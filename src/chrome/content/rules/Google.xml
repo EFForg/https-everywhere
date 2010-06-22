@@ -1,0 +1,59 @@
+<ruleset name="Google Search" match_rule="http:.*google\.">
+
+  <rule from="^http://(www\.)?google\.com/search" 
+          to="https://www.google.com/search"/>
+
+  <!-- There are two distinct cases for these firefox searches -->
+
+  <rule from="^http://(www\.)?google\.com/firefox/?$" 
+          to="https://www.google.com/"/>
+
+  <rule from="^http://(www\.)?google\.com/firefox" 
+          to="https://www.google.com/search"/>
+
+  <rule from="^http://(www\.)?google\.com/#" 
+          to="https://www.google.com/#"/>
+
+  <rule from="^http://(www\.)?google\.com/$" 
+          to="https://www.google.com/"/>
+
+  <!-- for international sites, we don't yet redirect the landing page, because
+       (for instance) we don't know what language a visitor to google.ch wants
+       to search in, so the landing pages are tricky.  But once an actual
+       search request is made, an hl=<lang> or rls=stuff:lang:stuff parameter
+       should be present, so the user's experience at www.google.com should be
+       ok
+   -->
+
+  <!-- most google international sites look like "google.fr" -->
+
+  <rule from="^http://(www\.)?google\.[^/@:][^/@:]/search\?" 
+          to="https://www.google.com/search?"/>
+
+  <!-- some look like "google.co.jp" -->
+  <!-- and some crazy ones like "google.com.au" -->
+
+  <rule from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/search\?" 
+          to="https://www.google.com/search?"/>
+
+  <!-- branded toolbar searches may somtimes look like this... 
+       
+       http://www.google.nl/search?q=thing&..&rls=com.ubuntu:nl:official&..
+       http://www.google.de/search?q=test&..&rls=org.mozilla:de:official&..
+    -->
+
+  <!-- Completion urls look like this: 
+
+http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1 HTTP/1.1\r\n
+
+   -->
+  <rule from="^http://clients[0-9]\.google\.com/complete/search" 
+          to="https://clients1.google.com/complete/search"/>
+
+  <rule from="^http://clients[0-9]\.google\.com?.[^/:@][^/:@]/complete/search" 
+          to="https://clients1.google.com/complete/search"/>
+
+  <rule from="^http://clients[0-9]\.google\.[^/:@][^/:@]/complete/search" 
+          to="https://clients1.google.com/complete/search"/>
+
+</ruleset>
