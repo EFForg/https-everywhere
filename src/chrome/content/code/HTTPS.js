@@ -36,7 +36,11 @@ const HTTPS = {
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
-    if (c2.redirectionLimit == 1) {
+    // XXX This used to be (c2.redirectionLimit == 1), but that's very
+    // inefficient in a case (eg amazon) where this may happen A LOT.
+    // Rather than number like 10, we should use the starting value
+    // in network.http.redirection-limit minus some counter
+    if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
       https_everywhere_blacklist[channel.URI.spec] = true;
