@@ -17,30 +17,55 @@
   <rule from="^http://(www\.)?google\.com/$" 
           to="https://www.google.com/"/>
 
-  <!-- for international sites, we don't yet redirect the landing page, because
-       (for instance) we don't know what language a visitor to google.ch wants
-       to search in, so the landing pages are tricky.  But once an actual
-       search request is made, an hl=<lang> or rls=stuff:lang:stuff parameter
-       should be present, so the user's experience at www.google.com should be
-       ok
+  <rule from="^http://(www\.)?google\.com/$" 
+          to="https://www.google.com/"/>
+
+  <!-- We could have a large collection of mappings from google country sites
+       to https://www.google.com/webhp?hl=<lang> where lang is the default
+       language for that country.  The problem with that is that the hl=
+       parameter would override any user preference for a particular language,
+       which would be Bad.  Instead, we only redirect from the country
+       homepages in cases where the default is English, which removes the need
+       for an hl= parameter and thereby the risk that we will override the
+       user's preferred language. -->
+
+  <rule 
+   from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
+     to="^https://www.google.com/">
+
+  <!-- For other international sites, we don't yet redirect the landing page,
+       because (for instance) we don't know what language a visitor to
+       google.ch wants to search in, so the landing pages are tricky.  But
+       once an actual search request is made, an hl=<lang> or
+       rls=stuff:lang:stuff parameter should be present, so the user's
+       experience at www.google.com should be ok.
+
+       We are currently working around a Google serverside bug which makes
+       HTTPS searches impossible if you are outside the US and have a
+       client=firefox or client=firefox-a URL parameter.
+
    -->
 
   <!-- most google international sites look like "google.fr" -->
 
-  <rule from="^http://(www\.)?google\.[^/@:][^/@:]/(search|firefox)\?" 
-          to="https://www.google.com/search?"/>
+  <rule 
+    from="^http://(www\.)?google\.[^/@:][^/@:]/search\?(.*)client=(firefox.*)$" 
+      to="https://www.google.com/search?$2client=https-everywhere-$3" />
+
+  <rule 
+    from="^http://(www\.)?google\.[^/@:][^/@:]/firefox\?(.*)client=(firefox.*)$" 
+      to="https://www.google.com/search?$2client=https-everywhere-$3" />
 
   <!-- some look like "google.co.jp" -->
   <!-- and some crazy ones like "google.com.au" -->
 
-  <rule from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/(search|firefox)\?" 
-          to="https://www.google.com/search?"/>
+  <rule
+    from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/search\?(.*)client=(firefox.*)$" 
+      to="https://www.google.com/search?$2client=https-everywhere-$3" /> 
 
-  <!-- branded toolbar searches may somtimes look like this... 
-       
-       http://www.google.nl/search?q=thing&..&rls=com.ubuntu:nl:official&..
-       http://www.google.de/search?q=test&..&rls=org.mozilla:de:official&..
-    -->
+  <rule
+    from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/firefox\?(.*)client=(firefox.*)$" 
+      to="https://www.google.com/search?$2client=https-everywhere-$3" /> 
 
   <!-- Completion urls look like this: 
 
