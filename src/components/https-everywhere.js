@@ -112,7 +112,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
 INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
 
 function https_everywhereLog(level, str) {
-  if (level >= WARN) {
+  if (level >= DBUG) {
     dump(str+"\n");
     var econsole = Components.classes["@mozilla.org/consoleservice;1"]
         .getService(Components.interfaces.nsIConsoleService);
