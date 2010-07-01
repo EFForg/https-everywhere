@@ -1,30 +1,28 @@
 <ruleset name="Google Search" match_rule="http:.*google\.">
 
   <rule from="^http://(www\.)?google\.com/search" 
-          to="https://www.google.com/search"/>
+          to="https://encrypted.google.com/search"/>
 
   <!-- There are two distinct cases for these firefox searches -->
 
   <rule from="^http://(www\.)?google\.com/firefox/?$" 
-          to="https://www.google.com/"/>
+          to="https://encrypted.google.com/"/>
 
   <rule from="^http://(www\.)?google\.com/firefox" 
-          to="https://www.google.com/search"/>
+          to="https://encrypted.google.com/search"/>
 
   <rule from="^http://(www\.)?google\.com/webhp" 
-          to="https://www.google.com/webhp"/>
+          to="https://encrypted.google.com/webhp"/>
 
   <rule from="^http://(www\.)?google\.com/#" 
-          to="https://www.google.com/#"/>
+          to="https://encrypted.google.com/#"/>
 
   <rule from="^http://(www\.)?google\.com/$" 
-          to="https://www.google.com/"/>
+          to="https://encrypted.google.com/"/>
 
-  <rule from="^http://(www\.)?google\.com/$" 
-          to="https://www.google.com/"/>
 
   <!-- We could have a large collection of mappings from google country sites
-       to https://www.google.com/webhp?hl=<lang> where lang is the default
+       to https://encrypted.google.com/webhp?hl=<lang> where lang is the default
        language for that country.  The problem with that is that the hl=
        parameter would override any user preference for a particular language,
        which would be Bad.  Instead, we only redirect from the country
@@ -34,14 +32,14 @@
 
   <rule 
    from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
-     to="^https://www.google.com/" />
+     to="https://encrypted.google.com/" />
 
   <!-- For other international sites, we don't yet redirect the landing page,
        because (for instance) we don't know what language a visitor to
        google.ch wants to search in, so the landing pages are tricky.  But
        once an actual search request is made, an hl=<lang> or
        rls=stuff:lang:stuff parameter should be present, so the user's
-       experience at www.google.com should be ok.
+       experience at encrypted.google.com should be ok.
 
        We are currently working around a Google serverside bug which makes
        HTTPS searches impossible if you are outside the US and have a
@@ -53,23 +51,38 @@
 
   <rule 
     from="^http://(www\.)?google\.[^/@:][^/@:]/search\?(.*)client=(firefox.*)$" 
-      to="https://www.google.com/search?$2client=https-everywhere-$3" />
+      to="https://encrypted.google.com/search?$2client=https-everywhere-$3" />
 
   <rule 
     from="^http://(www\.)?google\.[^/@:][^/@:]/firefox\?(.*)client=(firefox.*)$" 
-      to="https://www.google.com/search?$2client=https-everywhere-$3" />
+      to="https://encrypted.google.com/search?$2client=https-everywhere-$3" />
+
+  <rule 
+    from="^http://(www\.)?google\.[^/@:][^/@:]/#(.*)client=(firefox.*)$" 
+      to="https://encrypted.google.com/#$2client=https-everywhere-$3" />
+
+  <rule 
+    from="^http://(www\.)?google\.[^/@:][^/@:]/(search\?|firefox|#)" 
+      to="https://encrypted.google.com/#" />
 
   <!-- some look like "google.co.jp" -->
   <!-- and some crazy ones like "google.com.au" -->
 
   <rule
     from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/search\?(.*)client=(firefox.*)$" 
-      to="https://www.google.com/search?$2client=https-everywhere-$3" /> 
+      to="https://encrypted.google.com/search?$2client=https-everywhere-$3" /> 
 
   <rule
     from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/firefox\?(.*)client=(firefox.*)$" 
-      to="https://www.google.com/search?$2client=https-everywhere-$3" /> 
+      to="https://encrypted.google.com/search?$2client=https-everywhere-$3" /> 
 
+  <rule
+    from="^http://(www\.)?google\.com?\.[^@:/][^/@:]/#(.*)client=(firefox.*)$" 
+      to="https://encrypted.google.com/#$2client=https-everywhere-$3" /> 
+
+  <rule 
+    from="^http://(www\.)?google\.com?\.[^/@:][^/@:]/(search\?|firefox|#)" 
+      to="https://encrypted.google.com/#" />
   <!-- Completion urls look like this: 
 
 http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1 HTTP/1.1\r\n
