@@ -190,11 +190,6 @@ const RuleWriter = {
       var xmlrules = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Cookies corrupted: "+e);
-      try {
-        file.remove(false); //XXX: is it necessary to remove it ?
-      } catch(e2) {
-        this.log(WARN,"Can't remove file "+e);
-      }
       return null;
     }
 
