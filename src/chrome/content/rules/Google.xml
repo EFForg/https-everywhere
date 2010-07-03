@@ -20,33 +20,6 @@
   <rule from="^http://(www\.)?google\.com/$" 
           to="https://encrypted.google.com/"/>
 
-
-  <!-- We could have a large collection of mappings from google country sites
-       to https://encrypted.google.com/webhp?hl=<lang> where lang is the default
-       language for that country.  The problem with that is that the hl=
-       parameter would override any user preference for a particular language,
-       which would be Bad.  Instead, we only redirect from the country
-       homepages in cases where the default is English, which removes the need
-       for an hl= parameter and thereby the risk that we will override the
-       user's preferred language. -->
-
-  <rule 
-   from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
-     to="https://encrypted.google.com/" />
-
-  <!-- For other international sites, we don't yet redirect the landing page,
-       because (for instance) we don't know what language a visitor to
-       google.ch wants to search in, so the landing pages are tricky.  But
-       once an actual search request is made, an hl=<lang> or
-       rls=stuff:lang:stuff parameter should be present, so the user's
-       experience at encrypted.google.com should be ok.
-
-       We are currently working around a Google serverside bug which makes
-       HTTPS searches impossible if you are outside the US and have a
-       client=firefox or client=firefox-a URL parameter.
-
-   -->
-
   <!-- most google international sites look like "google.fr" -->
 
   <rule 
@@ -96,5 +69,56 @@ http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,
 
   <rule from="^http://clients[0-9]\.google\.[^/:@][^/:@]/complete/search" 
           to="https://clients1.google.com/complete/search"/>
+
+  <!-- We are trying a large collection of mappings from google country sites
+       to https://encrypted.google.com/webhp?hl=<lang> where lang is the default
+       language for that country.  The concern with that was that the hl=
+       parameter would override any user preference for a particular language,
+       which would be Bad, especially if people got bounced from 
+       http://google.com to google.cctld to https://google/webhp?hl=<constant>
+       but since we actually prevent google from performing the first bounce, 
+       we don't have to worry about this so much!
+       -->
+
+  <rule 
+   from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|na|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
+     to="https://encrypted.google.com/" />
+
+  <rule 
+   from="^http://(www\.)?google\.(com\.)?(ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/?$"
+    to="https://www.google.com/webhp?hl=es" />
+
+  <rule 
+   from="^http://(www\.)?google\.(com\.)?(ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/?$"
+     to="https://www.google.com/webhp?hl=ar" />
+
+  <rule from="^http://(www\.)?google\.(at|ch|de)/?$"
+          to="https://www.google.com/webhp?hl=de" />
+
+
+  <rule from="^http://(www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr)/?$"
+          to="https://www.google.com/webhp?hl=$2" />
+
+  <rule from="^http://(www\.)?google\.com?\.(id|th|tr)/?$"
+          to="https://www.google.com/webhp?hl=$2" />
+
+  <rule from="^http://(www\.)?google\.com\.il/?$"
+          to="https://www.google.com/webhp?hl=he" />
+
+  <rule from="^http://(www\.)?google\.com\.kr/?$"
+          to="https://www.google.com/webhp?hl=ko" />
+
+  <rule from="^http://(www\.)?google\.com\.jp/?$"
+          to="https://www.google.com/webhp?hl=ja" />
+
+  <rule from="^http://(www\.)?google\.com\.vn/?$"
+          to="https://www.google.com/webhp?hl=vi" />
+
+  <rule from="^http://(www\.)?google\.com\.br/?$"
+          to="https://www.google.com/webhp?hl=pt-BR" />
+
+  <rule from="^http://(www\.)?google\.se/?$"
+          to="https://www.google.com/webhp?hl=sv" />
+
 
 </ruleset>
