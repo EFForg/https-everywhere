@@ -1,4 +1,15 @@
+<!-- The third rule here rewrites profile picture URLs to follow a
+     pattern that Twitter currently uses itself, but inconsistently. 
+     Using this pattern now makes most user pages load successfully
+     in HTTPS instead of giving a mixed content warning. -->
+
+<!-- There are still some hosts that things get loaded from that can't
+     be safely rewritten without triggering a certificate error.
+     E.g. platform.twitter.com has some scripts, but the https version
+     won't validate. -->
+
 <ruleset name="Twitter">
-  <rule from="^http://twitter\.com" to="https://twitter.com"/>
-  <rule from="^http://www\.twitter\.com" to="https://twitter.com"/>
+  <rule from="^http://(www\.)?twitter\.com/" to="https://twitter.com/"/>
+  <rule from="^http://(search|static)\.twitter\.com/" to="https://$1.twitter.com/"/>
+  <rule from="^http://[a-z0-9].?\.twimg\.com/" to="https://s3.amazonaws.com/twitter_production/"/>
 </ruleset>
