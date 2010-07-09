@@ -281,5 +281,17 @@ const HTTPSRules = {
         return true;
     }
     return false;
+  },
+
+  rewrittenURI: function(uri) {
+    var i = 0;
+    var newuri = null
+    for(i = 0; i < this.rules.length; ++i) {
+      if((newuri = this.rules[i].rewrittenURI(uri)))
+        return newuri;
+    }
+    return null;
   }
+
+
 };

@@ -29,7 +29,7 @@ const HTTPS = {
   httpsRewrite: null,
   
   forceChannel: function(channel) {
-    return this.forceURI(channel.URI, function() { HTTPS.replaceChannel(channel); });
+    return this.forceURI(channel.URI, function() { return HTTPS.replaceChannel(channel); });
   },
   
   replaceChannel: function(channel) {
@@ -47,6 +47,7 @@ const HTTPS = {
       return false;
     }
     if (ChannelReplacement.supported) {
+      HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       IOUtil.runWhenPending(channel, function() {
         // replacing a shortcut icon causes a cache-related crash like
         // https://bugzilla.mozilla.org/show_bug.cgi?id=480352
@@ -60,8 +61,13 @@ const HTTPS = {
            return;
          }
         } catch(e) {}
-        var uri = HTTPSRules.rewrittenURI(channel.URI.clone());
-        if (!uri) return;
+        var uri = HTTPSRules.rewrittenURI(channel.URI);
+        if (!uri) {
+          HTTPS.log(INFO,
+              "Got replace channel with no applicable rules for URI "
+              + channel.URI.spec);
+          return;
+        }
         new ChannelReplacement(channel, uri).replace(true).open();
       });
       return true;
@@ -105,11 +111,11 @@ const HTTPS = {
       }
       
       if (fallback && fallback()) {
-         this.log(WARN,"Channel redirection fallback on " + newuri.spec);
+         this.log(INFO, "Channel redirection fallback on " + uri.spec);
          return true;
       }
       
-      this.log(WARN,"Firefox wouldn't set https on " + newuri.spec);
+      this.log(WARN,"Firefox wouldn't set https on " + uri.spec);
       this.log(INFO,"(error was " + e + ")");
     }
     return false;

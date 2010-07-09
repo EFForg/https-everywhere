@@ -189,7 +189,7 @@ HTTPSEverywhere.prototype = {
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
-      this.log(DBUG,"Got http-on-modify-request");
+      this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         return;
