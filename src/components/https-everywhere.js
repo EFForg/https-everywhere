@@ -129,7 +129,7 @@ function HTTPSEverywhere() {
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
 
-  // We need to use observers instead of categories for FF3.0 for thes:
+  // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
   // https://developer.mozilla.org/en/nsIObserver
@@ -231,18 +231,21 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;
     }
-    if (HTTPS.forceURI(uri.clone())) {
-      if (!HTTPS.replaceChannel(newChannel)) {
-        // Failed, try to put things back...
-        this.log(DBUG, "reverting URI, " + oldChannel.URI.spec);
-        try {
-          oldChannel.URI.scheme = "http";
-          newChannel.URI.scheme = "http";
-        } catch (e) {
-          this.log("uri windback error " + e);
-        }
-      }
-    }
+
+    HTTPS.forceChannel(newChannel);
+
+//    if (HTTPS.forceURI(uri.clone())) {
+//      if (!HTTPS.replaceChannel(newChannel)) {
+//        // Failed, try to put things back...
+//        this.log(DBUG, "reverting URI, " + oldChannel.URI.spec);
+//        try {
+//          oldChannel.URI.scheme = "http";
+//          newChannel.URI.scheme = "http";
+//        } catch (e) {
+//          this.log(WARN, "uri windback error " + e);
+//        }
+//      }
+//    }
   },
 
   // These implement the nsIContentPolicy API; they allow both yes/no answers

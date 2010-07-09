@@ -60,10 +60,8 @@ const HTTPS = {
            return;
          }
         } catch(e) {}
-        var uri = channel.URI.clone();
-        if (!HTTPSRules.replaceURI(uri)) {
-          HTTPS.log(NOTE,"Got replace channel with no applicable rules for URI "+uri.spec);
-        }
+        var uri = HTTPSRules.rewrittenURI(channel.URI.clone());
+        if (!uri) return;
         new ChannelReplacement(channel, uri).replace(true).open();
       });
       return true;
@@ -77,49 +75,44 @@ const HTTPS = {
   forceURI: function(uri, fallback, ctx) {
   // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
   // per the ContentPolicy API.
+  // Returns true if everything worked out (either correct replacement or no 
+  // replacement needed).  Retun False if all attempts to rewrite failed.
+
     try {
       if (HTTPSRules.replaceURI(uri)) {
         this.log(INFO,"Forced URI " + uri.spec);
-        return true;
+      } else {
+        this.log(DBUG,"No change to " + uri.spec);
       }
+      return true;
     } catch(e) {
         
       if (ctx && (ctx instanceof CI.nsIDOMHTMLImageElement || ctx instanceof CI.nsIDOMHTMLInputElement)) {
-        uri = uri.clone();
-        HTTPSRules.replaceURI(uri);
+        var newuri = HTTPSRules.rewrittenURI(uri);
+        if (!newuri) {
+          this.log(WARN, "SHOULD NEVER HAPPEN");
+          return true; // this should never happen
+        }
 
         // XXX Isn't this a security flaw?  Have to bug Georgio about
         // this... the content policy docs claim to require it, but
         // it looks like a race condition nightmare.
-        Thread.asap(function() { ctx.src = uri.spec; });
+        Thread.asap(function() { ctx.src = newuri.spec; });
         
-        var msg = "Image HTTP->HTTPS redirection to " + uri.spec;
+        var msg = "Image HTTP->HTTPS redirection to " + newuri.spec;
         this.log(INFO,msg);  
         throw msg;
       }
       
       if (fallback && fallback()) {
-         this.log(WARN,"Channel redirection fallback on " + uri.spec);
+         this.log(WARN,"Channel redirection fallback on " + newuri.spec);
          return true;
       }
       
-      this.log(WARN,"Firefox wouldn't set https on " + uri.spec);
+      this.log(WARN,"Firefox wouldn't set https on " + newuri.spec);
       this.log(INFO,"(error was " + e + ")");
     }
     return false;
-  },
-  
-  mustForce: function(uri) {
-    // Switch a URI over to HTTPS if some conditions apply
-    // XXX kill this horrid beast and replace it with something
-    // comprehensible!
-    return (uri.schemeIs("http") &&    // it's not https
-           (this.httpsForced &&        // S
-           this.httpsForced.test(uri.spec) ||
-         STS.isSTSURI(uri)) &&
-          !(this.httpsForcedExceptions &&
-            this.httpsForcedExceptions.test(uri.spec)
-        ));
   },
   
   log: function(msg) {
