@@ -5,9 +5,11 @@
 
   <!-- There are two distinct cases for these firefox searches -->
 
+  <!-- homepage: note that this ? is actually NOT a ? -->
   <rule from="^http://(www\.)?google\.com/firefox/?$" 
           to="https://encrypted.google.com/"/>
 
+  <!-- query: the absence of a ? implies there is one ;)-->
   <rule from="^http://(www\.)?google\.com/firefox" 
           to="https://encrypted.google.com/search"/>
 
@@ -34,14 +36,7 @@
    from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
      to="https://encrypted.google.com/" />
 
-  <!-- For other international sites, we don't yet redirect the landing page,
-       because (for instance) we don't know what language a visitor to
-       google.ch wants to search in, so the landing pages are tricky.  But
-       once an actual search request is made, an hl=<lang> or
-       rls=stuff:lang:stuff parameter should be present, so the user's
-       experience at encrypted.google.com should be ok.
-
-       We are currently working around a Google serverside bug which makes
+  <!-- We are currently working around a Google serverside bug which makes
        HTTPS searches impossible if you are outside the US and have a
        client=firefox or client=firefox-a URL parameter.
 
