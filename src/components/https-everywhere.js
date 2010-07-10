@@ -112,7 +112,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
 INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
 
 function https_everywhereLog(level, str) {
-  if (level >= DBUG) {
+  if (level >= WARN) {
     dump(str+"\n");
     var econsole = Components.classes["@mozilla.org/consoleservice;1"]
         .getService(Components.interfaces.nsIConsoleService);
@@ -255,6 +255,7 @@ HTTPSEverywhere.prototype = {
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+    //this.log(WARN, "should load " + unwrappedLocation.spec);
     if (isHTTP)
       HTTPS.forceURI(unwrappedLocation, null, aContext);
     return true;
