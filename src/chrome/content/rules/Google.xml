@@ -1,5 +1,14 @@
 <ruleset name="Google Search" match_rule="http:.*google\.">
 
+  <!-- Some Google pages can generate naive links back to the
+       unencrypted version of encrypted.google.com, which is a
+       301 but theoretically vulnerable to SSL stripping. -->
+
+  <rule from="^http://encrypted\.google\.com/"
+          to="https://encrypted.google.com/"/>
+
+  <!-- The most basic case. -->
+
   <rule from="^http://(www\.)?google\.com/search" 
           to="https://encrypted.google.com/search"/>
 
