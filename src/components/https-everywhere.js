@@ -252,12 +252,13 @@ HTTPSEverywhere.prototype = {
   // to "should this load?", but also allow us to change the thing.
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
+    if (aContentType == 11)
+      this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-    //this.log(WARN, "should load " + unwrappedLocation.spec);
     if (isHTTP)
-      HTTPS.forceURI(unwrappedLocation, null, aContext);
+      HTTPS.forceURI(aContentLocation, null, aContext);
     return true;
   },
 

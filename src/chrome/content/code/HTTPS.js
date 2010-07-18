@@ -29,6 +29,10 @@ const HTTPS = {
   httpsRewrite: null,
   
   forceChannel: function(channel) {
+    if (channel.loadFlags & CI.nsIRequest.LOAD_BACKGROUND) {
+      HTTPS.log(INFO, "Background request.. Forcing channel replacement.");
+      return HTTPS.replaceChannel(channel);
+    }
     return this.forceURI(channel.URI, function() { return HTTPS.replaceChannel(channel); });
   },
   
