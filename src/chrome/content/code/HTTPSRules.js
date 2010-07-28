@@ -70,31 +70,35 @@ RuleSet.prototype = {
     https_everywhereLog(level, msg);
   },
 
+  rewrittenURI: function(uri) {
+    // If no rule applies, return null; otherwise, return a fresh uri instance
+    // for the target
+    var newurl = this._apply(uri.spec);
+    if (null == newurl)
+      return null;
+    var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
+                createInstance(CI.nsIStandardURL);
+    newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
+             newurl, uri.originCharset, null);
+    newuri = newuri.QueryInterface(CI.nsIURI);
+    return newuri;
+  },
+
   replaceURI: function(uri) {
-    var newurispec = this._apply(uri.spec);
-    if (newurispec) {
-      var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
-                  createInstance(CI.nsIStandardURL);
-      newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
-               newurispec, uri.originCharset, null);
-      newuri = newuri.QueryInterface(CI.nsIURI);
-
-      this.log(NOTE,"Rewriting " + uri.spec + " -> " + newuri.spec + "\n");
-      uri.scheme = newuri.scheme;
-      uri.userPass = newuri.userPass;
-      uri.username = newuri.username;
-      if (newuri.password)
-        uri.password = newuri.password;
-      //if (newuri.hostPort)
-      //  uri.hostPort = newuri.hostPort;
-      uri.host = newuri.host;
-      uri.port = newuri.port;
-      uri.path = newuri.path;
-
-      return true;
-    }
-
-    return false;
+    // Strategy 1: replace the parts of the old uri piecewise.  Often this
+    // works.  In some cases it doesn't.
+    var newuri = this.rewrittenURI(uri);
+    if (!newuri) return false;
+    this.log(NOTE,"Rewriting " + uri.spec + " -> " + newuri.spec + "\n");
+    uri.scheme = newuri.scheme;
+    uri.userPass = newuri.userPass;
+    uri.username = newuri.username;
+    if (newuri.password)
+      uri.password = newuri.password;
+    uri.host = newuri.host;
+    uri.port = newuri.port;
+    uri.path = newuri.path;
+    return true;
   },
 
 };
@@ -189,12 +193,7 @@ const RuleWriter = {
     try {
       var xmlrules = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
-      this.log(WARN,"Cookies corrupted: "+e);
-      try {
-        file.remove(false); //XXX: is it necessary to remove it ?
-      } catch(e2) {
-        this.log(WARN,"Can't remove file "+e);
-      }
+      this.log(WARN,"Error in XML file: " + file + "\n" + e);
       return null;
     }
 
@@ -282,5 +281,17 @@ const HTTPSRules = {
         return true;
     }
     return false;
+  },
+
+  rewrittenURI: function(uri) {
+    var i = 0;
+    var newuri = null
+    for(i = 0; i < this.rules.length; ++i) {
+      if((newuri = this.rules[i].rewrittenURI(uri)))
+        return newuri;
+    }
+    return null;
   }
+
+
 };

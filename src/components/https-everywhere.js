@@ -129,7 +129,7 @@ function HTTPSEverywhere() {
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
 
-  // We need to use observers instead of categories for FF3.0 for thes:
+  // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
   // https://developer.mozilla.org/en/nsIObserver
@@ -189,7 +189,7 @@ HTTPSEverywhere.prototype = {
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
-      this.log(DBUG,"Got http-on-modify-request");
+      this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         return;
@@ -231,29 +231,40 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;
     }
-    if (HTTPS.forceURI(uri.clone())) {
-      if (!HTTPS.replaceChannel(newChannel)) {
-        // Failed, try to put things back...
-        this.log(DBUG, "reverting URI, " + oldChannel.URI.spec);
-        try {
-          oldChannel.URI.scheme = "http";
-          newChannel.URI.scheme = "http";
-        } catch (e) {
-          this.log("uri windback error " + e);
-        }
-      }
-    }
+
+    HTTPS.replaceChannel(newChannel);
+
+//    if (HTTPS.forceURI(uri.clone())) {
+//      if (!HTTPS.replaceChannel(newChannel)) {
+//        // Failed, try to put things back...
+//        this.log(DBUG, "reverting URI, " + oldChannel.URI.spec);
+//        try {
+//          oldChannel.URI.scheme = "http";
+//          newChannel.URI.scheme = "http";
+//        } catch (e) {
+//          this.log(WARN, "uri windback error " + e);
+//        }
+//      }
+//    }
   },
 
   // These implement the nsIContentPolicy API; they allow both yes/no answers
   // to "should this load?", but also allow us to change the thing.
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
+    if (aContentType == 11) {
+      try {
+        this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
+      } catch (e) {
+        this.log(DBUG,"shouldLoad exception");
+      }
+    }
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
+    // XXX do we want to remove the s here?
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
     if (isHTTP)
-      HTTPS.forceURI(unwrappedLocation, null, aContext);
+      HTTPS.forceURI(aContentLocation, null, aContext);
     return true;
   },
 

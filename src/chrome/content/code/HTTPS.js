@@ -29,10 +29,22 @@ const HTTPS = {
   httpsRewrite: null,
   
   forceChannel: function(channel) {
-    return this.forceURI(channel.URI, function() { HTTPS.replaceChannel(channel); });
+    if (channel.loadFlags & CI.nsIRequest.LOAD_BACKGROUND) {
+      HTTPS.log(INFO, "Background request.. Forcing channel replacement.");
+      return HTTPS.replaceChannel(channel);
+    }
+    return this.forceURI(channel.URI, function() { return HTTPS.replaceChannel(channel); });
   },
   
   replaceChannel: function(channel) {
+
+    var uri = HTTPSRules.rewrittenURI(channel.URI);
+    if (!uri) {
+       HTTPS.log(INFO,
+           "Got replace channel with no applicable rules for URI "
+           + channel.URI.spec);
+       return;
+     }
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
@@ -46,24 +58,30 @@ const HTTPS = {
       https_everywhere_blacklist[channel.URI.spec] = true;
       return false;
     }
+ 
     if (ChannelReplacement.supported) {
+      HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       IOUtil.runWhenPending(channel, function() {
         // replacing a shortcut icon causes a cache-related crash like
         // https://bugzilla.mozilla.org/show_bug.cgi?id=480352
         // just abort it... 
+        // XXX This is crazy NoScript code, but the crash it prevents is
+        // reproducible.  Unfortunately, there is a race condition between
+        // this nsIcontentobserver case and the contentpolicy code that is
+        // supposed to get to non-favicon images first, and so some real
+        // non-favicons get caught in this codepath.  
+        // Also unfortunatley, we don't know a better way to distinguish
+        // between favicons and non-favicon images.  Testing path==favicon.ico
+        // MIGHT work, but we don't want to risk that investigation yet.
         try {
          if (/\bimage\//.test(channel.getRequestHeader("Accept")) &&
              !PolicyState.extract(channel) // favicons don't trigger content policies
             ) {
-           HTTPS.log(WARN,"Aborting shortcut icon " + channel.name + ", should be HTTPS!");
+           HTTPS.log(WARN,"Aborting possible favicon " + channel.name + ", should be HTTPS!");
            IOUtil.abort(channel);
            return;
          }
         } catch(e) {}
-        var uri = channel.URI.clone();
-        if (!HTTPSRules.replaceURI(uri)) {
-          HTTPS.log(NOTE,"Got replace channel with no applicable rules for URI "+uri.spec);
-        }
         new ChannelReplacement(channel, uri).replace(true).open();
       });
       return true;
@@ -77,29 +95,37 @@ const HTTPS = {
   forceURI: function(uri, fallback, ctx) {
   // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
   // per the ContentPolicy API.
+  // Returns true if everything worked out (either correct replacement or no 
+  // replacement needed).  Retun False if all attempts to rewrite failed.
+
     try {
       if (HTTPSRules.replaceURI(uri)) {
         this.log(INFO,"Forced URI " + uri.spec);
-        return true;
-      }
+      } //else {
+        //this.log(DBUG,"No change to " + uri.spec);
+        //}
+      return true;
     } catch(e) {
         
       if (ctx && (ctx instanceof CI.nsIDOMHTMLImageElement || ctx instanceof CI.nsIDOMHTMLInputElement)) {
-        uri = uri.clone();
-        HTTPSRules.replaceURI(uri);
+        var newuri = HTTPSRules.rewrittenURI(uri);
+        if (!newuri) {
+          this.log(WARN, "SHOULD NEVER HAPPEN");
+          return true; // this should never happen
+        }
 
         // XXX Isn't this a security flaw?  Have to bug Georgio about
         // this... the content policy docs claim to require it, but
         // it looks like a race condition nightmare.
-        Thread.asap(function() { ctx.src = uri.spec; });
+        Thread.asap(function() { ctx.src = newuri.spec; });
         
-        var msg = "Image HTTP->HTTPS redirection to " + uri.spec;
+        var msg = "Image HTTP->HTTPS redirection to " + newuri.spec;
         this.log(INFO,msg);  
         throw msg;
       }
       
       if (fallback && fallback()) {
-         this.log(WARN,"Channel redirection fallback on " + uri.spec);
+         this.log(INFO, "Channel redirection fallback on " + uri.spec);
          return true;
       }
       
@@ -107,19 +133,6 @@ const HTTPS = {
       this.log(INFO,"(error was " + e + ")");
     }
     return false;
-  },
-  
-  mustForce: function(uri) {
-    // Switch a URI over to HTTPS if some conditions apply
-    // XXX kill this horrid beast and replace it with something
-    // comprehensible!
-    return (uri.schemeIs("http") &&    // it's not https
-           (this.httpsForced &&        // S
-           this.httpsForced.test(uri.spec) ||
-         STS.isSTSURI(uri)) &&
-          !(this.httpsForcedExceptions &&
-            this.httpsForcedExceptions.test(uri.spec)
-        ));
   },
   
   log: function(msg) {
