@@ -174,19 +174,13 @@ HTTPSEverywhere.prototype = {
   },
 
   // [optional] an array of categories to register this component in.
-  _xpcom_categories: [{
-    // Each object in the array specifies the parameters to pass to
-    // nsICategoryManager.addCategoryEntry(). 'true' is passed for
-    // both aPersist and aReplace params.
-    category: "app-startup",
-  },
-  {
-    category: "content-policy",
-    // optional, defaults to false. When set to true, and only if 'value'
-    // is not specified, the concatenation of the string "service," and the
-    // object's contractID is passed as aValue parameter of addCategoryEntry.
-    service: true,
-  },
+  _xpcom_categories: [
+    {
+      category: "app-startup",
+    },
+    {
+      category: "content-policy",
+    },
   ],
 
   // QueryInterface implementation, e.g. using the generateQI helper
