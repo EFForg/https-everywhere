@@ -275,6 +275,11 @@ HTTPSEverywhere.prototype = {
 //    }
   },
 
+  asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
+    this.onChannelRedirect(oldChannel, newChannel, flags);
+    callback.onRedirectVerifyCallback(0);
+  },
+
   // These implement the nsIContentPolicy API; they allow both yes/no answers
   // to "should this load?", but also allow us to change the thing.
 
