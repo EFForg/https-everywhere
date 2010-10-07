@@ -20,6 +20,7 @@ const CP_SHOULDPROCESS = 4;
 
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
+const SERVICE_NAME = "Encrypts your communications with a number of major websites";
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -120,6 +121,8 @@ function https_everywhereLog(level, str) {
   }
 }
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function HTTPSEverywhere() {
   // Hacks to set up logging in each component
   HTTPS.log = https_everywhereLog;
@@ -150,20 +153,46 @@ function HTTPSEverywhere() {
 // HTTP redirects) correctly.
 
 HTTPSEverywhere.prototype = {
-  QueryInterface: function(iid) {
-    if (!iid.equals(CI.nsIObserver)
-        && !iid.equals(CI.nsISupports)
-        && !iid.equals(CI.nsIContentPolicy)
-        && !iid.equals(CI.nsISupportsWeakReference)
-        && !iid.equals(CI.nsIWebProgressListener)
-        && !iid.equals(CI.nsIChannelEventSink)) {
-      Components.returnCode = CR.NS_ERROR_NO_INTERFACE;
-      this.log(INFO,"Bad QI: "+iid);
-      return null;
-    }
-    this.log(VERB,"Good QI: "+iid);
-    return this;
+  // properties required for XPCOM registration:
+  classDescription: SERVICE_NAME,
+  classID:          SERVICE_ID,
+  contractID:       SERVICE_CTRID,
+
+  _xpcom_factory: {
+    createInstance: function (outer, iid) {
+      if (outer != null)
+        throw Components.results.NS_ERROR_NO_AGGREGATION;
+      if (!HTTPSEverywhere.instance)
+        HTTPSEverywhere.instance = new HTTPSEverywhere();
+      return HTTPSEverywhere.instance.QueryInterface(iid);
+    },
+
+    QueryInterface: XPCOMUtils.generateQI(
+      [ Components.interfaces.nsISupports,
+        Components.interfaces.nsIModule,
+        Components.interfaces.nsIFactory ])
   },
+
+  // [optional] an array of categories to register this component in.
+  _xpcom_categories: [
+    {
+      category: "app-startup",
+    },
+    {
+      category: "content-policy",
+    },
+  ],
+
+  // QueryInterface implementation, e.g. using the generateQI helper
+  QueryInterface: XPCOMUtils.generateQI(
+    [ Components.interfaces.nsIObserver,
+      Components.interfaces.nsIMyInterface,
+      Components.interfaces.nsISupports,
+      Components.interfaces.nsIContentPolicy,
+      Components.interfaces.nsISupportsWeakReference,
+      Components.interfaces.nsIWebProgressListener,
+      Components.interfaces.nsIChannelEventSink ]),
+
   wrappedJSObject: null,  // Initialized by constructor
 
   getWeakReference: function () {
@@ -197,11 +226,6 @@ HTTPSEverywhere.prototype = {
       HTTPS.forceChannel(channel);
     } else if (topic == "app-startup") {
       this.log(DBUG,"Got app-startup");
-      OS.addObserver(this, "http-on-modify-request", false);
-      var dls = CC['@mozilla.org/docloaderservice;1']
-        .getService(CI.nsIWebProgress);
-      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST);
-      this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
     } else if (topic == "profile-before-change") {
       this.log(INFO, "Got profile-before-change");
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
@@ -209,9 +233,12 @@ HTTPSEverywhere.prototype = {
       catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
       Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
-      // This is currently separate from app-startup for hackish historical
-      // reasons; not sure if that's necessary.
       this.log(DBUG, "Got profile-after-change");
+      OS.addObserver(this, "http-on-modify-request", false);
+      var dls = CC['@mozilla.org/docloaderservice;1']
+        .getService(CI.nsIWebProgress);
+      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST);
+      this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
       HTTPSRules.init();
       Thread.hostRunning = true;
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
@@ -246,6 +273,11 @@ HTTPSEverywhere.prototype = {
 //        }
 //      }
 //    }
+  },
+
+  asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
+    this.onChannelRedirect(oldChannel, newChannel, flags);
+    callback.onRedirectVerifyCallback(0);
   },
 
   // These implement the nsIContentPolicy API; they allow both yes/no answers
@@ -294,92 +326,11 @@ HTTPSEverywhere.prototype = {
 
 };
 
-/*
- * Factory object
- */
-
-var HTTPSInstance = null;
-
-const factory = {
-  // nsIFactory interface implementation
-  createInstance: function(outer, iid) {
-    if (outer != null) {
-      Components.returnCode = CR.NS_ERROR_NO_AGGREGATION;
-      return null;
-    }
-
-    if (!iid.equals(Components.interfaces.nsIContentPolicy) &&
-            !iid.equals(Components.interfaces.nsIChannelEventSink) &&
-            !iid.equals(Components.interfaces.nsISupports)) {
-      Components.returnCode = CR.NS_ERROR_NO_INTERFACE;
-      return null;
-    }
-
-    if(!HTTPSInstance)
-        HTTPSInstance = new HTTPSEverywhere();
-
-    return HTTPSInstance;
-  },
-
-  // nsISupports interface implementation
-  QueryInterface: function(iid) {
-    if (iid.equals(Components.interfaces.nsISupports) ||
-        iid.equals(Components.interfaces.nsIModule) ||
-        iid.equals(Components.interfaces.nsIFactory))
-      return this;
-
-    Components.returnCode = CR.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
-};
-
-
-/*
- * Module object
- */
-const module = {
-  registerSelf: function(compMgr, fileSpec, location, type) {
-    compMgr = compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    compMgr.registerFactoryLocation(SERVICE_ID,
-                    "HTTPS-Everywhere",
-                    SERVICE_CTRID,
-                    fileSpec, location, type);
-
-    var catman = Components.classes["@mozilla.org/categorymanager;1"]
-           .getService(Components.interfaces.nsICategoryManager);
-    catman.addCategoryEntry("app-startup", SERVICE_CTRID,
-              SERVICE_CTRID, true, true);
-    catman.addCategoryEntry("content-policy", SERVICE_CTRID,
-              SERVICE_CTRID, true, true);
-
-  },
-
-  unregisterSelf: function(compMgr, fileSpec, location) {
-    compMgr = compMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-
-    compMgr.unregisterFactoryLocation(SERVICE_ID, fileSpec);
-
-    var catman = Components.classes["@mozilla.org/categorymanager;1"]
-             .getService(Components.interfaces.nsICategoryManager);
-    catman.deleteCategoryEntry("app-startup", SERVICE_CTRID, true);
-    catman.deleteCategoryEntry("content-policy", SERVICE_CTRID, true);
-  },
-
-  getClassObject: function(compMgr, cid, iid) {
-    if (cid.equals(SERVICE_ID))
-      return factory;
-
-    Components.returnCode = CR.NS_ERROR_NOT_REGISTERED;
-    return null;
-  },
-
-  canUnload: function(compMgr) {
-    return true;
-  }
-};
-
-function NSGetModule(comMgr, fileSpec) {
-  return module;
-}
-
-
+/**
+* XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
+* XPCOMUtils.generateNSGetModule is for Mozilla 1.9.2 (Firefox 3.6).
+*/
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([HTTPSEverywhere]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([HTTPSEverywhere]);

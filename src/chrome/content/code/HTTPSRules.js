@@ -19,7 +19,7 @@ function RuleSet(name, match_rule) {
   }
   this.rules = [];
   this.exclusions = [];
-  var prefs = HTTPSInstance.get_prefs();
+  var prefs = HTTPSEverywhere.instance.get_prefs();
   try {
     // if this pref exists, use it
     this.active = prefs.getBoolPref(name);
