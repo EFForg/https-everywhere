@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 APP_NAME=https-everywhere
 VERSION=`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`
 XPI_NAME=$APP_NAME-$VERSION.xpi
