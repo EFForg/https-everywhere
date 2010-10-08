@@ -9,6 +9,11 @@ WARN=5;
 //---------------
 
 https_everywhere_blacklist = {};
+https_domains = {};              // maps domain patterns (with at most one
+                                 // wildcard) to RuleSets
+
+https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
+                                 // of redirection loops
 
 //
 const CI = Components.interfaces;
@@ -111,15 +116,6 @@ function xpcom_checkInterfaces(iid,iids,ex) {
 }
 
 INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
-
-function https_everywhereLog(level, str) {
-  if (level >= WARN) {
-    dump(str+"\n");
-    var econsole = Components.classes["@mozilla.org/consoleservice;1"]
-        .getService(Components.interfaces.nsIConsoleService);
-    econsole.logStringMessage("HTTPS Everywhere: " +str);
-  }
-}
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -325,6 +321,23 @@ HTTPSEverywhere.prototype = {
   },
 
 };
+
+const LLVAR = "LogLevel";
+var prefs = HTTPSEverywhere.instance.get_prefs();
+try {
+  prefs.getBoolPref(LLVAR);
+} catch (e) {
+  prefs.setBoolPref(LLVAR, true);
+}
+
+function https_everywhereLog(level, str) {
+  if (level >= prefs.getBoolPref(LLVAR)) {
+    dump(str+"\n");
+    var econsole = Components.classes["@mozilla.org/consoleservice;1"]
+        .getService(Components.interfaces.nsIConsoleService);
+    econsole.logStringMessage("HTTPS Everywhere: " +str);
+  }
+}
 
 /**
 * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
