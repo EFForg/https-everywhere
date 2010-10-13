@@ -9,13 +9,20 @@ function Exclusion(pattern) {
   this.pattern_c = new RegExp(pattern);
 }
 
-function RuleSet(name, match_rule) {
+function RuleSet(name, match_rule, default_off) {
+  var on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;
   if (match_rule) {
     this.ruleset_match_c = new RegExp(match_rule);
   } else {
     this.ruleset_match_c = null;
+  }
+  if (default_off) {
+    // Perhaps problematically, this currently ignores the actual content of
+    // the default_off XML attribute.  Ideally we'd like this attribute to be
+    // "valueless"
+    on_by_default = false;
   }
   this.rules = [];
   this.exclusions = [];
@@ -27,7 +34,7 @@ function RuleSet(name, match_rule) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
     this.active = true;
-    prefs.setBoolPref(name, true);
+    prefs.setBoolPref(name, on_by_default);
   }
 }
 
@@ -197,11 +204,11 @@ const RuleWriter = {
       return null;
     }
 
-    if (xmlrules.@match_rule.length() > 0) {
-      var ret = new RuleSet(xmlrules.@name, xmlrules.@match_rule);
-    } else {
-      var ret = new RuleSet(xmlrules.@name, null);
-    }
+    var match_rl = null;
+    var dflt_off = null;
+    if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
+    if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
+    var ret = new RuleSet(xmlrules.@name, match_rl, dflt_off);
 
     for (var i = 0; i < xmlrules.exclusion.length(); i++) {
       var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
