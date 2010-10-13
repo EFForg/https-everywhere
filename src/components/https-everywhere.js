@@ -9,6 +9,11 @@ WARN=5;
 //---------------
 
 https_everywhere_blacklist = {};
+https_domains = {};              // maps domain patterns (with at most one
+                                 // wildcard) to RuleSets
+
+https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
+                                 // of redirection loops
 
 //
 const CI = Components.interfaces;
@@ -21,6 +26,8 @@ const CP_SHOULDPROCESS = 4;
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
 const SERVICE_NAME = "Encrypts your communications with a number of major websites";
+
+const LLVAR = "LogLevel";
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -89,9 +96,6 @@ const DUMMYOBJ = {};
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
 
-
-
-
 function xpcom_generateQI(iids) {
   var checks = [];
   for each (var iid in iids) {
@@ -111,15 +115,6 @@ function xpcom_checkInterfaces(iid,iids,ex) {
 }
 
 INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
-
-function https_everywhereLog(level, str) {
-  if (level >= WARN) {
-    dump(str+"\n");
-    var econsole = Components.classes["@mozilla.org/consoleservice;1"]
-        .getService(Components.interfaces.nsIConsoleService);
-    econsole.logStringMessage("HTTPS Everywhere: " +str);
-  }
-}
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -304,27 +299,58 @@ HTTPSEverywhere.prototype = {
       var branch_name = "extensions.https_everywhere.";
       var o_prefs = false;
       var o_branch = false;
+      // this function needs to be called from inside https_everywhereLog, so
+      // it needs to do its own logging...
+      var econsole = Components.classes["@mozilla.org/consoleservice;1"]
+          .getService(Components.interfaces.nsIConsoleService);
 
-      this.log(1, "called get_prefbranch()");
       o_prefs = Components.classes["@mozilla.org/preferences-service;1"]
                           .getService(Components.interfaces.nsIPrefService);
+
       if (!o_prefs)
       {
-          this.log(WARN, "Failed to get preferences-service!");
+          econsole.logStringMessage("HTTPS Everywhere: Failed to get preferences-service!");
           return false;
       }
 
       o_branch = o_prefs.getBranch(branch_name);
       if (!o_branch)
       {
-          this.log(WARN, "Failed to get prefs branch!");
+          econsole.logStringMessage("HTTPS Everywhere: Failed to get prefs branch!");
           return false;
+      }
+
+      // make sure there's an entry for our log level
+      try {
+        o_branch.getIntPref(LLVAR);
+      } catch (e) {
+        econsole.logStringMessage("Creating new about:config https_everywhere.LogLevel variable");
+        o_branch.setIntPref(LLVAR, WARN);
       }
 
       return o_branch;
   },
 
 };
+
+var prefs = 0;
+function https_everywhereLog(level, str) {
+  var econsole = Components.classes["@mozilla.org/consoleservice;1"]
+      .getService(Components.interfaces.nsIConsoleService);
+  if (prefs == 0) {
+    prefs = HTTPSEverywhere.instance.get_prefs();
+  } 
+  try {
+    var threshold = prefs.getIntPref(LLVAR);
+  } catch (e) {
+    econsole.logStringMessage( "HTTPS Everywhere: Failed to read about:config LogLevel");
+    threshold = WARN;
+  }
+  if (level >= threshold) {
+    dump(str+"\n");
+    econsole.logStringMessage("HTTPS Everywhere: " +str);
+  }
+}
 
 /**
 * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4).
