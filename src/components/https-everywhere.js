@@ -119,10 +119,10 @@ INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 function HTTPSEverywhere() {
-  // Hacks to set up logging in each component
-  HTTPS.log = https_everywhereLog;
-  HTTPSRules.log = https_everywhereLog;
-  RuleWriter.log = https_everywhereLog;
+
+  // Set up logging in each component:
+  HTTPS.log = HTTPSRules.log = RuleWriter.log = this.log = https_everywhereLog;
+
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
