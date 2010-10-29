@@ -254,7 +254,7 @@ HTTPSEverywhere.prototype = {
       return;
     }
 
-    HTTPS.forceChannel(newChannel);
+    HTTPS.replaceChannel(newChannel);
 
 //    if (HTTPS.forceURI(uri.clone())) {
 //      if (!HTTPS.replaceChannel(newChannel)) {
@@ -279,8 +279,13 @@ HTTPSEverywhere.prototype = {
   // to "should this load?", but also allow us to change the thing.
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    if (aContentType == 11)
-      this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
+    if (aContentType == 11) {
+      try {
+        this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
+      } catch(e) {
+        this.log(DBUG,"shouldLoad exception");
+      }
+    }
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https

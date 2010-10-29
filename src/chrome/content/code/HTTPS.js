@@ -37,6 +37,13 @@ const HTTPS = {
   },
   
   replaceChannel: function(channel) {
+    var uri = HTTPSRules.rewrittenURI(channel.URI);
+    if (!uri) {
+       HTTPS.log(INFO,
+           "Got replace channel with no applicable rules for URI "
+           + channel.URI.spec);
+       return;
+     }
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
@@ -73,13 +80,6 @@ const HTTPS = {
            return;
          }
         } catch(e) {}
-        var uri = HTTPSRules.rewrittenURI(channel.URI);
-        if (!uri) {
-          HTTPS.log(INFO,
-              "Got replace channel with no applicable rules for URI "
-              + channel.URI.spec);
-          return;
-        }
         new ChannelReplacement(channel, uri).replace(true).open();
       });
       return true;
