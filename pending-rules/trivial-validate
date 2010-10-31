@@ -19,3 +19,16 @@ grep to= *xml | grep '[^/]>' || echo "(None.)"
 echo
 echo "-- Rules redirecting to http in to pattern:"
 grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:' || echo "(None.)"
+echo
+if [ $(which xmllint) ]
+then
+  echo "-- Rules with syntatically invalid XML:"
+  none=true
+    for rule in *.xml
+    do
+      xmllint "$rule" >/dev/null 2>&1 || { echo $rule; none=false; }
+    done
+  $none && echo "(None.)"
+else
+  echo "-- Could not check XML validity because xmllint not found."
+fi
