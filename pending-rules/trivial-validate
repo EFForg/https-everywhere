@@ -1,0 +1,15 @@
+#!/bin/sh
+# THIS IS NOT A RULE, but a shell script that looks for common problems
+# and typos in rules.
+
+echo "-- Rules not anchored to beginning of a line:"
+grep from= *.xml | cut -d\" -f2 | grep '^[^^]' || echo "(None.)"
+echo
+echo "-- Rules with unescaped dots:"
+grep from= *.xml | cut -d\" -f2 | grep '[^\]\.[^*]' || echo "(None.)"
+echo
+echo "-- Rules not containing trailing slash:"
+grep from= *.xml | cut -d\" -f2 | grep -v '//.*/' || echo "(None.)"
+echo
+echo "-- Rules with missing closing slash in rule XML tag:"
+grep to= *xml | grep '[^/]>' || echo "(None.)"
