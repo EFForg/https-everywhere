@@ -32,3 +32,15 @@ then
 else
   echo "-- Could not check XML validity because xmllint not found."
 fi
+echo
+echo "-- Rules containing non-ASCII characters (possible homoglyph attacks):"
+none=true
+for i in *.xml
+do
+  if egrep '(from|to)=' "$i" | tr -d '[:print:]' | tr -d '[:space:]' | grep . >/dev/null
+  then
+    echo "$i contains non-ASCII character(s)."
+    none=false
+  fi
+done
+$none && echo "(None.)"
