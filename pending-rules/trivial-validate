@@ -12,7 +12,10 @@ echo "-- Rules not containing trailing slash in from pattern:"
 grep from= *.xml | cut -d\" -f2 | grep -v '//.*/' || echo "(None.)"
 echo
 echo "-- Rules not containing trailing slash in to pattern:"
-grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/'
+grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/' || echo "(None.)"
 echo
 echo "-- Rules with missing closing slash in rule XML tag:"
 grep to= *xml | grep '[^/]>' || echo "(None.)"
+echo
+echo "-- Rules redirecting to http in to pattern:"
+grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:' || echo "(None.)"
