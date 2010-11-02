@@ -204,6 +204,12 @@ const RuleWriter = {
       return null;
     }
 
+    this.log(DBUG, "name is '" + xmlrules.@name + "'\n");
+    if (xmlrules.@name == xmlrules.@nonexistantthing) {
+      this.log(DBUG, "FILE " + file + "is not a rulefile\n");
+      return null;
+    }
+
     var match_rl = null;
     var dflt_off = null;
     if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
@@ -238,47 +244,38 @@ const RuleWriter = {
   },
 };
 
+
+
 const HTTPSRules = {
   init: function() {
-    /*
-    // XXX: Major, temporary hack.
-    var ruleset = new RuleSet("Facebook", null);
-    ruleset.rules.push(new Rule("^http://www.facebook.com",
-                                "https://www.facebook.com"));
-    RuleWriter.write(ruleset);
-    this.rules = [];
-    this.rules.push(ruleset);
-    return;
-    */
     try {
-      var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      var i = 0;
       this.rules = [];
       this.exclusions = [];
-      for(i = 0; i < rulefiles.length; ++i) {
-        try {
-          this.log(DBUG,"Loading rule file: "+rulefiles[i]);
-          this.rules.push(RuleWriter.read(rulefiles[i]));
-        } catch(e) {
-          this.log(WARN, "Error in rules file: " + e);
-        }
-      }
+      var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
+      this.scanRulefiles(rulefiles);
+      rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
+      this.scanRulefiles(rulefiles);
 
-      var rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      var i = 0;
-      for(i = 0; i < rulefiles.length; ++i) {
-        try {
-          this.log(DBUG,"Loading rule file: "+rulefiles[i]);
-          this.rules.push(RuleWriter.read(rulefiles[i]));
-        } catch(e) {
-          this.log(WARN, "Error in rules file: " + e);
-        }
-      }
     } catch(e) {
       this.log(WARN,"Rules Failed: "+e);
     }
     this.log(DBUG,"Rules loaded");
     return;
+  },
+
+  scanRulefiles: function(rulefiles) {
+    var i = 0;
+    var r = null;
+    for(i = 0; i < rulefiles.length; ++i) {
+      try {
+        this.log(DBUG,"Loading rule file: "+rulefiles[i].path);
+        r = RuleWriter.read(rulefiles[i]);
+        if (r != null)
+          this.rules.push(r);
+      } catch(e) {
+        this.log(WARN, "Error in rules file: " + e);
+      }
+    }
   },
 
   replaceURI: function(uri) {
