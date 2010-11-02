@@ -204,7 +204,6 @@ const RuleWriter = {
       return null;
     }
 
-    this.log(DBUG, "name is '" + xmlrules.@name + "'\n");
     if (xmlrules.@name == xmlrules.@nonexistantthing) {
       this.log(DBUG, "FILE " + file + "is not a rulefile\n");
       return null;
