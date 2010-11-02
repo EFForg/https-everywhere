@@ -97,6 +97,8 @@ RuleSet.prototype = {
     var newuri = this.rewrittenURI(uri);
     if (!newuri) return false;
     this.log(NOTE,"Rewriting " + uri.spec + " -> " + newuri.spec + "\n");
+    HTTPSEverywhere.instance.notifyObservers(uri, newuri.spec);
+
     uri.scheme = newuri.scheme;
     uri.userPass = newuri.userPass;
     uri.username = newuri.username;

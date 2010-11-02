@@ -96,6 +96,8 @@ const DUMMYOBJ = {};
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
 
+const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
+
 function xpcom_generateQI(iids) {
   var checks = [];
   for each (var iid in iids) {
@@ -131,10 +133,12 @@ function HTTPSEverywhere() {
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
   // https://developer.mozilla.org/en/nsIObserver
-  var obsService = CC["@mozilla.org/observer-service;1"]
+  // We also use the observer service to let other extensions know about URIs
+  // we rewrite.
+  this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
-  obsService.addObserver(this, "profile-before-change", false);
-  obsService.addObserver(this, "profile-after-change", false);
+  this.obsService.addObserver(this, "profile-before-change", false);
+  this.obsService.addObserver(this, "profile-after-change", false);
   return;
 }
 
@@ -335,6 +339,23 @@ HTTPSEverywhere.prototype = {
 
       return o_branch;
   },
+
+  /**
+   * Notify observers of the topic OBSERVER_TOPIC_URI_REWRITE.
+   *
+   * @param nsIURI oldURI
+   * @param string newSpec
+   */
+  notifyObservers: function(oldURI, newSpec) {
+    this.log(INFO, "Notifying observers of rewrite from " + oldURI.spec + " to " + newSpec);
+    try {
+      // The subject has to be an nsISupports and the extra data is a string,
+      // that's why one is an nsIURI and the other is a nsIURI.spec string.
+      this.obsService.notifyObservers(oldURI, OBSERVER_TOPIC_URI_REWRITE, newSpec);
+    } catch (e) {
+      this.log(WARN, "Couldn't notify observers: " + e);
+    }
+  }
 
 };
 
