@@ -8,7 +8,8 @@ then
   exit 1
 fi
 
-dest="$1".xml
+capitalized=$(echo "$1" | cut -c 1 | tr a-z A-Z)$(echo "$1" | cut -c 2-)
+dest="$capitalized".xml
 if [ -f "$dest" ]
 then
   echo "error: $dest already exists." >&2
@@ -30,8 +31,10 @@ fi
 escaped=$(echo "$1" | sed 's/\./\\./g' )
 
 cat > "$dest" <<END
-<ruleset name="$1">
-  <rule from="^http://(www\.)?$escaped/" to="https://www.$1/"/>
+<ruleset name="$capitalized">
+  <target host="$1" />
+  <target host="www.$1" />
+  <rule from="^http://(www\.)?$escaped/" to="https://www.$1/" />
 </ruleset>
 END
 
