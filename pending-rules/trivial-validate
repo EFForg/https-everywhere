@@ -44,3 +44,15 @@ do
   fi
 done
 $none && echo "(None.)"
+
+echo "--- Rules that lack at least one valid <target> tag:"
+none=true
+for i in *.xml
+do
+  if ! egrep '<target .*host=".*/>' "$i" >/dev/null
+  then
+    echo $i
+    none=false
+  fi
+done
+$none && echo "(None.)"
