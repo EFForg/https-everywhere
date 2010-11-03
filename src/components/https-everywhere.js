@@ -8,7 +8,6 @@ WARN=5;
 
 //---------------
 
-https_everywhere_blacklist = {};
 https_domains = {};              // maps domain patterns (with at most one
                                  // wildcard) to RuleSets
 
