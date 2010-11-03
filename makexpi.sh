@@ -1,30 +1,33 @@
 #!/bin/sh
 APP_NAME=https-everywhere
-VERSION=`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`
-XPI_NAME=$APP_NAME-$VERSION.xpi
 
-if [ -e "pkg/$XPI_NAME" ]; then
-  echo pkg/$XPI_NAME already exists.
-  rm pkg/$XPI_NAME # meh.
-  #  exit 1
+# builds a .xpi from the git repository, placing the .xpi in the root
+# of the repository.
+
+# invoke with no arguments to pull a prerelease of the current
+# development point.
+
+# invoke with a tag name to build a specific branch.
+
+# e.g.:
+#  ./makexpi.sh 0.2.3.development.2
+
+# or just:
+#  ./makexpi.sh
+
+if [ "$1" ] ; then
+    VERSION="$1"
+    TARG="$1"
+else
+    VERSION="$(grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3)~pre"
+    TARG=HEAD
 fi
+XPI_NAME="$APP_NAME-$VERSION.xpi"
 
-# create jar file (we're just storing files here)
-echo ---------- create $APP_NAME.jar file ----------
-cd src/chrome
-#zip -r0 ../../$APP_NAME.jar ./ -x "*.svn/*"
-cd ../..
-
-# create .xpi
-echo ---------- create $APP_NAME.xpi ----------
-cd src
-echo zip -X -9r ../pkg/$XPI_NAME ./ -x "certDialogsOverride.js" -x "chrome/*" -x "*.diff" -x "*.svn/*" -x ".*.sw?"
-zip -X -9r ../pkg/$XPI_NAME ./ -x "*.svn/*" -x "*.diff" -x "*.swp" #-x "chrome/*"
-#mv ../$APP_NAME.jar ./chrome
-#zip -9m ../pkg/$XPI_NAME chrome/$APP_NAME.jar
-cd ..
-
-#cp ./pkg/$XPI_NAME ~/
-#zip -9m ../../downloads/$sXpiName  chrome/$APP_NAME.jar
-#zip -9  ../../downloads/$sXpiName  install.rdf
-#cd ..
+cd "$(dirname $0)/src"
+git archive --format=zip -9 "$TARG" . > "../$XPI_NAME"
+ret="$?"
+if [ "$ret" != 0 ]; then
+    rm -f "../$XPI_NAME"
+    exit "$?"
+fi
