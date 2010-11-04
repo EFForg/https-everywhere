@@ -4,18 +4,23 @@
 
 echo "-- Rules not anchored to beginning of a line:"
 grep from= *.xml | cut -d\" -f2 | grep '^[^^]' || echo "(None.)"
+
 echo
 echo "-- Rules with unescaped dots:"
 grep from= *.xml | cut -d\" -f2 | grep '[^\]\.[^*]' || echo "(None.)"
+
 echo
 echo "-- Rules not containing trailing slash in from pattern:"
 grep from= *.xml | cut -d\" -f2 | grep -v '//.*/' || echo "(None.)"
+
 echo
 echo "-- Rules not containing trailing slash in to pattern:"
 grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/' || echo "(None.)"
+
 echo
 echo "-- Rules with missing closing slash in rule XML tag:"
 grep to= *xml | grep '[^/]>' || echo "(None.)"
+
 echo
 echo "-- Rules redirecting to http in to pattern:"
 grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:' || echo "(None.)"
@@ -32,6 +37,7 @@ then
 else
   echo "-- Could not check XML validity because xmllint not found."
 fi
+
 echo
 echo "-- Rules containing non-ASCII characters (possible homoglyph attacks):"
 none=true
@@ -40,6 +46,19 @@ do
   if egrep '(from|to)=' "$i" | tr -d '[:print:][:space:]' | grep . >/dev/null
   then
     echo "$i contains non-ASCII character(s)."
+    none=false
+  fi
+done
+$none && echo "(None.)"
+
+echo
+echo "--- Rules that lack at least one valid <target> tag:"
+none=true
+for i in *.xml
+do
+  if ! egrep '<target .*host=".*/>' "$i" >/dev/null
+  then
+    echo $i
     none=false
   fi
 done
