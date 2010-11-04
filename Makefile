@@ -4,9 +4,11 @@
 %:
 	./makexpi.sh $@
 # this makes prerelease xpis (and is the default rule)
-prerelease:
+prerelease: pkg
 	./makexpi.sh
+pkg:
+	mkdir pkg
 clean:
-	rm -f *.xpi
+	rm -f pkg/*.xpi
 
 .PHONY: clean prerelease

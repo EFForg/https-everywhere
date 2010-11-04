@@ -22,7 +22,7 @@ else
     VERSION="$(grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3)~pre"
     TARG=HEAD
 fi
-XPI_NAME="$APP_NAME-$VERSION.xpi"
+XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 
 cd "$(dirname $0)/src"
 git archive --format=zip -9 "$TARG" . > "../$XPI_NAME"
