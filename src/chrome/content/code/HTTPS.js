@@ -42,7 +42,7 @@ const HTTPS = {
        HTTPS.log(INFO,
            "Got replace channel with no applicable rules for URI "
            + channel.URI.spec);
-       return;
+       return false;
      }
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
@@ -105,19 +105,31 @@ const HTTPS = {
       return true;
     } catch(e) {
         
-      if (ctx && (ctx instanceof CI.nsIDOMHTMLImageElement || ctx instanceof CI.nsIDOMHTMLInputElement)) {
+      if (ctx &&
+           (ctx instanceof CI.nsIDOMHTMLImageElement
+            || ctx instanceof CI.nsIDOMHTMLInputElement
+            || ctx instanceof CI.nsIObjectLoadingContent)) {
         var newuri = HTTPSRules.rewrittenURI(uri);
         if (!newuri) {
           this.log(WARN, "SHOULD NEVER HAPPEN");
           return true; // this should never happen
         }
 
+        var type, attr;
+        if (ctx instanceof CI.nsIObjectLoadingContent) {
+          type = "Object";
+          attr = "data";
+        } else {
+          type = "Image";
+          attr = "src";
+        }
         // XXX Isn't this a security flaw?  Have to bug Georgio about
         // this... the content policy docs claim to require it, but
         // it looks like a race condition nightmare.
-        Thread.asap(function() { ctx.src = newuri.spec; });
-        
-        var msg = "Image HTTP->HTTPS redirection to " + newuri.spec;
+        Thread.asap(function() { ctx.setAttribute(attr, newuri.spec); });
+
+        var msg = type + " HTTP->HTTPS redirection to " + newuri.spec;
+
         this.log(INFO,msg);  
         throw msg;
       }
