@@ -43,7 +43,7 @@ const _INCLUDED = {};
 const INCLUDE = function(name) {
   if (arguments.length > 1)
     for (var j = 0, len = arguments.length; j < len; j++)
-      arguments.callee(arguments[j]);
+      INCLUDE(arguments[j]);
   else if (!_INCLUDED[name]) {
     try {
       LOADER.loadSubScript("chrome://https-everywhere/content/code/"
@@ -189,6 +189,7 @@ HTTPSEverywhere.prototype = {
       Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
+      Components.interfaces.nsIWebProgressListener2,
       Components.interfaces.nsIChannelEventSink ]),
 
   wrappedJSObject: null,  // Initialized by constructor
