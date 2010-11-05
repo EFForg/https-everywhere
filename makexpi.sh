@@ -30,4 +30,6 @@ ret="$?"
 if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
+else
+  echo Created $XPI_NAME
 fi
