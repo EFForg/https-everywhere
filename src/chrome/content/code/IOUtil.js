@@ -72,21 +72,23 @@ const IOUtil = {
   },
   extractFromChannel: function(channel, key, preserve) {
     if (channel instanceof CI.nsIPropertyBag2) {
-      try {
-        var requestInfo = channel.getPropertyAsInterface(key, CI.nsISupports);
-        if (requestInfo) {
-          if(!preserve && (channel instanceof CI.nsIWritablePropertyBag)) channel.deleteProperty(key);
-          return requestInfo.wrappedJSObject;
-        }
-      } catch(e) {}
+      let p = channel.get(key);
+      if (p) {
+        if (!preserve && (channel instanceof CI.nsIWritablePropertyBag)) channel.deleteProperty(key);
+        return p.wrappedJSObject;
+      }
     }
     return null;
   },
 
   extractInternalReferrer: function(channel) {
-    if (channel instanceof CI.nsIPropertyBag2) try {
-      return channel.getPropertyAsInterface("docshell.internalReferrer", CI.nsIURL);
-    } catch(e) {}
+    if (channel instanceof CI.nsIPropertyBag2) {
+      const key = "docshell.internalReferrer";
+      if (channel.hasKey(key))
+        try {
+          return channel.getPropertyAsInterface(key, CI.nsIURL);
+        } catch(e) {}
+    }
     return null;
   },
   extractInternalReferrerSpec: function(channel) {
@@ -250,6 +252,30 @@ const IOUtil = {
       });
       return true;
     }
+  },
+  
+  get TLDService() {
+    var srv = null;
+    try {
+      if ("nsIEffectiveTLDService" in CI) {
+        var srv = CC["@mozilla.org/network/effective-tld-service;1"]
+                .getService(CI.nsIEffectiveTLDService);
+        if (typeof(srv.getBaseDomainFromHost) != "function"
+              || srv.getBaseDomainFromHost("bbc.co.uk") != "bbc.co.uk" // check, some implementations are "fake" (e.g. Songbird's)
+          ) {
+          srv = null;
+        }
+      }
+      if (!srv) {
+        INCLUDE('EmulatedTLDService');
+        srv = EmulatedTLDService;
+      }
+    } catch(ex) {
+      dump(ex + "\n");
+      return null;
+    }
+    delete this.TLDService;
+    return this.TLDService = srv;
   }
   
 };
@@ -416,36 +442,61 @@ ChannelReplacement.prototype = {
     newChan.loadFlags |= newChan.LOAD_REPLACE;
     
     // nsHttpHandler::OnChannelRedirect()
+
     const CES = CI.nsIChannelEventSink;
     const flags = CES.REDIRECT_INTERNAL;
-    CC["@mozilla.org/netwerk/global-channel-event-sink;1"].getService(CES)
-      .onChannelRedirect(oldChan, newChan, flags);
-    var ces;
-    for (var cess = CC['@mozilla.org/categorymanager;1'].getService(CI.nsICategoryManager)
+    this._callSink(
+    CC["@mozilla.org/netwerk/global-channel-event-sink;1"].getService(CES),
+      oldChan, newChan, flags);
+    var sink;
+    
+    for (let cess = CC['@mozilla.org/categorymanager;1']
+              .getService(CI.nsICategoryManager)
               .enumerateCategory("net-channel-event-sinks");
-        cess.hasMoreElements();) {
-      ces = cess.getNext();
-      if (ces instanceof CES)
-        ces.onChannelRedirect(oldChan, newChan, flags);
+          cess.hasMoreElements();
+        ) {
+      sink = cess.getNext();
+      if (sink instanceof CES)
+        this._callSink(sink, oldChan, newChan, flags);
     }
-    ces = IOUtil.queryNotificationCallbacks(oldChan, CES);
-    if (ces) ces.onChannelRedirect(oldChan, newChan, flags);
+    sink = IOUtil.queryNotificationCallbacks(oldChan, CES);
+    if (sink) this._callSink(sink, oldChan, newChan, flags);
+    
     // ----------------------------------
     
     newChan.originalURI = oldChan.originalURI;
     
-    ces =  IOUtil.queryNotificationCallbacks(oldChan, CI.nsIHttpEventSink);
-    if (ces) ces.onRedirect(oldChan, newChan);
-    
+    sink = IOUtil.queryNotificationCallbacks(oldChan, CI.nsIHttpEventSink);
+    if (sink) sink.onRedirect(oldChan, newChan);
+  },
+  
+  _callSink: function(sink, oldChan, newChan, flags) {
+    return ("onChannelRedirect" in sink)
+      ? sink.onChannelRedirect(oldChan, newChan, flags)
+      : sink.asyncOnChannelRedirect(oldChan, newChan, flags, this._redirectCallback)
+      ;
+  },
+  
+  get _redirectCallback() {
+    delete this.__proto__._redirectCallback;
+    return this.__proto__._redirectCallback = ("nsIAsyncVerifyRedirectCallback" in CI)
+    ? {
+        QueryInterface: xpcom_generateQI(CI.nsISupports, CI.nsIAsyncVerifyRedirectCallback),
+        onRedirectVerifyCallback: function(result) {}
+      }
+    : null;
   },
   
   replace: function(isRedir) {
-    
-    this._onChannelRedirect(isRedir);
-    
-    // dirty trick to grab listenerContext
     var oldChan = this.oldChannel;
-    
+    try {
+      this._onChannelRedirect(isRedir);
+    } catch(ex) {
+      oldChan.cancel(NS_BINDING_ABORTED);
+      throw ex;
+    }
+    // dirty trick to grab listenerContext
+   
     var ccl = new CtxCapturingListener(oldChan);
     
     oldChan.cancel(NS_BINDING_REDIRECTED); // this works because we've been called after loadGroup->addRequest(), therefore asyncOpen() always return NS_OK
