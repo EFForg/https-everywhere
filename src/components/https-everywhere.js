@@ -222,6 +222,8 @@ HTTPSEverywhere.prototype = {
         return;
       }
       HTTPS.forceChannel(channel);
+    } else if (topic == "http-one-examine-merged-response") {
+      HTTPS.handleSecureCookies(channel);
     } else if (topic == "app-startup") {
       this.log(DBUG,"Got app-startup");
     } else if (topic == "profile-before-change") {
@@ -233,6 +235,7 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
       OS.addObserver(this, "http-on-modify-request", false);
+      OS.addObserver(this, "http-on-examine-merged-response", false);
       var dls = CC['@mozilla.org/docloaderservice;1']
         .getService(CI.nsIWebProgress);
       dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST);
