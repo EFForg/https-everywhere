@@ -133,14 +133,6 @@ const HTTPS = {
     return false;
   },
   
-  log: function(msg) {
-    this.log = ns.getPref("https.showInConsole", true)
-      ? function(msg) { ns.log("[NoScript HTTPS] " + msg); }
-      : function(msg) {}
-      
-    return this.log(msg);
-  },
-  
   onCrossSiteRequest: function(channel, origin, browser, rw) {
     try {
       this.handleCrossSiteCookies(channel, origin, browser);
