@@ -21,7 +21,7 @@ const PolicyState = {
 };
 
 const HTTPS = {
-  secureCookies: false,
+  secureCookies: true,
   secureCookiesExceptions: null,
   secureCookiesForced: null,
   httpsForced: null,
@@ -143,108 +143,28 @@ const HTTPS = {
   
   registered: false,
   handleSecureCookies: function(req) {
-  /*
-    we check HTTPS responses setting cookies and
-    1) if host is in the noscript.secureCookiesExceptions list we let
-     it pass through
-    2) if host is in the noscript.secureCookiesForced list we append a
-       ";Secure" flag to every non-secure cookie set by this response
-    3) otherwise, we just log unsafe cookies BUT if no secure cookie
-       is set, we patch all these cookies with ";Secure" like in #2.
-       However, if current request redirects (directly or indirectly)
-       to an unencrypted final URI, we remove our ";Secure" patch to
-       ensure compatibility (ref: mail.yahoo.com and hotmail.com unsafe
-       behavior on 11 Sep 2008)
-  */
     
     if (!this.secureCookies) return;
-    
     var uri = req.URI;
     
-    if (uri.schemeIs("https") &&
-        !(this.secureCookiesExceptions && this.secureCookiesExceptions.test(uri.spec)) &&
-        (req instanceof CI.nsIHttpChannel)) {
+    if (uri.schemeIs("https") && (req instanceof CI.nsIHttpChannel)) {
+      var host = uri.host;
       try {
-        var host = uri.host;
-        try {
-          var cookies = req.getResponseHeader("Set-Cookie");
-        } catch(mayHappen) {
-          return;
-        }
-        if (cookies) {
-          var forced = this.secureCookiesForced && this.secureCookiesForced.test(uri.spec);
-          var secureFound = false;
-          var unsafe = null;
-         
-          const rw = ns.requestWatchdog;
-          var browser = rw.findBrowser(req);
-          
-          if (!browser) {
-            if (ns.consoleDump) ns.dump("Browser not found for " + uri.spec);
-          }
-          
-          var unsafeMap = this.getUnsafeCookies(browser) || {};
-          var c;
-          for each (var cs in cookies.split("\n")) {
-            c = new Cookie(cs, host);
-            if (c.secure && c.belongsTo(host)) {
-              this.log(WARN,"Secure cookie set by " + host + ": " + c);
-              secureFound = c;
-              delete unsafeMap[c.id];
-            } else {
-              if (!unsafe) unsafe = [];
-              unsafe.push(c);
-            }
-          }
-        
-          
-          if (unsafe && !(forced || secureFound)) {
-            // this page did not set any secure cookie, let's check if we already have one
-            secureFound = Cookie.find(function(c) {
-              return (c instanceof CI.nsICookie) && (c instanceof CI.nsICookie2)
-                && c.secure && !unsafe.find(function(x) { return x.sameAs(c); })
-            });
-            if (secureFound) {
-              this.log(WARN,"Secure cookie found for this host: " + Cookie.prototype.toString.apply(secureFound));
-            }
-          }
-          
-          if (secureFound && !forced) {
-            this.cookiesCleanup(secureFound);
-            return;
-          }
-          
-          if (!unsafe) return;
-
-          var msg;
-          if (forced || !secureFound) {
-            req.setResponseHeader("Set-Cookie", "", false);
-            msg = forced ? "FORCED SECURE" : "AUTOMATIC SECURE";
-            forced = true;
-          } else {
-            msg = "DETECTED INSECURE";
-          }
-          
-          if (!this.registered) {
-            this.registered = true;
-            rw.addCrossSiteListener(this);
-          }
-          
-          this.setUnsafeCookies(browser, unsafeMap);
-          msg += " on https://" + host + ": ";
-          for each (c in unsafe) {
-            if (forced) {
-              c.secure = true;
-              req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
-              unsafeMap[c.id] = c;
-            }
-            this.log(WARN,msg + c);
-          }
-          
-        }
-      } catch(e) {
-        if (ns.consoleDump) ns.dump(e);
+        var cookies = req.getResponseHeader("Set-Cookie");
+      } catch(mayHappen) {
+        return;
       }
+      if (!cookies) return;
+      var c;
+      for each (var cs in cookies.split("\n")) {
+        c = new Cookie(cs, host);
+        if (c.matches_target() && !c.secure) {
+          c.secure = true;
+          req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
+          this.log(WARN,msg + c);
+        }
+      }
+      
     }
   },
   
