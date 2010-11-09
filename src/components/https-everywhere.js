@@ -222,7 +222,7 @@ HTTPSEverywhere.prototype = {
         return;
       }
       HTTPS.forceChannel(channel);
-    } else if (topic == "http-one-examine-merged-response") {
+    } else if (topic == "http-on-examine-merged-response") {
       HTTPS.handleSecureCookies(channel);
     } else if (topic == "app-startup") {
       this.log(DBUG,"Got app-startup");

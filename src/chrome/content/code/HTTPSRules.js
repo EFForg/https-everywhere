@@ -9,6 +9,13 @@ function Exclusion(pattern) {
   this.pattern_c = new RegExp(pattern);
 }
 
+function CookieRule(host, cookiename) {
+  this.host = host
+  this.host_c = new RegExp(host);
+  this.cookiename = cookiename;
+  this.cookiename_c = new RegExp(cookiename);
+}
+
 function RuleSet(name, match_rule, default_off) {
   var on_by_default = true;
   this.name = name;
@@ -26,6 +33,7 @@ function RuleSet(name, match_rule, default_off) {
   }
   this.rules = [];
   this.exclusions = [];
+  this.cookierules = [];
   var prefs = HTTPSEverywhere.instance.get_prefs();
   try {
     // if this pref exists, use it
@@ -220,6 +228,13 @@ const RuleWriter = {
       ret.rules.push(rule);
     }
 
+    for (var i = 0; i < xmlrules.securecookie.length(); i++) {
+      var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
+                                  xmlrules.securecookie[i].@name);
+      ret.cookierules.push(c_rule);
+      this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.cookiename);
+    }
+
     return ret;
   },
 
@@ -283,11 +298,27 @@ const HTTPSRules = {
     var i = 0;
     var newuri = null
     for(i = 0; i < this.rules.length; ++i) {
-      if((newuri = this.rules[i].rewrittenURI(uri)))
+      if ((newuri = this.rules[i].rewrittenURI(uri)))
         return newuri;
     }
     return null;
+  },
+  
+  should_secure_cookie: function(cookie) {
+    var i = 0;
+    for (i = 0; i < this.cookierules.length; ++i) {
+      this.log(DBUG, "Testing cookie:");
+      this.log(DBUG, "  name: " + c.name);
+      this.log(DBUG, "  host: " + c.host);
+      this.log(DBUG, "  domain: " + c.domain);
+      this.log(DBUG, "  rawhost: " + c.rawHost);
+      var cr = this.cookierules[i];
+      if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
-
 
 };

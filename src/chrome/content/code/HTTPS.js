@@ -152,13 +152,14 @@ const HTTPS = {
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
       } catch(mayHappen) {
+        this.log(DBUG,"Exception huntting Set-Cookie in headers: " + mayHappen);
         return;
       }
       if (!cookies) return;
       var c;
       for each (var cs in cookies.split("\n")) {
         c = new Cookie(cs, host);
-        if (c.matches_target() && !c.secure) {
+        if (!c.secure && HTTPSRules.should_secure_cookie(c)) {
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
           this.log(WARN,msg + c);
