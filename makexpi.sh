@@ -21,6 +21,9 @@ if [ "$1" ] ; then
 else
     VERSION="$(grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3)~pre"
     TARG=HEAD
+    if [ -n "$(git status -s)" ] ; then
+        printf "WARNING: There are uncommitted changes in your current repostitory.\nWARNING: These changes will not be included in the generated .xpi\nWARNING: Run 'git status' for information about the uncommitted changes.\n" >&2
+    fi
 fi
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 
