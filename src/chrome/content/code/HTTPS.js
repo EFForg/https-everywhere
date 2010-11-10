@@ -1,4 +1,4 @@
-//INCLUDE('STS', 'Cookie');
+INCLUDE('Cookie');
 // XXX: Disable STS for now.
 var STS = {
   isSTSURI : function(uri) {
@@ -144,10 +144,21 @@ const HTTPS = {
   registered: false,
   handleSecureCookies: function(req) {
     
+    try {
+      req = req.QueryInterface(CI.nsIHttpChannel);
+    } catch(e) {
+      this.log(WARN, "Request is not an nsIHttpChannel: " + req);
+      return;
+    }
     if (!this.secureCookies) return;
     var uri = req.URI;
+    if (!uri) {
+      this.log(WARN,"No URI inside request " +req);
+      return;
+    }
+    this.log(VERB, "Cookie hunting in" + uri.spec);
     
-    if (uri.schemeIs("https") && (req instanceof CI.nsIHttpChannel)) {
+    if (uri.schemeIs("https")) {
       var host = uri.host;
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
@@ -158,11 +169,12 @@ const HTTPS = {
       if (!cookies) return;
       var c;
       for each (var cs in cookies.split("\n")) {
+        this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
         if (!c.secure && HTTPSRules.should_secure_cookie(c)) {
+          this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
-          this.log(WARN,msg + c);
         }
       }
       

@@ -12,8 +12,8 @@ function Exclusion(pattern) {
 function CookieRule(host, cookiename) {
   this.host = host
   this.host_c = new RegExp(host);
-  this.cookiename = cookiename;
-  this.cookiename_c = new RegExp(cookiename);
+  this.name = cookiename;
+  this.name_c = new RegExp(cookiename);
 }
 
 function RuleSet(name, match_rule, default_off) {
@@ -232,7 +232,7 @@ const RuleWriter = {
       var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
                                   xmlrules.securecookie[i].@name);
       ret.cookierules.push(c_rule);
-      this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.cookiename);
+      this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
 
     return ret;
@@ -304,21 +304,23 @@ const HTTPSRules = {
     return null;
   },
   
-  should_secure_cookie: function(cookie) {
-    var i = 0;
-    for (i = 0; i < this.cookierules.length; ++i) {
-      this.log(DBUG, "Testing cookie:");
-      this.log(DBUG, "  name: " + c.name);
-      this.log(DBUG, "  host: " + c.host);
-      this.log(DBUG, "  domain: " + c.domain);
-      this.log(DBUG, "  rawhost: " + c.rawHost);
-      var cr = this.cookierules[i];
-      if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
-        return true;
-      } else {
-        return false;
+  should_secure_cookie: function(c) {
+    // Check to see if the Cookie object c meets any of our cookierule citeria 
+    // for being marked as secure
+    this.log(DBUG, "Testing cookie:");
+    this.log(DBUG, "  name: " + c.name);
+    this.log(DBUG, "  host: " + c.host);
+    this.log(DBUG, "  domain: " + c.domain);
+    this.log(DBUG, "  rawhost: " + c.rawHost);
+    var i,j;
+    // XXX lots of optimisation could happen here
+    for (i = 0; i < this.rules.length; ++i) 
+      for (j = 0; j < this.rules[i].cookierules.length; j++) {
+        var cr = this.rules[i].cookierules[j];
+        if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
+          return true;
       }
-    }
+    return false;
   }
 
 };
