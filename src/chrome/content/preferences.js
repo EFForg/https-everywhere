@@ -28,11 +28,13 @@ function https_prefs_init(doc) {
   var rs = doc.getElementById('https_everywhere_RuleSetList');
   var rulesets = https_everywhere.https_rules.rules;
   var hbox;
+
+
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
 
     if (i % row_width == 0) {
-      hbox = doc.createElement("hbox");
+      hbox = doc.createElement("richlistitem");
       rs.insertBefore(hbox,null);
     }
 
