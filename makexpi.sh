@@ -41,7 +41,7 @@ fi
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 
 cd "src"
-if [ "$1" == "uncommitted" ]; then
+if [ "$1" = "uncommitted" ]; then
     printf >&2 "WARNING: using zip instead of git archive to build .xpi\n"
     CHANGES="$(git status . -s)"
     if [ -n "$CHANGES" ]; then
