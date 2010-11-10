@@ -23,6 +23,7 @@ else
     TARG=HEAD
 fi
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
+[ -d pkg ] || mkdir pkg
 
 cd "$(dirname $0)/src"
 git archive --format=zip -9 "$TARG" . > "../$XPI_NAME"
