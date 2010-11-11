@@ -163,7 +163,7 @@ const HTTPS = {
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
       } catch(mayHappen) {
-        this.log(DBUG,"Exception huntting Set-Cookie in headers: " + mayHappen);
+        this.log(VERB,"Exception huntting Set-Cookie in headers: " + mayHappen);
         return;
       }
       if (!cookies) return;
