@@ -256,14 +256,13 @@ const RuleWriter = {
 const HTTPSRules = {
   init: function() {
     try {
-      this.rules = [];
-      this.exclusions = [];
+      this.rulesets = [];
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
       this.scanRulefiles(rulefiles);
 
-      this.rules.sort(
+      this.rulesets.sort(
         function(r1,r2) {
             if (r1.name.toLowerCase() < r2.name.toLowerCase()) return -1;
             else return 1;
@@ -281,20 +280,20 @@ const HTTPSRules = {
     var r = null;
     for(i = 0; i < rulefiles.length; ++i) {
       try {
-        this.log(DBUG,"Loading rule file: "+rulefiles[i].path);
+        this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         r = RuleWriter.read(rulefiles[i]);
         if (r != null)
-          this.rules.push(r);
+          this.rulesets.push(r);
       } catch(e) {
-        this.log(WARN, "Error in rules file: " + e);
+        this.log(WARN, "Error in ruleset file: " + e);
       }
     }
   },
 
   replaceURI: function(uri) {
     var i = 0;
-    for(i = 0; i < this.rules.length; ++i) {
-      if(this.rules[i].replaceURI(uri))
+    for(i = 0; i < this.rulesets.length; ++i) {
+      if(this.rulesets[i].replaceURI(uri))
         return true;
     }
     return false;
@@ -303,8 +302,8 @@ const HTTPSRules = {
   rewrittenURI: function(uri) {
     var i = 0;
     var newuri = null
-    for(i = 0; i < this.rules.length; ++i) {
-      if ((newuri = this.rules[i].rewrittenURI(uri)))
+    for(i = 0; i < this.rulesets.length; ++i) {
+      if ((newuri = this.rulesets[i].rewrittenURI(uri)))
         return newuri;
     }
     return null;
@@ -320,10 +319,10 @@ const HTTPSRules = {
     this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
     // XXX lots of optimisation could happen here
-    for (i = 0; i < this.rules.length; ++i) 
-      if (this.rules[i].active) 
-        for (j = 0; j < this.rules[i].cookierules.length; j++) {
-          var cr = this.rules[i].cookierules[j];
+    for (i = 0; i < this.rulesets.length; ++i) 
+      if (this.rulesets[i].active) 
+        for (j = 0; j < this.rulesets[i].cookierules.length; j++) {
+          var cr = this.rulesets[i].cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
             return true;
         }
