@@ -13,7 +13,7 @@ function https_settings_changed(doc)
 // This is not efficient but it doesn't matter
 {
   var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rules;
+  var rulesets = https_everywhere.https_rules.rulesets;
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
     var elem = doc.getElementById(id_prefix + ruleset.name);
@@ -26,7 +26,7 @@ function https_prefs_init(doc) {
   var o_httpsprefs = https_everywhere.get_prefs();
 
   var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rules;
+  var rulesets = https_everywhere.https_rules.rulesets;
   var hbox;
 
   for (var i = 0; i < rulesets.length; i++) {
@@ -61,7 +61,7 @@ function https_prefs_init(doc) {
 function https_prefs_cancel(doc) {
   // the user changed some prefs but then cancelled; undo the consequences
   var o_httpsprefs = https_everywhere.get_prefs();
-  var rulesets = https_everywhere.https_rules.rules;
+  var rulesets = https_everywhere.https_rules.rulesets;
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
     ruleset.active = o_httpsprefs.getBoolPref(ruleset.name);
@@ -72,7 +72,7 @@ function https_prefs_cancel(doc) {
 function https_prefs_save(doc) {
   var o_httpsprefs = https_everywhere.get_prefs();
   var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rules;
+  var rulesets = https_everywhere.https_rules.rulesets;
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
     var elem = doc.getElementById(id_prefix + ruleset.name);
@@ -81,9 +81,9 @@ function https_prefs_save(doc) {
 }
 
 function https_set_all(doc,val) {
-  // set all rules to val (enable/disable)
+  // set all rulesets to val (enable/disable)
   var o_httpsprefs = https_everywhere.get_prefs();
-  var rulesets = https_everywhere.https_rules.rules;
+  var rulesets = https_everywhere.https_rules.rulesets;
   var rs = doc.getElementById('https_everywhere_RuleSetList');
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
