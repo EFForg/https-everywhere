@@ -315,11 +315,12 @@ const HTTPSRules = {
     var i,j;
     // XXX lots of optimisation could happen here
     for (i = 0; i < this.rules.length; ++i) 
-      for (j = 0; j < this.rules[i].cookierules.length; j++) {
-        var cr = this.rules[i].cookierules[j];
-        if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
-          return true;
-      }
+      if (this.rules[i].active) 
+        for (j = 0; j < this.rules[i].cookierules.length; j++) {
+          var cr = this.rules[i].cookierules[j];
+          if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
+            return true;
+        }
     return false;
   }
 
