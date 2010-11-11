@@ -248,6 +248,12 @@ const HTTPSRules = {
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
       this.scanRulefiles(rulefiles);
 
+      this.rules.sort(
+        function(r1,r2) {
+            if (r1.name.toLowerCase() < r2.name.toLowerCase()) return -1;
+            else return 1;
+        }
+      );
     } catch(e) {
       this.log(WARN,"Rules Failed: "+e);
     }
