@@ -28,30 +28,34 @@ function https_prefs_init(doc) {
   var rs = doc.getElementById('https_everywhere_RuleSetList');
   var rulesets = https_everywhere.https_rules.rules;
   var hbox;
+
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
 
     if (i % row_width == 0) {
-      hbox = doc.createElement("hbox");
-      rs.insertBefore(hbox,null);
+      hbox = doc.createElement("row");
     }
 
     var newopt = doc.createElement("checkbox");
+
     // This pref should always have been created by the RuleSet constructor
     var enabled = o_httpsprefs.getBoolPref(ruleset.name);
     newopt.setAttribute("id", id_prefix + ruleset.name);
     newopt.setAttribute("label",ruleset.name);
     newopt.setAttribute("preference",null);
     newopt.setAttribute("checked", enabled);
-    newopt.setAttribute("oncommand", 
+    newopt.setAttribute("oncommand",
                         "https_settings_changed(document)");
-    hbox.insertBefore(newopt,null);
+    hbox.appendChild(newopt);
+    if (i % row_width == 0) {
+      rs.appendChild(hbox);
+    }
   }
   // Do this here rather than in the .xul so that it goes after all these
   // postpendments
-  var spacer=doc.createElement("separator");
-  spacer.setAttribute("class", "groove");
-  rs.insertBefore(spacer,null);
+  //var spacer=doc.createElement("separator");
+  //spacer.setAttribute("class", "groove");
+  //rs.insertBefore(spacer,null);
 }
 
 function https_prefs_cancel(doc) {
@@ -76,15 +80,15 @@ function https_prefs_save(doc) {
   }
 }
 
-function https_enable_all(doc) {
-  // "restore defaults" / enable all rules
+function https_set_all(doc,val) {
+  // set all rules to val (enable/disable)
   var o_httpsprefs = https_everywhere.get_prefs();
   var rulesets = https_everywhere.https_rules.rules;
   var rs = doc.getElementById('https_everywhere_RuleSetList');
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
-    ruleset.active = true;
+    ruleset.active = val;
     var elem = doc.getElementById(id_prefix + ruleset.name);
-    elem.checked = true;
+    elem.checked = val;
   }
 }
