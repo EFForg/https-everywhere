@@ -280,25 +280,19 @@ const IOUtil = {
   
 };
 
-function CtxCapturingListener(tracingChannel, notify) {
+function CtxCapturingListener(tracingChannel, onCapture) {
   this.originalListener = tracingChannel.setNewListener(this);
-  if (notify) this.notify = true;
+  this.onCapture = onCapture;
 }
 CtxCapturingListener.prototype = {
   originalListener: null,
   originalCtx: null,
-  notify: false,
-  onDataAvailable: function(request, ctx, inputStream, offset, count) {
-    this.originalCtx = ctx;
-  },
   onStartRequest: function(request, ctx) {
     this.originalCtx = ctx;
-    if (this.notify) this.originalListener.onStartRequest(request, ctx);
+    if (this.onCapture) this.onCapture(request, ctx);
   },
-  onStopRequest: function(request, ctx, statusCode) {
-    this.originalCtx = ctx;
-    if (this.notify) this.originalListener.onStopRequest(request, ctx, statusCode);
-  },
+  onDataAvailable: function(request, ctx, inputStream, offset, count) {},
+  onStopRequest: function(request, ctx, statusCode) {},
   QueryInterface: function (aIID) {
     if (aIID.equals(CI.nsIStreamListener) ||
         aIID.equals(CI.nsISupports)) {
@@ -317,12 +311,17 @@ ChannelReplacement.supported = "nsITraceableChannel" in CI;
 ChannelReplacement.prototype = {
   listener: null,
   context: null,
-  _ccListener: null,
   oldChannel: null,
   channel: null,
   window: null,
+
   get _unsupportedError() {
     return new Error("Can't replace channels without nsITraceableChannel!");
+  },
+  
+  get _mustClassify() {
+    delete this.__proto__._mustClassify;
+    return this.__proto__._mustClassify = !("LOAD_CLASSIFIER_URI" in CI.nsIChannel);
   },
   
   _init: function(chan, newURI, newMethod) {
@@ -332,10 +331,7 @@ ChannelReplacement.prototype = {
     newURI = newURI || chan.URI;
     
     var newChan = IOS.newChannelFromURI(newURI);
-    
-    
-    
-    
+
     // porting of http://mxr.mozilla.org/mozilla-central/source/netwerk/protocol/http/src/nsHttpChannel.cpp#2750
     
     var loadFlags = chan.loadFlags;
@@ -391,7 +387,7 @@ ChannelReplacement.prototype = {
     
     if (chan.referrer) newChan.referrer = chan.referrer;
     newChan.allowPipelining = chan.allowPipelining;
-    newChan.redirectionLimit = chan.redirectionLimit - 1;
+    newChan.redirectionLimit -= 1;
     if (chan instanceof CI.nsIHttpChannelInternal && newChan instanceof CI.nsIHttpChannelInternal) {
       if (chan.URI == chan.documentURI) {
         newChan.documentURI = newURI;
@@ -446,7 +442,7 @@ ChannelReplacement.prototype = {
     const CES = CI.nsIChannelEventSink;
     const flags = CES.REDIRECT_INTERNAL;
     this._callSink(
-    CC["@mozilla.org/netwerk/global-channel-event-sink;1"].getService(CES),
+      CC["@mozilla.org/netwerk/global-channel-event-sink;1"].getService(CES),
       oldChan, newChan, flags);
     var sink;
     
@@ -487,38 +483,50 @@ ChannelReplacement.prototype = {
     : null;
   },
   
-  replace: function(isRedir) {
-    var oldChan = this.oldChannel;
-    try {
-      this._onChannelRedirect(isRedir);
-    } catch(ex) {
-      oldChan.cancel(NS_BINDING_ABORTED);
-      throw ex;
+  replace: function(isRedir, callback) {
+    let self = this;
+    let oldChan = this.oldChannel;
+    this.isRedir = !!isRedir;
+    if (typeof(callback) !== "function") {
+      callback = this._defaultCallback;
     }
+    IOUtil.runWhenPending(oldChan, function() {
+      let ccl = new CtxCapturingListener(oldChan,
+        function() {
+          try {
+            callback(self._replaceNow(isRedir, this))
+          } catch (e) {
+            self.dispose();
+          }
+        });
+      self.loadGroup = oldChan.loadGroup;
+      oldChan.loadGroup = null; // prevents the wheel from stopping spinning
+      // this calls asyncAbort, which calls onStartRequest on our listener
+      oldChan.cancel(NS_BINDING_REDIRECTED); 
+    });
+  },
+  
+  _defaultCallback: function(replacement) {
+    replacement.open();
+  },
+  
+  _replaceNow: function(isRedir, ccl) {
+    let oldChan = this.oldChannel;
+    oldChan.loadGroup = this.loadGroup;
+    
+    this._onChannelRedirect(isRedir);
+    
     // dirty trick to grab listenerContext
    
-    var ccl = new CtxCapturingListener(oldChan);
-    
-    oldChan.cancel(NS_BINDING_REDIRECTED); // this works because we've been called after loadGroup->addRequest(), therefore asyncOpen() always return NS_OK
-    
-    oldChan.notificationCallbacks =
-        oldChan.loadGroup = null; // prevent loadGroup removal and wheel stop
-    
-    if (oldChan instanceof CI.nsIRequestObserver) {
-      oldChan.onStartRequest(oldChan, null);
-    }
-
     this.listener = ccl.originalListener;
     this.context = ccl.originalCtx;
-    this._ccListener = ccl;
-    
     return this;
   },
   
   open: function() {
-    var oldChan = this.oldChannel, newChan = this.channel;
-
-    var overlap, fail = false;
+    let oldChan = this.oldChannel,
+      newChan = this.channel,
+      overlap;
     
     /* XXX: Hack
     if (!(this.window && (overlap = ABERequest.getLoadingChannel(this.window)) !== oldChan)) {
@@ -532,49 +540,27 @@ ChannelReplacement.prototype = {
         newChan.asyncOpen(this.listener, this.context);
         
         // safe browsing hook
-        try {
+        if (this._mustClassify)
           CC["@mozilla.org/channelclassifier"].createInstance(CI.nsIChannelClassifier).start(newChan, true);
-        } catch (e) {
-          // may throw if host app doesn't implement url classification
-        }
-      } catch (e) {
-        // redirect failed: we must notify the original channel listener, so let's restore bindings
-        fail = true;
-      }
+        
+      } catch (e) {}
     } else {
       if (ABE.consoleDump) {
         ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
       }
     }
     
-    this.cancel(NS_BINDING_REDIRECTED, fail);
+    this.dispose();
   },
   
-  cancel: function(status, fail) {
-    var oldChan = this.oldChannel, newChan = this.channel;
-    if (fail) {
-      oldChan.notificationCallbacks = newChan.notificationCallbacks;
-      this._ccListener.notify = true;
-      if (oldChan instanceof CI.nsIRequestObserver)
-        try {
-        oldChan.onStartRequest(oldChan, null);
-        } catch(e) {}
-    }
-    
-    if (oldChan instanceof CI.nsIRequestObserver)
-      try {  
-        oldChan.onStopRequest(oldChan, null, status);
-      } catch(e) {}
-    
-    if (newChan.loadGroup)
+  dispose: function() {
+    if (this.loadGroup) {
       try {
-        newChan.loadGroup.removeRequest(oldChan, null, status);
-      } catch(e) {}
+        this.loadGroup.removeRequest(this.oldChannel, null, NS_BINDING_REDIRECTED);
+      } catch (e) {}
+      this.loadGroup = null;
+    }
 
-    oldChan.notificationCallbacks = null;
-    delete this._ccListener;
-    delete this.window;
-    delete this.oldChannel;
   }
 }
 
