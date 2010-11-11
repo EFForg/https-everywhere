@@ -33,13 +33,13 @@ function https_prefs_init(doc) {
     var ruleset = rulesets[i];
 
     if (i % row_width == 0) {
-      hbox = doc.createElement("listitem");
+      hbox = doc.createElement("richlistitem");
       //hbox.setAttribute("type", "checkbox");
       //hbox.setAttribute("style", "listitem-checkbox");
     }
 
-    var newopt = doc.createElement("listcell");
-    newopt.setAttribute("type", "checkbox");
+    var newopt = doc.createElement("checkbox");
+    //newopt.setAttribute("type", "checkbox");
     //newopt.setAttribute("style", "listcell-checkbox");
 
     // This pref should always have been created by the RuleSet constructor
