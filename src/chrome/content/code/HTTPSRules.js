@@ -140,12 +140,21 @@ const RuleWriter = {
   },
 
   getRuleDir: function() {
-    var file = CC["@mozilla.org/extensions/manager;1"].
-               getService(Components.interfaces.nsIExtensionManager).
-               getInstallLocation("https-everywhere@eff.org").
-               getItemFile("https-everywhere@eff.org", "chrome").clone();
+    var loc = "ProfD";  // profile directory
+    var file =
+      CC["@mozilla.org/file/directory_service;1"]
+      .getService(CI.nsIProperties)
+      .get(loc, CI.nsILocalFile)
+      .clone();
+    file.append("extensions");
+    file.append("https-everywhere@eff.org");
+    file.append("chrome");
     file.append("content");
     file.append("rules");
+    // Check for existence, if not, create.
+    if (!file.exists()) {
+      file.create(CI.nsIFile.DIRECTORY_TYPE, 0700);
+    }
     if (!file.isDirectory()) {
       // XXX: Arg, death!
     }
