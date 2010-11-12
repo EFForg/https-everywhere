@@ -29,11 +29,7 @@ const HTTPS = {
   httpsRewrite: null,
   
   forceChannel: function(channel) {
-    if (channel.loadFlags & CI.nsIRequest.LOAD_BACKGROUND) {
-      HTTPS.log(INFO, "Background request.. Forcing channel replacement.");
-      return HTTPS.replaceChannel(channel);
-    }
-    return this.forceURI(channel.URI, function() { return HTTPS.replaceChannel(channel); });
+    return HTTPS.replaceChannel(channel);
   },
   
   replaceChannel: function(channel) {
@@ -60,27 +56,8 @@ const HTTPS = {
     if (ChannelReplacement.supported) {
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       IOUtil.runWhenPending(channel, function() {
-        // replacing a shortcut icon causes a cache-related crash like
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=480352
-        // just abort it... 
-        // XXX This is crazy NoScript code, but the crash it prevents is
-        // reproducible.  Unfortunately, there is a race condition between
-        // this nsIcontentobserver case and the contentpolicy code that is
-        // supposed to get to non-favicon images first, and so some real
-        // non-favicons get caught in this codepath.  
-        // Also unfortunatley, we don't know a better way to distinguish
-        // between favicons and non-favicon images.  Testing path==favicon.ico
-        // MIGHT work, but we don't want to risk that investigation yet.
-        try {
-         if (/\bimage\//.test(channel.getRequestHeader("Accept")) &&
-             !PolicyState.extract(channel) // favicons don't trigger content policies
-            ) {
-           HTTPS.log(WARN,"Aborting possible favicon " + channel.name + ", should be HTTPS!");
-           IOUtil.abort(channel);
-           return;
-         }
-        } catch(e) {}
         new ChannelReplacement(channel, uri).replace(true).open();
+        HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
       });
       return true;
     }

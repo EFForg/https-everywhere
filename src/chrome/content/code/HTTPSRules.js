@@ -257,6 +257,7 @@ const HTTPSRules = {
   init: function() {
     try {
       this.rulesets = [];
+      this.crulesets = [];  // rulesets that contain cookierules
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -282,8 +283,11 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         r = RuleWriter.read(rulefiles[i]);
-        if (r != null)
+        if (r != null) {
           this.rulesets.push(r);
+          if (r.cookierules.length != 0) 
+            this.crulesets.push(r)
+        }
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
       }
@@ -312,17 +316,17 @@ const HTTPSRules = {
   should_secure_cookie: function(c) {
     // Check to see if the Cookie object c meets any of our cookierule citeria 
     // for being marked as secure
-    this.log(DBUG, "Testing cookie:");
-    this.log(DBUG, "  name: " + c.name);
-    this.log(DBUG, "  host: " + c.host);
-    this.log(DBUG, "  domain: " + c.domain);
-    this.log(DBUG, "  rawhost: " + c.rawHost);
+    //this.log(DBUG, "Testing cookie:");
+    //this.log(DBUG, "  name: " + c.name);
+    //this.log(DBUG, "  host: " + c.host);
+    //this.log(DBUG, "  domain: " + c.domain);
+    //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
     // XXX lots of optimisation could happen here
-    for (i = 0; i < this.rulesets.length; ++i) 
-      if (this.rulesets[i].active) 
-        for (j = 0; j < this.rulesets[i].cookierules.length; j++) {
-          var cr = this.rulesets[i].cookierules[j];
+    for (i = 0; i < this.crulesets.length; ++i) 
+      if (this.crulesets[i].active) 
+        for (j = 0; j < this.crulesets[i].cookierules.length; j++) {
+          var cr = this.crulesets[i].cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
             return true;
         }
