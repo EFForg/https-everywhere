@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://https-everywhere/content/preferences.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/https-everywhere.dtd">
 
 <dialog id="https-everywhere-prefs"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         xmlns:html="http://www.w3.org/1999/xhtml"
-        buttons="accept,cancel,extra1,extra2"
+        buttons="accept"
         title="&https-everywhere.prefs.title;"
-        buttonlabelextra1="&https-everywhere.prefs.enable_all;"
-        buttonlabelextra2="&https-everywhere.prefs.disable_all;"
-        ondialogextra1="https_set_all(document,true);"
-        ondialogextra2="https_set_all(document,false);"
         persist="screenX screenY"
-        onload="https_prefs_init(document)"
-        ondialogaccept="https_prefs_save(document)" 
-        ondialogcancel="https_prefs_cancel(document)">
+        onload="https_prefs_init(document)">
 
     <script type="application/x-javascript" src="preferences.js"/>
     <groupbox flex="1">
-        <caption label="Which HTTPS redirection rules should apply?" 
+        <caption label="Which HTTPS redirection rules should apply?"
                align="center"/>
-        <hbox flex="1" style="overflow:auto">
-          <grid class="indent" align="center">
-            <columns>
-             <column/> <column/> <column/> <column/> <column/>
-            </columns>
-            <rows id="https_everywhere_RuleSetList"/>
-          </grid>
-          <seperator orient="vertical" width="40" flex="1"/>
-        </hbox>
+        <tree id="sites_tree" flex="1" height="200" editable="true">
+          <treecols>
+            <treecol id="enabled_col" type="checkbox" label="Enabled"
+                     editable="true" />
+            <treecol id="site_col" label="Site" flex="1" editable="false"
+                     align="left" />
+          </treecols>
+          <treechildren/>
+        </tree>
         <vbox>
             You can learn how to write your own rulesets (to add support for other web sites)
-            <label id="ruleset link" 
-              value="here" 
+            <label id="ruleset link"
+              value="here"
               style="color: blue; cursor:hand; text-decoration:underline;"
-              onmouseover="event.target.style.cursor='pointer'" 
-              onmouseout="event.target.style.cursor='default'" 
+              onmouseover="event.target.style.cursor='pointer'"
+              onmouseout="event.target.style.cursor='default'"
               onclick="window.open('https://eff.org/https-everywhere/rulesets')"/>.
         </vbox>
     </groupbox>
