@@ -387,7 +387,7 @@ ChannelReplacement.prototype = {
     
     if (chan.referrer) newChan.referrer = chan.referrer;
     newChan.allowPipelining = chan.allowPipelining;
-    newChan.redirectionLimit -= 1;
+    newChan.redirectionLimit = chan.redirectionLimit - 1;
     if (chan instanceof CI.nsIHttpChannelInternal && newChan instanceof CI.nsIHttpChannelInternal) {
       if (chan.URI == chan.documentURI) {
         newChan.documentURI = newURI;
