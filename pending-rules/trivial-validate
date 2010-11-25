@@ -1,29 +1,74 @@
 #!/bin/sh
-# THIS IS NOT A RULE, but a shell script that looks for common problems
-# and typos in rules.
+# This is a shell script that looks for common problems and typos in rules.
+
+[ -n "$1" ] && cd "$1"
+
+if ! cat *.xml >/dev/null  2>/dev/null
+then
+   echo There are no readable XML files in the current or specified directory.
+   echo Run this script inside a directory containing XML rule files or else
+   echo specify such a directory on the command line.  E.g.,
+   echo
+   echo "$0" pending-rules
+   echo "$0" src/chrome/content/rules
+   exit 2
+fi
+
+fail=false
 
 echo "-- Rules not anchored to beginning of a line:"
-grep from= *.xml | cut -d\" -f2 | grep '^[^^]' || echo "(None.)"
+if grep from= *.xml | cut -d\" -f2 | grep '^[^^]'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
 
 echo
 echo "-- Rules with unescaped dots left of a slash:"
-grep from= *.xml | cut -d\" -f2 | egrep 'http.?.?://[^/]*[^\]\.[^*]' || echo "(None.)"
+if grep from= *.xml | cut -d\" -f2 | egrep 'http.?.?://[^/]*[^\]\.[^*]'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
 
 echo
 echo "-- Rules not containing trailing slash in from pattern:"
-grep from= *.xml | cut -d\" -f2 | grep -v '//.*/' || echo "(None.)"
+if grep from= *.xml | cut -d\" -f2 | grep -v '//.*/'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
 
 echo
 echo "-- Rules not containing trailing slash in to pattern:"
-grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/' || echo "(None.)"
+if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
 
 echo
 echo "-- Rules with missing closing slash in rule XML tag:"
-grep to= *xml | grep '[^/]>' || echo "(None.)"
+if grep to= *xml | grep '[^/]>'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
 
 echo
 echo "-- Rules redirecting to http in to pattern:"
-grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:' || echo "(None.)"
+if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
 echo
 if [ $(which xmllint) ]
 then
@@ -31,7 +76,7 @@ then
   none=true
     for rule in *.xml
     do
-      xmllint "$rule" >/dev/null 2>&1 || { echo $rule; none=false; }
+      xmllint "$rule" >/dev/null 2>&1 || { echo $rule; none=false; fail=true; }
     done
   $none && echo "(None.)"
 else
@@ -47,6 +92,7 @@ do
   then
     echo "$i contains non-ASCII character(s)."
     none=false
+    fail=true
   fi
 done
 $none && echo "(None.)"
@@ -60,6 +106,14 @@ do
   then
     echo $i
     none=false
+    fail=true
   fi
 done
 $none && echo "(None.)"
+
+if $fail
+then
+  exit 1
+else
+  exit 0
+fi
