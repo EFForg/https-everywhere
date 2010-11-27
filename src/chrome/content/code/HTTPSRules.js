@@ -161,36 +161,11 @@ const RuleWriter = {
     return file;
   },
 
-  write: function(ruleset) {
-    var rulesAsXml = new XML('<ruleset/>');
-    var i = 0;
-    if (ruleset.ruleset_match)
-      rulesAsXml.@ruleset_match = ruleset.ruleset_match;
-    rulesAsXml.@name = ruleset.name;
-
-    for(i = 0; i < ruleset.rules.length; ++i) {
-      var rule = new XML('<rule/>');
-      rule.@from = ruleset.rules[i].from;
-      rule.@to = ruleset.rules[i].to;
-      rulesAsXml.appendChild(rule);
-    }
-
-    var xmlString = rulesAsXml.toString();
-
-    var dest = this._getCustomRuleDir();
-    dest.append(ruleset.name + ".xml");
-
-    var foStream = CC["@mozilla.org/network/file-output-stream;1"]
-          .createInstance(CI.nsIFileOutputStream);
-    foStream.init(dest, 0x02 | 0x08 | 0x20, 0600, 0);
-
-    foStream.write(xmlString, xmlString.length);
-    foStream.close();
-  },
-
-  read: function(file) {
+  read: function(file, targets) {
     if (!file.exists())
       return null;
+    if ((targets == null) && (targets != {}))
+      this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
         .createInstance(CI.nsIFileInputStream);
@@ -215,7 +190,7 @@ const RuleWriter = {
     }
 
     if (xmlrules.@name == xmlrules.@nonexistantthing) {
-      this.log(DBUG, "FILE " + file + "is not a rulefile\n");
+      this.log(DBUG, "FILE " + file.path + "is not a rulefile\n");
       return null;
     }
 
@@ -224,6 +199,26 @@ const RuleWriter = {
     if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
     if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
     var ret = new RuleSet(xmlrules.@name, match_rl, dflt_off);
+
+    if (xmlrules.target.length() == 0) {
+      var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
+      msg = msg + "\nbut " + file.path + " is missing one.";
+      this.log(WARN, msg);
+      return null;
+    }
+
+    // add this ruleset into HTTPSRules.targets with all of the applicable
+    // target host indexes
+    for (var i = 0; i < xmlrules.target.length(); i++) {
+      var host = xmlrules.target[i].@host;
+      if (!host) {
+        this.log(WARN, "<target> missing host in " + file);
+        continue;
+      }
+      if (! targets[host])
+        targets[host] = [];
+      targets[host].push(ret);
+    }
 
     for (var i = 0; i < xmlrules.exclusion.length(); i++) {
       var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
@@ -266,11 +261,23 @@ const HTTPSRules = {
   init: function() {
     try {
       this.rulesets = [];
-      this.crulesets = [];  // rulesets that contain cookierules
+      this.targets = {};  // dict mapping target host patterns -> lists of
+                          // applicable rules
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      this.scanRulefiles(rulefiles);
+      this.scanRulefiles(rulefiles, this.targets);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      this.scanRulefiles(rulefiles);
+      this.scanRulefiles(rulefiles, this.targets);
+      var t,i;
+      for (t in this.targets) {
+        for (i = 0 ; i < this.targets[t].length ; i++) {
+          this.log(INFO, t + " -> " + this.targets[t][i].name);
+        }
+      }
+
+      // for any rulesets with <target host="*"> 
+      // every URI needs to be checked against these rulesets 
+      // (though currently we don't ship any)
+      this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
 
       this.rulesets.sort(
         function(r1,r2) {
@@ -285,20 +292,19 @@ const HTTPSRules = {
     return;
   },
 
-  scanRulefiles: function(rulefiles) {
+  scanRulefiles: function(rulefiles, targets) {
     var i = 0;
     var r = null;
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        r = RuleWriter.read(rulefiles[i]);
-        if (r != null) {
+        r = RuleWriter.read(rulefiles[i], targets);
+        if (r != null) 
           this.rulesets.push(r);
-          if (r.cookierules.length != 0) 
-            this.crulesets.push(r)
-        }
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
+        if (e.lineNumber)
+          this.log(WARN, "(line number: " + e.lineNumber + ")");
       }
     }
   },
@@ -315,11 +321,41 @@ const HTTPSRules = {
   rewrittenURI: function(uri) {
     var i = 0;
     var newuri = null
-    for(i = 0; i < this.rulesets.length; ++i) {
-      if ((newuri = this.rulesets[i].rewrittenURI(uri)))
+    var rs = this.applicable_rulesets(uri.host);
+    for(i = 0; i < rs.length; ++i) {
+      if ((newuri = rs[i].rewrittenURI(uri)))
         return newuri;
     }
     return null;
+  },
+
+  applicable_rulesets: function(host) {
+    // Return a list of rulesets that apply to this host
+    var i, tmp, t;
+    var results = this.global_rulesets;
+    if (this.targets[host])
+      results = results.concat(this.targets[host]);
+    // replace each portion of the domain with a * in turn
+    var segmented = host.split(".");
+    for (i = 0; i < segmented.length; ++i) {
+      tmp = segmented[i];
+      segmented[i] = "*";
+      t = segmented.join(".");
+      segmented[i] = tmp;
+      if (this.targets[t])
+        results = results.concat(this.targets[t]);
+    }
+    // now eat away from the left, with *, so that for x.y.z.google.com we
+    // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
+    for (i = 1; i < segmented.length - 2; ++i) {
+      t = "*." + segmented.slice(i,segmented.length).join(".");
+      if (this.targets[t])
+        results = results.concat(this.targets[t]);
+    }
+    this.log(DBUG,"Applicable rules for " + host + ":");
+    for (i = 0; i < results.length; ++i) 
+      this.log(DBUG, "  " + results[i].name);
+    return results;
   },
   
   should_secure_cookie: function(c) {
@@ -331,14 +367,16 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    // XXX lots of optimisation could happen here
-    for (i = 0; i < this.crulesets.length; ++i) 
-      if (this.crulesets[i].active) 
-        for (j = 0; j < this.crulesets[i].cookierules.length; j++) {
-          var cr = this.crulesets[i].cookierules[j];
+    var rs = this.applicable_rulesets(c.host);
+    for (i = 0; i < rs.length; ++i) {
+      var ruleset = rs[i];
+      if (ruleset.active) 
+        for (j = 0; j < ruleset.cookierules.length; j++) {
+          var cr = ruleset.cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
             return true;
         }
+    }
     return false;
   }
 

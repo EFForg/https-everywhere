@@ -19,7 +19,9 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh
 
 # BUGS: if you have a branch or tagged named "uncommitted" then this
-# is kind of ambiguous.
+# is kind of ambiguous.  Also, the validation of rule syntax is done
+# against the rules in the current directory, not necessarily the
+# committed rules in git.
 
 cd "$(dirname $0)"
 
@@ -38,6 +40,15 @@ WARNING: Or, use 'makexpi.sh uncommitted' to include them in the build.
 " 
     fi
 fi
+
+if ./trivial-validate src/chrome/content/rules >&2
+then
+  echo Validation of included rulesets completed. >&2
+else
+  echo ERROR: Validation of rulesets failed. >&2
+  exit 1
+fi
+
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 [ -d pkg ] || mkdir pkg
 
