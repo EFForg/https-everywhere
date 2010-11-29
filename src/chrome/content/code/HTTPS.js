@@ -167,7 +167,7 @@ const HTTPS = {
       for each (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
-        if (!c.secure && HTTPSRules.should_secure_cookie(c)) {
+        if (!c.secure && HTTPSRules.shouldSecureCookie(c)) {
           this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
