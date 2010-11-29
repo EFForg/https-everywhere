@@ -292,7 +292,7 @@ const HTTPSRules = {
   rewrittenURI: function(uri) {
     var i = 0;
     var newuri = null
-    var rs = this.applicable_rulesets(uri.host);
+    var rs = this.applicableRulesets(uri.host);
     for(i = 0; i < rs.length; ++i) {
       if ((newuri = rs[i].transformURI(uri)))
         return newuri;
@@ -300,7 +300,7 @@ const HTTPSRules = {
     return null;
   },
 
-  applicable_rulesets: function(host) {
+  applicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
     var results = this.global_rulesets;
@@ -329,7 +329,7 @@ const HTTPSRules = {
     return results;
   },
   
-  should_secure_cookie: function(c) {
+  shouldSecureCookie: function(c) {
     // Check to see if the Cookie object c meets any of our cookierule citeria 
     // for being marked as secure
     //this.log(DBUG, "Testing cookie:");
@@ -338,7 +338,7 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    var rs = this.applicable_rulesets(c.host);
+    var rs = this.applicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) 
