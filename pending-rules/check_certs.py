@@ -6,7 +6,6 @@ from subprocess import Popen, PIPE
 from glob import glob
 
 host_targets = re.compile(r'<target *host="([a-z0-9\-\*\.]+)"')
-
 wget_cmd = lambda h : ["wget", "-O", "/dev/null", "https://" + h]
 
 for fname in sys.argv[1:]:
