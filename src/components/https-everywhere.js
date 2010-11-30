@@ -222,7 +222,7 @@ HTTPSEverywhere.prototype = {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         return;
       }
-      HTTPS.forceChannel(channel);
+      HTTPS.replaceChannel(channel);
     } else if (topic == "http-on-examine-response") {
       this.log(DBUG, "Got http-on-examine-response ");
       HTTPS.handleSecureCookies(channel);
@@ -268,18 +268,6 @@ HTTPSEverywhere.prototype = {
 
     HTTPS.replaceChannel(newChannel);
 
-//    if (HTTPS.forceURI(uri.clone())) {
-//      if (!HTTPS.replaceChannel(newChannel)) {
-//        // Failed, try to put things back...
-//        this.log(DBUG, "reverting URI, " + oldChannel.URI.spec);
-//        try {
-//          oldChannel.URI.scheme = "http";
-//          newChannel.URI.scheme = "http";
-//        } catch (e) {
-//          this.log(WARN, "uri windback error " + e);
-//        }
-//      }
-//    }
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
