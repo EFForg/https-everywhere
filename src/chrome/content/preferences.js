@@ -13,6 +13,8 @@ const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
 
 function https_prefs_init(doc) {
+  document.getElementById('sites_tree').height = (screen.height*0.5).toString();
+
   var treeView = {
     rowCount: rulesets.length,
     getCellText: function(row, col) { // site names
