@@ -28,10 +28,6 @@ const HTTPS = {
   httpsForcedExceptions: null,
   httpsRewrite: null,
   
-  forceChannel: function(channel) {
-    return HTTPS.replaceChannel(channel);
-  },
-  
   replaceChannel: function(channel) {
     var uri = HTTPSRules.rewrittenURI(channel.URI);
     if (!uri) {
@@ -66,19 +62,35 @@ const HTTPS = {
     IOUtil.abort(channel);
     return false;
   },
-  
+ 
+  rewriteInPlace: function(old_uri, new_uri) {
+    // Strategy 1: replace the parts of the old_uri piecewise.  Often this
+    // works.  In some cases it doesn't.
+    this.log(NOTE,"Rewriting " + old_uri.spec + " -> " + new_uri.spec + "\n");
+    HTTPSEverywhere.instance.notifyObservers(old_uri, new_uri.spec);
+
+    old_uri.scheme = new_uri.scheme;
+    old_uri.userPass = new_uri.userPass;
+    old_uri.username = new_uri.username;
+    if (new_uri.password)
+      old_uri.password = new_uri.password;
+    old_uri.host = new_uri.host;
+    old_uri.port = new_uri.port;
+    old_uri.path = new_uri.path;
+    return true;
+  },
+
   forceURI: function(uri, fallback, ctx) {
   // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
   // per the ContentPolicy API.
   // Returns true if everything worked out (either correct replacement or no 
   // replacement needed).  Retun False if all attempts to rewrite failed.
+    var newuri = HTTPSRules.rewrittenURI(uri);
+    if (!newuri) return true;                          // no applicable rule
 
     try {
-      if (HTTPSRules.replaceURI(uri)) {
+      if (this.rewriteInPlace(uri, newuri)) 
         this.log(INFO,"Forced URI " + uri.spec);
-      } //else {
-        //this.log(DBUG,"No change to " + uri.spec);
-        //}
       return true;
     } catch(e) {
         
@@ -86,11 +98,6 @@ const HTTPS = {
            (ctx instanceof CI.nsIDOMHTMLImageElement
             || ctx instanceof CI.nsIDOMHTMLInputElement
             || ctx instanceof CI.nsIObjectLoadingContent)) {
-        var newuri = HTTPSRules.rewrittenURI(uri);
-        if (!newuri) {
-          this.log(WARN, "SHOULD NEVER HAPPEN");
-          return true; // this should never happen
-        }
 
         var type, attr;
         if (ctx instanceof CI.nsIObjectLoadingContent) {
@@ -145,14 +152,14 @@ const HTTPS = {
       this.log(WARN,"No URI inside request " +req);
       return;
     }
-    this.log(VERB, "Cookie hunting in" + uri.spec);
+    this.log(VERB, "Cookie hunting in " + uri.spec);
     
     if (uri.schemeIs("https")) {
       var host = uri.host;
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
       } catch(mayHappen) {
-        this.log(VERB,"Exception huntting Set-Cookie in headers: " + mayHappen);
+        this.log(VERB,"Exception hunting Set-Cookie in headers: " + mayHappen);
         return;
       }
       if (!cookies) return;
@@ -160,7 +167,7 @@ const HTTPS = {
       for each (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
-        if (!c.secure && HTTPSRules.should_secure_cookie(c)) {
+        if (!c.secure && HTTPSRules.shouldSecureCookie(c)) {
           this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);

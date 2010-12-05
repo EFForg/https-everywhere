@@ -85,7 +85,7 @@ RuleSet.prototype = {
     https_everywhereLog(level, msg);
   },
 
-  rewrittenURI: function(uri) {
+ transformURI: function(uri) {
     // If no rule applies, return null; otherwise, return a fresh uri instance
     // for the target
     var newurl = this._apply(uri.spec);
@@ -98,26 +98,6 @@ RuleSet.prototype = {
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;
   },
-
-  replaceURI: function(uri) {
-    // Strategy 1: replace the parts of the old uri piecewise.  Often this
-    // works.  In some cases it doesn't.
-    var newuri = this.rewrittenURI(uri);
-    if (!newuri) return false;
-    this.log(NOTE,"Rewriting " + uri.spec + " -> " + newuri.spec + "\n");
-    HTTPSEverywhere.instance.notifyObservers(uri, newuri.spec);
-
-    uri.scheme = newuri.scheme;
-    uri.userPass = newuri.userPass;
-    uri.username = newuri.username;
-    if (newuri.password)
-      uri.password = newuri.password;
-    uri.host = newuri.host;
-    uri.port = newuri.port;
-    uri.path = newuri.path;
-    return true;
-  },
-
 };
 
 const RuleWriter = {
@@ -309,27 +289,18 @@ const HTTPSRules = {
     }
   },
 
-  replaceURI: function(uri) {
-    var i = 0;
-    for(i = 0; i < this.rulesets.length; ++i) {
-      if(this.rulesets[i].replaceURI(uri))
-        return true;
-    }
-    return false;
-  },
-
   rewrittenURI: function(uri) {
     var i = 0;
     var newuri = null
-    var rs = this.applicable_rulesets(uri.host);
+    var rs = this.applicableRulesets(uri.host);
     for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i].rewrittenURI(uri)))
+      if ((newuri = rs[i].transformURI(uri)))
         return newuri;
     }
     return null;
   },
 
-  applicable_rulesets: function(host) {
+  applicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
     var results = this.global_rulesets;
@@ -358,7 +329,7 @@ const HTTPSRules = {
     return results;
   },
   
-  should_secure_cookie: function(c) {
+  shouldSecureCookie: function(c) {
     // Check to see if the Cookie object c meets any of our cookierule citeria 
     // for being marked as secure
     //this.log(DBUG, "Testing cookie:");
@@ -367,7 +338,7 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    var rs = this.applicable_rulesets(c.host);
+    var rs = this.applicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) 
