@@ -23,8 +23,10 @@ function https_settings_changed(doc)
 
 const row_width = 5;
 function https_prefs_init(doc) {
+
   var o_httpsprefs = https_everywhere.get_prefs();
 
+  var prefs_window = doc.getElementById('https-everywhere-prefs');
   var rs = doc.getElementById('https_everywhere_RuleSetList');
   var rulesets = https_everywhere.https_rules.rulesets;
   var hbox;
@@ -50,6 +52,9 @@ function https_prefs_init(doc) {
     if (i % row_width == 0) {
       rs.appendChild(hbox);
     }
+
+    prefs_window.height = (screen.height*0.7).toString();
+    prefs_window.width = screen.width.toString();
   }
   // Do this here rather than in the .xul so that it goes after all these
   // postpendments
