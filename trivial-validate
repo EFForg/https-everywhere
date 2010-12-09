@@ -24,8 +24,8 @@ else
 fi
 
 echo
-echo "-- Rules with unescaped dots left of a slash:"
-if grep from= *.xml | cut -d\" -f2 | egrep 'http.?.?://[^/]*[^\]\.[^*]'
+echo "-- Rules with unescaped dots outside of brackets and left of a slash:"
+if grep from= *.xml | cut -d\" -f2 | sed 's/\[[^]]*\]//g' | egrep 'http.?.?://[^/]*[^\]\.[^*]'
 then
    fail=true
 else
