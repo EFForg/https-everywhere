@@ -1,20 +1,35 @@
 <ruleset name="HSBC">
-  <target host="www.hsbc.*" />
   <target host="hsbc.*" />
-  <target host="www.hsbc.co.*" />
+  <target host="www.hsbc.*" />
   <target host="hsbc.co.*" />
-  <target host="www.hsbc.com.*" />
+  <target host="www.hsbc.co.*" />
   <target host="hsbc.com.*" />
-  <target host="www.hsbctrinkaus.de" />
+  <target host="www.hsbc.com.*" />
+  <target host="*.hsbctrinkaus.de" />
   <target host="hsbctrinkaus.de" />
+  <target host="*.sabb.com" />
+  <target host="sabb.com" />
+  <target host="*.firstdirect.com" />
+  <target host="firstdirect.com" />
+  <target host="*.us.hsbc.com" />
+  <target host="us.hsbc.com" />
 
-  <rule from="^http://(www\.)?hsbc\.co\.uk/" to="https://www.hsbc.co.uk/"/>
-  <rule from="^http://(www\.)?hsbc\.com/" to="https://www.hsbc.com/"/>
-  <rule from="^http://(www\.)?hsbc\.ca/" to="https://www.hsbc.ca/"/>
-  <rule from="^http://(www\.)?hsbc\.fr/" to="https://www.hsbc.fr/"/>
-  <rule from="^http://(www\.)?hsbc\.de/" to="https://www.hsbctrinkaus.de/"/>
-  <rule from="^http://(www\.)?hsbctrinkaus\.de/" to="https://www.hsbctrinkaus.de/"/>
-  <rule from="^http://(www\.)?hsbc\.co\.in/" to="https://www.hsbc.co.in/"/>
-  <rule from="^http://(www\.)?hsbc\.com\.sg/" to="https://www.hsbc.com.sg/"/>
-  <rule from="^http://(www\.)?hsbc\.com\.au/" to="https://www.hsbc.com.au/"/>
+  <!--
+     Sites work with or without www, but ssl certs are for www only.
+     The list of country sites comes from https://www.hsbc.com/1/2
+     These do not work (no https service runs):
+       www.hsbc.ie, www.kuwait.hsbc.com, www.hfcbank.co.uk, www.hsbc.co.za,
+       www.hangseng.com, www.hsbc.co.id, www.hsbc.ge, www.hsbc.cz,
+       www.hsbc.com.pa.
+     These do not work (invalid ssl cert!):
+       www.hsbc.co.nz, www.hsbc.com.tr, www.hsbc.com.uy.
+  -->
+  <rule from="^http://(?:www\.)?hsbc\.(com|co\.uk|com\.ar|am|com\.au|com\.bh|com\.bd|bm|com\.br|com\.bn|ca|ky|com\.cn|com\.co|com\.eg|fr|gr|com\.hk|co\.in|co\.jp|kz|jo|co\.kr|com\.lb|com\.mo|com\.my|com\.mt|co\.mu|com\.mx|co\.om|com\.pk|com\.py|com\.ph|pl|com\.qa|ru|com\.sg|lk|com\.tw|co\.th|ae|com\.vn)/"
+        to="https://www.hsbc.$1/" />
+
+  <!-- some odd regional sites not using hsbc.tld names -->
+  <rule from="^http://(?:www\.)?hsbctrinkaus\.de/" to="https://www.hsbctrinkaus.de/" />
+  <rule from="^http://(?:www\.)?sabb\.com/" to="https://www.sabb.com/" />
+  <rule from="^http://(?:www\.)?firstdirect\.com/" to="https://www.firstdirect.com/" />
+  <rule from="^http://(?:www\.)?us\.hsbc\.com/" to="https://www.us.hsbc.com/" />
 </ruleset>
