@@ -28,7 +28,12 @@ function https_prefs_init(doc) {
       return o_httpsprefs.getBoolPref(this.rules[row].name) ? "true" : "false";
     },
     setCellValue: function(row, col, val) { // toggle a rule's activation
-      o_httpsprefs.setBoolPref( this.rules[row].name, (val == "true") );
+      var rule = this.rules[row];
+      var active = (val == "true");
+
+      o_httpsprefs.setBoolPref(rule.name, active);
+      rule.active = active;
+
       this.treebox.invalidateRow(row);
     },
     isEditable: function(row, col) {

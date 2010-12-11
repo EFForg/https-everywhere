@@ -24,8 +24,8 @@ else
 fi
 
 echo
-echo "-- Rules with unescaped dots left of a slash:"
-if grep from= *.xml | cut -d\" -f2 | egrep 'http.?.?://[^/]*[^\]\.[^*]'
+echo "-- Rules with unescaped dots outside of brackets and left of a slash:"
+if grep from= *.xml | cut -d\" -f2 | sed 's/\[[^]]*\]//g' | egrep 'http.?.?://[^/]*[^\]\.[^*]'
 then
    fail=true
 else
@@ -53,6 +53,15 @@ fi
 echo
 echo "-- Rules with missing closing slash in rule XML tag:"
 if grep to= *xml | grep '[^/]>'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
+echo
+echo "-- Rules with multiple wildcards in a single target rule:"
+if grep 'target host="' *xml | grep '\*.*\*'
 then
    fail=true
 else
