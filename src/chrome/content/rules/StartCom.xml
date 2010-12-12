@@ -12,6 +12,21 @@
   <target host="startcom.org" />
   <target host="*.startcom.org" />
 
+  <!-- since these resources are required for establishing HTTPS connections,
+       they need to be available over HTTP
+  <Piet> OCSP: URI: http://ocsp.startssl.com/sub/class4/server/ca
+  <Piet> CA Issuers: URI: http://www.startssl.com/certs/sub.class4.server.ca.crt
+  <Piet> URI: http://www.startssl.com/crt4-crl.crl
+  <Piet> URI: http://crl.startssl.com/crt4-crl.crl
+  -->
+  <exclusion pattern="oscp\.startcom">
+  <exclusion pattern="crl\.startcom">
+  <exclusion pattern="http://www.startssl.com/certs/sub.class4.server.ca.crt">
+  <exclusion pattern="http://www.startssl.com/crt4-crl.crl">
+
+  <!-- should mitigate against exploitation of the above exclusions -->
+  <securecookie host=".*" name=".*">
+
   <rule from="^http://(.*\.)?startssl\.(com|net|org|eu|us)/" to="https://$1startssl.$2/"/>
   <rule from="^http://(.*\.)?startcom\.org/" to="https://$1startcom.org/"/>
 </ruleset>
