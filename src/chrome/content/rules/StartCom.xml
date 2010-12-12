@@ -18,14 +18,22 @@
   <Piet> CA Issuers: URI: http://www.startssl.com/certs/sub.class4.server.ca.crt
   <Piet> URI: http://www.startssl.com/crt4-crl.crl
   <Piet> URI: http://crl.startssl.com/crt4-crl.crl
+  (and from the SSL observatory):
+  http://cert.startcom.org/sfsca-crl.crl
+  http://crl.startcom.org/sfsca-crl.crl
+  http://crl.startssl.com/sfsca.crl
+  http://cert.startcom.org/ca-crl.crl
+  http://crl.startcom.org/crl/ca-crl.crl
   -->
-  <exclusion pattern="oscp\.startcom">
-  <exclusion pattern="crl\.startcom">
-  <exclusion pattern="http://www.startssl.com/certs/sub.class4.server.ca.crt">
-  <exclusion pattern="http://www.startssl.com/crt4-crl.crl">
+  <exclusion pattern="oscp\.startcom" />
+  <exclusion pattern="crl\.startcom" />
+  <exclusion pattern="\.crl$" />
+  <exclusion pattern="http://www.startssl.com/sfsca.crt" />
+  <exclusion pattern="http://www.startssl.com/certs/" />
+  <exclusion pattern="http://www.startssl.com/crt4-crl.crl" />
 
   <!-- should mitigate against exploitation of the above exclusions -->
-  <securecookie host=".*" name=".*">
+  <securecookie host=".*" name=".*" />
 
   <rule from="^http://(.*\.)?startssl\.(com|net|org|eu|us)/" to="https://$1startssl.$2/"/>
   <rule from="^http://(.*\.)?startcom\.org/" to="https://$1startcom.org/"/>
