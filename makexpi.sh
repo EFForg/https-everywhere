@@ -25,6 +25,14 @@ APP_NAME=https-everywhere
 
 cd "$(dirname $0)"
 
+if ./trivial-validate src/chrome/content/rules >&2
+then
+  echo Validation of included rulesets completed. >&2
+else
+  echo ERROR: Validation of rulesets failed. >&2
+  exit 1
+fi
+
 if [ -n "$1" ] && [ "$1" != "uncommitted" ]; then
     VERSION="$1"
     TARG="$1"
@@ -39,14 +47,6 @@ WARNING: Run 'git status' for information about the uncommitted changes.
 WARNING: Or, use 'makexpi.sh uncommitted' to include them in the build.
 " 
     fi
-fi
-
-if ./trivial-validate src/chrome/content/rules >&2
-then
-  echo Validation of included rulesets completed. >&2
-else
-  echo ERROR: Validation of rulesets failed. >&2
-  exit 1
 fi
 
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
