@@ -142,7 +142,7 @@ const RuleWriter = {
     return file;
   },
 
-  read: function(file, targets) {
+  read: function(file, targets, existing_rulesets) {
     if (!file.exists())
       return null;
     if ((targets == null) && (targets != {}))
@@ -186,6 +186,15 @@ const RuleWriter = {
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
       return null;
+    }
+
+    // see if this ruleset has the same name as an existing ruleset;
+    // if so, this ruleset is ignored; DON'T add or return it.
+    for (var i = 0; i < existing_rulesets.length; i++){
+        if (ret.name == existing_rulesets[i].name){
+           this.log(WARN, "Error: found duplicate rule name " + ret.name + " in file " + file.path);
+           return null;
+        }
     }
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
@@ -279,7 +288,7 @@ const HTTPSRules = {
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        r = RuleWriter.read(rulefiles[i], targets);
+        r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
         if (r != null) 
           this.rulesets.push(r);
       } catch(e) {
