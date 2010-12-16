@@ -28,6 +28,7 @@ cd "$(dirname $0)"
 if ./trivial-validate src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
+  echo >&2
 else
   echo ERROR: Validation of rulesets failed. >&2
   exit 1
@@ -72,5 +73,7 @@ if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
+  printf >&2 "Total included rules: $(ls chrome/content/rules/*.xml | wc -l)\n"
+  printf >&2 "Rules disabled by default: $(grep -lr default_off chrome/content/rules | wc -l)\n"
   printf >&2 "Created %s\n" "$XPI_NAME"
 fi
