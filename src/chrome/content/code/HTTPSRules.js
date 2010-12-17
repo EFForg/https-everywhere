@@ -101,6 +101,8 @@ RuleSet.prototype = {
 };
 
 const RuleWriter = {
+  addonDir: false,
+
   getCustomRuleDir: function() {
     var loc = "ProfD";  // profile directory
     var file =
@@ -120,28 +122,27 @@ const RuleWriter = {
   },
 
   getRuleDir: function() {
-    var loc = "ProfD";  // profile directory
-    var file =
-      CC["@mozilla.org/file/directory_service;1"]
-      .getService(CI.nsIProperties)
-      .get(loc, CI.nsILocalFile)
-      .clone();
-    file.append("extensions");
-    file.append("https-everywhere@eff.org");
+    if (!this.addonDir)
+      try {
+        // Firefox < 4
+        this.addonDir = CC["@mozilla.org/extensions/manager;1"].
+          getService(CI.nsIExtensionManager).
+          getInstallLocation("https-everywhere@eff.org").
+          getItemFile("https-everywhere@eff.org", "");
+      } catch(e) {
+        // Firefox >= 4 (this should not be reached)
+      }
+    var file = this.addonDir.clone();
     file.append("chrome");
     file.append("content");
     file.append("rules");
-    // Check for existence, if not, create.
-    if (!file.exists()) {
-      file.create(CI.nsIFile.DIRECTORY_TYPE, 0700);
-    }
     if (!file.isDirectory()) {
       // XXX: Arg, death!
     }
     return file;
   },
 
-  read: function(file, targets) {
+  read: function(file, targets, existing_rulesets) {
     if (!file.exists())
       return null;
     if ((targets == null) && (targets != {}))
@@ -185,6 +186,15 @@ const RuleWriter = {
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
       return null;
+    }
+
+    // see if this ruleset has the same name as an existing ruleset;
+    // if so, this ruleset is ignored; DON'T add or return it.
+    for (var i = 0; i < existing_rulesets.length; i++){
+        if (ret.name == existing_rulesets[i].name){
+           this.log(WARN, "Error: found duplicate rule name " + ret.name + " in file " + file.path);
+           return null;
+        }
     }
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
@@ -278,7 +288,7 @@ const HTTPSRules = {
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        r = RuleWriter.read(rulefiles[i], targets);
+        r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
         if (r != null) 
           this.rulesets.push(r);
       } catch(e) {

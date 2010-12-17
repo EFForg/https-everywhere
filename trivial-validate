@@ -119,6 +119,15 @@ do
 done
 $none && echo "(None.)"
 
+echo
+echo "--- Duplicated ruleset names:"
+if cat *.xml | grep 'ruleset name' | cut -d\" -f2 | sort | uniq -d | grep .
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
 if $fail
 then
   exit 1
