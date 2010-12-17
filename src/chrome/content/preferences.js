@@ -19,13 +19,23 @@ function https_prefs_init(doc) {
   treeView = {
     rules: rulesets,
     rowCount: rulesets.length,
-    getCellText: function(row, col) { // site names
+    getCellValue: function(row, col) { // site names
       if (!this.rules[row]) return;
-      return this.rules[row].name;
+
+      switch (col.id) {
+        case "site_col":
+          return this.rules[row].name;
+        case "note_col":
+          return this.rules[row].notes;
+        case "enabled_col":
+          var e = o_httpsprefs.getBoolPref(this.rules[row].name);
+          return e ? "true" : "false";
+        default:
+          return;
+      }
     },
-    getCellValue: function(row, col) { // activation indicator
-      if (!this.rules[row]) return;
-      return o_httpsprefs.getBoolPref(this.rules[row].name) ? "true" : "false";
+    getCellText: function(row, col) { // activation indicator
+       return this.getCellValue(row, col);
     },
     setCellValue: function(row, col, val) { // toggle a rule's activation
       var rule = this.rules[row];
