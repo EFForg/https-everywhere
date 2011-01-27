@@ -86,14 +86,18 @@ function https_prefs_save(doc) {
 }
 
 function https_set_all(doc,val) {
-  // set all rulesets to val (enable/disable)
+  // set all rulesets to val (enable/disable, or -1 for "default")
   var o_httpsprefs = https_everywhere.get_prefs();
   var rulesets = https_everywhere.https_rules.rulesets;
   var rs = doc.getElementById('https_everywhere_RuleSetList');
+  https_everywhere.log(3, "Setting rules to " + val);
   for (var i = 0; i < rulesets.length; i++) {
     var ruleset = rulesets[i];
-    ruleset.active = val;
+    if (val == -1) {
+      ruleset.active = ruleset.on_by_default;
+    } else 
+      ruleset.active = val;
     var elem = doc.getElementById(id_prefix + ruleset.name);
-    elem.checked = val;
+    elem.checked = ruleset.active;
   }
 }
