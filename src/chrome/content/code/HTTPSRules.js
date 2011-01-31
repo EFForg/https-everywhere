@@ -17,7 +17,7 @@ function CookieRule(host, cookiename) {
 }
 
 function RuleSet(name, match_rule, default_off) {
-  var on_by_default = true;
+  this.on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;
   this.notes = "";
@@ -30,8 +30,8 @@ function RuleSet(name, match_rule, default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
     // "valueless"
-    on_by_default = false;
     this.notes = default_off;
+    this.on_by_default = false;
   }
   this.rules = [];
   this.exclusions = [];
@@ -44,7 +44,7 @@ function RuleSet(name, match_rule, default_off) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
     this.active = true;
-    prefs.setBoolPref(name, on_by_default);
+    prefs.setBoolPref(name, this.on_by_default);
   }
 }
 
