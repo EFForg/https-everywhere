@@ -59,7 +59,7 @@ function nsISupportWrapper(wrapped) {
   this.wrappedJSObject = wrapped;
 }
 nsISupportWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([CI.nsISupports])
+  QueryInterface: xpcom_generateQI([])
 }
 
 const IOUtil = {
@@ -255,27 +255,8 @@ const IOUtil = {
   },
   
   get TLDService() {
-    var srv = null;
-    try {
-      if ("nsIEffectiveTLDService" in CI) {
-        var srv = CC["@mozilla.org/network/effective-tld-service;1"]
-                .getService(CI.nsIEffectiveTLDService);
-        if (typeof(srv.getBaseDomainFromHost) != "function"
-              || srv.getBaseDomainFromHost("bbc.co.uk") != "bbc.co.uk" // check, some implementations are "fake" (e.g. Songbird's)
-          ) {
-          srv = null;
-        }
-      }
-      if (!srv) {
-        INCLUDE('EmulatedTLDService');
-        srv = EmulatedTLDService;
-      }
-    } catch(ex) {
-      dump(ex + "\n");
-      return null;
-    }
     delete this.TLDService;
-    return this.TLDService = srv;
+    return this.TLDService = CC["@mozilla.org/network/effective-tld-service;1"].getService(CI.nsIEffectiveTLDService);
   }
   
 };
@@ -293,13 +274,7 @@ CtxCapturingListener.prototype = {
   },
   onDataAvailable: function(request, ctx, inputStream, offset, count) {},
   onStopRequest: function(request, ctx, statusCode) {},
-  QueryInterface: function (aIID) {
-    if (aIID.equals(CI.nsIStreamListener) ||
-        aIID.equals(CI.nsISupports)) {
-        return this;
-    }
-    throw Components.results.NS_NOINTERFACE;
-  }
+  QueryInterface: xpcom_generateQI([CI.nsIStreamListener])
 }
 
 function ChannelReplacement(chan, newURI, newMethod) {
@@ -362,7 +337,7 @@ ChannelReplacement.prototype = {
     });
     
     
-    if (!newMethod) {
+    if (!newMethod || newMethod === chan.requestMethod) {
       if (newChan instanceof CI.nsIUploadChannel && chan instanceof CI.nsIUploadChannel && chan.uploadStream ) {
         var stream = chan.uploadStream;
         if (stream instanceof CI.nsISeekableStream) {
@@ -373,7 +348,7 @@ ChannelReplacement.prototype = {
           var ctype = chan.getRequestHeader("Content-type");
           var clen = chan.getRequestHeader("Content-length");
           if (ctype && clen) {
-            newChan.setUploadStream(stream, ctype, parseInt(clen));
+            newChan.setUploadStream(stream, ctype, parseInt(clen, 10));
           }
         } catch(e) {
           newChan.setUploadStream(stream, '', -1);
@@ -382,7 +357,7 @@ ChannelReplacement.prototype = {
         newChan.requestMethod = chan.requestMethod;
       }
     } else {
-      newChan.method = newMethod;
+      newChan.requestMethod = newMethod;
     }
     
     if (chan.referrer) newChan.referrer = chan.referrer;
@@ -467,17 +442,19 @@ ChannelReplacement.prototype = {
   },
   
   _callSink: function(sink, oldChan, newChan, flags) {
-    return ("onChannelRedirect" in sink)
-      ? sink.onChannelRedirect(oldChan, newChan, flags)
-      : sink.asyncOnChannelRedirect(oldChan, newChan, flags, this._redirectCallback)
-      ;
+    try { 
+      if ("onChannelRedirect" in sink) sink.onChannelRedirect(oldChan, newChan, flags);
+      else sink.asyncOnChannelRedirect(oldChan, newChan, flags, this._redirectCallback);
+    } catch(e) {
+      if (!/\(NS_ERROR_NOT_AVAILABLE\)/.test(e.message)) throw e;
+    }
   },
   
   get _redirectCallback() {
     delete this.__proto__._redirectCallback;
     return this.__proto__._redirectCallback = ("nsIAsyncVerifyRedirectCallback" in CI)
     ? {
-        QueryInterface: xpcom_generateQI(CI.nsISupports, CI.nsIAsyncVerifyRedirectCallback),
+        QueryInterface: xpcom_generateQI([CI.nsIAsyncVerifyRedirectCallback]),
         onRedirectVerifyCallback: function(result) {}
       }
     : null;
@@ -491,6 +468,8 @@ ChannelReplacement.prototype = {
       callback = this._defaultCallback;
     }
     IOUtil.runWhenPending(oldChan, function() {
+      if (oldChan.status) return; // channel's doom had been already defined
+      
       let ccl = new CtxCapturingListener(oldChan,
         function() {
           try {
@@ -571,7 +550,7 @@ function LoadGroupWrapper(channel, callbacks) {
   channel.loadGroup = this;
 }
 LoadGroupWrapper.prototype = {
-  QueryInterface: xpcom_generateQI(CI.nsISupports, CI.nsILoadGroup),
+  QueryInterface: xpcom_generateQI([CI.nsILoadGroup]),
   
   get activeCount() {
     return this._inner ? this._inner.activeCount : 0;
@@ -623,7 +602,7 @@ LoadGroupWrapper.prototype = {
     if (this._channel.loadGroup) this._channel.loadGroup = this._inner;
   },
   _emptyEnum: {
-    QueryInterface: xpcom_generateQI(CI.nsISupports, CI.nsISimpleEnumerator),
+    QueryInterface: xpcom_generateQI([CI.nsISimpleEnumerator]),
     getNext: function() { return null; },
     hasMoreElements: function() { return false; }
   }

@@ -143,6 +143,6 @@ Cookie.prototype = {
   get isDomain() { return this.domain && this.domain[0] == '.'; },
   policy: 0,
   status: 0,
-  QueryInterface: xpcom_generateQI([CI.nsICookie, CI.nsICookie2, CI.nsISupports])
+  QueryInterface: xpcom_generateQI([CI.nsICookie, CI.nsICookie2])
   
 }
