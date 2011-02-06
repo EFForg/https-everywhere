@@ -69,6 +69,15 @@ else
 fi
 
 echo
+echo "-- Rules with targets containing URLs/paths instead of hostnames:"
+if grep 'target host="' *xml | egrep '="[^"]*/'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
+echo
 echo "-- Rules redirecting to http in to pattern:"
 if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:'
 then
