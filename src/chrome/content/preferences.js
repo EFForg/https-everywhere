@@ -14,7 +14,7 @@ const pref_prefix = "extensions.https_everywhere.";
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
-
+  st.height = (screen.height*0.7).toString();
   // GLOBAL VARIABLE!
   treeView = {
     rules: rulesets,
