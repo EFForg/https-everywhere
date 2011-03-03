@@ -7,7 +7,7 @@
   <target host="google.co.*" />
   <target host="www.google.*" />
   <target host="google.*" />
-  <!-- beyond clients1 these do not currently exist in the ccTLDs, 
+  <!-- beyond clients1 these do not currently exist in the ccTLDs,
        but just in case... -->
   <target host="clients1.google.com.*" />
   <target host="clients2.google.com.*" />
@@ -34,7 +34,7 @@
 
   <!-- The most basic case. -->
 
-  <rule from="^http://(www\.)?google\.com/search" 
+  <rule from="^http://(www\.)?google\.com/search"
           to="https://encrypted.google.com/search"/>
 
   <!-- A very annoying exception that we seem to need for the basic case -->
@@ -44,7 +44,7 @@
   <exclusion pattern="^http://suggestqueries\.google\.com/.*client=.*" />
 
   <!-- Google's help is now available in HTTPS too. -->
-  <rule from="^http://(www\.)?google\.com/support/" 
+  <rule from="^http://(www\.)?google\.com/support/"
           to="https://www.google.com/support/"/>
 
   <!-- But not the forums, bizarrely. -->
@@ -52,68 +52,68 @@
 
   <!-- There are two distinct cases for these firefox searches -->
 
-  <rule from="^http://(www\.)?google\.com/firefox/?$" 
+  <rule from="^http://(www\.)?google\.com/firefox/?$"
           to="https://encrypted.google.com/"/>
 
-  <rule from="^http://(www\.)?google\.com/firefox" 
+  <rule from="^http://(www\.)?google\.com/firefox"
           to="https://encrypted.google.com/search"/>
 
-  <rule from="^http://(www\.)?google\.com/webhp" 
+  <rule from="^http://(www\.)?google\.com/webhp"
           to="https://encrypted.google.com/webhp"/>
 
-  <rule from="^http://(www\.)?google\.com/#" 
+  <rule from="^http://(www\.)?google\.com/#"
           to="https://encrypted.google.com/#"/>
 
-  <rule from="^http://(www\.)?google\.com/$" 
+  <rule from="^http://(www\.)?google\.com/$"
           to="https://encrypted.google.com/"/>
 
   <!-- most google international sites look like "google.fr" -->
 
-  <rule 
-    from="^http://(www\.)?google\.[^/@:][^/@:]/(search\?|firefox|#)" 
+  <rule
+    from="^http://(www\.)?google\.[^/@:][^/@:]/(search\?|firefox|#)"
       to="https://encrypted.google.com/#" />
 
   <!-- some look like "google.co.jp" -->
   <!-- and some crazy ones like "google.com.au" -->
-  <rule 
-    from="^http://(www\.)?google\.com?\.[^/@:][^/@:]/(search\?|firefox|#)" 
+  <rule
+    from="^http://(www\.)?google\.com?\.[^/@:][^/@:]/(search\?|firefox|#)"
       to="https://encrypted.google.com/#" />
-  <!-- Completion urls look like this: 
+  <!-- Completion urls look like this:
 
 http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1 HTTP/1.1\r\n
 
    -->
-  <rule from="^http://clients[0-9]\.google\.com/complete/search" 
+  <rule from="^http://clients[0-9]\.google\.com/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
-  <rule from="^http://clients[0-9]\.google\.com?\.[^/:@][^/:@]/complete/search" 
+  <rule from="^http://clients[0-9]\.google\.com?\.[^/:@][^/:@]/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
-  <rule from="^http://clients[0-9]\.google\.[^/:@][^/:@]/complete/search" 
+  <rule from="^http://clients[0-9]\.google\.[^/:@][^/:@]/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
-  <rule from="^http://suggestqueries\.google\.com/complete/search" 
+  <rule from="^http://suggestqueries\.google\.com/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
   <!-- We are trying a large collection of mappings from google country sites
        to https://encrypted.google.com/webhp?hl=<lang> where lang is the default
        language for that country.  The concern with that was that the hl=
        parameter would override any user preference for a particular language,
-       which would be Bad, especially if people got bounced from 
+       which would be Bad, especially if people got bounced from
        http://google.com to google.cctld to https://google/webhp?hl=<constant>
-       but since we actually prevent google from performing the first bounce, 
+       but since we actually prevent google from performing the first bounce,
        we don't have to worry about this so much!
        -->
 
-  <rule 
+  <rule
    from="^http://(www\.)?google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|na|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/?$"
      to="https://encrypted.google.com/" />
 
-  <rule 
+  <rule
    from="^http://(www\.)?google\.(com?\.)?(ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/?$"
     to="https://encrypted.google.com/webhp?hl=es" />
 
-  <rule 
+  <rule
    from="^http://(www\.)?google\.(com\.)?(ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/?$"
      to="https://encrypted.google.com/webhp?hl=ar" />
 
