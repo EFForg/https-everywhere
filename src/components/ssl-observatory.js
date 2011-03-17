@@ -171,8 +171,10 @@ SSLObservatory.prototype = {
     // XXX: Server ip??
     var reqParams = [];
     reqParams.push("domain="+domain);
+    reqParams.push("server_ip=-1");
     reqParams.push("fplist="+this.compatJSON.encode(fps));
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
+    reqParams.push("client_as=-1");
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 1024;
