@@ -1,5 +1,3 @@
-// XXX: This service uses prefs we have not set defaults for yet.
-// We should begin including a defaults/preferences/preferences.js
 const Ci = Components.interfaces;
 const Cc = Components.classes;
 const Cr = Components.results;
@@ -63,17 +61,23 @@ function SSLObservatory() {
     this.proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_type");
   }
 
-  // Generate nonce for request
+  // The url to submit to
+  this.submit_url = "https://observatory.eff.org/submit_cert";
+
+  // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
+  // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
+
+  this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 
   // Register observer
   OS.addObserver(this, "http-on-examine-response", false);
 
   // Register protocolproxyfilter
-  var pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"]
+  this.pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"]
                     .getService(Components.interfaces.nsIProtocolProxyService);
 
-  pps.registerFilter(this, 0);
+  this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
 }
 
@@ -134,30 +138,88 @@ SSLObservatory.prototype = {
      subject.QueryInterface(Ci.nsIHttpChannel);
      var certchain = this.getSSLCert(subject);
      if(certchain) {
-       var chainArray = certchain.getChain();
-
-       dump("----------------------------------\n");
-
-       for(var i = 0; i < chainArray.length; i++) {
-         var cert = chainArray.queryElementAt(i, Ci.nsIX509Cert);
-         var fp = cert.md5Fingerprint +":"+cert.sha1Fingerprint;
-         var len = new Object();
-         var derData = cert.getRawDER(len);
-         dump("DerData: "+this.base64_encode(derData, false, false)+"\n");
-
-         // XXX: Use an async XMLHTTPRequest:
-         // XXX: Ask to submit cert
-         // XXX: AS number??
+       var chainEnum = certchain.getChain();
+       var chainArray = [];
+       for(var i = 0; i < chainEnum.length; i++) {
+         var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+         chainArray.push(cert);
        }
-       dump("----------------------------------\n");
+
+       if (subject.URI.port == -1) {
+         this.submitChain(chainArray, subject.URI.host);
+       } else {
+         this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port);
+       }
      }
    }
   },
 
+  submitChain: function(certArray, domain) {
+    var base64Certs = [];
+    var fps = [];
+
+    for (var i = 0; i < certArray.length; i++) {
+      var fp = (certArray[i].md5Fingerprint+certArray[i].sha1Fingerprint).replace(":", "", "g");
+      fps.push(fp);
+
+      var len = new Object();
+      var derData = certArray[i].getRawDER(len);
+      base64Certs.push(this.base64_encode(derData, false, false));
+    }
+
+    // XXX: AS number??
+    // XXX: Server ip??
+    var reqParams = [];
+    reqParams.push("domain="+domain);
+    reqParams.push("fplist="+this.compatJSON.encode(fps));
+    reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
+
+    var params = reqParams.join("&") + "&padding=0";
+    var tot_len = 1024;
+
+    this.log(DBUG, "Params: "+params);
+
+    // Pad to exp scale
+    for (tot_len = 1024; tot_len < params.length; tot_len*=2);
+
+    while (params.length != tot_len) {
+      params += "0";
+    }
+
+    this.log(DBUG, "Padded params: "+params);
+
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("POST", this.submit_url+this.csrf_nonce, true);
+
+    // Send the proper header information along with the request
+    // Do not set gzip header.. It will ruin the padding
+    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    req.setRequestHeader("Content-length", params.length);
+    req.setRequestHeader("Connection", "close");
+
+    req.onreadystatechange = function(evt) {
+      if (req.readyState == 4) {
+        // XXX: Handle errors properly?
+        // XXX: We have neither SSLObservatory nor this in scope.
+        if (req.status == 200) {
+          dump("Got ReadyStateChange == 4\n");
+          //SSLObservatory.log(INFO, "Successful cert submission");
+        } else {
+          dump("Fail ReadyStateChange == 4\n");
+          //SSLObservatory.log(WARN, "Cert submission failure");
+        }
+      }
+    };
+
+    req.send(params);
+  },
+
   applyFilter: function(aProxyService, aURI, aProxy) {
-    // XXX: This check may be wrong. Have not tested it
-    if (aURI.spec.search("^https://observatory.eff.org/submit.py") != -1 &&
+    if (aURI.spec.search("^"+this.submit_url) != -1 &&
         aURI.path.search(this.csrf_nonce+"$") != -1) {
+
+      this.log(INFO, "Got observatory url + nonce: "+aURI.spec);
 
       // Send it through tor by creating an nsIProxy instance
       // for the torbutton proxy settings.
