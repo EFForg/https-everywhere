@@ -175,6 +175,7 @@ SSLObservatory.prototype = {
     reqParams.push("fplist="+this.compatJSON.encode(fps));
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
     reqParams.push("client_as=-1");
+    reqParams.push("private_opt_in=1");
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 1024;
