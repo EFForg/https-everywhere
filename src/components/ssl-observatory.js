@@ -27,39 +27,21 @@ function SSLObservatory() {
   this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefBranch);
 
-  dump("Dump: Loaded observatory component\n");
-  this.log(DBUG, "Loaded observatory component!");
-
   try {
     // Check for torbutton
     this.tor_logger = Components.classes["@torproject.org/torbutton-logger;1"]
           .getService(Components.interfaces.nsISupports).wrappedJSObject;
-
     this.torbutton_installed = true;
-
-    // If the user wants to use their Tor proxy, grab it automatically
-    if (this.prefs.getBoolPref("extensions.https_everywhere._prefs.use_tor_proxy")) {
-      // extract torbutton proxy settings
-      this.proxy_port = this.prefs.getIntPref("extensions.torbutton.https_port");
-      this.proxy_host = this.prefs.getCharPref("extensions.torbutton.https_proxy");
-      this.proxy_type = "http";
-
-      if (!this.proxy_port) {
-        this.proxy_host = this.prefs.getCharPref("extensions.torbutton.socks_host");
-        this.proxy_port = this.prefs.getIntPref("extensions.torbutton.socks_port");
-        this.proxy_type = "socks";
-      }
-    }
   } catch(e) {
-    dump("Torbutton not found\n");
     this.torbutton_installed = false;
   }
 
-  if (this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
-    this.proxy_host = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_host");
-    this.proxy_port = this.prefs.getIntPref("extensions.https_everywhere._observatory_prefs.proxy_port");
-    this.proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_type");
-  }
+  // XXX: Clear this on cookies-cleared observer event?
+  this.already_submitted = {};
+
+  // XXX: Read these two from a file? Or hardcode them?
+  this.public_roots = {};
+  this.popular_fps = {};
 
   // The url to submit to
   this.submit_url = "https://observatory.eff.org/submit_cert";
@@ -79,6 +61,7 @@ function SSLObservatory() {
 
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
+  this.log(DBUG, "Loaded observatory component!");
 }
 
 SSLObservatory.prototype = {
@@ -132,21 +115,31 @@ SSLObservatory.prototype = {
          && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
        return;
      }
+   } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
+     this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
+     return;
    }
 
    if ("http-on-examine-response" == topic) {
      subject.QueryInterface(Ci.nsIHttpChannel);
      var certchain = this.getSSLCert(subject);
-     if(certchain) {
+     if (certchain) {
        var chainEnum = certchain.getChain();
        var chainArray = [];
+       // XXX: We get chains for requests that have never completed if they
+       // match cached certs!
+       if (chainEnum.length && subject.status != 0) {
+         this.log(NOTE, "Got a certificate chain for "
+                +subject.URI.host+" despite error "+subject.status);
+         return;
+       }
        for(var i = 0; i < chainEnum.length; i++) {
          var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
          chainArray.push(cert);
        }
 
        if (subject.URI.port == -1) {
-         this.submitChain(chainArray, subject.URI.host);
+         this.submitChain(chainArray, new String(subject.URI.host));
        } else {
          this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port);
        }
@@ -161,14 +154,36 @@ SSLObservatory.prototype = {
     for (var i = 0; i < certArray.length; i++) {
       var fp = (certArray[i].md5Fingerprint+certArray[i].sha1Fingerprint).replace(":", "", "g");
       fps.push(fp);
+    }
 
+    // XXX: is 0 the root? or is the last one the root?
+    /*
+    if (!(fps[0] in this.public_roots)) {
+      this.log(INFO, "Got a private root cert. Ignoring");
+      return;
+    }
+    */
+
+    if (fps[fps.length-1] in this.already_submitted) {
+      this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
+      return;
+    }
+
+    if (fps[fps.length-1] in this.popular_fps) {
+      this.log(INFO, "Excluding popuar cert for "+domain);
+      return;
+    }
+
+    for (var i = 0; i < certArray.length; i++) {
       var len = new Object();
       var derData = certArray[i].getRawDER(len);
       base64Certs.push(this.base64_encode(derData, false, false));
     }
 
-    // XXX: AS number??
-    // XXX: Server ip??
+    // TODO: Refetch AS number every time one of these two changes:
+    // https://developer.mozilla.org/en/online_and_offline_events
+    // https://developer.mozilla.org/En/Monitoring_WiFi_access_points
+    // TODO: Server ip??
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
@@ -180,16 +195,18 @@ SSLObservatory.prototype = {
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 1024;
 
-    this.log(DBUG, "Params: "+params);
+    this.log(INFO, "Submitting cert for "+domain);
+    this.log(DBUG, "submit_cert params: "+params);
 
-    // Pad to exp scale
+    // Pad to exp scale. This is done because the distribution of cert sizes
+    // is almost certainly pareto, and definitely not uniform.
     for (tot_len = 1024; tot_len < params.length; tot_len*=2);
 
     while (params.length != tot_len) {
       params += "0";
     }
 
-    this.log(DBUG, "Padded params: "+params);
+    //this.log(DBUG, "Padded params: "+params);
 
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
@@ -201,21 +218,53 @@ SSLObservatory.prototype = {
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
 
+    var that = this; // We have neither SSLObservatory nor this in scope in the lambda
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         // XXX: Handle errors properly?
-        // XXX: We have neither SSLObservatory nor this in scope.
         if (req.status == 200) {
           dump("Got ReadyStateChange == 4\n");
-          //SSLObservatory.log(INFO, "Successful cert submission");
+          that.log(INFO, "Successful cert submission");
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.cache_submitted")) {
+            if (fps[fps.length-1] in that.already_submitted)
+              delete that.already_submitted[fps[fps.length-1]];
+          }
         } else {
           dump("Fail ReadyStateChange == 4\n");
-          //SSLObservatory.log(WARN, "Cert submission failure");
+          that.log(WARN, "Cert submission failure: "+req.status);
+          if (fps[fps.length-1] in that.already_submitted)
+            delete that.already_submitted[fps[fps.length-1]];
         }
       }
     };
 
+    // Cache this here to prevent multiple submissions for all the content elements.
+    that.already_submitted[fps[fps.length-1]] = true;
     req.send(params);
+  },
+
+  getProxySettings: function() {
+    var proxy_settings = ["direct", "", 0];
+    if (this.torbutton_installed &&
+        this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_tor_proxy")) {
+      // extract torbutton proxy settings
+      proxy_settings[0] = "http";
+      proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
+      proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.https_port");
+
+      if (proxy_settings[2] == 0) {
+        proxy_settings[0] = "socks";
+        proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
+        proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
+      }
+    } else if (this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
+      proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_type");
+      proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_host");
+      proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory_prefs.proxy_port");
+    } else {
+      this.log(WARN, "Proxy settings are strange: No Torbutton found, but no proxy specified. Using direct.");
+    }
+    return proxy_settings;
   },
 
   applyFilter: function(aProxyService, aURI, aProxy) {
@@ -223,13 +272,22 @@ SSLObservatory.prototype = {
         aURI.path.search(this.csrf_nonce+"$") != -1) {
 
       this.log(INFO, "Got observatory url + nonce: "+aURI.spec);
+      var proxy_settings = null;
+      var proxy = null;
 
       // Send it through tor by creating an nsIProxy instance
       // for the torbutton proxy settings.
-      var proxy = this.pps.newProxyInfo(this.proxy_type, this.proxy_host,
-                  this.proxy_port,
+      try {
+        proxy_settings = this.getProxySettings();
+        proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
+                  proxy_settings[2],
                   Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
                   0xFFFFFFFF, null);
+      } catch(e) {
+        this.log(WARN, "Error specifying proxy for observatory: "+e);
+      }
+
+      this.log(INFO, "Specifying proxy: "+proxy);
 
       // TODO: Use new identity or socks u/p to ensure we get a unique
       // tor circuit for this request
