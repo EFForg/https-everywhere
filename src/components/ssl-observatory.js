@@ -214,6 +214,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
+    // XXX: Need to clear useragent and other headers..
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
