@@ -158,7 +158,7 @@ SSLObservatory.prototype = {
 
     // XXX: is 0 the root? or is the last one the root?
     /*
-    if (!(fps[0] in this.public_roots)) {
+    if (fps.length > 1 && !(fps[0] in this.public_roots)) {
       this.log(INFO, "Got a private root cert. Ignoring");
       return;
     }
@@ -223,17 +223,19 @@ SSLObservatory.prototype = {
       if (req.readyState == 4) {
         // XXX: Handle errors properly?
         if (req.status == 200) {
-          dump("Got ReadyStateChange == 4\n");
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.cache_submitted")) {
             if (fps[fps.length-1] in that.already_submitted)
               delete that.already_submitted[fps[fps.length-1]];
           }
         } else {
-          dump("Fail ReadyStateChange == 4\n");
-          that.log(WARN, "Cert submission failure: "+req.status);
           if (fps[fps.length-1] in that.already_submitted)
             delete that.already_submitted[fps[fps.length-1]];
+          try {
+            that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
+          } catch(e) {
+            that.log(WARN, "Cert submission failure and exception: "+e);
+          }
         }
       }
     };
@@ -370,7 +372,7 @@ SSLObservatory.prototype = {
       threshold = WARN;
     }
     if (level >= threshold) {
-      dump(str+"\n");
+      dump("SSL Observatory: "+str+"\n");
       econsole.logStringMessage("SSL Observatory: " +str);
     }
   }
