@@ -24,13 +24,13 @@ const SERVICE_ID=Components.ID("{0f9ab521-986d-4ad8-9c1f-6934e195c15c}");
 const SERVICE_NAME = "Anonymously Submits strange SSL certificates to EFF.";
 
 function SSLObservatory() {
-  this.prefs = Components.classes["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefBranch);
+  this.prefs = CC["@mozilla.org/preferences-service;1"]
+        .getService(CI.nsIPrefBranch);
 
   try {
     // Check for torbutton
-    this.tor_logger = Components.classes["@torproject.org/torbutton-logger;1"]
-          .getService(Components.interfaces.nsISupports).wrappedJSObject;
+    this.tor_logger = CC["@torproject.org/torbutton-logger;1"]
+          .getService(CI.nsISupports).wrappedJSObject;
     this.torbutton_installed = true;
   } catch(e) {
     this.torbutton_installed = false;
@@ -56,8 +56,8 @@ function SSLObservatory() {
   OS.addObserver(this, "http-on-examine-response", false);
 
   // Register protocolproxyfilter
-  this.pps = Components.classes["@mozilla.org/network/protocol-proxy-service;1"]
-                    .getService(Components.interfaces.nsIProtocolProxyService);
+  this.pps = CC["@mozilla.org/network/protocol-proxy-service;1"]
+                    .getService(CI.nsIProtocolProxyService);
 
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
@@ -67,8 +67,8 @@ function SSLObservatory() {
 SSLObservatory.prototype = {
   // QueryInterface implementation, e.g. using the generateQI helper
   QueryInterface: XPCOMUtils.generateQI(
-    [ Components.interfaces.nsIObserver,
-      Components.interfaces.nsIProtocolProxyFilter ]),
+    [ CI.nsIObserver,
+      CI.nsIProtocolProxyFilter ]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -364,8 +364,8 @@ SSLObservatory.prototype = {
   },
 
   log: function(level, str) {
-    var econsole = Components.classes["@mozilla.org/consoleservice;1"]
-      .getService(Components.interfaces.nsIConsoleService);
+    var econsole = CC["@mozilla.org/consoleservice;1"]
+      .getService(CI.nsIConsoleService);
     try {
       var threshold = this.prefs.getIntPref(LLVAR);
     } catch (e) {
