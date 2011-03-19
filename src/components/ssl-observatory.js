@@ -22,6 +22,25 @@ const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverServic
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
 const SERVICE_ID=Components.ID("{0f9ab521-986d-4ad8-9c1f-6934e195c15c}");
 const SERVICE_NAME = "Anonymously Submits strange SSL certificates to EFF.";
+const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
+
+const _INCLUDED = {};
+const INCLUDE = function(name) {
+  if (arguments.length > 1)
+    for (var j = 0, len = arguments.length; j < len; j++)
+      INCLUDE(arguments[j]);
+  else if (!_INCLUDED[name]) {
+    try {
+      LOADER.loadSubScript("chrome://https-everywhere/content/code/"
+              + name + ".js");
+      _INCLUDED[name] = true;
+    } catch(e) {
+      dump("INCLUDE " + name + ": " + e + "\n");
+    }
+  }
+}
+
+INCLUDE('Root-CAs');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]
@@ -36,11 +55,12 @@ function SSLObservatory() {
     this.torbutton_installed = false;
   }
 
+  this.public_roots = root_ca_hashes;
+
   // XXX: Clear this on cookies-cleared observer event?
   this.already_submitted = {};
 
-  // XXX: Read these two from a file? Or hardcode them?
-  this.public_roots = {};
+  // XXX: Read these from a file? Or hardcode them?
   this.popular_fps = {};
 
   // The url to submit to
@@ -150,26 +170,34 @@ SSLObservatory.prototype = {
   submitChain: function(certArray, domain) {
     var base64Certs = [];
     var fps = [];
+    var rootidx = -1;
 
     for (var i = 0; i < certArray.length; i++) {
       var fp = (certArray[i].md5Fingerprint+certArray[i].sha1Fingerprint).replace(":", "", "g");
       fps.push(fp);
+      if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
+        this.log(INFO, "Got root cert at position: "+i);
+        rootidx = i;
+      }
     }
 
-    // XXX: is 0 the root? or is the last one the root?
-    /*
-    if (fps.length > 1 && !(fps[0] in this.public_roots)) {
-      this.log(INFO, "Got a private root cert. Ignoring");
+    // XXX: Test self-signed certs + CA certs.
+    if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
+      if (rootidx == -1) {
+        rootidx = fps.length-1;
+      }
+      this.log(INFO, "Got a private root cert. Ignoring domain "
+               +domain+" with root "+fps[rootidx]);
+      this.log(INFO, "Got a private root cert: "+this.public_roots[fps[rootidx]]);
       return;
     }
-    */
 
-    if (fps[fps.length-1] in this.already_submitted) {
+    if (fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
       return;
     }
 
-    if (fps[fps.length-1] in this.popular_fps) {
+    if (fps[0] in this.popular_fps) {
       this.log(INFO, "Excluding popuar cert for "+domain);
       return;
     }
@@ -189,7 +217,7 @@ SSLObservatory.prototype = {
     reqParams.push("server_ip=-1");
     reqParams.push("fplist="+this.compatJSON.encode(fps));
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
-    reqParams.push("client_as=-1");
+    reqParams.push("client_asn=-1");
     reqParams.push("private_opt_in=1");
 
     var params = reqParams.join("&") + "&padding=0";
@@ -226,12 +254,12 @@ SSLObservatory.prototype = {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.cache_submitted")) {
-            if (fps[fps.length-1] in that.already_submitted)
-              delete that.already_submitted[fps[fps.length-1]];
+            if (fps[0] in that.already_submitted)
+              delete that.already_submitted[fps[0]];
           }
         } else {
-          if (fps[fps.length-1] in that.already_submitted)
-            delete that.already_submitted[fps[fps.length-1]];
+          if (fps[0] in that.already_submitted)
+            delete that.already_submitted[fps[0]];
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
@@ -242,7 +270,7 @@ SSLObservatory.prototype = {
     };
 
     // Cache this here to prevent multiple submissions for all the content elements.
-    that.already_submitted[fps[fps.length-1]] = true;
+    that.already_submitted[fps[0]] = true;
     req.send(params);
   },
 

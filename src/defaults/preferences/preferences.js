@@ -2,7 +2,7 @@
 pref("extensions.https_everywhere._observatory_prefs.enabled",true);
 
 pref("extensions.https_everywhere._observatory_prefs.use_tor_proxy",true);
-pref("extensions.https_everywhere._observatory_prefs.submit_during_tor",false);
+pref("extensions.https_everywhere._observatory_prefs.submit_during_tor",true);
 pref("extensions.https_everywhere._observatory_prefs.submit_during_nontor",true);
 
 pref("extensions.https_everywhere._observatory_prefs.cache_submitted",true);
