@@ -146,13 +146,6 @@ SSLObservatory.prototype = {
      if (certchain) {
        var chainEnum = certchain.getChain();
        var chainArray = [];
-       // XXX: We get chains for requests that have never completed if they
-       // match cached certs!
-       if (chainEnum.length && subject.status != 0) {
-         this.log(NOTE, "Got a certificate chain for "
-                +subject.URI.host+" despite error "+subject.status);
-         return;
-       }
        for(var i = 0; i < chainEnum.length; i++) {
          var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
          chainArray.push(cert);
@@ -241,6 +234,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
