@@ -181,7 +181,6 @@ SSLObservatory.prototype = {
       }
     }
 
-    // XXX: Test self-signed certs + CA certs.
     if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
       if (rootidx == -1) {
         rootidx = fps.length-1;
@@ -221,14 +220,14 @@ SSLObservatory.prototype = {
     reqParams.push("private_opt_in=1");
 
     var params = reqParams.join("&") + "&padding=0";
-    var tot_len = 1024;
+    var tot_len = 8192;
 
     this.log(INFO, "Submitting cert for "+domain);
     this.log(DBUG, "submit_cert params: "+params);
 
     // Pad to exp scale. This is done because the distribution of cert sizes
     // is almost certainly pareto, and definitely not uniform.
-    for (tot_len = 1024; tot_len < params.length; tot_len*=2);
+    for (tot_len = 8192; tot_len < params.length; tot_len*=2);
 
     while (params.length != tot_len) {
       params += "0";
@@ -242,10 +241,15 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
-    // XXX: Need to clear useragent and other headers..
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
+    // Need to clear useragent and other headers..
+    req.setRequestHeader("User-Agent", "");
+    req.setRequestHeader("Accept", "");
+    req.setRequestHeader("Accept-Language", "");
+    req.setRequestHeader("Accept-Encoding", "");
+    req.setRequestHeader("Accept-Charset", "");
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
     req.onreadystatechange = function(evt) {
