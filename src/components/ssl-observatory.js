@@ -57,8 +57,9 @@ function SSLObservatory() {
 
   this.public_roots = root_ca_hashes;
 
-  // XXX: Clear this on cookies-cleared observer event?
+  // Clear this on cookies-cleared observer event
   this.already_submitted = {};
+  OS.addObserver(this, "cookie-changed", false);
 
   // XXX: Read these from a file? Or hardcode them?
   this.popular_fps = {};
@@ -81,6 +82,26 @@ function SSLObservatory() {
 
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
+
+  this.client_asn = -1;
+  this.getClientASN();
+
+  this.max_ap = null;
+
+  // Observe network changes to get new ASNs
+  OS.addObserver(this, "network:offline-status-changed", false);
+  var pref_service = Cc["@mozilla.org/preferences-service;1"]
+      .getService(Ci.nsIPrefBranchInternal);
+  proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+  proxy_branch.addObserver("network.proxy", this, false);
+
+  try {
+    var wifi_service = Cc["@mozilla.org/wifi/monitor;1"].getService(Ci.nsIWifiMonitor);
+    wifi_service.startWatching(this);
+  } catch(e) {
+    this.log(INFO, "Failed to register ASN change monitor: "+e);
+  }
+
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -88,7 +109,8 @@ SSLObservatory.prototype = {
   // QueryInterface implementation, e.g. using the generateQI helper
   QueryInterface: XPCOMUtils.generateQI(
     [ CI.nsIObserver,
-      CI.nsIProtocolProxyFilter ]),
+      CI.nsIProtocolProxyFilter,
+      CI.nsIWifiListener ]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -123,41 +145,101 @@ SSLObservatory.prototype = {
     }
   },
 
+  getClientASN: function() {
+    // XXX: Fetch a new client ASN..
+    return;
+  },
+
+  // Wifi status listener
+  onChange: function(accessPoints) {
+    var max_ap = accessPoints[0].mac;
+    var max_signal = accessPoints[0].signal;
+    var old_max_present = false;
+    for (var i=0; i<accessPoints.length; i++) {
+      if (accessPoints[i].mac == this.max_ap) {
+        old_max_present = true;
+      }
+      if (accessPoints[i].signal > max_signal) {
+        max_ap = accessPoints[i].mac;
+        max_signal = accessPoints[i].signal;
+      }
+    }
+    this.max_ap = max_ap;
+    if (!old_max_present) {
+      this.log(INFO, "Old access point is out of range. Getting new ASN");
+      this.getClientASN();
+    } else {
+      this.log(DBUG, "Old access point is still in range.");
+    }
+  },
+
+  // Wifi status listener
+  onError: function(value) {
+    // XXX: Do we care?
+    this.log(NOTE, "ASN change observer got an error: "+value);
+    this.getClientASN();
+  },
+
+
   observe: function(subject, topic, data) {
-   if (this.torbutton_installed) {
-     // Allow Tor users to choose if they want to submit
-     // during tor and/or non-tor
-     if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_tor")
-         && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
-       return;
-     }
-     if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_nontor")
-         && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
-       return;
-     }
-   } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
-     this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
-     return;
-   }
+    if (topic == "cookie-changed" && data == "cleared") {
+      this.already_submitted = {};
+      this.log(INFO, "Cookies were cleared. Purging list of already submitted sites");
+      return;
+    }
 
-   if ("http-on-examine-response" == topic) {
-     subject.QueryInterface(Ci.nsIHttpChannel);
-     var certchain = this.getSSLCert(subject);
-     if (certchain) {
-       var chainEnum = certchain.getChain();
-       var chainArray = [];
-       for(var i = 0; i < chainEnum.length; i++) {
-         var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
-         chainArray.push(cert);
-       }
+    if (topic == "nsPref:changed") {
+      // XXX: We somehow need to only call this once. Right now, we'll make
+      // like 3 calls to getClientASN().. The only thing I can think
+      // of is a timer...
+      if (data == "network.proxy.ssl" || data == "network.proxy.ssl_port" ||
+          data == "network.proxy.socks" || data == "network.proxy.socks_port") {
+        this.log(INFO, "Proxy settings have changed. Getting new ASN");
+        this.getClientASN();
+      }
+      return;
+    }
 
-       if (subject.URI.port == -1) {
-         this.submitChain(chainArray, new String(subject.URI.host));
-       } else {
-         this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port);
-       }
-     }
-   }
+    if (topic == "network:offline-status-changed" && data == "online") {
+      this.log(INFO, "Browser back online. Getting new ASN.");
+      this.getClientASN();
+      return;
+    }
+
+    if ("http-on-examine-response" == topic) {
+      if (this.torbutton_installed) {
+        // Allow Tor users to choose if they want to submit
+        // during tor and/or non-tor
+        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_tor")
+            && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
+          return;
+        }
+        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_nontor")
+            && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
+          return;
+        }
+      } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
+        this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
+        return;
+      }
+
+      subject.QueryInterface(Ci.nsIHttpChannel);
+      var certchain = this.getSSLCert(subject);
+      if (certchain) {
+        var chainEnum = certchain.getChain();
+        var chainArray = [];
+        for(var i = 0; i < chainEnum.length; i++) {
+          var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+          chainArray.push(cert);
+        }
+
+        if (subject.URI.port == -1) {
+          this.submitChain(chainArray, new String(subject.URI.host));
+        } else {
+          this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port);
+        }
+      }
+    }
   },
 
   submitChain: function(certArray, domain) {
@@ -180,7 +262,6 @@ SSLObservatory.prototype = {
       }
       this.log(INFO, "Got a private root cert. Ignoring domain "
                +domain+" with root "+fps[rootidx]);
-      this.log(INFO, "Got a private root cert: "+this.public_roots[fps[rootidx]]);
       return;
     }
 
@@ -200,16 +281,16 @@ SSLObservatory.prototype = {
       base64Certs.push(this.base64_encode(derData, false, false));
     }
 
-    // TODO: Refetch AS number every time one of these two changes:
-    // https://developer.mozilla.org/en/online_and_offline_events
-    // https://developer.mozilla.org/En/Monitoring_WiFi_access_points
     // TODO: Server ip??
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
     reqParams.push("fplist="+this.compatJSON.encode(fps));
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
-    reqParams.push("client_asn=-1");
+    // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
+    // the less reliable offline/online notification-triggered fetch?
+    // this.max_ap will be null if we have no wifi info.
+    reqParams.push("client_asn="+this.client_asn);
     reqParams.push("private_opt_in=1");
 
     var params = reqParams.join("&") + "&padding=0";
