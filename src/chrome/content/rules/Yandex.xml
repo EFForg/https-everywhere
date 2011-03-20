@@ -1,5 +1,126 @@
-<ruleset name="Mail.Yandex">
-  <target host="mail.yandex.ru" />
+<!--
+    For any questions please contact Artyom Gavrichenkov <ximaera@yandex.ru>.
 
-  <rule from="^http://mail\.yandex\.ru/" to="https://mail.yandex.ru/"/>
+    I'm not in any way a Yandex employee, however, this set of rules is
+    already working for a long time with all Yandex services, being used very
+    intensively, and thus is being shared with community in order to prevent
+    scam and stealing from Money.Yandex.ru (and other services as well).
+
+    If you want to know about license terms, here they are:
+
+    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+    Version 2, December 2004
+
+    Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+
+    Everyone is permitted to copy and distribute verbatim or modified
+    copies of this license document, and changing it is allowed as long
+    as the name is changed.
+
+    DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+    TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+    0. You just DO WHAT THE FUCK YOU WANT TO.
+-->
+<ruleset name="Yandex">
+    <target host="yandex.ru" />
+    <target host="yandex.net" />
+    <target host="yandex.st" />
+    <target host="ya.ru" />
+    <target host="*.yandex.ru" />
+    <target host="*.yandex.net" />
+    <target host="*.yandex.st" />
+    <target host="*.ya.ru" />
+    <target host="*.friends.yandex.net" />
+    <target host="*.maps.yandex.ru" />
+    <target host="moikrug.ru" />
+    <target host="*.moikrug.ru" />
+
+    <!--
+        Rather than enumerating domains that support SSL,
+        we enable SSL for all services and then exclude those
+        which become broken:
+    -->
+
+    <!-- 1. Public services without HTTPS support (or with broken one) -->
+    <exclusion pattern="^http://api-maps\.yandex\.ru/" />
+    <exclusion pattern="^http://bar-widgets\.yandex\.ru/" />
+    <exclusion pattern="^http://blogs\.yandex\.ru/" />
+    <exclusion pattern="^http://dzen\.yandex\.ru/" />
+    <exclusion pattern="^http://fotki\.yandex\.ru/" />
+    <exclusion pattern="^http://images\.yandex\.ru/" />
+    <exclusion pattern="^http://music\.yandex\.ru/" />
+    <exclusion pattern="^http://news\.yandex\.ru/" />
+    <exclusion pattern="^http://sprav\.yandex\.ru/" />
+    <exclusion pattern="^http://video\.yandex\.ru/" />
+    <exclusion pattern="^http://wdgt\.yandex\.ru/" />
+    <exclusion pattern="^http://www\.yandex\.ru/" />
+
+    <!-- 2. Simple redirections -->
+    <exclusion pattern="^http://probki\.yandex\.ru/" />
+    <exclusion pattern="^http://blogs\.ya\.ru" />
+    <exclusion pattern="^http://fotki\.ya\.ru" />
+    <exclusion pattern="^http://images\.ya\.ru" />
+    <exclusion pattern="^http://music\.ya\.ru" />
+    <exclusion pattern="^http://probki\.ya\.ru" />
+    <exclusion pattern="^http://video\.ya\.ru" />
+    <exclusion pattern="^http://wdgt\.ya\.ru" />
+    <exclusion pattern="^http://www\.ya\.ru" />
+
+    <!--
+        3. Narod.ru.
+
+        Narod.ru doesn't use auth data from Yandex,
+        so we don't need to encrypt its pages.
+        The only exception is Narod.Disk, but it doesn't provide HTTPS
+    -->
+    <exclusion pattern="^http://narod[0-9]*\.yandex\.ru/" />
+
+    <!-- 4. Search suggestions -->
+    <exclusion pattern="^http://suggest\.yandex\.ru/" />
+    <exclusion pattern="^http://suggest-blogs\.yandex\.ru/" />
+
+    <!-- 5. Webmaster -->
+    <exclusion pattern="^http://content\.webmaster\.yandex\.ru/" />
+
+    <!-- 6. Mobile services -->
+    <exclusion pattern="^http://m\.yandex\.ru/" />
+
+    <!-- 7. Internet.Yandex.Ru (connection rate detection breaks with HTTPS) -->
+    <exclusion pattern="^http://internet.yandex.ru/" />
+
+    <!-- 8. Various content storages -->
+    <exclusion pattern="^http://awaps\.yandex\.ru/" />
+    <exclusion pattern="^http://clck\.yandex\.ru/" />
+    <exclusion pattern="^http://kiks\.yandex\.ru/" />
+    <exclusion pattern="^http://mdata\.yandex\.net/" />
+    <exclusion pattern="^http://wrz\.yandex\.ru/" />
+
+    <!-- 9. Data clusters for Maps and Video -->
+    <exclusion pattern="^http://vec[0-9]+\.maps\.yandex\.ru/" />
+    <exclusion pattern="^http://[^.]+-tub\.yandex\.net/" />
+    <exclusion pattern="^http://[^.]+-tub\.yandex\.ru/" />
+    <exclusion pattern="^http://[^.]+-tub-[^.]+\.yandex\.net/" />
+    <exclusion pattern="^http://[^.]+-tub-[^.]+\.yandex\.ru/" />
+
+    <!--
+        Rewriting rules
+    -->
+    <rule from="^http://(www\.)?([^.]+)\.yandex\.(ru|net|st)/" to="https://$2.yandex.$3/" />
+
+    <rule from="^http://(www\.)?yandex\.(net|st)/" to="https://yandex.$2/" />
+
+    <!--
+        Here we can enable 4+ level domains with a single regexp,
+        but I've never seen any domains more that 4 levels deep
+        in Yandex network, so I wouldn't enable them now -
+        it may be unconvenient and may broke some services.
+        Only 4-level domains match.
+    -->
+    <rule from="^http://([^.]+)\.([^.]+)\.yandex\.(ru|net)/" to="https://$1.$2.yandex.$3/" />
+
+    <rule from="^http://(www\.)?([^.]+)\.ya\.ru/" to="https://$2.ya.ru/" />
+
+    <rule from="^http://(www\.)?moikrug\.ru/" to="https://moikrug.ru/" />
+
 </ruleset>
