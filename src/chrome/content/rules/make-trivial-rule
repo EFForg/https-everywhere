@@ -31,14 +31,15 @@ then
   exit 1
 fi
 
-escaped=$(echo "$1" | sed 's/\./\\./g' )
+lower=$(echo "$1" | tr A-Z a-z)
+escaped=$(echo "$lower" | sed 's/\./\\./g' )
 
 cat > "$dest" <<END
 <ruleset name="$capitalized">
-  <target host="$1" />
-  <target host="www.$1" />
+  <target host="$lower" />
+  <target host="www.$lower" />
 
-  <rule from="^http://(www\.)?$escaped/" to="https://www.$1/" />
+  <rule from="^http://(www\.)?$escaped/" to="https://www.$lower/" />
 </ruleset>
 END
 
