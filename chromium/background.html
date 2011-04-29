@@ -1,0 +1,18 @@
+<html><head><script type="text/javascript">
+function HTTPSOracle(url) {
+  if (url == "http://www.iana.org/domains/example/1") {
+    return "http://www.iana.org/domains/example/2";
+  } else {
+    return false;
+  }
+}
+
+chrome.experimental.webRequest.onBeforeRequest.addListener(function(details) {
+  var result = HTTPSOracle(details.url);
+  if (result) {
+    return {redirectUrl: result};
+  } else {
+    return {};
+  }
+}, {urls: ["http://*/*"]}, ["blocking"]);
+</script></head><body></body></html>
