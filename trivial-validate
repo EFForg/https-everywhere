@@ -33,6 +33,15 @@ else
 fi
 
 echo
+echo "-- Rules with backslashes in to pattern:"
+if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '\\'
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
+echo
 echo "-- Rules not containing trailing slash in from pattern:"
 if grep from= *.xml | cut -d\" -f2 | grep -v '//.*/'
 then
@@ -134,6 +143,15 @@ echo "--- Duplicated ruleset names:"
 if cat *.xml | grep 'ruleset name' | cut -d\" -f2 | sort | uniq -d | grep .
 then
    fail=true
+else
+   echo "(None.)"
+fi
+
+echo
+echo "--- Duplicated target hosts:"
+if cat *.xml | grep '<target host=' | cut -d\" -f2 | sort | uniq -d | grep .
+then
+   echo "(not exiting)"
 else
    echo "(None.)"
 fi
