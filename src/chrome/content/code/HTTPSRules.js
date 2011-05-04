@@ -36,15 +36,15 @@ function RuleSet(name, match_rule, default_off) {
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  var prefs = HTTPSEverywhere.instance.get_prefs();
+  this.prefs = HTTPSEverywhere.instance.get_prefs();
   try {
     // if this pref exists, use it
-    this.active = prefs.getBoolPref(name);
+    this.active = this.prefs.getBoolPref(name);
   } catch (e) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
     this.active = true;
-    prefs.setBoolPref(name, this.on_by_default);
+    this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
 
@@ -100,6 +100,18 @@ RuleSet.prototype = {
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;
   },
+
+  enable: function() {
+    // Enable us.
+    this.prefs.setBoolPref(this.name, true);
+    this.active = true;
+  },
+
+  disable: function() {
+    // Disable us.
+    this.prefs.setBoolPref(this.name, false);
+    this.active = false;
+  }
 };
 
 const RuleWriter = {

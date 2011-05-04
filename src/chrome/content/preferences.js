@@ -39,10 +39,12 @@ function https_prefs_init(doc) {
     },
     setCellValue: function(row, col, val) { // toggle a rule's activation
       var rule = this.rules[row];
-      var active = (val == "true");
 
-      o_httpsprefs.setBoolPref(rule.name, active);
-      rule.active = active;
+      if (val == "true") {
+        rule.enable();
+      } else {
+        rule.disable();
+      }
 
       this.treebox.invalidateRow(row);
     },
