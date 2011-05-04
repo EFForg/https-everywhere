@@ -12,6 +12,28 @@ rulesets = https_everywhere.https_rules.rulesets;
 const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
 
+// Disable all rules.
+function disable_all() {
+	for (var i in rulesets) {
+		rulesets[i].disable();
+	}
+
+	treeView.treebox.invalidate();
+}
+
+// Reset all rules to their default state.
+function reset_defaults() {
+  for (var i in rulesets) {
+    if (rulesets[i].on_by_default) {
+      rulesets[i].enable();
+    } else {
+      rulesets[i].disable();
+    }
+  }
+
+  treeView.treebox.invalidate();
+}
+
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
 
