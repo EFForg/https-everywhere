@@ -105,6 +105,7 @@ function https_prefs_init(doc) {
       this.rules = new_rules;
       this.rowCount = new_rules.length;
       this.treebox.invalidate();
+      this.treebox.scrollToRow(rulesets[0]);
     }
   };
 
