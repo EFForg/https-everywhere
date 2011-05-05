@@ -6,98 +6,108 @@ NOTE=4;
 WARN=5;
 
 https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+o_httpsprefs = https_everywhere.get_prefs();
+rulesets = https_everywhere.https_rules.rulesets;
 
 const id_prefix = "he_enable";
-function https_settings_changed(doc)
-// The user changed one of the preferences, so make the rulesets sync to them
-// This is not efficient but it doesn't matter
-{
-  var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rulesets;
-  for (var i = 0; i < rulesets.length; i++) {
-    var ruleset = rulesets[i];
-    var elem = doc.getElementById(id_prefix + ruleset.name);
-    ruleset.active = elem.checked;
-  }
+const pref_prefix = "extensions.https_everywhere.";
+
+// Disable all rules.
+function disable_all() {
+	for (var i in rulesets) {
+		rulesets[i].disable();
+	}
+
+	treeView.treebox.invalidate();
 }
 
-const row_width = 5;
+// Reset all rules to their default state.
+function reset_defaults() {
+  for (var i in rulesets) {
+    if (rulesets[i].on_by_default) {
+      rulesets[i].enable();
+    } else {
+      rulesets[i].disable();
+    }
+  }
+
+  treeView.treebox.invalidate();
+}
+
 function https_prefs_init(doc) {
+  var st = document.getElementById('sites_tree');
 
-  var o_httpsprefs = https_everywhere.get_prefs();
+  // GLOBAL VARIABLE!
+  treeView = {
+    rules: rulesets,
+    rowCount: rulesets.length,
+    getCellValue: function(row, col) { // site names
+      if (!this.rules[row]) return;
 
-  var prefs_window = doc.getElementById('https-everywhere-prefs');
-  var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rulesets;
-  var hbox;
+      switch (col.id) {
+        case "site_col":
+          return this.rules[row].name;
+        case "note_col":
+          return this.rules[row].notes;
+        case "enabled_col":
+          var e = o_httpsprefs.getBoolPref(this.rules[row].name);
+          return e ? "true" : "false";
+        default:
+          return;
+      }
+    },
+    getCellText: function(row, col) { // activation indicator
+       return this.getCellValue(row, col);
+    },
+    setCellValue: function(row, col, val) { // toggle a rule's activation
+      var rule = this.rules[row];
 
-  for (var i = 0; i < rulesets.length; i++) {
-    var ruleset = rulesets[i];
+      if (val == "true") {
+        rule.enable();
+      } else {
+        rule.disable();
+      }
 
-    if (i % row_width == 0) {
-      hbox = doc.createElement("row");
+      this.treebox.invalidateRow(row);
+    },
+    isEditable: function(row, col) {
+      return (col.id == "enabled_col");
+    },
+    setTree: function(treebox) {
+      this.treebox = treebox;
+    },
+    isContainer: function(row) { return false; },
+    isSeparator: function(row) { return false; },
+    isSorted: function() { return false; },
+    getRowProperties: function(row, props) {},
+    getColumnProperties: function(colid, col, props) {},
+    getCellProperties: function(row, col, props) {
+      var atomS = Components.classes["@mozilla.org/atom-service;1"];
+        atomS = atomS.getService(Components.interfaces.nsIAtomService);
+
+      if ( (col.id == "enabled_col") && !(this.rules[row]) ) {
+        props.AppendElement( atomS.getAtom("undefined") );
+      }
+    },
+    getLevel: function(row) { return 0; },
+    getImageSrc: function(row, col) { return null; },
+    search: function(query) {
+      var new_rules = [];
+      query = query.value.toLowerCase().replace(/^\s+|\s+$/g, "");
+
+      for (var i in rulesets) {
+        var rule_name = rulesets[i].name.toLowerCase();
+        if ( rule_name.indexOf(query) != -1 ) {
+          new_rules.push(rulesets[i]);
+        }
+      }
+
+      this.rules = new_rules;
+      this.rowCount = new_rules.length;
+      this.treebox.invalidate();
+      this.treebox.scrollToRow(rulesets[0]);
     }
+  };
 
-    var newopt = doc.createElement("checkbox");
-
-    // This pref should always have been created by the RuleSet constructor
-    var enabled = o_httpsprefs.getBoolPref(ruleset.name);
-    newopt.setAttribute("id", id_prefix + ruleset.name);
-    newopt.setAttribute("label",ruleset.name);
-    newopt.setAttribute("preference",null);
-    newopt.setAttribute("checked", enabled);
-    newopt.setAttribute("oncommand",
-                        "https_settings_changed(document)");
-    hbox.appendChild(newopt);
-    if (i % row_width == 0) {
-      rs.appendChild(hbox);
-    }
-
-    prefs_window.height = (screen.height*0.7).toString();
-    prefs_window.width = screen.width.toString();
-  }
-  // Do this here rather than in the .xul so that it goes after all these
-  // postpendments
-  //var spacer=doc.createElement("separator");
-  //spacer.setAttribute("class", "groove");
-  //rs.insertBefore(spacer,null);
-}
-
-function https_prefs_cancel(doc) {
-  // the user changed some prefs but then cancelled; undo the consequences
-  var o_httpsprefs = https_everywhere.get_prefs();
-  var rulesets = https_everywhere.https_rules.rulesets;
-  for (var i = 0; i < rulesets.length; i++) {
-    var ruleset = rulesets[i];
-    ruleset.active = o_httpsprefs.getBoolPref(ruleset.name);
-  }
-}
-
-
-function https_prefs_save(doc) {
-  var o_httpsprefs = https_everywhere.get_prefs();
-  var rs = doc.getElementById('https_everywhere_RuleSetList');
-  var rulesets = https_everywhere.https_rules.rulesets;
-  for (var i = 0; i < rulesets.length; i++) {
-    var ruleset = rulesets[i];
-    var elem = doc.getElementById(id_prefix + ruleset.name);
-    o_httpsprefs.setBoolPref(ruleset.name, elem.checked);
-  }
-}
-
-function https_set_all(doc,val) {
-  // set all rulesets to val (enable/disable, or -1 for "default")
-  var o_httpsprefs = https_everywhere.get_prefs();
-  var rulesets = https_everywhere.https_rules.rulesets;
-  var rs = doc.getElementById('https_everywhere_RuleSetList');
-  https_everywhere.log(3, "Setting rules to " + val);
-  for (var i = 0; i < rulesets.length; i++) {
-    var ruleset = rulesets[i];
-    if (val == -1) {
-      ruleset.active = ruleset.on_by_default;
-    } else 
-      ruleset.active = val;
-    var elem = doc.getElementById(id_prefix + ruleset.name);
-    elem.checked = ruleset.active;
-  }
+  st.view = treeView;
 }

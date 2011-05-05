@@ -20,6 +20,7 @@ function RuleSet(name, match_rule, default_off) {
   this.on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;
+  this.notes = "";
   if (match_rule) {
     this.ruleset_match_c = new RegExp(match_rule);
   } else {
@@ -29,20 +30,21 @@ function RuleSet(name, match_rule, default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
     // "valueless"
+    this.notes = default_off;
     this.on_by_default = false;
   }
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  var prefs = HTTPSEverywhere.instance.get_prefs();
+  this.prefs = HTTPSEverywhere.instance.get_prefs();
   try {
     // if this pref exists, use it
-    this.active = prefs.getBoolPref(name);
+    this.active = this.prefs.getBoolPref(name);
   } catch (e) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
     this.active = true;
-    prefs.setBoolPref(name, this.on_by_default);
+    this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
 
@@ -98,6 +100,18 @@ RuleSet.prototype = {
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;
   },
+
+  enable: function() {
+    // Enable us.
+    this.prefs.setBoolPref(this.name, true);
+    this.active = true;
+  },
+
+  disable: function() {
+    // Disable us.
+    this.prefs.setBoolPref(this.name, false);
+    this.active = false;
+  }
 };
 
 const RuleWriter = {
@@ -264,8 +278,8 @@ const HTTPSRules = {
         }
       }
 
-      // for any rulesets with <target host="*"> 
-      // every URI needs to be checked against these rulesets 
+      // for any rulesets with <target host="*">
+      // every URI needs to be checked against these rulesets
       // (though currently we don't ship any)
       this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
 
@@ -289,7 +303,7 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
-        if (r != null) 
+        if (r != null)
           this.rulesets.push(r);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
@@ -334,13 +348,13 @@ const HTTPSRules = {
         results = results.concat(this.targets[t]);
     }
     this.log(DBUG,"Applicable rules for " + host + ":");
-    for (i = 0; i < results.length; ++i) 
+    for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
   },
-  
+
   shouldSecureCookie: function(c) {
-    // Check to see if the Cookie object c meets any of our cookierule citeria 
+    // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure
     //this.log(DBUG, "Testing cookie:");
     //this.log(DBUG, "  name: " + c.name);
@@ -351,10 +365,10 @@ const HTTPSRules = {
     var rs = this.applicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active) 
+      if (ruleset.active)
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
+          if (cr.host_c.test(c.host) && cr.name_c.test(c.name))
             return true;
         }
     }
