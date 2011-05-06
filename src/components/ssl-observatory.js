@@ -275,10 +275,13 @@ SSLObservatory.prototype = {
       return;
     }
 
+    var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
+                .getService(Components.interfaces.nsIWindowMediator);
+    var browserWindow = wm.getMostRecentWindow("navigator:browser");
     for (var i = 0; i < certArray.length; i++) {
       var len = new Object();
       var derData = certArray[i].getRawDER(len);
-      base64Certs.push(this.base64_encode(derData, false, false));
+      base64Certs.push(browserWindow.btoa(derData));
     }
 
     // TODO: Server ip??
