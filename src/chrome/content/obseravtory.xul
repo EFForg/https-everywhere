@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/https-everywhere.dtd">
+
+<dialog id="ssl-observatory-prefs"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        buttons="accept,cancel"
+        title="&https-everywhere.prefs.title;"
+        buttonlabelextra1="&https-everywhere.prefs.no_obs;"
+        ondialogextra1="observatory_off(document);"
+        persist="screenX screenY"
+        onload="observatory_prefs_init(document)"
+        ondialogaccept="https_prefs_save(document)" 
+        ondialogcancel="https_prefs_cancel(document)">
+
+    <script type="application/x-javascript" src="preferences.js"/>
+    <groupbox flex="1">
+        <caption label="Which HTTPS redirection rules should apply?" 
+               align="center"/>
+        <hbox flex="1" style="overflow:auto">
+          <grid class="indent" align="center">
+            <columns>
+             <column/> <column/> <column/> <column/> <column/>
+            </columns>
+            <rows id="https_everywhere_RuleSetList"/>
+          </grid>
+          <seperator orient="vertical" width="40" flex="1"/>
+        </hbox>
+        <vbox>
+            You can learn how to write your own rulesets (to add support for other web sites)
+            <label id="ruleset link" 
+              value="here" 
+              style="color: blue; cursor:hand; text-decoration:underline;"
+              onmouseover="event.target.style.cursor='pointer'" 
+              onmouseout="event.target.style.cursor='default'" 
+              onclick="window.open('https://eff.org/https-everywhere/rulesets')"/>.
+        </vbox>
+    </groupbox>
+</dialog>
