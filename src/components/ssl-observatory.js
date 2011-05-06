@@ -281,15 +281,18 @@ SSLObservatory.prototype = {
     for (var i = 0; i < certArray.length; i++) {
       var len = new Object();
       var derData = certArray[i].getRawDER(len);
-      base64Certs.push(browserWindow.btoa(derData));
-      //this.log(DBUG, "encoding is"+ browserWindow.btoa(derData));
+      //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
+      base64Certs.push(this.base64_encode(derData, false, false));
     }
 
     // TODO: Server ip??
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
-    //reqParams.push("fplist="+this.compatJSON.encode(fps));
+    if (this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.testing")) {
+      // The server can compute these, but they're a nice test suite item!
+      reqParams.push("fplist="+this.compatJSON.encode(fps));
+    }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
     // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
     // the less reliable offline/online notification-triggered fetch?
