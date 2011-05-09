@@ -1,45 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<?xml-stylesheet href="chrome://https-everywhere/content/observatory-prefs.css" type="text/css"?>
+<window id="ssl-observatory-dialog" 
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+  xmlns:html="http://www.w3.org/1999/xhtml" 
+  title="Should HTTPS Everywhere use the SSL Observatory?" 
+  width="500" 
+  height="400" 
+  align="center"
+  onload="document.getElementById('ask-me-later').focus()" >
 
-<!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/ssl-observatory.dtd">
-
-<dialog id="ssl-observatory-prefs"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        xmlns:html="http://www.w3.org/1999/xhtml"
-        buttons="accept,cancel"
-        title="Title"
-        buttonlabelextra1="Button"
-        ondialogextra1="observatory_off(document);"
-        persist="screenX screenY"
-        onload="observatory_prefs_init(document)"
-        ondialogaccept="https_prefs_save(document)" 
-        ondialogcancel="https_prefs_cancel(document)">
-
-    <script type="application/x-javascript" src="preferences.js"/>
-    <groupbox>
-      <vbox class="observatory-logo" />
-    </groupbox>
-    <groupbox flex="1">
-        <caption label="Which HTTPS redirection rules should apply?" 
-               align="center"/>
-        <hbox flex="1" style="overflow:auto">
-          <grid class="indent" align="center">
-            <columns>
-             <column/> <column/> <column/> <column/> <column/>
-            </columns>
-            <rows id="https_everywhere_RuleSetList"/>
-          </grid>
-          <seperator orient="vertical" width="40" flex="1"/>
-        </hbox>
-        <vbox>
-            You can learn how to write your own rulesets (to add support for other web sites)
-            <label id="ruleset link" 
-              value="here" 
-              style="color: blue; cursor:hand; text-decoration:underline;"
-              onmouseover="event.target.style.cursor='pointer'" 
-              onmouseout="event.target.style.cursor='default'" 
-              onclick="window.open('https://eff.org/https-everywhere/rulesets')"/>.
-        </vbox>
-    </groupbox>
-</dialog>
+	<vbox>
+		<image src="chrome://https-everywhere/skin/SSLobservatory.jpg" />
+    <label style="padding:20px;">EFF's SSL Observatory can detect attacks against HTTPS websites by collecting and auditing the certificates being presented to your browser. Would you like to turn it on?</label>
+    <hbox>
+      <spacer flex="2" />
+      <button label="Yes" style="font-weight:bold" tabindex="1" acceskey="y" />
+      <spacer flex="1" />
+      <button label="No" tabindex="2" accesskey="n" />
+      <spacer flex="2" />
+    </hbox>
+    <hbox style="padding-top:10px;">
+      <label class="text-link" href="https://www.eff.org/" tabindex="3">Details and Privacy Information</label>
+      <spacer flex="1" />
+      <button label="Ask Me Later" id="ask-me-later" tabindex="0" style="font-size:0.8em;" accesskey="l" />
+    </hbox>
+	</vbox>
+</window>
