@@ -210,6 +210,24 @@ HTTPSEverywhere.prototype = {
     }
   },
 
+  // We use onLocationChange to make a fresh list of rulesets that could have
+  // applied to the content in the current page.  This will be appended to as
+  // various content is embedded / requested by JavaScript
+  onLocationChange: function(wp, req, uri) {
+    this.log(WARN,"onLocationChange");
+    if (wp instanceof CI.nsIWebProgress) {
+      var x = wp.DOMWindow;
+      if (x instanceof CI.nsIDOMWindow) {
+        var top_window = x.top;                        // climb out of iframes
+        top_window.https_everywhere_applicable_rules = {};
+      } else {
+        this.log(WARN,"onLocationChange: no nsIDOMWindow");
+      }
+    } else {
+      this.log(WARN,"onLocationChange: no nsIWebProgress");
+    }
+  },
+
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
     var channel = subject;
@@ -244,7 +262,8 @@ HTTPSEverywhere.prototype = {
       OS.addObserver(this, "http-on-examine-response", false);
       var dls = CC['@mozilla.org/docloaderservice;1']
         .getService(CI.nsIWebProgress);
-      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST);
+      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
+                                    CI.nsIWebProgress.NOTIFY_LOCATION);
       this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
       try {
         // Firefox >= 4

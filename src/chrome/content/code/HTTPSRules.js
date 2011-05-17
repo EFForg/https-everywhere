@@ -180,7 +180,7 @@ const RuleWriter = {
     try {
       var xmlrules = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
-      this.log(WARN,"Error in XML file: " + file + "\n" + e);
+      this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
 
