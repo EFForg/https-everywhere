@@ -1,4 +1,4 @@
-INCLUDE('Cookie');
+INCLUDE('Cookie','ApplicableList');
 // XXX: Disable STS for now.
 var STS = {
   isSTSURI : function(uri) {
@@ -28,8 +28,8 @@ const HTTPS = {
   httpsForcedExceptions: null,
   httpsRewrite: null,
   
-  replaceChannel: function(channel) {
-    var uri = HTTPSRules.rewrittenURI(channel.URI);
+  replaceChannel: function(applicable_list, channel) {
+    var uri = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
     if (!uri) {
        HTTPS.log(INFO,
            "Got replace channel with no applicable rules for URI "
@@ -80,12 +80,51 @@ const HTTPS = {
     return true;
   },
 
+  getApplicableListForContext: function(ctx, uri) {
+    var alist = null; 
+    var domWinOrNode = null;
+    if (!ctx) {
+      this.log(WARN, "No context loading " + uri.spec);
+      return null;
+    }
+
+    try {
+      domWinOrNode = ctx.QueryInterface(CI.nsIDOMWindow);
+      domWinOrNode = domWinOrNode.top;
+    } catch (e) {
+      try {
+        domWinOrNode = ctx.QueryInterface(CI.nsIDOMNode);
+      } catch(e) {
+        this.log(WARN, "Context coercion failure for " + uri.spec);
+        return null;
+      }
+    }
+
+    if ("https_everywhere_applicable_rules" in domWinOrNode) {
+      alist = domWinOrNode.https_everywhere_applicable_rules;
+    } else {
+      // Usually onLocationChange should have put this in here for us, in some
+      // cases perhaps we have to make it here...
+      alist = new ApplicableList(this.log);
+      domWinOrNode.https_everywhere_applicable_rules = alist;
+      this.log(WARN, "had to generate applicable list in forceURI for " +
+                      uri.spec + ", " + alist);
+    }
+    this.log(WARN, "Successfully returning " + alist);
+    return alist;
+  },
+
   forceURI: function(uri, fallback, ctx) {
   // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
   // per the ContentPolicy API.
   // Returns true if everything worked out (either correct replacement or no 
   // replacement needed).  Retun False if all attempts to rewrite failed.
-    var newuri = HTTPSRules.rewrittenURI(uri);
+    
+    // first of all we need to get the applicable rules list to keep track of
+    // what rulesets might have applied to this page
+    this.log(WARN, "Context is " + ctx);
+    var alist = this.getApplicableListForContext(ctx, uri);
+    var newuri = HTTPSRules.rewrittenURI(alist, uri);
     if (!newuri) return true;                          // no applicable rule
 
     try {

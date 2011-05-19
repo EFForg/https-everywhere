@@ -21,11 +21,8 @@ function RuleSet(name, match_rule, default_off) {
   this.name = name;
   this.ruleset_match = match_rule;
   this.notes = "";
-  if (match_rule) {
-    this.ruleset_match_c = new RegExp(match_rule);
-  } else {
-    this.ruleset_match_c = null;
-  }
+  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
+  else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
@@ -50,11 +47,10 @@ function RuleSet(name, match_rule, default_off) {
 
 RuleSet.prototype = {
   _apply: function(urispec) {
+    // return 0 would have applied but is inactive, null if it does not apply
+    // and the new url if it does apply
     var i;
     var returl = null;
-    if (!this.active) {
-      return null;
-    }
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       this.log(VERB, "ruleset_match_c excluded " + urispec);
@@ -69,10 +65,10 @@ RuleSet.prototype = {
     }
     // Okay, now find the first rule that triggers
     for(i = 0; i < this.rules.length; ++i) {
-      returl = urispec.replace(this.rules[i].from_c,
-                               this.rules[i].to);
+      returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
       if (returl != urispec) {
-        return returl;
+        if (this.active) return returl
+        else             return 0;
       }
     }
     if (this.ruleset_match_c) {
@@ -88,11 +84,14 @@ RuleSet.prototype = {
   },
 
  transformURI: function(uri) {
-    // If no rule applies, return null; otherwise, return a fresh uri instance
+    // If no rule applies, return null; if a rule would have applied but was
+    // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
     var newurl = this._apply(uri.spec);
     if (null == newurl)
       return null;
+    if (0 == newurl)
+      return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                 createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
@@ -313,13 +312,26 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(uri) {
+  rewrittenURI: function(applicable_list, uri) {
     var i = 0;
     var newuri = null
     var rs = this.applicableRulesets(uri.host);
+    if (!applicable_list)
+      this.log(DBUG, "No applicable list rewriting " + uri.spec);
     for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i].transformURI(uri)))
+      newuri = rs[i].transformURI(uri);
+      if (newuri) {
+        if (applicable_list) {
+          applicable_list.active_rule(rs[i]);
+          applicable_list.show_applicable();
+        }
         return newuri;
+      } else if (0 == newuri) {
+        if (applicable_list) {
+          applicable_list.inactive_rule(rs[i]);
+          applicable_list.show_applicable();
+        }
+      }
     }
     return null;
   },

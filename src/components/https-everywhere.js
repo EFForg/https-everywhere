@@ -115,7 +115,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
+INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -211,21 +211,38 @@ HTTPSEverywhere.prototype = {
   },
 
   // We use onLocationChange to make a fresh list of rulesets that could have
-  // applied to the content in the current page.  This will be appended to as
-  // various content is embedded / requested by JavaScript
+  // applied to the content in the current page (the "applicable list" is used
+  // for the context menu in the UI).  This will be appended to as various
+  // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
     this.log(WARN,"onLocationChange");
     if (wp instanceof CI.nsIWebProgress) {
       var x = wp.DOMWindow;
       if (x instanceof CI.nsIDOMWindow) {
         var top_window = x.top;                        // climb out of iframes
-        top_window.https_everywhere_applicable_rules = {};
+        top_window.https_everywhere_applicable_rules = new ApplicableList(this.log);
       } else {
         this.log(WARN,"onLocationChange: no nsIDOMWindow");
       }
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }
+  },
+
+  // the lists get made when the urlbar is loading something new, but they
+  // need to be appended to with reference only to the channel
+  getApplicableListForChannel: function(channel) {
+    var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+    if (!nc) {
+      this.log(WARN, "no window for " + channel.URI.spec);
+      return null;
+    } else {
+      var domWin = nc.getInterface(CI.nsIDOMWindow);
+      this.log(WARN, "list of rules is " + domWin.https_everywhere_applicable_rules);
+      this.log(WARN, "list of rules is " +
+      domWin.https_everywhere_applicable_rules.show_applicable());
+    }
+    return domWin.https_everywhere_applicable_rules;
   },
 
   observe: function(subject, topic, data) {
@@ -240,7 +257,8 @@ HTTPSEverywhere.prototype = {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         return;
       }
-      HTTPS.replaceChannel(channel);
+      var lst = this.getApplicableListForChannel(channel);
+      HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
       this.log(DBUG, "Got http-on-examine-response ");
       HTTPS.handleSecureCookies(channel);
@@ -297,8 +315,8 @@ HTTPSEverywhere.prototype = {
       return;
     }
 
-    HTTPS.replaceChannel(newChannel);
-
+    var lst = this.getApplicableListForChannel(channel);
+    HTTPS.replaceChannel(lst,newChannel);
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
