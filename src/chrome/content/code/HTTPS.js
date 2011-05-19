@@ -152,14 +152,14 @@ const HTTPS = {
       this.log(WARN,"No URI inside request " +req);
       return;
     }
-    this.log(VERB, "Cookie hunting in " + uri.spec);
+    //this.log(VERB, "Cookie hunting in " + uri.spec);
     
     if (uri.schemeIs("https")) {
       var host = uri.host;
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
       } catch(mayHappen) {
-        this.log(VERB,"Exception hunting Set-Cookie in headers: " + mayHappen);
+        //this.log(VERB,"Exception hunting Set-Cookie in headers: " + mayHappen);
         return;
       }
       if (!cookies) return;
