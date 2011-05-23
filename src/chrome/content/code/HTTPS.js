@@ -82,35 +82,38 @@ const HTTPS = {
 
   getApplicableListForContext: function(ctx, uri) {
     var alist = null; 
-    var domWinOrNode = null;
+    var domWin = null;
     if (!ctx) {
       this.log(WARN, "No context loading " + uri.spec);
       return null;
     }
-
-    try {
-      domWinOrNode = ctx.QueryInterface(CI.nsIDOMWindow);
-      domWinOrNode = domWinOrNode.top;
-    } catch (e) {
-      try {
-        domWinOrNode = ctx.QueryInterface(CI.nsIDOMNode);
-      } catch(e) {
-        this.log(WARN, "Context coercion failure for " + uri.spec);
-        return null;
-      }
+    if (ctx instanceof CI.nsIDOMWindow) {
+      domWin = ctx.QueryInterface(CI.nsIDOMWindow);
+    } else if (ctx instanceof CI.nsIDOMNode) {
+      domWin = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument.defaultView;
+    } else {
+      this.log(WARN, "Context for " + uri.spec + 
+                     "is some bizarre unexpected thing: " + ctx);
+      return null;
     }
 
-    if ("https_everywhere_applicable_rules" in domWinOrNode) {
-      alist = domWinOrNode.https_everywhere_applicable_rules;
+    if (!(domWin instanceof CI.nsIDOMWindow)) {
+      this.log(WARN, "that isn't a domWindow!");
+    }
+    domWin = domWin.top;  // jump out of iframes
+    if ("https_everywhere_applicable_rules" in domWin) {
+      this.log(DBUG,"Found existing applicable list");
+      alist = domWin.https_everywhere_applicable_rules;
+      //alist.show_applicable();
     } else {
       // Usually onLocationChange should have put this in here for us, in some
       // cases perhaps we have to make it here...
       alist = new ApplicableList(this.log);
-      domWinOrNode.https_everywhere_applicable_rules = alist;
+      domWin.https_everywhere_applicable_rules = alist;
       this.log(WARN, "had to generate applicable list in forceURI for " +
                       uri.spec + ", " + alist);
     }
-    this.log(WARN, "Successfully returning " + alist);
+    this.log(VERB, "Successfully returning " + alist);
     return alist;
   },
 
@@ -122,7 +125,7 @@ const HTTPS = {
     
     // first of all we need to get the applicable rules list to keep track of
     // what rulesets might have applied to this page
-    this.log(WARN, "Context is " + ctx);
+    this.log(VERB, "Context is " + ctx);
     var alist = this.getApplicableListForContext(ctx, uri);
     var newuri = HTTPSRules.rewrittenURI(alist, uri);
     if (!newuri) return true;                          // no applicable rule

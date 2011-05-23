@@ -322,12 +322,14 @@ const HTTPSRules = {
       newuri = rs[i].transformURI(uri);
       if (newuri) {
         if (applicable_list) {
+          this.log("Adding active rule: " + rs[i].name);
           applicable_list.active_rule(rs[i]);
           applicable_list.show_applicable();
         }
         return newuri;
       } else if (0 == newuri) {
         if (applicable_list) {
+          this.log("Adding inactive rule: " + rs[i].name);
           applicable_list.inactive_rule(rs[i]);
           applicable_list.show_applicable();
         }

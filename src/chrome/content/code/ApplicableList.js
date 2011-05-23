@@ -21,12 +21,12 @@ ApplicableList.prototype = {
   },
 
   show_applicable: function() {
-    this.log(WARN,"showing rules");
     for (var x in this.active) {
-      this.log(WARN,"Active: " + x.name);
+      this.log(WARN,"Active: " + this.active[x].name);
     }
+  
     for (x in this.inactive) {
-      this.log(WARN,"Inctive: " + x.name);
+      this.log(WARN,"Inctive: " + this.inactive[x].name);
     }
   }
 };

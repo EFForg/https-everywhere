@@ -215,12 +215,12 @@ HTTPSEverywhere.prototype = {
   // for the context menu in the UI).  This will be appended to as various
   // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
-    this.log(WARN,"onLocationChange");
     if (wp instanceof CI.nsIWebProgress) {
       var x = wp.DOMWindow;
       if (x instanceof CI.nsIDOMWindow) {
         var top_window = x.top;                        // climb out of iframes
         top_window.https_everywhere_applicable_rules = new ApplicableList(this.log);
+        this.log(WARN,"onLocationChange, made new alist for " +uri.spec);
       } else {
         this.log(WARN,"onLocationChange: no nsIDOMWindow");
       }
@@ -236,11 +236,18 @@ HTTPSEverywhere.prototype = {
     if (!nc) {
       this.log(WARN, "no window for " + channel.URI.spec);
       return null;
+    } 
+    var domWin = nc.getInterface(CI.nsIDOMWindow);
+    if (!domWin) {
+      this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
+      return null;
+    }
+    if ("https_everywhere_applicable_rules" in domWin) {
+      //domWin.https_everywhere_applicable_rules.show_applicable();
+      return domWin.https_everywhere_applicable_rules;
     } else {
-      var domWin = nc.getInterface(CI.nsIDOMWindow);
-      this.log(WARN, "list of rules is " + domWin.https_everywhere_applicable_rules);
-      this.log(WARN, "list of rules is " +
-      domWin.https_everywhere_applicable_rules.show_applicable());
+      this.log(DBUG, "Making new AL in getApplicableListForChannel");
+      domWin.https_everywhere_applicable_rules = new ApplicableList(this.log);
     }
     return domWin.https_everywhere_applicable_rules;
   },
