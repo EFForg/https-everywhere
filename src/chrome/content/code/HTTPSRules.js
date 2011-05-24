@@ -176,9 +176,9 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();
+    fstream.close();	
+    data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
-      data = data.replace(/<\?xml[^>]*\?>/, ""); 
       var xmlrules = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file + "\n" + e);
