@@ -20,6 +20,27 @@ ApplicableList.prototype = {
     this.inactive[ruleset.name] = ruleset;
   },
 
+  populate_menu: function(doc, xul_popupmenu) {
+    // called from the XUL when the context popup is about to be displayed;
+    // fill out the UI showing which rules are active and inactive in this
+    // page
+    while (xul_popupmenu.firstChild) {
+      // delete whatever was in the menu previously
+      xul_popupmenu.removeChild(xul_popupmenu.firstChild);
+    }
+
+    for (var x in this.active) {
+      var item = doc.createElement("menuitem");
+      item.setAttribute("label",this.active[x].name);
+      xul_popupmenu.appendChild(item);
+    }
+    for (var x in this.inactive) {
+      var item = doc.createElement("menuitem");
+      item.setAttribute("label",this.inactive[x].name);
+      xul_popupmenu.appendChild(item);
+    }
+  },
+
   show_applicable: function() {
     for (var x in this.active) {
       this.log(WARN,"Active: " + this.active[x].name);

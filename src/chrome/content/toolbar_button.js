@@ -1,5 +1,7 @@
 window.addEventListener("load", https_everywhere_load, true);
 
+const CI = Components.interfaces;
+
 function https_everywhere_load() {
     try {
        var firefoxnav = document.getElementById("nav-bar");
@@ -24,4 +26,15 @@ function https_everywhere_load() {
     catch(e) { }
 }
 
-
+function show_applicable_list(doc) {
+  var menu_popup = document.getElementById('HTTPSEverywhereContext');
+  var domWin = content.document.defaultView.top;
+  if (!(domWin instanceof CI.nsIDOMWindow)) {
+    alert(domWin + " is not an nsICDOMWindow");
+    return null;
+  }
+  if ("https_everywhere_applicable_rules" in domWin) {
+    domWin.https_everywhere_applicable_rules.populate_menu(doc,menu_popup);
+  } else {
+  }
+}
