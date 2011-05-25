@@ -151,6 +151,7 @@ const RuleWriter = {
     file.append("rules");
     if (!file.isDirectory()) {
       // XXX: Arg, death!
+      this.log(WARN,"Catastrophic failure: extension directory is not a directory");
     }
     return file;
   },
@@ -313,9 +314,12 @@ const HTTPSRules = {
   },
 
   rewrittenURI: function(applicable_list, uri) {
+    // This function oversees the task of working out if a uri should be
+    // rewritten, what it should be rewritten to, and recordkeeping of which
+    // applicable rulesets are and aren't active.
     var i = 0;
     var newuri = null
-    var rs = this.applicableRulesets(uri.host);
+    var rs = this.potentiallyApplicableRulesets(uri.host);
     if (!applicable_list)
       this.log(DBUG, "No applicable list rewriting " + uri.spec);
     for(i = 0; i < rs.length; ++i) {
@@ -345,8 +349,8 @@ const HTTPSRules = {
     return null;
   },
 
-  applicableRulesets: function(host) {
-    // Return a list of rulesets that apply to this host
+  potentiallyApplicableRulesets: function(host) {
+    // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
     if (this.targets[host])
@@ -383,7 +387,7 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    var rs = this.applicableRulesets(c.host);
+    var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active)
