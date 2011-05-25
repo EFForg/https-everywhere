@@ -1,6 +1,9 @@
 window.addEventListener("load", https_everywhere_load, true);
 
 const CI = Components.interfaces;
+const CC = Components.classes;
+
+
 
 function https_everywhere_load() {
     try {
@@ -33,11 +36,19 @@ function show_applicable_list(doc) {
     alert(domWin + " is not an nsICDOMWindow");
     return null;
   }
-  var alist = domWin.document.getUserData("https_everywhere_applicable_rules");
+
+  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+  var alist = HTTPSEverywhere.getExpando(domWin.document,"applicable_rules", null);
+  
   if (alist) {
+    alist.log(5,"Success wherein domWin is " + domWin);
+    alist.show_applicable();
     alist.populate_menu(doc,menu_popup);
   } else {
-    alert("Missing applicable rules");
+    HTTPSEverywhere.log(5,"Failure wherein domWin is " + domWin);
+    var str = "Missing applicable rules for " + domWin.document.baseURIObject.spec;
+    str += "\ndomWin is " + domWin;
+    alert(str);
     return null;
   }
 }

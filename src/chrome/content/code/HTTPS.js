@@ -89,13 +89,15 @@ const HTTPS = {
     }
     if (ctx instanceof CI.nsIDOMWindow) {
       domWin = ctx.QueryInterface(CI.nsIDOMWindow);
+      doc = domWin.document;
     } else if (ctx instanceof CI.nsIDOMNode) {
-      domWin = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument;
-      if (! domWin) {
+      var doc = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument;
+      if (! doc) {
         this.log(WARN, "No Document for request " + uri.spec);
         return null;
       }
-      domWin = domWin.defaultView;
+      domWin = doc.defaultView;
+      this.log(WARN,"Coerced nsIDOMWin from Node");
     } else {
       this.log(WARN, "Context for " + uri.spec + 
                      "is some bizarre unexpected thing: " + ctx);
@@ -106,19 +108,22 @@ const HTTPS = {
       this.log(WARN, "that isn't a domWindow");
     }
     domWin = domWin.top;  // jump out of iframes
-    alist = domWin.getUserData("https_everywhere_applicable_rules");
+    doc = doc.documentElement;
+    alist = HTTPSEverywhere.instance.getExpando(doc,"applicable_rules", null);
     if (alist) {
       this.log(DBUG,"Found existing applicable list");
       //alist.show_applicable();
     } else {
       // Usually onLocationChange should have put this in here for us, in some
       // cases perhaps we have to make it here...
-      alist = new ApplicableList(this.log);
-      domWin.setPropertyAsInterface("https_everywhere_applicable_rules", alist);
+      alist = new ApplicableList(this.log,doc);
+      this.log(WARN, "Sanity should be, " + alist);
+      HTTPSEverywhere.instance.setExpando(doc,"applicable_rules", alist);
       this.log(WARN, "had to generate applicable list in forceURI for " +
-                      uri.spec + ", " + alist);
+                      uri.spec + " in " + doc.baseURIObject.spec);
+      alist = HTTPSEverywhere.instance.getExpando(doc,"applicable_rules", null);
+      this.log(WARN, "Sanity check: " + alist);
     }
-    this.log(VERB, "Successfully returning " + alist);
     return alist;
   },
 

@@ -198,6 +198,21 @@ HTTPSEverywhere.prototype = {
     return Components.utils.getWeakReference(this);
   },
 
+  // An "expando" is an attribute glued onto something.  From NoScript.
+  getExpando: function(domObject, key, defValue) {
+    return domObject && domObject.__httpsEStorage && domObject.__httpsEStorage[key] || 
+           (defValue ? this.setExpando(domObject, key, defValue) : null);
+  },
+
+  setExpando: function(domObject, key, value) {
+    if (!domObject) return null;
+    if (!domObject.__httpsEStorage) domObject.__httpsEStorage = {};
+    if (domObject.__httpsEStorage) domObject.__httpsEStorage[key] = value;
+    else this.log(WARN, "Warning: cannot set expando " + key + " to value " + value);
+    return value;
+  },
+
+
   // This function is registered solely to detect favicon loads by virtue
   // of their failure to pass through this function.
   onStateChange: function(wp, req, stateFlags, status) {
@@ -219,9 +234,14 @@ HTTPSEverywhere.prototype = {
       var x = wp.DOMWindow;
       var top_window;
       if (x instanceof CI.nsIDOMWindow)  {
-        var top_window = x.top;               // climb out of iframes
-        top_window.document.setUserData("https_everywhere_applicable_rules", new ApplicableList(this.log), null);
-        this.log(WARN,"onLocationChange, made new alist for " +uri.spec);
+        top_window = x.top;               // climb out of iframes
+        if (top_window.document) {
+          var alist = new ApplicableList(this.log,top_window.document);
+          this.setExpando(top_window, "applicable rules", alist);
+          this.log(WARN,"onLocationChange, made new alist for " +uri.spec);
+        } else {
+          this.log(WARN,"onLocationChange, document is null");
+        }
       } else {
         this.log(WARN,"onLocationChange: no nsIDOMWindow");
       }
@@ -230,9 +250,8 @@ HTTPSEverywhere.prototype = {
     }
   },
 
-  // the lists get made when the urlbar is loading something new, but they
-  // need to be appended to with reference only to the channel
-  getApplicableListForChannel: function(channel) {
+  getWindowForChannel: function(channel) {
+    // Obtain an nsIDOMWindow from a channel
     var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
     if (!nc) {
       this.log(WARN, "no window for " + channel.URI.spec);
@@ -244,15 +263,25 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     domWin = domWin.top;
-    if ("https_everywhere_applicable_rules" in domWin) {
-      //domWin.https_everywhere_applicable_rules.show_applicable();
-      return domWin.https_everywhere_applicable_rules;
+    return domWin
+  },
+
+  // the lists get made when the urlbar is loading something new, but they
+  // need to be appended to with reference only to the channel
+  getApplicableListForChannel: function(channel) {
+    var domWin = this.getWindowForChannel(channel);
+    var alist= this.getExpando(domWin.document,"applicable_rules",null);
+    if (alist) {
+      this.log(WARN,"get AL success");
+      return alist;
     } else {
       this.log(DBUG, "Making new AL in getApplicableListForChannel");
-      domWin.document.setUserData("https_everywhere_applicable_rules", new ApplicableList(this.log), null);
+      alist = new ApplicableList(this.log,domWin.document);
+      this.setExpando(domWin.document,"applicable_rules",alist);
     }
-    return domWin.https_everywhere_applicable_rules;
+    return alist;
   },
+
 
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
@@ -323,9 +352,26 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;
     }
+    var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
+    HTTPS.replaceChannel(alist,newChannel);
+  },
 
-    var lst = this.getApplicableListForChannel(channel);
-    HTTPS.replaceChannel(lst,newChannel);
+  juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
+    // If the new channel doesn't yet have a list of applicable rulesets, start
+    // with the old one because that's probably a better representation of how
+    // secure the load process was for this page
+    var domWin = this.getWindowForChannel(oldChannel);
+    var old_alist = this.getExpando(domWin,"applicable_rules", null);
+    domWin = this.getWindowForChannel(newChannel);
+    var new_alist = this.getExpando(domWin,"applicable_rules", null);
+    if (old_alist && !new_alist) {
+      new_alist = old_alist;
+      this.setExpando(domWin,"applicable_rules",new_alist);
+    } else if (!new_alist) {
+      new_alist = new ApplicableList(this.log, domWin.document);
+      this.setExpando(domWin,"applicable_rules",new_alist);
+    }
+    return new_alist;
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
@@ -347,6 +393,7 @@ HTTPSEverywhere.prototype = {
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+    this.log(VERB,"shoulLoad for " + aContentLocation.spec);
     if (isHTTP)
       HTTPS.forceURI(aContentLocation, null, aContext);
     return true;
