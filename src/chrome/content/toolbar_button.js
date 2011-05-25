@@ -33,8 +33,11 @@ function show_applicable_list(doc) {
     alert(domWin + " is not an nsICDOMWindow");
     return null;
   }
-  if ("https_everywhere_applicable_rules" in domWin) {
-    domWin.https_everywhere_applicable_rules.populate_menu(doc,menu_popup);
+  var alist = domWin.document.getUserData("https_everywhere_applicable_rules");
+  if (alist) {
+    alist.populate_menu(doc,menu_popup);
   } else {
+    alert("Missing applicable rules");
+    return null;
   }
 }

@@ -217,9 +217,10 @@ HTTPSEverywhere.prototype = {
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
       var x = wp.DOMWindow;
-      if (x instanceof CI.nsIDOMWindow) {
-        var top_window = x.top;                        // climb out of iframes
-        top_window.https_everywhere_applicable_rules = new ApplicableList(this.log);
+      var top_window;
+      if (x instanceof CI.nsIDOMWindow)  {
+        var top_window = x.top;               // climb out of iframes
+        top_window.document.setUserData("https_everywhere_applicable_rules", new ApplicableList(this.log), null);
         this.log(WARN,"onLocationChange, made new alist for " +uri.spec);
       } else {
         this.log(WARN,"onLocationChange: no nsIDOMWindow");
@@ -242,12 +243,13 @@ HTTPSEverywhere.prototype = {
       this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
+    domWin = domWin.top;
     if ("https_everywhere_applicable_rules" in domWin) {
       //domWin.https_everywhere_applicable_rules.show_applicable();
       return domWin.https_everywhere_applicable_rules;
     } else {
       this.log(DBUG, "Making new AL in getApplicableListForChannel");
-      domWin.https_everywhere_applicable_rules = new ApplicableList(this.log);
+      domWin.document.setUserData("https_everywhere_applicable_rules", new ApplicableList(this.log), null);
     }
     return domWin.https_everywhere_applicable_rules;
   },

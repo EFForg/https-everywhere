@@ -321,6 +321,7 @@ const HTTPSRules = {
     for(i = 0; i < rs.length; ++i) {
       newuri = rs[i].transformURI(uri);
       if (newuri) {
+        // we rewrote the uri
         if (applicable_list) {
           this.log("Adding active rule: " + rs[i].name);
           applicable_list.active_rule(rs[i]);
@@ -328,11 +329,17 @@ const HTTPSRules = {
         }
         return newuri;
       } else if (0 == newuri) {
+        // the ruleset is inactive
         if (applicable_list) {
           this.log("Adding inactive rule: " + rs[i].name);
           applicable_list.inactive_rule(rs[i]);
           applicable_list.show_applicable();
         }
+      } else if (uri.scheme == "https" && applicable_list && rs[i].active) {
+        // we didn't rewrite but the rule applies to this domain and the
+        // requests are going over https
+        applicable_list.moot_rule(rs[i]);
+        applicable_list.show_applicable();
       }
     }
     return null;
