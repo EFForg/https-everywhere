@@ -270,6 +270,7 @@ HTTPSEverywhere.prototype = {
   // need to be appended to with reference only to the channel
   getApplicableListForChannel: function(channel) {
     var domWin = this.getWindowForChannel(channel);
+    if (!domWin) return null;
     var alist= this.getExpando(domWin.document,"applicable_rules",null);
     if (alist) {
       this.log(WARN,"get AL success");
@@ -361,8 +362,11 @@ HTTPSEverywhere.prototype = {
     // with the old one because that's probably a better representation of how
     // secure the load process was for this page
     var domWin = this.getWindowForChannel(oldChannel);
-    var old_alist = this.getExpando(domWin,"applicable_rules", null);
+    var old_alist = null;
+    if (domWin) 
+      old_alist = this.getExpando(domWin,"applicable_rules", null);
     domWin = this.getWindowForChannel(newChannel);
+    if (!domWin) return null;
     var new_alist = this.getExpando(domWin,"applicable_rules", null);
     if (old_alist && !new_alist) {
       new_alist = old_alist;
