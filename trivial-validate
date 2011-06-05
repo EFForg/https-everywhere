@@ -96,6 +96,30 @@ else
 fi
 
 echo
+echo "-- Rules containing space before to pattern:"
+if grep 'to="' *xml | sed 's/^.*to="//' | grep '^ '
+then
+   fail=true
+else
+   echo "(None.)"
+fi
+
+none=true
+echo
+echo "-- Rules with syntactically invalid regular expressions:"
+for f in *.xml
+do
+   grep from= $f | cut -d\" -f2 | egrep -f - 2>/dev/null
+   if [ $? -eq 2 ]
+   then
+       echo $f
+       fail=true
+       none=false
+   fi
+done
+$none && echo "(None.)"
+
+echo
 if [ $(which xmllint) ]
 then
   echo "-- Rules with syntatically invalid XML:"
