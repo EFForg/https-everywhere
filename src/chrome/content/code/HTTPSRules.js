@@ -16,7 +16,10 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+ruleset_counter = 0;
 function RuleSet(name, match_rule, default_off) {
+  this.id="https-everywhere-rule-" + ruleset_counter;
+  ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;

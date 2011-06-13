@@ -29,8 +29,7 @@ function https_everywhere_load() {
     catch(e) { }
 }
 
-function show_applicable_list(doc) {
-  var menu_popup = document.getElementById('HTTPSEverywhereContext');
+function show_applicable_list() {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
     alert(domWin + " is not an nsICDOMWindow");
@@ -43,7 +42,7 @@ function show_applicable_list(doc) {
   if (alist) {
     alist.log(5,"Success wherein domWin is " + domWin);
     alist.show_applicable();
-    alist.populate_menu(doc,menu_popup);
+    alist.populate_menu(document, alert);
   } else {
     HTTPSEverywhere.log(5,"Failure wherein domWin is " + domWin);
     var str = "Missing applicable rules for " + domWin.document.baseURIObject.spec;
@@ -52,3 +51,4 @@ function show_applicable_list(doc) {
     return null;
   }
 }
+

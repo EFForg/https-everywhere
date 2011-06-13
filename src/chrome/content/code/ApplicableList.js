@@ -38,34 +38,62 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(doc, xul_popupmenu) {
+  populate_menu: function(document, alert) {
+    // get the menu popup
+    var menupopup = document.getElementById('https-everywhere-context');
+  
     // called from the XUL when the context popup is about to be displayed;
     // fill out the UI showing which rules are active and inactive in this
     // page
     this.log(WARN, "populating using alist #" + this.serial);
-    while (xul_popupmenu.firstChild) {
+    while(menupopup.firstChild) {
       // delete whatever was in the menu previously
-      //this.log(WARN,"removing " + xul_popupmenu.firstChild.label +" from menu");
-      xul_popupmenu.removeChild(xul_popupmenu.firstChild);
+      //this.log(WARN,"removing " + menupopup.firstChild.label +" from menu");
+      menupopup.removeChild(menupopup.firstChild);
     }
 
-    for (var x in this.active) {
-      var item = doc.createElement("menuitem");
-      item.setAttribute("label",this.active[x].name);
-      xul_popupmenu.appendChild(item);
+    // create a commandset if it doesn't already exist
+    var commandset = document.getElementById('https-everywhere-commandset');
+    if(!commandset) {
+      commandset = document.createElement('commandset');
+      commandset.setAttribute('id', 'https-everywhere-commandset');
+      var button = document.getElementById('https-everywhere-button');
+      button.appendChild(commandset);
+    } else {
+        // empty commandset
+        while(commandset.firstChild) { commandset.removeChild(commandset.firstChild); }
+    }
+
+    // add all applicable commands
+    function add_command(rule) {
+      var command = document.createElement("command");
+      command.setAttribute('id', rule.id+'-command');
+      command.setAttribute('label', rule.name);
+      command.setAttribute('oncommand', "alert('label: '+this.getAttribute('label'))");
+      commandset.appendChild(command);
+    }
+    for(var x in this.active) { add_command(this.active[x]); }
+    for(var x in this.inactive) { add_command(this.inactive[x]); }
+    for(var x in this.moot) { add_command(this.moot[x]); }
+
+    // set commands to work
+    for(var x in this.active) {
+      var item = document.createElement("menuitem");
+      item.setAttribute('command', this.active[x].id+'-command');
+      menupopup.appendChild(item);
     }
     for (var x in this.inactive) {
-      var item = doc.createElement("menuitem");
-      item.setAttribute("label",this.inactive[x].name);
-      xul_popupmenu.appendChild(item);
+      var item = document.createElement("menuitem");
+      item.setAttribute('command', this.inactive[x].id+'-command');
+      menupopup.appendChild(item);
     }
 
     for (var x in this.moot) {
       if (! (x in this.active) ) {
         // rules that are active for some uris are not really moot
-        var item = doc.createElement("menuitem");
+        var item = document.createElement("menuitem");
         item.setAttribute("label","moot " + this.moot[x].name);
-        xul_popupmenu.appendChild(item);
+        menupopup.appendChild(item);
       } else {
         this.log(WARN,"Moot rule invisible " + this.moot[x].name);
       }
