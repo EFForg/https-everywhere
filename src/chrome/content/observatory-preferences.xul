@@ -10,7 +10,8 @@
   title="&ssl-observatory.prefs.title;"
   width="800"
   height="768"
-  persist="screenX screenY">
+  persist="screenX screenY"
+  onload="observatory_prefs_init(document)">
     <script type="application/x-javascript" src="observatory-preferences.js" />
     <vbox flex="1">
       <spacer flex="1" />
@@ -25,16 +26,23 @@
       <spacer flex="1" />
       <label>&ssl-observatory.prefs.explanation2;</label>
       <spacer flex="1" />
-      <checkbox label="&ssl-observatory.prefs.use;" checked="false"/>
-        <radiogroup style="indent">
+      <commandset>
+        <command id="toggle-enabled" oncommand="toggle_enabled()" />
+      </commandset>
+      <checkbox label="&ssl-observatory.prefs.use;" checked="false"
+                command="toggle-enabled" id="use-observatory"/>
+        <radiogroup style="margin-left:3em;">
           <radio label="&ssl-observatory.prefs.anonymous;" selected="true" 
-                 tooltiptext="&ssl-observatory.prefs.anonymous_tooltip;"/>
+                 tooltiptext="&ssl-observatory.prefs.anonymous_tooltip;"
+                 id="anon-option" class="ssl-obs-conf"/>
           <radio label="&ssl-observatory.prefs.nonanon;" 
-                 tooltiptext="&ssl-observatory.prefs.nonanon_tooltip;"/>
+                 tooltiptext="&ssl-observatory.prefs.nonanon_tooltip;"
+                 id="nonanon-option" class="ssl-obs-conf"/>
         </radiogroup>
       <groupbox flex="1">
         <checkbox label="&ssl-observatory.prefs.asn;" checked="true"
-                  tooltiptext="&ssl-observatory.prefs.asn_tooltip;"/>
+                  tooltiptext="&ssl-observatory.prefs.asn_tooltip;"
+                  class="ssl-obs-conf"/>
       </groupbox>
       <spacer flex="2" />
       <hbox>
