@@ -25,10 +25,15 @@ function observatory_prefs_init(doc) {
   //scale_title_logo();
 }
 
-// The user has responded to the popup in a final way; don't show it to them again
+// The user has responded to the popup in a final way; don't show it to them
+// again
 function popup_done() {
   ssl_observatory.popup_responded = true;
   window.close();
+}
+
+function enable_observatory() {
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory_prefs.enabled", true);
 }
 
 function scale_title_logo() {
