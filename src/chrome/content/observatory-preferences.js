@@ -25,6 +25,7 @@ function observatory_prefs_init(doc) {
   //scale_title_logo();
 }
 
+// The user has responded to the popup in a final way; don't show it to them again
 function popup_done() {
   ssl_observatory.popup_responded = true;
   window.close();
