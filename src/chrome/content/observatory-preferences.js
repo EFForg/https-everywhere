@@ -25,6 +25,11 @@ function observatory_prefs_init(doc) {
   //scale_title_logo();
 }
 
+function popup_done() {
+  ssl_observatory.popup_responded = true;
+  window.close();
+}
+
 function scale_title_logo() {
   // The image is naturally 500x207, but if it's shrunk we don't want it 
   // distorted
