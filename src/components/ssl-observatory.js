@@ -13,7 +13,7 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-// XXX: We should make the _observatory_prefs tree relative.
+// XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
@@ -84,23 +84,8 @@ function SSLObservatory() {
   this.wrappedJSObject = this;
 
   this.client_asn = -1;
-  this.getClientASN();
-
-  this.max_ap = null;
-
-  // Observe network changes to get new ASNs
-  OS.addObserver(this, "network:offline-status-changed", false);
-  var pref_service = Cc["@mozilla.org/preferences-service;1"]
-      .getService(Ci.nsIPrefBranchInternal);
-  proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
-  proxy_branch.addObserver("network.proxy", this, false);
-
-  try {
-    var wifi_service = Cc["@mozilla.org/wifi/monitor;1"].getService(Ci.nsIWifiMonitor);
-    wifi_service.startWatching(this);
-  } catch(e) {
-    this.log(INFO, "Failed to register ASN change monitor: "+e);
-  }
+  if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.send_asn")) 
+    this.setupASNWatcher();
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -143,6 +128,31 @@ SSLObservatory.prototype = {
     } catch(err) {
       return null;
     }
+  },
+
+  setupASNWatcher: function() {
+    this.getClientASN();
+
+    this.max_ap = null;
+
+    // Observe network changes to get new ASNs
+    OS.addObserver(this, "network:offline-status-changed", false);
+    var pref_service = Cc["@mozilla.org/preferences-service;1"]
+        .getService(Ci.nsIPrefBranchInternal);
+    proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+    proxy_branch.addObserver("network.proxy", this, false);
+
+    try {
+      var wifi_service = Cc["@mozilla.org/wifi/monitor;1"].getService(Ci.nsIWifiMonitor);
+      wifi_service.startWatching(this);
+    } catch(e) {
+      this.log(INFO, "Failed to register ASN change monitor: "+e);
+    }
+  },
+
+  stopASNWatcher: function() {
+    // XXX FIXME need to unhook the observers above, or do something more crude...
+    this.client_asn = -1;
   },
 
   getClientASN: function() {
@@ -210,15 +220,15 @@ SSLObservatory.prototype = {
       if (this.torbutton_installed) {
         // Allow Tor users to choose if they want to submit
         // during tor and/or non-tor
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_tor")
+        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_tor")
             && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.submit_during_nontor")
+        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_nontor")
             && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-      } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
+      } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
         this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
         return;
       }
@@ -256,14 +266,15 @@ SSLObservatory.prototype = {
       }
     }
 
-    if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
-      if (rootidx == -1) {
-        rootidx = fps.length-1;
+    if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots"))
+      if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
+        if (rootidx == -1) {
+          rootidx = fps.length-1;
+        }
+        this.log(INFO, "Got a private root cert. Ignoring domain "
+                 +domain+" with root "+fps[rootidx]);
+        return;
       }
-      this.log(INFO, "Got a private root cert. Ignoring domain "
-               +domain+" with root "+fps[rootidx]);
-      return;
-    }
 
     if (fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
@@ -289,7 +300,7 @@ SSLObservatory.prototype = {
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
-    if (this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.testing")) {
+    if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.testing")) {
       // The server can compute these, but they're a nice test suite item!
       reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
@@ -339,7 +350,7 @@ SSLObservatory.prototype = {
         // XXX: Handle errors properly?
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.cache_submitted")) {
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
             if (fps[0] in that.already_submitted)
               delete that.already_submitted[fps[0]];
           }
@@ -363,7 +374,7 @@ SSLObservatory.prototype = {
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
     if (this.torbutton_installed &&
-        this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_tor_proxy")) {
+        this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_tor_proxy")) {
       // extract torbutton proxy settings
       proxy_settings[0] = "http";
       proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
@@ -374,10 +385,10 @@ SSLObservatory.prototype = {
         proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
         proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
       }
-    } else if (this.prefs.getBoolPref("extensions.https_everywhere._observatory_prefs.use_custom_proxy")) {
-      proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_type");
-      proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory_prefs.proxy_host");
-      proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory_prefs.proxy_port");
+    } else if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
+      proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
+      proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
+      proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
     } else {
       this.log(WARN, "Proxy settings are strange: No Torbutton found, but no proxy specified. Using direct.");
     }

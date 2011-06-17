@@ -14,26 +14,33 @@ const pref_prefix = "extensions.ssl_observatory.";
 
 function observatory_prefs_init(doc) {
   // Is the Observatory on?
-  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory_prefs.enabled");
+  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory.enabled");
   document.getElementById("use-observatory").checked = enabled;
   set_observatory_configurability(enabled);
+  // Other settings
+  document.getElementById("alt-roots").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots");
+  document.getElementById("priv-dns").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.priv_dns");
+  document.getElementById("asn").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.asn");
 
   // More complicated: is it anonymised by Tor?
   var obs_how = doc.getElementById("ssl-obs-how");
   var anon_radio = document.getElementById("ssl-obs-anon");
   var nonanon_radio = document.getElementById("ssl-obs-nonanon");
   var anon = !obsprefs.getBoolPref(
-            "extensions.https_everywhere._observatory_prefs.use_custom_proxy");
+            "extensions.https_everywhere._observatory.use_custom_proxy");
 
   // first set the radios to match the current settings variables
   obs_how.selectedItem = (anon) ? anon_radio : nonanon_radio;
 
   // But if the user hasn't turned the observatory on, 
-  // the default should be something maximally sensible 
-  var torbutton = ssl_observatory.torbutton_installed;
+  // the default should be the maximally sensible one
+  var torbutton_avail = ssl_observatory.torbutton_installed;
   if (!enabled) {
-    set_obs_anon(torbutton);
-    obs_how.selectedItem = (torbutton) ? anon_radio : nonanon_radio;
+    set_obs_anon(torbutton_avail);
+    obs_how.selectedItem = (torbutton_avail) ? anon_radio : nonanon_radio;
   }
   //scale_title_logo();
 }
@@ -73,7 +80,7 @@ function set_observatory_configurability(enabled) {
 
 // show/hide advanced options in the preferences dialog
 function show_advanced() {
-  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory_prefs.enabled");
+  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory.enabled");
   if (enabled) {
     var adv_opts_box = document.getElementById("observatory-advanced-opts");
     recursive_set(adv_opts_box, "hidden", "false");
@@ -98,19 +105,33 @@ function recursive_set(node, attrib, value) {
 // called from the popup
 
 function set_obs_anon(val) {
-  obsprefs.setBoolPref( "extensions.https_everywhere._observatory_prefs.use_custom_proxy", !val);
+  obsprefs.setBoolPref( "extensions.https_everywhere._observatory.use_custom_proxy", !val);
 }
 function enable_observatory() {
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory_prefs.enabled", true);
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.enabled", true);
 }
 
 // called from within the prefs window, we have more work to do:
 function toggle_enabled() {
-  var checkbox = document.getElementById("use-observatory");
-  var use_obs = checkbox.checked;
-
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory_prefs.enabled",
-                       use_obs);
-
+  var use_obs = document.getElementById("use-observatory").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.enabled", use_obs);
   set_observatory_configurability(use_obs);
 }
+
+function toggle_send_asn() {
+  var send_asn = document.getElementById("send-asn").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.alt_roots", send_asn);
+  if (send_asn) ssl_observatory.setupASNWatcher()
+  else          ssl_observatory.stopASNWatcher();
+}
+
+function toggle_alt_roots() {
+  var alt_roots = document.getElementById("alt-roots").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.alt_roots", alt_roots);
+}
+
+function toggle_priv_dns() {
+  var priv_dns = document.getElementById("priv-dns").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.alt_roots", priv_dns);
+}
+
