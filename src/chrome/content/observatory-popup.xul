@@ -14,16 +14,26 @@
     <image src="chrome://https-everywhere/skin/ssl-observatory.jpg" />
     <label style="padding:20px;">&ssl-observatory.popup.text;</label>
 
+    <commandgroup>
+      <command id="enable" oncommand="enable_observatory() ; popup_done()" />
+      <command id="nope" oncommand="popup_done()" />
+      <command id="later" oncommand="window.close()" />
+      <command id="more-info" 
+               oncommand='popup_done() ; 
+               window.open("chrome://https-everywhere/content/observatory-preferences.xul","obsprefs","chrome")'
+      />
+    </commandgroup>
+
     <vbox flex="1">
     <spacer flex="5" />
     <separator class="thin"/>
       <hbox>
         <spacer flex="2" />
         <button label="&ssl-observatory.popup.yes;" tabindex="2" accesskey="y" 
-                onclick='enable_observatory() ; popup_done()'/>
+                command='enable'/>
         <spacer flex="1" />
         <button label="&ssl-observatory.popup.no;" tabindex="3" accesskey="n"
-                onclick='popup_done()'/>
+                command='nope'/>
         <spacer flex="2" />
       </hbox>
     <separator class="thin"/>
@@ -31,10 +41,10 @@
       <hbox>
         <spacer flex="2" />
         <button label="&ssl-observatory.popup.details;" tabindex="4" accesskey="D" 
-                onclick='popup_done() ; window.open("chrome://https-everywhere/content/observatory-preferences.xul","obsprefs","chrome")'/>
+                command='more-info'/>
         <spacer flex="1" />
         <button id="ask-me-later" label="&ssl-observatory.popup.later;" 
-                tabindex="1" accesskey="A" onclick='window.close()'/>
+                tabindex="1" accesskey="A" command='later'/>
         <spacer flex="2" />
       </hbox>
     <separator class="thin"/>
