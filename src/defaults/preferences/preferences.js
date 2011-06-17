@@ -1,5 +1,5 @@
 // SSl Observatory preferences
-pref("extensions.https_everywhere._observatory_prefs.enabled",true);
+pref("extensions.https_everywhere._observatory_prefs.enabled",false);
 
 // "testing" currently means send unecessary fingerprints and other test-suite
 // type stuff

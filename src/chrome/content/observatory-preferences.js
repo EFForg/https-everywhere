@@ -13,14 +13,27 @@ obsprefs = ssl_observatory.prefs;
 const pref_prefix = "extensions.ssl_observatory.";
 
 function observatory_prefs_init(doc) {
+  // Is the Observatory on?
   var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory_prefs.enabled");
   document.getElementById("use-observatory").checked = enabled;
   set_observatory_configurability(enabled);
-  // If the observatory is not yet on, and Tor is not available, the initial
-  // option is to turn it on /without/ Tor
-  if ((!ssl_observatory.torbutton_installed) && !enabled) {
-      var nonanon_radio = document.getElementById("ssl-obs-nonanon");
-      doc.getElementById("ssl-obs-how").selectedItem = nonanon_radio;
+
+  // More complicated: is it anonymised by Tor?
+  var obs_how = doc.getElementById("ssl-obs-how");
+  var anon_radio = document.getElementById("ssl-obs-anon");
+  var nonanon_radio = document.getElementById("ssl-obs-nonanon");
+  var anon = !obsprefs.getBoolPref(
+            "extensions.https_everywhere._observatory_prefs.use_custom_proxy");
+
+  // first set the radios to match the current settings variables
+  obs_how.selectedItem = (anon) ? anon_radio : nonanon_radio;
+
+  // But if the user hasn't turned the observatory on, 
+  // the default should be something maximally sensible 
+  var torbutton = ssl_observatory.torbutton_installed;
+  if (!enabled) {
+    set_obs_anon(torbutton);
+    obs_how.selectedItem = (torbutton) ? anon_radio : nonanon_radio;
   }
   //scale_title_logo();
 }
@@ -32,9 +45,6 @@ function popup_done() {
   window.close();
 }
 
-function enable_observatory() {
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory_prefs.enabled", true);
-}
 
 function scale_title_logo() {
   // The image is naturally 500x207, but if it's shrunk we don't want it 
@@ -85,6 +95,16 @@ function recursive_set(node, attrib, value) {
     recursive_set(node.childNodes[i], attrib, value)
 }
 
+// called from the popup
+
+function set_obs_anon(val) {
+  obsprefs.setBoolPref( "extensions.https_everywhere._observatory_prefs.use_custom_proxy", !val);
+}
+function enable_observatory() {
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory_prefs.enabled", true);
+}
+
+// called from within the prefs window, we have more work to do:
 function toggle_enabled() {
   var checkbox = document.getElementById("use-observatory");
   var use_obs = checkbox.checked;
