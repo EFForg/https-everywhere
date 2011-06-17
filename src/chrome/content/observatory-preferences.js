@@ -5,16 +5,23 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-ssl_observatory = CC["@eff.org/ssl-observatory;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+                    .getService(Components.interfaces.nsISupports)
+                    .wrappedJSObject;
 obsprefs = ssl_observatory.prefs;
 
 const pref_prefix = "extensions.ssl_observatory.";
 
 function observatory_prefs_init(doc) {
-  var enabled = obsprefs.getBoolPref(
-                 "extensions.https_everywhere._observatory_prefs.enabled");
-  doc.getElementById("use-observatory").checked = enabled;
+  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory_prefs.enabled");
+  document.getElementById("use-observatory").checked = enabled;
   set_observatory_configurability(enabled);
+  // If the observatory is not yet on, and Tor is not available, the initial
+  // option is to turn it on /without/ Tor
+  if ((!ssl_observatory.torbutton_installed) && !enabled) {
+      var nonanon_radio = document.getElementById("ssl-obs-nonanon");
+      doc.getElementById("ssl-obs-how").selectedItem = nonanon_radio;
+  }
   //scale_title_logo();
 }
 
@@ -33,14 +40,19 @@ function set_observatory_configurability(enabled) {
   var ui_elements = document.querySelectorAll(".ssl-obs-conf");
   for (var i =0; i < ui_elements.length; i++) 
     ui_elements[i].disabled = !enabled;
+  // the "use tor" option can't be ungreyed unless torbutton is installed
+  if (ssl_observatory.torbutton_installed == false) {
+    var tor_opt = document.getElementById("ssl-obs-anon")
+    tor_opt.disabled = true;
+    tor_opt.label = tor_opt.getAttribute("alt_label");
+  }
   if (!enabled) 
     hide_advanced();
 }
 
 // show/hide advanced options in the preferences dialog
 function show_advanced() {
-  var enabled = obsprefs.getBoolPref(
-                 "extensions.https_everywhere._observatory_prefs.enabled");
+  var enabled = obsprefs.getBoolPref("extensions.https_everywhere._observatory_prefs.enabled");
   if (enabled) {
     var adv_opts_box = document.getElementById("observatory-advanced-opts");
     recursive_set(adv_opts_box, "hidden", "false");
