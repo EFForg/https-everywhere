@@ -22,6 +22,11 @@ var HTTPSEverywhereMenu = {
   onAbout: function() {
     window.open("chrome://https-everywhere/content/about.xul", "",
     "chrome,centerscreen");
+  },
+
+  onMeta: function() {
+    window.open("chrome://https-everywhere/content/meta-preferences.xul", "",
+    "chrome,centerscreen");
   }
 };
 
