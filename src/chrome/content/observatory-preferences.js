@@ -22,8 +22,8 @@ function observatory_prefs_init(doc) {
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots");
   document.getElementById("priv-dns").checked = 
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.priv_dns");
-  document.getElementById("asn").checked = 
-    obsprefs.getBoolPref("extensions.https_everywhere._observatory.asn");
+  document.getElementById("send-asn").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.send_asn");
 
   // More complicated: is it anonymised by Tor?
   var obs_how = doc.getElementById("ssl-obs-how");
@@ -120,7 +120,7 @@ function toggle_enabled() {
 
 function toggle_send_asn() {
   var send_asn = document.getElementById("send-asn").checked;
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory.alt_roots", send_asn);
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.send_asn", send_asn);
   if (send_asn) ssl_observatory.setupASNWatcher()
   else          ssl_observatory.stopASNWatcher();
 }
@@ -132,6 +132,6 @@ function toggle_alt_roots() {
 
 function toggle_priv_dns() {
   var priv_dns = document.getElementById("priv-dns").checked;
-  obsprefs.setBoolPref("extensions.https_everywhere._observatory.alt_roots", priv_dns);
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.priv_dns", priv_dns);
 }
 

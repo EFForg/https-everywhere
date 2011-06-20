@@ -5,19 +5,23 @@ var HTTPSEverywhereMenu = {
   },
 
   onPreferences: function() {
-    window.open("chrome://https-everywhere/content/preferences.xul", "", "chrome");
+    window.open("chrome://https-everywhere/content/preferences.xul", "",
+    "chrome,centerscreen");
   },
   
   onSSLObservatoryPopup: function() {
-    window.open("chrome://https-everywhere/content/observatory-popup.xul", "", "chrome");
+    window.open("chrome://https-everywhere/content/observatory-popup.xul", "",
+    "chrome,centerscreen");
   },
 
   onSSLObservatory: function() {
-    window.open("chrome://https-everywhere/content/observatory-preferences.xul", "", "chrome");
+    window.open("chrome://https-everywhere/content/observatory-preferences.xul",
+    "", "chrome,centerscreen");
   },
 
   onAbout: function() {
-    window.open("chrome://https-everywhere/content/about.xul", "", "chrome");
+    window.open("chrome://https-everywhere/content/about.xul", "",
+    "chrome,centerscreen");
   }
 };
 
