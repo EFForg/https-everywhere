@@ -60,8 +60,8 @@ ApplicableList.prototype = {
       var button = document.getElementById('https-everywhere-button');
       button.appendChild(commandset);
     } else {
-        // empty commandset
-        while(commandset.firstChild) { commandset.removeChild(commandset.firstChild); }
+      // empty commandset
+      while(commandset.firstChild) { commandset.removeChild(commandset.firstChild); }
     }
 
     // add all applicable commands
@@ -80,19 +80,25 @@ ApplicableList.prototype = {
     for(var x in this.active) {
       var item = document.createElement("menuitem");
       item.setAttribute('command', this.active[x].id+'-command');
+      item.setAttribute('class', 'menuitem-iconic active-item');
+      item.setAttribute('image', 'chrome://https-everywhere/skin/tick.png');
       menupopup.appendChild(item);
     }
-    for (var x in this.inactive) {
+    for(var x in this.inactive) {
       var item = document.createElement("menuitem");
       item.setAttribute('command', this.inactive[x].id+'-command');
+      item.setAttribute('class', 'menuitem-iconic inactive-item');
+      item.setAttribute('image', 'chrome://https-everywhere/skin/cross.png');
       menupopup.appendChild(item);
     }
 
-    for (var x in this.moot) {
-      if (! (x in this.active) ) {
+    for(var x in this.moot) {
+      if(!(x in this.active) ) {
         // rules that are active for some uris are not really moot
         var item = document.createElement("menuitem");
-        item.setAttribute("label","moot " + this.moot[x].name);
+        item.setAttribute('command', this.moot[x].id+'-command');
+        item.setAttribute('class', 'menuitem-iconic moot-item');
+        item.setAttribute('image', 'chrome://https-everywhere/skin/tick-moot.png');
         menupopup.appendChild(item);
       } else {
         this.log(WARN,"Moot rule invisible " + this.moot[x].name);
