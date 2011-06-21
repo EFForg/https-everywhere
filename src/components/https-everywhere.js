@@ -257,11 +257,11 @@ HTTPSEverywhere.prototype = {
       this.log(WARN, "no window for " + channel.URI.spec);
       return null;
     } 
-    var domWin = nc.getInterface(CI.nsIDOMWindow);
-    if (!domWin) {
+    if (! (nc instanceof CI.nsIDOMWindow) ) {
       this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
+    var domWin = nc.getInterface(CI.nsIDOMWindow);
     domWin = domWin.top;
     return domWin
   },
