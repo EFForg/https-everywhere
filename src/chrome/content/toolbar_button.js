@@ -3,6 +3,12 @@ window.addEventListener("load", https_everywhere_load, true);
 const CI = Components.interfaces;
 const CC = Components.classes;
 
+// LOG LEVELS ---
+VERB=1;
+DBUG=2;
+INFO=3;
+NOTE=4;
+WARN=5;
 
 
 function https_everywhere_load() {
@@ -40,11 +46,11 @@ function show_applicable_list() {
   var alist = HTTPSEverywhere.getExpando(domWin.document,"applicable_rules", null);
   
   if (alist) {
-    alist.log(5,"Success wherein domWin is " + domWin);
+    alist.log(WARN,"Success wherein domWin is " + domWin);
     alist.show_applicable();
     alist.populate_menu(document, alert);
   } else {
-    HTTPSEverywhere.log(5,"Failure wherein domWin is " + domWin);
+    HTTPSEverywhere.log(WARN,"Failure wherein domWin is " + domWin);
     var str = "Missing applicable rules for " + domWin.document.baseURIObject.spec;
     str += "\ndomWin is " + domWin;
     alert(str);
@@ -53,6 +59,27 @@ function show_applicable_list() {
 }
 
 function toggle_rule(rule_id) {
-  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+  // toggle the rule state
+  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
+  reload_window(HTTPSEverywhere);
+}
+
+function reload_window(HTTPSEverywhere) {
+  var domWin = content.document.defaultView.top;
+  if (!(domWin instanceof CI.nsIDOMWindow)) {
+    HTTPSEverywhere.log(WARN, domWin + " is not an nsICDOMWindow");
+    return null;
+  }
+  try {
+    var webNav =  domWin.QueryInterface(CI.nsIInterfaceRequestor)
+                        .getInterface(CI.nsIWebNavigation)
+                        .QueryInterface(CI.nsIDocShell);
+  } catch(e) {
+    HTTPSEverywhere.log(WARN,"failed to get webNav");
+    return null;
+  }
+  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);
 }
