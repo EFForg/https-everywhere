@@ -85,3 +85,10 @@ function reload_window(HTTPSEverywhere) {
   // if it's optimal
   webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);
 }
+
+function open_in_tab(url) {
+  var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                     .getService(Components.interfaces.nsIWindowMediator);
+  var recentWindow = wm.getMostRecentWindow("navigator:browser");
+  recentWindow.delayedOpenTab(url, null, null, null, null);
+}
