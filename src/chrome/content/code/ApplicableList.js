@@ -12,7 +12,7 @@ function ApplicableList(logger, home) {
   this.moot={};  // rulesets that might be applicable but uris are already https
   serial_number += 1;
   this.serial = serial_number;
-  this.log(WARN,"Alist serial #" + this.serial);
+  this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
 };
 
 ApplicableList.prototype = {
@@ -39,7 +39,7 @@ ApplicableList.prototype = {
   },
 
   populate_menu: function(document, alert) {
-    this.log(WARN, "populating using alist #" + this.serial);
+    this.log(DBUG, "populating using alist #" + this.serial);
     
     // get the menu popup
     var menupopup = document.getElementById('https-everywhere-context');
@@ -68,19 +68,19 @@ ApplicableList.prototype = {
       var command = document.createElement("command");
       command.setAttribute('id', rule.id+'-command');
       command.setAttribute('label', rule.name);
-      // oh god, why can't we just say rule.toggle???
       command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
       commandset.appendChild(command);
     }
     for(var x in this.active) { 
       add_command(this.active[x]); 
     }
-    for(var x in this.inactive) { 
-      add_command(this.inactive[x]);
-    }
     for(var x in this.moot) {
       add_command(this.moot[x]);
     }
+    for(var x in this.inactive) { 
+      add_command(this.inactive[x]);
+    }
+
 
     // add a menu item for a rule -- type is "active", "inactive", or "moot"
     function add_menuitem(rule, type) {
@@ -114,9 +114,6 @@ ApplicableList.prototype = {
     // add all the menu items
     for(var x in this.active) {
       add_menuitem(this.active[x], 'active');
-    }
-    for(var x in this.moot) {
-      add_menuitem(this.moot[x], 'moot');
     }
     for(var x in this.moot) {
       if(!(x in this.active) ) {

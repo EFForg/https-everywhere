@@ -50,7 +50,7 @@ function RuleSet(name, match_rule, default_off) {
 
 RuleSet.prototype = {
   _apply: function(urispec) {
-    // return 0 would have applied but is inactive, null if it does not apply
+    // return null if it does not apply
     // and the new url if it does apply
     var i;
     var returl = null;
@@ -60,20 +60,19 @@ RuleSet.prototype = {
       return null;
     }
     // Even so, if we're covered by an exclusion, go home
-    for(i = 0; i < this.exclusions.length; ++i) {
+    for (i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         this.log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
     // Okay, now find the first rule that triggers
-    for(i = 0; i < this.rules.length; ++i) {
+    for (i = 0; i < this.rules.length; ++i) {
+      // This is just for displaying inactive rules
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
-      if (returl != urispec) {
-        if (this.active) return returl
-        else             return 0;
-      }
+      if (returl != urispec) return returl;
     }
+
     if (this.ruleset_match_c) {
       // This is not an error, because we do not insist the matchrule
       // precisely describes to target space of URLs ot redirected
@@ -85,13 +84,33 @@ RuleSet.prototype = {
   log: function(level, msg) {
     https_everywhereLog(level, msg);
   },
+ 
+ wouldMatch: function(hypothetical_uri, alist) {
+   // return true if this ruleset would match the uri, assuming it were http
+   // used for judging moot / inactive rulesets
+   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +"?  serial " + alist.serial);
+   var uri = hypothetical_uri.clone();
+   if (uri.scheme == "https") uri.scheme = "http";
+   var urispec = uri.spec;
+
+   if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
+     return false;
+
+   for (i = 0; i < this.exclusions.length; ++i) 
+     if (this.exclusions[i].pattern_c.test(urispec)) return false;
+
+   for (i = 0; i < this.rules.length; ++i) 
+     if (this.rules[i].from_c.test(urispec)) return true;
+   this.log(DBUG, "No, we fell through");
+   return false;
+ },
 
  transformURI: function(uri) {
     // If no rule applies, return null; if a rule would have applied but was
     // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
     var newurl = this._apply(uri.spec);
-    if (null == newurl)
+    if (null == newurl) 
       return null;
     if (0 == newurl)
       return 0;
@@ -324,37 +343,32 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(applicable_list, uri) {
+  rewrittenURI: function(alist, uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
     // applicable rulesets are and aren't active.
     var i = 0;
     var newuri = null
     var rs = this.potentiallyApplicableRulesets(uri.host);
-    if (!applicable_list)
+    if (!alist)
       this.log(DBUG, "No applicable list rewriting " + uri.spec);
     for(i = 0; i < rs.length; ++i) {
+      if (!rs[i].active) {
+        if (alist && rs[i].wouldMatch(uri, alist))
+          alist.inactive_rule(rs[i]);
+        continue;
+      } 
+      if (uri.scheme == "https" && alist) {
+        // we didn't rewrite but the rule applies to this domain and the
+        // requests are going over https
+        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
+        continue;
+      } 
       newuri = rs[i].transformURI(uri);
       if (newuri) {
         // we rewrote the uri
-        if (applicable_list) {
-          this.log("Adding active rule: " + rs[i].name);
-          applicable_list.active_rule(rs[i]);
-          //applicable_list.show_applicable();
-        }
+        if (alist) alist.active_rule(rs[i]);
         return newuri;
-      } else if (0 == newuri) {
-        // the ruleset is inactive
-        if (applicable_list) {
-          this.log("Adding inactive rule: " + rs[i].name);
-          applicable_list.inactive_rule(rs[i]);
-          //applicable_list.show_applicable();
-        }
-      } else if (uri.scheme == "https" && applicable_list && rs[i].active) {
-        // we didn't rewrite but the rule applies to this domain and the
-        // requests are going over https
-        applicable_list.moot_rule(rs[i]);
-        //applicable_list.show_applicable();
       }
     }
     return null;
@@ -383,7 +397,7 @@ const HTTPSRules = {
       if (this.targets[t])
         results = results.concat(this.targets[t]);
     }
-    this.log(DBUG,"Applicable rules for " + host + ":");
+    this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;

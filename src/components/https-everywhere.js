@@ -252,7 +252,12 @@ HTTPSEverywhere.prototype = {
 
   getWindowForChannel: function(channel) {
     // Obtain an nsIDOMWindow from a channel
-    var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+    try {
+      var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+    } catch(e) {
+      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
+      return null;
+    }
     if (!nc) {
       this.log(WARN, "no window for " + channel.URI.spec);
       return null;

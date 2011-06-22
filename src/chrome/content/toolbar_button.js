@@ -38,11 +38,11 @@ function https_everywhere_load() {
 function show_applicable_list() {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
-    alert(domWin + " is not an nsICDOMWindow");
+    alert(domWin + " is not an nsIDOMWindow");
     return null;
   }
 
-  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
   var alist = HTTPSEverywhere.getExpando(domWin.document,"applicable_rules", null);
   
   if (alist) {
@@ -60,7 +60,7 @@ function show_applicable_list() {
 
 function toggle_rule(rule_id) {
   // toggle the rule state
-  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
@@ -70,7 +70,7 @@ function toggle_rule(rule_id) {
 function reload_window(HTTPSEverywhere) {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
-    HTTPSEverywhere.log(WARN, domWin + " is not an nsICDOMWindow");
+    HTTPSEverywhere.log(WARN, domWin + " is not an nsIDOMWindow");
     return null;
   }
   try {
@@ -81,5 +81,7 @@ function reload_window(HTTPSEverywhere) {
     HTTPSEverywhere.log(WARN,"failed to get webNav");
     return null;
   }
+  // This choice of flags comes from NoScript's quickReload function; not sure
+  // if it's optimal
   webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);
 }
