@@ -126,6 +126,29 @@ ApplicableList.prototype = {
     for(var x in this.inactive) {
       add_menuitem(this.inactive[x], 'inactive');
     }
+
+    // add other menu items
+    menupopup.appendChild(document.createElement('menuseparator'));
+
+    // preferences, about
+    var preferences = document.createElement('menuitem');
+    preferences.setAttribute('label', 'Preferences');
+    menupopup.appendChild(preferences);
+    var about = document.createElement('menuitem');
+    about.setAttribute('label', 'About HTTPS Everywhere');
+    menupopup.appendChild(about);
+
+    // separator
+    menupopup.appendChild(document.createElement('menuseparator'));
+
+    // donate
+    var donate_eff = document.createElement('menuitem');
+    donate_eff.setAttribute('label', 'Donate to Electronic Frontier Foundation');
+    menupopup.appendChild(donate_eff);
+    var donate_tor = document.createElement('menuitem');
+    donate_tor.setAttribute('label', 'Donate to Tor Project');
+    menupopup.appendChild(donate_tor);
+
     this.log(WARN, "finished menu");
     
   },
