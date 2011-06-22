@@ -77,15 +77,12 @@ ApplicableList.prototype = {
       command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
       commandset.appendChild(command);
     }
-    for(var x in this.active) { 
+    for(var x in this.active) 
       add_command(this.active[x]); 
-    }
-    for(var x in this.moot) {
+    for(var x in this.moot)
       add_command(this.moot[x]);
-    }
-    for(var x in this.inactive) { 
+    for(var x in this.inactive) 
       add_command(this.inactive[x]);
-    }
 
 
     // add a menu item for a rule -- type is "active", "inactive", or "moot"
@@ -124,9 +121,8 @@ ApplicableList.prototype = {
     for(var x in this.moot) 
       if(!(x in this.active))   
         add_menuitem(this.moot[x], 'moot');
-    for(var x in this.inactive) {
+    for(var x in this.inactive)
       add_menuitem(this.inactive[x], 'inactive');
-    }
 
     // add other menu items
     menupopup.appendChild(document.createElement('menuseparator'));
@@ -134,9 +130,11 @@ ApplicableList.prototype = {
     // preferences, about
     var preferences = document.createElement('menuitem');
     preferences.setAttribute('label', 'Preferences');
+    preferences.setAttribute('command', 'https-everywhere-menuitem-preferences');
     menupopup.appendChild(preferences);
     var about = document.createElement('menuitem');
     about.setAttribute('label', 'About HTTPS Everywhere');
+    about.setAttribute('command', 'https-everywhere-menuitem-about');
     menupopup.appendChild(about);
 
     // separator
@@ -144,10 +142,12 @@ ApplicableList.prototype = {
 
     // donate
     var donate_eff = document.createElement('menuitem');
-    donate_eff.setAttribute('label', 'Donate to Electronic Frontier Foundation');
+    donate_eff.setAttribute('label', 'Donate to EFF');
+    donate_eff.setAttribute('command', 'https-everywhere-menuitem-donate-eff');
     menupopup.appendChild(donate_eff);
     var donate_tor = document.createElement('menuitem');
     donate_tor.setAttribute('label', 'Donate to Tor Project');
+    donate_tor.setAttribute('command', 'https-everywhere-menuitem-donate-tor');
     menupopup.appendChild(donate_tor);
 
     this.log(WARN, "finished menu");
