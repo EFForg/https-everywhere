@@ -306,7 +306,7 @@ HTTPSEverywhere.prototype = {
       var lst = this.getApplicableListForChannel(channel);
       HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
-      this.log(DBUG, "Got http-on-examine-response @ "+ channel.URI.spec );
+      this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
       HTTPS.handleSecureCookies(channel);
     } else if (topic == "http-on-examine-merged-response") {
       this.log(DBUG, "Got http-on-examine-merged-response ");

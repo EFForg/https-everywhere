@@ -343,7 +343,12 @@ const HTTPSRules = {
     // applicable rulesets are and aren't active.
     var i = 0;
     var newuri = null
-    var rs = this.potentiallyApplicableRulesets(uri.host);
+    try {
+      var rs = this.potentiallyApplicableRulesets(uri.host);
+    } catch(e) {
+      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      return null;
+    }
     if (!alist)
       this.log(DBUG, "No applicable list rewriting " + uri.spec);
     for(i = 0; i < rs.length; ++i) {
