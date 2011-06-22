@@ -113,6 +113,11 @@ RuleSet.prototype = {
     // Disable us.
     this.prefs.setBoolPref(this.name, false);
     this.active = false;
+  },
+
+  toggle: function() {
+    this.active = !this.active;
+    this.prefs.setBoolPref(this.name, this.active);
   }
 };
 
@@ -270,6 +275,7 @@ const HTTPSRules = {
       this.rulesets = [];
       this.targets = {};  // dict mapping target host patterns -> lists of
                           // applicable rules
+      this.rulesetsByID = {};
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles, this.targets);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -306,8 +312,10 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
-        if (r != null)
+        if (r != null) {
           this.rulesets.push(r);
+          this.rulesetsByID[r.id] = r;
+        }
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)

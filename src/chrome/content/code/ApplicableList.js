@@ -39,16 +39,13 @@ ApplicableList.prototype = {
   },
 
   populate_menu: function(document, alert) {
+    this.log(WARN, "populating using alist #" + this.serial);
+    
     // get the menu popup
     var menupopup = document.getElementById('https-everywhere-context');
-  
-    // called from the XUL when the context popup is about to be displayed;
-    // fill out the UI showing which rules are active and inactive in this
-    // page
-    this.log(WARN, "populating using alist #" + this.serial);
+
+    // empty it all of its menuitems
     while(menupopup.firstChild) {
-      // delete whatever was in the menu previously
-      //this.log(WARN,"removing " + menupopup.firstChild.label +" from menu");
       menupopup.removeChild(menupopup.firstChild);
     }
 
@@ -61,7 +58,9 @@ ApplicableList.prototype = {
       button.appendChild(commandset);
     } else {
       // empty commandset
-      while(commandset.firstChild) { commandset.removeChild(commandset.firstChild); }
+      while(commandset.firstChild) {
+        commandset.removeChild(commandset.firstChild);
+      }
     }
 
     // add all applicable commands
@@ -69,40 +68,66 @@ ApplicableList.prototype = {
       var command = document.createElement("command");
       command.setAttribute('id', rule.id+'-command');
       command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', "alert('label: '+this.getAttribute('label'))");
+      // oh god, why can't we just say rule.toggle???
+      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
       commandset.appendChild(command);
     }
-    for(var x in this.active) { add_command(this.active[x]); }
-    for(var x in this.inactive) { add_command(this.inactive[x]); }
-    for(var x in this.moot) { add_command(this.moot[x]); }
+    for(var x in this.active) { 
+      add_command(this.active[x]); 
+    }
+    for(var x in this.inactive) { 
+      add_command(this.inactive[x]);
+    }
+    for(var x in this.moot) {
+      add_command(this.moot[x]);
+    }
 
-    // set commands to work
+    // add a menu item for a rule -- type is "active", "inactive", or "moot"
+    function add_menuitem(rule, type) {
+      // create the menuitem
+      var item = document.createElement('menuitem');
+      item.setAttribute('command', rule.id+'-command');
+      item.setAttribute('class', type+'-item');
+
+      // set the icon
+      var image = document.createElement('image');
+      var image_src;
+      if(type == 'active') image_src = 'tick.png';
+      else if(type == 'inactive') image_src = 'cross.png';
+      else if(type == 'moot') image_src = 'tick-moot.png';
+      image.setAttribute('src', 'chrome://https-everywhere/skin/'+image_src);
+
+      // set the label
+      var label = document.createElement('label');
+      label.setAttribute('value', rule.name);
+      
+      // put them in an hbox, and put the hbox in the menuitem
+      var hbox = document.createElement('hbox');
+      hbox.appendChild(image);
+      hbox.appendChild(label);
+      item.appendChild(hbox);
+
+      // all done
+      menupopup.appendChild(item);
+    }
+
+    // add all the menu items
     for(var x in this.active) {
-      var item = document.createElement("menuitem");
-      item.setAttribute('command', this.active[x].id+'-command');
-      item.setAttribute('class', 'menuitem-iconic active-item');
-      item.setAttribute('image', 'chrome://https-everywhere/skin/tick.png');
-      menupopup.appendChild(item);
+      add_menuitem(this.active[x], 'active');
     }
-    for(var x in this.inactive) {
-      var item = document.createElement("menuitem");
-      item.setAttribute('command', this.inactive[x].id+'-command');
-      item.setAttribute('class', 'menuitem-iconic inactive-item');
-      item.setAttribute('image', 'chrome://https-everywhere/skin/cross.png');
-      menupopup.appendChild(item);
+    for(var x in this.moot) {
+      add_menuitem(this.moot[x], 'moot');
     }
-
     for(var x in this.moot) {
       if(!(x in this.active) ) {
         // rules that are active for some uris are not really moot
-        var item = document.createElement("menuitem");
-        item.setAttribute('command', this.moot[x].id+'-command');
-        item.setAttribute('class', 'menuitem-iconic moot-item');
-        item.setAttribute('image', 'chrome://https-everywhere/skin/tick-moot.png');
-        menupopup.appendChild(item);
+        add_menuitem(this.moot[x], 'moot');
       } else {
         this.log(WARN,"Moot rule invisible " + this.moot[x].name);
       }
+    }
+    for(var x in this.inactive) {
+      add_menuitem(this.inactive[x], 'inactive');
     }
     this.log(WARN, "finished menu");
     

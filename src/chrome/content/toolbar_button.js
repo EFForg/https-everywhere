@@ -52,3 +52,7 @@ function show_applicable_list() {
   }
 }
 
+function toggle_rule(rule_id) {
+  HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+  HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
+}
