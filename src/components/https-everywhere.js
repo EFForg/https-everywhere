@@ -231,20 +231,10 @@ HTTPSEverywhere.prototype = {
   // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
-      var x = wp.DOMWindow;
-      var top_window;
-      if (x instanceof CI.nsIDOMWindow)  {
-        top_window = x.top;               // climb out of iframes
-        if (top_window.document) {
-          var alist = new ApplicableList(this.log,top_window.document);
-          this.setExpando(top_window, "applicable rules", alist);
-          this.log(WARN,"onLocationChange, made new alist for " +uri.spec);
-        } else {
-          this.log(WARN,"onLocationChange, document is null");
-        }
-      } else {
-        this.log(WARN,"onLocationChange: no nsIDOMWindow");
-      }
+      this.log(DBUG,"(Probably) Making new alist in onLocationChange");
+      if (!this.getApplicableListForDOMWin(wp.DOMWindow, "onLocChange")) 
+        this.log(WARN,"Something went wrong in onLocationChange");
+      this.log(DBUG,"ok");
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }
@@ -280,15 +270,22 @@ HTTPSEverywhere.prototype = {
   // need to be appended to with reference only to the channel
   getApplicableListForChannel: function(channel) {
     var domWin = this.getWindowForChannel(channel);
-    if (!domWin) return null;
-    var alist= this.getExpando(domWin.document,"applicable_rules",null);
+    return this.getApplicableListForDOMWin(domWin, "on-modify-request w " + domWin);
+  },
+
+  getApplicableListForDOMWin: function(domWin, where) {
+    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
+      this.log(WARN, "Get alist without domWin");
+      return null;
+    }
+    var doc = domWin.top.document;
+    var alist= this.getExpando(doc,"applicable_rules",null);
     if (alist) {
-      this.log(WARN,"get AL success");
-      return alist;
+      this.log(DBUG,"get AL success in " + where);
     } else {
-      this.log(DBUG, "Making new AL in getApplicableListForChannel");
-      alist = new ApplicableList(this.log,domWin.document);
-      this.setExpando(domWin.document,"applicable_rules",alist);
+      this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
+      alist = new ApplicableList(this.log,doc);
+      this.setExpando(doc,"applicable_rules",alist);
     }
     return alist;
   },
@@ -297,7 +294,7 @@ HTTPSEverywhere.prototype = {
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
     var channel = subject;
-    this.log(VERB,"Got observer topic: "+topic);
+    //this.log(VERB,"Got observer topic: "+topic);
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
@@ -309,7 +306,7 @@ HTTPSEverywhere.prototype = {
       var lst = this.getApplicableListForChannel(channel);
       HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
-      this.log(DBUG, "Got http-on-examine-response ");
+      this.log(DBUG, "Got http-on-examine-response @ "+ channel.URI.spec );
       HTTPS.handleSecureCookies(channel);
     } else if (topic == "http-on-examine-merged-response") {
       this.log(DBUG, "Got http-on-examine-merged-response ");

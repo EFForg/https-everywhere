@@ -514,20 +514,15 @@ ChannelReplacement.prototype = {
           ABE.log("Opening delayed channel: " + oldChan.name + " - (current loading channel for this window " + (overlap && overlap.name) + ")");
         }
     */
-    if (true) {
-      try {
-        newChan.asyncOpen(this.listener, this.context);
-        
-        // safe browsing hook
-        if (this._mustClassify)
-          CC["@mozilla.org/channelclassifier"].createInstance(CI.nsIChannelClassifier).start(newChan, true);
-        
-      } catch (e) {}
-    } else {
-      if (ABE.consoleDump) {
-        ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
-      }
-    }
+    try {
+      newChan.asyncOpen(this.listener, this.context);
+      
+      // safe browsing hook
+      if (this._mustClassify)
+        CC["@mozilla.org/channelclassifier"].createInstance(CI.nsIChannelClassifier).start(newChan, true);
+      
+    } catch (e) {}
+
     
     this.dispose();
   },

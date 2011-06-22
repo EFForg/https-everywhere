@@ -13,22 +13,28 @@ function ApplicableList(logger, home) {
   serial_number += 1;
   this.serial = serial_number;
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
+  // The base URI of the dom tends to be loaded from some /other/
+  // ApplicableList, so pretend we're loading it from here.
+  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
+  HTTPSEverywhere.https_rules.rewrittenURI(this, home.baseURIObject);
 };
 
 ApplicableList.prototype = {
 
   active_rule: function(ruleset) {
-    this.log(WARN,"active rule " + ruleset.name +" in "+ this.home);
+    this.log(INFO,"active rule " + ruleset.name +" in "+ this.home);
     this.active[ruleset.name] = ruleset;
   },
 
   inactive_rule: function(ruleset) {
-    this.log(WARN,"inactive rule " + ruleset.name +" in "+ this.home);
+    this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home);
     this.inactive[ruleset.name] = ruleset;
   },
 
   moot_rule: function(ruleset) {
-    this.log(WARN,"moot rule " + ruleset.name +" in "+ this.home);
+    this.log(INFO,"moot rule " + ruleset.name +" in "+ this.home);
     this.moot[ruleset.name] = ruleset;
   },
 
@@ -112,17 +118,12 @@ ApplicableList.prototype = {
     }
 
     // add all the menu items
-    for(var x in this.active) {
+    for(var x in this.active) 
       add_menuitem(this.active[x], 'active');
-    }
-    for(var x in this.moot) {
-      if(!(x in this.active) ) {
-        // rules that are active for some uris are not really moot
+    // rules that are active for some uris are not really moot
+    for(var x in this.moot) 
+      if(!(x in this.active))   
         add_menuitem(this.moot[x], 'moot');
-      } else {
-        this.log(WARN,"Moot rule invisible " + this.moot[x].name);
-      }
-    }
     for(var x in this.inactive) {
       add_menuitem(this.inactive[x], 'inactive');
     }

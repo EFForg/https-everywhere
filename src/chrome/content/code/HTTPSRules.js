@@ -73,12 +73,6 @@ RuleSet.prototype = {
       if (returl != urispec) return returl;
     }
 
-    if (this.ruleset_match_c) {
-      // This is not an error, because we do not insist the matchrule
-      // precisely describes to target space of URLs ot redirected
-      this.log(DBUG,"Ruleset "+this.name
-              +" had an applicable match-rule but no matching rules");
-    }
     return null;
   },
   log: function(level, msg) {

@@ -31,9 +31,9 @@ const HTTPS = {
   replaceChannel: function(applicable_list, channel) {
     var uri = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
     if (!uri) {
-       HTTPS.log(INFO,
-           "Got replace channel with no applicable rules for URI "
-           + channel.URI.spec);
+       //HTTPS.log(INFO,
+       //    "Got replace channel with no applicable rules for URI "
+       //    + channel.URI.spec);
        return false;
      }
 
@@ -97,34 +97,13 @@ const HTTPS = {
         return null;
       }
       domWin = doc.defaultView;
-      this.log(WARN,"Coerced nsIDOMWin from Node");
+      this.log(WARN,"Coerced nsIDOMWin from Node: " + domWin);
     } else {
       this.log(WARN, "Context for " + uri.spec + 
                      "is some bizarre unexpected thing: " + ctx);
       return null;
     }
-
-    if (!(domWin instanceof CI.nsIDOMWindow)) {
-      this.log(WARN, "that isn't a domWindow");
-    }
-    domWin = domWin.top;  // jump out of iframes
-    doc = doc.documentElement;
-    alist = HTTPSEverywhere.instance.getExpando(doc,"applicable_rules", null);
-    if (alist) {
-      this.log(DBUG,"Found existing applicable list");
-      //alist.show_applicable();
-    } else {
-      // Usually onLocationChange should have put this in here for us, in some
-      // cases perhaps we have to make it here...
-      alist = new ApplicableList(this.log,doc);
-      this.log(WARN, "Sanity should be, " + alist);
-      HTTPSEverywhere.instance.setExpando(doc,"applicable_rules", alist);
-      this.log(WARN, "had to generate applicable list in forceURI for " +
-                      uri.spec + " in " + doc.baseURIObject.spec);
-      alist = HTTPSEverywhere.instance.getExpando(doc,"applicable_rules", null);
-      this.log(WARN, "Sanity check: " + alist);
-    }
-    return alist;
+    return HTTPSEverywhere.instance.getApplicableListForDOMWin(domWin, "for context/forceURI");
   },
 
   forceURI: function(uri, fallback, ctx) {
