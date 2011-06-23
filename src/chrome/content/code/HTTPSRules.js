@@ -404,16 +404,16 @@ const HTTPSRules = {
   shouldSecureCookie: function(applicable_list, c) {
     // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure
-    this.log(DBUG, "Testing cookie:");
-    this.log(DBUG, "  name: " + c.name);
-    this.log(DBUG, "  host: " + c.host);
+    //this.log(DBUG, "Testing cookie:");
+    //this.log(DBUG, "  name: " + c.name);
+    //this.log(DBUG, "  host: " + c.host);
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active)
+      if (ruleset.active) {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
@@ -422,7 +422,9 @@ const HTTPSRules = {
             return true;
           }
         }
-      else if (ruleset.cookierules.length > 0) {
+        if (ruleset.cookierules.length > 0)
+          applicable_list.moot_rule(ruleset);
+      } else if (ruleset.cookierules.length > 0) {
         applicable_list.inactive_rule(ruleset);
         this.log(INFO,"Inactive cookie rule " + ruleset.name);
       }

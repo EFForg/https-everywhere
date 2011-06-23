@@ -43,7 +43,7 @@ function show_applicable_list() {
   }
 
   var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
-  var alist = HTTPSEverywhere.getExpando(domWin.document,"applicable_rules", null);
+  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
   
   if (alist) {
     alist.log(WARN,"Success wherein domWin is " + domWin);

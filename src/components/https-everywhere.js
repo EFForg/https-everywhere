@@ -119,6 +119,35 @@ INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
+// This is black magic for storing Expando data w/ an nsIDOMWindow 
+// See http://pastebin.com/qY28Jwbv , 
+// https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIControllers
+
+StorageController.prototype = {
+  QueryInterface: XPCOMUtils.generateQI(
+    [ Components.interfaces.nsISupports,
+      Components.interfaces.nsIController ]),
+  wrappedJSObject: null,  // Initialized by constructor
+  supportsCommand: function (cmd) {return (cmd == this.command)},
+  isCommandEnabled: function (cmd) {return (cmd == this.command)},
+  onEvent: function(eventName) {return true},
+  doCommand: function() {return true}
+};
+
+function StorageController(command) {
+  this.command = command;
+  this.data = {};
+  this.wrappedJSObject = this;
+};
+
+/*var Controller = Class("Controller", XPCOM(CI.nsIController), {
+  init: function (command, data) {
+      this.command = command;
+      this.data = data;
+  },
+  supportsCommand: function (cmd) cmd === this.command
+});*/
+
 function HTTPSEverywhere() {
 
   // Set up logging in each component:
@@ -140,6 +169,9 @@ function HTTPSEverywhere() {
   this.obsService.addObserver(this, "profile-after-change", false);
   return;
 }
+
+
+
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -199,19 +231,28 @@ HTTPSEverywhere.prototype = {
   },
 
   // An "expando" is an attribute glued onto something.  From NoScript.
-  getExpando: function(domObject, key, defValue) {
-    return domObject && domObject.__httpsEStorage && domObject.__httpsEStorage[key] || 
-           (defValue ? this.setExpando(domObject, key, defValue) : null);
+  getExpando: function(domWin, key) {
+    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
+    if (c) {
+      c = c.wrappedJSObject;
+      this.log(DBUG, "Found a controller, returning data");
+      return c.data[key];
+    } else {
+      this.log(INFO, "No controller attached to " + domWin);
+      return null;
+    }
   },
-
-  setExpando: function(domObject, key, value) {
-    if (!domObject) return null;
-    if (!domObject.__httpsEStorage) domObject.__httpsEStorage = {};
-    if (domObject.__httpsEStorage) domObject.__httpsEStorage[key] = value;
-    else this.log(WARN, "Warning: cannot set expando " + key + " to value " + value);
-    return value;
+  setExpando: function(domWin, key, value) {
+    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
+    if (!c) {
+      this.log(DBUG, "Appending new StorageController for " + domWin);
+      c = new StorageController("https-everywhere-storage");
+      domWin.controllers.appendController(c);
+    } else {
+      c = c.wrappedJSObject;
+    }
+    c.data[key] = value;
   },
-
 
   // This function is registered solely to detect favicon loads by virtue
   // of their failure to pass through this function.
@@ -231,12 +272,8 @@ HTTPSEverywhere.prototype = {
   // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
-      // XXX this should not work like this, and it possibly shouldn't exist
-      // at all
-      //this.log(DBUG,"(Probably) Making new alist in onLocationChange");
-      if (!this.getApplicableListForDOMWin(wp.DOMWindow, "onLocChange")) 
+      if (!this.newApplicableListForDOMWin(wp.DOMWindow)) 
         this.log(WARN,"Something went wrong in onLocationChange");
-      //this.log(DBUG,"ok");
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }
@@ -275,19 +312,31 @@ HTTPSEverywhere.prototype = {
     return this.getApplicableListForDOMWin(domWin, "on-modify-request w " + domWin);
   },
 
+  newApplicableListForDOMWin: function(domWin) {
+    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
+      this.log(WARN, "Get alist without domWin");
+      return null;
+    }
+    var dw = domWin.top;
+    this.log(DBUG, "Forcing new AL in getApplicableListForDOMWin in onLocationChange");
+    var alist = new ApplicableList(this.log,dw.document);
+    this.setExpando(dw,"applicable_rules",alist);
+    return alist;
+  },
+
   getApplicableListForDOMWin: function(domWin, where) {
     if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
       this.log(WARN, "Get alist without domWin");
       return null;
     }
-    var doc = domWin.top.document;
-    var alist= this.getExpando(doc,"applicable_rules",null);
+    var dw = domWin.top;
+    var alist= this.getExpando(dw,"applicable_rules",null);
     if (alist) {
       this.log(DBUG,"get AL success in " + where);
     } else {
       this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
-      alist = new ApplicableList(this.log,doc);
-      this.setExpando(doc,"applicable_rules",alist);
+      alist = new ApplicableList(this.log,dw.document);
+      this.setExpando(dw,"applicable_rules",alist);
     }
     return alist;
   },

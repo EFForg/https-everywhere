@@ -1,4 +1,4 @@
-INCLUDE('Cookie','ApplicableList');
+INCLUDE('Cookie');
 // XXX: Disable STS for now.
 var STS = {
   isSTSURI : function(uri) {
