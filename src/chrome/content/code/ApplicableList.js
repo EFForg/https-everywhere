@@ -57,12 +57,13 @@ ApplicableList.prototype = {
     for(x in this.active) rules_count++;
     for(x in this.inactive) rules_count++;
     for(x in this.moot) rules_count++;
-    var label = document.createElement('label');
+    var label = document.createElement('menuitem');
     if(rules_count > 0) {
-        label.setAttribute('value', 'Enable / Disable Rules');
+        label.setAttribute('label', 'Enable / Disable Rules');
     } else {
-        label.setAttribute('value', 'No Rules for This Page');
+        label.setAttribute('label', '(No Rules for This Page)');
     }
+    label.setAttribute('command', 'https-everywhere-menuitem-preferences');
     menupopup.appendChild(label);
 
     // create a commandset if it doesn't already exist
@@ -138,10 +139,10 @@ ApplicableList.prototype = {
     menupopup.appendChild(document.createElement('menuseparator'));
 
     // preferences, about
-    var preferences = document.createElement('menuitem');
+    /*var preferences = document.createElement('menuitem');
     preferences.setAttribute('label', 'Preferences');
     preferences.setAttribute('command', 'https-everywhere-menuitem-preferences');
-    menupopup.appendChild(preferences);
+    menupopup.appendChild(preferences);*/
     var about = document.createElement('menuitem');
     about.setAttribute('label', 'About HTTPS Everywhere');
     about.setAttribute('command', 'https-everywhere-menuitem-about');
