@@ -44,7 +44,7 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(document, alert) {
+  populate_menu: function(document) {
     this.log(DBUG, "populating using alist #" + this.serial);
     
     // get the menu popup
@@ -54,6 +54,19 @@ ApplicableList.prototype = {
     while(menupopup.firstChild) {
       menupopup.removeChild(menupopup.firstChild);
     }
+
+    // add the label at the top
+    var rules_count = 0;
+    for(x in this.active) rules_count++;
+    for(x in this.inactive) rules_count++;
+    for(x in this.moot) rules_count++;
+    var label = document.createElement('label');
+    if(rules_count > 0) {
+        label.setAttribute('value', 'Enable / Disable Rules');
+    } else {
+        label.setAttribute('value', 'No Rules for This Page');
+    }
+    menupopup.appendChild(label);
 
     // create a commandset if it doesn't already exist
     var commandset = document.getElementById('https-everywhere-commandset');
