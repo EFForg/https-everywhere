@@ -231,10 +231,12 @@ HTTPSEverywhere.prototype = {
   // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
-      this.log(DBUG,"(Probably) Making new alist in onLocationChange");
+      // XXX this should not work like this, and it possibly shouldn't exist
+      // at all
+      //this.log(DBUG,"(Probably) Making new alist in onLocationChange");
       if (!this.getApplicableListForDOMWin(wp.DOMWindow, "onLocChange")) 
         this.log(WARN,"Something went wrong in onLocationChange");
-      this.log(DBUG,"ok");
+      //this.log(DBUG,"ok");
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }

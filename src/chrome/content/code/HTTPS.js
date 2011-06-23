@@ -97,7 +97,7 @@ const HTTPS = {
         return null;
       }
       domWin = doc.defaultView;
-      this.log(WARN,"Coerced nsIDOMWin from Node: " + domWin);
+      this.log(DBUG,"Coerced nsIDOMWin from Node: " + domWin);
     } else {
       this.log(WARN, "Context for " + uri.spec + 
                      "is some bizarre unexpected thing: " + ctx);
@@ -183,7 +183,10 @@ const HTTPS = {
       this.log(WARN,"No URI inside request " +req);
       return;
     }
-    //this.log(VERB, "Cookie hunting in " + uri.spec);
+    this.log(DBUG, "Cookie hunting in " + uri.spec);
+    var alist = HTTPSEverywhere.instance.getApplicableListForChannel(req);
+    if (!alist)
+      this.log(INFO, "No alist for cookies for "+(req.URI) ? req.URI.spec : "???");
     
     if (uri.schemeIs("https")) {
       var host = uri.host;
@@ -198,7 +201,7 @@ const HTTPS = {
       for each (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
-        if (!c.secure && HTTPSRules.shouldSecureCookie(c)) {
+        if (!c.secure && HTTPSRules.shouldSecureCookie(alist, c)) {
           this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
