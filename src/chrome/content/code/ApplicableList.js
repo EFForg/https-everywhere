@@ -15,10 +15,7 @@ function ApplicableList(logger, home) {
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
   // The base URI of the dom tends to be loaded from some /other/
   // ApplicableList, so pretend we're loading it from here.
-  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
-                      .getService(Components.interfaces.nsISupports)
-                      .wrappedJSObject;
-  HTTPSEverywhere.https_rules.rewrittenURI(this, home.baseURIObject);
+  HTTPSEverywhere.instance.https_rules.rewrittenURI(this, home.baseURIObject);
 };
 
 ApplicableList.prototype = {
