@@ -115,9 +115,38 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread');
+INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
+// This is black magic for storing Expando data w/ an nsIDOMWindow 
+// See http://pastebin.com/qY28Jwbv , 
+// https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIControllers
+
+StorageController.prototype = {
+  QueryInterface: XPCOMUtils.generateQI(
+    [ Components.interfaces.nsISupports,
+      Components.interfaces.nsIController ]),
+  wrappedJSObject: null,  // Initialized by constructor
+  supportsCommand: function (cmd) {return (cmd == this.command)},
+  isCommandEnabled: function (cmd) {return (cmd == this.command)},
+  onEvent: function(eventName) {return true},
+  doCommand: function() {return true}
+};
+
+function StorageController(command) {
+  this.command = command;
+  this.data = {};
+  this.wrappedJSObject = this;
+};
+
+/*var Controller = Class("Controller", XPCOM(CI.nsIController), {
+  init: function (command, data) {
+      this.command = command;
+      this.data = data;
+  },
+  supportsCommand: function (cmd) cmd === this.command
+});*/
 
 function HTTPSEverywhere() {
 
@@ -140,6 +169,9 @@ function HTTPSEverywhere() {
   this.obsService.addObserver(this, "profile-after-change", false);
   return;
 }
+
+
+
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -198,6 +230,30 @@ HTTPSEverywhere.prototype = {
     return Components.utils.getWeakReference(this);
   },
 
+  // An "expando" is an attribute glued onto something.  From NoScript.
+  getExpando: function(domWin, key) {
+    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
+    if (c) {
+      c = c.wrappedJSObject;
+      this.log(DBUG, "Found a controller, returning data");
+      return c.data[key];
+    } else {
+      this.log(INFO, "No controller attached to " + domWin);
+      return null;
+    }
+  },
+  setExpando: function(domWin, key, value) {
+    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
+    if (!c) {
+      this.log(DBUG, "Appending new StorageController for " + domWin);
+      c = new StorageController("https-everywhere-storage");
+      domWin.controllers.appendController(c);
+    } else {
+      c = c.wrappedJSObject;
+    }
+    c.data[key] = value;
+  },
+
   // This function is registered solely to detect favicon loads by virtue
   // of their failure to pass through this function.
   onStateChange: function(wp, req, stateFlags, status) {
@@ -210,10 +266,86 @@ HTTPSEverywhere.prototype = {
     }
   },
 
+  // We use onLocationChange to make a fresh list of rulesets that could have
+  // applied to the content in the current page (the "applicable list" is used
+  // for the context menu in the UI).  This will be appended to as various
+  // content is embedded / requested by JavaScript.
+  onLocationChange: function(wp, req, uri) {
+    if (wp instanceof CI.nsIWebProgress) {
+      if (!this.newApplicableListForDOMWin(wp.DOMWindow)) 
+        this.log(WARN,"Something went wrong in onLocationChange");
+    } else {
+      this.log(WARN,"onLocationChange: no nsIWebProgress");
+    }
+  },
+
+  getWindowForChannel: function(channel) {
+    // Obtain an nsIDOMWindow from a channel
+    try {
+      var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+    } catch(e) {
+      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
+      return null;
+    }
+    if (!nc) {
+      this.log(WARN, "no window for " + channel.URI.spec);
+      return null;
+    } 
+    try {
+      var domWin = nc.getInterface(CI.nsIDOMWindow);
+    } catch(e) {
+      this.log(WARN, "exploded getting DOMWin for " + channel.URI.spec);
+      return null;
+    }
+    if (!domWin) {
+      this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
+      return null;
+    }
+    domWin = domWin.top;
+    return domWin
+  },
+
+  // the lists get made when the urlbar is loading something new, but they
+  // need to be appended to with reference only to the channel
+  getApplicableListForChannel: function(channel) {
+    var domWin = this.getWindowForChannel(channel);
+    return this.getApplicableListForDOMWin(domWin, "on-modify-request w " + domWin);
+  },
+
+  newApplicableListForDOMWin: function(domWin) {
+    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
+      this.log(WARN, "Get alist without domWin");
+      return null;
+    }
+    var dw = domWin.top;
+    this.log(DBUG, "Forcing new AL in getApplicableListForDOMWin in onLocationChange");
+    var alist = new ApplicableList(this.log,dw.document);
+    this.setExpando(dw,"applicable_rules",alist);
+    return alist;
+  },
+
+  getApplicableListForDOMWin: function(domWin, where) {
+    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
+      this.log(WARN, "Get alist without domWin");
+      return null;
+    }
+    var dw = domWin.top;
+    var alist= this.getExpando(dw,"applicable_rules",null);
+    if (alist) {
+      this.log(DBUG,"get AL success in " + where);
+    } else {
+      this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
+      alist = new ApplicableList(this.log,dw.document);
+      this.setExpando(dw,"applicable_rules",alist);
+    }
+    return alist;
+  },
+
+
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
     var channel = subject;
-    this.log(VERB,"Got observer topic: "+topic);
+    //this.log(VERB,"Got observer topic: "+topic);
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
@@ -222,9 +354,10 @@ HTTPSEverywhere.prototype = {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         return;
       }
-      HTTPS.replaceChannel(channel);
+      var lst = this.getApplicableListForChannel(channel);
+      HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
-      this.log(DBUG, "Got http-on-examine-response ");
+      this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
       HTTPS.handleSecureCookies(channel);
     } else if (topic == "http-on-examine-merged-response") {
       this.log(DBUG, "Got http-on-examine-merged-response ");
@@ -244,7 +377,8 @@ HTTPSEverywhere.prototype = {
       OS.addObserver(this, "http-on-examine-response", false);
       var dls = CC['@mozilla.org/docloaderservice;1']
         .getService(CI.nsIWebProgress);
-      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST);
+      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
+                                    CI.nsIWebProgress.NOTIFY_LOCATION);
       this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
       try {
         // Firefox >= 4
@@ -277,9 +411,29 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;
     }
+    var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
+    HTTPS.replaceChannel(alist,newChannel);
+  },
 
-    HTTPS.replaceChannel(newChannel);
-
+  juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
+    // If the new channel doesn't yet have a list of applicable rulesets, start
+    // with the old one because that's probably a better representation of how
+    // secure the load process was for this page
+    var domWin = this.getWindowForChannel(oldChannel);
+    var old_alist = null;
+    if (domWin) 
+      old_alist = this.getExpando(domWin,"applicable_rules", null);
+    domWin = this.getWindowForChannel(newChannel);
+    if (!domWin) return null;
+    var new_alist = this.getExpando(domWin,"applicable_rules", null);
+    if (old_alist && !new_alist) {
+      new_alist = old_alist;
+      this.setExpando(domWin,"applicable_rules",new_alist);
+    } else if (!new_alist) {
+      new_alist = new ApplicableList(this.log, domWin.document);
+      this.setExpando(domWin,"applicable_rules",new_alist);
+    }
+    return new_alist;
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
@@ -301,6 +455,7 @@ HTTPSEverywhere.prototype = {
     var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
     var scheme = unwrappedLocation.scheme;
     var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+    this.log(VERB,"shoulLoad for " + aContentLocation.spec);
     if (isHTTP)
       HTTPS.forceURI(aContentLocation, null, aContext);
     return true;

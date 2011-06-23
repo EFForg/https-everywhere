@@ -16,16 +16,16 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+ruleset_counter = 0;
 function RuleSet(name, match_rule, default_off) {
+  this.id="https-everywhere-rule-" + ruleset_counter;
+  ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;
   this.notes = "";
-  if (match_rule) {
-    this.ruleset_match_c = new RegExp(match_rule);
-  } else {
-    this.ruleset_match_c = null;
-  }
+  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
+  else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
@@ -50,49 +50,63 @@ function RuleSet(name, match_rule, default_off) {
 
 RuleSet.prototype = {
   _apply: function(urispec) {
+    // return null if it does not apply
+    // and the new url if it does apply
     var i;
     var returl = null;
-    if (!this.active) {
-      return null;
-    }
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       this.log(VERB, "ruleset_match_c excluded " + urispec);
       return null;
     }
     // Even so, if we're covered by an exclusion, go home
-    for(i = 0; i < this.exclusions.length; ++i) {
+    for (i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         this.log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
     // Okay, now find the first rule that triggers
-    for(i = 0; i < this.rules.length; ++i) {
-      returl = urispec.replace(this.rules[i].from_c,
-                               this.rules[i].to);
-      if (returl != urispec) {
-        return returl;
-      }
+    for (i = 0; i < this.rules.length; ++i) {
+      // This is just for displaying inactive rules
+      returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
+      if (returl != urispec) return returl;
     }
-    if (this.ruleset_match_c) {
-      // This is not an error, because we do not insist the matchrule
-      // precisely describes to target space of URLs ot redirected
-      this.log(DBUG,"Ruleset "+this.name
-              +" had an applicable match-rule but no matching rules");
-    }
+
     return null;
   },
   log: function(level, msg) {
     https_everywhereLog(level, msg);
   },
+ 
+ wouldMatch: function(hypothetical_uri, alist) {
+   // return true if this ruleset would match the uri, assuming it were http
+   // used for judging moot / inactive rulesets
+   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +"?  serial " + alist.serial);
+   var uri = hypothetical_uri.clone();
+   if (uri.scheme == "https") uri.scheme = "http";
+   var urispec = uri.spec;
+
+   if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
+     return false;
+
+   for (i = 0; i < this.exclusions.length; ++i) 
+     if (this.exclusions[i].pattern_c.test(urispec)) return false;
+
+   for (i = 0; i < this.rules.length; ++i) 
+     if (this.rules[i].from_c.test(urispec)) return true;
+   return false;
+ },
 
  transformURI: function(uri) {
-    // If no rule applies, return null; otherwise, return a fresh uri instance
+    // If no rule applies, return null; if a rule would have applied but was
+    // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
     var newurl = this._apply(uri.spec);
-    if (null == newurl)
+    if (null == newurl) 
       return null;
+    if (0 == newurl)
+      return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                 createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
@@ -111,6 +125,11 @@ RuleSet.prototype = {
     // Disable us.
     this.prefs.setBoolPref(this.name, false);
     this.active = false;
+  },
+
+  toggle: function() {
+    this.active = !this.active;
+    this.prefs.setBoolPref(this.name, this.active);
   }
 };
 
@@ -152,6 +171,7 @@ const RuleWriter = {
     file.append("rules");
     if (!file.isDirectory()) {
       // XXX: Arg, death!
+      this.log(WARN,"Catastrophic failure: extension directory is not a directory");
     }
     return file;
   },
@@ -181,7 +201,7 @@ const RuleWriter = {
       data = data.replace(/<\?xml[^>]*\?>/, ""); 
       var xmlrules = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
-      this.log(WARN,"Error in XML file: " + file + "\n" + e);
+      this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
 
@@ -268,6 +288,7 @@ const HTTPSRules = {
       this.rulesets = [];
       this.targets = {};  // dict mapping target host patterns -> lists of
                           // applicable rules
+      this.rulesetsByID = {};
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles, this.targets);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -304,8 +325,10 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
-        if (r != null)
+        if (r != null) {
           this.rulesets.push(r);
+          this.rulesetsByID[r.id] = r;
+        }
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
@@ -314,19 +337,44 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(uri) {
+  rewrittenURI: function(alist, uri) {
+    // This function oversees the task of working out if a uri should be
+    // rewritten, what it should be rewritten to, and recordkeeping of which
+    // applicable rulesets are and aren't active.
     var i = 0;
     var newuri = null
-    var rs = this.applicableRulesets(uri.host);
+    try {
+      var rs = this.potentiallyApplicableRulesets(uri.host);
+    } catch(e) {
+      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      return null;
+    }
+    if (!alist)
+      this.log(DBUG, "No applicable list rewriting " + uri.spec);
     for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i].transformURI(uri)))
+      if (!rs[i].active) {
+        if (alist && rs[i].wouldMatch(uri, alist))
+          alist.inactive_rule(rs[i]);
+        continue;
+      } 
+      if (uri.scheme == "https" && alist) {
+        // we didn't rewrite but the rule applies to this domain and the
+        // requests are going over https
+        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
+        continue;
+      } 
+      newuri = rs[i].transformURI(uri);
+      if (newuri) {
+        // we rewrote the uri
+        if (alist) alist.active_rule(rs[i]);
         return newuri;
+      }
     }
     return null;
   },
 
-  applicableRulesets: function(host) {
-    // Return a list of rulesets that apply to this host
+  potentiallyApplicableRulesets: function(host) {
+    // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
     if (this.targets[host])
@@ -348,13 +396,13 @@ const HTTPSRules = {
       if (this.targets[t])
         results = results.concat(this.targets[t]);
     }
-    this.log(DBUG,"Applicable rules for " + host + ":");
+    this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
   },
 
-  shouldSecureCookie: function(c) {
+  shouldSecureCookie: function(applicable_list, c) {
     // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure
     //this.log(DBUG, "Testing cookie:");
@@ -363,15 +411,24 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    var rs = this.applicableRulesets(c.host);
+    var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active)
+      if (ruleset.active) {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(c.host) && cr.name_c.test(c.name))
+          if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
+            if (applicable_list) applicable_list.active_rule(ruleset);
+            this.log(INFO,"Active cookie rule " + ruleset.name);
             return true;
+          }
         }
+        if (ruleset.cookierules.length > 0)
+          applicable_list.moot_rule(ruleset);
+      } else if (ruleset.cookierules.length > 0) {
+        applicable_list.inactive_rule(ruleset);
+        this.log(INFO,"Inactive cookie rule " + ruleset.name);
+      }
     }
     return false;
   }
