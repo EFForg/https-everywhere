@@ -46,7 +46,7 @@ function show_applicable_list() {
   var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
   
   if (alist) {
-    alist.log(WARN,"Success wherein domWin is " + domWin);
+    //alist.log(WARN,"Success wherein domWin is " + domWin);
     alist.show_applicable();
     alist.populate_menu(document);
   } else {

@@ -82,7 +82,14 @@ RuleSet.prototype = {
  wouldMatch: function(hypothetical_uri, alist) {
    // return true if this ruleset would match the uri, assuming it were http
    // used for judging moot / inactive rulesets
-   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +"?  serial " + alist.serial);
+
+   // if the ruleset is already somewhere in this applicable list, we don't
+   // care about hypothetical wouldMatch questios
+   if (this.name in alist.all) return false;
+
+   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
+            "?  serial " + alist.serial);
+    
    var uri = hypothetical_uri.clone();
    if (uri.scheme == "https") uri.scheme = "http";
    var urispec = uri.spec;
@@ -357,18 +364,18 @@ const HTTPSRules = {
           alist.inactive_rule(rs[i]);
         continue;
       } 
-      if (uri.scheme == "https" && alist) {
-        // we didn't rewrite but the rule applies to this domain and the
-        // requests are going over https
-        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
-        continue;
-      } 
       newuri = rs[i].transformURI(uri);
       if (newuri) {
         // we rewrote the uri
         if (alist) alist.active_rule(rs[i]);
         return newuri;
       }
+      if (uri.scheme == "https" && alist) {
+        // we didn't rewrite but the rule applies to this domain and the
+        // requests are going over https
+        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
+        continue;
+      } 
     }
     return null;
   },

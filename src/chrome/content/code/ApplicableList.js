@@ -4,35 +4,43 @@
 
 serial_number = 0
 
-function ApplicableList(logger, home) {
-  this.home = home.baseURIObject.spec; // what doc we're housekeeping for
+function ApplicableList(logger, doc, domWin) {
+  this.domWin = domWin;
+  this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
   this.log = logger;
   this.active = {};
   this.inactive = {};
   this.moot={};  // rulesets that might be applicable but uris are already https
+  this.all={};  // active + inactive + moot
   serial_number += 1;
   this.serial = serial_number;
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
   // The base URI of the dom tends to be loaded from some /other/
   // ApplicableList, so pretend we're loading it from here.
-  HTTPSEverywhere.instance.https_rules.rewrittenURI(this, home.baseURIObject);
+  HTTPSEverywhere.instance.https_rules.rewrittenURI(this, doc.baseURIObject);
 };
 
 ApplicableList.prototype = {
 
   active_rule: function(ruleset) {
-    this.log(INFO,"active rule " + ruleset.name +" in "+ this.home);
+    this.log(INFO,"active rule " + ruleset.name +" in "+ this.home +" -> " +
+             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
     this.active[ruleset.name] = ruleset;
+    this.all[ruleset.name] = ruleset;
   },
 
   inactive_rule: function(ruleset) {
-    this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home);
+
+    this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home +" -> " +
+             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
     this.inactive[ruleset.name] = ruleset;
+    this.all[ruleset.name] = ruleset;
   },
 
   moot_rule: function(ruleset) {
-    this.log(INFO,"moot rule " + ruleset.name +" in "+ this.home);
+    this.log(INFO,"moot rule " + ruleset.name +" in "+ this.home + " serial " + this.serial);
     this.moot[ruleset.name] = ruleset;
+    this.all[ruleset.name] = ruleset;
   },
 
   dom_handler: function(operation,key,data,src,dst) {
@@ -43,13 +51,14 @@ ApplicableList.prototype = {
 
   populate_menu: function(document) {
     this.log(DBUG, "populating using alist #" + this.serial);
+    this.document = document;
     
     // get the menu popup
-    var menupopup = document.getElementById('https-everywhere-context');
+    this.menupopup = document.getElementById('https-everywhere-context');
 
     // empty it all of its menuitems
-    while(menupopup.firstChild) {
-      menupopup.removeChild(menupopup.firstChild);
+    while(this.menupopup.firstChild) {
+      this.menupopup.removeChild(this.menupopup.firstChild);
     }
 
     // add the label at the top
@@ -64,105 +73,100 @@ ApplicableList.prototype = {
         label.setAttribute('label', '(No Rules for This Page)');
     }
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
-    menupopup.appendChild(label);
+    this.menupopup.appendChild(label);
 
     // create a commandset if it doesn't already exist
-    var commandset = document.getElementById('https-everywhere-commandset');
-    if(!commandset) {
-      commandset = document.createElement('commandset');
-      commandset.setAttribute('id', 'https-everywhere-commandset');
+    this.commandset = document.getElementById('https-everywhere-commandset');
+    if(!this.commandset) {
+      this.commandset = document.createElement('commandset');
+      this.commandset.setAttribute('id', 'https-everywhere-commandset');
       var button = document.getElementById('https-everywhere-button');
-      button.appendChild(commandset);
+      button.appendChild(this.commandset);
     } else {
       // empty commandset
-      while(commandset.firstChild) {
-        commandset.removeChild(commandset.firstChild);
-      }
+      while(this.commandset.firstChild) 
+        this.commandset.removeChild(this.commandset.firstChild);
     }
 
     // add all applicable commands
-    function add_command(rule) {
-      var command = document.createElement("command");
-      command.setAttribute('id', rule.id+'-command');
-      command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
-      commandset.appendChild(command);
-    }
     for(var x in this.active) 
-      add_command(this.active[x]); 
+      this.add_command(this.active[x]); 
     for(var x in this.moot)
-      add_command(this.moot[x]);
+      this.add_command(this.moot[x]);
     for(var x in this.inactive) 
-      add_command(this.inactive[x]);
-
-
-    // add a menu item for a rule -- type is "active", "inactive", or "moot"
-    function add_menuitem(rule, type) {
-      // create the menuitem
-      var item = document.createElement('menuitem');
-      item.setAttribute('command', rule.id+'-command');
-      item.setAttribute('class', type+'-item');
-
-      // set the icon
-      var image = document.createElement('image');
-      var image_src;
-      if(type == 'active') image_src = 'tick.png';
-      else if(type == 'inactive') image_src = 'cross.png';
-      else if(type == 'moot') image_src = 'tick-moot.png';
-      image.setAttribute('src', 'chrome://https-everywhere/skin/'+image_src);
-
-      // set the label
-      var label = document.createElement('label');
-      label.setAttribute('value', rule.name);
-      
-      // put them in an hbox, and put the hbox in the menuitem
-      var hbox = document.createElement('hbox');
-      hbox.appendChild(image);
-      hbox.appendChild(label);
-      item.appendChild(hbox);
-
-      // all done
-      menupopup.appendChild(item);
-    }
+      this.add_command(this.inactive[x]);
 
     // add all the menu items
     for(var x in this.active) 
-      add_menuitem(this.active[x], 'active');
+      this.add_menuitem(this.active[x], 'active');
     // rules that are active for some uris are not really moot
     for(var x in this.moot) 
       if(!(x in this.active))   
-        add_menuitem(this.moot[x], 'moot');
+        this.add_menuitem(this.moot[x], 'moot');
     for(var x in this.inactive)
-      add_menuitem(this.inactive[x], 'inactive');
+      this.add_menuitem(this.inactive[x], 'inactive');
 
     // add other menu items
-    menupopup.appendChild(document.createElement('menuseparator'));
+    this.menupopup.appendChild(document.createElement('menuseparator'));
 
     // preferences, about
-    /*var preferences = document.createElement('menuitem');
-    preferences.setAttribute('label', 'Preferences');
-    preferences.setAttribute('command', 'https-everywhere-menuitem-preferences');
-    menupopup.appendChild(preferences);*/
     var about = document.createElement('menuitem');
     about.setAttribute('label', 'About HTTPS Everywhere');
     about.setAttribute('command', 'https-everywhere-menuitem-about');
-    menupopup.appendChild(about);
+    this.menupopup.appendChild(about);
 
     // separator
-    menupopup.appendChild(document.createElement('menuseparator'));
+    this.menupopup.appendChild(document.createElement('menuseparator'));
 
     // donate
     var donate_eff = document.createElement('menuitem');
     donate_eff.setAttribute('label', 'Donate to EFF');
     donate_eff.setAttribute('command', 'https-everywhere-menuitem-donate-eff');
-    menupopup.appendChild(donate_eff);
+    this.menupopup.appendChild(donate_eff);
     var donate_tor = document.createElement('menuitem');
     donate_tor.setAttribute('label', 'Donate to Tor Project');
     donate_tor.setAttribute('command', 'https-everywhere-menuitem-donate-tor');
-    menupopup.appendChild(donate_tor);
+    this.menupopup.appendChild(donate_tor);
 
-    this.log(WARN, "finished menu");
+    this.log(DBUG, "finished menu");
     
+  },
+
+  add_command: function(rule) {
+      var command = this.document.createElement("command");
+      command.setAttribute('id', rule.id+'-command');
+      command.setAttribute('label', rule.name);
+      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
+      this.commandset.appendChild(command);
+  },
+
+  // add a menu item for a rule -- type is "active", "inactive", or "moot"
+  add_menuitem: function(rule, type) {
+    // create the menuitem
+    var item = this.document.createElement('menuitem');
+    item.setAttribute('command', rule.id+'-command');
+    item.setAttribute('class', type+'-item');
+
+    // set the icon
+    var image = this.document.createElement('image');
+    var image_src;
+    if(type == 'active') image_src = 'tick.png';
+    else if(type == 'inactive') image_src = 'cross.png';
+    else if(type == 'moot') image_src = 'tick-moot.png';
+    image.setAttribute('src', 'chrome://https-everywhere/skin/'+image_src);
+
+    // set the label
+    var label = this.document.createElement('label');
+    label.setAttribute('value', rule.name);
+    
+    // put them in an hbox, and put the hbox in the menuitem
+    var hbox = this.document.createElement('hbox');
+    hbox.appendChild(image);
+    hbox.appendChild(label);
+    item.appendChild(hbox);
+
+    // all done
+    this.menupopup.appendChild(item);
   },
 
   show_applicable: function() {

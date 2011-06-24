@@ -319,7 +319,7 @@ HTTPSEverywhere.prototype = {
     }
     var dw = domWin.top;
     this.log(DBUG, "Forcing new AL in getApplicableListForDOMWin in onLocationChange");
-    var alist = new ApplicableList(this.log,dw.document);
+    var alist = new ApplicableList(this.log,dw.document,dw);
     this.setExpando(dw,"applicable_rules",alist);
     return alist;
   },
@@ -335,7 +335,7 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"get AL success in " + where);
     } else {
       this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
-      alist = new ApplicableList(this.log,dw.document);
+      alist = new ApplicableList(this.log,dw.document,dw);
       this.setExpando(dw,"applicable_rules",alist);
     }
     return alist;
@@ -430,7 +430,7 @@ HTTPSEverywhere.prototype = {
       new_alist = old_alist;
       this.setExpando(domWin,"applicable_rules",new_alist);
     } else if (!new_alist) {
-      new_alist = new ApplicableList(this.log, domWin.document);
+      new_alist = new ApplicableList(this.log, domWin.document, domWin);
       this.setExpando(domWin,"applicable_rules",new_alist);
     }
     return new_alist;
