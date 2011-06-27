@@ -233,25 +233,48 @@ HTTPSEverywhere.prototype = {
   // An "expando" is an attribute glued onto something.  From NoScript.
   getExpando: function(domWin, key) {
     var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
-    if (c) {
-      c = c.wrappedJSObject;
-      this.log(DBUG, "Found a controller, returning data");
-      return c.data[key];
-    } else {
-      this.log(INFO, "No controller attached to " + domWin);
-      return null;
+    try {
+      if (c) {
+        c = c.wrappedJSObject;
+        this.log(DBUG, "Found a controller, returning data");
+        return c.data[key];
+      } else {
+        this.log(INFO, "No controller attached to " + domWin);
+        return null;
+      }
+    } catch(e) {
+      // Firefox 3.5
+      this.log(WARN,"exception in getExpando");
+      return this.getExpando_old(domWin.document, key, null);
     }
   },
   setExpando: function(domWin, key, value) {
     var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
-    if (!c) {
-      this.log(DBUG, "Appending new StorageController for " + domWin);
-      c = new StorageController("https-everywhere-storage");
-      domWin.controllers.appendController(c);
-    } else {
-      c = c.wrappedJSObject;
+    try {
+      if (!c) {
+        this.log(DBUG, "Appending new StorageController for " + domWin);
+        c = new StorageController("https-everywhere-storage");
+        domWin.controllers.appendController(c);
+      } else {
+        c = c.wrappedJSObject;
+      }
+      c.data[key] = value;
+    } catch(e) {
+      this.setExpando_old(domWin.document, key, value);
     }
-    c.data[key] = value;
+  },
+
+  // This method is straight out of NoScript... we fall back to it in FF 3.*?
+  getExpando_old: function(domObject, key, defValue) {
+    return domObject && domObject.__httpsEStorage && domObject.__httpsEStorage[key] || 
+           (defValue ? this.setExpando(domObject, key, defValue) : null);
+  },
+  setExpando_old: function(domObject, key, value) {
+    if (!domObject) return null;
+    if (!domObject.__httpsEStorage) domObject.__httpsEStorage = {};
+    if (domObject.__httpsEStorage) domObject.__httpsEStorage[key] = value;
+    else this.log(WARN, "Warning: cannot set expando " + key + " to value " + value);
+    return value;
   },
 
   // This function is registered solely to detect favicon loads by virtue
