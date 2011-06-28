@@ -16,7 +16,7 @@ function ApplicableList(logger, doc, domWin) {
   this.all={};  // active + breaking + inactive + moot
   serial_number += 1;
   this.serial = serial_number;
-  this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
+  this.log(NOTE,"Alist serial #" + this.serial + " for " + this.home);
 };
 
 ApplicableList.prototype = {
@@ -29,7 +29,7 @@ ApplicableList.prototype = {
   },
 
   breaking_rule: function(ruleset) {
-    this.log(WARN,"breaking rule " + ruleset.name +" in "+ this.home +" -> " +
+    this.log(NOTE,"breaking rule " + ruleset.name +" in "+ this.home +" -> " +
              this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
     this.breaking[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
@@ -59,10 +59,7 @@ ApplicableList.prototype = {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    this.log(WARN,"BASE uri is", this.doc.baseURIObject.spec);
-    this.log(WARN,"home is", this.home);
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
-    this.show_applicable();
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
     

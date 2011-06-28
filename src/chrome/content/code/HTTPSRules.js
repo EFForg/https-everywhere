@@ -372,9 +372,9 @@ const HTTPSRules = {
       if (blob.newuri) {
         // we rewrote the uri
         if (alist)
-          if (blob.newuri.spec in https_everywhere_blacklist)
+          if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i])
-          else
+          else 
             alist.active_rule(rs[i]);
         blob.applied_rule = rs[i];
         return blob;

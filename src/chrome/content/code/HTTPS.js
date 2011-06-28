@@ -58,7 +58,9 @@ const HTTPS = {
     if (ChannelReplacement.supported) {
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       IOUtil.runWhenPending(channel, function() {
-        new ChannelReplacement(channel, uri).replace(true).open();
+        var cr = new ChannelReplacement(channel, uri);
+        cr.replace(true,null);
+        cr.open();
         HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
       });
       return true;
@@ -90,7 +92,7 @@ const HTTPS = {
     var alist = null; 
     var domWin = null;
     if (!ctx) {
-      this.log(WARN, "No context loading " + uri.spec);
+      this.log(NOTE, "No context loading " + uri.spec);
       return null;
     }
     if (ctx instanceof CI.nsIDOMWindow) {
@@ -99,7 +101,7 @@ const HTTPS = {
     } else if (ctx instanceof CI.nsIDOMNode) {
       var doc = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument;
       if (! doc) {
-        this.log(WARN, "No Document for request " + uri.spec);
+        this.log(NOTE, "No Document for request " + uri.spec);
         return null;
       }
       domWin = doc.defaultView;

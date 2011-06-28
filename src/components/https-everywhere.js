@@ -382,7 +382,7 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       var lst = this.getApplicableListForChannel(channel);
       if (channel.URI.spec in https_everywhere_blacklist) {
-        this.log(WARN, "Avoiding blacklisted " + channel.URI.spec);
+        this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
         return;
       }
@@ -554,11 +554,12 @@ HTTPSEverywhere.prototype = {
 };
 
 var prefs = 0;
+var econsole = 0;
 function https_everywhereLog(level, str) {
-  var econsole = Components.classes["@mozilla.org/consoleservice;1"]
-      .getService(Components.interfaces.nsIConsoleService);
   if (prefs == 0) {
     prefs = HTTPSEverywhere.instance.get_prefs();
+    econsole = Components.classes["@mozilla.org/consoleservice;1"]
+               .getService(Components.interfaces.nsIConsoleService);
   } 
   try {
     var threshold = prefs.getIntPref(LLVAR);
