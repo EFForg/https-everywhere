@@ -47,7 +47,7 @@ function show_applicable_list() {
   
   if (alist) {
     //alist.log(WARN,"Success wherein domWin is " + domWin);
-    alist.show_applicable();
+    //alist.show_applicable();
     alist.populate_menu(document);
   } else {
     HTTPSEverywhere.log(WARN,"Failure wherein domWin is " + domWin);
