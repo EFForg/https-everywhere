@@ -347,9 +347,13 @@ const HTTPSRules = {
   rewrittenURI: function(alist, uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
-    // applicable rulesets are and aren't active.
+    // applicable rulesets are and aren't active.  Previously this returned
+    // the new uri if there was a rewrite.  Now it returns a JS object with
+    // a newuri attribute and an applied_rule attribute (or null if there's no
+    // rewrite).
     var i = 0;
-    var newuri = null
+    var blob = {};
+    blob.newuri = null;
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
@@ -364,11 +368,16 @@ const HTTPSRules = {
           alist.inactive_rule(rs[i]);
         continue;
       } 
-      newuri = rs[i].transformURI(uri);
-      if (newuri) {
+      blob.newuri = rs[i].transformURI(uri);
+      if (blob.newuri) {
         // we rewrote the uri
-        if (alist) alist.active_rule(rs[i]);
-        return newuri;
+        if (alist)
+          if (blob.newuri.spec in https_everywhere_blacklist)
+            alist.breaking_rule(rs[i])
+          else
+            alist.active_rule(rs[i]);
+        blob.applied_rule = rs[i];
+        return blob;
       }
       if (uri.scheme == "https" && alist) {
         // we didn't rewrite but the rule applies to this domain and the

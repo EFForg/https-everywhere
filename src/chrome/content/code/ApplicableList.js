@@ -7,17 +7,16 @@ serial_number = 0
 function ApplicableList(logger, doc, domWin) {
   this.domWin = domWin;
   this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
+  this.doc = doc;
   this.log = logger;
   this.active = {};
+  this.breaking = {}; // rulesets with redirection loops
   this.inactive = {};
   this.moot={};  // rulesets that might be applicable but uris are already https
-  this.all={};  // active + inactive + moot
+  this.all={};  // active + breaking + inactive + moot
   serial_number += 1;
   this.serial = serial_number;
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
-  // The base URI of the dom tends to be loaded from some /other/
-  // ApplicableList, so pretend we're loading it from here.
-  HTTPSEverywhere.instance.https_rules.rewrittenURI(this, doc.baseURIObject);
 };
 
 ApplicableList.prototype = {
@@ -26,6 +25,13 @@ ApplicableList.prototype = {
     this.log(INFO,"active rule " + ruleset.name +" in "+ this.home +" -> " +
              this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
     this.active[ruleset.name] = ruleset;
+    this.all[ruleset.name] = ruleset;
+  },
+
+  breaking_rule: function(ruleset) {
+    this.log(WARN,"breaking rule " + ruleset.name +" in "+ this.home +" -> " +
+             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+    this.breaking[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
 
@@ -50,6 +56,13 @@ ApplicableList.prototype = {
   },
 
   populate_menu: function(document) {
+
+    // The base URI of the dom tends to be loaded from some /other/
+    // ApplicableList, so pretend we're loading it from here.
+    this.log(WARN,"BASE uri is", this.doc.baseURIObject.spec);
+    this.log(WARN,"home is", this.home);
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
+    this.show_applicable();
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
     
@@ -62,12 +75,13 @@ ApplicableList.prototype = {
     }
 
     // add the label at the top
-    var rules_count = 0;
-    for(x in this.active) rules_count++;
-    for(x in this.inactive) rules_count++;
-    for(x in this.moot) rules_count++;
+    var any_rules = false
+    for (var x in this.all) {
+      any_rules = true;  // how did JavaScript get this ugly?
+      break;
+    }
     var label = document.createElement('menuitem');
-    if(rules_count > 0) {
+    if (any_rules) {
         label.setAttribute('label', 'Enable / Disable Rules');
     } else {
         label.setAttribute('label', '(No Rules for This Page)');
@@ -89,6 +103,8 @@ ApplicableList.prototype = {
     }
 
     // add all applicable commands
+    for(var x in this.breaking) 
+      this.add_command(this.breaking[x]); 
     for(var x in this.active) 
       this.add_command(this.active[x]); 
     for(var x in this.moot)
@@ -97,13 +113,17 @@ ApplicableList.prototype = {
       this.add_command(this.inactive[x]);
 
     // add all the menu items
-    for(var x in this.active) 
-      this.add_menuitem(this.active[x], 'active');
+    for (var x in this.breaking)
+      this.add_menuitem(this.breaking[x], 'breaking');
+    // break once break everywhere
+    for (var x in this.active) 
+      if (!(x in this.breaking))
+        this.add_menuitem(this.active[x], 'active');
     // rules that are active for some uris are not really moot
-    for(var x in this.moot) 
-      if(!(x in this.active))   
+    for (var x in this.moot) 
+      if (!(x in this.active))   
         this.add_menuitem(this.moot[x], 'moot');
-    for(var x in this.inactive)
+    for (var x in this.inactive)
       this.add_menuitem(this.inactive[x], 'inactive');
 
     // add other menu items
@@ -140,7 +160,9 @@ ApplicableList.prototype = {
       this.commandset.appendChild(command);
   },
 
-  // add a menu item for a rule -- type is "active", "inactive", or "moot"
+  // add a menu item for a rule -- type is "active", "inactive", "moot",
+  // or "breaking"
+
   add_menuitem: function(rule, type) {
     // create the menuitem
     var item = this.document.createElement('menuitem');
@@ -150,9 +172,10 @@ ApplicableList.prototype = {
     // set the icon
     var image = this.document.createElement('image');
     var image_src;
-    if(type == 'active') image_src = 'tick.png';
-    else if(type == 'inactive') image_src = 'cross.png';
-    else if(type == 'moot') image_src = 'tick-moot.png';
+    if (type == 'active') image_src = 'tick.png';
+    else if (type == 'inactive') image_src = 'cross.png';
+    else if (type == 'moot') image_src = 'tick-moot.png';
+    else if (type == 'breaking') image_src = 'tick-red.png';
     image.setAttribute('src', 'chrome://https-everywhere/skin/'+image_src);
 
     // set the label
@@ -173,6 +196,9 @@ ApplicableList.prototype = {
     this.log(WARN, "Applicable list number " + this.serial);
     for (var x in this.active) 
       this.log(WARN,"Active: " + this.active[x].name);
+
+    for (var x in this.breaking) 
+      this.log(WARN,"Breaking: " + this.breaking[x].name);
   
     for (x in this.inactive) 
       this.log(WARN,"Inactive: " + this.inactive[x].name);

@@ -236,7 +236,7 @@ HTTPSEverywhere.prototype = {
     try {
       if (c) {
         c = c.wrappedJSObject;
-        this.log(DBUG, "Found a controller, returning data");
+        //this.log(DBUG, "Found a controller, returning data");
         return c.data[key];
       } else {
         this.log(INFO, "No controller attached to " + domWin);
@@ -245,7 +245,9 @@ HTTPSEverywhere.prototype = {
     } catch(e) {
       // Firefox 3.5
       this.log(WARN,"exception in getExpando");
-      return this.getExpando_old(domWin.document, key, null);
+      this.getExpando = this.getExpando_old;
+      this.setExpando = this.setExpando_old;
+      return this.getExpando_old(domWin, key, null);
     }
   },
   setExpando: function(domWin, key, value) {
@@ -260,16 +262,21 @@ HTTPSEverywhere.prototype = {
       }
       c.data[key] = value;
     } catch(e) {
-      this.setExpando_old(domWin.document, key, value);
+      this.log(WARN,"exception in setExpando");
+      this.getExpando = this.getExpando_old;
+      this.setExpando = this.setExpando_old;
+      this.setExpando_old(domWin, key, value);
     }
   },
 
   // This method is straight out of NoScript... we fall back to it in FF 3.*?
-  getExpando_old: function(domObject, key, defValue) {
+  getExpando_old: function(domWin, key, defValue) {
+    var domObject = domWin.document;
     return domObject && domObject.__httpsEStorage && domObject.__httpsEStorage[key] || 
            (defValue ? this.setExpando(domObject, key, defValue) : null);
   },
-  setExpando_old: function(domObject, key, value) {
+  setExpando_old: function(domWin, key, value) {
+    var domObject = domWin.document;
     if (!domObject) return null;
     if (!domObject.__httpsEStorage) domObject.__httpsEStorage = {};
     if (domObject.__httpsEStorage) domObject.__httpsEStorage[key] = value;
@@ -317,7 +324,7 @@ HTTPSEverywhere.prototype = {
     try {
       var domWin = nc.getInterface(CI.nsIDOMWindow);
     } catch(e) {
-      this.log(WARN, "exploded getting DOMWin for " + channel.URI.spec);
+      this.log(INFO, "exploded getting DOMWin for " + channel.URI.spec);
       return null;
     }
     if (!domWin) {
@@ -341,7 +348,6 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     var dw = domWin.top;
-    this.log(DBUG, "Forcing new AL in getApplicableListForDOMWin in onLocationChange");
     var alist = new ApplicableList(this.log,dw.document,dw);
     this.setExpando(dw,"applicable_rules",alist);
     return alist;
@@ -349,15 +355,16 @@ HTTPSEverywhere.prototype = {
 
   getApplicableListForDOMWin: function(domWin, where) {
     if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
-      this.log(WARN, "Get alist without domWin");
+      //this.log(WARN, "Get alist without domWin");
       return null;
     }
     var dw = domWin.top;
     var alist= this.getExpando(dw,"applicable_rules",null);
     if (alist) {
-      this.log(DBUG,"get AL success in " + where);
+      //this.log(DBUG,"get AL success in " + where);
+      return alist;
     } else {
-      this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
+      //this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
       alist = new ApplicableList(this.log,dw.document,dw);
       this.setExpando(dw,"applicable_rules",alist);
     }
@@ -373,11 +380,12 @@ HTTPSEverywhere.prototype = {
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
+      var lst = this.getApplicableListForChannel(channel);
       if (channel.URI.spec in https_everywhere_blacklist) {
-        this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
+        this.log(WARN, "Avoiding blacklisted " + channel.URI.spec);
+        lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
         return;
       }
-      var lst = this.getApplicableListForChannel(channel);
       HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
       this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );

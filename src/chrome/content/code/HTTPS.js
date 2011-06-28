@@ -29,13 +29,15 @@ const HTTPS = {
   httpsRewrite: null,
   
   replaceChannel: function(applicable_list, channel) {
-    var uri = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
-    if (!uri) {
+    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
+    if (null == blob) {
        //HTTPS.log(INFO,
        //    "Got replace channel with no applicable rules for URI "
        //    + channel.URI.spec);
        return false;
      }
+    var uri = blob.newuri;
+    if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
@@ -46,7 +48,11 @@ const HTTPS = {
     if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
-      https_everywhere_blacklist[channel.URI.spec] = true;
+      if (!blob.applied_rule) {
+        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        https_everywhere_blacklist[channel.URI.spec] = true;
+      }
+      https_everywhere_blacklist[channel.URI.spec] = blob.applied_rule;
       return false;
     }
     if (ChannelReplacement.supported) {
@@ -97,7 +103,7 @@ const HTTPS = {
         return null;
       }
       domWin = doc.defaultView;
-      this.log(DBUG,"Coerced nsIDOMWin from Node: " + domWin);
+      //this.log(DBUG,"Coerced nsIDOMWin from Node: " + domWin);
     } else {
       this.log(WARN, "Context for " + uri.spec + 
                      "is some bizarre unexpected thing: " + ctx);
@@ -116,8 +122,9 @@ const HTTPS = {
     // what rulesets might have applied to this page
     this.log(VERB, "Context is " + ctx);
     var alist = this.getApplicableListForContext(ctx, uri);
-    var newuri = HTTPSRules.rewrittenURI(alist, uri);
-    if (!newuri) return true;                          // no applicable rule
+    var blob = HTTPSRules.rewrittenURI(alist, uri);
+    if (null == blob) return true;                          // no applicable rule
+    var newuri = blob.newuri;
 
     try {
       if (this.rewriteInPlace(uri, newuri)) 
