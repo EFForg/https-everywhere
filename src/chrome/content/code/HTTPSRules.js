@@ -356,7 +356,6 @@ const HTTPSRules = {
     blob.newuri = null;
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
-    this.log(WARN, "About to check " + input_uri + input_uri.spec);
     if (input_uri.userPass) {
       var uri = input_uri.clone()
       userpass_present = true;
