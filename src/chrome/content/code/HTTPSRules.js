@@ -344,16 +344,26 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(alist, uri) {
+  rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
     // applicable rulesets are and aren't active.  Previously this returned
     // the new uri if there was a rewrite.  Now it returns a JS object with
     // a newuri attribute and an applied_rule attribute (or null if there's no
     // rewrite).
-    var i = 0;
+    var i = 0, userpass_present = false;
     var blob = {};
     blob.newuri = null;
+    // Rulesets shouldn't try to parse usernames and passwords.  If we find
+    // those, apply the ruleset without them and then add them back.
+    this.log(WARN, "About to check " + input_uri + input_uri.spec);
+    if (input_uri.userPass) {
+      var uri = input_uri.clone()
+      userpass_present = true;
+      uri.userPass = null;
+    } else {
+      var uri = input_uri;
+    }
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
@@ -362,7 +372,7 @@ const HTTPSRules = {
     }
     if (!alist)
       this.log(DBUG, "No applicable list rewriting " + uri.spec);
-    for(i = 0; i < rs.length; ++i) {
+    for (i = 0; i < rs.length; ++i) {
       if (!rs[i].active) {
         if (alist && rs[i].wouldMatch(uri, alist))
           alist.inactive_rule(rs[i]);
@@ -376,6 +386,7 @@ const HTTPSRules = {
             alist.breaking_rule(rs[i])
           else 
             alist.active_rule(rs[i]);
+        if (userpass_present) blob.newuri.userPass = input_uri.userPass;
         blob.applied_rule = rs[i];
         return blob;
       }
