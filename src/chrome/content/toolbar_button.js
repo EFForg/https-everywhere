@@ -91,3 +91,10 @@ function open_in_tab(url) {
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
+
+function chrome_opener(uri, opts) {
+  // we don't use window.open, because we need to work around TorButton's state control
+  CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
+                                               .getMostRecentWindow('navigator:browser')
+                                               .open(uri,'', 'chrome,centerscreen' );
+}
