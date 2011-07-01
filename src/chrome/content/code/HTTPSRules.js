@@ -355,6 +355,7 @@ const HTTPSRules = {
     var uri = input_uri;
     var blob = {};
     blob.newuri = null;
+    if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
 
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
@@ -375,8 +376,6 @@ const HTTPSRules = {
       this.log(WARN, 'Could not check applicable rules for '+uri.spec);
       return null;
     }
-    if (!alist)
-      this.log(DBUG, "No applicable list rewriting " + uri.spec);
 
     // ponder each potentially applicable ruleset, working out if it applies
     // and recording it as active/inactive/moot/breaking in the applicable list

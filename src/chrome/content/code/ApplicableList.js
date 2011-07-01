@@ -136,14 +136,14 @@ ApplicableList.prototype = {
     this.menupopup.appendChild(document.createElement('menuseparator'));
 
     // donate
-    var donate_eff = document.createElement('menuitem');
+    /* var donate_eff = document.createElement('menuitem');
     donate_eff.setAttribute('label', 'Donate to EFF');
     donate_eff.setAttribute('command', 'https-everywhere-menuitem-donate-eff');
     this.menupopup.appendChild(donate_eff);
     var donate_tor = document.createElement('menuitem');
     donate_tor.setAttribute('label', 'Donate to Tor');
     donate_tor.setAttribute('command', 'https-everywhere-menuitem-donate-tor');
-    this.menupopup.appendChild(donate_tor);
+    this.menupopup.appendChild(donate_tor); */
 
     this.log(DBUG, "finished menu");
     
