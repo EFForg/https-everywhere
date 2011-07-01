@@ -11,7 +11,6 @@ NOTE=4;
 WARN=5;
 
 function https_everywhere_load() {
-  return;
   // on first run, put the context menu in the addons bar
   try {
     var first_run;
