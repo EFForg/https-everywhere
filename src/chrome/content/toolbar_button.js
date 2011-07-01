@@ -10,29 +10,28 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-
 function https_everywhere_load() {
+  return;
+  // on first run, put the context menu in the addons bar
+  try {
+    var first_run;
     try {
-       var firefoxnav = document.getElementById("nav-bar");
-       var curSet = firefoxnav.currentSet;
-       if(curSet.indexOf("https-everywhere-button") == -1) {
-         var set;
-         // Place the button before the urlbar
-         if(curSet.indexOf("urlbar-container") != -1)
-           set = curSet.replace(/urlbar-container/, "https-everywhere-button,urlbar-container");
-         else  // at the end
-           set = curSet + ",https-everywhere-button";
-         firefoxnav.setAttribute("currentset", set);
-         firefoxnav.currentSet = set;
-         document.persist("nav-bar", "currentset");
-         // If you don't do the following call, funny things happen
-         try {
-           BrowserToolboxCustomizeDone(true);
-         }
-         catch (e) { }
-       }
+      first_run = Services.prefs.getBoolPref("extensions.https_everywhere.firstrun_context_menu");
+    } catch(e) {
+      Services.prefs.setBoolPref("extensions.https_everywhere.firstrun_context_menu", true);
+      first_run = true;
     }
-    catch(e) { }
+    if(first_run) {
+      Services.prefs.setBoolPref("extensions.https_everywhere.firstrun_context_menu", false);
+      var addon_bar = document.getElementById("addon-bar");
+      if(addon_bar.currentSet.indexOf("https-everywhere-button") == -1) {
+        var set = addon_bar.currentSet+',https-everywhere-button';
+        addon_bar.setAttribute('currentset', set);
+        addon_bar.currentSet = set;
+        document.persist('addon-bar', 'currentset');
+      }
+    }
+  } catch(e) { }
 }
 
 function show_applicable_list() {
