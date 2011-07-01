@@ -1,4 +1,5 @@
 const CC = Components.classes;
+const CI = Components.interfaces;
 VERB=1;
 DBUG=2;
 INFO=3;
@@ -110,4 +111,11 @@ function https_prefs_init(doc) {
   };
 
   st.view = treeView;
+}
+
+function window_opener(uri, opts) {
+  // we don't use window.open, because we need to work around TorButton's state control
+  CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
+                                               .getMostRecentWindow('navigator:browser')
+                                               .open(uri, '','centerscreen' );
 }
