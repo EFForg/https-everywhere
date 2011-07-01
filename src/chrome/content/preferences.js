@@ -113,7 +113,7 @@ function https_prefs_init(doc) {
   st.view = treeView;
 }
 
-function window_opener(uri, opts) {
+function window_opener(uri) {
   // we don't use window.open, because we need to work around TorButton's state control
   CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
                                                .getMostRecentWindow('navigator:browser')
