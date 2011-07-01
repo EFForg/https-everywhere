@@ -352,21 +352,22 @@ const HTTPSRules = {
     // newuri attribute and an applied_ruleset attribute (or null if there's
     // no rewrite).
     var i = 0, userpass_present = false;
-    var blob = {};
     var uri = input_uri;
+    var blob = {};
     blob.newuri = null;
 
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
+    // When .userPass is absent, sometimes it is false and sometimes trying
+    // to read it raises an exception (probably depending on the URI type).
     try {
       if (input_uri.userPass) {
         uri = input_uri.clone()
         userpass_present = true;
         uri.userPass = null;
-      } else { 
-        this.log(WARN, input_uri.spec + ".userPass is false, there is no API consistency");
-      }
+      } 
     } catch(e) {}
+
     // Get the list of rulesets that target this host
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
