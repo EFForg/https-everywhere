@@ -62,7 +62,7 @@ ApplicableList.prototype = {
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
-    
+   
     // get the menu popup
     this.menupopup = document.getElementById('https-everywhere-context');
 
@@ -91,8 +91,8 @@ ApplicableList.prototype = {
     if(!this.commandset) {
       this.commandset = document.createElement('commandset');
       this.commandset.setAttribute('id', 'https-everywhere-commandset');
-      var button = document.getElementById('https-everywhere-button');
-      button.appendChild(this.commandset);
+      var win = document.getElementById('main-window');
+      win.appendChild(this.commandset);
     } else {
       // empty commandset
       while(this.commandset.firstChild) 
