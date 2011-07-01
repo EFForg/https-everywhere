@@ -348,22 +348,26 @@ const HTTPSRules = {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
     // applicable rulesets are and aren't active.  Previously this returned
-    // the new uri if there was a rewrite.  Now it returns a JS object with
-    // a newuri attribute and an applied_ruleset attribute (or null if there's no
-    // rewrite).
+    // the new uri if there was a rewrite.  Now it returns a JS object with a
+    // newuri attribute and an applied_ruleset attribute (or null if there's
+    // no rewrite).
     var i = 0, userpass_present = false;
     var blob = {};
+    var uri = input_uri;
     blob.newuri = null;
 
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
-    if (input_uri.userPass) {
-      var uri = input_uri.clone()
-      userpass_present = true;
-      uri.userPass = null;
-    } else {
-      var uri = input_uri;
-    }
+    try {
+      if (input_uri.userPass) {
+        uri = input_uri.clone()
+        userpass_present = true;
+        uri.userPass = null;
+      } else { 
+        this.log(WARN, input_uri.spec + ".userPass is false, there is no API consistency");
+      }
+    } catch(e) {}
+    // Get the list of rulesets that target this host
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
