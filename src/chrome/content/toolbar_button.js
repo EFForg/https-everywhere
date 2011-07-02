@@ -22,12 +22,12 @@ function https_everywhere_load() {
     }
     if(first_run) {
       Services.prefs.setBoolPref("extensions.https_everywhere.firstrun_context_menu", false);
-      var addon_bar = document.getElementById("addon-bar");
-      if(addon_bar.currentSet.indexOf("https-everywhere-button") == -1) {
-        var set = addon_bar.currentSet+',https-everywhere-button';
-        addon_bar.setAttribute('currentset', set);
-        addon_bar.currentSet = set;
-        document.persist('addon-bar', 'currentset');
+      var navbar = document.getElementById("nav-bar");
+      if(navbar.currentSet.indexOf("https-everywhere-button") == -1) {
+        var set = navbar.currentSet+',https-everywhere-button';
+        navbar.setAttribute('currentset', set);
+        navbar.currentSet = set;
+        document.persist('nav-bar', 'currentset');
       }
     }
   } catch(e) { }
