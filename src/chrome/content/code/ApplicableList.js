@@ -62,7 +62,7 @@ ApplicableList.prototype = {
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
-    
+   
     // get the menu popup
     this.menupopup = document.getElementById('https-everywhere-context');
 
@@ -91,8 +91,8 @@ ApplicableList.prototype = {
     if(!this.commandset) {
       this.commandset = document.createElement('commandset');
       this.commandset.setAttribute('id', 'https-everywhere-commandset');
-      var button = document.getElementById('https-everywhere-button');
-      button.appendChild(this.commandset);
+      var win = document.getElementById('main-window');
+      win.appendChild(this.commandset);
     } else {
       // empty commandset
       while(this.commandset.firstChild) 
@@ -136,14 +136,14 @@ ApplicableList.prototype = {
     this.menupopup.appendChild(document.createElement('menuseparator'));
 
     // donate
-    var donate_eff = document.createElement('menuitem');
+    /* var donate_eff = document.createElement('menuitem');
     donate_eff.setAttribute('label', 'Donate to EFF');
     donate_eff.setAttribute('command', 'https-everywhere-menuitem-donate-eff');
     this.menupopup.appendChild(donate_eff);
     var donate_tor = document.createElement('menuitem');
     donate_tor.setAttribute('label', 'Donate to Tor');
     donate_tor.setAttribute('command', 'https-everywhere-menuitem-donate-tor');
-    this.menupopup.appendChild(donate_tor);
+    this.menupopup.appendChild(donate_tor); */
 
     this.log(DBUG, "finished menu");
     

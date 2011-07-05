@@ -344,25 +344,42 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(alist, uri) {
+  rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
     // applicable rulesets are and aren't active.  Previously this returned
-    // the new uri if there was a rewrite.  Now it returns a JS object with
-    // a newuri attribute and an applied_rule attribute (or null if there's no
-    // rewrite).
-    var i = 0;
+    // the new uri if there was a rewrite.  Now it returns a JS object with a
+    // newuri attribute and an applied_ruleset attribute (or null if there's
+    // no rewrite).
+    var i = 0, userpass_present = false;
+    var uri = input_uri;
     var blob = {};
     blob.newuri = null;
+    if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
+
+    // Rulesets shouldn't try to parse usernames and passwords.  If we find
+    // those, apply the ruleset without them and then add them back.
+    // When .userPass is absent, sometimes it is false and sometimes trying
+    // to read it raises an exception (probably depending on the URI type).
+    try {
+      if (input_uri.userPass) {
+        uri = input_uri.clone()
+        userpass_present = true;
+        uri.userPass = null;
+      } 
+    } catch(e) {}
+
+    // Get the list of rulesets that target this host
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
       this.log(WARN, 'Could not check applicable rules for '+uri.spec);
       return null;
     }
-    if (!alist)
-      this.log(DBUG, "No applicable list rewriting " + uri.spec);
-    for(i = 0; i < rs.length; ++i) {
+
+    // ponder each potentially applicable ruleset, working out if it applies
+    // and recording it as active/inactive/moot/breaking in the applicable list
+    for (i = 0; i < rs.length; ++i) {
       if (!rs[i].active) {
         if (alist && rs[i].wouldMatch(uri, alist))
           alist.inactive_rule(rs[i]);
@@ -376,7 +393,8 @@ const HTTPSRules = {
             alist.breaking_rule(rs[i])
           else 
             alist.active_rule(rs[i]);
-        blob.applied_rule = rs[i];
+        if (userpass_present) blob.newuri.userPass = input_uri.userPass;
+        blob.applied_ruleset = rs[i];
         return blob;
       }
       if (uri.scheme == "https" && alist) {
@@ -388,6 +406,7 @@ const HTTPSRules = {
     }
     return null;
   },
+
 
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host

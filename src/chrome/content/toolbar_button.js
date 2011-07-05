@@ -10,29 +10,27 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-
 function https_everywhere_load() {
+  // on first run, put the context menu in the addons bar
+  try {
+    var first_run;
     try {
-       var firefoxnav = document.getElementById("nav-bar");
-       var curSet = firefoxnav.currentSet;
-       if(curSet.indexOf("https-everywhere-button") == -1) {
-         var set;
-         // Place the button before the urlbar
-         if(curSet.indexOf("urlbar-container") != -1)
-           set = curSet.replace(/urlbar-container/, "https-everywhere-button,urlbar-container");
-         else  // at the end
-           set = curSet + ",https-everywhere-button";
-         firefoxnav.setAttribute("currentset", set);
-         firefoxnav.currentSet = set;
-         document.persist("nav-bar", "currentset");
-         // If you don't do the following call, funny things happen
-         try {
-           BrowserToolboxCustomizeDone(true);
-         }
-         catch (e) { }
-       }
+      first_run = Services.prefs.getBoolPref("extensions.https_everywhere.firstrun_context_menu");
+    } catch(e) {
+      Services.prefs.setBoolPref("extensions.https_everywhere.firstrun_context_menu", true);
+      first_run = true;
     }
-    catch(e) { }
+    if(first_run) {
+      Services.prefs.setBoolPref("extensions.https_everywhere.firstrun_context_menu", false);
+      var navbar = document.getElementById("nav-bar");
+      if(navbar.currentSet.indexOf("https-everywhere-button") == -1) {
+        var set = navbar.currentSet+',https-everywhere-button';
+        navbar.setAttribute('currentset', set);
+        navbar.currentSet = set;
+        document.persist('nav-bar', 'currentset');
+      }
+    }
+  } catch(e) { }
 }
 
 function show_applicable_list() {
@@ -91,4 +89,11 @@ function open_in_tab(url) {
                      .getService(Components.interfaces.nsIWindowMediator);
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
+}
+
+function chrome_opener(uri) {
+  // we don't use window.open, because we need to work around TorButton's state control
+  CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
+                                               .getMostRecentWindow('navigator:browser')
+                                               .open(uri,'', 'chrome,centerscreen' );
 }
