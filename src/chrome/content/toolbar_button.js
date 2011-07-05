@@ -43,17 +43,13 @@ function show_applicable_list() {
   var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
   var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
   
-  if (alist) {
-    //alist.log(WARN,"Success wherein domWin is " + domWin);
-    //alist.show_applicable();
-    alist.populate_menu(document);
-  } else {
-    HTTPSEverywhere.log(WARN,"Failure wherein domWin is " + domWin);
-    var str = "Missing applicable rules for " + domWin.document.baseURIObject.spec;
-    str += "\ndomWin is " + domWin;
-    alert(str);
-    return null;
+  if (!alist) {
+    // This case occurs for error pages and similar.  We need a dummy alist
+    // because populate_menu lives in there.  Would be good to refactor this
+    // away.
+    alist = new ApplicableList(HTTPSEverywhere.log, document, domWin);
   }
+  alist.populate_menu(document);
 }
 
 function toggle_rule(rule_id) {
