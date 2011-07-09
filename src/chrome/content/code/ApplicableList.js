@@ -55,7 +55,7 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(document) {
+  populate_menu: function(document, menupopup) {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
@@ -64,10 +64,10 @@ ApplicableList.prototype = {
     this.document = document;
    
     // get the menu popup
-    this.menupopup = document.getElementById('https-everywhere-context');
+    this.menupopup = menupopup;
 
     // empty it all of its menuitems
-    while(this.menupopup.firstChild) {
+    while(this.menupopup.firstChild.tagName != "menuseparator") {
       this.menupopup.removeChild(this.menupopup.firstChild);
     }
 
@@ -84,7 +84,6 @@ ApplicableList.prototype = {
         label.setAttribute('label', '(No Rules for This Page)');
     }
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
-    this.menupopup.appendChild(label);
 
     // create a commandset if it doesn't already exist
     this.commandset = document.getElementById('https-everywhere-commandset');
@@ -110,43 +109,24 @@ ApplicableList.prototype = {
       this.add_command(this.inactive[x]);
 
     // add all the menu items
-    for (var x in this.breaking)
-      this.add_menuitem(this.breaking[x], 'breaking');
-    // break once break everywhere
-    for (var x in this.active) 
-      if (!(x in this.breaking))
-        this.add_menuitem(this.active[x], 'active');
+    for (var x in this.inactive)
+      this.add_menuitem(this.inactive[x], 'inactive');
     // rules that are active for some uris are not really moot
     for (var x in this.moot) 
       if (!(x in this.active))   
         this.add_menuitem(this.moot[x], 'moot');
-    for (var x in this.inactive)
-      this.add_menuitem(this.inactive[x], 'inactive');
-
-    // add other menu items
-    this.menupopup.appendChild(document.createElement('menuseparator'));
-
-    // preferences, about
-    var about = document.createElement('menuitem');
-    about.setAttribute('label', 'About HTTPS Everywhere');
-    about.setAttribute('command', 'https-everywhere-menuitem-about');
-    this.menupopup.appendChild(about);
-
-    // separator
-    this.menupopup.appendChild(document.createElement('menuseparator'));
-
-    // donate
-    /* var donate_eff = document.createElement('menuitem');
-    donate_eff.setAttribute('label', 'Donate to EFF');
-    donate_eff.setAttribute('command', 'https-everywhere-menuitem-donate-eff');
-    this.menupopup.appendChild(donate_eff);
-    var donate_tor = document.createElement('menuitem');
-    donate_tor.setAttribute('label', 'Donate to Tor');
-    donate_tor.setAttribute('command', 'https-everywhere-menuitem-donate-tor');
-    this.menupopup.appendChild(donate_tor); */
-
-    this.log(DBUG, "finished menu");
+    // break once break everywhere
+    for (var x in this.active) 
+      if (!(x in this.breaking))
+        this.add_menuitem(this.active[x], 'active');
+    for (var x in this.breaking)
+      this.add_menuitem(this.breaking[x], 'breaking');
     
+    this.prepend_child(label);
+  },
+
+  prepend_child: function(node) {
+    this.menupopup.insertBefore(node, this.menupopup.firstChild);
   },
 
   add_command: function(rule) {
@@ -186,7 +166,7 @@ ApplicableList.prototype = {
     item.appendChild(hbox);
 
     // all done
-    this.menupopup.appendChild(item);
+    this.prepend_child(item);
   },
 
   show_applicable: function() {
