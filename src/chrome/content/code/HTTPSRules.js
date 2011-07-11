@@ -87,8 +87,8 @@ RuleSet.prototype = {
    // care about hypothetical wouldMatch questios
    if (this.name in alist.all) return false;
 
-   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
-            "?  serial " + alist.serial);
+   //this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
+   //         "?  serial " + alist.serial);
     
    var uri = hypothetical_uri.clone();
    if (uri.scheme == "https") uri.scheme = "http";
@@ -431,9 +431,9 @@ const HTTPSRules = {
       if (this.targets[t])
         results = results.concat(this.targets[t]);
     }
-    this.log(DBUG,"Potentially applicable rules for " + host + ":");
-    for (i = 0; i < results.length; ++i)
-      this.log(DBUG, "  " + results[i].name);
+    //this.log(DBUG,"Potentially applicable rules for " + host + ":");
+    //for (i = 0; i < results.length; ++i)
+    //  this.log(DBUG, "  " + results[i].name);
     return results;
   },
 
