@@ -43,7 +43,7 @@ function RuleSet(name, match_rule, default_off) {
   } catch (e) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
-    this.active = true;
+    this.active = this.on_by_default;
     this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
