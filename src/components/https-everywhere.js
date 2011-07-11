@@ -318,7 +318,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     if (!nc) {
-      this.log(WARN, "no window for " + channel.URI.spec);
+      this.log(DBUG, "no window for " + channel.URI.spec);
       return null;
     } 
     try {

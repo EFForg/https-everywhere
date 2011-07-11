@@ -1,6 +1,100 @@
-<!-- only www-cse seems to give back correct content :/ -->
-<ruleset name="UCSD.edu">
-	<target host="www-cse.ucsd.edu" />
-	<rule from="^http://www-cse\.ucsd\.edu/" to="https://www-cse.ucsd.edu/"/>
-</ruleset>
+<ruleset name="UCSD">
+<!-- quikpayasp.com (E-Check) and services.jsatech.com (TritonCash) need separate
+     rulesets because these domains also provide services for other universities.
+     Does uc.sumtotalsystems.com (ultimate destination of uclearning) belong here,
+     or do other UCs use it too?
+-->
+<!-- normally https only; protect against sslstripping -->
+   <target host="a4.ucsd.edu" />
+   <target host="acs-webmail.ucsd.edu" />
+   <target host="altng.ucsd.edu" />
+   <target host="cinfo.ucsd.edu" />
+   <target host="facilities.ucsd.edu" />
+   <target host="graduateapp.ucsd.edu" />
+   <target host="myucsdchart.ucsd.edu" />
+   <target host="sdacs.ucsd.edu" />
+   <target host="shs.ucsd.edu" />
+   <!-- TODO <target host="ucsdbkst.ucsd.edu" /> classification? -->
+<!-- supports https but normally uses it only in special circumstances -->
+   <target host="acms.ucsd.edu" />
+   <target host="roger.ucsd.edu" />
+   <!-- TODO <target host="www-no.ucsd.edu" /> classification? -->
+<!-- supports https but doesn't use it by default -->
+   <target host="www-cse.ucsd.edu" />
+<!-- only some features support https; protect them against sslstripping -->
+   <target host="hds.ucsd.edu" />
+   <target host="health.ucsd.edu" /><!-- needs testing for further https support -->
+   <target host="libraries.ucsd.edu" />
+   <target host="studenthealth.ucsd.edu" /><!-- warning, signed by ipsCA -->
+   <!-- TODO <target host="ted.ucsd.edu" /> supersedes webctweb -->
+   <!-- TODO <target host="webctweb.ucsd.edu" /> -->
+   <target host="www-act.ucsd.edu" />
+<!-- redirectors - TODO: full Link Family list at http://blink.ucsd.edu/technology/help-desk/applications/link-family/list.html -->
+   <!-- TODO <target host="acs.ucsd.edu" /> not all pages redirect -->
+   <target host="accesslink.ucsd.edu" />
+   <target host="cri.ucsd.edu" />
+   <target host="desktop.ucsd.edu" />
+   <target host="financiallink.ucsd.edu" />
+   <target host="iwdc.ucsd.edu" />
+   <target host="mytritonlink.ucsd.edu" />
+   <target host="www.mytritonlink.ucsd.edu" />
+   <target host="resnet.ucsd.edu" />
+   <target host="software.ucsd.edu" />
+   <target host="sysstaff.ucsd.edu" />
+   <target host="tritonlink.ucsd.edu" />
+   <target host="www.tritonlink.ucsd.edu" />
+   <target host="uclearning.ucsd.edu" />
+   <!-- TODO <target host="webct.ucsd.edu" /> behavior when logged in vs. out-->
+   <target host="www-acs.ucsd.edu" />
 
+   <securecookie host="^(.+\.)?a(4|cs-webmail)\.ucsd\.edu$" name=".*" />
+
+   <rule from="^http://a4\.ucsd\.edu/" to="https://a4.ucsd.edu/" />
+   <rule from="^http://acs-webmail\.ucsd\.edu/" to="https://acs-webmail.ucsd.edu/" />
+   <rule from="^http://altng\.ucsd\.edu/" to="https://altng.ucsd.edu/" />
+   <rule from="^http://cinfo\.ucsd\.edu/" to="https://cinfo.ucsd.edu/" />
+   <rule from="^http://facilities\.ucsd\.edu/" to="https://facilities.ucsd.edu/" />
+   <rule from="^http://graduateapp\.ucsd\.edu/" to="https://graduateapp.ucsd.edu/" />
+   <rule from="^http://myucsdchart\.ucsd\.edu/" to="https://myucsdchart.ucsd.edu/" />
+   <rule from="^http://sdacs\.ucsd\.edu/" to="https://sdacs.ucsd.edu/" />
+   <rule from="^http://shs\.ucsd\.edu/" to="https://shs.ucsd.edu/" />
+
+   <rule from="^http://acms\.ucsd\.edu/" to="https://acms.ucsd.edu/" />
+   <rule from="^http://roger\.ucsd\.edu/" to="https://roger.ucsd.edu/" />
+
+   <rule from="^http://www-cse\.ucsd\.edu/" to="https://www-cse.ucsd.edu/" />
+
+   <rule from="^http://hds\.ucsd\.edu/(ARCH_WaitList/ARCHMainMenu\.aspx|conference/RequestInfo/|HospitalityExpress)" 
+           to="https://hds.ucsd.edu/$1" />
+   <rule from="^http://health\.ucsd\.edu/request_appt/" 
+           to="https://health.ucsd.edu/request_appt/" />
+   <rule from="^http://libraries\.ucsd\.edu/digital/"
+           to="https://libraries.ucsd.edu/digital/" />
+<!-- NB: The line below attempts to protect a normally https-only area of the site against sslstripping. Cert error is unavoidable -->
+   <rule from="^http://studenthealth\.ucsd\.edu/secure/" 
+           to="https://studenthealth.ucsd.edu/secure/" />
+   <rule from="^http://www-act\.ucsd\.edu/(bsl/home|cgi-bin/[A-Za-z]+link\.pl|mytritonlink/view|myTritonlink20/display\.htm|student[A-Z][A-Za-z]+/[A-Za-z]+)" 
+           to="https://www-act.ucsd.edu/$1" />
+
+   <rule from="^http://accesslink\.ucsd\.edu/" 
+           to="https://altng.ucsd.edu/" />
+<!-- The redirectors shouldn't have subpages, but just in case, prevent anything like tritonlink.ucsd.edu/index.htm from 404ing -->
+   <rule from="^http://financiallink\.ucsd\.edu/(.*)$" 
+           to="https://www-act.ucsd.edu/cgi-bin/financiallink.pl" />
+   <rule from="^http://(www\.)?(my)?tritonlink\.ucsd\.edu/(.*)$" 
+           to="https://www-act.ucsd.edu/myTritonlink20/display.htm" />
+   <rule from="^http://uclearning\.ucsd\.edu/" 
+           to="https://a4.ucsd.edu/lms/" />
+<!-- all acms redirects below -->
+<!-- TODO: These have subpages - resnet has been tested fairly well, but iwdc and possibly software need more testing.
+     cri ultimately redirects to the ACMS homepage because the CRI dept was closed, although this rule is correct for the initial bounce. That isn't our problem -->
+   <rule from="^http://(cri|desktop|iwdc|resnet|software|sysstaff)\.ucsd\.edu/" 
+           to="https://acms.ucsd.edu/units/$1/" />
+<!-- Some www-acs.ucsd.edu pages redirect to acms on a case-by-case basis. This is a work in progress -->
+   <rule from="^http://www-acs\.ucsd\.edu/$" 
+           to="https://acms.ucsd.edu/index.shtml" />
+   <rule from="^http://www-acs\.ucsd\.edu/account-tools/oce-intro\.shtml$" 
+           to="https://acms.ucsd.edu/students/oce-intro.shtml" />
+   <rule from="^http://www-acs\.ucsd\.edu/instructional/?$" 
+           to="https://acms.ucsd.edu/students/" />
+</ruleset>

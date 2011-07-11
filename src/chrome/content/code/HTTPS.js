@@ -192,7 +192,7 @@ const HTTPS = {
       this.log(WARN,"No URI inside request " +req);
       return;
     }
-    this.log(DBUG, "Cookie hunting in " + uri.spec);
+    //this.log(DBUG, "Cookie hunting in " + uri.spec);
     var alist = HTTPSEverywhere.instance.getApplicableListForChannel(req);
     if (!alist)
       this.log(INFO, "No alist for cookies for "+(req.URI) ? req.URI.spec : "???");

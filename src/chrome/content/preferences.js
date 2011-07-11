@@ -35,6 +35,7 @@ function reset_defaults() {
   treeView.treebox.invalidate();
 }
 
+
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
 
@@ -118,4 +119,21 @@ function window_opener(uri) {
   CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
                                                .getMostRecentWindow('navigator:browser')
                                                .open(uri, '','centerscreen' );
+}
+
+function https_prefs_accept() {
+  // This is *horrid*, but
+  // https://developer.mozilla.org/en/working_with_windows_in_chrome_code#Accessing_the_elements_of_the_top-level_document_from_a_child_window
+  var outer = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIWebNavigation)
+                   .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                   .rootTreeItem
+                   .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIDOMWindow); 
+
+  if (outer) outer.close()
+  else alert("no outer space");
+
+  return true;  // https://developer.mozilla.org/en/XUL/dialog#a-ondialogaccept
+                // also close things if there is no out meta prefs window
 }
