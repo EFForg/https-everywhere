@@ -211,82 +211,90 @@ const RuleWriter = {
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
-    return this.parseXmlRulesets(xmlrulesets, rule_store);
+    this.parseXmlRulesets(xmlrulesets, rule_store, file);
   },
 
-  parseXmlRulesets: function(xmlrulesets, rule_store) {
+  parseXmlRulesets: function(xmlblob, rule_store, file) {
     // Iterate over all the <ruleset>...</ruleset> elements in the file, and
     // add them to the rule_store HTTPSRules object.
-
-    var lngth = xmlrulesets.ruleset.length(); // premature optimisation
-    for (var j = 0; j < lngth; j++) {
-      xmlrules = xmlrulesets.ruleset[j];
-
-      this.log(DBUG, xmlrules.@name + "");
-      this.log(DBUG, xmlrules + "");
-
-      if (xmlrules.@name == xmlrules.@nonexistantthing) {
-        this.log(INFO, "FILE " + file.path + " is not a rulefile\n");
-        this.log(DBUG, "This blob: '" + xmlrules + "' is not a ruleset\n");
-        continue;
-      }
-
-      var match_rl = null;
-      var dflt_off = null;
-      if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
-      if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
-      var rs = new RuleSet(xmlrules.@name, match_rl, dflt_off);
-
-      if (xmlrules.target.length() == 0) {
-        var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
-        msg = msg + "\nbut " + file.path + " is missing one.";
-        this.log(WARN, msg);
-        continue;
-      }
-
-      // see if this ruleset has the same name as an existing ruleset;
-      // if so, this ruleset is ignored; DON'T add or return it.
-      if (rs.name in rule_store.rulesetsByName) {
-        this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
-        continue;
-      }
-
-      // add this ruleset into HTTPSRules.targets with all of the applicable
-      // target host indexes
-      for (var i = 0; i < xmlrules.target.length(); i++) {
-        var host = xmlrules.target[i].@host;
-        if (!host) {
-          this.log(WARN, "<target> missing host in " + file.path);
-          continue;
-        }
-        if (! rule_store.targets[host])
-          rule_store.targets[host] = [];
-        rule_store.targets[host].push(rs);
-      }
-
-      for (var i = 0; i < xmlrules.exclusion.length(); i++) {
-        var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
-        rs.exclusions.push(exclusion);
-      }
-
-      for (var i = 0; i < xmlrules.rule.length(); i++) {
-        var rule = new Rule(xmlrules.rule[i].@from,
-                            xmlrules.rule[i].@to);
-
-        rs.rules.push(rule);
-      }
-
-      for (var i = 0; i < xmlrules.securecookie.length(); i++) {
-        var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
-                                    xmlrules.securecookie[i].@name);
-        rs.cookierules.push(c_rule);
-        this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
-      }
-
-      rule_store.rulesets.push(rs);
-      rule_store.rulesetsByID[rs.id] = rs;
-      rule_store.rulesetsByName[rs.name] = rs;
+    if (xmlblob.@name != xmlblob.@nonexistantthing) {
+      // The root of the XML tree has a name, which means it should be single a ruleset...
+      this.parseOneRuleset(xmlblob, rule_store, file);
+    } else {
+      // The root of the XML tree should be a <rulesetlibrary> with many
+      // <ruleset> children
+      var lngth = xmlblob.ruleset.length(); // premature optimisation
+      if (lngth == 0)
+        this.log(WARN, "Apparent <rulesetlibrary> with no <rulesets> in"
+                        + file.path + "\n" +  xmlbob);
+      for (var j = 0; j < lngth; j++) 
+        this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
     }
+  },
+
+  parseOneRuleset: function(xmlruleset, rule_store, file) {
+    // Extract an xmlrulset into the rulestore
+    this.log(DBUG, "Parsing " + xmlruleset.@name + " from " + file.path);
+
+    if (xmlruleset.@name == xmlruleset.@nonexistantthing) {
+      this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
+      return null;
+    }
+
+    var match_rl = null;
+    var dflt_off = null;
+    if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
+    if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
+    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
+
+    if (xmlruleset.target.length() == 0) {
+      var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
+      msg = msg + "\nbut " + file.path + " is missing one.";
+      this.log(WARN, msg);
+      return null;
+    }
+
+    // see if this ruleset has the same name as an existing ruleset;
+    // if so, this ruleset is ignored; DON'T add or return it.
+    if (rs.name in rule_store.rulesetsByName) {
+      this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
+      return null;
+    }
+
+    // add this ruleset into HTTPSRules.targets with all of the applicable
+    // target host indexes
+    for (var i = 0; i < xmlruleset.target.length(); i++) {
+      var host = xmlruleset.target[i].@host;
+      if (!host) {
+        this.log(WARN, "<target> missing host in " + file.path);
+        return null;
+      }
+      if (! rule_store.targets[host])
+        rule_store.targets[host] = [];
+      rule_store.targets[host].push(rs);
+    }
+
+    for (var i = 0; i < xmlruleset.exclusion.length(); i++) {
+      var exclusion = new Exclusion(xmlruleset.exclusion[i].@pattern);
+      rs.exclusions.push(exclusion);
+    }
+
+    for (var i = 0; i < xmlruleset.rule.length(); i++) {
+      var rule = new Rule(xmlruleset.rule[i].@from,
+                          xmlruleset.rule[i].@to);
+      rs.rules.push(rule);
+    }
+
+    for (var i = 0; i < xmlruleset.securecookie.length(); i++) {
+      var c_rule = new CookieRule(xmlruleset.securecookie[i].@host,
+                                  xmlruleset.securecookie[i].@name);
+      rs.cookierules.push(c_rule);
+      this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
+    }
+
+    rule_store.rulesets.push(rs);
+    rule_store.rulesetsByID[rs.id] = rs;
+    rule_store.rulesetsByName[rs.name] = rs;
 
   },
 
