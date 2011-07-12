@@ -206,72 +206,87 @@ const RuleWriter = {
     fstream.close();
     try {
       data = data.replace(/<\?xml[^>]*\?>/, ""); 
-      var xmlrules = XML(data);
+      var xmlrulesets = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
 
-    if (xmlrules.@name == xmlrules.@nonexistantthing) {
-      this.log(DBUG, "FILE " + file.path + "is not a rulefile\n");
-      return null;
-    }
+    // Iterate over all the <ruleset>...</ruleset> elements in the file. At
+    // the first error, we return null! Otherwise, we return the last
+    // ruleset we parse.
+    var rules = []; 
+    var lngth = xmlrulesets.ruleset.length(); // premature optimisation
+    for (var r = 0; r < lngth; r++) {
+      xmlrules = xmlrulesets.ruleset[r];
 
-    var match_rl = null;
-    var dflt_off = null;
-    if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
-    if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
-    var ret = new RuleSet(xmlrules.@name, match_rl, dflt_off);
+      this.log(DBUG, xmlrules.@name + "");
+      this.log(DBUG, xmlrules + "");
 
-    if (xmlrules.target.length() == 0) {
-      var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
-      msg = msg + "\nbut " + file.path + " is missing one.";
-      this.log(WARN, msg);
-      return null;
-    }
-
-    // see if this ruleset has the same name as an existing ruleset;
-    // if so, this ruleset is ignored; DON'T add or return it.
-    for (var i = 0; i < existing_rulesets.length; i++){
-        if (ret.name == existing_rulesets[i].name){
-           this.log(WARN, "Error: found duplicate rule name " + ret.name + " in file " + file.path);
-           return null;
-        }
-    }
-
-    // add this ruleset into HTTPSRules.targets with all of the applicable
-    // target host indexes
-    for (var i = 0; i < xmlrules.target.length(); i++) {
-      var host = xmlrules.target[i].@host;
-      if (!host) {
-        this.log(WARN, "<target> missing host in " + file);
+      if (xmlrules.@name == xmlrules.@nonexistantthing) {
+        //this.log(DBUG, "FILE " + file.path + " is not a rulefile\n");
+        this.log(DBUG, "This blob: '" + xmlrules + "' is not a ruleset\n");
         continue;
       }
-      if (! targets[host])
-        targets[host] = [];
-      targets[host].push(ret);
+
+      var match_rl = null;
+      var dflt_off = null;
+      if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
+      if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
+      var rs = new RuleSet(xmlrules.@name, match_rl, dflt_off);
+
+      if (xmlrules.target.length() == 0) {
+        var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
+        msg = msg + "\nbut " + file.path + " is missing one.";
+        this.log(WARN, msg);
+        continue;
+      }
+
+      // see if this ruleset has the same name as an existing ruleset;
+      // if so, this ruleset is ignored; DON'T add or return it.
+      for (var i = 0; i < existing_rulesets.length; i++){
+          if (rs.name == existing_rulesets[i].name){
+             this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
+             //return null; // XXX
+          }
+      }
+
+      // add this ruleset into HTTPSRules.targets with all of the applicable
+      // target host indexes
+      for (var i = 0; i < xmlrules.target.length(); i++) {
+        var host = xmlrules.target[i].@host;
+        if (!host) {
+          this.log(WARN, "<target> missing host in " + file);
+          continue;
+        }
+        if (! targets[host])
+          targets[host] = [];
+        targets[host].push(rs);
+      }
+
+      for (var i = 0; i < xmlrules.exclusion.length(); i++) {
+        var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
+        rs.exclusions.push(exclusion);
+      }
+
+      for (var i = 0; i < xmlrules.rule.length(); i++) {
+        var rule = new Rule(xmlrules.rule[i].@from,
+                            xmlrules.rule[i].@to);
+
+        rs.rules.push(rule);
+      }
+
+      for (var i = 0; i < xmlrules.securecookie.length(); i++) {
+        var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
+                                    xmlrules.securecookie[i].@name);
+        rs.cookierules.push(c_rule);
+        this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
+      }
+
+      rules.push(rs);
     }
 
-    for (var i = 0; i < xmlrules.exclusion.length(); i++) {
-      var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
-      ret.exclusions.push(exclusion);
-    }
-
-    for (var i = 0; i < xmlrules.rule.length(); i++) {
-      var rule = new Rule(xmlrules.rule[i].@from,
-                          xmlrules.rule[i].@to);
-
-      ret.rules.push(rule);
-    }
-
-    for (var i = 0; i < xmlrules.securecookie.length(); i++) {
-      var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
-                                  xmlrules.securecookie[i].@name);
-      ret.cookierules.push(c_rule);
-      this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
-    }
-
-    return ret;
+    return rules;
   },
 
   enumerate: function(dir) {
