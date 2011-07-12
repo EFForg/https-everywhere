@@ -183,10 +183,10 @@ const RuleWriter = {
     return file;
   },
 
-  read: function(file, targets, existing_rulesets) {
+  read: function(file, rule_store) {
     if (!file.exists())
       return null;
-    if ((targets == null) && (targets != {}))
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
       this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
@@ -211,20 +211,22 @@ const RuleWriter = {
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
+    return this.parseXmlRulesets(xmlrulesets, rule_store);
+  },
 
-    // Iterate over all the <ruleset>...</ruleset> elements in the file. At
-    // the first error, we return null! Otherwise, we return the last
-    // ruleset we parse.
-    var rules = []; 
+  parseXmlRulesets: function(xmlrulesets, rule_store) {
+    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
+    // add them to the rule_store HTTPSRules object.
+
     var lngth = xmlrulesets.ruleset.length(); // premature optimisation
-    for (var r = 0; r < lngth; r++) {
-      xmlrules = xmlrulesets.ruleset[r];
+    for (var j = 0; j < lngth; j++) {
+      xmlrules = xmlrulesets.ruleset[j];
 
       this.log(DBUG, xmlrules.@name + "");
       this.log(DBUG, xmlrules + "");
 
       if (xmlrules.@name == xmlrules.@nonexistantthing) {
-        //this.log(DBUG, "FILE " + file.path + " is not a rulefile\n");
+        this.log(INFO, "FILE " + file.path + " is not a rulefile\n");
         this.log(DBUG, "This blob: '" + xmlrules + "' is not a ruleset\n");
         continue;
       }
@@ -244,11 +246,9 @@ const RuleWriter = {
 
       // see if this ruleset has the same name as an existing ruleset;
       // if so, this ruleset is ignored; DON'T add or return it.
-      for (var i = 0; i < existing_rulesets.length; i++){
-          if (rs.name == existing_rulesets[i].name){
-             this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
-             //return null; // XXX
-          }
+      if (rs.name in rule_store.rulesetsByName) {
+        this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
+        continue;
       }
 
       // add this ruleset into HTTPSRules.targets with all of the applicable
@@ -256,12 +256,12 @@ const RuleWriter = {
       for (var i = 0; i < xmlrules.target.length(); i++) {
         var host = xmlrules.target[i].@host;
         if (!host) {
-          this.log(WARN, "<target> missing host in " + file);
+          this.log(WARN, "<target> missing host in " + file.path);
           continue;
         }
-        if (! targets[host])
-          targets[host] = [];
-        targets[host].push(rs);
+        if (! rule_store.targets[host])
+          rule_store.targets[host] = [];
+        rule_store.targets[host].push(rs);
       }
 
       for (var i = 0; i < xmlrules.exclusion.length(); i++) {
@@ -283,10 +283,11 @@ const RuleWriter = {
         this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
       }
 
-      rules.push(rs);
+      rule_store.rulesets.push(rs);
+      rule_store.rulesetsByID[rs.id] = rs;
+      rule_store.rulesetsByName[rs.name] = rs;
     }
 
-    return rules;
   },
 
   enumerate: function(dir) {
@@ -311,10 +312,11 @@ const HTTPSRules = {
       this.targets = {};  // dict mapping target host patterns -> lists of
                           // applicable rules
       this.rulesetsByID = {};
+      this.rulesetsByName = {};
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      this.scanRulefiles(rulefiles, this.targets);
+      this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      this.scanRulefiles(rulefiles, this.targets);
+      this.scanRulefiles(rulefiles);
       var t,i;
       for (t in this.targets) {
         for (i = 0 ; i < this.targets[t].length ; i++) {
@@ -340,17 +342,13 @@ const HTTPSRules = {
     return;
   },
 
-  scanRulefiles: function(rulefiles, targets) {
+  scanRulefiles: function(rulefiles) {
     var i = 0;
     var r = null;
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
-        if (r != null) {
-          this.rulesets.push(r);
-          this.rulesetsByID[r.id] = r;
-        }
+        RuleWriter.read(rulefiles[i], this);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
