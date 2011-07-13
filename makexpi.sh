@@ -54,22 +54,14 @@ XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 [ -d pkg ] || mkdir pkg
 
 cd "src"
-set -x
 echo "<rulelibrary>" > chrome/content/rules/default.rulesets
 cat chrome/content/rules/*.xml >> chrome/content/rules/default.rulesets
 echo "</rulelibrary>" >> chrome/content/rules/default.rulesets
 rm -f "../$XPI_NAME"
-if [ "$1" = "uncommitted" ]; then
-    printf >&2 "WARNING: using zip instead of git archive to build .xpi\n"
-    CHANGES="$(git status . -s)"
-    if [ -n "$CHANGES" ]; then
-        printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"
-    fi
-    zip -v -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
-else
-    git archive --format=zip -9 "$TARG" . > "../$XPI_NAME"
+if [ -n "$CHANGES" ]; then
+    printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"
 fi
-set +x
+zip -v -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
 ret="$?"
 if [ "$ret" != 0 ]; then
