@@ -54,19 +54,22 @@ XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 [ -d pkg ] || mkdir pkg
 
 cd "src"
+set -x
+echo "<rulelibrary>" > chrome/content/rules/default.rulesets
+cat chrome/content/rules/*.xml >> chrome/content/rules/default.rulesets
+echo "</rulelibrary>" >> chrome/content/rules/default.rulesets
+rm -f "../$XPI_NAME"
 if [ "$1" = "uncommitted" ]; then
     printf >&2 "WARNING: using zip instead of git archive to build .xpi\n"
     CHANGES="$(git status . -s)"
     if [ -n "$CHANGES" ]; then
         printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"
     fi
-    # FIXME: is it really acceptable to reuse .gitignore to specify
-    # include patterns for /usr/bin/zip?  It seems to work for our
-    # current patterns (2010-11-09)
-    zip -X -q -9r "../$XPI_NAME" . "-x@../.gitignore"
+    zip -v -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 else
     git archive --format=zip -9 "$TARG" . > "../$XPI_NAME"
 fi
+set +x
 
 ret="$?"
 if [ "$ret" != 0 ]; then
