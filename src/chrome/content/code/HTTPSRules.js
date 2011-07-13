@@ -224,8 +224,8 @@ const RuleWriter = {
       // The root of the XML tree should be a <rulesetlibrary> with many
       // <ruleset> children
       var lngth = xmlblob.ruleset.length(); // premature optimisation
-      if (lngth == 0)
-        this.log(WARN, "Apparent <rulesetlibrary> with no <rulesets> in"
+      if (lngth == 0 && (file.path.search("00README") == -1))
+        this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
                         + file.path + "\n" +  xmlblob);
       for (var j = 0; j < lngth; j++) 
         this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);

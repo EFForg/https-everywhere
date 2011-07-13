@@ -54,9 +54,9 @@ XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
 [ -d pkg ] || mkdir pkg
 
 cd "src"
-echo "<rulelibrary>" > chrome/content/rules/default.rulesets
+echo "<rulesetlibrary>" > chrome/content/rules/default.rulesets
 cat chrome/content/rules/*.xml >> chrome/content/rules/default.rulesets
-echo "</rulelibrary>" >> chrome/content/rules/default.rulesets
+echo "</rulesetlibrary>" >> chrome/content/rules/default.rulesets
 rm -f "../$XPI_NAME"
 if [ -n "$CHANGES" ]; then
     printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"
