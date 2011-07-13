@@ -226,7 +226,7 @@ const RuleWriter = {
       var lngth = xmlblob.ruleset.length(); // premature optimisation
       if (lngth == 0)
         this.log(WARN, "Apparent <rulesetlibrary> with no <rulesets> in"
-                        + file.path + "\n" +  xmlbob);
+                        + file.path + "\n" +  xmlblob);
       for (var j = 0; j < lngth; j++) 
         this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
     }
