@@ -61,7 +61,7 @@ rm -f "../$XPI_NAME"
 if [ -n "$CHANGES" ]; then
     printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"
 fi
-zip -v -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
 ret="$?"
 if [ "$ret" != 0 ]; then
