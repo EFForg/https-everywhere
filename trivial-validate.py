@@ -28,10 +28,27 @@ def test_bad_regexp(tree):
     return True
 
 def test_unescaped_dots(tree):
-    # XXX Rules containing unescaped dots outside of brackets and before slash.
-    # XXX TODO FIXME UNIMPLEMENTED
-    # was:
-    # if grep from= *.xml | cut -d\" -f2 | sed 's/\[[^]]*\]//g' | egrep 'http.?.?://[^/]*[^\]\.[^*]'
+    # Rules containing unescaped dots outside of brackets and before slash.
+    # Note: this is meant to require example\.com instead of example.com,
+    # but it also forbids things like .* which usually ought to be replaced
+    # with something like ([^/:@\.]+)
+    for f in tree.xpath("/ruleset/rule/@from"):
+        escaped = False
+        bracketed = False
+        s = re.sub("^\^https?://", "", f)
+        for c in s:
+            if c == "\\":
+               escaped = not escaped
+            elif not escaped and c == "[":
+               bracketed = True
+            elif not escaped and c == "]":
+               bracketed = False
+            elif not escaped and not bracketed and c == ".":
+               return False
+            elif not bracketed and c == "/":
+               break
+            else:
+               escaped = False
     return True
 
 def test_space_in_to(tree):
