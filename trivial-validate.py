@@ -20,7 +20,9 @@ def test_not_anchored(tree):
 
 def test_bad_regexp(tree):
     # Rules with invalid regular expressions.
-    for f in tree.xpath("/ruleset/rule/@from"):
+    for f in tree.xpath("/ruleset/rule/@from") + \
+             tree.xpath("/ruleset/exclusion/@pattern") + \
+             tree.xpath("/ruleset/securecookie/@host"):
         try:
             re.compile(f)
         except:
@@ -101,18 +103,25 @@ def test_duplicated_target_host(tree):
     targets = tree.xpath("/ruleset/target/@host")
     return len(set(targets)) == len(targets)
 
-# TODO: duplicated ruleset names across rules with /ruleset/@name
-# TODO: rules containing non-ASCII characters
-# TODO: exclusion pattern and secure cookie regexp validity tests
+printable_characters = set(map(chr, xrange(32, 127)))
 
+def test_non_ascii(tree):
+    # Rules containing non-printable characters.
+    for t in tree.xpath("/ruleset/rule/@to"):
+        for c in t:
+            if c not in printable_characters:
+                return False
+    return True
 
 tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
          test_no_trailing_slash, test_lacks_target_host, test_bad_target_host,
-         test_duplicated_target_host]
+         test_duplicated_target_host, test_non_ascii]
 
 failure = 0
 seen_file = False
+all_targets = set()
+all_names = set()
 
 for fi in os.listdir("."):
     if fi[-4:] != ".xml": continue
@@ -123,10 +132,18 @@ for fi in os.listdir("."):
        failure = 1
        sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
     ruleset_name = tree.xpath("/ruleset/@name")[0]
+    if ruleset_name in all_names:
+        failure = 1
+        sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
+    all_names.add(ruleset_name)
     for test in tests:
         if not test(tree):
             failure = 1
-            sys.stdout.write("%s failed test %s\n" % (fi, test))
+            sys.stdout.write("failure: %s failed test %s\n" % (fi, test))
+    for target in tree.xpath("/ruleset/target/@host"):
+        if target in all_targets:
+            sys.stdout.write("warning: duplicate target: %s\n" % target)
+        all_targets.add(target)
 
 if not seen_file:
    sys.stdout.write("There were no valid XML files in the current or ")
