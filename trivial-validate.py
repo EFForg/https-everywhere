@@ -54,6 +54,7 @@ def test_unescaped_dots(tree):
     return True
 
 def test_space_in_to(tree):
+    # Rules where the to pattern contains a space.
     for t in tree.xpath("/ruleset/rule/@to"):
         if ' ' in t:
             return False
