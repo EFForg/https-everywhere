@@ -48,7 +48,7 @@ function observatory_prefs_init(doc) {
 // The user has responded to the popup in a final way; don't show it to them
 // again
 function popup_done() {
-  ssl_observatory.popup_responded = true;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.popup_shown", true);
   window.close();
 }
 
@@ -109,6 +109,11 @@ function set_obs_anon(val) {
 }
 function enable_observatory() {
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.enabled", true);
+}
+
+function disable_observatory() {
+  // default but be sure...
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.enabled", false);
 }
 
 // called from within the prefs window, we have more work to do:
