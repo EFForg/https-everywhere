@@ -21,6 +21,16 @@ function ApplicableList(logger, doc, domWin) {
 
 ApplicableList.prototype = {
 
+  empty: function() {
+    // Empty everything, used when toggles occur in order to ensure that if
+    // the reload fails, the resulting list is not eroneous
+    this.active = {};
+    this.breaking = {}; 
+    this.inactive = {};
+    this.moot={};  
+    this.all={};  
+  },
+
   active_rule: function(ruleset) {
     this.log(INFO,"active rule " + ruleset.name +" in "+ this.home +" -> " +
              this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
@@ -55,7 +65,7 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(document, menupopup) {
+  populate_menu: function(document, menupopup, weird) {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
@@ -81,7 +91,8 @@ ApplicableList.prototype = {
     if (any_rules) {
         label.setAttribute('label', 'Enable / Disable Rules');
     } else {
-        label.setAttribute('label', '(No Rules for This Page)');
+      if (!weird) label.setAttribute('label', '(No Rules for This Page)');
+      else        label.setAttribute('label', '(Rules for This Page Uknown)');
     }
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
 

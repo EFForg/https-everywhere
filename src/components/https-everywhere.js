@@ -156,6 +156,8 @@ function HTTPSEverywhere() {
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
+  this.INCLUDE=INCLUDE;
+  this.ApplicableList = ApplicableList;
 
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
