@@ -167,6 +167,7 @@ function HTTPSEverywhere() {
                     .getService(Components.interfaces.nsIObserverService);
   this.obsService.addObserver(this, "profile-before-change", false);
   this.obsService.addObserver(this, "profile-after-change", false);
+  this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   return;
 }
 
@@ -430,6 +431,15 @@ HTTPSEverywhere.prototype = {
       // hook on redirections (non persistent, otherwise crashes on 1.8.x)
       catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
           SERVICE_CTRID, false, true);
+    } else if (topic == "sessionstore-windows-restored") {
+      var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+                        .getService(Components.interfaces.nsISupports)
+                        .wrappedJSObject;
+      // FIXME This prefs code is terrible spaghetti
+      var gbp = ssl_observatory.prefs.getBoolPref;
+      var shown = gbp("extensions.https_everywhere._observatory.popup_shown");
+      if (!shown && ssl_observatory.torbutton_installed) 
+        chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     }
     return;
   },
@@ -552,6 +562,15 @@ HTTPSEverywhere.prototype = {
   }
 
 };
+
+function chrome_opener(uri) {
+  // we don't use window.open, because we need to work around TorButton's 
+  // state control
+  CC['@mozilla.org/appshell/window-mediator;1']
+    .getService(CI.nsIWindowMediator) 
+    .getMostRecentWindow('navigator:browser')
+    .open(uri,'', 'chrome,centerscreen' );
+} 
 
 var prefs = 0;
 var econsole = 0;

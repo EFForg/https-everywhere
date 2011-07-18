@@ -33,7 +33,24 @@ function https_everywhere_load() {
   } catch(e) { }
 }
 
-function show_applicable_list() {
+function stitch_context_menu() {
+  // the same menu appears both under Tools and via the toolbar button:
+  var menu = document.getElementById("https-everywhere-menu");
+  if (!menu.firstChild) {
+    var popup = document.getElementById("https-everywhere-context");
+    menu.appendChild(popup.cloneNode(true));
+  }
+}
+function stitch_context_menu2() {
+  // the same menu appears both under Tools and via the toolbar button:
+  var menu = document.getElementById("https-everywhere-menu2");
+  if (!menu.firstChild) {
+    var popup = document.getElementById("https-everywhere-context");
+    menu.appendChild(popup.cloneNode(true));
+  }
+}
+
+function show_applicable_list(menupopup) {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
     alert(domWin + " is not an nsIDOMWindow");
@@ -49,7 +66,7 @@ function show_applicable_list() {
     // away.
     alist = new ApplicableList(HTTPSEverywhere.log, document, domWin);
   }
-  alist.populate_menu(document);
+  alist.populate_menu(document, menupopup);
 }
 
 function toggle_rule(rule_id) {
