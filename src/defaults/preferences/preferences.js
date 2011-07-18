@@ -13,6 +13,7 @@ pref("extensions.https_everywhere._observatory.submit_during_nontor",true);
 pref("extensions.https_everywhere._observatory.cache_submitted",true);
 
 pref("extensions.https_everywhere._observatory.use_custom_proxy",false);
+pref("extensions.https_everywhere._observatory.popup_shown",false);
 pref("extensions.https_everywhere._observatory.proxy_host","");
 pref("extensions.https_everywhere._observatory.proxy_port",0);
 pref("extensions.https_everywhere._observatory.proxy_type","direct");

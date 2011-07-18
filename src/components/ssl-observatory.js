@@ -163,7 +163,11 @@ SSLObservatory.prototype = {
 
   // Wifi status listener
   onChange: function(accessPoints) {
-    var max_ap = accessPoints[0].mac;
+    try {
+      var max_ap = accessPoints[0].mac;
+    } catch(e) {
+      return null;  // accessPoints[0] is undefined
+    }
     var max_signal = accessPoints[0].signal;
     var old_max_present = false;
     for (var i=0; i<accessPoints.length; i++) {
