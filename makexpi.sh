@@ -57,7 +57,7 @@ cd "src"
 echo "<rulesetlibrary>" > chrome/content/rules/default.rulesets
 cat chrome/content/rules/*.xml >> chrome/content/rules/default.rulesets
 echo "</rulesetlibrary>" >> chrome/content/rules/default.rulesets
-touch --reference chrome/content/rules chrome/content/rules/default.rulesets
+touch -r chrome/content/rules chrome/content/rules/default.rulesets
 rm -f "../$XPI_NAME"
 if [ -n "$CHANGES" ]; then
     printf >&2 "WARNING: uncommitted changes were included:\n%s\n" "$CHANGES"

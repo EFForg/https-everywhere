@@ -236,6 +236,13 @@ SSLObservatory.prototype = {
       } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
         this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
         return;
+      } else {
+        // no torbutton; the custom proxy is probably the user opting to
+        // submit certs without strong anonymisation.  Because the
+        // anonymisation is weak, we avoid submitting during private browsing
+        // mode.
+        var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
+        if (pbs.privateBrowsingEnabled) return;
       }
 
       subject.QueryInterface(Ci.nsIHttpChannel);

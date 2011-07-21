@@ -59,14 +59,16 @@ function show_applicable_list(menupopup) {
 
   var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
   var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+  var weird=false;
   
   if (!alist) {
     // This case occurs for error pages and similar.  We need a dummy alist
     // because populate_menu lives in there.  Would be good to refactor this
     // away.
-    alist = new ApplicableList(HTTPSEverywhere.log, document, domWin);
+    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, document, domWin);
+    weird = true;
   }
-  alist.populate_menu(document, menupopup);
+  alist.populate_menu(document, menupopup, weird);
 }
 
 function toggle_rule(rule_id) {
@@ -75,6 +77,11 @@ function toggle_rule(rule_id) {
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
+  var domWin = content.document.defaultView.top;
+  /*if (domWin instanceof CI.nsIDOMWindow) {
+    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    if (alist) alist.empty();
+  }*/
   reload_window(HTTPSEverywhere);
 }
 
