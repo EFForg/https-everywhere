@@ -1,5 +1,7 @@
 #!/bin/sh
 
+VERSION=$1
+
 [ -d pkg ] || mkdir -p pkg
 rm -rf pkg/crx
 cp -r chromium pkg/crx
@@ -7,17 +9,18 @@ cp -r src/chrome/content/rules pkg/crx/
 echo 'var rule_list = [' > pkg/crx/rule_list.js
 for i in $(ls pkg/crx/rules/*.xml)
 do
-    echo '"rules/$i.xml",' >> pkg/crx/rule_list.js
+    echo "\"rules/$i.xml\"," >> pkg/crx/rule_list.js
 done
 echo '];' >> pkg/crx/rule_list.js
-
+sed -ie "s/VERSION/$VERSION/g" pkg/crx/manifest.json
+sed -ie "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 
 ## from https://code.google.com/chrome/extensions/crx.html
 
 dir=pkg/crx
 key=chromium.pem
 name=pkg/crx
-crx="pkg/https-everywhere.crx"
+crx="pkg/https-everywhere-$VERSION.crx"
 pub="$name.pub"
 sig="$name.sig"
 zip="$name.zip"
