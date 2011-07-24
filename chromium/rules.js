@@ -88,6 +88,8 @@ RuleSets.prototype = {
     if (xhr.readyState == 4) {
       // XXX: Validation + error checking
       var ruletag = xhr.responseXML.getElementsByTagName('ruleset')[0];
+      
+      if (ruletag.attributes.default_off) { return; }
 
       var rule_set = new RuleSet(ruletag.getAttribute('name'),
                                  ruletag.getAttribute('match_rule'));
