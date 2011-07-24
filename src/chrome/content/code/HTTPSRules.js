@@ -16,81 +16,104 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+ruleset_counter = 0;
 function RuleSet(name, match_rule, default_off) {
+  this.id="https-everywhere-rule-" + ruleset_counter;
+  ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
   this.ruleset_match = match_rule;
-  if (match_rule) {
-    this.ruleset_match_c = new RegExp(match_rule);
-  } else {
-    this.ruleset_match_c = null;
-  }
+  this.notes = "";
+  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
+  else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
     // "valueless"
+    this.notes = default_off;
     this.on_by_default = false;
   }
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  var prefs = HTTPSEverywhere.instance.get_prefs();
+  this.prefs = HTTPSEverywhere.instance.get_prefs();
   try {
     // if this pref exists, use it
-    this.active = prefs.getBoolPref(name);
+    this.active = this.prefs.getBoolPref(name);
   } catch (e) {
     // if not, create it
     this.log(DBUG, "Creating new pref " + name);
-    this.active = true;
-    prefs.setBoolPref(name, this.on_by_default);
+    this.active = this.on_by_default;
+    this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
 
 RuleSet.prototype = {
   _apply: function(urispec) {
+    // return null if it does not apply
+    // and the new url if it does apply
     var i;
     var returl = null;
-    if (!this.active) {
-      return null;
-    }
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       this.log(VERB, "ruleset_match_c excluded " + urispec);
       return null;
     }
     // Even so, if we're covered by an exclusion, go home
-    for(i = 0; i < this.exclusions.length; ++i) {
+    for (i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         this.log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
     // Okay, now find the first rule that triggers
-    for(i = 0; i < this.rules.length; ++i) {
-      returl = urispec.replace(this.rules[i].from_c,
-                               this.rules[i].to);
-      if (returl != urispec) {
-        return returl;
-      }
+    for (i = 0; i < this.rules.length; ++i) {
+      // This is just for displaying inactive rules
+      returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
+      if (returl != urispec) return returl;
     }
-    if (this.ruleset_match_c) {
-      // This is not an error, because we do not insist the matchrule
-      // precisely describes to target space of URLs ot redirected
-      this.log(DBUG,"Ruleset "+this.name
-              +" had an applicable match-rule but no matching rules");
-    }
+
     return null;
   },
   log: function(level, msg) {
     https_everywhereLog(level, msg);
   },
+ 
+ wouldMatch: function(hypothetical_uri, alist) {
+   // return true if this ruleset would match the uri, assuming it were http
+   // used for judging moot / inactive rulesets
+
+   // if the ruleset is already somewhere in this applicable list, we don't
+   // care about hypothetical wouldMatch questios
+   if (this.name in alist.all) return false;
+
+   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
+            "?  serial " + alist.serial);
+    
+   var uri = hypothetical_uri.clone();
+   if (uri.scheme == "https") uri.scheme = "http";
+   var urispec = uri.spec;
+
+   if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
+     return false;
+
+   for (i = 0; i < this.exclusions.length; ++i) 
+     if (this.exclusions[i].pattern_c.test(urispec)) return false;
+
+   for (i = 0; i < this.rules.length; ++i) 
+     if (this.rules[i].from_c.test(urispec)) return true;
+   return false;
+ },
 
  transformURI: function(uri) {
-    // If no rule applies, return null; otherwise, return a fresh uri instance
+    // If no rule applies, return null; if a rule would have applied but was
+    // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
     var newurl = this._apply(uri.spec);
-    if (null == newurl)
+    if (null == newurl) 
       return null;
+    if (0 == newurl)
+      return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                 createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
@@ -98,6 +121,23 @@ RuleSet.prototype = {
     newuri = newuri.QueryInterface(CI.nsIURI);
     return newuri;
   },
+
+  enable: function() {
+    // Enable us.
+    this.prefs.setBoolPref(this.name, true);
+    this.active = true;
+  },
+
+  disable: function() {
+    // Disable us.
+    this.prefs.setBoolPref(this.name, false);
+    this.active = false;
+  },
+
+  toggle: function() {
+    this.active = !this.active;
+    this.prefs.setBoolPref(this.name, this.active);
+  }
 };
 
 const RuleWriter = {
@@ -138,14 +178,15 @@ const RuleWriter = {
     file.append("rules");
     if (!file.isDirectory()) {
       // XXX: Arg, death!
+      this.log(WARN,"Catastrophic failure: extension directory is not a directory");
     }
     return file;
   },
 
-  read: function(file, targets, existing_rulesets) {
+  read: function(file, rule_store) {
     if (!file.exists())
       return null;
-    if ((targets == null) && (targets != {}))
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
       this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
@@ -164,24 +205,49 @@ const RuleWriter = {
     sstream.close();
     fstream.close();
     try {
-      var xmlrules = XML(data);
+      data = data.replace(/<\?xml[^>]*\?>/, ""); 
+      var xmlrulesets = XML(data);
     } catch(e) { // file has been corrupted; XXX: handle error differently
-      this.log(WARN,"Error in XML file: " + file + "\n" + e);
+      this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
     }
+    this.parseXmlRulesets(xmlrulesets, rule_store, file);
+  },
 
-    if (xmlrules.@name == xmlrules.@nonexistantthing) {
-      this.log(DBUG, "FILE " + file.path + "is not a rulefile\n");
+  parseXmlRulesets: function(xmlblob, rule_store, file) {
+    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
+    // add them to the rule_store HTTPSRules object.
+    if (xmlblob.@name != xmlblob.@nonexistantthing) {
+      // The root of the XML tree has a name, which means it should be single a ruleset...
+      this.parseOneRuleset(xmlblob, rule_store, file);
+    } else {
+      // The root of the XML tree should be a <rulesetlibrary> with many
+      // <ruleset> children
+      var lngth = xmlblob.ruleset.length(); // premature optimisation
+      if (lngth == 0 && (file.path.search("00README") == -1))
+        this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
+                        + file.path + "\n" +  xmlblob);
+      for (var j = 0; j < lngth; j++) 
+        this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
+    }
+  },
+
+  parseOneRuleset: function(xmlruleset, rule_store, file) {
+    // Extract an xmlrulset into the rulestore
+    this.log(DBUG, "Parsing " + xmlruleset.@name + " from " + file.path);
+
+    if (xmlruleset.@name == xmlruleset.@nonexistantthing) {
+      this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
       return null;
     }
 
     var match_rl = null;
     var dflt_off = null;
-    if (xmlrules.@match_rule.length() > 0) match_rl = xmlrules.@match_rule;
-    if (xmlrules.@default_off.length() > 0) dflt_off = xmlrules.@default_off;
-    var ret = new RuleSet(xmlrules.@name, match_rl, dflt_off);
+    if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
+    if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
+    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
 
-    if (xmlrules.target.length() == 0) {
+    if (xmlruleset.target.length() == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
@@ -190,46 +256,46 @@ const RuleWriter = {
 
     // see if this ruleset has the same name as an existing ruleset;
     // if so, this ruleset is ignored; DON'T add or return it.
-    for (var i = 0; i < existing_rulesets.length; i++){
-        if (ret.name == existing_rulesets[i].name){
-           this.log(WARN, "Error: found duplicate rule name " + ret.name + " in file " + file.path);
-           return null;
-        }
+    if (rs.name in rule_store.rulesetsByName) {
+      this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
+      return null;
     }
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
     // target host indexes
-    for (var i = 0; i < xmlrules.target.length(); i++) {
-      var host = xmlrules.target[i].@host;
+    for (var i = 0; i < xmlruleset.target.length(); i++) {
+      var host = xmlruleset.target[i].@host;
       if (!host) {
-        this.log(WARN, "<target> missing host in " + file);
-        continue;
+        this.log(WARN, "<target> missing host in " + file.path);
+        return null;
       }
-      if (! targets[host])
-        targets[host] = [];
-      targets[host].push(ret);
+      if (! rule_store.targets[host])
+        rule_store.targets[host] = [];
+      rule_store.targets[host].push(rs);
     }
 
-    for (var i = 0; i < xmlrules.exclusion.length(); i++) {
-      var exclusion = new Exclusion(xmlrules.exclusion[i].@pattern);
-      ret.exclusions.push(exclusion);
+    for (var i = 0; i < xmlruleset.exclusion.length(); i++) {
+      var exclusion = new Exclusion(xmlruleset.exclusion[i].@pattern);
+      rs.exclusions.push(exclusion);
     }
 
-    for (var i = 0; i < xmlrules.rule.length(); i++) {
-      var rule = new Rule(xmlrules.rule[i].@from,
-                          xmlrules.rule[i].@to);
-
-      ret.rules.push(rule);
+    for (var i = 0; i < xmlruleset.rule.length(); i++) {
+      var rule = new Rule(xmlruleset.rule[i].@from,
+                          xmlruleset.rule[i].@to);
+      rs.rules.push(rule);
     }
 
-    for (var i = 0; i < xmlrules.securecookie.length(); i++) {
-      var c_rule = new CookieRule(xmlrules.securecookie[i].@host,
-                                  xmlrules.securecookie[i].@name);
-      ret.cookierules.push(c_rule);
+    for (var i = 0; i < xmlruleset.securecookie.length(); i++) {
+      var c_rule = new CookieRule(xmlruleset.securecookie[i].@host,
+                                  xmlruleset.securecookie[i].@name);
+      rs.cookierules.push(c_rule);
       this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
 
-    return ret;
+    rule_store.rulesets.push(rs);
+    rule_store.rulesetsByID[rs.id] = rs;
+    rule_store.rulesetsByName[rs.name] = rs;
+
   },
 
   enumerate: function(dir) {
@@ -253,10 +319,12 @@ const HTTPSRules = {
       this.rulesets = [];
       this.targets = {};  // dict mapping target host patterns -> lists of
                           // applicable rules
+      this.rulesetsByID = {};
+      this.rulesetsByName = {};
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      this.scanRulefiles(rulefiles, this.targets);
+      this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      this.scanRulefiles(rulefiles, this.targets);
+      this.scanRulefiles(rulefiles);
       var t,i;
       for (t in this.targets) {
         for (i = 0 ; i < this.targets[t].length ; i++) {
@@ -264,8 +332,8 @@ const HTTPSRules = {
         }
       }
 
-      // for any rulesets with <target host="*"> 
-      // every URI needs to be checked against these rulesets 
+      // for any rulesets with <target host="*">
+      // every URI needs to be checked against these rulesets
       // (though currently we don't ship any)
       this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
 
@@ -282,15 +350,13 @@ const HTTPSRules = {
     return;
   },
 
-  scanRulefiles: function(rulefiles, targets) {
+  scanRulefiles: function(rulefiles) {
     var i = 0;
     var r = null;
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        r = RuleWriter.read(rulefiles[i], targets, this.rulesets);
-        if (r != null) 
-          this.rulesets.push(r);
+        RuleWriter.read(rulefiles[i], this);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
@@ -299,19 +365,72 @@ const HTTPSRules = {
     }
   },
 
-  rewrittenURI: function(uri) {
-    var i = 0;
-    var newuri = null
-    var rs = this.applicableRulesets(uri.host);
-    for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i].transformURI(uri)))
-        return newuri;
+  rewrittenURI: function(alist, input_uri) {
+    // This function oversees the task of working out if a uri should be
+    // rewritten, what it should be rewritten to, and recordkeeping of which
+    // applicable rulesets are and aren't active.  Previously this returned
+    // the new uri if there was a rewrite.  Now it returns a JS object with a
+    // newuri attribute and an applied_ruleset attribute (or null if there's
+    // no rewrite).
+    var i = 0, userpass_present = false;
+    var uri = input_uri;
+    var blob = {};
+    blob.newuri = null;
+    if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
+
+    // Rulesets shouldn't try to parse usernames and passwords.  If we find
+    // those, apply the ruleset without them and then add them back.
+    // When .userPass is absent, sometimes it is false and sometimes trying
+    // to read it raises an exception (probably depending on the URI type).
+    try {
+      if (input_uri.userPass) {
+        uri = input_uri.clone()
+        userpass_present = true;
+        uri.userPass = null;
+      } 
+    } catch(e) {}
+
+    // Get the list of rulesets that target this host
+    try {
+      var rs = this.potentiallyApplicableRulesets(uri.host);
+    } catch(e) {
+      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      return null;
+    }
+
+    // ponder each potentially applicable ruleset, working out if it applies
+    // and recording it as active/inactive/moot/breaking in the applicable list
+    for (i = 0; i < rs.length; ++i) {
+      if (!rs[i].active) {
+        if (alist && rs[i].wouldMatch(uri, alist))
+          alist.inactive_rule(rs[i]);
+        continue;
+      } 
+      blob.newuri = rs[i].transformURI(uri);
+      if (blob.newuri) {
+        // we rewrote the uri
+        if (alist)
+          if (uri.spec in https_everywhere_blacklist) 
+            alist.breaking_rule(rs[i])
+          else 
+            alist.active_rule(rs[i]);
+        if (userpass_present) blob.newuri.userPass = input_uri.userPass;
+        blob.applied_ruleset = rs[i];
+        return blob;
+      }
+      if (uri.scheme == "https" && alist) {
+        // we didn't rewrite but the rule applies to this domain and the
+        // requests are going over https
+        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
+        continue;
+      } 
     }
     return null;
   },
 
-  applicableRulesets: function(host) {
-    // Return a list of rulesets that apply to this host
+
+  potentiallyApplicableRulesets: function(host) {
+    // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
     if (this.targets[host])
@@ -333,14 +452,14 @@ const HTTPSRules = {
       if (this.targets[t])
         results = results.concat(this.targets[t]);
     }
-    this.log(DBUG,"Applicable rules for " + host + ":");
-    for (i = 0; i < results.length; ++i) 
+    this.log(DBUG,"Potentially applicable rules for " + host + ":");
+    for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
   },
-  
-  shouldSecureCookie: function(c) {
-    // Check to see if the Cookie object c meets any of our cookierule citeria 
+
+  shouldSecureCookie: function(applicable_list, c) {
+    // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure
     //this.log(DBUG, "Testing cookie:");
     //this.log(DBUG, "  name: " + c.name);
@@ -348,15 +467,24 @@ const HTTPSRules = {
     //this.log(DBUG, "  domain: " + c.domain);
     //this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
-    var rs = this.applicableRulesets(c.host);
+    var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active) 
+      if (ruleset.active) {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) 
+          if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
+            if (applicable_list) applicable_list.active_rule(ruleset);
+            this.log(INFO,"Active cookie rule " + ruleset.name);
             return true;
+          }
         }
+        if (ruleset.cookierules.length > 0)
+          applicable_list.moot_rule(ruleset);
+      } else if (ruleset.cookierules.length > 0) {
+        applicable_list.inactive_rule(ruleset);
+        this.log(INFO,"Inactive cookie rule " + ruleset.name);
+      }
     }
     return false;
   }

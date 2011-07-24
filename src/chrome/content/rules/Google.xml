@@ -14,16 +14,19 @@
   <target host="clients3.google.com.*" />
   <target host="clients4.google.com.*" />
   <target host="clients5.google.com.*" />
+  <target host="clients6.google.com.*" />
   <target host="clients1.google.co.*" />
   <target host="clients2.google.co.*" />
   <target host="clients3.google.co.*" />
   <target host="clients4.google.co.*" />
   <target host="clients5.google.co.*" />
+  <target host="clients6.google.co.*" />
   <target host="clients1.google.*" />
   <target host="clients2.google.*" />
   <target host="clients3.google.*" />
   <target host="clients4.google.*" />
   <target host="clients5.google.*" />
+  <target host="clients6.google.*" />
 
   <!-- Some Google pages can generate naive links back to the
        unencrypted version of encrypted.google.com, which is a
@@ -43,12 +46,13 @@
   <exclusion pattern="^http://clients[0-9]\.google\.com/.*client=products.*" />
   <exclusion pattern="^http://suggestqueries\.google\.com/.*client=.*" />
 
-  <!-- Google's help is now available in HTTPS too. -->
-  <rule from="^http://(www\.)?google\.com/support/"
-          to="https://www.google.com/support/"/>
+  <!-- This is necessary for image results links from web search results -->
 
-  <!-- But not the forums, bizarrely. -->
-  <exclusion pattern="^http://www\.google\.com/support/forum([\?/].*)?$"/>
+  <exclusion pattern="^http://(www\.)?google\.com/search.*tbm=isch.*" />
+
+  <!-- The /about stuff is not available in HTTPS as of 2011-07. -->
+
+  <exclusion pattern="^http://(www\.)?google\.com/about" />
 
   <!-- There are two distinct cases for these firefox searches -->
 
@@ -60,6 +64,15 @@
 
   <rule from="^http://(www\.)?google\.com/webhp"
           to="https://encrypted.google.com/webhp"/>
+
+  <rule from="^http://(www\.)?google\.com/squared"
+          to="https://www.google.com/squared"/>
+
+  <rule from="^http://codesearch\.google\.com/"
+          to="https://codesearch.google.com/"/>
+
+  <rule from="^http://(www\.)?google\.com/codesearch"
+          to="https://www.google.com/codesearch"/>
 
   <rule from="^http://(www\.)?google\.com/#"
           to="https://encrypted.google.com/#"/>
@@ -120,7 +133,7 @@ http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,
   <rule from="^http://(www\.)?google\.(at|ch|de)/?$"
           to="https://encrypted.google.com/webhp?hl=de" />
 
-  <rule from="^http://(www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi)/?$"
+  <rule from="^http://(www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi|no)/?$"
           to="https://encrypted.google.com/webhp?hl=$2" />
 
   <rule from="^http://(www\.)?google\.com?\.(id|th|tr)/?$"
@@ -131,6 +144,9 @@ http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,
 
   <rule from="^http://(www\.)?google\.com\.kr/?$"
           to="https://encrypted.google.com/webhp?hl=ko" />
+
+  <rule from="^http://(www\.)?google\.com\.kz/?$"
+          to="https://encrypted.google.com/webhp?hl=kk" />
 
   <rule from="^http://(www\.)?google\.com\.jp/?$"
           to="https://encrypted.google.com/webhp?hl=ja" />

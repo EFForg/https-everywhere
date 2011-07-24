@@ -28,14 +28,16 @@ const HTTPS = {
   httpsForcedExceptions: null,
   httpsRewrite: null,
   
-  replaceChannel: function(channel) {
-    var uri = HTTPSRules.rewrittenURI(channel.URI);
-    if (!uri) {
-       HTTPS.log(INFO,
-           "Got replace channel with no applicable rules for URI "
-           + channel.URI.spec);
+  replaceChannel: function(applicable_list, channel) {
+    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
+    if (null == blob) {
+       //HTTPS.log(INFO,
+       //    "Got replace channel with no applicable rules for URI "
+       //    + channel.URI.spec);
        return false;
      }
+    var uri = blob.newuri;
+    if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
     var c2=channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
@@ -46,13 +48,19 @@ const HTTPS = {
     if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
-      https_everywhere_blacklist[channel.URI.spec] = true;
+      if (!blob.applied_ruleset) {
+        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        https_everywhere_blacklist[channel.URI.spec] = true;
+      }
+      https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       return false;
     }
     if (ChannelReplacement.supported) {
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       IOUtil.runWhenPending(channel, function() {
-        new ChannelReplacement(channel, uri).replace(true).open();
+        var cr = new ChannelReplacement(channel, uri);
+        cr.replace(true,null);
+        cr.open();
         HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
       });
       return true;
@@ -80,13 +88,45 @@ const HTTPS = {
     return true;
   },
 
+  getApplicableListForContext: function(ctx, uri) {
+    var alist = null; 
+    var domWin = null;
+    if (!ctx) {
+      this.log(NOTE, "No context loading " + uri.spec);
+      return null;
+    }
+    if (ctx instanceof CI.nsIDOMWindow) {
+      domWin = ctx.QueryInterface(CI.nsIDOMWindow);
+      doc = domWin.document;
+    } else if (ctx instanceof CI.nsIDOMNode) {
+      var doc = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument;
+      if (! doc) {
+        this.log(NOTE, "No Document for request " + uri.spec);
+        return null;
+      }
+      domWin = doc.defaultView;
+      //this.log(DBUG,"Coerced nsIDOMWin from Node: " + domWin);
+    } else {
+      this.log(WARN, "Context for " + uri.spec + 
+                     "is some bizarre unexpected thing: " + ctx);
+      return null;
+    }
+    return HTTPSEverywhere.instance.getApplicableListForDOMWin(domWin, "for context/forceURI");
+  },
+
   forceURI: function(uri, fallback, ctx) {
   // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
   // per the ContentPolicy API.
   // Returns true if everything worked out (either correct replacement or no 
   // replacement needed).  Retun False if all attempts to rewrite failed.
-    var newuri = HTTPSRules.rewrittenURI(uri);
-    if (!newuri) return true;                          // no applicable rule
+    
+    // first of all we need to get the applicable rules list to keep track of
+    // what rulesets might have applied to this page
+    this.log(VERB, "Context is " + ctx);
+    var alist = this.getApplicableListForContext(ctx, uri);
+    var blob = HTTPSRules.rewrittenURI(alist, uri);
+    if (null == blob) return true;                          // no applicable rule
+    var newuri = blob.newuri;
 
     try {
       if (this.rewriteInPlace(uri, newuri)) 
@@ -152,14 +192,17 @@ const HTTPS = {
       this.log(WARN,"No URI inside request " +req);
       return;
     }
-    this.log(VERB, "Cookie hunting in " + uri.spec);
+    //this.log(DBUG, "Cookie hunting in " + uri.spec);
+    var alist = HTTPSEverywhere.instance.getApplicableListForChannel(req);
+    if (!alist)
+      this.log(INFO, "No alist for cookies for "+(req.URI) ? req.URI.spec : "???");
     
     if (uri.schemeIs("https")) {
       var host = uri.host;
       try {
         var cookies = req.getResponseHeader("Set-Cookie");
       } catch(mayHappen) {
-        this.log(VERB,"Exception hunting Set-Cookie in headers: " + mayHappen);
+        //this.log(VERB,"Exception hunting Set-Cookie in headers: " + mayHappen);
         return;
       }
       if (!cookies) return;
@@ -167,7 +210,7 @@ const HTTPS = {
       for each (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
-        if (!c.secure && HTTPSRules.shouldSecureCookie(c)) {
+        if (!c.secure && HTTPSRules.shouldSecureCookie(alist, c)) {
           this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
