@@ -1,0 +1,45 @@
+<ruleset name="StartCom">
+  <target host="startssl.com" />
+  <target host="*.startssl.com" />
+  <target host="startssl.net" />
+  <target host="*.startssl.net" />
+  <target host="startssl.org" />
+  <target host="*.startssl.org" />
+  <target host="startssl.eu" />
+  <target host="*.startssl.eu" />
+  <target host="startssl.us" />
+  <target host="*.startssl.us" />
+  <target host="startcom.org" />
+  <target host="*.startcom.org" />
+
+  <!-- since these resources are required for establishing HTTPS connections,
+       they need to be available over HTTP
+  <Piet> OCSP: URI: http://ocsp.startssl.com/sub/class4/server/ca
+  <Piet> CA Issuers: URI: http://www.startssl.com/certs/sub.class4.server.ca.crt
+  <Piet> URI: http://www.startssl.com/crt4-crl.crl
+  <Piet> URI: http://crl.startssl.com/crt4-crl.crl
+  (and from the SSL observatory):
+  http://cert.startcom.org/sfsca-crl.crl
+  http://crl.startcom.org/sfsca-crl.crl
+  http://crl.startssl.com/sfsca.crl
+  http://cert.startcom.org/ca-crl.crl
+  http://crl.startcom.org/crl/ca-crl.crl
+  (and from Eddy Nigg):
+  http://ocsp.startssl.com/*
+  http://www.startssl.com/certs/*.crt
+  http://www.startssl.com/*.crl
+  http://crl.startssl.com/*.crl
+  http://cert.startcom.org/*.crl
+  http://cert.startcom.org/*.crt
+  -->
+  <exclusion pattern="ocsp\.startcom" />
+  <exclusion pattern="ocsp\.startssl" />
+  <exclusion pattern="\.crl$" />
+  <exclusion pattern="\.crt$" />
+
+  <!-- should mitigate against exploitation of the above exclusions -->
+  <securecookie host=".*" name=".*" />
+
+  <rule from="^http://([^/:@\.]*\.)?startssl\.(com|net|org|eu|us)/" to="https://$1startssl.$2/"/>
+  <rule from="^http://([^/:@\.]*\.)?startcom\.org/" to="https://$1startcom.org/"/>
+</ruleset>
