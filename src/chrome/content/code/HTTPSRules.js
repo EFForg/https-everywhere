@@ -203,10 +203,15 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();
+    fstream.close();	
+    data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
+<<<<<<< HEAD
       data = data.replace(/<\?xml[^>]*\?>/, ""); 
       var xmlrulesets = XML(data);
+=======
+      var xmlrules = XML(data);
+>>>>>>> e3a5f12afc25acc835e48ba23b9658281949fbbc
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
