@@ -1,6 +1,20 @@
 #!/bin/sh
 
+# How to do a new release:
+# 
+#  1. Visit https://github.com/aaronsw/https-everywhere/downloads
+#     and find the latest version number. Increment it and let the
+#     result be $NEWVERSION. So if the latest is 0.0.7-1, then let
+#     NEWVERSION=0.0.7-2.
+#  2. Run: ./makecrx.sh $NEWVERSION
+#  3. Upload pkg/crx/https-every-$NEWVERSION.crx to Github.
+#  4. Commit and push the change to chromium/updates.xml.
+
 VERSION=$1
+
+
+sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
+
 
 [ -d pkg ] || mkdir -p pkg
 rm -rf pkg/crx
