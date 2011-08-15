@@ -4,8 +4,8 @@
 # 
 #  1. Visit https://github.com/aaronsw/https-everywhere/downloads
 #     and find the latest version number. Increment it and let the
-#     result be $NEWVERSION. So if the latest is 0.0.7-1, then let
-#     NEWVERSION=0.0.7-2.
+#     result be $NEWVERSION. So if the latest is 0.0.7.1, then let
+#     NEWVERSION=0.0.7.2.
 #  2. Run: ./makecrx.sh $NEWVERSION
 #  3. Upload pkg/crx/https-every-$NEWVERSION.crx to Github.
 #  4. Commit and push the change to chromium/updates.xml.
