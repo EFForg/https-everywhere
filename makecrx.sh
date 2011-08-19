@@ -8,7 +8,10 @@
 #     NEWVERSION=0.0.7.2.
 #  2. Run: ./makecrx.sh $NEWVERSION
 #  3. Upload pkg/crx/https-every-$NEWVERSION.crx to Github.
-#  4. Commit and push the change to chromium/updates.xml.
+#  4. Run:
+#       git add chromium/updates.xml
+#       git commit -m "release $NEWVERSION"
+#       git push
 
 VERSION=$1
 
