@@ -222,6 +222,8 @@ SSLObservatory.prototype = {
     }
 
     if ("http-on-examine-response" == topic) {
+      if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.enabled"))
+        return;
       if (this.torbutton_installed) {
         // Allow Tor users to choose if they want to submit
         // during tor and/or non-tor
@@ -321,7 +323,7 @@ SSLObservatory.prototype = {
     // the less reliable offline/online notification-triggered fetch?
     // this.max_ap will be null if we have no wifi info.
     reqParams.push("client_asn="+this.client_asn);
-    reqParams.push("private_opt_in=1");
+    reqParams.push("private_opt_in=1"); //xxx actually respect the user's setting here
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 8192;
