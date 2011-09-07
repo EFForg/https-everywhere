@@ -140,7 +140,7 @@ SSLObservatory.prototype = {
     OS.addObserver(this, "network:offline-status-changed", false);
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
         .getService(Ci.nsIPrefBranchInternal);
-    proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+    var proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
     proxy_branch.addObserver("network.proxy", this, false);
 
     try {
@@ -152,12 +152,27 @@ SSLObservatory.prototype = {
   },
 
   stopASNWatcher: function() {
-    // XXX FIXME need to unhook the observers above, or do something more crude...
     this.client_asn = -1;
+    // unhook the observers we registered above
+    OS.removeObserver(this, "network:offline-status-changed");
+    var pref_service = Cc["@mozilla.org/preferences-service;1"]
+        .getService(Ci.nsIPrefBranchInternal);
+    var proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+    proxy_branch.removeObserver(this, "network.proxy");
+    try {
+      var wifi_service = Cc["@mozilla.org/wifi/monitor;1"].getService(Ci.nsIWifiMonitor);
+      wifi_service.stopWatching(this);
+    } catch(e) {
+      this.log(WARN, "Failed to stop wifi state monitor: "+e);
+    }
   },
 
   getClientASN: function() {
     // XXX: Fetch a new client ASN..
+    if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.send_asn")) {
+      this.client_asn = -1;
+      return;
+    }
     return;
   },
 
