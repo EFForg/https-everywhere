@@ -66,7 +66,8 @@ function SSLObservatory() {
   this.popular_fps = {};
 
   // The url to submit to
-  this.submit_url = "https://"+this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host")+"/submit_cert";
+  var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+  this.submit_url = "https://" + host + "/submit_cert";
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
@@ -133,7 +134,6 @@ SSLObservatory.prototype = {
 
   setupASNWatcher: function() {
     this.getClientASN();
-
     this.max_ap = null;
 
     // Observe network changes to get new ASNs
@@ -258,8 +258,10 @@ SSLObservatory.prototype = {
         // submit certs without strong anonymisation.  Because the
         // anonymisation is weak, we avoid submitting during private browsing
         // mode.
-        var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) return;
+        try {
+          var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
+          if (pbs.privateBrowsingEnabled) return;
+        } catch (e) { /* old browser */ }
       }
 
       subject.QueryInterface(Ci.nsIHttpChannel);
