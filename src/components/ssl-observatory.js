@@ -66,7 +66,7 @@ function SSLObservatory() {
   this.popular_fps = {};
 
   // The url to submit to
-  this.submit_url = "https://observatory.eff.org/submit_cert";
+  this.submit_url = "https://"+this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host")+"/submit_cert";
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF

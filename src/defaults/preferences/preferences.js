@@ -6,6 +6,7 @@ pref("extensions.https_everywhere._observatory.enabled",false);
 // type stuff
 pref("extensions.https_everywhere._observatory.testing",false);
 
+pref("extensions.https_everywhere._observatory.server_host","observatory.eff.org");
 pref("extensions.https_everywhere._observatory.use_tor_proxy",true);
 pref("extensions.https_everywhere._observatory.submit_during_tor",true);
 pref("extensions.https_everywhere._observatory.submit_during_nontor",true);
