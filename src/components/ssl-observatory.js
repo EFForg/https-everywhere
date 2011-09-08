@@ -66,7 +66,8 @@ function SSLObservatory() {
   this.popular_fps = {};
 
   // The url to submit to
-  this.submit_url = "https://observatory.eff.org/submit_cert";
+  var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+  this.submit_url = "https://" + host + "/submit_cert";
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
@@ -85,7 +86,7 @@ function SSLObservatory() {
   this.wrappedJSObject = this;
 
   this.client_asn = -1;
-  if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.send_asn")) 
+  if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
   this.log(DBUG, "Loaded observatory component!");
@@ -133,14 +134,13 @@ SSLObservatory.prototype = {
 
   setupASNWatcher: function() {
     this.getClientASN();
-
     this.max_ap = null;
 
     // Observe network changes to get new ASNs
     OS.addObserver(this, "network:offline-status-changed", false);
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
         .getService(Ci.nsIPrefBranchInternal);
-    proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+    var proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
     proxy_branch.addObserver("network.proxy", this, false);
 
     try {
@@ -152,12 +152,27 @@ SSLObservatory.prototype = {
   },
 
   stopASNWatcher: function() {
-    // XXX FIXME need to unhook the observers above, or do something more crude...
     this.client_asn = -1;
+    // unhook the observers we registered above
+    OS.removeObserver(this, "network:offline-status-changed");
+    var pref_service = Cc["@mozilla.org/preferences-service;1"]
+        .getService(Ci.nsIPrefBranchInternal);
+    var proxy_branch = pref_service.QueryInterface(Ci.nsIPrefBranchInternal);
+    proxy_branch.removeObserver(this, "network.proxy");
+    try {
+      var wifi_service = Cc["@mozilla.org/wifi/monitor;1"].getService(Ci.nsIWifiMonitor);
+      wifi_service.stopWatching(this);
+    } catch(e) {
+      this.log(WARN, "Failed to stop wifi state monitor: "+e);
+    }
   },
 
   getClientASN: function() {
     // XXX: Fetch a new client ASN..
+    if (!this.myGetBoolPref("send_asn")) {
+      this.client_asn = -1;
+      return;
+    }
     return;
   },
 
@@ -222,20 +237,20 @@ SSLObservatory.prototype = {
     }
 
     if ("http-on-examine-response" == topic) {
-      if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.enabled"))
+      if (!this.myGetBoolPref("enabled"))
         return;
       if (this.torbutton_installed) {
         // Allow Tor users to choose if they want to submit
         // during tor and/or non-tor
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_tor")
+        if (!this.myGetBoolPref("submit_during_tor")
             && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_nontor")
+        if (!this.myGetBoolPref("submit_during_nontor")
             && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-      } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
+      } else if (!this.myGetBoolPref("use_custom_proxy")) {
         this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
         return;
       } else {
@@ -243,8 +258,10 @@ SSLObservatory.prototype = {
         // submit certs without strong anonymisation.  Because the
         // anonymisation is weak, we avoid submitting during private browsing
         // mode.
-        var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) return;
+        try {
+          var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
+          if (pbs.privateBrowsingEnabled) return;
+        } catch (e) { /* old browser */ }
       }
 
       subject.QueryInterface(Ci.nsIHttpChannel);
@@ -266,6 +283,11 @@ SSLObservatory.prototype = {
     }
   },
 
+  myGetBoolPref: function(prefstring) {
+    // syntactic sugar
+    return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
   submitChain: function(certArray, domain) {
     var base64Certs = [];
     var fps = [];
@@ -280,7 +302,7 @@ SSLObservatory.prototype = {
       }
     }
 
-    if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots"))
+    if (!this.myGetBoolPref("alt_roots"))
       if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
         if (rootidx == -1) {
           rootidx = fps.length-1;
@@ -314,7 +336,7 @@ SSLObservatory.prototype = {
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
-    if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.testing")) {
+    if (this.myGetBoolPref("testing")) {
       // The server can compute these, but they're a nice test suite item!
       reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
@@ -323,7 +345,8 @@ SSLObservatory.prototype = {
     // the less reliable offline/online notification-triggered fetch?
     // this.max_ap will be null if we have no wifi info.
     reqParams.push("client_asn="+this.client_asn);
-    reqParams.push("private_opt_in=1"); //xxx actually respect the user's setting here
+    if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
+    else                                 reqParams.push("private_opt_in=0");
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 8192;
@@ -387,8 +410,7 @@ SSLObservatory.prototype = {
 
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
-    if (this.torbutton_installed &&
-        this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_tor_proxy")) {
+    if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
       // extract torbutton proxy settings
       proxy_settings[0] = "http";
       proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
@@ -399,7 +421,7 @@ SSLObservatory.prototype = {
         proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
         proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
       }
-    } else if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
+    } else if (this.myGetBoolPref("use_custom_proxy")) {
       proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
       proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
