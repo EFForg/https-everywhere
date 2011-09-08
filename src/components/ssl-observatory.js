@@ -345,7 +345,8 @@ SSLObservatory.prototype = {
     // the less reliable offline/online notification-triggered fetch?
     // this.max_ap will be null if we have no wifi info.
     reqParams.push("client_asn="+this.client_asn);
-    reqParams.push("private_opt_in=1"); //xxx actually respect the user's setting here
+    if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
+    else                                 reqParams.push("private_opt_in=0");
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = 8192;
