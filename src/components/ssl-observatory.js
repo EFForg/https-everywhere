@@ -86,7 +86,7 @@ function SSLObservatory() {
   this.wrappedJSObject = this;
 
   this.client_asn = -1;
-  if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.send_asn")) 
+  if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
   this.log(DBUG, "Loaded observatory component!");
@@ -169,7 +169,7 @@ SSLObservatory.prototype = {
 
   getClientASN: function() {
     // XXX: Fetch a new client ASN..
-    if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.send_asn")) {
+    if (!this.myGetBoolPref("send_asn")) {
       this.client_asn = -1;
       return;
     }
@@ -237,20 +237,20 @@ SSLObservatory.prototype = {
     }
 
     if ("http-on-examine-response" == topic) {
-      if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.enabled"))
+      if (!this.myGetBoolPref("enabled"))
         return;
       if (this.torbutton_installed) {
         // Allow Tor users to choose if they want to submit
         // during tor and/or non-tor
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_tor")
+        if (!this.myGetBoolPref("submit_during_tor")
             && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-        if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.submit_during_nontor")
+        if (!this.myGetBoolPref("submit_during_nontor")
             && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
           return;
         }
-      } else if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
+      } else if (!this.myGetBoolPref("use_custom_proxy")) {
         this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
         return;
       } else {
@@ -283,6 +283,11 @@ SSLObservatory.prototype = {
     }
   },
 
+  myGetBoolPref: function(prefstring) {
+    // syntactic sugar
+    return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
   submitChain: function(certArray, domain) {
     var base64Certs = [];
     var fps = [];
@@ -297,7 +302,7 @@ SSLObservatory.prototype = {
       }
     }
 
-    if (!this.prefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots"))
+    if (!this.myGetBoolPref("alt_roots"))
       if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
         if (rootidx == -1) {
           rootidx = fps.length-1;
@@ -331,7 +336,7 @@ SSLObservatory.prototype = {
     var reqParams = [];
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
-    if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.testing")) {
+    if (this.myGetBoolPref("testing")) {
       // The server can compute these, but they're a nice test suite item!
       reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
@@ -404,8 +409,7 @@ SSLObservatory.prototype = {
 
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
-    if (this.torbutton_installed &&
-        this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_tor_proxy")) {
+    if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
       // extract torbutton proxy settings
       proxy_settings[0] = "http";
       proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
@@ -416,7 +420,7 @@ SSLObservatory.prototype = {
         proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
         proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
       }
-    } else if (this.prefs.getBoolPref("extensions.https_everywhere._observatory.use_custom_proxy")) {
+    } else if (this.myGetBoolPref("use_custom_proxy")) {
       proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
       proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
