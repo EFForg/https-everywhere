@@ -568,7 +568,7 @@ HTTPSEverywhere.prototype = {
 function chrome_opener(uri) {
   // we don't use window.open, because we need to work around TorButton's 
   // state control
-  CC['@mozilla.org/appshell/window-mediator;1']
+  return CC['@mozilla.org/appshell/window-mediator;1']
     .getService(CI.nsIWindowMediator) 
     .getMostRecentWindow('navigator:browser')
     .open(uri,'', 'chrome,centerscreen' );

@@ -384,12 +384,20 @@ SSLObservatory.prototype = {
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
-        // XXX: Handle errors properly?
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
             if (fps[0] in that.already_submitted)
               delete that.already_submitted[fps[0]];
+          }
+        } else if (req.status == 403) {
+          that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
+          try {
+            var warningObj = JSON.parse(req.responseText);
+            this.warnUser(warningObj);
+          } catch(e) {
+            that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
+            that.log(WARN, req.responseText);
           }
         } else {
           if (fps[0] in that.already_submitted)
@@ -406,6 +414,15 @@ SSLObservatory.prototype = {
     // Cache this here to prevent multiple submissions for all the content elements.
     that.already_submitted[fps[0]] = true;
     req.send(params);
+  },
+
+  warnUser: function(warningObj) {
+    var label = "";
+    for (var hash in warningObj) 
+      label += warningObj[hash].long_desc;
+    var wtext = chrome_opener("chrome://https-everywhere/content/observatory-warning.xul")
+                             .document.getElementById("warning-text");
+    wtext.setAttribute("value", label);
   },
 
   getProxySettings: function() {
