@@ -13,6 +13,8 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
+BASE_REQ_SIZE=6400;
+
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
@@ -237,32 +239,8 @@ SSLObservatory.prototype = {
     }
 
     if ("http-on-examine-response" == topic) {
-      if (!this.myGetBoolPref("enabled"))
-        return;
-      if (this.torbutton_installed) {
-        // Allow Tor users to choose if they want to submit
-        // during tor and/or non-tor
-        if (!this.myGetBoolPref("submit_during_tor")
-            && this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
-          return;
-        }
-        if (!this.myGetBoolPref("submit_during_nontor")
-            && !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) {
-          return;
-        }
-      } else if (!this.myGetBoolPref("use_custom_proxy")) {
-        this.log(WARN, "No torbutton installed, but no custom proxies either. Not submitting certs");
-        return;
-      } else {
-        // no torbutton; the custom proxy is probably the user opting to
-        // submit certs without strong anonymisation.  Because the
-        // anonymisation is weak, we avoid submitting during private browsing
-        // mode.
-        try {
-          var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-          if (pbs.privateBrowsingEnabled) return;
-        } catch (e) { /* old browser */ }
-      }
+
+      if (!this.observatoryActive()) return;
 
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
@@ -275,12 +253,39 @@ SSLObservatory.prototype = {
         }
 
         if (subject.URI.port == -1) {
-          this.submitChain(chainArray, new String(subject.URI.host));
+          this.submitChain(chainArray, new String(subject.URI.host), subject);
         } else {
-          this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port);
+          this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port, subject);
         }
       }
     }
+  },
+
+  observatoryActive: function() {
+    if (!this.myGetBoolPref("enabled")) return false;
+    if (this.torbutton_installed) {
+      // Allow Tor users to choose if they want to submit
+      // during tor and/or non-tor
+      if (!this.myGetBoolPref("submit_during_tor") && 
+           this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
+        return false;
+      if (!this.myGetBoolPref("submit_during_nontor") && 
+          !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
+        return false;
+    } else if (!this.myGetBoolPref("use_custom_proxy")) {
+      this.log(DBUG, "No torbutton installed, but no custom proxies either. Not submitting certs");
+      return false;
+    } else {
+      // no torbutton; the custom proxy is probably the user opting to
+      // submit certs without strong anonymisation.  Because the
+      // anonymisation is weak, we avoid submitting during private browsing
+      // mode.
+      try {
+        var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
+        if (pbs.privateBrowsingEnabled) return false;
+      } catch (e) { /* old browser */ }
+    }
+    return true;
   },
 
   myGetBoolPref: function(prefstring) {
@@ -288,7 +293,7 @@ SSLObservatory.prototype = {
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
-  submitChain: function(certArray, domain) {
+  submitChain: function(certArray, domain, channel) {
     var base64Certs = [];
     var fps = [];
     var rootidx = -1;
@@ -349,39 +354,27 @@ SSLObservatory.prototype = {
     else                                 reqParams.push("private_opt_in=0");
 
     var params = reqParams.join("&") + "&padding=0";
-    var tot_len = 8192;
+    var tot_len = BASE_REQ_SIZE;
 
     this.log(INFO, "Submitting cert for "+domain);
     this.log(DBUG, "submit_cert params: "+params);
 
     // Pad to exp scale. This is done because the distribution of cert sizes
     // is almost certainly pareto, and definitely not uniform.
-    for (tot_len = 8192; tot_len < params.length; tot_len*=2);
+    for (tot_len = BASE_REQ_SIZE; tot_len < params.length; tot_len*=2);
 
     while (params.length != tot_len) {
       params += "0";
     }
 
-    //this.log(DBUG, "Padded params: "+params);
-
-    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
-                 .createInstance(Ci.nsIXMLHttpRequest);
-    req.open("POST", this.submit_url+this.csrf_nonce, true);
-
-    // Send the proper header information along with the request
-    // Do not set gzip header.. It will ruin the padding
-    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
-    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    req.setRequestHeader("Content-length", params.length);
-    req.setRequestHeader("Connection", "close");
-    // Need to clear useragent and other headers..
-    req.setRequestHeader("User-Agent", "");
-    req.setRequestHeader("Accept", "");
-    req.setRequestHeader("Accept-Language", "");
-    req.setRequestHeader("Accept-Encoding", "");
-    req.setRequestHeader("Accept-Charset", "");
-
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
+
+      
+    var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
+    var win = HTTPSEverywhere.getWindowForChannel(channel);
+    var req = this.buildRequest(params);
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         if (req.status == 200) {
@@ -394,7 +387,7 @@ SSLObservatory.prototype = {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            that.warnUser(warningObj);
+            that.warnUser(warningObj, win, certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
@@ -416,12 +409,32 @@ SSLObservatory.prototype = {
     req.send(params);
   },
 
-  warnUser: function(warningObj) {
+  buildRequest: function(params) {
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("POST", this.submit_url+this.csrf_nonce, true);
+
+    // Send the proper header information along with the request
+    // Do not set gzip header.. It will ruin the padding
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
+    req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    req.setRequestHeader("Content-length", params.length);
+    req.setRequestHeader("Connection", "close");
+    // Need to clear useragent and other headers..
+    req.setRequestHeader("User-Agent", "");
+    req.setRequestHeader("Accept", "");
+    req.setRequestHeader("Accept-Language", "");
+    req.setRequestHeader("Accept-Encoding", "");
+    req.setRequestHeader("Accept-Charset", "");
+    return req;
+  },
+
+  warnUser: function(warningObj, win, cert) {
     var aWin = CC['@mozilla.org/appshell/window-mediator;1']
                  .getService(CI.nsIWindowMediator) 
                  .getMostRecentWindow('navigator:browser');
     aWin.openDialog("chrome://https-everywhere/content/observatory-warning.xul",
-                    "","chrome,centerscreen", warningObj);
+                    "","chrome,centerscreen", warningObj, win, cert);
   },
 
 

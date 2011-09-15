@@ -1,4 +1,5 @@
 const CC = Components.classes;
+const CI = Components.interfaces;
 VERB=1;
 DBUG=2;
 INFO=3;
@@ -169,4 +170,14 @@ function warning_populate(warningObj) {
     separator.setAttribute("flex","1");
     container.appendChild(spacer);
   }
+}
+
+function show_certs() {
+  var parent_win = window.arguments[1];
+  var cert = window.arguments[2];
+  if (!parent_win)
+    alert("no parent window trying to show certs");
+  CC["@mozilla.org/nsCertificateDialogs;1"]
+     .getService(CI.nsICertificateDialogs)
+     .viewCert(parent_win, cert);
 }
