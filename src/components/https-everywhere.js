@@ -441,7 +441,7 @@ HTTPSEverywhere.prototype = {
       var gbp = ssl_observatory.prefs.getBoolPref;
       var shown = gbp("extensions.https_everywhere._observatory.popup_shown");
       if (!shown && ssl_observatory.torbutton_installed) 
-        chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+        this.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     }
     return;
   },
@@ -561,18 +561,18 @@ HTTPSEverywhere.prototype = {
     } catch (e) {
       this.log(WARN, "Couldn't notify observers: " + e);
     }
+  },
+
+  chrome_opener: function(uri) {
+    // we don't use window.open, because we need to work around TorButton's 
+    // state control
+    return CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator) 
+      .getMostRecentWindow('navigator:browser')
+      .open(uri,'', 'chrome,centerscreen' );
   }
 
 };
-
-function chrome_opener(uri) {
-  // we don't use window.open, because we need to work around TorButton's 
-  // state control
-  return CC['@mozilla.org/appshell/window-mediator;1']
-    .getService(CI.nsIWindowMediator) 
-    .getMostRecentWindow('navigator:browser')
-    .open(uri,'', 'chrome,centerscreen' );
-} 
 
 var prefs = 0;
 var econsole = 0;

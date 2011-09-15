@@ -10,6 +10,10 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
+HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
+
 function https_everywhere_load() {
   // on first run, put the context menu in the addons bar
   try {
@@ -57,7 +61,6 @@ function show_applicable_list(menupopup) {
     return null;
   }
 
-  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
   var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
   var weird=false;
   
@@ -73,19 +76,16 @@ function show_applicable_list(menupopup) {
 
 function toggle_rule(rule_id) {
   // toggle the rule state
-  var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
-                      .getService(Components.interfaces.nsISupports)
-                      .wrappedJSObject;
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
   var domWin = content.document.defaultView.top;
   /*if (domWin instanceof CI.nsIDOMWindow) {
     var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
     if (alist) alist.empty();
   }*/
-  reload_window(HTTPSEverywhere);
+  reload_window();
 }
 
-function reload_window(HTTPSEverywhere) {
+function reload_window() {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
     HTTPSEverywhere.log(WARN, domWin + " is not an nsIDOMWindow");
@@ -109,11 +109,4 @@ function open_in_tab(url) {
                      .getService(Components.interfaces.nsIWindowMediator);
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
-}
-
-function chrome_opener(uri) {
-  // we don't use window.open, because we need to work around TorButton's state control
-  CC['@mozilla.org/appshell/window-mediator;1'].getService(CI.nsIWindowMediator)
-                                               .getMostRecentWindow('navigator:browser')
-                                               .open(uri,'', 'chrome,centerscreen' );
 }

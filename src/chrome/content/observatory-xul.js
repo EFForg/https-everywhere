@@ -156,3 +156,17 @@ function observatory_prefs_accept() {
   return true;  // https://developer.mozilla.org/en/XUL/dialog#a-ondialogaccept
                 // also close things if there is no out meta prefs window
 }
+
+function warning_populate(warningObj) {
+  // Fill in the SSL Observatory Warning labels...
+  var container = document.getElementById("warning-container");
+  for (var hash in warningObj) {
+    var label=document.createElement("label");
+    label.setAttribute("value",warningObj[hash].long_desc);
+    label.setAttribute("style","padding:25px;");
+    container.appendChild(label);
+    var spacer=document.createElement("spacer");
+    separator.setAttribute("flex","1");
+    container.appendChild(spacer);
+  }
+}

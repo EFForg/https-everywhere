@@ -394,7 +394,7 @@ SSLObservatory.prototype = {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            this.warnUser(warningObj);
+            that.warnUser(warningObj);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
@@ -417,13 +417,13 @@ SSLObservatory.prototype = {
   },
 
   warnUser: function(warningObj) {
-    var label = "";
-    for (var hash in warningObj) 
-      label += warningObj[hash].long_desc;
-    var wtext = chrome_opener("chrome://https-everywhere/content/observatory-warning.xul")
-                             .document.getElementById("warning-text");
-    wtext.setAttribute("value", label);
+    var aWin = CC['@mozilla.org/appshell/window-mediator;1']
+                 .getService(CI.nsIWindowMediator) 
+                 .getMostRecentWindow('navigator:browser');
+    aWin.openDialog("chrome://https-everywhere/content/observatory-warning.xul",
+                    "","chrome,centerscreen", warningObj);
   },
+
 
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
