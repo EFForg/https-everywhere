@@ -164,11 +164,11 @@ function warning_populate(warningObj) {
   for (var hash in warningObj) {
     var label=document.createElement("label");
     label.setAttribute("value",warningObj[hash].long_desc);
-    label.setAttribute("style","padding:25px;");
+    label.setAttribute("style","padding:5px 25px 5px;");
     container.appendChild(label);
-    var spacer=document.createElement("spacer");
-    separator.setAttribute("flex","1");
-    container.appendChild(spacer);
+    //var spacer=document.createElement("spacer");
+    //separator.setAttribute("flex","1");
+    //container.appendChild(spacer);
   }
 }
 
