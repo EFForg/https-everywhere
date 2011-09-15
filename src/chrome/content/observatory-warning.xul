@@ -5,23 +5,28 @@
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
   xmlns:html="http://www.w3.org/1999/xhtml" 
   title="&ssl-observatory.warning.title;" 
+  width="600"
+  height="500"
   align="center"
   onload="warning_populate(window.arguments[0])"
   >
     <script type="application/x-javascript" src="observatory-xul.js" />
     <image src="chrome://https-everywhere/skin/ssl-observatory-messy.jpg" />
-    <vbox id="warning-container" flex="1">
-      <label style="padding:25px;">&ssl-observatory.warning.text;</label>
+    <vbox flex="1">
+      <vbox id="warning-container" flex="1">
+        <label style="padding:25px 25px 10px;">&ssl-observatory.warning.text;</label>
+        <spacer flex="1" />
+      </vbox>
+
+      <commandgroup>
+        <command id="showcert" oncommand="show_certs()" />
+        <command id="okay" oncommand='window.close()'
+        />
+      </commandgroup>
+
       <spacer flex="1" />
-    </vbox>
-
-    <commandgroup>
-      <command id="showcert" oncommand="show_certs()" />
-      <command id="okay" oncommand='window.close()'
-      />
-    </commandgroup>
-
-    <separator class="thin"/>
+      <label style="padding:5px 25px 0px;">&ssl-observatory.warning.defense;</label>
+      <separator class="thin"/>
       <hbox>
         <spacer flex="2" />
         <button label="&ssl-observatory.warning.showcert;" accesskey="S" 
@@ -31,6 +36,8 @@
                 command='okay'/>
         <spacer flex="2" />
       </hbox>
+      <separator class="thin" />
+    </vbox>
 
     <!--
     <hbox style="padding-top:10px;">
