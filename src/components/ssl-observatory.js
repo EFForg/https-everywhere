@@ -412,6 +412,10 @@ SSLObservatory.prototype = {
   buildRequest: function(params) {
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
+
+    // We do this again in case the user altered about:config
+    var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+    this.submit_url = "https://" + host + "/submit_cert";
     req.open("POST", this.submit_url+this.csrf_nonce, true);
 
     // Send the proper header information along with the request
