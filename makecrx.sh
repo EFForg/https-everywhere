@@ -7,7 +7,7 @@
 #     result be $NEWVERSION. So if the latest is 0.0.7.1, then let
 #     NEWVERSION=0.0.7.2.
 #  2. Run: ./makecrx.sh $NEWVERSION
-#  3. Upload pkg/crx/https-every-$NEWVERSION.crx to Github.
+#  3. Upload pkg/https-every-$NEWVERSION.crx to Github.
 #  4. Run:
 #       git add chromium/updates.xml
 #       git commit -m "release $NEWVERSION"
