@@ -13,7 +13,7 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-BASE_REQ_SIZE=6400;
+BASE_REQ_SIZE=4096;
 
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
