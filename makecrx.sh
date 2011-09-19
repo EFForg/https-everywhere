@@ -1,19 +1,14 @@
-#!/bin/sh
+#!/bin/bash
 
 # How to do a new release:
 # 
-#  1. Visit https://github.com/aaronsw/https-everywhere/downloads
-#     and find the latest version number. Increment it and let the
-#     result be $NEWVERSION. So if the latest is 0.0.7.1, then let
-#     NEWVERSION=0.0.7.2.
-#  2. Run: ./makecrx.sh $NEWVERSION
-#  3. Upload pkg/https-every-$NEWVERSION.crx to Github.
-#  4. Run:
-#       git add chromium/updates.xml
-#       git commit -m "release $NEWVERSION"
-#       git push
+#  1. Run: ./makecrx.sh
+#  2. It'll ask you to name the new version.
 
-VERSION=$1
+echo -n "previous versions: "; curl -s "https://api.github.com/repos/aaronsw/https-everywhere/downloads" | grep name | head -n 3 | sed -e 's/    "name": "https-everywhere-//' | sed -e "s/.crx\",/   /" | tr '\n' ' '; echo
+
+echo -n "New version: "
+read VERSION
 
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
@@ -67,3 +62,11 @@ sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 echo "Built .crx."
+
+python githubhelper.py $VERSION
+
+git add chromium/updates.xml
+git commit -m "release $VERSION"
+git tag -s chrome-$VERSION "release $VERSION"
+git push
+git push --tags
