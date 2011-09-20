@@ -6,7 +6,7 @@ VERSION = sys.argv[1]
 fn = 'pkg/https-everywhere-%s.crx' % VERSION
 
 results = json.load(urllib.urlopen('https://api.github.com/repos/aaronsw/https-everywhere/downloads?access_token=%s' % oauth_token, json.dumps(dict(
-  name=fn,
+  name=fn.split('/')[-1],
   size=os.stat(fn).st_size,
   description='Release of version %s' % VERSION,
   content_type='application/x-chrome-extension'
