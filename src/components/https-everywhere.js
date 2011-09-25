@@ -438,10 +438,12 @@ HTTPSEverywhere.prototype = {
                         .getService(Components.interfaces.nsISupports)
                         .wrappedJSObject;
       // FIXME This prefs code is terrible spaghetti
-      var gbp = ssl_observatory.prefs.getBoolPref;
-      var shown = gbp("extensions.https_everywhere._observatory.popup_shown");
-      if (!shown && ssl_observatory.torbutton_installed) 
-        chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+      var shown = ssl_observatory.myGetBoolPref("popup_shown");
+      // this is relevant if the user just installed torbutton bad had
+      // enabled the Observatory previously
+      var enabled = ssl_observatory.myGetBoolPref("enabled");
+      if (!shown && !enabled && ssl_observatory.torbutton_installed) 
+        this.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     }
     return;
   },
@@ -561,18 +563,18 @@ HTTPSEverywhere.prototype = {
     } catch (e) {
       this.log(WARN, "Couldn't notify observers: " + e);
     }
+  },
+
+  chrome_opener: function(uri) {
+    // we don't use window.open, because we need to work around TorButton's 
+    // state control
+    return CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator) 
+      .getMostRecentWindow('navigator:browser')
+      .open(uri,'', 'chrome,centerscreen' );
   }
 
 };
-
-function chrome_opener(uri) {
-  // we don't use window.open, because we need to work around TorButton's 
-  // state control
-  CC['@mozilla.org/appshell/window-mediator;1']
-    .getService(CI.nsIWindowMediator) 
-    .getMostRecentWindow('navigator:browser')
-    .open(uri,'', 'chrome,centerscreen' );
-} 
 
 var prefs = 0;
 var econsole = 0;

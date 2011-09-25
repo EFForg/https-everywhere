@@ -57,6 +57,13 @@ cd "src"
 echo "<rulesetlibrary>" > chrome/content/rules/default.rulesets
 cat chrome/content/rules/*.xml >> chrome/content/rules/default.rulesets
 echo "</rulesetlibrary>" >> chrome/content/rules/default.rulesets
+echo "Removing whitespaces and comments..."
+sed -i -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' chrome/content/rules/default.rulesets
+sed -i ':a;N;$!ba;s/\n//g' chrome/content/rules/default.rulesets
+sed -i 's/>[[:blank:]]*</></g' chrome/content/rules/default.rulesets
+sed -i 's/[[:blank:]]*to=/ to=/g' chrome/content/rules/default.rulesets
+sed -i 's/[[:blank:]]*from=/ from=/g' chrome/content/rules/default.rulesets
+sed -i 's/ \/>/\/>/g' chrome/content/rules/default.rulesets
 touch -r chrome/content/rules chrome/content/rules/default.rulesets
 rm -f "../$XPI_NAME"
 if [ -n "$CHANGES" ]; then
