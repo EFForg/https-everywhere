@@ -109,6 +109,40 @@ ApplicableList.prototype = {
         this.commandset.removeChild(this.commandset.firstChild);
     }
 
+	var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                     .getService(Components.interfaces.nsIWindowMediator);
+					 
+	var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;	
+	var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
+	
+	if(location.substr(0, 15) == "about:certerror"){
+		//"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
+		  
+		var fromHost = document.getElementById("urlbar").value;	 
+		
+	    //scheme must be trimmed out to check for applicable rulesets		
+		if(fromHost.indexOf("://") != -1)
+			fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
+			
+		//trim off any page locations - we only want the host - e.g. domain.com
+		if(fromHost.indexOf("/") != -1)
+			fromHost = fromHost.substr(0, fromHost.indexOf("/"));
+					   
+		//Search for applicable rulesets for the host listed in the location bar
+		var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);		
+	  
+		https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
+		o_httpsprefs = https_everywhere.get_prefs();
+		
+		for (var i = 0 ; i < alist.length ; i++){
+			//For each applicable rulset, determine active/inactive, and append to proper list.
+			if(o_httpsprefs.getBoolPref(alist[i].name))
+				this.active_rule(alist[i]);
+			else
+				this.inactive_rule(alist[i]);					
+		}	
+	}	
+	
     // add all applicable commands
     for(var x in this.breaking) 
       this.add_command(this.breaking[x]); 
