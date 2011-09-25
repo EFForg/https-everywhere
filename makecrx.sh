@@ -67,6 +67,6 @@ python githubhelper.py $VERSION
 
 git add chromium/updates.xml
 git commit -m "release $VERSION"
-git tag -s chrome-$VERSION "release $VERSION"
+git tag -u BBB4F59D -s chrome-$VERSION -m "release $VERSION"
 git push
 git push --tags
