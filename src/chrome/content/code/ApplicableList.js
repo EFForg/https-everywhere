@@ -202,7 +202,7 @@ ApplicableList.prototype = {
 
     // set the label
     var label = this.document.createElement('label');
-    label.setAttribute('value', rule.name);
+    label.setAttribute('value', "   " + rule.name);
     
     // put them in an hbox, and put the hbox in the menuitem
     var hbox = this.document.createElement('hbox');
