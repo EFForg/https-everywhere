@@ -24,8 +24,8 @@ do
     echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
 done
 echo '];' >> pkg/crx/rule_list.js
-sed -ie "s/VERSION/$VERSION/g" pkg/crx/manifest.json
-sed -ie "s/VERSION/$VERSION/g" pkg/crx/updates.xml
+sed -i "" -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
+sed -i "" -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 
 ## from https://code.google.com/chrome/extensions/crx.html
 
