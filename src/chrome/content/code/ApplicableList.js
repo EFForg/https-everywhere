@@ -115,7 +115,7 @@ ApplicableList.prototype = {
 	var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;	
 	var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
 	
-	if(location.substr(0, 15) == "about:certerror"){
+	if(location.substr(0, 6) == "about:"){
 		//"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
 		  
 		var fromHost = document.getElementById("urlbar").value;	 
