@@ -1,13 +1,7 @@
-<!-- www.wikisomething.org is generally a valid
-     domain containing general information on a project and is
-     simply not available at all in HTTPS.  Everything with a /wiki
-     suffix, however, is a language-specific page that is available in
-     HTTPS.  Hence these rules avoid redirecting www.wikisomething.org,
-     while redirecting all language-specific subdomains.  If you
-     navigate first to the WWW page, you could be vulnerable to SSL
-     stripping, but if you succeed in submitting a query from there
-     in a specific language without interference, you'll subsequently
-     be protected.  -->
+<!-- Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
+     URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
+     longer the case, see [TODO link to Ryan's blog post when published], so this file is a lot
+     simpler these days. -->
 
 <ruleset name="Wikipedia">
   <target host="*.wikipedia.org" />
@@ -46,12 +40,8 @@
   <rule from="^http://([^@:/]+\.)?wik(ipedia|inews|isource|ibooks|iquote|iversity|tionary)\.org/"
           to="https://$1wik$2.org/" />
 
-  <rule from="^http://(meta|commons|incubator|species|outreach|strategy|usability|wikimania|wikimania200[5-9]|wikimania201[0-2]|test)\.wikimedia\.org/(w|wiki)/"
-          to="https://secure.wikimedia.org/wikipedia/$1/$2/"/>
-  <rule from="^http://(meta|commons|incubator|species|outreach|strategy|usability|wikimania|wikimania200[5-9]|wikimania201[0-2]|test)\.wikimedia\.org/\?title="
-          to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
-  <rule from="^http://(meta|commons|incubator|species|outreach|strategy|usability|wikimania|wikimania200[5-9]|wikimania201[0-2]|test)\.wikimedia\.org/?$"
-          to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/>
+  <rule from="^http://(meta|commons|incubator|species|outreach|strategy|usability|wikimania|wikimania200[5-9]|wikimania201[0-2]|test)\.wikimedia\.org/"
+	  to="https://$1.wikimedia.org/"/>
   
 
   <rule from="^http://(www\.)?mediawiki\.org/" 
