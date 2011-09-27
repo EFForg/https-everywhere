@@ -221,7 +221,7 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
-      Components.interfaces.nsIContentPolicy,
+      //Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
@@ -489,7 +489,7 @@ HTTPSEverywhere.prototype = {
   // These implement the nsIContentPolicy API; they allow both yes/no answers
   // to "should this load?", but also allow us to change the thing.
 
-  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
+  /*shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
     if (aContentType == 11) {
       try {
         this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
@@ -508,7 +508,7 @@ HTTPSEverywhere.prototype = {
 
   shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra) {
     return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
-  },
+  },*/
 
   get_prefs: function() {
       // get our preferences branch object
