@@ -203,7 +203,8 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();
+    fstream.close();	
+    data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
       data = data.replace(/<\?xml[^>]*\?>/, ""); 
       var xmlrulesets = XML(data);
