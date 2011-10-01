@@ -20,12 +20,11 @@ if [ -n "$1" ]; then
 	BRANCH=$(git branch | head -n 1 | cut -d \  -f 2-)
 	SUBDIR=checkout
 	[ -d $SUBDIR ] || mkdir $SUBDIR
-	cp --recursive --archive .git $SUBDIR
+	cp -r -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
 fi
 
-if false; then
 if ./trivial-validate src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
@@ -33,7 +32,6 @@ then
 else
   echo ERROR: Validation of rulesets failed. >&2
   exit 1
-fi
 fi
 
 if [ -n "$1" ]; then
@@ -43,7 +41,7 @@ else
 fi
 
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
-mkdir --parents $XPI_NAME
+mkdir -p $XPI_NAME
 rmdir $XPI_NAME
 
 cd "src"
@@ -53,9 +51,9 @@ echo "</rulesetlibrary>" >> chrome/content/rules/default.rulesets
 echo "Removing whitespaces and comments..."
 sed -i -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' chrome/content/rules/default.rulesets
 sed -i ':a;N;$!ba;s/\n//g' chrome/content/rules/default.rulesets
-sed -i 's/>[[:blank:]]*</></g' chrome/content/rules/default.rulesets
-sed -i 's/[[:blank:]]*to=/ to=/g' chrome/content/rules/default.rulesets
-sed -i 's/[[:blank:]]*from=/ from=/g' chrome/content/rules/default.rulesets
+sed -i 's/>[ 	]*</></g' chrome/content/rules/default.rulesets
+sed -i 's/[ 	]*to=/ to=/g' chrome/content/rules/default.rulesets
+sed -i 's/[ 	]*from=/ from=/g' chrome/content/rules/default.rulesets
 sed -i 's/ \/>/\/>/g' chrome/content/rules/default.rulesets
 touch -r chrome/content/rules chrome/content/rules/default.rulesets
 rm -f "../$XPI_NAME"
@@ -66,8 +64,8 @@ if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
-  printf >&2 "Total included rules: $(ls chrome/content/rules/*.xml | wc -l)\n"
-  printf >&2 "Rules disabled by default: $(grep -lr default_off chrome/content/rules | wc -l)\n"
+  printf >&2 "Total included rules: $(find -name "chrome/content/rules/*.xml" | wc -l)\n"
+  printf >&2 "Rules disabled by default: $(grep -lrc default_off chrome/content/rules)\n"
   printf >&2 "Created %s\n" "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
     cd ../..
