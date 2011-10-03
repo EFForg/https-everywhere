@@ -34,6 +34,15 @@ else
   exit 1
 fi
 
+if ./compare-locales.sh >&2
+then
+  echo Validation of included locales completed. >&2
+  echo >&2
+else
+  echo ERROR: Validation of locales failed. >&2
+  exit 1
+fi
+
 if [ -n "$1" ]; then
     VERSION="$1"
 else
