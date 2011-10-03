@@ -25,7 +25,7 @@ if [ -n "$1" ]; then
 	git reset --hard "$1"
 fi
 
-if ./trivial-validate src/chrome/content/rules >&2
+if ./trivial-validate.py src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
   echo >&2
