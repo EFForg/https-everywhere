@@ -283,7 +283,7 @@ SSLObservatory.prototype = {
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
         if (pbs.privateBrowsingEnabled) return false;
-      } catch (e) { /* old browser */ }
+      } catch (e) { /* seamonkey or old firefox */ }
     }
     return true;
   },
