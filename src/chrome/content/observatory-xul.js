@@ -6,10 +6,10 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
                     .getService(Components.interfaces.nsISupports)
                     .wrappedJSObject;
-obsprefs = ssl_observatory.prefs;
+var obsprefs = ssl_observatory.prefs;
 
 const pref_prefix = "extensions.ssl_observatory.";
 
