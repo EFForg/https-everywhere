@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 
 import sys, re, os
-from lxml import etree
+
+try:
+    from lxml import etree
+except ImportError:
+    sys.stderr.write("** Could not import lxml!  Rule validation SKIPPED.\n")
+    sys.stderr.write("** Caution: A resulting build MAY CONTAIN INVALID RULES.\n")
+    sys.stderr.write("** Please install libxml2 and lxml to permit validation!\n")
+    sys.exit(0)
 
 if len(sys.argv) > 1:
    try:
