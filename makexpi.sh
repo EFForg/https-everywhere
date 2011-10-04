@@ -20,7 +20,7 @@ if [ -n "$1" ]; then
 	BRANCH=$(git branch | head -n 1 | cut -d \  -f 2-)
 	SUBDIR=checkout
 	[ -d $SUBDIR ] || mkdir $SUBDIR
-	cp -r -a .git $SUBDIR
+	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
 fi
@@ -34,13 +34,16 @@ else
   exit 1
 fi
 
-if ./compare-locales.sh >&2
+if [ -x ./compare-locales.sh ] >&2
 then
-  echo Validation of included locales completed. >&2
-  echo >&2
-else
-  echo ERROR: Validation of locales failed. >&2
-  exit 1
+  if ./compare-locales.sh >&2
+  then
+    echo Validation of included locales completed. >&2
+    echo >&2
+  else
+    echo ERROR: Validation of locales failed. >&2
+    exit 1
+  fi
 fi
 
 if [ -n "$1" ]; then
@@ -50,8 +53,8 @@ else
 fi
 
 XPI_NAME="pkg/$APP_NAME-$VERSION.xpi"
-mkdir -p $XPI_NAME
-rmdir $XPI_NAME
+mkdir -p pkg
+rm $XPI_NAME
 
 cd "src"
 echo "<rulesetlibrary>" > chrome/content/rules/default.rulesets
@@ -73,8 +76,8 @@ if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
-  printf >&2 "Total included rules: $(find -name "chrome/content/rules/*.xml" | wc -l)\n"
-  printf >&2 "Rules disabled by default: $(grep -lrc default_off chrome/content/rules)\n"
+  printf >&2 "Total included rules: $(find chrome/content/rules -name "*.xml" | wc -l)\n"
+  printf >&2 "Rules disabled by default: $(grep -lrc default_off chrome/content/rules | wc -l)\n"
   printf >&2 "Created %s\n" "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
     cd ../..
