@@ -219,6 +219,16 @@ const HTTPS = {
       
     }
   },
+
+  handleInsecureCookieEvent: function(c) {
+    if (HTTPSRules.shouldSecureCookie(null, c)) {
+      this.log(INFO, "Securing cookie from event: " + c.domain + " " + c.name);
+      var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
+                            .getService(Components.interfaces.nsICookieManager);
+      cookieManager.remove(c.host, c.name, c.path, false);
+      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, c.expiry);
+    }
+  },
   
   handleCrossSiteCookies: function(req, origin, browser) {
      

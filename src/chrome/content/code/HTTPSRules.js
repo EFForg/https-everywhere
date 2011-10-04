@@ -506,9 +506,9 @@ const HTTPSRules = {
           }
         }
         if (ruleset.cookierules.length > 0)
-          applicable_list.moot_rule(ruleset);
+          if (applicable_list) applicable_list.moot_rule(ruleset);
       } else if (ruleset.cookierules.length > 0) {
-        applicable_list.inactive_rule(ruleset);
+        if (applicable_list) applicable_list.inactive_rule(ruleset);
         this.log(INFO,"Inactive cookie rule " + ruleset.name);
       }
     }
