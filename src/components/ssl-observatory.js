@@ -245,29 +245,29 @@ SSLObservatory.prototype = {
       if (certchain) {
         var chainEnum = certchain.getChain();
         var chainArray = [];
-	var chainArrayFpStr = '';
-	var fps = [];
+        var chainArrayFpStr = '';
+        var fps = [];
         for(var i = 0; i < chainEnum.length; i++) {
           var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
           chainArray.push(cert);
-	  var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
-	  fps.push(fp);
-	  chainArrayFpStr = chainArrayFpStr + fp;
+          var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+          fps.push(fp);
+          chainArrayFpStr = chainArrayFpStr + fp;
         }
-	var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
-	this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
+        var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+        this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
-	if (this.isChainWhitelisted(chain_hash)) {
-	    this.log(INFO, "This cert chain is whitelisted. Not submitting.");
-	    return;
-	}
-	this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+        if (this.isChainWhitelisted(chain_hash)) {
+            this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+            return;
+        }
+        this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
 
 
         if (subject.URI.port == -1) {
-	    this.submitChain(chainArray, fps, new String(subject.URI.host), subject);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject);
         } else {
-	    this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject);
         }
       }
     }
