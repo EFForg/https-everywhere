@@ -174,7 +174,41 @@ function HTTPSEverywhere() {
 }
 
 
+// nsIContentPolicy interface
+// we use numeric constants for performance sake: 
+const TYPE_OTHER = 1;
+const TYPE_SCRIPT = 2;
+const TYPE_IMAGE = 3;
+const TYPE_STYLESHEET = 4;
+const TYPE_OBJECT = 5;
+const TYPE_DOCUMENT = 6;
+const TYPE_SUBDOCUMENT = 7;
+const TYPE_REFRESH = 8;
+const TYPE_XBL = 9;
+const TYPE_PING = 10;
+const TYPE_XMLHTTPREQUEST = 11;
+const TYPE_OBJECT_SUBREQUEST = 12;
+const TYPE_DTD	= 13;
+const TYPE_FONT = 14;
+const TYPE_MEDIA = 15; 	
+// --------------
+// REJECT_SERVER = -3
+// ACCEPT = 1
 
+
+// Some of these types are known by arbitrary assertion at
+// https://bugzilla.mozilla.org/show_bug.cgi?id=677643#c47
+// TYPE_FONT was required to fix https://trac.torproject.org/projects/tor/ticket/4194
+// TYPE_SUBDOCUMENT was required to fix https://trac.torproject.org/projects/tor/ticket/4149
+// I have NO IDEA why JS won't let me use the constants above in defining this
+const shouldLoadTargets = {
+  1 : true,
+  3 : true,
+  5 : true,
+  12 : true,
+  14 : true,
+  7 : true
+};
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -221,7 +255,7 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
-      //Components.interfaces.nsIContentPolicy,
+      Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
@@ -489,26 +523,23 @@ HTTPSEverywhere.prototype = {
   // These implement the nsIContentPolicy API; they allow both yes/no answers
   // to "should this load?", but also allow us to change the thing.
 
-  /*shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    if (aContentType == 11) {
-      try {
-        this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
-      } catch(e) {
-        this.log(DBUG,"shouldLoad exception");
-      }
-    }
-    var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-    var scheme = unwrappedLocation.scheme;
-    var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-    this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-    if (isHTTP)
-      HTTPS.forceURI(aContentLocation, null, aContext);
+  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
+    //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
+
+    if (shouldLoadTargets[aContentType] != null) {
+      var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
+      var scheme = unwrappedLocation.scheme;
+      var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+      this.log(VERB,"shoulLoad for " + aContentLocation.spec);
+      if (isHTTP)
+        HTTPS.forceURI(aContentLocation, null, aContext);
+    } 
     return true;
   },
 
   shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra) {
     return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
-  },*/
+  },
 
   get_prefs: function() {
       // get our preferences branch object
