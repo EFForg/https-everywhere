@@ -1,6 +1,8 @@
 #!/bin/sh
 # This is a shell script that looks for common problems and typos in rules.
 
+set -o errexit -o noclobber -o nounset
+
 cd "${1:-.}"
 
 if [ "$(echo *.xml)" = '*.xml' ]
@@ -109,13 +111,14 @@ echo
 echo "-- Rules with syntactically invalid regular expressions:"
 for f in *.xml
 do
-    grep from= "$f" | cut -d\" -f2 | egrep -f - 2>/dev/null
-    if [ $? -eq 2 ]
-    then
-        echo "$f"
-        fail=true
-        none=false
-    fi
+    grep from= "$f" | cut -d\" -f2 | egrep -f - 2>/dev/null || {
+        if [ $? -eq 2 ]
+        then
+            echo "$f"
+            fail=1
+            none=false
+        fi
+    }
 done
 $none && echo "(None.)"
 
