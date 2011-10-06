@@ -24,4 +24,4 @@ pref("extensions.https_everywhere._observatory.use_tor_proxy",true);
 pref("extensions.https_everywhere._observatory.alt_roots",false);
 pref("extensions.https_everywhere._observatory.priv_dns",false);
 pref("extensions.https_everywhere._observatory.send_asn",true);
-
+pref("extensions.https_everywhere._observatory.use_whitelist",true);
