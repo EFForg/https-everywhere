@@ -446,7 +446,17 @@ ChannelReplacement.prototype = {
       if ("onChannelRedirect" in sink) sink.onChannelRedirect(oldChan, newChan, flags);
       else sink.asyncOnChannelRedirect(oldChan, newChan, flags, this._redirectCallback);
     } catch(e) {
-      if (!/\(NS_ERROR_NOT_AVAILABLE\)/.test(e.message)) throw e;
+      if (e.toString().indexOf("(NS_ERROR_DOM_BAD_URI)") !== -1 && oldChan.URI.spec !== newChan.URI.spec) {
+        let oldURL = oldChan.URI.spec;
+        try {
+          oldChan.URI.spec = newChan.URI.spec;
+          this._callSink(sink, oldChan, newChan, flags);
+        } catch(e1) {
+          throw e;
+        } finally {
+          oldChan.URI.spec = oldURL;
+        }
+      } else if (e.message.indexOf("(NS_ERROR_NOT_AVAILABLE)") === -1) throw e;
     }
   },
   
