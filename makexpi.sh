@@ -64,7 +64,7 @@ if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
-  printf >&2 "Total included rules: $(find -name "chrome/content/rules/*.xml" | wc -l)\n"
+  printf >&2 "Total included rules: $(find -wholename "chrome/content/rules/*.xml" -printf ' ' | wc -c)\n"
   printf >&2 "Rules disabled by default: $(grep -lrc default_off chrome/content/rules)\n"
   printf >&2 "Created %s\n" "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
