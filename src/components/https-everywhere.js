@@ -448,19 +448,9 @@ HTTPSEverywhere.prototype = {
       dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
                                     CI.nsIWebProgress.NOTIFY_LOCATION);
       this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
-      try {
-        // Firefox >= 4
-        Components.utils.import("resource://gre/modules/AddonManager.jsm");
-        AddonManager.getAddonByID("https-everywhere@eff.org",
-          function(addon) {
-            RuleWriter.addonDir = addon.
-              getResourceURI("").QueryInterface(CI.nsIFileURL).file;
-            HTTPSRules.init();
-          });
-      } catch(e) {
-        // Firefox < 4
-        HTTPSRules.init();
-      }
+
+      HTTPSRules.init();
+
       Thread.hostRunning = true;
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);

@@ -141,7 +141,6 @@ RuleSet.prototype = {
 };
 
 const RuleWriter = {
-  addonDir: false,
 
   getCustomRuleDir: function() {
     var loc = "ProfD";  // profile directory
@@ -161,21 +160,47 @@ const RuleWriter = {
     return file;
   },
 
+  chromeToPath: function (aPath) {
+    if (!aPath || !(/^chrome:/.test(aPath)))
+       return; //not a chrome url
+
+    var ios =
+      CC['@mozilla.org/network/io-service;1']
+      .getService(CI.nsIIOService);
+    var uri = ios.newURI(aPath, "UTF-8", null);
+    var cr =
+      CC['@mozilla.org/chrome/chrome-registry;1']
+      .getService(CI.nsIChromeRegistry);
+    var rv = cr.convertChromeURL(uri).spec;
+
+    if (/^file:/.test(rv))
+      rv = this.urlToPath(rv);
+    else
+      rv = this.urlToPath("file://"+rv);
+
+    return rv;
+  },
+
+  urlToPath: function (aPath) {
+    if (!aPath || !/^file:/.test(aPath))
+      return ;
+
+    var ph =
+      CC["@mozilla.org/network/protocol;1?name=file"]
+      .createInstance(CI.nsIFileProtocolHandler);
+    var rv = ph.getFileFromURLSpec(aPath).path;
+
+    return rv;
+  },
+
   getRuleDir: function() {
-    if (!this.addonDir)
-      try {
-        // Firefox < 4
-        this.addonDir = CC["@mozilla.org/extensions/manager;1"].
-          getService(CI.nsIExtensionManager).
-          getInstallLocation("https-everywhere@eff.org").
-          getItemFile("https-everywhere@eff.org", "");
-      } catch(e) {
-        // Firefox >= 4 (this should not be reached)
-      }
-    var file = this.addonDir.clone();
-    file.append("chrome");
-    file.append("content");
-    file.append("rules");
+    loc = "chrome://https-everywhere/content/rules/";
+
+    var file =
+      CC["@mozilla.org/file/local;1"]
+      .createInstance(CI.nsILocalFile);  
+    file.initWithPath(this.chromeToPath(loc));
+
     if (!file.isDirectory()) {
       // XXX: Arg, death!
       this.log(WARN,"Catastrophic failure: extension directory is not a directory");
