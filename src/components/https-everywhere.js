@@ -436,17 +436,17 @@ HTTPSEverywhere.prototype = {
       if (data == "added" || data == "changed") {
         // subject can also be an nsIArray! bleh.
         try {
-          subject.QueryInterface(Ci.nsIArray);
+          subject.QueryInterface(CI.nsIArray);
           var elems = subject.enumerate();
           while (elems.hasMoreElements()) {
             var cookie = elems.getNext()
-                            .QueryInterface(Ci.nsICookie2);
+                            .QueryInterface(CI.nsICookie2);
             if (!cookie.isSecure) {
               HTTPS.handleInsecureCookie(cookie);
             }
           }
         } catch(e) {
-          subject.QueryInterface(Ci.nsICookie2);
+          subject.QueryInterface(CI.nsICookie2);
           if(!subject.isSecure) {
             HTTPS.handleInsecureCookie(subject);
           }

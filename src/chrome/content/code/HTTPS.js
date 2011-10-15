@@ -220,13 +220,15 @@ const HTTPS = {
     }
   },
 
-  handleInsecureCookieEvent: function(c) {
+  handleInsecureCookie: function(c) {
     if (HTTPSRules.shouldSecureCookie(null, c)) {
       this.log(INFO, "Securing cookie from event: " + c.domain + " " + c.name);
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
-                            .getService(Components.interfaces.nsICookieManager);
+                            .getService(Components.interfaces.nsICookieManager2);
+      //some braindead cookies apparently use umghzabilliontrabilions
+      var expiry = Math.min(c.expiry, Math.pow(2,31))
       cookieManager.remove(c.host, c.name, c.path, false);
-      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, c.expiry);
+      cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
     }
   },
   
