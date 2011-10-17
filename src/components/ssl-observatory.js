@@ -174,6 +174,10 @@ SSLObservatory.prototype = {
       this.client_asn = -1;
       return;
     }
+    else if (!this.torbutton_installed) {
+      this.client_asn = -2;
+      return;
+    }
     return;
   },
 
@@ -378,6 +382,7 @@ SSLObservatory.prototype = {
     reqParams.push("domain="+domain);
     reqParams.push("server_ip=-1");
     if (this.myGetBoolPref("testing")) {
+      reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
       reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
