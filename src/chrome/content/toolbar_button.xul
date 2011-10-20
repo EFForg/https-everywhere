@@ -8,13 +8,10 @@
 
 <overlay id="https-everywhere-button-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://https-everywhere/content/toolbar_button.js"/>
-
-  <!-- this works in Firefox, we need a Seamonkey version too... -->
-  <menupopup id="menu_ToolsPopup" onpopupshowing="stitch_context_menu()">
-    <menu id="https-everywhere-menu" label="&https-everywhere.about.ext_name;"> 
-      <!-- "https-everywhere-context" below gets .cloneNode()ed in here -->
-    </menu>
-  </menupopup>
+  
+  <toolbar id="nav-bar">
+    <popup id="https-everywhere-context-menu"/>
+  </toolbar>
 
   <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton 
@@ -27,11 +24,7 @@
       buttonstyle="pictures"
       type="menu">
 
-      <menupopup id="https-everywhere-context" onpopupshowing="show_applicable_list(this)">
-        <!-- entries will be written here by ApplicableList.populate_menu() -->
-        <menuseparator />
-        <menuitem label="&https-everywhere.menu.about;" command="https-everywhere-menuitem-about" />
-      </menupopup>
+      <menupopup id="https-everywhere-context" onpopupshowing="show_applicable_list()"></menupopup>
     </toolbarbutton>
   </toolbarpalette>
   <commandset>

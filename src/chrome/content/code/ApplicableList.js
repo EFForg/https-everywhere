@@ -65,7 +65,7 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(document, menupopup, weird) {
+  populate_menu: function(document, weird) {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
@@ -74,7 +74,7 @@ ApplicableList.prototype = {
     this.document = document;
    
     // get the menu popup
-    this.menupopup = menupopup;
+    this.menupopup = document.getElementById('https-everywhere-context');
 
     // empty it all of its menuitems
     while(this.menupopup.firstChild) {
