@@ -174,7 +174,41 @@ function HTTPSEverywhere() {
 }
 
 
+// nsIContentPolicy interface
+// we use numeric constants for performance sake: 
+const TYPE_OTHER = 1;
+const TYPE_SCRIPT = 2;
+const TYPE_IMAGE = 3;
+const TYPE_STYLESHEET = 4;
+const TYPE_OBJECT = 5;
+const TYPE_DOCUMENT = 6;
+const TYPE_SUBDOCUMENT = 7;
+const TYPE_REFRESH = 8;
+const TYPE_XBL = 9;
+const TYPE_PING = 10;
+const TYPE_XMLHTTPREQUEST = 11;
+const TYPE_OBJECT_SUBREQUEST = 12;
+const TYPE_DTD	= 13;
+const TYPE_FONT = 14;
+const TYPE_MEDIA = 15; 	
+// --------------
+// REJECT_SERVER = -3
+// ACCEPT = 1
 
+
+// Some of these types are known by arbitrary assertion at
+// https://bugzilla.mozilla.org/show_bug.cgi?id=677643#c47
+// TYPE_FONT was required to fix https://trac.torproject.org/projects/tor/ticket/4194
+// TYPE_SUBDOCUMENT was required to fix https://trac.torproject.org/projects/tor/ticket/4149
+// I have NO IDEA why JS won't let me use the constants above in defining this
+const shouldLoadTargets = {
+  1 : true,
+  3 : true,
+  5 : true,
+  12 : true,
+  14 : true,
+  7 : true
+};
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -396,6 +430,28 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "http-on-examine-merged-response") {
       this.log(DBUG, "Got http-on-examine-merged-response ");
       HTTPS.handleSecureCookies(channel);
+    } else if (topic == "cookie-changed") {
+      // Javascript can add cookies via document.cookie that are insecure.
+      // It might also be able to 
+      if (data == "added" || data == "changed") {
+        // subject can also be an nsIArray! bleh.
+        try {
+          subject.QueryInterface(CI.nsIArray);
+          var elems = subject.enumerate();
+          while (elems.hasMoreElements()) {
+            var cookie = elems.getNext()
+                            .QueryInterface(CI.nsICookie2);
+            if (!cookie.isSecure) {
+              HTTPS.handleInsecureCookie(cookie);
+            }
+          }
+        } catch(e) {
+          subject.QueryInterface(CI.nsICookie2);
+          if(!subject.isSecure) {
+            HTTPS.handleInsecureCookie(subject);
+          }
+        }
+      }
     } else if (topic == "app-startup") {
       this.log(DBUG,"Got app-startup");
     } else if (topic == "profile-before-change") {
@@ -406,6 +462,7 @@ HTTPSEverywhere.prototype = {
       Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
+      OS.addObserver(this, "cookie-changed", false);
       OS.addObserver(this, "http-on-modify-request", false);
       OS.addObserver(this, "http-on-examine-merged-response", false);
       OS.addObserver(this, "http-on-examine-response", false);
@@ -414,19 +471,9 @@ HTTPSEverywhere.prototype = {
       dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
                                     CI.nsIWebProgress.NOTIFY_LOCATION);
       this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
-      try {
-        // Firefox >= 4
-        Components.utils.import("resource://gre/modules/AddonManager.jsm");
-        AddonManager.getAddonByID("https-everywhere@eff.org",
-          function(addon) {
-            RuleWriter.addonDir = addon.
-              getResourceURI("").QueryInterface(CI.nsIFileURL).file;
-            HTTPSRules.init();
-          });
-      } catch(e) {
-        // Firefox < 4
-        HTTPSRules.init();
-      }
+
+      HTTPSRules.init();
+
       Thread.hostRunning = true;
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
@@ -490,19 +537,16 @@ HTTPSEverywhere.prototype = {
   // to "should this load?", but also allow us to change the thing.
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    if (aContentType == 11) {
-      try {
-        this.log(DBUG, "shouldLoad: "+aContentLocation.spec);
-      } catch(e) {
-        this.log(DBUG,"shouldLoad exception");
-      }
-    }
-    var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-    var scheme = unwrappedLocation.scheme;
-    var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-    this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-    if (isHTTP)
-      HTTPS.forceURI(aContentLocation, null, aContext);
+    //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
+
+    if (shouldLoadTargets[aContentType] != null) {
+      var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
+      var scheme = unwrappedLocation.scheme;
+      var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+      this.log(VERB,"shoulLoad for " + aContentLocation.spec);
+      if (isHTTP)
+        HTTPS.forceURI(aContentLocation, null, aContext);
+    } 
     return true;
   },
 

@@ -44,6 +44,8 @@ const INCLUDE = function(name) {
 }
 
 INCLUDE('Root-CAs');
+INCLUDE('sha256');
+INCLUDE('X509ChainWhitelist');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]
@@ -63,9 +65,6 @@ function SSLObservatory() {
   // Clear this on cookies-cleared observer event
   this.already_submitted = {};
   OS.addObserver(this, "cookie-changed", false);
-
-  // XXX: Read these from a file? Or hardcode them?
-  this.popular_fps = {};
 
   // The url to submit to
   var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
@@ -212,7 +211,6 @@ SSLObservatory.prototype = {
     this.getClientASN();
   },
 
-
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
@@ -247,15 +245,33 @@ SSLObservatory.prototype = {
       if (certchain) {
         var chainEnum = certchain.getChain();
         var chainArray = [];
+        var chainArrayFpStr = '';
+        var fps = [];
         for(var i = 0; i < chainEnum.length; i++) {
           var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
           chainArray.push(cert);
+          var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+          fps.push(fp);
+          chainArrayFpStr = chainArrayFpStr + fp;
         }
+        var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+        this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
+
+	if(!this.myGetBoolPref("use_whitelist")) {
+	  this.log(WARN, "Not using whitelist to filter cert chains.");
+	}
+        else if (this.isChainWhitelisted(chain_hash)) {
+          this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+          return;
+        }
+	else {
+          this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+	}
 
         if (subject.URI.port == -1) {
-          this.submitChain(chainArray, new String(subject.URI.host), subject);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject);
         } else {
-          this.submitChain(chainArray, subject.URI.host+":"+subject.URI.port, subject);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject);
         }
       }
     }
@@ -283,7 +299,7 @@ SSLObservatory.prototype = {
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
         if (pbs.privateBrowsingEnabled) return false;
-      } catch (e) { /* old browser */ }
+      } catch (e) { /* seamonkey or old firefox */ }
     }
     return true;
   },
@@ -293,21 +309,29 @@ SSLObservatory.prototype = {
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
-  submitChain: function(certArray, domain, channel) {
+  isChainWhitelisted: function(chainhash) {
+    if (X509ChainWhitelist == null) {
+      this.log(WARN, "Could not find whitelist of popular certificate chains, so ignoring whitelist");
+      return false;
+    }
+    if (X509ChainWhitelist[chainhash] != null) {
+      return true;
+    }
+    return false;
+  },
+
+  submitChain: function(certArray, fps, domain, channel) {
     var base64Certs = [];
-    var fps = [];
     var rootidx = -1;
 
     for (var i = 0; i < certArray.length; i++) {
-      var fp = (certArray[i].md5Fingerprint+certArray[i].sha1Fingerprint).replace(":", "", "g");
-      fps.push(fp);
       if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
         this.log(INFO, "Got root cert at position: "+i);
         rootidx = i;
       }
     }
 
-    if (!this.myGetBoolPref("alt_roots"))
+    if (!this.myGetBoolPref("alt_roots")) {
       if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
         if (rootidx == -1) {
           rootidx = fps.length-1;
@@ -316,14 +340,26 @@ SSLObservatory.prototype = {
                  +domain+" with root "+fps[rootidx]);
         return;
       }
+    } else {
+      // Convergence currently performs MITMs against the Firefox in order to
+      // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
+      // end-entity cert produced by Convergence contains a copy of the real
+      // end-entity cert inside an X509v3 extension.  For now we submit the
+      // synthetic end-entity cert but avoid the root CA cert above it, which would
+      // function like a tracking ID.  If anyone knows how to parse X509v3
+      // extensions in JS, we should do that instead.
+      var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
+      if (convergence) 
+        convergence = convergence.getService().wrappedJSObject;
+      if (convergence && convergence.enabled) {
+        this.log(INFO, "Convergence uses its own root CAs; not submitting those");
+        certArray = certArray.slice(0,1);
+        fps = fps.slice(0,1);
+      }
+    }
 
     if (fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
-      return;
-    }
-
-    if (fps[0] in this.popular_fps) {
-      this.log(INFO, "Excluding popuar cert for "+domain);
       return;
     }
 
