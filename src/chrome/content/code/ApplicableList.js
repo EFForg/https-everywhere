@@ -80,7 +80,12 @@ ApplicableList.prototype = {
     while(this.menupopup.firstChild.tagName != "menuseparator") {
       this.menupopup.removeChild(this.menupopup.firstChild);
     }
-
+	
+	// add global enable/disable toggle button	
+	var enableLabel = document.createElement('menuitem');
+	enableLabel.setAttribute('label', 'Enable / Disable HTTPS Everywhere');
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
+		
     // add the label at the top
     var any_rules = false
     for (var x in this.all) {
@@ -92,7 +97,7 @@ ApplicableList.prototype = {
         label.setAttribute('label', 'Enable / Disable Rules');
     } else {
       if (!weird) label.setAttribute('label', '(No Rules for This Page)');
-      else        label.setAttribute('label', '(Rules for This Page Uknown)');
+      else        label.setAttribute('label', '(Rules for This Page Unknown)');
     }
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
 
@@ -166,8 +171,9 @@ ApplicableList.prototype = {
         this.add_menuitem(this.active[x], 'active');
     for (var x in this.breaking)
       this.add_menuitem(this.breaking[x], 'breaking');
-    
+	  
     this.prepend_child(label);
+    this.prepend_child(enableLabel);
   },
 
   prepend_child: function(node) {
