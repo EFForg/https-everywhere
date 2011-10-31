@@ -158,6 +158,7 @@ function HTTPSEverywhere() {
   this.https_rules = HTTPSRules;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
+  this.globalEnable = false;
 
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -170,6 +171,7 @@ function HTTPSEverywhere() {
   this.obsService.addObserver(this, "profile-before-change", false);
   this.obsService.addObserver(this, "profile-after-change", false);
   this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+  this.globalEnable = true;
   return;
 }
 
@@ -616,8 +618,30 @@ HTTPSEverywhere.prototype = {
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', 'chrome,centerscreen' );
-  }
+  },
 
+  toggleEnabledState: function() {
+	if(this.globalEnable){			  
+		this.obsService.removeObserver(this, "profile-before-change", false);
+		this.obsService.removeObserver(this, "profile-after-change", false);
+		this.obsService.removeObserver(this, "sessionstore-windows-restored", false);		
+		OS.removeObserver(this, "cookie-changed", false);
+		OS.removeObserver(this, "http-on-modify-request", false);
+		OS.removeObserver(this, "http-on-examine-merged-response", false);
+		OS.removeObserver(this, "http-on-examine-response", false);  
+		this.globalEnable = false;
+	}
+	else{		  
+		this.obsService.addObserver(this, "profile-before-change", false);
+		this.obsService.addObserver(this, "profile-after-change", false);
+		this.obsService.addObserver(this, "sessionstore-windows-restored", false);		
+		OS.addObserver(this, "cookie-changed", false);
+		OS.addObserver(this, "http-on-modify-request", false);
+		OS.addObserver(this, "http-on-examine-merged-response", false);
+		OS.addObserver(this, "http-on-examine-response", false);  
+		this.globalEnable = true;
+	}
+  }  
 };
 
 var prefs = 0;
