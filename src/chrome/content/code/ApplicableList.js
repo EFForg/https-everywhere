@@ -72,6 +72,9 @@ ApplicableList.prototype = {
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
+	
+	var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;	  
+	var o_httpsprefs = https_everywhere.get_prefs();
    
     // get the menu popup
     this.menupopup = menupopup;
@@ -82,10 +85,17 @@ ApplicableList.prototype = {
     }
 	
 	// add global enable/disable toggle button	
+	var strings = document.getElementById("HttpsEverywhereStrings");
+	
 	var enableLabel = document.createElement('menuitem');
-	enableLabel.setAttribute('label', 'Enable / Disable HTTPS Everywhere');
-    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
+	var text = strings.getString("https-everywhere.menu.globalDisable");
+	if(!o_httpsprefs.getBoolPref("globalEnabled"))
+		text = strings.getString("https-everywhere.menu.globalEnable");
 		
+	enableLabel.setAttribute('label', text);
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');	
+	this.prepend_child(enableLabel);
+	
     // add the label at the top
     var any_rules = false
     for (var x in this.all) {
@@ -135,9 +145,6 @@ ApplicableList.prototype = {
 					   
 		//Search for applicable rulesets for the host listed in the location bar
 		var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);		
-	  
-		https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
-		o_httpsprefs = https_everywhere.get_prefs();
 		
 		for (var i = 0 ; i < alist.length ; i++){
 			//For each applicable rulset, determine active/inactive, and append to proper list.
@@ -158,22 +165,24 @@ ApplicableList.prototype = {
     for(var x in this.inactive) 
       this.add_command(this.inactive[x]);
 
-    // add all the menu items
-    for (var x in this.inactive)
-      this.add_menuitem(this.inactive[x], 'inactive');
-    // rules that are active for some uris are not really moot
-    for (var x in this.moot) 
-      if (!(x in this.active))   
-        this.add_menuitem(this.moot[x], 'moot');
-    // break once break everywhere
-    for (var x in this.active) 
-      if (!(x in this.breaking))
-        this.add_menuitem(this.active[x], 'active');
-    for (var x in this.breaking)
-      this.add_menuitem(this.breaking[x], 'breaking');
-	  
-    this.prepend_child(label);
-    this.prepend_child(enableLabel);
+	if(o_httpsprefs.getBoolPref("globalEnabled")){
+       // add all the menu items
+       for (var x in this.inactive)
+          this.add_menuitem(this.inactive[x], 'inactive');
+       // rules that are active for some uris are not really moot
+       for (var x in this.moot) 
+          if (!(x in this.active))   
+              this.add_menuitem(this.moot[x], 'moot');
+       // break once break everywhere
+       for (var x in this.active) 
+          if (!(x in this.breaking))
+              this.add_menuitem(this.active[x], 'active');
+	   for (var x in this.breaking)
+		  this.add_menuitem(this.breaking[x], 'breaking');
+		  
+       this.prepend_child(label);
+	}
+	
   },
 
   prepend_child: function(node) {
