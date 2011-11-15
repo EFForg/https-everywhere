@@ -102,24 +102,11 @@ function reload_window() {
   // This choice of flags comes from NoScript's quickReload function; not sure
   // if it's optimal
   webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);  
-  
-//The code below works fine for switching between HTTP/HTTPS when reload_window() is called.
-//However, reload_window() is also called for changing rulesets that do not affect page location (but rather content within a page)
-//Maybe add code to determine if a ruleset applies to the domain in the location bar, and reload to the proper scheme if so?
-/*
-	var ioService = Components.classes["@mozilla.org/network/io-service;1"]
-    .getService(Components.interfaces.nsIIOService);
+}
 
-    var uri = gBrowser.getBrowserForDocument(gBrowser.contentDocument).currentURI;	
-	var newURI = "";
-	
-	if(uri.scheme == "https")
-		var newURI = uri.asciiSpec.replace("https://", "http://");
-	else
-		var newURI = uri.asciiSpec.replace("http://", "https://");
-		
-    window.content.wrappedJSObject.location = newURI;
-*/
+function toggleEnabledState(){
+	HTTPSEverywhere.toggleEnabledState();
+	reload_window();	
 }
 
 function open_in_tab(url) {
