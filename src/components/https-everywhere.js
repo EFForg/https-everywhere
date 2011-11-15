@@ -158,12 +158,7 @@ function HTTPSEverywhere() {
   this.https_rules = HTTPSRules;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
-  
-  var prefs = CC["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefService);
-  var branch = prefs.getBranch("extensions.https_everywhere.");
 
-  
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
@@ -172,12 +167,9 @@ function HTTPSEverywhere() {
   // we rewrite.
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
-					
-  if(branch.getBoolPref("globalEnabled")){
-	this.obsService.addObserver(this, "profile-before-change", false);
-	this.obsService.addObserver(this, "profile-after-change", false);
-	this.obsService.addObserver(this, "sessionstore-windows-restored", false);
-  }
+  this.obsService.addObserver(this, "profile-before-change", false);
+  this.obsService.addObserver(this, "profile-after-change", false);
+  this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   return;
 }
 
@@ -470,31 +462,24 @@ HTTPSEverywhere.prototype = {
       Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
-	  
-	  var prefs = CC["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefService);
-	  var branch = prefs.getBranch("extensions.https_everywhere.");
-
-	  if(branch.getBoolPref("globalEnabled")){
-		OS.addObserver(this, "cookie-changed", false);
-		OS.addObserver(this, "http-on-modify-request", false);
-		OS.addObserver(this, "http-on-examine-merged-response", false);
-		OS.addObserver(this, "http-on-examine-response", false);
-		var dls = CC['@mozilla.org/docloaderservice;1']
-			.getService(CI.nsIWebProgress);
-		dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
+      OS.addObserver(this, "cookie-changed", false);
+      OS.addObserver(this, "http-on-modify-request", false);
+      OS.addObserver(this, "http-on-examine-merged-response", false);
+      OS.addObserver(this, "http-on-examine-response", false);
+      var dls = CC['@mozilla.org/docloaderservice;1']
+        .getService(CI.nsIWebProgress);
+      dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
                                     CI.nsIWebProgress.NOTIFY_LOCATION);
-		this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
+      this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
-		HTTPSRules.init();
+      HTTPSRules.init();
 
-		Thread.hostRunning = true;
-		var catman = Components.classes["@mozilla.org/categorymanager;1"]
+      Thread.hostRunning = true;
+      var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
-		// hook on redirections (non persistent, otherwise crashes on 1.8.x)
-		catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
-			SERVICE_CTRID, false, true);
-	  }
+      // hook on redirections (non persistent, otherwise crashes on 1.8.x)
+      catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
+          SERVICE_CTRID, false, true);
     } else if (topic == "sessionstore-windows-restored") {
       var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
                         .getService(Components.interfaces.nsISupports)
@@ -631,43 +616,8 @@ HTTPSEverywhere.prototype = {
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', 'chrome,centerscreen' );
-  },
-
-  toggleEnabledState: function() {
-	if(prefs.getBoolPref("globalEnabled")){	
-		try{	
-			this.obsService.removeObserver(this, "profile-before-change");
-			this.obsService.removeObserver(this, "profile-after-change");
-			this.obsService.removeObserver(this, "sessionstore-windows-restored");		
-			OS.removeObserver(this, "cookie-changed");
-			OS.removeObserver(this, "http-on-modify-request");
-			OS.removeObserver(this, "http-on-examine-merged-response");
-			OS.removeObserver(this, "http-on-examine-response");  
-			
-			prefs.setBoolPref("globalEnabled", false);
-		}
-		catch(e){
-			this.log(WARN, "Couldn't remove observers: " + e);			
-		}
-	}
-	else{	
-		try{	  
-			this.obsService.addObserver(this, "profile-before-change", false);
-			this.obsService.addObserver(this, "profile-after-change", false);
-			this.obsService.addObserver(this, "sessionstore-windows-restored", false);		
-			OS.addObserver(this, "cookie-changed", false);
-			OS.addObserver(this, "http-on-modify-request", false);
-			OS.addObserver(this, "http-on-examine-merged-response", false);
-			OS.addObserver(this, "http-on-examine-response", false);  
-			
-			HTTPSRules.init();			
-			prefs.setBoolPref("globalEnabled", true);
-		}
-		catch(e){
-			this.log(WARN, "Couldn't add observers: " + e);			
-		}
-	}
   }
+
 };
 
 var prefs = 0;

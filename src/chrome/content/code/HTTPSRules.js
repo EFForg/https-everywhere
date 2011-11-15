@@ -455,18 +455,12 @@ const HTTPSRules = {
   },
 
 
-  potentiallyApplicableRulesets: function(host) {  
+  potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
-	try{
-		if (this.targets[host])
-			results = results.concat(this.targets[host]);
-	}
-	catch(e){	
-		this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
-		return [];
-	}
+    if (this.targets[host])
+      results = results.concat(this.targets[host]);
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
