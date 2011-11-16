@@ -41,6 +41,33 @@ function onCookieChanged(changeInfo) {
 
 // This event is needed due to the potential race between cookie permissions
 // update and cookie transmission, becuase the cookie API is non-blocking..
+function onHeadersReceived(details) {
+  var a = document.createElement('a');
+  a.href = details.url;
+  var host = a.hostname;
+
+  // TODO: Verify this with wireshark
+  for (var h in details.responseHeaders) {
+    if (details.responseHeaders[h].name == "Set-Cookie") {
+      var cookie = details.responseHeaders[h].value;
+
+      if ("; Secure" not in cookie) {
+        log(DBUG, "Got insecure cookie header: "+cookie);
+
+        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
+        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookies[c].split("=")[0]})) {
+          details.responseHeaders[h].value = cookie+"; Secure";
+          log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
+        }
+      }
+    }
+  }
+
+  return {responseHeaders:details.responseHeaders};
+}
+
+// This event is needed due to the potential race between cookie permissions
+// update and cookie transmission, becuase the cookie API is non-blocking..
 // It would be less perf impact to have a blocking version of the cookie API
 // available instead.
 function onBeforeSendHeaders(details) {
@@ -68,19 +95,19 @@ function onBeforeSendHeaders(details) {
         }
       }
       details.requestHeaders[h].value = newCookies.join(";");
-      log(INFO, "Got new cookie header: "+details.requestHeaders[h].value);
+      log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
     }
   }
 
   return {requestHeaders:details.requestHeaders};
 }
 
-// XXX: Need content script to alter document.cookie? content script access
-// to document.cookie is synchronous
-
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]}, //{urls: ["*://*/*"]},
                                     ["requestHeaders", "blocking"]);
+// XXX: We probably do want all urls.. or at least http+https+spdy?
+wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http://*/*"]},
+                                    ["responseHeaders", "blocking"]);
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
 </script>
