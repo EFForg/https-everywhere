@@ -16,6 +16,7 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+// XXX: on_by_default
 function RuleSet(set_name, match_rule) {
   this.name = set_name;
   if (match_rule)

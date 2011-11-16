@@ -6,10 +6,20 @@
 var all_rules = new RuleSets();
 var wr = chrome.experimental.webRequest;
 
+// https://code.google.com/chrome/extensions/pageAction.html
+// http://code.google.com/chrome/extensions/extension.html#method-getBackgroundPage
+
+// FIXME: Settings:
+// http://code.google.com/chrome/extensions/trunk/experimental.settings.html
+// or localStorge[key] = value;
+
+var activeTabRules = {};
+
 function onBeforeRequest(details) {
   var a = document.createElement('a');
   a.href = details.url;
 
+  // XXX: Need to store the rule
   var newuri = all_rules.rewriteURI(details.url, a.host);
 
   if (newuri) return {redirectUrl: newuri};
@@ -45,17 +55,19 @@ function onHeadersReceived(details) {
   var a = document.createElement('a');
   a.href = details.url;
   var host = a.hostname;
+        
+  log(DBUG, "Headers received for "+a.href);
 
   // TODO: Verify this with wireshark
   for (var h in details.responseHeaders) {
     if (details.responseHeaders[h].name == "Set-Cookie") {
       var cookie = details.responseHeaders[h].value;
 
-      if ("; Secure" not in cookie) {
+      if (cookie.indexOf("; Secure") == -1) {
         log(DBUG, "Got insecure cookie header: "+cookie);
 
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookies[c].split("=")[0]})) {
+        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookie.split("=")[0]})) {
           details.responseHeaders[h].value = cookie+"; Secure";
           log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
         }
