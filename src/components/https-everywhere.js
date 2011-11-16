@@ -421,9 +421,19 @@ HTTPSEverywhere.prototype = {
     // Top level glue for the nsIObserver API
     var channel = subject;
     //this.log(VERB,"Got observer topic: "+topic);
-
+	
+	if (typeof prefs == "undefined" || prefs == 0) {
+	    try{
+		   this.https_everywhereLog(DBUG, "Setting up log and pref objects");
+		}
+		catch(e){
+		   this.log(WARN, "Could not get prefs: " + e); 
+		}
+    }
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
+	  else if(!prefs.getBoolPref("globalEnabled")) return;
+	  
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       var lst = this.getApplicableListForChannel(channel);
       if (channel.URI.spec in https_everywhere_blacklist) {
@@ -433,12 +443,18 @@ HTTPSEverywhere.prototype = {
       }
       HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
-      this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
-      HTTPS.handleSecureCookies(channel);
+	  if(prefs.getBoolPref("globalEnabled")){
+         this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
+         HTTPS.handleSecureCookies(channel);
+	   }
     } else if (topic == "http-on-examine-merged-response") {
-      this.log(DBUG, "Got http-on-examine-merged-response ");
-      HTTPS.handleSecureCookies(channel);
+	  if(prefs.getBoolPref("globalEnabled")){
+		 this.log(DBUG, "Got http-on-examine-merged-response ");
+         HTTPS.handleSecureCookies(channel);
+	  }
     } else if (topic == "cookie-changed") {
+	  if(!prefs.getBoolPref("globalEnabled"))
+	     return;
       // Javascript can add cookies via document.cookie that are insecure.
       // It might also be able to 
       if (data == "added" || data == "changed") {
@@ -471,11 +487,7 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
 	  
-	  var prefs = CC["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefService);
-	  var branch = prefs.getBranch("extensions.https_everywhere.");
-
-	  if(branch.getBoolPref("globalEnabled")){
+	  if(prefs.getBoolPref("globalEnabled")){
 		OS.addObserver(this, "cookie-changed", false);
 		OS.addObserver(this, "http-on-modify-request", false);
 		OS.addObserver(this, "http-on-examine-merged-response", false);
@@ -512,6 +524,8 @@ HTTPSEverywhere.prototype = {
 
   // nsIChannelEventSink implementation
   onChannelRedirect: function(oldChannel, newChannel, flags) {
+	if(!prefs.getBoolPref("globalEnabled")) return;
+  
     const uri = newChannel.URI;
     this.log(DBUG,"Got onChannelRedirect.");
     if (!(newChannel instanceof CI.nsIHttpChannel)) {
@@ -544,8 +558,10 @@ HTTPSEverywhere.prototype = {
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
-    this.onChannelRedirect(oldChannel, newChannel, flags);
-    callback.onRedirectVerifyCallback(0);
+    if(prefs.getBoolPref("globalEnabled")){
+		this.onChannelRedirect(oldChannel, newChannel, flags);
+		callback.onRedirectVerifyCallback(0);
+	}
   },
 
   // These implement the nsIContentPolicy API; they allow both yes/no answers
@@ -553,15 +569,16 @@ HTTPSEverywhere.prototype = {
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
     //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
-
-    if (shouldLoadTargets[aContentType] != null) {
-      var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-      var scheme = unwrappedLocation.scheme;
-      var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-      this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-      if (isHTTP)
-        HTTPS.forceURI(aContentLocation, null, aContext);
-    } 
+	if(prefs.getBoolPref("globalEnabled")){
+       if (shouldLoadTargets[aContentType] != null) {
+         var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
+         var scheme = unwrappedLocation.scheme;
+         var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
+         this.log(VERB,"shoulLoad for " + aContentLocation.spec);
+         if (isHTTP)
+           HTTPS.forceURI(aContentLocation, null, aContext);
+       } 
+	}
     return true;
   },
 
