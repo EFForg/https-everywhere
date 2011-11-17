@@ -4,11 +4,19 @@
     color: #999999;
     font-weight: bold;
 	white-space: nowrap;
+    cursor: pointer;
+}
+.nowrap-disabled:hover {
+    background: -webkit-linear-gradient(top, #7db9e8 0%,#207cca 49%,#2989d8 50%,#1e5799 100%); /* Chrome10+,Safari5.1+ */
 }
 .nowrap-enabled {
     color: #9AD100;
     font-weight: bold;
 	white-space: nowrap;
+    cursor: pointer;
+}
+.nowrap-enabled:hover {
+    background: -webkit-linear-gradient(top, #7db9e8 0%,#207cca 49%,#2989d8 50%,#1e5799 100%); /* Chrome10+,Safari5.1+ */
 }
 .about {
     font-weight: bold;
@@ -29,7 +37,13 @@ var tab = null;
 
 function toggleRuleLine(e, ruleset) {
   ruleset.active = !ruleset.active;
-  
+
+  if (ruleset.active != ruleset.default_state) {
+    localStorage[ruleset.name] = ruleset.active;
+  } else {
+    delete localStorage[ruleset.name];
+  }
+
   if (ruleset.active) {
     e.className = "nowrap-enabled";
     e.innerHTML = '<img src="tick.png"> '+ruleset.name;

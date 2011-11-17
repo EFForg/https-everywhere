@@ -6,12 +6,17 @@
 var all_rules = new RuleSets();
 var wr = chrome.experimental.webRequest;
 
-// https://code.google.com/chrome/extensions/pageAction.html
-// http://code.google.com/chrome/extensions/extension.html#method-getBackgroundPage
+/*
+for (var v in localStorage) {
+  log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
+}
 
-// FIXME: Settings:
-// http://code.google.com/chrome/extensions/trunk/experimental.settings.html
-// or localStorge[key] = value;
+var rs = all_rules.applicableRulesets("www.google.com");
+for (r in rs) {
+  log(DBUG, rs[r].name +": "+ rs[r].active);
+  log(DBUG, rs[r].name +": "+ rs[r].default_state);
+}
+*/
 
 function AppliedRulesets() {
   this.active_tab_rules = {}
@@ -44,6 +49,7 @@ AppliedRulesets.prototype = {
   }
 };
 
+// FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
 function onBeforeRequest(details) {
@@ -60,7 +66,7 @@ function onBeforeRequest(details) {
   var rs = all_rules.applicableRulesets(a.host);
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (!newuri)
+    if (rs[i].active && !newuri)
       newuri = rs[i]._apply(details.url);
   }
 
@@ -78,7 +84,7 @@ function onCookieChanged(changeInfo) {
                     expirationDate:changeInfo.cookie.expirationDate,
                     storeId:changeInfo.cookie.storeId};
       cookie.secure = true;
-      // XXX: What is with this url noise? are we just supposed to lie?
+      // FIXME: What is with this url noise? are we just supposed to lie?
       if (cookie.domain[0] == ".") {
         cookie.url = "https://www"+cookie.domain+cookie.path;
       } else {
