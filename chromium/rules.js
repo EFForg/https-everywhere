@@ -169,10 +169,10 @@ RuleSets.prototype = {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name))
-            return true;
+            return ruleset;
         }
     }
-    return false;
+    return null;
   },
 
   rewriteURI: function(urispec, host) {

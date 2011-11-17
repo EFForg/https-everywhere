@@ -1,0 +1,69 @@
+<style type="text/css" rel="stylesheet">
+<!--
+.nowrap-disabled {
+    color: #999999;
+    font-weight: bold;
+	white-space: nowrap;
+}
+.nowrap-enabled {
+    color: #9AD100;
+    font-weight: bold;
+	white-space: nowrap;
+}
+.about {
+    font-weight: bold;
+	white-space: nowrap;
+}
+-->	
+</style>
+
+<div id="Settings"></div>
+<div id="AppliedRules"></div>
+<hr>
+<div id="About" class="about">HTTPS Everywhere</div>
+
+<script>
+var backgroundPage = chrome.extension.getBackgroundPage();
+var appliedDiv = document.getElementById("AppliedRules");
+var tab = null;
+
+function toggleRuleLine(e, ruleset) {
+  ruleset.active = !ruleset.active;
+  
+  if (ruleset.active) {
+    e.className = "nowrap-enabled";
+    e.innerHTML = '<img src="tick.png"> '+ruleset.name;
+  } else {
+    e.className = "nowrap-disabled";
+    e.innerHTML = '<img src="tick-red.png"> '+ruleset.name;
+  }
+}
+
+function createRuleLine(ruleset) {
+  var e = document.createElement('div');
+
+  e.onclick = function(ev) { toggleRuleLine(e, ruleset); };
+
+  if (ruleset.active) {
+    e.className = "nowrap-enabled";
+    e.innerHTML = '<img src="tick.png"> '+ruleset.name;
+  } else {
+    e.className = "nowrap-disabled";
+    e.innerHTML = '<img src="tick-red.png"> '+ruleset.name;
+  }
+
+  return e;
+}
+
+function gotTab(tab) {
+  var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
+
+  for (r in rulesets) {
+    appliedDiv.appendChild(createRuleLine(rulesets[r]));
+  }
+}
+
+chrome.tabs.getSelected(null, gotTab);
+
+
+</script>

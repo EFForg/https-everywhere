@@ -13,16 +13,60 @@ var wr = chrome.experimental.webRequest;
 // http://code.google.com/chrome/extensions/trunk/experimental.settings.html
 // or localStorge[key] = value;
 
-var activeTabRules = {};
+function AppliedRulesets() {
+  this.active_tab_rules = {}
+
+  var that = this;
+  chrome.tabs.onRemoved.addListener(function(tabId, info) {
+    that.removeTab(tabId);
+  });
+}
+
+AppliedRulesets.prototype = {
+  addRulesetToTab: function(tabId, ruleset) {
+    if (tabId in this.active_tab_rules) {
+      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+    } else {
+      this.active_tab_rules[tabId] = {};
+      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+    }
+  },
+
+  getRulesets: function(tabId) {
+    if (tabId in this.active_tab_rules)
+      return this.active_tab_rules[tabId];
+    else
+      return null;
+  },
+
+  removeTab: function(tabId) {
+    delete this.active_tab_rules[tabId];
+  }
+};
+
+var activeRulesets = new AppliedRulesets();
 
 function onBeforeRequest(details) {
   var a = document.createElement('a');
   a.href = details.url;
 
-  // XXX: Need to store the rule
-  var newuri = all_rules.rewriteURI(details.url, a.host);
+  if (details.type == "main_frame") {
+    activeRulesets.removeTab(details.tabId);
+  }
 
-  if (newuri) return {redirectUrl: newuri};
+  var newuri = null;
+
+  var i = 0;
+  var rs = all_rules.applicableRulesets(a.host);
+  for(i = 0; i < rs.length; ++i) {
+    activeRulesets.addRulesetToTab(details.tabId, rs[i]);
+    if (!newuri)
+      newuri = rs[i]._apply(details.url);
+  }
+
+  if (newuri) {
+    return {redirectUrl: newuri};
+  }
 }
 
 function onCookieChanged(changeInfo) {
@@ -65,9 +109,12 @@ function onHeadersReceived(details) {
 
       if (cookie.indexOf("; Secure") == -1) {
         log(DBUG, "Got insecure cookie header: "+cookie);
+        var ruleset = null;
 
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookie.split("=")[0]})) {
+        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
+                                                     name:cookie.split("=")[0]}))) {
+          activeRulesets.addRulesetToTab(details.tabId, ruleset);
           details.responseHeaders[h].value = cookie+"; Secure";
           log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
         }
@@ -99,8 +146,11 @@ function onBeforeSendHeaders(details) {
       var cookies = details.requestHeaders[h].value.split(";");
 
       for (var c in cookies) {
+        var ruleset = null;
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookies[c].split("=")[0]})) {
+        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
+                                                     name:cookies[c].split("=")[0]}))) {
+          activeRulesets.addRulesetToTab(details.tabId, ruleset);
           log(INFO, "Woah, we lost the race on updating a cookie: "+details.requestHeaders[h].value);
         } else {
           newCookies.push(cookies[c]);
@@ -114,12 +164,21 @@ function onBeforeSendHeaders(details) {
   return {requestHeaders:details.requestHeaders};
 }
 
+function onResponseStarted(details) {
+  if (this.activeRulesets.getRulesets(details.tabId)) {
+      chrome.pageAction.show(details.tabId);
+  } 
+}
+
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]}, //{urls: ["*://*/*"]},
                                     ["requestHeaders", "blocking"]);
-// XXX: We probably do want all urls.. or at least http+https+spdy?
+// FIXME: We probably do want all urls.. or at least http+https+spdy?
 wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http://*/*"]},
                                     ["responseHeaders", "blocking"]);
+wr.onResponseStarted.addListener(onResponseStarted,
+                                 {urls: ["https://*/*", "http://*/*"]})
+
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
 </script>
