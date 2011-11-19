@@ -52,12 +52,36 @@ AppliedRulesets.prototype = {
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
+var urlBlacklist = {};
+
+// redirect counter workaround
+// TODO: Remove this code if they ever give us a real counter
+var redirectCounter = {};
+
 function onBeforeRequest(details) {
+  if (details.url in urlBlacklist) {
+    return;
+  }
+
   var a = document.createElement('a');
   a.href = details.url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
+  }
+
+  if (details.requestId in redirectCounter) {
+    redirectCounter[details.requestId] += 1;
+    log(DBUG, "Got redirect id "+details.requestId+
+        ": "+redirectCounter[details.requestId]);
+  } else {
+    redirectCounter[details.requestId] = 0;
+  }
+
+  if (redirectCounter[details.requestId] > 9) {
+    log(NOTE, "Redirect counter hit for "+details.url);
+    urlBlacklist[details.url] = true;
+    return;
   }
 
   var newuri = null;
@@ -71,8 +95,10 @@ function onBeforeRequest(details) {
   }
 
   if (newuri) {
+    log(DBUG, "Redirecting from "+a.href+" to "+newuri);
     return {redirectUrl: newuri};
   }
+
 }
 
 function onCookieChanged(changeInfo) {
@@ -106,8 +132,6 @@ function onHeadersReceived(details) {
   a.href = details.url;
   var host = a.hostname;
         
-  log(DBUG, "Headers received for "+a.href);
-
   // TODO: Verify this with wireshark
   for (var h in details.responseHeaders) {
     if (details.responseHeaders[h].name == "Set-Cookie") {
@@ -171,9 +195,19 @@ function onBeforeSendHeaders(details) {
 }
 
 function onResponseStarted(details) {
+  if (details.tabId == -1) {
+    return;
+  }
+
   if (this.activeRulesets.getRulesets(details.tabId)) {
       chrome.pageAction.show(details.tabId);
-  } 
+  }
+
+  // redirect counter workaround
+  // TODO: Remove this code if they ever give us a real counter
+  if (details.requestId in redirectCounter) {
+    delete redirectCounter[details.requestId];
+  }
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
@@ -186,5 +220,6 @@ wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]})
 
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
 
 </script>
