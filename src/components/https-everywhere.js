@@ -421,18 +421,9 @@ HTTPSEverywhere.prototype = {
     // Top level glue for the nsIObserver API
     var channel = subject;
     //this.log(VERB,"Got observer topic: "+topic);
-	
-	if (typeof prefs == "undefined" || prefs == 0) {
-	    try{
-		   this.https_everywhereLog(DBUG, "Setting up log and pref objects");
-		}
-		catch(e){
-		   this.log(WARN, "Could not get prefs: " + e); 
-		}
-    }
+
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
-	  else if(!prefs.getBoolPref("globalEnabled")) return;
 	  
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       var lst = this.getApplicableListForChannel(channel);
@@ -443,18 +434,12 @@ HTTPSEverywhere.prototype = {
       }
       HTTPS.replaceChannel(lst, channel);
     } else if (topic == "http-on-examine-response") {
-	  if(prefs.getBoolPref("globalEnabled")){
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
-	   }
     } else if (topic == "http-on-examine-merged-response") {
-	  if(prefs.getBoolPref("globalEnabled")){
 		 this.log(DBUG, "Got http-on-examine-merged-response ");
          HTTPS.handleSecureCookies(channel);
-	  }
     } else if (topic == "cookie-changed") {
-	  if(!prefs.getBoolPref("globalEnabled"))
-	     return;
       // Javascript can add cookies via document.cookie that are insecure.
       // It might also be able to 
       if (data == "added" || data == "changed") {
@@ -492,6 +477,7 @@ HTTPSEverywhere.prototype = {
 		OS.addObserver(this, "http-on-modify-request", false);
 		OS.addObserver(this, "http-on-examine-merged-response", false);
 		OS.addObserver(this, "http-on-examine-response", false);
+		
 		var dls = CC['@mozilla.org/docloaderservice;1']
 			.getService(CI.nsIWebProgress);
 		dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
@@ -523,9 +509,7 @@ HTTPSEverywhere.prototype = {
   },
 
   // nsIChannelEventSink implementation
-  onChannelRedirect: function(oldChannel, newChannel, flags) {
-	if(!prefs.getBoolPref("globalEnabled")) return;
-  
+  onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
     this.log(DBUG,"Got onChannelRedirect.");
     if (!(newChannel instanceof CI.nsIHttpChannel)) {
@@ -558,10 +542,8 @@ HTTPSEverywhere.prototype = {
   },
 
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
-    if(prefs.getBoolPref("globalEnabled")){
 		this.onChannelRedirect(oldChannel, newChannel, flags);
 		callback.onRedirectVerifyCallback(0);
-	}
   },
 
   // These implement the nsIContentPolicy API; they allow both yes/no answers
@@ -569,7 +551,6 @@ HTTPSEverywhere.prototype = {
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
     //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
-	if(prefs.getBoolPref("globalEnabled")){
        if (shouldLoadTargets[aContentType] != null) {
          var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
          var scheme = unwrappedLocation.scheme;
@@ -578,7 +559,6 @@ HTTPSEverywhere.prototype = {
          if (isHTTP)
            HTTPS.forceURI(aContentLocation, null, aContext);
        } 
-	}
     return true;
   },
 
@@ -661,6 +641,14 @@ HTTPSEverywhere.prototype = {
 			OS.removeObserver(this, "http-on-examine-merged-response");
 			OS.removeObserver(this, "http-on-examine-response");  
 			
+			var catman = Components.classes["@mozilla.org/categorymanager;1"]
+           .getService(Components.interfaces.nsICategoryManager);
+			catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
+						
+			var dls = CC['@mozilla.org/docloaderservice;1']
+			.getService(CI.nsIWebProgress);
+			dls.removeProgressListener(this);
+			
 			prefs.setBoolPref("globalEnabled", false);
 		}
 		catch(e){
@@ -676,6 +664,24 @@ HTTPSEverywhere.prototype = {
 			OS.addObserver(this, "http-on-modify-request", false);
 			OS.addObserver(this, "http-on-examine-merged-response", false);
 			OS.addObserver(this, "http-on-examine-response", false);  
+			
+			var dls = CC['@mozilla.org/docloaderservice;1']
+			.getService(CI.nsIWebProgress);
+			dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
+                                    CI.nsIWebProgress.NOTIFY_LOCATION);
+			
+			this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
+
+			HTTPSRules.init();
+
+			if(!Thread.hostRunning)
+				Thread.hostRunning = true;
+			
+			var catman = Components.classes["@mozilla.org/categorymanager;1"]
+			.getService(Components.interfaces.nsICategoryManager);
+			// hook on redirections (non persistent, otherwise crashes on 1.8.x)
+			catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
+				SERVICE_CTRID, false, true);			
 			
 			HTTPSRules.init();			
 			prefs.setBoolPref("globalEnabled", true);
