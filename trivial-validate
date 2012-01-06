@@ -1,9 +1,11 @@
 #!/bin/sh
 # This is a shell script that looks for common problems and typos in rules.
 
+set -o errexit -o noclobber -o nounset
+
 [ -n "$1" ] && cd "$1"
 
-if ! cat *.xml >/dev/null  2>/dev/null
+if [ "$(echo *.xml)" = '*.xml' ]
 then
    echo There are no readable XML files in the current or specified directory.
    echo Run this script inside a directory containing XML rule files or else
@@ -13,12 +15,10 @@ then
    exit 2
 fi
 
-fail=false
-
 echo "-- Rules not anchored to beginning of a line:"
 if grep from= *.xml | cut -d\" -f2 | grep '^[^^]'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -27,7 +27,7 @@ echo
 echo "-- Rules with unescaped dots outside of brackets and left of a slash:"
 if grep from= *.xml | cut -d\" -f2 | sed 's/\[[^]]*\]//g' | egrep 'http.?.?://[^/]*[^\]\.[^*]'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -36,7 +36,7 @@ echo
 echo "-- Rules with backslashes in to pattern:"
 if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '\\'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -45,7 +45,7 @@ echo
 echo "-- Rules not containing trailing slash in from pattern:"
 if grep from= *.xml | cut -d\" -f2 | grep -v '//.*/'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -54,7 +54,7 @@ echo
 echo "-- Rules not containing trailing slash in to pattern:"
 if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep -v '//.*/'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -63,7 +63,7 @@ echo
 echo "-- Rules with missing closing slash in rule XML tag:"
 if grep to= *xml | grep '[^/]>'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -72,7 +72,7 @@ echo
 echo "-- Rules with multiple wildcards in a single target rule:"
 if grep 'target host="' *xml | grep '\*.*\*'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -81,7 +81,7 @@ echo
 echo "-- Rules with targets containing URLs/paths instead of hostnames:"
 if grep 'target host="' *xml | egrep '="[^"]*/'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -90,7 +90,7 @@ echo
 echo "-- Rules redirecting to http in to pattern:"
 if grep 'to="' *xml | sed 's/^.*to="//' | sed 's/\".*$//' | grep '^http:'
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -99,7 +99,7 @@ echo
 echo "-- Rules containing space before to pattern:"
 if grep 'to="' *xml | sed 's/^.*to="//' | grep '^ '
 then
-   fail=true
+   fail=1
 else
    echo "(None.)"
 fi
@@ -109,28 +109,29 @@ echo
 echo "-- Rules with syntactically invalid regular expressions:"
 for f in *.xml
 do
-   grep from= $f | cut -d\" -f2 | egrep -f - 2>/dev/null
-   if [ $? -eq 2 ]
-   then
-       echo $f
-       fail=true
-       none=false
-   fi
+    grep from= "$f" | cut -d\" -f2 | egrep -f - 2>/dev/null || {
+        if [ $? -eq 2 ]
+        then
+            echo "$f"
+            fail=1
+            none=false
+        fi
+    }
 done
 $none && echo "(None.)"
 
 echo
-if [ $(which xmllint) ]
+if which xmllint >/dev/null
 then
-  echo "-- Rules with syntatically invalid XML:"
-  none=true
+    echo "-- Rules with syntactically invalid XML:"
+    none=true
     for rule in *.xml
     do
-      xmllint "$rule" >/dev/null 2>&1 || { echo $rule; none=false; fail=true; }
+        xmllint "$rule" >/dev/null 2>&1 || { echo $rule; none=false; fail=1; }
     done
-  $none && echo "(None.)"
+    $none && echo "(None.)"
 else
-  echo "-- Could not check XML validity because xmllint not found."
+    echo "-- Could not check XML validity because xmllint not found."
 fi
 
 echo
@@ -138,13 +139,13 @@ echo "-- Rules containing non-ASCII characters (possible homoglyph attacks):"
 none=true
 for i in *.xml
 do
-  if egrep '(from|to)=' "$i" | tr -d '[:print:][:space:]' | grep . >/dev/null
-  then
-    echo "$i contains non-ASCII character(s)."
-    none=false
-    #fail=true
-    echo "(not exiting)"
-  fi
+    if egrep '(from|to)=' "$i" | tr -d '[:print:][:space:]' | grep . >/dev/null
+    then
+        echo "$i contains non-ASCII character(s)."
+        none=false
+        #fail=1
+        echo "(not exiting)"
+    fi
 done
 $none && echo "(None.)"
 
@@ -153,12 +154,12 @@ echo "--- Rules that lack at least one valid <target> tag:"
 none=true
 for i in *.xml
 do
-  if ! egrep '<target .*host=".*/>' "$i" >/dev/null
-  then
-    echo $i
-    none=false
-    fail=true
-  fi
+    if ! egrep '<target .*host=".*/>' "$i" >/dev/null
+    then
+        echo $i
+        none=false
+        fail=1
+    fi
 done
 $none && echo "(None.)"
 
@@ -166,23 +167,18 @@ echo
 echo "--- Duplicated ruleset names:"
 if cat *.xml | grep 'ruleset name' | cut -d\" -f2 | sort | uniq -d | grep .
 then
-   fail=true
+    fail=1
 else
-   echo "(None.)"
+    echo "(None.)"
 fi
 
 echo
 echo "--- Duplicated target hosts:"
 if cat *.xml | grep '<target host=' | cut -d\" -f2 | sort | uniq -d | grep .
 then
-   echo "(not exiting)"
+    echo "(not exiting)"
 else
-   echo "(None.)"
+    echo "(None.)"
 fi
 
-if $fail
-then
-  exit 1
-else
-  exit 0
-fi
+exit ${fail-0}

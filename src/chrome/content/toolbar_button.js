@@ -101,7 +101,12 @@ function reload_window() {
   }
   // This choice of flags comes from NoScript's quickReload function; not sure
   // if it's optimal
-  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);
+  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);  
+}
+
+function toggleEnabledState(){
+	HTTPSEverywhere.toggleEnabledState();
+	reload_window();	
 }
 
 function open_in_tab(url) {

@@ -6,13 +6,99 @@
 var all_rules = new RuleSets();
 var wr = chrome.experimental.webRequest;
 
+/*
+for (var v in localStorage) {
+  log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
+}
+
+var rs = all_rules.applicableRulesets("www.google.com");
+for (r in rs) {
+  log(DBUG, rs[r].name +": "+ rs[r].active);
+  log(DBUG, rs[r].name +": "+ rs[r].default_state);
+}
+*/
+
+function AppliedRulesets() {
+  this.active_tab_rules = {}
+
+  var that = this;
+  chrome.tabs.onRemoved.addListener(function(tabId, info) {
+    that.removeTab(tabId);
+  });
+}
+
+AppliedRulesets.prototype = {
+  addRulesetToTab: function(tabId, ruleset) {
+    if (tabId in this.active_tab_rules) {
+      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+    } else {
+      this.active_tab_rules[tabId] = {};
+      this.active_tab_rules[tabId][ruleset.name] = ruleset;
+    }
+  },
+
+  getRulesets: function(tabId) {
+    if (tabId in this.active_tab_rules)
+      return this.active_tab_rules[tabId];
+    else
+      return null;
+  },
+
+  removeTab: function(tabId) {
+    delete this.active_tab_rules[tabId];
+  }
+};
+
+// FIXME: change this name
+var activeRulesets = new AppliedRulesets();
+
+var urlBlacklist = {};
+
+// redirect counter workaround
+// TODO: Remove this code if they ever give us a real counter
+var redirectCounter = {};
+
 function onBeforeRequest(details) {
+  if (details.url in urlBlacklist) {
+    return;
+  }
+
   var a = document.createElement('a');
   a.href = details.url;
 
-  var newuri = all_rules.rewriteURI(details.url, a.host);
+  if (details.type == "main_frame") {
+    activeRulesets.removeTab(details.tabId);
+  }
 
-  if (newuri) return {redirectUrl: newuri};
+  if (details.requestId in redirectCounter) {
+    redirectCounter[details.requestId] += 1;
+    log(DBUG, "Got redirect id "+details.requestId+
+        ": "+redirectCounter[details.requestId]);
+  } else {
+    redirectCounter[details.requestId] = 0;
+  }
+
+  if (redirectCounter[details.requestId] > 9) {
+    log(NOTE, "Redirect counter hit for "+details.url);
+    urlBlacklist[details.url] = true;
+    return;
+  }
+
+  var newuri = null;
+
+  var i = 0;
+  var rs = all_rules.applicableRulesets(a.host);
+  for(i = 0; i < rs.length; ++i) {
+    activeRulesets.addRulesetToTab(details.tabId, rs[i]);
+    if (rs[i].active && !newuri)
+      newuri = rs[i]._apply(details.url);
+  }
+
+  if (newuri) {
+    log(DBUG, "Redirecting from "+a.href+" to "+newuri);
+    return {redirectUrl: newuri};
+  }
+
 }
 
 function onCookieChanged(changeInfo) {
@@ -24,7 +110,7 @@ function onCookieChanged(changeInfo) {
                     expirationDate:changeInfo.cookie.expirationDate,
                     storeId:changeInfo.cookie.storeId};
       cookie.secure = true;
-      // XXX: What is with this url noise? are we just supposed to lie?
+      // FIXME: What is with this url noise? are we just supposed to lie?
       if (cookie.domain[0] == ".") {
         cookie.url = "https://www"+cookie.domain+cookie.path;
       } else {
@@ -37,6 +123,36 @@ function onCookieChanged(changeInfo) {
       chrome.cookies.set(cookie);
     }
   }
+}
+
+// This event is needed due to the potential race between cookie permissions
+// update and cookie transmission, becuase the cookie API is non-blocking..
+function onHeadersReceived(details) {
+  var a = document.createElement('a');
+  a.href = details.url;
+  var host = a.hostname;
+        
+  // TODO: Verify this with wireshark
+  for (var h in details.responseHeaders) {
+    if (details.responseHeaders[h].name == "Set-Cookie") {
+      var cookie = details.responseHeaders[h].value;
+
+      if (cookie.indexOf("; Secure") == -1) {
+        log(DBUG, "Got insecure cookie header: "+cookie);
+        var ruleset = null;
+
+        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
+        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
+                                                     name:cookie.split("=")[0]}))) {
+          activeRulesets.addRulesetToTab(details.tabId, ruleset);
+          details.responseHeaders[h].value = cookie+"; Secure";
+          log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
+        }
+      }
+    }
+  }
+
+  return {responseHeaders:details.responseHeaders};
 }
 
 // This event is needed due to the potential race between cookie permissions
@@ -60,27 +176,50 @@ function onBeforeSendHeaders(details) {
       var cookies = details.requestHeaders[h].value.split(";");
 
       for (var c in cookies) {
+        var ruleset = null;
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if (all_rules.shouldSecureCookie({domain:a.hostname, name:cookies[c].split("=")[0]})) {
+        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
+                                                     name:cookies[c].split("=")[0]}))) {
+          activeRulesets.addRulesetToTab(details.tabId, ruleset);
           log(INFO, "Woah, we lost the race on updating a cookie: "+details.requestHeaders[h].value);
         } else {
           newCookies.push(cookies[c]);
         }
       }
       details.requestHeaders[h].value = newCookies.join(";");
-      log(INFO, "Got new cookie header: "+details.requestHeaders[h].value);
+      log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
     }
   }
 
   return {requestHeaders:details.requestHeaders};
 }
 
-// XXX: Need content script to alter document.cookie? content script access
-// to document.cookie is synchronous
+function onResponseStarted(details) {
+  if (details.tabId == -1) {
+    return;
+  }
+
+  if (this.activeRulesets.getRulesets(details.tabId)) {
+      chrome.pageAction.show(details.tabId);
+  }
+
+  // redirect counter workaround
+  // TODO: Remove this code if they ever give us a real counter
+  if (details.requestId in redirectCounter) {
+    delete redirectCounter[details.requestId];
+  }
+}
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]}, //{urls: ["*://*/*"]},
                                     ["requestHeaders", "blocking"]);
+// FIXME: We probably do want all urls.. or at least http+https+spdy?
+wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http://*/*"]},
+                                    ["responseHeaders", "blocking"]);
+wr.onResponseStarted.addListener(onResponseStarted,
+                                 {urls: ["https://*/*", "http://*/*"]});
+
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
 
 </script>

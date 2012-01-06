@@ -16,7 +16,7 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
-function RuleSet(set_name, match_rule) {
+function RuleSet(set_name, match_rule, default_state) {
   this.name = set_name;
   if (match_rule)
     this.ruleset_match_c = new RegExp(match_rule);
@@ -26,7 +26,8 @@ function RuleSet(set_name, match_rule) {
   this.exclusions = [];
   this.targets = [];
   this.cookierules = [];
-  this.active = true; // XXX: prefs?
+  this.active = default_state;
+  this.default_state = default_state
 }
 
 RuleSet.prototype = {
@@ -88,11 +89,18 @@ RuleSets.prototype = {
     if (xhr.readyState == 4) {
       // XXX: Validation + error checking
       var ruletag = xhr.responseXML.getElementsByTagName('ruleset')[0];
-      
-      if (ruletag.attributes.default_off) { return; }
+
+      var default_state = true;
+      if (ruletag.attributes.default_off) { default_state = false; }
 
       var rule_set = new RuleSet(ruletag.getAttribute('name'),
-                                 ruletag.getAttribute('match_rule'));
+                                 ruletag.getAttribute('match_rule'),
+                                 default_state);
+
+      // Read user prefs
+      if (rule_set.name in localStorage) {
+        rule_set.active = (localStorage[rule_set.name] == "true");
+      }
 
       var rules = xhr.responseXML.getElementsByTagName('rule');
       for(var j = 0; j < rules.length; j++) {
@@ -168,10 +176,10 @@ RuleSets.prototype = {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name))
-            return true;
+            return ruleset;
         }
     }
-    return false;
+    return null;
   },
 
   rewriteURI: function(urispec, host) {
@@ -179,7 +187,7 @@ RuleSets.prototype = {
     var newuri = null
     var rs = this.applicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i]._apply(urispec)))
+      if (rs[i].active && (newuri = rs[i]._apply(urispec)))
         return newuri;
     }
     return null;
