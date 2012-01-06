@@ -35,6 +35,18 @@ function reset_defaults() {
   treeView.treebox.invalidate();
 }
 
+function getValue(row, col) {
+  switch (col.id) {
+    case "site_col":
+      return row.name;
+    case "note_col":
+      return row.notes;
+    case "enabled_col":
+      return o_httpsprefs.getBoolPref(row.name) ? "true" : "false";
+    default:
+      return;
+  }
+}
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
@@ -45,18 +57,7 @@ function https_prefs_init(doc) {
     rowCount: rulesets.length,
     getCellValue: function(row, col) { // site names
       if (!this.rules[row]) return;
-
-      switch (col.id) {
-        case "site_col":
-          return this.rules[row].name;
-        case "note_col":
-          return this.rules[row].notes;
-        case "enabled_col":
-          var e = o_httpsprefs.getBoolPref(this.rules[row].name);
-          return e ? "true" : "false";
-        default:
-          return;
-      }
+      return getValue(this.rules[row], col);
     },
     getCellText: function(row, col) { // activation indicator
        return this.getCellValue(row, col);
@@ -108,7 +109,34 @@ function https_prefs_init(doc) {
       this.rowCount = new_rules.length;
       this.treebox.invalidate();
       this.treebox.scrollToRow(rulesets[0]);
-    }
+    },
+    cycleHeader: function (col) {
+	    //alert(getValue(this.rules[0], col));
+	    var columnName;
+    	var order = 1;
+    	if (col.element.getAttribute("sortDirection") === "ascending") order = -1;
+    	
+    	rulesets.sort(function (a, b) {
+        var aval = getValue(a, col).toLowerCase();
+        var bval = getValue(b, col).toLowerCase();
+        var ret = 0;
+        if (aval < bval) {
+          ret = -1;
+        } else if (aval > bval) {
+            ret = 1;
+        } else {
+            ret = 0;
+        }
+        return ret * order;
+      });
+      
+      var cols = st.getElementsByTagName("treecol");
+      for (var i = 0; i < cols.length; i++) {
+    		cols[i].removeAttribute("sortDirection");
+    	}
+    	col.element.setAttribute("sortDirection", order === 1 ? "ascending" : "descending");
+	    this.treebox.invalidate();
+	}
   };
 
   st.view = treeView;
