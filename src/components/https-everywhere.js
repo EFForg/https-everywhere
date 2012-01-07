@@ -621,13 +621,14 @@ HTTPSEverywhere.prototype = {
     }
   },
 
-  chrome_opener: function(uri) {
+  chrome_opener: function(uri, args) {
     // we don't use window.open, because we need to work around TorButton's 
     // state control
+    args = args || 'chrome,centerscreen';
     return CC['@mozilla.org/appshell/window-mediator;1']
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
-      .open(uri,'', 'chrome,centerscreen' );
+      .open(uri,'', args );
   },
 
   toggleEnabledState: function() {
