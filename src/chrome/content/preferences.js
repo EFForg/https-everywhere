@@ -111,7 +111,6 @@ function https_prefs_init(doc) {
       this.treebox.scrollToRow(rulesets[0]);
     },
     cycleHeader: function (col) {
-	    //alert(getValue(this.rules[0], col));
 	    var columnName;
     	var order = 1;
     	if (col.element.getAttribute("sortDirection") === "ascending") order = -1;
