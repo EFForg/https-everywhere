@@ -115,7 +115,7 @@ function https_prefs_init(doc) {
     	var order = 1;
     	if (col.element.getAttribute("sortDirection") === "ascending") order = -1;
     	
-    	rulesets.sort(function (a, b) {
+    	this.rules.sort(function (a, b) {
         var aval = getValue(a, col).toLowerCase();
         var bval = getValue(b, col).toLowerCase();
         var ret = 0;
