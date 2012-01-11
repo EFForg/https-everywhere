@@ -36,7 +36,7 @@ function RuleSet(name, match_rule, default_off) {
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  this.prefs = HTTPSEverywhere.instance.get_prefs();
+  this.prefs = HTTPSEverywhere.instance.prefs;
   try {
     // if this pref exists, use it
     this.active = this.prefs.getBoolPref(name);

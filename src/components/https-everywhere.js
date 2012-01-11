@@ -161,6 +161,7 @@ function HTTPSEverywhere() {
   
   var prefs = CC["@mozilla.org/preferences-service;1"]
         .getService(Components.interfaces.nsIPrefService);
+  this.prefs = prefs;
   var branch = prefs.getBranch("extensions.https_everywhere.");
 
   
@@ -228,6 +229,7 @@ const shouldLoadTargets = {
 // HTTP redirects) correctly.
 
 HTTPSEverywhere.prototype = {
+  prefs: null,
   // properties required for XPCOM registration:
   classDescription: SERVICE_NAME,
   classID:          SERVICE_ID,
