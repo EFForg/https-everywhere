@@ -1,28 +1,28 @@
 function Rule(from, to) {
-  this.from = from;
-  this.to = to;
+  //this.from = from;
+  //this.to = to;
   this.from_c = new RegExp(from);
 }
 
 function Exclusion(pattern) {
-  this.pattern = pattern;
+  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
 function CookieRule(host, cookiename) {
   this.host = host
   this.host_c = new RegExp(host);
-  this.name = cookiename;
+  //this.name = cookiename;
   this.name_c = new RegExp(cookiename);
 }
 
 ruleset_counter = 0;
 function RuleSet(name, match_rule, default_off) {
-  this.id="https-everywhere-rule-" + ruleset_counter;
+  this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
-  this.ruleset_match = match_rule;
+  //this.ruleset_match = match_rule;
   this.notes = "";
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
   else              this.ruleset_match_c = null;
@@ -47,6 +47,8 @@ function RuleSet(name, match_rule, default_off) {
     this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
+
+
 
 RuleSet.prototype = {
   _apply: function(urispec) {
