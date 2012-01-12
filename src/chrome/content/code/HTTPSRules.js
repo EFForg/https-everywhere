@@ -48,8 +48,6 @@ function RuleSet(name, match_rule, default_off) {
   }
 }
 
-
-
 RuleSet.prototype = {
   _apply: function(urispec) {
     // return null if it does not apply

@@ -159,11 +159,7 @@ function HTTPSEverywhere() {
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
   
-  var prefs = CC["@mozilla.org/preferences-service;1"]
-        .getService(Components.interfaces.nsIPrefService);
-  this.prefs = prefs;
-  var branch = prefs.getBranch("extensions.https_everywhere.");
-
+  this.prefs = this.get_prefs();
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -174,10 +170,10 @@ function HTTPSEverywhere() {
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
 					
-  if(branch.getBoolPref("globalEnabled")){
-	this.obsService.addObserver(this, "profile-before-change", false);
-	this.obsService.addObserver(this, "profile-after-change", false);
-	this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+  if(this.prefs.getBoolPref("globalEnabled")){
+    this.obsService.addObserver(this, "profile-before-change", false);
+    this.obsService.addObserver(this, "profile-after-change", false);
+    this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
   return;
 }
@@ -474,7 +470,7 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
 	  
-	  if(prefs.getBoolPref("globalEnabled")){
+	  if(this.prefs.getBoolPref("globalEnabled")){
 		OS.addObserver(this, "cookie-changed", false);
 		OS.addObserver(this, "http-on-modify-request", false);
 		OS.addObserver(this, "http-on-examine-merged-response", false);
@@ -634,7 +630,7 @@ HTTPSEverywhere.prototype = {
   },
 
   toggleEnabledState: function() {
-	if(prefs.getBoolPref("globalEnabled")){	
+	if(this.prefs.getBoolPref("globalEnabled")){	
 		try{	
 			this.obsService.removeObserver(this, "profile-before-change");
 			this.obsService.removeObserver(this, "profile-after-change");
@@ -652,7 +648,7 @@ HTTPSEverywhere.prototype = {
 			.getService(CI.nsIWebProgress);
 			dls.removeProgressListener(this);
 			
-			prefs.setBoolPref("globalEnabled", false);
+			this.prefs.setBoolPref("globalEnabled", false);
 		}
 		catch(e){
 			this.log(WARN, "Couldn't remove observers: " + e);			
@@ -687,7 +683,7 @@ HTTPSEverywhere.prototype = {
 				SERVICE_CTRID, false, true);			
 			
 			HTTPSRules.init();			
-			prefs.setBoolPref("globalEnabled", true);
+			this.prefs.setBoolPref("globalEnabled", true);
 		}
 		catch(e){
 			this.log(WARN, "Couldn't add observers: " + e);			
