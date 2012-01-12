@@ -269,7 +269,7 @@ SSLObservatory.prototype = {
         this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
 	if(!this.myGetBoolPref("use_whitelist")) {
-	  this.log(WARN, "Not using whitelist to filter cert chains.");
+	  this.log(INFO, "Not using whitelist to filter cert chains.");
 	}
         else if (this.isChainWhitelisted(chain_hash)) {
           this.log(INFO, "This cert chain is whitelisted. Not submitting.");
