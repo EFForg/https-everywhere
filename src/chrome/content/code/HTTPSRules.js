@@ -12,7 +12,7 @@ function Exclusion(pattern) {
 function CookieRule(host, cookiename) {
   this.host = host
   this.host_c = new RegExp(host);
-  //this.name = cookiename;
+  this.name = cookiename;
   this.name_c = new RegExp(cookiename);
 }
 
