@@ -174,6 +174,10 @@ SSLObservatory.prototype = {
       this.client_asn = -1;
       return;
     }
+    else if (!this.torbutton_installed) {
+      this.client_asn = -2;
+      return;
+    }
     return;
   },
 
@@ -240,6 +244,13 @@ SSLObservatory.prototype = {
 
       if (!this.observatoryActive()) return;
 
+      var host_ip = "-1";
+      var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
+      try { 
+        host_ip = httpchannelinternal.remoteAddress;
+      } catch(e) {
+          this.log(WARN, "Could not get host IP address.");
+      }
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
       if (certchain) {
@@ -269,9 +280,9 @@ SSLObservatory.prototype = {
 	}
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip);
         }
       }
     }
@@ -320,7 +331,7 @@ SSLObservatory.prototype = {
     return false;
   },
 
-  submitChain: function(certArray, fps, domain, channel) {
+    submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
     var rootidx = -1;
 
@@ -373,11 +384,11 @@ SSLObservatory.prototype = {
       base64Certs.push(this.base64_encode(derData, false, false));
     }
 
-    // TODO: Server ip??
     var reqParams = [];
     reqParams.push("domain="+domain);
-    reqParams.push("server_ip=-1");
+    reqParams.push("server_ip="+host_ip);
     if (this.myGetBoolPref("testing")) {
+      reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
       reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
