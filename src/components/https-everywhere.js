@@ -160,6 +160,10 @@ function HTTPSEverywhere() {
   this.ApplicableList = ApplicableList;
   
   this.prefs = this.get_prefs();
+  var prefs = CC["@mozilla.org/preferences-service;1"]
+        .getService(Components.interfaces.nsIPrefService);
+  var branch = prefs.getBranch("extensions.https_everywhere.");
+
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -225,7 +229,6 @@ const shouldLoadTargets = {
 // HTTP redirects) correctly.
 
 HTTPSEverywhere.prototype = {
-  prefs: null,
   // properties required for XPCOM registration:
   classDescription: SERVICE_NAME,
   classID:          SERVICE_ID,

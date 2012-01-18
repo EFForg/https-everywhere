@@ -8,7 +8,7 @@ WARN=5;
 
 https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
 o_httpsprefs = https_everywhere.get_prefs();
-rulesets = https_everywhere.https_rules.rulesets;
+rulesets = Array.slice(https_everywhere.https_rules.rulesets);
 
 const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
@@ -46,6 +46,20 @@ function getValue(row, col) {
     default:
       return;
   }
+}
+
+function compareRules(a, b, col) {
+  var aval = getValue(a, col).toLowerCase();
+  var bval = getValue(b, col).toLowerCase();
+  var ret = 0;
+  if (aval < bval) {
+    ret = -1;
+  } else if (aval > bval) {
+      ret = 1;
+  } else {
+      ret = 0;
+  }
+  return ret;
 }
 
 function https_prefs_init(doc) {
@@ -112,22 +126,13 @@ function https_prefs_init(doc) {
     },
     cycleHeader: function (col) {
 	    var columnName;
-    	var order = 1;
-    	if (col.element.getAttribute("sortDirection") === "ascending") order = -1;
+    	var order = (col.element.getAttribute("sortDirection") === "ascending" ? -1 : 1);
     	
-    	this.rules.sort(function (a, b) {
-        var aval = getValue(a, col).toLowerCase();
-        var bval = getValue(b, col).toLowerCase();
-        var ret = 0;
-        if (aval < bval) {
-          ret = -1;
-        } else if (aval > bval) {
-            ret = 1;
-        } else {
-            ret = 0;
-        }
-        return ret * order;
-      });
+    	var compare = function (a, b) {
+    	  return compareRules(a, b, col) * order;
+  	  };
+    	rulesets.sort(compare);
+    	this.rules.sort(compare);
       
       var cols = st.getElementsByTagName("treecol");
       for (var i = 0; i < cols.length; i++) {
@@ -135,7 +140,7 @@ function https_prefs_init(doc) {
     	}
     	col.element.setAttribute("sortDirection", order === 1 ? "ascending" : "descending");
 	    this.treebox.invalidate();
-	}
+	  }
   };
 
   st.view = treeView;
