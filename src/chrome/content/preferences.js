@@ -72,6 +72,24 @@ function resetSelectedMenu() {
   menuitem.disabled = true;
 }
 
+function toggleSelected() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+  var menuitem = document.getElementById("revert_menuitem");
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      rs.toggle();
+      treeView.treebox.invalidateRow(v);
+    }
+  }
+}
+
 function getValue(row, col) {
   switch (col.id) {
     case "site_col":
