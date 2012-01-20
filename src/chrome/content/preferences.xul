@@ -16,15 +16,22 @@
         persist="screenX screenY width height"
         onload="https_prefs_init(document)"
         ondialogaccept="https_prefs_accept()">
-
+    
     <script type="application/x-javascript" src="preferences.js"/>
+    
+    <popupset>
+        <menupopup id="tree-contextmenu" onpopupshowing="resetSelectedMenu()">
+            <menuitem label="Revert to Default" oncommand="resetSelected();" id="revert_menuitem"/>
+        </menupopup>
+    </popupset>
+    
     <groupbox flex="1">
         <caption label="&https-everywhere.prefs.list_caption;"
                align="center"/>
         <vbox>
           &https-everywhere.prefs.search;: <textbox id="tree_search" oninput="treeView.search(this);" />
         </vbox>
-        <tree id="sites_tree" editable="true" flex="1">
+        <tree id="sites_tree" editable="true" flex="1" context="tree-contextmenu">
           <treecols>
             <treecol id="enabled_col" type="checkbox" label="&https-everywhere.prefs.enabled;"
                      editable="true" class="sortDirectionIndicator" persist="sortDirection width"/>

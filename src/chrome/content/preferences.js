@@ -35,6 +35,43 @@ function reset_defaults() {
   treeView.treebox.invalidate();
 }
 
+function resetSelected() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      rs[rs.on_by_default ? "enable" : "disable"]();
+    }
+  }
+}
+
+function resetSelectedMenu() {
+  var start = {};
+  var end = {};
+  var st = document.getElementById('sites_tree');
+  var sel = st.view.selection;
+  var numRanges = sel.getRangeCount();
+  var menuitem = document.getElementById("revert_menuitem");
+
+  for (var t = 0; t < numRanges; t++){
+    sel.getRangeAt(t, start, end);
+    for (var v = start.value; v <= end.value; v++){
+      var rs = treeView.rules[v];
+      if (rs.active !== rs.on_by_default) {
+        menuitem.disabled = false;
+        return;
+      }
+    }
+  }
+  menuitem.disabled = true;
+}
+
 function getValue(row, col) {
   switch (col.id) {
     case "site_col":
@@ -64,7 +101,7 @@ function compareRules(a, b, col) {
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
-
+  
   // GLOBAL VARIABLE!
   treeView = {
     rules: rulesets,
