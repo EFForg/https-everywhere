@@ -1,6 +1,6 @@
 function Rule(from, to) {
   //this.from = from;
-  //this.to = to;
+  this.to = to;
   this.from_c = new RegExp(from);
 }
 
