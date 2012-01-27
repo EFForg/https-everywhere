@@ -65,17 +65,23 @@ echo '];' >> pkg/crx/rule_list.js
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 
-## from https://code.google.com/chrome/extensions/crx.html
+
+if [ -n "$BRANCH" ] ; then
+  crx="pkg/https-everywhere-$VERSION.crx"
+  key=../dummy-chromium.pem
+else
+  crx="pkg/https-everywhere-$VERSION~pre.crx"
+  key=dummy-chromium.pem
+fi
+if ! [ -f "$key" ] ; then
+  echo "Making a dummy signing key for local build purposes"
+  openssl genrsa 2048 > "$key"
+fi
+
+## Based on https://code.google.com/chrome/extensions/crx.html
 
 dir=pkg/crx
 name=pkg/crx
-if [ "$BRANCH" ] ; then
-  crx="pkg/https-everywhere-$VERSION.crx"
-  key=../chromium.pem
-else
-  crx="pkg/https-everywhere-$VERSION~pre.crx"
-  key=chromium.pem
-fi
 pub="$name.pub"
 sig="$name.sig"
 zip="$name.zip"
