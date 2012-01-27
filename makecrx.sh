@@ -68,12 +68,13 @@ sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 ## from https://code.google.com/chrome/extensions/crx.html
 
 dir=pkg/crx
-key=chromium.pem
 name=pkg/crx
-if [ "$BUILD" ] ; then
+if [ "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
+  key=../chromium.pem
 else
   crx="pkg/https-everywhere-$VERSION~pre.crx"
+  key=chromium.pem
 fi
 pub="$name.pub"
 sig="$name.sig"
@@ -117,7 +118,7 @@ echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | w
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created $crx"
 if [ -n "$BRANCH" ]; then
-  cd ../..
+  cd ..
   cp $SUBDIR/$crx pkg
   rm -rf $SUBDIR
 fi
