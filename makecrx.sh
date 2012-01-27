@@ -103,7 +103,6 @@ sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
   echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | xxd -r -p
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
-echo "Built $crx"
 #rm -rf pkg/crx
 
 #python githubhelper.py $VERSION
@@ -113,3 +112,12 @@ echo "Built $crx"
 #git tag -s chrome-$VERSION -m "release $VERSION"
 #git push
 #git push --tags
+
+echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
+echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
+echo >&2 "Created $crx"
+if [ -n "$BRANCH" ]; then
+  cd ../..
+  cp $SUBDIR/$crx pkg
+  rm -rf $SUBDIR
+fi
