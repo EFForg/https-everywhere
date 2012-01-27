@@ -27,7 +27,7 @@ if [ -n "$1" ]; then
 fi
 
 if [ -x trivial-validate.py ]; then
-	VALIDATE=./trivial-validate.py
+	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
 else
 	VALIDATE=./trivial-validate
 fi
