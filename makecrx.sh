@@ -37,7 +37,7 @@ VERSION=`cat chromium/chrome-version.txt`
 echo "Building chrome version" $VERSION
 
 if [ -x trivial-validate.py ]; then
-	VALIDATE=./trivial-validate.py
+	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
 else
 	VALIDATE=./trivial-validate
 fi
