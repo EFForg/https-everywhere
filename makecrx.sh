@@ -14,9 +14,6 @@
 #
 #     ./makecrx.sh chrome-2012.1.26
 #
-# To set the version in the tree to today's date and test-build:
-#
-#     ./makecrx.sh today
 
 
 if [ -n "$1" ]; then
@@ -32,7 +29,7 @@ if [ -n "$1" ]; then
   fi
 fi
 
-VERSION=`cat chromium/chrome-version.txt`
+VERSION=`python -c "import json ; print json.loads(open('chromium/manifest.json').read())['version']"`
 
 echo "Building chrome version" $VERSION
 
