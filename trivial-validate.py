@@ -153,16 +153,10 @@ for fi in os.listdir("."):
             failure = 1
             sys.stdout.write("failure: %s failed test %s\n" % (fi, test))
     for target in tree.xpath("/ruleset/target/@host"):
-        if target in all_targets:
-            warn = True
+        if target in all_targets and not any(ign.search(target) for ign in ignoredups):
             # suppress warning about duplicate targets if an --ignoredups
             # pattern matches target
-            for ignorable in ignoredups:
-                if ignorable.search(target):
-                    warn = False
-                    break
-            if warn:
-                sys.stdout.write("warning: duplicate target: %s\n" % target)
+            sys.stdout.write("warning: duplicate target: %s\n" % target)
         all_targets.add(target)
 
 if not seen_file:
