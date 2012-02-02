@@ -18,6 +18,8 @@ BASE_REQ_SIZE=4096;
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
+Components.utils.import("resource://gre/modules/ctypes.jsm");
+
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
@@ -46,6 +48,7 @@ const INCLUDE = function(name) {
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
 INCLUDE('X509ChainWhitelist');
+INCLUDE('NSS');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]
@@ -251,6 +254,29 @@ SSLObservatory.prototype = {
       } catch(e) {
           this.log(WARN, "Could not get host IP address.");
       }
+
+      // check to see if Convergence plugin is enabled
+      var convergence = Components.classes['@thoughtcrime.org/convergence;1'].getService().wrappedJSObject;
+      if (convergence.enabled) {
+          // tododta clean up
+
+          this.log(WARN, "Convergence enabled. Getting real end-entity cert instead");
+          
+
+          NSS.initialize("somepath");//convergenceManager.nssFile.path);
+          var derItem             = NSS.types.SECItem();
+          this.log(WARN, "blah 1");
+          var status = NSS.lib.CERT_FindCertExtension(completeCertificate,
+                                                      NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT,
+                                                      extItem.address());
+          
+
+        // do stuff
+          this.log(WARN, "blah 2");
+      } else {
+          this.log(WARN, "Convergence NOT enabled.");
+      }
+
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
       if (certchain) {
@@ -330,8 +356,12 @@ SSLObservatory.prototype = {
     }
     return false;
   },
+    
+  handleConvergence: function(cert) {
+    //tododta here
+  },
 
-    submitChain: function(certArray, fps, domain, channel, host_ip) {
+  submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
     var rootidx = -1;
 
