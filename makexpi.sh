@@ -3,19 +3,20 @@ APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
 # of the repository.
-
+#
 # invoke with no arguments to build from the current src directory.
-
-# invoke with a tag name to build a specific branch or tag.
-
-# e.g.:
-#  ./makexpi.sh 0.2.3.development.2
-
-# or just:
+#
 #  ./makexpi.sh
+#
+# OR, invoke with a tag name to build a specific branch or tag.
+#
+# e.g.:
+#
+#  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
 
+# If the command line argument is a tag name, check that out and build it
 if [ -n "$1" ]; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
 	SUBDIR=checkout
@@ -26,7 +27,7 @@ if [ -n "$1" ]; then
 fi
 
 if [ -x trivial-validate.py ]; then
-	VALIDATE=./trivial-validate.py
+	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
 else
 	VALIDATE=./trivial-validate
 fi
@@ -50,6 +51,7 @@ then
   fi
 fi
 
+# The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
 if [ "$1" ]; then
 	XPI_NAME="$XPI_NAME.xpi"
@@ -59,11 +61,15 @@ fi
 
 [ -d pkg ] || mkdir pkg
 
+# Merge all the .xml rulesets into a single "default.rulesets" file -- this
+# prevents inodes from wasting disk space, but more importantly, works around
+# the fact that zip does not perform well on a pile of small files.
 cd src
 RULESETS=chrome/content/rules/default.rulesets
 echo "<rulesetlibrary>" > $RULESETS
 cat chrome/content/rules/*.xml >> $RULESETS
 echo "</rulesetlibrary>" >> $RULESETS
+
 echo "Removing whitespaces and comments..."
 rulesize() {
 	echo `wc -c $RULESETS | cut -d \  -f 1`
@@ -72,7 +78,12 @@ CRUSH=`rulesize`
 sed -i -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' $RULESETS
 sed -i ':a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g' $RULESETS
 echo "Crushed $CRUSH bytes of rulesets into `rulesize`"
+
+# We make default.rulesets at build time, but it shouldn't have a variable
+# timestamp
 touch -r chrome/content/rules $RULESETS
+
+# Build the XPI!
 rm -f "../$XPI_NAME"
 zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 

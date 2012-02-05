@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, re, os
+import sys, re, os, getopt
 
 try:
     from lxml import etree
@@ -10,11 +10,15 @@ except ImportError:
     sys.stderr.write("** Please install libxml2 and lxml to permit validation!\n")
     sys.exit(0)
 
-if len(sys.argv) > 1:
+longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups="])
+
+ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
+
+if args:
    try:
-       os.chdir(sys.argv[1])
+       os.chdir(args[0])
    except:
-       sys.stderr.write("could not chdir to %s\n" % sys.argv[1])
+       sys.stderr.write("could not chdir to %s\n" % args[0])
        sys.stderr.write("usage: %s directoryname\n" % sys.argv[0])
        sys.exit(2)
 
@@ -149,7 +153,9 @@ for fi in os.listdir("."):
             failure = 1
             sys.stdout.write("failure: %s failed test %s\n" % (fi, test))
     for target in tree.xpath("/ruleset/target/@host"):
-        if target in all_targets:
+        if target in all_targets and not any(ign.search(target) for ign in ignoredups):
+            # suppress warning about duplicate targets if an --ignoredups
+            # pattern matches target
             sys.stdout.write("warning: duplicate target: %s\n" % target)
         all_targets.add(target)
 
