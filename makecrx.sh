@@ -14,7 +14,10 @@
 #
 #     ./makecrx.sh chrome-2012.1.26
 #
-
+# Note that .crx files must be signed; this script makes you a
+# "dummy-chromium.pem" private key for you to sign your own local releases,
+# but these .crx files won't detect and upgrade to official HTTPS Everywhere
+# releases signed by EFF :/.  We should find a more elegant arrangement.
 
 if [ -n "$1" ]; then
   if [ "$1" = today ] ; then
