@@ -21,7 +21,7 @@
 
 if [ -n "$1" ]; then
   if [ "$1" = today ] ; then
-    date +%Y.%m.%d | sed s/\\.0/./g > chromium/chrome-version.txt
+    python chromium/setversion.py
   else
     BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
     SUBDIR=checkout
@@ -55,7 +55,14 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
 cp -r chromium pkg/crx
+cd pkg/crx
+do_not_ship="*.py *.xml"
+rm -f $do_not_ship
+cd ../..
 cp -r src/chrome/content/rules pkg/crx/
+# TODO: switch the chrome version over to using default.rulesets too
+# For now, don't ship it!
+[ -f pkg/crx/rules/default.rulesets ] && rm -f pkg/crx/rules/default.rulesets
 echo 'var rule_list = [' > pkg/crx/rule_list.js
 for i in $(ls pkg/crx/rules/*.xml)
 do
