@@ -70,8 +70,8 @@ do
 done
 echo '];' >> pkg/crx/rule_list.js
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
-sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
-
+#sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
+#sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
 
 if [ -n "$BRANCH" ] ; then
   crx="pkg/https-everywhere-$VERSION.crx"
