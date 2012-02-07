@@ -136,11 +136,17 @@ all_targets = set()
 all_names = set()
 
 for fi in os.listdir("."):
-    if fi[-4:] != ".xml": continue
     try:
        tree = etree.parse(fi)
+       if fi[-4:] != ".xml":
+           if tree.xpath("/ruleset"):
+               sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
+           else:
+               continue
        seen_file = True
     except Exception, oops:
+       if fi[-4:] != ".xml":
+           continue
        failure = 1
        sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
     ruleset_name = tree.xpath("/ruleset/@name")[0]
@@ -160,8 +166,9 @@ for fi in os.listdir("."):
         all_targets.add(target)
 
 if not seen_file:
-   sys.stdout.write("There were no valid XML files in the current or ")
-   sys.stdout.write("specified directory.\n")
+   which = "specified" if args else "current"
+   sys.stdout.write("There were no valid XML files in the %s " % which)
+   sys.stdout.write("directory.\n")
    failure = 3
 
 sys.exit(failure)
