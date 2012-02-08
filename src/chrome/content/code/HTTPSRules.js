@@ -115,7 +115,7 @@ RuleSet.prototype = {
     if (0 == newurl)
       return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
-                createInstance(CI.nsIStandardURL);
+                 createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
              newurl, uri.originCharset, null);
     newuri = newuri.QueryInterface(CI.nsIURI);
