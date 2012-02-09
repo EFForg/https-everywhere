@@ -108,7 +108,7 @@ RuleSets.prototype = {
                                       rules[j].getAttribute('to')));
       }
 
-      var exclusions = xhr.responseXML.getElementsByTagName('exclusions');
+      var exclusions = xhr.responseXML.getElementsByTagName('exclusion');
       for(var j = 0; j < exclusions.length; j++) {
         rule_set.exclusions.push(
               new Exclusion(exclusions[j].getAttribute('pattern')));
