@@ -24,6 +24,7 @@ if args:
 
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
+    """The 'from' rule is not anchored to beginning of line using the ^ symbol."""
     for f in tree.xpath("/ruleset/rule/@from"):
         if not f or f[0] != "^":
             return False
@@ -31,6 +32,7 @@ def test_not_anchored(tree):
 
 def test_bad_regexp(tree):
     # Rules with invalid regular expressions.
+    """The 'from' rule contains an invalid extended regular expression."""
     for f in tree.xpath("/ruleset/rule/@from") + \
              tree.xpath("/ruleset/exclusion/@pattern") + \
              tree.xpath("/ruleset/securecookie/@host"):
@@ -45,6 +47,7 @@ def test_unescaped_dots(tree):
     # Note: this is meant to require example\.com instead of example.com,
     # but it also forbids things like .* which usually ought to be replaced
     # with something like ([^/:@\.]+)
+    """The 'from' rule contains unescaped period in regular expression.  Try escaping it with a backslash."""
     for f in tree.xpath("/ruleset/rule/@from"):
         escaped = False
         bracketed = False
@@ -66,6 +69,7 @@ def test_unescaped_dots(tree):
 
 def test_space_in_to(tree):
     # Rules where the to pattern contains a space.
+    """The 'to' rule contains a space."""
     for t in tree.xpath("/ruleset/rule/@to"):
         if ' ' in t:
             return False
@@ -75,6 +79,7 @@ def test_unencrypted_to(tree):
     # Rules that redirect to something other than https.
     # This used to test for http: but testing for lack of https: will
     # catch more kinds of mistakes.
+    """Rule redirects to something other than https."""
     for t in tree.xpath("/ruleset/rule/@to"):
         if t[:6] != "https:":
             return False
@@ -82,6 +87,7 @@ def test_unencrypted_to(tree):
 
 def test_backslash_in_to(tree):
     # Rules containing backslashes in to pattern.
+    """The 'to' rule contains a backslash."""
     for t in tree.xpath("/ruleset/rule/@to"):
         if '\\' in t:
             return False
@@ -89,6 +95,7 @@ def test_backslash_in_to(tree):
 
 def test_no_trailing_slash(tree):
     # Rules not containing trailing slash in from or to pattern.
+    """Rule omits forward slash after host name."""
     for r in tree.xpath("/ruleset/rule"):
         f, t = r.get("from"), r.get("to")
         if not re.search("//.*/", f):
@@ -99,10 +106,12 @@ def test_no_trailing_slash(tree):
 
 def test_lacks_target_host(tree):
     # Rules that lack at least one target host (target tag with host attr).
+    """Rule fails to specify at least one target host."""
     return not not tree.xpath("/ruleset/target/@host")
 
 def test_bad_target_host(tree):
     # Rules where a target host contains multiple wildcards or a slash.
+    """The target host must be a hostname, not URL, and must use at most one wildcard."""
     for target in tree.xpath("/ruleset/target/@host"):
         if "/" in target:
             return False
@@ -112,6 +121,7 @@ def test_bad_target_host(tree):
 
 def test_duplicated_target_host(tree):
     # Rules where a single target host appears more than once.
+    """Rule contains the same target host more than once."""
     targets = tree.xpath("/ruleset/target/@host")
     return len(set(targets)) == len(targets)
 
@@ -119,6 +129,7 @@ printable_characters = set(map(chr, xrange(32, 127)))
 
 def test_non_ascii(tree):
     # Rules containing non-printable characters.
+    """Rule contains non-printable character in 'to' pattern."""
     for t in tree.xpath("/ruleset/rule/@to"):
         for c in t:
             if c not in printable_characters:
@@ -157,7 +168,7 @@ for fi in os.listdir("."):
     for test in tests:
         if not test(tree):
             failure = 1
-            sys.stdout.write("failure: %s failed test %s\n" % (fi, test))
+            sys.stdout.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
     for target in tree.xpath("/ruleset/target/@host"):
         if target in all_targets and not any(ign.search(target) for ign in ignoredups):
             # suppress warning about duplicate targets if an --ignoredups
