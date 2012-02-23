@@ -204,26 +204,16 @@ ApplicableList.prototype = {
     // create the menuitem
     var item = this.document.createElement('menuitem');
     item.setAttribute('command', rule.id+'-command');
-    item.setAttribute('class', type+'-item');
-
+    item.setAttribute('class', type+'-item menuitem-iconic');
+    item.setAttribute('label', rule.name);
+    
     // set the icon
-    var image = this.document.createElement('image');
     var image_src;
     if (type == 'active') image_src = 'tick.png';
     else if (type == 'inactive') image_src = 'cross.png';
     else if (type == 'moot') image_src = 'tick-moot.png';
     else if (type == 'breaking') image_src = 'tick-red.png';
-    image.setAttribute('src', 'chrome://https-everywhere/skin/'+image_src);
-
-    // set the label
-    var label = this.document.createElement('label');
-    label.setAttribute('value', "   " + rule.name);
-    
-    // put them in an hbox, and put the hbox in the menuitem
-    var hbox = this.document.createElement('hbox');
-    hbox.appendChild(image);
-    hbox.appendChild(label);
-    item.appendChild(hbox);
+    item.setAttribute('image', 'chrome://https-everywhere/skin/'+image_src);
 
     // all done
     this.prepend_child(item);

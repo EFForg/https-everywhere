@@ -88,6 +88,14 @@
   <rule
     from="^http://(?:www\.)?google\.com?\.[^/@:][^/@:]/(?:search\?|#)"
       to="https://encrypted.google.com/search?" />
+
+  <!-- However, if the user is trying to set the language on their https
+       country site, let's not mess with that
+       https://trac.torproject.org/projects/tor/ticket/5152 
+   -->
+   <rule from="^http://(www\.)?google(\.com?)?\.([a-z][a-z])/setprefs"
+           to="https://$1google$2.$3/setprefs" />
+
   <!-- Completion urls look like this:
 
 http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1 HTTP/1.1\r\n

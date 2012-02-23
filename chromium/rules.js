@@ -1,11 +1,11 @@
 function Rule(from, to) {
-  this.from = from;
+  //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
 
 function Exclusion(pattern) {
-  this.pattern = pattern;
+  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
@@ -108,7 +108,7 @@ RuleSets.prototype = {
                                       rules[j].getAttribute('to')));
       }
 
-      var exclusions = xhr.responseXML.getElementsByTagName('exclusions');
+      var exclusions = xhr.responseXML.getElementsByTagName('exclusion');
       for(var j = 0; j < exclusions.length; j++) {
         rule_set.exclusions.push(
               new Exclusion(exclusions[j].getAttribute('pattern')));

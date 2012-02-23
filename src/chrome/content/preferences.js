@@ -8,7 +8,7 @@ WARN=5;
 
 https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
 o_httpsprefs = https_everywhere.get_prefs();
-rulesets = https_everywhere.https_rules.rulesets;
+rulesets = Array.slice(https_everywhere.https_rules.rulesets);
 
 const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
@@ -35,6 +35,32 @@ function reset_defaults() {
   treeView.treebox.invalidate();
 }
 
+function getValue(row, col) {
+  switch (col.id) {
+    case "site_col":
+      return row.name;
+    case "note_col":
+      return row.notes;
+    case "enabled_col":
+      return o_httpsprefs.getBoolPref(row.name) ? "true" : "false";
+    default:
+      return;
+  }
+}
+
+function compareRules(a, b, col) {
+  var aval = getValue(a, col).toLowerCase();
+  var bval = getValue(b, col).toLowerCase();
+  var ret = 0;
+  if (aval < bval) {
+    ret = -1;
+  } else if (aval > bval) {
+      ret = 1;
+  } else {
+      ret = 0;
+  }
+  return ret;
+}
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
@@ -45,18 +71,7 @@ function https_prefs_init(doc) {
     rowCount: rulesets.length,
     getCellValue: function(row, col) { // site names
       if (!this.rules[row]) return;
-
-      switch (col.id) {
-        case "site_col":
-          return this.rules[row].name;
-        case "note_col":
-          return this.rules[row].notes;
-        case "enabled_col":
-          var e = o_httpsprefs.getBoolPref(this.rules[row].name);
-          return e ? "true" : "false";
-        default:
-          return;
-      }
+      return getValue(this.rules[row], col);
     },
     getCellText: function(row, col) { // activation indicator
        return this.getCellValue(row, col);
@@ -108,7 +123,24 @@ function https_prefs_init(doc) {
       this.rowCount = new_rules.length;
       this.treebox.invalidate();
       this.treebox.scrollToRow(rulesets[0]);
-    }
+    },
+    cycleHeader: function (col) {
+	    var columnName;
+    	var order = (col.element.getAttribute("sortDirection") === "ascending" ? -1 : 1);
+    	
+    	var compare = function (a, b) {
+    	  return compareRules(a, b, col) * order;
+  	  };
+    	rulesets.sort(compare);
+    	this.rules.sort(compare);
+      
+      var cols = st.getElementsByTagName("treecol");
+      for (var i = 0; i < cols.length; i++) {
+    		cols[i].removeAttribute("sortDirection");
+    	}
+    	col.element.setAttribute("sortDirection", order === 1 ? "ascending" : "descending");
+	    this.treebox.invalidate();
+	  }
   };
 
   st.view = treeView;
