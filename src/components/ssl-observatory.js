@@ -98,7 +98,8 @@ SSLObservatory.prototype = {
   QueryInterface: XPCOMUtils.generateQI(
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
-      CI.nsIWifiListener ]),
+      CI.nsIWifiListener,
+      CI.nsIBadCertListener2]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -131,6 +132,15 @@ SSLObservatory.prototype = {
     } catch(err) {
       return null;
     }
+  },
+
+  notifyCertProblem: function(socketInfo, status, targetSite) {
+    this.log(NOTE, "cert warning for " + targetSite);
+    if (targetSite == "observatory.eff.org") {
+      this.log(WARN, "Surpressing observatory warning");
+      return true;
+    }
+    return false;
   },
 
   setupASNWatcher: function() {
