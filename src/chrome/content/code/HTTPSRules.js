@@ -16,8 +16,9 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+localPlatformRegexp = new RegExp("firefox");
 ruleset_counter = 0;
-function RuleSet(name, match_rule, default_off) {
+function RuleSet(name, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
@@ -33,6 +34,12 @@ function RuleSet(name, match_rule, default_off) {
     this.notes = default_off;
     this.on_by_default = false;
   }
+  if (platform)
+    if (platform.search(localPlatformRegexp) == -1) {
+      this.on_by_default = false;
+      this.notes = "Only for " + platform;
+    }
+
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
@@ -269,9 +276,11 @@ const RuleWriter = {
 
     var match_rl = null;
     var dflt_off = null;
+    var platform = null;
     if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
     if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
-    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
+    if (xmlruleset.@platform.length() > 0) platform = xmlruleset.@platform;
+    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off, platform);
 
     if (xmlruleset.target.length() == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
