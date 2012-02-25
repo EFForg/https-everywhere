@@ -84,6 +84,8 @@ function RuleSets() {
 }
 
 RuleSets.prototype = {
+  localPlatformRegexp: RegExp("chromium"),
+
   loadRuleSet: function(xhr) {
     // Get file contents
     if (xhr.readyState == 4) {
@@ -92,6 +94,13 @@ RuleSets.prototype = {
 
       var default_state = true;
       if (ruletag.attributes.default_off) { default_state = false; }
+
+      // If a ruleset declares a platform, and we don't match it, treat it as
+      // off-by-default
+      var platform = ruletag.getAttribute("platform");
+      if (platform) 
+        if (platform.search(this.localPlatformRegexp) == -1)
+          default_state = false;
 
       var rule_set = new RuleSet(ruletag.getAttribute('name'),
                                  ruletag.getAttribute('match_rule'),
