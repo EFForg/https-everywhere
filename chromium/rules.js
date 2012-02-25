@@ -84,7 +84,7 @@ function RuleSets() {
 }
 
 RuleSets.prototype = {
-  localPlatformRegexp: RegExp("chromium"),
+  localPlatformRegexp: new RegExp("chromium"),
 
   loadRuleSet: function(xhr) {
     // Get file contents
