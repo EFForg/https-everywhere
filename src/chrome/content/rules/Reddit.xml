@@ -1,17 +1,24 @@
-<!-- This ruleset (a) caused a lot of confusion because of the redirect to
-the "pay" subdomain, and (b) sometimes caused cert warnings because of
-server-side CDN issues, so it's off for the time being -->
-<ruleset name="Reddit (hackish)" default_off="via pay.reddit.com">
+<ruleset name="Reddit (buggy)" default_off="Domains cannot be verifyed, and server timeout">
   <target host="reddit.com" />
   <target host="*.reddit.com" />
-  <target host="redd.it" />
 
-  <rule from="^http://(?:www\.|pay\.)?reddit\.com/"
-	  to="https://pay.reddit.com/"/>
-  <rule from="^http://(sp|static|thumbs)\.reddit\.com/"
-	  to="https://s3.amazonaws.com/$1.reddit.com/"/>
-  <rule from="^http://redd\.it/$"
-	  to="https://pay.reddit.com/"/>
-  <rule from="^http://redd\.it/"
-	  to="https://pay.reddit.com/tb/"/>
+  <target host="redditstatic.com" />
+  <target host="www.redditstatic.com" />
+
+  <target host="redditmedia.com"/>
+  <target host="www.redditmedia.com"/>
+  <target host="*.thumbs.redditmedia.com" />
+<!-- A pixel is loaded asynchroniously from: -->
+<!-- <target host="pixel.redditmedia.com" /> -->
+<!-- However this server times out when using HTTPS -->
+
+
+  <rule from="^http://(www\.)?reddit\.com/" to="https://www.reddit.com/"/>
+  <rule from="^http://static\.reddit\.com/" to="https://static.reddit.com/"/>
+
+  <rule from="^http://(www\.)?redditstatic\.com/" to="https://www.redditstatic.com/"/>
+
+  <rule from="^http://(?:www\.)?redditmedia\.com/" to="https://www.redditmedia.com/"/>
+  <rule from="^http://(f|d)\.thumbs\.redditmedia\.com/" to="https://$1.thumbs.redditmedia.com/"/>
+<!--  <rule from="^http://pixel\.redditmedia\.com/" to="https://pixel.redditmedia.com/"/> -->
 </ruleset>
