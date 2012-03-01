@@ -495,12 +495,12 @@ HTTPSEverywhere.prototype = {
       var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
                         .getService(Components.interfaces.nsISupports)
                         .wrappedJSObject;
-      // FIXME This prefs code is terrible spaghetti
+      // Show the popup at most once.  Users who enabled the Observatory before
+      // a version that would have shown it to them, don't need to see it
+      // again.
       var shown = ssl_observatory.myGetBoolPref("popup_shown");
-      // this is relevant if the user just installed torbutton bad had
-      // enabled the Observatory previously
       var enabled = ssl_observatory.myGetBoolPref("enabled");
-      if (!shown && !enabled && ssl_observatory.torbutton_installed) 
+      if (!shown && !enabled) 
         this.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     }
     return;

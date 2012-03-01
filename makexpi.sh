@@ -42,7 +42,7 @@ fi
 
 if [ -f relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml
+  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml  
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
@@ -51,7 +51,7 @@ then
   fi
 else
   echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
-fi
+fi 2>&1 | grep -v validates
 
 if [ -x ./compare-locales.sh ] >&2
 then
