@@ -1,30 +1,60 @@
+<link href="chrome://resources/css/checkbox.css" rel="stylesheet" type="text/css"/>
 <style type="text/css" rel="stylesheet">
 <!--
-.nowrap-disabled {
-    color: #999999;
-	white-space: nowrap;
-    cursor: pointer;
+body {
+  /* based off Chrome's WebUI */
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 75%;
+  cursor: default;
 }
-.nowrap-disabled:hover {
-    background: -webkit-linear-gradient(top, #7db9e8 0%,#207cca 49%,#2989d8 50%,#1e5799 100%); /* Chrome10+,Safari5.1+ */
+
+a {
+  cursor: auto;
 }
-.nowrap-enabled {
-    color: #9AD100;
-	white-space: nowrap;
-    cursor: pointer;
+
+#About {
+  background-image: url('icon48.png');
+  background-repeat: no-repeat;
+  min-width: 18em;
+  min-height: 48px;    /* icon size */
+  padding-left: 54px;  /* icon size + 6px padding */
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgb(205, 205, 205);
 }
-.nowrap-enabled:hover {
-    background: -webkit-linear-gradient(top, #7db9e8 0%,#207cca 49%,#2989d8 50%,#1e5799 100%); /* Chrome10+,Safari5.1+ */
+
+div.rule {
+  white-space: nowrap;
+  margin: 8px 0;
 }
-.about {
-	white-space: nowrap;
-	font-style: italic;
+
+.rule > * {
+  vertical-align: middle;
 }
--->	
+
+/* cb_block */
+.rule > div {
+  display: inline-block;
+  width: 54px;
+  text-align: right;
+}
+
+/* checkbox */
+.rule > div > input {
+  margin-right: 8px;
+}
+
+.rule > label {
+  margin-left: 0;
+  -webkit-margin-start: 0 !important; /* override checkbox.css */
+}
+
+input[type="checkbox"]:checked::before {
+  top: 3px; /* fix WebUI check not being centered in box */
+}
+--->
 </style>
 
-<div id="About" class="about">Securing:</div>
-<div id="Settings"></div>
+<div id="About">This webpage is from a site (or includes resources from a site) that can be secured with <a href="https://www.eff.org/https-everywhere" target="_blank">HTTPS Everywhere</a>.</div>
 <div id="AppliedRules"></div>
 
 <script>
@@ -32,38 +62,41 @@ var backgroundPage = chrome.extension.getBackgroundPage();
 var appliedDiv = document.getElementById("AppliedRules");
 var tab = null;
 
-function toggleRuleLine(e, ruleset) {
-  ruleset.active = !ruleset.active;
+function toggleRuleLine(checkbox, ruleset) {
+  ruleset.active = checkbox.checked;
 
   if (ruleset.active != ruleset.default_state) {
     localStorage[ruleset.name] = ruleset.active;
   } else {
     delete localStorage[ruleset.name];
   }
-
-  if (ruleset.active) {
-    e.className = "nowrap-enabled";
-    e.innerHTML = '<img src="tick.png"> '+ruleset.name;
-  } else {
-    e.className = "nowrap-disabled";
-    e.innerHTML = '<img src="tick-red.png"> '+ruleset.name;
-  }
 }
 
 function createRuleLine(ruleset) {
-  var e = document.createElement('div');
+  // parent block for line
+  var line = document.createElement('div');
+  line.className = 'rule checkbox';
 
-  e.onclick = function(ev) { toggleRuleLine(e, ruleset); };
+  // checkbox
+  var checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.id = ruleset.name; // FIXME: is uniqueness guaranteed?
+  checkbox.checked = ruleset.active;
+  checkbox.onchange = function(ev) { toggleRuleLine(checkbox, ruleset); };
 
-  if (ruleset.active) {
-    e.className = "nowrap-enabled";
-    e.innerHTML = '<img src="tick.png"> '+ruleset.name;
-  } else {
-    e.className = "nowrap-disabled";
-    e.innerHTML = '<img src="tick-red.png"> '+ruleset.name;
-  }
+  // checkbox container (used for spacing)
+  var cb_block = document.createElement('div');
+  cb_block.appendChild(checkbox);
 
-  return e;
+  // label for checkbox
+  var label = document.createElement('label');
+  label.innerText = ruleset.name;
+  label.htmlFor = ruleset.name;
+
+  line.appendChild(cb_block);
+  line.appendChild(label);
+
+  return line;
 }
 
 function gotTab(tab) {
