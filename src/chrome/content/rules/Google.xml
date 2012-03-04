@@ -1,4 +1,4 @@
-<ruleset name="Google Search" match_rule="http:.*google\.">
+<ruleset name="Google Search">
   <target host="*.google.com" />
   <target host="google.com" />
   <target host="www.google.com.*" />
@@ -77,22 +77,19 @@
   <rule from="^http://(?:www\.)?google\.com/$"
           to="https://encrypted.google.com/"/>
 
+  <!-- Google supports IPv6 search, including HTTPS with a valid
+       certificate! -->
+  <rule from="^http://ipv6\.google\.com/"
+          to="https://ipv6.google.com/"/>
+
   <!-- most google international sites look like "google.fr" -->
-
-  <rule
-    from="^http://(?:www\.)?google\.[^/@:][^/@:]/(?:search\?|#)"
-      to="https://encrypted.google.com/search?" />
-
   <!-- some look like "google.co.jp" -->
   <!-- and some crazy ones like "google.com.au" -->
-  <rule
-    from="^http://(?:www\.)?google\.com?\.[^/@:][^/@:]/(?:search\?|#)"
-      to="https://encrypted.google.com/search?" />
 
-  <!-- However, if the user is trying to set the language on their https
-       country site, let's not mess with that
-       https://trac.torproject.org/projects/tor/ticket/5152 
-   -->
+  <rule from="^http://(www\.)?google(\.com?)?\.([a-z][a-z])/(search\?|#)"
+          to="https://$1google$2.$3/$4" />
+
+  <!-- Language preference setting -->
    <rule from="^http://(www\.)?google(\.com?)?\.([a-z][a-z])/setprefs"
            to="https://$1google$2.$3/setprefs" />
 
@@ -104,84 +101,22 @@ http://clients2.google.co.jp/complete/search?hl=ja&client=hp&expIds=17259,24660,
   <rule from="^http://clients[0-9]\.google\.com/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
-  <rule from="^http://clients[0-9]\.google\.com?\.[^/:@][^/:@]/complete/search"
-          to="https://clients1.google.com/complete/search"/>
+  <rule from="^http://clients[0-9]\.google(\.com?\.[a-z][a-z])/complete/search"
+          to="https://clients1.google.$1/complete/search"/>
 
-  <rule from="^http://clients[0-9]\.google\.[^/:@][^/:@]/complete/search"
-          to="https://clients1.google.com/complete/search"/>
+  <rule from="^http://clients[0-9]\.google\.([a-z][a-z])/complete/search"
+          to="https://clients1.google.$1/complete/search"/>
 
   <rule from="^http://suggestqueries\.google\.com/complete/search"
           to="https://clients1.google.com/complete/search"/>
 
-  <!-- We are trying a large collection of mappings from google country sites
-       to https://encrypted.google.com/webhp?hl=<lang> where lang is the default
-       language for that country.  The concern with that was that the hl=
-       parameter would override any user preference for a particular language,
-       which would be Bad, especially if people got bounced from
-       http://google.com to google.cctld to https://google/webhp?hl=<constant>
-       but since we actually prevent google from performing the first bounce,
-       we don't have to worry about this so much!
-       -->
-
   <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:au|ca|gh|ie|in|jm|ke|lk|my|na|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/(?:webhp)?$"
-     to="https://encrypted.google.com/" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/(?:webhp)?$"
-    to="https://encrypted.google.com/webhp?hl=es" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com\.)?(?:ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/(?:webhp)$"
-     to="https://encrypted.google.com/webhp?hl=ar" />
-  <rule from="^http://(?:www\.)?google\.(?:at|ch|de)/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=de" />
-  <rule from="^http://(?:www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi|no)/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=$1" />
-  <rule from="^http://(?:www\.)?google\.com?\.(id|th|tr)/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=$1" />
-  <rule from="^http://(?:www\.)?google\.com\.il/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=he" />
-  <rule from="^http://(?:www\.)?google\.com\.kr/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=ko" />
-  <rule from="^http://(?:www\.)?google\.com\.kz/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=kk" />
-  <rule from="^http://(?:www\.)?google\.com\.jp/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=ja" />
-  <rule from="^http://(?:www\.)?google\.com\.vn/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=vi" />
-  <rule from="^http://(?:www\.)?google\.com\.br/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=pt-BR" />
-  <rule from="^http://(?:www\.)?google\.se/(?:webhp)?$"
-          to="https://encrypted.google.com/webhp?hl=sv" />
+   from="^http://(www\.)?google\.(com?\.)?([a-z][a-z])/(webhp)?$"
+     to="https://$1google.$2$3/" />
 
 <!-- If there are URL parameters, keep them. -->
   <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:au|ca|gh|ie|in|jm|ke|lk|my|na|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/(?:webhp)?\?"
-     to="https://encrypted.google.com/webhp?" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/(?:webhp)?\?"
-    to="https://encrypted.google.com/webhp?hl=es&#38;" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com\.)?(?:ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/(?:webhp)\?"
-     to="https://encrypted.google.com/webhp?hl=ar&#38;" />
-  <rule from="^http://(?:www\.)?google\.(?:at|ch|de)/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=de&#38;" />
-  <rule from="^http://(?:www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi|no)/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=$1&#38;" />
-  <rule from="^http://(?:www\.)?google\.com?\.(id|th|tr)/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=$1&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.il/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=he&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.kr/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=ko&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.kz/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=kk&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.jp/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=ja&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.vn/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=vi&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.br/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=pt-BR&#38;" />
-  <rule from="^http://(?:www\.)?google\.se/(?:webhp)?\?"
-          to="https://encrypted.google.com/webhp?hl=sv&#38;" />
+   from="^http://(www\.)?google\.(com?\.)?([a-z][a-z])/(?:webhp)?\?"
+     to="https://$1google.$2$3/webhp?" />
 
 </ruleset>
