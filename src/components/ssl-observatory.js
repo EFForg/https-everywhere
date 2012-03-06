@@ -179,7 +179,7 @@ SSLObservatory.prototype = {
   },
 
   getClientASN: function() {
-    // XXX: Fetch a new client ASN..
+    // Fetch a new client ASN..
     if (!this.myGetBoolPref("send_asn")) {
       this.client_asn = -1;
       return;
@@ -188,6 +188,9 @@ SSLObservatory.prototype = {
       this.client_asn = -2;
       return;
     }
+    // XXX As a possible base case: the user is running Tor, is not using
+    // bridges, and has send_asn enabled: should we ping an eff.org URL to
+    // learn our ASN?
     return;
   },
 
