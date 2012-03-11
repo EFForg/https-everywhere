@@ -42,7 +42,7 @@ fi
 
 if [ -f relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml  
+  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
@@ -74,13 +74,27 @@ fi
 
 [ -d pkg ] || mkdir pkg
 
+# Used for figuring out which branch to pull from when viewing source for rules
+GIT_OBJECT_FILE=".git/refs/heads/master"
+GIT_COMMIT_ID="HEAD"
+if [ -e "$GIT_OBJECT_FILE" ]; then
+	GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
+fi
+
 # Merge all the .xml rulesets into a single "default.rulesets" file -- this
 # prevents inodes from wasting disk space, but more importantly, works around
 # the fact that zip does not perform well on a pile of small files.
 cd src
 RULESETS=chrome/content/rules/default.rulesets
-echo "<rulesetlibrary>" > $RULESETS
-cat chrome/content/rules/*.xml >> $RULESETS
+echo "Creating ruleset library..."
+echo "<rulesetlibrary gitcommitid=\"${GIT_COMMIT_ID}\">" > $RULESETS
+# Include the filename.xml as the "f" attribute
+for file in chrome/content/rules/*.xml; do
+	xmlInsertString="<ruleset" 
+	fileName=$(basename "$file")
+	fileContent=$(sed "s/${xmlInsertString}/${xmlInsertString} f=\"${fileName}\"/" "chrome/content/rules/${fileName}")
+	echo "$fileContent" >> $RULESETS
+done
 echo "</rulesetlibrary>" >> $RULESETS
 
 echo "Removing whitespaces and comments..."
