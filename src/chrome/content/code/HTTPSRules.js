@@ -10,7 +10,7 @@ function Exclusion(pattern) {
 }
 
 function CookieRule(host, cookiename) {
-  this.host = host
+  this.host = host;
   this.host_c = new RegExp(host);
   this.name = cookiename;
   this.name_c = new RegExp(cookiename);
@@ -18,11 +18,12 @@ function CookieRule(host, cookiename) {
 
 localPlatformRegexp = new RegExp("firefox");
 ruleset_counter = 0;
-function RuleSet(name, match_rule, default_off, platform) {
+function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
+  this.xmlName = xmlName;
   //this.ruleset_match = match_rule;
   this.notes = "";
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
@@ -254,6 +255,12 @@ const RuleWriter = {
       // The root of the XML tree has a name, which means it should be single a ruleset...
       this.parseOneRuleset(xmlblob, rule_store, file);
     } else {
+      if (xmlblob.@gitcommitid == xmlblob.@nonexistantthing) {
+        this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
+        rule_store.gitcommitid = "HEAD";
+      } else {
+        rule_store.GITCommitID = xmlblob.@gitcommitid;
+      }
       // The root of the XML tree should be a <rulesetlibrary> with many
       // <ruleset> children
       var lngth = xmlblob.ruleset.length(); // premature optimisation
@@ -280,7 +287,7 @@ const RuleWriter = {
     if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
     if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
     if (xmlruleset.@platform.length() > 0) platform = xmlruleset.@platform;
-    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off, platform);
+    var rs = new RuleSet(xmlruleset.@name, xmlruleset.@f, match_rl, dflt_off, platform);
 
     if (xmlruleset.target.length() == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
