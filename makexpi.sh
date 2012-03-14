@@ -20,7 +20,12 @@ cd "`dirname $0`"
 if [ -n "$1" ]; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
 	SUBDIR=checkout
-	[ -d $SUBDIR ] || mkdir $SUBDIR
+  if [ -d $SUBDIR ] ; then
+    # Otherwise deleted files will lurk!
+    rm -r -f $SUBDIR/*
+  else
+    mkdir $SUBDIR
+  fi
 	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
