@@ -90,7 +90,7 @@ RuleSets.prototype = {
     // Get file contents
     if (xhr.readyState == 4) {
       // XXX: Validation + error checking
-      var ruletag = xhr.responseXML.getElementsByTagName('ruleset')[0];
+      var ruletag = xhr.responseXML.getElementsByTagName("ruleset")[0];
 
       var default_state = true;
       if (ruletag.attributes.default_off) { default_state = false; }
@@ -102,8 +102,8 @@ RuleSets.prototype = {
         if (platform.search(this.localPlatformRegexp) == -1)
           default_state = false;
 
-      var rule_set = new RuleSet(ruletag.getAttribute('name'),
-                                 ruletag.getAttribute('match_rule'),
+      var rule_set = new RuleSet(ruletag.getAttribute("name"),
+                                 ruletag.getAttribute("match_rule"),
                                  default_state);
 
       // Read user prefs
@@ -111,27 +111,27 @@ RuleSets.prototype = {
         rule_set.active = (localStorage[rule_set.name] == "true");
       }
 
-      var rules = xhr.responseXML.getElementsByTagName('rule');
+      var rules = xhr.responseXML.getElementsByTagName("rule");
       for(var j = 0; j < rules.length; j++) {
-        rule_set.rules.push(new Rule(rules[j].getAttribute('from'),
-                                      rules[j].getAttribute('to')));
+        rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
+                                      rules[j].getAttribute("to")));
       }
 
-      var exclusions = xhr.responseXML.getElementsByTagName('exclusion');
+      var exclusions = xhr.responseXML.getElementsByTagName("exclusion");
       for(var j = 0; j < exclusions.length; j++) {
         rule_set.exclusions.push(
-              new Exclusion(exclusions[j].getAttribute('pattern')));
+              new Exclusion(exclusions[j].getAttribute("pattern")));
       }
 
-      var cookierules = xhr.responseXML.getElementsByTagName('securecookie');
+      var cookierules = xhr.responseXML.getElementsByTagName("securecookie");
       for(var j = 0; j < cookierules.length; j++) {
-        rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute('host'),
-                                             cookierules[j].getAttribute('name')));
+        rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
+                                             cookierules[j].getAttribute("name")));
       }
 
-      var targets = xhr.responseXML.getElementsByTagName('target');
+      var targets = xhr.responseXML.getElementsByTagName("target");
       for(var j = 0; j < targets.length; j++) {
-         var host = targets[j].getAttribute('host');
+         var host = targets[j].getAttribute("host");
          if (!(host in this.targets)) {
            this.targets[host] = [];
          }

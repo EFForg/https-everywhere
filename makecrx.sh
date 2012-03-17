@@ -67,9 +67,10 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
-cp -r chromium pkg/crx
+mkdir -p pkg/crx
 cd pkg/crx
-do_not_ship="*.py *.xml"
+ln -sf ../../chromium/* .
+do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 cp -r src/chrome/content/rules pkg/crx/
