@@ -2,15 +2,25 @@
 <ruleset name="Disqus">
 
 	<target host="disqus.com" />
-	<target host="mediacdn.disqus.com" />
-	<target host="securecdn.disqus.com" />
-	<target host="www.disqus.com" />
+	<target host="*.disqus.com" />
 
 	<rule from="^http://(www\.)?disqus\.com/"
 		to="https://disqus.com/" />
 
-	<rule from="^http://(media|secure)cdn\.disqus\.com/"
+	<!-- don't match (media|secure)cdn -->
+
+	<rule from="^http://([^/^\.]+([^a^e]|[^i^r][ae]))cdn\.disqus\.com/"
+		to="https://$1cdn.disqus.com/" />
+
+	<!-- all subdomains not handled above nor below -->
+
+	<rule from="^http://([^/^\.]*([^c]dn|[^d]n|[^a^n]|[^i]a|[^d]ia|[^e]dia|[^m]edia))\.disqus\.com/"
+		to="https://$1.disqus.com/" />
+
+	<rule from="^http://(media|secure)(cdn)?\.disqus\.com/"
 		to="https://securecdn.disqus.com/" />
+
+
 
 </ruleset>
 
