@@ -1,5 +1,8 @@
 <ruleset name="SciVerse">
 
+  <target host="developers.elsevier.com" />
+  <target host="www.developers.elsevier.com" />
+   <exclusion pattern="^http://www\.developers\.elsevier\.com(/$|/action)" />
   <target host="sciencedirect.com" />
   <target host="binary-services.sciencedirect.com" />
   <target host="pdn.sciencedirect.com" />
@@ -7,12 +10,25 @@
   <target host="www.sciencedirect.com" />
     <!-- Homepage redirects to http -->
     <exclusion pattern="^http://(www\.)?sciencedirect\.com/$" />
+  <target host="acw.sciverse.com" />
+  <target host="applications.sciverse.com" />
+  <target host="www.applications.sciverse.com" />
+    <!-- exclusion below -->
+  <target host="hub.sciverse.com" />
+  <target host="www.hub.sciverse.com" />
+    <exclusion pattern="^http://www\.(applications|hub)\.sciverse\.com(/$|/action|/gadgetservices)" />
 
-  <rule from="^http://(www\.)?sciencedirect\.com/"
-          to="https://www.sciencedirect.com/" />
+  <rule from="^http://(www\.)?developers\.elsevier\.com/"
+	  to="https://www.developers.elsevier.com/" />
 
-  <rule from="^http://(binary-services|pdn|sdauth)\.sciencedirect\.com/"
-          to="https://$1.sciencedirect.com/" />
+  <rule from="^http://((binary-services|pdn|sdauth|www)\.)?sciencedirect\.com/"
+          to="https://$1sciencedirect.com/" />
+
+  <rule from="^http://(www\.)?(applications|hub)\.sciverse\.com/(.+)"
+	  to="https://www.$2.sciverse.com/$3" />
+
+  <rule from="^http://acw\.sciverse\.com/"
+	  to="https://acw.sciverse.com/" />
 
   <securecookie host="^(pdn|sdauth|www)\.sciencedirect\.com$" name=".*" />
 
