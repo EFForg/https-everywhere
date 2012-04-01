@@ -1,41 +1,43 @@
-<!-- This rule is off by default because it causes so many aspects of the
-     Amazon site to break; see the mailing list archives for details -->
-
+<!--	This rule is off by default because it causes so many aspects of the
+	Amazon site to break; see the mailing list archives for details
+-->
 <ruleset name="Amazon (buggy)" default_off="currently somewhat broken">
-   <target host="www.amazon.*" />
-   <target host="amazon.*" />
-   <target host=".amazon.co.uk" />
-   <target host="aan.amazon.co.uk"/>
-   <target host="www.amazon.co.*" />
-   <target host="amazon.co.*" />
-	<exclusion pattern="^http://www\.amazon\.co\.uk/s(/|\?rh=)"/>
-   <target host="www.amazon.com" />
-   <target host="amazon.com" />
-   <target host="ecx.images-amazon.com"/>
+	<target host="www.amazon.*"/>
+	<target host="amazon.*"/>
+	<target host=".amazon.co.uk"/>
+	<target host="aan.amazon.co.uk"/>
+	<target host="www.amazon.co.*"/>
+	<target host="amazon.co.*"/>
+		<exclusion pattern="^http://www\.amazon\.co\.uk/s(/|\?rh=)"/>
+	<target host="www.amazon.com"/>
+	<target host="amazon.com"/>
+	<target host="ecx.images-amazon.com"/>
 
-<!-- Amazon appears to operate in 7 countries, and does not hold the domains
-     for some others, like .se or .be.  In other cases there is an http-only site
-     that redirects to one of these 7 countries.  -->
+	<securecookie host="^(www)?\.amazon\.co\.uk$" name=".*"/>
 
-  <!-- We totally need to figure out if we can have a blanket redirect
-  for Amazon Web Services, which are a very popular CDN that appears
-  to support HTTPS!  The aws.amazon.com rule below does not do this
-  because it only applies to the developer signup page. -->
+<!--	Amazon appears to operate in 7 countries, and does not hold the domains
+	for some others, like .se or .be.  In other cases there is an http-only site
+	that redirects to one of these 7 countries.
 
-  <rule from="^http://(?:www\.)?amazon\.com/" to="https://www.amazon.com/" />
+	We totally need to figure out if we can have a blanket redirect
+	or Amazon Web Services, which are a very popular CDN that appears
+	to support HTTPS!  The aws.amazon.com rule below does not do this
+	because it only applies to the developer signup page. -->
 
-  <rule from="^http://(?:www\.)?amazon\.co\.(uk|jp)/"
-          to="https://www.amazon.co.$1/" />
+	<rule from="^http://(?:www\.)?amazon\.com/"
+		to="https://www.amazon.com/"/>
 
-  <rule from="^http://(?:www\.)?amazon\.(ca|cn|de|fr)/"
-          to="https://www.amazon.$1/" />
+	<rule from="^http://(?:www\.)?amazon\.co\.(jp|uk)/"
+		to="https://www.amazon.co.$1/"/>
+
+	<rule from="^http://(?:www\.)?amazon\.(ca|cn|de|fr)/"
+		to="https://www.amazon.$1/"/>
 
 	<rule from="^http://aan\.amazon\.co\.uk/"
 		to="https://aan.amazon.co.uk/"/>
 
-  <rule from="^http://ecx\.images-amazon\.com/"
-	  to="https://images-na.ssl-images-amazon.com/"/>
+	<rule from="^http://ecx\.images-amazon\.com/"
+		to="https://images-na.ssl-images-amazon.com/"/>
 
-  <securecookie host="^(www)?\.amazon\.co\.uk$" name=".*"/>
 
 </ruleset>
