@@ -27,9 +27,9 @@ if [ -n "$1" ]; then
 fi
 
 if [ -x trivial-validate.py ]; then
-	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
+	VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
 else
-	VALIDATE=./trivial-validate
+	VALIDATE="python trivial-validate"
 fi
 if $VALIDATE src/chrome/content/rules >&2
 then
