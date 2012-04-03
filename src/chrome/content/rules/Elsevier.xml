@@ -1,0 +1,79 @@
+<ruleset name="Elsevier (partial)">
+
+	<target host="ars.els-cdn.com"/>
+	<target host="origin-ars.els-cdn.com"/>
+	<target host="cdn.els-cdn.com"/>
+	<target host="origin-cdn.els-cdn.com"/>
+	<target host="elsevier.ca"/>
+	<target host="www.elsevier.ca"/>
+	<target host="covers.elsevier.com"/>
+	<target host="developers.elsevier.com" />
+	<target host="www.developers.elsevier.com" />
+		<exclusion pattern="^http://www\.developers\.elsevier\.com/($|action)" />
+	<target host="linkinghub.elsevier.com"/>
+	<target host="elsevierhealth.com"/>
+	<target host="*.elsevierhealth.com"/>
+	<target host="www.*.elsevierhealth.com"/>
+	<target host="elsevierhealth.com.au"/>
+	<target host="www.elsevierhealth.com.au"/>
+	<target host="elsevierhealth.co.uk"/>
+	<target host="www.elsevierhealth.co.uk"/>
+
+	<target host="sciencedirect.com" />
+	<target host="binary-services.sciencedirect.com" />
+	<target host="pdn.sciencedirect.com" />
+	<target host="sdauth.sciencedirect.com" />
+	<target host="www.sciencedirect.com" />
+		<!--	Homepage redirects to http, gagdetservices css throws 404	-->
+		<exclusion pattern="^http://(www\.)?sciencedirect\.com/($|gadgetservices/)" />
+	<target host="acw.sciverse.com" />
+	<target host="applications.sciverse.com" />
+	<target host="www.applications.sciverse.com" />
+		<!-- exclusion below -->
+	<target host="hub.sciverse.com" />
+	<target host="www.hub.sciverse.com" />
+		<exclusion pattern="^http://www\.(applications|hub)\.sciverse\.com/($|action|gadgetservices)" />
+
+
+	<securecookie host="^origin-ars\.els-cdn\.com$" name=".*"/>
+	<securecookie host="^www\.elsevier\.ca$" name=".*"/>
+	<securecookie host="(.*\.)?elsevierhealth\.co(m(\.au)?|\.uk)$" name=".*"/>
+
+	<securecookie host="^(pdn|sdauth|www)\.sciencedirect\.com$" name=".*" />
+
+
+	<rule from="^http://(?:origin-)?(ars|cdn)\.els-cdn\.com/"
+		to="https://origin-$1.els-cdn.com/" />
+
+	<rule from="^http://(?:www\.)?elsevier\.ca/"
+		to="https://www.elsevier.ca/"/>
+
+	<rule from="^http://(?:www\.)?developers\.elsevier\.com/"
+		to="https://www.developers.elsevier.com/" />
+
+	<rule from="^http://(covers|linkinghub)\.elsevier\.com/"
+		to="https://$1.elsevier.com/"/>
+
+	<rule from="^http://(www\.)?((asia|eu|mea|us)\.)?elsevierhealth\.com/"
+		to="https://$1$2elsevierhealth.com/"/>
+
+	<rule from="^http://(?:www\.)?elsevierhealth\.com\.au/"
+		to="https://www.elsevierhealth.com.au/"/>
+
+	<rule from="^http://(www\.)?elsevierhealth\.co\.uk/"
+		to="https://$1elsevierheath.co.uk/"/>
+
+
+	<rule from="^http://(?:www\.)?sciencedirect\.com/"
+		to="https://www.sciencedirect.com/"/>
+
+	<rule from="^http://(binary-services|pdn|sdauth)\.sciencedirect\.com/"
+		to="https://$1.sciencedirect.com/" />
+
+	<rule from="^http://(?:www\.)?(applications|hub)\.sciverse\.com/([\w\W]+)"
+		to="https://www.$1.sciverse.com/$2" />
+
+	<rule from="^http://acw\.sciverse\.com/"
+		to="https://acw.sciverse.com/" />
+
+</ruleset>
