@@ -3,14 +3,11 @@
 	<target host="affili.net"/>
 	<target host="www.affili.net"/>
 	<target host="sedo.com"/>
-	<target host=".sedo.com"/>
-	<target host="www.sedo.com"/>
+	<target host="*.sedo.com"/>
 	<target host="sedo.co.uk"/>
-	<target host=".sedo.co.uk"/>
-	<target host="www.sedo.co.uk"/>
+	<target host="*.sedo.co.uk"/>
 	<target host="sedo.de"/>
-	<target host=".sedo.de"/>
-	<target host="www.sedo.de"/>
+	<target host="*.sedo.de"/>
 	<target host="sedo.fr"/>
 	<target host="www.sedo.fr"/>
 	<target host="backoffice.sedo.de"/>
@@ -20,16 +17,20 @@
 	<target host="img.sedoparking.com"/>
 
 
-	<rule from="^http://(www\.)?affili\.net/"
+	<securecookie host="^www\.affili\.net$" name=".*"/>
+	<securecookie host="^\.sedo\.(co(m|\.uk)|de)$" name=".*"/>
+
+
+	<rule from="^http://(?:www\.)?affili\.net/"
 		to="https://www.affili.net/"/>
 
-	<rule from="^http://(www\.)?affili\.de/"
+	<rule from="^http://(?:www\.)?affili\.de/"
 		to="https://www.affili.net/de/"/>
 
-	<rule from="^http://(www\.)?sedo\.(co(m|\.uk)|de)/"
-		to="https://sedo.$2/"/>
+	<rule from="^http://(?:www\.)?sedo\.(co(m|\.uk)|de)/"
+		to="https://sedo.$1/"/>
 
-	<rule from="^http://(www\.)sedo\.fr/"
+	<rule from="^http://(?:www\.)?sedo\.fr/"
 		to="https://sedo.com/fr/home/bienvenue"/>
 
 	<rule from="^http://(backoffice|cvs|dbe|techoffice)\.sedo\.de/"
@@ -37,8 +38,5 @@
 
 	<rule from="^http://img\.sedoparking\.com/"
 		to="https://sedo.cachefly.net/"/>
-
-	<securecookie host="^www\.affili\.net$" name=".*"/>
-	<securecookie host="^\.sedo\.(co(m|\.uk)|de)$" name=".*"/>
 
 </ruleset>
