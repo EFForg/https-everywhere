@@ -1,12 +1,18 @@
 <ruleset name="CafePress (partial)">
 
+	<target host="cafepress.com"/>
+	<target host="*.cafepress.com"/>
 	<target host="cafepress.co.uk"/>
-	<target host="content.cafepress.co.uk"/>
-	<target host="members.cafepress.co.uk"/>
-	<target host="www.cafepress.co.uk"/>
+	<target host="*.cafepress.co.uk"/>
 
-	<rule from="^http://(www\.)?cafepress\.co\.uk/content/" to="https://www.cafepress.co.uk/content/"/>
+	<rule from="^http://(?:www\.)?cafepress\.co(m|\.uk)/content/"
+		to="https://www.cafepress.co$1/content/"/>
 
-	<rule from="^http://(content|members)\.cafepress\.co\.uk/" to="https://$1.cafepress.co.uk/"/>
+	<rule from="^http://(content|members)\.cafepress\.co(m|\.uk)/"
+		to="https://$1.cafepress.co$2/"/>
+
+	<!--	Akamai bucket.  Finding it would ideal.	-->
+	<rule from="^http://content\d?\.cpcache\.com/"
+		to="https://content.cafepress.com/"/>
 
 </ruleset>
