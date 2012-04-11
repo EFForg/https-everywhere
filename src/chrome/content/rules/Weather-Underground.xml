@@ -1,0 +1,23 @@
+<ruleset name="Weather Underground (partial)">
+
+	<target host="wunderground.com"/>
+	<target host="*.wunderground.com"/>
+	<!--	Akamai. Doesn't work as-is, haven't found bucket	-->
+	<target host="icons.wxug.com"/>
+	<target host="icons-ak.wxug.com"/>
+
+	<securecookie host="^(.*\.)wunderground\.com$" name=".*"/>
+
+	<rule from="^http://(www\.)?wunderground\.com/"
+		to="https://$1wunderground.com/"/>
+
+	<rule from="^http://icons\.wxug\.com/"
+		to="https://wunderground.com/"/>
+
+	<!--	some icons-ak data not on icons nor www. e.g.:
+			/i/wpbg/
+			/i/wu/	-->
+	<rule from="^http://icons-ak\.wxug\.com/(css|w/i)/"
+		to="https://wunderground.com/$1/"/>
+
+</ruleset>
