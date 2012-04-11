@@ -1,5 +1,6 @@
 <ruleset name="Microsoft (partial)">
 
+	<target host="ajax.aspnetcdn.com"/>
 	<target host="microsoft.com"/>
 	<target host="*.microsoft.com"/>
 		<exclusion pattern="^http://www\.microsoft\.com/(.*FamilyID|security/)"/>
@@ -14,37 +15,37 @@
 	<target host="services.social.microsoft.com"/>
 	<target host="*.services.social.microsoft.com"/>
 	<target host="*.social.s-msft.com"/>
+		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/"/>
 	<target host="blogs.technet.com"/>
 	<target host="*.blogs.technet.com"/>
 	<target host="ecn.dev.virtualearth.net"/>  
 
-	<securecookie host="^support\.microsoft\.com$" name=".*"/>
 	<securecookie host="^blogs\.technet\.com$" name=".*"/>
+
+	<rule from="^http://ajax\.aspnetcdn\.com/"
+		to="https://ajax.aspnetcdn.com/"/>
 
 	<rule from="^http://microsoft\.com/"
 		to="https://www.microsoft.com/"/>
 
-	<rule from="^http://(adcenter|advertising|ajax|c(onnect)?|social\.expression|go|ie|msdn|office(365|2010)?|onlinehelp|profile|research|signature|snackbox|(services\.)?social|store|social\.technet|windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(adcenter|advertising|ajax|c|connect|social\.expression|go|ie|msdn|office(365|2010)?|onlinehelp|profile|research|signature|snackbox|(services\.)?social|store|social\.technet|windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/"/>
 
-	<rule from="^http://i(?:\d)?\.microsoft\.com/"
+	<!--	Akamai with no valid cert.
+			Where's the bucket?	-->
+	<rule from="^https?://(?:i\d?|js)\.microsoft\.com/"
 		to="https://www.microsoft.com/"/>
 
-	<rule from="^http://i\d\.msdn\.microsoft\.com/"
-		to="https://msdn.microsoft.com/"/>
+	<!--	Akamai with no valid cert.
+			Where's the bucket?	-->
+	<rule from="^https?://i\d?\.((code\.)?msdn|services\.social|(gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
+		to="https://$1.microsoft.com/"/>
 
 	<rule from="^http://support\.microsoft\.com/((common|library|[sS]tyles)/|LTS/default\.aspx)"
 		to="https://support.microsoft.com/$1"/>
 
-	<!--	Akamai with no valid cert.
-			Where's the bucket?	-->
-	<rule from="^http://i\d\.services\.social\.microsoft\.com/"
-		to="https://services.social.microsoft.com/"/>
-
-	<!--	Akamai with no valid cert.
-			Where's the bucket?	-->
-	<rule from="^http://i\d?\.technet\.microsoft\.com/"
-		to="https://technet.microsoft.com/"/>
+	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
+		to="https://social.technet.microsoft.com/"/>
 
 	<rule from="^http://v(4|5)\.windowsupdate\.microsoft\.com/"
 		to="https://v$1.windowsupdate.microsoft.com/"/>
@@ -64,12 +65,12 @@
 	<rule from="^http://(blogs|social)\.msdn\.com/"
 		to="https://$1.msdn.com/"/>
 
-	<rule from="^http://i\d\.social\.s-msft\.com/"
+	<rule from="^https?://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/"/>
 
 	<!--	Akamai with no valid cert.
 			Where's the bucket?	-->
-	<rule from="^http://(?:i\d?)?blogs\.technet\.com/"
+	<rule from="^https?://(?:i\d?)?blogs\.technet\.com/"
 		to="https://blogs.technet.com/"/>
 
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
