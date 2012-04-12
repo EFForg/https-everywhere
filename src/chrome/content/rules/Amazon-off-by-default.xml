@@ -1,43 +1,78 @@
-<!--	This rule is off by default because it causes so many aspects of the
-	Amazon site to break; see the mailing list archives for details
--->
-<ruleset name="Amazon (buggy)" default_off="currently somewhat broken">
-	<target host="www.amazon.*"/>
-	<target host="amazon.*"/>
-	<target host="*.amazon.co.uk"/>
-	<target host="aan.amazon.co.uk"/>
-	<target host="www.amazon.co.*"/>
-	<target host="amazon.co.*"/>
-		<exclusion pattern="^http://www\.amazon\.co\.uk/(gp/search\?|s(/|\?rh=))"/>
-	<target host="www.amazon.com"/>
-	<target host="amazon.com"/>
-	<target host="ecx.images-amazon.com"/>
+<!--	This rule is off by default because it caused so many aspects of the
+	Amazon site to break; see the mailing list archives for details.
+	Currently being fixed...
 
-	<securecookie host="^(www)?\.amazon\.co\.uk$" name=".*"/>
-
-<!--	Amazon appears to operate in 7 countries, and does not hold the domains
+	Amazon appears to operate in 7 countries, and does not hold the domains
 	for some others, like .se or .be.  In other cases there is an http-only site
 	that redirects to one of these 7 countries.
 
-	We totally need to figure out if we can have a blanket redirect
-	or Amazon Web Services, which are a very popular CDN that appears
-	to support HTTPS!  The aws.amazon.com rule below does not do this
-	because it only applies to the developer signup page. -->
 
-	<rule from="^http://(?:www\.)?amazon\.com/"
-		to="https://www.amazon.com/"/>
+	amazon.com
+		does work:
+			ap/		(appears to be purchase-management related)
+			([\w\-]+/)?dp/	(i.e., dp/ possibly preceeded by title)
+			e/\w{10,10}/	(i.e., e/ followed by ASIN)
 
-	<rule from="^http://(?:www\.)?amazon\.co\.(jp|uk)/"
-		to="https://www.amazon.co.$1/"/>
+		doesn't work:
+			$		(i.e., homepage)
+			([\w\-]+/)?b/ 	(i.e., b/ preceeded by category)
+			([\w\-]+/)?gp/	(i.e., gp/ possibly preceeded by title), except as above
+			Help/
+			s/
 
-	<rule from="^http://(?:www\.)?amazon\.(ca|cn|de|fr)/"
+	amazon.co.jp:
+		does work:
+			/ap/
+			a few pages under gp/
+		doesn't work:
+			everything else
+
+	amazon.cn:
+		doesn't work:
+			everything?
+
+	amazon.*:
+		does work:
+			everything except...
+		doesn't work:
+			gp/search\?
+			/mn/search/
+			s/
+			s\?rh=		(i.e., search pages and files)
+				
+-->
+<ruleset name="Amazon (experimental)" default_off="needs testing">
+
+	<target host="www.amazon.*"/>
+	<target host="amazon.*"/>
+	<target host="*.amazon.co.uk"/>
+	<target host="www.amazon.co.*"/>
+	<target host="amazon.co.*"/>
+		<!--	search redirects to http, for all sites	-->
+		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(gp/search\?|mn/search/|s(/|\?rh=))"/>
+	<target host="amazon.com"/>
+	<target host="www.amazon.com"/>
+		<!--	product pages don't work on .com	-->
+		<exclusion pattern="^http://www\.amazon\.com/($|([\w\-]+/)?/(b|dp|Help)/)"/>
+	<target host="ecx.images-amazon.com"/>
+
+
+	<!--	verified as working for UK, others sites matched appear to function identically	-->
+	<securecookie host="^(www)?\.amazon\.(ca|co\.uk|de|es|fr|it)$" name=".*"/>
+
+
+	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
 		to="https://www.amazon.$1/"/>
+
+	<!--	very little support on JP website
+			possibly more than in this rule though	-->
+	<rule from="^http://www\.amazon\.co\.jp/(ap|gp/(cart|cobrandcard|registry))/"
+		to="https://www.amazon.co.jp/$1/"/>
 
 	<rule from="^http://aan\.amazon\.co\.uk/"
 		to="https://aan.amazon.co.uk/"/>
 
 	<rule from="^http://ecx\.images-amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/"/>
-
 
 </ruleset>
