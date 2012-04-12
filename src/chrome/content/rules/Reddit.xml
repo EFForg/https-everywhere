@@ -1,28 +1,26 @@
-<ruleset name="Reddit (buggy)" default_off="Domains cannot be verifyed, and server timeout">
-  <target host="reddit.com" />
-  <target host="*.reddit.com" />
+<!--	s3.amazonaws.com/reddit(ads|static)?/
+	s3.amazonaws.com/static.reddit.com/
+	s3.amazonaws.com/(\w\.)?thumbs.redditmedia.com/
+-->
+<ruleset name="Reddit">
 
-  <target host="redditstatic.com" />
-  <target host="www.redditstatic.com" />
+	<target host="ssl.reddit.com"/>
+	<target host="static.redditmedia.com"/>
+	<target host="thumbs.redditmedia.com"/>
+	<target host="*.thumbs.redditmedia.com"/>
+	<target host="redditstatic.com"/>
+	<target host="www.redditstatic.com"/>
 
-  <target host="redditmedia.com"/>
-  <target host="www.redditmedia.com"/>
-  <target host="thumbs.redditmedia.com" />
-  <target host="*.thumbs.redditmedia.com" />
-<!-- A pixel is loaded asynchroniously from: -->
-<!-- <target host="pixel.redditmedia.com" /> -->
-<!-- However this server times out when using HTTPS -->
+	<rule from="^http://ssl\.reddit\.com/"
+		to="https://ssl.reddit.com/"/>
 
-	<securecookie host="^\.reddit\.com$" name=".*"/>
+	<rule from="^http://static\.reddit\.com/"
+		to="https://s3.amazonaws.com/static.reddit.com/"/>
 
+	<rule from="^http://(\w\.)?thumbs\.redditmedia\.com/"
+		to="https://s3.amazonaws.com/$1.thumbs.redditmedia.com/"/>
 
-  <rule from="^http://(www\.)?reddit\.com/" to="https://www.reddit.com/"/>
-  <rule from="^http://(static|thumbs)\.reddit\.com/" to="https://$1.reddit.com/"/>
+	<rule from="^http://(?:www\.)?redditstatic\.com/"
+		to="https://s3.amazonaws.com/redditstatic/"/>
 
-  <rule from="^http://(www\.)?redditstatic\.com/" to="https://www.redditstatic.com/"/>
-
-  <rule from="^http://(?:www\.)?redditmedia\.com/" to="https://www.redditmedia.com/"/>
-  <rule from="^http://thumbs\.redditmedia\.com/" to="https://thumbs.redditmedia.com/"/>
-  <rule from="^http://([a-z])\.thumbs\.redditmedia\.com/" to="https://$1.thumbs.redditmedia.com/"/>
-<!--  <rule from="^http://pixel\.redditmedia\.com/" to="https://pixel.redditmedia.com/"/> -->
 </ruleset>
