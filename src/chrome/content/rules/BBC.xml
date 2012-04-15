@@ -1,3 +1,4 @@
+
 <!--	Nonfunctional:
 		- news.bbc.co.uk
 			When rewritten to www, redirects back to news
@@ -6,6 +7,10 @@
 			When rewritten to www, redirects to http =(
 			!on static.
 		- stats
+		- wwwimg.bbc.co.uk
+			redirects to http
+
+	see BBC-mismatches.xml for problematic rules.
 -->
 <ruleset name="BBC (partial)">
 
@@ -13,11 +18,16 @@
 	<target host="sa.bbc.co.uk"/>
 	<target host="*.bbc.co.uk"/>
 	<target host="static.bbci.co.uk"/>
+	<!--	Akamai	-->
+	<target host="node1.bbcimg.co.uk"/>
 
 	<rule from="^http://(sa|static)\.bbci?\.co\.uk/"
 		to="https://$1.bbc.co.uk/"/>
 
-	<rule from="^http://(?:www\.)?bbc\.co\.uk/favicon\.ico$"
-		to="https://www.bbc.co.uk/favicon.ico"/>
+	<rule from="^http://(?:www\.)?bbc\.co\.uk/(favicon\.ico$|glow/|guidance/|iplayer/)"
+		to="https://www.bbc.co.uk/$1"/>
+
+	<rule from="^http://node[12]\.bbcimg\.co\.uk/iplayer/"
+		to="https://www.bbc.co.uk/iplayer/"/>
 
 </ruleset>
