@@ -1,35 +1,64 @@
 <!--	!functional:
+		archive.hhs.gov			(timeout)
+		www.hhs.gov			(Akamai, shows 404 page)
 		thomas.loc.gov
-		www.loc.gov		(cert: wwws.loc.gov)
+		www.loc.gov			(cert: wwws.loc.gov)
+		transparency.cit.nih.gov	(Akamai, "An error occurred")
+		www.nih.gov			(timeout)
+		ansers.usa.gov			(timeout)
+		blog.usa.gov
+		usa.gov				(Akamai, redirects to http)
 -->
 <ruleset name="US government (partial)">
 
+	<target host="cms.gov"/>
+	<target host="*.cms.gov"/>
 	<target host="export.gov"/>
 	<target host="*.export.gov"/>
 	<target host="fbo.gov"/>
 	<target host="*.fbo.gov"/>
 	<target host="fnal.gov"/>
 	<target host="*.fnal.gov"/>
+	<target host="genome.gov"/>
+	<target host="www.genome.gov"/>
+	<target host="cms.hhs.gov"/>
+	<target host="www.cms.hhs.gov"/>
 	<target host="intelligence.house.gov"/>
+	<target host="medicare.gov"/>
+	<target host="*.medicare.gov"/>
+	<target host="*.usa.gov"/>
 	<target host="usajobs.gov"/>
 	<target host="*.usajobs.gov"/>
 
+	<securecookie host="^questions\.cms\.gov$" name=".*"/>
 	<securecookie host="^safeharbor\.export\.gov$" name=".*"/>
-	<securecookie host="^(.*\.)?f(bo|nal)\.gov$" name=".*"/>
+	<securecookie host="^(.*\.)?(fbo|fnal|medicare|usajobs)\.gov$" name=".*"/>
 	<securecookie host="^intelligence\.house\.gov$" name=".*"/>
-	<securecookie host="^(.*\.)?usajobs\.gov$" name=".*"/>
+	<securecookie host="^publications\.usa\.gov$" name=".*"/>
+
+	<rule from="^http://(?:www\.)?cms(?:\.hhs)?\.gov/"
+		to="https://www.cms.gov/"/>
+
+	<rule from="^http://assets\.cms\.gov/"
+		to="https://assets.cms.gov/"/>
+
+	<rule from="^http://questions\.(cms|medicare)\.gov/"
+		to="https://questions.$1.gov/"/>
 
 	<rule from="^http://(safeharbor|www)\.export\.gov/"
 		to="https://$1.export.gov/"/>
 
-	<rule from="^http://(?:www\.)?fbo\.gov/"
-		to="https://www.fbo.gov/"/>
+	<rule from="^http://(?:www\.)?(fbo|genome|medicare)\.gov/"
+		to="https://www.$1.gov/"/>
 
 	<rule from="^http://(www\.)?fnal\.gov/"
 		to="https://$1fnal.fov/"/>
 
 	<rule from="^http://intelligence\.house\.gov/"
 		to="https://intelligence.house.gov/"/>
+
+	<rule from="^http://(busines|publication)s\.usa\.gov/"
+		to="https://$1s.usa.gov/"/>
 
 	<rule from="^http://([\w\-]+\.)?usajobs\.gov/"
 		to="https://$1usajobs.gov/"/>
