@@ -1,0 +1,38 @@
+<!--
+	d1yoaun8syyxxt.cloudfront.net	(used on partners.infusionsoft)
+	d2ma5jma76a61i.cloudfront.net	(used on learningcenter, client pages)
+	s3.amazonaws.com/infusionlp/	(used on partners.infusionsoft)
+	s3.amazonaws.com/infusiontraning/
+
+	!functional:
+		- infusionblog.com
+		- 2012.infusioncon.com
+		- help(center).infusionsoft.com
+		- marketplace.infusionsoft.com
+-->	
+<ruleset name="Infusionsoft (partial)">
+
+	<target host="customerhub.net"/>
+	<target host="*.customerhub.net"/>
+		<!--	www cert: infusedsystems.com, expired, shows infused... website	-->
+		<exclusion pattern="^http://(help|kb|www)\.customerhub\."/>
+	<target host="infusionsoft.com"/>
+	<target host="www.infusionsoft.com"/>
+		<exclusion pattern="^http://(help(center)?|marketplace)\.infusionsoft\."/>
+
+
+	<securecookie host="^(.*\.)?customerhub\.net$" name=".*"/>
+	<securecookie host="^(.*\.)?infusionsoft\.com$" name=".*"/>
+
+
+	<rule from="^http://customerhub\.net/$"
+		to="https://customerhub.net/"/>
+
+	<!--	unique subdomains for each client	-->
+	<rule from="^http://([\w\-]+)\.customerhub\.net/"
+		to="https://$1.customerhub.net/"/>
+
+	<rule from="^http://(crm\.|www\.)?infusionsoft\.com/"
+		to="https://$1infusionsoft.com/"/>
+
+</ruleset>
