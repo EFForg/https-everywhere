@@ -1,0 +1,43 @@
+<!--
+	See Gannet-Company-mismatches for problematic rules.
+
+
+	!functional:
+		- images.crossmediaservices.com		(cert: *.shoplocal.com; "Access Denied")
+		- classifieds.flatoday.com
+		- cmsimg.gannet.com			(Akamai, "Service Unavailable")
+		- origin-cmsimg.gannet.com		(exists but !https)
+		- origin-www.gannett.com		(ditto)
+		- www.gannet.com			(Akamai, "Service Unavailable")
+		- floridatoday.gannettdigital.com
+		- floridatoday.gon.gannettonline.com
+-->
+<ruleset name="Gannet Company (partial)">
+
+	<target host="ads.flatdy.com"/>
+	<target host="floridatoday.com"/>
+	<!--	cmsimg:	Akamai, "Service Unavailable"
+		origin-cmsimg:	!https			-->
+	<target host="*.floridatoday.com"/>
+	<target host="shoplocal.com"/>
+	<target host="www.shoplocal.com"/>
+
+	<!--	encountered:	ads.flatdy.com
+				floridatoday.com, .floridatoday.com, www.floridatoday.com
+				www.shoplocal.com					-->
+	<securecookie host="^(.*\.)(flatdy|floridatoday|shoplocal)\.com$" name=".*"/>
+
+	<rule from="^http://(?:(origin-)?cmsimg)?floridatoday\.com/"
+		to="https://www.floridatoday.com/"/>
+
+	<!--	origin-www works with https	-->
+	<rule from="^http://((origin-)?www)\.floridatoday\.com/"
+		to="https://$1.floridatoday.com/"/>
+
+	<rule from="^http://ads\.flatdy\.net/"
+		to="https://ads.flatdy.net/"/>
+
+	<rule from="^http://(www\.)?shoplocal\.com/"
+		to="https://$1shoplocal.com/"/>	
+
+</ruleset>
