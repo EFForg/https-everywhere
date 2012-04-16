@@ -3,17 +3,25 @@
 	ToDo: Find edgecast URL for /(fc|th)\d+.
 -->
 <ruleset name="DeviantArt (pending)" default_off="site operator says not ready yet">
-	<target host="deviantart.com" />
-	<target host="*.deviantart.com" />
-	<target host="*.deviantart.net" />
-	<exclusion pattern="^http://(backend|st)\.deviantart\.(com|net)/"/>
-	<rule from="^http://deviantart\.com/"
-		to="https://www.deviantart.com/" />
-	<rule from="^http://([^/:@\.]+)\.deviantart\.(com|net)/"
-		to="https://$1.deviantart.com/" />
 
-	<rule from="^http://(fc|th)\d+\.deviantart\.net/"
-		to="https://th.deviantart.com/"/>
+	<target host="deviantart.com"/>
+	<target host="*.deviantart.com"/>
+	<target host="*.deviantart.net"/>
+		<exclusion pattern="^http://backend\.deviantart\.(com|net)/"/>
 
 	<securecookie host="^\.deviantart\.com$" name=".*" />
+
+	<rule from="^http://deviantart\.com/"
+		to="https://www.deviantart.com/"/>
+
+	<rule from="^http://([^/:@\.]+)\.deviantart\.(?:com|net)/"
+		to="https://$1.deviantart.com/"/>
+
+	<rule from="^http://(?:fc|th)\d+\.deviantart\.net/"
+		to="https://th.deviantart.com/"/>
+
+	<!--	redirects from net to com	-->
+	<rule from="^http://([aei]|s[ht])\.deviantart\.(?:com|net)/"
+		to="https://$1.deviantart.net/"/>
+
 </ruleset>

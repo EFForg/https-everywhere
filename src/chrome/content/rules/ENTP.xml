@@ -1,10 +1,14 @@
 <!--	See ENTP-mismatches.xml also
+
+	d1ros97qkrwjf5.cloudfront.net
+	s3.amazonaws.com/entp-lh-avatar-production/
 -->
 <ruleset name="ENTP (partial)">
 
 	<target host="lighthouseapp.com" />
-	<target host="my.lighthouseapp.com" />
-	<target host="www.lighthouseapp.com" />
+	<target host="*.lighthouseapp.com" />
+		<!--	handled in mismatches ruleset	-->
+		<exclusion pattern="^http://help\.lighthouseapp\."/>
 	<target host="tenderapp.com" />
 	<target host="asset-0.tenderapp.com" />
 	<target host="asset-1.tenderapp.com" />
@@ -14,7 +18,18 @@
 	<target host="www.tenderapp.com" />
 		<exclusion pattern="^http://(www\.)?tenderapp\.com/$" />
 
-	<rule from="^http://(www\.)?([a-s][\w\-]+\.)?(lighthouse|tender)app\.com/"
-		to="https://$2$3app.com/" />
+
+	<securecookie host="^(.*\.)?tenderapp\.com$" name=".*"/>
+
+
+	<rule from="^http://(my\.|www\.)?lighthouseapp\.com/"
+		to="https://$1lighthouseapp.com/"/>
+
+	<!--	clients have unique subdomains.  Pages redirect to http.	-->
+	<rule from="^http://([\w\-]+)\.lighthouseapp\.com/(images/|login|pkg/|stylesheets/|users/new)"
+		to="https://$1.lighthouseapp.com/$1"/>
+
+	<rule from="^http://([\w\-]+\.)?tenderapp\.com/"
+		to="https://$1tenderapp.com/" />
 
 </ruleset>

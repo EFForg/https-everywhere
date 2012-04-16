@@ -1,0 +1,33 @@
+<!--
+	AmazonAWS buckets:
+	cdn-images.mailchimp.com
+	experts-production		(used on experts.)
+	int-dir				(used on connect.; doesn't have "blog" in filenames)
+
+	apidocs			(cert valid; shows "Nothing found" blog page)
+	cf			(shows blog over https, nothing over http)
+	cf.../(blog|www)/	(shows "Nothing found" blog page)
+	static			(cert: cloudfront.net; same data as cf over https)
+
+	!functional:
+		50.23.108.136/cloudfront_html/creative-blog/	("Nothing found" blog page; !at static.mailchimp.com/blog/images/; no creative-blog bucket on AmazonAWS)
+		creative.mailchimp.com
+
+	See MailChimp-mismatches.xml for problematic rules.
+-->
+<ruleset name="MailChimp (partial)">
+
+	<target host="mailchimp.com"/>
+	<target host="*.mailchimp.com"/>
+	<target host="*.admin.mailchimp.com"/>
+
+	<!--	is cross-domain login cookie used on unsecureable pages?	-->
+	<securecookie host="^(.*\.admin|blog|login)\.mailchimp\.com$" name=".*"/>
+
+	<rule from="^http://((\w+\.)?admin|blog\.|login\.|www\.)?mailchimp\.com/"
+		to="https://$1mailchimp.com/"/>
+
+	<rule from="^http://cdn-images\.mailchimp\.com/"
+		to="https://s3.amazonaws.com/cdn-images.mailchimp.com/"/>
+
+</ruleset>
