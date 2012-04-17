@@ -15,6 +15,7 @@
 					Bingo: s3.scribd.com
 						Doesn't hold:
 						- fonts2
+						- img
 						- s[67]
 				- scribdfonts
 				- scribd.com.fonts
@@ -30,7 +31,7 @@
 		- origin-s.scribd.com			works
 			- rewriting img.scribdassets and fonts[23].scribassets paths to origin-s causes redirection to www.scribd.com 404 page.
 						
-	ToDo: find fonts and img buckets.
+	ToDo: find img bucket.
 -->
 <ruleset name="Scribd.com (partial)">
 
@@ -43,8 +44,12 @@
 	<rule from="^http://(?:www\.)?scribd\.com/"
 		to="https://www.scribd.com/"/>
 
+	<!--	fonts.scribd.com is on AmazonAWS, but valid cert	-->
+	<rule from="^http://fonts[23]\.scribdassets\.com/"
+		to="https://fonts.scribd.com/"/>
+
 	<!-- bucket !found, but...	-->
-	<rule from="^http://s[1-8]\.scribdassets\.com/"
+	<rule from="^http://s[1-8]?\.scribd(?:assets)?\.com/"
 		to="https://origin-s.scribd.com/"/>
 
 </ruleset>
