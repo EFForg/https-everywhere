@@ -1,13 +1,31 @@
+<!--	!functional:
+		- (www.)piraten-media.de		(cert: cws-server14.de; "nicht über https verfügbar")
+		- (www.)piraten-mond.de			(cert: *.piratenpartei-bayern.de; 404)
+		- (www.)piraten-oberfranken.de		(cert: piratenpartei-bayern.de; shows blank page)
+		- events.piratenpartei-bayern.de	(cert valid; 404)
+		- (www.)piraten-ufr.de			(cert: argon.cws-server.de; "nicht über https verfügbar")
+
+	See PirateParty-mismatches for problematic rules.
+-->
 <ruleset name="Pirate Party">
 
+	<target host="junge-piraten.de"/>
+	<target host="*.junge-piraten.de"/>
 	<target host="partidopirata.es"/>
 	<target host="www.partidopirata.es"/>
 	<target host="piraattipuolue.fi"/>
 	<target host="www.piraattipuolue.fi"/>
 	<target host="piratenpartei.de"/>
+	<target host="*.piratenpartei.de"/>
+		<!--	handled in -mismatches	-->
+		<exclusion pattern="^http://(flaschenpost|ober(bayern|pfalz))\.piratenpartei\.de/"/>
+	<target host="piratenpartei-bayern.de"/>
+		<!--	homepage redirects to http	-->
+		<exclusion pattern="^http://piratenpartei-bayern\.de/$"/>
+	<!--	* for cross-domain cookie	-->
+	<target host="*.piratenpartei-bayern.de"/>
 	<target host="piratenpartij.nl"/>
 	<target host="*.piratenpartij.nl"/>
-	<target host="*.piratenpartei.de"/>
 	<target host="pirateparty.ca"/>
 	<target host="www.pirateparty.ca"/>
 	<target host="pirateparty.org.au"/>
@@ -17,17 +35,32 @@
 	<target host="remixdepolitiek.nl"/>
 	<target host="www.remixdepolitiek.nl"/>
 
+	<securecookie host="^(.*\.)?junge-piraten\.de$" name=".*"/>
+	<securecookie host="^(.*\.)?piratenpartei\.de$" name=".*"/>
+	<!--	cookies !not needed for homepage	-->
+	<securecookie host="^(.*\.)?piratenpartei-bayern\.de$" name=".*"/>
+
+	<!--	encountered:
+			- forum
+			- lists
+			- static
+			- stats
+			- wiki
+			- www		-->
+	<rule from="^http://(\w+\.)?junge-piraten\.de/"
+		to="https://$1junge-piraten.de/"/>
+
 	<rule from="^http://(?:www\.)?partidopirata\.es/"
 		to="https://www.partidopirata.es/"/>
 
 	<rule from="^http://(?:www\.)?piraattipuolue\.fi/"
 		to="https://www.piraattipuolue.fi/"/>
 
-	<rule from="^http://piratenpartei\.de/"
-		to="https://www.piratenpartei.de/"/>
+	<rule from="^http://((forum|live|news|planet|wiki|www)\.)?piratenpartei\.de/"
+		to="https://$1piratenpartei.de/"/>
 
-	<rule from="^http://w(iki|ww)\.piratenpartei\.de/"
-		to="https://w$1.piratenpartei.de/"/>
+	<rule from="^http://(www\.)?piratenpartei-bayern\.de/"
+		to="https://$1piratenpartei-bayern.de/"/>
 
 	<rule from="^http://(?:www\.)?(?:piratenpartij|remixdepolitiek)\.nl/"
 		to="https://depiratenpartij.wordpress.com/"/>
