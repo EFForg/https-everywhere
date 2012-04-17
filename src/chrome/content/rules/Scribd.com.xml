@@ -1,10 +1,50 @@
-<!--	ToDo: find pantherssl buckets
+<!--	!functional:
+		- fonts[23].scribdassets.com		(cert: pantherssl.com; blank page; !on www.scribd.com; data appear the same for [23])
+		- s[1-8].scribdassets.com		(ditto)
+		- s.scribd.com				(ditto)
+		- s1.scribd.com				(!found)
+		- img(v2(-[1-4])?)?.scribdassets.com	(cert: panth...)
+		- img.scribd.com			(AmazonAWS: "NoSuchBucket")
+		- fonts.scribd.com			(AmazonAWS: "AccessDenied")
+			buckets !at:
+				- scribd.com
+				- fonts.scribd.com
+				- fonts2.scribd.com
+				- imgv2.scribd.com
+				- s[124-7]?.scribd.com
+					Bingo: s3.scribd.com
+						Doesn't hold:
+						- fonts2
+						- s[67]
+				- scribdfonts
+				- scribd.com.fonts
+				- scribd.com.assets
+				- scribd.com.img
+				Bucket at assets.scribd.com
+					Doesn't hold:
+						- fonts[23]
+						- img
+						- s[67]
+		- origin-img.scribd.com	(!found)
+		- origin.scribd.com	(!found)
+		- origin-s.scribd.com			works
+			- rewriting img.scribdassets and fonts[23].scribassets paths to origin-s causes redirection to www.scribd.com 404 page.
+						
+	ToDo: find fonts and img buckets.
 -->
 <ruleset name="Scribd.com (partial)">
-  <target host="scribd.com" />
-  <target host="*.scribd.com" />
+
+	<target host="scribd.com"/>
+	<target host="*.scribd.com"/>
+	<target host="*.scribdassets.com"/>
 
 	<securecookie host="^(.*\.)?scribd\.com$" name=".*"/>
 
-  <rule from="^http://(?:www\.)?scribd\.com/" to="https://www.scribd.com/" />
+	<rule from="^http://(?:www\.)?scribd\.com/"
+		to="https://www.scribd.com/"/>
+
+	<!-- bucket !found, but...	-->
+	<rule from="^http://s[1-8]\.scribdassets\.com/"
+		to="https://origin-s.scribd.com/"/>
+
 </ruleset>
