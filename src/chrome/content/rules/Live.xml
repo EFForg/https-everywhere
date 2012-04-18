@@ -1,27 +1,47 @@
 <ruleset name="Hotmail / Live">
-  <target host="*.live.com" />
-  <target host="secure.*.live.com"/>
-  <target host="*.hotmail.com" />
-  <target host="hotmail.com" />
-  <!-- target host is * because Live URLs can contain multiple unpredictable
-       components, like http://snXXXw.sntXXX.mail.live.com/default.aspx
-       In the current target host syntax, a wildcard can match only one
-       hostname element, not two, and only one wildcard per target host
-       is permitted. -->
+
+	<!--	target host is * because Live URLs can contain multiple unpredictable
+		components, like http://snXXXw.sntXXX.mail.live.com/default.aspx
+		In the current target host syntax, a wildcard can match only one
+		hostname element, not two, and only one wildcard per target host
+		is permitted.		-->
+	<target host="hotmail.com" />
+	<target host="*.hotmail.com" />
+	<target host="*.live.com" />
+	<target host="*.login.live.com"/>
+	<target host="secure.*.live.com"/>
+
 
 	<securecookie host="^login\.live\.com$" name=".*"/>
 
-  <!-- Microsoft itself protects the login this way but we can prevent
-       against SSL stripping. -->
-  <rule from="^http://(login|onecare|mail)\.live\.com/" to="https://$1.live.com/"/>
 
-  <!-- Both of these appear to trigger two good things: (1) the user is
-       prompted to make HTTPS the default; (2) even if the user decides
-       not to, the remainder of that mail-reading session is automatically
-       HTTPS-only. -->
-  <rule from="^http://(?:www\.)?hotmail\.com/" to="https://www.hotmail.com/"/>
-  <rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/" to="https://$1.mail.live.com/"/>
-  <!-- example:
-       http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0 >>>
-       https://snt133.mail.live.com/default.aspx?wa=wsignin1.0  -->
+	<!--	Microsoft itself protects the login this way but we can prevent
+		against SSL stripping.	-->
+
+	<rule from="^http://(login|onecare|signup|mail)\.live\.com/" to="https://$1.live.com/"/>
+
+	<rule from="^http://secure\.(\w+)\.live\.com/"
+		to="https://secure.$1.live.com/"/>
+
+	<rule from="^http://(\w+)\.login\.live\.com/"
+		to="https://$1.login.live.com/"/>
+
+	<rule from="^http://accountservices\.passport\.net/"
+		to="https://accountservices.passport.net/"/>
+
+	<!--	Both of these appear to trigger two good things: (1) the user is
+		prompted to make HTTPS the default; (2) even if the user decides
+		not to, the remainder of that mail-reading session is automatically
+		HTTPS-only.		-->
+
+	<rule from="^http://(?:www\.)?hotmail\.com/"
+		to="https://www.hotmail.com/"/>
+
+	<rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/"
+		to="https://$1.mail.live.com/"/>
+
+	<!--	example:
+			http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0 >>>
+			https://snt133.mail.live.com/default.aspx?wa=wsignin1.0			-->
+
 </ruleset>
