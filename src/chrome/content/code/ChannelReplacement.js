@@ -265,7 +265,8 @@ ChannelReplacement.prototype = {
       newChan = this.channel,
       overlap;
 
-    if (!(this.window && (overlap = ABERequest.getLoadingChannel(this.window)) !== oldChan)) {
+    // XXX: Hack: We don't use ABE.. Is it safe to ignore this check and assume no double load?
+    //if (!(this.window && (overlap = ABERequest.getLoadingChannel(this.window)) !== oldChan)) {
       try {
         if (ABE.consoleDump && this.window) {
           ABE.log("Opening delayed channel: " + oldChan.name + " - (current loading channel for this window " + (overlap && overlap.name) + ")");
@@ -287,11 +288,11 @@ ChannelReplacement.prototype = {
       } catch (e) {
         ABE.log(e);
       }
-    } else {
-      if (ABE.consoleDump) {
-        ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
-      }
-    }
+    //} else {
+    //  if (ABE.consoleDump) {
+    //    ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
+    //  }
+    //}
     
     this.dispose();
   },
