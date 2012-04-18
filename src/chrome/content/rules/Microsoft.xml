@@ -1,14 +1,33 @@
 <!--	!functional:
+		- bing.com:
+			az/			(redirects to http)
+			HPImageArchive.aspx	(ditto); !in fd/
+			images/			(ditto)
+			notifications/		(ditto); !in fd/
+			sa/			(ditto); !in fd/
+			s/			(some ditto)
+			thumb/			(ditto)
+		- db3.api.bing.com	(cert: bing.com; blank page)
 		- visio.microsoft.com	(cert valid; redirects to login.live.com)
 -->
 <ruleset name="Microsoft (partial)">
 
 	<target host="ajax.aspnetcdn.com"/>
+	<target host="bing.com"/>
+	<target host="*.bing.com"/>
 	<target host="microsoft.com"/>
 	<target host="*.microsoft.com"/>
 		<exclusion pattern="^http://www\.microsoft\.com/(.*FamilyID|security/)"/>
 	<target host="social.expression.microsoft.com"/>
+	<!--	Akamai	-->
+	<target host="*.msdn.microsoft.com"/>
+	<target host="*.code.msdn.microsoft.com"/>
+	<target host="*.onlinehelp.microsoft.com"/>
+	<target host="*.social.microsoft.com"/>
+	<target host="services.social.microsoft.com"/>
+	<target host="*.services.social.microsoft.com"/>
 	<target host="*.technet.microsoft.com"/>
+	<target host="*.gallery.technet.microsoft.com"/>
 	<target host="*.windowsupdate.microsoft.com"/>
 	<target host="microsoftstore.com"/>
 	<target host="*.microsoftstore.com"/>
@@ -17,21 +36,31 @@
 	<target host="*.msdn.com"/>
 	<!--	Akamai	-->
 	<target host="i1.blogs.msdn.com"/>
-	<!--	Akamai	-->
-	<target host="i1.social.microsoft.com"/>
-	<target host="services.social.microsoft.com"/>
-	<target host="*.services.social.microsoft.com"/>
 	<target host="*.social.s-msft.com"/>
 		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/"/>
 	<target host="blogs.technet.com"/>
 	<target host="*.blogs.technet.com"/>
 	<target host="ecn.dev.virtualearth.net"/>  
+	<target host="secure.wlxrs.com"/>
+
 
 	<securecookie host="^blogs\.msdn\.com$" name=".*"/>
 	<securecookie host="^blogs\.technet\.com$" name=".*"/>
 
+
 	<rule from="^http://ajax\.aspnetcdn\.com/"
 		to="https://ajax.aspnetcdn.com/"/>
+
+	<!--	cert !match www
+		some s/ paths work, others not.
+		fa/s/ is equivalent and fd/ seems to work always, so redirect there.
+		/bing and /ssl.bing are the same here, but ssl has an EV.	-->
+	<rule from="^http://(?:www\.)?bing\.com/(?:fd/|(s/))"
+		to="https://ssl.bing.com/fd/$1"/>
+
+	<!--	c:	tracking beacon		-->
+	<rule from="^http://(c|ssl)\.bing\.com/"
+		to="https://$1.bing.com/"/>
 
 	<rule from="^http://microsoft\.com/"
 		to="https://www.microsoft.com/"/>
@@ -46,7 +75,7 @@
 
 	<!--	Akamai with no valid cert.
 			Where's the bucket?	-->
-	<rule from="^https?://i\d?\.((code\.)?msdn|services\.social|(gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
+	<rule from="^https?://i\d?\.((code\.)?msdn|onlinehelp|(services\.)?social|(gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/"/>
 
 	<rule from="^http://support\.microsoft\.com/((common|library|[sS]tyles)/|LTS/default\.aspx)"
@@ -83,5 +112,8 @@
 
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
 		to="https://ecn.dev.virtualearth.net/"/>
+
+	<rule from="^http://secure\.wlxrs\.com/"
+		to="https://secure.wlxrs.com/"/>
 
 </ruleset>
