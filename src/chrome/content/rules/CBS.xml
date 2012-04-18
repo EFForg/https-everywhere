@@ -1,12 +1,24 @@
 <!--	!functional:
-		asset\d?.cbsistatic.com		(Akamai, 404)
+		- asset\d?.cbsistatic.com		(Akamai, 404)
+		- (bwp|www).cnet.com
+		- ads.com.com			(timeout; data on www.cnet.com)
+		- i.i.com.com			(Akamai; "Service Unavailable")
+		- image.com.com			(Akamai; "An error occurred")
+		- userimage.gamespot.com	(ditto)
+		- im(age|g[12].gamespotcdn.net	(Akamai; "An error occurred"; all equivalent)
+
+	asset\d		≍	i.i.com.com
 -->
 <ruleset name="CBS (partial)">
 
+	<target host="*.gamespot.com"/>
 	<!--	/cdn.la?st.fm, userserve(-ak)?.last.fm: Akamai, 404s	-->
 	<target host="last.fm"/>
 	<target host="*.last.fm"/>
 	<target host="cdn.lst.fm"/>
+
+	<rule from="^http://(fuse|u[ks])\.gamespot\.com/"
+		to="https://$1.gamespot.com/"/>
 
 	<rule from="^http://last\.fm/"
 		to="https://www.last.fm/"/>
