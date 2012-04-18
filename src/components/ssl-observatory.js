@@ -23,7 +23,7 @@ const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverServic
 
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
 const SERVICE_ID=Components.ID("{0f9ab521-986d-4ad8-9c1f-6934e195c15c}");
-const SERVICE_NAME = "Anonymously Submits strange SSL certificates to EFF.";
+const SERVICE_NAME = "Anonymously Submits SSL certificates to EFF for security auditing.";
 const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
 
 const _INCLUDED = {};
@@ -98,7 +98,7 @@ SSLObservatory.prototype = {
   QueryInterface: XPCOMUtils.generateQI(
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
-      CI.nsIWifiListener,
+      //CI.nsIWifiListener,
       CI.nsIBadCertListener2]),
 
   wrappedJSObject: null,  // Initialized by constructor
@@ -147,6 +147,12 @@ SSLObservatory.prototype = {
     this.getClientASN();
     this.max_ap = null;
 
+    // we currently do not actually do *any* ASN watching from the client
+    // (in other words, the db will not have ASNs for certs submitted 
+    // through Tor, even if the user checks the "send ASN" option)
+    // all of this code for guessing at changes in our public IP via WiFi hints
+    // is therefore disabled
+    /*
     // Observe network changes to get new ASNs
     OS.addObserver(this, "network:offline-status-changed", false);
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
@@ -159,11 +165,12 @@ SSLObservatory.prototype = {
       wifi_service.startWatching(this);
     } catch(e) {
       this.log(INFO, "Failed to register ASN change monitor: "+e);
-    }
+    }*/
   },
 
   stopASNWatcher: function() {
     this.client_asn = -1;
+    /*
     // unhook the observers we registered above
     OS.removeObserver(this, "network:offline-status-changed");
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
@@ -175,7 +182,7 @@ SSLObservatory.prototype = {
       wifi_service.stopWatching(this);
     } catch(e) {
       this.log(WARN, "Failed to stop wifi state monitor: "+e);
-    }
+    }*/
   },
 
   getClientASN: function() {
@@ -194,6 +201,7 @@ SSLObservatory.prototype = {
     return;
   },
 
+  /*
   // Wifi status listener
   onChange: function(accessPoints) {
     try {
@@ -227,6 +235,7 @@ SSLObservatory.prototype = {
     this.log(NOTE, "ASN change observer got an error: "+value);
     this.getClientASN();
   },
+  */
 
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
