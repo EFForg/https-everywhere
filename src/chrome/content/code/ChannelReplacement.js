@@ -170,7 +170,8 @@ ChannelReplacement.prototype = {
       oldChan, newChan, flags);
     var sink;
     
-    for (let cess = ns.categoryManager.enumerateCategory("net-channel-event-sinks");
+    for (let cess = Cc['@mozilla.org/categorymanager;1'].getService(CI.nsICategoryManager)
+            .enumerateCategory("net-channel-event-sinks");
           cess.hasMoreElements();
         ) {
       sink = cess.getNext();
