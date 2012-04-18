@@ -105,8 +105,8 @@ Cookie.prototype = {
   
   get cookieManager() {
     delete Cookie.prototype.cookieManager;
-    var cman =  CC["@mozilla.org/cookiemanager;1"]
-      .getService(CI.nsICookieManager2).QueryInterface(CI.nsICookieManager);
+    var cman =  Cc["@mozilla.org/cookiemanager;1"]
+      .getService(Ci.nsICookieManager2).QueryInterface(Ci.nsICookieManager);
     return Cookie.prototype.cookieManager = cman; 
   },
   belongsTo: function(host, path) {
@@ -131,7 +131,7 @@ Cookie.prototype = {
   },
   
   sameAs: function(c) {
-    (c instanceof CI.nsICookie) && (c instanceof CI.nsICookie2);
+    (c instanceof Ci.nsICookie) && (c instanceof Ci.nsICookie2);
     return Cookie.computeId(c) == this.id;
   },
   
@@ -143,6 +143,6 @@ Cookie.prototype = {
   get isDomain() { return this.domain && this.domain[0] == '.'; },
   policy: 0,
   status: 0,
-  QueryInterface: xpcom_generateQI([CI.nsICookie, CI.nsICookie2])
+  QueryInterface: xpcom_generateQI([Ci.nsICookie, Ci.nsICookie2])
   
 }

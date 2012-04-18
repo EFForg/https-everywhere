@@ -1,35 +1,11 @@
+
 var Thread = {
   
   hostRunning: true,
-  activeQueues: 0,
   activeLoops: 0,
   _timers: [],
   
-  get canSpin() {
-    delete this.canSpin;
-    return this.canSpin = this.current instanceof CI.nsIEventTarget;
-  },
-  
-  runWithQueue: function(callback, self) {
-    var thread = this.current;
-    thread instanceof CI.nsIThreadInternal;
-    try {
-      this.activeQueues++;
-      thread.pushEventQueue(null);
-      return self ? callback.apply(self) : callback();
-    } finally {
-      thread.popEventQueue();
-      this.activeQueues--;
-    }
-  },
-  
-  spinWithQueue: function(ctrl) {
-    return this.runWithQueue(function() { return Thread.spin(ctrl); });
-  },
-  
   spin: function(ctrl) { 
-    if (!this.canSpin) throw new Error("Thread: can't spin!");
-
     ctrl.startTime = ctrl.startTime || Date.now();
     ctrl.timeout = false;
     this.activeLoops++;
@@ -65,9 +41,9 @@ var Thread = {
   
   get current() {
     delete this.current;
-    var obj = "@mozilla.org/thread-manager;1" in CC 
-      ? CC["@mozilla.org/thread-manager;1"].getService() 
-      : CC["@mozilla.org/thread;1"].createInstance(CI.nsIThread);
+    var obj = "@mozilla.org/thread-manager;1" in Cc 
+      ? Cc["@mozilla.org/thread-manager;1"].getService() 
+      : Cc["@mozilla.org/thread;1"].createInstance(Ci.nsIThread);
     this.__defineGetter__("current", function() { return obj.currentThread; });
     return this.current; 
   },
@@ -76,9 +52,9 @@ var Thread = {
     delete this.currentQueue;
     var eqs = null;
     const CTRID = "@mozilla.org/event-queue-service;1";
-    if (CTRID in CC) {
-      const IFace = CI.nsIEventQueueService;
-      eqs = CC[CTRID].getService(IFace);
+    if (CTRID in Cc) {
+      const IFace = Ci.nsIEventQueueService;
+      eqs = Cc[CTRID].getService(IFace);
     }
     this.__defineGetter__("currentQueue", eqs
       ? function() { return eqs.getSpecialEventQueue(IFace.CURRENT_THREAD_EVENT_QUEUE); }
@@ -88,43 +64,26 @@ var Thread = {
   },
   
   delay: function(callback, time, self, args) {
-    var timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+    var timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
     this._timers.push(timer);
     timer.initWithCallback({
       notify: this._delayRunner,
-      context: { callback: callback, args: args || [], self: self || null }
+      context: { callback: callback, args: args || DUMMY_ARRAY, self: self || null }
     }, time || 1, 0);
   },
   
+  dispatch: function(runnable) {
+    this.current.dispatch(runnable, Ci.nsIEventTarget.DISPATCH_NORMAL);
+  },
+  
   asap: function(callback, self, args) {
-    if (this.canSpin) {
-      this.current.dispatch({
-        run: function() {
-          callback.apply(self, args || []);
-        }
-      }, CI.nsIEventTarget.DISPATCH_NORMAL);
-    } else {
-      this.delay(callback, 0, self, args);
-    }
+    this.current.dispatch({
+      run: function() {
+        callback.apply(self, args || DUMMY_ARRAY);
+      }
+    }, Ci.nsIEventTarget.DISPATCH_NORMAL);
   },
-  
-  basap: function(callback, self, args) { // before as soon as possible
-    if (!this.canSpin) {
-      this.asap(callback, self, args);
-      return;
-    }
-    var thread = this.current;
-    thread instanceof CI.nsIThreadInternal;
-    this.activeQueues++;
-    thread.pushEventQueue(null);
-    this.asap(function() {
-      callback.apply(self, args || []);
-      thread.popEventQueue();
-      Thread.activeQueues--;
-    }, self, args);
-  },
-  
-  
+
   _delayRunner: function(timer) {
     var ctx = this.context;
     try {
@@ -138,4 +97,4 @@ var Thread = {
     }
   }
   
-}
+};
