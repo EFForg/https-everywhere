@@ -19,6 +19,10 @@ const CI = Components.interfaces;
 const CC = Components.classes;
 const CU = Components.utils;
 const CR = Components.results;
+const Ci = Components.interfaces;
+const Cc = Components.classes;
+const Cu = Components.utils;
+const Cr = Components.results;
 
 const CP_SHOULDPROCESS = 4;
 
@@ -91,11 +95,23 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const DUMMYOBJ = {};
+const DUMMY_OBJ = {};
+DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
+const DUMMY_FUNC = function() {}
+const DUMMY_ARRAY = [];
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
 
 const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
+
+// XXX: Better plan for this?
+// We need it to exist to make our updates of ChannelReplacement.js easier.
+var ABE = {
+  consoleDump: false,
+  log: function(str) {
+    https_everywhereLog(WARN, str);
+  }
+};
 
 function xpcom_generateQI(iids) {
   var checks = [];
@@ -115,7 +131,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
