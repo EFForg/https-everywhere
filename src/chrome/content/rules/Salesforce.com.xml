@@ -14,10 +14,14 @@ Rackcdn buckets:
 	<target host="webassets.assistly.com"/>
 	<target host="desk.com"/>
 	<target host="*.desk.com"/>
+	<target host="force.com"/>
+	<target host="www.force.com"/>
 	<target host="*.secure.force.com"/>
 	<target host="salesforce.com"/>
 	<target host="*.salesforce.com"/>
 	<target host="secure2.sfdcstatic.com"/>
+
+	<securecookie host="^(.*\.)?force\.com$" name=".*"/>
 
 	<rule from="^http://webassets\.assistly\.com/"
 		to="https://assistlywebsite.s3.amazonaws.com/"/>
@@ -38,8 +42,9 @@ Rackcdn buckets:
 	<rule from="^http://([\w\-]+)\.secure\.force\.com/"
 		to="https://$1.secure.force.com/"/>
 
-	<rule from="^http://(?:www\.)?salesforce\.com/"
-		to="https://www.salesforce.com/"/>
+	<!--	/force.com times out	-->
+	<rule from="^http://(?:www\.)?(sales)?force\.com/"
+		to="https://www.$1force.com/"/>
 
 	<rule from="^http://login\.salesforce\.com/"
 		to="https://login.salesforce.com/"/>
