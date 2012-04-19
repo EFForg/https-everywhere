@@ -1,13 +1,19 @@
 <!--	!functional:
-		archive.hhs.gov			(timeout)
-		www.hhs.gov			(Akamai, shows 404 page)
-		thomas.loc.gov
-		www.loc.gov			(cert: wwws.loc.gov)
-		transparency.cit.nih.gov	(Akamai, "An error occurred")
-		www.nih.gov			(timeout)
-		ansers.usa.gov			(timeout)
-		blog.usa.gov
-		usa.gov				(Akamai, redirects to http)
+		- archive.hhs.gov		(timeout)
+		- www.hhs.gov			(Akamai, shows 404 page)
+		- thomas.loc.gov
+		- www.loc.gov			(cert: wwws.loc.gov)
+		- pds.nasa.gov			(timeout)
+		- transparency.cit.nih.gov	(Akamai, "An error occurred")
+		- www.nih.gov			(timeout)
+		- (www.)noaa.gov		(timeout)
+		- maps.ngdc.noaa.gov
+		- noaanews.noaa.gov
+		- www.noaanews.noaa.gov		(timeout)
+		- (csrc.|www.)nist.gov		(shows RHL test page)
+		- ansers.usa.gov		(timeout)
+		- blog.usa.gov
+		- usa.gov			(Akamai, redirects to http)
 -->
 <ruleset name="US government (partial)">
 
@@ -26,14 +32,18 @@
 	<target host="intelligence.house.gov"/>
 	<target host="medicare.gov"/>
 	<target host="*.medicare.gov"/>
+	<target host="web.nvd.nist.gov"/>
 	<target host="*.usa.gov"/>
 	<target host="usajobs.gov"/>
 	<target host="*.usajobs.gov"/>
+	<target host="uspsoig.gov"/>
+	<target host="www.uspsoig.gov"/>
 
 	<securecookie host="^questions\.cms\.gov$" name=".*"/>
 	<securecookie host="^safeharbor\.export\.gov$" name=".*"/>
 	<securecookie host="^(.*\.)?(fbo|fnal|medicare|usajobs)\.gov$" name=".*"/>
 	<securecookie host="^intelligence\.house\.gov$" name=".*"/>
+	<securecookie host="^web\.nvd\.nist\.gov$" name=".*"/>
 	<securecookie host="^publications\.usa\.gov$" name=".*"/>
 
 	<rule from="^http://(?:www\.)?cms(?:\.hhs)?\.gov/"
@@ -57,10 +67,16 @@
 	<rule from="^http://intelligence\.house\.gov/"
 		to="https://intelligence.house.gov/"/>
 
+	<rule from="^http://web\.nvd\.nist\.gov/"
+		to="https://web.nvd.nist.gov/"/>
+
 	<rule from="^http://(busines|publication)s\.usa\.gov/"
 		to="https://$1s.usa.gov/"/>
 
 	<rule from="^http://([\w\-]+\.)?usajobs\.gov/"
 		to="https://$1usajobs.gov/"/>
+
+	<rule from="^http://(www\.)?uspsoig\.gov/"
+		to="https://$1uspsoig.gov/"/>
 
 </ruleset>

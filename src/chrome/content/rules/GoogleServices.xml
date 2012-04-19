@@ -1,11 +1,14 @@
-<!--
-	Mismatch:
-		safebrowsing.clients.google.com	(404)
-
+<!--	!functional:
+		(www.)admeld.(com|de)
+		books.google.com		(redirects to google.cctld)
+		safebrowsing.clients.google.com	(mismatch; 404)
 
 	XXX: Needs more testing
 -->
 <ruleset name="Google Services">
+
+  <target host="admeld.com"/>
+  <target host="*.admeld.com"/>
   <target host="google.*" />
   <target host="google.com" />
   <target host="*.google.com" />
@@ -33,6 +36,16 @@
 
   <exclusion pattern="^http://(news\.)?google\.com/newspapers" />
   <exclusion pattern="^http://(news\.)?google\.com/archivesearch" />
+
+
+	<securecookie host="^portal\.admeld\.com$" name=".*"/>
+
+
+  <rule from="^http://(?:www\.)?admeld\.com/images/interface/masthead_bk\.jpg$"
+	  to="https://portal.admeld.com/images/bg.jpg"/>
+
+  <rule from="^http://portal\.admeld\.com/"
+	  to="https://portal.admeld.com/"/>
 
   <rule from="^http://(accounts|adwords|appengine|calendar|checkout|chrome|code|docs\d?|drive|feedburner|groups|health|hostedtalkgadget|investor|mail|pack|picasaweb|plus|plusone|profiles|sites|spreadsheets\d?|support|talkgadget|talk|tools)\.google\.com/"
           to="https://$1.google.com/"/>

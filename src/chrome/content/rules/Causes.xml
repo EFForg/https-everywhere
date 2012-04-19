@@ -1,0 +1,38 @@
+<!--	s3.amazonaws.com/causes-prod/
+-->
+<ruleset name="Causes (partial)">
+
+	<target host="causes.com"/>
+	<target host="*.causes.com"/>
+	<target host="causes.presscdn.com"/>
+
+
+	<securecookie host="^(([^s]\w*)?\.)?causes\.com$" name=".*"/>
+
+
+	<!--	s2 !work over http	-->
+	<rule from="^http://s2\.causes\.com/"
+		to="https://www.causes.com/"/>
+
+	<!--	encountered:
+			- causes-assets[0-3]
+			- exchange
+			- nonprofits
+			- s2 (!functional, data on www)
+			- support (problematic, see below)
+			- widgets
+			- wishes			-->
+	<rule from="^http://([^s][\w\-]*\.)?causes\.com/"
+		to="https://$1causes.com/"/>
+
+	<!--	Zendesk.  causes.zendesk.com/$ redirects back to support.causes.com
+		https pages redirect to http.						-->
+	<rule from="^http://support\.causes\.com/(assets|generated|images|system)/"
+		to="https://causes.zendesk.com/$1/"/>
+
+	<!--	exchange rewrites presscdn to https, which doesn't work.
+		It's on exchange too though.		-->
+	<rule from="^https?://causes\.presscdn\.com/"
+		to="https://exchange.causes.com/"/>
+
+</ruleset>

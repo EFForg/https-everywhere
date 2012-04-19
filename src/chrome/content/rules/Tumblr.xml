@@ -2,21 +2,23 @@
 	s3.amazonaws.com/assets.tumblr.com/
 	s3.amazonaws.com/data.tumblr.com/
 	s3.amazonaws.com/static.tumblr.com/
+	gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/
 -->
 <ruleset name="Tumblr (partial)">
 
 	<target host="tumblr.com"/>
 	<target host="*.tumblr.com"/>
+	<target host="secure.assets.tumblr.com"/>
 	<target host="*.media.tumblr.com"/>
 
-	<rule from="^http://tumblr\.com/"
-		to="https://tumblr.com/"/>
-
-	<rule from="^http://www\.tumblr\.com/login"
-		to="https://www.tumblr.com/login"/>
+	<rule from="^http://(www\.)?tumblr\.com/($|login)"
+		to="https://$1tumblr.com/$2"/>
 
 	<rule from="^http://(assets|data|static)\.tumblr\.com/"
 		to="https://s3.amazonaws.com/$1.tumblr.com/"/>
+
+	<rule from="^http://secure\.assets\.tumblr\.com/"
+		to="https://secure.assets.tumblr.com/"/>
 
 	<rule from="^http://(?:\d+\.)?media\.tumblr\.com/"
 		to="https://s3.amazonaws.com/data.tumblr.com/"/>

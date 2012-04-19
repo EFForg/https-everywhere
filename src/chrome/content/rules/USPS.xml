@@ -1,13 +1,25 @@
+<!--	!functional:
+		- origin-dbcalc		(timeout)
+		- origin-ircalc		(ditto)
+		- origin-pe
+		- origin-postcalc	(timeout)
+		- ircalc		(Akamai, redirects to http)
+		- pe.usps		(ditto)
+		- postcalc		(ditto)
+-->
 <ruleset name="USPS">
-  <target host="usps.com" />
-  <target host="www.usps.com" />
-  <target host="shop.usps.com" />
-  <target host="moversguide.usps.com" />
 
-  <!-- These are only useful for business customers, but probably still worth listing here -->
-  <target host="fast.usps.com" />
-  <target host="gateway-cat.usps.com" />
+	<target host="usps.com"/>
+	<target host="*.usps.com"/>
 
-  <rule from="^http://(?:www\.)?usps\.com/" to="https://www.usps.com/"/>
-  <rule from="^http://(fast|gateway-cat|moversguide|shop)\.usps\.com/" to="https://$1.usps.com/"/>
+	<rule from="^http://usps\.com/"
+		to="https://www.usps.com/"/>
+
+	<securecookie host="^(.*\.)?usps\.com$" name=".*"/>
+
+	<!--	fast and gateway-cat are only useful for business
+		customers, but probably still worth listing here	-->
+	<rule from="^http://(about|fast|gateway-cat|moversguide|shop|tools|www)\.usps\.com/"
+		to="https://$1.usps.com/"/>
+
 </ruleset>

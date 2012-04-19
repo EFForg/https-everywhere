@@ -1,5 +1,25 @@
-<ruleset name="Comodo (Partial)">
-  <target host="*.comodo.com" />
-  <rule from="^http://(www|personalfirewall|antivirus|enterprise)\.comodo\.com/"
-          to="https://$1.comodo.com/"/>
+<!--	!functional:
+		- antivirus:		(cert: (www.)downloads.comodo.com; 404)
+		- backup		(cert: (www.)comodo.com; redirects there)
+		- system-utilities	(cert: (www.)secure.comodo.net; redirects there)
+-->
+<ruleset name="Comodo (partial)">
+
+	<target host="comodo.com"/>
+	<target host="www.downloads.comodo.com"/>	
+	<target host="www.secure.comodo.com"/>	
+	<target host="*.comodo.com"/>
+		<exclusion pattern="^http://(antivirus|backup|system-utilities)\."/>
+
+
+	<securecookie host="^(.*\.)?comodo\.com$" name=".*"/>
+
+
+	<rule from="^http://((download|(?:www\.)?downloads|enterprise|m|personalfirewall|(?:www\.)?secure|ssl|support|www)\.)?comodo\.com/"
+		to="https://$1comodo.com/"/>
+
+	<!--	pages redirect to http	-->
+	<rule from="^http://siteinspector\.comodo\.com/(favicon\.ico|images/|login|stylesheets/)"
+		to="https://siteinspector.comodo.com/$1"/>
+
 </ruleset>

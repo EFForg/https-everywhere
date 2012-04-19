@@ -1,7 +1,12 @@
+<!--	!functional:
+		- icons.wunderground.com	(Akamai; "An error occurred")
+-->
 <ruleset name="Weather Underground (partial)">
 
 	<target host="wunderground.com"/>
 	<target host="*.wunderground.com"/>
+	<!--	for cross-domain cookie		-->
+	<target host="*.www.wunderground.com"/>
 	<!--	Akamai. Doesn't work as-is, haven't found bucket	-->
 	<target host="icons.wxug.com"/>
 	<target host="icons-ak.wxug.com"/>
@@ -11,13 +16,22 @@
 	<rule from="^http://(www\.)?wunderground\.com/"
 		to="https://$1wunderground.com/"/>
 
-	<rule from="^http://icons\.wxug\.com/"
+	<rule from="^http://maps\.wunderground\.com/"
+		to="https://www.wunderground.com/"/>
+
+	<rule from="^http://icons\.w(?:underground|xug)\.com/"
 		to="https://wunderground.com/"/>
 
 	<!--	some icons-ak data not on icons nor www. e.g.:
-			/i/wpbg/
-			/i/wu/	-->
-	<rule from="^http://icons-ak\.wxug\.com/(css|w/i)/"
+			graphics/
+			i/wpbg/		-->
+	<rule from="^http://icons-ak\.wxu(?:g|underground)\.com/(css|data|scripts|i/wu?)/"
 		to="https://wunderground.com/$1/"/>
+
+	<!--	when fetched via https, radblast.asp sets type to null.  That causes the radar image (WUNIDS_map)
+		to claim that the radar is offline and display no map.
+		This rule fixes the problem by setting type to N0R when it isn't already set.			-->
+	<rule from="^https?://radblast-mi\.wunderground\.com/cgi-bin/radar/WUNIDS_map\?([\w&amp;=\.]+)?type=&amp;"
+		to="https://radblast-mi.wunderground.com/cgi-bin/radar/WUNIDS_map?$1type=N0R&amp;"/>
 
 </ruleset>

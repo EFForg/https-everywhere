@@ -76,13 +76,15 @@ def test_space_in_to(tree):
     return True
 
 def test_unencrypted_to(tree):
-    # Rules that redirect to something other than https.
+    # Rules that redirect to something other than https or http.
     # This used to test for http: but testing for lack of https: will
     # catch more kinds of mistakes.
     """Rule redirects to something other than https."""
     for t in tree.xpath("/ruleset/rule/@to"):
-        if t[:6] != "https:":
+        if t[:6] != "https:" and t[:5] != "http:":
             return False
+        elif t[:5] == "http:":        
+	    sys.stdout.write("warning: rule in %s redirects to http, this is probably a mistake.\n" % fi)
     return True
 
 def test_backslash_in_to(tree):
