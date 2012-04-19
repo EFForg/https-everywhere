@@ -1,0 +1,28 @@
+<!--	s3.amazonaws.com/pbs.merlin.cdn.prod/
+
+	!functional:
+		- pbs.org					(timeout)
+		- www.pbs.org					(homepage redirects to http, other paths: 403)
+		- www-tc.pbs.org(/cove-media|/images|/video)	(*.hs.llnwd.net, *.llnw.net, *.llnw-trials.com, *.upload.llnw.net; shows blank page)
+		- (www.)pbskids.org				(timeout)
+-->
+<ruleset name="Public Broadcasting Service (partial)">
+
+	<target host="video.pbs.org"/>
+	<target host="www-tc.pbs.org"/>
+	<target host="shoppbs.org"/>
+	<target host="www.shoppbs.org"/>
+
+	<securecookie host="^www\.shoppbs\.org$" name=".*"/>
+
+	<rule from="^http://video\.pbs\.org/"
+		to="https://video.pbs.org/"/>
+
+	<rule from="^http://www-tc\.pbs\.org/s3/pbs\.(merlin\.cdn\.prod|pbsorg-prod\.mediafiles|videoportal-prod\.cdn)/"
+		to="https://s3.amazonaws.com/pbs.$1/"/>
+
+	<!--	cert !match !www	-->
+	<rule from="^http://(?:www\.)?shoppbs\.org/"
+		to="https://www.shoppbs.org/"/>
+
+</ruleset>
