@@ -356,22 +356,41 @@ SSLObservatory.prototype = {
   submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
     var rootidx = -1;
+    var leaf = certArray[0];
+    var nextInChain = leaf.issuer;
 
     for (var i = 0; i < certArray.length; i++) {
-      if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
-        this.log(INFO, "Got root cert at position: "+i);
-        rootidx = i;
+      // Find the next cert in the valid chain
+      if (certArray[i].equals(nextInChain)) {
+        if (certArray[i].issuerName == certArray[i].subjectName) {
+          // All X509 root certs are self-signed
+          this.log(INFO, "Got root cert at position: "+i);
+          rootidx = i;
+          break;
+        } else {
+          // This is an intermediate CA cert; keep looking for the root
+          nextInChain = certArray[i].issuer;
+        }
       }
     }
 
     if (!this.myGetBoolPref("alt_roots")) {
-      if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
+      // Submit self-signed end-entity certs regardless, because these are
+      // atypical for confidential private PKI deployments, and they need to
+      // be audited in order to warn about most devices with
+      // remotely-factorisable key vulnerabilites
+      if (!(leaf.issuerName == leaf.subjectName)) {
         if (rootidx == -1) {
-          rootidx = fps.length-1;
+          // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
+          this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
+                   leaf.issuerName + " (not submitting due to settings)");
+          return;
+        } else if (!(fps[rootidx] in this.public_roots)) {
+          // A cert with a known but non-public Issuer
+          this.log(INFO, "Got a private root cert. Ignoring domain "
+                   +domain+" with root "+fps[rootidx]);
+          return;
         }
-        this.log(INFO, "Got a private root cert. Ignoring domain "
-                 +domain+" with root "+fps[rootidx]);
-        return;
       }
     } else {
       // Convergence currently performs MITMs against the Firefox in order to
