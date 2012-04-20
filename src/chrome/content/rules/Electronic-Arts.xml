@@ -6,11 +6,24 @@
 		- cdn.forum.ea.com		(Akamai; "An error occurred"; same data on forum)
 		- (www.)info.ea.com
 		- investor.ea.com		(cert: *.shareholder.com; 403)
+		- eamobile.com			(cert: synergy-stage.eamobile.com; shows that domain's data)
+		- content.easports.com		(Akamai; "An error occurred")
+		- insideea.com			(ssl_error_rx_record_too_long)
 -->
 <ruleset name="Electronic Arts (partial)">
 
 	<target host="ea.com"/>
 	<target host="*.ea.com"/>
+	<target host="www.*.ea.com"/>
+	<target host="ll.assets.ea.com"/>
+	<target host="ssl.resources.ea.com"/>
+	<target host="om.eamobile.com"/>
+	<target host="synergy-stage.eamobile.com"/>
+	<target host="easports.com"/>
+	<target host="www.easports.com"/>
+	<!--	* for cross-domain cookie
+		Also matches cdn	-->
+	<target host="*.www.easports.com"/>
 	<target host="origin.com"/>
 	<target host="*.origin.com"/>
 	<target host="thesims3.com"/>
@@ -18,17 +31,24 @@
 	<target host="*.store.thesims3.com"/>
 
 
-	<!--	incomplete	-->
-	<securecookie host="^(help)?\.ea\.com$" name="^CEM-session$"/>
-	<securecookie host="^(forum|\w\w)?\.thesims\.com$" name=".*"/>
+	<!--	incomplete
+		.ea s_ : omniture cookies	-->
+	<securecookie host="^\.ea\.com$" name="^(CEM-session|s_.*)$"/>
+	<securecookie host="^(help|profile|ssl\.resources)\.ea\.com$" name=".*"/>
+	<securecookie host="\.www\.easports\.com$" name=".*"/>
+	<securecookie host="^sso\.origin\.com$" name=".*"/>
+	<securecookie host="^(forum|\w\w|www)?\.thesims\.com$" name=".*"/>
 
 
 	<!--	cert !match !www	-->
 	<rule from="^http://ea\.com/"
 		to="https://www.ea.com/"/>
 
-	<rule from="^http://(activate|help|images|jobs|tos|www)\.ea\.com/"
+	<rule from="^http://(activate|ll\.assets|help|images|(?:www\.)?jobs|tos|www)\.ea\.com/"
 		to="https://$1.ea.com/"/>
+
+	<rule from="^http://(?:ssl\.)?resources\.ea\.com/"
+		to="https://ssl.resources.ea.com/"/>
 
 	<rule from="^http://(?:web-)?(static|vassets)\.ea\.com/"
 		to="https://a248.e.akamai.net/$1.ea.com/"/>
@@ -36,6 +56,17 @@
 	<!--	cert !match support, redirects to help	-->
 	<rule from="^http://support\.ea\.com/"
 		to="https://help.ea.com/"/>
+
+	<rule from="^http://om\.eamobile\.com/"
+		to="https://eamwebproduction.122.2o7.net/"/>
+
+	<rule from="^http://synergy-stage\.eamobile\.com/"
+		to="https://synergy-stage.eamobile.com/"/>
+
+	<!--	cdn: Akamai
+		cert !match !www	-->
+	<rule from="^http://(?:(?:cdn\.)?www\.)?easports\.com/"
+		to="https://www.easports.com/"/>
 
 	<!--	cert !match !www	-->
 	<rule from="^http://origin\.com/"
@@ -45,8 +76,8 @@
 	<rule from="^http://www\.origin\.com/favicon\.ico"
 		to="https://www.origin.com/favicon.ico"/>
 
-	<rule from="^http://activate\.origin\.com/"
-		to="https://activate.origin.com/"/>
+	<rule from="^http://(activate|sso)\.origin\.com/"
+		to="https://$1.origin.com/"/>
 
 	<rule from="^http://store\.origin\.com/DRHM/Storefront/Site/"
 		to="https://store.origin.com/DRHM/Storefront/Site/"/>
