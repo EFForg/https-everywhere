@@ -1,0 +1,70 @@
+<!--	!functional:
+		- (prod.)crysis.ea.com		(timeout)
+		- cdn.prod.crysis.ea.com	(Akamai; "An error occurred")
+		- eapressbox.ea.com		(timeout)
+		- forum.ea.com			(timeout)
+		- cdn.forum.ea.com		(Akamai; "An error occurred"; same data on forum)
+		- (www.)info.ea.com
+		- investor.ea.com		(cert: *.shareholder.com; 403)
+-->
+<ruleset name="Electronic Arts (partial)">
+
+	<target host="ea.com"/>
+	<target host="*.ea.com"/>
+	<target host="origin.com"/>
+	<target host="*.origin.com"/>
+	<target host="thesims3.com"/>
+	<target host="*.thesims3.com"/>
+	<target host="*.store.thesims3.com"/>
+
+
+	<!--	incomplete	-->
+	<securecookie host="^(help)?\.ea\.com$" name="^CEM-session$"/>
+	<securecookie host="^(forum|\w\w)?\.thesims\.com$" name=".*"/>
+
+
+	<!--	cert !match !www	-->
+	<rule from="^http://ea\.com/"
+		to="https://www.ea.com/"/>
+
+	<rule from="^http://(activate|help|images|jobs|tos|www)\.ea\.com/"
+		to="https://$1.ea.com/"/>
+
+	<rule from="^http://(?:web-)?(static|vassets)\.ea\.com/"
+		to="https://a248.e.akamai.net/$1.ea.com/"/>
+
+	<!--	cert !match support, redirects to help	-->
+	<rule from="^http://support\.ea\.com/"
+		to="https://help.ea.com/"/>
+
+	<!--	cert !match !www	-->
+	<rule from="^http://origin\.com/"
+		to="https://www.origin.com/"/>
+
+	<!--	most images served by Digital River	-->
+	<rule from="^http://www\.origin\.com/favicon\.ico"
+		to="https://www.origin.com/favicon.ico"/>
+
+	<rule from="^http://activate\.origin\.com/"
+		to="https://activate.origin.com/"/>
+
+	<rule from="^http://store\.origin\.com/DRHM/Storefront/Site/"
+		to="https://store.origin.com/DRHM/Storefront/Site/"/>
+
+	<!--	llnw:	*.hs.llnwd.net
+		cert !match !www	-->
+	<rule from="^http://(?:llnw\.|www\.)?thesims3\.com/"
+		to="https://www.thesims3.com/"/>
+
+	<!--	\w\w:	country codes	-->
+	<rule from="^http://(forum|\w\w)\.thesims3\.com/"
+		to="https://$1.thesims3.com/"/>
+
+	<rule from="^http://(\w\w\.)?store\.thesims3\.com/(community|content/|css/|images/)"
+		to="https://$1store.thesims3.com/$2"/>
+
+	<!--	also on store, but cert valid & works	-->
+	<rule from="^http://llnw\.store\.thesims3\.com/"
+		to="https://llnw.store.thesims3.com/"/>
+
+</ruleset>
