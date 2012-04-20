@@ -353,12 +353,10 @@ SSLObservatory.prototype = {
     return false;
   },
 
-  submitChain: function(certArray, fps, domain, channel, host_ip) {
-    var base64Certs = [];
+  findRootInChain: function(certArray) {
+    // Return the position in the chain Array of the/a root CA
     var rootidx = -1;
-    var leaf = certArray[0];
-    var nextInChain = leaf.issuer;
-
+    var nextInChain = certArray[0].issuer;
     for (var i = 0; i < certArray.length; i++) {
       // Find the next cert in the valid chain
       if (certArray[i].equals(nextInChain)) {
@@ -373,6 +371,35 @@ SSLObservatory.prototype = {
         }
       }
     }
+    return rootidx;
+  },
+
+  processConvergenceChain: function(certArray) {
+    // Make sure the chain we're working with is sane, even if Convergence is
+    // present
+    // Convergence currently performs MITMs against the Firefox in order to
+    // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
+    // end-entity cert produced by Convergence contains a copy of the real
+    // end-entity cert inside an X509v3 extension.  For now we submit the
+    // synthetic end-entity cert but avoid the root CA cert above it, which would
+    // function like a tracking ID.  If anyone knows how to parse X509v3
+    // extensions in JS, we should do that instead.
+    var certArray2 = certArray;
+    var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
+    if (convergence) 
+      convergence = convergence.getService().wrappedJSObject;
+    if (convergence && convergence.enabled) {
+      this.log(INFO, "Convergence uses its own root CAs; not submitting those");
+      certArray2 = certArray2.slice(0,1);
+      fps = fps.slice(0,1);
+    }
+    return certArray2;
+  },
+
+  submitChain: function(certArray, fps, domain, channel, host_ip) {
+    var base64Certs = [];
+    var leaf = certArray[0];
+    var rootidx = this.findRootInChain(certArray);
 
     if (!this.myGetBoolPref("alt_roots")) {
       // Submit self-signed end-entity certs regardless, because these are
@@ -393,21 +420,7 @@ SSLObservatory.prototype = {
         }
       }
     } else {
-      // Convergence currently performs MITMs against the Firefox in order to
-      // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
-      // end-entity cert produced by Convergence contains a copy of the real
-      // end-entity cert inside an X509v3 extension.  For now we submit the
-      // synthetic end-entity cert but avoid the root CA cert above it, which would
-      // function like a tracking ID.  If anyone knows how to parse X509v3
-      // extensions in JS, we should do that instead.
-      var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
-      if (convergence) 
-        convergence = convergence.getService().wrappedJSObject;
-      if (convergence && convergence.enabled) {
-        this.log(INFO, "Convergence uses its own root CAs; not submitting those");
-        certArray = certArray.slice(0,1);
-        fps = fps.slice(0,1);
-      }
+      certArray = processConvergenceChain(certArray);
     }
 
     if (fps[0] in this.already_submitted) {
