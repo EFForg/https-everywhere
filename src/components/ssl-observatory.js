@@ -404,13 +404,13 @@ SSLObservatory.prototype = {
     for (var elem in convergence) {
       this.log(WARN, "Element " + elem)
       this.log(WARN, "Value " + convergence[elem]);
-
     }
     this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
     //this.log(WARN, this.extractRealLeafFromConveregenceLeaf(certArray2[0]));
   },
 
   extractRealLeafFromConveregenceLeaf: function(certificate) {
+    // Copied from Convergence's CertificateStatus.getVerificiationStatus
     var len = {};
     var derEncoding = certificate.getRawDER(len);
 
