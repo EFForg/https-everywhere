@@ -48,6 +48,7 @@ const INCLUDE = function(name) {
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
 INCLUDE('X509ChainWhitelist');
+INCLUDE('NSS');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]
@@ -92,6 +93,11 @@ function SSLObservatory() {
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
+  try {
+    NSS.initialize("");
+  } catch(e) {
+    this.log(WARN, "Failed to initialize NSS component:" + e);
+  }
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -376,7 +382,7 @@ SSLObservatory.prototype = {
     return rootidx;
   },
 
-  processConvergenceChain: function(certArray) {
+  processConvergenceChain: function(chain) {
     // Make sure the chain we're working with is sane, even if Convergence is
     // present
     // Convergence currently performs MITMs against the Firefox in order to
@@ -386,17 +392,22 @@ SSLObservatory.prototype = {
     // synthetic end-entity cert but avoid the root CA cert above it, which would
     // function like a tracking ID.  If anyone knows how to parse X509v3
     // extensions in JS, we should do that instead.
-    var certArray2 = certArray;
     var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
-    if (convergence) 
-      convergence = convergence.getService().wrappedJSObject;
-    if (convergence && convergence.enabled) {
-      this.log(INFO, "Convergence uses its own root CAs; not submitting those");
-      certArray2 = certArray2.slice(0,1);
-      fps = fps.slice(0,1);
+    if (!convergence) return null;
+    convergence = convergence.getService().wrappedJSObject;
+    if (!convergence || !convergence.enabled) return null;
+
+    this.log(INFO, "Convergence uses its own root CAs; not submitting those");
+    chain.certArray = chain.certArray.slice(0,1);
+    chain.fps = chain.fps.slice(0,1);
+    
+    for (var elem in convergence) {
+      this.log(WARN, "Element " + elem)
+      this.log(WARN, "Value " + convergence[elem]);
+
     }
-    this.log(WARN, extractRealLeafFromConveregenceLeaf(certArray2[0]));
-    return certArray2;
+    this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
+    //this.log(WARN, this.extractRealLeafFromConveregenceLeaf(certArray2[0]));
   },
 
   extractRealLeafFromConveregenceLeaf: function(certificate) {
@@ -433,7 +444,10 @@ SSLObservatory.prototype = {
   submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
     var leaf = certArray[0];
-    var rootidx = this.findRootInChain(certArray);
+    // Put all this chain data in one object so that it can be modified by
+    // subroutines if required
+    c = {}; c.certArray=certArray; c.fps = fps;
+    var rootidx = this.findRootInChain(c.certArray);
 
     if (!this.myGetBoolPref("alt_roots")) {
       // Submit self-signed end-entity certs regardless, because these are
@@ -446,18 +460,18 @@ SSLObservatory.prototype = {
           this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
                    leaf.issuerName + " (not submitting due to settings)");
           return;
-        } else if (!(fps[rootidx] in this.public_roots)) {
+        } else if (!(c.fps[rootidx] in this.public_roots)) {
           // A cert with a known but non-public Issuer
           this.log(INFO, "Got a private root cert. Ignoring domain "
-                   +domain+" with root "+fps[rootidx]);
+                   +domain+" with root "+c.fps[rootidx]);
           return;
         }
       }
     } else {
-      certArray = processConvergenceChain(certArray);
+      this.processConvergenceChain(c);
     }
 
-    if (fps[0] in this.already_submitted) {
+    if (c.fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
       return;
     }
@@ -465,9 +479,9 @@ SSLObservatory.prototype = {
     var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
                 .getService(Components.interfaces.nsIWindowMediator);
     var browserWindow = wm.getMostRecentWindow("navigator:browser");
-    for (var i = 0; i < certArray.length; i++) {
+    for (var i = 0; i < c.certArray.length; i++) {
       var len = new Object();
-      var derData = certArray[i].getRawDER(len);
+      var derData = c.certArray[i].getRawDER(len);
       //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
       base64Certs.push(this.base64_encode(derData, false, false));
     }
@@ -478,7 +492,7 @@ SSLObservatory.prototype = {
     if (this.myGetBoolPref("testing")) {
       reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
-      reqParams.push("fplist="+this.compatJSON.encode(fps));
+      reqParams.push("fplist="+this.compatJSON.encode(c.fps));
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
     // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
@@ -515,21 +529,21 @@ SSLObservatory.prototype = {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
-            if (fps[0] in that.already_submitted)
-              delete that.already_submitted[fps[0]];
+            if (c.fps[0] in that.already_submitted)
+              delete that.already_submitted[c.fps[0]];
           }
         } else if (req.status == 403) {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            that.warnUser(warningObj, win, certArray[0]);
+            that.warnUser(warningObj, win, c.certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
           }
         } else {
-          if (fps[0] in that.already_submitted)
-            delete that.already_submitted[fps[0]];
+          if (c.fps[0] in that.already_submitted)
+            delete that.already_submitted[c.fps[0]];
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
@@ -540,7 +554,7 @@ SSLObservatory.prototype = {
     };
 
     // Cache this here to prevent multiple submissions for all the content elements.
-    that.already_submitted[fps[0]] = true;
+    that.already_submitted[c.fps[0]] = true;
     req.send(params);
   },
 
