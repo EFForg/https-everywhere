@@ -6,6 +6,10 @@
 cd src
 RULESETS=chrome/content/rules/default.rulesets
 echo "Creating ruleset library..."
+
+# Under git bash, sed -i issues errors and sets the file "read only".  Thanks.
+chmod u+w $RULESETS
+
 echo "<rulesetlibrary gitcommitid=\"${GIT_COMMIT_ID}\">" > $RULESETS
 # Include the filename.xml as the "f" attribute
 for file in chrome/content/rules/*.xml; do
