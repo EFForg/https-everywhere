@@ -81,7 +81,9 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
+
 . merge-rulesets.sh
+cd src
 
 # Build the XPI!
 rm -f "../$XPI_NAME"

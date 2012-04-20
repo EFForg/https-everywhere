@@ -29,3 +29,5 @@ echo "Crushed $CRUSH bytes of rulesets into `rulesize`"
 # We make default.rulesets at build time, but it shouldn't have a variable
 # timestamp
 touch -r chrome/content/rules $RULESETS
+
+cd ..
