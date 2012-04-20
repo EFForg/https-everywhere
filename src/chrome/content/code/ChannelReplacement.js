@@ -47,7 +47,7 @@ ChannelReplacement.prototype = {
   
   get _classifierClass() {
     delete this.__proto__._classifierClass;
-    return this.__proto__._classifierClass = Cc["@mozilla.org/channelclassifier"];
+    return this.__proto__._classifierClass = Cc["@mozilla.org/channelclassifier;1"];
   },
   
   _autoHeadersRx: /^(?:Host|Cookie|Authorization)$|Cache|^If-/,
