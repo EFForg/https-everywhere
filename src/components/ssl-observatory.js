@@ -290,16 +290,16 @@ SSLObservatory.prototype = {
         var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
         this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
-	if(!this.myGetBoolPref("use_whitelist")) {
-	  this.log(WARN, "Not using whitelist to filter cert chains.");
-	}
+        if(!this.myGetBoolPref("use_whitelist")) {
+          this.log(WARN, "Not using whitelist to filter cert chains.");
+        }
         else if (this.isChainWhitelisted(chain_hash)) {
           this.log(INFO, "This cert chain is whitelisted. Not submitting.");
           return;
         }
-	else {
+        else {
           this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-	}
+        }
 
         if (subject.URI.port == -1) {
             this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
@@ -353,7 +353,7 @@ SSLObservatory.prototype = {
     return false;
   },
 
-    submitChain: function(certArray, fps, domain, channel, host_ip) {
+  submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
     var rootidx = -1;
 
