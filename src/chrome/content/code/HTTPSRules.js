@@ -249,20 +249,25 @@ const RuleWriter = {
   },
 
   parseXmlRulesets: function(xmlblob, rule_store, file) {
-    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
-    // add them to the rule_store HTTPSRules object.
+    // XML input files can either be a <ruleset> in a file, or a
+    // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
+    // because ZIP does a much better job of compressing it).
+    // Strangely we didn't work out how to inspect the type of element at the
+    // top of the tree (?), so we infer which case we have indirectly
     if (xmlblob.@name != xmlblob.@nonexistantthing) {
       // The root of the XML tree has a name, which means it should be single a ruleset...
       this.parseOneRuleset(xmlblob, rule_store, file);
     } else {
+      // The root of the XML tree looks like a <rulesetlibrary>
       if (xmlblob.@gitcommitid == xmlblob.@nonexistantthing) {
+        // The gitcommitid is a tricky hack to let us display the true full
+        // source code of a ruleset, even though we strip out comments at build
+        // time, by having the UI fetch the ruleset from the public https git repo.
         this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
         rule_store.gitcommitid = "HEAD";
       } else {
         rule_store.GITCommitID = xmlblob.@gitcommitid;
       }
-      // The root of the XML tree should be a <rulesetlibrary> with many
-      // <ruleset> children
       var lngth = xmlblob.ruleset.length(); // premature optimisation
       if (lngth == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
