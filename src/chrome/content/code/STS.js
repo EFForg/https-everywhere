@@ -2,7 +2,7 @@
 
 const STS = {
   
-  enabled: true,
+  enabled: false,
   
   get db() {
     delete this.db;
@@ -19,11 +19,7 @@ const STS = {
       if (uri.schemeIs("https")) {
         try {
           this.db.processHeader(uri.asciiHost, chan.getResponseHeader("Strict-Transport-Security"));
-        } catch (e) {
-          try {
-            this.db.processHeader(uri.asciiHost, chan.getResponseHeader("X-Strict-Transport-Security"));
-          } catch (e) {}
-        }
+        } catch (e) {}
       }
     }
   },
@@ -170,8 +166,8 @@ STSDB.prototype = {
   saveDeferred: function() {
     if (this._dirty || !this._persistence) return;
     this._dirty = true;
-    if (!this._timer) this._timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
-    this._timer.initWithCallback(this, 10000, CI.nsITimer.TYPE_ONE_SHOT);
+    if (!this._timer) this._timer = Cc["@mozilla.org/timer;1"].createInstance(Ci.nsITimer);
+    this._timer.initWithCallback(this, 10000, Ci.nsITimer.TYPE_ONE_SHOT);
   },
   notify: function(timer) {
     this.save();
@@ -204,8 +200,8 @@ STSEntry.prototype = {
 const STSPersistence = {
   get _file() {
     delete this._file;
-    var f =  CC["@mozilla.org/file/directory_service;1"].getService(
-        CI.nsIProperties).get("ProfD", CI.nsIFile);
+    var f =  Cc["@mozilla.org/file/directory_service;1"].getService(
+        Ci.nsIProperties).get("ProfD", Ci.nsIFile);
     f.append("NoScriptSTS.db");
     return this._file = f;
   },
@@ -220,7 +216,7 @@ const STSPersistence = {
     return true;
   },
   save: function(db) {
-    f = this._file;
+    var f = this._file;
     try {
       IO.safeWriteFile(f, db.serialize());
     } catch(e) {

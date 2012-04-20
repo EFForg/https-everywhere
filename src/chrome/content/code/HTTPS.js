@@ -21,6 +21,8 @@ const PolicyState = {
 };
 
 const HTTPS = {
+  ready: false,
+
   secureCookies: true,
   secureCookiesExceptions: null,
   secureCookiesForced: null,
@@ -57,7 +59,7 @@ const HTTPS = {
     }
     if (ChannelReplacement.supported) {
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
-      IOUtil.runWhenPending(channel, function() {
+      ChannelReplacement.runWhenPending(channel, function() {
         var cr = new ChannelReplacement(channel, uri);
         cr.replace(true,null);
         cr.open();
@@ -302,7 +304,7 @@ const HTTPS = {
     }
 
     if (cs) {
-      Array.prototype.push.apply(
+      dcookies.push.apply(
         dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") } })
          .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name }) })
       );
@@ -360,33 +362,6 @@ const HTTPS = {
       : this._globalUnsafeCookies = value;
   },
   
-  shouldForbid: function(site) {
-    switch(this.allowHttpsOnly) {
-      case 0:
-        return false;
-      case 1:
-        return /^(?:ht|f)tp:\/\//.test(site) && this.isProxied(site);
-      case 2:
-        return /^(?:ht|f)tp:\/\//.test(site);
-    }
-    return false;
-  },
-  
-  isProxied: function(u) {
-    var ps = CC["@mozilla.org/network/protocol-proxy-service;1"].getService(CI.nsIProtocolProxyService);
-   
-    this.isProxied = function(u) {
-      try {
-        if (!(u instanceof CI.nsIURI)) {
-          u = IOS.newURI(u, null, null);
-        }
-        return ps.resolve(u, 0).type != "direct";
-      } catch(e) {
-        return false;
-      }
-    }
-  },
-  
   _getParent: function(req, w) {
     return  w && w.frameElement || DOM.findBrowserForNode(w || IOUtil.findWindow(req));
   }
@@ -402,11 +377,10 @@ const HTTPS = {
     });
     HTTPS.__defineSetter__(p, function(n) {
       v = n;
-      HTTPS.cookiesCleanup();
+      if (HTTPS.ready) HTTPS.cookiesCleanup();
       return v;
     });
   });
 })();
 
-
-
+HTTPS.ready = true;
