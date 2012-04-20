@@ -343,18 +343,6 @@ HTTPSEverywhere.prototype = {
     return value;
   },
 
-  // This function is registered solely to detect favicon loads by virtue
-  // of their failure to pass through this function.
-  onStateChange: function(wp, req, stateFlags, status) {
-    if (stateFlags & WP_STATE_START) {
-      if (req instanceof CI.nsIChannel) {
-        if (req instanceof CI.nsIHttpChannel) {
-          PolicyState.attach(req);
-        }
-      }
-    }
-  },
-
   // We use onLocationChange to make a fresh list of rulesets that could have
   // applied to the content in the current page (the "applicable list" is used
   // for the context menu in the UI).  This will be appended to as various
@@ -494,8 +482,7 @@ HTTPSEverywhere.prototype = {
 		
 		var dls = CC['@mozilla.org/docloaderservice;1']
 			.getService(CI.nsIWebProgress);
-		dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
-                                    CI.nsIWebProgress.NOTIFY_LOCATION);
+		dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
 		this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
 		HTTPSRules.init();
@@ -682,8 +669,7 @@ HTTPSEverywhere.prototype = {
 			
 			var dls = CC['@mozilla.org/docloaderservice;1']
 			.getService(CI.nsIWebProgress);
-			dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_STATE_REQUEST |
-                                    CI.nsIWebProgress.NOTIFY_LOCATION);
+			dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
 			
 			this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
