@@ -19,6 +19,8 @@ BASE_REQ_SIZE=4096;
 LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/ctypes.jsm");
+
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
@@ -393,7 +395,39 @@ SSLObservatory.prototype = {
       certArray2 = certArray2.slice(0,1);
       fps = fps.slice(0,1);
     }
+    this.log(WARN, extractRealLeafFromConveregenceLeaf(certArray2[0]));
     return certArray2;
+  },
+
+  extractRealLeafFromConveregenceLeaf: function(certificate) {
+    var len = {};
+    var derEncoding = certificate.getRawDER(len);
+
+    var derItem = NSS.types.SECItem();
+    derItem.data = NSS.lib.ubuffer(derEncoding);
+    derItem.len = len.value;
+
+    var completeCertificate = NSS.lib.CERT_DecodeDERCertificate(derItem.address(), 1, null);
+
+    var extItem = NSS.types.SECItem();
+    var status = NSS.lib.CERT_FindCertExtension(completeCertificate, 
+                                                NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT, 
+                                                extItem.address());
+    if (status != -1) {
+      var encoded = '';
+      var asArray = ctypes.cast(extItem.data, ctypes.ArrayType(ctypes.unsigned_char, extItem.len).ptr).contents;
+      var marker = false;
+
+      for (var i=0;i<asArray.length;i++) {
+        if (marker) {
+          encoded += String.fromCharCode(asArray[i]);
+        } else if (asArray[i] == 0x00) {
+          marker = true;
+        }
+      }
+
+      return JSON.parse(encoded);
+    }
   },
 
   submitChain: function(certArray, fps, domain, channel, host_ip) {
