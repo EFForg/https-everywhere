@@ -67,18 +67,19 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
-mkdir -p pkg/crx
+mkdir -p pkg/crx/rules
 cd pkg/crx
 ln -sf ../../chromium/* .
 do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
-cp -r src/chrome/content/rules pkg/crx/
-# TODO: switch the chrome version over to using default.rulesets too
-# For now, don't ship it!
-[ -f pkg/crx/rules/default.rulesets ] && rm -f pkg/crx/rules/default.rulesets
+
+. merge-rulesets.sh
+
+cp src/$RULESETS pkg/crx/rules/default.rulesets
+
 echo 'var rule_list = [' > pkg/crx/rule_list.js
-for i in $(ls pkg/crx/rules/*.xml)
+for i in $(ls pkg/crx/rules/*.xml pkg/crx/rules/*.rulesets)
 do
     echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
 done
