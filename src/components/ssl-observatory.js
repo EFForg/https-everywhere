@@ -245,6 +245,11 @@ SSLObservatory.prototype = {
   },
   */
 
+  ourFingerprint: function(cert) {
+    // Calculate our custom fingerprint from an nsIX509Cert
+    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+  },
+
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
@@ -291,7 +296,7 @@ SSLObservatory.prototype = {
         for(var i = 0; i < chainEnum.length; i++) {
           var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
           chainArray.push(cert);
-          var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+          var fp = this.ourFingerprint(cert);
           fps.push(fp);
           chainArrayFpStr = chainArrayFpStr + fp;
         }
@@ -384,29 +389,34 @@ SSLObservatory.prototype = {
 
   processConvergenceChain: function(chain) {
     // Make sure the chain we're working with is sane, even if Convergence is
-    // present
+    // present.
+
     // Convergence currently performs MITMs against the Firefox in order to
     // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
     // end-entity cert produced by Convergence contains a copy of the real
-    // end-entity cert inside an X509v3 extension.  For now we submit the
-    // synthetic end-entity cert but avoid the root CA cert above it, which would
-    // function like a tracking ID.  If anyone knows how to parse X509v3
-    // extensions in JS, we should do that instead.
+    // end-entity cert inside an X509v3 extension.  We extract this and send
+    // it rather than the Convergence certs.
     var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
     if (!convergence) return null;
     convergence = convergence.getService().wrappedJSObject;
     if (!convergence || !convergence.enabled) return null;
 
-    this.log(INFO, "Convergence uses its own root CAs; not submitting those");
-    chain.certArray = chain.certArray.slice(0,1);
-    chain.fps = chain.fps.slice(0,1);
+    this.log(INFO, "Convergence uses its own internal root certs; not submitting those");
     
-    for (var elem in convergence) {
-      this.log(WARN, "Element " + elem)
-      this.log(WARN, "Value " + convergence[elem]);
+    //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
+    try {
+      var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
+      var b64Cert = certInfo["certificate"];
+      var certDB = Components.classes["@mozilla.org/security/x509certdb;1"].getService(Components.interfaces.nsIX509CertDB);
+      var leaf = certDB.constructX509FromBase64(b64Cert);
+      chain.certArray = [leaf];
+      chain.fps = [this.ourFingerprint(leaf)];
+    } catch (e) {
+      this.log(WARN, "Failed to extract leaf cert from Convergence cert " + e);
+      chain.certArray = chain.certArray.slice(0,1);
+      chain.fps = chain.fps.slice(0,1);
     }
-    this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
-    //this.log(WARN, this.extractRealLeafFromConveregenceLeaf(certArray2[0]));
+
   },
 
   extractRealLeafFromConveregenceLeaf: function(certificate) {
