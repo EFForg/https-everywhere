@@ -1,20 +1,56 @@
-<ruleset name="Lenovo">
-  <target host="lenovo.com" />
-  <target host="www.lenovo.com" />
-  <target host="shop.lenovo.com" />
-  <target host="lenovo.co.uk" />
-  <target host="www.lenovo.co.uk" />
+<!--	!functional:
+		- training.lenovo.partner-management.com
+-->
+<ruleset name="Lenovo (partial)">
 
-  <securecookie host="^(.+\.)?lenovo\.com$" name=".*"/>
+	<target host="lenovo.com"/>
+		<exclusion pattern="^http://lenovo\.com/friendsandfamily$"/>
+	<target host="blog.lenovo.com"/>
+	<target host="consumersupport.lenovo.com"/>
+	<target host="news.lenovo.com"/>
+	<target host="outlet.lenovo.com"/>
+	<target host="shop.lenovo.com"/>
+		<exclusion pattern="^http://shop\.lenovo\.com/us(/.*)?$"/>
+	<target host="social.lenovo.com"/>
+	<target host="support.lenovo.com"/>
+	<target host="www.lenovo.com"/>
+		<exclusion pattern="^http://(www\.)?lenovo\.com/depotstatus"/>
+		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html	-->
+		<exclusion pattern="^http://www\.lenovo\.com/(support|training)/"/>
+	<target host="lenovo.co.uk"/>
+	<target host="www.lenovo.co.uk"/>
+	<target host="lenovoorders.com"/>
+	<target host="www.lenovoorders.com"/>
 
-  <exclusion pattern="^http://lenovo\.com/friendsandfamily$"/>
-  <exclusion pattern="^http://shop\.lenovo\.com/us(/.*)?$"/>
-  <exclusion pattern="^http://(www\.)?lenovo\.com/depotstatus"/>
 
-  <rule from="^http://(?:www\.)?lenovo\.com/epp$" to="https://www.lenovo.com/epp/"/>
+	<securecookie host="^(.+\.)?lenovo\.com$" name=".*"/>
 
-  <rule from="^http://lenovo\.com/" to="https://www.lenovo.com/"/>
-  <rule from="^http://(www|shop)\.lenovo\.com/" to="https://$1.lenovo.com/"/>
-  
-  <rule from="^http://(?:www\.)?lenovo\.co\.uk/?$" to="https://www.lenovo.com/uk/en/"/>
+
+	<rule from="^http://lenovo\.com/"
+		to="https://www.lenovo.com/"/>
+
+	<rule from="^http://(outlet|shop|www)\.lenovo\.com/"
+		to="https://$1.lenovo.com/"/>
+ 
+	<rule from="^http://(?:www\.)?lenovo\.co\.uk/?$"
+		to="https://www.lenovo.com/uk/en/"/>
+
+	<rule from="^http://(www\.)?lenovoorders\.com/"
+		to="https://$1lenovoorders.com/"/>
+
+	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
+
+		support redirects to support.lenovo.com
+		training redirects to training.lenovo.partner-management.com
+										-->
+	<rule from="^https://www\.lenovo\.com/(support|training)/"
+		to="http://www.lenovo.com/$1/"/>
+
+	<!--	self-signed
+		social just redirects to blog
+		haven't seen blog nor support links, but just in case.
+										-->
+	<rule from="^https://(blog|(consumer)?support|news|social)\.lenovo\.com/"
+		to="http://$1.lenovo.com/"/>
+
 </ruleset>
