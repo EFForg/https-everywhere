@@ -407,7 +407,7 @@ SSLObservatory.prototype = {
     try {
       var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
       var b64Cert = certInfo["certificate"];
-      var certDB = Components.classes["@mozilla.org/security/x509certdb;1"].getService(Components.interfaces.nsIX509CertDB);
+      var certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
       var leaf = certDB.constructX509FromBase64(b64Cert);
       chain.certArray = [leaf];
       chain.fps = [this.ourFingerprint(leaf)];
