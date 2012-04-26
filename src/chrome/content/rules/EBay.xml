@@ -1,8 +1,27 @@
+<!--	!functional:
+		- pages.ebay.com		(cert: giftcertificates.ebay.com, spages.half.ebay.com)
+		- i.ebayimg.com			(timeout; doesn't translate directly to securepics)
+		- include.ebaystatic.com	(Akamai; "Service Unavailable"; nothing at include-origin nor origin-include)
+		- ir.ebaystatic.com		(Akamai; works; nothing at ir-origin nor origin-ir)
+		- thumbs.ebaystatic.com		(Akamai; "An error occurred")
+-->
 <ruleset name="eBay (partial)">
 
+	<target host="certificates.ebay.com"/>
+	<target host="giftcertificates.ebay.com"/>
+	<target host="spages.half.ebay.com"/>
+	<target host="ocs.ebay.com"/>
+	<target host="p.ebaystatic.com"/>
+	<target host="q.ebaystatic.com"/>
+	<target host="pics.ebaystatic.com"/>
 	<target host="securepics.ebaystatic.com"/>
 
-	<rule from="^http://securepics\.ebaystatic\.com/"
+	<!--	spages.help seems identical to pages.ebay.com,
+		except for being styled differently.		-->
+	<rule from="^http://((gift)?certificates|ocs|spages\.half)\.ebay\.com/"
+		to="https://$1.ebay.com/"/>
+
+	<rule from="^http://(?:[pq]|(?:secure)?pics)\.ebaystatic\.com/"
 		to="https://securepics.ebaystatic.com/"/>
 
 </ruleset>
