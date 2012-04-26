@@ -1,5 +1,6 @@
 <!--	!functional:
 		- factfinder2.census.gov
+		- (www.)energy.gov		(timeout)
 		- archive.hhs.gov		(timeout)
 		- www.hhs.gov			(Akamai, shows 404 page)
 		- thomas.loc.gov
@@ -7,6 +8,7 @@
 		- pds.nasa.gov			(timeout)
 		- transparency.cit.nih.gov	(Akamai, "An error occurred")
 		- www.nih.gov			(timeout)
+		- www.cdscc.nasa.gov		(cert: TS Series NAS; redirects infinitely)
 		- (www.)noaa.gov		(timeout)
 		- maps.ngdc.noaa.gov
 		- noaanews.noaa.gov
@@ -15,6 +17,11 @@
 		- ansers.usa.gov		(timeout)
 		- blog.usa.gov
 		- usa.gov			(Akamai, redirects to http)
+		- www.usda.gov			(Akamai, redirects to pws.sc.egov.usda.gov; however !www works [cert: my.usda.gov])
+		- (www.)eauth.egov.usda.gov
+		- www.nrcs.usda.gov		(Akamai; www redirects to pws.sc.egov.usda.gov; !www times out)
+		- (www.)rurdev.usda.gov		(!www times out)
+		- forms.sc.egov.usda.gov	(timeout)
 -->
 <ruleset name="US government (partial)">
 
@@ -37,6 +44,10 @@
 	<target host="*.medicare.gov"/>
 	<target host="web.nvd.nist.gov"/>
 	<target host="*.usa.gov"/>
+	<target host="oip.sc.egov.usda.gov"/>
+	<target host="pws.sc.egov.usda.gov"/>
+	<target host="my.usda.gov"/>
+	<target host="oip.usda.gov"/>
 	<target host="usajobs.gov"/>
 	<target host="*.usajobs.gov"/>
 	<target host="postalinspectors.uspis.gov"/>
@@ -50,6 +61,7 @@
 	<securecookie host="^intelligence\.house\.gov$" name=".*"/>
 	<securecookie host="^web\.nvd\.nist\.gov$" name=".*"/>
 	<securecookie host="^publications\.usa\.gov$" name=".*"/>
+	<securecookie host="^my\.usda\.gov$" name=".*"/>
 
 
 	<rule from="^http://(?:www\.)?(census|fbo|genome|medicare)\.gov/"
@@ -81,6 +93,13 @@
 
 	<rule from="^http://([\w\-]+\.)?usajobs\.gov/"
 		to="https://$1usajobs.gov/"/>
+
+	<!--	cert doesn't match !www		-->
+	<rule from="^http://(?:www\.)?fsa\.usda\.gov/"
+		to="https://www.fsa.usda.gov/"/>
+
+	<rule from="^http://(my|oip|(oip|pws)\.sc\.egov)\.usda\.gov/"
+		to="https://$1.usda.gov/"/>
 
 	<rule from="^http://postalinspectors\.uspis\.gov/"
 		to="https://postalinspectors.uspis.gov/"/>
