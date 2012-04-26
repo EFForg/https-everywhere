@@ -1,8 +1,25 @@
 <ruleset name="Stanford University (partial)">
 
 	<target host="crypto.stanford.edu"/>
+	<target host="slac.stanford.edu"/>
+	<target host="news.slac.stanford.edu"/>
+	<!--	* for cross-domain cookie	-->
+	<target host="*.news.slac.stanford.edu"/>
+	<target host="www.slac.stanford.edu"/>
+	<target host="www6.slac.stanford.edu"/>
 
-	<rule from="^http://crypto\.stanford\.edu/"
-		to="https://crypto.stanford.edu/"/>
+	<securecookie host="^\.news\.slac\.stanford\.edu$" name=".*"/>
+
+	<rule from="^http://(crypto|news\.slac)\.stanford\.edu/"
+		to="https://$1.stanford.edu/"/>
+
+	<!--	cert isn't valid for !www	-->
+	<rule from="^http://(?:www\.)?slac\.stanford\.edu/"
+		to="https://www.slac.stanford.edu/"/>
+
+	<!--	cert isn't valid for www6
+		when rewritten to www, redirects back	-->
+	<rule from="^https://www6\.slac\.stanford\.edu/"
+		to="http://www6.slac.stanford.edu/"/>
 
 </ruleset>
