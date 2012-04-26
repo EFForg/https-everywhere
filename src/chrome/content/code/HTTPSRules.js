@@ -431,7 +431,7 @@ const HTTPSRules = {
     // to read it raises an exception (probably depending on the URI type).
     try {
       if (input_uri.userPass) {
-        uri = input_uri.clone()
+        uri = input_uri.clone();
         userpass_present = true;
         uri.userPass = null;
       } 
