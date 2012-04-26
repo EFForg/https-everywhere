@@ -1,6 +1,16 @@
+<!--
+	Other UBM rulesets:
+		- CRN.xml
+
+	!functional:
+		- (www.)gamasutra.com	(valid cert; pages become blank)
+-->
 <ruleset name="TechWeb (partial)">
 
 	<target host="i.cmpnet.com"/>
+	<target host="gamasutra.com"/>
+	<target host="www.gamasutra.com"/>
+	<target host="i.techweb.com"/>
 	<target host="techwebonlineevents.com"/>
 	<target host="*.techwebonlineevents.com"/>
 	<target host="twimgs.com"/>
@@ -9,8 +19,11 @@
 	<securecookie host="^(.*\.)?techwebonlineevents\.com$" name=".*"/>
 
 
-	<rule from="^http://i\.cmpnet\.com/"
-		to="https://i.cmpnet.com/"/>
+	<rule from="^http://i\.(cmpnet|techweb)\.com/"
+		to="https://i.$1.com/"/>
+
+	<rule from="^http://(www\.)?gamasutra\.com/(blogs/edit/img/|(comments/|content/blogs/)?\w+\.css|(db_area/)?images/)"
+		to="https://$1gamasutra.com/$2"/>
 
 	<rule from="^http://(?:www\.)?techwebonlineevents\.com/"
 		to="https://www.techwebonlineevents.com/"/>
