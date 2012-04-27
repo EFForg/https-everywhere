@@ -47,7 +47,7 @@ ChannelReplacement.prototype = {
   
   get _classifierClass() {
     delete this.__proto__._classifierClass;
-    return this.__proto__._classifierClass = Cc["@mozilla.org/channelclassifier;1"];
+    return this.__proto__._classifierClass = Cc["@mozilla.org/channelclassifier"];
   },
   
   _autoHeadersRx: /^(?:Host|Cookie|Authorization)$|Cache|^If-/,
@@ -143,6 +143,7 @@ ChannelReplacement.prototype = {
 
     if (chan.loadFlags & chan.LOAD_DOCUMENT_URI) {
       this.window = IOUtil.findWindow(chan);
+      if (this.window) this.window._replacedChannel = chan;
     }
     
     return this;
@@ -266,8 +267,7 @@ ChannelReplacement.prototype = {
       newChan = this.channel,
       overlap;
 
-    // XXX: Hack: We don't use ABE.. Is it safe to ignore this check and assume no double load?
-    //if (!(this.window && (overlap = ABERequest.getLoadingChannel(this.window)) !== oldChan)) {
+    if (!(this.window && (overlap = this.window._replacedChannel) !== oldChan)) {
       try {
         if (ABE.consoleDump && this.window) {
           ABE.log("Opening delayed channel: " + oldChan.name + " - (current loading channel for this window " + (overlap && overlap.name) + ")");
@@ -289,11 +289,11 @@ ChannelReplacement.prototype = {
       } catch (e) {
         ABE.log(e);
       }
-    //} else {
-    //  if (ABE.consoleDump) {
-    //    ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
-    //  }
-    //}
+    } else {
+      if (ABE.consoleDump) {
+        ABE.log("Detected double load on the same window: " + oldChan.name + " - " + (overlap && overlap.name));
+      }
+    }
     
     this.dispose();
   },

@@ -431,11 +431,25 @@ const HTTPSRules = {
     // to read it raises an exception (probably depending on the URI type).
     try {
       if (input_uri.userPass) {
-        uri = input_uri.clone()
+        uri = input_uri.clone();
         userpass_present = true;
         uri.userPass = null;
       } 
     } catch(e) {}
+
+    // example.com.  is equivalent to example.com
+    // example.com.. is invalid, but firefox would load it anyway
+    try {
+      var h = input_uri.host;
+      if (h.charAt(h.length - 1) == ".") {
+        while (h.charAt(h.length - 1) == ".") 
+          h = h.slice(0,-1);
+        uri = uri.clone();
+        uri.host = h;
+      }
+    } catch(e) {
+      this.log(WARN, "Failed to normalise domain " + input_uri.host);
+    }
 
     // Get the list of rulesets that target this host
     try {
