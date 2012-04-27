@@ -50,6 +50,7 @@
     <exclusion pattern="^http://api-maps\.yandex\.ru/" />
     <exclusion pattern="^http://bar-widgets\.yandex\.ru/" />
     <exclusion pattern="^http://blogs\.yandex\.ru/" />
+    <exclusion pattern="^http://cs-ellpic\.yandex\.net/" />
     <exclusion pattern="^http://cs-thumb\.yandex\.net/" />
     <exclusion pattern="^http://dict\.yandex\.ru/" />
     <exclusion pattern="^http://cards\.yandex\.ru/"/>
@@ -60,6 +61,7 @@
     <exclusion pattern="^http://images\.yandex\.ru/" />
     <exclusion pattern="^http://lingvo\.yandex\.ru/" />
     <exclusion pattern="^http://maps\.yandex\.ru/" />
+    <exclusion pattern="^http://static-maps\.yandex\.ru/"/>
     <exclusion pattern="^http://metro\.yandex\.ru/" />
     <exclusion pattern="^http://music\.yandex\.ru/" />
     <exclusion pattern="^http://news\.yandex\.ru/" />
@@ -151,5 +153,19 @@
     <rule from="^http://(?:www\.)?([^.]+)\.ya\.ru/" to="https://$1.ya.ru/" />
 
     <rule from="^http://(?:www\.)?moikrug\.ru/" to="https://moikrug.ru/" />
+
+
+	<!--	"<error><status>401</status><message>Unauthorized</message><cause>Incorrect referer</cause></error>"
+		https doesn't give a referrer, so images don't load.
+		Example:	https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
+		List:		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html	-->
+	<rule from="^https://static-maps\.yandex\.ru/"
+		to="http://static-maps.yandex.ru/" downgrade="1" />
+
+	<!--	timeout
+		Example:	https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
+		List:		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html	-->
+	<rule from="^https://(cs-ellpic|mdata)\.yandex\.net/"
+		to="http://$1.yandex.net/" downgrade="1" />
 
 </ruleset>

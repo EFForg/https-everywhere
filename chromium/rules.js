@@ -85,61 +85,67 @@ function RuleSets() {
 
 RuleSets.prototype = {
   localPlatformRegexp: new RegExp("chromium"),
-
+ 
   loadRuleSet: function(xhr) {
     // Get file contents
-    if (xhr.readyState == 4) {
-      // XXX: Validation + error checking
-      var ruletag = xhr.responseXML.getElementsByTagName("ruleset")[0];
+    if (xhr.readyState != 4) {
+      return;
+    }
 
-      var default_state = true;
-      if (ruletag.attributes.default_off) { default_state = false; }
-
-      // If a ruleset declares a platform, and we don't match it, treat it as
-      // off-by-default
-      var platform = ruletag.getAttribute("platform");
-      if (platform) 
-        if (platform.search(this.localPlatformRegexp) == -1)
-          default_state = false;
-
-      var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                                 ruletag.getAttribute("match_rule"),
-                                 default_state);
-
-      // Read user prefs
-      if (rule_set.name in localStorage) {
-        rule_set.active = (localStorage[rule_set.name] == "true");
-      }
-
-      var rules = xhr.responseXML.getElementsByTagName("rule");
-      for(var j = 0; j < rules.length; j++) {
-        rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
-                                      rules[j].getAttribute("to")));
-      }
-
-      var exclusions = xhr.responseXML.getElementsByTagName("exclusion");
-      for(var j = 0; j < exclusions.length; j++) {
-        rule_set.exclusions.push(
-              new Exclusion(exclusions[j].getAttribute("pattern")));
-      }
-
-      var cookierules = xhr.responseXML.getElementsByTagName("securecookie");
-      for(var j = 0; j < cookierules.length; j++) {
-        rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
-                                             cookierules[j].getAttribute("name")));
-      }
-
-      var targets = xhr.responseXML.getElementsByTagName("target");
-      for(var j = 0; j < targets.length; j++) {
-         var host = targets[j].getAttribute("host");
-         if (!(host in this.targets)) {
-           this.targets[host] = [];
-         }
-         this.targets[host].push(rule_set);
-      }
+    // XXX: Validation + error checking
+    var sets = xhr.responseXML.getElementsByTagName("ruleset");
+    for (var i = 0; i < sets.length; ++i) {
+      this.parseOneRuleset(sets[i]);
     }
   },
+  parseOneRuleset: function(ruletag) {
+    var default_state = true;
+    if (ruletag.attributes.default_off) { default_state = false; }
 
+    // If a ruleset declares a platform, and we don't match it, treat it as
+    // off-by-default
+    var platform = ruletag.getAttribute("platform");
+    if (platform) 
+      if (platform.search(this.localPlatformRegexp) == -1)
+        default_state = false;
+
+    var rule_set = new RuleSet(ruletag.getAttribute("name"),
+                               ruletag.getAttribute("match_rule"),
+                               default_state);
+
+    // Read user prefs
+    if (rule_set.name in localStorage) {
+      rule_set.active = (localStorage[rule_set.name] == "true");
+    }
+
+    var rules = ruletag.getElementsByTagName("rule");
+    for(var j = 0; j < rules.length; j++) {
+      rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
+                                    rules[j].getAttribute("to")));
+    }
+
+    var exclusions = ruletag.getElementsByTagName("exclusion");
+    for(var j = 0; j < exclusions.length; j++) {
+      rule_set.exclusions.push(
+            new Exclusion(exclusions[j].getAttribute("pattern")));
+    }
+
+    var cookierules = ruletag.getElementsByTagName("securecookie");
+    for(var j = 0; j < cookierules.length; j++) {
+      rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
+                                           cookierules[j].getAttribute("name")));
+    }
+
+    var targets = ruletag.getElementsByTagName("target");
+    for(var j = 0; j < targets.length; j++) {
+       var host = targets[j].getAttribute("host");
+       if (!(host in this.targets)) {
+         this.targets[host] = [];
+       }
+       this.targets[host].push(rule_set);
+    }
+  },
+  
   applicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
