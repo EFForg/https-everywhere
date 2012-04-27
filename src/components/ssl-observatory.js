@@ -19,6 +19,8 @@ BASE_REQ_SIZE=4096;
 LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/ctypes.jsm");
+
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
@@ -46,6 +48,7 @@ const INCLUDE = function(name) {
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
 INCLUDE('X509ChainWhitelist');
+INCLUDE('NSS');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]
@@ -90,6 +93,11 @@ function SSLObservatory() {
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
+  try {
+    NSS.initialize("");
+  } catch(e) {
+    this.log(WARN, "Failed to initialize NSS component:" + e);
+  }
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -237,6 +245,11 @@ SSLObservatory.prototype = {
   },
   */
 
+  ourFingerprint: function(cert) {
+    // Calculate our custom fingerprint from an nsIX509Cert
+    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+  },
+
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
@@ -283,23 +296,23 @@ SSLObservatory.prototype = {
         for(var i = 0; i < chainEnum.length; i++) {
           var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
           chainArray.push(cert);
-          var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+          var fp = this.ourFingerprint(cert);
           fps.push(fp);
           chainArrayFpStr = chainArrayFpStr + fp;
         }
         var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
         this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
-	if(!this.myGetBoolPref("use_whitelist")) {
-	  this.log(WARN, "Not using whitelist to filter cert chains.");
-	}
+        if(!this.myGetBoolPref("use_whitelist")) {
+          this.log(WARN, "Not using whitelist to filter cert chains.");
+        }
         else if (this.isChainWhitelisted(chain_hash)) {
           this.log(INFO, "This cert chain is whitelisted. Not submitting.");
           return;
         }
-	else {
+        else {
           this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-	}
+        }
 
         if (subject.URI.port == -1) {
             this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
@@ -353,45 +366,124 @@ SSLObservatory.prototype = {
     return false;
   },
 
-    submitChain: function(certArray, fps, domain, channel, host_ip) {
-    var base64Certs = [];
+  findRootInChain: function(certArray) {
+    // Return the position in the chain Array of the/a root CA
     var rootidx = -1;
-
+    var nextInChain = certArray[0].issuer;
     for (var i = 0; i < certArray.length; i++) {
-      if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
-        this.log(INFO, "Got root cert at position: "+i);
-        rootidx = i;
+      // Find the next cert in the valid chain
+      if (certArray[i].equals(nextInChain)) {
+        if (certArray[i].issuerName == certArray[i].subjectName) {
+          // All X509 root certs are self-signed
+          this.log(INFO, "Got root cert at position: "+i);
+          rootidx = i;
+          break;
+        } else {
+          // This is an intermediate CA cert; keep looking for the root
+          nextInChain = certArray[i].issuer;
+        }
       }
     }
+    return rootidx;
+  },
 
-    if (!this.myGetBoolPref("alt_roots")) {
-      if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
-        if (rootidx == -1) {
-          rootidx = fps.length-1;
+  processConvergenceChain: function(chain) {
+    // Make sure the chain we're working with is sane, even if Convergence is
+    // present.
+
+    // Convergence currently performs MITMs against the Firefox in order to
+    // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
+    // end-entity cert produced by Convergence contains a copy of the real
+    // end-entity cert inside an X509v3 extension.  We extract this and send
+    // it rather than the Convergence certs.
+    var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
+    if (!convergence) return null;
+    convergence = convergence.getService().wrappedJSObject;
+    if (!convergence || !convergence.enabled) return null;
+
+    this.log(INFO, "Convergence uses its own internal root certs; not submitting those");
+    
+    //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
+    try {
+      var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
+      var b64Cert = certInfo["certificate"];
+      var certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
+      chain.leaf = certDB.constructX509FromBase64(b64Cert);
+      chain.certArray = [chain.leaf];
+      chain.fps = [this.ourFingerprint(chain.leaf)];
+    } catch (e) {
+      this.log(WARN, "Failed to extract leaf cert from Convergence cert " + e);
+      chain.certArray = chain.certArray.slice(0,1);
+      chain.fps = chain.fps.slice(0,1);
+    }
+
+  },
+
+  extractRealLeafFromConveregenceLeaf: function(certificate) {
+    // Copied from Convergence's CertificateStatus.getVerificiationStatus
+    var len = {};
+    var derEncoding = certificate.getRawDER(len);
+
+    var derItem = NSS.types.SECItem();
+    derItem.data = NSS.lib.ubuffer(derEncoding);
+    derItem.len = len.value;
+
+    var completeCertificate = NSS.lib.CERT_DecodeDERCertificate(derItem.address(), 1, null);
+
+    var extItem = NSS.types.SECItem();
+    var status = NSS.lib.CERT_FindCertExtension(completeCertificate, 
+                                                NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT, 
+                                                extItem.address());
+    if (status != -1) {
+      var encoded = '';
+      var asArray = ctypes.cast(extItem.data, ctypes.ArrayType(ctypes.unsigned_char, extItem.len).ptr).contents;
+      var marker = false;
+
+      for (var i=0;i<asArray.length;i++) {
+        if (marker) {
+          encoded += String.fromCharCode(asArray[i]);
+        } else if (asArray[i] == 0x00) {
+          marker = true;
         }
+      }
+
+      return JSON.parse(encoded);
+    }
+  },
+
+  submitChain: function(certArray, fps, domain, channel, host_ip) {
+    var base64Certs = [];
+    // Put all this chain data in one object so that it can be modified by
+    // subroutines if required
+    c = {}; c.certArray=certArray; c.fps = fps;
+    c.leaf = certArray[0];
+    this.processConvergenceChain(c);
+    var rootidx = this.findRootInChain(c.certArray);
+    var ss= false;
+
+    if (c.leaf.issuerName == c.leaf.subjectName) 
+      ss = true;
+
+    if (!this.myGetBoolPref("self_signed") && ss) {
+      this.log(INFO, "Not submitting self-signed cert for " + domain);
+      return;
+    }
+
+    if (!ss && !this.myGetBoolPref("alt_roots")) {
+      if (rootidx == -1) {
+        // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
+        this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
+                 c.leaf.issuerName + " (not submitting due to settings)");
+        return;
+      } else if (!(c.fps[rootidx] in this.public_roots)) {
+        // A cert with a known but non-public Issuer
         this.log(INFO, "Got a private root cert. Ignoring domain "
-                 +domain+" with root "+fps[rootidx]);
+                 +domain+" with root "+c.fps[rootidx]);
         return;
       }
-    } else {
-      // Convergence currently performs MITMs against the Firefox in order to
-      // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
-      // end-entity cert produced by Convergence contains a copy of the real
-      // end-entity cert inside an X509v3 extension.  For now we submit the
-      // synthetic end-entity cert but avoid the root CA cert above it, which would
-      // function like a tracking ID.  If anyone knows how to parse X509v3
-      // extensions in JS, we should do that instead.
-      var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
-      if (convergence) 
-        convergence = convergence.getService().wrappedJSObject;
-      if (convergence && convergence.enabled) {
-        this.log(INFO, "Convergence uses its own root CAs; not submitting those");
-        certArray = certArray.slice(0,1);
-        fps = fps.slice(0,1);
-      }
     }
 
-    if (fps[0] in this.already_submitted) {
+    if (c.fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
       return;
     }
@@ -399,9 +491,9 @@ SSLObservatory.prototype = {
     var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
                 .getService(Components.interfaces.nsIWindowMediator);
     var browserWindow = wm.getMostRecentWindow("navigator:browser");
-    for (var i = 0; i < certArray.length; i++) {
+    for (var i = 0; i < c.certArray.length; i++) {
       var len = new Object();
-      var derData = certArray[i].getRawDER(len);
+      var derData = c.certArray[i].getRawDER(len);
       //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
       base64Certs.push(this.base64_encode(derData, false, false));
     }
@@ -412,7 +504,7 @@ SSLObservatory.prototype = {
     if (this.myGetBoolPref("testing")) {
       reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
-      reqParams.push("fplist="+this.compatJSON.encode(fps));
+      reqParams.push("fplist="+this.compatJSON.encode(c.fps));
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
     // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
@@ -449,21 +541,21 @@ SSLObservatory.prototype = {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
-            if (fps[0] in that.already_submitted)
-              delete that.already_submitted[fps[0]];
+            if (c.fps[0] in that.already_submitted)
+              delete that.already_submitted[c.fps[0]];
           }
         } else if (req.status == 403) {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            that.warnUser(warningObj, win, certArray[0]);
+            that.warnUser(warningObj, win, c.certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
           }
         } else {
-          if (fps[0] in that.already_submitted)
-            delete that.already_submitted[fps[0]];
+          if (c.fps[0] in that.already_submitted)
+            delete that.already_submitted[c.fps[0]];
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
@@ -474,7 +566,7 @@ SSLObservatory.prototype = {
     };
 
     // Cache this here to prevent multiple submissions for all the content elements.
-    that.already_submitted[fps[0]] = true;
+    that.already_submitted[c.fps[0]] = true;
     req.send(params);
   },
 
