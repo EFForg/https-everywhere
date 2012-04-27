@@ -464,7 +464,9 @@ SSLObservatory.prototype = {
       // atypical for confidential private PKI deployments, and they need to
       // be audited in order to warn about most devices with
       // remotely-factorisable key vulnerabilites
-      if (!(leaf.issuerName == leaf.subjectName)) {
+      if (this.myGetBoolPref("self_signed") && (leaf.issuerName == leaf.subjectName)) {
+        // continue on and submit self-signed certs
+      } else {
         if (rootidx == -1) {
           // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
           this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
