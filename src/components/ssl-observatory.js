@@ -408,9 +408,9 @@ SSLObservatory.prototype = {
       var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
       var b64Cert = certInfo["certificate"];
       var certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-      var leaf = certDB.constructX509FromBase64(b64Cert);
-      chain.certArray = [leaf];
-      chain.fps = [this.ourFingerprint(leaf)];
+      chain.leaf = certDB.constructX509FromBase64(b64Cert);
+      chain.certArray = [chain.leaf];
+      chain.fps = [this.ourFingerprint(chain.leaf)];
     } catch (e) {
       this.log(WARN, "Failed to extract leaf cert from Convergence cert " + e);
       chain.certArray = chain.certArray.slice(0,1);
@@ -453,34 +453,34 @@ SSLObservatory.prototype = {
 
   submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
-    var leaf = certArray[0];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
     c = {}; c.certArray=certArray; c.fps = fps;
+    c.leaf = certArray[0];
+    this.processConvergenceChain(c);
     var rootidx = this.findRootInChain(c.certArray);
+    var ss= false;
 
-    if (!this.myGetBoolPref("alt_roots")) {
-      // Submit self-signed end-entity certs regardless, because these are
-      // atypical for confidential private PKI deployments, and they need to
-      // be audited in order to warn about most devices with
-      // remotely-factorisable key vulnerabilites
-      if (this.myGetBoolPref("self_signed") && (leaf.issuerName == leaf.subjectName)) {
-        // continue on and submit self-signed certs
-      } else {
-        if (rootidx == -1) {
-          // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
-          this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
-                   leaf.issuerName + " (not submitting due to settings)");
-          return;
-        } else if (!(c.fps[rootidx] in this.public_roots)) {
-          // A cert with a known but non-public Issuer
-          this.log(INFO, "Got a private root cert. Ignoring domain "
-                   +domain+" with root "+c.fps[rootidx]);
-          return;
-        }
+    if (c.leaf.issuerName == c.leaf.subjectName) 
+      ss = true;
+
+    if (!this.myGetBoolPref("self_signed") && ss) {
+      this.log(INFO, "Not submitting self-signed cert for " + domain);
+      return;
+    }
+
+    if (!ss && !this.myGetBoolPref("alt_roots")) {
+      if (rootidx == -1) {
+        // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
+        this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
+                 c.leaf.issuerName + " (not submitting due to settings)");
+        return;
+      } else if (!(c.fps[rootidx] in this.public_roots)) {
+        // A cert with a known but non-public Issuer
+        this.log(INFO, "Got a private root cert. Ignoring domain "
+                 +domain+" with root "+c.fps[rootidx]);
+        return;
       }
-    } else {
-      this.processConvergenceChain(c);
     }
 
     if (c.fps[0] in this.already_submitted) {
