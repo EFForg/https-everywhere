@@ -517,7 +517,7 @@ SSLObservatory.prototype = {
 
     this.log(INFO, "Submitting cert for "+domain);
     this.log(DBUG, "submit_cert params: "+params);
-      
+
     // Pad to exp scale. This is done because the distribution of cert sizes
     // is almost certainly pareto, and definitely not uniform.
     for (tot_len = BASE_REQ_SIZE; tot_len < params.length; tot_len*=2);
@@ -535,9 +535,6 @@ SSLObservatory.prototype = {
     var win = HTTPSEverywhere.getWindowForChannel(channel);
     var req = this.buildRequest(params);
     req.onreadystatechange = function(evt) {
-      if (req.readyState != 4) {
-        that.log(INFO, "Ready state change:" + req.readyState);
-      }
       if (req.readyState == 4) {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
@@ -567,7 +564,7 @@ SSLObservatory.prototype = {
     };
 
     // Cache this here to prevent multiple submissions for all the content elements.
-    //that.already_submitted[c.fps[0]] = true;
+    that.already_submitted[c.fps[0]] = true;
     req.send(params);
   },
 
