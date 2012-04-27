@@ -15,6 +15,8 @@
 	<target host="nyt.com"/>
 	<target host="*.nyt.com"/>
 	<target host="nytimes.com" />
+	<target host="*.blogs.nytimes.com"/>
+	<target host="markets.on.nytimes.com"/>
 	<target host="*.nytimes.com" />
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/roomfordebate"/>
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(1[89]\d\d|200[0-4])/"/>
@@ -24,6 +26,7 @@
 
 	<securecookie host="^(.*\.)?boston\.com$" name=".*"/>
 	<securecookie host="^(.*\.)?bostonglobe\.com$" name=".*"/>
+	<securecookie host="^markets\.on\.nytimes\.com$" name=".*"/>
 
 
 	<rule from="^http://(graphics\.|www\.)?boston\.com/"
@@ -57,10 +60,22 @@
 	<rule from="^http://(?:css|i1)\.nyt\.com/"
 		to="https://www.nytimes.com/"/>
 
-	<rule from="^http://(global|myaccount|up)\.nytimes\.com/"
+	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
+		to="https://www.nytimes.com/favicon.ico"/>
+
+	<rule from="^http://(global|myaccount|markets\.on|up)\.nytimes\.com/"
 		to="https://$1.nytimes.com/"/>
 
 	<rule from="^http://graphics\d\.nytimes\.com/"
 		to="https://www.nytimes.com/"/>
+
+	<rule from="^http://jobmarket\.nytimes\.com/(adx|images)/"
+		to="https://www.nytimes.com/$1/"/>
+
+	<!--	travel.nytimes.com doesn't work, but articles
+		on travel appear to be on www too.
+		Ditto for adverts and scripts.		-->
+	<rule from="^http://travel\.nytimes\.com/(\d{4}/\d\d/\d\d|adx|js)/"
+		to="https://www.nytimes.com/$1/"/>
 
 </ruleset>

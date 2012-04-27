@@ -10,6 +10,11 @@
 	<target host="www.ngdc.noaa.gov"/>
 	<!--	Akamai	-->
 	<target host="apps.usa.gov"/>
+	<target host="usda.gov"/>
+	<target host="offices.sc.egov.usda.gov"/>
+	<target host="www.usda.gov"/>
+
+	<securecookie host="^(offices\.sc\.egov\.)?usda\.gov$" name=".*"/>
 
 	<rule from="^http://democrats\.intelligence\.house\.gov/(profiles|sites)/"
 		to="https://democrats.intelligence.house.gov/$1/"/>
@@ -23,5 +28,15 @@
 
 	<rule from="^http://apps\.usa\.gov/"
 		to="https://apps.usa.gov/"/>
+
+	<!--	www
+			- cert: Akamai
+			- redirects to pws.sc.egov.usda.gov
+		!www
+			- cert: my.usda.gov
+		offices.sc.egov
+			- cert: oip.usda.gov		-->
+	<rule from="^http://(offices\.sc\.egov\.|(?:www\.))?usda\.gov/"
+		to="https://$1usda.gov/"/>
 
 </ruleset>

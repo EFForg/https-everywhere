@@ -1,14 +1,23 @@
-<!--	s3.amazonaws.com/coursera/
+<!--	Buckets:
+		coursera.s3.amazonaws.com
+		spark-public.s3.amazonaws.com
 -->
 <ruleset name="Coursera">
 
 	<target host="coursera.org"/>
-	<target host="www.coursera.org"/>
+	<target host="*.coursera.org"/>
 
-	<securecookie host="^www\.coursera\.org$" name=".*"/>
+	<!--	encountered cookies:
+			- ^\.
+			- ^class
+			- ^www		-->
+	<securecookie host="^.*\.coursera\.org$" name=".*"/>
 
 	<!--	!www !work	-->
-	<rule from="^http://(?:www\.)?coursera\.org/"
+	<rule from="^http://coursera\.org/"
 		to="https://www.coursera.org/"/>
+
+	<rule from="^http://(class|www)\.coursera\.org/"
+		to="https://$1.coursera.org/"/>
 
 </ruleset>
