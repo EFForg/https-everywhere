@@ -1,0 +1,56 @@
+<!--
+	!functional:
+		- afisha.mail.ru	(timeout)
+		- blogs.mail.ru
+		- internet.mail.ru	(timeout)
+		- limg.imgsmail.ru	(cert: *.mail.ru; 403)
+		- r2.mail.ru
+		- (www.)mail.ru
+-->
+<ruleset name="Mail.ru (partial)">
+
+	<target host="ad.mail.ru"/>
+	<target host="corp.mail.ru"/>
+	<target host="avt.foto.mail.ru"/>
+	<target host="img.mail.ru"/>
+	<target host="lady.mail.ru"/>
+	<target host="news.mail.ru"/>
+	<target host="m.news.mail.ru"/>
+	<target host="r.mail.ru"/>
+	<target host="r2.mail.ru"/>
+	<target host="r3.mail.ru"/>
+	<target host="rs.mail.ru"/>
+	<target host="sales.mail.ru"/>
+	<target host="showbiz.mail.ru"/>
+	<target host="status.mail.ru"/>
+	<target host="tv.mail.ru"/>
+	<target host="img.tv.mail.ru"/>
+	<target host="my.tv.mail.ru"/>
+	<target host="img.imgsmail.ru"/>
+	<target host="limg.imgsmail.ru"/>
+
+	<!--	Are .tv.mail.ru cookies used on unsecurable pages?	-->
+
+	<!--	cert doesn't match img.tv
+		ditto my.tv.  my.tv appears identical to tv	-->
+	<rule from="^http://(ad|corp|avt\.foto|img(?:\.tv)|r3?|sales|showbiz|status|(?:my\.)?tv)\.mail\.ru/"
+		to="https://$1.mail.ru/"/>
+
+	<rule from="^http://lady\.mail\.ru/([^/])\.css"
+		to="https://lady.mail.ru/$1.css"/>
+
+	<rule from="^http://news\.mail\.ru/(_css/|favicon\.ico$|img/|pic/|prev\d{1,6}/)"
+		to="https://news.mail.ru/$1"/>
+
+	<!--	cert doesn't match m.news	-->
+	<rule from="^http://m\.news\.mail\.ru/(_css/|favicon\.ico$|img/)"
+		to="https://news.mail.ru/$1"/>
+
+	<rule from="^http://r[2s]\.mail\.ru/"
+		to="https://rs.mail.ru/"/>
+
+	<!--	also on img.mail.ru	-->
+	<rule from="^http://l?img\.imgsmail\.ru/"
+		to="https://img.imgsmail.ru/"/>
+
+</ruleset>

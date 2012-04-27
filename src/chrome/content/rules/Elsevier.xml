@@ -20,16 +20,18 @@
 	<target host="www.elsevierhealth.co.uk"/>
 
 	<target host="sciencedirect.com" />
-	<target host="binary-services.sciencedirect.com" />
-	<target host="pdn.sciencedirect.com" />
-	<target host="sdauth.sciencedirect.com" />
-	<target host="www.sciencedirect.com" />
+	<!--	domains:
+			- binary-services
+			- pdn
+			- sdauth
+			- www		-->
+	<target host="*.sciencedirect.com" />
 		<!--	Homepage redirects to http, gagdetservices css throws 404	-->
 		<exclusion pattern="^http://(www\.)?sciencedirect\.com/($|gadgetservices/)" />
 	<target host="acw.sciverse.com" />
 	<target host="applications.sciverse.com" />
 	<target host="www.applications.sciverse.com" />
-		<!-- exclusion below -->
+		<!--	exclusion below		-->
 	<target host="hub.sciverse.com" />
 	<target host="www.hub.sciverse.com" />
 		<exclusion pattern="^http://www\.(applications|hub)\.sciverse\.com/($|action|gadgetservices)" />
@@ -39,11 +41,17 @@
 	<securecookie host="^www\.elsevier\.ca$" name=".*"/>
 	<securecookie host="(.*\.)?elsevierhealth\.co(m(\.au)?|\.uk)$" name=".*"/>
 
-	<securecookie host="^(pdn|sdauth|www)\.sciencedirect\.com$" name=".*" />
+	<!--	encountered cookies:
+			- ^\.
+			- ^pdn
+			- ^sdauth
+			- ^www		-->
+	<securecookie host="^.*\.sciencedirect\.com$" name=".*" />
 
 
 	<rule from="^http://(?:origin-)?(ars|cdn)\.els-cdn\.com/"
 		to="https://origin-$1.els-cdn.com/" />
+
 
 	<rule from="^http://(?:www\.)?elsevier\.ca/"
 		to="https://www.elsevier.ca/"/>
@@ -53,6 +61,7 @@
 
 	<rule from="^http://(covers|linkinghub)\.elsevier\.com/"
 		to="https://$1.elsevier.com/"/>
+
 
 	<rule from="^http://(www\.)?((asia|eu|mea|us)\.)?elsevierhealth\.com/"
 		to="https://$1$2elsevierhealth.com/"/>
@@ -64,10 +73,10 @@
 		to="https://$1elsevierheath.co.uk/"/>
 
 
-	<rule from="^http://(?:www\.)?sciencedirect\.com/"
+	<rule from="^http://sciencedirect\.com/"
 		to="https://www.sciencedirect.com/"/>
 
-	<rule from="^http://(binary-services|pdn|sdauth)\.sciencedirect\.com/"
+	<rule from="^http://(binary-services|pdn|sdauth|www)\.sciencedirect\.com/"
 		to="https://$1.sciencedirect.com/" />
 
 	<rule from="^http://(?:www\.)?(applications|hub)\.sciverse\.com/([\w\W]+)"
