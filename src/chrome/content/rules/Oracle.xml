@@ -1,0 +1,57 @@
+<!--
+	Other Oracle rulesets:
+
+		- MySQL.xml
+		- MySQL-mismatches.xml
+		- NetBeans.zml
+		- Oracle-mismatches.xml
+
+
+	See Oracle-mismatches.xml for problematic rules.
+
+	There are probably some data identical across shop and www that could be grabbed for www.
+
+-->
+<ruleset name="Oracle (partial)">
+
+	<target host="oracle.com"/>
+	<target host="*.oracle.com"/>
+		<!--	Very stingy https support
+			-all(?) data redirects to http		-->
+		<exclusion pattern="^http://www\."/>
+	<!--	* for cross-domain cookie	-->
+	<target host="*.edelivery.oracle.com"/>
+
+
+	<!--	Cookie domains matched:
+
+			- blogs
+			- .edelivery
+			- education
+			- login
+			- shop
+			- solutions
+			- wikis
+					-->
+	<securecookie host="^(\w+|\.edelivery)\.oracle\.com$" name=".*"/>
+	<!--	2o7.net stats cookies.	-->
+	<securecookie host="^\.oracle\.com$" name="^(gpw_e24|s_(cc|nr|sq))$"/>
+
+
+	<!--	!www doesn't work	-->
+	<rule from="^https?://oracle\.com/"
+		to="https://www.oracle.com/"/>
+
+	<!--	crmondemand doesn't work via https,
+		and redirects as so via http.	-->
+	<rule from="^http://crmondemand\.oracle\.com/"
+		to="https://www.oracle.com/us/products/applications/crmondemand/index.html"/>
+
+	<rule from="^http://(blogs|education|edelivery|partners|oss|otn|shop|solutions|support|wikis)\.oracle\.com/"
+		to="https://$1.oracle.com/"/>
+
+	<!--	Cert: *.oracle.com	-->
+	<rule from="^https?://oracleimg\.com/"
+		to="https://www.oracleimg.com/"/>
+
+</ruleset>

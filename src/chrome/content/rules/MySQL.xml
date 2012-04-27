@@ -1,14 +1,38 @@
+<!--
+	Other Oracle rulesets:
+
+		- NetBeans.xml
+		- Oracle.xml
+		- Oracle-mismatches.xml
+
+
+	See Oracle-mismatches.xml for problematic rules.
+
+-->
 <ruleset name="MySQL">
 
 	<target host="mysql.com"/>
 	<target host="*.mysql.com"/>
-		<exclusion pattern="^http://(bugs|lists|planet|wb)\.mysql\.com/"/>
+		<exclusion pattern="^http://(bugs|forge|lists|planet|wb)\.mysql\.com/"/>
+	<target host="mysql.de"/>
+	<target host="www.mysql.de"/>
+	<target host="mysql.fr"/>
+	<target host="www.mysql.fr"/>
+	<target host="mysql.it"/>
+	<target host="www.mysql.it"/>
 
 
-	<securecookie host="^\.mysql\.com$" name=".*"/>
+	<!--	Sole cookie observered:
+			- MySQL_S		-->
+	<securecookie host="^\.mysql\.\w{2,3}$" name=".*"/>
+
 
 
 	<rule from="^http://([^/:@\.]+\.)?mysql\.com/"
 		to="https://$1mysql.com/"/>
+
+	<!--	Cert doesn't match !www		-->
+	<rule from="^http://(?:www\.)?mysql\.(\w\w)/"
+		to="https://www.mysql.$1/"/>
 
 </ruleset>
