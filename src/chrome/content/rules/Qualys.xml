@@ -3,8 +3,9 @@
 
 -->
 <ruleset name="Qualys (partial)">
-  <target host="qualys.com" />
-  <target host="*.qualys.com" />
+
+	<target host="qualys.com" />
+	<target host="*.qualys.com" />
 		<!--	Doesn't work.	-->
 		<exclusion pattern="^http://news\."/>
 
@@ -17,6 +18,16 @@
 	<securecookie host="^.*\.qualys\.com$" name=".*"/>
 
 
-  <rule from="^http://qualys\.com/" to="https://qualys.com/"/>
-  <rule from="^http://(browsercheck|community|pci|qualysguard|seal|www)\.qualys\.com/" to="https://$1.qualys.com/"/>
+	<!--	Observed working subdomains:
+
+			- browsercheck
+			- community
+			- pci
+			- qualysguard
+			- seal
+			- www
+				-->
+	<rule from="^http://(\w+\.)?qualys\.com/"
+		to="https://$1qualys.com/"/>
+
 </ruleset>
