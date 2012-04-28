@@ -1,7 +1,22 @@
-<ruleset name="Qualys">
+<!--
+	s3.amazonaws.com/qualys/ | d1dejaj6dcqv24.cloudfront.net
+
+-->
+<ruleset name="Qualys (partial)">
   <target host="qualys.com" />
   <target host="*.qualys.com" />
+		<!--	Doesn't work.	-->
+		<exclusion pattern="^http://news\."/>
 
-  <rule from="^http://qualys\.com/" to="https://www.qualys.com/"/>
-  <rule from="^http://(community|seal|www)\.qualys\.com/" to="https://$1.qualys.com/"/>
+	<!--	Observed cookies:
+
+			- \.
+			- browsercheck
+			- community
+					-->
+	<securecookie host="^.*\.qualys\.com$" name=".*"/>
+
+
+  <rule from="^http://qualys\.com/" to="https://qualys.com/"/>
+  <rule from="^http://(browsercheck|community|pci|qualysguard|seal|www)\.qualys\.com/" to="https://$1.qualys.com/"/>
 </ruleset>
