@@ -1,12 +1,17 @@
 <ruleset name="Vimeo">
   <target host="vimeo.com" />
-  <target host="player.vimeo.com"/>
-  <target host="www.vimeo.com" />
+  <target host="*.vimeo.com" />
+  <target host="*.vimeocdn.com" />
 
   <rule from="^http://player\.vimeo\.com/"
 	  to="https://player.vimeo.com/"/>
 
   <!-- secure login form -->
-  <rule from="^http://(?:www\.)?vimeo\.com/log_in" to="https://secure.vimeo.com/log_in"/>
+  <rule from="^http://(?:secure\.|www\.)?vimeo\.com/log_in" to="https://secure.vimeo.com/log_in"/>
+
+	<!--	a & b: Akamai	-->
+	<rule from="^http://(?:secure-)?([ab])\.vimeocdn\.com/"
+		to="https://secure-$1.vimeocdn.com/" />
+
 </ruleset>
 
