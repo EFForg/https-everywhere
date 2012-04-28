@@ -1,0 +1,94 @@
+<!--
+
+	Other UBM rulesets:
+
+		- CMP.xml
+		- CRN.xml
+		- InformationWeek.xml
+		- OAG.xml
+		- PIERS.xml
+		- RISI.xml
+		- TechWeb.xml
+
+	Nonfunctional:
+
+		- (www.)cloudconnectevent.com
+		- (www.)inforwarding.com
+		- acme.medialiveinternational.com
+		- (www.)nonwovens.com			(cert: *.risiinfo.com; shows that domain's data)
+		- (www.)oag-flights.com
+		- (static.|www.)routesonline.com
+		- liveevents.techweb.com
+		- (www.)ubm.com				(times out)
+		- (www.)ubmbuiltenvironment.com		(ssl_error_rx_record_too_long)
+		- (www.)ubmconferences.com		(times out)
+		- (www.)ubmcanon.com
+		- ubmconferences.com			(cert: directories.piers.com; redirects there)
+		- (www.)ubmmedica.com			(times out)
+		- (www.)ubmlive.com			(ditto)
+		- (www.)ubmtechweb.com
+		- (www.)woodbiomass.com			(cert: *.risiinfo.com; shows that domain's data)
+
+-->
+<ruleset name="UBM (mismatches)" default_off="mismatch">
+
+	<!--	Cert: www.oag.com	-->
+	<target host="aircargoworld.com"/>
+	<target host="www.aircargoworld.com"/>
+	<!--	Ditto.	-->
+	<target host="oagaviation.com"/>
+	<target host="www.oagaviation.com"/>
+	<!--	Ditto.	-->
+	<target host="oagcargo.com"/>
+	<target host="www.oagcargo.com"/>
+	<!--	Ditto.	-->
+	<target host="oagtravel.com"/>
+	<target host="www.oagtravel.com"/>
+	<!--	Ditto.	-->
+	<target host="ubmaviation.com"/>
+	<target host="www.ubmaviation.com"/>
+	<!--	Ditto.	-->
+	<target host="ubmaviationnews.com"/>
+	<target host="www.ubmaviationnews.com"/>
+	<!--	Cert: *.crn.com		-->
+	<target host="ubmchannel.com"/>
+	<target host="www.ubmchannel.com"/>
+	<!--	Cert: *.bluehost.com	-->
+	<target host="ubmelectronics.techinsights-marketing.com"/>
+	<target host="ubmelectronics.com"/>
+
+
+	<securecookie host="^oagcargo\.com$" name=".*"/>
+	<securecookie host="^ubmaviationnews\.com$" name=".*"/>
+
+
+	<!--	!www doesn't work via https.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?aircargoworld\.com/"
+		to="https://www.aircargoworld.com/"/>
+
+	<!--	!www doesn't work via https.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?oagaviation\.com/"
+		to="https://www.oagaviation.com/"/>
+
+	<rule from="^http://(?:www\.)?oag(cargo|travel)\.com/"
+		to="https://oag$1.com/"/>
+
+	<!--	!www doesn't work via http.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?ubmaviation\.com/"
+		to="https://www.ubmaviation.com/"/>
+
+	<rule from="^http://(?:www\.)?ubmaviationnews\.com/"
+		to="https://ubmaviationnews.com/"/>
+
+	<!--	!www redirects to www.
+		Pages redirect to http.		-->
+	<rule from="^http://(?:www\.)?ubmchannel\.com/(cs|image)s/"
+		to="https://www.ubmchannel.com/$1s/"/>
+
+	<rule from="^http://(?:www\.)?ubmelectronics(?:\.techinsights-marketing)?\.com/(\d{4}/wordpress/|favicon\.ico)"
+		to="https://ubmelectronics.techinsights-marketing.com/~techinsi/ubmelectronics/$1"/>
+
+</ruleset>
