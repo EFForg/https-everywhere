@@ -60,7 +60,6 @@ var urlBlacklist = {};
 var redirectCounter = {};
 
 function onBeforeRequest(details) {
-  log(DBUG, "dta original is: " + details.url);
   // get URL into canonical format
   // todo: check that this is enough
   var tmpuri = new Uri(details.url);
@@ -70,11 +69,9 @@ function onBeforeRequest(details) {
     while (tmphost.charAt(tmphost.length - 1) == ".") 
       tmphost = tmphost.slice(0,-1);
   }
-  log(DBUG, "dta host is: " + tmphost);
-  log(DBUG, "dta userinfo is: " + tmpuserinfo);
   tmpuri.host(tmphost);
+  tmpuri.userInfo('');
   var canonical_url = tmpuri.toString();
-  log(DBUG, "dta canonical url is: " + canonical_url);
 
   if (canonical_url in urlBlacklist) {
     return;
@@ -113,8 +110,13 @@ function onBeforeRequest(details) {
   }
 
   if (newuri) {
+    // re-insert userpass info which was stripped temporarily
+    // while rules were applied
+    var final_uri = new Uri(newuri);
+    final_uri.userInfo(tmpuserinfo);
+    finaluristr = final_uri.toString();
     log(DBUG, "Redirecting from "+a.href+" to "+newuri);
-    return {redirectUrl: newuri};
+    return {redirectUrl: finaluristr};
   }
 
 }
