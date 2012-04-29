@@ -10,9 +10,9 @@
 		- db3.api.bing.com		(cert: bing.com; blank page)
 		- messenger.services.live.com
 		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
-		- visio.microsoft.com		(cert valid; redirects to login.live.com)
-		- (www.)windows.microsoft.com	(cert: *.windows.microsoft.com; 404)
-		- res[12].windows.microsoft.com	(cert: *.sharepointonline.com; 404)
+		- visio.microsoft.com		(cert valid; ditto)
+		- (www.)windows.microsoft.com	(cert valid; 404)
+		- res[12].windows.microsoft.com	(cert: *.sharepointonline.com; 404; also on origin-res.windows.microsoft.com)
 		- www.wlmessenger.net
 -->
 <ruleset name="Microsoft (partial)">
@@ -33,7 +33,9 @@
 	<target host="*.services.social.microsoft.com"/>
 	<target host="*.technet.microsoft.com"/>
 	<target host="*.gallery.technet.microsoft.com"/>
+	<target host="*.windows.microsoft.com"/>
 	<target host="*.windowsupdate.microsoft.com"/>
+	<target host="www.*.microsoft.com"/>
 	<target host="microsoftstore.com"/>
 	<target host="*.microsoftstore.com"/>
 	<target host="*.microsoftstoreassets.com"/>
@@ -72,7 +74,7 @@
 	<rule from="^http://microsoft\.com/"
 		to="https://www.microsoft.com/"/>
 
-	<rule from="^http://(adcenter|advertising|ajax|c|connect|social\.expression|go|ie|msdn|office(365|2010)?|onlinehelp|profile|research|signature|snackbox|(services\.)?social|store|social\.technet|windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(adcenter|advertising|ajax|c|connect|social\.expression|go|ie|msdn|office(365|2010)?|onlinehelp|profile|research|signature|snackbox|(services\.)?social|store|social\.technet|www\.update|windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/"/>
 
 	<!--	Akamai with no valid cert.
@@ -88,8 +90,17 @@
 	<rule from="^http://support\.microsoft\.com/((common|library|[sS]tyles)/|LTS/default\.aspx)"
 		to="https://support.microsoft.com/$1"/>
 
+	<!--	Res[12] appear to be identical.
+		Res[12] cert: *.sharepointonline.com; display blank page	-->
+	<rule from="^http://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
+		to="https://origin-res.windows.microsoft.com/"/>
+
 	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
 		to="https://social.technet.microsoft.com/"/>
+
+	<!--	Cert doesn't match /update.	-->
+	<rule from="^https?://update\.microsoft\.com/"
+		to="https://www.update.microsoft.com/"/>
 
 	<rule from="^http://v(4|5)\.windowsupdate\.microsoft\.com/"
 		to="https://v$1.windowsupdate.microsoft.com/"/>

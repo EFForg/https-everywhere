@@ -1,24 +1,68 @@
-<ruleset name="PostgreSQL">
-  <target host="commitfest.postgresql.org" />
-  <target host="wiki.postgresql.org" />
-  <target host="planet.postgresql.org" />
-  <target host="redmine.postgresql.org" />
-  <target host="nagios.postgresql.org" />
+<!--
+	As of 2012-02-09, known unprotected .org subdomains are:
 
-  <rule from="^http://((wiki|commitfest|planet|redmine|nagios)\.postgresql\.org)/" to="https://$1/"/>
-  <!--
-  As of 2012-02-09, known unprotected subdomains are:
-  www.postgresql.org
-  archives.postgresql.org
-  git.postgresql.org
-  yum.postgresql.org
-  ftp.postgresql.org
-  webmail.postgresql.org
-  *.projects.postgresql.org
-  babel.postgresql.org
-  jdbc.postgresql.org
-  doxygen.postgresql.org
-  media.postgresql.org
-  buildfarm.postgresql.org
-  -->
+		- archives
+		- babel
+		- buildfarm
+		- doxygen
+		- ftp
+		- git
+		- jdbc
+		- media
+		- *.projects
+		- webmail
+		- www
+		- yum
+
+
+	Other nonfunctional domains:
+
+		- (www.)pgfoundry.org
+		- (images.|www.)pgsql.ru
+		- docs.postgresql.fr		(cert: svn.postgresqlfr.org; shows a login page)
+		- www.postgresql.fr		(ditto)
+
+
+	See PostgreSQL-self-signed.xml for problematic rules.
+
+-->
+<ruleset name="PostgreSQL">
+
+	<target host="postgresql.eu"/>
+	<target host="www.postgresql.eu"/>
+	<target host="postgresql.org" />
+	<target host="commitfest.postgresql.org" />
+	<target host="nagios.postgresql.org" />
+	<target host="planet.postgresql.org" />
+	<target host="redmine.postgresql.org" />
+	<target host="wiki.postgresql.org" />
+	<target host="www.postgresql.org" />
+	<target host="postgresql.us"/>
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.postgresql.us"/>
+
+
+	<securecookie host="^wiki\.postgresql\.org$" name=".*" />
+	<securecookie host="^\.postgresql.us$" name=".*" />
+
+
+	<!--	!www doesn't work over https.
+		Redirects to www over http.	-->
+	<rule from="^http://(?:www\.)?postgresql\.eu/"
+		to="https://www.postgresql.eu/" />
+
+	<!--	404s over https
+		Redirects to www over http.	-->
+	<rule from="^https?://postgresql\.org/"
+		to="https://www.postgresql.org/" />
+
+	<rule from="^http://www\.postgresql\.org/(account|media)/"
+		to="https://www.postgresql.org/$1/" />
+
+	<rule from="^http://(commitfest|nagios|planet|redmine|wiki)\.postgresql\.org/"
+		to="https://$1.postgresql.org/" />
+
+	<rule from="^http://(www\.)?postgresql\.us/"
+		to="https://$1postgresql.us/" />
+
 </ruleset>

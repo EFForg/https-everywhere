@@ -1,0 +1,31 @@
+<!--
+	Nonfunctional subdomains:
+
+		(www.)		(ssl_error_rx_record_too_long)
+
+
+	epi.3cdn.net	→	s3.amazonaws.com/epi.3cdn.net/ is handled in 3cdn.xml.
+
+-->
+<ruleset name="Economic Policy Institute (partial)">
+
+	<target host="*.epi.org" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.secure.epi.org" />
+
+
+	<securecookie host="^(my|\.?secure)\.epi\.org$" name=".*" />
+
+
+	<!--	From secure, server redirects to epi.3cdn.net/$hash.ext,
+		but we can't predict what the hash will be (of course).	-->
+	<rule from="^http://www\.epi\.org/page/-/"
+		to="https://secure.epi.org/page/-/" />
+
+	<!--	Server doesn't redirect for secure.
+		Server does redirect for my.
+		Priorities...			-->
+	<rule from="^http://(my|secure)\.epi\.org/"
+		to="https://$1.epi.org/" />
+
+</ruleset>
