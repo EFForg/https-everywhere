@@ -1,8 +1,11 @@
-<!--	!functional:
+<!--
+	!functional:
 		- status.apps.rackspace.com
+
 -->
 <ruleset name="Rackspace (partial)">
 
+	<target host="*.r73.cf1.rackcdn.com"/>
 	<target host="*.r29.cf2.rackcdn.com"/>
 	<target host="*.r30.cf2.rackcdn.com"/>
 	<target host="*.r56.cf2.rackcdn.com"/>
@@ -36,21 +39,25 @@
 	<target host="lon.manage.rackspacecloud.com"/>
 	<target host="www.rackspacecloud.com"/>
 
-	<rule from="^http://(\w+)\.r\d\d?\.cf2\.rackcdn\.com/"
-		to="https://$1.ssl.cf2.rackcdn.com/"/>
 
-	<rule from="^http://([a-z0-9\-]+)\.ssl\.cf2\.rackcdn\.com/" to="https://$1.ssl.cf2.rackcdn.com/"/>
+	<securecookie host="^(www)?\.rackspace\.(com|co\.(uk|za)|dk|n[lo]|se)$" name=".*" />
+	<securecookie host="^(apps|my)\.rackspace\.com$" name=".*" />
+	<securecookie host="^manage\.rackspacecloud\.com$" name=".*" />
 
-	<rule from="^http://(www\.)?rackspace(cloud)?\.(com|co\.(uk|za)|dk|nl|no|se)/" to="https://www.rackspace$2.$3/"/>
 
-	<rule from="^http://(apps|cart|cp|my)\.rackspace\.com/" to="https://$1.rackspace.com/"/>
+	<rule from="^http://([\w\-]+)\.(?:r\d\d?|ssl)\.cf([12])\.rackcdn\.com/"
+		to="https://$1.ssl.cf$2.rackcdn.com/" />
 
-	<rule from="^http://(www\.)?rackspace(\.com)?\.hk/" to="https://www.rackspace.hk/"/>
+	<rule from="^http://(?:www\.)?rackspace(cloud)?\.(com|co\.(uk|za)|dk|n[lo]|se)/"
+		to="https://www.rackspace$1.$2/" />
 
-	<rule from="^http://(lon\.)?manage\.rackspacecloud\.com/" to="https://$1manage.rackspacecloud.com/"/>
+	<rule from="^http://(apps|cart|cp|my)\.rackspace\.com/"
+		to="https://$1.rackspace.com/" />
 
-	<securecookie host="^(www)?\.rackspace\.(com|co\.(uk|za)|dk|n[lo]|se)$" name=".*"/>
-	<securecookie host="^(apps|my)\.rackspace\.com$" name=".*"/>
-	<securecookie host="^manage\.rackspacecloud\.com$" name=".*"/>
+	<rule from="^http://(?:www\.)?rackspace(?:\.com)?\.hk/"
+		to="https://www.rackspace.hk/" />
+
+	<rule from="^http://(lon\.)?manage\.rackspacecloud\.com/"
+		to="https://$1manage.rackspacecloud.com/" />
 
 </ruleset>

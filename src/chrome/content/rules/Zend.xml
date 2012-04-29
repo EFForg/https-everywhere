@@ -1,0 +1,37 @@
+<!--
+	Nonfunctional subdomains:
+
+		- forums	(times out)
+
+-->
+<ruleset name="Zend (partial)">
+
+	<target host="zend.com" />
+	<target host="*.zend.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.shop.zend.com" />
+
+
+	<!--	Observed cookies:
+
+			- \.
+			- \.shop
+					-->
+	<securecookie host="^.*\.zend\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^http://(?:www\.)?zend\.com/"
+		to="https://www.zend.com/" />
+
+	<rule from="^http://shop\.zend\.com/"
+		to="https://shop.zend.com/" />
+
+	<!--	NB: Must catch this before the next rule.	-->
+	<rule from="^http://static\.zend\.com/shop/"
+		to="https://shop-zend.pantherssl.com/" />
+
+	<rule from="^http://static\.zend\.com/"
+		to="https://static-zend.pantherssl.com/" />
+
+</ruleset>

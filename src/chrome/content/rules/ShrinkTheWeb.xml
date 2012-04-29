@@ -1,0 +1,38 @@
+<!--
+	c249773.r73.cf1.rackcdn.com
+	c249773.ssl.cf1.rackcdn.com
+-->
+<ruleset name="ShrinkTheWeb">
+
+	<target host="shrinktheweb.com" />
+	<target host="*.shrinktheweb.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.images.shrinktheweb.com" />
+
+
+	<!--	Observed cookies:
+
+			- \.
+			- \.images
+				-->
+	<securecookie host="^.*\.shrinktheweb\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^http://(?:www\.)?shrinktheweb\.com/"
+		to="https://www.shrinktheweb.com/" />
+
+	<!--	Redirects to http, identical to blogs/$		-->
+	<rule from="^http://www\.shrinktheweb\.com/blog$"
+		to="https://www.shrinktheweb.com/blogs/" />
+
+	<!--	Included on third-party websites.	-->
+	<rule from="^http://images\.shrinktheweb\.com/"
+		to="https://images.shrinktheweb.com/" />
+
+	<!--	Cert not valid for learn.
+		Server redirects as so, sans-https.	-->
+	<rule from="^https?://learn\.shrinktheweb\.com/"
+		to="https://www.shrinktheweb.com/learn/index.html" />
+
+</ruleset>
