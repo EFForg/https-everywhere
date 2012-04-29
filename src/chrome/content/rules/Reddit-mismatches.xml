@@ -1,16 +1,29 @@
-<ruleset name="Reddit (buggy)" default_off="Domains cannot be verifyed, and server timeout">
+<ruleset name="Reddit (certificate warnings)" default_off="Domains with bad CN (common name) in certificate">
 
 	<target host="reddit.com"/>
+	<target host=".reddit.com"/> <!-- Necessary to get 'secure flag' for login cookies -->
 	<target host="www.reddit.com"/>
+	<target host="redd.it"/>
 
-	<!--	A pixel is loaded asynchroniously from:
+	<!-- Doesn't seem to be used anymore:
 	<target host="pixel.redditmedia.com"/>
-		However this server times out when using HTTPS	-->
+	-->
+
+        <!-- Following domains are not covered, either due to bad CN or no HTTPS:
+             * pixel.redditmedia.com - seems some sort of ad tracking, possibly can be sent to /dev/null; didn't find anything broken when I blocked the domain
+             * www.redditmedia.com - seems only/mostly to be used for ads
+             * s0.2mdn.net - has https, bad cert CN (not sure what this domain actually provides)
+
+        -->
 
 	<securecookie host="^\.reddit\.com$" name=".*"/>
 
 	<rule from="^http://(?:www\.)?reddit\.com/"
 		to="https://www.reddit.com/"/>
+
+        <!-- not entirely sure redd.it rule is always correct -->
+	<rule from="^http://redd\.it/"
+		to="https://www.reddit.com/tb/"/>
 
 	<!--rule from="^http://pixel\.redditmedia\.com/"
 		to="https://pixel.redditmedia.com/"/-->
