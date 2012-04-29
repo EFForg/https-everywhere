@@ -1,0 +1,67 @@
+<!--
+	Nonfunctional:
+
+		- (www.)about-monster.com	(cert: facebook.ketchum.com; shows that domain's data [i.e. a blank page])
+		- (www.)education.org		(times out)
+		- degrees.education.org		(ditto)
+		- ai.education.org		(ditto)
+		- monster.com			(ditto)
+			- advertising
+			- answers
+			- career-services	(times out)
+			- company
+			- help
+			- inside		(times out)
+			- jobs			(ditto)
+			- jobsearch
+			- my			(times out)
+			- origin-www		(exists, but doesn't support https)
+			- partner		(times out)
+			- resume
+			- www			(Akamai; "An error occurred")
+		- (www.)programadvisor.com	(times out)
+		- edu.programadvisor.com	(ditto)
+
+
+		ir.monster.com is handled in Thomson-Reuters-clients.xml.
+
+-->
+<ruleset name="Monster (partial)">
+
+	<target host="myresumeagent.com" />
+	<target host="www.myresumeagent.com" />
+	<target host="cookie.monster.com" />
+	<target host="login.monster.com" />
+	<target host="media.monster.com" />
+	<target host="css-seeker.newjobs.com" />
+	<target host="img-seeker.newjobs.com" />
+	<target host="media.newjobs.com" />
+	<target host="securemedia.newjobs.com" />
+	<target host="track.newjobs.com" />
+
+
+	<!--	Just a session cookie.	-->
+	<securecookie host="^login\.monster\.com$" name=".*" />
+	<securecookie host="^www\.myresumeagent\.com$" name=".*" />
+
+
+	<!--	cookie.monster.com and track.newjobs.com
+		appear to be synonyms.		-->
+	<rule from="^http://(cookie|login)\.monster\.com/"
+		to="https://$1.monster.com/" />
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^http://(?:www\.)?myresumeagent\.com/"
+		to="https://www.myresumeagent.com/" />
+
+	<!--	Track is used on third-party websites.	-->
+	<rule from="^http://((css|img)-seeker|track)\.newjobs\.com/"
+		to="https://$1.newjobs.com/" />
+
+	<!--	media: Akamai
+		media.monster.com times out, but appears
+		identical to media.newjobs.	-->
+	<rule from="^http://(?:secure)?media\.(?:monster|newjobs)\.com/"
+		to="https://securemedia.newjobs.com/" />
+
+</ruleset>
