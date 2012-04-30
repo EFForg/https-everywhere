@@ -1,0 +1,30 @@
+<!--
+	s3.amazonaws.com/images.mediastorehouse.com/
+
+
+	Nonfunctional:
+
+		- images.mediastorehouse.net	(times out; not on secure nor images...com)
+
+-->
+<ruleset name="Media Storehouse (partial)">
+
+	<target host="mediastorehouse.com" />
+	<target host="*.mediastorehouse.com" />
+	<target host="mediastorehouse.net" />
+	<target host="www.mediastorehouse.net" />
+
+
+	<securecookie host="^secure\.mediastorehouse\.com$" name=".*" />
+
+
+	<!--	Cert not valid for static nor www.
+		Data appear identical.			-->
+	<rule from="^http://(?:static|www)\.mediastorehouse\.com/"
+		to="https://secure.mediastorehouse.com/" />
+
+	<!--	www...net redirects to www...com	-->
+	<rule from="^http://(?:www\.)?mediastorehouse\.net/"
+		to="https://secure.mediastorehouse.com/" />
+
+</ruleset>
