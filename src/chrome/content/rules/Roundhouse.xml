@@ -1,0 +1,39 @@
+<ruleset name="Roundhouse" default_off="needs testing">
+
+	<target host="roundhouse.org.uk" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.roundhouse.org.uk" />
+		<!--	Some pages in [\w\-]+/\w redirect to http.
+				Excluded here are:
+
+					- about/history
+					- about/press
+					- about/roundhouse-people/annual-reports
+					- contact/?$
+					- explore/portfolios
+					- explore/profiles/all
+					- explore/radio/
+						- Some programs' pages don't.
+					- explore/what-was-on
+					- hire/roundhouse-london-2012
+					- hire/spaces-for-hire
+					- take-part/get-support
+					- visit/buy-a-t-shirt
+					- whats-on/productions
+						- Some productions' pages don't.
+								-->
+	<exclusion pattern="^http://(www\.)?roundhouse\.org\.uk/(about/(history|press|roundhouse-people/annual-reports)|contact/?$|explore/(portfolios|profiles/all|radio/|what-was-on)|hire/(roundhouse-london-2012|spaces-for-hire)|take-part/get-support|visit/buy-a-t-shirt|whats-on/productions)" />
+
+
+	<securecookie host="^(www)?\.roundhouse\.org\.uk$" name=".*" />
+
+
+	<rule from="^http://(www\.)?roundhouse\.org\.uk/"
+		to="https://$1roundhouse.org.uk/" />
+
+	<!--	/$ redirects to $, but only after redirecting to http.
+		The same is the case for some other directories.	-->
+	<rule from="^http://www\.roundhouse\.org\.uk/take-part/$"
+		to="https://www.roundhouse.org.uk/take-part" />
+
+</ruleset>
