@@ -1,16 +1,31 @@
-<!--	livefyre-avatar.s3.amazonaws.com
+<!--
+	livefyre-avatar.s3.amazonaws.com
+
 -->
 <ruleset name="Livefyre (partial)" default_off="mismatch">
 
-	<!--	gridserver.com	-->
-	<target host="blog.livefyre.co"/>
-	<!--	totemapp.com	-->
-	<target host="press.livefyre.co"/>
-		<exclusion pattern="^http://press\.livefyre\.co/$"/>
 	<!--	cloudflare.net	-->
-	<target host="zore.livefyre.co"/>
+	<target host="zor.fyre.co"/>
+	<!--	No https.	-->
+	<target host="livefyre.com" />
+	<target host="*.livefyre.com" />
+		<exclusion pattern="^http://press\.livefyre\.com/$"/>
 
-	<rule from="^http://(blog|press|zor)\.livefyre\.co/"
-		to="https://$1.livefyre.co/"/>
+
+	<securecookie host="^\.livefyre\.co$" name="." />
+
+
+	<!--	Data appear to be identical.	-->
+	<rule from="^http://(?:zor\.fyre\.co|(?:www\.)?livefyre\.com)/"
+		to="https://zor.fyre.co/" />
+
+	<!--	Some pages redirect to http, others may not.
+		Cert: gridserver.com	-->
+	<rule from="^http://blog\.livefyre\.com/wp-content/"
+		to="https://blog.livefyre.com/wp-content/" />
+
+	<!--	Cert: totemapp.com	-->
+	<rule from="^http://press\.livefyre\.com/"
+		to="https://press.livefyre.com/" />
 
 </ruleset>
