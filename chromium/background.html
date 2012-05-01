@@ -98,27 +98,26 @@ function onBeforeRequest(details) {
     return;
   }
 
-  var newuri = null;
+  var newuristr = null;
 
   var i = 0;
   
   var rs = all_rules.applicableRulesets(a.host);
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuri)
-      newuri = rs[i]._apply(canonical_url);
+    if (rs[i].active && !newuristr)
+      newuristr = rs[i]._apply(canonical_url);
   }
 
-  if (newuri) {
+  if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
-    log(DBUG, "Reinserting userpass info: " + tmpuserinfo);
-    tmpuri.userInfo(tmpuserinfo);
-    finaluristr = tmpuri.toString();
+    var finaluri = new Uri(newuristr);
+    finaluri.userInfo(tmpuserinfo);
+    finaluristr = finaluri.toString();
     log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
     return {redirectUrl: finaluristr};
   }
-
 }
 
 function onCookieChanged(changeInfo) {
