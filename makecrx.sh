@@ -79,7 +79,7 @@ cd ../..
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 echo 'var rule_list = [' > pkg/crx/rule_list.js
-for i in $(ls pkg/crx/rules/*.xml pkg/crx/rules/*.rulesets)
+for i in $(find pkg/crx/rules/ -maxdepth 1 \( -name '*.xml' -o -name '*.rulesets' \))
 do
     echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
 done
