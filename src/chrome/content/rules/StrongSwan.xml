@@ -1,0 +1,27 @@
+<ruleset name="StrongSwan (partial)" platform="cacert">
+
+	<target host="strongswan.org" />
+	<target host="*.strongswan.org" />
+		<!--	Cert valid, but shows CRL files.	-->
+		<exclusion pattern="^http://git\." />
+
+
+	<!--	Observed cookie domains:
+
+			- ^/
+			- ^wiki
+			- ^www
+				-->
+	<securecookie host="^(.*\.)?strongswan\.org$" name=".*" />
+
+
+	<!--	Observed subdomains:
+
+			- downloads
+			- wiki
+			- www
+				-->
+	<rule from="^http://(\w+\.)?strongswan\.org/"
+		to="https://$1strongswan.org/" />
+
+</ruleset>
