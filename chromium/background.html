@@ -1,6 +1,7 @@
 <script src="rule_list.js"></script>
 <script src="util.js"></script>
 <script src="rules.js"></script>
+<script src="jsuri-1.1.1.js"></script>
 
 <script>
 var all_rules = new RuleSets();
@@ -59,12 +60,25 @@ var urlBlacklist = {};
 var redirectCounter = {};
 
 function onBeforeRequest(details) {
-  if (details.url in urlBlacklist) {
+  // get URL into canonical format
+  // todo: check that this is enough
+  var tmpuri = new Uri(details.url);
+  var tmpuserinfo = tmpuri.userInfo();
+  var tmphost = tmpuri.host();
+  if (tmphost.charAt(tmphost.length - 1) == ".") {
+    while (tmphost.charAt(tmphost.length - 1) == ".") 
+      tmphost = tmphost.slice(0,-1);
+  }
+  tmpuri.host(tmphost);
+  tmpuri.userInfo('');
+  var canonical_url = tmpuri.toString();
+
+  if (canonical_url in urlBlacklist) {
     return;
   }
 
   var a = document.createElement("a");
-  a.href = details.url;
+  a.href = canonical_url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
@@ -79,26 +93,31 @@ function onBeforeRequest(details) {
   }
 
   if (redirectCounter[details.requestId] > 9) {
-    log(NOTE, "Redirect counter hit for "+details.url);
-    urlBlacklist[details.url] = true;
+    log(NOTE, "Redirect counter hit for "+canonical_url);
+    urlBlacklist[canonical_url] = true;
     return;
   }
 
-  var newuri = null;
+  var newuristr = null;
 
   var i = 0;
+  
   var rs = all_rules.applicableRulesets(a.host);
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuri)
-      newuri = rs[i]._apply(details.url);
+    if (rs[i].active && !newuristr)
+      newuristr = rs[i]._apply(canonical_url);
   }
 
-  if (newuri) {
-    log(DBUG, "Redirecting from "+a.href+" to "+newuri);
-    return {redirectUrl: newuri};
+  if (newuristr) {
+    // re-insert userpass info which was stripped temporarily
+    // while rules were applied
+    var finaluri = new Uri(newuristr);
+    finaluri.userInfo(tmpuserinfo);
+    var finaluristr = finaluri.toString();
+    log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
+    return {redirectUrl: finaluristr};
   }
-
 }
 
 function onCookieChanged(changeInfo) {
