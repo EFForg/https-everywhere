@@ -1,0 +1,81 @@
+<!--
+
+	s3.amazonaws.com/pa-hrsuite-production/
+
+
+	Nonfunctional:
+
+		.ohio-state.edu:
+
+			- cse		(times out)
+			- www.cse	(shows test page)
+
+		.osu.edu:
+			- 8help		(403; 404)
+			- buckeyeemail	(times out)
+			- buckeyelink	(403)
+			- carmen
+			- connect	(cert: secure2.convio.com; shows that domain's data)
+			- cse		(cert: www.cse.ohio-state.edu; shows test page)
+			- www.cse	(ditto)
+			- digitalunion	(cert: lt.osu.edu; shows that domain's data [i.e. redirects to ocio.osu.edu/elearning])
+			- jobs		(cert: hr.osu.edu; shows that domain's data)
+			- oaa		(cert valid; shows login page)
+
+
+	See Ohio-State-University-self-signed.xml for problematic rules.
+
+-->
+<ruleset name="Ohio State University (partial)">
+
+	<target host="jobsatosu.com" />
+	<target host="www.jobsatosu.com" />
+	<target host="esue.ohio-state.edu" />
+	<target host="www.esue.ohio-state.edu" />
+	<target host="ohiostatealumni.org" />
+	<target host="www.ohiostatealumni.org" />
+	<target host="osu.edu" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.ced.osu.edu" />
+	<target host="*.osu.edu" />
+
+
+	<securecookie host="^www\.jobsatosu\.com$" name=".*" />
+	<!--	Observed cookie domains:
+
+			- ^carmen
+			- ^.ced
+			- ^www.ced
+			- ^go
+			- ^ocio
+			- ^my
+			- ^registrar
+					-->
+	<securecookie host="^.*\.osu\.edu$" name=".*" />
+
+
+	<!--	!www doesn't work over https.
+		Redirects to www over http.	-->
+	<rule from="^http://(?:www\.)?jobsatosu\.com/"
+		to="https://www.jobsatosu.com/" />
+
+	<rule from="^http://(www\.)?esue\.ohio-state\.edu/"
+		to="https://$1esue.ohio-state.edu/" />
+
+	<!--	!www throws error.	-->
+	<rule from="^http://(?:www\.)?ohiostatealumni\.org/"
+		to="https://www.ohiostatealumni.org/" />
+
+	<!--	Cert only matches *.osu.edu.	-->
+	<rule from="^http://(?:www\.)?osu\.edu/(\d{4})/(css|images|inc)/"
+		to="https://www.osu.edu/$1/$2/" />
+
+	<!--	At least some www.ced data aren't available over https.		-->
+	<rule from="^http://(carmen|ced|contoller|email|go|hr|library|lt|my|ocio|registrar|webmail)\.osu\.edu/"
+		to="https://$1.osu.edu/" />
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^http://(?:www\.)?giveto\.osu\.edu/"
+		to="https://www.giveto.osu.edu/" />
+
+</ruleset>
