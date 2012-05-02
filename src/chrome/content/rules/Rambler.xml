@@ -3,11 +3,21 @@
 -->
 <ruleset name="Rambler (partial)">
 
-	<target host="i.rambler.ru"/>
-	<target host="id.rambler.ru"/>
-	<target host="images.rambler.ru"/>
-	<target host="kassa.rambler.ru"/>
-	<target host="mail.rambler.ru"/>
+	<target host="*.rambler.ru" />
+		<exclusion pattern="^http://www\." />
+
+	<!--	Observed cookies:
+
+			- ^\.
+				- ruid
+				- top100rb
+
+			Both set by scounter.		-->
+	<securecookie host="^\.rambler\.com$" name=".*" />
+
+	<!--	This is another of those 1px tracking services.	-->
+	<rule from="^http://s?counter\.rambler\.ru/"
+		to="https://scounter.rambler.ru/" />
 
 	<rule from="^http://(id?|images|kassa|mail)\.rambler\.ru/"
 		to="https://$1.rambler.ru/"/>
