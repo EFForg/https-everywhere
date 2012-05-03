@@ -1,40 +1,58 @@
-<!-- BOOOO: Firefox.com (which some download links pass through) is in
-     HTTP only...
+<!--
+	BOOOO: Firefox.com (which some download links pass through)
+	is in HTTP only...
 
-	!functional:
+
+	Nonfunctional:
+
 		- sfx-images.mozilla.org	(banners)
+
 -->
 <ruleset name="Mozilla">
-  <target host="mozilla.org" />
-  <target host="*.mozilla.org" />
-  <target host="mozilla.com" />
-  <target host="*.mozilla.com" />
-  <target host="mozillalabs.com" />
-  <target host="*.mozillalabs.com" />
-  <target host="mozillamessaging.com" />
-  <target host="www.mozillamessaging.com" />
-  <target host="planet.mozillamessaging.com" />
-  <target host="support.mozillamessaging.com" />
-  <target host="drumbeat.org" />
-  <target host="www.drumbeat.org" />
 
-  <exclusion pattern="^http://nightly\.mozilla\.org/" />
+	<target host="drumbeat.org" />
+	<target host="www.drumbeat.org" />
+	<target host="mozilla.com" />
+	<target host="*.mozilla.com" />
+	<target host="mozilla.net" />
+	<target host="static-ssl-cdn.addons.mozilla.net" />
+	<target host="www.mozilla.net" />
+	<target host="mozilla.org" />
+	<target host="*.mozilla.org" />
+		<exclusion pattern="^http://nightly\.mozilla\.org/" />
+	<target host="mozillalabs.com" />
+	<target host="*.mozillalabs.com" />
+	<target host="mozillamessaging.com" />
+	<target host="*.mozillamessaging.com" />
 
-  <rule from="^http://mozilla\.org/" to="https://www.mozilla.org/"/>
-  <rule from="^http://(addons|blog|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|ftp|intlstore|krakenbenchmark|lists|l10n|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbp1|quality|wiki|www)\.mozilla\.org/" 
-to="https://$1.mozilla.org/"/>
 
-  <rule from="^http://mozilla\.com/" to="https://www.mozilla.com/"/>
-  <rule from="^http://(blog|crash-stats|input|people|support|www)\.mozilla\.com/" to="https://$1.mozilla.com/"/>
+	<securecookie host="^addons\.mozilla\.org$" name=".*" />
 
-  <rule from="^http://(?:www\.)?mozillalabs\.com/" to="https://mozillalabs.com/"/>
-  <rule from="^http://(apps|bespin|bespinplugins|gaming|heatmap|jetpack|testpilot)\.mozillalabs\.com/" to="https://$1.mozillalabs.com/"/>
 
-  <rule from="^http://mozillamessaging\.com/" to="https://mozillamessaging.com/"/>
-  <rule from="^http://(planet|www|support)\.mozillamessaging\.com/" to="https://$1.mozillamessaging.com/"/>
+	<rule from="^http://(?:www\.)?drumbeat\.org/"
+		to="https://www.drumbeat.org/" />
 
-  <rule from="^http://(?:www\.)?drumbeat\.org/" to="https://www.drumbeat.org/" />
+	<rule from="^http://((blog|crash-stats|input|people|support|www)\.)?mozilla\.com/"
+		to="https://$1mozilla.com/" />
 
-  <securecookie host="^addons\.mozilla\.org$" name=".*"/>
+	<!--	Redirects as so over http.	-->
+	<rule from="^https?://(?:www\.)?mozilla\.net/"
+		to="https://www.mozilla.org/" />
+
+	<rule from="^http://static-ssl-cdn\.addons\.mozilla\.net/"
+		to="https://static-ssl-cdn.addons.mozilla.net/" />
+
+	<!--	Cert doesn't match affiliates-cdn	-->
+	<rule from="^http://((addons|affiliates(?:-cdn)?|blog|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|ftp|intlstore|krakenbenchmark|l10n|lists|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbp1|quality|wiki|www)\.)?mozilla\.org/"
+		to="https://$1mozilla.org/" />
+
+	<rule from="^http://(?:www\.)?mozillalabs\.com/"
+		to="https://mozillalabs.com/" />
+
+	<rule from="^http://(apps|bespin(plugins)?|gaming|heatmap|jetpack|testpilot)\.mozillalabs\.com/"
+		to="https://$1.mozillalabs.com/"/>
+
+	<rule from="^http://(planet\.|support\.|www\.)?mozillamessaging\.com/"
+		to="https://$1mozillamessaging.com/" />
 
 </ruleset>

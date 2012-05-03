@@ -1,14 +1,39 @@
 <!-- tracking network, included on lots of sites. may carry banners.
 If we are to download their content, atleast do it by https
+
+	Nonfunctional subdomains:
+
+		- blog		(cert: pweb2.wt.redux; shows CentOS Apache 2 test page)
+		- kb		(cert: webtrends.com; reset)
+		- optimize	(cert valid; hosted on Akamai; "Service Unavailable")
+
+
 -->
-<ruleset name="webtrends.com">
+<ruleset name="WebTrends">
 
+	<target host="reinvigorate.net" />
+	<target host="*.reinvigorate.net" />
 	<target host="*.webtrendslive.com"/>
+	<target host="webtrends.com" />
+	<target host="*.webtrends.com" />
 
+
+	<securecookie host="^m\.webtrends\.com$" name=".*" />
 	<securecookie host="^(.*\.)?webtrendslive\.com$" name=".*"/>
 
-	<rule from="^http://(m|developer|statse)\.webtrends\.com/"
+
+	<rule from="^http://(report\.|www\.)?reinvigorate\.net/"
+		to="https://$1reinvigorate.net/" />
+
+	<rule from="^http://webtrends\.com/"
+		to="https://webtrends.com/" />
+
+	<rule from="^http://(ads|developer|itservices|ondemand|m|segments|social|statse|www)\.webtrends\.com/"
 		to="https://$1.webtrends.com/"/>
+
+	<!--	At least some pages redirect back.	-->
+	<rule from="^http://forums\.webtrends\.com/(assets/|favicon\.png)"
+		to="https://getsatisfaction.com/$1" />
 
 </ruleset>
 
