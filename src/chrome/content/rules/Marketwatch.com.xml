@@ -1,9 +1,35 @@
-<ruleset name="Secure.marketwatch.com">
-  <target host="secure.marketwatch.com" />
-  <target host="www.marketwatch.com" />
-  <target host="marketwatch.com" />
+<!--
+	Other News Corporation rulesets:
 
-  <rule from="^http://secure\.marketwatch\.com/" to="https://secure.marketwatch.com/" />
-  <rule from="^http://www\.marketwatch\.com/" to="https://secure.marketwatch.com/" />
-  <rule from="^http://marketwatch\.com/" to="https://secure.marketwatch.com/" />
+		- News-Corporation.xml
+		- News-Corporation-mismatches.xml
+
+-->
+<ruleset name="Marketwatch.com">
+
+	<target host="marketwatch.com" />
+	<target host="*.marketwatch.com" />
+	<target host="i.mktw.net" />
+	<target host="i.origin.mktw.net" />
+
+
+	<securecookie host="^\.marketwatch\.com$" name=".*" />
+
+
+	<!--	Data appear identical.
+		Since we know the CDN, be kind and point there.		-->
+	<rule from="^https?://(communitycontent|[is]|static)\.marketwatch\.com/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.marketwatch.com/" />
+
+	<rule from="^https?://i\.mktw\.net/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/i.mktw.net/" />
+
+	<!--	If they're pointing explicitly to origin, there's
+		probably a good reason for that, so stick with it.	-->
+	<rule from="^http://i\.origin\.mktw\.net/"
+		to="https://i.origin.mktw.net/" />
+
+	<rule from="^http://(?:secure\.|www\.)?marketwatch\.com/"
+		to="https://secure.marketwatch.com/" />
+
 </ruleset>

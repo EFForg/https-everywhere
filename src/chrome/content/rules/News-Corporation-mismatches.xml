@@ -1,4 +1,10 @@
 <!--
+	Other News Corporation rulesets:
+
+		- Marketwatch.com.xml
+		- News-Corporation.xml
+
+
 	(www.)fbnstatic.com:	Akamai, 404
 
 	a\d\d.foxnews.com:	Akamai, 404
@@ -12,15 +18,18 @@
 
 	<!--	Akamai	-->
 	<target host="404.foxnews.com.edgesuite.net"/>
-	<!-- *.2o7.net	-->
-	<target host="om.dowjoneson.com"/>
+	<target host="dowjones.com" />
+	<target host="www.dowjones.com" />
 	<!--	Akamai	-->
 	<target host="media.efinancialnews.com"/>
+	<target host="s.fins.com" />
 	<!-- 2o7.net	-->
 	<target host="metrics.foxnews.com"/>
 	<!--	Akamai	-->
 	<target host="myfoxdetroit.com"/>
 	<target host="www.myfoxdetroit.com"/>
+	<target host="charts.smartmoney.com" />
+	<target host="m1.smartmoney.net" />
 	<!-- www.dowjones.com	-->
 	<target host="wsjpro.com"/>
 	<target host="*.wsjpro.com"/>
@@ -30,17 +39,33 @@
 	<rule from="^http://404\.foxnews\.com\.edgesuite\.net/"
 		to="https://404.foxnews.com.edgesuite.net/"/>
 
-	<rule from="^http://om\.dowjoneson\.com/"
-		to="https://om.dowjoneson.com/"/>
+	<!--	https slows things down a bit.
+		wsjpro.com isnt hosted on Akamai,
+		and since files appear to be on
+		wsjpro.com too, point there instead.	-->
+	<rule from="^https?://(?:www\.)?dowjones\.com/(carousel_files|(chart/)?css|factiva|images)/"
+		to="https://wsjpro.com/$1/" />
+
+	<!--	!www cert: www.dowjones.com
+		www cert: Akamai
+		!www redirects to www.	-->
+	<rule from="^http://(?:www\.)?dowjones\.com/"
+		to="https://www.dowjones.com/" />
 
 	<rule from="^http://media\.efinancialnews\.com/"
 		to="https://media.efinancialnews.com/"/>
+
+	<rule from="^http://s\.fins\.com/"
+		to="https://s.fins.com/" />
 
 	<rule from="^http://metrics\.foxnews\.com/"
 		to="https://metrics.foxnews.com/"/>
 
 	<rule from="^http://(?:www\.)?myfoxdetroit\.com/"
 		to="https://www.myfoxdetroit.com/"/>
+
+	<rule from="^http://charts\.smartmoney\.com/"
+		to="https://charts.smartmoney.com/" />
 
 	<rule from="^http://(?:www\.)?wsjpro\.com/"
 		to="https://wsjpro.com/"/>
