@@ -17,10 +17,17 @@
 	<target host="mitpressjournals.org"/>
 	<target host="www.mitpressjournals.org"/>
 
-	<rule from="^http://((?:www\.)?mitpres|(www\.)?script)s\.mit\.edu/"
-		to="https://$1s.mit.edu/"/>
 
-	<rule from="^http://(www\.)?mitpressjournals\.org/((entityImage|na101|sda|templates|userimages)/|action/(registration|showLogin)$)"
+	<!--
+		mitpress.mit.edu	→	mitpress.edu
+		www.mitpress.mit.edu	→	mitpress.edu
+
+		scripts.mit.edu		→	scripts.mit.edu
+		www.scripts.mit.edu	→	www.scripts.mit.edu	-->
+	<rule from="^http://(?:(?:www\.)?(mitpres)|((?:www\.)?script))s\.mit\.edu/"
+		to="https://$1$2s.mit.edu/"/>
+
+	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
 		to="https://www.mitpressjournals.org/$2"/>
 
 	<securecookie host="^mitpress\.mit\.edu$" name=".*"/>
