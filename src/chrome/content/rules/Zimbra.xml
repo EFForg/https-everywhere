@@ -1,9 +1,26 @@
-<ruleset name="Zimbra (partial)">
-  <target host="zimbra.com" />
-  <target host="*.zimbra.com" />
-	<exclusion pattern="^http://files2\."/>
+<ruleset name="Zimbra">
 
-  <rule from="^http://zimbra\.com/" to="https://www.zimbra.com/"/>
-  <rule from="^http://([^/:@\.]+)\.zimbra\.com/" to="https://$1.zimbra.com/"/>
+	<target host="zimbra.com" />
+	<target host="*.zimbra.com" />
+	<target host="zimbrablog.com" />
+	<target host="www.zimbrablog.com" />
+
+
+	<securecookie host="^(.*\.)?zimbra\.com$" name=".*" />
+
+
+	<!--	files2: Akamai
+		Data appear identical.	-->
+	<rule from="^https?://files2?\.zimbra\.com/"
+		to="https://s3.amazonaws.com/files.zimbra.com/" />
+
+	<rule from="^http://([^/:@\.]+\.)?zimbra\.com/"
+		to="https://$1zimbra.com/"/>
+
+	<!--	Cert doesn't match zimbrablog.com.
+		It just redirects, so do so for it.	-->
+	<rule from="^https?://(?:www\.)?zimbrablog\.com/"
+		to="https://blog.zimbra.com/" />
+
 </ruleset>
 
