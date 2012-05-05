@@ -1,15 +1,27 @@
-<ruleset name="uTorrent (broken)" default_off="https is gone!">
+<ruleset name="µTorrent (partial)">
 
 	<target host="utorrent.com" />
-	<target host="www.utorrent.com" />
-	<target host="download.utorrent.com" />
-	<target host="forum.utorrent.com" />
+	<target host="*.utorrent.com" />
+		<!--	Cert: *.wpengine.com; 403	-->
+		<exclusion pattern="^http://blog\." />
 
 
-	<rule from="^https?://(?:www\.)?utorrent\.com/"
+	<securecookie host="^(.*\.)?utorrent\.com$" name=".*" />
+
+
+	<!--	Cert only matches *.utorrent.com.	-->
+	<rule from="^https?://utorrent\.com/"
 		to="https://www.utorrent.com/" />
 
-	<rule from="^http://(download|forum)\.utorrent\.com/"
+	<!--	Observed subdomains:
+
+			- download	(throws 403 over both http & https)
+			- forums
+			- rapton-i-c805b8af
+			- remote
+			- www
+				-->
+	<rule from="^http://(\w+)\.utorrent\.com/"
 		to="https://$1.utorrent.com/" />
 
 </ruleset>
