@@ -2,6 +2,8 @@
 
 	<target host="stumbleupon.com"/>
 	<target host="*.stumbleupon.com"/>
+	<target host="stumble-upon.com" />
+	<target host="*.stumble-upon.com" />
 	<!--	hosted on CloudFlare, but valid certificate	-->
 	<target host="*.sustatic.com"/>
 
@@ -9,6 +11,15 @@
 
 	<rule from="^http://(?:www\.)?stumbleupon\.com/"
 		to="https://www.stumbleupon.com/"/>
+
+	<!--	Cert doesn't match.  Server redirects
+		as so, dropping the atom.	-->
+	<rule from="^https?://(?:www\.)?stumble-upon\.com/([\w\W]+)$"
+		to="https://www.stumble-upon.com/" />
+
+	<!--	Akamai	-->
+	<rule from="^https?://cdn\.stumble-upon\.com/"
+		to="https://www.stumbleupon.com/" />
 
 	<rule from="^http://b(\d)\.sustatic\.com/"
 		to="https://b$1.sustatic.com/"/>
