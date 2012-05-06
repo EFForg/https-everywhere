@@ -33,13 +33,17 @@
 	<target host="www.pirateparty.org.au"/>
 	<target host="pirateparty.org.uk"/>
 	<target host="*.pirateparty.org.uk"/>
+		<!--	Many pages started redirecting to http =(	-->
+		<exclusion pattern="^http://www\.pirateparty\.org\.uk/($|blog/|party/[$a-ln-z]|policies/|press/)" />
 	<target host="remixdepolitiek.nl"/>
 	<target host="www.remixdepolitiek.nl"/>
+
 
 	<securecookie host="^(.*\.)?junge-piraten\.de$" name=".*"/>
 	<securecookie host="^(.*\.)?piratenpartei\.de$" name=".*"/>
 	<!--	cookies !not needed for homepage	-->
 	<securecookie host="^(.*\.)?piratenpartei-bayern\.de$" name=".*"/>
+
 
 	<!--	encountered:
 			- forum
@@ -69,6 +73,31 @@
 	<rule from="^http://tpb\.piratenpartij\.nl/"
 		to="https://tpb.piratenpartij.nl/"/>
 
+	<!--	Insists on redirecting to http
+		before redirecting to Spreadshirt.	-->
+	<rule from="^http://(?:www\.)?pirateparty\.org\.uk/shop/"
+		to="https://ppuk.spreadshirt.co.uk/shop/" />
+
+	<!--
+		For .org.uk,
+
+			Works:
+
+				- accounts/register
+				- forum/
+				- media/
+				- party/membership/$
+
+
+			Doesn't work
+
+				- $
+				- blog/$
+				- party/$
+				- party/people/
+				- policies/
+				- press/$
+						-->
 	<rule from="^http://(?:www\.)?pirateparty\.(ca|org\.(?:au|uk))/"
 		to="https://www.pirateparty.$1/"/>
 
