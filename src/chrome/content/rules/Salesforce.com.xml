@@ -25,6 +25,8 @@
 	<target host="webassets.assistly.com" />
 	<target host="desk.com" />
 	<target host="*.desk.com" />
+	<target host="developerforce.com" />
+	<target host="*.developerforce.com" />
 	<target host="force.com" />
 	<target host="*.force.com" />
 	<target host="*.secure.force.com" />
@@ -33,30 +35,33 @@
 	<target host="*.sfdcstatic.com" />
 
 
-	<securecookie host="^(.*\.)?(sales)?force\.com$" name=".*" />
+	<securecookie host="^(.*\.)?(developer|sales)?force\.com$" name=".*" />
 
 
 	<rule from="^https?://webassets\.assistly\.com/"
 		to="https://assistlywebsite.s3.amazonaws.com/" />
 
-	<rule from="^https?://desk\.com/"
+	<rule from="^https?://(?:www\.)?desk\.com/"
 		to="https://www.desk.com/" />
 
 	<rule from="^https?://assets\d\.desk\.com/"
 		to="https://s3.amazonaws.com/deskcontent/" />
 
-	<rule from="^http://(dev|reg|support|www)\.desk\.com/"
+	<rule from="^http://(dev|reg|support)\.desk\.com/"
 		to="https://$1.desk.com/" />
 
 	<rule from="^https?://webassets\.desk\.com/"
 		to="https://s3.amazonaws.com/deskwww/" />
+
+	<rule from="^http://wiki\.developerforce\.com/"
+		to="https://wiki.developerforce.com/" />
 
 	<!--	unique domain for each client	-->
 	<rule from="^http://([\w\-]+)\.secure\.force\.com/"
 		to="https://$1.secure.force.com/" />
 
 	<!--	/force.com times out	-->
-	<rule from="^http://(?:www\.)?(sales)?force\.com/"
+	<rule from="^https?://(?:www\.)?(developer|sales)?force\.com/"
 		to="https://www.$1force.com/" />
 
 	<rule from="^http://(lct|login|na2)\.salesforce\.com/"
@@ -65,7 +70,7 @@
 	<rule from="^https?://(?:www\.)?salesforce\.com/(assets|common)/"
 		to="https://secure2.sfdcstatic.com/$1/" />
 
-	<rule from="^http://(?:secure|www)2\.sfdcstatic\.com/"
+	<rule from="^https?://(?:secure|www)2\.sfdcstatic\.com/"
 		to="https://secure2.sfdcstatic.com/"/>
 
 </ruleset>
