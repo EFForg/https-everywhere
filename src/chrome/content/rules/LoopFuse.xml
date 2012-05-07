@@ -1,0 +1,29 @@
+<ruleset name="LoopFuse (partial)">
+
+	<target host="loopfuse.com" />
+	<target host="*.loopfuse.com" />
+	<target host="loopfuse.net" />
+	<target host="*.loopfuse.net" />
+		<!--	404s over https.
+			There's another domain on which it works,
+			that's used on 3rd-party websites.
+			ToDo: Find it (again).	-->
+		<exclusion pattern="^http://(www\.)?loopfuse\.net/webrecorder/js/listen\.js" />
+
+
+	<securecookie host="^(.*\.)?loopfuse\.(com|net)$" name=".*" />
+
+
+	<!--	!www doesn't work over https.	-->
+	<rule from="^https?://loopfuse\.(com|net)/"
+		to="https://www.loopfuse.$1/" />
+
+	<!--	com: main website.
+		net: members' area.	-->
+	<rule from="^http://www\.loopfuse\.(com|net)/"
+		to="https://www.loopfuse.$1/" />
+
+	<rule from="^http://help\.loopfuse\.com/"
+		to="https://help.loopfuse.com/" />
+
+</ruleset>
