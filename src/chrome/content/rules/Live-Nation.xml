@@ -15,8 +15,10 @@
 	<target host="www.admission.com"/>
 	<target host="billetnet.dk"/>
 	<target host="www.billetnet.dk"/>
-	<target host="billetservice.no"/>
-	<target host="www.billetservice.no"/>
+		<!--	Someone's noticed what we're up to =(	-->
+		<exclusion pattern="^http://(www\.)?billetnet\.dk/($|index\.php)" />
+	<target host="billettservice.no"/>
+	<target host="www.billettservice.no"/>
 	<target host="getmein.com"/>
 	<target host="*.getmein.com"/>
 	<target host="lippupalvelu.fi"/>
@@ -35,22 +37,40 @@
 	<target host="*.ticketweb.com"/>
 	<target host="www.ticketweb.co.uk"/>
 
+
+
 	<securecookie host="^(.*\.)?getmein\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?admission\.com/(resourc|them)e/"
-		to="https://www.admission.com/$1e/"/>
 
-	<rule from="^http://(?:www\.)?billetnet\.dk/"
-		to="https://a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/"/>
+
+	<!--	Apply 2o7 rules first, so that matches
+		don't get rewritten by other rules.	-->
 
 	<rule from="^http://(?:www\.)?billetnet\.dk/tm-dkprod\.112\.2O7\.net/"
 		to="https://tm-dkprod.112.2o7.net/"/>
 
+	<rule from="^http://(?:www\.)?billettservice\.no/tm-noprod\.112\.2O7\.net/"
+		to="https://tm-noprod.112.2o7.net/"/>
+
+	<rule from="^http://(?:www\.)?lippupalvelu\.fi/tm-fiprod\.112\.2O7\.net/"
+		to="https://tm-fiprod.112.2o7.net/"/>
+
+	<rule from="^http://(?:www\.)?ticketmaster\.(de|nl)/tm-(?:de|nl)prod\.112\.2O7\.net/"
+		to="https://tm-$1prod.112.2o7.net/"/>
+
+
+
+	<rule from="^http://(?:www\.)?admission\.com/(resourc|them)e/"
+		to="https://www.admission.com/$1e/"/>
+
+
+	<rule from="^http://(?:www\.)?billetnet\.dk/"
+		to="https://a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/"/>
+
+
 	<rule from="^http://(?:www\.)?billetservice\.no/(assets/|myAccount/|resource/|static/|theme/)"
 		to="https://www.billetservice.no/$1"/>
 
-	<rule from="^http://(?:www\.)?billettservice\.no/tm-noprod\.112\.2O7\.net/"
-		to="https://tm-noprod.112.2o7.net/"/>
 
 	<rule from="^http://getmein\.com/"
 		to="https://www.getmein.com/"/>
@@ -58,35 +78,41 @@
 	<rule from="^http://(secure|www)\.getmein\.com/"
 		to="https://$1.getmein.com/"/>
 
+
 	<rule from="^http://(?:www\.)?lippupalvelu\.fi/"
 		to="https://a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/"/>
 
-	<rule from="^http://(?:www\.)?lippupalvelu\.fi/tm-fiprod\.112\.2O7\.net/"
-		to="https://tm-fiprod.112.2o7.net/"/>
 
 	<rule from="^http://(?:www\.)?livenation\.(ae|asia|com\.au|cz|dk|es|f[ir]|hu|it|no|pl)/"
 		to="https://www.livenation.$1/"/>
 
+
 	<rule from="^http://(fr|nl)\.livenation\.be/"
 		to="https://$1.livenation.be/"/>
+
 
 	<rule from="^http://(?:www\.)?livenation\.com/(favicon-ln\.ico|ln/)"
 		to="https://www.livenation.com/$1"/>
 
+
 	<rule from="^http://media\.livenationinternational\.com/"
 		to="https://a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/"/>
+
 
 	<rule from="^http://(?:www\.)?ticket(?:ek|master)\.cl/"
 		to="https://www.ticketek.cl/"/>
 
+
 	<rule from="^http://(?:www\.)?ticketmaster\.(ca|com\.(?:au|nz|mx)|ie)/favicon-rebrand\.ico"
 		to="https://www.ticketmaster.$1/favicon-rebrand.ico"/>
+
 
 	<rule from="^http://media\.ticketmaster\.com/"
 		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com/"/>
 
 	<rule from="^http://mm\.ticketmaster\.com/"
 		to="https://mm.ticketmaster.com/"/>
+
 
 	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(favicon\.ico|londonpreparesseries)"
 		to="https://www.ticketmaster.co.uk/$1"/>
@@ -97,32 +123,34 @@
 	<rule from="^http://reviews\.ticketmaster\.co\.uk/"
 		to="https://a248.e.akamai.net/f/248/905/10m/reviews.ticketmaster.co.uk/"/>
 
+
 	<rule from="^http://(?:www\.)?ticketmaster\.de/(resource|myAccount|static|theme)/"
 		to="https://www.ticketmaster.de/$1/"/>
 
-	<rule from="^http://www\.ticketmaster\.de/tm-deprod\.112\.2O7\.net/"
-		to="https://tm-deprod.112.2o7.net/"/>
 
 	<rule from="^http://(?:www\.)?ticketmaster\.(dk|es)/"
 		to="https://www.billetnet.$1/"/>
 
+
 	<rule from="^http://media\.ticketmaster\.eu/"
 		to="https://media.ticketmaster.eu/"/>
+
 
 	<rule from="^http://(?:www\.)?ticketmaster\.nl/"
 		to="https://a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/"/>
 
-	<rule from="^http://(?:www\.)?ticketmaster\.nl/tm-nlprod\.112\.2O7\.net/"
-		to="https://tm-nlprod.112.2o7.net/"/>
 
 	<rule from="^http://(?:www\.)?ticketnet\.fr/(assets|static)/"
 		to="https://www.ticketnet.fr/$1/"/>
 
+
 	<rule from="^http://(?:www\.)?ticketweb\.com/"
 		to="https://www.ticketweb.com/"/>
 
+
 	<rule from="^http://i\.ticketweb\.com/"
 		to="https://a248.e.akamai.net/f/248/15404/24h/i.ticketweb.com/"/>
+
 
 	<rule from="^http://(?:www\.)?ticketweb\.co\.uk/(images/|INFO/|giftcards|member|partners/|section/|styles\.css|twpurple\.html|ukcontent\.css|user/gb_northeast/order/|venuepages/|[\w\-\./]+\.html$|[\w\-]+/artist/\d+)"
 		to="https://www.ticketweb.co.uk/$1"/>

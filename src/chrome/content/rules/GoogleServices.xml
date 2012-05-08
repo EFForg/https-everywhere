@@ -2,8 +2,9 @@
 	Nonfunctional:
 
 		- (www.)admeld.(com|de)
-		- (www.)feedburner.com		(redirects to encrypted.google.com)
-		- books.google.com		(redirects to google.cctld)
+		- (www.)feedburner.com			(redirects to encrypted.google.com)
+		- books.google.com			(redirects to google.cctld)
+		- knol.google.com			(most paths redirect to google.cctld)
 		- safebrowsing.clients.google.com	(mismatch; 404)
 		- buttons.googlesyndication.com		(redirects to encrypted.google.com)
 
@@ -72,12 +73,26 @@
 		to="https://encrypted-tbn2.google.com/"/>
 
   <!-- This worked for a while but seems to be unstable
-  <rule from="^http://(www\.)?google((\.com?)?(\.[^/@:][^/@:])?)/products"
+  <rule from="^http://(www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/products"
           to="https://www.google$2/products" />
    -->
 
-  <rule from="^http://(?:www\.)?google((\.com?)?(\.[^/@:][^/@:])?)/profiles"
+  <rule from="^http://(?:www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/profiles"
           to="https://www.google$1/profiles" />
+
+	<!--	These paths redirect to http:
+
+			- /$
+			- k/-/-/\w+/\w+/\w+.jpg
+			- k/\w+/_/rsrc/\d+/system/app/images/
+			- reviews/css/
+					-->
+	<rule from="^http://knol\.google\.com/k/knoll/"
+		to="https://knol.google.com/k/knoll/" />
+
+	<!--	This doesn't though.	-->
+	<rule from="^http://knol\.google\.com/k/\w+/_/rsrc/(\d+)/system/"
+		to="https://knol.google.com/k/knoll/_/rsrc/$1/system/" />
 
   <rule from="^http://news\.google(?:\.com?)?(?:\.[^/@:][^/@:])?/news"
           to="https://www.google.com/news" />

@@ -1,0 +1,35 @@
+<!--
+	becu.122.2o7.net/b/ss/becudev/1/H.17/
+
+-->
+<ruleset name="Boeing Employees Credit Union (partial)">
+
+	<target host="becu.org" />
+	<target host="*.becu.org" />
+	<target host="becuonlinebanking.org" />
+	<target host="*.becuonlinebanking.org" />
+
+
+	<!--	s_ cookies are set by 2o7.net.
+		becuhome is set by the homepage.	-->
+	<securecookie host="^\.becu\.org$" name="^(becuhome|s_\w+)$" />
+	<securecookie host="^accessassistant\.becu\.org$" name=".*" />
+	<securecookie host="^.*\.becuonlinebanking\.org$" name=".*" />
+
+
+	<!--	Cert is only valid for www.	-->
+	<rule from="^https?://becu\.org/"
+		to="https://www.becu.org/" />
+
+	<!--	Some pages redirect to http.  There may be more that don't.	-->
+	<rule from="^http://www\.becu\.org/($|contact-us\.aspx|css/|Default\.aspx|flash/|images/|js/|mobile-online-banking/|pdfsource/|who-is/becu-is-you\.aspx)"
+		to="https://www.becu.org/$1s/" />
+
+	<rule from="^http://accessassistant\.becu\.org/"
+		to="https://accessassistant.becu.org/" />
+
+	<!--	Cert is only valid for www.	-->
+	<rule from="^http://(?:www\.)?becuonlinebanking\.org/"
+		to="https://www.becuonlinebanking.org/" />
+
+</ruleset>
