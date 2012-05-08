@@ -11,19 +11,25 @@
 	<target host="secure.assets.tumblr.com"/>
 	<target host="*.media.tumblr.com"/>
 
+
 	<rule from="^http://(www\.)?tumblr\.com/($|login)"
 		to="https://$1tumblr.com/$2"/>
 
-	<!--	swf: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html	-->
-	<rule from="^http://assets\.tumblr\.com/((images/)?iframe|javascript/tumblelog\.js|swf/)"
-		to="https://secure.assets.tumblr.com/$1"/>
+	<!--	Amazon only works for a subset of assets data.
+		The pattern for that subset is a mystery.
+		Forget being kind and just do what works.
 
-	<rule from="^http://(assets|data|static)\.tumblr\.com/"
-		to="https://s3.amazonaws.com/$1.tumblr.com/"/>
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001149.html
 
-	<rule from="^http://secure\.assets\.tumblr\.com/"
+		swf: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
+			-->
+	<rule from="^https?://(?:secure\.)?assets\.tumblr\.com/"
 		to="https://secure.assets.tumblr.com/"/>
 
-	<rule from="^http://(?:\d+\.)?media\.tumblr\.com/"
-		to="https://s3.amazonaws.com/data.tumblr.com/"/>
+	<rule from="^https?://(?:data|(?:\d+\.)?media)\.tumblr\.com/"
+		to="https://s3.amazonaws.com/data.tumblr.com/" />
+
+	<rule from="^https?://static\.tumblr\.com/"
+		to="https://s3.amazonaws.com/static.tumblr.com/" />
+
 </ruleset>
