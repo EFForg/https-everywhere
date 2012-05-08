@@ -72,9 +72,9 @@ ApplicableList.prototype = {
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
-	
-	var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;	  
-	var o_httpsprefs = https_everywhere.get_prefs();
+    
+    var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;   
+    var o_httpsprefs = https_everywhere.get_prefs();
    
     // get the menu popup
     this.menupopup = menupopup;
@@ -83,19 +83,19 @@ ApplicableList.prototype = {
     while(this.menupopup.firstChild.tagName != "menuseparator") {
       this.menupopup.removeChild(this.menupopup.firstChild);
     }
-	
-	// add global enable/disable toggle button	
-	var strings = document.getElementById("HttpsEverywhereStrings");
-	
-	var enableLabel = document.createElement('menuitem');
-	var text = strings.getString("https-everywhere.menu.globalDisable");
-	if(!o_httpsprefs.getBoolPref("globalEnabled"))
-		text = strings.getString("https-everywhere.menu.globalEnable");
-		
-	enableLabel.setAttribute('label', text);
-    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');	
-	this.prepend_child(enableLabel);
-	
+    
+    // add global enable/disable toggle button  
+    var strings = document.getElementById("HttpsEverywhereStrings");
+    
+    var enableLabel = document.createElement('menuitem');
+    var text = strings.getString("https-everywhere.menu.globalDisable");
+    if(!o_httpsprefs.getBoolPref("globalEnabled"))
+        text = strings.getString("https-everywhere.menu.globalEnable");
+        
+    enableLabel.setAttribute('label', text);
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');    
+    this.prepend_child(enableLabel);
+    
     // add the label at the top
     var any_rules = false
     for (var x in this.all) {
@@ -124,37 +124,37 @@ ApplicableList.prototype = {
         this.commandset.removeChild(this.commandset.firstChild);
     }
 
-	var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
-					 
-	var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;	
-	var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
-	
-	if(location.substr(0, 6) == "about:"){
-		//"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
-		  
-		var fromHost = document.getElementById("urlbar").value;	 
-		
-	    //scheme must be trimmed out to check for applicable rulesets		
-		if(fromHost.indexOf("://") != -1)
-			fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
-			
-		//trim off any page locations - we only want the host - e.g. domain.com
-		if(fromHost.indexOf("/") != -1)
-			fromHost = fromHost.substr(0, fromHost.indexOf("/"));
-					   
-		//Search for applicable rulesets for the host listed in the location bar
-		var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);		
-		
-		for (var i = 0 ; i < alist.length ; i++){
-			//For each applicable rulset, determine active/inactive, and append to proper list.
-			if(o_httpsprefs.getBoolPref(alist[i].name))
-				this.active_rule(alist[i]);
-			else
-				this.inactive_rule(alist[i]);					
-		}	
-	}	
-	
+                     
+    var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;  
+    var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
+    
+    if(location.substr(0, 6) == "about:"){
+        //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
+          
+        var fromHost = document.getElementById("urlbar").value;  
+        
+        //scheme must be trimmed out to check for applicable rulesets       
+        if(fromHost.indexOf("://") != -1)
+            fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
+            
+        //trim off any page locations - we only want the host - e.g. domain.com
+        if(fromHost.indexOf("/") != -1)
+            fromHost = fromHost.substr(0, fromHost.indexOf("/"));
+                       
+        //Search for applicable rulesets for the host listed in the location bar
+        var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
+        
+        for (var i = 0 ; i < alist.length ; i++){
+            //For each applicable rulset, determine active/inactive, and append to proper list.
+            if(o_httpsprefs.getBoolPref(alist[i].name))
+                this.active_rule(alist[i]);
+            else
+                this.inactive_rule(alist[i]);                   
+        }   
+    }   
+    
     // add all applicable commands
     for(var x in this.breaking) 
       this.add_command(this.breaking[x]); 
@@ -165,7 +165,7 @@ ApplicableList.prototype = {
     for(var x in this.inactive) 
       this.add_command(this.inactive[x]);
 
-	if(o_httpsprefs.getBoolPref("globalEnabled")){
+    if(o_httpsprefs.getBoolPref("globalEnabled")){
        // add all the menu items
        for (var x in this.inactive)
           this.add_menuitem(this.inactive[x], 'inactive');
@@ -177,12 +177,12 @@ ApplicableList.prototype = {
        for (var x in this.active) 
           if (!(x in this.breaking))
               this.add_menuitem(this.active[x], 'active');
-	   for (var x in this.breaking)
-		  this.add_menuitem(this.breaking[x], 'breaking');
-		  
+       for (var x in this.breaking)
+          this.add_menuitem(this.breaking[x], 'breaking');
+          
        this.prepend_child(label);
-	}
-	
+    }
+    
   },
 
   prepend_child: function(node) {
