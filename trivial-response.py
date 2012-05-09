@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os, re, subprocess
-<<<<<<< HEAD
-=======
 from time import sleep
->>>>>>> colonelgraff/graff
 
 try:
     from lxml import etree
@@ -38,15 +35,6 @@ while True:
         try:
             tree = etree.parse(fil)
 
-<<<<<<< HEAD
-    proc = subprocess.Popen([rule_script, fil, report_file])
-    procs.append(proc)
-
-failure = 0
-
-for proc in procs:
-    failure = failure or proc.poll()
-=======
             if tree.xpath('/ruleset/@default_off'):
                 default_off += 1
                 continue
@@ -64,7 +52,6 @@ for proc in procs:
         break
 
     sleep(0.5)
->>>>>>> colonelgraff/graff
 
 sys.stdout.write("Skipped %d default_off rulesets.\n" % default_off)
 
