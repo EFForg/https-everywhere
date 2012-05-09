@@ -17,17 +17,31 @@
 
 	Nonfunctional:
 
-		- arst.ch		(cert: api.arstechnica.net; shows that domain's data)
+
+		- architecturaldigest.com:
+			- /
+			- www				(Akamai; blank page)
+		- arst.ch				(cert: api.arstechnica.net; shows that domain's data)
+		- origin.cdn.arstechnica.com		(times out)
+		- condenast.com:
+			- /
+			-www 				(Akamai; "Service Unavailable")
+		- images1.designcentersearch.com	(times out; data aren't on www)
+		- (www.)shopad.net			(cert: designcentersearch.com; shows that domain's data)
 		- style.com:
 			- /
-			- www		(Akamai; "Service Unavailable")
+			- www				(Akamai; "Service Unavailable")
 				- origin, origin-www, secure, www2 don't exist
 		- promotions.vf.com
+
 -->
 <ruleset name="Condé Nast (partial)">
 
-	<target host="api.arstechnica.net" />
-	<target host="static.arstechnica.net" />
+	<target host="arstechnica.com" />
+	<target host="*.arstechnica.com" />
+		<!--	Handled in -mismatches.	-->
+		<exclusion pattern="^https?://cdn\.arstechnica\.net/wp-(content|uploads)/" />
+	<target host="*.arstechnica.net" />
 	<target host="condenaststore.com" />
 	<target host="www.condenaststore.com" />
 	<target host="subscribe.condenet.com" />
@@ -50,6 +64,9 @@
 	<securecookie host="^www\.golfdigestinsiders\.com$" name=".*" />
 	<securecookie host="^.*\.vanityfair\.com$" name=".*" />
 
+
+	<rule from="^https?://(?:cdn\.|www\.)?arstechnica\.com/public/shared/"
+		to="https://arstechnica.cachefly.com/public/shared/" />
 
 	<rule from="^http://api\.arstechnica\.net/"
 		to="https://api.arstechnica.net/" />

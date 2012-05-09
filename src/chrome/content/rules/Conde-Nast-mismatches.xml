@@ -8,9 +8,16 @@
 -->
 <ruleset name="Condé Nast (mismatches)" default_off="expired, mismatch, self-signed">
 
+	<target host="allure.com" />
+	<target host="*.allure.com" />
 	<target host="cdn.arstechnica.com" />
+		<!--	Handled in main ruleset.	-->
+		<exclusion pattern="^https?://cdn\.arstechnica\.com/public/shared/" />
 	<target host="jobs.arstechnica.com" />
 	<target host="cdni.condenast.co.uk" />
+	<!--	Expired.	-->
+	<target host="designcentersearch.com" />
+	<target host="www.designcentersearch.com" />
 	<target host="blog.details.com" />
 	<target host="golfdigestschool.com" />
 	<target host="www.golfdigestschool.com" />
@@ -20,18 +27,39 @@
 	<target host="www.vf.com" />
 	<target host="cdni.wired.co.uk" />
 
-	<!--	cdn is on cachefly, but not at arstechnica.cachefly.net.
-		ToDo: Find bucket.	-->
+
+	<securecookie host="^designcentersearch\.com$" name=".*" />
+
+
+	<!--	!www doesn't work.	-->
+	<rule from="^https?://allure\.com/"
+		to="https://www.allure.com/" />
+
+	<!--	Akamai.
+		At least some pages redirect to http.	-->
+	<rule from="^http://www\.allure\.com/(cs|image)s/"
+		to="https://www.allure.com/$1s/" />
+
+	<!--	self-signed.	-->
+	<rule from="^http://blog\.allure\.com/"
+		to="https://blog.allure.com/" />
+
+	<!--	cdn is on cachefly, but many paths redirect to origin.static,
+		where the data doesn't exist, instead of origin.cdn, where it does.
+			-->
 	<rule from="^http://(cdn|jobs)\.arstechnica\.com/"
 		to="https://$1.arstechnica.com/" />
 
-	<rule from="^http://cdni\.(condenast|wired)\.co\.uk/"
+	<rule from="^https?://cdni\.(condenast|wired)\.co\.uk/"
 		to="https://img.$1.co.uk.s3.amazonaws.com/" />
+
+	<rule from="^https?://(?:www\.)?designcentersearch.com/"
+		to="https://designcentersearch.com/" />
 
 	<rule from="^http://blog\.details\.com/"
 		to="https://blog.details.com/" />
 
-	<rule from="^http://(?:www\.)?golfdigestschool\.com/"
+	<rule from="^https?://(?:www\.)?golfdigestschool\.com/"
 		to="https://www.golfdigestschool.com/" />
 
 	<rule from="^https?://(?:www\.)?v(?:anityfair|f)\.com/"
