@@ -8,6 +8,7 @@
 -->
 <ruleset name="Condé Nast (mismatches)" default_off="expired, mismatch, self-signed">
 
+	<target host="cdn.arstechnica.com" />
 	<target host="jobs.arstechnica.com" />
 	<target host="cdni.condenast.co.uk" />
 	<target host="blog.details.com" />
@@ -19,8 +20,10 @@
 	<target host="www.vf.com" />
 	<target host="cdni.wired.co.uk" />
 
-	<rule from="^http://jobs\.arstechnica\.com/"
-		to="https://jobs.arstechnica.com/" />
+	<!--	cdn is on cachefly, but not at arstechnica.cachefly.net.
+		ToDo: Find bucket.	-->
+	<rule from="^http://(cdn|jobs)\.arstechnica\.com/"
+		to="https://$1.arstechnica.com/" />
 
 	<rule from="^http://cdni\.(condenast|wired)\.co\.uk/"
 		to="https://img.$1.co.uk.s3.amazonaws.com/" />
