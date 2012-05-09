@@ -1,14 +1,48 @@
 <!--
+	For problematic rules, see GNOME-expired.xml.
+
+
 	Nonfunctional:
 
-		- www-old		(cert: www.gnome.org, expired; 404)
+		- gnomejournal.org		(cert: rt.gnome.org, expired, shows that domain's data)
+
+		- gnome.org subdomains:
+
+			- art			(cert: www, expired; 404)
+			- blogs
+			- developer		(cert: rt, expired)
+			- foundation		(cert: www; shows www's data)
+			- git
+			- ldap			(cert: live; shows live's data)
+			- label			(ditto)
+			- library		(cert: rt, expired; shows rt's data)
+			- menubar		(cert: mail, shows mail's data)
+			- news			(cert: rt, expired; shows rt's data)
+			- people		(cert: www, expired; 404)
+			- planet		(cert: rt, expired; shows rt's data)
+			- projects		(cert: www, expired; 404)
+			- webstats		(cert: live, shows rt's data)
+			- vote			(cert: rt, expired; shows rt's data)
+			- webapps		(ditto)
+			- www-old		(cert: www, expired; 404)
 
 -->
 <ruleset name="GNOME (partial)">
 
+	<target host="gnome.org" />
 	<target host="*.gnome.org" />
+		<!--	404, redirects to projects.gnome.org	-->
+		<exclusion pattern="^http://www\.gnome\.org/projects/" />
 
-	<rule from="^http://(bugzilla|mail|live)\.gnome\.org/"
-		to="https://$1.gnome.org/" />
+
+	<securecookie host="^.*\.gnome\.org$" name=".*" />
+
+
+	<rule from="^http://((?:bugzilla|extensions|mail|mango|live|www)\.)?gnome\.org/"
+		to="https://$1gnome.org/" />
+
+	<!--	Redirects as so over http.	-->
+	<rule from="^https?://foundation\.gnome\.org/"
+		to="https://www.gnome.org/foundation/" />
 
 </ruleset>
