@@ -1,0 +1,32 @@
+<!--
+	For rules that are on by default, see NewspaperDirect.xml
+
+
+	Nonfunctional:
+
+		- cache-thumb1.pressdisplay.com		(Akamai; "Service Unavailable")
+
+-->
+<ruleset name="NewspaperDirect (partial)" default_off="mismatch">
+
+	<target host="pressdisplay.com" />
+	<target host="*.pressdisplay.com" />
+		<!--	Rewritten back to http by JS	-->
+		<exclusion pattern="^http://(www\.)?pressdisplay/viewer\.aspx" />
+
+
+	<!--	Cert: www.newspapersdirect.com	-->
+	<rule from="^https?://(?:www\.)?pressreader\.com/"
+		to="https://pressreader.com/" />
+
+	<!--	Cert: *.bluehost.com
+		At least some pages redirect recursively.	-->
+	<rule from="^https?://blog\.pressdisplay\.com/wp-(content|includes)/"
+		to="https://blog.pressdisplay.com/~pressdis/wp-$1/" />
+
+	<!--	!2:	Akamai
+		 2:	EdgeCast	-->
+	<rule from="^https?://cache2?-s(cripts|style)s\.pressdisplay\.com/"
+		to="https://cache-s$1s.pressdisplay.com/" />
+
+</ruleset>
