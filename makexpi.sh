@@ -82,7 +82,7 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 fi
 
 
-sh ./merge-rulesets.sh
+sh ./utils/merge-rulesets.sh
 cd src
 
 # Build the XPI!
