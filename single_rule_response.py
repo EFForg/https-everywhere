@@ -41,6 +41,12 @@ def test_response_no_redirect(to):
     ret = True
     try:
         response = request(to, allow_redirects=False)
+        if response.status_code in (300, 301, 302, 307, 308):
+            find_redirect(to)
+            ret = False
+        if response.status_code != 200:
+            ret = False
+        del response
     except SSLError:
     #   sys.stdout.write("failure: %s certificate validity check failed.\n" % to)
         certificate.append(to)
@@ -49,33 +55,25 @@ def test_response_no_redirect(to):
     #   sys.stdout.write("failure: %s can not be reached.\n" % to)
         timeout.append('%s - timeout' % to)
         ret = False
-    finally:
-        del response
-    if response.status_code != 200:
-        return find_redirect(to)
     return ret
 
 
 def find_redirect(to):
     """Prints redirects"""
-    ret = True
     try:
         response = request(to, allow_redirects=True)
+        url_re = re.compile(re.escape(to))
+        if response.status_code == 200 and not url_re.match(response.url):
+            # i.e. it redirected and it didn't redirect from something like:
+            #  https://www.eff.org/ -> https://www.eff.org/index.html
+        #   sys.stdout.write("failure: %s redirects to %s.\n" % (to, response.url))
+            redirect.append('%s -> %s' % (to, response.url))
     except SSLError:
         redirect.append('%s - ssl_error' % to)
-        ret = False
     except (ConnectionError, Timeout):
     #   sys.stdout.write("failure: %s can not be reached to complete a redirect\n" % to)
         redirect.append('%s - timeout' % to)
-        ret = False
-    finally:
-        del response
-    url_re = re.compile(re.escape(to))
-    if response.status_code == 200 and not url_re.match(response.url):
-    #   sys.stdout.write("failure: %s redirects to %s.\n" % (to, response.url))
-        redirect.append('%s -> %s' % (to, response.url))
-        ret = False
-    return ret
+
 
 failure = 0
 #failed = []

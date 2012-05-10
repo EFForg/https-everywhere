@@ -29,7 +29,7 @@ with open(report_file, 'w+') as fd:
     fd.truncate(0)
 
 while True:
-    if files and len(procs) < PARALLELISM:
+    if files and (len(procs) < PARALLELISM):
         fil = files.pop()
         if 'mismatches' in fil:
             continue
@@ -48,7 +48,7 @@ while True:
 
     for (proc, f) in procs:
         proc.poll()
-        if proc.returncode:
+        if proc.returncode != None:
             with open(rule_file % f, 'r') as rule_fd:
                 with open(report_file, 'a') as report_fd:
                     report_fd.writelines(rule_fd)
