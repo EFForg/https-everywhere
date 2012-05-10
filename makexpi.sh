@@ -26,11 +26,15 @@ if [ -n "$1" ]; then
 	git reset --hard "$1"
 fi
 
-if [ -x trivial-validate.py ]; then
-	VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
+if [ -f utils/trivial-validate.py ]; then
+	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+elif [ -x utils/trivial-validate ] ; then
+  # This case probably never happens
+	VALIDATE=./utils/trivial-validate
 else
-	VALIDATE="python trivial-validate"
+	VALIDATE=./trivial-validate
 fi
+
 if $VALIDATE src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2

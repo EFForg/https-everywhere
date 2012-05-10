@@ -36,11 +36,15 @@ VERSION=`python -c "import json ; print json.loads(open('chromium/manifest.json'
 
 echo "Building chrome version" $VERSION
 
-if [ -x trivial-validate.py ]; then
-	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
+if [ -f utils/trivial-validate.py ]; then
+	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+elif [ -x utils/trivial-validate ] ; then
+  # This case probably never happens
+	VALIDATE=./utils/trivial-validate
 else
 	VALIDATE=./trivial-validate
 fi
+
 if $VALIDATE src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
