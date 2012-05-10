@@ -12,7 +12,7 @@ except ImportError:
     sys.exit(0)
 
 try:
-    from requests import request
+    from requests import get
     from requests.exceptions import SSLError, ConnectionError, Timeout
 except ImportError:
     sys.stderr.write("** Could not import requests!  Rule validation SKIPPED.\n")
@@ -24,44 +24,61 @@ if not (sys.argv[1:] and sys.argv[2:]):
     sys.stderr.write("Usage: %s ruleset report_file\n\n" % sys.argv[0])
     sys.exit(0)
 
+# Error lists
+certificate = []
+timeout = []
+redirect = []
+
 ruleset = sys.argv[1]
 report_file = sys.argv[2]
 
-req = partial(request, 'GET', verify=True, timeout=5.0)
+request = partial(get, verify=True, timeout=15.0,
+        config={'keep_alive': False})
 # 'GET' - method, verify - verify the certificate, timeout - 5.0 seconds
 
 def test_response_no_redirect(to):
-    """Ruleset contains a destination which may not support HTTPS."""
+    """destination may not support HTTPS."""
+    ret = True
     try:
-        response = req(to, allow_redirects=False)
+        response = request(to, allow_redirects=False)
     except SSLError:
-        sys.stdout.write("failure: %s certificate validity check failed.\n" % to)
-        return False
+    #   sys.stdout.write("failure: %s certificate validity check failed.\n" % to)
+        certificate.append(to)
+        ret = False
     except (ConnectionError, Timeout):
-        sys.stdout.write("failure: %s can not be reached.\n" % to)
-        return False
+    #   sys.stdout.write("failure: %s can not be reached.\n" % to)
+        timeout.append('%s - timeout' % to)
+        ret = False
+    finally:
+        del response
     if response.status_code != 200:
         return find_redirect(to)
-    return True
+    return ret
 
 
 def find_redirect(to):
     """Prints redirects"""
+    ret = True
     try:
-        response = req(to, allow_redirects=True)
+        response = request(to, allow_redirects=True)
     except SSLError:
-        return False
+        redirect.append('%s - ssl_error' % to)
+        ret = False
     except (ConnectionError, Timeout):
-        sys.stdout.write("failure: %s can not be reached to complete a redirect\n" % to)
-        return False
+    #   sys.stdout.write("failure: %s can not be reached to complete a redirect\n" % to)
+        redirect.append('%s - timeout' % to)
+        ret = False
+    finally:
+        del response
     url_re = re.compile(re.escape(to))
     if response.status_code == 200 and not url_re.match(response.url):
-        sys.stdout.write("failure: %s redirects to %s.\n" % (to, response.url))
-        return False
-    return True
+    #   sys.stdout.write("failure: %s redirects to %s.\n" % (to, response.url))
+        redirect.append('%s -> %s' % (to, response.url))
+        ret = False
+    return ret
 
 failure = 0
-failed = []
+#failed = []
 back_ref = re.compile('\$\d+')
 
 if __name__ == "__main__":
@@ -75,13 +92,22 @@ if __name__ == "__main__":
         if back_ref.search(to):
             continue
         if not test_response_no_redirect(to):
-            failed.append(to)
+            #failed.append(to)
             failure = 1
         seen.append(to)
 
     if failure:
         sys.stdout.write("warning: %s failed test: %s\n" % (ruleset, test_response_no_redirect.__doc__))
         with open(report_file, 'a') as fd:
-            fd.write('%s: %s\n' % (ruleset, ', '.join(failed)))
+            #fd.write('%s: %s\n' % (ruleset, ', '.join(failed)))
+            if certificate:
+                fd.write('[%s] Certificate Errors:\n %s\n' %
+                        (ruleset, ', '.join(certificate)))
+            if redirect:
+                fd.write('[%s] Redirect Failures:\n %s\n' %
+                        (ruleset, ', '.join(redirect)))
+            if timeout:
+                fd.write('[%s] Timeout Failures:\n %s\n' %
+                        (ruleset, ', '.join(timeout)))
 
     sys.exit(failure)
