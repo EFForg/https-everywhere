@@ -36,11 +36,15 @@ VERSION=`python -c "import json ; print json.loads(open('chromium/manifest.json'
 
 echo "Building chrome version" $VERSION
 
-if [ -x trivial-validate.py ]; then
-	VALIDATE="./trivial-validate.py --ignoredups google --ignoredups facebook"
+if [ -f utils/trivial-validate.py ]; then
+	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+elif [ -x utils/trivial-validate ] ; then
+  # This case probably never happens
+	VALIDATE=./utils/trivial-validate
 else
 	VALIDATE=./trivial-validate
 fi
+
 if $VALIDATE src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
@@ -50,9 +54,9 @@ else
   exit 1
 fi
 
-if [ -f relaxng.xml -a -x "$(which xmllint)" ] >&2
+if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml
+  if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
@@ -74,7 +78,7 @@ do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-. ./merge-rulesets.sh
+. ./utils/merge-rulesets.sh
 
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 

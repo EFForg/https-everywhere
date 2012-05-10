@@ -26,11 +26,15 @@ if [ -n "$1" ]; then
 	git reset --hard "$1"
 fi
 
-if [ -x trivial-validate.py ]; then
-	VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
+if [ -f utils/trivial-validate.py ]; then
+	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+elif [ -x utils/trivial-validate ] ; then
+  # This case probably never happens
+	VALIDATE=./utils/trivial-validate
 else
-	VALIDATE="python trivial-validate"
+	VALIDATE=./trivial-validate
 fi
+
 if $VALIDATE src/chrome/content/rules >&2
 then
   echo Validation of included rulesets completed. >&2
@@ -40,9 +44,9 @@ else
   exit 1
 fi
 
-if [ -f relaxng.xml -a -x "$(which xmllint)" ] >&2
+if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml
+  if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
@@ -53,9 +57,9 @@ else
   echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
 fi 2>&1 | grep -v validates
 
-if [ -x ./compare-locales.sh ] >&2
+if [ -x ./utils/compare-locales.sh ] >&2
 then
-  if ./compare-locales.sh >&2
+  if ./utils/compare-locales.sh >&2
   then
     echo Validation of included locales completed. >&2
   else
@@ -82,7 +86,7 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 fi
 
 
-sh ./merge-rulesets.sh
+sh ./utils/merge-rulesets.sh
 cd src
 
 # Build the XPI!

@@ -8,7 +8,7 @@
 #    merge version and the current merge version.
 # 1. Update the FROM and TO versions appropriately below.
 # 2  execute:
-#    ./diff-noscript.sh > noscript-merge.diff
+#    ./utils/diff-noscript.sh > noscript-merge.diff
 #    cd ./src/chrome/content/code/
 #    patch -p4 < ../../../../noscript-merge.diff
 # 3. Clean up the mess.

@@ -32,16 +32,11 @@ const HTTPS = {
   
   replaceChannel: function(applicable_list, channel) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
-    if (null == blob) {
-       //HTTPS.log(INFO,
-       //    "Got replace channel with no applicable rules for URI "
-       //    + channel.URI.spec);
-       return false;
-     }
+    if (null == blob) return false; // no rewrite
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
-    var c2=channel.QueryInterface(CI.nsIHttpChannel);
+    var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
     // XXX This used to be (c2.redirectionLimit == 1), but that's very
     // inefficient in a case (eg amazon) where this may happen A LOT.
@@ -58,6 +53,7 @@ const HTTPS = {
       return false;
     }
     if (ChannelReplacement.supported) {
+      HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
       ChannelReplacement.runWhenPending(channel, function() {
         var cr = new ChannelReplacement(channel, uri);
@@ -77,7 +73,6 @@ const HTTPS = {
     // Strategy 1: replace the parts of the old_uri piecewise.  Often this
     // works.  In some cases it doesn't.
     this.log(NOTE,"Rewriting " + old_uri.spec + " -> " + new_uri.spec + "\n");
-    HTTPSEverywhere.instance.notifyObservers(old_uri, new_uri.spec);
 
     old_uri.scheme = new_uri.scheme;
     old_uri.userPass = new_uri.userPass;
@@ -131,6 +126,7 @@ const HTTPS = {
     var newuri = blob.newuri;
 
     try {
+      HTTPSEverywhere.instance.notifyObservers(uri, newuri.spec);
       if (this.rewriteInPlace(uri, newuri)) 
         this.log(INFO,"Forced URI " + uri.spec);
       return true;
