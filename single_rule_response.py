@@ -12,7 +12,7 @@ except ImportError:
     sys.exit(0)
 
 try:
-    from requests import get
+    from requests import head
     from requests.exceptions import SSLError, ConnectionError, Timeout
 except ImportError:
     sys.stderr.write("** Could not import requests!  Rule validation SKIPPED.\n")
@@ -32,7 +32,7 @@ redirect = []
 ruleset = sys.argv[1]
 report_file = sys.argv[2]
 
-request = partial(get, verify=True, timeout=15.0,
+request = partial(head, verify=True, timeout=15.0,
         config={'keep_alive': False})
 # 'GET' - method, verify - verify the certificate, timeout - 5.0 seconds
 
