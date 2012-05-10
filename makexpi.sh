@@ -44,9 +44,9 @@ else
   exit 1
 fi
 
-if [ -f relaxng.xml -a -x "$(which xmllint)" ] >&2
+if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng relaxng.xml src/chrome/content/rules/*.xml
+  if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
