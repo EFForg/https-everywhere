@@ -55,6 +55,8 @@ def test_response_no_redirect(to):
     #   sys.stdout.write("failure: %s can not be reached.\n" % to)
         timeout.append('%s - timeout' % to)
         ret = False
+    except Exception:
+        ret = False
     return ret
 
 
@@ -73,6 +75,8 @@ def find_redirect(to):
     except (ConnectionError, Timeout):
     #   sys.stdout.write("failure: %s can not be reached to complete a redirect\n" % to)
         redirect.append('%s - timeout' % to)
+    except Exception:
+        pass
 
 
 failure = 0

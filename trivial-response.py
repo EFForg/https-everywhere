@@ -44,21 +44,24 @@ while True:
 
         proc = subprocess.Popen([rule_script, fil, rule_file %
             fil[:-4]])
-        procs.append((proc, fil))
+        procs.append((proc, fil[:-4]))
 
     for (proc, f) in procs:
         proc.poll()
+        print "POLL'D"
         if proc.returncode != None:
+            print "FUCKED"
             with open(rule_file % f, 'r') as rule_fd:
                 with open(report_file, 'a') as report_fd:
+                    print "CONTEXT"
                     report_fd.writelines(rule_fd)
             os.unlink(rule_file % f)
-        procs.remove((proc, f))
+            procs.remove((proc, f))
 
     if not (files or procs):
         break
 
-    sleep(0.5)
+    sleep(0.75)
 
 sys.stdout.write("Skipped %d default_off rulesets.\n" % default_off)
 
