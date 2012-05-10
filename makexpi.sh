@@ -57,9 +57,9 @@ else
   echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
 fi 2>&1 | grep -v validates
 
-if [ -x ./compare-locales.sh ] >&2
+if [ -x ./utils/compare-locales.sh ] >&2
 then
-  if ./compare-locales.sh >&2
+  if ./utils/compare-locales.sh >&2
   then
     echo Validation of included locales completed. >&2
   else
