@@ -1,7 +1,33 @@
-<ruleset name="RememberTheMilk">
-  <target host="rememberthemilk.com" />
-  <target host="www.rememberthemilk.com" />
+<!--
+	Nonfunctional: 
 
-  <rule from="^http://(?:www\.)?rememberthemilk\.com/" to="https://www.rememberthemilk.com/"/>
+		- blog.rememberthemilk.com	(cert: *.medialayer.net; shows status message)
+		- status.rememberthemilk.com	(times out)
+		- blog.rememberthemilk.jp	(cert: *.medialayer.net; shows status message)
+
+-->
+<ruleset name="Remember the Milk">
+
+	<target host="rememberthemilk.com" />
+	<target host="*.rememberthemilk.com" />
+	<target host="rememberthemilk.jp" />
+	<target host="www.rememberthemilk.jp" />
+	<target host="*.rtmcdn.net" />
+
+
+	<securecookie host="^\.rememberthemilk\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match !www.
+		.jp redirects to .com.	-->
+	<rule from="^https?://(?:www\.)?rememberthemilk\.(?:com|jp)/"
+		to="https://www.rememberthemilk.com/" />
+
+	<rule from="^http://api\.rememberthemilk\.com/"
+		to="https://api.rememberthemilk.com/" />
+
+	<rule from="^http://s([1-4])\.rtmcdn\.net/"
+		to="https://s$1.rtmcdn.net/" />
+
 </ruleset>
 
