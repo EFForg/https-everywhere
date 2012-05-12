@@ -4,7 +4,7 @@
 		- Jalopnik.xml
 
 
-	nonfunctional:
+	Nonfunctional:
 
 		- fonts.gawker.com
 		- hyperion.gawker.com
@@ -14,12 +14,27 @@
 -->
 <ruleset name="Gawker (partial)">
 
-	<target host="api.gawker.com"/>
-	<target host="login.gawker.com"/>
+	<target host="gawker.com" />
+	<target host="*.gawker.com" />
+	<target host="ganja.gawkerassets.com" />
+	<target host="lifehacker.com" />
+	<target host="*.lifehacker.com" />
 
-	<securecookie host="^login\.gawker\.com$" name=".*"/>
 
-	<rule from="^http://(api|login)\.gawker\.com/"
-		to="https://$1.gawker.com/"/>
+	<securecookie host="^(.*\.)?gawker\.com$" name=".*" />
+
+
+
+	<rule from="^http://((?:api|login|www)\.)?gawker\.com/"
+		to="https://$1gawker.com/" />
+
+	<!--	None work over https.	-->
+	<rule from="^https?://(?:cache\.(?:gawker|lifehacker)|ganja\.gawkerassets)\.com/"
+		to="https://gawker.com/" />
+
+	<!--	Cert: gawker.com
+		At least some pages redirect to http.	-->
+	<rule from="^https?://(?:www\.)?lifehacker\.com/assets/"
+		to="https://gawker.com/assets/" />
 
 </ruleset>
