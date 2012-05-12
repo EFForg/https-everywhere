@@ -30,6 +30,19 @@ sed -i -e :a -re 's/<!--.*?-->//g;/<!--/N;//ba' $RULESETS
 sed -i ':a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g' $RULESETS
 echo "Crushed $CRUSH bytes of rulesets into `rulesize`"
 
+if [ -x $(which xmllint)]
+then
+   if xmllint --noout $RULESETS
+   then
+      echo "$RULESETS passed XML validity test."
+   else
+      echo "ERROR: $RULESETS failed XML validity test."
+      exit 2
+   fi
+else
+   echo "WARNING: xmllint not present; validation of $RULESETS skipped."
+fi
+
 # We make default.rulesets at build time, but it shouldn't have a variable
 # timestamp
 touch -r chrome/content/rules $RULESETS
