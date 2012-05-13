@@ -24,6 +24,7 @@
 			([\w\-]+/)gp/	(i.e., gp/ possibly preceeded by title)
 			gp/goldbox($|\?)
 			gp/pdp/profile($|\?)
+			gp/richpub/syltguides/byauthor($|\?)
 			Help/
 			l/
 			s/
@@ -51,17 +52,16 @@
 -->
 <ruleset name="Amazon (experimental)" default_off="needs testing">
 
-	<target host="www.amazon.*"/>
 	<target host="amazon.*"/>
+	<target host="www.amazon.*"/>
+		<!--	These pages don't work on .com	-->
+		<exclusion pattern="^http://www\.amazon\.com/($|\?|gp/(goldbox|pdp/profile|richpub/syltguides/byauthor)($|\?)|l/|([\w\-]+/)?(b|dp|Help)/)"/>
+	<target host="affiliate-program.amazon.com" />
 	<target host="*.amazon.co.uk"/>
-	<target host="www.amazon.co.*"/>
 	<target host="amazon.co.*"/>
+	<target host="www.amazon.co.*"/>
 		<!--	search redirects to http, for all sites	-->
 		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(gp/search\?|mn/search/|s(/|\?rh=))"/>
-	<target host="amazon.com"/>
-	<target host="www.amazon.com"/>
-		<!--	product pages don't work on .com	-->
-		<exclusion pattern="^http://www\.amazon\.com/($|\?|gp/(goldbox|pdp/profile)($|\?)|l/|([\w\-]+/)?(b|dp|Help)/)"/>
 
 
 	<!--	verified as working for UK, others sites matched appear to function identically	-->
@@ -73,6 +73,9 @@
 		These cookies are set by gp/cart/view.html
 	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
 
+
+	<rule from="^http://affiliate-program\.amazon\.com/"
+		to="https://affiliate-program.amazon.com/" />
 
 	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
 		to="https://www.amazon.$1/"/>
