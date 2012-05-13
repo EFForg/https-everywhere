@@ -2,13 +2,31 @@
 	For problematic rules, see IEEE-mismatches.xml.
 
 -->
-<ruleset name="IEEE">
+<ruleset name="IEEE (partial)">
 
 	<target host="ieee.org" />
-	<target host="www.ieee.org" />
+	<target host="*.ieee.org" />
+	<target host="origin.www.ieee.org" />
 
 
-	<rule from="^http://(?:www\.)?ieee\.org/"
-		to="https://origin.www.ieee.org/" />
+	<!--	Observed cookie subdomains:
+
+			- ^.
+			- ^origin.www
+			- ^www
+				-->
+	<securecookie host="^.*\.ieee\.org$" name=".*" />
+
+
+	<!--	!www presents cert for origin.www.	-->
+	<rule from="^https?://(?:www\.)?ieee\.org/"
+		to="https://www.ieee.org/" />
+
+	<!--	Homepage 403s.	-->
+	<rule from="^http://eleccomm\.ieee\.org/(aliase|cs|image)s/"
+		to="https://eleccomm.ieee.org/$1s/" />
+
+	<rule from="^http://(uce|origin\.www)\.ieee\.org/"
+		to="https://$1.ieee.org/" />
 
 </ruleset>
