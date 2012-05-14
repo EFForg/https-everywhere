@@ -1,47 +1,67 @@
-<!--	!functional:
+<!--
+	Nonfunctional domains:
+
 		- engineering.twitter.com	(timeout)
+		- r.twimg.com
+
+
+	twitter-blog.s3.amazonaws.com
+
 
 	There are still some hosts that things get loaded from that can't
 	be safely rewritten without triggering a certificate error.
 	E.g. platform.twitter.com has some scripts, but the https version
 	won't validate.
+
 -->
 <ruleset name="Twitter">
-  <target host="*.twitter.com" />
-  <target host="twitter.com" />
-  <target host="cdn.api.twitter.com" />
-  <target host="www.twitter.jp" />
-  <target host="twitter.jp" />
-  <target host="*.twimg.com" />
-  <target host="www.t.co" />
-  <target host="t.co" />
 
-  <securecookie host="^(.*\.)?twitter\.com$" name=".*" />
+	<target host="t.co" />
+	<target host="www.t.co" />
+	<target host="*.twimg.com" />
 
-  <rule from="^http://twitter\.com/"
-	  to="https://twitter.com/"/>
-  <rule from="^http://(?:de|en|es|fr|it|ja|jp|www)\.twitter\.com/"
-	  to="https://twitter.com/"/>
-  <rule from="^http://(?:www\.)?twitter\.jp/"
-	  to="https://twitter.com/"/> 
-  <rule from="^http://((?:cdn\.)?api|business|dev|mobile|p|search|static|support)\.twitter\.com/"
-   	  to="https://$1.twitter.com/" />
-  <rule from="^http://(p|si\d)\.twimg\.com/"
-	  to="https://$1.twimg.com/" />
-  <rule from="^http://widgets\.twimg\.com/"
-	  to="https://widgets.twimg.com/" />
-  <rule from="^http://m\.twitter\.com/"
-	  to="https://mobile.twitter.com/" />
-  <rule from="^http://(?:a\d|s)\.twimg\.com/"
-	  to="https://si0.twimg.com/" />
-  <rule from="^http://firefox\.twitter\.com/"
-	  to="https://twitter.com/download/firefox/" />
-  <rule from="^http://media\.twitter\.com/"
-	  to="https://dev.twitter.com/media/" />
-  <rule from="^http://(?:www\.)?t\.co/"
-	  to="https://t.co/" />
+	<target host="twitter.com" />
+	<target host="*.twitter.com" />
+	<target host="cdn.api.twitter.com" />
+	<target host="twitter.jp" />
+	<target host="www.twitter.jp" />
 
-	<rule from="^http://engineering\.twitter\.com/favicon\.ico"
+
+	<securecookie host="^(.*\.)?twitter\.com$" name=".*" />
+
+
+	<rule from="^https?://(?:www\.)?t\.co/"
+		to="https://t.co/" />
+
+	<rule from="^https?://(?:a\d|s)\.twimg\.com/"
+		to="https://si0.twimg.com/" />
+
+	<rule from="^http://(p|si\d|widgets)\.twimg\.com/"
+		to="https://$1.twimg.com/" />
+
+
+	<rule from="^http://twitter\.com/"
+		to="https://twitter.com/" />
+
+	<rule from="^http://((?:cdn\.)?api|business|dev|mobile|p|search|static|support|www)\.twitter\.com/"
+		to="https://$1.twitter.com/" />
+
+	<rule from="^https?://(?:de|e[ns]|fr|it|j[ap])\.twitter\.com/"
+		to="https://twitter.com/" />
+
+	<rule from="^https?://engineering\.twitter\.com/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico"/>
+
+	<rule from="^https?://firefox\.twitter\.com/"
+		to="https://twitter.com/download/firefox/" />
+
+	<rule from="^https?://m\.twitter\.com/"
+		to="https://mobile.twitter.com/" />
+
+	<rule from="^https?://media\.twitter\.com/"
+		to="https://dev.twitter.com/media/" />
+
+	<rule from="^https?://(?:www\.)?twitter\.jp/"
+		to="https://twitter.com/"/> 
 
 </ruleset>
