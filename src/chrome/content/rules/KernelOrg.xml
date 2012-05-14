@@ -12,6 +12,7 @@
 
 	<target host="kernel.org" />
 	<target host="*.kernel.org" />
+		<exclusion pattern="^http://(archive|mirrors|planet|vger|wireless)\." />
 	<target host="*.git.kernel.org" />
 	<target host="*.wiki.kernel.org" />
 
@@ -20,7 +21,24 @@
 	<rule from="^https?://kernel\.org/"
 		to="https://www.kernel.org/" />
 
-	<rule from="^http://(accounts|all|boot|bugzilla|eu|ftp|(?:[\w\-]+\.)?(?:git|wiki)|patchwork|pub|userweb|www)\.kernel\.org/"
+	<!--	Known subdomains:
+
+			- accounts
+			- all
+			- boot
+			- bugzilla
+			- eu
+			- ftp
+			- git
+			- [\w\-]+.git
+			- patchwork
+			- pub
+			- userweb
+			- wiki
+			- [\w\-]+.wiki
+			- www
+				-->
+	<rule from="^http://([\w\-\.]+)\.kernel\.org/"
 		to="https://$1.kernel.org/" />
 
 </ruleset>
