@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)joomlacode.org	(sec_error_reused_issuer_and_serial)
+
+		- joomla.org:
+
+			- api		(ssl_error_rx_record_too_long)
+			- cdn		(cert: *.https.internapcdn.net; 404; 403)
+			- community	(ssl_error_rx_record_too_long)
+			- docs		(ditto)
+			- demo		(cert: www.cloudaccess.net;
+					shows that domain's data)
+			- developer	(ssl_error_rx_record_too_long)
+			- events	(ditto)
+			- forum		(ditto)
+			- magazine	(ditto)
+			- people	(ditto)
+			- shop		(ditto)
+			- ux		(ditto)
+
+
+	ideas.joomla.org pages are handled in Uservoice-clients.xml.
+
+-->
+<ruleset name="Joomla (partial)">
+
+	<target host="joomla.org" />
+	<target host="*.joomla.org" />
+
+
+	<securecookie host="^.*\.joomla\.org$" name=".*" />
+
+
+	<!--	joomla.uservoice.com redirects back to ideas.joomla.org	-->
+
+	<rule from="^http://((?:extensions|resources|www)\.)?joomla\.org/"
+		to="https://$1joomla.org/" />
+
+	<rule from="^http://ideas\.joomla\.org/(css/|images/|packages/|track\.gif)"
+		to="https://joomla.uservoice.com/$1" />
+
+</ruleset>

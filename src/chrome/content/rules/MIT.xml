@@ -1,35 +1,49 @@
 <!--
+	See MIT-mismatches for problematic rules.
+
+
 	Nonfunctional:
 
 		- ocw.mit.edu		(Akamai; "Service Unavailable")
 		- tech.mit.edu		(cert: the-tech.mit.edu; 401)
 		- the-tech.mit.edu	(401)
 		- web.mit.edu		(self-signed; interrupted)
-
-
-	See MIT-mismatches for problematic rules.
+		- www.mit.edu		(interrupted)
 
 -->
 <ruleset name="Massachusetts Institute of Technology (partial)">
 
-	<target host="*.mit.edu"/>
-	<target host="www.*.mit.edu"/>
-	<target host="mitpressjournals.org"/>
-	<target host="www.mitpressjournals.org"/>
+	<target host="*.mit.edu" />
+	<target host="www.*.mit.edu" />
+	<target host="mitpressjournals.org" />
+	<target host="www.mitpressjournals.org" />
+
+
+	<!--	Observed cookie domains:
+
+			- mitpress
+			- wayf
+				-->
+	<securecookie host="^.*\.mit\.edu$" name=".*" />
 
 
 	<!--
-		mitpress.mit.edu	→	mitpress.edu
-		www.mitpress.mit.edu	→	mitpress.edu
+		libraries.mit.edu	→	libraries.mit.edu
+
+		library.mit.edu		→	library.mit.edu
+
+		mitpress.mit.edu	→	mitpress.mit.edu
+		www.mitpress.mit.edu	→	mitpress.mit.edu
 
 		scripts.mit.edu		→	scripts.mit.edu
-		www.scripts.mit.edu	→	www.scripts.mit.edu	-->
-	<rule from="^http://(?:(?:www\.)?(mitpres)|((?:www\.)?script))s\.mit\.edu/"
-		to="https://$1$2s.mit.edu/"/>
+		www.scripts.mit.edu	→	www.scripts.mit.edu
+
+		wayf.mit.edu		→	wayf.mit.edu
+						-->
+	<rule from="^https?://(?:(librar(?:ies|y)|(?:www\.)?scripts|wayf)|(?:www\.)?(mitpress))\.mit\.edu/"
+		to="https://$1$2$3.mit.edu/" />
 
 	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
-		to="https://www.mitpressjournals.org/$2"/>
-
-	<securecookie host="^mitpress\.mit\.edu$" name=".*"/>
+		to="https://www.mitpressjournals.org/$2" />
 
 </ruleset>

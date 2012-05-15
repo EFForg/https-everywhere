@@ -1,6 +1,22 @@
-<ruleset name="Change.org">
-  <target host="change.org" />
-  <target host="www.change.org" />
+<!--
+	s3.amazonaws.com/change-production
 
-  <rule from="^http://(?:www\.)?change\.org/" to="https://www.change.org/" />
+-->
+<ruleset name="Change.org">
+
+	<target host="change.org" />
+	<target host="*.change.org" />
+
+
+	<securecookie host="^.*\.change\.org$" name=".*" />
+
+
+	<rule from="^http://(www\.)?change\.org/"
+		to="https://$1change.org/" />
+
+	<!--	change.zendesk.com pages redirect back to helpdesk.
+		helpdesk pages redirect to http.	-->
+	<rule from="^https?://helpdesk\.change\.org/(generated|images|system)/"
+		to="https://change.zendesk.com/$1/" />
+
 </ruleset>

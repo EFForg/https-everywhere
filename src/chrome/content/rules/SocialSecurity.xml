@@ -1,16 +1,27 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+-->
 <ruleset name="US Social Security Administration">
+
 	<target host="socialsecurity.gov" />
-	<target host="www.socialsecurity.gov" />
+	<target host="*.socialsecurity.gov" />
+		<exclusion pattern="^https://ftp\." />
 	<target host="ssa.gov" />
-	<target host="ftp.ssa.gov" />
-	<target host="secure.ssa.gov" />
-	<target host="stats.ssa.gov" />
-	<target host="www.ssa.gov" />
+	<target host="*.ssa.gov" />
+
 
 	<securecookie host="^((www)?\.)?socialsecurity\.gov$" name=".+" />
 	<securecookie host="^((ftp|secure|stats|www)?\.)?ssa\.gov$" name=".+" />
 
-	<rule from="^((http://(www\.)?)|(https://))socialsecurity\.gov/" to="https://www.socialsecurity.gov/" />
-	<rule from="^((http://((ftp|www)\.)?)|https://(www\.)?)ssa\.gov/" to="https://www.socialsecurity.gov/" />
-	<rule from="^http://(secure|stats)\.ssa\.gov/" to="https://$1.ssa.gov/" />
+
+	<rule from="^https?://(?:www\.)?socialsecurity\.gov/"
+		to="https://www.socialsecurity.gov/" />
+
+	<rule from="^https?://(?:ftp\.|www\.)?ssa\.gov/"
+		to="https://www.socialsecurity.gov/" />
+
+	<rule from="^http://s(ecure|tats)\.ssa\.gov/"
+		to="https://s$1.ssa.gov/" />
+
 </ruleset>

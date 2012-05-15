@@ -1,27 +1,100 @@
-<!--	!functional:
-		- pages.ebay.com		(cert: giftcertificates.ebay.com, spages.half.ebay.com)
-		- i.ebayimg.com			(timeout; doesn't translate directly to securepics)
-		- include.ebaystatic.com	(Akamai; "Service Unavailable"; nothing at include-origin nor origin-include)
-		- ir.ebaystatic.com		(Akamai; works; nothing at ir-origin nor origin-ir)
-		- thumbs.ebaystatic.com		(Akamai; "An error occurred")
+<!--
+	For problematic rules, see EBay-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- announcements.ebay.com
+		- answercenter.ebay.com
+		- cgi5.ebay.com
+		- community.ebay.com
+		- deals.ebay.com
+		- forums.ebay.com		(at least some paths redirect to http)
+		- garden.ebay.com
+		- groups.ebay.com
+		- motors.ebay.com
+		- hub.motors.ebay.com
+		- my.ebay.com
+		- parts.motors.ebay.com
+		- qu.ebay.com
+		- shop.ebay.com
+		- stores.ebay.com
+		- viv.ebay.com
+		- i.ebayimg.com			(times out; doesn't translate directly to securepics)
+		- (www.)ebayinc.com		(times out)
+		- ebay-stories.com		(ditto)
+
 -->
 <ruleset name="eBay (partial)">
 
-	<target host="certificates.ebay.com"/>
-	<target host="giftcertificates.ebay.com"/>
-	<target host="spages.half.ebay.com"/>
-	<target host="ocs.ebay.com"/>
-	<target host="p.ebaystatic.com"/>
-	<target host="q.ebaystatic.com"/>
-	<target host="pics.ebaystatic.com"/>
-	<target host="securepics.ebaystatic.com"/>
+	<target host="*.ebay.com" />
+	<target host="spages.half.ebay.com" />
+	<target host="ebayclassifieds.com" />
+	<target host="www.ebayclassifieds.com" />
+	<target host="*.ebayrtm.com" />
+	<target host="srv.*.ebayrtm.com" />
+	<target host="srx.*.ebayrtm.com" />
+	<target host="ebaystatic.com" />
+	<target host="*.ebaystatic.com" />
 
-	<!--	spages.help seems identical to pages.ebay.com,
-		except for being styled differently.		-->
-	<rule from="^http://((?:gift)?certificates|ocs|spages\.half)\.ebay\.com/"
+
+	<securecookie host="^\.ebayrtm\.com$" name="^CT$" />
+
+
+	<rule from="^http://((?:gift)?certificates|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
 		to="https://$1.ebay.com/"/>
 
-	<rule from="^http://(?:[pq]|(?:secure)?pics)\.ebaystatic\.com/"
+	<rule from="^https?://s?rtm\.ebay\.com/"
+		to="https://srtm.ebay.com/" />
+
+	<!--	thumbs\d?.ebaystatic:	Akamai, "An error occurred"
+		thumbs.ebay:		times out	-->
+	<rule from="^https?://thumbs\d?\.ebay(?:static)?\.com/"
+		to="https://securethumbs.ebay.com/" />
+
+	<!--	Cert only matches *.ebayclassifieds.	-->
+	<rule from="^https?://(?:www\.)?ebayclassifieds\.com/"
+		to="https://ebayclassifieds.com/" />
+
+	<rule from="^http://static(\d)?\.ebayclassifieds\.com/"
+		to="https://static$1.ebayclassifieds.com/" />
+
+	<!--	Cert doesn't match srx.
+
+		Atom matches:
+
+			- at
+			- au
+			- befr
+			- benl
+			- ca
+			- cafr
+			- ch
+			- de
+			- ebaymotors
+			- es
+			- fr
+			- hk
+			- ie
+			- in
+			- it
+			- main
+			- my
+			- nl
+			- nz
+			- ph
+			- pl
+			- sg
+			- uk
+				-->
+	<rule from="^https?://sr[vx](\.\w+)?\.ebayrtm\.com/"
+		to="https://srv$1.ebayrtm.com/" />
+
+	<!--	!secure: Akamai	-->
+	<rule from="^https?://(?:secure)?(include|ir|pics|rtm)\.ebaystatic\.com/"
+		to="https://secure$1.ebaystatic.com/" />
+
+	<rule from="^https?://[pq]\.ebaystatic\.com/"
 		to="https://securepics.ebaystatic.com/"/>
 
 </ruleset>

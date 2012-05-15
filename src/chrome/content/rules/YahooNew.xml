@@ -1,7 +1,6 @@
 <!--
 	Undiscovered:
 		- geo.yahoo.com
-		- yui.yahooapis.com/combo
 		- d.yimg.com/nl/
 		- ec.yimg.com/ec?url=
 		- ext.yimg.com/ec?url=
@@ -25,6 +24,7 @@
 	<target host="rocketmail.com"/>
 	<target host="www.rocketmail.com"/>
 	<target host="*.yahoo.com"/>
+	<target host="uk.adserver.yahoo.com" />
 	<target host="cookex.amp.yahoo.com"/>
 	<target host="*.analytics.yahoo.com"/>
 	<target host="global.ard.yahoo.com"/>
@@ -34,9 +34,11 @@
 	<target host="*.europe.yahoo.com"/>
 	<target host="secure.help.yahoo.com"/>
 	<target host="us.lrd.yahoo.com"/>
-	<target host="us.rd.yahoo.com"/>
 	<target host="*.mail.yahoo.com"/>
+	<target host="ucs.netsvs.yahoo.com" />
 	<target host="rtb.pclick.yahoo.com"/>
+	<target host="us.rd.yahoo.com"/>
+	<target host="order.smallbusiness.yahoo.com" />
 	<target host="yui.yahooapis.com" />
 	<target host="*.yahoofs.com"/>
 	<target host="*.yimg.com"/>
@@ -89,7 +91,7 @@
 	<rule from="^https?://java\.europe\.yahoo\.com/uk/"
 		to="https://s.yimg.com/zz/java.europe.yahoo.com/uk/"/>
 
-	<rule from="^http://(cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|mail|rtb\.pclick|sec)\.yahoo\.com/"
+	<rule from="^http://(uk\.adserver|cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|mail|ucs\.netsvs|rtb\.pclick|sec|order\.smallbusiness)\.yahoo\.com/"
 		to="https://$1.yahoo.com/"/>
 
 	<rule from="^https?://(?:secure\.)?help\.yahoo\.com/"
@@ -98,8 +100,21 @@
 	<rule from="^http://(\w+(?:\.\w+)?)\.mail\.yahoo\.com/"
 		to="https://$1.mail.yahoo.com/"/>
 
-	<rule from="^https?://yui\.yahooapis\.com/([\d\.]+)/"
-		to="https://s.yimg.com/zz/d/lib/yui/$1/" />
+	<!--	Cert only matches us.rd,
+		all appear equivalent.	-->
+	<rule from="^https?://rds?\.yahoo\.com/"
+		to="https://us.rd.yahoo.com/" />
+
+	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
+		to="https://smallbusiness.yahoo.com/servicecheck.php" />
+
+	<!--	e.g.
+		http://yui.yahooapis.com/combo?2.8.0r4/build/button/assets/skins/sam/button.css&2.8.0r4/build/container/assets/skins/sam/container.css
+		http://yui.yahooapis.com/2.8.0r4/build/button/assets/skins/sam/button.css
+				-->
+	<rule from="^https?://yui\.yahooapis\.com/"
+		to="https://s.yimg.com/zz/d/lib/yui/" />
+
 
 	<rule from="^http://([\w\-]+)\.yahoofs\.com/"
 		to="https://$1.yahoofs.com/"/>
@@ -118,7 +133,7 @@
 	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(cv|dh|k[jx]|lo|pj|zz)/"
 		to="https://s.yimg.com/$1/"/>
 
-	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(bt|dg|eur\.yimg\.com|[ghiq]|kq|os|pv|r[uz])/"
+	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(bt|dg|eur\.yimg\.com|[ghiqt]|kq|lm|os|pv|qz|r[uz])/"
 		to="https://s.yimg.com/zz/$1/"/>
 
 	<rule from="^http://s(ec)?\.yimg\.com/"
