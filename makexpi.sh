@@ -16,6 +16,8 @@ APP_NAME=https-everywhere
 
 cd "`dirname $0`"
 
+[ -d pkg ] || mkdir pkg
+
 # If the command line argument is a tag name, check that out and build it
 if [ -n "$1" ]; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
