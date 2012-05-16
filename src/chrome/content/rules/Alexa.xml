@@ -1,18 +1,36 @@
-<!--	There's a bucket at s3.amazonaws.com/alexa/.
+<!--
+	There's a bucket at s3.amazonaws.com/alexa/.
 
-	d1d024ntqri789.cloudfront.net
-	d5nxst8fruw4z.cloudfront.net
+
+	CDN buckets:
+
+	- s3.amazonaws.com/com.alexa.pcache/
+		- Equivalent to d1d024ntqri789.cloudfront.net
+	- s3.amazonaws.com/com.alexametrics.pixel/
+		- Equivalent to d5nxst8fruw4z.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- traffic
+
 -->
 <ruleset name="Alexa (partial)">
 
-	<target host="alexa.com"/>
-	<target host="*.alexa.com"/>
+	<target host="alexa.com" />
+	<target host="*.alexa.com" />
+	<target host="pixel.alexametrics.com" />
 
-	<rule from="^http://(www\.)?alexa\.com/images/"
-		to="https://$1alexa.com/images/"/>
 
-	<rule from="^http://pcache\.alexa\.com/"
-		to="https://d1d024ntqri789.cloudfront.net/"/>
+	<rule from="^http://(www\.)?alexa\.com/(favicon\.ico|css/|images/|secure/|\w+/wp-content/)"
+		to="https://$1alexa.com/$2" />
+
+	<rule from="^https?://([ip])cache\.alexa\.com/"
+		to="https://s3.amazonaws.com/com.alexa.$1cache/" />
+
+	<rule from="^https?://pixel\.alexametrics\.com/"
+		to="https://s3.amazonaws.com/com.alexametrics.pixel/" />
+
 
 </ruleset>
 
