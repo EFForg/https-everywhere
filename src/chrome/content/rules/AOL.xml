@@ -7,6 +7,7 @@
 
 	Nonfunctional:
 
+		- euportal.aolcdn.com		(Akamai; "Service Unavailable")
 		blogsmithmedia.com		(Akamai; "Service Unavailable")
 		(massively.|www.)joystiq.com
 		(www.)weblogsinc.com
@@ -31,6 +32,8 @@
 	<target host="*.aol.co.uk"/>
 	<target host="*.aolcdn.com" />
 		<exclusion pattern="^http://o\.aolcdn\.com/(myfeeds|portaleu)/"/>
+	<target host="netscape.com" />
+	<target host="*.netscape.com" />
 
 
 	<!--	.my.screenname.aol.com		-->
@@ -40,28 +43,37 @@
 
 	<!--	!www doesn't work
 		cdn: Akamai		-->
-	<rule from="^http://(?:cdn\.|www\.)?aim\.com/"
+	<rule from="^https?://(?:cdn\.|www\.)?aim\.com/"
 		to="https://www.aim.com/"/>
 
-	<rule from="^http://(?:www\.)?aol\.com/(favicon\.ico|video/)"
+	<rule from="^https?://(?:www\.)?aol\.com/(favicon\.ico|video/)"
 		to="https://www.aol.com/$1"/>
 
-	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|new|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
+	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|netscape|new|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
 		to="https://$1.aol.com/" />
 
-	<rule from="^http://(?:exp)?api\.oscar\.aol\.com/"
+	<rule from="^https?://(?:exp)?api\.oscar\.aol\.com/"
 		to="https://api.oscar.aol.com/"/>
 
-	<rule from="^http://aol\.co\.uk/"
+	<rule from="^https?://aol\.co\.uk/"
 		to="https://www.aol.co.uk/"/>
 
 	<rule from="^http://(rs|www)\.aol\.co\.uk/"
 		to="https://$1.aol.co.uk/"/>
 
-	<rule from="^http://o\.aolcdn\.com/"
+	<rule from="^https?://o\.aolcdn\.com/"
 		to="https://s.aolcdn.com/" />
 
 	<rule from="^http://s(ns-static)?\.aolcdn\.com/"
 		to="https://s$1.aolcdn.com/" />
+
+	<!--	- Doesn't work over https.
+		- Redirects as so.
+					-->
+	<rule from="^https?://(?:(?:home|www)\.)?netscape\.com/"
+		to="https://netscape.aol.com/" />
+
+	<rule from="^https?://(?:web)?mail\.netscape\.com/"
+		to="https://my.screenname.aol.com/_cqr/login/login.psp?sitedomain=sns.webmail.aol.com" />
 
 </ruleset>
