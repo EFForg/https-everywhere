@@ -19,13 +19,19 @@ cd "`dirname $0`"
 [ -d pkg ] || mkdir pkg
 
 # If the command line argument is a tag name, check that out and build it
-if [ -n "$1" ]; then
+if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
 	SUBDIR=checkout
 	[ -d $SUBDIR ] || mkdir $SUBDIR
 	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
+  # Use the version of the build script that was current when that
+  # tag/release/branch was made.
+  ./makexpi.sh $1 --no-recurse && exit 0
+  # The fact that the above works even when the thing you are building predates
+  # support for --no-recurse in this script is (1) non-intuitive; (2) crazy; and (3)
+  # involves two pristine checkouts of $1 within each other
 fi
 
 if [ -f utils/trivial-validate.py ]; then
