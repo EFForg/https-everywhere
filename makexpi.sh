@@ -19,13 +19,32 @@ cd "`dirname $0`"
 [ -d pkg ] || mkdir pkg
 
 # If the command line argument is a tag name, check that out and build it
-if [ -n "$1" ]; then
+if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
 	SUBDIR=checkout
 	[ -d $SUBDIR ] || mkdir $SUBDIR
 	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
+  # Use the version of the build script that was current when that
+  # tag/release/branch was made.
+  ./makexpi.sh $1 --no-recurse || exit 1
+  # The fact that the above works even when the thing you are building predates
+  # support for --no-recurse in this script is (1) non-intuitive; (2) crazy; and (3)
+  # involves two pristine checkouts of $1 within each other
+
+  # Now escape from the horrible mess we've made
+  cd ..
+	XPI_NAME="$APP_NAME-$1.xpi"
+  # In this mad recursive situation, sometimes old buggy build scripts make
+  # the xpi as ./pkg :(
+  if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
+    echo Recovering from hair-raising recursion:
+    echo cp $SUBDIR/pkg pkg/$XPI_NAME
+    cp $SUBDIR/pkg pkg/$XPI_NAME
+  fi
+  rm -rf $SUBDIR
+  exit 0
 fi
 
 if [ -f utils/trivial-validate.py ]; then
