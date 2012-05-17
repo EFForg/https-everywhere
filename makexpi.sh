@@ -30,6 +30,8 @@ fi
 
 if [ -f utils/trivial-validate.py ]; then
 	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+elif [ -f trivial-validate.py ] ; then
+	VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
 elif [ -x utils/trivial-validate ] ; then
   # This case probably never happens
 	VALIDATE=./utils/trivial-validate
