@@ -10,9 +10,13 @@
 	Nonfunctional:
 		- (advertising|my|news|sports).yahoo.com	(mismatch, "Your requested URL was not found.")
 		- docs.yahoo.com				(times out)
+		- fr.docs.yahoo.com
 		- everything.yahoo.com				(times out)
 		- ((ichart.)finance|suggestions).yahoo.com
+		- info.yahoo.com				(mismatch, redirects to http)
+		- movies.yahoo.com				(mismatch, "Your requested URL was not found.")
 		- img.omg.yahoo.com		(times out)
+		- yhoo.it			(times out)
 
 -->
 <ruleset name="Yahoo! (experimental)" default_off="needs testing">
@@ -39,8 +43,10 @@
 	<target host="rtb.pclick.yahoo.com"/>
 	<target host="us.rd.yahoo.com"/>
 	<target host="order.smallbusiness.yahoo.com" />
+	<target host="uk.health.lifestyle.yahoo.net" />
 	<target host="yui.yahooapis.com" />
 	<target host="*.yahoofs.com"/>
+	<target host="yhoo.it" />
 	<target host="*.yimg.com"/>
 	<target host="*.l.yimg.com"/>
 	<!--	* for cross-domain cookie.	-->
@@ -94,6 +100,9 @@
 	<rule from="^http://(uk\.adserver|cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|mail|ucs\.netsvs|rtb\.pclick|sec|order\.smallbusiness)\.yahoo\.com/"
 		to="https://$1.yahoo.com/"/>
 
+	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
+		to="https://s.yimg.com/lq/lib/lsl/i/uk/" />
+
 	<rule from="^https?://(?:secure\.)?help\.yahoo\.com/"
 		to="https://secure.help.yahoo.com/"/>
 
@@ -105,6 +114,11 @@
 	<rule from="^https?://rds?\.yahoo\.com/"
 		to="https://us.rd.yahoo.com/" />
 
+	<!--	This needs a craptonne of effort to work, as *every* link
+		points towards s.yimg.com/foo instead of shine.yahoo.com/foo.
+	<rule from="^https?://shine\.yahoo\.com/"
+		to="https://s.yimg.com/zz/shine.yahoo.com/" /-->
+
 	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
 		to="https://smallbusiness.yahoo.com/servicecheck.php" />
 
@@ -115,9 +129,12 @@
 	<rule from="^https?://yui\.yahooapis\.com/"
 		to="https://s.yimg.com/zz/d/lib/yui/" />
 
-
 	<rule from="^http://([\w\-]+)\.yahoofs\.com/"
 		to="https://$1.yahoofs.com/"/>
+
+	<!--	Just like bit.ly, only inferior.	-->
+	<rule from="^https?://yhoo\.it/"
+		to="https://bit.ly/" />
 
 	<rule from="^https?://ads\.yimg\.com/"
 		to="https://s.yimg.com/zz/"/>
@@ -133,7 +150,7 @@
 	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(cv|dh|k[jx]|lo|pj|zz)/"
 		to="https://s.yimg.com/$1/"/>
 
-	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(bt|dg|eur\.yimg\.com|[ghiqt]|kq|lm|os|pv|qz|r[uz])/"
+	<rule from="^https?://(?:(?:a\.)?l\d?\|us\.js1).yimg\.com/(bt|dg|(?:eur|us)\.yimg\.com|[ghiqt]|ho|j[hn]|kq|lm|nn|ml|os|pv|qz|r[uwz])/"
 		to="https://s.yimg.com/zz/$1/"/>
 
 	<rule from="^http://s(ec)?\.yimg\.com/"
