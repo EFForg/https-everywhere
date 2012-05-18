@@ -1,0 +1,36 @@
+<!--
+	For problematic rules, see Whiskey-Media-mismatches.xml.
+
+
+	dh3vbjnk0bnfa.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- comicvine.com		(cert: auth.whiskeymedia.com; redirects there)
+		- www.comicvine.com	(ditto)
+		- giantbomb.com		(cert: auth.whiskeymedia.com; redirects there)
+		- store.giantbomb.com	(cert: *.myshopify.com; redirects to http)
+		- www.giantbomb.com	(cert: auth.whiskeymedia.com; redirects there)
+		- tested.com
+		- www.tested.com
+		- whiskeymedia.com	(cert: auth.whiskeymedia.com; redirects there)
+		- www.whiskeymedia.com	(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Whiskey Media (partial)">
+
+	<target host="*.comicvine.com" />
+	<target host="media.giantbomb.com" />
+	<target host="media.screened.com" />
+	<target host="auth.whiskeymedia.com" />
+	<target host="media.corp.whiskeymedia.com" />
+
+
+	<rule from="^http://auth\.(comicvine|whiskeymedia)\.com/"
+		to="https://auth.$1.com/" />
+
+	<rule from="^https?://media\.(comicvine|giantbomb|screened|corp\.whiskeymedia)\.com/"
+		to="https://s3.amazonaws.com/media.$1.com/" />
+
+</ruleset>
