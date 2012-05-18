@@ -1,0 +1,42 @@
+<!--
+	For problematic rules, see Ning-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- status	(times out)
+
+-->
+<ruleset name="Ning (partial)">
+
+	<target host="ning.com" />
+	<target host="*.ning.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.developer.ning.com" />
+
+
+	<securecookie host="^.*\.ning\.com$" name=".*" />
+
+
+	<!--	Cert only matches *.ning.com	-->
+	<rule from="^https?://(?:www\.)?ning\.com/(\d\.\d\d\.\d\d\.\d/|(?:about|blog|help|main)(?:$|/)|payment/|\w+/wp-content/)"
+		to="https://www.ning.com/$1" />
+
+	<rule from="^http://(about|build|developer|go|help)\.ning\.com/"
+		to="https://$1.ning.com/" />
+
+	<!--	Times out.	-->
+	<rule from="^https?://help-o\.ning\.com/"
+		to="https://help.ning.com/" />
+
+	<rule from="^http://creators\.ning\.com/([\w\-]+/)?(cs|image)s/"
+		to="https://creators.ning.com/$1$2s/" />
+
+	<!--	static: Akamai; "Service Unavailable"	-->
+	<rule from="^https?://static\.ning\.com/www/(\d\.\d\d\.\d\d\.\d)/"
+		to="https://www.ning.com/$1/xn_resources/" />
+
+	<rule from="^http://uk\.ning\.com/favicon\.ico"
+		to="https://uk.ning.com/favicon.ico" />
+
+</ruleset>
