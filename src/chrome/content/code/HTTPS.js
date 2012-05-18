@@ -38,9 +38,9 @@ const HTTPS = {
 
     var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
-    // XXX This used to be (c2.redirectionLimit == 1), but that's very
+    // This used to be (c2.redirectionLimit == 1), but that's very
     // inefficient in a case (eg amazon) where this may happen A LOT.
-    // Rather than number like 10, we should use the starting value
+    // FIXME Rather than a number like 10, we should use the starting value
     // in network.http.redirection-limit minus some counter
     if (c2.redirectionLimit < 10) {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
@@ -59,6 +59,9 @@ const HTTPS = {
         var cr = new ChannelReplacement(channel, uri);
         cr.replace(true,null);
         cr.open();
+        // XXX If we had a way to tell other extensions that we were replacing
+        // their channels, perhaps this would be a good place to do it?
+        // https://trac.torproject.org/projects/tor/ticket/3190
         HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
       });
       return true;
@@ -112,10 +115,10 @@ const HTTPS = {
   },
 
   forceURI: function(uri, fallback, ctx) {
-  // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
-  // per the ContentPolicy API.
-  // Returns true if everything worked out (either correct replacement or no 
-  // replacement needed).  Retun False if all attempts to rewrite failed.
+    // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
+    // per the ContentPolicy API.
+    // Returns true if everything worked out (either correct replacement or no 
+    // replacement needed).  Retun False if all attempts to rewrite failed.
     
     // first of all we need to get the applicable rules list to keep track of
     // what rulesets might have applied to this page
