@@ -5,55 +5,56 @@
 		- AOL-Advertising.xml
 
 
-	ToDo: find Akamai buckets
+	ToDo: find Akamai buckets.
+
 -->
 <ruleset name="AOL (mismatches)" default_off="mismatch">
 
 	<!--	Akamai	-->
-	<target host="adinfo.aol.com"/>
+	<target host="adinfo.aol.com" />
 	<!--	cert: misc.blogsmith.aol.com	-->
 	<target host="corp.aol.com" />
-	<target host="dev.aol.com"/>
-	<target host="legal.aol.com"/>
-	<target host="privacy.aol.com"/>
+	<target host="dev.aol.com" />
+	<target host="legal.aol.com" />
+	<target host="privacy.aol.com" />
 	<target host="aolcdn.com" />
-	<target host="vivad.aolcdn.com"/>
-	<target host="www.aolcdn.com"/>
+	<target host="vivad.aolcdn.com" />
+	<target host="www.aolcdn.com" />
 	<target host="blogsmithmedia.com" />
 	<target host="www.blogsmithmedia.com" />
-	<target host="mydaily.co.uk"/>
-	<target host="www.mydaily.co.uk"/>
-	<target host="an.tacoda.net"/>
+	<!--
+		Moved to Akamai and broke.
+	<target host="mydaily.co.uk" />
+	<target host="www.mydaily.co.uk" /-->
+	<target host="an.tacoda.net" />
 
 
-	<securecookie host="^(corp|dev|privacy)\.aol\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?mydaily\.co\.uk$" name=".*"/>
+	<securecookie host="^(corp|dev|privacy)\.aol\.com$" name=".*" />
+	<securecookie host="^(.*\.)?mydaily\.co\.uk$" name=".*" />
 
 
 	<rule from="^http://(adinfo|corp|dev|legal|privacy)\.aol\.com/"
-		to="https://$1.aol.com/"/>
+		to="https://$1.aol.com/" />
 
-	<rule from="^http://aolcdn\.com/"
+	<rule from="^https?://(?:vivad|www)?aolcdn\.com/"
 		to="https://www.aolcdn.com/"/>
 
-	<rule from="^http://(vivad|www)\.aolcdn\.com/"
-		to="https://www.aolcdn.com/" />
-
-	<!--	!www doesn't work.
-		Images throw "Service Unavailable".
+	<!--	- !www doesn't work.
+		- Images throw "Service Unavailable".
 	
 		Two examples of working paths:
 
 			- blogsmithmedia.com/corp.aol.com/media/jquery-fancybox_1-3-1.css
 			- blogsmithmedia.com/corp.aol.com/media/screen.css?v=1
 										-->
-	<rule from="^http://(?:www\.)?blogsmithmedia\.com/corp\.aol\.com/media/([\w\-\.]+)\.css(\?v=\d)?$"
+	<rule from="^https?://(?:www\.)?blogsmithmedia\.com/corp\.aol\.com/media/([\w\-\.]+)\.css(\?v=\d)?$"
 		to="https://www.blogsmithmedia.com/corp.aol.com/media/$1.css$2" />
 
-	<rule from="^http://(?:www\.)?mydaily\.co\.uk/"
-		to="https://www.mydaily.co.uk/"/>
+	<!--	Moved to Akamai and broke: "An error occurred"
+	<rule from="^https?://(?:www\.)?mydaily\.co\.uk/"
+		to="https://www.mydaily.co.uk/" /-->
 
 	<rule from="^http://an\.tacoda\.net/"
-		to="https://an.tacoda.net/"/>
+		to="https://an.tacoda.net/" />
 
 </ruleset>
