@@ -8,6 +8,7 @@ redbooks. -->
 	<target host="*.ibm.com"/>
 	<target host="publib.boulder.ibm.com" />
 	<target host="www.redbooks.ibm.com"/>
+	<target host="redirect.www.ibm.com" />
 
 
 	<securecookie host="^(.*\.)?ibm\.com$" name=".*"/>
@@ -16,6 +17,16 @@ redbooks. -->
 	<rule from="^http://(dw1|1\.www)\.s81c\.com/"
 		to="https://$1.s81c.com/"/>
 
+	<!--	- Redirects to http before en/us/
+		- https://trac.torproject.org/projects/tor/ticket/5686
+					-->
+	<rule from="^https?://(?:www\.)?ibm.com/$"
+		to="https://www.ibm.com/us/en/" />
+
+	<!--	!www:
+			- cert: redirect.www.ibm.com
+			- Redirects to www
+					-->
 	<rule from="^http://(?:www\.)?ibm\.com/"
 		to="https://www.ibm.com/"/>
 
@@ -24,7 +35,7 @@ redbooks. -->
 	<rule from="^https?://www-306\.ibm.com/software/webservers/httpservers/support/"
 		to="https://www-947.ibm.com/support/entry/portal/Overview/Software/WebSphere/IBM_HTTP_Server" />
 
-	<rule from="^http://(publib\.boulder|www\.redbooks|www-(01|947))\.ibm\.com/"
+	<rule from="^http://(publib\.boulder|www\.redbooks|redirect\.www|www-(01|947))\.ibm\.com/"
 		to="https://$1.ibm.com/" />
 
 </ruleset>
