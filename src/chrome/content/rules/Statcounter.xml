@@ -5,32 +5,39 @@
 
 	www-beta implies that statcounter's planning to switch to pantherssl, which would
 	result in it breaking unless we can find its ID.
+
 -->
 <ruleset name="Statcounter">
 
 	<target host="statcounter.com" />
 	<target host="*.statcounter.com" />
 		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html	-->
-		<exclusion pattern="^http://gs\.statcounter\.com/($|MSLine\.swf)"/>
+		<exclusion pattern="^http://gs\.statcounter\.com/($|MSLine\.swf)" />
 
-	<securecookie host="^(.*\.)?statcounter\.com$" name=".*"/>
 
+	<securecookie host="^(.*\.)?statcounter\.com$" name=".*" />
+
+
+	<!--	Observed subdomains:
+
+			- c
+				-->
 	<rule from="^http://([^/:@\.]+\.)?statcounter\.com/"
-		to="https://$1statcounter.com/" downgrade="1" />
+		to="https://$1statcounter.com/" />
 
 	<rule from="^https?://www\.statcounter\.com/"
-		to="https://statcounter.com/"/>
+		to="https://statcounter.com/" />
 
 	<!--	Bug 5576	-->
 
 	<!--	images 404 over https
 		css breaks for some reason	-->
 	<rule from="^https?://gs.statcounter.com/(cs|image)s/"
-		to="https://statcounter.com/$1s/"/>
+		to="https://statcounter.com/$1s/" />
 
 	<!--	Pantherssl/CDNetworks	-->
 	<rule from="^https?://www-beta\.statcounter\.com/"
-		to="https://statcounter.com/"/>
+		to="https://statcounter.com/" />
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html	-->
 	<rule from="^https://gs\.statcounter\.com/($|MSLine\.swf)"
