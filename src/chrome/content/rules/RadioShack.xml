@@ -1,7 +1,87 @@
-<!-- Most requests sent back to HTTP. -->
-<ruleset name="RadioShack (broken)" default_off="HTTPS support generally absent">
-  <target host="radioshack.com" />
-  <target host="www.radioshack.com" />
+<!--
+	Most requests sent back to HTTP.
 
-  <rule from="^http://(?:www\.)?radioshack\.com/" to="https://www.radioshack.com/"/>
+
+	These are handled Thomson-Reuters-clients.xml:
+
+	- ir.radioshackcorporate.com
+	- media.radioshackcorporate.com
+
+
+	Nonfunctional domains:
+
+		- cdn.jobsatradioshack.com	(cert: edgecastcdn.net; 404)
+		- www.jobsatradioshack.com	(self-signed; shows blank page)
+		- support.radioshack.com	(times out)
+		- www.radioshackcorporation.com	(self-signed; shows blank page)
+
+-->
+<ruleset name="RadioShack (partial)">
+
+	<target host="franchiseradioshack.cloudapp.net" />
+	<target host="franchiseradioshack.com" />
+	<target host="www.franchiseradioshack.com" />
+	<target host="radioshack.com" />
+	<target host="*.radioshack.com" />
+		<exclusion pattern="^http://www\.radioshack\.com/($|category/|family/|home/|shop/)" />
+	<target host="radioshackwireless.com" />
+	<target host="www.radioshackwireless.com" />
+
+
+	<securecookie host="^radioshackwireless\.com$" name=".*" />
+
+
+	<!--	Cert mismatch.	-->
+	<rule from="^https?://franchiseradioshack\.cloudapp\.net/"
+		to="https://www.franchiseradioshack.com/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?franchiseradioshack\.com/"
+		to="https://www.franchiseradioshack.com/" />
+
+	<!--
+		These paths redirect to http:
+
+			- category/index.jsp?categoryId=
+			- family/index.jsp?categoryId=
+			- home/index.jsp?rdir=
+			- shop/index.jsp?categoryId=
+
+
+		These paths don't redirect to http (shh!):
+
+			- $
+			- affiliate
+			- checkout/
+			- cms_widgets/
+			- coreg/
+			- corp
+			- emailAProduct
+			- graphics
+			- helpdesk
+			- images/
+			- include/
+			- min-cat/
+			- product
+			- search
+			- sitemap
+			- storeLocator3
+			- uc
+
+
+		Cert only matches www.
+					
+	<rule from="^https?://(?:www\.)?radioshack\.com/($|(?:affiliate|checkout|cms_widgets|coreg|corp|emailAProduct|graphics|helpdesk|images|include|min-cat|product|search|sitemap|storeLocator3|uc)(?:$|/|\?))"
+		to="https://www.radioshack.com/$1" /-->
+
+	<rule from="^https?://(?:www\.)?radioshack\.com/"
+		to="https://www.radioshack.com/" />
+
+	<rule from="^http://blog\.radioshack\.com/"
+		to="https://blog.radioshack.com/" />
+
+	<!--	Cert doesn't match www.	-->
+	<rule from="^https?://(?:www\.)?radioshackwireless\.com/"
+		to="https://radioshackwireless.com/" />
+
 </ruleset>

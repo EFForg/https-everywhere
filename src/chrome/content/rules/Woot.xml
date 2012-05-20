@@ -1,6 +1,66 @@
-<ruleset name="Woot (broken)" default_off="completely broken">
-  <target host="woot.com" />
-  <target host="www.woot.com" />
+<!--
+	s3.amazonaws.com/images.deals.woot.com/
+	s3.amazonaws.com/image.w00t.com/
+		- Equivalent to d15xkf1ye01a0m.cloudfront.net
+	s3.amazonaws.com/gzip.static.woot.com/
+	s3.amazonaws.com/wootblogimages/
 
-  <rule from="^http://(?:www\.)?woot\.com/" to="https://www.woot.com/"/>
+-->
+<ruleset name="Woot (partial)">
+
+	<target host="w00t.com" />
+	<target host="*.w00t.com" />
+	<target host="woot.com" />
+	<target host="*.woot.com" />
+		<!--exclusion pattern="^http://www\.woot\.com/(forums|(jobs|recalls|sponsorus|terms|writeus)\.aspx|User)" /-->
+	<target host="images.deals.woot.com" />
+	<target host="gzip.static.woot.com" />
+
+
+	<!--	403s :(
+	<rule from="^https?://image(?:cache)?\.w00t\.com/"
+		to="https://s3.amazonaws.com/image.w00t.com/" />
+
+	
+		These paths redirect to http:
+
+			- blog
+			- forums
+			- jobs.aspx
+			- recalls.aspx
+			- sponsorus.aspx
+			- terms.aspx
+			- User
+			- writeus.aspx
+
+		These paths don't redirect to http (shh!):
+
+			- account/login?
+			- App_Themes
+			- Blog
+			- blog/rss.aspx
+			- Forums
+			- images
+			- Images
+			- Jobs.aspx
+			- Recalls.aspx
+			- Search
+			- SponsorUs.aspx
+			- Terms.aspx
+			- wantone
+			- WhatIsWoot.aspx
+			- WriteUs.aspx
+
+
+		Cert only matches *.woot.com.
+					-->
+	<rule from="^https?://(?:www\.)?w[0o]{2}t\.com/((?:account|App_Themes|Blog|Forums|[iI]mages|Search)(?:$|/)|(?:blog/rss|Jobs|Recalls|SponsorUs|Terms|WhatIsWoot|WriteUs)\.aspx)"
+		to="https://www.woot.com/$1" />
+
+	<rule from="^http://(account|members)\.woot\.com/"
+		to="https://$1.woot.com/" />
+
+	<rule from="^https?://(avatar|images\.deals|(?:gzip\.)?static)\.woot\.com/"
+		to="https://s3.amazonaws.com/$1.woot.com/" />
+
 </ruleset>

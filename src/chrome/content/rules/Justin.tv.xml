@@ -1,11 +1,27 @@
-<!--	ToDo: find Akamai buckets
--->
-<ruleset name="Justin.tv (partial)" default_off="Akamai certificate">
+<ruleset name="Justin.tv (partial)">
 
-	<target host="s.jtvnw.net"/>
-	<target host="static-cdn.jtvnw.net"/>
+	<target host="*.jtvnw.net" />
+	<target host="justin.tv" />
+	<target host="*.justin.tv" />
+	<target host="twitch.tv" />
+	<target host="www.twitch.tv" />
 
-	<rule from="^http://s(tatic-cdn)?\.jtvnw\.net/"
-		to="https://s$1.jtvnw.net/"/>
+
+	<!--	- www-cdn: Akamai
+		- www doesn't exist
+				-->
+	<rule from="^https?://www-cdn\.jtvnw\.net/"
+		to="https://www.justin.tv/" />
+
+	<!--
+		- s: Akamai
+		- static-cdn: Akamai
+		- static: Cert only matches *.justin.tv
+				-->
+	<rule from="^https?://s(?:tatic(?:-cdn)?)?\.jtvnw\.net/"
+		to="https://static.justin.tv/" />
+
+	<rule from="^http://((?:static|www)\.)?(justin|twitch)\.tv/"
+		to="https://$1$2.tv/" />
 
 </ruleset>

@@ -1,6 +1,33 @@
-<ruleset name="BuisnessInsider (broken)" default_off="Broken">
-<target host="businessinsider.com" />
-<target host="www.businessinsider.com" />
-        <rule from="^http://businessinsider\.com/" to="https://www.businessinsider.com/"/>
-        <rule from="^http://www\.businessinsider\.com/" to="https://www.businessinsider.com/"/>
+<!--
+	Nonfunctional subdomains:
+
+		- jobs	(cert: *.jobamatic.com)
+
+-->
+<ruleset name="BuisnessInsider (partial)">
+
+	<target host="businessinsider.com" />
+	<target host="*.businessinsider.com" />
+		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
+		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
+
+
+	<!--	Many pages redirect to http.	-->
+        <rule from="^http://(www\.)?businessinsider\.com/(account|assets/|login|register)"
+		to="https://$1businessinsider.com/$2" />
+
+        <!--    See Simply-Hired-clients.xml for problematic jobs rules         -->
+        <rule from="^https?://jobs\.businessinsider\.com/c/"
+                to="https://businessinsider.jobamatic.com/c/" />
+
+	<!--
+		- static[1-9]? are identical
+		- static0 doesn't exist
+		- Cert: gp1.wac.edgecastcdn.net
+		- 404
+		- image/ redirects back to static.
+						-->
+	<rule from="^https?://static\d?\.businessinsider\.com/"
+		to="https://www.businessinsider.com/" />
+
 </ruleset>
