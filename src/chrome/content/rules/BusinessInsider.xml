@@ -1,10 +1,34 @@
-<ruleset name="BuisnessInsider (broken)" default_off="Broken">
+<!--
+	Nonfunctional subdomains:
+
+		- jobs	(cert: *.jobamatic.com)
+
+-->
+<ruleset name="BuisnessInsider (partial)">
 
 	<target host="businessinsider.com" />
-	<target host="www.businessinsider.com" />
+	<target host="*.businessinsider.com" />
+		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
 
 
-        <rule from="^http://(?:www\.)?businessinsider\.com/"
+	<!--	Many pages redirect to http.	-->
+        <rule from="^http://(www\.)?businessinsider\.com/(account|assets/|login|register)"
+		to="https://$1businessinsider.com/$2" />
+
+	<rule from="^https?://jobs\.businessinsider\.com/$"
+		to="https://businessinsider.jobamatic.com/a/all-jobs/list" />
+
+	<rule from="^https?://jobs\.businessinsider\.com/"
+		to="https://businessinsider.jobamatic.com/" />
+
+	<!--
+		- static[1-9]? are identical
+		- static0 doesn't exist
+		- Cert: gp1.wac.edgecastcdn.net
+		- 404
+		- image/ redirects back to static.
+						-->
+	<rule from="^https?://static\d?\.businessinsider\.com/"
 		to="https://www.businessinsider.com/" />
 
 </ruleset>
