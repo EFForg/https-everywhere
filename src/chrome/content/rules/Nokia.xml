@@ -9,13 +9,20 @@
 		- doc.qt.nokia.com	(times out)
 		- labs.qt.nokia.com	(redirects to blogs.qt.nokia.com)
 
+
+	discussions.nokia.co.uk is handled mostly in Lithium-clients.xml.
+
+
 -->
 <ruleset name="Nokia (partial)">
 
 	<target host="nokia.*" />
 	<target host="www.nokia.*" />
 	<target host="*.nokia.com" />
-	<target host="www.developer.nokia.com" />
+	<target host="*.developer.nokia.com" />
+		<!--	Redirect to http.	-->
+		<exclusion pattern="^http://www\.developer\.nokia\.com/($|Design/|Develop/|Devices/|Distribute/|info/)" />
+	<target host="discussions.europe.nokia.com" />
 	<target host="*.qt.nokia.com" />
 	<target host="nokia.co.uk" />
 	<target host="www.nokia.co.uk" />
@@ -23,14 +30,23 @@
 	<target host="www.nokiausa.com" />
 
 
-	<rule from="^https?://(?:www\.)?nokia\.(ca|com|co\.uk|de|fr)/"
+	<securecookie host="^.*\.nokia\.com$" name=".*" />
+
+
+	<!--	www.nokia.ca: Akamai, redirects as so.	-->
+	<rule from="^https?://(?:www\.)?nokia\.ca/"
+		to="https://www.nokia.com/ca-en/" />
+
+	<!--	//nokia.(ca|co.uk|de|fr) cert:	www.nokia.com	-->
+	<rule from="^https?://(?:www\.)?nokia\.(co\.uk|de|fr)/"
 		to="https://www.nokia.$1/" />
 
-	<rule from="^https?://(?:www\.)?developer\.nokia\.com/"
-		to="https://www.developer.nokia.com/" />
+	<rule from="^http://((?:account|(?:(?:analytics|projects|www)\.)?developer|discussions\.europe|[ir]|(?:(?:blog|developer)\.)?qt)\.)?nokia\.com/"
+		to="https://$1nokia.com/" />
 
-	<rule from="^http://((?:blog|developer)\.)?qt\.nokia\.com/"
-		to="https://$1qt.nokia.com/" />
+	<!--	Cert: secure02.lithium.com	-->
+	<rule from="^https?://discussions.nokia.co.uk/html/images/"
+		to="https://discussions.europe.nokia.com/html/images/" />
 
 	<rule from="^https?://(?:www\.)?nokiausa\.com/"
 		to="https://www.nokiausa.com/" />
