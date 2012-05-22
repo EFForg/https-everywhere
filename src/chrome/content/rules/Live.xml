@@ -15,6 +15,9 @@
 	<target host="*.login.live.com"/>
 	<target host="secure.*.live.com"/>
 	<target host="*.bay.livefilestore.com" />
+	<target host="*.vo.msecnd.net" />
+	<target host="so.cl" />
+	<target host="www.so.cl" />
 
 
 	<securecookie host="^login\.live\.com$" name=".*"/>
@@ -23,8 +26,12 @@
 	<!--	Microsoft itself protects the login this way but we can prevent
 		against SSL stripping.	-->
 
-	<rule from="^http://(login|onecare|signup|mail)\.live\.com/" to="https://$1.live.com/"/>
+	<rule from="^http://(login|oauth|onecare|signup|mail)\.live\.com/" to="https://$1.live.com/"/>
 
+	<!--	e.g.
+
+			- secure.shared.live.com
+						-->
 	<rule from="^http://secure\.(\w+)\.live\.com/"
 		to="https://secure.$1.live.com/"/>
 
@@ -51,5 +58,16 @@
 
 	<rule from="^http://(\w+)\.bay\.livefilestore\.com/"
 		to="https://$1.bay.livefilestore.com/" />
+
+	<!--	e.g.
+
+			- az94986.vo.msecnd.net on so.cl
+			- officeimg.vo.msecnd.net
+					-->
+	<rule from="^http://(\w+)\.vo\.msecnd\.net/"
+		to="https://$1.vo.msecnd.net/" />
+
+	<rule from="^http://(www\.)?so\.cl/"
+		to="https://$1so.cl/" />
 
 </ruleset>
