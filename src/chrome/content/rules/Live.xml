@@ -12,27 +12,30 @@
 	<target host="hotmail.com" />
 	<target host="*.hotmail.com" />
 	<target host="*.live.com" />
-	<target host="*.login.live.com"/>
-	<target host="secure.*.live.com"/>
+	<target host="*.login.live.com" />
+	<target host="secure.*.live.com" />
 	<target host="*.bay.livefilestore.com" />
+	<target host="*.vo.msecnd.net" />
+	<target host="so.cl" />
+	<target host="www.so.cl" />
+	<target host="secure.wlxrs.com" />
 
 
 	<securecookie host="^login\.live\.com$" name=".*"/>
 
 
 	<!--	Microsoft itself protects the login this way but we can prevent
-		against SSL stripping.	-->
+		against SSL stripping.
 
-	<rule from="^http://(login|onecare|signup|mail)\.live\.com/" to="https://$1.live.com/"/>
+		secure.* e.g.
 
-	<rule from="^http://secure\.(\w+)\.live\.com/"
-		to="https://secure.$1.live.com/"/>
-
-	<rule from="^http://(\w+)\.login\.live\.com/"
-		to="https://$1.login.live.com/"/>
+			- secure.shared.live.com
+					-->
+	<rule from="^http://((?:\w+\.)?login|mail|oauth|onecare|secure\.(?:\w+)|signup)\.live\.com/"
+		to="https://$1.live.com/" />
 
 	<rule from="^http://accountservices\.passport\.net/"
-		to="https://accountservices.passport.net/"/>
+		to="https://accountservices.passport.net/" />
 
 	<!--	Both of these appear to trigger two good things: (1) the user is
 		prompted to make HTTPS the default; (2) even if the user decides
@@ -40,16 +43,30 @@
 		HTTPS-only.		-->
 
 	<rule from="^http://(?:www\.)?hotmail\.com/"
-		to="https://www.hotmail.com/"/>
-
-	<rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/"
-		to="https://$1.mail.live.com/"/>
+		to="https://www.hotmail.com/" />
 
 	<!--	example:
 			http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0 >>>
-			https://snt133.mail.live.com/default.aspx?wa=wsignin1.0			-->
+			https://snt133.mail.live.com/default.aspx?wa=wsignin1.0
+							-->
+	<rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/"
+		to="https://$1.mail.live.com/" />
 
 	<rule from="^http://(\w+)\.bay\.livefilestore\.com/"
 		to="https://$1.bay.livefilestore.com/" />
+
+	<!--	e.g.
+
+			- az94986.vo.msecnd.net on so.cl
+			- officeimg.vo.msecnd.net
+					-->
+	<rule from="^http://(\w+)\.vo\.msecnd\.net/"
+		to="https://$1.vo.msecnd.net/" />
+
+	<rule from="^http://(www\.)?so\.cl/"
+		to="https://$1so.cl/" />
+
+	<rule from="^http://secure\.wlxrs\.com/"
+		to="https://secure.wlxrs.com/" />
 
 </ruleset>
