@@ -450,8 +450,8 @@ const HTTPSRules = {
         }
       } catch(e) {
         this.log(WARN, "Failed to normalise domain: ");
-        try       this.log(WARN, input_uri.host)
-        catch(e2) this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);
+        try       {this.log(WARN, input_uri.host);}
+        catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
       }
 
     // Get the list of rulesets that target this host
