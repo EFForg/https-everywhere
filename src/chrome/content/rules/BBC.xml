@@ -1,27 +1,32 @@
+<!--
+	For problematic rules, see BBC-mismatches.xml.
 
-<!--	Nonfunctional:
-		- news.bbc.co.uk
-			When rewritten to www, redirects back to news
-		- newsimg.bbc.co.uk
-			When rewritten news, doesn't redirect back to newsimg..
-			When rewritten to www, redirects to http =(
-			!on static.
-		- stats
-		- wwwimg.bbc.co.uk
-			redirects to http
-		- emp.bbci.co.uk	(Akamai; "Service Unavailable")
+
+	Nonfunctional domains:
+
+		- bbc.co.uk subdomains:
+
+			- news
+				When rewritten to www, redirects back to news
+			- newsimg
+				- When rewritten news, doesn't redirect back to newsimg..
+				- When rewritten to www, redirects to http =(
+				- Not on static.
+			- stats
+			- wwwimg
+				redirects to http
+
 		- (www.)bbcamerica.com	(reset)
+		- emp.bbci.co.uk	(Akamai; "Service Unavailable")
 
-	see BBC-mismatches.xml for problematic rules.
 -->
 <ruleset name="BBC (partial)">
 
-	<target host="bbc.co.uk"/>
-	<target host="sa.bbc.co.uk"/>
-	<target host="*.bbc.co.uk"/>
-	<target host="static.bbci.co.uk"/>
+	<target host="bbc.co.uk" />
+	<target host="*.bbc.co.uk" />
+	<target host="static.bbci.co.uk" />
 	<!--	Akamai	-->
-	<target host="node1.bbcimg.co.uk"/>
+	<target host="node1.bbcimg.co.uk" />
 
 
 	<!--	Tracking cookie set by sa	-->
@@ -29,12 +34,12 @@
 
 
 	<rule from="^http://(sa|static)\.bbci?\.co\.uk/"
-		to="https://$1.bbc.co.uk/"/>
+		to="https://$1.bbc.co.uk/" />
 
-	<rule from="^http://(?:www\.)?bbc\.co\.uk/(favicon\.ico$|glow/|guidance/|iplayer/)"
-		to="https://www.bbc.co.uk/$1"/>
+	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(favicon\.ico$|glow/|guidance/|iplayer/)"
+		to="https://www.bbc.co.uk/$1" />
 
-	<rule from="^http://node[12]\.bbcimg\.co\.uk/iplayer/"
-		to="https://www.bbc.co.uk/iplayer/"/>
+	<rule from="^https?://node[12]\.bbcimg\.co\.uk/iplayer/"
+		to="https://www.bbc.co.uk/iplayer/" />
 
 </ruleset>
