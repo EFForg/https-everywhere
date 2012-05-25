@@ -439,17 +439,20 @@ const HTTPSRules = {
 
     // example.com.  is equivalent to example.com
     // example.com.. is invalid, but firefox would load it anyway
-    try {
-      var h = uri.host;
-      if (h.charAt(h.length - 1) == ".") {
-        while (h.charAt(h.length - 1) == ".") 
-          h = h.slice(0,-1);
-        uri = uri.clone();
-        uri.host = h;
+    if (uri.host)
+      try {
+        var h = uri.host;
+        if (h.charAt(h.length - 1) == ".") {
+          while (h.charAt(h.length - 1) == ".") 
+            h = h.slice(0,-1);
+          uri = uri.clone();
+          uri.host = h;
+        }
+      } catch(e) {
+        this.log(WARN, "Failed to normalise domain: ");
+        try       {this.log(WARN, input_uri.host);}
+        catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
       }
-    } catch(e) {
-      this.log(WARN, "Failed to normalise domain " + input_uri.host);
-    }
 
     // Get the list of rulesets that target this host
     try {
