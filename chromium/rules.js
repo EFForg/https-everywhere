@@ -170,8 +170,11 @@ RuleSets.prototype = {
         results = results.concat(this.targets[t]);
     }
     log(DBUG,"Applicable rules for " + host + ":");
-    for (i = 0; i < results.length; ++i)
-      log(DBUG, "  " + results[i].name);
+    if (results.length == 0)
+      log(DBUG, "  None");
+    else
+      for (i = 0; i < results.length; ++i)
+        log(DBUG, "  " + results[i].name);
     return results;
   },
 
