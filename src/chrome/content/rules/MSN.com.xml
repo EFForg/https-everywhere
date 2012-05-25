@@ -21,7 +21,6 @@
 	<target host="msnbc.msn.com" />
 	<!--	Akamai: assets(\dd)?, www	-->
 	<target host="*.msnbc.msn.com" />
-	<target host="cosmiclog.msnbc.msn.com" />
 	<target host="my.msn.com" />
 	<!--	Akamai	-->
 	<target host="polls.newsvine.com" />
@@ -39,13 +38,18 @@
 	<rule from="^https?://assets(?:\dd)?\.msnbc\.msn\.com/"
 		to="https://assets.msnbc.msn.com/" />
 
-	<rule from="^http://cosmiclog\.msnbc\.msn\.com/"
-		to="https://cosmiclog.msnbc.msn.com/" />
+	<rule from="^http://(bottomline|cosmiclog)\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
 
 	<rule from="^http://my\.msn\.com/"
 		to="https://my.msn.com/" />
 
 	<rule from="^http://((?:www\.)?polls|m\.static)\.newsvine\.com/"
 		to="https://$1.newsvine.com/" />
+
+	<!--	bottomline over https points to msnbcmedia over https,
+		which doesn't work as it times out.	-->
+	<rule from="^https://msnbcmedia(\d)?\.msn\.com/"
+		to="http://msnbcmedia$1.msn.com/" downgrade="1" />
 
 </ruleset>

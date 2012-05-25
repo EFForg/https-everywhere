@@ -36,6 +36,10 @@
 	<target host="*.bing.com"/>
 	<!--	* for cross-domain cookie.	-->
 	<target host="*.c.bing.com" />
+	<target host="dreamspark.com" />
+	<target host="www.dreamspark.com" />
+	<target host="imaginecup.com" />
+	<target host="www.imaginecup.com" />
 	<target host="microsoft.com"/>
 	<target host="*.microsoft.com"/>
 		<exclusion pattern="^http://www\.microsoft\.com/.*FamilyID"/>
@@ -69,6 +73,7 @@
 
 
 	<securecookie host="^(\.c|ssl)\.bing\.com$" name=".*" />
+	<securecookie host="^www\.dreamspark\.com$" name=".*" />
 	<!--	cookies set by c.microsoft.com		-->
 	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$"/>
 	<securecookie host="^www\.microsoft\.com$" name=".*" />
@@ -92,6 +97,17 @@
 	<!--	c:	tracking beacon		-->
 	<rule from="^http://(c|ssl)\.bing\.com/"
 		to="https://$1.bing.com/"/>
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?dreamspark\.com/"
+		to="https://www.dreamspark.com/" />
+
+	<!--	- Cert only matches www.
+		- Many paths redirect to http or a login page.
+		- There may be more than are matched here that don't.
+				-->
+	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
+		to="https://www.imaginecup.com/$1" />
 
 	<rule from="^http://microsoft\.com/"
 		to="https://www.microsoft.com/"/>
