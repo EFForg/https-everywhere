@@ -1,8 +1,10 @@
 <!--
+	For problematic rules, see Microsoft-mismatches.xml.
+
+
 	Other Microsoft rulesets:
 
 		- Live.xml
-		- Microsoft-mismatches.xml
 		- Photosynth.xml
 		- Technet.com.xml
 
@@ -33,59 +35,58 @@
 
 	<target host="acikakademi.com" />
 	<target host="www.acikakademi.com" />
-	<target host="ajax.aspnetcdn.com"/>
-	<target host="bing.com"/>
-	<target host="*.bing.com"/>
+	<target host="ajax.aspnetcdn.com" />
+	<target host="bing.com" />
+	<target host="*.bing.com" />
 	<!--	* for cross-domain cookie.	-->
 	<target host="*.c.bing.com" />
 	<target host="dreamspark.com" />
 	<target host="www.dreamspark.com" />
 	<target host="imaginecup.com" />
 	<target host="www.imaginecup.com" />
-	<target host="microsoft.com"/>
-	<target host="*.microsoft.com"/>
-		<exclusion pattern="^http://www\.microsoft\.com/.*FamilyID"/>
-	<target host="social.expression.microsoft.com"/>
+	<target host="microsoft.com" />
+	<target host="*.microsoft.com" />
+		<exclusion pattern="^http://www\.microsoft\.com/.*FamilyID" />
+		<!--     Microsoft won't serve OEM pages on https -->
+    		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
+	<target host="social.expression.microsoft.com" />
 	<!--	Akamai	-->
-	<target host="*.msdn.microsoft.com"/>
-	<target host="*.code.msdn.microsoft.com"/>
+	<target host="*.msdn.microsoft.com" />
+	<target host="*.code.msdn.microsoft.com" />
 	<!--	* for cross-domain cookie	-->
 	<target host="*.office.microsoft.com" />
-	<target host="*.onlinehelp.microsoft.com"/>
-	<target host="*.social.microsoft.com"/>
-	<target host="services.social.microsoft.com"/>
-	<target host="*.services.social.microsoft.com"/>
-	<target host="*.technet.microsoft.com"/>
-	<target host="*.gallery.technet.microsoft.com"/>
-	<target host="*.windows.microsoft.com"/>
-	<target host="*.windowsupdate.microsoft.com"/>
-	<target host="www.*.microsoft.com"/>
-	<target host="microsoftstore.com"/>
-	<target host="*.microsoftstore.com"/>
-	<target host="*.microsoftstoreassets.com"/>
-	<target host="external.microsoftstoreservices.com"/>
-	<target host="*.msdn.com"/>
+	<target host="*.onlinehelp.microsoft.com" />
+	<target host="*.social.microsoft.com" />
+	<target host="services.social.microsoft.com" />
+	<target host="*.services.social.microsoft.com" />
+	<target host="*.technet.microsoft.com" />
+	<target host="*.gallery.technet.microsoft.com" />
+	<target host="*.windows.microsoft.com" />
+	<target host="*.windowsupdate.microsoft.com" />
+	<target host="www.*.microsoft.com" />
+	<target host="microsoftstore.com" />
+	<target host="*.microsoftstore.com" />
+	<target host="*.microsoftstoreassets.com" />
+	<target host="external.microsoftstoreservices.com" />
+	<target host="*.msdn.com" />
 	<!--	Akamai	-->
-	<target host="i1.blogs.msdn.com"/>
+	<target host="i1.blogs.msdn.com" />
 	<target host="create.msdn.com" />
 	<target host="*.create.msdn.com" />
-	<target host="*.social.s-msft.com"/>
-		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/"/>
-	<target host="ecn.dev.virtualearth.net"/>
+	<target host="*.social.s-msft.com" />
+		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/" />
+	<target host="ecn.dev.virtualearth.net" />
 
 
 	<securecookie host="^www\.acikakademi\.com$" name=".*" />
 	<securecookie host="^(\.c|ssl)\.bing\.com$" name=".*" />
 	<securecookie host="^www\.dreamspark\.com$" name=".*" />
 	<!--	cookies set by c.microsoft.com		-->
-	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$"/>
+	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
 	<securecookie host="^www\.microsoft\.com$" name=".*" />
-	<securecookie host="^blogs\.msdn\.com$" name=".*"/>
+	<securecookie host="^blogs\.msdn\.com$" name=".*" />
 	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
 
-
-    <!--     Microsoft won't serve OEM pages on https -->
-    <exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
 
 	<!--	- Cert only matches www
 		- !www redirects to www over http
@@ -96,16 +97,17 @@
 	<rule from="^http://ajax\.aspnetcdn\.com/"
 		to="https://ajax.aspnetcdn.com/"/>
 
-	<!--	cert !match www
-		some s/ paths work, others not.
-		fa/s/ is equivalent and fd/ seems to work always, so redirect there.
-		/bing and /ssl.bing are the same here, but ssl has an EV.	-->
-	<rule from="^http://(?:www\.)?bing\.com/(?:fd/|(s/))"
-		to="https://ssl.bing.com/fd/$1"/>
+	<!--	- Cert doesn't match www
+		- Some s/ paths work, others not.
+		- fa/s/ is equivalent and fd/ seems to work always, so redirect there.
+		- /bing and /ssl.bing are the same here, but ssl has an EV.
+					-->
+	<rule from="^https?://(?:www\.)?bing\.com/(?:fd/|(s/))"
+		to="https://ssl.bing.com/fd/$1" />
 
 	<!--	c:	tracking beacon		-->
 	<rule from="^http://(c|ssl)\.bing\.com/"
-		to="https://$1.bing.com/"/>
+		to="https://$1.bing.com/" />
 
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?dreamspark\.com/"
@@ -118,77 +120,75 @@
 	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
 		to="https://www.imaginecup.com/$1" />
 
-	<rule from="^http://microsoft\.com/"
-		to="https://www.microsoft.com/"/>
+	<rule from="^https?://microsoft\.com/"
+		to="https://www.microsoft.com/" />
 
 	<rule from="^http://(adcenter|advertising|ajax|c|connect|events|social\.expression|go|ie|msdn|office(?:365|2010)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|social\.technet|www\.update|windowsupdate|www)\.microsoft\.com/"
-		to="https://$1.microsoft.com/"/>
+		to="https://$1.microsoft.com/" />
 
 	<!--	Akamai with no valid cert.
 			Where's the bucket?	-->
 	<rule from="^https?://(?:i\d?|js)\.microsoft\.com/"
-		to="https://www.microsoft.com/"/>
+		to="https://www.microsoft.com/" />
 
 	<!--	Akamai with no valid cert.
 			Where's the bucket?	-->
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
-		to="https://$1.microsoft.com/"/>
+		to="https://$1.microsoft.com/" />
 
 	<!--	Akamai	-->
-	<rule from="^http://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
+	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
 		to="https://www.microsoft.com/$1/" />
 
 	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
-		to="https://support.microsoft.com/$1"/>
+		to="https://support.microsoft.com/$1" />
 
-	<!--	Res[12] appear to be identical.
-		Res[12] cert: *.sharepointonline.com; display blank page	-->
-	<rule from="^http://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
-		to="https://origin-res.windows.microsoft.com/"/>
+	<!--	- res[12] appear to be identical
+		- Cert: *.sharepointonline.com
+		- Display blank page
+			-->
+	<rule from="^https?://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
+		to="https://origin-res.windows.microsoft.com/" />
 
 	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
-		to="https://social.technet.microsoft.com/"/>
+		to="https://social.technet.microsoft.com/" />
 
 	<!--	Cert doesn't match /update.	-->
 	<rule from="^https?://update\.microsoft\.com/"
-		to="https://www.update.microsoft.com/"/>
+		to="https://www.update.microsoft.com/" />
 
-	<rule from="^http://v(4|5)\.windowsupdate\.microsoft\.com/"
-		to="https://v$1.windowsupdate.microsoft.com/"/>
+	<rule from="^http://v([45])\.windowsupdate\.microsoft\.com/"
+		to="https://v$1.windowsupdate.microsoft.com/" />
 
-	<rule from="^http://(?:www\.)?microsoftstore\.com/"
-		to="https://www.microsoftstore.com/"/>
+	<rule from="^https?://(?:www\.)?microsoftstore\.com/"
+		to="https://www.microsoftstore.com/" />
 
 	<rule from="^http://emea\.microsoftstore\.com/(\w+)/(desktopdefault\.aspx|portaldata/|services/|tags.axd)"
-		to="https://emea.microsoftstore.com/$1/$2"/>
+		to="https://emea.microsoftstore.com/$1/$2" />
 
 	<rule from="^http://assets-(\d)\.microsoftstoreassets\.com/"
-		to="https://assets-$1.microsoftstoreassets.com/"/>
+		to="https://assets-$1.microsoftstoreassets.com/" />
 
 	<rule from="^http://external\.microsoftstoreservices\.com/"
-		to="https://external.microsoftstoreservices.com/"/>
+		to="https://external.microsoftstoreservices.com/" />
 
-	<rule from="^http://(?:i1\.)?(blogs|social)\.msdn\.com/"
-		to="https://$1.msdn.com/"/>
+	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
+		to="https://$1.msdn.com/" />
 
-	<!--	www pages redirect to !www, which the cert doesn't match.
-		Cert doesn't match public, either.	-->
+	<!--	- Cert doesn't match !www
+		- www pages redirect to !www
+		- Cert doesn't match public
+						-->
 	<rule from="^https?://(?:public\.)?create\.msdn\.com/assets/"
 		to="https://www.create.msdn.com/assets/" />
 
 	<rule from="^http://(profile|www)\.create\.msdn\.com/"
 		to="https://$1.create.msdn.com/" />
 
-	<rule from="^http://officeimg\.vo\.msecnd\.net/"
-		to="https://officeimg.vo.msecnd.net/" />
-
 	<rule from="^https?://i\d\.social\.s-msft\.com/"
-		to="https://social.expression.microsoft.com/"/>
+		to="https://social.expression.microsoft.com/" />
 
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
-		to="https://ecn.dev.virtualearth.net/"/>
-
-	<rule from="^http://secure\.wlxrs\.com/"
-		to="https://secure.wlxrs.com/"/>
+		to="https://ecn.dev.virtualearth.net/" />
 
 </ruleset>
