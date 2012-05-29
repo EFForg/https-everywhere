@@ -606,7 +606,11 @@ HTTPSEverywhere.prototype = {
   },
 
   /**
-   * Notify observers of the topic OBSERVER_TOPIC_URI_REWRITE.
+   * Notify observers of the topic OBSERVER_TOPIC_URI_REWRITE.  Intended for
+   * extension compatibility: 
+   *
+   * https://trac.torproject.org/projects/tor/ticket/1574
+   * https://trac.torproject.org/projects/tor/ticket/3190
    *
    * @param nsIURI oldURI
    * @param string newSpec
