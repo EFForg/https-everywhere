@@ -1,15 +1,80 @@
-<ruleset name="Zoho">
+<!--
+	For problematic rules, see Zoho-mismatches.xml.
 
+
+	Other Zoho rulesets:
+
+		- ManageEngine.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)swissql.com	(cert: *.manageengine.com; $ redirects to http; .+ redirects to that domain and 404s)
+		- (www.)zoho.co.jp	(cert: ssl.zoho.co.jp; shows that domain's data)
+
+
+-->
+<ruleset name="Zoho (partial)">
+
+	<target host="site24x7.com" />
+	<target host="*.site24x7.com" />
+	<target host="forums.webnms.com" />
+	<target host="zoho.com" />
 	<target host="*.zoho.com" />
+	<target host="*.creator.zoho.com" />
+	<target host="help.discussions.zoho.com" />
+	<target host="*.wiki.zoho.com" />
+	<target host="export.writer.zoho.com" />
+	<target host="zoho.jp" />
+	<target host="blogs.zoho.jp" />
+	<target host="ssl.zoho.co.jp" />
+	<target host="zohoblogs.com" />
+	<target host="www.zohoblogs.com" />
+	<target host="zohocorp.com" />
+	<target host="www.zohocorp.com" />
 	<target host="*.zohostatic.com" />
 
 
-	<securecookie host=".*\.zoho\.com$" name=".*" />
+	<securecookie host="^(.*\.)?site24x7\.com$" name=".*" />
+	<securecookie host="^forums\.webnms\.com$" name=".*" />
+	<securecookie host="^.*\.zoho\.com$" name=".*" />
+	<securecookie host="^(www\.)?zohoblogs\.com$" name=".*" />
 
 
-	<rule from="^http://(assist|business|chat|creator|discussions|docs|invoice|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show|wiki|writer|www)\.zoho\.com/"
-		to="https://$1.zoho.com/" />
+	<rule from="^http://(blogs\.|static\.|www\.)?site24x7\.com/"
+		to="https://$1site24x7.com/" />
 
+	<rule from="^http://forums\.webnms\.com/"
+		to="https://forums.webnms.com/" />
+
+	<!--	Observed wiki subdomains:
+
+			- arvindnatarajan
+			- vbmacros
+			- zohocrm
+			- zohocrmapi
+			- zohodiscussions
+		-->
+	<rule from="^http://((?:accounts|assist|blogs|www\.blogs|business|chat|(?:(?:api|help|kbase|lounge|www)\.)?creator|crm|crmkbase|customer-blogs|discussions|(?:help\.)?discussions|docs|forums|invoice|iplocation|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show2?|support|viewer|(?:\w+\.)?wiki|export\.writer|writer2?|www)\.)?zoho\.com/"
+		to="https://$1zoho.com/" />
+
+	<!--	- Unsupported //zoho.jp paths redirect to http://www.	-->
+	<rule from="^http://(blogs\.)?zoho\.jp/"
+		to="https://$1zoho.jp/" />
+
+	<rule from="^http://ssl\.zoho\.co\.jp/"
+		to="https://ssl.zoho.co.jp/" />
+
+	<rule from="^http://(www\.)?zoho(blogs|corp)\.com/"
+		to="https://$1zoho$2.com/" />
+
+	<!--	Observed subdomains:
+
+			- css
+			- img
+			- js
+					-->
 	<rule from="^http://(\w+)\.zohostatic\.com/"
 		to="https://$1.zohostatic.com/"/>
+
 </ruleset>
