@@ -1,12 +1,19 @@
 <!--
+	Other Mozilla rulesets:
+
+		- BrowserID.xml
+
+
 	BOOOO: Firefox.com (which some download links pass through)
 	is in HTTP only...
 
 
 	Nonfunctional:
 
-		- static.mozilla.org		(cert valid; shows www data)
+		- identity.mozilla.com		(hosted on Tumblr)
 		- sfx-images.mozilla.org	(banners)
+		- static.mozilla.org		(cert valid; shows www data)
+		- blog.webfwd.org		(hosted on Tumblr)
 
 -->
 <ruleset name="Mozilla">
@@ -16,26 +23,32 @@
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
 	<target host="mozilla.net" />
-	<target host="static-ssl-cdn.addons.mozilla.net" />
-	<target host="www.mozilla.net" />
+	<target host="*.addons.mozilla.net" />
+	<target host="*.mozilla.net" />
 	<target host="mozilla.org" />
 	<target host="*.mozilla.org" />
 		<exclusion pattern="^http://nightly\.mozilla\.org/" />
-	<!--	* for cross-domain cookie.	-->
+	<target host="forums.addons.mozilla.org" />
+	<!--	*s for cross-domain cookies.	-->
 	<target host="*.developer.mozilla.org" />
+	<target host="*.forums.mozilla.org" />
+	<target host="*.wiki.mozilla.org" />
 	<target host="mozillalabs.com" />
 	<target host="*.mozillalabs.com" />
 	<target host="*.mozillamessaging.com" />
+	<target host="webfwd.org" />
+	<target host="www.webfwd.org" />
 	<target host="webmaker.org" />
 	<target host="www.webmaker.org" />
 
 
 	<securecookie host="^.*\.mozilla\.(com|org)$" name=".*" />
+	<securecookie host="^mozillalabs\.com$" name=".*" />
 	<securecookie host="^(www\.)?webmaker\.org$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?drumbeat\.org/"
-		to="https://www.drumbeat.org/" />
+	<rule from="^http://(www\.)?(drumbeat|webfwd|webmaker)\.org/"
+		to="https://$1$2.org/" />
 
 	<rule from="^http://((?:blog|crash-stats|input|people|support|www)\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />
@@ -44,10 +57,13 @@
 	<rule from="^https?://(?:www\.)?mozilla\.net/"
 		to="https://www.mozilla.org/" />
 
-	<rule from="^http://static-ssl-cdn\.addons\.mozilla\.net/"
-		to="https://static-ssl-cdn.addons.mozilla.net/" />
+	<!--	- Cert matches videos-ssl-cdn.mozilla.net
+		- videos-ssl-cdn.mozilla.net doesn't exist
+				-->
+	<rule from="^http://(static(?:-ssl)?-cdn\.addons|video-cdn)\.mozilla\.net/"
+		to="https://$1.mozilla.net/" />
 
-	<rule from="^http://((?:addons|blog|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|ftp|intlstore|krakenbenchmark|l10n|lists|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbpl|quality|wiki|www)\.)?mozilla\.org/"
+	<rule from="^http://((?:addons|blog|bugzilla|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|forums(?:\.addons)?|ftp|intlstore|krakenbenchmark|l10n|lists|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbpl|quality|wiki|www)\.)?mozilla\.org/"
 		to="https://$1mozilla.org/" />
 
 	<!--	Cert doesn't match affiliates-cdn	-->
@@ -58,7 +74,21 @@
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.com/" />
 
-	<rule from="^http://(?:www\.)?mozillalabs\.com/"
+	<!--	- Cert: www.mozilla.org
+		- 404s over https
+		- Redirects like so over http
+			-->
+	<rule from="^https?://talkback-public\.mozilla\.org/"
+		to="https://crash-stats.mozilla.com/" />
+
+	<!--	Cert mismatch	-->
+	<rule from="^https?://videos\.mozilla\.org/"
+		to="https://videos-cdn.mozilla.net/" />
+
+	<!--	- www cert: tbpl.mozilla.org
+		- 403
+					-->
+	<rule from="^https?://(?:www\.)?mozillalabs\.com/"
 		to="https://mozillalabs.com/" />
 
 	<rule from="^http://(apps|bespin(?:plugins)?|gaming|heatmap|jetpack|testpilot|webmaker)\.mozillalabs\.com/"
@@ -66,8 +96,5 @@
 
 	<rule from="^http://(planet|support)\.mozillamessaging\.com/"
 		to="https://$1.mozillamessaging.com/" />
-
-	<rule from="^http://(www\.)?webmaker\.org/"
-		to="https://$1webmaker.org/" />
 
 </ruleset>

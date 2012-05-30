@@ -1,46 +1,96 @@
- <!-- Partial -->
+<!--
+	Partial
+
+
+	tesco.scene7.com
+
+
+	Nonfunctional subdomains:
+
+		- origin-img
+		- origin-www	(times out)
+
+-->
 <ruleset name="Tesco">
-  <target host="tesco.com" />
-  <target host="tescocompare.com" />
-  <target host="tescofinance.com" />
-  <target host="tescobank.com" />
-  <target host="tescophoto.com" />
-  <target host="tescodiets.com" />
-  <target host="clothingattesco.com" />
-  <target host="tescogetinvolved.com" />
-  <target host="direct.tesco.com" />
-  <target host="secure.tesco.com" />
-  <target host="phone-shop.tesco.com" />
-  <target host="www.tesco.com" />
-  <target host="www.clothingattesco.com" />
-  <target host="www.tescocompare.com" />
-  <target host="www.tescofinance.com" />
-  <target host="www.tescobank.com" />
-  <target host="www.tescophoto.com" />
-  <target host="www.tescodiets.com" />
-  <target host="www.tescogetinvolved.com" />
 
-  <securecookie host="^(.*\.)?tescobank\.com$" name=".*" />
-  <securecookie host="^(.*\.)?tescocompare\.com$" name=".*" />
-  <securecookie host="^(.*\.)?clothingattesco\.com$" name=".*" />
-  <securecookie host="^(.*\.)?tescophoto\.com$" name=".*" />
-  <securecookie host="^(.*\.)?tescodiets\.com$" name=".*" />
-  <securecookie host="^(.*\.)?tescogetinvolved\.com$" name=".*" />
+	<target host="clothingattesco.com" />
+	<target host="www.clothingattesco.com" />
+	<target host="tesco.com" />
+	<target host="*.tesco.com" />
+	<target host="*.tescoassets.com" />
+	<target host="tescobank.com" />
+	<target host="www.tescobank.com" />
+	<target host="tescocompare.com" />
+	<target host="www.tescocompare.com" />
+	<target host="tescodiets.com" />
+	<target host="www.tescodiets.com" />
+	<target host="tescofinance.com" />
+	<target host="www.tescofinance.com" />
+	<target host="tescogetinvolved.com" />
+	<target host="www.tescogetinvolved.com" />
+	<target host="tescophoto.com" />
+	<target host="www.tescophoto.com" />
 
-  <rule from="^http://(?:www\.)?tescocompare\.com/" to="https://www.tescocompare.com/"/>
-  <rule from="^http://(?:www\.)?tescofinance\.com/" to="https://www.tescobank.com/"/>
-  <rule from="^http://(?:www\.)?tescobank\.com/" to="https://www.tescobank.com/"/>
-  <rule from="^http://(?:www\.)?tescophoto\.com/" to="https://www.tescophoto.com/"/>
-  <rule from="^http://(?:www\.)?tescodiets\.com/" to="https://www.tescodiets.com/"/>
-  <rule from="^http://(?:www\.)?tescogetinvolved\.com/" to="https://www.tescogetinvolved.com/"/>
-  <rule from="^http://(?:www\.)?clothingattesco\.com/" to="https://www.clothingattesco.com/"/>
 
-  <rule from="^http://(secure|direct|phone-shop)\.tesco\.com/" to="https://$1.tesco.com/"/>
+	<securecookie host="^secure\.tesco\.com$" name=".*" />
+	<securecookie host="^(.*\.)?tesco(?:bank|compare|diets|getinvolved|photo)\.com$" name=".*" />
+	<securecookie host="^(.*\.)?clothingattesco\.com$" name=".*" />
 
-	<rule from="^http://(?:www\.)?tesco\.com/books/"
-			to="https://secure.tesco.com/books/"/>
-	<rule from="^http://(?:www\.)?tesco\.com/groceries/"
-			to="https://secure.tesco.com/groceries/"/>
-	<rule from="^http://(?:www\.)?tesco\.com/whatsinstore/"
-			to="https://secure.tesco.com/whatsinstore/"/>
+
+	<rule from="^https?://(?:www\.)?clothingattesco\.com/"
+		to="https://www.clothingattesco.com/" />
+
+	<!--	www: Akamai
+
+		These paths don't work:
+
+			- wine/$	(redirects to winestore/)
+			- WINE/Help/$	(404)
+
+		These paths redirect back to www:
+
+			- direct/$
+			- direct/help/homepage.page$
+
+		These paths don't:
+
+			- $
+			- c/css/
+			- clubcard/
+			- css/
+			- directuiassets/
+			- exchange$
+			- exchange/$
+			- grocery/images/
+			- homepages/default/[\w.]+.css
+			- offer/$
+			- Wine/MarketingContent/Sites/
+			- wine/UIAssets/
+			- storelocator/
+			- storeLocator/
+			- termsandconditions/privacy.htm$
+					-->
+	<rule from="^https?://(?:www\.)?tesco\.com/($|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|groceries|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
+		to="https://secure.tesco.com/$1" />
+
+	<rule from="^http://(direct|phone-shop|secure)\.tesco\.com/"
+		to="https://$1.tesco.com/" />
+
+	<!--	Akamai	-->
+	<rule from="^https?://img\.tesco\.com/"
+		to="https://secure.tesco.com/" />
+
+	<!--	Akamai
+
+		Observed subdomains:
+
+			- direct
+			- ui
+				-->
+	<rule from="^https?://\w+\.tescoassets\.com/"
+		to="https://secure.tesco.com/" />
+
+	<rule from="^https?://(?:www\.)?tesco(bank|compare|diets|finance|getinvolved|photo)\.com/"
+		to="https://www.tesco$1.com/" />
+
 </ruleset>

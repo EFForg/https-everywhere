@@ -1,5 +1,8 @@
 <!--
-	nonfunctional subdomains:
+	For problematic rules, see Gentoo-mismatches.xml.
+
+
+	Nonfunctional subdomains:
 
 		- anoncvs
 		- archives	(sec_error_reused_issuer_and_serial)
@@ -9,17 +12,15 @@
 		- sources	(times out)
 		- www
 
-
-	See Gentoo-mismatches.xml for problematic rules.
-
 -->
 <ruleset name="Gentoo (partial)" platform="cacert">
 
-	<target host="*.gentoo.org"/>
+	<target host="*.gentoo.org" />
 		<!--	git.overlays & sidebar are handled in Gentoo-mismatches.xml.	-->
-		<exclusion pattern="^http://(anoncvs|archives|devmanual|foundation|git\.overlays|packages|sidebar|sources|www)\."/>
+		<exclusion pattern="^http://(anoncvs|archives|devmanual|foundation|git\.overlays|packages|sidebar|sources|www)\." />
+	<target host="*.bugs.gentoo.org" />
 	<!--	* for cross-domain cookie.	-->
-	<target host="*.forums.gentoo.org"/>
+	<target host="*.forums.gentoo.org" />
 
 
 	<!--	Observed cookies:
@@ -28,24 +29,25 @@
 			- ^\.forums
 			- overlays
 					-->
-	<securecookie host="^.*\.gentoo\.org$" name=".*"/>
+	<securecookie host="^.*\.gentoo\.org$" name=".*" />
 
 
 	<!--	This is what the server does	-->
 	<rule from="^https?://store\.gentoo\.org/"
-		to="https://www.cafepress.com/officialgentoo"/>
+		to="https://www.cafepress.com/officialgentoo" />
 
 	<!--	Matched domains:
 
 			- blogs
 			- bugs
+			- \d+.bugs
 			- dev
 			- forums
 			- overlays
 			- piwik
 			- wiki
 					-->	
-	<rule from="^http://(\w+)\.gentoo\.org/"
-		to="https://$1.gentoo.org/"/>
+	<rule from="^http://((?:\d+\.)?\w+)\.gentoo\.org/"
+		to="https://$1.gentoo.org/" />
 
 </ruleset>
