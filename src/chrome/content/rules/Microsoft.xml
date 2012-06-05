@@ -5,6 +5,10 @@
 	Other Microsoft rulesets:
 
 		- Live.xml
+		- Microsoft-Atlas.xml
+		- MSN.com.xml
+		- MSN-Extra.xml
+		- Newsvine.com.xml
 		- Photosynth.xml
 		- Technet.com.xml
 
@@ -49,6 +53,9 @@
 		<exclusion pattern="^http://www\.microsoft\.com/.*FamilyID" />
 		<!--     Microsoft won't serve OEM pages on https -->
     		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
+		<!--	https://trac.torproject.org/projects/tor/ticket/5754	-->
+		<exclusion pattern="^http://msdn\.microsoft\.com/($|en-us/$|.+(/$|\.aspx|/\w\w\d{6,10}$))" />
+		<exclusion pattern="^https?://blogs\.msdn\.com/.*\?Redirected=true" />
 	<target host="social.expression.microsoft.com" />
 	<!--	Akamai	-->
 	<target host="*.msdn.microsoft.com" />
@@ -135,6 +142,13 @@
 			Where's the bucket?	-->
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
+
+	<!--	Attempted workaround for
+
+		https://trac.torproject.org/projects/tor/ticket/5754
+				-->
+	<rule from="^https?://blogs\.msdn\.com/"
+		to="https://blogs.msdn.com/?Redirected=true" />
 
 	<!--	Akamai	-->
 	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"

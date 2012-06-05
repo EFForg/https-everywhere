@@ -3,6 +3,7 @@
 		- s[1-8].scribdassets.com		(ditto)
 		- s.scribd.com				(ditto)
 		- s1.scribd.com				(!found)
+		- rs5?.scribd.com			(times out)
 		- img(v2(-[1-4])?)?.scribdassets.com	(cert: panth...)
 		- img.scribd.com			(AmazonAWS: "NoSuchBucket")
 		- fonts.scribd.com			(AmazonAWS: "AccessDenied")
@@ -37,9 +38,17 @@
 
 	<target host="scribd.com"/>
 	<target host="*.scribd.com"/>
+		<!--
+			Redirects to http.
+
+			Lulz @ login redirecting to http.
+						-->
+		<exclusion pattern="^http://www\.scribd\.com/(documents/\d+/pingback$|login($|[\?/]))" />
+		<exclusion pattern="^http://s\d?\.scribdassets\.com/options/exposed_to_client\.js\?\d*$" />
 	<target host="*.scribdassets.com"/>
 
-	<securecookie host="^(.*\.)?scribd\.com$" name=".*"/>
+	<!--	Since login redirects to http, handling cookies might be problematic.
+	<securecookie host="^(.*\.)?scribd\.com$" name=".*"/-->
 
 	<rule from="^http://(www\.)?scribd\.com/"
 		to="https://www.scribd.com/"/>
