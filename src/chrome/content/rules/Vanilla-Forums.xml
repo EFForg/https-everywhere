@@ -1,0 +1,34 @@
+<!--
+	vanillaforums.totemapp.com
+
+
+	Nonfunctional subdomains:
+
+		- cdn	(Akamai; 401)
+
+-->
+<ruleset name="Vanilla Forums (partial)">
+
+	<target host="vanillaforums.com" />
+	<target host="www.vanillaforums.com" />
+		<!--	These paths redirect to http.	-->
+		<exclusion pattern="^http://(www\.)?vanillaforums\.com/($|info($|/))" />
+	<target host="autostatic-cl1.vanilladev.com" />
+
+
+	<!--	Some pages redirect to http.
+
+		Those in the commented out rule have been verified as not doing so.
+		
+	<rule from="^http://(www\.)?vanillaforums\.com/((?:account|applications|blog|entry|features|migrate-your-community|plans|resources|themes|tour)(?:$|/))">
+			-->
+	<rule from="^http://(www\.)?vanillaforums\.com/"
+		to="https://$1vanillaforums.com/$2" />
+
+	<!--	- Doesn't work over https
+		- Included on clients' websites
+				-->
+	<rule from="^https?://autostatic-cl1\.vanilladev\.com/(\w+)\.vanillaforums\.com/"
+		to="https://$1.vanillaforums.com/" />
+
+</ruleset>

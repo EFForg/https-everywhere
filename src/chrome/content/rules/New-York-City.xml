@@ -1,0 +1,47 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+-->
+<ruleset name="New York City (partial)">
+
+	<target host="nyc.gov" />
+	<target host="*.nyc.gov" />
+		<!--exclusion pattern="^http://(?:www\.)?nyc\.gov/(?:apps/311|html/index\.html|html/misc/gif/)" /-->
+	<target host="www.comptroller.nyc.gov" />
+
+
+	<securecookie host="^comptroller\.nyc\.gov$" name=".*" />
+
+
+	<!--	These paths 404 over https:
+
+			- html/index.html
+			- html/misc/gif/buz_express_module.gif
+
+		These paths don't:
+
+			- portal/apps/threeoneone/site_launch/css/stylesheet.css
+			- portal/apps/threeoneone/site_launch/img/footer.gif
+			- portal/css/nycgov2003.css
+			- portal/images/headers/nycgov/banner_man_midtownnight.jpg
+
+
+		These paths 302 to http:
+
+			- apps/311/advancedSearch.htm
+			- apps/311/feedbackForm.htm
+
+
+		These paths redirect to http, but don't force doing so:
+
+			- portal/site/nycgov/menuitem.beb0d8fdaa9e1607a62fa24601c789a0/
+
+				-->
+	<rule from="^http://(www\.)?nyc\.gov/(portal/(?:apps/threeoneone/site_launch/(?:css|img)|css|images)/)"
+		to="https://$1nyc.gov/$2" />
+
+	<!--	Cert only matches //comptroller.	-->
+	<rule from="^https?://(?:www\.)?comptroller\.nyc\.gov/"
+		to="https://comptroller.nyc.gov/" />
+
+</ruleset>

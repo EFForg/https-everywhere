@@ -1,11 +1,55 @@
+<!--
+	Nonfunctional domains:
+
+		- openx.com
+		- www.openx.com:	(Akamai, 503; origin, origin-www, and www-origin don't exist
+					presumably data are gathered from //openx.com)
+		- blog.openx.org
+		- forum.openx.org
+		- www.openx.org		(Akamai, 503; 301s over http to www.openx.com)
+		- servedbyopenx.com	(301s to www.openx.org over http)
+
+
+	(www.)openx.net shows CentOS Apache test page over http
+	openx.org throws 400 over http
+	(www.)openxenterprise.com doesn't exist
+	www.servedbyopenx.com is hosted by Akamai, throws 400s over both https & http
+
+-->
 <ruleset name="OpenX (partial)">
+
 	<target host="i-cdn.openx.com" />
-	<target host="d1.openx.org" />
-	<target host="developer.openx.org" />
+	<target host="d.tradex.openx.com" />
+	<target host="*.openx.net" />
+	<target host="*.openx.org" />
+	<target host="oxdemo-d.openxenterprise.com" />
+	<target host="i-cdn.servedbyopenx.com" />
 
-	<securecookie host="^i-cdn\.openx\.com$" name=".+" />
-	<securecookie host="^(d1|developer)\.openx\.org$" name=".+" />
 
-	<rule from="^http://i-cdn\.openx\.com/" to="https://i-cdn.openx.com/" />
-	<rule from="^http://(d1|developer)\.openx\.org/" to="https://$1.openx.org/" />
+	<securecookie host="^(?:i-cdn|d\.tradex)\.openx\.com$" name=".+" />
+	<securecookie host="^\.openx\.net$" name=".*" />
+	<securecookie host="^(?:adserver|d1|developer)\.openx\.org$" name=".+" />
+	<securecookie host="^oxdemo-d\.openxenterprise\.com$" name=".*" />
+
+
+	<rule from="^http://d\.tradex\.openx\.com/"
+		to="https://d.tradex.openx.com/" />
+
+	<!--	i-cdn.servedbyopenx.com: Akamai	-->
+	<rule from="^http://i-cdn\.(?:servedby)?openx\.com/"
+		to="https://i-cdn.openx.com/" />
+
+	<rule from="^http://(adserver|d1|developer)\.openx\.org/"
+		to="https://$1.openx.org/" />
+
+	<!--	Tracking beacon.	-->
+	<rule from="^http://([ru])\.openx\.net/"
+		to="https://$1.openx.net/" />
+
+	<!--	- Tracking beacon
+		- Seems edentical to u.openx.net
+					-->
+	<rule from="^http://oxdemo-d\.openxenterprise\.com/"
+		to="https://oxdemo-d.openxenterprise.com/" />
+
 </ruleset>

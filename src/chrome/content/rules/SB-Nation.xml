@@ -1,22 +1,57 @@
 <!--
-	s3.amazonaws.com/assets.sbnation.com/
-	chalk-images.s3.amazonaws.com
+	Other Vox Media rulesets:
 
-	!functional:
-		- cdn[0-3].sbnation.com		(data not on www)
+		- The-Verge.xml
 
-	data from cdn[0-3] all appear identical
+
+	CDN buckets:
+
+	- s3.amazonaws.com/assets.sbnation.com/
+	- chalk-images.s3.amazonaws.com
+
+
+	Nonfunctional domains:
+
+		- cdn[0-3].sbnation.com		(data not on www; cdn, cdn-origin,
+						origin, and origin-cdn don't exist)
+		- fonts.sbnation.com		(cert: *.voxcdn.com; 404)
+		- (www.)voxmedia.com		(ssl_error_rx_record_too_long)
+		- jobs.voxmedia.com		(Cert: *.resumator.com; voxmedia.resumator.com redirects to
+						http://app.theresumator.com/:nocustomer?dv_server_name=voxmedia.theresumator.com
+						jobs.voxmedia.com redirects to http)
+		- product.voxmedia.com		(hosted on Tumblr)
+
+
+	Data from cdn[0-3] all appear identical
+
 -->
 <ruleset name="SB Nation (partial)">
 
-	<target host="sbnation.com"/>
-	<target host="www.sbnation.com"/>
+	<target host="sbnation.com" />
+	<target host="*.sbnation.com" />
+	<target host="share.sbndev.net" />
 
-	<!--	observed cookies:
-			- _session_id	-->
-	<securecookie host="^www\.sbnation\.com$" name=".*"/>
 
-	<rule from="^http://(www\.)?sbnation\.com/"
-		to="https://$1sbnation.com/"/>
+	<!--	Observed cookies:
+			- _session_id
+		-->
+	<securecookie host="^www\.sbnation\.com$" name=".*" />
+
+
+	<!--	When fetched via https, blog
+		points links to http://....:443.
+						-->
+	<rule from="^http://(blog\.|www\.)?sbnation\.com(?::443)?/"
+		to="https://$1sbnation.com/" />
+
+	<rule from="^https?://assets\.sbnation\.com/"
+		to="https://s3.amazonaws.com/assets.sbnation.com/" />
+
+	<!--	cert: *.openxenterprise.com	-->
+	<rule from="^https?://ox-d\.sbnation\.com/"
+		to="https://u.openx.net/" />
+
+	<rule from="^https?://share\.sbndev\.net/"
+		to="https://s3.amazonaws.com/share.sbndev.net/" />
 
 </ruleset>

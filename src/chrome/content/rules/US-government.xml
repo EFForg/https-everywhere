@@ -10,6 +10,7 @@
 		- National-Institutes-of-Health.xml
 		- National-Science-Foundation.xml
 		- National-Security-Agency.xml
+		- New-York-City.xml
 		- Oak-Ridge-National-Laboratory.xml
 		- Pay.gov
 		- Senate.gov.xml
@@ -23,46 +24,56 @@
 		- US-Securities-and-Exchange-Commission.xml
 
 
+	mtrics.cdc.gov/b/ss/cdcgov/
+
+
 	Nonfunctional:
 
 		- georgewbush-whitehouse.archives.gov	(times out)
+		- cdc.gov				(ditto)
+		- www.cdc.gov				(Akamai; "temporarily unavailable")
 		- factfinder2.census.gov
-		- (www.)civicfed.gov		(cert: secure115.inmotionhosting.com; shows that domain's data)
-		- (www.)cybercrime.gov		(ssl_error_rx_record_too_long)
-		- (www.)energy.gov		(timeout)
-		- rgl.faa.gov			(timeout)
-		- archive.hhs.gov		(timeout)
-		- www.hhs.gov			(Akamai, shows 404 page)
-		- appropriations.house.gov	(Bad Request)
-		- clerk.house.gov		(timeout)
-		- (www.)justice.gov		(ssl_error_rx_record_too_long)
+		- (www.)civicfed.gov			(cert: secure115.inmotionhosting.com; shows that domain's data)
+		- (www.)copyright.gov			(cert: wwws.loc.gov; shows that domain's data)
+		- (www.)cybercrime.gov			(ssl_error_rx_record_too_long)
+		- (www.)energy.gov			(timeout)
+		- rgl.faa.gov				(timeout)
+		- archive.hhs.gov			(timeout)
+		- www.hhs.gov				(Akamai, shows 404 page)
+		- appropriations.house.gov		(400)
+		- clerk.house.gov			(timeout)
+		- energycommerce.house.gov		(400)
+		- republicans.energycommerce.house.gov	(400)
+		- (www.)justice.gov			(ssl_error_rx_record_too_long)
 		- thomas.loc.gov
-		- www.loc.gov			(cert: wwws.loc.gov)
-		- mymoney.gov           	(interrupted)
-		- www.mymoney.gov       	(Akamai; shows Microsoft Forefront 403 page)
-		- (www.)nga.gov			(times out)
-		- (www.)noaa.gov		(timeout)
+		- www.loc.gov				(cert: wwws.loc.gov)
+		- mymoney.gov           		(interrupted)
+		- www.mymoney.gov       		(Akamai; shows Microsoft Forefront 403 page)
+		- (www.)nga.gov				(times out)
+		- (www.)noaa.gov			(timeout)
 		- maps.ngdc.noaa.gov
 		- noaanews.noaa.gov
-		- www.noaanews.noaa.gov		(timeout)
-		- www.acces.nysed.gov		(timeout)
-		- ansers.usa.gov		(timeout)
-		- blog.usa.gov
-		- usa.gov			(Akamai, redirects to http)
-		- www.usda.gov			(Akamai, redirects to pws.sc.egov.usda.gov; however !www works [cert: my.usda.gov])
+		- www.noaanews.noaa.gov			(timeout)
+		- www.acces.nysed.gov			(timeout)
+		- uscourts.gov
+		- www.ca9.uscourts.gov
+		- www.uscourts.gov			(Akamai; 404)
+		- www.usda.gov				(Akamai, redirects to pws.sc.egov.usda.gov; however !www works [cert: my.usda.gov])
 		- (www.)eauth.egov.usda.gov
-		- www.nrcs.usda.gov		(Akamai; www redirects to pws.sc.egov.usda.gov; !www times out)
-		- (www.)rurdev.usda.gov		(!www times out)
-		- forms.sc.egov.usda.gov	(timeout)
-		- (www.)usitc.gov		(ditto)
-		- ebiz1.uspto.gov		(ditto)
-		- patft.uspto.gov		(ditto)
-		- (www.)uspto.gov		(ditto)
-		- (www.)ustr.gov		(cert: ssl2050.cloudflare.com; "Offline Mode")
+		- www.nrcs.usda.gov			(Akamai; www redirects to pws.sc.egov.usda.gov; !www times out)
+		- (www.)rurdev.usda.gov			(!www times out)
+		- forms.sc.egov.usda.gov		(timeout)
+		- (www.)usitc.gov			(ditto)
+		- ebiz1.uspto.gov			(ditto)
+		- patft.uspto.gov			(ditto)
+		- (www.)uspto.gov			(ditto)
+		- (www.)ustr.gov			(cert: ssl2050.cloudflare.com; "Offline Mode")
 
 -->
 <ruleset name="US government (partial)">
 
+	<target host="mtrics.cdc.gov" />
+	<target host="wwwn.cdc.gov" />
 	<target host="census.gov"/>
 	<target host="www.census.gov"/>
 	<target host="cms.gov"/>
@@ -78,6 +89,7 @@
 	<target host="cms.hhs.gov"/>
 	<target host="www.cms.hhs.gov"/>
 	<target host="intelligence.house.gov"/>
+	<target host="wwws.loc.gov" />
 	<target host="medicare.gov"/>
 	<target host="*.medicare.gov"/>
 	<target host="oip.sc.egov.usda.gov"/>
@@ -99,6 +111,12 @@
 	<securecookie host="^my\.usda\.gov$" name=".*"/>
 
 
+	<rule from="^https?://mtrics\.cdc\.gov/"
+		to="https://cdcgov.112.2o7.net/" />
+
+	<rule from="^http://wwwn\.cdc\.gov/"
+		to="https://wwwn.cdc.gov/" />
+
 	<rule from="^http://(?:www\.)?(census|fbo|genome|medicare)\.gov/"
 		to="https://www.$1.gov/"/>
 
@@ -119,6 +137,9 @@
 
 	<rule from="^http://intelligence\.house\.gov/"
 		to="https://intelligence.house.gov/"/>
+
+	<rule from="^http://wwws\.loc\.gov/"
+		to="https://wwws.loc.gov/" />
 
 	<rule from="^http://([\w\-]+\.)?usajobs\.gov/"
 		to="https://$1usajobs.gov/"/>

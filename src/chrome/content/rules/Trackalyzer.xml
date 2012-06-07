@@ -1,0 +1,24 @@
+<ruleset name="Trackalyzer">
+
+	<target host="trackalyzer.com" />
+	<target host="*.trackalyzer.com" />
+
+
+	<securecookie host="^(.*\.)?trackalyzer\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?trackalyzer\.com/"
+		to="https://$1trackalyzer.com/" />
+
+	<!--	- //(www\.)?trackalyser.com/trackalyze.asp redirects to t1.../0.gif
+		- Cert only matches // & www
+		- t 2 & 3 time out
+				-->
+	<rule from="^https?://t[123]\.trackalyzer\.com/trackalyze(?:_secure)?\.asp"
+		to="https://trackalyzer.com/trackalyze_secure.asp" />
+
+	<!--	0.gif doesn't though.	-->
+	<rule from="^https?://t[123]\.trackalyzer\.com/0\.gif"
+		to="https://trackalyzer.com/0.gif" />
+
+</ruleset>
