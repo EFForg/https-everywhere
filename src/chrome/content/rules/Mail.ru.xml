@@ -1,5 +1,6 @@
 <!--
-	!functional:
+	Nonfunctional domains:
+
 		- afisha.mail.ru	(timeout)
 		- blogs.mail.ru
 		- internet.mail.ru	(timeout)
@@ -7,16 +8,17 @@
 		- r2.mail.ru
 		- d4.c8.b0.a2.top.mail.ru
 		- (www.)mail.ru
+
 -->
 <ruleset name="Mail.ru (partial)">
 
+	<target host="*.mail.ru" />
+		<!--	afisha & internet time out.	-->
+		<exclusion pattern="^http://(afisha|blogs|internet|www)\." />
 	<target host="cdn.connect.mail.ru" />
 	<target host="avt.foto.mail.ru" />
 	<target host="m.news.mail.ru" />
 	<target host="*.tv.mail.ru" />
-	<target host="*.mail.ru" />
-		<!--	afisha & internet time out.	-->
-		<exclusion pattern="^http://(afisha|blogs|internet|www)\." />
 	<target host="*.imgsmail.ru" />
 
 
@@ -27,30 +29,30 @@
 	<!--	cert doesn't match img.tv
 		ditto my.tv.  my.tv appears identical to tv	-->
 	<rule from="^http://(?:(ad|corp|avt\.foto|r3?|sales|showbiz|status)|(img)(?:\.tv)?|(?:my\.)?(tv))\.mail\.ru/"
-		to="https://$1$2$3.mail.ru/"/>
+		to="https://$1$2$3.mail.ru/" />
 
 	<!--	Cert only matches *.mail.ru	-->
 	<rule from="^https?://(?:cdn\.)?connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
 
 	<rule from="^http://lady\.mail\.ru/([^/])\.css"
-		to="https://lady.mail.ru/$1.css"/>
+		to="https://lady.mail.ru/$1.css" />
 
 	<rule from="^http://news\.mail\.ru/(_css/|favicon\.ico$|img/|pic/|prev\d{1,6}/)"
-		to="https://news.mail.ru/$1"/>
+		to="https://news.mail.ru/$1" />
 
 	<!--	cert doesn't match m.news	-->
-	<rule from="^http://m\.news\.mail\.ru/(_css/|favicon\.ico$|img/)"
-		to="https://news.mail.ru/$1"/>
+	<rule from="^https?://m\.news\.mail\.ru/(_css/|favicon\.ico$|img/)"
+		to="https://news.mail.ru/$1" />
 
-	<rule from="^http://r[23s]\.mail\.ru/"
-		to="https://rs.mail.ru/"/>
+	<rule from="^https?://r[23s]\.mail\.ru/"
+		to="https://rs.mail.ru/" />
 
 	<rule from="^http://go\.imgsmail\.ru/"
 		to="https://go.imgsmail.ru/" />
 
 	<!--	also on img.mail.ru	-->
-	<rule from="^http://l?img\.imgsmail\.ru/"
-		to="https://img.imgsmail.ru/"/>
+	<rule from="^https?://l?img\.imgsmail\.ru/"
+		to="https://img.imgsmail.ru/" />
 
 </ruleset>
