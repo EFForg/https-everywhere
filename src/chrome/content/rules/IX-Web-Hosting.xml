@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional domains:
+
+		- status.ixwebhosting.com
+
+-->
+<ruleset name="IX Web Hosting">
+
+	<target host="ixwebhosting.com" />
+	<target host="*.ixwebhosting.com" />
+	<target host="webmail.opentransfer.com" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.webmail.opentransfer.com" />
+
+
+	<securecookie host="^.*\.ixwebhosting\.com$" name=".*" />
+	<securecookie host="^\.webmail\.opentransfer\.com$" name=".*" />
+
+
+	<rule from="^http://((?:assets|manage|webmail|www)\.)?ixwebhosting\.com/"
+		to="https://$1ixwebhosting.com/" />
+
+	<!--	- blog doesn't work over https
+		- $ redirects like so
+			-->
+	<rule from="^https?://blog\.ixwebhosting\.com/"
+		to="https://www.ixwebhosting.com/blog/" />
+
+	<!--	- Cert: *.opentransfer.com
+		- Redirects like so
+				-->
+	<rule from="^https?://email\.ixwebhosting\.com/"
+		to="https://webmail.opentransfer.com/horde/imp/" />
+
+	<rule from="^http://webmail\.opentransfer\.com/"
+		to="https://webmail.opentransfer.com/" />
+
+</ruleset>
