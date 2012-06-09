@@ -1,6 +1,17 @@
-<!--	!functional:
-		- static.typepad.com
-		- foo.typepad.com	(account subdomains)
+<!--
+	For problematic rules, see Say-Media-mismatches.xml.
+
+
+	Nonfunctional:
+
+		- typepad.com subdomains:
+
+			- everything		(times out)
+			- help			(ditto)
+			- help-origin		(ditto)
+			- static		(cert: www; redirects to www)
+			- foo			(account subdomains)
+
 		- (www.)saydaily.com	(timeout)
 		- blog.saymedia.com	(timeout)
 -->
@@ -10,7 +21,9 @@
 	<target host="www.saymedia.com"/>
 	<target host="typepad.com"/>
 	<target host="www.typepad.com"/>
-		<exclusion pattern="http://www\.typepad\.com/services/signin/"/>
+		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001190.html	-->
+		<exclusion pattern="http://www\.typepad\.com/services($|[\?/])" />
+
 
 	<rule from="^http://(www\.)?saymedia\.com/"
 		to="https://$1saymedia.com/"/>
