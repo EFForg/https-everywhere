@@ -2,10 +2,19 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
+	d3j5vwomefv46c.cloudfront.net
+
+
 	Nonfunctional domains:
 
-		- msnbcmedia\d?.msn.com	(timeout)
-		- nbcsports.msnbc.com	(cert: *.pantherssl.com)
+		- nbcsports.msnbc.com		(cert: *.pantherssl.com)
+
+		- msnbc.msn.com subdomains:
+
+			- www.futureoftech	(Akamai, 503; !www redirects to www)
+			- www.gadgetbox		(ditto)
+			- www.ingame		(ditto)
+			- www.technolog		(ditto)
 
 -->
 <ruleset name="MSN (partial)" default_off="mismatch">
@@ -14,6 +23,12 @@
 	<target host="msnbc.msn.com" />
 	<!--	Akamai: assets(\dd)?, www	-->
 	<target host="*.msnbc.msn.com" />
+	<target host="*.today.msnbc.msn.com" />
+	<target host="msnbcmedia.msn.com" />
+	<target host="msnbcmedia1.msn.com" />
+	<target host="msnbcmedia2.msn.com" />
+	<target host="msnbcmedia3.msn.com" />
+	<target host="msnbcmedia4.msn.com" />
 	<target host="my.msn.com" />
 	<!--	Akamai	-->
 	<target host="polls.newsvine.com" />
@@ -27,12 +42,45 @@
 	<rule from="^https?://(?:www\.)?msnbc\.msn\.com/"
 		to="https://www.msnbc.msn.com/" />
 
-	<!--	all appear to be the same, so minimize exclusions needed	-->
+	<!--	- Akamai
+		- All appear to be the same, so minimize exclusions needed
+				-->
 	<rule from="^https?://assets(?:\dd)?\.msnbc\.msn\.com/"
 		to="https://assets.msnbc.msn.com/" />
 
-	<rule from="^http://(bottomline|cosmiclog|photoblog|usnews)\.msnbc\.msn\.com/"
+	<!--	Akamai	-->
+	<rule from="^http://(assets(?:2c)?|behindthewall|bodyodd|bottomline|cartoonblog|cosmiclog|ed|dailynightly|entertainment|firstread|hardballblog|insidedateline|itineraries|maddowblog|mojoe|openchannel|overheadbin|photoblog|presspass|redtape|scoop|thelastword|(?:animaltracks|bites|celebrate|digitallife|lifeinc|moms|rockcenter|scoop|theclicker|thelook|today(?:entertainment|health|hiringourheroes|onthetrail|travel)|windsorknot)\.today|travelkit|usnews(?:first)?|vitals|world(?:blog|news|newsfirst))\.msnbc\.msn\.com/"
 		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- foo.today.msnbc.msn.com cert: *.newsvine.com
+		- foo.today 302s to foo
+			-->
+	<rule from="^https?://(economywatch|marketday|nbcpolitics)(?:\.today)?\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- 302s like so
+			-->
+	<rule from="^https?://fieldnotes\.msnbc\.msn\.com/"
+		to="https://usnews.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- allday 302s to allday.today
+			-->
+	<rule from="^https?://allday(?:\.today)\.msnbc\.com/"
+		to="https://allday.today.msnbc.com/" />
+
+	<!--	- www.today cert: *.msnbc.msn.com
+		- 301s to today
+			-->
+	<rule from="^https?://(?:www\.)?today\.msnbc\.msn\.com/"
+		to="https://today.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- Data appear identical
+				-->
+	<rule from="^https?://msnbcmedia[1-4]?\.msn\.com/"
+		to="https://msnbcmedia.msn.com/" />
 
 	<rule from="^http://my\.msn\.com/"
 		to="https://my.msn.com/" />
