@@ -2,10 +2,16 @@
 
 	<target host="hotels.nationalrail.co.uk"/>
 	<target host="*.hotels.nationalrail.co.uk"/>
+	<target host="js.nationalrail.co.uk" />
 
 	<securecookie host="^\.hotels\.nationalrail\.co\.uk$" name=".*"/>
 
-	<rule from="^http://hotels\.nationalrail\.co\.uk/"
-		to="https://hotels.nationalrail.co.uk/"/>
+	<!--	js cert: *.cloudfront.net
+
+		s3.amazonaws.com/js.nationalrail.co.uk forces redirect to js.nationalrail.co.uk.s3.amazonaws.com,
+		so there's not much point rewriting there - invalid cert either way.
+					-->
+	<rule from="^http://(hotels|js)\.nationalrail\.co\.uk/"
+		to="https://$1.nationalrail.co.uk/"/>
 
 </ruleset>
