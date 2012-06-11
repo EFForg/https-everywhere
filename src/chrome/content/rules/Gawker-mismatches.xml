@@ -5,16 +5,25 @@
 <ruleset name="Gawker (mismatches)" default_off="mismatch">
 
 	<target host="jalopnik.com" />
-	<!--	* for cross-domain cookies	-->
+	<!--	*s for cross-domain cookies	-->
 	<target host="*.jalopnik.com" />
+	<target host="kotaku.com" />
+	<target host="*.kotaku.com" />
+		<!--	Handled in Gawker.xml.	-->
+		<exclusion pattern="^http://(www\.)?kotaku\.com/assets/" />
 
 
 	<securecookie host="^\.?jalopnik\.com$" name=".*" />
+	<securecookie host="^\.?kotaku\.com$" name=".*" />
 
 
 	<!--	Minimize the number of exceptions needed
 		by rewriting to one domain only.	-->
-	<rule from="^http://(?:cache\.|www\.)?jalopnik\.com/"
+	<rule from="^https?://(?:cache\.|www\.)?jalopnik\.com/"
 		to="https://jalopnik.com/" />
+
+	<!--	Cert: *.gawker.com	-->
+	<rule from="^https?://(?:www\.)?kotaku\.com/"
+		to="https://kotaku.com/" />
 
 </ruleset>
