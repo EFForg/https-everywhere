@@ -26,6 +26,12 @@
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(1[89]\d\d|200[0-4])/"/>
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/info/"/>
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/services/xml/rss/index.html"/>
+		<!--
+			404s over https.
+
+			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+							-->
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler($|\?)" />
 
 
 	<securecookie host="^(.*\.)?boston\.com$" name=".*"/>
@@ -92,5 +98,12 @@
 		Ditto for adverts and scripts.		-->
 	<rule from="^http://travel\.nytimes\.com/(\d{4}/\d\d/\d\d|adx|js)/"
 		to="https://www.nytimes.com/$1/"/>
+
+	<!--	404s over https.
+
+		https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+							-->
+	<rule from="^https://www\.nytimes\.com/svc/community/V3/requestHandler($|\?)"
+		to="http://www.nytimes.com/svc/community/V3/requestHandler$1" downgrade="1" />
 
 </ruleset>
