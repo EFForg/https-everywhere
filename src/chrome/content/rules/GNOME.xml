@@ -1,32 +1,29 @@
 <!--
-	Nonfunctional:
+	Nonfunctional domains:
 
 		- gnome.asia		(cert: guzheng.lyrical.net; shows empty tree)
 		- 2012.gnome.asia	(ditto)
 		- www.gnome.asia	(ditto)
 
-		- gnomejournal.org		(cert: rt.gnome.org, expired, shows that domain's data)
+		- gnomejournal.org		(cert: www.gnome.org; shows rt.gnome.org's data)
 
 		- gnome.org subdomains:
 
-			- art			(cert: www, expired; 404)
+			- art
 			- blogs
-			- developer		(cert: rt, expired)
+			- developer		(shows rt's data)
 			- foundation		(cert: www; shows www's data)
 			- git
-			- ldap			(cert: live; shows live's data)
-			- label			(ditto)
-			- library		(cert: rt, expired; shows rt's data)
-			- menubar		(cert: mail, shows mail's data)
-			- news			(cert: rt, expired; shows rt's data)
-			- people		(cert: www, expired; 404)
-			- planet		(cert: rt, expired; shows rt's data)
-			- projects		(cert: www, expired; 404)
-			- webstats		(cert: live, shows live's data)
-			- vote			(cert: rt, expired; shows rt's data)
+			- library		(shows rt's data)
+			- news			(shows rt's data)
+			- people
+			- planet		(shows rt's data)
+			- projects
+			- webstats		(ssl_error_rx_record_too_long)
+			- vote			(shows rt's data)
 			- usability		(ditto)
-			- webapps		(ditto)
-			- www-old		(cert: www, expired; 404)
+			- webapps		(shows rt's data)
+			- www-old
 
 -->
 <ruleset name="GNOME (partial)">
@@ -41,12 +38,19 @@
 	<securecookie host="^.*\.gnome\.org$" name=".*" />
 
 
-	<rule from="^http://((?:bugzilla|extensions|mail|mango|live|rt|www)\.)?gnome\.org/"
+	<rule from="^http://((?:bugzilla|extensions|ldap|mail|mango|menubar|live|rt|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
 	<!--	Redirects as so over http.	-->
 	<rule from="^https?://foundation\.gnome\.org/"
 		to="https://www.gnome.org/foundation/" />
+
+	<!--	- Cert matches label & ldap
+		- Both reply in http (ssl_error_rx_record_too_long)
+		- Both redirect like so over http.
+				-->
+	<rule from="^https?://l(?:abel|dap)\.gnome\.org/"
+		to="https://live.gnome.org/" />
 
 	<!--	Redirects as so over http.	-->
 	<rule from="^https?://usability\.gnome\.org/"
