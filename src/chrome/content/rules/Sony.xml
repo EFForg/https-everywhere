@@ -3,6 +3,7 @@
 
 		- esupport.sony.com		(redirects to s01.esupport, which has different data)
 		- www.kb.sony.com
+		- talk.sonymobile.com		(cert: gp1.wac.edgecastcdn.net; 404)
 
 -->
 <ruleset name="Sony (partial)">
@@ -12,11 +13,14 @@
 	<target host="*.us.playstation.com" />
 	<target host="webassets.scea.com" />
 	<target host="*.webassets.scea.com" />
+	<target host="www-static.se-mc.com" />
 	<target host="sony.com" />
 	<target host="*.sony.com" />
 	<target host="s01.esupport.sony.com" />
 	<target host="sonyentertainmentnetwork.com" />
 	<target host="*.sonyentertainmentnetwork.com" />
+	<target host="sonymobile.com" />
+	<target host="www.sonymobile.com" />
 
 
 	<securecookie host="^.*\.playstation\.com$" name=".*" />
@@ -38,6 +42,9 @@
 	<rule from="^https?://(?:\w+\.)?webassets\.scea\.com/"
 		to="https://secure.webassets.scea.com/" />
 
+	<rule from="^http://www-static\.se-mc\.com/"
+		to="https://www-static.se-mc.com/" />
+
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?sony\.com/"
 		to="https://www.sony.com/" />
@@ -53,5 +60,13 @@
 					-->
 	<rule from="^https?://cdn\.sonyentertainmentnetwork\.com/"
 		to="https://www.sonyentertainmentnetwork.com/" />
+
+
+	<!--	- !www times out over https
+		- !www redirects to www over http
+		- At least some pages throw 401
+				-->
+	<rule from="^https?://(?:www\.)?sonymobile\.com/(cws|wp-content)/"
+		to="https://www.sonymobile.com/$1/" />
 
 </ruleset>
