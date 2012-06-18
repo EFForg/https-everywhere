@@ -48,6 +48,8 @@ function RuleSet(name, match_rule, default_off) {
   }
 }
 
+var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
+
 RuleSet.prototype = {
   _apply: function(urispec) {
     // return null if it does not apply
@@ -228,11 +230,12 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();	
+    fstream.close();
+    // XXX: With DOMParser, we probably do not need to throw away the XML
+    // declaration anymore nowadays.
     data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
-      data = data.replace(/<\?xml[^>]*\?>/, ""); 
-      var xmlrulesets = XML(data);
+      var xmlrulesets = dom_parser.parseFromString(data, "text/xml");
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
@@ -240,40 +243,39 @@ const RuleWriter = {
     this.parseXmlRulesets(xmlrulesets, rule_store, file);
   },
 
-  parseXmlRulesets: function(xmlblob, rule_store, file) {
-    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
-    // add them to the rule_store HTTPSRules object.
-    if (xmlblob.@name != xmlblob.@nonexistantthing) {
-      // The root of the XML tree has a name, which means it should be single a ruleset...
-      this.parseOneRuleset(xmlblob, rule_store, file);
+
+  parseXmlRulesets: function(xmldom, rule_store, file) {
+    // XML input files can either be a <ruleset> in a file, or a
+    // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
+    // because ZIP does a much better job of compressing it).
+    if (xmldom.documentElement.nodeName == "ruleset") {
+      // This is a single ruleset.
+      this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
-      // The root of the XML tree should be a <rulesetlibrary> with many
-      // <ruleset> children
-      var lngth = xmlblob.ruleset.length(); // premature optimisation
+      // The root of the XML tree is assumed to look like a <rulesetlibrary>
+      var lngth = xmldom.documentElement.getElementsByTagName("ruleset").length; // premature optimisation
       if (lngth == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
-                        + file.path + "\n" +  xmlblob);
+                        + file.path + "\n" +  xmldom);
       for (var j = 0; j < lngth; j++) 
-        this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
+        this.parseOneRuleset(xmldom.getElementsByTagName("ruleset")[j], rule_store, file);
     }
   },
 
   parseOneRuleset: function(xmlruleset, rule_store, file) {
-    // Extract an xmlrulset into the rulestore
-    this.log(DBUG, "Parsing " + xmlruleset.@name + " from " + file.path);
-
-    if (xmlruleset.@name == xmlruleset.@nonexistantthing) {
+    // Extract an xmlruleset into the rulestore
+    if (!xmlruleset.getAttribute("name")) {
       this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
       return null;
     }
 
-    var match_rl = null;
-    var dflt_off = null;
-    if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
-    if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
-    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
+    this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name") + " from " + file.path);
 
-    if (xmlruleset.target.length() == 0) {
+    var match_rl = xmlruleset.getAttribute("match_rule");
+    var dflt_off = xmlruleset.getAttribute("default_off");
+    var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off);
+
+    if (xmlruleset.getElementsByTagName("target").length == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
@@ -289,8 +291,8 @@ const RuleWriter = {
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
     // target host indexes
-    for (var i = 0; i < xmlruleset.target.length(); i++) {
-      var host = xmlruleset.target[i].@host;
+    for (var i = 0; i < xmlruleset.getElementsByTagName("target").length; i++) {
+      var host = xmlruleset.getElementsByTagName("target")[i].getAttribute("host");
       if (!host) {
         this.log(WARN, "<target> missing host in " + file.path);
         return null;
@@ -300,20 +302,20 @@ const RuleWriter = {
       rule_store.targets[host].push(rs);
     }
 
-    for (var i = 0; i < xmlruleset.exclusion.length(); i++) {
-      var exclusion = new Exclusion(xmlruleset.exclusion[i].@pattern);
+    for (var i = 0; i < xmlruleset.getElementsByTagName("exclusion").length; i++) {
+      var exclusion = new Exclusion(xmlruleset.getElementsByTagName("exclusion")[i].getAttribute("pattern"));
       rs.exclusions.push(exclusion);
     }
 
-    for (var i = 0; i < xmlruleset.rule.length(); i++) {
-      var rule = new Rule(xmlruleset.rule[i].@from,
-                          xmlruleset.rule[i].@to);
+    for (var i = 0; i < xmlruleset.getElementsByTagName("rule").length; i++) {
+      var rule = new Rule(xmlruleset.getElementsByTagName("rule")[i].getAttribute("from"),
+                          xmlruleset.getElementsByTagName("rule")[i].getAttribute("to"));
       rs.rules.push(rule);
     }
 
-    for (var i = 0; i < xmlruleset.securecookie.length(); i++) {
-      var c_rule = new CookieRule(xmlruleset.securecookie[i].@host,
-                                  xmlruleset.securecookie[i].@name);
+    for (var i = 0; i < xmlruleset.getElementsByTagName("securecookie").length; i++) {
+      var c_rule = new CookieRule(xmlruleset.getElementsByTagName("securecookie")[i].getAttribute("host"),
+                                  xmlruleset.getElementsByTagName("securecookie")[i].getAttribute("name"));
       rs.cookierules.push(c_rule);
       this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
