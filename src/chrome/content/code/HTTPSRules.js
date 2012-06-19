@@ -269,12 +269,12 @@ const RuleWriter = {
       } else {
         rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
       }
-      var lngth = xmldom.documentElement.getElementsByTagName("ruleset").length; // premature optimisation
-      if (lngth == 0 && (file.path.search("00README") == -1))
+      var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
+      if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
                         + file.path + "\n" +  xmldom);
-      for (var j = 0; j < lngth; j++) 
-        this.parseOneRuleset(xmldom.getElementsByTagName("ruleset")[j], rule_store, file);
+      for (var j = 0; j < rulesets.length; j++)
+        this.parseOneRuleset(rulesets[j], rule_store, file);
     }
   },
 
@@ -292,7 +292,8 @@ const RuleWriter = {
     var platform = xmlruleset.getAttribute("platform");
     var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
 
-    if (xmlruleset.getElementsByTagName("target").length == 0) {
+    var targets = xmlruleset.getElementsByTagName("target");
+    if (targets.length == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
@@ -308,8 +309,8 @@ const RuleWriter = {
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
     // target host indexes
-    for (var i = 0; i < xmlruleset.getElementsByTagName("target").length; i++) {
-      var host = xmlruleset.getElementsByTagName("target")[i].getAttribute("host");
+    for (var i = 0; i < targets.length; i++) {
+      var host = targets[i].getAttribute("host");
       if (!host) {
         this.log(WARN, "<target> missing host in " + file.path);
         return null;
@@ -319,20 +320,23 @@ const RuleWriter = {
       rule_store.targets[host].push(rs);
     }
 
-    for (var i = 0; i < xmlruleset.getElementsByTagName("exclusion").length; i++) {
-      var exclusion = new Exclusion(xmlruleset.getElementsByTagName("exclusion")[i].getAttribute("pattern"));
+    var exclusions = xmlruleset.getElementsByTagName("exclusion");
+    for (var i = 0; i < exclusions.length; i++) {
+      var exclusion = new Exclusion(exclusions[i].getAttribute("pattern"));
       rs.exclusions.push(exclusion);
     }
 
-    for (var i = 0; i < xmlruleset.getElementsByTagName("rule").length; i++) {
-      var rule = new Rule(xmlruleset.getElementsByTagName("rule")[i].getAttribute("from"),
-                          xmlruleset.getElementsByTagName("rule")[i].getAttribute("to"));
+    var rules = xmlruleset.getElementsByTagName("rule");
+    for (var i = 0; i < rules.length; i++) {
+      var rule = new Rule(rules[i].getAttribute("from"),
+                          rules[i].getAttribute("to"));
       rs.rules.push(rule);
     }
 
-    for (var i = 0; i < xmlruleset.getElementsByTagName("securecookie").length; i++) {
-      var c_rule = new CookieRule(xmlruleset.getElementsByTagName("securecookie")[i].getAttribute("host"),
-                                  xmlruleset.getElementsByTagName("securecookie")[i].getAttribute("name"));
+    var securecookies = xmlruleset.getElementsByTagName("securecookie");
+    for (var i = 0; i < securecookies.length; i++) {
+      var c_rule = new CookieRule(securecookies[i].getAttribute("host"),
+                                  securecookies[i].getAttribute("name"));
       rs.cookierules.push(c_rule);
       this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
