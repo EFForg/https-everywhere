@@ -40,12 +40,14 @@
 	<rule from="^http://apps\.usa\.gov/"
 		to="https://apps.usa.gov/"/>
 
-	<!--	www
-			- cert: Akamai
-			- redirects to pws.sc.egov.usda.gov
-		!www
-			- cert: my.usda.gov
-		offices.sc.egov
+	<!--	- !www cert: my.usda.gov
+		- www: Akamai
+		- Both !www...$ & www...$ redirect to pws.sc.egov.usda.gov over https
+				-->
+	<rule from="^http://(?:www\.)?usda\.gov/$"
+		to="https://usda.org/wps/portal/usda/usdahome" />
+
+	<!--	offices.sc.egov
 			- cert: oip.usda.gov		-->
 	<rule from="^http://(?:(offices\.sc\.egov\.)|www\.)?usda\.gov/"
 		to="https://$1usda.gov/"/>
