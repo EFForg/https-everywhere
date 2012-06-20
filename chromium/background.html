@@ -19,6 +19,19 @@ for (r in rs) {
 }
 */
 
+function displayPageAction(details) {
+  if (details.tabId != -1 && this.activeRulesets.getRulesets(details.tabId)) {
+    chrome.tabs.get(details.tabId, function(tab) {
+      if(typeof(tab) == "undefined") {
+        log(DBUG, "Not a real tab. Skipping showing pageAction."); 
+      }
+      else {
+        chrome.pageAction.show(details.tabId);
+      }
+    });
+  }
+}
+
 function AppliedRulesets() {
   this.active_tab_rules = {}
 
@@ -109,9 +122,7 @@ function onBeforeRequest(details) {
       newuristr = rs[i]._apply(canonical_url);
   }
 
-  if (this.activeRulesets.getRulesets(details.tabId)) {
-      chrome.pageAction.show(details.tabId);
-  }
+  displayPageAction(details);
 
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
@@ -218,13 +229,7 @@ function onBeforeSendHeaders(details) {
 }
 
 function onResponseStarted(details) {
-  if (details.tabId == -1) {
-    return;
-  }
-
-  if (this.activeRulesets.getRulesets(details.tabId)) {
-      chrome.pageAction.show(details.tabId);
-  }
+  displayPageAction(details);
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
