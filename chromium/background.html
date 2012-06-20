@@ -109,6 +109,10 @@ function onBeforeRequest(details) {
       newuristr = rs[i]._apply(canonical_url);
   }
 
+  if (this.activeRulesets.getRulesets(details.tabId)) {
+      chrome.pageAction.show(details.tabId);
+  }
+
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
@@ -216,10 +220,6 @@ function onBeforeSendHeaders(details) {
 function onResponseStarted(details) {
   if (details.tabId == -1) {
     return;
-  }
-
-  if (this.activeRulesets.getRulesets(details.tabId)) {
-      chrome.pageAction.show(details.tabId);
   }
 
   // redirect counter workaround
