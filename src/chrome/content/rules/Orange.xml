@@ -3,6 +3,11 @@
 	some pages it keeps falling back to http.
 
 
+	CDN buckets:
+
+		- melt-orange-live-orangedigital.s3.amazonaws.com
+
+
 	Nonfunctional domains:
 
 		- (www.)orange.co.uk
@@ -11,14 +16,27 @@
 
 			  Thanks Orange!
 
+		- www2.orange.co.uk
+
+			- cert: www.orange.co.uk)
+			- Redirects to www
+			- 404s on www
+
 -->
 <ruleset name="Orange">
 
 	<target host="orange.co.il" />
 	<target host="www.orange.co.il" />
+	<target host="*.orange.co.uk" />
+
+
+	<securecookie host="^(kareena|shop)\.orange\.co\.uk$" name=".*" />
 
 
 	<rule from="^http://(?:www\.)?orange\.co\.il/"
 		to="https://www.orange.co.il/" />
+
+	<rule from="^http://(kareena|services|shop|wassup|web)\.orange\.co\.uk/"
+		to="https://$1.orange.co.uk/" />
 
 </ruleset>
