@@ -19,6 +19,29 @@ for (r in rs) {
 }
 */
 
+function displayPageAction(details) {
+  // Right now, the call to chrome.tabs.get creates
+  // a console error for a missing tab, even in a try/catch
+  // block. As it still provides a good test of whether a tab
+  // exists (if it does not then 'tab' in the callback is undefined)
+  // Reading forums on chrome extensions, it seems the only way
+  // to avoid a console error is to loop through all windows
+  // and explicitly check for the tabid in question. This seems
+  // expensive and not necessary so we are living with console errors
+  // of the form: "Error during tabs.get: No tab with id: 370"
+
+  if (details.tabId != -1 && this.activeRulesets.getRulesets(details.tabId)) {
+    chrome.tabs.get(details.tabId, function(tab) {
+      if(typeof(tab) == "undefined") {
+        log(DBUG, "Not a real tab. Skipping showing pageAction."); 
+      }
+      else {
+        chrome.pageAction.show(details.tabId);
+      }
+    });
+  }
+}
+
 function AppliedRulesets() {
   this.active_tab_rules = {}
 
@@ -108,6 +131,8 @@ function onBeforeRequest(details) {
     if (rs[i].active && !newuristr)
       newuristr = rs[i]._apply(canonical_url);
   }
+
+  displayPageAction(details);
 
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
@@ -214,13 +239,7 @@ function onBeforeSendHeaders(details) {
 }
 
 function onResponseStarted(details) {
-  if (details.tabId == -1) {
-    return;
-  }
-
-  if (this.activeRulesets.getRulesets(details.tabId)) {
-      chrome.pageAction.show(details.tabId);
-  }
+  displayPageAction(details);
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
