@@ -1,16 +1,29 @@
+<!--
+	Much of jobs.linux.com is handled in JobThread-clients.xml.
+
+
+	Nonfunctional subdomains:
+
+		- blogs
+
+-->
 <ruleset name="Linux.com">
 
 	<target host="linux.com" />
 	<target host="*.linux.com" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.store.linux.com" />
 
 
-	<securecookie host="^video\.linux\.com$" name=".*" />
+	<securecookie host="^.*\.linux\.com$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?linux\.com/"
-		to="https://www.linux.com/" />
+	<rule from="^http://((?:store|video|www)\.)?linux\.com/"
+		to="https://$1linux.com/" />
 
-	<rule from="^http://(store|video)\.linux\.com/"
-		to="https://$1.linux.com/" />
+	<!--	Cert: www.jobthread.com
+					-->
+	<rule from="^https?://jobs\.linux\.com/(image|file|partner)s/"
+		to="https://www.jobthread.com/$1s/" />
 
 </ruleset>
