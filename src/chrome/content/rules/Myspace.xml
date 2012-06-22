@@ -1,11 +1,32 @@
+<!--
+	For problematic rules, see Myspace-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- developer.myspace.com
+		- cms.myspacecdn.com		(valid cert; 504)
+
+-->
 <ruleset name="Myspace">
 
 	<target host="myspace.com" />
-	<target host="www.myspace.com" />
-		<exclusion pattern="^http://([^/:@\.]+)myspacecdn.com/" />
+	<target host="*.myspace.com" />
+	<target host="x.myspacecdn.com" />
 
 
-	<rule from="^http://(?:www\.)?myspace\.com/"
-		to="https://www.myspace.com/" />
+	<securecookie host="^\.myspace\.com$" name=".*" />
+
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^https?://(?:www\.)?imeem\.com/"
+		to="https://www.myspace.com/music/" />
+
+	<rule from="^http://(www\.)?myspace\.com/"
+		to="https://$1myspace.com/" />
+
+	<rule from="^http://x\.myspacecdn\.com/"
+		to="https://x.myspacecdn.com/" />
 
 </ruleset>
