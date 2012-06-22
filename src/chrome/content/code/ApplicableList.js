@@ -6,8 +6,8 @@ serial_number = 0
 
 function ApplicableList(logger, doc, domWin) {
   this.domWin = domWin;
+  this.uri = doc.baseURIObject.clone();
   this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
-  this.doc = doc;
   this.log = logger;
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
@@ -69,7 +69,7 @@ ApplicableList.prototype = {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
     
