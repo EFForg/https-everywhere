@@ -143,15 +143,15 @@ ApplicableList.prototype = {
         if(fromHost.indexOf("/") != -1)
             fromHost = fromHost.substr(0, fromHost.indexOf("/"));
                        
-        //Search for applicable rulesets for the host listed in the location bar
-        var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
+        // Search for applicable rulesets for the host listed in the location bar
+        var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
         
-        for (var i = 0 ; i < alist.length ; i++){
+        for (var i = 0 ; i < plist.length ; i++){
             //For each applicable rulset, determine active/inactive, and append to proper list.
-            if(o_httpsprefs.getBoolPref(alist[i].name))
-                this.active_rule(alist[i]);
+            if(o_httpsprefs.getBoolPref(plist[i].name))
+                this.active_rule(plist[i]);
             else
-                this.inactive_rule(alist[i]);                   
+                this.inactive_rule(plist[i]);                   
         }   
     }   
     
