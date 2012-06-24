@@ -6,8 +6,8 @@ serial_number = 0
 
 function ApplicableList(logger, doc, domWin) {
   this.domWin = domWin;
+  this.uri = doc.baseURIObject.clone();
   this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
-  this.doc = doc;
   this.log = logger;
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
@@ -69,7 +69,7 @@ ApplicableList.prototype = {
 
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.doc.baseURIObject);
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
     this.log(DBUG, "populating using alist #" + this.serial);
     this.document = document;
     
@@ -143,15 +143,15 @@ ApplicableList.prototype = {
         if(fromHost.indexOf("/") != -1)
             fromHost = fromHost.substr(0, fromHost.indexOf("/"));
                        
-        //Search for applicable rulesets for the host listed in the location bar
-        var alist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
+        // Search for applicable rulesets for the host listed in the location bar
+        var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
         
-        for (var i = 0 ; i < alist.length ; i++){
+        for (var i = 0 ; i < plist.length ; i++){
             //For each applicable rulset, determine active/inactive, and append to proper list.
-            if(o_httpsprefs.getBoolPref(alist[i].name))
-                this.active_rule(alist[i]);
+            if(o_httpsprefs.getBoolPref(plist[i].name))
+                this.active_rule(plist[i]);
             else
-                this.inactive_rule(alist[i]);                   
+                this.inactive_rule(plist[i]);                   
         }   
     }   
     
