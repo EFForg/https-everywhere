@@ -556,9 +556,9 @@ SSLObservatory.prototype = {
           
           // Retry up to two previously failed submissions
           let n = 0;
-          for (let fp in that.already_submitted) {
-            that.already_submitted[fp]();
-            delete that.already_submitted[fp];
+          for (let fp in that.delayed_submissions) {
+            that.delayed_submissions[fp]();
+            delete that.delayed_submissions[fp];
             if (++n >= 2) break;
           }
         } else if (req.status == 403) {
