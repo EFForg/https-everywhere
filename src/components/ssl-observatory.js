@@ -14,6 +14,7 @@ NOTE=4;
 WARN=5;
 
 BASE_REQ_SIZE=4096;
+MAX_DELAYED = 32;
 
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
@@ -65,8 +66,9 @@ function SSLObservatory() {
 
   this.public_roots = root_ca_hashes;
 
-  // Clear this on cookies-cleared observer event
+  // Clear these on cookies-cleared observer event
   this.already_submitted = {};
+  this.delayed_submissions = {};
   OS.addObserver(this, "cookie-changed", false);
 
   // The url to submit to
@@ -92,6 +94,7 @@ function SSLObservatory() {
   this.client_asn = -1;
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
+
 
   try {
     NSS.initialize("");
@@ -253,7 +256,8 @@ SSLObservatory.prototype = {
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
-      this.log(INFO, "Cookies were cleared. Purging list of already submitted sites");
+      this.delayed_submissions = {};
+      this.log(INFO, "Cookies were cleared. Purging list of pending and already submitted certs");
       return;
     }
 
@@ -315,9 +319,9 @@ SSLObservatory.prototype = {
         }
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
     }
@@ -451,7 +455,7 @@ SSLObservatory.prototype = {
     }
   },
 
-  submitChain: function(certArray, fps, domain, channel, host_ip) {
+  submitChain: function(certArray, fps, domain, channel, host_ip, resubmitting) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
@@ -534,28 +538,43 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = HTTPSEverywhere.getWindowForChannel(channel);
+    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
             if (c.fps[0] in that.already_submitted)
               delete that.already_submitted[c.fps[0]];
+          
+          // Retry up to two previously failed submissions
+          let n = 0;
+          for (let fp in that.already_submitted) {
+            that.already_submitted[fp]();
+            delete that.already_submitted[fp];
+            if (++n >= 2) break;
           }
         } else if (req.status == 403) {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            that.warnUser(warningObj, win, c.certArray[0]);
+            if (win) that.warnUser(warningObj, win, c.certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
           }
         } else {
+          // Submission failed
           if (c.fps[0] in that.already_submitted)
             delete that.already_submitted[c.fps[0]];
+          // If we don't have too many delayed submissions, and this isn't
+          // (somehow?) one of them, then plan to retry this submission later
+          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
+            if (!(c.fps[0] in that.delayed_submissions)) {
+              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); }
+              that.delayed_submissions[c.fps[0]] = retry;
+            }
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
