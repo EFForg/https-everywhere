@@ -16,6 +16,10 @@ WARN=5;
 BASE_REQ_SIZE=4096;
 MAX_DELAYED = 32;
 
+ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
+ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
+ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
+
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
@@ -91,7 +95,7 @@ function SSLObservatory() {
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
 
-  this.client_asn = -1;
+  this.client_asn = ASN_PRIVATE;
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
@@ -180,7 +184,7 @@ SSLObservatory.prototype = {
   },
 
   stopASNWatcher: function() {
-    this.client_asn = -1;
+    this.client_asn = ASN_PRIVATE;
     /*
     // unhook the observers we registered above
     OS.removeObserver(this, "network:offline-status-changed");
@@ -199,11 +203,11 @@ SSLObservatory.prototype = {
   getClientASN: function() {
     // Fetch a new client ASN..
     if (!this.myGetBoolPref("send_asn")) {
-      this.client_asn = -1;
+      this.client_asn = ASN_PRIVATE;
       return;
     }
     else if (!this.torbutton_installed) {
-      this.client_asn = -2;
+      this.client_asn = ASN_IMPLICIT;
       return;
     }
     // XXX As a possible base case: the user is running Tor, is not using
@@ -517,10 +521,10 @@ SSLObservatory.prototype = {
       reqParams.push("fplist="+this.compatJSON.encode(c.fps));
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
-    // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
-    // the less reliable offline/online notification-triggered fetch?
-    // this.max_ap will be null if we have no wifi info.
-    reqParams.push("client_asn="+this.client_asn);
+
+    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE)
+    else              reqParams.push("client_asn="+this.client_asn);
+
     if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
     else                                 reqParams.push("private_opt_in=0");
 
