@@ -455,6 +455,40 @@ SSLObservatory.prototype = {
     }
   },
 
+  shouldSubmit: function(chain, domain) {
+    // Return true if we should submit this chain to the SSL Observatory
+    var rootidx = this.findRootInChain(chain.certArray);
+    var ss= false;
+
+    if (chain.leaf.issuerName == chain.leaf.subjectName) 
+      ss = true;
+
+    if (!this.myGetBoolPref("self_signed") && ss) {
+      this.log(INFO, "Not submitting self-signed cert for " + domain);
+      return false;
+    }
+
+    if (!ss && !this.myGetBoolPref("alt_roots")) {
+      if (rootidx == -1) {
+        // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
+        this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
+                 chain.leaf.issuerName + " (not submitting due to settings)");
+        return false;
+      } else if (!(chain.fps[rootidx] in this.public_roots)) {
+        // A cert with a known but non-public Issuer
+        this.log(INFO, "Got a private root cert. Ignoring domain "
+                 +domain+" with root "+chain.fps[rootidx]);
+        return false;
+      }
+    }
+
+    if (chain.fps[0] in this.already_submitted) {
+      this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
+      return false;
+    }
+    return true;
+  },
+
   submitChain: function(certArray, fps, domain, channel, host_ip, resubmitting) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
@@ -462,35 +496,7 @@ SSLObservatory.prototype = {
     c = {}; c.certArray=certArray; c.fps = fps;
     c.leaf = certArray[0];
     this.processConvergenceChain(c);
-    var rootidx = this.findRootInChain(c.certArray);
-    var ss= false;
-
-    if (c.leaf.issuerName == c.leaf.subjectName) 
-      ss = true;
-
-    if (!this.myGetBoolPref("self_signed") && ss) {
-      this.log(INFO, "Not submitting self-signed cert for " + domain);
-      return;
-    }
-
-    if (!ss && !this.myGetBoolPref("alt_roots")) {
-      if (rootidx == -1) {
-        // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
-        this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
-                 c.leaf.issuerName + " (not submitting due to settings)");
-        return;
-      } else if (!(c.fps[rootidx] in this.public_roots)) {
-        // A cert with a known but non-public Issuer
-        this.log(INFO, "Got a private root cert. Ignoring domain "
-                 +domain+" with root "+c.fps[rootidx]);
-        return;
-      }
-    }
-
-    if (c.fps[0] in this.already_submitted) {
-      this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
-      return;
-    }
+    if (!this.shouldSubmit(c,domain)) return;
 
     var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
                 .getService(Components.interfaces.nsIWindowMediator);
