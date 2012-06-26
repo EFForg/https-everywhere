@@ -564,6 +564,7 @@ SSLObservatory.prototype = {
           // Retry up to two previously failed submissions
           let n = 0;
           for (let fp in that.delayed_submissions) {
+            that.log(WARN, "Retrying a submission...");
             that.delayed_submissions[fp]();
             delete that.delayed_submissions[fp];
             if (++n >= 2) break;
@@ -581,18 +582,20 @@ SSLObservatory.prototype = {
           // Submission failed
           if (c.fps[0] in that.already_submitted)
             delete that.already_submitted[c.fps[0]];
-          // If we don't have too many delayed submissions, and this isn't
-          // (somehow?) one of them, then plan to retry this submission later
-          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
-            if (!(c.fps[0] in that.delayed_submissions)) {
-              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); }
-              that.delayed_submissions[c.fps[0]] = retry;
-            }
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
             that.log(WARN, "Cert submission failure and exception: "+e);
           }
+          // If we don't have too many delayed submissions, and this isn't
+          // (somehow?) one of them, then plan to retry this submission later
+          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
+            if (!(c.fps[0] in that.delayed_submissions)) {
+              that.log(WARN, "Planning to retry submission...");
+              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+              that.delayed_submissions[c.fps[0]] = retry;
+            }
+
         }
       }
     };

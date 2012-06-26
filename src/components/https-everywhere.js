@@ -418,7 +418,6 @@ HTTPSEverywhere.prototype = {
     return alist;
   },
 
-
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
     var channel = subject;
