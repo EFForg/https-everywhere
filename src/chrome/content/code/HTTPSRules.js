@@ -426,6 +426,7 @@ const HTTPSRules = {
     var blob = {};
     blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
+    this.log(NOTE, "Processing " + uri.spec);
 
     // Rulesets shouldn't try to parse usernames and passwords.  If we find
     // those, apply the ruleset without them and then add them back.
@@ -499,14 +500,12 @@ const HTTPSRules = {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
-	try{
-		if (this.targets[host])
-			results = results.concat(this.targets[host]);
-	}
-	catch(e){	
-		this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
-		return [];
-	}
+    try {
+      if (this.targets[host]) results = results.concat(this.targets[host]);
+    } catch(e) {   
+      this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
+      return [];
+    }
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {

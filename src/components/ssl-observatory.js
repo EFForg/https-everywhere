@@ -14,6 +14,11 @@ NOTE=4;
 WARN=5;
 
 BASE_REQ_SIZE=4096;
+MAX_DELAYED = 32;
+
+ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
+ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
+ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
@@ -65,8 +70,9 @@ function SSLObservatory() {
 
   this.public_roots = root_ca_hashes;
 
-  // Clear this on cookies-cleared observer event
+  // Clear these on cookies-cleared observer event
   this.already_submitted = {};
+  this.delayed_submissions = {};
   OS.addObserver(this, "cookie-changed", false);
 
   // The url to submit to
@@ -89,9 +95,10 @@ function SSLObservatory() {
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
 
-  this.client_asn = -1;
+  this.client_asn = ASN_PRIVATE;
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
+
 
   try {
     NSS.initialize("");
@@ -177,7 +184,7 @@ SSLObservatory.prototype = {
   },
 
   stopASNWatcher: function() {
-    this.client_asn = -1;
+    this.client_asn = ASN_PRIVATE;
     /*
     // unhook the observers we registered above
     OS.removeObserver(this, "network:offline-status-changed");
@@ -196,11 +203,11 @@ SSLObservatory.prototype = {
   getClientASN: function() {
     // Fetch a new client ASN..
     if (!this.myGetBoolPref("send_asn")) {
-      this.client_asn = -1;
+      this.client_asn = ASN_PRIVATE;
       return;
     }
     else if (!this.torbutton_installed) {
-      this.client_asn = -2;
+      this.client_asn = ASN_IMPLICIT;
       return;
     }
     // XXX As a possible base case: the user is running Tor, is not using
@@ -253,7 +260,8 @@ SSLObservatory.prototype = {
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
-      this.log(INFO, "Cookies were cleared. Purging list of already submitted sites");
+      this.delayed_submissions = {};
+      this.log(INFO, "Cookies were cleared. Purging list of pending and already submitted certs");
       return;
     }
 
@@ -315,9 +323,9 @@ SSLObservatory.prototype = {
         }
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
     }
@@ -451,42 +459,48 @@ SSLObservatory.prototype = {
     }
   },
 
-  submitChain: function(certArray, fps, domain, channel, host_ip) {
-    var base64Certs = [];
-    // Put all this chain data in one object so that it can be modified by
-    // subroutines if required
-    c = {}; c.certArray=certArray; c.fps = fps;
-    c.leaf = certArray[0];
-    this.processConvergenceChain(c);
-    var rootidx = this.findRootInChain(c.certArray);
+  shouldSubmit: function(chain, domain) {
+    // Return true if we should submit this chain to the SSL Observatory
+    var rootidx = this.findRootInChain(chain.certArray);
     var ss= false;
 
-    if (c.leaf.issuerName == c.leaf.subjectName) 
+    if (chain.leaf.issuerName == chain.leaf.subjectName) 
       ss = true;
 
     if (!this.myGetBoolPref("self_signed") && ss) {
       this.log(INFO, "Not submitting self-signed cert for " + domain);
-      return;
+      return false;
     }
 
     if (!ss && !this.myGetBoolPref("alt_roots")) {
       if (rootidx == -1) {
         // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
         this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
-                 c.leaf.issuerName + " (not submitting due to settings)");
-        return;
-      } else if (!(c.fps[rootidx] in this.public_roots)) {
+                 chain.leaf.issuerName + " (not submitting due to settings)");
+        return false;
+      } else if (!(chain.fps[rootidx] in this.public_roots)) {
         // A cert with a known but non-public Issuer
         this.log(INFO, "Got a private root cert. Ignoring domain "
-                 +domain+" with root "+c.fps[rootidx]);
-        return;
+                 +domain+" with root "+chain.fps[rootidx]);
+        return false;
       }
     }
 
-    if (c.fps[0] in this.already_submitted) {
+    if (chain.fps[0] in this.already_submitted) {
       this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
-      return;
+      return false;
     }
+    return true;
+  },
+
+  submitChain: function(certArray, fps, domain, channel, host_ip, resubmitting) {
+    var base64Certs = [];
+    // Put all this chain data in one object so that it can be modified by
+    // subroutines if required
+    c = {}; c.certArray=certArray; c.fps = fps;
+    c.leaf = certArray[0];
+    this.processConvergenceChain(c);
+    if (!this.shouldSubmit(c,domain)) return;
 
     var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
                 .getService(Components.interfaces.nsIWindowMediator);
@@ -495,7 +509,10 @@ SSLObservatory.prototype = {
       var len = new Object();
       var derData = c.certArray[i].getRawDER(len);
       //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
-      base64Certs.push(this.base64_encode(derData, false, false));
+      let result = "";
+      for (let j = 0, dataLength = derData.length; j < dataLength; ++j) 
+        result += String.fromCharCode(derData[j]);
+      base64Certs.push(btoa(result));
     }
 
     var reqParams = [];
@@ -507,10 +524,10 @@ SSLObservatory.prototype = {
       reqParams.push("fplist="+this.compatJSON.encode(c.fps));
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
-    // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
-    // the less reliable offline/online notification-triggered fetch?
-    // this.max_ap will be null if we have no wifi info.
-    reqParams.push("client_asn="+this.client_asn);
+
+    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE)
+    else              reqParams.push("client_asn="+this.client_asn);
+
     if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
     else                                 reqParams.push("private_opt_in=0");
 
@@ -534,26 +551,35 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = HTTPSEverywhere.getWindowForChannel(channel);
+    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
             if (c.fps[0] in that.already_submitted)
               delete that.already_submitted[c.fps[0]];
+          
+          // Retry up to two previously failed submissions
+          let n = 0;
+          for (let fp in that.delayed_submissions) {
+            that.log(WARN, "Retrying a submission...");
+            that.delayed_submissions[fp]();
+            delete that.delayed_submissions[fp];
+            if (++n >= 2) break;
           }
         } else if (req.status == 403) {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            that.warnUser(warningObj, win, c.certArray[0]);
+            if (win) that.warnUser(warningObj, win, c.certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
           }
         } else {
+          // Submission failed
           if (c.fps[0] in that.already_submitted)
             delete that.already_submitted[c.fps[0]];
           try {
@@ -561,6 +587,15 @@ SSLObservatory.prototype = {
           } catch(e) {
             that.log(WARN, "Cert submission failure and exception: "+e);
           }
+          // If we don't have too many delayed submissions, and this isn't
+          // (somehow?) one of them, then plan to retry this submission later
+          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
+            if (!(c.fps[0] in that.delayed_submissions)) {
+              that.log(WARN, "Planning to retry submission...");
+              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+              that.delayed_submissions[c.fps[0]] = retry;
+            }
+
         }
       }
     };
@@ -661,64 +696,7 @@ SSLObservatory.prototype = {
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
   encStringS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
-
-  base64_encode: function(inp, uc, safe) {
-    // do some argument checking
-    if (arguments.length < 1) return null;
-    var readBuf = new Array();    // read buffer
-    if (arguments.length >= 3 && safe != true && safe != false) return null;
-    var enc = (arguments.length >= 3 && safe) ? this.encStringS : this.encString; // character set used
-    var b = (typeof inp == "string"); // how input is to be processed
-    if (!b && (typeof inp != "object") && !(inp instanceof Array)) return null; // bad input
-    if (arguments.length < 2) {
-      uc = true;                  // set default
-    } // otherwise its value is passed from the caller
-    if (uc != true && uc != false) return null;
-    var n = (!b || !uc) ? 1 : 2;  // length of read buffer
-    var out = '';                 // output string
-    var c = 0;                    // holds character code (maybe 16 bit or 8 bit)
-    var j = 1;                    // sextett counter
-    var l = 0;                    // work buffer
-    var s = 0;                    // holds sextett
-
-    // convert  
-    for (var i = 0; i < inp.length; i++) {  // read input
-      c = (b) ? inp.charCodeAt(i) : inp[i]; // fill read buffer
-      for (var k = n - 1; k >= 0; k--) {
-        readBuf[k] = c & 0xff;
-        c >>= 8;
-      }
-      for (var m = 0; m < n; m++) {         // run through read buffer
-        // process bytes from read buffer
-        l = ((l<<8)&0xff00) | readBuf[m];   // shift remaining bits one byte to the left and append next byte
-        s = (0x3f<<(2*j)) & l;              // extract sextett from buffer
-        l -=s;                              // remove those bits from buffer;
-        out += enc.charAt(s>>(2*j));        // convert leftmost sextett and append it to output
-        j++;
-        if (j==4) {                         // another sextett is complete
-          out += enc.charAt(l&0x3f);        // convert and append it
-          j = 1;
-        }
-      }        
-    }
-    switch (j) {                            // handle left-over sextetts
-      case 2:
-        s = 0x3f & (16 * l);                // extract sextett from buffer
-        out += enc.charAt(s);               // convert leftmost sextett and append it to output
-        out += '==';                        // stuff
-        break;
-      case 3:
-        s = 0x3f & (4 * l);                 // extract sextett from buffer
-        out += enc.charAt(s);               // convert leftmost sextett and append it to output
-        out += '=';                         // stuff
-        break;
-      default:
-        break;
-    }
-
-    return out;
-  },
-
+  
   log: function(level, str) {
     var econsole = CC["@mozilla.org/consoleservice;1"]
       .getService(CI.nsIConsoleService);

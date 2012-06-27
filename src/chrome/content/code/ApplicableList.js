@@ -7,6 +7,13 @@ serial_number = 0
 function ApplicableList(logger, doc, domWin) {
   this.domWin = domWin;
   this.uri = doc.baseURIObject.clone();
+  if (!this.uri) {
+    this.log(WARN,"NULL CLONING URI " + doc);
+    if (doc) 
+      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject);
+    if (doc.baseURIObject) 
+      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject.spec);
+  }
   this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
   this.log = logger;
   this.active = {};
