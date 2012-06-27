@@ -1,0 +1,34 @@
+<!--
+
+	Nonfunctional domains:
+
+		- www2.cmbi.ru.nl	(cert: www.cmbi.ru.nl; redirects to http)
+
+-->
+<ruleset name="Radboud University Nijmegen">
+
+	<target host="*.radboudnet.nl" />
+	<target host="ru.nl" />
+	<target host="*.ru.nl" />
+	<target host="*.cmbi.ru.nl" />
+	<target host="*.hosting.ru.nl" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.portalhelp.hosting.ru.nl" />
+
+
+	<securecookie host="^www(-acc)?\.radboudnet\.nl$" name=".*" />
+	<securecookie host="^.*\.ru\.nl$" name=".*" />
+
+
+	<rule from="^http://www(-acc)?\.radboudnet\.nl/"
+		to="https://www$1.radboudnet.nl/" />
+
+	<!--	Cert doesn't match //ru.nl.
+						-->
+	<rule from="^https?://(?:www\.)?ru\.nl/"
+		to="https://www.ru.nl/" />
+
+	<rule from="^http://((?:ldap2|n?mr|mrms|svn|webmail|www)\.cmbi|cms|cms-acc|(?:bangalore|bombay|delhi|hubli|jaipur|kota|mangalore|portalhelp|pune)\.hosting|idm|student|www-acc)\.ru\.nl/"
+		to="https://$1.ru.nl/" />
+
+</ruleset>
