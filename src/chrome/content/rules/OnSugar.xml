@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- sugarinc-a.akamaihd.net
+
+-->
+<ruleset name="OnSugar">
+
+	<target host="onsugar.com" />
+	<target host="*.onsugar.com" />
+		<!--
+			301s back to www.
+						-->
+		<exclusion pattern="^http://www\.onsugar\.com/($|\?)" />
+	<target host="secure.*.onsugar.com" />
+	<target host="www.*.onsugar.com" />
+
+
+	<securecookie host="^.*\.onsugar\.com$" name=".*" />
+
+
+	<!--	Cert isn't valid for (www.).
+						-->
+	<rule from="^http:///(?:www\.)?onsugar\.com/"
+		to="https:///secure.onsugar.com/" />
+
+	<!--	- lim → 35 media\d+: Akamai
+		- media2: Akamai; 504
+					-->
+	<rule from="^https?://media(\d|[12]\d|3[1-5])?\.onsugar\.com/"
+		to="https://sugarinc-a.akamaihd.net/" />
+
+	<rule from="^https?://(?:secure\.|www\.)?(dev[123567]|local)\.onsugar\.com/"
+		to="https://secure.$1.onsugar.com/" />
+
+	<rule from="^http://(www\.)?secure\.onsugar\.com/"
+		to="https://$1secure.onsugar.com/" />
+
+	<!--	- Cert doesn't match
+		- 301s liks so, sans-https.
+						-->
+	<rule from="^https?://(?:www\.)?shopsense\.onsugar\.com/"
+		to="https://shopsense.shopstyle.com/" />
+
+</ruleset>
