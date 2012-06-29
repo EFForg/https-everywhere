@@ -1,3 +1,9 @@
+<!--
+	Nonfunctional subdomains:
+
+		- homecommunity
+
+-->
 <ruleset name="Cisco" default_off="Needs review">
 
 	<target host="cisco.com" />
@@ -8,15 +14,24 @@
 			They redirect to HTTPS secured pages, though.
 									-->
 		<exclusion pattern="^http://(?:www\.)?cisco\.com/go" />
+	<target host="www.static-cisco.com" />
+
+
+	<securecookie host="^[hst].*\.cisco\.com$" name=".*" />
 
 
 	<!--	Default: Replace with HTTPS.  Redirect at Logout
 		is still bugged, but the logout itself works.
 								-->
-	<rule from="^http://(?:www\.)?cisco\.com/"
+	<rule from="^https?://(?:www\.)?cisco\.com/"
 		to="https://www.cisco.com/" />
 
-	<rule from="^http://homesupport\.cisco\.com/"
-		to="https://homesupport.cisco.com/" />
+	<rule from="^http://(home|homesupport|sso|tools)\.cisco\.com/"
+		to="https://$1.cisco.com/" />
+
+	<!--	!www doesn't exist.
+					-->
+	<rule from="^http://www\.static-cisco\.com/"
+		to="https://www.static-cisco.com/" />
 
 </ruleset>
