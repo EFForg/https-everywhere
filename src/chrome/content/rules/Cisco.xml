@@ -1,12 +1,22 @@
 <ruleset name="Cisco" default_off="Needs review">
-  <target host="www.cisco.com"/>
-  <target host="cisco.com"/>
-  <target host="homesupport.cisco.com" />
-  <exclusion pattern="^http://www\.cisco\.com/cgi-bin/login"/>
- <!-- Cisco Redirection Pages do not support HTTPS, so we exclude them. They redirect to HTTPS secured pages, though -->
-  <exclusion pattern="^http://(?:www\.)?cisco\.com/go"/>
 
-  <!-- Default: Replace with HTTPS. Redirect at Logout is still bugged, but the Logout itself works -->
-  <rule from="^http://(?:www\.)?cisco\.com/" to="https://www.cisco.com/"/>
-  <rule from="^http://homesupport\.cisco\.com/" to="https://homesupport.cisco.com/"/>
+	<target host="cisco.com" />
+	<target host="*.cisco.com" />
+		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
+		<!--
+			Cisco redirection pages do not support HTTPS, so we exclude them.
+			They redirect to HTTPS secured pages, though.
+									-->
+		<exclusion pattern="^http://(?:www\.)?cisco\.com/go" />
+
+
+	<!--	Default: Replace with HTTPS.  Redirect at Logout
+		is still bugged, but the logout itself works.
+								-->
+	<rule from="^http://(?:www\.)?cisco\.com/"
+		to="https://www.cisco.com/" />
+
+	<rule from="^http://homesupport\.cisco\.com/"
+		to="https://homesupport.cisco.com/" />
+
 </ruleset>
