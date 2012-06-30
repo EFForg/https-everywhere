@@ -1,0 +1,42 @@
+<!--
+	Other NeuStar rulesets:
+
+		- UltraDNS.xml
+
+
+	Nonfunctional domains:
+
+		- blog.neustar.biz
+		- (www.)neustarlife.biz	(cert: www.neustarlife.biz; shows blank page)
+
+-->
+<ruleset name="NeuStar">
+
+	<target host="neustar.biz" />
+	<target host="www.neustar.biz" />
+	<target host="neustar.com" />
+	<target host="*.neustar.com" />
+	<target host="neustarultraservices.biz" />
+	<target host="www.neustarultraservices.biz" />
+
+
+	<securecookie host="^(www\.)?neustar\.biz$" name=".*" />
+	<securecookie host="^payment\.neustar\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?neustar\.biz/"
+		to="https://$1neustar.biz/" />
+
+	<!--	- Cert only matches (*.)neustar.biz
+		- .com 301s like so
+		- ...services.biz 301s:
+
+			neustarultraservices.biz → ultradns.com → neustar.biz
+										-->
+	<rule from="^https?://(?:www\.)?neustar\.com/"
+		to="https://www.neustar.biz/" />
+
+	<rule from="^http://payment\.neustar\.com/"
+		to="https://payment.neustar.com/" />
+
+</ruleset>
