@@ -25,20 +25,34 @@
 	<rule from="^http://s([1-4])(-s)?\.licdn\.com/"
 		to="https://s$1$2.licdn.com/" />
 
+	<!--	- !www times out over https
+		- !www 301s to www over http
+						-->
 	<rule from="^https?://(?:www\.)?linkedin\.com/$"
 		to="https://www.linkedin.com/" />
 
-	<rule from="^https?://(?:www\.)?linkedin\.com/(company|home|profile|secure|settings|today|uas|ucds)([\?\/].*)?$"
+	<!--	These paths redirect to http:
+
+			- groups?gid=\d+
+			- mpr$
+			- static?key=.+
+					-->
+	<rule from="^https?://(?:www\.)?linkedin\.com/(company|home|media|profile|reg|scds|secure|settings|today|uas|ucds)([\?\/].*)?$"
 		to="https://www.linkedin.com/$1$2" />
 
-	<rule from="^https?://(?:www\.)?linkedin\.com/img/"
-		to="https://www.linkedin.com/img/" />
+	<rule from="^https?://(?:www\.)?linkedin\.com/(img/|reg/join|mpr/)"
+		to="https://www.linkedin.com/$1" />
+
+	<!--	Akamai.
+			-->
+	<rule from="^https?://media(?:0[1-4])?\.linkedin\.com/"
+		to="https://www.linkedin.com/" />
 
 	<rule from="^http://platform\.linkedin\.com/"
 		to="https://platform.linkedin.com/" />
 
 	<!--	Akamai	-->
-	<rule from="^https?://static01\.linkedin\.com/"
-		to="https://www.linkedin.com/" />
+	<rule from="^https?://static0([1-4])\.linkedin\.com/"
+		to="https://s$1.licdn.com/" />
 
 </ruleset>
