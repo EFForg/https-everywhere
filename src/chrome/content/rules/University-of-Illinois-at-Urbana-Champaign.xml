@@ -1,21 +1,37 @@
 <!--
-	Nonfunctional illinois.edu subdomains:
+	Nonfunctional domains:
 
-		- acdis			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
-		- admissions		(cert: www-s2.oar.illinois.edu, expired; 403 & 404)
-		- blog.admissions	(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
-		- www.ahs		(cert: www.mrp.illinois.edu; shows that domain's data)
-		- (www.)cam		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
-		- cgs			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
-		- disability		(cert: ED-webdev1.ad.uiuc.edu, expired, self-signed; prints "The service is unavailable.")
-		- engagement		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
-		- www.grad		(403)
-		- honors		(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
-		- i2i			(ditto)
-		- ilint			(cert: secure.admin.illinois.edu; prints "Default Place Holder")
-		- www.isss		(ditto)
-		- (www.)library
-		- (www.)ncsa
+		-  illinois.edu subdomains:
+
+			- acdis			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+			- admissions		(cert: www-s2.oar.illinois.edu, expired; 403 & 404)
+			- blog.admissions	(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+			- www.ahs		(cert: www.mrp.illinois.edu; shows that domain's data)
+			- (www.)bioen		(reset)
+			- bioengineering	(ditto)
+			- (www.)cam		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+			- cgs			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+			- cs			(cert: engineering.illinois.edu; shows chbe's data)
+			- lists.cs
+			- disability		(cert: ED-webdev1.ad.uiuc.edu, expired, self-signed; prints "The service is unavailable.")
+			- engagement		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+			- www.grad		(403)
+			- honors		(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+			- i2i			(ditto)
+			- ilint			(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+			- (www.)ise		(reset)
+			- www.isss		(ditto)
+			- iti			(reset)
+			- www.iti		(cert mismatch; whos chbe's data)
+			- (www.)library
+			- (www.)ncsa
+			- mechanical		(cert: www-s.mechse.uiuc.edu; shows that domain's data)
+			- mechse		(ditto)
+			- mrl			(cert valid; shows chbe's data)
+			- npre			(ditto)
+			- parallel		(ditto)
+
+		- lists.cs.uiuc.edu
 
 
 	This is the result of a cursory trawl.
@@ -27,6 +43,11 @@
 	<target host="illinois.edu" />
 	<target host="*.illinois.edu" />
 	<target host="secure.admin.illinois.edu" />
+	<target host="*.engineering.illinois.edu" />
+	<!--	*s for cross-domain cookies.	-->
+	<target host="*.blogs.engineering.illinois.edu" />
+	<target host="*.iefx.engineering.illinois.edu" />
+	<target host="*.it.engineering.illinois.edu" />
 	<target host="*.housing.illinois.edu" />
 	<target host="internal.ncsa.illinois.edu" />
 	<target host="www.*.illinois.edu" />
@@ -34,6 +55,7 @@
 	<target host="www.illinoislawreview.org" />
 	<target host="*.uiuc.edu" />
 	<target host="*.ks.uiuc.edu" />
+	<target host="www-s.mechse.uiuc.edu" />
 	<target host="www.union.uiuc.edu" />
 
 
@@ -42,10 +64,16 @@
 
 		Observed cookies (.illinois.edu):
 
+			- .chbe
+			- .engineering
+			- .blogs.engineering
+			- .iefx.engineering
+			- .it.engineering
 			- www-s.housing
 			- mrp
 					-->
 	<securecookie host="^.*[^w]\.illinois\.edu$" name=".*" />
+	<securecookie host="^www-s\.mechse\.uiuc\.edu$" name=".*" />
 
 
 	<!--	Cert doesn't match, redirects as so.	-->
@@ -55,6 +83,11 @@
 	<!--	Cert only matches www-s.	-->
 	<rule from="^https?://(?:www(?:-s)?\.)?ks\.uiuc\.edu/"
 		to="https://www-s.ks.uiuc.edu/" />
+
+	<!--	www 302s to mechse.illinois.edu.
+							-->
+	<rule from="^http://www-s\.mechse\.uiuc\.edu/"
+		to="https://www-s.mechse.uiuc.edu/" />
 
 	<!--	Cert doesn't match uiuc.	-->
 	<rule from="^https://(www\.)?union\.(?:uiuc|illinois)\.edu/"
@@ -70,6 +103,19 @@
 	<rule from="^http://(secure\.admin|internal\.ncsa)\.illinois\.edu/"
 		to="https://$1.illinois.edu/" />
 
+	<!--	Cert doesn't match www.chbe.
+						-->
+	<rule from="^https?://(?:www\.)?chbe\.illinois\.edu/"
+		to="https://chbe.illinois.edu/" />
+
+	<rule from="^https?://(cs|npre)\.illinois\.edu/sites/"
+		to="https://chbe.illinois.edu/sites/" />
+
+	<!--	Cert doesn't match www.engineering.
+						-->
+	<rule from="^https?://(?:((?:blogs|iefx|it)\.)|www\.)?engineering\.illinois\.edu/"
+		to="https://$1engineering.illinois.edu/" />
+
 	<!--	Cert only matches www-s.	-->
 	<rule from="^https?://(?:www(?:-s)?\.)?housing\.illinois\.edu/"
 		to="https://www-s.housing.illinois.edu/" />
@@ -77,6 +123,9 @@
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?mrp\.illinois\.edu/"
 		to="https://www.mrp.illinois.edu/" />
+
+	<rule from="^http://parallel\.illinois\.edu/sites/"
+		to="https://parallel.illinois.edu/sites/" />
 
 	<rule from="^http://(www\.)?illinoislawreview\.org/"
 		to="https://$1illinoislawreview.org/" />
