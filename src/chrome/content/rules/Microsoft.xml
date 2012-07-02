@@ -89,6 +89,9 @@
 	<target host="systemcenteradvisor.com" />
 	<target host="*.systemcenteradvisor.com" />
 	<target host="ecn.dev.virtualearth.net" />
+	<target host="windows.net" />
+	<target host="*.blob.core.windows.net" />
+	<target host="www.windows.net" />
 
 
 	<securecookie host="^www\.acikakademi\.com$" name=".*" />
@@ -217,5 +220,16 @@
 
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
 		to="https://ecn.dev.virtualearth.net/" />
+
+	<!--	- Times out over https
+		- Redirects like so over http
+						-->
+	<rule from="^https?://(?:www\.)?windows\.net/$"
+		to="https://www.microsoft.com/net" />
+
+	<!--	Clients have unique subdomains.
+						-->
+	<rule from="^http://(\w+)\.blob\.core\.windows\.net/"
+		to="https://$1.blob.core.windows.net/" />
 
 </ruleset>
