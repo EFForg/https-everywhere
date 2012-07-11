@@ -1,9 +1,4 @@
-<script src="rule_list.js"></script>
-<script src="util.js"></script>
-<script src="rules.js"></script>
-<script src="jsuri-1.1.1.js"></script>
 
-<script>
 var all_rules = new RuleSets();
 var wr = chrome.webRequest;
 
@@ -33,7 +28,7 @@ function displayPageAction(details) {
   if (details.tabId != -1 && this.activeRulesets.getRulesets(details.tabId)) {
     chrome.tabs.get(details.tabId, function(tab) {
       if(typeof(tab) == "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction."); 
+        log(DBUG, "Not a real tab. Skipping showing pageAction.");
       }
       else {
         chrome.pageAction.show(details.tabId);
@@ -89,7 +84,7 @@ function onBeforeRequest(details) {
   var tmpuserinfo = tmpuri.userInfo();
   var tmphost = tmpuri.host();
   if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".") 
+    while (tmphost.charAt(tmphost.length - 1) == ".")
       tmphost = tmphost.slice(0,-1);
   }
   tmpuri.host(tmphost);
@@ -124,7 +119,7 @@ function onBeforeRequest(details) {
   var newuristr = null;
 
   var i = 0;
-  
+
   var rs = all_rules.applicableRulesets(a.host);
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
@@ -258,6 +253,3 @@ wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
 
 chrome.cookies.onChanged.addListener(onCookieChanged);
-
-
-</script>
