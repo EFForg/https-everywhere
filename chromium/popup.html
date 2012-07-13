@@ -1,119 +1,30 @@
-<link href="chrome://resources/css/widgets.css" rel="stylesheet" type="text/css"/>
-<style type="text/css" rel="stylesheet">
-<!--
-/* attempt to emulate Chrome's connection / site information popup    */
-/* (click the globe or lock icon on the left side of the omnibox)     */
-body {
-  /* based off Chrome's WebUI */
-  font-family: 'Segoe UI', Tahoma, sans-serif;
-  font-size: 75%;
-  cursor: default;
+<head>
+<title>HTTPS Everywhere</title>
 
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 6px;
-  margin-right: 6px;
-}
+<!-- Chrome 21 --->
+<link href="chrome://resources/css/chrome_shared.css" rel="stylesheet" type="text/css"/>
 
-body > div {
-  padding-top: 14px;
-  padding-bottom: 14px;
-  padding-right: 22px;
-  border-top: 1px solid rgb(233, 233, 233);
-}
+<!-- Chrome 20 (remove this once stable channel is 21) --->
+<link href="chrome://resources/css/chrome_shared2.css" rel="stylesheet" type="text/css"/>
 
-a {
-  cursor: auto;
-  white-space: nowrap;
-}
+<link href="popup.css" rel="stylesheet" type="text/css"/>
+<script src="popup.js"></script>
+</head>
 
-#About {
-  background-image: url('icon48.png');
-  background-repeat: no-repeat;
-  background-position: 12px 14px; /* y position = div's padding-top */
-  min-width: 9em;     /* encourage text to populate at least 3 lines */
-  min-height: 48px;   /* icon height */
-  padding-left: 68px; /* icon x position + icon width + 8px spacing */
-  border-top: 0;
-}
-
-div.rule {
-  white-space: nowrap;
-}
-
-.rule > * {
-  vertical-align: middle;
-}
-
-/* cb_block */
-.rule > div {
-  display: inline-block;
-  width: 68px; /* #About's padding-left */
-  text-align: right;
-}
-
-/* checkbox */
-.rule > div > input {
-  margin-right: 8px;
-}
---->
-</style>
-
-<div id="About"><a href="https://www.eff.org/https-everywhere" target="_blank" tabindex="-1">HTTPS Everywhere</a> rulesets applicable to this site:</div>
-<div id="AppliedRules"></div>
-
-<script>
-var backgroundPage = chrome.extension.getBackgroundPage();
-var appliedDiv = document.getElementById("AppliedRules");
-var tab = null;
-
-function toggleRuleLine(checkbox, ruleset) {
-  ruleset.active = checkbox.checked;
-
-  if (ruleset.active != ruleset.default_state) {
-    localStorage[ruleset.name] = ruleset.active;
-  } else {
-    delete localStorage[ruleset.name];
-  }
-}
-
-function createRuleLine(ruleset) {
-  // parent block for line
-  var line = document.createElement("div");
-  line.className = "rule checkbox";
-
-  // checkbox
-  var checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  var rand = Math.random().toString(36).substring(8); // for uniqueness
-  checkbox.id = ruleset.name + " " + rand;
-  checkbox.checked = ruleset.active;
-  checkbox.onchange = function(ev) { toggleRuleLine(checkbox, ruleset); };
-
-  // checkbox container (used for spacing)
-  var cb_block = document.createElement("div");
-  cb_block.appendChild(checkbox);
-
-  // label for checkbox
-  var label = document.createElement("label");
-  label.innerText = ruleset.name;
-  label.htmlFor = checkbox.id;
-
-  line.appendChild(cb_block);
-  line.appendChild(label);
-
-  return line;
-}
-
-function gotTab(tab) {
-  var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
-
-  for (r in rulesets) {
-    appliedDiv.appendChild(createRuleLine(rulesets[r]));
-  }
-}
-
-chrome.tabs.getSelected(null, gotTab);
-
-
-</script>
+<body>
+<header>
+  <h1>HTTPS Everywhere</h1>
+</header>
+<section id="StableRules" class="rules">
+  <h3>Stable rules</h3>
+  <p class="description">Force <a href="https://wikipedia.org/wiki/Transport_Layer_Security" title="Wikipedia article about encryption" target="_blank" tabindex="-1">encrypted</a> connections to the following websites and services. Enabled by default.</p>
+</section>
+<section id="UnstableRules" class="rules">
+  <h3>Experimental rules</h3>
+  <p class="description">May generate excessive browser warnings or cause websites to break. Disabled by default.</p>
+</section>
+<footer>
+  <a href="https://www.eff.org/https-everywhere" title="HTTPS Everywhere website" target="_blank" tabindex="-1">What is this?</a>
+  <!-- <a href="" title="HTTPS Everywhere Options">Options</a> --->
+</footer>
+</body>

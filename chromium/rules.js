@@ -16,7 +16,7 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
-function RuleSet(set_name, match_rule, default_state) {
+function RuleSet(set_name, match_rule, default_state, note) {
   this.name = set_name;
   if (match_rule)
     this.ruleset_match_c = new RegExp(match_rule);
@@ -27,7 +27,8 @@ function RuleSet(set_name, match_rule, default_state) {
   this.targets = [];
   this.cookierules = [];
   this.active = default_state;
-  this.default_state = default_state
+  this.default_state = default_state;
+  this.note = note;
 }
 
 RuleSet.prototype = {
@@ -85,7 +86,7 @@ function RuleSets() {
 
 RuleSets.prototype = {
   localPlatformRegexp: new RegExp("chromium"),
- 
+
   loadRuleSet: function(xhr) {
     // Get file contents
     if (xhr.readyState != 4) {
@@ -100,18 +101,26 @@ RuleSets.prototype = {
   },
   parseOneRuleset: function(ruletag) {
     var default_state = true;
-    if (ruletag.attributes.default_off) { default_state = false; }
+    var note = "";
+    if (ruletag.attributes.default_off) {
+      default_state = false;
+      note += ruletag.attributes.default_off.value + "\n";
+    }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
     // off-by-default
     var platform = ruletag.getAttribute("platform");
-    if (platform) 
-      if (platform.search(this.localPlatformRegexp) == -1)
+    if (platform) {
+      if (platform.search(this.localPlatformRegexp) == -1) {
         default_state = false;
+      }
+      note += "Platform(s): " + platform + "\n";
+    }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
                                ruletag.getAttribute("match_rule"),
-                               default_state);
+                               default_state,
+                               note.trim());
 
     // Read user prefs
     if (rule_set.name in localStorage) {
