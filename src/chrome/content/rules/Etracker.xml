@@ -2,15 +2,26 @@
 
 	<target host="etracker.com" />
 	<target host="*.etracker.com" />
+	<target host="etracker.de" />
+	<target host="www.etracker.de" />
+	<target host="visitormotion.com" />
+	<target host="www.visitormotion.com" />
 
 
-	<securecookie host="^(.*\.)?etracker\.com$" name=".*" />
+	<securecookie host="^(.*\.)?etracker\.(com|de)$" name=".*" />
 
 
-	<rule from="^http://etracker\.com/"
-		to="https://www.etracker.com/" />
+	<!--	!www: cert mismatch.
+				-->
+	<rule from="^https?://(?:www\.)?etracker\.(com|de)/"
+		to="https://www.etracker.$1/" />
 
-	<rule from="^http://(\w+)\.etracker\.com/"
-		to="https://$1.etracker.com/" />
+	<rule from="^http://(\w+)\.etracker\.(com|de)/"
+		to="https://$1.etracker.$2/" />
+
+	<!--	Cert mismatch.
+				-->
+	<rule from="^https?://(?:www\.)?visitormotion\.com/"
+		to="https://www.visitormotion.com/" />
 
 </ruleset>
