@@ -292,7 +292,7 @@ SSLObservatory.prototype = {
       try { 
         host_ip = httpchannelinternal.remoteAddress;
       } catch(e) {
-          this.log(WARN, "Could not get host IP address.");
+          this.log(INFO, "Could not get server IP address.");
       }
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
