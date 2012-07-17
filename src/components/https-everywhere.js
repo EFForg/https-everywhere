@@ -430,7 +430,7 @@ HTTPSEverywhere.prototype = {
       var lst = this.getApplicableListForChannel(channel);
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
-        lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
+        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
         return;
       }
       HTTPS.replaceChannel(lst, channel);
