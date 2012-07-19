@@ -2,6 +2,8 @@
 	Nonfunctional domains:
 
 		- cdimage.ubuntu.com
+		- odm.ubuntu.com		(cert: testcases.qa.ubuntu.com_https; 301s there)
+		- testcases.qa.ubuntu.com	(self-signed, 301s to http)
 		- pad.ubuntu.com
 		- summit.ubuntu.com
 		- (www.)ubuntu.com		(times out)
@@ -11,11 +13,15 @@
 <ruleset name="Ubuntu (partial)">
 
 	<target host="*.ubuntu.com" />
+	<target host="myapps.developer.ubuntu.com" />
 	<target host="ubuntuone.com" />
 	<target host="www.ubuntuone.com" />
 
 
-	<rule from="^http://(cloud|help|uds|uec-images|wiki|one)\.ubuntu\.com/"
+	<securecookie host="^apps\.ubuntu\.com$" name=".*" />
+
+
+	<rule from="^http://(apps|cloud|(?:myapps\.)?developer|help|lists|uds|uec-images|wiki|one)\.ubuntu\.com/"
 		to="https://$1.ubuntu.com/" />
 
 	<rule from="^https?://(?:www\.)?ubuntuone\.com/"

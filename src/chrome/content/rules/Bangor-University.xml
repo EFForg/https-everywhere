@@ -1,0 +1,52 @@
+<!--
+	For problematic rules, see Bangor-University-self-signed.xml.
+
+
+	Nonfunctional domains:
+
+		- bangor.ac.uk subdomains:
+
+			- admint		(times out)
+			- www.bc		(cert: www.bangor.ac.uk; shows www's data)
+			- bucu			(ditto)
+			- baruno		(ditto)
+			- (www.)bilingualism	(ditto)
+			- www..cazs		(ditto)
+			- desktopanywhere	(ditto)
+			- (www.)dyslexia	(cert: www.bangor.ac.uk; shows www's data)
+			- elcos			(ditto)
+			- hss			(ditto)
+			- ielts			(ditto)
+			- www.is		(ditto)
+			- repository
+			- studyskills		(cert: www.bangor.ac.uk; shows www's data)
+
+		- (www.)edeandravenscroft.co.uk	(ssl_error_rx_record_too_long)
+		- (www.)www.pontio.co.uk	(cert: www.bangor.ac.uk; shows that domain's data)
+
+
+	agresso.bangor.ac.uk & translate.bangor.ac.uk timed
+	out over http, so their https capability is unknown.
+
+-->
+<ruleset name="Bangor University (partial)">
+
+	<target host="bangor.ac.uk" />
+	<target host="*.bangor.ac.uk" />
+
+
+		<!--	Don't handle ^www cookies, just in case they're used on unsecureable pages.
+				All webmail cookies appear to be cross-domain.	-->
+		<securecookie host="^[^w]\w+\.bangor\.ac\.uk$" name=".*" />
+
+
+	<!--	- NB: Data differ between http & https
+		- Cert only matches www
+				-->
+	<rule from="^https?://(?:www\.)?bangor\.ac\.uk/itservices/user($|/)"
+		to="https://www.bangor.ac.uk/itservices/user$1" />
+
+	<rule from="^http://(bangorportal|blackboard|forum|inside|intranet|webmail)\.bangor\.ac\.uk/"
+		to="https://$1.bangor.ac.uk/" />
+
+</ruleset>

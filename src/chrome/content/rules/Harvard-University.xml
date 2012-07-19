@@ -1,4 +1,9 @@
 <!--
+	For problematic rules, see Harvard-University-expired.xml.
+
+
+	www.citmedialaw.org , www.omln.org
+
 
 	Nonfunctional subdomains:
 
@@ -11,8 +16,7 @@
 
 	<target host="berkman.harvard.edu" />
 	<target host="login.icommons.harvard.edu" />
-	<target host="adam.law.harvard.edu" />
-	<target host="cyber.law.harvard.edu" />
+	<target host="*.law.harvard.edu" />
 	<!--	* for cross-domain cookie.	-->
 	<target host="*.cyber.law.harvard.edu" />
 	<target host="www.*.harvard.edu" />
@@ -36,12 +40,17 @@
 	<rule from="^https?://(?:www\.)?berkman\.harvard\.edu/"
 		to="https://www.berkman.harvard.edu/" />
 
-	<!--	At least some pages redirec to http.	-->
+	<!--	At least some pages redirect to http.	-->
 	<rule from="^http://isites\.harvard\.edu/(fs/|icb/calendar/themes/|icb/[\w\-]\.css|js/)"
 		to="https://isites.harvard.edu/$1" />
 
-	<!--	www works over http and cert doesn't match.	-->
-	<rule from="^https?://(?:www\.)?cyber\.law\.harvard\.edu/"
+	<!--	- www.cyber works over http
+		- Cert doesn't match www.cyber
+		- eon.law presents adam.law cert
+		- eon.law over https shows adam.law data
+		- eon.law over http redirects to cyber.law
+					-->
+	<rule from="^https?://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
 		to="https://cyber.law.harvard.edu/" />
 
 </ruleset>

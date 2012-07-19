@@ -1,4 +1,5 @@
 <!--	!functional:
+		- d.scribd.com				(cert: pantherssl.com; 403; data aren't on www)
 		- fonts[23].scribdassets.com		(cert: pantherssl.com; blank page; !on www.scribd.com; data appear the same for [23])
 		- s[1-8].scribdassets.com		(ditto)
 		- s.scribd.com				(ditto)
@@ -54,8 +55,15 @@
 		to="https://www.scribd.com/"/>
 
 	<!--	fonts.scribd.com is on AmazonAWS, but valid cert	-->
-	<rule from="^http://fonts[23]\.scribdassets\.com/"
+	<rule from="^http://fonts[123]?\.scribd(assets)?\.com/"
 		to="https://fonts.scribd.com/"/>
+
+	<!--	- 1-4 in html(img)?\d exist on assets
+			- pantherssl.com
+		- Only html on scribd.com
+					-->
+	<rule from="^http://html(img)?[1-4]?\.scribd(assets)?\.com/"
+		to="https://s3.amazonaws.com/html.scribd.com/" />
 
 	<!-- bucket !found, but...	-->
 	<rule from="^http://s[1-8]?\.scribd(assets)?\.com/"

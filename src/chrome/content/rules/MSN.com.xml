@@ -1,45 +1,71 @@
 <!--
-	Other Microsoft rulesets:
-
-		- Live.xml
-		- Microsoft.xml
-		- Microsoft-mismatches.xml
-		- MSN-Extra.xml
-		- Newsvine.com.xml
-		- Technet.com.xml
-
-
-	Nonfunctional:
-
-		- msnbcmedia\d?.msn.com	(timeout)
-		- nbcsports.msnbc.com	(cert: *.pantherssl.com)
+	For rules that are on by default, see MSN-Extra.xml.
 
 -->
-<ruleset name="MSN (partial)" default_off="mismatch">
+<ruleset name="MSN (mismatches)" default_off="mismatch">
 
 	<!--	*.msnbc.msn.com, doesn't redirect to www	-->
 	<target host="msnbc.msn.com" />
 	<!--	Akamai: assets(\dd)?, www	-->
 	<target host="*.msnbc.msn.com" />
+	<target host="*.today.msnbc.msn.com" />
+	<target host="msnbcmedia.msn.com" />
+	<target host="msnbcmedia1.msn.com" />
+	<target host="msnbcmedia2.msn.com" />
+	<target host="msnbcmedia3.msn.com" />
+	<target host="msnbcmedia4.msn.com" />
 	<target host="my.msn.com" />
 	<!--	Akamai	-->
 	<target host="polls.newsvine.com" />
 	<target host="www.polls.newsvine.com" />
-		<!--	also hosted on www, handled in Newsvine.com.xml		-->
+		<!--	Also hosted on www, handled in Newsvine.com.xml		-->
 		<exclusion pattern="http://(www\.)?polls\.newsvine\.com/_(static|vine)/" />
 	<target host="m.static.newsvine.com" />
 
 
-	<!--	since both are invalid, be nice and point to CDN	-->
+	<!--	Since both are invalid, be nice and point to CDN.	-->
 	<rule from="^https?://(?:www\.)?msnbc\.msn\.com/"
 		to="https://www.msnbc.msn.com/" />
 
-	<!--	all appear to be the same, so minimize exclusions needed	-->
+	<!--	- Akamai
+		- All appear to be the same, so minimize exclusions needed
+				-->
 	<rule from="^https?://assets(?:\dd)?\.msnbc\.msn\.com/"
 		to="https://assets.msnbc.msn.com/" />
 
-	<rule from="^http://(bottomline|cosmiclog|photoblog)\.msnbc\.msn\.com/"
+	<!--	Akamai	-->
+	<rule from="^http://(assets(?:2c)?|behindthewall|bodyodd|bottomline|cartoonblog|cosmiclog|ed|dailynightly|entertainment|firstread|hardballblog|insidedateline|itineraries|maddowblog|mojoe|openchannel|overheadbin|photoblog|presspass|redtape|scoop|thelastword|(?:animaltracks|bites|celebrate|digitallife|lifeinc|moms|rockcenter|scoop|theclicker|thelook|today(?:entertainment|health|hiringourheroes|onthetrail|travel)|windsorknot)\.today|travelkit|usnews(?:first)?|vitals|world(?:blog|news|newsfirst))\.msnbc\.msn\.com/"
 		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- foo.today.msnbc.msn.com cert: *.newsvine.com
+		- foo.today 302s to foo
+			-->
+	<rule from="^https?://(economywatch|marketday|nbcpolitics)(?:\.today)?\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- 302s like so
+			-->
+	<rule from="^https?://fieldnotes\.msnbc\.msn\.com/"
+		to="https://usnews.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- allday 302s to allday.today
+			-->
+	<rule from="^https?://allday(?:\.today)\.msnbc\.com/"
+		to="https://allday.today.msnbc.com/" />
+
+	<!--	- www.today cert: *.msnbc.msn.com
+		- 301s to today
+			-->
+	<rule from="^https?://(?:www\.)?today\.msnbc\.msn\.com/"
+		to="https://today.msnbc.msn.com/" />
+
+	<!--	- Akamai
+		- Data appear identical
+				-->
+	<rule from="^https?://msnbcmedia[1-4]?\.msn\.com/"
+		to="https://msnbcmedia.msn.com/" />
 
 	<rule from="^http://my\.msn\.com/"
 		to="https://my.msn.com/" />

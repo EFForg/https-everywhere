@@ -1,0 +1,35 @@
+<ruleset name="Hello Bar (partial)">
+
+	<target host="hellobar.com" />
+	<target host="*.hellobar.com" />
+		<!--
+			These paths 302 to http:
+
+				- $
+				- blogs$
+				- demo$
+
+		<exclusion pattern="^http://(www\.)?hellobar\.com/(blogs|demo)?$" /-->
+
+
+	<!--	These paths work:
+
+			- assets/
+			- files/
+			- [^/]+.js$
+			- solo$
+			- solo/$
+			- solo/[^/]+$
+			- solo/images/
+			- solo/javascripts/
+			- solo/styles/
+			- system/
+			- wp-includes/
+					-->
+	<rule from="^http://(www\.)?hellobar\.com/([^/]+\.js(?:$|\?)|(?:assets|files|solo|system|wp-includes)/)"
+		to="https://$1hellobar.com/$2" />
+
+	<rule from="^http://ping\.hellobar\.com/"
+		to="https://ping.hellobar.com/" />
+
+</ruleset>

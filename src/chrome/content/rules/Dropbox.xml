@@ -1,19 +1,32 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog		(301s to http)
+		- forums	(ditto)
+
+-->
 <ruleset name="Dropbox">
-  <target host="www.dropbox.com" />
-  <target host="dropbox.com" />
-  <target host="dl.dropbox.com" />
-  <target host="dl-web.dropbox.com" />
-  <target host="files.dropbox.com" />
 
-  <securecookie host="^(.*\.)?dropbox\.com$" name=".*" />
+	<target host="dropbox.com" />
+	<target host="*.dropbox.com" />
+		<!--
+			This fixes https://trac.torproject.org/projects/tor/ticket/3673
+											-->
+		<exclusion pattern="http://(?:www\.)?dropbox.com/frameresize.htm" />
 
-  <rule from="^http://(dl|dl-web|files)\.dropbox\.com/" to="https://$1.dropbox.com/"/>
-  <rule from="^http://(?:www\.)?dropbox\.com/" to="https://www.dropbox.com/"/>
+
+	<securecookie host="^(.*\.)?dropbox\.com$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?dropbox\.com/"
+		to="https://www.dropbox.com/" />
+
+	<rule from="^http://(dl|dl-web|files)\.dropbox\.com/"
+		to="https://$1.dropbox.com/" />
   
-  <!-- this fixes https://trac.torproject.org/projects/tor/ticket/3673 -->
-  <exclusion pattern="http://(?:www\.)?dropbox.com/frameresize.htm" />
+	<!--	This breaks blog.dropbox.com and forums.dropbox.com, for example
 
-  <!-- This breaks blog.dropbox.com and forums.dropbox.com, for example
-  <rule from="^http://([^/:@]+)\.dropbox\.com/" to="https://$1.dropbox.com/"/>
-  -->
+	<rule from="^http://([^/:@]+)\.dropbox\.com/"
+		to="https://$1.dropbox.com/" /-->
+
 </ruleset>

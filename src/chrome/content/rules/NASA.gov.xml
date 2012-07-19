@@ -1,34 +1,45 @@
 <!--
-	Other US government rulesets:
-
-		- US-government.xml
-		- US-government-mismatches.xml
+	For other US government coverage, see US-government.xml.
 
 
 	Nonfunctional domains:
 
-		- (www.)hubblesite.org	(times out)
-		- m.hubblesite.org	(ditto)
+		- (www.)hubblesite.org		(times out)
+		- m.hubblesite.org		(ditto)
 		- nasa.gov subdomains:
 			- apod
-			- www.cdscc	(cert: TS Series NAS; redirects infinitely)
-			- nssdc.gsfc	(times out)
-			- jpl		(times out; redirects to www over http)
+			- www.cdscc		(cert: TS Series NAS; redirects infinitely)
+			- earthobservatory	(times out)
+			- nssdc.gsfc		(times out)
+			- sdo.gsfc		(ditto)
+			- svs.gsfc		(ditto)
+			- venustransit.gsfc	(Akamai; 504)
+			- voyager.gsfc
+			- history		(cert: www.hq.nasa.gov; shows that domain's data)
+			- dayton.hq		(times out)
+			- grin.hq		(ditto)
+			- jpl			(times out; redirects to www over http)
 			- www.jps
-			- pds		(timeout)
-			- visibleearth	(times out)
+			- eol.jsc
+			- science.ksc
+			- www.msfc		(Akamai; 301s to http)
+			- pds			(timeout)
+			- spaceflight		(Akamai; 504)
+			- sunearthday		(Akamai; some paths 404, others work-ToDo: Sort which ones)
+			- visibleearth		(times out)
 
 -->
 <ruleset name="NASA">
 
-	<target host="corts.hq.nasa.gov" />
+	<target host="rt.grc.nasa.gov" />
+	<target host="*.hq.nasa.gov" />
 	<target host="solarsystem.nasa.gov" />
 
 
-	<securecookie host="^(corts\.hq|solarsystem).nasa.gov$" name=".*" />
+	<securecookie host="^.*\.nasa\.gov$" name=".*" />
 
 
-	<rule from="^http://(corts\.hq|solarsystem)\.nasa\.gov/"
+	<rule from="^http://(rt\.grc|(?:corts|www)\.hq|solarsystem)\.nasa\.gov/"
 		to="https://$1.nasa.gov/" />
 
 </ruleset>

@@ -14,6 +14,7 @@
 	<target host="rcm-images.amazon.com" />
 	<target host="sis.amazon.com" />
 	<target host="ws.amazon.com" />
+	<target host="fls-na.amazon-adsystem.com" />
 	<target host="s3.amazonaws.com" />
 	<target host="*.s3.amazonaws.com" />
 		<!--	bloody forced redirection:
@@ -27,10 +28,16 @@
 	<target host="*.images-amazon.com" />
 	<target host="amazonwebservices.com" />
 	<target host="*.amazonwebservices.com" />
+	<target host="assoc-amazon.com" />
+	<target host="www.assoc-amazon.com" />
+	<target host="c.compete.com" />
 
 
-	<rule from="^http://(signin\.aws|aws(-portal)?|payments|sis|ws)\.amazon\.com/"
+	<rule from="^http://(signin\.aws|aws(?:-portal)?|payments|sis|ws)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
+
+	<rule from="^http://fls-na\.amazon-adsystem\.com/"
+		to="https://fls-na.amazon-adsystem.com/" />
 
 	<rule from="^http://s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
@@ -41,16 +48,25 @@
 	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
 
-	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
+	<rule from="^https?://(?:www\.)?amazonwebservices\.com/"
 		to="https://aws.amazon.com/" />
 
 	<rule from="^http://developer\.amazonwebservices\.com/"
 		to="https://developer.amazonwebservices.com/" />
 
-	<rule from="^http://media\.amazonwebservices\.com/"
+	<rule from="^https?://media\.amazonwebservices\.com/"
 		to="https://s3.amazonaws.com/awsmedia/" />
 
-	<rule from="^http://(?:(?:\w-)?ec[2x]\.images-|(?:rcm-)?images\.)amazon\.com/"
+	<rule from="^https?://(?:(?:\w-)?ec[2x]\.images-|(?:rcm-)?images\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?assoc-amazon\.com/"
+		to="https://www.assoc-amazon.com/" />
+
+	<!--	Included on 3rd-party websites.
+						-->
+	<rule from="^http://c\.compete\.com/"
+		to="https://c.compete.com/" />
 
 </ruleset>

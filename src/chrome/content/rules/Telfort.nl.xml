@@ -1,5 +1,36 @@
-<ruleset name="Telfort">
-  <target host="www.telfort.nl" />
+<!--
+	static.insided.nl/forum.telfort.nl/
 
-  <rule from="^http://www\.telfort\.nl/" to="https://www.telfort.nl/"/>
+
+	Nonfunctional subdomains:
+
+		- blog
+		- klantenservice.internet	(times out)
+
+-->
+<ruleset name="Telfort (partial)">
+
+	<target host="telfort.nl" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.telfort.nl" />
+	<target host="tiscali.nl" />
+	<target host="www.tiscali.nl" />
+
+
+	<securecookie host="^([^i]\w*)?\.telfort\.nl$" name=".*" />
+
+
+	<rule from="^http://((?:forum|orderstatus|shop|webmail|www)\.)?telfort\.nl/"
+		to="https://$1telfort.nl/" />
+
+	<!--	At least some pages redirect to http.	-->
+	<rule from="^http://internet\.telfort\.nl/5/(css|gfx)/"
+		to="https://internet.telfort.nl/5/$1/" />
+
+	<!--	- Cert only matches (*.)telfort.nl
+		- Redirects like so
+				-->
+	<rule from="^https?://(?:www\.)?tiscali\.nl/"
+		to="https://www.telfort.nl/" />
+
 </ruleset>

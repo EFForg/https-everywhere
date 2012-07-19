@@ -27,13 +27,13 @@
 			s/			(some ditto)
 			thumb/			(ditto)
 		- db3.api.bing.com		(cert: bing.com; blank page)
-		- messenger.services.live.com
 		- download.microsoft.com	(Akamai; 503)
+		- web.esd.microsoft.com		(Akamai, 503; esd, origin, origin-web, and web don't exist)
 		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
 		- visio.microsoft.com		(cert valid; ditto)
 		- (www.)windows.microsoft.com	(cert valid; 404)
 		- res[12].windows.microsoft.com	(cert: *.sharepointonline.com; 404; also on origin-res.windows.microsoft.com)
-		- www.wlmessenger.net
+		- blogs.office.com
 
 -->
 <ruleset name="Microsoft (partial)">
@@ -86,7 +86,12 @@
 	<target host="*.create.msdn.com" />
 	<target host="*.social.s-msft.com" />
 		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/" />
+	<target host="systemcenteradvisor.com" />
+	<target host="*.systemcenteradvisor.com" />
 	<target host="ecn.dev.virtualearth.net" />
+	<target host="windows.net" />
+	<target host="*.blob.core.windows.net" />
+	<target host="www.windows.net" />
 
 
 	<securecookie host="^www\.acikakademi\.com$" name=".*" />
@@ -97,6 +102,7 @@
 	<securecookie host="^www\.microsoft\.com$" name=".*" />
 	<securecookie host="^blogs\.msdn\.com$" name=".*" />
 	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
+	<securecookie host="^www\.systemcenteradvisor\.com$" name=".*" />
 
 
 	<!--	- Cert only matches www
@@ -161,6 +167,9 @@
 	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
 		to="https://support.microsoft.com/$1" />
 
+	<rule from="^http://technet\.microsoft\.com/en-us/library/([^\.])\.rss($|\?)"
+		to="https://technet.microsoft.com/en-us/library/$1.rss$2" />
+
 	<!--	- res[12] appear to be identical
 		- Cert: *.sharepointonline.com
 		- Display blank page
@@ -206,7 +215,21 @@
 	<rule from="^https?://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/" />
 
+	<rule from="^http://(login\.|www\.)?systemcenteradvisor\.com/"
+		to="https://$1systemcenteradvisor.com/" />
+
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
 		to="https://ecn.dev.virtualearth.net/" />
+
+	<!--	- Times out over https
+		- Redirects like so over http
+						-->
+	<rule from="^https?://(?:www\.)?windows\.net/$"
+		to="https://www.microsoft.com/net" />
+
+	<!--	Clients have unique subdomains.
+						-->
+	<rule from="^http://(\w+)\.blob\.core\.windows\.net/"
+		to="https://$1.blob.core.windows.net/" />
 
 </ruleset>

@@ -1,34 +1,50 @@
 <!--
-	Other Microsoft rulesets:
+	For problematic rules, see MSN.com.xml.
 
-		- Live.xml
-		- Microsoft.xml
-		- Microsoft-Atlas.xml
-		- Microsoft-mismatches.xml
-		- MSN.xml
-		- Newsvine.com.xml
-		- Technet.com.xml
+
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	d3j5vwomefv46c.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- ads.msn.com
+		- ads1.msn.com		(times out)
+
+		- nbcsports.msnbc.com		(cert: *.pantherssl.com)
+
+		- msnbc.msn.com subdomains:
+
+			- www.futureoftech	(Akamai, 503; !www redirects to www)
+			- www.gadgetbox		(ditto)
+			- www.ingame		(ditto)
+			- www.technolog		(ditto)
 
 -->
-<ruleset name="MSN (other domains)">
+<ruleset name="MSN (partial)">
 
 	<!--	* for cross-domain cookie.	-->
 	<target host="*.msn.com" />
-	<target host="kaw.stb.s-msn.com"/>
-	<target host="kaw.stc.s-msn.com"/>
+	<target host="eb.my.msn.com" />
+	<target host="rad.msn.com" />
+	<target host="*.rad.msn.com" />
+	<target host="kaw.*.s-msn.com" />
 
 
 	<!--	Set by c.atdmt.com.	-->
 	<securecookie host="^\.msn\.com$" name="^MUID$" />
 
 
-	<!--	Redirects to c.atdmt.com with unique ID,
-		which then redirects back to c.msn, with
-		the unique ID appended.		-->
-	<rule from="^http://c\.msn\.com/"
-		to="https://c.msn.com/" />
+	<!--	c.msn.com redirects to c.atdmt.com with
+		a unique ID, which then redirects back
+		to c.msn, with the unique ID appended.
+				-->
+	<rule from="^http://(ac3|adsyndication|c|eb\.my|(?:[ab]\.)?rad)\.msn\.com/"
+		to="https://$1.msn.com/" />
 
-	<rule from="^http://kaw\.(stb|stc)\.s-msn\.com/"
-		to="https://kaw.$1.s-msn.com/"/>
+	<rule from="^http://kaw\.st([bc])\.s-msn\.com/"
+		to="https://kaw.st$1.s-msn.com/" />
 
 </ruleset>

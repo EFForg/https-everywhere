@@ -1,0 +1,28 @@
+<!--
+	For rules that are on by default, see Atlantic-Media.xml.
+
+-->
+<ruleset name="Atlantic Media (problematic)" default_off="probably breaks administration">
+
+	<target host="theatlanticcities.com" />
+	<target host="*.theatlanticcities.com" />
+	<target host="theatlanticwire.com" />
+	<target host="*.theatlanticwire.com" />
+
+
+	<!--	- cdn cert: gp1.wac.edgecastcdn.net
+		- cdn 404s
+		- !www 301s to www
+		- (www.) cert: admin.theatlantic(cities|wire).com
+		- $ shows admin's data
+					-->
+	<rule from="^https?://(?:cdn\.|www\.)?theatlantic(cities|wire)\.com/([\w\-]+)/"
+		to="https://admin.theatlantic$1.com/$2/" />
+
+	<!--	With the above rule, www.../$ points to
+		admin.../$, which isn't identical.
+							-->
+	<rule from="^https://admin\.theatlantic(cities|wire)\.com/($|\?)"
+		to="http://www.theatlantic$1.com/$2" downgrade="1" />
+
+</ruleset>

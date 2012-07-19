@@ -1,0 +1,31 @@
+<!--
+	CDN buckets:
+
+		- tptqimages.s3.amazonaws.com
+
+			- equivalent to d39zsn48xaymk0.cloudfront.net
+
+-->
+<ruleset name="Typotheque (partial)">
+
+	<target host="typotheque.com" />
+	<target host="*.typotheque.com" />
+
+
+	<securecookie host="^wf\.typotheque\.com$" name=".*" />
+
+
+	<!--	Some pages 302 to http.
+					-->
+	<rule from="^http://(www\.)?typotheque\.com/(css/|images/|my_account|WF-\d{6}-\d{6})"
+		to="https://$1typotheque.com/$2" />
+
+	<rule from="^https?://im\.typotheque\.com/"
+		to="https://tptqimages.s3.amazonaws.com/" />
+
+	<!--	Included on 3rd-party websites.
+						-->
+	<rule from="^http://wf\.typotheque\.com/"
+		to="https://wf.typotheque.com/" />
+
+</ruleset>

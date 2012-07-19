@@ -1,16 +1,19 @@
-<!-- tracking network, included on lots of sites. may carry banners.
-If we are to download their content, atleast do it by https
+<!--
+	Tracking network, included on lots of sites. may carry banners.
+	If we are to download their content, at least do it by https.
 
-	Nonfunctional subdomains:
+
+	Nonfunctional webtrends.com subdomains:
 
 		- blog		(cert: pweb2.wt.redux; shows CentOS Apache 2 test page)
 		- kb		(cert: webtrends.com; reset)
 		- optimize	(cert valid; hosted on Akamai; "Service Unavailable")
 
-
 -->
-<ruleset name="WebTrends">
+<ruleset name="Webtrends">
 
+	<target host="qsstats.com" />
+	<target host="www.qsstats.com" />
 	<target host="reinvigorate.net" />
 	<target host="*.reinvigorate.net" />
 	<target host="*.webtrendslive.com"/>
@@ -18,22 +21,31 @@ If we are to download their content, atleast do it by https
 	<target host="*.webtrends.com" />
 
 
-	<securecookie host="^m\.webtrends\.com$" name=".*" />
-	<securecookie host="^(.*\.)?webtrendslive\.com$" name=".*"/>
+	<securecookie host="^www\.qsstats\.com$" name=".*" />
+	<securecookie host="^(.*\.)?webtrends(live)?\.com$" name=".*" />
 
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?qsstats\.com/"
+		to="https://www.qsstats.com/" />
+
+	<!--	- include: cloudfront.net
+		- include bucket unknown
+						-->
+	<rule from="^https?://(?:include|track)\.reinvigorate\.net/"
+		to="https://track.reinvigorate.net/" />
 
 	<rule from="^http://(report\.|www\.)?reinvigorate\.net/"
 		to="https://$1reinvigorate.net/" />
 
-	<rule from="^http://webtrends\.com/"
-		to="https://webtrends.com/" />
+	<rule from="^http://((?:ads|developer|itservices|ondemand|[ms]|segments|social|www)\.)?webtrends\.com/"
+		to="https://$1webtrends.com/"/>
 
-	<rule from="^http://(ads|developer|itservices|ondemand|m|segments|social|statse|www)\.webtrends\.com/"
-		to="https://$1.webtrends.com/"/>
+	<rule from="^http://statse\.webtrendslive\.com/"
+		to="https://statse.webtrendslive.com/" />
 
 	<!--	At least some pages redirect back.	-->
 	<rule from="^http://forums\.webtrends\.com/(assets/|favicon\.png)"
 		to="https://getsatisfaction.com/$1" />
 
 </ruleset>
-

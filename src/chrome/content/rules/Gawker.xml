@@ -1,40 +1,49 @@
 <!--
-	Other Gawker Media rulesets:
-
-		- Jalopnik.xml
+	For problematic rules, see Gawker-mismatches.xml.
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- fonts.gawker.com
+		- edge.alluremedia.com.au	(cert: gp1.wac.edgecastcdn.net; 404)
+		- fonts.gawker.com		(reset)
 		- hyperion.gawker.com
 		- ganja.gawkerassets.com	(reset)
 		- img.gawkerassets.com		(ditto)
+		- www.gizmodo.com.au 		(times out)
 
 -->
 <ruleset name="Gawker (partial)">
 
+	<target host="deadspin.com" />
+	<target host="www.deadspin.com" />
 	<target host="gawker.com" />
 	<target host="*.gawker.com" />
-	<target host="ganja.gawkerassets.com" />
+	<target host="*.gawkerassets.com" />
+	<target host="gizmodo.com" />
+	<target host="cache.gizmodo.com" />
+	<target host="www.gizmodo.com" />
 	<target host="lifehacker.com" />
-	<target host="*.lifehacker.com" />
+	<target host="cache.lifehacker.com" />
+	<target host="www.lifehacker.com" />
+	<target host="kotaku.com" />
+	<target host="cache.kotaku.com" />
+	<target host="www.kotaku.com" />
 
 
 	<securecookie host="^(.*\.)?gawker\.com$" name=".*" />
-
 
 
 	<rule from="^http://((?:api|login|www)\.)?gawker\.com/"
 		to="https://$1gawker.com/" />
 
 	<!--	None work over https.	-->
-	<rule from="^https?://(?:cache\.(?:gawker|lifehacker)|ganja\.gawkerassets)\.com/"
+	<rule from="^https?://(?:cache\.(?:gawker|gizmodo|kotaku|lifehacker)|(?:cache|ganja)\.gawkerassets)\.com/"
 		to="https://gawker.com/" />
 
-	<!--	Cert: gawker.com
-		At least some pages redirect to http.	-->
-	<rule from="^https?://(?:www\.)?lifehacker\.com/assets/"
-		to="https://gawker.com/assets/" />
+	<!--	- Cert: gawker.com
+		- At least some pages redirect to http
+					-->
+	<rule from="^https?://(?:www\.)?(?:deadspin|gizmodo|kotaku|lifehacker)\.com/(assets|static)/"
+		to="https://gawker.com/$1/" />
 
 </ruleset>

@@ -1,0 +1,37 @@
+<!--
+	For problematic rules, see US-government-mismatches.
+
+
+	For other US government coverage, see US-government.xml.
+
+
+		Nonfunctional subdomains:
+
+			- www			(Akaamai, redirects to pws.sc.egov.usda.gov;
+						!www used to work [cert: my.usda.gov], but has been broken
+						along with an undue cert update [presumably intentionally])
+			- (www.)eauth.egov
+			- www.nrcs		(Akamai; www redirects to pws.sc.egov.usda.gov; !www times out)
+			- www.mo.nrcs.usda.gov	(times out)
+			- (www.)rurdev		(!www times out)
+			- forms.sc.egov		(timeout)
+
+-->
+<ruleset name="United States Department of Agriculture (partial)">
+
+	<target host="*.sc.egov.usda.gov" />
+	<target host="my.usda.gov" />
+	<target host="oip.usda.gov" />
+
+
+	<securecookie host="^my\.usda\.gov$" name=".*" />
+
+
+	<!--	cert doesn't match !www		-->
+	<rule from="^http://(?:www\.)?fsa\.usda\.gov/"
+		to="https://www.fsa.usda.gov/" />
+
+	<rule from="^http://(my|oip|(?:oip|pws)\.sc\.egov)\.usda\.gov/"
+		to="https://$1.usda.gov/" />
+
+</ruleset>

@@ -1,0 +1,36 @@
+<!--
+	For rules that are on by default, see Gawker.xml.
+
+-->
+<ruleset name="Gawker (mismatches)" default_off="mismatch">
+
+	<!--	Cert: *.gawker.com	-->
+	<target host="deadspin.com" />
+	<target host="*.deadspin.com" />
+	<target host="gizmodo.com" />
+	<!--	*s for cross-domain cookies	-->
+	<target host="*.gizmodo.com" />
+	<target host="jalopnik.com" />
+	<target host="*.jalopnik.com" />
+	<target host="kotaku.com" />
+	<target host="*.kotaku.com" />
+	<target host="lifehacker.com" />
+	<target host="*.lifehacker.com" />
+		<!--	Handled in Gawker.xml.	-->
+		<exclusion pattern="^http://(www\.)?(deadspin|gizmodo|kotaku|lifehacker)\.com/(assets|static)/" />
+
+
+	<securecookie host="^\.?jalopnik\.com$" name=".*" />
+	<securecookie host="^\.?(deadspin|gizmodo|kotaku|lifehacker)\.com$" name=".*" />
+
+
+	<!--	Minimize the number of exceptions needed
+		by rewriting to one domain only.	-->
+	<rule from="^https?://(?:cache\.|www\.)?jalopnik\.com/"
+		to="https://jalopnik.com/" />
+
+	<!--	Cert: *.gawker.com	-->
+	<rule from="^https?://(?:www\.)?(deadspin|gizmodo|kotaku|lifehacker)\.com/"
+		to="https://$1.com/" />
+
+</ruleset>

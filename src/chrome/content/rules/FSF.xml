@@ -1,18 +1,29 @@
 <!--
 	Nonfunctional domains:
 
+		- ftp.gnu.org		(ssl_error_rx_record_too_long)
+		- ftpmirror.gnu.org
 		- gcc.gnu.org
-		- shop.fsf.org	(redirects to http):
+		- shop.fsf.org		(redirects to http):
 
 -->
 <ruleset name="Free Software Foundation">
 
+	<target host="classpath.org" />
+	<target host="www.classpath.org" />
 	<target host="fsf.org" />
 	<target host="*.fsf.org" />
 	<target host="gnu.org" />
 	<target host="*.gnu.org" />
         <target host="*.nongnu.org" />
 
+
+	<!--	- Cert: www.gnu.org
+		- Shows gnu.org data over https
+		- 302s like so over http
+			-->
+	<rule from="^https?://(?:www\.)?classpath\.org/$"
+		to="https://www.gnu.org/software/classpath/" />
 
 	<!--	There's a cross-domain session cookie, which is not
 		handled in case it's used on unsecurable pages.
@@ -24,6 +35,12 @@
 
 	<rule from="^http://((?:crm|my|static|www)\.)?fsf\.org/"
 		to="https://$1fsf.org/" />
+
+	<!--	- Shows www's data over https
+		- 301s like so over http
+						-->
+	<rule from="^https?://donate\.fsf\.org/"
+		to="https://my.fsf.org/donate/" />
 
 	<!--	- Shows www data over https
 		- Redirects like so over http

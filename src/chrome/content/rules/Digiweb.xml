@@ -1,0 +1,70 @@
+<!--
+	For problematic rules, see Digiweb-self-signed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)digiclix.com		(interrupted)
+		- (www.)diginet.ie
+		- webmail.diginet.ie
+		- (www.)digiweb.ie		(cert: secureorders.digiweb.ie; shows that domain's data)
+		- beta.digiweb.ie		(cert: secureorders.digiweb.ie; shows that domain's data)
+		- hosting.digiweb.ie		(cert: manage.hosting.digiweb.ie; shows CentOS Apache test page)
+		- win2.hosting.digiweb.ie	(interrupted)
+		- italia.digiweb.ie		(cert: secureorders.digiweb.ie; shows that domain's data)
+		- support.digiweb.ie		(cert: www.snakeoil.com, self-signed; shows default H-Sphere page)
+		- webmail.digiweb.ie
+		- (www.)itdirectory.ie		(cert: uweb2.host.ie, self-signed; shows that domain's data)
+		- (www.)it-directory.ie		(ditto)
+		- support.novara.ie		(cert: novweb.novara.ie, self-signed; shows that domain's data)
+		- (www.)novara.ie		(ditto)
+		- (www.)novarait.com
+		- (www.)omniserve.ie		(interrupted)
+		- (www.)omniserve.eu		(ssl_error_rx_record_too_long)
+		- mycp.omniserve.eu		(ssl_error_rx_record_too_long)
+		- (www.)servers.ie
+		- (www.)whoislookup.ie		(cert: novweb.novara.ie, self-signed; shows that domain's data)
+
+-->
+<ruleset name="Digiweb (partial)">
+
+	<target host="manage.hosting.digiweb.ie" />
+	<target host="secureorders.digiweb.ie" />
+	<target host="host.ie" />
+	<target host="*.host.ie" />
+	<target host="novara.ie" />
+	<target host="www.novara.ie" />
+	<target host="ncm.novarait.com" />
+	<target host="promote.ie" />
+	<target host="www.promote.ie" />
+	<target host="register.ie" />
+	<target host="www.register.ie" />
+
+
+	<securecookie host="^(?:manage\.hosting|secureorders)\.digiweb\.ie$" name=".*" />
+	<securecookie host="^(?:host|register)\.ie$" name=".*" />
+	<securecookie host="^ncm\.novarait\.com$" name=".*" />
+
+
+	<rule from="^http://(manage\.hosting|secureorders)\.digiweb\.ie/"
+		to="https://$1.digiweb.ie/" />
+
+	<!--	Cert only matches //host.ie	-->
+	<rule from="^https?://(?:www\.)?host\.ie/"
+		to="https://host.ie/" />
+
+	<rule from="^http://cp\.host\.ie/"
+		to="https://cp.host.ie/" />
+
+	<!--	- pegister: cert only matches //register.ie
+		- promote: cert only matches www
+		- promote's cert has expired
+		- promote & novera redirect like so
+			-->
+	<rule from="^https?://(?:www\.)?(?:novera|promote|register)\.ie/"
+		to="https://register.ie/" />
+
+	<rule from="^http://ncm\.novarait\.com/"
+		to="https://ncm.novarait.com/" />
+
+</ruleset>

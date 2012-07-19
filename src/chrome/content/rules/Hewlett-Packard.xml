@@ -1,7 +1,12 @@
 <!--
 	Nonfunctional:
 
-	-  h10060.www1	(cert doesn't match; 404)
+	- (www.)arcsight.com	(ssl_error_rx_record_too_long)
+	-  h10060.www1		(cert doesn't match; 404)
+	- h30565.www3.hp.com
+	- hpwebos.com		(Cert: palm.com)
+	- www.hpwebos.com	(Akamai; 301s to http)
+	
 
 -->
 <ruleset name="Hewlett-Packard Company (partial)">
@@ -27,6 +32,7 @@
 	<target host="*.hp-ww.com"/>
 	<target host="by.optimost.com"/>
 	<target host="by.essl.optimost.com"/>
+	<target host="developer.palm.com" />
 	<target host="threatlinq.tippingpoint.com"/>
 	<target host="www.threatlinq.tippingpoint.com"/>
 
@@ -37,6 +43,7 @@
 	<securecookie host="^h(20141\.www2|41183\.www4)\.hp\.com$" name=".*"/>
 	<!--	Stats cookie set by met1.hp.com		-->
 	<securecookie host="^\.hp\.com$" name="^s_vi$"/>
+	<securecookie host="^developer\.palm\.com$" name=".*" />
 
 
 	<rule from="^https?://3com\.com/"
@@ -45,10 +52,10 @@
 	<rule from="^http://(b2bgw|login|www)\.3com\.com/"
 		to="https://$1.3com.com/"/>
 
-	<rule from="^http://(?:www\.)?compaq\.com/"
+	<rule from="^https?://(?:www\.)?compaq\.com/"
 		to="https://www.compaq.com/"/>
 
-	<rule from="^http://(www(-mo)?\.)?eds\.com/"
+	<rule from="^http://(www(?:-mo)?\.)?eds\.com/"
 		to="https://$1eds.com/"/>
 
 	<rule from="^https?://hp\.com/"
@@ -63,10 +70,10 @@
 	<rule from="^http://(www\.)?register\.hp\.com/"
 		to="https://$1register.hp.com/"/>
 
-	<rule from="^http://(www\.)?shopping\.hp\.com/"
+	<rule from="^http://(?:www\.)?shopping\.hp\.com/"
 		to="https://shopping.hp.com/"/>
 
-	<rule from="^http://welcome\.hp\.com/"
+	<rule from="^https?://welcome\.hp\.com/"
 		to="https://secure.hp-ww.com/"/>
 
 	<rule from="^http://h(1000[34]|10018|10032|10048|10057|1008[456]|10148|10151|10176|1700[3-9]|17010|18000)\.www1\.hp\.com/"
@@ -84,10 +91,10 @@
 	<rule from="^http://esam(2)?\.austin\.hp\.com/"
 		to="https://esam$1.austin.hp.com/"/>
 
-	<rule from="^http://(?:vausnzpro2\.austin|20465\.www2)\.hp\.com/"
+	<rule from="^https?://(?:vausnzpro2\.austin|20465\.www2)\.hp\.com/"
 		to="https://vausnzpro2.austin.hp.com/"/>
 
-	<rule from="^http://(?:www\.)?esca\.hp\.com/"
+	<rule from="^https?://(?:www\.)?esca\.hp\.com/"
 		to="https://esca2.americas.hp.com/"/>
 
 	<rule from="^http://esca3\.europe\.hp\.com/"
@@ -96,13 +103,16 @@
 	<rule from="^http://h41183\.www4\.hp\.com/"
 		to="https://h41183.www4.hp.com/"/>
 
-	<rule from="^http://(?:ssl|www\.)?www8\.hp\.com/"
+	<rule from="^https?://(?:ssl|www\.)?www8\.hp\.com/"
 		to="https://ssl.www8.hp.com/"/>
 
-	<rule from="^http://(?:secure|welcome)\.hp-ww\.com/"
+	<rule from="^https?://(?:secure|welcome)\.hp-ww\.com/"
 		to="https://secure.hp-ww.com/"/>
 
-	<rule from="^http://by(?:\.essl)?\.optimost\.com/"
+	<rule from="^http://developer\.palm\.com/"
+		to="https://developer.palm.com/" />
+
+	<rule from="^https?://by(?:\.essl)?\.optimost\.com/"
 		to="https://by.essl.optimost.com/"/>
 
 	<rule from="^http://(www\.)?threatlinq\.tippingpoint\.com/"

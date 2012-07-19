@@ -1,24 +1,45 @@
 <!--
-	if we are going to include ads and tracking info, lets atleast do it by https.
+	If we are going to include ads and tracking info, let's at least do it by https.
+
 -->
 <ruleset name="Doubleclick.net (disabled)" default_off="breaks some news sites">
 
-	<target host="doubleclick.net"/>
-	<target host="*.doubleclick.net"/>
-	<target host="*.au.doubleclick.net"/>
-	<target host="*.g.doubleclick.net"/>
-	<target host="*.uk.doubleclick.net"/>
-	<target host="www.googleadservices.com"/>
+	<target host="doubleclick.net" />
+	<target host="*.doubleclick.net" />
+	<target host="*.au.doubleclick.net" />
+	<target host="*.de.doubleclick.net" />
+	<target host="*.es.doubleclick.net" />
+	<target host="*.fls.doubleclick.net" />
+	<target host="*.fr.doubleclick.net" />
+	<target host="*.g.doubleclick.net" />
+	<target host="*.jp.doubleclick.net" />
+	<target host="*.mo.doubleclick.net" />
+	<target host="*.nl.doubleclick.net" />
+	<target host="*.uk.doubleclick.net" />
+	<target host="www.googleadservices.com" />
 
-	<securecookie host="^\.doubleclick\.net$" name=".*"/>
+
+	<securecookie host="^\.doubleclick\.net$" name=".*" />
+
 
 	<rule from="^http://doubleclick\.net/"
-		to="https://doubleclick.net/"/>
+		to="https://doubleclick.net/" />
 
-	<rule from="^http://([^/:@\.]+)(\.(au|g|uk))?\.doubleclick\.net/"
-		to="https://$1$2.doubleclick.net/"/>
+	<!--	Observed subdomains:
+
+			- ad
+			- ad-apac
+			- fls
+								-->
+	<rule from="^http://([^/:@\.]+)(\.(?:au|de|fls|fr|g|jp|mo|uk))?\.doubleclick\.net/"
+		to="https://$1$2.doubleclick.net/" />
+
+	<!--	Cert doesn't match *.(es|nl).doubleclick.net
+						-->
+	<rule from="^https?://([^/:@\.]+)\.(?:es|nl)\.doubleclick\.net/"
+		to="https://$1.doubleclick.net/" />
 
 	<rule from="^http://www\.googleadservices\.com/"
-		to="https://www.googleadservices.com/"/>
+		to="https://www.googleadservices.com/" />
 
 </ruleset>
