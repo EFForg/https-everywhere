@@ -1,38 +1,41 @@
 <!--
-	For other Yahoo coverage, see YahooNew.xml.
+	For other Yahoo coverage, see Yahoo.xml.
+
+
+	These altnames don't exist:
+
+		- www.blog.flickr.net
+		- www.code.flickr.net
 
 -->
-<ruleset name="Flickr (partial)">
+<ruleset name="Flickr">
 
 	<target host="flic.kr" />
+	<target host="*.flic.kr" />
 	<target host="flickr.com" />
 	<target host="*.flickr.com" />
-	<target host="*.static.flickr.com" />
+	<target host="*.flickr.net" />
 	<target host="*.staticflickr.com" />
 
 
-	<rule from="^https?://flic\.kr/f/"
-		to="https://secure.flickr.com/short_urls.gne?favorites=" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flic\.kr$" name="^BX$" /-->
 
-	<rule from="^https?://flic\.kr/p/"
-		to="https://secure.flickr.com/photo.gne?short=" />
+	<securecookie host="^\.flic\.kr$" name=".+" />
+	<securecookie host=".*\.flickr\.com$" name=".+" />
 
-	<rule from="^https?://flic\.kr/ps/"
-		to="https://secure.flickr.com/short_urls.gne?photostream=" />
 
-	<rule from="^https?://flic\.kr/s/"
-		to="https://secure.flickr.com/short_urls.gne?photoset=" />
+	<rule from="^http://flic\.kr/"
+		to="https://flic.kr/" />
 
-	<rule from="^https?://(?:secure\.|www\.)?flickr\.com/"
-		to="https://secure.flickr.com/" />
+	<rule from="^http://((?:api|secure|static|www)\.)?flickr\.com/"
+		to="https://$1flickr.com/" />
 
-	<rule from="^https?://api\.flickr\.com/services/"
-		to="https://api.flickr.com/services/" />
+	<rule from="^http://(c2|farm\d+)\.static(\.)?flickr\.com/"
+		to="https://$1.static$2flickr.com/" />
 
-	<rule from="^http://static\.flickr\.com/"
-		to="https://static.flickr.com/" />
-
-	<rule from="^http://farm(\d+)\.static(\.)?flickr\.com/"
-		to="https://farm$1.static$2flickr.com/" />
+	<rule from="^http://(blog|code)\.flickr\.net/"
+		to="https://$1.flickr.net/" />
 
 </ruleset>
