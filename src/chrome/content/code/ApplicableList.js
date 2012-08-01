@@ -226,7 +226,7 @@ ApplicableList.prototype = {
     if (type == 'active') image_src = 'tick.png';
     else if (type == 'inactive') image_src = 'cross.png';
     else if (type == 'moot') image_src = 'tick-moot.png';
-    else if (type == 'breaking') image_src = 'tick-red.png';
+    else if (type == 'breaking') image_src = 'loop.png';
     item.setAttribute('image', 'chrome://https-everywhere/skin/'+image_src);
 
     // all done
