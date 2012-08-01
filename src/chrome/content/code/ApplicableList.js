@@ -213,6 +213,13 @@ ApplicableList.prototype = {
     item.setAttribute('command', rule.id+'-command');
     item.setAttribute('class', type+'-item menuitem-iconic');
     item.setAttribute('label', rule.name);
+
+    // we can get confused if rulesets have their state changed after the
+    // ApplicableList was constructed
+    if (!rule.active && (type == 'active' || type == 'moot'))
+      type = 'inactive';
+    if (rule.active && type == 'inactive')
+      type = 'moot';
     
     // set the icon
     var image_src;
