@@ -1,0 +1,34 @@
+<ruleset name="ClickTale">
+
+	<target host="clicktale.com" />
+	<target host="*.clicktale.com" />
+	<target host="*.app.clicktale.com" />
+	<target host="*.clicktale.net" />
+
+
+	<securecookie host="^.*\.clicktale\.(?:com|net)$" name=".*" />
+
+
+	<!--	- s:
+
+			- Tracking scripts included on 3rd-party websites
+			- Cert: ssl2.cdngc.net
+			- 403s
+		 	- Scripts 404 when rewritten to ^clicktale.net
+			- Script uses www for https
+						-->
+	<rule from="^https?://(?:s|www)\.clicktale\.net/"
+		to="https://www.clicktale.net/" />
+
+	<!--	- ^clicktale.com/$
+
+			- interrupted
+			- 301s to www over http
+						-->
+	<rule from="^https?://(?:www\.)?clicktale\.com/"
+		to="https://www.clicktale.com/" />
+
+	<rule from="^http://((?:login|subs)\.app|blog)\.clicktale\.com/"
+		to="https://$1.app.clicktale.com/" />
+
+</ruleset>
