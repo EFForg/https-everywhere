@@ -96,7 +96,7 @@ ApplicableList.prototype = {
     
     var enableLabel = document.createElement('menuitem');
     var text = strings.getString("https-everywhere.menu.globalDisable");
-    if(!o_httpsprefs.getBoolPref("globalEnabled"))
+    if (!o_httpsprefs.getBoolPref("globalEnabled"))
         text = strings.getString("https-everywhere.menu.globalEnable");
         
     enableLabel.setAttribute('label', text);
@@ -110,13 +110,16 @@ ApplicableList.prototype = {
       break;
     }
     var label = document.createElement('menuitem');
-    if (any_rules) {
-        label.setAttribute('label', 'Enable / Disable Rules');
-    } else {
-      if (!weird) label.setAttribute('label', '(No Rules for This Page)');
-      else        label.setAttribute('label', '(Rules for This Page Unknown)');
-    }
+    label.setAttribute('label', 'Enable / Disable Rules');
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
+    var label2 = false;
+    if (!any_rules) {
+      label2 = document.createElement('menuitem');
+      if (!weird) label2.setAttribute('label', '(No Rules for This Page)');
+      else        label2.setAttribute('label', '(Rules for This Page Unknown)');
+      label2.setAttribute('command', 'https-everywhere-menuitem-preferences');
+      label2.setAttribute('style', 'color:#909090;');
+    }
 
     // create a commandset if it doesn't already exist
     this.commandset = document.getElementById('https-everywhere-commandset');
@@ -187,6 +190,7 @@ ApplicableList.prototype = {
        for (var x in this.breaking)
           this.add_menuitem(this.breaking[x], 'breaking');
           
+       if (label2) this.prepend_child(label2);
        this.prepend_child(label);
     }
     
