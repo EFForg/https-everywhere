@@ -96,7 +96,7 @@ ApplicableList.prototype = {
     
     var enableLabel = document.createElement('menuitem');
     var text = strings.getString("https-everywhere.menu.globalDisable");
-    if(!o_httpsprefs.getBoolPref("globalEnabled"))
+    if (!o_httpsprefs.getBoolPref("globalEnabled"))
         text = strings.getString("https-everywhere.menu.globalEnable");
         
     enableLabel.setAttribute('label', text);
@@ -110,13 +110,17 @@ ApplicableList.prototype = {
       break;
     }
     var label = document.createElement('menuitem');
-    if (any_rules) {
-        label.setAttribute('label', 'Enable / Disable Rules');
-    } else {
-      if (!weird) label.setAttribute('label', '(No Rules for This Page)');
-      else        label.setAttribute('label', '(Rules for This Page Unknown)');
-    }
+    label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
+    var label2 = false;
+    if (!any_rules) {
+      label2 = document.createElement('menuitem');
+      if (!weird) text = strings.getString('https-everywhere.menu.noRules');
+      else        text = strings.getString('https-everywhere.menu.unknownRules');
+      label2.setAttribute('label', text);
+      label2.setAttribute('command', 'https-everywhere-menuitem-preferences');
+      label2.setAttribute('style', 'color:#909090;');
+    }
 
     // create a commandset if it doesn't already exist
     this.commandset = document.getElementById('https-everywhere-commandset');
@@ -187,6 +191,7 @@ ApplicableList.prototype = {
        for (var x in this.breaking)
           this.add_menuitem(this.breaking[x], 'breaking');
           
+       if (label2) this.prepend_child(label2);
        this.prepend_child(label);
     }
     
@@ -213,13 +218,20 @@ ApplicableList.prototype = {
     item.setAttribute('command', rule.id+'-command');
     item.setAttribute('class', type+'-item menuitem-iconic');
     item.setAttribute('label', rule.name);
+
+    // we can get confused if rulesets have their state changed after the
+    // ApplicableList was constructed
+    if (!rule.active && (type == 'active' || type == 'moot'))
+      type = 'inactive';
+    if (rule.active && type == 'inactive')
+      type = 'moot';
     
     // set the icon
     var image_src;
     if (type == 'active') image_src = 'tick.png';
     else if (type == 'inactive') image_src = 'cross.png';
     else if (type == 'moot') image_src = 'tick-moot.png';
-    else if (type == 'breaking') image_src = 'tick-red.png';
+    else if (type == 'breaking') image_src = 'loop.png';
     item.setAttribute('image', 'chrome://https-everywhere/skin/'+image_src);
 
     // all done
