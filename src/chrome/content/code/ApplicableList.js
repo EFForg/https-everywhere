@@ -110,13 +110,14 @@ ApplicableList.prototype = {
       break;
     }
     var label = document.createElement('menuitem');
-    label.setAttribute('label', 'Enable / Disable Rules');
+    label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
     label.setAttribute('command', 'https-everywhere-menuitem-preferences');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');
-      if (!weird) label2.setAttribute('label', '(No Rules for This Page)');
-      else        label2.setAttribute('label', '(Rules for This Page Unknown)');
+      if (!weird) text = strings.getString('https-everywhere.menu.noRules');
+      else        text = strings.getString('https-everywhere.menu.unknownRules');
+      label2.setAttribute('label', text);
       label2.setAttribute('command', 'https-everywhere-menuitem-preferences');
       label2.setAttribute('style', 'color:#909090;');
     }
