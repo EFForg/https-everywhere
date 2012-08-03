@@ -1,15 +1,36 @@
 <!--
-	s3.amazonaws.com/i.huffpost.com/	-	not directly equivalent to i.huffingtonpost.com
+	For problematic rules, see Huffington-Post-mismatches.xml.
 
-	!functional subdomains:
+
+	CDN buckets:
+
+		- s3.amazonaws.com/i.huffpost.com/	-	not directly equivalent to i.huffingtonpost.com
+
+
+	Nonfunctional subdomains:
+
 		- entry-stats
 		- s		(redirects to i; prints Amazon Web Services "Access Denied")
+
 -->
-<ruleset name="Huffington Post (partial)" default_off="Akamai certificate">
+<ruleset name="Huffington Post">
 
-	<target host="i.huffpost.com" />
+	<target host="huffingtonpost.com" />
+	<target host="*.huffingtonpost.com" />
+	<target host="*.huffpost.com" />
 
-	<rule from="^http://i\.huffpost\.com/"
-		to="https://i.huffpost.com/" />
+
+	<rule from="^https?://(?:secure\.|www\.)?huffingtonpost\.com/"
+		to="https://secure.huffingtonpost.com/" />
+
+	<!--	404s on s-s.huffpost.com.
+						-->
+	<rule from="^https?://s\.huffpost\.com/contributors/"
+		to="https://secure.huffingtonpost.com/contributors/" />
+
+	<!--	AmazonWS, but valid cert.
+						-->
+	<rule from="^https?://(?:s-)?([is])\.huffpost\.com/"
+		to="https://s-$1.huffpost.com/" />
 
 </ruleset>
