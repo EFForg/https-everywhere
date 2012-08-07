@@ -1,0 +1,34 @@
+<!--
+	a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/
+
+	Rewriting static.chartbeat.com to a248.e.akamai.net/chartbeat.download.akamai.com/102508/static/
+	redirects to http14432.storage.akadns.net/.14432,14333^-1.0./102508/static/
+
+	Ditto when for rewriting static paths to .../static2/.
+
+
+	For problematic rules, see Chartbeat-mismatches.xml.
+
+-->
+<ruleset name="Chartbeat (partial)">
+
+	<target host="chartbeat.com"/>
+	<target host="*.chartbeat.com"/>
+
+
+	<rule from="^http://(www\.)?chartbeat\.com/"
+		to="https://$1chartbeat.com/"/>
+
+	<!--	Courtesy of https://s3.amazonaws.com/plug.onswipe.com/on.js	-->
+	<rule from="^https?://static\.chartbeat\.com/"
+		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" />
+
+	<rule from="^http://static2\.chartbeat\.com/"
+		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/"/>
+
+	<!--	Cert: *.zendesk.com
+		Pages redirect to http.		-->
+	<rule from="^http://support\.chartbeat\.com/(assets|generated|images|system)/"
+		to="https://assets.zendesk.com/$1/"/>
+
+</ruleset>

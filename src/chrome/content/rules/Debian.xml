@@ -1,7 +1,30 @@
-<ruleset name="Debian" default_off="self-signed">
-  <target host="lists.debian.org" />
-  <target host="wiki.debian.org" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://lists\.debian\.org/" to="https://lists.debian.org/"/>
-  <rule from="^http://(?:www\.)?wiki\.debian\.org/" to="https://wiki.debian.org/"/>
+		- anonscm	(cert: alioth; shows alioth's data)
+		- bugs
+		- ca		(cert: db.debian.org; shows that domain's data)
+		- cdimage
+		- incoming	(cert: ftp-master.debian.org; shows that domain's data)
+		- packages
+		- people	(reset; people.debian.org/~joerg/ is displayed
+				after fetching gpg.ganneff.de over http...)
+		- qa
+		- packages.qa
+		- search
+		- svn		(cert: alioth; shows alioth's data)
+		- (www.)
+
+-->
+<ruleset name="Debian (partial)" default_off="self-signed">
+
+	<target host="*.debian.org"/>
+	<target host="pcsclite.alioth.debian.org"/>
+
+	<rule from="^http://(alioth|buildd|db|ftp-master|lists|nagios|nm|paste|wiki)\.debian\.org/"
+		to="https://$1.debian.org/"/>
+
+	<rule from="^http://pcsclite\.alioth\.debian\.org/"
+		to="https://alioth.debian.org/"/>
+
 </ruleset>

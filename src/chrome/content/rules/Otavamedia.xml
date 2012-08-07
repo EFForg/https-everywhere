@@ -1,0 +1,42 @@
+<!--
+	!functional:
+		- (www.)dome.fi			(cert: aulis.plaza.fi)
+		- (www.)kirjakerho.fi
+		- (www.)kotiliesi.fi		(ditto)
+		- (www.)kuvalehdet.fi		(cert: www.otavamedia.fi)
+		- kannet.kuvalehdet.fi
+		- (www.)libricard.fi
+		- (www.)like.fi
+		- (www.)luekirja.fi		(ssl_error_rx_record_too_long)
+		- (www.)lukulahja.fi
+		- (www.)otava.fi
+		- (www.)otavafiles.fi		(cert: aulis.plaza.fi; shows that domain's data)
+		- mediatiedot.otavamedia.fi	(ditto)
+		- (www.)plaza.fi		(ditto)
+
+-->
+<ruleset name="Otavamedia (partial)">
+
+	<target host="kuvalehdet.fi"/>
+	<target host="www.kuvalehdet.fi"/>
+	<target host="otavamedia.fi"/>
+	<target host="www.otavamedia.fi"/>
+	<target host="aulis.plaza.fi"/>
+	<target host="plazakauppa.fi"/>
+	<target host="www.plazakauppa.fi"/>
+
+	<securecookie host="^www\.plazakauppa\.fi$" name=".*"/>
+
+	<!--	(www.)kuv... redirects to www.oct...
+		cert is not valid for !www.oct...	-->
+	<rule from="^http://(?:www\.)?(?:kuvalehdet|otavamedia)\.fi/"
+		to="https://www.otavamedia.fi/"/>
+
+	<rule from="^http://aulis\.plaza\.fi/"
+		to="https://aulis.plaza.fi/"/>
+
+	<!--	cert isn't valid for !www	-->
+	<rule from="^http://(?:www\.)plazakauppa\.fi/"
+		to="https://www.plazakauppa.fi/"/>
+
+</ruleset>

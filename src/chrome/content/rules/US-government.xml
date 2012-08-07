@@ -1,0 +1,142 @@
+<!--
+	Other US government rulesets:
+
+		- Argonne-National-Laboratory.xml
+		- City-of-Chicago.xml
+		- Federal-Communications-Commission.xml
+		- Lawrence-Livermore-National-Laboratory.xml
+		- NASA.xml
+		- National-Institute-of-Standards-and-Technology.xml
+		- National-Institutes-of-Health.xml
+		- National-Science-Foundation.xml
+		- National-Security-Agency.xml
+		- Oak-Ridge-National-Laboratory.xml
+		- Pay.gov
+		- Senate.gov.xml
+		- SocialSecurity.xml
+		- United-States-Nuclear-Regulatory-Commission.xml
+		- USA.gov
+		- US-Department-of-Housing-and-Urban-Development.xml
+		- US-Dept-of-Veterans-Affairs.xml
+		- US-government-mismatches.xml
+		- US-Immigration-and-Customs-Enforcement.xml
+		- US-Securities-and-Exchange-Commission.xml
+
+
+	Nonfunctional:
+
+		- georgewbush-whitehouse.archives.gov	(times out)
+		- factfinder2.census.gov
+		- (www.)civicfed.gov		(cert: secure115.inmotionhosting.com; shows that domain's data)
+		- (www.)cybercrime.gov		(ssl_error_rx_record_too_long)
+		- (www.)energy.gov		(timeout)
+		- rgl.faa.gov			(timeout)
+		- archive.hhs.gov		(timeout)
+		- www.hhs.gov			(Akamai, shows 404 page)
+		- appropriations.house.gov	(Bad Request)
+		- clerk.house.gov		(timeout)
+		- (www.)justice.gov		(ssl_error_rx_record_too_long)
+		- thomas.loc.gov
+		- www.loc.gov			(cert: wwws.loc.gov)
+		- mymoney.gov           	(interrupted)
+		- www.mymoney.gov       	(Akamai; shows Microsoft Forefront 403 page)
+		- (www.)nga.gov			(times out)
+		- (www.)noaa.gov		(timeout)
+		- maps.ngdc.noaa.gov
+		- noaanews.noaa.gov
+		- www.noaanews.noaa.gov		(timeout)
+		- www.acces.nysed.gov		(timeout)
+		- ansers.usa.gov		(timeout)
+		- blog.usa.gov
+		- usa.gov			(Akamai, redirects to http)
+		- www.usda.gov			(Akamai, redirects to pws.sc.egov.usda.gov; however !www works [cert: my.usda.gov])
+		- (www.)eauth.egov.usda.gov
+		- www.nrcs.usda.gov		(Akamai; www redirects to pws.sc.egov.usda.gov; !www times out)
+		- (www.)rurdev.usda.gov		(!www times out)
+		- forms.sc.egov.usda.gov	(timeout)
+		- (www.)usitc.gov		(ditto)
+		- ebiz1.uspto.gov		(ditto)
+		- patft.uspto.gov		(ditto)
+		- (www.)uspto.gov		(ditto)
+		- (www.)ustr.gov		(cert: ssl2050.cloudflare.com; "Offline Mode")
+
+-->
+<ruleset name="US government (partial)">
+
+	<target host="census.gov"/>
+	<target host="www.census.gov"/>
+	<target host="cms.gov"/>
+	<target host="*.cms.gov"/>
+	<target host="export.gov"/>
+	<target host="*.export.gov"/>
+	<target host="fbo.gov"/>
+	<target host="*.fbo.gov"/>
+	<target host="fnal.gov"/>
+	<target host="*.fnal.gov"/>
+	<target host="genome.gov"/>
+	<target host="www.genome.gov"/>
+	<target host="cms.hhs.gov"/>
+	<target host="www.cms.hhs.gov"/>
+	<target host="intelligence.house.gov"/>
+	<target host="medicare.gov"/>
+	<target host="*.medicare.gov"/>
+	<target host="oip.sc.egov.usda.gov"/>
+	<target host="pws.sc.egov.usda.gov"/>
+	<target host="my.usda.gov"/>
+	<target host="oip.usda.gov"/>
+	<target host="usajobs.gov"/>
+	<target host="*.usajobs.gov"/>
+	<target host="postalinspectors.uspis.gov"/>
+	<target host="uspsoig.gov"/>
+	<target host="www.uspsoig.gov"/>
+	<target host="wwws.whitehouse.gov" />
+
+
+	<securecookie host="^questions\.cms\.gov$" name=".*"/>
+	<securecookie host="^safeharbor\.export\.gov$" name=".*"/>
+	<securecookie host="^(.*\.)?(census|fbo|fnal|medicare|usajobs)\.gov$" name=".*"/>
+	<securecookie host="^intelligence\.house\.gov$" name=".*"/>
+	<securecookie host="^my\.usda\.gov$" name=".*"/>
+
+
+	<rule from="^http://(?:www\.)?(census|fbo|genome|medicare)\.gov/"
+		to="https://www.$1.gov/"/>
+
+	<rule from="^http://(?:www\.)?cms(?:\.hhs)?\.gov/"
+		to="https://www.cms.gov/"/>
+
+	<rule from="^http://assets\.cms\.gov/"
+		to="https://assets.cms.gov/"/>
+
+	<rule from="^http://questions\.(cms|medicare)\.gov/"
+		to="https://questions.$1.gov/"/>
+
+	<rule from="^http://(safeharbor|www)\.export\.gov/"
+		to="https://$1.export.gov/"/>
+
+	<rule from="^http://(www\.)?fnal\.gov/"
+		to="https://$1fnal.fov/"/>
+
+	<rule from="^http://intelligence\.house\.gov/"
+		to="https://intelligence.house.gov/"/>
+
+	<rule from="^http://([\w\-]+\.)?usajobs\.gov/"
+		to="https://$1usajobs.gov/"/>
+
+	<!--	cert doesn't match !www		-->
+	<rule from="^http://(?:www\.)?fsa\.usda\.gov/"
+		to="https://www.fsa.usda.gov/"/>
+
+	<rule from="^http://(my|oip|(oip|pws)\.sc\.egov)\.usda\.gov/"
+		to="https://$1.usda.gov/"/>
+
+	<rule from="^http://postalinspectors\.uspis\.gov/"
+		to="https://postalinspectors.uspis.gov/"/>
+
+	<rule from="^http://(www\.)?uspsoig\.gov/"
+		to="https://$1uspsoig.gov/"/>
+
+	<rule from="^http://wwws\.whitehouse\.gov/"
+		to="https://wwws.whitehouse.gov/" />
+
+</ruleset>

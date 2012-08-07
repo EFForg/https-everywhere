@@ -1,8 +1,49 @@
-<!-- www.polls.newsvine.com uses akamai -->
-<!-- i.newsvine.com lacks ssl. -->
-<ruleset name="newsvine.com">
-	<target host="newsvine.com" />
-	<rule from="^http://newsvine\.com/" to="https://www.newsvine.com/"/>
-	<rule from="^http://www\.newsvine\.com/" to="https://www.newsvine.com/"/>
-</ruleset>
+<!--
+	Other Microsoft rulesets:
 
+		- Live.com
+		- Microsoft.xml
+		- Microsoft-mismatches.xml
+		- MSN.com.xml
+		- MSN-Extra.xml
+		- Technet.com.xml
+
+
+	For problematic rules, see MSN.com.xml.
+
+-->
+<ruleset name="newsvine.com (partial)">
+
+	<target host="newsvine.com" />
+	<!--	Akamai	-->
+	<target host="cdn.lib.newsvine.com" />
+	<target host="*.newsvine.com" />
+		<!--	redirects to www	-->
+		<exclusion pattern="^http://www\.newsvine\.com/_nv/" />
+	<target host="www.*.newsvine.com" />
+
+
+	<securecookie host="^\.newsvine\.com$" name=".*" />
+
+
+	<!--	- Cert doesn't match !www.
+		- www.cdn: Akamai
+		- i times out as-is
+					-->
+	<rule from="^https?://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
+		 to="https://www.newsvine.com/" />
+
+	<rule from="^http://(?:(?:cdn\.|www\.)?(bonosrama|lib)|(log))\.newsvine\.com/"
+		to="https://$1$2.newsvine.com/" />
+
+	<!--	Pages redirect to www.		-->
+	<rule from="^http://onesearch4-2\.newsvine\.com/_vine/"
+		to="https://onesearch4-2.newsvine.com/_vine/" />
+
+	<!--	polls uses Akamai.
+		This is what server does for https pages.
+		NB: Most polls pages are handled in MSN.com.xml.	-->
+	<rule from="^http://(?:www\.)?polls\.newsvine\.com/_(static|vine)/"
+		to="https://www.newsvine.com/_$1/" />
+
+</ruleset>

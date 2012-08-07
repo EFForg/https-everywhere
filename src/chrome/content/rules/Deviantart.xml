@@ -1,10 +1,27 @@
+<!--	See Deviantart-mismatches.xml also
+
+	ToDo: Find edgecast URL for /(fc|th)\d+.
+-->
 <ruleset name="DeviantArt (pending)" default_off="site operator says not ready yet">
-	<target host="deviantart.com" />
-	<target host="*.deviantart.com" />
-	<target host="*.deviantart.net" />
-	<exclusion pattern="^http://(backend|st|fc\d+|th\d+)\.deviantart\.(com|net)/"/>
+
+	<target host="deviantart.com"/>
+	<target host="*.deviantart.com"/>
+	<target host="*.deviantart.net"/>
+		<exclusion pattern="^http://backend\.deviantart\.(com|net)/"/>
+
+	<securecookie host="^\.deviantart\.com$" name=".*" />
+
+	<!--	redirects from com to net	-->
+	<rule from="^http://([aei]|s[ht])\.deviantart\.(?:com|net)/"
+		to="https://$1.deviantart.net/"/>
+
+	<rule from="^http://(?:fc|th)\d+\.deviantart\.net/"
+		to="https://th.deviantart.com/"/>
+
 	<rule from="^http://deviantart\.com/"
-		to="https://www.deviantart.com/" />
-	<rule from="^http://([^/:@\.]+)\.deviantart\.(com|net)/"
-		to="https://$1.deviantart.com/" />
+		to="https://www.deviantart.com/"/>
+
+	<rule from="^http://([^/:@\.]+)\.deviantart\.(?:com|net)/"
+		to="https://$1.deviantart.com/"/>
+
 </ruleset>

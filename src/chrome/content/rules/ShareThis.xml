@@ -1,5 +1,39 @@
-<ruleset name="ShareThis (embedded widget)">
-	<target host="w.sharethis.com" />
+<!--
+	Nonfunctional subdomains:
 
-	<rule from="^http://w\.sharethis\.com/" to="https://ws.sharethis.com/" />
+		- forums	(times out)
+		- help
+
+-->
+<ruleset name="ShareThis (partial)">
+
+	<target host="sharethis.com" />
+	<target host="*.sharethis.com" />
+		<!--	See comments above.	-->
+		<exclusion pattern="^http://(forums|help)\." />
+
+
+	<securecookie host="^(.*\.)?sharethis\.com$" name=".*" />
+
+
+	<!--	cdn: Akamai
+		NB: Needs to be placed
+		before the final rule.	-->
+	<rule from="^https?://cdn\.sharethis\.com/"
+		to="https://sharethis.com/" />
+
+	<rule from="^http://ws?\.sharethis\.com/"
+		to="https://ws.sharethis.com/" />
+
+	<!--	Observed domains:
+
+			- l
+			- seg
+			- wd-edge
+			- ws
+			- www
+				-->
+	<rule from="^http://([\w\-]+\.)?sharethis\.com/"
+		to="https://$1sharethis.com/" />
+
 </ruleset>

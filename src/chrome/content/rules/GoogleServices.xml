@@ -1,5 +1,21 @@
-<!-- XXX: Needs more testing -->
-<ruleset name="GoogleServices">
+<!--
+	Nonfunctional:
+
+		- (www.)admeld.(com|de)
+		- (www.)feedburner.com			(redirects to encrypted.google.com)
+		- books.google.com			(redirects to google.cctld)
+		- knol.google.com			(most paths redirect to google.cctld)
+		- safebrowsing.clients.google.com	(mismatch; 404)
+		- buttons.googlesyndication.com		(redirects to encrypted.google.com)
+
+
+	XXX: Needs more testing
+-->
+<ruleset name="Google Services">
+
+  <target host="admeld.com"/>
+  <target host="*.admeld.com"/>
+  <target host="*.ggpht.com"/>
   <target host="google.*" />
   <target host="google.com" />
   <target host="*.google.com" />
@@ -11,6 +27,8 @@
   <target host="groups.google.de" />
   <target host="gmail.com" />
   <target host="www.gmail.com" />
+  <target host="googlemail.com" />
+  <target host="www.googlemail.com" />
   <target host="googlecode.com" />
   <target host="*.googlecode.com" />
   <target host="news.google.co.*" />
@@ -18,28 +36,73 @@
   <target host="news.google.*" />
   <target host="appspot.com" />
   <target host="*.appspot.com" />
+	<!--	Redirects to http for some reason.	-->
+	<exclusion pattern="^http://photomunchers\.appspot\.com/"/>
+  <target host="googlesource.com"/>
+  <target host="*.googlesource.com"/>
   <target host="pagead2.googlesyndication.com" />
   <target host="partner.googleadservices.com" />
   <target host="googleusercontent.com" />
   <target host="*.googleusercontent.com" />
+  <target host="goo.gl" />
+  <target host="www.goo.gl" />
+	<target host="postini.com" />
+	<target host="*.postini.com" />
 
   <exclusion pattern="^http://(news\.)?google\.com/newspapers" />
   <exclusion pattern="^http://(news\.)?google\.com/archivesearch" />
 
-  <rule from="^http://(adwords|appengine|calendar|code|docs\d?|feedburner|groups|investor|mail|pack|picasaweb|plus|plusone|sites|spreadsheets\d?|tools)\.google\.com/"
+
+	<securecookie host="^portal\.admeld\.com$" name=".*"/>
+
+
+  <rule from="^http://(?:www\.)?admeld\.com/images/interface/masthead_bk\.jpg$"
+	  to="https://portal.admeld.com/images/bg.jpg"/>
+
+  <rule from="^http://portal\.admeld\.com/"
+	  to="https://portal.admeld.com/"/>
+
+	<!--
+		- lh 3-6 exist
+		- All appear identical
+		- Identical to lh\d.googleusercontent.com
+					-->
+	<rule from="^http://lh(\d)\.ggpht\.com/"
+		to="https://lh$1.ggpht.com/"/>
+
+
+  <rule from="^http://(accounts|adwords|appengine|calendar|checkout|chrome|code|docs\d?|drive|feedburner|groups|health|(?:hosted)?talkgadget|investor|mail|pack|picasaweb|plus|plusone|profiles|safebrowsing-cache|sb-ssl|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
           to="https://$1.google.com/"/>
   <rule from="^http://groups\.google\.de/"
           to="https://groups.google.de/"/>
-  <rule from="^http://(?:www\.)?gmail\.com/"
+  <rule from="^http://(?:www\.)?g(?:oogle)?mail\.com/"
           to="https://mail.google.com/"/>
 
+
+	<rule from="^http://(?:encrypted-)?tbn2\.google\.com/"
+		to="https://encrypted-tbn2.google.com/"/>
+
   <!-- This worked for a while but seems to be unstable
-  <rule from="^http://(www\.)?google((\.com?)?(\.[^/@:][^/@:])?)/products"
+  <rule from="^http://(www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/products"
           to="https://www.google$2/products" />
    -->
 
-  <rule from="^http://(?:www\.)?google((\.com?)?(\.[^/@:][^/@:])?)/profiles"
+  <rule from="^http://(?:www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/profiles"
           to="https://www.google$1/profiles" />
+
+	<!--	These paths redirect to http:
+
+			- /$
+			- k/-/-/\w+/\w+/\w+.jpg
+			- k/\w+/_/rsrc/\d+/system/app/images/
+			- reviews/css/
+					-->
+	<rule from="^http://knol\.google\.com/k/knoll/"
+		to="https://knol.google.com/k/knoll/" />
+
+	<!--	This doesn't though.	-->
+	<rule from="^http://knol\.google\.com/k/\w+/_/rsrc/(\d+)/system/"
+		to="https://knol.google.com/k/knoll/_/rsrc/$1/system/" />
 
   <rule from="^http://news\.google(?:\.com?)?(?:\.[^/@:][^/@:])?/news"
           to="https://www.google.com/news" />
@@ -57,18 +120,21 @@
   <rule from="^http://([^/:@]+)\.googlecode\.com/(.+)"
           to="https://$1.googlecode.com/$2" />
 
-  <rule from="^http://(?:www\.)?google\.com/finance"
-          to="https://www.google.com/finance"/>
-  <rule from="^http://(?:www\.)?google\.co\.uk/finance"
-          to="https://www.google.co.uk/finance"/>
-  <rule from="^https?://finance\.google\.com/"
-          to="https://www.google.com/finance/"/>
-  <rule from="^https?://finance\.google\.co\.uk/"
-          to="https://www.google.co.uk/finance/"/>
+  <rule from="^http://(?:www\.)?google\.co(m|\.uk)/finance"
+          to="https://www.google.co$1/finance"/>
+  <rule from="^https?://finance\.google\.co(m|\.uk)/"
+          to="https://www.google.co$1/finance/"/>
+  <rule from="^http://([^/:@\.]+)\.google\.ca/finance"
+          to="https://$1.google.ca/finance"/>
+
   <rule from="^http://trends\.google\.com/"
           to="https://www.google.com/trends"/>
   <rule from="^http://([^@:\./]+\.)?appspot\.com/"
           to="https://$1appspot.com/"/>
+
+	<rule from="^http://([^\./]\.)?googlesource\.com/"
+		to="https://$1googlesource.com/"/>
+
   <rule from="^http://pagead2\.googlesyndication\.com/"
           to="https://pagead2.googlesyndication.com/"/>
   <rule from="^http://partner\.googleadservices\.com/"
@@ -77,12 +143,9 @@
           to="https://www.googleusercontent.com/"/>
   <rule from="^http://([^@:\./]+)\.googleusercontent\.com/"
           to="https://$1.googleusercontent.com/"/>
-  <rule from="^http://(?:www\.)?google\.com/contacts"
-          to="https://www.google.com/contacts"/>
-  <rule from="^http://(?:www\.)?google\.co\.uk/contacts"
-          to="https://www.google.co.uk/contacts"/>
-  <rule from="^http://(?:www\.)?google\.co\.in/contacts"
-          to="https://www.google.co.in/contacts"/>
+
+  <rule from="^http://(?:www\.)?google\.c(a|o\.in|o\.uk)/(contacts|prdhp|products|shopping)"
+          to="https://www.google.c$1/$2"/>
 
   <rule from="^http://(?:www\.)?google(?:\.com?)?(?:\.[^/@:][^/@:])?/(adplanner|ads|css|images|intl|js|logos|tools|googleblogs|s2|support|transparencyreport)/"
           to="https://www.google.com/$1/"/>
@@ -90,8 +153,18 @@
           to="https://www.google.com/$1"/>
   <rule from="^http://(?:www\.)?google(?:\.com?)?(?:\.[^/@:][^/@:])?/(?:cse|custom)"
           to="https://www.google.com/cse" />
-  <rule from="^http://(?:www\.)?google\.com/(\+|accounts|extern_js|moderator|newproducts|phone|reader)/"
+  <rule from="^http://(?:www\.)?google\.com/(\+|accounts|extern_js|moderator|newproducts|nexus|phone|postini|reader|videotargeting|safebrowsing)/"
           to="https://www.google.com/$1/"/>
-  <rule from="^http://(?:www\.)?google\.com/(buzz|news|webfonts)"
+  <rule from="^http://(?:www\.)?google\.com/(buzz|contacts|favicon\.ico|insights|news|prdhp|products|shopping|webfonts)"
           to="https://www.google.com/$1"/>
+
+	<rule from="^http://(?:www\.)?goo\.gl/" to="https://goo.gl/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?postini\.com/"
+		to="https://www.postini.com/" />
+
+	<rule from="^http://login\.postini\.com/"
+		to="https://login.postini.com/" />
+
 </ruleset>

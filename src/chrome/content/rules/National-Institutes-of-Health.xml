@@ -1,0 +1,47 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional domains:
+
+		- clinicaltrials.gov
+		- www.clinicaltrials.gov
+
+		- nih.gov:
+
+			- $			(times out)
+			- transparency.cit	(Akamai, "An error occurred")
+			- ncats			(timeout)
+			- www.ncats
+			- blast.ncbi.nlm	(cert valid; shows [www.]ncbi's data)
+			- od			(times out)
+			- nihpublications.od	(reset)
+			- www.od		(times out)
+			- www			(times out)
+
+-->
+<ruleset name="National Institutes of Health (partial)">
+
+	<target host="nlm.nih.gov" />
+	<target host="*.nlm.nih.gov" />
+	<target host="pubchem.ncbi.nlm.nih.gov" />
+	<target host="www.ncbi.nlm.nih.gov" />
+	<target host="pubmed.gov" />
+	<target host="*.pubmed.gov" />
+
+
+	<!--	Cert only matches www.
+		!www redirects to www.	-->
+	<rule from="^https?://(?:www\.)?nlm\.nih\.gov/"
+		to="https://www.nlm.nih.gov/" />
+
+	<!--	Both !www & www work proerly.	-->
+	<rule from="^http://(pubchem\.|www\.)?ncbi\.nlm\.nih\.gov/"
+		to="https://$1ncbi.nlm.nih.gov/" />
+
+	<!--	cert: *.ncbi.nlm.nih.gov
+		Redirects as so.	-->
+	<rule from="^https?://(?:www\.)?pubmed\.gov/"
+		to="https://www.ncbi.nlm.nih.gov/pubmed/" />
+
+</ruleset>

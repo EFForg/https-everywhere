@@ -1,0 +1,57 @@
+<!--
+	For problematic rules, see University-of-Bern-expired.xml.
+
+
+	Nonfunctional subdomains:
+
+		- $				(times out)
+		- www.agenda			(cert matches, redirects to
+						https://wayf.switch.ch/SWITCHaai/WAYF?...)
+		- www				(times out)
+
+-->
+<ruleset name="University of Bern (partial)">
+
+	<target host="*.unibe.ch" />
+	<target host="www.*.unibe.ch" />
+
+
+	<securecookie host="^.*\.unibe\.ch$" name=".*" />
+
+
+	<!--	For domains within this nested atom, !www doesn't exist.
+			-->
+	<rule from="^http://(cmslive3|www\.(?:kommunikation|phil(?:hist|hum|nat)|psy|rechtswissenschaft|risiko|uniaktuell|vetsuisse|wiso|zuw))\.unibe\.ch/"
+		to="https://$1.unibe.ch/" />
+
+	<!--
+		//id & //medizin:
+			- Mismatch
+			- Work over http & https
+
+		//ub:
+
+			- Mismatch
+			- Cert: cmslive3
+			- Paths 404 over https
+			- /$ redirects to login page over https
+			- Redirects to www over http
+					-->
+	<rule from="^https?://(?:www\.)?(id|medizin|ub)\.unibe\.ch/"
+		to="https://www.$1.unibe.ch/" />
+
+	<!--	For medianmitteilungen, unilink, & unipress:
+
+			- !www doesn't exist.
+			- Cert doesn't match.
+			- Redirects to login page over https.
+			- Redirects as so over http.
+				-->
+	<rule from="^https?://www\.medienmitteilungen\.unibe\.ch/"
+		to="https://www.kommunikation.unibe.ch/content/medien/medienmitteilungen/index_ger.html" />
+
+	<!--	See comment above.	-->
+	<rule from="^https?://www\.uni(link|press)\.unibe\.ch/"
+		to="https://www.kommunikation.unibe.ch/content/publikationen/uni$1/index_ger.html" />
+
+</ruleset>

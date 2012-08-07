@@ -1,0 +1,46 @@
+<ruleset name="Channel 5">
+
+	<target host="channel5.com"/>
+	<target host="fwd.channel5.com"/>
+	<target host="fwdcdn.channel5.com"/>
+	<target host="sso.channel5.com"/>
+	<target host="www.channel5.com"/>
+	<target host="wwwcdn.channel5.com"/>
+	<target host="oas.five.tv"/>
+	<target host="sso.five.tv"/>
+
+
+	<!--	observed cookies:
+			- ^fwd.c...
+				- _five-hero_session
+			- ^www.c...
+				- _five-tv_session
+			- ^wwwcdn.c...
+				- _five-tv_session
+			- ^\.f...
+				- NXCLICK2
+				- OAX
+			- ^oas.f...
+				- NSC_nnnnnn_qppm_iuuq	-->
+	<securecookie host="^fwd\.channel5\.com$" name=".*"/>
+
+
+	<rule from="^http://oas\.five\.tv/"
+		to="https://oasc07.247realmedia.com/"/>
+
+	<rule from="^http://(www\.)?channel5\.com/(assets|images|stylesheets)/"
+		to="https://$1channel5.com/$2/"/>
+
+	<!--	fwdcdn cert: *.hs.llnwd.net	-->
+	<rule from="^http://fwd(?:cdn)?\.channel5\.com/"
+		to="https://fwd.channel5.com/"/>
+
+	<!--	cert doesn't match sso.five.tv	-->
+	<rule from="^http://sso\.(?:channel5\.com|five\.tv)/"
+		to="https://sso.channel5.com/"/>
+
+	<!--	cert: *.hs.llnwd.net		-->
+	<rule from="^http://wwwcdn\.channel5\.com/"
+		to="https://wwwcdn.channel5.com/"/>
+
+</ruleset>

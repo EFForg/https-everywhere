@@ -1,14 +1,52 @@
+<!--
+	Nonfunctional domains:
+
+		- gcc.gnu.org
+		- shop.fsf.org	(redirects to http):
+
+-->
 <ruleset name="Free Software Foundation">
-	<target host="fsf.org"/>
-	<target host="www.fsf.org"/>
-	<target host="static.fsf.org"/>
-	<target host="gnu.org"/>
-	<target host="*.gnu.org"/>
-        <target host="savannah.nongnu.org" />
-        
-	<rule from="^http://(?:www\.)?fsf\.org/" to="https://www.fsf.org/"/>
-	<rule from="^http://static\.fsf\.org/" to="https://static.fsf.org/"/>
-        <rule from="^http://(?:www\.)?gnu\.org/" to="https://www.gnu.org/"/>
-        <rule from="^http://lists\.gnu\.org/" to="https://lists.gnu.org/"/>
-        <rule from="^http://savannah\.(non)?gnu\.org/" to="https://savannah.$1gnu.org/"/>
+
+	<target host="fsf.org" />
+	<target host="*.fsf.org" />
+	<target host="gnu.org" />
+	<target host="*.gnu.org" />
+        <target host="*.nongnu.org" />
+
+
+	<!--	There's a cross-domain session cookie, which is not
+		handled in case it's used on unsecurable pages.
+			In particular, shop.fsf.org is not fully
+		securable, and seems to share a login system with www.
+		-->
+	<securecookie host="^my\.fsf\.org$" name=".*" />
+
+
+	<rule from="^http://((?:crm|my|static|www)\.)?fsf\.org/"
+		to="https://$1fsf.org/" />
+
+	<!--	- Shows www data over https
+		- Redirects like so over http
+			-->
+	<rule from="^https?://patron\.fsf\.org/"
+		to="https://www.fsf.org/patrons" />
+
+	<!--	These paths redirect to http:
+
+			- $
+			- cart/$
+			- category/\w+/$
+			- product/\w+/$
+
+		There may be more than are handled here that don't.
+			-->
+	<rule from="^http://shop\.fsf\.org/(faq/$|jf$|static/|termsofsale/$)"
+		to="https://shop.fsf.org/$1" />
+
+        <rule from="^http://(www\.)?gnu\.org/"
+		to="https://$1gnu.org/" />
+
+        <rule from="^http://(lists|savannah)\.(non)?gnu\.org/"
+		to="https://$1.$2gnu.org/" />
+
 </ruleset>

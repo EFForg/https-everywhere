@@ -1,0 +1,21 @@
+<ruleset name="Wiley (partial)">
+
+	<target host="onlinelibrary.wiley.com"/>
+	<target host="onlinelibrarystatic.wiley.com"/>
+	<target host="sp.onlinelibrary.wiley.com" />
+
+
+	<securecookie host="^sp\.onlinelibrary\.wiley\.com$" name=".*" />
+
+
+	<!--	Where there's only one atom, it's Wiley's internal ID for a publication
+		Where there are two atoms:
+			- 1st atom: 1st half of DOI
+			- 2nd atom: 2nd half of DOI OR ISSN		-->
+	<rule from="^http://onlinelibrary\.wiley\.com/store/([\d\.]+)(/[^/]+)?/asset/"
+		to="https://onlinelibrarystatic.wiley.com/store/$1$2/asset/"/>
+
+	<rule from="^http://(onlinelibrarystatic|sp)\.wiley\.com/"
+		to="https://$1.wiley.com/"/>
+
+</ruleset>

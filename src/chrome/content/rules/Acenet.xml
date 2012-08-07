@@ -1,0 +1,27 @@
+<ruleset name="Acenet (partial)">
+
+	<target host="ace-host.net"/>
+	<target host="*.ace-host.net"/>
+		<!--	redirect to http	-->
+		<exclusion pattern="http://billing\.ace-host\.net/(announcements|index)\.php$"/>
+		<!--	ssl_error_rx_record_too_long	-->
+		<exclusion pattern="http://(demos|testimonials)\.ace-host\.net/"/>
+	<target host="acenet-inc.net"/>
+	<target host="*.acenet-inc.net"/>
+	<!--	for cross-domain cookie	-->
+	<target host="*.esupport.acenet-inc.net"/>
+
+	<securecookie host="^(.*\.)?ace-host\.net$" name=".*"/>
+	<!--	no cookies needed for excluded pages	-->
+	<securecookie host="^(.*\.)?acenet-inc\.net$" name=".*"/>
+
+	<rule from="^http://(\w+\.)?ace-host\.net/"
+		to="https://$1ace-host.net/"/>
+
+	<rule from="^http://(www\.)?ace-net\.net/"
+		to="https://$1ace-host.net/"/>
+
+	<rule from="^http://(billing|esupport|warthog)\.acenet-inc\.net/"
+		to="https://$1.acenet-inc.net/"/>
+
+</ruleset>

@@ -1,8 +1,23 @@
-<ruleset name="Boxee.tv">
-  <target host="www.boxee.tv" />
-  <target host="app.boxee.tv" />
-  <target host="boxee.tv" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(?:www\.)?boxee\.tv/" to="https://www.boxee.tv/"/>
-  <rule from="^http://app\.boxee\.tv/" to="https://app.boxee.tv/"/>
+		- jira	(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Boxee.tv (partial)">
+
+	<target host="boxee.tv"/>
+	<target host="*.boxee.tv"/>
+
+
+	<!--	Don't secure cross-domain cookies, wrt:
+
+		https://trac.torproject.org/projects/tor/ticket/5931
+					-->
+	<securecookie host="^(\w+\.)?boxee\.tv$" name=".*"/>
+
+
+	<rule from="^http://(app\.|www\.)?boxee\.tv/"
+		to="https://$1boxee.tv/"/>
+
 </ruleset>

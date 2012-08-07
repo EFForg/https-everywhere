@@ -1,14 +1,22 @@
 <ruleset name="Imgur">
-  <target host="imgur.com" />
-  <target host="www.imgur.com" />
-  <target host="i.imgur.com" />
-  <target host="api.imgur.com" />
 
-  <exclusion pattern="^http://(www\.)?imgur\.com/[a-zA-Z0-9]+\.[a-z]+$" />
+	<target host="imgur.com"/>
+	<target host="*.imgur.com"/>
+		<exclusion pattern="^http://api\.imgur\.com/"/>
+		<exclusion pattern="^http://(www\.)?imgur\.com/[a-zA-Z\d]+\.[a-z]+$"/>
 
-  <rule from="^http://(?:www\.)?imgur\.com/" to="https://imgur.com/" />
-  <rule from="^http://api\.imgur\.com/" to="https://api.imgur.com/" />
+	<rule from="^http://(?:origin\.|s\.|www\.)?imgur\.com/"
+		to="https://imgur.com/"/>
 
-  <!-- i.imgur.com doesn't match the certificate, but *some* urls can be converted to imgur.com -->
-  <rule from="^http://i\.imgur\.com/((images|include)(/.*)?)?$" to="https://imgur.com/$1" />
+	<!--	This rule breaks the Imgur Uploader Firefox extension
+	<rule from="^http://api\.imgur\.com/"
+		to="https://api.imgur.com/"/-->
+
+	<!--	i.imgur.com doesn't match the certificate,
+		but *some* urls can be converted to imgur.com	-->
+	<rule from="^http://i\.imgur\.com/((images|include)(/.*)?)?$"
+		to="https://imgur.com/$1"/>
+
+    <securecookie host="^\.?imgur\.com" name=".*" />
+
 </ruleset>

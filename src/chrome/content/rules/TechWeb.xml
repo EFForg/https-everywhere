@@ -1,0 +1,55 @@
+<!--
+	Other UBM rulesets:
+
+		- CMP.xml
+		- CRN.xml
+		- InformationWeek.xml
+		- OAG.xml
+		- PIERS.xml
+		- RISI.xml
+		- UBM-mismatches.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)darkreading.com		(cert: cms.informationweekanalytics.com, self-signed; redirects to http)
+		- (www.)gamasutra.com		(valid cert; pages become blank)
+		- (www.)lightreading.com	(cert: payment.lightreading.com; .+ 404s, $ redirects to http)
+		- liveevents.techweb.com
+		- (www.)ubmtechweb.com
+
+-->
+<ruleset name="TechWeb (partial)">
+
+	<target host="gamasutra.com" />
+	<target host="www.gamasutra.com" />
+	<target host="*.lightreading.com" />
+	<target host="i.techweb.com" />
+	<target host="techwebonlineevents.com" />
+	<target host="*.techwebonlineevents.com" />
+	<target host="twimgs.com" />
+
+
+	<securecookie host="^(.*\.)?techwebonlineevents\.com$" name=".*" />
+
+
+	<rule from="^http://i\.techweb\.com/"
+		to="https://i.techweb.com/" />
+
+	<rule from="^http://(www\.)?gamasutra\.com/(blogs/edit/img/|(?:comments/|content/blogs/)?\w+\.css|(?:db_area/)?images/)"
+		to="https://$1gamasutra.com/$2" />
+
+	<!--	Cert: *.cachefly.net	-->
+	<rule from="^https?://img\.lightreading\.com/darkreading/"
+		to="https://i.cmpnet.com/infoweek/security/darkreading/seo/" />
+
+	<rule from="^http://payment\.lightreading\.com/"
+		to="https://payment.lightreading.com/" />
+
+	<rule from="^https?://(?:www\.)?techwebonlineevents\.com/"
+		to="https://www.techwebonlineevents.com/" />
+
+	<rule from="^http://twimgs\.com/"
+		to="https://twimgs.com/" />
+
+</ruleset>

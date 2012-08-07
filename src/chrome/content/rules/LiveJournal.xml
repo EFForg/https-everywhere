@@ -1,10 +1,41 @@
-<!-- NOTE: In its current form and with the current site configuration,
-this rule protects login passwords but prevents the user from reading
-other users' journals! -->
+<!--
+	Nonfunctional subdomains:
 
-<ruleset name="LiveJournal" default_off="breaks for non-logged-in users">
-  <target host="livejournal.com" />
-  <target host="www.livejournal.com" />
+		- l-files	(cert: *.pantherssl.com; displays blank page)
+			- files doesn't exist
+			- Not on www
 
-  <rule from="^http://(?:www\.)?livejournal\.com/" to="https://www.livejournal.com/"/>
+		- l-userpic	(ditto)
+
+		- user		(404 via https)
+
+-->
+<ruleset name="LiveJournal (partial)">
+
+	<target host="livejournal.com" />
+	<target host="*.livejournal.com" />
+		<!--	Seems to have disappeared from /stat	-->
+		<exclusion pattern="^http://l-stat\.livejournal\.com/\?\?" />
+
+
+	<!--	paths under img/ & stc/ have started redirecting to http.
+
+		.n|n, LJ.
+			-->
+	<rule from="^http://(www\.)?livejournal\.com/((?:changepassword|create|login)\.html|manage/|shop/)"
+		to="https://$1livejournal.com/$2" />
+
+	<rule from="^https?://status\.livejournal\.com/img/"
+		to="https://s3.amazonaws.com/status-livejournal/img/" />
+
+	<!--	Also on stat.livejournal.com, but as these are
+		on a CDN too, be kind and point there instead.	-->
+	<rule from="^http://(?:l-)stat\.livejournal\.com/img/error-pages/(bg-error-page\.jpg|bullet-round-grey\.gif|frank\.png|logo-lj\.png|rule-grey\.gif)"
+		to="https://s3.amazonaws.com/status-livejournal/img/$1" />
+
+	<!--	l-stat cert: pantherssl.com
+		user 404s via http		-->
+	<rule from="^https?://(?:l-)?stat\.livejournal\.com/"
+		to="https://stat.livejournal.com/" />
+
 </ruleset>

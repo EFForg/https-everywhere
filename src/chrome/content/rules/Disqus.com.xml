@@ -1,8 +1,42 @@
-<!-- commenting system used by several large sites. -->
-<ruleset name="Disqus">
+<!--
+	Commenting system used by several large sites.
+
+
+	Nonfunctional subdomains:
+
+		- content	(cert: edgecastcdn.net; 404)
+		- docs		(times out)
+		- help		(cert: *.desk.com; 301s to http)
+
+-->
+<ruleset name="Disqus (unreliable)" default_off="https://eff.org/r.5abU">
+
 	<target host="disqus.com" />
-	<target host="www.disqus.com" />
-	<rule from="^http://www\.disqus\.com/" to="https://disqus.com/"/>
-	<rule from="^http://disqus\.com/" to="https://disqus.com/"/>
+	<target host="*.disqus.com" />
+		<exclusion pattern="^http://blog\."/>
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/5496
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001176.html
+						-->
+		<exclusion pattern="^http://disqus\.com/next/lounge/client\.html" />
+		<exclusion pattern="^http://\w+\.disqus\.com/\d+/build/system/embed\.js"/>
+		<!--
+			See comments at top.
+							-->
+		<exclusion pattern="^http://(content|docs|help)\.disqus\.com/"/>
+
+	<securecookie host="^securecdn\.disqus\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?disqus\.com/"
+		to="https://$1disqus.com/" />
+
+	<rule from="^http://(?:media|secure)(?:cdn)?\.disqus\.com/"
+		to="https://securecdn.disqus.com/" />
+
+	<rule from="^http://(\w+)\.disqus\.com/"
+								to="https://$1.disqus.com/" />
+
 </ruleset>
 

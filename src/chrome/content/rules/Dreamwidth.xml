@@ -1,10 +1,22 @@
-<!-- NOTE: In its current form and with the current site configuration,
-this rule protects login passwords but prevents the user from reading
-other users' journals! -->
+<!--
+	NOTE: In its current form and with the current site
+	configuration, this rule protects login passwords
+	but prevents the user from reading other users' journals!
 
+-->
 <ruleset name="Dreamwidth" default_off="breaks for non-logged-in users">
-  <target host="www.dreamwidth.org" />
-  <target host="dreamwidth.org" />
 
-  <rule from="^http://(?:www\.)?dreamwidth\.org/" to="https://www.dreamwidth.org/"/>
+	<target host="dreamwidth.org" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.dreamwidth.org" />
+		<!--	302s to http.	-->
+		<exclusion pattern="^http://www\.dreamwidth\.org/(favicon\.ico|stc/\?\?|tools/commentcount)($|\?)" />
+
+
+	<securecookie host="^\.dreamwidth\.org$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?dreamwidth\.org/"
+		to="https://www.dreamwidth.org/" />
+
 </ruleset>

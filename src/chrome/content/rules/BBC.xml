@@ -1,0 +1,45 @@
+<!--
+	For problematic rules, see BBC-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- bbc.co.uk subdomains:
+
+			- news
+				When rewritten to www, redirects back to news
+			- newsimg
+				- When rewritten news, doesn't redirect back to newsimg..
+				- When rewritten to www, redirects to http =(
+				- Not on static.
+			- stats
+			- wwwimg
+				redirects to http
+
+		- (www.)bbcamerica.com	(reset)
+		- emp.bbci.co.uk	(Akamai; "Service Unavailable")
+
+-->
+<ruleset name="BBC (partial)">
+
+	<target host="bbc.co.uk" />
+	<target host="*.bbc.co.uk" />
+	<target host="static.bbci.co.uk" />
+	<!--	Akamai	-->
+	<target host="*.bbcimg.co.uk" />
+
+
+	<!--	Tracking cookie set by sa	-->
+	<securecookie host="^\.bbc\.co\.uk$" name="^s1$" />
+
+
+	<rule from="^http://(sa|static)\.bbci?\.co\.uk/"
+		to="https://$1.bbc.co.uk/" />
+
+	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(favicon\.ico$|glow/|guidance/|iplayer/)"
+		to="https://www.bbc.co.uk/$1" />
+
+	<rule from="^https?://node[12]\.bbcimg\.co\.uk/iplayer/"
+		to="https://www.bbc.co.uk/iplayer/" />
+
+</ruleset>

@@ -1,0 +1,40 @@
+<ruleset name="Mobify">
+
+	<target host="mobify.com" />
+	<target host="*.mobify.com" />
+		<!--	Cert: *.desk.com.
+			mobify.desk.com redirects back to support.	-->
+		<exclusion pattern="^http://support\." />
+	<target host="mobify.me" />
+	<target host="*.mobify.me" />
+	<target host="mobifyagogo.wpengine.netdna-cdn.com" />
+
+
+	<!--	Observed cookie domains:
+
+			- ^.
+			- ^portal
+					-->
+	<securecookie host="^.*\.mobify\.com$" name=".*" />
+
+
+	<!--	Observed domains:
+
+			- cloud
+			- community
+			- portal
+			- www
+				-->
+	<rule from="^http://(\w+\.)?mobify\.com/"
+		to="https://$1mobify.com/" />
+
+	<!--	Cert doesn't match *.me, data are identical.	-->
+	<rule from="^https?://(?:(community\.)|www\.)?mobify\.me/"
+		to="https://$1mobify.com/" />
+
+	<!--	Cert: *.netdna-ssl.com; 404.	-->
+	<rule from="^https?://mobifyagogo\.wpengine\.netdna-cdn\.com/"
+		to="https://www.mobify.com/" />
+	
+
+</ruleset>

@@ -1,0 +1,27 @@
+<!--	There's a bucket at s3.amazonaws.com/st-assets/ - related?
+	soundstrue-ha.s3.amazonaws.com
+	soundstrue-media.s3.amazonaws.com
+	d1qsxla1p9s5sy.cloudfront.net
+
+	!functional:
+		- components.soundstrue.com	(404)
+
+	Every item page seems to work over https.  Covering every item individually
+	is impractical, so ideally this would work by exclusion.
+-->
+<ruleset name="Sounds True">
+
+	<target host="soundstrue.com"/>
+	<target host="*.soundstrue.com"/>
+
+	<!--	!www: timeout	-->
+	<rule from="^http://(?:www\.)?soundstrue\.com/((?:assets/|media)\.soundstrue\.com/|catalog/|/?components/|css/|directaccess/|email/|google/ga\.js|linkshare/|pages/popup_shipping\.php|shipping/|shop/(?:login\.do|player/|st_assets/)|wakeup/|pages/popup_shipping\.php)"
+		to="https://www.soundstrue.com/$1"/>
+
+	<rule from="^http://assets\.soundstrue\.com/"
+		to="https://assets.soundstrue.com/"/>
+
+	<rule from="^http://components\.soundstrue\.com/"
+		to="https://assets.soundstrue.com/components/public/"/>
+
+</ruleset>

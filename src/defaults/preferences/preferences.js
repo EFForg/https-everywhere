@@ -1,7 +1,7 @@
 pref("extensions.https_everywhere.LogLevel", 5);
 
 // SSl Observatory preferences
-
+pref("extensions.https_everywhere.globalEnabled",true);
 pref("extensions.https_everywhere._observatory.enabled",false);
 
 // "testing" currently means send unecessary fingerprints and other test-suite
@@ -22,6 +22,7 @@ pref("extensions.https_everywhere._observatory.proxy_port",0);
 pref("extensions.https_everywhere._observatory.proxy_type","direct");
 pref("extensions.https_everywhere._observatory.use_tor_proxy",true);
 pref("extensions.https_everywhere._observatory.alt_roots",false);
+pref("extensions.https_everywhere._observatory.self_signed",true);
 pref("extensions.https_everywhere._observatory.priv_dns",false);
 pref("extensions.https_everywhere._observatory.send_asn",true);
 pref("extensions.https_everywhere._observatory.use_whitelist",true);

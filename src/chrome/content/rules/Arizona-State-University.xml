@@ -1,0 +1,83 @@
+<!--
+	Other Arizona State University rulesets:
+
+		- Cronkite-News.xml
+
+
+	Nonfunctional domains:
+
+
+		- asu.edu subdomains:
+
+			- annualreport		(403)
+			- asuonline		(prints "Apache is functioning normally")
+			- (www.)biodesign	(ssl_error_rx_record_too_long)
+			- campus		(prints "This IP is being shared among many domains.")
+			- clubasu		(ditto)
+			- community		(ditto)
+			- entrepreneurship	(ditto)
+			- help			(times out)
+			- library.lib		(redirects to login page)
+			- links 		(times out)
+			- newamericanuniversity	(prints "This IP is being shared among many domains.")
+			- president		(prints "This IP is being shared among many domains.")
+			- skysong
+			- transfer		(prints default message)
+
+		- (www.)asufoundation.org	(reset)
+
+-->
+<ruleset name="Arizona State University (partial)">
+
+	<target host="asu.edu" />
+	<target host="*.asu.edu" />
+	<!--	*s for cross-subdomain cookie.	-->
+	<target host="*.asuresearch.asu.edu" />
+	<target host="*.cfo.asu.edu" />
+	<target host="*.global.asu.edu" />
+	<target host="*.graduate.asu.edu" />
+	<target host="www.law.asu.edu" />
+	<target host="*.lsi.asu.edu" />
+	<target host="*.oasis.asu.edu" />
+	<target host="*.uresearch.asu.edu" />
+	<target host="secure.asufoundation.org" />
+
+
+	<!--	The following cross-domain cookies have been observed, but
+		not handled in case they are used on unsecurable domains:
+
+			- .oasis.asu.edu
+				- asucmprd-80-PORTAL-PSJSESSIONID
+				- asusaprd-80-PORTAL-PSJSESSIONID
+				- PS_LOGINLIST
+				- PS_TOKENEXPIRE
+
+		-->
+	<securecookie host="^\.(?:(?:asuresearch|flexdisplay|global|graduate|lsi|students|uresearch)\.)?asu\.edu$" name=".*" />
+	<securecookie host="^\w[\w\.]*\.asu\.edu$" name=".*" />
+	<securecookie host="^secure\.asufoundation\.org$" name=".*" />
+
+
+	<!--	Cert only matches *.asu.edu	-->
+	<rule from="^https?://(?:www\.)?asu\.edu/"
+		to="https://www.asu.edu/" />
+
+	<rule from="^http://(asunews|asuresearch|caliper|cfo|flexdisplay|global|graduate|(?:www\.)?law|lsi|my|(?:crm|hrsa)\.oasis|selfsub|students|sustainability|syshealth|uresearch|webapp[346]|weblogin)\.asu\.edu/"
+		to="https://$1.asu.edu/" />
+
+	<!--	- budget prints "Apache is functioning normally" over https
+		- Redirects like so over http
+		-->
+	<rule from="^https?://budget\.asu\.edu/"
+		to="https://cfo.asu.edu/budget" />
+
+	<!--	- At least the homepage prints a blank page
+		- At least one path under files/ 404s
+			-->
+	<rule from="^http://lib\.asu\.edu/(misc|sites)/"
+		to="https://lib.asu.edu/$1/" />
+
+	<rule from="^http://secure\.asufoundation\.org/"
+		to="https://secure.asufoundation.org/" />
+
+</ruleset>

@@ -13,23 +13,37 @@
         buttonlabelextra2="&https-everywhere.prefs.reset_defaults;"
         ondialogextra2="reset_defaults();"
         title="&https-everywhere.prefs.title;"
-        persist="screenX screenY"
+        persist="screenX screenY width height"
+        style="height:80%; resize:both;"
+        height="600"
+        width="650"
         onload="https_prefs_init(document)"
         ondialogaccept="https_prefs_accept()">
-
+    
     <script type="application/x-javascript" src="preferences.js"/>
+    
+    <popupset>
+        <menupopup id="tree-contextmenu" onpopupshowing="resetSelectedMenu()">
+            <menuitem label="&https-everywhere.prefs.reset_default;" oncommand="resetSelected();" id="revert_menuitem"/>
+            <menuitem label="&https-everywhere.prefs.toggle;" oncommand="toggleSelected();"/>
+            <menuitem label="&https-everywhere.prefs.view_xml_source;" oncommand="viewXMLSource();"/>
+        </menupopup>
+    </popupset>
+    
     <groupbox flex="1">
         <caption label="&https-everywhere.prefs.list_caption;"
                align="center"/>
         <vbox>
           &https-everywhere.prefs.search;: <textbox id="tree_search" oninput="treeView.search(this);" />
-        </vbox>
-        <tree id="sites_tree" style="1" rows="20" editable="true" flex="1">
+	</vbox>
+        <tree id="sites_tree" editable="true" flex="1" context="tree-contextmenu">
           <treecols>
             <treecol id="enabled_col" type="checkbox" label="&https-everywhere.prefs.enabled;"
-                     editable="true" />
-            <treecol id="site_col" label="&https-everywhere.prefs.site;" flex="1" editable="false" />
-            <treecol id="note_col" label="&https-everywhere.prefs.notes;" flex="1" editable="false" />
+                     editable="true" class="sortDirectionIndicator" persist="sortDirection width"/>
+            <splitter class="tree-splitter"/>
+            <treecol id="site_col" label="&https-everywhere.prefs.site;" flex="1" editable="false" class="sortDirectionIndicator" persist="sortDirection width"/>
+            <splitter class="tree-splitter"/>
+            <treecol id="note_col" label="&https-everywhere.prefs.notes;" flex="1" editable="false" class="sortDirectionIndicator"  persist="sortDirection width"/>
           </treecols>
           <treechildren/>
         </tree>

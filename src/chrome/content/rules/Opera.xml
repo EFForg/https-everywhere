@@ -1,11 +1,22 @@
 <ruleset name="Opera" default_off="very buggy">
-  <target host="opera.com" />
-  <target host="*.opera.com" />
-  <target host="myopera.com" />
-  <target host="*.myopera.com" />
 
-  <rule from="^http://opera\.com/" to="https://opera.com/" />
-  <rule from="^http://([^/:@\.]+)\.opera\.com/" to="https://$1.opera.com/" />
-  <rule from="^http://myopera\.com/" to="https://myopera.com/" />
-  <rule from="^http://([^/:@\.]+)\.myopera\.com/" to="https://$1.myopera.com/" />
+	<target host="*.opera.com" />
+		<!--
+			These redirect to http.
+
+			user/avatar.pl redirects to static.myopera.com/avatars/
+			in an unpredictable fashion.
+					-->
+		<exclusion pattern="^http://dev\.opera\.com/($|articles/view/|author/|labs$|user/avatar\.pl|[^ls]\w+$)" />
+		<exclusion pattern="^http://my\.opera\.com/($|\w+/blog/|community/($|api/|blogs/|campaign/|customize/|explore/|forums/|groups/|help/|members$|opera/|photos$|terms-of-service/|users/avatar\.pl)|[^ls]\w+/?$|\w+/tags/show\.pl)" />
+		<!--	These don't seem to work over https.	-->
+		<exclusion pattern="^http://(get\d|snapshot|www)\.opera\.com/" />
+		<exclusion pattern="^http://thumbs\.myopera\.com/" />
+	<target host="myopera.com" />
+	<target host="*.myopera.com" />
+
+
+	<rule from="^http://([^/:@\.]+\.)?(my)?opera\.com/"
+		to="https://$1$2opera.com/" />
+
 </ruleset>

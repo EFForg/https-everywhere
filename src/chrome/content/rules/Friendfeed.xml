@@ -1,6 +1,29 @@
-<ruleset name="Friendfeed">
-  <target host="www.friendfeed.com" />
-  <target host="friendfeed.com" />
+<!--
+	Nonfunctional:
 
-  <rule from="^http://(?:www\.)?friendfeed\.com/" to="https://friendfeed.com/"/>
+		- blog.friendfeed.com	(times out)
+
+-->
+<ruleset name="Friendfeed">
+
+	<target host="friendfeed.com" />
+	<target host="*.friendfeed.com" />
+	<target host="friendfeed-media.com" />
+	<target host="m.friendfeed-media.com" />
+
+
+	<securecookie host="^friendfeed-media\.com$" name=".*" />
+
+
+	<!--	www.friendfeed-media redirects as so.	-->
+	<rule from="^http://(?:www\.)?friendfeed(?:-media)?\.com/"
+		to="https://friendfeed.com/" />
+
+	<rule from="^http://blog\.friendfeed\.com/favicon\.ico"
+		to="https://www.blogger.com/favicon.ico" />
+
+	<!--	!m redirects to m.	-->
+	<rule from="^http://(?:m\.)?friendfeed-media\.com/"
+		to="https://s3.amazonaws.com/friendfeed-media/" />
+
 </ruleset>

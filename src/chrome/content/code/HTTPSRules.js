@@ -1,28 +1,30 @@
 function Rule(from, to) {
-  this.from = from;
+  //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
 
 function Exclusion(pattern) {
-  this.pattern = pattern;
+  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
 function CookieRule(host, cookiename) {
-  this.host = host
+  this.host = host;
   this.host_c = new RegExp(host);
   this.name = cookiename;
   this.name_c = new RegExp(cookiename);
 }
 
+localPlatformRegexp = new RegExp("firefox");
 ruleset_counter = 0;
-function RuleSet(name, match_rule, default_off) {
-  this.id="https-everywhere-rule-" + ruleset_counter;
+function RuleSet(name, xmlName, match_rule, default_off, platform) {
+  this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
   this.name = name;
-  this.ruleset_match = match_rule;
+  this.xmlName = xmlName;
+  //this.ruleset_match = match_rule;
   this.notes = "";
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
   else              this.ruleset_match_c = null;
@@ -33,10 +35,16 @@ function RuleSet(name, match_rule, default_off) {
     this.notes = default_off;
     this.on_by_default = false;
   }
+  if (platform)
+    if (platform.search(localPlatformRegexp) == -1) {
+      this.on_by_default = false;
+      this.notes = "Only for " + platform;
+    }
+
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  this.prefs = HTTPSEverywhere.instance.get_prefs();
+  this.prefs = HTTPSEverywhere.instance.prefs;
   try {
     // if this pref exists, use it
     this.active = this.prefs.getBoolPref(name);
@@ -47,6 +55,8 @@ function RuleSet(name, match_rule, default_off) {
     this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
+
+var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 
 RuleSet.prototype = {
   _apply: function(urispec) {
@@ -115,7 +125,7 @@ RuleSet.prototype = {
     if (0 == newurl)
       return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
-                createInstance(CI.nsIStandardURL);
+                 createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
              newurl, uri.originCharset, null);
     newuri = newuri.QueryInterface(CI.nsIURI);
@@ -228,11 +238,12 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();	
+    fstream.close();
+    // XXX: With DOMParser, we probably do not need to throw away the XML
+    // declaration anymore nowadays.
     data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
-      data = data.replace(/<\?xml[^>]*\?>/, ""); 
-      var xmlrulesets = XML(data);
+      var xmlrulesets = dom_parser.parseFromString(data, "text/xml");
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
@@ -240,40 +251,49 @@ const RuleWriter = {
     this.parseXmlRulesets(xmlrulesets, rule_store, file);
   },
 
-  parseXmlRulesets: function(xmlblob, rule_store, file) {
-    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
-    // add them to the rule_store HTTPSRules object.
-    if (xmlblob.@name != xmlblob.@nonexistantthing) {
-      // The root of the XML tree has a name, which means it should be single a ruleset...
-      this.parseOneRuleset(xmlblob, rule_store, file);
+  parseXmlRulesets: function(xmldom, rule_store, file) {
+    // XML input files can either be a <ruleset> in a file, or a
+    // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
+    // because ZIP does a much better job of compressing it).
+    if (xmldom.documentElement.nodeName == "ruleset") {
+      // This is a single ruleset.
+      this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
-      // The root of the XML tree should be a <rulesetlibrary> with many
-      // <ruleset> children
-      var lngth = xmlblob.ruleset.length(); // premature optimisation
-      if (lngth == 0 && (file.path.search("00README") == -1))
+      // The root of the XML tree is assumed to look like a <rulesetlibrary>
+      if (xmldom.documentElement.getAttribute("gitcommitid")) {
+        // The gitcommitid is a tricky hack to let us display the true full
+        // source code of a ruleset, even though we strip out comments at build
+        // time, by having the UI fetch the ruleset from the public https git repo.
+        this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
+        rule_store.gitcommitid = "HEAD";
+      } else {
+        rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
+      }
+      var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
+      if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
-                        + file.path + "\n" +  xmlblob);
-      for (var j = 0; j < lngth; j++) 
-        this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
+                        + file.path + "\n" +  xmldom);
+      for (var j = 0; j < rulesets.length; j++)
+        this.parseOneRuleset(rulesets[j], rule_store, file);
     }
   },
 
   parseOneRuleset: function(xmlruleset, rule_store, file) {
-    // Extract an xmlrulset into the rulestore
-    this.log(DBUG, "Parsing " + xmlruleset.@name + " from " + file.path);
-
-    if (xmlruleset.@name == xmlruleset.@nonexistantthing) {
+    // Extract an xmlruleset into the rulestore
+    if (!xmlruleset.getAttribute("name")) {
       this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
       return null;
     }
 
-    var match_rl = null;
-    var dflt_off = null;
-    if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
-    if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
-    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
+    this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name") + " from " + file.path);
 
-    if (xmlruleset.target.length() == 0) {
+    var match_rl = xmlruleset.getAttribute("match_rule");
+    var dflt_off = xmlruleset.getAttribute("default_off");
+    var platform = xmlruleset.getAttribute("platform");
+    var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
+
+    var targets = xmlruleset.getElementsByTagName("target");
+    if (targets.length == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
@@ -289,8 +309,8 @@ const RuleWriter = {
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
     // target host indexes
-    for (var i = 0; i < xmlruleset.target.length(); i++) {
-      var host = xmlruleset.target[i].@host;
+    for (var i = 0; i < targets.length; i++) {
+      var host = targets[i].getAttribute("host");
       if (!host) {
         this.log(WARN, "<target> missing host in " + file.path);
         return null;
@@ -300,20 +320,23 @@ const RuleWriter = {
       rule_store.targets[host].push(rs);
     }
 
-    for (var i = 0; i < xmlruleset.exclusion.length(); i++) {
-      var exclusion = new Exclusion(xmlruleset.exclusion[i].@pattern);
+    var exclusions = xmlruleset.getElementsByTagName("exclusion");
+    for (var i = 0; i < exclusions.length; i++) {
+      var exclusion = new Exclusion(exclusions[i].getAttribute("pattern"));
       rs.exclusions.push(exclusion);
     }
 
-    for (var i = 0; i < xmlruleset.rule.length(); i++) {
-      var rule = new Rule(xmlruleset.rule[i].@from,
-                          xmlruleset.rule[i].@to);
+    var rules = xmlruleset.getElementsByTagName("rule");
+    for (var i = 0; i < rules.length; i++) {
+      var rule = new Rule(rules[i].getAttribute("from"),
+                          rules[i].getAttribute("to"));
       rs.rules.push(rule);
     }
 
-    for (var i = 0; i < xmlruleset.securecookie.length(); i++) {
-      var c_rule = new CookieRule(xmlruleset.securecookie[i].@host,
-                                  xmlruleset.securecookie[i].@name);
+    var securecookies = xmlruleset.getElementsByTagName("securecookie");
+    for (var i = 0; i < securecookies.length; i++) {
+      var c_rule = new CookieRule(securecookies[i].getAttribute("host"),
+                                  securecookies[i].getAttribute("name"));
       rs.cookierules.push(c_rule);
       this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
@@ -410,11 +433,28 @@ const HTTPSRules = {
     // to read it raises an exception (probably depending on the URI type).
     try {
       if (input_uri.userPass) {
-        uri = input_uri.clone()
+        uri = input_uri.clone();
         userpass_present = true;
         uri.userPass = null;
       } 
     } catch(e) {}
+
+    // example.com.  is equivalent to example.com
+    // example.com.. is invalid, but firefox would load it anyway
+    if (uri.host)
+      try {
+        var h = uri.host;
+        if (h.charAt(h.length - 1) == ".") {
+          while (h.charAt(h.length - 1) == ".") 
+            h = h.slice(0,-1);
+          uri = uri.clone();
+          uri.host = h;
+        }
+      } catch(e) {
+        this.log(WARN, "Failed to normalise domain: ");
+        try       {this.log(WARN, input_uri.host);}
+        catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
+      }
 
     // Get the list of rulesets that target this host
     try {
@@ -455,12 +495,18 @@ const HTTPSRules = {
   },
 
 
-  potentiallyApplicableRulesets: function(host) {
+  potentiallyApplicableRulesets: function(host) {  
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets;
-    if (this.targets[host])
-      results = results.concat(this.targets[host]);
+	try{
+		if (this.targets[host])
+			results = results.concat(this.targets[host]);
+	}
+	catch(e){	
+		this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
+		return [];
+	}
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {

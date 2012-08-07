@@ -1,17 +1,41 @@
-<!-- This ruleset (a) caused a lot of confusion because of the redirect to
-the "pay" subdomain, and (b) sometimes caused cert warnings because of
-server-side CDN issues, so it's off for the time being -->
-<ruleset name="Reddit (hackish)" default_off="via pay.reddit.com">
-  <target host="reddit.com" />
-  <target host="*.reddit.com" />
-  <target host="redd.it" />
+<!--
+	Other Condé Nast rulesets:
 
-  <rule from="^http://(?:www\.|pay\.)?reddit\.com/"
-	  to="https://pay.reddit.com/"/>
-  <rule from="^http://(sp|static|thumbs)\.reddit\.com/"
-	  to="https://s3.amazonaws.com/$1.reddit.com/"/>
-  <rule from="^http://redd\.it/$"
-	  to="https://pay.reddit.com/"/>
-  <rule from="^http://redd\.it/"
-	  to="https://pay.reddit.com/tb/"/>
+		- Conde-Nast.xml
+		- Conde-Nast-mismatches.xml
+
+
+	For problematic rules, see Reddit-mismatches.xml.
+
+
+	s3.amazonaws.com/reddit(ads|static)?/
+	s3.amazonaws.com/static.reddit.com/
+	s3.amazonaws.com/(\w\.)?thumbs.redditmedia.com/
+-->
+<ruleset name="Reddit">
+
+	<target host="ssl.reddit.com"/>
+	<target host="static.reddit.com"/>
+	<target host="thumbs.reddit.com"/>
+	<target host="thumbs.redditmedia.com"/>
+	<target host="*.thumbs.redditmedia.com"/>
+	<target host="redditstatic.com"/>
+	<target host="www.redditstatic.com"/>
+
+
+	<rule from="^http://ssl\.reddit\.com/"
+		to="https://ssl.reddit.com/"/>
+
+	<rule from="^http://static\.reddit\.com/"
+		to="https://s3.amazonaws.com/static.reddit.com/"/>
+
+	<rule from="^http://thumbs\.reddit\.com/"
+		to="https://s3.amazonaws.com/thumbs.reddit.com/"/>
+
+	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
+		to="https://s3.amazonaws.com/$1thumbs.redditmedia.com/"/>
+
+	<rule from="^http://(?:www\.)?redditstatic\.com/"
+		to="https://s3.amazonaws.com/redditstatic/"/>
+
 </ruleset>

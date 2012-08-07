@@ -1,0 +1,41 @@
+<!--	See LogMeIn-mismatches.xml also
+		ToDo: Find Akamai bucket
+-->
+<ruleset name="LogMeIn.com (partial)">
+
+	<target host="boldchat.com"/>
+	<target host="*.boldchat.com"/>
+	<target host="join.me"/>
+	<target host="*.join.me"/>
+	<target host="logmein.com"/>
+	<target host="*.logmein.com"/>
+	<target host="*.investor.logmein.com"/>
+	<target host="logmeinrescue.com"/>
+	<target host="*.logmeinrescue.com"/>
+	<target host="remotelyanywhere.com"/>
+	<target host="*.remotelyanywhere.com"/>
+
+	<rule from="^http://(?:www\.)?boldchat\.com/"
+		to="https://www.boldchat.com/"/>
+
+	<rule from="^http://(images|livechat|vms|web)\.boldchat\.com/"
+		to="https://$1.boldchat.com/"/>
+
+	<rule from="^http://(?:secure\.|www\.)?(joinme\.me|logmein(?:rescue)?\.com|remotelyanywhere\.com)/"
+		to="https://secure.$1/"/>
+
+	<rule from="^http://(content|investor)?\.logmein\.com/"
+		to="https://$1.logmein.com/"/>
+
+	<rule from="^http://(?:www\.)?remotelyanywhere\.com/$"
+		to="https://secure.remotelyanywhere.com/template.asp?page=home"/>
+
+	<rule from="^http://(?:www\.)?remotelyanywhere\.com/(.+)"
+		to="https://secure.remotelyanywhere.com/$1"/>
+
+	<securecookie host="^(livechat|web|www)?\.boldchat\.com$" name=".*"/>
+	<securecookie host="^(secure\.)?(join\.me|remotelyanywhere\.com)$" name=".*"/>
+	<securecookie host="^(content|\.?investor|secure)?\.logmein\.com$" name=".*"/>
+	<securecookie host="^secure\.logmeinrescue\.com$" name=".*"/>
+
+</ruleset>

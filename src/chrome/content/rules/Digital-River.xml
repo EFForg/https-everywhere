@@ -1,0 +1,80 @@
+<!--	a248.e.akamai.net/f/248/5462/2d/images.element5.com/
+-->
+<ruleset name="Digital River (partial)">
+
+	<target host="cm.commerce5.com"/>
+	<target host="*.cfspx.digitalriver.com"/>
+	<target host="*.digitalriver.com"/>
+	<target host="*.img.digitalriver.com"/>
+	<target host="ui1.img.digitalrivercontent.net"/>
+	<target host="cp.element5.com"/>
+	<target host="*.esellerate.net"/>
+	<target host="findmyorder.com"/>
+	<target host="www.findmyorder.com"/>
+	<target host="*.frcanalytics.com"/>
+	<target host="mycommerce.com"/>
+	<target host="www.mycommerce.com"/>
+	<target host="secure.shareit.com" />
+
+
+	<!--	encountered:
+			- cm.commerce5.com
+			- gc.digitalriver.com
+			- publishers.esellerate.net
+			- store2.esellerate.net
+			- store3.esellerate.net
+			- store6.esellerate.net
+			- findmyorder.com
+			- www.findmyorder.com
+			- mycommerce.com
+			- www.mycommerce.com		-->
+	<securecookie host="^gc\.digitalriver\.com$" name=".*"/>
+	<securecookie host="^(.*\.)?(commerce5|eselleratefindmyorder|mycommerce|shareit)\.com$" name=".*"/>
+
+
+	<rule from="^http://cm\.commerce5\.com/"
+		to="https://cm.commerce5.com/"/>
+
+	<!--	cert !valid for !www	-->
+	<rule from="^http://(?:www\.)?digitalriver\.com/"
+		to="https://www.digitalriver.com/"/>
+
+	<!--	tracking images for esellerate
+			encountered *.img:
+				- drh
+				- drh1
+				- drh2
+				- ui1		-->
+	<rule from="^http://(([\w+\-]+)\.cfspx|gc|\w+\.img)\.digitalriver\.com/"
+		to="https://$1.digitalriver.com/"/>
+
+	<!--	pages redirect to http	-->
+	<rule from="^http://corporate\.digitalriver\.com/DRHM/"
+		to="https://corporate.digitalriver.com/DRHM/"/>
+
+	<rule from="^http://ui1\.img\.digitalrivercontent\.net/"
+		to="https://ui1.img.digitalrivercontent.net/"/>
+
+	<rule from="^http://cp\.element5\.com/"
+		to="https://cp.element5.com/"/>
+
+	<!--	"Bad Request"		-->
+	<rule from="^http://esellerate\.net/"
+		to="https://www.esellerate.net/"/>
+
+	<rule from="^http://(publishers\.|store\d\.)?esellerate\.net/"
+		to="https://$1esellerate.net/"/>
+
+	<rule from="^http://(www\.)?findmyorder\.com/"
+		to="https://$1findmyorder.com/"/>
+
+	<rule from="^http://([\w\-]+)\.frcanalytics\.com/"
+		to="https://$1.frcanalytics.com/"/>
+
+	<rule from="^http://(www\.)?mycommerce\.com/"
+		to="https://mycommerce.com/"/>
+
+	<rule from="^http://secure\.shareit\.com/"
+		to="https://secure.shareit.com/" />
+
+</ruleset>

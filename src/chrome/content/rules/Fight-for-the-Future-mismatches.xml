@@ -1,0 +1,58 @@
+<!--
+	For rules that are on by default, see Fight-for-the-Future.xml.
+
+-->
+<ruleset name="Fight fot the Future (mismatches)" default_off="mismatch, self-signed">
+
+	<target host="americancensorship.org" />
+	<target host="*.americancensorship.org" />
+	<!--	cert:	*.heroku.com	-->
+	<target host="congresstmi.org" />
+	<target host="www.congresstmi.org" />
+	<target host="fightforthefuture.org" />
+	<target host="*.fightforthefuture.org" />
+	<target host="freebieber.org" />
+	<target host="www.freebieber.org" />
+	<target host="internetdefenseleague.org" />
+	<target host="www.internetdefenseleague.org" />
+	<target host="privacyisawesome.com" />
+	<target host="www.privacyisawesome.com" />
+	<target host="sopastrike.com" />
+	<target host="www.sopastrike.com" />
+
+
+	<securecookie host="^(.*\.)?americancensorship\.org$" name=".*" />
+	<securecookie host="^a\.fightforthefuture\.org$" name=".*" />
+
+
+	<!--	my now presents two certs, one after the other:
+
+			1. www.vanillaforums.com
+			2. *.vanillaforums.com
+
+		Over both http & https it redirects to :
+
+			1. fftf.cl0.vanillaforums.com
+			2. vanillaforums.com/oops
+
+		=> Commented out and added (www.) below for now.
+
+	<rule from="^https?://(?:www\.|(my\.))?americancensorship\.org/"
+		to="https://$1americancensorship.org/" /-->
+
+	<rule from="^https?://(?:www\.)?(americancensorship|congresstmi|freebieber|internetdefenseleague)\.org/"
+		to="https://$1.org/" />
+
+	<!--	- //privacyisawesome.com doesn't work over https
+		- Redirects to www over http
+						-->
+	<rule from="^https?://(?:www\.)?(fightforthefuture\.org|privacyisawesome\.com)/"
+		to="https://www.$1/" />
+
+	<rule from="^http://a\.fightforthefuture\.org/"
+		to="https://a.fightforthefuture.org/" />
+
+	<rule from="^https?://(?:www\.)?sopastrike\.com/"
+		to="https://sopastrike.com/" />
+
+</ruleset>

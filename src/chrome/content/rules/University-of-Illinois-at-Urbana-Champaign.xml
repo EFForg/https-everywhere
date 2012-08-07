@@ -1,0 +1,84 @@
+<!--
+	Nonfunctional illinois.edu subdomains:
+
+		- acdis			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+		- admissions		(cert: www-s2.oar.illinois.edu, expired; 403 & 404)
+		- blog.admissions	(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+		- www.ahs		(cert: www.mrp.illinois.edu; shows that domain's data)
+		- (www.)cam		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+		- cgs			(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+		- disability		(cert: ED-webdev1.ad.uiuc.edu, expired, self-signed; prints "The service is unavailable.")
+		- engagement		(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+		- www.grad		(403)
+		- honors		(cert: lsecure.admin.illinois.edu; prints list of sites hosted)
+		- i2i			(ditto)
+		- ilint			(cert: secure.admin.illinois.edu; prints "Default Place Holder")
+		- www.isss		(ditto)
+		- (www.)library
+		- (www.)ncsa
+
+
+	This is the result of a cursory trawl.
+	There is much, much more to add.
+
+-->
+<ruleset name="University of Illinois at Urban-Champaign (partial)">
+
+	<target host="illinois.edu" />
+	<target host="*.illinois.edu" />
+	<target host="secure.admin.illinois.edu" />
+	<target host="*.housing.illinois.edu" />
+	<target host="internal.ncsa.illinois.edu" />
+	<target host="www.*.illinois.edu" />
+	<target host="illinoislawreview.org" />
+	<target host="www.illinoislawreview.org" />
+	<target host="*.uiuc.edu" />
+	<target host="*.ks.uiuc.edu" />
+	<target host="www.union.uiuc.edu" />
+
+
+	<!--	Don't match www, just in case cookies set on
+		securable www pages are needed on unsecurable ones.
+
+		Observed cookies (.illinois.edu):
+
+			- www-s.housing
+			- mrp
+					-->
+	<securecookie host="^.*[^w]\.illinois\.edu$" name=".*" />
+
+
+	<!--	Cert doesn't match, redirects as so.	-->
+	<rule from="^https?://(?:www\.)?uiuc\.edu/"
+		to="https://illinois.edu/" />
+
+	<!--	Cert only matches www-s.	-->
+	<rule from="^https?://(?:www(?:-s)?\.)?ks\.uiuc\.edu/"
+		to="https://www-s.ks.uiuc.edu/" />
+
+	<!--	Cert doesn't match uiuc.	-->
+	<rule from="^https://(www\.)?union\.(?:uiuc|illinois)\.edu/"
+		to="https://$1union.illinois.edu/" />
+
+	<!--	Cert doesn't match www.	-->
+	<rule from="^https?://www\.illinois\.edu/"
+		to="https://illinois.edu/" />
+
+	<rule from="^http://illinois\.edu/(about/about\.html|academics/academics\.html|assets2?/|athletics/athletics\.html|favicon\.ico|\.psg/)"
+		to="https://illinois.edu/$1" />
+
+	<rule from="^http://(secure\.admin|internal\.ncsa)\.illinois\.edu/"
+		to="https://$1.illinois.edu/" />
+
+	<!--	Cert only matches www-s.	-->
+	<rule from="^https?://(?:www(?:-s)?\.)?housing\.illinois\.edu/"
+		to="https://www-s.housing.illinois.edu/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?mrp\.illinois\.edu/"
+		to="https://www.mrp.illinois.edu/" />
+
+	<rule from="^http://(www\.)?illinoislawreview\.org/"
+		to="https://$1illinoislawreview.org/" />
+
+</ruleset>

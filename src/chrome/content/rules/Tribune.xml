@@ -1,0 +1,36 @@
+<!--	!functional:
+		- media.trb.com		(Akamai, "An error occurred")
+		- mv2.trb.com
+-->
+<ruleset name="Tribune (partial)">
+
+	<target host="courant.com"/>
+	<target host="*.courant.com"/>
+	<target host="latimes.com"/>
+	<target host="*.latimes.com"/>
+		<!--	Not on secure, redirects to another domain. e.g.
+
+				latimes.com/media/photo/2009-11/50719492.jpg
+
+			redirects to
+
+				latimes.image2.trb.com/lanews/media/photo/2009-11/50719492.jpg
+									-->
+		<exclusion pattern="^http://(www\.)?latimes\.com/media/photo/" />
+
+
+
+	<rule from="^http://advertise\.courant\.com/"
+		to="https://advertise.courant.com/"/>
+
+	<rule from="^http://(?:www\.)?courant\.com/includes/uploads/2010/08/3A2C26D5_courant_logo_981x160b\.jpg$"
+		to="https://advertise.courant.com/portal/page/portal/Hartford%20Courant/Content%20Items/P2P/3A2C26D5_courant_logo_981x160b.jpg"/>
+
+	<rule from="^http://(?:www\.)?courant\.com/media/graphic/2009-06/47547079\.png$"
+		to="https://advertise.courant.com/portal/page/portal/Hartford%20Courant/Content%20Items/P2P/47547079.png"/>
+
+
+	<rule from="^http://(?:(?:origin-)?www\.)?latimes\.com/(favicon\.ico|hive/|images/|includes/|media/|stylesheets/)"
+		to="https://secure.latimes.com/$1"/>
+
+</ruleset>

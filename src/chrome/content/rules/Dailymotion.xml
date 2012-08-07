@@ -1,0 +1,36 @@
+<!--
+	For rules that are off by default, see Dailymotion-mismatches.xml.
+
+	Nonfunctional domains:
+
+		- blog.dailymotion.com
+		- publicite.dailymotion.com
+
+-->
+<ruleset name="Dailymotion">
+
+	<target host="dailymotion.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.dailymotion.com" />
+	<target host="*.dmcdn.net" />
+	<target host="dmcloud.net" />
+	<target host="*.dmcloud.net" />
+
+
+	<securecookie host="^.*\.dailymotion\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?dailymotion\.com/"
+		to="https://$1dailymotion.com/" />
+
+	<rule from="^http://static(\d)\.dmcdn\.net/"
+		to="https://static$1.dmcdn.net/" />
+
+	<rule from="^http://((?:s|www)\.)?dmcloud\.net/"
+		to="https://$1dmcloud.net/" />
+
+	<!--	dmcloud.zendesk.com pages redirect back.	-->
+	<rule from="^https?://support\.dmcloud\.net/(assets|generated|images|system)/"
+		to="https://dmcloud.zendesk.com/$1/" />
+
+</ruleset>

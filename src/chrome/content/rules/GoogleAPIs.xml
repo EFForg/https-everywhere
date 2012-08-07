@@ -1,62 +1,79 @@
+<!--
+	Nonfunctioning domains:
+
+		- t[013].gstatic.com	(404)
+
+-->
 <ruleset name="Google APIs">
-  <target host="www.google-analytics.com" />
-  <target host="ssl.google-analytics.com" />
-  <target host="*.googleapis.com" />
-  <target host="*.commondatastorage.googleapis.com"/>
-  <target host="google.com" />
-  <target host="www.google.com" />
-  <target host="translate.google.com" />
-  <target host="apis.google.com" />
-  <target host="*.apis.google.com" />
-  <target host="gstatic.com" />
-  <target host="*.gstatic.com" />
-  <target host="api.recaptcha.net" />
-  <target host="gdata.youtube.com" />
 
-  <rule from="^http://www\.google-analytics\.com/"
-          to="https://ssl.google-analytics.com/"/>
-  <rule from="^http://(ajax|chart|fonts|translate|www)\.googleapis\.com/"
-          to="https://$1.googleapis.com/"/>
-  <rule from="^http://commondatastorage\.googleapis\.com/"
-	  to="https://commondatastorage.googleapis.com/"/>
-  <rule from="^http://([^@:\./]+)\.commondatastorage\.googleapis\.com/"
-	  to="https://$1.commondatastorage.googleapis.com/"/>
-  <rule from="^http://translate\.google\.com/translate_a/element\.js"
-	  to="https://translate.google.com/translate_a/element.js"/>
 
-<!-- There is an interesting question about whether we should
-     append &strip=1 to all cache URLs.  This causes them to load without
-     images and styles, which is more secure but can look worse.  Without
-     &strip=1, the images and styles from the cached pages still load from
-     the original, typically unencrypted, page.  With &strip=1, the
-     cached page will be text-only and will come exclusively from Google's
-     HTTPS server. -->
+	<target host="google.com" />
+	<target host="www.google.com" />
+	<target host="apis.google.com" />
+	<target host="*.apis.google.com" />
+	<target host="www.google-analytics.com" />
+	<target host="ssl.google-analytics.com" />
+	<target host="*.googleapis.com" />
+	<target host="*.commondatastorage.googleapis.com" />
+	<target host="gstatic.com" />
+	<target host="*.gstatic.com" />
+	<target host="api.recaptcha.net" />
+	<target host="gdata.youtube.com" />
 
-  <rule from="^http://(?:www\.|ssl\.)?gstatic\.com/"
-          to="https://ssl.gstatic.com/" />
-  <rule from="^http://api\.recaptcha\.net/"
-          to="https://www.google.com/recaptcha/api/"/>
-  <rule from="^http://(?:www\.)?google\.com/recaptcha/"
-          to="https://www.google.com/recaptcha/"/>
-  <rule from="^http://(?:www\.)?google\.com/uds"
-          to="https://www.google.com/uds"/>
-  <rule from="^http://(?:www\.)?google\.com/chart"
-          to="https://www.google.com/chart"/>
-  <rule from="^http://apis\.google\.com/"
-	  to="https://apis.google.com/"/>
-  <rule from="^http://chart\.apis\.google\.com/chart"
-          to="https://chart.googleapis.com/chart"/>
 
-<!--  jsapi was causing problems on some sites that embed google maps:
-      https://trac.torproject.org/projects/tor/ticket/2335
-      Apparently now fixed; thanks, Google! -->
+	<rule from="^http://www\.google-analytics\.com/"
+		to="https://ssl.google-analytics.com/" />
 
-  <rule from="^http://(?:www\.)?google\.com/jsapi"
-          to="https://www.google.com/jsapi"/>
+	<rule from="^http://(ajax|chart|fonts|www)\.googleapis\.com/"
+		to="https://$1.googleapis.com/" />
 
-  <rule from="^http://(?:www\.)?google\.com/afsonline/"
-          to="https://www.google.com/afsonline/"/>
+	<rule from="^http://commondatastorage\.googleapis\.com/"
+		to="https://commondatastorage.googleapis.com/" />
 
-  <rule from="^http://gdata\.youtube\.com/"
-          to="https://gdata.youtube.com/"/>
+	<rule from="^http://([^@:\./]+)\.commondatastorage\.googleapis\.com/"
+		to="https://$1.commondatastorage.googleapis.com/" />
+
+	<!--	There is an interesting question about whether we should
+		append &strip=1 to all cache URLs.  This causes them to load
+		without images and styles, which is more secure but can look
+		worse.
+			Without &strip=1, the images and styles from the cached
+		pages still load from the original, typically unencrypted, page.
+			With &strip=1, the cached page will be text-only and
+		will come exclusively from Google's HTTPS server.	-->
+
+	<rule from="^http://(?:www\.|ssl\.)?gstatic\.com/"
+		to="https://ssl.gstatic.com/" />
+
+	<rule from="^http://api\.recaptcha\.net/"
+		to="https://www.google.com/recaptcha/api/" />
+
+	<rule from="^http://(?:www\.)?google\.com/recaptcha/"
+		to="https://www.google.com/recaptcha/" />
+
+	<rule from="^http://(?:www\.)?google\.com/uds"
+		to="https://www.google.com/uds" />
+
+	<rule from="^http://(?:www\.)?google\.com/chart"
+		to="https://www.google.com/chart" />
+
+	<rule from="^http://apis\.google\.com/"
+	  to="https://apis.google.com/" />
+
+	<rule from="^http://chart\.apis\.google\.com/chart"
+		to="https://chart.googleapis.com/chart" />
+
+	<!--	jsapi was causing problems on some sites that embed google maps:
+		https://trac.torproject.org/projects/tor/ticket/2335
+		Apparently now fixed; thanks, Google!	-->
+
+	<rule from="^http://(?:www\.)?google\.com/jsapi"
+		to="https://www.google.com/jsapi" />
+
+	<rule from="^http://(?:www\.)?google\.com/afsonline/"
+		to="https://www.google.com/afsonline/" />
+
+	<rule from="^http://gdata\.youtube\.com/"
+		to="https://gdata.youtube.com/" />
+
 </ruleset>

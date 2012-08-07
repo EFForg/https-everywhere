@@ -1,0 +1,48 @@
+<ruleset name="Better Business Bureau (partial)">
+
+	<target host="bbb.org"/>
+	<target host="hurdman.app.bbb.org"/>
+	<target host="*.bbb.org"/>
+		<!--	expired, self-signed, shows "domain has just been registered" page
+			(www.)dcbbb.org redirects here		-->
+		<exclusion pattern="^http://(?:www\.)?dc\."/>
+		<exclusion pattern="http://(?:www\.)?seflorida\."/>
+	<target host="www.*.bbb.org"/>
+	<target host="bbbonline.org"/>
+	<target host="www.bbbonline.org"/>
+	<target host="bbbsilicon.org" />
+	<target host="www.bbbsilicon.org" />
+	<target host="labbb.org"/>
+	<target host="www.labbb.org"/>
+
+
+	<securecookie host="^.*\.bbb\.org$" name=".*" />
+	<securecookie host="^(.*\.)?bbbsilicon\.org$" name=".*" />
+	<securecookie host="^www\.labbb\.org$" name=".*"/>
+
+
+	<!--	cert invalid	-->
+	<rule from="^https?://(?:www\.)?la\.?bbb\.org/"
+		to="https://www.labbb.org/"/>
+
+	<rule from="^http://bbb\.org/"
+		to="https://www.bbb.org/"/>
+
+	<rule from="^http://(?:www\.)?([\w\-]+)\.bbb\.org/"
+		to="https://$1.bbb.org/"/>
+
+	<rule from="^http://hurdman\.app\.bbb\.org/"
+		to="https://hurdman.app.bbb.org/"/>
+
+	<!--	cert doesn't match 	-->
+	<rule from="^https?://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
+		to="https://www.bbb.org/us/bbb-online-business/?id=$1"/>
+
+	<rule from="^http://(www\.)?bbbsilicon\.org/"
+		to="https://$1bbbsilicon.org/" />
+
+	<!--	Cert doens't match.	-->
+	<rule from="^https?://(?:www\.)?sanjose\.bbb\.org/"
+		to="https://bbbsilicon.org/" />
+
+</ruleset>

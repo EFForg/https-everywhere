@@ -1,0 +1,95 @@
+<!--
+	This rule is off by default because it caused so many aspects of the
+	Amazon site to break; see the mailing list archives for details.
+	Currently being fixed...
+
+	Amazon appears to operate in 7 countries, and does not hold the domains
+	for some others, like .se or .be.  In other cases there is an http-only site
+	that redirects to one of these 7 countries.
+
+
+	amazon.com
+		does work:
+			ap/		(appears to be purchase-management related)
+			([\w\-]+/)?dp/	(i.e., dp/ possibly preceeded by title)
+			e/\w{10,10}/	(i.e., e/ followed by ASIN)
+			gp/cart
+			gp/css
+			gp/feature.html
+			gp/redirect.html
+			gp/registry/wishlist
+
+		doesn't work:
+			$		(i.e., homepage)
+			([\w\-]+/)?b/ 	(i.e., b/ preceeded by category)
+			exec/obidos/ASIN/
+			([\w\-]+/)gp/	(i.e., gp/ possibly preceeded by title)
+			gp/goldbox($|\?)
+			gp/kindle/pc($|\?)
+			gp/pdp/profile($|\?)
+			gp/product/
+			gp/richpub/syltguides/byauthor($|\?)
+			Help/
+			l/
+			s/
+
+	amazon.co.jp:
+		does work:
+			/ap/
+			a few pages under gp/
+		doesn't work:
+			everything else
+
+	amazon.cn:
+		doesn't work:
+			everything?
+
+	amazon.*:
+		does work:
+			everything except...
+		doesn't work:
+			gp/search\?
+			/mn/search/
+			s/
+			s\?rh=		(i.e., search pages and files)
+				
+-->
+<ruleset name="Amazon (experimental)" default_off="needs testing">
+
+	<target host="amazon.*" />
+	<target host="www.amazon.*" />
+		<!--	These pages don't work on .com.	-->
+		<exclusion pattern="^http://www\.amazon\.com/($|\?|exec/obidos/|gp/((goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)($|\?)|product/)|l/|([\w\-]+/)?(b|dp|Help)/)" />
+	<target host="affiliate-program.amazon.com" />
+	<target host="astore.amazon.com" />
+	<target host="*.amazon.co.uk" />
+	<target host="amazon.co.*" />
+	<target host="www.amazon.co.*" />
+		<!--	Search redirects to http, for all sites.	-->
+		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(gp/search\?|mn/search/|s(/|\?rh=))" />
+
+
+	<!--	Verified as working for UK, others sites matched appear to function identically.	-->
+	<securecookie host="^(www)?\.amazon\.(ca|co\.uk|de|es|fr|it)$" name=".*" />
+
+	<!--	These cookies are set all over .com.
+	<securecookie host="^\.amazon\.com$" name="^session-id(-time)?$" />
+
+		These cookies are set by gp/cart/view.html
+	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
+
+	<rule from="^http://a(ffiliate-program|store)\.amazon\.com/"
+		to="https://a$1.amazon.com/" />
+
+	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
+		to="https://www.amazon.$1/" />
+
+	<!--	There is very little support on JP website
+			possibly more than is in this rule though.	-->
+	<rule from="^http://(?:www\.)?amazon\.co\.jp/(ap|gp/(?:cart|cobrandcard|registry))/"
+		to="https://www.amazon.co.jp/$1/" />
+
+	<rule from="^http://aan\.amazon\.co\.uk/"
+		to="https://aan.amazon.co.uk/" />
+
+</ruleset>

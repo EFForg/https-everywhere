@@ -1,0 +1,73 @@
+<!--
+	fastclick.com				cert: ""; redirects  to www.valueclick.com
+
+	Nonfunctional:
+		- (www.)(couponmountain|idealhomegarden|investopedia|symptomfind).com
+		- files.(couponmountain|idealhomegarden|smarter.com|symptomfind).com	(Akamai)
+		- i.investopedia.com							(Akamai)
+		- (forum.|www.)pricerunner.co(m|.uk)
+		- images.pricerunner.com						(Akamai)
+		- blogs.smarter.com
+		- ir.valueclick.com							(cert: shareholder.com)
+
+	See ValueClick-mismatches for invalid cert rules
+-->
+<ruleset name="ValueClick (partial)">
+
+	<target host="awltovhc.com"/>
+	<target host="www.awltovhc.com"/>
+	<target host="*.fastclick.net"/>
+	<target host="lduhtrp.net"/>
+	<target host="www.lduhtrp.net"/>
+	<target host="adfarm.mediaplex.com"/>
+	<target host="app.mediaplex.com"/>
+	<target host="img.mediaplex.com"/>
+	<target host="img-cdn.mediaplex.com"/>
+	<target host="mojofarm.mediaplex.com"/>
+	<target host="secure.img-cdn.mediaplex.com"/>
+	<target host="pricerunner.com"/>
+	<target host="*.pricerunner.com"/>
+	<target host="pricerunner.co.uk"/>
+	<target host="*.pricerunner.co.uk"/>
+	<target host="admin.valueclickmedia.com"/>
+	<target host="cdn-origin.snv.vcmedia.com"/>
+
+
+	<securecookie host="^.*\.fastclick\.net$" name=".*"/>
+	<securecookie host="^(partner|secure)\.pricerunner\.com$" name=".*"/>
+	<securecookie host="^admin\.valueclickmedia\.com$" name=".*"/>
+
+
+	<!--	!www doesn't work via https
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?awltovhc\.com/"
+		to="https://www.awltovhc.com/" />
+
+	<rule from="^http://(?:media|secure)\.fastclick\.net/"
+		to="https://secure.fastclick.net/"/>
+
+	<rule from="^http://(?:www\.)?lduhtrp\.net/"
+		to="https://www.lduhtrp.net/"/>
+
+	<!--	img-cdn: invalid Akamai cert	
+		same data as img, but be kind and point to CDN	-->
+	<rule from="^http://(?:secure\.)?img-cdn\.mediaplex\.com/"
+		to="https://secure.img-cdn.mediaplex.com/"/>
+
+	<rule from="^http://(adfarm|app|img|mojofarm)\.mediaplex\.com/"
+		to="https://$1.mediaplex.com/"/>
+
+	<rule from="^http://(?:www\.)?pricerunner\.co(?:m|\.uk)/favicon\.ico"
+		to="https://secure.pricerunner.com/imgserver/images/v3/favicon.ico"/>
+
+	<rule from="^http://(partner|secure)\.pricerunner\.com/"
+		to="https://$1.pricerunner.com/"/>
+
+	<!--	contains only: "Click here to visit fastclick.com"	-->
+	<rule from="^http://cdn-origin\.snv\.vcmedia\.com/"
+		to="https://cdn-origin.snv.vcmedia.com/"/>
+
+	<rule from="^http://admin\.valueclickmedia\.com/"
+		to="https://admin.valueclickmedia.com/"/>
+
+</ruleset>

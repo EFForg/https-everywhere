@@ -1,0 +1,41 @@
+<!--
+	Other iNet Interactive rulesets:
+
+		- INet-Interactive.xml
+
+-->
+<ruleset name="Overclockers.com (partial)">
+
+	<target host="ocforums.com"/>
+	<target host="www.ocforums.com"/>
+	<target host="overclockers.com"/>
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.overclockers.com"/>
+
+
+	<!--	Covers:
+
+			- bbforum_view
+			- bblastactivity
+			- bblastvisit
+			- bbsessionhash
+
+	Blanket coverage not included in case there
+	are some cookies needed for article pages.
+							-->
+	<securecookie host="^\.overclockers\.com$" name="^bb\w+$"/>
+
+
+	<!--	Cert isn't valid for ocforums.com.
+		Server redirects as so.
+					-->
+	<rule from="^http://(?:www\.)ocforums\.com/"
+		to="https://www.overclockers.com/forums/"/>
+
+	<!--	\w+$ redirects to \w+/, so we
+		can't secure articles. =(
+						-->
+	<rule from="^http://(www\.)?overclockers\.com/($|\w+/)"
+		to="https://$1overclockers.com/$2"/>
+
+</ruleset>

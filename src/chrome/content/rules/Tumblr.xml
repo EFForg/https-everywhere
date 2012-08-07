@@ -1,13 +1,37 @@
-<ruleset name="Tumblr (partial)">
-  <target host="assets.tumblr.com" />
-  <target host="media.tumblr.com" />
-  <target host="*.media.tumblr.com" />
-  <target host="static.tumblr.com" />
+<!--
+	Buckets:
+	s3.amazonaws.com/assets.tumblr.com/
+	s3.amazonaws.com/data.tumblr.com/
+	s3.amazonaws.com/static.tumblr.com/
+	gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/
 
-  <rule from="^http://static\.tumblr\.com/"
-	  to="https://s3.amazonaws.com/static.tumblr.com/" />
-  <rule from="^http://assets\.tumblr\.com/images/favicon\.gif"
-	  to="https://s3.amazonaws.com/assets.tumblr.com/images/favicon.gif" />
-  <rule from="^http://(\d+\.)?media\.tumblr\.com/"
-	  to="https://s3.amazonaws.com/data.tumblr.com/" />
+-->
+<ruleset name="Tumblr (partial)">
+
+	<target host="tumblr.com" />
+	<target host="*.tumblr.com" />
+	<target host="secure.assets.tumblr.com" />
+	<target host="*.media.tumblr.com" />
+
+
+	<rule from="^http://(www\.)?tumblr\.com/($|login|photo/)"
+		to="https://$1tumblr.com/$2" />
+
+	<!--	Amazon only works for a subset of assets data.
+		The pattern for that subset is a mystery.
+		Forget being kind and just do what works.
+
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001149.html
+
+		swf: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
+			-->
+	<rule from="^https?://(?:secure\.)?assets\.tumblr\.com/"
+		to="https://secure.assets.tumblr.com/" />
+
+	<rule from="^https?://(?:data|(?:\d+\.)?media)\.tumblr\.com/"
+		to="https://s3.amazonaws.com/data.tumblr.com/" />
+
+	<rule from="^https?://static\.tumblr\.com/"
+		to="https://s3.amazonaws.com/static.tumblr.com/" />
+
 </ruleset>

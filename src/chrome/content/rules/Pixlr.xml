@@ -1,0 +1,35 @@
+<!--
+	Nonfunctional:
+
+		- (www.)imm.io		(times out)
+		- blog.pixlr.com	(ditto)
+
+
+	There's a bucket at s3.amazonaws.com/i.pixlr.com/
+
+-->
+<ruleset name="Pixlr (partial)">
+
+	<target host="i.imm.io" />
+	<target host="pixlr.com" />
+	<target host="*.pixlr.com" />
+
+
+	<securecookie host="^(.*\.)?pixlr\.com$" name=".*" />
+
+
+	<rule from="^http://i\.imm\.io/"
+		to="https://s3.amazonaws.com/i.imm.io/" />
+
+	<!--	cdn: CloudFront.	-->
+	<rule from="^http://(?:cdn\.|(www\.))?pixlr\.com/"
+		to="https://$1pixlr.com/" />
+
+	<rule from="^http://blog\.pixlr\.com/favicon\.ico"
+		to="https://www.blogger.com/favicon.ico" />
+
+	<!--	At least some pages redirect back.	-->
+	<rule from="^http://support\.pixlr\.com/(assets/|favicon\.png)"
+		to="https://getsatisfaction.com/$1" />
+
+</ruleset>

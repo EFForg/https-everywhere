@@ -1,18 +1,65 @@
+<!--
+
+	Nonfunctional:
+
+		- global.epson.com	(cert: netporter.ebz.epson.net; 403)
+		- (www.)epson.jp
+
+-->
 <ruleset name="Epson.com (partial)">
-  <target host="www.epson.com" />
-  <target host="epson.com" />
-  <target host="was.epson.com" />
-  <target host="pos.epson.com" />
 
-	<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/jsp/Product/Photos.do"/>
-	<!-- URLs such as http://www.epson.com/snowleopard -->
-	<exclusion pattern="^http://(www\.)?epson\.com/([a-zA-Z]([a-zA-Z0-9])+){1}$"/>
-	<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/consumer/"/>
+	<target host="epson.ca" />
+	<target host="www.epson.ca" />
+	<target host="epson.com" />
+	<target host="*.epson.com" />
+		<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/consumer/"/>
+		<exclusion pattern="^http://(?:www\.)?epson\.com/cgi-bin/Store/jsp/Product/Photos\.do"/>
+		<!--	URLs such as http://www.epson.com/snowleopard	-->
+		<exclusion pattern="^http://(www\.)?epson\.com/([a-zA-Z][a-zA-Z\d]+){1}$"/>
+	<target host="global.latin.epson.com" />
+	<target host="epson.com.mx" />
+	<target host="www.epson.com.mx" />
+	<target host="*.epson.jp" />
 
-	<rule from="^http://(?:www\.)?epson\.com/" to="https://www.epson.com/"/>
-	<rule from="^http://was\.epson\.com/" to="https://was.epson.com/"/>
-	<rule from="^http://pos\.epson\.com/" to="https://pos.epson.com/"/>
-	<rule from="^https://(www\.)?epson\.com/(([a-zA-Z]([a-zA-Z0-9])+){1})$" to="https://$1epson.com/$2"/>
+
+	<securecookie host="^(.*\.)?epson\.c(a|om)$" name=".*" />
+
+
+	<!--	ca: cert only matches www.
+		com: !www times out.	-->
+	<rule from="^https?://(?:www\.)?epson\.c(a|om)/"
+		to="https://www.epson.c$1/" />
+
+	<!--	At least some pages redirect to http.
+
+		When fetched via https,
+
+			(mx|sites)/newSite/pages/home/carouselDataES-Educacion.php
+
+		appear to cause JS to break.	-->
+	<rule from="^http://global\.latin\.epson\.com/(data|frame|template)/"
+		to="https://global.latin.epson.com/$1/" />
+
+	<rule from="^http://(pos|was)\.epson\.com/"
+		to="https://$1.epson.com/" />
+
+	<!--	What is this doing?
+		It looks as though this is excluded above...
+	<rule from="^https://(?:www\.)?epson\.com/((?:[a-zA-Z][a-zA-Z\d]+){1})$"
+		to="https://www.epson.com/$1" /-->
+
+	<!--	Cert only matches global.*
+		Redirects as so.	-->
+	<rule from="^https?://(?:www\.)?epson\.com\.mx/"
+		to="https://global.latin.epson.com/mx" />
+
+	<rule from="^http://cform\.epson\.jp/"
+		to="https://cform.epson.jp/" />
+
+	<!--	At least the homepage redirects to http.	-->
+	<rule from="^http://shop\.epson\.jp/eshop/"
+		to="https://shop.epson.jp/eshop/" />
+
 </ruleset>
 
 

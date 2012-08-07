@@ -23,6 +23,8 @@ function observatory_prefs_init(doc) {
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.alt_roots");
   document.getElementById("priv-dns").checked = 
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.priv_dns");
+  document.getElementById("self-signed").checked = 
+    obsprefs.getBoolPref("extensions.https_everywhere._observatory.self_signed");
   document.getElementById("send-asn").checked = 
     obsprefs.getBoolPref("extensions.https_everywhere._observatory.send_asn");
 
@@ -141,6 +143,11 @@ function toggle_priv_dns() {
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.priv_dns", priv_dns);
 }
 
+function toggle_self_signed() {
+  var self_signed = document.getElementById("self-signed").checked;
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.self_signed", self_signed);
+}
+
 function observatory_prefs_accept() {
   // This is *horrid*, but
   // https://developer.mozilla.org/en/working_with_windows_in_chrome_code#Accessing_the_elements_of_the_top-level_document_from_a_child_window
@@ -163,8 +170,8 @@ function warning_populate(warningObj) {
   var container = document.getElementById("warning-container");
   for (var hash in warningObj) {
     var label=document.createElement("label");
-    label.setAttribute("value",warningObj[hash].long_desc);
     label.setAttribute("style","padding:5px 25px 5px;");
+    label.textContent = warningObj[hash].long_desc;
     container.appendChild(label);
     //var spacer=document.createElement("spacer");
     //separator.setAttribute("flex","1");

@@ -1,0 +1,47 @@
+<!--
+
+	Nonfunctional subdomains:
+
+		absabs		(times out)
+		reference.pin	(sec_error_reused_issuer_and_serial)
+		(www.)		(times out)
+
+-->
+<ruleset name="Harvard University (partial)">
+
+	<target host="berkman.harvard.edu" />
+	<target host="login.icommons.harvard.edu" />
+	<target host="adam.law.harvard.edu" />
+	<target host="cyber.law.harvard.edu" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.cyber.law.harvard.edu" />
+	<target host="www.*.harvard.edu" />
+
+
+	<securecookie host="^login\.icommons\.harvard\.edu$" name=".*" />
+	<!--	Observed cookies:
+
+			- ^adam
+			- ^.cyber
+					-->
+	<securecookie host="^.*\.law\.harvard\.edu$" name=".*" />
+	<securecookie host="^www\.pin1\.harvard\.edu$" name=".*" />
+
+
+	<!--	www doesn't work over http.	-->
+	<rule from="^http://(login\.icommons|adam\.law|www\.pin1)\.harvard\.edu/"
+		to="https://$1.harvard.edu/" />
+
+	<!--	!www works over http and cert doesn't match.	-->
+	<rule from="^https?://(?:www\.)?berkman\.harvard\.edu/"
+		to="https://www.berkman.harvard.edu/" />
+
+	<!--	At least some pages redirec to http.	-->
+	<rule from="^http://isites\.harvard\.edu/(fs/|icb/calendar/themes/|icb/[\w\-]\.css|js/)"
+		to="https://isites.harvard.edu/$1" />
+
+	<!--	www works over http and cert doesn't match.	-->
+	<rule from="^https?://(?:www\.)?cyber\.law\.harvard\.edu/"
+		to="https://cyber.law.harvard.edu/" />
+
+</ruleset>

@@ -1,8 +1,33 @@
-<ruleset name="TinEye">
-  <target host="www.tineye.com" />
-  <target host="tineye.com" />
-  <target host="pixid.ideeinc.com" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(?:www\.)?tineye\.com/" to="https://www.tineye.com/"/>
-  <rule from="^http://(?:www\.)?pixid\.ideeinc\.com/" to="https://pixid.ideeinc.com/"/>
+		- ideeinc.com:
+
+			- $
+			- blog
+			- labs	(cert: *.tineye.com; 403)
+			- www
+
+		- tineye.com:
+
+			- blog
+
+-->
+<ruleset name="TinEye (partial)">
+
+	<target host="pixid.ideeinc.com" />
+	<target host="www.pixid.ideeinc.com" />
+	<target host="tineye.com" />
+	<target host="*.tineye.com" />
+
+
+	<securecookie host="^www\.tineye\.com$" name=".*"/>
+
+
+ 	<rule from="^https?://(?:www\.)?pixid\.ideeinc\.com/"
+		to="https://pixid.ideeinc.com/" />
+
+	<rule from="^http://((?:img|services|www)\.)?tineye\.com/"
+		to="https://$1tineye.com/" />
+
 </ruleset>

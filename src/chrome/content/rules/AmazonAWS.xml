@@ -1,15 +1,55 @@
-<ruleset name="Amazon Web Services">
-  <target host="aws.amazon.com" />
-  <target host="aws-portal.amazon.com" />
-  <target host="*.s3.amazonaws.com" />
-  <target host="s3.amazonaws.com" />
+<!--
+	d36cz9buwru1tt.cloudfront.net
+	s3.amazonaws.com/awsmedia/
+	s3.amazonaws.com/rodica-work/
 
-  <rule from="^http://aws\.amazon\.com/"
-	  to="https://aws.amazon.com/" />
-  <rule from="^http://aws-portal\.amazon\.com/"
-	  to="https://aws-portal.amazon.com/" />
-  <rule from="^http://s3\.amazonaws\.com/"
-	  to="https://s3.amazonaws.com/" />
-  <rule from="^http://([^@:/]+)\.s3\.amazonaws\.com/"
-	  to="https://s3.amazonaws.com/$1/" />
+-->
+<ruleset name="Amazon Web Services">
+
+	<target host="aws.amazon.com" />
+	<target host="signin.aws.amazon.com" />
+	<target host="aws-portal.amazon.com" />
+	<target host="images.amazon.com" />
+	<target host="payments.amazon.com" />
+	<target host="rcm-images.amazon.com" />
+	<target host="sis.amazon.com" />
+	<target host="ws.amazon.com" />
+	<target host="s3.amazonaws.com" />
+	<target host="*.s3.amazonaws.com" />
+		<!--	bloody forced redirection:
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001100.html	-->
+		<exclusion pattern="^http://static\.via\.me\.s3\.amazonaws\.com/" />
+	<target host="cdn.*.s3.amazonaws.com" />
+	<target host="s3-eu-west-1.amazonaws.com" />
+	<target host="*.s3-eu-west-1.amazonaws.com" />
+	<target host="cdn.*.s3-eu-west-1.amazonaws.com" />
+	<target host="*.images-amazon.com" />
+	<target host="amazonwebservices.com" />
+	<target host="*.amazonwebservices.com" />
+
+
+	<rule from="^http://(signin\.aws|aws(-portal)?|payments|sis|ws)\.amazon\.com/"
+		to="https://$1.amazon.com/" />
+
+	<rule from="^http://s3(-eu-west-1)?\.amazonaws\.com/"
+		to="https://s3$1.amazonaws.com/" />
+
+	<rule from="^http://([^@:\.]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
+		to="https://$1.s3$2.amazonaws.com/" />
+
+	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
+		to="https://s3$3.amazonaws.com/$1.$2/" />
+
+	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
+		to="https://aws.amazon.com/" />
+
+	<rule from="^http://developer\.amazonwebservices\.com/"
+		to="https://developer.amazonwebservices.com/" />
+
+	<rule from="^http://media\.amazonwebservices\.com/"
+		to="https://s3.amazonaws.com/awsmedia/" />
+
+	<rule from="^http://(?:(?:\w-)?ec[2x]\.images-|(?:rcm-)?images\.)amazon\.com/"
+		to="https://images-na.ssl-images-amazon.com/" />
+
 </ruleset>

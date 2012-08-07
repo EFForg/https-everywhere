@@ -1,5 +1,50 @@
-<ruleset name="MSN" default_off="certificate mismatch">
-  <target host="my.msn.com" />
+<!--
+	Other Microsoft rulesets:
 
-  <rule from="^http://my\.msn\.com/" to="https://my.msn.com/"/>
+		- Live.xml
+		- Microsoft.xml
+		- Microsoft-mismatches.xml
+		- MSN-Extra.xml
+		- Newsvine.com.xml
+		- Technet.com.xml
+
+
+	Nonfunctional:
+
+		- msnbcmedia\d?.msn.com	(timeout)
+		- nbcsports.msnbc.com	(cert: *.pantherssl.com)
+
+-->
+<ruleset name="MSN (partial)" default_off="mismatch">
+
+	<!--	*.msnbc.msn.com, doesn't redirect to www	-->
+	<target host="msnbc.msn.com" />
+	<!--	Akamai: assets(\dd)?, www	-->
+	<target host="*.msnbc.msn.com" />
+	<target host="my.msn.com" />
+	<!--	Akamai	-->
+	<target host="polls.newsvine.com" />
+	<target host="www.polls.newsvine.com" />
+		<!--	also hosted on www, handled in Newsvine.com.xml		-->
+		<exclusion pattern="http://(www\.)?polls\.newsvine\.com/_(static|vine)/" />
+	<target host="m.static.newsvine.com" />
+
+
+	<!--	since both are invalid, be nice and point to CDN	-->
+	<rule from="^https?://(?:www\.)?msnbc\.msn\.com/"
+		to="https://www.msnbc.msn.com/" />
+
+	<!--	all appear to be the same, so minimize exclusions needed	-->
+	<rule from="^https?://assets(?:\dd)?\.msnbc\.msn\.com/"
+		to="https://assets.msnbc.msn.com/" />
+
+	<rule from="^http://(bottomline|cosmiclog|photoblog)\.msnbc\.msn\.com/"
+		to="https://$1.msnbc.msn.com/" />
+
+	<rule from="^http://my\.msn\.com/"
+		to="https://my.msn.com/" />
+
+	<rule from="^http://((?:www\.)?polls|m\.static)\.newsvine\.com/"
+		to="https://$1.newsvine.com/" />
+
 </ruleset>

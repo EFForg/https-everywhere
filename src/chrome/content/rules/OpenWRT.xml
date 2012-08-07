@@ -1,0 +1,31 @@
+<!--
+	For problematic rules, see OpenWRT-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- downloads	(cert: www.openwrt.org; shows that domain's data)
+		- kamikaze	(ditto)
+
+-->
+<ruleset name="OpenWRT (partial)">
+
+	<target host="openwrt.org" />
+	<target host="*.openwrt.org" />
+
+
+	<securecookie host="^.*\.openwrt\.org$" name=".*" />
+
+
+	<rule from="^http://openwrt\.org/"
+		to="https://openwrt.org/" />
+
+	<!--	git shows www data over both http and https.	-->
+	<rule from="^http://(dev|forum|git|lists|www)\.openwrt\.org/"
+		to="https://$1.openwrt.org/" />
+
+	<rule from="^https?://wiki\.openwrt\.org/lib/tpl/ameoto/images/(bg(?:-2)?|footer|openwrt-logo)\.png$"
+		to="https://openwrt.org/.styles/img/$1.png" />
+
+
+</ruleset>

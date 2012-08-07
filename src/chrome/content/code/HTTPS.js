@@ -21,6 +21,8 @@ const PolicyState = {
 };
 
 const HTTPS = {
+  ready: false,
+
   secureCookies: true,
   secureCookiesExceptions: null,
   secureCookiesForced: null,
@@ -30,16 +32,11 @@ const HTTPS = {
   
   replaceChannel: function(applicable_list, channel) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
-    if (null == blob) {
-       //HTTPS.log(INFO,
-       //    "Got replace channel with no applicable rules for URI "
-       //    + channel.URI.spec);
-       return false;
-     }
+    if (null == blob) return false; // no rewrite
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
-    var c2=channel.QueryInterface(CI.nsIHttpChannel);
+    var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
     // XXX This used to be (c2.redirectionLimit == 1), but that's very
     // inefficient in a case (eg amazon) where this may happen A LOT.
@@ -56,8 +53,9 @@ const HTTPS = {
       return false;
     }
     if (ChannelReplacement.supported) {
+      HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
-      IOUtil.runWhenPending(channel, function() {
+      ChannelReplacement.runWhenPending(channel, function() {
         var cr = new ChannelReplacement(channel, uri);
         cr.replace(true,null);
         cr.open();
@@ -75,7 +73,6 @@ const HTTPS = {
     // Strategy 1: replace the parts of the old_uri piecewise.  Often this
     // works.  In some cases it doesn't.
     this.log(NOTE,"Rewriting " + old_uri.spec + " -> " + new_uri.spec + "\n");
-    HTTPSEverywhere.instance.notifyObservers(old_uri, new_uri.spec);
 
     old_uri.scheme = new_uri.scheme;
     old_uri.userPass = new_uri.userPass;
@@ -129,6 +126,7 @@ const HTTPS = {
     var newuri = blob.newuri;
 
     try {
+      HTTPSEverywhere.instance.notifyObservers(uri, newuri.spec);
       if (this.rewriteInPlace(uri, newuri)) 
         this.log(INFO,"Forced URI " + uri.spec);
       return true;
@@ -302,7 +300,7 @@ const HTTPS = {
     }
 
     if (cs) {
-      Array.prototype.push.apply(
+      dcookies.push.apply(
         dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") } })
          .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name }) })
       );
@@ -360,33 +358,6 @@ const HTTPS = {
       : this._globalUnsafeCookies = value;
   },
   
-  shouldForbid: function(site) {
-    switch(this.allowHttpsOnly) {
-      case 0:
-        return false;
-      case 1:
-        return /^(?:ht|f)tp:\/\//.test(site) && this.isProxied(site);
-      case 2:
-        return /^(?:ht|f)tp:\/\//.test(site);
-    }
-    return false;
-  },
-  
-  isProxied: function(u) {
-    var ps = CC["@mozilla.org/network/protocol-proxy-service;1"].getService(CI.nsIProtocolProxyService);
-   
-    this.isProxied = function(u) {
-      try {
-        if (!(u instanceof CI.nsIURI)) {
-          u = IOS.newURI(u, null, null);
-        }
-        return ps.resolve(u, 0).type != "direct";
-      } catch(e) {
-        return false;
-      }
-    }
-  },
-  
   _getParent: function(req, w) {
     return  w && w.frameElement || DOM.findBrowserForNode(w || IOUtil.findWindow(req));
   }
@@ -402,11 +373,10 @@ const HTTPS = {
     });
     HTTPS.__defineSetter__(p, function(n) {
       v = n;
-      HTTPS.cookiesCleanup();
+      if (HTTPS.ready) HTTPS.cookiesCleanup();
       return v;
     });
   });
 })();
 
-
-
+HTTPS.ready = true;

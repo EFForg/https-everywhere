@@ -1,11 +1,23 @@
-<ruleset name="Lighttpd.net" default_off="CACert">
+<ruleset name="lighttpd.net" platform="cacert">
+
 	<target host="lighttpd.net" />
-	<target host="www.lighttpd.net" />
-	<target host="blog.lighttpd.net" />
-	<target host="redmine.lighttpd.net" />
-	<rule from="^http://www\.lighttpd\.net/" to="https://www.lighttpd.net/"/>
-	<rule from="^http://lighttpd\.net/" to="https://www.lighttpd.net/"/>
-	<rule from="^http://blog\.lighttpd\.net/" to="https://blog.lighttpd.net/"/>
-	<rule from="^http://redmine\.lighttpd\.net/" to="https://redmine.lighttpd.net/"/>
+	<target host="*.lighttpd.net" />
+
+
+	<securecookie host="^.*\.lighttpd\.net$" name=".*" />
+
+
+	<!--	Observed domains:
+
+			- blog
+			- download
+			- redmine
+			- wiki
+			- www
+			- xcache
+				-->
+	<rule from="^http://(\w+\.)?lighttpd\.net/"
+		to="https://$1lighttpd.net/"/>
+
 </ruleset>
 

@@ -1,8 +1,33 @@
-<ruleset name="Qualys">
-  <target host="qualys.com" />
-  <target host="www.qualys.com" />
-  <target host="community.qualys.com" />
+<!--
+	s3.amazonaws.com/qualys/ | d1dejaj6dcqv24.cloudfront.net
 
-  <rule from="^http://(?:www\.)?qualys\.com/" to="https://www.qualys.com/"/>
-  <rule from="^http://community\.qualys\.com/" to="https://community.qualys.com/"/>
+-->
+<ruleset name="Qualys (partial)">
+
+	<target host="qualys.com" />
+	<target host="*.qualys.com" />
+		<!--	Doesn't work.	-->
+		<exclusion pattern="^http://news\."/>
+
+	<!--	Observed cookies:
+
+			- \.
+			- browsercheck
+			- community
+					-->
+	<securecookie host="^.*\.qualys\.com$" name=".*"/>
+
+
+	<!--	Observed working subdomains:
+
+			- browsercheck
+			- community
+			- pci
+			- qualysguard
+			- seal
+			- www
+				-->
+	<rule from="^http://(\w+\.)?qualys\.com/"
+		to="https://$1qualys.com/"/>
+
 </ruleset>

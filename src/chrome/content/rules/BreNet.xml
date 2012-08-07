@@ -1,0 +1,27 @@
+<!--
+	For problematic rules, see BreNet-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- piwik	(cert: vz46.brenet.de; shows that domain's data)
+
+-->
+<ruleset name="BreNet (partial)">
+
+	<target host="brenet.de" />
+	<target host="*.brenet.de" />
+	<!--	* for cross-domain cookies.  This won't break
+		webmail if it's used over http, and in the case
+		that https is used and that ruleset is off, it'll
+		encrypt cookies anyway, which would be a good thing.	-->
+	<target host="*.webmail.brenet.de" />
+
+
+	<securecookie host="^(.*\.)?brenet\.de$" name=".*" />
+
+
+	<rule from="^http://(www\.)?brenet\.de(:8443)?/"
+		to="https://$1brenet.de$2/" />
+
+</ruleset>

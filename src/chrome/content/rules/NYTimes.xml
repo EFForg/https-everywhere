@@ -1,12 +1,109 @@
-<ruleset name="NYTimes">
-  <target host="*.nytimes.com" />
-  <target host="nytimes.com" />
+<!--
+	Nonfunctional:
 
-  <exclusion pattern="^http://(?:www\.)?nytimes\.com/roomfordebate"/>
-  <exclusion pattern="^http://(?:www\.)?nytimes\.com/(1[89]\d\d|200[0-4])/"/>
-  <exclusion pattern="^http://(?:www\.)?nytimes\.com/info/"/>
-  <exclusion pattern="^http://(?:www\.)?nytimes\.com/services/xml/rss/index.html"/>
+		- (www.)nytco.com
+		- documents.nytimes.com
 
-  <rule from="^http://(?:www\.)?nytimes\.com/" to="https://www.nytimes.com/"/>
-  <rule from="^http://global\.nytimes\.com/" to="https://global.nytimes.com/"/>
+-->
+<ruleset name="NYTimes (partial)">
+
+	<target host="boston.com"/>
+	<target host="*.boston.com"/>
+	<target host="bostonglobe.com"/>
+	<target host="*.bostonglobe.com"/>
+		<!--	!work
+			epaper cert: www.pressdisplay.com	-->
+		<exclusion pattern="http://(epaper|spiderbites)\.bostonglobe\.com/"/>
+	<target host="newyorktimes.com"/>
+	<target host="www.newyorktimes.com"/>
+	<target host="nyt.com"/>
+	<target host="*.nyt.com"/>
+	<target host="nytimes.com" />
+	<target host="*.blogs.nytimes.com"/>
+	<target host="markets.on.nytimes.com"/>
+	<target host="*.nytimes.com" />
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/roomfordebate"/>
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(1[89]\d\d|200[0-4])/"/>
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/info/"/>
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/services/xml/rss/index.html"/>
+		<!--
+			404s over https.
+
+			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+							-->
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler($|\?)" />
+
+
+	<securecookie host="^(.*\.)?boston\.com$" name=".*"/>
+	<securecookie host="^(.*\.)?bostonglobe\.com$" name=".*"/>
+	<!--
+		adxcs isn't needed on unsecurable pages.
+
+		Other cross-domain cookies:
+
+			- RMID
+
+			Used on mobile.
+					-->
+	<securecookie host="^\.nytimes\.com$" name="^(adxc\w|NYT-S)$" />
+	<securecookie host="^homedelivery\.nytimes\.com$" name=".*" />
+	<securecookie host="^markets\.on\.nytimes\.com$" name=".*"/>
+
+
+	<rule from="^http://(graphics\.|www\.)?boston\.com/"
+		to="https://$1boston.com/"/>
+
+	<!--	cache !work, cert: *.https.internapcdn.net	-->
+	<rule from="^http://cache\.boston\.com/"
+		to="https://graphics.boston.com/"/>
+
+	<rule from="^http://deals\.boston\.com/(favicon\.ico|signup|views/)"
+		to="https://deals.boston.com/$1"/>
+
+	<!--	weather !work.
+		This is what the server does, aside from https.	-->
+	<rule from="^http://weather\.boston\.com/"
+		to="https://www.boston.com/weather/"/>
+
+	<rule from="^http://(services\.)?bostonglobe\.com/"
+		to="https://$1bostonglobe.com/"/>
+
+	<!--	www: timeout	-->
+	<rule from="^http://www\.bostonglobe\.com/"
+		to="https://bostonglobe.com/"/>
+
+	<rule from="^http://(?:www\.)?newyorktimes\.com/"
+		to="https://www.nytimes.com/"/>
+
+	<rule from="^http://(?:www\.)?nyt(?:imes)?\.com/"
+		to="https://www.nytimes.com/"/>
+
+	<rule from="^http://(?:css|i1)\.nyt\.com/"
+		to="https://www.nytimes.com/"/>
+
+	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
+		to="https://www.nytimes.com/favicon.ico"/>
+
+	<rule from="^http://(global|homedelivery|myaccount|markets\.on|up)\.nytimes\.com/"
+		to="https://$1.nytimes.com/"/>
+
+	<rule from="^http://graphics\d\.nytimes\.com/"
+		to="https://www.nytimes.com/"/>
+
+	<rule from="^http://jobmarket\.nytimes\.com/(adx|images)/"
+		to="https://www.nytimes.com/$1/"/>
+
+	<!--	travel.nytimes.com doesn't work, but articles
+		on travel appear to be on www too.
+		Ditto for adverts and scripts.		-->
+	<rule from="^http://travel\.nytimes\.com/(\d{4}/\d\d/\d\d|adx|js)/"
+		to="https://www.nytimes.com/$1/"/>
+
+	<!--	404s over https.
+
+		https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+							-->
+	<rule from="^https://www\.nytimes\.com/svc/community/V3/requestHandler($|\?)"
+		to="http://www.nytimes.com/svc/community/V3/requestHandler$1" downgrade="1" />
+
 </ruleset>

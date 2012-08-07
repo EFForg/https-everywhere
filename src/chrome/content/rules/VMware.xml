@@ -1,0 +1,40 @@
+<!--
+	s3.amazonaws.com/vmware-partnerpedia-production/product/NNNN/
+
+-->
+<ruleset name="VMware (partial)">
+
+	<target host="vmware.com" />
+	<target host="*.vmware.com" />
+		<!--	communities: Akamai; "An error occurred"
+			info is handled in Eloqua-clients.xml.
+			kb times out.	-->
+		<exclusion pattern="^http://(communities|forum|info|kb)\." />
+
+
+	<!--	Observed cookie domains:
+
+			- /
+			- ^.
+			- ^campaign
+			- ^downloads
+			- ^my
+			- ^solutionexchange
+			- ^www
+					-->
+	<securecookie host="^(.*\.)?vmware\.com$" name=".*" />
+
+
+	<!--	Observed subdomains:
+
+			- campaign
+			- download3
+			- downloads
+			- my
+			- solutionexchange
+			- www
+				-->
+	<rule from="^http://(\w+\.)?vmware\.com/"
+		to="https://$1vmware.com/" />
+
+</ruleset>

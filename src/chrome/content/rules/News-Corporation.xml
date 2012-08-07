@@ -1,0 +1,110 @@
+<!--
+	Other News Corporation rulesets:
+
+		- Marketwatch.com.xml
+		- News-Corporation-mismatches.xml
+
+
+	a248.e.akamai.net/f/1731/67675/12h/(m|s[1-4i]?).wsj.net/
+	s3.amazonaws.com/static.fins.com/
+
+	404:
+		www.foxnews.com/politics/
+
+	Nonfunctional:
+		- www.news.com.au	(Akamai; "Service Unavailable")
+		cs.wsj.net		(data also hosted on sc.wsj.net)
+		synccontent.wsj.com
+-->
+<ruleset name="News Corporation (partial)">
+
+	<target host="om.dowjoneson.com" />
+	<target host="efinancialnews.com"/>
+	<target host="www.efinancialnews.com"/>
+	<target host="factiva.com" />
+	<target host="*.factiva.com" />
+	<target host="fins.com"/>
+	<target host="www.fins.com"/>
+	<target host="secure.nypost.com"/>
+	<target host="*.wsj.com"/>
+	<target host="*.wsj.net"/>
+		<exclusion pattern="http://bc\.wsj\.net/"/>
+		<!--	Doesn't translate directly
+			to s2.wsj.net	-->
+		<exclusion pattern="^http://barrons\.wsj\.net/djstyle/" />
+	<target host="services.wsje.com"/>
+	<target host="s.smartmoney.net" />
+	<target host="sc.smartmoney.net" />
+	<target host="secure.smartmoney.net" />
+	<target host="wsjeuropesubs.com"/>
+	<target host="*.wsjeuropesubs.com"/>
+	<target host="wsjsafehouse.com"/>
+	<target host="*.wsjsafehouse.com"/>
+
+
+	<securecookie host="^.*\.factiva\.com$" name=".*" />
+	<securecookie host="^secure\.nypost\.com$" name=".*"/>
+	<securecookie host="^secure\.smartmoney\.com$" name=".*" />
+	<securecookie host="^(classifieds|customerceter)\.wsj\.com$" name=".*"/>
+	<securecookie host="^services\.wsje?\.com$" name=".*"/>
+	<securecookie host="^(.*\.)?wsj(eurosubs|safehouse)\.com$" name=".*"/>
+
+
+	<rule from="^https?://om\.dowjoneson\.com/"
+		to="https://djglobal.122.2o7.net/"/>
+
+	<rule from="^http://(www\.)?efinancialnews\.com/(about-us/tour/|css/|img/|js/|login/|forgot-password|register)"
+		to="https://$1efinancialnews.com/$2"/>
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^https?://factiva\.com/"
+		to="https://www.factiva.com/" />
+
+	<rule from="^http://(global|www)\.factiva\.com/"
+		to="https://$1.factiva.com/" />
+
+	<rule from="^http://(?:www\.)?fins\.com/Finance/(css/|Images/)"
+		to="https://www.fins.com/Finance/$1"/>
+
+	<rule from="^http://secure\.nypost\.com/"
+		to="https://secure.nypost.com/"/>
+
+	<rule from="^http://(charts|m1|s)\.smartmoney\.net/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.smartmoney.net/" />
+
+	<rule from="^http://sc\.smartmoney\.net/css/cssDependencies/hat-icons\.css"
+		to="https://sc.wsj.net/" />
+
+	<rule from="^http://secure\.smartmoney\.net/"
+		to="https://secure.smartmoney.net/" />
+
+	<rule from="^http://\w+\.wsj\.com/(favicon\.ico|img/|j20type\.css|static_html_files/)"
+		to="https://s.wsj.net/$1"/>
+
+	<rule from="^http://(classifieds|customercenter)\.wsj\.com/"
+		to="https://buy.wsj.com/"/>
+
+	<rule from="^http://services\.wsj(e)?\.com/"
+		to="https://services.wsj$1.com/"/>
+
+	<rule from="^http://barrons\.wsj\.net/"
+		to="https://s2.wsj.net/"/>
+
+	<rule from="^http://(m|s[1-4i]?)?\.wsj\.net/"
+		to="https://$1.wsj.net/"/>
+
+	<!--	Akamai
+		Some of this is also on secure.marketwatch.com.	-->
+	<rule from="^https?://mw(\d)\.wsj\.net/([mM][wW])5/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/mw$1.wsj.net/$25/" />
+
+	<rule from="^http://sc\.wsj\.net/css/(cssDependencies/hat-icons|standalone_partner_hat|teublog|wsjblog(?:_global(?:_2|_static)?)?)\.css"
+		to="https://sc.wsj.net/css/$1.css"/>
+
+	<rule from="^http://(www\.)?wsjeuropesubs\.com/"
+		to="https://$1wsjeuropesubs.com/"/>
+
+	<rule from="^http://(?:www\.)?wsjsafehouse\.com/"
+		to="https://www.wsjsafehouse.com/"/>
+
+</ruleset>

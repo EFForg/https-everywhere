@@ -1,14 +1,35 @@
-<ruleset name="Hidemyass">
-	<target host="hidemyass.com" />
-	<target host="www.hidemyass.com" />
-	<target host="1.hidemyass.com" />
-	<target host="2.hidemyass.com" />
-	<target host="3.hidemyass.com" />
-	<target host="4.hidemyass.com" />
-	<target host="5.hidemyass.com" />
+<!--
+	Nonfunctional subdomains:
+
+		- blog		(cert: hidemyass.com; shows that domain's data)
+		- forum		(ditto)
+
+-->
+<ruleset name="Hide My Ass (partial)">
+
+	<target host="hidemyass.com"/>
+	<target host="*.hidemyass.com"/>
+
 	
-	<securecookie host="^(.+\.)?hidemyass\.com$" name=".*"/>
-	
-	<rule from="^http://(?:www\.)?hidemyass\.com/" to="https://hidemyass.com/"/>
-	<rule from="^http://(1|2|3|4|5)\.hidemyass\.com/" to="https://$1.hidemyass.com/"/>
+	<!--	Observed cookie domains:
+
+			- ^.
+			- ^affiliate
+					-->
+	<securecookie host="^(.*\.)?hidemyass\.com$" name=".*"/>
+
+
+	<!--	cert !valid for !www	-->
+	<rule from="^http://(?:www\.)?hidemyass\.com/"
+		to="https://hidemyass.com/"/>
+
+	<rule from="^http://(\d+)\.hidemyass\.com/"
+		to="https://$1.hidemyass.com/"/>
+
+	<rule from="^http://affiliate\.hidemyass\.com/"
+		to="https://affiliate.hidemyass.com/" />
+
+	<rule from="^http://static\.hidemyass\.com/"
+		to="https://hidemyass.cachefly.net/"/>
+
 </ruleset>

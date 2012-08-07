@@ -1,6 +1,37 @@
-<ruleset name="Amnesty-International">
-  <target host="www.amnesty.org" />
-  <target host="amnesty.org" />
+<!--
+	For problematic rules, see Amnesty-International-mismatches.xml.
 
-  <rule from="^http://(?:www\.)?amnesty\.org/" to="https://www.amnesty.org/"/>
+
+	d3soxcs9eo85xz.cloudfront.net
+
+
+	Nonfunctional:
+
+		- files.amnesty.org		(times out; not equivalent to www)
+		- web.amnesty.org		(ssl_error_rx_record_too_long)
+		- pthblog.amnesty.org.uk
+		- tv.amnesty.org.uk
+
+-->
+<ruleset name="Amnesty International (partial)">
+
+	<target host="amnesty.org" />
+	<target host="www.amnesty.org" />
+	<target host="amnesty.org.uk" />
+	<target host="*.amnesty.org.uk" />
+
+
+	<securecookie host="^(.*\.)?amnesty\.org\.uk$" name=".*" />
+
+
+	<rule from="^https?://(?:www\.)?amnesty\.org/"
+		to="https://www.amnesty.org/"/>
+
+	<rule from="^http://(protectthehuman\.|www2?\.)?amnesty\.org\.uk/"
+		to="https://$1amnesty.org.uk/" />
+
+	<!--	blogs has a valid certificate, but pages redirect to http.	-->
+	<rule from="^http://blogs\.amnesty\.org\.uk/"
+		to="https://d3soxcs9eo85xz.cloudfront.net/" />
+
 </ruleset>

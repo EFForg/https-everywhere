@@ -1,7 +1,84 @@
-<ruleset name="Siemens.com">
-	<target host="siemens.com" />
-	<target host="www.siemens.com" />
-	<rule from="^http://siemens\.com/" to="https://www.siemens.com/"/>
-	<rule from="^http://www\.siemens\.com/" to="https://www.siemens.com/"/>
+<!--
+	For problematic rules, see Siemens.com-mismatches.xml.
+
+
+	Nonfunctional:
+
+		- www.siemens.kz
+
+
+	There are *many* more country domains to add.
+
+-->
+<ruleset name="Siemens.com (partial)">
+
+	<target host="siemens.*" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.siemens.com" />
+	<target host="www.siemens.*" />
+	<target host="www.siemens.co.*" />
+	<target host="www.siemens.com.*" />
+
+
+	<securecookie host="^.*\.siemens\.com$" name=".*" />
+
+
+	<!--	!www doesn't exist.	-->
+	<rule from="^http://www\.siemens\.co\.id/"
+		to="https://www.siemens.co.id/" />
+
+	<!--	Cert: eshare-ext.siemens.com.sg
+		!www doesn't exist.
+		Redirects as so.	-->
+	<rule from="^https?://www\.siemens\.co\.jp/"
+		to="https://www.siemens.com/answers/jp/ja/" />
+
+	<!--	https times out.
+		!www doesn't exist.
+		Redirects like so.	-->
+	<rule from="^https?://www\.siemens\.co\.in/"
+		to="https://www.siemens.com/answers/in/en/" />
+
+	<!--	https doesn't work.
+		!www doesn't exist.
+		Redirects like so.	-->
+	<rule from="^https?://www\.siemens\.co\.kr/"
+		to="https://www.siemens.com/answers/kr/ko/" />
+
+	<rule from="^http://(w1\.|www\.)?siemens\.com/"
+		to="https://$1siemens.com/" />
+
+	<!--	!www doesn't exist.	-->
+	<rule from="^http://www\.siemens\.com\.(hk|mx)/"
+		to="https://www.siemens.com.$1/" />
+
+	<!--	Cert: eshare-ext.siemens.com.sg
+		!www doesn't exist.
+		Redirects like so.	-->
+	<rule from="^https?://www\.siemens\.com\.kw/"
+		to="https://w1.siemens.com/answers/kw/en/" />
+
+	<!--	Self-signed.
+		Redirects as so.	-->
+	<rule from="^https?://(?:www\.)?siemens\.hu/"
+		to="https://w1.siemens.com/answers/hu/hu/" />
+
+	<!--	https doesn't work.
+		Redirects as so.	-->
+	<rule from="^https?://(?:www\.)?siemens\.ie/"
+		to="https://w1.siemens.com/entry/ie/en/" />
+
+	<!--	https times out.
+		Redirects like so.	-->
+	<rule from="^https?://(?:www\.)?siemens\.it/"
+		to="https://www.siemens.com/entry/it/index.htm" />
+
+	<!--	https times out.
+		www doesn't exist.
+		Server *doesn't* redirect to .com, but this works,
+		and is close to what it does for other cctlds.	-->
+	<rule from="^https?://www\.siemens\.lv/"
+		to="https://w1.siemens.com/entry/lv/" />
+
 </ruleset>
 

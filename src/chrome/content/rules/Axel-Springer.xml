@@ -1,0 +1,38 @@
+<!--	Nonfunctional:
+		imworld.aufeminin.com		(Akamai)
+		media.news.aufeminin.com	(timeout)
+		www\d?.smartadserver.com	("Le fichier spécifié est introuvable.")
+						this directs to various ads
+-->
+<ruleset name="Axel Springer (partial)">
+
+	<target host="aufeminin.com"/>
+	<target host="*.aufeminin.com"/>
+		<exclusion pattern="^http://www\.aufeminin\.com/.+(\.asp$|/)"/>
+	<target host="ced.sascdn.com"/>
+	<target host="smartadserver.com"/>
+	<target host="*.smartadserver.com"/>
+
+
+	<securecookie host="^(im2|manage|www)\.smartadserver\.com$" name=".*"/>
+
+	<!--	pages redirect to http	-->
+	<rule from="^http://(?:www\.)?aufeminin\.com/(a/|[\w\W]+(?:\.(?:css|gif|ico|jpg|png)|\?lsh|v=[\d\.]+))"
+		to="https://www.aufeminin.com/$1"/>
+
+	<!--	302 to akamai.smartserver.com	-->
+        <rule from="^http://network\.aufeminin\.com/call/pubimppixel/\d{7}/\d+\??"
+                to="https://im2.smartserver.com/images/shim.gif"/>
+
+	<!--	every https URL redirects to shim.gif	-->
+	<rule from="^http://(?:www\.)?smartadserver\.com/(images/)?shim\.gif$"
+		to="https://www.smartadserver.com/$1shim.gif"/>
+
+	<!--	cert: Akamai.  Appears to be the same as above.	-->
+	<rule from="^http://(?:akamai\.smartadserver|ced\.sascdn)\.com/"
+		to="https://im2.smartserver.com/"/>
+
+	<rule from="^http://(im2|manage)\.smartadserver\.com/"
+		to="https://$1.smartadserver.com/"/>
+
+</ruleset>

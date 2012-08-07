@@ -1,0 +1,25 @@
+<!--
+	For rules that are on by default, see University-of-Stuttgart.xml.
+
+-->
+<ruleset name="University of Stuttgart (self-signed)" default_off="self-signed">
+
+	<target host="icp.uni-stuttgart.de" />
+	<target host="www.icp.uni-stuttgart.de" />
+
+
+	<securecookie host="^www\.icp\.uni-stuttgart\.de$" name=".*" />
+
+
+	<!--	This is what the server does over http.
+		Over https, it redirects to src/,
+		which probably isn't what's intended.
+			Don't mess with it if it's
+		already pointing to https though,
+		as that probably would be intended.	-->
+	<rule from="^http://(?:www\.)?icp\.uni-stuttgart\.de/$"
+		to="https://www.icp.uni-stuttgart.de/~icp/" />
+
+	<rule from="^http://(?:www\.)?icp\.uni-stuttgart\.de/"
+		to="https://www.icp.uni-stuttgart.de/" />
+</ruleset>

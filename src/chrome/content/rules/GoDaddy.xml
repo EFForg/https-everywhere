@@ -1,10 +1,47 @@
-<ruleset name="GoDaddy">
-  <target host="*.godaddy.com" />
-  <target host="godaddy.com" />
-  <target host="www.godaddymobile.com" />
-  <target host="godaddymobile.com" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(?:www\.)?godaddy\.com/" to="https://www.godaddy.com/"/>
-  <rule from="^http://(?:www\.)?godaddymobile\.com/" to="https://www.godaddymobile.com/"/>
-  <rule from="^http://(community|shops|who)\.godaddy\.com/" to="https://$1.godaddy.com/"/>
+		- video		(at least some pages redirect to http)
+
+-->
+<ruleset name="GoDaddy (partial)">
+
+	<target host="godaddy.com" />
+	<target host="*.godaddy.com" />
+	<target host="godaddymobile.com" />
+	<target host="www.godaddymobile.com" />
+	<target host="instantpage.me" />
+	<target host="*.instantpage.me" />
+	<target host="tdnam.com" />
+	<target host="www.tdnam.com" />
+
+
+	<securecookie host="^(.*\.)?godaddy\.com$" name=".*" />
+
+
+	<rule from="^http://((?:auctions|certs|community|idp|img|mya|seal|shops|who|www)\.)?godaddy\.com/"
+		to="https://$1godaddy.com/" />
+
+	<!--	At least some pages redirect to http.	-->
+	<rule from="^http://support\.godaddy\.com/(files|wp-content)/"
+		to="https://support.godaddy.com/$1/" />
+
+	<rule from="^http://(?:www\.)?godaddymobile\.com/"
+		to="https://www.godaddymobile.com/" />
+
+	<!--	- Times out over https
+		- Redirects like so over http.
+			-->
+	<rule from="^https?://instantpage\.me/"
+		to="https://www.godaddy.com/default.aspx" />
+
+	<!--	- Cert only matches admin
+		- www redirects like so over http
+				-->
+	<rule from="^https?://(?:admin|www)\.instantpage\.me/"
+		to="https://admin.instantpage.me/" />
+
+	<rule from="^http://(www\.)?tdnam\.com/"
+		to="https://$1tdnam.com/" />
+
 </ruleset>

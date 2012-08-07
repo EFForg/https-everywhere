@@ -1,0 +1,40 @@
+<!--
+	store-0ef21.mybigcommerce
+
+
+	Nonfunctional subdomains:
+
+		- assu			($ redirects to http; at least some paths 404)
+		- elections		("not yet configured")
+		- fairuse
+		- sse			("not yet configured")
+		- sselabs		(cert: assu-web.stanford.edu; "not yet configured")
+		- startx		("not yet configured")
+		- store			($ redirects to http; at least some paths 404)
+
+-->
+<ruleset name="Stanford University (partial)">
+
+	<target host="*.stanford.edu" />
+	<target host="*.slac.stanford.edu" />
+	<!--	* for cross-domain cookie	-->
+	<target host="*.news.slac.stanford.edu" />
+
+
+	<securecookie host="^(\.news\.slac\|weblogin).stanford\.edu$" name=".*" />
+
+
+	<rule from="^http://(assu-web|ccrma|crypto|cyberlaw|refunds|news\.slac|waivers|weblogin)\.stanford\.edu/"
+		to="https://$1.stanford.edu/" />
+
+	<!--	Cert isn't valid for !www	-->
+	<rule from="^https?://(?:www\.)?slac\.stanford\.edu/"
+		to="https://www.slac.stanford.edu/" />
+
+	<!--	- Cert isn't valid for www6
+		- When rewritten to www, redirects back
+					-->
+	<rule from="^https://www6\.slac\.stanford\.edu/"
+		to="http://www6.slac.stanford.edu/" downgrade="1" />
+
+</ruleset>

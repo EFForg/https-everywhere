@@ -1,0 +1,62 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+-->
+<ruleset name="National Science Foundation (partial)">
+
+	<target host="nsf.gov" />
+	<target host="*.nsf.gov" />
+		<exclusion pattern="^http://www\.nsf\.gov/($|\?|index\.jsp|awardsearch|statistics)" />
+	<target host="www.*.nsf.gov" />
+
+
+	<securecookie host="^.*\.nsf\.gov$" name=".*" />
+
+
+	<!--	These paths redirect to http:
+
+			- $
+			- awardsearch$
+			- awardsearch/$
+			- awardsearch/common/images/
+			- awardsearch/style/
+			- index.jsp$
+			- statistics/$
+			- statistics/about.cfm$
+			- statistics/css/
+			- statistics/graphics/
+			- statistics/profiles/$
+			- statistics/showpub.cfm
+
+		These paths don't (shh!):
+
+			- about
+			- awards
+			- bfa
+			- cgi-bin
+			- css
+			- discoveries
+			- email.jsp
+			- funding
+			- help
+			- images
+			- news
+			- oirm
+			- policies
+			- staff
+
+
+		Cert only matches www.
+						
+	<rule from="^https?://(?:www\.)?nsf\.gov/((?:about|awards|bfa|cgi-bin|css|discoveries|funding|help|images|news|oirm|policies|publications|staff)(?:$|/|\?)|email\.jsp)"
+		to="https://www.nsf.gov/$1" /-->
+
+	<rule from="^https?://(?:www\.)?nsf\.gov/"
+		to="https://www.nsf.gov/" />
+
+	<!--	Cert only matches www.foo	-->
+	<rule from="^https?://(?:www\.)?f(astlane|ldemo)\.nsf\.gov/"
+		to="https://www.f$1.nsf.gov/" />
+
+</ruleset>
+

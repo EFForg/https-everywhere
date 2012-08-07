@@ -1,20 +1,212 @@
-<ruleset name="Microsoft">
-  <target host="*.microsoft.com" />
-  <target host="microsoft.com" />
-  <target host="blogs.msdn.com" />
-  <target host="*.technet.microsoft.com" />
-  <target host="*.windowsupdate.microsoft.com" />
-  
-  <exclusion pattern="^http://www\.microsoft\.com/.*FamilyID" />
-  <!-- ironic -->
-  <exclusion pattern="^http://www\.microsoft\.com/security/" />
+<!--
+	For problematic rules, see Microsoft-mismatches.xml.
 
-  <rule from="^http://(?:www\.)?microsoft\.com/"
-	  to="https://www.microsoft.com/"/>
-  <rule from="^http://(adcenter|advertising|ajax|connect|go|ie|office|office365|office2010|onlinehelp|research|signature|snackbox|social|store|profile|msdn|(?:social\.)?technet|windowsupdate)\.microsoft\.com/"
-          to="https://$1.microsoft.com/"/>
-  <rule from="^http://(v4|v5)\.windowsupdate\.microsoft\.com/"
-          to="https://$1.windowsupdate.microsoft.com/" />
-  <rule from="^http://blogs\.msdn\.com/"
-	  to="https://blogs.msdn.com/"/>
+
+	Other Microsoft rulesets:
+
+		- Live.xml
+		- Microsoft-Atlas.xml
+		- MSN.com.xml
+		- MSN-Extra.xml
+		- Newsvine.com.xml
+		- Photosynth.xml
+		- Technet.com.xml
+
+
+	msnportalmobileisv.112.2o7.net
+
+
+	Nonfunctional:
+
+		- bing.com:
+			az/			(redirects to http)
+			HPImageArchive.aspx	(ditto); !in fd/
+			images/			(ditto)
+			notifications/		(ditto); !in fd/
+			sa/			(ditto); !in fd/
+			s/			(some ditto)
+			thumb/			(ditto)
+		- db3.api.bing.com		(cert: bing.com; blank page)
+		- messenger.services.live.com
+		- download.microsoft.com	(Akamai; 503)
+		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
+		- visio.microsoft.com		(cert valid; ditto)
+		- (www.)windows.microsoft.com	(cert valid; 404)
+		- res[12].windows.microsoft.com	(cert: *.sharepointonline.com; 404; also on origin-res.windows.microsoft.com)
+		- www.wlmessenger.net
+
+-->
+<ruleset name="Microsoft (partial)">
+
+	<target host="acikakademi.com" />
+	<target host="www.acikakademi.com" />
+	<target host="ajax.aspnetcdn.com" />
+	<target host="bing.com" />
+	<target host="*.bing.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.c.bing.com" />
+	<target host="dreamspark.com" />
+	<target host="www.dreamspark.com" />
+	<target host="imaginecup.com" />
+	<target host="www.imaginecup.com" />
+	<target host="microsoft.com" />
+	<target host="*.microsoft.com" />
+		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html	-->
+		<exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" />
+		<!--	Redirects via JS to http.  Very secure indeed.	-->
+		<exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx($|\?)" />
+		<!--     Microsoft won't serve OEM pages on https -->
+    		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
+		<!--	https://trac.torproject.org/projects/tor/ticket/5754	-->
+		<exclusion pattern="^http://msdn\.microsoft\.com/($|en-us/$|.+(/$|\.aspx|/\w\w\d{6,10}$))" />
+		<exclusion pattern="^https?://blogs\.msdn\.com/.*\?Redirected=true" />
+	<target host="social.expression.microsoft.com" />
+	<!--	Akamai	-->
+	<target host="*.msdn.microsoft.com" />
+	<target host="*.code.msdn.microsoft.com" />
+	<!--	* for cross-domain cookie	-->
+	<target host="*.office.microsoft.com" />
+	<target host="*.onlinehelp.microsoft.com" />
+	<target host="*.social.microsoft.com" />
+	<target host="services.social.microsoft.com" />
+	<target host="*.services.social.microsoft.com" />
+	<target host="*.technet.microsoft.com" />
+	<target host="*.gallery.technet.microsoft.com" />
+	<target host="*.windows.microsoft.com" />
+	<target host="*.windowsupdate.microsoft.com" />
+	<target host="www.*.microsoft.com" />
+	<target host="microsoftstore.com" />
+	<target host="*.microsoftstore.com" />
+	<target host="*.microsoftstoreassets.com" />
+	<target host="external.microsoftstoreservices.com" />
+	<target host="*.msdn.com" />
+	<!--	Akamai	-->
+	<target host="i1.blogs.msdn.com" />
+	<target host="create.msdn.com" />
+	<target host="*.create.msdn.com" />
+	<target host="*.social.s-msft.com" />
+		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/" />
+	<target host="ecn.dev.virtualearth.net" />
+
+
+	<securecookie host="^www\.acikakademi\.com$" name=".*" />
+	<securecookie host="^(\.c|ssl)\.bing\.com$" name=".*" />
+	<securecookie host="^www\.dreamspark\.com$" name=".*" />
+	<!--	cookies set by c.microsoft.com		-->
+	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
+	<securecookie host="^www\.microsoft\.com$" name=".*" />
+	<securecookie host="^blogs\.msdn\.com$" name=".*" />
+	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
+
+
+	<!--	- Cert only matches www
+		- !www redirects to www over http
+					-->
+	<rule from="^https?://(?:www\.)?acikakademi\.com/"
+		to="https://www.acikakademi.com/" />
+
+	<rule from="^http://ajax\.aspnetcdn\.com/"
+		to="https://ajax.aspnetcdn.com/"/>
+
+	<!--	- Cert doesn't match www
+		- Some s/ paths work, others not.
+		- fa/s/ is equivalent and fd/ seems to work always, so redirect there.
+		- /bing and /ssl.bing are the same here, but ssl has an EV.
+					-->
+	<rule from="^https?://(?:www\.)?bing\.com/(?:fd/|(s/))"
+		to="https://ssl.bing.com/fd/$1" />
+
+	<!--	c:	tracking beacon		-->
+	<rule from="^http://(c|ssl)\.bing\.com/"
+		to="https://$1.bing.com/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?dreamspark\.com/"
+		to="https://www.dreamspark.com/" />
+
+	<!--	- Cert only matches www.
+		- Many paths redirect to http or a login page.
+		- There may be more than are matched here that don't.
+				-->
+	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
+		to="https://www.imaginecup.com/$1" />
+
+	<rule from="^https?://microsoft\.com/"
+		to="https://www.microsoft.com/" />
+
+	<rule from="^http://(adcenter|advertising|ajax|c|connect|events|social\.expression|go|ie|msdn|office(?:365|2010)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|social\.technet|www\.update|windowsupdate|www)\.microsoft\.com/"
+		to="https://$1.microsoft.com/" />
+
+	<!--	Akamai with no valid cert.
+			Where's the bucket?	-->
+	<rule from="^https?://(?:i\d?|js)\.microsoft\.com/"
+		to="https://www.microsoft.com/" />
+
+	<!--	Akamai with no valid cert.
+			Where's the bucket?	-->
+	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
+		to="https://$1.microsoft.com/" />
+
+	<!--	Attempted workaround for
+
+		https://trac.torproject.org/projects/tor/ticket/5754
+				-->
+	<rule from="^https?://blogs\.msdn\.com/(.*(?:\.aspx|\.xml|/))?$"
+		to="https://blogs.msdn.com/$1?Redirected=true" />
+
+	<!--	Akamai	-->
+	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
+		to="https://www.microsoft.com/$1/" />
+
+	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
+		to="https://support.microsoft.com/$1" />
+
+	<!--	- res[12] appear to be identical
+		- Cert: *.sharepointonline.com
+		- Display blank page
+			-->
+	<rule from="^https?://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
+		to="https://origin-res.windows.microsoft.com/" />
+
+	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
+		to="https://social.technet.microsoft.com/" />
+
+	<!--	Cert doesn't match /update.	-->
+	<rule from="^https?://update\.microsoft\.com/"
+		to="https://www.update.microsoft.com/" />
+
+	<rule from="^http://v([45])\.windowsupdate\.microsoft\.com/"
+		to="https://v$1.windowsupdate.microsoft.com/" />
+
+	<rule from="^https?://(?:www\.)?microsoftstore\.com/"
+		to="https://www.microsoftstore.com/" />
+
+	<rule from="^http://emea\.microsoftstore\.com/(\w+)/(desktopdefault\.aspx|portaldata/|services/|tags.axd)"
+		to="https://emea.microsoftstore.com/$1/$2" />
+
+	<rule from="^http://assets-(\d)\.microsoftstoreassets\.com/"
+		to="https://assets-$1.microsoftstoreassets.com/" />
+
+	<rule from="^http://external\.microsoftstoreservices\.com/"
+		to="https://external.microsoftstoreservices.com/" />
+
+	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
+		to="https://$1.msdn.com/" />
+
+	<!--	- Cert doesn't match !www
+		- www pages redirect to !www
+		- Cert doesn't match public
+						-->
+	<rule from="^https?://(?:public\.)?create\.msdn\.com/assets/"
+		to="https://www.create.msdn.com/assets/" />
+
+	<rule from="^http://(profile|www)\.create\.msdn\.com/"
+		to="https://$1.create.msdn.com/" />
+
+	<rule from="^https?://i\d\.social\.s-msft\.com/"
+		to="https://social.expression.microsoft.com/" />
+
+	<rule from="^http://ecn\.dev\.virtualearth\.net/"
+		to="https://ecn.dev.virtualearth.net/" />
+
 </ruleset>

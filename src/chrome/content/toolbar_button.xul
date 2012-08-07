@@ -8,6 +8,11 @@
 
 <overlay id="https-everywhere-button-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://https-everywhere/content/toolbar_button.js"/>
+  
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="HttpsEverywhereStrings"
+      src="chrome://https-everywhere/locale/https-everywhere.properties" />
+    </stringbundleset>
 
   <!-- this works in Firefox, we need a Seamonkey version too... -->
   <menupopup id="menu_ToolsPopup" onpopupshowing="stitch_context_menu()">
@@ -27,6 +32,7 @@
       id="https-everywhere-button"
       class="toolbarbutton-1 chromeclass-toolbar-additional"
       tooltiptext="&https-everywhere.about.ext_name;"
+      label="HTTPS"
       context="https-everywhere-context-menu"
       oncontextmenu="this.open = true;"
       oncommand="this.open = true;"
@@ -42,12 +48,14 @@
     </toolbarbutton>
   </toolbarpalette>
   <commandset>
+    <command id="https-everywhere-menuitem-globalEnableToggle"
+      oncommand="toggleEnabledState();" />
     <command id="https-everywhere-menuitem-preferences"
-      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/preferences.xul');" />
+      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/preferences.xul', 'chrome,centerscreen,resizable=yes');" />
     <command id="https-everywhere-menuitem-about"
       oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/about.xul');" />
     <command id="https-everywhere-menuitem-observatory"
-      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/observatory-preferences.xul');" />
+      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/observatory-preferences.xul', 'chrome,centerscreen,resizable=yes');" />
     <command id="https-everywhere-menuitem-donate-eff" 
       oncommand="open_in_tab('https://www.eff.org/donate');" />
     <command id="https-everywhere-menuitem-donate-tor" 

@@ -1,0 +1,35 @@
+<ruleset name="123-reg">
+
+	<target host="123-reg.co.uk" />
+	<target host="*.123-reg.co.uk" />
+	<target host="ssllin1.123-secure.com" />
+
+
+	<securecookie host="^.*\.123-reg\.co\.uk$" name=".*" />
+
+
+	<!--	Cert: fusion.webfusion-secure.co.uk, redirects
+		to www.webfusion.co.uk/support/ over https.
+
+		Redirects as follows over http.
+
+		NB: This rule must remain above the next one.
+				-->
+	<rule from="^https?://inside\.123-reg\.co\.uk/"
+		to="https://www.123-reg.co.uk/blog/" />
+
+	<!--	Observed subdomains:
+
+			- img1
+			- img2
+			- static
+			- webmail
+			- www
+				-->
+	<rule from="^http://(\w+\.)?123-reg\.co\.uk/"
+		to="https://$1123-reg.co.uk/" />
+
+	<rule from="^http://ssllin1\.123-secure\.com/"
+		to="https://ssllin1.123-secure.com/" />
+
+</ruleset>

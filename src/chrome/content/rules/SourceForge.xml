@@ -1,6 +1,57 @@
-<ruleset name="Source Forge (partial)">
-  <target host="lists.sourceforge.net" />
+<!--
+	For problematic rules, see SourceForge-mismatches.xml.
 
-  <rule from="^http://lists\.sourceforge\.net/"
-	  to="https://lists.sourceforge.net/" />
+
+	Note that SourceForge supports blanket https
+	use, but only for members who are logged in.
+
+
+	Nonfunctional domains:
+
+		- p.sf.net			(reset)
+		- heanet.dl.sourceforge.net
+		- netcologne.dl.sourceforge.net
+		- switch.dl.sourceforge.net
+		- html5center.sourceforge.net
+		- p.sourceforge.net		(cert: *.sf.net; reset)
+
+-->
+<ruleset name="SourceForge (partial)">
+
+	<target host="sf.net" />
+	<target host="*.sf.net" />
+	<target host="*.svn.sf.net" />
+	<target host="sourceforge.jp" />
+	<target host="sourceforge.net" />
+	<target host="*.sourceforge.net" />
+	<target host="*.svn.sourceforge.net" />
+		<!--	Redirects to http
+		<exclusion pattern="^http://\w+\.svn\.s(?:f|ourceforge)\.net/viewvc/" /-->
+	<target host="*.sourceforge.jp" />
+
+
+	<securecookie host="^downloads\.sourceforge\.net$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?(?:sf|sourceforge)\.(?:jp|net)/(account|image)s/"
+		to="https://sourceforge.net/$1s/" />
+
+	<rule from="^http://(?:www\.)?(?:sf|sourceforge)\.net/sflogo\.php"
+		to="https://sourceforge.net/sflogo.php" />
+
+	<rule from="^http://(apps|images|lists|prdownloads|sflogo|static)\.(?:sf|sourceforge)\.(?:jp|net)/"
+		to="https://$1.sourceforge.net/" />
+
+	<rule from="^http://downloads\.s(?:f|ourceforge)\.net/project/([^\?]+)\?r=http%3A%2F%2Fs"
+		to="https://downloads.sourceforge.net/project/$1?r=https%3A%2F%2Fs" />
+
+	<!--	jobs.sourceforge.net is equivalent to slashdot.personforce.com,
+		but cert doesn't match that domain either.	-->
+	<rule from="^https?://jobs\.sourceforge\.net/(build|images|include)/"
+		to="https://secure.personforce.com/$1/" />
+
+	<!--	Cert only matches *.svn.sourceforge.net	-->
+	<rule from="^http://(\w+)\.svn\.s(?:f|ourceforge)\.net/svnroot/"
+		to="https://$1.svn.sourceforge.net/svnroot/" />
+
 </ruleset>

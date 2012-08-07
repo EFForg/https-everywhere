@@ -1,0 +1,66 @@
+<!--	Nonfunctional
+		(www.)channelbiz.(co.uk|es|it)		(plesk default page)
+		(www.)channelbiz.de			(displays "Bart")
+		(www.)channelbiz.fr			(redirects to http www)
+		(www.)downsoft.com			(reset)
+		(www.)gizmodo.fr			(cert: plesk; blank)
+		(telecharger|www).itespresso.fr		(reset; !www presents plesk cert and redirects to www)
+		(www.)itespresso.de			(www resets; !www displays "Bart")
+		(www.)itespresso.(es|it)		(plesk default page)
+		(www.)netmediaeurope.com		(plesk default page)
+		subscriber.netmediaeurope.com		(timeout)
+		(www.)netmediaeurope.es			(cert: www.soul-bcn-shop.com, expired; Apache test page)
+		www.netmediaeurope.fr			(reset)
+		fr.netmediaeurope.com			(timeout)
+		www.silicon.fr				(reset; !www pages redirect to www)
+		((news|static|www).)?techeye.net	(timeout)
+		techweekeurope.co.uk			(plesk default page)
+		www.techweekeurope.co.uk		(reset)
+		theinquirer.fr				(cert: plesk; pages redirect to www)
+		
+
+-->
+<ruleset name="NetMediaEurope" default_off="expired, mismatch">
+
+	<target host="quiz.itespresso.fr"/>
+	<!--	plesk	-->
+	<target host="itespresso.fr"/>
+	<target host="*.itespresso.fr"/>
+	<target host="netmediaeurope.co.uk"/>
+	<target host="www.netmediaeurope.co.uk"/>
+	<target host="netmediaeurope.fr"/>
+	<target host="www.netmediaeurope.fr"/>
+	<target host="silicon.fr"/>
+	<target host="www.silicon.fr"/>
+	<target host="resourcecentre.techweekeurope.co.uk"/>
+	<target host="techweekeurope.fr"/>
+	<target host="www.techweekeurope.fr"/>
+	<target host="theinquirer.fr"/>
+	<target host="www.theinquirer.fr"/>
+
+	<securecookie host="^quiz\.itespresso\.fr$" name=".*"/>
+	<securecookie host="^resourcecentre\.techweekeurope\.co\.uk$" name=".*"/>
+
+	<!-- !www pages redirect to www	-->
+	<rule from="^http://(?:www\.)?(itespresso|silicon|theinquirer)\.fr/(favicon\.ico|wp-(?:content|includes)/)"
+		to="https://$1.fr/$2"/>
+
+	<rule from="^http://quiz\.itespresso\.fr/"
+		to="https://quiz.itespresso.fr/"/>
+
+	<!--	!www redirects to www	-->
+	<rule from="^http://(?:www\.)?netmediaeurope\.co\.uk/"
+		to="https://www.netmediaeurope.co.uk/"/>
+
+	<!--	www resets	-->
+	<rule from="^http://(?:www\.)?netmediaeurope\.fr/"
+		to="https://netmediaeurope.fr/"/>
+
+	<rule from="^http://resourcecentre\.techweekeurope\.co\.uk/"
+		to="https://resourcecentre.techweekeurope.co.uk/"/>
+
+	<rule from="^http://(?:www\.)?techweekeurope\.fr/"
+		to="https://techweekeurope.fr/"/>
+
+</ruleset>
+		

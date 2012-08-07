@@ -1,41 +1,48 @@
-<ruleset name="GMX" match_rule="http:.*gmx\.">
-  <target host="www.gmx.*" />
-  <target host="gmx.*" />
-  <target host="www.gmx.co.uk" />
-  <target host="gmx.co.uk" />
-  <target host="service.gmx.com" />
-  <target host="service.gmx.net" />
-  <target host="help.gmx.com" />
-  <target host="storage-file-eu.gmx.com" />
+<ruleset name="GMX">
 
-  <!-- in countries like se, it, ca, and ru, www.gmx.cctld redirects
-       to www.gmx.com; we may as well secure that a bit but it should
-       work regardless of whether we got all of these countries -->
+	<target host="www.gmx.*"/>
+	<target host="gmx.*"/>
+	<target host="www.gmx.co.uk"/>
+	<target host="gmx.co.uk"/>
+	<target host="*.gmx.com"/>
+	<target host="*.gmx.net"/>
+	<target host="img.ui-portal.de"/>
 
-  <rule from="^http://(?:www\.)?gmx\.(?:se|it|ca|ru)/"
-          to="https://www.gmx.com/" />
+	<rule from="^http://(img|js|sec-10)\.gmx\.net/"
+		to="https://$1.gmx.net/"/>
 
-  <!-- In these domains GMX supports SSL right at the homepage -->
-  <!-- https://gmx.com appears to work but hopefully redirecting away won't
-  break anything.-->
+	<rule from="^http://img\.ui-portal\.de/"
+		to="https://img.ui-portal.de/"/>
 
-  <rule from="^http://(www\.)?gmx\.(fr|co\.uk|ch|at|com|net)/"
-          to="https://www.gmx.$2/" />
+	<!-- in countries like se, it, ca, and ru, www.gmx.cctld redirects
+		to www.gmx.com; we may as well secure that a bit but it should
+		work regardless of whether we got all of these countries -->
 
-  <!-- gmx.de lives at gmx.net -->
+	<rule from="^http://(?:www\.)?gmx\.(?:ca|it|se|ru)/"
+		to="https://www.gmx.com/"/>
 
-  <rule from="^http://(?:www\.)?gmx\.de/"
-          to="https://www.gmx.net/" />
+	<!-- In these domains GMX supports SSL right at the homepage	-->
+	<!-- https://gmx.com appears to work but hopefully redirecting away won't
+	break anything.	-->
 
-  <!-- a lot of the back-end work is reportedly done by service.gmx.* -->
+	<rule from="^http://(?:www\.)?gmx\.(at|ch|com|co\.uk|fr|net)/"
+		to="https://www.gmx.$1/"/>
 
-  <rule from="^http://service\.gmx\.(com|net)/"
-          to="https://service.gmx.$1/" />
+	<!-- gmx.de lives at gmx.net -->
 
-  <rule from="^http://help\.gmx\.com/"
-          to="https://help.gmx.com/" />
+	<rule from="^http://(?:www\.)?gmx\.de/"
+		to="https://www.gmx.net/" />
+
+	<!-- a lot of the back-end work is reportedly done by service.gmx.* -->
+
+	<rule from="^http://service\.gmx\.(com|net)/"
+		to="https://service.gmx.$1/"/>
+
+	<rule from="^http://help\.gmx\.com/"
+		to="https://help.gmx.com/"/>
 	
-   <!-- Gmx file storage service (WebDAV) -->
-  <rule from="^http://storage-file-eu\.gmx\.com/"
-          to="https://storage-file-eu.gmx.com/" />
+	 <!--	Gmx file storage service (WebDAV)	-->
+	<rule from="^http://storage-file-eu\.gmx\.com/"
+		to="https://storage-file-eu.gmx.com/"/>
+
 </ruleset>

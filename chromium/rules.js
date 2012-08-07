@@ -1,11 +1,11 @@
 function Rule(from, to) {
-  this.from = from;
+  //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
 
 function Exclusion(pattern) {
-  this.pattern = pattern;
+  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
@@ -16,7 +16,7 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
-function RuleSet(set_name, match_rule) {
+function RuleSet(set_name, match_rule, default_state) {
   this.name = set_name;
   if (match_rule)
     this.ruleset_match_c = new RegExp(match_rule);
@@ -26,7 +26,8 @@ function RuleSet(set_name, match_rule) {
   this.exclusions = [];
   this.targets = [];
   this.cookierules = [];
-  this.active = true; // XXX: prefs?
+  this.active = default_state;
+  this.default_state = default_state
 }
 
 RuleSet.prototype = {
@@ -83,46 +84,68 @@ function RuleSets() {
 }
 
 RuleSets.prototype = {
+  localPlatformRegexp: new RegExp("chromium"),
+ 
   loadRuleSet: function(xhr) {
     // Get file contents
-    if (xhr.readyState == 4) {
-      // XXX: Validation + error checking
-      var ruletag = xhr.responseXML.getElementsByTagName('ruleset')[0];
-      
-      if (ruletag.attributes.default_off) { return; }
+    if (xhr.readyState != 4) {
+      return;
+    }
 
-      var rule_set = new RuleSet(ruletag.getAttribute('name'),
-                                 ruletag.getAttribute('match_rule'));
-
-      var rules = xhr.responseXML.getElementsByTagName('rule');
-      for(var j = 0; j < rules.length; j++) {
-        rule_set.rules.push(new Rule(rules[j].getAttribute('from'),
-                                      rules[j].getAttribute('to')));
-      }
-
-      var exclusions = xhr.responseXML.getElementsByTagName('exclusions');
-      for(var j = 0; j < exclusions.length; j++) {
-        rule_set.exclusions.push(
-              new Exclusion(exclusions[j].getAttribute('pattern')));
-      }
-
-      var cookierules = xhr.responseXML.getElementsByTagName('securecookie');
-      for(var j = 0; j < cookierules.length; j++) {
-        rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute('host'),
-                                             cookierules[j].getAttribute('name')));
-      }
-
-      var targets = xhr.responseXML.getElementsByTagName('target');
-      for(var j = 0; j < targets.length; j++) {
-         var host = targets[j].getAttribute('host');
-         if (!(host in this.targets)) {
-           this.targets[host] = [];
-         }
-         this.targets[host].push(rule_set);
-      }
+    // XXX: Validation + error checking
+    var sets = xhr.responseXML.getElementsByTagName("ruleset");
+    for (var i = 0; i < sets.length; ++i) {
+      this.parseOneRuleset(sets[i]);
     }
   },
+  parseOneRuleset: function(ruletag) {
+    var default_state = true;
+    if (ruletag.attributes.default_off) { default_state = false; }
 
+    // If a ruleset declares a platform, and we don't match it, treat it as
+    // off-by-default
+    var platform = ruletag.getAttribute("platform");
+    if (platform) 
+      if (platform.search(this.localPlatformRegexp) == -1)
+        default_state = false;
+
+    var rule_set = new RuleSet(ruletag.getAttribute("name"),
+                               ruletag.getAttribute("match_rule"),
+                               default_state);
+
+    // Read user prefs
+    if (rule_set.name in localStorage) {
+      rule_set.active = (localStorage[rule_set.name] == "true");
+    }
+
+    var rules = ruletag.getElementsByTagName("rule");
+    for(var j = 0; j < rules.length; j++) {
+      rule_set.rules.push(new Rule(rules[j].getAttribute("from"),
+                                    rules[j].getAttribute("to")));
+    }
+
+    var exclusions = ruletag.getElementsByTagName("exclusion");
+    for(var j = 0; j < exclusions.length; j++) {
+      rule_set.exclusions.push(
+            new Exclusion(exclusions[j].getAttribute("pattern")));
+    }
+
+    var cookierules = ruletag.getElementsByTagName("securecookie");
+    for(var j = 0; j < cookierules.length; j++) {
+      rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
+                                           cookierules[j].getAttribute("name")));
+    }
+
+    var targets = ruletag.getElementsByTagName("target");
+    for(var j = 0; j < targets.length; j++) {
+       var host = targets[j].getAttribute("host");
+       if (!(host in this.targets)) {
+         this.targets[host] = [];
+       }
+       this.targets[host].push(rule_set);
+    }
+  },
+  
   applicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
@@ -147,8 +170,11 @@ RuleSets.prototype = {
         results = results.concat(this.targets[t]);
     }
     log(DBUG,"Applicable rules for " + host + ":");
-    for (i = 0; i < results.length; ++i)
-      log(DBUG, "  " + results[i].name);
+    if (results.length == 0)
+      log(DBUG, "  None");
+    else
+      for (i = 0; i < results.length; ++i)
+        log(DBUG, "  " + results[i].name);
     return results;
   },
 
@@ -168,10 +194,10 @@ RuleSets.prototype = {
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name))
-            return true;
+            return ruleset;
         }
     }
-    return false;
+    return null;
   },
 
   rewriteURI: function(urispec, host) {
@@ -179,7 +205,7 @@ RuleSets.prototype = {
     var newuri = null
     var rs = this.applicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
-      if ((newuri = rs[i]._apply(urispec)))
+      if (rs[i].active && (newuri = rs[i]._apply(urispec)))
         return newuri;
     }
     return null;
