@@ -243,6 +243,15 @@ function onResponseStarted(details) {
   }
 }
 
+function onErrorOccurred(details) {
+  displayPageAction(details);
+}
+
+function onCompleted(details) {
+  displayPageAction(details);
+}
+
+
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]}, //{urls: ["*://*/*"]},
                                     ["requestHeaders", "blocking"]);
@@ -251,5 +260,10 @@ wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http
                                     ["responseHeaders", "blocking"]);
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
+wr.onErrorOccurred.addListener(onErrorOccurred,
+                               {urls: ["https://*/*", "http://*/*"]});
+wr.onCompleted.addListener(onCompleted,
+                           {urls: ["https://*/*", "http://*/*"]});
+
 
 chrome.cookies.onChanged.addListener(onCookieChanged);
