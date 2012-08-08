@@ -14,23 +14,18 @@ NOTE=4;
 WARN=5;
 
 BASE_REQ_SIZE=4096;
-MAX_DELAYED = 32;
-
-ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
-ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
-ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
 const SERVICE_ID=Components.ID("{0f9ab521-986d-4ad8-9c1f-6934e195c15c}");
-const SERVICE_NAME = "Anonymously Submits SSL certificates to EFF for security auditing.";
+const SERVICE_NAME = "Anonymously Submits strange SSL certificates to EFF.";
 const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
 
 const _INCLUDED = {};
@@ -70,9 +65,8 @@ function SSLObservatory() {
 
   this.public_roots = root_ca_hashes;
 
-  // Clear these on cookies-cleared observer event
+  // Clear this on cookies-cleared observer event
   this.already_submitted = {};
-  this.delayed_submissions = {};
   OS.addObserver(this, "cookie-changed", false);
 
   // The url to submit to
@@ -95,16 +89,10 @@ function SSLObservatory() {
   this.pps.registerFilter(this, 0);
   this.wrappedJSObject = this;
 
-  this.client_asn = ASN_PRIVATE;
+  this.client_asn = -1;
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
-
-  try {
-    NSS.initialize("");
-  } catch(e) {
-    this.log(WARN, "Failed to initialize NSS component:" + e);
-  }
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -113,8 +101,7 @@ SSLObservatory.prototype = {
   QueryInterface: XPCOMUtils.generateQI(
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
-      //CI.nsIWifiListener,
-      CI.nsIBadCertListener2]),
+      CI.nsIWifiListener ]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -149,25 +136,10 @@ SSLObservatory.prototype = {
     }
   },
 
-  notifyCertProblem: function(socketInfo, status, targetSite) {
-    this.log(NOTE, "cert warning for " + targetSite);
-    if (targetSite == "observatory.eff.org") {
-      this.log(WARN, "Surpressing observatory warning");
-      return true;
-    }
-    return false;
-  },
-
   setupASNWatcher: function() {
     this.getClientASN();
     this.max_ap = null;
 
-    // we currently do not actually do *any* ASN watching from the client
-    // (in other words, the db will not have ASNs for certs submitted 
-    // through Tor, even if the user checks the "send ASN" option)
-    // all of this code for guessing at changes in our public IP via WiFi hints
-    // is therefore disabled
-    /*
     // Observe network changes to get new ASNs
     OS.addObserver(this, "network:offline-status-changed", false);
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
@@ -180,12 +152,11 @@ SSLObservatory.prototype = {
       wifi_service.startWatching(this);
     } catch(e) {
       this.log(INFO, "Failed to register ASN change monitor: "+e);
-    }*/
+    }
   },
 
   stopASNWatcher: function() {
-    this.client_asn = ASN_PRIVATE;
-    /*
+    this.client_asn = -1;
     // unhook the observers we registered above
     OS.removeObserver(this, "network:offline-status-changed");
     var pref_service = Cc["@mozilla.org/preferences-service;1"]
@@ -197,26 +168,22 @@ SSLObservatory.prototype = {
       wifi_service.stopWatching(this);
     } catch(e) {
       this.log(WARN, "Failed to stop wifi state monitor: "+e);
-    }*/
+    }
   },
 
   getClientASN: function() {
-    // Fetch a new client ASN..
+    // XXX: Fetch a new client ASN..
     if (!this.myGetBoolPref("send_asn")) {
-      this.client_asn = ASN_PRIVATE;
+      this.client_asn = -1;
       return;
     }
     else if (!this.torbutton_installed) {
-      this.client_asn = ASN_IMPLICIT;
+      this.client_asn = -2;
       return;
     }
-    // XXX As a possible base case: the user is running Tor, is not using
-    // bridges, and has send_asn enabled: should we ping an eff.org URL to
-    // learn our ASN?
     return;
   },
 
-  /*
   // Wifi status listener
   onChange: function(accessPoints) {
     try {
@@ -250,18 +217,11 @@ SSLObservatory.prototype = {
     this.log(NOTE, "ASN change observer got an error: "+value);
     this.getClientASN();
   },
-  */
-
-  ourFingerprint: function(cert) {
-    // Calculate our custom fingerprint from an nsIX509Cert
-    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
-  },
 
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
-      this.delayed_submissions = {};
-      this.log(INFO, "Cookies were cleared. Purging list of pending and already submitted certs");
+      this.log(INFO, "Cookies were cleared. Purging list of already submitted sites");
       return;
     }
 
@@ -292,8 +252,31 @@ SSLObservatory.prototype = {
       try { 
         host_ip = httpchannelinternal.remoteAddress;
       } catch(e) {
-          this.log(INFO, "Could not get server IP address.");
+          this.log(WARN, "Could not get host IP address.");
       }
+
+      // check to see if Convergence plugin is enabled
+      var convergence = Components.classes['@thoughtcrime.org/convergence;1'].getService().wrappedJSObject;
+      if (convergence.enabled) {
+          // tododta clean up
+
+          this.log(WARN, "Convergence enabled. Getting real end-entity cert instead");
+          
+
+          NSS.initialize("somepath");//convergenceManager.nssFile.path);
+          var derItem             = NSS.types.SECItem();
+          this.log(WARN, "blah 1");
+          var status = NSS.lib.CERT_FindCertExtension(completeCertificate,
+                                                      NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT,
+                                                      extItem.address());
+          
+
+        // do stuff
+          this.log(WARN, "blah 2");
+      } else {
+          this.log(WARN, "Convergence NOT enabled.");
+      }
+
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
       if (certchain) {
@@ -304,28 +287,28 @@ SSLObservatory.prototype = {
         for(var i = 0; i < chainEnum.length; i++) {
           var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
           chainArray.push(cert);
-          var fp = this.ourFingerprint(cert);
+          var fp = (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
           fps.push(fp);
           chainArrayFpStr = chainArrayFpStr + fp;
         }
         var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
         this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
-        if(!this.myGetBoolPref("use_whitelist")) {
-          this.log(WARN, "Not using whitelist to filter cert chains.");
-        }
+	if(!this.myGetBoolPref("use_whitelist")) {
+	  this.log(INFO, "Not using whitelist to filter cert chains.");
+	}
         else if (this.isChainWhitelisted(chain_hash)) {
           this.log(INFO, "This cert chain is whitelisted. Not submitting.");
           return;
         }
-        else {
+	else {
           this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-        }
+	}
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
+            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
+            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip);
         }
       }
     }
@@ -373,146 +356,45 @@ SSLObservatory.prototype = {
     }
     return false;
   },
-
-  findRootInChain: function(certArray) {
-    // Return the position in the chain Array of the/a root CA
-    var rootidx = -1;
-    var nextInChain = certArray[0].issuer;
-    for (var i = 0; i < certArray.length; i++) {
-      // Find the next cert in the valid chain
-      if (certArray[i].equals(nextInChain)) {
-        if (certArray[i].issuerName == certArray[i].subjectName) {
-          // All X509 root certs are self-signed
-          this.log(INFO, "Got root cert at position: "+i);
-          rootidx = i;
-          break;
-        } else {
-          // This is an intermediate CA cert; keep looking for the root
-          nextInChain = certArray[i].issuer;
-        }
-      }
-    }
-    return rootidx;
-  },
-
-  processConvergenceChain: function(chain) {
-    // Make sure the chain we're working with is sane, even if Convergence is
-    // present.
-
-    // Convergence currently performs MITMs against the Firefox in order to
-    // get around https://bugzilla.mozilla.org/show_bug.cgi?id=644640.  The
-    // end-entity cert produced by Convergence contains a copy of the real
-    // end-entity cert inside an X509v3 extension.  We extract this and send
-    // it rather than the Convergence certs.
-    var convergence = Components.classes['@thoughtcrime.org/convergence;1'];
-    if (!convergence) return null;
-    convergence = convergence.getService().wrappedJSObject;
-    if (!convergence || !convergence.enabled) return null;
-
-    this.log(INFO, "Convergence uses its own internal root certs; not submitting those");
     
-    //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
-    try {
-      var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
-      var b64Cert = certInfo["certificate"];
-      var certDB = Cc["@mozilla.org/security/x509certdb;1"].getService(Ci.nsIX509CertDB);
-      chain.leaf = certDB.constructX509FromBase64(b64Cert);
-      chain.certArray = [chain.leaf];
-      chain.fps = [this.ourFingerprint(chain.leaf)];
-    } catch (e) {
-      this.log(WARN, "Failed to extract leaf cert from Convergence cert " + e);
-      chain.certArray = chain.certArray.slice(0,1);
-      chain.fps = chain.fps.slice(0,1);
-    }
-
+  handleConvergence: function(cert) {
+    //tododta here
   },
 
-  extractRealLeafFromConveregenceLeaf: function(certificate) {
-    // Copied from Convergence's CertificateStatus.getVerificiationStatus
-    var len = {};
-    var derEncoding = certificate.getRawDER(len);
-
-    var derItem = NSS.types.SECItem();
-    derItem.data = NSS.lib.ubuffer(derEncoding);
-    derItem.len = len.value;
-
-    var completeCertificate = NSS.lib.CERT_DecodeDERCertificate(derItem.address(), 1, null);
-
-    var extItem = NSS.types.SECItem();
-    var status = NSS.lib.CERT_FindCertExtension(completeCertificate, 
-                                                NSS.lib.SEC_OID_NS_CERT_EXT_COMMENT, 
-                                                extItem.address());
-    if (status != -1) {
-      var encoded = '';
-      var asArray = ctypes.cast(extItem.data, ctypes.ArrayType(ctypes.unsigned_char, extItem.len).ptr).contents;
-      var marker = false;
-
-      for (var i=0;i<asArray.length;i++) {
-        if (marker) {
-          encoded += String.fromCharCode(asArray[i]);
-        } else if (asArray[i] == 0x00) {
-          marker = true;
-        }
-      }
-
-      return JSON.parse(encoded);
-    }
-  },
-
-  shouldSubmit: function(chain, domain) {
-    // Return true if we should submit this chain to the SSL Observatory
-    var rootidx = this.findRootInChain(chain.certArray);
-    var ss= false;
-
-    if (chain.leaf.issuerName == chain.leaf.subjectName) 
-      ss = true;
-
-    if (!this.myGetBoolPref("self_signed") && ss) {
-      this.log(INFO, "Not submitting self-signed cert for " + domain);
-      return false;
-    }
-
-    if (!ss && !this.myGetBoolPref("alt_roots")) {
-      if (rootidx == -1) {
-        // A cert with an unknown/absent Issuer.  Out of caution, don't submit these
-        this.log(INFO, "Cert for " + domain + " issued by unknown CA " +
-                 chain.leaf.issuerName + " (not submitting due to settings)");
-        return false;
-      } else if (!(chain.fps[rootidx] in this.public_roots)) {
-        // A cert with a known but non-public Issuer
-        this.log(INFO, "Got a private root cert. Ignoring domain "
-                 +domain+" with root "+chain.fps[rootidx]);
-        return false;
-      }
-    }
-
-    if (chain.fps[0] in this.already_submitted) {
-      this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
-      return false;
-    }
-    return true;
-  },
-
-  submitChain: function(certArray, fps, domain, channel, host_ip, resubmitting) {
+  submitChain: function(certArray, fps, domain, channel, host_ip) {
     var base64Certs = [];
-    // Put all this chain data in one object so that it can be modified by
-    // subroutines if required
-    c = {}; c.certArray=certArray; c.fps = fps;
-    c.leaf = certArray[0];
-    this.processConvergenceChain(c);
-    if (!this.shouldSubmit(c,domain)) return;
+    var rootidx = -1;
+
+    for (var i = 0; i < certArray.length; i++) {
+      if (certArray[i].issuer && certArray[i].equals(certArray[i].issuer)) {
+        this.log(INFO, "Got root cert at position: "+i);
+        rootidx = i;
+      }
+    }
+
+    if (!this.myGetBoolPref("alt_roots"))
+      if (rootidx == -1 || (fps.length > 1 && !(fps[rootidx] in this.public_roots))) {
+        if (rootidx == -1) {
+          rootidx = fps.length-1;
+        }
+        this.log(INFO, "Got a private root cert. Ignoring domain "
+                 +domain+" with root "+fps[rootidx]);
+        return;
+      }
+
+    if (fps[0] in this.already_submitted) {
+      this.log(INFO, "Already submitted cert for "+domain+". Ignoring");
+      return;
+    }
 
     var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
                 .getService(Components.interfaces.nsIWindowMediator);
     var browserWindow = wm.getMostRecentWindow("navigator:browser");
-    for (var i = 0; i < c.certArray.length; i++) {
+    for (var i = 0; i < certArray.length; i++) {
       var len = new Object();
-      var derData = c.certArray[i].getRawDER(len);
+      var derData = certArray[i].getRawDER(len);
       //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
-      let result = "";
-      for (let j = 0, dataLength = derData.length; j < dataLength; ++j) 
-        result += String.fromCharCode(derData[j]);
-      base64Certs.push(btoa(result));
+      base64Certs.push(this.base64_encode(derData, false, false));
     }
 
     var reqParams = [];
@@ -521,13 +403,13 @@ SSLObservatory.prototype = {
     if (this.myGetBoolPref("testing")) {
       reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
-      reqParams.push("fplist="+this.compatJSON.encode(c.fps));
+      reqParams.push("fplist="+this.compatJSON.encode(fps));
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
-
-    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE)
-    else              reqParams.push("client_asn="+this.client_asn);
-
+    // XXX: Should we indicate if this was a wifi-triggered asn fetch vs
+    // the less reliable offline/online notification-triggered fetch?
+    // this.max_ap will be null if we have no wifi info.
+    reqParams.push("client_asn="+this.client_asn);
     if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
     else                                 reqParams.push("private_opt_in=0");
 
@@ -551,57 +433,39 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = HTTPSEverywhere.getWindowForChannel(channel);
     var req = this.buildRequest(params);
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
-            if (c.fps[0] in that.already_submitted)
-              delete that.already_submitted[c.fps[0]];
-          
-          // Retry up to two previously failed submissions
-          let n = 0;
-          for (let fp in that.delayed_submissions) {
-            that.log(WARN, "Retrying a submission...");
-            that.delayed_submissions[fp]();
-            delete that.delayed_submissions[fp];
-            if (++n >= 2) break;
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) {
+            if (fps[0] in that.already_submitted)
+              delete that.already_submitted[fps[0]];
           }
         } else if (req.status == 403) {
           that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
           try {
             var warningObj = JSON.parse(req.responseText);
-            if (win) that.warnUser(warningObj, win, c.certArray[0]);
+            that.warnUser(warningObj, win, certArray[0]);
           } catch(e) {
             that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
             that.log(WARN, req.responseText);
           }
         } else {
-          // Submission failed
-          if (c.fps[0] in that.already_submitted)
-            delete that.already_submitted[c.fps[0]];
+          if (fps[0] in that.already_submitted)
+            delete that.already_submitted[fps[0]];
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
             that.log(WARN, "Cert submission failure and exception: "+e);
           }
-          // If we don't have too many delayed submissions, and this isn't
-          // (somehow?) one of them, then plan to retry this submission later
-          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
-            if (!(c.fps[0] in that.delayed_submissions)) {
-              that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
-              that.delayed_submissions[c.fps[0]] = retry;
-            }
-
         }
       }
     };
 
     // Cache this here to prevent multiple submissions for all the content elements.
-    that.already_submitted[c.fps[0]] = true;
+    that.already_submitted[fps[0]] = true;
     req.send(params);
   },
 
@@ -696,7 +560,64 @@ SSLObservatory.prototype = {
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
   encStringS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
-  
+
+  base64_encode: function(inp, uc, safe) {
+    // do some argument checking
+    if (arguments.length < 1) return null;
+    var readBuf = new Array();    // read buffer
+    if (arguments.length >= 3 && safe != true && safe != false) return null;
+    var enc = (arguments.length >= 3 && safe) ? this.encStringS : this.encString; // character set used
+    var b = (typeof inp == "string"); // how input is to be processed
+    if (!b && (typeof inp != "object") && !(inp instanceof Array)) return null; // bad input
+    if (arguments.length < 2) {
+      uc = true;                  // set default
+    } // otherwise its value is passed from the caller
+    if (uc != true && uc != false) return null;
+    var n = (!b || !uc) ? 1 : 2;  // length of read buffer
+    var out = '';                 // output string
+    var c = 0;                    // holds character code (maybe 16 bit or 8 bit)
+    var j = 1;                    // sextett counter
+    var l = 0;                    // work buffer
+    var s = 0;                    // holds sextett
+
+    // convert  
+    for (var i = 0; i < inp.length; i++) {  // read input
+      c = (b) ? inp.charCodeAt(i) : inp[i]; // fill read buffer
+      for (var k = n - 1; k >= 0; k--) {
+        readBuf[k] = c & 0xff;
+        c >>= 8;
+      }
+      for (var m = 0; m < n; m++) {         // run through read buffer
+        // process bytes from read buffer
+        l = ((l<<8)&0xff00) | readBuf[m];   // shift remaining bits one byte to the left and append next byte
+        s = (0x3f<<(2*j)) & l;              // extract sextett from buffer
+        l -=s;                              // remove those bits from buffer;
+        out += enc.charAt(s>>(2*j));        // convert leftmost sextett and append it to output
+        j++;
+        if (j==4) {                         // another sextett is complete
+          out += enc.charAt(l&0x3f);        // convert and append it
+          j = 1;
+        }
+      }        
+    }
+    switch (j) {                            // handle left-over sextetts
+      case 2:
+        s = 0x3f & (16 * l);                // extract sextett from buffer
+        out += enc.charAt(s);               // convert leftmost sextett and append it to output
+        out += '==';                        // stuff
+        break;
+      case 3:
+        s = 0x3f & (4 * l);                 // extract sextett from buffer
+        out += enc.charAt(s);               // convert leftmost sextett and append it to output
+        out += '=';                         // stuff
+        break;
+      default:
+        break;
+    }
+
+    return out;
+  },
+
   log: function(level, str) {
     var econsole = CC["@mozilla.org/consoleservice;1"]
       .getService(CI.nsIConsoleService);
