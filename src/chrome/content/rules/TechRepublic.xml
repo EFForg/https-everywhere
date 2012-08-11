@@ -1,0 +1,36 @@
+<!--
+	For other CBS coverage, see CBS.xml.
+
+
+	Nonfunctional domains:
+
+
+		- techrepublic.com.com		(cert: www.techrepublic.com; 301s there)
+		- i.techrepublic.com.com	(Akamai; 504)
+		- techrepublic.com		(301s to http)
+		- www.techrepublic.com		(Akamai; 301s to http)
+		- \w+.trstatic.com		(Akamai, "An error occurred")
+
+
+	origin.techrepublic.com/images/foo.ext 301s to img.com.com/i/tr/foo.ext
+
+-->
+<ruleset name="TechRepublic (partial)" default_off="mismatch">
+
+	<target host="techrepublic.com" />
+	<target host="*.techrepublic.com" />
+
+
+	<!--	Valid cert, but many (all?) paths 301 to www.
+								-->
+	<rule from="^http://techrepublic\.com/"
+		to="https://techrepublic.com/" />
+
+	<!--	- origin: Cert mismatch
+		- www: Akamai
+		- Some origin paths 301 to http
+						-->
+	<rule from="^https?://(?:origin|www)\.techrepublic\.com/css/"
+		to="https://origin.techrepublic.com/css/" />
+
+</ruleset>
