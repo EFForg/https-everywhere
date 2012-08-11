@@ -52,6 +52,22 @@ const HTTPS = {
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
       return false;
     }
+
+    // Check for the new internal redirect API. If it exists, use it.
+    if ("redirectTo" in channel) {
+      this.log(INFO, "Found nsIHttpChannel.redirectTo. Using it.");
+      try {
+        channel.redirectTo(uri);
+        return true;
+      } catch(e) {
+        // This should not happen. We should only get exceptions if
+        // the channel was already open.
+        this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
+
+        // Don't return: Fallback to NoScript ChannelReplacement.js
+      }
+    }
+
     if (ChannelReplacement.supported) {
       HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
       HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
