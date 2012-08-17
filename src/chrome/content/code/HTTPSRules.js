@@ -273,7 +273,7 @@ const RuleWriter = {
 
     var match_rl = xmlruleset.getAttribute("match_rule");
     var dflt_off = xmlruleset.getAttribute("default_off");
-    var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off);
+    var rs = new RuleSet(xmlruleset.getAttribute("name"), match_rl, dflt_off);
 
     var targets = xmlruleset.getElementsByTagName("target");
     if (targets.length == 0) {
