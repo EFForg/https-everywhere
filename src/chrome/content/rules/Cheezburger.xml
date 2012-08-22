@@ -1,0 +1,36 @@
+<ruleset name="Cheezburger">
+<!--
+        As of 2012-08-22, known unprotected subdomains are:
+        - corp        (not listening on https)
+        - blog        (not listening on https)
+        - sites       (unbounce.com certificate)
+        - advertising (unbounce.com certificate)
+        - developer   (mashery.com certificate)
+        - jobs        (theresumator.com certificate)
+        - feedback    (uservoice.com certificate)
+
+        However, there are tens (hundreds?) of subdomains supporting https with
+        a wildcard certificate, so it's not worth whitelisting them one by one.
+
+        Other related unprotected hosts:
+        - chzb.gr
+        - knowyourmeme.com
+-->
+  <target host="cheezburger.com" />
+  <target host="*.cheezburger.com" />
+  <target host="i.chzbgr.com" />
+  <target host="s.chzbgr.com" />
+
+  <exclusion pattern="^http://(corp|blog|sites|advertising|developer|jobs|feedback)\.cheezburger\.com/"/>
+
+<!--
+      There are some inconsistent redirects between cheezburger.com and
+      www.cheezburger.com. Don't try to enforce either hostname
+-->
+  <rule from="^http://cheezburger\.com/"
+          to="https://cheezburger.com/" />
+  <rule from="^http://([\w\-]+)\.cheezburger\.com/"
+          to="https://$1.cheezburger.com/" />
+  <rule from="^http://(i|s)\.chzbgr\.com/"
+          to="https://$1.chzbgr.com/" />
+</ruleset>
