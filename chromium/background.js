@@ -14,7 +14,7 @@ for (r in rs) {
 }
 */
 
-function displayPageAction(details) {
+function displayPageAction(tabId) {
   // Right now, the call to chrome.tabs.get creates
   // a console error for a missing tab, even in a try/catch
   // block. As it still provides a good test of whether a tab
@@ -25,13 +25,13 @@ function displayPageAction(details) {
   // expensive and not necessary so we are living with console errors
   // of the form: "Error during tabs.get: No tab with id: 370"
 
-  if (details.tabId != -1 && this.activeRulesets.getRulesets(details.tabId)) {
-    chrome.tabs.get(details.tabId, function(tab) {
+  if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
+    chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) == "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
       }
       else {
-        chrome.pageAction.show(details.tabId);
+        chrome.pageAction.show(tabId);
       }
     });
   }
@@ -127,7 +127,7 @@ function onBeforeRequest(details) {
       newuristr = rs[i]._apply(canonical_url);
   }
 
-  displayPageAction(details);
+  displayPageAction(details.tabId);
 
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
@@ -234,7 +234,6 @@ function onBeforeSendHeaders(details) {
 }
 
 function onResponseStarted(details) {
-  displayPageAction(details);
 
   // redirect counter workaround
   // TODO: Remove this code if they ever give us a real counter
@@ -242,6 +241,15 @@ function onResponseStarted(details) {
     delete redirectCounter[details.requestId];
   }
 }
+
+function onErrorOccurred(details) {
+  displayPageAction(details.tabId);
+}
+
+function onCompleted(details) {
+  displayPageAction(details.tabId);
+}
+
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]}, //{urls: ["*://*/*"]},
@@ -251,5 +259,13 @@ wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http
                                     ["responseHeaders", "blocking"]);
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
+wr.onErrorOccurred.addListener(onErrorOccurred,
+                               {urls: ["https://*/*", "http://*/*"]});
+wr.onCompleted.addListener(onCompleted,
+                           {urls: ["https://*/*", "http://*/*"]});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+    displayPageAction(tabId);
+});
 
 chrome.cookies.onChanged.addListener(onCookieChanged);
