@@ -67,7 +67,11 @@ function SSLObservatory() {
   } catch(e) {
     this.torbutton_installed = false;
   }
-  this.proxy_test_successful = false;
+
+  /* The proxy test result starts out null until the test is attempted.
+   * This is for UI notification purposes */
+  this.proxy_test_successful = null;
+  this.proxy_test_callback = null;
 
   this.public_roots = root_ca_hashes;
 
@@ -650,13 +654,24 @@ SSLObservatory.prototype = {
                     "","chrome,centerscreen", warningObj, win, cert);
   },
 
+  registerProxyTestNotification: function(callback_fcn) {
+    if (this.proxy_test_successful != null) {
+      /* Proxy test already ran. Callback immediately. */
+      callback_fcn(this.proxy_test_successful);
+      this.proxy_test_callback = null;
+      return;
+    } else {
+      this.proxy_test_callback = callback_fcn;
+    }
+  },
+
   testProxySettings: function() {
     /* Plan:
      * 1. Launch an async XMLHttpRequest to check.tp.o with magic nonce
      * 3. Filter the nonce in protocolProxyFilter to use proxy settings
      * 4. Async result function sets test result status based on check.tp.o
      */
-    this.proxy_test_successful = false;
+    this.proxy_test_successful = null;
 
     try {
       var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
@@ -668,6 +683,8 @@ SSLObservatory.prototype = {
       var that = this; // Scope gymnastics for async callback
       req.onreadystatechange = function (oEvent) {
         if (req.readyState === 4) {
+          that.proxy_test_successful = false;
+
           if(req.status == 200) {
             if(!req.responseXML) {
               that.log(INFO, "Tor check failed: No XML returned by check service.");
@@ -689,14 +706,25 @@ SSLObservatory.prototype = {
           } else {
             that.log(INFO, "Tor check failed: HTTP Error "+req.status);
           }
+
+          /* Notify the UI of the test result */
+          if (that.proxy_test_callback) {
+            that.proxy_test_callback(that.proxy_test_successful);
+            that.proxy_test_callback = null;
+          }
         }
       };
       req.send(null);
     } catch(e) {
+      this.proxy_test_successful = false;
       if(e.result == 0x80004005) { // NS_ERROR_FAILURE
-        that.log(INFO, "Tor check failed: Proxy not running.");
+        this.log(INFO, "Tor check failed: Proxy not running.");
       }
-      that.log(INFO, "Tor check failed: Internal error: "+e);
+      this.log(INFO, "Tor check failed: Internal error: "+e);
+      if (this.proxy_test_callback) {
+        this.proxy_test_callback(this.proxy_test_successful);
+        this.proxy_test_callback = null;
+      }
     }
   },
 
