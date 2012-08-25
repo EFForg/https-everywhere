@@ -68,6 +68,11 @@ function SSLObservatory() {
     this.torbutton_installed = false;
   }
 
+  /* The proxy test result starts out null until the test is attempted.
+   * This is for UI notification purposes */
+  this.proxy_test_successful = null;
+  this.proxy_test_callback = null;
+
   this.public_roots = root_ca_hashes;
 
   // Clear these on cookies-cleared observer event
@@ -99,12 +104,14 @@ function SSLObservatory() {
   if (this.myGetBoolPref("send_asn")) 
     this.setupASNWatcher();
 
-
   try {
     NSS.initialize("");
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
+
+  this.testProxySettings();
+
   this.log(DBUG, "Loaded observatory component!");
 }
 
@@ -332,20 +339,27 @@ SSLObservatory.prototype = {
   },
 
   observatoryActive: function() {
-    if (!this.myGetBoolPref("enabled")) return false;
-    if (this.torbutton_installed) {
+                         
+    if (!this.myGetBoolPref("enabled"))
+      return false;
+
+    if (this.torbutton_installed && this.proxy_test_successful) {
       // Allow Tor users to choose if they want to submit
       // during tor and/or non-tor
-      if (!this.myGetBoolPref("submit_during_tor") && 
+      if (this.myGetBoolPref("submit_during_tor") && 
            this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
-        return false;
-      if (!this.myGetBoolPref("submit_during_nontor") && 
+        return true;
+
+      if (this.myGetBoolPref("submit_during_nontor") && 
           !this.prefs.getBoolPref("extensions.torbutton.tor_enabled")) 
-        return false;
-    } else if (!this.myGetBoolPref("use_custom_proxy")) {
-      this.log(DBUG, "No torbutton installed, but no custom proxies either. Not submitting certs");
+        return true;
+
       return false;
-    } else {
+    }
+
+    if (this.proxy_test_successful) {
+      return true;
+    } else if (this.myGetBoolPref("use_custom_proxy")) {
       // no torbutton; the custom proxy is probably the user opting to
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
@@ -354,8 +368,11 @@ SSLObservatory.prototype = {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
         if (pbs.privateBrowsingEnabled) return false;
       } catch (e) { /* seamonkey or old firefox */ }
+    
+      return true;
     }
-    return true;
+
+    return false;
   },
 
   myGetBoolPref: function(prefstring) {
@@ -637,6 +654,79 @@ SSLObservatory.prototype = {
                     "","chrome,centerscreen", warningObj, win, cert);
   },
 
+  registerProxyTestNotification: function(callback_fcn) {
+    if (this.proxy_test_successful != null) {
+      /* Proxy test already ran. Callback immediately. */
+      callback_fcn(this.proxy_test_successful);
+      this.proxy_test_callback = null;
+      return;
+    } else {
+      this.proxy_test_callback = callback_fcn;
+    }
+  },
+
+  testProxySettings: function() {
+    /* Plan:
+     * 1. Launch an async XMLHttpRequest to check.tp.o with magic nonce
+     * 3. Filter the nonce in protocolProxyFilter to use proxy settings
+     * 4. Async result function sets test result status based on check.tp.o
+     */
+    this.proxy_test_successful = null;
+
+    try {
+      var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                              .createInstance(Components.interfaces.nsIXMLHttpRequest);
+      var url = "https://check.torproject.org/?TorButton=true"+this.csrf_nonce;
+      req.open('GET', url, true);
+      req.channel.loadFlags |= Ci.nsIRequest.LOAD_BYPASS_CACHE;
+      req.overrideMimeType("text/xml");
+      var that = this; // Scope gymnastics for async callback
+      req.onreadystatechange = function (oEvent) {
+        if (req.readyState === 4) {
+          that.proxy_test_successful = false;
+
+          if(req.status == 200) {
+            if(!req.responseXML) {
+              that.log(INFO, "Tor check failed: No XML returned by check service.");
+              return;
+            }
+
+            var result = req.responseXML.getElementById('TorCheckResult');
+            if(result===null) {
+              that.log(INFO, "Tor check failed: Non-XML returned by check service.");
+            } else if(typeof(result.target) == 'undefined' 
+                    || result.target === null) {
+              that.log(INFO, "Tor check failed: Busted XML returned by check service.");
+            } else if(result.target === "success") {
+              that.log(INFO, "Tor check succeeded.");
+              that.proxy_test_successful = true;
+            } else {
+              that.log(INFO, "Tor check failed: "+result.target);
+            }
+          } else {
+            that.log(INFO, "Tor check failed: HTTP Error "+req.status);
+          }
+
+          /* Notify the UI of the test result */
+          if (that.proxy_test_callback) {
+            that.proxy_test_callback(that.proxy_test_successful);
+            that.proxy_test_callback = null;
+          }
+        }
+      };
+      req.send(null);
+    } catch(e) {
+      this.proxy_test_successful = false;
+      if(e.result == 0x80004005) { // NS_ERROR_FAILURE
+        this.log(INFO, "Tor check failed: Proxy not running.");
+      }
+      this.log(INFO, "Tor check failed: Internal error: "+e);
+      if (this.proxy_test_callback) {
+        this.proxy_test_callback(this.proxy_test_successful);
+        this.proxy_test_callback = null;
+      }
+    }
+  },
 
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
@@ -652,11 +742,17 @@ SSLObservatory.prototype = {
         proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
       }
     } else if (this.myGetBoolPref("use_custom_proxy")) {
+      /* XXX: Should we have a separate pref for use_direct? Or should "direct" be a subcase of custom
+       * proxy hardcoded by the UI? Assuming the latter for now.
+       */
       proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
       proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
     } else {
-      this.log(WARN, "Proxy settings are strange: No Torbutton found, but no proxy specified. Using direct.");
+      /* Take a guess at default tor proxy settings */
+      proxy_settings[0] = "socks";
+      proxy_settings[1] = "localhost";
+      proxy_settings[2] = 9050;
     }
     return proxy_settings;
   },
