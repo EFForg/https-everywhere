@@ -1,34 +1,38 @@
-<!--	See Deviantart-mismatches.xml also
+<!--
+	For problematic rules, see Deviantart-mismatches.xml.
+
 
 	ToDo: Find edgecast URL for /(fc|th)\d+.
+
 -->
 <ruleset name="DeviantArt (pending)" default_off="site operator says not ready yet">
 
-	<target host="deviantart.com"/>
-	<target host="*.deviantart.com"/>
-	<target host="deviantart.net"/>
-	<target host="*.deviantart.net"/>
-		<exclusion pattern="^http://backend\.deviantart\.(com|net)/"/>
+	<target host="deviantart.com" />
+	<target host="*.deviantart.com" />
+	<target host="deviantart.net" />
+	<target host="*.deviantart.net" />
+		<exclusion pattern="^http://backend\.deviantart\.(com|net)/" />
+
 
 	<securecookie host="^\.deviantart\.com$" name=".*" />
+
 
 	<!--	Redirects from com to net, but does so successfully by itself.
 										-->
 	<rule from="^http://([aei]|fc\d\d|s[ht]|th\d\d)\.deviantart\.(com|net)/"
-		to="https://$1.deviantart.$2/"/>
+		to="https://$1.deviantart.$2/" />
 
-	<!--	This is to handle everything that isn't in
-		the first rule. Namely, usernames, fc, th,
-		and (www.).
-			These domains present a cert that
-		is only valid for .com.
-			Note that .net isn't used on DA, but
-		.net does redirect to .com, and we shouldn't
-		break what would otherwise work.
-			Mustn't rewrite from https here, as
-		that would conflict with the first rule.
+	<!--	This handles everything that isn't in the first rule.
+		Namely, usernames, fc, th, and (www.).
+			These domains present a cert that is only
+		valid for .com.
+			Note that .net isn't used on DA, but.net does
+		redirect to .com, and we shouldn't break what would
+		otherwise work.
+			Mustn't rewrite from https here, as doing so
+		would conflict with the first rule.
 								-->
 	<rule from="^http://([^/:@\.]+\.)?deviantart\.(?:com|net)/"
-		to="https://$1deviantart.com/"/>
+		to="https://$1deviantart.com/" />
 
 </ruleset>
