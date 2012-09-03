@@ -11,16 +11,23 @@
 
 	<securecookie host="^\.deviantart\.com$" name=".*" />
 
-	<!--	redirects from com to net	-->
-	<rule from="^http://([aei]|s[ht])\.deviantart\.(?:com|net)/"
-		to="https://$1.deviantart.net/"/>
-
-	<rule from="^http://(?:fc|th)\d+\.deviantart\.net/"
-		to="https://th.deviantart.com/"/>
+	<!--	Redirects from com to net, but does so successfully by itself.
+										-->
+	<rule from="^http://([aei]|fc\d\d|s[ht]|th\d\d)\.deviantart\.(com|net)/"
+		to="https://$1.deviantart.$2/"/>
 
 	<rule from="^http://deviantart\.com/"
 		to="https://www.deviantart.com/"/>
 
+	<!--	This is to handle everything that isn't in
+		the first rule. Namely, usernames, fc, th,
+		and (www.).
+			These domains present a cert that
+		is only valid for .com.
+			Note that .net isn't used on DA, but
+		.net does redirect to .com, and we shouldn't
+		break what would otherwise work.
+								-->
 	<rule from="^http://([^/:@\.]+)\.deviantart\.(?:com|net)/"
 		to="https://$1.deviantart.com/"/>
 
