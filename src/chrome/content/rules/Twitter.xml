@@ -1,14 +1,20 @@
 <!--
 	Nonfunctional domains:
 
-		- blogger.twitter.com		(hosted on Blogger)
-		- engineering.twitter.com	(timeout)
-		- r.twimg.com
+		- blog.twitter.com		(hosted on Blogger)
+		- engineering.twitter.com	(hosted on Blogger; interrupted)
 
 
 	CDN buckets:
 
 		- twitter-blog.s3.amazonaws.com
+		- d2rdfnizen5apl.cloudfront.net
+			- Equivalent to s.twimg.com
+		- ssl2.twitter.com.edgekey.net/.../
+			- e3826.g.akamaiedge.net/.../
+		- platform2.twitter.com.edgesuite.net/.../
+			- a1095.g.akamai.net/.../
+		- twitter.github.com
 
 
 	There are still some hosts that things get loaded from that can't
@@ -26,6 +32,7 @@
 	<target host="twitter.com" />
 	<target host="*.twitter.com" />
 	<target host="cdn.api.twitter.com" />
+	<target host="preview.cdn.twitter.com" />
 	<target host="twitter.jp" />
 	<target host="www.twitter.jp" />
 
@@ -39,17 +46,18 @@
 	<rule from="^https?://(?:a\d|s)\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(p|si\d|widgets)\.twimg\.com/"
+	<rule from="^http://(jp|o|p|pbs|r|si\d|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
+	<!--	Main cert matches ma[0-3], but cert presented only matches ma.
+							-->
+	<rule from="^https?://ma\d?\.twimg\.com/"
+		to="https://ma.twimg.com/" />
 
-	<rule from="^http://twitter\.com/"
-		to="https://twitter.com/" />
+	<rule from="^http://((?:(?:cdn\.)?api|business|preview\.cdn|dev|mobile|p|search|static|support|www)\.)?twitter\.com/"
+		to="https://$1twitter.com/" />
 
-	<rule from="^http://((?:cdn\.)?api|business|dev|mobile|p|search|static|support|www)\.twitter\.com/"
-		to="https://$1.twitter.com/" />
-
-	<rule from="^https?://(?:de|e[ns]|fr|it|j[ap])\.twitter\.com/"
+	<rule from="^https?://(?:de|en|es|fr|it|ja|jp)\.twitter\.com/"
 		to="https://twitter.com/" />
 
 	<rule from="^https?://engineering\.twitter\.com/favicon\.ico"
@@ -63,6 +71,14 @@
 
 	<rule from="^https?://media\.twitter\.com/"
 		to="https://dev.twitter.com/media/" />
+
+	<!--	platform2:
+
+			- Akamai
+			- 403
+				-->
+	<rule from="^https?://platform2?\.twitter\.com/"
+		to="https://platform.twitter.com/" />
 
 	<rule from="^https?://(?:www\.)?twitter\.jp/"
 		to="https://twitter.com/"/> 
