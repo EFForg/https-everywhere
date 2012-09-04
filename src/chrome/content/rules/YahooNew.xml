@@ -26,7 +26,9 @@
 			- everything			(times out)
 			- ((ichart.)finance|suggestions)
 			- info				(cert: secure.help.yahoo.com; redirects to http)
+			- webservices.mobile		(times out)
 			- movies			(mismatch; "Your requested URL was not found.")
+			- prod2.rest-core.msg		(times out)
 			- news				(cert: *.mail.yahoo.com; 404)
 			- img.omg			(times out)
 			- research
@@ -50,6 +52,7 @@
 	<target host="www.rocketmail.com" />
 	<target host="*.yahoo.com" />
 	<target host="uk.adserver.yahoo.com" />
+	<target host="c5.ah.yahoo.com" />
 	<target host="cookex.amp.yahoo.com" />
 	<target host="*.analytics.yahoo.com" />
 	<target host="global.ard.yahoo.com" />
@@ -63,12 +66,16 @@
 		<!--
 			Cert mismatch.
 					-->
-		<exclusion pattern="^http://us\.mg6\.mail\.yahoo\.com/" />
-	<target host="ucs.netsvs.yahoo.com" />
+		<exclusion pattern="^http://us\.mg\d?\.mail\.yahoo\.com/(?:neo|om|ws|ya|yab-fe)/" />
+	<target host="*.c.yom.mail.yahoo.com" />
+	<target host="*.msg.yahoo.com" />
+	<target host="prod1.rest-notify.msg.yahoo.com" />
+	<target host="ucs.*.yahoo.com" />
 	<target host="rtb.pclick.yahoo.com" />
 	<target host="us.rd.yahoo.com" />
 	<target host="order.smallbusiness.yahoo.com" />
 	<target host="uk.health.lifestyle.yahoo.net" />
+	<target host="*.c.yom.mail.yahoo.net" />
 	<target host="yui.yahooapis.com" />
 	<target host="*.yahoofs.com" />
 	<target host="yhoo.it" />
@@ -119,7 +126,7 @@
 	<rule from="^https?://java\.europe\.yahoo\.com/uk/"
 		to="https://s.yimg.com/zz/java.europe.yahoo.com/uk/" />
 
-	<rule from="^http://(uk\.adserver|cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|mail|ucs\.netsvs|rtb\.pclick|sec|order\.smallbusiness)\.yahoo\.com/"
+	<rule from="^http://(uk\.adserver|c5\.ah|calendar|cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:overview\.)?mail|prod1\.rest-notify\.msg|ucs\.(?:netsvs|query)|rtb\.pclick|sec|order\.smallbusiness)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
 	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
@@ -130,6 +137,19 @@
 
 	<rule from="^http://(\w+(?:\.\w+)?)\.mail\.yahoo\.com/"
 		to="https://$1.mail.yahoo.com/" />
+
+	<!--	Observed subdomains:
+
+			- c
+			- image-c
+					-->
+	<rule from="^http://([\w\-]+)\.c\.yom\.mail\.yahoo\.(com|net)/"
+		to="https://$1.c.yom.mail.yahoo.$2/" />
+
+	<!--	dps times out.
+				-->
+	<rule from="^https?://(?:ycpi-mail-)?dps\.msg\.yahoo\.com/"
+		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
 	<!--	Cert only matches us.rd,
 		all appear equivalent.	-->
@@ -167,13 +187,13 @@
 	<!--	- l1 to l7 exist.
 		- a appears equivalent to l, except hosted on Akamai.
 			-->
-	<rule from="^https?://((?:a\.)?l\d?|us\.(?:a2|i1|js2))\.yimg\.com/(?:[ad]|us(?:\.js)?\.yimg\.com)/"
+	<rule from="^https?://((?:a\.)?l\d?|us\.(?:a2|i1|js2?))\.yimg\.com/(?:[ad]|us(?:\.js)?\.yimg\.com)/"
 		to="https://s.yimg.com/lq/" />
 
-	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(cv|dh|k[jx]|lo|pj|zz)/"
+	<rule from="^https?://(?:(?:a\.)?l\d?|mail)\.yimg\.com/(cv|dh|k[jx]|lo|ok|pj|rq|zz)/"
 		to="https://s.yimg.com/$1/" />
 
-	<rule from="^https?://(?:(?:a\.)?l\d?|us\.js1)\.yimg\.com/(bt|dg|(?:eur|us)\.yimg\.com|[ghiqt]|ho|j[hn]|kq|lm|nn|ml|os|pv|qz|r[uwz])/"
+	<rule from="^https?://(?:(?:a\.)?l\d?|us\.js1|mail)\.yimg\.com/(bt|dg|(?:eur|us)\.yimg\.com|[ghiqt]|ho|j[hn]|kq|lh|lm|nn|nq|ml|os|pv|qz|r[uwz])/"
 		to="https://s.yimg.com/zz/$1/" />
 
 	<rule from="^http://s(ec)?\.yimg\.com/"
