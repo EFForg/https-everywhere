@@ -1,3 +1,10 @@
+<!--
+	CDN buckets:
+
+		- web-www-1660276444.us-east-1.elb.amazonaws.com 
+		- d1ov8b9v5fwdrf.cloudfront.net
+
+-->
 <ruleset name="Vuze">
 
 	<target host="vuze.com" />
@@ -5,12 +12,15 @@
 
 	<securecookie host="^www\.vuze\.com$" name=".*" />
 
-	<!--	cf2 is on cloudfront.
-		ToDo: Find bucket.	-->
-	<rule from="^http://(?:cf2\.|www\.)?vuze\.com/"
+	<rule from="^https?://(?:www\.)?vuze\.com/"
 		to="https://www.vuze.com/" />
 
 	<rule from="^http://(blog|forum|hwcdn01|plugins|p?search|remote|wiki)\.vuze\.com/"
 		to="https://$1.vuze.com/" />
+
+	<!--	Data are also on www.
+					-->
+	<rule from="^https?://cf2\.vuze\.com/"
+		to="https://d1ov8b9v5fwdrf.cloudfront.net/" />
 
 </ruleset>
