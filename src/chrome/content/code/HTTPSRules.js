@@ -433,9 +433,10 @@ const HTTPSRules = {
                        "YouMail (buggy)","StudiVZ (disabled)","Woot (broken)"];
 
     var nonBuggy = 0;
-    for (rulename in shouldBeOff) {
+    for (var ruleindex in shouldBeOff) {
       // Some of these shouldBeOff rules may be removed in the future, so
       // tolerate their absence
+      var rulename = shouldBeOff[ruleindex];
       if (rulename in this.rulesetsByName) {
         if (!this.rulesetsByName[rulename].active) 
           nonBuggy += 1;
