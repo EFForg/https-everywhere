@@ -1,30 +1,41 @@
-<!--	!functional
-		- blog.examiner.com	(ssl_error_rx_record_too_long)
-		- photos.examiner.com	
--->
-<ruleset name="examiner.com">
+<!--
+	Nonfunctional domains:
 
-	<target host="examiner.com"/>
-	<target host="*.examiner.com"/>
-		<!--	redirects to http
-		<exclusion pattern="^http://www\.examiner\.com/(automotive-in-national$|auto-reviews$|handheld-games$|card-games$|happy-hour$|tag/)"/-->
-		<exclusion pattern="^http://www.examiner.com/tag/"/>
+		- blog.examiner.com	(rx_record_too_long)
+		- photos.examiner.com	
+
+-->
+<ruleset name="examiner.com (partial)">
+
+	<target host="examiner.com" />
+	<target host="*.examiner.com" />
+		<!--
+			Redirects to http.
+
+		<exclusion pattern="^http://www\.examiner\.com/(automotive-in-national$|auto-reviews$|handheld-games$|card-games$|happy-hour$|tag/)" /-->
+		<exclusion pattern="^http://www\.examiner\.com/tag/" />
+
+
+	<securecookie host="^photos\.examiner\.com$" name=".*" />
+
 
 	<rule from="^http://(beacon\.|cdn2-b\.|photos\.)?examiner\.com/"
-		to="https://$1examiner.com/"/>
+		to="https://$1examiner.com/" />
 
-	<!--	seems there's a pattern where [\w\-]+$ (generally) !work and [\w\-]+/[\w\-/]+ works
-		There are exceptions, but this stops https-everywhere from not forcing
-		https on pages that work more than does attempting a blanket rewrite.	-->
+	<!--	seems there's a pattern where [\w\-]+$ (generally) does not work and [\w\-]+/[\w\-/]+ works.
+			There are exceptions, but this stops https-everywhere from not forcing
+		https on pages that work more than does attempting a blanket rewrite.
+									-->
 	<rule from="^http://www\.examiner\.com/([\w\-]+/|About_Examiner|Advertise|arts-entertainment$|careers|interests$|privacy_policy|rss$|[\w\-]*sitemap|Terms_of_Use)"
-		to="https://www.examiner.com/$1"/>
+		to="https://www.examiner.com/$1" />
 
 	<rule from="^http://stats\.examiner\.com/"
-		to="https://examinercom.122.2o7.net/"/>
+		to="https://examinercom.122.2o7.net/" />
 
-	<!-- 	having a cid seems to make pages redirect to www	-->
-	<rule from="^http://www\.theexaminer\.com/([\w\-/]+)\?cid=[\w\-]*"
-		to="https://www.theexaminer.com/$1"/>
+	<!-- 	Having a cid seems to make pages redirect to www.
+						-->
+	<rule from="^http://www\.examiner\.com/([\w\-/]+)(?:\?cid=.*)$"
+		to="https://www.examiner.com/$1" />
 
 </ruleset>
 

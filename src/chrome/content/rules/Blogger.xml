@@ -2,6 +2,12 @@
 	For other Google coverage, see GoogleServices.xml.
 
 
+	Nonfunctional domains:
+
+		- buttons.blogger.com	(valid cert; 302s to google.cctld)
+			- e.g. buttons.blogger.com/bloggerbutton1.gif
+
+
 -->
 <ruleset name="Blogger (partial)">
 
@@ -11,45 +17,42 @@
 	<target host="*.blogger.com" />
 	<target host="blogger.co.uk" />
 	<target host="*.blogger.co.uk" />
-	<target host="blogspot.com" />
+	<target host="blogspot.*" />
+	<target host="*.blogspot.ca" />
 	<target host="*.bp.blogspot.com" />
 	<target host="*.blogspot.com" />
 	<target host="blogspot.co.uk" />
 	<target host="*.blogspot.co.uk" />
+	<target host="*.blogspot.se" />
 
 
-	<!--	comment-iframe.g uses cookies blogger_TID & S
-		Said path redirects to http
-
-		Possibly related:
-
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001201.html
-
-	<securecookie host="^www\.blogger\.com$" name=".*" /-->
+	<securecookie host="^www\.blogger\.com$" name=".*" />
 
 
-	<rule from="^http://(www\.)?blogblog\.com/(1kt|dynamicviews)/"
-		to="https://$1blogblog.com/$2/" />
+	<!--	img[12] works as-is now. Thanks Google!
 
-	<!--	Works as-is now. Thanks Google!
+		Observed working www paths:
+
+			- 1kt/
+			- dynamicviews/
+			- tictac_blue/
 					-->
-	<rule from="^http://img([12])\.blogblog\.com/"
-		to="https://img$1.blogblog.com/" />
+	<rule from="^http://(img[12]\.|www\.)?blogblog\.com/"
+		to="https://$1blogblog.com/" />
 
-	<!--	dyn-css/authorization.css redirects to http.	-->
-	<rule from="^https?://(?:www\.)?blogger\.com/(app|buttons|css|img|static)/"
-		to="https://www.blogger.com/$1/" />
+	<rule from="^https?://(?:www\.)?blogger\.com/((?:app|buttons|css|dyn-css|img|static)/|comment(?:-iframe(?:-bg)?)?\.(?:do|g)(?:$|\?))"
+		to="https://www.blogger.com/$1" />
 
-	<rule from="^https?://(?:\w+)\.blog(?:ger|spot)\.co(?:m|\.uk)/favicon\.ico"
+	<rule from="^https?://(?:\w+)\.blog(?:ger|spot)\.(?:ca|com|co\.uk|se)/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico" />
 
 	<rule from="^http://help\.blogger\.com/"
-		to="https://help.blogger.com/"	/>
+		to="https://help.blogger.com/" />
 
 	<!--	- 1-4 in *.bp exist.
 		- All appear identical
 		- Cert: *.blogger.com
-		- Redirect to www.google.ccltd
+		- Redirect to www.google.cctld
 					-->
 	<rule from="^https?://[1-4]\.bp\.blogspot\.com/"
 		to="https://lh3.ggpht.com/" />

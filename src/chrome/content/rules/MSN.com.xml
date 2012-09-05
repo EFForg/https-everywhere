@@ -6,6 +6,10 @@
 
 	<!--	*.msnbc.msn.com, doesn't redirect to www	-->
 	<target host="msnbc.msn.com" />
+	<!--
+		301s to www.
+					-->
+		<exclusion pattern="^https?://www\.msnbc\.msn\.com/id/" />
 	<!--	Akamai: assets(\dd)?, www	-->
 	<target host="*.msnbc.msn.com" />
 	<target host="*.today.msnbc.msn.com" />
@@ -23,18 +27,28 @@
 	<target host="m.static.newsvine.com" />
 
 
-	<!--	Since both are invalid, be nice and point to CDN.	-->
-	<rule from="^https?://(?:www\.)?msnbc\.msn\.com/"
-		to="https://www.msnbc.msn.com/" />
+	<!--	www moved from Akamai to pantherssl and so stopped working.
 
-	<!--	- Akamai
+		These paths don't 301 to http:
+
+			- redirect.aspx
+
+		These do:
+
+			- id/
+					-->
+	<rule from="^https?://(?:www\.)?msnbc\.msn\.com/"
+		to="https://msnbc.msn.com/" />
+
+	<!--	- assets\d\w: Akamai
+		- assets$: pantherssl (doesn't work)
 		- All appear to be the same, so minimize exclusions needed
 				-->
-	<rule from="^https?://assets(?:\dd)?\.msnbc\.msn\.com/"
-		to="https://assets.msnbc.msn.com/" />
+	<rule from="^https?://assets(?:\d\w)?\.msnbc\.msn\.com/"
+		to="https://assets1c.msnbc.msn.com/" />
 
 	<!--	Akamai	-->
-	<rule from="^http://(assets(?:2c)?|behindthewall|bodyodd|bottomline|cartoonblog|cosmiclog|ed|dailynightly|entertainment|firstread|hardballblog|insidedateline|itineraries|maddowblog|mojoe|openchannel|overheadbin|photoblog|presspass|redtape|scoop|thelastword|(?:animaltracks|bites|celebrate|digitallife|lifeinc|moms|rockcenter|scoop|theclicker|thelook|today(?:entertainment|health|hiringourheroes|onthetrail|travel)|windsorknot)\.today|travelkit|usnews(?:first)?|vitals|world(?:blog|news|newsfirst))\.msnbc\.msn\.com/"
+	<rule from="^http://(behindthewall|bodyodd|bottomline|cartoonblog|cosmiclog|ed|dailynightly|entertainment|firstread|hardballblog|insidedateline|itineraries|maddowblog|mojoe|openchannel|overheadbin|photoblog|presspass|redtape|scoop|thelastword|(?:animaltracks|bites|celebrate|digitallife|lifeinc|moms|rockcenter|scoop|theclicker|thelook|today(?:entertainment|health|hiringourheroes|onthetrail|travel)|windsorknot)\.today|travelkit|usnews(?:first)?|vitals|world(?:blog|news|newsfirst))\.msnbc\.msn\.com/"
 		to="https://$1.msnbc.msn.com/" />
 
 	<!--	- foo.today.msnbc.msn.com cert: *.newsvine.com
