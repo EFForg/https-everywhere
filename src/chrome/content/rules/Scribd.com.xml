@@ -1,4 +1,6 @@
-<!--	!functional:
+<!--
+	Nonfunctional domains:
+
 		- d.scribd.com				(cert: pantherssl.com; 403; data aren't on www)
 		- fonts[23].scribdassets.com		(cert: pantherssl.com; blank page; !on www.scribd.com; data appear the same for [23])
 		- s[1-8].scribdassets.com		(ditto)
@@ -34,11 +36,12 @@
 			- rewriting img.scribdassets and fonts[23].scribassets paths to origin-s causes redirection to www.scribd.com 404 page.
 						
 	ToDo: find img bucket.
+
 -->
 <ruleset name="Scribd.com (buggy)" default_off="often breaks login">
 
-	<target host="scribd.com"/>
-	<target host="*.scribd.com"/>
+	<target host="scribd.com" />
+	<target host="*.scribd.com" />
 		<!--
 			Redirects to http.
 
@@ -46,17 +49,21 @@
 						-->
 		<exclusion pattern="^http://www\.scribd\.com/(documents/\d+/pingback$|login($|[\?/]))" />
 		<exclusion pattern="^http://s\d?\.scribdassets\.com/options/exposed_to_client\.js\?\d*$" />
-	<target host="*.scribdassets.com"/>
+	<target host="*.scribdassets.com" />
+
 
 	<!--	Since login redirects to http, handling cookies might be problematic.
-	<securecookie host="^(.*\.)?scribd\.com$" name=".*"/-->
+
+	<securecookie host="^(.*\.)?scribd\.com$" name=".*" /-->
+
 
 	<rule from="^http://(www\.)?scribd\.com/"
-		to="https://www.scribd.com/"/>
+		to="https://www.scribd.com/" />
 
-	<!--	fonts.scribd.com is on AmazonAWS, but valid cert	-->
+	<!--	fonts.scribd.com is on AmazonAWS, but valid cert
+						-->
 	<rule from="^http://fonts[123]?\.scribd(assets)?\.com/"
-		to="https://fonts.scribd.com/"/>
+		to="https://fonts.scribd.com/" />
 
 	<!--	- 1-4 in html(img)?\d exist on assets
 			- pantherssl.com
@@ -65,8 +72,9 @@
 	<rule from="^http://html(img)?[1-4]?\.scribd(assets)?\.com/"
 		to="https://s3.amazonaws.com/html.scribd.com/" />
 
-	<!-- bucket !found, but...	-->
+	<!--	Bucket not found, but...
+					-->
 	<rule from="^http://s[1-8]?\.scribd(assets)?\.com/"
-		to="https://origin-s.scribd.com/"/>
+		to="https://origin-s.scribd.com/" />
 
 </ruleset>
