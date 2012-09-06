@@ -1,9 +1,21 @@
 <!--
+	Other Clearspring rulesets:
+
+		- XGraph.xml
+
+
 	CDN buckets:
 
-	wildcard.addthis.com.edgekey.net
+		- wildcard.addthis.com.edgekey.net/...
+			- e2943.e11.akamaiedge.net/...
 
-		- e2943.e11.akamaiedge.net/.../
+		- wildcard.addthiscdn.com.edgekey.net/...
+			- e1303.c.akamaiedge.net/...
+
+	Nonfunctional domains:
+
+		- support.addthis.com	(cert: *.assistly.com; 301s to http)
+			- So does addthis.assistly.com  & addthis.desk.com 
 
 -->
 <ruleset name="AddThis">
@@ -13,10 +25,45 @@
 	<target host="cache.addthiscdn.com" />
 
 
-	<rule from="^http://(?:www\.)?addthis\.com/bookmark\.php"
-		to="https://www.addthis.com/bookmark.php" />
+	<!--	These paths 302 to http:
 
-	<rule from="^http://(api|cache|ds|s[3579])\.addthis\.com/"
+			- about$
+			- about/team$
+			- advertising-choices$
+			- browser-extensions$
+			- careers$
+			- contact$
+			- get$
+			- get/welcome$
+			- logos$
+			- privacy/opt-out$
+			- privacy/partners$
+			- privacy/privacy-policy$
+			- technology$
+			- technology/web-intents$
+			- tos$
+
+		These paths don't:
+
+			- blog$
+			- blog/
+			- download/
+			- get/just-analytics
+			- get/sharing
+			- get/trending
+			- images/
+			- landing$
+			- login
+			- press$
+			- register
+					-->
+	<rule from="^http://(?:www\.)?addthis\.com/(bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get/(?:just-analytics|sharing|trending)|landing|login|press|register)(?:$|\?))"
+		to="https://www.addthis.com/$1" />
+
+	<rule from="^http://(?:www\.)?addthis\.com/get($|\?)"
+		to="https://www.addthis.com/get/sharing$1" />
+
+	<rule from="^http://(api|cache|cf|ds|s[3579])\.addthis\.com/"
 		to="https://$1.addthis.com/" />
 
 	<rule from="^http://cache\.addthiscdn\.com/"
