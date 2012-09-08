@@ -26,6 +26,7 @@ LLVAR="extensions.https_everywhere.LogLevel";
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
 
+
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
 const SERVICE_CTRID = "@eff.org/ssl-observatory;1";
@@ -72,6 +73,9 @@ function SSLObservatory() {
    * This is for UI notification purposes */
   this.proxy_test_successful = null;
   this.proxy_test_callback = null;
+  this.cto_url = "https://check.torproject.org/?TorButton=true";
+  // a regexp to match the above URL
+  this.cto_search = "^https://check.torproject.org/";
 
   this.public_roots = root_ca_hashes;
 
@@ -676,7 +680,7 @@ SSLObservatory.prototype = {
     try {
       var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
                               .createInstance(Components.interfaces.nsIXMLHttpRequest);
-      var url = "https://check.torproject.org/?TorButton=true"+this.csrf_nonce;
+      var url = this.cto_url + this.csrf_nonce;
       req.open('GET', url, true);
       req.channel.loadFlags |= Ci.nsIRequest.LOAD_BYPASS_CACHE;
       req.overrideMimeType("text/xml");
@@ -730,7 +734,9 @@ SSLObservatory.prototype = {
 
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
+    this.log(INFO,"in getProxySettings()");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
+      this.log(INFO,"CASE: use_tor_proxy");
       // extract torbutton proxy settings
       proxy_settings[0] = "http";
       proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
@@ -745,11 +751,13 @@ SSLObservatory.prototype = {
       /* XXX: Should we have a separate pref for use_direct? Or should "direct" be a subcase of custom
        * proxy hardcoded by the UI? Assuming the latter for now.
        */
+      this.log(INFO,"CASE: use_custom_proxy");
       proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
       proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
     } else {
       /* Take a guess at default tor proxy settings */
+      this.log(INFO,"CASE: try localhost:9050");
       proxy_settings[0] = "socks";
       proxy_settings[1] = "localhost";
       proxy_settings[2] = 9050;
@@ -757,31 +765,44 @@ SSLObservatory.prototype = {
     return proxy_settings;
   },
 
-  applyFilter: function(aProxyService, aURI, aProxy) {
-    if (aURI.spec.search("^"+this.submit_url) != -1 &&
-        aURI.path.search(this.csrf_nonce+"$") != -1) {
+  applyFilter: function(aProxyService, inURI, aProxy) {
 
-      this.log(INFO, "Got observatory url + nonce: "+aURI.spec);
-      var proxy_settings = null;
-      var proxy = null;
-
-      // Send it through tor by creating an nsIProxy instance
-      // for the torbutton proxy settings.
-      try {
-        proxy_settings = this.getProxySettings();
-        proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
-                  proxy_settings[2],
-                  Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
-                  0xFFFFFFFF, null);
-      } catch(e) {
-        this.log(WARN, "Error specifying proxy for observatory: "+e);
+    try {
+      if (inURI instanceof Ci.nsIURI) {
+        var aURI = inURI.QueryInterface(Ci.nsIURI);
+        if (!aURI) this.log(WARN, "Failed to QI to nsIURI!");
+      } else {
+        this.log(WARN, "applyFilter called without URI");
       }
+    } catch (e) {
+      this.log(WARN, "EXPLOSION: " + e);
+    }
 
-      this.log(INFO, "Specifying proxy: "+proxy);
+    if (aURI.spec.search("^"+this.submit_url) != -1 || aURI.spec.search(this.cto_search) != -1) {
+      if (aURI.path.search(this.csrf_nonce+"$") != -1) {
 
-      // TODO: Use new identity or socks u/p to ensure we get a unique
-      // tor circuit for this request
-      return proxy;
+        this.log(INFO, "Got observatory url + nonce: "+aURI.spec);
+        var proxy_settings = null;
+        var proxy = null;
+
+        // Send it through tor by creating an nsIProxy instance
+        // for the torbutton proxy settings.
+        try {
+          proxy_settings = this.getProxySettings();
+          proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
+                    proxy_settings[2],
+                    Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
+                    0xFFFFFFFF, null);
+        } catch(e) {
+          this.log(WARN, "Error specifying proxy for observatory: "+e);
+        }
+
+        this.log(INFO, "Specifying proxy: "+proxy);
+
+        // TODO: Use new identity or socks u/p to ensure we get a unique
+        // tor circuit for this request
+        return proxy;
+      }
     }
     return aProxy;
   },
