@@ -11,6 +11,10 @@
 
 	CDN buckets:
 
+		- ad.cnet-basic-performance.akadns.net
+		- www.cbsnews.com.edgesuite.net
+		- wwwimage.cbsnews.com.edgesuite.net 
+			- a1030.g.akamai.net/=/1030/1957/7d/wwwimages.cbsnews.com/	(works!)
 		- i.com.com.edgesuite.net	(maps directly ... but 404s over https.)
 			- a868.g.akamai.net
 				- a248.e.akamai.net/cnwk.1d/
@@ -24,6 +28,7 @@
 
 		- (www.)3qit.com
 		- bbs.3qit.com
+		- adlog.com.com
 		- cbs.com			(times out)
 		- www.cbs.com			(Akamai; "An error occurred"; origin,
 						origin-www, and www-origin don't exist)
@@ -33,6 +38,8 @@
 		- \w+.cbsistatic.com		(Akamai; 503)
 		- cbsnews.com			(times out)
 		- www.cbsnews.com		(Akamai; 503)
+		- bwp.cbsnews.com
+		- mads.cbsnews.com
 		- (bwp|www).cnet.com
 		- forums.cnetfrance.fr		(times out)
 		- adlog.com.com
@@ -56,6 +63,7 @@
 -->
 <ruleset name="CBS (partial)">
 
+	<target host="*.cbsnews.com" />
 	<target host="om.cnet.com.au" />
 	<target host="dw.com.com" />
 	<target host="*.gamespot.com" />
@@ -64,6 +72,15 @@
 	<target host="*.last.fm" />
 	<target host="cdn.lst.fm" />
 
+
+	<rule from="^https?://markets\.cbsnews\.com/$"
+		to="https://markets.financialcontent.com/cbsnews" />
+
+	<rule from="^https?://markets\.cbsnews\.com/"
+		to="https://markets.financialcontent.com/" />
+
+	<rule from="^https?://wwwimages\.cbsnews\.com/"
+		to="https://a248.e.akamai.net/=/868/1957/7d/wwwimages.cbsnews.com/" />
 
 	<rule from="^https?://om\.cnet\.com\.au/"
 		to="https://zdau-cnet.122.2o7.net/" />
