@@ -1,0 +1,34 @@
+<!--
+	For problematic rules, see Newegg-problematic.xml.
+
+
+	CDN buckets:
+
+		- ssl-images.newegg.com.edgekey.net
+
+		- images10.newegg.com.edgesuite.net	(maps directly)
+			- a200.g.akamai.net/.../
+
+		- images17.newegg.com.edgesuite.net/.../
+			- a1268.g.akamai.net/.../
+
+-->
+<ruleset name="Newegg (partial)">
+
+	<target host="*.newegg.com" />
+		<!--
+			ssl-images.newegg.com/WebResource/Themes/2005/Nest/blank.html 503s
+							-->
+		<exclusion pattern="^http://(?:images10\.newegg|c1\.neweggimages)\.com/WebResource/Themes/2005/Nest/\w+.html(?:$|\?)" />
+	<target host="c1.neweggimages.com" />
+
+
+	<rule from="^http://secure\.newegg\.com/"
+		to="https://secure.newegg.com/" />
+
+	<!--	- Akamai
+					-->
+	<rule from="^http://(?:(?:images10|ssl-images)\.newegg|c1\.neweggimages)\.com/"
+		to="https://ssl-images.newegg.com/" />
+
+</ruleset>
