@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional domains:
+
+		- blog.compete.com
+
+
+	CDN buckets:
+
+		- wildcard.compete.com.edgekey.net
+		- media.compete.com.edgesuite.net
+
+-->
+<ruleset name="Compete (partial)">
+
+	<target host="*.c-col.com" />
+	<target host="compete.com" />
+	<target host="*.compete.com" />
+
+
+	<securecookie host="^.*\.c-col\.com$" name=".*" />
+
+
+	<!--	Tracking on 3rd-party websites.
+							-->
+	<rule from="^http://([\w\-]+)\.c-ol\.com/"
+		to="https://$1.col.com/" />
+
+	<!--	At least some pages 302 to http.
+							-->
+	<rule from="^http://(www\.)?compete\.com/(plans(?:$|/|\?)|site_media/)"
+		to="https://$1compete.com/$2" />
+
+	<rule from="^http://(app|c)\.compete\.com/"
+		to="https://$1.compete.com/" />
+
+	<!--	media: Akamai.
+					-->
+	<rule from="^https?://(?:secure)?media\.compete\.com/"
+		to="https://securemedia.compete.com/" />
+
+</ruleset>
