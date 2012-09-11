@@ -24,6 +24,10 @@
 
 	<target host="bbc.co.uk" />
 	<target host="*.bbc.co.uk" />
+		<!--
+			Causes censorship bypass to fail.
+								-->
+		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
 	<target host="static.bbci.co.uk" />
 	<!--	Akamai	-->
 	<target host="*.bbcimg.co.uk" />
@@ -41,5 +45,8 @@
 
 	<rule from="^https?://node[12]\.bbcimg\.co\.uk/iplayer/"
 		to="https://www.bbc.co.uk/iplayer/" />
+
+	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?\w+/?(?:$|\?))"
+		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" />
 
 </ruleset>
