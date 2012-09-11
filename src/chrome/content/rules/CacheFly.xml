@@ -1,5 +1,13 @@
-<ruleset name="CacheFly">
+<!--
+	Nonfunctional domains:
 
+		- (www.)cachefly.com	(302 to http)
+		- blog.cachefly.com	(cert: offsite.cachefly.com, expired, self-signed; shows blank page)
+
+-->
+<ruleset name="CacheFly (partial)">
+
+	<target host="portal.cachefly.com" />
 	<target host="*.cachefly.net" />
 	<!--
 		Breaks speed test.
@@ -9,6 +17,12 @@
 		<exclusion pattern="^https?://cachefly\.cachefly\.net/(?:speedtest/|.+\.test)" />
 	<target host="*.cachefly.cachefly.net" />
 
+
+	<securecookie host="^portal\.cachefly\.com$" name=".+" />
+
+
+	<rule from="^http://portal\.cachefly\.com/"
+		to="https://portal.cachefly.com/" />
 
 	<rule from="^https?://(?:\d\.)?([^@:/\.]+)\.cachefly\.net/"
 		to="https://$1.cachefly.net/" />
