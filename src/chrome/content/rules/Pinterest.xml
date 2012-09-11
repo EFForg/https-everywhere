@@ -3,10 +3,26 @@
 
 		- a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
 		- a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/ | d3io1k5o0zdpqr.cloudfront.net
+		- wac.7a97.edgecastcdn.net/...
+			- media-cache-ec0.pinterest.com
+		- cs89.wac.edgecastcdn.net/...
+			- s-passets-ec.pinimg.com
+			- s-media-cache-ec\d.pinimg.com
+		- cs30\d.wac.edgecastcdn.net/...
+			- media-cache-ec\d.pinterest.com
+		- media-cache\d.pinterest.com.edgesuite.net
+			- media-cache\d.pinterest.com
+		- media-cdn.pinterest.com.edgesuite.net
+			- passets-cdn.pinterest.com
+		- pinit-cdn.pinterest.com.edgesuite.net
+			- pinit-cdn.pinterest.com
+		- cdn.pinterest.com.c.footprint.net/...
+			- media-cache-lt\d.pinterest.com
 
 -->
 <ruleset name="Pinterest">
 
+	<target host="*.pinimg.com" />
 	<target host="pinterest.com" />
 	<target host="*.pinterest.com" />
 
@@ -14,15 +30,19 @@
 	<securecookie host="^(.*\.)?pinterest\.com$" name=".*" />
 
 
+	<rule from="^http://s-([\w\-]+)-ec\.pinimg\.com/"
+		to="https://s-$1-ec.pinimg.com/" />
+
+	<rule from="^https?://media-cache-ec\d\.pin(?:img|terest)\.com/"
+		to="https://s-media-cache-ec.pinimg.com/" />
+
 	<rule from="^http://(assets\.|www\.)?pinterest\.com/"
 		to="https://$1pinterest.com/" />
 
-	<rule from="^http://(?:(media)-cache\d?|(passets)-cdn)\.pinterest\.com/"
-		to="https://s3.amazonaws.com/$1$2.pinterest.com/" />
+	<rule from="^http://media-cache\d?\.pinterest\.com/"
+		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
 
-	<!--	Akamai.
-			-->
-	<rule from="^https?://pinit-cdn\.pinterest\.com/"
+	<rule from="^https?://p(?:assets|init)-cdn\.pinterest\.com/"
 		to="https://a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/" />
 
 </ruleset>

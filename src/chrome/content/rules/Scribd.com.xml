@@ -1,62 +1,67 @@
-<!--	!functional:
-		- d.scribd.com				(cert: pantherssl.com; 403; data aren't on www)
-		- fonts[23].scribdassets.com		(cert: pantherssl.com; blank page; !on www.scribd.com; data appear the same for [23])
-		- s[1-8].scribdassets.com		(ditto)
-		- s.scribd.com				(ditto)
-		- s1.scribd.com				(!found)
-		- rs5?.scribd.com			(times out)
-		- img(v2(-[1-4])?)?.scribdassets.com	(cert: panth...)
-		- img.scribd.com			(AmazonAWS: "NoSuchBucket")
-		- fonts.scribd.com			(AmazonAWS: "AccessDenied")
-			buckets !at:
-				- scribd.com
-				- fonts.scribd.com
-				- fonts2.scribd.com
-				- imgv2.scribd.com
-				- s[124-7]?.scribd.com
-					Bingo: s3.scribd.com
-						Doesn't hold:
-						- fonts2
-						- img
-						- s[67]
-				- scribdfonts
-				- scribd.com.fonts
-				- scribd.com.assets
-				- scribd.com.img
-				Bucket at assets.scribd.com
-					Doesn't hold:
-						- fonts[23]
-						- img
-						- s[67]
-		- origin-img.scribd.com	(!found)
-		- origin.scribd.com	(!found)
-		- origin-s.scribd.com			works
-			- rewriting img.scribdassets and fonts[23].scribassets paths to origin-s causes redirection to www.scribd.com 404 page.
-						
-	ToDo: find img bucket.
+<!--
+	Nonfunctional domains:
+
+		- scribd subdomains:
+
+			- d				(cert: pantherssl.com; 403; data aren't on www)
+			- img				(AmazonAWS: "NoSuchBucket")
+			- s				(ditto)
+				- s1 doesn't exist
+			- rat				(times out)
+				- rs[15]?		(alias for rat)
+
+
+		- scribdassets subdomains:
+
+			- fonts[23]				(cert: pantherssl.com; blank page; !on www.scribd.com; data appear the same for [23])
+			- img(v2(-[1-4])?)?			(cert: panth...)
+			- s[1-8]				(ditto)
+
+		 rewriting img.scribdassets and fonts[23].scribassets paths to origin-s causes redirection to www.scribd.com 404 page.
+
+		ToDo: find img bucket.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/assets.scribd.com/
+		- s3.amazonaws.com/html.scribd.com/
+		- s3.amazonaws.com/reflow.scribd.com/
+		- s3.amazonaws.com/sprited-images.scribd.com/
+		- s3.amazonaws.com/s3.scribd.com/
+		- s.scribd.com.cdngc.net/...
+		- html.scribdassets.com.cdngc.net/...
+		- imgv2.scribdassets.com.cdngc.net/..
+		- s.scribd.com.edgesuite.net/...
+			- a440.ch1.akamai.net/...
+
 -->
 <ruleset name="Scribd.com (buggy)" default_off="often breaks login">
 
-	<target host="scribd.com"/>
-	<target host="*.scribd.com"/>
+	<target host="scribd.com" />
+	<target host="*.scribd.com" />
 		<!--
 			Redirects to http.
 
 			Lulz @ login redirecting to http.
 						-->
-		<exclusion pattern="^http://www\.scribd\.com/(documents/\d+/pingback$|login($|[\?/]))" />
+		<exclusion pattern="^http://www\.scribd\.com/(\w+($|\?)|doc/\d+$|documents/\d+/pingback$|login($|[\?/]))" />
 		<exclusion pattern="^http://s\d?\.scribdassets\.com/options/exposed_to_client\.js\?\d*$" />
-	<target host="*.scribdassets.com"/>
+	<target host="*.scribdassets.com" />
+
 
 	<!--	Since login redirects to http, handling cookies might be problematic.
-	<securecookie host="^(.*\.)?scribd\.com$" name=".*"/-->
+
+	<securecookie host="^(.*\.)?scribd\.com$" name=".*" /-->
+
 
 	<rule from="^http://(www\.)?scribd\.com/"
-		to="https://www.scribd.com/"/>
+		to="https://www.scribd.com/" />
 
-	<!--	fonts.scribd.com is on AmazonAWS, but valid cert	-->
+	<!--	fonts.scribd.com is on AmazonAWS, but valid cert
+						-->
 	<rule from="^http://fonts[123]?\.scribd(assets)?\.com/"
-		to="https://fonts.scribd.com/"/>
+		to="https://fonts.scribd.com/" />
 
 	<!--	- 1-4 in html(img)?\d exist on assets
 			- pantherssl.com
@@ -65,8 +70,12 @@
 	<rule from="^http://html(img)?[1-4]?\.scribd(assets)?\.com/"
 		to="https://s3.amazonaws.com/html.scribd.com/" />
 
-	<!-- bucket !found, but...	-->
+	<!--	Bucket not found, but...
+					-->
 	<rule from="^http://s[1-8]?\.scribd(assets)?\.com/"
-		to="https://origin-s.scribd.com/"/>
+		to="https://origin-s.scribd.com/" />
+
+	<rule from="^https?://sprited-images\.scribd\.com/"
+		to="https://s3.amazonaws.com/sprited-images.scribd.com/" />
 
 </ruleset>

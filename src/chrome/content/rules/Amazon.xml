@@ -1,4 +1,10 @@
 <!--
+	Other Amazon rulesets:
+
+		- Amazon-Associates.xml
+		- AmazonAWS.xml
+
+
 	This rule is off by default because it caused so many aspects of the
 	Amazon site to break; see the mailing list archives for details.
 	Currently being fixed...
@@ -58,19 +64,22 @@
 
 	<target host="amazon.*" />
 	<target host="www.amazon.*" />
-		<!--	These pages don't work on .com.	-->
-		<exclusion pattern="^http://www\.amazon\.com/($|\?|exec/obidos/|gp/((goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)($|\?)|product/)|l/|([\w\-]+/)?(b|dp|Help)/)" />
-	<target host="affiliate-program.amazon.com" />
-	<target host="astore.amazon.com" />
+		<!--
+			These pages don't work on .com.
+						-->
+		<exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" />
 	<target host="*.amazon.co.uk" />
 	<target host="amazon.co.*" />
 	<target host="www.amazon.co.*" />
-		<!--	Search redirects to http, for all sites.	-->
-		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(gp/search\?|mn/search/|s(/|\?rh=))" />
+		<!--
+			Search redirects to http, for all sites.
+									-->
+		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search/|s(?:/|\?rh=))" />
 
 
-	<!--	Verified as working for UK, others sites matched appear to function identically.	-->
-	<securecookie host="^(www)?\.amazon\.(ca|co\.uk|de|es|fr|it)$" name=".*" />
+	<!--	Verified as working for UK, other sites matched appear to function identically.
+											-->
+	<securecookie host="^(?:www)?\.amazon\.(?:ca|co\.uk|de|es|fr|it)$" name=".*" />
 
 	<!--	These cookies are set all over .com.
 	<securecookie host="^\.amazon\.com$" name="^session-id(-time)?$" />
@@ -78,8 +87,6 @@
 		These cookies are set by gp/cart/view.html
 	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
 
-	<rule from="^http://a(ffiliate-program|store)\.amazon\.com/"
-		to="https://a$1.amazon.com/" />
 
 	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
 		to="https://www.amazon.$1/" />

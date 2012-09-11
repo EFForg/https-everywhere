@@ -9,45 +9,60 @@
 
 	CDN buckets:
 
-		- a248.e.akamai.net/f/1731/67675/12h/(m|s[1-4i]?).wsj.net/
+		- a248.e.akamai.net/f/1731/67675/12h/(m|s[1-4ci]?).wsj.net/
 		- s3.amazonaws.com/static.fins.com/
+		- efinancialnews.com.edgesuite.net/...
+			- a1859.g.akamai.net/...
+		- s.smartmoney.net.edgesuite.net/...
+			- a1092.g.akamai.net/...
+		- sj.smartmoney.net.edgesuite.net/...
+			- a1683.g.akamai.net/...
+		- fonts.wsj.com.edgesuite.net/...
+			- a1213.g.akamai.net/...
+		- sc.wsj.net.edgesuite.net/...
+			- a1574.g.akamai.net/...
 
 
 	404:
 		www.foxnews.com/politics/
 
 
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
 		- (www.)fbnstatic.com	(Akamai; 404)
 		- global.fncstatic.com	(Akamai; 503)
 		- a\d\d.foxnews.com	(Akamai; 404)
 		- www.news.com.au	(Akamai; "Service Unavailable")
+		- live.wsj.com		(Cert: online.wsj.com; 301s there)
+		- online.wsj.com	(Cert: self-signed; 301s to http)
+		- uk.wsj.com		(Cert: online.wsj.com; 301s there)
 		- cs.wsj.net		(data also hosted on sc.wsj.net)
 		- synccontent.wsj.com
 
 -->
 <ruleset name="News Corporation (partial)">
 
+	<target host="online.barrons.com" />
 	<target host="om.dowjoneson.com" />
+	<target host="djrc.portal.dowjones.com" />
 	<target host="efinancialnews.com" />
-	<target host="www.efinancialnews.com" />
+	<target host="*.efinancialnews.com" />
 	<target host="factiva.com" />
 	<target host="*.factiva.com" />
 	<target host="fins.com" />
-	<target host="www.fins.com" />
+	<target host="*.fins.com" />
+	<target host="metrics.foxnews.com" />
 	<target host="secure.nypost.com" />
 	<target host="*.wsj.com" />
 	<target host="*.wsj.net" />
-		<exclusion pattern="http://bc\.wsj\.net/" />
 		<!--
 			Doesn't translate directly to s2.wsj.net
 								-->
-		<exclusion pattern="^http://barrons\.wsj\.net/djstyle/" />
+		<exclusion pattern="^http://barrons\.wsj\.net/css/barronsDependencies/" />
 	<target host="services.wsje.com" />
-	<target host="s.smartmoney.net" />
-	<target host="sc.smartmoney.net" />
-	<target host="secure.smartmoney.net" />
+	<target host="smartmoney.com" />
+	<target host="*.smartmoney.com" />
+	<target host="*.smartmoney.net" />
 	<target host="wsjeuropesubs.com" />
 	<target host="*.wsjeuropesubs.com" />
 	<target host="wsjsafehouse.com" />
@@ -62,57 +77,83 @@
 	<securecookie host="^(.*\.)?wsj(eurosubs|safehouse)\.com$" name=".*" />
 
 
+	<rule from="^https?://online.barrons.com/img/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/s.wsj.net/img/" />
+
 	<rule from="^https?://om\.dowjoneson\.com/"
 		to="https://djglobal.122.2o7.net/" />
 
+	<rule from="^http://djrc\.portal\.dowjones\.com/"
+		to="https://djrc.portal.dowjones.com/" />
+
 	<rule from="^http://(www\.)?efinancialnews\.com/(about-us/tour/|css/|img/|js/|login/|forgot-password|register)"
 		to="https://$1efinancialnews.com/$2" />
+
+	<rule from="^https?://media\.efinancialnews\.com/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/media.efinancialnews.com/" />
 
 	<!--	Cert doesn't match !www.	-->
 	<rule from="^https?://factiva\.com/"
 		to="https://www.factiva.com/" />
 
-	<rule from="^http://(global|www)\.factiva\.com/"
+	<rule from="^http://(customer|global|www)\.factiva\.com/"
 		to="https://$1.factiva.com/" />
 
 	<rule from="^http://(?:www\.)?fins\.com/Finance/(cs|Image)s/"
 		to="https://www.fins.com/Finance/$1s/" />
 
+	<rule from="^https?://s\.fins\.com/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/s.fins.com/" />
+
+	<rule from="^https?://metrics\.foxnews\.com/"
+		to="https://foxnews.112.2o7.net/" />
+
 	<rule from="^http://secure\.nypost\.com/"
 		to="https://secure.nypost.com/"/>
 
-	<rule from="^http://(charts|m1|s)\.smartmoney\.net/"
+	<!--	At least some paths aren't available on (s|sc).smartmoney.net.
+										-->
+	<rule from="^https?://(?:www\.)?smartmoney\.com/img/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/s.smartmoney.net/img/" />
+
+	<rule from="^https?://charts\.smartmoney\.com/gifbuilder/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/charts.smartmoney.com/gifbuilder/" />
+
+	<rule from="^https?://fonts\.(smartmoney|wsj)\.com/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/fonts.smartmoney.com/" />
+
+	<rule from="^https?://j(?:tools|secure)?\.smartmoney\.com/"
+		to="https://jsecure.smartmoney.com/" />
+
+	<rule from="^https?://(charts|m1|s)\.smartmoney\.net/"
 		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.smartmoney.net/" />
 
-	<rule from="^http://sc\.smartmoney\.net/css/cssDependencies/hat-icons\.css"
-		to="https://sc.wsj.net/" />
+	<rule from="^https?://sc\.smartmoney\.net/css/cssDependencies/hat-icons\.css"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/sc.smartmoney.net/css/cssDependencies/hat-icons.css" />
 
-	<rule from="^http://secure\.smartmoney\.net/"
-		to="https://secure.smartmoney.net/" />
-
-	<rule from="^http://\w+\.wsj\.com/(favicon\.ico|img/|j20type\.css|static_html_files/)"
-		to="https://s.wsj.net/$1" />
+	<rule from="^http://\w+\.wsj\.com/(dscript/|favicon\.ico|img/|j20type\.css|static_html_files/)"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/s.wsj.net/$1" />
 
 	<rule from="^http://(classifieds|customercenter)\.wsj\.com/"
 		to="https://buy.wsj.com/" />
 
+	<rule from="^https?://live\.wsj\.com/djscript/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/live.wsj.com/djscript/" />
+
 	<rule from="^http://services\.wsj(e)?\.com/"
 		to="https://services.wsj$1.com/" />
 
-	<rule from="^http://barrons\.wsj\.net/"
-		to="https://s2.wsj.net/" />
+	<rule from="^https?://barrons\.wsj\.net/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/s.wsj.net/" />
 
-	<rule from="^http://(m|s[1-4i]?)\.wsj\.net/"
-		to="https://$1.wsj.net/" />
+	<rule from="^https?://(bc|cc|m|s[1-4cgij]?)\.wsj\.net/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.wsj.net/" />
 
 	<!--	Akamai
 		Some of this is also on secure.marketwatch.com.
 								-->
 	<rule from="^https?://mw(\d)\.wsj\.net/([mM][wW])5/"
 		to="https://a248.e.akamai.net/f/1731/67675/12h/mw$1.wsj.net/$25/" />
-
-	<rule from="^http://sc\.wsj\.net/css/(cssDependencies/hat-icons|standalone_partner_hat|teublog|wsjblog(?:_global(?:_2|_static)?)?)\.css"
-		to="https://sc.wsj.net/css/$1.css" />
 
 	<rule from="^http://(www\.)?wsjeuropesubs\.com/"
 		to="https://$1wsjeuropesubs.com/" />

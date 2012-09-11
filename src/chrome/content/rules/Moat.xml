@@ -1,0 +1,36 @@
+<!--
+	CDN buckets:
+
+		- moat-ads.s3.amazonaws.com
+		- moatsearch-data.s3.amazonaws.com
+		- s3.amazonaws.com/search.moat/
+		- s.moatads.com.edgesuite.net/...
+
+
+	Nonfunctional domains:
+
+		- (www.)moatads.com
+		- s.moatads.com		(Akamai; 503)
+		- v3.moatads.com
+
+-->
+<ruleset name="Moat (partial)">
+
+	<target host="moat.com" />
+	<target host="*.moat.com" />
+	<target host="moatads.com" />
+	<target host="www.moatads.com" />
+
+
+	<securecookie host="^(?:www\.)?moat\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?moat\.com/"
+		to="https://$1moat.com/" />
+
+	<!--	Redirects like so. 
+					-->
+	<rule from="^https?://(?:www\.)?moatads\.com/$"
+		to="https://www.moat.com/" />
+
+</ruleset>
