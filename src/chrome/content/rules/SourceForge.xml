@@ -26,6 +26,10 @@
 	<target host="*.sf.net" />
 	<target host="*.svn.sf.net" />
 	<target host="sourceforge.jp" />
+		<!--
+			Different.
+					-->
+		<exclusion pattern="^http://downloads\.sourceforge\.jp" />
 	<target host="sourceforge.net" />
 	<target host="*.sourceforge.net" />
 	<target host="*.svn.sourceforge.net" />
@@ -46,11 +50,13 @@
 	<rule from="^https?://(www\.)?(?:sf|sourceforge)\.net/sflogo\.php"
 		to="https://$1sourceforge.net/sflogo.php" />
 
-	<rule from="^http://(apps|images|lists|prdownloads|sflogo|static)\.(?:sf|sourceforge)\.(?:jp|net)/"
-		to="https://$1.sourceforge.net/" />
-
+	<!--	This should be above the next rule, so as to avoid double rewrites.
+											-->
 	<rule from="^https?://downloads\.s(?:f|ourceforge)\.net/project/([^\?]+)\?r=http%3A%2F%2Fs"
 		to="https://downloads.sourceforge.net/project/$1?r=https%3A%2F%2Fs" />
+
+	<rule from="^http://(apps|downloads|images|lists|prdownloads|sflogo|static)\.(?:sf|sourceforge)\.(?:jp|net)/"
+		to="https://$1.sourceforge.net/" />
 
 	<!--	jobs.sourceforge.net is equivalent to slashdot.personforce.com,
 		but cert doesn't match that domain either.	-->
