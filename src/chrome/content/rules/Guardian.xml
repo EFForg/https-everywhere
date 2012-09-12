@@ -1,8 +1,11 @@
 <!--
-	s3.amazonaws.com/soulmates/
-	combo.guim.co.uk.edgesuite.net
-		a241.w7.akamai.net
-	hits.guardian.co.uk/b/ss/guardiangu-network,guardiangu-mobile/
+	CDN buckets:
+
+		- s3.amazonaws.com/soulmates/
+		- combo.guim.co.uk.edgesuite.net
+
+
+	- guardian.co.uk.112.2o7.net/b/ss/guardiangu-network,guardiangu-mobile/
 
 
 	Nonfunctional domains:
@@ -23,20 +26,28 @@
 	<target host="guardianeatright.co.uk" />
 	<target host="www.guardianeatright.co.uk" />
 	<target host="*.guim.co.uk" />
-		<!--	Akamai, 404	-->
-		<exclusion pattern="^http://(www\.)?(combo|resource)\." />
 	<target host="www.*.guim.co.uk" />
+		<!--
+			Akamai, 404
+
+		<exclusion pattern="^http://(?:www\.)?(?:combo|resource)\." /-->
 
 
-	<securecookie host="^soulmates\.guardian\.co\.uk$" name=".*" />
-	<securecookie host="(.*\.)?guardianeatright\.co\.uk$" name=".*" />
+	<securecookie host="^soulmates\.guardian\.co\.uk$" name=".+" />
+	<securecookie host="^(?:.*\.)?guardianeatright\.co\.uk$" name=".+" />
 
 
 	<rule from="^https?://www\.guardian\.co\.uk/favicon\.ico"
 		to="https://image.guim.co.uk/favicon.ico" />
 
+	<rule from="^https?://(?:www\.)?(?:download|image|static)\.gu(?:ardian|im)\.co\.uk/"
+		to="https://image.guim.co.uk/" />
+
 	<rule from="^https?://hits\.guardian\.co\.uk/"
-		to="https://guardiangu-network-guardiangu-mobile.122.2o7.net/" />
+		to="https://guardian-co-uk.122.2o7.net/" />
+
+	<rule from="^http://soulmates)\.guardian\.co\.uk/"
+		to="https://soulmates.guardian.co.uk/" />
 
 	<rule from="^https?://guardianbookshop\.co\.uk/"
 		to="https://www.guardianbookshop.co.uk/" />
@@ -46,11 +57,5 @@
 
 	<rule from="^http://(www\.)?guardianeatright\.co\.uk/"
 		to="https://$1guardianeatright.co.uk/" />
-
-	<rule from="^https?://(?:www\.)?(?:download|image|static)\.gu(?:ardian|im)\.co\.uk/"
-		to="https://image.guim.co.uk/" />
-
-	<rule from="^http://soulmates\.guardian\.co\.uk/"
-		to="https://soulmates.guardian.co.uk/" />
 
 </ruleset>
