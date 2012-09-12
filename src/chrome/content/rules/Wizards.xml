@@ -1,10 +1,33 @@
-<ruleset name="Wizards of the Coast">
+<!--
+	For problematic rules, see Wizards-of-the-Coast-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- locator
+
+
+	Cert presented by ww2 is only valid for (www.). ww2
+	appears only to redirect to locator, which doesn't
+	work, so there's not much point handling it.
+
+-->
+<ruleset name="Wizards of the Coast (partial)">
 
 	<target host="wizards.com" />
+	<target host="images.community.wizards.com" />
 	<target host="www.wizards.com" />
 
 
-	<rule from="^http://(www\.)?wizards\.com/"
+	<securecookie host="^(?:.+\.)?wizards\.com$" name=".+" />
+
+
+	<rule from="^http://(accounts\.|www\.)?wizards\.com/"
 		to="https://$1wizards.com/" />
+
+	<!--	Expired certificate.
+					-->
+	<rule from="^https?://images\.community\.wizards\.com/"
+		to="https://images.onesite.com/" />
 
 </ruleset>
