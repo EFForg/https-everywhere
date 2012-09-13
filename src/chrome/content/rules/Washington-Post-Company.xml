@@ -2,7 +2,17 @@
 	For problematic rules, see Washington-Post-Company-mismatches.xml.
 
 
-	Nonfunctional:
+	CDN buckets:
+
+		- js.washingtonpost.com.edgesuite.net
+		- media[23]?.washingtonpost.com.edgesuite.net
+		- projects.washingtonpost.com.edgesuite.net
+		- www.washingtonpost.com.edgesuite.net
+		- css.wpdigital.net.edgesuite.net
+		- img[23]?.wpdigital.net.edgesuite.net
+
+
+	Nonfunctional domains:
 
 		- washingtonpost.com
 		- findnsave.washingtonpost.com	(times out)
@@ -11,7 +21,7 @@
 	Nonfunctional Akamai:
 
 		- js.washingtonpost.com			(504)
-		- media(\d)?.washingtonpost.com		("Service Unavailable")
+		- media[23]?.washingtonpost.com		("Service Unavailable")
 		- projects.washingtonpost.com
 		- www.washingtonpost.com		("An error occurred")
 		- css.wpdigital.net			("An error occurred")
@@ -24,14 +34,14 @@
 
 	<target host="washpost.com" />
 	<target host="*.washpost.com" />
-	<target host="subscription.washingtonpost.com" />
+	<target host="*.washingtonpost.com" />
 
 
 	<securecookie host="^subscription\.washingtonpost\.com$" name=".*" />
 
 
-	<rule from="^http://subscription\.washingtonpost\.com/"
-		to="https://subscription.washingtonpost.com/" />
+	<rule from="^http://(subscription|voices)\.washingtonpost\.com/"
+		to="https://$1.washingtonpost.com/" />
 
 	<rule from="^http://(media\.|www\.)?washpost\.com/"
 		to="https://$1washpost.com/" />
