@@ -762,6 +762,7 @@ SSLObservatory.prototype = {
       proxy_settings[1] = "localhost";
       proxy_settings[2] = 9050;
     }
+    this.log(INFO, "Using proxy: " + proxy_settings);
     return proxy_settings;
   },
 
