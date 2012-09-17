@@ -3,23 +3,26 @@
 
 		- uTorrent.xml
 
--->
-<ruleset name="BitTorrent (cert warning)" default_off="cert warning">
+	CDN buckets:
 
-	<target host="bittorrent.com" />
+		- bittorrent.vo.llnwd.net
+			- bittorent.hs doesn't exist
+
+		- bittorrent.gyre.wpengine.com
+
+
+	Nonfunctional subdomains:
+
+		- blog	(cert: *.wpengine.com; 301s to http)
+		- www	(cert: *.hs.llnwd.net; 400)
+
+-->
+<ruleset name="BitTorrent (partial)">
+
 	<target host="*.bittorrent.com" />
 
 
-	<securecookie host="^(.*\.)?bittorrent\.com$" name=".*" />
-
-
-	<!--	Observed subdomains:
-
-			- blog
-			- forum
-			- torque
-				-->
-	<rule from="^http://(\w+\.)?bittorrent\.com/"
-		to="https://$1bittorrent.com/" />
+	<rule from="^http://(forum|remote|torque)\.bittorrent\.com/"
+		to="https://$1.bittorrent.com/" />
 
 </ruleset>

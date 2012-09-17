@@ -6,6 +6,7 @@
 
 		- Live.xml
 		- Microsoft-Atlas.xml
+		- MSDN.xml
 		- MSN.com.xml
 		- MSN-Extra.xml
 		- Newsvine.com.xml
@@ -60,7 +61,6 @@
     		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
 		<!--	https://trac.torproject.org/projects/tor/ticket/5754	-->
 		<exclusion pattern="^http://msdn\.microsoft\.com/($|en-us/$|.+(/$|\.aspx|/\w\w\d{6,10}$))" />
-		<exclusion pattern="^https?://blogs\.msdn\.com/.*\?Redirected=true" />
 	<target host="social.expression.microsoft.com" />
 	<!--	Akamai	-->
 	<target host="*.msdn.microsoft.com" />
@@ -80,11 +80,7 @@
 	<target host="*.microsoftstore.com" />
 	<target host="*.microsoftstoreassets.com" />
 	<target host="external.microsoftstoreservices.com" />
-	<target host="*.msdn.com" />
-	<!--	Akamai	-->
-	<target host="i1.blogs.msdn.com" />
-	<target host="create.msdn.com" />
-	<target host="*.create.msdn.com" />
+	<target host="i-technet.sec.s-msft.com" />
 	<target host="*.social.s-msft.com" />
 		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/" />
 	<target host="systemcenteradvisor.com" />
@@ -101,7 +97,6 @@
 	<!--	cookies set by c.microsoft.com		-->
 	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
 	<securecookie host="^www\.microsoft\.com$" name=".*" />
-	<securecookie host="^blogs\.msdn\.com$" name=".*" />
 	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
 	<securecookie host="^www\.systemcenteradvisor\.com$" name=".*" />
 
@@ -154,13 +149,6 @@
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
 
-	<!--	Attempted workaround for
-
-		https://trac.torproject.org/projects/tor/ticket/5754
-				-->
-	<rule from="^https?://blogs\.msdn\.com/(.*(?:\.aspx|\.xml|/))?$"
-		to="https://blogs.msdn.com/$1?Redirected=true" />
-
 	<!--	Akamai	-->
 	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
 		to="https://www.microsoft.com/$1/" />
@@ -168,8 +156,8 @@
 	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
 		to="https://support.microsoft.com/$1" />
 
-	<rule from="^http://technet\.microsoft\.com/en-us/library/([^\.])\.rss($|\?)"
-		to="https://technet.microsoft.com/en-us/library/$1.rss$2" />
+	<rule from="^http://technet\.microsoft\.com/en-us/(library/[^\.]\.rss(?:$|\?)|security/bulletin(?:$|\?|/))"
+		to="https://technet.microsoft.com/en-us/$1" />
 
 	<!--	- res[12] appear to be identical
 		- Cert: *.sharepointonline.com
@@ -179,7 +167,7 @@
 		to="https://origin-res.windows.microsoft.com/" />
 
 	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
-		to="https://social.technet.microsoft.com/" />
+		to="https://social.technet.microsoft.com/wiki/" />
 
 	<!--	Cert doesn't match /update.	-->
 	<rule from="^https?://update\.microsoft\.com/"
@@ -200,18 +188,8 @@
 	<rule from="^http://external\.microsoftstoreservices\.com/"
 		to="https://external.microsoftstoreservices.com/" />
 
-	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
-		to="https://$1.msdn.com/" />
-
-	<!--	- Cert doesn't match !www
-		- www pages redirect to !www
-		- Cert doesn't match public
-						-->
-	<rule from="^https?://(?:public\.)?create\.msdn\.com/assets/"
-		to="https://www.create.msdn.com/assets/" />
-
-	<rule from="^http://(profile|www)\.create\.msdn\.com/"
-		to="https://$1.create.msdn.com/" />
+	<rule from="^http://i-technet\.sec\.s-msft\.com/"
+		to="https://i-technet.sec.s-msft.com/" />
 
 	<rule from="^https?://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/" />

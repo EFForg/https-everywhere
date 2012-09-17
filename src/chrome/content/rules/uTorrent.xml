@@ -3,31 +3,41 @@
 
 		- BitTorrent.xml
 
+<<<<<<< HEAD
 -->
 <ruleset name="µTorrent (cert warning)" default_off="cert warning">
+=======
+>>>>>>> negres/for-4.0
 
-	<target host="utorrent.com" />
-	<target host="*.utorrent.com" />
-		<!--	Cert: *.wpengine.com; 403	-->
-		<exclusion pattern="^http://blog\." />
+	CDN buckets:
 
-
-	<securecookie host="^(.*\.)?utorrent\.com$" name=".*" />
-
-
-	<!--	Cert only matches *.utorrent.com.	-->
-	<rule from="^https?://utorrent\.com/"
-		to="https://www.utorrent.com/" />
-
-	<!--	Observed subdomains:
-
-			- download	(throws 403 over both http & https)
-			- forums
-			- rapton-i-c805b8af
-			- remote
+		- bittorrent.vo.llnwd.net
+			- ....hs.llnwd.net doesn't exist
 			- www
-				-->
-	<rule from="^http://(\w+)\.utorrent\.com/"
+			- ll.download3
+			- ll.static
+
+		- utorrent.gyre.wpengine.com
+
+
+	Nonfunctional subdomains:
+
+		- www		(cert: *.hs.llnwd.net; 400)
+		- blog		(cert: *.wpengine.com; 301s to http)
+		- ll.download3	(cert: *.hs.llnwd.net; 400)
+		- ll.static	(ditto)
+
+-->
+<ruleset name="µTorrent (partial)">
+
+	<target host="*.utorrent.com" />
+	<target host="ll.*.utorrent.com" />
+
+
+	<rule from="^http://(forum|remote)\.utorrent\.com/"
+		to="https://$1.utorrent.com/" />
+
+	<rule from="^https?://(?:ll\.)?(download3?|static)\.utorrent\.com/"
 		to="https://$1.utorrent.com/" />
 
 </ruleset>

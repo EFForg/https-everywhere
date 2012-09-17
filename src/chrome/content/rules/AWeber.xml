@@ -1,10 +1,66 @@
-<ruleset name="AWeber">
+<!--
 
-	<target host="aweber.com"/>
-	<target host="www.aweber.com"/>
+	CDN buckets:
 
-	<!--	cert is valid for !www, but doesn't work even over http (blank page)	-->
-	<rule from="^http://(?:www\.)?aweber\.com/"
-		to="https://www.aweber.com/"/>
+		- hostedimages.aweber-static.com.s3.amazonaws.com
+		- blogcontent.awebercommunicat.netdna-cdn.com
+			- blog-cdn.aweber-static.com
+			- blogcontent-awebercommunicat.netdna-ssl.com doesn't exist
+
+	aweber.zendesk.com
+
+
+	Nonfunctional domains:
+
+		- blog-cdn.aweber-static.com	(cert: netdna-ssl.com; 404)
+
+-->
+<ruleset name="AWeber (partial)">
+
+	<target host="aweber.com" />
+	<target host="*.aweber.com" />
+		<!--
+			Some paths 302 to http.
+
+			These do:
+
+				- $
+				- affiliates.htm
+				- antispam.htm
+				- blog/
+				- email-marketing-features.htm
+				- pricing.htm
+				- privacy.htm
+
+			These don't:
+
+				- contact-us.htm
+				- images/
+				- img/
+				- login.htm
+				- order.htm
+
+		<exclusion pattern="^http://(?:www\.)?aweber\.com/(((affiliates|antispam|email-marketing-features|priving|privacy)\.htm)?($|\?)|blog(/|\?|/))" /-->
+	<target host="*.aweber-static.com" />
+
+
+	<securecookie host="^(?:forms|help|labs)\.aweber\.com$" name=".+" />
+	<securecookie host="^.*\.aweber-static\.com$" name=".+" />
+
+
+	<!--	Cert is valid for !www, but doesn't
+		work even over http (blank page).
+							-->
+	<rule from="^http://(?:www\.)?aweber\.com/(blog(?:$|\?|/)|(?:(?:contact-us|login|order)\.htm)(?:$|\?)|images/|img/)"
+		to="https://www.aweber.com/$1"/>
+
+	<rule from="^http://(analytics|forms|help|labs)\.aweber\.com/"
+		to="https://$1s.aweber.com/" />
+
+	<rule from="^http://cdn([1-5])\.aweber-static\.com/"
+		to="https://cdn$1.weber-static.com/" />
+
+	<rule from="^https?://hostedimages\.aweber-static\.com/"
+		to="https://s3.amazonaws.com/hostedimages.aweber-static.com/" />
 
 </ruleset>
