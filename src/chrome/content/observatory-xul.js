@@ -40,7 +40,7 @@ function observatory_prefs_init(doc) {
 
   // But if the user hasn't turned the observatory on, 
   // the default should be the maximally sensible one
-  var torbutton_avail = ssl_observatory.torbutton_installed;
+  var torbutton_avail = ssl_observatory.proxy_test_successful;
   if (!enabled) {
     set_obs_anon(torbutton_avail);
     obs_how.selectedItem = (torbutton_avail) ? anon_radio : nonanon_radio;
@@ -71,8 +71,8 @@ function set_observatory_configurability(enabled) {
   var ui_elements = document.querySelectorAll(".ssl-obs-conf");
   for (var i =0; i < ui_elements.length; i++) 
     ui_elements[i].disabled = !enabled;
-  // the "use tor" option can't be ungreyed unless torbutton is installed
-  if (ssl_observatory.torbutton_installed == false) {
+  // the "use tor" option can't be ungreyed unless tor is available
+  if (ssl_observatory.proxy_test_successful == false) {
     var tor_opt = document.getElementById("ssl-obs-anon")
     tor_opt.disabled = true;
     tor_opt.label = tor_opt.getAttribute("alt_label");

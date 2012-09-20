@@ -503,8 +503,15 @@ HTTPSEverywhere.prototype = {
       // again.
       var shown = ssl_observatory.myGetBoolPref("popup_shown");
       var enabled = ssl_observatory.myGetBoolPref("enabled");
-      if (!shown && !enabled) 
-        this.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+      var that = this;
+      var obs_popup_callback = function(result) {
+        if (result) that.log(INFO, "Got positive proxy test.");
+        else        that.log(INFO, "Got negative proxy text.");
+        // We are now ready to show the popup in its most informative state
+        that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+      };
+      if (!shown && !enabled)
+        ssl_observatory.registerProxyTestNotification(obs_popup_callback);
     }
     return;
   },
