@@ -1,17 +1,61 @@
+<!--
+	Nonfunctional subdomains:
+
+		- developer	(cert: secure; 301s to http)
+
+-->
 <ruleset name="LongTail (partial)">
 
+	<target host="dashboard.bitsontherun.com" />
+	<target host="*.jwpltx.com" />
+	<target host="longtail.tv" />
+	<target host="www.longtail.tv" />
 	<target host="longtailvideo.com" />
 	<target host="*.longtailvideo.com" />
+	<target host="ltvimg.com" />
 	<target host="*.ltvimg.com" />
+		<!--
+			302 to http.
+					-->
+		<exclusion pattern="^https?://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/\w+/images/\w+\.png$" />
 
 
-	<!--	!www cert only matches (www.)?secure
+	<securecookie host="^\w\.jwpltx\.com$" name=".+" />
+	<securecookie host="^.+\.longtailvideo\.com$" name=".+" />
+
+
+	<!--	At least some pages 303 to http.
 							-->
-	<rule from="^http://(?:www\.)?longtailvideo\.com/(content|jw)/"
-		to="https://www.longtailvideo.com/$1/" />
+	<rule from="^http://dashboard\.bitsontherun\.com/static/"
+		to="https://dashboard.bitsontherun.com/static/" />
 
-	<rule from="^http://(dashboard|plugins)\.longtailvideo\.com/"
+	<rule from="^http://(i|s)\.jwpltx\.com/"
+		to="https://$1.jwpltx.com/" />
+
+	<!--	- Cert valid for www, but $ 404s
+		- 301s like so
+						-->
+	<rule from="^https?://(?:www\.)?longtail\.tv/"
+		to="https://www.longtailvideo.com/" />
+
+	<!--	- !www cert only matches secure
+		- Some (most?) pages redirect to http
+		- As do these paths:
+
+			- addons/images/
+						-->
+	<rule from="^https?://(?:www\.)?longtailvideo\.com/(bits-on-the-run/sign-up|content/|jw/|sites/)"
+		to="https://www.longtailvideo.com/$1" />
+
+	<rule from="^http://(content|dashboard|lp|player|plugins|secure)\.longtailvideo\.com/"
 		to="https://$1.longtailvideo.com/" />
+
+	<!--	- !www CN: edgecastcdn.net
+		- www CN: *.longtailvideo.com
+		- Both 404
+					-->
+	<rule from="^https?://(?:www\.)?ltvimg\.com/"
+		to="https://s0-www.ltvimg.com/" />
 
 	<rule from="^http://s(0|1)-www\.ltvimg\.com/"
 		to="https://s$1-www.ltvimg.com/" />
