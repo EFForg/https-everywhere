@@ -26,9 +26,9 @@
 	<target host="aber-ac-uk.campuspack.eu" />
 
 
-	<!--	Letters are specified to as to avoid cadair,
-		which doesn't have blanket support for https.	-->
-	<securecookie host="^[bd-v]\w+\.aber\.ac\.uk$" name=".*" />
+	<!--	c is avoided to avoid cadair, which
+		doesn't have blanket support for https.	-->
+	<securecookie host="^[^c]\w+\.aber\.ac\.uk$" name=".*" />
 
 
 	<rule from="^http://cadair\.aber\.ac\.uk/dspace/ldap-login"
@@ -36,11 +36,13 @@
 
 	<!--	Letters are specified so as to avoid cadair,
 		which doesn't have blanket support for https.	-->
-	<rule from="^http://([bd-v]\w+|careers|webmail)\.aber\.ac\.uk/"
+	<rule from="^http://([^c]\w+|careers)\.aber\.ac\.uk/"
 		to="https://$1.aber.ac.uk/" />
 
-	<rule from="^http://(?:www\.)?aber\.ac\.uk/(css|en/(?:development/(?:2010_)?registration|ibers/isnh8/(?:cancel|remove|retrieve)|media))/"
-		to="https://www.aber.ac.uk/$1/" />
+	<!--	!www doesn't work.
+					-->
+	<rule from="^https?://aber\.ac\.uk/"
+		to="https://www.aber.ac.uk/" />
 
 	<!--	ToDo: Move this to a campuspack ruleset.	-->
 	<rule from="^http://aber-ac-uk\.campuspack\.eu/(Domain|static)/"
