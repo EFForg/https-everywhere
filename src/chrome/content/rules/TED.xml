@@ -2,7 +2,17 @@
 	For problematic rules, see TED-mismatches.xml.
 
 
-	ToDo: Find images.ted.com Akamai bucket
+	CDN buckets:
+
+		- video.ted.com.edgesuite.net
+		- lvlt.tedcdn.com.c.footprint.net
+			- images.ted.com
+
+
+	Nonfunctional domains:
+
+		- conferences.ted.com	(shows default RHEL page)
+		- images.ted.com	(times out)
 
 -->
 <ruleset name="TED (partial)">
@@ -14,20 +24,24 @@
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001134.html
 											-->
-		<exclusion pattern="^http://images\.ted\.com/crossdomain\.xml$" />
+		<exclusion pattern="^https?://images\.ted\.com/crossdomain\.xml$" />
 		<!--
 			Handled in TED-mismatches.xml.
 							-->
 		<exclusion pattern="^http://video\.ted\.com/" />
+	<target host="lvlt.tedcdn.com" />
 
 
-	<securecookie host="^\.ted\.com$" name=".+" />
+	<securecookie host="^.*\.ted\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?ted\.com/"
+	<rule from="^http://(auth\.|www\.)?ted\.com/"
 		to="https://$1ted.com/" />
 
-	<rule from="^http://images\.ted\.com/"
+	<rule from="^https?://ed\.ted\.com/"
+		to="https://teded.herokuapp.com/" />
+
+	<rule from="^https?://(?:images\.ted|lvlt\.tedcdn)\.com/"
 		to="https://www.ted.com/" />
 
 </ruleset>
