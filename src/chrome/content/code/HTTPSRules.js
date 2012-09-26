@@ -48,6 +48,8 @@ function RuleSet(name, match_rule, default_off) {
   }
 }
 
+var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
+
 RuleSet.prototype = {
   _apply: function(urispec) {
     // return null if it does not apply
@@ -228,11 +230,12 @@ const RuleWriter = {
     }
 
     sstream.close();
-    fstream.close();	
+    fstream.close();
+    // XXX: With DOMParser, we probably do not need to throw away the XML
+    // declaration anymore nowadays.
     data = data.replace(/<\?xml[^>]*\?>/, ""); 
     try {
-      data = data.replace(/<\?xml[^>]*\?>/, ""); 
-      var xmlrulesets = XML(data);
+      var xmlrulesets = dom_parser.parseFromString(data, "text/xml");
     } catch(e) { // file has been corrupted; XXX: handle error differently
       this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
       return null;
@@ -240,40 +243,40 @@ const RuleWriter = {
     this.parseXmlRulesets(xmlrulesets, rule_store, file);
   },
 
-  parseXmlRulesets: function(xmlblob, rule_store, file) {
-    // Iterate over all the <ruleset>...</ruleset> elements in the file, and
-    // add them to the rule_store HTTPSRules object.
-    if (xmlblob.@name != xmlblob.@nonexistantthing) {
-      // The root of the XML tree has a name, which means it should be single a ruleset...
-      this.parseOneRuleset(xmlblob, rule_store, file);
+
+  parseXmlRulesets: function(xmldom, rule_store, file) {
+    // XML input files can either be a <ruleset> in a file, or a
+    // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
+    // because ZIP does a much better job of compressing it).
+    if (xmldom.documentElement.nodeName == "ruleset") {
+      // This is a single ruleset.
+      this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
-      // The root of the XML tree should be a <rulesetlibrary> with many
-      // <ruleset> children
-      var lngth = xmlblob.ruleset.length(); // premature optimisation
-      if (lngth == 0 && (file.path.search("00README") == -1))
+      // The root of the XML tree is assumed to look like a <rulesetlibrary>
+      var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
+      if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
-                        + file.path + "\n" +  xmlblob);
-      for (var j = 0; j < lngth; j++) 
-        this.parseOneRuleset(xmlblob.ruleset[j], rule_store, file);
+                        + file.path + "\n" +  xmldom);
+      for (var j = 0; j < rulesets.length; j++)
+        this.parseOneRuleset(rulesets[j], rule_store, file);
     }
   },
 
   parseOneRuleset: function(xmlruleset, rule_store, file) {
-    // Extract an xmlrulset into the rulestore
-    this.log(DBUG, "Parsing " + xmlruleset.@name + " from " + file.path);
-
-    if (xmlruleset.@name == xmlruleset.@nonexistantthing) {
+    // Extract an xmlruleset into the rulestore
+    if (!xmlruleset.getAttribute("name")) {
       this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
       return null;
     }
 
-    var match_rl = null;
-    var dflt_off = null;
-    if (xmlruleset.@match_rule.length() > 0) match_rl = xmlruleset.@match_rule;
-    if (xmlruleset.@default_off.length() > 0) dflt_off = xmlruleset.@default_off;
-    var rs = new RuleSet(xmlruleset.@name, match_rl, dflt_off);
+    this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name") + " from " + file.path);
 
-    if (xmlruleset.target.length() == 0) {
+    var match_rl = xmlruleset.getAttribute("match_rule");
+    var dflt_off = xmlruleset.getAttribute("default_off");
+    var rs = new RuleSet(xmlruleset.getAttribute("name"), match_rl, dflt_off);
+
+    var targets = xmlruleset.getElementsByTagName("target");
+    if (targets.length == 0) {
       var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
       msg = msg + "\nbut " + file.path + " is missing one.";
       this.log(WARN, msg);
@@ -289,8 +292,8 @@ const RuleWriter = {
 
     // add this ruleset into HTTPSRules.targets with all of the applicable
     // target host indexes
-    for (var i = 0; i < xmlruleset.target.length(); i++) {
-      var host = xmlruleset.target[i].@host;
+    for (var i = 0; i < targets.length; i++) {
+      var host = targets[i].getAttribute("host");
       if (!host) {
         this.log(WARN, "<target> missing host in " + file.path);
         return null;
@@ -300,20 +303,23 @@ const RuleWriter = {
       rule_store.targets[host].push(rs);
     }
 
-    for (var i = 0; i < xmlruleset.exclusion.length(); i++) {
-      var exclusion = new Exclusion(xmlruleset.exclusion[i].@pattern);
+    var exclusions = xmlruleset.getElementsByTagName("exclusion");
+    for (var i = 0; i < exclusions.length; i++) {
+      var exclusion = new Exclusion(exclusions[i].getAttribute("pattern"));
       rs.exclusions.push(exclusion);
     }
 
-    for (var i = 0; i < xmlruleset.rule.length(); i++) {
-      var rule = new Rule(xmlruleset.rule[i].@from,
-                          xmlruleset.rule[i].@to);
+    var rules = xmlruleset.getElementsByTagName("rule");
+    for (var i = 0; i < rules.length; i++) {
+      var rule = new Rule(rules[i].getAttribute("from"),
+                          rules[i].getAttribute("to"));
       rs.rules.push(rule);
     }
 
-    for (var i = 0; i < xmlruleset.securecookie.length(); i++) {
-      var c_rule = new CookieRule(xmlruleset.securecookie[i].@host,
-                                  xmlruleset.securecookie[i].@name);
+    var securecookies = xmlruleset.getElementsByTagName("securecookie");
+    for (var i = 0; i < securecookies.length; i++) {
+      var c_rule = new CookieRule(securecookies[i].getAttribute("host"),
+                                  securecookies[i].getAttribute("name"));
       rs.cookierules.push(c_rule);
       this.log(DBUG,"Cookie rule "+ c_rule.host+ " " +c_rule.name);
     }
@@ -351,6 +357,7 @@ const HTTPSRules = {
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
       this.scanRulefiles(rulefiles);
+      this.checkForBuggyDefaults();
       var t,i;
       for (t in this.targets) {
         for (i = 0 ; i < this.targets[t].length ; i++) {
@@ -388,6 +395,54 @@ const HTTPSRules = {
         if (e.lineNumber)
           this.log(WARN, "(line number: " + e.lineNumber + ")");
       }
+    }
+  },
+
+  checkForBuggyDefaults: function() {
+    // The 2.2 release had a ruleset parsing bug which caused the match_rule
+    // attribute to be misinterpreted as the default_off attribute.  That was
+    // a big problem iff 2.2 was the first version of HTTPS Everywhere
+    // installed in a particular browser profile.  If enough buggy rulesets
+    // are on, conclude that this is such a profile, and reset to the correct
+    // defaults.  More here:
+    //
+    // https://mail1.eff.org/pipermail/https-everywhere/2012-August/001511.html
+    //
+    this.log(DBUG, "Checking for buggy configurations from version 2.2");
+    // All of these were default_off in 2.2, and none of them had a
+    // match_rule:
+    var shouldBeOff = ["SchuelerVZ","Tcodevelopment.com","33Bits","BerliOS",
+                       "BuisnessInsider (broken)","Daft.ie","DVDFab",
+                       "YouMail (buggy)","StudiVZ (disabled)","Woot (broken)"];
+
+    var nonBuggy = 0;
+    for (var ruleindex in shouldBeOff) {
+      // Some of these shouldBeOff rules may be removed in the future, so
+      // tolerate their absence
+      var rulename = shouldBeOff[ruleindex];
+      if (rulename in this.rulesetsByName) {
+        if (!this.rulesetsByName[rulename].active) 
+          nonBuggy += 1;
+      } else {
+        this.log("INFO", "Couldn't check state of ruleset " + rulename);
+      }
+    }
+
+    // Heuristic: a user starting with a buggy config might have disabled up
+    // to 2 of the 10 broken rulesets manually, but we will still conclude
+    // that their config is broken and reset it
+    if (nonBuggy <= 2) {
+      this.log(WARN, "Detected a buggy-looking configuration, probably from HTTPS Everywhere 2.2.  Resetting ruleset states to defaults");
+      this.resetRulesetsToDefaults();
+    }
+  },
+
+  resetRulesetsToDefaults: function() {
+    // Callable from within the prefs UI and also for cleaning up buggy
+    // configurations...
+    for (var i in this.rulesets) {
+      if (this.rulesets[i].on_by_default) this.rulesets[i].enable();
+      else                                this.rulesets[i].disable();
     }
   },
 
