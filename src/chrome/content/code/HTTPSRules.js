@@ -16,7 +16,7 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
-localPlatformRegexp = new RegExp("firefox");
+localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
 ruleset_counter = 0;
 function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;

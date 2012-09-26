@@ -80,17 +80,20 @@ var redirectCounter = {};
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
-  var tmpuri = new Uri(details.url);
-  var tmpuserinfo = tmpuri.userInfo();
+  var tmpuri = new URI(details.url);
+  var tmpuserinfo = tmpuri.userinfo();
   var tmphost = tmpuri.host();
   if (tmphost.charAt(tmphost.length - 1) == ".") {
     while (tmphost.charAt(tmphost.length - 1) == ".")
       tmphost = tmphost.slice(0,-1);
   }
   tmpuri.host(tmphost);
-  tmpuri.userInfo('');
+  tmpuri.userinfo('');
   var canonical_url = tmpuri.toString();
-
+  if (details.url != canonical_url && tmpuserinfo == '') {
+    log(INFO, "Original url " + details.url + 
+        " changed before processing to " + canonical_url);
+  }
   if (canonical_url in urlBlacklist) {
     return;
   }
@@ -132,8 +135,8 @@ function onBeforeRequest(details) {
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
-    var finaluri = new Uri(newuristr);
-    finaluri.userInfo(tmpuserinfo);
+    var finaluri = new URI(newuristr);
+    finaluri.userinfo(tmpuserinfo);
     var finaluristr = finaluri.toString();
     log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
     return {redirectUrl: finaluristr};
