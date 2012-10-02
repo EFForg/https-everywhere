@@ -6,4 +6,3 @@ WARN=5;
 function log(level, str) {
   console.log(str);
 }
-
