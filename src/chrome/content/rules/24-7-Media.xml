@@ -1,11 +1,18 @@
 <!--
+	For client coverage, see 24-7-Media-clients.xml.
+
+
 	Nonfunctional domains:
 
 		- (www.)247media.com
 		- (www.)247realmedia.com
 
 
-	ssl.sifomedia.se , panel.research-int.se
+	Nonexistant 247realmedia.com subdomains:
+
+		- oasc0[0-4]
+		- oasc1[39]
+		- openadstream1[139]
 
 -->
 <ruleset name="24/7 Media (partial)">
@@ -17,13 +24,22 @@
 	<!--	If something breaks, try commenting
 		this cross-domain cookie rule.
 					-->
-	<securecookie host="^.*\.(?:247)?realmedia\.com$" name=".*" />
-	<securecookie host="^network\.realmedia\.com$" name=".*" />
+	<securecookie host="^.*\.(?:247)?realmedia\.com$" name=".+" />
+	<securecookie host="^network\.realmedia\.com$" name=".+" />
 
 
-	<!--	Ads on 3rd-party websites.	-->
-	<rule from="^http://o(aadstream16|asc0[78]|asc1[1468]|penadstream14)\.247realmedia\.com/"
+	<!--	Ads on 3rd-party websites.
+
+			Although some in \d don't exist, we're not breaking
+		anything by "handling" them, and doing so makes things simpler.
+							-->
+	<rule from="^http://o(asc[01]\d|penadstream1\d)\.247realmedia\.com/"
 		to="https://o$1.247realmedia.com/" />
+
+	<!--	Cert mismatch.
+				-->
+	<rule from="^https?://oasc([01]\d)a\.247realmedia\.com/"
+		to="https://oasc$1.247realmedia.com/" />
 
 	<!--	Cert mismatch.
 				-->
@@ -32,5 +48,10 @@
 
 	<rule from="^http://network\.realmedia\.com/"
 		to="https://network.realmedia.com/" />
+
+	<!--	Cert mismatch.
+				-->
+	<rule from="^https?://oas-central\.realmedia\.com/"
+		to="https://oasc10.247realmedia.com/" />
 
 </ruleset>

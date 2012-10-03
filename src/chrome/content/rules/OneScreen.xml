@@ -1,0 +1,42 @@
+<!--
+	DNS buckets:
+
+		- media-sites-1941005050.us-east-1.elb.amazonaws.com
+			- ms.lb.onescreen.net
+
+		- wac.23ea.edgecastcdn.net/...
+			- images.1sfx.net
+
+		- wac.7c61.edgecastcdn.net/...
+			- cdn.onescreen.com
+
+
+	Nonfunctional domains:
+
+		- onescreen.com		(times out)
+		- cdn.onescreen.com	(cert: gp1.wac.edgecastcdn.net; 404)
+		- new.onescreen.com	(cert: *.onescreen.net; pages 301 to http)
+
+-->
+<ruleset name="OneScreen (partial)" default_off="mismatch">
+
+	<target host="images.1sfx.net" />
+	<target host="onescreen.com" />
+	<target host="*.onescreen.com" />
+
+
+	<!--	- !www times out
+		- cdn cert: gp1.wac.edgecastcdn.net
+		- cdn 404s
+		- www cert: *.onescreen.net
+		- Pages 301 to http
+					-->
+	<rule from="^https?://(?:cdn\.|www\.)?onescreen.com/wp-content/"
+		to="https://www.onescreen.com/wp-content/" />
+
+	<!--	Cert: gp1.wac.edgecastcdn.net
+						-->
+	<rule from="^http://images\.1sfx\.net/"
+		to="https://images.1sfx.net/" />
+
+</ruleset>

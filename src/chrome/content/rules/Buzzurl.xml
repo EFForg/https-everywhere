@@ -1,0 +1,37 @@
+<!--
+	CDN buckets:
+
+		- ecnavi.vo.llnwd.net/...
+			- cdn.buzzurl.jp
+
+		- p13191.cdngc.net/...
+			- buzzurl.jp.eimg.jp
+
+
+	Nonfunctional domains:
+
+		- cdn.buzzurl.jp	(cert: *.hs.llnwd.net; 400)
+		- buzzurl.jp.eimg.jp	(cert: jpssl.cdngc.net; 403)
+
+-->
+<ruleset name="Buzzurl">
+
+	<target host="buzzurl.jp" />
+	<target host="*.buzzurl.jp" />
+	<target host="buzzurl.jp.eimg.jp" />
+
+
+	<securecookie host="^\.?buzzurl\.jp$" name=".+" />
+
+
+	<!--	- api: cert only matches ^buzzurl.jp
+		- api: Tracking on 3rd-party websites
+		- www doesn't exist
+					-->
+	<rule from="^https?://(?:api\.|cdn\.)?buzzurl.jp/"
+		to="https://buzzurl.jp/" />
+
+	<rule from="^https?://buzzurl\.jp\.eimg\.jp/"
+		to="https://buzzurl.jp/" />
+
+</ruleset>
