@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- d1clcicqv97n4s.cloudfront.net
+		- d2b1xqaw2ss8na.cloudfront.net
+		- dlfl22czvqywx.cloudfront.net
+		- spotify.i.lithium.com
+
+-->
+<ruleset name="Spotify (partial)">
+
+	<target host="cf.scdn.co" />
+	<target host="spotify.com" />
+	<target host="*.spotify.com" />
+	<!--target host="*.embed.spotify.com" /-->
+
+
+	<securecookie host="^(?:community|embed)\.spotify\.com$" name=".*" />
+	<!--
+		Is this cookie needed on other domains?
+
+	<securecookie host="^\.embed\.spotify\.com$" name=".*" /-->
+
+
+	<rule from="^https?://cf\.scdn\.co/"
+		to="https://dlfl22czvqywx.cloudfront.net/" />
+
+	<!--	Some (most?) pages 302 to http.
+						-->
+	<rule from="^http://(www\.)?spotify\.com/(\w\w/)?signup($|/|\?)"
+		to="https://$1spotify.com/$2signup$3" />
+
+	<rule from="^http://(community|embed)\.spotify\.com/"
+		to="https://$1.spotify.com/" />
+
+	<rule from="^https?://download\.spotify\.com/"
+		to="https://d1clcicqv97n4s.cloudfront.net/" />
+
+</ruleset>

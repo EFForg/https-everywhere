@@ -1,0 +1,31 @@
+<!--
+	Lots of domains lack (valid) https, e.g.:
+
+		- www.cam.ac.uk
+		- www.lib.cam.ac.uk 
+		- www.mrc-lmb.cam.ac.uk	(self-signed, expired; https breaks styling)
+		- www.sports.cam.ac.uk
+
+-->
+<ruleset name="University of Cambridge (partial)">
+
+	<target host="www.admin.cam.ac.uk" />
+	<target host="webservices.admin.cam.ac.uk" />
+	<target host="www.cl.cam.ac.uk" />
+	<target host="damtp.cam.ac.uk" />
+	<target host="www.damtp.cam.ac.uk" />
+
+
+	<rule from="^http://w(ebservices|ww)\.admin\.cam\.ac\.uk/"
+		to="https://w$1.admin.cam.ac.uk/" />
+
+	<rule from="^http://www\.cl\.cam\.ac\.uk/"
+		to="https://www.cl.cam.ac.uk/" />
+
+	<!--	- Cert only matches www.damtp
+		- At least some pages 404
+			-->
+	<rule from="^https?://(?:www\.)?damtp\.cam\.ac\.uk/global/"
+		to="https://www.damtp.cam.ac.uk/global/" />
+
+</ruleset>

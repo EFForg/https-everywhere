@@ -1,0 +1,26 @@
+<!--
+	Nonfunctional subdomains:
+
+		- git	(shows collector's data)
+		- repo	(ditto)
+
+-->
+<ruleset name="OpenSVC (partial)">
+
+	<target host="opensvc.com" />
+	<target host="*.opensvc.com" />
+
+
+	<securecookie host="^\w+\.opensvc\.com$" name=".*" />
+
+
+	<!--	- !www doesn't work over https
+		- !www redirects to www over http
+					-->
+	<rule from="^https?://(?:www\.)?opensvc\.com/"
+		to="https://www.opensvc.com/" />
+
+	<rule from="^http://(collector|docs|lists)\.opensvc\.com/"
+		to="https://$1.opensvc.com/" />
+
+</ruleset>

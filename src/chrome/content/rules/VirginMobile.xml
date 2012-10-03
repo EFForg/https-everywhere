@@ -1,6 +1,42 @@
-<ruleset name="Virgin Mobile AU">
-    <target host="www.virginmobile.com.au" />
+<!--
+	For problematic rules and other Virgin coverage, see Virgin-mismatches.xml.
 
-    <rule from="^http://www\.virginmobile\.com\.au/" to="https://www.virginmobile.com.au/" />
+
+	virginmobileusa.newshq.businesswire.com
+
+
+	Nonfunctional domains:
+
+		- stores.virginmobileusa.com	(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Virgin Mobile">
+
+	<target host="virginmobileusa.com" />
+	<target host="*.virginmobileusa.com" />
+	<target host="www.virginmobile.com.au" />
+
+
+	<securecookie host="^.*\.virginmobileusa\.com$" name=".*" />
+
+
+	<!--	- !www cert: origin-www-ls
+		- !www redirects to www over http
+							-->
+	<rule from="^https?://(?:www(1)?\.)?virginmobileusa\.com/"
+		to="https://www$1.virginmobileusa.com/" />
+
+	<rule from="^http://(espanol|origin-www-ls|shop)\.virginmobileusa\.com/"
+		to="https://$1.virginmobileusa.com/" />
+
+	<!--	- At least some pages redirect back from virginmobileusa.newshq.businesswire.com
+		- At least some pages redirect to http from https
+						-->
+	<rule from="^https?://newsroom\.virginmobileusa\.com/sites/"
+		to="https://virginmobileusa.newshq.businesswire.com/sites/" />
+
+	<rule from="^http://www\.virginmobile\.com\.au/"
+		to="https://www.virginmobile.com.au/" />
+
 </ruleset>
 

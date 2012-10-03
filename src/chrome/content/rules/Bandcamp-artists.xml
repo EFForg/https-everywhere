@@ -1,0 +1,20 @@
+<ruleset name="Bandcamp artists" default_off="mismatch">
+
+	<target host="*.bandcamp.com" />
+		<!--
+			- blog: Handled in WordPress-blogs.xml
+			- f, s, & www: handled in Bandcamp.xml
+				-->
+		<exclusion pattern="^http://(blog|[fs]|www)\." />
+
+
+	<!--	We can't secure cross-domain cookies in Bandcamp.xml due to this
+		ruleset being off by default.  However, when this is enabled...
+					-->
+	<securecookie host="^\.bandcamp\.com$" name=".*" />
+
+
+	<rule from="^http://([\w\-]+)\.bandcamp\.com/"
+		to="https://$1.bandcamp.com/" />
+
+</ruleset>

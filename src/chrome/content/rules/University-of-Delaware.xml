@@ -1,0 +1,27 @@
+<ruleset name="University of Delaware (partial)">
+
+	<target host="udel.edu" />
+	<target host="*.udel.edu" />
+	<target host="*.facilities.udel.edu" />
+	<target host="*.nss.udel.edu" />
+
+
+	<securecookie host="^(?:extension|.*\.nss)\.udel\.edu$" name=".+" />
+
+
+	<!--	Observed nss subdomains:
+
+			- chico
+			- primus
+			- udapps
+					-->
+	<rule from="^http://((?:ag|extension|web\.facilities|\w+\.nss|www)\.)?udel\.edu/"
+		to="https://$1udel.edu/" />
+
+	<!--	- !www times out over both http & https
+		- Some (most?) pages 302 to http
+							-->
+	<rule from="^http://www\.facilities\.udel\.edu/(App_Themes|[dD]ata|Secure)/"
+		to="https://www.facilities.udel.edu/$1/" />
+
+</ruleset>

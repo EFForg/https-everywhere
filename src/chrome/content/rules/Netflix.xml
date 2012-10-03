@@ -1,7 +1,40 @@
-<ruleset name="Netflix (buggy)" default_off="various things break">
-  <target host="netflix.com" />
-  <target host="*.netflix.com" />
-  <exclusion pattern="^http://(blog|developer|ir|jobs|techblog|ukirelandblog).netflix.com/" />
+<!--
+	CDN buckets:
 
-  <rule from="^http://([^/:@\.]+)\.netflix\.com/" to="https://$1.netflix.com/"/>
+		- netflix.hs.llnwd.net/e1/us/
+
+-->
+<ruleset name="Netflix (buggy)" default_off="various things break">
+
+	<target host="netflix.com" />
+	<target host="*.netflix.com" />
+		<!--
+			blog, techblog, ukirelandblog:
+
+				- Hosted on Blogger
+				- Shows Google 404 page
+
+			developer:
+
+				- Handled in Mashery-clients.xml
+
+			ir:
+
+				- Cert: *.shareholder.com
+				- Throws 403
+
+			jobs:
+
+				- reset
+
+			-->
+		<exclusion pattern="^http://(blog|developer|ir|jobs|techblog|ukirelandblog)\.netflix\.com/" />
+
+
+	<securecookie host="^(contactus|signup)\.netflix\.com$" name=".*" />
+
+
+	<rule from="^http://([^/:@\.]+\.)?netflix\.com/"
+		to="https://$1netflix.com/" />
+
 </ruleset>

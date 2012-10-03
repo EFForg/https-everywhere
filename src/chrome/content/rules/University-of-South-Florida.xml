@@ -1,0 +1,53 @@
+<!--
+	For problematic rules, see University-of-South-Florida-mismatches.xml.
+
+
+	Nonfunctional usf.edu subdomains:
+
+		- (www.)		(times out)
+		- directory.acomp	(cert: netid.usf.edu; redirects there)
+		- it			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
+		- guides.lib		(cert: libguides.com; 404)
+		- (www.)nelson
+		- news
+		- (www.)research
+		- system
+		- tap			(expired, self-signed; 301s to rc.blog.usf.edu/domain-not-found/)
+
+-->
+<ruleset name="University of South Florida (partial)">
+
+	<target host="*.usf.edu" />
+	<target host="*.stpete.usf.edu" />
+	<target host="usfsp.edu" />
+	<target host="*.usfsp.edu" />
+
+
+	<!--	Not handling cross-domain cookies as a precaution.	-->
+	<securecookie host="^(\w.*\.)?usf(sp)?\.edu$" name=".*" />
+
+
+	<!--	Cert only matches www.lib.
+						-->
+	<rule from="^https?://(?:www\.)?lib\.usf\.edu/"
+		to="https://www.lib.usf.edu/" />
+
+	<rule from="^http://(my|mysites|netid|usfsts|usfweb2|webauth)\.usf\.edu/"
+		to="https://$1.usf.edu/" />
+
+	<!--	- Cert doesn't match
+		- Redirects like so
+				-->
+	<rule from="^https?://(?:www\.)?stpete\.usf\.edu/"
+		to="https://www.usfsp.edu/" />
+
+	<rule from="^http://((?:dev|vpn|www)\.)?usfsp\.edu/"
+		to="https://$1usfsp.edu/" />
+
+	<!--	- Cert only matches sharemypc.stpete.usf
+		- Data appear identical
+				-->
+	<rule from="^https?://sharemypc\.(?:stpete\.usf|usfsp).edu/"
+		to="https://sharemypc.stpete.usf.edu/" />
+
+</ruleset>

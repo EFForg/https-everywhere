@@ -1,0 +1,27 @@
+<!--
+	For other NeuStar coverage, see NeuStar.xml.
+
+-->
+<ruleset name="UltraDNS">
+
+	<target host="ultradns.*" />
+	<target host="www.ultradns.*" />
+
+
+	<securecookie host="^www\.ultradns\.net$" name=".*" />
+
+
+	<!--	Redirect chain like so:
+
+			ultradns.info → neustarultraservices.biz → ultradns.com → neustar.biz
+												-->
+	<rule from="^https?://(?:www\.)?ultradns(?:com|info)/$"
+		to="https://www.neustar.biz/" />
+
+	<!--	- !www times out over https
+		- !www.../$ 302s to www over http
+						-->
+	<rule from="^https?://(?:www\.)?ultradns\.net/"
+		to="https://www.ultradns.net/" />
+
+</ruleset>

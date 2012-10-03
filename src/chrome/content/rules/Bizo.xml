@@ -1,0 +1,41 @@
+<!--
+	For problematic rules, see Bizo-mismatches.xml.
+
+
+	CDN buckets:
+
+		- proxy-lb-1774177433.us-east-1.elb.amazonaws.com
+		- d15a7gkmxinlzq.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- (www.)bizo.com
+		- developer.bizo.com	(cert: ghs-ssl.googlehosted.com; 404)
+
+-->
+<ruleset name="Bizo">
+
+	<target host="accounts.bizo.com" />
+	<target host="*.bizographics.com" />
+
+
+	<securecookie host="^\.bizographics\.com$" name=".+" />
+
+
+	<rule from="^http://accounts\.bizo\.com/"
+		to="https://accounts.bizo.com/" />
+
+	<!--	- Tracking beacon
+		- !www doesn't exist
+					-->
+	<rule from="^http://(api|www)\.bizographics\.com/"
+		to="https://$1.bizographics.com/" />
+
+	<!--	- js cert: cloudfront.net
+		- Uses sjs for https
+					-->
+	<rule from="^https?://s?js\.bizographics\.com/"
+		to="https://sjs.bizographics.com/" />
+
+</ruleset>

@@ -13,6 +13,7 @@
 	<target host="*.files.wordpress.com" />
 		<!--	This isn't targeted anyway...
 		<exclusion pattern="^http://([^/:@\.]+)\.blog\.files\.wordpress\.com/" /-->
+	<target host="s.stats.wordpress.com" />
 	<target host="*.svn.wordpress.org" />
 	<target host="*.trac.wordpress.org" />
 	<target host="*.wp.com" />
@@ -30,13 +31,19 @@
 	<rule from="^http://([^/:@\.]+)\.wordpress\.(com|org)/"
 		to="https://$1.wordpress.$2/"/>
 
+	<!--	- Cert: gp1.wac.edgecastcdn.net
+		- 404s over https
+					-->
+	<rule from="^https?://s\.stats\.wordpress\.com/"
+		to="https://stats.wordpress.com/" />
+
 	<rule from="^http://([^/:@\.]+)\.(trac|svn)\.wordpress\.org/"
 		to="https://$1.$2.wordpress.org/"/>
 
 	<rule from="^http://([^/:@\.]+)\.files\.wordpress\.com/"
 		to="https://$1.files.wordpress.com/"/>
 
-	<rule from="^http://s(\d*)\.wp\.com/"
-		to="https://s$1.wp.com/" />
+	<rule from="^http://(i[012]|s\d*)\.wp\.com/"
+		to="https://$1.wp.com/" />
 
 </ruleset>

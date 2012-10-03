@@ -1,18 +1,31 @@
 <!--
-	Other Condé Nast rulesets:
-
-		- Reddit.xml
-		- Reddit-mismatches.xml
-
-
 	For problematic rules, see Conde-Nast-mismatches.xml.
 
 
-	condenast.com, details.com, howto.wired.com, and webmonkey.com are hosted on Akamai.
+	Other Condé Nast rulesets:
+
+		- Ars-Technica.xml
+		- Reddit.xml
+		- The-New-Yorker.xml
+		- Vanity-Fair.xml
+		- Wired.xml
+
+
+	details.com and webmonkey.com are hosted on Akamai.
 
 	golfdigest is hosted on imavex.com and imavex.vo.llnwd.net.
 
 		ToDo: find buckets
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/img.condenast.co.uk/	| dvcpqzrjfwvhx.cloudfront.net	
+			- aws permanently redirects.
+		- fonts.condenast.com.edgekey.net
+		- thumbnailer.thestudio.condenast.com.edgesuite.net
+		- www.condenast.com.edgekey.net
+		- www.webmonkey.com.edgesuite.net
 
 
 	Nonfunctional:
@@ -22,26 +35,20 @@
 			- /
 			- www				(Akamai; blank page)
 		- arst.ch				(cert: api.arstechnica.net; shows that domain's data)
-		- origin.cdn.arstechnica.com		(times out)
-		- condenast.com:
-			- /
-			-www 				(Akamai; "Service Unavailable")
 		- images1.designcentersearch.com	(times out; data aren't on www)
 		- (www.)shopad.net			(cert: designcentersearch.com; shows that domain's data)
 		- style.com:
 			- /
-			- www				(Akamai; "Service Unavailable")
+			- www				(Akamai; 503)
 				- origin, origin-www, secure, www2 don't exist
-		- promotions.vf.com
+		- www.webmonkey.com			(Akamai; 503)
 
 -->
 <ruleset name="Condé Nast (partial)">
 
-	<target host="arstechnica.com" />
-	<target host="*.arstechnica.com" />
-	<target host="*.arstechnica.net" />
-		<!--	Handled in -mismatches.	-->
-		<exclusion pattern="^https?://cdn\.arstechnica\.net/wp-(content|uploads)/" />
+	<target host="condenast.com" />
+	<target host="*.condenast.com" />
+	<target host="cdni.condenast.co.uk" />
 	<target host="condenaststore.com" />
 	<target host="www.condenaststore.com" />
 	<target host="subscribe.condenet.com" />
@@ -51,28 +58,21 @@
 	<target host="*.golfdigest.com" />
 	<target host="golfdigestinsiders.com" />
 	<target host="www.golfdigestinsiders.com" />
-	<target host="newyorker.com" />
-	<target host="*.newyorker.com" />
 	<target host="gq-magazine.co.uk" />
 	<target host="www.gq-magazine.co.uk" />
-	<target host="*.vanityfair.com" />
-	<target host="wired.com" />
-	<target host="*.wired.com" />
-		<exclusion pattern="^http://(?:www\.)?wired\.com/favicon\.ico$" />
 
 
 	<securecookie host="^www\.golfdigestinsiders\.com$" name=".*" />
-	<securecookie host="^.*\.vanityfair\.com$" name=".*" />
 
 
-	<rule from="^https?://(?:cdn\.|www\.)?arstechnica\.(?:com|net)/public/shared/"
-		to="https://arstechnica.cachefly.net/public/shared/" />
+	<rule from="^https?://(?:www\.)?condenast\.com/"
+		to="https://www.condenast.com/" />
 
-	<rule from="^http://api\.arstechnica\.net/"
-		to="https://api.arstechnica.net/" />
+	<rule from="^http://fonts\.condenast\.com/"
+		to="https://fonts.condenast.com/" />
 
-	<rule from="^https?://static\.arstechnica\.net/"
-		to="https://arstechnica.cachefly.net/" />
+	<rule from="^https?://cdni\.condenast\.co\.uk/"
+		to="https://dvcpqzrjfwvhx.cloudfront.net/" />
 
 	<rule from="^https?://(?:www\.)?condenaststore\.com/"
 		to="https://www.condenaststore.com/" />
@@ -87,10 +87,10 @@
 		- images_blogs/
 		- opinion/wp-content/
 					-->
-	<rule from="^https?://(?:www\.)?(details|golfdigest|newyorker|wired)\.com/((?:cs|image)s/|favicon\.ico$|sandbox/)"
+	<rule from="^https?://(?:www\.)?(details|golfdigest)\.com/(css/|images/|favicon\.ico$|sandbox/)"
 		to="https://secure.$1.com/$2" />
 
-	<rule from="^http://secure\.(details|golfdigest|newyorker|wired)\.com/"
+	<rule from="^http://secure\.(details|golfdigest)\.com/"
 		to="https://secure.$1.com/" />
 
 	<rule from="^http://(www\.)?golfdigestinsiders\.com/"
@@ -98,17 +98,5 @@
 
 	<rule from="^https?://(?:www\.)?gq-magazine\.co\.uk/_/"
 		to="https://d3u12z27ui3vom.cloudfront.net/GQ/343431a42aff/" />
-
-	<rule from="^http://secure\.vanityfair\.com/"
-		to="https://secure.vanityfair.com/" />
-
-	<rule from="^https?://stats2\.vanityfair\.com/"
-		to="https://conde-vanityfair.122.2o7.net/" />
-
-	<rule from="^https?://(?:www\.)?wired\.com/usr/log(in|out)"
-		to="https://secure.wired.com/usr/log$1" />
-
-	<rule from="^http://subscri(be|ptions)\.wired\.com/"
-		to="https://subscri$1.wired.com/" />
 
 </ruleset>

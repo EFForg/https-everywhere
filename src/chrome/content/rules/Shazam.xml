@@ -1,0 +1,44 @@
+<!--
+	CDN buckets:
+
+		- ec2-75-101-210-252.compute-1.amazonaws.com
+			- swpcontent1.blog.aws-ue1a.shazamcloud.com
+
+		- ec2-176-34-223-26.eu-west-1.compute.amazonaws.com
+			- admin.blog.aws-ew1a.shazamcloud.com
+
+
+	Nonfunctional domains:
+
+		- admin.blog.aws-ew1a.shazamcloud.com		(times out)
+		- swpcontent1.blog.aws-ue1a.shazamcloud.com	(ditto)
+		- (www.)shazamers.com
+
+-->
+<ruleset name="Shazam (partial)">
+
+	<target host="myshazam.com" />
+	<target host="www.myshazam.com" />
+	<target host="shazam.com" />
+	<target host="www.shazam.com" />
+
+
+	<securecookie host="^myshazam\.com$" name=".+" />
+	<securecookie host="^www\.shazam\.com$" name=".+" />
+
+
+	<rule from="^http://myshazam\.com/"
+		to="https://myshazam.com/" />
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^https?://www\.myshazam\.com/$"
+		to="https://www.shazam.com/" />
+
+
+	<!--	!www presents cert for myshazam.com
+							-->
+	<rule from="^https?://(?:www\.)?shazam\.com/"
+		to="https://www.shazam.com/" />
+
+</ruleset>

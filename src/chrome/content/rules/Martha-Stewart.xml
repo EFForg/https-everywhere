@@ -1,0 +1,47 @@
+<!--
+	For problematic rules, see Martha-Stewart-mismatches.xml.
+
+
+	metric.marthastewart.com/b/ss/marthacom,marthacomglobal,/
+	martha.zt01.net
+
+
+	Nonfunctional domains:
+
+		- (www.)marthastewart.com		(redirects to http)
+		- dailywag.marthastewart.com
+		- (www.)marthastewartweddings.com	(redirects to http)
+		- community.wholeliving.com		(cert: *.ning.com)
+
+-->
+<ruleset name="Martha Stewart (partial)">
+
+	<target host="marthastewart.com" />
+	<target host="*.marthastewart.com" />
+	<target host="marthastewartweddings.com" />
+	<target host="*.marthastewartweddings.com" />
+	<target host="*.wholeliving.com" />
+
+
+	<securecookie host="^my\.marthastewart(weddings)?\.com$" name=".*" />
+
+
+	<!--	- 301s like so
+		- ...t.com and ...s.com appear identical.
+					-->
+	<rule from="^http://(?:www\.)?marthastewart(?:weddings)?\.com/images//?"
+		to="https://images.marthastewart.com/images/" />
+
+	<!--	- weddings & wholeliving: Akamai
+		- Data appear the same
+			-->
+	<rule from="^https?://images\.(?:marthastewart(?:weddings)?|wholeliving)\.com/"
+		to="https://images.marthastewart.com/" />
+
+	<rule from="^http://my\.(marthastewart(?:weddings)?|wholeliving)\.com/"
+		to="https://my.$1.com/" />
+
+	<rule from="^https?://metric\.marthastewart\.com/"
+		to="https://marthacom-marthacomglobal.122.2o7.net/" />
+
+</ruleset>

@@ -1,0 +1,119 @@
+<!--
+	Nonfunctional domains:
+
+
+		- berkeley.edu subdomains:
+
+			- alumni-friends	(cert: asterix.berkeley.edu; prints domain name)
+			- atcal-career		(shows givetocal's data)
+			- awards		(ditto)
+			- builders		(ditto)
+			- cads2			(ditto)
+			- cal-demo		(prints "a" over https; acts as atcal over http)
+			- calparents		("No access to the calparents SSL site available.")
+			- calvm			("No access to the calvm SSL site available.")
+			- campaign		(shows givetocal's data)
+			- campuslife		(ssl_error_rx_record_too_long)
+			- cfr			(shows givetocal's data)
+			- charterday		(ditto)
+			- diller		(403s over http, shows givetocal's data over https)
+			- discovercal		(shows givetocal's data)
+			- fundraising		(ditto)
+			- hewlett		(shows givetocal's data)
+			- hewlettchallenge	(cert: devcomm.urel; shows givetocal's data)
+			- homecoming		(prints domain name)
+			- hrweb			(ssl_error_rx_record_too_long)
+			- identity		(shows givetocal's data)
+			- ims			(400; times out over https, so status unknown)
+			- inauguration		(shows givetocal's data)
+			- newalumnichallenge	(ditto)
+			- newscenter		(ssl_error_rx_record_too_long)
+			- socalevents		(ditto)
+			- stadium		(shows givetocal's data)
+			- systemstatus
+			- tiencenter		(valid cert; "Site Temporarily Unavailable" over http, so status unknown)
+			- urel			(cert: devcomm.urel; shows givetocal's data)
+			- devcomm.urel		(403s over http; redirects to givetocal over https)
+
+		- (www.)ucbsystems.org
+
+-->
+<ruleset name="University of California, Berkeley (partial)">
+
+	<target host="*.berkeley.edu" />
+	<target host="boinc.berkeley.edu" />
+	<target host="www.boinc.berkeley.edu" />
+	<target host="*.calnet.berkeley.edu" />
+	<target host="*.cs.berkeley.edu" />
+	<target host="*.eecs.berkeley.edu" />
+	<target host="services.housing.berkeley.edu" />
+	<target host="blu.is.berkeley.edu" />
+	<target host="as-ezsvn-prod.ist.berkeley.edu" />
+	<target host="www.law.berkeley.edu" />
+	<target host="*.urel.berkeley.edu" />
+
+
+	<securecookie host="^\w.*\.berkeley\.edu$" name=".*" />
+
+
+	<!--	- Cert only matches *.berkeley
+
+		These paths 404:
+
+			- $
+			- about/$
+			- calendar/images/
+			- img/target/
+			- nc2.0/
+			- news2/2012/05/FreecyclePhoto60.jpg
+			- style/
+
+	<rule from="^https?://(?:www\.)?berkeley\.edu/()"
+		to="https://www.berkeley.edu/$1" /-->
+
+	<rule from="^http://(airbears|asterix|atcal|atcal-dev|auth|auth-key|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|calmail|(?:calnet\.|net-auth\.)?calnet|career|ccc|ccc-dev|commencement|convio|auto(?:config|discover)\.(?:ee)?cs|(?:auth|buffy)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-ezsvn-prod\.ist|ist|journalism|kb|or|scholarship|seniors|(?:new)?students|(?:urshare-prod1|wiki)\.urel|wikihub)\.berkeley\.edu/"
+		to="https://$1.berkeley.edu/" />
+
+	<!--	These paths 302s to http:
+
+			- $
+			- community$
+			- donate$
+			- donate/new-alumni-challenge$
+			- events$
+			- join$
+					-->
+	<rule from="^http://alumni\.berkeley\.edu/sites/"
+		to="https://alumni.berkeley.edu/sites/" />
+
+	<rule from="^http://(?:www\.)?boinc\.berkeley\.edu/"
+		to="https://boinc.berkeley.edu/" />
+
+	<!--	- Shows givetocal's data over https
+		- Redirects like so over http
+				-->
+	<rule from="^https?://callcenter\.berkeley\.edu/$"
+		to="https://givetocal.berkeley.edu/browse/?u=191" />
+
+	<!--	Cert doesn't match //cs, //eecs, nor law.	-->
+	<rule from="^https?://(?:www\.)?(cs|eecs|law)\.berkeley\.edu/"
+		to="https://www.$1.berkeley.edu/" />
+
+	<!--	Data differ between http & https.
+	<rule from="^http://idsg\.eecs\.berkeley\.edu/"
+		to="https://idsg.eecs.berkeley.edu/" /-->
+
+	<!--	- Cert: asterix.berkeley.edu
+		- Prints domain name over https
+		- Redirects like so over http
+			-->
+	<rule from="^https?://graduation\.berkeley\.edu/$"
+		to="https://commencement.berkeley.edu/" />
+
+	<!--	- Shows givetocal's data over https
+		- Redirects like so over http
+			-->
+	<rule from="^https?://ourpromise\.berkeley\.edu/$"
+		to="https://givetocal.berkeley.edu/browse/?u=174" />
+
+</ruleset>

@@ -1,6 +1,45 @@
-<ruleset name="eHow (broken)" default_off="HTTPS disabled">
-  <target host="ehow.com" />
-  <target host="www.ehow.com" />
+<!--
+	CDN buckets:
 
-  <rule from="^http://(?:www\.)?ehow\.com/" to="https://www.ehow.com/"/>
+		- www.ehow.com.ipi.demand.akadns.net
+		- blog.ehow.com.edgesuite.net
+		- www.ehow.com.edgesuite.net
+		- www.ehow.co.uk.edgesuite.net
+		- img.ehowcdn.com.edgesuite.net
+		- v5-static.ehowcdn.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- ehow-com.blog.ehow.com	(Akamai; 503)
+		- www.ehow.co.uk		(ditto)
+
+-->
+<ruleset name="eHow (partial)" default_off="Akamai">
+
+	<target host="ehow.com" />
+	<target host="*.ehow.com" />
+	<target host="*.ehowcdn.com" />
+
+
+	<securecookie host="^www\.ehow\.com$" name=".+" />
+
+
+	<!--	- Cert for !www is valid
+		- www: Akamai
+		- !www 301s to www
+		- img.ehow.com: Akamai; 503
+		- img.ehow-cdn.com: ditto
+		- v5-static.ehow-cdn.com: ditto
+		- Cert for v5-static.ehow.com is valid
+		- v5-static.ehow.com 301s to www.ehow.com
+					-->
+	<rule from="^https?://(?:img\.|v5-static\.|www\.)?ehow(?:cdn)?\.com/"
+		to="https://www.ehow.com/" />
+
+	<!--	All paths 301 like so.
+					-->
+	<rule from="^https?://blog\.ehow\.com/(?:.*)"
+		to="https://www.ehow.com/blog/" />
+
 </ruleset>

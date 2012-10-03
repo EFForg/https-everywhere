@@ -1,12 +1,45 @@
-<ruleset name="Cisco" default_off="Needs review">
-  <target host="www.cisco.com"/>
-  <target host="cisco.com"/>
-  <target host="homesupport.cisco.com" />
-  <exclusion pattern="^http://www\.cisco\.com/cgi-bin/login"/>
- <!-- Cisco Redirection Pages do not support HTTPS, so we exclude them. They redirect to HTTPS secured pages, though -->
-  <exclusion pattern="^http://(?:www\.)?cisco\.com/go"/>
+<!--
+	Nonfunctional subdomains:
 
-  <!-- Default: Replace with HTTPS. Redirect at Logout is still bugged, but the Logout itself works -->
-  <rule from="^http://(?:www\.)?cisco\.com/" to="https://www.cisco.com/"/>
-  <rule from="^http://homesupport\.cisco\.com/" to="https://homesupport.cisco.com/"/>
+		- bam-prd1
+		- blogs		(cert: 184964-nc-web1.cisco.com, self-signed, expired; shows RHEL Apache test page)
+		- homecommunity
+		- newsroom	(times out)
+
+-->
+<ruleset name="Cisco" default_off="Needs review">
+
+	<target host="cisco.com" />
+	<target host="*.cisco.com" />
+		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
+		<!--
+			Cisco redirection pages do not support HTTPS, so we exclude them.
+			They redirect to HTTPS secured pages, though.
+									-->
+		<exclusion pattern="^http://(?:www\.)?cisco\.com/go" />
+	<target host="ciscoconnectcloud.com" />
+	<target host="www.ciscoconnectcloud.com" />
+	<target host="www.static-cisco.com" />
+
+
+	<securecookie host="^[hst].*\.cisco\.com$" name=".*" />
+
+
+	<!--	Default: Replace with HTTPS.  Redirect at Logout
+		is still bugged, but the logout itself works.
+								-->
+	<rule from="^https?://(?:www\.)?cisco\.com/"
+		to="https://www.cisco.com/" />
+
+	<rule from="^http://(home|homesupport|sso|tools)\.cisco\.com/"
+		to="https://$1.cisco.com/" />
+
+	<rule from="^http://(www\.)?ciscoconnectcloud\.com/"
+		to="https://$1ciscoconnectcloud.com/" />
+
+	<!--	!www doesn't exist.
+					-->
+	<rule from="^http://www\.static-cisco\.com/"
+		to="https://www.static-cisco.com/" />
+
 </ruleset>

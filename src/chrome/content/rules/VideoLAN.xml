@@ -1,14 +1,40 @@
+<!--
+	Nonfunctional subdomains:
+
+		- albiero
+		- download	(shows www's data)
+		- ganesh	(ditto)
+		- git
+		- mailman
+		- people
+		- rsync		(shows www's data)
+		- sirius	(images 404)
+		- stats		(shows www's data)
+		- update	(ditto)
+		- www2		(images 404)
+
+-->
 <ruleset name="VideoLAN (CAcert)" platform="cacert">
 
-	<target host="videolan.org"/>
-	<target host="*.videolan.org"/>
+	<target host="videolan.org" />
+	<target host="*.videolan.org" />
 
-	<securecookie host=".*videolan\.org$" name=".*"/>
 
+	<securecookie host=".*videolan\.org$" name=".*" />
+
+
+	<!--	Cert matches neither images nor images1.
+							-->
 	<rule from="^https?://(?:images1?\.)?videolan\.org/"
-		to="https://videolan.org/"/>
+		to="https://videolan.org/" />
 
-	<rule from="^http://(forum|trac|wiki|www)\.videolan\.org/"
-		to="https://$1.videolan.org/"/>
+	<rule from="^http://(forum|trac|wiki|www1?)\.videolan\.org/"
+		to="https://$1.videolan.org/" />
+
+	<!--	- Show www's data over https
+		- Redirect like so over http
+						-->
+	<rule from="^http://(?:ganesh|rsync|stats)\.videolan\.org/$"
+		to="https://www.videolan.org/" />
 
 </ruleset>

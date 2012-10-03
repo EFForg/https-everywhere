@@ -2,6 +2,17 @@
 	For problematic rules, see BBC-mismatches.xml.
 
 
+	CDN buckets:
+
+		- electradl.iplayer.bbc.co.uk.edgesuite.net
+		- news.bbc.co.uk.edgesuite.net
+			- newsimg.bbc.co.uk
+			- news.bbcimg.co.uk
+		- emp.bbci.co.uk.edgesuite.net
+		- ichef.bbci.co.uk.edgesuite.net
+		- bbcmedia.fcod.llnwd.net
+
+
 	Nonfunctional domains:
 
 		- bbc.co.uk subdomains:
@@ -17,7 +28,9 @@
 				redirects to http
 
 		- (www.)bbcamerica.com	(reset)
-		- emp.bbci.co.uk	(Akamai; "Service Unavailable")
+		- emp.bbci.co.uk	(Akamai; 503)
+		- ichef.bbci.co.uk	(ditto)
+		- news.bbcimg.co.uk	(ditto)
 
 -->
 <ruleset name="BBC (partial)">
@@ -28,25 +41,39 @@
 			Causes censorship bypass to fail.
 								-->
 		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
-	<target host="static.bbci.co.uk" />
+	<target host="*.bbci.co.uk" />
 	<!--	Akamai	-->
 	<target host="*.bbcimg.co.uk" />
 
 
 	<!--	Tracking cookie set by sa	-->
 	<securecookie host="^\.bbc\.co\.uk$" name="^s1$" />
+	<securecookie host="^ssl\.bbc\.co\.uk$" name=".+" />
 
 
-	<rule from="^https?://(sa|static)\.bbci?\.co\.uk/"
+	<!--	ichef: Images.
+					-->
+	<rule from="^https?://(ichef|sa|static)\.bbci?\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
-	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(favicon\.ico$|glow/|guidance/|iplayer/)"
+	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
 
-	<rule from="^https?://node[12]\.bbcimg\.co\.uk/iplayer/"
-		to="https://www.bbc.co.uk/iplayer/" />
+	<rule from="^http://(downloads|id|ssl)\.bbc\.co\.uk/"
+		to="https://$1.bbc.co.uk/" />
+
+	<rule from="^https?://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
+		to="https://www.bbc.co.uk/$1" />
+
+	<rule from="^https?://playlists\.bbc\.co\.uk/crossdomain\.xml"
+		to="https://ssl.bbc.co.uk/crossdomain.xml" />
 
 	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?\w+/?(?:$|\?))"
 		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" />
+
+        <!--    iPlayer points here, but only when fetched via https.
+
+	<rule from="^https://open\.bbci\.co\.uk/buzz/shares($|\?)"
+		to="http://open.bbci.co.uk/buzz/shares$1" downgrade="1" /-->
 
 </ruleset>

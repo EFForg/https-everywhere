@@ -1,7 +1,30 @@
 <!--
-	d36cz9buwru1tt.cloudfront.net
-	s3.amazonaws.com/awsmedia/
-	s3.amazonaws.com/rodica-work/
+	For other Amazon coverage, see Amazon.xml.
+
+
+	CDN buckets:
+
+		- ec7.images-amazon.com.cdn20.com
+			- ec7.images-amazon.com
+		- ec4.images-amazon.chinacache.net
+			- ec4.images-amazon.com
+		- d1ge0kk1l5kms0.cloudfront.net
+			- ec[5x].images-amazon.com
+		- d36cz9buwru1tt.cloudfront.net
+		- s3.amazonaws.com/awsmedia/
+		- s3.amazonaws.com/rodica-work/
+		- images-(eu|fe|na).ssl-images-amazon.com.edgekey.net
+		- ecx.images-amazon.com.c.footprint.net
+			- images.amazon.com
+			- rcm-images.amazon.com
+		- ec2.images-amazon.com.edgesuite.net
+			- ec2.images.amazon.com
+		- ec8.images-amazon.com.edgesuite.net
+			- ec8.images-amazon.com
+		- ec3.images-amazon.com.c.footprint.net
+			- ec[13].images-amazon.com
+		- amazonrtl.vo.llnwd.net
+			- ec6.images-amazon.com
 
 -->
 <ruleset name="Amazon Web Services">
@@ -9,27 +32,30 @@
 	<target host="aws.amazon.com" />
 	<target host="signin.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
+	<target host="fls-eu.amazon.com" />
+	<target host="fls-na.amazon.com" />
 	<target host="images.amazon.com" />
 	<target host="payments.amazon.com" />
-	<target host="rcm-images.amazon.com" />
 	<target host="sis.amazon.com" />
-	<target host="ws.amazon.com" />
 	<target host="s3.amazonaws.com" />
 	<target host="*.s3.amazonaws.com" />
-		<!--	bloody forced redirection:
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001100.html	-->
-		<exclusion pattern="^http://static\.via\.me\.s3\.amazonaws\.com/" />
-		<exclusion pattern="^http://img\.wired\.co\.uk\.s3\.amazonaws.com/" />
+		<!--
+			Bloody forced redirection:
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001100.html
+											-->
+		<exclusion pattern="^http://(?:static\.via\.me|img\.wired\.co\.uk)\.s3\.amazonaws\.com/" />
 	<target host="cdn.*.s3.amazonaws.com" />
 	<target host="s3-eu-west-1.amazonaws.com" />
 	<target host="*.s3-eu-west-1.amazonaws.com" />
 	<target host="cdn.*.s3-eu-west-1.amazonaws.com" />
-	<target host="*.images-amazon.com" />
 	<target host="amazonwebservices.com" />
 	<target host="*.amazonwebservices.com" />
+	<target host="*.images-amazon.com" />
+	<target host="*.ssl-images-amazon.com" />
 
 
-	<rule from="^http://(signin\.aws|aws(-portal)?|payments|sis|ws)\.amazon\.com/"
+	<rule from="^http://(signin\.aws|aws(?:-portal)?|fls-eu|fls-na|payments|sis)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
 	<rule from="^http://s3(-eu-west-1)?\.amazonaws\.com/"
@@ -41,16 +67,22 @@
 	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
 
-	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
+	<rule from="^https?://(?:www\.)?amazonwebservices\.com/"
 		to="https://aws.amazon.com/" />
 
 	<rule from="^http://developer\.amazonwebservices\.com/"
 		to="https://developer.amazonwebservices.com/" />
 
-	<rule from="^http://media\.amazonwebservices\.com/"
+	<rule from="^https?://media\.amazonwebservices\.com/"
 		to="https://s3.amazonaws.com/awsmedia/" />
 
-	<rule from="^http://(?:(?:\w-)?ec[2x]\.images-|(?:rcm-)?images\.)amazon\.com/"
+	<rule from="^https?://ec[5x]\.images-amazon\.com/"
+		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
+
+	<rule from="^https?://(?:(?:\w-)?ec[1-8x]\.images-|images\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
+
+	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
+		to="https://images-$1.ssl-images-amazon.com/" />
 
 </ruleset>

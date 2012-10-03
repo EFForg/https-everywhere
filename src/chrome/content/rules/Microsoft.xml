@@ -6,6 +6,7 @@
 
 		- Live.xml
 		- Microsoft-Atlas.xml
+		- MSDN.xml
 		- MSN.com.xml
 		- MSN-Extra.xml
 		- Newsvine.com.xml
@@ -27,13 +28,14 @@
 			s/			(some ditto)
 			thumb/			(ditto)
 		- db3.api.bing.com		(cert: bing.com; blank page)
-		- messenger.services.live.com
 		- download.microsoft.com	(Akamai; 503)
+		- web.esd.microsoft.com		(Akamai, 503; esd, origin, origin-web, and web don't exist)
 		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
 		- visio.microsoft.com		(cert valid; ditto)
 		- (www.)windows.microsoft.com	(cert valid; 404)
 		- res[12].windows.microsoft.com	(cert: *.sharepointonline.com; 404; also on origin-res.windows.microsoft.com)
-		- www.wlmessenger.net
+		- blogs.office.com
+		- (www.)windowsteamblog.com
 
 -->
 <ruleset name="Microsoft (partial)">
@@ -59,7 +61,6 @@
     		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
 		<!--	https://trac.torproject.org/projects/tor/ticket/5754	-->
 		<exclusion pattern="^http://msdn\.microsoft\.com/($|en-us/$|.+(/$|\.aspx|/\w\w\d{6,10}$))" />
-		<exclusion pattern="^https?://blogs\.msdn\.com/.*\?Redirected=true" />
 	<target host="social.expression.microsoft.com" />
 	<!--	Akamai	-->
 	<target host="*.msdn.microsoft.com" />
@@ -79,14 +80,15 @@
 	<target host="*.microsoftstore.com" />
 	<target host="*.microsoftstoreassets.com" />
 	<target host="external.microsoftstoreservices.com" />
-	<target host="*.msdn.com" />
-	<!--	Akamai	-->
-	<target host="i1.blogs.msdn.com" />
-	<target host="create.msdn.com" />
-	<target host="*.create.msdn.com" />
+	<target host="i-technet.sec.s-msft.com" />
 	<target host="*.social.s-msft.com" />
 		<exclusion pattern="^http://i\d\.social\.s-msft\.com/wiki/" />
+	<target host="systemcenteradvisor.com" />
+	<target host="*.systemcenteradvisor.com" />
 	<target host="ecn.dev.virtualearth.net" />
+	<target host="windows.net" />
+	<target host="*.blob.core.windows.net" />
+	<target host="www.windows.net" />
 
 
 	<securecookie host="^www\.acikakademi\.com$" name=".*" />
@@ -95,8 +97,8 @@
 	<!--	cookies set by c.microsoft.com		-->
 	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
 	<securecookie host="^www\.microsoft\.com$" name=".*" />
-	<securecookie host="^blogs\.msdn\.com$" name=".*" />
 	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
+	<securecookie host="^www\.systemcenteradvisor\.com$" name=".*" />
 
 
 	<!--	- Cert only matches www
@@ -147,19 +149,15 @@
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
 
-	<!--	Attempted workaround for
-
-		https://trac.torproject.org/projects/tor/ticket/5754
-				-->
-	<rule from="^https?://blogs\.msdn\.com/(.*(?:\.aspx|\.xml|/))?$"
-		to="https://blogs.msdn.com/$1?Redirected=true" />
-
 	<!--	Akamai	-->
 	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
 		to="https://www.microsoft.com/$1/" />
 
 	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
 		to="https://support.microsoft.com/$1" />
+
+	<rule from="^http://technet\.microsoft\.com/en-us/(library/[^\.]\.rss(?:$|\?)|security/bulletin(?:$|\?|/))"
+		to="https://technet.microsoft.com/en-us/$1" />
 
 	<!--	- res[12] appear to be identical
 		- Cert: *.sharepointonline.com
@@ -190,23 +188,27 @@
 	<rule from="^http://external\.microsoftstoreservices\.com/"
 		to="https://external.microsoftstoreservices.com/" />
 
-	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
-		to="https://$1.msdn.com/" />
-
-	<!--	- Cert doesn't match !www
-		- www pages redirect to !www
-		- Cert doesn't match public
-						-->
-	<rule from="^https?://(?:public\.)?create\.msdn\.com/assets/"
-		to="https://www.create.msdn.com/assets/" />
-
-	<rule from="^http://(profile|www)\.create\.msdn\.com/"
-		to="https://$1.create.msdn.com/" />
+	<rule from="^http://i-technet\.sec\.s-msft\.com/"
+		to="https://i-technet.sec.s-msft.com/" />
 
 	<rule from="^https?://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/" />
 
+	<rule from="^http://(login\.|www\.)?systemcenteradvisor\.com/"
+		to="https://$1systemcenteradvisor.com/" />
+
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
 		to="https://ecn.dev.virtualearth.net/" />
+
+	<!--	- Times out over https
+		- Redirects like so over http
+						-->
+	<rule from="^https?://(?:www\.)?windows\.net/$"
+		to="https://www.microsoft.com/net" />
+
+	<!--	Clients have unique subdomains.
+						-->
+	<rule from="^http://(\w+)\.blob\.core\.windows\.net/"
+		to="https://$1.blob.core.windows.net/" />
 
 </ruleset>

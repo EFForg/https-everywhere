@@ -1,16 +1,51 @@
-<!-- This rule was automatically generated based on an HSTS
-     preload rule in the Chromium browser.  See 
-     https://src.chromium.org/viewvc/chrome/trunk/src/net/base/transport_security_state.cc
-     for the list of preloads.  Sites are added to the Chromium HSTS
-     preload list on request from their administrators, so HTTPS should
-     work properly everywhere on this site.
+<!--
+	This rule was automatically generated based on an
+	HSTS preload rule in the Chromium browser.  See
+	https://src.chromium.org/viewvc/chrome/trunk/src/net/base/transport_security_state.cc
+	for the list of preloads.  Sites are added to the Chromium
+	HSTS preload list on request from their administrators, so
+	HTTPS should work properly everywhere on this site.
  
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
+	Because Chromium and derived browsers automatically force HTTPS for
+	every access to this site, this rule applies only to Firefox.
+
+
+	Mismatches:
+
+		- 404.s.sapo.pt	(CN: js.sapo.pt; works)
+		- h.s.sl.pt	(ditto)
+		- i.s.sl.pt	(ditto)
+
+
+	Nonfunctional domains:
+
+		- exameinformatica.sapo.pt
+
+-->
 <ruleset name="Sapo.pt" platform="firefox">
-  <target host="login.sapo.pt" />
 
-  <securecookie host="^login\.sapo\.pt$" name=".+" />
+	<target host="sapo.pt" />
+	<target host="*.sapo.pt" />
+	<target host="h.s.sl.pt" />
 
-  <rule from="^http://login\.sapo\.pt/" to="https://login.sapo.pt/" />
+
+	<securecookie host="^(?:login|pub)\.sapo\.pt$" name=".+" />
+
+
+	<!--	- !www 403s over https
+		- !www 301s to www over http
+		- At least some pages 301 to http
+								-->
+	<rule from="^https?://(?:www\.)?sapo\.pt/(css/|imgs/|pub/|widgets/)"
+		to="https://www.sapo.pt/$1" />
+
+	<rule from="^http://(login|pub|pubimgs)\.sapo\.pt/"
+		to="https://$1.sapo.pt/" />
+
+	<rule from="^https?://h\.s\.sl\.pt/css-pt-2011/"
+		to="https://www.sapo.pt/css/" />
+
+	<rule from="^https?://h\.s\.sl\.pt/imgs/(?:v12/)?"
+		to="https://www.sapo.pt/imgs/" />
+
 </ruleset>

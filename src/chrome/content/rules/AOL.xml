@@ -1,16 +1,60 @@
 <!--
+	For problematic coverage, see AOL-mismatches.xml.
+
+
 	Other AOL rulesets:
 
+		- 5min.xml
+		- AboutMe.xml
 		- AOL-Advertising.xml
-		- AOL-mismatches.xml
+		- Huffington-Post.xml
 
 
-	Nonfunctional:
+	Much of CrunchBoard is handled in PersonForce-clients.xml.
 
-		- euportal.aolcdn.com		(Akamai; "Service Unavailable")
+	TechCrunch is handled in WordPress-blogs.xml.
+
+
+	CDN buckets:
+
+		- v6v4.win.blogsmith.aol.com.aol.akadns.net
+			- www.engadget.com
+
+		- win.blogsmith.aol.com.aol.akadns.net
+			- alt.engadget.com
+			- hd.engadget.com
+			- mobile.engadget.com
+
+		- platform-a.egslb.aol.com
+		- myfeeds.aolcdn.com.edgesuite.net
+		- o.aolcdn-ds.com.edgesuite.net
+		- www.blogsmithcdn-ds.com.edgesuite.net
+			- www.blogcdn.com
+			- www.blogsmithcdn.com
+			- www.blogsmithmedia.com
+
+
+	Nonfunctional domains:
+
+		- advertising.aol.com
+		- hss-prod.hss.aol.com
+		- music.aol.com
+		- euportal.aolcdn.com		(Akamai; 503)
+		- myfeeds.aolcdn.com		(ditto)
 		- blogsmithmedia.com		(ditto)
+
+		- engadget.com subdomains:
+
+			- (www.)
+			- alt
+			- hd
+			- mobile
+
 		- (massively.|www.)joystiq.com
+		- tuaw.com
 		- (www.)weblogsinc.com
+		- www.winamp.com
+		- blog.winamp.com
 
 -->
 <ruleset name="AOL (partial)">
@@ -31,7 +75,9 @@
 	<target host="aol.co.uk" />
 	<target host="*.aol.co.uk" />
 	<target host="*.aolcdn.com" />
-		<exclusion pattern="^http://o\.aolcdn\.com/(dims-global|mars|myfeeds|portaleu)/" />
+		<exclusion pattern="^http://o\.aolcdn\.com/(dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
+	<target host="crunchboard.com" />
+	<target host="www.crunchboard.com" />
     <exclusion pattern="^http://my\.screenname\.aol\.com/_cqr/logout/"/>
 	<target host="netscape.com" />
 	<target host="*.netscape.com" />
@@ -63,8 +109,11 @@
 	<rule from="^http://rs\.aol\.co\.uk/"
 		to="https://rs.aol.co.uk/" />
 
-	<rule from="^https?://(?:o|s(ns-static)?)\.aolcdn\.com/"
+	<rule from="^https?://(?:o3?|s(ns-static)?)\.aolcdn\.com/"
 		to="https://s$1.aolcdn.com/" />
+
+	<rule from="^https?://(?:www\.)?crunchboard\.com/(build|images3?|include)/"
+		to="https://secure.personforce.com/$1/" />
 
 	<!--	- Doesn't work over https.
 		- Redirects as so.
