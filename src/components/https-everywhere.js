@@ -371,7 +371,7 @@ HTTPSEverywhere.prototype = {
     try {
       var domWin = nc.getInterface(CI.nsIDOMWindow);
     } catch(e) {
-      this.log(INFO, "exploded getting DOMWin for " + channel.URI.spec);
+      this.log(INFO, "No window associated with request: " + channel.URI.spec);
       return null;
     }
     if (!domWin) {
