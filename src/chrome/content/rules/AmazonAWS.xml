@@ -43,8 +43,10 @@
 			Bloody forced redirection:
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001100.html
+      https://trac.torproject.org/projects/tor/ticket/4199 
 											-->
-		<exclusion pattern="^http://(?:static\.via\.me|img\.wired\.co\.uk)\.s3\.amazonaws\.com/" />
+		<exclusion pattern="^http://(?:static\.via\.me|img\.wired\.co\.uk|spiegeltv-ivms2-restapi)\.s3\.amazonaws\.com/" />
+
 	<target host="cdn.*.s3.amazonaws.com" />
 	<target host="s3-eu-west-1.amazonaws.com" />
 	<target host="*.s3-eu-west-1.amazonaws.com" />
@@ -82,7 +84,14 @@
 	<rule from="^https?://(?:(?:\w-)?ec[1-8x]\.images-|images\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
 
+  <!-- Exclusions for Amazon's Zeitgeist MP3 Player
+       https://trac.torproject.org/projects/tor/ticket/7000 
+       note that the second exclusion can't be scoped to the ssl-images-amazon
+       domain, though it could have copied the crazy pattern from the rule
+       above -->
+  <exclusion pattern="^http://amazon-zg\.s3\.amazonaws.com/" />
+  <exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
+
 	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
 		to="https://images-$1.ssl-images-amazon.com/" />
-
 </ruleset>
