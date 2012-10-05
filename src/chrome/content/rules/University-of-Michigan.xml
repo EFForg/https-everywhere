@@ -1,10 +1,46 @@
+<!--
+	Nonfunctional umich.edu subdomains:
+
+		- (www.)			(redirects to weblogin
+		- (www.)bi			(CN: www.businessintelligence.umich.edu; 302s there)
+		- (www.)businessintelligence	(redirects to weblogin)
+		- (www.)cio			(ditto)
+		- itcs				(rx_record_too_long)
+		- accounts.itcs			(redirects to weblogin)
+		- showcase.itcs			(ditto)
+		- www.itcs			(ditto)
+		- (www.)itcom.itd		(ditto)
+		- (www.)its			(ditto)
+		- www.mais			(rx_record_too_long)
+		- (www.)mobileapps		(redirects to weblogin)
+		- (www.)nextgen			(rx_record_too_long)
+		- orsp
+		- (www.)provost			(redirects to weblogin)
+		- (www.)regents			(ditto)
+		- (www.)sustainablecomputing	(rx_record_too_long)
+
+-->
 <ruleset name="University of Michigan (partial)">
 
-	<target host="law.umich.edu" />
-	<target host="www.law.umich.edu" />
+	<target host="*.umich.edu" />
+	<target host="www.*.umich.edu" />
+	<target host="webapps.lsa.umich.edu" />
 
 
-	<rule from="^http://(www\.)?law\.umich\.edu/"
-		to="https://$1law.umich.edu/" />
+	<securecookie host="^.+\.umich\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:eram|eresearch|erpm|friend|(www\.)?law|servicerequest|webapps\.lsa|weblogin|wolverineaccess)\.umich\.edu/"
+		to="https://$1.umich.edu/" />
+
+	<!--	Cert only matches ^ctools.
+						-->
+	<rule from="^https?://(?:www\.)?ctools\.umich\.edu/"
+		to="https://ctools.umich.edu/" />
+
+	<!--	Cert only matches *.lsa.
+						-->
+	<rule from="^https?://(?:www\.)?lsa\.umich\.edu/"
+		to="https://www.lsa.umich.edu/" />
 
 </ruleset>
