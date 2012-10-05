@@ -1,0 +1,48 @@
+<!--
+	For other New York Times coverage, see NYTimes.xml.
+
+-->
+<ruleset name="The Boston Globe (partial)">
+
+	<target host="boston.com" />
+	<target host="*.boston.com" />
+	<target host="bostonglobe.com" />
+	<target host="*.bostonglobe.com" />
+		<!--
+			- Doesn't work
+			- epaper CN: www.pressdisplay.com
+							-->
+		<exclusion pattern="http://(epaper|spiderbites)\.bostonglobe\.com/" />
+
+
+	<securecookie host="^(?:.*\.)?boston\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?bostonglobe\.com$" name=".+" />
+
+
+	<rule from="^http://(graphics\.|www\.)?boston\.com/"
+		to="https://$1boston.com/" />
+
+	<!--	- cache doesn't work
+		- cache CN: *.https.internapcdn.net
+							-->
+	<rule from="^http://cache\.boston\.com/"
+		to="https://graphics.boston.com/" />
+
+	<rule from="^http://deals\.boston\.com/(favicon\.ico|signup|views/)"
+		to="https://deals.boston.com/$1" />
+
+	<!--	- Weather doesn't work
+		- This is what the server does, aside from https
+							-->
+	<rule from="^http://weather\.boston\.com/"
+		to="https://www.boston.com/weather/" />
+
+	<rule from="^http://(services\.)?bostonglobe\.com/"
+		to="https://$1bostonglobe.com/" />
+
+	<!--	www times out.
+				-->
+	<rule from="^http://www\.bostonglobe\.com/"
+		to="https://bostonglobe.com/" />
+
+</ruleset>
