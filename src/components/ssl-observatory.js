@@ -75,7 +75,7 @@ function SSLObservatory() {
   this.proxy_test_callback = null;
   this.cto_url = "https://check.torproject.org/?TorButton=true";
   // a regexp to match the above URL
-  this.cto_search = "^https://check.torproject.org/";
+  this.cto_regexp = RegExp("^https://check.torproject.org/");
 
   this.public_roots = root_ca_hashes;
 
@@ -84,9 +84,9 @@ function SSLObservatory() {
   this.delayed_submissions = {};
   OS.addObserver(this, "cookie-changed", false);
 
-  // The url to submit to
-  var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
-  this.submit_url = "https://" + host + "/submit_cert";
+  // Figure out the url to submit to
+  this.submit_host = null;
+  this.findSubmissionTarget();
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
@@ -157,6 +157,17 @@ SSLObservatory.prototype = {
         return null;
     } catch(err) {
       return null;
+    }
+  },
+
+  findSubmissionTarget: function() {
+    // Compute the URL that the Observatory will currently submit to
+    var host = this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+    // Rebuild the regexp iff the host has changed
+    if (host != this.submit_host) {
+      this.submit_host = host;
+      this.submit_url = "https://" + host + "/submit_cert";
+      this.submission_regexp = RegExp("^" + this.submit_url);
     }
   },
 
@@ -518,18 +529,13 @@ SSLObservatory.prototype = {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
-    c = {}; c.certArray=certArray; c.fps = fps;
-    c.leaf = certArray[0];
+    var c = {}; c.certArray = certArray; c.fps = fps; c.leaf = certArray[0];
     this.processConvergenceChain(c);
     if (!this.shouldSubmit(c,domain)) return;
 
-    var wm = CC["@mozilla.org/appshell/window-mediator;1"] 
-                .getService(Components.interfaces.nsIWindowMediator);
-    var browserWindow = wm.getMostRecentWindow("navigator:browser");
     for (var i = 0; i < c.certArray.length; i++) {
       var len = new Object();
       var derData = c.certArray[i].getRawDER(len);
-      //var encoded = browserWindow.btoa(derData);  // seems to not be a real base 64 encoding!
       let result = "";
       for (let j = 0, dataLength = derData.length; j < dataLength; ++j) 
         result += String.fromCharCode(derData[j]);
@@ -631,8 +637,7 @@ SSLObservatory.prototype = {
                  .createInstance(Ci.nsIXMLHttpRequest);
 
     // We do this again in case the user altered about:config
-    var host=this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
-    this.submit_url = "https://" + host + "/submit_cert";
+    this.findSubmissionTarget();
     req.open("POST", this.submit_url+this.csrf_nonce, true);
 
     // Send the proper header information along with the request
@@ -732,7 +737,9 @@ SSLObservatory.prototype = {
     }
   },
 
-  getProxySettings: function() {
+  getProxySettings: function(testingForTor) {
+    // This may be called either for an Observatory submission, or during a test to see if Tor is
+    // present.  The testingForTor argument is true in the latter case.
     var proxy_settings = ["direct", "", 0];
     this.log(INFO,"in getProxySettings()");
     var custom_proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
@@ -756,7 +763,7 @@ SSLObservatory.prototype = {
      * localhost:9050 is a better bet.  People whose networks send all traffc through Tor can just
      * tell the Observatory to submit certs without Tor.
      */
-    } else if (this.myGetBoolPref("use_custom_proxy") && custom_proxy_type != "direct") {
+    } else if (this.myGetBoolPref("use_custom_proxy") && !(testingForTor && custom_proxy_type == "direct")) {
       this.log(INFO,"CASE: use_custom_proxy");
       proxy_settings[0] = custom_proxy_type;
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
@@ -785,7 +792,10 @@ SSLObservatory.prototype = {
       this.log(WARN, "EXPLOSION: " + e);
     }
 
-    if (aURI.spec.search("^"+this.submit_url) != -1 || aURI.spec.search(this.cto_search) != -1) {
+    var isSubmission = this.submission_regexp.test(aURI.spec);
+    var testingForTor = this.cto_regexp.test(aURI.spec);
+
+    if (isSubmission || testingForTor) {
       if (aURI.path.search(this.csrf_nonce+"$") != -1) {
 
         this.log(INFO, "Got observatory url + nonce: "+aURI.spec);
@@ -795,7 +805,7 @@ SSLObservatory.prototype = {
         // Send it through tor by creating an nsIProxy instance
         // for the torbutton proxy settings.
         try {
-          proxy_settings = this.getProxySettings();
+          proxy_settings = this.getProxySettings(testingForTor);
           proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
                     proxy_settings[2],
                     Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
