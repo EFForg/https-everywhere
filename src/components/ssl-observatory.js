@@ -735,6 +735,7 @@ SSLObservatory.prototype = {
   getProxySettings: function() {
     var proxy_settings = ["direct", "", 0];
     this.log(INFO,"in getProxySettings()");
+    var custom_proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
       this.log(INFO,"CASE: use_tor_proxy");
       // extract torbutton proxy settings
@@ -747,12 +748,17 @@ SSLObservatory.prototype = {
         proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
         proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
       }
-    } else if (this.myGetBoolPref("use_custom_proxy")) {
-      /* XXX: Should we have a separate pref for use_direct? Or should "direct" be a subcase of custom
-       * proxy hardcoded by the UI? Assuming the latter for now.
-       */
+    /* Regarding the test below:
+     *
+     * custom_proxy_type == "direct" is indicative of the user having selected "submit certs even if
+     * Tor is not available", rather than true custom Tor proxy settings.  So in that case, there's
+     * not much point probing to see if the direct proxy is actually a Tor connection, and
+     * localhost:9050 is a better bet.  People whose networks send all traffc through Tor can just
+     * tell the Observatory to submit certs without Tor.
+     */
+    } else if (this.myGetBoolPref("use_custom_proxy") && custom_proxy_type != "direct") {
       this.log(INFO,"CASE: use_custom_proxy");
-      proxy_settings[0] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
+      proxy_settings[0] = custom_proxy_type;
       proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
       proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
     } else {
