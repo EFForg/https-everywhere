@@ -1,0 +1,40 @@
+<!--
+	For problematic rules, see Buffalo_State_College-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- email		(reset)
+		- library	(CN: bsclib02; 404)
+		- president	("This page cannot be found")
+		- (www.)rf	(CN: *.rochen.com; shows cPanel default page)
+		- search	(CN: foo.ent.google.com; 302 to http)
+
+
+-->
+<ruleset name="Buffalo State College (partial)">
+
+	<target host="buffalostate.edu" />
+	<target host="*.buffalostate.edu" />
+	<!--
+		For cross-domain cookie.
+						-->
+	<target host="*.giving.buffalostate.edu" />
+	<!--
+		Ditto.
+			-->
+	<target host="*.newsandevents.buffalostate.edu" />
+
+
+	<securecookie host="^.+\.buffalostate\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:bscintra|bsclib01|catalog|chngpwd|giving|newsandevents|owa|president|sharepoint|www|wwwprod)\.)?buffalostate\.edu/"
+		to="https://$1buffalostate.edu/" />
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^https?://email\.buffalostate\.edu/(?:.*)"
+		to="https://owa.buffalostate.edu/owa/" />
+
+</ruleset>
