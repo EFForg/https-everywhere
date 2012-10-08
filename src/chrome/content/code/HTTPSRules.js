@@ -374,7 +374,6 @@ const HTTPSRules = {
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
       this.scanRulefiles(rulefiles);
-      this.checkForBuggyDefaults();
       var t,i;
       for (t in this.targets) {
         for (i = 0 ; i < this.targets[t].length ; i++) {
@@ -412,45 +411,6 @@ const HTTPSRules = {
         if (e.lineNumber)
           this.log(WARN, "(line number: " + e.lineNumber + ")");
       }
-    }
-  },
-
-  checkForBuggyDefaults: function() {
-    // The 2.2 release had a ruleset parsing bug which caused the match_rule
-    // attribute to be misinterpreted as the default_off attribute.  That was
-    // a big problem iff 2.2 was the first version of HTTPS Everywhere
-    // installed in a particular browser profile.  If enough buggy rulesets
-    // are on, conclude that this is such a profile, and reset to the correct
-    // defaults.  More here:
-    //
-    // https://mail1.eff.org/pipermail/https-everywhere/2012-August/001511.html
-    //
-    this.log(DBUG, "Checking for buggy configurations from version 2.2");
-    // All of these were default_off in 2.2, and none of them had a
-    // match_rule:
-    var shouldBeOff = ["SchuelerVZ","Tcodevelopment.com","33Bits","BerliOS",
-                       "BuisnessInsider (broken)","Daft.ie","DVDFab",
-                       "YouMail (buggy)","StudiVZ (disabled)","Woot (broken)"];
-
-    var nonBuggy = 0;
-    for (var ruleindex in shouldBeOff) {
-      // Some of these shouldBeOff rules may be removed in the future, so
-      // tolerate their absence
-      var rulename = shouldBeOff[ruleindex];
-      if (rulename in this.rulesetsByName) {
-        if (!this.rulesetsByName[rulename].active) 
-          nonBuggy += 1;
-      } else {
-        this.log("INFO", "Couldn't check state of ruleset " + rulename);
-      }
-    }
-
-    // Heuristic: a user starting with a buggy config might have disabled up
-    // to 2 of the 10 broken rulesets manually, but we will still conclude
-    // that their config is broken and reset it
-    if (nonBuggy <= 2) {
-      this.log(WARN, "Detected a buggy-looking configuration, probably from HTTPS Everywhere 2.2.  Resetting ruleset states to defaults");
-      this.resetRulesetsToDefaults();
     }
   },
 
