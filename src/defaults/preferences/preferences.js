@@ -1,7 +1,7 @@
 pref("extensions.https_everywhere.LogLevel", 5);
+pref("extensions.https_everywhere.globalEnabled",true);
 
 // SSl Observatory preferences
-pref("extensions.https_everywhere.globalEnabled",true);
 pref("extensions.https_everywhere._observatory.enabled",false);
 
 // "testing" currently means send unecessary fingerprints and other test-suite

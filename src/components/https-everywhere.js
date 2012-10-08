@@ -95,6 +95,8 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
+const N_COHORTS = 1000; 
+
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
 const DUMMY_FUNC = function() {}
@@ -495,25 +497,45 @@ HTTPSEverywhere.prototype = {
             SERVICE_CTRID, false, true);
       }
     } else if (topic == "sessionstore-windows-restored") {
-      var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
-                        .getService(Components.interfaces.nsISupports)
-                        .wrappedJSObject;
-      // Show the popup at most once.  Users who enabled the Observatory before
-      // a version that would have shown it to them, don't need to see it
-      // again.
-      var shown = ssl_observatory.myGetBoolPref("popup_shown");
-      var enabled = ssl_observatory.myGetBoolPref("enabled");
-      var that = this;
-      var obs_popup_callback = function(result) {
-        if (result) that.log(INFO, "Got positive proxy test.");
-        else        that.log(INFO, "Got negative proxy text.");
-        // We are now ready to show the popup in its most informative state
-        that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
-      };
-      if (!shown && !enabled)
-        ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+      this.maybeShowObservatoryPopup();
     }
     return;
+  },
+
+  maybeShowObservatoryPopup: function() {
+    // Show the popup at most once.  Users who enabled the Observatory before
+    // a version that would have shown it to them, don't need to see it
+    // again.
+    var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
+    var shown = ssl_observatory.myGetBoolPref("popup_shown");
+    var enabled = ssl_observatory.myGetBoolPref("enabled");
+    var that = this;
+    var obs_popup_callback = function(result) {
+      if (result) that.log(INFO, "Got positive proxy test.");
+      else        that.log(INFO, "Got negative proxy text.");
+      // We are now ready to show the popup in its most informative state
+      that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+    };
+    if (!shown && !enabled)
+      ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+  },
+
+  getExperimentalFeatureCohort: function() {
+    // This variable is used for gradually turning on features for testing and
+    // scalability purposes.  It is a random integer [0,N_COHORTS) generated
+    // once and stored thereafter.
+    // 
+    // This is not currently used/called in the development branch
+    var cohort;
+    try {
+      cohort = this.prefs.getIntPref("experimental_feature_cohort");
+    } catch(e) {
+      cohort = Math.round(Math.random() * N_COHORTS);
+      this.prefs.setIntPref("experimental_feature_cohort", cohort);
+    }
+    return cohort;
   },
 
   // nsIChannelEventSink implementation
