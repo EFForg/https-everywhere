@@ -2,6 +2,7 @@
 	CDN buckets:
 
 		- s3.amazonaws.com/cit/
+		- s3.amazonaws.com/imss-test/
 		- s3.amazonaws.com/imss-test-storage.ads.caltech.edu/
 		- s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/
 		- s3.amazonaws.com/www-prod-storage.cloud.caltech.edu/
@@ -14,12 +15,15 @@
 		- (www.)spitzer.caltech.edu	(self-signed; expired; shows RHEL test page)
 -->
 <ruleset name="Caltech">
+
+	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
 <!-- normally https only; protect against SSL stripping -->
    <target host="tqfr.caltech.edu" />
    <target host="access.caltech.edu" />
    <target host="courses.caltech.edu" />
    <target host="irsecure.caltech.edu" /><!-- mixed content from www.alumni.caltech.edu -->
    <target host="mail.alumni.caltech.edu" />
+	<target host="imss-website-storage.cloud.caltech.edu" />
    <target host="utils.its.caltech.edu" />
    <target host="webmail.caltech.edu" />
    <target host="webvpn.caltech.edu" />
@@ -40,8 +44,18 @@
    <target host="moodle.caltech.edu" />
 	 <target host="web.caltech.edu"/>
 
+
+	<!--	Handily, this bucket forces redirect from s3.amazonaws.com/foo to foo.s3.amazonaws.com.
+										-->
+	<rule from="^https?://www-prod-storage.cloud.caltech.edu.s3.amazonaws.com/"
+		to="https://www-prod-storage.cloud.caltech.edu.s3-us-west-1.amazonaws.com/" />
+
    <rule from="^http://tqfr\.caltech\.edu/" to="https://tqfr.caltech.edu/" />
    <rule from="^http://(?:www\.)?access\.caltech\.edu/" to="https://access.caltech.edu/" />
+
+	<rule from="^https?://imss-website-storage\.cloud\.caltech\.edu/"
+		to="https://s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/" />
+
    <rule from="^http://(?:courses|moodle)\.caltech\.edu/" to="https://courses.caltech.edu/" />
    <rule from="^http://irsecure\.caltech\.edu/" to="https://irsecure.caltech.edu/" />
    <rule from="^http://mail\.alumni\.caltech\.edu/" to="https://mail.alumni.caltech.edu/" />
