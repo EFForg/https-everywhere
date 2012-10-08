@@ -1,13 +1,12 @@
 <!--
 	Other Nokia rulesets:
 
-		- Qt.xml
+		- NAVTEQ.xml
 
 
 	Nonfunctional domains:
 
 		- doc.qt.nokia.com	(times out)
-		- labs.qt.nokia.com	(redirects to blogs.qt.nokia.com)
 
 
 	discussions.nokia.co.uk is handled mostly in Lithium-clients.xml.
@@ -23,6 +22,7 @@
 		<!--	Redirect to http.	-->
 		<exclusion pattern="^http://www\.developer\.nokia\.com/($|Design/|Develop/|Devices/|Distribute/|info/)" />
 	<target host="discussions.europe.nokia.com" />
+	<target host="api.maps.nokia.com" />
 	<target host="*.qt.nokia.com" />
 	<target host="nokia.co.uk" />
 	<target host="www.nokia.co.uk" />
@@ -41,8 +41,19 @@
 	<rule from="^https?://(?:www\.)?nokia\.(co\.uk|de|fr)/"
 		to="https://www.nokia.$1/" />
 
-	<rule from="^http://((?:account|(?:(?:analytics|projects|www)\.)?developer|discussions\.europe|[ir]|(?:(?:blog|developer)\.)?qt)\.)?nokia\.com/"
+	<!--	- Self-signed
+		- Redirects like so
+					-->
+	<rule from="^https?://advertising\.nokia\.com/"
+		to="https://primeplace.nokia.com/" />
+
+	<rule from="^http://((?:account|(?:(?:analytics|projects|sso|www)\.)?developer|discussions\.europe|[ir]|maps|api\.maps|primeplace|(?:developer\.)?qt)\.)?nokia\.com/"
 		to="https://$1nokia.com/" />
+
+	<!--	Both expired, redirect like so.
+						-->
+	<rule from="^https?://(?:blog|labs)\.qt\.nokia\.com/"
+		to="https://blog.qt.digia.com/" />
 
 	<!--	Cert: secure02.lithium.com	-->
 	<rule from="^https?://discussions.nokia.co.uk/html/images/"

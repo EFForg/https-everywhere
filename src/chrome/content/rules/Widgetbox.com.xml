@@ -1,20 +1,58 @@
-<!--	?functional:
+<!--
+	For other Flite coverage, see Flite.xml.
+
+
+	CDN buckets:
+
+		- ne.edgecastcdn.net/...
+			- cdn.widgetbox.com
+
+
+	Nonfunctional domains:
+
+		- widgetbox.com
 		- runtime.widgetbox.com		(EdgeCast CDN)
+		- support.widgetbox.com		(CN: *.zendesk.com; redirects to http)
+		- widgetserver.com
+
+
+	Partially covered domains:
+
+		- support.widgetbox.com
+
+
+	Fully covered domains:
+
+		- (www.)widgetbox.com
+		- pub.widgetbox.com
+		- (www.)widgetserver.com
+		- cdn.widgetserver.com
+		- p.widgetserver.com
+
 -->
-<ruleset name="Widgetbox.com">
+<ruleset name="Widgetbox.com (partial)">
 
 	<target host="widgetbox.com" />
-	<target host="www.widgetbox.com" />
+	<target host="*.widgetbox.com" />
 	<target host="widgetserver.com" />
-	<target host="p.widgetserver.com" />
-	<target host="www.widgetserver.com" />
+	<target host="*.widgetserver.com" />
 
-	<securecookie host="^widgetbox\.com$" name=".*"/>
 
-	<rule from="^http://(www\.)?widgetbox\.com/"
-		to="https://widgetbox.com/" />
+	<securecookie host="^www\.widgetbox\.com$" name=".+" />
 
-	<rule from="^http://(www\.)?(p\.)?widgetserver\.com/"
-		to="https://$2widgetserver.com/" />
+
+	<!--	!www doesn't work over https.
+						-->
+	<rule from="^http://(?:www\.)?widget(box|server)\.com/"
+		to="https://www.widget$1.com/" />
+
+	<rule from="^http://pub\.widgetbox\.com/"
+		to="https://pub.widgetbox.com/" />
+
+	<rule from="^https?://support\.widgetbox\.com/generated/"
+		to="https://generated.zendesk.com/generated/" />
+
+	<rule from="^http://(cdn|p)\.widgetserver\.com/"
+		to="https://$1.widgetserver.com/" />
 
 </ruleset>

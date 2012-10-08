@@ -1,0 +1,53 @@
+<!--
+	For problematic rules, see Karlsruhe_Institute_of_Technology-problematic.xml.
+
+-->
+<ruleset name="Karlsruhe Institute of Technology (partial)">
+
+	<target host="kit.edu" />
+	<target host="*.kit.edu" />
+	<target host="www.*.kit.edu" />
+	<target host="idp.scc.kit.edu" />
+	<target host="ilias.stadium.kit.edu" />
+	<target host="uni-karlsruhe.de" />
+	<target host="*.uni-karlsruhe.de" />
+	<target host="www.*.uni-karlsruhe.de" />
+	<target host="mensa.akk.uni-karlsruhe.de" />
+
+
+	<securecookie host="^.+\.kit\.edu$" name=".+" />
+
+
+	<!--	- Self-signed
+		- Redirects like so
+					-->
+	<rule from="^https?://(?:www\.)?alumni\.kit\.edu/"
+		to="https://www.rsm.kit.edu/" />
+
+	<!--	- ^kit.edu: cert only matches www
+		- ^bibliothek, ^pst, ^radio, ^rsm, & ^scc: self-signed
+					-->
+	<rule from="^https?://(?:www\.)?((?:bibliothek|pst|radio|rsm|scc)\.)?kit\.edu/"
+		to="https://www.$1kit.edu/" />
+
+	<!--	^stiftung.kit.edu doesn't exist.
+							-->
+	<rule from="^http://((?:campus|owa|idp\.scc|(?:ilias\.)?stadium|www\.stiftung)\.)?kit\.edu/"
+		to="https://$1kit.edu/" />
+
+	<!--	- CN: www.kit.edu
+		- ^zib doesn't exist
+		- Redirects like so
+					-->
+	<rule from="^https?://www\.zib\.kit\.edu/(?:.*)"
+		to="https://www.kit.edu/studieren/3052.php" />
+
+	<!--	^uni-karlsruhe, ^ubka, & zvw: self-signed.
+					-->
+	<rule from="^https?://(?:www\.)?(ubka\.|zvw\.)?uni-karlsruhe\.de/"
+		to="https://www.$1uni-karlsruhe.de/" />
+
+	<rule from="^http://mensa\.akk\.uni-karlsruhe\.de/"
+		to="https://mensa.akk.uni-karlsruhe.de/" />
+
+</ruleset>
