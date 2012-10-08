@@ -428,6 +428,9 @@ const HTTPSRules = {
     this.log(DBUG, "Checking for buggy configurations from version 2.2");
     // All of these were default_off in 2.2, and none of them had a
     // match_rule:
+    // Many of these have  been deleted in 3.0 stable, which is great and
+    // makes this heuristic safer (since the about:config variables would
+    // still be around for users who upgraded from 2.2)
     var shouldBeOff = ["SchuelerVZ","Tcodevelopment.com","33Bits","BerliOS",
                        "BuisnessInsider (broken)","Daft.ie","DVDFab",
                        "YouMail (buggy)","StudiVZ (disabled)","Woot (broken)"];
