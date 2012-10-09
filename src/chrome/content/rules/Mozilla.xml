@@ -4,10 +4,6 @@
 		- BrowserID.xml
 
 
-	BOOOO: Firefox.com (which some download links pass through)
-	is in HTTP only...
-
-
 	Nonfunctional domains:
 
 		- identity.mozilla.com		(hosted on Tumblr)
@@ -21,6 +17,7 @@
 
 	Problematic domains:
 
+		- (www.)firefox.com		(CN: www.mozilla.com; 404)
 		- blog.lizardwrangler.com	(self-signed)
 		- affiliates-cdn.mozilla.org	(CN: affiliates.mozilla.org)
 		- krakenbenchmark.mozilla.org	(CN: www.mozilla.org)
@@ -34,6 +31,8 @@
 
 		- drumbeat.org
 		- www.drumbeat.org
+		- firefox.com
+		- www.firefox.com
 
 		- mozilla.com subdomains:
 
@@ -94,7 +93,7 @@
 			- wiki
 			- www
 
-		- mozillalabs subdomains:
+		- mozillalabs.com subdomains:
 
 			- ^
 			- apps
@@ -119,6 +118,8 @@
 
 	<target host="drumbeat.org" />
 	<target host="www.drumbeat.org" />
+	<target host="firefox.com" />
+	<target host="www.firefox.com" />
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
 		<exclusion pattern="^http://(?:identity|static)\.mozilla\.com/" />
@@ -152,6 +153,11 @@
 
 	<rule from="^http://(www\.)?(drumbeat|webfwd|webmaker)\.org/"
 		to="https://$1$2.org/" />
+
+	<!--	Redirects like so over http.
+						-->
+	<rule from="^https?://(?:www\.)?firefox\.com/"
+		to="https://www.mozilla.org/firefox/" />
 
 	<rule from="^http://([\w\-]+\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />
