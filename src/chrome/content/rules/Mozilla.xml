@@ -2,40 +2,149 @@
 	Other Mozilla rulesets:
 
 		- BrowserID.xml
+		- GetPersonas.xml
 
 
-	BOOOO: Firefox.com (which some download links pass through)
-	is in HTTP only...
-
-
-	Nonfunctional:
+	Nonfunctional domains:
 
 		- identity.mozilla.com		(hosted on Tumblr)
-		- static.mozilla.com		(cert: www.mozilla.com; 404)
+		- static.mozilla.com		(CN: www.mozilla.com; 404)
+		- nightly.mozilla.org		(in what way doesn't this work?)
 		- releases.mozilla.org
-		- sfx-images.mozilla.org	(banners)
-		- static.mozilla.org		(cert valid; shows www data)
+		- sfx-images.mozilla.org	(CN: www.mozilla.com; banners)
+		- www-archive.mozilla.org	(CN: www.mozilla.com; 404)
 		- blog.webfwd.org		(hosted on Tumblr)
+
+
+	Problematic domains:
+
+		- (www.)firefox.com		(CN: www.mozilla.com; 404)
+		- blog.lizardwrangler.com	(self-signed)
+		- affiliates-cdn.mozilla.org	(CN: affiliates.mozilla.org)
+		- krakenbenchmark.mozilla.org	(CN: www.mozilla.org)
+		- people.mozilla.org		(CN: people.mozilla.com)
+		- talkback-public.mozilla.org	(CN: www.mozilla.org; 404)
+		- videos.mozilla.org		(CN: static-cdn.addons.mozilla.net)
+		- www.mozillalabs.com		(CN: tbpl.mozilla.org; 403)
+
+
+	Fully covered domains:
+
+		- drumbeat.org
+		- www.drumbeat.org
+		- firefox.com
+		- www.firefox.com
+
+		- mozilla.com subdomains:
+
+			- ^
+			- blog
+			- crash-stats
+			- input
+			- people
+			- support
+			- www
+
+		- mozilla.net subdomains:
+
+			- ^
+			- static-cdn.addons
+			- static-ssl-cdn.addons
+			- addons.cdn
+			- video-cdn
+			- www
+
+		- mozilla.org subdomains:
+
+			- ^
+			- forums.addons
+			- services.addons
+			- affiliates
+			- affiliates-cdn
+			- air
+			- blog
+			- bugzilla
+			- bzr
+			- communitystore
+			- creative
+			- developer
+			- directory
+			- donate
+			- education
+			- etherpad
+			- firefoxlive
+			- forums
+			- ftp
+			- input
+			- intlstore
+			- l10n
+			- lists
+			- localize
+			- hacks
+			- hg
+			- labs
+			- mail
+			- mpl
+			- mxr
+			- nightly
+			- quality
+			- studentreps
+			- support
+			- tbpl
+			- wiki
+			- www
+
+		- mozillaignite.org
+		- blog.mozillaignite.org
+		- www.mozillaignite.org
+
+		- mozillalabs.com subdomains:
+
+			- ^
+			- apps
+			- bespin
+			- bespinplugins
+			- gaming
+			- heatmap
+			- jetpack
+			- testpilot
+			- webmaker
+			- www
+
+		- planet.mozillamessaging.com
+		- support.mozillamessaging.com
+		- webfwd.org
+		- www.webfwd.org
+		- webmaker.org
+		- www.webmaker.org
 
 -->
 <ruleset name="Mozilla">
 
 	<target host="drumbeat.org" />
 	<target host="www.drumbeat.org" />
+	<target host="firefox.com" />
+	<target host="www.firefox.com" />
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
+		<exclusion pattern="^http://(?:identity|static)\.mozilla\.com/" />
 	<target host="mozilla.net" />
 	<target host="*.addons.mozilla.net" />
 	<target host="addons.cdn.mozilla.net" />
 	<target host="*.mozilla.net" />
 	<target host="mozilla.org" />
 	<target host="*.mozilla.org" />
-		<exclusion pattern="^http://nightly\.mozilla\.org/" />
+		<exclusion pattern="^http://(?:krakenbenchmark|nightly|releases|sfx-images|www-archive)\.mozilla\.org/" />
 	<target host="*.addons.mozilla.org" />
-	<!--	*s for cross-domain cookies.	-->
+	<!--
+		*s for cross-domain cookies.
+						-->
 	<target host="*.developer.mozilla.org" />
+	<target host="*.donate.mozilla.org" />
 	<target host="*.forums.mozilla.org" />
 	<target host="*.wiki.mozilla.org" />
+	<target host="mozillaignite.com" />
+	<target host="*.mozillaignite.com" />
 	<target host="mozillalabs.com" />
 	<target host="*.mozillalabs.com" />
 	<target host="*.mozillamessaging.com" />
@@ -45,56 +154,54 @@
 	<target host="www.webmaker.org" />
 
 
-	<securecookie host="^.*\.mozilla\.(com|org)$" name=".*" />
-	<securecookie host="^mozillalabs\.com$" name=".*" />
-	<securecookie host="^(www\.)?webmaker\.org$" name=".*" />
+	<securecookie host="^.*\.mozilla\.(?:com|org)$" name=".+" />
+	<securecookie host="^mozilla(?:ignite|labs)\.com$" name=".+" />
+	<securecookie host="^(?:www\.)?webmaker\.org$" name=".+" />
 
 
 	<rule from="^http://(www\.)?(drumbeat|webfwd|webmaker)\.org/"
 		to="https://$1$2.org/" />
 
-	<rule from="^http://((?:blog|crash-stats|input|people|support|www)\.)?mozilla\.com/"
+	<!--	Redirects like so over http.
+						-->
+	<rule from="^https?://(?:www\.)?firefox\.com/"
+		to="https://www.mozilla.org/firefox/" />
+
+	<rule from="^http://([\w\-]+\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />
 
-	<!--	Redirects as so over http.	-->
+	<!--	Redirects as so over http.
+						-->
 	<rule from="^https?://(?:www\.)?mozilla\.net/"
 		to="https://www.mozilla.org/" />
 
-	<!--	- Cert matches videos-ssl-cdn.mozilla.net
-		- videos-ssl-cdn.mozilla.net doesn't exist
-				-->
-	<rule from="^http://(static(?:-ssl)?-cdn\.addons|addons\.cdn|video-cdn)\.mozilla\.net/"
+	<rule from="^http://([\w\-\.]+)\.mozilla\.net/"
 		to="https://$1.mozilla.net/" />
 
-	<rule from="^http://((?:(?:forums\.|services\.)?addons|air|blog|bugzilla|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|forums|ftp|input|intlstore|l10n|lists|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbpl|quality|wiki|www)\.)?mozilla\.org/"
-		to="https://$1mozilla.org/" />
-
-	<!--	Cert doesn't match affiliates-cdn	-->
-	<rule from="^https?://affiliates(?:-cdn)?\.mozilla\.org/"
+	<rule from="^https?://affiliates-cdn\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
 
-	<!--	Cert only matches .com.	-->
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.com/" />
 
-	<!--	- Cert: www.mozilla.org
-		- 404s over https
-		- Redirects like so over http
-			-->
+	<!--	Redirects like so over http.
+						-->
 	<rule from="^https?://talkback-public\.mozilla\.org/"
 		to="https://crash-stats.mozilla.com/" />
 
-	<!--	Cert mismatch	-->
 	<rule from="^https?://videos\.mozilla\.org/"
 		to="https://videos-cdn.mozilla.net/" />
 
-	<!--	- www cert: tbpl.mozilla.org
-		- 403
-					-->
+	<rule from="^http://([\w\-\.]+\.)?mozilla\.org/"
+		to="https://$1mozilla.org/" />
+
+	<rule from="^http://(\w+\.)?mozillaignite\.com/"
+		to="https://$1mozillaignite.com/" />
+
 	<rule from="^https?://(?:www\.)?mozillalabs\.com/"
 		to="https://mozillalabs.com/" />
 
-	<rule from="^http://(apps|bespin(?:plugins)?|gaming|heatmap|jetpack|testpilot|webmaker)\.mozillalabs\.com/"
+	<rule from="^http://(\w+)\.mozillalabs\.com/"
 		to="https://$1.mozillalabs.com/"/>
 
 	<rule from="^http://(planet|support)\.mozillamessaging\.com/"
