@@ -8,13 +8,13 @@
 	is in HTTP only...
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
 		- identity.mozilla.com		(hosted on Tumblr)
-		- static.mozilla.com		(cert: www.mozilla.com; 404)
+		- static.mozilla.com		(CN: www.mozilla.org; 404)
 		- releases.mozilla.org
 		- sfx-images.mozilla.org	(banners)
-		- static.mozilla.org		(cert valid; shows www data)
+		- static.mozilla.org		(shows www data)
 		- blog.webfwd.org		(hosted on Tumblr)
 
 -->
@@ -32,7 +32,9 @@
 	<target host="*.mozilla.org" />
 		<exclusion pattern="^http://nightly\.mozilla\.org/" />
 	<target host="*.addons.mozilla.org" />
-	<!--	*s for cross-domain cookies.	-->
+	<!--
+		*s for cross-domain cookies.
+						-->
 	<target host="*.developer.mozilla.org" />
 	<target host="*.forums.mozilla.org" />
 	<target host="*.wiki.mozilla.org" />
@@ -45,9 +47,9 @@
 	<target host="www.webmaker.org" />
 
 
-	<securecookie host="^.*\.mozilla\.(com|org)$" name=".*" />
-	<securecookie host="^mozillalabs\.com$" name=".*" />
-	<securecookie host="^(www\.)?webmaker\.org$" name=".*" />
+	<securecookie host="^.*\.mozilla\.(?:com|org)$" name=".+" />
+	<securecookie host="^mozillalabs\.com$" name=".+" />
+	<securecookie host="^(?:www\.)?webmaker\.org$" name=".+" />
 
 
 	<rule from="^http://(www\.)?(drumbeat|webfwd|webmaker)\.org/"
@@ -56,35 +58,39 @@
 	<rule from="^http://((?:blog|crash-stats|input|people|support|www)\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />
 
-	<!--	Redirects as so over http.	-->
+	<!--	Redirects as so over http.
+						-->
 	<rule from="^https?://(?:www\.)?mozilla\.net/"
 		to="https://www.mozilla.org/" />
 
 	<!--	- Cert matches videos-ssl-cdn.mozilla.net
 		- videos-ssl-cdn.mozilla.net doesn't exist
-				-->
+							-->
 	<rule from="^http://(static(?:-ssl)?-cdn\.addons|addons\.cdn|video-cdn)\.mozilla\.net/"
 		to="https://$1.mozilla.net/" />
 
 	<rule from="^http://((?:(?:forums\.|services\.)?addons|air|blog|bugzilla|bzr|communitystore|creative|developer|directory|donate|education|etherpad|firefoxlive|forums|ftp|input|intlstore|l10n|lists|localize|hacks|hg|labs|mail|mpl|mxr|nightly|studentreps|support|tbpl|quality|wiki|www)\.)?mozilla\.org/"
 		to="https://$1mozilla.org/" />
 
-	<!--	Cert doesn't match affiliates-cdn	-->
+	<!--	Cert doesn't match affiliates-cdn
+							-->
 	<rule from="^https?://affiliates(?:-cdn)?\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
 
-	<!--	Cert only matches .com.	-->
+	<!--	Cert only matches .com.
+					-->
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.com/" />
 
 	<!--	- Cert: www.mozilla.org
 		- 404s over https
 		- Redirects like so over http
-			-->
+						-->
 	<rule from="^https?://talkback-public\.mozilla\.org/"
 		to="https://crash-stats.mozilla.com/" />
 
-	<!--	Cert mismatch	-->
+	<!--	Cert mismatch
+				-->
 	<rule from="^https?://videos\.mozilla\.org/"
 		to="https://videos-cdn.mozilla.net/" />
 
