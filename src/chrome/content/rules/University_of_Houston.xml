@@ -1,0 +1,72 @@
+<!--
+	Nonfunctional subdomains:
+
+		- bauerticker
+		- distance
+		- orientation.distance	(reset)
+		- www.hrm		(CN: *.contentactive.com; 404)
+		- m.law			(reset)
+		- www.uhsa		(SN: ssl.uh.edu; redirects there)
+		- weekendu		(reset)
+
+
+	Problematic subdomains:
+
+		- www.arch			(CN: ssl.uh.edu; 
+		- eto				(expired; works)
+		- researchstores.nsm.uh.edu	(CN: nsm.uh.edu; works)
+		- www.sw			(CN: ssl.uh.edu;
+
+
+	Fully covered subdomains:
+
+		- ^
+		- accessuh
+		- (www.)bauer
+		- (www.)coe
+		- (www.)egr
+		- (www.)law
+		- fp.my
+		- myuh
+		- nsm
+		- forms.nsm
+		- mail.nsm
+		- mynsm.nsm
+		- mynsmstore.nsm
+		- nsmit.nsm
+		- www.nsm
+		- www.opt
+		- ssl
+		- (www.)tech
+		- vnet
+		- www
+
+-->
+<ruleset name="University of Houston (partial)">
+
+	<target host="*.uh.edu" />
+	<target host="www.*.uh.edu" />
+	<target host="fp.my.uh.edu" />
+	<target host="*.nsm.uh.edu" />
+
+
+	<securecookie host="^.+\.uh\.edu$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?uh\.edu/"
+		to="https://ssl.uh.edu/" />
+
+	<rule from="^http://(accessuh|fp\.mh|myuh|(?:forms|mail|mynsm|mynsmstore|nsmit)\.nsm|www\.opt|ssl|vnet)\.uh\.edu/"
+		to="https://$1.uh.edu/" />
+
+	<!--	Certs don't match www.
+					-->
+	<rule from="^https?://(?:www\.)?nsm\.uh\.edu/"
+		to="https://nsm.uh.edu/" />
+
+	<!--	Certs don't match !www.
+					-->
+	<rule from="^https?://(?:www\.)?(bauer|coe|egr|law|tech)\.uh\.edu/"
+		to="https://www.$1.uh.edu/" />
+
+</ruleset>
