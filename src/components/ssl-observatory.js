@@ -75,7 +75,7 @@ function SSLObservatory() {
   this.proxy_test_callback = null;
   this.cto_url = "https://check.torproject.org/?TorButton=true";
   // a regexp to match the above URL
-  this.cto_regexp = RegExp("^https://check\.torproject\.org/");
+  this.cto_regexp = RegExp("^https://check\\.torproject\\.org/");
 
   this.public_roots = root_ca_hashes;
 
