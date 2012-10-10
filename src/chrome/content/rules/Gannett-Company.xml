@@ -1,4 +1,9 @@
 <!--
+	Other Gannett Company rulesets:
+
+		- Florida_Today.xml
+
+
 	CDN buckets:
 
 		- wildcard.shoplocal.com.edgekey.net
@@ -11,7 +16,6 @@
 
 	Nonfunctional domains:
 
-		- classifieds.flatoday.com
 		- cmsimg.gannet.com			(Akamai, 503)
 		- origin-cmsimg.gannet.com		(exists but no https)
 		- origin-www.gannett.com		(ditto)
@@ -26,10 +30,6 @@
 
 		- akimages.crossmediaservices.com	(Akamai)
 		- images.crossmediaservices.com		(cert: *.shoplocal.com; "Access Denied")
-		- cmsimg.floridatoday.com		(Akamai; 503)
-		- deals.floridatoday.com		(CN: *.planetdiscover.com)
-		- origin-cmsimg.floridaytoday.com	(no https)
-		- search.floridatoday.com		(CN: *.planetdiscover.com)
 		- deals.montomeryadvertiser.com		(CN: *.planetdiscover.com)
 
 
@@ -37,14 +37,6 @@
 
 		- akimages.crossmediaservices.com
 		- images.crossmediaservics.com
-		- ads.flatdy.net
-		- floridatoday.com
-		- cmsimg.floridatoday.com
-		- deals.floridatoday.com
-		- origin-cmsimg.floridatoday.com
-		- origin-www.floridatoday.com
-		- search.floridatoday.com
-		- www.floridatoday.com
 		- deals.montgomeryadvertiser.com
 		- shoplocal.com
 		- akimages.shoplocal.com
@@ -54,46 +46,16 @@
 <ruleset name="Gannet Company (partial)">
 
 	<target host="*.crossmediaservices.com" />
-	<target host="ads.flatdy.com" />
-	<target host="floridatoday.com" />
-	<target host="*.floridatoday.com" />
 	<target host="deals.montomeryadvertiser.com" />
 	<target host="shoplocal.com" />
 	<target host="*.shoplocal.com" />
 
 
-	<!--	Observed cookie domains:
-
-			- ads.flatdy.com
-			- floridatoday.com
-			- .floridatoday.com
-			- www.floridatoday.com
-			- www.shoplocal.com
-						-->
-	<securecookie host="^(?:.*\.)(?:flatdy|floridatoday|shoplocal)\.com$" name=".+" />
+	<securecookie host="^www\.shoplocal\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:ak)?images\.crossmediaservices\.com/"
 		to="https://akimages.shoplocal.com/" />
-
-	<rule from="^http://ads\.flatdy\.net/"
-		to="https://ads.flatdy.net/" />
-
-	<rule from="^https?://(?:(?:origin-)?cmsimg\.)?floridatoday\.com/"
-		to="https://www.floridatoday.com/" />
-
-	<!--	origin-www works with https.
-						-->
-	<rule from="^http://((?:origin-)?www)\.floridatoday\.com/"
-		to="https://$1.floridatoday.com/" />
-
-	<!--	Fails to redirect properly.
-						-->
-	<rule from="^https?://deals\.floridatoday\.com/(?:$|\?)"
-		to="https://brevardco.planetdiscover.com/sp?aff=1180" />
-
-	<rule from="^https?://(?:deals|search)\.floridatoday\.com/"
-		to="https://brevardco.planetdiscover.com/" />
 
 	<rule from="^https?://deals\.montgomeryadvertiser\.com/"
 		to="https://montgom.planetdiscover.com/" />
