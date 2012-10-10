@@ -1,59 +1,66 @@
 <!--
-	See Gannet-Company-mismatches for problematic rules.
+	Other Gannett Company rulesets:
+
+		- Florida_Today.xml
+
+
+	CDN buckets:
+
+		- wildcard.shoplocal.com.edgekey.net
+			- images.crossmediaservices.com
+			- akimages.shoplocal.com
+
+		- img.gannett.edgesuite.net 
+			- cmsimg.floridatoday.com
 
 
 	Nonfunctional domains:
 
-		- images.crossmediaservices.com		(cert: *.shoplocal.com; "Access Denied")
-		- classifieds.flatoday.com
-		- cmsimg.gannet.com			(Akamai, "Service Unavailable")
+		- cmsimg.gannet.com			(Akamai, 503)
 		- origin-cmsimg.gannet.com		(exists but no https)
 		- origin-www.gannett.com		(ditto)
-		- www.gannet.com			(Akamai, "Service Unavailable")
+		- www.gannet.com			(Akamai, 503)
 		- floridatoday.gannettdigital.com
 		- floridatoday.gon.gannettonline.com
+		- montgomeryadvertiser.com
+		- www.montgomeryadvertiser.com		(Akamai; 503)
 
 
-	cmsimg.floridatoday.com
+	Problematic domains:
 
-		img.gannett.edgesuite.net
+		- akimages.crossmediaservices.com	(Akamai)
+		- images.crossmediaservices.com		(cert: *.shoplocal.com; "Access Denied")
+		- deals.montomeryadvertiser.com		(CN: *.planetdiscover.com)
+
+
+	Fully covered domains:
+
+		- akimages.crossmediaservices.com
+		- images.crossmediaservics.com
+		- deals.montgomeryadvertiser.com
+		- shoplocal.com
+		- akimages.shoplocal.com
+		- www.shoplocal.com
 
 -->
 <ruleset name="Gannet Company (partial)">
 
-	<target host="ads.flatdy.com" />
-	<target host="floridatoday.com" />
-	<target host="*.floridatoday.com" />
+	<target host="*.crossmediaservices.com" />
+	<target host="deals.montomeryadvertiser.com" />
 	<target host="shoplocal.com" />
-	<target host="www.shoplocal.com" />
+	<target host="*.shoplocal.com" />
 
 
-	<!--	Observed cookie domains:
-
-			- ads.flatdy.com
-			- floridatoday.com
-			- .floridatoday.com
-			- www.floridatoday.com
-			- www.shoplocal.com
-						-->
-	<securecookie host="^(.*\.)(flatdy|floridatoday|shoplocal)\.com$" name=".*" />
+	<securecookie host="^www\.shoplocal\.com$" name=".+" />
 
 
-	<rule from="^http://ads\.flatdy\.net/"
-		to="https://ads.flatdy.net/" />
+	<rule from="^https?://(?:ak)?images\.crossmediaservices\.com/"
+		to="https://akimages.shoplocal.com/" />
 
-	<!--	- cmsimg:		Akamai, 503
-		- origin-cmsimg:	no https
-							-->
-	<rule from="^https?://(?:(?:origin-)?cmsimg\.)?floridatoday\.com/"
-		to="https://www.floridatoday.com/" />
+	<rule from="^https?://deals\.montgomeryadvertiser\.com/"
+		to="https://montgom.planetdiscover.com/" />
 
-	<!--	origin-www works with https.
-						-->
-	<rule from="^http://((?:origin-)?www)\.floridatoday\.com/"
-		to="https://$1.floridatoday.com/" />
-
-	<rule from="^http://(www\.)?shoplocal\.com/"
+	<rule from="^http://(akimages\.|www\.)?shoplocal\.com/"
 		to="https://$1shoplocal.com/" />
 
 </ruleset>
