@@ -1,24 +1,33 @@
+<!--
+	Problematic subdomains:
+
+		- mi *
+		- static *
+		- mi-cache **
+		- mi-static **
+
+	* CN: www.legacy.com
+	** CN: *.service.mirror-image.net; 404
+
+-->
 <ruleset name="Legacy.com (partial)">
 
-	<target host="legacy.com"/>
-	<target host="*.legacy.com"/>
+	<target host="legacy.com" />
+	<target host="*.legacy.com" />
+
 
 	<rule from="^http://(www\.)?legacy\.com/($|Images/|(?:[\w\-/]+/)?(?:images/|ObitsTileCorner\.axd)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)"
-		to="https://$1legacy.com/$2"/>
+		to="https://$1legacy.com/$2" />
 
 	<!--	obituaries/Images/ redirects to http.
 							-->
 	<rule from="^http://(www\.)?legacy\.com/obituaries/Images/"
 		to="https://$1legacy.com/obituaries/images/" />
 
-	<!--	mi		cert: www.legacy.com
-		static		cert: ditto
-		mi-static	cert: *.service.mirror-image.net; 404	-->
 	<rule from="^http://(?:mi|(?:mi-)?static)\.legacy\.com/"
-		to="https://www.legacy.com/"/>
+		to="https://www.legacy.com/" />
 
-	<!--	!on www		-->
 	<rule from="^http://mi-cache\.legacy\.com/"
-		to="https://cache.legacy.com/"/>
+		to="https://cache.legacy.com/" />
 
 </ruleset>
