@@ -2,15 +2,17 @@
 		a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
 		a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/ | d3io1k5o0zdpqr.cloudfront.net
 -->
-<ruleset name="Pinterest">
+<ruleset name="Pinterest (partial)">
 
 	<target host="pinterest.com"/>
 	<target host="*.pinterest.com"/>
 
-	<securecookie host="^(.*\.)?pinterest\.com$" name=".*"/>
 
-	<rule from="^http://(assets\.|www\.)?pinterest\.com/"
-		to="https://$1pinterest.com/"/>
+	<rule from="^http://(www\.)?pinterest\.com/(login|password|pin)($|\?|/)"
+		to="https://$1pinterest.com/$2$3" />
+
+	<rule from="^http://assets\.pinterest\.com/"
+		to="https://assets.pinterest.com/" />
 
 	<rule from="^http://(?:(media)-cache\d?|(passets)-cdn)\.pinterest\.com/"
 		to="https://s3.amazonaws.com/$1$2.pinterest.com/"/>
