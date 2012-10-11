@@ -4,6 +4,7 @@
 
 	Other Microsoft rulesets:
 
+		- Bing.xml
 		- Live.xml
 		- Microsoft-Atlas.xml
 		- MSN.com.xml
@@ -17,17 +18,6 @@
 
 
 	Nonfunctional:
-
-		- bing.com:
-			az/			(redirects to http)
-			HPImageArchive.aspx	(ditto); !in fd/
-			images/			(ditto)
-			notifications/		(ditto); !in fd/
-			sa/			(ditto); !in fd/
-			s/			(some ditto)
-			thumb/			(ditto)
-		- db3.api.bing.com		(cert: bing.com; blank page)
-		- messenger.services.live.com
 		- download.microsoft.com	(Akamai; 503)
 		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
 		- visio.microsoft.com		(cert valid; ditto)
@@ -41,16 +31,6 @@
 	<target host="acikakademi.com" />
 	<target host="www.acikakademi.com" />
 	<target host="ajax.aspnetcdn.com" />
-	<target host="bing.com" />
-	<target host="*.bing.com" />
-		<!--
-			Breaks login menu
-
-				https://trac.torproject.org/projects/tor/ticket/7092
-						-->
-		<exclusion pattern="^https?://(?:www\.)?bing\.com/fd/fb/mulmfg" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.c.bing.com" />
 	<target host="dreamspark.com" />
 	<target host="www.dreamspark.com" />
 	<target host="imaginecup.com" />
@@ -102,7 +82,6 @@
 
 
 	<securecookie host="^www\.acikakademi\.com$" name=".*" />
-	<securecookie host="^(\.c|ssl)\.bing\.com$" name=".*" />
 	<securecookie host="^www\.dreamspark\.com$" name=".*" />
 	<!--	cookies set by c.microsoft.com		-->
 	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
@@ -119,18 +98,6 @@
 
 	<rule from="^http://ajax\.aspnetcdn\.com/"
 		to="https://ajax.aspnetcdn.com/"/>
-
-	<!--	- Cert doesn't match www
-		- Some s/ paths work, others not.
-		- fa/s/ is equivalent and fd/ seems to work always, so redirect there.
-		- /bing and /ssl.bing are the same here, but ssl has an EV.
-					-->
-	<rule from="^https?://(?:www\.)?bing\.com/(?:fd/|(s/))"
-		to="https://ssl.bing.com/fd/$1" />
-
-	<!--	c:	tracking beacon		-->
-	<rule from="^http://(c|ssl)\.bing\.com/"
-		to="https://$1.bing.com/" />
 
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?dreamspark\.com/"
