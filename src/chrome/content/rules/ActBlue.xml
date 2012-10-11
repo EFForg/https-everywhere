@@ -1,0 +1,35 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/i.actblue.com/
+		- d1gjqyr9cva5pi.cloudfront.net
+		- d1q85vn0sl19b5.cloudfront.net
+		- d2f8x7hc613baw.cloudfront.net
+		- dopnrkrjwe62k.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- blog	(hosted at actblue.typepad.com; doesn't redirect
+			 back, but that doesn't support https either.)
+
+-->
+<ruleset name="ActBlue (partial)">
+
+	<target host="actblue.com" />
+	<target host="*.actblue.com" />
+	<target host="s.secure.actblue.com" />
+
+
+	<securecookie host="^\.actblue\.com$" name=".*" />
+
+
+	<!--	Server actually redirects from (www.) to secure.
+							-->
+	<rule from="^http://(?:(?:s\.)?secure\.|www\.)?actblue\.com/"
+		to="https://secure.actblue.com/" />
+
+	<rule from="^https?://(i|public)\.actblue\.com/"
+		to="https://s3.amazonaws.com/$1.actblue.com/" />
+
+</ruleset>

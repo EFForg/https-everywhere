@@ -1,0 +1,46 @@
+<!--
+	For problematic rules, see MIT-mismatches.xml.
+
+
+	Nonfunctional mit.edu subdomains:
+
+		- csail		(cert: inquir.csail.mit.edu; handshake fails)
+		- inquir.csail	(ditto)
+		- www.csail
+		- executive
+		- img		(times out)
+		- mvl		(self-signed, expired; 403)
+		- ocw		(Akamai; "Service Unavailable")
+		- scratch	(times out)
+		- tech		(cert: the-tech.mit.edu; 401)
+		- the-tech	(401)
+		- web		(self-signed; interrupted)
+		- www		(interrupted)
+
+-->
+<ruleset name="Massachusetts Institute of Technology (partial)">
+
+	<target host="*.mit.edu" />
+	<target host="www.*.mit.edu" />
+	<target host="mitpressjournals.org" />
+	<target host="www.mitpressjournals.org" />
+
+
+	<!--	Observed cookie domains:
+
+			- mitpress
+			- wayf
+				-->
+	<securecookie host="^.*\.mit\.edu$" name=".*" />
+
+
+	<rule from="^http://(librar(?:ies|y)|(?:www\.)?scripts|wayf)\.mit\.edu/"
+		to="https://$1.mit.edu/" />
+
+	<rule from="^https?://(?:www\.)?mitpress\.mit\.edu/"
+		to="https://mitpress.mit.edu/" />
+
+	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
+		to="https://www.mitpressjournals.org/$2" />
+
+</ruleset>

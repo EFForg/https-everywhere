@@ -1,0 +1,24 @@
+<!--
+	CDN buckets:
+
+		- www-cdn.pardot.netdna-cdn.com
+			- www-cdn-pardot.netdna-ssl.com doesn't exist
+
+-->
+<ruleset name="Pardot (partial)">
+
+	<target host="pardot.com"/>
+	<!--	www-cdn2: netdna-ssl.com	-->
+	<target host="*.pardot.com"/>
+
+	<!-- www https causes www-cdn\d (not) to be fetched over https too	-->
+	<rule from="^https?://www-cdn\d\.pardot\.com/"
+		to="https://www.pardot.com/"/>
+
+	<rule from="^http://pardot\.com/"
+		to="https://www.pardot.com/"/>
+
+	<rule from="^http://(blog|go|help|pi|www)\.pardot\.com/"
+		to="https://$1.pardot.com/"/>
+
+</ruleset>

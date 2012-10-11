@@ -1,0 +1,47 @@
+<!--
+	As of 2012-05-14, known unprotected domains are:
+
+		- archive.kernel.org	(ssl_error_rx_record_too_long)
+		- mirrors.kernel.org	(ditto)
+		- planet.kernel.org	(ditto)
+		- vger.kernel.org
+		- wireless.kernel.org	(cert: sipsolutions.net, 404)
+
+-->
+<ruleset name="Kernel.org">
+
+	<target host="kernel.org" />
+	<target host="*.kernel.org" />
+		<exclusion pattern="^http://(archive|mirrors|planet|vger|wireless)\." />
+	<target host="*.git.kernel.org" />
+	<target host="*.wiki.kernel.org" />
+
+
+	<securecookie host="^.*\.kernel\.org$" name=".*" />
+
+
+	<!--	Cert is only valid for *.kernel.org.	-->
+	<rule from="^https?://kernel\.org/"
+		to="https://www.kernel.org/" />
+
+	<!--	Known subdomains:
+
+			- accounts
+			- all
+			- boot
+			- bugzilla
+			- eu
+			- ftp
+			- git
+			- [\w\-]+.git
+			- patchwork
+			- pub
+			- userweb
+			- wiki
+			- [\w\-]+.wiki
+			- www
+				-->
+	<rule from="^http://([\w\-\.]+)\.kernel\.org/"
+		to="https://$1.kernel.org/" />
+
+</ruleset>

@@ -1,0 +1,48 @@
+<!--
+	For problematic rules, see New-York-University-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)gsas
+		- stern		(times out)
+
+-->
+<ruleset name="New York University (partial)">
+
+	<target host="nyu.edu" />
+	<target host="*.nyu.edu" />
+	<target host="www.*.nyu.edu" />
+
+
+	<!--	Cross-domain cookies observed:
+
+			- AMAuthCookie
+			- amlbcookie
+
+		Not handled here in case they're used on unsecurable pages.
+				-->
+	<securecookie host="^\w+\.nyu\.edu$" name=".*" />
+
+
+	<!--	- !www doesn't work over https
+		- Redirects to www over http
+		- Cert doesn't match //bookstores.
+					-->
+	<rule from="^https?://(?:www\.)?(bookstores\.)?nyu\.edu/"
+		to="https://www.$1nyu.edu/" />
+
+	<!--	- Cert: www.nyu.edu
+		- Redirects like so
+				-->
+	<rule from="^https?://admissions\.nyu\.edu/"
+		to="https://www.nyu.edu/admissions/undergraduate-admissions.html" />
+
+	<!--	Cert doesn't match www.	-->
+	<rule from="^https?://(?:www\.)?cims\.nyu\.edu/"
+		to="https://cims.nyu.edu/" />
+
+	<rule from="^http://(cs|home|login|steinhardt)\.nyu\.edu/"
+		to="https://$1.nyu.edu/" />
+
+</ruleset>

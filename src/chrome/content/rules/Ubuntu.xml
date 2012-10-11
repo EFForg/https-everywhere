@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional domains:
+
+		- ubuntu.com subdomains:
+
+			- (www.)		(times out)
+			- archive
+			- cdimage
+			- odm			(cert: testcases.qa.ubuntu.com_https; 301s there)
+			- old-releases		(cert: uec-images.ubuntu.com; shows uec-images' data)
+			- packages		(times out)
+			- planet		(rx_record_too_long)
+			- popcorn		(rx_record_too_long)
+			- testcases.qa		(self-signed, 301s to http)
+			- pad
+			- summit
+
+		- (www.)ubuntuforums.org	(times out)
+
+-->
+<ruleset name="Ubuntu (partial)">
+
+	<target host="*.ubuntu.com" />
+	<target host="myapps.developer.ubuntu.com" />
+	<target host="ubuntuone.com" />
+	<target host="www.ubuntuone.com" />
+
+
+	<securecookie host="^apps\.ubuntu\.com$" name=".*" />
+
+
+	<rule from="^http://(apps|cloud|(?:myapps\.)?developer|help|lists|one|uds|uec-images|wiki)\.ubuntu\.com/"
+		to="https://$1.ubuntu.com/" />
+
+	<rule from="^https?://(?:www\.)?ubuntuone\.com/"
+		to="https://one.ubuntu.com/" />
+
+</ruleset>

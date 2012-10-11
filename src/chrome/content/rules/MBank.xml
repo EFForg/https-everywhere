@@ -1,0 +1,45 @@
+<!--
+	Problematic:
+
+		- mbank.com.pl
+			- Presents cert for ssl.mbank.com.pl.
+			- Redirects to www.mbank.pl via http.
+
+		- media.mbank.eu
+			- Presents cert for secure.netpr.pl.
+		- mbank.cz
+			- Presents cert for ssl.mbank.com.pl.
+			- Redirects to www.mbank.cz via http.
+
+		- ssl.mbank.com.pl
+			- Displays blank page via https.
+
+
+-->
+<ruleset name="mBank (partial)">
+
+	<target host="cz.mbank.eu"/>
+	<target host="form.cz.mbank.eu"/>
+	<target host="sk.mbank.eu"/>
+	<target host="form.sk.mbank.eu"/>
+	<target host="form.mbank.com.pl"/>
+	<!--target host="ssl.mbank.com.pl"/-->
+	<target host="www.mbank.com.pl"/>
+
+
+	<securecookie host="^(cz|sk)\.mbank\.eu$" name=".*"/>
+
+
+	<rule from="^http://(form\.)?(cz|sk)\.mbank\.eu/"
+		to="https://$1$2.mbank.eu/"/>
+
+	<!--	http://pavelmachek.livejournal.com/105225.html
+		Shows a blank page atm...
+		Redirects to www.mbank.pl over http.
+	<rule from="^http://ssl\.mbank\.com\.pl/"
+		to="https://ssl.mbank.com.pl/"/-->
+
+	<rule from="^http://(form|www)\.mbank\.com\.pl/"
+		to="https://$1.mbank.com.pl/"/>
+
+</ruleset>

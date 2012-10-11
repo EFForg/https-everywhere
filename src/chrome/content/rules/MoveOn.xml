@@ -1,0 +1,32 @@
+<ruleset name="MoveOn">
+	<target host="moveon.org" />
+	<target host="*.moveon.org" />
+	<target host="moveonpac.org" />
+	<target host="www.moveonpac.org" />
+
+	<!-- For a URL such as http://www.moveon.org/press where
+	there is no trailing slash, add a trailing slash when
+	changing the URL to HTTPS (the previous URL becomes
+	https://www.moveon.org/press/ for instance.) -->
+	<rule from="^https?://(?:www\.)?moveon\.org/([a-z0-9]+)$" to="https://www.moveon.org/$1/" />
+	<rule from="^https?://(pol|civic|civ)\.moveon\.org/([a-z0-9]+)$" to="https://$1.moveon.org/$2/" />
+
+	<!-- As of April 23, 2011, the URL https://www.moveon.org/keepmeposted/ redirects to the
+	https://civic.moveon.org/keepmeposted// URL. This is probably an error-the correct URL
+	should be https://civic.moveon.org/keepmeposted/ instead. The rule that comes next tries
+	to correct this error by adjusting certain URLs that end with two or more slashes. -->
+	<rule from="^https?://civic\.moveon\.org/([a-z0-9]+){1}/{2,}" to="https://civic.moveon.org/$1/" />
+
+	<!-- Change URLs that start with http://www.moveon.org/r? to start with
+	https://www.moveon.org/r/? instead. -->
+	<rule from="^http://(?:www\.)?moveon\.org/r\?" to="https://www.moveon.org/r/?" />
+
+	<!-- Handle URLs that do not fall within the previously mentioned
+	special cases. -->
+	<rule from="^http://(?:www\.)?moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]{2,}\?)|(?:[a-qs-z0-9]\?)|(?:[a-z0-9]+[^a-z0-9?]+)){1}" to="https://www.moveon.org/$1" />
+	<rule from="^http://(pol|civ)\.moveon\.org/([^a-z0-9]+|(?:[a-z0-9]+[^a-z0-9]+)|$){1}" to="https://$1.moveon.org/$2" />
+	<rule from="^http://civic\.moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]+[^a-z0-9/]+)|(?:[a-z0-9]+/(?:$|[^/]+))|$){1}" to="https://civic.moveon.org/$1" />
+
+	<!-- Handle URLs for the moveonpac.org domain. -->
+	<rule from="^http://(?:www\.)?moveonpac\.org/" to="https://www.moveonpac.org/" />
+</ruleset>

@@ -1,0 +1,52 @@
+<!--
+	For problematic rules, see Atlantic-Media-problematic.xml.
+
+
+	CDN buckets:
+
+		- wac.35fb.edgecastcdn.net
+
+
+	Nonfunctional domains:
+
+		- atlanticmediacompany.com	(cert: secure.nationaljournal.com)
+		- cdn.govexec.com		(cert: gp1.wac.edgecastcdn.net)
+		- (www.)nationaljournal.com	(timeout)
+		- media.nationaljournal.com	(ditto)
+		- www.theatlantic.com		(cert: ssl.theatlantic.com)
+		- advertising.theatlantic.com	(ditto)
+		- cdn.theatlantic.com		(cert: gp1.wac.edgecastcdn.net)
+		- cdn.theatlanticcities.com	(cert: gp1.wac.edgecastcdn.net; 404)
+
+-->
+<ruleset name="Atlantic Media (partial)">
+
+	<target host="govexec.com" />
+	<target host="*.govexec.com" />
+	<target host="secure.nationaljournal.com" />
+	<target host="ssl.theatlantic.com" />
+	<target host="admin.theatlanticcities.com" />
+	<target host="admin.theatlanticwire.com" />
+
+
+	<securecookie host="\.govexec\.com$" name=".*" />
+	<securecookie host="^admin\.theatlantic(cities|wire)$" name=".*" />
+
+
+	<!--	- Cert is not valid for !www
+		- cdn is hosted on edgecast
+		- cdn 404s as-is
+					-->
+	<rule from="^https?://(?:cdn\.|www\.)?govexec\.com/"
+		to="https://www.govexec.com/" />
+
+	<rule from="^http://secure\.nationaljournal\.com/"
+		to="https://secure.nationaljournal.com/" />
+
+	<rule from="^http://ssl\.theatlantic\.com/"
+		to="https://ssl.theatlantic.com/" />
+
+	<rule from="^http://admin\.theatlantic(cities|wire)\.com/"
+		to="https://admin.theatlantic$1.com/" />
+
+</ruleset>

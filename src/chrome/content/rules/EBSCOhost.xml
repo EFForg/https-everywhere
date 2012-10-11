@@ -1,0 +1,32 @@
+<ruleset name="EBSCOhost (partial)">
+
+	<target host="training.ebsco.com" />
+	<target host="ebscohost.com" />
+	<target host="*.ebscohost.com" />
+		<!--	www2 doesn't work over https.
+			It looks like there's a fair
+			bit of identical data on www,
+			so there's a ToDo.	-->
+		<exclusion pattern="^http://www2\." />
+
+
+	<securecookie host="^(.*\.)?ebscohost\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match,
+		redirects as so.	-->
+	<rule from="^http://training\.ebsco\.com/"
+		to="https://ebscotraining.webex.com/" />
+
+	<!--	Observed subdomains:
+
+			- dynamed
+			- ehis
+			- search
+			- web
+			- www
+				-->
+	<rule from="^http://(\w+\.)?ebscohost\.com/"
+		to="https://$1ebscohost.com/" />
+
+</ruleset>

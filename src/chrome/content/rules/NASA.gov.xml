@@ -1,0 +1,78 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+
+	stiesx2-ntrs.larc.nasa.gov, ntrs.larc.nasa.gov, &
+	ntrs.nasa.gov are handled in US-government-mismatches.xml.
+
+
+	CDN buckets:
+
+		- landingimagecatalog-1450153822.us-west-1.elb.amazonaws.com
+		- dkaj27004uji9.cloudfront.net
+		- msfcnasa.r3h.net/.../
+			- www.msfc.nasa.gov.edgesuite.net/.../
+				- a974.dscg.akamai.net/.../
+		- spaceflight.nasa.gov.speedera.net
+			- spaceflight.nasa.gov.edgesuite.net/.../
+				- a1295.dscg.akamai.net/.../
+		- www.nasa.gov.speedera.net
+			- www.nasa.gov.edgesuite.net/.../
+				- a1718.dscg.akamai.net/.../
+
+
+	Nonfunctional domains:
+
+		- (www.)hubblesite.org		(times out)
+		- m.hubblesite.org		(ditto)
+		- nasa.gov subdomains:
+			- apod
+			- www.cdscc		(cert: TS Series NAS; redirects infinitely)
+			- earthobservatory	(times out)
+			- eclipse.gsfc		(ditto)
+			- jdem.gsfc
+			- nssdc.gsfc		(times out)
+			- sdo.gsfc		(ditto)
+			- sunearthday.gsfc	(ditto)
+			- svs.gsfc		(ditto)
+			- venustransit.gsfc	(ditto)
+			- voyager.gsfc
+			- history		(cert: www.hq.nasa.gov; shows that domain's data)
+			- dayton.hq		(times out)
+			- grin.hq		(ditto)
+			- jpl			(times out; redirects to www over http)
+			- voyager.jpl
+			- www.jps
+			- eol.jsc
+			- science.ksc
+			- www-pao.ksc		(times out)
+			- www.msfc		(Akamai; 301s to http)
+			- pds			(timeout)
+			- spaceflight		(Akamai; 504)
+			- sunearthday		(Akamai; some paths 404, others work-ToDo: Sort which ones)
+			- venustransit		(times out)
+			- visibleearth		(ditto)
+
+-->
+<ruleset name="NASA">
+
+	<target host="eyes.nasa.gov" />
+	<target host="rt.grc.nasa.gov" />
+	<target host="*.hq.nasa.gov" />
+	<!--
+		Tracking beacon.
+					-->
+	<target host="ws1.ems.eosdis.nasa.gov" />
+	<target host="solarsystem.nasa.gov" />
+
+
+	<securecookie host="^.*\.nasa\.gov$" name=".*" />
+
+
+	<rule from="^http://eyes\.nasa\.gov/"
+		to="https://dkaj27004uji9.cloudfront.net/" />
+
+	<rule from="^http://(ws1\.ems\.eosdis|rt\.grc|(?:corts|www)\.hq|solarsystem)\.nasa\.gov/"
+		to="https://$1.nasa.gov/" />
+
+</ruleset>

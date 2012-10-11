@@ -1,0 +1,58 @@
+<ruleset name="EVGA (partial)">
+
+	<target host="evga.com" />
+	<target host="*.evga.com" />
+	<target host="evga.com.au" />
+	<target host="www.evga.com.au" />
+	<target host="evga.com.tw" />
+	<target host="www.evga.com.tw" />
+
+
+	<securecookie host="^www\.evga\.com$" name="^dbforums.*$" />
+
+
+	<!--	Cert only matches www.
+
+
+		General patterns:
+
+			- .*.asp redirects to http.
+				- Except for login pages.
+			- .*.aspx doesn't redirect to http.
+
+
+		Paths that this rule should rewrite:
+
+			- for i in aspx, css, jpg, js, swf, xml:
+				- .+/\w+.i$
+				- .+/\w+.i?
+			- .+/$
+				- NB: For paths that don't support https, server
+				  redirects to .+/.+asp$, Saving us a farktonne of effort.
+			- .+/attachments/
+			- .+/files/
+			- .+/images/
+			- .+/includes/
+			- .+/JS/
+			- /$
+			- banner/
+			- favicon.ico
+			- forums/
+			- gaming/wp-content/
+			- images/
+			- includes/
+			- login.asp$
+			- support/download/
+			- support/drivers/
+			- support/login.asp$
+			- Support/download/
+			- Support/login.asp$
+
+				-->
+	<rule from="^https?://(?:www\.)?evga\.com/((?:.+/)?(?:$|\w+\.(?:aspx|css|jpg|js|swf|xml)($|\?)|attachments/|files/|images/|includes/|JS/)|banners/|favicon\.ico|forums/|gaming/wp-content/|(?:[sS]upport/)?login\.asp$|support/d(?:ownload|rivers)/|Support/download/)"
+		to="https://www.evga.com/$1"/>
+
+	<rule from="^https?://(?:(?:asia|[bfk]r|eu|jp|latam)\.evga\.com|(?:www\.)?evga\.com\.(?:au|tw))/((?:.+/)?images/common/|favicon\.ico$)"
+		to="https://www.evga.com/$1"/>
+
+</ruleset>

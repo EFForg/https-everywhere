@@ -1,0 +1,36 @@
+<!--
+	Nonfunctional subdomains:
+
+		- chatlogs	(times out)
+		- js
+		- stats		(times out)
+
+-->
+<ruleset name="Jabber.ru (partial)">
+
+	<target host="jabber.ru" />
+	<target host="*.jabber.ru" />
+
+
+	<!--	Cookie set by reg page and
+		not what is normally on www.	-->
+	<securecookie host="^www\.jabber\.ru$" name="^PHPSESSID$" />
+
+
+	<!--	!www times out.	-->
+	<rule from="^https?://jabber\.ru/"
+		to="https://www.jabber.ru/" />
+
+	<rule from="^http://www\.jabber\.ru/(favicon\.ico|misc|modules|themes)/"
+		to="https://www.jabber.ru/$1/" />
+
+	<!--	Cert doesn't match reg,
+		most data appear to be on www.	-->
+	<rule from="^http://reg\.jabber\.ru/"
+		to="https://reg.jabber.ru/" />
+
+	<!--	Not on www.	-->
+	<rule from="^https://www\.jabber\.ru/xreg/captcha/"
+		to="http://reg.jabber.ru/xreg/captcha/" downgrade="1" />
+
+</ruleset>

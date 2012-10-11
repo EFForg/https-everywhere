@@ -1,0 +1,40 @@
+<!--
+	a1net.i.lithium.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.)a1blog.net	(cert: www.bfi-stmk.at; shows that domain's data)
+
+-->
+<ruleset name="A1 Telekom Austria">
+
+	<target host="a1.net" />
+	<target host="*.a1.net" />
+	<target host="a1community.net" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.a1community.net" />
+	<target host="telekom.at" />
+	<target host="www.telekom.at" />
+
+
+	<securecookie host="^.*\.a1(community)?\.net$" name=".*" />
+
+
+	<!--	- !www times out over https
+		- !www 302s to http over http
+				-->
+	<rule from="^https?://(?:www\.)?a1\.net/"
+		to="https://www.a1.net/" />
+
+	<rule from="^http://(asmp|cdn[123]|mss|shop)\.a1\.net/"
+		to="https://$1.a1.net/" />
+
+	<rule from="^http://(www\.)?a1community\.net/"
+		to="https://$1a1community.net/" />
+
+	<!--	!www doesn't work over https.	-->
+	<rule from="^https?://(?:www\.)?telekom\.at/"
+		to="https://www.telekom.at/" />
+
+</ruleset>

@@ -1,0 +1,94 @@
+<!--
+	Yo Dawg:
+
+		- a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
+		- a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/ | d3io1k5o0zdpqr.cloudfront.net
+
+		- d5eppwnwxs8d9.cloudfront.net
+			- blog-assets.pinterest.com
+
+		- wac.7a97.edgecastcdn.net/...
+			- media-cache-ec0.pinterest.com
+			- passets-ec.pinterest.com
+		- cs89.wac.edgecastcdn.net/...
+			- s-passets-ec.pinimg.com
+			- s-media-cache-ec\d.pinimg.com
+		- cs30\d.wac.edgecastcdn.net/...
+			- media-cache-ec\d.pinterest.com
+		- media-cache\d.pinterest.com.edgesuite.net
+			- media-cache\d.pinterest.com
+		- media-cdn.pinterest.com.edgesuite.net
+			- passets-cdn.pinterest.com
+		- pinit-cdn.pinterest.com.edgesuite.net
+			- pinit-cdn.pinterest.com
+		- cdn.pinterest.com.c.footprint.net/...
+			- media-cache-lt\d.pinterest.com
+
+
+	Nonfunctional domains:
+
+		- blog.pinterest.com		(tumblr)
+
+
+	Problematic domains:
+
+		- blog-assets.pinterest.com	(cloudfront)
+		- passets-cdn.pinterest.com	(akamai)
+		- passets-ec.pinterest.com	(CN: gp1.wac.edgecastcdn.net)
+		- pinit-cdn.pinterest.com	(akamai)
+
+
+	Partially covered domains:
+
+		- (www.)pinterest.com
+			- Most pages started redirecting to http:
+
+				https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001339.html
+
+
+	Fully covered domains:
+
+		- s-media-cache-ec\d.pinimg.com
+		- s-passets-ec.pinimg.com
+
+		- pinterest.com subdomains:
+
+			- assets
+			- blog-assets
+			- media-cache
+			- media-cache\d
+			- media-cache-ec\d
+			- media-cache-lt\d
+			- passets-cdn
+			- passets-ec
+			- pinit-cdn
+
+-->
+<ruleset name="Pinterest (partial)">
+
+	<target host="*.pinimg.com" />
+	<target host="pinterest.com" />
+	<target host="*.pinterest.com" />
+
+
+	<!--	Handles s-media-cache-ec\d & s-passets-ec.
+								-->
+	<rule from="^http://s-([\w\-]+)-ec(\d)?\.pinimg\.com/"
+		to="https://s-$1-ec$2.pinimg.com/" />
+
+	<rule from="^http://(www\.)?pinterest\.com/(login|password|pin)($|\?|/)"
+		to="https://$1pinterest.com/$2$3" />
+
+	<rule from="^http://assets\.pinterest\.com/"
+		to="https://assets.pinterest.com/" />
+
+	<rule from="^https?://blog-assets\.pinterest\.com/"
+		to="https://d5eppwnwxs8d9.cloudfront.net/" />
+
+	<rule from="^https?://media-cache(?:\d?|-ec\d|-lt\d)\.pinterest\.com/"
+		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
+
+	<rule from="^https?://p(?:assets-(?:cdn|ec)|init-cdn)\.pinterest\.com/"
+		to="https://a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/" />
+
+</ruleset>

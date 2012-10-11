@@ -1,0 +1,30 @@
+<!--
+	Nonfunctional domains:
+
+		- i.rl0.ru	(cert: *.rambler.ru; 403)
+
+-->
+<ruleset name="Rambler (partial)">
+
+	<target host="*.rambler.ru" />
+		<exclusion pattern="^http://www\." />
+
+
+	<!--	Observed cookies:
+
+			- ^\.
+				- ruid
+				- top100rb
+
+			Both set by scounter.		-->
+	<securecookie host="^\.rambler\.com$" name=".*" />
+
+
+	<!--	This is another of those 1px tracking services.	-->
+	<rule from="^http://s?counter\.rambler\.ru/"
+		to="https://scounter.rambler.ru/" />
+
+	<rule from="^http://(cnt|id?|images|kassa|mail)\.rambler\.ru/"
+		to="https://$1.rambler.ru/" />
+
+</ruleset>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/ssl-observatory.dtd">
+
+<dialog id="https-everywhere-prefs"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  xmlns:html="http://www.w3.org/1999/xhtml"
+  buttons="accept"
+  buttonlabelaccept="&ssl-observatory.prefs.done;"
+  title="&ssl-observatory.prefs.title;"
+  width="800"
+  height="768"
+  persist="screenX screenY width height"
+  onload="observatory_prefs_init(document)"
+  ondialogaccept="observatory_prefs_accept()">
+  <script type="application/x-javascript" src="observatory-xul.js" />
+  <vbox flex="1">
+    <spacer flex="1" />
+    <hbox flex="1">
+      <spacer flex="1" />
+      <image id="obs-title-logo"
+             src="chrome://https-everywhere/skin/ssl-observatory-messy.jpg" />
+      <spacer flex="1" />
+    </hbox>
+    <spacer flex="2" />
+    <label>&ssl-observatory.prefs.explanation;</label>
+    <separator class="thin" />
+    <label>&ssl-observatory.prefs.explanation2;</label>
+    <separator class="thin" />
+    <commandset>
+      <command id="toggle-enabled" oncommand="toggle_enabled()" />
+      <command id="use-obs-anon" oncommand="set_obs_anon(true)" />
+      <command id="use-obs-nonanon" oncommand="set_obs_anon(false)" />
+      <command id="toggle-alt-roots" oncommand="toggle_alt_roots()" />
+      <command id="toggle-send-asn" oncommand="toggle_send_asn()" />
+      <command id="toggle-priv-dns" oncommand="toggle_priv_dns()" />
+      <command id="toggle-self-signed" oncommand="toggle_self_signed()" />
+    </commandset>
+    <checkbox label="&ssl-observatory.prefs.use;" id="use-observatory"
+              command="toggle-enabled" style="font-size:1.5em;"/>
+    <separator class="thin"/>
+      <radiogroup style="margin-left:3em;" id="ssl-obs-how">
+        <radio label="&ssl-observatory.prefs.anonymous;" 
+               tooltiptext="&ssl-observatory.prefs.anonymous_tooltip;"
+               alt_label="&ssl-observatory.prefs.anonymous_unavailable;"
+               command="use-obs-anon" 
+               class="ssl-obs-conf" id="ssl-obs-anon"/>
+        <radio label="&ssl-observatory.prefs.nonanon;" 
+               tooltiptext="&ssl-observatory.prefs.nonanon_tooltip;"
+               command="use-obs-nonanon"
+               class="ssl-obs-conf" id="ssl-obs-nonanon"/>
+      </radiogroup>
+    <separator class="thin"/>
+    <tooltip id="asn-tip" noautohide="true">
+      <label>&ssl-observatory.prefs.asn_tooltip;</label>
+    </tooltip>
+    <checkbox label="&ssl-observatory.prefs.asn;" id="send-asn"
+              tooltip="asn-tip" class="ssl-obs-conf"
+              command="toggle-send-asn"/>
+    <spacer flex="2" />
+    <hbox>
+      <spacer flex="1" />
+      <button label="&ssl-observatory.prefs.show;" onclick="show_advanced()"
+              id="show-advanced-button" class="ssl-obs-conf"/>
+      <button label="&ssl-observatory.prefs.hide;" onclick="hide_advanced()"
+              id="hide-advanced-button" hidden="true" />
+      <spacer flex="1" />
+    </hbox>
+    <spacer flex="1" />
+    <vbox height="150">
+      <tooltip id="alt-roots-tip" noautohide="true">
+        <label>&ssl-observatory.prefs.alt_roots_tooltip;</label>
+      </tooltip>
+      <tooltip id="priv-dns-tip" noautohide="true">
+        <label>&ssl-observatory.prefs.priv_dns_tooltip;</label>
+      </tooltip>
+      <tooltip id="self-signed-tip" noautohide="true">
+        <label>&ssl-observatory.prefs.self_signed_tooltip;</label>
+      </tooltip>
+      <vbox id="observatory-advanced-opts" hidden="true">
+
+        <groupbox hidden="true" tooltip="self-signed-tip">
+          <checkbox label="&ssl-observatory.prefs.self_signed;" 
+                    class="ssl-obs-conf" id="self-signed"
+                    command="toggle-self-signed"/>
+        </groupbox>
+
+        <groupbox hidden="true" tooltip="alt-roots-tip" >
+          <caption hidden="true" label="&ssl-observatory.prefs.adv_priv_opts1;"/>
+          <checkbox label="&ssl-observatory.prefs.alt_roots;" 
+                    command="toggle-alt-roots" class="ssl-obs-conf"
+                    id="alt-roots" />
+        </groupbox>
+        <groupbox hidden="true" tooltip="priv-dns-tip">
+          <caption hidden="true" label="&ssl-observatory.prefs.adv_priv_opts2;"/>
+          <checkbox label="&ssl-observatory.prefs.priv_dns;" 
+                    class="ssl-obs-conf" id="priv-dns"
+                    command="toggle-priv-dns"/>
+        </groupbox>
+      </vbox>
+    </vbox>
+    <spacer flex="5" />
+  </vbox>
+</dialog>
+

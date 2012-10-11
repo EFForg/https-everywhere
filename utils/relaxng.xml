@@ -1,0 +1,61 @@
+<element xmlns="http://relaxng.org/ns/structure/1.0" name="ruleset" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <attribute name="name" />
+
+  <optional>
+    <attribute name="match_rule" />
+  </optional>
+
+  <optional>
+    <attribute name="default_off" />
+  </optional>
+
+  <optional>
+    <attribute name="platform">
+      <data type="string">
+        <param name="pattern">(firefox|chromium|cacert|ipsca|mixedcontent)( (firefox|chromium|cacert|ipsca|mixedcontent))*</param>
+      </data>
+    </attribute>
+  </optional>
+
+  <interleave>
+
+    <oneOrMore>
+      <element name="target">
+        <attribute name="host">
+          <data type="string">
+            <param name="pattern">(([A-Za-z0-9äö-]+|\*)\.)*([A-Za-z0-9äö-]+|\*)</param>
+          </data>
+        </attribute>
+      </element>
+    </oneOrMore>
+
+    <zeroOrMore>
+      <element name="exclusion">
+        <attribute name="pattern" />
+      </element>
+    </zeroOrMore>
+
+    <zeroOrMore>
+      <element name="securecookie">
+        <attribute name="host"/>
+        <attribute name="name"/>
+      </element>
+    </zeroOrMore>
+
+    <oneOrMore>
+      <element name="rule">
+        <attribute name="from"/>
+        <attribute name="to">
+          <data type="string">
+            <param name="pattern">https?://.*</param>
+          </data>
+        </attribute>
+        <optional>
+            <attribute name="downgrade" />
+        </optional>
+      </element>
+    </oneOrMore>
+
+  </interleave>
+
+</element>

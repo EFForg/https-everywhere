@@ -1,0 +1,32 @@
+<ruleset name="OVH">
+
+	<target host="ovh.com" />
+	<target host="www.ovh.com" />
+	<target host="ovh.co.uk" />
+	<target host="www.ovh.co.uk" />
+	<target host="ovh.de" />
+	<target host="www.ovh.de" />
+	<target host="*.ovh.net" />
+
+
+	<securecookie host="^(?:.*\.)?ovh\.(?:com|co\.uk|de|net)$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ovh\.(com|co\.uk|de)/"
+		to="https://www.ovh.$1/" />
+
+	<!--	- 2: doesn't exist
+		- 4: self-signed
+		- 8: times out
+		- 9: 7's cert
+		- 16: reset
+					-->
+	<rule from="^http://ssl([0137]|1[0-5])\.ovh\.net/"
+		to="https://ssl$1.ovh.net/" />
+
+	<!--	302s like so.
+				-->
+	<rule from="^https?://webmail\.ovh\.net/"
+		to="https://ssl0.ovh.net/" />
+
+</ruleset>

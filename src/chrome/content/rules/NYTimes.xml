@@ -1,0 +1,100 @@
+<!--
+	Other New York Times rulesets:
+
+		- The_Boston_Globe.xml
+
+
+	CDN buckets:
+
+		- js.nyt.com.edgesuite.net
+		- graphics478.nytimes.com.edgesuite.net
+		- json8.nytimes.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- (www.)nytco.com
+		- documents.nytimes.com
+
+-->
+<ruleset name="NYTimes (mixed content)" platform="mixedcontent">
+
+	<target host="newyorktimes.com" />
+	<target host="www.newyorktimes.com" />
+	<target host="nyt.com" />
+	<target host="*.nyt.com" />
+	<target host="nytimes.com" />
+	<target host="*.nytimes.com" />
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:200[0-4]|info)/" />
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/(?:roomfordebate|services/xml/rss/index\.html)" />
+		<!--
+			404s over https.
+
+			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+							-->
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler($|\?)" />
+		<!--
+			Breaks slideshow.
+
+				- Lens/data/\d{8}POD.xml redirects to login page
+				- Lens/swfs/ & Lens/lens_post.swf fail to load
+						-->
+		<exclusion pattern="^https?://graphics8\.nytimes\.com/packages/flash/multimedia/(?:swfs/|TEMPLATES/Lens/(?:data/\d{8}POD\.xml|lens_post\.swf))" />
+	<target host="*.blogs.nytimes.com" />
+	<target host="wt.o.nytimes.com" />
+	<target host="markets.on.nytimes.com"/>
+
+
+	<!--	adxcs isn't needed on unsecurable pages.
+
+		Other cross-domain cookies:
+
+			- RMID
+
+			Used on mobile.
+					-->
+	<securecookie host="^\.nytimes\.com$" name="^(adxc\w|NYT-S)$" />
+	<securecookie host="^homedelivery\.nytimes\.com$" name=".+" />
+	<securecookie host="^markets\.on\.nytimes\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?newyorktimes\.com/"
+		to="https://www.nytimes.com/" />
+
+	<rule from="^http://(?:www\.)?nyt(?:imes)?\.com/"
+		to="https://www.nytimes.com/" />
+
+	<rule from="^http://(?:css|i1|js)\.nyt\.com/"
+		to="https://www.nytimes.com/" />
+
+	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
+		to="https://www.nytimes.com/favicon.ico" />
+
+	<rule from="^http://(global|homedelivery|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
+		to="https://$1.nytimes.com/" />
+
+	<rule from="^http://graphics\d\.nytimes\.com/"
+		to="https://www.nytimes.com/" />
+
+	<rule from="^http://jobmarket\.nytimes\.com/(adx|images)/"
+		to="https://www.nytimes.com/$1/" />
+
+	<rule from="^https?://json8\.nytimes\.com/"
+		to="https://static.nytimes.com/" />
+
+	<!--		travel.nytimes.com doesn't work, but
+		articles on travel appear to be on www too.
+
+			Ditto for adverts and scripts.
+							-->
+	<rule from="^http://travel\.nytimes\.com/(\d{4}/\d\d/\d\d|adx|js)/"
+		to="https://www.nytimes.com/$1/" />
+
+	<!--	404s over https.
+
+		https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
+											-->
+	<rule from="^https://www\.nytimes\.com/svc/community/V3/requestHandler($|\?)"
+		to="http://www.nytimes.com/svc/community/V3/requestHandler$1" downgrade="1" />
+
+</ruleset>

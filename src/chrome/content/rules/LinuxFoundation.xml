@@ -1,0 +1,45 @@
+<ruleset name="Linux Foundation (partial)">
+
+	<target host="fossbazaar.org" />
+	<target host="*.fossbazaar.org" />
+	<target host="linuxfoundation.org" />
+	<target host="*.linuxfoundation.org" />
+	<target host="*.linux-foundation.org" />
+	<target host="spdx.org" />
+		<!--	wiki redirects to http	-->
+		<exclusion pattern="^http://spdx\.org/wiki/" />
+	<target host="*.spdx.org" />
+	<target host="yoctoproject.org" />
+	<target host="*.yoctoproject.org" />
+
+
+	<securecookie host="^(.*\.)?fossbazaar\.org$" name=".*" />
+	<securecookie host="^.*\.linuxfoundation\.org$" name=".*" />
+	<!--	spdx.org wiki redirects to http, so we don't want to match wiki cookies	-->
+	<securecookie host="^\.spdx\.org$" name="^SESS.*$" />	
+	<securecookie host="^(.*\.)?yoctoproject\.org$" name=".*" />
+
+
+	<rule from="^http://(\w+\.)?fossbazaar\.org/"
+		to="https://$1fossbazaar.org/" />
+
+	<rule from="^http://(www\.)?linuxfoundation\.org/(misc|sites)/"
+		to="https://$1linuxfoundation.org/$2/" />
+
+	<rule from="^http://(admin|events|ldn|training)\.linuxfoundation\.org/"
+		to="https://$1.linuxfoundation.org/" />
+
+	<rule from="^http://lists\.linux-?foundation\.org/"
+		to="https://lists.linuxfoundation.org/" />
+
+	<!--	Cert doesn't match www.	-->
+	<rule from="^https?://(?:www\.)?spdx\.org/"
+		to="https://spdx.org/" />
+
+	<rule from="^http://lists\.spdx\.org/"
+		to="https://lists.spdx.org/" />
+
+	<rule from="^http://(www\.)?yoctoproject\.org/"
+		to="https://$1yoctoproject.org/" />
+
+</ruleset>

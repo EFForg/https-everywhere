@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see William-Hill-mismatches.xml
+
+
+	Nonfunctional:
+
+		- jobs-williamhill.com		(self-signed; shows Apache status)
+		- (www.)williamhillmedia.com	(times out)
+		- careers.williamhillplc.com	(interrupted)
+		- www.williamhillplc.com	(cert: www2.myinvestis.com, expired, self-signed; ssl_error_handshake_failure_alert)
+
+-->
+<ruleset name="William Hill (partial)">
+
+	<target host="affutd.com" />
+	<target host="www.affutd.com" />
+	<target host="williamhill.com" />
+	<target host="*.williamhill.com" />
+
+
+	<securecookie host="^www\.affutd\.com$" name=".*" />
+	<!--	Lots of cross-domain cookies.  Are any used on
+		(unsecurable) sports?	-->
+	<securecookie host="^\w+\.williamhill\.com$" name=".*" />
+
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?affutd\.com/"
+		to="https://www.affutd.com/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?williamhill\.com/"
+		to="https://www.williamhill.com/" />
+
+	<!--	Advertisements included on 3rd-party websites.
+
+		NB: serve redirects to cacheserve with a different
+		path.  When rewritten to serve again with this
+		different path, it *doesn't* redirect back.
+					-->
+	<rule from="^https?://(?:cache)?serve\.williamhill\.com/"
+		to="https://serve.williamhill.com/" />
+
+	<!--	whdn:
+			- Cert: *.hs.llnwd.net
+			- Displays blank page
+			- Not on www
+					-->
+	<rule from="^https?://(?:sec|wh)dn\.williamhill\.com/"
+		to="https://secdn.williamhill.com/" />
+
+	<!--	At least some pages redirect to http.	-->
+	<rule from="^http://sports\.williamhill\.com/acc/"
+		to="https://sports.williamhill.com/acc/" />
+
+</ruleset>

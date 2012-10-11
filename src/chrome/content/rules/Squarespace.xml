@@ -1,0 +1,40 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/s3.media.squarespace.com/
+			- s3.media.squarespace.com
+
+		- squarespace.cachefly.net
+			- squarespace.cachefly.net
+
+-->
+<ruleset name="Squarespace (partial)">
+
+	<target host="sqsp.com" />
+	<target host="*.sqsp.com" />
+	<target host="squarespace.com"/>
+	<target host="*.squarespace.com" />
+	<target host="s3.media.squarespace.com" />
+
+
+	<securecookie host="^.*\.sq(?:sp|uarespace)\.com$" name=".+" />
+
+
+	<rule from="^http://(\w+\.)?sqsp\.com/"
+		to="https://$1sqsp.com/" />
+
+	<rule from="^http://((?:blog|developers|static|www)\.)?squarespace\.com/"
+		to="https://$1squarespace.com/" />
+
+	<rule from="^https?://cachefly\.squarespace\.com/"
+		to="https://squarespace.cachefly.net/" />
+
+	<rule from="^https?://s3\.media\.squarespace\.com/"
+		to="https://s3.amazonaws.com/s3.media.squarespace.com/" />
+
+	<!--	Clients have unique subdomains.
+						-->
+	<rule from="^http://(\w+)\.squarespace\.com/(display/|favicon\.ico|layout/|storage/|universal/)"
+		to="https://$1.squarespace.com/$2" />
+
+</ruleset>

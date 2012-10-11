@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://https-everywhere/content/preferences.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/https-everywhere.dtd">
+
+<dialog id="https-everywhere-prefs"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        buttons="accept,extra1,extra2"
+        buttonlabelextra1="&https-everywhere.prefs.disable_all;"
+        ondialogextra1="disable_all();"
+        buttonlabelextra2="&https-everywhere.prefs.reset_defaults;"
+        ondialogextra2="reset_defaults();"
+        title="&https-everywhere.prefs.title;"
+        persist="screenX screenY width height"
+        style="height:80%; resize:both;"
+        height="600"
+        width="650"
+        onload="https_prefs_init(document)"
+        ondialogaccept="https_prefs_accept()">
+    
+    <script type="application/x-javascript" src="preferences.js"/>
+    
+    <popupset>
+        <menupopup id="tree-contextmenu" onpopupshowing="resetSelectedMenu()">
+            <menuitem label="&https-everywhere.prefs.reset_default;" oncommand="resetSelected();" id="revert_menuitem"/>
+            <menuitem label="&https-everywhere.prefs.toggle;" oncommand="toggleSelected();"/>
+            <menuitem label="&https-everywhere.prefs.view_xml_source;" oncommand="viewXMLSource();"/>
+        </menupopup>
+    </popupset>
+    
+    <groupbox flex="1">
+        <caption label="&https-everywhere.prefs.list_caption;"
+               align="center"/>
+        <vbox>
+          &https-everywhere.prefs.search;: <textbox id="tree_search" oninput="treeView.search(this);" />
+	</vbox>
+        <tree id="sites_tree" editable="true" flex="1" context="tree-contextmenu">
+          <treecols>
+            <treecol id="enabled_col" type="checkbox" label="&https-everywhere.prefs.enabled;"
+                     editable="true" class="sortDirectionIndicator" persist="sortDirection width"/>
+            <splitter class="tree-splitter"/>
+            <treecol id="site_col" label="&https-everywhere.prefs.site;" flex="1" editable="false" class="sortDirectionIndicator" persist="sortDirection width"/>
+            <splitter class="tree-splitter"/>
+            <treecol id="note_col" label="&https-everywhere.prefs.notes;" flex="1" editable="false" class="sortDirectionIndicator"  persist="sortDirection width"/>
+          </treecols>
+          <treechildren/>
+        </tree>
+    </groupbox>
+    <separator class="thin"/>
+    <vbox>
+        &https-everywhere.prefs.ruleset_howto;
+        <separator class="thin"/>
+        <label id="ruleset link"
+          value="&https-everywhere.prefs.here_link;"
+          style="color: blue; cursor:hand; text-decoration:underline;"
+          onmouseover="event.target.style.cursor='pointer'"
+          onmouseout="event.target.style.cursor='default'"
+          onclick="window_opener('https://eff.org/https-everywhere/rulesets')"/>.
+    </vbox>
+</dialog>

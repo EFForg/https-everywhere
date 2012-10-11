@@ -1,0 +1,33 @@
+<!--
+	For other US government coverage,
+	see US-government.xml.
+
+-->
+<ruleset name="City of Chicago">
+
+	<target host="cityofchicago.org" />
+	<target host="*.cityofchicago.org" />
+	<target host="explorechicago.org" />
+	<target host="*.explorechicago.org" />
+
+
+	<securecookie host="^.*\.(cityof|explore)chicago\.org$" name=".*" />
+
+
+	<!--	Cert only matches www,
+		for both cityof & explore.	-->
+	<rule from="^https?://(cityof|explore)chicago\.org/"
+		to="https://www.$1chicago.org/" />
+
+	<!--	mayor times out over https.
+		Redirects like so over http.	-->
+	<rule from="^https?://mayor\.cityofchicago\.org/"
+		to="https://www.cityofchicago.org/content/city/en/depts/mayor.html" />
+
+	<rule from="^http://(data|www)\.cityofchicago\.org/"
+		to="https://$1.cityofchicago.org/" />
+
+	<rule from="^http://www\.explorechicago\.com/"
+		to="https://www.explorechicago.com/" />
+	
+</ruleset>

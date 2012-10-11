@@ -1,0 +1,81 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	CDN buckets:
+
+
+		- az2755.vo.msecnd.net		(400)
+			- files.channel9.msdn.com
+
+		- mschannel9.vo.msecnd.net	(400)
+			- media.ch9.ms
+
+
+	Nonfunctional domains:
+
+		- media.ch9.ms			(CN: *.sharepointonline.com; 400)
+		- files.channel9.msdn.com	(CN: *.sharepointonline.com; 400)
+
+
+	Partially covered msdn.com subdomains:
+
+		- public.create
+
+
+	Fully covered msdn.com subdomains:
+
+		- blogs
+		- i1.blogs
+		- channel9
+		- create
+		- forums.create
+		- profile.create
+		- users.create
+		- windowsphone.create
+		- www.create
+		- social
+		- i1.social
+
+-->
+<ruleset name="MSDN (partial)">
+
+	<target host="*.msdn.com" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/5754
+										-->
+		<exclusion pattern="^https?://blogs\.msdn\.com/.*\?Redirected=true" />
+	<target host="i1.*.msdn.com" />
+	<target host="create.msdn.com" />
+	<target host="*.create.msdn.com" />
+
+
+	<!--	Observed cookie subdomains:
+
+			- blogs
+			- forums.create
+					-->
+	<securecookie host="^.+\.msdn\.com$" name=".+" />
+
+
+	<!--	Attempted workaround for
+
+		https://trac.torproject.org/projects/tor/ticket/5754
+				-->
+	<rule from="^https?://blogs\.msdn\.com/(.*(?:\.aspx|\.xml|/))?$"
+		to="https://blogs.msdn.com/$1?Redirected=true" />
+
+	<!--	i1: Akamai
+				-->
+	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
+		to="https://$1.msdn.com/" />
+
+	<rule from="^http://(channel9|(?:(?:forums|profile|users|windowsphone|www)\.)?create)\.msdn\.com/"
+		to="https://$1.msdn.com/" />
+
+	<!--	Cert doesn't match public
+						-->
+	<rule from="^https?://public\.create\.msdn\.com/assets/"
+		to="https://www.create.msdn.com/assets/" />
+
+</ruleset>

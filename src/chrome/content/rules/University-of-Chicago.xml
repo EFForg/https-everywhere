@@ -1,0 +1,25 @@
+<!--
+	For problematic rules, see University-of-Chicago-self-signed.xml.
+
+-->
+<ruleset name="University of Chicago (partial)">
+
+	<target host="uchicago.edu" />
+	<target host="*.uchicago.edu" />
+	<target host="*.ci.uchicago.edu" />
+
+
+	<securecookie host="^.*\.uchicago\.edu$" name=".*" />
+
+
+	<!--	- //uchicago doesn't work over https
+		- //uchicago redirects to www over http
+		- Cert doesn't match //ci
+				-->
+	<rule from="^https?://(?:www\.)?(ci\.)?uchicago\.edu/"
+		to="https://www.$1uchicago.edu/" />
+
+	<rule from="^http://((?:beagle|pads|pokey)\.ci|identity)\.uchicago\.edu/"
+		to="https://$1.uchicago.edu/" />
+
+</ruleset>

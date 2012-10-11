@@ -1,0 +1,28 @@
+<!--
+	nonfunctional subdomains:
+		blog	(hosted on Tumblr)
+-->
+<ruleset name="Urban Dictionary (partial)" default_off="mismatch">
+
+	<target host="urbandictionary.com"/>
+	<target host="*.urbandictionary.com"/>
+		<!--	Handled in TheResumator.com-clients.xml
+			due to this ruleset being off by default.	-->
+		<exclusion pattern="^http://jobs\."/>
+
+	<!--	observed cookies:
+			- ^\.
+				- _urban_session
+			- ^www
+				- country	-->
+	<securecookie host="^(www)?\.urbandictionary\.com$" name=".*"/>
+
+	<!--	www. cert:		Akamai
+		static[0-3] cert:	ditto
+		(origin.) cert:		*.heroku.com
+		!www redirects to www
+		data on static[0-3] appear identical to those on www	-->
+	<rule from="^http://(?:origin\.|static[0-3]\.|www\.)?urbandictionary\.com/"
+		to="https://www.urbandictionary.com/"/>
+
+</ruleset>

@@ -1,0 +1,30 @@
+<!--
+	For problematic rules, see New-Relic-mismatches.xml.
+
+-->
+<ruleset name="New Relic (partial)">
+
+	<target host="newrelic.com" />
+	<target host="*.newrelic.com" />
+		<!--
+			Handled in -mismatches.xml.
+							-->
+		<exclusion pattern="^http://blog\." />
+
+
+	<securecookie host="^(.*\.)?newrelic\.com$" name=".*" />
+
+
+	<!--	Encountered subdomains:
+
+			- beacon-1
+			- rpm
+			- staging-beacon-1
+			- support
+				- hosted on Zendesk, but cert matches.
+			- www
+				-->
+	<rule from="^http://([\w\-]+\.)?newrelic\.com/"
+		to="https://$1newrelic.com/" />
+
+</ruleset>

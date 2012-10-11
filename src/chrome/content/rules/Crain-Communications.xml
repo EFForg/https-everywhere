@@ -1,0 +1,52 @@
+<!--
+	For problematic rules, see Crain-Communications-mismatches.xml
+
+
+	Nonfunctional domains:
+
+		- brandedcontent.adage.com
+		- events.adage.com		(ssl_error_rx_record_too_long)
+		- mediakit.adage.com		(ditto)
+		- jobs.adagetalentworks.com	(cert: insurancepathway.com; shows that domain's data)
+		- (www.)crain.com
+		- media.crainsnewyork.com	(ssl_error_rx_record_too_long)
+		- (www.)idea2009.org		(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Crain Communications (partial)">
+
+	<target host="adage.com" />
+	<target host="*.adage.com" />
+	<target host="www.amiga.adage.com" />
+	<target host="sec.crain.com" />
+	<target host="crainsnewyork.com" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.crainsnewyork.com" />
+	<target host="creativity-online.com" />
+	<target host="www.creativity-online.com" />
+
+
+	<securecookie host="^sec\.crain\.com$" name=".*" />
+	<securecookie host="^\.crainsnewyork\.com$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?adage\.com/(help/|(?:login|register)\.php)"
+		to="https://adage.com/$1" />
+
+	<!--	Server does this, pre-empt it	-->
+	<rule from="^http://(?:www\.)?adage\.com/(image|script)s/"
+		to="https://gaia.adage.com/$1s/"/>
+
+	<rule from="^http://((?:www\.)?amig|gai)a\.adage\.com/"
+		to="https://$1a.adage.com/" />
+
+	<rule from="^http://sec\.crain\.com/"
+		to="https://sec.crain.com/" />
+
+	<rule from="^http://(www\.)?crainsnewyork\.com/"
+		to="https://$1crainsnewyork.com/" />
+
+	<rule from="^http://(?:www\.)?creativity-online\.com/"
+		to="https://creativity-online.com/" />
+
+</ruleset>

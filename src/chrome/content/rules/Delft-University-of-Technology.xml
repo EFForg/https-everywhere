@@ -1,0 +1,42 @@
+<!--
+	For problematic rules, see Delft-University-of-Technology-mismatches.xml.
+
+	Nonfunctional subdomains:
+
+		- $			(ssl_error_rx_record_too_long)
+		- campus.citg		(ditto)
+		- campus.ewi		(ditto)
+		- home			(ditto)
+		- medewerkers		(ditto)
+		- studenten		(ditto)
+		- 3me.studenten		(ditto)
+		- bk.studenten		(ditto)
+		- www.bk.studenten	(ditto)
+		- io.studenten		(ditto)
+		- lr.studenten		(ditto)
+		- www.lr.studenten	(ditto)
+		- tnw.studenten		(ditto)
+		- www.tnw.studenten	(ditto)
+		- www.studentsite.tbm	(ditto)
+		- tunews.weblog		(cert: weblog.tudelft.nl; redirects to
+					http from https and back from weblog)
+
+	www redirects to home over https and intranet over http.
+
+	Without a path appended, intranet redirects to medewerkers.
+
+-->
+<ruleset name="Delft University of Technology (partial)">
+
+	<target host="*.tudelft.nl" />
+
+
+	<!--	There is a cross-subdomain .weblog cookie, which is
+		not handled in case it is required on other domains.	-->
+	<securecookie host="^\w+\.tudelft\.nl$" name=".*" />
+
+
+	<rule from="^http://(intranet|netid|weblog)\.tudelft\.nl/"
+		to="https://$1.tudelft.nl/" />
+
+</ruleset>

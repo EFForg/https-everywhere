@@ -1,0 +1,54 @@
+<!--
+	For problematic rules, see PulsePoint-mismatches.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)pulsepoint.com
+
+-->
+<ruleset name="PulsePoint (partial)">
+
+	<target host="contextweb.com" />
+	<target host="*.contextweb.com" />
+	<target host="login.stormpost.datranmedia.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.mycontactual.com" />
+	<target host="nmargin.com" />
+	<target host="www.nmargin.com" />
+
+
+	<securecookie host="^www\.apertureinsight\.com$" name=".*" />
+	<securecookie host="^.*\.mycontactual\.com$" name=".*" />
+	<securecookie host="^login\.stormpost\.datranmedia\.com$" name=".*" />
+	<securecookie host="^nmargin\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?apertureinsight\.com/"
+		to="https://$1apertureinsight.com/" />
+
+	<!--	Cert is only valid for *.contextweb.com.	-->
+	<rule from="^https?://(?:www\.)?contextweb\.com/"
+		to="https://www.contextweb.com/" />
+
+	<!--	- Cert: *.hubspot.com
+		- Redirects like so.
+				-->
+	<rule from="^https?://blog\.contextweb\.com/sellingdesk$"
+		to="https://getsatisfaction.com/contextweb" />
+
+	<!--	bh & tag: included on 3rd-party websites.	-->
+	<rule from="^http://(bh|exchange|tag)\.contextweb\.com/"
+		to="https://$1.contextweb.com/" />
+
+	<rule from="^http://login\.stormpost\.datranmedia\.com/"
+		to="https://login.stormpost.datranmedia.com/" />
+
+	<rule from="^http://na3\.mycontactual\.com/"
+		to="https://na3.mycontactual.com/" />
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://(?:www\.)?nmargin\.com/"
+		to="https://nmargin.com/" />
+
+</ruleset>

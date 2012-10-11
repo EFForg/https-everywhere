@@ -1,0 +1,40 @@
+<ruleset name="Brown Paper Tickets (partial)">
+
+	<target host="bpt.bz"/>
+	<target host="*.bpt.bz"/>
+	<target host="bpt.me"/>
+	<target host="*.bpt.me"/>
+	<target host="brownpapertickets.com"/>
+	<target host="*.brownpapertickets.com"/>
+		<!--	!work	-->
+		<exclusion pattern="^http://community\."/>
+
+  <!-- JS redirection loop :( 
+       https://trac.torproject.org/projects/tor/ticket/6573 -->
+  <exclusion pattern="^http://(www\.)?brownpapertickets\.com/event/" />
+
+	<securecookie host="^m\.bpt\.me$" name=".*"/>
+	<securecookie host="^(.*\.)?brownpapertickets\.com$" name=".*"/>
+
+
+	<!--	this is what the server does, except without https	-->
+	<rule from="^http://(?:www\.)?bpt\.(?:bz|me)/"
+		to="https://www.brownpapertickets.com/"/>
+
+	<!--	cert !valid for bz
+		data identical		-->
+	<rule from="^http://m\.bpt\.(?:bz|me)/"
+		to="https://m.bpt.me/"/>
+
+	<!--	!www: timeout	-->
+	<rule from="^http://brownpapertickets\.com/"
+		to="https://www.brownpapertickets.com/"/>
+
+	<!--	encountered subdomains:
+			- es
+			- fr
+			- stats		-->
+	<rule from="^http://(\w+)\.brownpapertickets\.com/"
+		to="https://$1.brownpapertickets.com/"/>
+
+</ruleset>

@@ -1,0 +1,43 @@
+<!--
+	!functional:
+		- jobbank.dtu.dk		(timeout)
+		- (www.)studievalg.dtu.dk	(self-signed; prints "This is the AIT LAMP 01 server")
+-->
+<ruleset name="Technical University of Denmark (partial)">
+
+	<target host="dtu.dk"/>
+	<target host="alumne.dtu.dk"/>
+	<target host="www.alumne.dtu.dk"/>
+	<target host="backend.alumnenet.dtu.dk"/>
+	<target host="auth.dtu.dk"/>
+	<target host="dtic.dtu.dk"/>
+	<target host="www.dtic.dtu.dk"/>
+	<target host="nemid.dtu.dk"/>
+	<target host="portalen.dtu.dk"/>
+	<target host="www.portalen.dtu.dk"/>
+	<target host="space.dtu.dk"/>
+	<target host="www.space.dtu.dk"/>
+	<target host="mail.win.dtu.dk"/>
+	<target host="www.dtu.dk"/>
+
+	<securecookie host="^(backend\.alumnenet|auth|nemid|portalen|space|www)\.dtu\.dk$" name=".*"/>
+
+	<!--	cert doesn't match www.foo.dtu
+
+		See below if this makes your head hurt.
+							-->
+	<rule from="^http://(?:(?:www\.)?((?:(?:alumne|dtic|portalen|space)|backend\.alumnenet|auth|nemid|mail\.win|www)\.))?dtu\.dk/"
+		to="https://$1dtu.dk/"/>
+
+</ruleset>
+<!--	  from="^http://(?:
+				(?:www\.
+				)?
+				(
+					(?:
+						(?:alumne|dtic|portalen|space
+						)|backend\.alumnenet|auth|nemid|mail\.win|www
+					)\.
+				)
+			)?dtu\.dk/"
+-->

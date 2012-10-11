@@ -1,0 +1,31 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/resumator/
+		- s3.amazonaws.com/resumator-assets/ | d1o2i4ti2oga3l.cloudfront.net
+
+-->
+<ruleset name="TheResumator.com (partial)">
+
+	<target host="theresumator.com" />
+	<target host="*.theresumator.com" />
+		<exclusion pattern="^http://support\.theresumator\.com/support/" />
+
+
+	<!--	Is the .app cross-domain cookie used on any unsecurable pages?
+						-->
+	<securecookie host="^(app\.|www\.)?theresumator\.com$" name=".*" />
+
+
+	<rule from="^http://(app\.|www\.)?theresumator\.com/"
+		to="https://$1theresumator.com/" />
+
+	<rule from="^https?://assets\.theresumator\.com/"
+		to="https://d1o2i4ti2oga3l.cloudfront.net/" />
+
+	<!--	Unique pages for each client.  Pages redirect to http.
+					-->
+	<rule from="^http://(\w+)\.theresumator\.com/(css/|favicon\.ico|img/)"
+		to="https://$1.theresumator.com/$2" />
+
+</ruleset>

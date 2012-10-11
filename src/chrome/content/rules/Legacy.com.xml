@@ -1,0 +1,68 @@
+<!--
+	CDN buckets:
+
+		- legacy.o.miisolutions.net/...
+			- mi-cache.legacy.com
+			- mi-static.legacy.com
+
+
+	Problematic subdomains:
+
+		- blog		(handled in WordPress-blogs.xml)
+		- connect	(CN: *.ning.com)
+		- mi-cache *
+		- mi-static *
+
+	* CN: *.service.mirror-image.net; 404
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- memorialwebsites *
+
+	* Some pages redirect to http.
+
+
+	Fully covered subdomains:
+
+		- ^
+		- cache
+		- mi
+		- mi-cache
+		- mi-static
+		- static
+
+-->
+<ruleset name="Legacy.com (partial)">
+
+	<target host="legacy.com" />
+	<target host="*.legacy.com" />
+	<target host="*.legacyconnect.ning.com" />
+
+
+	<securecookie host="^static\.legacy\.com$" name=".+" />
+	<securecookie host="^\.legacyconnect\.ning\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?legacy\.com/($|Images/|(?:[\w\-/]+/)?(?:images/|ObitsTileCorner\.axd)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)"
+		to="https://$1legacy.com/$2" />
+
+	<!--	obituaries/Images/ redirects to http.
+							-->
+	<rule from="^http://(www\.)?legacy\.com/obituaries/Images/"
+		to="https://$1legacy.com/obituaries/images/" />
+
+	<rule from="^http://(cache|mi|static)\.legacy\.com/"
+		to="https://$1.legacy.com/" />
+
+	<rule from="^https?://connect\.legacy\.com/"
+		to="https://legacyconnect.ning.com/" />
+
+	<rule from="^http://memorialwebsites\.legacy\.com/(create(?:account|memorial)\.aspx|images/|styles/)"
+		to="https://memorialwebsites.legacy.com/$1" />
+
+	<rule from="^https?://mi-(cache|static)\.legacy\.com/"
+		to="https://$1.legacy.com/" />
+
+</ruleset>

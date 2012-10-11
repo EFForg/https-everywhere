@@ -1,0 +1,40 @@
+<!--
+	For problematic rules, see QuinStreet-mismatches.xml.
+
+
+	CDN buckets:
+
+		- o1.qnsr.com.edgesuite.net/...
+			- e1.cdn.qnsr.com
+
+		- qshqb2b.edgesuite.net
+			- www.enterprisenetworkingplanet.com
+
+
+	Nonfunctional domains:
+
+		- enterprisenetworkingplanet.com	(rx_record_too_long)
+		- www.enterprisenetworkingplanet.com	(Akamai; 503)
+		- (www.)internet.com			(rx_record_too_long)
+		- files.internet.com			(ditto)
+		- investor.quinstreet.com		(cert: *.shareholder.com; 403)
+
+-->
+<ruleset name="QuinStreet">
+
+	<target host="*.qnsr.com" />
+	<target host="e1.cdn.qnsr.com" />
+	<target host="*.quinstreet.com" />
+
+
+	<securecookie host="^.*\.quinstreet\.com$" name=".*" />
+
+
+	<rule from="^http://(blog|clientservices|publishers|sitegenie-external|www)\.quinstreet\.com/"
+		to="https://$1.quinstreet.com/" />
+
+	<!--	e1.cdn: Akamai	-->
+	<rule from="^https?://(?:e1\.cdn|o1)\.qnsr\.com/"
+		to="https://o1.qnsr.com/" />
+
+</ruleset>

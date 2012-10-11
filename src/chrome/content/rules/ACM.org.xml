@@ -1,0 +1,35 @@
+<!--
+	For problematic rules, see ACM.org-mismatches.xml.
+
+
+	CDN buckets:
+
+		- deliveryimages.acm.org.edgesuite.net/.../
+
+			- a1907.g.akamai.net/.../
+
+
+	acm.org lacks proper ssl for the following subdomains
+
+		- awards		<- stacktrace for coldfusion
+		- dev			<- shows www data
+		- jobs			<- sends to jobtarget.com
+		- librarians		<- displays what appears to be
+					   an old version of the website.
+		- mags
+		- portalparts
+
+-->
+<ruleset name="ACM.org (partial)">
+
+	<target host="acm.org" />
+	<target host="*.acm.org" />
+
+
+	<securecookie host="^.*\.acm\.org$" name=".*" />
+
+
+	<rule from="^http://((?:campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
+		to="https://$1acm.org/" />
+
+</ruleset>

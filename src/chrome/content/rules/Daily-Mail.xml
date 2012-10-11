@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- f.dailymail.co.uk.edgesuite.net/..
+			- a1913.g.akamai.net/..
+
+		- i.dailymail.co.uk.edgesuite.net/..
+			- a1202.g.akamai.net/..
+
+		- www.dailymail.co.uk.edgesuite.net/..
+			- a1613.g.akamai.net/..
+
+		- images.anm.co.uk.edgesuite.net/..
+			- a382.g.akamai.net/..
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(Akamai; 301s to http)
+
+-->
+<ruleset name="Daily Mail (partial)" default_off="Akamai certificate">
+
+	<target host="*.dailymail.co.uk" />
+
+
+	<!--	Same data, so miminize exceptions needed.
+								-->
+	<rule from="^http://(?:i|img|scripts)\.dailymail\.co\.uk/"
+		to="https://i.dailymail.co.uk/" />
+
+	<rule from="^http://f\.dailymail\.co\.uk/"
+		to="https://f.dailymail.co.uk/" />
+
+	<!--	- Cert: *.jobsite.co.uk
+		- At least some pages 301 to http
+							-->
+	<rule from="^http://jobs\.dailymail\.co\.uk/(css|home|images)/"
+		to="https://jobs.dailymail.co.uk/$1/" />
+
+</ruleset>

@@ -1,0 +1,34 @@
+<!--
+	See CDS-Global-mismatches.xml for problematic rules.
+
+
+	Nonfunctional:
+
+		- cds-global.com        (times out)
+
+-->
+<ruleset name="CDS Global (partial)">
+
+	<target host="w1.buysub.com" />
+	<target host="mycdsglobal.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.mycdsglobal.com" />
+
+
+	<securecookie host="^w1\.buysub\.com$" name=".*" />
+	<securecookie host="^(sso)?\.mycdsglobal\.com$" name=".*" />
+
+
+	<rule from="^http://w1\.buysub\.com/"
+		to="https://w1.buysub.com/" />
+
+	<!--	Cert doesn't match !www.
+		This is what the server does,
+		sans-https.	-->
+	<rule from="^https?://mycdsglobal\.com/"
+		to="https://www.mycdsglobal.com//" />
+
+	<rule from="^http://(sso|www)\.mycdsglobal\.com/"
+		to="https://$1.mycdsglobal.com/" />
+
+</ruleset>

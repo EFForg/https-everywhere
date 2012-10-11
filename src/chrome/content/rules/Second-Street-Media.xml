@@ -1,0 +1,46 @@
+<!--
+	Nonfunctional:
+
+		- (www.)mycapture.com
+		- affiliates.mycapture.com
+		- chains.mycapture.com
+		- files.mycapture.com
+		- photographers.mycapture.com
+		- (www.)secondstreet.com	(ssl_error_rx_record_too_long)
+		- files.secondstreetmedia.com
+		- share.upickem.com		(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Second Street Media">
+
+	<target host="*.eblastengine.com" />
+	<target host="*.upickem.net" />
+
+
+	<!--	Observed cookie domains:
+
+			eblastengine.com:
+
+				- affiliates
+				- c
+
+			upickem.net:
+
+				- $
+				- affiliates
+				- eblastengine
+				- ssm
+				- www
+						-->
+	<securecookie host="^.*\.eblastengine\.com$" name=".*" />
+	<securecookie host="^.*\.upickem\.net$" name=".*" />
+
+
+	<!--	c: Included on 3rd-party websites.	-->
+	<rule from="^http://(affiliates|c)\.eblastengine\.com/"
+		to="https://$1.eblastengine.com/" />
+
+	<rule from="^http://((?:affiliates|eblastengine|ssm|www)\.)?upickem\.net/"
+		to="https://$1upickem.net/" />
+
+</ruleset>

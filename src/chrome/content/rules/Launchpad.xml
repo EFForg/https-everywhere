@@ -1,0 +1,34 @@
+<!--
+	For problematic rules, see Canonical-mismatches.xml.
+
+-->
+<ruleset name="Launchpad">
+	<target host="launchpad.net" />
+	<target host="*.launchpad.net" />
+	<target host="bugs.qastaging.launchpad.net" />
+	<target host="bugs.staging.launchpad.net" />
+	<target host="login.staging.launchpad.net" />
+
+	<target host="launchpadlibrarian.net" />
+	<target host="qastaging.launchpadlibrarian.net" />
+	<target host="*.restricted.qastaging.launchpadlibrarian.net" />
+	<target host="staging.launchpadlibrarian.net" />
+	<target host="www.launchpadlibrarian.net" />
+
+	<securecookie host="^(answers|api|bazaar|blueprints|bugs|code|dev|help|librarian|lists|login|((bugs\.)?(qa)?staging)|(login\.staging)|translations|www)\.launchpad\.net$" name=".+" />
+	<securecookie host="^((([a-zA-Z\d\-]+\.restricted\.)?qa)?staging)\.launchpadlibrarian\.net$" name=".+" />
+
+	<rule from="^http://launchpad\.net/" to="https://launchpad.net/" />
+
+	<!-- For the bazaar.launchpad.net domain, the URL http://bazaar.launchpad.net/ (where
+	there is nothing after the final slash) should be directed to https://launchpad.net/
+	as a special case. URLs such as http://bazaar.launchpad.net/~example/ where content
+	does come after the final slash should be handled as normal. -->
+	<rule from="^https?://bazaar\.launchpad\.net/$" to="https://launchpad.net/" />
+	<rule from="^http://bazaar\.launchpad\.net/(.+)" to="https://bazaar.launchpad.net/$1" />
+
+	<rule from="^http://(answers|api|blueprints|bugs|code|dev|help|librarian|lists|login|(?:(?:bugs\.)?(?:qa)?staging)|(?:login\.staging)|translations|www)\.launchpad\.net/" to="https://$1.launchpad.net/" />
+
+	<rule from="^http://(?:www\.)?launchpadlibrarian\.net/" to="https://launchpadlibrarian.net/" />
+	<rule from="^http://((?:(?:[a-zA-Z\d\-]+\.restricted\.)?qa)?staging)\.launchpadlibrarian\.net/" to="https://$1.launchpadlibrarian.net/" />
+</ruleset>

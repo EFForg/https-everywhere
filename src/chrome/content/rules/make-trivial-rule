@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# THIS IS NOT A RULE, but a shell script to create simple rules for a
+# specified domain.
+#
+# create $1.xml, mapping $1 and www.$1 to https://$2 (or https://www.$1 by
+# default)
+
+if [ -z "$1" ]
+then
+  echo "syntax: $0 example.com [secure.example.com]" >&2
+  exit 1
+fi
+
+capitalized=$(echo "$1" | cut -c 1 | tr a-z A-Z)$(echo "$1" | cut -c 2-)
+dest="$capitalized".xml
+if [ -f "$dest" ]
+then
+  echo "error: $dest already exists." >&2
+  exit 1
+fi
+
+if echo "$1" | grep -i '^www' >/dev/null
+then
+  echo "error: omit leading www" >&2
+  exit 1
+fi
+
+if echo "$1" | grep -v '\.' >/dev/null
+then
+  echo "error: domain should probably contain a dot" >&2
+  exit 1
+fi
+
+lower=$(echo "$1" | tr A-Z a-z)
+escaped=$(echo "$lower" | sed 's/\./\\./g' )
+if [ "$#" -gt 1 ] ; then
+    to="$2"
+else
+    to="www.$lower"
+fi
+
+cat > "$dest" <<END
+<ruleset name="$capitalized">
+  <target host="$lower" />
+  <target host="www.$lower" />
+
+  <rule from="^http://(www\.)?$escaped/" to="https://$to/" />
+</ruleset>
+END
+
+echo "$0: created $dest; please examine it." >&2

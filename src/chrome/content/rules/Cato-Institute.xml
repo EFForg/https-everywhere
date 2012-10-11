@@ -1,0 +1,46 @@
+<!--
+	CDN bucket:
+
+		- wac.0873.edgecastcdn.net/800873
+
+
+	Nonfunctional domains:
+
+		- (www.)cato-at-liberty.org		(sec_error_reused_issuer_and_serial)
+		- (www.)catooncampus.org		(cert: secure.cato.org; www shows that domain's data)
+		- (www.)downsizinggovernment.org	(cert: ditto; shows that domain's data)
+		- www.elcato.org			(sec_error_reused_issuer_and_serial)
+		- (www.)libertarianism.org		(ditto)
+
+-->
+<ruleset name="Cato Institute (partial)">
+
+	<target host="cato.com" />
+	<target host="*.cato.com" />
+
+
+	<!--	NB: This coverage is incomplete.
+
+		cert isn't valid for !www
+
+		It seems that all pages at least two directories deep can be fetched via https
+									-->
+	<rule from="^https?://(?:www\.)?cato\.org/([^/]+/[^/]+)/"
+		to="https://www.cato.org/$1/" />
+
+	<!--	the above rewrite makes the server print https links that point to pages which
+		don't support https.  We need to rewrite these links back to http before dealing
+		with non-page paths below, since the paths below are matched here too.
+			The paths that don't work comprise anything which isn't at least two
+		directory levels deep.					-->
+	<rule from="^https://www\.cato\.org/([^/]+/?(?:[^/]+/?)?)?$"
+		to="http://www.cato.org/$1" downgrade="1" />
+
+	<!--	Account-related pages and non-page paths that support https.  Not all do so.	-->
+	<rule from="^https?://(?:www\.)?cato\.org/(images/|store/(?:sites/|user/(?:password|register)))"
+		to="https://www.cato.org/$1" />
+
+	<rule from="^http://secure\.cato\.org/"
+		to="https://secure.cato.org/" />
+
+</ruleset>

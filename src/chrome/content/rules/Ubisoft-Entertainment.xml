@@ -1,0 +1,38 @@
+<!--
+	For problematic rules, see Ubisoft-Entertainment-mismatches.xml.
+
+
+	Possible bucket at s3.amazonaws.com/ubi/
+
+
+	Nonfunctional:
+
+		- (www.)ubi.com
+		- forums.ubi.com
+		- thesettlers.uk.ubi.com
+
+
+	ToDo: Secure shop pages that don't redirect to http.
+
+-->
+<ruleset name="Ubisoft Entertainment (partial)">
+
+	<target host="*.cdn.ubi.com" />
+	<target host="*.ubi.com" />
+		<exclusion pattern="^http://(forums|www)\." />
+
+
+	<securecookie host="^.*\.ubi\.com$" name=".*" />
+
+
+	<rule from="^http://static7\.cdn\.ubi\.com/"
+		to="https://s3.amazonaws.com/static7.ubi.com/" />
+
+	<!--	Works, but cert: *.hs.llnwd.net		-->
+	<rule from="^http://static9\.cdn\.ubi\.com/"
+		to="https://static9.ubi.com/" />
+
+	<rule from="^http://(engineroom|ghost-recon|secure|static\d(\.cdn)?|tools|uts)\.ubi\.com/"
+		to="https://$1.ubi.com/" />
+
+</ruleset>

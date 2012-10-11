@@ -1,0 +1,47 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Nonfunctional domains:
+
+		- wpdev.ms	(times out)
+
+
+	Fully covered windowsphone.com domains:
+
+		- ^
+		- cmsresources
+		- dev
+		- developer
+		- resources
+		- www
+
+-->
+<ruleset name="Windows Phone (partial)">
+
+	<target host="windowsphone.com" />
+	<target host="*.windowsphone.com" />
+
+
+	<!--	Observed cookie subdomains:
+
+			- dev
+			- www
+				-->
+	<securecookie host="^.+\.windowsphone\.com$" name=".+" />
+
+
+	<!--	!www: cert only matches resources.windowsphone.com.
+									-->
+	<rule from="^https?://(?:www\.)?windowsphone\.com/"
+		to="https://www.windowsphone.com/" />
+
+	<rule from="^http://((?:cms)?resources|dev|developer)\.windowsphone\.com/"
+		to="https://$1.windowsphone.com/" />
+
+	<!--	$ redirects like so.
+					-->
+	<rule from="^https://wpdev\.ms/$"
+		to="https://bitly.com/" />
+
+</ruleset>

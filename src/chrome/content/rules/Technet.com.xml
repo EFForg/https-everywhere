@@ -1,0 +1,39 @@
+<!--
+	Other Microsoft rulesets:
+
+		- Live.xml
+		- Microsoft.xml
+		- Microsoft-mismatches.xml
+
+
+	Technet.com redirects to technet.microsoft.com,
+	which does not support SSL (301 redirect).
+		blogs.technet.com, however, does.
+
+-->
+<ruleset name="Technet.com (partial)">
+
+	<target host="blogs.technet.com" />
+		<exclusion pattern="https?://blogs\.technet\.com/(.*)\?Redirected=true" />
+	<target host="*.blogs.technet.com" />
+
+
+	<securecookie host="^blogs\.technet\.com$" name=".*" />
+
+
+	<!--	Preemptive workaround for problem identical to:
+
+		https://trac.torproject.org/projects/tor/ticket/5754
+					-->
+	<rule from="^http://blogs\.technet\.com/(.*(?:\.aspx|\.xml|/))?$"
+		to="https://blogs.technet.com/$1?Redirected=true" />
+
+	<rule from="^http://blogs\.technet\.com/"
+		to="https://blogs.technet.com/" />
+
+	<!--	Akamai with no valid cert.
+			Where's the bucket?	-->
+	<rule from="^https?://(?:i\d?)\.blogs\.technet\.com/"
+		to="https://blogs.technet.com/" />
+
+</ruleset>

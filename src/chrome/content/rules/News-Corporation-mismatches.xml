@@ -1,0 +1,60 @@
+<!--
+	For rules that are on by default, see News-Corporation.xml.
+
+
+	404.foxnews.com.edgesuite.net
+		tried:
+			((ne.)?wac|ne1.wpc).edgecastcdn.net/404.fox(business|news).com/
+			(www.)edgesuite.net/404.fox(business|news).com/
+
+-->
+<ruleset name="News Corporation (mismatches)" default_off="mismatch">
+
+	<!--	Akamai	-->
+	<target host="404.foxnews.com.edgesuite.net" />
+	<target host="dowjones.com" />
+	<target host="www.dowjones.com" />
+	<!--	Akamai	-->
+	<target host="myfoxdetroit.com" />
+	<target host="www.myfoxdetroit.com" />
+	<target host="charts.smartmoney.com" />
+		<!--
+			Handled in News-Corporation.xml.
+							-->
+		<exclusion pattern="^http://charts\.smartmoney\.com/gifbuilder/" />
+	<!--	www.dowjones.com	-->
+	<target host="wsjpro.com" />
+	<target host="*.wsjpro.com" />
+
+
+	<securecookie host="^(.*\.)?wsjpro\.com$" name=".*" />
+
+
+	<rule from="^http://404\.foxnews\.com\.edgesuite\.net/"
+		to="https://404.foxnews.com.edgesuite.net/" />
+
+	<!--	https slows things down a bit.
+		wsjpro.com isnt hosted on Akamai,
+		and since files appear to be on
+		wsjpro.com too, point there instead.
+						-->
+	<rule from="^https?://(?:www\.)?dowjones\.com/(carousel_files|(?:chart/)?css|factiva|images)/"
+		to="https://wsjpro.com/$1/" />
+
+	<!--	- !www cert: www.dowjones.com
+		- www cert: Akamai
+		- !www redirects to www.
+						-->
+	<rule from="^https?://(?:www\.)?dowjones\.com/"
+		to="https://www.dowjones.com/" />
+
+	<rule from="^https?://(?:www\.)?myfoxdetroit\.com/"
+		to="https://www.myfoxdetroit.com/" />
+
+	<rule from="^http://charts\.smartmoney\.com/"
+		to="https://charts.smartmoney.com/" />
+
+	<rule from="^https?://(?:www\.)?wsjpro\.com/"
+		to="https://wsjpro.com/" />
+
+</ruleset>

@@ -1,0 +1,58 @@
+<!--
+	For problematic rules and other UBM coverage, see UBM-mismatches.xml.
+
+
+	CDN buckets:
+
+		- newagora.cachefly.net
+
+
+	Nonfunctional domains:
+
+		- (www.)darkreading.com		(cert: cms.informationweekanalytics.com, self-signed; redirects to http)
+		- (www.)gamasutra.com		(valid cert; pages become blank)
+		- (www.)lightreading.com	(cert: payment.lightreading.com; .+ 404s, $ redirects to http)
+		- liveevents.techweb.com
+		- (www.)ubmtechweb.com
+
+-->
+<ruleset name="TechWeb (partial)">
+
+	<target host="store.drdobbs.com" />
+	<target host="gamasutra.com" />
+	<target host="www.gamasutra.com" />
+	<target host="*.lightreading.com" />
+	<target host="i.techweb.com" />
+	<target host="techwebonlineevents.com" />
+	<target host="*.techwebonlineevents.com" />
+	<target host="twimgs.com" />
+
+
+	<securecookie host="^store\.drdobbs\.com$" name=".+" />
+	<securecookie host="^(.*\.)?techwebonlineevents\.com$" name=".*" />
+
+
+	<rule from="^http://store\.drdobbs\.com/"
+		to="https://store.drdobbs.com/" />
+
+	<rule from="^http://i\.techweb\.com/"
+		to="https://i.techweb.com/" />
+
+	<rule from="^http://(www\.)?gamasutra\.com/(blogs/edit/img/|(?:comments/|content/blogs/)?\w+\.css|(?:db_area/)?images/)"
+		to="https://$1gamasutra.com/$2" />
+
+	<!--	darkreading/ data are also available in i.cmpnet.com/infoweek/security/darkreading/seo/
+					-->
+	<rule from="^https?://img\.lightreading\.com/"
+		to="https://newagora.cachefly.net/" />
+
+	<rule from="^http://payment\.lightreading\.com/"
+		to="https://payment.lightreading.com/" />
+
+	<rule from="^https?://(?:www\.)?techwebonlineevents\.com/"
+		to="https://www.techwebonlineevents.com/" />
+
+	<rule from="^http://twimgs\.com/"
+		to="https://twimgs.com/" />
+
+</ruleset>

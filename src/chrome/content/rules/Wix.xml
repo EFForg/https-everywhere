@@ -1,0 +1,36 @@
+<!--
+	CDN buckets:
+
+		- orig-10023.wix.cotcdn.net
+			- static.parastorage.com
+			- static.wix.com
+
+		- wix.go2cloud.org
+			- tracking.wix.com
+
+
+	Nonfunctional domains:
+
+		- static.parastorage.com
+		- jobs.wix.com			(cert: dns.lc.wix.com; 403)
+		- static.wix.com		(times out)
+
+-->
+<ruleset name="Wix (partial)">
+
+	<target host="wix.com" />
+	<target host="*.wix.com" />
+	<target host="dns.lc.wix.com" />
+	<target host="www.dns.lc.wix.com" />
+
+
+	<securecookie host="^\.wix\.com$" name=".+" />
+
+
+	<rule from="^http://((?:www\.)?dns\.lc\.|www\.)?wix\.com/"
+		to="https://$1wix.com/" />
+
+	<rule from="^https?://tracking\.wix\.com/"
+		to="https://wix.go2cloud.org/" />
+
+</ruleset>

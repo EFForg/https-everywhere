@@ -1,0 +1,47 @@
+<!--
+	!functional subdomains:
+		- corporate		(cert: *.shareholder.com; 403 & 404)
+		- lbs			(reset)
+		- routes		(ditto)
+		- static.routes		(cert: *.tomtom.com; reset)
+-->
+<ruleset name="TomTom International (partial)">
+
+	<target host="tomtom.com"/>
+	<target host="business.tomtom.com"/>
+	<target host="www.tomtom.com"/>
+		<!--	redirect to http	-->
+		<exclusion pattern="^http://(www\.)?tomtom\.com/(products|support)/"/>
+
+	<securecookie host="^business.tomtom.com$" name=".*"/>
+	<!--	cookies encountered:
+			- ^\.
+				- tt_locale
+			- ^business
+				- AAannnaa
+			- ^corporate
+				- PRELOADIMAGESNOW
+			- ^\.corporate
+				- TOMTOM_BRIEFCASE
+				- TOMTOM_SESSION
+			- ^\.investors
+				- TOMTOM_BRIEFCASE
+				- TOMTOM_SESSION
+			- ^aa.support.tomtom.com
+				- cp_session
+				- locale
+			- ^www
+				- JSESSIONID
+				- TT
+		Are any more of these not used on unsecurable pages?	-->
+
+	<!--	front page redirects to http
+		pages within a directory seem to work		-->
+	<rule from="^http://(www\.)?tomtom\.com/(\w+)/"
+		to="https://$1tomtom.com/$2/"/>
+
+	<rule from="^http://business\.tomtom\.com/"
+		to="https://business.tomtom.com/"/>
+
+</ruleset>
+	

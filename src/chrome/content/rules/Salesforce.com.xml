@@ -1,0 +1,90 @@
+<!--
+	CloudFront buckets:
+
+		- assistly-production
+		- assistlywebsite	| dwan8j4vneaa7.cloudfront.net
+		- d3j15y3zsn7b4t
+		- d3jyn100am7dxp
+		- deskcontent		| d1epb5gzmg3005.cloudfront.net | d3jyn100am7dxp.cloudfront.net
+		- deskwww		| d3e6ejlgd1t9v1.cloudfront.net
+
+
+	Other buckets:
+
+		- secure.sfdcstatic.com.edgekey.net
+		- www2.sfdcstatic.com.edgesuite.net
+		- c9649669.r69.cf2.rackcdn.com
+
+
+	Nonfunctional:
+
+		- sites.force.com		(cert: slotmatching4.salesforce.com; redirects to http.
+							slotmatching4 doesn't appear to exist.)
+		- appexchange.salesforce.com	(redirects to http)
+
+-->
+<ruleset name="Salesforce.com (partial)">
+
+	<target host="assistly.com" />
+	<target host="*.assistly.com" />
+	<target host="desk.com" />
+	<target host="*.desk.com" />
+	<target host="developerforce.com" />
+	<target host="*.developerforce.com" />
+	<target host="force.com" />
+	<target host="*.force.com" />
+	<target host="c.eu0.content.force.com" />
+	<target host="*.secure.force.com" />
+	<target host="salesforce.com" />
+	<target host="*.salesforce.com" />
+	<target host="*.sfdcstatic.com" />
+
+
+	<securecookie host="^(.*\.)?(developer|sales)?force\.com$" name=".*" />
+
+
+	<rule from="^http://(www\.)?assistly\.com/"
+		to="https://$1assistly.com/" />
+
+	<rule from="^https?://assets\d\.assistly\.com/"
+		to="https://d1epb5gzmg3005.cloudfront.net/" />
+
+	<rule from="^https?://webassets\.assistly\.com/"
+		to="https://dwan8j4vneaa7.cloudfront.net/" />
+
+	<rule from="^https?://(?:www\.)?desk\.com/"
+		to="https://www.desk.com/" />
+
+	<rule from="^https?://assets\d\.desk\.com/"
+		to="https://d3jyn100am7dxp.cloudfront.net/" />
+
+	<rule from="^http://(dev|reg|support)\.desk\.com/"
+		to="https://$1.desk.com/" />
+
+	<rule from="^https?://webassets\.desk\.com/"
+		to="https://d3e6ejlgd1t9v1.cloudfront.net/" />
+
+	<rule from="^http://wiki\.developerforce\.com/"
+		to="https://wiki.developerforce.com/" />
+
+	<rule from="^http://c\.eu0\.content\.force\.com/"
+		to="https://c.eu0.content.force.com/" />
+
+	<!--	unique domain for each client	-->
+	<rule from="^http://([\w\-]+)\.secure\.force\.com/"
+		to="https://$1.secure.force.com/" />
+
+	<!--	/force.com times out	-->
+	<rule from="^https?://(?:www\.)?(developer|sales)?force\.com/"
+		to="https://www.$1force.com/" />
+
+	<rule from="^http://(lct|login|na2)\.salesforce\.com/"
+		to="https://$1.salesforce.com/" />
+
+	<rule from="^https?://(?:www\.)?salesforce\.com/(assets|common)/"
+		to="https://secure2.sfdcstatic.com/$1/" />
+
+	<rule from="^https?://(?:secure|www)2\.sfdcstatic\.com/"
+		to="https://secure2.sfdcstatic.com/"/>
+
+</ruleset>

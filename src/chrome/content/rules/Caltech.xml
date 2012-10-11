@@ -1,0 +1,106 @@
+<!--
+	For problematic rules, see Caltech-mismatches.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/cit/
+		- s3.amazonaws.com/imss-test/
+		- s3.amazonaws.com/imss-test-storage.ads.caltech.edu/
+		- s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/
+		- s3.amazonaws.com/www-prod-storage.cloud.caltech.edu/
+
+
+	Nonfunctional subdomains:
+
+		- ^			(shows ICT page)
+		- neocam.ipac		(rx_record_too_long)
+		- kiss
+		- www.nustar		(CN: bragi, 403)
+		- (www.)spitzer		(self-signed; shows RHEL test page)
+
+
+	Problematic subdomains:
+
+		- ^
+		- cliara	(self-signed)
+		- dabney	(ditto)
+		- courses.hss	(ditto)
+		- imss		(CN: cliara.caltech.edu)
+		- www.imss
+		- www		(CN: cliara.caltech.edu)
+
+
+	Fully covered subdomains:
+
+		- access *
+		- www.access **
+		- mail.alumni
+		- business-query ***
+		- imss-website-storage.cloud
+		- courses *
+		- irsecure ****
+		- its **
+		- utils.its
+		- www.its *****
+		- moodle **
+		- nassau ***
+		- pcard ***
+		- scriptor ***
+		- techne1 ***
+		- tqfr *
+		- web **
+		- webmail
+		- webvpn
+
+	* Normally https only, protect against SSL stripping
+	** Redirectors
+	*** XXX: These sites are only for faculty and/or staff. See System Status on www.imss.caltech.edu.
+		Some may require Internet Explorer, so this list may not be useful.
+		The following need to be investigated: outlookweb, kronos, kronoslimited, fiji, jobs
+	**** Mixed content from www.alumni.caltech.edu
+	***** Supports https but doesn't use it by default. Some pages weren't
+	      designed w/ https in mind and have insecure third-party content.
+
+-->
+<ruleset name="Caltech">
+
+	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
+	<target host="*.caltech.edu" />
+	<target host="www.*.caltech.edu" />
+	<target host="mail.alumni.caltech.edu" />
+	<target host="imss-website-storage.cloud.caltech.edu" />
+	<target host="utils.its.caltech.edu" />
+	<!--target host="solutions.sciquest.com" /> safe? -->
+
+
+	<securecookie host="^.+\.caltech\.edu$" name=".+" />
+
+
+	<!--	Handily, this bucket forces redirect from s3.amazonaws.com/foo to foo.s3.amazonaws.com.
+										-->
+	<rule from="^https?://www-prod-storage.cloud.caltech.edu.s3.amazonaws.com/"
+		to="https://s3-us-west-1.amazonaws.com/www-prod-storage.cloud.caltech.edu/" />
+
+	<rule from="^http://(?:www\.)?access\.caltech\.edu/"
+		to="https://access.caltech.edu/" />
+
+	<rule from="^http://(mail\.alumni|insecure|utils\.its|pcard|scriptor|techne1|tqfr|web|webmail|webvpn)\.caltech\.edu/"
+		to="https://$1.caltech.edu/" />
+
+	<rule from="^http://business-query\.caltech\.edu:8181/"
+		to="https://business-query.caltech.edu:8181/" />
+
+	<rule from="^https?://imss-website-storage\.cloud\.caltech\.edu/"
+		to="https://s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/" />
+
+	<rule from="^http://(?:courses|moodle)\.caltech\.edu/"
+		to="https://courses.caltech.edu/" />
+
+	<rule from="^http://(?:www\.)?its\.caltech\.edu/"
+		to="https://www.its.caltech.edu/" />
+
+	<rule from="^http://nassau\.caltech\.edu:4444/"
+		to="https://nassau.caltech.edu:4444/" />
+
+</ruleset>

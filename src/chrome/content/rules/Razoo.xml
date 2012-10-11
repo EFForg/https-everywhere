@@ -1,0 +1,28 @@
+<!--
+	For problematic rules, see Razoo-mismatches.xml.
+
+-->
+<ruleset name="Razoo (partial)">
+
+	<target host="razoo.com" />
+	<target host="*.razoo.com" />
+
+
+	<!--	Cert only matches *.razoo.com	-->
+	<rule from="^https?://razoo\.com/"
+		to="https://www.razoo.com/" />
+
+	<!--	- Some paths redirect to http
+		- There may be more than are handled here that don't
+		- password-resets$ redirects to http and then throws 404
+				-->
+	<rule from="^http://www\.razoo\.com/((?:login|signup)(?:$|[\?/])|password_resets/)"
+		to="https://www.razoo.com/$1" />
+
+	<!--	- assets[0-3]? cert: gp1.wac.edgecastcdn.net
+		- This is what the server does on secure pages
+			-->
+	<rule from="^https?://assets(?:\d|-secure)?\.razoo\.com/"
+		to="https://assets-secure.razoo.com/" />
+
+</ruleset>

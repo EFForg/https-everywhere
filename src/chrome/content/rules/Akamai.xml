@@ -1,0 +1,44 @@
+<!--
+	For problematic rules, see Akamai-mismatches.xml.
+
+
+	Nonfunctional:
+
+		- http14432.storage.akadns.net		(cert: contentstorage.akamai.com)
+		- cp44823.edgefcs.net			(reset)
+
+
+-->
+<ruleset name="Akamai">
+
+	<target host="*.abmr.net" />
+	<target host="a248.e.akamai.net" />
+	<target host="*.akamaihd.net" />
+		<!--
+			Causes many streams to 403 and region restriction to trip inappropriately.
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001324.html
+			https://trac.torproject.org/projects/tor/ticket/6557
+			https://trac.torproject.org/projects/tor/ticket/6871
+			https://trac.torproject.org/projects/tor/ticket/7080
+										-->
+		<exclusion pattern="^http://[\w\-]+-f\.akamaihd\.net/" />
+	<target host="*.speedera.net" />
+
+
+	<securecookie host="^.*\.abmr\.net$" name=".*" />
+
+
+	<rule from="^http://ak1s\.abmr\.net/"
+		to="https://ak1s.abmr.net/" />
+
+	<rule from="^http://a248\.e\.akamai\.net/"
+		to="https://a248.e.akamai.net/" />
+
+	<rule from="^http://([^@:/\.]+)\.akamaihd\.net/"
+		to="https://$1.akamaihd.net/" />
+
+	<rule from="^http://(?:[\w\-]+)\.speedera\.net/"
+		to="https://ssl.speedera.net/" />
+
+</ruleset>

@@ -1,0 +1,32 @@
+<!--
+	Nonfunctional subdomains:
+
+		- maddox	(ssl_error_rx_record_too_long)
+		- wiki		(ditto)
+
+-->
+<ruleset name="XMission (partial)">
+
+	<target host="xmission.com" />
+	<target host="*.xmission.com" />
+		<exclusion pattern="^http://(maddox|wiki)\." />
+	<!--	*s for cross-domain cookies.	-->
+	<target host="*.mail.xmission.com" />
+	<target host="*.webmail.xmission.com" />
+
+
+	<securecookie host="^(.*\.)?xmission\.com$" name=".*" />
+
+
+	<!--	Observed subdomains:
+
+			- mail
+			- my
+			- stats
+			- webmail
+			- www
+				-->
+	<rule from="^http://(\w+\.)?xmission\.com/"
+		to="https://$1xmission.com/" />
+
+</ruleset>

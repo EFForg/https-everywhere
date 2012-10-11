@@ -1,0 +1,22 @@
+<ruleset name="easyDNS (partial)">
+
+	<target host="easydns.net"/>
+	<target host="*.easydns.net"/>
+	<target host="easydns.com"/>
+	<target host="*.easydns.com"/>
+		<!--	blog & helpwiki time out	-->
+		<exclusion pattern="^http://(blog2?|helpwiki)\.easydns\.com/"/>
+
+	<securecookie host="^.*\.easydns\.(com|net)$" name=".*"/>
+
+	<!--	Cert isn't valid for .net.
+		This is what the server does,
+		aside from https.		-->
+	<rule from="^http://(?:www\.)?easydns\.net/"
+		to="https://www.easydns.com/"/>
+
+	<!--	clients have unique .net subdomains	-->
+	<rule from="^http://([\w\-]+\.)?easydns\.(com|net)/"
+		to="https://$1easydns.$2/"/>
+
+</ruleset>

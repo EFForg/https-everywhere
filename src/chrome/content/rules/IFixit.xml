@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- d225i93lhigkl1.cloudfront.net
+			- ifixit-meta.dozuki.net
+
+		- da2lh5cs8ikqj.cloudfront.net
+			- cart-products.ifixit.net
+
+		- d3nevzfk7ii3be.cloudfront.net
+			- guide-images.ifixit.net
+
+-->
+<ruleset name="iFixit (partial)">
+
+	<target host="ifixit-meta.dozuki.net" />
+	<target host="ifixit.com" />
+	<target host="*.ifixit.com" />
+	<target host="*.edu.ifixit.com" />
+	<target host="*.ifixit.net" />
+
+
+	<securecookie host="^\.edu\.ifixit\.com$" name=".+" />
+
+
+	<rule from="^https?://ifixit-meta\.dozuki\.net/"
+		to="https://d225i93lhigkl1.cloudfront.net/" />
+
+	<!--	Some (most?) pages 302 to http.
+						-->
+	<rule from="^http://(www\.)?ifixit\.com/(cart|Guide)/login(/register)?($|\?)"
+		to="https://$1ifixit.com/$2/login$3$4" />
+
+	<rule from="^http://edu\.ifixit\.com/"
+		to="https://edu.ifixit.com/" />
+
+	<!--	Some (most?) pages 302 to http.
+						-->
+	<rule from="^http://meta\.ifixit\.com/login(/register)?($|\?)"
+		to="https://meta.ifixit.com/login$1$2" />
+
+	<rule from="^https?://cart-products\.ifixit\.net/"
+		to="https://da2lh5cs8ikqj.cloudfront.net/" />
+
+	<rule from="^https?://guide-images\.ifixit\.net/"
+		to="https://d3nevzfk7ii3be.cloudfront.net/" />
+
+</ruleset>

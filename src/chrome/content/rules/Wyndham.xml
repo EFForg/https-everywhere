@@ -1,0 +1,180 @@
+<!--	Buckets:
+		d2bae186y49u92.cloudfront.net	(used on landal.(com|nl), landalskilife.com)
+		d2yr1lcnwqnwfx.cloudfront.net	(ditto)
+
+	Nonfunctional:
+		- www.blakes.co.uk		(shows howseasons.co.uk)
+		- dales-holiday-cottages.com	(404)
+		- dansommer.d[ek]		(timeout)
+		- holidaycottagesgroup.com	(redirects to thehoseasonsgroup.co.uk)
+		- static.landal.com		(cert: redhotminute.com, listing denied)
+		- novasol.(d[ek]|n[lo])		(timeout)
+		- www.rci.com			(valid cert, Akamai: "Service Unavailable")
+		- www.resortquest.com		(cert: www.resortrequestsecure.com, shows that domain's data)
+		- thehoseasonsgroup.co.uk	(timeout)
+		- wmowners.com			(cert: *.accountservergroup.com, shows site5 page)
+		- worldmapsp			(cert: wyndhamvrap.com, "It Works!")
+		- wyndhamvrap.com		(cert: secure1.onthenet.net, "It Works!")
+		- www.wyndhamworldwide.com
+
+	wyndhamjobs.com	(cert: *.careerbuilder.com)
+-->
+<ruleset name="Wyndham (partial)">
+
+	<target host="canvasholidays.co.uk"/>
+	<target host="www.canvasholidays.co.uk"/>
+	<target host="cheznous.com"/>
+	<target host="www.cheznous.com"/>
+	<target host="competitionsbywyndham.com.au"/>
+	<target host="www.competitionsbywyndham.com.au"/>
+	<target host="cottages4you.co.uk"/>
+	<target host="*.cottages4you.co.uk"/>
+	<target host="cottagesdirect.co.uk"/>
+	<target host="www.cottagesdirect.co.uk"/>
+	<target host="cottageselection.co.uk"/>
+	<target host="www.cottageselection.co.uk"/>
+	<target host="easycottages.com"/>
+	<target host="www.easycottages.com"/>
+	<target host="english-country-cottages.co.uk"/>
+	<!--	for cross-domain cookie	-->
+	<target host="*.english-country-cottages.co.uk"/>
+	<target host="french-country-cottages.co.uk"/>
+	<!--	ditto	-->
+	<target host="*.french-country-cottages.co.uk"/>
+	<target host="hoseasons.co.uk"/>
+	<target host="*.hoseasons.co.uk"/>
+	<target host="individual-villas.co.uk"/>
+	<target host="www.individual-villas.co.uk"/>
+	<target host="irish-country-cottages.co.uk"/>
+	<!--	for cross-domain cookie	-->
+	<target host="*.irish-country-cottages.co.uk"/>
+	<target host="italian-country-cottages.co.uk"/>
+	<!--	ditto	-->
+	<target host="*.italian-country-cottages.co.uk"/>
+	<target host="jamesvillas.co.uk"/>
+	<target host="www.jamesvillas.co.uk"/>
+	<target host="landal.*"/>
+	<target host="secure.landal.com"/>
+	<target host="www.landal.*"/>
+	<target host="landalgreenparks.com"/>
+	<target host="www.landalgreenparks.com"/>
+	<target host="landalcampings.be"/>
+	<target host="www.landalcampings.be"/>
+	<target host="landalcampings.de"/>
+	<target host="www.landalcampings.de"/>
+	<target host="landalcampings.nl"/>
+	<target host="www.landalcampings.nl"/>
+	<target host="landalparkshop.*"/>
+	<target host="www.landalparkshop.*"/>
+	<target host="landalskilife.*"/>
+	<target host="www.landalskilife.*"/>
+		<!--	handled in mismatches	-->
+		<exclusion pattern="^http://(www\.)?landalskilife\.(com|fr)/"/>
+	<target host="mijnlandal.nl"/>
+	<target host="www.mijnlandal.nl"/>
+	<target host="ovscruise.com"/>
+	<target host="www.ovscruise.com"/>
+	<target host="prep.rci.com"/>
+	<target host="rcitravelstore.co.uk"/>
+	<target host="www.rcitravelstore.co.uk"/>
+	<target host="resortquestsecure.com"/>
+	<target host="www.resortquestsecure.com"/>
+	<target host="secureholidays.com"/>
+	<target host="www.secureholidays.com"/>
+	<target host="scottish-country-cottages.co.uk"/>
+	<target host="www.scottish-country-cottages.co.uk"/>
+	<target host="villas4you.co.uk"/>
+	<target host="www.villas4you.co.uk"/>
+	<target host="welcomecottages.com"/>
+	<target host="www.welcomecottages.com"/>
+	<target host="welsh-country-cottages.co.uk"/>
+	<target host="www.welsh-country-cottages.co.uk"/>
+	<target host="worldmarkbywyndham.com"/>
+	<target host="www.worldmarkbywyndham.com"/>
+	<target host="wyndham.com"/>
+	<target host="*.wyndham.com"/>
+	<target host="wyndhamrentals.com"/>
+	<target host="www.wyndhamrentals.com"/>
+	<target host="*.wyndhamvrap.com"/>
+		<exclusion pattern="^http://www\.wyndhamvrap\."/>
+
+
+	<!--	incomplete	-->
+	<securecookie host="^(.*\.)?(canvasholidays|cheznous|cottages(direct|4you)|english-country-cottages|hoseasons|(individual-|james)villas)\.co\.uk$" name=".*"/>
+	<securecookie host="^(www\.)?competitionsbywyndham\.com\.au$" name=".*"/>
+	<securecookie host="^secure\.landal\.com$" name=".*"/>
+	<securecookie host="^www\.ourvacationstore\.com$" name=".*"/>
+	<securecookie host="^(www\.)?ovscruise\.com$" name=".*"/>
+	<securecookie host="^new\.wyndhamvrap\.com$" name=".*"/>
+
+
+	<rule from="^http://(?:www\.)?(canvasholidays|cheznous|cottages(?:4you|direct|election)|(?:english|french|irish|italian|scottish|welsh)-country-cottages|(?:individual-|james)villas|villas4you)\.co\.uk/"
+		to="https://www.$1.co.uk/"/>
+
+	<rule from="^http://(www\.)?competitionsbywyndham\.com\.au/"
+		to="https://$1competitionsbywyndham.com.au/"/>
+
+	<rule from="^http://blog\.cottages4you\.co\.uk/"
+		to="https://blog.cottages4you.co.uk/"/>
+
+	<rule from="^http://(?:www\.)?((?:easy|welcome)cottages|resortquestsecure|secureholidays|worldmarkbywyndham|wyndhamrentals)\.com/"
+		to="https://www.$1.com/"/>
+
+	<rule from="^http://(images\.|www\.)?hoseasons\.co\.uk/"
+		to="https://$1hoseasons.co.uk/"/>
+
+	<!--	don't match landalskilife\.cz here, cert invalid	-->
+	<rule from="^http://landal(skilife)?\.(\w[\w^z]\w?)/"
+		to="https://www.landal$1.$2/"/>
+
+	<!--	ditto	-->
+	<rule from="^http://www\.landal(skilife)?\.(\w[\w^z]\w?)/(bp|db|favicons|img)/"
+		to="https://www.landal$1.$2/$3/"/>
+
+	<!--	...skilife.cz redirects as so	-->
+	<rule from="^http://(?:www\.)?landal(?:skilife)?\.cz/"
+		to="https://www.landal.cz/"/>
+
+	<!--	webshop only for be & nl	-->
+	<rule from="^http://landal(campings|parkshop)\.([bd]e|nl)/"
+		to="https://www.landal$1.$2/"/>
+
+	<rule from="^http://www\.landacampings\.([bd]e|nl)/(css|favicons|img)/"
+		to="https://www.landalcampings.$1/$2/"/>
+
+	<!--	redirects as so	-->
+	<rule from="^http://(?:www\.)?landalparkshop\.de/"
+		to="https://www.landal.de/"/>
+
+	<rule from="^http://secure\.landal\.com/"
+		to="https://secure.landal.com/"/>
+
+	<!--	redirects as so	-->
+	<rule from="^http://(?:www\.)?landalgreenparks\.com/"
+		to="https://www.landal.com/"/>
+
+	<rule from="^http://(www\.)?mijnlandal\.nl/"
+		to="https://$1mijnlandal.nl/"/>
+
+	<rule from="^http://(www\.)?ovscruise\.com/"
+		to="https://$1ovscruise.com/"/>
+
+	<rule from="^http://prep\.rci\.com/"
+		to="https://prep.rci.com/"/>
+
+	<rule from="^http://(www\.)?rcitravelstore\.co\.uk/(images/|includes/|managebooking/login\.asp|shortlist/)"
+		to="https://$1rcitravelstore.co.uk/$2"/>
+
+	<rule from="^http://wyndham\.com/"
+		to="https://www.wyndham.com/"/>
+
+	<rule from="^http://www\.wyndham\.com/(cms_content|hotels/images|resources)"
+		to="https://www.wyndham.com/$1/"/>
+
+	<rule from="^http://wynres\.wyndham\.com/"
+		to="https://wynres.wyndham.com/"/>
+
+	<rule from="^http://(hotels|new)\.wyndhamvrap\.com/"
+		to="https://$1.wyndhamvrap.com/"/>
+
+</ruleset>

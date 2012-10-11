@@ -1,0 +1,28 @@
+<!--
+	Nonfunctional subdomains:
+
+		- education	(times out)
+
+
+	dictionaryblog.cambridge.org is handled in WordPress-blogs.xml.
+
+-->
+<ruleset name="Cambridge University Press (partial)">
+
+	<target host="cambridge.org" />
+	<target host="*.cambridge.org" />
+
+
+	<securecookie host="^assets\.cambridge\.org$" name=".*" />
+
+
+	<!--	- Cert only matches www
+		- At least some pages redirect to www
+					-->
+	<rule from="^https?://(?:www\.)?cambridge\.org/((?:generated|other)_files/|login(?:$|[/\?]))"
+		to="https://www.cambridge.org/$1" />
+
+	<rule from="^http://(assets|dictionary)\.cambridge\.org/"
+		to="https://$1.cambridge.org/" />
+
+</ruleset>

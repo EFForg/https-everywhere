@@ -1,0 +1,38 @@
+<!--
+	For problematic rules, see EdgeCast-Networks-mismatches.xml.
+
+
+-->
+<ruleset name="EdgeCast Networks (partial)">
+
+	<target host="wpc.*.edgecastcdn.net" />
+	<target host="wac.1ac1.edgecastcdn.net" />
+	<target host="ne.edgecastcdn.net" />
+	<target host="wac.edgecastcdn.net" />
+	<target host="ne.wac.edgecastcdn.net" />
+	<target host="*.wpc.edgecastcdn.net" />
+
+
+	<rule from="^https?://wac(?:\.1ac1)?\.edgecastcdn\.net/"
+		to="https://wac.edgecastcdn.net/" />
+
+	<!--	Seems to be equivalent to ne1.wpc.edgecastcdn.net,
+		given that the two are identical for the buckets
+		observed at web.com (Web.com.xml).
+				-->
+	<rule from="^http://ne\.edgecastcdn\.net/"
+		to="https://ne.edgecastcdn.net/" />
+
+	<!--	Encountered in wpc.nnnn:
+
+			- 200e
+			- 437a  (/00437A/)
+			- 50b9	(/0050B9/)
+							-->
+	<rule from="^https?://(?:wpc\.\w{4}|ne1\.wpc)\.edgecastcdn\.net/"
+		to="https://ne1.wpc.edgecastcdn.net/" />
+
+	<rule from="^https?://(?:ne\.wa|gs1\.wp)c\.edgecastcdn\.net/"
+		to="https://ne.wac.edgecastcdn.net/" />
+
+</ruleset>

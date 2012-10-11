@@ -1,0 +1,44 @@
+<!--
+	dee.uidaho.edu & support.uidaho.edu are handled in WordPress-blogs.xml.
+
+
+	Nonfunctional domains:
+
+		- directory	(cert: www.dfa.uidaho.edu; shows that domain)
+		- www.its2	(cert: www.sci.uidaho.edu; 302s to uihome 404)
+		- websource	(cert: webha1.its.uidaho.edu, self-signed; 404)
+
+
+	Mismatches:
+
+		- www.its	(cert: www.webedit.uidaho.edu; works)
+		- www.uihome	(cert: www.webedit.uidaho.edu; seems to work)
+		- www.uiweb	(302s to www.uihome)
+		- www.webpages	(cert: *.uidaho.edu; 302s to uihome, sometimes...)
+		- www.webs	(cert: www.sci.uidaho.edu; 302s to www.webpages)
+
+-->
+<ruleset name="University of Idaho (partial)">
+
+	<target host="uidaho.edu" />
+	<target host="*.uidaho.edu" />
+	<!--
+		^dfa, ^its, ^sci, ^sites, ^uiweb, & ^webedit don't exist.
+					-->
+	<target host="www.*.uidaho.edu" />
+	<target host="www2.sites.uidaho.edu" />
+
+
+	<securecookie host="^\w.*\.uidaho\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:sitecore|vandalweb|www\.(?:dfa|sci|uiweb|webedit)|www2?\.sites|www)\.)?uidaho\.edu/"
+		to="https://$1uidaho.edu/" />
+
+	<!--	- Cert: www.webedit
+		- 302s like so
+				-->
+	<rule from="^https?://www\.its\.uidaho\.edu/$"
+		to="https://www.uidaho.edu/its" />
+
+</ruleset>

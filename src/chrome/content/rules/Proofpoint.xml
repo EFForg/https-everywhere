@@ -1,0 +1,37 @@
+<!--
+	Nonfunctional:
+
+		- blog.proofpoint.com		(times out; hosted on Typepad)
+		- investors.proofpoint.com	(cert: *.shareholder.com; 403)
+
+-->
+<ruleset name="Proofpoint (partial)">
+
+	<target host="proofpoint.com" />
+	<target host="*.proofpoint.com" />
+
+
+	<rule from="^http://proofpoint\.com/"
+		to="https://proofpoint.com/" />
+
+	<!--	At least these paths redirect to http:
+
+			- $
+			- favicon.ico$
+			- id/gartner-email-security-magic-quadrant/index.php
+						-->
+	<rule from="^http://www\.proofpoint\.com/(asset|cs|image|partner)s/"
+		to="https://www.proofpoint.com/$1s/" />
+
+	<!--	These paths 404:
+
+			- formstandard-2column.html
+
+				-->
+	<rule from="^https?://go\.proofpoint\.com/(css|images)/"
+		to="https://na-n.marketo.com/$1/" />
+
+	<rule from="^http://support\.proofpoint\.com/"
+		to="https://support.proofpoint.com/" />
+
+</ruleset>

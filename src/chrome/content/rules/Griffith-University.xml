@@ -1,0 +1,47 @@
+<ruleset name="Griffith University">
+
+	<target host="griffith.edu.au" />
+	<target host="*.griffith.edu.au" />
+	<target host="*.secure.griffith.edu.au" />
+
+
+	<securecookie host="^www3\.secure\.griffith\.edu\.au$" name=".*" />
+
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://griffith\.edu\.au/"
+		to="https://www.griffith.edu.au/" />
+
+	<!--
+		These paths redirect to www:
+
+			- $
+			- homepage2/events-image?eventID=
+			- homepage2/news-image?eventID=
+			- students$
+
+		These paths don't:
+
+			- __data/
+			- intranet
+
+		These paths 404:
+
+			- search
+					-->
+	<rule from="^http://www\.griffith\.edu\.au/(__data/|intranet)"
+		to="https://www.griffith.edu.au/$1" />
+
+	<rule from="^http://(ias|learning|(?:intranet|learning|portal|www3)\.secure)\.griffith\.edu\.au/"
+		to="https://$1.griffith.edu.au/" />
+
+	<!--	Cert only matches intranet.secure	-->
+	<rule from="^https?://intranet\.griffith\.edu\.au/"
+		to="https://intranet.secure.griffith.edu.au/" />
+
+	<!--	At least /$ throws 500.
+					-->
+	<rule from="^https?://www3\.griffith\.edu\.au/(03/ertiki|schema)/"
+		to="https://www3.secure.griffith.edu.au/$1/" />
+
+</ruleset>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://https-everywhere/skin/https-everywhere.css" type="text/css"?>
+
+<!DOCTYPE overlay SYSTEM "chrome://https-everywhere/locale/https-everywhere.dtd">
+
+<!-- helpful docs at 
+     https://developer.mozilla.org/en/XUL/PopupGuide/PopupEvents -->
+
+<overlay id="https-everywhere-button-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript" src="chrome://https-everywhere/content/toolbar_button.js"/>
+  
+    <stringbundleset id="stringbundleset">
+        <stringbundle id="HttpsEverywhereStrings"
+      src="chrome://https-everywhere/locale/https-everywhere.properties" />
+    </stringbundleset>
+
+  <!-- this works in Firefox, we need a Seamonkey version too... -->
+  <menupopup id="menu_ToolsPopup" onpopupshowing="stitch_context_menu()">
+    <menu id="https-everywhere-menu" label="&https-everywhere.about.ext_name;"> 
+      <!-- "https-everywhere-context" below gets .cloneNode()ed in here -->
+    </menu>
+  </menupopup>
+
+  <menupopup id="toolsPopup" onpopupshowing="stitch_context_menu2()">
+    <menu id="https-everywhere-menu2" label="&https-everywhere.about.ext_name;">
+      <!-- "https-everywhere-context" below gets .cloneNode()ed in here -->
+    </menu>
+  </menupopup>
+  
+  <toolbarpalette id="BrowserToolbarPalette">
+    <toolbarbutton 
+      id="https-everywhere-button"
+      class="toolbarbutton-1 chromeclass-toolbar-additional"
+      tooltiptext="&https-everywhere.about.ext_name;"
+      label="HTTPS"
+      context="https-everywhere-context-menu"
+      oncontextmenu="this.open = true;"
+      oncommand="this.open = true;"
+      buttonstyle="pictures"
+      type="menu">
+
+      <menupopup id="https-everywhere-context" onpopupshowing="show_applicable_list(this)">
+        <!-- entries will be written here by ApplicableList.populate_menu() -->
+        <menuseparator />
+        <menuitem label="&https-everywhere.menu.observatory;" command="https-everywhere-menuitem-observatory" />
+        <menuitem label="&https-everywhere.menu.about;" command="https-everywhere-menuitem-about" />
+      </menupopup>
+    </toolbarbutton>
+  </toolbarpalette>
+  <commandset>
+    <command id="https-everywhere-menuitem-globalEnableToggle"
+      oncommand="toggleEnabledState();" />
+    <command id="https-everywhere-menuitem-preferences"
+      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/preferences.xul', 'chrome,centerscreen,resizable=yes');" />
+    <command id="https-everywhere-menuitem-about"
+      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/about.xul');" />
+    <command id="https-everywhere-menuitem-observatory"
+      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/observatory-preferences.xul', 'chrome,centerscreen,resizable=yes');" />
+    <command id="https-everywhere-menuitem-donate-eff" 
+      oncommand="open_in_tab('https://www.eff.org/donate');" />
+    <command id="https-everywhere-menuitem-donate-tor" 
+      oncommand="open_in_tab('https://www.torproject.org/donate');" />
+  </commandset>
+</overlay>
+

@@ -1,0 +1,28 @@
+<!--
+	For rules that are on by default, see NewspaperDirect.xml
+
+
+	Nonfunctional:
+
+		- cache-thumb1.pressdisplay.com		(Akamai; 503)
+		- cache2-thumb1.pressdisplay.com	(cert: gp1.wac.edgecastcdn.net; 404)
+
+-->
+<ruleset name="NewspaperDirect (mismatches)" default_off="mismatch">
+
+	<target host="pressdisplay.com" />
+	<target host="*.pressdisplay.com" />
+		<!--	Rewritten back to http by JS	-->
+		<exclusion pattern="^http://(www\.)?pressdisplay/viewer\.aspx" />
+
+
+	<!--	Cert: www.newspapersdirect.com	-->
+	<rule from="^https?://(?:www\.)?pressreader\.com/"
+		to="https://pressreader.com/" />
+
+	<!--	!2:	Akamai
+		 2:	EdgeCast	-->
+	<rule from="^https?://cache2?-s(cripts|style)s\.pressdisplay\.com/"
+		to="https://cache-s$1s.pressdisplay.com/" />
+
+</ruleset>

@@ -1,0 +1,58 @@
+<!--
+	See Tucows-mismatches.xml for problematic rules.
+
+
+	Nonfunctional:
+
+		- (www.)accountservergroup.com	(ssl_error_rx_record_too_long)
+		- www.tucowsdomains.com		(cert: opensrs.com
+
+-->
+<ruleset name="Tucows (partial)">
+
+	<target host="contact-privacy.com" />
+	<target host="hover.com" />
+	<target host="mail.hover.com" />
+	<target host="www.hover.com" />
+	<target host="support.ispbilling.com" />
+	<target host="opensrs.com" />
+	<target host="signup.opensrs.com" />
+	<target host="www.opensrs.com" />
+		<!-- blog posts redirect to /www., for which the cert is invalid -->
+		<exclusion pattern="^http://www\.opensrs\.com/blog[\w/\-]*/$"/>
+	<target host="opensrs.net" />
+	<target host="rr-n1-tor.opensrs.net" />
+	<target host="www.opensrs.net" />
+	<target host="ting.com" />
+	<target host="help.ting.com" />
+	<target host="www.ting.com" />
+	<target host="tucows.com" />
+	<target host="www.tucows.com" />
+
+
+	<securecookie host="^(.*\.)?(hover|ting)\.com$" name=".*"/>
+
+
+	<!-- actually redirects as so -->
+	<rule from="^http://(?:www\.)?contactprivacy\.com/"
+		to="https://rr-n1-tor.opensrs.net/wp_mailer/" />
+
+	<rule from="^http://(?:www\.)?hover\.com/"
+		to="https://www.hover.com/" />
+
+	<rule from="^http://(mail|support)\.(hover|ispbilling)\.com/"
+		to="https://$1.$2.com/" />
+
+	<rule from="^http://(?:(signup\.)|www\.)?opensrs\.(?:com|net)/"
+		to="https://$1opensrs.com/" />
+
+	<rule from="^http://rr-n1-tor\.opensrs\.net/"
+		to="https://rr-n1-tor.opensrs.net/" />
+
+	<rule from="^http://(?:(help\.)|www\.)?ting\.com/"
+		to="https://$1ting.com/" />
+
+	<rule from="^http://(www\.)?tucows\.com/"
+		to="https://$1tucows.com/" />
+
+</ruleset>

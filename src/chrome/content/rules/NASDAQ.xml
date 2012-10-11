@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- content.nasdaq.com.edgesuite.net
+		- kona.nasdaq.com.edgesuite.net
+			- www.nasdaq.com
+
+
+	Nonfunctional domains:
+
+		- content.nasdaq.com	(Akamai; 503)
+		- www.nasdaq.com	(Akamai; 503)
+		- (www.)nasdaqomx.com
+		- ir.nasdaqomx.com	(cert: shareholder.com)
+
+-->
+<ruleset name="NASDAQ (partial)">
+
+	<target host="secure.directorsdesk.com" />
+	<target host="community.nasdaq.com" />
+	<target host="*.nasdaqomx.com" />
+	<target host="dialogue.openboard.info" />
+	<target host="shareholder.com" />
+	<target host="*.shareholder.com" />
+
+
+	<securecookie host="^(?:secure\.|www\.)?directorsdesk\.com$" name=".+" />
+	<securecookie host="^community\.nasdaq\.com$" name=".+" />
+	<securecookie host="^corporateintelligence\.nasdaqomx\.com$" name=".+" />
+	<securecookie host="^dialogue\.(?:openboard\.info|shareholder\.com)$" name=".+" />
+
+
+	<rule from="^http://secure\.directorsdesk\.com/"
+		to="https://secure.directorsdesk.com/" />
+
+	<rule from="^http://community\.nasdaq\.com/"
+		to="https://community.nasdaq.com/" />
+
+	<rule from="^http://(corporateintelligence|listingcenter)\.nasdaqomx\.com/"
+		to="https://$1.nasdaqomx.com/" />
+
+	<rule from="^http://dialogue\.openboard\.info/"
+		to="https://dialogue.openboard.info/" />
+
+	<!--	- apps2 doesn't work over https
+		- apps & apps2 appear identical
+			-->
+	<rule from="^https?://apps2?\.shareholder\.com/"
+		to="https://apps.shareholder.com/" />
+
+	<rule from="^http://(?:www\.)?(dialogue\.|investor\.)?shareholder\.com/"
+		to="https://$1shareholder.com/" />
+
+</ruleset>

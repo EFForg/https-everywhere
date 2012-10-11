@@ -1,0 +1,102 @@
+<!--
+	For problematic rules, see Conde-Nast-mismatches.xml.
+
+
+	Other Condé Nast rulesets:
+
+		- Ars-Technica.xml
+		- Reddit.xml
+		- The-New-Yorker.xml
+		- Vanity-Fair.xml
+		- Wired.xml
+
+
+	details.com and webmonkey.com are hosted on Akamai.
+
+	golfdigest is hosted on imavex.com and imavex.vo.llnwd.net.
+
+		ToDo: find buckets
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/img.condenast.co.uk/	| dvcpqzrjfwvhx.cloudfront.net	
+			- aws permanently redirects.
+		- fonts.condenast.com.edgekey.net
+		- thumbnailer.thestudio.condenast.com.edgesuite.net
+		- www.condenast.com.edgekey.net
+		- www.webmonkey.com.edgesuite.net
+
+
+	Nonfunctional:
+
+
+		- architecturaldigest.com:
+			- /
+			- www				(Akamai; blank page)
+		- arst.ch				(cert: api.arstechnica.net; shows that domain's data)
+		- images1.designcentersearch.com	(times out; data aren't on www)
+		- (www.)shopad.net			(cert: designcentersearch.com; shows that domain's data)
+		- style.com:
+			- /
+			- www				(Akamai; 503)
+				- origin, origin-www, secure, www2 don't exist
+		- www.webmonkey.com			(Akamai; 503)
+
+-->
+<ruleset name="Condé Nast (partial)">
+
+	<target host="condenast.com" />
+	<target host="*.condenast.com" />
+	<target host="cdni.condenast.co.uk" />
+	<target host="condenaststore.com" />
+	<target host="www.condenaststore.com" />
+	<target host="subscribe.condenet.com" />
+	<target host="details.com" />
+	<target host="*.details.com" />
+	<target host="golfdigest.com" />
+	<target host="*.golfdigest.com" />
+	<target host="golfdigestinsiders.com" />
+	<target host="www.golfdigestinsiders.com" />
+	<target host="gq-magazine.co.uk" />
+	<target host="www.gq-magazine.co.uk" />
+
+
+	<securecookie host="^www\.golfdigestinsiders\.com$" name=".*" />
+
+
+	<rule from="^https?://(?:www\.)?condenast\.com/"
+		to="https://www.condenast.com/" />
+
+	<rule from="^http://fonts\.condenast\.com/"
+		to="https://fonts.condenast.com/" />
+
+	<rule from="^https?://cdni\.condenast\.co\.uk/"
+		to="https://dvcpqzrjfwvhx.cloudfront.net/" />
+
+	<rule from="^https?://(?:www\.)?condenaststore\.com/"
+		to="https://www.condenaststore.com/" />
+
+	<rule from="^http://subscribe\.condenet\.com/"
+		to="https://subscribe.condenet.com/" />
+
+	<!--	secure... redirects to http:
+
+		- epicenter/wp-content/
+		- favicon.ico
+		- images_blogs/
+		- opinion/wp-content/
+					-->
+	<rule from="^https?://(?:www\.)?(details|golfdigest)\.com/(css/|images/|favicon\.ico$|sandbox/)"
+		to="https://secure.$1.com/$2" />
+
+	<rule from="^http://secure\.(details|golfdigest)\.com/"
+		to="https://secure.$1.com/" />
+
+	<rule from="^http://(www\.)?golfdigestinsiders\.com/"
+		to="https://$1golfdigestinsiders.com/" />
+
+	<rule from="^https?://(?:www\.)?gq-magazine\.co\.uk/_/"
+		to="https://d3u12z27ui3vom.cloudfront.net/GQ/343431a42aff/" />
+
+</ruleset>

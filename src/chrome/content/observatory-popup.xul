@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE window SYSTEM "chrome://https-everywhere/locale/ssl-observatory.dtd">
+<window id="ssl-observatory-dialog" 
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" 
+  xmlns:html="http://www.w3.org/1999/xhtml" 
+  title="&ssl-observatory.popup.title;" 
+  width="500" 
+  height="440" 
+  align="center"
+  onload="document.getElementById('ask-me-later').focus()"
+  >
+    <script type="application/x-javascript" src="observatory-xul.js" />
+    <image src="chrome://https-everywhere/skin/ssl-observatory-messy.jpg" />
+    <label style="padding:25px;">&ssl-observatory.popup.text;</label>
+
+    <commandgroup>
+      <command id="enable" oncommand="enable_observatory() ; popup_done()" />
+      <command id="nope" oncommand="disable_observatory() ; popup_done()" />
+      <command id="later" oncommand="window.close()" />
+      <command id="more-info" 
+               oncommand='popup_done() ; 
+               window.open("chrome://https-everywhere/content/observatory-preferences.xul","obsprefs",
+               "chrome, centerscreen")'
+      />
+    </commandgroup>
+
+    <vbox flex="1">
+    <spacer flex="5" />
+    <separator class="thin"/>
+      <hbox>
+        <spacer flex="2" />
+        <button label="&ssl-observatory.popup.yes;" tabindex="2" accesskey="y" 
+                command='enable'/>
+        <spacer flex="1" />
+        <button label="&ssl-observatory.popup.no;" tabindex="3" accesskey="n"
+                command='nope'/>
+        <spacer flex="2" />
+      </hbox>
+    <separator class="thin"/>
+    <spacer flex="10" />
+      <hbox>
+        <spacer flex="2" />
+        <button label="&ssl-observatory.popup.details;" tabindex="4" accesskey="D" 
+                command='more-info'/>
+        <spacer flex="1" />
+        <button id="ask-me-later" label="&ssl-observatory.popup.later;" 
+                tabindex="1" accesskey="A" command='later'/>
+        <spacer flex="2" />
+      </hbox>
+    <separator class="thin"/>
+    <spacer flex="1" />
+    </vbox>
+
+    <!--
+    <hbox style="padding-top:10px;">
+      <label class="text-link" href="https://www.eff.org/" tabindex="3" value="&ssl-observatory.popup.details;" />
+      <spacer flex="1" />
+      <button label="&ssl-observatory.popup.later;" id="ask-me-later" tabindex="0" style="font-size:0.8em;" accesskey="l"
+              oncommand="doCancel()"/>-
+    </hbox>-->
+</window>

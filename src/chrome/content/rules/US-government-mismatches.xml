@@ -1,0 +1,65 @@
+<ruleset name="US government (mismatches)" default_off="mismatch, self-signed">
+
+	<!--	*.house.gov	-->
+	<target host="democrats.intelligence.house.gov"/>
+	<!--	self-signed	-->
+	<target host="newscenter.lbl.gov"/>
+	<target host="panews.lbl.gov"/>
+	<!--	self-signed
+				-->
+	<target host="ntrs.nasa.gov" />
+	<target host="ntrs.larc.nasa.gov" />
+	<target host="stiesx2-ntrs.larc.nasa.gov" />
+	<!--	ditto	-->
+	<target host="ngdc.noaa.gov"/>
+	<target host="www.ngdc.noaa.gov"/>
+	<!--	ditto	-->
+	<target host="paymentaccuracy.gov" />
+	<target host="www.paymentaccuracy.gov" />
+	<!--	Akamai	-->
+	<target host="apps.usa.gov"/>
+	<target host="usda.gov"/>
+	<target host="offices.sc.egov.usda.gov"/>
+	<target host="www.usda.gov"/>
+
+	<securecookie host="^(offices\.sc\.egov\.)?usda\.gov$" name=".*"/>
+
+	<rule from="^http://democrats\.intelligence\.house\.gov/(profiles|sites)/"
+		to="https://democrats.intelligence.house.gov/$1/"/>
+
+	<rule from="^http://(?:newscenter|panews)\.lbl\.gov/"
+		to="https://panews.lbl.gov/"/>
+
+	<!--	Cert only matches stiesx2-ntrs.larc.nasa.gov.
+								-->
+	<rule from="^https?://(?:(?:stiesx2-)?ntrs(?:\.larc)?)\.nasa\.gov/"
+		to="https://stiesx2-ntrs.larc.nasa.gov/" />
+
+	<!--	cert !match !www	-->
+	<rule from="^http://(?:www\.)?ngdc\.noaa\.gov/"
+		to="https://www.ngdc.noaa.gov/"/>
+
+	<!--	Cert only matches !www.	-->
+	<rule from="^https://www\.paymentaccuracy\.gov/"
+		to="https://paymentaccuracy.gov/" />
+
+	<!--	At least the homepage redirects to http.	-->
+	<rule from="^http://paymentaccuracy\.gov/(modul|sit)es/"
+		to="https://paymentaccuracy.gov/$1es/" />
+
+	<rule from="^http://apps\.usa\.gov/"
+		to="https://apps.usa.gov/"/>
+
+	<!--	- !www cert: my.usda.gov
+		- www: Akamai
+		- Both !www...$ & www...$ redirect to pws.sc.egov.usda.gov over https
+				-->
+	<rule from="^http://(?:www\.)?usda\.gov/$"
+		to="https://usda.org/wps/portal/usda/usdahome" />
+
+	<!--	offices.sc.egov
+			- cert: oip.usda.gov		-->
+	<rule from="^http://(?:(offices\.sc\.egov\.)|www\.)?usda\.gov/"
+		to="https://$1usda.gov/"/>
+
+</ruleset>

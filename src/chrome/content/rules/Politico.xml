@@ -1,0 +1,41 @@
+<!--
+	!functional subdomains:
+		- avatar	(data not on images nor www)
+		- find		(timeout)
+
+	matches:	(www.)politicopro.com
+-->
+<ruleset name="Politico (partial)" default_off="mismatch">
+
+	<!--	cert: Akamai	-->
+	<target host="politico.com"/>
+	<target host="*.politico.com"/>
+		<!--	avatar: 404; data not on images nor www.
+			dyn: timeout
+			find: ditto
+			www2: ditto		-->
+		<exclusion pattern="^http://(avatar|dyn|find|www2)\."/>
+
+
+	<!--	encountered cookies:
+			- ^.
+			- dyn
+			- find
+			- jobs	-->
+	<securecookie host="^(jobs)?\.politico\.com$" name=".*"/>
+
+
+	<rule from="^http://politico\.com/"
+		to="https://www.politico.com/"/>
+
+	<rule from="^http://(images|www)\.politico\.com/"
+		to="https://$1.politico.com/"/>
+
+	<!--	cert: *.jobtarget.com
+		Not at:
+			- politico.jobtarget.com
+			- www.jobtarget.com/politico/	-->
+	<rule from="^http://jobs\.politico\.com/"
+		to="https://jobs.politico.com/"/>
+
+</ruleset>

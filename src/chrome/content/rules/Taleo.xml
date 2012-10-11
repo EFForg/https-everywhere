@@ -1,0 +1,46 @@
+<!--
+	!functional:
+		- www.taleo.net			(cert: acquia-sites.com; redirect to http://...com; same cert is valid for .com)
+		- www.taleobusinessedition.com	(timeout)
+
+-->
+<ruleset name="Taleo (partial)">
+
+	<target host="taleo.com"/>
+	<target host="*.taleo.com"/>
+	<target host="taleo.net"/>
+	<target host="*.taleo.net"/>
+	<target host="*.tbe.taleo.net"/>
+
+
+	<!--	encountered cookies:
+			- .com:
+				- ^www
+			- .net:
+				- ^tbe
+				- ^staticiad.tbe	-->
+	<securecookie host="^www\.taleo\.com$" name=".*"/>
+	<securecookie host="^(?:.+\.)?tbe\.taleo\.net$" name=".+" />
+
+
+	<!--	cert is not valid for www nor net	-->
+	<rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
+		to="https://www.taleo.com/"/>
+
+	<!--	domain for clients
+
+		Observed subdomains:
+
+			- ch
+			- staticiad
+			- staticord
+					-->
+	<rule from="^http://(\w+\.)?tbe\.taleo\.net/"
+		to="https://$1tbe.taleo.net/"/>
+
+	<!--	times out over https.  This redirection
+		is what the server does, aside from https.	-->
+	<rule from="^http://(?:www\.)?taleobusinessedition\.com/"
+		to="https://www.taleo.com/solutions/taleo-business-edition"/>
+
+</ruleset>

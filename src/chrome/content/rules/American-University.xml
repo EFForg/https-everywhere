@@ -1,0 +1,41 @@
+<!--
+	lgimages.s3.amazonaws.com/data/imagemanager/17756/
+
+
+	Nonfunctional domains:
+
+		- bender.library		(ssl_error_rx_record_too_long)
+		- subjectguides.library		(cert: libguides.com; displays
+						another domain's data)
+
+-->
+<ruleset name="American University (partial)">
+
+	<target host="american.edu" />
+	<target host="*.american.edu" />
+	<target host="*.wcl.american.edu" />
+
+
+	<!--	Doesn't work over https.
+		Redirects like so.
+					-->
+	<rule from="^https?://library\.american\.edu/"
+		to="https://www.american.edu/library/" />
+
+	<!--	Observed subdomains:
+
+			- $
+			- my
+			- myau
+			- wcl
+			- leagle.wcl
+			- library.wcl
+			- my.wcl
+			- proxy.wcl
+			- www.wcl
+			- www
+				-->
+	<rule from="^http://([\w\.]+\.)?american\.edu/"
+		to="https://$1american.edu/" />
+
+</ruleset>

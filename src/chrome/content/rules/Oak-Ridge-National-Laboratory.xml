@@ -1,0 +1,62 @@
+<!--
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional subdomains:
+
+		- gsearch	(cert: www.ornl.gov)
+		- neutrons	(501; 403)
+
+-->
+<ruleset name="Oak Ridge National Laboratory (partial)">
+
+	<target host="ornl.gov" />
+	<target host="www.ornl.gov" />
+		<!--	Redirect to 404 page	-->
+		<exclusion pattern="^http://www\.ornl\.gov/(adm/|info/|ornlreview/|partnerships/(css/handheld\.css|university)|search)" />
+	<target host="sustainability-ornl.org" />
+
+
+	<!--	Cert only matches www.	-->
+	<rule from="^https?://ornl\.gov/"
+		to="https://www.ornl.gov/" />
+
+	<!--	At least some paths redirect to http.
+
+		These paths work:
+
+			- $
+			- ornlhome/
+			- partnerships/			(except those listed below)
+
+		These don't:
+
+			- adm/contracts/$
+			- adm/user_facilities/$
+			- info/features/get_feature.cfm
+			- info/library/$
+			- info/ornlreview/$
+			- info/ornlreview/images_home/pdficon_small.gif
+			- info/press_releases/get_press_release.cfm
+			- ornlreview/v45_1_12/article02.shtml
+			- partnerships/css/handheld.css?v=1
+			- partnerships/university$
+			- search
+
+		Hint:
+			- Working paths return 200.
+			- Nonworking paths return 302.
+
+				-->
+	<rule from="^http://www\.ornl\.gov/($|ornlhome/|partnerships/)"
+		to="https://www.ornl.gov/$1" />
+
+	<!--	ornlhome/ pages link to nonworking info/ & ornlreview/ pages via https.	-->
+	<rule from="^https://www\.ornl\.gov/(adm|info|ornlreview)/"
+		to="http://www.ornl.gov/$1/" downgrade="1" />
+
+	<!--	www doesn't appear to exist.	-->
+	<rule from="^http://sustainability-ornl\.org/"
+		to="https://sustainability-ornl.org/" />
+
+</ruleset>

@@ -1,0 +1,51 @@
+<!--
+	For other AOL coverage, see AOL.xml.
+
+
+	For problematic rules, see Huffington-Post-mismatches.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/i.huffpost.com/	-	not directly equivalent to i.huffingtonpost.com
+		- entry-stats-huffpost-com.egslb.aol.com
+		- s-i.huffpost.com.edgekey.net
+		- s-s.huffpost.com.edgekey.net
+		- www.huffingtonpost.ca.edgesuite.net
+		- images.huffingtonpost.com.edgesuite.net
+		- e.huffpost.com.edgesuite.net
+		- i.huffpost.com.edgesuite.net
+		- s.huffpost.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- entry-stats
+		- s		(redirects to i; prints Amazon Web Services "Access Denied")
+
+-->
+<ruleset name="Huffington Post">
+
+	<target host="huffingtonpost.com" />
+	<target host="*.huffingtonpost.com" />
+	<target host="*.huffpost.com" />
+
+
+	<rule from="^https?://(?:secure\.|www\.)?huffingtonpost\.com/"
+		to="https://secure.huffingtonpost.com/" />
+
+
+	<rule from="^https?://images\.huffingtonpost\.com/"
+		to="https://s-i.huffpost.com/" />
+
+	<!--	404s on s-s.huffpost.com.
+						-->
+	<rule from="^https?://s\.huffpost\.com/contributors/"
+		to="https://secure.huffingtonpost.com/contributors/" />
+
+	<!--	AmazonWS, but valid cert.
+						-->
+	<rule from="^https?://(?:s-)?([is])\.huffpost\.com/"
+		to="https://s-$1.huffpost.com/" />
+
+</ruleset>

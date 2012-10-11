@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional:
+
+		- (www.)?kitd.com
+
+
+	Mismatches:
+
+		- help.accelaworks.com (cert: *.hoster909.com;)
+
+-->
+<ruleset name="Accela Communications (partial)">
+
+	<target host="accelacomm.com" />
+	<target host="*.accelacomm.com" />
+	<target host="accelaworks.com" />
+	<target host="www.accelaworks.com" />
+
+
+	<!--	Observed cookie domains:
+
+			- ^\.
+			- ^reg
+				-->
+	<securecookie host="^.*\.accelacomm\.com$" name=".*" />
+	<securecookie host="^(.*\.)?accelaworks\.com$" name=".*" />
+
+
+	<!--	Cert doesn't match !www.	-->
+	<rule from="^https?://accelacomm\.com/"
+		to="https://www.accelacomm.com/" />
+
+	<rule from="^http://(reg|www)\.accelacomm\.com/"
+		to="https://$1.accelacomm.com/" />
+
+	<rule from="^http://(www\.)?accelaworks\.com/"
+		to="https://$1accelaworks.com/" />
+
+</ruleset>

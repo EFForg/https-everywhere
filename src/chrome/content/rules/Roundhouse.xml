@@ -1,0 +1,66 @@
+<ruleset name="Roundhouse" default_off="needs testing">
+
+	<target host="roundhouse.org.uk" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.roundhouse.org.uk" />
+		<!--	Some pages in [\w\-]+/\w redirect to http.
+				Excluded here are:
+
+					- about
+					- about/cultural-camden
+					x about/history					(works)
+					- about/jobs$
+					- about/people
+					x about/press					(works)
+					- about/press/archive/
+					- about/roundhouse-people/ambassadors
+					x about/roundhouse-people/annual-reports	(works)
+					- about/roundhouse-people/associates
+					- about/roundhouse-people/biographies
+					- about/roundhouse-people/roundhouse-trust
+					- about/roundhouse-people/staff
+					- book-tickets
+					- call-to-create$
+					x contact/?$					(works)
+					- expore$
+					- explore/portfolios
+					- explore/profiles/all
+					- explore/radio/
+						- Some programs' pages don't.
+					x explore/what-was-on 				(works)
+					- hire/roundhouse-london-2012
+					- hire/spaces-for-hire
+					- round1$
+					- round1/about
+					- round1/blog
+					- round1/jointheteam
+					- round1/producers
+					- round1/projects
+					- takepart$
+					- take-part/creative-projects$
+					- take-part/creative-projects/creative-media/online-film-fund-2012
+					- take-part/creative-projects/music
+					- take-part/get-support$
+					- take-part/get-support/financial-support
+					- visit/buy-a-t-shirt
+					- whats-on/festivals
+					- whats-on/productions$
+					- whats-on/world-shakespeare-festival
+								-->
+	<exclusion 
+pattern="^http://(www\.)?roundhouse\.org\.uk/(about($|/cultural-camden|/jobs$|/people|press/archive/|/roundhouse-people/(ambassadors|associates|biographies|roundhouse-trust|staff))|book-tickets|call-to-create$|explore($|/portfolios|/profiles/all|/radio/)|hire/(roundhouse-london-2012|spaces-for-hire)|round1($|/about|/blog|/jointheteam|/producers|/projects)|take-part$|take-part/(creative-projects($|/creative-media/online-film-fund-2012|/performing-arts)|get-support($|financial-support))|visit/buy-a-t-shirt|whats-on/(festivals|productions$|world-shakespeare-festival))" 
+/>
+
+
+	<securecookie host="^(www)?\.roundhouse\.org\.uk$" name=".*" />
+
+
+	<!--	/$ redirects to $, but only after redirecting to http.
+		The same is the case for some other directories.	-->
+	<rule from="^http://(www\.)?roundhouse\.org\.uk/(contact|take-part)/$"
+		to="https://$1roundhouse.org.uk/$2" />
+
+	<rule from="^http://(www\.)?roundhouse\.org\.uk/"
+		to="https://$1roundhouse.org.uk/" />
+
+</ruleset>

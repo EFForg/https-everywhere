@@ -1,0 +1,22 @@
+<!--	There are international versions of eHarmony which utilize the areas tld. These rules do not cover them at this time.
+-->
+<ruleset name="eHarmony (partial)">
+
+	<target host="eharmony.com"/>
+	<target host="*.eharmony.com"/>
+		<!--	Done by Akamai and has certificate mismatch.	-->
+		<exclusion pattern="^http://static\.eharmony\.com/"/>
+		<!--	the following cannot handle SSL.		-->
+		<exclusion pattern="^http://(advice|photos)\.eharmony\.com/"/>
+
+	<!--	encountered:	.eharmony.com $client.eharmony.com	-->
+	<securecookie host="^(.*\.)?eharmony\.com$" name=".*" />
+
+	<rule from="^http://eharmony\.com/"
+		to="https://eharmony.com/"/>
+
+	<!--	affiliates have unique subdomains	-->
+	<rule from="^http://([\w\-]+)\.eharmony\.com/"
+		to="https://$1.eharmony.com/"/>
+
+</ruleset>

@@ -1,0 +1,61 @@
+<!--
+	For problematic rules, see Washington-Post-Company-mismatches.xml.
+
+
+	CDN buckets:
+
+		- js.washingtonpost.com.edgesuite.net
+		- media[23]?.washingtonpost.com.edgesuite.net
+		- projects.washingtonpost.com.edgesuite.net
+		- www.washingtonpost.com.edgesuite.net
+		- css.wpdigital.net.edgesuite.net
+		- img[23]?.wpdigital.net.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- washingtonpost.com
+		- findnsave.washingtonpost.com	(times out)
+		- origin.washingtonpost.com		(redirects to www)
+
+	Nonfunctional Akamai:
+
+		- www.slate.com				(504)
+		- js.washingtonpost.com			(504)
+		- media[23]?.washingtonpost.com		("Service Unavailable")
+		- projects.washingtonpost.com
+		- www.washingtonpost.com		("An error occurred")
+		- css.wpdigital.net			("An error occurred")
+			- Data also exist on www.washingtonpost.com
+		- img.wpdigital.net/wp-adv/		("An error occurred")
+		- img3.wpdigital.net 
+
+-->
+<ruleset name="Washington Post Company (partial)">
+
+	<target host="washpost.com" />
+	<target host="*.washpost.com" />
+	<target host="*.washingtonpost.com" />
+		<!--
+			404 when rewritten to ssl1.
+							-->
+		<exclusion pattern="^https?://(?:js\.|www\.)?washingtonpost\.com/wp-srv/(?:ad|javascript)/" />
+	<target host="*.wpdigital.net" />
+
+
+	<securecookie host="^.*\.washingtonpost\.com$" name=".*" />
+
+
+	<rule from="^https?://(?:js\.|www\.)?washingtonpost\.com/"
+		to="https://ssl1.washingtonpost.com/" />
+
+	<rule from="^http://(id|ssl1?|subscription|voices)\.washingtonpost\.com/"
+		to="https://$1.washingtonpost.com/" />
+
+	<rule from="^http://(media\.|www\.)?washpost\.com/"
+		to="https://$1washpost.com/" />
+
+	<rule from="^https?://(?:css|img[23]?)\.wpdigital\.net/"
+		to="https://ssl1.washingtonpost.com/" />
+
+</ruleset>
