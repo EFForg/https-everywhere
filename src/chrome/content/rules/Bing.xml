@@ -5,35 +5,53 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
 		- bing.com:
-			az/			(redirects to http)
-			HPImageArchive.aspx	(ditto); !in fd/
-			images/			(ditto)
-			notifications/		(ditto); !in fd/
-			sa/			(ditto); !in fd/
-			s/			(some ditto)
-			thumb/			(ditto)
-		- db3.api.bing.com		(cert: bing.com; blank page)
+			az/ *
+			HPImageArchive.aspx *	not in fd/
+			images/ *
+			notifications/ *	not in fd/
+			sa/ *			not in fd/
+			s/			(some paths redirect to http)
+			thumb/ *
+		- db3.api.bing.com		(CN: bing.com; blank page)
+
+	* Redirects to http.
+
+
+	Problematic domains:
+
+		- www.bing.com		(mismatch)
+
+
+	Partially covered domains:
+
+		- (www.)bing.com
+
+
+	Fully covered domains:
+
+		- c.bing.com		(tracking beacons)
+		- ssl.bing.com
 
 -->
 <ruleset name="Bing (partial)">
 
 	<target host="bing.com" />
 	<target host="*.bing.com" />
-	<!--	* for cross-domain cookie.	-->
+	<!--
+		* for cross-domain cookie.
+						-->
 	<target host="*.c.bing.com" />
 
 
-	<securecookie host="^(\.c|ssl)\.bing\.com$" name=".*" />
+	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
 
 
-	<!--	- Cert doesn't match www
-		- Some s/ paths work, others not.
-		- fa/s/ is equivalent and fd/ seems to work always, so redirect there.
-		- /bing and /ssl.bing are the same here, but ssl has an EV.
-					-->
+	<!--	- fa/s/ is equivalent and fd/ seems to work always, so redirect there
+		- /bing and /ssl.bing are the same here, but ssl has an EV
+								-->
 	<rule from="^https?://(?:www\.)?bing\.com/(?:fd/|(s/))"
 		to="https://ssl.bing.com/fd/$1" />
 
