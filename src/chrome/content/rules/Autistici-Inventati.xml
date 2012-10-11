@@ -1,10 +1,24 @@
 <ruleset name="Autistici/inventati" default_off="self-signed">
-  <target host="*.autistici.org" />
-  <target host="*.inventati.org" />
-  <target host="*.noblogs.org" />
 
-  <rule from="^http://([^/:@\.]+)\.autistici\.org/" to="https://$1.autistici.org/"/>
-  <rule from="^http://([^/:@\.]+)\.inventati\.org/" to="https://$1.inventati.org/"/>
-  <exclusion pattern="^http://stats\.noblogs\.org/"/>
-  <rule from="^http://([^/:@\.]+)\.noblogs\.org/" to="https://$1.noblogs.org/"/>
+	<target host="autistici.org" />
+	<target host="*.autistici.org" />
+	<target host="inventati.org" />
+	<target host="*.inventati.org" />
+	<target host="*.noblogs.org" />
+		<exclusion pattern="^http://stats\.noblogs\.org/" />
+
+
+	<securecookie host="^www\.autistici\.org$" name=".+" />
+	<securecookie host="^\.noblogs\.org$" name=".+" />
+
+
+	<!--	All seem identical, aside from ^inventati which redirects to
+		www.inventati. Avoid having to add four different exceptions.
+										-->
+	<rule from="^https?://(?:www\.)?(?:autistic|inventat)i\.org/"
+		to="https://www.autistici.org/" />
+
+	<rule from="^http://([^/:@\.]+)\.(autistici|inventati|noblogs)\.org/"
+		to="https://$1.$2.org/" />
+
 </ruleset>
