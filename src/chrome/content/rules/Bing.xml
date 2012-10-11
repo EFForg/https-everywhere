@@ -5,16 +5,25 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
+	DNS buckets:
+
+		- a134.lm.akamai.net/...
+			- akam.bing.com
+			- ts[1-4].mm.bing.net
+
+
+		- ssl.bing.com.edgekey.net/...
+			- ssl.bing.com
+
+
 	Nonfunctional domains:
 
 		- bing.com:
-			az/ *
-			HPImageArchive.aspx *	not in fd/
 			images/ *
 			notifications/ *	not in fd/
-			sa/ *			not in fd/
-			s/			(some paths redirect to http)
 			thumb/ *
+
+		- api.bing.com			(akami; 404)
 		- db3.api.bing.com		(CN: bing.com; blank page)
 
 	* Redirects to http.
@@ -23,6 +32,7 @@
 	Problematic domains:
 
 		- www.bing.com		(mismatch)
+		- ts[1-4].mm.bing.net	(akamai)
 
 
 	Partially covered domains:
@@ -34,6 +44,7 @@
 
 		- c.bing.com		(tracking beacons)
 		- ssl.bing.com
+		- ts[1-4].mm.bing.net
 
 -->
 <ruleset name="Bing (partial)">
@@ -44,19 +55,25 @@
 		* for cross-domain cookie.
 						-->
 	<target host="*.c.bing.com" />
+	<target host="*.mm.bing.net" />
 
 
 	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
 
 
+	<rule from="^https?://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|sa/|th(?:$|\?))"
+		to="https://ssl.bing.com/$1" />
+
 	<!--	- fa/s/ is equivalent and fd/ seems to work always, so redirect there
 		- /bing and /ssl.bing are the same here, but ssl has an EV
 								-->
-	<rule from="^https?://(?:www\.)?bing\.com/(?:fd/|(s/))"
-		to="https://ssl.bing.com/fd/$1" />
+	<rule from="^https?://(?:www\.)?bing\.com/s/"
+		to="https://ssl.bing.com/fd/s/" />
 
-	<!--	c:	tracking beacon		-->
 	<rule from="^http://(c|ssl)\.bing\.com/"
 		to="https://$1.bing.com/" />
+
+	<rule from="^https?://ts[1-4]\.mm\.bing\.net/"
+		to="https://ssl.bing.com/"/>
 
 </ruleset>
