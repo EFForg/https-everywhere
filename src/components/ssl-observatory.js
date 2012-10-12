@@ -75,7 +75,7 @@ function SSLObservatory() {
   this.proxy_test_callback = null;
   this.cto_url = "https://check.torproject.org/?TorButton=true";
   // a regexp to match the above URL
-  this.cto_regexp = RegExp("^https://check.torproject.org/");
+  this.cto_regexp = RegExp("^https://check\\.torproject\\.org/");
 
   this.public_roots = root_ca_hashes;
 
@@ -167,8 +167,14 @@ SSLObservatory.prototype = {
     if (host != this.submit_host) {
       this.submit_host = host;
       this.submit_url = "https://" + host + "/submit_cert";
-      this.submission_regexp = RegExp("^" + this.submit_url);
+      this.submission_regexp = RegExp("^" + this.regExpEscape(this.submit_url));
     }
+  },
+
+  regExpEscape: function(s) {
+    // Borrowed from the Closure Library,
+    // https://closure-library.googlecode.com/svn/docs/closure_goog_string_string.js.source.html
+     return String(s).replace(/([-()\[\]{}+?*.$\^|,:#<!\\])/g, '\\$1').replace(/\x08/g, '\\x08');
   },
 
   notifyCertProblem: function(socketInfo, status, targetSite) {
