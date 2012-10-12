@@ -42,8 +42,8 @@ header = """
 const X509ChainWhitelist = {"""
 
 print header
-for h in sorted([row[0] for row in results]):
-  print "  '%s' : true," % h
+for chain_fp in sorted([row[0] for row in results]):
+  print "  '%s' : true," % chain_fp
 
 footer = "} ;"
 print footer
