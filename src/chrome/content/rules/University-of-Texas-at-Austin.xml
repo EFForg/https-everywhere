@@ -1,15 +1,170 @@
 <!--
 	For problematic rules, see University-of-Texas-at-Austin-mismatches.xml.
 
+
+	CDN buckets:
+
+		- cm.utexas.edu.wp.mpcinternet.com
+
+
+	Nonfunctional subdomains:
+
+		- outreach.as *
+		- www.beg *
+		- www.cah
+		- (www.)cns **
+		- web5.cns		(rx_record_too_long)
+		- computerstore
+		- www.csr **
+		- www.esi
+		- (www.)ctlab.geo
+		- www.geo ***
+		- he			(prints "It works!")
+		- www.hrc
+		- nees
+		- ssc **
+		- synergyx.tacc
+		- www.tcc *
+		- www.tsgc **
+		- (www.)utmsi
+		- intranet.utmsi ***
+
+	* Shows affirmed.as
+	** Times out
+	*** Interrupted
+
+
+	Problematic subdomains:
+
+		- ^ 
+		- www.advertising	(broken redirect to ^advertising)
+		- affirmed.as *
+		- www.affirmed **
+		- www.cpge *
+		- directory
+		- jsg **
+		- (www.)la **
+		- ma
+		- (www.)music **
+		- www.tacc **
+
+	* Self-signed
+	** Mismatch
+
+
+	Partially covered subdomains:
+
+		- (www.)advertising *
+		- (www.)bealonghorn *
+		- commstudies *
+		- (www.)communication *
+		- csd *
+		- www.journalism *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- autodiscover.austin
+		- wmail.austin
+		- ww4.austin
+		- www.biosci
+		- blogs
+		- (www.)che
+		- www.cm
+		- advisorycouncil.cns
+		- elements.cns
+		- vhost.cns
+		- courses
+		- (www.)cs
+		- www.edb
+		- (www.)energy
+		- (www.)engr
+		- www.finearts
+		- steelresearch.geo
+		- giving
+		- ideas
+		- cbth.ig
+		- www.ig
+		- www.ischool
+		- fc.its
+		- help.its
+		- idmanager.its
+		- apps.jsg
+		- edger.jsg
+		- knightcenter
+		- sites.la
+		- (www.)laits
+		- (www.)landmarks
+		- (www.)lib
+		- catalog.lib
+		- dev.lib
+		- metalib.lib
+		- repositories.lib
+		- m
+		- mail
+		- www.mccombs
+		- registrar
+		- www.ph
+		- rtf
+		- (www.)soa
+		- portal.tacc
+		- techstaff
+		- utdirect
+		- utmail
+		- get.utmail
+		- webmail
+		- webspace
+		- wikis
+
+
+	Targets solely for wildcard cookies:
+
+		- *.cs
+		- *.knightscenter
+		- *.landmarks
+		- *.registrar
+		- *.rtf
+		- *.webmail
+
+
+	Other wildcard cookie domains observed:
+
+		- .advertising
+		- .bealonghorn
+		- .commstudies
+		- .communication
+		- .csd
+		- .journalism
+		- .lib
+
 -->
 <ruleset name="University of Texas at Austin (partial)">
 
 	<target host="utexas.edu" />
 	<target host="*.utexas.edu" />
+	<target host="www.*.utexas.edu" />
+	<target host="*.austin.utexas.edu" />
+	<target host="*.cns.utexas.edu" />
+	<target host="*.cs.utexas.edu" />
+	<target host="steelresearch.geo.utexas.edu" />
+	<target host="*.ig.utexas.edu" />
+	<target host="*.its.utexas.edu" />
+	<target host="*.jsg.utexas.edu" />
+	<target host="*.knightcenter.utexas.edu" />
+	<target host="sites.la.utexas.edu" />
+	<target host="*.landmarks.utexas.edu" />
 	<target host="*.lib.utexas.edu" />
+	<target host="*.registrar.utexas.edu" />
+	<target host="*.rtf.utexas.edu" />
+	<target host="portal.tacc.utexas.edu" />
+	<target host="get.utmail.utexas.edu" />
+	<target host="*.webmail.utexas.edu" />
 
 
-	<securecookie host="^portal\.tacc\.utexas\.edu$" name=".*" />
+	<securecookie host="^.*\.utexas\.edu$" name=".*" />
 
 
 	<!--	It appears that HTTPS connections cannot be established to
@@ -19,7 +174,25 @@
 	<rule from="^https?://(?:www\.)?utexas\.edu/"
 		to="https://www.utexas.edu/" />
 
-	<rule from="^http://(ideas|(?:www|catalog|metalib|dev)\.lib|registrar|portal\.tacc)\.utexas\.edu/"
+	<rule from="^http://((?:autodiscover|wmail|ww4)\.austin|(?:www\.)?(?:biosci|che|cm|cs|edb|energy|engr|finearts|ig|ischool|laits|landmarks|mccombs|ph|soa)|blogs|(?:advisorycouncil|elements|vhost)\.cns|courses|steelresearch\.geo|giving|ideas|\w+\.ig|\w+\.its|(?:apps|edger)\.jsg|knightcenter|sites\.la|\w+\.lib|m|mail|registrar|rtf|smartvoice|portal\.tacc|techstaff|utdirect|utmail|get\.utmail|webmail|webspace|wikis)\.utexas\.edu/"
 		to="https://$1.utexas.edu/" />
+
+	<rule from="^http://(?:www\.)?advertising\.utexas\.edu/(modul|sit)es/"
+		to="https://advertising.utexas.edu/$1es/" />
+
+	<rule from="^http://(www\.)?(bealonghorn|commstudies|communication|csd|journalism)\.utexas\.edu/(modul|sit)es/"
+		to="https://$1$2.utexas.edu/$3es/" />
+
+	<rule from="^https?://directory\.utexas\.edu/(?:.*)"
+		to="https://www.utexas.edu/directory/" />
+
+	<rule from="^https?://(?:www\.)?la\.utexas\.edu/(?:.*)"
+		to="https://www.utexas.edu/cola" />
+
+	<rule from="^https?://(?:www\.)?(jsg|ma)\.utexas\.edu/"
+		to="https://www.$1.utexas.edu/" />
+
+	<rule from="^https?://(?:www\.)?music\.utexas\.edu/"
+		to="https://ww4.austin.utexas.edu/" />
 
 </ruleset>
