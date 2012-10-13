@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- opencalais-com-p-1664263593.us-east-1.elb.amazonaws.com
+			- api.opencalais.org
+
+		- proxycluster-p-2125821298.us-east-1.elb.amazonaws.com
+			- beta.opencalais.org
+
+
+	Nonfunctional subdomains:
+
+		- beta *
+		- opencalaisbeta.api *
+		- viewer		(redirects to opencalais.com/gnosis)
+
+	* Mismatch, CN: *.mashery.com
+
+
+	Problematic subdomains:
+
+		- mail		(mismatch, CN: *.gridserver.com)
+
+
+	Partially supported subdomains:
+
+		- (www.)	(some paths 404)
+
+-->
+<ruleset name="OpenCalais (partial)">
+
+	<target host="opencalais.org" />
+	<target host="*.opencalais.org" />
+		<!--
+			These paths 404:
+
+				- about$
+				- about/developer$
+				- APIkey$
+				- apps/register$
+				- blog$
+				- Community$
+				- Contact$
+				- documentation/opencalais-documentation$
+				- faq$
+				- forum/3
+				- news/opencalais-46-now-released$
+				- news-room$
+				- rss-feeds$
+				- showcase$
+				- user$
+
+			These paths don't:
+
+				- $ *
+				- files/
+				- misc/
+				- sites/
+				- themes/
+
+			* $ points to pages which do 404.
+
+		<exclusion pattern="^http://(?:www\.)?opencalais\.org/(?:APIkey|apps|about|blog|CommercialCalais|Community|Contact|documentation|faq|forum|news|news-room|rss-feeds|showcase|user)(?:$|\?|/)" /-->
+
+
+	<rule from="^http://(www\.)?opencalais\.org/(files|misc|sites|themes)/"
+		to="https://$1opencalais.org/$2/" />
+
+	<rule from="^http://api\.opencalais\.org/"
+		to="https://api.opencalais.org/" />
+
+</ruleset>
