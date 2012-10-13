@@ -12,14 +12,24 @@
 
 	Problematic domains:
 
+		- springer.com			(mismatch)
 		- springerlink.com
 		- www.springerlink.com		(akamai)
+
+
+	Fully covered domains:
+
+		- (www.)springer.com
+		- admin.springer.com
+		- images.springer.com
+		- preview.springer.com
+		- static.springer.com
 
 -->
 <ruleset name="Springer (partial)">
 
 	<target host="springer.com"/>
-	<target host="www.springer.com"/>
+	<target host="*.springer.com"/>
 	<target host="springer-gabler.de"/>
 	<target host="www.springer-gabler.de"/>
 	<!--target host="springerlink.com"/>
@@ -27,8 +37,16 @@
 	<target host="springerzahnmedizin.de"/>
 	<target host="www.springerzahnmedizin.de"/>
 
-	<rule from="^http://(www\.)?springer\.com/"
+
+	<securecookie host="^springer-gabler\.de$" name=".+" />
+	<securecookie host="^.+\.springer\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?springer\.com/"
 		to="https://www.springer.com/"/>
+
+	<rule from="^http://(admin|images|preview|static)\.springer\.com/"
+		to="https://$1.springer.com/" />
 
 	<rule from="^http://(www\.)?springer-gabler\.de/"
 		to="https://springer-gabler.de/"/>

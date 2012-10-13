@@ -1,0 +1,43 @@
+<!--
+	For other Live Nation coverage, see Live-Nation.xml.
+
+
+	CDN buckets:
+
+		- content.ticketsnow.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- content	(akamai; 504)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(at least some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- content
+		- securecontent
+
+-->
+<ruleset name="TicketsNow (partial)">
+
+	<target host="ticketsnow.com" />
+	<target host="*.ticketsnow.com" />
+
+
+	<rule from="^http://(www\.)?ticketsnow\.com/(UI/)"
+		to="https://$1ticketsnow.com/$2" />
+
+	<!--	myTicketsNow$ redirects to http before myTicketsNow/
+									-->
+	<rule from="^http://(www\.)?ticketsnow\.com/myTicketsNow/?"
+		to="https://$1ticketsnow.com/myTicketsNow/" />
+
+	<rule from="^https?://(?:secure)?content\.ticketsnow\.com/"
+		to="https://securecontent.ticketsnow.com/" />
+
+</ruleset>
