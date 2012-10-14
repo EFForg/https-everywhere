@@ -59,6 +59,11 @@
 			s/
 			s\?rh=		(i.e., search pages and files)
 				
+
+	Targets solely for wildcard cookies:
+
+		- *.amazon.ca
+
 -->
 <ruleset name="Amazon (experimental)">
 
@@ -68,13 +73,15 @@
 			These pages don't work on .com.
 						-->
 		<exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" />
+	<target host="*.amazon.ca" />
+	<target host="local.amazon.com" />
 	<target host="*.amazon.co.uk" />
 	<target host="amazon.co.*" />
 	<target host="www.amazon.co.*" />
 		<!--
 			Search redirects to http, for all sites.
 									-->
-		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search/|s(?:/|\?rh=))" />
+		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search(?:$|\?)|s(?:/|\?rh=))" />
 
 
 	<!--	Verified as working for UK, other sites matched appear to function identically.
@@ -86,10 +93,17 @@
 
 		These cookies are set by gp/cart/view.html
 	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
+	<securecookie host="^local\.amazon\.co(?:m|\.uk)$" name=".+" />
 
+
+	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/mn/search/uedata/"
+		to="https://www.amazon.$1/uedata/" />
 
 	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
 		to="https://www.amazon.$1/" />
+
+	<rule from="^http://local\.amazon\.co(m|\.uk)/"
+		to="https://local.amazon.co$1/" />
 
 	<!--	There is very little support on JP website
 			possibly more than is in this rule though.	-->

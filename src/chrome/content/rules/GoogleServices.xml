@@ -7,12 +7,18 @@
 		- Postini.xml
 
 
+	Partially covered domains:
+
+		- translate.google.com			(pages redirect to http)
+
+
 	Nonfunctional domains:
 
 		- books.google.com			(redirects to google.cctld)
 		- feedproxy.google.com			(503)
 		- knol.google.com			(most paths redirect to google.cctld)
 		- safebrowsing.clients.google.com	(mismatch; 404)
+		- translate.google.com			(redirects to http)
 		- buttons.googlesyndication.com		(redirects to encrypted.google.com)
 
 
@@ -30,6 +36,7 @@
 		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
 	<target host="www.google.*" />
 	<target host="google.co.*" />
+	<target host="*.google.ca" />
 	<target host="news.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
@@ -53,7 +60,7 @@
 	<target host="*.googleusercontent.com" />
 
 
-	<securecookie host="^(?:accounts|login\.corp|developers)\.google\.com$" name=".+" />
+	<securecookie host="^(?:accounts|login\.corp|developers|mail)\.google\.[\w\.]{2,6}$" name=".+" />
 
 
 	<!--	- lh 3-6 exist
@@ -62,6 +69,9 @@
 					-->
 	<rule from="^http://lh(\d)\.ggpht\.com/"
 		to="https://lh$1.ggpht.com/" />
+
+	<rule from="^http://lh(\d)\.google\.ca/"
+		to="https://lh$1.google.ca/" />
 
 
 	<rule from="^http://(?:www\.)?goo\.gl/"
@@ -97,7 +107,7 @@
 	<rule from="^http://(?:www\.)?g(?:oogle)?mail\.com/"
 		to="https://mail.google.com/" />
 
-	<rule from="^http://(accounts|adwords|appengine|calendar|checkout|chrome|clients2|code|[\w\-]+\.corp|developers|docs\d?|drive|encrypted-tbn[123]|feedburner|groups|health|history|(?:hosted)?talkgadget|investor|(?:chatenabled\.)?mail|pack|picasaweb|play|plus|plusone|profiles|safebrowsing-cache|sb-ssl|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
+	<rule from="^http://(accounts|adwords|appengine|calendar|checkout|chrome|clients2|code|[\w\-]+\.corp|developers|docs\d?|drive|encrypted-tbn[123]|feedburner|groups|health|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|play|plus|plusone|profiles|safebrowsing-cache|sb-ssl|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<rule from="^http://productforums\.google\.com/$"
@@ -140,6 +150,9 @@
 
 	<rule from="^http://trends\.google\.com/"
 		 to="https://www.google.com/trends" />
+
+	<rule from="^http://translate\.google\.com/translate/static/"
+		to="https://translate.google.com/translate/static/" />
 
 
 	<rule from="^http://groups\.google\.de/"
