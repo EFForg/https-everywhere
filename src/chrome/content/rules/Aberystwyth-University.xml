@@ -2,29 +2,55 @@
 	For problematic rules, see Aberystwyth-University-mismatches.xml.
 
 
+	Problematic subdomains:
+
+		- arun		(CN: primo; same as primo)
+		- connect	(self-signed)
+
+
 	Nonfunctional subdomains:
 
 		- www.inf
 		- nexus
 		- users
 
+
+	Partially covered subdomains:
+
+		- cadair	(many pages redirect to http)
+		- primo		(many paths 404)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blackboard
+		- careers
+		- exchange
+		- myaccount
+		- outlook
+		- qmpsum
+		- share
+		- shibboleth
+		- shop
+		- staffrecord
+		- studentrecord
+		- voyager
+		- webmail
+
 -->
 <ruleset name="Aberystwyth University (partial)">
 
 	<target host="aber.ac.uk" />
 	<target host="*.aber.ac.uk" />
-		<!--
-			connect has an invalid certificate, and so is
-			handled in Aberystwyth-University-mismatches.xml.
-									-->
 		<exclusion pattern="^http://(?:connect|nexus|users)\." />
+		<exclusion pattern="^http://primo\.aber\.ac\.uk(?:80)?/primo_library/libweb/" />
 	<target host="aber-ac-uk.campuspack.eu" />
 
 
-	<!--	c is avoided to avoid cadair, which
-		doesn't have blanket support for https.
+	<!--	^c & ^p to avoid cadair & primo.
 							-->
-	<securecookie host="^[^c]\w+\.aber\.ac\.uk$" name=".+" />
+	<securecookie host="^[^cp]\w+\.aber\.ac\.uk$" name=".+" />
 
 
 	<!--	!www doesn't work.
@@ -32,28 +58,13 @@
 	<rule from="^https?://aber\.ac\.uk/"
 		to="https://www.aber.ac.uk/" />
 
-	<!--	Letters are specified so as to avoid cadair,
-		which doesn't have blanket support for https.
-
-		Observed subdomains:
-
-			- blackboard
-			- careers
-			- exchange
-			- myaccount
-			- outlook
-			- qmpsum
-			- share
-			- shibboleth
-			- shop
-			- staffrecord
-			- studentrecord
-			- voyager
-			- webmail
-			- www
-				-->
-	<rule from="^http://([^c]\w+|careers)\.aber\.ac\.uk/"
+	<!--	Letters are specified so as to avoid cadair & primo.
+									-->
+	<rule from="^http://([^cp]\w+|careers)\.aber\.ac\.uk/"
 		to="https://$1.aber.ac.uk/" />
+
+	<!--rule from="^http://primo.aber.ac.uk/($|\?|goto/logon/|pds(?:$|\?))"
+		to="https://primo.aber.ac.uk/$1" /-->
 
 	<rule from="^http://cadair\.aber\.ac\.uk/dspace/ldap-login"
 		to="https://cadair.aber.ac.uk/dspace/ldap-login" />
