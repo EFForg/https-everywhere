@@ -1,17 +1,74 @@
 <!--
-	Fully covered subdomains:
+	CDN buckets:
 
-		- (www.)verizon.com
-		- (www.)verizonwireless.com
+		- cache.vzw.com.edgesuite.net
+
+		- wildcard.verizon.net.edgekey.net
+			- static-business.verizon.net
+
+		- vrzn.i.lithium.com
+
+		- vrzn.lithium.com
+			- forums.verizon.com
+			- businessforums.verizon.net
+
+
+	Nonfunctional subdomains:
+
+		- (www.)thinkfinity.org
+		- (www.)community.thinkfinity.org
+		- mail.verizon.com *
+		- webmail.verizon.com *
+
+	* Times out.
+
+
+	Problematic domains:
+
+		- businessforums.verizon.net *
+		- verizonbusiness.com			(cert only matches www)
+		- verizonwireless.com
+		- (www.)vzw.com				(cert only matches verizonwireless.com)
+		- cache.vzw.com				(akamai)
+
+	CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
 
 
 	Partially covered domains:
 
 		- www22.verizon.com *
+		- business.verizon.net **
+		- (www.)verizonbusiness.com ***
 
 	* See: 
 		- https://mail1.eff.org/pipermail/https-everywhere/2011-November/001237.html
 		- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-February/001003.html
+
+	NB: Has this been fixed? It doesn't seem to loop...
+
+	* The login page, and only the login page(!), redirects to http.
+	*** Some (most?) pages redirect to http.
+
+
+	Fully covered domains:
+
+		- verizon.com subdomains:
+
+			- (www.)
+			- enterprisecenter
+			- espanol
+			- forums
+			- signin
+			- smallbusiness
+
+		- (www.)verizon.net
+		- static-business.verizon.net
+		- (www.)verizonwireless.com
+		- b2b.verizonwireless.com
+		- mblogin.verizonwireless.com
+		- (www.)vzw.com
+		- cache.vzw.com
+		- scache.vzw.com
 
 -->
 <ruleset name="Verizon">
@@ -19,14 +76,55 @@
 	<target host="verizon.com" />
 	<target host="*.verizon.com" />
 		<exclusion pattern="^http://www22\.verizon\.com/(?:Foryourhome/MyAccount/Unprotected|secure/pages/viewbill)/" />
+	<target host="verizon.net" />
+	<target host="*.verizon.net" />
+		<exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" />
+	<target host="verizonbusiness.com" />
+	<target host="www.verizonbusiness.com" />
 	<target host="verizonwireless.com" />
-	<target host="www.verizonwireless.com" />
+	<target host="*.verizonwireless.com" />
+	<target host="vzw.com" />
+	<target host="*.vzw.com" />
 
 
-	<rule from="^http://(?:www(?:22)?\.)?verizon\.com/"
-		to="https://www22.verizon.com/" />
+	<securecookie host="^(?:enterprisecenter|espanol|forums|signin|smallbusiness)\.verizon\.com$" name=".+" />
+	<!--securecookie host="^\.verizon\.com$" name=".+" /-->
+	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
+	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
+	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
+	<securecookie host="^.*\.verizonwireless\.com$" name=".+" />
+	<securecookie host="^\.vzw\.com$" name=".+" />
 
-	<rule from="^http://(?:www\.)?verizonwireless\.com/"
+
+	<rule from="^http://(?:www(22)?\.)?verizon\.com/"
+		to="https://www$1.verizon.com/" />
+
+	<rule from="^http://(enterprisecenter|espanol|forums|smallbusiness|signon)\.verizon\.com/"
+		to="https://$1.verizon.com/" />
+
+	<rule from="^http://((?:static-)?business\.|www\.)?verizon\.net/"
+		to="https://$1verizon.net/" />
+
+	<rule from="^https?://businessforums\.verizon\.net/html/"
+		to="https://forums.verizon.com/html/" />
+
+	<rule from="^https?://(?:www\.)?verizonbusiness\.com/(gfx|support/myaccount|templates)/"
+		to="https://www.verizonbusiness.com/$1/" />
+
+	<!--	vzw.com redirects like so.
+						-->
+	<rule from="^https?://(?:www\.)?v(?:erizonwireless|zw)\.com/"
 		to="https://www.verizonwireless.com/" />
+
+	<rule from="^http://(b2b|mblogin)\.verizonwireless\.com/"
+		to="https://$1.verizonwireless.com/" />
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^https?://(?:www\.)?vzw\.com/"
+		to="https://www.verizonwireless.com/" />
+
+	<rule from="^https?://s?cache\.vzw\.com/"
+		to="https://scache.vzw.com/" />
 
 </ruleset>
