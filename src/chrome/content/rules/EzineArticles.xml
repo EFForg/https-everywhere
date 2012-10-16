@@ -1,12 +1,30 @@
-<ruleset name="EzineArticles">
-  <target host="www.ezinearticles.com" />
-  <target host="blog.ezinearticles.com" />
-  <target host="shop.ezinearticles.com" />
-  <target host="subscriptions.ezinearticles.com" />
+<!--
+	Problematic subdomains:
+
+		- subscriptions		(mismatch)
+
+
+	Partially covered subdomains:
+
+		- (www.)		(some [most?] pages redirect to http)
+
+-->
+<ruleset name="EzineArticles (partial)">
   <target host="ezinearticles.com" />
+  <target host="*.ezinearticles.com" />
+		<!--
+			Many pages started redirecting to http:
+
+				https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001352.html
+															-->
+		<exclusion pattern="^http://ezinearticles\.com/(?:.+\.html)?(?:$|\?)" />
+
 
   <rule from="^http://(?:www\.)?ezinearticles\.com/" to="https://ezinearticles.com/"/>
-  <rule from="^http://(subscriptions)\.ezinearticles\.com/" to="https://$1.ezinearticles.com/"/>
+
+	<rule from="^http://img\.ezinearticles\.com/"
+		to="https://img.ezinearticles.com/" />
+
   <!--
   <rule from="^http://(blog|shop|subscriptions)\.ezinearticles\.com/" to="https://$1.ezinearticles.com/"/>
   -->

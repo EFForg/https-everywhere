@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+		- cs89.wpc.edgecastcdn.net/...
+			- *.https.cdn.softlayer.net
+
+		- wpc.4e6d.edgecastcdn.net/...
+			- cdn.softlayer.com
+			- static1.softlayer.com
+
+
+	Nonfunctional domains:
+
+		- blog.softlayer.com
+		- knowledgelayer.softlayer.com
+		- static1.softlayer.com		(CN: edgecastcdn.net)
+
+
+	Problematic domains:
+
+		- cdn.softlayer.com	(mismatch, CN: edgecastcdn.net; works)
+
+
+	Fully covered softlayer.com subdomains:
+
+		- forums
+		- manage
+		- outlet
+		- www
+
+-->
+<ruleset name="SoftLayer">
+
+	<target host="softlayer.com" />
+	<target host="*.softlayer.com" />
+	<target host="*.http.cdn.softlayer.net" />
+	<target host="*.https.cdn.softlayer.net" />
+
+
+	<securecookie host="^.+\.softlayer\.com$" name=".+" />
+
+
+	<rule from="^http://((?:forums|manage|outlet|www)\.)?softlayer\.com/"
+		to="https://$1softlayer.com/" />
+
+	<rule from="^https?://(\d+)\.https?\.cdn\.softlayer\.net/"
+		to="https://$1.https.cdn.softlayer.net/" />
+
+</ruleset>

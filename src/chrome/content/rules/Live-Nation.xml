@@ -1,4 +1,15 @@
-<!--	buckets:
+<!--
+	Other Live Nation rulesets:
+
+		- TicketsNow.xml
+
+
+	buckets:
+
+		- ads.ticketmaster1st.akadns.net
+			 - ads.tmcs.ticketmaster.com
+			 - ads.as4x.tmcs.ticketmaster.com
+
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/www.ticketmaster.de/
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/media.ticketmaster.com/
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/media.ticketmaster.eu/
@@ -7,10 +18,31 @@
 		a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/
 		a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/
 		a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/
+		a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com
 		a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/
 		a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/
 		a248.e.akamai.net/f/248/15404/24h/i.ticketweb.com/
 		a248.e.akamai.net/f/248/22942/1d/www.billetnet.dk/
+
+		- content.ticketsnow.com.edgesuite.net
+
+
+	Problematic domains:
+
+		- ticketmaster.com			(only matches www)
+		- ads.tmcs.ticketmaster.com *
+		- ads.as4x.tmcs.ticketmaster.com *
+
+	* CN: de.ticketmaster.com, works.
+
+
+	Partially covered domains:
+
+		- (www.)ticketmaster.com *
+		- ticketsnow.ticketmaster.com *
+
+	* At least some pages redirect to http.
+
 -->
 <ruleset name="Live Nation Entertainment (partial)">
 
@@ -109,12 +141,18 @@
 	<rule from="^http://(?:www\.)?ticketmaster\.(ca|com\.(?:au|nz|mx)|ie)/favicon-rebrand\.ico"
 		to="https://www.ticketmaster.$1/favicon-rebrand.ico"/>
 
+	<rule from="^https?://(?:www\.)?ticketmaster\.com/(app|checkout|h|json)/"
+		to="https://www.ticketmaster.com/$1/" />
+
 
 	<rule from="^http://media\.ticketmaster\.com/"
 		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com/"/>
 
 	<rule from="^http://mm\.ticketmaster\.com/"
 		to="https://mm.ticketmaster.com/"/>
+
+	<rule from="^http://ticketsnow\.ticketmaster\.com/(DataProviders/|Scripts/|TopCitiesDropDownListGenerator\.aspx|UI/)"
+		to="https://ticketsnow.ticketmaster.com/$1" />
 
 
 	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(favicon\.ico|londonpreparesseries)"

@@ -5,18 +5,44 @@
 		- fbcdn-profile-a.akamaihd.net
 		- fbcdn-photos-a.akamaihd.net
 		- fbcdn-sphotos-a.akamaihd.net
+		- fbcdn-sphotos-[a-h]-a.akamaihd.net
 		- fbexternal-a.akamaihd.net
 		- fbstatic-a.akamaihd.net
 		- s-static.ak.facebook.com.edgekey.net
 		- s-static.ak.fbcdn.net.edgekey.net
+		- profile.ak.facebook.com.edgesuite.net 
 		- external.ak.fbcdn.net.edgesuite.net
+
+		- photos-c.ak.facebook.com.edgesuite.net
+			- photos-g.ak.fbcdn.net
+
+		- photos-d.ak.facebook.com.edgesuite.net/...
+			- photos-h.ak.fbcdn.net
+
 		- static.ak.connect.facebook.com.edgesuite.net
 
 	foo.ak.fbcdn.net	<=>	fb(cdn-)?foo-a.akamaihd.net
 
 
+	Problematic domains:
+
+		- external.ak.facebook.com *
+		- profile.ak.facebook.com *
+		- connect.facebook.com *
+		- photos-[a-h].ak.fbcdn.net	*
+
+	* akamai
+
+
 	Fully covered domains:
 
+		- (www.)facebook.com
+		- connect.facebook.com
+		- developers.facebook.com
+		- connect.facebook.net
+		- photos-[a-h].ak.fbcdn.net
+		- s-static.ak.fbcdn.net
+		- photos-b.xx.fbcdn.net
 		- scontent-02.xx.fbcdn.net
 		- sphotos.xx.fbcdn.net
 		- sphotos-b.xx.fbcdn.net
@@ -25,21 +51,17 @@
 <ruleset name="Facebook">
 
 	<target host="facebook.*" />
-	<target host="www.facebook.be" />
+	<target host="www.facebook.*" />
 	<target host="*.facebook.com" />
 	<target host="*.facebook.de" />
 	<target host="*.facebook.dk" />
 	<target host="*.facebook.es" />
 	<target host="*.facebook.fr" />
-	<target host="www.facebook.is" />
-	<target host="www.facebook.it" />
 	<target host="*.facebook.jp" />
 	<target host="*.facebook.mx" />
 	<target host="connect.facebook.net" />
-	<target host="www.facebook.nl" />
 	<target host="*.facebook.no" />
 	<target host="*.facebook.se" />
-	<target host="www.facebook.us" />
 	<target host="fb.com" />
 	<target host="www.fb.com" />
 	<target host="*.fbcdn.net" />
@@ -67,11 +89,16 @@
 	<rule from="^http://(\w\w-\w\w|api|api-read|apps|developers|graph|login|m|ssl|static-ak|www\.v6)\.facebook\.com/"
 		to="https://$1.facebook.com/" />
 
-	<rule from="^http://(profile|s-static)\.ak\.facebook\.com/"
-		to="https://$1.ak.facebook.com/" />
+	<rule from="^http://s-static\.ak\.facebook\.com/"
+		to="https://s-static.ak.facebook.com/" />
 
 	<rule from="^https?://badge\.facebook\.com/badge/"
 		to="https://www.facebook.com/badge/" />
+
+	<!--	Redirects like so.
+					-->
+	<rule from="^https?://connect\.facebook\.com/"
+		to="https://www.facebook.com/" />
 
 	<!--	Also on fbstatic-a.akamaihd.net, but this is what the servers do.
 								-->
@@ -121,6 +148,9 @@
 			-->
 	<rule from="^https?://external\.ak\.fbcdn\.net/"
 		to="https://fbexternal-a.akamaihd.net/" />
+
+	<rule from="^https?://photos-([a-h])\.ak\.fbcdn\.net/"
+		to="https://fbcdn-sphotos-$1-a.akamaihd.net/" />
 
 	<rule from="^https?://profile\.ak\.fbcdn\.net/"
 		to="https://fbcdn-profile-a.akamaihd.net/" />

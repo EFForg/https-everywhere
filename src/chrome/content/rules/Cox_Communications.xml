@@ -1,0 +1,76 @@
+<!--
+	Nonfunctional domains:
+
+		- support.coxbusiness.com
+
+
+	Problematic domains:
+
+		- cox.com			(cert only matches www)
+		- www.cox.com			(reset)
+		- (www.)cox.net *
+		- (www.)coxbusiness.com		(cert only matches myaccount)
+
+	Cert only matches ww2.cox.com, redirects
+	to a page which itself redirects to http.
+
+
+	Partially covered domains:
+
+		- intercept.cox.com *
+		- ww2.cox.com *
+
+	* Some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- (www.)cox.com
+		- framework.cox.com
+		- images.cox.com
+		- store.cox.com
+		- idm.east.cox.net
+		- framework.cox.net
+		- framework.coxbusiness.com
+		- myaccount.coxbusiness.com
+
+
+	Targets solely for wildcard cookies:
+
+		- *.store.cox.com
+
+-->
+<ruleset name="Cox Communications (partial)">
+
+	<target host="cox.com" />
+	<target host="*.cox.com" />
+		<exclusion pattern="^http://(?:intercept|ww2)\.cox\.com/.+\.cox(?:$|\?)" />
+	<target host="*.store.cox.com" />
+	<target host="*.cox.net" />
+	<target host="idm.east.cox.net" />
+	<target host="coxbusiness.com" />
+	<target host="*.coxbusiness.com" />
+
+
+	<securecookie host="^\.?store\.cox\.com$" name=".+" />
+	<!--securecookie host="^\.cox\.com$" name=".+" /-->
+	<securecookie host="^\.cox\.net$" name=".+" />
+	<securecookie host="^.*\.coxbusiness\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:ww[2w]\.)?cox\.com/"
+		to="https://ww2.cox.com/" />
+
+	<rule from="^http://(framework|images|intercept|store)\.cox\.com/"
+		to="https://$1.cox.com/" />
+
+	<rule from="^http://(idm\.east|framework)\.cox\.net/"
+		to="https://$1.cox.net/" />
+
+	<rule from="^https?://(?:www\.)?coxbusiness\.com/"
+		to="https://ww2.cox.com/business" />
+
+	<rule from="^http://(framework|myaccount)\.coxbusiness\.com/"
+		to="https://$1.coxbusiness.com/" />
+
+</ruleset>
