@@ -14,6 +14,7 @@
 			- developer		(shows rt's data)
 			- download		(cert: www; shows rt's data)
 			- foundation		(cert: www; shows www's data)
+			- foundation		(CN: www; shows rt)
 			- ftp
 			- git
 			- library		(shows rt's data)
@@ -22,10 +23,40 @@
 			- planet		(shows rt's data)
 			- projects
 			- webstats		(ssl_error_rx_record_too_long)
-			- vote			(shows rt's data)
-			- usability		(ditto)
 			- webapps		(shows rt's data)
 			- www-old
+
+
+	Problematic domains:
+
+		- foundation.gnome.org
+		- label.gnome.org *
+		- ldap.gnome.org *
+		- usability.gnome.org	(shows rt)
+		- (www.)gupnp.org	(mismatch, CN: www.webstreams.de)
+
+	* Reply with http, redirect to live.gnome.org
+
+
+	Fully covered domains:
+
+		- gnome.org subdomains:
+
+			- (www.)
+			- bugzilla
+			- extensions
+			- foundation
+			- label
+			- ldap
+			- mail
+			- mango
+			- menubar
+			- live
+			- rt
+			- usability
+			- vote
+
+		- (www.)gupnp.org
 
 -->
 <ruleset name="GNOME (partial)">
@@ -44,7 +75,7 @@
 	<securecookie host="^.*\.gnome\.org$" name=".*" />
 
 
-	<rule from="^http://((?:bugzilla|extensions|mail|mango|menubar|live|rt|www)\.)?gnome\.org/"
+	<rule from="^http://((?:bugzilla|extensions|mail|mango|menubar|live|rt|vote|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
 	<!--	Redirects as so over http.
@@ -52,10 +83,6 @@
 	<rule from="^https?://foundation\.gnome\.org/"
 		to="https://www.gnome.org/foundation/" />
 
-	<!--	- Cert matches label & ldap
-		- Both reply in http (ssl_error_rx_record_too_long)
-		- Both redirect like so over http.
-				-->
 	<rule from="^https?://l(?:abel|dap)\.gnome\.org/"
 		to="https://live.gnome.org/" />
 
@@ -64,8 +91,7 @@
 	<rule from="^https?://usability\.gnome\.org/"
 		to="https://live.gnome.org/UsabilityProject" />
 
-	<!--	- Cert: www.webstreams.de
-		- 307s as so over http
+	<!--	307s as so over http.
 						-->
 	<rule from="^https?://(?:www\.)?gupnp\.org/"
 		to="https://live.gnome.org/GUPnP/" />
