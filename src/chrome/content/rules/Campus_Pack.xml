@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)campuspack.net		(CN: *.learningobjects.com; 403)
+		- www.learningobjects.com	(self-signed; 403)
+
+
+	Partially covered domains:
+
+		- .+.campuspack.net		(at least some pages redirect to http)
+
+-->
+<ruleset name="Campus Pack (partial)">
+
+	<target host="campuspack.eu" />
+	<target host="*.campuspack.eu" />
+	<target host="*.campuspack.net" />
+		<exclusion pattern="^http://www\.campuspack\.net/" />
+
+
+	<securecookie host="^(?:.+\.)?campuspack\.eu$" name=".+" />
+
+
+	<!--	Unique domains for each institution.
+							-->
+	<rule from="^http://([\w\-]+\.)?campuspack\.eu/"
+		to="https://$1campuspack.eu/" />
+
+	<!--	Ditto.
+			-->
+	<rule from="^http://([\w\-]+)\.campuspack\.net/(Domain/|static)/"
+		to="https://$1.campuspack.net/$2/" />
+
+</ruleset>
