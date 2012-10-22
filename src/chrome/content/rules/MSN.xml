@@ -8,14 +8,44 @@
 	CDN buckets:
 
 		- d3j5vwomefv46c.cloudfront.net
+		- glo.vo.msecnd.net/...
+			- static[12]?.glo.com
+
+		- msnimstore.vo.msecnd.net/...
+			- x.msimg.com
+
 		- msnvidprod.vo.msecnd.net
 			- img1.video.s-msn.com
+
+		- msnvidweb.vo.msecnd.net
+			- img[123].catalog.video.msn.com
 
 
 	Nonfunctional domains:
 
-		- ads.msn.com
-		- ads1.msn.com		(times out)
+		- msn.com subdomains:
+
+			- ads
+			- ads1 *
+			- fp.images.autos **
+			- causes **
+			- fitbie		(akamai; 503)
+			- healthyliving *
+			- living *
+			- money
+			- signout *
+			- specials
+			- uk
+			- dating.uk
+			- extras.uk ***
+			- help.uk ***
+			- mobile.uk
+			- money.uk ***
+			- partner.uk
+			- socialvoices.uk ***
+			- vfcdn **
+			- www			(404)
+			- co3.www *
 
 		- nbcsports.msnbc.com		(cert: *.pantherssl.com)
 
@@ -26,36 +56,124 @@
 			- www.ingame		(ditto)
 			- www.technolog		(ditto)
 
+		- s-msn.com subdomains:
+
+			- cpc.db3 **
+			- hlc *
+			- hli *
+			- livc *
+			- img.widgets.video **
+
+	* Times out
+	** 400
+	*** Reset
+
 
 	Problematic domains:
 
-		- img1.video.s-msn.com		(CN: *.sharepointonline.com; works)
+		- static[12]?.glo.com			(400)
+		- realestate.msn.com			(CN: now.msn.com; works)
+		- img[123].catalog.video.msn.com *
+		- db2.stb0[01].s-msn.com *
+		- img1.video.s-msn.com *
+
+	* CN: *.sharepointonline.com; works
+
+
+	Fully covered domains:
+
+		- static[12]?.glo.com
+
+		- msn.com subdomains:
+
+			- ac3
+			- accountservices
+			- adsyndication
+			- blstc
+			- c
+			- *.secure.co1
+				- login.secure.co1
+			- cityofspeed 			(400)
+			- entimg
+			- estc
+			- g
+			- glo
+			- hp
+			- eb.my
+			- \d.r
+			- a.rad
+			- b.rad
+			- setstj
+			- *.storage
+				- blufiles.storage
+				- byfiles.storage
+
+		- s-msn.com subdomains:
+
+			- entcss
+			- entimg
+			- *.st
+			- *.stb
+				- blu.stb
+				- col.stb
+				- db2.stb
+				- kaw.stb
+
+			- *.stb\d*
+				- db2.stb0[01]
+
+			- *.stc
+				- blu.stc
+				- col.stc
+				- db2.stc
+				- db3.stc
+				- kaw.stc
+
+			- stc-now
+
+			- *.stj
+				- db2.stj
 
 -->
 <ruleset name="MSN (partial)">
 
-	<!--	* for cross-domain cookie.
+	<target host="*.glo.com" />
+	<!--
+		* for cross-domain cookie.
 					-->
 	<target host="*.msn.com" />
 	<target host="eb.my.msn.com" />
 	<target host="*.r.msn.com" />
 	<target host="rad.msn.com" />
 	<target host="*.rad.msn.com" />
-	<target host="kaw.*.s-msn.com" />
+	<target host="*.storage.msn.com" />
+	<target host="*.s-msn.com" />
+	<target host="*.st.s-msn.com" />
+	<target host="*.stb.s-msn.com" />
+	<target host="*.stb00.s-msn.com" />
+	<target host="*.stb01.s-msn.com" />
+	<target host="*.stc.s-msn.com" />
+	<target host="*.stj.s-msn.com" />
 
 
 	<!--	Set by c.atdmt.com.	-->
 	<securecookie host="^\.msn\.com$" name="^MUID$" />
 
 
+	<rule from="^https?://static[12]?\.glo\.com/"
+		to="https://glo.msn.com/" />
+
 	<!--	c.msn.com redirects to c.atdmt.com with
 		a unique ID, which then redirects back
 		to c.msn, with the unique ID appended.
 				-->
-	<rule from="^http://(ac3|adsyndication|c|eb\.my|\d\.r|(?:[ab]\.)?rad)\.msn\.com/"
+	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|entimg|estc|g|hp|eb\.my|\d\.r|(?:[ab]\.)?rad|setstj|\w+\.storage)\.msn\.com/"
 		to="https://$1.msn.com/" />
 
-	<rule from="^http://kaw\.st(b|c)\.s-msn\.com/"
-		to="https://kaw.st$1.s-msn.com/" />
+	<rule from="^http://(entcss|entimg|media-social|stc-now)\.s-msn\.com/"
+		to="https://$1.s-msn.com/" />
+
+	<rule from="^http://(\w+)\.st(b|c|j)?\d*\.s-msn\.com/"
+		to="https://$1.st$2.s-msn.com/" />
 
 </ruleset>

@@ -7,7 +7,36 @@
 	CDN buckets:
 
 		- wildcard.compete.com.edgekey.net
+		- home.compete.com.edgesuite.net
 		- media.compete.com.edgesuite.net
+
+
+	Problematic domains:
+
+		- media.compete.com	(akamai)
+
+
+	Partially covered domains:
+
+		- home.compete.com *
+		- (www.)compete.com *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- *.c-col.com
+
+		- compete.com subdomains:
+
+			- app
+			- c
+			- grapher
+			- media
+			- securemedia
+
+		- home.compete.com.edgesuite.net
 
 -->
 <ruleset name="Compete (partial)">
@@ -15,6 +44,7 @@
 	<target host="*.c-col.com" />
 	<target host="compete.com" />
 	<target host="*.compete.com" />
+	<target host="home.compete.com.edgesuite.net" />
 
 
 	<securecookie host="^.*\.c-col\.com$" name=".*" />
@@ -25,17 +55,19 @@
 	<rule from="^http://([\w\-]+)\.c-ol\.com/"
 		to="https://$1.col.com/" />
 
-	<!--	At least some pages 302 to http.
-							-->
 	<rule from="^http://(www\.)?compete\.com/(plans(?:$|/|\?)|site_media/)"
 		to="https://$1compete.com/$2" />
 
-	<rule from="^http://(app|c)\.compete\.com/"
+	<rule from="^http://(app|c|grapher)\.compete\.com/"
 		to="https://$1.compete.com/" />
 
-	<!--	media: Akamai.
-					-->
+	<rule from="^http://home\.compete\.com/site_media/"
+		to="https://securemedia.compete.com/site_media/" />
+
 	<rule from="^https?://(?:secure)?media\.compete\.com/"
 		to="https://securemedia.compete.com/" />
+
+	<rule from="^https?://home.compete.com.edgesuite.net/"
+		to="https://home.compete.com/" />
 
 </ruleset>

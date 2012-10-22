@@ -1,0 +1,46 @@
+<!--
+	For problematic rules, see Filemobile-mismatches.xml.
+
+
+	Other Filemobile rulesets:
+
+		- Media_Factory.xml
+
+
+	CDN buckets:
+
+		- assets.filemobile.com.s3.amazonaws.com
+
+		- s3.amazonaws.com/storage.filemobile.com/
+
+
+	Problematic subdomains:
+
+		- bugreport	(CN: *.mediafactory.fm; works)
+
+
+	- Fully covered subdomains:
+
+		- (www.)
+		- assets
+		- developer
+		- storage
+		- rstorage
+
+-->
+<ruleset name="Filemobile (partial)">
+
+	<target host="filemobile.com" />
+	<target host="*.filemobile.com" />
+
+
+	<securecookie host="^(?:.+\.)?filemobile\.com$" name=".+" />
+
+
+	<rule from="^https?://(assets|storage)\.filemobile\.com/"
+		to="https://s3.amazonaws.com/$1.filemobile.com/" />
+
+	<rule from="^http://(developer\.|rstorage\.|www\.)?filemobile\.com/"
+		to="https://$1filemobile.com/" />
+
+</ruleset>
