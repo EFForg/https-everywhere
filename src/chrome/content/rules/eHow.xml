@@ -14,8 +14,19 @@
 		- ehow-com.blog.ehow.com	(Akamai; 503)
 		- www.ehow.co.uk		(ditto)
 
+
+	Problematic domains:
+
+		- blog.ehow.com
+		- img.ehow.com *
+		- v5-static.ehow.com		(redirects to www.ehow.com)
+		- img.ehowcdn.com *
+		- v5-static.ehowcdn.com *
+
+	*Akamai, 503
+
 -->
-<ruleset name="eHow (partial)" default_off="Akamai">
+<ruleset name="eHow (partial)">
 
 	<target host="ehow.com" />
 	<target host="*.ehow.com" />
@@ -25,16 +36,10 @@
 	<securecookie host="^www\.ehow\.com$" name=".+" />
 
 
-	<!--	- Cert for !www is valid
-		- www: Akamai
-		- !www 301s to www
-		- img.ehow.com: Akamai; 503
-		- img.ehow-cdn.com: ditto
-		- v5-static.ehow-cdn.com: ditto
-		- Cert for v5-static.ehow.com is valid
-		- v5-static.ehow.com 301s to www.ehow.com
-					-->
-	<rule from="^https?://(?:img\.|v5-static\.|www\.)?ehow(?:cdn)?\.com/"
+	<rule from="^http://(www\.)?ehow\.com/"
+		to="https://$1ehow.com/" />
+
+	<rule from="^https?://(?:img|v5-static)\.ehow(?:cdn)?\.com/"
 		to="https://www.ehow.com/" />
 
 	<!--	All paths 301 like so.

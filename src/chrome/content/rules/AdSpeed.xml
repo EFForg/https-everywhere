@@ -1,0 +1,38 @@
+<!--
+	Problematic domains:
+
+		- (www.)adspeed.biz
+		- \w\d+.adspeed.biz	(cert only matches g.adspeed.net)
+		- m.adpseed.com		(redirects to adspeed.com)
+		- www.adspeed.com *
+		- (www.)adspeed.net *
+
+	* Cert only matches adspeed.com
+
+-->
+<ruleset name="AdSpeed (partial)">
+
+	<target host="adspeed.biz" />
+	<target host="*.adspeed.biz" />
+	<target host="adspeed.com" />
+	<target host="www.adspeed.com" />
+	<target host="adspeed.net" />
+	<target host="*.adspeed.net" />
+
+
+	<securecookie host="^\.adspeed\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?adspeed\.biz/(?:.*)"
+		to="https://adspeed.com/?src=dotbiz" />
+
+	<rule from="^https?://(?:www\.)?adspeed\.com/"
+		to="https://adspeed.com/" />
+
+	<rule from="^https?://(?:\w\d+\.adspeed\.biz|g\.adspeed\.net)/"
+		to="https://g.adspeed.net/" />
+
+	<rule from="^https?://(?:www\.)?adspeed\.net/"
+		to="https://adspeed.com/" />
+
+</ruleset>
