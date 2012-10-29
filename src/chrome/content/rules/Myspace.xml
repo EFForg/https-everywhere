@@ -1,11 +1,23 @@
 <!--
-	For problematic rules, see Myspace-mismatches.xml.
-
-
 	Nonfunctional domains:
 
 		- developer.myspace.com
 		- cms.myspacecdn.com		(valid cert; 504)
+
+
+	Problematic domains:
+
+		- 1[1-4].ec-images.myspacecdn.com	(CN: gp1.wac.edgecastcdn.net; works)
+
+
+	Fully covered domains:
+
+		- secure.adviva.net
+		- (www.)imeem.com
+		- (www.)myspace.com
+		- a[1-4].ec-images.myspacecdn.com
+		- a[1-4]-images.myspacecdn.com
+		- x.myspacecdn.com
 
 -->
 <ruleset name="Myspace">
@@ -15,7 +27,8 @@
 	<target host="www.imeem.com" />
 	<target host="myspace.com" />
 	<target host="*.myspace.com" />
-	<target host="x.myspacecdn.com" />
+	<target host="*.myspacecdn.com" />
+	<target host="*.ec-images.myspacecdn.com" />
 
 
 	<securecookie host="^\.myspace\.com$" name=".*" />
@@ -32,7 +45,10 @@
 	<rule from="^http://(www\.)?myspace\.com/"
 		to="https://$1myspace.com/" />
 
-	<rule from="^http://x\.myspacecdn\.com/"
-		to="https://x.myspacecdn.com/" />
+	<rule from="^http://(a\d-images|x)\.myspacecdn\.com/"
+		to="https://$1.myspacecdn.com/" />
+
+	<rule from="^https?://a(\d)\.ec-images\.myspacecdn\.com/"
+		to="https://a$1-images.myspacecdn.com/" />
 
 </ruleset>
