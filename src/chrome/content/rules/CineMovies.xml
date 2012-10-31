@@ -1,0 +1,43 @@
+<!--
+	For other Webedia coverage, see Charts_in_France.xml.
+
+
+	Problematic domains:
+
+		- cinemovies.com	(times out)
+
+
+	Partially covered domains:
+
+		- (www.)purecine.com		( → sinemovies.fr)
+			- Paths 404 over http
+
+	Fully covered domains:
+
+		- static1.purecine.com
+		- cinemovies.fr			( → www)
+		- static1.cinemovies.fr
+		- www.cinemovies.fr
+
+-->
+<ruleset name="CineMovies">
+
+	<target host="cinemovies.fr" />
+	<target host="*.cinemovies.fr" />
+	<target host="purecine.fr" />
+	<target host="*.purecine.fr" />
+
+
+	<securecookie host="^\.cinemovies\.fr$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?cinemovies\.fr/"
+		to="https://www.cinemovies.fr/" />
+
+	<rule from="^http://static1\.(cinemovies|purecine)\.fr/"
+		to="https://static1.$1.fr/" />
+
+	<rule from="^https?://(?:www\.)?purecine\.fr/(?:\?.*)?"
+		to="https://www.cinemovies.fr/" />
+
+</ruleset>
