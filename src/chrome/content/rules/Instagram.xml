@@ -1,19 +1,110 @@
-<ruleset name="Instagram (partial)">
-  <target host="api.instagram.com" />
-  <target host="images.instagram.com" />
-  <target host="instagr.am" />
+<!--
+	CDN buckets:
 
-  <rule from="^http://api\.instagram\.com/"
-	  to="https://api.instagram.com/" />
-  <rule from="^http://images\.instagram\.com/"
-	  to="https://distillery.s3.amazonaws.com/" />
-  <rule from="^http://instagr\.am/p/"
-	  to="https://instagr.am/p/" />
-  <rule from="^http://instagr\.am/static/images/"
-	  to="https://s3.amazonaws.com/instagram-static/images/" />
-  <!-- note that this next rule does not currently work for /static/images
-       but that case is handled by the previous rule 
-    -->
-  <rule from="^http://instagr\.am/(p|static)/"
-	  to="https://instagr.am/$1/"/>
+		- distillery.s3.amazonaws.com
+		- s3.amazonaws.com/instagram-static/
+
+		- d17c70w5wkxq2m.cloudfront.net
+			- distilleryimage7.instagram.com
+
+		- distilleryimage1.s3.amazonaws.com | d1ae3bdqlkjebx.cloudfront.net
+			- distilleryimage1.instagram.com
+
+		- d1uysd8m4iv3h8.cloudfront.net
+			- distilleryimage5.instagram.com
+
+		- d1z5wd2gcq19yd.cloudfront.net
+			- distilleryimage11.instagram.com
+
+		- d24elmu442q75h.cloudfront.net
+			- distilleryimage4.instagram.com
+
+		- d2aqnk7wh4vqhb.cloudfront.net
+			- distilleryimage0.instagram.com
+
+		- d2nms3640z5x8l.cloudfront.net
+			- distilleryimage8.instagram.com
+
+		- distilleryimage1.s3.amazonaws.com | d2vdurooumowqn.cloudfront.net
+			- distilleryimage2.instagram.com
+
+		- d2x3khweh61zds.cloudfront.net
+			- distilleryimage9.instagram.com
+
+		- d34sa3fuqtuf2w.cloudfront.net
+			- distilleryimage10.instagram.com
+
+		- d36xtkk24g8jdx.cloudfront.net
+
+		- d3v3n0f5b1i27d.cloudfront.net
+			- distilleryimage6.instagram.com
+
+		- doa9ijhk46qwf.cloudfront.net
+			- distilleryimage3.instagram.com
+
+
+	Partially covered domains:
+
+		- instagr.am
+
+
+	Fully covered instagram.com subdomains:
+
+		- api
+		- distilleryimage[1-9]
+		- distilleryimage1[12]
+		- images
+
+-->
+<ruleset name="Instagram (partial)">
+
+	<target host="instagr.am" />
+	<target host="*.instagram.com" />
+
+
+	<rule from="^http://instagr\.am/static/images/"
+		to="https://s3.amazonaws.com/instagram-static/images/" />
+
+	<!--	Note that this next rule does not currently work for /static/images
+		but that case is handled by the previous rule.
+								-->
+	<rule from="^http://instagr\.am/(p|static)/"
+		to="https://instagr.am/$1/" />
+
+	<rule from="^http://api\.instagram\.com/"
+		to="https://api.instagram.com/" />
+
+	<rule from="^https?://distilleryimage([12])\.instagram\.com/"
+		to="https://distilleryimage$1.s3.amazonaws.com/" />
+
+	<rule from="^https?://distilleryimage3\.instagram\.com/"
+		to="https://doa9ijhk46qwf.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage4\.instagram\.com/"
+		to="https://d24elmu442q75h.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage5\.instagram\.com/"
+		to="https://d1uysd8m4iv3h8.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage6\.instagram\.com/"
+		to="https://d2aqnk7wh4vqhb.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage7\.instagram\.com/"
+		to="https://d17c70w5wkxq2m.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage8\.instagram\.com/"
+		to="https://d2nms3640z5x8l.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage9\.instagram\.com/"
+		to="https://d2x3khweh61zds.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage10\.instagram\.com/"
+		to="https://d34sa3fuqtuf2w.cloudfront.net/" />
+
+	<rule from="^https?://distilleryimage11\.instagram\.com/"
+		to="https://d1z5wd2gcq19yd.cloudfront.net/" />
+
+	<rule from="^https?://images\.instagram\.com/"
+		to="https://distillery.s3.amazonaws.com/" />
+
 </ruleset>
