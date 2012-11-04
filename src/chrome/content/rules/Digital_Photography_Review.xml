@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- d199bk7kirt65b.cloudfront.net
+			- \d+.static.img-dpreview.com
+
+		- d3ojfab0q2dwum.cloudfront.net
+			- g[1-4].img-dpreview.com
+
+		- a.img-dpreview.com.c.footprint.net
+			- a.img-dpreview.com
+
+
+	Nonfunctional domains:
+
+		- forums.dpreview.com	(redirects to http)
+
+	Problematic domains:
+
+		- dpreview.com		(times out)
+
+
+	Partially covered dpreview.com subdomains:
+
+		- (www.) *
+		- connect *
+
+	* Some [most?] pages redirect to http)
+
+-->
+<ruleset name="Digital Photography Review (partial)">
+
+	<target host="dpreview.com" />
+	<target host="www.dpreview.com" />
+	<target host="*.img-dpreview.com" />
+	<target host="*.static.img-dpreview.com" />
+
+
+	<rule from="^https?://(?:www\.)?dpreview\.com/(challenges/[iI]mages/|members/register|products_data/|resources/)"
+		to="https://www.dpreview.com/$1" />
+
+	<rule from="^http://connect\.dpreview\.com/products_data/"
+		to="https://connect.dpreview.com/products_data/" />
+
+	<rule from="^https?://(?:a|\d+\.static)\.img-dpreview\.com/"
+		to="https://d199bk7kirt65b.cloudfront.net/" />
+
+	<rule from="^https?://g[1-4]\.img-dpreview\.com/"
+		to="https://d3ojfab0q2dwum.cloudfront.net/" />
+
+</ruleset>
