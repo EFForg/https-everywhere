@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- cdn.b.st-hatena.com.edgesuite.net
+		- cdn.www.st-hatena.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- b.hatena.ne.jp	(not identical to d)
+		- b.st-hatena.com
+		- cdn.b.st-hatena.com	(akamai)
+
+
+	Problematic domains:
+
+		- www.st-hatena.com	(mismatch, CN: www.hatena.ne.jp)
+		- cdn.www.st-hatena.com	(akamai)
+
+
+	Partially covered domains:
+
+		- (www.)hatena.ne.jp *
+		- d.hatena.ne.jp *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- www.st-hatena.com *
+		- cdn.www.st-hatena.com *
+
+	* → www.hatena.ne.jp
+
+-->
+<ruleset name="Hatena (partial)">
+
+	<target host="hatena.ne.jp" />
+	<target host="*.hatena.ne.jp" />
+	<target host="www.st-hatena.com" />
+	<target host="cdn.www.st-hatena.com" />
+
+
+	<rule from="^https?://(?:www\.)?hatena\.ne\.jp/(css/|images/|login(?:$|\?|/)|statics/)"
+		to="https://www.hatena.ne.jp/$1" />
+
+	<rule from="^http://d\.hatena\.ne\.jp/images/"
+		to="https://d.hatena.ne.jp/images/" />
+
+	<rule from="^https?://(?:cdn\.)?www\.st-hatena\.com/"
+		to="https://www.hatena.ne.jp/" />
+
+</ruleset>
