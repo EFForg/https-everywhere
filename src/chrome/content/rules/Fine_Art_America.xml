@@ -1,0 +1,30 @@
+<!--
+	CDN buckets:
+
+		- render-889924663.us-east-1.elb.amazonaws.com
+			- render.fineartamerica.com
+
+		- s3.amazonaws.com/images.fineartamerica.com/
+
+
+	Problematic subdomains:
+
+		- render
+
+-->
+<ruleset name="Fine Art America">
+
+	<target host="fineartamerica.com" />
+	<target host="*.fineartamerica.com" />
+
+
+	<securecookie host="^(?:www\.)?fineartamerica\.com$" name=".+" />
+
+
+	<rule from="^http://(?:render\.|(www\.))?fineartamerica\.com/"
+		to="https://$1fineartamerica.com/" />
+
+	<rule from="^https?://images\.fineartamerica\.com/"
+		to="https://s3.amazonaws.com/images.fineartamerica.com/" />
+
+</ruleset>
