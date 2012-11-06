@@ -95,8 +95,8 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const N_COHORTS = 1000;  // For now 150 / 1000 stable non-Tor users get the popup
-const OBS_COHORTS = 150; // asking them if they'd like to turn on the
+const N_COHORTS = 1000;  // For now 450 / 1000 stable non-Tor users get the popup
+const OBS_COHORTS = 450; // asking them if they'd like to turn on the
                          // Decentralized SSL Observatory
 
 const DUMMY_OBJ = {};
