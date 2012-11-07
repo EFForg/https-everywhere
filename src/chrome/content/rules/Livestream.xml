@@ -1,9 +1,35 @@
+<!--
+	Nonfunctional domains:
+
+		- thumbnail.api		(503)
+		- upload-downloads	(CN: *.new.livestream.com; redirects to new.livestream.com)
+		- www			(akamai; 404)
+
+
+	Fully covered subdomains:
+
+		- \w+.api	(per-account subdomains)
+		- cdn
+		- new
+		- img.new
+		- secure
+
+-->
 <ruleset name="Livestream (partial)">
 
-	<target host="cdn.livestream.com" />
+	<target host="*.livestream.com" />
+	<target host="*.api.livestream.com" />
+		<exclusion pattern="^http://thumbnail\.api\." />
+	<target host="img.new.livestream.com" />
 
 
-	<rule from="^http://cdn\.livestream\.com/"
-		to="https://cdn.livestream.com/" />
+	<securecookie host="^new\.livestream\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?livestream\.com/filestore/"
+		to="https://secure.livestream.com/filestore/" />
+
+	<rule from="^http://(\w+\.api|cdn|new|img\.new|secure)\.livestream\.com/"
+		to="https://$1.livestream.com/" />
 
 </ruleset>
