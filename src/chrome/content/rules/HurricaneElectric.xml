@@ -1,12 +1,19 @@
-<ruleset name="HurricaneElectric">
+<ruleset name="Hurricane Electric">
   <target host="he.net" />
   <target host="www.he.net" />
   <target host="ipv6.he.net" />
   <target host="admin.he.net" />
+  <target host="cust.he.net" />
   <!-- bgp.he.net and faq.he.net are don't support SSL at the moment -->
 
-  <rule from="^http://he\.net/" to="https://www.he.net/"/>
-  <rule from="^http://([^/:@\.]+)\.he\.net/" to="https://$1.he.net/"/>
+  <!-- alternative domains, same content, using he.net certificate -->
+  <target host="he.com" />
+  <target host="www.he.com" />
+  <target host="hurricaneelectric.net" />
 
-  <securecookie host="^ipv6\.he\.net$" name=".*"/>
+  <rule from="^http://hurricaneelectric\.net/" to="https://www.he.net/" />
+  <rule from="^http://he\.(net|com)/" to="https://www.he.net/" />
+  <rule from="^http://([^/:@\.]+)\.he\.(net|com)/" to="https://$1.he.net/" />
+
+  <securecookie host="^([^/:@]*\.)?he\.net$" name=".*" />
 </ruleset>
