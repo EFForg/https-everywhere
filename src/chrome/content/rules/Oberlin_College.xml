@@ -1,0 +1,47 @@
+<!--
+		oberlin.catalog.acalog.com
+			- catalog.oberlin.edu
+
+
+	Nonfunctional subdomains:
+
+		- blogs
+		- catalog	(CN: *.acalogadmin.com; "not available at this address")
+		- ocsites
+		- osca.csr	(self-signed; 403)
+		- how
+
+
+	Problematic subdomains:
+
+		- (www.)cs	(cert only matches occs.cs, seems identical)
+
+
+	Fully covered subdomains:
+
+		- blackboard
+		- classifieds
+		- (www.)cs	(→ occs.cs)
+		- occs.cs
+		- oncampus.csr
+		- new
+		- oncampus
+
+-->
+<ruleset name="Oberlin College (partial)">
+
+	<target host="*.oberlin.edu" />
+	<target host="*.cs.oberlin.edu" />
+	<target host="oncampus.csr.oberlin.edu" />
+
+
+	<securecookie host="^.+\.oberlin\.edu$" name=".+" />
+
+
+	<rule from="^http://(blackboard|classifieds|new|oncampus(?:\.csr)?)\.oberlin\.edu/"
+		to="https://$1.oberlin.edu/" />
+
+	<rule from="^http://(?:occs\.|www\.)?cs\.oberlin\.edu/"
+		to="https://occs.cs.oberlin.edu/" />
+
+</ruleset>
