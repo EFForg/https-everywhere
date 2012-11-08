@@ -8,7 +8,6 @@
 
 			- announcements
 			- answercenter
-			- cgi5
 			- community
 			- deals
 			- forums		(at least some paths redirect to http)
@@ -23,17 +22,60 @@
 			- stores
 			- viv
 
+		- deals.ebay.co.uk
 		- myworld.ebay.co.uk
+		- vi.raptor.ebaydesc.co.uk
 		- i.ebayimg.com			(times out; doesn't translate directly to securepics)
 		- (www.)ebayinc.com		(times out)
 		- ebay-stories.com		(ditto)
 		- portalconsole.backends.ebay.eu	(redirects to login)
 
 
-	Fully covered subdomains:
+	Problematic domains:
+
+			- cgi[15].ebay.com
+
+
+	Fully covered domains:
+
+		ebay.com subdomains:
+
+			- certificates
+			- cgi[15]		(→ scgi.ebay.com)
+			- giftcertificates
+			- spages.half
+			- ocs
+			- rover
+			- rtm			(→ srtm.ebay.com)
+			- scgi
+			- securethumbs
+			- signin
+			- srtm
+			- thumbs		(→ securethumbs.ebay.com)
 
 		- gatekeeper.psnt.ebay.eu
-		- gh.ebaystatic.com
+		- ebayclassifieds.com		(→ www.ebayclassifieds.com)
+		- static.ebayclassifieds.com
+		- www.ebayclassifieds.com
+		- srv.\w+.ebayrtm.com
+		- srx.\w+.ebayrtm.com		(→ srv.\w+\.ebayrtm.com)
+		- srv.ebayrtm.com
+		- srx.ebayrtm.com		(→ srv.ebayrtm.com)
+
+		- ebaystatic.com subdomains:
+
+			- gh
+			- include		(→ secureinclude.ebaystatic.com)
+			- ir			(→ secureir.ebaystatic.com)
+			- p			(→ securepics.ebaystatic.com)
+			- pics			(→ securepics.ebaystatic.com)
+			- q			(→ securepics.ebaystatic.com)
+			- rtm			(→ securertm.ebaystatic.com)
+			- secureinclude
+			- secureir
+			- securepics
+			- securertm
+			- \d.thumbs		(→ securethumbs.ebay.com)
 
 
 	Targets solely for wildcard cookies:
@@ -60,8 +102,11 @@
 	<securecookie host="^\.ebayrtm\.com$" name="^CT$" />
 
 
-	<rule from="^http://((?:gift)?certificates|rover|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
+	<rule from="^http://((?:gift)?certificates|rover|scgi|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
 		to="https://$1.ebay.com/" />
+
+	<rule from="^https?://[15]cgi\.ebay\.com/"
+		to="https://scgi.ebay.com/" />
 
 	<rule from="^https?://s?rtm\.ebay\.com/"
 		to="https://srtm.ebay.com/" />
