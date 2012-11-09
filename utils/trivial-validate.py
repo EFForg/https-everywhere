@@ -87,11 +87,11 @@ def test_unencrypted_to(tree):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-	    sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
-	    sys.stdout.write("to http.\n")
+            sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
+            sys.stdout.write("to http.\n")
         elif to[:5] == "http:":
-	    sys.stdout.write("error: rule in %s redirects to http and " % fi)
-	    sys.stdout.write("downgrade attribute not specified.\n")
+            sys.stdout.write("error: rule in %s redirects to http and " % fi)
+            sys.stdout.write("downgrade attribute not specified.\n")
             return False
     return True
 
@@ -165,7 +165,7 @@ for fi in os.listdir("."):
            else:
                continue
        seen_file = True
-    except Exception, oops:
+    except Exception as oops:
        if fi[-4:] != ".xml":
            continue
        failure = 1
