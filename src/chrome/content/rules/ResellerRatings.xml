@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- d2ebdb90bhptzn.cloudfront.net
+			- images.resellerratings.com
+
+		- d3cb52u6zfmv02.cloudfront.net
+			- cdn[0-5].resellerratings.com
+
+
+	Nonfunctional subdomains:
+
+		- merchantblog *
+		- shopperblog *
+
+	* Prints blank page
+
+
+	Problematic subdomains:
+
+		- beta		(mismatched, seems identical to www)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- beta		(→ resellerratings.com)
+		- cdn\d		(→ d3cb52u6zfmv02.cloudfront.net)
+		- images	(→ d2ebdb90bhptzn.cloudfront.net)
+		- seals
+
+-->
+<ruleset name="ResellerRatings (partial)">
+
+	<target host="resellerratings.com" />
+	<target host="*.resellerratings.com" />
+
+
+	<securecookie host="^.*\.resellerratings\.com$" name=".+" />
+
+
+	<rule from="^http://(?:beta\.|(seals\.|www\.))?resellerratings\.com/"
+		to="https://$1resellerratings.com/" />
+
+	<rule from="^https?://cdn\d\.resellerratings\.com/"
+		to="https://d3cb52u6zfmv02.cloudfront.net/" />
+
+	<rule from="^https?://images\.resellerratings\.com/"
+		to="https://d2ebdb90bhptzn.cloudfront.net/" />
+
+</ruleset>
