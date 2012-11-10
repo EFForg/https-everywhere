@@ -2,21 +2,32 @@
 	For problematic rules, see Hollywood-Reporter-mismatches.xml
 
 
+	CDN buckets:
+
+		- www.hollywoodreporter.com.edgesuite.net
+			- thr[1-4].pgmcdn.net
+
+
 	Nonfunctional subdomains:
 
 		- m		(cert: *.mobify.com; shows that domain's data)
 		- origin-www	(self-signed; paths not found)
 
+
+	Problematic domains:
+
+		- thr[1-4].pgmcdn.net	(works, akamai)
+
 -->
 <ruleset name="Hollywood Reporter (partial)">
 
-	<target host="secure.hollywoodreporter.com" />
+	<target host="*.hollywoodreporter.com" />
 
 
-	<securecookie host="^secure\.hollywoodreporter\.com$" name=".*" />
+	<securecookie host="^.+\.hollywoodreporter\.com$" name=".*" />
 
 
-	<rule from="^http://secure\.hollywoodreporter\.com/"
-		to="https://secure.hollywoodreporter.com/" />
+	<rule from="^http://s(ecure|ubscribe)\.hollywoodreporter\.com/"
+		to="https://s$1.hollywoodreporter.com/" />
 
 </ruleset>
