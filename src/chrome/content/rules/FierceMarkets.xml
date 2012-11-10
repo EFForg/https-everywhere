@@ -1,0 +1,43 @@
+<!--
+	Other FierceMarkets rulesets:
+
+		- FierceWireless.xml
+
+
+	CDN buckets:
+
+		- d2pkycnpovhofp.cloudfront.net
+			- assets.fiercemarkets.net
+
+
+	Problematic domains:
+
+		- static.fiercemarkets.com	(shows secure, CN: secure.fiercemarkets.com)
+
+
+	Fully covered domains:
+
+		- secure.fiercemarkets.com
+		- static.fiercemarkets.com	(→ d2pkycnpovhofp.cloudfront.net)
+		- assets.fiercemarkets.net	(→ d2pkycnpovhofp.cloudfront.net)
+
+
+-->
+<ruleset name="FierceMarkets (partial)">
+
+	<target host="*.fiercemarkets.com" />
+	<target host="assets.fiercemarkets.net" />
+	<target host="fiercewireless.com" />
+	<target host="www.fiercewireless.com" />
+
+
+	<rule from="^http://secure\.fiercemarkets\.com/"
+		to="https://secure.fiercemarkets.com/" />
+
+	<rule from="^https?://(?:static\.fiercemarkets\.com|assets\.fiercemarkets\.net)/"
+		to="https://d2pkycnpovhofp.cloudfront.net/" />
+
+	<rule from="^https?://(?:www\.)?fiercewireless\.com/(files|sites)/"
+		to="https://d2pkycnpovhofp.cloudfront.net/$1/" />
+
+</ruleset>
