@@ -1,8 +1,28 @@
-<ruleset name="SonyMusic">
-  <target host="sonymusic.com" />
-  <target host="www.sonymusic.com" />
+<!--
+	For problematic rules, see SonyMusic-problematic.xml
 
-  <securecookie host="^(.+\.)?sonymusic\.com$" name=".*"/>
 
-  <rule from="^http://(?:www\.)?sonymusic\.com/" to="https://www.sonymusic.com/"/>
+	For other Sony coverage, see Sony.xml.
+
+
+	CDN buckets:
+
+		- d27g862ehx8viu.cloudfront.net
+			- cf.sonymusic.com
+
+
+	Problematic subdomains:
+
+		- ^	(shows CentOS test page, self-signed, CN: ip-10-251-89-204)
+		- www	(works, akamai)
+
+-->
+<ruleset name="SonyMusic (partial)">
+
+	<target host="cf.sonymusic.com" />
+
+
+	<rule from="^https?://cf\.sonymusic\.com/"
+		to="https://d27g862ehx8viu.cloudfront.net/" />
+
 </ruleset>

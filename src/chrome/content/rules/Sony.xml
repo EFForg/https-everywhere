@@ -1,43 +1,56 @@
 <!--
+	Other Sony rulesets:
+
+		- PlayStation.xml
+		- Sony.se.xml
+		- Sony-europe.com.xml
+		- SonyMobile.xml
+		- SonyMusic.xml
+		- Sony_Pictures_UK.xml
+
+
+	CDN buckets:
+
+		- fp.scea.com.c.footprint.net
+			- fp.scea.com
+			- webassets[a-j]?.scea.com
+
+
 	Nonfunctional domains:
 
 		- esupport.sony.com		(redirects to s01.esupport, which has different data)
 		- www.kb.sony.com
-		- talk.sonymobile.com		(cert: gp1.wac.edgecastcdn.net; 404)
+
+
+	Partially covered domains:
+
+		- (www.)sony.co.uk	(at least some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- shop.sony.co.uk
+		- outlet.sony.co.uk
 
 -->
 <ruleset name="Sony (partial)">
 
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.playstation.com" />
-	<target host="*.us.playstation.com" />
-		<!--
-			302s to http.
-
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001284.html
-
-				-->
-		<exclusion pattern="^http://us\.playstation\.com/omniture/blogs/s_code\.js" />
 	<target host="webassets.scea.com" />
 	<target host="*.webassets.scea.com" />
 	<target host="www-static.se-mc.com" />
 	<target host="sony.com" />
 	<target host="*.sony.com" />
 	<target host="s01.esupport.sony.com" />
+	<target host="sony.co.uk" />
+	<target host="*.sony.co.uk" />
 	<target host="sonyentertainmentnetwork.com" />
 	<target host="*.sonyentertainmentnetwork.com" />
-	<target host="sonymobile.com" />
-	<target host="www.sonymobile.com" />
 
 
-	<securecookie host="^.*\.playstation\.com$" name=".*" />
 	<securecookie host="^.*\.sony\.com$" name=".*" />
+	<securecookie host="^outlet\.sony\.co\.uk$" name=".+" />
 	<securecookie host="^.*\.sonyentertainmentnetwork\.com$" name=".*" />
 
-
-	<!--	Cert doesn't match www.us.	-->
-	<rule from="^https?://(?:(service1\.)|www\.)?us\.playstation\.com/"
-		to="https://$1us.playstation.com/" />
 
 	<!--	- Cert doesn't match
 		- Redirects as so
@@ -56,6 +69,12 @@
 	<rule from="^https?://(?:www\.)?sony\.com/"
 		to="https://www.sony.com/" />
 
+	<rule from="^http://(www\.)?sony\.co\.uk/(bravia|res)/"
+		to="https://$1sony.co.uk/$2/" />
+
+	<rule from="^http://(outlet|shop)\.sony\.co\.uk/"
+		to="https://$1.sony.co.uk/" />
+
 	<rule from="^http://s(01\.esupport|tore)\.sony\.com/"
 		to="https://s$1.sony.com/" />
 
@@ -67,13 +86,5 @@
 					-->
 	<rule from="^https?://cdn\.sonyentertainmentnetwork\.com/"
 		to="https://www.sonyentertainmentnetwork.com/" />
-
-
-	<!--	- !www times out over https
-		- !www redirects to www over http
-		- At least some pages throw 401
-				-->
-	<rule from="^https?://(?:www\.)?sonymobile\.com/(cws|wp-content)/"
-		to="https://www.sonymobile.com/$1/" />
 
 </ruleset>

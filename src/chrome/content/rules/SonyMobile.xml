@@ -1,0 +1,32 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)sonymobile.com		(403)
+		- blogs.sonymobile.com		(401)
+		- talk.sonymobile.com		(cert: gp1.wac.edgecastcdn.net; 404)
+
+-->
+<ruleset name="Sony Mobile (partial)">
+
+	<target host="sonymobile.com" />
+	<target host="*.sonymobile.com" />
+		<!--
+			403
+				-->
+		<exclusion pattern="^https?://(?:www\.)?sonymobile\.com/wp-content/themes/semc-main/css/global\.css" />
+
+
+	<securecookie host="^shop\.sonymobile\.com$" name=".+" />
+
+
+	<!--	- !www times out over https
+		- !www redirects to www over http
+		- At least some pages throw 401
+				-->
+	<rule from="^https?://(?:www\.)?sonymobile\.com/(cws|wp-content)/"
+		to="https://www.sonymobile.com/$1/" />
+
+	<rule from="^http://shop\.sonymobile\.com/"
+		to="https://shop.sonymobile.com/" />
+
+</ruleset>
