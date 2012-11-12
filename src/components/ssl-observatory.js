@@ -500,7 +500,7 @@ SSLObservatory.prototype = {
   shouldSubmit: function(chain, domain) {
     // Return true if we should submit this chain to the SSL Observatory
     var rootidx = this.findRootInChain(chain.certArray);
-    var ss= false;
+    var ss = false;  // ss: self-signed
 
     if (chain.leaf.issuerName == chain.leaf.subjectName) 
       ss = true;
