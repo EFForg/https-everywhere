@@ -7,6 +7,15 @@
 
 		- research.ihost.com	(times out)
 
+
+	Problematic domains:
+
+		- stats.www.ibm.com *
+		- www-1.ibm.com *
+		- www-306.ibm.com *
+
+	* Mismatched; CN: redirect.www.ibm.com
+
 -->
 <ruleset name="IBM" default_off="Support section redirect loops">
 
@@ -15,6 +24,7 @@
 	<target host="ibm.com" />
 	<target host="*.ibm.com" />
 	<target host="publib.boulder.ibm.com" />
+	<target host="pic.dhe.ibm.com" />
 	<target host="www.redbooks.ibm.com" />
 	<target host="redirect.www.ibm.com" />
 
@@ -38,8 +48,14 @@
 	<rule from="^https?://(?:www\.)?ibm\.com/"
 		to="https://www.ibm.com/" />
 
-	<rule from="^http://(publib\.boulder|www\.redbooks|redirect\.www|www-(?:01|947))\.ibm\.com/"
+	<rule from="^http://(publib\.boulder|pic\.dhe|www\.redbooks|redirect\.www|www-(?:01|304|947|950))\.ibm\.com/"
 		to="https://$1.ibm.com/" />
+
+	<rule from="^https?://stats\.www\.ibm\.com/rc/images/uc\.GIF"
+		to="https://www.ibm.com/i/c.gif" />
+
+	<rule from="^https?://www-1\.ibm\.com/support/search\.wss"
+		to="https://www.ibm.com/support/search.wss" />
 
 	<!--	- Redirects as so, sans-https.
 		- Link found at https://buysub.com/
