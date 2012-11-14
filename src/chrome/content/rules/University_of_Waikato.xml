@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional subdomains:
+
+		- asterix.cc *
+		- events
+		- cms.its
+		- papers
+		- phonebook		(shows yogsothoth.its)
+		- researchcommons *
+		- timetable
+		- uwt
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^		(fails to redirect to www, as it does over http)
+		- help		(works, mismatched)
+		- research	(mismatched)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cookie
+		- tools.its
+		- (www.)mngt
+
+-->
+<ruleset name="University of Waikato (partial)">
+
+	<target host="waikato.ac.nz" />
+	<target host="*.waikato.ac.nz" />
+	<target host="tools.its.waikato.ac.nz" />
+	<target host="www.mngt.waikato.ac.nz" />
+
+
+	<securecookie host="^.+\.waikato\.ac\.nz$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?waikato\.ac\.nz/"
+		to="https://www.waikato.ac.nz/" />
+
+	<rule from="^http://(cookie|tools\.its|mngt|www\.mngt)\.waikato\.ac\.nz/"
+		to="https://$1.waikato.ac.nz/" />
+
+	<rule from="^http://research\.waikato\.ac\.nz/($|\?)"
+		to="https://www.waikato.ac.nz/research/$1" />
+
+</ruleset>

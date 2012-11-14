@@ -1,7 +1,10 @@
 <!--
-	CDN buckets:
+	Other Verizon rulesets:
 
-		- cache.vzw.com.edgesuite.net
+		- Verizon_Wireless.xml
+
+
+	CDN buckets:
 
 		- wildcard.verizon.net.edgekey.net
 			- static-business.verizon.net
@@ -13,10 +16,11 @@
 			- businessforums.verizon.net
 
 
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
 		- (www.)thinkfinity.org
 		- (www.)community.thinkfinity.org
+		- developer.verizon.com *
 		- mail.verizon.com *
 		- webmail.verizon.com *
 
@@ -27,9 +31,6 @@
 
 		- businessforums.verizon.net *
 		- verizonbusiness.com			(cert only matches www)
-		- verizonwireless.com
-		- (www.)vzw.com				(cert only matches verizonwireless.com)
-		- cache.vzw.com				(akamai)
 
 	CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
 
@@ -63,12 +64,6 @@
 
 		- (www.)verizon.net
 		- static-business.verizon.net
-		- (www.)verizonwireless.com
-		- b2b.verizonwireless.com
-		- mblogin.verizonwireless.com
-		- (www.)vzw.com
-		- cache.vzw.com
-		- scache.vzw.com
 
 -->
 <ruleset name="Verizon">
@@ -81,10 +76,6 @@
 		<exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" />
 	<target host="verizonbusiness.com" />
 	<target host="www.verizonbusiness.com" />
-	<target host="verizonwireless.com" />
-	<target host="*.verizonwireless.com" />
-	<target host="vzw.com" />
-	<target host="*.vzw.com" />
 
 
 	<securecookie host="^(?:enterprisecenter|espanol|forums|signin|smallbusiness)\.verizon\.com$" name=".+" />
@@ -92,8 +83,6 @@
 	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
 	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
 	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
-	<securecookie host="^.*\.verizonwireless\.com$" name=".+" />
-	<securecookie host="^\.vzw\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www(22)?\.)?verizon\.com/"
@@ -110,16 +99,5 @@
 
 	<rule from="^https?://(?:www\.)?verizonbusiness\.com/(gfx|support/myaccount|templates)/"
 		to="https://www.verizonbusiness.com/$1/" />
-
-	<!--	vzw.com redirects like so.
-						-->
-	<rule from="^https?://(?:www\.)?v(?:erizonwireless|zw)\.com/"
-		to="https://www.verizonwireless.com/" />
-
-	<rule from="^http://(b2b|mblogin)\.verizonwireless\.com/"
-		to="https://$1.verizonwireless.com/" />
-
-	<rule from="^https?://s?cache\.vzw\.com/"
-		to="https://scache.vzw.com/" />
 
 </ruleset>
