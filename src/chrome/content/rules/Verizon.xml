@@ -1,7 +1,10 @@
 <!--
-	CDN buckets:
+	Other Verizon rulesets:
 
-		- cache.vzw.com.edgesuite.net
+		- Verizon_Wireless.xml
+
+
+	CDN buckets:
 
 		- wildcard.verizon.net.edgekey.net
 			- static-business.verizon.net
@@ -20,10 +23,6 @@
 		- developer.verizon.com
 		- mail.verizon.com *
 		- webmail.verizon.com *
-		- devices.verizonwireless.com		(503)
-		- droiddoes.verizonwireless.com		(redirects to www.droiddoes, akamai)
-		- network4g.verizonwireless.com		(503, akamai)
-		- support.verizonwireless.com		(reset)
 
 	* Times out.
 
@@ -32,10 +31,6 @@
 
 		- businessforums.verizon.net *
 		- verizonbusiness.com			(cert only matches www)
-		- verizonwireless.com
-		- (www.)vzw.com				(cert only matches verizonwireless.com)
-		- cache.vzw.com				(akamai)
-		- lte.vzw.com				(cert only matches www.lte.wzw.com
 
 	CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
 
@@ -70,43 +65,6 @@
 		- (www.)verizon.net
 		- static-business.verizon.net
 
-		- verizonwireless.com subdomains:
-
-			- (www.)
-			- aboutus
-			- b2b
-			- businessportals
-			- community
-			- login
-			- mblogin
-			- mediastore
-			- myaccount
-			- news
-			- opennetwork
-			- products
-			- psearch
-			- ringtones
-			- videos
-			- wbillpay
-			- wizard
-			- vzwworkshops
-
-		vzw.com subdomains:
-
-			- (www.)
-			- alerts
-			- b2b
-			- cache
-			- ecache
-			- espanol
-			- lte		(→ www.lte.vzw.com)
-			- www.lte
-			- mediaimages
-			- picture
-			- scache
-			- text
-			- wallpaper
-
 -->
 <ruleset name="Verizon">
 
@@ -118,11 +76,6 @@
 		<exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" />
 	<target host="verizonbusiness.com" />
 	<target host="www.verizonbusiness.com" />
-	<target host="verizonwireless.com" />
-	<target host="*.verizonwireless.com" />
-	<target host="vzw.com" />
-	<target host="*.vzw.com" />
-	<target host="www.lte.vzw.com" />
 
 
 	<securecookie host="^(?:enterprisecenter|espanol|forums|signin|smallbusiness)\.verizon\.com$" name=".+" />
@@ -130,8 +83,6 @@
 	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
 	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
 	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
-	<securecookie host="^.*\.verizonwireless\.com$" name=".+" />
-	<securecookie host="^\.vzw\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www(22)?\.)?verizon\.com/"
@@ -148,22 +99,5 @@
 
 	<rule from="^https?://(?:www\.)?verizonbusiness\.com/(gfx|support/myaccount|templates)/"
 		to="https://www.verizonbusiness.com/$1/" />
-
-	<!--	vzw.com redirects like so.
-						-->
-	<rule from="^https?://(?:www\.)?v(?:erizonwireless|zw)\.com/"
-		to="https://www.verizonwireless.com/" />
-
-	<rule from="^http://(aboutus|b2b|businessportals|community|login|mblogin|mediastore|myaccount|news|opennetwork|products|psearch|ringtones|videos|wbillpay|wizard|vzwworkshops)\.verizonwireless\.com/"
-		to="https://$1.verizonwireless.com/" />
-
-	<rule from="^http://(alerts|b2b|ecache|espanol|mediaimages|picture|text|wallpaper)\.vzw\.com/"
-		to="https://$1.vzw.com/" />
-
-	<rule from="^https?://(?:www\.)?lte\.vzw\.com/"
-		to="https://www.lte.vzw.com/" />
-
-	<rule from="^https?://s?cache\.vzw\.com/"
-		to="https://scache.vzw.com/" />
 
 </ruleset>
