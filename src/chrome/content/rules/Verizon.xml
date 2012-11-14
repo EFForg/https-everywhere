@@ -17,8 +17,13 @@
 
 		- (www.)thinkfinity.org
 		- (www.)community.thinkfinity.org
+		- developer.verizon.com
 		- mail.verizon.com *
 		- webmail.verizon.com *
+		- devices.verizonwireless.com		(503)
+		- droiddoes.verizonwireless.com		(redirects to www.droiddoes, akamai)
+		- network4g.verizonwireless.com		(503, akamai)
+		- support.verizonwireless.com		(reset)
 
 	* Times out.
 
@@ -30,6 +35,7 @@
 		- verizonwireless.com
 		- (www.)vzw.com				(cert only matches verizonwireless.com)
 		- cache.vzw.com				(akamai)
+		- lte.vzw.com				(cert only matches www.lte.wzw.com
 
 	CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
 
@@ -67,14 +73,39 @@
 		- verizonwireless.com subdomains:
 
 			- (www.)
+			- aboutus
 			- b2b
+			- businessportals
+			- community
+			- login
 			- mblogin
+			- mediastore
+			- myaccount
+			- news
+			- opennetwork
+			- products
+			- psearch
+			- ringtones
+			- videos
+			- wbillpay
+			- wizard
+			- vzwworkshops
 
 		vzw.com subdomains:
 
 			- (www.)
+			- alerts
+			- b2b
 			- cache
+			- ecache
+			- espanol
+			- lte		(→ www.lte.vzw.com)
+			- www.lte
+			- mediaimages
+			- picture
 			- scache
+			- text
+			- wallpaper
 
 -->
 <ruleset name="Verizon">
@@ -91,6 +122,7 @@
 	<target host="*.verizonwireless.com" />
 	<target host="vzw.com" />
 	<target host="*.vzw.com" />
+	<target host="www.lte.vzw.com" />
 
 
 	<securecookie host="^(?:enterprisecenter|espanol|forums|signin|smallbusiness)\.verizon\.com$" name=".+" />
@@ -122,8 +154,14 @@
 	<rule from="^https?://(?:www\.)?v(?:erizonwireless|zw)\.com/"
 		to="https://www.verizonwireless.com/" />
 
-	<rule from="^http://(b2b|mblogin)\.verizonwireless\.com/"
+	<rule from="^http://(aboutus|b2b|businessportals|community|login|mblogin|mediastore|myaccount|news|opennetwork|products|psearch|ringtones|videos|wbillpay|wizard|vzwworkshops)\.verizonwireless\.com/"
 		to="https://$1.verizonwireless.com/" />
+
+	<rule from="^http://(alerts|b2b|ecache|espanol|mediaimages|picture|text|wallpaper)\.vzw\.com/"
+		to="https://$1.vzw.com/" />
+
+	<rule from="^https?://(?:www\.)?lte\.vzw\.com/"
+		to="https://www.lte.vzw.com/" />
 
 	<rule from="^https?://s?cache\.vzw\.com/"
 		to="https://scache.vzw.com/" />
