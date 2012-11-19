@@ -3,6 +3,7 @@
 
 		- BrowserID.xml
 		- GetPersonas.xml
+		- Mozilla_Webmaker.xml
 
 
 	Nonfunctional domains:
@@ -21,6 +22,7 @@
 		- (www.)firefox.com		(CN: www.mozilla.com; 404)
 		- blog.lizardwrangler.com	(self-signed)
 		- affiliates-cdn.mozilla.org	(CN: affiliates.mozilla.org)
+		- beta.mozilla.org		(prompts for LDAP login, CN: www.mozilla.com)
 		- krakenbenchmark.mozilla.org	(CN: www.mozilla.org)
 		- people.mozilla.org		(CN: people.mozilla.com)
 		- talkback-public.mozilla.org	(CN: www.mozilla.org; 404)
@@ -62,6 +64,7 @@
 			- affiliates
 			- affiliates-cdn
 			- air
+			- beta		(→ mozilla.org/en-US/firefox/channel/)
 			- blog
 			- bugzilla
 			- bzr
@@ -119,8 +122,6 @@
 		- support.mozillamessaging.com
 		- webfwd.org
 		- www.webfwd.org
-		- webmaker.org
-		- www.webmaker.org
 
 -->
 <ruleset name="Mozilla">
@@ -155,16 +156,13 @@
 	<target host="*.mozillamessaging.com" />
 	<target host="webfwd.org" />
 	<target host="www.webfwd.org" />
-	<target host="webmaker.org" />
-	<target host="www.webmaker.org" />
 
 
 	<securecookie host="^.*\.mozilla\.(?:com|org)$" name=".+" />
 	<securecookie host="^mozilla(?:ignite|labs)\.com$" name=".+" />
-	<securecookie host="^(?:www\.)?webmaker\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?(drumbeat|webfwd|webmaker)\.org/"
+	<rule from="^http://(www\.)?(drumbeat|webfwd)\.org/"
 		to="https://$1$2.org/" />
 
 	<!--	Redirects like so over http.
@@ -185,6 +183,9 @@
 
 	<rule from="^https?://affiliates-cdn\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
+
+	<rule from="^https?://beta\.mozilla\.org/"
+		to="https://www.mozilla.org/firefox/channel/" />
 
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.com/" />

@@ -1,0 +1,72 @@
+<!--
+	For problematic rules, see Santa_Clara_University-problematic.xml.
+
+
+	dcsantaclara.bepress.com
+	scu.hosted.exlibrisgroup.com
+	csul.iii.com
+
+
+	Nonfunctional subdomains:
+
+		- claranet *
+		- eres
+		- law *
+		- onehosted	(403/404, CN: *.hosted.exlibrisgroup.com, not identical to sfxhosted.exlibrisgroup.com)
+		- phonebook	(shows www, CN: www.scu.edu)
+		- sierra	(shows default Plesk page)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- astra			(works, expired in 2010)
+		- libguides *
+		- digitalcommons.law	(works, CN: *.bepress.com; dcsantaclara.bepress.com shows different uni's pages)
+		- lawguides *
+
+	- Redirects to http, CN: libguides.com
+
+
+	Partially covered subdomains:
+
+		- digitalcommons.law	(→ dcsantaclara.bepress.com, rest handled in -problematic.xml)
+		- lawguides		(→ libguides.com)
+		- libguides		(→ libguides.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)alumnidirectory
+		- angel
+		- feportmgmt
+		- gw
+		- it
+		- quarantine
+		- (www.)sculib
+
+-->
+<ruleset name="Santa Clara University (partial)">
+
+	<target host="scu.edu" />
+	<target host="*.scu.edu" />
+	<target host="www.*.scu.edu" />
+	<target host="*.law.scu.edu" />
+
+
+	<securecookie host="^\w.*\.scu\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:(?:www\.)?(?:alumnidirectory|sculib)|angel|feportmgmt|gw|it|quarantine|www)\.)?scu\.edu/"
+		to="https://$1scu.edu/" />
+
+	<rule from="^https?://digitalcommons\.law\.scu\.edu/assets/"
+		to="https://dcsantaclara.bepress.com/assets/" />
+
+	<rule from="^https?://l(?:aw|ib)guides\.scu\.edu/(css\d*|data|js)/"
+		to="https://libguides.com/$1/" />
+
+
+</ruleset>
