@@ -17,12 +17,21 @@
 		- d.yimg.com/hn/p/i/bcst/yp/cnbc2/
 		- d.yimg.com/oq/
 		- ec.yimg.com/ec?url=
+		- ep.yimg.com/ca/
 		- ext.yimg.com/ec?url=
 		- sm-a[1-4].yimg.com
 		- thm-a0[1-4].yimg.com
 
 
 	Nonfunctional domains:
+
+		- yahoo.co.jp subdomains:
+
+			- rd.ane *
+			- blogs *
+			- img5.blogs *
+
+		* Times out
 
 		- yahoo.com subdomains:
 
@@ -47,6 +56,7 @@
 			- gossip-ss.us.search
 			- images.search
 			- qos.video
+			- weather			(404, CN: *.mail.yahoo.com)
 
 		- analyze.yahooapis.com
 		- webplayer.yahooapis.com	(CN: s.yimg.com; 404)
@@ -70,8 +80,15 @@
 
 	Fully covered domains:
 
+		- yahoo.co.jp subdomains:
+
+			- b[35-9]
+			- b10
+			- pclick
+
 		yahoo.com subdomains:
 
+			- y.analytics
 			- csc.beap.bc
 			- edit.europe
 			- help
@@ -97,6 +114,13 @@
 
 		- open.login.yahooapis.
 
+		- yimg.jp subdomains:
+
+			- ai		(→ s.yimg.jp)
+			- ident.c
+			- i		(→ s.yimg.jp)
+			- s
+
 
 	Reported to fix bug
 
@@ -110,7 +134,9 @@
 
 	<target host="rocketmail.com" />
 	<target host="www.rocketmail.com" />
+	<target host="*.yahoo.co.jp" />
 	<target host="*.yahoo.com" />
+	<target host="y.analytics.yahoo.com" />
 	<target host="ucs.netsvs.yahoo.com" />
 	<target host="*.adserver.yahoo.com" />
 	<target host="c5.ah.yahoo.com" />
@@ -145,6 +171,7 @@
 	<!--	* for cross-domain cookie.	-->
 	<target host="*.s.yimg.com" />
 	<target host="*.yimg.jp" />
+	<target host="ident.c.yimg.jp" />
 	<target host="ymail.com" />
 	<target host="www.ymail.com" />
 	<target host="yuilibrary.com" />
@@ -191,13 +218,16 @@
 	<rule from="^https?://(?:www\.)?(?:rocket|y)mail\.com/"
 		to="https://mail.yahoo.com/" />
 
+	<rule from="^http://(b\d+|pclick)\.yahoo\.co\.jp/"
+		to="https://$1.yahoo.co.jp/" />
+
 	<rule from="^https?://java\.europe\.yahoo\.com/uk/"
 		to="https://s.yimg.com/zz/java.europe.yahoo.com/uk/" />
 
 	<rule from="^https?://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|c5\.ah|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:[\w\-]+\.)?mail|[\w\-\.]+\.msg|ucs\.netsvs|rtb\.pclick|(?:mailapps|ucs)\.query|sec|order\.smallbusiness|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:[\w\-]+\.)?mail|[\w\-\.]+\.msg|ucs\.netsvs|rtb\.pclick|(?:mailapps|ucs)\.query|sec|order\.smallbusiness|yep\.video)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
 	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
@@ -258,11 +288,11 @@
 	<rule from="^https://s\.yimg\.com/common/img/"
 		to="https://s.yimg.com/kj/ydn/common/img/" />
 
-	<rule from="^https?://i\.yimg\.jp/images/"
-		to="https://s.yimg.jp/images/" />
-
-	<rule from="^http://s\.yimg\.jp/"
+	<rule from="^https?://(?:a[hi]?|s)\.yimg\.jp/"
 		to="https://s.yimg.jp/" />
+
+	<rule from="^http://ident\.c\.yimg\.jp/"
+		to="https://ident.c.yimg.jp/" />
 
 	<rule from="^http://(www\.)?yuilibrary\.com/"
 		to="https://$1yuilibrary.com/" />
