@@ -82,13 +82,16 @@ def test_unencrypted_to(tree):
     # Now warn if the rule author indicates they intended it, with the
     # downgrade attribute.  Error if this attribute is not present.
     """Rule redirects to something other than https."""
+    down_warned = False
     for rule in tree.xpath("/ruleset/rule"):
         to, downgrade = rule.get("to"), rule.get("downgrade")
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
-            sys.stdout.write("to http.\n")
+            if not down_warned:
+                sys.stdout.write("warning: downgrade rule in %s redirects " %fi)
+                sys.stdout.write("to http.\n")
+                down_warned = True
         elif to[:5] == "http:":
             sys.stdout.write("error: rule in %s redirects to http and " % fi)
             sys.stdout.write("downgrade attribute not specified.\n")
