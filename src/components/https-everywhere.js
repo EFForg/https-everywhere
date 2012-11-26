@@ -14,6 +14,9 @@ https_domains = {};              // maps domain patterns (with at most one
 https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
                                  // of redirection loops
 
+https_blacklist_domains = {};    // domains for which there is at least one
+                                 // blacklisted URL
+
 //
 const CI = Components.interfaces;
 const CC = Components.classes;
