@@ -92,13 +92,14 @@ RuleSet.prototype = {
  wouldMatch: function(hypothetical_uri, alist) {
    // return true if this ruleset would match the uri, assuming it were http
    // used for judging moot / inactive rulesets
+   // alist is optional
 
    // if the ruleset is already somewhere in this applicable list, we don't
-   // care about hypothetical wouldMatch questios
-   if (this.name in alist.all) return false;
+   // care about hypothetical wouldMatch questions
+   if (alist && (this.name in alist.all)) return false;
 
    this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
-            "?  serial " + alist.serial);
+            "?  serial " + (alist && alist.serial));
     
    var uri = hypothetical_uri.clone();
    if (uri.scheme == "https") uri.scheme = "http";
@@ -587,19 +588,25 @@ const HTTPSRules = {
     return results;
   },
 
-  shouldSecureCookie: function(applicable_list, c) {
+  shouldSecureCookie: function(applicable_list, c, known_https) {
     // Check to see if the Cookie object c meets any of our cookierule citeria
-    // for being marked as secure
+    // for being marked as secure.
+    // @applicable_list : an ApplicableList or record keeping
+    // @c : an nsICookie2
+    // @known_https : true if we know the page setting the cookie is https
     //this.log(DBUG, "Testing cookie:");
     //this.log(DBUG, "  name: " + c.name);
     //this.log(DBUG, "  host: " + c.host);
     //this.log(DBUG, "  domain: " + c.domain);
-    //this.log(DBUG, "  rawhost: " + c.rawHost);
+    this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
+        // Never secure a cookie if this page might be HTTP
+        if (!known_https && !this.safeToSecureCookie(c.rawhost)) 
+          continue;
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
@@ -616,6 +623,36 @@ const HTTPSRules = {
       }
     }
     return false;
+  },
+
+  safeToSecureCookie(domain) {
+    // Check if the domain might be being served over HTTP.  If so, it isn't
+    // safe to secure a cookie!  We can't always know this for sure because
+    // observing cookie-changed doesn't give us enough context to know the
+    // full origin URI.
+
+    // If there are any redirect loops on this domain, don't secure cookies.
+    // XXX This is not a very satisfactory heuristic.  Sometimes we would want
+    // to secure the cookie anyway, because the URLs that loop are not
+    // authenticated or not important.  Also by the time 
+
+    if (domain in https_blacklist_domains) return false;
+
+    // If we passed that test, make up a random URL on the domain, and see if
+    // we would HTTPSify that.
+
+    var ios = CC['@mozilla.org/network/io-service;1']
+              .getService(CI.nsIIOService);
+    try {
+      var nonce_path = Math.random().toString() + "/" + Math.random().toString();
+      var test_uri = ios.newURI("http://" + nonce_path, "UTF-8", null);
+    } catch (e) {
+      this.log(WARN, "explosion in safeToSecureCookie for " + domain + "\n" 
+                      + "(" + e + ")");
+      return false;
+    }
+    return wouldMatch(test_uri, null);
   }
+
 
 };
