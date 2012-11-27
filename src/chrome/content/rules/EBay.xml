@@ -27,6 +27,7 @@
 			- stores
 			- viv
 
+		- cgi5.ebay.com.sg
 		- deals.ebay.co.uk
 		- myworld.ebay.co.uk
 		- vi.raptor.ebaydesc.co.uk
@@ -49,6 +50,7 @@
 			- cgi[15]		(→ scgi.ebay.com)
 			- giftcertificates
 			- spages.half
+			- merch
 			- ocs
 			- rover
 			- rtm			(→ srtm.ebay.com)
@@ -58,6 +60,8 @@
 			- srtm
 			- thumbs		(→ securethumbs.ebay.com)
 
+		- cgi5.ebay.com.sg		(→ scgi.ebay.com.sg)
+		- scgi.ebay.com.sg
 		- gatekeeper.psnt.ebay.eu
 		- ebayclassifieds.com		(→ www.ebayclassifieds.com)
 		- static.ebayclassifieds.com
@@ -90,8 +94,12 @@
 -->
 <ruleset name="eBay (partial)">
 
+	<target host="payments.ebay.*" />
 	<target host="*.ebay.com" />
 	<target host="spages.half.ebay.com" />
+	<target host="payments.ebay.com.*" />
+	<target host="*.ebay.com.sg" />
+	<target host="payments.ebay.co.uk" />
 	<target host="gatekeeper.psnt.ebay.eu" />
 	<target host="*.gatekeeper.psnt.ebay.eu" />
 	<target host="ebayclassifieds.com" />
@@ -107,11 +115,14 @@
 	<securecookie host="^\.ebayrtm\.com$" name="^CT$" />
 
 
-	<rule from="^http://((?:gift)?certificates|rover|scgi|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
+	<rule from="^http://((?:gift)?certificates|merch|rover|scgi|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
 		to="https://$1.ebay.com/" />
 
 	<rule from="^https?://[15]cgi\.ebay\.com/"
 		to="https://scgi.ebay.com/" />
+
+	<rule from="^http://payments\.ebay\.([\w\.]{2,6})/"
+		to="https://payments.ebay.$1/" />
 
 	<rule from="^https?://s?rtm\.ebay\.com/"
 		to="https://srtm.ebay.com/" />
@@ -121,6 +132,9 @@
 							-->
 	<rule from="^https?://thumbs\d?\.ebay(?:static)?\.com/"
 		to="https://securethumbs.ebay.com/" />
+
+	<rule from="^https?://(?:cgi5|scgi)\.ebay\.com\.sg/"
+		to="https://scgi.ebay.com.sg/" />
 
 	<rule from="^http://gatekeeper\.psnt\.ebay\.eu/"
 		to="https://gatekeeper.psnt.ebay.eu/" />
