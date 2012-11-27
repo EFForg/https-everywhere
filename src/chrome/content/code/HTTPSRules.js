@@ -644,8 +644,9 @@ const HTTPSRules = {
     var ios = CC['@mozilla.org/network/io-service;1']
               .getService(CI.nsIIOService);
     try {
-      var nonce_path = Math.random().toString() + "/" + Math.random().toString();
-      var test_uri = ios.newURI("http://" + nonce_path, "UTF-8", null);
+      var nonce_path = "/" + Math.random().toString();
+      nonce_path = nonce_path + nonce_path;
+      var test_uri = ios.newURI("http://" + domain + nonce_path, "UTF-8", null);
     } catch (e) {
       this.log(WARN, "explosion in safeToSecureCookie for " + domain + "\n" 
                       + "(" + e + ")");
