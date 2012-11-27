@@ -36,12 +36,14 @@
 	Problematic domains:
 
 		- z-ak.images-amazon.com	(Akamai; 503)
+		- (.+.)s3-website-eu-west-1.amazonaws.com
 
 
 	Fully covered domains:
 
 		- images-jp.amazon.com		(→ images-na.ssl-images-amazon.com)
 		- g-images.amazon.com		(→ d1ge0kk1l5kms0.cloudfront.net)
+		- (.+.)s3-website-eu-west-1.amazonaws.com	(→ s3-eu-west-1.amazonaws.com)
 		- g-ecx.images-amazon.com	(→ d1ge0kk1l5kms0.cloudfront.net)
 		- z-ak.images-amazon.com
 
@@ -74,6 +76,8 @@
 	<target host="s3-us-west-1.amazonaws.com" />
 	<target host="*.s3-us-west-1.amazonaws.com" />
 	<target host="cdn.*.s3-us-west-1.amazonaws.com" />
+	<target host="s3-website-eu-west-1.amazonaws.com" />
+	<target host="*.s3-website-eu-west-1.amazonaws.com" />
 	<target host="amazonwebservices.com" />
 	<target host="*.amazonwebservices.com" />
 	<target host="*.images-amazon.com" />
@@ -83,13 +87,13 @@
 	<rule from="^http://(signin\.aws|aws(?:-portal)?|fls-eu|fls-na|payments|sis)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
-	<rule from="^http://s3(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
 		to="https://$1.s3$2.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
 
 	<rule from="^https?://(?:www\.)?amazonwebservices\.com/"
