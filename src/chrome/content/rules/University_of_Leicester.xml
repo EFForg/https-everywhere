@@ -1,0 +1,20 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- www2	(redirects to swww2 then back to http://www2, mismatched, CN: swww2.le.ac.uk)
+
+-->
+<ruleset name="University of Leicester (partial)">
+
+	<target host="*.le.ac.uk" />
+	<target host="www.myleicester.le.ac.uk" />
+
+
+	<rule from="^https?://(?:www\.)?le\.ac\.uk/"
+		to="https://www.le.ac.uk/" />
+
+	<rule from="^http://((?:www\.)?myleicester|swww2)\.le\.ac\.uk/"
+		to="https://$1.le.ac.uk/" />
+
+</ruleset>
