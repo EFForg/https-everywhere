@@ -474,47 +474,14 @@ const HTTPSRules = {
     // the new uri if there was a rewrite.  Now it returns a JS object with a
     // newuri attribute and an applied_ruleset attribute (or null if there's
     // no rewrite).
-    var i = 0, userpass_present = false;
-    var uri = input_uri;
-    var blob = {};
-    blob.newuri = null;
-    if (!alist) this.log(DBUG, "No applicable list rewriting " + uri.spec);
-    this.log(NOTE, "Processing " + uri.spec);
+    var i = 0; 
+    userpass_present = false; // Global so that sanitiseURI can tweak it.
+                              // Why does JS have no tuples, again?
+    var blob = {}; blob.newuri = null;
+    if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
+    this.log(NOTE, "Processing " + input_uri.spec);
 
-    // Rulesets shouldn't try to parse usernames and passwords.  If we find
-    // those, apply the ruleset without them and then add them back.
-    // When .userPass is absent, sometimes it is false and sometimes trying
-    // to read it raises an exception (probably depending on the URI type).
-    try {
-      if (input_uri.userPass) {
-        uri = input_uri.clone();
-        userpass_present = true;
-        uri.userPass = null;
-      } 
-    } catch(e) {}
-
-    // example.com.  is equivalent to example.com
-    // example.com.. is invalid, but firefox would load it anyway
-    try {
-      if (uri.host)
-        try {
-          var h = uri.host;
-          if (h.charAt(h.length - 1) == ".") {
-            while (h.charAt(h.length - 1) == ".") 
-              h = h.slice(0,-1);
-            uri = uri.clone();
-            uri.host = h;
-          }
-        } catch(e) {
-          this.log(WARN, "Failed to normalise domain: ");
-          try       {this.log(WARN, input_uri.host);}
-          catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
-        }
-    } catch(e3) {
-      this.log(WARN, "uri.host is explosive!");
-      try       { this.log(WARN, "(" + uri.spec + ")"); } 
-      catch(e4) { this.log(WARN, "(and unprintable)"); }
-    }
+    var uri = this.sanitiseURI(input_uri);
 
     // Get the list of rulesets that target this host
     try {
@@ -552,6 +519,45 @@ const HTTPSRules = {
       } 
     }
     return null;
+  },
+
+  sanitiseURI: function(input_uri) {
+    // Rulesets shouldn't try to parse usernames and passwords.  If we find
+    // those, apply the ruleset without them (and then add them back later).
+    // When .userPass is absent, sometimes it is false and sometimes trying
+    // to read it raises an exception (probably depending on the URI type).
+    var uri = input_uri;
+    try {
+      if (input_uri.userPass) {
+        uri = input_uri.clone();
+        userpass_present = true; // tweaking a global in our caller :(
+        uri.userPass = null;
+      } 
+    } catch(e) {}
+
+    // example.com.  is equivalent to example.com
+    // example.com.. is invalid, but firefox would load it anyway
+    try {
+      if (uri.host)
+        try {
+          var h = uri.host;
+          if (h.charAt(h.length - 1) == ".") {
+            while (h.charAt(h.length - 1) == ".") 
+              h = h.slice(0,-1);
+            uri = uri.clone();
+            uri.host = h;
+          }
+        } catch(e) {
+          this.log(WARN, "Failed to normalise domain: ");
+          try       {this.log(WARN, input_uri.host);}
+          catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
+        }
+    } catch(e3) {
+      this.log(WARN, "uri.host is explosive!");
+      try       { this.log(WARN, "(" + uri.spec + ")"); } 
+      catch(e4) { this.log(WARN, "(and unprintable)"); }
+    }
+    return uri;
   },
 
 
@@ -630,7 +636,9 @@ const HTTPSRules = {
     // If there are any redirect loops on this domain, don't secure cookies.
     // XXX This is not a very satisfactory heuristic.  Sometimes we would want
     // to secure the cookie anyway, because the URLs that loop are not
-    // authenticated or not important.  Also by the time 
+    // authenticated or not important.  Also by the time the loop has been
+    // observed and the domain blacklisted, a cookie might already have been
+    // flagged as secure.
 
     if (domain in https_blacklist_domains) return false;
 
