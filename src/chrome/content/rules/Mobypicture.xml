@@ -1,0 +1,75 @@
+<!--
+	CDN buckets:
+
+		- mobypicture.s3.amazonaws.com
+
+		- d1u33j8blhxgzy.cloudfront.net
+			- media.mobyhub.com
+			- \w+.media.mobyhub.com
+
+		- d2d8v8ddwfpkhk.cloudfront.net
+			- img.mobypicture.com
+			- a[0-3].img.mobypicture.com
+
+		- d3l076gtvxuom7.cloudfront.net
+			- static.mobypicture.com
+
+		- dq8u4hkdxtrwa.cloudfront.net
+			- layout.mobypicture.com
+
+		- dxujr96dorra9.cloudfront.net
+			- vid.mobypicture.com
+
+
+	Nonfunctional subdomains:
+
+		- i
+
+
+	Problematic subdomains:
+
+		- www
+
+
+	Fully covered subdomains:
+
+		- ^
+		- (www.)api
+		- img		(→ d2d8v8ddwfpkhk.cloudfront.net)
+		- a\d.img	(→ d2d8v8ddwfpkhk.cloudfront.net)
+		- secure
+		- www		(→ secure.mobypicture.com)
+
+-->
+<ruleset name="Mobypicture">
+
+	<target host="media.mobyhub.com" />
+	<target host="*.media.mobyhub.com" />
+	<target host="mobypicture.com" />
+	<target host="*.mobypicture.com" />
+	<target host="www.api.mobypicture.com" />
+	<target host="*.img.mobypicture.com" />
+
+
+	<rule from="^https?://(?:\w+\.)?media\.mobyhub\.com/"
+		to="https://d1u33j8blhxgzy.cloudfront.net/" />
+
+	<rule from="^http://((?:www\.)?api\.|secure\.)?mobypicture\.com/"
+		to="https://$1mobypicture.com/" />
+
+	<rule from="^http://www\.mobypicture\.com/"
+		to="https://secure.mobypicture.com/" />
+
+	<rule from="^https?://(?:a\d\.)?img\.mobypicture\.com/"
+		to="https://d2d8v8ddwfpkhk.cloudfront.net/" />
+
+	<rule from="^https?://layout\.mobypicture\.com/"
+		to="https://dq8u4hkdxtrwa.cloudfront.net/" />
+
+	<rule from="^https?://static\.mobypicture\.com/"
+		to="https://d3l076gtvxuom7.cloudfront.net/" />
+
+	<rule from="^https?://vid\.mobypicture\.com/"
+		to="https://dxujr96dorra9.cloudfront.net/" />
+
+</ruleset>

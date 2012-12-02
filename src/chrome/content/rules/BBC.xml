@@ -22,6 +22,7 @@
 
 		- bbc.co.uk subdomains:
 
+			- confluence.dev	(handshake error)
 			- news
 				When rewritten to www, redirects back to news
 			- newsimg
@@ -46,6 +47,7 @@
 			Causes censorship bypass to fail.
 								-->
 		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
+	<target host="iplayerhelp.external.bbc.co.uk" />
 	<target host="*.bbci.co.uk" />
 	<!--	Akamai	-->
 	<target host="*.bbcimg.co.uk" />
@@ -53,7 +55,7 @@
 
 	<!--	Tracking cookie set by sa	-->
 	<securecookie host="^\.bbc\.co\.uk$" name="^s1$" />
-	<securecookie host="^ssl\.bbc\.co\.uk$" name=".+" />
+	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
 	<!--	ichef: Images.
@@ -64,7 +66,10 @@
 	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
 
-	<rule from="^http://(downloads|id|ssl)\.bbc\.co\.uk/"
+	<rule from="^http://www\.bbc\.co\.uk/webwise/static/"
+		to="https://static.bbc.co.uk/webwise/" />
+
+	<rule from="^http://(downloads|iplayerhelp\.external|id|ssl)\.bbc\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
 	<rule from="^https?://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"

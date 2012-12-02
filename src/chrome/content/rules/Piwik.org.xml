@@ -1,19 +1,26 @@
 <!--
 	Nonfunctional subdomains:
 
+		- de *
 		- dev	(ssl_error_rx_record_too_long)
+		- forum	(401, CN: superadmin.mysnip.de)
+		- el *
+		- fr *
+		- pl *
+
+	* Interrupted
 
 -->
-<ruleset name="piwik.org (partial)" default_off="expired, self-signed">
+<ruleset name="piwik.org (partial)">
 
 	<target host="piwik.org" />
-	<target host="de.piwik.org" />
-	<target host="el.piwik.org" />
-	<target host="fr.piwik.org" />
-	<target host="pl.piwik.org" />
-	<target host="www.piwik.org" />
+	<target host="*.piwik.org" />
 
-	<rule from="^http://(www\.)?([d-p]\w\.)?piwik\.org/"
-		to="https://$2piwik.org/" />
+
+	<securecookie host="^(?:.+\.)?piwik\.org$" name=".+" />
+
+
+	<rule from="^http://(demo\.|www\.)?piwik\.org/"
+		to="https://$1piwik.org/" />
 
 </ruleset>
