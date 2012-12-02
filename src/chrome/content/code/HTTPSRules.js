@@ -594,10 +594,6 @@ const HTTPSRules = {
     // @applicable_list : an ApplicableList or record keeping
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
-    //this.log(DBUG, "Testing cookie:");
-    //this.log(DBUG, "  name: " + c.name);
-    //this.log(DBUG, "  host: " + c.host);
-    //this.log(DBUG, "  domain: " + c.domain);
     this.log(DBUG, "  rawhost: " + c.rawHost);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
@@ -625,7 +621,7 @@ const HTTPSRules = {
     return false;
   },
 
-  safeToSecureCookie(domain) {
+  safeToSecureCookie: function(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
     // observing cookie-changed doesn't give us enough context to know the
