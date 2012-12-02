@@ -52,13 +52,11 @@ const INCLUDE = function(name) {
     for (var j = 0, len = arguments.length; j < len; j++)
       INCLUDE(arguments[j]);
   else if (!_INCLUDED[name]) {
-    try {
-      LOADER.loadSubScript("chrome://https-everywhere/content/code/"
-              + name + ".js");
-      _INCLUDED[name] = true;
-    } catch(e) {
-      dump("INCLUDE " + name + ": " + e + "\n");
-    }
+    // we used to try/catch here, but that was less useful because it didn't
+    // produce line numbers for syntax errors
+    LOADER.loadSubScript("chrome://https-everywhere/content/code/"
+            + name + ".js");
+    _INCLUDED[name] = true;
   }
 }
 
