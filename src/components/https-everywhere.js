@@ -14,6 +14,9 @@ https_domains = {};              // maps domain patterns (with at most one
 https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
                                  // of redirection loops
 
+https_blacklist_domains = {};    // domains for which there is at least one
+                                 // blacklisted URL
+
 //
 const CI = Components.interfaces;
 const CC = Components.classes;
@@ -49,13 +52,11 @@ const INCLUDE = function(name) {
     for (var j = 0, len = arguments.length; j < len; j++)
       INCLUDE(arguments[j]);
   else if (!_INCLUDED[name]) {
-    try {
-      LOADER.loadSubScript("chrome://https-everywhere/content/code/"
-              + name + ".js");
-      _INCLUDED[name] = true;
-    } catch(e) {
-      dump("INCLUDE " + name + ": " + e + "\n");
-    }
+    // we used to try/catch here, but that was less useful because it didn't
+    // produce line numbers for syntax errors
+    LOADER.loadSubScript("chrome://https-everywhere/content/code/"
+            + name + ".js");
+    _INCLUDED[name] = true;
   }
 }
 

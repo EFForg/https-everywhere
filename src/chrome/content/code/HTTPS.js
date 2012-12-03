@@ -50,6 +50,9 @@ const HTTPS = {
         https_everywhere_blacklist[channel.URI.spec] = true;
       }
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
+      var domain = null;
+      try { domain = channel.URI.host; } catch (e) {}
+      if (domain) https_blacklist_domains[domain] = true;
       return false;
     }
 
@@ -224,7 +227,7 @@ const HTTPS = {
       for each (var cs in cookies.split("\n")) {
         this.log(DBUG, "Examining cookie: ");
         c = new Cookie(cs, host);
-        if (!c.secure && HTTPSRules.shouldSecureCookie(alist, c)) {
+        if (!c.secure && HTTPSRules.shouldSecureCookie(alist, c, true)) {
           this.log(INFO, "Securing cookie: " + c.domain + " " + c.name);
           c.secure = true;
           req.setResponseHeader("Set-Cookie", c.source + ";Secure", true);
@@ -235,7 +238,7 @@ const HTTPS = {
   },
 
   handleInsecureCookie: function(c) {
-    if (HTTPSRules.shouldSecureCookie(null, c)) {
+    if (HTTPSRules.shouldSecureCookie(null, c, false)) {
       this.log(INFO, "Securing cookie from event: " + c.domain + " " + c.name);
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
                             .getService(Components.interfaces.nsICookieManager2);
