@@ -1,0 +1,26 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- s	(mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Some (most?) pages redirect to http.
+
+-->
+<ruleset name="XE (partial)">
+
+	<target host="xe.com" />
+	<target host="*.xe.com" />
+
+
+	<rule from="^https?://(?:www\.)?xe\.com/(themes/|xetrade/(?:help/)?login)"
+		to="https://www.xe.com/$1" />
+
+	<rule from="^http://fx2\.xe\.com/"
+		to="https://fx2.xe.com/" />
+
+	<rule from="^https?://s\.xe\.com/\d{8}/"
+		to="https://www.xe.com/" />
+
+</ruleset>
