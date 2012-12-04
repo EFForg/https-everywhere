@@ -19,24 +19,79 @@
 
 	Nonfunctional domains:
 
-		- pic.pbsrc.com		(cert: gp1.wac.edgecastcdn.net; 404)
-		- static.pbsrc.com	(ditto)
-		- photobucket.com	(times out)
-		- i0006.photobucket.com	(cert: edgecastcdn.net; 404)
-		- i1205.photobucket.com	(ditto)
+		- static.pbsrc.com	(404, CN: gp1.wac.edgecastcdn.net)
+
+		- photobucket.com subdomains:
+
+			- ^ *
+			- i0006 **
+			- i1205 **
+			- i619
+
+	* Times out
+	** 404, CN: edgecastcdn.net
+
+
+	Problematic domains:
+
+		- pbsrc.com subdomains:
+
+			- pic *
+			- pic2 *
+			- static2 *
+
+		- photobucket.com subdomains:
+
+			- beta **
+			- s619.beta **
+			- pic
+
+	* CN: gp1.wac.edgecastcdn.net; 404
+	** Times out
+
+
+	Partially covered domains:
+
+		- s619.beta.photobucket.com	(some paths redirect back)
+
+
+	Fully covered domains:
+
+		pbsrc.com subdomains:
+
+			- (www.)
+			- opic2
+			- ostatic2
+			- pic			(→ pbsrc.com)
+			- pic2			(→ opic2.pbsrc.com)
+			- static2		(→ ostatic2.pbsrc.com)
+
+		- photobucket.com subdomains:
+
+			- beta			(→ secure-beta.photobucket.com)
+			- pic			(→ pbsrc.com)
+			- secure-beta
 
 -->
 <ruleset name="Photobucket (partial)">
 
 	<target host="pbsrc.com" />
 	<target host="*.pbsrc.com" />
-	<target host="pic.photobucket.com" />
-
+	<target host="*.photobucket.com" />
+	<target host="s619.beta.photobucket.com" />
+		<exclusion pattern="^https?://s619\.beta\.photobucket\.com/(?!action/|component/)" />
+		
 
 	<rule from="^http://(www\.)?pbsrc\.com/"
 		to="https://$1pbsrc.com/" />
 
 	<rule from="^https?://pic\.p(?:bsrc|hotobucket)\.com/"
 		to="https://pbsrc.com/" />
+
+	<rule from="^http://o?(pic|static)2\.pbsrc\.com/"
+		to="https://o$12.pbsrc.com/" />
+
+	<rule from="^https?://(?:s619\.|secure-)?beta\.photobucket\.com/"
+		to="https://secure-beta.photobucket.com/" />
 
 </ruleset>
