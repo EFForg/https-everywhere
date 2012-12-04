@@ -1,0 +1,44 @@
+<!--
+	Other T'nAflix rulesets:
+
+		- EmpFlix.xml
+
+
+	Nonfunctional subdomains:
+
+		- static *
+		- s[1-4].static *
+		- static-edge		(404, mismatched, CN: systemcdn.net)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- (www.)		(appears identical to payment, mismatched)
+		- www-edge		(404, mismatched, CN: systemcdn.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ payment)
+		- payment
+		- www-edge	(→ payment)
+
+
+	CN: payment.tnaflix.com
+
+-->
+<ruleset name="T'nAflix (partial)" platform="mixedcontent">
+
+	<target host="tnaflix.com" />
+	<target host="*.tnaflix.com" />
+
+
+	<securecookie host="^payment\.tnaflix\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:payment\.|www(?:-edge)?\.)?tnaflix\.com/"
+		to="https://payment.tnaflix.com/" />
+
+</ruleset>
