@@ -1,0 +1,84 @@
+<!--
+	Nonfunctional ubs.com subdomains:
+
+		- financialservicesinc		(times out)
+		- (www.)ibb			(reset)
+
+
+	Problematic ubs.com subdomains:
+
+		- ^
+
+
+	Partially covered ubs.com subdomains:
+
+		- keyinvest.ibb			(some pages-but not all-404)
+
+
+	Fully covered domains:
+
+		- ubs.com subdomains:
+
+			- ^			(→ www)
+			- apps
+			- apps[12]
+			- assetgateway
+			- connect
+			- connect-ch
+			- connect-ch1
+			- clientlogin.ibb
+			- clientportal.ibb
+
+			- ebanking-\w+
+
+				- ebanking-asia1
+				- ebanking-au
+				- ebanking-de
+				- ebanking-de1
+				- ebanking-es
+				- ebanking-es[12]?
+				- ebanking-it
+				- ebanking-it[12]?
+
+			- ebanking-us
+			- grs
+			- jobs
+			- onesource
+			- onlineservices
+			- sbms
+			- sbms[12]
+			- secure
+			- www
+			- www[12]
+
+		- www.ubs-static.com		(^ doesn't exist)
+
+
+	Targets solely for wildcard cookies:
+
+		- *.www.ubs.com
+
+-->
+<ruleset name="UBS (partial)">
+
+	<target host="ubs.com" />
+	<target host="*.ubs.com" />
+	<target host="*.ibb.ubs.com" />
+		<exclusion pattern="^http://keyinvest\.ibb\.ubs\.com/(?!images/|styles/)" />
+	<target host="*.www.ubs.com" />
+	<target host="www.ubs-static.com" />
+
+
+	<securecookie host="^.*\.ubs\.com$" name=".+" />
+
+
+	<rule from="^https?://ubs\.com/"
+		to="https://www.ubs.com/" />
+
+	<rule from="^http://(apps[12]?|assetgateway|connect(?:-ch1?)?|ebanking-\w+|grs|(?:client(?:login|portal)|keyinvest)\.ibb|jobs|onesource|onlineservices|sbms[12]?|secure|www[12]?)\.ubs\.com/"
+		to="https://$1.ubs.com/" />
+
+	<rule from="^http://www\.ubs-static\.com/"
+		to="https://www.ubs-static.com/" />
+
+</ruleset>
