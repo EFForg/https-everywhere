@@ -57,6 +57,7 @@
 			- images.search
 			- sports ***
 			- qos.video
+			- voices			(redirects to http)
 			- weather ***
 
 		- analyze.yahooapis.com
@@ -72,6 +73,7 @@
 
 	Problematic domains:
 
+		- i.acdn.us
 		- yhoo.it		(times out; bit.ly alias)
 
 		yahoo.com subdomains:
@@ -80,7 +82,17 @@
 			- help		(valid cert; 404)
 
 
+	Partially covered yahoo.com subdomains:
+
+		- contributor *
+		- uk.contributor *
+
+	* Ssome (most?) pages redirect to http
+
+
 	Fully covered domains:
+
+		- i.acdn.us			(→ s.yimg.com/ck/)
 
 		- yahoo.co.jp subdomains:
 
@@ -92,6 +104,7 @@
 
 			- y.analytics
 			- csc.beap.bc
+			- br.contribuidores
 			- edit.europe
 			- help
 			- secure.help
@@ -134,10 +147,12 @@
 -->
 <ruleset name="Yahoo! (partial)">
 
+	<target host="i.acdn.us" />
 	<target host="rocketmail.com" />
 	<target host="www.rocketmail.com" />
 	<target host="*.yahoo.co.jp" />
 	<target host="*.yahoo.com" />
+		<exclusion pattern="^http://(?:uk\.)?contributor\.yahoo\.com/(?!$|\?|account/|contributor/|help/|signup/)" />
 	<target host="y.analytics.yahoo.com" />
 	<target host="ucs.netsvs.yahoo.com" />
 	<target host="*.adserver.yahoo.com" />
@@ -147,6 +162,8 @@
 	<target host="global.ard.yahoo.com" />
 	<target host="*.bc.yahoo.com" />
 	<target host="csc.beap.bc.yahoo.com" />
+	<target host="br.contribuidores.yahoo.com" />
+	<target host="uk.contributor.yahoo.com" />
 	<target host="na.edit.yahoo.com" />
 	<target host="*.europe.yahoo.com" />
 	<target host="secure.help.yahoo.com" />
@@ -217,6 +234,9 @@
 	<securecookie host="^\.s\.yimg\.com$" name=".+" />
 
 
+	<rule from="^https?://i\.acdn\.us/"
+		to="https://s.yimg.com/ck/" />
+
 	<rule from="^https?://(?:www\.)?(?:rocket|y)mail\.com/"
 		to="https://mail.yahoo.com/" />
 
@@ -229,7 +249,7 @@
 	<rule from="^https?://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:[\w\-]+\.)?mail|[\w\-\.]+\.msg|ucs\.netsvs|rtb\.pclick|(?:mailapps|ucs)\.query|sec|order\.smallbusiness|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:[\w\-]+\.)?mail|[\w\-\.]+\.msg|ucs\.netsvs|rtb\.pclick|(?:mailapps|ucs)\.query|sec|order\.smallbusiness|yep\.video)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
 	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
@@ -276,7 +296,7 @@
 	<rule from="^https?://(d|(?:a\.)?l\d?|us\.(?:a2|i1|js2?))\.yimg\.com/(?:a|d|us(?:\.js)?\.yimg\.com)/"
 		to="https://s.yimg.com/lq/" />
 
-	<rule from="^https?://(?:(?:a\.)?l\d?|mail)\.yimg\.com/(cv|dh|kj|kx|lo|ok|pj|qa|rq|rx|ugcwidgets|zz)/"
+	<rule from="^https?://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ck|cv|dh|kj|kx|lo|ok|pj|qa|rq|rx|ugcwidgets|zz)/"
 		to="https://s.yimg.com/$1/" />
 
 	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bt|dg|(?:eur|us)\.yimg\.com|fg|[ghiqt]|ho|jh|jn|kq|lh|lm|nn|nq|ml|os|pb|pv|qz|r[uwz])/"
