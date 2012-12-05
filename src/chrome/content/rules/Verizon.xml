@@ -29,10 +29,12 @@
 
 	Problematic domains:
 
-		- businessforums.verizon.net *
-		- verizonbusiness.com			(cert only matches www)
+		- verizon.net *
+		- businessforums.verizon.net **
+		- verizonbusiness.com *
 
-	CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
+	* Cert only matches www
+	** CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
 
 
 	Partially covered domains:
@@ -85,14 +87,20 @@
 	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
 
 
+	<rule from="^http://(?:www\.)?verizon\.com/(?:$|\?)"
+		to="https://www22.verizon.com/home/verizonglobalhome/ghp_landing.aspx" />
+
 	<rule from="^http://(?:www(22)?\.)?verizon\.com/"
 		to="https://www$1.verizon.com/" />
 
 	<rule from="^http://(enterprisecenter|espanol|forums|smallbusiness|signon)\.verizon\.com/"
 		to="https://$1.verizon.com/" />
 
-	<rule from="^http://((?:static-)?business\.|www\.)?verizon\.net/"
-		to="https://$1verizon.net/" />
+	<rule from="^https?://(?:www\.)?verizon\.net/"
+		to="https://www.verizon.net/" />
+
+	<rule from="^http://(static-)?business\.verizon\.net/"
+		to="https://$1business.verizon.net/" />
 
 	<rule from="^https?://businessforums\.verizon\.net/html/"
 		to="https://forums.verizon.com/html/" />

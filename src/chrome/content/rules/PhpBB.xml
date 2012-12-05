@@ -1,11 +1,46 @@
-<ruleset name="phpBB (partial)" default_off="self-signed">
+<!--
+	Nonfunctional subdomains:
 
-	<target host="phpbb.com"/>
-	<target host="*.phpbb.com"/>
+		- lists
 
-	<securecookie host="^\.phpbb\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?phpbb\.com/"
-		to="https://www.phpbb.com/"/>
+	Partially covered subdomains:
+
+		- tracker
+
+			- These paths 500:
+
+				- plugins/servlet/gadgets/dashboard-diagnostics$
+
+			- These don't:
+
+				- $
+				- plugins/servlet/gadgets/js/
+				- rest/
+				- s/
+				- secure/
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- bamboo
+		- blog
+		- tracker
+		- wiki
+
+-->
+<ruleset name="phpBB (partial)">
+
+	<target host="phpbb.com" />
+	<target host="*.phpbb.com" />
+		<exclusion pattern="^http://tracker\.phpbb\.com/plugins/servlet/gadgets/dashboard-diagnostics" />
+
+
+	<securecookie host="^(?:bamboo|wiki)?\.phpbb\.com$" name=".+" />
+
+
+	<rule from="^http://((?:area51|bamboo|blog|tracker|wiki|www)\.)?phpbb\.com/"
+		to="https://$1phpbb.com/" />
 
 </ruleset>
