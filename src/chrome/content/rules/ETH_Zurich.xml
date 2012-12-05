@@ -1,0 +1,66 @@
+<!--
+	Nonfunctional subdomains:
+
+		- addis2050 *
+		- www.alumni		(^alumni doesn't exist)
+
+		- arch subdomains:
+
+			- aaa *
+			- ambitus *
+			- angelil *
+			- baudok *
+			- www.baudok **
+			- archiv.gta *
+			- ausstellungen.gta *
+
+	* Redirects to http, mismatched, CN: webgta.ethz.ch
+	** Redirects to http, mismatched, CN: webita.ethz.ch
+
+
+	Problematic subdomains:
+
+		- ^			(times out)
+		- ethlife		(cert only matches www.ethlife)
+
+
+	Fully covered subdomains:
+
+		- ^			(→ www)
+		- (www.)bilddb.arch
+		- (www.)bilddb.gta.arch
+		- (www.)media.gta.arch
+		- (www.)intern.arch
+		- (www.)it.arch
+		- www.arch		(^arch doesn't exist)
+		- ethlife		(→ www.ethlife)
+		- www.ethlife
+		- webgta
+		- webita
+
+-->
+<ruleset name="ETH Zürich (partial)">
+
+	<target host="darch.ch" />
+	<target host="ethz.ch" />
+	<target host="*.ethz.ch" />
+	<target host="www.ethlife.ethz.ch" />
+	<target host="*.arch.ethz.ch" />
+	<target host="www.*.arch.ethz.ch" />
+	<target host="*.gta.arch.ethz.ch" />
+	<target host="www.*.gta.arch.ethz.ch" />
+
+
+	<securecookie host="^www\.ethz\.ch$" name=".+" />
+
+
+	<rule from="^http://darch\.ch/"
+		to="https://darch.ch/" />
+
+	<rule from="^https?://(?:www\.)?(ethlife\.)?ethz\.ch/"
+		to="https://www.$1ethz.ch/" />
+
+	<rule from="^http://((?:www\.)?(?:(?:bilddb(?:\.gta)?|media\.gta|intern|it)\.)?arch|webgta|webita)\.ethz\.ch/"
+		to="https://$1.ethz.ch/" />
+
+</ruleset>
