@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional subdomains:
+
+		- forum		(shows www)
+
+
+	Problematic subdomains:
+
+		- form		(mismatched, CN: *.marketo.com)
+
+
+	Partially covered subdomains:
+
+		- form		(→ na-n.marketo.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- customers
+		- s[0-3]
+
+-->
+<ruleset name="Percona (partial)">
+
+	<target host="percona.com" />
+	<target host="*.percona.com" />
+
+
+	<securecookie host="^customers\.percona\.com$" name=".+" />
+
+
+	<rule from="^https?://form\.percona\.com/(cs|image|r)s/"
+		to="https://na-n.marketo.com/$1s/" />
+
+	<rule from="^http://(customers\.|s\d\.|www\.)?percona\.com/"
+		to="https://$1percona.com/" />
+
+</ruleset>
