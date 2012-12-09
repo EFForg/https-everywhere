@@ -1,7 +1,26 @@
-<ruleset name="Nintendo.com">
-	<target host="nintendo.com" />
-	<target host="www.nintendo.com" />
-	<rule from="^http://nintendo\.com/" to="https://nintendo.com/"/>
-	<rule from="^http://www\.nintendo\.com/" to="https://www.nintendo.com/"/>
-</ruleset>
+<!--
+	CDN buckets:
 
+		- wpc.92ED.att-acdn.net
+			- media.nintendo.com
+
+
+	Nonfunctional subdomains:
+
+		- media		(404, expired, mismatched, CN: *.eci.cdn.att.net)
+		- techforums	(times out)
+
+-->
+<ruleset name="Nintendo.com (partial)" platform="mixedcontent">
+
+	<target host="nintendo.com" />
+	<target host="*.nintendo.com" />
+
+
+	<securecookie host="^.*\.nintento\.com$" name=".+" />
+
+
+	<rule from="^http://((?:club|happyholidays|iwataasks|share|store|www)\.)?nintendo\.com/"
+		to="https://$1nintendo.com/" />
+
+</ruleset>
