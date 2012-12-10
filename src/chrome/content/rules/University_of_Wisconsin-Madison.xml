@@ -1,0 +1,55 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ^			(redirects to www, mismatched, CN: ldap.services.wisc.edu)
+		- (www.)aos *
+		- depot.library *
+		- digital.library
+		- m.library **
+		- madcat.library
+		- search.library	(redirects to wayf login)
+		- studyrooms.library **
+		- uwdc.library **
+		- xerxes.library
+		- (www.)today ***
+		- vip ***
+		- www *
+
+	* Times out
+	** Redirects to www.library
+	*** Shows krakatau.doit
+
+
+	Problematic subdomains:
+
+		- krakatau.doit		(expired, self-signed)
+		- services.ldap		(weak crypto)
+
+
+	Partially covered subdomains:
+
+		- (www.)library		(at least the homepage redirects to http)
+
+
+	Fully covered subdomains:
+
+		- learnuw
+		- ecs.library
+		- login
+		- my
+		- mywebspace
+		- wayf
+		- wiscmail
+
+-->
+<ruleset name="University of Wisconsin-Madison">
+
+	<target host="*.wisc.edu" />
+	<target host="*.library.wisc.edu" />
+		<exclusion pattern="^http://(?:www\.)?library\.wisc\.edu/(?!css/|images/)" />
+
+
+	<rule from="^http://(learnuw|(?:ecs\.|www\.)?library|login|my|mywebspace|wayf|wiscmail)\.wisc\.edu/"
+		to="https://$1.wisc.edu/" />
+
+</ruleset>
