@@ -1,8 +1,16 @@
 <!--
+	Nonfunctional domains:
+
+		- mastercard.us			(reset)
+		- www.mastercard.us		(redirects to 127986/alternate/index.html, akamai)
+		- www.priceless.com		($ redirects to http, content/ 404s)
+
+
 	Problematic domains:
 
 		- mastercard.com				(mismatched, CN: www.securecode.com)
 		- investorrelations.mastercardintl.com		(works, akamai)
+		- securecode.com				(cert only matches www)
 
 -->
 <ruleset name="MasterCard">
@@ -10,9 +18,12 @@
 	<target host="mastercard.com" />
 	<target host="*.mastercard.com" />
 	<target host="smetrics.mastercardintl.com" />
+	<target host="securecode.com" />
+	<target host="www.securecode.com" />
 
 
 	<securecookie host="^.*\.mastercard\.com$" name=".+" />
+	<securecookie host="^www\.securecode\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?mastercard\.com/"
@@ -23,5 +34,8 @@
 
 	<rule from="^http://smetrics\.mastercardintl\.com/"
 		to="https://smetrics.mastercardintl.com/" />
+
+	<rule from="^https?://(?:www\.)?securecode\.com/"
+		to="https://www.securecode.com/" />
 
 </ruleset>
