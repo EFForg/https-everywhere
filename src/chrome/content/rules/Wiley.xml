@@ -1,12 +1,32 @@
+<!--
+	Nonfunctional subdomains:
+
+		- eu *
+		- eu.he *
+		- www *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- bcs		(some [most?] paths 404)
+
+-->
 <ruleset name="Wiley (partial)">
 
-	<target host="onlinelibrary.wiley.com"/>
+	<target host="wiley.com"/>
+	<target host="*.wiley.com"/>
+		<exclusion pattern="^http://bcs\.wiley\.com/(?!/he-bcs/Books\?action=index&amp;item[iI][dD]=\w+&amp;bcs[iI][dD]=\d+)" />
 	<target host="onlinelibrarystatic.wiley.com"/>
 	<target host="sp.onlinelibrary.wiley.com" />
 
 
 	<securecookie host="^sp\.onlinelibrary\.wiley\.com$" name=".*" />
 
+
+	<rule from="^http://(?:www\.)?wiley\.com/(?:remcover\.cg|WileyRemoteAPI/Cover\.rap)i\?isbn=(\d{8})(\w\w)"
+		to="https://media.wiley.com/product_data/coverImage/$2/$1/$1$2.jpg" />
 
 	<!--	Where there's only one atom, it's Wiley's internal ID for a publication
 		Where there are two atoms:
@@ -15,7 +35,7 @@
 	<rule from="^http://onlinelibrary\.wiley\.com/store/([\d\.]+)(/[^/]+)?/asset/"
 		to="https://onlinelibrarystatic.wiley.com/store/$1$2/asset/"/>
 
-	<rule from="^http://(sp\.onlinelibrary|onlinelibrarystatic)\.wiley\.com/"
+	<rule from="^http://(bcs|images|sp\.onlinelibrary|onlinelibrarystatic)\.wiley\.com/"
 		to="https://$1.wiley.com/"/>
 
 </ruleset>
