@@ -21,4 +21,15 @@
 	<rule from="^https?://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
 		to="https://$1biomedcentral.com/" />
 
+ 	<rule from="^https?://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
+ 		to="https://$1biomedcentral.com/" />
+ 
+        <!-- This is really ugly, but some (not all!) BiomedCentral
+             HTTPS URLs generate an incorrect 302 redirect from the
+             site to http://www.biomedcentral.com:443/somepath
+             which then produces an error; we can apparently fix the
+             effects of this 302 ourselves with a rewrite rule. -->
+	<rule from="^http://(?:w\d\d\.|(www\.))?biomedcentral\.com:443/"
+                to="https://$1biomedcentral.com/" />
+
 </ruleset>
