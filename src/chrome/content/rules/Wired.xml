@@ -1,0 +1,41 @@
+<!--
+	For other Condé Nast coverage, see Conde-Nast.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/img.wired.co.uk/	| d2f0ban6dhfdsw.cloudfront.net
+			- AWS permanently redirects.
+
+		- howto.wired.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- howto.wired.com	(Akamai; 503)
+
+-->
+<ruleset name="Wired (partial)">
+
+	<target host="wired.com" />
+	<target host="*.wired.com" />
+	<target host="cdni.wired.co.uk" />
+        <exclusion pattern="^http://(?:www\.)?wired\.com/images/1x1\.trans\.gif" />
+
+	<!--	secure... redirects to http:
+
+		- epicenter/wp-content/
+		- favicon.ico
+		- images_blogs/
+		- opinion/wp-content/
+					-->
+	<rule from="^https?://(?:www\.)?wired\.com/(css/|images/|sandbox/|usr/log(?:in|out))"
+		to="https://secure.wired.com/$1" />
+
+	<rule from="^http://s(ecure|ubscri(?:be|ptions))\.wired\.com/"
+		to="https://s$1.wired.com/" />
+
+	<rule from="^https?://cdni\.wired\.co\.uk/"
+		to="https://d2f0ban6dhfdsw.cloudfront.net/" />
+
+</ruleset>
