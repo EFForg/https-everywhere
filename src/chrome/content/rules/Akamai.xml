@@ -2,11 +2,10 @@
 	For problematic rules, see Akamai-mismatches.xml.
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- http14432.storage.akadns.net		(cert: contentstorage.akamai.com)
+		- http14432.storage.akadns.net		(CN: contentstorage.akamai.com)
 		- cp44823.edgefcs.net			(reset)
-
 
 -->
 <ruleset name="Akamai">
@@ -21,27 +20,25 @@
 			https://trac.torproject.org/projects/tor/ticket/6557
 			https://trac.torproject.org/projects/tor/ticket/6871
 			https://trac.torproject.org/projects/tor/ticket/7080
-      https://trac.torproject.org/projects/tor/ticket/7577
+		 	https://trac.torproject.org/projects/tor/ticket/7198
+			https://trac.torproject.org/projects/tor/ticket/7577
 										-->
-		<exclusion pattern="^http://[\w\-]+-f\.akamaihd\.net/" />
-		<exclusion pattern="^http://[\w\-]+-i\.akamaihd\.net/" />
-		<exclusion pattern="^http://[\w\-]+-s\.akamaihd\.net/" />
-		<exclusion pattern="^http://[\w\-]+-lh\.akamaihd\.net/" />
-		<exclusion pattern="^http://[\w\-]+-vh\.akamaihd\.net/" />
+		<exclusion pattern="^http://[\w\-]+-(?:f|i|s|lh|vh)\.akamaihd\.net/" />
+                <!--
+			Apparently causes some Zynga games to fail to load.
 
-    <!-- https://trac.torproject.org/projects/tor/ticket/7198 -->
-		<exclusion pattern="^http://(median3live|mtv3median3)-s\.akamaihd\.net/" />
-
-                <!-- Apparently causes some Zynga games to fail to load.
-                        https://trac.torproject.org/projects/tor/ticket/7090
-                -->
-		<exclusion pattern="^http://zynga[0-9]-a.akamaihd\.net/" />
-
+			https://trac.torproject.org/projects/tor/ticket/7090
+										-->
+		<exclusion pattern="^http://zynga\d-a.akamaihd\.net/" />
 	<target host="*.speedera.net" />
-    <!-- https://trac.torproject.org/projects/tor/ticket/7146 --> 
-    <exclusion pattern="^http://hpshopping\.speedera\.net/" />
+    		<!--
+			https://trac.torproject.org/projects/tor/ticket/7146
+										--> 
+    		<exclusion pattern="^http://hpshopping\.speedera\.net/" />
 
-	<securecookie host="^.*\.abmr\.net$" name=".*" />
+
+	<securecookie host="^.*\.abmr\.net$" name=".+" />
+
 
 	<rule from="^http://ak1s\.abmr\.net/"
 		to="https://ak1s.abmr.net/" />
