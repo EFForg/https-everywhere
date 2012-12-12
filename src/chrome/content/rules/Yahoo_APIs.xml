@@ -8,19 +8,35 @@
 		- webplayer		(CN: s.yimg.com; 404)
 
 
+	Problematic subdomains:
+
+		- ^			(reset)
+		- search
+		- www			(works, mismatched, CN: developer.yahoo.com, differs from developer)
+
+
 	Fully covered subdomains:
 
+		- ^			(→ developer.yahoo.com)
 		- open.login
+		- query
+		- search		(→ developer.yahoo.com)
+		- yui			(→ yui-s.yahooapis.com)
+		- yui-s
 
 -->
 <ruleset name="Yahoo APIs (partial)">
 
+	<target host="yahooapis.com" />
 	<target host="*.yahooapis.com" />
 	<target host="open.login.yahooapis.com" />
 
 
 	<rule from="^http://(open\.login|query)\.yahooapis\.com/"
 		to="https://$1.yahooapis.com/" />
+
+	<rule from="^https?://(?:search\.)?yahooapis\.com/(?:.*)"
+		to="https://developer.yahoo.com/" />
 
 	<rule from="^https?://yui(?:-s)?\.yahooapis\.com/"
 		to="https://yui-s.yahooapis.com/" />
