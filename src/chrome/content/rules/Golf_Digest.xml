@@ -6,29 +6,28 @@
 
 		ToDo: find buckets
 
--->
-<ruleset name="Golf Digest (partial)">
 
-	<target host="golfdigest.com" />
-	<target host="*.golfdigest.com" />
-	<target host="golfdigestinsiders.com" />
-	<target host="www.golfdigestinsiders.com" />
-
-
-	<securecookie host="^www\.golfdigestinsiders\.com$" name=".*" />
-
-
-	<!--	secure... redirects to http:
+	Some pages redirect to http, including:
 
 		- epicenter/wp-content/
 		- favicon.ico
 		- images_blogs/
 		- opinion/wp-content/
-					-->
-	<rule from="^https?://(?:www\.)?golfdigest\.com/(css/|images/|favicon\.ico$|sandbox/)"
-		to="https://secure.golfdigest.com/$1" />
 
-	<rule from="^http://secure\.golfdigest\.com/"
+-->
+<ruleset name="Golf Digest (partial)">
+
+	<target host="golfdigest.com" />
+	<target host="*.golfdigest.com" />
+		<exclusion pattern="^https?://(?:www\.)?golfdigest\.com/(?!css/|images/|favicon\.ico$|sandbox/)" />
+	<target host="golfdigestinsiders.com" />
+	<target host="www.golfdigestinsiders.com" />
+
+
+	<securecookie host="^www\.golfdigestinsiders\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:secure\.|www\.)?golfdigest\.com/"
 		to="https://secure.golfdigest.com/" />
 
 	<rule from="^http://(www\.)?golfdigestinsiders\.com/"
