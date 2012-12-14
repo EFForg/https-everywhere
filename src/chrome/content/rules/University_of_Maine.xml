@@ -1,0 +1,48 @@
+<!--
+	Problematic subdomains:
+
+		- www.calendar *
+		- www.calendar-dev *
+		- www.extension *
+		- www.go *
+		- extensionpubs.umext		(shows epos2-phx.sequoiars.com, mismatched, CN: *.sequoiars.com)
+
+	* Cert only matches *.
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)calendar
+		- (www.)calendar-dev
+		- (www.)extension
+		- (www.)go
+		- mainestreetcs
+		- peportal
+		- plugged-in.umext
+
+-->
+<ruleset name="University of Maine (partial)">
+
+	<target host="umaine.edu" />
+	<target host="*.umaine.edu" />
+	<target host="www.*.umaine.edu" />
+	<target host="*.umext.maine.edu" />
+
+
+	<securecookie host="^.+\.umaine\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:mainestreetcs|peportal|plugged-in\.umext|www)\.)?umaine\.edu/"
+		to="https://$1umaine.edu/" />
+
+	<rule from="^https?://(?:www\.)?(calendar(?:-dev)?|extension|go)\.umaine\.edu/"
+		to="https://$1.umaine.edu/" />
+
+	<rule from="^https?://extensionpubs.umext.maine.edu/(?:$|\?.*)"
+		to="https://epos2-phx.sequoiars.com/ePOS?store=413&amp;form=shared3%2findex.html" />
+
+	<rule from="^https?://extensionpubs\.umext\.maine\.edu/ePOS"
+		to="https://epos2-phx.sequoiars.com/ePOS" />
+
+</ruleset>
