@@ -1,0 +1,63 @@
+<!--
+	Other FriendFinder rulesets:
+
+		- Adult-FriendFinder.xml
+
+
+	CDN buckets:
+
+		 - cs77.wac.edgecastcdn.net
+
+			- graphics.friendfinder.com
+			- graphics.pop6.com
+
+
+	Problematic domains:
+
+		- friendfinder.com subdomains:
+
+			- (www.)		(works, mismatched, CN: secure.friendfinder.com)
+			- graphics *
+			- photos *
+			- piclist *
+
+		- (www.)pop6.com		(works, mismatched, CN: secure.adultfriendfinder.com)
+		- graphics.pop6.com *
+
+	* Works, mismatched, CN: *.securedataimages.com
+
+
+	Fully covered domains:
+
+		- friendfinder.com subdomains:
+
+			- (www.)			(→ secure.friendfinder.com)
+			- graphics			(→ secureimage.securedataimages.com)
+			- photos			(→ secureimage.securedataimages.com)
+			- piclist			(→ secureimage.securedataimages.com)
+			- secure
+
+		- (www.)pop6.com			(→ secure.friendfinder.com)
+		- graphics.pop6.com			(→ secureimage.securedataimages.com)
+		- secureimage.securedataimages.com
+
+-->
+<ruleset name="FriendFinder">
+
+	<target host="friendfinder.com" />
+	<target host="*.friendfinder.com" />
+	<target host="pop6.com" />
+	<target host="*.pop6.com" />
+	<target host="secureimage.securedataimages.com" />
+
+
+	<securecookie host="^\.friendfinder\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:secure\.|www\.)?(?:friendfinder|pop6)\.com/"
+		to="https://secure.friendfinder.com/" />
+
+	<rule from="^https?://(?:graphics|photos|piclist|secureimage)\.(?:friendfinder|pop6|securedataimages)\.com/"
+		to="https://secureimage.securedataimages.com/" />
+
+</ruleset>
