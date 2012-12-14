@@ -1,0 +1,53 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional subdomains:
+
+		- host1		(times out)
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- citylink *
+		- web5		(cert only matches web1)
+
+	* Cert only matches www
+
+
+	Fully covered subdomains:
+
+		- ^		(→ www)
+		- citylink	(→ www)
+		- data
+		- my
+		- wald1
+		- web1
+		- web5		(→ web6)
+		- web6
+		- www
+
+-->
+<ruleset name="City of Seattle (partial)" platform="mixedcontent">
+
+	<target host="seattle.gov" />
+	<target host="*.seattle.gov" />
+
+
+	<securecookie host="^.+\.seattle\.gov$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?seattle\.gov/"
+		to="https://www.seattle.gov/" />
+
+	<rule from="^https?://citylink\.seattle\.gov/"
+		to="https://www.seattle.gov/citylink/" />
+
+	<rule from="^http://(data|my|wald1|web1)\.seattle\.gov/"
+		to="https://$1.seattle.gov/" />
+
+	<rule from="^https?://web[56]\.seattle\.gov/"
+		to="https://web6.seattle.gov/" />
+
+</ruleset>
