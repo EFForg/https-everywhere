@@ -4,24 +4,23 @@
 
 	details.com is hosted on Akamai.
 
--->
-<ruleset name="Details (partial)">
 
-	<target host="details.com" />
-	<target host="*.details.com" />
-
-
-	<!--	secure... redirects to http:
+	Some pages redirect to http, including:
 
 		- epicenter/wp-content/
 		- favicon.ico
 		- images_blogs/
 		- opinion/wp-content/
-					-->
-	<rule from="^https?://(?:www\.)?details\.com/(css/|images/|favicon\.ico$|sandbox/)"
-		to="https://secure.details.com/$1" />
 
-	<rule from="^http://secure\.details\.com/"
+-->
+<ruleset name="Details (partial)">
+
+	<target host="details.com" />
+	<target host="*.details.com" />
+		<exclusion pattern="^https?://(?:www\.)?details\.com/(?!css/|images/|favicon\.ico$|sandbox/)" />
+
+
+	<rule from="^https?://(?:secure\.|www\.)?details\.com/"
 		to="https://secure.details.com/" />
 
 </ruleset>
