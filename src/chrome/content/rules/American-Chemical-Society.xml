@@ -1,24 +1,78 @@
 <!--
+	For problematic rules, see American_Chemical_Society-problematic.xml.
+
+
 	Other American Chemical Society rulesets:
 
 		- Chemical_Abstracts_Service.xml
 
 
+	Problematic subdomains:
+
+		- chemistryjobs		(mismatched, CN: secure.boxwoodtech.com)
+		- ewebtest		(mismatched)
+
+
 	Partially covered subdomains:
 
-		- pubs		(most pages redirect to http)
+		- pubs			(most pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- assets
+		- www.awards
+		- www.awardstest
+		- www.akzonobel
+		- www.ccedlookup
+		- cen
+		- communities
+		- communitiestest
+		- www.donate
+		- (www.)emailpref
+		- eweb
+		- (www.)ewebtest	(^ → www)
+		- www.fellowselection
+		- www.fellowselectiontest
+		- www.giving
+		- www.givingtest
+		- portal
+		- (www.)join
+		- www.meetings
+		- www.membernumberlookup
+		- www.ncwlookup
+		- www.nominate
+		- www.nominatefellow
+		- www.nominatetest
+		- www.profed
+		- www.profedtest
+		- www.pubsbenefits
+		- www.register
+		- www.registertest
+		- www.renew
+		- www.store
+		- www.yellowbook
 
 -->
 <ruleset name="American Chemical Society (partial)">
 
+	<target host="acs.org" />
 	<target host="*.acs.org" />
 		<exclusion pattern="^http://pubs\.acs\.org/(?!appl/|action/showLogin|sda/|templates/)" />
+	<target host="www.*.acs.org" />
 
 
-	<securecookie host="^assets\.acs\.org$" name=".+" />
+	<securecookie host="^(?!pu)(?:.*\.)?acs\.org$" name=".+" />
 
 
-	<rule from="^http://(assets|portal|pubs)\.acs\.org/"
-		to="https://$1.acs.org/" />
+	<rule from="^http://((?:cen|communities(?:test)?|eweb|(?:www\.)?(?:emailpref|join)|portal|pubs|www(?:(?:(?:awards|fellowselection|giving|nominate|profed|register)(?:test)?|akzonobel|ccedlookup|donate|meetings|membernumberlookup|ncwlookup|nominatefellow|pubsbenefits|renew|store|yellowbook)\.)?)\.)?acs\.org/"
+		to="https://$1acs.org/" />
+
+	<rule from="^https?://assets(?:test)?\.acs\.org/"
+		to="https://assets.acs.org/" />
+
+	<rule from="^https?://(?:www\.)?ewebtest\.acs\.org/"
+		to="https://www.ewebtest.acs.org/" />
 
 </ruleset>
