@@ -2,23 +2,64 @@
 	For problematic rules, see MailChimp-mismatches.xml.
 
 
-	AmazonWS buckets:
+	CDN buckets:
 
-		- cdn-images.mailchimp.com
-		- experts-production		(used on experts)
-		- int-dir			(used on connect.; doesn't have "blog" in filenames)
+		- s3.amazonaws.com:
 
-
-	apidocs			(cert valid; shows "Nothing found" blog page)
-	cf			(shows blog over https, nothing over http)
-	cf.../(blog|www)/	(shows "Nothing found" blog page)
+			- cdn-images.mailchimp.com
+			- experts-production		(used on experts)
+			- int-dir			(used on connect.; doesn't have "blog" in filenames)
 
 
-	Nonfunctional:
+		- dbfv8p2wljo34.cloudfront.net
 
-		- 50.23.108.136/cloudfront_html/creative-blog/	("Nothing found" blog page; !at static.mailchimp.com/blog/images/;
-								no creative-blog bucket on AmazonWS)
-		- creative.mailchimp.com
+			- static.mailchimp.com
+
+		- dbhkt46el5ri0.cloudfront.net
+
+			- equivalent to cdn-images.mailchimp.com.s3.amazonaws.com
+			- cdn-images.mailchimp.com
+
+		- mcid.heroku.com
+
+		- mc-experts.herokuapp.com
+
+			- experts.mailchimp.com
+
+		- mc-status.herokuapp.com		(404, "No such app")
+
+			- status.mailchimp.com
+
+
+	Nonfunctional domains:
+
+		- 50.23.108.136		(shows sfbloghost)
+
+		- mailchimp.com subdomains:
+
+			- apidocs	(shows sfbloghost, cert valid)
+			- cf		(shows sfbloghost over https, 403 over http)
+			- creative	(hosted on Tumblr)
+
+
+	Problematic subdomains:
+
+		- status		(mismatched, CN: *.herokuapp.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- admin
+		- \w+.admin
+		- blog
+		- cdn-images	(→ s3.amazonaws.com/cdn-images.mailchimp.com/)
+		- connect	(→ mcid.heroku.com)
+		- experts	(→ mc-experts.herokuapp.com)
+		- login
+		- sfbloghost
+		- static	(→ dbfv8p2wljo34.cloudfront.net)
+
 
 -->
 <ruleset name="MailChimp (partial)">
@@ -28,9 +69,9 @@
 	<target host="*.admin.mailchimp.com" />
 
 
-	<!--	is cross-domain login cookie used on unsecureable pages?
+	<!--	is wildcard login cookie used on unsecureable pages?
 									-->
-	<securecookie host="^(?:.*\.admin|blog|login)\.mailchimp\.com$" name=".*" />
+	<securecookie host="^.+\.mailchimp\.com$" name=".+" />
 
 
 	<rule from="^http://((?:(?:\w+\.)?admin|blog|login|sfbloghost|www)\.)?mailchimp\.com/"
