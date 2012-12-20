@@ -2,11 +2,6 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	CDN buckets:
-
-		- s1-word-view-15.vo.msecnd.net
-
-
 	Nonfunctional domains:
 
 		- explore.live.com		(404)
@@ -25,25 +20,39 @@
 
 			- account
 			- directory
-			- \w+.directory
-				- people.directory
+			- \w+.directory:
+
+				- people
+
 			- g
 			- home
 			- sc.imp
 			- login
 			- \w+.login
 			- mail
-			- *.mail
-				- snt\d+\.mail
+
+			- *.mail:
+
+				- snt\d+
+
 			- *.*.mail
-			- \w+.gateway.messenger
-				- baymsg\d+.gateway.messenger
+
+			- \w+.gateway.messenger:
+
+				- baymsg\d+
+
 			- oauth
 			- onecare
 			- profile
-			- cid-\w+.profile
+
+			- \w+.profile:
+
+				- cid-\w+
+
 			- secure.\w+
+
 				- secure.shared
+
 			- geo.messenger.services
 			- signout
 			- signup
@@ -56,19 +65,26 @@
 				- byfiles
 				- dm1files
 
-			- cid-\w+.users.storage
+			- \w+.users.storage:
 
-		- \w+.bay.livefilestore.com
-			- c.bay
+				- cid-\w+
 
-		- \w+.vo.msecnd.net
+		- \w+.bay.livefilestore.com:
+
+			- c
+
+		- \w+.vo.msecnd.net:
+
+                        - az94986.vo.msecnd.net		(on so.cl)
+                        - officeimg.vo.msecnd.net
+			- s1-word-view-15.vo.msecnd.net
 
 		- accountservices.passport.net
 
 		- so.cl
 		- www.so.cl
 
-		- \w+.wlxrs.com
+		- \w+.wlxrs.com:
 
 			- js2
 			- secure
@@ -83,21 +99,23 @@
 <ruleset name="Hotmail / Live">
 
 	<target host="a.gfx.ms" />
-	<!--	target host is * because Live URLs can contain multiple unpredictable
+	<!--
+		Target host is * because Live URLs can contain multiple unpredictable
 		components, like http://snXXXw.sntXXX.mail.live.com/default.aspx
 		In the current target host syntax, a wildcard can match only one
 		hostname element, not two, and only one wildcard per target host
-		is permitted.		-->
+		is permitted.
+				-->
 	<target host="hotmail.com" />
 	<target host="*.hotmail.com" />
 	<target host="*.live.com" />
+	<target host="secure.*.live.com" />
 	<target host="*.account.live.com" />
 	<target host="*.directory.live.com" />
 	<target host="sc.imp.live.com" />
 	<target host="*.mail.live.com" />
 	<target host="*.login.live.com" />
 	<target host="*.profile.live.com" />
-	<target host="secure.*.live.com" />
 	<target host="*.gateway.messenger.live.com" />
 	<target host="geo.messenger.services.live.com" />
 	<target host="*.storage.live.com" />
@@ -112,19 +130,14 @@
 	<!--	NB: Are cross-domain cookies needed on unsecurable pages?
 
 	<securecookie host="^\.live\.com$" name=".+" /-->
-	<securecookie host="^\.?(?:account|login)\.live\.com$" name=".*"/>
-	<securecookie host="^\.(?:account|mail|profile)\.live\.com$" name=".+" />
+	<securecookie host="^\.?(?:account|login|mail|profile)\.live\.com$" name=".+" />
 	<securecookie host="^people\.directory\.live\.com$" name=".+" />
 
 
 	<!--	Microsoft itself protects the login this way but we can prevent
 		against SSL stripping.
-
-		secure.* e.g.
-
-			- secure.shared.live.com
 					-->
-	<rule from="^http://(account|(?:\w+\.)?(?:directory|login)|g|home|sc\.imp|mail|\w+\.gateway\.messenger|oauth|onecare|(?:[\w-]\.)?profile|secure\.(?:\w+)|geo\.messenger\.services|signout|signup|skydrive|[\w\-]+(?:\.users)?\.storage)\.live\.com/"
+	<rule from="^http://(account|(?:[\w-]+\.)?(?:directory|login|profile)|g|home|sc\.imp|mail|\w+\.gateway\.messenger|oauth|onecare|secure\.\w+|geo\.messenger\.services|signout|signup|skydrive|[\w-]+(?:\.users)?\.storage)\.live\.com/"
 		to="https://$1.live.com/" />
 
 	<rule from="^http://accountservices\.passport\.net/"
@@ -133,44 +146,30 @@
 	<!--	Both of these appear to trigger two good things: (1) the user is
 		prompted to make HTTPS the default; (2) even if the user decides
 		not to, the remainder of that mail-reading session is automatically
-		HTTPS-only.		-->
-
+		HTTPS-only.
+					-->
 	<rule from="^http://(?:www\.)?hotmail\.com/"
 		to="https://www.hotmail.com/" />
 
 	<rule from="^http://gfx(\d)\.hotmail\.com/"
 		to="https://gfx$1.hotmail.com/" />
 
-	<!--	example:
+	<!--	Example:
 			http://sn133w.snt133.mail.live.com/default.aspx?wa=wsignin1.0 >>>
 			https://snt133.mail.live.com/default.aspx?wa=wsignin1.0
 							-->
 	<rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/"
 		to="https://$1.mail.live.com/" />
 
-	<rule from="^http://byfiles\.storage\.live\.com/"
-		to="https://byfiles.storage.live.com/" />
-
 	<rule from="^http://(\w+)\.bay\.livefilestore\.com/"
 		to="https://$1.bay.livefilestore.com/" />
 
-	<!--	e.g.
-
-			- az94986.vo.msecnd.net on so.cl
-			- officeimg.vo.msecnd.net
-					-->
 	<rule from="^http://(\w+)\.vo\.msecnd\.net/"
 		to="https://$1.vo.msecnd.net/" />
 
 	<rule from="^http://(www\.)?so\.cl/"
 		to="https://$1so.cl/" />
 
-	<!--	Encountered subdomains:
-
-			- js2
-			- secure
-			- skydrive
-					-->
 	<rule from="^http://(\w+)\.wlxrs\.com/"
 		to="https://$1.wlxrs.com/" />
 
