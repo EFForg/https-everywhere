@@ -1,0 +1,67 @@
+<!--
+	For problematic rules, see CCS-problematic.xml.
+
+
+	For other Foot Locker coverage, see Foot_Locker_Inc.xml.
+
+
+	Nonfunctional subdomains:
+
+		- dailysweeps
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched)
+		- blog		(works, mismatched, CN: www.webhero.com)
+		- ebm.e		(mismatched, CN: ebm.cheetahmail.com)
+		- f.e		(mismatched, CN: *.chtah.com)
+		- jobs *
+		- reviews *
+
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- ebm.e		(→ ebm.cheetahmail.com)
+		- f.e		(→ f.chtah.com)
+		- images
+		- m
+		- shop
+
+
+	Targets solely for wildcard cookies:
+
+		- *.shop.ccs.com
+
+
+	Mixed data are only images and so shouldn't be a problem.
+
+-->
+<ruleset name="CCS (partial)">
+
+	<target host="ccs.com" />
+	<target host="*.ccs.com" />
+	<target host="*.e.ccs.com" />
+	<target host="*.shop.ccs.com" />
+
+
+	<securecookie host="^.*\.ccs\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?ccs\.com/"
+		to="https://www.ccs.com/" />
+
+	<rule from="^https?://ebm\.e\.ccs\.com/"
+		to="https://ebm.cheetahmail.com/" />
+
+	<rule from="^https?://f\.e\.ccs\.com/"
+		to="https://f.chtah.com/" />
+
+	<rule from="^http://(images|m|shop)\.ccs\.com/"
+		to="https://$1.ccs.com/" />
+
+</ruleset>
