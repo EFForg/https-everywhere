@@ -1,0 +1,53 @@
+<!--
+	CDN buckets:
+
+		- d1jyr02lmd46xp.cloudfront.net
+
+			- cdn.images.reevoo.com
+
+
+	Nonfunctional domains:
+
+		- analytics.reevoo.com
+
+
+	Fully covered domains:
+
+		- reevoo.com subdomains:
+
+			- (www.)
+			- cdn.images	(→ d1jyr02lmd46xp.cloudfront.net)
+			- mark
+			- c.mark
+			- de.mark
+			- t.mark
+			- shopping
+
+		- mark.reevoo.es
+		- mark.reevoo.fr
+		- mark.reevoo.it
+		- mark.reevoo.nl
+
+-->
+<ruleset name="Reevoo (partial)">
+
+	<target host="mark.reevoo.*" />
+	<target host="reevoo.com" />
+	<target host="*.reevoo.com" />
+	<target host="cdn.images.reevoo.com" />
+	<target host="*.mark.reevoo.com" />
+
+
+	<securecookie host="^\.reevoo\.com$" name=".+" />
+
+
+	<rule from="^http://((?:[ct]\.|de\.)?mark\.|shopping\.|www\.)?reevoo\.com/"
+		to="https://$1reevoo.com/" />
+
+	<rule from="^https?://cdn\.images\.reevoo\.com/"
+		to="https://d1jyr02lmd46xp.cloudfront.net/" />
+
+	<rule from="^http://mark\.reevoo\.(es|fr|it|nl)/"
+		to="https://mark.reevoo.$1/" />
+
+</ruleset>
