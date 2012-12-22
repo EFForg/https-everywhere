@@ -1,7 +1,8 @@
 <!--
 	CDN buckets:
 
-		- orig-10023.wix.cotcdn.net
+		- www.wix.com.edgesuite.net
+
 			- static.parastorage.com
 			- static.wix.com
 
@@ -11,13 +12,21 @@
 
 	Nonfunctional domains:
 
-		- static.parastorage.com
 		- jobs.wix.com			(cert: dns.lc.wix.com; 403)
-		- static.wix.com		(times out)
+
+
+	Problematic domains:
+
+		- static.parastorage.com *
+		- static.wix.com *
+
+	* Works, akamai
 
 -->
 <ruleset name="Wix (partial)" platform="mixedcontent">
 
+	<target host="static.parastorage.com" />
+		<exclusion pattern="^https?://static\.parastorage\.com/media/" />
 	<target host="wix.com" />
 	<target host="*.wix.com" />
 	<target host="dns.lc.wix.com" />
@@ -27,8 +36,11 @@
 	<securecookie host="^\.wix\.com$" name=".+" />
 
 
-	<rule from="^http://((?:www\.)?dns\.lc\.|www\.)?wix\.com/"
+	<rule from="^http://(frog\.|(?:www\.)?dns\.lc\.|www\.)?wix\.com/"
 		to="https://$1wix.com/" />
+
+	<rule from="^https?://(?:static|users)\.(?:parastorage|wix)\.com/"
+		to="https://users.wix.com/" />
 
 	<rule from="^https?://tracking\.wix\.com/"
 		to="https://wix.go2cloud.org/" />
