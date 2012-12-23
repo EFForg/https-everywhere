@@ -1,9 +1,40 @@
-<ruleset name="Inria.fr">
+<!--
+	Nonfunctional subdomains:
+
+		- siteadmin.gforge
+
+
+	Problematic subdomains:
+
+		- en	(mismatched, CN: admin-www)
+
+
+	Fully covered subdomains:
+
+		- admin-www
+		- cas
+		- gforge
+		- lists.gforge
+		- gforge-qualif
+		- lists.gforge-qualif
+		- planete
+		- sympa
+		- www
+
+-->
+<ruleset name="Inria.fr (partial)">
 
 	<target host="*.inria.fr" />
+	<target host="lists.*.inria.fr" />
 
 
-	<rule from="^http://(planete|www)\.inria\.fr/"
+	<securecookie host="^.+\.inria\.fr$" name=".+" />
+
+
+	<rule from="^http://(admin-www|cas|(?:lists\.)?gforge(?:-qualif)?|planete|sympa|www)\.inria\.fr/"
 		to="https://$1.inria.fr/" />
+
+	<rule from="^https?://en\.inria\.fr/"
+		to="https://www.inria.fr/en/" />
 
 </ruleset>
