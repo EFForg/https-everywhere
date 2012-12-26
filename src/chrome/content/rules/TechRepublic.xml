@@ -14,23 +14,23 @@
 
 	origin.techrepublic.com/images/foo.ext 301s to img.com.com/i/tr/foo.ext
 
+
+	Problematic domains:
+
+		- origin.techrepublic.com	(some paths redirect to http, mismatched)
+
 -->
 <ruleset name="TechRepublic (partial)" default_off="mismatch">
 
 	<target host="techrepublic.com" />
 	<target host="*.techrepublic.com" />
+	<target host="*.trstatic.com" />
 
 
-	<!--	Valid cert, but many (all?) paths 301 to www.
-								-->
-	<rule from="^http://techrepublic\.com/"
-		to="https://techrepublic.com/" />
+	<rule from="^http://(ssl\.)?techrepublic\.com/"
+		to="https://$1techrepublic.com/" />
 
-	<!--	- origin: Cert mismatch
-		- www: Akamai
-		- Some origin paths 301 to http
-						-->
-	<rule from="^https?://(?:origin|www)\.techrepublic\.com/css/"
-		to="https://origin.techrepublic.com/css/" />
+	<rule from="^https?://(?:(?:origin|www)\.techrepublic|i\d\.trstatic)\.com/(cs|image)s/"
+		to="https://ssl.techrepublic.com/s/$1s/" />
 
 </ruleset>
