@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- d1gyuuidj3lauh.cloudfront.net
+
+			- s.cmcdn.net
+
+		- d2tbi97h020xxe.cloudfront.net
+
+			- media.cmcdn.net
+
+
+	Partially covered domains:
+
+		- (www.)carbonmade.com
+
+			- These paths redirect to http:
+
+				- $
+				- about$
+				- portfolios$
+				- terms$
+
+			- These don't
+
+				- blog$
+				- examples$
+				- img/
+				- rescues/
+				- passwordresets/
+				- privacy$
+				- signin/
+				- signup/
+				- why$
+
+-->
+<ruleset name="Carbonmade (partial)">
+
+	<target host="carbonmade.com" />
+	<target host="www.carbonmade.com" />
+		<exclusion pattern="^http://(?:www\.)?carbonmade\.com/(?:$|\?|about|portfolio|terms)" />
+	<target host="*.cmcdn.net" />
+
+
+	<rule from="^http://(www\.)?carbonmade\.com/"
+		to="https://$1carbonmade.com/" />
+
+	<rule from="^https?://media\.cmcdn\.net/"
+		to="https://d2tbi97h020xxe.cloudfront.net/" />
+
+	<rule from="^https?://s\.cmcdn\.net/"
+		to="https://d1gyuuidj3lauh.cloudfront.net/" />
+
+</ruleset>
