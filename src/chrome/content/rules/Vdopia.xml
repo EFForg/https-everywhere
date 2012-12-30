@@ -1,0 +1,58 @@
+<!--
+	Problematic domains:
+
+		- ivdopia.com		(mismatched)
+
+		- vdopia.com subdomains:
+
+			- cdn		(akamai)
+			- i2		(self-signed)
+			- serve		(revoked cert)
+
+
+	Partially covered subdomains:
+
+		- i2		($ displays blank page over http, → ^)
+
+
+	Fully covered domains:
+
+		ivdopia.com		(^ → www)
+
+		vdopia.com subdomains:
+
+			- (www.)
+			- cdn		(→ mobile, $ redirects to mobile)
+			- i2		(→ ^)
+			- mobile
+			- online *
+			- sb *
+			- mobile.sb	(appears identical to mobile)
+			- serve		(→ ^)
+
+	* Seems identical to www
+
+-->
+<ruleset name="Vdopia">
+
+	<target host="ivdopia.com" />
+	<target host="www.ivdopia.com" />
+	<target host="vdopia.com" />
+	<target host="*.vdopia.com" />
+		<exclusion pattern="^https?://i2\.vdopia\.com/(?!js/)" />
+	<target host="mobile.sb.vdopia.com" />
+
+
+	<securecookie host="^(?:.+\.)?vdopia\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?ivdopia\.com/"
+		to="https://www.ivdopia.com/" />
+
+	<rule from="^https?://(?:i2\.|serve\.|(online\.|sb\.|www\.))?vdopia\.com/"
+		to="https://$1vdopia.com/" />
+
+	<rule from="^http://(?:cdn|mobile(\.sb)?)\.vdopia\.com/"
+		to="https://mobile$1.vdopia.com/" />
+
+</ruleset>
