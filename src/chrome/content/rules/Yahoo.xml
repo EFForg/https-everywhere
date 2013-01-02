@@ -6,6 +6,8 @@
 		- Yahoo_APIs.xml
 		- YUI_Library.xml
 
+	feedback.yahoo.com is handled in Uservoice-clients.xml.
+
 
 	CDN buckets:
 
@@ -19,7 +21,6 @@
 		- d.yimg.com/hn/p/i/bcst/yp/cnbc2/
 		- d.yimg.com/oq/
 		- ec.yimg.com/ec?url=
-		- ep.yimg.com/ca/
 		- ext.yimg.com/ec?url=
 		- sm-a[1-4].yimg.com
 		- thm-a0[1-4].yimg.com
@@ -53,14 +54,21 @@
 			- news **
 			- notepad			(cert: *.calendar.yahoo.com; shows calendar's data)
 			- img.omg *
+			- ar.rd
 			- research
 			- rightmedia			(cert: www.ce1.com; redirects there)
+			- screen **
 			- gossip-ss.us.search
 			- images.search
 			- sports **
 			- qos.video
 			- voices			(redirects to http)
 			- weather **
+
+		- yahoo.net subdomains:
+
+			- uk.match
+			- uk.matchaffinity
 
 		- ypolicyblog.com		(reset)
 		- www.ypolicyblog.com
@@ -80,8 +88,11 @@
 		yahoo.com subdomains:
 
 			- dps		(times out)
+			- feedback	(works, mismatched, CN: *.uservoice.com)
 			- help		(valid cert; 404)
 			- r.m		(404, CN: *.mail.yahoo.com)
+
+		- ep.yimg.com
 
 	* Self-signed
 
@@ -138,7 +149,18 @@
 			- ucs.query
 			- au.totaltravel
 
-		- image-c.c.yom.mail.yahoo.net
+		- yahoo.net subdomains:
+
+			- image-c.c.yom.mail
+			- lib.store
+			- order.store
+
+		- yimg.com subdomains:
+
+			- ep		(→ sep)
+			- s
+			- sep
+			- sec
 
 		- yimg.jp subdomains:
 
@@ -199,6 +221,7 @@
 	<target host="yep.video.yahoo.com" />
 	<target host="uk.health.lifestyle.yahoo.net" />
 	<target host="*.c.yom.mail.yahoo.net" />
+	<target host="*.store.yahoo.net" />
 	<target host="*.yahoofs.com" />
 	<target host="yhoo.it" />
 	<target host="*.yimg.com" />
@@ -296,6 +319,9 @@
 	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
 		to="https://smallbusiness.yahoo.com/servicecheck.php" />
 
+	<rule from="^http://(lib|order)\.store\.yahoo\.net/"
+		to="https://$1.store.yahoo.net/" />
+
 	<rule from="^http://([\w\-]+)\.yahoofs\.com/"
 		to="https://$1.yahoofs.com/" />
 
@@ -314,11 +340,14 @@
 	<rule from="^https?://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|ok|pj|qa|rq|rx|ugcwidgets|zz)/"
 		to="https://s.yimg.com/$1/" />
 
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghiqt]|ho|jg|jh|jn|kq|lh|lm|nn|nq|ml|os|pb|pv|qz|r[uwz])/"
+	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghiqt]|gh|ho|jg|jh|jn|kq|lh|lm|nn|nq|ml|os|pb|pv|qz|r[luwz])/"
 		to="https://s.yimg.com/zz/$1/" />
 
 	<rule from="^http://s(ec)?\.yimg\.com/"
 		to="https://s$1.yimg.com/" />
+
+	<rule from="^https?://s?ep\.yimg\.com/"
+		to="https://sep.yimg.com/" />
 
 	<!--	s://developer. breakage
 					-->
