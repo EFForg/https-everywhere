@@ -26,12 +26,7 @@
 	msnportalmobileisv.112.2o7.net
 
 
-	Problematic domains:
-
-		- img3.store.microsoft.com	(mismatch)
-
-
-	Nonfunctional:
+	Nonfunctional domains:
 
 		- www.buildmypinnedsite.com
 		- download.microsoft.com	(Akamai; 503)
@@ -48,11 +43,43 @@
 		- (www.)windowsteamblog.com
 
 
+	Problematic domains:
+
+		- acikakademi.com *
+		- dreamspark.com *
+		- imaginecup.com *
+
+		- microsoft.com subdomains:
+
+			- i **
+			- i\d **
+			- js **
+			- search **
+			- img3.store		(mismatched)
+			- update *
+			- res[12].windows	(400, mismatched, CN: *.sharepointonline.com)
+
+		- windows.net		(times out)
+
+	* Cert only matches www
+	** akamai
+
+
+	Partially covered domains:
+
+		- (www.)imaginecup.com		(many paths redirect to http or a login page)
+
+
 	Fully covered subdomains:
 
 		- choice
 		- commerce
 		- g
+
+
+	Targets solely for wildcard cookies:
+
+		- *.office.microsoft.com
 
 -->
 <ruleset name="Microsoft (partial)">
@@ -66,19 +93,32 @@
 	<target host="www.imaginecup.com" />
 	<target host="microsoft.com" />
 	<target host="*.microsoft.com" />
-		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html	-->
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
+											-->
 		<exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" />
-		<!--	Redirects via JS to http.  Very secure indeed.	-->
-		<exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx($|\?)" />
-		<!--     Microsoft won't serve OEM pages on https -->
-    		<exclusion pattern="^http://(www\.)?microsoft\.com/[oO][eE][mM]/" />
-		<!--	https://trac.torproject.org/projects/tor/ticket/5754	-->
-		<exclusion pattern="^http://msdn\.microsoft\.com/($|en-us/$|.+(/$|\.aspx|/\w\w\d{6,10}$))" />
+		<!--
+			Redirects via JS to http.  Very secure indeed.
+									-->
+		<exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx(?:$|\?)" />
+		<!--
+			Microsoft won't serve OEM pages on https
+								-->
+    		<exclusion pattern="^http://(?:www\.)?microsoft\.com/[oO][eE][mM]/" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/5754
+										-->
+		<exclusion pattern="^http://msdn\.microsoft\.com/(?:$|en-us/$|.+(?:/$|\.aspx|/\w\w\d{6,10}$))" />
+		<!--
+			Some data exist on www, exclude the rest here.
+									-->
+		<exclusion pattern="^https?://search\.microsoft\.com/(?!global/oneMscomSettings/|shared/)" />
+		<exclusion pattern="^http://support\.microsoft\.com/(?!(?:common|library|[sS]tyles)/|LTS/default\.aspx)" />
+		<exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^\.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|\?|/)))" />
+		<exclusion pattern="^http://emea\.microsoftstore\.com/(?!\w+/(?:desktopdefault\.aspx|portaldata/|services/|tags\.axd))" />
 	<target host="social.expression.microsoft.com" />
-	<!--	Akamai	-->
 	<target host="*.msdn.microsoft.com" />
 	<target host="*.code.msdn.microsoft.com" />
-	<!--	* for cross-domain cookie	-->
 	<target host="*.office.microsoft.com" />
 	<target host="*.onlinehelp.microsoft.com" />
 	<target host="*.social.microsoft.com" />
@@ -106,80 +146,47 @@
 	<target host="www.windows.net" />
 
 
-	<securecookie host="^www\.acikakademi\.com$" name=".*" />
-	<securecookie host="^www\.dreamspark\.com$" name=".*" />
-	<!--	cookies set by c.microsoft.com		-->
-	<securecookie host="^\.microsoft\.com$" name="^(A|MC1|MS0)$" />
-	<securecookie host="^(?:advertising|choice|commerce|ieonline|www)\.microsoft\.com$" name=".*" />
-	<securecookie host="^\.?office\.microsoft\.com$" name=".*" />
-	<securecookie host="^www\.systemcenteradvisor\.com$" name=".*" />
+	<securecookie host="^www\.acikakademi\.com$" name=".+" />
+	<securecookie host="^www\.dreamspark\.com$" name=".+" />
+	<!--
+		Cookies set by c.microsoft.com
+						-->
+	<securecookie host="^\.microsoft\.com$" name="^(?:A|MC1|MS0)$" />
+	<securecookie host="^(?:advertising|choice|commerce|ieonline|\.?office|www)\.microsoft\.com$" name=".+" />
+	<securecookie host="^www\.systemcenteradvisor\.com$" name=".+" />
 
 
-	<!--	- Cert only matches www
-		- !www redirects to www over http
-					-->
 	<rule from="^https?://(?:www\.)?acikakademi\.com/"
 		to="https://www.acikakademi.com/" />
 
 	<rule from="^http://ajax\.aspnetcdn\.com/"
 		to="https://ajax.aspnetcdn.com/"/>
 
-	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?dreamspark\.com/"
 		to="https://www.dreamspark.com/" />
 
-	<!--	- Cert only matches www.
-		- Many paths redirect to http or a login page.
-		- There may be more than are matched here that don't.
-				-->
 	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
 		to="https://www.imaginecup.com/$1" />
 
-	<rule from="^https?://microsoft\.com/"
+	<rule from="^https?://(?:i\d?\.|js\.|search\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(adcenter|advertising|ajax|c|choice|commerce|connect|events|social\.expression|go?|ie|ieonline|msdn|social\.msdn|office(?:365|2010)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|social\.technet|www\.update|windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(adcenter|advertising|ajax|c|choice|commerce|connect|events|social\.expression|go?|ie|ieonline|msdn|social\.msdn|office(?:365|2010)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<!--	Akamai with no valid cert.
-			Where's the bucket?	-->
-	<rule from="^https?://(?:i\d?|js)\.microsoft\.com/"
-		to="https://www.microsoft.com/" />
-
-	<!--	Akamai with no valid cert.
-			Where's the bucket?	-->
+						-->
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
-
-	<!--	Akamai	-->
-	<rule from="^https?://search\.microsoft\.com/(global/oneMscomSettings|shared)/"
-		to="https://www.microsoft.com/$1/" />
 
 	<rule from="^https?://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
 
-	<rule from="^http://support\.microsoft\.com/((?:common|library|[sS]tyles)/|LTS/default\.aspx)"
-		to="https://support.microsoft.com/$1" />
-
-	<rule from="^http://technet\.microsoft\.com/en-us/(library/[^\.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|\?|/))"
-		to="https://technet.microsoft.com/en-us/$1" />
-
-	<!--	- res[12] appear to be identical
-		- Cert: *.sharepointonline.com
-		- Display blank page
-			-->
-	<rule from="^https?://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
-		to="https://origin-res.windows.microsoft.com/" />
-
-	<rule from="^http://social\.technet\.microsoft\.com/wiki/"
-		to="https://social.technet.microsoft.com/wiki/" />
-
-	<!--	Cert doesn't match /update.	-->
 	<rule from="^https?://update\.microsoft\.com/"
 		to="https://www.update.microsoft.com/" />
 
-	<rule from="^http://v([45])\.windowsupdate\.microsoft\.com/"
-		to="https://v$1.windowsupdate.microsoft.com/" />
+	<rule from="^https?://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
+		to="https://origin-res.windows.microsoft.com/" />
 
 	<rule from="^http://login\.microsoftonline\.com/"
 		to="https://login.microsoftonline.com/" />
@@ -187,11 +194,8 @@
 	<rule from="^https?://(?:www\.)?microsoftstore\.com/"
 		to="https://www.microsoftstore.com/" />
 
-	<rule from="^http://content\.microsoftstore\.com/"
-		to="https://content.microsoftstore.com/" />
-
-	<rule from="^http://emea\.microsoftstore\.com/(\w+)/(desktopdefault\.aspx|portaldata/|services/|tags.axd)"
-		to="https://emea.microsoftstore.com/$1/$2" />
+	<rule from="^http://(content|emea)\.microsoftstore\.com/"
+		to="https://$1.microsoftstore.com/" />
 
 	<rule from="^http://assets-(\d)\.microsoftstoreassets\.com/"
 		to="https://assets-$1.microsoftstoreassets.com/" />
@@ -211,9 +215,6 @@
 	<rule from="^http://ecn\.dev\.virtualearth\.net/"
 		to="https://ecn.dev.virtualearth.net/" />
 
-	<!--	- Times out over https
-		- Redirects like so over http
-						-->
 	<rule from="^https?://(?:www\.)?windows\.net/$"
 		to="https://www.microsoft.com/net" />
 
