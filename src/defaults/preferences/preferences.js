@@ -20,7 +20,6 @@ pref("extensions.https_everywhere._observatory.popup_shown",false);
 pref("extensions.https_everywhere._observatory.proxy_host","");
 pref("extensions.https_everywhere._observatory.proxy_port",0);
 pref("extensions.https_everywhere._observatory.proxy_type","direct");
-pref("extensions.https_everywhere._observatory.use_tor_proxy",true);
 pref("extensions.https_everywhere._observatory.alt_roots",false);
 pref("extensions.https_everywhere._observatory.self_signed",true);
 pref("extensions.https_everywhere._observatory.priv_dns",false);
