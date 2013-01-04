@@ -46,7 +46,8 @@ def rulesize():
 crush = rulesize()
 sedcmd = ["sed", "-i", "-e", ":a", "-re"]
 call(sedcmd + [r"s/<!--.*?-->//g;/<!--/N;//ba", rulesets_fn])
-call( ["sed", "-i", r":a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g", rulesets_fn])
+call(["sed", "-i", r":a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g", rulesets_fn])
+call(["sed", "-i", r"s/<\/ruleset>/<\/ruleset>\n/g", rulesets_fn])
 print "Crushed", crush, "bytes of rulesets into", rulesize()
 
 try:
