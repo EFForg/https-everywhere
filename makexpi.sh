@@ -103,13 +103,13 @@ fi
 
 # Used for figuring out which branch to pull from when viewing source for rules
 GIT_OBJECT_FILE=".git/refs/heads/master"
-GIT_COMMIT_ID="HEAD"
+export GIT_COMMIT_ID="HEAD"
 if [ -e "$GIT_OBJECT_FILE" ]; then
-	GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
+	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
 
-sh ./utils/merge-rulesets.sh
+python ./utils/merge-rulesets.py
 cd src
 
 # Build the XPI!
