@@ -108,8 +108,7 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
-
-python ./utils/merge-rulesets.py
+sh ./utils/merge-rulesets.sh
 cd src
 
 # Build the XPI!
