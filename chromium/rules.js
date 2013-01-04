@@ -32,7 +32,7 @@ function RuleSet(set_name, match_rule, default_state, note) {
 }
 
 RuleSet.prototype = {
-  _apply: function(urispec) {
+  apply: function(urispec) {
     var returl = null;
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
@@ -214,7 +214,7 @@ RuleSets.prototype = {
     var newuri = null
     var rs = this.applicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
-      if (rs[i].active && (newuri = rs[i]._apply(urispec)))
+      if (rs[i].active && (newuri = rs[i].apply(urispec)))
         return newuri;
     }
     return null;

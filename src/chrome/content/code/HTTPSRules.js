@@ -59,7 +59,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
 var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 
 RuleSet.prototype = {
-  _apply: function(urispec) {
+  apply: function(urispec) {
     // return null if it does not apply
     // and the new url if it does apply
     var i;
@@ -120,7 +120,7 @@ RuleSet.prototype = {
     // If no rule applies, return null; if a rule would have applied but was
     // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
-    var newurl = this._apply(uri.spec);
+    var newurl = this.apply(uri.spec);
     if (null == newurl) 
       return null;
     if (0 == newurl)
@@ -557,14 +557,15 @@ const HTTPSRules = {
     // @applicable_list : an ApplicableList or record keeping
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
-    this.log(DBUG, "  rawhost: " + c.rawHost);
+
+    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
         // Never secure a cookie if this page might be HTTP
-        if (!known_https && !this.safeToSecureCookie(c.rawhost)) 
+        if (!known_https && !this.safeToSecureCookie(c.rawHost))
           continue;
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
@@ -590,31 +591,42 @@ const HTTPSRules = {
     // observing cookie-changed doesn't give us enough context to know the
     // full origin URI.
 
-    // If there are any redirect loops on this domain, don't secure cookies.
-    // XXX This is not a very satisfactory heuristic.  Sometimes we would want
-    // to secure the cookie anyway, because the URLs that loop are not
-    // authenticated or not important.  Also by the time the loop has been
+    // First, if there are any redirect loops on this domain, don't secure
+    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
+    // would want to secure the cookie anyway, because the URLs that loop are
+    // not authenticated or not important.  Also by the time the loop has been
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domain in https_blacklist_domains) return false;
+    if (domain in https_blacklist_domains) {
+      this.log(INFO, "cookies for " + domain + "blacklisted");
+      return false;
+    }
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
 
-    var ios = CC['@mozilla.org/network/io-service;1']
-              .getService(CI.nsIIOService);
     try {
       var nonce_path = "/" + Math.random().toString();
       nonce_path = nonce_path + nonce_path;
-      var test_uri = ios.newURI("http://" + domain + nonce_path, "UTF-8", null);
+      var test_uri = "http://" + domain + nonce_path;
     } catch (e) {
       this.log(WARN, "explosion in safeToSecureCookie for " + domain + "\n" 
                       + "(" + e + ")");
       return false;
     }
-    return wouldMatch(test_uri, null);
+
+    this.log(INFO, "Testing securecookie applicability with " + test_uri);
+    var rs = this.potentiallyApplicableRulesets(domain);
+    for (i = 0; i < rs.length; ++i) {
+      if (!rs[i].active) continue;
+      var rewrite = rs[i].apply(test_uri);
+      if (rewrite) {
+        this.log(INFO, "Yes: " + rewrite);
+        return true;
+      }
+    }
+    this.log(INFO, "(NO)");
+    return false;
   }
-
-
 };
