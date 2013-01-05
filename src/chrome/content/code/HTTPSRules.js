@@ -123,8 +123,6 @@ RuleSet.prototype = {
     var newurl = this.apply(uri.spec);
     if (null == newurl) 
       return null;
-    if (0 == newurl)
-      return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                  createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
