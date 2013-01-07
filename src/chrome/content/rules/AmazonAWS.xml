@@ -44,6 +44,8 @@
 
 		- images-jp.amazon.com		(→ images-na.ssl-images-amazon.com)
 		- g-images.amazon.com		(→ d1ge0kk1l5kms0.cloudfront.net)
+		- s3-external-[123].amazonaws.com
+		- (.+.)s3-external-[123].amazonaws.com
 		- (.+.)s3-website-eu-west-1.amazonaws.com	(→ s3-eu-west-1.amazonaws.com)
 		- (.+.)s3-website-us-east-1.amazonaws.com	(→ s3.amazonaws.com)
 		- g-ecx.images-amazon.com	(→ d1ge0kk1l5kms0.cloudfront.net)
@@ -79,6 +81,12 @@
 	<target host="s3-eu-west-1.amazonaws.com" />
 	<target host="*.s3-eu-west-1.amazonaws.com" />
 	<target host="cdn.*.s3-eu-west-1.amazonaws.com" />
+	<target host="s3-external-1.amazonaws.com" />
+	<target host="*.s3-external-1.amazonaws.com" />
+	<target host="s3-external-2.amazonaws.com" />
+	<target host="*.s3-external-2.amazonaws.com" />
+	<target host="s3-external-3.amazonaws.com" />
+	<target host="*.s3-external-3.amazonaws.com" />
 	<target host="s3-us-west-1.amazonaws.com" />
 	<target host="*.s3-us-west-1.amazonaws.com" />
 	<target host="cdn.*.s3-us-west-1.amazonaws.com" />
@@ -95,13 +103,13 @@
 	<rule from="^http://(signin\.aws|aws(?:-portal)?|fls-eu|fls-na|payments|sis)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
-	<rule from="^http://s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://s3(?:-website)?(-(?:eu|us)-west-1|-external-\d)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-(?:eu|us)-west-1|-external-\d)?\.amazonaws\.com/"
 		to="https://$1.s3$2.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-(?:eu|us)-west-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-(?:eu|us)-west-1|-external-\d)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
 
 	<rule from="^http://s3-website-us-east-1\.amazonaws\.com/"
