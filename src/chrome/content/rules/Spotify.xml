@@ -1,15 +1,25 @@
 <!--
+	For problematic rules, see Spotify-problematic.xml.
+
+
 	CDN buckets:
 
 		- d1clcicqv97n4s.cloudfront.net
 		- d2b1xqaw2ss8na.cloudfront.net
 		- dlfl22czvqywx.cloudfront.net
 		- spotify.i.lithium.com
+		- s3.amazonaws.com/scdn/
+
+
+	Problematic domains:
+
+		- cf.scdn.co			(cloudfront)
+		- origin.scdn.co		(mismatched, CN: *.spotify.com)
 
 -->
 <ruleset name="Spotify (partial)">
 
-	<target host="cf.scdn.co" />
+	<!--target host="cf.scdn.co" /-->
 	<target host="spotify.com" />
 	<target host="*.spotify.com" />
 	<!--target host="*.embed.spotify.com" /-->
@@ -22,8 +32,15 @@
 	<securecookie host="^\.embed\.spotify\.com$" name=".*" /-->
 
 
+	<!--	Spotify has (deliberately?) broken us by
+		starting to redirect to www.spotify.com.
+
+		Possibly related:
+
+		https://trac.torproject.org/projects/tor/ticket/7888
+
 	<rule from="^https?://cf\.scdn\.co/"
-		to="https://dlfl22czvqywx.cloudfront.net/" />
+		to="https://dlfl22czvqywx.cloudfront.net/" /-->
 
 	<!--	Some (most?) pages 302 to http.
 						-->
