@@ -4,17 +4,51 @@
 
 	lego.112.2o7.net/b/ss/legoglobal/
 
+
+	Nonfunctional subdomains:
+
+		- cs *
+		- service **
+		- services **
+		- cs.us *
+		- www
+
+	* 404, mismatched
+	** At least some pages redirect to http
+
+
+	Problematic subdomains:
+
+		- (www.)
+		- en-us.kb	(mismatched, CN: *.parature.com)
+
+
+	Partially covered subdomains:
+
+		- club *
+		- education *
+
+	* Some (most?) pages redirect to http
+	
+
 -->
 <ruleset name="LEGO (partial)">
 
+	<target host="lego.com" />
 	<target host="*.lego.com" />
+		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
+		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
+	<target host="services.*.lego.com" />
 
 
-	<securecookie host="^account\.lego\.com$" name=".*" />
+	<securecookie host="^(?:aboutus|account2?|services\.account|assets|rebrick)\.lego\.com$" name=".*" />
 
 
-	<rule from="^http://a(boutus|ccount)\.lego\.com/"
-		to="https://a$1.lego.com/" />
+	<rule from="^https?://(?:www\.|wwwsecure\.)?lego\.com/"
+		to="https://wwwsecure.lego.com/" />
+
+	<rule from="^http://(aboutus|account2?|services\.(?:account|community)|assets|club|education|moderation|rebrick)\.lego\.com/"
+		to="https://$1.lego.com/" />
 
 	<rule from="^http://cache\.lego\.com/"
 		to="https://a248.e.akamai.net/cache.lego.com/" />
