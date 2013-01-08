@@ -1,0 +1,29 @@
+<!--
+	Problematic subdomains:
+
+		- marketo	(redirects to app-c.marketo.com, mismatched, CN: *.marketo.com)
+
+
+	Partially covered subdomains:
+
+		- marketo	(→ na-c.marketo.com)
+		- (www.)	(some [most?] pages redirect to http)
+
+-->
+<ruleset name="RingCentral">
+
+	<target host="ringcentral.com" />
+	<target host="*.ringcentral.com" />
+		<exclusion pattern="^http://(?:www\.)?ringcentral\.com/(?!css/|demo/[\w-]+\.jpg$|images/|ringme/)" />
+
+
+	<securecookie host="^service\.ringcentral\.com$" name=".+" />
+
+
+	<rule from="^http://(service\.|www\.)?ringcentral\.com/"
+		to="https://$1ringcentral.com/" />
+
+	<rule from="^https?://marketo\.ringcentral\.com/(cs|image|r)s/"
+		to="https://na-c.marketo.com/$1s/" />
+
+</ruleset>
