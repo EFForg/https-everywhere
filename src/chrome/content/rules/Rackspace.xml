@@ -5,9 +5,13 @@
 		- (www.)rackspacestartups.com
 
 
-	Mismatches:
+	Problematic domains:
 
-		- mosso.com	(cert: *.rackspacecloud.com; redirects to www.rackspace.com/cloud/)
+		- mosso.com				(redirects to www.rackspace.com/cloud/; mismatched, CN: *.rackspacecloud.com)
+		- cdn.cloudfiles.mosso.com		(401, akamai)
+		- www.rackspace.com.hk			(mismatched)
+		- (*).cdn.cloudfiles.rackspacecdn.com	(akamai)
+		- (*).cdn1.cloudfiles.rackspacecdn.com	(akamai)
 
 
 	Partially covered domains:
@@ -18,7 +22,7 @@
 	Fully covered domains:
 
 		- cdn.cloudfiles.mosso.com/(*)/		(→ (*).ssl.cf0.rackcdn.com)
-		- (*).r\d{1,2}.cf[0-3].rackcdn.com	(→ (*).ssl.cf[0-3].rackcdn.com)
+		- (*).r\d+.cf[0-3].rackcdn.com		(→ (*).ssl.cf[0-3].rackcdn.com)
 
 		- rackspace.com subdomains:
 
@@ -30,7 +34,7 @@
 		- (*).cdn.cloudfiles.rackspace.com	(→ (*).ssl.cf0.rackcdn.com)
 		- (*).cdn1.cloudfiles.rackspace.com	(→ (*).ssl.cf1.rackcdn.com)
 
-		- (www.)rackspace.com.hk		(→ [www.]rackspace.hk)
+		- (www.)rackspace.com.hk		(→ www.rackspace.hk)
 		- (www.)rackspace.co.uk			(^ → www)
 		- (www.)rackspace.co.za			(^ → www)
 		- (www.)rackspace.dk			(^ → www)
@@ -52,13 +56,11 @@
 	<target host="*.cf3.rackcdn.com" />
 	<target host="rackspace.*" />
 	<target host="*.rackspace.com" />
-		<exclusion pattern="^http://www\.rackspace\.com/cloud/" />
-		<exclusion pattern="^http://www\.rackspace\.com/knowledge_center/" />
+		<exclusion pattern="^http://www\.rackspace\.com/(?:cloud|knowledge_center)/" />
 	<target host="rackspace.com.hk" />
 	<target host="www.rackspace.com.hk" />
-	<target host="rackspace.co.uk" />
+	<target host="rackspace.co.*" />
 	<target host="*.rackspace.co.uk" />
-	<target host="rackspace.co.za" />
 	<target host="*.rackspace.co.za" />
 	<target host="*.rackspace.dk" />
 	<target host="*.rackspace.hk" />
@@ -66,26 +68,23 @@
 	<target host="*.rackspace.no" />
 	<target host="*.rackspace.se" />
 	<target host="rackspacecloud.com" />
-	<target host="*.cdn.cloudfiles.rackspacecloud.com" />
-	<target host="*.cdn1.cloudfiles.rackspacecloud.com" />
-	<target host="manage.rackspacecloud.com" />
+	<target host="*.rackspacecloud.com" />
+	<target host="*.cloudfiles.rackspacecloud.com" />
 	<target host="lon.manage.rackspacecloud.com" />
-	<target host="www.rackspacecloud.com" />
 
 
-	<securecookie host="^(www)?\.rackspace\.(com|co\.(uk|za)|dk|n[lo]|se)$" name=".*" />
-	<securecookie host="^(apps|my)\.rackspace\.com$" name=".*" />
-	<securecookie host="^manage\.rackspacecloud\.com$" name=".*" />
+	<securecookie host="^(?:www)?\.rackspace\.(?:com|co\.uk|co\.za|dk|nl|no|se)$" name=".+" />
+	<securecookie host="^(?:apps|my)\.rackspace\.com$" name=".+" />
+	<securecookie host="^manage\.rackspacecloud\.com$" name=".+" />
 
 
-	<!--	Akamai, 401	-->
 	<rule from="^https?://cdn\.cloudfiles\.mosso\.com/(\w+)/"
 		to="https://$1.ssl.cf0.rackcdn.com/" />
 
-	<rule from="^https?://([\w\-]+)\.(?:r\d\d?|ssl)\.cf([0-3])\.rackcdn\.com/"
+	<rule from="^https?://([\w-]+)\.(?:r\d+|ssl)\.cf(\d)\.rackcdn\.com/"
 		to="https://$1.ssl.cf$2.rackcdn.com/" />
 
-	<rule from="^https?://(?:www\.)?rackspace(cloud)?\.(com|co\.(?:uk|za)|dk|n[lo]|se)/"
+	<rule from="^https?://(?:www\.)?rackspace(cloud)?\.(com|co\.uk|co\.za|dk|nl|no|se)/"
 		to="https://www.rackspace$1.$2/" />
 
 	<rule from="^http://(apps|cart|cp|my)\.rackspace\.com/"
@@ -97,10 +96,6 @@
 	<rule from="^http://(lon\.)?manage\.rackspacecloud\.com/"
 		to="https://$1manage.rackspacecloud.com/" />
 
-	<!--	Akamai.  e.g.
-
-		c0939582.cdn.cloudfiles.rackspacecloud.com/entry_titles/small/video.gif
-						-->
 	<rule from="^https?://(\w+)\.cdn\.cloudfiles\.rackspacecloud\.com/"
 		to="https://$1.ssl.cf0.rackcdn.com/" />
 
