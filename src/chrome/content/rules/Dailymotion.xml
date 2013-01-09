@@ -7,6 +7,11 @@
 		- publicite.dailymotion.com
 		- vid.ak.dmcdn.net		(Akamai; 403)
 
+
+	Problematic domains:
+
+		- ak2.static.dailymotion.com	(mismatched, CN: *.dmcdn.net)
+
 -->
 <ruleset name="Dailymotion (default off)" default_off="breaks some embedded videos">
 
@@ -17,6 +22,7 @@
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001241.html
 													-->
 		<exclusion pattern="^http://(www\.)?dailymotion\.com/(cdn/[\w\-]+/video/|crossdomain\.xml$)" />
+	<target host="ak2.static.dailymotion.com" />
 	<target host="*.dmcdn.net" />
 	<target host="dmcloud.net" />
 	<target host="*.dmcloud.net" />
@@ -32,6 +38,9 @@
 												-->
 	<rule from="^http://static(\d(?:-ssl)?)\.dmcdn\.net/static/(.+)\.jpg"
 		to="https://static$1.dmcdn.net/static/$2.jpg" />
+
+	<rule from="^https?://ak2\.static\.dailymotion\.com/static/(.+)\.jpg"
+		to="https://static1-ssl.dmcdn.net/static/$1.jpg" />
 
 	<rule from="^http://((?:s|www)\.)?dmcloud\.net/"
 		to="https://$1dmcloud.net/" />
