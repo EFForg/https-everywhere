@@ -1,0 +1,32 @@
+<!--
+	Partially covered subdomains:
+
+		- (www.)
+
+			- $ redirects to accadm/base/auth.php
+			- other pages 404
+			- modules/ 404s
+
+		- support	(same as www)
+
+
+	Fully covered subdomains:
+
+		- owa
+		- webmail2
+
+-->
+<ruleset name="Space2u (partial)">
+
+	<target host="space2u.com" />
+	<target host="www.space2u.com" />
+		<exclusion pattern="^http://(?:www\.)?space2u\.com/(?!accadm/base/auth\.php|files/login\.php|images/)" />
+
+
+	<securecookie host="^(?:owa|webmail2)\.space2u\.com$" name=".+" />
+
+
+	<rule from="^http://(owa\.|webmail2\.|www\.)?space2u\.com/"
+		to="https://$1space2u.com/" />
+
+</ruleset>
