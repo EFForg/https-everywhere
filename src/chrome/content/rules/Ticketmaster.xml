@@ -32,26 +32,30 @@
 		- a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/
 		- a248.e.akamai.net/f/248/22942/1d/www.billetnet.dk/
 
+		- ticketmaster.ugc.bazaarvoice.com
 
-	Nonfunctional domains:
-
-		- reviews.ticketmaster.co.uk		(pages redirect back from akamai)
+			- reviews.ticketmaster.co.uk
 
 
 	Problematic domains:
 
 		- (www.)billetnet.es			(redirects to billetnet.fr)
 		- (www.)billetnet.fr			(shows default Parallels Panel page)
+		- eticketing.co.uk ***
 		- ticketmaster.com			(only matches www)
 		- media.ticketmaster.com *
 		- media.ticketmaster.co.uk *
+		- reviews.ticketmaster.co.uk *
 		- ads.tmcs.ticketmaster.com **
 		- ads.as4x.tmcs.ticketmaster.com **
-		- ticketmaster.es			(cert only matches www)
+		- ticketmaster.co.uk			(cert only matches media)
+		- ticketmaster.es ***
 		- i.ticketweb.com **
+		- (www.)tmdeals.co.uk
 
 	* Akamai
 	** CN: de.ticketmaster.com, works.
+	*** Cert only matches www
 
 
 	Partially covered domains:
@@ -61,6 +65,7 @@
 		- lippupalvelu.fi *
 		- (www.)ticketmaster.com *
 		- ticketsnow.ticketmaster.com *
+		- reviews.ticketmaster.co.uk *
 		- (www.)ticketmaster.de *
 		- (www.)ticketmaster.nl *
 
@@ -69,6 +74,8 @@
 
 	Fully covered domains:
 
+		- (www.)eticketing.co.uk	(^ → www)
+		- (www.)ticketmaster.co.uk	(^ → www)
 		- (www.)ticketmaster.es		(^ → www)
 
 -->
@@ -81,16 +88,22 @@
 		<exclusion pattern="^http://(?:www\.)?(?:billetnet\.dk|billettservice\.no|lippupalvelu\.fi|ticketmaster\.(?:de|nl))/(?!assets/|myAccount|resource/|static/|theme/|tm-\w\wprod\.112\.2O7\.net/)" />
 	<target host="billettservice.no" />
 	<target host="www.billettservice.no" />
+	<target host="eticketing.co.uk" />
+	<target host="www.eticketing.co.uk" />
 	<target host="lippupalvelu.fi" />
 	<target host="www.lippupalvelu.fi" />
 	<target host="ticketmaster.*" />
 	<target host="www.ticketmaster.*" />
 	<target host="*.ticketmaster.com" />
+	<target host="ticketmaster.co.uk" />
 	<target host="*.ticketmaster.co.uk" />
 	<target host="media.ticketmaster.eu" />
 	<target host="ticketweb.*" />
 	<target host="*.ticketweb.com" />
 	<target host="www.ticketweb.co.uk" />
+
+
+	<securecookie host="^www\.eticketing\.co\.uk$" name=".+" />
 
 
 	<!--	Apply 2o7 rules first, so that matches
@@ -106,6 +119,9 @@
 
 	<rule from="^http://(?:www\.)?billetnet\.dk/"
 		to="https://www.billetnet.dk/" />
+
+	<rule from="^https?://(?:www\.)?eticketing\.co\.uk/"
+		to="https://www.eticketing.co.uk/" />
 
 	<rule from="^http://(?:www\.)?lippupalvelu\.fi/"
 		to="https://www.lippupalvelu.fi/" />
@@ -132,11 +148,17 @@
 		to="https://ticketsnow.ticketmaster.com/$1" />
 
 
-	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(favicon\.ico|londonpreparesseries)"
-		to="https://www.ticketmaster.co.uk/$1" />
+	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(?:section)?(\?.*)?$"
+		to="https://www.ticketmaster.co.uk/section/$1" />
+
+	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/"
+		to="https://www.ticketmaster.co.uk/" />
 
 	<rule from="^http://media\.ticketmaster\.co\.uk/"
 		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/" />
+
+	<rule from="^http://reviews\.ticketmaster\.co\.uk/(logging(?:$|\?)|\d+-\w\w_\w\w/\d+/reviews\.htm\?.*format=embedded|static/)"
+		to="https://ticketmaster.ugc.bazaarvoice.com/$1" />
 
 
 	<rule from="^http://(?:www\.)?ticketmaster\.(de|es|nl)/"
