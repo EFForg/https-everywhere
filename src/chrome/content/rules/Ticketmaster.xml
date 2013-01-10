@@ -11,29 +11,53 @@
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/www.ticketmaster.de/
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/media.ticketmaster.com/
 		a248.e.akamai.net/6/248/85580/MNXWEB10.3.8-13442812851/media.ticketmaster.eu/
+		a248.e.akamai.net/6/248/85580/MNXWEB11.1.7-13576805241/media.ticketmaster.eu/
+		a248.e.akamai.net/6/248/85580/MNXWEB11.1.7-13576805241/www.ticketmaster.de/
+		a248.e.akamai.net/7/248/11802/MNXWEB10.3.8-13528827611/media.ticketmaster.eu/
+		a248.e.akamai.net/7/248/11802/MNXWEB10.3.8-13528827611/www.ticketmaster.nl/
 		a248.e.akamai.net/7/248/11802/MNXWEB9-2-41/www.ticketmaster.nl/
+		a248.e.akamai.net/7/248/11803/MNXWEB10.3.9-13511844753/www.billettservice.no/
+		a248.e.akamai.net/7/248/11803/MNXWEB10.3.9-13511844753/media.ticketmaster.eu/
 		a248.e.akamai.net/7/248/17391/MNXWEB9-2-2/www.lippupalvelu.fi/
+		a248.e.akamai.net/7/248/17391/MNXWEB10.3.8-1352882761/www.lippupalvelu.fi/
+		a248.e.akamai.net/7/248/17391/MNXWEB10.3.8-1352882761/media.ticketmaster.eu/
 		a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/
+		a248.e.akamai.net/7/248/22942/MNXWEB11.1.7-13576805241/www.billetnet.dk/
+		a248.e.akamai.net/7/248/22942/MNXWEB11.1.7-13576805241/media.ticketmaster.eu/
 		a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/
 		a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com
 		a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/
+		a248.e.akamai.net/f/248/905/10m/reviews.ticketmaster.co.uk/
 		a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/
 		a248.e.akamai.net/f/248/22942/1d/www.billetnet.dk/
+
+
+	Nonfunctional domains:
+
+		- reviews.ticketmaster.co.uk		(pages redirect back from akamai)
 
 
 	Problematic domains:
 
 		- ticketmaster.com			(only matches www)
-		- ads.tmcs.ticketmaster.com *
-		- ads.as4x.tmcs.ticketmaster.com *
+		- media.ticketmaster.com *
+		- media.ticketmaster.co.uk *
+		- ads.tmcs.ticketmaster.com **
+		- ads.as4x.tmcs.ticketmaster.com **
 
-	* CN: de.ticketmaster.com, works.
+	* Akamai
+	** CN: de.ticketmaster.com, works.
 
 
 	Partially covered domains:
 
+		- (www.)billetnet.dk *
+		- (www.)billettservice.no *
+		- lippupalvelu.fi *
 		- (www.)ticketmaster.com *
 		- ticketsnow.ticketmaster.com *
+		- (www.)ticketmaster.de *
+		- (www.)ticketmaster.nl *
 
 	* At least some pages redirect to http.
 
@@ -44,8 +68,7 @@
 	<target host="www.admission.com"/>
 	<target host="billetnet.dk"/>
 	<target host="www.billetnet.dk"/>
-		<!--	Someone's noticed what we're up to =(	-->
-		<exclusion pattern="^http://(www\.)?billetnet\.dk/($|index\.php)" />
+		<exclusion pattern="^http://(www\.)?(?:billetnet\.dk|billettservice\.no|lippupalvelu\.fi|ticketmaster\.(?:de|nl))/(?!assets/|myAccount|resource/|static/|theme/|tm-\w\wprod\.112\.2O7\.net/)" />
 	<target host="billettservice.no"/>
 	<target host="www.billettservice.no"/>
 	<target host="lippupalvelu.fi"/>
@@ -83,15 +106,11 @@
 
 
 	<rule from="^http://(?:www\.)?billetnet\.dk/"
-		to="https://a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/"/>
-
-
-	<rule from="^http://(?:www\.)?billettservice\.no/(assets/|myAccount/|resource/|static/|theme/)"
-		to="https://www.billettservice.no/$1"/>
+		to="https://www.billetnet.dk/"/>
 
 
 	<rule from="^http://(?:www\.)?lippupalvelu\.fi/"
-		to="https://a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/"/>
+		to="https://www.lippupalvelu.fi/"/>
 
 
 	<rule from="^http://(?:www\.)?ticket(?:ek|master)\.cl/"
@@ -121,12 +140,9 @@
 	<rule from="^http://media\.ticketmaster\.co\.uk/"
 		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/"/>
 
-	<rule from="^http://reviews\.ticketmaster\.co\.uk/"
-		to="https://a248.e.akamai.net/f/248/905/10m/reviews.ticketmaster.co.uk/"/>
 
-
-	<rule from="^http://(?:www\.)?ticketmaster\.de/(resource|myAccount|static|theme)/"
-		to="https://www.ticketmaster.de/$1/"/>
+	<rule from="^http://(?:www\.)?ticketmaster\.de/"
+		to="https://www.ticketmaster.de/"/>
 
 
 	<rule from="^http://(?:www\.)?ticketmaster\.(dk|es)/"
@@ -138,7 +154,7 @@
 
 
 	<rule from="^http://(?:www\.)?ticketmaster\.nl/"
-		to="https://a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/"/>
+		to="https://www.ticketmaster.nl/"/>
 
 
 	<rule from="^http://(?:www\.)?ticketnet\.fr/(assets|static)/"
