@@ -33,6 +33,7 @@
 		- download.microsoft.com	(Akamai; 503)
 		- web.esd.microsoft.com		(Akamai, 503; esd, origin, origin-web, and web don't exist)
 		- mymfe.microsoft.com		(reset)
+		- officeimages.microsoft.com
 		- privacy.microsoft.com		(times out)
 		- sharepoint.microsoft.com	(cert valid; redirects to login.live.com)
 		- edir.windows.microsoft.com	(404)
@@ -60,6 +61,8 @@
 			- update *
 			- res[12].windows	(400, mismatched, CN: *.sharepointonline.com)
 
+		- office.com
+
 		- widgets.membership.s-msft.com		(akamai)
 		- windows.net		(times out)
 
@@ -81,6 +84,11 @@
 			- commerce
 			- g
 			- widgets.membership
+			- office15client
+			- officepreview
+			- officeredir
+
+		- (www.)office.com			(^ → www)
 
 		- widgets.membership.s-msft.com		(→ widgets.membership.microsoft.com)
 
@@ -124,6 +132,8 @@
 		<exclusion pattern="^https?://search\.microsoft\.com/(?!global/oneMscomSettings/|shared/)" />
 		<exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^\.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|\?|/)))" />
 	<target host="login.microsoftonline.com" />
+	<target host="office.com" />
+	<target host="www.office.com" />
 	<target host="*.s-msft.com" />
 	<target host="systemcenteradvisor.com" />
 	<target host="*.systemcenteradvisor.com" />
@@ -158,7 +168,7 @@
 	<rule from="^https?://(?:i\d?\.|js\.|search\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(accountservices|adcenter|advertising|ajax|c|choice|commerce|connect|events|social\.expression|go?|ie|ieonline|msdn|social\.msdn|office(?:365|2010)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(accountservices|adcenter|advertising|ajax|c|choice|commerce|connect|events|social\.expression|go?|ie|ieonline|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<rule from="^https?://i\d\.social\.s-msft\.com/wiki/"
@@ -180,6 +190,9 @@
 
 	<rule from="^http://login\.microsoftonline\.com/"
 		to="https://login.microsoftonline.com/" />
+
+	<rule from="^https?://(?:www\.)?office\.com/"
+		to="https://www.office.com/" />
 
 	<rule from="^http://i-technet\.sec\.s-msft\.com/"
 		to="https://i-technet.sec.s-msft.com/" />
