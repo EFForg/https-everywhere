@@ -12,12 +12,46 @@
 
 	Nonfunctional domains:
 
+		- www.livenation.be		(reset)
 		- media.livenation.co.uk	(shows "UNSUBSCRIBE INFORMATION", akamai)
 
 
 	Problematic domains:
 
+		- onenation.livenation.com		(works, akamai)
 		- media.livenationinternational.com	(akamai)
+
+
+	Partially covered domains:
+
+		- (www.)livenation.com			(at least some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- secure.getmein.com
+		- (www1?.)livenation.ae
+		- (www1?.)livenation.asia
+		- fr.livenation.be
+		- www1.fr.livenation.be
+		- nl.livenation.be
+		- www1.nl.livenation.be
+		- (www1?.)livenation.co.jp
+		- (www1?.)livenation.co.uk
+		- (www1?.)livenation.com.au
+		- (www1?.)livenation.cz
+		- (www1?.)livenation.dk
+		- (www1?.)livenation.es
+		- (www1?.)livenation.fi
+		- (www1?.)livenation.fr
+		- (www1?.)livenation.hu
+		- (www1?.)livenation.it
+		- (www.)livenation.kr
+		- (www1?.)livenation.nl
+		- (www1?.)livenation.no
+		- (www1?.)livenation.pl
+		- (www1?.)livenation.se
+		- media.livenationinternational.com	(→ a248.e.akamai.net/...)
 
 -->
 <ruleset name="Live Nation Entertainment (partial)">
@@ -26,7 +60,14 @@
 	<target host="*.getmein.com" />
 	<target host="livenation.*" />
 	<target host="www.livenation.*" />
+	<target host="www1.livenation.*" />
 	<target host="*.livenation.be" />
+	<target host="livenation.co.*" />
+	<target host="www.livenation.co.*" />
+	<target host="www1.livenation.co.*" />
+	<target host="livenation.com.au" />
+	<target host="*.livenation.com.au" />
+	<target host="media.livenationinternational.com" />
 
 
 	<securecookie host="^(?:.*\.)?getmein\.com$" name=".+" />
@@ -39,14 +80,17 @@
 		to="https://secure.getmein.com/" />
 
 
-	<rule from="^http://(?:www\.)?livenation\.(ae|asia|com\.au|cz|dk|es|fi|fr|hu|it|no|pl)/"
-		to="https://www.livenation.$1/" />
+	<rule from="^http://(?:www(1)?\.)?livenation\.(ae|asia|co\.jp|co\.uk|com\.au|cz|dk|es|fi|fr|hu|it|kr|nl|no|pl|se)/"
+		to="https://www$1.livenation.$2/" />
 
-	<rule from="^http://(fr|nl)\.livenation\.be/"
-		to="https://$1.livenation.be/" />
+	<rule from="^http://(www1\.)?(fr|nl)\.livenation\.be/"
+		to="https://$1$2.livenation.be/" />
 
 	<rule from="^http://(?:www\.)?livenation\.com/(favicon-ln\.ico|ln/)"
 		to="https://www.livenation.com/$1" />
+
+	<rule from="^http://concerts\.livenation\.com/(?!$|concerts)"
+		to="https://concerts.livenation.com/" />
 
 
 	<rule from="^http://media\.livenationinternational\.com/"
