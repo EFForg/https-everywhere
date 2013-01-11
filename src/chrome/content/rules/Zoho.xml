@@ -5,6 +5,7 @@
 	Other Zoho rulesets:
 
 		- ManageEngine.xml
+		- Site24x7.xml
 
 
 	Nonfunctional domains:
@@ -13,16 +14,19 @@
 		- (www.)zoho.co.jp	(cert: ssl.zoho.co.jp; shows that domain's data)
 
 
+	Problematic domains:
+
+		- customer-discussions.zoho.com		(works, redirects to forum.zoho-china.com)
+		- forum.zoho-china.com			(mismatched)
+
 -->
 <ruleset name="Zoho (partial)">
 
-	<target host="site24x7.com" />
-	<target host="*.site24x7.com" />
 	<target host="forums.webnms.com" />
 	<target host="zoho.com" />
 	<target host="*.zoho.com" />
 	<target host="zoho.jp" />
-	<target host="blogs.zoho.jp" />
+	<target host="*.zoho.jp" />
 	<target host="ssl.zoho.co.jp" />
 	<target host="zohoblogs.com" />
 	<target host="www.zohoblogs.com" />
@@ -31,14 +35,11 @@
 	<target host="*.zohostatic.com" />
 
 
-	<securecookie host="^(.*\.)?site24x7\.com$" name=".*" />
-	<securecookie host="^forums\.webnms\.com$" name=".*" />
-	<securecookie host="^.*\.zoho\.com$" name=".*" />
-	<securecookie host="^(www\.)?zohoblogs\.com$" name=".*" />
+	<securecookie host="^forums\.webnms\.com$" name=".+" />
+	<securecookie host="^.*\.zoho\.com$" name=".+" />
+	<securecookie host="^forums\.zoho\.jp$" name=".+" />
+	<securecookie host="^(?:www\.)?zohoblogs\.com$" name=".+" />
 
-
-	<rule from="^http://(blogs\.|static\.|www\.)?site24x7\.com/"
-		to="https://$1site24x7.com/" />
 
 	<rule from="^http://forums\.webnms\.com/"
 		to="https://forums.webnms.com/" />
@@ -50,12 +51,13 @@
 			- zohocrm
 			- zohocrmapi
 			- zohodiscussions
-		-->
-	<rule from="^http://((?:accounts|assist|blogs|www\.blogs|business|chat|(?:(?:api|help|kbase|lounge|www)\.)?creator|crm|crmkbase|customer-blogs|discussions|(?:help\.)?discussions|docs|forums|invoice|iplocation|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show2?|support|viewer|(?:\w+\.)?wiki|export\.writer|writer2?|www)\.)?zoho\.com/"
+						-->
+	<rule from="^http://((?:accounts|assist|(?:customer-|www\.)?blogs|business|chat|(?:(?:api|help|kbase|lounge|www)\.)?creator|crm|crmkbase|discuss|(?:help\.)?discussions|docs|forums|invoice|iplocation|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show2?|support|viewer|(?:\w+\.)?wiki|export\.writer|writer2?|www)\.)?zoho\.com/"
 		to="https://$1zoho.com/" />
 
-	<!--	- Unsupported //zoho.jp paths redirect to http://www.	-->
-	<rule from="^http://(blogs\.)?zoho\.jp/"
+	<!--	Unsupported //zoho.jp paths redirect to http://www.
+									-->
+	<rule from="^http://(blogs\.|forums\.)?zoho\.jp/"
 		to="https://$1zoho.jp/" />
 
 	<rule from="^http://ssl\.zoho\.co\.jp/"
