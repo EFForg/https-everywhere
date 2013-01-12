@@ -1,18 +1,51 @@
 <!--
+	For problematic rules, see Zillow-problematic.xml
+
+
+	CDN buckets:
+
+		- d155excyarmp3n.cloudfront.net
+		- rentjuice.desk.com
+
+
+	Nonfunctional domains:
+
+		- rentalshelp.zillow.com	(redirects to http, mismatched, CN: *.desk.com)
+
+
 	Problematic domains:
 
 		- photos[123].zillow.com	(akamai)
+		- rentalpro.zillow.com		(works, mismatched, CN: *.rentalapp.zillow.com)
 
 
 	Partially covered domains:
 
-		- (www.)zillow.com	(most pages redirect to http)
+		- (www.)zillow.com
+
+			These paths redirect to http:
+
+				- $
+				- blog$
+				- ca
+				- homedetails
+				- homes
+				- profile
+				- reviews
+				- wikipages
+
+			- These paths 404:
+
+				- blog/
 
 
 	Fully covered domains:
 
+		- engineering.zillow.com
+		- mortgageapi.zillow.com
 		- photos.zillow.com
 		- photos\d.zillow.com		(→ photos)
+		- rentalapp.zillow.com
 		- (www.)zillowstatic.com
 
 -->
@@ -24,8 +57,11 @@
 	<target host="www.zillowstatic.com" />
 
 
-	<rule from="^http://(www\.)?zillow\.com/(mobile|static)/"
-		to="https://$1zillow.com/$2/" />
+	<rule from="^http://(www\.)?zillow\.com/(.*\$LoginLink|(?:advertising|advice(?:pages|-thread)|app|corp|directory|fhs-loan|foreclosures|for-sale-by-owner|help|home-(?:equity-loan|improvement-dueling-digs)|imaging|learnmore|local-info|make-me-move|mobile|mortgage-(?:calculator|glossary|rates)|post-re(?:al-estate|ntal)-listings|refinance|search|visuals|webtools)(?:$|\?|/)|static/)"
+		to="https://$1zillow.com/$2" />
+
+	<rule from="^http://(engineering|mortgageapi|rentalapp)\.zillow\.com/"
+		to="https://$1.zillow.com/" />
 
 	<rule from="^http://photos\d?\.zillow\.com/"
 		to="https://photos.zillow.com/" />
