@@ -1,20 +1,36 @@
+<!--
+	Problematic domains:
+
+		- photos[123].zillow.com	(akamai)
+
+
+	Partially covered domains:
+
+		- (www.)zillow.com	(most pages redirect to http)
+
+
+	Fully covered domains:
+
+		- photos.zillow.com
+		- photos\d.zillow.com		(→ photos)
+		- (www.)zillowstatic.com
+
+-->
 <ruleset name="Zillow (partial)">
 
-	<target host="zillow.com"/>
-	<target host="*.zillow.com"/>
-	<target host="zillowstatic.com"/>
-	<target host="www.zillowstatic.com"/>
+	<target host="zillow.com" />
+	<target host="*.zillow.com" />
+	<target host="zillowstatic.com" />
+	<target host="www.zillowstatic.com" />
 
-	<rule from="^http://zillow\.com/"
-		to="https://www.zillow.com/"/>
 
-	<rule from="^http://www\.zillow\.com/(mobile|static)/"
-		to="https://www.zillow.com/$1/"/>
+	<rule from="^http://(www\.)?zillow\.com/(mobile|static)/"
+		to="https://$1zillow.com/$2/" />
 
 	<rule from="^http://photos\d?\.zillow\.com/"
-		to="https://photos.zillow.com/"/>
+		to="https://photos.zillow.com/" />
 
 	<rule from="^http://(www\.)?zillowstatic\.com/"
-		to="https://$1zillowstatic.com/"/>
+		to="https://$1zillowstatic.com/" />
 
 </ruleset>
