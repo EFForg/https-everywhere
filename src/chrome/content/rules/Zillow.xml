@@ -41,11 +41,14 @@
 
 	Fully covered domains:
 
-		- engineering.zillow.com
-		- mortgageapi.zillow.com
-		- photos.zillow.com
-		- photos\d.zillow.com		(→ photos)
-		- rentalapp.zillow.com
+		- zillow.com subdomains:
+
+			- engineering
+			- mortgageapi
+			- photos
+			- photos\d		(→ photos)
+			- rentalapp
+
 		- (www.)zillowstatic.com
 
 -->
@@ -53,15 +56,13 @@
 
 	<target host="zillow.com" />
 	<target host="*.zillow.com" />
+		<exclusion pattern="^http://(?:www\.)?zillow\.com/(?!.*\$LoginLink|(?:advertising|advice(?:pages|-thread)|app|corp|directory|fhs-loan|foreclosures|for-sale-by-owner|help|home-(?:equity-loan|improvement-dueling-digs)|imaging|learnmore|local-info|make-me-move|mobile|mortgage-(?:calculator|glossary|rates)|post-re(?:al-estate|ntal)-listings|refinance|search|static|visuals|webtools)(?:$|\?|/))" />
 	<target host="zillowstatic.com" />
 	<target host="www.zillowstatic.com" />
 
 
-	<rule from="^http://(www\.)?zillow\.com/(.*\$LoginLink|(?:advertising|advice(?:pages|-thread)|app|corp|directory|fhs-loan|foreclosures|for-sale-by-owner|help|home-(?:equity-loan|improvement-dueling-digs)|imaging|learnmore|local-info|make-me-move|mobile|mortgage-(?:calculator|glossary|rates)|post-re(?:al-estate|ntal)-listings|refinance|search|visuals|webtools)(?:$|\?|/)|static/)"
-		to="https://$1zillow.com/$2" />
-
-	<rule from="^http://(engineering|mortgageapi|rentalapp)\.zillow\.com/"
-		to="https://$1.zillow.com/" />
+	<rule from="^http://((?:engineering|mortgageapi|rentalapp|www)\.)?zillow\.com/"
+		to="https://$1zillow.com/" />
 
 	<rule from="^http://photos\d?\.zillow\.com/"
 		to="https://photos.zillow.com/" />
