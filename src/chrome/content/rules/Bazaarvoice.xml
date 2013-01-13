@@ -1,0 +1,38 @@
+<!--
+	For problematic rules, see Bazaarvoice-problematic.xml.
+
+
+	Problematic domains:
+
+		- bazaarvoice.com subdomains:
+
+			- ^			(expired, self-signed)
+			- resources		($ redirects to app-a.marketo.com; mismatched, CN: *.marketo.com)
+			- spark			(mismatched, CN: slotmatching6.salesforce.com)
+			- *.ugc			(works, akamai)
+	
+		- resources.bazaarvoicecampaigns.com	(works, self-signed)
+
+-->
+<ruleset name="Bazaarvoice">
+
+	<target host="bazaarvoice.com" />
+	<target host="*.bazaarvoice.com" />
+
+
+	<securecookie host="^.*\.bazaarvoice\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?bazaarvoice\.com/"
+		to="https://www.bazaarvoice.com/" />
+
+	<rule from="^http://login\.bazaarvoice\.com/"
+		to="https://login.bazaarvoice.com/" />
+
+	<rule from="^https?://resources\.bazaarvoice\.com/images/"
+		to="https://na-a.bazaarvoice.com/images/" />
+
+	<rule from="^https?://spark\.bazaarvoice\.com/"
+		to="https://bazaarvoice.secure.force.com/" />
+
+</ruleset>
