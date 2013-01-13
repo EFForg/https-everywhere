@@ -9,6 +9,8 @@
 		- wildcard.verizon.net.edgekey.net
 			- static-business.verizon.net
 
+		- ehg-verizon.hitbox.com
+
 		- vrzn.i.lithium.com
 
 		- vrzn.lithium.com
@@ -39,9 +41,14 @@
 
 	Partially covered domains:
 
+		- collaborateext.verizon.com ¹
+		- collaborateextstg.verizon.com ¹
 		- www22.verizon.com *
+		- www98.verizon.com ***
 		- business.verizon.net **
 		- (www.)verizonbusiness.com ***
+
+	¹ $ redirects to ...:449
 
 	* See: 
 		- https://mail1.eff.org/pipermail/https-everywhere/2011-November/001237.html
@@ -68,11 +75,13 @@
 		- static-business.verizon.net
 
 -->
-<ruleset name="Verizon (broken)" default_off="redirects to HTTP">
+<ruleset name="Verizon (partial)">
 
 	<target host="verizon.com" />
 	<target host="*.verizon.com" />
+		<exclusion pattern="^http://collaborateext(?:stg)?\.verizon\.com/(?:$|\?|aims/main/ext_index\.jsp)" />
 		<exclusion pattern="^http://www22\.verizon\.com/(?:Foryourhome/MyAccount/Unprotected|secure/pages/viewbill)/" />
+		<exclusion pattern="^http://www98\.verizon\.com/(?:$|\?)" />
 	<target host="verizon.net" />
 	<target host="*.verizon.net" />
 		<exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" />
@@ -87,13 +96,13 @@
 	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
 
 
-	<rule from="^http://(?:www\.)?verizon\.com/(?:$|\?)"
+	<rule from="^http://(?:www(?:22)?\.)?verizon\.com/(?:$|\?.*)"
 		to="https://www22.verizon.com/home/verizonglobalhome/ghp_landing.aspx" />
 
-	<rule from="^http://(?:www(22)?\.)?verizon\.com/"
+	<rule from="^http://(?:www(22|98)?\.)?verizon\.com/"
 		to="https://www$1.verizon.com/" />
 
-	<rule from="^http://(enterprisecenter|espanol|forums|smallbusiness|signon)\.verizon\.com/"
+	<rule from="^http://(collaborateext(?:stg)?|enterprisecenter|espanol|forums|smallbusiness|signon)\.verizon\.com/"
 		to="https://$1.verizon.com/" />
 
 	<rule from="^https?://(?:www\.)?verizon\.net/"
