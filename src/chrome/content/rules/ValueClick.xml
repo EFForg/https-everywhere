@@ -12,7 +12,6 @@
 
 		- (www.)couponmountain.com
 		- files.couponmountain.com *
-		- (www.)fastclick.com		(redirects to www.valueclickmedia.com; CN: cdn-origin.snv.vcmedia.com)
 		- (www.)idealhomegarden.com
 		- files.idealhomegarden.com *
 		- (www.)investopedia.com
@@ -28,24 +27,31 @@
 
 	Problematic subdomains:
 
+		- (www.)fastclick.com		(redirects to www.valueclickmedia.com; CN: cdn-origin.snv.vcmedia.com)
+		- mediaplex.com *
 		- img-cdn.mediaplex.com		(akamai)
+		- valueclick.com *
+		- valueclickmedia.com *
+		- cdn-origin.snv.vcmedia.com	(self-signed)
+
+	* Self-signed, CN: cdn-origin.snv.vcmedia.com
 
 -->
 <ruleset name="ValueClick (partial)">
 
 	<target host="mp.apmebf.com" />
+	<target host="fastclick.com" />
+	<target host="www.fastclick.com" />
 	<target host="*.fastclick.net" />
-	<target host="adfarm.mediaplex.com" />
-	<target host="app.mediaplex.com" />
-	<target host="img.mediaplex.com" />
-	<target host="img-cdn.mediaplex.com" />
-	<target host="mojofarm.mediaplex.com" />
-	<target host="secure.img-cdn.mediaplex.com" />
-	<target host="admin.valueclickmedia.com" />
-	<target host="cdn-origin.snv.vcmedia.com" />
+	<target host="mediaplex.com" />
+	<target host="*.mediaplex.com" />
+	<target host="valueclick.com" />
+	<target host="www.valueclick.com" />
+	<target host="valueclickmedia.com" />
+	<target host="*.valueclickmedia.com" />
 
 
-	<securecookie host="^.*\.fastclick\.net$" name=".+ "/>
+	<securecookie host="^.*\.(?:fastclick|mediaplex|valueclick(?:media)?)\.(?:com|net)$" name=".+ "/>
 	<securecookie host="^admin\.valueclickmedia\.com$" name=".+" />
 
 
@@ -64,10 +70,13 @@
 	<rule from="^http://(adfarm|altfarm|app|img|mojofarm)\.mediaplex\.com/"
 		to="https://$1.mediaplex.com/" />
 
+	<rule from="^https?://(?:www\.)?(?:fast|value)click(media)?\.com/"
+		to="https://www.valueclick$1.com/" />
+
+	<rule from="^https?://(?:www\.)?mediaplex\.com/"
+		to="https://www.mediaplex.com/" />
+
 	<rule from="^http://admin\.valueclickmedia\.com/"
 		to="https://admin.valueclickmedia.com/" />
-
-	<rule from="^http://cdn-origin\.snv\.vcmedia\.com/"
-		to="https://cdn-origin.snv.vcmedia.com/" />
 
 </ruleset>
