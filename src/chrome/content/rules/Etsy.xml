@@ -1,23 +1,24 @@
 <!--
-	For problematic rules, see Etsy-mismatches.xml.
+  For problematic rules, see Etsy-mismatches.xml.
 
 -->
-<ruleset name="Etsy (partial)">
+<ruleset name="Etsy">
 
-	<target host="etsy.com"/>
-	<!--	* for cross-domain cookies.	-->
-	<target host="*.etsy.com"/>
-	<target host="site.etsystatic.com"/>
+  <target host="etsy.com"/>
+  <!--  * for cross-domain cookies. -->
+  <target host="www.etsy.com"/>
+  <!-- CDN hosts -->
+  <target host="*.etsystatic.com"/>
+
+  <securecookie host="^\.etsy\.com$" name=".*" />
 
 
-	<securecookie host="^\.etsy\.com$" name=".*" />
+  <rule from="^http://etsy\.com/(.*)"       to="https://etsy.com/$1"/>
+  <rule from="^http://www\.etsy\.com/(.*)"  to="https://www.etsy.com/$1"/>
 
+  <rule from="^http://(site|img[0-9]|www)\.etsystatic\.com/(.+)" to="https://$1.etsystatic.com/$2"/>
 
-	<rule from="^http://(www\.)?etsy\.com/([\w\-]+/)?(asset|file|image|stylesheet)s/"
-		to="https://$1etsy.com/$2$3s/"/>
-
-	<!--	Akamai	-->
-	<rule from="^https?://site\.etsystatic\.com/"
-		to="https://www.etsy.com/"/>
+  <!--  <rule from="^http://(www\.)?etsy\.com/([\w\-]+/)?(asset|file|image|stylesheet)s/"
+    to="https://$1etsy.com/$2$3s/"/> -->
 
 </ruleset>
