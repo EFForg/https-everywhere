@@ -46,15 +46,17 @@
 		- ssl.bing.com
 		- ts[1-4].mm.bing.net
 
+		- virtualearth.net subdomains:
+
+			- ecn.dev
+			- ecn.t[0-7].tiles
+			- venuemaps
+
 -->
 <ruleset name="Bing (partial)">
 
 	<target host="bing.com" />
 	<target host="*.bing.com" />
-	<!--
-		* for cross-domain cookie.
-						-->
-	<target host="*.c.bing.com" />
 	<target host="*.mm.bing.net" />
 		<!--
 			Breaks login menu
@@ -62,12 +64,14 @@
 				https://trac.torproject.org/projects/tor/ticket/7092
 						-->
 		<exclusion pattern="^https?://(?:www\.)?bing\.com/fd/fb/mulmfg" />
+	<target host="*.virtualearth.net" />
 
 
 	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
+	<securecookie host="^\.virtualearth\.net$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|sa/|th(?:$|\?))"
+	<rule from="^https?://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|news/s/|s/as/|sa/|th(?:$|\?))"
 		to="https://ssl.bing.com/$1" />
 
 	<!--	- fd/s/ is equivalent and fd/ seems to work always, so redirect there
@@ -81,5 +85,8 @@
 
 	<rule from="^https?://ts[1-4]\.mm\.bing\.net/"
 		to="https://ssl.bing.com/"/>
+
+	<rule from="^http://(ecn\.(?:dev|t\d\.tiles)|api\.tiles|venuemaps)\.virtualearth\.net/"
+		to="https://$1.virtualearth.net/" />
 
 </ruleset>

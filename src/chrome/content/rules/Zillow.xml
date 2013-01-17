@@ -1,20 +1,76 @@
+<!--
+	For problematic rules, see Zillow-problematic.xml
+
+
+	CDN buckets:
+
+		- d155excyarmp3n.cloudfront.net
+		- rentjuice.desk.com
+
+
+	Nonfunctional domains:
+
+		- rentalshelp.zillow.com	(redirects to http, mismatched, CN: *.desk.com)
+
+
+	Problematic domains:
+
+		- photos[123].zillow.com	(akamai)
+		- rentalpro.zillow.com		(works, mismatched, CN: *.rentalapp.zillow.com)
+
+
+	Partially covered domains:
+
+		- (www.)zillow.com
+
+			These paths redirect to http:
+
+				- $
+				- blog$
+				- ca
+				- homedetails
+				- homes
+				- profile
+				- reviews
+				- wikipages
+
+			- These paths 404:
+
+				- blog/
+
+
+	Fully covered domains:
+
+		- zillow.com subdomains:
+
+			- engineering
+			- mortgageapi
+			- photos
+			- photos\d		(→ photos)
+			- rentalapp
+
+		- (www.)zillowstatic.com
+
+-->
 <ruleset name="Zillow (partial)">
 
-	<target host="zillow.com"/>
-	<target host="*.zillow.com"/>
-	<target host="zillowstatic.com"/>
-	<target host="www.zillowstatic.com"/>
+	<target host="zillow.com" />
+	<target host="*.zillow.com" />
+		<exclusion pattern="^http://(?:www\.)?zillow\.com/(?!.*\$LoginLink|(?:advertising|advice(?:pages|-thread)|app|corp|directory|fhs-loan|foreclosures|for-sale-by-owner|help|home-(?:equity-loan|improvement-dueling-digs)|imaging|learnmore|local-info|make-me-move|mobile|mortgage-(?:calculator|glossary|rates)|post-re(?:al-estate|ntal)-listings|refinance|search|static|visuals|webtools)(?:$|\?|/))" />
+	<target host="zillowstatic.com" />
+	<target host="www.zillowstatic.com" />
 
-	<rule from="^http://zillow\.com/"
-		to="https://www.zillow.com/"/>
 
-	<rule from="^http://www\.zillow\.com/(mobile|static)/"
-		to="https://www.zillow.com/$1/"/>
+	<securecookie host="^engineering\.zillow\.com$" name=".+" />
+
+
+	<rule from="^http://((?:engineering|mortgageapi|rentalapp|www)\.)?zillow\.com/"
+		to="https://$1zillow.com/" />
 
 	<rule from="^http://photos\d?\.zillow\.com/"
-		to="https://photos.zillow.com/"/>
+		to="https://photos.zillow.com/" />
 
 	<rule from="^http://(www\.)?zillowstatic\.com/"
-		to="https://$1zillowstatic.com/"/>
+		to="https://$1zillowstatic.com/" />
 
 </ruleset>
