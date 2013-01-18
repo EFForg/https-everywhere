@@ -1,46 +1,38 @@
+<!--
+	For rules that are on by default, see ValueClick.xml
+
+-->
 <ruleset name="ValueClick (mismatches)" default_off="Akamai">
 
-	<!--	Akamai	-->
-	<target host="adrxmedia.com"/>
-	<target host="*.adrxmedia.com"/>
-	<target host="fastclick.com"/>
-	<target host="www.fastclick.com"/>
-	<target host="cdn.fastclick.net" />
-	<target host="mediaplex.com"/>
-	<target host="*.mediaplex.com"/>
-	<target host="modernlivingmedia.com"/>
-	<target host="*.modernlivingmedia.com"/>
-	<target host="momsmedia.com"/>
-	<target host="*.momsmedia.com"/>
-	<target host="valueclick.com"/>
-	<target host="*.valueclick.com"/>
-	<target host="valueclickmedia.com"/>
-	<target host="*.valueclickmedia.com"/>
-	<target host="yceml.net"/>
-	<target host="www.yceml.net"/>
+	<!--	Akamai
+			-->
+	<target host="adrxmedia.com" />
+	<target host="*.adrxmedia.com" />
+	<target host="modernlivingmedia.com" />
+	<target host="*.modernlivingmedia.com" />
+	<target host="momsmedia.com" />
+	<target host="*.momsmedia.com" />
+	<target host="gocart.valueclickmedia.com" />
+	<target host="cdn-origin.snv.vcmedia.com" />
 
 
-	<securecookie host="(.*\.)?(adrxmedia|mediaplex|modernlivingmedia|momsmedia|valueclick(media)?)\.com$" name=".*"/>
+	<securecookie host="(?:.*\.)?(?:adrxmedia|modernlivingmedia|momsmedia)\.com$" name=".+" />
 
 
-	<!--	!www cert: cdn-origin.snv.vcmedia.com (self-signed); redirect to www	-->
-	<rule from="^http://(?:www\.)?(adrxmedia|mediaplex|modernlivingmedia|momsmedia|valueclick)\.com/"
-		to="https://www.$1.com/"/>
+	<!--	!www cert: cdn-origin.snv.vcmedia.com (self-signed); redirect to www
+											-->
+	<rule from="^http://(?:www\.)?(adrx|modernliving|moms)media\.com/"
+		to="https://www.$1media.com/"/>
 
-	<rule from="^http://(?:www\.)?fastclick\.com/"
-		to="https://www.valueclick.com/"/>
-
-	<!--	Redirects back from secure.fastclick.net.	-->
+	<!--	Redirects back from secure.fastclick.net.
+							-->
 	<rule from="^http://cdn\.fastclick\.net/"
 		to="https://cdn.fastclick.net/" />
 
-	<rule from="^http://valueclickmedia\.com/"
-		to="https://www.valueclickmedia.com/"/>
+	<rule from="^http://gocart\.valueclickmedia\.com/"
+		to="https://gocart.valueclickmedia.com/"/>
 
-	<rule from="^http://(gocart|www)\.valueclickmedia\.com/"
-		to="https://$1.valueclickmedia.com/"/>
-
-	<rule from="^http://(?:www\.)?yceml\.net/"
-		to="https://www.yceml.net/"/>
+	<rule from="^http://cdn-origin\.snv\.vcmedia\.com/"
+		to="https://cdn-origin.snv.vcmedia.com/" />
 
 </ruleset>
