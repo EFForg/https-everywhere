@@ -45,9 +45,14 @@
 			- advertising
 			- hss-prod.hss
 			- music
+			- stg.s.on
+			- stg.on
+			- stg.support.on
+			- stg.t.on
 
 		- euportal.aolcdn.com		(503, Akamai)
 		- myfeeds.aolcdn.com		(ditto)
+		- stg.support.aolonnetwork.com
 		- media.blogcdn.com
 		- blogsmithmedia.com		(ditto)
 
@@ -71,7 +76,14 @@
 		- aim.com
 		- cdn.aim.com		(akamai)
 
-		- privacy.aol.com	(works, mismatched, CN: misc.blogsmith.aol.com)
+		- aol.com subdomains:
+
+			- as.on		(works, akamai)
+			- at.on		(works, akamai)
+			- support.on
+			- privacy	(works, mismatched, CN: misc.blogsmith.aol.com)
+
+		- console.aolonnetwork.com	(works, mismatched)
 
 -->
 <ruleset name="AOL (partial)">
@@ -88,6 +100,7 @@
 	<target host="*.aol.co.uk" />
 	<target host="*.aolcdn.com" />
 		<exclusion pattern="^http://o\.aolcdn\.com/(?:dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
+	<target host="support.aolonnetwork.com" />
 	<target host="crunchboard.com" />
 	<target host="www.crunchboard.com" />
 	<target host="netscape.com" />
@@ -97,6 +110,7 @@
 	<!--	.my.screenname.aol.com		-->
 	<securecookie host="^(?:dev\.sandbox\.autos|new)\.aol\.com$" name=".+" />
 	<securecookie host="^www\.aol\.co\.uk$" name=".+" />
+	<securecookie host="^support\.aolonnetwork\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:cdn\.|www\.)?aim\.com/"
@@ -105,8 +119,14 @@
 	<rule from="^https?://(?:www\.)?aol\.com/(favicon\.ico|video/)"
 		to="https://www.aol.com/$1" />
 
-	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|netscape|new|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
+	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|netscape|new|on|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
 		to="https://$1.aol.com/" />
+
+	<rule from="^https?://a?(s|t)\.on\.aol\.com/"
+		to="https://$1.on.aol.com/" />
+
+	<rule from="^https?://support\.(?:on\.aol|aolonnetwork)\.com/"
+		to="https://support.aolonnetwork.com/" />
 
 	<rule from="^https?://(?:exp)?api\.oscar\.aol\.com/"
 		to="https://api.oscar.aol.com/" />
