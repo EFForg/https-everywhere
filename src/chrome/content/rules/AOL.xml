@@ -18,9 +18,11 @@
 	CDN buckets:
 
 		- v6v4.win.blogsmith.aol.com.aol.akadns.net
+
 			- www.engadget.com
 
 		- win.blogsmith.aol.com.aol.akadns.net
+
 			- alt.engadget.com
 			- hd.engadget.com
 			- mobile.engadget.com
@@ -28,7 +30,9 @@
 		- platform-a.egslb.aol.com
 		- myfeeds.aolcdn.com.edgesuite.net
 		- o.aolcdn-ds.com.edgesuite.net
+
 		- www.blogsmithcdn-ds.com.edgesuite.net
+
 			- www.blogcdn.com
 			- www.blogsmithcdn.com
 			- www.blogsmithmedia.com
@@ -36,10 +40,13 @@
 
 	Nonfunctional domains:
 
-		- advertising.aol.com
-		- hss-prod.hss.aol.com
-		- music.aol.com
-		- euportal.aolcdn.com		(Akamai; 503)
+		- aol.com subdomains:
+
+			- advertising
+			- hss-prod.hss
+			- music
+
+		- euportal.aolcdn.com		(503, Akamai)
 		- myfeeds.aolcdn.com		(ditto)
 		- media.blogcdn.com
 		- blogsmithmedia.com		(ditto)
@@ -51,7 +58,8 @@
 			- hd
 			- mobile
 
-		- (massively.|www.)joystiq.com
+		- (www.)joystiq.com
+		- massively.joystiq.com
 		- tuaw.com
 		- (www.)weblogsinc.com
 		- www.winamp.com
@@ -59,6 +67,9 @@
 
 
 	Problematic domains:
+
+		- aim.com
+		- cdn.aim.com		(akamai)
 
 		- privacy.aol.com	(works, mismatched, CN: misc.blogsmith.aol.com)
 
@@ -69,25 +80,25 @@
 	<target host="*.aim.com" />
 	<target host="aol.com" />
 	<target host="*.aol.com" />
+		<!--
+			Added by AOL, required for http logout.
+								-->
+		<exclusion pattern="^http://my\.screenname\.aol\.com/_cqr/logout/" />
 	<target host="aol.co.uk" />
 	<target host="*.aol.co.uk" />
 	<target host="*.aolcdn.com" />
-		<exclusion pattern="^http://o\.aolcdn\.com/(dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
+		<exclusion pattern="^http://o\.aolcdn\.com/(?:dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
 	<target host="crunchboard.com" />
 	<target host="www.crunchboard.com" />
-    <exclusion pattern="^http://my\.screenname\.aol\.com/_cqr/logout/"/>
 	<target host="netscape.com" />
 	<target host="*.netscape.com" />
 
 
 	<!--	.my.screenname.aol.com		-->
-	<securecookie host="^(dev\.sandbox\.autos|new)\.aol\.com$" name=".*" />
-	<securecookie host="^www\.aol\.co\.uk$" name=".*" />
+	<securecookie host="^(?:dev\.sandbox\.autos|new)\.aol\.com$" name=".+" />
+	<securecookie host="^www\.aol\.co\.uk$" name=".+" />
 
 
-	<!--	- !www doesn't work
-		- cdn: Akamai
-				-->
 	<rule from="^https?://(?:cdn\.|www\.)?aim\.com/"
 		to="https://www.aim.com/" />
 
