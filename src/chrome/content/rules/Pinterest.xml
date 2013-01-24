@@ -1,27 +1,44 @@
 <!--
+	For rules that break logged-in functions, see Pinterest-break-pinning.xml.
+
+
 	Yo Dawg:
 
 		- a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
 		- a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/ | d3io1k5o0zdpqr.cloudfront.net
 
 		- d5eppwnwxs8d9.cloudfront.net
+
 			- blog-assets.pinterest.com
 
 		- wac.7a97.edgecastcdn.net/...
+
 			- media-cache-ec0.pinterest.com
 			- passets-ec.pinterest.com
+
 		- cs89.wac.edgecastcdn.net/...
+
 			- s-passets-ec.pinimg.com
 			- s-media-cache-ec\d.pinimg.com
+
 		- cs30\d.wac.edgecastcdn.net/...
+
 			- media-cache-ec\d.pinterest.com
+
 		- media-cache\d.pinterest.com.edgesuite.net
+
 			- media-cache\d.pinterest.com
+
 		- media-cdn.pinterest.com.edgesuite.net
+
 			- passets-cdn.pinterest.com
+
 		- pinit-cdn.pinterest.com.edgesuite.net
+
 			- pinit-cdn.pinterest.com
+
 		- cdn.pinterest.com.c.footprint.net/...
+
 			- media-cache-lt\d.pinterest.com
 
 
@@ -41,9 +58,14 @@
 	Partially covered domains:
 
 		- (www.)pinterest.com
+
 			-  At least the homepage started redirecting to http:
 
 				https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001339.html
+
+			- pin/ breaks repinning
+
+				- https://trac.torproject.org/projects/tor/ticket/7825
 
 
 	Fully covered domains:
@@ -70,15 +92,15 @@
 	<target host="*.pinimg.com" />
 	<target host="pinterest.com" />
 	<target host="*.pinterest.com" />
-		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:$|\?)" />
+		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:$|\?|board/|pin/)" />
 
 
 	<!--	Handles s-media-cache-ec\d & s-passets-ec.
 								-->
-	<rule from="^http://s-([\w\-]+)-ec(\d)?\.pinimg\.com/"
+	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
 		to="https://s-$1-ec$2.pinimg.com/" />
 
-	<!--rule from="^http://(www\.)?pinterest\.com/(login|password|pin)($|\?|/)"
+	<!--rule from="^http://(www\.)?pinterest\.com/(login|password)($|\?|/)"
 		to="https://$1pinterest.com/$2$3" /-->
 
 	<rule from="^http://(assets\.|m\.|www\.)?pinterest\.com/"

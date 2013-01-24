@@ -18,9 +18,11 @@
 	CDN buckets:
 
 		- v6v4.win.blogsmith.aol.com.aol.akadns.net
+
 			- www.engadget.com
 
 		- win.blogsmith.aol.com.aol.akadns.net
+
 			- alt.engadget.com
 			- hd.engadget.com
 			- mobile.engadget.com
@@ -28,7 +30,9 @@
 		- platform-a.egslb.aol.com
 		- myfeeds.aolcdn.com.edgesuite.net
 		- o.aolcdn-ds.com.edgesuite.net
+
 		- www.blogsmithcdn-ds.com.edgesuite.net
+
 			- www.blogcdn.com
 			- www.blogsmithcdn.com
 			- www.blogsmithmedia.com
@@ -36,11 +40,19 @@
 
 	Nonfunctional domains:
 
-		- advertising.aol.com
-		- hss-prod.hss.aol.com
-		- music.aol.com
-		- euportal.aolcdn.com		(Akamai; 503)
+		- aol.com subdomains:
+
+			- advertising
+			- hss-prod.hss
+			- music
+			- stg.s.on
+			- stg.on
+			- stg.support.on
+			- stg.t.on
+
+		- euportal.aolcdn.com		(503, Akamai)
 		- myfeeds.aolcdn.com		(ditto)
+		- stg.support.aolonnetwork.com
 		- media.blogcdn.com
 		- blogsmithmedia.com		(ditto)
 
@@ -51,7 +63,8 @@
 			- hd
 			- mobile
 
-		- (massively.|www.)joystiq.com
+		- (www.)joystiq.com
+		- massively.joystiq.com
 		- tuaw.com
 		- (www.)weblogsinc.com
 		- www.winamp.com
@@ -60,7 +73,17 @@
 
 	Problematic domains:
 
-		- privacy.aol.com	(works, mismatched, CN: misc.blogsmith.aol.com)
+		- aim.com
+		- cdn.aim.com		(akamai)
+
+		- aol.com subdomains:
+
+			- as.on		(works, akamai)
+			- at.on		(works, akamai)
+			- support.on
+			- privacy	(works, mismatched, CN: misc.blogsmith.aol.com)
+
+		- console.aolonnetwork.com	(works, mismatched)
 
 -->
 <ruleset name="AOL (partial)">
@@ -69,33 +92,41 @@
 	<target host="*.aim.com" />
 	<target host="aol.com" />
 	<target host="*.aol.com" />
+		<!--
+			Added by AOL, required for http logout.
+								-->
+		<exclusion pattern="^http://my\.screenname\.aol\.com/_cqr/logout/" />
 	<target host="aol.co.uk" />
 	<target host="*.aol.co.uk" />
 	<target host="*.aolcdn.com" />
-		<exclusion pattern="^http://o\.aolcdn\.com/(dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
+		<exclusion pattern="^http://o\.aolcdn\.com/(?:dims-global|mars|myfeeds|portaleu|winamp/dp)/" />
+	<target host="support.aolonnetwork.com" />
 	<target host="crunchboard.com" />
 	<target host="www.crunchboard.com" />
-    <exclusion pattern="^http://my\.screenname\.aol\.com/_cqr/logout/"/>
 	<target host="netscape.com" />
 	<target host="*.netscape.com" />
 
 
 	<!--	.my.screenname.aol.com		-->
-	<securecookie host="^(dev\.sandbox\.autos|new)\.aol\.com$" name=".*" />
-	<securecookie host="^www\.aol\.co\.uk$" name=".*" />
+	<securecookie host="^(?:dev\.sandbox\.autos|new)\.aol\.com$" name=".+" />
+	<securecookie host="^www\.aol\.co\.uk$" name=".+" />
+	<securecookie host="^support\.aolonnetwork\.com$" name=".+" />
 
 
-	<!--	- !www doesn't work
-		- cdn: Akamai
-				-->
 	<rule from="^https?://(?:cdn\.|www\.)?aim\.com/"
 		to="https://www.aim.com/" />
 
 	<rule from="^https?://(?:www\.)?aol\.com/(favicon\.ico|video/)"
 		to="https://www.aol.com/$1" />
 
-	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|netscape|new|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
+	<rule from="^http://((?:dev\.sandbox\.)?autos|bill|misc\.blogsmith|contactus|account\.login|(?:api\.|cdn\.web)mail|myaccount|netscape|new|on|openid|pki-info|aolctoftp\.red|s2c|(?:api|my)\.screenname|dashboard\.voice)\.aol\.com/"
 		to="https://$1.aol.com/" />
+
+	<rule from="^https?://a?(s|t)\.on\.aol\.com/"
+		to="https://$1.on.aol.com/" />
+
+	<rule from="^https?://support\.(?:on\.aol|aolonnetwork)\.com/"
+		to="https://support.aolonnetwork.com/" />
 
 	<rule from="^https?://(?:exp)?api\.oscar\.aol\.com/"
 		to="https://api.oscar.aol.com/" />

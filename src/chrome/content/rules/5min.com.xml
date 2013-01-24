@@ -5,18 +5,43 @@
 	CDN buckets:
 
 		- ashared.5min.com.edgesuite.net
+
 			- [ap]shared.5min.com
 
 		- athumbnails.5min.com.edgesuite.net
+
 			- [ap]thumbnails.5min.com
 
 
 	Nonfunctional domains:
 
-		- blog.5min.com
-		- solutions.5min.com	(times out)
-		- (www.)5minmedia.com	(ditto)
-		- c.5minmedia.com	(cert: *.hs.llnwd.net; 400)
+		- 5min.com subdomains:
+
+			- stg.api
+			- blog
+			- stg.embed
+			- stg.files
+			- stg.shared
+			- solutions	(times out)
+			- www.stg
+			- stg.syn
+			- stg.thumbnails
+			- stg.videos
+
+		- 5minmedia.com subdomains:
+
+			- (www.)	(times out)
+			- c		(400, CN: *.hs.llnwd.net)
+			- console
+			- editorsroom
+
+
+	Problematic 5min.com subdomains:
+
+		- [ap]shared *
+		- [ap]thumbnails *
+
+	* Akamai
 
 -->
 <ruleset name="5min (partial)">
@@ -25,11 +50,10 @@
 	<target host="*.5min.com" />
 
 
-	<rule from="^http://(www\.)?5min\.com/"
+	<rule from="^http://((?:admin|api|embed|files|l|syn|videos|www)\.)?5min\.com/"
 		to="https://$15min.com/" />
 
-	<!--	- shared: Ads
-		- [ap].+: Akamai
+	<!--	shared: Ads
 				-->
 	<rule from="^https?://[ap]?(shared|thumbnails)\.5min\.com/"
 		to="https://$1.5min.com/" />

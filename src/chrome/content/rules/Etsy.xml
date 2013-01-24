@@ -1,28 +1,26 @@
-<!--
-  For problematic rules, see Etsy-mismatches.xml.
-
--->
 <ruleset name="Etsy">
 
-  <target host="etsy.com"/>
-  <!--  * for cross-domain cookies. -->
-  <target host="www.etsy.com"/>
-  <!-- CDN hosts -->
-  <target host="*.etsystatic.com"/>
-
-<!--
-  This site has rewrites back to HTTP and various other issues.  That makes a
-  securecookie directive highly inadvisable
-  <securecookie host="^\.etsy\.com$" name=".*" />
-  -->
+	<target host="etsy.com" />
+	<target host="www.etsy.com" />
+	<!--
+		CDN hosts
+				-->
+	<target host="*.etsystatic.com" />
 
 
-  <rule from="^http://etsy\.com/(.*)"       to="https://etsy.com/$1"/>
-  <rule from="^http://www\.etsy\.com/(.*)"  to="https://www.etsy.com/$1"/>
+	<!--	This site has rewrites back to HTTP and various other issues.
+		That makes asecurecookie directive highly inadvisable.
 
-  <rule from="^http://(site|img[0-9]|www)\.etsystatic\.com/(.+)" to="https://$1.etsystatic.com/$2"/>
+	<securecookie host="^\.etsy\.com$" name=".+" /-->
 
-  <!--  <rule from="^http://(www\.)?etsy\.com/([\w\-]+/)?(asset|file|image|stylesheet)s/"
-    to="https://$1etsy.com/$2$3s/"/> -->
+
+	<rule from="^http://(www\.)?etsy\.com/"
+		to="https://$1etsy.com/" />
+
+	<rule from="^http://(img\d|site|www)\.etsystatic\.com/"
+		to="https://$1.etsystatic.com/" />
+
+	<!--rule from="^http://(www\.)?etsy\.com/([\w-]+/)?(asset|file|image|stylesheet)s/"
+		to="https://$1etsy.com/$2$3s/" /-->
 
 </ruleset>
