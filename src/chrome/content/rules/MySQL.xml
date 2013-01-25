@@ -8,13 +8,18 @@
 
 	See Oracle-mismatches.xml for problematic rules.
 
+
+	Problematic subdomains:
+
+		- cdn	(akamai)
+
 -->
 <ruleset name="MySQL">
 
 	<target host="mysql.com"/>
 	<target host="*.mysql.com"/>
     <!-- forums works but is a cert mismatch -->
-		<exclusion pattern="^http://(bugs|forge|lists|planet|wb|forums)\.mysql\.com/"/>
+		<exclusion pattern="^http://(bugs|cdn|forge|lists|planet|wb|forums)\.mysql\.com/"/>
 	<target host="mysql.de"/>
 	<target host="www.mysql.de"/>
 	<target host="mysql.fr"/>
@@ -23,9 +28,20 @@
 	<target host="www.mysql.it"/>
 
 
-	<!--	Sole cookie observered:
-			- MySQL_S		-->
-	<securecookie host="^\.mysql\.\w{2,3}$" name=".*"/>
+	<!--	Cookies observered:
+
+			- MySQL_S
+			- SSO_Interstitial
+
+		Looks like we need to leave SSO for bug 8025:
+
+		- https://trac.torproject.org/projects/tor/ticket/8025
+		- http://bugs.mysql.com/bug.php?id=67311
+
+		Shared with at least bugs.
+
+							-->
+	<securecookie host="^\.mysql\.\w{2,3}$" name="^MySQL_S$"/>
 
 
 
