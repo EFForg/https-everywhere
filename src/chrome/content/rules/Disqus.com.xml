@@ -21,7 +21,7 @@
 
 			- blog		(tumblr)
 			- docs		(403, mismatched, CN: *.services.disqus.com)
-			- help		(cert: *.desk.com; 301s to http)
+			- help		(redirects to http, CN: *.desk.com)
 			- import
 			- status
 
@@ -37,7 +37,6 @@
 
 	<target host="disqus.com" />
 	<target host="*.disqus.com" />
-		<exclusion pattern="^http://blog\."/>
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/5496
 
@@ -48,10 +47,10 @@
 
 			See comments at top.
 							-->
-		<exclusion pattern="^http://(docs|help|import|status)\.disqus\.com/"/>
-	<target host="juggler.services.disqus.com" />
+		<exclusion pattern="^http://(?:blog|docs|help|import|status)\.disqus\.com/" />
 
-	<securecookie host="^securecdn\.disqus\.com$" name=".*" />
+
+	<securecookie host="^securecdn\.disqus\.com$" name=".+" />
 
 
 	<rule from="^http://(www\.)?disqus\.com/"
@@ -69,4 +68,3 @@
 		to="https://$1.disqus.com/" />
 
 </ruleset>
-
