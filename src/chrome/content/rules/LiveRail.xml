@@ -1,5 +1,5 @@
 <!--
-	lp.liverail.com is handled in Marketo-clients.xml.
+	For problematic rules, see LiveRail-problematic.xml.
 
 
 	CDN buckets:
@@ -16,7 +16,6 @@
 	Nonfunctional subdomains:
 
 		- (www.) *
-		- lp		(redirects to app-n.marketo.com, CN: *.marketo.com)
 		- platform
 		- platform4
 		- static *
@@ -33,8 +32,13 @@
 		- static		(403, CN: test.liverail.com, self-signed)
 		- vox-static		(works, akamai)
 
+
+	Partially covered subdomains:
+
+		- lp		(→ na-n.marketo.com; $ redirects to app-n.marketo.com, CN: *.marketo.com)
+
 -->
-<ruleset name="LiveRail (partial)" default_off="mismatch">
+<ruleset name="LiveRail (partial) ">
 
 	<target host="*.liverail.com" />
 
@@ -42,7 +46,7 @@
 	<rule from="^http://(ad|t)4\.liverail\.com/"
 		to="https://$14.liverail.com/" />
 
-	<rule from="^https?://(?:cdn-)?static\.liverail\.com/"
-		to="https://cdn-static.liverail.com/" />
+	<rule from="^https?://lp\.liverail\.com/(css|images|rs)/"
+		to="https://na-n.marketo.com/$1/" />
 
 </ruleset>
