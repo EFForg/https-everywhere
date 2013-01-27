@@ -4,15 +4,23 @@
 
 	CDN buckets:
 
+		- cdn.liverail.com.edgesuite.net
+
 		- cdn-static.liverail.com.edgesuite.net/.../
 
 			- a516.g.akamai.net/.../
+
+		- vox-static.liverail.com.edgesuite.net
 
 
 	Nonfunctional subdomains:
 
 		- (www.) *
+		- lp		(redirects to app-n.marketo.com, CN: *.marketo.com)
+		- platform
+		- platform4
 		- static *
+		- support	(times out)
 		- wp *
 
 	* 403, CN: test.liverail.com, self-signed
@@ -23,12 +31,16 @@
 		- cdn			(shows AWS 403, akamai)
 		- cdn-static		(akamai)
 		- static		(403, CN: test.liverail.com, self-signed)
+		- vox-static		(works, akamai)
 
 -->
 <ruleset name="LiveRail (partial)" default_off="mismatch">
 
 	<target host="*.liverail.com" />
 
+
+	<rule from="^http://(ad|t)4\.liverail\.com/"
+		to="https://$14.liverail.com/" />
 
 	<rule from="^https?://(?:cdn-)?static\.liverail\.com/"
 		to="https://cdn-static.liverail.com/" />
