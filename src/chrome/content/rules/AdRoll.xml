@@ -1,0 +1,53 @@
+<!--
+	For problematic rules, see AdRoll-problematic.xml
+
+
+	CDN buckets:
+
+		- adroll-2081128421.us-west-1.elb.amazonaws.com
+
+		- wildcard.adroll.com.edgekey.net
+
+			- s.adroll.com
+
+		- a.adroll.com.edgesuite.net
+
+		- adroll.userecho.com
+
+			- feedback.adroll.com
+
+		- adroll.wpengine.com		(redirects to blog.adroll)
+
+			- blog.adroll.com
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- support *
+
+	* Redirects to http, mismatched, CN: *.wpengine.com)
+
+
+	Problematic subdomains:
+
+		- a		(akamai)
+		- feedback	(works, mismatched, CN: userecho.com)
+
+-->
+<ruleset name="AdRoll (partial)">
+
+	<target host="adroll.com" />
+	<target host="*.adroll.com" />
+
+
+	<rule from="^http://(d\.|www\.)?adroll\.com/"
+		to="https://$1adroll.com/" />
+
+	<rule from="^https?://[as]\.adroll\.com/"
+		to="https://s.adroll.com/" />
+
+	<rule from="^https?://feedback\.adroll\.com/s/"
+		to="https://userecho.com/s/" />
+
+</ruleset>
