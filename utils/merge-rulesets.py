@@ -16,6 +16,13 @@ import re
 
 os.chdir("src")
 rulesets_fn="chrome/content/rules/default.rulesets"
+
+# cleanup after bugs :/
+misfile = rulesets_fn + "r"
+if os.path.exists(misfile):
+  print "Cleaning up malformed rulesets file..."
+  os.unlink(misfile)
+
 print "Creating ruleset library..."
 
 # Under git bash, sed -i issues errors and sets the file "read only".  Thanks.
