@@ -27,8 +27,13 @@ library = open(rulesets_fn,"w")
 # XXX TODO replace all sed commands with native Python
 #strip_oneline_comment = re.compile(r"<!--.*?-->")
 
-commit_id = os.environ["GIT_COMMIT_ID"]
-library.write('<rulesetlibrary gitcommitid="%s">' % commit_id)
+try:
+  commit_id = os.environ["GIT_COMMIT_ID"]
+  library.write('<rulesetlibrary gitcommitid="%s">' % commit_id)
+except:
+  # Chromium
+  library.write('<rulesetlibrary>')
+
 # Include the filename.xml as the "f" attribute
 for rfile in sorted(glob("chrome/content/rules/*.xml")):
   ruleset = open(rfile).read()
