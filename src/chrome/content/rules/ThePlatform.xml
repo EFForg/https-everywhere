@@ -1,0 +1,47 @@
+<!--
+	For problematic rules, see ThePlatform-problematic.xml.
+
+
+	CDN buckets:
+
+		- mpx.theplatform.com.edgesuite.net
+		- web.theplatform.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(shows default Media Temple page, CN: plesk)
+
+
+	Problematic subdomains:
+
+		- mpx *
+		- web *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- help		(some paths 403)
+
+
+	NB: crossdomain.xml on player forbids https (FUU!)
+		=> we must avoid securing clients
+
+	OTOH, we could rewrite crossdomain.xml from player to release....
+
+-->
+<ruleset name="thePlatform (partial)">
+
+	<target host="*.theplatform.com" />
+		<exclusion pattern="^http://help\.theplatform\.com/(?!login(?:$|\?|/))" />
+
+
+	<securecookie host="^(?:mps|release)\.theplatform\.com$" name=".+" />
+
+
+	<rule from="^http://(feed|help|mps|player|release)\.theplatform\.com/"
+		to="https://$1.theplatform.com/" />
+
+</ruleset>
