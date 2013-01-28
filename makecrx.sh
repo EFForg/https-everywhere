@@ -80,6 +80,7 @@ cd ../..
 
 python ./utils/merge-rulesets.py
 
+export RULESETS=chrome/content/rules/default.rulesets
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 echo 'var rule_list = [' > pkg/crx/rule_list.js
