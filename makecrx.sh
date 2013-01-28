@@ -78,7 +78,7 @@ do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-sh ./utils/merge-rulesets.sh
+python ./utils/merge-rulesets.py
 
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
