@@ -1,10 +1,11 @@
 <!--
+	See Oracle-mismatches.xml for problematic rules.
+
+
 	Other Oracle rulesets:
 
 		- MySQL.xml
-		- MySQL-mismatches.xml
 		- NetBeans.zml
-		- Oracle-mismatches.xml
 		- RightNow.xml
 		- VirtualBox.xml
 
@@ -32,6 +33,7 @@
 		- oracle.com subdomains:
 
 			- ^
+			- crmondemand
 			- docs *
 			- events *
 
@@ -40,20 +42,18 @@
 	* Works, akamai
 
 
-	See Oracle-mismatches.xml for problematic rules.
-
 	There are probably some data identical across shop and www that could be grabbed for www.
 
 -->
 <ruleset name="Oracle (partial)">
 
-	<target host="oracle.com"/>
-	<target host="*.oracle.com"/>
-		<!--	Very stingy https support
-			-most data redirects to http		-->
+	<target host="oracle.com" />
+	<target host="*.oracle.com" />
+		<!--
+			Very stingy https support
+			most paths redirects to http
+							-->
 		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:jp|pn)g$)"/>
-	<!--	* for cross-domain cookie	-->
-	<target host="*.edelivery.oracle.com"/>
 	<target host="oracleimg.com" />
 	<target host="www.oracleimg.com" />
 	<target host="*.oracleoutsourcing.com" />
@@ -69,24 +69,24 @@
 			- solutions
 			- wikis
 					-->
-	<securecookie host="^(\w+|\.edelivery)\.oracle\.com$" name=".*"/>
-	<!--	2o7.net stats cookies.	-->
-	<securecookie host="^\.oracle\.com$" name="^(gpw_e24|s_(cc|nr|sq))$"/>
+	<securecookie host="^(?:\w+|\.edelivery)\.oracle\.com$" name=".+" />
+	<!--
+		2o7.net stats cookies
+					-->
+	<securecookie host="^\.oracle\.com$" name="^(?:gpw_e24|s_(?:cc|nr|sq))$" />
 
 
 	<rule from="^http://(?:www\.)?oracle(img)?\.com/us/([^/]+)\.(jp|pn)g$"
 		to="https://www.oracle$1.com/us/assets/$2.$3g" />
 
 	<rule from="^https?://(?:www\.)?oracle(img)?\.com/"
-		to="https://www.oracle$1.com/"/>
+		to="https://www.oracle$1.com/" />
 
-	<!--	crmondemand doesn't work via https,
-		and redirects as so via http.	-->
 	<rule from="^http://crmondemand\.oracle\.com/"
-		to="https://www.oracle.com/us/products/applications/crmondemand/index.html"/>
+		to="https://www.oracle.com/us/products/applications/crmondemand/index.html" />
 
-	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|communities|competencycentre|conference|education(?:-stage)?|etrm|digitalmedia|dne|download|edelivery(?:-hqdc-test)?|emeajobs|emeapressoffice|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my|myprofile(?:-mktas)?|oai|partners|oss|otn|plmap|shop|solutions|stbeehive|strtc|suppliers|support|supporthtml|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
-		to="https://$1.oracle.com/"/>
+	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|communities|competencycentre|conference|digitalmedia|dne|download|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|shop|solutions|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
+		to="https://$1.oracle.com/" />
 
 	<rule from="^http://(bi|crm|fin|fs|[hs]cm|ic|pr[cj])-(\w+)\.oracleoutsourcing\.com/"
 		to="https://$1-$2.oracleoutsourcing.com/" />
