@@ -1,0 +1,31 @@
+<!--
+	For problematic rules, see Museum_of_Science-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- (www.)	(CN: *.acquia-sites.com)
+
+
+	Partially covered subdomains:
+
+		- legacy	(at least some paths redirect to http)
+
+-->
+<ruleset name="Museum of Science (partial)">
+
+	<target host="mos.org" />
+	<target host="*.mos.org" />
+		<exclusion pattern="http://legacy\.mos\.org/(?!media/)" />
+
+
+	<securecookie host="^\.mos\.org$" name="^MOS_store$" />
+
+
+	<rule from="^https?://(?:www\.)?mos\.org/sites/dev-elvis\.mos\.org/themes/(.*)\.(jp|pn)g$"
+		to="https://store.mos.org/common/themes/$1.$2g" />
+
+	<rule from="^http://(legacy|store)\.mos\.org/"
+		to="https://$1.mos.org/" />
+
+</ruleset>
