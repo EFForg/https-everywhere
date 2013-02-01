@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- blog.kinghost.com.br		(shows live, CN: *.kinghost.net)
+
+		- kinghost.net subdomains:
+
+			- (www.)
+			- davydmelo
+			- lithic
+			- marcelomelloweb
+			- mysql01-farm26	(expired 2012-06-02)
+			- pin
+			- static
+			- tvsinopse
+
+
+	Problematic domains:
+
+		- live.kinghost.com.br		(mismatched, CN: *.kinghost.net)
+
+-->
+<ruleset name="KingHost (partial)">
+
+	<target host="kinghost.com.br" />
+	<target host="*.kinghost.com.br" />
+	<target host="*.kinghost.net" />
+
+
+	<securecookie host="^\.kinghost\.com\.br$" name=".+" />
+	<securecookie host="^(?:painel2?|webftp|webmail)\.kinghost\.net$" name=".+" />
+
+
+	<rule from="^http://(www\.)?kinghost\.com\.br/"
+		to="https://$1kinghost.com.br/" />
+
+	<rule from="^http://(live|painel2?|web\d{3}|webftp|webmail)\.kinghost\.net/"
+		to="https://$1.kinghost.net/" />
+
+	<rule from="^https?://live\.kinghost\.(?:com\.br|net)/"
+		to="https://live.kinghost.net/" />
+
+</ruleset>
