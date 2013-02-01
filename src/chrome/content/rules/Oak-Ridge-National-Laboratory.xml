@@ -7,11 +7,16 @@
 		- gsearch	(cert: www.ornl.gov)
 		- neutrons	(501; 403)
 
+
+	Problematic subdomains:
+
+		- olcf		(cert only matches www.olcf)
+
 -->
 <ruleset name="Oak Ridge National Laboratory (partial)">
 
 	<target host="ornl.gov" />
-	<target host="www.ornl.gov" />
+	<target host="*.ornl.gov" />
 		<!--	Redirect to 404 page	-->
 		<exclusion pattern="^http://www\.ornl\.gov/(adm/|info/|ornlreview/|partnerships/(css/handheld\.css|university)|search)" />
 	<target host="sustainability-ornl.org" />
@@ -54,6 +59,9 @@
 	<!--	ornlhome/ pages link to nonworking info/ & ornlreview/ pages via https.	-->
 	<rule from="^https://www\.ornl\.gov/(adm|info|ornlreview)/"
 		to="http://www.ornl.gov/$1/" downgrade="1" />
+
+	<rule from="^https?://(?:www\.)?olcf\.ornl\.gov/"
+		to="https://www.olcf.ornl.gov/" />
 
 	<!--	www doesn't appear to exist.	-->
 	<rule from="^http://sustainability-ornl\.org/"
