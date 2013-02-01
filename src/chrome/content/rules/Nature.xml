@@ -3,18 +3,26 @@
 
 		- /		(times out)
 		- mts-msb	(ditto)
-		- npg		(ditto)
+		- my *
+		- network **	(504, akamai)
+		- npg *
 		- www.		(Akamai; "An error occurred")
 
+	* Times out
+	** 503, akamai
 
 -->
 <ruleset name="Nature (partial)">
 
+	<target host="nature.com" />
 	<target host="*.nature.com" />
 
 
 	<securecookie host="^secure\.nature\.com$" name=".*" />
 
+
+	<rule from="^https?://(?:www\.)?nature\.com/(common|(?:view/)?images)/"
+		to="https://secure.nature.com/$1/" />
 
 	<rule from="^http://s(ecure|tatus)\.nature\.com/"
 		to="https://s$1.nature.com/" />
