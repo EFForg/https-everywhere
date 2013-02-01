@@ -16,6 +16,11 @@
 	Problematic domains:
 
 		- polling.bbc.co.uk	(akamai)
+		- wwwimg.bbc.co.uk	(redirects to http)
+		- ichef.bbci.co.uk *
+		- news.bbcimg.co.uk *
+
+	* 503, akamai
 
 
 	Nonfunctional domains:
@@ -23,20 +28,25 @@
 		- bbc.co.uk subdomains:
 
 			- confluence.dev	(handshake error)
+
+			- open.live
+
 			- news
 				When rewritten to www, redirects back to news
+
+			- newsforums
+
 			- newsimg
 				- When rewritten news, doesn't redirect back to newsimg..
 				- When rewritten to www, redirects to http =(
 				- Not on static.
+
+			- newsvote
+
 			- stats
-			- wwwimg
-				redirects to http
 
 		- (www.)bbcamerica.com	(reset)
 		- emp.bbci.co.uk	(Akamai; 503)
-		- ichef.bbci.co.uk	(ditto)
-		- news.bbcimg.co.uk	(ditto)
 
 -->
 <ruleset name="BBC (partial)">
@@ -58,6 +68,9 @@
 	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
+	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|inc)/"
+		to="https://beta.bbc.co.uk/$1/" />
+
 	<!--	ichef: Images.
 					-->
 	<rule from="^https?://(ichef|sa|static)\.bbci?\.co\.uk/"
@@ -66,14 +79,20 @@
 	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
 
+	<rule from="^http://(?:www\.)?bbc\.co\.uk/programmes/branding/"
+		to="https://ssl.bbc.co.uk/programmes/branding/" />
+
 	<rule from="^http://www\.bbc\.co\.uk/webwise/static/"
 		to="https://static.bbc.co.uk/webwise/" />
 
-	<rule from="^http://(downloads|iplayerhelp\.external|id|ssl)\.bbc\.co\.uk/"
+	<rule from="^http://(bbc|careers|downloads|iplayerhelp\.external|id|ssl)\.bbc\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
 	<rule from="^https?://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
+
+	<rule from="^https?://node\d\.bbcimg\.co\.uk/tv/p2/"
+		to="https://beta.bbc.co.uk/tv/p2/" />
 
 	<rule from="^https?://playlists\.bbc\.co\.uk/crossdomain\.xml"
 		to="https://ssl.bbc.co.uk/crossdomain.xml" />
@@ -88,5 +107,8 @@
 
 	<rule from="^https://open\.bbci\.co\.uk/buzz/shares($|\?)"
 		to="http://open.bbci.co.uk/buzz/shares$1" downgrade="1" /-->
+
+	<rule from="^https?://news\.bbcimg\.co\.uk/"
+		to="https://beta.bbc.co.uk/" />
 
 </ruleset>
