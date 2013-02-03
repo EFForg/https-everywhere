@@ -1,0 +1,33 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(https differs from http)
+		- search	(403, mismatched)
+
+
+	Partially covered subdomains:
+
+		- business	(at least some pages redirect to http)
+
+-->
+<ruleset name="Federal Trade Commission (partial)">
+
+	<target host="*.ftc.gov" />
+		<exclusion pattern="^http://business\.ftc\.gov/(?!misc/|modules/|sites/)" />
+	<target host="ftccomplaintassistant.gov" />
+	<target host="www.ftccomplaintassistant.gov" />
+
+
+	<securecookie host="^bulkorder\.ftc\.gov$" name=".+" />
+
+
+	<rule from="^http://(bulkorder|business|(?:www\.)?consum(?:e|ido)r)\.ftc\.gov/"
+		to="https://$1.ftc.gov/" />
+
+	<rule from="^http://(www\.)?ftccomplaintassistant\.gov/"
+		to="https://$1ftccomplaintassistant.gov/" />
+
+</ruleset>
