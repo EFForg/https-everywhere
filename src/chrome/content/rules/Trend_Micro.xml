@@ -1,0 +1,58 @@
+<!--
+	For problematic rules, see Trend_Micro-problematic.xml.
+
+
+	CDN buckets:
+
+		- trend-fail.download.trendmicro.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- trendmicro.ae *
+		- www.trendmicro.ae **
+		- trendmicro.be *
+		- www.trendmicro.be **
+
+		- trendmicro.com subdomains:
+
+			- ^
+			- about-threats **
+			- de ***
+			- fr ***
+			- housecall **
+
+		- trendmicro.co.uk *
+		- www.trendmicro.co.uk **
+
+	* Shows eu, mismatched, CN: www.trendmicro.eu
+	** 503, akamai
+	*** "Server Error", akamai
+
+
+	Problematic domains:
+
+		- countermeasures.trendmicro.eu		(works, akamai)
+
+-->
+<ruleset name="Trend Micro (partial)">
+
+	<target host="trendmicro.com" />
+	<target host="*.trendmicro.com" />
+	<target host="trendmicro.eu" />
+	<target host="*.trendmicro.eu" />
+
+
+	<securecookie host="^esupport\.trendmicro\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?trendmicro\.com/"
+		to="https://www.trendmicro.com/" />
+
+	<rule from="^http://(esupport|go)\.trendmicro\.com/"
+		to="https://$1.trendmicro.com/" />
+
+	<rule from="^http://(partnerlocator\.|www\.)?trendmicro\.eu/"
+		to="https://$1trendmicro.eu/" />
+
+</ruleset>
