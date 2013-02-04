@@ -1,0 +1,53 @@
+<!--
+
+	Nonfunctional domains:
+
+
+		- baidu.com subdomains:
+
+			- gimg *
+			- img *
+			- imgsrc *
+			- static.tieba *
+			- wap *
+
+		- cdn.iknow.bdimg.com *
+		- tb[12].bdstatic.com *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- developer.baidu.com	(mismatched, CN: openapi.baidu.com)
+		- apps.bdimg.com *
+		- apps[123].bdimg.com *
+
+	* Times out
+
+
+	Fully covered domains:
+
+		- baidu.com subdomains:
+
+			- developer	(→ openapi)
+			- openapi
+			- passport
+
+		- apps.bdimg.com	(→ openapi.baidu.com)
+		- apps\d.bdimg.com	(→ openapi.baidu.com)
+
+-->
+<ruleset name="Baidu (partial)">
+
+	<target host="*.baidu.com" />
+	<target host="*.bdimg.com" />
+
+
+	<rule from="^https?://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
+		to="https://openapi.baidu.com/" />
+
+	<rule from="^http://passport\.baidu\.com/"
+		to="https://passport.baidu.com/" />
+
+</ruleset>
