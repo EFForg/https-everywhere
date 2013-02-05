@@ -4,10 +4,12 @@
 
 	CDN buckets:
 
+		- cdnedge.bbc.co.uk.edgesuite.net
 		- electradl.iplayer.bbc.co.uk.edgesuite.net
 		- news.bbc.co.uk.edgesuite.net
 			- newsimg.bbc.co.uk
 			- news.bbcimg.co.uk
+			- tile[1-4].bbcimg.co.uk
 		- emp.bbci.co.uk.edgesuite.net
 		- ichef.bbci.co.uk.edgesuite.net
 		- bbcmedia.fcod.llnwd.net
@@ -19,6 +21,7 @@
 		- wwwimg.bbc.co.uk	(redirects to http)
 		- ichef.bbci.co.uk *
 		- news.bbcimg.co.uk *
+		- tile[1-4].bbcimg.co.uk	(works, akamai)
 
 	* 503, akamai
 
@@ -27,6 +30,7 @@
 
 		- bbc.co.uk subdomains:
 
+			- cdnedge *
 			- confluence.dev	(handshake error)
 
 			- open.live
@@ -47,6 +51,9 @@
 
 		- (www.)bbcamerica.com	(reset)
 		- emp.bbci.co.uk	(Akamai; 503)
+		- open.bbci.co.uk *
+
+	* 503, akamai
 
 -->
 <ruleset name="BBC (partial)">
@@ -68,7 +75,7 @@
 	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|inc|player/emp)/"
+	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|inc|player/emp|survey/pulse|weather/locales)/"
 		to="https://beta.bbc.co.uk/$1/" />
 
 	<!--	ichef: Images.
@@ -107,5 +114,8 @@
 
 	<rule from="^https?://news\.bbcimg\.co\.uk/"
 		to="https://beta.bbc.co.uk/" />
+
+	<rule from="^https?:///tile\d\.bbcimg\.co\.uk/"
+		to="https://static.bbc.co.uk/" />
 
 </ruleset>
