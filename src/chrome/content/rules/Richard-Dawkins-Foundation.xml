@@ -9,6 +9,8 @@
 		- s3.amazonaws.com/rdf_article_images/
 		- s3.amazonaws.com/rdf_files/
 		- s3.amazonaws.com/rdfnet_production/
+		- d3rifzqc0esuo8.cloudfront.net
+		- ddeedjkumnzhr.cloudfront.net
 		- cdn.cloudfiles.mosso.com/c114612/
 		- cdn.cloudfiles.mosso.com/c116811/
 		- cdn.cloudfiles.mosso.com/c148211/
@@ -27,6 +29,13 @@
 		- c0589922.cdn.cloudfiles.rackspacecloud.com
 		- c0914452.cdn.cloudfiles.rackspacecloud.com
 		- c0939582.cdn.cloudfiles.rackspacecloud.com
+		- i2.wp.com/s3.amazonaws.com/rdf_files/
+
+
+	Problematic domains:
+
+		- richarddawkins.net		(no https)
+		- www.richarddawkins.net	(works, mismatched, CN: *.herokuapp.com)
 
 -->
 <ruleset name="Richard Dawkins Foundation for Reason and Science (partial)" default_off="mismatch">
@@ -37,17 +46,16 @@
 	<!--	Cert: *.herokuapp.com	-->
 	<target host="rdfrs.com" />
 	<target host="www.rdfrs.com" />
-	<!--	Cert: *.heroku.com	-->
 	<target host="richarddawkins.net" />
 	<target host="*.richarddawkins.net" />
-	<!--	Ditto	-->
+	<!--	CN: *.heroku.com	-->
 	<target host="richarddawkinsfoundation.org" />
 	<target host="*.richarddawkinsfoundation.org" />
 
 
 	<securecookie host="^outcampaign\.org$" name=".*" />
 	<securecookie host="^rdfrs\.com$" name=".*" />
-	<securecookie host="^(.*\.)?richarddawkins\.net$" name=".*" />
+	<securecookie host="^.*\.richarddawkins\.net$" name=".*" />
 
 
 	<rule from="^https?://(?:www\.)?outcampaign\.org/"
@@ -56,15 +64,15 @@
 	<rule from="^https?://(?:www\.)?rdfrs\.com/"
 		to="https://rdfrs.com/" />
 
-	<rule from="^https?://(?:(old\.)|www\.)?richarddawkins\.net/"
-		to="https://$1richarddawkins.net/" />
+	<rule from="^https?://(?:www\.)?richarddawkins\.net/"
+		to="https://www.richarddawkins.net/" />
 
 	<!--	Observed subdomains:
 
 			- donate
 			- givingaid
 				-->
-	<rule from="^http://(donate|givingaid)\.richarddawkins\.net/"
+	<rule from="^http://(donate|givingaid|old)\.richarddawkins\.net/"
 		to="https://$1.richarddawkins.net/" />
 
 	<!--	Pages 301 back.
