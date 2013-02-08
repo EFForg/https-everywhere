@@ -2,7 +2,81 @@
 	Nonfunctional subdomains:
 
 		- calendar		(cert: secure.hosting.vt.edu; 404)
+		- www.cnr
+		- (www.)fishwild
+		- (www.)frec
+		- (www.)geography
+		- m.lib				(shows scrooge.lib, CN: ulfs.lib)
+		- scholar.lib			(shows CentOS test page)
+		- www.tec.lib			(shows secure.hosting. CN: secure.hosting)
+		- www.podcasts			(shows secure.hosting. CN: secure.hosting)
+		- (www.)auction.research	(404)
+		- (www.)sbio
+		- www.directory.unirel		(shows secure.hosting, CN: secure.hosting)
 		- ossie.wireless	(self-signed, expired; shows CentOS Apache test page)
+
+
+	Problematic subdomains:
+
+		- ^
+		- bioinformatics
+		- scrooge.lib				(expired, self-signed)
+		- www.oesrc.researchcompliance *
+		- vbi *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)				(^ → www)
+		- addison
+		- m.addison
+		- (www.)assessment
+		- auth
+		- (www.)bioinformatics			(^ → www)
+		- (www.)cals
+		- (www.)research.cals
+		- www.cnr				(→ cnre)
+		- (www.)cnre
+		- (www.)ext
+		- (www.)pubs.ext
+		- www.fralin
+		- (www.)vectorborne.fralin
+		- www.hnfe
+		- (www.)hipl.hnfe
+		- secure.hosting
+
+		- lib subdomains:
+
+			- aqua
+			- login.ezproxy.lib...:2443
+			- ulfs
+			- www
+
+		- my
+		- (www.)osp
+
+		- research subdomains:
+
+			- (www.)
+			- confluence
+			- dev
+			- help
+			- secure
+
+		- researchcompliance subdomains:
+
+			- (www.)
+			- (www.)oesrc			(www → ^)
+			- (www.)ibc
+
+		- (www.)unirel
+
+		- (www.)vaes
+		- arec.vaes
+		- (www.)vbi				(^ → www)
+		- (www.)vtnews
 
 -->
 <ruleset name="Virginia Polytechnic Institute and State University (partial)">
@@ -12,12 +86,23 @@
 	<target host="secure.hosting.vt.edu" />
 
 
-	<!--	!www doesn't work over https.
-					-->
-	<rule from="^https?://(?:www\.)?vt\.edu/"
-		to="https://www.vt.edu/" />
+	<securecookie host="^(?:(?:m?\.)?addison|auth|www\.(?:bioinformatics|vbi)|(?:\.vectorborne)?\.fralin|(?:confluence|help|secure)?\.research|(?:\.ibc|\.oesrc)?\.researchcompliance)\.vt\.edu$" name=".+" />
+	<!--securecookie host="^\.vt\.edu$" name=".+" /-->
 
-	<rule from="^http://(secure\.hosting|my)\.vt\.edu/"
+
+	<rule from="^https?://(?:www\.)?(bioinformatics\.|vbi\.)?vt\.edu/"
+		to="https://www.$1vt.edu/" />
+
+	<rule from="^http://((?:m\.)?addison|auth|www\.(?:fralin|hnfe|lib)|(?:www\.)?(?:assessment|cnre|ext|pubs\.ext|vectorborne\.fralin|hipl\.hnfe|osp|research(?:\.cals)?|(?:ibc\.)?researchcompliance|unirel|vaes|vtnews)|secure\.hosting|(?:aqua|ulfs)\.lib|my|(?:confluence|dev|help|secure)\.research|arec\.vaes)\.vt\.edu/"
 		to="https://$1.vt.edu/" />
+
+	<rule from="^https?://www\.cnr\.vt\.edu/"
+		to="https://cnre.vt.edu/" />
+
+	<rule from="^http://login\.ezproxy\.lib\.vt\.edu:2443/"
+		to="https://login.ezproxy.lib.vt.edu:2443/" />
+
+	<rule from="^https?://(?:www\.)?oesrc\.researchcompliance\.vt\.edu/"
+		to="https://oesrc.researchcompliance.vt.edu/" />
 
 </ruleset>

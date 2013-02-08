@@ -1,0 +1,62 @@
+<!--
+	For other E-Plus Gruppe coverage, see E-Plus_Gruppe.xml.
+
+
+	CDN buckets:
+
+		- mobile-base-de-pec.net-m.net
+
+			- fun.base.de
+
+
+	Nonfunctional subdomains:
+
+		- (www.)blog
+		- fun			(403, mismatched, CN: *.net-m.net)
+		- partnerprogramm
+		- shopsuche
+
+
+	Problematic subdomains:
+
+		^			(cert only matches www)
+		- www.angebote		(cert only matches ^angebote)
+		- einstellungen		(works, mismatched, CN: *.customersaas.com)
+		- facebook		(no https)
+		- infos			(reset)
+		- promotion		(works, mismatched, CN: *.digital-media.de)
+
+-->
+<ruleset name="BASE (partial)">
+
+	<target host="base.de" />
+	<target host="*.base.de" />
+		<!--
+			?.* redirects to www for promotion, but not for infos
+										-->
+		<exclusion pattern="^https?://infos\.base\.de/\?" />
+
+
+	<securecookie host="^.*\.base\.de$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?base\.de/"
+		to="https://www.base.de/" />
+
+	<rule from="^https?://(?:www\.)?angebote\.base\.de/"
+		to="https://angebote.base.de/" />
+
+	<rule from="^http://(chatsurvey|m|proactive2?|tracking)\.base\.de/"
+		to="https://$1.base.de/" />
+
+	<!--	Redirects like so, but drops the post-TLD slash.
+
+		No harm in fixing things ourselves.
+							-->
+	<rule from="^https?://facebook\.base\.de/"
+		to="https://angebote.base.de/" />
+
+	<rule from="^https?://(?:infos|promotion)\.base\.de/(?:$|\?.*)"
+		to="https://www.base.de/" />
+
+</ruleset>
