@@ -5,6 +5,38 @@
 		- Norton_Online_Backup.xml
 		- Verisign.xml
 
+
+	CDN buckets:
+
+		- d1mj3xqaoh14j0.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- check			(redirects to app-l.marketo.com, mismatched, CN: *.marketo.com)
+		- csaweb
+		- customersupport	(redirects to http, mismatched, CN: slotmatching6.salesforce.com)
+		- entsupport		(times out)
+		- eval			(503, akamai)
+		- lcdls
+		- searchg
+
+
+	Problematic symantec.com subdomains:
+
+		- definitions 		(504, akamai)
+		- esdownload *
+		- go *
+		- investor *
+		- liveupdate *
+		- norton		(akamai)
+		- securityresponse *
+		- secure1		(works, expired)
+		- service1		(works, expired, mismatched, CN: secure1.symantec.com)
+		- sfdoccentral		(works, expired 2011-12-14)
+
+	* Works, akamai
+
 -->
 <ruleset name="Symantec (partial)">
 
@@ -14,9 +46,12 @@
 			These redirect to http.
 						-->
 		<exclusion pattern="^http://www\.symantec\.com/connect/(?:$|all-connect$|articles/|blogs/|imagebrowser/view/image/|forums/)" />
+	<target host="*.symanteccloud.com" />
+	<target host="*.symanteccontent.com" />
+	<target host="now.symassets.com" />
 
 
-	<securecookie host="^(?:.*\.)?symantec\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?symantec(?:content)?\.com$" name=".*" />
 
 
 	<!--	//symantec.com/.+:
@@ -26,10 +61,43 @@
 	<rule from="^https?://symantec\.com/"
 		to="https://www.symantec.com/" />
 
+	<rule from="^https?://check\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/" />
+
+	<rule from="^https?://definitions\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/business/security_response/definitions.jsp" />
+
+	<rule from="^https?://entsupport\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/enterprise/support/index.jsp" />
+
+	<rule from="^https?://go\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/index.jsp" />
+
 	<rule from="^https?://om\.symantec\.com/"
 		to="https://veritasnonconsumer.122.2o7.net/" />
 
-	<rule from="^http://(oms|productadvisor|sitedirector|solutions|symaccount|webdl|www|www-secure)\.symantec\.com/"
+	<rule from="^http://(buy|careers|customercare|education|transfer\.emea|et|faster|fileconnect|fileshare|licensing(?:programs)?|locator|my?|my(?:-qa|-uat|sort|support|symantec)|oms|partner(?:locator|net(?:-internal|-qa|-sit|-uat|-temp)?|vpn)|phoenix|productadvisor|renewals|(?:corp\.|retail\.)?sarcscan|security|sfprep|sitedirector|scm|solutions|sort|ssae|store|submit|symaccount|symbeta|symlms|telemetrics|vias|vip|(?:desktop|idprotect|toolbar)\.vip|vos|vpn-us-west|vs|webdl|www4?|www-secure)\.symantec\.com/"
 		to="https://$1.symantec.com/" />
+
+	<rule from="^https?://customersupport\.symantec\.com/(resource|servlet)/"
+		to="https:///symantec1.secure.force.com/$1/" />
+
+	<rule from="^https?://liveupdate\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/security_response/" />
+
+	<rule from="^https?://securityresponse\.symantec\.com/(?:$|\?.*)"
+		to="https://www.symantec.com/security_response/index.jsp" />
+
+	<rule from="^https?://se(?:cur|rvic)e1\.symantec\.com/(\?.*)?$"
+		to="https://www.symantec.com/techsupp/$1" />
+
+	<rule from="^http://(buy|static)\.symanteccloud\.com/"
+		to="https://$1.symanteccloud.com/" />
+
+	<rule from="^http://static(1|2|3)\.symanteccontent\.com/"
+		to="https://static$1.symanteccontent.com/" />
+
+	<rule from="^http://now\.symassets\.com/"
+		to="https://now.symassets.com/" />
 
 </ruleset>
