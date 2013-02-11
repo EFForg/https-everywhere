@@ -1,0 +1,64 @@
+<!--
+	For other Symantec coverage, see Symantec.xml.
+
+
+	norton.i.lithium.com
+
+
+	Nonfunctional norton.com subdomains:
+
+		- apps *
+		- appstore *
+		- smallbusiness		(some [all?] paths redirect to http)
+
+	* At least $ redirects to http
+
+
+	Problematic domains:
+
+		- ^ *
+		- arabic *
+		- asia *
+		- at *
+		- il *
+		- lu *
+		- ro *
+
+	* Mismatched
+
+-->
+<ruleset name="Norton (partial)">
+
+	<target host="mynortonaccount.com" />
+	<target host="www.mynortonaccount.com" />
+
+	<target host="norton.com" />
+	<target host="*.norton.com" />
+	<target host="*.nortoncdn.com" />
+
+
+	<securecookie host="^(?:.*\.)?norton\.com$" name=".+" />
+
+
+	<rule from="^https?://(mynortonaccount|norton)\.com/"
+		to="https://www.$1.com/" />
+
+	<rule from="^http://((?:www\.)?account|au|be|be-nl|br|buy|buy-static1?|c[ahlnz]|ca-fr|community|de|dk|dns|es|fi|fr|gr|hk|hk-en|hotspot|hu|i[ent]|jp|kr|login|malaysia|mx|n[loz]|now-static|onlinefamily|p[lrt]|ru|safeweb|se|sg|static-wap(?:-stg)?|store|support(?:-stg)?|tr|tw|uk|us|www|za)\.norton\.com/"
+		to="https://$1.norton.com/" />
+
+	<rule from="^https?://(?:arabic|il|ro)\.norton\.com/(?:.*)"
+		to="https://uk.norton.com/" />
+
+	<rule from="^https?://asia\.norton\.com/(?:.*)"
+		to="https://sg.norton.com/" />
+
+	<rule from="^https?://at\.norton\.com/(?:.*)"
+		to="https://de.norton.com/" />
+
+	<rule from="^https?://lu\.norton\.com/(?:.*)"
+		to="https://fr.norton.com/" />
+
+	<rule from="^http://sta(ge|tic)\.nortoncdn\.com/"
+		to="https://sta$1.nortoncdn.com/" />
+
+</ruleset>
