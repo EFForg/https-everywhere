@@ -1,4 +1,3 @@
-<ruleset name="Turku.fi" default_off="buggy">
 <!--
 	Cert matches only www
 
@@ -6,11 +5,28 @@
 		- www.turku.fi/(ahtela|bussar|busses|bussit|paikalla|paplats|
 		ippe|nuorikulttuuri|sustainable-city|...)
 -->
+<ruleset name="Turku.fi">
 	<target host="www.turku.fi" />
 	<target host="turku.fi" />
+	<target host="www.bussit.turku.fi" />
 
 	<rule from="^https?://(?:www\.)?turku\.fi/"
 		to="https://www.turku.fi/" />
+
+
+	<!-- Match problematic looking links if they are not excluded -->
+	<exclusion pattern="^http://(?:www\.)?turku\.fi/(?!bussit$|buses$|bussar$)[\w-]+$" />
+
+	<!-- Redirect problematic subdomain and links -->
+	<rule from="^https?://www\.bussit\.turku\.fi/$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916" />
+
+	<rule from="^https?://(?:www\.)?turku\.fi/bussit$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=1" />
+	<rule from="^https?://(?:www\.)?turku\.fi/buses$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=2" />
+	<rule from="^https?://(?:www\.)?turku\.fi/bussar$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=3" />
 
 	<securecookie host="^\.(www)?\.?turku\.fi" name=".*" />
 </ruleset>
