@@ -1,12 +1,95 @@
 <!--
+	CDN buckets:
+
+		- d1ui9i2jp8fkao.cloudfront.net
+
+			- img.appstatic.opera.com
+			- img\d+.appstatic.opera.com
+
+		- opera.globalsportsmedia.com.edgesuite.net
+
+			- sports.opera.com
+
+
 	Nonfunctional domains:
 
-		- devfiles.myopera.com	(times out)
+		- devfiles.myopera.com *
+		- thumbs.myopera.com
 
 		- opera.com subdomains:
 
+			- (www.)
+			- blackberry.apps **
+			- html5.apps **
+			- iphone.apps **
+			- java.apps **
+			- windows-mobile.apps **
+			- ar
+			- arc
+			- cn
+			- de
+			- deb *
+			- fr
+			- ftp
+			- get
+			- get\d
+			- get-ice-1
+			- get-tsw-1
 			- help
+			- in
+			- jp
 			- labs
+			- media
+			- mini
+			- redir
+			- ru
+			- snapshot *
+			- sports		(503, akamai)
+			- tw
+
+		- (www.)operamini.com
+
+	* Times out
+	* Redirects to http, mismatched, CN: apps.opera.com
+
+
+	Problematic opera.com subdomains:
+
+		- img.appstatic *
+		- img\d+.appstatic *
+		- mobilestore		(redirects to apps, mismatched, CN: apps.opera.com)
+
+	* Cloudfront
+
+
+	Partially covered opera.com subdomains:
+
+		- apps *
+		- dev *
+		- my *
+		- portal *
+		- widgets *
+
+	* Some paths redirect to http
+
+
+	Fully covered domains:
+
+		- files.myopera.com
+		- static.myopera.com
+
+		- opera.com subdomains:
+
+			- addons
+			- idp
+			- mail
+			- micropage
+			- ssl
+			- static-portal
+			- unite
+
+		- btsfiles.operasoft.com
+		- bugfiles.operasoft.com
 
 -->
 <ruleset name="Opera" default_off="needs testing">
@@ -14,20 +97,45 @@
 	<target host="*.opera.com" />
 		<!--
 			These redirect to http.
-
+							-->
+		<exclusion pattern="^http://apps\.opera\.com/(?:\w\w(?:_\w\w)?/(?:$|\?|.+\.htm)|(?:cs|script)s/opt/|index\.php)" />
+		<!--
 			user/avatar.pl redirects to static.myopera.com/avatars/
 			in an unpredictable fashion.
-					-->
-		<exclusion pattern="^http://dev\.opera\.com/($|articles|author/|labs$|user/avatar\.pl|[^ls]\w+$)" />
-		<exclusion pattern="^http://my\.opera\.com/($|\w+/blog/|community/($|api/|blogs/|campaign/|customize/|explore/|forums/|groups/|help/|members$|opera/|photos$|terms-of-service/|users/avatar\.pl)|[^ls]\w+/?$|\w+/tags/show\.pl)" />
-		<!--	These don't seem to work over https.	-->
-		<exclusion pattern="^http://(get\d|help|labs|snapshot|www)\.opera\.com/" />
+							-->
+		<exclusion pattern="^http://dev\.opera\.com/(?:$|articles|author/|labs$|user/avatar\.pl|sdk/|(?!login|signup)\w+(?:$|\?))" />
+		<exclusion pattern="^http://my\.opera\.com/(?:$|\w+/blog/|community/(?:$|api/|blogs/|campaign/|customize/|explore/|forums/|groups/|help/|members$|opera/|photos$|terms-of-service/|users/avatar\.pl)|(?!login|signup)\w+/?(?:$|\?)|\w+/tags/show\.pl)" />
+		<exclusion pattern="^http://portal\.opera\.com/(?!accounts/login)" />
+		<exclusion pattern="^http://widgets\.opera\.com/(?:$|\?|author/|category/|general/|new/|popular/|rated/|user/(?:avatar|picture)/|users/|widget/(?:\d+|download)/)" />
+		<!--
+			These don't seem to work over https.
+								-->
+		<exclusion pattern="^http://(?:arc?|cn|deb?|fr|get\d?|get-[\w-]+|help|in|jp|labs|mobilestore|redir|ru|snapshot|sports|tw|www)\.opera\.com/" />
 		<exclusion pattern="^http://(?:devfile|thumb)s\.myopera\.com/" />
+	<target host="*.operasoft.com" />
 	<target host="myopera.com" />
 	<target host="*.myopera.com" />
 
 
+	<securecookie host="^(?:addons|bugs|idp|\.mail|ssl)\.opera\.com$" name=".+" />
+	<securecookie host="^btsfiles\.operasoft\.com$" name=".+" />
+
+
+	<!--	Redirects to http first.
+						-->
+	<rule from="^http://my\.opera\.com/(login|signup)"
+		to="https://my.opera.com/community/$1" />
+
+	<rule from="^http://portal\.opera\.com/accounts/login$"
+		to="https://portal.opera.com/accounts/login/" />
+
 	<rule from="^http://([^/:@\.]+\.)?(my)?opera\.com/"
 		to="https://$1$2opera.com/" />
+
+	<rule from="^https?://img(?:\d*)\.appstatic\.opera\.com/"
+		to="https://d1ui9i2jp8fkao.cloudfront.net/" />
+
+	<rule from="^http://b(ts|ug)files\.operasoft\.com/"
+		to="https://b$1files.operasoft.com/" />
 
 </ruleset>
