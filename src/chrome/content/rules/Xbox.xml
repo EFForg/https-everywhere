@@ -1,0 +1,68 @@
+<!--
+	For problematic rules, see Xbox-problematic.xml.
+
+
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Nonfunctional domains:
+
+		- xbox.com subdomains:
+
+			- ^
+			- gamercard *
+			- gearsofwar
+			- marketplace **
+			- tiles *
+			- www **
+
+		- compass.xboxlive.com	(times out)
+		- press.xbox360.com
+
+	* 504, akamai
+	** 503, akamai
+
+
+	Problematic domains:
+
+		- xbox.com subdomains:
+
+			- nxeassets *
+			- o		(mismatched, CN: *.112.2o7.net)
+			- piflc		(works, mismatched, CN: *.xboxlive.com)
+
+		- avatar.xboxlive.com *
+
+	* Works, akamai
+
+
+	Partially covered domains:
+
+		- rewards.xbox.com *
+		- support.xbox.com *
+
+	* Some pages redirect to http
+
+-->
+<ruleset name="Xbox (partial)">
+
+	<target host="*.xbox.com" />
+		<exclusion pattern="^http://support\.xbox\.com/(?:en-US/)?(?:$|\?)" />
+		<exclusion pattern="^http://rewards\.xbox\.com/(?!join-now|(?:localized_)?media/)" />
+	<target host="piflc.xboxlive.com" />
+
+
+	<securecookie host="^\.xbox\.com$" name="^s_vi$" />
+	<securecookie host="^(?:help|live|myservice)\.xbox\.com$" name=".+" />
+
+
+	<rule from="^http://(halo|help|live|(?:my)?service|retailer|rewards|solutions|support)\.xbox\.com/"
+		to="https://$1.xbox.com/" />
+
+	<rule from="^https?://o\.xbox\.com/"
+		to="https://xbox-com.112.2o7.net/" />
+
+	<rule from="^https?://piflc\.xbox(?:live)?\.com/"
+		to="https://piflc.xboxlive.com/" />
+
+</ruleset>
