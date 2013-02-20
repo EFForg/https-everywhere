@@ -1,0 +1,43 @@
+<!--
+	For problematic rules, see Marin_Software-problematic.xml.
+
+
+	Nonfunctional domains:
+
+		- forms.marinsoftware.com		(redirects to app-i.marketo.com, mismatched, CN: *.marketo.com)
+		- insights.marinsoftware.com
+		- jira.marinsoftware.com		(data differ between http & https)
+		- prosupport.marinsoftware.com		(redirects to http, mismatched, CN: *.zendesk.com)
+		- marinsoftware.de			(shows marinsoftware.com. mismatched, CN: *.marinsoftware.com)
+
+
+	Problematic domains:
+
+		- marinsm.com			(cert only matches *.marinsm.com)
+		- www.marinsoftware.de		(works, mismatched, CN: *.marinsoftware.com)
+
+-->
+<ruleset name="Marin Software (partial)">
+
+	<target host="marinsm.com" />
+	<target host="*.marinsm.com" />
+	<target host="marinsoftware.com" />
+	<target host="*.marinsoftware.com" />
+
+
+	<securecookie host="^(?:app|lvw4|pro|rt)\.marinsoftware\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?marinsm\.com/"
+		to="https://www.marinsm.com/" />
+
+	<rule from="^http://tracker\.marinsm\.com/"
+		to="https://tracker.marinsm.com/" />
+
+	<rule from="^http://((?:app|cs|lvw4|pro|rt|www)\.)?marinsoftware\.com/"
+		to="https://$1marinsoftware.com/" />
+
+	<rule from="^https?://prosupport\.marinsoftware\.com/generated/"
+		to="https://generated.zendesk.com/generated/" />
+
+</ruleset>
