@@ -8,11 +8,22 @@
 		- itunes.apple.com	(Akamai; "An error occurred")
 		- a1.phobos.apple.com	(Akamai; 503; not on phobos nor ssl)
 
+
+	Problematic domains:
+
+		- store.storeimages.cdn-apple.com	(akamai)
+
+
+	Partially covered domains:
+
+		- concierge	(at least some pages redirect to http)
+
 -->
 <ruleset name="Apple.com (partial)">
 
 	<target host="apple.com" />
 	<target host="*.apple.com" />
+		<exclusion pattern="^http://concierge\.apple\.com/(?!resources/)" />
 	<target host="km.support.apple.com" />
 	<target host="store.storeimages.cdn-apple.com" />
 	<target host="iwork.com" />
@@ -23,12 +34,12 @@
 	<target host="www.mzstatic.com" />
 
 
-	<securecookie host="^(appleid|application|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|iforgot|itunesconnect|jobs|portal|register|remoteadvisor|selfsolve|ssl|support(profile)?|www)\.apple\.com$" name=".+" />
+	<securecookie host="^(appleid|application|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|ssl|support(profile)?|www)\.apple\.com$" name=".+" />
 
 	<rule from="^http://(?:www\.)?apple\.com/"
 		to="https://www.apple.com/" />
 
-	<rule from="^http://(appleid|application|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|iforgot|itunesconnect|jobs|portal|register|remoteadvisor|selfsolve|support(profile)?)\.apple\.com/"
+	<rule from="^http://(appleid|application|(?:nc-|nwk-)?as-images|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|support(profile)?)\.apple\.com/"
 		to="https://$1.apple.com/" />
 
 	<rule from="^https?://(?:images|ssl)\.apple\.com/"
@@ -38,6 +49,9 @@
 				-->
 	<rule from="^https?://store(?:images\.|\.storeimages\.cdn-)apple\.com/\d+/store\.apple\.com/"
 		to="https://store.apple.com/" />
+
+	<rule from="^https?://store\.storeimages\.cdn-apple\.com/\d+/(nc-|nwk-)?as-images\.apple\.com/"
+		to="https://$1as-images.apple.com/" />
 
 	<!--	Akamai	-->
 	<rule from="^https?://km\.support\.apple\.com/"
