@@ -1,19 +1,30 @@
 <!--
-	Nonfunctional domains:
-
-		- (www.)rubiconproject.com	(times out)
-		- (www.)rubiconproject.net	(ditto)
-
-
 	rubiconproject.net.akadns.net
 
--->
-<ruleset name="Rubicon Project (partial)">
 
+	Problematic domains:
+
+		- tap2-cdn.rubiconproject.com	(akamai)
+		- (www.)rubiconproject.net	(broken copy of .com, mismatched, CN: *.rubiconproject.com)
+
+-->
+<ruleset name="Rubicon Project">
+
+	<target host="rubiconproject.com" />
 	<target host="*.rubiconproject.com" />
 
 
-	<rule from="^http://(anvil|login|optimized-by|pixel|revv-static|tap|tap-cdn)\.rubiconproject\.com/"
-		to="https://$1.rubiconproject.com/" />
+	<!--	Broken, but otherwise identical to .com.
+			I doubt that Rubicon would mind
+		us fixing things like so.
+						-->
+	<rule from="^https?://(www\.)?rubiconproject\.net/"
+		to="https://$1rubiconproject.com/" />
+
+	<rule from="^http://((?:ads|anvil|arsenal|beacon(?:-us-east)?|demand|login|optimized-by|pixel|revv|revv-static|staged-by|tap|tap-cdn|vantage|www)\.)?rubiconproject\.com/"
+		to="https://$1rubiconproject.com/" />
+
+	<rule from="^https?://tap2-cdn\.rubiconproject\.com/"
+		to="https://tap.rubiconproject.com/" />
 
 </ruleset>
