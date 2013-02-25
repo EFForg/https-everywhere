@@ -19,15 +19,49 @@
 		- discussionapi.guardian.co.uk	(times out)
 		- m.guardian.co.uk		(cert: my.mobileiq.com; 403)
 		- www.guardian.co.uk		(timeout)
-		- combo.guim.co.uk		(Akamai)
-		- resource.guim.co.uk		(Akamai)
+		- combo.guim.co.uk		(404, Akamai)
+		- resource.guim.co.uk		(404, Akamai)
 		- audio.theguardian.tv		(timeout)
 		- cdn.theguardian.tv		(ditto)
 
 
+	Problematic domains:
+
+		- guardian.co.uk subdomains:
+
+			- download *
+			- hits			(mismatched, CN: *.112.2o7.net)
+			- image *
+
+		- static.guim.co.uk		(akamai)
+
+	* Cert only matches (www.)guim.co.uk
+
+
 	Partially covered domains:
 
-		- (www.)guardianbookshop.co.uk		(some [most?] pages redirect to http)
+		- (www.)guardianbookshop.co.uk *
+		- \w+.guardianoffers.co.uk *		
+
+	* Some [most?] pages redirect to http
+
+
+	Fully covered domains:
+
+		- guardian.co.uk subdomains:
+
+			- download	(→ image.guim.co.uk)
+			- id
+			- image		(→ image.guim.co.uk)
+			- oas
+			- soulmates
+
+		- (www.)guardianeatright.co.uk
+
+		- guim.co.uk subdomains:
+
+			- (www.)image
+			- (www.)static	(→ image)
 
 -->
 <ruleset name="The Guardian (partial)">
@@ -36,7 +70,7 @@
 	<target host="guardianbookshop.co.uk" />
 	<target host="www.guardianbookshop.co.uk" />
 		<!--
-			These pages still don't redirect to http (yet):
+			At least these pages still don't redirect to http (yet):
 
 				- checkout.do
 				- register.do
@@ -44,6 +78,7 @@
 		<exclusion pattern="^https?://(?:www\.)?guardianbookshop\.co\.uk/BerteShopWeb/(?:addToBasket|advancedSearch|customPage|home|showSubCategories|updateBasket|viewCategory|viewProduct)\.do" />
 	<target host="guardianeatright.co.uk" />
 	<target host="www.guardianeatright.co.uk" />
+	<target host="*.guardianoffers.co.uk" />
 	<target host="*.guim.co.uk" />
 		<!--
 			Akamai, 404
@@ -76,5 +111,8 @@
 
 	<rule from="^http://(www\.)?guardianeatright\.co\.uk/"
 		to="https://$1guardianeatright.co.uk/" />
+
+	<rule from="^http://(\w+)\.guardianoffers\.co\.uk/(AddtoBasket\.asp|checkout\.asp|(?:BrandImages|images|lib|ProductImages|scripts|SKUImages|styles)/)"
+		to="https://$1.guardianoffers.co.uk/$2" />
 
 </ruleset>
