@@ -4,6 +4,8 @@
 
 	CDN buckets:
 
+		- km.support.apple.com.edgekey.net
+
 		- a([1-5]).mzstatic.com.edgesuite.net/...
 
 			- a$1.da1.akamai.net/...
@@ -34,7 +36,10 @@
 
 	Partially covered domains:
 
-		- concierge	(at least some pages redirect to http)
+		- concierge *
+		- store *
+
+	* At least some pages redirect to http
 
 -->
 <ruleset name="Apple.com (partial)">
@@ -42,6 +47,7 @@
 	<target host="apple.com" />
 	<target host="*.apple.com" />
 		<exclusion pattern="^http://concierge\.apple\.com/(?!resources/)" />
+		<exclusion pattern="^http://store\.apple\.com/(?![\w/]+/css/|rs/)" />
 	<target host="store.storeimages.cdn-apple.com" />
 	<target host="iwork.com" />
 	<target host="www.iwork.com" />
@@ -51,10 +57,13 @@
 	<target host="www.mzstatic.com" />
 
 
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.apple\.com$" name="^s_.+$" />
 	<securecookie host="^(?:appleid|application|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|ssl|support(?:profile)?|www)\.apple\.com$" name=".+" />
 
 
-	<rule from="^http://((?:appleid|application|(?:nc-|nwk-)?as-images|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|support(?:profile)?|www)\.)?apple\.com/"
+	<rule from="^http://((?:appleid|application|(?:nc-|nwk-)?as-images|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|store|support(?:profile)?|www)\.)?apple\.com/"
 		to="https://$1apple.com/" />
 
 	<rule from="^https?://(?:images|ssl)\.apple\.com/"
@@ -67,7 +76,7 @@
 		to="https://$1as-images.apple.com/" />
 
 	<rule from="^https?://km\.support\.apple\.com/"
-		to="https://support.apple.com/" />
+		to="https://km.support.apple.com.edgekey.net/" />
 
 	<rule from="^https?://(?:www\.)?iwork\.com/"
 		to="https://www.iwork.com/" />
