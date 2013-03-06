@@ -1,19 +1,40 @@
 <!--
+	For problematic rules, see Evernote-problematic.xml.
+
+
 	Nonfunctional subdomains:
 
+		- discussion
+		- pootle
 		- translate	(times out)
 
+
+	Problematic subdomains:
+
+		- devcup *
+		- 2012.devcup *
+		- ru-support	(works, mismatched, CN: vmeste.bank24.ru)
+		- shop		(redirects to http, mismatched, CN: *.myshopify.com)
+
+	* Works, mismatched, CN: *.challengepost.com
+
 -->
-<ruleset name="Evernote">
+<ruleset name="Evernote (partial)">
 
 	<target host="evernote.com" />
-	<target host="www.evernote.com" />
+	<target host="*.evernote.com" />
 
 
 	<securecookie host="^(.*\.)?evernote\.com$" name=".*" />
 
 
-	<rule from="^http://(www\.)?evernote\.com/"
+	<rule from="^http://((?:blog|dev|sandbox|support|trunk|www)\.)?evernote\.com/"
 		to="https://$1evernote.com/" />
+
+	<rule from="^https?://discussion\.evernote\.com/public/style_images/"
+		to="https://i2.wp.com/discussion.evernote.com/public/style_images/" />
+
+	<rule from="^https?://shop\.evernote\.com/"
+		to="https://evernote.myshopify.com/" />
 
 </ruleset>
