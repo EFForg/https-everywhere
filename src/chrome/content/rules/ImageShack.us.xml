@@ -1,5 +1,13 @@
 <!--
-	See ImageShack.us-mismatches.xml for problematic rules.
+	Nonfunctional subdomains:
+
+		- kb
+
+
+	Fully covered subdomains:
+
+		- post
+		- register
 
 -->
 <ruleset name="ImageShack (partial)">
@@ -7,15 +15,22 @@
 	<target host="imageshack.us" />
 	<target host="*.imageshack.us" />
 		<exclusion pattern="^http://imageshack\.us/f/.*" />
-		<exclusion pattern="^http://img\d{1,3}\." />
+		<exclusion pattern="^http://img\d{1,3}\.imageshack\.us/(?!img\d{1,3}/\d+/\w+\.)" />
+		<exclusion pattern="^http://kb\.imageshack\.us/(?!img/favicon\.ico$)" />
 		<exclusion pattern="^http://iload\d\.imageshack\.us/$" />
 
 
-	<securecookie host="^\.?imageshack\.us$" name=".*" />
+	<securecookie host="^(?:.*\.)?imageshack\.us$" name=".*" />
 
+
+	<rule from="^http://kb\.imageshack\.us/img/favicon\.ico$"
+		to="https://imageshack.us/favicon.ico" />
 
 	<rule from="^http://stream\.imageshack\.us/favicon\.ico$"
 		to="https://imageshack.us/favicon.ico" />
+
+	<rule from="^http://img\d{1,3}\.imageshack\.us/(img\d{1,3}/\d+/\w+)\.(th\.)?(bmp|gif|jpe?g|png|tiff?)(\?|$)"
+		to="https://imageshack.us/a/$1.$2$3$4" />
 
 	<rule from="^http://(?:www\.)?([c-r]\w+\.)?imageshack\.us/"
 		to="https://$1imageshack.us/" />
