@@ -1,11 +1,29 @@
 <!--
 	CDN buckets:
 
+		- 2a7e9.v.fwmrm.net
+
+			- realmedia.channel4.com
+
+		- chnlfourad.fcod.llnwd.net
+
+			- ll.flash.anno.channel4.com
+
 		- chnlfour.vo.llnwd.net
 			- ll.abrstream.channel4.com
 			- .hs. doesn't exist
 
+
+	Nonfunctional subdomains:
+
 		- ll.abrstream.channel4.com	(CN: *.hs.llnwd.net; 400)
+		- ll.flash.anno		(interrupted)
+		- watchlive		(503, akamai)
+
+
+	Problematic subdomains:
+
+		- realmedia	(mismatched, CN: *.v.fwmrm.net)
 
 -->
 <ruleset name="Channel 4 (partial)">
@@ -17,11 +35,15 @@
 	<!--	These paths 302 to http:
 
 			- assets/
+			- media/
 					-->
-	<rule from="^http://(www\.)?channel4\.com/static/"
-		to="https://$1channel4.com/static/" />
+	<rule from="^http://(www\.)?channel4\.com/(4me(?:$|\?|/)|static/)"
+		to="https://$1channel4.com/$2" />
 
 	<rule from="^http://(4id|ais)\.channel4\.com/"
 		to="https://$1.channel4.com/" />
+
+	<rule from="^https?://realmedia\.channel4\.com/"
+		to="https://2a7e9.v.fwmrm.net/" />
 
 </ruleset>

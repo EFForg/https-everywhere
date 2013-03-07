@@ -1,22 +1,28 @@
 <!--
-	For problematic rules, see Duo-Security-self-signed.
-
-
 	Nonfunctional subdomains:
 
-		- $	(cert: dl.duosecurity.com; shows that domain's data)
-		- www	(times out)
+		- go		(redirects to app-sj02.marketo.com)
+		- guide		(interrupted)
+
+
+	Problematic subdomains:
+
+		- jobs		(mismatched, CN: *.theresumator.com)
 
 -->
 <ruleset name="Duo Security (partial)">
 
+	<target host="duosecurity.com" />
 	<target host="*.duosecurity.com" />
 
 
 	<securecookie host="^admin\.duosecurity\.com$" name=".*" />
 
 
-	<rule from="^http://(admin|dl)\.duosecurity\.com/"
-		to="https://$1.duosecurity.com/" />
+	<rule from="^http://((?:admin|blog|dl|www)\.)?duosecurity\.com/"
+		to="https://$1duosecurity.com/" />
+
+	<rule from="^https?://jobs\.duosecurity\.com/(css|img)/"
+		to="https://duo.theresumator.com/$1/" />
 
 </ruleset>

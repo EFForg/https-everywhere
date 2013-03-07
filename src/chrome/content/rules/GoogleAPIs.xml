@@ -1,7 +1,14 @@
 <!--
 	Problematic subdomains:
 
+		- gmodules.com			(503, CN: www.google.com)
+		- www.gmodules.com		(503, CN: *.googleusercontent.com)
 		- t[013].gstatic.com	(404)
+
+
+	Partially covered domains:
+
+		- (www.)gmodules.com		(→ www.google.com)
 
 
 	Fully covered domains:
@@ -12,6 +19,8 @@
 -->
 <ruleset name="Google APIs">
 
+	<target host="gmodules.com" />
+	<target host="www.gmodules.com" />
 	<target host="google.com" />
 	<target host="www.google.com" />
 	<target host="apis.google.com" />
@@ -24,6 +33,9 @@
 	<target host="api.recaptcha.net" />
 	<target host="gdata.youtube.com" />
 
+
+	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
+		to="https://www.google.com/ig/images/" />
 
 	<!--	jsapi was causing problems on some sites that embed google maps:
 		https://trac.torproject.org/projects/tor/ticket/2335
@@ -62,8 +74,8 @@
 	<rule from="^https?://(?:encrypted-tbn|t)(\d).gstatic.com/"
 		to="https://encrypted-tbn$1.gstatic.com/" />
 
-	<rule from="^http://g0\.gstatic\.com/"
-		to="https://g0.gstatic.com/" />
+	<rule from="^http://(g0|[\w-]+\.metric)\.gstatic\.com/"
+		to="https://$1.gstatic.com/" />
 
 	<rule from="^http://api\.recaptcha\.net/"
 		to="https://www.google.com/recaptcha/api/" />

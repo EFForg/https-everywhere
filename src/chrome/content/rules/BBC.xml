@@ -17,6 +17,7 @@
 
 	Problematic domains:
 
+		- sa.bbc.com		(mismatched, CN: *.112.2o7.net)
 		- polling.bbc.co.uk	(akamai)
 		- wwwimg.bbc.co.uk	(redirects to http)
 		- ichef.bbci.co.uk *
@@ -58,6 +59,7 @@
 -->
 <ruleset name="BBC (partial)">
 
+	<target host="sa.bbc.com" />
 	<target host="bbc.co.uk" />
 	<target host="*.bbc.co.uk" />
 		<!--
@@ -75,6 +77,9 @@
 	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
+	<rule from="^https?://sa\.bbc\.com/"
+		to="https://bbc.112.2o7.net/" />
+
 	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|inc|player/emp|survey/pulse|weather/locales)/"
 		to="https://beta.bbc.co.uk/$1/" />
 
@@ -83,7 +88,7 @@
 	<rule from="^https?://(ichef|sa|static)\.bbci?\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
-	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/)"
+	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/|podcasts/assets/)"
 		to="https://www.bbc.co.uk/$1" />
 
 	<rule from="^http://(?:www\.)?bbc\.co\.uk/programmes/branding/"
@@ -98,13 +103,13 @@
 	<rule from="^https?://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
 
-	<rule from="^https?://node\d\.bbcimg\.co\.uk/tv/p2/"
-		to="https://beta.bbc.co.uk/tv/p2/" />
+	<rule from="^https?://node\d\.bbcimg\.co\.uk/(podcasts|tv/p2)/"
+		to="https://beta.bbc.co.uk/$1/" />
 
 	<rule from="^https?://polling\.bbc\.co\.uk/modules/onairpanel/include/"
 		to="https://ssl.bbc.co.uk/modules/onairpanel/include/" />
 
-	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?\w+/?(?:$|\?))"
+	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
 		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" />
 
         <!--    iPlayer points here, but only when fetched via https.

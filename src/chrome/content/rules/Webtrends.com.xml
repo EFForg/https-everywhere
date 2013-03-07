@@ -6,35 +6,39 @@
 	CDN buckets:
 
 		- denvua8xbp3vs.cloudfront.net
+
 		- optimize.webtrends.com.edgekey.net
+
 			- e2550.b.akamaiedge.net/.../
 
 
 	Nonfunctional webtrends.com subdomains:
 
-		- blog		(cert: pweb2.wt.redux; shows CentOS Apache 2 test page)
-		- kb		(cert: webtrends.com; reset)
-		- optimize	(cert valid; hosted on Akamai; "Service Unavailable")
+		- (www.)	(kind folks at Webtrends saw fit to break us [now redirects to http])
+		- blog		(shows CentOS Apache 2 test page, CN: pweb2.wt.redux)
+		- engage *
+		- forums	(redirects to http, mismatched, CN: *.getsatisfaction.com)
+		- go		(shows app-q.marketo.com, mismatched, CN: *.marketo.com)
+		- help
+		- kb		(reset, CN: webtrends.com)
+		- optimize	(503, cert valid; hosted on Akamai)
+		- portal	(redirects to http, mismatched, CN: slotmatching5.salesforce.com)
+		- releasenotes *
+		- sharepoint *
+
+	* Redirects to http, mismatched, CN: webtrends.com
 
 -->
-<ruleset name="Webtrends">
+<ruleset name="Webtrends (partial)">
 
-	<target host="qsstats.com" />
-	<target host="www.qsstats.com" />
 	<target host="reinvigorate.net" />
 	<target host="*.reinvigorate.net" />
-	<target host="*.webtrendslive.com"/>
-	<target host="webtrends.com" />
 	<target host="*.webtrends.com" />
+	<target host="*.webtrendslive.com" />
 
 
-	<securecookie host="^www\.qsstats\.com$" name=".*" />
-	<securecookie host="^(.*\.)?webtrends(live)?\.com$" name=".*" />
+	<securecookie host="^.*\.webtrends(?:live)?\.com$" name=".+" />
 
-
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?qsstats\.com/"
-		to="https://www.qsstats.com/" />
 
 	<!--	data are also on track.
 						-->
@@ -44,13 +48,12 @@
 	<rule from="^http://(report\.|track\.|www\.)?reinvigorate\.net/"
 		to="https://$1reinvigorate.net/" />
 
-	<rule from="^http://((?:ads|developer|itservices|ondemand|[ms]|segments|social|www)\.)?webtrends\.com/"
-		to="https://$1webtrends.com/"/>
+	<rule from="^http://(ads|analytics|s?auth|autodiscover|blackberry|(?:(?:apps\.)?uat\.)?connect|developer|email|generator|itservices|m|mobile|ondemand(?:ui)?|s|segments|social|tagbuilder)\.webtrends\.com/"
+		to="https://$1.webtrends.com/"/>
 
 	<rule from="^http://statse\.webtrendslive\.com/"
 		to="https://statse.webtrendslive.com/" />
 
-	<!--	At least some pages redirect back.	-->
 	<rule from="^http://forums\.webtrends\.com/(assets/|favicon\.png)"
 		to="https://getsatisfaction.com/$1" />
 

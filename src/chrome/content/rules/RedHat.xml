@@ -1,32 +1,58 @@
 <!--
+	magazine & servicesblog.redhat.com are handled in WordPress-blogs.xml.
+
+
 	Other RedHat rulesets:
 
 		- Opensource.com.xml
 
 
+	rhat.client.shareholder.com
+
+
 	Nonfunctional subdomains:
 
+		- et
+		- ftp
+		- investors
+		- spacewalk	(shows www)
 		- sources	(times out)
+
+
+	Problematic subdomains:
+
+		- apac		(cert only matches www.apac)
+		- europe	(cert only matches www.europe)
+		- jobs		(mismatched, CN: *.sc.hodesdigital.com)
+		- magazine *
+		- servicesblog *
+
+	* Mismatched, CN: *.wordpress.com
 
 -->
 <ruleset name="RedHat">
 
 	<target host="redhat.com" />
 	<target host="*.redhat.com" />
-	<!--	*s for cross-subdomain cookies.	-->
-	<target host="*.engage.redhat.com" />
-	<target host="*.rhn.redhat.com" />
-	<target host="*.smtrcs.redhat.com" />
 
 
-	<securecookie host="^(.*\.)?redhat\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?redhat\.com/"
 		to="https://www.redhat.com/" />
 
-	<rule from="^http://(access|archive|bugzilla|careers|docs|engage|openshift|rhn)\.redhat\.com/"
+	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|de|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|sg|support|webmail)\.redhat\.com/"
 		to="https://$1.redhat.com/" />
+
+	<rule from="^https?://(?:www\.)?(apac|europe)\.redhat\.com/"
+		to="https://www.$1.redhat.com/" />
+
+	<rule from="^https?://investors\.redhat\.com/common/"
+		to="https://investor.shareholder.com/common/" />
+
+	<rule from="^https?://jobs\.redhat\.com/"
+		to="https://redhat.sc.hodesdigital.com/" />
 
 	<rule from="^https?://smtrcs\.redhat\.com/"
 		to="https://redhatopensourcecom-redhatglobal.122.2o7.net/" />
