@@ -137,7 +137,7 @@ function onBeforeRequest(details) {
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr)
-      newuristr = rs[i]._apply(canonical_url);
+      newuristr = rs[i].apply(canonical_url);
   }
 
   displayPageAction(details.tabId);
