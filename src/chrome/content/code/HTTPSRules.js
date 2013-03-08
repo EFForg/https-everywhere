@@ -371,6 +371,7 @@ const HTTPSRules = {
                           // applicable rules
       this.rulesetsByID = {};
       this.rulesetsByName = {};
+      var t1 = new Date().getTime();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -397,7 +398,8 @@ const HTTPSRules = {
     } catch(e) {
       this.log(WARN,"Rules Failed: "+e);
     }
-    this.log(DBUG,"Rules loaded");
+    var t2 =  new Date().getTime();
+    this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
     return;
   },
 
