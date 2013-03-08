@@ -154,11 +154,20 @@ RuleSets.prototype = {
        this.targets[host].push(rule_set);
     }
   },
+
+  setInsert: function(intoList, fromList) {
+    // Insert any elements from fromList into intoList, if they are not
+    // already there.  fromList may be null.
+    if (!fromList) return;
+    for (var i = 0; i < fromList.length; i++)
+      if (intoList.indexOf(fromList[i]) == -1)
+        intoList.push(fromList[i]);
+  },
   
   applicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
-    var results = this.global_rulesets;
+    var results = this.global_rulesets.slice(0); // copy global_rulesets
     if (this.targets[host])
       results = results.concat(this.targets[host]);
     // replace each portion of the domain with a * in turn
@@ -168,15 +177,13 @@ RuleSets.prototype = {
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (i = 1; i < segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     log(DBUG,"Applicable rules for " + host + ":");
     if (results.length == 0)
