@@ -1,3 +1,5 @@
+window.addEventListener("load", https_everywhere_load, true);
+
 const CI = Components.interfaces;
 const CC = Components.classes;
 
@@ -18,9 +20,6 @@ toolbarButton = {
   hintShown: false,
 
   init: function() {
-    // perform load function
-    https_everywhere_load();
-
     // decide if to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
     if(!Services.prefs.getPrefType(hintPref) 
@@ -41,7 +40,8 @@ toolbarButton = {
       gBrowser.selectedTab = gBrowser.addTab(faqURL);
       var nBox = gBrowser.getNotificationBox();
 
-      const msg = 'HTTPS Everywhere has been installed. If a page seems to be broken, rules can be disabled by clicking on the HTTPS Everywhere icon in the toolbar';
+      var strings = document.getElementById('HttpsEverywhereStrings');
+      var msg = strings.getString('https-everywhere.toolbar.hint');
       nBox.appendNotification(
           msg, 
           'https-everywhere', 
