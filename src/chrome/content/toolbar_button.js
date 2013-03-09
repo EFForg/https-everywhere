@@ -1,5 +1,3 @@
-window.addEventListener("load", https_everywhere_load, true);
-
 const CI = Components.interfaces;
 const CC = Components.classes;
 
@@ -13,6 +11,49 @@ WARN=5;
 HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
+
+if (!toolbarButton) { var toolbarButton = {}; }
+
+toolbarButton = {
+  hintShown: false,
+
+  init: function() {
+    // perform load function
+    https_everywhere_load();
+
+    // decide if to show toolbar hint
+    let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
+    if(!Services.prefs.getPrefType(hintPref) 
+        || !Services.prefs.getBoolPref(hintPref)) { 
+      // only run once
+      Services.prefs.setBoolPref(hintPref, true);
+
+      // listen for events to show toolbar hint
+      gBrowser.addEventListener('load', toolbarButton.showToolbarHint, true);
+    }
+  },
+
+  showToolbarHint: function() {
+    if (!this.hintShown) {
+      this.hintShown = true;
+      const faqURL = "https://www.eff.org/https-everywhere/faq";
+
+      gBrowser.selectedTab = gBrowser.addTab(faqURL);
+      var nBox = gBrowser.getNotificationBox();
+
+      const msg = 'HTTPS Everywhere has been installed. If a page seems to be broken, rules can be disabled by clicking on the HTTPS Everywhere icon in the toolbar';
+      nBox.appendNotification(
+          msg, 
+          'https-everywhere', 
+          'chrome://https-everywhere/skin/https-everywhere-24.png', 
+          nBox.PRIORITY_WARNING_MEDIUM
+        );
+
+      // remove listener
+      gBrowser.removeEventListener('load', toolbarButton.showToolbarHint, true);
+    }
+  }
+};
 
 function https_everywhere_load() {
   // on first run, put the context menu in the addons bar
@@ -115,3 +156,6 @@ function open_in_tab(url) {
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
+
+// hook event
+window.addEventListener("load", toolbarButton.init, false);
