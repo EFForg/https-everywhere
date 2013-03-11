@@ -1,0 +1,32 @@
+<!--
+	Problematic domains:
+
+		- verivox.de		(cert only matches www)
+
+
+	Partially covered domains:
+
+		- (www.)verivox.de	(some [most?] pages redirect to http)
+
+-->
+<ruleset name="Verivox (partial)">
+
+	<target host="verivox.de" />
+	<target host="www.verivox.de" />
+	<target host="*.vxcdn.com" />
+	<target host="partner.vxcp.de" />
+
+
+	<securecookie host="^partner\.vxcp\.de$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?verivox\.de/(i/|(?:login|PasswordReset|Register)\.aspx)"
+		to="https://www.verivox.de/$1" />
+
+	<rule from="^http://(css|img)\.vxcdn\.com/"
+		to="https://$1.vxcdn.com/" />
+
+	<rule from="^http://partner\.vxcp\.de/"
+		to="https://partner.vxcp.de/" />
+
+</ruleset>
