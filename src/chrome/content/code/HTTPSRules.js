@@ -369,6 +369,7 @@ const HTTPSRules = {
                           // applicable rules
       this.rulesetsByID = {};
       this.rulesetsByName = {};
+      var t1 = new Date().getTime();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -394,7 +395,8 @@ const HTTPSRules = {
     } catch(e) {
       this.log(WARN,"Rules Failed: "+e);
     }
-    this.log(DBUG,"Rules loaded");
+    var t2 =  new Date().getTime();
+    this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
     return;
   },
 
@@ -515,13 +517,22 @@ const HTTPSRules = {
     return uri;
   },
 
+  setInsert: function(intoList, fromList) {
+    // Insert any elements from fromList into intoList, if they are not
+    // already there.  fromList may be null.
+    if (!fromList) return;
+    for (var i = 0; i < fromList.length; i++)
+      if (intoList.indexOf(fromList[i]) == -1)
+        intoList.push(fromList[i]);
+  },
 
   potentiallyApplicableRulesets: function(host) {  
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
-    var results = this.global_rulesets;
+    var results = this.global_rulesets.slice(0); // copy global_rulesets
     try {
-      if (this.targets[host]) results = results.concat(this.targets[host]);
+      if (this.targets[host])
+        results = results.concat(this.targets[host]);
     } catch(e) {   
       this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
       return [];
@@ -533,15 +544,13 @@ const HTTPSRules = {
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (i = 1; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
