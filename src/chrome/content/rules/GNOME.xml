@@ -1,39 +1,44 @@
 <!--
 	Nonfunctional domains:
 
-		- gnome.asia		(cert: guzheng.lyrical.net; shows empty tree)
-		- 2012.gnome.asia	(ditto)
-		- www.gnome.asia	(ditto)
+		- gnome.asia subdomains:
 
-		- gnomejournal.org		(cert: www.gnome.org; shows rt.gnome.org's data)
+			- (www.) *
+			- 2012 *
 
 		- gnome.org subdomains:
 
 			- admin		(shows blank page, mismatched, CN: www)
-			- api *
-			- art **
-			- download *
+			- api **
+			- art ***
+			- download **
 			- ftp
-			- jabber **
-			- people **
-			- projects **
-			- webstats *
-			- webapps *
-			- www-old **
+			- jabber ***
+			- people ***
+			- projects ***
+			- webstats **
+			- webapps **
+			- www-old ***
 
-	* Prints "OOPS...", mismatched, CN: blogs.gnome.org
-	** record_too_long
+		- gnomejournal.org	(shows rt.gnome.org, CN: www.gnome.org)
+
+	* cert: guzheng.lyrical.net; shows empty tree)
+	** Prints "OOPS...", mismatched, CN: blogs.gnome.org
+	*** record_too_long
 
 
 	Problematic domains:
 
-		- foundation.gnome.org	(works, mismatched, CN: www)
-		- label.gnome.org *
-		- ldap.gnome.org *
-		- usability.gnome.org	(prints "OOPS...", mismatched, CN: blogs.gnome.org)
-		- (www.)gupnp.org	(mismatch, CN: www.webstreams.de)
+		- gnome.org subdomains:
 
-	* Reply with http, redirect to live.gnome.org
+			- foundation	(works, mismatched, CN: www)
+			- label *
+			- ldap *
+			- usability	(prints "OOPS...", mismatched, CN: blogs.gnome.org)
+
+		- (www.)gupnp.org	(mismatched, CN: www.webstreams.de)
+
+	* Replies with http, redirects to live.gnome.org
 
 
 	Fully covered domains:
@@ -45,11 +50,11 @@
 			- bugzilla
 			- developer
 			- extensions
-			- foundation
+			- foundation	(→ www)
 			- git
 			- help
-			- label
-			- ldap
+			- label		(→ live)
+			- ldap		(→ live)
 			- l10n
 			- library
 			- mail
@@ -61,10 +66,10 @@
 			- ostree
 			- planet
 			- rt
-			- usability
+			- usability	(→ live)
 			- vote
 
-		- (www.)gupnp.org
+		- (www.)gupnp.org	(→ live.gnome.org)
 
 -->
 <ruleset name="GNOME (partial)">
@@ -79,10 +84,10 @@
 	<target host="www.gupnp.org" />
 
 
-	<securecookie host="^.*\.gnome\.org$" name=".*" />
+	<securecookie host="^.*\.gnome\.org$" name=".+" />
 
 
-	<rule from="^http://((?:blogs|bugzilla|developer|extensions|git|help|l10n|library|mail|mango|menubar|live|nagios|news|ostree|planet|rt|vote|www)\.)?gnome\.org/"
+	<rule from="^http://((?:blogs|bugzilla|developer|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|planet|rt|vote|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
 	<!--	Redirects as so.
