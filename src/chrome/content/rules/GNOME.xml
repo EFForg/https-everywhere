@@ -9,30 +9,28 @@
 
 		- gnome.org subdomains:
 
-			- art
-			- blogs
-			- developer		(shows rt's data)
-			- download		(cert: www; shows rt's data)
-			- foundation		(cert: www; shows www's data)
-			- foundation		(CN: www; shows rt)
+			- admin		(shows blank page, mismatched, CN: www)
+			- api *
+			- art **
+			- download *
 			- ftp
-			- git
-			- library		(shows rt's data)
-			- news			(shows rt's data)
-			- people
-			- planet		(shows rt's data)
-			- projects
-			- webstats		(ssl_error_rx_record_too_long)
-			- webapps		(shows rt's data)
-			- www-old
+			- jabber **
+			- people **
+			- projects **
+			- webstats *
+			- webapps *
+			- www-old **
+
+	* Prints "OOPS...", mismatched, CN: blogs.gnome.org
+	** record_too_long
 
 
 	Problematic domains:
 
-		- foundation.gnome.org
+		- foundation.gnome.org	(works, mismatched, CN: www)
 		- label.gnome.org *
 		- ldap.gnome.org *
-		- usability.gnome.org	(shows rt)
+		- usability.gnome.org	(prints "OOPS...", mismatched, CN: blogs.gnome.org)
 		- (www.)gupnp.org	(mismatch, CN: www.webstreams.de)
 
 	* Reply with http, redirect to live.gnome.org
@@ -43,15 +41,25 @@
 		- gnome.org subdomains:
 
 			- (www.)
+			- blogs
 			- bugzilla
+			- developer
 			- extensions
 			- foundation
+			- git
+			- help
 			- label
 			- ldap
+			- l10n
+			- library
 			- mail
 			- mango
 			- menubar
+			- nagios
+			- news
 			- live
+			- ostree
+			- planet
 			- rt
 			- usability
 			- vote
@@ -64,10 +72,9 @@
 	<target host="gnome.org" />
 	<target host="*.gnome.org" />
 		<!--
-			- projects/: 404, redirects to projects.gnome.org
-			- ~: 404, redirects to people.gnome.org
+			404, redirects to people.gnome.org
 								-->
-		<exclusion pattern="^http://www\.gnome\.org/(projects/|~)" />
+		<exclusion pattern="^http://www\.gnome\.org/~" />
 	<target host="gupnp.org" />
 	<target host="www.gupnp.org" />
 
@@ -75,11 +82,11 @@
 	<securecookie host="^.*\.gnome\.org$" name=".*" />
 
 
-	<rule from="^http://((?:bugzilla|extensions|mail|mango|menubar|live|rt|vote|www)\.)?gnome\.org/"
+	<rule from="^http://((?:blogs|bugzilla|developer|extensions|git|help|l10n|library|mail|mango|menubar|live|nagios|news|ostree|planet|rt|vote|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
-	<!--	Redirects as so over http.
-						-->
+	<!--	Redirects as so.
+					-->
 	<rule from="^https?://foundation\.gnome\.org/"
 		to="https://www.gnome.org/foundation/" />
 
