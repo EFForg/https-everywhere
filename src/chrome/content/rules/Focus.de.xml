@@ -1,6 +1,37 @@
-<ruleset name="Focus.de">
- <target host="www.focus.de" />
- <target host="focus.de" />
+<!--
+	For domains with mixed content, see Focus.de-mixedcontent.xml.
 
- <rule from="^http://(www\.)?focus\.de/" to="https://www.focus.de/"/>
+
+	Nonfunctional subdomains:
+
+		- festgeld
+		- images.fragen
+		- tagesgeld
+		- unternehmen
+		- wetter
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.focus.de)
+		- bausparen	(works, mismatched, CN: rechner.fmh.de)
+		- p4		(akamai)
+		- strompreise	(works, mismatched, CN: partner.vxcp.de)
+
+-->
+<ruleset name="Focus.de">
+
+	<target host="focus.de" />
+	<target host="*.focus.de" />
+
+
+	<securecookie host="^(?:www)?\.focus\.de$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?focus\.de/"
+		to="https://www.focus.de/" />
+
+	<rule from="^http://p[04]\.focus\.de/"
+		to="https://p0.focus.de/" />
+
 </ruleset>

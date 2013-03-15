@@ -4,7 +4,10 @@
 
 	CDN buckets:
 
+		- storeimages.apple.com.edgekey.net
 		- km.support.apple.com.edgekey.net
+		- images.apple.com.edgesuite.net
+		- ax.phobos.apple.com.edgesuite.net
 
 		- a([1-5]).mzstatic.com.edgesuite.net/...
 
@@ -41,6 +44,65 @@
 
 	* At least some pages redirect to http
 
+
+	Fully covered domains:
+
+		- apple.com subdomains:
+
+			- (www.)
+			- appleid
+			- application
+			- as-images
+			- bugreport
+			- buyiphone
+			- certifications
+			- connect
+			- daw
+			- developer
+			- devforums
+			- discussions
+			- expresslane
+			- help
+			- id
+			- idmsa
+			- iforgot
+			- images		(→ ssl)
+
+			- itunes subdomains:
+
+				- ^
+				- buy
+				- p\d+-buy
+				- p100-sandbox
+				- sandbox
+				- volume
+				- vpp
+
+			- itunesconnect
+			- jobs
+			- jointventure
+			- nc-as-images
+			- nwk-as-images
+			- onetoone
+			- portal
+			- register
+			- remoteadvisor
+			- selfsolve
+			- ssl
+			- secure.store
+			- secure\d.store
+			- storeimages		(→ storeimages.apple.com.edgekey.net)
+			- support
+			- km.support		(→ km.support.apple.com.edgekey.net)
+			- supportprofile
+			- wdg2
+
+		- store.storeimages.cdn-apple.com	(→ storeimages.apple.com.edgekey.net)
+		- (www.)iwork.com			(^ → www)
+		- (www.)me.com
+		- (www.)mzstatic.com
+		- s.mzstatic.com
+
 -->
 <ruleset name="Apple.com (partial)">
 
@@ -54,26 +116,27 @@
 	<target host="me.com" />
 	<target host="www.me.com" />
 	<target host="mzstatic.com" />
+	<target host="s.mzstatic.com" />
 	<target host="www.mzstatic.com" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.apple\.com$" name="^s_.+$" />
-	<securecookie host="^(?:appleid|application|bugreport|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|ssl|support(?:profile)?|wdg2|www)\.apple\.com$" name=".+" />
+	<!--
+		No known problems, just being cautious
+							-->
+	<securecookie host="^(?!\.?(?:concierg|stor)e\.apple\.com).+\.apple\.com$" name=".+" />
 
 
-	<rule from="^http://((?:appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|store|support(?:profile)?|wdg2|www)\.)?apple\.com/"
+	<rule from="^http://((?:appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|(?:(?:buy|p\d+-buy|p100-sandbox|sandbox|volume|vpp)\.)?itunes|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|store|secure\d?\.store|support(?:profile)?|wdg2|www)\.)?apple\.com/"
 		to="https://$1apple.com/" />
 
 	<rule from="^https?://(?:images|ssl)\.apple\.com/"
 		to="https://ssl.apple.com/" />
 
-	<rule from="^https?://store(?:images\.|\.storeimages\.cdn-)apple\.com/\d+/store\.apple\.com/"
-		to="https://store.apple.com/" />
-
-	<rule from="^https?://store\.storeimages\.cdn-apple\.com/\d+/(nc-|nwk-)?as-images\.apple\.com/"
-		to="https://$1as-images.apple.com/" />
+	<rule from="^https?://store(?:images\.|\.storeimages\.cdn-)apple\.com/"
+		to="https://storeimages.apple.com.edgekey.net/" />
 
 	<rule from="^https?://km\.support\.apple\.com/"
 		to="https://km.support.apple.com.edgekey.net/" />
@@ -89,5 +152,8 @@
 							-->
 	<rule from="^https?://(?:www\.)mzstatic\.com/"
 		to="https://ssl.apple.com/" />
+
+	<rule from="^http://s\.mzstatic\.com/"
+		to="https://s.mzstatic.com/" />
 
 </ruleset>

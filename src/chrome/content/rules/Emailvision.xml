@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- emailvision.com subdomains:
+
+			- blog		(redirects to www.blog, which doesn't exist)
+			- echannel
+
+		- webe.emv3.com		(http & https data differ)
+
+
+	Problematic domains:
+
+		- news.emailvision.com *
+		- emv3.com			(works, mismatched, CN: *.emv3.com)
+		- tre-test.emv3.com		(works, mismatched, CN: *.campaigncommander.com)
+		- www.emv3.com			(redirects to p1ccr2.emv2.com, which doesn't exist; CN: *.campaigncommander.com)
+
+
+	* Works, mismatched, CN: *.emv3.com
+
+-->
+<ruleset name="Emailvision (partial)">
+
+	<target host="emailvision.com" />
+	<target host="*.emailvision.com" />
+	<target host="emv3.com" />
+	<target host="*.emv3.com" />
+
+
+	<securecookie host="^\.www\.emailvision\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?emailvision\.com/"
+		to="https://$1emailvision.com/" />
+
+	<rule from="^https?://(?:www\.)?emv3\.com/"
+		to="https://emv3.emv3.com/" />
+
+	<rule from="^http://(ase|emv\d|p\dtre|tre)\.emv3\.com/"
+		to="https://$1.emv3.com/" />
+
+</ruleset>

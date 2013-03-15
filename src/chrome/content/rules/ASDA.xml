@@ -1,0 +1,64 @@
+<!--
+
+	asda.ugc.bazaarvoice.com
+
+
+	Nonfunctional subdomains:
+
+		- greenroom *
+		- reviews		(redirects to http, akamai)
+		- shop			(shows walmart.com, mismatched, CN: cap-hosting.walmart.com)
+		- storelocator		(shows imp-facebook.i6a.co.uk, mismatched)
+		- your *
+
+	* Shows impuploader.i6a.co.uk, mismatched)
+
+
+	Problematic subdomains:
+
+		- credit-card		(shows credit-cardapply, mismatched)
+		- giftguide		(interrupted)
+		- omniture.groceries	(mismatched, CN: *.d2.sc.omtrdc.net)
+		- survey
+
+
+	Fully covered subdomains:
+
+		- cards
+		- credit-card			(→ apply.creation.co.uk)
+		- direct
+		- ipadkiosk.direct
+		- i.groceries
+		- omniture.groceries		(→ groceries.asda.com.d2.sc.omtrdc.net)
+		- groceries-qa2
+		- i\d-groceries
+		- money
+		- online-account-manager
+		- pulse
+		- tradein
+
+-->
+<ruleset name="ASDA (partial)">
+
+	<target host="*.asda.com" />
+
+
+	<securecookie host="^.+\.asda\.com$" name=".+" />
+
+
+	<rule from="^https?://credit-card\.asda\.com/$"
+		to="https://apply.creation.co.uk/apply/index.html?brandCode=asda_colleague" />
+
+	<rule from="^https?://credit-card\.asda\.com/(?!$)"
+		to="https://apply.creation.co.uk/" />
+
+	<rule from="^http://(cards|(?:ipadkiosk\.)?direct|email|i(?:\.|\d-)groceries|grocieries-qa2|money|online-account-manager|pulse|tradein)\.asda\.com/"
+		to="https://$1.asda.com/" />
+
+	<rule from="^https?://omniture\.groceries\.asda\.com/"
+		to="https://groceries.asda.com.d2.sc.omtrdc.net/" />
+
+	<rule from="^https?://survey\.asda\.com/(?:\?.*)?$"
+		to="https://www.emailvision.com/" />
+
+</ruleset>

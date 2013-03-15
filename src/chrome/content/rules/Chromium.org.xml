@@ -1,6 +1,32 @@
-<!-- Google chromium web. Supports src over ssl atm -->
+<!--
+	Google chromium web. Supports src over ssl atm.
+
+
+	Nonfunctional subdomains:
+
+		- ^		(503, mismatched, CN: *.google.com)
+		- blog *
+		- dev *
+		- www *
+
+	* Interrupted
+
+
+	Problematic subdomains:
+
+		- build
+
+-->
 <ruleset name="Chromium.org">
-  <target host="src.chromium.org" />
-  <rule from="^http://src\.chromium\.org/" to="https://src.chromium.org/"/>
+  <target host="*.chromium.org" />
+
+
+	<securecookie host="^codereview\.chromium\.org$" name=".+" />
+
+
+	<rule from="^https?://build\.chromium\.org/(?:\?.*)?$"
+		to="https://chromium-build.appspot.com/p/chromium/console" />
+
+  <rule from="^http://(codereview|gerrit|git|src)\.chromium\.org/" to="https://$1.chromium.org/"/>
 </ruleset>
 
