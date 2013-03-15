@@ -14,6 +14,47 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
+if (!toolbarButton) { var toolbarButton = {}; }
+
+toolbarButton = {
+  hintShown: false,
+
+  init: function() {
+    // decide if to show toolbar hint
+    let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
+    if(!Services.prefs.getPrefType(hintPref) 
+        || !Services.prefs.getBoolPref(hintPref)) { 
+      // only run once
+      Services.prefs.setBoolPref(hintPref, true);
+
+      // listen for events to show toolbar hint
+      gBrowser.addEventListener('load', toolbarButton.showToolbarHint, true);
+    }
+  },
+
+  showToolbarHint: function() {
+    if (!this.hintShown) {
+      this.hintShown = true;
+      const faqURL = "https://www.eff.org/https-everywhere/faq";
+
+      gBrowser.selectedTab = gBrowser.addTab(faqURL);
+      var nBox = gBrowser.getNotificationBox();
+
+      var strings = document.getElementById('HttpsEverywhereStrings');
+      var msg = strings.getString('https-everywhere.toolbar.hint');
+      nBox.appendNotification(
+          msg, 
+          'https-everywhere', 
+          'chrome://https-everywhere/skin/https-everywhere-24.png', 
+          nBox.PRIORITY_WARNING_MEDIUM
+        );
+
+      // remove listener
+      gBrowser.removeEventListener('load', toolbarButton.showToolbarHint, true);
+    }
+  }
+};
+
 function https_everywhere_load() {
   // on first run, put the context menu in the addons bar
   try {
@@ -115,3 +156,6 @@ function open_in_tab(url) {
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
+
+// hook event
+window.addEventListener("load", toolbarButton.init, false);
