@@ -1,4 +1,6 @@
 <!--
+	For domains with mixed content, see Elsevier-mixedcontent.xml.
+
 	For problematic rules, see Elsevier-mismatches.xml
 
 
@@ -10,7 +12,23 @@
 		- Scopus.xml
 
 
-	loginptr.elsevierhealth.com	(cert: secure.elsevierhealth.com)
+	CDN buckets:
+
+		- elseviercdn.squizltd.netdna-cdn.com
+
+			- cdn.elsevier.com
+			- -ssl doesn't exist
+
+
+	Problematic domains:
+
+		- elsevier.com subdomains:
+
+			- ^		(cert only matches www)
+			- www		(mixed content from cdn)
+			- cdn		(404, mismatched, CN: *.netdna-ssl.com)
+
+		- loginptr.elsevierhealth.com	(cert: secure.elsevierhealth.com)
 
 
 	Nonfunctional domains:
@@ -46,7 +64,7 @@
 
 	<securecookie host="^origin-ars\.els-cdn\.com$" name=".*" />
 	<securecookie host="^www\.elsevier\.ca$" name=".*" />
-	<securecookie host="^.*\.elsevier\.com$" name=".+" />
+	<securecookie host="^(?!\.www\.elsevier\.).*\.elsevier\.com$" name=".+" />
 	<securecookie host="(.*\.)?elsevierhealth\.co(m(\.au)?|\.uk)$" name=".*" />
 
 
