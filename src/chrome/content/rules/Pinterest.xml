@@ -52,12 +52,16 @@
 	Problematic domains:
 
 		- media-cache-is0.pinimg.com *
-		- blog-assets.pinterest.com	(cloudfront)
-		- passets-cdn.pinterest.com	(akamai)
-		- passets-ec.pinterest.com *
-		- pinit-cdn.pinterest.com	(akamai)
+
+		- pinterest.com subdomains:
+
+			- blog-assets	(cloudfront)
+			- passets-cdn **
+			- passets-ec *
+			- pinit-cdn **
 
 	* CN: gp1.wac.edgecastcdn.net
+	** akamai
 
 
 	Partially covered domains:
@@ -75,9 +79,11 @@
 
 	Fully covered domains:
 
-		- media-cache-is\d.pinimg.com	(→ a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/)
-		- s-media-cache-ec\d.pinimg.com
-		- s-passets-ec.pinimg.com
+		- pinimg.com subdomains:
+
+			- media-cache-is\d	(→ a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/)
+			- s-media-cache-ec\d
+			- s-passets-ec
 
 		- pinterest.com subdomains:
 
@@ -113,16 +119,13 @@
 	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
 		to="https://s-$1-ec$2.pinimg.com/" />
 
-	<!--rule from="^http://(www\.)?pinterest\.com/(login|password)($|\?|/)"
-		to="https://$1pinterest.com/$2$3" /-->
-
-	<rule from="^http://(about\.|api\.|assets\.|help\.|m\.|support\.|www\.)?pinterest\.com/"
+	<rule from="^http://((?:about|api|assets|help|m|support|www)\.)?pinterest\.com/"
 		to="https://$1pinterest.com/" />
 
 	<rule from="^https?://blog-assets\.pinterest\.com/"
 		to="https://d5eppwnwxs8d9.cloudfront.net/" />
 
-	<rule from="^https?://media-cache(?:\d?|-\w\w\d)\.pin(?:img|terest)\.com/"
+	<rule from="^https?://media-cache(?:\d|-\w\w\d)?\.pin(?:img|terest)\.com/"
 		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
 
 	<rule from="^https?://p(?:assets-(?:cdn|ec)|init-cdn)\.pinterest\.com/"
