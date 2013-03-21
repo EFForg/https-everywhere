@@ -1,0 +1,54 @@
+<!--
+	For other TripAdvisor coverage, see TripAdvisor.xml.
+
+
+	Nonfunctional virtualtourist.com subdomains:
+
+		- forum *
+		- m *
+
+	* Redirects to http
+
+
+	Problematic domains:
+
+		- cdn[1-4].vtourist.com		(redirects to p.vtourist.com, akamai)
+		- p.vtourist.com *
+
+		- virtualtourist.com subdomains:
+
+			- ^		(mismatched)
+			- cache		(redirects to p.virtualtourist.com, akamai)
+			- p *
+
+	Redirects to http, mismatched, CN: www.virtualtourist.com
+
+
+	Partially covered domains:
+
+		- members.virtualtourist.com *
+		- www.virtualtourist.com *
+
+	* Some (most?) pages redirect to http
+
+-->
+<ruleset name="VirtualTourist (partial)">
+
+	<target host="*.vtourist.com" />
+	<target host="*.virtualtourist.com" />
+		<exclusion pattern="^http://members\.virtualtourist\.com/(?!_assets/|m/j/|m/nl/)" />
+
+
+	<securecookie host="^vpn\.virtualtourist\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?virtualtourist\.com/ajax/"
+		to="https://www.virtualtourist.com/ajax/" />
+
+	<rule from="^http://(meetings|members|vpn)\.virtualtourist\.com/"
+		to="https://$1.virtualtourist.com/" />
+
+	<rule from="^https?://(?:(?:cdn\d|p).v|(?:cache|p)\.virtual)tourist.com/"
+		to="https://members.virtualtourist.com/_assets/" />
+
+</ruleset>
