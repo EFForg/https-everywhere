@@ -6,16 +6,17 @@
 
 	CDN buckets:
 
-		- wildcard.addthis.com.edgekey.net/...
-			- e2943.e11.akamaiedge.net/...
+		- wildcard.addthis.com.edgekey.net
+		- wildcard.addthiscdn.com.edgekey.net
 
-		- wildcard.addthiscdn.com.edgekey.net/...
-			- e1303.c.akamaiedge.net/...
 
 	Nonfunctional domains:
 
-		- support.addthis.com	(cert: *.assistly.com; 301s to http)
-			- So does addthis.assistly.com  & addthis.desk.com 
+		- s4.addthis.com	(shows empty tree, mismatched, CN: xiaomufwq.com)
+
+		- support.addthis.com	(redirects to http, CN: *.assistly.com)
+
+			- So does addthis.assistly.com  & addthis.desk.com
 
 
 	Partially covered domains:
@@ -42,13 +43,8 @@
 
 	<target host="addthis.com" />
 	<target host="*.addthis.com" />
-	<target host="cache.addthiscdn.com" />
-
-
-	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|uid)$" />
-
-
-	<!--	These paths 302 to http:
+	<!--
+		These paths 302 to http:
 
 			- about$
 			- about/team$
@@ -80,14 +76,18 @@
 			- press$
 			- register
 					-->
-	<rule from="^http://(www\.)?addthis\.com/(bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get/(?:just-analytics|sharing|trending)|landing|login|press|register)(?:$|\?))"
-		to="https://$1addthis.com/$2" />
+		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get(?:/just-analytics|/sharing|/trending)?|landing|login|press|register)(?:$|\?))" />
+	<target host="cache.addthiscdn.com" />
+
+
+	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|uid)$" />
+
 
 	<rule from="^http://(www\.)?addthis\.com/get($|\?)"
 		to="https://$1addthis.com/get/sharing$2" />
 
-	<rule from="^http://(api|cache|cf|ct5|ds|s[3579]|secure)\.addthis\.com/"
-		to="https://$1.addthis.com/" />
+	<rule from="^http://((?:api|cache|cf|ct5|ds|s[3579]|secure|www)\.)?addthis\.com/"
+		to="https://$1addthis.com/" />
 
 	<rule from="^http://cache\.addthiscdn\.com/"
 		to="https://cache.addthiscdn.com/" />
