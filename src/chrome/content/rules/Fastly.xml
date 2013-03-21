@@ -1,12 +1,26 @@
 <!--
-	assets1.fastly.com.a.prod.fastly.net
-	pubnub.a.ssl.fastly.net
-	fastly.zendesk.com
+	CDN buckets:
+
+		- assets1.fastly.com.a.prod.fastly.net
+		- pubnub.a.ssl.fastly.net
+		- fastly.zendesk.com
 
 
 	Nonfunctional domains:
 
 		- purge.fastly.net	(times out)
+
+
+	Problematic domains:
+
+		- fastly.com
+
+
+	Fully covered domains:
+
+		- *.fastly.net:
+
+			- mirrors
 
 -->
 <ruleset name="Fastly">
@@ -15,16 +29,11 @@
 	<target host="*.fastly.com" />
 	<target host="*.fastly.net" />
 		<exclusion pattern="^http://purge\.fastly\.net/" />
-	<target host="assets1.fastly.com.a.prod.fastly.net" />
-	<target host="*.a.ssl.fastly.net" />
 	<target host="*.fastssl.net" />
 	<target host="*.imgix.net" />
 	<target host="parsecdn.com" />
 
 
-	<!--	- !www doesn't work over https
-		- !www 301s to www over http
-			-->
 	<rule from="^https?://(?:www\.)?fastly\.com/"
 		to="https://www.fastly.com/" />
 
@@ -34,20 +43,16 @@
 	<rule from="^https?://assets1\.fastly\.com\.a\.prod\.fastly\.net/"
 		to="https://fastly.a.ssl.fastly.net/" />
 
-	<!--	Observed subdomains:
-
-			- mirrors
-					-->
 	<rule from="^http://([^@:/]+)\.fastly\.net/"
 		to="https://$1.fastly.net/" />
 
-	<rule from="^http://([\w\-]+)\.fastssl\.net/"
+	<rule from="^http://([\w-]+)\.fastssl\.net/"
 		to="https://$1.fastssl.net/" />
 
-	<rule from="^http://([\w\-]+)\.imgix\.net/"
+	<rule from="^http://([\w-]+)\.imgix\.net/"
 		to="https://$1.immgix.net/" />
 
-	<rule from="^http://([\w\-]+)\.parsecdn\.com/"
+	<rule from="^http://([\w-]+)\.parsecdn\.com/"
 		to="https://$1.parsecdn.com/" />
 
 </ruleset>
