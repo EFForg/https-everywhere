@@ -8,29 +8,29 @@
 
 		- gnome.org subdomains:
 
-			- admin		(shows blank page, mismatched, CN: www)
 			- api **
 			- art ***
 			- download **
 			- ftp
 			- jabber ***
-			- people ***
-			- projects ***
-			- webstats **
 			- webapps **
+			- webapps2 ****
+			- wiki		(shows live, mismatched, CN: www.gnome.org)
 			- www-old ***
 
 		- gnomejournal.org	(shows rt.gnome.org, CN: www.gnome.org)
 
 	* cert: guzheng.lyrical.net; shows empty tree)
-	** Prints "OOPS...", mismatched, CN: blogs.gnome.org
+	** Prints "OOPS...", mismatched, CN: l10n.gnome.org
 	*** record_too_long
+	**** Prints "OOPS..."
 
 
 	Problematic domains:
 
 		- gnome.org subdomains:
 
+			- bugzilla-attachments	(works, mismatched, CN: www.gnome.org)
 			- foundation	(works, mismatched, CN: www)
 			- label *
 			- ldap *
@@ -46,6 +46,7 @@
 		- gnome.org subdomains:
 
 			- (www.)
+			- admin
 			- blogs
 			- bugzilla
 			- developer
@@ -65,9 +66,12 @@
 			- live
 			- ostree
 			- planet
+			- people
+			- projects
 			- rt
 			- usability	(→ live)
 			- vote
+			- webstats
 
 		- (www.)gupnp.org	(→ live.gnome.org)
 
@@ -76,10 +80,6 @@
 
 	<target host="gnome.org" />
 	<target host="*.gnome.org" />
-		<!--
-			404, redirects to people.gnome.org
-								-->
-		<exclusion pattern="^http://www\.gnome\.org/~" />
 	<target host="gupnp.org" />
 	<target host="www.gupnp.org" />
 
@@ -87,11 +87,22 @@
 	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
 
 
-	<rule from="^http://((?:blogs|bugzilla|developer|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|planet|rt|vote|www)\.)?gnome\.org/"
+	<rule from="^http://((?:admin|blogs|bugzilla|developer|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|people|planet|projects|rt|vote|webstats|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
 	<!--	Redirects as so.
 					-->
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/\??$"
+		to="https://bugzilla.gnome.org/" />
+
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\?.+)"
+		to="https:///bugzilla.gnome.org/?keywords=$1" />
+
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\w[^\?]*)(?:\?.*)?"
+		to="https://bugzilla.gnome.org/show_bug.cgi?id=$1" />
+
+	<!--	Ditto.
+				-->
 	<rule from="^https?://foundation\.gnome\.org/"
 		to="https://www.gnome.org/foundation/" />
 
