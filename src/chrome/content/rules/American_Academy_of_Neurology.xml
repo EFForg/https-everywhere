@@ -1,0 +1,25 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Some (most?) pages redirect to http
+
+-->
+<ruleset name="American Academy of Neurology (partial)">
+
+	<target host="aan.com" />
+	<target host="*.aan.com" />
+
+
+	<securecookie host="^patients\.aan\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?aan\.com/(CFFileServlet/|contact/|globals/|go/|(?:index\.cfm)?\?axon=user\.(?:login|profile)|skins/)"
+		to="https://www.aan.com/$1" />
+
+	<rule from="^http://patients\.aan\.com/"
+		to="https://patients.aan.com/" />
+
+</ruleset>
