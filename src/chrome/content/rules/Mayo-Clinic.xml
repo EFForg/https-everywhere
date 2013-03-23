@@ -1,18 +1,24 @@
 <!--	!functional:
-		-*.mayo.edu
+
+		- www.mayo.edu	(times out)
 -->
 <ruleset name="Mayo Clinic (partial)">
 
 	<target host="mayoclinic.com"/>
 	<target host="*.mayoclinic.com"/>
+	<target host="mayoclinic.org"/>
+	<target host="*.mayoclinic.org"/>
 
-	<securecookie host="^(.*\.)?mayoclinic\.com$" name=".*"/>
+	<securecookie host="^(.*\.)?mayoclinic\.(?:com|org)$" name=".*"/>
 
 	<!--	cert !valid for !www	-->
 	<rule from="^https?://mayoclinic\.com/"
 		to="https://www.mayoclinic.com/"/>
 
-	<rule from="^http://(healthletter|store|www)\.mayoclinic\.com/"
+	<rule from="^http://(healthletter|(?:book)?store|www)\.mayoclinic\.com/"
 		to="https://$1.mayoclinic.com/"/>
+
+	<rule from="^http://(www\.)?mayoclinic\.org/"
+		to="https://$1mayoclinic.org/" />
 
 </ruleset>
