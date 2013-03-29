@@ -12,11 +12,45 @@
 		- wac.04c7.edgecastcdn.net/0004C7/
 
 
+	Nonfunctional domains:
+
+		- t-mobile.com subdomains:
+
+			- newsroom
+			- cache.deals *
+			- htc **
+			- cache.htc **
+			- locator			(404, mismatched, CN: *.spatialpoint.com)
+			- cache.newsroom *
+			- t-mobile-coverage		(shows videos, mismatched, CN: videos.t-mobile.com)
+
+	* 404, CN: gp1.wac.edgecastcdn.net
+	** Revoked cert
+
+
 	Problematic domains:
 
-		- (www.)tmobile.com		(redirects to t-mobile.com over http, mismatched, CN: vip.t-mobile.com)
-		- t-mobile.com			(cert only matches www)
+		- (www.)tmobile.com *
+		- my.tmobile.com *
+
+		- t-mobile.com subdomains:
+
+			- ^				(cert only matches www)
+			- deals				(shows videos, mismatched, CN: videos.t-mobile.com)
+			- find **
+			- cache.prepaid-phones		(works, CN: gp1.wac.edgecastcdn.net)
+			- cache.videos			(404, CN: gp1.wac.edgecastcdn.net)
+
 		- (www.)tmobile.nl		(redirects to t-mobile.nl over http)
+
+	* Redirects to t-mobile.com over http, mismatched, CN: vip.t-mobile.com
+	** Works, mismatched, CN: find.my.t-mobile.com. Functionally
+	   equivalent to the latter, but visually different.
+
+
+	Partially covered domains:
+
+		- deals.t-mobile.com	(→ www.t-mobile.com)
 
 
 	Fully covered domains:
@@ -25,16 +59,36 @@
 		- www.tmobileuk.blackberry.com		(→ tmobileuk.blackberry.com)
 		- (www.)tmobile.com			(→ www.t-mobile.com)
 		- my.tmobile.com			(→ my.t-mobile.com)
-		- t-mobile.com				(→ www.t-mobile.com)
-		- my.t-mobile.com
-		- www.t-mobile.com
-		- t-mobile.co.uk			(→ www.t-mobile.co.uk)
-		- www.t-mobile.co.uk
+
+		- t-mobile.com subdomains:
+
+			- (www.)			(^ → www)
+			- business
+			- cache.business
+			- ebill
+			- es
+			- explore
+			- cache.explore
+			- my
+			- find.my
+			- prepaid-phones
+			- cache.prepaid-phones		(→ prepaid-phones)
+			- secure-checkout
+			- support
+			- videos
+			- cache.videos			(→ videos)
+			- www
+
+		- (www.)t-mobile.co.uk			(^ → www)
 		- (www.)instantemail.t-mobile.co.uk	(→ tmobileuk.blackberry.com)
 		- (www.)tmobile.nl			(→ www.t-mobile.nl)
-		- t-mobile.nl				(→ www.t-mobile.nl)
+		- (www.)t-mobile.nl			(^ → www)
 		- gsm.t-mobile.nl
-		- www.t-mobile.nl
+
+		- tmocache.com subdomains:
+
+			- s.my
+			- s
 
 -->
 <ruleset name="Tmobile">
@@ -52,6 +106,10 @@
 	<target host="www.tmobile.nl" />
 	<target host="t-mobile.nl" />
 	<target host="*.t-mobile.nl" />
+	<target host="*.tmocache.com" />
+
+
+	<securecookie host="^(?:business|ebill|explore|my|find\.my|support|videos)\.t-mobile\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?tmobileuk\.blackberry\.com/"
@@ -60,8 +118,17 @@
 	<rule from="^http://(?:www\.)?t-?mobile\.(com|nl)/"
 		to="https://www.t-mobile.$1/" />
 
+	<rule from="^https?://deals\.t-mobile\.com/(?:\?.*)?$"
+		to="https://www.t-mobile.com/shop/phones/?pricerange=0-0&amp;features=371e5c4a-3dc6-4404-86d0-c59f8d8baa3b" />
+
+	<rule from="^http://((?:cache\.)?(?:business|explore)|ebill|es|my|find\.my|secure-checkout|support)\.t-mobile\.com/"
+		to="https://$1.t-mobile.com/" />
+
 	<rule from="^http://my\.t-?mobile\.com/"
 		to="https://my.t-mobile.com/" />
+
+	<rule from="^https?://(?:cache\.)?(prepaid-phone|video)s\.t-mobile\.com/"
+		to="https://$1s.t-mobile.com/" />
 
 	<rule from="^http://(?:www\.)?t-mobile\.co\.uk/"
 		to="https://www.t-mobile.co.uk/" />
@@ -71,5 +138,8 @@
 
 	<rule from="^http://gsm\.t-mobile\.nl/"
 		to="https://gsm.t-mobile.nl/" />
+
+	<rule from="^http://s(\.my)?\.tmocache\.com/"
+		to="https://s$1.tmocache.com/" />
 
 </ruleset>
