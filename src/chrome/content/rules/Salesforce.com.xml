@@ -11,11 +11,22 @@
 		- c9649669.r69.cf2.rackcdn.com
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- sites.force.com		(cert: slotmatching4.salesforce.com; redirects to http.
-							slotmatching4 doesn't appear to exist.)
-		- appexchange.salesforce.com	(redirects to http)
+		- sites.force.com *
+
+			- CN: slotmatching4.salesforce.com
+			- slotmatching4 doesn't appear to exist
+
+		- appexchange.salesforce.com *
+
+	* Redirects to http.
+
+
+	Problematic domains:
+
+		- developerforce.com	(cert only matches www)
+		- force.com		(times out)
 
 
 	Fully covered domains:
@@ -25,6 +36,8 @@
 			- eu0
 			- na13
 
+		- *.secure.force.com	(per-client subdomains)
+
 -->
 <ruleset name="Salesforce.com (partial)">
 
@@ -32,15 +45,16 @@
 	<target host="*.developerforce.com" />
 	<target host="force.com" />
 	<target host="*.force.com" />
-	<target host="c.eu0.content.force.com" />
-	<target host="*.secure.force.com" />
 	<target host="salesforce.com" />
 	<target host="*.salesforce.com" />
 	<target host="*.sfdcstatic.com" />
 
 
-	<securecookie host="^(.*\.)?(developer|sales)?force\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?(?:developer|sales)?force\.com$" name=".+" />
 
+
+	<rule from="^https?://(?:www\.)?(developer)?force\.com/"
+		to="https://www.$1force.com/" />
 
 	<rule from="^http://wiki\.developerforce\.com/"
 		to="https://wiki.developerforce.com/" />
@@ -48,19 +62,11 @@
 	<rule from="^http://c\.(\w\w\d+)\.content\.force\.com/"
 		to="https://c.$1.content.force.com/" />
 
-	<!--	unique domain for each client	-->
-	<rule from="^http://([\w\-]+)\.secure\.force\.com/"
+	<rule from="^http://([\w-]+)\.secure\.force\.com/"
 		to="https://$1.secure.force.com/" />
 
-	<!--	/force.com times out	-->
-	<rule from="^https?://(?:www\.)?(developer)?force\.com/"
-		to="https://www.$1force.com/" />
-
-	<rule from="^http://(www\.)?salesforce\.com/"
+	<rule from="^http://((?:lct|login|na\d+(?:-api)?|www)\.)?salesforce\.com/"
 		to="https://$1salesforce.com/" />
-
-	<rule from="^http://(lct|login|na\d+(?:-api)?)\.salesforce\.com/"
-		to="https://$1.salesforce.com/" />
 
 	<rule from="^https?://(?:www\.)?salesforce\.com/(assets|common)/"
 		to="https://secure2.sfdcstatic.com/$1/" />
