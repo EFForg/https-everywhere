@@ -1,0 +1,67 @@
+<!--
+	For problematic rules, see Getty_Images-problematic.xml.
+
+
+	CDN buckets:
+
+		- cache.gettyimages.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		gettyimages.com subdomains:
+
+			- artist
+			- awards		(interrupted)
+			- blog			(shows default page, self-signed)
+			- company		(interrupted)
+			- competitions		(record_too_long)
+			- corporate		(times out)
+			- creative		(redirects to http; mismatched, CN: SECURE.GETTYIMAGES.COM)
+			- curve
+			- fashion
+			- globalassignment
+			- imagery		(reset)
+			- moodstream
+			- thefeed
+			- wiki			(shows contributors; expired 2012-03-04, self-signed)
+
+
+	Problematic domains:
+
+		- gettyimages.com subdomains:
+
+			- ^			(redirects to secure; mismatched, CN: SECURE.GETTYIMAGES.COM)
+			- cache			(works, akamai)
+			- contributors		(works; expired 2012-03-04, self-signed)
+			- e			(works; mismatched, CN: secure.eloqua.com)
+			- www			(redirects to www.secure, akamai)
+
+		- gettyimages.co.uk		(pages redirect to http; mismatched, CN: SECURE.GETTYIMAGES.COM)
+		- www.gettyimages.co.uk		(pages redirect to http, akamai)
+
+-->
+<ruleset name="Getty Images (partial)">
+
+	<target host="*.gettyimages.com" />
+	<target host="gettyimages.co.uk" />
+	<target host="*.gettyimages.co.uk" />
+		<exclusion pattern="^https?://www\.gettyimages\.co\.uk/(?!cms/|CMS/|favicon\.ico|[iI]mages/|scripts/|style/)" />
+
+
+	<securecookie host="^.+\.gettyimages\.com$" name=".+" />
+
+
+	<rule from="^http://secure\.gettyimages\.com/"
+		to="https://secure.gettyimages.com/" />
+
+	<rule from="^https?://(?:cache|delivery)\.gettyimages\.com/"
+		to="https://delivery.gettyimages.com/" />
+
+	<rule from="^http://(api|assignments|autodiscover|callawaygolf|contribute|contributorsystems|developer|licensecompliance|mail|mixer|mm|remote|upload)\.gettyimages\.com/"
+		to="https://$1.gettyimages.com/" />
+
+	<rule from="^https?://(?:secure\.|www\.)?gettyimages\.co\.uk/"
+		to="https://secure.gettyimages.co.uk/" />
+
+</ruleset>
