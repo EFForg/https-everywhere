@@ -98,9 +98,7 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const N_COHORTS = 1000;  // For now 850 / 1000 stable non-Tor users get the popup
-const OBS_COHORTS = 850; // asking them if they'd like to turn on the
-                         // Decentralized SSL Observatory
+const N_COHORTS = 1000;  // For partial feature deployment
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
@@ -522,10 +520,7 @@ HTTPSEverywhere.prototype = {
       if (result) that.log(INFO, "Got positive proxy test.");
       else        that.log(INFO, "Got negative proxy text.");
       // We are now ready to show the popup in its most informative state
-      // (actually for temporary scalability reasons let's only show it if
-      // the user has Tor available too, or is in a small cohort...)
-      if (result || cohort < OBS_COHORTS)
-        that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+      that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
     };
     if (!shown && !enabled)
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
