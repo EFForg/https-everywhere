@@ -1,0 +1,32 @@
+<!--
+	CDN buckets:
+
+		- aka-img-1.h-img.com.edgesuite.net
+		- aka-img-2.h-img.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- blog
+
+
+	Problematic domains:
+
+		- aka-img-[12].h-img.com	(works, akamai)
+		- img-1.hunch.com		(mismatched, CN: HUNCH.COM)
+
+-->
+<ruleset name="Hunch (partial)">
+
+	<target host="aka-img-1.h-img.com" />
+	<target host="hunch.com" />
+	<target host="*.hunch.com" />
+
+
+	<rule from="^http://(admin\.|api\.|www\.)?hunch\.com/"
+		to="https://$1hunch.com/" />
+
+	<rule from="^https?://(?:aka-img-\d\.h-img|img-1\.hunch)\.com/"
+		to="https://hunch.com/" />
+
+</ruleset>
