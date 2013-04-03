@@ -13,9 +13,43 @@
 
 		- att.com subdomains:
 
+			- repair		(times out)
 			- (www.)research	(prints "this is a test")
+			- savings
+			- att.uc		(http & https data differ)
 
 		- (www.)attpublicpolicy.com	(shows RHEL default page, CN: localhost.localdomain)
+
+
+	Problematic domains:
+
+		- att.com subdomains:
+
+			- (www.)business	(reset)
+			- uc			(works; mismatched, CN: *.sslcert35.com)
+
+
+	Fully covered domains:
+
+		- att.com subdomains:
+
+			- (www.)
+			- connect
+			- www.corp
+			- cprodmasx
+			- developer
+			- www.e-access
+			- forums
+			- localization
+			- networkingexchangeblog
+			- rewardcenter
+			- smb
+			- trial.uc
+			- ufix
+			- uversecentral[3]
+			- www.wireless
+
+		- [013].ecom.attccc.com
 
 -->
 <ruleset name="AT&amp;T (partial)">
@@ -28,13 +62,16 @@
 	<securecookie host="^.*\.att\.com$" name=".+" />
 
 
-	<rule from="^http://((?:connect|cprodmasx|developer|forums|localization|smb|uversecentral\d|www)\.)?att\.com/"
+	<rule from="^http://((?:connect|www\.corp|cprodmasx|developer|www\.e-access|forums|localization|networkingexchangeblog|rewardcenter|smb|trial\.uc|ufix|uversecentral\d|www\.wireless|www)\.)?att\.com/"
 		to="https://$1att.com/" />
+
+	<rule from="^https?://(?:www\.)?business\.att\.com/(?:enterprise/)?(?:\?.*)?$"
+		to="https://www.att.com/gen/landing-pages?pid=9214" />
 
 	<!--	https://wireless redirects to login, while
 		http://wireless redirects like so.
 							-->
-	<rule from="^http://(?:www\.)?wireless\.att\.com/($|\?)"
+	<rule from="^http://wireless\.att\.com/($|\?)"
 		to="https://www.att.com/shop/wireless/$1" />
 
 	<rule from="^http://(\d)\.ecom\.attccc\.com/"
