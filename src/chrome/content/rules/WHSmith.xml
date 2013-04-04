@@ -1,4 +1,7 @@
 <!--
+	wbiprod.storedvalue.com
+
+
 	Problematic subdomains:
 
 		- (www.)	(mismatched, CN: secure.whsmith.co.uk)
@@ -8,10 +11,29 @@
 
 	<target host="whsmith.co.uk" />
 	<target host="*.whsmith.co.uk" />
-		<exclusion pattern="^https?://(?:www\.)?whsmith\.co\.uk/(?!App_Themes/|[iI]mages/|Support/|WebResource\.axd)" />
+		<!--
+			Nonfunctional paths:
+
+				- $				(redirects back)
+				- ComputingAndElectronics/ *
+				- eb_eBooks/ *
+				- GiftsGamesAndToys$ *
+				- GiftsGamesAndToys/$ *
+				- StationeryAndCards *
+				- StationeryAndCards/$		(403)
+
+			* 404
+							-->
+		<exclusion pattern="^https?://(?:www\.)?whsmith\.co\.uk/(?!App_Themes/|(?:Books|CatalogAndSearch|E?Products|GiftCardProducts|Voting)(?:$|\?|/)|favicon\.ico|GiftsGamesAndToys/\w|[iI]mages/|Script/|StationeryAndCards/\w|[sS]upport/|WebResource\.axd)" />
+
+
+	<securecookie host="^(?:www\.)?magazines\.whsmith\.co\.uk$" name=".+" />
 
 
 	<rule from="^https?://(?:secure\.|www\.)?whsmith\.co\.uk/"
 		to="https://secure.whsmith.co.uk/" />
+
+	<rule from="^http://(www\.)?magazines\.whsmith\.co\.uk/"
+		to="https://$1magazines.whsmith.co.uk/" />
 
 </ruleset>
