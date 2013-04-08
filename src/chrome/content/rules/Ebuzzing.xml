@@ -9,12 +9,19 @@
 		- labs.ebuzzing.co.uk *
 		- external.labs.ebuzzing.co.uk *
 		- (www.)ebuzzing.co.uk **
-		- (www.)ebuzzing.de **
+
+		- ebuzzing.de subdomains:
+
+			- (www.) **
+			- blog
+			- labs *
+			- external.labs
+
 		- (www.)ebuzzing.es **
 		- (www.)ebuzzing.fr **
 		- (www.)ebuzzing.it **
 		- im.wk.io *
-		- st0.wk.io			(reset, CN: *.pantherssl.com)
+		- st0.wk.io *
 
 	* Times out
 	** Redirects to http, CN: *.ebuzzing.com
@@ -29,9 +36,20 @@
 
 	<target host="ebuzzing.com" />
 	<target host="www.ebuzzing.com" />
+	<target host="ebuzzing.de" />
+	<target host="*.ebuzzing.de" />
+
+
+	<securecookie host="^social\.ebuzzing\.de$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?ebuzzing\.com/"
 		to="https://ebuzzing.com/" />
+
+	<rule from="^https?://(?:www\.)?ebuzzing\.de/(\?.*)?$"
+		to="https://social.ebuzzing.de/$1" />
+
+	<rule from="^http://social\.ebuzzing\.de/"
+		to="https://social.ebuzzing.de/" />
 
 </ruleset>
