@@ -1,0 +1,34 @@
+<!--
+	CDN buckets:
+
+		- wildcard.ak.yelpcdn.com.edgekey.net
+
+			- s3-media[0-4].ak.yelpcdn.com
+
+
+	Nonfunctional domains:
+
+		- officialblog.yelp.com		(times out)
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="Yelp (partial)">
+
+	<target host="yelp.com" />
+	<target host="*.yelp.com" />
+		<exclusion pattern="^http://(?:www\.)?yelp\.com/(?!(?:forgot|login|signup)(?:$|\?|/))" />
+	<target host="s3-media4.ak.yelpcdn.com" />
+
+
+	<securecookie host="^\.biz\.yelp\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?(biz\.)?yelp\.com/"
+		to="https://$1$2yelp.com/" />
+
+	<rule from="^http://s3-media(\d)\.ak\.yelpcdn\.com/"
+		to="https://s3-media$1.ak.yelpcdn.com/" />
+
+</ruleset>
