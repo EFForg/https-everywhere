@@ -1,20 +1,168 @@
 <!--
 	Nonfunctional subdomains:
 
+		- cenewscenter
+		- colonelhenry			(redirects tp http; mismatched, CN: www.rutgers.edu)
+		- compliance			(shows webhost-saf; mismatched, CN: webhost-saf.rutgers.edu)
+		- computer-repair		(shows webhost-x05; mismatched, CN: webhost-x05.rutgers.edu)
+		- (www.)continuingstudies
+		- koji
+		- rucore.libraries		(403, valid cert)
+		- (www.)nb			(redirects to http; mismatched, CN: www.rutgers.edu)
+		- (www.)president		(redirects to http; mismatched, CN: www.rutgers.edu)
+		- rpm
+		- ru-umdnjtogether		(redirects to http; mismatched, CN: www.rutgers.edu)
+		- ruwireless			(shows services; mismatched, CN: services.rutgers.edu)
 		- (www.)ur	(shows www; mismatched, CN: www.rutgers.edu)
+
+
+	Problematic subdomains:
+
+		- www.andromeda		(cert only matches ^andromeda)
+		- (www.)alumni		(works; mismatched, CN: *.imodules.com)
+		- edseries.camden	(prints "Hey, the web server is running!", valid cert)
+		- campusstatus		(works; mismatched, CN: www.rutgers.edu)
+		- css			(works; mismatched, CN: www.rci.rutgers.edu)
+		- eden			(cert only matches www.eden)
+		- edseries		(works; mismatched, CN: www.nbcs.rutgers.edu)
+		- faq			(works; mismatched, CN: www.rci.rutgers.edu)
+		- findtech		(works; mismatched, CN: www.rci.rutgers.edu)
+		- helpchat		(works; mismatched, CN: andromeda.rutgers.edu)
+		- (www.)ideabank	(shows acceptance page, valid cert)
+		- libguides		($ redirects to http, other pages 404; mismatched, CN: *.libguides.com)
+		- libraries		(cert only matches *.libraries)
+		- mailman		(works; mismatched, CN: email.rutgers.edu)
+		- www.mssg		(cert only matches ^mssg)
+		- nbcs			(cert only matches www.nbcs)
+
+		- newark subdomains:
+
+			- ^		(works; mismatched, CN: andromeda.rutgers.edu)
+			- www.law	(cert only matches ^law.newark)
+			- oucp		(works; mismatched, CN: andromeda.rutgers.edu)
+			- roomres	(works; mismatched, CN: andromeda.rutgers.edu)
+
+		- nbpweb		(works; mismatched, CN: www.rci.rutgers.edu)
+		- www.rads		(cert only matches ^rads)
+		- rucs-nbp		(works; mismatched, CN: www.nbcs.rutgers.edu)
+		- ruweb			(works; mismatched, CN: www.rci.rutgers.edu)
+		- oit			(works; mismatched, CN: www.nbcs.rutgers.edu)
+		- oss			(works; mismatched, CN: www.nbcs.rutgers.edu)
+		- rci			(cert only matches www.rci)
+		- registrar		(works; mismatched, CN: www.rci.rutgers.edu)
+		- www.resnet		(cert only matches ^resnet)
+		- techdir		(works; mismatched, CN: www.rci.rutgers.edu)
+		- webhost-saf		(http & https data differ)
+		- www.webmail.newark	(cert only matches ^webmail.newark)
+
+
+	Partially covered subdomains:
+
+		- www.acs		(directory/?$ redirects to http)
+		- (www.)alumni		(→ imodules.com)
+		- libguides		(→ libguides.com)
+		- www4.libraries	(some pages redirect to http)
+		- (www.)rads		(www → ^, some pages redirect to http)
+		- (www.)resnet		(www → ^, some pages redirect to http)
+		- ruevents		(most paths redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)andromeda	(www → ^)
+		- blackboard
+		- computing.camden
+		- edseries.camden	(→ computing.camden)
+		- (www.)camlaw
+		- cas
+		- (www.)eden		(^ → www)
+		- webmail.eden
+		- email
+		- identityservices
+		- (www.)ipe
+
+		- libraries subdomains:
+
+			- (www.)	(^ → www)
+			- facsub
+			- mss3
+			- login.proxy
+			- www-iris-rutgers-edu.proxy
+			- www2
+
+		- (www.)nbcs		(^ → www)
+		- mailman		(→ email)
+		- (www.)mssg		(www → ^)
+		- my
+		- nagios
+		- netid
+		- newark subdomains:
+
+			- (www.)	(^ → www)
+			- blackboard
+			- (www.)law	(www → ^)
+			- ncs
+			- webmail
+
+		- broad.nwk-campus
+		- services.oit
+		- personalinfo
+		- rams
+		- (www.)rci		(^ → www)
+		- (www.)rulill
+		- sc-apps
+		- scarletmail
+		- search
+		- services
+		- software
+		- transcripts
+		- webhost-x05
 
 -->
 <ruleset name="Rutgers University">
 	<target host="rutgers.edu" />
 	<target host="*.rutgers.edu" />
 	<target host="www.*.rutgers.edu" />
+		<exclusion pattern="^http://www\.acs\.rutgers\.edu/directory/?(?:\?.*)?$" />
+		<exclusion pattern="^http://www4\.libraries\.rutgers\.edu/(?!sites/)" />
+		<exclusion pattern="^http://rads\.rutgers\.edu/(?!css/|images/|Login\.aspx)" />
+		<exclusion pattern="^http://resnet\.rutgers\.edu/(?!css/|favicon\.ico|graphics/)" />
+		<exclusion pattern="^http://ruevents\.rutgers\.edu/(?!events/admin/)" />
+
+
+	<!--securecookie host="^\.rutgers\.edu$" name="^EssUserTrk$" /-->
+	<securecookie host="^(?:webmail\.eden|identityservices|(?:www\.)?ipe|my|netid|(?:blackboard|law|ncs|webmail|www)\.newark|broad\.nwk-campus|personalinfo|sc-apps|search|software|transcripts|www)\.rutgers\.edu$" name=".+" />
+
 
 	<rule from="^http://(?:www\.)?rutgers\.edu/"
 		to="https://www.rutgers.edu/" />
-	<rule from="^http://(?:www\.)?(acs|cs|eden|nbcs|physics|rci)\.rutgers\.edu/"
+	<rule from="^https?://(?:www\.)?(acs|cs|eden|nbcs|newark|physics|rci)\.rutgers\.edu/"
 		to="https://www.$1.rutgers.edu/" />
-	<rule from="^http://(?:www\.)?(comminfo|food|gobble|math|njaes|rhshope|ruinfo|ruoffcampus|search|studentabc|uhr)\.rutgers\.edu/"
+
+	<!--rule from="^https?://(?:www\.)?alumni\.rutgers\.edu/(\?.*)?$"
+		to="https://imodules.com/s/896/$1" /-->
+
+	<rule from="^https?://(?:www\.)?alumni\.rutgers\.edu/(admin/|calendar\.css$|images/|s/\d+/(?:appstyles\.css|images/|js/)|ScriptResource\.axd|scripts/)"
+		to="https://imodules.com/$1" />
+
+	<rule from="^http://(?:www\.)?(andromeda|comminfo|food|gobble|libraries|math|mssg|(?:law|webmail)\.newark|resnet|njaes|rads|rhshope|ruinfo|ruoffcampus|search|studentabc|uhr)\.rutgers\.edu/"
 		to="https://$1.rutgers.edu/" />
+
+	<rule from="^http://(camden|computing\.camden|(?:www\.)?(?:camlaw|ipe|rulill)|cas|webmail\.eden|email|identityservices|(?:facsub|mss3|(?:login|www-iris-rutgers-edu)\.proxy|www[24])\.libraries|my|nagios|netid|(?:blackboard|ncs)\.newark|broad\.nwk-campus|services\.oit|personalinfo|rams|ruevents|sc-apps|scarletmail|services|software|transcripts|webhost-x05)\.rutgers\.edu/"
+		to="https://$1.rutgers.edu/" />
+
+	<rule from="^https?://edseries\.camden\.rutgers\.edu/(?:.+/)?([^\?]*)(\?.*)?"
+		to="https://computing.camden.rutgers.edu/help/training$1$2" />
+
+	<rule from="^http://(?:www\.)?ideabank\.rutgers\.edu/(?:\?.*)?$"
+		to="https://camlaw.rutgers.edu/webapps/ideabank/" />
+
+	<rule from="^https?://libguides\.rutgers\.edu/(css\d*|data|include|js(?:\d+\w?)?)/"
+		to="https://libguides.com/$1/" />
+
+	<rule from="^https?://mailmain\.rutgers\.edu/"
+		to="https://email.rutgers.edu/" />
+
 	<rule from="^http://(parktran|rudots)\.rutgers\.edu/"
 		to="https://gobble.rutgers.edu/" />
 
