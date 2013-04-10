@@ -13,7 +13,7 @@
 		- rpm
 		- ru-umdnjtogether		(redirects to http; mismatched, CN: www.rutgers.edu)
 		- ruwireless			(shows services; mismatched, CN: services.rutgers.edu)
-		- (www.)ur	(shows www; mismatched, CN: www.rutgers.edu)
+		- (www.)ur			(shows www; mismatched, CN: www.rutgers.edu)
 
 
 	Problematic subdomains:
@@ -51,6 +51,7 @@
 		- rci			(cert only matches www.rci)
 		- registrar		(works; mismatched, CN: www.rci.rutgers.edu)
 		- www.resnet		(cert only matches ^resnet)
+		- studentaid		(broken left menu)
 		- techdir		(works; mismatched, CN: www.rci.rutgers.edu)
 		- webhost-saf		(http & https data differ)
 		- www.webmail.newark	(cert only matches ^webmail.newark)
@@ -120,9 +121,9 @@
 
 -->
 <ruleset name="Rutgers University">
+
 	<target host="rutgers.edu" />
 	<target host="*.rutgers.edu" />
-	<target host="www.*.rutgers.edu" />
 		<exclusion pattern="^http://www\.acs\.rutgers\.edu/directory/?(?:\?.*)?$" />
 		<exclusion pattern="^http://www4\.libraries\.rutgers\.edu/(?!sites/)" />
 		<exclusion pattern="^http://rads\.rutgers\.edu/(?!css/|images/|Login\.aspx)" />
@@ -134,10 +135,8 @@
 	<securecookie host="^(?:webmail\.eden|identityservices|(?:www\.)?ipe|my|netid|(?:blackboard|law|ncs|webmail|www)\.newark|broad\.nwk-campus|personalinfo|sc-apps|search|software|transcripts|www)\.rutgers\.edu$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?rutgers\.edu/"
-		to="https://www.rutgers.edu/" />
-	<rule from="^https?://(?:www\.)?(acs|cs|eden|nbcs|newark|physics|rci)\.rutgers\.edu/"
-		to="https://www.$1.rutgers.edu/" />
+	<rule from="^https?://(?:www\.)?((?:acs|cs|eden|nbcs|newark|physics|rci)\.)?rutgers\.edu/"
+		to="https://www.$1rutgers.edu/" />
 
 	<!--rule from="^https?://(?:www\.)?alumni\.rutgers\.edu/(\?.*)?$"
 		to="https://imodules.com/s/896/$1" /-->
@@ -166,5 +165,4 @@
 	<rule from="^http://(parktran|rudots)\.rutgers\.edu/"
 		to="https://gobble.rutgers.edu/" />
 
-	<!-- Not working: studentaid.rutgers.edu: broken left menu -->
 </ruleset>
