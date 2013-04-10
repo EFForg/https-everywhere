@@ -1,0 +1,28 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/content.vcommerce.com/
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.vcommerce.com)
+		- content	(403; mismatched, CN: ssl2.cdngc.net)
+
+-->
+<ruleset name="Vcommerce (partial)">
+
+	<target host="vcommerce.com" />
+	<target host="*.vcommerce.com" />
+
+
+	<securecookie host="^www\.vcommerce\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?vcommerce\.com/"
+		to="https://www.vcommerce.com/" />
+
+	<rule from="^https?://content\.vcommerce\.com/"
+		to="https://s3.amazonaws.com/content.vcommerce.com/" />
+
+</ruleset>
