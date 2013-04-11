@@ -50,7 +50,7 @@ def test_bad_regexp(tree):
 def test_missing_to(tree):
 
     # Rules that are terminated before setting 'to'.
-    # These cases are probably due to either a misplaced
+    # These cases are probably either due to a misplaced
     # rule end or intended to be different elements.
     """Rule is missing a 'to' value."""
     for rule in tree.xpath("/ruleset/rule"):
