@@ -1,0 +1,72 @@
+<!--
+	Other GFI Software Development rulesets:
+
+		- GFI_Cloud.xml
+
+
+	Nonfunctional domains:
+
+		- kbase.gfi.com		(redirects to cutomers login, valid cert)
+
+
+	Problematic domains:
+
+		- kb.gfi.com		(redirects to http; mismatched, CN: slotmatching2.salesforce.com)
+		- gfi.nl *
+		- gfihispana.com *
+		- gfi-italia.com *
+		- gfisoftware.de *
+		- gfsfrance.com *
+
+	* Mismatched, CN: *.gif.com
+
+
+	Partially covered domains:
+
+		- kb.gfi.com		(→ gfi.secure.force.com)
+
+
+	Fully covered domains:
+
+		- (www.)gfi.com
+		- customers.gfi.com
+		- (www.)gfi.nl		(^ → www)
+		- (www.)gfihispana.com	(^ → www)
+		- (www.)gfi-italia.com	(^ → www)
+		- (www.)gfisoftware.de	(^ → www)
+		- (www.)gfsfrance.com	(^ → www)
+
+-->
+<ruleset name="GFI Software Development (partial)">
+
+	<target host="gfi.com" />
+	<target host="*.gfi.com" />
+	<target host="gfi.nl" />
+	<target host="www.gfi.nl" />
+	<target host="gfihispana.com" />
+	<target host="www.gfihispana.com" />
+	<target host="gfi-italia.com" />
+	<target host="www.gfi-italia.com" />
+	<target host="gfisoftware.de" />
+	<target host="www.gfisoftware.de" />
+	<target host="gfsfrance.com" />
+	<target host="www.gfsfrance.com" />
+
+
+	<securecookie host="^(?:customers\.|www\.)?gfi\.com$" name=".+" />
+	<securecookie host="^www\.gf(?:i\.nl|ihispana\.com|i-italia\.com|isoftware\.de|sfrance\.com)$" name=".+" />
+
+
+	<rule from="^http://(customers\.|www\.)?gfi\.com/"
+		to="https://$1gfi.com/" />
+
+	<rule from="^https?://kb\.gfi\.com/partnersurvey/site/"
+		to="https://gfi.secure.force.com/partnersurvey/site/" />
+
+	<rule from="^https?://kb\.gfi\.com/resource/"
+		to="https://gfi.secure.force.com/partnersurvey/resource/" />
+
+	<rule from="^https?://(?:www\.)?gf(i\.nl|ihispana\.com|i-italia\.com|isoftware\.de|sfrance\.com)/"
+		to="https://www.gf$1/" />
+
+</ruleset>
