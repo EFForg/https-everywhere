@@ -1,0 +1,63 @@
+<!--
+	Nonfunctional subdomains:
+
+		- athdb			(replies with http)
+		- catalog		(shows www.acalogadmin.com; mismatched, CN: *.acalogadmin.com)
+		- perecruiting.cs
+		- pdid			(times out)
+		- pioneers
+		- schedule25wb		(times out)
+		- (www.)web
+		- wm
+		- wm2
+
+
+	Problematic subdomains:
+
+		- ^		(times out)
+		- www.cs	(works; expired 2010-08-17, self-signed)
+		- drupal	(works, mismatched, CN: www.cs.grinnell.edu)
+		- www.cat.lib	(cert only matches ^cat.lib)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http *sometimes*)
+
+
+	Fully covered subdomains:
+
+		- autodiscover
+		- bookstore
+		- db
+		- digital
+		- help
+		- imap
+		- itwebapps
+		- (www.)cat.lib		(www → ^)
+		- libweb
+		- loggia
+		- mail
+		- webmail
+
+-->
+<ruleset name="Grinnell College (partial)">
+
+	<target host="grinnell.edu" />
+	<target host="*.grinnell.edu" />
+
+
+	<!--securecookie host="^\.grinnell\.edu$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:\.?bookstore|db|\.?digital|help|cat\.lib|mail)\.grinnell\.edu$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?grinnell\.edu/(files/|includes/|misc/|sites/)"
+		to="https://www.grinnell.edu/$1" />
+
+	<rule from="^http://(autodiscover|db|digital|help|imap|itwebapps|libweb|loggia|mail)\.grinnell\.edu/"
+		to="https://$1.grinnell.edu/" />
+
+	<rule from="^https?://(?:www\.)?cat\.lib\.grinnell\.edu/"
+		to="https://cat.lib.grinnell.edu/" />
+
+</ruleset>
