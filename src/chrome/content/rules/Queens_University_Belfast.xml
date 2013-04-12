@@ -1,0 +1,45 @@
+<!--
+	Nonfunctional subdomains:
+
+		- calib
+		- www.qol
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- www.daro	(cert only matches ^daro)
+		- knock		($ 500s)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- (www.)daro	(www → ^)
+		- knock
+		- home.qol
+		- login.qol
+
+-->
+<ruleset name="Queen's University Belfast (partial)">
+
+	<target host="qub.ac.uk" />
+	<target host="*.qub.ac.uk" />
+
+
+	<rule from="^https?://(?:www\.)?qub\.ac\.uk/"
+		to="https://www.qub.ac.uk/" />
+
+	<rule from="^https?://(?:www\.)?daro\.qub\.ac\.uk/"
+		to="https://daro.qub.ac.uk/" />
+
+	<rule from="^http://knock\.qub\.ac\.uk/(?:\?.*)?$"
+		to="https://login.qol.qub.ac.uk/home/?logout=true" />
+
+	<rule from="^http://knock\.qub\.ac\.uk/myqueens/"
+		to="https://knock.qub.ac.uk/myqueens/" />
+
+	<rule from="^http://(home|login)\.qol\.qub\.ac\.uk/"
+		to="https://$1.qol.qub.ac.uk/" />
+
+</ruleset>

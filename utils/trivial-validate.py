@@ -42,6 +42,19 @@ def test_bad_regexp(tree):
             return False
     return True
 
+def test_missing_to(tree):
+
+    # Rules that are terminated before setting 'to'.
+    # These cases are probably either due to a misplaced
+    # rule end or intended to be different elements.
+    """Rule is missing a 'to' value."""
+    for rule in tree.xpath("/ruleset/rule"):
+	if not rule.get("to"):
+            sys.stdout.write("warning: 'to' attribute missing in %s. " %fi)
+            sys.stdout.write("Misplaced end or misnamed element?\n")
+            return False
+    return True
+
 def test_unescaped_dots(tree):
     # Rules containing unescaped dots outside of brackets and before slash.
     # Note: this is meant to require example\.com instead of example.com,
@@ -149,7 +162,7 @@ def test_non_ascii(tree):
                 return False
     return True
 
-tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots,
+tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
          test_no_trailing_slash, test_lacks_target_host, test_bad_target_host,
          test_duplicated_target_host, test_non_ascii]

@@ -1,0 +1,111 @@
+<!--
+	Other Automatic Data Processing rulesets:
+
+		- ADP_Retirement_Services.xml
+		- ADP_Screening_and_Selection_Services.xml
+		- ADP_VirtualEdge.xml
+		- ELabor.xml
+		- Employease.xml
+		- Payrollapp.com.xml
+
+
+	Problematic subdomains:
+
+		- ^				(cert only matches www)
+		- (www.)accountant		(works; mismatched, CN: www.adp.com)
+		- www.adp4me			(certo only matches ^foo)
+		- (www.)dataaccessregistration	(no https)
+		- www.easynet			(cert only matches ^foo)
+		- edu				(cert only matches www.foo)
+		- flexdirect			(cert only matches www.foo)
+		- www.smallbusiness		(cert only matches ^foo)
+		- (www.)ilearn			(works; mismatched, CN: www.adp.com)
+		- (www.)virtualedge		(works; mismatched, CN: www.adp.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)ilearn		(→ adpe.csod.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)adp4me		(www → ^)
+		- (www.)adpvantage
+		- agateway
+		- cgateway
+		- clientcenter
+		- (www.)documax
+		- (www.)dataaccessregistration	(→ runpayroll)
+		- downtime2
+		- (www.)easynet		(www → ^)
+		- (www.)edu		(^ → www)
+		- eetime1
+		- (www.)etime
+		- ewallet
+		- (www.)ezlm
+		- (www.)flexdirect	(^ → www)
+		- glinterface
+		- (www.)ipay
+		- (www.)ipayadmin
+		- (www.)ireports
+		- (www.)netsecure
+		- (www.)paystatements
+		- (www.)payex
+		- payexag
+		- (www.)portal
+		- checkprint.pss
+		- yearend.pss
+		- (www.)quickview
+		- (www.)reporting
+		- resource-secure
+		- runpayroll
+		- (www.)select
+		- (www.)smallbusiness	(www → ^)
+		- (www.)support
+		- (www.)timesaver
+		- www.tlm
+		- totalsource
+		- (www.)virtualedge	(→ www)
+		- (www.)
+		- (www.)
+		- (www.)
+
+-->
+<ruleset name="Automatic Data Processing (partial)">
+
+	<target host="adp.com" />
+	<target host="*.adp.com" />
+	<target host="adpe.csod.com" />
+
+
+	<securecookie host=".*\.adp\.com$" name=".+" />
+	<securecookie host="^adpe\.csod\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?(edu\.|flexdirect\.)?adp\.com/"
+		to="https://www.$1adp.com/" />
+
+	<rule from="^http://([ac]gateway|clientcenter|(?:checkprint|yearend)\.pss|downtime2|eetime1|ewallet|glinterface|payexag|resource-secure|runpayroll|www\.tlm|totalsource)\.adp\.com/"
+		to="https://$1.adp.com/" />
+
+	<rule from="^http://(www\.)?(adpvantage|documax|etime|ezlm|ipay(?:admin)?|ireports|netsecure|paystatements|payex|portal|quickview|reporting|select|support|timesaver)\.adp\.com/"
+		to="https://$1$2.adp.com/" />
+
+	<rule from="^https?://(?:www\.)?(adp4me|easynet|smallbusiness)\.adp\.com/"
+		to="https://$1.adp.com/" />
+
+	<rule from="^https?://(?:www\.)?dataaccessregistration\.adp\.com/(?:.*)"
+		to="https://runpayroll.adp.com/default.aspx?action=newclient&amp;RAP=1" />
+
+	<rule from="^https?://(?:www\.)?ilearn\.adp\.com/\?*$"
+		to="https://adpe.csod.com/" />
+
+	<rule from="^https?://(?:www\.)?virtualedge\.adp\.com/(?:.*)"
+		to="https://www.adp.com/solutions/employer-services/pre-employment-services.aspx" />
+
+	<rule from="^http://adpe\.csod\.com/"
+		to="https://adpe.csod.com/" />
+
+</ruleset>

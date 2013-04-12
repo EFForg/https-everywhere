@@ -6,27 +6,50 @@
 
 	Nonfunctional domains:
 
-		- labs.ebuzzing.co.uk		(times out)
-		- external.labs.ebuzzing.co.uk	(ditto)
-		- (www.)ebuzzing.co.uk		(cert: *.ebuzzing.com; redirects to http)
-		- (www.)ebuzzing.de		(ditto)
-		- (www.)ebuzzing.es		(ditto)
-		- (www.)ebuzzing.fr		(ditto)
-		- (www.)ebuzzing.it		(ditto)
-		- im.wk.io			(times out)
-		- st0.wk.io			(cert: *.pantherssl.com; reset)
+		- labs.ebuzzing.co.uk *
+		- external.labs.ebuzzing.co.uk *
+		- (www.)ebuzzing.co.uk **
+
+		- ebuzzing.de subdomains:
+
+			- (www.) **
+			- blog
+			- labs *
+			- external.labs
+
+		- (www.)ebuzzing.es **
+		- (www.)ebuzzing.fr **
+		- (www.)ebuzzing.it **
+		- im.wk.io *
+		- st0.wk.io *
+
+	* Times out
+	** Redirects to http, CN: *.ebuzzing.com
+
+
+	Problematic domains:
+
+		- www.ebuzzing.com	(prints domain name)
 
 -->
 <ruleset name="ebuzzing (partial)">
 
 	<target host="ebuzzing.com" />
 	<target host="www.ebuzzing.com" />
+	<target host="ebuzzing.de" />
+	<target host="*.ebuzzing.de" />
 
 
-	<!--	- Prints domain name over https
-		- Redirects to www over http
-					-->
+	<securecookie host="^social\.ebuzzing\.de$" name=".+" />
+
+
 	<rule from="^https?://(?:www\.)?ebuzzing\.com/"
 		to="https://ebuzzing.com/" />
+
+	<rule from="^https?://(?:www\.)?ebuzzing\.de/(\?.*)?$"
+		to="https://social.ebuzzing.de/$1" />
+
+	<rule from="^http://social\.ebuzzing\.de/"
+		to="https://social.ebuzzing.de/" />
 
 </ruleset>
