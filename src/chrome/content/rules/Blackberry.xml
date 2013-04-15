@@ -1,8 +1,30 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- press *
+		- supportforums	(no https)
+		- us *
+
+	* Works, akamai
+
+-->
 <ruleset name="Blackberry (partial)">
 
-	<target host="appworld.blackberry.com"/>
+	<target host="blackberry.com"/>
+	<target host="*.blackberry.com"/>
 
-	<rule from="^http://appworld\.blackberry\.com/"
-		to="https://appworld.blackberry.com/"/>
+
+	<!--	Omniture tracking cookies:
+						-->
+	<securecookie host="^\.blackberry\.com$" name="^s_\w+$" />
+	<securecookie host="^.+\.blackberry\.com$" name=".+" />
+
+
+	<rule from="^http://((?:appworld|blackberryid|developer|global|www)\.)?blackberry\.com/"
+		to="https://$1blackberry.com/"/>
+
+	<rule from="^https?://supportforums\.blackberry\.com/"
+		to="https://rim.i.lithium.com/" />
 
 </ruleset>
