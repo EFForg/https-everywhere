@@ -1,0 +1,75 @@
+<!--
+	strlabs.wpengine.com
+
+
+	Nonfunctional domains:
+
+		- media.sharethrough.com	(no https)
+
+
+	Problematic domains:
+
+		- ads.shareth.ru		(mismatched, CN: *.adnxs.com)
+		- marketing.sharethrough.com	(works; mismatched, CN: actonsoftware.com)
+
+
+	Partially covered domains:
+
+		- marketing.sharethrough.com
+
+
+	Fully covered domains:
+
+		- strlabs.wpengine.netdna-cdn.com	(→ strlabs.wpengine.com)
+
+		- ads.shareth.ru		(→ ib.adnxs.com)
+
+		- sharethrough.com subdomains:
+
+			- (www.)
+			- apis
+			- apis-acceptance
+			- apis-staging
+			- assets
+			- assets-acceptance
+			- assets-staging
+			- content
+			- content-acceptance
+			- content-staging
+			- hq
+			- hq-acceptance
+			- hq-staging
+			- native
+			- native-staging
+			- static
+			- static-acceptance
+			- static-staging
+
+-->
+<ruleset name="Sharethrough (partial)">
+
+	<target host="strlabs.wpengine.netdna-cdn.com" />
+	<target host="ads.shareth.ru" />
+	<target host="sharethrough.com" />
+	<target host="*.sharethrough.com" />
+
+
+	<securecookie host="^(?:.*\.)?sharethrough\.com$" name=".+" />
+
+
+	<rule from="^https?://strlabs\.wpengine\.netdna-cdn\.com/"
+		to="https://strlabs.wpengine.com/" />
+
+	<rule from="^https?://ads\.shareth\.ru/"
+		to="https://ib.adnxs.com/" />
+
+	<rule from="^http://((?:(?:apis|assets|content|hq|static)(?:-acceptance|-staging)?|native(?:-staging)?|www)\.)?sharethrough\.com/"
+		to="https://$1sharethrough.com/" />
+
+	<rule from="^https?://marketing\.sharethrough\.com/(?:\?.*)?$"
+		to="https://sharethrough.com/?ao=1" />
+
+	<rule from="^https?://marketing\.sharethrough\.com/acton/"
+		to="https://ci33.actonsoftware.com/acton/" />
+
+</ruleset>
