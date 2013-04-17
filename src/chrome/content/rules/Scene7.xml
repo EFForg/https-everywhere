@@ -7,29 +7,37 @@
 		- a248.e.akamai.net/f/248/9086/10h/origin-g3.scene7.com/
 
 
-	Fully covered domains:
+	Problematic subdomains:
 
-		- .+.scene7.com		(per-client subdomains)
+		- ^	(mismatched, CN: www.adobe.com)
+		- www	(akamai)
+		- .+	(akamai)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ www.adobe.com)
+		- www1
+		- .+		(→ akamai, per-client subdomains)
+
 
 -->
 <ruleset name="Scene7">
 
 	<target host="scene7.com" />
 	<target host="*.scene7.com" />
-		<!--
-			Akamai:
-				-->
-		<exclusion pattern="^http://riverisland\.scene7\.com/" />
 
 
-	<securecookie host="^.*\.scene7\.com$" name=".*" />
+	<securecookie host="^www1\.scene7\.com$" name=".+" />
 
 
-	<!--	!www cert: www1.scene7.com	-->
-	<rule from="^https?://(?:www(1)?\.)?scene7\.com/"
-		to="https://www$1.scene7.com/" />
+	<rule from="^https?://(?:www\.)?scene7\.com/[^\?]*(\?.*)?"
+		to="https://www.adobe.com/products/scene7.html$1" />
+
+	<rule from="^http://www1\.scene7\.com/"
+		to="https://www1.scene7.com/" />
 
 	<rule from="^http://([\w-]+)\.scene7\.com/"
-		to="https://$1.scene7.com/" />
+		to="https://a248.e.akamai.net/f/248/9086/10h/$1.scene7.com/" />
 
 </ruleset>
