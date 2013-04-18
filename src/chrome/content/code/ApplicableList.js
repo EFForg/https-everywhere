@@ -23,7 +23,7 @@ function ApplicableList(logger, doc, domWin) {
   this.all={};  // active + breaking + inactive + moot
   serial_number += 1;
   this.serial = serial_number;
-  this.log(NOTE,"Alist serial #" + this.serial + " for " + this.home);
+  this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
 };
 
 ApplicableList.prototype = {
