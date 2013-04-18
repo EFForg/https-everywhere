@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional domains:
+
+		- community.freshbooks.com *
+		- developers.freshbooks.com *
+
+	* Redirects to http, valid cert
+
+
+	Partially covered domains:
+
+		- (www.)freshbooks.com	($ redirects to secure)
+
+-->
+<ruleset name="FreshBooks (partial)">
+
+	<target host="fb-assets.com" />
+	<target host="www.fb-assets.com" />
+	<target host="freshbooks.com" />
+	<target host="*.freshbooks.com" />
+		<exclusion pattern="^http://(?:www\.)?freshbooks\.com/(?!cache/|images/|javascript/|styles/)" />
+		<exclusion pattern="^http://(?:community|developers)\." />
+
+
+	<securecookie host="^(?!www\.).+\.freshbooks\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?fb-assets\.com/"
+		to="https://$1fb-assets.com/" />
+
+	<rule from="^http://([\w-]+\.)?freshbooks\.com/"
+		to="https://$1freshbooks.com/" />
+
+</ruleset>

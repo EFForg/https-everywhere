@@ -8,13 +8,20 @@
 		- u.hwstatic.com			(cert: vsecure.hostelworld.com; shows that domain's data)
 		- (www.)webresint.com			(times out)
 
+
+	Problematic domains:
+
+		- ccd.hwstatic.com		(works; mismatched, CN: ssl.cdngc.net)
+		- scd.hwstatic.com		(works; mismatched, CN: ssl.cdngc.net)
+		- shccd.hwstatic.com		(works; mismatched, CN: ssl.cdngc.net)
+
 -->
 <ruleset name="Web Reservations International (partial)">
 
 	<target host="secure.bookhostels.com" />
 	<target host="images.hostels.com" />
 	<target host="*.hostelworld.com" />
-	<target host="icd.hwstatic.com" />
+	<target host="*.hwstatic.com" />
 	<target host="*.webresint.com" />
 
 
@@ -34,12 +41,22 @@
 		to="https://static.webresint.com/" />
 
 	<!--	- www: cert only matches vsecure
-		- icd cert: *.pantherssl.com
-		- icd 403s
 		- Data on vsecure & www appear identical
 				-->
-	<rule from="^https?://(?:(?:vsecure|www)\.hostelworld|icd\.hwstatic)\.com/"
+	<rule from="^https?://(?:vsecure|www)\.hostelworld\.com/"
 		to="https://vsecure.hostelworld.com/" />
+
+	<rule from="^http://ccd\.hwstatic\.com/"
+		to="https://ucd.hwstatic.com/" />
+
+	<rule from="^https?://scd\.hwstatic\.com/"
+		to="https://icd.hwstatic.com/" />
+
+	<rule from="^htps?://shccd\.hwstatic\.com/"
+		to="https://ihccd.hwstatic.com/" />
+
+	<rule from="^http://(icd|ihccd|ucd)\.hwstatic\.com/"
+		to="https://$1.hwstatic.com/" />
 
 	<rule from="^http://secure\.webresint\.com/"
 		to="https://secure.webresint.com/" />

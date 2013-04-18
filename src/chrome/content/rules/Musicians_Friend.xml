@@ -1,0 +1,31 @@
+<!--
+	Nonfunctional subdomains:
+
+		- img3		(shows static, valid cert)
+
+
+	Problematic subdomains:
+
+		- ^		(.+ redirects to www.../$)
+		- media		(akamai)
+
+
+	At least some pages redirect to http.
+
+-->
+<ruleset name="Musician's Friend (partial)">
+
+	<target host="musiciansfriend.com" />
+	<target host="*.musiciansfriend.com" />
+
+
+	<securecookie host="^origin-static\.musiciansfriend\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?musiciansfriend\.com/(checkout|mediaCenter/feeds/)"
+		to="https://www.musiciansfriend.com/$1" />
+
+	<rule from="^http://(origin-)?static\.musiciansfriend\.com/"
+		to="https://$1static.musiciansfriend.com/" />
+
+</ruleset>

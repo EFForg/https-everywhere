@@ -1,0 +1,23 @@
+<!--
+	cdn.freshdesk.com.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(no https)
+		- blog		(shows default nginx_ssl page; mismatched, CN: freshdesk.com)
+
+-->
+<ruleset name="Freshdesk (partial)">
+
+	<target host="*.freshdesk.com" />
+		<exclusion pattern="^http://(?:blog|www)\." />
+
+
+	<rule from="^https?://cdn\.freshdesk\.com/"
+		to="https://s3.amazonaws.com/cdn.freshdesk.com/" />
+
+	<rule from="^http://([\w-]+)\.freshdesk\.com/"
+		to="https://$1.freshdesk.com/" />
+
+</ruleset>

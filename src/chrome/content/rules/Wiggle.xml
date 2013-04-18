@@ -1,8 +1,31 @@
-<ruleset name="Wiggle">
-  <target host="wiggle.co.uk" />
-  <target host="*.wiggle.co.uk" />
+<!--
+	Nonfunctional domains:
 
-  <securecookie host="^([^@:/]+\.)?wiggle\.co\.uk$" name=".*"/>
+		- blog.wiggle.com	(times out)
 
-  <rule from="^http://(?:www\.)?wiggle\.co\.uk/" to="https://www.wiggle.co.uk/"/>
+
+	Many pages started redirecting to http.
+	There may be more that don't.
+
+-->
+<ruleset name="Wiggle (partial)">
+
+	<target host="wiggle.co.uk" />
+	<target host="*.wiggle.co.uk" />
+	<target host="www.wigglestatic.com" />
+
+
+	<securecookie host="^ajax\.wiggle\.co\.uk$" name=".+" />
+	<!--securecookie host="^www\.wiggle\.co\.uk$" name=".+" /-->
+
+
+	<rule from="^http://(?:www\.)?wiggle\.co\.uk/(favicon\.ico|h/|secure/)"
+		to="https://www.wiggle.co.uk/$1" />
+
+	<rule from="^http://(ajax|s|s-dyni)\.wiggle\.co\.uk/"
+		to="https://$1.wiggle.co.uk/" />
+
+	<rule from="^http://www\.wigglestatic\.com/"
+		to="https://www.wigglestatic.com/" />
+
 </ruleset>

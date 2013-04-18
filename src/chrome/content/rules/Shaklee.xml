@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional domains:
+
+		- blog.shaklee.com
+
+
+	Problematic domains:
+
+		- myshaklee.com		(cert only matches *.myshaklee.com)
+
+
+	Partially covered domains:
+
+		- member.myshaklee.com	(some pages redirect to http)
+
+-->
+<ruleset name="Shaklee (partial)">
+
+	<target host="myshaklee.com" />
+	<target host="*.myshaklee.com" />
+		<exclusion pattern="^http://member\.myshaklee\.com/\w\w/\w\w/article/" />
+	<target host="shaklee.com" />
+	<target host="*.shaklee.com" />
+
+
+	<securecookie host="^www\.(?:my)?shaklee\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?myshaklee\.com/"
+		to="https://www.myshaklee.com/" />
+
+	<rule from="^http://member\.myshaklee\.com/"
+		to="https://member.myshaklee.com/" />
+
+	<rule from="^http://(content\.|images\.|www\.)?shaklee\.com/"
+		to="https://$1shaklee.com/" />
+
+</ruleset>

@@ -1,0 +1,61 @@
+<!--
+	riverisland.scene7.com
+
+
+	Problematic domains:
+
+		- riverisland.com *
+		- riverisland.fr *
+
+	* No https
+
+
+	Partially covered domains:
+
+		- riverisland.com subdomains:
+
+			- (www.) *
+			- au *
+			- eu *
+			- us *
+
+		- (www.)riverisland.fr *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- riverisland.com subdomains:
+
+			- content1
+			- content1-us
+			- my
+
+		- content1.riverisland.fr
+
+-->
+<ruleset name="River Island (partial)">
+
+	<target host="riverisland.com" />
+	<target host="*.riverisland.com" />
+		<exclusion pattern="^https?://(?:(?:au|eu|us|www)\.)?riverisland\.(?:com|fr)/(?![aA]ssets/|myaccount)" />
+	<target host="riverisland.fr" />
+	<target host="*.riverisland.fr" />
+
+
+	<!--	Omniture tracking cookies:
+						-->
+	<securecookie host="^\.riverisland\.com$" name="^s_\w+$" />
+
+
+	<rule from="^https?://riverisland\.(com|fr)/"
+		to="https://www.riverisland.$1/" />
+
+	<rule from="^http://(au|content1|content1-us|eu|my|us|www)\.riverisland\.com/"
+		to="https://$1.riverisland.com/" />
+
+	<rule from="^http://(content1|www)\.riverisland\.fr/"
+		to="https://$1.riverisland.fr/" />
+
+</ruleset>

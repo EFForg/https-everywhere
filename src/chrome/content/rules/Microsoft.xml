@@ -4,6 +4,7 @@
 
 	Other Microsoft rulesets:
 
+		- ASP.NET.xml
 		- Bing.xml
 		- Halo.xml
 		- Live.xml
@@ -37,6 +38,7 @@
 
 			- download *
 			- web.esd *		(esd, origin, origin-web, and web don't exist)
+			- visualstudiogallery.msdn	(redirects to http, valid cert)
 			- mymfe			(reset)
 			- officeimages
 			- privacy		(times out)
@@ -63,6 +65,7 @@
 
 		- microsoft.com subdomains:
 
+			- i[1-4].connect **
 			- i **
 			- i\d **
 			- js **
@@ -84,6 +87,7 @@
 	Partially covered domains:
 
 		- (www.)imaginecup.com		(many paths redirect to http or a login page)
+		- code.msdn.microsoft.com	(pages redirect to http)
 
 
 	Fully covered domains:
@@ -93,13 +97,23 @@
 			- accountservices
 			- ajax
 			- c
+			- c1
 			- choice
 			- commerce
+
+			- connect subdomains:
+
+				- connect
+				- i[1-4]		(→ services)
+				- innovation
+				- services
+
 			- g
 			- widgets.membership
 			- office15client
 			- officepreview
 			- officeredir
+			- rad
 			- res.windows		(→ origin-res.windows)
 			- res[12].windows	(→ origin-res.windows)
 
@@ -146,6 +160,7 @@
 			https://trac.torproject.org/projects/tor/ticket/5754
 										-->
 		<exclusion pattern="^http://msdn\.microsoft\.com/(?:$|en-us/$|.+(?:/$|\.aspx|/\w\w\d{6,10}$))" />
+		<exclusion pattern="^http://code\.msdn\.microsoft\.com/(?![cC]content/|RequestReduceContent/)" />
 		<!--
 			Some data exist on www, exclude the rest here.
 									-->
@@ -188,7 +203,7 @@
 	<rule from="^https?://(?:i\d?\.|js\.|search\.|i\.s-)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(accountservices|adcenter|advertising|ajax|c|choice|commerce|connect|events|social\.expression|go?|ie|ieonline|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(accountservices|adcenter|advertising|ajax|c1?|choice|commerce|(?:innovation\.|services\.)?connect|events|social\.expression|go?|ie|ieonline|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|rad|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<rule from="^https?://i\d\.social\.s-msft\.com/wiki/"
@@ -198,6 +213,9 @@
 						-->
 	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
+
+	<rule from="^https?://i\d\.connect\.microsoft\.com/"
+		to="https://services.connect.microsoft.com/" />
 
 	<rule from="^https?://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />

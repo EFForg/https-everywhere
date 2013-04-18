@@ -1,0 +1,43 @@
+<!--
+	thehut.pantherssl.com
+
+
+	Nonfunctional domains:
+
+		- help.thehut.com	(replies with http)
+
+
+	Problematic domains:
+
+		- static1.thcdn.com	(403; mismatched, CN: *.pantherssl.com)
+		- static[234].thcdn.com	(403; mismatched, CN: ssl2.cdngc.net)
+		- thehut.com		(cert only matches www)
+
+
+	Some pages redirect to http, including:
+
+		- $
+		- offers.list$
+
+-->
+<ruleset name="TheHut.com (partial)">
+
+	<target host="*.thcdn.com" />
+	<target host="thehut.com" />
+	<target host="www.thehut.com" />
+	<target host="tracking.thehut.net" />
+
+
+	<securecookie host="^tracking\.thehut\.net$" name=".+" />
+
+
+	<rule from="^https?://static\d\.thcdn\.com/"
+		to="https://thehut.pantherssl.com/" />
+
+	<rule from="^https?://(?:www\.)?thehut\.com/([\w-]+\.info|c-images/|common/|c-scripts/|css/|hutint/)"
+		to="https://www.thehut.com/$1" />
+
+	<rule from="^http://tracking\.thehut\.net/"
+		to="https://tracking.thehut.net/" />
+
+</ruleset>

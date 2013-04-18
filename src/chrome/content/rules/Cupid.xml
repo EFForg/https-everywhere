@@ -1,26 +1,55 @@
+<!--
+	Partially covered domains:
+
+		- ed.benaughty.com *
+		- (www.)cupid.com
+		- ed.cupid.com *
+
+	* $ redirects to http
+
+
+	Fully covered domains:
+
+		- (www.)becoquin.com	(^ → www)
+		- (www.)benaughty.com	(^ → www)
+		- cdn.cupid.com
+
+		- cupidplc.com subdomains:
+
+			- stat.ed
+			- stat.to
+			- cdn.stat.to
+			- whitelabeldating
+
+-->
 <ruleset name="Cupid (partial)">
 
 	<target host="becoquin.com"/>
 	<target host="www.becoquin.com"/>
 	<target host="benaughty.com"/>
-	<target host="www.benaughty.com"/>
+	<target host="*.benaughty.com"/>
 	<target host="cupid.com"/>
-	<target host="www.cupid.com"/>
+	<target host="*.cupid.com"/>
+		<exclusion pattern="^http://ed\.(?:benaughty|cupid)\.com/(?!ext\.php)" />
 	<target host="stat.ed.cupidplc.com"/>
 	<target host="whitelabeldating.cupidplc.com"/>
 
 
 	<securecookie host="^(.*\.)?be(coquin|naughty)\.com$" name=".*"/>
-	<securecookie host="^whitelabeldating\.cupidplc\.com$" name=".*"/>
+	<securecookie host="^\.cupid\.com$" name="^TRACK_\w+$" />
+	<securecookie host="^(?:stat\.to|whitelabeldating)\.cupidplc\.com$" name=".*"/>
 
 
 	<rule from="^http://(?:www\.)?be(coquin|naughty)\.com/"
 		to="https://www.be$1.com/"/>
 
+	<rule from="^http://(cdn|ed)\.(benaughty|cupid)\.com/"
+		to="https://$1.$2.com/" />
+
 	<rule from="^http://(?:www\.)?cupid\.com/(aff|oth)\.php"
 		to="https://www.cupid.com/$1.php"/>
 
-	<rule from="^http://(stat\.ed|whitelabeldating)\.cupidplc\.com/"
+	<rule from="^http://(stat\.ed|(?:cdn\.)?stat\.to|whitelabeldating)\.cupidplc\.com/"
 		to="https://$1.cupidplc.com/"/>
 
 </ruleset>
