@@ -4,7 +4,7 @@
 # preload list (in the from-preloads/ directory)
 
 import urllib2, re, glob, os
-preloads = urllib2.urlopen("https://src.chromium.org/viewvc/chrome/trunk/src/net/base/transport_security_state_static.h?content-type=text%2Fplain").read()
+preloads = urllib2.urlopen("https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h?content-type=text%2Fplain").read()
 
 def escape(s):
     return re.sub("\.", "\\.", s)
@@ -12,7 +12,7 @@ def escape(s):
 def make_rule(name, hosts):
     output = """<!-- This rule was automatically generated based on an HSTS
      preload rule in the Chromium browser.  See 
-     https://src.chromium.org/viewvc/chrome/trunk/src/net/base/transport_security_state_static.h
+     https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h
      for the list of preloads.  Sites are added to the Chromium HSTS
      preload list on request from their administrators, so HTTPS should
      work properly everywhere on this site.
