@@ -16,6 +16,7 @@
 
 		- www.hotmail.co.jp *
 		- www.hotmail.co.uk *
+		- live.com		(no https)
 		- sc[34].maps.live.com
 
 	* Mismatched
@@ -40,7 +41,10 @@
 
 		- live.com subdomains:
 
+			- (www.)	(^ → www)
 			- account
+			- c
+			- c-mid
 			- calendar
 			- consent
 			- contacts
@@ -53,6 +57,7 @@
 			- favorites
 			- g
 			- groups
+			- h
 			- client.hip
 			- dc[12].client.hip
 			- hipservice
@@ -95,14 +100,19 @@
 
 				- cid-\w+
 
+			- rad
+
 			- secure.\w+
 
 				- secure.shared
 
+			- directory.services
+			- livecontacts.services
 			- geo.messenger.services
 			- signout
 			- signup
 			- skydrive
+			- skygfx
 			- status
 			- storage
 
@@ -116,6 +126,15 @@
 
 				- cid-\w+
 
+			- max.sup
+
+		- live.net subdomains:
+
+			- df-feeds
+			- feeds
+			- js
+			- l
+
 		- \w+.bay.livefilestore.com:
 
 			- c
@@ -128,6 +147,8 @@
 
 		- accountservices.passport.net
 		- www.passportimages.com
+
+		- p.sfx.ms
 
 		- so.cl
 		- www.so.cl
@@ -159,10 +180,13 @@
 				-->
 	<target host="hotmail.com" />
 	<target host="*.hotmail.com" />
+	<target host="live.com" />
 	<target host="*.live.com" />
+	<target host="*.live.net" />
 	<target host="*.bay.livefilestore.com" />
 	<target host="*.vo.msecnd.net" />
 	<target host="www.passportimages.com" />
+	<target host="p.sfx.ms" />
 	<target host="so.cl" />
 	<target host="www.so.cl" />
 	<target host="*.wlxrs.com" />
@@ -171,8 +195,9 @@
 	<!--	NB: Are cross-domain cookies needed on unsecurable pages?
 
 	<securecookie host="^\.live\.com$" name=".+" /-->
-	<securecookie host="^\.?(?:account|consent|login|mail|profile|signup)\.live\.com$" name=".+" />
+	<securecookie host="^\.?(?:account|consent|login|mail|messenger|profile|signup)\.live\.com$" name=".+" />
 	<securecookie host="^people\.directory\.live\.com$" name=".+" />
+	<securecookie host="^l\.live\.net$" name=".+" />
 
 
 	<rule from="^http://dub(\d+)\.afx\.ms/"
@@ -181,10 +206,13 @@
 	<rule from="^http://a(uth)?\.gfx\.ms/"
 		to="https://a$1.gfx.ms/" />
 
+	<rule from="^https?://live\.com/"
+		to="https://www.live.com/" />
+
 	<!--	Microsoft itself protects the login this way but we can prevent
 		against SSL stripping.
 					-->
-	<rule from="^http://(account|calendar|consent|contacts|devices|(?:[\w-]+\.)?(?:directory|login|profile)|favorites|g|groups|(?:dc\d\.)?client\.hip|hipservice|home|hotmail|sc\.imp|mail|(?:mc1|sc[12])\.maps|(?:\w+\.gateway\.)?messenger|mid|oauth|office|onecare|people|photos|secure\.\w+|geo\.messenger\.services|signout|signup|skydrive|status|(?:[\w-]+(?:\.users)?\.)?storage)\.live\.com/"
+	<rule from="^http://(account|calendar|c|c-mid|consent|contacts|devices|(?:[\w-]+\.)?(?:directory|login|profile)|favorites|g|groups|h|(?:dc\d\.)?client\.hip|hipservice|home|hotmail|sc\.imp|mail|(?:mc1|sc[12])\.maps|(?:\w+\.gateway\.)?messenger|mid|oauth|office|onecare|people|photos|rad|secure\.\w+|(?:directory|livecontacts|geo\.messenger)\.services|signout|signup|skydrive|skygfx|status|(?:[\w-]+(?:\.users)?\.)?storage|max\.sup|www)\.live\.com/"
 		to="https://$1.live.com/" />
 
 	<rule from="^https?://sc[34]\.maps\.live\.com/"
@@ -214,6 +242,9 @@
 	<rule from="^http://[^@:/\.]+\.([^@:/\.]+)\.mail\.live\.com/"
 		to="https://$1.mail.live.com/" />
 
+	<rule from="^http://(df-feeds|feeds|js|l)\.live\.net/"
+		to="https://$1.live.net/" />
+
 	<rule from="^http://(\w+)\.bay\.livefilestore\.com/"
 		to="https://$1.bay.livefilestore.com/" />
 
@@ -222,6 +253,9 @@
 
 	<rule from="^http://www\.passportimages\.com/"
 		to="https://www.passportimages.com/" />
+
+	<rule from="^http://p\.sfx\.ms/"
+		to="https://p.sfx.ms/" />
 
 	<rule from="^http://(www\.)?so\.cl/"
 		to="https://$1so.cl/" />
