@@ -27,4 +27,14 @@
 	<rule from="^http://www\.sec\.gov/"
 		to="https://www.sec.gov/" />
 
+        <!-- Search results from the HTTPS EDGAR search form are always invalid,
+             regardless of how we get there (even with HTTPS Everywhere disabled,
+             even if the SEC's own HTTPS homepage sends us here!) -->
+        <rule from="^https://www\.sec\.gov/edgar/searchedgar/companysearch\.html"
+              to="^http://www.sec.gov/edgar/searchedgar/companysearch.html"
+              downgrade="1" />
+        <!-- Similarly, actual EDGAR results are invalid in HTTPS. -->
+        <rule from="^https://www\.sec\.gov/cgi-bin/browse-edgar"
+              to="http://www.sec.gov/cgi-bin/browse-edgar"
+              downgrade="1" />
 </ruleset>
