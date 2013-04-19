@@ -208,7 +208,6 @@ if multi_file_validate:
             all_targets.add(target)
 else:
     fi = os.path.basename(args[0])
-    os.chdir(os.path.dirname(args[0]))
     if len(args) > 1:
         all_names, all_targets = get_all_names_and_targets(args[1])
     else:
