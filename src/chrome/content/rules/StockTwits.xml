@@ -1,0 +1,29 @@
+<!--
+	Nonfunctional domains:
+
+		- blog.stocktwits.com	(502)
+
+
+	Problematic domains:
+
+		- assets[0-3].stocktwits.net		(mismatched, CN: *.stocktwits.com)
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="StockTwits (partial)">
+
+	<target host="stocktwits.com" />
+	<target host="*.stocktwits.com" />
+		<exclusion pattern="^http://(?:new\.|www\.)?stocktwits\.com/(?!assets/|sign(?:in|up)(?:$|\?|/))" />
+	<target host="*.stocktwits.net" />
+
+
+	<rule from="^http://(new\.|www\.)?stocktwits\.com/"
+		to="https://$1stocktwits.com/" />
+
+	<rule from="^https?://assets\d\.stocktwits\.net/"
+		to="https://new.stocktwits.com/" />
+
+</ruleset>
