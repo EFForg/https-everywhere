@@ -14,13 +14,18 @@ longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups="])
 
 ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
 
+multi_file_validate = True
+
 if args:
-   try:
-       os.chdir(args[0])
-   except:
-       sys.stderr.write("could not chdir to %s\n" % args[0])
-       sys.stderr.write("usage: %s directoryname\n" % sys.argv[0])
-       sys.exit(2)
+    if os.path.isfile(args[0]):
+        multi_file_validate = False
+    else:
+        try:
+            os.chdir(args[0])
+        except:
+            sys.stderr.write("could not chdir to %s\n" % args[0])
+            sys.stderr.write("usage: %s (<directoryname> or <file to validate><directory of all rulesets (optional)>\n" % sys.argv[0])
+            sys.exit(2)
 
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
@@ -39,19 +44,6 @@ def test_bad_regexp(tree):
         try:
             re.compile(f)
         except:
-            return False
-    return True
-
-def test_missing_to(tree):
-
-    # Rules that are terminated before setting 'to'.
-    # These cases are probably either due to a misplaced
-    # rule end or intended to be different elements.
-    """Rule is missing a 'to' value."""
-    for rule in tree.xpath("/ruleset/rule"):
-	if not rule.get("to"):
-            sys.stdout.write("warning: 'to' attribute missing in %s. " %fi)
-            sys.stdout.write("Misplaced end or misnamed element?\n")
             return False
     return True
 
@@ -95,19 +87,16 @@ def test_unencrypted_to(tree):
     # Now warn if the rule author indicates they intended it, with the
     # downgrade attribute.  Error if this attribute is not present.
     """Rule redirects to something other than https."""
-    down_warned = False
     for rule in tree.xpath("/ruleset/rule"):
         to, downgrade = rule.get("to"), rule.get("downgrade")
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            if not down_warned:
-                sys.stdout.write("warning: downgrade rule in %s redirects " %fi)
-                sys.stdout.write("to http.\n")
-                down_warned = True
+	    sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
+	    sys.stdout.write("to http.\n")
         elif to[:5] == "http:":
-            sys.stdout.write("error: rule in %s redirects to http and " % fi)
-            sys.stdout.write("downgrade attribute not specified.\n")
+	    sys.stdout.write("error: rule in %s redirects to http and " % fi)
+	    sys.stdout.write("downgrade attribute not specified.\n")
             return False
     return True
 
@@ -162,7 +151,22 @@ def test_non_ascii(tree):
                 return False
     return True
 
-tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
+def get_all_names_and_targets(d):
+    names = set()
+    targets = set()
+    for fi in os.listdir(d):
+        try:
+            tree = etree.parse(fi)
+            ruleset_name = tree.xpath("/ruleset/@name")[0]
+            target_names = tree.xpath("/ruleset/target/@host")
+        except Exception:
+            continue
+        names.add(ruleset_name)
+        for target in target_names:
+            targets.add(target)
+    return names, targets
+
+tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
          test_no_trailing_slash, test_lacks_target_host, test_bad_target_host,
          test_duplicated_target_host, test_non_ascii]
@@ -172,25 +176,55 @@ seen_file = False
 all_targets = set()
 all_names = set()
 
-for fi in os.listdir("."):
+if multi_file_validate:
+    for fi in os.listdir("."):
+        try:
+            tree = etree.parse(fi)
+            if fi[-4:] != ".xml":
+                if tree.xpath("/ruleset"):
+                    sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
+                else:
+                    continue
+            seen_file = True
+        except Exception, oops:
+            if fi[-4:] != ".xml":
+                continue
+            failure = 1
+            sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
+        ruleset_name = tree.xpath("/ruleset/@name")[0]
+        if ruleset_name in all_names:
+            failure = 1
+            sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
+        all_names.add(ruleset_name)
+        for test in tests:
+            if not test(tree):
+                failure = 1
+                sys.stdout.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
+        for target in tree.xpath("/ruleset/target/@host"):
+            if target in all_targets and not any(ign.search(target) for ign in ignoredups):
+                # suppress warning about duplicate targets if an --ignoredups
+                # pattern matches target
+                sys.stdout.write("warning: duplicate target: %s\n" % target)
+            all_targets.add(target)
+else:
+    fi = os.path.basename(args[0])
+    if len(args) > 1:
+        all_names, all_targets = get_all_names_and_targets(args[1])
+    else:
+        sys.stdout.write("warning: pass a directory of existing rulesets as the second argument to check for duplicates \n")
     try:
-       tree = etree.parse(fi)
-       if fi[-4:] != ".xml":
-           if tree.xpath("/ruleset"):
-               sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
-           else:
-               continue
-       seen_file = True
-    except Exception as oops:
-       if fi[-4:] != ".xml":
-           continue
-       failure = 1
-       sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
+        tree = etree.parse(fi)
+        if fi[-4:] != ".xml":
+            if tree.xpath("/ruleset"):
+                sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
+        seen_file = True
+    except Exception, oops:
+        failure = 1
+        sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
     ruleset_name = tree.xpath("/ruleset/@name")[0]
     if ruleset_name in all_names:
         failure = 1
         sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
-    all_names.add(ruleset_name)
     for test in tests:
         if not test(tree):
             failure = 1
@@ -200,7 +234,6 @@ for fi in os.listdir("."):
             # suppress warning about duplicate targets if an --ignoredups
             # pattern matches target
             sys.stdout.write("warning: duplicate target: %s\n" % target)
-        all_targets.add(target)
 
 if not seen_file:
    which = "specified" if args else "current"
