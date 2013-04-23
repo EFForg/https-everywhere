@@ -2,16 +2,25 @@
 	Problematic subdomains:
 
 		- ^			(cert only matches www)
+		- chaosradio *
+		- blog.chaosradio *
+		- dasalte		(revoked)
+		- ds			(different data)
+
+	* Invalid cert
 
 -->
 <ruleset name="ccc.de (CAcert)" platform="cacert">
-  <target host="*.ccc.de" />
-  <target host="ccc.de" />
 
-  <exclusion pattern="^http://dasalte\.ccc\.de/"/><!-- revoked cert -->
-  <exclusion pattern="^http://chaosradio\.ccc\.de/"/><!-- invalid cert -->
-  <exclusion pattern="^http://blog.chaosradio\.ccc\.de/"/><!-- invalid cert -->
-  <exclusion pattern="^http://ds\.ccc\.de/"/><!-- different content -->
-  <rule from="^http://ccc\.de/" to="https://www.ccc.de/"/>
-  <rule from="^http://([^/:@\.]+)\.ccc\.de/" to="https://$1.ccc.de/"/>
+	<target host="ccc.de" />
+	<target host="*.ccc.de" />
+		<exclusion pattern="^http://(?:(?:blog\.)?chaosradio|desalte|ds)\.ccc\.de/" />
+
+
+	<rule from="^http://ccc\.de/"
+		to="https://www.ccc.de/" />
+
+	<rule from="^http://([^/:@\.]+)\.ccc\.de/"
+		to="https://$1.ccc.de/" />
+
 </ruleset>
