@@ -21,6 +21,9 @@
 		- Statesman_Journal.xml
 
 
+	www.gannett.com/section/WHOWEARE06
+
+
 	CDN buckets:
 
 		- wildcard.shoplocal.com.edgekey.net
@@ -37,21 +40,29 @@
 
 	Nonfunctional domains:
 
+		- aws.gannett.com			(no https)
 		- cmsimg.gannet.com			(Akamai, 503)
 		- origin-cmsimg.gannet.com		(exists but no https)
 		- origin-www.gannett.com		(ditto)
 		- www.gannet.com			(Akamai, 503)
+		- topics.gannett.com			(404, akamai)
 		- www.gannett-cdn.com			(503, akamai)
 		- floridatoday.gannettdigital.com
+		- content.gannettonline.com		(times out)
 		- floridatoday.gon.gannettonline.com
+		- gon.gannettonline.com			(no https)
+		- static.gcion.net			(no https)
+		- cherryhi.ur.gcion.com			(no https)
 		- montgomeryadvertiser.com
 		- www.montgomeryadvertiser.com		(Akamai; 503)
+		- www.vipjacksonmag.com			(no https)
 
 
 	Problematic domains:
 
 		- akimages.crossmediaservices.com	(Akamai)
 		- images.crossmediaservices.com		(cert: *.shoplocal.com; "Access Denied")
+		- newspaper.app30.ur.gcion.com		(works; expired 2012-04-29, depth mismatched)
 		- deals.montomeryadvertiser.com		(CN: *.planetdiscover.com)
 
 
@@ -59,28 +70,66 @@
 
 		- akimages.crossmediaservices.com
 		- images.crossmediaservics.com
+
+		- gannett.com subdomains:
+
+			- ammoc0[12]
+			- ampoc01
+			- autodiscover
+			- benefits	(→ www.benefitsweb.com)
+			- circportal
+			- webmail.dmz
+			- www.ganweb01
+			- webmail
+			- webmail.west
+
 		- deals.montgomeryadvertiser.com
+		- classifieds.nncogannett.com
 		- shoplocal.com
 		- akimages.shoplocal.com
 		- www.shoplocal.com
 
 -->
-<ruleset name="Gannet Company (partial)">
+<ruleset name="Gannett Company (partial)">
 
 	<target host="*.crossmediaservices.com" />
+	<target host="*.gannett.com" />
+	<target host="myaccount.gcion.com" />
+	<target host="ssl1.gmti.com" />
 	<target host="deals.montomeryadvertiser.com" />
+	<target host="classifieds.nncogannett.com" />
 	<target host="shoplocal.com" />
 	<target host="*.shoplocal.com" />
 
 
+	<!--	Omniture tracking cookies:
+						-->
+	<securecookie host="^\.gannett\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:am[mp]oc0\d|circportal|cwa|www\.ganweb01|webmail(?:\.\w+)?)\.gannett\.com$" name=".+" />
+	<securecookie host="^classifieds\.nncogannett\.com$" name=".+" />
 	<securecookie host="^www\.shoplocal\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:ak)?images\.crossmediaservices\.com/"
 		to="https://akimages.shoplocal.com/" />
 
+	<rule from="^http://(am[mp]oc0\d|autodisover|circportal|cwa|www\.ganweb01|webmail(?:\.\w+)?)\.gannett\.com/"
+		to="https://$1.gannett.com/" />
+
+	<rule from="^http://benefits\.gannett\.com/[^\?]*(\?.*)"
+		to="https://www.benefitsweb.com/gannett.html$1" />
+
+	<rule from="^http://myaccount\.gcion\.com/"
+		to="https://myaccount.gcion.com/" />
+
+	<rule from="^http://ssl1\.gmti\.com/"
+		to="https://ssl1.gmti.com/" />
+
 	<rule from="^https?://deals\.montgomeryadvertiser\.com/"
 		to="https://montgom.planetdiscover.com/" />
+
+	<rule from="^http://classifieds\.nncogannett\.com/"
+		to="https://classifieds.nncogannett.com/" />
 
 	<rule from="^http://(akimages\.|www\.)?shoplocal\.com/"
 		to="https://$1shoplocal.com/" />
