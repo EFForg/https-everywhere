@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional hawaii.gov subdomains:
+
+		- (www.) *
+		- alohastadium *
+		- www.capitol *
+
+	* Times out
+
+
+	Partially covered domains:
+
+		- portal.ehawaii.gov	(landing/$ redirects to http)
+
+-->
+<ruleset name="Hawaii.gov (partial)">
+
+	<target host="ehawaii.gov" />
+	<target host="*.ehawaii.gov" />
+		<exclusion pattern="^http://portal\.ehawaii\.gov/landing/(?:\?.*)?$" />
+	<target host="*.hawaii.gov" />
+
+
+	<securecookie host="^www\.ehawaii\.gov$" name=".+" />
+	<securecookie host="^stayconnected\.hawaii\.gov$" name=".+" />
+
+
+	<rule from="^http://(dlnr|hic|hidot|stayconnected)\.hawaii\.gov/"
+		to="https://$1.hawaii.gov/" />
+
+	<rule from="^http://(portal\.|www\.)?ehawaii\.gov/"
+		to="https://$1ehawaii.gov/" />
+
+</ruleset>

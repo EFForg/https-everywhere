@@ -1,24 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- welcome.authorize.net		(no https)
+
+
+	Problematic domains:
+
+		- authorize.net		(cert only matches www)
+
+-->
 <ruleset name="Authorize.Net">
+
 	<target host="authorize.net" />
 	<target host="*.authorize.net" />
-	<target host="community.developer.authorize.net" />
 	<target host="authorizenet.com" />
 	<target host="www.authorizenet.com" />
-
-
-	<securecookie host="^(.*\.)?authorize\.net$" name=".*" />
-
-
-	<!-- The fuzeqna.com domain is included to avoid possible
-	issues with mixed content. Also, from what one remembers,
-	using the Authorize.Net site may involve accessing the
-	fuzeqna.com/www.fuzeqna.com domains . -->
+	<!--	The fuzeqna.com domain is included to avoid possible
+		issues with mixed content. Also, from what one remembers,
+		using the Authorize.Net site may involve accessing the
+		fuzeqna.com/www.fuzeqna.com domains.
+							-->
 	<target host="fuzeqna.com" />
 	<target host="www.fuzeqna.com" />
 
-	<rule from="^http://(developer|ems|community\.developer|verify|www)\.authorize\.net/" to="https://$1.authorize.net/" />
-	<rule from="^http://authorize\.net/" to="https://www.authorize.net/" />
-	<rule from="^https?://(?:www\.)?authorizenet\.com/" to="https://www.authorize.net/" />
+
+
+	<securecookie host="^(?:.*\.)?authorize\.net$" name=".+" />
+
+
+	<rule from="^http://authorize\.net/"
+		to="https://www.authorize.net/" />
+
+	<rule from="^http://(account|captcha|content|(?:community\.)?developer|ems|simplecheckout|support|verify|www)\.authorize\.net/"
+		to="https://$1.authorize.net/" />
+
+	<rule from="^https?://(?:www\.)?authorizenet\.com/"
+		to="https://www.authorize.net/" />
 	
-	<rule from="^http://(?:www\.)?fuzeqna\.com/" to="https://www.fuzeqna.com/" />
+	<rule from="^http://(?:www\.)?fuzeqna\.com/"
+		to="https://www.fuzeqna.com/" />
+
 </ruleset>

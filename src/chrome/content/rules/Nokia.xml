@@ -4,58 +4,101 @@
 		- NAVTEQ.xml
 
 
-	Nonfunctional domains:
-
-		- doc.qt.nokia.com	(times out)
-
-
 	discussions.nokia.co.uk is handled mostly in Lithium-clients.xml.
 
+
+	Problematic domains:
+
+		- nokia.(ca|co.uk|de|fr)	(mismatched, CN:  www.nokia.com)
+		- www.nokia.ca			(akamai)
+		- discussions.nokia.co.uk	(mismatched, CN: secure02.lithium.com)
+
+		- nokia.com subdomains:
+
+			- advertising		(self-signed)
+			- blog.qt *
+			- labs.qt *
+			- doc.qt		(times out)
+
+		- nokiausa.com			(no https)
+
+		* Expired
+
+
+	Partially covered domains:
+
+		- discussions.nokia.co.uk	(→ discussions.europe.nokia.com)
+		- (www.)developer.nokia.com	(some pages redirect to http)
+
+
+
+	Fully covered domains:
+
+		- (www.)nokia.ca	(→ nokia.com)
+		- (www.)nokia.co.uk	(^ → www)
+
+		- nokia.com subdomains:
+
+			- account
+			- advertising	(→ primeplace)
+
+			- developer subdomains:
+
+				- analytics
+				- projects
+				- sso
+
+			- discussions.europe
+			- i
+			- maps
+			- api.maps
+			- primeplace
+
+			- qt subdomains:
+
+				- ^
+				- blog		(→ blog.qt.digia.com)
+				- developer
+				- labs		(→ blog.qt.digia.com)
+
+		- (www.)nokia.de	(^ → www)
+		- (www.)nokia.fr	(^ → www)
+		- (www.)nokiausa.com	(^ → www)
 
 -->
 <ruleset name="Nokia (partial)">
 
 	<target host="nokia.*" />
 	<target host="www.nokia.*" />
-	<target host="*.nokia.com" />
-	<target host="*.developer.nokia.com" />
-		<!--	Redirect to http.	-->
-		<exclusion pattern="^http://www\.developer\.nokia\.com/($|Design/|Develop/|Devices/|Distribute/|info/)" />
-	<target host="discussions.europe.nokia.com" />
-	<target host="api.maps.nokia.com" />
-	<target host="*.qt.nokia.com" />
 	<target host="nokia.co.uk" />
 	<target host="www.nokia.co.uk" />
+	<target host="*.nokia.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://www\.developer\.nokia\.com/(?:$|De(?:sign|velop|vices)/|Distribute/|info/)" />
 	<target host="nokiausa.com" />
 	<target host="www.nokiausa.com" />
 
 
-	<securecookie host="^.*\.nokia\.(com|co\.uk|de|fr)$" name=".*" />
+	<securecookie host="^(?:.*\.)?nokia\.(?:com|co\.uk|de|fr)$" name=".+" />
 
 
-	<!--	www.nokia.ca: Akamai, redirects as so.	-->
 	<rule from="^https?://(?:www\.)?nokia\.ca/"
 		to="https://www.nokia.com/ca-en/" />
 
-	<!--	//nokia.(ca|co.uk|de|fr) cert:	www.nokia.com	-->
 	<rule from="^https?://(?:www\.)?nokia\.(co\.uk|de|fr)/"
 		to="https://www.nokia.$1/" />
 
-	<!--	- Self-signed
-		- Redirects like so
-					-->
 	<rule from="^https?://advertising\.nokia\.com/"
 		to="https://primeplace.nokia.com/" />
 
-	<rule from="^http://((?:account|(?:(?:analytics|projects|sso|www)\.)?developer|discussions\.europe|[ir]|maps|api\.maps|primeplace|(?:developer\.)?qt)\.)?nokia\.com/"
+	<rule from="^http://((?:account|(?:(?:analytics|projects|sso|www)\.)?developer|discussions\.europe|[ir](?:\.prod)?|maps|api\.maps|primeplace|(?:developer\.)?qt|www)\.)?nokia\.com/"
 		to="https://$1nokia.com/" />
 
-	<!--	Both expired, redirect like so.
-						-->
 	<rule from="^https?://(?:blog|labs)\.qt\.nokia\.com/"
 		to="https://blog.qt.digia.com/" />
 
-	<!--	Cert: secure02.lithium.com	-->
 	<rule from="^https?://discussions.nokia.co.uk/html/images/"
 		to="https://discussions.europe.nokia.com/html/images/" />
 

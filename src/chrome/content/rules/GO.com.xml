@@ -1,23 +1,123 @@
 <!--
+	CDN buckets:
+
+		- a248.e.akamai.net/f/12/621/5m/proxy.espn.go.com/
+		- s3.amazonaws.com/avatars.espn.go.com/
+
 
 	Nonfunctional domains:
 
-		- a.abc.com		(Akamai; "Service Unavailable")
-		- go.com
-		- beta.abc.go.com	(times out)
-		- media.abc.go.com
-		- cdn.media.abc.go.com	(Akamai; "Service Unavailable"; same data on media.abc.go.com)
-		- abclocal.go.com
-		- cdn.abclocal.go.com	(Akamai; "Service Unavailable"; same data on abclocal.go.com)
-		- www.go.com
+		- a.abc.com **
+
+		- go.com subdomains:
+
+			- (www.)
+
+			- abc subdomains:
+
+				- beta *
+				- media
+				- cdn.media **	(same data on media.abc.go.com)
+
+			- abclocal
+			- cdn.abclocal **	(same data on abclocal.go.com)
+
+			- espn subdomains:
+
+				- espndeportes ***
+				- espndeportes-assets **
+				- insider ***
+				- search *
+				- soccernet ***
+				- soccernet-akamai **
+				- sports ***
+
+	* Times out
+	** 503, akamai
+	*** No https
+
+
+	Problematic domains:
+
+		- a[12]?.espncdn.com *
+		- g.espncdn.com **
+
+		- espn.go.com subdomains:
+
+			- assets *
+			- avatars **
+			- games-ak **
+
+	* 503, akamai
+	* works, akamai
+
+
+	Partially covered domains:
+
+		- a.espncdn.com		(→ akamai)
+		- a[12].espncdn.com	(→ akamai)
+		- games-ak.espn.go.com	(→ akamai)
+
+
+	Fully covered domains:
+
+		- g.espncdn.com		(→ akamai)
+
+		- go.com subdomains:
+
+			- abc
+
+			- espn subdomains:
+
+				- ^
+				- assets	(→ akamai)
+				- avatars	(→ akamai)
+				- games
+				- streak
+
+			- tredir
+
+
+	Mixed content breaks videos for Chrome: https://eff.org/r.a8nc
 
 -->
-<ruleset name="GO.com (buggy)" default_off="https://eff.org/r.a8nc">
+<ruleset name="GO.com (partial)" platform="mixedcontent">
 
+	<target host="a248.e.akamai.net" />
 	<target host="*.go.com" />
+	<target host="*.espncdn.com" />
+		<!--
+			404s when rewritten to akamai.
+
+			This excludes images only:
+							-->
+		<exclusion pattern="^http://a\d?\.espncdn\.com/(?:espn360|media/motion)/" />
 
 
-	<rule from="^http://(abc|espn)\.go\.com/"
+	<securecookie host="^\.games\.espn\.go\.com$" name=".+" />
+
+
+	<rule from="^http://(abc|(?:games\.|streak\.)?espn|tredir)\.go\.com/"
 		to="https://$1.go.com/" />
+
+	<!--	404s when rewritten to akamai.
+
+		NB: This rule must be above the one to akamai:
+								-->
+	<rule from="^http://games-ak\.espn\.go\.com/(banners|img)/"
+		to="https://games.espn.go.com/$1/" />
+
+	<!--	Ditto:
+				-->
+	<rule from="^https?://g\.espncdn\.com/flb/static/"
+		to="https://games.espn.go.com/flb/static/" />
+
+	<rule from="^http://(?:(?:a\d?|g)\.espncdn|(?:assets|avatars|games-ak)\.espn\.go)\.com/"
+		to="https://a248.e.akamai.net/f/12/621/5m/proxy.espn.go.com/" />
+
+	<!--	The following is pointed to from ...espn.go.com/combiner/ :
+												-->
+	<rule from="^https://a248\.e\.akamai\.net/f/12/621/5m/proxy\.espn\.go\.com/media/motion/"
+		to="http://a.espncdn.com/media/motion/" downgrade="1" />
 
 </ruleset>

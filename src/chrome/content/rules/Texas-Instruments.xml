@@ -2,20 +2,73 @@
 	For problematic rules, see Texas-Instruments-mismatches.xml.
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- www2:	(cert: dqhgl02; shows RHEL Apache test page)
+		- careers	(shows default Media Temple page, CN: plesk)
+		- education	(403/404, valid cert)
+		- investor *
+		- m		(redirects to www, valid cert)
+		- newscenter *
+		- reviews	(akamai)
+		- www2		(shows RHEL Apache test page, CN: dqhgl02)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- www-k.ext		(times out)
+		- trainingcenter	(mismatched, CN: *.vsearch2.net)
+		- videos		(redirects to www; mismatched, CN: www.ti.com)
+
+
+	Partially covered subdomains:
+
+		- e2e		(support/other_analog/default.aspx redirects to http)
+		- www-k.ext	(→ www)
+
+
+	Mixed images from reviews.ti.com on www.ti.com
 
 -->
 <ruleset name="Texas Instruments (partial)">
 
+	<target host="ti.com" />
 	<target host="*.ti.com" />
+		<exclusion pattern="^http://e2e\.ti\.com/(?!.+/css/|cfs-file\.ashx|resized-image\.ashx|[tT]emes/)" />
 
 
-	<securecookie host="^.*\.ti\.com$" name=".*" />
+	<!--	Cookie domains:
+
+			- .
+			- estore
+			- focus
+			- myportal
+			- www
+				-->
+	<securecookie host="^(?!e2e\.).*\.ti\.com$" name=".+" />
 
 
-	<rule from="^http://(focus|my|myportal)\.ti\.com/"
+	<rule from="^http://(?:www\.)?ti\.com/"
+		to="https://www.ti.com/" />
+
+	<rule from="^http://(commerce|e2e|estore|focus|my|myportal)\.ti\.com/"
 		to="https://$1.ti.com/" />
+
+	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/americas\.htm(?:\?.*)?$"
+		to="https://www.ti.com/ww/en/csc/support-Americas.html" />
+
+	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/asia\.htm(?:\?.*)?$"
+		to="https://www.ti.com/ww/en/pic/PIC-Asia.html" />
+
+	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/japan\.htm(?:\?.*)?$"
+		to="https://www.ti.com/ww/en/pic/PIC-Japan.html" />
+
+	<rule from="^http://reviews\.ti\.com/(?:\?.*)?$"
+		to="https://focus.ti.com/" />
+
+	<rule from="^http://videos\.ti\.com/[^\?]*(\?.*)?"
+		to="https://focus.ti.com/general/docs/video/Portal.tsp$1" />
 
 </ruleset>
