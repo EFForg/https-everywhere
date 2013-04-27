@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)as	(shows default IIS7 page; mismatched, CN: *.secure.pitt.edu)
+
+
+	Problematic subdomains:
+
+		- www.accounts	(cert only matches ^accounts)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)accounts	(www → ^)
+
+		- cs subdomains:
+
+			- (www.)
+			- people
+			- web
+
+		- (www.)my
+		- pre
+
+-->
+<ruleset name="University of Pittsburgh (partial)">
+
+	<target host="pitt.edu" />
+	<target host="*.pitt.edu" />
+
+
+	<!--securecookie host="^\.pitt\.edu$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:(?:www\.)?(?:cs|my)|web\.cs)\.pitt\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:(?:people\.|web\.|www\.)?cs|(?:www\.)?my|pre|www)\.)?pitt\.edu/"
+		to="https://$1pitt.edu/" />
+
+	<rule from="^http://(?:www\.)?accounts\.pitt\.edu/"
+		to="https://accounts.pitt.edu/" />
+
+</ruleset>
