@@ -1,0 +1,114 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- (www.)academicaffairs *
+		- admissions *
+		- (www.)brae *
+		- (www.)catalog		(no https)
+		- (www.)cla		(shows hagrid.libart; mismatched, CN: hagrid.libart.calpoly.edu)
+		- (www.)continuing-ed *
+		- financialaid *
+		- (www.)international *
+		- (www.)its *
+		- databases.lib		(shows xerxes; mismatched, CN: xerxes.calstate.edu)
+		- (www.)maps *
+		- (www.)mds *
+		- netadmin		(shows wireless; mismatched, CN: wireless.calpoly.edu)
+		- (www.)polylearnsupport *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- (www.)academic-personnel *
+		- (www.)aged *
+		- (www.)alumni *
+		- (www.)careerservices *
+		- (www.)drupal *
+		- (www.)hcs *
+		- (www.)housing *
+		- (www.)housing-test *
+		- (www.)ipa *
+		- www.my		(cert only matches ^my)
+		- polycard *
+		- (www.)polydata *
+		- (www.)registrar *
+		- (www.)servicedesk *
+		- (www.)soe *
+		- (www.)studentaffairs *
+		- (www.)studentaffairs-test *
+		- www.wireless			(cert only matches ^wireless)
+
+	* Mismatched, CN: *.wcms.calpoly.edu
+
+
+	Partially covered subdomains:
+
+		- (www.)academic-personnel *	(→ academic-personnel.wcms)
+		- (www.)aged *			(→ aged.wcms)
+		- (www.)alumni *		(→ alumni.wcms)
+		- (www.)careerservices *	(→ careerservices.wcms)
+		- (www.)drupal *		(→ drupal.wcms)
+		- (www.)hcs *			(→ hcs.wcms)
+		- (www.)housing *		(→ housing.wcms)
+		- (www.)housing-test *		(→ housing-test.wcms)
+		- (www.)ipa *			(→ ipa.wcms)
+		- polycard *			(→ polycard.wcms)
+		- (www.)polydata *		(→ polydata.wcms)
+		- (www.)registrar *		(→ registrar.wcms)
+		- (www.)servicedesk *		(→ servicedesk.wcms)
+		- (www.)soe			(→ soe.wcms)
+		- (www.)studentaffairs		(→ studentaffairs.wcms)
+		- (www.)studentaffairs-test	(→ studentaffairs-test.wcms)
+		- academic-personnel.wcms *
+		- aged.wcms *
+		- alumni.wcms *
+		- careerservices.wcms *
+		- drupal.wcms *
+		- hcs.wcms *
+		- housing.wcms *
+		- housing-test.wcms *
+		- ipa.wcms *
+		- polycard.wcms *
+		- polydata.wcms *
+		- registrar.wcms *
+		- servicedesk.wcms *
+		- soe.wcms *
+		- studentaffairs.wcms *
+		- studentaffairs-test.wcms *
+
+	* Pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- webresource.its
+		- (www.)lib
+		- hagrid.libart
+		- (www.)my		(www → ^)
+		- myportal
+		- (www.)wireless	(www → ^)
+		- xerxes
+
+-->
+<ruleset name="California Polytechnic State University (partial)">
+
+	<target host="*.calpoly.edu" />
+		<exclusion pattern="^http://[\w-]+\.wcms\.calpoly\.edu/(?!sites/)" />
+
+
+	<securecookie host="^(?:my|myportal|xerxes)\.calpoly\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(academic-personnel|aged|alumni|careerservices|drupal|hcs|housing(?:-test)?|ipa|polycard|polydata|registrar|servicedesk|soe|studentaffairs)\.calpoly\.edu/sites/"
+		to="https://$1.wcms.calpoly.edu/sites/" />
+
+	<rule from="^http://(webresource\.its|(?:www\.)?lib|hagrid\.libart|myportal|[\w-]+\.wcms|xerxes)\.calpoly\.edu/"
+		to="https://$1.calpoly.edu/" />
+
+	<rule from="^http://(?:www\.)?(my|wireless)\.calpoly\.edu/"
+		to="https://$1.calpoly.edu/" />
+
+</ruleset>
