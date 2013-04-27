@@ -1,0 +1,58 @@
+<!--
+	CDN buckets:
+
+		- s1.media.ft.com.edgesuite.net
+		- search.ft.com.edgesuite.net 
+		- s[1-4].ft-static.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- ft.com subdomains:
+
+			- ^			(times out)
+			- blogs			(503, akamai)
+			- media *
+			- s1.media *
+			- test.media *
+			- reg.test.media *
+			- s[123].test.media *
+			- search		(504, akamai)
+			- www			(redirects to http, akamai)
+
+		- im.ft-static.com *
+		- s1.ft-static.com *
+
+	* Redirects to www.ft.com, akamai
+
+
+	Problematic domains:
+
+		- s4.media.ft.com		(works, akamai)
+
+
+	Partially covered domains:
+
+		- registration.ft.com		(some pages redirect to http)
+
+-->
+<ruleset name="Financial Times (partial)">
+
+	<target host="*.ft.com" />
+		<exclusion pattern="^http://registration\.ft\.com/(?!Common/|registration/barrier)" />
+	<target host="*.ft-static.com" />
+
+
+	<rule from="^http://(force|(?:api|orc)\.memb|registration)\.ft\.com/"
+		to="https://$1.ft.com/" />
+
+	<rule from="^http://s4\.media\.ft\.com/"
+		to="https://s4.ft-static.com/" />
+
+	<rule from="^http://on\.ft\.com/"
+		to="https://bit.ly/" />
+
+	<rule from="^http://(reg|s4|(?:reg|s4)\.test)\.ft-static\.com/"
+		to="https://$1.ft-static.com/" />
+
+</ruleset>
