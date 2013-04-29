@@ -39,7 +39,7 @@ while True:
             if tree.xpath('/ruleset/@default_off'):
                 default_off += 1
                 continue
-        except Exception, e:
+        except Exception as e:
             continue
 
         proc = subprocess.Popen([rule_script, fil, rule_file %
@@ -48,12 +48,12 @@ while True:
 
     for (proc, f) in procs:
         proc.poll()
-        print "POLL'D"
+        print("POLL'D")
         if proc.returncode != None:
-            print "FUCKED"
+            print("FUCKED")
             with open(rule_file % f, 'r') as rule_fd:
                 with open(report_file, 'a') as report_fd:
-                    print "CONTEXT"
+                    print("CONTEXT")
                     report_fd.writelines(rule_fd)
             os.unlink(rule_file % f)
             procs.remove((proc, f))
