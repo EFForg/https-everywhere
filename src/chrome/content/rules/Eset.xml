@@ -6,9 +6,14 @@
 
 	Nonfunctional domains:
 
-		- cart.eset.com
-		- shop.eset.com		(times out)
 		- (www.)eset.co.uk
+
+		- eset.com subdomains:
+
+			- cart
+			- shop *
+
+	* Times out
 
 
 	Partially covered domains:
@@ -21,25 +26,23 @@
 -->
 <ruleset name="ESET (partial)">
 
+	<target host="shop.eset.co.uk" />
 	<target host="eset.com" />
 	<target host="*.eset.com" />
 		<exclusion pattern="^http://blog\.eset\.com/(?!wp-content/)" />
-	<target host="shop.eset.co.uk" />
+		<exclusion pattern="^http://kb\.eset\.com/(?!esetkb/a(?:pp|sset)s/)" />
 	<target host="*.esetstatic.com" />
 
 
-	<securecookie host="^go\.eset\.com$" name=".+" />
 	<securecookie host="^shop\.eset\.co\.uk$" name=".+" />
+	<securecookie host="^go\.eset\.com$" name=".+" />
 
-
-	<rule from="^http://(blog\.|go\.|www\.)?eset\.com/"
-		to="https://$1eset.com/" />
-
-	<rule from="^http://kb\.eset\.com/esetkb/a(pp|sset)s/"
-		to="https://kb.eset.com/esetkb/a$1s/" />
 
 	<rule from="^http://shop\.eset\.co\.uk/"
 		to="https://shop.eset.co.uk/" />
+
+	<rule from="^http://((?:blog|go|kb|www)\.)?eset\.com/"
+		to="https://$1eset.com/" />
 
 	<rule from="^http://static(\d)\.esetstatic\.com/"
 		to="https://static$1.esetstatic.com/" />
