@@ -1,25 +1,51 @@
 <!--
 	CDN buckets:
 
+		- d1t8hc7w4sf1nn.cloudfront.net
+
+			- w.mlv-cdn.com
+
+
 		- d2h0k96vhpmtat.cloudfront.net
+
+
+	Problematic domains:
+
+		- mlv-cdn.com		(mismatched, CN: mylikes.com)
+		- m.mlv-cdn.com		(cloudfront)
+
+
+	- www.longurl.it doesn't exist
+	- www.mlv-cdn.com doesn't exist
 
 -->
 <ruleset name="MyLikes">
 
 	<target host="clnk.me" />
+	<target host="longurl.it" />
+	<target host="*.longurl.it" />
+	<target host="mlv-cdn.com" />
+	<target host="w.mlv-cdn.com" />
 	<target host="mylikes.com" />
-	<target host="www.mylikes.com" />
+	<target host="*.mylikes.com" />
 
 
-	<securecookie host="^(?:www\.)?mylikes\.com$" name=".+" />
+	<securecookie host="^\.longurl\.it$" name=".+" />
+	<securecookie host="^(?:ads\.|www\.)?mylikes\.com$" name=".+" />
 
 
 	<!--	www doesn't exist.
 					-->
-	<rule from="^http://clnk\.me/"
-		to="https://clnk.me/" />
+	<rule from="^http://(clnk\.me|longurl\.it)/"
+		to="https://$1/" />
 
-	<rule from="^http://(www\.)?mylikes\.com/"
+	<rule from="^http://mlv-cdn\.com/"
+		to="https://mylikes.com/" />
+
+	<rule from="^http://w\.mlv-cdn\.com/"
+		to="https://d1t8hc7w4sf1nn.cloudfront.net/" />
+
+	<rule from="^http://(ads\.|www\.)?mylikes\.com/"
 		to="https://$1mylikes.com/" />
 
 </ruleset>
