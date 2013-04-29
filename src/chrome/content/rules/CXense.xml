@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)	(no https)
+
+
+	Problematic subdomains:
+
+		- cdn	(akamai)
+
+
+	Fully covered subdomains:
+
+		- cdn		(→ scdn)
+		- comcluster
+		- adserver.cxad
+		- s-adserver.cxad
+		- adserver.sandbox.cxad
+		- s-adserver.sandbox.cxad
+		- scdn
+		- wiki
+
+-->
+<ruleset name="cXense">
+
+	<target host="*.cxense.com" />
+
+
+	<securecookie host="^\.cxense\.com$" name="^gck\w$" />
+	<securecookie host="^wiki\.cxense\.com$" name=".+" />
+
+
+	<rule from="^http://s?cdn\.cxense\.com/"
+		to="https://scdn.cxense.com/" />
+
+	<rule from="^http://(comcluster|(?:s-)?adserver(?:\.sandbox)?\.cxad|wiki)\.cxense\.com/"
+		to="https://$1.cxense.com/" />
+
+</ruleset>
