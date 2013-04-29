@@ -18,11 +18,20 @@
 		- eloqua.com subdomains:
 
 			- (www.)
-			- media
-			- topliners
+			- investor *
+			- topliners *
 
 		- eloquaexperience.com
 		- *.en25.com
+
+	* Times out
+
+
+	Problematic eloqua.com subdomains:
+
+		- media		(works; mismatched, CN: *.clickability.com)
+		- now		(mismatched, CN: secure.eloqua.com)
+		- web		(works; self-signed, CN: plesk)
 
 -->
 <ruleset name="Eloqua">
@@ -30,19 +39,25 @@
 	<target host="elq.to" />
 	<target host="www.elq.to" />
 	<target host="img.en25.com" />
-	<target host="secure.eloqua.com" />
+	<target host="*.eloqua.com" />
 	<target host="*.t.eloqua.com" />
+
+
+	<securecookie host="^\.eloqua\.com$" name="^EL(?:OQUA|QSTATUS)$" />
 
 
 	<rule from="^http://(?:www\.)?elq\.to/"
 		to="https://bit.ly/" />
+
+	<rule from="^http://now\.eloqua\.com/"
+		to="https://secure.eloqua.com/" />
 
 	<!--	Observed in *.t:
 
 			- p01
 			- s2624
 				-->
-	<rule from="^http://(secure|\w\d+\.t)\.eloqua\.com/"
+	<rule from="^http://(secure|static|\w\d+\.t)\.eloqua\.com/"
 		to="https://$1.eloqua.com/" />
 
 	<rule from="^http://img\.en25\.com/"
