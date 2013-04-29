@@ -50,6 +50,7 @@
 
 		- msimg.com
 		- blogs.office.com
+		- blog.surface.com		(handshake fails)
 		- blogs.windows.com		(reset)
 		- (www.)windowsteamblog.com
 
@@ -65,10 +66,12 @@
 
 		- microsoft.com subdomains:
 
+			- ^ ***
 			- i[1-4].connect **
 			- i **
 			- i\d **
 			- js **
+			- scache **
 			- search **
 			- img3.store		(mismatched)
 			- update *
@@ -78,15 +81,18 @@
 
 		- i.s-microsoft.com **
 		- widgets.membership.s-msft.com		(akamai)
+		- compass.surface.com **
 		- windows.net				(times out)
 
 	* Cert only matches www
 	** akamai
+	*** Times out
 
 
 	Partially covered domains:
 
 		- (www.)imaginecup.com		(many paths redirect to http or a login page)
+		- answers.microsoft.com		(some pages redirect to http)
 		- code.msdn.microsoft.com	(pages redirect to http)
 
 
@@ -96,6 +102,7 @@
 
 			- accountservices
 			- ajax
+			- fb.answers
 			- c
 			- c1
 			- choice
@@ -108,12 +115,14 @@
 				- innovation
 				- services
 
+			- sas.css
 			- g
 			- widgets.membership
 			- office15client
 			- officepreview
 			- officeredir
 			- rad
+			- scache		(→ www)
 			- res.windows		(→ origin-res.windows)
 			- res[12].windows	(→ origin-res.windows)
 
@@ -125,6 +134,8 @@
 
 			- i-technet
 			- i2-technet
+
+		- msngpm.accesscontrol.windows.net
 
 
 	Wildcard cookies:
@@ -156,6 +167,11 @@
 			Microsoft won't serve OEM pages on https
 								-->
     		<exclusion pattern="^http://(?:www\.)?microsoft\.com/[oO][eE][mM]/" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.microsoft\.com/Surface/\w\w-\w\w(?:$|\?|/)" />
+		<exclusion pattern="^http://answers\.microsoft\.com/(?!\w\w-\w\w/\w+/forum/[\w-]+/[\w-]+/)" />
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/5754
 										-->
@@ -203,7 +219,7 @@
 	<rule from="^https?://(?:i\d?\.|js\.|search\.|i\.s-)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(accountservices|adcenter|advertising|ajax|c1?|choice|commerce|(?:innovation\.|services\.)?connect|events|social\.expression|go?|ie|ieonline|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|rad|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(accountservices|adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ie|ieonline|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|rad|research|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<rule from="^https?://i\d\.social\.s-msft\.com/wiki/"
@@ -216,6 +232,9 @@
 
 	<rule from="^https?://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
+
+	<rule from="^http://scache\.microsoft\.com/"
+		to="https://www.microsoft.com/" />
 
 	<rule from="^https?://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
@@ -248,5 +267,8 @@
 						-->
 	<rule from="^http://(\w+)\.blob\.core\.windows\.net/"
 		to="https://$1.blob.core.windows.net/" />
+
+	<rule from="^http://msngpm\.accesscontrol\.windows\.net/"
+		to="https://msngpm.accesscontrol.windows.net/" />
 
 </ruleset>
