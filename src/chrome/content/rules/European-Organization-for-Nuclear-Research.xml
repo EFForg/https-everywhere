@@ -1,14 +1,18 @@
 <!--
 	Nonfunctional domains:
 
-		- home.web.cern.ch	(redirects to login.cern.ch)
+		- itssb.web.cern.ch *
+		- home.web.cern.ch	(redirects to login.cern.ch, valid cert)
 		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
 		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
+
+	* Redirects to login.cern.ch, valid cert
 
 
 	Problematic cern.ch subdomains:
 
 		- bulletin *
+		- info		(404; mismatched, CN: *.web.cern.ch)
 		- web *
 		- listboxservices.web *
 
@@ -41,5 +45,10 @@
 					-->
 	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
 		to="https://simba3.web.cern.ch/simba3/simba2/" />
+
+	<!--	Protocol-relative redirect from user.web:
+							-->
+	<rule from="^https://home\.web\.cern\.ch/"
+		to="http://home.web.cern.ch/" downgrade="1" />
 
 </ruleset>
