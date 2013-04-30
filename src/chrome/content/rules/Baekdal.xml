@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional subdomains:
+
+		- cdn.baekdal.com		(displays blank page, valid cert)
+		- baekdalmedia.com		(no https)
+		- www.baekdalmedia.com		(shows baekdal.com; mismatched, CN: www.baekdal.com)
+
+
+	Problematic domains:
+
+		- baekdal.com		(redirects erroneously to www)
+
+
+	Mixed images from:
+
+		- cdn.baekdal.com
+		- www.baekdalmedia.com
+
+-->
+<ruleset name="Baekdal (partial)">
+
+	<target host="baekdal.com" />
+	<target host="www.baekdal.com" />
+		<exclusion pattern="^http://(?:www\.)?baekdal\.com/(?:about|analysis|insights|notes|opinion|plus|trends)" />
+
+
+	<!--securecookie host="^www\.baekdal\.com$" name=".+" /-->
+
+
+	<rule from="^http://(?:www\.)?baekdal\.com/"
+		to="https://www.baekdal.com/" />
+
+	<!--	Protocol-relative links:
+						-->
+	<rule from="^https://(?:www\.)?baekdal\.com/(about|analysis|insights|notes|opinion|plus|trends)"
+		to="http://www.baekdal.com/$1" downgrade="1" />
+
+</ruleset>
