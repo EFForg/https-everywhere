@@ -9,6 +9,19 @@
 	CDN buckets:
 
 		- landingimagecatalog-1450153822.us-west-1.elb.amazonaws.com
+
+		- d1p01lglytwktu.cloudfront.net
+
+			- marsrovers.jpl.nasa.gov
+
+		- d2cj35nmzi9erd.cloudfront.net
+
+			- mars.jpl.nasa.gov
+
+		- d3r05mwudimf00.cloudfront.net
+
+			- marsstaticcdn.jpl.nasa.gov
+
 		- dkaj27004uji9.cloudfront.net
 
 		- msfcnasa.r3h.net/.../
@@ -57,7 +70,22 @@
 			- jpl subdomains:
 
 				- ^ *			(redirects to www over http)
+				- blogs **
+				- directory		(redirects to http, valid cert)
+				- genesismission **
+				- hydro *
+				- maps *
+				- neo *
+				- photojournal *
+				- planetquest
+				- saturn *
+				- space *
+				- ssd *
+				- stardust **
+				- trs-new *
 				- voyager
+				- www *
+				- www-robotics *
 
 			- www.jps
 			- eol.jsc
@@ -68,16 +96,23 @@
 			- www.msfc		(301s to http, akamai)
 			- pds *
 			- spaceflight		(504, akamai)
+			- (www.)spaceplace **
 			- sunearthday		(some paths 404, others work-ToDo: sort which ones; akamai)
 			- venustransit *
 			- visibleearth *
 
 	* Times out
+	** No https
 
 
 	Problematic subdomains:
 
 		- heasarc	(cert only matches heasarc.gsfc)
+		- mars.jpl *
+		- marsrovers.jpl *
+		- marsstaticcdn.jpl *
+
+	* Cloudfront
 
 
 	Fully covered subdomains:
@@ -95,6 +130,33 @@
 		- heasarc	(→ heasarc.gsfc)
 		- corts.hq
 		- www.hq
+
+		- jpl subdomains:
+
+			- acquisition
+			- beacon
+			- careerlaunch
+			- dir
+			- enose
+			- icis
+			- jpldataeval
+			- jplnet
+			- jplspaceship
+			- mars			(→ d2cj35nmzi9erd.cloudfront.net)
+			- marsrovers		(→ d1p01lglytwktu.cloudfront.net)
+			- marsstaticcdn		(→ d3r05mwudimf00.cloudfront.net)
+			- metrics		(→ jpl-nasa-gov.122.2o7.net)
+			- nightsky
+			- pds
+			- ras
+			- science
+			- scienceandtechnology
+			- solarsystem
+			- sse
+			- studentprograms
+			- telework
+
+		- people
 		- solarsystem
 		- (www.)spacecomm
 
@@ -107,7 +169,7 @@
 	<securecookie host="^.*\.nasa\.gov$" name=".+" />
 
 
-	<rule from="^http://(airbornescience|cloud1\.arc|astrobiology|ws1\.ems\.eosdis|esdpubs|(?:www\.)?(?:espo|spacecomm)|espoarchive|rt\.grc|heasarc\.gsfc|(?:corts|www)\.hq|solarsystem)\.nasa\.gov/"
+	<rule from="^http://(airbornescience|cloud1\.arc|astrobiology|ws1\.ems\.eosdis|esdpubs|(?:www\.)?(?:espo|spacecomm)|espoarchive|rt\.grc|heasarc\.gsfc|(?:corts|www)\.hq|(?:acquisition|beacon|careerlaunch|dir|enose|icis|jpldataeval|jplnet|jplspaceship|nightsky|pds|science(?:andtechnology)?|solarsystem|sse|studentprograms|telework)\.jpl|people|ras|solarsystem)\.nasa\.gov/"
 		to="https://$1.nasa.gov/" />
 
 	<rule from="^http://eyes\.nasa\.gov/"
@@ -115,5 +177,19 @@
 
 	<rule from="^https?://heasarc\.nasa\.gov/"
 		to="https://heasarc.gsfc.nasa.gov/" />
+
+	<rule from="^http://mars\.jpl\.nasa\.gov/"
+		to="https://d2cj35nmzi9erd.cloudfront.net/" />
+
+	<rule from="^http://marsrovers\.jpl\.nasa\.gov/"
+		to="https://d1p01lglytwktu.cloudfront.net/" />
+
+	<rule from="^http://marsstaticcdn\.jpl\.nasa\.gov/"
+		to="https://d3r05mwudimf00.cloudfront.net/" />
+
+	<!--	Protocol-relative links from scienceandtechnology.jpl:
+							-->
+	<rule from="^https?://metrics\.jpl\.nasa\.gov/"
+		to="https://jpl-nasa-gov.122.2o7.net/" />
 
 </ruleset>
