@@ -2,39 +2,44 @@
 	Nonfunctional domains:
 
 		- home.web.cern.ch	(redirects to login.cern.ch)
-		cerncourier.org		(cert: *.iop.org; redirects to http)
-		- (www.)cernland.net	(cert: *.infomaniak.ch; "cernland.net does not exist")
+		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
+		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
+
+
+	Problematic cern.ch subdomains:
+
+		- bulletin *
+		- web *
+		- listboxservices.web *
+
+	* Mismatched, CN: www.cern.ch
 
 -->
 <ruleset name="European Organization for Nuclear Research (partial)">
 
 	<target host="cern.ch" />
 	<target host="*.cern.ch" />
-	<target host="*.web.cern.ch" />
 
 
-	<securecookie host="^.*\.cern\.ch$" name=".*" />
+	<securecookie host=".*\.cern\.ch$" name=".+" />
 
 
 	<rule from="^http://((?:association|cds|cdsweb|ert|login|(?:atlas|education|egee-uig|environmental-impact|framework|home|hr-dept|hr-info|indico|job|outreach|press|project-voisins|public|simba3|user|webservices)\.web|www)\.)?cern\.ch/"
 		to="https://$1cern.ch/" />
 
-	<!--	- Cert: www.cern.ch
-		- Redirects like so
-				-->
+	<!--	Redirects like so:
+					-->
 	<rule from="^https?://bulletin\.cern\.ch/"
 		to="https://cdsweb.cern.ch/journal/CERNBulletin/" />
 
-	<!--	- Cert: www.cern.sh
-		- Redirects like so
-			-->
-	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
-		to="https://simba3.web.cern.ch/simba3/simba2/" />
-
-	<!--	- Cert: www.cern.ch
-		- Redirects like so
+	<!--	Redirects like so:
 					-->
 	<rule from="^https?://web\.cern\.ch/"
 		to="https://webservices.web.cern.ch/webservices/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
+		to="https://simba3.web.cern.ch/simba3/simba2/" />
 
 </ruleset>
