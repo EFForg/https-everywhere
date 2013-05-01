@@ -2,25 +2,26 @@
 	dyrkrau635c04.cloudfront.net
 
 -->
-<ruleset name="Sailthru (partial)">
+<ruleset name="Sailthru">
 
 	<target host="sailthru.com"/>
 	<target host="*.sailthru.com"/>
-		<exclusion pattern="^http://getstarted\."/>
 
-	<securecookie host="^my\.getstarted\.com$" name=".*"/>
+	<!--	Observed cookie domains:
+
+			- .getstarted
+			- my
+					-->
+	<securecookie host=".+\.getstarted\.com$" name=".*"/>
 
 	<!--	Observed domains:
+			- ak
 			- blog
 			- cb
 			- getstarted
 			- my
 			- www		-->
-	<rule from="^http://([^b]\w*\.)?sailthru\.com/"
+	<rule from="^http://(\w*\.)?sailthru\.com/"
 		to="https://$1sailthru.com/"/>
-
-	<!--	blog pages break via https	-->
-	<rule from="^http://blog\.sailthru\.com/wp-content/"
-		to="https://blog.sailthru.com/wp-content/"/>
 
 </ruleset>
