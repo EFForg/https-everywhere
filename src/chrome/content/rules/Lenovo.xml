@@ -32,8 +32,6 @@
 	<target host="social.lenovo.com"/>
 	<target host="support.lenovo.com"/>
 	<target host="www.lenovo.com"/>
-        <!-- https://trac.torproject.org/projects/tor/ticket/8715 -->
-        <exclusion pattern="^http://www\.lenovo\.com(:80)?/(\w\w)/?$"/>
 		<exclusion pattern="^http://(www\.)?lenovo\.com/depotstatus"/>
 		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html	-->
 		<exclusion pattern="^http://www\.lenovo\.com/(support|training)/"/>
@@ -48,6 +46,14 @@
 
 
 	<securecookie host="^(.+\.)?lenovo\.com$" name=".*"/>
+
+
+	<!--	https://trac.torproject.org/projects/tor/ticket/8715
+
+		International domains fail to redirect properly:
+									-->
+	<rule from="^http://(?:www\.)?lenovo\.com(?::80)?/(\w\w)/?(?:\?.*)?$"
+		to="https://www.lenovo.com/$1/$1/" />
 
     <rule from="^http://lenovo\.com/"
 		to="https://www.lenovo.com/"/>
