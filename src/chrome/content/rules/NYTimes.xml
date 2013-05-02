@@ -15,10 +15,13 @@
 	Nonfunctional domains:
 
 		- (www.)nytco.com
-		- dealbook.nytimes.com
-		- documents.nytimes.com
-		- dealbook.on.nytimes.com
-		- topics.nytimes.com
+
+		- nytimes.com subdomains:
+
+			- dealbook
+			- documents
+			- dealbook.on
+			- topics
 
 
 	Problematic domains:
@@ -28,10 +31,12 @@
 
 	Fully covered domains:
 
-		- et.nytimes.com
-		- graphics.nytimes.com
-		- markets.on.nytimes.com
-		- meter-svc.nytimes.com
+		- nytimes.com subdomains:
+
+			- et
+			- graphics
+			- markets.on
+			- meter-svc
 
 -->
 <ruleset name="NYTimes (mixed content)" platform="mixedcontent">
@@ -48,18 +53,15 @@
 			404s over https.
 
 			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
-							-->
-		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler($|\?)" />
+												-->
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler(?:$|\?)" />
 		<!--
 			Breaks slideshow.
 
 				- Lens/data/\d{8}POD.xml redirects to login page
 				- Lens/swfs/ & Lens/lens_post.swf fail to load
-						-->
+										-->
 		<exclusion pattern="^https?://graphics8\.nytimes\.com/packages/flash/multimedia/" />
-	<target host="*.blogs.nytimes.com" />
-	<target host="wt.o.nytimes.com" />
-	<target host="markets.on.nytimes.com"/>
 
 
 	<!--	Other cross-domain cookies:
@@ -68,18 +70,16 @@
 
 			Used on mobile.
 
-  This may break random bits of the NYTimes site:
-  https://trac.torproject.org/projects/tor/ticket/7690
+	This may break random bits of the NYTimes site:
+
+		https://trac.torproject.org/projects/tor/ticket/7690
 
 	<securecookie host="^\.nytimes\.com$" name="^NYT-S$" />
-  -->
 
-	<!--	Tracking cookies:
+		Tracking cookies:
 					-->
 	<securecookie host="^\.nytimes\.com$" name="^(?:adxc\w|chartbeat2)$" />
-	<securecookie host="^homedelivery\.nytimes\.com$" name=".+" />
-	<securecookie host="^markets\.on\.nytimes\.com$" name=".+" />
-	<securecookie host="^wt\.o\.nytimes\.com$" name=".+" />
+	<securecookie host="^(?:homedelivery|markets\.on|wt\.o)\.nytimes\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?newyorktimes\.com/"
