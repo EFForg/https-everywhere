@@ -4,86 +4,114 @@
 		- SWREG.xml
 
 
-	a248.e.akamai.net/f/248/5462/2d/images.element5.com/
+	CDN buckets:
+
+		- a248.e.akamai.net/f/248/5462/2d/images.element5.com/
+
+
+	Problematic domains:
+
+		- esellerate.net	(400)
+
+
+	Partially covered domains:
+
+		- corporate.digitalriver.com	(pages redirect to http)
 
 
 	Fully covered domains:
 
-		- (www.)digitalriver.com
-		- swreg.img.digitalriver.com
-		- store.digitalriver.com
-		- dri[12].img.digitalrivercontent.net
-		- ui1.img.digitalrivercontent.net
+		- digitalriver.com subdomains:
+
+			- (www.)
+			- *.cfspx
+
+			- *.img	(tracking images for esellerate):
+
+				- drh
+				- drh[12]
+				- swreg
+				- ui1
+
+			- gc
+			- store
+
+		- *.img.digitalrivercontent.net:
+
+			- dri[12]
+			- ui1
+
+		- esellerate.net subdomains:
+
+			- (www.)	(^ → www)
+			- publishers
+			- store\d
+
+		- (www.)findmyorder.com
+		- *.frcanalytics.com
+		- reservoir.marketstudio.net
+		- (www.)mycommerce.com
+		- secure.shareit.com
 
 -->
 <ruleset name="Digital River (partial)">
 
-	<target host="cm.commerce5.com"/>
-	<target host="*.digitalriver.com"/>
-	<target host="*.img.digitalrivercontent.net"/>
-	<target host="cp.element5.com"/>
-	<target host="esellerate.net"/>
-	<target host="*.esellerate.net"/>
-	<target host="findmyorder.com"/>
-	<target host="www.findmyorder.com"/>
-	<target host="*.frcanalytics.com"/>
+	<target host="cm.commerce5.com" />
+	<target host="*.digitalriver.com" />
+		<!--
+			Pages redirect to http:
+						-->
+		<exclusion pattern="^http://corporate\.digitalriver\.com/(?!DRHM/)" />
+	<target host="*.img.digitalrivercontent.net" />
+	<target host="cp.element5.com" />
+	<target host="esellerate.net" />
+	<target host="*.esellerate.net" />
+	<target host="findmyorder.com" />
+	<target host="www.findmyorder.com" />
+	<target host="*.frcanalytics.com" />
 	<target host="reservoir.marketstudio.net" />
-	<target host="mycommerce.com"/>
-	<target host="www.mycommerce.com"/>
+	<target host="mycommerce.com" />
+	<target host="www.mycommerce.com" />
 	<target host="secure.shareit.com" />
 
 
-	<!--	encountered:
+	<!--	Observed cookie domains:
+
 			- cm.commerce5.com
 			- gc.digitalriver.com
 			- publishers.esellerate.net
-			- store2.esellerate.net
-			- store3.esellerate.net
-			- store6.esellerate.net
+			- store[236].esellerate.net
 			- findmyorder.com
 			- www.findmyorder.com
 			- mycommerce.com
-			- www.mycommerce.com		-->
-	<securecookie host="^(?:gc|store)\.digitalriver\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?(commerce5|esellerate|findmyorder|mycommerce|shareit)\.com$" name=".*"/>
+			- www.mycommerce.com
+						-->
+	<securecookie host="^(?:gc|store)\.digitalriver\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?(?:commerce5|esellerate|findmyorder|mycommerce|shareit)\.com$" name=".+" />
 
 
 	<rule from="^http://cm\.commerce5\.com/"
-		to="https://cm.commerce5.com/"/>
+		to="https://cm.commerce5.com/" />
 
-	<rule from="^http://(www\.)?digitalriver\.com/"
-		to="https://$1digitalriver.com/"/>
-
-	<!--	tracking images for esellerate
-			encountered *.img:
-				- drh
-				- drh1
-				- drh2
-				- ui1		-->
-	<rule from="^http://(([\w+\-]+)\.cfspx|gc|\w+\.img|store)\.digitalriver\.com/"
-		to="https://$1.digitalriver.com/"/>
-
-	<!--	pages redirect to http	-->
-	<rule from="^http://corporate\.digitalriver\.com/DRHM/"
-		to="https://corporate.digitalriver.com/DRHM/"/>
+	<rule from="^http://((?:[\w+-]+\.cfspx|corporate|gc|\w+\.img|store|www)\.)?digitalriver\.com/"
+		to="https://$1digitalriver.com/" />
 
 	<rule from="^http://(\w+)\.img\.digitalrivercontent\.net/"
-		to="https://$1.img.digitalrivercontent.net/"/>
+		to="https://$1.img.digitalrivercontent.net/" />
 
 	<rule from="^http://cp\.element5\.com/"
 		to="https://cp.element5.com/"/>
 
-	<!--	"Bad Request"		-->
 	<rule from="^http://esellerate\.net/"
-		to="https://www.esellerate.net/"/>
+		to="https://www.esellerate.net/" />
 
-	<rule from="^http://(publishers\.|store\d\.|www\.)?esellerate\.net/"
-		to="https://$1esellerate.net/"/>
+	<rule from="^http://(publishers|store\d|www)\.esellerate\.net/"
+		to="https://$1.esellerate.net/"/>
 
 	<rule from="^http://(www\.)?findmyorder\.com/"
 		to="https://$1findmyorder.com/"/>
 
-	<rule from="^http://([\w\-]+)\.frcanalytics\.com/"
+	<rule from="^http://([\w-]+)\.frcanalytics\.com/"
 		to="https://$1.frcanalytics.com/"/>
 
 	<rule from="^http://reservoir\.marketstudio\.net/"
