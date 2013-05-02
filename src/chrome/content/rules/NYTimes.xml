@@ -6,6 +6,7 @@
 
 	CDN buckets:
 
+		- pnytimes.chartbeat.net
 		- js.nyt.com.edgesuite.net
 		- graphics478.nytimes.com.edgesuite.net
 		- json8.nytimes.com.edgesuite.net
@@ -27,8 +28,10 @@
 
 	Fully covered domains:
 
+		- et.nytimes.com
 		- graphics.nytimes.com
 		- markets.on.nytimes.com
+		- meter-svc.nytimes.com
 
 -->
 <ruleset name="NYTimes (mixed content)" platform="mixedcontent">
@@ -59,24 +62,23 @@
 	<target host="markets.on.nytimes.com"/>
 
 
-	<!--	adxcs isn't needed on unsecurable pages.
-
-		Other cross-domain cookies:
+	<!--	Other cross-domain cookies:
 
 			- RMID
 
 			Used on mobile.
-					-->
-  <!--
-  These may break random bits of the NYTimes site:
+
+  This may break random bits of the NYTimes site:
   https://trac.torproject.org/projects/tor/ticket/7690
 
-	<securecookie host="^\.nytimes\.com$" name="^(adxc\w|NYT-S)$" />
-	<securecookie host="^homedelivery\.nytimes\.com$" name=".+" />
-	<securecookie host="^markets\.on\.nytimes\.com$" name=".+" />
+	<securecookie host="^\.nytimes\.com$" name="^NYT-S$" />
   -->
 
-
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.nytimes\.com$" name="^(?:adxc\w|chartbeat2)$" />
+	<securecookie host="^homedelivery\.nytimes\.com$" name=".+" />
+	<securecookie host="^markets\.on\.nytimes\.com$" name=".+" />
 	<securecookie host="^wt\.o\.nytimes\.com$" name=".+" />
 
 
@@ -92,7 +94,7 @@
 	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
 		to="https://www.nytimes.com/favicon.ico" />
 
-	<rule from="^http://(global|homedelivery|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
+	<rule from="^http://(et|global|homedelivery|meter-svc|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
 		to="https://$1.nytimes.com/" />
 
 	<rule from="^http://graphics\d?\.nytimes\.com/"
