@@ -8,20 +8,50 @@
 
 
 	!functional:
+		- lenovo.com subdomains:
+
+			- blog *
+			- consumersupport **
+			- news			(handshake fails)
+			- social *
+			- support **
+
 		- training.lenovo.partner-management.com
+
+	* Redirects to www.lenovoblogs.com; expired 2011-10-05, CN: localhost.localdomain
+	** Times out
 
 
 	Problematic domains:
 
+		- lenovo.com			(cert is only valid for www)
 		- forum.lenovo.com *
 		- (www.)lenovovision.com	(times out)
+		- (www.)thinkpad.com **
 
 	* Mismatched, CN: secure01.lithium.com
+	** Times out
+
+
+	Partially covered domains:
+
+		- (www.)lenovo.co.uk	(→ www.lenovo.com)
+		- (www.)lenovo.com	(^ → www, some paths 404)
 
 
 	Fully covered domains:
 
+		- lenovo.com subdomains:
+
 		- download.lenovo.com
+			- forum		(→ forums)
+			- forums
+			- outlet
+			- shop
+
+		- (www.)lenovoorders.com
+		- (www.)lenovovision.com	(→ www.lenovo.com)
+		- (www.)thinkpad.com		(→ www.lenovo.com)
 
 -->
 <ruleset name="Lenovo (partial)">
@@ -36,7 +66,11 @@
 	<target host="social.lenovo.com"/>
 	<target host="support.lenovo.com"/>
 	<target host="www.lenovo.com"/>
-		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html	-->
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
+
+			Redirects that 404. Destinations don't support https:
+										-->
 		<exclusion pattern="^http://www\.lenovo\.com/(support|training)/"/>
 	<target host="lenovo.co.uk"/>
 	<target host="www.lenovo.co.uk"/>
