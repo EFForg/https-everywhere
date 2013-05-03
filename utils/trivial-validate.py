@@ -105,11 +105,11 @@ def test_unencrypted_to(tree):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-	    sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
-	    sys.stdout.write("to http.\n")
+            sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
+            sys.stdout.write("to http.\n")
         elif to[:5] == "http:":
-	    sys.stdout.write("error: rule in %s redirects to http and " % fi)
-	    sys.stdout.write("downgrade attribute not specified.\n")
+            sys.stdout.write("error: rule in %s redirects to http and " % fi)
+            sys.stdout.write("downgrade attribute not specified.\n")
             return False
     return True
 
@@ -153,7 +153,7 @@ def test_duplicated_target_host(tree):
     targets = tree.xpath("/ruleset/target/@host")
     return len(set(targets)) == len(targets)
 
-printable_characters = set(map(chr, xrange(32, 127)))
+printable_characters = set(map(chr, list(range(32, 127))))
 
 def test_non_ascii(tree):
     # Rules containing non-printable characters.
@@ -199,7 +199,7 @@ if multi_file_validate:
                 else:
                     continue
             seen_file = True
-        except Exception, oops:
+        except Exception as oops:
             if fi[-4:] != ".xml":
                 continue
             failure = 1
@@ -231,7 +231,7 @@ else:
             if tree.xpath("/ruleset"):
                 sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
         seen_file = True
-    except Exception, oops:
+    except Exception as oops:
         failure = 1
         sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
     ruleset_name = tree.xpath("/ruleset/@name")[0]

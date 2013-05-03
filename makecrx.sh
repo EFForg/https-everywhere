@@ -32,7 +32,7 @@ if [ -n "$1" ]; then
   fi
 fi
 
-VERSION=`python -c "import json ; print json.loads(open('chromium/manifest.json').read())['version']"`
+VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
 echo "Building chrome version" $VERSION
 
