@@ -1,4 +1,5 @@
 <!--
+		- motorola-global-portal.custhelp.com
 		- abea-2fo3vv.client.shareholder.com
 		- abea-58xvpr.client.shareholder.com
 			- webcenter360.shareholder.com
@@ -7,7 +8,7 @@
 	Nonfunctional domains:
 
 		- investor.motorola.com			(cert: shareholder.com; 404)
-		- responsibility.motorola.com
+		- responsibility.motorola.com		(no https)
 		- (www.)motorola.com
 			- www.motorola.com/staticfiles/.* 302s to homepage.
 			- www.motorola.com/Business/.* prints "tcp_error"
@@ -15,6 +16,11 @@
 		- (www.)motorolacareers.com		(times out)
 		- careers.motorolasolutions.com		(cert: secure.resumeware.net; redirects to www.resumeware.com)
 		- investors.motorolasolutions.com	(cert: shareholder.com; 403)
+
+
+	Problematic domains:
+
+		- motorola.com		("dns_server_failure", valid cert)
 
 -->
 <ruleset name="Motorola (partial)">
@@ -28,7 +34,11 @@
 	<securecookie host="^mediacenter\.motorolasolutions\.com$" name=".*" />
 
 
-	<rule from="^http://(globalrepairtools|mediacenter|membership|sdc)\.motorola\.com/"
+
+	<rule from="^http://motorola\.com/"
+		to="https://www.motorola.com/" />
+
+	<rule from="^http://(globalrepairtools|mediacenter|membership|sdc|www)\.motorola\.com/"
 		to="https://$1.motorola.com/" />
 
 	<!--	- !www prints "dns_server_error"
