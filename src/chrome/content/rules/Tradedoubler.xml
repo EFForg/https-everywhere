@@ -1,9 +1,21 @@
-<ruleset name="Tradedoubler">
+<!--
+	Nonfunctional subdomains:
 
-	<target host="publisher.tradedoubler.com" />
+		- (www.)	(no https)
+		- financials	(handshake fails)
+
+-->
+<ruleset name="Tradedoubler (partial)">
+
+	<target host="*.tradedoubler.com" />
 
 
-	<rule from="^http://publisher\.tradedoubler\.com/"
-		to="https://publisher.tradedoubler.com/" />
+	<!--securecookie host="^\.tradedoubler\.com$" name="^(?:BT|TD_EH_0|TradeDoublerGUID)$" /-->
+	<securecookie host="^\.tradedoubler\.com$" name="^TD_UNIQUE_IMP$" />
+	<securecookie host="^(?:login|publisher)\.tradedoubler\.com$" name=".+" />
+
+
+	<rule from="^http://(clk|img|imp\w\w|login|publisher)\.tradedoubler\.com/"
+		to="https://$1.tradedoubler.com/" />
 
 </ruleset>

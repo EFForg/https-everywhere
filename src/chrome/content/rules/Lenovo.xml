@@ -1,79 +1,158 @@
-<!--	!functional:
+<!--
+	CDN buckets:
+
+		- lenovo.com.102.112.2o7.net
+
+			- s.lenovo.com
+
+		- lnv.lithium.com
+
+			- forum.lenovo.com
+			- forums.lenovo.com
+
+		- com-lenovo.netmng.com
+		- tags.tiqcdn.com/utag/lenovo/
+
+
+	Nonfunctional domains;
+
+		- lenovo.com subdomains:
+
+			- blog *
+			- consumersupport **
+			- news			(handshake fails)
+			- social *
+			- support **
+
 		- training.lenovo.partner-management.com
+
+	* Redirects to www.lenovoblogs.com; expired 2011-10-05, CN: localhost.localdomain
+	** Times out
+
+
+	Problematic domains:
+
+		- lenovo.com			(cert is only valid for www)
+		- forum.lenovo.com *
+		- (www.)lenovovision.com **
+		- (www.)thinkpad.com **
+
+	* Mismatched, CN: secure01.lithium.com
+	** Times out
+
+
+	Partially covered domains:
+
+		- (www.)lenovo.co.uk	(→ www.lenovo.com)
+		- (www.)lenovo.com	(^ → www, some paths 404)
+
+
+	Fully covered domains:
+
+		- lenovo.com subdomains:
+
+			- checkout
+			- download
+			- forum		(→ forums)
+			- forums
+			- outlet
+			- s
+			- shop
+
+		- (www.)lenovoorders.com
+		- (www.)lenovovision.com	(→ www.lenovo.com)
+		- (www.)thinkpad.com		(→ www.lenovo.com)
+
 -->
 <ruleset name="Lenovo (partial)">
 
-	<target host="lenovo.com"/>
-		<exclusion pattern="^http://lenovo\.com/friendsandfamily$"/>
-	<target host="blog.lenovo.com"/>
-	<target host="consumersupport.lenovo.com"/>
-	<target host="news.lenovo.com"/>
-	<target host="outlet.lenovo.com"/>
-	<target host="shop.lenovo.com"/>
-		<exclusion pattern="^http://shop\.lenovo\.com/us(/.*)?$"/>
-	<target host="social.lenovo.com"/>
-	<target host="support.lenovo.com"/>
-	<target host="www.lenovo.com"/>
-        <!-- https://trac.torproject.org/projects/tor/ticket/8715 -->
-        <exclusion pattern="^http://www\.lenovo\.com(:80)?/(\w\w)/?$"/>
-		<exclusion pattern="^http://(www\.)?lenovo\.com/depotstatus"/>
-		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html	-->
-		<exclusion pattern="^http://www\.lenovo\.com/(support|training)/"/>
-	<target host="lenovo.co.uk"/>
-	<target host="www.lenovo.co.uk"/>
-	<target host="lenovoorders.com"/>
-	<target host="www.lenovoorders.com"/>
+	<target host="lenovo.co.uk" />
+	<target host="www.lenovo.co.uk" />
+	<target host="lenovo.com" />
+	<target host="*.lenovo.com" />
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
+
+			Redirects that 404. Destinations don't support https:
+										-->
+		<exclusion pattern="^http://www\.lenovo\.com/(?:support|training)/" />
+	<target host="lenovoorders.com" />
+	<target host="www.lenovoorders.com" />
+	<target host="lenovovision.com" />
 	<target host="www.lenovovision.com" />
 	<target host="thinkpad.com" />
 	<target host="www.thinkpad.com" />
 
 
-	<securecookie host="^(.+\.)?lenovo\.com$" name=".*"/>
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.lenovo\.com$" name="^(?:exp_|oo_inv_|psp|s_|utag_)\w+$" />
+	<securecookie host="^(?:.+\.)?lenovo\.com$" name=".+" />
 
-    <rule from="^http://lenovo\.com/"
-		to="https://www.lenovo.com/"/>
 
-	<rule from="^https?://www\.lenovo\.com/epp$"
-		to="https://www.lenovo.com/epp/"/>
+	<rule from="^http://(?:www\.)?lenovo\.co\.uk/?$"
+		to="https://www.lenovo.com/uk/en/" />
 
-	<rule from="^http://(outlet|shop|www)\.lenovo\.com/"
+	<!--	https://trac.torproject.org/projects/tor/ticket/8715
+
+		International domains fail to redirect properly:
+									-->
+	<rule from="^http://(?:www\.)?lenovo\.com(?::80)?/(?!us)(\w\w)/?(?:\?.*)?$"
+		to="https://www.lenovo.com/$1/$1/" />
+
+	<!--	404s as-is:
+				-->
+	<rule from="^http://(?:www\.)?lenovo\.com/depotstatus/?$"
+		to="https://download.lenovo.com/lenovo/content/vru/depotstatus.html" />
+
+	<!--	404s as-is:
+				-->
+	<rule from="^http://(?:www\.)?lenovo\.com/friendsandfamily/?$"
+		to="https://shop.lenovo.com/SEUILibrary/controller/Lenovo:EnterStdAffinity?affinity=lenovofamily&amp;ConfigContext=StdAffinityPortal" />
+
+	<!--	https://trac.torproject.org/projects/tor/ticket/6604
+
+		thinkpad.com redirects to www.lenovo.com/link/redirect.www.lenovo.com/www.thinkpad.com/,
+		which 404s over https but redirects like so over http:
+									-->
+	<rule from="^https?://(?:(?:www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(?:www\.)?thinkpad\.com/(?:.*)"
+		to="https://www.lenovo.com/us/en/?cid=SEO-thinkpadcom" />
+
+	<rule from="^http://lenovo\.com/"
+		to="https://www.lenovo.com/" />
+
+	<!--	404s as-is:
+				-->
+	<rule from="^http:///shop\.lenovo\.com/us/?$"
+		to="https://www.lenovo.com/products/us/desktop/essential/c-series" />
+
+	<rule from="^http://(checkout|download|outlet|s|shop|www)\.lenovo\.com/"
 		to="https://$1.lenovo.com/"/>
  
-	<rule from="^http://(?:www\.)?lenovo\.co\.uk/?$"
-		to="https://www.lenovo.com/uk/en/"/>
+	<rule from="^http://forums?\.lenovo\.com/"
+		to="https://forums.lenovo.com/" />
 
 	<rule from="^http://(www\.)?lenovoorders\.com/"
-        to="https://$1lenovoorders.com/"/>
+		to="https://$1lenovoorders.com/" />
 
+	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
+
+		shop.lenovo points here:
+						-->
+	<rule from="^https?://(?:www\.)?lenovovision\.com/(?:.*)"
+		to="https://www.lenovo.com/" />
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
 
-		support redirects to support.lenovo.com
-		training redirects to training.lenovo.partner-management.com
+		training redirects to training.lenovo.partner-management.com:
 										-->
-	<rule from="^https://www\.lenovo\.com/(support|training)/"
-		to="http://www.lenovo.com/$1/" downgrade="1" />
+	<rule from="^https://www\.lenovo\.com/training/"
+		to="http://www.lenovo.com/training/" downgrade="1" />
 
-	<!--	self-signed
-		social just redirects to blog
-		haven't seen blog nor support links, but just in case.
+	<!--	- Social just redirects to blog
+		- Haven't seen blog nor support links, but just in case.
 										-->
-	<rule from="^https://(blog|(consumer)?support|forum|news|social)\.lenovo\.com/"
+	<rule from="^https://(blog|(?:consumer)?support|news|social)\.lenovo\.com/"
 		to="http://$1.lenovo.com/" downgrade="1" />
-
-	<!--	shop.lenovo points here.
-
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
-					-->
-	<rule from="^https://www\.lenovovision\.com/"
-		to="http://www.lenovovision.com/" downgrade="1" />
-
-	<!--	thinkpad.com redirects to www.lenovo.com/link/redirect.www.lenovo.com/www.thinkpad.com/,
-		which 404s over https but redirects like so over http.
-
-		https://trac.torproject.org/projects/tor/ticket/6604
-									-->
-	<rule from="^https?://(?:(?:www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(?:www\.)?thinkpad\.com/"
-		to="https://www.lenovo.com/us/en/?cid=SEO-thinkpadcom" />
 
 </ruleset>

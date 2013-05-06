@@ -1,23 +1,34 @@
-<ruleset name="The Washington Examiner" default_off="expired, mismatch">
+<!--
+	CDN buckets:
 
-	<!--	Cert: *.acquia-sites.com	-->
-	<target host="washingtonexaminer.com" />
-	<target host="*.washingtonexaminer.com" />
+		- d1j4hw6rcy3g1h.cloudfront.net
 
-
-	<securecookie host="^(.*\.)?washingtonexaminer\.com$" name=".*" />
+			- cdn.washingtonexaminer.biz
 
 
-	<!--	Pages redirect to /wash...	-->
-	<rule from="^https://www\.washingtonexaminer\.com/"
-		to="https://washingtonexaminer.com/" />
+	Nonfunctional subdomains:
 
-	<!--	Observed subdomains:
+		- (www.) *
+		- campaign2012 *
+		- events		(shows amstarcinemas.com; mismatched, CN: thegrandtheatre.com)
 
-		- campaign2012
-		- events
-			-->
-	<rule from="^http://(\w+\.)?washingtonexaminer\.com/"
-		to="https://$1washingtonexaminer.com/" />
+	* Times out
+
+
+	Problematic domains:
+
+		- community.washingtonexaminer.com	(wpengine)
+		- newsletters.washingtonexaminer.com *
+
+	* wpengine
+
+-->
+<ruleset name="The Washington Examiner (partial)">
+
+	<target host="cdn.washingtonexaminer.biz" />
+
+
+	<rule from="^http://cdn\.washingtonexaminer\.biz/"
+		to="https://d1j4hw6rcy3g1h.cloudfront.net/" />
 
 </ruleset>

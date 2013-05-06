@@ -1,22 +1,36 @@
 <!--
-	Problematic domains:
+	Nonfunctional domains:
 
 		- img.zumzi.com *
 		- s.zumzi.com *
+		- ss.zumzi.com *
+		- afiliere.zumzi.ro	(times out)
 
-	* CN: www.zumzi.com; shows that domain.
+	* Redirects to www.zumzi.ro; mismatched, CN: www.zumzi.ro
+
+
+	Problematic domains:
+
+		- biz.zumzi.md		(works; mismatched, CN: www.zumzi.md)
+		- biz.zumzi.ro		(works; mismatched, CN: www.zumzi.ro)
+
+
+	Mixed css & js on www from ss
+
+	Mixed images on www from img & s
 
 -->
 <ruleset name="Zumzi (partial)" platform="mixedcontent">
 
-	<target host="zumzi.ro" />
+	<target host="zumzi.*" />
+	<target host="*.zumzi.md" />
 	<target host="*.zumzi.ro" />
 
 
-	<securecookie host="^\.zumzi\.ro$" name=".+" />
+	<securecookie host="^\.zumzi\.(?:md|ro)$" name=".+" />
 
 
-	<rule from="^http://(www\.)?zumzi\.ro/"
-		to="https://$1zumzi.ro/" />
+	<rule from="^http://(www\.)?zumzi\.(md|ro)/"
+		to="https://$1zumzi.$2/" />
 
 </ruleset>

@@ -1,0 +1,49 @@
+<!--
+	For other Gannett Company coverage, see Gannett-Company.xml.
+
+
+	CDN buckets:
+
+		- wildcard.shoplocal.com.edgekey.net
+
+			- images.crossmediaservices.com
+			- akimages.shoplocal.com
+
+
+	Problematic domains:
+
+		- akimages.crossmediaservices.com	(Akamai)
+		- images.crossmediaservices.com		(403, CN: *.shoplocal.com)
+
+
+	Fully covered domains:
+
+		- akimages.crossmediaservices.com	(→ akimages.shoplocal.com)
+		- images.crossmediaservics.com		(→ akimages.shoplocal.com)
+
+		- shoplocal.com subdomains:
+
+			- (www.)
+			- akimages
+			- sl2
+			- support
+			- wiki
+
+-->
+<ruleset name="ShopLocal">
+
+        <target host="*.crossmediaservices.com" />
+	<target host="shoplocal.com" />
+	<target host="*.shoplocal.com" />
+
+
+	<securecookie host="^(?:support|wiki|www)\.shoplocal\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:ak)?images\.crossmediaservices\.com/"
+		to="https://akimages.shoplocal.com/" />
+
+	<rule from="^http://((?:akimages|sl2|support|wiki|www)\.)?shoplocal\.com/"
+		to="https://$1shoplocal.com/" />
+
+</ruleset>

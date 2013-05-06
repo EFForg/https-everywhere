@@ -1,39 +1,67 @@
 <!--
+	Other Motorola rulesets:
+
+		- Motorola_Trade_Up.xml
+
+
+	CDN buckets:
+
+		- motorola-global-portal.custhelp.com
 		- abea-2fo3vv.client.shareholder.com
+
 		- abea-58xvpr.client.shareholder.com
+
 			- webcenter360.shareholder.com
 
 
 	Nonfunctional domains:
 
-		- investor.motorola.com			(cert: shareholder.com; 404)
-		- responsibility.motorola.com
-		- (www.)motorola.com
-			- www.motorola.com/staticfiles/.* 302s to homepage.
+		- investor.motorola.com			(404, CN: shareholder.com)
+		- responsibility.motorola.com		(no https)
+		- (www.)motorolacareers.com		(times out)
+		- careers.motorolasolutions.com		(redirects to www.resumeware.com, CN: secure.resumeware.net)
+		- investors.motorolasolutions.com	(403, CN: shareholder.com)
+
+
+	Problematic domains:
+
+		- motorola.com *
+
+		- www.motorola.com
+
+			- www.motorola.com/staticfiles/.* 302s to homepage
 			- www.motorola.com/Business/.* prints "tcp_error"
 
-		- (www.)motorolacareers.com		(times out)
-		- careers.motorolasolutions.com		(cert: secure.resumeware.net; redirects to www.resumeware.com)
-		- investors.motorolasolutions.com	(cert: shareholder.com; 403)
+		- motorolasolutions.com *
+
+	* Prints "dns_server_failure", valid cert
+
+
+	Partially covered domains:
+
+		- (www.)motorola.com			(^ → www)
+		- (www.)motorolasolutions.com		(^ → www, some pages redirect to http)
 
 -->
 <ruleset name="Motorola (partial)">
 
 	<target host="*.motorola.com" />
+		<exclusion pattern="^http://(?:www\.)?motorola\.com/(?!Business|staticfiles)/" />
 	<target host="motorolasolutions.com" />
 	<target host="*.motorolasolutions.com" />
 
 
-	<securecookie host="^(?:globalrepairtools|mediacenter|membership)\.motorola\.com$" name=".*" />
-	<securecookie host="^mediacenter\.motorolasolutions\.com$" name=".*" />
+	<securecookie host="^(?:globalrepairtools|mediacenter|membership)\.motorola\.com$" name=".+" />
+	<securecookie host="^mediacenter\.motorolasolutions\.com$" name=".+" />
 
 
-	<rule from="^http://(globalrepairtools|mediacenter|membership|sdc)\.motorola\.com/"
+
+	<rule from="^http://motorola\.com/"
+		to="https://www.motorola.com/" />
+
+	<rule from="^http://(globalrepairtools|mediacenter|membership|sdc|www)\.motorola\.com/"
 		to="https://$1.motorola.com/" />
 
-	<!--	- !www prints "dns_server_error"
-		- At least some pages 302 to http
-						-->
 	<rule from="^https?://(?:www\.)?motorolasolutions.com/web/"
 		to="https://www.motorolasolutions.com/web/" />
 
