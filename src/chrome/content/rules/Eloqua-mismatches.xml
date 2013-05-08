@@ -2,30 +2,21 @@
 	For rules that are on by default, see Eloqua.xml.
 
 -->
-<ruleset name="Eloqua (mismatches)" default_off="expired mismatch, self-signed">
+<ruleset name="Eloqua (mismatches)" default_off="expired, mismatched, self-signed">
 
 	<target host="*.eloqua.com" />
-		<!--
-			secure is handled by default-on ruleset.
-								-->
-		<exclusion pattern="http://(media|secure|www)\." />
+		<exclusion pattern="http://(?:media|secure|www)\." />
 	<target host="useitandsee.com" />
 	<target host="*.useitandsee.com" />
 
 
-	<securecookie host="^.*\.eloqua\.com$" name=".*" />
-	<securecookie host="(.*\.)useitandsee\.com$" name=".*" />
+	<securecookie host=".*\.eloqua\.com$" name=".+" />
+	<securecookie host="(?:.*\.)useitandsee\.com$" name=".+" />
 
 
-	<!--	- blog: expired, self-signed
-		- now & succeed: secure.eloqua.com
-		- web: plesk
-					-->
 	<rule from="^http://(blog|now|succeed|web)\.eloqua\.com/"
 		to="https://$1.eloqua.com/" />
 
-	<!--	secure.eloqua.com
-					-->
 	<rule from="^http://(?:www\.)?useitandsee\.com/"
 		to="https://useitandsee.com/" />
 

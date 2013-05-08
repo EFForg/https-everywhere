@@ -9,8 +9,7 @@
 
 	CDN buckets:
 
-		- wildcard.en25.com.edgekey.net/...
-			- e5763.g.akamaiedge.net/...
+		- wildcard.en25.com.edgekey.net
 
 
 	Nonfunctional domains:
@@ -28,38 +27,59 @@
 	* Times out
 
 
-	Problematic eloqua.com subdomains:
+	Problematic domains:
 
-		- media		(works; mismatched, CN: *.clickability.com)
-		- now		(mismatched, CN: secure.eloqua.com)
-		- web		(works; self-signed, CN: plesk)
+		-  eloqua.com subdomains:
+
+			- blog		(works; expired 2011-03-04, CN: localhost.localdomain)
+			- media		(works; mismatched, CN: *.clickability.com)
+			- now *
+			- succeed	(works; mismatched, CN: *.t.eloqua.com)
+			- web		(works; self-signed, CN: plesk)
+
+		- (www.)useitandsee.com *
+
+	* Mismatched, CN: secure.eloqua.com
+
+
+	Fully covered domains:
+
+		- (www.)elq.to		(→ bit.ly)
+
+		- eloqua.com subdomains:
+
+			- now		(→ secure)
+			- secure
+			- static
+
+			- *.t:
+
+				- p01
+				- s2624
+				- s33
+
+		- img.en25.com
 
 -->
 <ruleset name="Eloqua">
 
+	<target host="*.eloqua.com" />
 	<target host="elq.to" />
 	<target host="www.elq.to" />
 	<target host="img.en25.com" />
-	<target host="*.eloqua.com" />
-	<target host="*.t.eloqua.com" />
 
 
 	<securecookie host="^\.eloqua\.com$" name="^EL(?:OQUA|QSTATUS)$" />
 
 
-	<rule from="^http://(?:www\.)?elq\.to/"
-		to="https://bit.ly/" />
-
 	<rule from="^http://now\.eloqua\.com/"
 		to="https://secure.eloqua.com/" />
 
-	<!--	Observed in *.t:
-
-			- p01
-			- s2624
-				-->
 	<rule from="^http://(secure|static|\w\d+\.t)\.eloqua\.com/"
 		to="https://$1.eloqua.com/" />
+
+	<rule from="^http://(?:www\.)?elq\.to/"
+		to="https://bit.ly/" />
 
 	<rule from="^http://img\.en25\.com/"
 		to="https://img.en25.com/" />
