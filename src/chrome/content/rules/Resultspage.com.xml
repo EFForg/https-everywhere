@@ -1,13 +1,30 @@
 <!--
 	For other SLI Systems coverage, see SLI-Systems.xml.
 
+
+	Nonfunctional domains:
+
+		- (www.)resultsdemo.com		(redirects to http, valid cert)
+		- (www.)resultspage.com		(mismatched, CN: *.resultsdemo.com)
+		- sli-systems.resultspage.com	(redirects to site-search.sli-systems.com, with or without https)
+
+
+	Fully covered resultspage.com subdomains:
+
+		- assets
+		- \w+		(per-client subdomains)
+
 -->
 <ruleset name="resultspage.com (partial)">
 
-	<target host="assets.resultspage.com"/>
+	<target host="*.resultspage.com"/>
+		<exclusion pattern="^http://www\." />
 
 
-	<rule from="^http://assets\.resultspage\.com/"
-		to="https://assets.resultspage.com/"/>
+	<securecookie host="^.+\.resultspage\.com$" name=".+" />
+
+
+	<rule from="^http://([\w-]+)\.resultspage\.com/"
+		to="https://$1.resultspage.com/"/>
 
 </ruleset>
