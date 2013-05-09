@@ -1,6 +1,30 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ^		(times out)
+		- www		(no https)
+
+
+	Problematic subdomains:
+
+		- hirise-pds.lpl	(mismatched, CN: hirise.lpl.arizona.edu)
+
+			- $ redirects to PDS/, which is identical on hirise.lpl
+			- other paths show a broken version of hirise.lpl
+
+-->
 <ruleset name="Cs.arizona.edu">
-  <target host="cs.arizona.edu" />
+  <target host="*.arizona.edu" />
   <target host="www.cs.arizona.edu" />
   <rule from="^http://www\.cs\.arizona\.edu/" to="https://www.cs.arizona.edu/" />
   <rule from="^http://cs\.arizona\.edu/" to="https://www.cs.arizona.edu/" />
+
+	<rule from="^http://hirise\.lpl\.arizona\.edu/"
+		to="https://hirise.lpl.arizona.edu/" />
+
+	<rule from="^http://hirise-pds\.lpl\.arizona\.edu/(\?.*)?$"
+		to="https://hirise.lpl.arizona.edu/PDS/$1" />
+
+	<rule from="^http://hirise-pds\.lpl\.arizona\.edu/"
+		to="https://hirise.lpl.arizona.edu/" />
 </ruleset>
