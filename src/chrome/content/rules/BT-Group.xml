@@ -4,9 +4,45 @@
 		- Dabs.xml
 
 
-	Problematic domains:
+	btbusiness.custhelp.com
 
-		- globalservices	(cert only matches www.globalservices)
+
+	Nonfunctional bt.com subdomains:
+
+		- (www.)btlife *
+		- (www.)btvision *
+		- (www.)business	(data differs from http, valid cert)
+		- (www.)insight		(times out)
+
+	* http reply
+
+
+	Problematic bt.com subdomains:
+
+		- globalservices *
+		- productsandservices *
+		- shop			(times out)
+
+	* Cert only matches www.foo
+
+
+	Fully covered domains:
+
+		- bt.com subdomains:
+
+			- (www.)			(^ → www)
+			- secure.business
+			- (www.)globalservices		(^ → www)
+			- (www.)productsandservices	(^ → www)
+			- (www.)shop			(^ → www)
+			- www.vouchers
+			- www2
+
+		- www.btplc.com
+		- www.openreach.co.uk
+
+
+	^vouchers.bt.com doesn't exist
 
 -->
 <ruleset name="BT Group (partial)">
@@ -28,6 +64,14 @@
 
 	<rule from="^https?://(?:www\.)?((?:global|productsand)services\.)?bt\.com/"
 		to="https://www.$1bt.com/" />
+
+	<rule from="^http://(secure\.business|www\.(?:shop|vouchers)|www2)\.bt\.com/"
+		to="https://$1.bt.com/" />
+
+	<!--	Server drops path like so:
+						-->
+	<rule from="^http://shop\.bt\.com/.*"
+		to="https://www.shop.bt.com/" />
 
 	<rule from="^http://www\.btplc\.com/"
 		to="https://www.btplc.com/" />
