@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- secure.www.odcdn.com.edgekey.net
+		- static.www.odcdn.com.edgekey.net
+		- hosted.where2getit.com/officedepot/
+
+
+	Problematic domains:
+
+		- static.www.odcdn.com		(mismatched, CN: *.test.edgekey.net)
+		- officedepot.com		(no https)
+		- storelocator.officedepot.com	(404; mismatched, CN: hosted.where2getit.com)
+
+
+	Partially covered domains:
+
+		- (www.)officedepot.com		(^ → www, some pages redirect to http)
+
+		- storelocator.officedepot.com	(→ hosted.where2getit.com)
+
+			- ajax causes:
+
+				Internal error: [Exception... "Failure" nsresult: "0x80004005 (NS_ERROR_FAILURE)" location: "JS frame ::
+				http://static.where2getit.com/w2gi/javascript/ace/1.78/prototype.js :: Ajax.Request<.request :: line 50" data: no]
+
+			- index.html causes cookie error - trips referrer check?
+
+
+	Fully covered domains:
+
+		- secure.www.odcdn.com
+		- static.www.odcdn.com		(→ secure.www)
+		- www18.officedepot.com
+
+-->
+<ruleset name="Office Depot (partial)">
+
+	<target host="*.www.odcdn.com" />
+	<target host="officedepot.com" />
+	<target host="*.officedepot.com" />
+
+
+	<securecookie host="^www18\.officedepot\.com$" name=".+" />
+
+
+	<rule from="^http://s(?:ecure|tatic)\.www\.odcdn\.com/"
+		to="https://secure.www.odcdn.com/" />
+
+	<rule from="^http://(?:www\.)?officedepot\.com/(account/|cart/checkout\.do|favicon\.ico|images/|links/(?!links)|orderhistory(?:$|\?|/))"
+		to="https://www.officedepot.com/$1" />
+
+	<rule from="^http://storelocator\.officedepot\.com/(images|javascript)/"
+		to="https://hosted.where2getit.com/officedepot/$1/" />
+
+	<rule from="^http://storelocator\.officedepot\.com/w2gi/images/"
+		to="https://hosted.where2getit.com/w2gi/images/" />
+
+	<rule from="^http://www18\.officedepot\.com/"
+		to="https://www18.officedepot.com/" />
+
+</ruleset>
