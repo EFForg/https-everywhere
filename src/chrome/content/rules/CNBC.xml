@@ -1,13 +1,42 @@
-<ruleset name="CNBC">
+<!--
+	For rules causing mixed content, see CNBC-mixed.xml.
+
+
+	CDN buckets:
+
+		- sc.cnbc.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- apps	(no https)
+
+
+	Problematic subdomains:
+
+		- data	(works, mixed active content from apps & sc)
+		- sc	(works, akamai)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- fm
+		- login
+		- pro
+		- register
+
+-->
+<ruleset name="CNBC (partial)">
 
 	<target host="cnbc.com" />
 	<target host="*.cnbc.com" />
 
 
-	<securecookie host="^www\.cnbc\.com$" name=".+" />
+	<securecookie host="^(?:login|pro|register|www)\.cnbc\.com$" name=".+" />
 
 
-	<rule from="^http://(fm\.|www\.)?cnbc\.com/"
+	<rule from="^http://(fm\.|login\.|pro\.|register\.|www\.)?cnbc\.com/"
 		to="https://$1cnbc.com/" />
 
 </ruleset>
