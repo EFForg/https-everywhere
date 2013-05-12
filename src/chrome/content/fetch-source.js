@@ -148,6 +148,7 @@ httpsEverywhere.fetchSource = {
   }
 };
 
+// TODO: Test resizing on mulitple platforms
 // adjust window resizing
 window.onresize = function() {
   var textBox = document.getElementById("source-text");
