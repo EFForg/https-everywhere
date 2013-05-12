@@ -152,8 +152,8 @@ httpsEverywhere.fetchSource = {
 window.onresize = function() {
   var textBox = document.getElementById("source-text");
   // TODO: Move to constants
-  textBox.width = window.innerWidth - 50;
-  textBox.height = window.innerHeight - 100;
+  textBox.width = window.innerWidth - 100;
+  textBox.height = window.innerHeight - 150;
 }
 
 // hook event for init
