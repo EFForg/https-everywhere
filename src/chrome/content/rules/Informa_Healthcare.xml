@@ -1,0 +1,44 @@
+<!--
+	For problematic rules, see Informa_Healthcare-problematic.xml.
+
+
+	For other Informa coverage, see Informa.xml.
+
+
+	Some (most?) pages redirect to http.
+
+
+	Problematic domains:
+
+		- informahealthcare.com subdomains:
+
+			- comms *
+			- contact *
+			- www		(cert only matches ^informahealthcare.com)
+
+	* Works, mismatched, CN: *.gridserver.com
+
+
+	Partially covered domains:
+
+		- (www.)informahealthcare.com		(most pages redirect to http)
+
+-->
+<ruleset name="Informa Healthcare (partial)">
+
+	<target host="informahealthcare.com" />
+	<target host="www.informahealthcare.com" />
+	<target host="informahealthcarestore.com" />
+	<target host="*.informahealthcarestore.com" />
+
+
+	<securecookie host="^\.(?:www\.)?informahealthcarestore\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?informahealthcare\.com/(action/(?:clickThrough|doLogin|registration)|cssJawr/|favicon\.ico|na101/|sda/|templates/|userimages/)"
+		to="https://informahealthcare.com/$1" />
+
+	<rule from="^http://(www\.)?informahealthcarestore\.com/"
+		to="https://$1informahealthcarestore.com/" />
+
+</ruleset>

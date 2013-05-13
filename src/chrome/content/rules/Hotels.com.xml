@@ -1,0 +1,96 @@
+<!--
+	Nonfunctional domains:
+
+		- jobs.hotels.com	(times out)
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.hotels.com)
+		- el *
+		- es		(mismatched, CN: *.test.edgekey.net)
+		- www *
+
+	* Akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)
+
+
+	Fully covered domains:
+
+		- a[12].cdn-hotels.com
+		- exp.cdn-hotels.com
+
+		- hotel.com subdomains:
+
+			- customercare
+			- delivery
+
+			- service subdomains:
+
+				- ^
+				- be
+				- cn
+				- da
+				- de
+				- es
+				- fi
+				- fr
+				- id
+				- it
+				- jp
+				- kr
+				- ms
+				- no
+				- ru
+				- sv
+				- zh
+
+			- ssl
+
+-->
+<ruleset name="Hotels.com (partial)">
+
+	<target host="*.cdn-hotels.com" />
+	<target host="hotels.com" />
+	<target host="*.hotels.com" />
+
+
+	<securecookie host="^\.cdn-hotels\.com$" name=".+" />
+	<!--
+		Omniture tracking cookies:
+							-->
+	<securecookie host="^\.hotels\.com$" name="^s_\w+$" />
+	<!--
+		Careful: we're putting some www and \w\w pages in the ssl(-\w\w)? namespace,
+		so securing ssl or ssl-\w\w cookies could be problematic.
+										-->
+	<securecookie host="^(?:customercare|(?:\w\w\.)?service)\.hotels\.com$" name=".+" />
+
+
+	<rule from="^http://(\w+)\.cdn-hotels\.com/"
+		to="https://$1.cdn-hotels.com/" />
+
+	<!--	Also on ssl, but presumably pointing
+		to CDN would be preferred:
+							-->
+	<rule from="^https?://(?:\w\w\.|www\.)?hotels\.com/(external/|html/blank\.html|static/)"
+		to="https://a1.cdn-hotels.com/$1" />
+
+	<!--	CDN redirects to ssl, so preempt it:
+							-->
+	<rule from="^https?://(?:www\.)?hotels\.com/((?:c[no]\d+|customer_care|de\d+|deals|ImageDisplay|site-index)(?:$|\?|/)|selectors/|__ssobj/)"
+		to="https://ssl.hotels.com/$1" />
+
+	<!--	Same for different locales:
+						-->
+	<rule from="^https?://(\w\w)\.hotels\.com/((?:c[no]\d+|customer_care|de\d+|deals|ImageDisplay|site-index)(?:$|\?|/)|selectors/|__ssobj/)"
+		to="https://ssl-$1.hotels.com/$2" />
+
+	<rule from="^http://(customercare|delivery|(?:\w\w\.)?service|ssl(?:-\w\w)?)\.hotels\.com/"
+		to="https://$1.hotels.com/" />
+
+</ruleset>

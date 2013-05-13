@@ -1,0 +1,63 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+
+	For problematic rules, see Linksys-problematic.xml.
+
+
+	CDN buckets:
+
+		- downloads.linksys.com.edgesuite.net
+
+		- linksys-content.vcommerce.com
+
+			- 403; mismatched, CN: support3.cdnetworks.net
+
+
+	Nonfunctional subdomains:
+
+		- m		(shows another domain; mismatched, CN: www.linksysbycisco.com)
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: homesupport.cisco.com)
+		- downloads	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- store		(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- support
+
+
+	downloads serves mixed images on www and
+	support, but no scripts nor stylesheets.
+
+-->
+<ruleset name="Linksys (partial)">
+
+	<target host="linksys.com" />
+	<target host="*.linksys.com" />
+		<exclusion pattern="^http://store\.linksys\.com/(?!\w+\.css$|css/|imagecache/|images/|moduleimages/)" />
+	<target host="linksys-content.vcommerce.com" />
+
+
+	<securecookie host="^.*\.linksys\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?linksys\.com/"
+		to="https://www.linksys.com/" />
+
+	<rule from="^http://(store|support)\.linksys\.com/"
+		to="https://$1.linksys.com/" />
+
+	<rule from="^https?://linksys-content\.vcommerce\.com/"
+		to="https://store.linksys.com/" />
+
+</ruleset>

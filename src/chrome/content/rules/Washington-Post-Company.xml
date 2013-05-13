@@ -14,21 +14,34 @@
 
 	Nonfunctional domains:
 
-		- washingtonpost.com
-		- findnsave.washingtonpost.com	(times out)
-		- origin.washingtonpost.com		(redirects to www)
+		- www.slate.com *
 
-	Nonfunctional Akamai:
+		- washingtonpost.com subdomains:
 
-		- www.slate.com				(504)
-		- js.washingtonpost.com			(504)
-		- media[23]?.washingtonpost.com		("Service Unavailable")
-		- projects.washingtonpost.com
-		- www.washingtonpost.com		("An error occurred")
-		- css.wpdigital.net			("An error occurred")
-			- Data also exist on www.washingtonpost.com
-		- img.wpdigital.net/wp-adv/		("An error occurred")
-		- img[23].wpdigital.net
+			- ^
+			- findnsave		(times out)
+			- img *
+			- js *
+			- media[23]? **
+			- origin		(redirects to www)
+			- projects **
+			- www *
+
+		- wpdigital.net subdomains:
+
+			- css *		(data also exist on www.washingtonpost.com)
+			- img *
+			- img[23] *
+
+	* 504, akamai
+	** 503, akamai
+
+
+	Problematic domains:
+
+		- (www.)wapo.st				(times out)
+		- (www.)washingtonpostmedia.com		(mismatched, CN: washpost.com)
+		- (www.)washpostco.com			(akamai, mostly corporate-ir.net)
 
 
 	www no longer works when rewritten to ssl.
@@ -36,6 +49,7 @@
 -->
 <ruleset name="Washington Post Company (unreliable)" default_off="needs testing">
 
+	<target host="wapo.st" />
 	<target host="washpost.com" />
 	<target host="*.washpost.com" />
 	<target host="*.washingtonpost.com" />
@@ -46,14 +60,17 @@
 	<target host="*.wpdigital.net" />
 
 
-	<!--securecookie host="^.*\.washingtonpost\.com$" name=".*" /-->
+	<!--securecookie host="^.*\.washingtonpost\.com$" name=".+" /-->
 
 
-	<rule from="^https?://js\.washingtonpost\.com/"
-		to="https://ssl.washingtonpost.com/" />
+	<rule from="^http://wapo\.st/"
+		to="https://bit.ly/" />
 
 	<rule from="^http://(id|ssl1?|subscription|voices)\.washingtonpost\.com/"
 		to="https://$1.washingtonpost.com/" />
+
+	<rule from="^https?://js\.washingtonpost\.com/"
+		to="https://ssl.washingtonpost.com/" />
 
 	<rule from="^http://(media\.|www\.)?washpost\.com/"
 		to="https://$1washpost.com/" />

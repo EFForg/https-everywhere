@@ -6,7 +6,8 @@
 
 # currently a very literal translation of merge-rulesets.sh, but about five
 # times faster
-
+from __future__ import print_function
+pass
 import os
 from glob import glob
 from subprocess import call
@@ -20,10 +21,10 @@ rulesets_fn="chrome/content/rules/default.rulesets"
 # cleanup after bugs :/
 misfile = rulesets_fn + "r"
 if os.path.exists(misfile):
-  print "Cleaning up malformed rulesets file..."
+  print("Cleaning up malformed rulesets file...")
   os.unlink(misfile)
 
-print "Creating ruleset library..."
+print("Creating ruleset library...")
 
 # Under git bash, sed -i issues errors and sets the file "read only".  Thanks.
 if os.path.isfile(rulesets_fn):
@@ -50,7 +51,7 @@ for rfile in sorted(glob("chrome/content/rules/*.xml")):
 library.write("</rulesetlibrary>\n")
 library.close()
 
-print "Removing whitespaces and comments..."
+print("Removing whitespaces and comments...")
 
 def rulesize():
   return len(open(rulesets_fn).read())
@@ -60,18 +61,18 @@ sedcmd = ["sed", "-i", "-e", ":a", "-re"]
 call(sedcmd + [r"s/<!--.*?-->//g;/<!--/N;//ba", rulesets_fn])
 call(["sed", "-i", r":a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g", rulesets_fn])
 call(["sed", "-i", r"s/<\/ruleset>/<\/ruleset>\n/g", rulesets_fn])
-print "Crushed", crush, "bytes of rulesets into", rulesize()
+print("Crushed", crush, "bytes of rulesets into", rulesize())
 
 try:
   if 0 == call(["xmllint", "--noout", rulesets_fn]):
-    print rulesets_fn, "passed XML validity test."
+    print(rulesets_fn, "passed XML validity test.")
   else:
-    print "ERROR:", rulesets_fn, "failed XML validity test!"
+    print("ERROR:", rulesets_fn, "failed XML validity test!")
     sys.exit(1)
-except OSError, e:
+except OSError as e:
   if "No such file or directory" not in traceback.format_exc():
     raise
-  print "WARNING: xmllint not present; validation of", rulesets_fn, " skipped."
+  print("WARNING: xmllint not present; validation of", rulesets_fn, " skipped.")
 
 # We make default.rulesets at build time, but it shouldn't have a variable
 # timestamp

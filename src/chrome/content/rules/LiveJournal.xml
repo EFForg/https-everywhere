@@ -6,7 +6,7 @@
 			- Not on www
 
 		- l-userpic	(ditto)
-
+		- ic.pics	(403, mismatched, CN: ssl2.cdngc.net)
 		- user		(404 via https)
 
 -->
@@ -14,8 +14,6 @@
 
 	<target host="livejournal.com" />
 	<target host="*.livejournal.com" />
-		<!--	Seems to have disappeared from /stat	-->
-		<exclusion pattern="^http://l-stat\.livejournal\.com/\?\?" />
 
 
 	<!--	paths under img/ & stc/ have started redirecting to http.
@@ -37,5 +35,13 @@
 		user 404s via http		-->
 	<rule from="^https?://(?:l-)?stat\.livejournal\.com/"
 		to="https://stat.livejournal.com/" />
+
+	<!--	User journal entries work, but user pages redirect to www.
+										-->
+	<rule from="^http://([\w-]+)\.livejournal\.com/(\d+)\.html"
+		to="https://$1.livejournal.com/$2.html" />
+
+	<rule from="^https://www\.livejournal\.com/stc/img/error-pages/"
+		to="https://www.livejournal.com/img/error-pages/" />
 
 </ruleset>

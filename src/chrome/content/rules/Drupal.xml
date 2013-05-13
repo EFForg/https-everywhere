@@ -1,12 +1,37 @@
-<ruleset name="Drupal">
-  <target host="*.drupal.org" />
-  <target host="drupal.org" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(?:www\.)?drupal\.org/" to="https://drupal.org/"/>
-  <rule from="^http://(sec|association|chicago2011)\.drupal\.org/" to="https://$1.drupal.org/"/>
-  <!-- Following a bug report and https://drupal.org/node/952992 -->
-  <!-- Some of the following don't work. -->
-  <!--
-  <rule from="^http://(groups|localize|testing|api|association|scratch|beta|chicago2011|london2011)\.drupal\.org/" to="https://$1.drupal.org/"/>
-   -->
+		- api *
+		- denver2012 *
+		- ftp
+		- groups *
+		- localize *
+		- munich2012 *
+		- qa *
+		- testing *
+
+	* 403: https://drupal.org/node/952992
+
+
+	Partially covered subdomains:
+
+		- portland2013 *
+		- sydney2013 *		(sites/default/files/images/laudanum-140.png loops)
+
+	* Some [most?] pages redirect to http, including login & registration
+				
+-->
+<ruleset name="Drupal (partial)">
+
+	<target host="drupal.org" />
+	<target host="*.drupal.org" />
+		<exclusion pattern="^http://(?:portland|sydney)2013\.drupal\.org/(?!cart(?:$|\?|/)|sites/(?!default/files/images/laudanum-140\.png))" />
+
+
+	<rule from="^http://(?:www\.)?drupal\.org/"
+		to="https://drupal.org/" />
+
+	<rule from="^http://(association|chicago2011|lists|london2011|portland2013|sec|security|sydney2013)\.drupal\.org/"
+		to="https://$1.drupal.org/"/>
+
 </ruleset>

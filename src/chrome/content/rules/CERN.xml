@@ -1,0 +1,103 @@
+<!--
+	Nonfunctional domains:
+
+		- alpha.web.cern.ch *
+		- first-website.web.cern.ch *
+		- itssb.web.cern.ch *
+		- home.web.cern.ch	(redirects to login.cern.ch, valid cert)
+		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
+		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
+
+	* Redirects to login.cern.ch, valid cert
+
+
+	Problematic cern.ch subdomains:
+
+		- bulletin *
+		- info		(404; mismatched, CN: *.web.cern.ch)
+		- web *
+		- listboxservices.web *
+
+	* Mismatched, CN: www.cern.ch
+
+
+	Partially covered subdomains:
+
+		- listboxservices.web	(→ simba3.web)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- bulletin	(→ webservices.web)
+		- cds
+		- cdsweb
+		- edms
+		- ert
+		- espace
+		- indico
+		- login
+		- mtf
+
+		- web subdomains:
+
+			- ^			(→ webservices.web)
+			- ab-dep-op-elogbook
+			- atlas
+			- committees
+			- education
+			- egee-uig
+			- environmental-impact
+			- framework
+			- hie-isolde
+			- hr-dept
+			- hr-info
+			- hr-recruit
+			- indico
+			- isolde
+			- isolde-project-rilis
+			- job
+			- oraweb
+			- outreach
+			- press
+			- project-voisins
+			- public
+			- service-portal
+			- simba3
+			- user
+			- webservices
+
+-->
+<ruleset name="CERN (partial)">
+
+	<target host="cern.ch" />
+	<target host="*.cern.ch" />
+
+
+	<securecookie host=".*\.cern\.ch$" name=".+" />
+
+
+	<rule from="^http://((?:association|cds|cdsweb|edms|ert|espace|indico|login|mtf|(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|service-portal|simba3|user|webservices)\.web|www)\.)?cern\.ch/"
+		to="https://$1cern.ch/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^https?://bulletin\.cern\.ch/"
+		to="https://cdsweb.cern.ch/journal/CERNBulletin/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^https?://web\.cern\.ch/"
+		to="https://webservices.web.cern.ch/webservices/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
+		to="https://simba3.web.cern.ch/simba3/simba2/" />
+
+	<!--	Protocol-relative redirect from user.web:
+							-->
+	<rule from="^https://home\.web\.cern\.ch/"
+		to="http://home.web.cern.ch/" downgrade="1" />
+
+</ruleset>

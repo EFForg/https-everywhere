@@ -1,0 +1,29 @@
+<!--
+	Nonfunctional xsolla.com subdomains:
+
+		- (www.)	(times out)
+		- analytics	(handshake fails)
+		- help		(403; mismatched, CN: ps.xsolla.com)
+
+
+	Problematic domains:
+
+		- tools.xsolla.com	(works, self-signed)
+
+-->
+<ruleset name="Xsolla (partial)">
+
+	<target host="2pay.ru" />
+	<target host="*.xsolla.com" />
+
+
+	<securecookie host="^.+\.xsolla\.com$" name=".+" />
+
+
+	<rule from="^http://2pay\.ru/"
+		to="https://2pay.ru/" />
+
+	<rule from="^http://((?:dev-)?account|cdn|ps|secure|static)\.xsolla\.com/"
+		to="https://$1.xsolla.com/" />
+
+</ruleset>

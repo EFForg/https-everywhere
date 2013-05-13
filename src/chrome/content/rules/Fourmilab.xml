@@ -1,31 +1,40 @@
-<ruleset name="Fourmilab">
+<!--
+	!www: cert only matches www
+
+-->
+<ruleset name="Fourmilab (partial)">
+
 	<target host="fourmilab.ch" />
 	<target host="www.fourmilab.ch" />
+		<exclusion pattern="^http://(?:www\.)?fourmilab\.ch/(?:cgi-bin/(?:uncgi/)?Earth\?|images/(?:c1995o1/$|flash/g-audio-player\.swf))" />
+
 
 	<securecookie host="^www\.fourmilab\.ch$" name=".+" />
 
-	<exclusion pattern="^http://(www\.)?fourmilab\.ch/images/flash/g-audio-player\.swf" />
-	<exclusion pattern="^http://(www\.)?fourmilab\.ch/cgi-bin/(uncgi/)?Earth\?" />
 
-	<rule from="^(http://(www\.)?|https://)fourmilab\.ch/"
+	<rule from="^http(?:://(?:www\.)?|s://)fourmilab\.ch/"
 		to="https://www.fourmilab.ch/" />
 
-	<!-- Without the following downgrade rule, the "Comet C/1996 B2 (Hyakutake) Images"
-	hyperlink near the bottom of the page at http://www.fourmilab.ch/images/c1995o1/
-	does not work. (February 26, 2013.) -->
+	<!--	Without the following downgrade rule, the "Comet C/1996 B2 (Hyakutake) Images"
+		hyperlink near the bottom of the page at http://www.fourmilab.ch/images/c1995o1/
+		does not work. (February 26, 2013.)
+							-->
 	<rule from="^https://www\.fourmilab\.ch/images/c1995o1/$"
 		to="http://www.fourmilab.ch/images/c1995o1/" downgrade="1" />
 
-	<!-- Without the following downgrade rule, the image on the page at
-	http://www.fourmilab.ch/cship/figures/Gdoppler1.html may not
-	display properly. (February 26, 2013.) -->
+	<!--	Without the following downgrade rule, the image on the page
+		at http://www.fourmilab.ch/cship/figures/Gdoppler1.html may
+		not display properly. (February 26, 2013.)
+							-->
 	<rule from="^https://www\.fourmilab\.ch/cship/figures/Gdoppler1\.html"
 		to="http://www.fourmilab.ch/cship/figures/Gdoppler1.html" downgrade="1" />
 
-	<!-- Without the following downgrade rule, images requested via the URL
-	starting with http://www.fourmilab.com.ch/cgi-bin/uncgi/Earth? or
-	http://www.fourmilab.com.ch/cgi-bin/Earth? may not load completely.
-	(February 26, 2013.) -->
-	<rule from="^https://(www\.)?fourmilab\.ch/cgi-bin/(uncgi/)?Earth\?"
+	<!--	Without the following downgrade rule, images requested via the URL
+		starting with http://www.fourmilab.com.ch/cgi-bin/uncgi/Earth? or
+		http://www.fourmilab.com.ch/cgi-bin/Earth? may not load completely.
+		(February 26, 2013.)
+					-->
+	<rule from="^https://(?:www\.)?fourmilab\.ch/cgi-bin/(?:uncgi/)?Earth\?"
 		to="http://www.fourmilab.ch/cgi-bin/Earth?" downgrade="1" />
+
 </ruleset>

@@ -1,0 +1,85 @@
+<!--
+	Problematic domains:
+
+		- wwte.com *
+		- www.wwte.com		(akamai)
+		- www.wwte[23].com *
+		- wwte4.com		(mismatched, CN: uk.wwte4.com)
+		- wwte7.com		(mismatched, CN: euro.wwte7.com)
+		- wwte8.com		(mismatched, CN: aus.wwte8.com)
+		- wwte9.com		(mismatched, CN: se.wwte9.com)
+		- (www.)wwte10.com	(mismatched, CN: travel.wwte10.com)
+		- www.wwte1[1-4].com *
+
+	* Mismatched, CN: *.wwte1.com
+
+-->
+<ruleset name="WWTE (partial)">
+
+	<target host="media.wwte.com" />
+	<target host="wwte1.com" />
+	<target host="*.wwte1.com" />
+	<target host="www.wwte2.com" />
+	<target host="www.wwte3.com" />
+	<target host="wwte4.com" />
+	<target host="uk.wwte4.com" />
+	<target host="wwte7.com" />
+	<target host="*.wwte7.com" />
+	<target host="wwte8.com" />
+	<target host="aus.wwte8.com" />
+	<target host="wwte9.com" />
+	<target host="se.wwte9.com" />
+	<target host="wwte10.com" />
+	<target host="*.wwte10.com" />
+	<target host="www.wwte11.com" />
+	<target host="www.wwte12.com" />
+	<target host="www.wwte13.com" />
+	<target host="www.wwte14.com" />
+
+
+	<securecookie host="^\.(?:travel\.)?wwte1\.com$" name=".+" />
+	<securecookie host="^uk\.wwte4\.com$" name=".+" />
+	<securecookie host="^\.?euro\.wwte7\.com$" name=".+" />
+	<securecookie host="^aus\.wwte8\.com$" name=".+" />
+	<securecookie host="^se\.wwte9\.com$" name=".+" />
+
+
+	<rule from="^http://media\.wwte\.com/"
+		to="https://media.wwte.com/" />
+
+	<rule from="^http://(travel\.|www\.)?wwte1\.com/"
+		to="https://$1wwte1.com/" />
+
+	<!--	Redirects like so:
+									-->
+	<rule from="^https?://www\.wwte(?:2|3|1\d)\.com/(?:default\.htm|pubspec/scripts/default\.asp)?(?:\?.*)?$"
+		to="https://travel.wwte1.com/pubspec/scripts/eap.asp?eapid=0-30001" />
+
+	<rule from="^https?://wwte4\.com/(\?.*)?$"
+		to="https://uk.wwte4.com/Default.aspx$1" />
+
+	<rule from="^http://uk\.wwte4\.com/"
+		to="https://uk.wwte4.com/" />
+
+	<rule from="^https?://wwte7\.com/(\?.*)?$"
+		to="https://euro.wwte7.com/Default.aspx$1" />
+
+	<rule from="^http://euro\.wwte7\.com/"
+		to="https://euro.wwte7.com/" />
+
+	<rule from="^https?://wwte8\.com/(\?.*)?$"
+		to="https://aus.wwte8.com/Default.aspx$1" />
+
+	<rule from="^http://aus\.wwte8\.com/"
+		to="https://aus.wwte8.com/" />
+
+	<rule from="^https?://wwte9\.com/(\?.*)?$"
+		to="https://se.wwte9.com/Default.aspx$1" />
+
+	<rule from="^https?://wwte10\.com/(?:default\.htm|pubspec/scripts/default\.asp)?(?:\?.*)?$"
+		to="https://travel.wwte1.com/pubspec/scripts/eap.asp?eapid=0-30001" />
+
+	<rule from="^http://travel\.wwte10\.com/"
+		to="https://travel.wwte10.com/" />
+
+</ruleset>

@@ -1,0 +1,29 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog		(times out)
+		- support	(redirects to http; mismatched, CN: *.zendesk.com)
+
+
+	Cert only matches *.brightidea.com
+
+-->
+<ruleset name="Brightidea (partial)">
+
+	<target host="brightidea.com" />
+	<target host="*.brightidea.com" />
+
+
+	<securecookie host="^www\.brightidea\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?brightidea\.com/"
+		to="https://www.brightidea.com/" />
+
+	<rule from="^http://(images|na2)\.brightidea\.com/"
+		to="https://$1.brightidea.com/" />
+
+	<rule from="^https?://support\.brightidea\.com/(generated|system)/"
+		to="https://assets.zendesk.com/$1/" />
+
+</ruleset>

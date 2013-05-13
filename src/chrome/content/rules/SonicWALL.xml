@@ -1,0 +1,23 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- forms		(works; mismatched, CN: secure.eloqua.com)
+
+-->
+<ruleset name="SonicWALL (partial)">
+
+	<target host="sonicwall.com" />
+	<target host="*.sonicwall.com" />
+
+
+	<securecookie host="^.+\.sonicwall\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?sonicwall\.com/"
+		to="https://www.sonicwall.com/" />
+
+	<rule from="^http://software\.sonicwall\.com/"
+		to="https://software.sonicwall.com/" />
+
+</ruleset>

@@ -26,10 +26,16 @@
 		- ^
 		- cliara	(self-signed)
 		- dabney	(ditto)
-		- courses.hss	(ditto)
+		- gps		(cert only matches www.gps)
+		- courses.hss	(self-signed)
 		- imss		(CN: cliara.caltech.edu)
 		- www.imss
 		- www		(CN: cliara.caltech.edu)
+
+
+	Partially covered subdomains:
+
+		- (www.)gps	(^ → www, at least some pages redirect to http)
 
 
 	Fully covered subdomains:
@@ -49,6 +55,7 @@
 		- pcard ***
 		- scriptor ***
 		- techne1 ***
+		- x-tmt-web1.tmt
 		- tqfr *
 		- web **
 		- webmail
@@ -68,6 +75,7 @@
 
 	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
 	<target host="*.caltech.edu" />
+		<exclusion pattern="^https?://(?:www\.)?gps\.caltech\.edu/(?!pics/|stylesheets/|uploads/)" />
 	<!--target host="solutions.sciquest.com" /> safe? -->
 
 
@@ -82,7 +90,7 @@
 	<rule from="^http://(?:www\.)?access\.caltech\.edu/"
 		to="https://access.caltech.edu/" />
 
-	<rule from="^http://(mail\.alumni|insecure|utils\.its|pcard|scriptor|techne1|tqfr|web|webmail|webvpn)\.caltech\.edu/"
+	<rule from="^http://(mail\.alumni|insecure|utils\.its|pcard|scriptor|techne1|x-tmt-web1\.tmt|tqfr|web|webmail|webvpn)\.caltech\.edu/"
 		to="https://$1.caltech.edu/" />
 
 	<rule from="^http://business-query\.caltech\.edu:8181/"
@@ -94,8 +102,8 @@
 	<rule from="^http://(?:courses|moodle)\.caltech\.edu/"
 		to="https://courses.caltech.edu/" />
 
-	<rule from="^http://(?:www\.)?its\.caltech\.edu/"
-		to="https://www.its.caltech.edu/" />
+	<rule from="^http://(?:www\.)?(gp|it)s\.caltech\.edu/"
+		to="https://www.$1s.caltech.edu/" />
 
 	<rule from="^http://nassau\.caltech\.edu:4444/"
 		to="https://nassau.caltech.edu:4444/" />

@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- b7d61a7c6b8c307bf531-a92a66b9587e2a0aa805bd4e70b98407.r95.cf2.rackcdn.com
+
+			- cloud.staticzacks.net
+
+
+	Problematic domains:
+
+		- zacks.com
+		- zcom.zacks.com *		(works)
+		- cloud.staticzacks.net		(akamai - rackspace)
+
+	* Cert only matches www.zacks.com
+
+
+	Nonfunctional subdomains:
+
+		- finance	(503, akamai)
+
+
+	$ redirects to http.
+
+-->
+<ruleset name="Zacks Investment Research (partial)">
+
+	<target host="zacks.com" />
+	<target host="*.zacks.com" />
+	<target host="cloud.staticzacks.net" />
+
+
+	<!--	Tracking cookie:
+					-->
+	<securecookie host="^\.zacks\.com$" name="^s_vi$" />
+
+
+	<rule from="^http://(?:www\.)?zacks\.com/(css/|(?:[\w-]+/)?images/|registration)"
+		to="https://www.zacks.com/$1" />
+
+	<rule from="^http://(smetrics|1\.widget3|woas)\.zacks\.com/"
+		to="https://$1.zacks.com/" />
+
+	<rule from="^http://cloud\.staticzacks\.net/"
+		to="https://b7d61a7c6b8c307bf531-a92a66b9587e2a0aa805bd4e70b98407.ssl.cf2.rackcdn.com/" />
+
+</ruleset>

@@ -1,96 +1,145 @@
 <!--
-	CloudFront buckets:
+	Other Salesforce.com rulesets:
 
-		- assistly-production
-		- assistlywebsite	| dwan8j4vneaa7.cloudfront.net
-		- d3j15y3zsn7b4t
-		- d3jyn100am7dxp
-		- deskcontent		| d1epb5gzmg3005.cloudfront.net | d3jyn100am7dxp.cloudfront.net
-		- deskwww		| d3e6ejlgd1t9v1.cloudfront.net
+		- Chatter.xml
+		- Data.com.xml
+		- Desk.com.xml
 
 
-	Other buckets:
+	CDN buckets:
 
+		- d3cpryevho78f5.cloudfront.net
 		- secure.sfdcstatic.com.edgekey.net
 		- www2.sfdcstatic.com.edgesuite.net
+		- sforce.i.lithium.com
 		- c9649669.r69.cf2.rackcdn.com
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- sites.force.com		(cert: slotmatching4.salesforce.com; redirects to http.
-							slotmatching4 doesn't appear to exist.)
-		- appexchange.salesforce.com	(redirects to http)
+		- force.com subdomains:
+
+			- careers *
+			- cms **
+			- developer *
+			- sites *
+
+		- blogs.salesforce.com *
+
+	* Redirects to http; CN: slotmatching4.salesforce.com
+	** Redirects to http; CN: slotmatching3.salesforce.com
+
+
+	Problematic domains:
+
+		- developerforce.com		(cert only matches www)
+		- boards.developerforce.com
+		- force.com *
+		- partners.salesforce.com	(works, mismatched, CN: www.salesforce.com)
+		- uesurveys.salesforce.com	(works; mismatched, CN: *.datstathost.com)
+		- www.sfdcstatic.com		(akamai)
+
+	* Times out
 
 
 	Fully covered domains:
 
-		- c.\w\w\d+.content.force.com:
+		- developerforce.com subdomains:
 
-			- eu0
-			- na13
+			- (www.)	(^ → www)
+			- blogs
+			- boards	(→ sforce.i.lithium.com)
+			- events
+			- wiki
+			- workbench
+
+		- force.com subdomains:
+
+			- (www.)	(^ → www)
+
+			- c.\w\w\d+.content:
+
+				- eu0
+				- na5
+				- na13
+
+			- *.secure	(per-client subdomains)
+			- www2
+			- www-blitz0[0-4]
+
+		- salesforce.com subdomains:
+
+			- (www.)
+			- ap
+			- appexchange
+			- appexchangejp
+			- emea
+			- help
+			- lct
+			- login
+			- \w{2,4}\d+
+
+				- ap[01]
+				- cs\d
+				- cs\d[0-7]
+				- eu[012]
+				- na[1-9]
+				- na\d[0-5]
+				- tapp0
+
+			- \w\{2,4}d+-api
+
+				- ap[01]-api
+				- cs[1-9]-api
+				- cs\d[0-7]-api
+				- eu[012]-api
+				- na\d-api
+				- na1[0-5]-api
+				- tapp0-api
+
+			- ssl
+			- store
+			- success
+			- trust
 
 -->
 <ruleset name="Salesforce.com (partial)">
 
-	<target host="assistly.com" />
-	<target host="*.assistly.com" />
-	<target host="desk.com" />
-	<target host="*.desk.com" />
 	<target host="developerforce.com" />
 	<target host="*.developerforce.com" />
 	<target host="force.com" />
 	<target host="*.force.com" />
-	<target host="c.eu0.content.force.com" />
-	<target host="*.secure.force.com" />
 	<target host="salesforce.com" />
 	<target host="*.salesforce.com" />
 	<target host="*.sfdcstatic.com" />
 
 
-	<securecookie host="^(.*\.)?(developer|sales)?force\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?(?:developer|sales)?force\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?assistly\.com/"
-		to="https://$1assistly.com/" />
-
-	<rule from="^https?://assets\d\.assistly\.com/"
-		to="https://d1epb5gzmg3005.cloudfront.net/" />
-
-	<rule from="^https?://webassets\.assistly\.com/"
-		to="https://dwan8j4vneaa7.cloudfront.net/" />
-
-	<rule from="^https?://(?:www\.)?desk\.com/"
-		to="https://www.desk.com/" />
-
-	<rule from="^https?://assets\d\.desk\.com/"
-		to="https://d3jyn100am7dxp.cloudfront.net/" />
-
-	<rule from="^http://(dev|reg|support)\.desk\.com/"
-		to="https://$1.desk.com/" />
-
-	<rule from="^https?://webassets\.desk\.com/"
-		to="https://d3e6ejlgd1t9v1.cloudfront.net/" />
-
-	<rule from="^http://wiki\.developerforce\.com/"
-		to="https://wiki.developerforce.com/" />
-
-	<rule from="^http://c\.(\w\w\d+)\.content\.force\.com/"
-		to="https://c.$1.content.force.com/" />
-
-	<!--	unique domain for each client	-->
-	<rule from="^http://([\w\-]+)\.secure\.force\.com/"
-		to="https://$1.secure.force.com/" />
-
-	<!--	/force.com times out	-->
-	<rule from="^https?://(?:www\.)?(developer|sales)?force\.com/"
+	<rule from="^https?://(?:www\.)?(developer)?force\.com/"
 		to="https://www.$1force.com/" />
 
-	<rule from="^http://(lct|login|na\d+(?:-api)?)\.salesforce\.com/"
-		to="https://$1.salesforce.com/" />
+	<rule from="^http://(blogs|events|wiki|workbench)\.developerforce\.com/"
+		to="https://$1.developerforce.com/" />
+
+	<rule from="^https?://boards\.developerforce\.com/"
+		to="https://sforce.i.lithium.com/" />
+
+	<rule from="^http://(cms-stg|c\.\w\w\d+\.content|[\w-]+\.secure|www2|www-blitz0\d)\.force\.com/"
+		to="https://$1.force.com/" />
+
+	<rule from="^https?://sites\.force\.com/appexchange/home$"
+		to="https://appexchange.salesforce.com/" />
+
+	<rule from="^http://((?:ap|appexchange(?:jp)?|emea|help|lct|login|\w{2,4}\d+(?:-api)?|ssl|store|success|trust|www)\.)?salesforce\.com/"
+		to="https://$1salesforce.com/" />
 
 	<rule from="^https?://(?:www\.)?salesforce\.com/(assets|common)/"
 		to="https://secure2.sfdcstatic.com/$1/" />
+
+	<rule from="^https?://partners\.salesforce\.com/(?:[^\?]*)(\?.*)$"
+		to="https://www.salesforce.com/partners/$1" />
 
 	<rule from="^http://secure\.sfdcstatic\.com/"
 		to="https://secure.sfdcstatic.com/" />

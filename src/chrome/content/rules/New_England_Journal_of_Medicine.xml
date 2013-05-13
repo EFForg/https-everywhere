@@ -1,0 +1,36 @@
+<!--
+	For problematic rules, see New_England_Journal_of_Medicine-problematic.xml.
+
+
+	CDN buckets:
+
+		 - cdn.nejm.org.edgekey.net
+
+			- NB: Cert isn't valid
+
+
+	Problematic domains:
+
+		- nejm.org		(cert only matches www)
+		- cdn.nejm.org		(works, mismatched, CN: *.test.edgekey.net)
+
+-->
+<ruleset name="New England Journal of Medicine (partial)">
+
+	<target host="nejm.org" />
+	<target host="*.nejm.org" />
+
+
+	<securecookie host="^cdf\.nejm\.org$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?nejm\.org/(action/s(?:howCDFLogin|so)|favicon\.ico|na101/|sda/)"
+		to="https://www.nejm.org/$1" />
+
+	<rule from="^http://cdf\.nejm\.org/"
+		to="https://cdf.nejm.org/" />
+
+	<rule from="^https?://cdn\.nejm\.org/5\.0/"
+		to="https://cdf.nejm.org/files/" />
+
+</ruleset>

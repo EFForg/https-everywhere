@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional subdomains:
+
+		- pdfcatalog
+
+
+	Partially covered subdomains:
+
+		- (www.)
+
+
+	Fully covered subdomains:
+
+		- digikeytest
+		- dkc1
+		- dkc3
+		- form
+		- media
+		- ordering
+		- orderingtest
+		- punchout
+		- punchouttest
+
+-->
+<ruleset name="Digi-Key (partial)">
+
+	<target host="digikey.com" />
+	<target host="*.digikey.com" />
+		<!--
+			These paths 404:
+
+				- product-detail/
+				- product-search/en
+
+			These paths redirect to http:
+
+				- scripts/dksearch/dksus.dll
+							-->
+		<exclusion pattern="^https?://(?:www\.)?digikey\.com/(?:product-(?:detail|search)|scripts/dksearch)" />
+
+
+	<securecookie host="^(?!www\.).+\.digikey\.com$" name=".+" />
+
+
+	<rule from="^https?://digikey\.com/"
+		to="https://www.digikey.com/" />
+
+	<rule from="^http://(digikeytest|dkc\d|form|media|ordering(?:test)?|punchout(?:test)?|www)\.digikey\.com/"
+		to="https://$1.digikey.com/" />
+
+</ruleset>

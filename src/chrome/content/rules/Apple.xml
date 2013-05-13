@@ -2,34 +2,73 @@
 	For problematic rules, see Apple-mismatches.xml.
 
 
+	Other Apple rulesets:
+
+		- Apple_China.xml
+
+
 	CDN buckets:
 
+		- a248.e.akamai.net/7/248/51/20120908/swdlp.apple.com/
+		- a772.g.akamai.net/7/772/51/ef865529940b9e/www.apple.com/
+		- devimages.apple.com.edgekey.net
+		- init.ess.apple.com.edgesuite.net
+		- static-uptodate.apple.com.edgekey.net
+		- storeimages.apple.com.edgekey.net
 		- km.support.apple.com.edgekey.net
+		- images.apple.com.edgesuite.net
+		- ax.phobos.apple.com.edgesuite.net
+		- a\d+.phobos.apple.com.edgesuite.net
 
 		- a([1-5]).mzstatic.com.edgesuite.net/...
 
 			- a$1.da1.akamai.net/...
 
 
-	Nonfunctional apple.com subdomains:
+	Nonfunctional domains:
 
-		- deimos3	(403/404, akamai)
-		- a1.phobos	(503, Akamai; not on phobos nor ssl)
+		- apple.com subdomains:
+
+			- deimos3	(403/404, akamai)
+			- init.ess	(503, akamai)
+			- rss.lists	(shows lists; mismatched, CN: lists.apple.com)
+			- mynews
+			- opensource	(record_too_long)
+
+		- dzc-metrics.mzstatic.com *
+
+	* Data differ betwen http & https
 
 
 	Problematic domains:
 
 		- apple.com subdomains:
 
+			- adcdownload *
+			- appldnld *
+			- devimages *
 			- images *
+			- www.info *
+			- www0.info *
+			- www.lists		(mismatched, CN: lists.apple.com)
+			- a1.phobos *
 			- a1721.phobos *
+			- a1980.phobos *
+			- static-mynews *
 			- storeimages *
 			- km.support *
+			- trailers *
 
 		- store.storeimages.cdn-apple.com *
 		- iwork.com				(cert only matches www)
-		- a\d.mzstatic.com *
-		- r.mzstatic.com *
+
+		- mzstatic.com subdomains:
+
+			- ^
+			- a\d *
+			- r *
+			- r[1-8] *
+			- store *
 
 	* Akamai
 
@@ -41,44 +80,152 @@
 
 	* At least some pages redirect to http
 
+
+	Fully covered domains:
+
+		- apple.com subdomains:
+
+			- (www.)
+			- albert
+			- appleid
+			- application
+			- as-images
+			- bugreport
+			- buyiphone
+			- buyiphone[1-4]
+			- certifications
+			- configuration
+			- connect
+			- csat
+			- daw
+			- developer
+			- devforums
+			- devimages		(→ devimages.apple.com.edgekey.net)
+			- discussions
+			- discussionsjapan
+			- ecommerce
+			- service1.ess
+			- expresslane
+			- gsx
+			- gsxapp
+			- help
+			- hrweb
+			- iad
+			- id
+			- idmsa
+			- iforgot
+			- images		(→ ssl)
+
+			- itunes subdomains:
+
+				- ^
+				- buy
+				- p\d+-buy
+				- p100-sandbox
+				- sandbox
+				- volume
+				- vpp
+
+			- itunesconnect
+			- jobs
+			- jointventure
+			- (www.)lists		(www → ^)
+			- prod.lists
+			- locate
+			- mypage
+			- nc-as-images
+			- nc-buyiphone
+			- nc-unbrick1
+			- nwk-as-images
+			- nwk-buyiphone
+			- nwk-unbrick[12]
+			- onetoone
+			- phobos
+			- portal
+			- register
+			- remoteadvisor
+			- reportingitc
+			- securemetrics
+			- reseller
+			- reserve
+			- salestraining
+			- selfsolve
+			- ssl
+			- secure.store
+			- secure\d.store
+			- storeimages		(→ storeimages.apple.com.edgekey.net)
+			- support
+			- km.support		(→ km.support.apple.com.edgekey.net)
+			- supportprofile
+			- swdlp
+			- uptodate
+			- wdg2
+
+		- hrweb.cdn-apple.com
+		- store.storeimages.cdn-apple.com	(→ storeimages.apple.com.edgekey.net)
+		- ax.phobos.apple.com.edgesuite.net	(→ s.mzstatic.com)
+		- (www.)iwork.com			(^ → www)
+		- (www.)me.com
+
+		- mzstatic.com subdomains:
+
+			- (www.)	(→ ssl.apple.com)
+			- accertify
+			- itc
+			- metrics
+			- s
+			- s[1-5]
+
 -->
-<ruleset name="Apple.com (partial)">
+<ruleset name="Apple.com (parial)">
 
 	<target host="apple.com" />
 	<target host="*.apple.com" />
 		<exclusion pattern="^http://concierge\.apple\.com/(?!resources/)" />
-		<exclusion pattern="^http://store\.apple\.com/(?![\w/]+/css/|rs/)" />
-	<target host="store.storeimages.cdn-apple.com" />
+		<exclusion pattern="^http://store\.apple\.com/(?!Catalog/|[\w/]+/css/|rs/)" />
+	<target host="*.cdn-apple.com" />
+	<target host="ax.phobos.apple.com.edgesuite.net" />
 	<target host="iwork.com" />
 	<target host="www.iwork.com" />
 	<target host="me.com" />
 	<target host="www.me.com" />
 	<target host="mzstatic.com" />
-	<target host="www.mzstatic.com" />
+	<target host="*.mzstatic.com" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.apple\.com$" name="^s_.+$" />
-	<securecookie host="^(?:appleid|application|bugreport|buyiphone|certifications|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|ssl|support(?:profile)?|wdg2|www)\.apple\.com$" name=".+" />
+	<!--
+		No known problems, just being cautious
+							-->
+	<securecookie host="^(?!\.?(?:concierg|stor)e\.apple\.com).+\.apple\.com$" name=".+" />
 
-
-	<rule from="^http://((?:appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone|certifications|concierge|connect|daw|developer|devforums|discussions|expresslane|help|id|idmsa|iforgot|itunesconnect|jointventure|jobs|onetoone|portal|register|remoteadvisor|selfsolve|store|support(?:profile)?|wdg2|www)\.)?apple\.com/"
+	<rule from="^http://((?:albert|appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone\d?|certifications|concierge|configuration|connect|csat|daw|developer|devforums|discussions(?:japan)?|ecommerce|service1\.ess|expresslane|gsx|gsxapp|help|hrweb|ia?d|idmsa|iforgot|(?:(?:buy|p\d+-buy|p100-sandbox|sandbox|volume|vpp)\.)?itunes|itunesconnect|jointventure|jobs|prod\.lists|locate|mypage|n(?:c|wk)-(?:buyiphone|unbrick1)|nwk-unbrick2|onetoone|phobos|portal|register|remoteadvisor|reportingitc|reseller|reserve|salestraining|securemetrics|selfsolve|store|secure\d?\.store|swdlp|uptodate|wdg2|www)\.)?apple\.com/"
 		to="https://$1apple.com/" />
 
-	<rule from="^https?://(?:images|ssl)\.apple\.com/"
+	<rule from="^http://devimages\.apple\.com/"
+		to="https://devimages.apple.com.edgekey.net/" />
+
+	<rule from="^http://(?:images|ssl)\.apple\.com/"
 		to="https://ssl.apple.com/" />
 
-	<rule from="^https?://store(?:images\.|\.storeimages\.cdn-)apple\.com/\d+/store\.apple\.com/"
-		to="https://store.apple.com/" />
+	<rule from="^http://(?:www\.)?lists\.apple\.com/"
+		to="https://lists.apple.com/" />
 
-	<rule from="^https?://store\.storeimages\.cdn-apple\.com/\d+/(nc-|nwk-)?as-images\.apple\.com/"
-		to="https://$1as-images.apple.com/" />
+	<rule from="^http://store(?:images\.|\.storeimages\.cdn-)apple\.com/"
+		to="https://storeimages.apple.com.edgekey.net/" />
 
-	<rule from="^https?://km\.support\.apple\.com/"
+	<rule from="^http://hrweb\.cdn-apple\.com/"
+		to="https://hrweb.cdn-apple.com/" />
+
+	<rule from="^http://ax\.phobos\.apple\.com\.edgesuite\.net/"
+		to="https://s.mzstatic.com/" />
+
+	<rule from="^http://km\.support\.apple\.com/"
 		to="https://km.support.apple.com.edgekey.net/" />
 
-	<rule from="^https?://(?:www\.)?iwork\.com/"
+	<rule from="^http://(?:www\.)?iwork\.com/"
 		to="https://www.iwork.com/" />
 
 	<rule from="^http://(www\.)?me\.com/"
@@ -87,7 +234,13 @@
 	<!--	- Doesn't work over https
 		- Redirects over http to www.apple.com
 							-->
-	<rule from="^https?://(?:www\.)mzstatic\.com/"
+	<rule from="^http://(?:www\.)?mzstatic\.com/"
 		to="https://ssl.apple.com/" />
+
+	<rule from="^http://(accertify|itc|metrics|s\d?)\.mzstatic\.com/"
+		to="https://$1.mzstatic.com/" />
+
+	<rule from="^http://r\.mzstatic\.com/"
+		to="https://s.mzstatic.com/" />
 
 </ruleset>

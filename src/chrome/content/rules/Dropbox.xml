@@ -1,32 +1,63 @@
 <!--
-	Nonfunctional subdomains:
+	Fully covered domains:
 
-		- blog		(301s to http)
-		- forums	(ditto)
+		- (www.)db.tt
+
+		- dropbox.com subdomains:
+
+			- blog
+			- bloghost[12]
+			- developers
+			- dl
+			- dl-web
+			- dropboxatwork
+			- files
+			- forum
+			- forums
+			- status
+			- tech
+			- v-misc
+
+		- (www.)dropboxatwork.com
+		- (www.)dropboxmail.com
+		- (www.)dropboxteam.com
+		- *.dropboxusercontent.com
+		- (www.)getdropbox.com
 
 -->
 <ruleset name="Dropbox">
 
+	<target host="db.tt" />
+	<target host="www.db.tt" />
 	<target host="dropbox.com" />
 	<target host="*.dropbox.com" />
-		<!--
-			This fixes https://trac.torproject.org/projects/tor/ticket/3673
-											-->
-		<exclusion pattern="http://(?:www\.)?dropbox.com/frameresize.htm" />
+	<target host="dropboxatwork.com" />
+	<target host="www.dropboxatwork.com" />
+	<target host="dropboxmail.com" />
+	<target host="www.dropboxmail.com" />
+	<target host="dropboxteam.com" />
+	<target host="www.dropboxteam.com" />
+	<target host="*.dropboxusercontent.com" />
+	<target host="getdropbox.com" />
+	<target host="www.getdropbox.com" />
 
 
-	<securecookie host="^(.*\.)?dropbox\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?dropbox\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?dropbox\.com/"
-		to="https://www.dropbox.com/" />
+	<rule from="^http://(www\.)?db\.tt/"
+		to="https://$1db.tt/" />
 
-	<rule from="^http://(dl|dl-web|files)\.dropbox\.com/"
-		to="https://$1.dropbox.com/" />
+	<rule from="^http://([\w-]+\.)?dropbox\.com/"
+		to="https://$1dropbox.com/" />
   
-	<!--	This breaks blog.dropbox.com and forums.dropbox.com, for example
+	<rule from="^http://(www\.)?dropbox(atwork|mail|team)\.com/"
+		to="https://$1dropbox$2.com/" />
 
-	<rule from="^http://([^/:@]+)\.dropbox\.com/"
-		to="https://$1.dropbox.com/" /-->
+	<rule from="^http://([\w-]+)\.dropboxusercontent\.com/"
+		to="https://$1.dropboxusercontent.com/" />
+
+	<rule from="^http://(www\.)?getdropbox\.com/"
+		to="https://$1getdropbox.com/" />
 
 </ruleset>

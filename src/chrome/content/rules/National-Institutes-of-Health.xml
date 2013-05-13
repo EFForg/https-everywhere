@@ -7,31 +7,50 @@
 		- clinicaltrials.gov
 		- www.clinicaltrials.gov
 
-		- nih.gov:
+		- nih.gov subdomains:
 
-			- $			(times out)
-			- transparency.cit	(Akamai, "An error occurred")
-			- ncats			(timeout)
+			- ^ *
+			- jobs			(shows ugsp; mismatched, CN: ugsp.nih.gov)
+			- www.jobs **
+			- ncats *
 			- www.ncats
-			- patientinfo.ninds	(interrupted)
-			- blast.ncbi.nlm	(cert valid; shows [www.]ncbi's data)
-			- od			(times out)
-			- acd.od		(cert: secure.palladianpartners.com, expired; 404)
-			- nihpublications.od	(reset)
-			- www.nimh **
-			- www.od		(times out)
-			- www			(times out)
+			- patientinfo.ninds ***
+			- blast.ncbi.nlm	(shows ncbi, cert valid)
+			- od *
+			- acd.od		(404; expired, CN secure.palladianpartners.com)
+			- nihpublications.od **
+			- www.nimh ***
+			- www.od *
+			- www *
 
-	* Reset
+	* Times out
+	** Reset
+	*** Interrupted
+
+
+	Problematic domains:
+
+		- nlm.nih.gov		(cert only matches www.nlm)
+		- training.nih.gov	(shows ugsp; mismatched, CN: ugsp.nih.gov)
+		- (www.)pubmed.gov	(mismatched, CN: *.ncbi.nlm.nih.gov)
+
+
+	Fully covered domains:
+
+		- nih.gov subdomains:
+
+			- (www.)nlm		(^ → www)
+			- (www.)ncbi.nlm
+			- pubchem.ncbi.nlm
+			- www.nidcd.nlm
+			- (www.)training	(^ → www)
+
+		- (www.)pubmed.gov	(→ www.ncbi.nlm.nih.gov)
 
 -->
 <ruleset name="National Institutes of Health (partial)">
 
-	<target host="nlm.nih.gov" />
-	<target host="*.nlm.nih.gov" />
-	<target host="pubchem.ncbi.nlm.nih.gov" />
-	<target host="www.ncbi.nlm.nih.gov" />
-	<target host="www.nidcd.nih.gov" />
+	<target host="*.nih.gov" />
 	<target host="pubmed.gov" />
 	<target host="*.pubmed.gov" />
 
@@ -39,17 +58,12 @@
 	<securecookie host="^.*\.nih\.gov$" name=".+" />
 
 
-	<!--	Cert only matches www.
-		!www redirects to www.	-->
-	<rule from="^https?://(?:www\.)?nlm\.nih\.gov/"
-		to="https://www.nlm.nih.gov/" />
+	<rule from="^https?://(?:www\.)?(nlm|training)\.nih\.gov/"
+		to="https://www.$1.nih.gov/" />
 
-	<!--	Both ncbi & www.ncbi work proerly.	-->
 	<rule from="^http://((?:pubchem\.|www\.)?ncbi|www\.nidcd)\.nlm\.nih\.gov/"
 		to="https://$1.nlm.nih.gov/" />
 
-	<!--	cert: *.ncbi.nlm.nih.gov
-		Redirects as so.	-->
 	<rule from="^https?://(?:www\.)?pubmed\.gov/"
 		to="https://www.ncbi.nlm.nih.gov/pubmed/" />
 

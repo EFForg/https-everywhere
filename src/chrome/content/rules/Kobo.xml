@@ -1,0 +1,165 @@
+<!--
+	Nonfunctional domains:
+
+		- kobobooks.com subdomains:
+
+			- blog		(prints "Thank you for taking part")
+
+			- ptbr *
+
+				- These paths redirect to http:
+
+					- android$
+					- apps$
+					- blackberry$
+					- default.aspx$
+					- egiftcards$
+					- ereaders$
+					- free_ebooks$
+					- Gifting$
+					- Gifting/Start.aspx$
+					- iphone$
+					- lists$
+					- lists/New_Releases/GLES0et0ik-Asyf9eaGKWQ-1.html
+					- palmpre$
+					- readinglife$
+					- search$
+					- search/search.html
+					- smartphones$
+
+			- stage2 *
+			- wwwt *
+
+		- kobobooks.de subdomains:
+
+			- ^			(no https)
+			- stage2 **
+			- stage4 *
+			- www *
+
+		- kobobooks.(es|fr|it|nl|pt) subdomains:
+
+			- ^ ***
+			- stage4 *
+			- www *
+			- wwwt *
+
+		- stage2.kobobooks.(it|nl) **
+
+		- kobobooks.pt subdomains:
+
+			- stage2 **
+			- stage6	(403, mismatched, CN: securestage4.kobobooks.de)
+
+
+	* Redirects to http
+	** Redirects to .com
+	*** Times out
+
+
+	Problematic domains:
+
+		- kobo.com			(times out)
+		- ecimages.kobobooks.com	(akamai)
+		- securestage2.kobobooks.pt *
+		- stage[36].kobobooks.pt *
+
+	* Mismatched, CN: securestage4.kobobooks.de
+
+
+	Partially covered domains:
+
+		- (www.)kobobooks.com *
+		- stage2.kobobooks.es *
+		- stage2.kobobooks.fr *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- kobo.com subdomains:
+
+			- (www.)	(^ → www)
+			- assets
+			- ptbr
+
+		- kobobooks.com subdomains:
+
+			- akimages
+			- akimagest
+			- assets
+			- ecimages	(→ images)
+			- ecimagest
+			- images
+			- merch
+			- ptbrsecure
+			- secure
+			- securestage
+			- securestage[2-6]
+			- stage
+
+		- kobobooks.(de|es|fr|it|nl) subdomains:
+
+			- secure
+			- securestage
+			- securestage[2456]
+			- securet
+			- stage
+			- stage[36]
+
+		- kobobooks.pt subdomains:
+
+			- secure
+			- securestage
+			- securestage[456]
+			- securet
+			- stage
+
+-->
+<ruleset name="Kobo (partial)">
+
+	<target host="kobo.com" />
+	<target host="*.kobo.com" />
+	<target host="kobobooks.com" />
+	<target host="*.kobobooks.com" />
+	<target host="*.kobobooks.de" />
+	<target host="*.kobobooks.es" />
+	<target host="*.kobobooks.fr" />
+	<target host="*.kobobooks.it" />
+	<target host="*.kobobooks.nl" />
+	<target host="*.kobobooks.pt" />
+		<exclusion pattern="^http://(?:www\.)?kobobooks\.com/(?!Etc/frameresize\.htm)" />
+		<exclusion pattern="^http://(?:securestage[24]|stage[36])\.kobobooks\.pt/" />
+
+
+	<securecookie host="^\.(?:ptbr|www)\.kobo\.com$" name=".+" />
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.kobobooks\.com$" name="^(?:tracking|__utm\w)$" />	
+	<securecookie host="^(?!ptbr\.|wwwt?\.)\w+\.kobobooks\.com$" name=".+" />
+	<securecookie host="^\.kobobooks\.\w\w$" name="^tracking$" />
+	<securecookie host="^s(?:ecure(?:stage\d?|t)|tage[36]?)\.kobobooks\.\w\w$" name=".+" />
+
+
+	<rule from="^https?://kobo\.com/"
+		to="https://www.kobo.com/" />
+
+	<rule from="^http://(assets|ptbr|www)\.kobo\.com/"
+		to="https://$1.kobo.com/" />
+
+
+	<rule from="^http://((?:akimagest?|assets|ecimagest|merch|(?:ptbr)?secure|securestage\d?|stage)\.)?kobobooks\.com/"
+		to="https://$1kobobooks.com/" />
+
+	<rule from="^https?://(?:ec)?images\.kobobooks\.com/"
+		to="https://images.kobobooks.com/" />
+
+	<rule from="^http://s(ecure(?:stage[2456]?|t)?|tage[36]?)\.kobobooks\.(\w\w)/"
+		to="https://s$1.kobobooks.$2/" />
+
+	<rule from="^http://stage2\.kobobooks\.(fr|es)/(default\.aspx)?(\?.*)?$"
+		to="https://stage2.kobobooks.$1/$2$3" />
+
+</ruleset>

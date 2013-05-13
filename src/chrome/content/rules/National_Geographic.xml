@@ -1,0 +1,72 @@
+<!--
+	nationalgeographic.desk.com
+	natgeo.edgeboss.net
+
+
+	Nonfunctional subdomains:
+
+		- greenliving	(503, akamai)
+		- help		(redirects to http, desk.com)
+		- newswatch
+		- ngm		(504, akamai)
+
+
+	Problematic domains:
+
+		nationalgeographic.com subdomains:
+
+			- environment *
+			- images *
+			- news *
+			- photography *
+			- travel *
+			- video *
+			- yourshot *
+			- www		(redirects to travel, akamai)
+
+		- s.ngeo.com *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ www-s)
+
+
+	Fully covered subdomains:
+
+		- channel
+		- genographic
+		- media-channel
+		- media-members
+		- media-mmdb
+		- media-yourshot
+		- members
+		- mmdb
+		- natgeotv
+		- stage.natgeotv
+		- www-s
+
+-->
+<ruleset name="National Geographic (partial)">
+
+	<target host="nationalgeographic.com" />
+	<target host="*.nationalgeographic.com" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.nationalgeographic\.com$" name="^(?:s_\w+|__utm)\w$" />
+
+
+	<!--	$ is linked to from the footer of channel ("HOME"). Rewriting
+		$ to www-s saves us from having to use a downgrade rule:
+										-->
+	<rule from="^https?://(?:www\.)?nationalgeographic\.com/($|\?|leaderboard/quiz/)"
+		to="https://www-s.nationalgeographic.com/$1" />
+
+	<rule from="^http://(channel|genographic|media-(?:channel|members|mmdb|yourshot)|members|mmdb|(?:stage\.)?natgeotv|www-s)\.nationalgeographic\.com/"
+		to="https://$1.nationalgeographic.com/" />
+
+</ruleset>

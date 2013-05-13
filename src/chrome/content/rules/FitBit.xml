@@ -1,8 +1,34 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/fitbit.production/ | d6y8zfzc2qfsl.cloudfront.net
+		- fitbit.assistly.com
+		- fitbit.theresumator.com
+
+
+	Nonfunctional subdomains:
+
+		- blog		(redirects to innovaeframelessfittings.com, mismatched)
+		- help		(redirects to http, mismatched, CN: *.assistly.com)
+		- jobs		(redirects to http, mismatched, CN: *.theresumator.com)
+
+-->
 <ruleset name="FitBit">
-  <target host="fitbit.com" />
-  <target host="www.fitbit.com" />
 
-  <securecookie host="^(.+\.)?fitbit\.com$" name=".*"/>
+	<target host="fitbit.com" />
+	<target host="*.fitbit.com" />
 
-  <rule from="^http://(?:www\.)?fitbit\.com/" to="https://www.fitbit.com/"/>
+
+	<securecookie host="^(?:.+\.)?fitbit\.com$" name=".+" />
+
+
+	<rule from="^http://((?:api|client|dev|m|qa3store(?:-static\d)?|static\d|store-\w\w|wiki|www)\.)?fitbit\.com/"
+		to="https://$1fitbit.com/" />
+
+	<rule from="^https?://cache\.fitbit\.com/"
+		to="https://d6y8zfzc2qfsl.cloudfront.net/" />
+
+	<rule from="^https?://jobs\.fitbit\.com/(css|img)/"
+		to="https://fitbit.theresumator.com/$1/" />
+
 </ruleset>

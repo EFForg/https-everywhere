@@ -1,8 +1,15 @@
 <!--
-	dgbc7tshfzi70.cloudfront.net
-
-
 	For problematic rules, see Minus.com-mismatches.xml.
+
+
+	CDN buckets:
+
+	- dgbc7tshfzi70.cloudfront.net
+
+
+	Problematic domains:
+
+		- feedback.minus.com	(works; mismatched, CN: *.userecho.com)
 
 -->
 <ruleset name="Minus.com (partial)">
@@ -11,13 +18,16 @@
 	<target host="*.min.us" />
 	<target host="minus.com" />
 	<target host="*.minus.com" />
-		<exclusion pattern="^http://(blog|feedback)\." />
+		<exclusion pattern="^http://(?:blog|feedback)\." />
+
+
+	<securecookie host="^\.?minus\.com$" name=".+" />
 
 
 	<!--	Members have unique subdomains.
-		Cert only matches (*.)minus.com.	-->
+		Cert only matches (*.)minus.com.
+							-->
 	<rule from="^https?://([^/:@\.]+\.)?min(?:\.us|us\.com)/"
 		to="https://$1minus.com/" />
 
 </ruleset>
-

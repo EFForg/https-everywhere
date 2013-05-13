@@ -4,6 +4,7 @@
 		- Argonne-National-Laboratory.xml
 		- Bonneville_Power_Administration.xml
 		- California_Department_of_Justice.xml
+		- California_Legislative_Information.xml
 		- Catalog-of-Domestic-Federal-Assistance.xml
 		- Central_Intelligence_Agency.xml
 		- City-of-Chicago.xml
@@ -11,22 +12,31 @@
 		- City_of_Seattle.xml
 		- City-of-Sedona.xml
 		- Colorado_Secretary_of_State.xml
+		- Commodity_Futures_Trading_Commission.xml
 		- Consumer.gov.xml
+		- CPSC.xml
+		- Defense_Nuclear_Facilities_Safety_Board.xml
+		- Distraction.xml
 		- ED.gov.xml
 		- Federal_Aviation_Administration.xml
 		- Federal_Business_Opportunities.xml
 		- Federal-Communications-Commission.xml
 		- Federal-Deposit-Insurance-Corporation.xml
 		- Federal_Trade_Commission.xml
+		- Fermi_National_Accelerator_Laboratory.xml
 		- FoodSafety.gov.xml
 		- Fuel_Economy.xml
+		- Harry_S_Truman_Library_and_Museum.xml
+		- Hawaii.gov.xml
 		- HowTo.gov.xml
 		- Lawrence-Livermore-National-Laboratory.xml
+		- Maine.gov.xml
 		- NASA.xml
 		- National_Consumer_Protection_Week.xml
 		- National-Institute-of-Standards-and-Technology.xml
 		- National-Institutes-of-Health.xml
 		- National_Oceanic_and_Atmospheric_Administration.xml
+		- National_Park_Service.xml
 		- National-Science-Foundation.xml
 		- National-Security-Agency.xml
 		- National_Transport_Safety_Board.xml
@@ -38,18 +48,25 @@
 		- Senate.gov.xml
 		- SocialSecurity.xml
 		- State_of_Alaska.xml
+		- State_of_Delaware.xml
 		- State_of_Oregon.xml
 		- Texas-Department-of-State-Health-Services.xml
 		- United-States-Department-of-Agriculture.xml
 		- United-States-Department-of-Energy.xml
 		- United-States-Nuclear-Regulatory-Commission.xml
 		- USA.gov
+		- US_Citizenship_and_Immigration_Services.xml
+		- US_Department_of_Commerce.xml
 		- US-Department-of-Housing-and-Urban-Development.xml
+		- US_Department_of_the_Treasury.xml
 		- US-Dept-of-Veterans-Affairs.xml
+		- US_Fish_and_Wildlife_Service.xml
 		- US_Geological_Survey.xml
 		- US-government-mismatches.xml
 		- US-Immigration-and-Customs-Enforcement.xml
+		- US_Patent_and_Trademark_Office.xml
 		- US-Securities-and-Exchange-Commission.xml
+		- US_State_Department.xml
 
 
 	CDN buckets:
@@ -73,10 +90,10 @@
 		- (www.)cybercrime.gov			(ssl_error_rx_record_too_long)
 		- www.defense.gov			(Akamai; 301s to http)
 		- (www.)energy.gov			(timeout)
+		- water.epa.gov
 		- fs.fed.us
 		- nrs.fs.fed.us
 		- www.fs.fed.us				(Akamai; 302s to http; origin, origin-www, nor www-origin exist)
-		- www-boone.fnal.gov			(valid cert; prints "VHOSTS - Home Page")
 		- (www.)gao.gov				(prints "No Secure Connection (https://) Required")
 		- www.gpo.gov				(times out)
 		- archive.hhs.gov			(timeout)
@@ -85,6 +102,7 @@
 		- clerk.house.gov			(timeout)
 		- energycommerce.house.gov		(400)
 		- republicans.energycommerce.house.gov	(400)
+		- iedc.in.gov				(record_too_long)
 		- irs.gov
 		- www.irs.gov				(redirects to http, akamai)
 		- jobs.irs.gov				(503, akamai)
@@ -96,23 +114,28 @@
 		- thomas.loc.gov
 		- www.loc.gov				(cert: wwws.loc.gov)
 		- (www.)manhattanda.org			(times out)
+		- www.ncs.gov				(504, akamai)
 		- mymoney.gov           		(interrupted)
 		- www.mymoney.gov       		(Akamai; shows Microsoft Forefront 403 page)
 		- (www.)nga.gov				(times out)
 		- www.nhtsa.gov				(Akamai; redirects to http)
 		- www.acces.nysed.gov			(timeout)
 		- (www.)pppl.gov			(times out)
+		- (www.)regulations.gov			(times out)
 		- (www.)scstatehouse.gov		(times out)
+		- www.supremecourt.gov			(500; akamai)
 		- uscourts.gov
 		- www.ca9.uscourts.gov
 		- www.uscourts.gov			(Akamai; 404)
-		- (www.)usitc.gov			(ditto)
-		- appft1.uspto.gov			(times out)
-		- ebiz1.uspto.gov			(Akamai; 404)
-		- patft.uspto.gov			(ditto)
-		- tess2.uspto.gov
-		- (www.)uspto.gov			(ditto)
+		- (www.)usitc.gov			(times out)
 		- (www.)ustr.gov			(cert: ssl2050.cloudflare.com; "Offline Mode")
+		- wdfw.wa.gov				(works; expired, self-signed)
+
+
+	Problematic domains:
+
+		- ncs.gov	(works; mismatched, CN: dhs.gov)
+
 
 -->
 <ruleset name="US government (partial)">
@@ -125,8 +148,6 @@
 	<target host="*.cms.gov"/>
 	<target host="export.gov"/>
 	<target host="*.export.gov"/>
-	<target host="fnal.gov"/>
-	<target host="*.fnal.gov"/>
 	<target host="genome.gov"/>
 	<target host="www.genome.gov"/>
 	<target host="cms.hhs.gov"/>
@@ -146,7 +167,7 @@
 
 	<securecookie host="^questions\.cms\.gov$" name=".*"/>
 	<securecookie host="^safeharbor\.export\.gov$" name=".*"/>
-	<securecookie host="^(.*\.)?(census|fnal|medicare|usajobs)\.gov$" name=".*"/>
+	<securecookie host="^(.*\.)?(census|medicare|usajobs)\.gov$" name=".*"/>
 	<securecookie host="^intelligence\.house\.gov$" name=".*"/>
 	<securecookie host="^wtr\.nhtsa\.gov$" name=".+" />
 
@@ -171,9 +192,6 @@
 
 	<rule from="^http://(safeharbor|www)\.export\.gov/"
 		to="https://$1.export.gov/"/>
-
-	<rule from="^http://(www\.)?fnal\.gov/"
-		to="https://$1fnal.gov/"/>
 
 	<rule from="^http://intelligence\.house\.gov/"
 		to="https://intelligence.house.gov/"/>

@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional domains:
+
+		- ecommerce.shopatron	(no https)
+
+
+	Problematic domains:
+
+		- orderhlp.com			(mismatched, CN: *.shopatron.com)
+		- mediacdn.shopatron.com	(works; expired 2010-09-15, mismatched, CN: media.shopatron.com)
+
+
+	Fully covered domains:
+
+		- (www.)orderhlp.com	(^ → www)
+
+		- shopatron.com subdomains:
+
+			- (www.)
+			- media
+			- mediacdn	(→ media)
+			- mss
+
+		- cdn.shptrn.com
+
+-->
+<ruleset name="Shopatron (partial)">
+
+	<target host="orderhlp.com" />
+	<target host="www.orderhlp.com" />
+	<target host="shopatron.com" />
+	<target host="*.shopatron.com" />
+	<target host="cdn.shptrn.com" />
+
+
+	<securecookie host="^www\.(?:orderhlp|shopatron)\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?orderhlp\.com/"
+		to="https://www.orderhlp.com/" />
+
+	<rule from="^http://(media\.|mss\.|www\.)?shopatron\.com/"
+		to="https://$1shopatron.com/" />
+
+	<rule from="^http://mediacdn\.shopatron\.com/"
+		to="https://media.shopatron.com/" />
+
+	<rule from="^http://cdn\.shptrn\.com/"
+		to="https://cdn.shptrn.com/" />
+
+</ruleset>

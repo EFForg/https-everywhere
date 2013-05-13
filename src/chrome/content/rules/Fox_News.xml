@@ -1,0 +1,69 @@
+<!--
+	For other News Corporation coverage, see News-Corporation.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)fbnstatic.com *
+		- (www.)foxbusiness.com *
+
+		- foxnews.com subdomains:
+
+			- (www.) *
+			- latino *
+			- magazine		(503, akamai)
+			- nation **
+			- radio **
+
+		- (www.)foxnewsinsider		(403; self-signed, CN: nmweb01)
+
+	* 404, akamai
+	** 403, akamai
+
+
+	Problematic domains:
+
+		- www.fbnstatic.com *
+		- global.fncstatic.com *
+		- ureport.foxnews.com		(works; mismatched, CN: *.filemobile.com)
+
+	* Works, akamai
+
+-->
+<ruleset name="Fox News (partial)">
+
+	<target host="www.fbnstatic.com" />
+	<target host="global.fncstatic.com" />
+		<!--
+			- css:	503
+			- js: 404
+					-->
+		<exclusion pattern="^https?://(?:www\.fbn|global\.fnc)static\.com/static/(?:.+/)?(?:j|cs)s/" />
+	<target host="*.foxbusiness.com" />
+	<target host="*.foxnews.com" />
+	<target host="facebook.foxnewsinsider.com" />
+	<target host="foxnews.ramp.com" />
+
+
+	<rule from="^https?://(www\.fbn|global\.fnc)static\.com/"
+		to="https://a57.foxnews.com/$1static.com/" />
+
+	<rule from="^http://(beta\.)?video\.foxbusiness\.com/"
+		to="https://$1video.foxbusiness.com/" />
+
+	<rule from="^http://(a57|ads|video\.(?:imag|insider|latino|ureport)|live|video|beta\.video(?:\.latino)?)\.foxnews\.com/"
+		to="https://$1.foxnews.com/" />
+
+	<rule from="^https?://metrics\.foxnews\.com/"
+		to="https://foxnews.112.2o7.net/" />
+
+	<rule from="^https?://uereport\.foxnews\.com/services/"
+		to="https://filemobile.com/services/" />
+
+	<rule from="^http://facebook\.foxnewsinsider\.com/"
+		to="https://facebook.foxnewsinsider.com/" />
+
+	<rule from="^http://foxnews\.ramp\.com/"
+		to="https://foxnews.ramp.com/" />
+
+</ruleset>

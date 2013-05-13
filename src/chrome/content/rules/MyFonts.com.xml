@@ -1,4 +1,12 @@
 <!--
+	CDN buckets:
+
+		- d2c1cl1a12l6zn.cloudfront.net
+
+			- cdn.myfonts.com
+			- cdn.myfonts.net
+
+
 	Nonfunctional domains:
 
 		- webfonts.myfonts.com
@@ -7,24 +15,18 @@
 <ruleset name="MyFonts.com (partial)">
 
 	<target host="myfonts.com" />
-	<target host="cdn.myfonts.com" />
-	<target host="my.myfonts.com" />
-	<target host="origin.myfonts.com" />
-	<target host="www.myfonts.com" />
-	<target host="your.myfonts.com" />
-	<target host="cdn.myfonts.net" />
-	<target host="my.myfonts.net" />
-	<target host="origin.myfonts.net" />
-	<target host="your.myfonts.net" />
+	<target host="*.myfonts.com" />
+		<exclusion pattern="^http://(?:www\.)?myfonts\.com/(?!my/|s/|secure/|viewlicense(?:$|\?))" />
+	<target host="*.myfonts.net" />
 
 
-	<rule from="^http://(www\.)?myfonts\.com/(my/|s/|secure/|viewlicense(?:$|\?))"
-		to="https://$1myfonts.com/$2" />
+	<rule from="^http://(origin\.|www\.)?myfonts\.com/"
+		to="https://$1myfonts.com/" />
 
 	<rule from="^https?://cdn\.myfonts\.(?:com|net)/"
-		to="https://origin.myfonts.net/" />
+		to="https://d2c1cl1a12l6zn.cloudfront.net/" />
 
-	<rule from="^http://([^w]\w+)\.myfonts\.(?:com|net)/"
+	<rule from="^http://(hello|origin|your)\.myfonts\.net/"
 		to="https://$1.myfonts.net/" />
 
 </ruleset>

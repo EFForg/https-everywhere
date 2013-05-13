@@ -3,23 +3,108 @@
 
 		- blog.twitter.com		(hosted on Blogger)
 		- engineering.twitter.com	(hosted on Blogger; interrupted)
+		- status.twitter.com
+		- status.twitter.jp
 
 
 	CDN buckets:
 
+		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
+
+			- platform2.twitter.com
+
 		- twitter-any.s3.amazonaws.com
 		- twitter-blog.s3.amazonaws.com
+
 		- d2rdfnizen5apl.cloudfront.net
-			- Equivalent to s.twimg.com
-		- ssl2.twitter.com.edgekey.net/.../
-			- e3826.g.akamaiedge.net/.../
-		- platform2.twitter.com.edgesuite.net/.../
-			- a1095.g.akamai.net/.../
+
+			- s.twimg.com
+
+		- ssl2.twitter.com.edgekey.net
 		- twitter.github.com
 
 
-	There are still some hosts that things get loaded from that can't
-	be safely rewritten without triggering a certificate error.
+	Problematic domains:
+
+		- twimg.com subdomains:
+
+			- a[12]		(mismatched, CN: gp1.wac.edgecastcdn.net)
+			- a3 *
+			- a4		(mismatched, CN: si0.twimg.com)
+			- a5 *
+			- s		(cloudfront)
+
+		- twitter.com subdomains:
+
+			- urls.api *
+			- platform[0-3]		(403, akamai)
+			- anywhere.platform *
+			- widgets.platform	(mismatched, CN: si0.twimg.com)
+
+	* akamai
+
+
+	Fully covered domains:
+
+		- (www.)t.co		(www → ^)
+
+		- twimg.com subdomains:
+
+			- a\d		(→ si0)
+			- abs
+			- ea
+			- g
+			- gu
+			- hca
+			- jp
+			- ma
+			- ma[0123]
+			- o
+			- p
+			- pbs
+			- r
+			- s		(→ d2rdfnizen5apl.cloudfront.net)
+			- si[0-5]
+			- syndication
+			- cdn.syndication
+			- widgets
+
+		- twitter.com subdomains:
+
+			- (www.)
+			- 201[012]
+			- ads
+			- api
+			- cdn.api
+			- urls.api	(→ cdn.api)
+			- business
+			- preview.cdn
+			- preview-dev.cdn
+			- preview-stage.cdn
+			- de
+			- dev
+			- en
+			- es
+			- firefox
+			- fr
+			- it
+			- ja
+			- jp
+			- m
+			- media
+			- mobile
+			- music
+			- oauth
+			- p
+			- platform
+			- platform[0-3]		(→ platform)
+			- anywhere.platform	(→ platform)
+			- widgets.platform	(→ platform)
+			- search
+			- static
+			- support
+			- transparency
+			- upload
 
 -->
 <ruleset name="Twitter">
@@ -27,60 +112,35 @@
 	<target host="t.co" />
 	<target host="www.t.co" />
 	<target host="*.twimg.com" />
-	<target host="cdn.syndication.twimg.com" />
-
 	<target host="twitter.com" />
 	<target host="*.twitter.com" />
-	<target host="cdn.api.twitter.com" />
-	<target host="preview.cdn.twitter.com" />
-	<target host="twitter.jp" />
-	<target host="www.twitter.jp" />
 
 
-	<securecookie host="^(.*\.)?twitter\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?t\.co/"
 		to="https://t.co/" />
 
-	<rule from="^https?://(?:a\d|s)\.twimg\.com/"
+	<rule from="^https?://a\d\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(jp|o|p|pbs|r|si\d|cdn\.syndication|widgets)\.twimg\.com/"
+	<rule from="^http://(abs|ea|gu?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
-	<!--	Main cert matches ma[0-3], but cert presented only matches ma.
-							-->
-	<rule from="^https?://ma\d?\.twimg\.com/"
-		to="https://ma.twimg.com/" />
+	<rule from="^https?://s\.twimg\.com/"
+		to="https://d2rdfnizen5apl.cloudfront.net/" />
 
-	<rule from="^http://((?:(?:cdn\.)?api|business|preview\.cdn|dev|mobile|oauth|p|platform|search|static|support|upload|www)\.)?twitter\.com/"
+	<rule from="^http://((?:201\d|ads|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
 		to="https://$1twitter.com/" />
 
-	<rule from="^https?://(?:de|en|es|fr|it|ja|jp)\.twitter\.com/"
-		to="https://twitter.com/" />
+	<rule from="^https?://urls\.api\.twitter\.com/"
+		to="https://cdn.api.twitter.com/" />
 
-	<rule from="^https?://engineering\.twitter\.com/favicon\.ico"
+	<rule from="^https?://(?:blo|engineerin)g\.twitter\.com/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico"/>
 
-	<rule from="^https?://firefox\.twitter\.com/"
-		to="https://twitter.com/download/firefox/" />
-
-	<rule from="^https?://m\.twitter\.com/"
-		to="https://mobile.twitter.com/" />
-
-	<rule from="^https?://media\.twitter\.com/"
-		to="https://dev.twitter.com/media/" />
-
-	<!--	platform2:
-
-			- Akamai
-			- 403
-				-->
-	<rule from="^https?://platform2?\.twitter\.com/"
+	<rule from="^https?://(?:anywhere\.|widgets\.)?platform\d?\.twitter\.com/"
 		to="https://platform.twitter.com/" />
-
-	<rule from="^https?://(?:www\.)?twitter\.jp/"
-		to="https://twitter.com/"/> 
 
 </ruleset>

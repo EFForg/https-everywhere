@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional subdomains:
+
+		- git	(shows CentOS test page)
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- support	(expired 2012-05-24)
+		- wiki *
+		- www		(self-signed)
+
+	* Cert only matches www
+
+-->
+<ruleset name="RTEMS (partial)" default_off="expired, self-signed">
+
+	<target host="rtems.org" />
+	<target host="*.rtems.org" />
+
+
+	<securecookie host="^(?:\.support|www)\.rtems\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?rtems\.org/"
+		to="https://www.rtems.org/" />
+
+	<rule from="^http://support\.rtems\.org/"
+		to="https://support.rtems.org/" />
+
+	<rule from="^http://wiki\.rtems\.org/(?:\?.*)?$"
+		to="https://www.rtems.org/wiki/index.php/Main_Page" />
+
+	<rule from="^http://wiki\.rtems\.org/wiki/"
+		to="https://www.rtems.org/wiki/" />
+
+</ruleset>

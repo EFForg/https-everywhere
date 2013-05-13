@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- mlpforums.feld0.netdna-cdn.com
+
+			- -ssl exists
+			- s.mlpforums.com
+
+
+	Problematic domains:
+
+		- s.mlpforums.com	(works; mismatched, CN: *.netdna-ssl.com
+
+
+	$ redirects to http.
+
+-->
+<ruleset name="MLP Forums">
+
+	<target host="mlpforums.com" />
+	<target host="*.mlpforums.com" />
+
+
+	<securecookie host="^\.mlpforums\.com$" name=".+" />
+
+
+	<!--	$ redirects to http.
+					-->
+	<rule from="^http://(www\.)?mlpforums\.com/(\?.*)?$"
+		to="https://$1mlpforums.com/index.php$2" />
+
+	<rule from="^http://(www\.)?mlpforums\.com/"
+		to="https://$1mlpforums.com/" />
+
+	<rule from="^https?://s\.mlpforums\.com/"
+		to="https://mlpforums-feld0.netdna-ssl.com/" />
+
+</ruleset>

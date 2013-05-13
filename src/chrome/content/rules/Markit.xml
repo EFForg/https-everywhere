@@ -1,0 +1,33 @@
+<!--
+	Other Markit rulesets:
+
+		- Markit_On_Demand.xml
+
+
+	Nonfunctional subdomains:
+
+		- (www.)feedback		(400; mismatched, CN: *.clicktools.com)
+
+
+	!www: Cert only matches www
+
+-->
+<ruleset name="Markit (partial)">
+
+	<target host="markit.com" />
+	<target host="*.markit.com" />
+
+
+	<securecookie host="^.+\.markit\.com$" name=".+" />
+
+
+	<rule from="^https?://markit\.com/"
+		to="https://www.markit.com/" />
+
+	<rule from="^http://(web\.apps|www)\.markit\.com/"
+		to="https://$1.markit.com/" />
+
+	<rule from="^https?://(?:www\.)?feedback\.markit\.com/dashboard/(?:\w+\.(?:cs|j)s|org/)"
+		to="https://www.clicktools.com/dashboard/$1" />
+
+</ruleset>

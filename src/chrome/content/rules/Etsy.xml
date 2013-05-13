@@ -1,10 +1,14 @@
-<ruleset name="Etsy">
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/siteassets.etsy.com/
+
+-->
+<ruleset name="Etsy (partial)">
 
 	<target host="etsy.com" />
-	<target host="www.etsy.com" />
-	<!--
-		CDN hosts
-				-->
+	<target host="*.etsy.com" />
+		<exclusion pattern="^http://(?:de\.|fr\.|www\.)?etsy\.com/(?:about|android|apps|browse|community|error\.php|forums(?:_user_threads\.php)?|help|ipad|iphone|mobile|people|press|registry|sell|teams|treasury)(?:$|\?|/)" />
 	<target host="*.etsystatic.com" />
 
 
@@ -14,13 +18,10 @@
 	<securecookie host="^\.etsy\.com$" name=".+" /-->
 
 
-	<rule from="^http://(www\.)?etsy\.com/"
+	<rule from="^http://((?:de|fr|ny-image\d|system|www)\.)?etsy\.com/"
 		to="https://$1etsy.com/" />
 
 	<rule from="^http://(img\d|site|www)\.etsystatic\.com/"
 		to="https://$1.etsystatic.com/" />
-
-	<!--rule from="^http://(www\.)?etsy\.com/([\w-]+/)?(asset|file|image|stylesheet)s/"
-		to="https://$1etsy.com/$2$3s/" /-->
 
 </ruleset>

@@ -1,0 +1,29 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(times out)
+
+
+	Partially covered subdomains:
+
+		- members	(some pages redirect to http)
+
+-->
+<ruleset name="Zipcar">
+
+	<target host="zipcar.com" />
+	<target host="*.zipcar.com" />
+		<exclusion pattern="http://members\.zipcar\.com/(?!apply|regist)" />
+
+
+	<securecookie host="^\.zipcar\.com$" name="^ad_\w+$" />
+	<securecookie host="^www\.zipcar\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?zipcar\.com/"
+		to="https://www.zipcar.com/" />
+
+	<rule from="^http://(dru-cdn|media|members)\.zipcar\.com/"
+		to="https://$1.zipcar.com/" />
+
+</ruleset>

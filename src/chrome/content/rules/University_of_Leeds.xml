@@ -1,0 +1,179 @@
+<!--
+	Nonfunctional subdomains:
+
+		- www.bmb *
+		- careerweb **
+		- www.chem
+		- (www.)education	(redirects to arts; mismatched, CN: webhost02c.leeds.ac.uk)
+		- (www.)equality ***
+		- www.fbs *
+		- findanexpert		(redirects to changemypassword; mismatched, CN: changemypassword.leeds.ac.uk)
+		- www.food *
+		- hotspots ***
+		- hr **
+		- www.hr		(shows asd; mismatched, CN: asd.leeds.ac.uk)
+		- italladdsup ***
+		- redeployment		(reset)
+		- www.sddu ***
+		- servicesguide		(shows consultancyguidance; mismatched, CN: consultancyguidance.leeds.ac.uk)
+		- sport			(prints "TEST PAGE"; mismatched, CN: stars.leeds.ac.uk)
+		- tsh ***
+		- www.tsh		(404; mismatched, CN: www.environment.leeds.ac.uk)
+		- webhost02h		(redirects to http)
+
+	* Times out
+	** 503; mismatched, CN: www.leeds.ac.uk
+	*** Redirects to http; mismatched, CN: webhost02h.leeds.ac.uk
+
+
+	Problematic subdomains:
+
+		- ^			(times out)
+		- adm
+		- www.business		(mismatched, CN: lubsws01.leeds.ac.uk)
+		- campus		(503; mismatched, CN: www.leeds.ac.uk)
+		- www.cipeg *
+		- consultancyguidance	(works, expired 2011-11-10)
+		- www.digitalis **
+		- www.ee		(mismatched, CN: www.engineering.leeds.ac.uk)
+		- environment *
+		- epocs **
+		- jobs			(works; mismatched, CN: *.i-grasp.com)
+		- www.leedsportal	(cert only matches ^leedsportal)
+		- (www.)music		(works; mismatched, CN: pvac-webhost.leeds.ac.uk)
+		- (www.)portal		(works; mismatched, CN: leedsportal.leeds.ac.uk)
+		- pvac **
+		- www.stringeditions	(mismatched, CN: webhost02h.leeds.ac.uk)
+
+	* Mismatched
+	** Mismatched, CN: webhost02c.leeds.ac.uk
+
+
+	Partially covered subdomains:
+
+		- campus	(→ www)
+		- (www.)chase	(some pages redirect to http)
+		- music		(→ pvac-webhost)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- acceptonline
+		- access
+		- adm			(→ www)
+		- (www.)alumni
+		- (www.)arts
+		- autodiscover.adm
+		- autodiscover.as
+		- asd
+		- autodiscover
+		- awesome
+		- www.bioelectronics
+		- blog
+		- autodiscover.bmb
+		- (www.)business	(www → ^)
+		- changemypassword
+		- autodiscover.chem
+		- (www.)cipeg		(www → ^)
+		- (www.)cjs
+		- autodiscover.comp
+		- www.comp
+		- concussion
+		- www.dentistry
+		- (www.)digitalis	(^ → www)
+		- apollo3.ds
+		- apollo4.ds
+		- dsalumni3.ds
+		- (www.)earth
+		- autodiscover.earth
+		- autodiscover.education
+		- www.ee		(→ www.engineering)
+		- autodiscover.ee
+		- (www.)engineering
+		- (www.)env
+		- (www.)environment	(^ → www)
+		- (www.)epocs		(^ → www)
+		- autodiscover.estates
+		- autodiscover.food
+		- autodiscover.getech
+		- www.geog
+		- impact
+		- (www.)iss
+		- autodiscover.its
+		- www.its
+		- jobs			(→ ig29.i-grasp.com)
+		- leedsforlife
+		- (www.)leedsportal	(www → ^)
+		- library
+		- blog.library
+		- autodiscover.llu
+		- autodiscover.lubs
+		- lubsws01
+		- lubswww
+		- lutube
+		- outlook
+		- dev.pdr
+		- www.pdr
+		- (www.)portal		(→ leedsportal)
+		- (www.)pvac		(^ → www)
+		- (www.)pvac-cms
+		- pvac-forum
+		- pvac-webhost
+		- qtool
+		- (www.)rothaconference
+		- (www.)see
+		- bookings.see
+		- doc.see
+		- homepages.see
+		- stars
+		- (www.)stringeditions	(www → ^)
+		- studentservices
+		- vlebb
+		- (www.)wpad
+
+-->
+<ruleset name="University of Leeds (partial)">
+
+	<target host="leeds.ac.uk" />
+	<target host="*.leeds.ac.uk" />
+		<exclusion pattern="^http://(?:www\.)?chase\.leeds\.ac\.uk/(?!-/|archive/images/)" />
+
+
+	<securecookie host="^.+\.leeds\.ac\.uk$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?((?:digitalis|environment|epocs|pvac)\.)?leeds\.ac\.uk/"
+		to="https://www.$1leeds.ac.uk/" />
+
+	<rule from="^http://(acceptonline|access|(?:www\.)?(?:alumni|arts|chase|cjs|earth|engineering|env|iss|pvac-cms|rothaconference|see|wpad)|applyonline|asd|autodiscover(?:(?:adm|as|bmb|chem|comp|earth|education|ee|estates|food|getech|its|llu|lubs)\.)?|awesome|www\.bioelectronics|blog|changemypassword|www\.comp|concussion|www\.dentistry|apollo\d\.ds|dsalumni3\.ds|www\.geo|impact|www\.its|leedsforlife|(?:blog\.)?library|lubsw(?:s01|ww)|lutube|outlook|(?:dev|www)\.pdr|pvac-(?:pvac-forum|webhost)|qtool|(?:bookings|doc|homepages)\.see|stars|studentservices|vlebb)\.leeds\.ac\.uk/"
+		to="https://$1.leeds.ac.uk/" />
+
+	<rule from="^https?://adm\.leeds\.ac\.uk/(?:.*)"
+		to="https://www.leeds.ac.uk/" />
+
+	<rule from="^https?://campus\.leeds\.ac\.uk/accessibility-statement\.htm"
+		to="https://www.leeds.ac.uk/accessibility/" />
+
+	<rule from="^https?://campus\.leeds\.ac\.uk/legal\.htm"
+		to="https://www.leeds.ac.uk/terms/" />
+
+	<rule from="^https?://(?:www\.)?(business|cipeg|leedsportal|stringeditions)\.leeds\.ac\.uk/"
+		to="https://$1.leeds.ac.uk/" />
+
+	<rule from="^https?://www\.ee\.leeds\.ac\.uk/(?:[^\?]*)(\?.*)"
+		to="https://www.engineering.leeds.ac.uk/electronic$1" />
+
+	<rule from="^https?://jobs\.leeds\.ac\.uk/(?:\?.*)?$"
+		to="https://ig29.i-grasp.com/fe/tpl_universityofleeds01.asp" />
+
+	<rule from="^https?://jobs\.leeds\.ac\.uk/"
+		to="https://ig29.i-grasp.com/" />
+
+	<rule from="^https?://music\.leeds\.ac\.uk/wp-content/"
+		to="https://pvac-webhost.leeds.ac.uk/wp-content/" />
+
+	<rule from="^https?://(?:www\.)?portal\.leeds\.ac\.uk/"
+		to="https://leedsportal.leeds.ac.uk/" />
+
+</ruleset>

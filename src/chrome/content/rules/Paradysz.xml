@@ -1,16 +1,23 @@
-<!--	!functional
-		- (www.)marketrelevance.com	(timeout)
-		- (www.)paradysz.com		(cert:   *.clockwork.net; 404)
-		- (www.)paradyszmatera.com	(ditto, redirects to paradysz.com on http)
+<!--
+	Nonfunctional domains:
+
+		- (www.)marketrelevance.com	(times out)
+		- (www.)paradysz.com *
+		- (www.)paradyszmatera.com *	(redirects to paradysz.com over http)
+
+	* 404, CN:  *.clockwork.net
+
 -->
 <ruleset name="Paradysz">
 
-	<target host="offeredby.net"/>
-	<target host="www.offeredby.net"/>
+	<target host="offeredby.net" />
+	<target host="*.offeredby.net" />
 
-	<securecookie host="^(.*\.)offeredby\.net" name=".*"/>
 
-	<rule from="^http://(www\.)?offeredby\.net/"
-		to="https://$1offeredby.net/"/>
+	<securecookie host="^(?:.*\.)?offeredby\.net" name=".+" />
+
+
+	<rule from="^http://(ssl\.analytics\.|www\.)?offeredby\.net/"
+		to="https://$1offeredby.net/" />
 
 </ruleset>

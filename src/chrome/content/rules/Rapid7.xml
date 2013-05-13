@@ -1,21 +1,24 @@
+<!--
+	Other Rapid7 rulesets:
+
+		- Metasploit.xml
+
+
+	Problematic subdomains:
+
+		- downloads	(works, akamai)
+
+-->
 <ruleset name="Rapid7 (partial)">
 
-	<target host="dev.metasploit.com"/>
-	<target host="mail.metasploit.com"/>
-	<target host="rapid7.com"/>
-	<target host="community.rapid7.com"/>
-	<target host="www.rapid7.com"/>
+	<target host="rapid7.com" />
+	<target host="*.rapid7.com" />
 
-	<rule from="^http://(dev|mail)\.metasploit\.com/"
-		to="https://$1.metasploit.com/"/>
 
-	<rule from="^http://(www\.)?rapid7\.com/"
-		to="https://www.rapid7.com/"/>
+	<securecookie host="^(?:community|www)\.rapid7\.com$" name=".+" />
 
-	<rule from="^http://community\.rapid7\.com/"
-		to="https://community.rapid7.com/"/>
 
-	<securecookie host="^dev\.metasploit\.com$" name=".*"/>
-	<securecookie host="^(community|www)\.rapid7\.com$" name=".*"/>
+	<rule from="^http://(browsercan\.|community\.|www\.)?rapid7\.com/"
+		to="https://$1rapid7.com/" />
 
 </ruleset>

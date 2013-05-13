@@ -1,13 +1,38 @@
+<!--
+	Other Trustwave rulesets:
+
+		- TrustKeeper.xml
+
+
+	Nonfunctional subdomains:
+
+		- go
+
+
+	Problematic domains:
+
+		- securetrust.com	(cert only matches www)
+
+-->
 <ruleset name="Trustwave (partial)">
 
+	<target host="securetrust.com" />
+	<target host="www.securetrust.com" />
 	<target host="trustwave.com" />
 	<target host="*.trustwave.com" />
+	<target host="*.xramp.com" />
 
 
-	<securecookie host="^(.*\.)?trustwave\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?trustwave\.com$" name=".+" />
 
 
-	<rule from="^http://((?:sealserver|ssl|www)\.)?trustwave\.com/"
+	<rule from="^https?://(?:www\.)?securetrust\.com/"
+		to="https://www.securetrust.com/" />
+
+	<rule from="^http://((?:login|mailmax|pci|scanmail|sealserver|ssl|www)\.)?trustwave\.com/"
 		to="https://$1trustwave.com/" />
+
+	<rule from="^http://s(eal|itedata)\.xramp\.com/"
+		to="https://s$1.xramp.com/" />
 
 </ruleset>

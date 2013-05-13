@@ -1,0 +1,66 @@
+<!--
+	For other Digital River coverage, see Digital-River.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)shareit.com	(no https)
+
+
+	Problematic domains:
+
+		- esellerate.net	(400)
+
+
+	Fully covered domains:
+
+		- esellerate.net subdomains:
+
+			- (www.)	(^ → www)
+			- publishers
+			- store\d
+
+		- (www.)mycommerce.com
+		- ccc.shareit.com
+		- secure.shareit.com
+
+-->
+<ruleset name="MyCommerce">
+
+	<target host="esellerate.net" />
+	<target host="*.esellerate.net" />
+	<target host="mycommerce.com" />
+	<target host="www.mycommerce.com" />
+	<target host="shareit.com" />
+	<target host="*.shareit.com" />
+
+
+	<!--	Observed cookie domains:
+
+			- publishers.esellerate.net
+			- store[236].esellerate.net
+			- mycommerce.com
+			- partner.mycommerce.com
+			- www.mycommerce.com
+			- ccc.shareit.com
+			- secure.shareit.com
+						-->
+	<securecookie host="^(?:.*\.)?(?:esellerate|mycommerce|shareit)\.com$" name=".+" />
+
+
+	<rule from="^http://esellerate\.net/"
+		to="https://www.esellerate.net/" />
+
+	<rule from="^http://(partner|publishers|store\d|www)\.esellerate\.net/"
+		to="https://$1.esellerate.net/"/>
+
+	<rule from="^http://(www\.)?mycommerce\.com/"
+		to="https://mycommerce.com/"/>
+
+	<rule from="^http://(?:www\.)?shareit\.com/signup\.html"
+		to="https://secure.shareit.com/signup.html" />
+
+	<rule from="^http://(ccc|secure)\.shareit\.com/"
+		to="https://$1.shareit.com/" />
+
+</ruleset>

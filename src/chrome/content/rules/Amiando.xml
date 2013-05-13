@@ -1,0 +1,28 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog	(403, valid cert)
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches *.amiando.com)
+		- info	(works; mismatched, CN: secure.eloqua.com)
+
+-->
+<ruleset name="amiando (partial)">
+
+	<target host="amiando.com" />
+	<target host="*.amiando.com" />
+
+
+	<securecookie host=".*\.amiando\.com$" name=".+" />
+
+
+	<rule from="^https?://amiando\.com/"
+		to="https://www.amiando.com/" />
+
+	<rule from="^http://(?!blog\.|info\.)(\w+)\.amiando\.com/"
+		to="https://$1.amiando.com/" />
+
+</ruleset>

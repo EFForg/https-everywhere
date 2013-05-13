@@ -1,14 +1,23 @@
-<ruleset name="Wolfram.com">
-  <target host="wolfram.com" />
-  <target host="www.wolfram.com" />
-  <target host="www.wolframcdn.com" />
-  <target host="wolframalpha.com" />
-  <target host="*.wolframalpha.com" />
+<ruleset name="Wolfram.com (partial)" platform="mixedcontent">
 
-	<securecookie host="^(.*\.)?wolframalpha\.com$" name=".*"/>
+	<target host="wolfram.com" />
+	<target host="www.wolfram.com" />
+	<target host="wolframalpha.com" />
+	<target host="*.wolframalpha.com" />
+	<target host="www.wolframcdn.com" />
+		<!--
+			These break search:
+								-->
+		<exclusion pattern="^http://www\d\w\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
 
-  <rule from="^http://(?:www\.)?wolfram\.com/" to="https://www.wolfram.com/" />
-  <rule from="^http://(?:www\.)?wolframalpha\.com/" to="https://www.wolframalpha.com/" />
-  <rule from="^http://www([0-9][a-z]?)\.wolframalpha\.com/" to="https://www$1.wolframalpha.com/" />
-  <rule from="^http://www\.?wolframcdn\.com/" to="https://www.wolframcdn.com/" />
+
+	<!--securecookie host="^(.*\.)?wolframalpha\.com$" name=".+"/-->
+
+
+	<rule from="^http://(?:www\.)?wolfram(alpha|cdn)?\.com/"
+		to="https://www.wolfram$1.com/" />
+
+	<rule from="^http://www(\d\w?)\.wolframalpha\.com/"
+		to="https://www$1.wolframalpha.com/" />
+
 </ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Other TripAdvisor rulesets:
+
+		- VirtualTourist.xml
+
+
+	Nonfunctional tripadvisor.com subdomains:
+
+		- (www.) *
+		- cobrands **
+		- flights *	(mismatched, CN: *.seatguru.com)
+		- flights-cdn ***
+		- ir
+		- no *
+		- pl *
+		- th ***
+		- tripwow *
+		- tuiuk **
+		- virtualtourist **
+
+	* Some [all?] pages redirect to http
+	** Times out
+	*** Some [all?] pages redirect to http, akamai
+
+-->
+<ruleset name="TripAdvisor (partial)">
+
+	<target host="c1.tacdn.com" />
+	<target host="*.tripadvisor.com" />
+
+
+	<securecookie host="^webmail\.tripadvisor\.com$" name=".+" />
+
+
+	<rule from="^http://c1\.tacdn\.com/"
+		to="https://c1.tacdn.com/" />
+
+	<rule from="^http://(cdn|media-cdn|remote|webmail)\.tripadvisor\.com/"
+		to="https://$1.tripadvisor.com/" />
+
+</ruleset>

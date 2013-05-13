@@ -1,17 +1,29 @@
 <!--
 	Nonfunctional domains:
 
+		- search.citrix.com		(at least some pages redirect to http)
 		- www.citrixonline.com
 		- images.gotowebinar.com
 		- (www.)joingotomeeting.com
 		- (www.)jointraining.com
 		- (www.)joinwebinar.com
 
+
+	Problematic domains:
+
+		- hdx.citrix.com	(record_too_long)
+
+
+	Partially covered domains:
+
+		- hdx.citrix.com
+
 -->
 <ruleset name="Citrix (partial)">
 
 	<target host="citrix.com" />
 	<target host="*.citrix.com" />
+		<exclusion pattern="^http://search\.citrix\.com/(?!favicon\.ico)" />
 	<target host="*.citrixonline.com" />
 	<target host="www.gotoassist.com" />
 	<target host="gotomeeting.com" />
@@ -29,8 +41,11 @@
 	<rule from="^http://(?:www\.)?citrix\.com/"
 		to="https://www.citrix.com/" />
 
-	<rule from="^http://eu\.citrix\.com/"
-		to="https://eu.citrix.com/" />
+	<rule from="^http://(eu|search)\.citrix\.com/"
+		to="https://$1.citrix.com/" />
+
+	<rule from="^https?://hdx\.citrix\.com/$"
+		to="https://www.citrix.com/products/xendesktop/features/high-def-experience.html" />
 
 	<rule from="^http://(news|support)\.citrixonline\.com/"
 		to="https://$1.citrixonline.com/" />

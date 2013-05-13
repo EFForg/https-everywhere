@@ -1,0 +1,60 @@
+<!--
+	Unspported subdomains:
+
+	bookstore	(times out)
+	callcenter	(no public access)
+	fpgis		(different HTTP vs HTTPS content)
+	greenandgold	(SSL error: ssl_error_rx_record_too_long)
+	lib		(cert is for *.consortiumlibrary.org and consortiumlibrary.org)
+	math		(self-signed cert is for spangolite.ua.ad.alaska.edu)
+	phb		(cannot connect to server)
+	webmail		(different HTTP vs HTTPS content)
+
+	Subdomains that are handled by cross-domain redirects in this ruleset:
+
+	hosting (sometimes)
+	moodle
+	womens
+
+-->
+<ruleset name="University of Alaska Anchorage (partial)" default_off="Additional testing recommended">
+	<target host="classes.uaa.alaska.edu" />
+	<target host="coe.uaa.alaska.edu" />
+	<target host="edit.uaa.alaska.edu" />
+	<target host="elive.uaa.alaska.edu" />
+	<target host="hosting.uaa.alaska.edu" />
+	<target host="kb.uaa.alaska.edu" />
+	<target host="longdistance.uaa.alaska.edu" />
+	<target host="me.uaa.alaska.edu" />
+	<target host="moodle.uaa.alaska.edu" />
+	<target host="owa.uaa.alaska.edu" />
+	<target host="student.uaa.alaska.edu" />
+	<target host="technology.uaa.alaska.edu" />
+	<target host="techsupport.uaa.alaska.edu" />
+	<target host="webaccess.uaa.alaska.edu" />
+	<target host="womens.uaa.alaska.edu" />
+	<target host="www.uaa.alaska.edu" />
+	<target host="edit.www.uaa.alaska.edu" />
+
+	<securecookie host="^(classes|coe|edit|elive|hosting|kb|longdistance|me|owa|student|technology|techsupport|webaccess|www)\.uaa\.alaska\.edu$"
+			name=".+" />
+
+	<exclusion pattern="^http://www\.uaa\.alaska\.edu/map/(CampusMap\.swf|interactive\.cfm)" />
+
+	<rule from="^http://(classes|coe|edit|elive|kb|longdistance|me|owa|student|technology|techsupport|webaccess|www)\.uaa\.alaska\.edu/"
+		to="https://$1.uaa.alaska.edu/" />
+	<rule from="^http://edit\.www\.uaa\.alaska\.edu/"
+		to="https://edit.uaa.alaska.edu/" />
+
+	<rule from="^http://hosting\.uaa\.alaska\.edu/?$"
+		to="https://www.uaa.alaska.edu/informationtechnologyservices/" />
+	<rule from="^http://hosting\.uaa\.alaska\.edu/(.+)"
+		to="https://hosting.uaa.alaska.edu/$1" />
+	<rule from="^http://moodle\.uaa\.alaska\.edu($|/.*)"
+		to="https://www.uaa.alaska.edu/classes/facultyresources/" />
+	<rule from="^http://womens\.uaa\.alaska\.edu($|/.*)"
+		to="https://www.uaa.alaska.edu/womensstudies/" />
+
+	<rule from="^https://www\.uaa\.alaska\.edu/map/interactive\.cfm"
+		to="http://www.uaa.alaska.edu/map/interactive.cfm" downgrade="1" />
+</ruleset>

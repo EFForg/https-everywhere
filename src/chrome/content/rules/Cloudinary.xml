@@ -1,0 +1,45 @@
+<!--
+	For problematic rules, see Cloudinary-problematic.xml.
+
+
+	CDN buckets:
+
+		- res.cloudinary.com.edgesuite.net
+
+			- res.cloudinary.com
+			- a[1-5].res.cloudinary.com
+
+		- cloudinary.zendesk.com
+
+			- support.cloudinary.com
+
+
+	Problematic subdomains:
+
+		- res *
+		- a[1-5].res *
+		- support	(pages redirect to http; mismatched, CN: *.zendesk.com)
+
+	* Works, akamai
+
+
+	Mixed data are images only, so shouldn't
+	cause problems for Chrome at the moment.
+
+-->
+<ruleset name="Cloudinary (partial)">
+
+	<target host="cloudinary.com" />
+	<target host="*.cloudinary.com" />
+
+
+	<securecookie host="^cloudinary\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?cloudinary\.com/"
+		to="https://$1cloudinary.com/" />
+
+	<rule from="^https?://support\.cloudinary\.com/generated/"
+		to="https://assets.zendesk.com/generated/" />
+
+</ruleset>

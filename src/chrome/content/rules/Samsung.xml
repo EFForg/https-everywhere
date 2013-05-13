@@ -1,32 +1,112 @@
 <!--
-	Problematic subdomains:
+	Other Samsung rulesets:
 
-		- ^		(times out)
-		- nmetrics	(mismatched, CN: *.112.2o7.net)
+		- AllShare_Play.xml
+		- ChatON.xml
+		- Samsung_Apps.xml
+		- Samsung_Direct.xml
+		- Samsung_LFD.xml
+		- Samsung_mySingle.xml
+		- Samsung_Techwin.xml
 
 
-	Nonfunctional subdomains:
+	samsungbarbarian.appspot.com
 
-		- origin	(times out)
+
+	Nonfunctional domains:
+
+		- samsung.com subdomains:
+
+			- help.content *
+			- m		(503, akamai)
+			- origin *
+
+		- (www.)samsungmobilepress.com *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)samsung.cn	(cert only matches samsung.com.cn)
+
+		- samsung.com subdomains:
+
+			- ^		(times out)
+			- chaton	(akamai)
+			- nmetrics	(mismatched, CN: *.112.2o7.net)
+			- shop.us	(some paths redirect to http)
+
+
+	Partially covered samsung.com subdomains:
+
+		- opensource	(at least some pages redirect to http)
+		- shop.us	(display cart requests redirect to http)
+
+
+	Fully covered domains:
+
+		- samsung.cn subdomains:
+
+			- (www.)	(→ samsung.com.cn)
+			- content
+			- img.content
+			- pub.content
+
+		- samsung.com subdomains:
+
+			- (www.)	(^ → www)
+			- account
+			- allshareplay
+			- apps
+			- chaton	(→ web.samsungchaton.com)
+			- content
+			- img.content
+			- pub.content
+			- findmymobile
+			- findmymobile2
+			- images
+			- nmetrics	(→ samsung-com.112.2o7.net)
+			- secureus
+			- smm
+			- support-cn
+			- us
+
+		- (www.)samsung.com.cn
 
 -->
 <ruleset name="Samsung (partial)">
 
+	<target host="samsung.cn" />
+	<target host="*.samsung.cn" />
 	<target host="samsung.com" />
 	<target host="*.samsung.com" />
+		<exclusion pattern="^http://opensource\.samsung\.com/(?!img/)" />
+		<exclusion pattern="^http://shop\.us\.samsung\.com/store\?[aA]ction=[dD]isplay[dD][rR][cC]art[sS]ummary" />
+	<target host="samsung.com.cn" />
+	<target host="www.samsung.com.cn" />
 
 
-	<securecookie host="^(?:www)?\.samsung\.com$" name=".+" />
+	<securecookie host="^\.samsung\.cn$" name=".+" />
+	<securecookie host="^(?!shop\.us\.).*\.samsung\.com$" name=".+" />
 
+
+	<rule from="^http://(img\.|pub\.)?content\.samsumg\.cn/"
+		to="https://$1content.samsung.cn/" />
 
 	<rule from="^https?://(?:www\.)?samsung\.com/"
 		to="https://www.samsung.com/" />
 
+	<rule from="^https?://chaton\.samsung\.com/"
+		to="https://web.samsungchaton.com/" />
+
 	<rule from="^https?://nmetrics\.samsung\.com/"
 		to="https://samsung-com.112.2o7.net/" />
 
-	<!--	At least some pages redirect to http.	-->
-	<rule from="^http://opensource\.samsung\.com/img/"
-		to="https://opensource.samsung.com/img/" />
+	<rule from="^http://(account|allshareplay|apps|(?:img\.|pub\.)?content|findmymobile2?|images|opensource|secureus|smm|support-cn|us|shop\.us)\.samsung\.com/"
+		to="https://$1.samsung.com/" />
+
+	<rule from="^http://(www\.)?samsung\.(?:com\.)?cn/"
+		to="https://$1samsung.com.cn/" />
 
 </ruleset>

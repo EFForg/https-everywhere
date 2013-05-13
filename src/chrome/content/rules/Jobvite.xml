@@ -1,17 +1,33 @@
+<!--
+	Nonfunctional subdomains:
+
+		- autodiscover *
+		- blog
+		- owa *
+		- recruiting
+		- web		(redirects to app-a.marketo.com; mismatched, CN: *.marketo.com)
+
+	* Data differ between http & https
+
+-->
 <ruleset name="Jobvite (partial)">
 
-	<target host="careers.jobvite.com" />
+	<target host="jobvite.com" />
+	<target host="*.jobvite.com" />
 
 
-	<securecookie host="^careers\.jobvite\.com$" name=".*" />
+	<securecookie host="^(?!hire(?:-stg)?\.)(?:.+\.)?jobvite\.com$" name=".*" />
 
 
-	<rule from="^http://careers\.jobvite\.com/"
-		to="https://careers.jobvite.com/" />
+	<rule from="^http://((?:careers|demo|search|source|source-stg|www|www-stg)\.)?jobvite\.com/"
+		to="https://$1jobvite.com/" />
 
-	<!--	At least some pages 302 to http.
+	<!--	Some pages 302 to http.
 							-->
-	<rule from="^http://hire\.jobvite\.com/images2/"
-		to="https://hire.jobvite.com/images2/" />
+	<rule from="^http://hire(-stg)?\.jobvite\.com/([\w/]+\.css$|CompanyJobs/Careers\.aspx|favicon\.ico|images2/|Login/|logo/)"
+		to="https://hire$1.jobvite.com/$2" />
+
+	<rule from="^https?://web\.jobvite\.com/(cs|image|rs)s/"
+		to="https://na-a.marketo.com/$1s/" />
 
 </ruleset>

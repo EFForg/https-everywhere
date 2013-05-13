@@ -1,10 +1,29 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- control *
+		- email		(shows default Plesk page; mismatched, CN: plesk.aquiss.net)
+		- forums *
+		- support
+
+	* Times out
+
+
+	Partially covered subdomains:
+
+		- ebilling	(login page redirects to http)
+
+-->
 <ruleset name="Aquiss (partial)">
 
-	<target host="secure.aquiss.net"/>
+	<target host="*.aquiss.net"/>
+		<exclusion pattern="^http://ebilling\.aquiss\.net/(?!css/|templates/)" />
+
 
 	<securecookie host="^secure\.aquiss\.net$" name=".*"/>
 
-	<rule from="^http://secure\.aquiss\.net/"
-		to="https://secure.aquiss.net/"/>
+	<rule from="^http://(ebilling|secure)\.aquiss\.net/"
+		to="https://$1.aquiss.net/"/>
 
 </ruleset>

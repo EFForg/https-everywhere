@@ -4,6 +4,8 @@
 
 	CDN buckets:
 
+		- condenast.112.2o7.net
+
 		- arstechnica.cachefly.net
 
 		- arstechnicarp.cachefly.net
@@ -22,16 +24,34 @@
 
 	* Times out
 
+
+	Problematic domains:
+
+		- ars.to	(times out)
+		- stats2.arstechnica.com	(2o7.net)
+
 -->
 <ruleset name="Ars Technica (partial)">
 
+	<target host="ars.to" />
 	<target host="arstechnica.com" />
 	<target host="*.arstechnica.com" />
 	<target host="*.arstechnica.net" />
 
 
+	<!--	Omniture tracking cookies:
+						-->
+	<securecookie host="^\.arstechnica\.com$" name="^s_\w+$" />
+
+
+	<rule from="^https?://ars\.to/"
+		to="https://bit.ly/" />
+
 	<rule from="^https?://(?:www\.)?arstechnica\.com/(public/shared|wp-content)/"
 		to="https://arstechnicarp.cachefly.net/$1/" />
+
+	<rule from="^http://stats2\.arstechnica\.com/"
+		to="https://condenast.112.2o7.net/" />
 
 	<rule from="^http://api\.arstechnica\.net/"
 		to="https://api.arstechnica.net/" />

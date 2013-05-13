@@ -1,22 +1,38 @@
 <!--
-	Nonfunctional subdomains:
-
-		- (www.)	(301s to http)
-
-
 	CDN buckets:
 
 		- ne1.wpc.edgecastcdn.net/002759/
 
+
+	Problematic domains:
+
+		- assets\d+	(edgecast)
+
+
+	^pokemon.co.jp doesn't exist.
+
 -->
 <ruleset name="Pokemon.com (partial)">
 
+	<target host="www.pokemon.co.jp" />
+	<target host="pokemon.com" />
 	<target host="*.pokemon.com" />
+		<!--
+			Redirects to http:
+							-->
+		<exclusion pattern="^http://(?:www\.)?pokemon\.com/(?:at|br|cz|dk|my|nl|no|ru)/" />
 
+
+
+	<rule from="^http://www\.pokemon\.co\.jp/(.+/resources/|common/|images/|_personalize/\w+/scripts/|scripts/|_sys/)"
+		to="https://www.pokemon.co.jp/$1" />
+
+	<rule from="^http://(www\.)?pokemon\.com/"
+		to="https://$1pokemon.com/" />
 
 	<!--	Cert: edgecast.net
 					-->
-	<rule from="^https?://assets\d\d?\.pokemon\.com/"
-		to="https://www.pokemon.com/" />
+	<rule from="^https?://assets\d*\.pokemon\.com/"
+		to="https://assets.pokemon.com/" />
 
 </ruleset>

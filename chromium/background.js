@@ -7,7 +7,7 @@ for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
 }
 
-var rs = all_rules.applicableRulesets("www.google.com");
+var rs = all_rules.potentiallyApplicableRulesets("www.google.com");
 for (r in rs) {
   log(DBUG, rs[r].name +": "+ rs[r].active);
   log(DBUG, rs[r].name +": "+ rs[r].default_state);
@@ -72,6 +72,7 @@ AppliedRulesets.prototype = {
 var activeRulesets = new AppliedRulesets();
 
 var urlBlacklist = {};
+var domainBlacklist = {};
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -81,14 +82,20 @@ function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
   var tmpuri = new URI(details.url);
-  var tmpuserinfo = tmpuri.userinfo();
-  var tmphost = tmpuri.host();
+
+  // Normalise hosts such as "www.example.com."
+  var tmphost = tmpuri.hostname();
   if (tmphost.charAt(tmphost.length - 1) == ".") {
     while (tmphost.charAt(tmphost.length - 1) == ".")
       tmphost = tmphost.slice(0,-1);
   }
-  tmpuri.host(tmphost);
+  tmpuri.hostname(tmphost);
+
+  // If there is a username / password, put them aside during the ruleset
+  // analysis process
+  var tmpuserinfo = tmpuri.userinfo();
   tmpuri.userinfo('');
+
   var canonical_url = tmpuri.toString();
   if (details.url != canonical_url && tmpuserinfo == '') {
     log(INFO, "Original url " + details.url + 
@@ -116,6 +123,9 @@ function onBeforeRequest(details) {
   if (redirectCounter[details.requestId] > 9) {
     log(NOTE, "Redirect counter hit for "+canonical_url);
     urlBlacklist[canonical_url] = true;
+    var hostname = tmpuri.hostname();
+    domainBlacklist[hostname] = true;
+    log(WARN, "Domain blacklisted " + hostname);
     return;
   }
 
@@ -123,7 +133,7 @@ function onBeforeRequest(details) {
 
   var i = 0;
 
-  var rs = all_rules.applicableRulesets(a.host);
+  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr)
@@ -145,7 +155,7 @@ function onBeforeRequest(details) {
 
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
-    if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
+    if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
       var cookie = {name:changeInfo.cookie.name,value:changeInfo.cookie.value,
                     domain:changeInfo.cookie.domain,path:changeInfo.cookie.path,
                     httpOnly:changeInfo.cookie.httpOnly,
@@ -167,25 +177,29 @@ function onCookieChanged(changeInfo) {
   }
 }
 
-// This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, becuase the cookie API is non-blocking..
+// Check to see if a newly set cookie in an HTTP request should be secured
 function onHeadersReceived(details) {
-  var a = document.createElement("a");
-  a.href = details.url;
+  var a = document.createElement("a");  // hack to parse URLs
+  a.href = details.url;                 //
   var host = a.hostname;
+
+  if(a.protocol != "https:") {
+    // Never flag a cookie as secure if it's being set over HTTP
+    return;
+  }
 
   // TODO: Verify this with wireshark
   for (var h in details.responseHeaders) {
     if (details.responseHeaders[h].name == "Set-Cookie") {
+      log(INFO,"Deciding whether to secure cookies in " + details.url);
       var cookie = details.responseHeaders[h].value;
 
       if (cookie.indexOf("; Secure") == -1) {
-        log(DBUG, "Got insecure cookie header: "+cookie);
-        var ruleset = null;
-
+        log(INFO, "Got insecure cookie header: "+cookie);
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
-                                                     name:cookie.split("=")[0]}))) {
+        var fake = {domain:a.hostname, name:cookie.split("=")[0]};
+        var ruleset = all_rules.shouldSecureCookie(fake, true);
+        if (ruleset) {
           activeRulesets.addRulesetToTab(details.tabId, ruleset);
           details.responseHeaders[h].value = cookie+"; Secure";
           log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
@@ -202,6 +216,9 @@ function onHeadersReceived(details) {
 // It would be less perf impact to have a blocking version of the cookie API
 // available instead.
 function onBeforeSendHeaders(details) {
+  // XXX this function appears to enforce something equivalent to the secure
+  // cookie flag by independent means.  Is that really what it's supposed to
+  // do?
   var a = document.createElement("a");
   a.href = details.url;
   var host = a.hostname;
@@ -218,10 +235,13 @@ function onBeforeSendHeaders(details) {
       var cookies = details.requestHeaders[h].value.split(";");
 
       for (var c in cookies) {
-        var ruleset = null;
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        if ((ruleset = all_rules.shouldSecureCookie({domain:a.hostname,
-                                                     name:cookies[c].split("=")[0]}))) {
+        var fake = {domain:a.hostname, name:cookies[c].split("=")[0]};
+        // XXX I have no idea whether the knownHttp parameter should be true
+        // or false here.  We're supposedly inside a race condition or
+        // something, right?
+        var ruleset = all_rules.shouldSecureCookie(fake, false);
+        if (ruleset) {
           activeRulesets.addRulesetToTab(details.tabId, ruleset);
           log(INFO, "Woah, we lost the race on updating a cookie: "+details.requestHeaders[h].value);
         } else {

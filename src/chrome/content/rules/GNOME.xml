@@ -1,41 +1,41 @@
 <!--
 	Nonfunctional domains:
 
-		- gnome.asia		(cert: guzheng.lyrical.net; shows empty tree)
-		- 2012.gnome.asia	(ditto)
-		- www.gnome.asia	(ditto)
+		- gnome.asia subdomains:
 
-		- gnomejournal.org		(cert: www.gnome.org; shows rt.gnome.org's data)
+			- (www.) *
+			- 2012 *
+			- 2013 *
 
 		- gnome.org subdomains:
 
-			- art
-			- blogs
-			- developer		(shows rt's data)
-			- download		(cert: www; shows rt's data)
-			- foundation		(cert: www; shows www's data)
-			- foundation		(CN: www; shows rt)
+			- api **
+			- art ***
+			- download **
 			- ftp
-			- git
-			- library		(shows rt's data)
-			- news			(shows rt's data)
-			- people
-			- planet		(shows rt's data)
-			- projects
-			- webstats		(ssl_error_rx_record_too_long)
-			- webapps		(shows rt's data)
-			- www-old
+			- jabber ***
+			- webapps **
+			- webapps2 ****
+			- www-old ***
+
+		- gnomejournal.org	(shows rt.gnome.org, CN: www.gnome.org)
+
+	* cert: guzheng.lyrical.net; shows empty tree)
+	** Prints "OOPS...", mismatched, CN: l10n.gnome.org
+	*** record_too_long
+	**** Prints "OOPS..."
 
 
 	Problematic domains:
 
-		- foundation.gnome.org
-		- label.gnome.org *
-		- ldap.gnome.org *
-		- usability.gnome.org	(shows rt)
-		- (www.)gupnp.org	(mismatch, CN: www.webstreams.de)
+		- gnome.org subdomains:
 
-	* Reply with http, redirect to live.gnome.org
+			- bugzilla-attachments	(works, mismatched, CN: www.gnome.org)
+			- foundation	(works, mismatched, CN: www.gnome.org)
+			- ldap		(403, redirects to www over http, mismatched, CN: l10n.gnome.org)
+			- usability	(prints "OOPS...", mismatched, CN: l10n.gnome.org)
+
+		- (www.)gupnp.org	(mismatched, CN: www.webstreams.de)
 
 
 	Fully covered domains:
@@ -43,47 +43,71 @@
 		- gnome.org subdomains:
 
 			- (www.)
+			- admin
+			- blogs
 			- bugzilla
+			- *.bugzilla-attachments
+			- developer
 			- extensions
-			- foundation
-			- label
-			- ldap
+			- foundation	(→ www)
+			- git
+			- help
+			- ldap		(→ www)
+			- l10n
+			- library
 			- mail
 			- mango
 			- menubar
+			- nagios
+			- news
 			- live
+			- ostree
+			- planet
+			- people
+			- projects
 			- rt
-			- usability
+			- usability	(→ live)
 			- vote
+			- webstats
+			- wiki		(→ live, mismatched, CN: www.gnome.org)
 
-		- (www.)gupnp.org
+		- (www.)gupnp.org	(→ live.gnome.org)
 
 -->
 <ruleset name="GNOME (partial)">
 
 	<target host="gnome.org" />
 	<target host="*.gnome.org" />
-		<!--
-			- projects/: 404, redirects to projects.gnome.org
-			- ~: 404, redirects to people.gnome.org
-								-->
-		<exclusion pattern="^http://www\.gnome\.org/(projects/|~)" />
 	<target host="gupnp.org" />
 	<target host="www.gupnp.org" />
 
 
-	<securecookie host="^.*\.gnome\.org$" name=".*" />
+	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
 
 
-	<rule from="^http://((?:bugzilla|extensions|mail|mango|menubar|live|rt|vote|www)\.)?gnome\.org/"
+	<rule from="^http://((?:admin|blogs|bugzilla|\w+\.bugzilla-attachments|developer|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|people|planet|projects|rt|vote|webstats|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
-	<!--	Redirects as so over http.
-						-->
+	<!--	Redirects as so.
+					-->
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/\??$"
+		to="https://bugzilla.gnome.org/" />
+
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\?.+)"
+		to="https://bugzilla.gnome.org/?keywords=$1" />
+
+	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\w[^\?]*)(?:\?.*)?"
+		to="https://bugzilla.gnome.org/show_bug.cgi?id=$1" />
+
+	<!--	Ditto.
+				-->
 	<rule from="^https?://foundation\.gnome\.org/"
 		to="https://www.gnome.org/foundation/" />
 
-	<rule from="^https?://l(?:abel|dap)\.gnome\.org/"
+	<rule from="^https?://ldap\.gnome\.org/"
+		to="https://www.gnome.org/" />
+
+	<rule from="^https?://wiki\.gnome\.org/"
 		to="https://live.gnome.org/" />
 
 	<!--	Redirects as so over http.

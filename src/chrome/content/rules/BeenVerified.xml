@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- imagesbv123.s3.amazonaws.com
+		- d39p957rlu0vhp.cloudfront.net
+		- dizokop6i4p8s.cloudfront.net
+		- dkaq991r5j07n.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- partners
+		- report	(shows sor.api; mismatched, CN: sor.api.beenverified.com)
+		- support	(redirects to http; mismatched, CN: *.zendesk.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(home page and sitemap.html redirect to http)
+
+-->
+<ruleset name="BeenVerified (partial)">
+
+	<target host="beenverified.com" />
+	<target host="*.beenverified.com" />
+		<exclusion pattern="^http://(?:www\.)?beenverified\.com/(?!(?:\?.*)?$|sitemap\.html)" />
+
+
+	<securecookie host="^m\.beenverified\.com$" name=".+" />
+
+
+	<rule from="^http://(api\.|(?:www\.)?sor\.api\.|m\.|www\.)?beenverified\.com/"
+		to="https://$1beenverified.com/" />
+
+	<rule from="^https?://support\.beenverified\.com/(generated|images)/"
+		to="https://assets.zendesk.com/$1/" />
+
+</ruleset>

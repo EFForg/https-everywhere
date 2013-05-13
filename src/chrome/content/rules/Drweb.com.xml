@@ -1,9 +1,72 @@
-<ruleset name="Dr.Web">
-	<target host="drweb.com" />
-	<target host="www.drweb.com" />
-	<target host="st.drweb.com" />
-	<rule from="^http://www\.drweb\.com/" to="https://www.drweb.com/"/>
-	<rule from="^http://st\.drweb\.com/" to="https://st.drweb.com/"/>
-	<rule from="^http://drweb\.com/" to="https://www.drweb.com/"/>
-</ruleset>
+<!--
+	Nonfunctional subdomains:
 
+		- awstats	(data differs)
+		- bugs
+		- ftp		(redirects to drweb.fr, mismatched, CN: *.drweb.fr)
+		- forum
+		- info		(shows https://awstats)
+		- live
+		- people
+		- update	(data differs, mismatched, CN: *.drweb.fr)
+		- us		(shows blank tree)
+		- us1
+
+
+	Problematic subdomains:
+
+		^	(.+ redirects to www.drweb.com/$)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- antifraud
+		- antitheft
+		- beta
+		- blogs
+		- buy
+		- company
+		- customers
+		- download
+		- estore
+		- f2
+		- license
+		- mobi
+		- my
+		- network
+		- news
+		- new-support
+		- online
+		- online[13]
+		- osp
+		- pa
+		- partners
+		- pda
+		- products
+		- promotions
+		- solutions
+		- st
+		- stat
+		- support
+		- training
+		- vms
+		- wiki
+
+-->
+<ruleset name="Dr.Web">
+
+	<target host="drweb.com" />
+	<target host="*.drweb.com" />
+
+
+	<securecookie host="^.*\.drweb\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?drweb\.com/"
+		to="https://www.drweb.com/" />
+
+	<rule from="^http://(antifraud|antitheft|beta|blogs|buy|company|customers|download|estore|f2|license|mobi|my|network|news|online\d?|osp|pa|partners|pda|products|promotions|solutions|st|stat|(?:new-)?support|training|vms|wiki)\.drweb\.com/"
+		to="https://$1.drweb.com/" />
+
+</ruleset>

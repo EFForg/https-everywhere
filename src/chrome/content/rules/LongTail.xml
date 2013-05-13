@@ -1,12 +1,25 @@
 <!--
+	CDN buckets:
+
+		- cs28.wpc.edgecastcdn.net
+
+			- p.jwpcdn.com
+
+
 	Nonfunctional subdomains:
 
 		- developer	(cert: secure; 301s to http)
+
+
+	Problematic domains:
+
+		- cdn.s.jwpcdn.com	(akamai)
 
 -->
 <ruleset name="LongTail (partial)">
 
 	<target host="dashboard.bitsontherun.com" />
+	<target host="*.jwpcdn.com" />
 	<target host="*.jwpltx.com" />
 	<target host="longtail.tv" />
 	<target host="www.longtail.tv" />
@@ -17,7 +30,7 @@
 		<!--
 			302 to http.
 					-->
-		<exclusion pattern="^https?://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/\w+/images/\w+\.png$" />
+		<exclusion pattern="^https?://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/(?!community/)\w+/images/\w+\.png$" />
 
 
 	<securecookie host="^\w\.jwpltx\.com$" name=".+" />
@@ -28,6 +41,12 @@
 							-->
 	<rule from="^http://dashboard\.bitsontherun\.com/static/"
 		to="https://dashboard.bitsontherun.com/static/" />
+
+	<rule from="^http://(a|v)\.jwpcdn\.com/"
+		to="https://$1.jwpcdn.com/" />
+
+	<rule from="^https?://(?:cdn\.)?p\.jwpcdn\.com/"
+		to="https://ssl.p.jwpcdn.com/" />
 
 	<rule from="^http://(i|s)\.jwpltx\.com/"
 		to="https://$1.jwpltx.com/" />
@@ -56,6 +75,11 @@
 					-->
 	<rule from="^https?://(?:www\.)?ltvimg\.com/"
 		to="https://s0-www.ltvimg.com/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://s(?:0|1)-www\.ltvimg\.com/(\?.*)?$"
+		to="https://www.longtailvideo.com/$1" />
 
 	<rule from="^http://s(0|1)-www\.ltvimg\.com/"
 		to="https://s$1-www.ltvimg.com/" />

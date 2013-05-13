@@ -1,31 +1,120 @@
 <!--
 	CDN buckets:
 
-		- www.target.com.edgesuite.net/.../
-			- a1112.b.akamai.net/.../
+		- www.target.com.edgesuite.net
+		- img1.targetimg1.com.edgesuite.net
 
-		- img1.targetimg1.com.edgesuite.net/.../
-			- a1123.b.akamai.net/.../
+
+	Nonfunctional target.com subdomains:
+
+		- ^			(times out)
+		- staging.college	(shows RHEL test page)
+		- weeklyad		(redirects to http, akamai)
+		- www			("Oh no", akamai)
+
+
+	Problematic domains:
+
+		- target.com subdomains:
+
+			- dailydeals *
+			- m *
+			- m-beta-secure	(mismatched)
+
+		- img1.targetimg1.com		(works, akamai)
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- target.com subdomains:
+
+			- *-secure:
+
+				- cartwheel-secure
+				- cartwheelws-secure
+				- imgsvc-secure
+				- m-secure
+				- mobileapp-secure
+				- m-perf-secure
+				- tapidotcom-secure
+				- tws-secure
+				- www-secure
+				- www-perf-secure
+
+			- *-secure-perf
+
+				- socialsavings-secure-perf
+				- socialsavingsws-secure-perf
+				- tws-secure-perf
+
+			- *-secure-stg:
+
+				- imgsvc-secure-stg
+				- mobileapp-secure-stg
+				- m-secure-stg
+				- socialsavingsws-secure-stg
+				- tapidotcom-secure-stg
+				- tws-secure-stg
+
+			- babycatalog
+
+			- catalogs subdomains:
+
+				- baby
+				- m.baby
+				- home
+				- patio
+				- toys
+				- wedding
+
+			- college
+			- corporate
+			- corporate-admin
+			- health
+			- images-babycatalog
+			- m			(→ m-secure)
+			- microsites
+			- mrcam
+			- sites
+			- tgtfiles
+
+		- static.targetimg1.com
+
+		- targetimg[1-3].com subdomains:
+
+			- img\d			(→ img\d-secure)
+			- img\d-secure
+			- img\d-secure-stg
+			- img\d-ssa-secure-perf
+			- img\d-ssa-secure-stg
 
 -->
-<ruleset name="Target (partial)" default_off="mismatch">
+<ruleset name="Target (partial) ">
 
-	<!--	Akamai, broken.
-	<target host="target.com" />
-	<target host="www.target.com" />
-	<target host="sites.target.com" /-->
-	<target host="img1.targetimg1.com" />
+	<target host="*.target.com" />
+		<exclusion pattern="^http://m-beta-secure\.target\.com/" />
+	<target host="*.targetimg1.com" />
+	<target host="*.targetimg2.com" />
+	<target host="*.targetimg3.com" />
 
 
-	<!--	Broken.
+	<!--	No partially covered domains:
+							-->
+	<securecookie host="^.+\.target\.com$" name=".+" />
 
-	<rule from="^http://(?:www\.)?target\.com/"
-		to="https://www.target.com/" />
 
-	<rule from="^http://sites\.target\.com/"
-		to="https://sites.target.com/" /-->
+	<rule from="^http://([\w-]+-secure(?:-perf|-stg)?|(?:images-)?babycatalog|(?:baby|m\.baby|home|patio|toys|wedding)\.catalogs|college|corporate(?:-admin)?|health|microsites|mrcam|sites|tgtfiles)\.target\.com/"
+		to="https://$1.target.com/" />
 
-	<rule from="^http://img1\.targetimg1\.com/"
-		to="https://img1.targetimg1.com/" />
+	<rule from="^http://([\w-]+)-secure(-perf|-stg)?\.targetimg(\d)\.com/"
+		to="https://$1-secure$2.targetimg$3.com/" />
+
+	<rule from="^http://img(\d)\.targetimg\d\.com/"
+		to="https://img$1-secure.targetimg$1.com/" />
+
+	<rule from="^http://static\.targetimg1\.com/"
+		to="https://static.targetimg1.com/" />
 
 </ruleset>

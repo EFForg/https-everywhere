@@ -1,15 +1,111 @@
-<ruleset name="Dell">
+<!--
+	dellideas.force.com 
 
-	<target host="dell.com"/>
-	<target host="linux.dell.com"/>
-	<target host="www.dell.com"/>
-	<target host="support.dell.com"/>
 
-	<rule from="^http://(www\.)?dell\.com/"
-		to="https://www.dell.com/"/>
+	Nonfunctional subdomains:
 
-	<rule from="^http://(linux|support)\.dell\.com/"
-		to="https://$1.dell.com/"/>
+		- community	(times out)
+		- content	(times out)
+
+
+	Problematic subdomains:
+
+		- i *
+		- accessories-cdn *
+		- www1.la *
+		- www1-cdn.la *
+		- accessories.us	(mismatched, CN: accessories.dell.com)
+		- www-cdn *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- community subdomains:
+
+				- de *
+				- en *
+				- es *
+				- fr *
+				- ja *
+				- ko *
+				- media		(→ en.community; 504, akamai)
+				- pt *
+				- zh *
+
+		- partnerdirect **
+
+	* cfs-file.ashx & resized-image.ashx 404, at least some pages redirect to http
+	** At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- accessories-cdn	(→ accessories)
+		- afcs
+
+		- ap subdomains:
+
+			- chatpro
+			- cs
+			- dellchat
+
+		- b2bservices
+
+		- cdn subdomains:
+
+			- ec2
+			- si
+			- snp
+
+		- ecomm
+		- ecomm2
+		- support.euro
+		- i			(→ si.cdn)
+		- img
+		- mobility
+		- premier
+		- signin
+		- sso
+		- support
+		- supportapj
+		- pbar.us
+		- www-cdn		(→ www)
+
+-->
+<ruleset name="Dell (partial)" platform="mixedcontent">
+
+	<target host="dell.com" />
+	<target host="*.dell.com" />
+		<exclusion pattern="^http://(?:\w\w|media)\.community\.dell\.com/(?![tT]hemes/)" />
+		<exclusion pattern="^http://partnerdirect\.dell\.com/(?!sites/channel/(?:Style\ Library/|\w\w_\w\w/pages/loginpage\.aspx))" />
+	<target host="ideastorm.com" />
+	<target host="www.ideastorm.com" />
+
+
+	<!--(?!.+\.community\.|partnerdirect\.)-->
+	<securecookie host="^(?:accessories|ecomm|support\.euro|mobility|premier|signin|support(?:apj)?)\.dell\.com$" name=".+" />
+
+
+	<rule from="^https?://(www(?:-cdn)?\.)?dell\.com/"
+		to="https://www.dell.com/" />
+
+	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|mobility|partnerdirect|premier|signin|sso|support(?:apj)?|pbar\.us)\.dell\.com/"
+		to="https://$1.dell.com/" />
+
+	<rule from="^https?://accessories-cdn\.dell\.com/"
+		to="https://accessories.dell.com/" />
+
+	<rule from="^https?://media\.community\.dell\.com/"
+		to="https://en.community.dell.com/" />
+
+	<rule from="^https?://i\.dell\.com/"
+		to="https://si.cdn.dell.com/" />
+
+	<rule from="^https?://(?:www\.)?ideastorm\.com/"
+		to="https://dellideas.secure.force.com/" />
 
 </ruleset>
 

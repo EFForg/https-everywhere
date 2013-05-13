@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- xxxbunker.cachefly.net
+		- 759425240.r.cdn77.net
+
+
+	Nonfunctional subdomains:
+
+		- cdn *
+		- m *
+		- thumbs
+
+	* Redirects to ^xxxbunker.com
+
+
+	Many pages redirect to http, others 404.
+
+-->
+<ruleset name="xxxbunker.com (partial)">
+
+	<target host="109.201.146.247" />
+	<target host="759425240.r.cdn77.net" />
+		<exclusion pattern="^https?://759425240\.r\.cdn77\.net/(?:css/|images/tbc_|js/)" />
+	<target host="xxxbunker.com" />
+	<target host="*.xxxbunker.com" />
+		<exclusion pattern="^http://(?:www\.)?xxxbunker\.com/(?!css/|(?:ajaxCommand|download|forgotPassword|iframePlayer|joinUs|video(?:List|Player|Vote))\.php|js/(?!functions_0456\.js))" />
+
+
+	<rule from="^https?://(?:109\.201\.146\.247|759425240\.r\.cdn77\.net)/"
+		to="https://xxxbunker.com/" />
+
+	<rule from="^http://((?:cdn\.)?flash\.|www\.)?xxxbunker\.com/"
+		to="https://$1xxxbunker.com/" />
+
+	<rule from="^https://(www\.)?xxxbunker\.com/tos\.php"
+		to="http://$1xxxbunker.com/tos.php" downgrade="1" />
+
+</ruleset>

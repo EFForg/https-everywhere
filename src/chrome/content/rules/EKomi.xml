@@ -1,0 +1,46 @@
+<!--
+	Problematic domains:
+
+		- (www.)akomi.(at|ch)		(no https)
+		- ekomi.(co.za|it|se|sk)	(mismatched, CN: ssl.ekomi.de)
+		- ssl.ekomi.de			(mismatched, CN: www.ekomi.de)
+
+
+	Fully covered domains:
+
+		- (www.)akomi.(at|ch)		(→ www.ekomi.de)
+		- (www.)ekomi.(co.uk|de|es|fr|nl)
+		- (www.)ekomi.(co.za|it|se|sk)	(^ → www)
+		- ssl.ekomi.de			(→ www)
+		- vf-js.ekomi.de
+		- (www.)ekomi-us.com
+
+-->
+<ruleset name="eKomi">
+
+	<target host="ekomi.*" />
+	<target host="www.ekomi.*" />
+	<target host="ekomi.co.*" />
+	<target host="*.ekomi.co.uk" />
+	<target host="www.ekomi.co.za" />
+	<target host="*.ekomi.de" />
+	<target host="ekomi-us.com" />
+	<target host="www.ekomi-us.com" />
+
+
+	<securecookie host="^(?:www)?\.ekomi(?:\.\w\w|\.co\.\w\w|-us\.com)$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?ekomi\.(?:at|ch)/"
+		to="https://www.ekomi.de/" />
+
+	<rule from="^https?://ssl\.ekomi\.de/"
+		to="https://www.ekomi.de/" />
+
+	<rule from="^https?://ekomi\.(co\.za|it|se|sk)/"
+		to="https://www.ekomi.$1/" />
+
+	<rule from="^http://(vf-js\.|www\.)?ekomi(\.\w\w|\.co\.\w\w|-us\.com)/"
+		to="https://$1ekomi$2/" />
+
+</ruleset>

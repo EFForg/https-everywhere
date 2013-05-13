@@ -1,0 +1,47 @@
+<!--
+	For other Samsung coverage, see Samsung.xml.
+
+
+	Problematic domains:
+
+		- chaton.com		(mismatched, CN: web.samsungchaton.com)
+		- adminfront.chaton.com	(mismatched, CN: smm.samsung.com)
+		- mobileweb.chaton.com	(mismatched, CN: smm.samsung.com)
+		- www.chaton.com	(akamai)
+
+
+	Fully covered domains:
+
+		- (www.)chaton.com	(→ web.samsungchaton.com)
+		- adminfront.chaton.com	(→ smm.samsung.com)
+		- mobileweb.chaton.com	(→ smm.samsung.com)
+		- i0.chatoncdn.com
+		- s0.chatoncdn.com
+		- livemw.samsungchaton.com
+		- web.samsungchaton.com
+
+-->
+<ruleset name="ChatON">
+
+	<target host="chaton.com" />
+	<target host="*.chaton.com" />
+	<target host="*.chatoncdn.com" />
+	<target host="*.samsungchaton.com" />
+
+
+	<securecookie host="^web\.samsungchaton\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?chaton\.com/"
+		to="https://web.samsungchaton.com/" />
+
+	<rule from="^https?://(?:adminfront|mobileweb)\.chaton\.com/"
+		to="https://smm.samsung.com/" />
+
+	<rule from="^http://(i|s)0\.chatoncdn\.com/"
+		to="https://$10.chatoncdn.com/" />
+
+	<rule from="^http://(livemw|web)\.samsungchaton\.com/"
+		to="https://$1.samsungchaton.com/" />
+
+</ruleset>

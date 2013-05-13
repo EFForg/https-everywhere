@@ -1,9 +1,4 @@
 <!--
-	Nonfunctional subdomains:
-
-		- store		(cert: *.myshopify.com; redirects to http)
-
-
 	CDN buckets:
 
 		- s3.amazonaws.com/rdf_article_images/
@@ -16,7 +11,15 @@
 		- cdn.cloudfiles.mosso.com/c148211/
 		- cdn.cloudfiles.mosso.com/c148271/
 		- rdfnet.herokuapp.com
+
 		- rdfnet-comments.herokuapp.com
+
+			- comments.richarddawkins.net
+
+		- richarddawkins.myshopify.com
+
+			- store.richarddawkins.net
+
 		- c177661.r61.cf0.rackcdn.com
 		- c1731762.r62.cf0.rackcdn.com
 		- c3046032.r32.cf0.rackcdn.com
@@ -34,28 +37,32 @@
 
 	Problematic domains:
 
-		- richarddawkins.net		(no https)
-		- www.richarddawkins.net	(works, mismatched, CN: *.herokuapp.com)
+		- (www.)outcampaign.org *
+		- (www.)rdfs.com **
+		- richarddawkins.net			(no https)
+		- comments.richarddawkins.net **
+		- www.richarddawkins.net **
+		- (www.)richarddawkinsfoundation.org *
+
+	* Mismatched, CN: *.heroku.com
+	** Works, mismatched, CN: *.herokuapp.com
 
 -->
-<ruleset name="Richard Dawkins Foundation for Reason and Science (partial)" default_off="mismatch">
+<ruleset name="Richard Dawkins Foundation (partial)" default_off="mismatched">
 
-	<!--	Cert: *.heroku.com	-->
 	<target host="outcampaign.org" />
 	<target host="www.outcampaign.org" />
-	<!--	Cert: *.herokuapp.com	-->
 	<target host="rdfrs.com" />
 	<target host="www.rdfrs.com" />
 	<target host="richarddawkins.net" />
 	<target host="*.richarddawkins.net" />
-	<!--	CN: *.heroku.com	-->
 	<target host="richarddawkinsfoundation.org" />
-	<target host="*.richarddawkinsfoundation.org" />
+	<target host="www.richarddawkinsfoundation.org" />
 
 
-	<securecookie host="^outcampaign\.org$" name=".*" />
-	<securecookie host="^rdfrs\.com$" name=".*" />
-	<securecookie host="^.*\.richarddawkins\.net$" name=".*" />
+	<securecookie host="^outcampaign\.org$" name=".+" />
+	<securecookie host="^rdfrs\.com$" name=".+" />
+	<securecookie host="^.*\.richarddawkins\.net$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?outcampaign\.org/"
@@ -67,19 +74,14 @@
 	<rule from="^https?://(?:www\.)?richarddawkins\.net/"
 		to="https://www.richarddawkins.net/" />
 
-	<!--	Observed subdomains:
+	<rule from="^https?://comments\.richarddawkins\.net/"
+		to="https://rdfnet-comments.herokuapp.com/" />
 
-			- donate
-			- givingaid
-				-->
 	<rule from="^http://(donate|givingaid|old)\.richarddawkins\.net/"
 		to="https://$1.richarddawkins.net/" />
 
-	<!--	Pages 301 back.
-				-->
-	<rule from="^https?://store\.richarddawkins\.net/global/"
-		to="https://richarddawkins.myshopify.com/global/" />
-
+	<rule from="^https?://store\.richarddawkins\.net/"
+		to="https://richarddawkins.myshopify.com/" />
 
 	<rule from="^https?://(?:www\.)?richarddawkinsfoundation\.org/"
 		to="https://richarddawkinsfoundation.org/" />

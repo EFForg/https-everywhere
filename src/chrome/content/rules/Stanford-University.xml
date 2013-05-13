@@ -32,6 +32,7 @@
 		- fingate **
 		- maps *
 		- search **
+		- slac			(cert only matches www.slac)
 		- studentservicescenter **
 		- thestanfordchallenge	(works, mismatched, CN: ood-web1.stanford.edu)
 		- www-ee		(mismatched, CN: ee.stanford.edu)
@@ -43,7 +44,7 @@
 
 	Fully covered subdomains:
 
-		- ^			(→ www.stanford.edu)
+		- (www.)		(^ → www)
 		- accessories
 		- ai
 		- alumni
@@ -65,6 +66,8 @@
 		- itservices
 		- itunes
 		- janestanford
+		- (www.)law
+		- blogs.law
 		- lbre
 		- lists
 		- mailman
@@ -80,16 +83,17 @@
 		- refunds
 		- remedyweb
 		- search
+		- siepr
 
 		- slac subdomains:
 
-			- ^			(→ www.slac.stanford.edu)
+			- (www.)	(^ → www)
 			- bbr-wiki
 			- news
 			- oraweb
 			- webauth1
-			- www
 			- www2
+			- www6
 			- www-group
 			- www-public
 
@@ -101,7 +105,6 @@
 		- visit
 		- waivers
 		- weblogin
-		- www
 		- www-ee		(→ ee)
 
 
@@ -116,24 +119,17 @@
 
 	<target host="stanford.edu" />
 	<target host="*.stanford.edu" />
-	<target host="*.answers.stanford.edu" />
-	<target host="*.slac.stanford.edu" />
-	<target host="*.itservices.stanford.edu" />
-	<target host="*.lbre.stanford.edu" />
-	<!--	* for cross-domain cookie	-->
-	<target host="*.news.slac.stanford.edu" />
 
 
 	<!--securecookie host="^\.stanford\.edu$" name=".+" /-->
-	<securecookie host="^(alumni|\.answers|ehsappprd1|hannahousetours|\.itservices|\.lbre|maven|openflow|pgnet|\.news\.slac\|stanfordwho|weblogin|webauth1).stanford\.edu$" name=".*" />
+	<securecookie host="^(?:alumni|\.answers|ehsappprd1|hannahousetours|\.itservices|\.law|\.lbre|maven|openflow|pgnet|\.siepr|(?:\.news|www6)\.slac\|stanfordwho|weblogin|webauth1).stanford\.edu$" name=".+" />
 
 
-	<rule from="^http://(accessories|ai|alumni|annualreport|answers|assu-web|ccrma|crowd|crypto|ctr|cyberlaw|ehsappprd1|engineering|events|founders|hannahousetours|itservices|itunes|janestanford|lbre|lists|mailman|maven|med|news|npl|openflow|osep|parentsweekend|pgnet|publicaffairs|refunds|remedyweb|(?:bbr-wiki|news|oraweb|webauth1|www2|www-group|www-public)\.slac|stanford(?:events|who)|studentaffairs|ucomm|visit|waivers|weblogin)\.stanford\.edu/"
-		to="https://$1.stanford.edu/" />
-
-	<!--	Cert isn't valid for !www	-->
 	<rule from="^https?://(?:www\.)?(slac\.)?stanford\.edu/"
 		to="https://www.$1stanford.edu/" />
+
+	<rule from="^http://(accessories|ai|alumni|annualreport|answers|assu-web|ccrma|crowd|crypto|ctr|cyberlaw|ehsappprd1|engineering|events|founders|hannahousetours|itservices|itunes|janestanford|(?:blogs\.|www\.)?law|lbre|lists|mailman|maven|med|news|npl|openflow|osep|parentsweekend|pgnet|publicaffairs|refunds|remedyweb|siepr|(?:bbr-wiki|news|oraweb|webauth1|www[26]|www-group|www-public)\.slac|stanford(?:events|who)|studentaffairs|ucomm|visit|waivers|weblogin)\.stanford\.edu/"
+		to="https://$1.stanford.edu/" />
 
 	<rule from="^https?://askjane\.stanford\.edu/(?:.*)"
 		to="https://studentaffairs.stanford.edu/askjane" />

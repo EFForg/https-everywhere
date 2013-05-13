@@ -6,21 +6,17 @@
 
 	CDN buckets:
 
-		- wildcard.addthis.com.edgekey.net/...
-			- e2943.e11.akamaiedge.net/...
+		- wildcard.addthis.com.edgekey.net
+		- wildcard.addthiscdn.com.edgekey.net
 
-		- wildcard.addthiscdn.com.edgekey.net/...
-			- e1303.c.akamaiedge.net/...
 
 	Nonfunctional domains:
 
-		- support.addthis.com	(cert: *.assistly.com; 301s to http)
-			- So does addthis.assistly.com  & addthis.desk.com 
+		- s4.addthis.com	(shows empty tree, mismatched, CN: xiaomufwq.com)
 
+		- support.addthis.com	(redirects to http, CN: *.assistly.com)
 
-	Problematic domains:
-
-		- ct5.addthis.com	(404, CN: gp1.wac.edgecastcdn.net)
+			- So does addthis.assistly.com  & addthis.desk.com
 
 
 	Partially covered domains:
@@ -35,7 +31,7 @@
 			- api
 			- cache
 			- cf
-			- ct5		(→ s5.addthis.com)
+			- ct[01345]
 			- ds
 			- s[3579]
 			- secure
@@ -47,13 +43,8 @@
 
 	<target host="addthis.com" />
 	<target host="*.addthis.com" />
-	<target host="cache.addthiscdn.com" />
-
-
-	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|uid)$" />
-
-
-	<!--	These paths 302 to http:
+	<!--
+		These paths 302 to http:
 
 			- about$
 			- about/team$
@@ -85,17 +76,18 @@
 			- press$
 			- register
 					-->
-	<rule from="^http://(?:www\.)?addthis\.com/(bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get/(?:just-analytics|sharing|trending)|landing|login|press|register)(?:$|\?))"
-		to="https://www.addthis.com/$1" />
+		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get(?:/just-analytics|/sharing|/trending)?|landing|login|press|register)(?:$|\?))" />
+	<target host="cache.addthiscdn.com" />
 
-	<rule from="^http://(?:www\.)?addthis\.com/get($|\?)"
-		to="https://www.addthis.com/get/sharing$1" />
 
-	<rule from="^http://(api|cache|cf|ds|s[3579]|secure)\.addthis\.com/"
-		to="https://$1.addthis.com/" />
+	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|di|uid)$" />
 
-	<rule from="^https?://ct5\.addthis\.com/"
-		to="https://s5.addthis.com/" />
+
+	<rule from="^http://(www\.)?addthis\.com/get($|\?)"
+		to="https://$1addthis.com/get/sharing$2" />
+
+	<rule from="^http://((?:api|cache|cf|ct\d|ds|s[3579]|secure|www)\.)?addthis\.com/"
+		to="https://$1addthis.com/" />
 
 	<rule from="^http://cache\.addthiscdn\.com/"
 		to="https://cache.addthiscdn.com/" />

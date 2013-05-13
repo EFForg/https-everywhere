@@ -1,30 +1,53 @@
 <!--
-	Nonfunctional skimlinks.com subdomains:
+	For problematic rules, see SkimLinks-problematic.xml.
 
+
+	Problematic subdomains:
+
+		- redirect		(works, mismatched, CN: *.skimresources.com)
+
+
+	Nonfunctional subdomains:
+
+		- api-product
+		- api-products
+		- arthur	(times out)
+
+
+	Observed working subdomains:
+
+		- (www.)
+		- accounts
+		- api-merchants
 		- blog
+		- events
 		- labs
+		- ocelot
 		- press
 		- scoop
 
 -->
-<ruleset name="SkimLinks">
+<ruleset name="SkimLinks (partial)">
 
 	<target host="skimlinks.com" />
 	<target host="*.skimlinks.com" />
+		<exclusion pattern="^https?://api-products?\.skimlinks\.com/(?!$|\?.*)" />
+		<exclusion pattern="^http://(?:arthur|redirect)\." />
+		<exclusion pattern="^https?://support\.skimlinks\.com/(?!(?:assets|external|generated|images|registration|system)/)" />
 	<target host="*.skimresources.com" />
 
 
-	<rule from="^http://(www\.)?skimlinks\.com/"
+	<securecookie host="^\.skimlinks\.com$" name=".+" />
+
+
+	<rule from="^https?://api-products?\.skimlinks\.com/(?:\?.*)?"
+		to="https://skimlinks.com/" />
+
+	<rule from="^https?://support\.skimlinks\.com/"
+		to="https://skimlinks.zendesk.com/" />
+
+	<rule from="^http://([\w-]+\.)?skimlinks\.com/"
 		to="https://$1skimlinks.com/" />
-
-	<!--	- Included on 3rd-party websites
-		- static.skimlinks.com cert: localhost.localdomain, expired
-					-->
-	<rule from="^https?://static\.skimlinks\.com/"
-		to="https://s.skimresources.com/" />
-
-	<rule from="^https?://support\.skimlinks\.com/(assets|external|generated|images|registration|system)/"
-		to="https://skimlinks.zendesk.com/$1/" />
 
 	<rule from="^http://(r|s)\.skimresources\.com/"
 		to="https://$1.skimresources.com/" />

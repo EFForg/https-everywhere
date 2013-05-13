@@ -1,0 +1,190 @@
+<!--
+	For problematic rules, see Intuit-problematic.xml
+
+
+	Other Intuit rulesets:
+
+		- Love_Our_Local_Business.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/media.turbotaxcpaselect.intuit.com/
+		- d13yycbcrizy5m.cloudfront.net
+		- d2l1w43gzkifhk.cloudfront.net
+		- d2t6vx8xuyfwjt.cloudfront.net
+		- e61667af7f740600c4e8-0971b8480fe84ded6a5e322d96450080.r36.cf1.rackcdn.com
+
+
+	Nonfunctional domains:
+
+		- gopayment.com
+		- www.gopayment.com *
+
+		- intuit.com subdomains:
+
+			- blog			(reset, expired)
+			- careers		(shows default MediaTemple page, self-signed)
+			- ippblog		(times out)
+			- m
+			- reviews.turbotax ***
+			- socialreviews.turbotax ***
+			- support.turbotax *
+
+		- intuitreseller.com		(times out)
+		- www.intuitreseller.com	(shows meeting-reg.com, CN: meeting-reg.com)
+		- (www.)intuitsolutionproviders.com	(shows meeting-reg.com, CN: meeting-reg.com)
+		- blog-s1.intuitstatic.com	(500)
+		- m-s1.intuitstatic.com		(500)
+
+	* Redirects to www.intuit.com, expired
+	*** 503, akamai
+
+
+	Problematic domains:
+
+		- intuit.com subdomains:
+
+			- index			(pages work but images don't, mismatched, CN: online.payroll.intuit.com)
+			- a\d+.quickbase	(mismatched, CN: quickbase.intuit.com)
+			- blog.turbotax		(mismatched, CN: *.wordpress.com)
+
+		- intuitpayments.com		(mismatched, CN: *.postclickmarketing.com)
+		- quickbase.com			(cert only matches *.quickbase.com)
+
+
+	Fully covered domains:
+
+		- intuit.com subdomains:
+
+			- (www.)
+			- about
+			- academy
+			- accountants
+			- blog.accountants
+			- accounts
+
+			- appcenter subdomains:
+
+				- ^
+				- css
+				- images
+
+			- business
+			- community
+			- developer
+			- enterprisesuite
+			- (www.)fi
+			- healthcard
+			- healthcards
+			- healthcare
+			- http-download
+			- ifs
+			- insurance
+			- intuitmarket
+			- ipn
+			- quickbooks.lc
+			- qbosg.lcp
+			- learn
+			- marketplace
+			- paymentnetwork
+			- payments
+			- payroll
+			- paytrust
+			- pointofsale
+			- privacy
+			- proadvisor
+			- psswprod3lb
+			- support.quickbooks.qdc
+			- quickbase
+			- a\d*.quickbase		(→ quickbase)
+			- quickbase-community-e2e
+
+			- quickbooks subdomains:
+
+				- ^
+				- support
+
+			- quickbooksonline
+			- quicken
+			- sci
+			- security
+			- smallbusiness
+			- ttlc
+			- ttlcprd
+			- turbotax
+			- images.turbotax
+			- turbotaxcpaselect
+			- media.turbotaxcpaselect	(→ s3.amazonaws.com)
+			- websites
+
+		- *.intuitcdn.net:
+
+			- intuitmarket
+			- quickbase
+
+		- intuitstatic.com subdomains:
+
+			- s[123]
+			- payments-s3
+
+		- billscenter.paytrust.com
+
+		- quickbase.com subdomains:
+
+			- (www.)	(^ → www)
+			- intuitcorp
+
+		- (www.)turbotax.com
+
+-->
+<ruleset name="Intuit (partial)">
+
+	<target host="*.intuit.com" />
+	<target host="*.intuitcdn.net" />
+	<target host="*.intuitstatic.com" />
+	<target host="billscenter.paytrust.com" />
+	<target host="quickbase.com" />
+	<target host="*.quickbase.com" />
+	<target host="turbotax.com" />
+	<target host="*.turbotax.com" />
+
+
+	<!--securecookie host="^\.intuit\.com$" name=".+" /-->
+	<securecookie host="^.+\.intuit\.com$" name=".+" />
+	<securecookie host="^billscenter\.paytrust\.com$" name=".+" />
+
+
+	<!--	$ redirects to http.
+					-->
+	<rule from="^http://quicken\.intuit\.com/(\?.*)?$"
+		to="https://quicken.intuit.com/index.jsp$1" />
+
+	<rule from="^http://((?:about|academy|(?:blog\.)?accountants|accounts|(?:css\.|images\.)?appcenter|business|community|developer|enterprisesuite|(?:www\.)?fi|healthcards?|healthcare|http-download|ifs|insurance|intuitmarket|ipn|quickbooks\.lc|qbosg\.lcp|learn|marketplace|paymentnetwork|payments|payroll|paytrust|pointofsale|privacy|proadvisor|psswprod3lb|support\.quickbooks\.qdc|quickbase|quickbase-community-e2e|(?:support\.)?quickbooks|quickbooksonline|quicken|sci|security|smallbusiness|ttlc|ttlcprd|(?:images\.)?turbotax|turbotaxcpaselect|websites|www)\.)?intuit\.com/"
+		to="https://$1intuit.com/" />
+
+	<rule from="^https?://a\d*\.quickbase\.intuit\.com/"
+		to="https://quickbase.intuit.com/" />
+
+	<rule from="^https?://media\.turbotaxcpaselect\.intuit\.com/"
+		to="https://s3.amazonaws.com/media.turbotaxcpaselect.intuit.com/" />
+
+	<rule from="^http://(\w+)\.intuitcdn\.net/"
+		to="https://$1.intuitcdn.net/" />
+
+	<rule from="^http://(payments-s3|s[123])\.intuitstatic\.com/"
+		to="https://$1.intuitstatic.com/" />
+
+	<rule from="^http://billscenter\.paytrust\.com/"
+		to="https://billscenter.paytrust.com/" />
+
+	<rule from="^https?://(?:www\.)?quickbase\.com/"
+		to="https://www.quickbase.com/" />
+
+	<rule from="^http://intuitcorp\.quickbase\.com/"
+		to="https://intuitcorp.quickbase.com/" />
+
+	<rule from="^http://(www\.)?turbotax\.com/"
+		to="https://$1turbotax.com/" />
+
+</ruleset>

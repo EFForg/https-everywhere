@@ -5,24 +5,34 @@
 
 	CDN buckets:
 
+		- s3.amazonaws.com/live-installer-autoupdate/
+		- s3.amazonaws.com/bittorrent-live-thumbnail/
+
 		- bittorrent.vo.llnwd.net
 			- bittorent.hs doesn't exist
 
 		- bittorrent.gyre.wpengine.com
 
 
+	Partially covered subdomains:
+
+		- live	(some pages redirect to http)
+
+
 	Nonfunctional subdomains:
 
 		- blog	(cert: *.wpengine.com; 301s to http)
+		- bundles	(no https)
 		- www	(cert: *.hs.llnwd.net; 400)
 
 -->
 <ruleset name="BitTorrent (partial)">
 
 	<target host="*.bittorrent.com" />
+		<exclusion pattern="^http://live\.bittorrent\.com/(?!create|css/|img/|js/|login|styles/)" />
 
 
-	<rule from="^http://(forum|remote|torque)\.bittorrent\.com/"
+	<rule from="^http://(forum|live|remote|torque)\.bittorrent\.com/"
 		to="https://$1.bittorrent.com/" />
 
 </ruleset>

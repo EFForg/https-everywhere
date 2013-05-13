@@ -1,0 +1,59 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)	(no https)
+		- cachepoker	(400; mismatched, CN: *.hs.llnwd.net)
+
+
+	Partially covered subdomains:
+
+		- casino	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- bannercasino
+		- bingo		(→ securebingo)
+		- cdn-bingo
+		- cdn-casino
+		- cdn-games
+		- cdn-livecasino
+		- cdn-m
+		- cdn-mobile
+		- cdn-www
+		- chat-winnercasino
+		- games			(→ securegames)
+		- livecasino		(→ securelivecasino)
+		- login
+		- m
+		- mcasino
+		- mobile		(→ securemobile)
+		- secure
+		- securebingo
+		- securegames
+		- securelivecasino
+		- securemobile
+		- service
+		- wap		
+
+-->
+<ruleset name="Winner.com (partial)">
+
+	<target host="*.winner.com" />
+		<exclusion pattern="^http://casino\.winner\.com/(?!media/)" />
+
+
+	<securecookie host="^\.winner\.com$" name="^banner_.+" />
+	<securecookie host=".+\.winner\.com$" name=".+" />
+
+
+	<rule from="^http://((?:banner|cdn-|cdn-live|chat-winner|m)?casino|cdn-(?:bingo|games|m|mobile|www)|login|m|secure|service|wap)\.winner\.com/"
+		to="https://$1.winner.com/" />
+
+	<rule from="^http://(?:secure)?(bingo|games|livecasino|mobile)\.winner\.com/"
+		to="https://secure$1.winner.com/" />
+
+	<rule from="^https?://cachepoker\.winner\.com/"
+		to="https://poker.winner.com/" />
+
+</ruleset>

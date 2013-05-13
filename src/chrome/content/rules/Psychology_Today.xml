@@ -1,0 +1,37 @@
+<!--
+	Partially covered subdomains:
+
+		- (www.)
+
+			- redirects to my
+			- pages then redirect back to http
+
+
+	Fully covered subdomains:
+
+		- rsrc *
+		- rsrc2 *
+
+	* Same as for (www.), but serves no pages
+
+
+
+-->
+<ruleset name="Psychology Today (partial)">
+
+	<target host="psychologytoday.com" />
+	<target host="*.psychologytoday.com" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.psychologytoday\.com$" name="^__utm\w$" />
+
+
+	<rule from="^http://(?:rsrc2?\.|www\.)?psychologytoday\.com/(fil|imag|sit)es/"
+		to="https://my.psychologytoday.com/$1es/" />
+
+	<rule from="^http://(my|trak)\.psychologytoday\.com/"
+		to="https://$1.psychologytoday.com/" />
+
+</ruleset>

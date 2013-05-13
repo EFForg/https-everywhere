@@ -6,6 +6,8 @@
 			- img.appstatic.opera.com
 			- img\d+.appstatic.opera.com
 
+		- d2jc9zwbrclgz3.cloudfront.net
+
 		- opera.globalsportsmedia.com.edgesuite.net
 
 			- sports.opera.com
@@ -26,6 +28,7 @@
 			- windows-mobile.apps **
 			- ar
 			- arc
+			- business
 			- cn
 			- de
 			- deb *
@@ -41,6 +44,8 @@
 			- labs
 			- media
 			- mini
+			- my-beta		(redirects to http)
+			- my-next		(reset, expired 2013-03-06)
 			- redir
 			- ru
 			- snapshot *
@@ -65,8 +70,9 @@
 	Partially covered opera.com subdomains:
 
 		- apps *
+		- my.cn *
 		- dev *
-		- my *
+		- (www.)my *
 		- portal *
 		- widgets *
 
@@ -76,14 +82,17 @@
 	Fully covered domains:
 
 		- files.myopera.com
+		- mail.myopera.com
 		- static.myopera.com
 
 		- opera.com subdomains:
 
 			- addons
+			- dev-beta
 			- idp
 			- mail
 			- micropage
+			- upload.my
 			- ssl
 			- static-portal
 			- unite
@@ -104,36 +113,36 @@
 			in an unpredictable fashion.
 							-->
 		<exclusion pattern="^http://dev\.opera\.com/(?:$|articles|author/|labs$|user/avatar\.pl|sdk/|(?!login|signup)\w+(?:$|\?))" />
-		<exclusion pattern="^http://my\.opera\.com/(?:$|\w+/blog/|community/(?:$|api/|blogs/|campaign/|customize/|explore/|forums/|groups/|help/|members$|opera/|photos$|terms-of-service/|users/avatar\.pl)|(?!login|signup)\w+/?(?:$|\?)|\w+/tags/show\.pl)" />
+		<exclusion pattern="^http://(?:my\.cn|(?:www\.)?my)\.opera\.com/(?:$|\w+/blog/|community/(?:$|api/|blogs/|campaign/|customize/|explore/|forums/|groups/|help/|members$|opera/|photos$|terms-of-service/|users/avatar\.pl)|(?!login|signup)\w+/?(?:$|\?)|\w+/tags/show\.pl)" />
 		<exclusion pattern="^http://portal\.opera\.com/(?!accounts/login)" />
 		<exclusion pattern="^http://widgets\.opera\.com/(?:$|\?|author/|category/|general/|new/|popular/|rated/|user/(?:avatar|picture)/|users/|widget/(?:\d+|download)/)" />
 		<!--
 			These don't seem to work over https.
 								-->
-		<exclusion pattern="^http://(?:arc?|cn|deb?|fr|get\d?|get-[\w-]+|help|in|jp|labs|mobilestore|redir|ru|snapshot|sports|tw|www)\.opera\.com/" />
+		<exclusion pattern="^http://(?:arc?|business|cn|deb?|fr|get\d?|get-[\w-]+|help|in|jp|labs|mobilestore|my-beta|my-next|redir|ru|snapshot|sports|tw|www)\.opera\.com/" />
 		<exclusion pattern="^http://(?:devfile|thumb)s\.myopera\.com/" />
-	<target host="*.operasoft.com" />
 	<target host="myopera.com" />
 	<target host="*.myopera.com" />
+	<target host="*.operasoft.com" />
 
 
 	<securecookie host="^(?:addons|bugs|idp|\.mail|ssl)\.opera\.com$" name=".+" />
 	<securecookie host="^btsfiles\.operasoft\.com$" name=".+" />
 
 
+	<rule from="^https?://img\.appstatic\.opera\.com/"
+		to="https://d1ui9i2jp8fkao.cloudfront.net/" />
+
 	<!--	Redirects to http first.
 						-->
-	<rule from="^http://my\.opera\.com/(login|signup)"
-		to="https://my.opera.com/community/$1" />
+	<rule from="^http://my(\.cn)?\.opera\.com/(login|signup)"
+		to="https://my$1.opera.com/community/$2" />
 
 	<rule from="^http://portal\.opera\.com/accounts/login$"
 		to="https://portal.opera.com/accounts/login/" />
 
-	<rule from="^http://([^/:@\.]+\.)?(my)?opera\.com/"
+	<rule from="^http://([^/:@]+\.)?(my)?opera\.com/"
 		to="https://$1$2opera.com/" />
-
-	<rule from="^https?://img(?:\d*)\.appstatic\.opera\.com/"
-		to="https://d1ui9i2jp8fkao.cloudfront.net/" />
 
 	<rule from="^http://b(ts|ug)files\.operasoft\.com/"
 		to="https://b$1files.operasoft.com/" />

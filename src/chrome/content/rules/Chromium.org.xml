@@ -1,6 +1,42 @@
-<!-- Google chromium web. Supports src over ssl atm -->
-<ruleset name="Chromium.org">
-  <target host="src.chromium.org" />
-  <rule from="^http://src\.chromium\.org/" to="https://src.chromium.org/"/>
-</ruleset>
+<!--
+	Google chromium web. Supports src over ssl atm.
 
+
+	Nonfunctional subdomains:
+
+		- ^		(503, mismatched, CN: *.google.com)
+		- blog *
+		- dev *
+		- www *
+
+	* Interrupted
+
+
+	Problematic domains:
+
+		- build.chromium.org
+		- crbug.com		(no https)
+
+-->
+<ruleset name="Chromium.org">
+
+	<target host="*.chromium.org" />
+	<target host="crbug.com" />
+
+
+	<securecookie host="^codereview\.chromium\.org$" name=".+" />
+
+
+	<rule from="^https?://blog\.chromium\.org/favicon\.ico"
+		to="https://www.blogger.com/favicon.ico" />
+
+	<rule from="^https?://build\.chromium\.org/(?:\?.*)?$"
+		to="https://chromium-build.appspot.com/p/chromium/console" />
+
+	<rule from="^http://(codereview|gerrit|git|src)\.chromium\.org/"
+		to="https://$1.chromium.org/" />
+
+	<rule from="^http://crbug\.com/"
+		to="https://bugs.chromium.org/" />
+
+</ruleset>

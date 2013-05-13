@@ -1,8 +1,27 @@
 <!--
-	For problematic rules, see Asana-mismatches.xml.
+	CDN buckets:
+
+		- asana_static.s3.amazonaws.com
+		- d1gwm4cf8hecp4.cloudfront.net
+
+		- asanablog.wpengine.com
+
+			- blog.asana.com
+
+		- asanadev.wpengine.com
+
+			- developer.asana.com
+			- developers.asana.com
 
 
-	asana_static.s3.amazonaws.com
+	Problematic subdomains:
+
+		- blog *
+		- connect	(mismatched, CN: t.trackedlink.net)
+		- developer *
+		- developers *
+
+	* Mismatched, CN: *.wpengine.com
 
 -->
 <ruleset name="Asana (partial)">
@@ -11,13 +30,19 @@
 	<target host="*.asana.com" />
 
 
-	<securecookie host="^app\.asana\.com$" name=".*" />
+	<securecookie host="^(?:app\.)?asana\.com$" name=".*" />
 
 
-	<rule from="^https?://(?:www\.)?asana\.com/favicon\.ico"
-		to="https://app.asana.com/favicon.ico" />
+	<rule from="^http://((?:app|beta|help|www)\.)?asana\.com/"
+		to="https://$1asana.com/" />
 
-	<rule from="^http://app\.asana\.com/"
-		to="https://app.asana.com/" />
+	<rule from="^https?://blog\.asana\.com/"
+		to="https://asanablog.wpengine.com/" />
+
+	<rule from="^https?://connect\.asana\.com/"
+		to="https://t.trackedlink.net/" />
+
+	<rule from="^https?://developers?\.asana\.com/"
+		to="https://asanadev.wpengine.com/" />
 
 </ruleset>

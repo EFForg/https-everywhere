@@ -1,11 +1,25 @@
+<!--
+	Problematic subdomains:
+
+		- ww	(works; mismatched, CN: *.pardot.com)
+
+-->
 <ruleset name="Prolexic">
 
-	<target host="prolexic.com"/>
-	<target host="*.prolexic.com"/>
+	<target host="prolexic.com" />
+	<target host="*.prolexic.com" />
 
-	<securecookie host="^(.*\.)?prolexic\.com$" name=".*"/>
 
-	<rule from="^http://(\w+\.)prolexic\.com/"
-		to="https://$1prolexic.com/"/>
+	<securecookie host="^(?:.*\.)?prolexic\.com$" name=".+" />
+
+
+	<rule from="^http://(?!ww\.)(\w+\.)?prolexic\.com/"
+		to="https://$1prolexic.com/" />
+
+	<rule from="^https?://ww\.prolexic\.com/l/(\w+/\d{4}-\d\d-\d\d/\w+)"
+		to="https://go.pardot.com/l/$1" />
+
+	<rule from="^https?://ww\.prolexic\.com/(?:l/)?(\?.*)?$"
+		to="https://www.prolexic.com/$1" />
 
 </ruleset>

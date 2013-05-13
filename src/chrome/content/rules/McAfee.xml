@@ -1,5 +1,12 @@
-<!-- Av vendor. promos.mcafee.com lacks https -->
+<!--
+	For other Intel coverage, see Intel.xml.
+
+
+	Av vendor. promos.mcafee.com lacks https
+
+-->
 <ruleset name="McAfee (buggy)" default_off="Rediects to http, buggy">
+
 	<target host="mcafee.com" />
 	<target host="*.mcafee.com" />
 		<!--
@@ -10,10 +17,11 @@
 
 			Bug: https://trac.torproject.org/projects/tor/ticket/5686
 				-->
-		<exclusion pattern="^https?://(www\.)?mcafee\.com/error-pages/404\.aspx" />
-	<target host="mcafeesecure.com" />
-	<target host="www.mcafeesecure.com" />
-	<target host="images.scanalert.com" />
+		<exclusion pattern="^https?://(?:www\.)?mcafee\.com/error-pages/404\.aspx" />
+		<!--
+			At least the homepage redirects to http.
+								-->
+		<exclusion pattern="^http://service\.mcafee\.com/(?!css/|images/|js/|locale/|(?:Script|Web)Resource\.axd)" />
 
 
 	<!--	If we fetch a cookie over http,
@@ -21,8 +29,7 @@
 		no need to play acrobatics in
 		order to avoid doing so.
 			-->
-	<securecookie host="^(.*\.)?mcafee\.com$" name=".*" />
-	<securecookie host="^(www\.)?mcafeesecure\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?mcafee\.com$" name=".+" />
 
 
 	<!--	/$ redirects to http.  We give
@@ -37,17 +44,7 @@
 	<rule from="^http://(?:www\.)?mcafee\.com/"
 		to="https://www.mcafee.com/" />
 
-	<rule from="^http://(blogs|home|(?:secure)?images|shop|us)\.mcafee\.com/"
+	<rule from="^http://(blogs|community|home|(?:secure)?images|service|shop|us)\.mcafee\.com/"
 		to="https://$1.mcafee.com/" />
-
-	<!--	At least the homepage redirects to http.	-->
-	<rule from="^http://service\.mcafee\.com/(css/|images/|js/|locale/|(?:Script|Web)Resource\.axd)"
-		to="https://service.mcafee.com/$1" />
-
-	<rule from="^http://images\.scanalert\.com/"
-		to="https://images.scanalert.com/" />
-
-	<rule from="^http://www\.mcafeesecure\.com/"
-		to="https://www.mcafeesecure.com/" />
 
 </ruleset>

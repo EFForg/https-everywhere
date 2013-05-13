@@ -1,56 +1,50 @@
 <!--
 	Nonfunctional umich.edu subdomains:
 
-		- (www.)			(redirects to weblogin
+		- (www.) *
 		- (www.)bi			(CN: www.businessintelligence.umich.edu; 302s there)
-		- (www.)businessintelligence	(redirects to weblogin)
-		- (www.)cio			(ditto)
-		- rcgd.isr *
-		- itcs				(rx_record_too_long)
-		- accounts.itcs			(redirects to weblogin)
-		- showcase.itcs			(ditto)
-		- www.itcs			(ditto)
-		- (www.)itcom.itd		(ditto)
-		- (www.)its			(ditto)
-		- www.mais			(rx_record_too_long)
-		- (www.)mobileapps		(redirects to weblogin)
-		- (www.)nextgen			(rx_record_too_long)
-		- (www.)ns **
+		- (www.)businessintelligence *
+		- (www.)cio *
+		- rcgd.isr **
+		- itcs ***
+		- accounts.itcs *
+		- showcase.itcs *
+		- www.itcs *
+		- (www.)itcom.itd *
+		- (www.)its *
+		- www.mais ***
+		- (www.)mobileapps *
+		- (www.)nextgen ***
+		- (www.)ns *
 		- orsp
-		- (www.)provost			(redirects to weblogin)
-		- (www.)regents			(ditto)
-		- (www.)sustainablecomputing	(rx_record_too_long)
+		- (www.)provost *
+		- (www.)regents *
+		- (www.)sustainablecomputing ***
 
-	* Times out
-	** Redirects to weblogin
+	* Redirects to weblogin
+	** Times out
+	*** record_too_long
 
 
 	Problematic subdomains:
 
+		- www.ctools		(cert only matches ^ctools)
+		- lsa			(cert only matches *.lsa)
 		- www.weblogin		(cert only matches ^weblogin)
 
 -->
 <ruleset name="University of Michigan (partial)">
 
 	<target host="*.umich.edu" />
-	<target host="www.*.umich.edu" />
-	<target host="webapps.lsa.umich.edu" />
 
 
 	<securecookie host="^.+\.umich\.edu$" name=".+" />
 
 
-	<rule from="^http://(?:eram|eresearch|erpm|friend|(www\.)?law|servicerequest|webapps\.lsa|wolverineaccess)\.umich\.edu/"
+	<rule from="^http://(?:eram|eresearch|erpm|friend|(www\.)?law|webapps\.lsa|servicerequest|wolverineaccess)\.umich\.edu/"
 		to="https://$1.umich.edu/" />
 
-	<!--	Cert only matches ^ctools.
-						-->
-	<rule from="^https?://(?:www\.)?(ctools|weblogin)\.umich\.edu/"
+	<rule from="^https?://(?:www\.)?(ctools|lsa|weblogin)\.umich\.edu/"
 		to="https://$1.umich.edu/" />
-
-	<!--	Cert only matches *.lsa.
-						-->
-	<rule from="^https?://(?:www\.)?lsa\.umich\.edu/"
-		to="https://www.lsa.umich.edu/" />
 
 </ruleset>

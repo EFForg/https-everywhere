@@ -1,0 +1,73 @@
+<!--
+	For other Sina coverage, see Sina.xml.
+
+
+
+	CDN buckets:
+
+		- js.app.ccgslb.com.cn
+
+			- img.app.wcdn.cn
+			- img1.app.wcdn.cn
+
+		- u1.sinaimg.cn.cdngc.net
+
+
+	Nonfunctional domains:
+
+		- u1.sinaimg.cn		(403; mismatched, CN: *.pantherssl.com)
+		- img.app.wcdn.cn	(403; mismatched, CN: support4.cdnetworks.net)
+		- img[12].app.wcdn.cn	(403; mismatched, CN: *.pantherssl.com)
+		- e.weibo.com
+		- game.weibo.com
+		- open.weibo.com	(times out)
+
+
+	Problematic subdomains:
+
+		- hr			(mismatched, CN: *.sinaapp.com)
+		- tp2.sinaimg.cn	(reset)
+		- tp4.sinaimg.cn	(403; mismatched, CN: *.pantherssl.com)
+
+
+	Fully covered domains:
+
+		- tp[24].sinaimg.cn	(→ tpssl.weibo.cn)
+		- (www.)weibo.cn
+		- tpssl.weibo.cn
+
+		- weibo.com subdomains:
+
+			- api
+			- upload.api
+			- hr		(→ weihr.sinaapp.com)
+			- static
+
+
+	Mixed css on weihr.sinaapp.com from img.t.sinajs.cn
+
+-->
+<ruleset name="Sina Weibo (partial)" platform="mixedcontent">
+
+	<target host="*.sinaimg.cn" />
+	<target host="weibo.cn" />
+	<target host="*.weibo.cn" />
+	<target host="*.weibo.com" />
+
+
+	<securecookie host="^upload\.api\.weibo\.com$" name=".+" />
+
+
+	<rule from="^https?://tp\d\.sinaimg\.cn/"
+		to="https://tpssl.weibo.cn/" />
+
+	<rule from="^http://(tpssl\.|www\.)?weibo\.cn/"
+		to="https://$1weibo.cn/" />
+
+	<rule from="^http://(api|upload\.api|static)\.weibo\.com/"
+		to="https://$1.weibo.com/" />
+
+	<rule from="^https?://hr\.weibo\.com/"
+		to="https://weihr.sinaapp.com/" />
+
+</ruleset>

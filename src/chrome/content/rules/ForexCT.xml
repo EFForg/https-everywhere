@@ -1,0 +1,31 @@
+<!--
+	Nonfunctional domains:
+
+		- registration.forexct.com	(403; mismatched, CN: *.pantherssl.com)
+
+
+	- !www: Cert only matches www
+	- Some pages redirect to http
+
+-->
+<ruleset name="ForexCT (partial)">
+
+	<target host="forexct.com" />
+	<target host="*.forexct.com" />
+		<exclusion pattern="^https?://(?:cn\.|www\.)?forexct\.com/(?![iI]mages/|styles/)" />
+	<target host="forexctlogin.tradenetworks.com" />
+
+
+	<securecookie host="^forexctlogin\.tradenetworks\.com$" name=".+" />
+
+
+	<rule from="^https?://forexct\.com/"
+		to="https://www.forexct.com/" />
+
+	<rule from="^http://(cn|www)\.forexct\.com/"
+		to="https://$1.forexct.com/" />
+
+	<rule from="^http://forexctlogin\.tradenetworks\.com/"
+		to="https://forexctlogin.tradenetworks.com/" />
+
+</ruleset>

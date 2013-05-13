@@ -1,17 +1,45 @@
 <!--
 	CDN buckets:
 
-		- d238gk3mw72oe2.cloudfront.net
+		- d238gk3mw72oe2.cloudfront.net | xignite-cdn.s3.amazonaws.com
 			- cdn.xignite.com
 
+
+	Nonfunctional subdomains:
+
+		- pages		(redirects to app-g.marketo.com)
+
+
+	Problematic subdomains:
+
+		- splice	(pages redirect to http, other paths work; expired 2011-09-21)
+
+
+	Some pages started redirecting to http, including:
+
+		- $
+		- Documents/PrivacyPolicy.aspx$
+		- market-data/community/$
+		- market-data/contact-us/$
+		- market-data/developers-community/$
+		- market-data/financial-institutions-community/$
+		- market-data/wp-content/themes/xignite/images/\w+/.*.png
+		- Policies/SiteUseTerms.aspx$
+		- Products/$
+		- Products/Mutual-Funds-ETFs/$
+		- Support/$
+		- Support/FAQs.aspx$
+		- Support/SupportPlans.aspx$
+
 -->
-<ruleset name="Xignite">
+<ruleset name="Xignite (partial)">
 
 	<target host="xignite.com" />
 	<target host="*.xignite.com" />
+		<exclusion pattern="^http://(?:www\.)?xignite\.com/(?:$|\?|Documents/|market-data/|Products/|Support/)" />
 
 
-	<securecookie host="^(?:www\.)?xignite\.com$" name=".+" />
+	<!--securecookie host="^(?:www\.)?xignite\.com$" name=".+" /-->
 
 
 	<rule from="^http://(www\.)?xignite\.com/"

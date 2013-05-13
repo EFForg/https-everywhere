@@ -43,17 +43,19 @@
 	Fully covered domains:
 
 		- c.bing.com		(tracking beacons)
+		- h.bing.com
 		- ssl.bing.com
 		- ts[1-4].mm.bing.net
 
 		- virtualearth.net subdomains:
 
+			- dev
 			- ecn.dev
 			- ecn.t[0-7].tiles
 			- venuemaps
 
 -->
-<ruleset name="Bing (partial)">
+<ruleset name="Bing (partial, buggy)" default_off="breaks points dashboard">
 
 	<target host="bing.com" />
 	<target host="*.bing.com" />
@@ -68,7 +70,7 @@
 
 
 	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
-	<securecookie host="^\.virtualearth\.net$" name=".+" />
+	<securecookie host="^.*\.virtualearth\.net$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|news/s/|s/as/|sa/|th(?:$|\?))"
@@ -80,13 +82,13 @@
 	<rule from="^https?://(?:www\.)?bing\.com/s/"
 		to="https://ssl.bing.com/fd/s/" />
 
-	<rule from="^http://(c|ssl)\.bing\.com/"
+	<rule from="^http://(c|h|ssl)\.bing\.com/"
 		to="https://$1.bing.com/" />
 
 	<rule from="^https?://ts[1-4]\.mm\.bing\.net/"
 		to="https://ssl.bing.com/"/>
 
-	<rule from="^http://(ecn\.(?:dev|t\d\.tiles)|api\.tiles|venuemaps)\.virtualearth\.net/"
+	<rule from="^http://(dev|ecn\.(?:dev|t\d\.tiles)|api\.tiles|venuemaps)\.virtualearth\.net/"
 		to="https://$1.virtualearth.net/" />
 
 </ruleset>

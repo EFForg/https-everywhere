@@ -1,32 +1,67 @@
-<!--	learningjquery.kswedberg.netdna-cdn.com
-			- learningjquery-kswedberg.netdna-ssl.com doesn't exist
+<!--
+	For problematic rules, see JQuery-mismatches.xml.
 
-	!functional:
-		- blog.jquery.com
-		- (bugs|docs|plugins).jquery.org
-		- (events|www).jquery.org	(cert: blog.jquery.org, shows that domain's data)
-		- cdn.jquery.com		(EdgeCast CDN, 504 "Not Found")
-		- (code|static).jquery.com	(EdgeCast CDN, 504 "Gateway Timeout")
-		- jquerymobile.com		(shows Mozilla Labs TestSwarm Alpha)
-		- (blog.|.bugs.|www.)jqueryui.com
+
+	CDN buckets:
+
+		- learningjquery.kswedberg.netdna-cdn.com
+
+			- -ssl doesn't exist
+
+		- jquery-groups.ning.com
+
+
+	Nonfunctional domains:
+
+		- jquery.com subdomains:
+
+			- blog
+			- bugs
+			- code *
+			- static *
+
+		- (www.)jquerymobile.com
+
+		- jqueryui.com subdomains:
+
+			- blog
+			- bugs
+
+	* 504, CN: gp1.wac.edgecastcdn.net
+	** Shows blog.jquery.org; CN: blog.jquery.org
 
 
 	Problematic domains:
 
-		- meetups.jquery.com	(works, CN: *.ning.com)
+		- jquery.com subdomains:
 
+			- (www.) *
+			- meetups	(works, CN: *.ning.com)
+			- plugins *
 
-	See JQuery-mismatches.xml for problematic rules.
+		- jqueryui.com subdomains:
+
+			- ^ *
+			- api *
+			- www
+
+	* Works; mismatched, CN: jquery.org
 
 -->
 <ruleset name="jQuery (partial)">
 
-	<!--	cert: accet87.net	-->
-	<target host="forum.jquery.com"/>
+	<!--	CN: accet87.net
+					-->
+	<target host="forum.jquery.com" />
 
-	<securecookie host="^forum\.jquery\.com$" name=".*"/>
+
+	<securecookie host="^forum\.jquery\.com$" name=".+" />
+
 
 	<rule from="^http://forum\.jquery\.com/"
-		to="https://forum.jquery.com/"/>
+		to="https://forum.jquery.com/" />
+
+	<rule from="^https?://meetups\.jquery\.com/xn_resources/"
+		to="https://jquery-groups.ning.com/xn_resources/" />
 
 </ruleset>

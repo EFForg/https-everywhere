@@ -7,27 +7,34 @@
 		- bazaarvoice.com subdomains:
 
 			- ^			(expired, self-signed)
+			- bvlabs-hvr-web-staging.aws
 			- resources		($ redirects to app-a.marketo.com; mismatched, CN: *.marketo.com)
 			- spark			(mismatched, CN: slotmatching6.salesforce.com)
 			- *.ugc			(works, akamai)
 	
 		- resources.bazaarvoicecampaigns.com	(works, self-signed)
 
+
+	Partially covered domains:
+
+		- dashboard.bazaarvoice.com	(some pages redirect to http)
+
 -->
 <ruleset name="Bazaarvoice">
 
 	<target host="bazaarvoice.com" />
 	<target host="*.bazaarvoice.com" />
+		<exclusion pattern="^http://dashboard\.bazaarvoice\.com/(?!css/|images/)" />
 
 
-	<securecookie host="^.*\.bazaarvoice\.com$" name=".+" />
+	<securecookie host="^(?!dashboard\.).*\.bazaarvoice\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?bazaarvoice\.com/"
 		to="https://www.bazaarvoice.com/" />
 
-	<rule from="^http://login\.bazaarvoice\.com/"
-		to="https://login.bazaarvoice.com/" />
+	<rule from="^http://(dashboard|login)\.bazaarvoice\.com/"
+		to="https://$1.bazaarvoice.com/" />
 
 	<rule from="^https?://resources\.bazaarvoice\.com/images/"
 		to="https://na-a.bazaarvoice.com/images/" />

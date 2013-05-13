@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- a248.e.akamai.net/f/248/8705/1h/images.tickets.com/
+
+
+	Nonfunctional subdomains:
+
+		- (www.)
+		- purchase
+
+
+	Problematic subdomains:
+
+		- facebook
+		- frontline.images	(works, akamai)
+		- youtube
+
+-->
+<ruleset name="Tickets.com (partial)">
+
+	<target host="broadcaster.email-tickets.com" />
+	<target host="*.tickets.com" />
+
+
+	<securecookie host="^broadcaster\.email-tickets\.com$" name=".+" />
+	<securecookie host="^purchasecdn\.tickets\.com$" name=".+" />
+
+
+	<rule from="^http://broadcaster\.email-tickets\.com/"
+		to="https://broadcaster.email-tickets.com/" />
+
+	<rule from="^https?://facebook\.tickets\.com/(?:[^\?]*)(\?.*)?"
+		to="https://www.facebook.com/pages/Ticketscom/43749304172$1" />
+
+	<rule from="^http://(?:frontline\.)?images\.tickets\.com/"
+		to="https://images.tickets.com/" />
+
+	<rule from="^http://purchasecdn\.tickets\.com/"
+		to="https://purchasecdn.tickets.com/" />
+
+	<rule from="^https?://youtube\.tickets\.com/(?:[^\?]*)(\?.*)?"
+		to="https://www.youtube.com/gototicketsdotcom$1" />
+
+</ruleset>

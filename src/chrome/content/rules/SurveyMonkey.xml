@@ -1,21 +1,57 @@
+<!--
+	Other SurveyMonkey rulesets:
+
+		- Wufoo.xml
+
+
+	CDN buckets:
+
+		- surveymonkey.force.com
+
+			- help.surveymonkey.com
+
+
+	Problematic surveymonkey.com subdomains:
+
+		- ^		(cert only matches www)
+		- help		(mismatched, CN: slotmatching4.salesforce.com)
+		- smaudience	(redirects to app-d.marketo.com; mismatched, CN: *.marketo.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(Home_Landing.aspx redirects to http)
+
+-->
 <ruleset name="SurveyMonkey (buggy)" default_off="breaks surveys!">
 
-	<target host="surveymonkey.com"/>
-	<target host="*.surveymonkey.com"/>
+	<target host="surveymonkey.com" />
+	<target host="*.surveymonkey.com" />
 		<exclusion pattern="^http://www\.surveymonkey\.com/Home_Landing\.aspx" />
-	<target host="wufoo.com"/>
-	<target host="*.wufoo.com"/>
+	<target host="research.net" />
+	<target host="*.research.net" />
 
-	<securecookie host="^(.+\.)?surveymonkey\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?wufoo\.com$" name=".*"/>
 
-	<rule from="^http://surveymonkey\.com/"
-		to="https://www.surveymonkey.com/"/>
+	<securecookie host="^\.research\.net$" name=".+" />
+	<securecookie host="^(?:.*\.)?surveymonkey\.com$" name=".+" />
 
-	<rule from="^http://(secure|www)\.surveymonkey\.com/"
-		to="https://$1.surveymonkey.com/"/>
 
-	<rule from="^http://(cubit\.|secure\.|sharp\.|www\.)?wufoo\.com/"
-		to="https://$1wufoo.com/"/>
+	<rule from="^http://(secure\.|www\.)?research\.net/"
+		to="https://$1research.net/" />
+
+	<rule from="^https?://surveymonkey\.com/"
+		to="https://www.surveymonkey.com/" />
+
+	<rule from="^http://(admin|aide|a[jy]uda|blog|contribute|da|de|fr|es|fi|go|help2|hilfe|it|jp|ko|nl|no|pt|ru|ruhelp|secure|sv|www|zh)\.surveymonkey\.com/"
+		to="https://$1.surveymonkey.com/" />
+
+	<rule from="^https?://help\.surveymonkey\.com/"
+		to="https://surveymonkey.secure.force.com/" />
+
+	<rule from="^https?://smaudience\.surveymonkey\.com/(?:\?.*)?$"
+		to="https://www.surveymonkey.com/mp/audience/" />
+
+	<rule from="^https?://smaudience\.surveymonkey\.com/(cs|image|j|r)s/"
+		to="https://na-d.market.com/$1s/" />
 
 </ruleset>

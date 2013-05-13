@@ -1,13 +1,33 @@
-<!--	banner network.
+<!--
+	For other AOL coverage, see AOL.xml.
+
+
+	Banner network.
+
+
+	CDN buckets:
+
+		- aka-cdn-ns.adtech.de.edgesuite.net
+
+
+	Problematic domains:
+
+		- aka-cdn-ns.adtech.de		(works, akamai)
+
 -->
 <ruleset name="Adtech.de (breaks videos)" default_off="https://eff.org/r.a6rZ">
 
-	<target host="*.adtech.de"/>
+	<target host="*.adtech.de" />
+		<exclusion pattern="http://(?:adserver\.)?adtech\.de/crossdomain\.xml" />
 
-  <exclusion pattern="http://(adserver\.)?adtech\.de/crossdomain\.xml" />
 
-	<rule from="^http://adserver\.adtech\.de/"
-		to="https://adserver.adtech.de/"/>
+	<securecookie host="^\.adtech\.de" name=".+" />
+
+
+	<rule from="^http://(adserver|aka-cdn|ums)\.adtech\.de/"
+		to="https://$1.adtech.de/" />
+
+	<rule from="^http://aka-cdn-ns\.adtech\.de/"
+		to="https://aka-cdn.adtech.de/" />
 
 </ruleset>
-

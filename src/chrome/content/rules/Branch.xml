@@ -1,0 +1,31 @@
+<!--
+	CDN buckets:
+
+		- d3sipcemvmkij2.cloudfront.net
+
+			- static.branch.com
+
+
+	Problematic domains:
+
+		- ^		(mismatched, CN: secure.branch.com)
+		- static	(cloudfront)
+		- www		(mismatched, CN: *.herokuapp.com)
+
+-->
+<ruleset name="Branch">
+
+	<target host="branch.com" />
+	<target host="*.branch.com" />
+
+
+	<securecookie host="^\.branch\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:secure\.|www\.)?branch\.com/"
+		to="https://secure.branch.com/" />
+
+	<rule from="^https?://static\.branch\.com/"
+		to="https://d3sipcemvmkij2.cloudfront.net/" />
+
+</ruleset>

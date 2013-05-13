@@ -1,8 +1,15 @@
 <!--
-	Nonfunctional domains:
+	Nonfunctional examiner.com subdomains:
 
-		- blog.examiner.com	(rx_record_too_long)
-		- photos.examiner.com	
+		- apply
+		- blog		(record_too_long)
+		- community	(times out)
+
+
+	Problematic domains:
+
+		- support.examiner.com	(works; mismatched, CN: *.parature.com)
+		- cdn.exm.nr	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
 
 -->
 <ruleset name="examiner.com (partial)">
@@ -14,28 +21,30 @@
 
 		<exclusion pattern="^http://www\.examiner\.com/(automotive-in-national$|auto-reviews$|cats$|handheld-games$|card-games$|happy-hour$|tag/|topic/)" /-->
 		<exclusion pattern="^http://www\.examiner\.com/tag/" />
+		<!--
+			Seems there's a pattern where [\w-]+$ (generally) does not work and [\w-]+/[\w/-]+ works.
+				There are exceptions, but this stops https-everywhere from not forcing
+			https on pages that work more than does attempting a blanket rewrite.
+										-->
+		<exclusion pattern="^http://www\.examiner\.com/(?![^/]+/|About_Examiner|Advertise|arts-entertainment$|careers|favicon\.ico|interests$|privacy_policy|rss$|[\w-]*sitemap|Terms_of_Use|video-portal$|[^\?]+\?cid=.*)" />
+	<target host="cdn.exm.nr" />
 
 
-	<securecookie host="^photos\.examiner\.com$" name=".*" />
+	<securecookie host="^photos\.examiner\.com$" name=".+" />
 
 
-	<rule from="^http://(beacon\.|cdn2-b\.|photos\.)?examiner\.com/"
+	<rule from="^http://((?:beacon|cdn2-b|photos|staging|www)\.)?examiner\.com/"
 		to="https://$1examiner.com/" />
 
-	<!--	seems there's a pattern where [\w\-]+$ (generally) does not work and [\w\-]+/[\w\-/]+ works.
-			There are exceptions, but this stops https-everywhere from not forcing
-		https on pages that work more than does attempting a blanket rewrite.
-									-->
-	<rule from="^http://www\.examiner\.com/([\w\-]+/|About_Examiner|Advertise|arts-entertainment$|careers|interests$|privacy_policy|rss$|[\w\-]*sitemap|Terms_of_Use|video-portal$)"
+	<!-- 	Having a cid seems to make pages redirect to http.
+						-->
+	<rule from="^http://www\.examiner\.com/([^\?]+)(?:\?cid=.*)$"
 		to="https://www.examiner.com/$1" />
 
 	<rule from="^https?://stats\.examiner\.com/"
 		to="https://examiner-com.122.2o7.net/" />
 
-	<!-- 	Having a cid seems to make pages redirect to http.
-						-->
-	<rule from="^http://www\.examiner\.com/([\w\-/]+)(?:\?cid=.*)$"
-		to="https://www.examiner.com/$1" />
+	<rule from="^https?://cdn\.exm\.nr/"
+		to="https://cdn2-b.examiner.com/" />
 
 </ruleset>
-

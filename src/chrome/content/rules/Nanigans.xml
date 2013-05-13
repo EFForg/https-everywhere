@@ -1,8 +1,26 @@
+<!--
+	Problematic domains:
+
+		- www.unifiedtracking.com	(mismatched)
+
+-->
 <ruleset name="Nanigans (partial)">
 
-	<target host="api.nanigans.com"/>
+	<target host="*.nanigans.com"/>
+	<target host="socialtyzetracking.com" />
+	<target host="www.socialtyzetracking.com" />
+	<target host="unifiedtracking.com" />
+	<target host="www.unifiedtracking.com" />
 
-	<rule from="^http://api\.nanigans\.com/"
-		to="https://api.nanigans.com/"/>
+
+	<securecookie host="^lp\.nanigans\.com$" name=".+" />
+	<securecookie host="^www\.(?:socialtyze|unified)tracking\.com$" name=".+" />
+
+
+	<rule from="^http://(api|lp)\.nanigans\.com/"
+		to="https://$1.nanigans.com/"/>
+
+	<rule from="^http://(?:www\.)?(socialtyze|unified)tracking\.com/"
+		to="https://www.$1tracking.com/" />
 
 </ruleset>
