@@ -102,7 +102,7 @@ httpsEverywhere.fetchSource = {
           fs.downloadFailed();
         }
       }
-    }
+    };
 
     req.send();
   },
@@ -155,7 +155,7 @@ window.onresize = function() {
   // TODO: Move to constants
   textBox.width = window.innerWidth - 100;
   textBox.height = window.innerHeight - 150;
-}
+};
 
 // hook event for init
 window.addEventListener("load", httpsEverywhere.fetchSource.init, false);
