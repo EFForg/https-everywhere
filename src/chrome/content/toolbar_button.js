@@ -14,27 +14,47 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
-if (!toolbarButton) { var toolbarButton = {}; }
+// avoid polluting global namespace
+if (!httpsEverywhere) { var httpsEverywhere = {}; }
 
-toolbarButton = {
+/**
+ * JS Object for used to display toolbar hint to new users.
+ *
+ */
+httpsEverywhere.toolbarButton = {
+
+  /**
+   * Used to determine if a hint has been previously shown.
+   */
   hintShown: false,
 
+  /**
+   * Initialize the toolbar button used to hint new users.
+   */
   init: function() {
-    // decide if to show toolbar hint
+    var tb = httpsEverywhere.toolbarButton;
+
+    // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
     if(!Services.prefs.getPrefType(hintPref) 
         || !Services.prefs.getBoolPref(hintPref)) { 
+
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
 
       // listen for events to show toolbar hint
-      gBrowser.addEventListener('load', toolbarButton.showToolbarHint, true);
+      gBrowser.addEventListener('load', tb.handleShowHint, true);
     }
+    
   },
 
-  showToolbarHint: function() {
-    if (!this.hintShown) {
-      this.hintShown = true;
+  /**
+   * Shows toolbar hint if previously not shown.
+   */
+  handleShowHint: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    if (!tb.hintShown) {
+      tb.hintShown = true;
       const faqURL = "https://www.eff.org/https-everywhere/faq";
 
       gBrowser.selectedTab = gBrowser.addTab(faqURL);
@@ -43,17 +63,20 @@ toolbarButton = {
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
       nBox.appendNotification(
-          msg, 
-          'https-everywhere', 
-          'chrome://https-everywhere/skin/https-everywhere-24.png', 
-          nBox.PRIORITY_WARNING_MEDIUM
-        );
+        msg, 
+        'https-everywhere', 
+        'chrome://https-everywhere/skin/https-everywhere-24.png', 
+        nBox.PRIORITY_WARNING_MEDIUM
+      );
 
-      // remove listener
-      gBrowser.removeEventListener('load', toolbarButton.showToolbarHint, true);
     }
+
+    // remove listener
+    gBrowser.removeEventListener('load', tb.showToolbarHint, true);
   }
+
 };
+
 
 function https_everywhere_load() {
   // on first run, put the context menu in the addons bar
@@ -157,5 +180,5 @@ function open_in_tab(url) {
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
 
-// hook event
-window.addEventListener("load", toolbarButton.init, false);
+// hook event for showing hint
+window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);
