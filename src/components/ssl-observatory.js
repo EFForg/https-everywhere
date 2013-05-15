@@ -15,7 +15,6 @@ WARN=5;
 
 BASE_REQ_SIZE=4096;
 MAX_DELAYED = 32;
-TIMEOUT=5000;
 
 ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
@@ -587,7 +586,6 @@ SSLObservatory.prototype = {
                             .wrappedJSObject;
     var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
-    req.timeout = TIMEOUT;
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
         if (req.status == 200) {
