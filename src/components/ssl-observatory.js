@@ -546,11 +546,15 @@ SSLObservatory.prototype = {
     // only try to submit now if there aren't too many outstanding requests
     if (this.current_outstanding_requests > MAX_OUTSTANDING) {
       this.log(WARN, "Too many outstanding requests ("+this.current_outstanding_requests+"), not submitting");
-      if (!(c.fps[0] in this.delayed_submissions)) {
-        this.log(WARN, "Planning to retry submission...");
-        let retry = function() { this.submitChain(certArray, fps, domain, channel, host_ip, true); };
-        this.delayed_submissions[c.fps[0]] = retry;
-      }
+
+      // if there are too many current requests but not too many
+      // delayed/pending ones, then delay this one
+      if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
+        if (!(c.fps[0] in this.delayed_submissions)) {
+          this.log(WARN, "Planning to retry submission...");
+          let retry = function() { this.submitChain(certArray, fps, domain, channel, host_ip, true); };
+          this.delayed_submissions[c.fps[0]] = retry;
+        }
       return;
     }
 
