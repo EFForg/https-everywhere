@@ -14,9 +14,9 @@ NOTE=4;
 WARN=5;
 
 BASE_REQ_SIZE=4096;
-MAX_DELAYED = 32;
-MAX_OUTSTANDING = 20;
 TIMEOUT = 60000;
+MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
+MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
 
 ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
