@@ -1,15 +1,22 @@
 <!--
 	For problematic rules, see Advertising.com-mismatches.xml.
 
--->
-<ruleset name="Advertising.com (partial)">
 
-	<target host="*.advertising.com" />
-	<target host="*.ace.advertising.com" />
-	<target host="secure.uac.advertising.com" />
+	For other AOL coverage, see AOL.xml.
 
 
-	<!--	Observed subdomains:
+	Problematic subdomains:
+
+		- ace-tag *
+		- cte.ace.beta		(mismatched, CN: servedby.advertising.com)
+		- leadback *
+
+	* Cert only matches secure.foo
+
+
+	Fully covered subdomains:
+
+		- *.ace	(→ secure):
 
 			- beta
 			- cs
@@ -18,15 +25,30 @@
 			- r1
 			- r1-ads
 			- r2
+			- secure
 			- sr-r3
-						-->
-	<rule from="^https?://(?:[\w\-]+\.)?ace\.advertising\.com/"
+
+		- ace-tag		(→ secure.ace-tag)
+		- secure.ace-tag
+		- leadback		(→ secure.leadback)
+		- secure.leadback
+		- servedby
+		- uac		(→ secure.uac)
+		- secure.uac
+
+-->
+<ruleset name="Advertising.com (partial)">
+
+	<target host="*.advertising.com" />
+
+
+	<rule from="^https?://(?:[\w-]+\.)?ace\.advertising\.com/"
 		to="https://secure.ace.advertising.com/" />
+
+	<rule from="^https?://(?:secure\.)?(ace-tag|leadback|uac)\.advertising\.com/"
+		to="https://secure.$1.advertising.com/" />
 
 	<rule from="^http://servedby\.advertising\.com/"
 		to="https://servedby.advertising.com/" />
-
-	<rule from="^https?://(?:secure\.)?uac\.advertising\.com/"
-		to="https://secure.uac.advertising.com/" />
 
 </ruleset>

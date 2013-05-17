@@ -1,34 +1,39 @@
+<!--
+	Problematic subdomains:
+
+		- ^ *
+		- content.www *
+
+	* Cert only matches *.rspca.org.uk
+
+-->
 <ruleset name="RSPCA (partial)">
 
-	<!--	mismatch, cert: *.rspca.org.uk	-->
-	<target host="rspca.org.uk"/>
-	<target host="donations.rspca.org.uk"/>
-	<target host="gifts.rspca.org.uk"/>
-	<!--	for cross-domain cookie	-->
-	<target host="*.gifts.rspca.org.uk"/>
-	<target host="www.rspca.org.uk"/>
-		<!--	homepage redirects to http	-->
-		<exclusion pattern="^http://www\.rspca\.org\.uk/(home)?$"/>
-	<!--	mismatch, cert: *.rspca.org.uk	-->
-	<target host="content.www.rspca.org.uk"/>
-	<target host="rspcashop.co.uk"/>
-	<target host="*.rspcashop.co.uk"/>
+	<target host="rspca.org.uk" />
+	<target host="*.rspca.org.uk" />
+		<!--
+			Homepage redirects to http
+							-->
+		<exclusion pattern="^http://www\.rspca\.org\.uk/(?:home)?$" />
+	<target host="rspcashop.co.uk" />
+	<target host="*.rspcashop.co.uk" />
 
 
-	<securecookie host="^(donations|\.gifts)\.rspca\.org\.uk$" name=".*"/>
-	<!--	cookie from data rewritten from content.www	-->
-	<securecookie host="^www\.rspca\.org\.uk$" name="^CMS_PRD_SESSIONID$"/>
-	<securecookie host="^(.*\.)?rspcashop\.co\.uk$" name=".*"/>
+	<securecookie host="^(?:donation|\.gift)s\.rspca\.org\.uk$" name=".+" />
+	<!--
+		cookie from data rewritten from content.www
+								-->
+	<securecookie host="^www\.rspca\.org\.uk$" name="^CMS_PRD_SESSIONID$" />
+	<securecookie host="^(?:.*\.)?rspcashop\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://rspca\.org\.uk/"
-		to="https://www.rspca.org.uk/"/>
+	<rule from="^http://(?:(?:content\.)?www\.)?rspca\.org\.uk/"
+		to="https://www.rspca.org.uk/" />
 
-	<rule from="^http://(?:(donations)|(?:content\.)?(www))\.rspca\.org\.uk/"
-		to="https://$1$2.rspca.org.uk/"/>
+	<rule from="^http://donations\.rspca\.org\.uk/"
+		to="https://donations.rspca.org.uk/" />
 
 	<rule from="^http://(www\.)?rspcashop\.co\.uk/"
-		to="https://$1rspcashop.co.uk/"/>
-
+		to="https://$1rspcashop.co.uk/" />
 
 </ruleset>
