@@ -14,7 +14,9 @@ NOTE=4;
 WARN=5;
 
 BASE_REQ_SIZE=4096;
-MAX_DELAYED = 32;
+TIMEOUT = 60000;
+MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
+MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
 
 ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
@@ -87,6 +89,9 @@ function SSLObservatory() {
   // Figure out the url to submit to
   this.submit_host = null;
   this.findSubmissionTarget();
+
+  // Used to track current number of pending requests to the server
+  this.current_outstanding_requests = 0;
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
@@ -539,6 +544,21 @@ SSLObservatory.prototype = {
     this.processConvergenceChain(c);
     if (!this.shouldSubmit(c,domain)) return;
 
+    // only try to submit now if there aren't too many outstanding requests
+    if (this.current_outstanding_requests > MAX_OUTSTANDING) {
+      this.log(WARN, "Too many outstanding requests ("+this.current_outstanding_requests+"), not submitting");
+
+      // if there are too many current requests but not too many
+      // delayed/pending ones, then delay this one
+      if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
+        if (!(c.fps[0] in this.delayed_submissions)) {
+          this.log(WARN, "Planning to retry submission...");
+          let retry = function() { this.submitChain(certArray, fps, domain, channel, host_ip, true); };
+          this.delayed_submissions[c.fps[0]] = retry;
+        }
+      return;
+    }
+
     for (var i = 0; i < c.certArray.length; i++) {
       var len = new Object();
       var derData = c.certArray[i].getRawDER(len);
@@ -558,7 +578,7 @@ SSLObservatory.prototype = {
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
 
-    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE)
+    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE);
     else              reqParams.push("client_asn="+this.client_asn);
 
     if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
@@ -580,14 +600,19 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-      
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
     var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
+    req.timeout = TIMEOUT;
+
     req.onreadystatechange = function(evt) {
       if (req.readyState == 4) {
+        // pop off one outstanding request
+        that.current_outstanding_requests -= 1;
+        that.log(DBUG, "Popping one off of outstanding requests, current num is: "+that.current_outstanding_requests);
+
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
@@ -635,6 +660,10 @@ SSLObservatory.prototype = {
 
     // Cache this here to prevent multiple submissions for all the content elements.
     that.already_submitted[c.fps[0]] = true;
+
+    // add one to current outstanding request number
+    that.current_outstanding_requests += 1;
+    that.log(DBUG, "Adding outstanding request, current num is: "+that.current_outstanding_requests);
     req.send(params);
   },
 
