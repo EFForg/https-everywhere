@@ -578,11 +578,19 @@ SSLObservatory.prototype = {
     }
     reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
 
-    if (resubmitting) reqParams.push("client_asn="+ASN_UNKNOWABLE);
-    else              reqParams.push("client_asn="+this.client_asn);
+    if (resubmitting) {
+      reqParams.push("client_asn="+ASN_UNKNOWABLE);
+    }
+    else {
+      reqParams.push("client_asn="+this.client_asn);
+    }
 
-    if (this.myGetBoolPref("priv_dns"))  reqParams.push("private_opt_in=1") 
-    else                                 reqParams.push("private_opt_in=0");
+    if (this.myGetBoolPref("priv_dns")) {
+      reqParams.push("private_opt_in=1");
+    }
+    else {
+      reqParams.push("private_opt_in=0");
+    }
 
     var params = reqParams.join("&") + "&padding=0";
     var tot_len = BASE_REQ_SIZE;
