@@ -34,6 +34,9 @@ httpsEverywhere.toolbarButton = {
   init: function() {
     var tb = httpsEverywhere.toolbarButton;
 
+    // make sure icon is proper color during init
+    tb.changeIcon();
+
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
     if(!Services.prefs.getPrefType(hintPref) 
@@ -73,6 +76,22 @@ httpsEverywhere.toolbarButton = {
 
     // remove listener
     gBrowser.removeEventListener('load', tb.showToolbarHint, true);
+  },
+
+  /**
+   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
+   * is enabled or disabled.
+   */
+  changeIcon: function() {
+    var prefs = HTTPSEverywhere.get_prefs();
+    var enabled = prefs.getBoolPref("globalEnabled");
+
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    if (enabled) {
+      toolbarbutton.setAttribute('status', 'enabled');
+    } else {
+      toolbarbutton.setAttribute('status', 'disabled');
+    }
   }
 
 };
@@ -171,6 +190,9 @@ function reload_window() {
 function toggleEnabledState(){
 	HTTPSEverywhere.toggleEnabledState();
 	reload_window();	
+
+  // Change icon depending on enable state
+  httpsEverywhere.toolbarButton.changeIcon();
 }
 
 function open_in_tab(url) {
