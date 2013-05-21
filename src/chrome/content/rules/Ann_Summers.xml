@@ -1,0 +1,30 @@
+<!--
+	Other Ann Summers rulesets:
+
+		- Ann_Summers_Jobs.xml
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- careers	(works; mismatched, CN: *.gridserver.com)
+
+-->
+<ruleset name="Ann Summers (partial)">
+
+	<target host="annsummers.com" />
+	<target host="*.annsummers.com" />
+
+
+	<securecookie host="^(?:www)?\.annsummers\.com$" name=".+" />
+
+
+	<!--	Server drops path like so, sans trailing-slash:
+								-->
+	<rule from="^http://annsummers\.com/[^\?]*(\?.*)?"
+		to="https://www.annsummers.com/$1" />
+
+	<rule from="^http://www\.annsummers\.com/"
+		to="https://www.annsummers.com/" />
+
+</ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(times out)
+		- www	(403; mismatched, CN: ssl2.cdngc.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ secure)
+		- apply
+		- assets
+		- myaccount
+		- practice
+		- practice15
+		- previewtrade
+		- secure
+		- secure15
+
+
+	Nonfunctional subdomains:
+
+		- jp	(403; mismatched, CN: ssl2.cdngc.net)
+
+-->
+<ruleset name="Forex.com (partial)">
+
+	<target host="forex.com" />
+	<target host="*.forex.com" />
+
+
+	<securecookie host="^(?:myaccount|(?:practic|secur)e(?:15)?|previewtrade)\.forex\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?forex\.com/"
+		to="https://secure.forex.com/" />
+
+	<rule from="^http://(apply|assets|myaccount|(?:practic|secur)e(?:15)?|previewtrade)\.forex\.com/"
+		to="https://$1.forex.com/" />
+
+</ruleset>

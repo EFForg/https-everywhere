@@ -2,13 +2,35 @@
 	For other New York Times coverage, see NYTimes.xml.
 
 
+	CDN buckets:
+
+		- nytbglobe.112.2o7.net
+		- s3.amazonaws.com/static.rondavu.com/C/Boston_PROD/
+
+		- wac.493C.edgecastcdn.net
+
+			- cinesport.boston.com
+
+		- bostoncom.http.internapcdn.net
+
+			- c.o0bc.com
+			- cache.boston.com
+
+
+	Nonfunctional domains:
+
+		- cinesport.boston.com		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
 	Problematic subdomains:
 
+		- c.o0bc.com	(404; mismatched, CN: *.internapcdn.net)
 		- www		(akamai)
 
 -->
 <ruleset name="The Boston Globe (partial)">
 
+	<target host="c.o0bc.com" />
 	<target host="boston.com" />
 	<target host="*.boston.com" />
 	<target host="bostonglobe.com" />
@@ -23,6 +45,9 @@
 	<securecookie host="^(?:.*\.)?boston\.com$" name=".+" />
 	<securecookie host="^(?:.*\.)?bostonglobe\.com$" name=".+" />
 
+
+	<rule from="^http://c\.o0bc\.com/"
+		to="https://boston.com/" />
 
 	<rule from="^http://(?:(graphics\.)|www\.)?boston\.com/"
 		to="https://$1boston.com/" />
