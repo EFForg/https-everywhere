@@ -7,6 +7,9 @@
 
 	CDN buckets:
 
+		- ak1s.abmr.net/is/www22.verizon.com
+		- vznews.convio.net
+
 		- wildcard.verizon.net.edgekey.net
 			- static-business.verizon.net
 
@@ -24,7 +27,9 @@
 		- (www.)thinkfinity.org
 		- (www.)community.thinkfinity.org
 		- developer.verizon.com *
+		- foundation.verizon.com	(shows RHEL test page; self-signed, CN: ph1025101.bwi40g.vzbi.caas)
 		- mail.verizon.com *
+		- newscenter2.verizon.com	(no https)
 		- webmail.verizon.com *
 
 	* Times out.
@@ -32,6 +37,9 @@
 
 	Problematic domains:
 
+		- about.verizon.com		(works; self-signed, CN: vz-about-dev.com)
+		- entertainment.verizon.com	(some pages work, at least games/index.php 404s)
+		- searchresults.verizon.com	(works; mismatched, CN: entertainmentlogin.verizon.com)
 		- verizon.net *
 		- businessforums.verizon.net **
 		- verizonbusiness.com *
@@ -66,11 +74,15 @@
 		- verizon.com subdomains:
 
 			- (www.)
+			- auth
 			- enterprisecenter
+			- entertainmentlogin
 			- espanol
 			- forums
+			- responsibility
 			- signin
 			- smallbusiness
+			- webmail
 
 		- (www.)verizon.net
 		- static-business.verizon.net
@@ -90,7 +102,7 @@
 	<target host="www.verizonbusiness.com" />
 
 
-	<securecookie host="^(?:enterprisecenter|espanol|forums|signin|smallbusiness)\.verizon\.com$" name=".+" />
+	<securecookie host="^(?:enterprisecenter|espanol|forums|responsibility|signin|smallbusiness|webmail)\.verizon\.com$" name=".+" />
 	<!--securecookie host="^\.verizon\.com$" name=".+" /-->
 	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
 	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
@@ -103,7 +115,7 @@
 	<rule from="^http://(?:www(22|98)?\.)?verizon\.com/"
 		to="https://www$1.verizon.com/" />
 
-	<rule from="^http://(collaborateext(?:stg)?|enterprisecenter|espanol|forums|smallbusiness|signon)\.verizon\.com/"
+	<rule from="^http://(auth|collaborateext(?:stg)?|enterprisecenter|entertainmentlogin|espanol|forums|responsibility|smallbusiness|signon|webmail)\.verizon\.com/"
 		to="https://$1.verizon.com/" />
 
 	<rule from="^https?://(?:www\.)?verizon\.net/"
