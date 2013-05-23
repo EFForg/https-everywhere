@@ -1,0 +1,36 @@
+<!--
+	CDN buckets:
+
+		- d1i6ti2j258a4f.cloudfront.net
+
+		- s164796.gridserver.com
+
+			- blog.divide.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(redirects to http, valid cert)
+		- support	(zendesk)
+
+
+	Problematic subdomains:
+
+		- blog		(works; mismatched, CN: *.gridserver.com)
+
+-->
+<ruleset name="Divide (partial)">
+
+	<target host="*.divide.com" />
+
+
+	<rule from="^http://(api|get|my)\.divide\.com/"
+		to="https://$1.divide.com/" />
+
+	<rule from="^http://blog\.divide\.com/wp-(content|includes)/"
+		to="https://s164796.gridserver.com/wp-$1/" />
+
+	<rule from="^http://support\.divide\.com/(generated|system)/"
+		to="https://assets.zendesk.com/$1/" />
+
+</ruleset>

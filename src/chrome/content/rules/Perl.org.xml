@@ -1,0 +1,60 @@
+<!--
+	CDN buckets:
+
+		- devcdn.develooper.netdna-cdn.com
+
+			- st.pimg.net
+
+
+	Problematic domains:
+
+		- perldoc		(works; mismatched, CN: *.a.ssl.fastly.net)
+		- svn.perl.org		(works, self-signed)
+		- st.pimg.net		(404; mismatched, CN: *.netdna-ssl.com)
+
+
+	Nonfunctional perl.org subdomains:
+
+		- (www.) *
+		- blob *
+		- blogs *
+		- books *
+		- cpan *
+		- cpanratings *
+		- cpansearch	(times out)
+		- dbi *
+		- dev *
+		- history *
+		- jobs *
+		- learn *
+		- lists *
+		- log		(blogspot)
+		- noc *
+		- pdl *
+		- use *
+
+	* No https
+
+
+	Mixed image from www on rt
+
+-->
+<ruleset name="Perl.org (partial)">
+
+	<target host="*.perl.org" />
+	<target host="st.pimg.net" />
+
+
+	<securecookie host="^rt\.perl\.org$" name=".+" />
+
+
+	<rule from="^http://log\.perl\.org/favicon\.ico"
+		to="https://www.blogger.com/favicon.ico" />
+
+	<rule from="^http://(pause|rt)\.perl\.org/"
+		to="https://$1.perl.org/" />
+
+	<rule from="^http://st\.pimg\.net/"
+		to="https://devcdn-develooper.netdna-ssl.com/" />
+
+</ruleset>

@@ -1,0 +1,34 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches *.lternet.edu)
+		- intranet	(displays default drupal page)
+		- lno		(works, expired 2012-10-11)
+
+
+	Partially covered subdomains:
+
+		- intranet2	(some pages redirect to http)
+
+-->
+<ruleset name="LTER">
+
+	<target host="lternet.edu" />
+	<target host="*.lternet.edu" />
+		<exclusion pattern="^http://intranet2\.lternet\.edu/(?!misc/|modules/|sites/|(?:track|us)er(?:$|\?|/))" />
+
+
+	<!--securecookie host="^\.lternet\.edu$" name="^SESS\d{32}$" /-->
+	<securecookie host="^metacat\.lternet\.edu$" name=".+" />
+
+
+	<rule from="^http://lternet\.edu/"
+		to="https://www.lternet.edu/" />
+
+	<rule from="^http://intranet2?\.lternet\.edu/"
+		to="https://intranet2.lternet.edu/" />
+
+	<rule from="^http://(metacat|www)\.lternet\.edu/"
+		to="https://$1.lternet.edu/" />
+
+</ruleset>
