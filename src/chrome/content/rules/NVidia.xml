@@ -2,6 +2,7 @@
 	For problematic rules, see NVidia-mismatches.xml.
 
 
+	nvidia.com.122.2o7.net
 	nvidiaus.122.2o7.net/b/ss/nvidiausdev/1/
 
 
@@ -11,20 +12,35 @@
 		- forums			(Akamai; "An error occurred")
 		- forum-archive.developer	(times out)
 		- origin-forums			(ditto)
-		- shield
 		- www				(403, akamai)
+
+
+	Problematic subdomains:
+
+		- shield	(works, akamai)
 
 -->
 <ruleset name="nVidia (partial)" platform="mixedcontent">
 
 	<target host="*.nvidia.com" />
+		<!--
+			Some pages redirect to http.
+							-->
+		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/)" />
 
 
-	<securecookie host="^nvidianews\.nvidia\.com$" name=".+" />
+	<securecookie host="^(?:\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
+	<!--
+		Omniture tracking cookies:
+						-->
+	<securecookie host="^\.store\.nvidia\.com$" name="^s_\w+$" />
 
 
-	<rule from="^http://nvidianews\.nvidia\.com/"
-		to="https://nvidianews.nvidia.com/" />
+	<rule from="^http://(devtalk|nvidianews|store)\.nvidia\.com/"
+		to="https://$1.nvidia.com/" />
+
+	<rule from="^http://nsomniture\.nvidia\.com/"
+		to="https://nvidia-com.122.2o7.net/" />
 
 	<rule from="^https?://omniture\.nvidia\.com/"
 		to="https://nvidiaus.122.2o7.net/" />
