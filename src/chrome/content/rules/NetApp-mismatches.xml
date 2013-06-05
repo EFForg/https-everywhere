@@ -1,20 +1,26 @@
-<ruleset name="NetApp (mismatches)" default_off="mismatch">
+<!--
+	For rules that are on by default, see NetApp.xml.
 
-	<!--	Akamai	-->
-	<target host="netapp.com"/>
-	<!--	* for cross-domain cookie	-->
-	<target host="*.netapp.com"/>
-		<!--	handled in main ruleset	-->
-		<exclusion pattern="^http://(communities|fieldportal|login)\."/>
-		<!--	not available via https	-->
-		<exclusion pattern="^http://(www\.)?netapp\.com/designimages/(bkg|icon)-"/>
+-->
+<ruleset name="NetApp (mismatches)" default_off="mismatched">
 
-	<!--	encountered:
-			- .netapp.com
-			- www.netapp.com	-->
-	<securecookie host="^(.*\.)?netapp\.com$" name=".*"/>
+	<target host="netapp.com" />
+	<target host="*.netapp.com" />
+		<!--
+			Not available via https:
+						-->
+		<exclusion pattern="^http://(?:www\.)?netapp\.com/designimages/(?:bkg|icon)-" />
+
+
+	<!--	Observed cookie subdomains:
+
+			- .
+			- www
+					-->
+	<securecookie host="^w*\.netapp\.com$" name=".+" />
+
 
 	<rule from="^http://(?:www\.)?netapp\.com/"
-		to="https://www.netapp.com/"/>
+		to="https://www.netapp.com/" />
 
 </ruleset>
