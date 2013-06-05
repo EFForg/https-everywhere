@@ -378,7 +378,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     if (!domWin) {
-      this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
+      this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
     domWin = domWin.top;
