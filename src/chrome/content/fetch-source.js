@@ -63,9 +63,9 @@ httpsEverywhere.fetchSource = {
 
   /**
    * Sends HTTP request to view ruleset source and updates the window with the 
-   * rulset source.
+   * ruleset source.
    * 
-   * @param URL HTTP request will be sent to this URL
+   * @param URL      HTTP request will be sent to this URL
    * @param filename used for displaying ruleset source
    * @param useHead  whether send request to latest revision of ruleset
    */
@@ -108,7 +108,7 @@ httpsEverywhere.fetchSource = {
   },
 
   /**
-   * Handle a download failure of rulset.
+   * Handle a download failure of ruleset.
    */
   downloadFailed: function() {
     document.getElementById("source-text").hidden = true;
@@ -138,7 +138,7 @@ httpsEverywhere.fetchSource = {
 
   /**
    * Convenience method for setting the path (URL) that was used to fetch
-   * ruleset
+   * ruleset.
    *
    * @param text path text
    */
