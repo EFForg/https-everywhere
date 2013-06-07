@@ -1,27 +1,54 @@
+<!--
+	Nonfunctional domains:
+
+		- www.justin.tv *
+		- www.twitch.tv *
+
+	* Times out
+
+
+	Problematic jtvnw.net subdomains:
+
+		- s *
+		- static	(mismatched, CN: *.justin.tv)
+		- www-cdn *
+
+	* Times out
+
+
+	Fully covered domains:
+
+		- jtvnw.net subdomains:
+
+			- s		(→ static.justin.tv)
+			- static	(→ static.justin.tv)
+			- static-cdn	(→ static.justin.tv)
+
+		- justin.tv
+		- static.justin.tv
+		- (www.)twitch.tv
+
+-->
 <ruleset name="Justin.tv (partial, broken)" default_off="bad cert">
 
 	<target host="*.jtvnw.net" />
 	<target host="justin.tv" />
-	<target host="*.justin.tv" />
+	<target host="static.justin.tv" />
 	<target host="twitch.tv" />
-	<target host="www.twitch.tv" />
 
 
-	<!--	- www-cdn: Akamai
-		- www doesn't exist
+	<!--	www doesn't exist
 				-->
 	<rule from="^https?://www-cdn\.jtvnw\.net/"
-		to="https://www.justin.tv/" />
+		to="https://justin.tv/" />
 
 	<!--
-		- s: Akamai
 		- static-cdn: Akamai
-		- static: Cert only matches *.justin.tv
 				-->
 	<rule from="^https?://s(?:tatic(?:-cdn)?)?\.jtvnw\.net/"
 		to="https://static.justin.tv/" />
 
-	<rule from="^http://((?:static|www)\.)?(justin|twitch)\.tv/"
+	<rule from="^http://(static\.)?(justin|twitch)\.tv/"
 		to="https://$1$2.tv/" />
 
 </ruleset>
