@@ -1,14 +1,15 @@
-<!--	See Convio.xml also
+<!--
+	For rules that are on by default, see Convio.xml.
+
 -->
-<ruleset name="Convio (mismatches)" default_off="Certificate mismatch">
+<ruleset name="Convio (mismatches)" default_off="mismatched">
 
-	<target host="ir.convio.com"/>
-	<target host="resources.convio.com"/>
+	<target host="*.convio.com" />
+		<exclusion pattern="^http://ir\.convio\.com/(?!common/)" />
+		<exclusion pattern="^http://resources\.convio\.com/(?!css/|images/)" />
 
-	<rule from="^http://ir\.convio\.com/common/" to="https://ir.convio.com/common/"/>
 
-	<rule from="^http://resources\.convio\.com/(cs|image)s/" to="https://resources.convio.com/$1s/"/>
-
-	<securecookie host="^secure[23]\.convio\.net^" name=".*"/>
+	<rule from="^http://(ir|resources)\.convio\.com/"
+		to="https://$1.convio.com/" />
 
 </ruleset>

@@ -6,6 +6,7 @@
 
 	CDN buckets:
 
+		- pnytimes.chartbeat.net
 		- js.nyt.com.edgesuite.net
 		- graphics478.nytimes.com.edgesuite.net
 		- json8.nytimes.com.edgesuite.net
@@ -14,10 +15,17 @@
 	Nonfunctional domains:
 
 		- (www.)nytco.com
-		- dealbook.nytimes.com
-		- documents.nytimes.com
-		- dealbook.on.nytimes.com
-		- topics.nytimes.com
+
+		- nytimes.com subdomains:
+
+			- firstlook.blogs *
+			- dealbook
+			- documents
+			- dealbook.on
+			- firstlook *
+			- topics
+
+	* No https
 
 
 	Problematic domains:
@@ -27,8 +35,12 @@
 
 	Fully covered domains:
 
-		- graphics.nytimes.com
-		- markets.on.nytimes.com
+		- nytimes.com subdomains:
+
+			- et
+			- graphics
+			- markets.on
+			- meter-svc
 
 -->
 <ruleset name="NYTimes (mixed content)" platform="mixedcontent">
@@ -45,36 +57,34 @@
 			404s over https.
 
 			https://mail1.eff.org/pipermail/https-everywhere/2012-June/001448.html
-							-->
-		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler($|\?)" />
+												-->
+		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler(?:$|\?)" />
 		<!--
 			Breaks slideshow.
 
 				- Lens/data/\d{8}POD.xml redirects to login page
 				- Lens/swfs/ & Lens/lens_post.swf fail to load
-						-->
-		<exclusion pattern="^https?://graphics8\.nytimes\.com/packages/flash/multimedia/(?:swfs/|TEMPLATES/Lens/(?:data/\d{8}POD\.xml|lens_post\.swf))" />
-	<target host="*.blogs.nytimes.com" />
-	<target host="wt.o.nytimes.com" />
-	<target host="markets.on.nytimes.com"/>
+										-->
+		<exclusion pattern="^https?://graphics8\.nytimes\.com/packages/flash/multimedia/" />
 
 
-	<!--	adxcs isn't needed on unsecurable pages.
-
-		Other cross-domain cookies:
+	<!--	Other cross-domain cookies:
 
 			- RMID
 
 			Used on mobile.
-					-->
-  <!--
-  These may break random bits of the NYTimes site:
-  https://trac.torproject.org/projects/tor/ticket/7690
 
-	<securecookie host="^\.nytimes\.com$" name="^(adxc\w|NYT-S)$" />
-	<securecookie host="^homedelivery\.nytimes\.com$" name=".+" />
-	<securecookie host="^markets\.on\.nytimes\.com$" name=".+" />
-  -->
+	NYT-S is the paywall cookie. Securing it may break random bits of the NYTimes site:
+
+		https://trac.torproject.org/projects/tor/ticket/7690
+
+	<securecookie host="^\.nytimes\.com$" name="^NYT-S$" />
+
+		Tracking cookies:
+					-->
+	<securecookie host="^\.nytimes\.com$" name="^(?:adxc\w|_chartbeat2)$" />
+	<securecookie host="^(?:homedelivery|markets\.on|wt\.o)\.nytimes\.com$" name=".+" />
+
 
 	<rule from="^http://(?:www\.)?newyorktimes\.com/"
 		to="https://www.nytimes.com/" />
@@ -88,7 +98,7 @@
 	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
 		to="https://www.nytimes.com/favicon.ico" />
 
-	<rule from="^http://(global|homedelivery|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
+	<rule from="^http://(et|global|homedelivery|meter-svc|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
 		to="https://$1.nytimes.com/" />
 
 	<rule from="^http://graphics\d?\.nytimes\.com/"

@@ -1,4 +1,9 @@
 <!--
+	Other ESET rulesets:
+
+		- ESET_NOD32.xml
+
+
 	CDN buckets:
 
 		- d1q82mpda228xr.cloudfront.net
@@ -6,9 +11,26 @@
 
 	Nonfunctional domains:
 
-		- cart.eset.com
-		- shop.eset.com		(times out)
-		- (www.)eset.co.uk
+		- (www.)eset.co.uk *
+
+		- eset.com subdomains:
+
+			- cart
+			- download *
+			- shop *
+
+		- (www.)virusradar.com *
+		- (www.)welivesecurity.com *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)eset.at *
+		- sicontact.at *
+
+	* Cert only matches www.sicontact.at
 
 
 	Partially covered domains:
@@ -18,30 +40,52 @@
 
 	* At least some pages redirect to http
 
+
+	Fully covered domains:
+
+		- shop.eset.co.uk
+		- (www.)eset.at			(→ www.sicontact.at)
+
+		- eset.com subdomains:
+
+			- (www.)
+			- go
+			- my
+
+		- static\d.esetstatic.com
+		- www.esetstatic.com
+		- (www.)sicontact.at		(^ → www)
+
 -->
 <ruleset name="ESET (partial)">
 
+	<target host="eset.at" />
+	<target host="www.eset.at" />
+	<target host="shop.eset.co.uk" />
 	<target host="eset.com" />
 	<target host="*.eset.com" />
 		<exclusion pattern="^http://blog\.eset\.com/(?!wp-content/)" />
-	<target host="shop.eset.co.uk" />
+		<exclusion pattern="^http://kb\.eset\.com/(?!esetkb/a(?:pp|sset)s/)" />
 	<target host="*.esetstatic.com" />
+	<target host="sicontact.at" />
+	<target host="*.sicontact.at" />
 
 
-	<securecookie host="^go\.eset\.com$" name=".+" />
 	<securecookie host="^shop\.eset\.co\.uk$" name=".+" />
+	<securecookie host="^(?:go|my)\.eset\.com$" name=".+" />
+	<securecookie host="^\.www\.sicontact\.at$" name=".+" />
 
 
-	<rule from="^http://(blog\.|go\.|www\.)?eset\.com/"
-		to="https://$1eset.com/" />
-
-	<rule from="^http://kb\.eset\.com/esetkb/a(pp|sset)s/"
-		to="https://kb.eset.com/esetkb/a$1s/" />
+	<rule from="^http://(?:www\.)?(?:ese|sicontac)t\.at/"
+		to="https://www.sicontact.at/" />
 
 	<rule from="^http://shop\.eset\.co\.uk/"
 		to="https://shop.eset.co.uk/" />
 
-	<rule from="^http://static(\d)\.esetstatic\.com/"
-		to="https://static$1.esetstatic.com/" />
+	<rule from="^http://((?:blog|go|kb|my|www)\.)?eset\.com/"
+		to="https://$1eset.com/" />
+
+	<rule from="^http://(static\d|www)\.esetstatic\.com/"
+		to="https://$1.esetstatic.com/" />
 
 </ruleset>

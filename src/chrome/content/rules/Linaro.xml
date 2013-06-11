@@ -1,22 +1,21 @@
 <!--
 	Nonfunctional subdomains:
-		- (www.)	(cert: ask.linaro.org; redirects to http)
-		- connect	(cert: ditto; 404)
-		- status	(cert: wiki.linaro.org; redirects to http)
+
+		- (www.)	(redirects to http; CN: ask.linaro.org)
+		- connect	(404; CN: ask.linaro.org)
+		- status	(redirects to http; CN: wiki.linaro.org)
 
 -->
 <ruleset name="Linaro (partial)">
 
-	<target host="ask.linaro.org"/>
-	<target host="planet.linaro.org"/>
-	<target host="wiki.linaro.org"/>
+	<target host="*.linaro.org" />
+		<exclusion pattern="^http://planet\.linaro\.org/(?!openid/)" />
 
-	<securecookie host="^(ask|wiki)\.linaro\.org$" name=".*"/>
 
-	<rule from="^http://(ask|wiki)\.linaro\.org/"
-		to="https://$1.linaro.org/"/>
+	<securecookie host="^(?:ask|support|wiki)\.linaro\.org$" name=".+" />
 
-	<rule from="^http://planet\.linaro\.org/openid/"
-		to="https://planet.linaro.org/openid/"/>
+
+	<rule from="^http://(ask|planet|support|wiki)\.linaro\.org/"
+		to="https://$1.linaro.org/" />
 
 </ruleset>

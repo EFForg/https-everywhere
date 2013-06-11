@@ -378,7 +378,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     if (!domWin) {
-      this.log(WARN, "failed to get DOMWin for " + channel.URI.spec);
+      this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
     domWin = domWin.top;
@@ -446,7 +446,6 @@ HTTPSEverywhere.prototype = {
          HTTPS.handleSecureCookies(channel);
     } else if (topic == "cookie-changed") {
       // Javascript can add cookies via document.cookie that are insecure.
-      // It might also be able to 
       if (data == "added" || data == "changed") {
         // subject can also be an nsIArray! bleh.
         try {

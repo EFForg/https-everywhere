@@ -17,7 +17,6 @@
 
 	Undiscovered:
 
-		- geo.yahoo.com
 		- d.yimg.com/nl/
 		- d.yimg.com/hn/p/i/bcst/yp/cnbc2/
 		- d.yimg.com/oq/
@@ -37,35 +36,49 @@
 
 		- yahoo.com subdomains:
 
+			- (www.)			($ redirects to http, other paths 404; valid cert)
 			- advertising **
-			- answers **
+			- answers ****
+			- malaysia.answers ****
+			- cn
+			- help.cn
 			- docs *
 			- fr.docs
+			- en-maktoob			(redirects to http; mismatched, CN: www.yahoo.com)
 			- everything
+			- finance			(redirects to 404, valid cert)
 			- chart.finance
-			- ichart.finance
+			- ichart.finance		(no https)
+			- streamerapi.finance *
+			- hsrd				(no https)
 			- visit.webhosting *
 			- ichart
 			- suggestions
 			- info				(cert: secure.help.yahoo.com; redirects to there)
-			- m **
+			- m ****
+			- us.m ****
 			- webservices.mobile *
-			- movies **
+			- movies ****
 			- my **
-			- news **
+			- news ****
 			- notepad			(cert: *.calendar.yahoo.com; shows calendar's data)
 			- img.omg *
 			- opi
 			- ar.rd
 			- research
 			- rightmedia			(cert: www.ce1.com; redirects there)
+			- search *
 			- screen **
 			- gossip-ss.us.search
 			- images.search
 			- sports **
+			- uk ***
+			- us ***
 			- qos.video
 			- voices			(redirects to http)
 			- weather **
+			- count.yisou
+			- dmros.ysm *
 
 		- yahoo.net subdomains:
 
@@ -74,10 +87,13 @@
 
 		- ypolicyblog.com		(reset)
 		- www.ypolicyblog.com
+		- cn.yimg.com
 		- ybinst3.ec.yimg.com	(CN: *.l.yimg.com; 404)
 
 	* Times out
-	** 404, CN: *.mail.yahoo.com
+	** 404; mismatched, CN: www.yahoo.com
+	*** Redirects to http, valid cert
+	**** 404, valid cert
 
 
 	Problematic domains:
@@ -139,14 +155,18 @@
 
 			- bc subdomains:
 
+				- clicks.beap
 				- csc.beap
 				- pn1
 				- row
 				- us
 
+			- migration.cn
 			- br.contribuidores
+			- edit
 			- na.edit
 			- edit.europe
+			- geo
 			- help
 			- secure.help
 			- legalredirect
@@ -162,6 +182,8 @@
 				- c.c.yom
 				- \w+-c.c.yom
 
+			- mlogin
+
 			- *.msg:
 
 				- dps			(→ ycpi-mail-dps)
@@ -173,8 +195,10 @@
 				- ycpi-mail-rest-core2
 
 			- ucs.netsvs
+			- cookiex.ngd
 			- rtb.pclick
 			- mailapps.query
+			- media.query
 			- ucs.query
 			- us.rd
 			- order.smallbusiness
@@ -265,7 +289,7 @@
 
 		-->
 	<securecookie host="^\.yahoo\.com$" name="^(?:AO|B|SSL)$" />
-	<securecookie host="^\.mail\.yahoo\.com$" name=".+" />
+	<securecookie host="^\.(?:analytics|mail)\.yahoo\.com$" name=".+" />
 	<securecookie host="^.+-c\.c\.yom\.mail\.yahoo\.net$" name=".+" />
 	<securecookie host="^\.s\.yimg\.com$" name=".+" />
 
@@ -288,7 +312,7 @@
 	<rule from="^https?://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|(?:[\w-]+\.)?mail|[\w\.-]+\.msg|ucs\.netsvs|rtb\.pclick|(?:mailapp|uc)s\.query|sec|order\.smallbusiness|au\.totaltravel|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|login|us\.l?rd|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:mailapps|media|ucs)\.query|sec|order\.smallbusiness|au\.totaltravel|yep\.video)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
 	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
@@ -336,10 +360,10 @@
 	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.(?:a2|i1|js2?))\.yimg\.com/(?:a|d|us(?:\.js)?\.yimg\.com)/"
 		to="https://s.yimg.com/lq/" />
 
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|ok|pj|pp|qa|rq|rx|ugcwidgets|zz)/"
+	<rule from="^https?://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|mi|ok|pj|pp|qa|rq|rx|ugcwidgets|zz)/"
 		to="https://s.yimg.com/$1/" />
 
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qz|r[luwz])/"
+	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qw|qz|r[luwz]|sc|ts)/"
 		to="https://s.yimg.com/zz/$1/" />
 
 	<rule from="^http://s(ec)?\.yimg\.com/"

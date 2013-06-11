@@ -1,0 +1,42 @@
+<!--
+	CDN buckets:
+
+		- kayako.media.s3.amazonaws.com | d13f94alzxkv7n.cloudfront.net
+
+			- media.kayako.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- blog *
+		- forge		(shows CentOS test page; expired 2012-05-22, CN: localhost.localdomain)
+		- forums *
+		- wiki *
+
+	* Times out
+
+
+	Fully covered subdomains:
+
+		- media		(→ d13f94alzxkv7n.cloudfront.net)
+		- my
+		- \w+		(per-client subdomains)
+
+-->
+<ruleset name="Kayako (partial)">
+
+	<target host="*.kayako.com" />
+		<exclusion pattern="^http://(?:blog|forge|forums|wiki|www)\." />
+
+
+	<securecookie host=".+\.kayako\.com$" name=".+" />
+
+
+	<rule from="^http://media\.kayako\.com/"
+		to="https://d13f94alzxkv7n.cloudfront.net/" />
+
+	<rule from="^http://([\w-]+)\.kayako\.com/"
+		to="https://$1.kayako.com/" />
+
+</ruleset>

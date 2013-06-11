@@ -1,0 +1,54 @@
+<!--
+	For rules that cause mixed content, see Weebly-mixed.xml.
+
+
+	CDN buckets:
+
+		- cdn1.editmysite.com.cdngc.net
+		- cdn2.editmysite.com.cdngc.net
+
+		- cdn1.weebly.com.cdngc.net
+
+			- static-cdn.weebly.com
+
+
+	Nonfunctional domains:
+
+		- editmysite.com subdomains:
+
+			- (www.) *
+			- cdn[12]	(403; mismatched, CN: ssl2.cdngc.net)
+			- preview *
+			- static *
+
+		- weebly.com subdomains:
+
+			- affiliate *
+			- affiliates *
+			- blog *
+			- help *
+			- kb *
+			- partnerblog *
+			- partnerwith *
+			- static-cdn	(403; mismatched, CN: *.pantherssl.com)
+			- support *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)weebly.com	(mixed css & images from *.editmysite.com)
+
+-->
+<ruleset name="Weebly (partial)">
+
+	<target host="weebly.com" />
+	<target host="*.weebly.com" />
+		<exclusion pattern="^http://(?:www\.)?weebly\.com/(?!images/)" />
+
+
+	<rule from="^http://((?:mobileapi|secure|www)\.)?weebly\.com/"
+		to="https://$1weebly.com/" />
+
+</ruleset>

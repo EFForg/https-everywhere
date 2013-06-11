@@ -155,7 +155,7 @@ RuleSets.prototype = {
     }
   },
   
-  applicableRulesets: function(host) {
+  potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
     var i, tmp, t;
     var results = this.global_rulesets;
@@ -187,32 +187,91 @@ RuleSets.prototype = {
     return results;
   },
 
-  shouldSecureCookie: function(cookie) {
+  shouldSecureCookie: function(cookie, knownHttps) {
     // Check to see if the Cookie object c meets any of our cookierule citeria
-    // for being marked as secure
+    // for being marked as secure.  knownHttps is true if the context for this
+    // cookie being set is known to be https.
     //log(DBUG, "Testing cookie:");
     //log(DBUG, "  name: " + cookie.name);
     //log(DBUG, "  host: " + cookie.host);
     //log(DBUG, "  domain: " + cookie.domain);
     //log(DBUG, "  rawhost: " + cookie.rawHost);
     var i,j;
-    var rs = this.applicableRulesets(cookie.domain);
+    var hostname = cookie.domain;
+    // cookie domain scopes can start with .
+    while (hostname.charAt(0) == ".")
+      hostname = hostname.slice(1);
+
+    var rs = this.potentiallyApplicableRulesets(hostname);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active)
+      if (ruleset.active) {
+        if (!knownHttps && !this.safeToSecureCookie(hostname))
+          continue;
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name))
+          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
+          }
+          //log(WARN, "no match domain " + cr.host_c.test(cookie.domain) +
+          //          " name " + cr.name_c.test(cookie.name));
+          //log(WARN, "with " + cookie.domain + " " + cookie.name);
+          //log(WARN, "and " + cr.host + " " + cr.name);
         }
+      }
     }
     return null;
+  },
+
+  safeToSecureCookie: function(domain) {
+    // Check if the domain might be being served over HTTP.  If so, it isn't
+    // safe to secure a cookie!  We can't always know this for sure because
+    // observing cookie-changed doesn't give us enough context to know the
+    // full origin URI.
+
+    // First, if there are any redirect loops on this domain, don't secure
+    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
+    // would want to secure the cookie anyway, because the URLs that loop are
+    // not authenticated or not important.  Also by the time the loop has been
+    // observed and the domain blacklisted, a cookie might already have been
+    // flagged as secure.
+
+    if (domain in domainBlacklist) {
+      log(INFO, "cookies for " + domain + "blacklisted");
+      return false;
+    }
+
+    // If we passed that test, make up a random URL on the domain, and see if
+    // we would HTTPSify that.
+
+    try {
+      var nonce_path = "/" + Math.random().toString();
+      nonce_path = nonce_path + nonce_path;
+      var test_uri = "http://" + domain + nonce_path;
+    } catch (e) {
+      log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
+                      + "(" + e + ")");
+      return false;
+    }
+
+    log(INFO, "Testing securecookie applicability with " + test_uri);
+    var rs = this.potentiallyApplicableRulesets(domain);
+    for (i = 0; i < rs.length; ++i) {
+      if (!rs[i].active) continue;
+      var rewrite = rs[i].apply(test_uri);
+      if (rewrite) {
+        log(INFO, "Yes: " + rewrite);
+        return true;
+      }
+    }
+    log(INFO, "(NO)");
+    return false;
   },
 
   rewriteURI: function(urispec, host) {
     var i = 0;
     var newuri = null
-    var rs = this.applicableRulesets(host);
+    var rs = this.potentiallyApplicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
       if (rs[i].active && (newuri = rs[i].apply(urispec)))
         return newuri;

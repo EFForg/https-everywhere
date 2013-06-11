@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- a1608.g.akamai.net/7/1608/1174/20136715301/
+
+		- movietickets.reviews.bazaarvoice.com
+
+			- reviews.movietickets.com
+
+-->
+<ruleset name="MovieTickets.com">
+
+	<target host="a1608.g.akamai.net" />
+	<target host="movietickets.com" />
+	<target host="*.movietickets.com" />
+
+
+	<securecookie host="^(?:www\.)?movietickets\.com$" name=".+" />
+	<!--
+		Omniture tracking cookies:
+						-->
+	<securecookie host="^\.movietickets\.com$" name="^s_\w\w$" />
+
+
+	<rule from="^http://(www\.)?movietickets\.com/"
+		to="https://$1movietickets.com/" />
+
+	<!--	www uses some protocol-relative links:
+							-->
+	<rule from="^https?://a1608\.g\.akamai\.net/7/1608/1174/20136715301/"
+		to="https://a248.e.akamai.net/7/1608/1174/20136715301/" />
+
+	<!--	Ditto:
+			-->
+	<rule from="^https?://reviews\.movietickets\.com/(6056|module|static)/"
+		to="https://a248.e.akamai.net/7/1608/1174/20136715301/reviews.movietickets.com/$1/" />
+
+</ruleset>

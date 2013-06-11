@@ -1,10 +1,27 @@
-<!--	Some data from www is identical to manage
+<!--
+	CDN buckets:
+
+		- d19hkjflplfhx2.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- support	(zendesk)
+
 -->
 <ruleset name="Name.com (partial)">
 
-	<target host="manage.name.com"/>
+	<target host="name.com" />
+	<target host="*.name.com" />
 
-	<rule from="^http://manage\.name\.com/"
-		to="https://manage.name.com/"/>
+
+	<securecookie host="^www\.name\.com$" name=".+" />
+
+
+	<rule from="^http://(manage\.|www\.)?name\.com/"
+		to="https://$1name.com/" />
+
+	<rule from="^http://support\.name\.com/(generated|system)/"
+		to="https://assets.zendesk.com/$1/" />
 
 </ruleset>

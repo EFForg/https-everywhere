@@ -72,12 +72,15 @@ ApplicableList.prototype = {
       dst.setUserData(key, data, this.dom_handler);
   },
 
-  populate_menu: function(document, menupopup, weird) {
-
+  populate_list: function() {
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
     HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
     this.log(DBUG, "populating using alist #" + this.serial);
+  },
+
+  populate_menu: function(document, menupopup, weird) {
+    this.populate_list();
     this.document = document;
     
     var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;   

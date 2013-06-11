@@ -174,10 +174,15 @@ function https_prefs_init(doc) {
     getRowProperties: function(row, props) {},
     getColumnProperties: function(colid, col, props) {},
     getCellProperties: function(row, col, props) {
-      var atomS = Components.classes["@mozilla.org/atom-service;1"];
-        atomS = atomS.getService(Components.interfaces.nsIAtomService);
-
       if ( (col.id == "enabled_col") && !(this.rules[row]) ) {
+        var atomS = CC["@mozilla.org/atom-service;1"];
+        atomS = atomS.getService(CI.nsIAtomService);
+        // Starting with 22.0a1 there is no |props| available anymore. See:
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=407956. Looking at the
+        // patch the following seems to work, though.
+        if (!props) {
+          return "undefined";
+        }
         props.AppendElement( atomS.getAtom("undefined") );
       }
     },

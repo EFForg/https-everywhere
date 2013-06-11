@@ -21,6 +21,10 @@
 
 			- db2.stb.s-msn.com
 
+		- catalog.video.msn.com.edgesuite.net
+
+			- img.widgets.video.msn.com
+
 		- img.widgets.video.s-msn.com.edgesuite.net
 
 		- glo.vo.msecnd.net/...
@@ -54,6 +58,7 @@
 			- br *
 			- causes **
 			- cityofspeed **
+			- estc			(404, akamai)
 			- fitbie		(503, akamai)
 			- healthyliving *
 			- jp
@@ -70,6 +75,7 @@
 			- money.uk ***
 			- partner.uk
 			- prodigy *
+			- static.stratosphere	(400; mismatched, CN: images.partner.windowsphone.com)
 			- socialvoices.uk ***
 			- vfcdn **
 			- www			(404)
@@ -106,6 +112,7 @@
 			- assets[1-4]d.msnbc		(works, akamai)
 			- msnbcmedia
 			- msnbcmedia[1-4]
+			- m.now				(works; mismatched, CN: home.now.msn.com)
 			- realestate			(CN: now.msn.com; works)
 			- img[123].catalog.video **
 
@@ -117,7 +124,6 @@
 
 			- *.stb
 
-				- blu.stb
 				- col.stb
 				- db2.stb
 				- kaw.stb
@@ -128,7 +134,6 @@
 
 			- *.stc
 
-				- blu.stc
 				- col.stc
 				- db2.stc
 				- db3.stc
@@ -141,7 +146,9 @@
 				- db2.stj
 
 			- db2.stb0[01] **
+			- img3.catalog.video *
 			- img1.video **
+
 
 	* Works, akamai
 	** CN: *.sharepointonline.com; works
@@ -170,6 +177,7 @@
 			- h
 			- (www.)hotmail
 			- hp
+			- imgs1-video
 			- eb.my
 			- now
 			- \d+.r
@@ -186,6 +194,9 @@
 				- bn1files
 				- byfiles
 
+			- stratosphere
+			- catalog.video
+
 		- s-msn.com subdomains:
 
 			- cpc.db3	(→ msn.vo.msecnd.net)
@@ -193,6 +204,7 @@
 			- entimg
 			- media-social
 
+			- blu.st[bc]
 			- stc-now
 
 -->
@@ -206,7 +218,7 @@
 	<!--	Set by c.atdmt.com:
 						-->
 	<securecookie host="^\.msn\.com$" name="^MUID$" />
-	<securecookie host="^\.c\.msn\.com$" name=".+" />
+	<securecookie host="^(?:\.c|now)\.msn\.com$" name=".+" />
 
 
 	<rule from="^https?://static[12]?\.glo\.com/"
@@ -216,10 +228,13 @@
 		a unique ID, which then redirects back
 		to c.msn, with the unique ID appended.
 				-->
-	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|contacts|entimg|estc|g|h|(?:www\.)?hotmail|hp|eb\.my|now|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage)\.msn\.com/"
+	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|eb\.my|now|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|catalog\.video)\.msn\.com/"
 		to="https://$1.msn.com/" />
 
-	<rule from="^http://(entcss|entimg|media-social|stc-now)\.s-msn\.com/"
+	<rule from="^http://m\.now\.msn\.com/sc/i/"
+		to="https://stc-now.s-msn.com/sc/i/" />
+
+	<rule from="^http://(entcss|entimg|media-social|blu\.st[bc]|stc-now)\.s-msn\.com/"
 		to="https://$1.s-msn.com/" />
 
 	<rule from="^https?://cpc\.db3\.s-msn\.com/"

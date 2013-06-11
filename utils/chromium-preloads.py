@@ -3,8 +3,8 @@
 # autogenerate sample versions of rules from Chromium browser's HSTS
 # preload list (in the from-preloads/ directory)
 
-import urllib2, re, glob, os
-preloads = urllib2.urlopen("https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h?content-type=text%2Fplain").read()
+import urllib.request, urllib.error, urllib.parse, re, glob, os
+preloads = urllib.request.urlopen("https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h?content-type=text%2Fplain").read()
 
 def escape(s):
     return re.sub("\.", "\\.", s)
@@ -37,7 +37,7 @@ def make_rule(name, hosts):
     open("from-preloads/%s.xml" % name.capitalize(), "w").write(output)
 
 t = re.compile('", true')
-preloads = filter(t.search,preloads.split("\n"))
+preloads = list(filter(t.search,preloads.split("\n")))
 
 preloads = [x.split('"')[1] for x in preloads]
 preloads = [re.sub('\\\\[0-9]*', '.', x) for x in preloads]
@@ -48,7 +48,7 @@ rules = [open(x).read() for x in glob.glob("src/chrome/content/rules/*.xml")]
 d = {}
 for x in preloads:
     if any(map(re.compile(x).search, rules)):
-        print "Ignored existing domain", x
+        print("Ignored existing domain", x)
         continue
     domain = ".".join(x.split(".")[-2:])
     d.setdefault(domain, []).append(x)
@@ -59,4 +59,4 @@ if not os.access("from-preloads", 0):
 for k in d:
     make_rule(k, d[k])
 
-print "Please examine %d new rules in from-preloads/ directory." % len(d)
+print("Please examine %d new rules in from-preloads/ directory." % len(d))

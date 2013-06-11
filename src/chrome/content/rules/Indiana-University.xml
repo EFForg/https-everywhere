@@ -4,47 +4,60 @@
 
 	Nonfunctional domains:
 
-		- lkml.indiana.edu	(ssl_error_rx_record_too_long)
-		- cacr.iu.edu		(ditto)
-		- (www.)uwsg.iu.edu	(ditto)
+		- lkml.indiana.edu *
+
+		- iu.edu subdomains:
+
+			- cacr *
+			- info		(shows PHP installation info, valid cert)
+			- newsinfo	(shows info; mismatched, CN: info.iu.edu)
+			- (www.)uwsg *
+
+	* http reply
+
+
+	Partially covered domains:
+
+		- (www.)iu.edu		(some pages redirect to http, some paths 404)
+
+
+	Problematic domains:
+
+		- soic.indiana.edu *
+		- osl.iu.edu *
+		- www.pti.iu.edu	(cert only matches ^pti)
+
+	* Cert only matches www.foo
 
 -->
 <ruleset name="Indianna University (partial)">
 
-	<target host="soic.indiana.edu" />
-	<target host="www.soic.indiana.edu" />
+	<target host="*.indiana.edu" />
 	<target host="iu.edu" />
 	<target host="*.iu.edu" />
-	<target host="www.*.iu.edu" />
+		<!--
+			At least some pages redirect to http.
+
+			These paths 404:
+
+				- _slideshows/img/.+
+				- WRAP_SDDU/BL-PROV-COMM/IUBGATE/hotspots/_images/
+											-->
+		<exclusion pattern="^http://(?:www\.)?iu\.edu/(?!css|img|~\w+|[\w/-]+/_image)/" />
 
 
 	<securecookie host="^cas\.iu\.edu$" name=".+" />
 
 
-	<!--	Cert only matches www.soic.	-->
 	<rule from="^https?://(?:www\.)?soic\.indiana\.edu/"
 		to="https://www.soic.indiana.edu/" />
 
-	<!--	At least some pages redirect to http.
+	<rule from="^http://(cas\.|www\.)?iu\.edu/"
+		to="https://$1iu.edu/" />
 
-		These paths 404:
-
-			- _slideshows/img/.+
-			- WRAP_SDDU/BL-PROV-COMM/IUBGATE/hotspots/_images/
-							-->
-	<rule from="^http://(www\.)?iu\.edu/(css|img|~\w+|[\w/\-]+/_image)/"
-		to="https://$1iu.edu/$2/" />
-
-	<rule from="^http://cas\.iu\.edu/"
-		to="https://cas.iu.edu/" />
-
-	<!--	Cert only matches www.osl.
-						-->
 	<rule from="^https?://(?:www\.)?osl\.iu\.edu/"
 		to="https://www.osl.iu.edu/" />
 
-	<!--	Cert only matches //pti.
-						-->
 	<rule from="^https?://(?:www\.)?pti\.iu\.edu/"
 		to="https://pti.iu.edu/" />
 

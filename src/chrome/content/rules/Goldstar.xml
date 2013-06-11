@@ -1,0 +1,30 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- gifts	(mismatched, CN: *.myshopify.com)
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="Goldstar (partial)">
+
+	<target host="goldstar.com" />
+	<target host="*.goldstar.com" />
+		<exclusion pattern="^http://(?:i\.|www\.)?goldstar\.com/(?:company|help|my_tickets|series|weekendapp)(?:$|\?|/)" />
+
+
+	<securecookie host="^images\.goldstar\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?goldstar\.com/"
+		to="https://www.goldstar.com/" />
+
+	<rule from="^http://gifts\.goldstar\.com/"
+		to="https://goldstar.myshopify.com/" />
+
+	<rule from="^http://i(mages)?\.goldstar\.com/"
+		to="https://i$1.goldstar.com/" />
+
+</ruleset>

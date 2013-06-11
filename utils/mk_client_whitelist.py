@@ -32,7 +32,7 @@ results = dbc.fetchmany(1000)
 
 sys.stderr.write("TOP 100:\n")
 for n in range(100):
-  sys.stderr.write(`results[n][1:4]` + '\n')
+  sys.stderr.write(repr(results[n][1:4]) + '\n')
 
 header = """
 // These are SHA256 fingerprints for the most common chains observed by the
@@ -41,11 +41,11 @@ header = """
 
 const X509ChainWhitelist = {"""
 
-print header
+print(header)
 for chain_fp in sorted([row[0] for row in results]):
-  print "  '%s' : true," % chain_fp
+  print("  '%s' : true," % chain_fp)
 
 footer = "} ;"
-print footer
+print(footer)
 
 

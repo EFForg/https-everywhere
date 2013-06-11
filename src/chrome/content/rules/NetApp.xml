@@ -1,15 +1,61 @@
-<!--	See NetApp-mismatches.xml for problematic rules.
+<!--
+	For problematic rules, see NetApp-mismatches.xml.
+
+
+	CDN buckets:
+
+		- netapp-fp.revolutiondata-cms.com
+
+
+	Nonfunctional subdomains:
+
+		- investors	(times out)
+
+
+	Problematic subdomains:
+
+		- (www.) *
+		- blogs		(no https)
+		- media *
+
+	* Works, akamai
+
+
+	Mixed images on communities from www
+
+	Mixed images on solutionconnection from media
+
 -->
 <ruleset name="NetApp (partial)">
 
-	<target host="communities.netapp.com"/>
-	<target host="fieldportal.netapp.com"/>
-	<target host="login.netapp.com"/>
-	<target host="now.netapp.com"/>
+	<target host="*.netapp.com" />
 
-	<securecookie host="^\w+\.netapp\.com$" name=".*"/>
 
-	<rule from="^http://(\w+)\.netapp\.com/"
-		to="https://$1.netapp.com/"/>
+	<!--	Observed cookie subdomains:
+
+			- communities
+			- fast
+			- fast-new
+			- fieldportal
+			- forums
+			- login
+			- services-new
+			- solutionconnection
+			- support
+			- tech
+					-->
+	<securecookie host="^\w+\.netapp\.com$" name=".+" />
+
+
+	<!--	Server drops trailing slash:
+						-->
+	<rule from="^http://blogs\.netapp\.com/(\w+)/(\?.*)?$"
+		to="https://communities.netapp.com/community/netapp-blogs/$1$2" />
+
+	<rule from="^http://blogs\.netapp\.com/"
+		to="https://communities.netapp.com/community/netapp-blogs/" />
+
+	<rule from="^http://(communities|fast|fast-new|fieldportal|forums|learningcent(?:er|re)|login|now|services(?:-new)?|solutionconnection|support|tech)\.netapp\.com/"
+		to="https://$1.netapp.com/" />
 
 </ruleset>

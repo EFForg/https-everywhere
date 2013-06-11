@@ -1,19 +1,32 @@
 <!--
+	CDN buckets:
+
+		- clicktalecdn.sslcs.cdngc.net
+		- clicktale.pantherssl.com
+
+
 	Problematic domains:
 
+		- clicktale.com		(interrupted)
 		- cdn.clicktale.net	(403, mismatched, CN: ssl2.cdngc.net)
+		- s.clicktale.net	(403; mismatched, CN: ssl2.cdngc.net)
 
 -->
 <ruleset name="ClickTale">
 
 	<target host="clicktale.com" />
 	<target host="*.clicktale.com" />
-	<target host="*.app.clicktale.com" />
 	<target host="*.clicktale.net" />
 
 
-	<securecookie host="^.*\.clicktale\.(?:com|net)$" name=".*" />
+	<securecookie host=".*\.clicktale\.(?:com|net)$" name=".+" />
 
+
+	<rule from="^https?://(?:www\.)?clicktale\.com/"
+		to="https://www.clicktale.com/" />
+
+	<rule from="^http://((?:login|subs)\.app|blog)\.clicktale\.com/"
+		to="https://$1.clicktale.com/" />
 
 	<!--	- s:
 
@@ -22,22 +35,14 @@
 			- 403s
 		 	- Scripts 404 when rewritten to ^clicktale.net
 			- Script uses www for https
-						-->
+							-->
 	<rule from="^https?://(?:s|www)\.clicktale\.net/"
 		to="https://www.clicktale.net/" />
 
 	<rule from="^https?://cdn\.clicktale\.net/"
 		to="https://clicktalecdn.sslcs.cdngc.net/" />
 
-	<!--	- ^clicktale.com/$
-
-			- interrupted
-			- 301s to www over http
-						-->
-	<rule from="^https?://(?:www\.)?clicktale\.com/"
-		to="https://www.clicktale.com/" />
-
-	<rule from="^http://((?:login|subs)\.app|blog)\.clicktale\.com/"
-		to="https://$1.app.clicktale.com/" />
+	<rule from="^http://www07\.clicktale\.net/"
+		to="https://www07.clicktale.net/" />
 
 </ruleset>

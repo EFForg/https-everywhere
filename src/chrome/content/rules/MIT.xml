@@ -2,26 +2,82 @@
 	For problematic rules, see MIT-mismatches.xml.
 
 
+	Other MIT rulesets:
+
+		- Touchstone_Network.xml
+
+
 	Nonfunctional mit.edu subdomains:
 
+		- arts *
+		- artscal **
+		- civic		(no https)
 		- csail		(cert: inquir.csail.mit.edu; handshake fails)
 		- inquir.csail	(ditto)
 		- www.csail	(handshake_failure)
+		- development ***
+		- events	(interruped)
 		- executive
-		- img		(times out)
+		- img		(shows web; mismatched, CN: web.mit.edu)
 		- web.media
 		- mvl		(self-signed, expired; 403)
-		- ocw		(Akamai; "Service Unavailable")
+		- ocw		(503, Akamai)
 		- scratch	(times out)
+		- student	(redirects to idp, valid cert)
+		- stuff *
 		- tech		(cert: the-tech.mit.edu; 401)
 		- the-tech	(401)
-		- web		(self-signed; interrupted)
-		- www		(interrupted)
+		- web ****
+		- xvm ***
+		- websis	(shows student; mismatched, CN: student.mit.edu)
+		- www ****
+
+	* No https
+	** Times out
+	*** Handshake fails
+	**** Redirects to cert_error/
 
 
 	Problematic subdomains:
 
+		- 3down		(works, self-signed)
+		- calendar	(works, expired 2013-01-27)
+		- cluedumps *
+		- hacks *
+		- ideabank	(mismatched, CN: future.mit.edu)
+		- itinfo	(redirects to ist; mismatched, CN: ist.mit.edu)
 		- techblogs	($ works, at least some pages 404, expired, self-signed)
+		- techtime	(mismatched, CN: calendar.mit.edu)
+
+	* Works; mismatched, CN: *.scripts.mit.edu
+
+
+
+	Fully covered subdomains:
+
+		- alum
+		- alumsso
+		- athena10
+		- ca
+		- debathena
+		- future
+		- giving
+		- gsc
+		- ideabank	(→ future)
+		- idp
+		- linerva
+		- mit150
+		- odge
+		- orgchart
+		- picker
+		- sipb
+		- stellar
+		- webpub
+		- whereis
+		- wikis
+
+
+	Mixed image on picker from web
 
 -->
 <ruleset name="Massachusetts Institute of Technology (partial)">
@@ -35,17 +91,51 @@
 
 	<!--	Observed cookie domains:
 
+			- alum
+			- .alum
+			- alumsso
+			- athena10
+			- ca
+			- cluedumps
+			- debathena
+			- .future
+			- giving
+			- gsc
+			- idp
+			- .ist
+			- kb
+			- .mit150
 			- mitpress
+			- scripts
+			- stellar
+			- student
 			- wayf
+			- webpub
+			- whereis
+			- wikis
 				-->
-	<securecookie host="^mitpress.mit\.edu$" name=".*" />
+	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|mitpress|scripts|stellar|webpub|wikis).mit\.edu$" name=".*" />
+	<!--securecookie host="^\.alum\.mist\.edu$" name="^S?SESS\w{32}$" /-->
+	<!--securecookie host="^\.future\.mist\.edu$" name="^SSESS\w{32}$" /-->
+	<!--securecookie host="^\.ist\.mist\.edu$" name="^SSESS\w{32}$" /-->
+	<!--securecookie host="^\.mit150\.mist\.edu$" name="^SESS\w{32}$" /-->
 	<securecookie host="^wayf\.mit\.edu$" name=".*" />
 
-	<rule from="^http://((?:groups|people)\.csail|librar(?:ies|y)|(?:www\.)?scripts|wayf)\.mit\.edu/"
+
+	<rule from="^http://mit\.edu/"
+		to="https://mit.edu/" />
+
+	<rule from="^http://(alum|alumsso|athena10|ca|(?:groups|people)\.csail|debathena|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|linerva|mail|mit150|odge|orgchart|picker|(?:www\.)?scripts|sipb|stellar|wayf|webpub|whereis|wikis)\.mit\.edu/"
 		to="https://$1.mit.edu/" />
+
+	<rule from="^http://ideabank\.mit\.edu/"
+		to="https://future.mit.edu/" />
 
 	<rule from="^https?://(?:www\.)?mitpress\.mit\.edu/"
 		to="https://mitpress.mit.edu/" />
+
+	<rule from="^http://scripts\.mit\.edu:444/"
+		to="https://scripts.mit.edu:444/" />
 
 	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
 		to="https://www.mitpressjournals.org/$2" />

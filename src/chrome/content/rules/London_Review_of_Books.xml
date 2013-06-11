@@ -1,0 +1,30 @@
+<!--
+	CDN buckets:
+
+		- d7mx03fbraf30.cloudfront.net
+
+			- cdn.lrb.co.uk
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- cdn	(cloudfront)
+
+
+	Som pages redirect to http.
+
+-->
+<ruleset name="London Review of Books (partial)">
+
+	<target host="lrb.co.uk" />
+	<target host="*.lrb.co.uk" />
+
+
+	<rule from="^http://(?:www\.)?lrb\.co\.uk/(activate/?(?:$|\?)|assets/|Shibboleth\.sso)"
+		to="https://www.lrb.co.uk/$1" />
+
+	<rule from="^http://cdn\.lrb\.co\.uk/"
+		to="https://d7mx03fbraf30.cloudfront.net/" />
+
+</ruleset>

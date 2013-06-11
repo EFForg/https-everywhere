@@ -9,19 +9,29 @@
 
 	Nonfunctional domains:
 
-		- (www.)parse.ly
-		- blog.parse.ly		(hosted on Tumblr)
-		- (www.)parsely.com
-		- blog.parsely.com	(redirects to .ly)
+		- blog.parsely.com	(tumblr)
+
+
+	Problematic domains:
+
+		- (www.)parse.ly	(mismatched, CN: *.parsely.com)
+		- blog.parse.ly		(works; mismatched, CN: *.parsely.com)
 
 -->
 <ruleset name="Parse.ly (partial)">
 
+	<target host="parsely.com" />
 	<target host="*.parsely.com" />
 
 
-	<rule from="^http://(api|dash)\.parsely\.com/"
-		to="https://$1.parsely.com/" />
+	<securecookie host="^config\.parsely\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?parse\.ly/"
+		to="https://www.parsely.com/" />
+
+	<rule from="^http://(?:(api|config|dash|pixel|www)\.)?parsely\.com/"
+		to="https://$1parsely.com/" />
 
 	<rule from="^https?://static\.parsely\.com/"
 		to="https://d1z2jf7jlzjs58.cloudfront.net/" />

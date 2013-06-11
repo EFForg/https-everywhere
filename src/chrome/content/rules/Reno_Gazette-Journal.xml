@@ -1,0 +1,38 @@
+<!--
+	For other Gannett Company coverage, see Gannett-Company.xml.
+
+
+	CDN buckets:
+
+		- img.gannett.edgesuite.net
+
+			- cmsimg.rgj.com
+
+		- reno.planetdiscover.com
+
+			- deals.rgj.com
+
+
+	Problematic subdomains:
+
+		- ^		(no https)
+		- cmsimg	(akamai)
+		- deals		(works; mismatched, CN: *.planetdiscover.com)
+
+-->
+<ruleset name="Reno Gazette-Journal (partial)">
+
+	<target host="rgj.com" />
+	<target host="*.rgj.com" />
+
+
+	<securecookie host="^(?:www)?\.rgj\.com$" name=".+" />
+
+
+	<rule from="^http://(?:cmsimg\.|www\.)?rgj\.com/"
+		to="https://www.rgj.com/" />
+
+	<rule from="^http://deals\.rgj\.com/sf_(framework|module)s/"
+		to="https://reno.planetdiscover.com/sf_$1s/" />
+
+</ruleset>

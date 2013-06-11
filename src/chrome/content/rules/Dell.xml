@@ -4,6 +4,7 @@
 
 	Nonfunctional subdomains:
 
+		- community	(times out)
 		- content	(times out)
 
 
@@ -11,6 +12,8 @@
 
 		- i *
 		- accessories-cdn *
+		- www1.la *
+		- www1-cdn.la *
 		- accessories.us	(mismatched, CN: accessories.dell.com)
 		- www-cdn *
 
@@ -19,31 +22,77 @@
 
 	Partially covered subdomains:
 
-		- en.community *	(cfs-file.ashx & resized-image.ashx 404)
-		- media.community	(→ en.community; 504, akamai)
-		- partnerdirect *
+		- community subdomains:
 
-	* At least some pages redirect to http
+				- de *
+				- en *
+				- es *
+				- fr *
+				- ja *
+				- ko *
+				- media		(→ en.community; 504, akamai)
+				- pt *
+				- zh *
+
+		- partnerdirect **
+
+	* cfs-file.ashx & resized-image.ashx 404, at least some pages redirect to http
+	** At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- accessories-cdn	(→ accessories)
+		- afcs
+
+		- ap subdomains:
+
+			- chatpro
+			- cs
+			- dellchat
+
+		- b2bservices
+
+		- cdn subdomains:
+
+			- ec2
+			- si
+			- snp
+
+		- ecomm
+		- ecomm2
+		- support.euro
+		- i			(→ si.cdn)
+		- img
+		- mobility
+		- premier
+		- signin
+		- sso
+		- support
+		- supportapj
+		- pbar.us
+		- www-cdn		(→ www)
 
 -->
 <ruleset name="Dell (partial)" platform="mixedcontent">
 
 	<target host="dell.com" />
 	<target host="*.dell.com" />
-		<exclusion pattern="^http://(?:en|media)\.community\.dell\.com/(?![tT]hemes/)" />
+		<exclusion pattern="^http://(?:\w\w|media)\.community\.dell\.com/(?![tT]hemes/)" />
 		<exclusion pattern="^http://partnerdirect\.dell\.com/(?!sites/channel/(?:Style\ Library/|\w\w_\w\w/pages/loginpage\.aspx))" />
 	<target host="ideastorm.com" />
 	<target host="www.ideastorm.com" />
 
 
 	<!--(?!.+\.community\.|partnerdirect\.)-->
-	<securecookie host="^(?:accessories|ecomm|support)\.dell\.com$" name=".+" />
+	<securecookie host="^(?:accessories|ecomm|support\.euro|mobility|premier|signin|support(?:apj)?)\.dell\.com$" name=".+" />
 
 
 	<rule from="^https?://(www(?:-cdn)?\.)?dell\.com/"
 		to="https://www.dell.com/" />
 
-	<rule from="^http://(accessories|afcs|si\.cdn|en\.community|ecomm|img|partnerdirect|support)\.dell\.com/"
+	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|mobility|partnerdirect|premier|signin|sso|support(?:apj)?|pbar\.us)\.dell\.com/"
 		to="https://$1.dell.com/" />
 
 	<rule from="^https?://accessories-cdn\.dell\.com/"

@@ -1,0 +1,21 @@
+<!--
+	Problematic domains:
+
+		- servicenow.com	(works, cert only matches *.servicenow.com)
+		- www.servicenow.com	(works, akamai)
+		- service-now.com	(cert only matches *.service-now.com)
+		- www.service-now.com	(works, valid cert, but redirects to https://www.servicenow.com)
+
+-->
+<ruleset name="ServiceNow (partial)">
+
+	<target host="*.service-now.com" />
+
+
+	<securecookie host="^.+\.service-now\.com$" name=".+" />
+
+
+	<rule from="^http://(?!www\.)([\w-]+)\.service-now\.com/"
+		to="https://$1.service-now.com/" />
+
+</ruleset>

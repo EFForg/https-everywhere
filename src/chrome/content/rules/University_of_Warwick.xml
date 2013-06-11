@@ -1,0 +1,31 @@
+<!--
+	CDN buckets:
+
+		- d36jn9qou1tztq.cloudfront.net
+		- warwick.service-now.com
+
+
+	Nonfunctional subdomains:
+
+		- text.www2	(redirects to http; mismatched, CN: www2.warwick.ac.uk)
+
+
+	Partially covered subdomains:
+
+		- www2		(some pages redirect to http)
+
+-->
+<ruleset name="University of Warwick (partial)">
+
+	<target host="warwick.ac.uk" />
+	<target host="*.warwick.ac.uk" />
+		<exclusion pattern="^http://www2\.warwick\.ac\.uk/(?!.+\.(?:gif|jpg|png)|brands/|static_war/)" />
+
+
+	<securecookie host="^(?:idp|onlinepayment)\.warwick\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://((?:go|idp|onlinepayment|websignon|www2?)\.)?warwick\.ac\.uk/"
+		to="https://$1warwick.ac.uk/" />
+
+</ruleset>

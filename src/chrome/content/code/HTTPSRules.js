@@ -16,7 +16,19 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
-localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
+// Firefox 23+ blocks mixed content by default, so rulesets that create
+// mixed content situations should be disabled there
+var appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
+var platformVer = appInfo.platformVersion;
+var versionChecker = CC["@mozilla.org/xpcom/version-comparator;1"]
+                      .getService(CI.nsIVersionComparator);
+if(versionChecker.compare(appInfo.version, "23.0a1") >= 0) {
+  localPlatformRegexp = new RegExp("firefox");
+} else {
+  localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
+}
+
+
 ruleset_counter = 0;
 function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
@@ -259,15 +271,16 @@ const RuleWriter = {
       this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
       // The root of the XML tree is assumed to look like a <rulesetlibrary>
-      if (xmldom.documentElement.getAttribute("gitcommitid")) {
+      if (!xmldom.documentElement.getAttribute("gitcommitid")) {
         // The gitcommitid is a tricky hack to let us display the true full
         // source code of a ruleset, even though we strip out comments at build
         // time, by having the UI fetch the ruleset from the public https git repo.
         this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
-        rule_store.gitcommitid = "HEAD";
+        rule_store.GITCommitID = "HEAD";
       } else {
         rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
       }
+
       var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
       if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "

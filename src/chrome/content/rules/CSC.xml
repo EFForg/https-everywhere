@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/assets[1-4].csc.com/
+		- s3.amazonaws.com/assetsdev[1-4].csc.com/
+
+		- d22z1n4koknpni.cloudfront.net
+
+			- assetsdev2
+
+		- d2vblp5odpf1nm.cloudfront.net
+
+			- assetsdev3
+
+		- dkoz0rlg89gph.cloudfront.net
+
+			- assetsdev4
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.csc.com)
+		- assetsdev1	(AmazonWS)
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="CSC (partial)">
+
+	<target host="csc.com" />
+	<target host="*.csc.com" />
+		<exclusion pattern="^http://(?:staging\.|www\.)?csc\.com/(?!favicon\.ico|images/|stylesheets/)" />
+
+
+	<rule from="^http://(?:www\.)?csc\.com/"
+		to="https://www.csc.com/" />
+
+	<rule from="^http://(assets[1-4]|qa|staging)\.csc\.com/"
+		to="https://$1.csc.com/" />
+
+	<rule from="^http://assetsdev1\.csc\.com/"
+		to="https://s3.amazonaws.com/assetsdev1.csc.com/" />
+
+	<rule from="^http://assetsdev2\.csc\.com/"
+		to="https://d22z1n4koknpni.cloudfront.net/" />
+
+	<rule from="^http://assetsdev3\.csc\.com/"
+		to="https://d2vblp5odpf1nm.cloudfront.net/" />
+
+	<rule from="^http://assetsdev4\.csc\.com/"
+		to="https://dkoz0rlg89gph.cloudfront.net/" />
+
+</ruleset>

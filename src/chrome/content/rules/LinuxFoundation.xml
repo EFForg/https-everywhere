@@ -1,9 +1,23 @@
+<!--
+	Other Linux Foundation rulesets:
+
+		- OpenDaylight.xml
+
+-->
 <ruleset name="Linux Foundation (partial)">
 
 	<target host="fossbazaar.org" />
 	<target host="*.fossbazaar.org" />
 	<target host="linuxfoundation.org" />
 	<target host="*.linuxfoundation.org" />
+		<!--
+			These paths started redirecting to http:
+
+				- $
+				- events$
+				- events/[\w-]+(?!/register)
+						-->
+		<exclusion pattern="^http://events\.linuxfoundation\.org/(?:events(?:/|/[\w-]+)?)?(?!/register)(?:\?.*)?$" />
 	<target host="*.linux-foundation.org" />
 	<target host="spdx.org" />
 		<!--	wiki redirects to http	-->
@@ -14,7 +28,7 @@
 
 
 	<securecookie host="^(.*\.)?fossbazaar\.org$" name=".*" />
-	<securecookie host="^.*\.linuxfoundation\.org$" name=".*" />
+	<securecookie host="^(?!events\.).*\.linuxfoundation\.org$" name=".*" />
 	<!--	spdx.org wiki redirects to http, so we don't want to match wiki cookies	-->
 	<securecookie host="^\.spdx\.org$" name="^SESS.*$" />	
 	<securecookie host="^(.*\.)?yoctoproject\.org$" name=".*" />

@@ -1,7 +1,21 @@
 <!--
 	Nonfunctional subdomains:
 
+		- www.psych	(shows www.sas; mismatched, CN: *.sas.upenn.edu)
 		- www		("temporarily unavailable", akamai)
+
+
+	Partially covered subdomains:
+
+		- www.libary	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- www.college
+		- weblogin.pennkey
+		- fission.sas
+		- www.sas
 
 
 	^upenn.edu doesn't exist.
@@ -9,9 +23,15 @@
 -->
 <ruleset name="University of Pennsylvania (partial)">
 
-	<target host="medley.isc-seo.upenn.edu"/>
+	<target host="*.upenn.edu"/>
+		<exclusion pattern="^http://www\.library\.upenn\.edu/(?!images/|styles/)" />
 
-	<rule from="^http://medley\.isc-seo\.upenn\.edu/"
-		to="https://medley.isc-seo.upenn.edu/"/>
+
+	<!--securecookie host="^\.college\.upenn\.edu$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:weblogin\.pennkey|\.www\.sas)\.upenn\.edu$" name=".+" />
+
+
+	<rule from="^http://(www\.college|medley\.isc-seo|www\.library|weblogin\.pennkey|(?:fission|www)\.sas)\.upenn\.edu/"
+		to="https://$1.upenn.edu/"/>
 
 </ruleset>
