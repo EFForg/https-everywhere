@@ -179,6 +179,20 @@ def get_all_names_and_targets(d):
             targets.add(target)
     return names, targets
 
+def nomes(where=sys.argv[1:]):
+    """Returns generator to extract files from a list of files / directories"""
+    # TODO: extract files recursively to a certain depth?
+    orig = os.getcwd()
+    if not where: where=["."]
+    for i in where:
+        if os.path.isdir(i):
+            os.chdir(i)
+            for f in os.listdir("."):
+                if os.path.isfile(f): yield open(f)
+            os.chdir(orig)
+        elif os.path.isfile(i):
+            yield open(i)
+
 tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
          test_no_trailing_slash, test_lacks_target_host, test_bad_target_host,
@@ -190,7 +204,7 @@ all_targets = set()
 all_names = set()
 
 if multi_file_validate:
-    for fi in os.listdir("."):
+    for fi in nomes():
         try:
             tree = etree.parse(fi)
             if fi[-4:] != ".xml":
@@ -219,6 +233,7 @@ if multi_file_validate:
                 # pattern matches target
                 sys.stdout.write("warning: duplicate target: %s\n" % target)
             all_targets.add(target)
+        fi.close()
 else:
     fi = os.path.basename(args[0])
     if len(args) > 1:
