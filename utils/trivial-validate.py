@@ -15,8 +15,6 @@ longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups=", "dupdir="])
 ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
 dupdir = [val for opt, val in longargs if opt == "--dupdir"]
 
-multi_file_validate = True
-
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
     """The 'from' rule is not anchored to beginning of line using the ^ symbol."""
@@ -197,9 +195,12 @@ def nomes_all(where=sys.argv[1:]):
     """Returns generator to extract all files from a list of files/dirs"""
     if not where: where=['.']
     for i in where:
-        for r, d, f in os.walk(i):
-            for fi in map(lambda x: '/'.join([r, x]), f):
-                yield fi
+        if os.path.isfile(i):
+            yield i
+        elif os.path.isdir(i):
+            for r, d, f in os.walk(i):
+                for fi in map(lambda x: '/'.join([r, x]), f):
+                    yield fi
 
 tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
@@ -211,6 +212,7 @@ seen_file = False
 all_names, all_targets = get_all_names_and_targets(dupdir)
 
 for fi in nomes_all():
+   # print fi
     try:
         tree = etree.parse(fi)
         if fi[-4:] != ".xml":
