@@ -1,0 +1,41 @@
+<!--
+	For problematic rules, see Chicago_Tribune-problematic.xml.
+
+
+	For other Tribune coverage, see Tribune.xml.
+
+
+	CDN buckets:
+
+		- dev-chitribgreenguide.s3.amazonaws.com
+		- s3.amazonaws.com/prod-chitribgreenguide/
+
+
+	Nonfunctional subdomains:
+
+		- my	(504; akamai)
+		- touch	(refused)
+
+
+	Problematic subdomains:
+
+		- ^	(times out)
+		- cars	(works; mismatched, CN: members.chicagotribune.com)
+		- www	(works, akamai)
+
+-->
+<ruleset name="Chicago Tribune (partial)">
+
+	<target host="*.chicagotribune.com" />
+
+
+	<securecookie host="^myaccount2\.chicagotribune\.com$" name=".+" />
+
+
+	<rule from="^http://((?:www\.)?advertise|members|myaccount2)\.chicagotribune\.com/"
+		to="https://$1.chicagotribune.com/" />
+
+	<rule from="^http://touch\.chicagotribune\.com/"
+		to="https://my.chicagotribune.com/" />
+
+</ruleset>
