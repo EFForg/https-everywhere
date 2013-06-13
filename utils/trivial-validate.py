@@ -176,21 +176,6 @@ def get_all_names_and_targets(ds):
                 targets.add(target)
     return names, targets
 
-def nomes(where=sys.argv[1:]):
-    """Returns generator to extract files from a list of files / directories:
-        Note that this only works to depth 1 in directories"""
-    # TODO: extract files recursively to a certain depth?
-    orig = os.getcwd()
-    if not where: where=["."]
-    for i in where:
-        if os.path.isdir(i):
-            os.chdir(i)
-            for f in os.listdir("."):
-                if os.path.isfile(f): yield open(f)
-            os.chdir(orig)
-        elif os.path.isfile(i):
-            yield open(i)
-
 def nomes_all(where=sys.argv[1:]):
     """Returns generator to extract all files from a list of files/dirs"""
     if not where: where=['.']
