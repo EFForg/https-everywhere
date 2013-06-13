@@ -165,7 +165,7 @@ def get_all_names_and_targets(ds):
     targets = set()
     for d in ds:
         for fi in os.listdir(d):
-            fi = '/'.join([d, fi])
+            fi = os.path.join(d, fi)
             try:
                 tree = etree.parse(fi)
                 ruleset_name = tree.xpath("/ruleset/@name")[0]
@@ -185,8 +185,8 @@ def nomes_all(where=sys.argv[1:]):
             yield i
         elif os.path.isdir(i):
             for r, d, f in os.walk(i):
-                for fi in map(lambda x: '/'.join([r, x]), f):
-                    yield fi
+                for fi in f:
+                    yield os.path.join(r, fi)
 
 tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
