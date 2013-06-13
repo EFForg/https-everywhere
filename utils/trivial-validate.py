@@ -10,22 +10,10 @@ except ImportError:
     sys.stderr.write("** Please install libxml2 and lxml to permit validation!\n")
     sys.exit(0)
 
-longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups="])
+longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups=", "dupdir="])
 
 ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
-
-multi_file_validate = True
-
-if args:
-    if os.path.isfile(args[0]):
-        multi_file_validate = False
-    else:
-        try:
-            os.chdir(args[0])
-        except:
-            sys.stderr.write("could not chdir to %s\n" % args[0])
-            sys.stderr.write("usage: %s (<directoryname> or <file to validate><directory of all rulesets (optional)>\n" % sys.argv[0])
-            sys.exit(2)
+dupdir = [val for opt, val in longargs if opt == "--dupdir"]
 
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
@@ -164,20 +152,40 @@ def test_non_ascii(tree):
                 return False
     return True
 
-def get_all_names_and_targets(d):
+def test_ruleset_name(tree):
+    """Rule has name"""
+    if tree.xpath("/ruleset/@name"):
+        return True
+    else:
+        return False
+
+def get_all_names_and_targets(ds):
+    """extract unique names and targets from a list of dirs of xml files"""
     names = set()
     targets = set()
-    for fi in os.listdir(d):
-        try:
-            tree = etree.parse(fi)
-            ruleset_name = tree.xpath("/ruleset/@name")[0]
-            target_names = tree.xpath("/ruleset/target/@host")
-        except Exception:
-            continue
-        names.add(ruleset_name)
-        for target in target_names:
-            targets.add(target)
+    for d in ds:
+        for fi in os.listdir(d):
+            try:
+                tree = etree.parse(fi)
+                ruleset_name = tree.xpath("/ruleset/@name")[0]
+                target_names = tree.xpath("/ruleset/target/@host")
+            except Exception:
+                continue
+            names.add(ruleset_name)
+            for target in target_names:
+                targets.add(target)
     return names, targets
+
+def nomes_all(where=sys.argv[1:]):
+    """Returns generator to extract all files from a list of files/dirs"""
+    if not where: where=['.']
+    for i in where:
+        if os.path.isfile(i):
+            yield i
+        elif os.path.isdir(i):
+            for r, d, f in os.walk(i):
+                for fi in map(lambda x: '/'.join([r, x]), f):
+                    yield fi
 
 tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
@@ -186,58 +194,34 @@ tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_t
 
 failure = 0
 seen_file = False
-all_targets = set()
-all_names = set()
+all_names, all_targets = get_all_names_and_targets(dupdir)
 
-if multi_file_validate:
-    for fi in os.listdir("."):
-        try:
-            tree = etree.parse(fi)
-            if fi[-4:] != ".xml":
-                if tree.xpath("/ruleset"):
-                    sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
-                else:
-                    continue
-            seen_file = True
-        except Exception as oops:
-            if fi[-4:] != ".xml":
-                continue
-            failure = 1
-            sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
-        ruleset_name = tree.xpath("/ruleset/@name")[0]
-        if ruleset_name in all_names:
-            failure = 1
-            sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
-        all_names.add(ruleset_name)
-        for test in tests:
-            if not test(tree):
-                failure = 1
-                sys.stdout.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
-        for target in tree.xpath("/ruleset/target/@host"):
-            if target in all_targets and not any(ign.search(target) for ign in ignoredups):
-                # suppress warning about duplicate targets if an --ignoredups
-                # pattern matches target
-                sys.stdout.write("warning: duplicate target: %s\n" % target)
-            all_targets.add(target)
-else:
-    fi = os.path.basename(args[0])
-    if len(args) > 1:
-        all_names, all_targets = get_all_names_and_targets(args[1])
-    else:
-        sys.stdout.write("warning: pass a directory of existing rulesets as the second argument to check for duplicates \n")
+for fi in nomes_all():
+   # print fi
     try:
         tree = etree.parse(fi)
         if fi[-4:] != ".xml":
             if tree.xpath("/ruleset"):
                 sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
+            else:
+                continue
         seen_file = True
     except Exception as oops:
+        if fi[-4:] != ".xml":
+            continue
         failure = 1
         sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
+    if not tree.xpath("/ruleset"):
+        continue
+    if not test_ruleset_name(tree):
+        failure = 1
+        sys.stdout.write("failure: unnamed ruleset: %s\n" % fi)
+        continue
     ruleset_name = tree.xpath("/ruleset/@name")[0]
     if ruleset_name in all_names:
         failure = 1
         sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
+    all_names.add(ruleset_name)
     for test in tests:
         if not test(tree):
             failure = 1
@@ -247,6 +231,7 @@ else:
             # suppress warning about duplicate targets if an --ignoredups
             # pattern matches target
             sys.stdout.write("warning: duplicate target: %s\n" % target)
+        all_targets.add(target)
 
 if not seen_file:
    which = "specified" if args else "current"
