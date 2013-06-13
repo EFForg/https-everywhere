@@ -1,9 +1,103 @@
+<!--
+	CDN buckets:
+
+		- assets[67].ee.co.uk.s3-external-3.amazonaws.com
+		- business-orange-live-orangedigital.s3.amazonaws.com
+		- ee-cookies.s3.amazonaws.com
+		- e-gain.s3.amazonaws.com
+		- ee-nav.s3.amazonaws.com
+		- ee-static.s3.amazonaws.com
+		- ee-tagging.s3.amazonaws.com
+
+		- edev.i.lithium.com
+
+			- community
+
+		- c1400017.r17.cf3.rackcdn.com
+
+			- assets10
+
+		- c1400021.r21.cf3.rackcdn.com
+
+			- assets12
+
+		- c1400022.r22.cf3.rackcdn.com
+
+			- assets11
+
+		- c1400023.r23.stream.cf3.rackcdn.com
+
+			- assets13
+
+		- c1400024.ssl.cf3.rackcdn.com
+
+			- assets14
+
+
+	Nonfunctional subdomains:
+
+		- help		(times out)
+
+
+	Problematic subdomains:
+
+		- jobs		(works, self-signed)
+
+
+
+	Partially covered subdomains:
+
+		- business	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- apply
+		- assets[1-5]
+		- assets[67]	(→ s3-eu-west-1.amazonaws.com)
+		- assets1[012]	(→ ssl.cf3.rackcdn.com)
+		- broadband
+		- community
+		- explore
+		- my
+		- shop
+		- storefinder
+
+-->
 <ruleset name="Everything Everywhere (partial)">
 
-	<target host="explore.ee.co.uk" />
+	<target host="ee.co.uk" />
+	<target host="*.ee.co.uk" />
+		<exclusion pattern="^http://business\.ee\.co\.uk/(?!favicon\.ico|misc/|modules/|sites/)" />
 
 
-	<rule from="^http://explore\.ee\.co\.uk/"
-		to="https://explore.ee.co.uk/" />
+	<!--securecookie host="^\.ee\.co\.uk$" name=".+" /-->
+	<securecookie host="^(?:(?:apply|broadband|community|explore|my|shop|storefinder)\.)?ee\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://((?:apply|assets[1-5]|broadband|business|community|explore|my|shop|storefinder|www)\.)?ee\.co\.uk/"
+		to="https://$1ee.co.uk/" />
+
+	<rule from="^http://assets6\.ee\.co\.uk/"
+		to="https://s3-eu-west-1.amazonaws.com/assets6.ee.co.uk/" />
+
+	<rule from="^http://assets7\.ee\.co\.uk/"
+		to="https://s3-eu-west-1.amazonaws.com/assets7.ee.co.uk/" />
+
+	<rule from="^http://assets10\.ee\.co\.uk/"
+		to="https://c1400017.ssl.cf3.rackcdn.com/" />
+
+	<rule from="^http://assets11\.ee\.co\.uk/"
+		to="https://c1400022.ssl.cf3.rackcdn.com/" />
+
+	<rule from="^http://assets12\.ee\.co\.uk/"
+		to="https://c1400021.ssl.cf3.rackcdn.com/" />
+
+	<rule from="^http://assets13\.ee\.co\.uk/"
+		to="https://c1400023.ssl.cf3.rackcdn.com/" />
+
+	<rule from="^http://assets14\.ee\.co\.uk/"
+		to="https://c1400024.ssl.cf3.rackcdn.com/" />
 
 </ruleset>

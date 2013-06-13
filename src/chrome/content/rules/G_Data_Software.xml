@@ -1,0 +1,124 @@
+<!--
+	Av vendor. Includes plaintext from st.gdata-software.com
+
+
+	Nonfunctional domains:
+
+		- (www.)gdata.tw	(shows ZyWALL login, CN: usg50h_C86C870035B6)
+
+
+	Problematic domains:
+
+		- gdata.at *
+		- gdata.be *
+		- gdata.ch *
+		- gdata.de **
+		- gdata.es *
+		- gdata.fr *
+		- gdata.it *
+		- gdata.nl *
+		- gdata.pt *
+		- (www.)gdatasoftware.be *
+		- (www.)gdata.co.jp *
+		- gdatasoftware.co.uk *
+		- mx.gdatasoftware.com **
+		- gdata-software.com		(cert only matches www)
+		- (www.)gdatasoftware.com.br *
+		- (www.)gdatasoftware.in *
+		- (www.)gdatasoftware.mx *
+
+	* Mismatched
+	** Times out
+
+
+	Fully covered domains:
+
+		- (www.)gdata.at		(^ → www)
+		- (www.)gdata.be		(^ → www)
+		- (www.)gdata.ch		(^ → www)
+		- (www.)gdata.co.jp		(→ jp.gdatasoftware.com)
+		- (www.)gdata.de		(^ → www)
+		- (www.)gdata.es		(^ → www)
+		- (www.)gdata.fr		(^ → www)
+		- (www.)gdata.it		(^ → www)
+		- (www.)gdata.nl		(^ → www)
+		- (www.)gdata.pl
+		- static.gdata.pl
+		- (www.)gdata.pt		(^ → www)
+		- (www.)gdatasoftware.be	(→ www.gdata.be)
+		- (www.)gdatasoftware.co.uk	(^ → www)
+
+		- gdatasoftware.com subdomains:
+
+			- (www.)
+			- br
+			- in
+			- jp
+			- public
+			- ru
+			- static
+			- tr
+
+		- (www.)gdata-software.com	(^ → www)
+		- (www.)gdatasoftware.com.br	(→ br.gdatasoftware.com)
+		- (www.)gdatasoftware.in	(→ in.gdatasoftware.com)
+
+
+	Missing mx & tw coverage => partial
+
+-->
+<ruleset name="G Data Software (partial)">
+
+	<target host="gdata.*" />
+	<target host="www.gdata.*" />
+	<target host="gdata.co.jp" />
+	<target host="www.gdata.co.jp" />
+	<target host="*.gdata.pl" />
+	<target host="gdatasoftware.*" />
+	<target host="www.gdatasoftware.*" />
+	<target host="gdatasoftware.co.uk" />
+	<target host="www.gdatasoftware.co.uk" />
+	<target host="*.gdatasoftware.com" />
+	<target host="gdata-software.com" />
+	<target host="www.gdata-software.com" />
+	<target host="gdatasoftware.com.br" />
+	<target host="www.gdatasoftware.com.br" />
+
+
+	<securecookie host="^www\.gdata\.(?:at|be|ch|de|es|fr|it|nl|pt)$" name=".+" />
+	<securecookie host="^\.www\.gdata\.pl$" name=".+" />
+	<securecookie host="^www\.gdatasoftware\.co\.uk$" name=".+" />
+	<securecookie host="^(?:br|in|jp|ru|tr|www)\.gdatasoftware\.com$" name=".+" />
+	<securecookie host="^www\.gdata-software\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?gdata\.(at|be|ch|de|es|fr|it|nl|pt)/"
+		to="https://www.gdata.$1/" />
+
+	<rule from="^http://(?:www\.)?gdatasoftware\.be/"
+		to="https://www.gdata.be/" />
+
+	<!--	Protocol-relative links from jp.gdatasoftware.com:
+									-->
+	<rule from="^https?://(?:www\.)?gdata\.co\.jp/"
+		to="https://jp.gdatasoftware.com/" />
+
+	<rule from="^http://(static\.|www\.)?gdata\.pl/"
+		to="https://$1gdata.pl/" />
+
+	<rule from="^http://(?:www\.)?gdatasoftware\.co\.uk/"
+		to="https://www.gdatasoftware.co.uk/" />
+
+	<rule from="^http://((?:br|jp|public|ru|static|tr|www)\.)?gdatasoftware\.com/"
+		to="https://$1gdatasoftware.com/" />
+
+	<rule from="^http://(?:www\.)?gdata-software\.com/"
+		to="https://www.gdata-software.com/" />
+
+	<rule from="^http://(?:www\.)?gdatasoftware\.com\.br/"
+		to="https://br.gdatasoftware.com/" />
+
+	<rule from="^http://(?:www\.)?gdatasoftware\.in/"
+		to="https://in.gdatasoftware.com/" />
+
+</ruleset>

@@ -1,0 +1,47 @@
+<!--
+	For other Pivotal coverage, see Pivotal.xml.
+
+
+	CDN buckets:
+
+		- cloudfoundry.github.io
+
+			- docs
+
+		- i[012].wp.com/blog.cloudfoundry.com/
+	
+
+	Nonfunctional subdomains:
+
+		- docs		(404; mismatched, CN: *.github.com)
+		- status	(times out)
+
+
+	Problematic subdomains:
+
+		- blog		(wpengine)
+
+
+	Partially covered subdomains:
+
+		- blog		(→ i0.wp.com)
+		- support	(some pages redirect to http)
+
+-->
+<ruleset name="Cloud Foundry (partial)">
+
+	<target host="cloudfoundry.com" />
+	<target host="*.cloudfoundry.com" />
+		<exclusion pattern="^http://support\.cloudfoundry\.com/(?!generated/|system/)" />
+
+
+	<securecookie host="^core\.cloudfoundry\.com$" name=".+" />
+
+
+	<rule from="^http://blog\.cloudfoundry\.com/wp-content/(.+\.(?:jp|pn))g$"
+		to="https://i0.wp.com/blog.cloudfoundry.com/wp-content/$1g" />
+
+	<rule from="^http://((?:core|support|www)\.)?cloudfoundry\.com/"
+		to="https://$1cloudfoundry.com/" />
+
+</ruleset>

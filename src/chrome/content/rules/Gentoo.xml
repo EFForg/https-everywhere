@@ -1,61 +1,64 @@
 <!--
-	For problematic rules, see Gentoo-mismatches.xml.
-
-
 	Nonfunctional subdomains:
 
-		- anoncvs
-		- archives	(sec_error_reused_issuer_and_serial)
-		- bouncer	(times out)
-		- devmanual	(times out)
+		- anoncvs *
+		- bouncer *
 		- distfiles	(support varies between mirrors resolved to)
-		- foundation
-		- packages	(shows council-webapp)
-		- planet	(times out)
-		- security
-		- sources	(times out)
-		- torrent
-		- www
+		- packages	("Empty Page!", self-signed)
+		- sources *
+
+	* Times out
 
 
 	Fully covered subdomains:
 
+		- (www.)
+		- ads
+		- archives
 		- blogs
 		- bugs
 		- \d+.bugs
+		- council
 		- council-webapp
 		- dev
+		- devmanual
+		- foundation
 		- forums
+		- forums-lb
+		- forums-web[12]
 		- overlays
+		- git.overlays
+		- svn.overlays
 		- piwik
+		- planet
+		- security
+		- sidebar
 		- store
 		- wiki
 
+
+	Mixed images on planet from various domains.
+
 -->
-<ruleset name="Gentoo (partial)" platform="cacert">
+<ruleset name="Gentoo (partial) ">
 
+	<target host="gentoo.org" />
 	<target host="*.gentoo.org" />
-		<!--	git.overlays & sidebar are handled in Gentoo-mismatches.xml.	-->
-		<exclusion pattern="^http://(anoncvs|archives|blogs|bouncer|devmanual|distfiles|foundation|git\.overlays|packages|planet|security|sidebar|sources|torrent|www)\." />
-	<target host="*.bugs.gentoo.org" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.forums.gentoo.org" />
+		<exclusion pattern="^http://(?:anoncvs|bouncer|distfiles|packages|sources)\." />
 
 
-	<!--	Observed cookies:
+	<!--	Observed cookie subdomains:
 
+			- blogs
 			- bugs
 			- ^\.forums
 			- overlays
+			- wiki
 					-->
-	<securecookie host="^.*\.gentoo\.org$" name=".*" />
+	<securecookie host=".*\.gentoo\.org$" name=".+" />
 
 
-	<!--	This is what the server does	-->
-	<rule from="^https?://store\.gentoo\.org/"
-		to="https://www.cafepress.com/officialgentoo" />
-
-	<rule from="^http://((?:\d+\.)?[\w-]+)\.gentoo\.org/"
-		to="https://$1.gentoo.org/" />
+	<rule from="^http://([\w\.-]+\.)?gentoo\.org/"
+		to="https://$1gentoo.org/" />
 
 </ruleset>
