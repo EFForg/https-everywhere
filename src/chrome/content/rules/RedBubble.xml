@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- wac.0b02.edgecastcdn.net
+
+			- blog.redbubble.com
+
+
+	Nonfunctional domains:
+
+		- blog.redbubble.com		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- support.redbubble.com		(redirects to http; mismatched, CN: *.tenderapp.com)
+
+
+	Problematic domains:
+
+		- feedback.redbubble.com	(mismatched, CN: *.uservoice.com)
+
+
+	Partially covered domains:
+
+		- (www.)redbubble.com	(most pages redirect to http)
+
+
+	Fully covered domains:
+
+		- support.redbubble.com		(→ redbubble.tenderapp.com)
+		- assets[01].redbubble.net
+		- ih[0-3].redbubble.net
+
+-->
+<ruleset name="RedBubble (partial)">
+
+	<target host="redbubble.com" />
+	<target host="*.redbubble.com" />
+	<target host="*.redbubble.net" />
+
+
+	<rule from="^http://(www\.)?redbubble\.com/(auth/login|signup)(\?|/$)"
+		to="https://$1redbubble.com/$2$3" />
+
+	<rule from="^http://support\.redbubble\.com/"
+		to="https://redbubble.tenderapp.com/" />
+
+	<rule from="^http://(assets\d|ih\d)\.redbubble\.net/"
+		to="https://$1.redbubble.net/" />
+
+</ruleset>
