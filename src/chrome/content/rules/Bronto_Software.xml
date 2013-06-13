@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional bronto.com subdomains:
+
+		- (www.) *
+		- community *
+		- mkto		(redirects to app-c, marketo)
+
+	* 403, valid cert
+
+
+	Problematic domains:
+
+		- (www.)fyleio.com	(mismatched, CN: *.bronto.com)
+
+
+	Fully covered domains:
+
+		- bm23.com subdomains:
+
+			- appstatic
+			- hosting
+			- p
+
+		- bronto.com subdomains:
+
+			- app
+			- appstatic
+			- content\d*
+			- hosting
+			- static
+
+		- hosting.fyleio.com
+
+-->
+<ruleset name="Bronto Software (partial)">
+
+	<target host="*.bm23.com" />
+	<target host="*.bronto.com" />
+	<target host="*.fyleio.com" />
+
+
+	<securecookie host="^\.(?:bm23|fyleio)\.com$" name="^CISFOR$" />
+	<securecookie host="^\.app\.bronto\.com$" name=".+" />
+
+
+	<rule from="^http://(appstatic|hosting|p)\.bm23\.com/"
+		to="https://$1.bm23.com/" />
+
+	<rule from="^http://(app|appstatic|content\d*|hosting|static)\.bronto\.com/"
+		to="https://$1.bronto.com/" />
+
+	<rule from="^http://mkto\.bronto\.com/(cs|image|j|r)s/"
+		to="https://na-c.marketo.com/$1s/" />
+
+	<rule from="^http://(?:www\.)?fyleio\.com/(?:\?.*)?$"
+		to="https://app.bronto.com/login/index/login/" />
+
+	<rule from="^http://hosting\.fyleio\.com/"
+		to="https://hosting.fyleio.com/" />
+
+</ruleset>
