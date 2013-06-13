@@ -196,8 +196,6 @@ tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_t
 failure = 0
 seen_file = False
 all_names, all_targets = get_all_names_and_targets(dupdir)
-print dupdir
-print len(all_names), len(all_targets)
 
 for fi in nomes_all():
     try:
