@@ -5,13 +5,36 @@
 	blog.gravity.com is handled in WordPress-blogs.xml.
 
 
+	CDN buckets:
+
+		- cdn.insights.gravity.com.edgesuite.net
+		- rma-api.gravity.com.edgesuite.net
+		- i.api.grvcdn.com.edgesuite.net
+		- i.grvcdn.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- graph.gravity.com	(refused)
+
+
 	Problematic domains:
 
 		- gravity.com subdomains:
 
 			- ^		(cert only matches www)
+			- blog		(wordpress)
 			- insights	(mismatched, CN: analytics.gravity.com)
+			- cdn.insights *
+			- rma-api *
 			- www		(expired 2013-02-02)
+
+		- grvcdn.com subdomains:
+
+			- i.api *
+			- i *
+
+	* Akamai
 
 -->
 <ruleset name="Gravity (partial)">
@@ -20,11 +43,10 @@
 	<target host="i.api.grvcdn.com" />
 
 
-	<securecookie host="^analytics\.gravity\.com$" name=".*" />
+	<securecookie host="^analytics\.gravity\.com$" name=".+" />
 
 
-	<!--	rma-api & grvcdn: Akamai	-->
-	<rule from="^https?://(?:(?:rma-)?api\.gravity|i\.api\.grvcdn)\.com/"
+	<rule from="^http://(?:(?:rma-)?api\.gravity|i\.api\.grvcdn)\.com/"
 		to="https://api.gravity.com/" />
 
 	<rule from="^http://(?:analytic|insight)s\.gravity\.com/"
