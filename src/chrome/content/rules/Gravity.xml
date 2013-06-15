@@ -9,23 +9,19 @@
 
 		- gravity.com subdomains:
 
+			- ^		(cert only matches www)
 			- insights	(mismatched, CN: analytics.gravity.com)
+			- www		(expired 2013-02-02)
 
 -->
 <ruleset name="Gravity (partial)">
 
-	<target host="gravity.com" />
 	<target host="*.gravity.com" />
-	<target host="i.grvcdn.com" />
 	<target host="i.api.grvcdn.com" />
 
 
-	<securecookie host="^(analytics)?\.gravity\.com$" name=".*" />
+	<securecookie host="^analytics\.gravity\.com$" name=".*" />
 
-
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?gravity\.com/"
-		to="https://www.gravity.com/" />
 
 	<!--	rma-api & grvcdn: Akamai	-->
 	<rule from="^https?://(?:(?:rma-)?api\.gravity|i\.api\.grvcdn)\.com/"
@@ -33,8 +29,5 @@
 
 	<rule from="^http://(?:analytic|insight)s\.gravity\.com/"
 		to="https://insights.gravity.com/" />
-
-	<rule from="^https?://i\.grvcdn\.com/gravity\.com/"
-		to="https://www.gravity.com/" />
 
 </ruleset>
