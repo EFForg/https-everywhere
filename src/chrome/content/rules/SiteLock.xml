@@ -1,12 +1,21 @@
+<!--
+	Problematic subdomains:
+
+		- blog		(some pages redirect to http:.../$, valid cert)
+
+-->
 <ruleset name="SiteLock (partial)">
 
+	<target host="sitelock.com"/>
 	<target host="*.sitelock.com"/>
+		<exclusion pattern="^http;//blog\.sitelock\.com/(?!feed/)" />
 
 
-	<securecookie host="^\.sitelock\.com$" name="^btrack$" />
+	<securecookie host="^\.sitelock\.com$" name="^(?:btrack|___utm\w+)$" />
+	<securecookie host="^(?:admin|mapi|secure|wiki|www)\.sitelock\.com$" name=".+" />
 
 
-	<rule from="^http://shield\.sitelock\.com/"
-		to="https://shield.sitelock.com/"/>
+	<rule from="^http://((?:admin|blog|mapi|secure|shield|wiki|www)\.)?sitelock\.com/"
+		to="https://$1sitelock.com/"/>
 
 </ruleset>
