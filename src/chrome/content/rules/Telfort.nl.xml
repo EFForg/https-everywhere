@@ -7,30 +7,31 @@
 		- blog
 		- klantenservice.internet	(times out)
 
+
+	Problematic domains:
+
+		- (www.)tiscali.nl	(mismatched, CN: *.telfort.nl)
+
 -->
 <ruleset name="Telfort (partial)">
 
 	<target host="telfort.nl" />
-	<!--	* for cross-domain cookies.	-->
 	<target host="*.telfort.nl" />
+		<!--
+			At least some pages redirect to http:
+								-->
+		<exclusion pattern="^http://internet\.telfort\.nl/(?!5/css/|5/gfx/)" />
 	<target host="tiscali.nl" />
 	<target host="www.tiscali.nl" />
 
 
-	<securecookie host="^([^i]\w*)?\.telfort\.nl$" name=".*" />
+	<securecookie host="^(?!internet\.).*\.telfort\.nl$" name=".+" />
 
 
-	<rule from="^http://((?:forum|orderstatus|shop|webmail|www)\.)?telfort\.nl/"
+	<rule from="^http://((?:forum|internet|orderstatus|shop|webmail|www)\.)?telfort\.nl/"
 		to="https://$1telfort.nl/" />
 
-	<!--	At least some pages redirect to http.	-->
-	<rule from="^http://internet\.telfort\.nl/5/(css|gfx)/"
-		to="https://internet.telfort.nl/5/$1/" />
-
-	<!--	- Cert only matches (*.)telfort.nl
-		- Redirects like so
-				-->
-	<rule from="^https?://(?:www\.)?tiscali\.nl/"
+	<rule from="^http://(?:www\.)?tiscali\.nl/"
 		to="https://www.telfort.nl/" />
 
 </ruleset>
