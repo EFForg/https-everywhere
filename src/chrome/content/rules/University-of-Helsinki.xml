@@ -9,11 +9,27 @@
 		- www-db.helsinki.fi		(times out)
 		- www.helsinki200.fi
 
+
+	Problematic subdomains:
+
+		- cs	(cert only matches www.cs)
+
+
+	Fully covered subdomains:
+
+		- (www.)cs	(^ → www)
+
+
+	Mixed image on www.cs from www.informatics-europe.org
+
 -->
 <ruleset name="University of Helsinki (partial)">
 
 	<target host="helsinki.fi" />
 	<target host="*.helsinki.fi" />
+
+
+	<!--securecookie host="^\.cs\.helsinki\.fi$" name="^SESS\w{32}$" /-->
 
 
 	<!--	Cert doesn't match !www.	-->
@@ -28,5 +44,8 @@
 
 	<rule from="^http://(alma|alumniverkosto|blogs|www-db2)\.helsinki\.fi/"
 		to="https://$1.helsinki.fi/" />
+
+	<rule from="^http://(?:www\.)?cs\.helsinki\.fi/"
+		to="https://www.cs.helsinki.fi/" />
 
 </ruleset>
