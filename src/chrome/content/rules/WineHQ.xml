@@ -1,9 +1,29 @@
-<<ruleset name="WineHQ (partial)" default_off="self-signed">
+<!--
+	Nonfunctional subdomains:
 
-	<target host="test.winehq.org" />
+		- wiki		(shows lattica.com; mismatched, CN: lattica.com)
 
 
-	<rule from="^http://test\.winehq\.org/"
-		to="https://test.winehq.org/" />
+	Fully covered subdomains:
+
+		- (www.)
+		- appdb
+		- bugs
+		- forum
+		- source
+		- test
+
+-->
+<ruleset name="WineHQ (partial)" default_off="self-signed">
+
+	<target host="winehq.org" />
+	<target host="*.winehq.org" />
+
+
+	<securecookie host="^(?:appdb|\.bugs|\.forum)\.winehq\.org$" name=".+" />
+
+
+	<rule from="^http://((?:appdb|bugs|forum|source|test|www)\.)?winehq\.org/"
+		to="https://$1winehq.org/" />
 
 </ruleset>
