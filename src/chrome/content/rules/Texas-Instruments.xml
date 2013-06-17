@@ -26,6 +26,11 @@
 		- www-k.ext	(→ www)
 
 
+	Fully covered subdomains:
+
+		- fedid.ext
+
+
 	Mixed images from reviews.ti.com on www.ti.com
 
 -->
@@ -33,24 +38,29 @@
 
 	<target host="ti.com" />
 	<target host="*.ti.com" />
-		<exclusion pattern="^http://e2e\.ti\.com/(?!.+/css/|cfs-file\.ashx|resized-image\.ashx|[tT]emes/)" />
+		<exclusion pattern="^http://e2e\.ti\.com/(?!.+/css/|cfs-file\.ashx|favicon\.ico|resized-image\.ashx|[tT]hemes/)" />
 
 
 	<!--	Cookie domains:
 
 			- .
+			- e2e
 			- estore
 			- focus
 			- myportal
 			- www
-				-->
-	<securecookie host="^(?!e2e\.).*\.ti\.com$" name=".+" />
+
+		Set by myportal, might be used as login
+		on e2e or othe unsecurable subdomains:
+
+	<securecookie host="^\.ti\.com$" name="^iatc$" /-->
+	<securecookie host="^(?!e2e\.).+\.ti\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?ti\.com/"
 		to="https://www.ti.com/" />
 
-	<rule from="^http://(commerce|e2e|estore|focus|my|myportal)\.ti\.com/"
+	<rule from="^http://(commerce|e2e|estore|fedid\.ext|focus|my|myportal)\.ti\.com/"
 		to="https://$1.ti.com/" />
 
 	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/americas\.htm(?:\?.*)?$"

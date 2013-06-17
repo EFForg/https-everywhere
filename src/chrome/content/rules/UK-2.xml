@@ -1,0 +1,54 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)moreuk2.net	(http reply)
+		- mirrors.uk2.net	(refused)
+		- status.uk2.net	(shows secure; mismatched, CN: secure.us2.net)
+
+
+	Problematic domains:
+
+		- blog.uk2.net		(refused)
+		- www.mail.uk2.net	(cert only matches ^mail)
+
+
+	Fully covered domains:
+
+		- uk2.net subdomains:
+
+			- (www.)
+			- blog		(→ www)
+			- controlpanel
+			- static.controlpanel
+			- kb
+			- (www.)mail	(www → ^)
+			- support
+
+		- (www.)uk2img.net
+
+-->
+<ruleset name="UK-2 (partial)">
+
+	<target host="uk2.net" />
+	<target host="*.uk2.net" />
+	<target host="uk2img.net" />
+	<target host="www.uk2img.net" />
+
+
+	<securecookie host="^\.uk2\.net$" name="^controlpanel$" />
+	<securecookie host="^(?:mail|support)\.uk2\.net$" name=".+" />
+
+
+	<rule from="^http://((?:(?:static\.)?controlpanel|kb|support|www)\.)?uk2\.net/"
+		to="https://$1uk2.net/" />
+
+	<rule from="^http://blog\.uk2\.net/"
+		to="https://www.uk2.net/blog/" />
+
+	<rule from="^http://(?:www\.)?mail\.uk2\.net/"
+		to="https://mail.uk2.net/" />
+
+	<rule from="^http://(www\.)?uk2img\.net/"
+		to="https://$1uk2img.net/" />
+
+</ruleset>

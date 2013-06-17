@@ -1,0 +1,63 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- admissions *
+		- advising *
+		- financialaid *
+		- its *
+		- microbes	(shows archaea; expired 2009-02-12, CN: localhost.localdomain)
+		- news *
+		- opers1 *
+		- reg *
+		- registrar *
+		- sbs *
+		- static *
+		- studentservices *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- archaea		(works; expired 2009-02-12, CN: localhost.localdomain)
+		- email			(interrupted)
+		- hgdownload.cse	(works; CN: hgdownload)
+		- soe			(refused)
+
+
+	Fully covered subdomains:
+
+		- cruzid
+		- cancer2.cse
+		- genome-cancer.cse
+		- email		(→ mail.google.com)
+		- (www.)genome
+		- genome-cancer
+		- my
+		- (www.)soe	(^ → www)
+		- cbse.soe
+		- www1
+
+-->
+<ruleset name="University of California, Santa Cruz (partial)">
+
+	<target host="*.ucsc.edu" />
+
+
+	<!--securecookie host="^\.ucsc\.edu$" name="^(?:ais-prod-dmz-4-1610-PORTAL-PSJSESSIONID|SESS\w{32})$" /-->
+	<securecookie host="^(?:cruzid|(?:cancer2|genome-cancer)\.cse|www1)\.ucsc\.edu$" name=".+" />
+
+
+	<rule from="^http://(cruzid|(?:cancer2|genome-cancer)\.cse|(?:www\.)?genome|genome-cancer|my|cbse\.soe|www1)\.ucsc\.edu/"
+		to="https://$1.ucsc.edu/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://email\.ucsc\.edu/.*"
+		to="https://mail.google.com/a/ucsc.edu" />
+
+	<rule from="^http://(?:www\.)?soe\.ucsc\.edu/"
+		to="https://www.soe.ucsc.edu/" />
+
+</ruleset>

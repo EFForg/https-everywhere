@@ -1,9 +1,22 @@
-<ruleset name="Plone.org">
-	<target host="plone.org" />
-	<target host="www.plone.org" />
-	<!-- products does not display over https. returns error 500. -->
-	<exclusion pattern="^http://(?:www\.)?plone\.org/products"/>
-	<rule from="^http://www\.plone\.org/" to="https://www.plone.org/"/>
-	<rule from="^http://plone\.org/" to="https://plone.org/"/>
-</ruleset>
+<!--
+	Nonfunctional subdomains:
 
+		- planet	(403, valid cert)
+
+
+	Mixed image from planet on dev
+
+-->
+<ruleset name="Plone.org">
+
+	<target host="plone.org" />
+	<target host="*.plone.org" />
+
+
+	<securecookie host="^(?:dev)?\.plone\.org$" name=".+" />
+
+
+	<rule from="^http://((?:dev|staging|svn|www)\.)?plone\.org/"
+		to="https://$plone.org/" />
+
+</ruleset>

@@ -1,9 +1,20 @@
+<!--
+	Problematic domains:
+
+		- codeweavers.fr	(cert only matches www)
+
+-->
 <ruleset name="CodeWeavers (partial)">
 
-	<target host="codeweavers.com"/>
-	<target host="www.codeweavers.com"/>
+	<target host="codeweavers.*" />
+	<target host="www.codeweavers.*" />
+		<exclusion pattern="^http://(?:www\.)?codeweavers\.(?:com|fr)/(?!(?:about/\w+|login|services/\w+|store)(?:$|\?|/)|css/|images/|js/)" />
 
-	<rule from="^http://(www\.)?codeweavers\.com/(css|images|login)/"
-		to="https://www.codeweavers.com/$2/"/>
+
+	<rule from="^http://(www\.)?codeweavers\.com/"
+		to="https://$1codeweavers.com/" />
+
+	<rule from="^http://(?:www\.)?codeweavers\.fr/"
+		to="https://www.codeweavers.fr/" />
 
 </ruleset>
