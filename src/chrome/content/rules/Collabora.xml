@@ -1,31 +1,45 @@
 <!--
 	Nonfunctional:
 
-		- cgit.collabora.com			(cert: www.collabora.com, trac.collabora.co.uk; self-signed; shows dhansak.collabora.co.uk data)
+		- cgit.collabora.com *
+		- git.collabora.com *
 
-		- planet.collabora.co(m|.co.uk)		(ditto; .co.uk redirects to .com via http)
+		- planet.collabora.co(m|.co.uk) *
 
-		- bzr.collabora.co.uk			(ditto)
+		- bzr.collabora.co.uk *
+		- cgit.collabora.co.uk *
+		- git.collabora.co.uk *
+
+	* Shows dhansak.collabora.co.uk; CN: www.collabora.co.uk
 
 
 	Mismatches:
 
-		- dhansak.collabora.co.uk	(cert: www.collabora.com; trac.collabora.co.uk; self-signed)
+		- dhansak.collabora.co.uk *
 
-		- monkey.collabora.co.uk	(cert: ditto; self-signed; appears identical to dhansak.collabora.co.uk)
+		- monkey.collabora.co.uk *
 
-		- trac.collabora.co.uk		(cert: dhansak.collabora.co.uk; self-signed)
+	* Works; mismatched, CN: www.collabora.co.uk
 
 
 	See Collabora-mismatches.xml for problematic rules.
 
+
+	Fully covered domains:
+
+		- (www.)collabora.co.uk
+		- trac.collabora.co.uk
+		- (www.)collabora.com
+
 -->
 <ruleset name="Collabora (partial)">
 
+	<target host="collabora.co.uk"/>
+	<target host="*.collabora.co.uk"/>
 	<target host="collabora.com"/>
 	<target host="www.collabora.com"/>
 
-	<rule from="^http://(www\.)?collabora\.com/"
-		to="https://$1collabora.com/"/>
+	<rule from="^http://(trac\.|www\.)?collabora\.co(\.uk|m)/"
+		to="https://$1collabora.co$2/"/>
 
 </ruleset>
