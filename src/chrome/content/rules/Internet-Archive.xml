@@ -8,15 +8,17 @@
 
 	<target host="archive.org" />
 	<target host="*.archive.org" />
-	<target host="*.us.archive.org" />
+		<exclusion pattern="^http://(?:graphite|s3)\.us\.archive\.org/" />
+		<!--
+			The rule does not handle web anyway:
+
+		<exclusion pattern="^http://web\.archive\.org/" /-->
 
 
-	<securecookie host="^\.archive\.org$" name=".*" />
+	<securecookie host="^\.archive\.org$" name=".+" />
 
-	<exclusion pattern="^http://web\.archive\.org/" />
-	<exclusion pattern="^http://s3\.us\.archive\.org/"/>
-	<exclusion pattern="^http://graphite\.us\.archive\.org/" />
-	<rule from="^http://((?:\w+)\.us\.|www\.)?archive\.org/"
+
+	<rule from="^http://(\w+\.us\.|www\.)?archive\.org/"
 		to="https://$1archive.org/" />
 
 </ruleset>
