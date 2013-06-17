@@ -47,6 +47,19 @@ def test_bad_regexp(tree):
             return False
     return True
 
+def test_missing_to(tree):
+
+    # Rules that are terminated before setting 'to'.
+    # These cases are probably either due to a misplaced
+    # rule end or intended to be different elements.
+    """Rule is missing a 'to' value."""
+    for rule in tree.xpath("/ruleset/rule"):
+	if not rule.get("to"):
+            sys.stdout.write("warning: 'to' attribute missing in %s. " %fi)
+            sys.stdout.write("Misplaced end or misnamed element?\n")
+            return False
+    return True
+
 def test_unescaped_dots(tree):
     # Rules containing unescaped dots outside of brackets and before slash.
     # Note: this is meant to require example\.com instead of example.com,
@@ -92,11 +105,11 @@ def test_unencrypted_to(tree):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-	    sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
-	    sys.stdout.write("to http.\n")
+            sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
+            sys.stdout.write("to http.\n")
         elif to[:5] == "http:":
-	    sys.stdout.write("error: rule in %s redirects to http and " % fi)
-	    sys.stdout.write("downgrade attribute not specified.\n")
+            sys.stdout.write("error: rule in %s redirects to http and " % fi)
+            sys.stdout.write("downgrade attribute not specified.\n")
             return False
     return True
 
@@ -140,7 +153,7 @@ def test_duplicated_target_host(tree):
     targets = tree.xpath("/ruleset/target/@host")
     return len(set(targets)) == len(targets)
 
-printable_characters = set(map(chr, xrange(32, 127)))
+printable_characters = set(map(chr, list(range(32, 127))))
 
 def test_non_ascii(tree):
     # Rules containing non-printable characters.
@@ -166,7 +179,7 @@ def get_all_names_and_targets(d):
             targets.add(target)
     return names, targets
 
-tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots,
+tests = [test_not_anchored, test_bad_regexp, test_unescaped_dots, test_missing_to,
          test_space_in_to, test_unencrypted_to, test_backslash_in_to,
          test_no_trailing_slash, test_lacks_target_host, test_bad_target_host,
          test_duplicated_target_host, test_non_ascii]
@@ -186,7 +199,7 @@ if multi_file_validate:
                 else:
                     continue
             seen_file = True
-        except Exception, oops:
+        except Exception as oops:
             if fi[-4:] != ".xml":
                 continue
             failure = 1
@@ -218,7 +231,7 @@ else:
             if tree.xpath("/ruleset"):
                 sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
         seen_file = True
-    except Exception, oops:
+    except Exception as oops:
         failure = 1
         sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
     ruleset_name = tree.xpath("/ruleset/@name")[0]
