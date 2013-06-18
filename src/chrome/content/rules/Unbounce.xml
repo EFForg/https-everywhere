@@ -1,0 +1,53 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/assets.unbounce.com/
+		- d2xxq4ijfwetlm.cloudfront.net
+		- unbouncepages-com.s3.amazonaws.com | d9hhrg4mnvzow.cloudfront.net
+		- unbounce.wpengine.netdna-cdn.com
+
+
+	Problematic subdomains:
+
+		- (www.)	(wpengine)
+		- assets	(amazonaws)
+
+
+	Partially covered domains:
+
+		- (www.)unbounce.com	(→ ubounce.wpengine.com)
+
+
+	Fully covered domains:
+
+		- ubounce.wpengine.netdna-cdn.com	(→ ubounce.wpengine.com)
+
+		- unbounce.com subdomains:
+
+			- app
+			- assets		(→ s3.amazonaws.com)
+			- go
+
+-->
+<ruleset name="Unbounce (partial)">
+
+	<target host="ubounce.wpengine.netdna-cdn" />
+	<target host="unbounce.com" />
+	<target host="*.unbounce.com" />
+		<exclusion pattern="^http://(?:www\.)?ubounce\.com/(?!\?mcsf_action=main_css|photos/|wp-content/)" />
+
+
+	<!--securecookie host="^\.unbounce\.com$" name="^_lp-webapp_session$" /-->
+	<securecookie host="^go\.unbounce\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ubounce(?:\.wpengine\.netdna-cdn)?\.com/"
+		to="https://unbounce.wpengine.com/" />
+
+	<rule from="^http://(app|go)\.unbounce\.com/"
+		to="https://$1.unbounce.com/" />
+
+	<rule from="^http://assets\.unbounce\.com/"
+		to="https://s3.amazonaws.com/assets.unbounce.com/" />
+
+</ruleset>
