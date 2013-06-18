@@ -1,15 +1,24 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches *.gemius.pl)
+
+-->
 <ruleset name="Gemius">
-	<target host="*.hit.gemius.pl" />
-	<target host="www.gemius.pl" />
+
 	<target host="gemius.pl" />
+	<target host="*.gemius.pl" />
+
 
 	<securecookie host="^(?:\.hit|www)\.gemius\.pl$" name=".+" />
 
-	<!-- Cert only matches *.gemius.pl -->
 
-	<rule from="^https?://(?:www\.)?gemius\.pl/" to="https://www.gemius.pl/" />
+	<rule from="^http://(?:www\.)?gemius\.pl/"
+		to="https://www.gemius.pl/" />
 
-	<!-- Included on 3rd-party websites -->
+	<!--	Web bugs:
+				-->
+	<rule from="^http://([^@:/]+)\.hit\.gemius\.pl/"
+		to="https://$1.hit.gemius.pl/" />
 
-	<rule from="^http://([^@:/]*)\.hit\.gemius\.pl/" to="https://$1.hit.gemius.pl/" />
 </ruleset>
