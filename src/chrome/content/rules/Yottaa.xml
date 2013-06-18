@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+		- yottaa1.web12.hubspot.com
+		- cdn-eu-e-[01].yottaa.net/50577ae476111c7215066d3a/www.yottaa.com/
+
+
+	Nonfunctional domains:
+
+		- yottaa.com		(times out)
+		- www.yottaa.com	(redirects to http:.../$; mismatched, CN: *.yotta.net)
+
+
+	Problematic domains:
+
+		- yottaa.net		(works; mismatched, CN: yotta.com)
+		- www.yotta.net		(works, expired 2012-01-08)
+
+
+	Fully covered domains:
+
+		- yottaa.com subdomains:
+
+			- api
+			- api-dev
+			- api-dev-new
+			- apps
+			- apps-dev
+			- apps-dev-new
+
+		- cdn-eu.yottaa.net
+
+-->
+<ruleset name="Yottaa (partial)">
+
+	<target host="*.yottaa.com" />
+	<target host="cdn-eu.yottaa.net" />
+
+
+	<securecookie host="^apps(?:-dev|-dev-new)?\.yottaa\.com$" name=".+" />
+
+
+	<rule from="^http://ap(i|ps)(-dev|-dev-new)?\.yottaa\.com/"
+		to="https://ap$1$2.yottaa.com/" />
+
+	<rule from="^http://cdn-eu\.yottaa\.net/"
+		to="https://cdn-eu.yottaa.net/" />
+
+</ruleset>

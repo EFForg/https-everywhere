@@ -1,0 +1,40 @@
+<!--
+	For other Wolfram Research coverage, see Wolfram.com.xml.
+
+
+	CDN buckets:
+
+		- wac.36f4.edgecastcdn.net/0036F4/
+
+
+	Nonfunctional wolframalpha.com subdomains:
+
+		- blog *
+		- community	(refused)
+		- products *
+
+	* Times out
+
+-->
+<ruleset name="Wolfram Alpha (partial)" platform="mixedcontent">
+
+	<target host="wolframalpha.com" />
+	<target host="*.wolframalpha.com" />
+	<target host="www.wolframcdn.com" />
+		<!--
+			These break search:
+								-->
+		<exclusion pattern="^http://www\d\w\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
+
+
+	<!--securecookie host="^(.*\.)?wolframalpha\.com$" name=".+"/-->
+	<securecookie host="^(?:volunteer|www)\.wolframalpha\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?wolfram(alpha|cdn)\.com/"
+		to="https://www.wolfram$1.com/" />
+
+	<rule from="^http://(volunteer|www\d\w?)\.wolframalpha\.com/"
+		to="https://$1.wolframalpha.com/" />
+
+</ruleset>

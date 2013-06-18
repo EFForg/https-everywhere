@@ -1,32 +1,49 @@
 <!--
-	Nonfunctional:
-
-		- cgit.collabora.com			(cert: www.collabora.com, trac.collabora.co.uk; self-signed; shows dhansak.collabora.co.uk data)
-
-		- planet.collabora.co(m|.co.uk)		(ditto; .co.uk redirects to .com via http)
-
-		- bzr.collabora.co.uk			(ditto)
+	For problematic rules, see Collabora-mismatches.xml.
 
 
-	Mismatches:
+	Nonfunctional domains:
 
-		- dhansak.collabora.co.uk	(cert: www.collabora.com; trac.collabora.co.uk; self-signed)
+		- collabora.co.uk subdomains:
 
-		- monkey.collabora.co.uk	(cert: ditto; self-signed; appears identical to dhansak.collabora.co.uk)
+			- bzr *
+			- cgit *
+			- git *
+			- planet *
 
-		- trac.collabora.co.uk		(cert: dhansak.collabora.co.uk; self-signed)
+		- collabora.com subdomains:
+
+			- cgit *
+			- git *
+			- planet *
+
+	* Shows dhansak.collabora.co.uk; CN: www.collabora.co.uk
 
 
-	See Collabora-mismatches.xml for problematic rules.
+	Problematic domains:
+
+		- dhansak.collabora.co.uk *
+		- monkey.collabora.co.uk *
+
+	* Works; mismatched, CN: www.collabora.co.uk
+
+
+	Fully covered domains:
+
+		- (www.)collabora.co.uk
+		- trac.collabora.co.uk
+		- (www.)collabora.com
 
 -->
 <ruleset name="Collabora (partial)">
 
-	<target host="collabora.com"/>
-	<target host="www.collabora.com"/>
+	<target host="collabora.co.uk" />
+	<target host="*.collabora.co.uk" />
+	<target host="collabora.com" />
+	<target host="www.collabora.com" />
 
-	<!--	Cert doesn't match !www		-->
-	<rule from="^http://(?:www\.)?collabora\.com/"
-		to="https://www.collabora.com/"/>
+
+	<rule from="^http://(trac\.|www\.)?collabora\.co(\.uk|m)/"
+		to="https://$1collabora.co$2/" />
 
 </ruleset>
