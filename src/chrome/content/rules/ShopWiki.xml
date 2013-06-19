@@ -4,16 +4,34 @@
 
 	CDN buckets:
 
+		- i.s.shopwiki.com.cdngc.net
+
+			- si[0-5].shopwiki.com
+
 		- d2wh0l1jxh2l45.cloudfront.net
 			- static2.shopwiki.com
 
 		- Possible bucket at https://s3.amazonaws.com/shopwiki/
 
+		- shopwiki.co.uk.edgesuite.net
+
+			- l.shwcd.com
+			- s.shwcd.com
+
 
 	Nonfunctional subdomains:
 
 		- i.s		(reset, CN: ssl2.cdngc.net)
-		- static	(403, CN: ssl2.cdngc.net)
+		- si0		(403; mismatched, CN: support2.cdnetworks.net)
+		- si[134]	(403; mismatched, CN: ssl2.cdngc.net)
+		- static	(403, CN: support4.cdnetworks.net)
+
+		- l.shwcd.com	(shows shopwiki.com, akamai)
+
+
+	Problematic domains:
+
+		- s.shwcd.com	(works, akamai)
 
 -->
 <ruleset name="ShopWiki (partial)" platform="mixedcontent">
@@ -25,10 +43,13 @@
 	<securecookie host="^.*\.shopwiki\.com$" name=".+" />
 
 
-	<rule from="^http://((?:staticssl|wiki|www)\.)?shopwiki\.com/"
+	<rule from="^http://((?:redir|staticssl|wiki|www)\.)?shopwiki\.com/"
 		to="https://$1shopwiki.com/" />
 
 	<rule from="^https?://static2\.shopwiki\.com/"
 		to="https://d2wh0l1jxh2l45.cloudfront.net/" />
+
+	<rule from="^http://s\.shwcd\.com/"
+		to="https://www.shopwiki.com/" />
 
 </ruleset>
