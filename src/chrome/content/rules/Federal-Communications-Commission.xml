@@ -4,12 +4,32 @@
 
 	Nonfunctional subdomains:
 
-		- apps		(404)
 		- hraunfoss	(shows fjallfoss, CN: fjallfoss.fcc.gov)
+
+
+	Problematic subdomains:
+
+		- ^		(shows transition; mismatched, CN: transition.fcc.gov)
 		- publicsafety	(times out)
-		- reboot
-		- transition	(cert: licencing.fcc.gov; shows another domain's data;
-					after rewriting to www, server redirects back)
+		- reboot *
+
+	* Times out
+
+
+	Partially covered subdomains:
+
+		- publicsafety	(→ www)
+		- reboot	(→ www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- apps
+		- fjallfoss
+		- licensing
+		- stations
+		- transition
 
 -->
 <ruleset name="Federal Communications Commission (partial)">
@@ -21,11 +41,19 @@
 	<securecookie host="^.*\.fcc\.gov$" name=".*" />
 
 
-	<!--	Cert: licensing.fcc.gov	-->
 	<rule from="^https?://fcc\.gov/"
 		to="https://www.fcc.gov/" />
 
-	<rule from="^http://(fjallfoss|licensing|www)\.fcc\.gov/"
+	<rule from="^http://(apps|fjallfoss|licensing|stations|transition|www)\.fcc\.gov/"
 		to="https://$1.fcc.gov/" />
+
+	<rule from="^http://publicsafety\.fcc\.gov/(?:\?.*)?$"
+		to="https://www.fcc.gov/pshs/" />
+
+	<rule from="^http://reboot\.fcc\.gov/about-reboot$"
+		to="https://www.fcc.gov/about" />
+
+	<rule from="^http://reboot\.fcc\.gov/data(?:\?.*)?$"
+		to="https://www.fcc.gov/data" />
 
 </ruleset>
