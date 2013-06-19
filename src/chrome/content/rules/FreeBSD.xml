@@ -1,9 +1,50 @@
+<!--
+	Credit: https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001629.html
+
+
+	Nonfunctional subdomains:
+
+		- ftp		(times out)
+		- portsmon *
+		- tinderbox *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^		(interrupted)
+		- docs *
+		- portaudit *
+		- security *
+
+	* Works; mismatched, CN: www.freebsd.org
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- forums
+		- lists
+		- security	(→ www)
+
+-->
 <ruleset name="FreeBSD (partial)" default_off="self-signed">
 
-	<target host="lists.freebsd.org" />
+	<target host="freebsd.org" />
+	<target host="*.freebsd.org" />
 
 
-	<rule from="^http://lists\.freebsd\.org/"
-		to="https://lists.freebsd.org/" />
+	<securecookie host="^forums\.freebsd\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?freebsd\.org/"
+		to="https://www.freebsd.org/" />
+
+	<rule from="^http://(forums|lists|svnweb|wiki)\.freebsd\.org/"
+		to="https://$1.freebsd.org/" />
+
+	<rule from="^http://security\.freebsd\.org/"
+		to="https://www.freebsd.org/security/" />
 
 </ruleset>
