@@ -72,7 +72,7 @@ preloads = [x.split('&quot;')[1] for x in preloads]
 preloads = [re.sub('\\\\[0-9]*', '.', x) for x in preloads]
 preloads = [re.sub('^\.', '', x) for x in preloads]
 
-print("Found %d rules total in HSTS preloads list" % len(preloads))
+print("Found %d targets total in HSTS preloads list" % len(preloads))
 
 #rules = [open(x).read() for x in glob.glob("src/chrome/content/rules/*.xml")]
 
