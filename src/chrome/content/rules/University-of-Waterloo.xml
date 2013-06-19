@@ -1,10 +1,48 @@
+<!--
+	Problematic subdomains:
+
+		- campaign	(refused)
+		- development	(refused)
+		- cecs		(shows info; mismatched, CN: uwaterloo.ca)
+		- info		(redirects to ^.../$, valid cert)
+
+
+	Partially covered subdomains:
+
+		- campaign	(→ ^)
+		- info		(→ ^)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cecs			(→ ^)
+		- cecspilot.cecssys
+		- (www.)cs
+		- csclub
+		- development		( → ^)
+
+-->
 <ruleset name="University of Waterloo (partial)">
 
-	<target host="csclub.uwaterloo.ca"/>
-	<target host="cs.uwaterloo.ca"/>
-	<target host="www.cs.uwaterloo.ca"/>
+	<target host="uwaterloo.ca"/>
+	<target host="*.uwaterloo.ca"/>
 
-	<rule from="^http://(csclub|(www\.)?cs)\.uwaterloo\.ca/"
-		to="https://$1.uwaterloo.ca/"/>
+	<rule from="^http://((?:cecspilot\.cecssys|csclub|(?:www\.)?cs|www)\.)?uwaterloo\.ca/"
+		to="https://$1uwaterloo.ca/"/>
+
+	<rule from="^http://campaign\.uwaterloo\.ca/(\?.*)?$"
+		to="https://uwaterloo.ca/support/$1" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://cecs\.uwaterloo\.ca/.*"
+		to="https://uwaterloo.ca/co-operative-education" />
+
+	<rule from="^http://development\.uwaterloo\.ca/[^\?]*(\?.*)?"
+		to="https://uwaterloo.ca/support/$1" />
+
+	<rule from="^http://info\.uwaterloo\.ca/(\?.*)?$"
+		to="https://uwaterloo.ca/central-stores/$1" />
 
 </ruleset>
