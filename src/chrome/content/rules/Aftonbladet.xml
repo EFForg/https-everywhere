@@ -1,0 +1,27 @@
+<!--
+	Problematic domains:
+
+		- aftonbladet.se		(cert only matches www)
+		- gfx.aftonbladet-cdn.se *
+		- gfx2.aftonbladet-cdn.se *
+
+	* Times out
+
+-->
+<ruleset name="Aftonbladet">
+
+	<target host="aftonbladet.se" />
+	<target host="*.aftonbladet.se" />
+	<target host="*.aftonbladet-cdn.se" />
+
+
+	<securecookie host="^(?:\.smetrics)?\.aftonbladet\.se$" name=".+" />
+
+
+	<rule from="^http://(?:(?:www\.)?aftonbladet|gfx2?\.aftonbladet-cdn)\.se/"
+		to="https://www.aftonbladet.se/" />
+
+	<rule from="^http://(login|smetrics)\.aftonbladet\.se/"
+		to="https://$1.aftonbladet.se/" />
+
+</ruleset>
