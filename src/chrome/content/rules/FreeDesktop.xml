@@ -1,25 +1,34 @@
 <!--
 	Nonfunctional domains:
 
-		- (www.)cairographics.org	(displays bugzilla data)
-		- lists.cairographics.org	(ssl_error_rx_record_too_long)
-		- .freedesktop.org:
-			- download		(displays bugzilla data)
-			- gstreamer		(ditto)
-			- poppler		(displays bugzilla data)
-			- portland		(ssl_error_rx_record_too_long)
-			- specifications	(ditto)
-			- xcb			(ditto)
-			- xorg			(ditto)
+		- (www.)cairographics.org *
+		- lists.cairographics.org **
+
+		- freedesktop.org subdomains:
+
+			- download *
+			- gstreamer *
+			- poppler *
+			- portland **
+			- specifications **
+			- xcb **
+			- xorg **
+
+	* Displays bugs.freedesktop.org
+	** http reply
 
 -->
 <ruleset name="freedesktop.org">
 
 	<target host="freedesktop.org" />
 	<target host="*.freedesktop.org" />
+		<!--
+			$ is not identical:
+						-->
+		<exclusion pattern="^http://people\.freedesktop\.org/(?!~)" />
 
 
-	<securecookie host="^bugs\.freedesktop\.org$" name=".*" />
+	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
 
 
 	<rule from="^http://freedesktop\.org/wiki(\?.*)?$"
@@ -34,13 +43,10 @@
 	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/(?:wiki/)?"
 		to="https://freedesktop.org/$1/" />
 
-	<rule from="^https?://bug(?:s|zilla)\.freedesktop\.org/"
+	<rule from="^http://bug(?:s|zilla)\.freedesktop\.org/"
 		to="https://bugs.freedesktop.org/" />
 
-	<rule from="^http://people\.freedesktop\.org/~"
-		to="https://secure.freedesktop.org/~" />
-
-	<rule from="^http://secure\.freedesktop\.org/"
+	<rule from="^http://(?:peopl|secur)e\.freedesktop\.org/"
 		to="https://secure.freedesktop.org/" />
 
 	<rule from="^http://wiki\.freedesktop\.org/"
