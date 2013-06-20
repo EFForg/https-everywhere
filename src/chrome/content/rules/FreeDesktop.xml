@@ -6,25 +6,44 @@
 		- .freedesktop.org:
 			- download		(displays bugzilla data)
 			- gstreamer		(ditto)
-			- ldtp			(ssl_error_rx_record_too_long)
 			- poppler		(displays bugzilla data)
 			- portland		(ssl_error_rx_record_too_long)
 			- specifications	(ditto)
-			- www			(displays bugzilla data)
 			- xcb			(ditto)
 			- xorg			(ditto)
 
 -->
 <ruleset name="FreeDesktop Bugzilla">
 
-	<target host="bugs.freedesktop.org" />
-	<target host="bugzilla.freedesktop.org" />
+	<target host="freedesktop.org" />
+	<target host="*.freedesktop.org" />
 
 
 	<securecookie host="^bugs\.freedesktop\.org$" name=".*" />
 
 
+	<rule from="^http://freedesktop\.org/wiki(\?.*)?$"
+		to="https://freedesktop.org/www$1" />
+
+	<rule from="^http://freedesktop\.org/(?:wiki/)?"
+		to="https://freedesktop.org/www/" />
+
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/wiki(\?.*)?$"
+		to="https://freedesktop.org/$1$2" />
+
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/(?:wiki/)?"
+		to="https://freedesktop.org/$1/" />
+
 	<rule from="^https?://bug(?:s|zilla)\.freedesktop\.org/"
 		to="https://bugs.freedesktop.org/" />
+
+	<rule from="^http://people\.freedesktop\.org/~"
+		to="https://secure.freedesktop.org/~" />
+
+	<rule from="^http://secure\.freedesktop\.org/"
+		to="https://secure.freedesktop.org/" />
+
+	<rule from="^http://wiki\.freedesktop\.org/"
+		to="https://freedesktop.org/" />
 
 </ruleset>
