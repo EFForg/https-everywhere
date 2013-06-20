@@ -1,0 +1,85 @@
+<!--
+	CDN buckets:
+
+		- sapblogs.wpengine.netdna-cdn.com
+
+			- cdn.blog-sap.com
+
+
+	Nonfunctional subdomains:
+
+
+
+	Problematic domains:
+
+		- cdn.blog-sap.com	(404; mismatched, CN: *.netdna-ssl.com)
+
+		- sap.com subdomains:
+
+			- ^		(cert only matches www)
+			- mywts		(data differ from http)
+			- www.scn *
+			- sdn *
+			- search	($ redirects to accounts)
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+		- www.sdn	(some paths redirect to http)
+		- search
+
+
+	Fully covered domains:
+
+		- cdn.blog-sap.com	(→ blogs.sap.com)
+
+		- sap.com subdomains:
+
+			- accounts
+			- blogs
+			- help
+			- internalstore
+			- mail
+			- open
+			- (www.)scn	(www → ^)
+			- sdn		(→ scn)
+			- store
+			- www54
+
+
+	Mixed images on scn from www.sdn
+
+DNS Name: autodiscovery.sap.com
+
+
+-->
+<ruleset name="SAP (partial)">
+
+	<target host="cdn.blog-sap.com" />
+	<target host="sap.com" />
+	<target host="*.sap.com" />
+		<exclusion pattern="^https://www\.sdn\.sap\.com/irj/scn/go(?:$|\?|/)" />
+		<exclusion pattern="^http://search\.sap\.com/(?:$|\?.)" />
+
+
+	<securecookie host="^(?:accounts|help|internalstore|mail|open|scn|store|www54)\.sap\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.blog-sap\.com/"
+		to="https://blog.sap.com/" />
+
+	<rule from="^http://(?:www\.)?sap\.com/(favicon\.ico|global/(?:js|ui)/)"
+		to="https://www.sap.com/$1" />
+
+	<rule from="^http://(accounts|blogs|help|internalstore|mail|open|scn|www\.sdn|search|store|www54)\.sap\.com/"
+		to="https://$1.sap.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://(www\.sc|sd)n\.sap\.com/.*"
+		to="https://scn.sap.com/welcome?original_fqdn=$1n.sap.com" />
+
+</ruleset>
