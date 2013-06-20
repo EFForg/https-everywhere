@@ -1,0 +1,66 @@
+<!--
+	Nonfunctional subdomains:
+
+		- www.intern *
+		- (www.)pogs		(shows broken hybrid; mismatched, CN: pep.uni-potsdam.de)
+		- (www.)puck *
+		- (www.)sb-portal *
+
+		- ub subdomains:
+
+			- info **
+			- opac **
+			- www **
+
+		- www.zeik *
+
+	* Shows www; mismatched, CN: www.uni-potsdam.de
+	** Refused
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- hpi		(self-signed)
+		- jura *	(shows www over http)
+		- rzblx1	(works, self-signed)
+		- rzblx10	(works; expired 2012-02-09, self-signed)
+
+	* Cert only matches www
+
+
+	Partially covered subdomains:
+
+		- www.jura	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- (www.)hpi	(^ → www)
+		- jura		(→ www)
+		- (www.)pep
+		- puls
+		- webmail
+
+-->
+<ruleset name="University of Potsdam (partial)">
+
+	<target host="uni-potsdam.de" />
+	<target host="*.uni-potsdam.de" />
+		<exclusion pattern="^http://www\.jura\.uni-potsdam\.de/(?!favicon\.ico|_layout/|_medien/)" />
+
+
+	<securecookie host="^(?:www\.hpi|(?:www\.)?pep|puls|\.webmail)\.uni-potsdam\.de$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(hpi\.)?uni-potsdam\.de/"
+		to="https://www.$1uni-potsdam.de/" />
+
+	<rule from="^http://jura\.uni-potsdam\.de/"
+		to="https://www.uni-potsdam.de/" />
+
+	<rule from="^http://(www\.jura|(?:www\.)?pep|puls|webmail)\.uni-potsdam\.de/"
+		to="https://$1.uni-potsdam.de/" />
+
+</ruleset>
