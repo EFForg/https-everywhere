@@ -1,0 +1,52 @@
+<!--
+	CDN buckets:
+
+		- landing.newsinc.com.s3.amazonaws.com | landing.newsinc.com.edgesuite.net
+		- assets.newsinc.com.s3.amazonaws.com | assets.newsinc.com.edgesuite.net
+		- widget.newsinc.com.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- control **
+		- dashboard **
+		- embed *
+
+	* Refused
+	** Reset
+
+
+	Problematic subdomains:
+
+		- autodiscover	(refused)
+
+
+	Fully covered subdomains:
+
+		- assets	(→ s3.amazonaws.com)
+		- autodiscover	(→ autodiscover-s.outlook.com)
+		- landing	(→ s3.amazonaws.com)
+		- mail
+		- mailfire
+		- widget	(→ s3.amazonaws.com)
+
+-->
+<ruleset name="News Distribution Network (partial)">
+
+	<target host="*.newsinc.com" />
+
+
+	<securecookie host="^mail(?:fire)?\.newsinc\.com$" name=".+" />
+
+
+	<rule from="^http://(assets|landing|widget)\.newsinc\.com/"
+		to="https://s3.amazonaws.com/$1.newsinc.com/" />
+
+	<rule from="^http://autodiscover\.newsinc\.com/"
+		to="https://autodiscover-s.outlook.com/" />
+
+	<rule from="^http://(mail|mailfire)\.newsinc\.com/"
+		to="https://$1.newsinc.com/" />
+
+</ruleset>
