@@ -438,6 +438,11 @@ HTTPSEverywhere.prototype = {
         return;
       }
       HTTPS.replaceChannel(lst, channel);
+
+      var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
+      if (ssl_observatory.observatoryActive()) channel.notificationCallbacks = ssl_observatory;
     } else if (topic == "http-on-examine-response") {
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
