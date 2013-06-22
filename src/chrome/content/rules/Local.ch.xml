@@ -1,6 +1,27 @@
+<!--
+	CDN buckets:
+
+		- s3-external-3.amazonaws.com/static.blog.local.ch/
+
+		- s3-eu-west-1.amazonaws.com/s.staticlocal.ch/
+
+
+	Problematic domains:
+
+		- local.ch *
+		- s.staticlocal.ch *	(works)
+
+	* Cert only matches *.local.ch
+
+
+	Mixed on multiple subdomains from local.wemfbox.ch
+
+	Mixed image from s.staticlocal.ch on yellow
+
+-->
 <ruleset name="Local.ch">
 	<target host="local.ch" />
-	<target host="www.local.ch" />
+	<target host="*.local.ch" />
 	<target host="auto.local.ch" />
 	<target host="blog.local.ch" />
 	<target host="developer.local.ch" />
@@ -15,9 +36,17 @@
 	<target host="tel.local.ch" />
 	<target host="yellow.local.ch" />
 
+
+	<securecookie host="^\.local\.ch$" name="^l(?:ang|cl_session_1_production)$" />
+
+
 	<rule from="^http://(?:www\.)?local\.ch/" to="https://www.local.ch/"/>
 	<rule from="^http://auto\.local\.ch/" to="https://auto.local.ch/"/>
 	<rule from="^http://blog\.local\.ch/" to="https://blog.local.ch/"/>
+
+	<rule from="^http://static\.blog\.local\.ch/"
+		to="https://s3-eu-west-1.amazonaws.com/static.blog.local.ch/" />
+
 	<rule from="^http://developer\.local\.ch/" to="https://developer.local.ch/"/>
 	<rule from="^http://guide\.local\.ch/" to="https://guide.local.ch/"/>
 	<rule from="^http://id\.local\.ch/" to="https://id.local.ch/"/>
