@@ -1,13 +1,34 @@
 <!--
+	CDN buckets:
+
+		- bizjournals.com.112.2o7.net
+
+			- metric.bizjournals.com
+
+		- media.bizj.us.edgesuite.net
+
+
 	Problematic domains:
 
 		- media.bizj.us		(works, akamai)
+
+
+	Fully covered domains:
+
+		- media.bizj.us		(→ mediaapi.bizjournals.com)
+
+		- bizjournals.com subdomains:
+
+			- assets	(→ www)
+			- mediaapi
+			- metric	(→ bizjournals-com.112.2o7.net)
 
 -->
 <ruleset name="The Business Journals (partial)">
 
 	<target host="bizjournals.com" />
 	<target host="*.bizjournals.com" />
+	<target host="media.bizj.us" />
 
 
 	<!--	Presumably, we need to avoid securing login cookies
@@ -24,6 +45,9 @@
 	<!--	assets: Akamai.	-->
 	<rule from="^https?://assets\.bizjournals\.com/"
 		to="https://www.bizjournals.com/" />
+
+	<rule from="^http://media(?:\.bizj\.us|api\.bizjournals\.com)/"
+		to="https://mediaapi.bizjournals.com/" />
 
 	<rule from="^https?://metric\.bizjournals\.com/"
 		to="https://bizjournals-com.112.2o7.net/" />
