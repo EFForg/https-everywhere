@@ -36,6 +36,10 @@
 
 			- reviews.ticketmaster.co.uk
 
+		- ticketmaster.com.d2.sc.omtrdc.net
+
+			- metrics.ticketmaster.com
+
 
 	Problematic domains:
 
@@ -45,6 +49,7 @@
 		- ticketmaster.com			(only matches www)
 		- media.ticketmaster.com *
 		- media.ticketmaster.co.uk *
+		- metrics.ticketmaster.com		(mismatched, CN: *.d2.sc.omtrdc.net)
 		- reviews.ticketmaster.co.uk *
 		- ads.tmcs.ticketmaster.com **
 		- ads.as4x.tmcs.ticketmaster.com **
@@ -77,6 +82,7 @@
 		- (www.)eticketing.co.uk	(^ → www)
 		- (www.)ticketmaster.co.uk	(^ → www)
 		- secure.store.ticketmaster.com
+		- de.ticketmaster.com
 		- (www.)ticketmaster.es		(^ → www)
 
 -->
@@ -105,7 +111,11 @@
 
 
 	<securecookie host="^www\.eticketing\.co\.uk$" name=".+" />
-
+	<!--
+		Omniture cookies:
+					-->
+	<securecookie host="^\.ticketmaster\.com$" name="^s_vi$" />
+	<securecookie host="^de\.ticketmaster\.com$" name=".+" />
 
 	<!--	Apply 2o7 rules first, so that matches
 		don't get rewritten by other rules.
@@ -142,8 +152,11 @@
 	<rule from="^http://media\.ticketmaster\.com/"
 		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com/" />
 
-	<rule from="^http://(mm|secure\.store)\.ticketmaster\.com/"
+	<rule from="^http://(ds|mm|secure\.store)\.ticketmaster\.com/"
 		to="https://$1.ticketmaster.com/" />
+
+	<rule from="^http://metrics\.ticketmaster\.com/"
+		to="https://ticketmaster-com.d2.sc.omtrdc.net/" />
 
 	<rule from="^http://ticketsnow\.ticketmaster\.com/(DataProviders/|Scripts/|TopCitiesDropDownListGenerator\.aspx|UI/)"
 		to="https://ticketsnow.ticketmaster.com/$1" />
