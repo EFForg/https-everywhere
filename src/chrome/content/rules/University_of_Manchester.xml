@@ -1,12 +1,29 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
+		- studentblog.cs.man.ac.uk	(redirects to login.manchester.ac.uk; expired 2013-04-03, mismatched, CN: *.cs.manchester.ac.uk)
+
+		- manchester.ac.uk subdomains:
+
+			- csis.cs	(401, valid cert)
+			- documents	(interrupted)
+			- www.eps	(500; mismatched, CN: *.manchester.ac.uk)
 		- newsadmin	(404, valid cert)
 
 
 	Problematic subdomains:
 
 		- ^		(404, valid cert)
+		- studentnet.cs	(some paths 404)
+
+
+	Fully covered subdomains:
+
+		- assets
+		- cdt.cs
+		- staffnet.cs
+		- www.cs
+		- login
 
 
 	At least some pages redirect to http.
@@ -18,10 +35,13 @@
 	<target host="*.manchester.ac.uk" />
 
 
-	<rule from="^http://(?:www\.)?manchester\.ac\.uk/([\w-]+\.(?:jpg|JPG)$|media(?:library)?/)"
+	<securecookie host="^login\.manchester\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?manchester\.ac\.uk/([\w-]+\.(?:jpg|JPG)$|favicon\.ico|media(?:library)?/)"
 		to="https://www.manchester.ac.uk/$1" />
 
-	<rule from="^http://assets\.manchester\.ac\.uk/"
-		to="https://assets.manchester.ac.uk/" />
+	<rule from="^http://(assets|(?:cdt|staffnet|www)\.cs|login)\.manchester\.ac\.uk/"
+		to="https://$1.manchester.ac.uk/" />
 
 </ruleset>
