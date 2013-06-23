@@ -4,15 +4,22 @@
 		- kb
 
 
-	Fully covered subdomains:
+	Fully covered domains:
 
+
+		- (www.)imageshack.com
+
+		- imageshack.us subdomains:
+
+		- api
 		- post
 		- register
 
 -->
 <ruleset name="ImageShack (partial)">
 
-	<target host="imageshack.us" />
+	<target host="imageshack.*" />
+	<target host="www.imageshack.com" />
 	<target host="*.imageshack.us" />
 		<exclusion pattern="^http://imageshack\.us/f/.*" />
 		<exclusion pattern="^http://img\d{1,3}\.imageshack\.us/(?!img\d{1,3}/\d+/\w+\.)" />
@@ -23,6 +30,9 @@
 	<securecookie host="^(?:.*\.)?imageshack\.us$" name=".*" />
 
 
+	<rule from="^http://(www\.)?imageshack\.com/"
+		to="https://$1imageshack.com/" />
+
 	<rule from="^http://kb\.imageshack\.us/img/favicon\.ico$"
 		to="https://imageshack.us/favicon.ico" />
 
@@ -32,7 +42,7 @@
 	<rule from="^http://img\d{1,3}\.imageshack\.us/(img\d{1,3}/\d+/\w+)\.(th\.)?(bmp|gif|jpe?g|png|tiff?)(\?|$)"
 		to="https://imageshack.us/a/$1.$2$3$4" />
 
-	<rule from="^http://(?:www\.)?([c-r]\w+\.)?imageshack\.us/"
+	<rule from="^http://(?:www\.)?([ac-r]\w+\.)?imageshack\.us/"
 		to="https://$1imageshack.us/" />
 
 	<!--	https://trac.torproject.org/projects/tor/ticket/5727	-->
