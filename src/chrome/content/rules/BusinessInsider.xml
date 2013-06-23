@@ -1,14 +1,28 @@
 <!--
+	CDN buckets:
+
+		- wac.34CE.edgecastcdn.net/??34CE/
+
+			- static.businessinsider.com
+
+
 	Nonfunctional subdomains:
 
 		- articles	(CN: ssl2?.cdngc.net; 403)
 		- jobs		(cert: *.jobamatic.com)
+		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Partially covered subdomains:
+
+		- au.businessinsider.com	(some pages redirect to http)
 
 -->
 <ruleset name="BuisnessInsider (partial)">
 
 	<target host="businessinsider.com" />
 	<target host="*.businessinsider.com" />
+		<exclusion pattern="^http://au\.businessinsider\.com/(?!image/)" />
 		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
 		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
 
@@ -16,6 +30,9 @@
 	<!--	Many pages redirect to http.	-->
         <rule from="^http://(www\.)?businessinsider\.com/(account|assets/|login|register)"
 		to="https://$1businessinsider.com/$2" />
+
+	<rule from="^http://au\.businessinsider\.com/"
+		to="https://au.businessinsider.com/" />
 
         <!--    See Simply-Hired-clients.xml for problematic jobs rules         -->
         <rule from="^https?://jobs\.businessinsider\.com/c/"
