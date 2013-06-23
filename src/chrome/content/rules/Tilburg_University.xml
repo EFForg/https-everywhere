@@ -1,0 +1,60 @@
+<!--
+	Problematic domains:
+
+		- tilburguniversity.edu		(mismatched, CN: www.tilburguniversity.edu)
+		- (www.)tilberguniversity.edu	(some paths redirect to osso)
+		- tilburguniversity.nl		(mismatched, CN: images.uvt.nl)
+		- www.tilburgenuniversity.nl	(redirects to osso)
+
+		- uvt.nl subdomains:
+
+			- ^		(mismatched, CN: www.tilburguniversity.edu)
+			- oudesite	($ redirects to osso)
+			- saml		(shows different data)
+			- www		(redirects to osso)
+
+
+	Partially covered domains:
+
+		- (www.)tilburguniversity.edu
+		- oudesite.uvt.nl
+
+
+	Fully covered domains:
+
+		- uvt.nl subdomains:
+
+			- (www.)	(→ www.tilburguniversity.edu)
+			- osso
+			- osso...:4443
+			- sso
+			- stuwww
+
+-->
+<ruleset name="Tilburg University (partial)">
+
+	<target host="tilburguniversity.edu" />
+	<target host="www.tilburguniversity.edu" />
+	<target host="*.uvt.nl" />
+		<exclusion pattern="^http://oudesite\.uvt\.nl/(?!imweb2/)" />
+
+
+	<securecookie host="^(?:sso|stuwww)\.uvt\.nl$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?tilberguniversity\.edu/imweb2/"
+		to="https://www.tilberguniversity.edu/imweb2/" />
+
+	<!--rule from="^http://(?:www\.)?tilberguniversity\.nl/[^\?]*(\?.*)?"
+		to="https://www.tilberguniversity.edu/$1" /-->
+
+	<!--rule from="^http://(?:www\.)?uvt\.nl/[^\?]*(\?.*)?"
+		to="http://www.tilburguniversity.edu/nl$1" /-->
+
+	<rule from="^http://(o?sso|oudesite|stuwww)\.uvt\.nl/"
+		to="https://$1.uvt.nl/" />
+
+	<rule from="^http://osso\.uvt\.nl:4443/"
+		to="https://osso.uvt.nl:4443/" />
+
+</ruleset>
