@@ -1,32 +1,27 @@
-<!--	http://info.getsatisfaction.com/contact_sales.html	-	404
+<!--
+	For rules that are on by default, see Getsatisfaction.com.xml.
 
+
+	http://info.getsatisfaction.com/contact_sales.html	-	404
 
 -->
-<ruleset name="Getsatisfaction.com (mismatches)" default_off="expired, mismatch">
+<ruleset name="Getsatisfaction.com (mismatches)" default_off="expired, mismatched">
 
 	<!--target host="blog.getsatisfaction.com"/-->
-	<!--	*.marketo.com	-->
 	<target host="info.getsatisfaction.com"/>
-	<!--	plesk, expired	-->
 	<target host="product.getsatisfaction.com"/>
 	<target host="getsat.presscdn.com"/>
 
-	<securecookie host=".*\.getsatisfaction\.com" name=".*"/>
-
 
 	<rule from="^http://info\.getsatisfaction\.com/(cs|r)s"
-		to="https://info.getsatisfaction.com/$1s/"/>
+		to="https://info.getsatisfaction.com/$1s/" />
 
-	<!--	plesk	-->
-	<rule from="^http://blog\.getsatisfaction\.com/"
-		to="https://blog.getsatisfaction.com/"/>
-
-	<!--	plesk	-->
-	<rule from="^http://product\.getsatisfaction\.com/"
-		to="https://product.getsatisfaction.com/"/>
+	<rule from="^http://(blog|product)\.getsatisfaction\.com/"
+		to="https://$1.getsatisfaction.com/" />
 
 	<!--	blog turns presscdn links into https when fetched as such.
-		work around this by rewriting them back to http.	-->
+		work around this by rewriting them back to http.
+								-->
 	<rule from="^https://getsat\.presscdn\.com/"
 		to="http://getsat.presscdn.com/" downgrade="1" />
 

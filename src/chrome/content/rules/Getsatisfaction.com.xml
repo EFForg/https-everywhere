@@ -1,34 +1,47 @@
 <!--
+	For problematic rules, see Getsatisfaction.com-mismatches.xml.
+
+
 	Other Getsatisfaction.com rulesets:
 
 		- Gsfn.us.xml
 
 
-	d37wxxhohlp07s.cloudfront.net
-	d2omfglnd8fp1f.cloudfront.net*
-	d2tyksh53t7ls4.cloudfront.net*
-	d37wxxhohlp07s.cloudfront.net
-	d3rorgotota87b.cloudfront.net*
-	d79yqnsk0j0g9.cloudfront.net*
-	s3.amazonaws.com/getsatisfaction.com/
+	CDN buckets:
 
-	* equivalent to getsatisfaction.com
+		- d2omfglnd8fp1f.cloudfront.net *
+		- d2tyksh53t7ls4.cloudfront.net *
+		- d37wxxhohlp07s.cloudfront.net
+		- d3rorgotota87b.cloudfront.net *
+		- d79yqnsk0j0g9.cloudfront.net *
+		- s3.amazonaws.com/getsatisfaction.com/
 
-	Nonfunctional:
-		(www.)ccpact.com
-		status.getsatisfaction.com
+	* Equivalent to getsatisfaction.com
+
+
+	Problematic getsatisfaction.com subdomains:
+
+		- blog		(self-signed, CN: plesk)
+		- info		(marketo)
+		- product	(expired, self-signed, CN: plesk)
+
+
+	Nonfunctional domains:
+
+		- (www.)ccpact.com
+		- status.getsatisfaction.com
+
 -->
 <ruleset name="Getsatisfaction.com">
 
-	<target host="getsatisfaction.com"/>
-	<target host="*.getsatisfaction.com"/>
+	<target host="getsatisfaction.com" />
+	<target host="*.getsatisfaction.com" />
 
-	<rule from="^http://(www\.)?getsatisfaction\.com/"
-		to="https://$1getsatisfaction.com/"/>
 
-	<rule from="^http://assets(\d)\.getsatisfaction\.com/"
-		to="https://assets$1.getsatisfaction.com/"/>
+	<securecookie host="^\.getsatisfaction\.com$" name=".+" />
 
-	<securecookie host="^\.getsatisfaction\.com$" name=".*"/>
+
+	<rule from="^http://(assets\d\.|www\.)?getsatisfaction\.com/"
+		to="https://$1getsatisfaction.com/" />
 
 </ruleset>
