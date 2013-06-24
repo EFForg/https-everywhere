@@ -2,20 +2,25 @@
 	Nonfunctional domains:
 
 		- (www.)cachefly.com	(302 to http)
-		- blog.cachefly.com	(cert: offsite.cachefly.com, expired, self-signed; shows blank page)
+		- blog.cachefly.com	(shows blank page; expired, self-signed, CN: offsite.cachefly.com)
 
 -->
 <ruleset name="CacheFly (partial)">
 
 	<target host="portal.cachefly.com" />
 	<target host="*.cachefly.net" />
-	<!--
-		Breaks speed test.
+		<!--
+			Breaks speed test.
 
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001291.html
-							-->
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001291.html
+													-->
 		<exclusion pattern="^https?://cachefly\.cachefly\.net/(?:speedtest/|.+\.test)" />
-	<target host="*.cachefly.cachefly.net" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/7585
+
+			Breaks captcha:
+					-->
+		<exclusion pattern="^https?://topix\.cachefly\.net" />
 
 
 	<securecookie host="^portal\.cachefly\.com$" name=".+" />
@@ -23,7 +28,6 @@
 
 	<rule from="^http://portal\.cachefly\.com/"
 		to="https://portal.cachefly.com/" />
-  <exclusion pattern="^https?://topix\.cachefly\.net" />
 
 	<rule from="^https?://(?:\d\.)?([^@:/\.]+)\.cachefly\.net/"
 		to="https://$1.cachefly.net/" />
