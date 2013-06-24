@@ -12,7 +12,7 @@
 			- api **
 			- art		(prints "ok"; self-signed, CN: CentOS-63-64-minimal)
 			- download **
-			- ftp
+			- ftp		(refused)
 			- jabber ***
 			- webapps **
 			- webapps2 ****
@@ -30,7 +30,6 @@
 
 		- gnome.org subdomains:
 
-			- bugzilla-attachments	(works, mismatched, CN: www.gnome.org)
 			- foundation	(works, mismatched, CN: www.gnome.org)
 			- ldap		(403, redirects to www over http, mismatched, CN: l10n.gnome.org)
 			- src		(shows git; mismatched, CN: l10n.gnome.org)
@@ -48,6 +47,7 @@
 			- admin
 			- blogs
 			- bugzilla
+			- bugzilla-attachments
 			- *.bugzilla-attachments
 			- build
 			- cloud
@@ -91,19 +91,8 @@
 	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
 
 
-	<rule from="^http://((?:admin|blogs|bugzilla|\w+\.bugzilla-attachments|build|cloud|developer|etherpad|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|people|planet|projects|rt|vote|webstats|www)\.)?gnome\.org/"
+	<rule from="^http://((?:admin|blogs|bugzilla|(?:\w+\.)?bugzilla-attachments|build|cloud|developer|etherpad|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|people|planet|projects|rt|vote|webstats|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
-
-	<!--	Redirects as so.
-					-->
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/\??$"
-		to="https://bugzilla.gnome.org/" />
-
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\?.+)"
-		to="https://bugzilla.gnome.org/?keywords=$1" />
-
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\w[^\?]*)(?:\?.*)?"
-		to="https://bugzilla.gnome.org/show_bug.cgi?id=$1" />
 
 	<!--	Ditto.
 				-->
