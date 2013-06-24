@@ -1,0 +1,66 @@
+<!--
+	CDN buckets:
+
+		- cdn.thejournal.ie.s3.amazonaws.com
+
+		- d1icb8fuiosdrj.cloudfront.net
+
+			- s[0-3]jrnl.ie
+			- s[0-3].thejournal.ie
+
+
+	Problematic domains:
+
+		- s[0-3].jrnl.ie	(cloudfront)
+		- static.jrnl.ie	(works; mismatched, CN: *.thejournal.ie)
+
+		 thejournal.ie subdomains:
+
+			- ^		(times out)
+			- cdn		(amazonws)
+			- jobs		(works; mismatched, CN: *.adverts.ie)
+			- s[0-3]	(cloudfront)
+
+
+	Fully covered domains:
+
+		- s[0-3].jrnl.ie	(→ d1icb8fuiosdrj.cloudfront.net)
+		- static.jrnl.ie	(→ static.thejournal.ie)
+
+		- thejournal.ie subdomains:
+
+			- (www.)	(^ → www)
+			- businessetc
+			- cdn		(→ s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/)
+			- s[0-3]	(→ d1icb8fuiosdrj.cloudfront.net)
+			- static
+			- thedailyedge
+			- thescore
+
+-->
+<ruleset name="TheJournal.ie">
+
+	<target host="*.jrnl.ie" />
+	<target host="thejournal.ie" />
+	<target host="*.thejournal.ie" />
+
+
+	<securecookie host="^\.thejournal\.ie$" name=".+" />
+
+
+	<rule from="^http://s\d\.(?:jrn|thejourna)l\.ie/"
+		to="https://d1icb8fuiosdrj.cloudfront.net/" />
+
+	<rule from="^http://static\.jrnl\.ie/"
+		to="https://static.thejournal.ie/" />
+
+	<rule from="^http://(?:www\.)?thejournal\.ie/"
+		to="https://www.thejournal.ie/" />
+
+	<rule from="^http://(businessetc|thedailyedge|static|thescore)\.thejournal\.ie/"
+		to="https://$1.thejournal.ie/" />
+
+	<rule from="^http://cdn\.thejournal\.ie/"
+		to="https://s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/" />
+
+</ruleset>

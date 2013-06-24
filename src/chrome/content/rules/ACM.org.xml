@@ -8,6 +8,8 @@
 
 			- a1907.g.akamai.net/.../
 
+		- portalparts.acm.org.edgesuite.net
+
 
 	acm.org lacks proper ssl for the following subdomains
 
@@ -17,19 +19,32 @@
 		- librarians		<- displays what appears to be
 					   an old version of the website.
 		- mags
-		- portalparts
+
+
+	Problematic subdomains:
+
+		- portalparts		(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- cacm		(some pages redirect to http)
+
+
+	Mixed image on campus from portalparts
 
 -->
 <ruleset name="ACM.org (partial)">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
+		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
 
-	<securecookie host="^.*\.acm\.org$" name=".*" />
+	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".*" />
 
 
-	<rule from="^http://((?:campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
+	<rule from="^http://((?:cacm|campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
 		to="https://$1acm.org/" />
 
 </ruleset>

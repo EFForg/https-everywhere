@@ -2,63 +2,70 @@
 	For other Sony coverage, see Sony.xml.
 
 
-	Nonfunctional domains:
+		- playstation.custhelp.com
+		- playstationna.i.lithium.com
+
+
+	Nonfunctional playstation.com subdomains:
 
 		- (www.) *
-		- blog.eu	(times out)
+		- blog.eu *
 		- mypsn.eu *
+		- fp.profiles.us *
 
 	* Times out
 
 
 	Problematic domains:
 
-		- uk.playstation.com	(works, mismatched, CN: secure.eu.playstation.com)
+		- uk.playstation.com		(works; mismatched, CN: secure.eu.playstation.com)
+		- www.us.playstation.com	(mismatched)
+
+
+	Partially covered domains:
+
+		- (www.)us.playstation.com	(www → ^, omniture/blogs/s_code.js redirects to http)
 
 
 	Fully covered domains:
 
 		- playstation.com subdomains:
+
 			- secure.eu
 			- store
-			- blog.us
-			- service1.us
+
+			- us subdomains:
+
+				- blog
+				- community
+				- service1
+				- support
 
 		- static-resource.np.community.playstation.net
 		- en-support.psm.playstation.net
 
-
-	Partially covered domains:
-
-		- (www.)us.playstation.com	(omniture/blogs/s_code.js redirects to http)
-
 -->
 <ruleset name="PlayStation (partial)">
 
-	<!--	* for cross-domain cookie.	-->
 	<target host="*.playstation.com" />
-	<target host="secure.eu.playstation.com" />
-	<target host="*.us.playstation.com" />
 		<!--
 			302s to http.
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001284.html
-
-				-->
+													-->
 		<exclusion pattern="^http://us\.playstation\.com/omniture/blogs/s_code\.js" />
-	<target host="static-resource.np.community.playstation.net" />
+	<target host="*.playstation.net" />
 
 
-	<securecookie host="^.*\.playstation\.com$" name=".*" />
+	<securecookie host=".*\.playstation\.com$" name=".+" />
 	<securecookie host="^en-support\.psm\.playstation\.net$" name=".+" />
 
 
-	<rule from="^http://(secure\.eu|store)\.playstation\.com/"
+	<rule from="^http://(secure\.eu|store|(?:blog|community|service1|support)\.us)\.playstation\.com/"
 		to="https://$1.playstation.com/" />
 
-	<!--	Cert doesn't match www.us.	-->
-	<rule from="^https?://(?:(blog\.|service1\.)|www\.)?us\.playstation\.com/"
-		to="https://$1us.playstation.com/" />
+	<rule from="^http://(?:www\.)?us\.playstation\.com/"
+		to="https://us.playstation.com/" />
 
 	<rule from="^http://(static-resource\.np\.community|en-support\.psm)\.playstation\.net/"
 		to="https://$1.playstation.net/" />

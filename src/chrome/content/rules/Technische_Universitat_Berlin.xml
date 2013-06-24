@@ -1,0 +1,180 @@
+<!--
+	Nonfunctional subdomains:
+
+		- cybertron.cg	(500; expired 2009-11-07, self-signed)
+
+
+	Problematic subdomains:
+
+		- autodiscover	(403, valid cert)
+		- www.cg	(works; mismatched, CN: cybertron.cg.tu-berlin.de)
+		- www.tmp	(works; mismatched, CN: ace-hauptblock4.tubit.TU-Berlin.DE)
+
+
+	Fully covered subdomains:
+
+		- www.ab
+		- www.accounting
+		- www.agrs
+		- www.aio
+		- www.ak
+		- mailbox.alumni
+		- www.alumni
+		- www.angewbiochem
+		- www.antennen-emv
+		- www.arbeits-umweltschutz
+		- www.architektur
+		- www.auslandsamt
+		- autodiscover		(→ exchange)
+		- www.avstudiofak1
+		- www.avt
+		- www.aw
+		- www.ba
+		- www.bahnsysteme
+		- www.bau
+		- www.bauinformatik
+		- www.bauprozessmodelle
+		- www.baustoffe
+		- www.becap
+		- www.behindertenberatung
+		- www.betreuung-int-stud
+		- www.bioanorganik
+		- www.biodiv
+		- www.bioenergetik
+		- www.biophys-chemie
+		- www.biopsych
+		- www.biotech
+		- www.boden
+		- www.bodenkunde
+		- www.brauwesen
+		- www.campusradio
+		- www.career
+		- (www.)chemie
+		- www.china
+		- www.cit
+		- www.clw
+		- www.cognition
+		- www.cv
+		- www.daf
+		- www.dbta
+		- www.dima
+		- www.eecs
+		- www.ek-massivbau
+		- www.ek-stahlbau
+		- www.ek-verbundstrukturen
+		- www.elv
+		- www.energie
+		- www.energietechnik
+		- www.energiewirtschaft
+		- www.energy
+		- www.ensys
+		- www.enzymtechnologie
+		- www.evur
+		- exchange
+		- www.explorationsgeologie
+		- www.facilities
+		- www.fak[1-7]
+		- www.finance
+		- www.finanzen
+		- www.finanzierung
+		- www.flp
+		- www.fsd
+		- www.fsp-wib
+		- www.geo
+		- www.geolab
+		- www.geophysik
+		- www.geschichte
+		- www.geschundkunstgesch
+		- www.ginut
+		- www.gkwi
+		- www.glas
+		- www.gsw
+		- www.heclinet
+		- www.hft
+		- www.histurbanistik
+		- www.hlb
+		- www.ht
+		- www.humanfactors
+		- www.hydrogeologie
+		- www.ic
+		- www.iea
+		- www.ifkp
+		- www.iit
+		- www.ikm
+		- www.ils
+		- www.immatrikulation
+		- www.impetus
+		- www.ingenieurgeologie
+		- www.int-admission
+		- www.ioap
+		- www.ipa
+		- www.isti
+		- www.itp
+		- www.iz-wib
+		- www.kbs
+		- www.kfz
+		- www.ki
+		- www.kke
+		- www.km
+		- www.kpl
+		- www.kup
+		- www.kw
+		- www.la
+		- www.lehrerbildung
+		- www.li
+		- www.literaturwissenschaft
+		- www.logistik
+		- mail
+		- mailbox
+		- www.marketing
+		- www.marsys
+		- www.math
+		- www.medtech
+		- (www.)mig
+		- www.mineralogie
+		- www.ml
+		- www.move-it
+		- www.mrt
+		- www.mtv
+		- www.musikwissenschaft
+		- www.mwt
+		- www.nachwuchsbuero
+		- www.naturwissenschaften
+
+		- www.planen-bauen-umwelt
+
+		- tubit subdomains:
+
+			- (www.)
+			- aagw
+			- horde-test
+			- wlan
+
+		- webmail
+		- www.wm
+		- www
+
+-->
+<ruleset name="Technische Universität Berlin (partial)">
+
+	<target host="*.tu-berlin.de" />
+
+
+	<securecookie host="^\.tu-berlin\.de$" name="^fe_typo_user$" />
+	<securecookie host="^(?:www\.alumni|exchange|mail|\.horde-test\.tubit|\.webmail)\.tu-berlin\.de$" name=".+" />
+
+
+	<rule from="^http://(mailbox\.alumni|(?:www\.)?chemie|exchange|mail|mailbox|(?:www\.)?mig|(?:(?:aagw|horde-test|wlan|www)\.)?tubit|webmail|www)\.tu-berlin\.de/"
+		to="https://$1.tu-berlin.de/" />
+
+	<!--	Subdomains for which www.foo exists and ^foo does not:
+									-->
+	<rule from="^http://www\.(ab|accounting|agrs|aio|ak|angewbiochem|antennen-emv|arbeits-umweltschutz|alumni|architektur|auslandsamt|auslandsamt|avstudiofak1|avt|aw|ba|bahnsysteme|bau|bauinformatik|bauprozessmodelle|baustoffe|becap|behindertenberatung|betreuung-int-stud|bioanorganik|biodiv|bioenergetik|biophys-chemie|biopsych|biotech|boden|bodenkunde|brauwesen|campusradio|career|china|cit|clw|cognition|cv|daf|dbta|dima|eecs|ek-massivbau|ek-stahlbau|ek-verbundstrukturen|elv|energie|energietechnik|energiewirtschaft|energy|ensys|enzymtechnologie|evur|explorationsgeologie|facilities|fak\d|finance|finanzen|finanzierung|flp|fsd|fsp-wib|geo|geolab|geophysik|geschichte|geschundkunstgesch|ginut|gkwi|glas|gsw|heclinet|hft|histurbanistik|hlb|ht|humanfactors|hydrogeologie|ic|iea|ifkp|iit|ikm|ils|immatrikulation|impetus|ingenieurgeologie|int-admission|ioap|ipa|isti|itp|iz-wib|kbs|kfz|ki|kke|km|kpl|kup|kw|la|lehrerbildung|li|literaturwissenschaft|logistik|marketing|marsys|math|medtech|mineralogie|ml|move-it|mrt|mtv|musikwissenschaft|mwt|nachwuchsbuero|naturwissenschaften|planen-bauen-umwelt|wm)\.tu-berlin\.de/"
+		to="https://www.$1.tu-berlin.de/" />
+
+	<!--	403s over https, redirects like to over http:
+								-->
+	<rule from="^http://autodiscover\.tu-berlin\.de/"
+		to="https://exchange.tu-berlin.de/" />
+
+</ruleset>

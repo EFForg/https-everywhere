@@ -1,0 +1,32 @@
+<!--
+	Nonfunctional subdomains:
+
+		- gitweb	(shows bugs; mismatched, CN: bugs.dragonflybsd.org)
+
+
+	Problematic subdomains:
+
+		- ^	(refused)
+		- leaf	(mismatched, CN: bugs.dragonflybsd.org)
+
+-->
+<ruleset name="DragonFly BSD (partial)">
+
+	<target host="dragonflybsd.org" />
+	<target host="*.dragonflybsd.org" />
+		<!--
+			Not all of leaf is identical to bugs:
+								-->
+		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!cgi/web-man)" />
+
+
+	<securecookie host="^bugs\.dragonflybsd\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?dragonflybsd\.org/"
+		to="https://www.dragonflybsd.org/" />
+
+	<rule from="^http://(?:bugs|leaf)\.dragonflybsd\.org/"
+		to="https://bugs.dragonflybsd.org/" />
+
+</ruleset>

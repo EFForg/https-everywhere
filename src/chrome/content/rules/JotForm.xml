@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- static.interlogyllc.netdna-cdn.com
+
+			- ssl does exist
+			- max.jotfor.ms
+
+
+	Problematic domains:
+
+		- max.jotfor.ms		(works; mismatched, CN: *.netdna-ssl.com)
+
+-->
+<ruleset name="JotForm">
+
+	<target host="max.jotfor.ms" />
+	<target host="jotform.com" />
+	<target host="*.jotform.com" />
+	<target host="jotformpro.com" />
+	<target host="*.jotformpro.com" />
+
+
+	<securecookie host="^(?:w*\.)?jotform\.com$" name=".+" />
+
+
+	<rule from="^http://max\.jotfor\.ms/"
+		to="https://static-interlogyllc.netdna-ssl.com/" />
+
+	<!--	Although ^jotform.com works, ^ redirects
+		to www over http => clone that behavior:
+							-->
+	<rule from="^http://(?:www\.)?jotform\.com/"
+		to="https://www.jotform.com/" />
+
+	<rule from="^http://(secure\.|www\.)?jotformpro\.com/"
+		to="https://$1jotformpro.com/" />
+
+</ruleset>

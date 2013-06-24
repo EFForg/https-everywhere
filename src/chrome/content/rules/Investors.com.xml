@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional domains:
+
+		- streamer.ibdcd.com	(times out)
+
+
+	Problematic domains:
+
+		- www1.ibdcd.com	(refused)
+		- news.investors.com	(works; mismatched, CN: www.investors.com)
+
+
+	Mixed images from www1.ibdcd.com
+
+-->
+<ruleset name="Investors.com (partial)">
+
+	<target host="www1.ibdcd.com" />
+	<target host="investors.com" />
+	<target host="www.investors.com" />
+		<exclusion pattern="http://news\.investors\.com/(?![\w-]+/|ClientScriptCombiner\.aspx|favicon\.ico|(?:Script|Web)Resource\.axd)" />
+
+
+	<!--securecookie host="^\.investors\.com$" name="^CSUC$" /-->
+	<securecookie host="^(?:www\.)?investors\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www1\.ibdcd|news\.investors)\.com/"
+		to="https://www.investors.com/" />
+
+	<rule from="^http://(www\.)?investors\.com/"
+		to="https://$1investors.com/" />
+
+</ruleset>

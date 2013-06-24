@@ -2,6 +2,11 @@
 	For problematic rules, see Time_Inc-problematic.xml.
 
 
+	Other Time Inc rulesets:
+
+		- Entertainment_Weekly.xml
+
+
 	CDN buckets:
 
 		- timeinc.brightcove.com.edgesuite.net
@@ -10,24 +15,52 @@
 
 			- img.timeinc.net
 
+		- img2.timeinc.net.edgesuite.net
+
+			- img2.timeinc.net
+
+		- img2-[12].timeinc.net.edgesuite.net
+
+			- img2-[12].timeinc.net
+
 
 	Nonfunctional domains:
 
-		- timeinc.com
+		- timeinc.com		(refused)
 		- www.timeinc.com	(503, akamai)
+
+
+	Problematic domains:
+
+		- img2.timeinc.net *
+		- img2-[123].timeinc.net *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- timeinc.net subdomains:
+
+			- i2
+			- img2		(→ i2)
+			- img2-[123]	(→ i2)
 
 -->
 <ruleset name="Time Inc (partial)">
 
 	<target host="subscription-assets.timeinc.com" />
 	<target host="timeinc.net" />
-	<target host="www.timeinc.net" />
+	<target host="*.timeinc.net" />
 
 
 	<rule from="^http://subscription-assets\.timeinc\.com/"
 		to="https://subscription-assets.timeinc.com/" />
 
-	<rule from="^http://(www\.)?timeinc\.net/"
+	<rule from="^http://(i2\.|www\.)?timeinc\.net/"
 		to="https://$1timeinc.net/" />
+
+	<rule from="^http://img2(?:-\d)?\.timeinc\.net/"
+		to="https://i2.timeinc.net/" />
 
 </ruleset>

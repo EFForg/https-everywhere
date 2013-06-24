@@ -1,37 +1,58 @@
 <!--
+	CDN buckets:
+
+		- wac.34CE.edgecastcdn.net/??34CE/
+
+			- static.businessinsider.com
+
+
 	Nonfunctional subdomains:
 
-		- articles	(CN: ssl2?.cdngc.net; 403)
-		- jobs		(cert: *.jobamatic.com)
+		- articles	(403; CN: ssl2?.cdngc.net)
+		- jobs		(CN: *.jobamatic.com)
+
+
+	Problematic subdomains:
+
+		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Partially covered subdomains:
+
+		- au.businessinsider.com	(some pages redirect to http)
 
 -->
 <ruleset name="BuisnessInsider (partial)">
 
 	<target host="businessinsider.com" />
 	<target host="*.businessinsider.com" />
+		<!--
+			Many pages redirect to http.
+							-->
+	        <exclusion pattern="^http://(?:www\.)?businessinsider\.com/(?!account|assets/|login|register)" />
+		<exclusion pattern="^http://au\.businessinsider\.com/(?!image/)" />
 		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
 		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
 
 
-	<!--	Many pages redirect to http.	-->
-        <rule from="^http://(www\.)?businessinsider\.com/(account|assets/|login|register)"
-		to="https://$1businessinsider.com/$2" />
+        <rule from="^http://(au\.|www\.)?businessinsider\.com/"
+		to="https://$1businessinsider.com/" />
 
-        <!--    See Simply-Hired-clients.xml for problematic jobs rules         -->
-        <rule from="^https?://jobs\.businessinsider\.com/c/"
+        <!--    See Simply-Hired-clients.xml for problematic jobs rules.
+									-->
+        <rule from="^http://jobs\.businessinsider\.com/c/"
                 to="https://businessinsider.jobamatic.com/c/" />
 
-	<rule from="^https?://oascentral\.businessinsider\.com/"
+	<rule from="^http://oascentral\.businessinsider\.com/"
 		to="https://oasc18.247realmedia.com/" />
 
-	<!--
-		- static[1-9]? are identical
+	<!--	- static[1-9]? are identical
 		- static0 doesn't exist
 		- Cert: gp1.wac.edgecastcdn.net
 		- 404
-		- image/ redirects back to static.
+		- image/ redirects back to static
 						-->
-	<rule from="^https?://static\d?\.businessinsider\.com/"
+	<rule from="^http://static\d?\.businessinsider\.com/"
 		to="https://www.businessinsider.com/" />
 
 </ruleset>

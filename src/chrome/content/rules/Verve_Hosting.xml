@@ -1,0 +1,35 @@
+<!--
+	Nonfunctional subdomains:
+
+		- nagios	(refused)
+		- support	(http reply)
+
+
+	Problematic subdomains:
+
+		- www	(cert only matches ^vervehosting.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- cms
+		- hudson
+
+-->
+<ruleset name="Verve Hosting (partial)">
+
+	<target host="vervehosting.com" />
+	<target host="*.vervehosting.com" />
+
+
+	<securecookie host="^cms\.vervehosting\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?vervehosting\.com/"
+		to="https://vervehosting.com/" />
+
+	<rule from="^http://(cms|hudson)\.vervehosting\.com/"
+		to="https://$1.vervehosting.com/" />
+
+</ruleset>

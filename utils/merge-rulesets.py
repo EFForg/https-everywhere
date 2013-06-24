@@ -17,12 +17,20 @@ import re
 
 os.chdir("src")
 rulesets_fn="chrome/content/rules/default.rulesets"
+xml_ruleset_files = glob("chrome/content/rules/*.xml")
 
 # cleanup after bugs :/
 misfile = rulesets_fn + "r"
 if os.path.exists(misfile):
   print("Cleaning up malformed rulesets file...")
   os.unlink(misfile)
+
+if "--fast" in sys.argv:
+  library_compiled_time = os.path.getmtime(rulesets_fn)
+  newest_xml = max([os.path.getmtime(f) for f in xml_ruleset_files])
+  if library_compiled_time >= newest_xml:
+    print("Library is newer that all rulesets, skipping rebuild...")
+    sys.exit(0)
 
 print("Creating ruleset library...")
 
@@ -43,7 +51,7 @@ except:
   library.write('<rulesetlibrary>')
 
 # Include the filename.xml as the "f" attribute
-for rfile in sorted(glob("chrome/content/rules/*.xml")):
+for rfile in sorted(xml_ruleset_files):
   ruleset = open(rfile).read()
   fn=os.path.basename(rfile)
   ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)

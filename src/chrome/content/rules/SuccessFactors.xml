@@ -1,12 +1,47 @@
-<ruleset name="SuccessFactors (partial)">
+<!--
+	CDN buckets:
 
-	<target host="career8.successfactors.com" />
+		- successfactors.112.2o7.net
+
+		- successfactors.i.lithium.com
+
+			- community
 
 
-	<securecookie host="^career8\.successfactors\.com$" name=".+" />
+	Problematic subdomains:
+
+		- ^	(cert only matches *.successfactors.com)
 
 
-	<rule from="^http://career8\.successfactors\.com/"
-		to="https://career8.successfactors.com/" />
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- autodiscover
+		- blogs
+		- career
+		- career[48]
+		- career10
+		- community
+		- jobs
+		- owa
+		- performancemanager
+		- performancemanager[48]
+		- performancemanager10
+
+-->
+<ruleset name="SuccessFactors">
+
+	<target host="successfactors.com" />
+	<target host="*.successfactors.com" />
+
+
+	<securecookie host="^(?:blogs|career\d*|community|jobs|owa|performancemanager\d*|www)\.successfactors\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?successfactors\.com/"
+		to="https://www.successfactors.com/" />
+
+	<rule from="^http://(autodiscover|blogs|career\d*|community|jobs|owa|performancemanager\d*)\.successfactors\.com/"
+		to="https://$1.successfactors.com/" />
 
 </ruleset>

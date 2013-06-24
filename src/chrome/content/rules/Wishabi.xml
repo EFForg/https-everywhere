@@ -4,19 +4,42 @@
 		- f.wishabi.ca.s3.amazonaws.com
 			- f.wishabi.ca
 
+		- d2e0sxz09bo7k2.cloudfront.net
 
-	Problematic domains:
+			- f1.wishabi.ca
 
-		- (www.)wishabi.ca	(works, redirects to domain with mismatched cert)
-		- (www.)wishabi.com	(mismatched, CN: wishabi.ca)
+
+	Nonfunctional domains:
+
+		- (www.)wishabi.ca *
+		- (www.)wishabi.com *
+
+	* Refused
+
+
+	Fully covered wishabi.ca subdomains:
+
+		- analytics
+		- f		(→ s3.amazonaws.com)
+		- f1		(→ d2e0sxz09bo7k2.cloudfront.net)
+		- merchants
 
 -->
 <ruleset name="Wishabi">
 
-	<target host="f.wishabi.ca" />
+	<target host="*.wishabi.ca" />
+
+
+	<securecookie host="^\.merchants\.wishabi\.ca$" name=".+" />
 
 
 	<rule from="^https?://f.wishabi.ca/"
 		to="https://s3.amazonaws.com/f.wishabi.ca/" />
+
+	<rule from="^http://f1\.wishabi\.ca/"
+		to="https://d2e0sxz09bo7k2.cloudfront.net/" />
+
+	<rule from="^http://(analytic|merchant)s\.wishabi\.ca/"
+		to="https://$1s.wishabi.ca/" />
 
 </ruleset>

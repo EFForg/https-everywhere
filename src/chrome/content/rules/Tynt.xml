@@ -7,13 +7,42 @@
 
 	CDN buckets:
 
+		- cdn.tynt.com.edgesuite.net
+		- sc.tynt.com.edgesuite.net
+
 		- tcr.tynt.com.edgesuite.net/...
 			- a38.g.akamai.net/...
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(shows 33across.com; mismatched, CN: *.33across.com)
+		- de *
+		- ic *
+		- sc		(redirects to http://id, akamai)
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- cdn *
+		- tcr *
+
+	* Works; akamai
 
 -->
 <ruleset name="Tynt (partial)">
 
-	<target host="id.tynt.com" />
+	<target host="*.tynt.com" />
+
+
+	<!--securecookie host="^\.tynt\.com$" name="^uid$" />
+
+		Tracking cookies:
+					-->
+	<securecookie host="^\.tynt\.com$" name="^s_\w\w\w?$" />
+	<securecookie host="^id\.tynt\.com$" name=".+" />
 
 
 	<rule from="^http://id\.tynt\.com/"

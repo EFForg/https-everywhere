@@ -1,0 +1,40 @@
+<!--
+	Problematic domains:
+
+		- nokiasiemensnetworks.com *
+		- (www.)nsn.com *
+
+	* Works; mismatched, CN: acquia-sites.com
+
+
+	Fully covered nokiasiemensnetworks.com subdomains:
+
+		- industryanalyst
+		- online.portal
+		- supplier.portal
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="Nokia Siemens Networks (partial)">
+
+	<target host="nokiasiemensnetworks.com" />
+	<target host="*.nokiasiemensnetworks.com" />
+	<target host="nsn.com" />
+	<target host="www.nsn.com" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.nokiasiemensnetworks\.com$" name="^(?:s_\w{1,3}|__utm)\w$" />
+	<securecookie host="^(?:supplier)?\.portal\.nokiasiemensnetworks\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?n(?:okiasiemensnetworks|sn)\.com/(jwbox|sites)/"
+		to="https://www.nokiasiemensnetworks.com/$1/" />
+
+	<rule from="^http://(blogs|industryanalyst|(?:online|supplier)\.portal)\.nokiasiemensnetworks\.com/"
+		to="https://$1.nokiasiemensnetworks.com/" />
+
+</ruleset>

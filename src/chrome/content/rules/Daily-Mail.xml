@@ -1,11 +1,15 @@
 <!--
 	CDN buckets:
 
+		- gs.dailymail.co.uk.edgesuite.net
+
 		- f.dailymail.co.uk.edgesuite.net/..
 			- a1913.g.akamai.net/..
 
 		- i.dailymail.co.uk.edgesuite.net/..
 			- a1202.g.akamai.net/..
+
+		- video.dailymail.co.uk.edgesuite.net
 
 		- www.dailymail.co.uk.edgesuite.net/..
 			- a1613.g.akamai.net/..
@@ -13,15 +17,37 @@
 		- images.anm.co.uk.edgesuite.net/..
 			- a382.g.akamai.net/..
 
+		- i.mol.im.edgesuite.net
+
 
 	Nonfunctional subdomains:
 
 		- (www.)	(Akamai; 301s to http)
+		- gs		(504, akamai)
+		- rta		(404, self-signed)
+		- ted		(redirects to www, self-signed)
+
+
+	Problematic domains:
+
+		- dailymail.co.uk subdomains:
+
+			- video *
+
+		- i.mol.im *
+
+	* Works, akamai
 
 -->
 <ruleset name="Daily Mail (partial)" default_off="Akamai certificate">
 
 	<target host="*.dailymail.co.uk" />
+	<target host="i.mol.im" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.dailymail\.co\.uk$" name="^(?:Akamai_?Analytics\w+|__mo|__utm)\w$" />
 
 
 	<!--	Same data, so miminize exceptions needed.
@@ -29,13 +55,16 @@
 	<rule from="^http://(?:i|img|scripts)\.dailymail\.co\.uk/"
 		to="https://i.dailymail.co.uk/" />
 
-	<rule from="^http://f\.dailymail\.co\.uk/"
-		to="https://f.dailymail.co.uk/" />
+	<rule from="^http://(f|video)\.dailymail\.co\.uk/"
+		to="https://$1.dailymail.co.uk/" />
 
 	<!--	- Cert: *.jobsite.co.uk
 		- At least some pages 301 to http
 							-->
 	<rule from="^http://jobs\.dailymail\.co\.uk/(css|home|images)/"
 		to="https://jobs.dailymail.co.uk/$1/" />
+
+	<rule from="^http://i\.mol\.im/"
+		to="https://i.mol.im/" />
 
 </ruleset>

@@ -1,28 +1,47 @@
-<ruleset name="Imgur (partial, broken)" default_off="breaks albums">
+<!--
+	CDN buckets:
 
-	<target host="imgur.com"/>
-	<target host="*.imgur.com"/>
-		<exclusion pattern="^http://api\.imgur\.com/"/>
-		<!--
-			302 to http.
+		- wac.4220.edgecastcdn.net/??4220/
 
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001255.html
-					-->
-		<exclusion pattern="^http://(www\.)?imgur\.com/($|\w/\w+\??$)" />
-		<exclusion pattern="^http://(www\.)?imgur\.com/[a-zA-Z\d]+\.[a-z]+$"/>
+			- s
 
-	<rule from="^http://(?:origin\.|s\.|www\.)?imgur\.com/"
+
+	Problematic subdomains:
+
+		- img	(refused)
+		- s	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- i
+		- img		(→ i)
+		- origin
+		- s		(→ ^)
+
+-->
+<ruleset name="Imgur">
+
+	<target host="imgur.com" />
+	<target host="*.imgur.com" />
+
+
+	<securecookie host="^\.?imgur\.com" name=".+" />
+
+
+	<rule from="^http://(?:s\.)?imgur\.com/"
 		to="https://imgur.com/"/>
 
+	<rule from="^http://(i|origin|www)\.imgur\.com/"
+		to="https://$1.imgur.com/" />
+
 	<!--	This rule breaks the Imgur Uploader Firefox extension
+
 	<rule from="^http://api\.imgur\.com/"
-		to="https://api.imgur.com/"/-->
+		to="https://api.imgur.com/" /-->
 
-	<!--	i.imgur.com doesn't match the certificate,
-		but *some* urls can be converted to imgur.com	-->
-	<rule from="^http://i\.imgur\.com/((images|include)(/.*)?)?$"
-		to="https://imgur.com/$1"/>
-
-    <securecookie host="^\.?imgur\.com" name=".*" />
+	<rule from="^http://img\.imgur\.com/"
+		to="https://i.imgur.com/" />
 
 </ruleset>

@@ -1,5 +1,27 @@
-<ruleset name="Feide">
-  <target host="idp.feide.no" />
+<!--
+	For other Uninett coverage, see Uninett.xml.
 
-  <rule from="^http://idp\.feide\.no/" to="https://idp.feide.no/"/>
+
+	Fully covered subdomains:
+
+		- (www.)
+		- idp.demo
+		- sp[1-4].demo
+		- idp
+		- rnd
+
+-->
+<ruleset name="Feide">
+
+	<target host="feide.no" />
+	<target host="*.feide.no" />
+
+
+	<!--securecookie host="^\.feide\.no$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:(?:idp|sp\d)\.demo|rnd|www)\.feide\.no$" name=".+" />
+
+
+	<rule from="^http://((?:(?:idp|sp\d)\.demo|idp|rnd|www)\.)?feide\.no/"
+		to="https://$1feide.no/" />
+
 </ruleset>

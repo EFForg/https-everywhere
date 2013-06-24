@@ -1,8 +1,23 @@
 <!--
+		- broadcom.jobs2web.com
+
+			- jobs
+
+
 	Nonfunctional subdomains:
 
 		- investor	(cert: *.shareholder.com; 403)
 		- websearch	(cert: foo.ent.google.com, expired, self-signed; redirects to http)
+
+
+	Problematic subdomains:
+
+		- jobs		(works; mismatched, CN: *.jobs2web.com)
+
+
+	Partially covered subdomains:
+
+		- jobs		(→ broadcom.jobs2web.com)
 
 -->
 <ruleset name="Broadcom">
@@ -13,12 +28,18 @@
 	<target host="www.broadcomfoundation.org" />
 
 
+	<securecookie host="^blog\.broadcom\.com$" name=".+" />
+
+
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?broadcom\.com/"
 		to="https://www.broadcom.com/" />
 
 	<rule from="^http://blog\.broadcom\.com/"
 		to="https://blog.broadcom.com/" />
+
+	<rule from="^http://jobs\.broadcom\.com/(css|sites|view)/"
+		to="https://broadcom.jobs2web.com/$1/" />
 
 	<!--	Cert only matches www.	-->
 	<rule from="^https?://(?:www\.)?broadcomfoundation\.org/"

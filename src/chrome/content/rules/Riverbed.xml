@@ -1,13 +1,70 @@
-<ruleset name="Riverbed">
+<!--
+	CDN buckets:
+
+		- riverbed.vo.llnwd.net
+
+			- .hs. doesn't exist
+			- media-cms
+			- www
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- blogs *
+		- media-cms **
+		- www **
+
+	* Times out
+	** 400; mismatched, CN: *.hs.llnwd.net
+
+
+	Problematic subdomains:
+
+		- dev.www	(works; mismatched, CN: *.clickability.com)
+		- forms		(works; mismatched, CN: secure.eloqua.com)
+		- ir		(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- ir	(→ origin-phoenix.corporate-ir.net)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- autodiscover
+		- community
+		- developer
+		- dr-cas
+		- dr-webmail
+		- global
+
+		- splash subdomains:
+
+			- ^
+			- apps
+			- uat
+			- apps.uat
+
+		- support
+		- webmail
+
+-->
+<ruleset name="Riverbed (partial)">
 
 	<target host="riverbed.com" />
-	<target host="www.riverbed.com" />
+	<target host="*.riverbed.com" />
 
 
-	<securecookie host="^(?:www\.)?riverbed\.com$" name=".+" />
+	<securecookie host="^(?:(?:autodiscover|community|developer|global|(?:apps(?:\.uat)?\.|uat\.)?splash|support|(?:dr-)?webmail)\.)?riverbed\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?riverbed\.com/"
+	<rule from="^http://((?:autodiscover|community|developer|dr-cas|global|(?:apps(?:\.uat)?\.|uat\.)?splash|support|(?:dr-)?webmail)\.)?riverbed\.com/"
 		to="https://$1riverbed.com/" />
+
+	<rule from="^http://ir\.riverbed\.com/(client|WebSideStory)/"
+		to="https://origin-phoenix.corporate-ir.net/$1/" />
 
 </ruleset>

@@ -1,23 +1,24 @@
 <!--
 	Nonfunctional subdomains:
 
-		- jira	(ssl_error_rx_record_too_long)
+		- jira	(http reply)
+		- my	(refused)
 
 -->
 <ruleset name="Boxee.tv (partial)">
 
-	<target host="boxee.tv"/>
-	<target host="*.boxee.tv"/>
+	<target host="boxee.tv" />
+	<target host="*.boxee.tv" />
 
 
-	<!--	Don't secure cross-domain cookies, wrt:
+	<!--	Don't secure wildcard cookies, wrt:
 
 		https://trac.torproject.org/projects/tor/ticket/5931
-					-->
-	<securecookie host="^(\w+\.)?boxee\.tv$" name=".*"/>
+								-->
+	<securecookie host="^(?:\w+\.)?boxee\.tv$" name=".+" />
 
 
-	<rule from="^http://(app\.|www\.)?boxee\.tv/"
-		to="https://$1boxee.tv/"/>
+	<rule from="^http://((?:account|app|assets|www)\.)?boxee\.tv/"
+		to="https://$1boxee.tv/" />
 
 </ruleset>

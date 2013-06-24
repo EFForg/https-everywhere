@@ -1,30 +1,61 @@
 <!--
 	Nonfunctional domains:
 
-		- (www.)cairographics.org	(displays bugzilla data)
-		- lists.cairographics.org	(ssl_error_rx_record_too_long)
-		- .freedesktop.org:
-			- download		(displays bugzilla data)
-			- gstreamer		(ditto)
-			- ldtp			(ssl_error_rx_record_too_long)
-			- poppler		(displays bugzilla data)
-			- portland		(ssl_error_rx_record_too_long)
-			- specifications	(ditto)
-			- www			(displays bugzilla data)
-			- xcb			(ditto)
-			- xorg			(ditto)
+		- (www.)cairographics.org *
+		- lists.cairographics.org **
+
+		- freedesktop.org subdomains:
+
+			- download *
+			- gstreamer *
+			- poppler *
+			- portland *
+			- specifications **
+			- xcb *
+			- xorg *
+
+	* Shows ^freedesktop.org; mismatched, CN: secure.freedesktop.org
+	** http reply
+
+
+	Problematic subdomains:
+
+		- bugzilla	(mismatched, CN: bugs.freedesktop.org)
+		- people	(mismatched, CN: secure.freedesktop.org)
 
 -->
-<ruleset name="FreeDesktop Bugzilla">
+<ruleset name="freedesktop.org">
 
-	<target host="bugs.freedesktop.org" />
-	<target host="bugzilla.freedesktop.org" />
+	<target host="freedesktop.org" />
+	<target host="*.freedesktop.org" />
+		<!--
+			$ is not identical:
+						-->
+		<exclusion pattern="^http://people\.freedesktop\.org/(?!~)" />
 
 
-	<securecookie host="^bugs\.freedesktop\.org$" name=".*" />
+	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
 
 
-	<rule from="^https?://bug(?:s|zilla)\.freedesktop\.org/"
+	<rule from="^http://freedesktop\.org/wiki(\?.*)?$"
+		to="https://freedesktop.org/www$1" />
+
+	<rule from="^http://freedesktop\.org/(?:wiki/)?"
+		to="https://freedesktop.org/www/" />
+
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/wiki(\?.*)?$"
+		to="https://freedesktop.org/$1$2" />
+
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/(?:wiki/)?"
+		to="https://freedesktop.org/$1/" />
+
+	<rule from="^http://bug(?:s|zilla)\.freedesktop\.org/"
 		to="https://bugs.freedesktop.org/" />
+
+	<rule from="^http://(?:peopl|secur)e\.freedesktop\.org/"
+		to="https://secure.freedesktop.org/" />
+
+	<rule from="^http://wiki\.freedesktop\.org/"
+		to="https://freedesktop.org/" />
 
 </ruleset>

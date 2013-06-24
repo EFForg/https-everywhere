@@ -1,7 +1,25 @@
 <!--
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- ct	(404, CN: gp1.wac.edgecastcdn.net)
+		- wac.09fc.edgecastcdn.net/??09FC/
+
+			- ct.buzzfeed.com
+
+		- s.buzzfeed.com.edgesuite.net
+
+			- pglb.buzzfed.com
+
+
+	Nonfunctional domains:
+
+		- pglb.buzzfed.com	(503, akamai)
+		- ct.buzzfeed.com	(404, CN: gp1.wac.edgecastcdn.net)
+
+
+	Problematic domains:
+
+		- s3-ak.buzzfed.com	(akamai)
+		- s3-ec.buzzfed.com	(edgecast)
 
 -->
 <ruleset name="BuzzFeed">
@@ -11,16 +29,13 @@
 	<target host="www.buzzfeed.com" />
 
 
-	<securecookie host="^www\.buzzfeed\.com$" name=".*" />
+	<securecookie host="^www\.buzzfeed\.com$" name=".+" />
 
 
 	<rule from="^http://(www\.)?buzzfeed\.com/"
 		to="https://$1buzzfeed.com/" />
 
-	<!--	- s3-ak: Akamai
-		- s3-ec: EdgeCast
-					-->
-	<rule from="^https?://s3-(?:ak|ec)\.buzzfed\.com/"
+	<rule from="^http://s3-(?:ak|ec)\.buzzfed\.com/"
 		to="https://buzzfeed-static.s3.amazonaws.com/" />
 
 </ruleset>

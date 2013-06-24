@@ -1,0 +1,44 @@
+<!--
+	Problematic subdomains:
+
+		- preferences	(seems identical to bcpd; mismatched, CN: bcpd.x7y24z365.com)
+		- status	(works; mismatched, CN: bcpd.x7y24z365.com)
+
+
+	Fully covered domains:
+
+		- bluecava.com subdomains:
+
+			- (www.)
+			- clients	(web bugs)
+			- vpn.corp
+			- ds
+			- insight
+			- lookup
+			- platform
+			- preferences	(→ bcpd.x7y24z365.com)
+			- transfer
+
+		- bcpd.x7y24z365.com
+
+-->
+<ruleset name="BlueCava (partial)">
+
+	<target host="bluecava.com" />
+	<target host="*.bluecava.com" />
+	<target host="bcpd.x7y24z365.com" />
+
+
+	<!--	Tracking cookies set by clients:
+							-->
+	<securecookie host="^\.bluecava\.com$" name="^(?:d|e|g|machine|s)$" />
+	<securecookie host="^(?:vpn\.corp|transfer)\.bluecava\.com$" name=".+" />
+
+
+	<rule from="^http://((?:clients|vpn\.corp|ds|insight|lookup|platform|transfer|www)\.)?bluecava\.com/"
+		to="https://$1bluecava.com/" />
+
+	<rule from="^http://(?:preferences\.bluecava|bcpd\.x7y24z365)\.com/"
+		to="https://bcpd.x7y24z365.com/" />
+
+</ruleset>

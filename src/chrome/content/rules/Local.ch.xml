@@ -1,32 +1,58 @@
-<ruleset name="Local.ch">
-	<target host="local.ch" />
-	<target host="www.local.ch" />
-	<target host="auto.local.ch" />
-	<target host="blog.local.ch" />
-	<target host="developer.local.ch" />
-	<target host="guide.local.ch" />
-	<target host="id.local.ch" />
-	<target host="immo.local.ch" />
-	<target host="info.local.ch" />
-	<target host="map.local.ch" />
-	<target host="market.local.ch" />
-	<target host="my.local.ch" />
-	<target host="news.local.ch" />
-	<target host="tel.local.ch" />
-	<target host="yellow.local.ch" />
+<!--
+	CDN buckets:
 
-	<rule from="^http://(?:www\.)?local\.ch/" to="https://www.local.ch/"/>
-	<rule from="^http://auto\.local\.ch/" to="https://auto.local.ch/"/>
-	<rule from="^http://blog\.local\.ch/" to="https://blog.local.ch/"/>
-	<rule from="^http://developer\.local\.ch/" to="https://developer.local.ch/"/>
-	<rule from="^http://guide\.local\.ch/" to="https://guide.local.ch/"/>
-	<rule from="^http://id\.local\.ch/" to="https://id.local.ch/"/>
-	<rule from="^http://immo\.local\.ch/" to="https://immo.local.ch/"/>
-	<rule from="^http://info\.local\.ch/" to="https://info.local.ch/"/>
-	<rule from="^http://map\.local\.ch/" to="https://map.local.ch/"/>
-	<rule from="^http://market\.local\.ch/" to="https://market.local.ch/"/>
-	<rule from="^http://my\.local\.ch/" to="https://my.local.ch/"/>
-	<rule from="^http://news\.local\.ch/" to="https://news.local.ch/"/>
-	<rule from="^http://tel\.local\.ch/" to="https://tel.local.ch/"/>
-	<rule from="^http://yellow\.local\.ch/" to="https://yellow.local.ch/"/>
+		- s3-external-3.amazonaws.com/static.blog.local.ch/
+
+		- s3-eu-west-1.amazonaws.com/s.staticlocal.ch/
+
+
+	Problematic domains:
+
+		- local.ch *
+		- s.staticlocal.ch *	(works)
+
+	* Cert only matches *.local.ch
+
+
+	Fully covered local.ch subdomains:
+
+		- (www.)	(^ → www)
+		- auto
+		- blog
+		- developer
+		- guide
+		- id
+		- immo
+		- info
+		- map
+		- market
+		- my
+		- news
+		- tel
+		- yellow
+
+
+	Mixed on multiple subdomains from local.wemfbox.ch
+
+	Mixed image from s.staticlocal.ch on yellow
+
+-->
+<ruleset name="Local.ch">
+
+	<target host="local.ch" />
+	<target host="*.local.ch" />
+
+
+	<securecookie host="^\.local\.ch$" name="^l(?:ang|cl_session_1_production)$" />
+
+
+	<rule from="^http://(?:www\.)?local\.ch/"
+		to="https://www.local.ch/" />
+
+	<rule from="^http://(auto|blog|developer|guide|id|immo|info|map|market|my|news|tel|yellow)\.local\.ch/"
+		to="https://$1.local.ch/" />
+
+	<rule from="^http://static\.blog\.local\.ch/"
+		to="https://s3-eu-west-1.amazonaws.com/static.blog.local.ch/" />
+
 </ruleset>

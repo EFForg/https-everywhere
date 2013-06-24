@@ -1,15 +1,45 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.)	(data differ between http & https, homepage 404s)
+		- blog *
+		- verizon *
+		- vzw *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- cms *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- ads
+		- api
+		- cms		( → www)
+		- tags
+		- wifi
+		- v4
 
 -->
 <ruleset name="JiWire (partial)">
 
-	<target host="v4.jiwire.com" />
+	<target host="jiwire.com" />
+	<target host="*.jiwire.com" />
 
 
-	<rule from="^http://v4\.jiwire\.com/"
-		to="https://v4.jiwire.com/" />
+	<securecookie host="^v4\.jiwire\.com$" name=".+" />
+
+
+	<rule from="^http://(?:cms\.|www\.)?jiwire\.com/"
+		to="https://www.jiwire.com/" />
+
+	<rule from="^http://(ads|api|tags|v4|wi-fi)\.jiwire\.com/"
+		to="https://$1.jiwire.com/" />
 
 </ruleset>

@@ -1,0 +1,66 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)hcl.com		(times out)
+		- (www.)hcl-axon.com	(401, valid cert)
+		- (www.)hcltech.com	(http reply)
+
+
+	Problematic domains:
+
+		- microsite.hcltech.com		(works; self-signed, CN: Parallels Panel)
+
+
+	Fully covered domains:
+
+		- hcl.com subdomains:
+
+			- autodiscover
+			- chnmail
+			- comnetwebmail
+			- isdmail
+			- mail
+			- meme
+			- mpindia
+			- mycampus
+			- ocsweb
+			- as.ocsweb
+			- download.ocsweb
+			- remedy
+
+		- hcl.in subdomains:
+
+			- autodiscover
+			- hcltmail
+			- hcltmail-chn
+
+		- autodiscover.hcl-axon.com
+		- webmail.hcltech.com
+
+-->
+<ruleset name="HCL Technologies (partial)">
+
+	<target host="*.hcl.com" />
+	<target host="*.hcl.in" />
+	<target host="autodiscover.hcl-axon.com" />
+	<target host="webmail.hcltech.com" />
+
+
+	<securecookie host="^(?:(?:chn|comnetweb|isd)?mail|\.?meme|mpindia|mycampus|(?:as\.|download\.)?ocsweb|remedy)\.hcl\.com$" name=".+" />
+	<securecookie host="^hcltmail(?:-chn)?\.hcl\.in$" name=".+" />
+	<securecookie host="^webmail\.hcltech\.com$" name=".+" />
+
+
+	<rule from="^http://(autodiscover|(?:chn|comnetweb|isd)?mail|meme|mpindia|mycampus|(?:as\.|download\.)?ocsweb|remedy)\.hcl\.com/"
+		to="https://$1.hcl.com/" />
+
+	<rule from="^http://(autodiscover|hcltmail(?:-chn)?)\.hcl\.in/"
+		to="https://$1.hcl.in/" />
+
+	<rule from="^http://autodiscover\.hcl-axon\.com/"
+		to="https://autodiscover.hcl-axon.com/" />
+
+	<rule from="^http://webmail\.hcltech\.com/"
+		to="https://webmail.hcltech.com/" />
+
+</ruleset>

@@ -1,0 +1,49 @@
+<!--
+	Other Hostpoint rulesets:
+
+		- Hostpointpartner.ch.xml
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- (www.)14daytrial *
+		- www.blog		(cert only matches ^blog)
+		- www.support		(cert only matches *.hostpoint.ch)
+
+	* Cert only matches www
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- (www.)14daytrial	(→ www)
+		- (www.)blog		(www → ^)
+		- (www.)support		(www → ^)
+
+-->
+<ruleset name="Hostpoint">
+
+	<target host="hostpoint.ch" />
+	<target host="*.hostpoint.ch" />
+
+
+	<securecookie host="^(?:support|www)\.hostpoint\.ch$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?hostpoint\.ch/"
+		to="https://www.hostpoint.ch/" />
+
+	<rule from="^http://(?:www\.)?14daytrial\.hostpoint\.ch/[^\?]*(\?.*)?"
+		to="https://www.hostpoint.ch/ms/promo/hostingtrial/index.php$1" />
+
+	<rule from="^http://(?:www\.)?blog\.hostpoint\.ch/"
+		to="https://blog.hostpoint.ch/" />
+
+	<rule from="^http://support\.hostpoint\.ch/"
+		to="https://support.hostpoint.ch/" />
+
+	<rule from="^http://www\.support\.hostpoint\.ch/[^\?]*(\?.*)?"
+		to="https://support.hostpoint.ch/$1" />
+
+</ruleset>

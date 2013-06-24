@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- zadarastorage.s3.amazonaws.com
+		- zadarastorage-public.s3.amazonaws.com
+
+		- zadara-web.herokuapp.com
+
+			- www
+
+
+	Nonfunctional subdomains:
+
+		- support	(zendesk)
+
+
+	Problematic subdomains:
+
+		- ^		(refused)
+		- www		(works; mismatched, CN; *.herokuapp.com)
+
+-->
+<ruleset name="Zadara Storage (partial)">
+
+	<target host="zadarastorage.com" />
+	<target host="*.zadarastorage.com" />
+		<!--
+			Presumably, altering the visible domain would not be appreciated:
+												-->
+		<exclusion pattern="^http://(?:www\.)?zadarastorage\.com/(?!favicon\.ico|static/)" />
+
+
+	<securecookie host="^manage\.zadarastorage\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?zadarastorage\.com/"
+		to="https://zadara-web.herokuapp.com/" />
+
+	<rule from="^http://manage\.zadarastorage\.com/"
+		to="https://manage.zadarastorage.com/" />
+
+	<rule from="^http://support\.zadarastorage\.com/(generated|system)/"
+		to="https://assets.zendesk.com/$1/" />
+
+</ruleset>

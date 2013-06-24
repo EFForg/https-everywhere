@@ -19,7 +19,7 @@ cd "`dirname $0`"
 [ -d pkg ] || mkdir pkg
 
 # If the command line argument is a tag name, check that out and build it
-if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
+if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
 	SUBDIR=checkout
 	[ -d $SUBDIR ] || mkdir $SUBDIR
@@ -47,53 +47,59 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   exit 0
 fi
 
-if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-elif [ -f trivial-validate.py ] ; then
-	VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
-elif [ -x utils/trivial-validate ] ; then
-  # This case probably never happens
-	VALIDATE=./utils/trivial-validate
-else
-	VALIDATE=./trivial-validate
-fi
+# =============== BEGIN VALIDATION ================
+# Unless we're in a hurry, validate the ruleset library & locales
 
-if $VALIDATE src/chrome/content/rules >&2
-then
-  echo Validation of included rulesets completed. >&2
-  echo >&2
-else
-  echo ERROR: Validation of rulesets failed. >&2
-  exit 1
-fi
-
-if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
-then
-  if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
-  then
-    echo Validation of rulesets with RELAX NG grammar completed. >&2
+if [ "$1" != "--fast" ] ; then
+  if [ -f utils/trivial-validate.py ]; then
+    VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+  elif [ -f trivial-validate.py ] ; then
+    VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
+  elif [ -x utils/trivial-validate ] ; then
+    # This case probably never happens
+    VALIDATE=./utils/trivial-validate
   else
-    echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
+    VALIDATE=./trivial-validate
+  fi
+
+  if $VALIDATE src/chrome/content/rules >&2
+  then
+    echo Validation of included rulesets completed. >&2
+    echo >&2
+  else
+    echo ERROR: Validation of rulesets failed. >&2
     exit 1
   fi
-else
-  echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
-fi 2>&1 | grep -v validates
 
-if [ -x ./utils/compare-locales.sh ] >&2
-then
-  if ./utils/compare-locales.sh >&2
+  if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
   then
-    echo Validation of included locales completed. >&2
+    if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
+    then
+      echo Validation of rulesets with RELAX NG grammar completed. >&2
+    else
+      echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
+      exit 1
+    fi
   else
-    echo ERROR: Validation of locales failed. >&2
-    exit 1
+    echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
+  fi 2>&1 | grep -v validates
+
+  if [ -x ./utils/compare-locales.sh ] >&2
+  then
+    if ./utils/compare-locales.sh >&2
+    then
+      echo Validation of included locales completed. >&2
+    else
+      echo ERROR: Validation of locales failed. >&2
+      exit 1
+    fi
   fi
 fi
+# =============== END VALIDATION ================
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
-if [ "$1" ]; then
+if [ "$1" ] && [ "$1" != "--fast" ] ; then
 	XPI_NAME="$XPI_NAME.xpi"
 else
 	XPI_NAME="$XPI_NAME~pre.xpi"
@@ -108,7 +114,14 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
-python ./utils/merge-rulesets.py
+# Unless we're in a hurry and there's already a ruleset library, build it from
+# the ruleset .xml files
+
+if [ "$1" = "--fast" ] ; then
+  FAST="--fast"
+fi
+python ./utils/merge-rulesets.py $FAST
+
 cd src
 
 # Build the XPI!

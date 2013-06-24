@@ -9,18 +9,22 @@
 			- (www.)
 			- blog
 			- developer
-			- feeds			(reset)
+			- feeds *
 			- forum
-			- investor		(cert: *.shareholder.com; 403)
+			- goku			(refused)
+			- investor		(403, CN: *.shareholder.com)
 			- link
-			- brightcove04.o	(Akamai; "Service Unavailable")
-			- status		(reset)
+			- brightcove04.o	(503, Akamai)
+			- status *
 
-		- brightcove.vo.llnwd.net	(cert: *.hs.llnwd.net; blank page; brightcove.hs.llnwd.net doesn't exist)
+		- brightcove.vo.llnwd.net	(400; CN: *.hs.llnwd.net, .hs. doesn't exist)
+
+	* Reset
 
 
 	Problematic domains:
 
+		- admin.brightcove.com		(akamai)
 		- services.brightcove.com	(504, valid cert)
 
 
@@ -32,6 +36,7 @@
 	- rainbow.brightcove.com.edgesuite.net
 
 	/101716/rtmp_pd
+
 -->
 <ruleset name="Brightcove (partial)">
 
@@ -49,20 +54,20 @@
 		<!--exclusion pattern="^https?://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
 
 
-	<securecookie host="^\w.*\.brightcove\.com$" name=".*" />
+	<securecookie host="^\w.*\.brightcove\.com$" name=".+" />
 
 
 	<!--rule from="^https?://c\.brightcove\.com/services"
 		to="https://secure.brightcove.com/services" /-->
 
-	<rule from="^http://(appcloud|files|img|my|register|secure|signin)\.brightcove\.com/"
+	<rule from="^http://(appcloud|files|img|metrics|my|register|secure|signin)\.brightcove\.com/"
 		to="https://$1.brightcove.com/" />
 
-	<!--	At least the homepage redirects to http.	-->
+	<!--	At least the homepage redirects to http.
+							-->
 	<rule from="^http://support\.brightcove\.com/(en/contact$|sites/)"
 		to="https://support.brightcove.com/$1" />
 
-	<!--	admin:	Akamai	-->
 	<rule from="^https?://s?admin\.brightcove\.com/"
 		to="https://sadmin.brightcove.com/" />
 
