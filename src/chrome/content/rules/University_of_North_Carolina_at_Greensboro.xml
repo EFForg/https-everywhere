@@ -1,0 +1,64 @@
+<!--
+	DNS Name: s-libweb2.uncg.edu
+
+	Nonfunctional domains:
+
+		- advancement *
+		- donate *
+		- giving *
+
+	* http reply
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.uncg.edu)
+		- inspirechange	(mismatched, CN: ure.uncg.edu)
+
+
+	Partially covered subdomains:
+
+		- inspirechanges	(→ ure)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- alumni
+		- baeservices
+		- banweb
+		- blackboard
+		- communityengagement
+		- fsv
+		- giveto
+		- hrl
+		- its
+		- library
+		- newsandfeatures
+		- oedi
+		- online
+		- provost
+		- research
+		- ure
+		- web
+
+-->
+<ruleset name="University of North Carolina at Greensboro (partial)">
+
+	<target host="uncg.edu" />
+	<target host="*.uncg.edu" />
+
+
+	<securecookie host="^(?:baeservices|banweb|blackboard|communityengagement|\.library|newsandfeatures|provost|web)\.uncg\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?uncg\.edu/"
+		to="https://www.uncg.edu/" />
+
+	<rule from="^http://(alumni|baeservices|banweb|blackboard|communityengagement|fsv|giveto|hrl|its|library|newsandfeatures|oedi|online|provost|research|ure|web)\.uncg\.edu/"
+		to="https://$1.uncg.edu/" />
+
+	<rule from="^http://inspirechange\.uncg\.edu/(\?.*)?$"
+		to="https://ure.uncg.edu/features/$1" />
+
+</ruleset>
