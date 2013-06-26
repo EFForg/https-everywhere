@@ -1,7 +1,9 @@
 <!--
 	CDN buckets:
 
-		- bnetcmsus-a.akamaihd.net
+		- bnetcmsus-a.akamaihd.net | us.media3.battle.net.edgesuite.net
+
+			- us.media3
 
 
 	Problematic subdomains:
@@ -9,18 +11,40 @@
 		- us.media3	(akamai)
 
 
-	Some pages redirect to http.
+	Partially covered subdomains:
+
+		- (www.) *
+		- eu *
+		- kr *
+		- sea *
+		- tw *
+		- us *
+
+	* Some pages redirect to http.
+
+
+	Fully covered subdomains:
+
+		- forums
+		- us.media3	(→ bnetcmsus-a.akamaihd.net)
 
 -->
 <ruleset name="Battle.net (partial)">
 
+	<target host="battle.net" />
 	<target host="*.battle.net" />
 
+
+	<securecookie host="^forums\.battle\.net$" name=".+" />
+
+
+	<rule from="^http://forums\.battle\.net/"
+		to="https://forums.battle.net/" />
 
 	<rule from="^http://us\.media3\.battle\.net/"
 		to="https://bnetcmsus-a.akamaihd.net/" />
 
-	<rule from="^http://us\.battle\.net/((?:account|d3|login)(?:$|\?|/)|favicon\.ico|static/)"
-		to="https://us.battle.net/$1" />
+	<rule from="^http://((?:eu|kr|sea|tw|us|www)\.)?battle\.net/((?:account|d3|login)(?:$|\?|/)|favicon\.ico|static(?:-render)?/|.+/static/)"
+		to="https://$1battle.net/$2" />
 
 </ruleset>
