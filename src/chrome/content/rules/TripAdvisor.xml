@@ -6,7 +6,6 @@
 
 	Nonfunctional tripadvisor.com subdomains:
 
-		- (www.) *
 		- cobrands **
 		- flights *	(mismatched, CN: *.seatguru.com)
 		- flights-cdn ***
@@ -22,18 +21,37 @@
 	** Times out
 	*** Some [all?] pages redirect to http, akamai
 
+
+	Problematic subdomains:
+
+		- ^	(cert only matches *.tripadvisor.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
 -->
 <ruleset name="TripAdvisor (partial)">
 
 	<target host="c1.tacdn.com" />
+	<target host="www.t-analytics.com" />
+	<target host="tripadvisor.com" />
 	<target host="*.tripadvisor.com" />
 
 
+	<securecookie host="^www\.t-analytics\.com$" name=".+" />
 	<securecookie host="^webmail\.tripadvisor\.com$" name=".+" />
 
 
 	<rule from="^http://c1\.tacdn\.com/"
 		to="https://c1.tacdn.com/" />
+
+	<rule from="^http://www\.t-analytics\.com/"
+		to="https://www.t-analytics.com/" />
+
+	<rule from="^http://(?:www\.)?tripadvisor\.com/(favicon\.ico|img/|Registration(?:$|\?))"
+		to="https://www.tripadvisor.com/$1" />
 
 	<rule from="^http://(cdn|media-cdn|remote|webmail)\.tripadvisor\.com/"
 		to="https://$1.tripadvisor.com/" />
