@@ -1,8 +1,17 @@
 <!--
+	CDN buckets:
+
+		- downloads2.esri.com.edgesuite.net
+		- www.esri.com.edgesuite.net
+
+
 	Nonfunctional subdomains:
 
+		- ^ *
 		- blogs *
 		- downloads2 **
+		- esrici	(data differ, valid cert)
+		- rp1 *
 		- store *
 		- support **
 		- www **
@@ -11,7 +20,31 @@
 	** 503, akamai
 
 
-	^esri.com doesn't exist.
+	Problematic domains:
+
+		- www.myesri.com	(mismatched, CN: www.esri.com)
+
+
+	Fully covered domains:
+
+		- esri.com subdomains:
+
+			- autodiscover
+			- customers
+			- ecasapi
+			- esribc
+			- esriwd
+			- events
+			- legacy
+			- promos
+			- redowa
+			- rss
+			- service
+			- training
+			- uel
+			- webaccounts
+
+		- (www.)myesri.com	(www → ^)
 
 
 	Mixed images from downloads2 on training.
@@ -20,12 +53,18 @@
 <ruleset name="Esri (partial)">
 
 	<target host="*.esri.com" />
+	<target host="myesri.com" />
+	<target host="www.myesri.com" />
 
 
-	<securecookie host="^(?:events|training)\.esri\.com$" name=".+" />
+	<!--securecookie host="^\.esri\.com$" name="^ESRIPREFS$" /-->
+	<securecookie host="^(?:customers|ecasapi|esribc|events|redowa|training)\.esri\.com$" name=".+" />
 
 
-	<rule from="^http://(events|training|webaccounts)\.esri\.com/"
+	<rule from="^http://(autodiscover|customers|ecasapi|esribc|esriwd|events|legacy|promos|redowa|rss|service|training|uel|webaccounts)\.esri\.com/"
 		to="https://$1.esri.com/" />
+
+	<rule from="^http://(?:www\.)?myesri\.com/"
+		to="https://myesri.com/" />
 
 </ruleset>
