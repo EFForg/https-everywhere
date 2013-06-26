@@ -1,9 +1,36 @@
 <!--
 	s3.amazonaws.com/mibbit/
 
+
+	Nonfunctional subdomains:
+
+		- a *
+		- blog		(shows www, valid cert)
+		- wiki *
+
+	* 401, valid cert
+
+
+	Fully covered subdomains:
+
+		- (www.)
+
+		- chat subdomains:
+
+			- ^
+			- 02
+			- client01
+
+		- data
+		- search
+		- widget
+		- widget0[1-4]
+		- widgetmanager
+
 -->
 <ruleset name="Mibbit">
 
+	<target host="mibbit.com" />
 	<target host="*.mibbit.com" />
 	<target host="*.chat.mibbit.com" />
 
@@ -11,9 +38,7 @@
 	<securecookie host="^(.*\.)?mibbit.com$" name=".*" />
 
 
-	<!--	Forcing SSL on homepage would redirect to Mibbit chat page.
-								-->
-	<rule from="^http://(chat|02\.chat|data|widget(?:0[14]|manager))\.mibbit\.com/"
-		to="https://$1.mibbit.com/" />
+	<rule from="^http://((?:chat|(?:02|client01)\.chat|data|search|widget(?:0\d|manager)?|www)\.)?mibbit\.com/"
+		to="https://$1mibbit.com/" />
 
 </ruleset>
