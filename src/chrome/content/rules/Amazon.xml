@@ -3,6 +3,7 @@
 
 		- Amazon-Associates.xml
 		- AmazonAWS.xml
+		- Amazon_EU.xml
 
 
 	This rule is off by default because it caused so many aspects of the
@@ -54,10 +55,7 @@
 		does work:
 			everything except...
 		doesn't work:
-			gp/search\?
 			/mn/search/
-			s/
-			s\?rh=		(i.e., search pages and files)
 				
 
 	Partially covered domains:
@@ -65,15 +63,12 @@
 		- askville.amazon.com	(pages redirect to SendToHttp.do)
 
 
-	Targets solely for wildcard cookies:
-
-		- *.amazon.ca
-
 -->
 <ruleset name="Amazon (broken)" default_off="breaks Look Inside the Book">
 
-	<target host="amazon.*" />
-	<target host="www.amazon.*" />
+	<target host="amazon.ca" />
+	<target host="amazon.com" />
+	<target host="www.amazon.com" />
 		<!--
 			These pages don't work on .com.
 						-->
@@ -86,16 +81,15 @@
 	<target host="*.amazon.ca" />
 	<target host="developer.amazon.com" />
 	<target host="local.amazon.com" />
-	<target host="*.amazon.co.uk" />
-	<target host="amazon.co.*" />
-	<target host="www.amazon.co.*" />
+	<target host="amazon.co.jp" />
+	<target host="www.amazon.co.jp" />
 		<!--
 			Search redirects to http, for all sites.
 									-->
 		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search(?:$|\?)|s(?:/|\?rh=))" />
 
 
-	<!--	Verified as working for UK, other sites matched appear to function identically.
+	<!--	Verified as working for UK, ca appears to function identically.
 
 		Unfortunately, navigating to an unsecured page wipes one's shopping basket :(
 			This is problem with out handling of secure cookies, wherein we treat
@@ -103,20 +97,20 @@
 			If our handling were correct, this securecookie rule would have only
 		one problem, namely that basket information would be missing on search pages.
 
-	<securecookie host="^(?:www)?\.amazon\.(?:ca|co\.uk|de|es|fr|it)$" name=".*" /-->
+	<securecookie host="^(?:www)?\.amazon\.ca$" name=".*" /-->
 
 	<!--	These cookies are set all over .com.
 	<securecookie host="^\.amazon\.com$" name="^session-id(-time)?$" />
 
 		These cookies are set by gp/cart/view.html
 	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
-	<securecookie host="^local\.amazon\.co(?:m|\.uk)$" name=".+" />
+	<securecookie host="^local\.amazon\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/mn/search/uedata/"
+	<rule from="^http://(?:www\.)?amazon\.(ca|com)/mn/search/uedata/"
 		to="https://www.amazon.$1/uedata/" />
 
-	<rule from="^http://(?:www\.)?amazon\.(ca|com|co\.uk|de|es|fr|it)/"
+	<rule from="^http://(?:www\.)?amazon\.(ca|com)/"
 		to="https://www.amazon.$1/" />
 
 	<rule from="^http://askville\.amazon\.com/css/"
@@ -125,15 +119,12 @@
 	<rule from="^http://developer\.amazon\.com/"
 		to="https://developer.amazon.com/" />
 
-	<rule from="^http://local\.amazon\.co(m|\.uk)/"
-		to="https://local.amazon.co$1/" />
+	<rule from="^http://local\.amazon\.com/"
+		to="https://local.amazon.com/" />
 
 	<!--	There is very little support on JP website
 			possibly more than is in this rule though.	-->
 	<rule from="^http://(?:www\.)?amazon\.co\.jp/(ap|gp/(?:bestsellers|cart|cobrandcard|registry|uedata))/"
 		to="https://www.amazon.co.jp/$1/" />
-
-	<rule from="^http://aan\.amazon\.co\.uk/"
-		to="https://aan.amazon.co.uk/" />
 
 </ruleset>
