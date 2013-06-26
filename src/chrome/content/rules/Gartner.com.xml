@@ -1,23 +1,28 @@
 <!--
 	Problematic subdomains:
 
-		- na[123].www	(cert only matches www)
+		- ^ *
+		- na[123].www *
+
+	* Cert only matches www
 
 -->
 <ruleset name="Gartner.com (partial)">
 
 	<target host="gartner.com" />
 	<target host="*.gartner.com" />
-		<!--	Started redirecting to http.	-->
-		<exclusion pattern="^http://www\.gartner\.com/.*\.jsp($|\?)" />
+		<!--
+			Started redirecting to http.
+							-->
+		<exclusion pattern="^http://www\.gartner\.com/.+\.jsp(?:$|\?)" />
 
 
 	<!--	Commented for the reason above.
-	<securecookie host="^www\.gartner\.com$" name=".*"/-->
+
+	<securecookie host="^www\.gartner\.com$" name=".+" /-->
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:(?:na\d\.)?www\.)?gartner\.com/"
+	<rule from="^http://(?:(?:na\d\.)?www\.)?gartner\.com/"
 		to="https://www.gartner.com/" />
 
 	<rule from="^http://(imagesrv|my)\.gartner\.com/"
