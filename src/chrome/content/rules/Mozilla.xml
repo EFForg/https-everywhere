@@ -9,6 +9,21 @@
 		- Open_Badges.xml
 
 
+	CDN buckets:
+
+		- images.s4.exacttarget.com.edgesuite.net
+
+			- image.e.mozilla.org
+
+		- click.virt.s4.exacttarget.com
+
+			- click.e.mozilla.org
+
+		- view.virt.s4.exacttarget.com
+
+			- view.e.mozilla.org
+
+
 	Nonfunctional domains:
 
 		- identity.mozilla.com		(hosted on Tumblr)
@@ -17,6 +32,7 @@
 		- mozilla.org subdomains:
 
 			- dxr			(times out)
+			- view.e *
 			- pastebin		(403; mismatched, CN: tbpl.mozilla.org)
 			- planet
 			- releases
@@ -25,6 +41,8 @@
 			- www-archive		(prompts for LDAP login, CN: www.mozilla.com)
 
 		- blog.webfwd.org		(hosted on Tumblr)
+
+	* Times out
 
 
 	Problematic domains:
@@ -38,6 +56,8 @@
 
 			- affiliates-cdn	(CN: affiliates.mozilla.org)
 			- beta			(prompts for LDAP login, CN: www.mozilla.com)
+			- click.e		(works; mismatched, CN: *.virt.s4.exacttarget.com)
+			- image.e		(works, akamai)
 			- krakenbenchmark	(CN: www.mozilla.org)
 			- people		(CN: people.mozilla.com)
 			- talkback-public	(404, CN: www.mozilla.org)
@@ -181,6 +201,12 @@
 	<target host="mozilla.org" />
 	<target host="*.mozilla.org" />
 		<exclusion pattern="^http://(?:dxr|krakenbenchmark|pastebin|planet|releases|sfx-images|start|www-archive)\.mozilla\.org/" />
+		<!--
+			Breaks newsletter:
+
+				https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001635.html
+									-->
+		<exclusion pattern="^http://\w+\.e\.mozilla\.org/" />
 	<target host="mdn.mozillademos.org" />
 	<target host="mozillaignite.com" />
 	<target host="*.mozillaignite.com" />
