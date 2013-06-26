@@ -15,46 +15,59 @@
 	that redirects to one of these 7 countries.
 
 
-	amazon.com
-		does work:
-			ap/		(appears to be purchase-management related)
-			([\w\-]+/)?dp/	(i.e., dp/ possibly preceeded by title)
-			e/\w{10,10}/	(i.e., e/ followed by ASIN)
-			gp/cart
-			gp/css
-			gp/feature.html
-			gp/redirect.html
-			gp/registry/wishlist
+	amazon.com:
 
-		doesn't work:
-			$		(i.e., homepage)
-			([\w\-]+/)?b/ 	(i.e., b/ preceeded by category)
-			exec/obidos/ASIN/
-			([\w\-]+/)gp/	(i.e., gp/ possibly preceeded by title)
-			gp/goldbox($|\?)
-			gp/kindle/pc($|\?)
-			gp/pdp/profile($|\?)
-			gp/product/
-			gp/richpub/syltguides/byauthor($|\?)
-			Help/
-			l/
-			s/
+		Does work:
+
+			- ap/		(appears to be purchase-management related)
+			- ([\w-]+/)?dp/	(i.e. dp/ possibly preceeded by title)
+			- e/\w{10,10}/	(i.e. e/ followed by ASIN)
+			- gp/cart
+			- gp/css
+			- gp/feature.html
+			- gp/redirect.html
+			- gp/registry/wishlist
+
+		Doesn't work:
+
+			- $			(i.e. homepage)
+			- ([\w-]+/)?b/	 	(i.e. b/ preceeded by category)
+			- exec/obidos/ASIN/
+			- ([\w-]+/)gp/		(i.e. gp/ possibly preceeded by title)
+			- gp/goldbox($|\?)
+			- gp/kindle/pc($|\?)
+			- gp/pdp/profile($|\?)
+			- gp/product/
+			- gp/richpub/syltguides/byauthor($|\?)
+			- Help/
+			- l/
+			- s/
 
 	amazon.co.jp:
-		does work:
-			/ap/
-			a few pages under gp/
-		doesn't work:
-			everything else
+
+		Does work:
+
+			- /ap/
+			- a few pages under gp/
+
+		Doesn't work:
+
+			- Everything else
 
 	amazon.cn:
-		doesn't work:
-			everything?
 
-	amazon.*:
-		does work:
+		Doesn't work:
+
+			- Everything?
+
+	amazon.ca:
+
+		Does work:
+
 			everything except...
-		doesn't work:
+
+		Doesn't work:
+
 			/mn/search/
 				
 
@@ -62,27 +75,27 @@
 
 		- askville.amazon.com	(pages redirect to SendToHttp.do)
 
-
 -->
 <ruleset name="Amazon (broken)" default_off="breaks Look Inside the Book">
 
 	<target host="amazon.ca" />
+	<target host="www.amazon.ca" />
+	<target host="amazon.co.jp" />
+	<target host="www.amazon.co.jp" />
 	<target host="amazon.com" />
+		<exclusion pattern="^http://askville\.amazon\.com/(?!css/)" />
+	<target host="developer.amazon.com" />
+	<target host="local.amazon.com" />
 	<target host="www.amazon.com" />
 		<!--
-			These pages don't work on .com.
-						-->
+			These pages don't work on .com:
+							-->
 		<exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" />
 		<!--
 			- ajaxv2: Breaks adding to basket for products with options
 			- dynamic-update: Breaks image zoom
-										-->
+								-->
 		<exclusion pattern="^http://(?:www\.)?amazon\.com/gp/twister/(?:ajaxv2|dynamic-update/)" />
-	<target host="*.amazon.ca" />
-	<target host="developer.amazon.com" />
-	<target host="local.amazon.com" />
-	<target host="amazon.co.jp" />
-	<target host="www.amazon.co.jp" />
 		<!--
 			Search redirects to http, for all sites.
 									-->
@@ -92,39 +105,37 @@
 	<!--	Verified as working for UK, ca appears to function identically.
 
 		Unfortunately, navigating to an unsecured page wipes one's shopping basket :(
-			This is problem with out handling of secure cookies, wherein we treat
+			This is problem with our handling of secure cookies, wherein we treat
 		secure and non-secure cookies with the same ID as one cookie, instead of two.
 			If our handling were correct, this securecookie rule would have only
 		one problem, namely that basket information would be missing on search pages.
 
-	<securecookie host="^(?:www)?\.amazon\.ca$" name=".*" /-->
+	<securecookie host="^(www)?\.amazon\.ca$" name=".+" />
 
-	<!--	These cookies are set all over .com.
+		These cookies are set all over .com:
+
 	<securecookie host="^\.amazon\.com$" name="^session-id(-time)?$" />
 
 		These cookies are set by gp/cart/view.html
+
 	<securecookie host="\.amazon\.com$" name="^(session-token|ubid-main)$"/-->
 	<securecookie host="^local\.amazon\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?amazon\.(ca|com)/mn/search/uedata/"
-		to="https://www.amazon.$1/uedata/" />
+	<!--	There is very little support on JP website.
 
-	<rule from="^http://(?:www\.)?amazon\.(ca|com)/"
-		to="https://www.amazon.$1/" />
-
-	<rule from="^http://askville\.amazon\.com/css/"
-		to="https://askville.amazon.com/css/" />
-
-	<rule from="^http://developer\.amazon\.com/"
-		to="https://developer.amazon.com/" />
-
-	<rule from="^http://local\.amazon\.com/"
-		to="https://local.amazon.com/" />
-
-	<!--	There is very little support on JP website
-			possibly more than is in this rule though.	-->
+		Possibly more than is covered in this rule, though.
+									-->
 	<rule from="^http://(?:www\.)?amazon\.co\.jp/(ap|gp/(?:bestsellers|cart|cobrandcard|registry|uedata))/"
 		to="https://www.amazon.co.jp/$1/" />
+
+	<rule from="^http://(?:www\.)?amazon\.c(a|om)/mn/search/uedata/"
+		to="https://www.amazon.c$1/uedata/" />
+
+	<rule from="^http://(?:www\.)?amazon\.c(a|om)/"
+		to="https://www.amazon.c$1/" />
+
+	<rule from="^http://(askville|developer|local)\.amazon\.com/"
+		to="https://$1.amazon.com/" />
 
 </ruleset>
