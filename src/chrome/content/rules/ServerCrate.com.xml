@@ -1,0 +1,32 @@
+<!--
+	Nonfunctional subdomains:
+
+		- dalweb1		(interrupted)
+		- dalweb1...:2082	(times out)
+
+
+	Partially covered subdomains:
+
+		- billing	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- vps
+
+-->
+<ruleset name="ServerCrate.com (partial)">
+
+	<target host="servercrate.com" />
+	<target host="*.servercrate.com" />
+		<exclusion pattern="^http://billing\.servercrate\.com/($|\?|(?:announcements|index|knowledgebase)\.php)" />
+
+
+	<securecookie host="^(?:vps|www)?\.servercrate\.com$" name=".+" />
+
+
+	<rule from="^http://((?:billing|vps|www)\.)?servercrate\.com/"
+		to="https://$1servercrate.com/" />
+
+</ruleset>
