@@ -8,6 +8,11 @@
 
 	- s3.amazonaws.com/assets.sbnation.com/
 	- chalk-images.s3.amazonaws.com
+
+	- ddrgqsxlcy7wq.cloudfront.net
+
+		- cdn[0-3].sbnation.com
+
 	- 1876.voxcdn.com		(404s over https)
 	- 1876-fonts.voxcdn.com		(403 over http; 404 over -s)
 
@@ -17,11 +22,14 @@
 
 	Nonfunctional domains:
 
-		- cdn[0-3].sbnation.com		(Cert: *.voxcdn.com; 404; data not on www; cdn,
-						cdn-origin, origin, and origin-cdn don't exist)
-		- fonts.sbnation.com		(cert: *.voxcdn.com; 404)
 		- (www.)voxmedia.com		(ssl_error_rx_record_too_long)
 		- product.voxmedia.com		(hosted on Tumblr)
+
+
+	Fully covered domains:
+
+		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
+		- fonts.sbnation.com	(→ d1jcofl6pfjesh.cloudfront.net)
 
 
 	Data from cdn[0-3] all appear identical
@@ -49,6 +57,12 @@
 
 	<rule from="^https?://assets\.sbnation\.com/"
 		to="https://s3.amazonaws.com/assets.sbnation.com/" />
+
+	<rule from="^http://cdn\d\.sbnation\.com/"
+		to="https://ddrgqsxlcy7wq.cloudfront.net/" />
+
+	<rule from="^http://fonts\.sbnation\.com/"
+		to="https://d1jcofl6pfjesh.cloudfront.net/" />
 
 	<!--	cert: *.openxenterprise.com	-->
 	<rule from="^https?://ox-d\.sbnation\.com/"
