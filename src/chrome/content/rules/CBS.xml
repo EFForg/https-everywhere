@@ -14,6 +14,13 @@
 	CDN buckets:
 
 		- ad.cnet-basic-performance.akadns.net
+
+			- mads.cbs.com
+
+		- wwwimage.cbs.com.edgesuite.net
+
+			- wwwimage.cbsstatic.com
+
 		- www.cbsnews.com.edgesuite.net
 		- wwwimage.cbsnews.com.edgesuite.net 
 			- a1030.g.akamai.net/=/1030/1957/7d/wwwimages.cbsnews.com/	(works!)
@@ -33,10 +40,9 @@
 
 	Nonfunctional domains:
 
-		- adlog.com.com
-		- cbs.com			(times out)
-		- www.cbs.com			(Akamai; "An error occurred"; origin,
-						origin-www, and www-origin don't exist)
+		- mads.cbs.com *
+		- (www.)cbs.dk			(redirects to http, valid cert)
+		- adlog.com.com *
 		- cdn.cbsi.com.au		(Akamai; "Service Unavailable")
 		- (www.)cbsinteractive.com
 		- (www.)cbsinteractive.com.au
@@ -63,16 +69,55 @@
 		- (www.)zol.com.cn
 		- img2.zol.com.cn
 
+	* Refused
+
 
 	asset\d		≍	i.i.com.com
+
+
+	Problematic domains:
+
+		- wwwimage.cbs.com *
+		- www.cbsstatic.com		(mismatched, CN: *.cbs.com)
+		- wwwimage.cbsstatic.com *
+
+	* 504, akamai
+
+
+	Partially covered domains:
+
+		- (www.)cbs.com		(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- fileupload.intl.cbs.com
+		- wwwimage.cbs.com		(→ www.cbs.com)
+		- www.cbsstatic.com		(→ www.cbs.com)
+		- wwwimage.cbsstatic.com	(→ www.cbs.com)
 
 -->
 <ruleset name="CBS (partial)">
 
+	<target host="cbs.com" />
+	<target host="*.cbs.com" />
+		<exclusion pattern="^http://(?:www\.)?cbs\.com/(?!assets/|base/files/|Common/|favicon\.ico|thumbnails/|user(?:$|\?|/))" />
 	<target host="*.cbsnews.com" />
+	<target host="*.cbsstatic.com" />
 	<target host="om.cnet.com.au" />
 	<target host="dw.com.com" />
 
+
+	<!--	Fails to redirect over https:
+						-->
+	<rule from="^http://(www\.)?cbs\.com/user/?(?:\?.*)?$"
+		to="https://$1cbs.com/user/settings/" />
+
+	<rule from="^http://(fileupload\.intl\.|www\.)?cbs\.com/"
+		to="https://$1cbs.com/" />
+
+	<rule from="^http://wwwimage\.cbs\.com/"
+		to="https://www.cbs.com/" />
 
 	<rule from="^https?://markets\.cbsnews\.com/$"
 		to="https://markets.financialcontent.com/cbsnews" />
@@ -82,6 +127,9 @@
 
 	<rule from="^https?://wwwimages\.cbsnews\.com/"
 		to="https://a248.e.akamai.net/=/868/1957/7d/wwwimages.cbsnews.com/" />
+
+	<rule from="^http://www(?:image)?\.cbsstatic\.com/"
+		to="https://www.cbs.com/" />
 
 	<rule from="^https?://om\.cnet\.com\.au/"
 		to="https://zdau-cnet.122.2o7.net/" />
