@@ -1,0 +1,42 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/packages.couchbase.com/
+
+
+	Nonfunctional subdomains:
+
+		- info		(redirects to app-a.marketo.com)
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="Couchbase (partial)">
+
+	<target host="couchbase.com" />
+	<target host="*.couchbase.com" />
+		<!--exclusion pattern="^http://(www\.)?couchbase\.com/($|\?|(careers|couchbase-(server-admin-training|services|vs-couchdb)|documentation|downloads(-all)?|leadership|partners|press-releases|white-papers)(?|\?|/)|case-studies/?($|\?))" /-->
+		<!--exclusion pattern="^http://(www\.)?couchbase\.com/forums/(?!misc/|sites/|user($|\?|/))" /-->
+
+
+	<!--	couchbase-server$ redirects to http first:
+								-->
+	<rule from="^http://(www\.)?couchbase\.com/couchbase-server(?:/?(?:\?.*)?$|/overview)"
+		to="https://$1couchbase.com/couchbase-server/overview" />
+
+	<!--	Ditto:
+				-->
+	<rule from="^http://(www\.)?couchbase\.com/develop/?(?:\?.*)?$"
+		to="https://www.couchbase.com/communities/all-client-libraries" />
+
+	<rule from="^http://(www\.)?couchbase\.com/((?:buzz|case-studies/\w+|communities|company|contact|couchbase-(?:open-source-project|server-java-training|server/use-cases|support)|customers|docs|forums/user|learn|presentations|why-nosql/nosql-database)(?:$|\?|/)|(?:forums/)?(?:misc|sites)/)"
+		to="https://$1couchbase.com/$2" />
+
+	<rule from="^http://info\.couchbase\.com/(cs|image|j|r)s/"
+		to="https://na-a.couchbase.com/$1s/" />
+
+	<rule from="^http://packages\.couchbase\.com/"
+		to="https://s3.amazonaws.com/packages.couchbase.com/" />
+
+</ruleset>
