@@ -1,0 +1,55 @@
+<!--
+	CDN buckets:
+
+		- a248.e.akamai.net/f/248/76110/1h/s3-sa-east-1.amazonaws.com/selo.siteblindado.com/
+		- s3-sa-east-1.amazonaws.com/portal.siteblindado.com/
+
+
+	Problematic domains:
+
+		- portal.siteblindado.com *
+		- www.siteblindado.com.br *
+
+	* Mismatched, CN: incapsula.com
+
+
+	Fully covered domains:
+
+		- siteblindado.com subdomains:
+
+			- (www.)
+			- portal	(→ portal.siteblindado.com.br)
+			- portal2
+			- selo
+
+		- siteblindado.com.br subdomains:
+
+			- portal
+			- selo
+			- www		(→ www.siteblindado.com)
+
+-->
+<ruleset name="Site Blindado">
+
+	<target host="siteblindado.com" />
+	<target host="*.siteblindado.com" />
+	<target host="*.siteblindado.com.br" />
+
+
+	<securecookie host="^(?:portal2|selo|www)?\.siteblindado\.com$" name=".+" />
+	<securecookie host="^(?:portal|selo)?\.siteblindado\.com\.br$" name=".+" />
+
+
+	<rule from="^http://((?:portal2|selo|www)\.)?siteblindado\.com/"
+		to="https://$1siteblindado.com/" />
+
+	<rule from="^http://portal\.siteblindado\.com/"
+		to="https://portal.siteblindado.com.br/" />
+
+	<rule from="^http://(portal|selo)\.siteblindado\.com\.br/"
+		to="https://$1.siteblindado.com.br/" />
+
+	<rule from="^http://www\.siteblindado\.com\.br/"
+		to="https://www.siteblindado.com/" />
+
+</ruleset>
