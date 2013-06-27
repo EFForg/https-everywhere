@@ -6,6 +6,8 @@
 
 		- condenast.112.2o7.net
 
+			- stats2.arstechnica.com
+
 		- arstechnica.cachefly.net
 
 		- arstechnicarp.cachefly.net
@@ -16,25 +18,28 @@
 			- static.arstechnica.net
 
 
-	Nonfunctional domains:
+	Nonfunctional arstechnica.com subdomains:
 
-		- archive.arstechnica.com *
-		- live.arstechnica.com		(refused)
-		- origin.cdn.arstechnica.com		(times out)
+		- archive *
+		- live		(refused)
+		- origin.cdn *
 
 	* Times out
 
 
 	Problematic domains:
 
-		- ars.to	(times out)
-		- episteme.arstechnica.com	(works; mismatched, CN: arstechnica.com)
-		- feeds.arstechnica.com		(interrupted)
-		- media.arstechnica.com		(cachefly)
-		- stats2.arstechnica.com	(2o7.net)
+		- ars.to			(times out)
+
+		- arstechnica.com subdomains:
+
+			- episteme	(works; mismatched, CN: arstechnica.com)
+			- feeds		(interrupted)
+			- media		(cachefly)
+			- stats2	(2o7.net)
 
 
-	Partially covered subdomains:
+	Partially covered arstechnica.com subdomains:
 
 		- (www.)	(most pages redirect to http)
 		- feeds		(→ feedburner.google.com)
@@ -45,6 +50,7 @@
 	<target host="ars.to" />
 	<target host="arstechnica.com" />
 	<target host="*.arstechnica.com" />
+		<exclusion pattern="^http://(?:www\.)?arstechnica\.com/(?!civis/ucp\.php|favicon\.ico|public-shared/|wp-content/)" />
 	<target host="*.arstechnica.net" />
 
 
@@ -53,14 +59,11 @@
 	<securecookie host="^\.arstechnica\.com$" name="^s_\w+$" />
 
 
-	<rule from="^https?://ars\.to/"
+	<rule from="^http://ars\.to/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://(www\.)?arstechnica\.com/(civis/ucp\.php|favicon\.ico|public-shared/|wp-content/)"
-		to="https://$1arstechnica.com/$2" />
-
-	<rule from="^http://(cms|hq)\.arstechnica\.com/"
-		to="https://$1.arstechnica.com/" />
+	<rule from="^http://((?:cms|hq|www)\.)?arstechnica\.com/"
+		to="https://$1arstechnica.com/" />
 
 	<rule from="^http://feeds\.arstechnica\.com/(?:\?.*)$"
 		to="https://feedburner.google.com/fb/a/home" />
@@ -71,7 +74,7 @@
 	<rule from="^http://api\.arstechnica\.net/"
 		to="https://api.arstechnica.net/" />
 
-	<rule from="^https?://(?:(?:media|origin)\.arstechnica\.com|(?:cdn|static)\.arstechnica\.net)/"
+	<rule from="^http://(?:(?:media|origin)\.arstechnica\.com|(?:cdn|static)\.arstechnica\.net)/"
 		to="https://cdn.arstechnica.net/" />
 
 </ruleset>
