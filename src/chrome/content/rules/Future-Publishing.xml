@@ -1,24 +1,48 @@
-<!--	!functional:
-		medialib.computerandvideogames.com	(data identical to cdn)
-		cdn.medialib.computerandvideogames.com	(times out, data !on www.../(medialib|templates)/)
+<!--
+	For problematic rules, see Future-Publishing-mismatches.xml.
 
-	See Future-Publishing-mismatches.xml for problematic rules
+
+	CDN buckets:
+
+		- cdn.futurepublishing.c.footprint.net
+
+			- cdn.medialib.computerandvideogames.com
+
+		- cdn.medialib.oxm.co.uk.c.footprint.net
+		- cdn.static.oxm.co.uk.c.footprint.net
+
+
+	Problematic domains:
+
+		- computerandvideogames.com *
+		- prg.computerandvideogames.com **
+		- cdn.static.computerandvideogames.com *
+		- prg.gamesradar.com **
+
+	* Times out
+	** Akamai
+
+
+	Nonfunctional domains:
+
+		- medialib.computerandvideogames.com		(data identical to cdn)
+		- cdn.medialib.computerandvideogames.com	(times out, data not on www.../(medialib|templates)/)
+		- medialib.oxm.co.uk *
+		- static.oxm.co.uk *
+
+	* Redirects to computerandvideogames.com; mismatched, CN: www.computerandvideogames.com
+
 -->
 <ruleset name="Future Publishing (partial)">
 
-	<target host="computerandvideogames.com"/>
-	<target host="*.computerandvideogames.com"/>
-	<target host="cdn.static.computerandvideogames.com"/>
+	<target host="computerandvideogames.com" />
+	<target host="*.computerandvideogames.com" />
 
-	<!--	!www times out	-->
-	<rule from="^http://computerandvideogames\.com/"
-		to="https://www.computerandvideogames.com/"/>
 
-	<rule from="^http://www\.computerandvideogames\.com/(reg|templates)/"
-		to="https://www.computerandvideogames.com/$1/"/>
+	<rule from="^http://(?:www\.)?computerandvideogames\.com/(reg|templates)/"
+		to="https://www.computerandvideogames.com/$1/" />
 
-	<!--	times out	-->
 	<rule from="^http://(?:cdn\.)?static\.computerandvideogames\.com/"
-		to="https://www.computerandvideogames.com/templates/"/>
+		to="https://www.computerandvideogames.com/templates/" />
 
 </ruleset>

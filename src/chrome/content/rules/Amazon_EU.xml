@@ -1,0 +1,57 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	Amazon appears to operate in 7 countries, and does not hold the domains
+	for some others, like .se or .be.  In other cases there is an http-only site
+	that redirects to one of these 7 countries.
+
+
+	amazon.*:
+
+		Does work:
+
+			- Everything except...
+
+		Doesn't work:
+
+			- gp/search\?
+			- /mn/search/
+			- s/
+			- s\?rh=	(i.e. search pages and files)
+				
+-->
+<ruleset name="Amazon EU" default_off="testing">
+
+	<target host="amazon.*" />
+	<target host="www.amazon.*" />
+	<target host="amazon.co.uk" />
+	<target host="*.amazon.co.uk" />
+		<!--
+			Search redirects to http, for all sites.
+									-->
+		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search(?:$|\?)|s(?:/|\?rh=))" />
+
+
+	<!--	Verified as working for UK, other sites matched appear to function identically.
+
+		Unfortunately, navigating to an unsecured page wipes one's shopping basket :(
+			This is problem with our handling of secure cookies, wherein we treat
+		secure and non-secure cookies with the same ID as one cookie, instead of two.
+			If our handling were correct, this securecookie rule would have only
+		one problem, namely that basket information would be missing on search pages.
+												-->
+	<!--securecookie host="^(www)?\.amazon\.(co\.uk|de|es|fr|it)$" name=".+" /-->
+	<securecookie host="^local\.amazon\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?amazon\.(co\.uk|de|es|fr|it)/mn/search/uedata/"
+		to="https://www.amazon.$1/uedata/" />
+
+	<rule from="^http://(?:www\.)?amazon\.(co\.uk|de|es|fr|it)/"
+		to="https://www.amazon.$1/" />
+
+	<rule from="^http://(aan|local)\.amazon\.co\.uk/"
+		to="https://$1.amazon.co.uk/" />
+
+</ruleset>

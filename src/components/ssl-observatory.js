@@ -130,12 +130,7 @@ SSLObservatory.prototype = {
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
       //CI.nsIWifiListener,
-      CI.nsIBadCertListener2,
-      CI.nsIInterfaceRequestor]),
-
-  getInterface: function(aIID) {
-    return this.QueryInterface(aIID);
-  },
+      CI.nsIBadCertListener2]),
 
   wrappedJSObject: null,  // Initialized by constructor
 

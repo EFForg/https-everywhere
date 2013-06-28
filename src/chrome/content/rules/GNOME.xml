@@ -9,35 +9,25 @@
 
 		- gnome.org subdomains:
 
-			- api **
 			- art		(prints "ok"; self-signed, CN: CentOS-63-64-minimal)
-			- download **
-			- ftp
-			- jabber ***
+			- ftp		(refused)
+			- jabber **
 			- webapps **
-			- webapps2 ****
-			- www-old **
-
-		- gnomejournal.org	(shows rt.gnome.org, CN: www.gnome.org)
+			- webapps2 **
 
 	* Shows empty tree, CN: guzheng.lyrical.net
-	** Prints "OOPS...", mismatched, CN: l10n.gnome.org
-	*** http reply
-	**** Prints "OOPS..."
+	** http reply
 
 
 	Problematic domains:
 
 		- gnome.org subdomains:
 
-			- bugzilla-attachments	(works, mismatched, CN: www.gnome.org)
-			- foundation	(works, mismatched, CN: www.gnome.org)
-			- ldap		(403, redirects to www over http, mismatched, CN: l10n.gnome.org)
-			- src		(shows git; mismatched, CN: l10n.gnome.org)
-			- usability	(prints "OOPS...", mismatched, CN: l10n.gnome.org)
-			- wiki		(shows live; mismatched, CN: www.gnome.org)
+			- ldap		(http reply)
+			- src		(mismatched, CN: bugzilla.gnome.org)
 
-		- (www.)gupnp.org	(mismatched, CN: www.webstreams.de)
+		- (www.)gnomejournal.org	(identical to gnome.org; mismatched, CN: bugzilla.org)
+		- (www.)gupnp.org		(mismatched, CN: www.webstreams.de)
 
 
 	Fully covered domains:
@@ -46,15 +36,18 @@
 
 			- (www.)
 			- admin
+			- api
 			- blogs
 			- bugzilla
+			- bugzilla-attachments
 			- *.bugzilla-attachments
 			- build
 			- cloud
 			- developer
+			- download
 			- etherpad
 			- extensions
-			- foundation	(→ www)
+			- foundation
 			- git
 			- help
 			- ldap		(→ www)
@@ -62,28 +55,33 @@
 			- library
 			- mail
 			- mango
-			- menubar
+			- meetbot
 			- nagios
 			- news
 			- live
 			- ostree
 			- planet
 			- people
+			- progress
 			- projects
 			- rt
 			- src		(→ git)
-			- usability	(→ live)
+			- usability
 			- vote
 			- webstats
-			- wiki		(→ live, mismatched, CN: www.gnome.org)
+			- wiki
+			- www-old
 
-		- (www.)gupnp.org	(→ live.gnome.org)
+		- (www.)gnomejournal.org	(→ www.gnome.org)
+		- (www.)gupnp.org		(→ live.gnome.org)
 
 -->
 <ruleset name="GNOME (partial)">
 
 	<target host="gnome.org" />
 	<target host="*.gnome.org" />
+	<target host="gnomejournal.org" />
+	<target host="www.gnomejournal.org" />
 	<target host="gupnp.org" />
 	<target host="www.gupnp.org" />
 
@@ -91,24 +89,8 @@
 	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
 
 
-	<rule from="^http://((?:admin|blogs|bugzilla|\w+\.bugzilla-attachments|build|cloud|developer|etherpad|extensions|git|help|l10n|library|live|mail|mango|menubar|nagios|news|ostree|people|planet|projects|rt|vote|webstats|www)\.)?gnome\.org/"
+	<rule from="^http://((?:admin|api|blogs|bugzilla|(?:\w+\.)?bugzilla-attachments|build|cloud|developer|download|etherpad|extensions|foundation|git|help|l10n|library|live|mail|mango|meetbot|nagios|news|ostree|people|planet|progress|projects|rt|usability|vote|webstats|wiki|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
-
-	<!--	Redirects as so.
-					-->
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/\??$"
-		to="https://bugzilla.gnome.org/" />
-
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\?.+)"
-		to="https://bugzilla.gnome.org/?keywords=$1" />
-
-	<rule from="^https?://bugzilla-attachments\.gnome\.org/(\w[^\?]*)(?:\?.*)?"
-		to="https://bugzilla.gnome.org/show_bug.cgi?id=$1" />
-
-	<!--	Ditto.
-				-->
-	<rule from="^https?://foundation\.gnome\.org/"
-		to="https://www.gnome.org/foundation/" />
 
 	<rule from="^https?://ldap\.gnome\.org/"
 		to="https://www.gnome.org/" />
@@ -116,17 +98,10 @@
 	<rule from="^http://src\.gnome\.org/"
 		to="https://git.gnome.org/" />
 
-	<rule from="^https?://wiki\.gnome\.org/"
-		to="https://live.gnome.org/" />
+	<rule from="^http://(?:www\.)?gnomejournal\.org/"
+		to="https://www.gnomejournal.org/" />
 
-	<!--	Redirects as so over http.
-						-->
-	<rule from="^https?://usability\.gnome\.org/"
-		to="https://live.gnome.org/UsabilityProject" />
-
-	<!--	307s as so over http.
-						-->
-	<rule from="^https?://(?:www\.)?gupnp\.org/"
+	<rule from="^http://(?:www\.)?gupnp\.org/"
 		to="https://live.gnome.org/GUPnP/" />
 
 

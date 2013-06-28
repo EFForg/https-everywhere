@@ -54,7 +54,6 @@
 			- officeimages
 			- privacy		(times out)
 			- sharepoint		(redirects to login.live.com, cert valid)
-			- spcache		(504, akamai)
 			- edir.windowsm		(404)
 			- visio **
 			- (www.)windows **
@@ -88,6 +87,7 @@
 			- i1.mobile **
 			- scache **
 			- search **
+			- spcache		(504, akamai)
 			- img3.store		(mismatched)
 			- update *
 			- res[12].windows	(400, mismatched, CN: *.sharepointonline.com)
@@ -147,6 +147,7 @@
 			- profileapi.services
 			- social
 			- services.social
+			- spcache		( → www)
 			- social.technet
 			- res.windows		(→ origin-res.windows)
 			- res[12].windows	(→ origin-res.windows)
@@ -185,6 +186,12 @@
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
 											-->
 		<exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" />
+		<!--
+			Health pages 404:
+
+				https://trac.torproject.org/projects/tor/ticket/9148
+											-->
+		<exclusion pattern="^http://(?:www\.)?microsoft\.com/health/(?:$|\?|.+\.aspx)" />
 		<!--
 			Redirects via JS to http.  Very secure indeed.
 									-->
@@ -242,7 +249,7 @@
 	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
 		to="https://www.imaginecup.com/$1" />
 
-	<rule from="^https?://(?:i\d?\.|js\.|search\.)?microsoft\.com/"
+	<rule from="^https?://(?:i\d?\.|js\.|search\.|spcache\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
 	<rule from="^http://(accountservices|adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ie|ieonline|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"

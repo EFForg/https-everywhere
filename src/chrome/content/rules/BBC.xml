@@ -87,6 +87,14 @@
 			Causes censorship bypass to fail.
 								-->
 		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/9136
+
+			Breaks archived radio streams:
+
+				"This content doesn't seem to be working"
+										-->
+		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/playlist/\w+$" />
 	<target host="iplayerhelp.external.bbc.co.uk" />
 	<target host="*.bbci.co.uk" />
 	<!--	Akamai	-->
@@ -98,7 +106,7 @@
 	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
-	<rule from="^https?://sa\.bbc\.com/"
+	<rule from="^http://sa\.bbc\.com/"
 		to="https://bbc.112.2o7.net/" />
 
 	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|inc|player/emp|survey/pulse|tv/js|weather/locales)/"
@@ -106,10 +114,10 @@
 
 	<!--	ichef: Images.
 					-->
-	<rule from="^https?://(ichef|www\.live|sa|static)\.bbci?\.co\.uk/"
+	<rule from="^http://(ichef|www\.live|sa|static)\.bbci?\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
-	<rule from="^https?://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/|podcasts/assets/)"
+	<rule from="^http://(?:www\.)?bbc\.co\.uk/(emp/|favicon\.ico$|glow/|guidance/|iplayer/|podcasts/assets/)"
 		to="https://www.bbc.co.uk/$1" />
 
 	<rule from="^http://(?:www\.)?bbc\.co\.uk/programmes/branding/"
@@ -130,13 +138,13 @@
 	<rule from="^http://newsimg\.bbc\.co\.uk/(media/images|shared/img)/"
 		to="https://beta.bbc.co.uk/$1/" />
 
-	<rule from="^https?://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
+	<rule from="^http://node[12]\.bbcimg\.co\.uk/(crossdomain\.xml$|glow/|iplayer/)"
 		to="https://www.bbc.co.uk/$1" />
 
-	<rule from="^https?://node\d\.bbcimg\.co\.uk/(podcasts|tv/p2)/"
+	<rule from="^http://node\d\.bbcimg\.co\.uk/(podcasts|tv/p2)/"
 		to="https://beta.bbc.co.uk/$1/" />
 
-	<rule from="^https?://polling\.bbc\.co\.uk/modules/onairpanel/include/"
+	<rule from="^http://polling\.bbc\.co\.uk/modules/onairpanel/include/"
 		to="https://ssl.bbc.co.uk/modules/onairpanel/include/" />
 
 	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
@@ -147,10 +155,10 @@
 	<rule from="^https://open\.bbci\.co\.uk/buzz/shares($|\?)"
 		to="http://open.bbci.co.uk/buzz/shares$1" downgrade="1" /-->
 
-	<rule from="^https?://news\.bbcimg\.co\.uk/"
+	<rule from="^http://news\.bbcimg\.co\.uk/"
 		to="https://beta.bbc.co.uk/" />
 
-	<rule from="^https?://tile\d\.bbcimg\.co\.uk/"
+	<rule from="^http://tile\d\.bbcimg\.co\.uk/"
 		to="https://static.bbc.co.uk/" />
 
 </ruleset>

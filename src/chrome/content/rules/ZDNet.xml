@@ -5,13 +5,16 @@
 	CDN buckets:
 
 		- phx2-ss-4-lb.cnet.com
+
 			- bwp.zdnet.com
 
 		- i.b2b.com.com.edgesuite.net
+
 			- i.zdnet.com
 			- i[12].zdnetstatic.com
 
 		- cdn-static.zdnet.com.edgesuite.net
+
 			- cdn-static.zdnet.com
 
 		- i2.wp.com/i1.zdnetstatic.com/
@@ -19,24 +22,29 @@
 
 	Nonfunctional domains:
 
-		- zdnet.com					(shows another domain; mismatched, CN: *.intl.cbs.com)
-		- www.zdnet.com					(no https)
-		- assets.zdnet.com
-		- bwp.zdnet.com
-		- cdn-origin.zdnet.com				(Cert: www.zdnet.com; 302s to http)
-		- cdn-static.zdnet.com				(503; Akamai)
-		- downloads.zdnet.com				(Cert: www.zdnet.com; 302s to http)
-		- i.zdnet.com					(Akamai, 504, not on www|origin)
+		- zdnet.com subdomains:
 
-			- i.b2b.com.com.edgesuite.net		(400)
-				- i.b2b.com 302s to phx2-b2b-publish-app-lb.cnet.com
-			- a1262.g.akamai.net
+			- ^			(redirects to http; mismatched, CN: *.intl.cbs.com)
+			- bwp			(refused)
+			- cdn-origin *
+			- cdn-static		(redirects to http, Akamai)
+			- downloads *
+			- i **			(not on www nor origin)
+			- origin *
+			- www *
 
-		- origin.zdnet.com				(301s to http)
-		- (www.)zdnet.com.au
-		- broadband.zdnet.com.au			(reset)
-		- mobile-phones.zdnet.com.au			(reset)
-		- \w+.zdnetstatic.com				(Akamai, 504)
+		- zdnet.com.au subdomains:
+
+			- ^ ***
+			- broadband ***
+			- mobile-phones ***
+			- www			(redirects to http; mismatched, CN: *.zdnet.com)
+
+		- \w+.zdnetstatic.com **
+
+	* Redirects to http, valid cert
+	** 504, akamai
+	*** Shows fileupload.intl.cbs.com; mismatched, CN: *.intl.cbs.com)
 
 -->
 <ruleset name="ZDNet (partial)">
@@ -45,10 +53,10 @@
 	<target host="*.zdnet.com.au" />
 
 
-	<rule from="^https?://(?:www\.)?zdnet\.com\.au/secure-au\.imrworldwide\.com/"
+	<rule from="^http://(?:www\.)?zdnet\.com\.au/secure-au\.imrworldwide\.com/"
 		to="https://secure-au.imrworldwide.com/" />
 
-	<rule from="^https?://om\.zdnet\.com\.au/"
+	<rule from="^http://om\.zdnet\.com\.au/"
 		to="https://zdau-zdnetbeta.122.2o7.net/" />
 
 </ruleset>

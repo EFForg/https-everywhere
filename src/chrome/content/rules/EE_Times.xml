@@ -1,17 +1,31 @@
 <!--
-	For problematic rules and other UBM coverage, see UBM-mismatches.xml.
+	For rules causing mixed content, see EE_Times-mixed.xml.
+
+	For other UBM coverage, see UBM.xml.
 
 
 	Nonfunctional subdomains:
 
-		- engineeringcareers
-		- video			(times out)
+		- engineeringcareers	(refused)
+		- scout			(reset)
+
+
+	Problematic subdomains:
+
+		- jobs		(works; mismatched, CN: sitemanager2.adicio.com)
+		- video		(mixed iframe from sso.techonline.com & video from brightcove.vo.llnwd.net)
 
 -->
 <ruleset name="EE Times (partial)">
 
 	<target host="eetimes.com" />
 	<target host="*.eetimes.com" />
+
+
+	<!--	Omniture cookies:
+					-->
+	<securecookie host="^\.eetimes\.com$" name="^s_\w+$" />
+	<securecookie host="^www\.eetimes\.com$" name=".+" />
 
 
 	<rule from="^http://((?:cdn|confidential|new|www)\.)?eetimes\.com/"

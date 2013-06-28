@@ -1,7 +1,4 @@
 <!--
-	For rules which break logging in, see Scribd.com-break-login.xml.
-
-
 	CDN buckets:
 
 		- s3.amazonaws.com/assets.scribd.com/
@@ -109,30 +106,12 @@
 			- htmlimg[1-4]		(→ s3.amazonaws.com/html.scribd.com/)
 			- s[1-8]		(→ origin-s.scribd.com)
 
-
-	NB: Login is broken for https pages.
-
-
-	These paths don't redirect to http, and aren't pages (and thus won't break login):
-
-		- images/
-		- ssi/
-
-	These do:
-
-		- [\w-]+$
-		- [\w-]+\?
-		- documents/\d+/pingback$
-		- login
-		.+/login
-		- options/exposed_to_client.js
-
 -->
 <ruleset name="Scribd.com (partial)">
 
 	<target host="scribd.com" />
 	<target host="*.scribd.com" />
-		<exclusion pattern="^http://(?:www\.)?scribd\.com/(?!aggregated/|embeds/|images/|login/|options/|ssi/)" />
+		<exclusion pattern="^http://(?:www\.)?scribd\.com/(?!aggregated/|embeds/|images/|login(?:$|\?/)|options/|ssi/)" />
 	<target host="*.scribdassets.com" />
 
 
