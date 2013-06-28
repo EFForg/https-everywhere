@@ -1,0 +1,68 @@
+<!--
+		- westernunion.com.d1.sc.omtrdc.net
+
+			- metrics
+
+
+	Nonfunctional subdomains:
+
+		- (www.)		(redirects to http, valid cert)
+		- (www.)business *
+		- corporate		(http reply)
+		- foundation *
+		- ir			(refused)
+		- onlinefx *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- metrics	(mismatched, CN: *.d1.sc.omtrdc.net)
+		- payments	(works; mismatched, CN: www.wupaymentsolutions.com)
+
+
+	Fully covered domains:
+
+		- westernunion.com subdomains:
+
+			- agentportal
+
+			- globalpay subdomains:
+
+				- ^
+				- demo
+				- payee
+
+			- marketing
+			- metrics		(→ westernunion-com.d1.sc.omtrdc.net)
+			- online
+			- secure
+			- wumt
+
+		- (www.)wupaymentsolutions.com
+
+-->
+<ruleset name="Western Union (partial)">
+
+	<target host="*.westernunion.com" />
+	<target host="wupaymentsolutions.com" />
+	<target host="www.wupaymentsolutions.com" />
+
+
+	<!--	Omniture cookies:
+					-->
+	<securecookie host="^\.westernunion\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:agentportal|(?:demo\.)?globalpay|marketing|online|secure|wumt)\.westernunion\.com$" name=".+" />
+
+
+	<rule from="^http://(agentportal|(?:demo\.|payee\.)?globalpay|marketing|online|secure|wumt)\.westernunion\.com/"
+		to="https://$1.westernunion.com/" />
+
+	<rule from="^http://metrics\.westernunion\.com/"
+		to="https://westernunion.com.d1.sc.omtrdc.net/" />
+
+	<rule from="^http://(www\.)?wupaymentsolutions\.com/"
+		to="https://$1wupaymentsolutions.com/" />
+
+</ruleset>

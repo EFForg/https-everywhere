@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- d33827d8ipi614.cloudfront.net
+
+			- static.belezanaweb.net.br
+			- static[123].belezanaweb.net.br
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- static	(→ d33827d8ipi614.cloudfront.net)
+		- static[123]	(→ d33827d8ipi614.cloudfront.net)
+
+-->
+<ruleset name="Beleza na Web (partial)">
+
+	<target host="belezanaweb.net.br" />
+	<target host="*.belezanaweb.net.br" />
+
+
+	<!--	Tracking cookie:
+					-->
+	<securecookie host="^\.belezanaweb\.net\.br$" name="^__sonar$" />
+
+
+	<rule from="^http://(www\.)?belezanaweb\.com\.br/(css/|favicon\.ico|imagen?s/|scripts/)"
+		to="https://$1belezanaweb.com.br/$2" />
+
+	<rule from="^http://static\d?\.belezanaweb\.net\.br/"
+		to="https://d33827d8ipi614.cloudfront.net/" />
+
+</ruleset>
