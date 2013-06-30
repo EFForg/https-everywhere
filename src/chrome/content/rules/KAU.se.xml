@@ -1,8 +1,72 @@
-<!-- Karlstad university -->
+<!-- Karlstad university
+
+
+	For problematic rules, see KAU.se-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)intra *
+		- rektorsblogg *
+		- lynx.sae *
+		- www1		(http reply)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- www.bib *
+		- www.cs *
+		- itsakhandbok.irt	(works; self-signed)
+		- narvi.sae		(works; mismatched, CN: www.kau.edu)
+		- www.nxt
+
+	* Times out
+
+
+	Partially covered subdomains:
+
+		- www.bib	(→ www)
+		- www.cs	(→ www)
+		- www.nxt	(→ www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cas
+		- film
+		- sycorax.sae
+		- sp
+		- sycorax.web
+		- www3
+
+-->
 <ruleset name="KAU.se">
-	<target host="www.kau.se" />
+	<target host="*.kau.se" />
 	<target host="kau.se" />
+
+
+	<!--securecookie host="^\.kau\.se$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:cas|\.film|sp)\.kau\.se$" name=".+" />
+
+
 	<rule from="^http://kau\.se/" to="https://www.kau.se/"/>
 	<rule from="^http://www\.kau\.se/" to="https://www.kau.se/"/>
+
+	<rule from="^http://www\.bib\.kau\.se/(?:\?.*)?$"
+		to="https://www.kau.se/bibliotek" />
+
+	<rule from="^http://(cas|film|sycorax\.(?:sae|web)|sp|www3)\.kau\.se/"
+		to="https://$1.kau.se/" />
+
+	<rule from="^http://www\.cs\.kau\.se/(\?.*)?$"
+		to="https://www.kau.se/$1" />
+
+	<rule from="^http://www\.nxt\.kau\.se/[^\?]*(\?.*)?$"
+		to="https://www.kau.se/nxt$1" />
+
 </ruleset>
 
