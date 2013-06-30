@@ -1,12 +1,48 @@
 <!--
 	Nonfunctional subdomains:
 
+		- api		(503, CN: issa.toshiba.co.jp)
 		- developer
-		- ev
-		- manifesto
+		- docs *
+		- edu *
+		- ev *
+		- events *
+		- jointhegame *
+		- manifesto *
 		- websvn
-		- wiki
+		- wiki *
 		- (www.)	(times out)
+
+	* Times out
+
+
+	Partially covered subdomains:
+
+		- userbase	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- akademy2013
+		- blogs
+
+		- bugs subdomains:
+
+			- ^
+			- admin
+			- sandbox
+
+		- cdn
+		- community
+		- conf
+		- dot
+		- forum
+		- identity
+		- mail
+		- season
+		- sprints
+		- sysadmin
+		- techbase
 
 -->
 <ruleset name="KDE (partial)">
@@ -16,12 +52,14 @@
 		* for cross-domain cookies.
 						-->
 	<target host="*.forum.kde.org" />
+		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
 
 
-	<securecookie host="^.+\.kde\.org$" name=".+" />
+	<!--securecookie host="^\.kde\.org$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<securecookie host="^(?!userbase\.).+\.kde\.org$" name=".+" />
 
 
-	<rule from="^http://(blogs|bugs|cdn|community|dot|forum|identity|mail)\.kde\.org/"
+	<rule from="^http://(akademy2013|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
 		to="https://$1.kde.org/" />
 
 </ruleset>
