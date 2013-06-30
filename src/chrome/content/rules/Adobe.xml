@@ -14,6 +14,11 @@
 	stats.adobe.com/b/ss/mxmacromedia/
 
 
+	Nonfunctional domains:
+
+		- experiencedelivers.adobe.com	(redirects to www; mismatched, CN: *.day.com)
+
+
 	Problematic domains:
 
 		- airdownload.adobe.com		(works, akamai)
@@ -21,6 +26,15 @@
 		- html.adobe.com *
 
 	* Works, mismatched, CN: www.adobe.com
+
+	* Works, akamai
+
+
+	Partially covered domains:
+
+		- adobe.com subdomains:
+
+			- blogs		(some pages redirect to http)
 
 
 	Fully covered domains:
@@ -36,6 +50,13 @@
 
 	<target host="adobe.com" />
 	<target host="*.adobe.com" />
+		<!--
+			Some pages redirect to http:
+
+				https://trac.torproject.org/projects/tor/ticket/8604
+											-->
+		<!--exclusion pattern="^http://blogs\.adobe\.com/webplatform($|\?|/)" /-->
+		<exclusion pattern="^http://blogs\.adobe\.com/(?!$|\?|(?:acrobat|adobe(?:connect|ingovernment|life)|aftereffects|captivate|conversations|creativelayer|digital(?:marketing|dmedia|publishing)|dreamweaver|educationleaders|experiencedelivers|globalization|indesigndocs|iwamoto|lightroomjournal|photoshopdotcom|premierepro|presenter|readermobile|vikrant)(?:$|\?|/)|wp-content/)" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
@@ -53,7 +74,7 @@
 	<rule from="^https?://adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://(entitlement\.auth|bugbase|community|cookbooks|edexchange|cem\.events|fpdownload|get|helpx|images-tv|kuler|max|success|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
+	<rule from="^http://(entitlement\.auth|blogs|bugbase|community|cookbooks|edexchange|cem\.events|fpdownload|get|helpx|images-tv|kuler|max|success|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
 		to="https://$1.adobe.com/" />
 
 	<!--	- Cert is only valid for www
