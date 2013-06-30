@@ -18,8 +18,9 @@
 
 	Problematic domains:
 
-		- hdx.citrix.com	(record_too_long)
+		- hdx.citrix.com	(http reply)
 		- cdn.ws.citrix.com	(akamai)
+		- gotowebinar.com	(cert only matches www)
 
 
 	Partially covered domains:
@@ -50,9 +51,9 @@
 	<target host="*.gotowebinar.com" />
 
 
-	<securecookie host="^(.*\.)?citrix\.com$" name=".*" />
-	<securecookie host="^www[1-4]gotomeeting\.com$" name=".*" />
-	<securecookie host="^.*\.gototraining\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?citrix\.com$" name=".+" />
+	<securecookie host="^www[1-4]gotomeeting\.com$" name=".+" />
+	<securecookie host=".*\.gototraining\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?citrix\.com/"
@@ -61,7 +62,7 @@
 	<rule from="^http://(blogs|eu|search|support)\.citrix\.com/"
 		to="https://$1.citrix.com/" />
 
-	<rule from="^https?://hdx\.citrix\.com/$"
+	<rule from="^http://hdx\.citrix\.com/$"
 		to="https://www.citrix.com/products/xendesktop/features/high-def-experience.html" />
 
 	<rule from="^http://cdn\.ws\.citrix\.com/"
@@ -75,7 +76,7 @@
 		This'll probably catch more working paths than
 		just handling the paths that we know work over
 		https from both !www & www.
-					-->
+						-->
 	<rule from="^http://www\.gotoassist\.com/"
 		to="https://www.gotoassist.com/" />
 
@@ -88,9 +89,7 @@
 	<rule from="^http://student\.gototraining\.com/"
 		to="https://student.gototraining.com/" />
 
-	<!--	Cert is only valid for www.
-						-->
-	<rule from="^https?://(?:www\.)?gotowebinar\.com/"
+	<rule from="^http://(?:www\.)?gotowebinar\.com/"
 		to="https://www.gotowebinar.com/" />
 
 	<rule from="^http://attendee\.gotowebinar\.com/"
