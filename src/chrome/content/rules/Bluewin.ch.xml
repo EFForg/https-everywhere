@@ -1,0 +1,43 @@
+<!--
+		- blue-ssl.wemfbox.ch
+		- bluewin.wemfbox.ch
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- (www.)business	(works; mismatched, CN: www.sso.bluewin.ch)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+
+		- sso subdomains:
+
+			- pres
+			- sam
+			- www
+			- xtrazone
+
+-->
+<ruleset name="Bluewin.ch (partial)">
+
+	<target host="bluewin.ch" />
+	<target host="*.bluewin.ch" />
+	<target host="bluewin.wemfbox.ch" />
+
+
+	<securecookie host="^(?:(?:xtrazone|pres|sam)\.sso|www)\.bluewin\.ch$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?bluewin\.ch/"
+		to="https://www.bluewin.ch/" />
+
+	<rule from="^http://(pres|sam|www|xtrazone)\.sso\.bluewin\.ch/"
+		to="https://$1.sso.bluewin.ch/" />
+
+	<rule from="^http://bluewin\.wemfbox\.ch/"
+		to="https://blue-ssl.wemfbox.ch/" />
+
+</ruleset>
