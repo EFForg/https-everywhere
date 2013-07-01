@@ -1,7 +1,10 @@
 <!--
 	CDN buckets:
 
+		- /D/16382/173656/000/
 		- www.target.com.edgesuite.net
+		- weeklyad.target.com.edgesuite.net
+		- m.weeklyad.target.com.edgesuite.net
 		- img1.targetimg1.com.edgesuite.net
 
 
@@ -20,10 +23,17 @@
 			- dailydeals *
 			- m *
 			- m-beta-secure	(mismatched)
+			- m.weeklyad *
 
 		- img1.targetimg1.com		(works, akamai)
 
 	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- www			(→ akamai)
+		- m.weeklyad		(→ akamai)
 
 
 	Fully covered domains:
@@ -36,10 +46,12 @@
 				- cartwheelws-secure
 				- imgsvc-secure
 				- m-secure
+				- m-beta		(→ akamai)
 				- mobileapp-secure
 				- m-perf-secure
 				- tapidotcom-secure
 				- tws-secure
+				- typeahead-secure
 				- www-secure
 				- www-perf-secure
 
@@ -77,6 +89,7 @@
 			- m			(→ m-secure)
 			- microsites
 			- mrcam
+			- secureconnect
 			- sites
 			- tgtfiles
 
@@ -100,16 +113,32 @@
 	<target host="*.targetimg3.com" />
 
 
-	<!--	No partially covered domains:
+	<securecookie host="^\.m-secure\.target\.com$" name=".+" />
+	<!--
+		No partially covered domains
+
+		... except for those rewritten to akamai,
+		which in turn is not touched here:
 							-->
 	<securecookie host="^.+\.target\.com$" name=".+" />
 
 
-	<rule from="^http://([\w-]+-secure(?:-perf|-stg)?|(?:images-)?babycatalog|(?:baby|m\.baby|home|patio|toys|wedding)\.catalogs|college|corporate(?:-admin)?|health|microsites|mrcam|sites|tgtfiles)\.target\.com/"
+	<!--	This generates links that people to akamai :(
+
+	<rule from="^http://(?:www\.)?target\.com/AjaxGlobalNavView($|\?|/)"
+		to="https://a248.e.akamai.net/D/16382/173656/000/www.target.com/AjaxGlobalNavView$1" /-->
+
+	<rule from="^http://(?:www\.)?target\.com/favicon\.ico"
+		to="https://a248.e.akamai.net/D/16382/173656/000/www.target.com/favicon.ico" />
+
+	<rule from="^http://([\w-]+-secure(?:-perf|-stg)?|(?:images-)?babycatalog|(?:baby|m\.baby|home|patio|toys|wedding)\.catalogs|college|corporate(?:-admin)?|health|microsites|mrcam|secureconnect|sites|tgtfiles)\.target\.com/"
 		to="https://$1.target.com/" />
 
 	<rule from="^http://m\.target\.com/"
 		to="https://m-secure.target.com/" />
+
+	<rule from="^http;//m\.weeklyad\.target\.com/(asset|image)s/"
+		to="https://a248.e.akamai.net/D/16382/173656/000/m.weeklyad.target.com/$1s/" />
 
 	<rule from="^http://([\w-]+)-secure(-perf|-stg)?\.targetimg(\d)\.com/"
 		to="https://$1-secure$2.targetimg$3.com/" />
