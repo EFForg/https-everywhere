@@ -1,0 +1,82 @@
+<!--
+	Other Swisscom rulesets:
+
+		- Bluewin.ch.xml
+		- Bluewin-HostCenter.xml
+		- Scssstatic.ch.xml
+
+
+		- swisscom.ch.122.2o7.net
+
+			- o.swisscom.ch
+
+
+	Nonfunctional subdomains:
+
+		- web.tvair *
+		- web.tvonline *
+
+	* Shows services.snoopy; mismatched, CN: services.snoopy.swisscom.com)
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- de		(http reply)
+		- o		(mismatched, CN: *.122.2o7.net)
+		- sommer	(works; mismatched, CN: *.hostcenter.com)
+
+
+	Partially covered subdomains:
+
+		- de		(→ www)
+
+
+	Fully covered domains:
+
+		- swisscom.ch subdomains:
+
+			- (www.)	(^ → www)
+			- o		(→ swisscom-ch.122.2o7.net)
+			- so
+			- www1
+
+		- (www.)swisscom.com
+		- services.snoopy.swisscom.com
+
+
+-->
+<ruleset name="Swisscom.ch (partial)">
+
+	<target host="swisscom.ch" />
+	<target host="*.swisscom.ch" />
+	<target host="swisscom.com" />
+	<target host="*.swisscom.com" />
+
+
+	<!--	Omniture cookies:
+					-->
+	<securecookie host="^\.swisscom\.ch$" name="^s_\w+$" />
+	<securecookie host="^www1?\.swisscom\.ch$" name=".+" />
+	<securecookie host="^(?:www\.)?swisscom\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?swisscom\.ch/"
+		to="https://www.swisscom.ch/" />
+
+	<rule from="^http://de\.swisscom\.ch/(?:\?.*|privatkunden)?$"
+		to="https://www.swisscom.ch/de/privatkunden.html" />
+
+	<rule from="^http://de\.swisscom\.ch/its/(?:\?.*)?$"
+		to="https://www.swisscom.ch/it-services/" />
+
+	<rule from="^http://o\.swisscom\.ch/"
+		to="https://swisscom-ch.122.2o7.net/" />
+
+	<rule from="^http://(so|www1)\.swisscom\.ch/"
+		to="https://$1.swisscom.sh/" />
+
+	<rule from="^http://(services\.snoopy|www\.)?swisscom\.com/"
+		to="https://$1swisscom.com/" />
+
+</ruleset>
