@@ -1,13 +1,75 @@
+<!--
+	Nonfunctional domains:
+
+		- infovm9-8.rrze.uni-erlangen.de	(redirects to www.eam; mismatched, CN: www.eam.uni-erlangen.de)
+
+
+	Problematic domains:
+
+		- (www.)blog.fua.de *
+		- (www.)blog.uni-erlangen.de *
+		- (www.)fau.eu			(works; mismatched, CN: www.uni-erlangen.org)
+		- u-erlangen.org ****
+		- www.u-erlangen.org ***
+		- blogs.uni-erlangen.de *
+		- www.blogs.uni-erlangen.de **
+		- (www.)home.uni-erlangen.de *
+		- uni-erlangen.com ***
+		- www.uni-erlangen.com ****
+		- uni-erlangen.org ****
+		- www.uni-erlangen.org ***
+		- univ-erlangen.org ****
+		- www.univ-erlangen.org ***
+		- university-nuernberg.de ***
+		- www.university-nuernberg.de ****
+		- university-nuremberg.de ***
+		- www.university-nuremberg.de ****
+
+	* Prints "Fehler beim Aufbau einer Datenbankverbindung", valid cert
+	** Prints "Fehler beim Aufbau einer Datenbankverbindung", mismatched
+	*** Works; mismatched, self-signed
+	**** Works, self-signed
+
+
+	Fully covered domains:
+
+		- fau.de subdomains:
+
+			- (www.)
+			- (www.)blog	(→ blogs)
+			- (www.)blogs
+			- www1.cs
+			- (www.)eam
+
+		- uni-erlangen.de subdomains:
+
+			- (www.)
+			- (www.)blog		(→ blogs.fau.de)
+			- (www.)blogs		(→ blogs.fau.de)
+			- (www.)eam
+			- (www.)home		(→ blogs.fau.de)
+			- www1.informatik
+
+-->
 <ruleset name="University of Erlangen-Nuremberg (partial)">
 
-	<target host="www1.cs.fau.de" />
-	<target host="www1.informatik.uni-erlangen.de" />
+	<target host="fau.de" />
+	<target host="*.fau.de" />
+	<target host="uni-erlangen.de" />
+	<target host="*.uni-erlangen.de" />
 
 
-	<rule from="^http://www1\.cs\.fau\.de/"
-		to="https://www1.cs.fau.de/" />
+	<securecookie host="^(?:www\.)?eam\.fau\.de$" name=".+" />
+	<securecookie host="^(?:www\.)?eam\.uni-erlangen\.de$" name=".+" />
 
-	<rule from="^http://www1\.informatik\.uni-erlangen\.de/"
-		to="https://www1.informatik.uni-erlangen.de/" />
+
+	<rule from="^http://((?:(?:www\.)?blogs|www1\.cs|www)\.)?fau\.de/"
+		to="https://$1fau.de/" />
+
+	<rule from="^http://(?:www\.)?blog(?:\.fau|(?:home|s?)\.uni-erlangen)\.de/"
+		to="https://blogs.fau.de/" />
+
+	<rule from="^http://((?:(?:www\.)?eam|www1\.informatik|www)\.)?uni-erlangen\.de/"
+		to="https://$1uni-erlangen.de/" />
 
 </ruleset>
