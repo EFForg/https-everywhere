@@ -2,21 +2,53 @@
 	For problematic rules, see Amnesty-International-mismatches.xml.
 
 
+	For rules subject to JS redirects, see Amnesty_International-nojs.xml
+
+
 	d3soxcs9eo85xz.cloudfront.net
 
 
 	Nonfunctional:
 
-		- files.amnesty.org		(times out; not equivalent to www)
 		- web.amnesty.org		(ssl_error_rx_record_too_long)
 		- pthblog.amnesty.org.uk
 		- tv.amnesty.org.uk
+
+
+	Problematic domains:
+
+		- livewire.amnesty.org		(JS redirect to http)
+
+
+	Partially covered domains:
+
+		- livewire.amnesty.org		(complete coverage in -nojs.xml)
+
+
+	Fully covered domains:
+
+		- amnesty.org subdomains:
+
+			- (www.)
+			- adam
+			- files
+
+		- amnesty.org.uk subdomains:
+
+			- (www.)
+			- blogs		(→ d3soxcs9eo85xz.cloudfront.net)
+			- protectthehuman
+			- www2
 
 -->
 <ruleset name="Amnesty International (partial)">
 
 	<target host="amnesty.org" />
-	<target host="www.amnesty.org" />
+	<target host="*.amnesty.org" />
+		<!--
+			JS redirect to http:
+						-->
+		<exclusion pattern="^http;//livewire\.amnesty\.org/(?:.+/)?(?:\?.*)?$" />
 	<target host="amnesty.org.uk" />
 	<target host="*.amnesty.org.uk" />
 
@@ -24,7 +56,7 @@
 	<securecookie host="^(.*\.)?amnesty\.org\.uk$" name=".*" />
 
 
-	<rule from="^http://(www\.)?amnesty\.org/"
+	<rule from="^http://((?:adam|files|livewire|www)\.)?amnesty\.org/"
 		to="https://$1amnesty.org/"/>
 
 	<rule from="^http://(protectthehuman\.|www2?\.)?amnesty\.org\.uk/"
