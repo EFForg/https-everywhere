@@ -1,18 +1,20 @@
 <!--
-	Nonfunctional subdomains:
+	Partially covered subdomains:
 
-		- (www.)	(prints "https://www.internet2.edu/")
+		- (www.)	(some pages redirect to http, contentslider-1k.css & images/ 404)
 
 -->
 <ruleset name="Internet2 (partial)">
 
+	<target host="internet2.edu" />
 	<target host="*.internet2.edu" />
+		<exclusion pattern="^http://(?:www\.)?internet2\.edu/(?!includes/)" />
 
 
-	<securecookie host="^s(?:ervice1|paces)\.internet2\.edu$" name=".+" />
+	<securecookie host="^(?:\.lists|service1|spaces|wiki)\.internet2\.edu$" name=".+" />
 
 
-	<rule from="^http://s(ervice1|paces)\.internet2\.edu/"
-		to="https://s$1.internet2.edu/" />
+	<rule from="^http://((?:lists|service1|spaces|wiki|www)\.)?internet2\.edu/"
+		to="https://$1internet2.edu/" />
 
 </ruleset>
