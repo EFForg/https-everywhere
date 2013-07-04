@@ -8,30 +8,33 @@
 		- www.zoo		(times out)
 
 
+	Problematic subdomains:
+
+		- damtp		(cert only matches www.damtp)
+
+
+	Partially covered subdomains:
+
+		- www.damtp	(^ → www, some pages 404)
+
+
 	Fully covered subdomains:
 
+		- webservices.admin
+		- www.admin
+		- www.cl
 		- www.wolfson
 
 -->
 <ruleset name="University of Cambridge (partial)">
 
 	<target host="*.cam.ac.uk" />
-	<target host="webservices.admin.cam.ac.uk" />
-	<target host="www.cl.cam.ac.uk" />
-	<target host="damtp.cam.ac.uk" />
-	<target host="www.damtp.cam.ac.uk" />
 
 
-	<rule from="^http://w(ebservices|ww)\.admin\.cam\.ac\.uk/"
-		to="https://w$1.admin.cam.ac.uk/" />
+	<rule from="^http://w(?:ebservices\.admin|ww\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
+		to="https://w$1.cam.ac.uk/" />
 
-	<rule from="^http://www\.(cl|wolfson)\.cam\.ac\.uk/"
-		to="https://www.$1.cam.ac.uk/" />
-
-	<!--	- Cert only matches www.damtp
-		- At least some pages 404
-			-->
-	<rule from="^https?://(?:www\.)?damtp\.cam\.ac\.uk/global/"
+	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
 		to="https://www.damtp.cam.ac.uk/global/" />
 
 </ruleset>
