@@ -5,45 +5,52 @@
 		- OpenDaylight.xml
 		- Poky.xml
 
+
+	Problematic domains:
+
+		- www.spdx.org	(mismatched)
+
 -->
 <ruleset name="Linux Foundation (partial)">
 
 	<target host="linuxfoundation.org" />
 	<target host="*.linuxfoundation.org" />
+		<exclusion pattern="^http://(?:www\.)?linuxfoundation\.org/(?!misc/|sites/)" />
 		<!--
 			These paths started redirecting to http:
 
 				- $
 				- events$
 				- events/[\w-]+(?!/register)
-						-->
+								-->
 		<exclusion pattern="^http://events\.linuxfoundation\.org/(?:events(?:/|/[\w-]+)?)?(?!/register)(?:\?.*)?$" />
 	<target host="*.linux-foundation.org" />
 	<target host="spdx.org" />
-		<!--	wiki redirects to http	-->
+		<!--
+			wiki redirects to http
+						-->
 		<exclusion pattern="^http://spdx\.org/wiki/" />
 	<target host="*.spdx.org" />
 	<target host="yoctoproject.org" />
 	<target host="*.yoctoproject.org" />
 
 
-	<securecookie host="^(?!events\.).*\.linuxfoundation\.org$" name=".*" />
-	<!--	spdx.org wiki redirects to http, so we don't want to match wiki cookies	-->
-	<securecookie host="^\.spdx\.org$" name="^SESS.*$" />	
-	<securecookie host="^(.*\.)?yoctoproject\.org$" name=".*" />
+	<securecookie host="^(?!events\.).*\.linuxfoundation\.org$" name=".+" />
+	<!--
+		spdx.org wiki redirects to http, so
+		we don't want to match wiki cookies:
+							-->
+	<securecookie host="^\.spdx\.org$" name="^SESS.*" />	
+	<securecookie host="^(?:.*\.)?yoctoproject\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?linuxfoundation\.org/(misc|sites)/"
-		to="https://$1linuxfoundation.org/$2/" />
-
-	<rule from="^http://(admin|automotive|events|ldn|training)\.linuxfoundation\.org/"
-		to="https://$1.linuxfoundation.org/" />
+	<rule from="^http://((?:admin|automotive|events|ldn|training|www)\.)?linuxfoundation\.org/"
+		to="https://$1linuxfoundation.org/" />
 
 	<rule from="^http://lists\.linux-?foundation\.org/"
 		to="https://lists.linuxfoundation.org/" />
 
-	<!--	Cert doesn't match www.	-->
-	<rule from="^https?://(?:www\.)?spdx\.org/"
+	<rule from="^http://(?:www\.)?spdx\.org/"
 		to="https://spdx.org/" />
 
 	<rule from="^http://lists\.spdx\.org/"
