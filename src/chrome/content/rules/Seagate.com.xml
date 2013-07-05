@@ -1,22 +1,67 @@
 <!--
+	CDN buckets:
+
+		- seagatewtb.force.com
+
+			- knowledge
+			- support2
+			- wheretobuy
+
+		- stx.lithium.com
+
+			- forums
+
+		- seagate.my.salesforce.com
+
+
+	Nonfunctional subdomains:
+
+		- freeagent *
+		- samsunghdd *
+
+	* Refused
+
+
 	Problematic subdomains:
 
-		- ^	(mismatched, CN: www.seagate.com)
+		- ^		(mismatched, CN: www.seagate.com)
+		- drive		(works; mismatched, CN: secure.eloqua.com)
+		- forums	(refused)
+		- knowledge *
+		- support2 *
+		- wheretobuy *
+
+	* Nismatched, CN: slotmatching4.salesforce.com
 
 
 	Partially covered subdomains:
 
 		- (www.) *	(^ → www)
+		- knowledge **
+		- shop *
+		- support2 **
 		- origin-www *
 
 	* Some pages redirect to http
+	** → seagatewtb.secure.force.com, $ differs from seagatewtb
+
+
+	Fully covered subdomains:
+
+		- direct
+		- forums	(→ stx.i.lithium.com)
+		- services
+		- store
+		- wheretobuy	(→ seagatewtb.secure.force.com)
 
 -->
 <ruleset name="Seagate.com (partial)">
 
   <target host="seagate.com"/>
-  <target host="www.seagate.com"/>
+  <target host="*.seagate.com"/>
 	<exclusion pattern="^http://(?:origin-www\.|www\.)?seagate\.com/(?!files/|javascript/|ww/)" />
+		<exclusion pattern="^http://(?:knowledge|support2)\.seagate\.com/(?!faces/|jslibrary/|resource/|sCSS/|s\.gif|static/)" />
+		<exclusion pattern="^http://shop\.seagate\.com/(?!store/sgateus/DisplayPage/id\.DRCartSummaryJSONPage/output\.json/)" />
   <target host="origin-www.seagate.com"/>
   <target host="partnerreg.seagate.com"/>
   <target host="reseller.seagate.com"/>
@@ -25,8 +70,14 @@
 
   <rule from="^http://(www\.)?seagate\.com/" to="https://www.seagate.com/"/>
 
-  <rule from="^http://(apps1|origin-www|partnerreg|reseller|spp|sso)\.seagate\.com/" to="https://$1.seagate.com/"/>
+  <rule from="^http://(apps1|direct|origin-www|partnerreg|reseller|services|shop|spp|sso|store)\.seagate\.com/" to="https://$1.seagate.com/"/>
 
-  <securecookie host="^(apps1|partnerreg)\.seagate\.com$" name=".*"/>
+  <securecookie host="^(apps1|partnerreg|services)\.seagate\.com$" name=".*"/>
+
+	<rule from="^http://forums\.seagate\.com/"
+		to="https://stx.i.lithium.com/" />
+
+	<rule from="^http://(?:knowledge|support2|wheretobuy)\.seagate\.com/"
+		to="https://seagatewtb.secure.force.com/" />
 
 </ruleset>
