@@ -4,6 +4,10 @@
 		- cdn-casino.winner.com.cdngc.net
 		- cdn-m.winner.com.cdngc.net
 
+		- 2-01-2d9c-0007.cdx.cedexis.net
+
+			- static
+
 
 	Nonfunctional subdomains:
 
@@ -14,15 +18,21 @@
 		- cdn-livecasino *
 		- cdn-m		(403; mismatched, CN: *.pantherssl.com)
 		- cdn-mobile	(reset)
+		- cdn-sports **
 		- cdn-www	(403; mismatched, CN: support3.cdnetworks.net)
-		- static	(data differs between http & https)
+		- sports	(redirects to http)
 
 	* Refused
+	** 403; mismatched, CN: *.pantherssl.com
 
 
 	Partially covered subdomains:
 
 		- casino	(some pages redirect to http)
+		- poker *
+		- static	(www/ 503s)
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -50,13 +60,15 @@
 
 	<target host="*.winner.com" />
 		<exclusion pattern="^http://casino\.winner\.com/(?!media/)" />
+		<exclusion pattern="^http://poker\.winner\.com/(?!style/|tpl/)" />
+		<exclusion pattern="^http://static\.winner\.com/www/" />
 
 
 	<securecookie host="^\.winner\.com$" name="^banner_.+" />
 	<securecookie host=".+\.winner\.com$" name=".+" />
 
 
-	<rule from="^http://((?:banner|chat-winner|m)?casino|cdn-bingo|login|m|secure|service|wap)\.winner\.com/"
+	<rule from="^http://((?:banner|chat-winner|m)?casino|cdn-bingo|login|m|poker|secure|service|static|wap)\.winner\.com/"
 		to="https://$1.winner.com/" />
 
 	<rule from="^http://(?:secure)?(bingo|games|livecasino|mobile)\.winner\.com/"
