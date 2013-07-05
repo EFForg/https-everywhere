@@ -3,11 +3,20 @@
 
 		- ^	(mismatched, CN: www.seagate.com)
 
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- origin-www *
+
+	* Some pages redirect to http
+
 -->
 <ruleset name="Seagate.com (partial)">
 
   <target host="seagate.com"/>
   <target host="www.seagate.com"/>
+	<exclusion pattern="^http://(?:origin-www\.|www\.)?seagate\.com/(?!files/|javascript/|ww/)" />
   <target host="origin-www.seagate.com"/>
   <target host="partnerreg.seagate.com"/>
   <target host="reseller.seagate.com"/>
@@ -18,6 +27,6 @@
 
   <rule from="^http://(origin-www|partnerreg|reseller|spp|sso)\.seagate\.com/" to="https://$1.seagate.com/"/>
 
-  <securecookie host="^(origin-www|partnerreg)\.seagate\.com$" name=".*"/>
+  <securecookie host="^partnerreg\.seagate\.com$" name=".*"/>
 
 </ruleset>
