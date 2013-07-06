@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional subdomains:
+
+		- godzilla *
+		- mailarchive *
+		- papers *
+		- tnc200[0-4] **
+		- tnc2005 *
+		- v4 *
+
+	* Shows eduroam.org, valid cert
+	** Shows eduroam.org; mismatched, CN: godzilla.terena.org
+
+
+	Problematic subdomains:
+
+		- tnc2006	(403)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- tnc200[789] *
+		- tnc2010 *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- confluence
+		- login
+		- my
+		- omega
+		- tec
+		- tnc2006	(→ www)
+		- tnc201[1-4]
+		- wikis
+
+-->
+<ruleset name="Terena.org (partial)">
+
+	<target host="terena.org" />
+	<target host="*.terena.org" />
+		<exclusion pattern="^http://(?:www\.)?terena\.org/(?!css/|events(?:$|\?|/)|favicon\.ico|gfx/|js/)" />
+		<exclusion pattern="^http://tnc20(?:0\d|10)\.terena\.org/(?!css/|gfx/|js/)" />
+
+
+	<securecookie host="^(?:confluence|login|tnc201[1-4]|wikis)\.terena\.org$" name=".+" />
+
+
+	<rule from="^http://((?:confluence|login|my|omega|tec|tnc20(?:0[789]|1\d)|wikis|www)\.)?terena\.org/"
+		to="https://$1terena.org/" />
+
+	<rule from="^http://tnc2006\.terena\.org/"
+		to="https://www.terena.org/events/tnc2006/" />
+
+</ruleset>
