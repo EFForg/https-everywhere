@@ -1,0 +1,64 @@
+<!--
+	CDN buckets:
+
+		- cdn.comixology.com.cdngc.net
+		- iphone.comixology.com.cdngc.net
+		- comixologyssl.sslcs.cdngc.net
+		- dcomixologyssl.sslcs.cdngc.net
+
+		- comixology.desk.com
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- blog		(prints "blog0"; expired 2012-06-05, self-signed, CN: ip-10-86-101-22)
+		- cdn		(403; mismatched, CN: ssl2.cdngc.net)
+		- iphone	(403; mismatched, CN: support4.cdnetworks.net)
+		- support	(desk.com)
+
+
+	Problematic subdomains:
+
+		- ^		(times out)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- pulllist
+		- retailers
+		- store-images
+		- submit
+		- www-images
+
+
+	Mixed images on pulllist from cdn
+	Mixed image on retailers from cdn
+	Mixed images on submit from iphone
+
+-->
+<ruleset name="comiXology.com (partial)">
+
+	<target host="comixology.com" />
+	<target host="*.comixology.com" />
+
+
+	<securecookie host="^(?:pulllist|retailers|store-images|submit)\.comixology\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?comixology\.com/(assets/|login(?:$|\?))"
+		to="https://www.comixology.com/$1" />
+
+	<rule from="^http://(pulllist|retailers|(?:store|www)-images|submit)\.comixology\.com/"
+		to="https://$1.comixology.com/" />
+
+	<rule from="^http://support\.comixology\.com/favicon\.ico"
+		to="https://d3jyn100am7dxp.cloudfront.net/favicon.ico" />
+
+</ruleset>
