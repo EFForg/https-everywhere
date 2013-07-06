@@ -1,0 +1,42 @@
+<!--
+	Other Marvel rulesets:
+
+		- Annihil.us.xml
+
+
+	Nonfunctional subdomains:
+
+		- marvelkids	(redirects to http, valid cert)
+
+
+	Partially covered subdomains:
+
+		- comicstore *
+		- secure *
+		- subscriptions *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+
+-->
+<ruleset name="Marvel.com (partial)">
+
+	<target host="marvel.com" />
+	<target host="*.marvel.com" />
+		<exclusion pattern="^http://comicstore\.marvel\.com/(?!assets/)" />
+		<exclusion pattern="^http://secure\.marvel\.com/(?:\?.*)?$" />
+		<exclusion pattern="^http://subscriptions\.marvel\.com/(?!css/|i/|images/|(?:login|store/shippingr)\.asp|script/)" />
+
+
+	<!--securecookie host="^\.marvel\.com$" name="^CMXSESSIONID$" /-->
+	<securecookie host="^marvel\.com$" name=".+" />
+
+
+	<rule from="^http://((?:comicstore|secure|subscriptions|www)\.)?marvel\.com/"
+		to="https://$1marvel.com/" />
+
+</ruleset>
