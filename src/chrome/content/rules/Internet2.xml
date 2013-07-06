@@ -1,20 +1,34 @@
 <!--
+	Problematic subdomains:
+
+		- middleware	(shows www; mismatched, CN: www.internet2.edu)
+
+
 	Partially covered subdomains:
 
-		- (www.)	(some pages redirect to http, contentslider-1k.css & images/ 404)
+		- middleware	(→ www)
+		- (www.)	(some pages redirect to http; contentslider-1k.css, images/, index.cfm, & pubs/ 404)
 
 -->
 <ruleset name="Internet2 (partial)">
 
 	<target host="internet2.edu" />
 	<target host="*.internet2.edu" />
-		<exclusion pattern="^http://(?:www\.)?internet2\.edu/(?!includes/)" />
+		<exclusion pattern="^http://(?:www\.)?internet2\.edu/(?!includes/|middleware(?:$|\?|/))" />
 
 
 	<securecookie host="^(?:\.lists|service1|spaces|wiki)\.internet2\.edu$" name=".+" />
 
 
-	<rule from="^http://((?:lists|service1|spaces|wiki|www)\.)?internet2\.edu/"
+	<!--	$ & /$ 404:
+				-->
+	<rule from="^http://(?:www\.)?internet2\.edu/middleware/?(?:\?.*)?$"
+		to="https://www.internet2.edu/middleware/index.cfm" />
+
+	<rule from="^http://((?:lists|mail|service1|spaces|wiki|www)\.)?internet2\.edu/"
 		to="https://$1internet2.edu/" />
+
+	<rule from="^http://middleware\.internet2\.edu/(?:\?.*)?$"
+		to="https://www.internet2.edu/middleware/index.cfm" />
 
 </ruleset>
