@@ -4,21 +4,46 @@
 
 	Nonfunctional domains:
 
-		- 4d5.net
 		- s0.d45.net
-		- d.prbrds.com
 		- s1.prbrds.com
 		- s15524.prbrds.com
-		- images.proboards.com	(times out)
+		- ads.proboards.com *
+		- images.proboards.com *
+		- www.login.proboards.com *
+
+	* 502
+
+
+	Problematic domains:
+
+		- 4d5.net *
+		- d.prbrds.com *
+
+	* Works; mismatched, CN; ss.prbrds.com
+
+
+	Fully covered domains:
+
+		- 4d5.net		(→ ss.prbrds.com)
+		- d.prbrds.com		(→ ss)
+		- s.prbrds.com
+		- login.proboards.com
 
 -->
 <ruleset name="ProBoards (partial)">
 
+	<target host="*.prbrds.com" />
 	<target host="proboards.com" />
-	<target host="www.proboards.com" />
+	<target host="*.proboards.com" />
 
+
+	<rule from="^http://(?:4d5\.net|(?:d|ss)\.prbrds\.com)/"
+		to="https://ss.prbrds.com/" />
 
 	<rule from="^http://(www\.)?proboards\.com/n/images/"
 		to="https://$1proboards.com/n/images/" />
+
+	<rule from="^http://login\.proboards\.com/"
+		to="https://login.proboards.com/" />
 
 </ruleset>
