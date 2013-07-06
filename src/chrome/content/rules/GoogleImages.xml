@@ -1,3 +1,23 @@
+<!--
+	Problematic domains:
+
+		- www.google.bo *
+		- www.google.co *
+		- www.google.ec *
+		- www.google.in *
+		- www.google.kr *
+		- www.google.com.kz **
+		- www.google.com.lk *
+		- www.google.mx **
+		- www.google.sg *
+		- www.google.sl *
+		- www.google.ug *
+		- www.google.vn *
+
+	* 404; mismatched, CN: google.com
+	** Works; mismatched, CN: google.com
+
+-->
 <ruleset name="Google Images">
   <target host="*.google.com" />
   <target host="google.com" />
@@ -8,75 +28,33 @@
   <target host="www.google.*" />
   <target host="google.*" />
 
-  <rule from="^http://encrypted\.google\.com/(advanced_image_search|imghp)" 
-          to="https://encrypted.google.com/$1" />
+  <rule from="^http://(encrypted|www)\.google\.com/(advanced_image_search|imghp|.*tb(?:m=isch|s=sbi))" 
+          to="https://$1.google.com/$2" />
 
-  <!-- https://images.google.com is currently broken; work around that... -->
-  <rule from="^https?://images\.google\.com/(images)?$"
-          to="https://encrypted.google.com/imghp" />
-  <rule from="^http://(?:images\.|www\.)?google\.com/(advanced_image_search|imghp)"
-	  to="https://encrypted.google.com/$1" />
-  <rule from="^https?://images\.google\.com/images\?(.*q=)"
-          to="https://encrypted.google.com/search?tbm=isch&#38;$1" />
-  <rule from="^http://(?:images|www|encrypted)\.google\.com/(.*tb(?:m=isch|s=sbi))"
-          to="https://encrypted.google.com/$1" />
+  <rule from="^http://images\.google\.com/"
+          to="https://images.google.com/" />
+
+
+	<rule from="^http://(?:www\.)?google\.co/(advanced_image_search|imghp)"
+		to="https://www.google.com/$1" />
+
+	<rule from="^http://(?:www\.)?google\.(?:co\.)?(in|kr|ug)/(advanced_image_search|imghp)"
+		to="https://www.google.$1/$2" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(kz|lk)/(advanced_image_search|imghp)"
+		to="https://www.google.$1/$2" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(bo|ec|mx|sg|sl|vn)/(advanced_image_search|imghp)"
+		to="https://www.google.com.$1/$2" />
 
   <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:au|ca|gh|ie|in|jm|ke|lk|my|na|ng|nz|pk|rw|sl|sg|ug|uk|za|zw)/(advanced_image_search|imghp)"
-     to="https://encrypted.google.com/$1" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/(advanced_image_search|imghp)$"
-    to="https://encrypted.google.com/$1?hl=es" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com\.)?(?:ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/(advanced_image_search|imghp)$"
-     to="https://encrypted.google.com/imghp?hl=ar" />
-  <rule from="^http://(?:www\.)?google\.(?:at|ch|de)/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=de" />
-  <rule from="^http://(?:www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi|no)/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$2?hl=$1" />
-  <rule from="^http://(?:www\.)?google\.com?\.(id|th|tr)/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$2?hl=$1" />
-  <rule from="^http://(?:www\.)?google\.co\.il/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=he" />
-  <rule from="^http://(?:www\.)?google\.co\.kr/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=ko" />
-  <rule from="^http://(?:www\.)?google\.com\.kz/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=kk" />
-  <rule from="^http://(?:www\.)?google\.co\.jp/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=ja" />
-  <rule from="^http://(?:www\.)?google\.com\.vn/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=vi" />
-  <rule from="^http://(?:www\.)?google\.com\.br/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=pt-BR" />
-  <rule from="^http://(?:www\.)?google\.se/(advanced_image_search|imghp)$"
-          to="https://encrypted.google.com/$1?hl=sv" />
+   from="^http://(?:www\.)?google\.(com?\.)?(ar|au|ca|cl|co|cr|cu|es|gh|gt|id|ie|il|jp|jm|ke|nz|my|na|ng|pa|pe|pk|pl|py|ru|rw|sv|th|tr|uk|uy|ve|za|zw)/(advanced_image_search|imghp)"
+     to="https://www.google.$1$2/$3" />
 
-<!-- If there are URL parameters, keep them. -->
   <rule
-   from="^http://(?:www\.)?google\.(?:com?\.)?(?:ar|bo|cl|co|cu|cr|ec|es|gt|mx|pa|pe|py|sv|uy|ve)/(advanced_image_search|imghp)\?"
-    to="https://encrypted.google.com/$1?hl=es&#38;" />
-  <rule
-   from="^http://(?:www\.)?google\.(?:com\.)?(?:ae|bh|eg|jo|kw|lb|ly|om|qa|sa)/(advanced_image_search|imghp)\?"
-     to="https://encrypted.google.com/$1?hl=ar&#38;" />
-  <rule from="^http://(?:www\.)?google\.(?:at|ch|de)/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=de&#38;" />
-  <rule from="^http://(?:www\.)?google\.(fr|nl|it|pl|ru|bg|pt|ro|hr|fi|no)/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$2?hl=$1&#38;" />
-  <rule from="^http://(?:www\.)?google\.com?\.(id|th|tr)/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$2?hl=$1&#38;" />
-  <rule from="^http://(?:www\.)?google\.co\.il/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=he&#38;" />
-  <rule from="^http://(?:www\.)?google\.co\.kr/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=ko&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.kz/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=kk&#38;" />
-  <rule from="^http://(?:www\.)?google\.co\.jp/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=ja&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.vn/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=vi&#38;" />
-  <rule from="^http://(?:www\.)?google\.com\.br/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=pt-BR&#38;" />
-  <rule from="^http://(?:www\.)?google\.se/(advanced_image_search|imghp)\?"
-          to="https://encrypted.google.com/$1?hl=sv&#38;" />
+   from="^http://(?:www\.)?google\.(com\.)?(ae|bh|br|eg|jo|kw|lb|ly|om|qa|sa)/(advanced_image_search|imghp)"
+     to="https://www.google.$1$2/$3" />
+  <rule from="^http://(?:www\.)?google\.(at|bg|ch|de|fi|fr|hr|it|nl|no|pl|pt|ro|se)/(advanced_image_search|imghp)"
+          to="https://www.google.$1/$2" />
 
 </ruleset>
