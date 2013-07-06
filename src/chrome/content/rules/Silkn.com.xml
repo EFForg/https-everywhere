@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/dnaresponse-estore/
+
+
+	Problematic domains:
+
+		- buyfacefx.com		(mismatched, CN: *.dnaresponse.com)
+
+
+	Partially covered domains:
+
+		- (www.)silkn.com	(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- (www.)buyfacefx.com	(^ → www)
+		- shop.silkn.com
+
+-->
+<ruleset name="Silkn.com">
+
+	<target host="buyfacefx.com" />
+	<target host="www.buyfacefx.com" />
+	<target host="silkn.com" />
+	<target host="*.silkn.com" />
+		<exclusion pattern="^http://(?:www\.)?silkn\.com/(?!images/|include/|RadControls/|scripts/|upload/|WebResource\.axd)" />
+
+
+	<securecookie host="^shop\.silkn\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?buyfacefx\.com/"
+		to="https://www.buyfacefx.com/" />
+
+	<rule from="^http://(shop\.|www\.)?silkn\.com/"
+		to="https://$1silkn.com/" />
+
+</ruleset>
