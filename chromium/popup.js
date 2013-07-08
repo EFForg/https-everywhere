@@ -62,15 +62,12 @@ document.addEventListener('DOMContentLoaded', function () {
   chrome.tabs.getSelected(null, gotTab);
 
   // auto-translate all elements with i18n attributes
-  var all = document.getElementsByTagName("*");
-  for(var i=0, max=all.length; i < max; i++) {
-    var label = all[i].getAttribute('i18n');
-    if(label) {
-      all[i].innerHTML = chrome.i18n.getMessage(label);
-    }
+  var e = document.querySelectorAll("[i18n]");
+  for (var i=0; i < e.length; i++) {
+    e[i].innerHTML = chrome.i18n.getMessage(e[i].getAttribute("i18n"));
   }
 
   // other translations
-  document.getElementById('whatIsThis').setAttribute('title', chrome.i18n.getMessage('chrome_what_is_this_title'));
+  document.getElementById("whatIsThis").setAttribute("title", chrome.i18n.getMessage("chrome_what_is_this_title"));
 });
 
