@@ -4,33 +4,66 @@
 		- Crowd-Factory.xml
 
 
+	Problematic domains:
+
+		- marketo.com *
+		- (www.)marketo.net *
+
+	* Cert only matches *.marketo.com
+
+
+	Fully covered domains:
+
+		- marketo.com subdomains:
+
+			- (www.)	(^ → www)
+			- app
+			- app-[a-q]
+			- app-sj\d
+			- app-sj[fh]
+			- b2c-mlm
+			- blog
+			- micro
+			- munchkin	(→ munchkin.marketo.net)
+			- na-[a-df-q]
+			- na-sj0\d
+			- na-sj[fh]
+
+		- marketo.net subdomains:
+
+			- (www.)	(→ www.marketo.com)
+			- app		(→ app-a.marketo.com)
+			- munchkin
+			- ssl-munchkin
+
+
 	munchkin sets a "_mkto_trk" wildcard cookie on whichever domain it is
 	loaded from.
 
 -->
 <ruleset name="Marketo">
 
-	<target host="marketo.com"/>
-	<target host="*.marketo.com"/>
-	<target host="marketo.net"/>
-	<target host="*.marketo.net"/>
+	<target host="marketo.com" />
+	<target host="*.marketo.com" />
+	<target host="marketo.net" />
+	<target host="*.marketo.net" />
 
 
-	<securecookie host="^(.*\.)?marketo\.(com|net)$" name=".*"/>
+	<securecookie host="^(?:.*\.)?marketo\.(?:com|net)$" name=".+" />
 
 
-	<!--	cert valid for *.marketo.com only	-->
-	<rule from="^https?://(?:www\.)?marketo\.(?:com|net)/"
-		to="https://www.marketo.com/"/>
+	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
+		to="https://www.marketo.com/" />
 
 	<rule from="^http://(app(?:-[a-q]|-sj0\d|-sj[fh])?|b2c-mlm|blog|micro|na-(?:[a-df-q]|sj0\d|sj[fh]))\.marketo\.com/"
-		to="https://$1.marketo.com/"/>
+		to="https://$1.marketo.com/" />
 
-	<!--	what the server does	-->
-	<rule from="^https?://app\.marketo\.net/"
-		to="https://app-a.marketo.com/"/>
+	<!--	Server redirects as so:
+					-->
+	<rule from="^http://app\.marketo\.net/"
+		to="https://app-a.marketo.com/" />
 
-	<rule from="^https?://(ssl-)?munchkin\.marketo\.(?:com|net)/"
-		to="https://$1munchkin.marketo.net/"/>
+	<rule from="^http://(ssl-)?munchkin\.marketo\.(?:com|net)/"
+		to="https://$1munchkin.marketo.net/" />
 
 </ruleset>
