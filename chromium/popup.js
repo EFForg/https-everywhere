@@ -55,7 +55,7 @@ function gotTab(tab) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
