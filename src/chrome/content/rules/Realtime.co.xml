@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- www	(refused)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- app
+		- ortc-ws2
+		- ortc-ws2-useast1-s000[5-9]
+		- ortc-ws2-useast1-s0010
+		- www	(→ app)
+
+-->
+<ruleset name="Realtime.co">
+
+	<target host="realtime.co" />
+	<target host="*.realtime.co" />
+
+
+	<securecookie host="^app\.realtime\.co$" name=".+" />
+
+
+	<rule from="^http://(ortc-ws2(?:-useast1-s\d+)?\.)?realtime\.co/"
+		to="https://$1realtime.co/" />
+
+	<rule from="^http://www\.realtime\.co/"
+		to="https://app.realtime.co/" />
+
+</ruleset>
