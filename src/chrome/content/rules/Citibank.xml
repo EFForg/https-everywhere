@@ -1,9 +1,38 @@
+<!--
+	Problematic subdomains:
+
+		- www[12]	(redirect from $ is different)
+
+
+	Fully covered subdomains:
+
+		- metrics1
+		- www[12]
+
+
+	Observed cookie domains:
+
+		- .
+		- online
+		- www
+
+-->
 <ruleset name="Citibank (testing)" default_off="broken?">
   <target host="citibank.com" />
   <target host="*.citibank.com" />
 
+
+	<securecookie host="^\.citibank\.com$" name="^(?:CTBN|ss_pers|ss_sess|s_vi)$" />
+	<securecookie host="^(?:online|www)\.citibank\.com$" name=".+" />
+
+
   <rule from="^http://citibank\.com/"
           to="https://www.citibank.com/" />
-  <rule from="^http://(online|www|www\.asia|www\.latam|www\.privatebank)\.citibank\.com/"
+
+	<rule from="^http://www[12]\.citibank\.com/(?:\?.*)?$"
+		to="https://www.citibank.com/US/Welcome.c" />
+
+  <rule from="^http://(metrics1|online|www[12]?|www\.asia|www\.latam|www\.privatebank)\.citibank\.com/"
           to="https://$1.citibank.com/" />
+
 </ruleset>
