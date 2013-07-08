@@ -1,35 +1,66 @@
+<!--
+	Problematic domains:
+
+		- liveperson.com	(cert only matches *.liveperson.com)
+
+
+	Fully covered domains:
+
+		- liveperson.net subdomains:
+
+			- apps
+			- lptag
+			- sso
+
+
+	Observed cookie domains:
+
+		- hc2.humanclick.com
+
+		- liveperson.com:
+
+			- .
+			- apps
+			- connect
+			- customercenter
+
+		- liveperson.net:
+
+			- .
+			- base
+			- sales
+			- sr2
+
+-->
 <ruleset name="LivePerson (partial)">
 
 	<target host="hc2.humanclick.com" />
-	<target host="liveperson.hosted.jivesoftware.com"/>
+	<target host="liveperson.hosted.jivesoftware.com" />
 	<target host="liveperson.com" />
 	<target host="*.liveperson.com" />
-	<target host="liveperson.net"/>
-	<target host="*.liveperson.net"/>
-	<target host="*.iad.liveperson.net"/>
+	<target host="liveperson.net" />
+	<target host="*.liveperson.net" />
 
 
-	<securecookie host="^hc2\.humanclick\.com$" name=".*" />
-	<securecookie host="^(?:sr2)?\.liveperson\.net$" name=".*"/>
+	<securecookie host="^hc2\.humanclick\.com$" name=".+" />
+	<securecookie host=".*\.liveperson\.(?:com|net)$" name=".+" />
 
 
 	<rule from="^http://hc2\.humanclick\.com/"
 		to="https://hc2.humanclick.com/" />
 
-	<!--	Cert only matches *.liveperson.com.	-->
-	<rule from="^https?://(?:www\.)?liveperson\.com/"
-		to="https://www.liveperson.com/"/>
+	<rule from="^http://(?:www\.)?liveperson\.com/"
+		to="https://www.liveperson.com/" />
 
-	<rule from="^http://(base|community|customercenter|solutions|sr2)\.liveperson\.com/"
+	<rule from="^http://(apps|base|community|customercenter|solutions|sr2)\.liveperson\.com/"
 		to="https://solutions.liveperson.com/" />
 
-	<!--	sr2 example: https://www.oracle.com/partners/index.html		-->
-	<rule from="^http://(adminlogon|base|dev|sales|server\.iad|sr2)\.liveperson\.net/"
-		to="https://$1.liveperson.net/"/>
+	<!--	sr2 example: https://www.oracle.com/partners/index.html
+									-->
+	<rule from="^http://(adminlogon|base|dev|lptag|sales|server\.iad|sr2|sso)\.liveperson\.net/"
+		to="https://$1.liveperson.net/" />
 
 	<rule from="^http://liveperson\.hosted\.jivesoftware\.com/"
-		to="https://community.liveperson.net/"/>
-
-	<securecookie host="^.*\.liveperson\.(com|net)$" name=".*"/>
+		to="https://community.liveperson.net/" />
 
 </ruleset>
