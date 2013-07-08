@@ -1,0 +1,70 @@
+<!--
+	Other Citi Group rulesets:
+
+		- Citi_Alumni_Network.xml
+		- Citibank.xml
+		- Citibank-Australia.xml
+
+
+	Nonfunctional subdomains:
+
+		- icg		(404, valid cert)
+		- www.icg	(404)
+
+
+	Problematic domains:
+
+		- (www.)citicards.com	(differs from http)
+		- www.oncampus.citi.com *
+		- thankyoucard.citi.com *
+
+	* Works; mismatched, CN: www.citibank.com
+
+
+	Partially covered subdomains:
+
+		- thankyoucard	(^ → online)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- chat.online
+		- creditcards
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- creditcards
+		- icg
+		- www.icg
+		- oncampus
+		- chat.online
+		- thankyoucard
+		- www
+
+-->
+<ruleset name="Citi.com">
+
+	<target host="citi.com" />
+	<target host="*.citi.com" />
+
+
+	<securecookie host="^\.citi\.com$" name="^(?:mbox|ss_pers|ss_sess)$" />
+	<securecookie host="^(?:(?:chat\.online|creditcards|www)\.)?citi\.com$" name=".+" />
+
+
+	<rule from="^http://((?:creditcards|chat\.online|www)\.)?citi\.com/"
+		to="https://$1citi.com/" />
+
+	<!--	Redirects as so, sans trailing slash:
+							-->
+	<!--rule from="^http://(?:www\.)?oncampus\.citi\.com/(\?.*)?$"
+		to="https://icg.citi.com//icg/sa/recruiting/index.jsp$1" /-->
+
+	<rule from="^http://thankyoucard\.citi\.com/(\?.*)?$"
+		to="https://online.citibank.com/US/JRS/portal/template.do?ID=ThankYouCards$1" />
+
+</ruleset>
