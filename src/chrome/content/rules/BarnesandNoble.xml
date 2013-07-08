@@ -1,48 +1,62 @@
 <!--
+	Problematic domains:
+
+		- images.barnesandnoble.com	(akamai)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+
 	Fully covered domains:
 
 		- barnesandnoble.com subdomains:
 
 			- cart[1-4]
+			- images	(→ simg1.imagesbn.com)
 			- my
 			- mynook
 			- pnr
 
+		- imagesbn.com subdomains:
+
+			- img[12]	(→ simg[12])
+			- img3
+			- simg[12]
+
 -->
 <ruleset name="Barnes and Noble (partial)">
-    <target host="bn.com" />
-    <target host="*.bn.com" />
+
 	<target host="barnesandnoble.com" />
 	<target host="*.barnesandnoble.com" />
-		<exclusion pattern="http://www\.barnesandnoble\.com/(?:google/ad\?url=|[sw]/)" />
-		<exclusion pattern="^http://www\.barnesandnoble\.com/p/[\w\-]+" />
+		<exclusion pattern="^http://www\.barnesandnoble\.com/(?:google/ad\?url=|p/[\w-]+|[sw]/)" />
+	<target host="bn.com" />
+	<target host="www.bn.com" />
 	<target host="*.imagesbn.com" />
 
 
 	<securecookie host="^(?:cart\d|my|\.?mynook)\.barnesandnoble\.com$" name=".+" />
 
 
-    <rule from="^http://(www\.)?bn\.com/"
-        to="https://www.barnesandnoble.com/" />
-
-	<rule from="^http://(?:www\.)?barnesandnoble\.com/"
+	<rule from="^http://(?:www\.)?b(?:arnesandnoble|n)\.com/"
 		to="https://www.barnesandnoble.com/" />
 
 	<rule from="^http://(cart\d|my|mynook|pnr)\.barnesandnoble\.com/"
 		to="https://$1.barnesandnoble.com/" />
 
-	<!--	Akamai.
-			-->
-	<rule from="^https?://images\.barnesandnoble\.com/"
+	<rule from="^http://images\.barnesandnoble\.com/"
 		to="https://simg1.imagesbn.com/" />
 
 	<!--	s?img[12] appear identical, but copy what
-		the server does as closely as is feasible.	-->
+		the server does as closely as is feasible:
+							-->
 	<rule from="^http://s?img([12])\.imagesbn\.com/"
 		to="https://simg$1.imagesbn.com/" />
 
-	<!--	simg3 doesn't exist, and unlinke 1 & 2,
-		the cert matches img3.	-->
+	<!--	simg3 doesn't exist, and unlike
+		1 & 2, the cert matches img3:
+						-->
 	<rule from="^http://img3\.imagesbn\.com/"
 		to="https://img3.imagesbn.com/" />
 
