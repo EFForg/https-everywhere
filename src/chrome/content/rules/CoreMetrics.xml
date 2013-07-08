@@ -1,11 +1,39 @@
+<!--
+	Problematic domains:
+
+		- www.coremetrics.com	(mismatched, CN: redirect.www.ibm.com)
+
+
+	Fully covered domains:
+
+		- data.cmcore.com
+
+		- coremetrics.com subdomains:
+
+			- data
+			- testdata
+			- www		(→ www.ibm.com)
+
+
+	^coremetrics.com times out over both http & https.
+
+-->
 <ruleset name="CoreMetrics (partial)">
 
-	<target host="libs.coremetrics.com" />
+	<target host="data.cmcore.com" />
+	<target host="*.coremetrics.com" />
 	<target host="*.surfaid.ihost.com"/>
 
+	<securecookie host="^testdata\.coremetrics\.com$" name=".+" />
 	<securecookie host="^\.surfaid\.ihost\.com$" name=".*"/>
 
-	<rule from="^http://libs\.coremetrics\.com/"
+	<rule from="^http://data\.cmcore\.com/"
+		to="https://data.cmcore.com/" />
+
+	<rule from="^http://www\.coremetrics\.com/"
+		to="https://www.ibm.com/software/marketing-solutions/coremetrics/www.redirects/" />
+
+	<rule from="^http://(data|libs|testdata)\.coremetrics\.com/"
 		to="https://libs.coremetrics.com/" />
 
 	<rule from="^http://stats\.surfaid\.ihost\.com/"
