@@ -10,6 +10,7 @@
 
 		- hubspot.com subdomains:
 
+			- cdn1			(akamai 503, valid cert)
 			- dev			(times out)
 			- go			(interrupted)
 			- help			(cert: slotmatching8.salesforce.com; redirects to http)
@@ -19,18 +20,31 @@
 
 		- (www.)inboundconference.com	(times out)
 
+
+	Fully covered domains:
+
+		- hubspot.com subdomains:
+
+			- forms
+			- static2cdn
+
+		- hubspot.net subdomains:
+
+			- cdn2
+
 -->
 <ruleset name="HubSpot">
 
 	<target host="hubspot.com" />
 	<target host="*.hubspot.com" />
 	<target host="cdn.blog.hubspot.com" />
+	<target host="*.hubspot.net" />
 
 
 	<securecookie host="^(.*\.)?hubspot\.com$" name=".*" />
 
 
-	<rule from="^http://((?:app|blog|developers|js|login|marketplace|static|track|tracking|www)\.)?hubspot\.com/"
+	<rule from="^http://((?:app|blog|developers|forms|js|login|marketplace|static|static2cdn|track|tracking|www)\.)?hubspot\.com/"
 		to="https://$1hubspot.com/" />
 
 	<rule from="^https?://cdn\.blog\.hubspot\.com/"
@@ -44,5 +58,8 @@
 					-->
 	<rule from="^https?://jobs\.hubspot\.com/"
 		to="https://www.hubspot.com/jobs/" />
+
+	<rule from="^http://cdn2\.hubspot\.net/"
+		to="https://cdn2.hubspot.net/" />
 
 </ruleset>
