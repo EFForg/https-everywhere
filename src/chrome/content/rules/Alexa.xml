@@ -4,10 +4,8 @@
 
 	CDN buckets:
 
-	- s3.amazonaws.com/com.alexa.pcache/
-		- Equivalent to d1d024ntqri789.cloudfront.net
-	- s3.amazonaws.com/com.alexametrics.pixel/
-		- Equivalent to d5nxst8fruw4z.cloudfront.net
+	- s3.amazonaws.com/com.alexa.pcache/ | d1d024ntqri789.cloudfront.net
+	- s3.amazonaws.com/com.alexametrics.pixel/ | d5nxst8fruw4z.cloudfront.net
 	- alexa-sitestats.s3.amazonaws.com
 	- d31qbv1cthcecs.cloudfront.net
 
@@ -22,8 +20,10 @@
 
 	<target host="alexa.com" />
 	<target host="*.alexa.com" />
-		<!--	Rewriting css to AmaonAWS breaks images.
-			(images/ points to s3.amazonaws.com/images/)	-->
+		<!--
+			Rewriting css to AmaonAWS breaks images.
+			(images/ points to s3.amazonaws.com/images/)
+									-->
 		<exclusion pattern="^http://pcache.alexa.com/css/" />
 	<target host="pixel.alexametrics.com" />
 
@@ -31,15 +31,13 @@
 	<rule from="^http://(www\.)?alexa\.com/(favicon\.ico|css/|images/|secure/|\w+/wp-content/)"
 		to="https://$1alexa.com/$2" />
 
-	<rule from="^https?://([ip])cache\.alexa\.com/"
+	<rule from="^http://(i|p)cache\.alexa\.com/"
 		to="https://s3.amazonaws.com/com.alexa.$1cache/" />
 
-	<rule from="^https?://xslt\.alexa\.com/"
+	<rule from="^http://xslt\.alexa\.com/"
 		to="https://alexa-sitestats.s3.amazonaws.com/" />
 
-	<rule from="^https?://pixel\.alexametrics\.com/"
+	<rule from="^http://pixel\.alexametrics\.com/"
 		to="https://s3.amazonaws.com/com.alexametrics.pixel/" />
 
-
 </ruleset>
-
