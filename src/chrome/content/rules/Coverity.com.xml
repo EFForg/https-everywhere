@@ -1,0 +1,56 @@
+<!--
+
+	CDN buckets:
+
+		- coverity.mktoweb.com
+
+			- softwareintegrity
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(dropped)
+		- scan		(refused)
+
+
+	Problematic subdomains:
+
+		- autodiscover		(refused)
+		- blog			(dropped)
+		- softwareintegrity	(redirects to app-sjf.marketo.com)
+
+
+	Partially covered subdomains:
+
+		- blpg			(→ communities)
+		- softwareintegrity	(→ na-sjf.marketo.com)
+
+
+	Fully covered subdomains:
+
+		- communities
+		- uat.communities
+		- apps.uat
+
+-->
+<ruleset name="Coverity.com (partial)">
+
+	<target host="*.coverity.com" />
+
+
+	<securecookie host="^(?:(?:uat\.)?communities|apps\.uat)\.coverity\.com$" name=".+" />
+
+
+	<rule from="^http://autodiscover\.coverity\.com/"
+		to="https://autodiscover-s.outlook.com/" />
+
+	<rule from="^http://blog\.coverity\.com/[^?]*(\?.*)?"
+		to="https://communities.coverity.com/blogs/software-integrity-blog/$1" />
+
+	<rule from="^http://((?:uat\.)?communities|apps\.uat)\.coverity\.com/"
+		to="https://$1.coverity.com/" />
+
+	<rule from="^http://softwareintegrity\.coverity\.com/(cs|image|j|r)s/"
+		to="https://na-sjf.marketo.com/$1s/" />
+
+</ruleset>
