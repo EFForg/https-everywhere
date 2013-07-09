@@ -1,0 +1,56 @@
+<!--
+	CDN buckets:
+
+		- oasc06020.247realmedia.com
+
+			- oascentral
+
+		- www.travelzoo.com.edgesuite.net
+
+			- data.travelzoo.com
+			- www.tzoo-img.com
+
+
+	Nonfunctional subdomains:
+
+		- data		(504, akamai)
+
+
+	Problematic domains:
+
+		- oascentral.travelzoo.com	(mismatched, CN: openadstream15.247realmedia.com)
+		- www.tzoo-img.com		(504, akamai)
+
+
+	Fully covered domains:
+
+		- travelzoo.com subdomains:
+
+			- (www.)	(→ ssl)
+			- oascentral	(→ oasc06.247realmedia.com)
+			- ssl
+
+		- ssl.tzoo-img.com
+		- www.tzoo-img.com	(→ ssl)
+
+-->
+<ruleset name="Travelzoo.com (partial)">
+
+	<target host="*.tzoo-img.com" />
+	<target host="travelzoo.com" />
+	<target host="*.travelzoo.com" />
+
+
+	<securecookie host="^ssl\.travelzoo\.com$" name=".+" />
+
+
+	<rule from="^http://(?:ssl\.|www\.)?travelzoo\.com/"
+		to="https://ssl.travelzoo.com/" />
+
+	<rule from="^http://oascentral\.travelzoo\.com/"
+		to="https://oasc06.247realmedia.com/" />
+
+	<rule from="^http://(?:ssl|www)\.tzoo-img\.com/"
+		to="https://ssl.tzoo-img.com/" />
+
+</ruleset>
