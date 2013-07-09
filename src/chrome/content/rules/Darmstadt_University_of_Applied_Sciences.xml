@@ -1,0 +1,43 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- international	(works; invalid, expired 2013-05-18)
+		- mail		(shows webmail.ma; invalid, CN: webmail.ma.h-da.de)
+
+
+	Partially covered subdomains:
+
+		- mail	(→ webmail)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- autodiscover
+		- email
+		- (www.)fbi
+		- webmail.fbi
+		- webmail.ma
+		- webmail
+
+-->
+<ruleset name="Darmstadt University of Applied Sciences (partial)">
+
+	<target host="h-da.de" />
+	<target host="*.h-da.de" />
+
+
+	<securecookie host="^(?:(?:\.?www\.)?fbi|email|www)\.h-da\.de$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?h-da\.de/"
+		to="https://www.h-da.de/" />
+
+	<rule from="^http://(autodiscover|(?:www\.|webmail\.)?fbi|email|webmail)\.h-da\.de/"
+		to="https://$1.h-da.de/" />
+
+	<rule from="^http://mail\.h-da\.de/(?:\?.*)?$"
+		to="https://webmail.h-da.de/owa" />
+
+</ruleset>
