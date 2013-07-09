@@ -8,6 +8,7 @@
 		- combo.guim.co.uk.edgesuite.net
 		- resource.guim.co.uk.edgesuite.net
 		- static.guim.co.uk.edgesuite.net
+		- ssl-pasteup.guim.co.uk.c.footprint.net 
 		- audio.theguardian.tv.c.footprint.net
 
 		- cdn.theguardian.com.c.footprint.net
@@ -24,12 +25,14 @@
 		- m.guardian.co.uk		(times out)
 		- www.guardian.co.uk *
 		- combo.guim.co.uk **
+		- discussion.guim.co.uk ***
 		- resource.guim.co.uk **
 		- audio.theguardian.tv *
 		- cdn.theguardian.tv *
 
 	* Times out
 	** 404, Akamai
+	*** Interrupted
 
 
 	Problematic domains:
@@ -70,7 +73,10 @@
 		- guim.co.uk subdomains:
 
 			- (www.)image
+			- pasteup
 			- (www.)static	(→ image)
+
+		- oas.theguardian.com
 
 -->
 <ruleset name="The Guardian (partial)">
@@ -89,11 +95,17 @@
 	<target host="www.guardianeatright.co.uk" />
 	<target host="*.guardianoffers.co.uk" />
 	<target host="*.guim.co.uk" />
+	<target host="*.theguardian.com" />
 
 
 	<securecookie host="^\.guardian\.co\.uk$" name="^(?:NXCLICK2|OAX|s_.+s)$" />
-	<securecookie host="^(?:soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
+	<securecookie host="^(?:oas|soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
 	<securecookie host="^(?:.*\.)?guardianeatright\.co\.uk$" name=".+" />
+	<!--
+		Tracking cookies set by oas.theguardian.com:
+								-->
+	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH])$" />
+	<securecookie host="^oas\.theguardian\.com$" name=".+" />
 
 
 	<rule from="^https?://www\.guardian\.co\.uk/favicon\.ico"
@@ -119,5 +131,11 @@
 
 	<rule from="^http://(\w+)\.guardianoffers\.co\.uk/(AddtoBasket\.asp|checkout\.asp|(?:BrandImages|images|lib|ProductImages|scripts|SKUImages|styles)/)"
 		to="https://$1.guardianoffers.co.uk/$2" />
+
+	<rule from="^http://pasteup\.guim\.co\.uk/"
+		to="https://pasteup.guim.co.uk/" />
+
+	<rule from="^http://oas\.theguardian\.com/"
+		to="https://oas.theguardian.com/" />
 
 </ruleset>
