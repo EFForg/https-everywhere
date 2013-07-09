@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)goldencharter.co.uk	(http reply)
+
+
+	Problematic domains:
+
+		- webservices.goldencharter.co.uk:8808	(http reply)
+		- www.mygoldencharter.co.uk		(mismatched, CN: mail.goldencharter.co.uk)
+
+
+	Fully covered domains:
+
+		- mail.goldencharter.co.uk
+		- (www.)mygoldencharter.co.uk	(www → ^)
+
+-->
+<ruleset name="Golden Charter (partial)">
+
+	<target host="*.goldencharter.co.uk" />
+	<target host="mygoldencharter.co.uk" />
+	<target host="www.mygoldencharter.co.uk" />
+
+
+	<securecookie host="^mygoldencharter\.co\.uk$" name=".+" />
+
+
+	<rule from="^http://(mail|webservices)\.goldencharter\.co\.uk/"
+		to="https://$1.goldencharter.co.uk/" />
+
+	<rule from="^http://webservices\.goldencharter\.co\.uk:8808/portal/([^?]*)(?:\?.*)?"
+		to="https://mygoldencharter.co.uk/$1" />
+
+	<rule from="^http://(?:www\.)?mygoldencharter\.co\.uk/"
+		to="https://mygoldencharter.co.uk/" />
+
+</ruleset>
