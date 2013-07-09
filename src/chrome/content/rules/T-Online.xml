@@ -1,13 +1,102 @@
 <!--
 	For other Deutsche Telekom coverage, see Deutsche_Telekom.xml.
 
+
+	CDN buckets:
+
+		- toi.ivwbox.de
+		- toi-ssl.ivwbox.de
+
+		- telekom.tipico.com
+
+			- sportwetten
+
+
+	Nonfunctional domains:
+
+		- img.toi.de *
+
+		- t-online.de subdomains:
+
+			- (www.) *
+			- augenblicke *
+			- bilder *
+			- downloads *
+			- dsl-und-dienste *
+			- einkaufswelt *
+			- eltern *
+			- erotik *
+			- gewinnspiele *
+			- handy1 *
+			- hilfe *
+			- hilfe-und-service *
+			- horoskop		(prints "it works!"; mismatched, CN: www.viversum.de)
+			- kids *
+			- lifestyle *
+			- nachrichten *
+			- iss *
+			- partnerfragmente2010 *
+			- routenplaner **
+			- service *
+			- sportwetten	(redirects to http; mismatched, CN: *.tipico.com)
+			- stats *
+			- themen **
+			- top-themen *
+			- unterhaltung *
+
+	* Refused
+	** Shows suche; mismatched, CN: suche.t-online.de
+
+
+	Problematic subdomains:
+
+		- freemail *
+		- sportdaten *
+
+	* Works; mismatched, CN: webservice.fussball.de
+
+
+	Partially covered subdomains:
+
+		- rezepte	($ redirects to http)
+
+
+	Fully covered subdomains:
+
+		- im.banner
+		- header.cdb
+		- email
+		- fssecure
+		- mediencenter
+		- stayfriends
+		- suche
+		- tbx
+		- wiga
+
+
+	Mixed web bug on suche from stats
+
+	Mixed images on suche from bilder
+
 -->
 <ruleset name="T-Online (partial)">
 
-	<target host="fssecure.t-online.de" />
+	<target host="t-online.de.intellitxt.com" />
+	<target host="toi.ivwbox.de" />
+	<target host="*.t-online.de" />
+		<exclusion pattern="^http://rezepte\.t-online\.de/(?!sites/)" />
 
 
-	<rule from="^http://fssecure\.t-online\.de/"
-		to="https://fssecure.t-online.de/" />
+	<securecookie host="^(?:\.banner|email|\.mediencenter|stayfriends|suche|tbx)\.t-online\.de$" name=".+" />
+
+
+	<rule from="^http://toi\.ivwbox\.de/"
+		to="https://toi-ssl.ivwbox.de/" />
+
+	<rule from="^http://(im\.banner|header\.cdb|email|fssecure|mediencenter|rezepte|stayfriends|suche|tbx|wiga)\.t-online\.de/"
+		to="https://$1.t-online.de/" />
+
+	<rule from="^http://t-online\.de\.intellitxt\.com/"
+		to="https://ln1-g003.intellitxt.com/" />
 
 </ruleset>
