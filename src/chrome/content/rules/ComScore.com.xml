@@ -1,18 +1,85 @@
 <!--
-	Nonfunctional domains:
+	Other comScore rulesets:
 
-		- dax-files.comscore.com	(times out)
+		- ComScore_Data_Mine.xml
+		- Sitestat.xml
+
+
+	CDN buckets:
+
+		- scor.client.shareholder.com
+
+			- ir
+
+
+	Nonfunctional subdomains:
+
+		- sip.office	(reset)
+
+
+	Problematic domains:
+
+		- comscore.com subdomains:
+
+			- ^ *
+			- ir *
+			- webmail	(mismatched, CN: im.scorecardresearch.com)
+
+		- www.nedstat.com	(works; mismatched, CN: *.comscore.com)
+
+	* Dropped
+
+
+	Partially covered subdomains:
+
+		- ir	(→ investor.shareholder.com)
+
+
+	Fully covered domains:
+
+		- comscore.com subdomains:
+
+			- (www.)	(^ → www)
+			- autodiscover
+			- dax-files
+			- mail
+			- webmail	(→ mail)
+
+		- (www.)nedstat.com	(→ dax-files.comscore.com)
+
+
+	Observed cookie subdomains:
+
+		- ir
+		- .ir
+		- mail
+		- my
 
 -->
 <ruleset name="comScore.com (partial)">
 
+	<target host="comscore.com"/>
 	<target host="*.comscore.com"/>
+	<target host="nedstat.com" />
+	<target host="www.nedstat.com" />
 
 
-	<securecookie host="^my\.comscore\.com$" name=".*"/>
+	<securecookie host="^(?:mail|my)\.comscore\.com$" name=".*"/>
 
 
-	<rule from="^http://(dax|my)\.comscore\.com/"
+	<rule from="^http://(?:www\.)?comscore\.com/"
+		to="https://www.comscore.com/" />
+
+	<rule from="^http://(autodiscover|dax|dax-files|my)\.comscore\.com/"
 		to="https://$1.comscore.com/"/>
+
+	<rule from="^http://ir\.shareholder\.com/common/"
+		to="https://investor.shareholder.com/common/" />
+
+	<rule from="^http://(?:web)?mail\.comscore\.com/"
+		to="https://mail.comscore.com/" />
+
+	<rule from="^http://(?:www\.)?nedstat\.com/"
+		to="https://dax-files.comescore.com/" />
 
 </ruleset>
