@@ -1,0 +1,36 @@
+<!--
+	CDN buckets:
+
+		- cloudinary-a.akamaihd.net/moot/
+
+
+	Problematic subdomains:
+
+		- origin	(mismatched, CN: cdn.moot.it)
+		- www		(refused)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- api
+		- cdn
+		- origin	(→ cdn)
+
+-->
+<ruleset name="Moot.it">
+
+	<target host="moot.it" />
+	<target host="*.moot.it" />
+
+
+	<securecookie host="^moot\.it$" name=".+" />
+
+
+	<rule from="^http://(?:(api\.)|www\.)?moot\.it/"
+		to="https://$1moot.it/" />
+
+	<rule from="^http://(?:cd|origi)n\.moot\.it/"
+		to="https://cdn.moot.it/" />
+
+</ruleset>
