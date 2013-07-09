@@ -3,6 +3,7 @@
 
 		- a248.e.akamai.net/f/12/621/5m/proxy.espn.go.com/
 		- s3.amazonaws.com/avatars.espn.go.com/
+		- adisneyparks.disney.go.com.edgesuite.net
 
 
 	Nonfunctional domains:
@@ -42,6 +43,9 @@
 		- a[12]?.espncdn.com *
 		- g.espncdn.com **
 
+		- adisneyparks.disney.go.com **
+		- scripts.parksmedia.disney.go.com **
+
 		- espn.go.com subdomains:
 
 			- assets *
@@ -67,6 +71,16 @@
 
 			- abc
 
+			- disney subdomains:
+
+				- analytics
+				- adisneyparks	(→ akamai)
+				- disneyparks
+				- disneyworld
+				- home
+				- scripts.parksmedia	(→ akamai)
+				- quickquote
+
 			- espn subdomains:
 
 				- ^
@@ -75,8 +89,27 @@
 				- games
 				- streak
 
+			- sw88
 			- tredir
 
+
+	Observed cookie domains:
+
+		- .
+
+		- disney subdomains:
+
+			- .
+			- disneyparks
+			- .disneyparks
+			- disneyworld
+			- .disneyworld
+			- quickquote
+
+		- .games.espn
+
+
+	Mixed images on disneyparks.disney from www.disney.co.jp
 
 	Mixed content breaks videos for Chrome: https://eff.org/r.a8nc
 
@@ -94,11 +127,23 @@
 		<exclusion pattern="^http://a\d?\.espncdn\.com/(?:espn360|media/motion)/" />
 
 
-	<securecookie host="^\.games\.espn\.go\.com$" name=".+" />
+	<!--securecookie host="^\.go\.com$" name="^(?:contentLocale|dpsc|gi|SWID)$" /-->
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.go\.com$" name="^(?:mbox|s_pers|s_sess|s_vi)$" />
+	<!--securecookie host="^\.disney\.go\.com$" name="^wam_reg$" /-->
+	<securecookie host="^(?:(?:\.?disneyparks|\.?disneyworld|quickquote)\.disney|\.games\.espn)\.go\.com$" name=".+" />
 
 
-	<rule from="^http://(abc|(?:games\.|streak\.)?espn|tredir)\.go\.com/"
+	<rule from="^http://(abc|(?:analytics|disneyparks|disneyworld|home|quickquote)\.disney|(?:games\.|streak\.)?espn|sw88|tredir)\.go\.com/"
 		to="https://$1.go.com/" />
+
+	<rule from="^http://adisneyparks\.disney\.go\.com/"
+		to="https://a248.e.akamai.net/f/1806/621/5m/adisneyparks.disney.go.com/" />
+
+	<rule from="^http://scripts\.parksmedia\.disney\.go\.com/"
+		to="https://a248.e.akamai.net/f/1940/621/5m/scripts.parksmedia.disney.go.com/" />
 
 	<!--	404s when rewritten to akamai.
 
