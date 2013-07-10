@@ -1,6 +1,7 @@
 var backgroundPage = null;
 var stableRules = null;
 var unstableRules = null;
+var hostReg = /.*\/\/[^$/]*\//;
 
 function toggleRuleLine(checkbox, ruleset) {
   ruleset.active = checkbox.checked;
@@ -24,18 +25,34 @@ function createRuleLine(ruleset) {
   // checkbox
   var checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  checkbox.checked = ruleset.active;
-  checkbox.onchange = function(ev) { toggleRuleLine(checkbox, ruleset); };
+  if (ruleset.active) {
+    checkbox.setAttribute("checked", "");
+  }
+  checkbox.onchange = function(ev) {
+    toggleRuleLine(checkbox, ruleset);
+  }
+  label.appendChild(checkbox);
+
+  // favicon (from chrome's cache)
+  var favicon = document.createElement("img");
+  favicon.src = "chrome://favicon/";
+  for (var i=0; i < ruleset.rules.length; i++) {
+    var host = hostReg.exec(ruleset.rules[i].to);
+    if (host) {
+      favicon.src += host[0];
+      break;
+    }
+  }
+  label.appendChild(favicon);
 
   // label text
-  var labelText = document.createElement("span");
-  labelText.innerText = ruleset.name;
+  var text = document.createElement("span");
+  text.innerText = ruleset.name;
   if (ruleset.note.length) {
-    labelText.title = ruleset.note;
+    text.title = ruleset.note;
   }
+  label.appendChild(text);
 
-  label.appendChild(checkbox);
-  label.appendChild(labelText);
   line.appendChild(label);
 
   return line;
@@ -55,22 +72,19 @@ function gotTab(tab) {
   }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
 
   // auto-translate all elements with i18n attributes
-  var all = document.getElementsByTagName("*");
-  for(var i=0, max=all.length; i < max; i++) {
-    var label = all[i].getAttribute('i18n');
-    if(label) {
-      all[i].innerHTML = chrome.i18n.getMessage(label);
-    }
+  var e = document.querySelectorAll("[i18n]");
+  for (var i=0; i < e.length; i++) {
+    e[i].innerHTML = chrome.i18n.getMessage(e[i].getAttribute("i18n"));
   }
 
   // other translations
-  document.getElementById('whatIsThis').setAttribute('title', chrome.i18n.getMessage('chrome_what_is_this_title'));
+  document.getElementById("whatIsThis").setAttribute("title", chrome.i18n.getMessage("chrome_what_is_this_title"));
 });
 
