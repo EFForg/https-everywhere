@@ -1,0 +1,47 @@
+<!--
+	arranca is handled in Arranca.org.xml.
+
+
+	Nonfunctional subdomains:
+
+		- status	(shows 23b; mismatched, CN: wiki.nadir.org)
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- arranca	(works; mismatched, CN: *.so36.net)
+		- schleuder	(refused)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- 23b
+		- code
+		- deb
+		- schleuder	(→ schleuder2)
+		- schleuder2
+		- webschleuder
+		- wiki
+
+-->
+<ruleset name="nadir.org (partial)" platform="cacert">
+
+	<target host="nadir.org" />
+	<target host="*.nadir.org" />
+
+
+	<securecookie host="^(?:23b|wiki)\.nadir\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?nadir\.org/"
+		to="https://www.nadir.org/" />
+
+	<rule from="^http://(23b|code|deb|webschleuder|wiki)\.nadir\.org/"
+		to="https://$1.nadir.org/" />
+
+	<rule from="^http://schleuder2?\.nadir\.org/"
+		to="https://schleuder2.nadir.org/" />
+
+</ruleset>
