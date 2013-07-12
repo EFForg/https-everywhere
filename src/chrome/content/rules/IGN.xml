@@ -26,6 +26,7 @@
 				- www
 
 			- assets[12].ignimgs.com
+			- fonts.ignimgs.com
 			- media.ignimgs.com
 			- oyster.ignimgs.com
 			- oystatic.ignimgs.com
@@ -34,10 +35,6 @@
 	Nonfunctional domains:
 
 		- corp.ign.com
-		- widgets.ign.com *
-		- assets[12].ignimgs.com *
-
-	- Akamai, 503
 
 
 	Problematic domains:
@@ -56,22 +53,52 @@
 			- pspmedia *
 			- redirect **
 			- uk *
+			- widgets *
 			- www *
 			- xbox360media *
 
+		- assets[12].ignimgs.com
+		- fonts.ignimgs.com
 		- media.ignimgs.com *
 		- oystatic.ignimgs.com *
 
 	* Akamai, works
 	* Self-signed
 
+
+	Fully covered domains:
+
+		- ign.com subdomains:
+
+			- ads *
+			- dsmedia *
+			- pcmedia *
+			- ps3media *
+			- pspmedia *
+			- wirelessmedia *
+			- xbox360media *
+
+		- ignimgs.com subdomains:
+
+			- assets[12] *
+			- fonts *
+			- media *
+			- oyster *
+
+	* → akamai
+
 -->
 <ruleset name="IGN (partial)">
 
+	<target host="ads.ign.com" />
 	<target host="mail.ign.com" />
 	<target host="media.ign.com" />
+	<target host="pcmedia.ign.com" />
+	<target host="ps3media.ign.com" />
+	<target host="pspmedia.ign.com" />
 	<target host="s.ign.com" />
-	<target host="oystatic.ignimgs.com" />
+	<target host="wirelessmedia.ign.com" />
+	<target host="*.ignimgs.com" />
 		<!--
 			Points some resource links to akamai.net/$
 									-->
@@ -81,13 +108,16 @@
 	<securecookie host="^s\.ign\.com$" name=".+" />
 
 
+	<rule from="^http://((?:ads|(?:ds|pc|ps[3p]|wireless|xbox360)media)\.ign|(?:fonts|oyster)\.ignimgs)\.com/"
+		to="https://a248.e.akamai.net/f/1005/1/g/$1.com/" />
+
 	<rule from="^https?://media\.ign\.com/"
 		to="https://a248.e.akamai.net/media.ign.com/" />
 
 	<rule from="^http://(mail|s)\.ign\.com/"
 		to="https://$1.ign.com/" />
 
-	<rule from="^https?://oystatic\.ignimgs\.com/"
-		to="https://a248.e.akamai.net/oystatic.ignimgs.com/" />
+	<rule from="^https?://(assets\d|media|oystatic)\.ignimgs\.com/"
+		to="https://a248.e.akamai.net/$1.ignimgs.com/" />
 
 </ruleset>
