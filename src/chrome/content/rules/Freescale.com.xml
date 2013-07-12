@@ -1,0 +1,67 @@
+<!--
+	CDN buckets:
+
+		- www.corporate-ir.net.edgesuite.net
+
+			- investors
+
+		- freescale.http.internapcdn.net
+
+			- cache
+			- images
+			- media
+			- styles
+
+
+	Problematic subdomains:
+
+		- cache *
+		- images *
+		- investors	(works, akamai)
+		- styles *
+
+	* Paths are different
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+		- investors	(→ akamai)
+
+
+	Fully covered subdomains:
+
+		- cache
+		- community
+		- community-cache
+		- fdc
+		- images
+		- styles
+
+-->
+<ruleset name="Freescale.com (partial)">
+
+	<target host="freescale.com" />
+	<target host="*.freescale.com" />
+		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|\?|/)|recommendation/|shared/)" />
+
+
+	<securecookie host="^(?:community|fdc)\.freescale\.com$" name=".+" />
+
+
+	<!--	Although ^ works over https, it does not redirect
+		to www as it does over http, so imitate the latter:
+									-->
+	<rule from="^http://(?:www\.)?freescale\.com/"
+		to="https://www.freescale.com/" />
+
+	<rule from="^http://(cache|images|styles)\.freescale\.com/"
+		to="https://$1.freescale.com/freescale/ssl/" />
+
+	<rule from="^http://(community(?:-cache)?|fdc)\.freescale\.com/"
+		to="https://$1.freescale.com/" />
+
+	<rule from="^http://investors\.freescale\.com/(client/|WebSideStory/)"
+		to="https://a248.e.akamai.net/f/121/1/1/phx.corporate-ir.net/$1" />
+
+</ruleset>
