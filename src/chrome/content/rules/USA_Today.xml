@@ -23,6 +23,7 @@
 
 	 Problematic domains:
 
+		- usatoday.com		(refused)
 		- onlinestore	(pages redirect to http; mismatched, CN: *.nexternal.com)
 		- www.usatoday.com	(works, akamai)
 
@@ -31,10 +32,16 @@
 
 	<target host="usatoday.com" />
 	<target host="*.usatoday.com" />
+		<!--
+			news/ points links to akamai.net/$
+
+			global-plain.css links to resources relative to /
+
+		<exclusion pattern="^http;//www\.usatoday\.com/(?:global-plain\.css|news/)" /-->
 
 
-	<rule from="^http://(?:www\.)?usatoday\.com/favicon\.ico"
-		to="https://a248.e.akamai.net/f/534/1/1/www.usatoday.com/favicon.ico" />
+	<rule from="^http://(?:www\.)?usatoday\.com/(favicon\.ico|services/|static/images/)"
+		to="https://a248.e.akamai.net/f/534/1/1/www.usatoday.com/$1" />
 
 	<rule from="^http://onlinestore\.usatoday\.com/Net/"
 		to="https://www.nexternal.com/Net/" />
