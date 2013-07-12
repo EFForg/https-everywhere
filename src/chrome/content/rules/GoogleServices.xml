@@ -18,7 +18,7 @@
 	Nonfunctional domains:
 
 		- books.google.com			(redirects to google.cctld)
-		- feedproxy.google.com			(503)
+		- feedproxy.google.com			(404, valid cert)
 		- knol.google.com			(most paths redirect to google.cctld)
 		- scholar.google.com			(redirects to http)
 		- safebrowsing.clients.google.com	(mismatch; 404)
@@ -31,6 +31,11 @@
 		- imgres
 		- hangouts	(404)
 		- patents/\w\w\d+\?hl=\w\w
+
+
+	Problematic subdomains:
+
+		- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
 
 
 	Partially covered google.com subdomains:
@@ -68,7 +73,7 @@
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="*.google.com" />
-		<exclusion pattern="^http://books\.google\.com/(?!books/(?:\w+\.js|css/|javascript/))" />
+		<exclusion pattern="^http://books\.google\.com/(?!books/(?:\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" />
 	<target host="news.google.com.*" />
 	<target host="google.com.*" />
 	<target host="www.google.com.*" />
@@ -111,6 +116,13 @@
 	<rule from="^http://(?:www\.)?goo\.gl/"
 		to="https://goo.gl/" />
 
+	<!--	Protocol-relative links from books/css/:
+								-->
+	<rule from="^https?://books\.google\.com/googlebooks/"
+		to="https://www.google.com/googlebooks/" />
+
+	<rule from="^http://books\.google\.com/i(mages|ntl)/"
+		to="https://www.google.com/i$1/" />
 
 	<rule from="^http://(?:www\.)?google\.c(a|o\.in|o\.uk)/(contacts|prdhp|products|shopping)"
 		 to="https://www.google.c$1/$2" />
@@ -124,7 +136,7 @@
 	<rule from="^http://(?:www\.)?google(?:\.com?)?(?:\.[^/@:][^/@:])?/(?:cse|custom)"
 		 to="https://www.google.com/cse" />
 
-	<rule from="^http://(?:www\.)?google\.com/(\+|accounts|doodles|doubleclick|extern_js|help|moderator|newproducts|nexus|phone|postini|reader|settings|videotargeting|safebrowsing)/"
+	<rule from="^http://(?:www\.)?google\.com/(\+|accounts|doodles|doubleclick|extern_js|googlebooks|help|images|moderator|newproducts|nexus|phone|postini|reader|settings|videotargeting|safebrowsing)/"
 		 to="https://www.google.com/$1/" />
 
 	<rule from="^http://(?:www\.)?google\.com/(appsstatus|buzz|contacts|culturalinstitute|favicon\.ico|glass|insights|mapmaker|news|patents/licensing/|prdhp|products|shopping|webfonts)"
