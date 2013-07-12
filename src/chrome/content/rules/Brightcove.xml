@@ -10,18 +10,19 @@
 			- brightcove04
 			- brightcove04.o
 
+		- osab.vorpal.io
+
+			- opensource.brightcove.com
+
 
 	Nonfunctional domains:
 
 		- brightcove.com subdomains:
 
-			- (www.)
-			- blog
-			- developer
 			- feeds *
-			- forum
+			- forum **
 			- goku			(refused)
-			- investor		(403, CN: *.shareholder.com)
+			- investor ***
 			- link
 			- brightcove04.o	(503, Akamai)
 			- status *
@@ -29,17 +30,34 @@
 		- brightcove.vo.llnwd.net	(400; CN: *.hs.llnwd.net, .hs. doesn't exist)
 
 	* Reset
+	** Refused
+	*** Dropped
 
 
 	Problematic domains:
 
 		- admin.brightcove.com		(akamai)
+		- go.brightcove.com		(works; mismatched, CN: secure.eloqua.com)
+		- opensource.brightcove.com	(works; mismatched, CN: *.vorpal.io)
 		- services.brightcove.com	(504, valid cert)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- blog *
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
 		- api
+		- read.appcloud
+		- write.appcloud
+		- developer
+		- docs
+		- videocloud
 
 
 	- brightcove.vo.llnwd.net/d21/unsecured/media/
@@ -55,6 +73,8 @@
 <ruleset name="Brightcove (partial)">
 
 	<target host="*.brightcove.com" />
+		<exclusion pattern="^http://(?:www\.)?brightcove\.com/(?!sites/|timetrade-iframe\.html)" />
+		<exclusion pattern="^http://blog\.brightcove\.com/(?!sites/)" />
 		<!--
 			Videos fail to load.
 
@@ -68,14 +88,15 @@
 		<!--exclusion pattern="^https?://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
 
 
+	<!--securecookie host="^\.brightcove\.com$" name="^(test|vorpal-signature|vorpal-user)$" /-->
 	<securecookie host="^\w.*\.brightcove\.com$" name=".+" />
 
 
 	<rule from="^http://c\.brightcove\.com/services/viewer/"
 		to="https://secure.brightcove.com/services/viewer/" />
 
-	<rule from="^http://(api|appcloud|files|img|metrics|my|register|secure|signin)\.brightcove\.com/"
-		to="https://$1.brightcove.com/" />
+	<rule from="^http://((?:api|(?:read\.|write\.)?appcloud|blog|docs|files|img|metrics|my|register|secure|signin|videocloud|www)\.)?brightcove\.com/"
+		to="https://$1brightcove.com/" />
 
 	<!--	At least the homepage redirects to http.
 							-->
