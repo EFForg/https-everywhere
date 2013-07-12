@@ -5,6 +5,16 @@
 		- s3.amazonaws.com/avatars.espn.go.com/
 		- adisneyparks.disney.go.com.edgesuite.net
 
+		- wdig-03.vo.llnwd.net
+
+			- .hs. does not exist
+			- aglobal.go.com
+
+		- wdig-24.vo.llnwd.net
+
+			- .hs. does not exist
+			- ahome.go.com
+
 
 	Nonfunctional domains:
 
@@ -23,6 +33,8 @@
 			- abclocal
 			- cdn.abclocal **	(same data on abclocal.go.com)
 
+			- disneydvd.disney ***
+
 			- espn subdomains:
 
 				- espndeportes ***
@@ -32,6 +44,8 @@
 				- soccernet ***
 				- soccernet-akamai **
 				- sports ***
+
+			- transfer ***
 
 	* Times out
 	** 503, akamai
@@ -43,7 +57,11 @@
 		- a[12]?.espncdn.com *
 		- g.espncdn.com **
 
+		- aglobal.go.com ***
+		- ahome.go.com ***
+		- weblogger01.data			(works, expired 2013-04-11)
 		- adisneyparks.disney.go.com **
+		- corporate.disney.go.com		(works; expired 2013-06-26)
 		- scripts.parksmedia.disney.go.com **
 
 		- espn.go.com subdomains:
@@ -54,6 +72,7 @@
 
 	* 503, akamai
 	* works, akamai
+	*** 400; mismatched, CN: *.hs.llnwd.net
 
 
 	Partially covered domains:
@@ -70,14 +89,19 @@
 		- go.com subdomains:
 
 			- abc
+			- aglobal	(→ global)
+			- ctologgerdev01.analytics
 
 			- disney subdomains:
 
+				- ^
+				- ahome		(→ home)
 				- analytics
 				- adisneyparks	(→ akamai)
 				- disneyparks
 				- disneyworld
 				- home
+				- mobile
 				- scripts.parksmedia	(→ akamai)
 				- quickquote
 
@@ -89,6 +113,10 @@
 				- games
 				- streak
 
+			- global
+			- globalregsession
+			- marvelstore
+			- register
 			- sw88
 			- tredir
 
@@ -127,7 +155,7 @@
 		<exclusion pattern="^http://a\d?\.espncdn\.com/(?:espn360|media/motion)/" />
 
 
-	<!--securecookie host="^\.go\.com$" name="^(?:contentLocale|dpsc|gi|SWID)$" /-->
+	<!--securecookie host="^\.go\.com$" name="^(?:contentLocale|ctoArPageName|DE2|dpsc|DS|gi|SWID)$" /-->
 	<!--
 		Tracking cookies:
 					-->
@@ -136,7 +164,10 @@
 	<securecookie host="^(?:(?:\.?disneyparks|\.?disneyworld|quickquote)\.disney|\.games\.espn)\.go\.com$" name=".+" />
 
 
-	<rule from="^http://(abc|(?:analytics|disneyparks|disneyworld|home|quickquote)\.disney|(?:games\.|streak\.)?espn|sw88|tredir)\.go\.com/"
+	<rule from="^http://(abc|ctologgerdev01\.analytics|(?:(?:analytics|disneyparks|disneyworld|mobile|quickquote)\.)?disney|(?:games\.|streak\.)?espn|globalregsession|marvelstore|register|sw88|tredir)\.go\.com/"
+		to="https://$1.go.com/" />
+
+	<rule from="^http://a?(home\.disney|global)\.go\.com/"
 		to="https://$1.go.com/" />
 
 	<rule from="^http://adisneyparks\.disney\.go\.com/"
