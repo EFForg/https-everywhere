@@ -1,3 +1,33 @@
+<!--
+		- vodafonegroup.122.2o7.net
+		- vodafone.ivwbox.de
+
+		- vodafonede.i.lithium.com
+
+			- forum.vodafone.de
+
+		- vodafone01.secure.lithium.com
+
+
+	Problematic domains:
+
+		- www.dsl.vodafone.de		(refused)
+		- www.dslshop.vodafone.de	(cert only matches ^dslshop)
+
+
+	Fully covered domains:
+
+		- vodafone.de subdomains:
+
+			- (www.)dsl	(www → ^)
+			- (www.)dslshop	(www → ^)
+			- forum
+			- hilfe
+			- media
+			- vfd2dyn
+			- was
+
+-->
 <ruleset name="Vodafone">
   <target host="vodafone.ie" />
   <target host="www.vodafone.ie" />
@@ -6,12 +36,24 @@
   <target host="online.vodafone.co.uk" />
   <target host="shop.vodafone.co.uk" />
   <target host="vodafone.de" />
-  <target host="www.vodafone.de" />
+  <target host="*.vodafone.de" />
   <target host="shop.vodafone.de" />
   <target host="vodafone.co.nz" />
   <target host="www.vodafone.co.nz" />
 
+
+	<securecookie host="^\.vodafone\.de$" name="^(?:DYN_USER_(?:CONFIRM|ID)|oshop|s_vi)$" />
+	<securecookie host="^(?:dsl|dslshop|forum|hilfe|shop|www)\.vodafone\.de$" name=".+" />
+
+
   <rule from="^http://(?:www\.)?vodafone\.(co\.nz|co\.uk|de|ie)/" to="https://www.vodafone.$1/"/>
   <rule from="^http://online\.vodafone\.co\.uk/" to="https://online.vodafone.co.uk/"/>
   <rule from="^http://shop\.vodafone\.(co\.uk|de)/" to="https://shop.vodafone.$1/"/>
+
+	<rule from="^http://(?:www\.)?dsl(shop)?\.vodafone\.de/"
+		to="https://dsl$1.vodafone.de/" />
+
+	<rule from="^http://(forum|hilfe|media|vfd2dyn|was)\.vodafone\.de/"
+		to="https://$1.vodafone.de/" />
+
 </ruleset>
