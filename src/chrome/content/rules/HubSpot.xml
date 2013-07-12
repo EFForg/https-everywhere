@@ -1,6 +1,15 @@
 <!--
 	s3.amazonaws.com/css.blog.hubspot.com/
+		- s3.amazonaws.com/cdn1.hubspot.com/
 	hubspot-marketplace.s3.amazonaws.com
+
+		- hubspot.force.com
+
+			- help.hubspot.com
+
+		- a.performable.com
+
+			- go.hubspot.com
 
 
 	ideas.hubspot.com is handled in Uservoice-clients.xml.
@@ -10,27 +19,51 @@
 
 		- hubspot.com subdomains:
 
-			- cdn1			(akamai 503, valid cert)
-			- dev			(times out)
-			- go			(interrupted)
+			- academy		(504, akamai)
+			- go *
 			- help			(cert: slotmatching8.salesforce.com; redirects to http)
-			- hugs			(redirects to www.inboundconference.com over http)
-			- learning		(times out)
+			- hugs			(504, akamai; redirects to www.inboundconference.com over http)
+			- learning *
 			- university.web11	(times out)
 
+		- cdn1.hubspotqa.com *
+
 		- (www.)inboundconference.com	(times out)
+
+	* 503, akamai
+
+
+	Problematic domains:
+
+		- hubspot.com subdomains:
+
+			- cdn1			(akamai 503, valid cert)
+			- dev			(works, akamai)
+
+		- www.inbound.com	(works, akamai)
 
 
 	Fully covered domains:
 
 		- hubspot.com subdomains:
 
+			- cdn1		(→ s3.amazonaws.com)
 			- forms
+			- info
+			- no-cache
+			- sites-auth
 			- static2cdn
 
-		- hubspot.net subdomains:
+		- cdn2.hubspot.net
 
-			- cdn2
+		- hubspotqa.com subdomains:
+
+			- js
+			- no-cache
+			- static
+
+	track sets "hsfirstvisit" and "hubspotutk" wildcard
+	cookies on domains from which it is loaded.
 
 -->
 <ruleset name="HubSpot">
@@ -39,16 +72,20 @@
 	<target host="*.hubspot.com" />
 	<target host="cdn.blog.hubspot.com" />
 	<target host="*.hubspot.net" />
+	<target host="*.hubspotqa.com" />
 
 
 	<securecookie host="^(.*\.)?hubspot\.com$" name=".*" />
 
 
-	<rule from="^http://((?:app|blog|developers|forms|js|login|marketplace|static|static2cdn|track|tracking|www)\.)?hubspot\.com/"
+	<rule from="^http://((?:app|blog|developers|forms|info|js|login|marketplace|no-cache|sites-auth|static|static2cdn|track|tracking|www)\.)?hubspot\.com/"
 		to="https://$1hubspot.com/" />
 
 	<rule from="^https?://cdn\.blog\.hubspot\.com/"
 		to="https://s3.amazonaws.com/cdn.hubspot.com/" />
+
+	<rule from="^http://cdn1\.hubspot\.com/"
+		to="https://s3.amazonaws.com/cdn1.hubspot.com/" />
 
 	<rule from="^https?://forums\.hubspot\.com/"
 		to="https://hubspot3.vanillaforums.com/" />
@@ -61,5 +98,8 @@
 
 	<rule from="^http://cdn2\.hubspot\.net/"
 		to="https://cdn2.hubspot.net/" />
+
+	<rule from="^http://(js|no-cache|static)\.hubspotqa\.com/"
+		to="https://$1.hubspotqa.com/" />
 
 </ruleset>
