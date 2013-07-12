@@ -1,12 +1,28 @@
+<!--
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- test
+		- wm
+		- wmapp
+
+-->
 <ruleset name="WiredMinds (partial)">
 
-	<target host="test.wiredminds.de" />
+	<target host="wiredminds.de" />
+	<target host="*.wiredminds.de" />
+		<exclusion pattern="^http://(?:www\.)?wiredminds\.de/(?!/?assets/|favicon\.ico)" />
 
 
-	<securecookie host="^test\.wiredminds\.de$" name=".+" />
+	<securecookie host="\.wiredminds\.de$" name="^WMSESSNAME$" />
+	<securecookie host="^(?:test|wm)\.wiredminds\.de$" name=".+" />
 
 
-	<rule from="^http://test\.wiredminds\.de/"
-		to="https://test.wiredminds.de/" />
+	<rule from="^http://((?:test|wm|wmapp|www)\.)?wiredminds\.de/"
+		to="https://$1wiredminds.de/" />
 
 </ruleset>
