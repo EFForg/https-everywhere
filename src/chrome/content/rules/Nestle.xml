@@ -6,17 +6,21 @@
 
 	Problematic domains:
 
+		- cdn.nestle.com	(akamai)
 		- nestle.de	(cert only matches www)
 
 
 	Partially covered domains:
 
+		- (www.)nestle.com	($ 503s)
 		- (www.)nestle.de	(some [most?] pages redirect to http)
 
 -->
 <ruleset name="Nestlé (partial)">
 
+	<target host="nestle.com" />
 	<target host="*.nestle.com" />
+		<exclusion pattern="^http://(?:www\.)?nestle\.com/(?![aA]sset-library/|skin-engine-shared/|staticlocal/)" />
 	<target host="nestle.de" />
 	<target host="www.nestle.de" />
 
@@ -24,8 +28,11 @@
 	<securecookie host="^hosting\.nestle\.com$" name=".+" />
 
 
-	<rule from="^http://(eur-tools|hosting)\.nestle\.com/"
-		to="https://$1.nestle.com/" />
+	<rule from="^http://((?:eur-tools|hosting|www)\.)?nestle\.com/"
+		to="https://$1nestle.com/" />
+
+	<rule from="^http://cdn\.nestle\.com/"
+		to="https://a248.e.akamai.net/f/1961/1/5m/cdn.nestle.com/" />
 
 	<rule from="^https?://(?:www\.)?nestle\.de/(_layouts/|DownloadPDF\.ashx|Helper/|MetaNavigation/|Style Library/)"
 		to="https://www.nestle.de/$1" />
