@@ -1,0 +1,51 @@
+<!--
+	For other Thompson Reuters coverage, see Thompson-Reuters.xml.
+
+
+	Problematic subdomains:
+
+		- media		(504, akamai)
+		- origin-media	(dropped)
+		- phoenix *
+		- phx *
+		- www *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- media *
+		- origin-media *
+		- phx *
+		- phoenix *
+		- www *
+
+	* → akamai
+
+
+	Fully covered subdomains:
+
+		- origin-phoenix
+		- origin-www
+
+-->
+<ruleset name="corporate-ir.net (partial)">
+
+	<target host="*.corporate-ir.net" />
+		<!--
+			Avoid any user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:(?:phoenix|phx|www)\.)?corporate-ir\.net/(?!External\.File\?|HttpCombiner\.ashx|media_files/|WebSideStory/)" />
+
+
+	<rule from="^http://(?:(?:origin-)?media|phx)\.corporate-ir\.net/"
+		to="https://a248.e.akamai.net/f/121/1/1/phx.corporate-ir.net/" />
+
+	<rule from="^http://origin-(phoenix|www)\.corporate-ir\.net/"
+		to="https://origin-$1.corporate-ir.net/" />
+
+	<rule from="^http://(phoenix|www)\.corporate-ir\.net/"
+		to="https://a248.e.akamai.net/f/121/1/1/$1.corporate-ir.net/" />
+
+</ruleset>
