@@ -11,6 +11,7 @@
 
 		- assets.msnbc.msn.com.edgesuite.net
 
+			- assets[1-4]c.msnbc.msn.com
 			- assets[1-4]d.msnbc.msn.com
 
 		- colst(b|c)01.msn.com.edgesuite.net
@@ -110,8 +111,9 @@
 		- msn.com subdomains:
 
 			- assets[1-4]d.msnbc		(works, akamai)
-			- msnbcmedia
-			- msnbcmedia[1-4]
+			- media.msnbc ***
+			- msnbcmedia ***
+			- msnbcmedia[1-4] ***
 			- m.now				(works; mismatched, CN: home.now.msn.com)
 			- realestate			(CN: now.msn.com; works)
 			- img[123].catalog.video **
@@ -152,6 +154,7 @@
 
 	* Works, akamai
 	** CN: *.sharepointonline.com; works
+	*** Sometimes works, sometimes 403s; akamai
 
 
 	Fully covered domains:
@@ -178,6 +181,13 @@
 			- (www.)hotmail
 			- hp
 			- imgs1-video
+
+			- msnbc subdomains:
+
+				- assets *
+				- assets[1-4]c *
+				- assets[1-4]d *
+
 			- eb.my
 			- now
 			- \d+.r
@@ -207,6 +217,8 @@
 			- blu.st[bc]
 			- stc-now
 
+	* → akamai
+
 -->
 <ruleset name="MSN (partial)">
 
@@ -230,6 +242,9 @@
 				-->
 	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|eb\.my|now|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|catalog\.video)\.msn\.com/"
 		to="https://$1.msn.com/" />
+
+	<rule from="^http://assets(\d[cd])?\.msnbc\.msn\.com/"
+		to="https://a248.e.akamai.net/f/1127/349/8m/assets$1.msnbc.msn.com/" />
 
 	<rule from="^http://m\.now\.msn\.com/sc/i/"
 		to="https://stc-now.s-msn.com/sc/i/" />
