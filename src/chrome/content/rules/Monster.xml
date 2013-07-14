@@ -1,4 +1,7 @@
 <!--
+	ir.monster.com is handled in Thomson-Reuters-clients.xml.
+
+
 	Other Monster rulesets:
 
 		- MyResumeAgent.com.xml
@@ -15,65 +18,68 @@
 			- media.newjobs.com
 
 
-	Nonfunctional:
+	Nonfunctional domains:
 
-		- (www.)about-monster.com	(cert: facebook.ketchum.com; shows that domain's data)
-		- (www.)education.org		(times out)
-		- degrees.education.org		(ditto)
-		- ai.education.org		(ditto)
-		- monster.com			(ditto)
+		- (www.)about-monster.com	(shows facebook; mismatched, CN: facebook.ketchum.com)
+
+		- education.org subdomains:
+
+			- (www.) *
+			- ai *
+			- degrees *
+
+		- monster.com subdomains:
+
+			- ^ *
 			- advertising *
 			- answers *
-			- career-services	(times out)
+			- career-services *
 			- chat *
 			- company *
 			- help *
-			- inside		(times out)
-			- jobs			(ditto)
+			- inside *
+			- jobs *
 			- jobsearch *
-			- my			(times out)
-			- partner		(times out)
+			- my *
+			- partner *
 			- promotion *
 			- resume *
-			- www			(Akamai; "An error occurred")
-		- (www.)programadvisor.com	(times out)
-		- edu.programadvisor.com	(ditto)
+			- www			(504, akamai)
+
+		- (www.)programadvisor.com *
+		- edu.programadvisor.com *
 
 	* Dropped
 
 
-		ir.monster.com is handled in Thomson-Reuters-clients.xml.
+	Problematic subdomains:
+
+		- media		(works, akamai)
 
 
-	Problematic domains:
+	Partially covered subdomains:
 
-		- media.monster.com *
+		- hiring.* ¹	(per-client subdomains)
+		- hiring ¹
 
-	* Works, akamai
-
-
-	Partially covered domains:
-
-		- hiring.*.monster.com	(some page redirect to http, per-client subdomains)
-		- hiring.monster.com	(some pages redirect to http)
+	¹ Some pages redirect to http
 
 
-	Fully covered domains:
+	Fully covered subdomains:
 
-		- monster.com subdomains:
+		- cookie
+		- login
+		- media		(→ akamai)
+		- oas
 
-			- cookie
-			- login
-			- media		(→ akamai)
-			- oas
+
+	cookie.monster.com and track.newjobs.com appear to by synonyms.
 
 -->
 <ruleset name="Monster (partial)">
 
 	<target host="*.monster.com" />
 		<exclusion pattern="^http://hiring\.(?:[\w-]+\.)?monster\.com/(?!favicon\.ico|images/|(?:Script|Web)Resource\.axd|[sS]ervices/|SharedUI/)" />
-	<target host="login.monster.com" />
-	<target host="media.monster.com" />
 
 
 	<!--	Tracking cookies:
@@ -83,11 +89,9 @@
 			- WT_FPC is set by cookie
 						-->
 	<securecookie host="^\.monster\.com$" name="^(?:OAX|v1st|WT_FPC)$" />
-	<securecookie host="^(?:cookie|login|oas)\.monster\.com$" name=".*" />
+	<securecookie host="^(?:cookie|login|oas)\.monster\.com$" name=".+" />
 
 
-	<!--	cookie.monster.com and track.newjobs.com
-		appear to be synonyms.		-->
 	<rule from="^http://(hiring(?:\.[\w-]+)?|cookie|login|oas)\.monster\.com/"
 		to="https://$1.monster.com/" />
 
