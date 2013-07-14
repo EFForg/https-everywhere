@@ -1,35 +1,41 @@
 <!--
 	CDN buckets:
 
+		- www.monster.com.edgesuite.net
+
 		- nswildcard.newjobs.com.edgesuite.net
 
 			- media.monster.com
 			- media.newjobs.com
 
+		- newjobs.d1.sc.omtrdc.net
+
 
 	Nonfunctional:
 
-		- (www.)about-monster.com	(cert: facebook.ketchum.com; shows that domain's data [i.e. a blank page])
+		- (www.)about-monster.com	(cert: facebook.ketchum.com; shows that domain's data)
 		- (www.)education.org		(times out)
 		- degrees.education.org		(ditto)
 		- ai.education.org		(ditto)
 		- monster.com			(ditto)
-			- advertising
-			- answers
+			- advertising *
+			- answers *
 			- career-services	(times out)
-			- company
-			- help
+			- chat *
+			- company *
+			- help *
 			- inside		(times out)
 			- jobs			(ditto)
-			- jobsearch
+			- jobsearch *
 			- my			(times out)
-			- origin-www		(exists, but doesn't support https)
 			- partner		(times out)
-			- promotion
-			- resume
+			- promotion *
+			- resume *
 			- www			(Akamai; "An error occurred")
 		- (www.)programadvisor.com	(times out)
 		- edu.programadvisor.com	(ditto)
+
+	* Dropped
 
 
 		ir.monster.com is handled in Thomson-Reuters-clients.xml.
@@ -38,46 +44,70 @@
 	Problematic domains:
 
 		- media.monster.com *
+		- myresumeagent.com	(cert only matches www)
 		- media.newjobs.com *
 
 	* Works, akamai
+
+
+	Partially covered domains:
+
+		- hiring.*.monster.com	(some page redirect to http, per-client subdomains)
+		- hiring.monster.com	(some pages redirect to http)
 
 
 	Fully covered domains:
 
 		- monster.com subdomains:
 
+			- cookie
+			- login
 			- media		(→ akamai)
+			- oas
+
+		- (www.)myresumeagent.com	(^ → www)
 
 		- newjobs.com subdomains:
 
+			- css-hx
+			- img-hx
+			- js-hx
+			- css-seeker
+			- img-seeker
+			- js-seeker
 			- media		(→ akamai)
+			- securemedia
 
 -->
 <ruleset name="Monster (partial)">
 
 	<target host="myresumeagent.com" />
-	<target host="www.myresumeagent.com" />
-	<target host="cookie.monster.com" />
+	<target host="*.myresumeagent.com" />
+	<target host="*.monster.com" />
+		<exclusion pattern="^http://hiring\.(?:[\w-]+\.)?monster\.com/(?!favicon\.ico|images/|(?:Script|Web)Resource\.axd|[sS]ervices/|SharedUI/)" />
 	<target host="login.monster.com" />
 	<target host="media.monster.com" />
-	<target host="css-seeker.newjobs.com" />
+	<target host="*.newjobs.com" />
 	<target host="img-seeker.newjobs.com" />
 	<target host="media.newjobs.com" />
 	<target host="securemedia.newjobs.com" />
 	<target host="track.newjobs.com" />
 
 
-	<!--	Tracking cookie set by cookie:
+	<!--	Tracking cookies:
+
+			- OAX is set by oas
+			- v1st is set by cookie
+			- WT_FPC is set by cookie
 						-->
-	<securecookie host="^\.monster\.com$" name="^v1st$" />
-	<securecookie host="^(?:cookie|login)\.monster\.com$" name=".*" />
-	<securecookie host="^www\.myresumeagent\.com$" name=".*" />
+	<securecookie host="^\.monster\.com$" name="^(?:OAX|v1st|WT_FPC)$" />
+	<securecookie host="^(?:cookie|login|oas)\.monster\.com$" name=".*" />
+	<securecookie host="^(?:www)?\.myresumeagent\.com$" name=".*" />
 
 
 	<!--	cookie.monster.com and track.newjobs.com
 		appear to be synonyms.		-->
-	<rule from="^http://(cookie|login)\.monster\.com/"
+	<rule from="^http://(hiring(?:\.[\w-]+)?|cookie|login|oas)\.monster\.com/"
 		to="https://$1.monster.com/" />
 
 	<rule from="^http://media\.(monster|newjobs)\.com/"
@@ -88,7 +118,7 @@
 		to="https://www.myresumeagent.com/" />
 
 	<!--	Track is used on third-party websites.	-->
-	<rule from="^http://((css|img)-seeker|track)\.newjobs\.com/"
+	<rule from="^http://((css|img|js)-(?:hx|seeker)|track)\.newjobs\.com/"
 		to="https://$1.newjobs.com/" />
 
 	<rule from="^http://securemedia\.newjobs\.com/"
