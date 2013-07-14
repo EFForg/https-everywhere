@@ -9,12 +9,21 @@
 
 	Ditto when for rewriting static paths to .../static2/.
 
+
+	Fully covered domains:
+
+		- ping.chartbeat.net
+		- *.chartbeat.net	(per-client subdomains)
+
+
+	*.charbeat.net sets _chartbeat2 cookie on whichever domain it is loaded from.
+
 -->
 <ruleset name="Chartbeat (partial)">
 
 	<target host="chartbeat.com" />
 	<target host="*.chartbeat.com" />
-	<target host="ping.chartbeat.net" />
+	<target host="*.chartbeat.net" />
 
 
 	<rule from="^http://(www\.)?chartbeat\.com/"
@@ -33,7 +42,7 @@
 	<rule from="^https?://support\.chartbeat\.com/(assets|generated|images|system)/"
 		to="https://assets.zendesk.com/$1/" />
 
-	<rule from="^http://ping\.chartbeat\.net/"
-		to="https://ping.chartbeat.net/" />
+	<rule from="^http://([\w-]+)\.chartbeat\.net/"
+		to="https://$1.chartbeat.net/" />
 
 </ruleset>
