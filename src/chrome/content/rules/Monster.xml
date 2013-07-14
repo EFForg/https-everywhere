@@ -1,4 +1,12 @@
 <!--
+	CDN buckets:
+
+		- nswildcard.newjobs.com.edgesuite.net
+
+			- media.monster.com
+			- media.newjobs.com
+
+
 	Nonfunctional:
 
 		- (www.)about-monster.com	(cert: facebook.ketchum.com; shows that domain's data [i.e. a blank page])
@@ -25,6 +33,25 @@
 
 
 		ir.monster.com is handled in Thomson-Reuters-clients.xml.
+
+
+	Problematic domains:
+
+		- media.monster.com *
+		- media.newjobs.com *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- monster.com subdomains:
+
+			- media		(→ akamai)
+
+		- newjobs.com subdomains:
+
+			- media		(→ akamai)
 
 -->
 <ruleset name="Monster (partial)">
@@ -53,6 +80,9 @@
 	<rule from="^http://(cookie|login)\.monster\.com/"
 		to="https://$1.monster.com/" />
 
+	<rule from="^http://media\.(monster|newjobs)\.com/"
+		to="https://a248.e.akamai.net/f/1015/8220/1m/media.$1.com/" />
+
 	<!--	Cert doesn't match !www.	-->
 	<rule from="^http://(?:www\.)?myresumeagent\.com/"
 		to="https://www.myresumeagent.com/" />
@@ -61,10 +91,7 @@
 	<rule from="^http://((css|img)-seeker|track)\.newjobs\.com/"
 		to="https://$1.newjobs.com/" />
 
-	<!--	media: Akamai
-		media.monster.com times out, but appears
-		identical to media.newjobs.	-->
-	<rule from="^http://(?:secure)?media\.(?:monster|newjobs)\.com/"
+	<rule from="^http://securemedia\.newjobs\.com/"
 		to="https://securemedia.newjobs.com/" />
 
 </ruleset>
