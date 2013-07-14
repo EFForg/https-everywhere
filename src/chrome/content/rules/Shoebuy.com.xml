@@ -1,17 +1,53 @@
 <!--
+	CDN buckets:
+
+		- att-i.shoebuy.com.edgesuite.net
+		- i.shoebuy.com.edgesuite.net
+
+
 	Problematic domains:
 
+		- att-i *
 		- i.shoebuy.com		(akamai, works)
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- designer *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- att-i		(→ akamai, www)
+		- i		(→ akamai)
 
 -->
 <ruleset name="Shoebuy.com (partial)">
 
 	<target host="shoebuy.com" />
 	<target host="*.shoebuy.com" />
+		<exclusion pattern="^http://designer\.shoebuy\.com/(?!(?:cart|cust|lists)(?:$|[?/])|coremetrics/|css/|favicon\.ico|images/|jscript/)" />
 
 
-	<rule from="^http://(www\.)?shoebuy\.com/(cart|css|images)($|\?|/)"
+	<rule from="^http://(www\.)?shoebuy\.com/(cart|coremetrics|css|favicon\.ico|images|jscript)($|\?|/)"
 		to="https://$1shoebuy.com/$2$3" />
+
+	<rule from="^http://designer\.shoebuy\.com/"
+		to="https://designer.shoebuy.com/" />
+
+	<!--	Relative links break resource paths
+		when rewritten to akamai:
+						-->
+	<rule from="^http://att-i\.shoebuy\.com/css/"
+		to="https://www.shoebuy.com/css/" />
+
+	<rule from="^http://att-i\.shoebuy\.com/"
+		to="https://a248.e.akamai.net/f/1095/1/g2/att-i.shoebuy.com/" />
 
 	<rule from="^http://i\.shoebuy\.com/"
 		to="https://a248.e.akamai.net/f/727/1/g/i.shoebuy.com/" />
