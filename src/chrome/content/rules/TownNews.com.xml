@@ -1,0 +1,77 @@
+<!--
+	CDN buckets:
+
+		- townnews365-dot-com.bloxcms.com
+		- adimages.townnews.com.edgesuite.net
+		- images.townnews.com.edgesuite.net
+		- bloximages.chicago2.vip.townnews.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+
+		- (www.)dotconnectmedia.com *
+
+		- townnews.com subdomains:
+
+			- adimages **
+			- adsys *
+			- docs *
+			- images **
+
+	* Refused
+	** 503, akamai
+
+
+	Problematic domains:
+
+		- support.townnews.com			(refused)
+		- bloximages.chicago2.vip.townnews.com	(503, akamai)
+		- (www.)townnews365.com			(503; mismatched, CN: *.bloxcms.com)
+
+
+	Partially covered domains:
+
+		- support.townnews.com			(→ secure)
+		- bloximages.chicago2.vip.townnews.com *
+		- (www.)townnews365.com *		(avoiding user-visible paths)
+
+	* → townnews365-dot-com.bloxcms.com
+
+
+	Fully covered domains:
+
+		- townnews365-dot-com.bloxcms.com
+		- secure.townnews.com
+		- stats.townnews.com
+
+-->
+<ruleset name="TownNews.com">
+
+	<target host="townnews365-dot-com.bloxcms.com" />
+	<target host="secure.townnews.com" />
+	<target host="townnews365.com" />
+	<target host="www.townnews365.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?townnews365\.com/(?!content/|favicon\.ico)" />
+
+
+	<securecookie host="^townnews365-dot-com\.bloxcms\.com$" name=".+" />
+	<securecookie host="^secure\.townnews\.com$" name=".+" />
+
+
+	<rule from="^http://(?:townnews365-dot-com\.bloxcms|(?:www\.)?townnews365)\.com/"
+		to="https://townnews365-dot-com.bloxcms.com/" />
+
+	<rule from="^http://(secure|stats)\.townnews\.com/"
+		to="https://$1.townnews.com/" />
+
+	<rule from="^http://support\.townnews\.com/(\?.*)?$"
+		to="https://secure.townnews.com/support.townnews.com/custlogin/$1" />
+
+	<rule from="^http://bloximages\.chicago2\.vip\.townnews\.com/townnews365\.com/"
+		to="https://townnews365-dot-com.bloxcms.com/" />
+
+</ruleset>
