@@ -1,4 +1,9 @@
 <!--
+	Other Monster rulesets:
+
+		- MyResumeAgent.com.xml
+
+
 	CDN buckets:
 
 		- www.monster.com.edgesuite.net
@@ -44,7 +49,6 @@
 	Problematic domains:
 
 		- media.monster.com *
-		- myresumeagent.com	(cert only matches www)
 		- media.newjobs.com *
 
 	* Works, akamai
@@ -65,8 +69,6 @@
 			- media		(→ akamai)
 			- oas
 
-		- (www.)myresumeagent.com	(^ → www)
-
 		- newjobs.com subdomains:
 
 			- css-hx
@@ -81,8 +83,6 @@
 -->
 <ruleset name="Monster (partial)">
 
-	<target host="myresumeagent.com" />
-	<target host="*.myresumeagent.com" />
 	<target host="*.monster.com" />
 		<exclusion pattern="^http://hiring\.(?:[\w-]+\.)?monster\.com/(?!favicon\.ico|images/|(?:Script|Web)Resource\.axd|[sS]ervices/|SharedUI/)" />
 	<target host="login.monster.com" />
@@ -102,7 +102,6 @@
 						-->
 	<securecookie host="^\.monster\.com$" name="^(?:OAX|v1st|WT_FPC)$" />
 	<securecookie host="^(?:cookie|login|oas)\.monster\.com$" name=".*" />
-	<securecookie host="^(?:www)?\.myresumeagent\.com$" name=".*" />
 
 
 	<!--	cookie.monster.com and track.newjobs.com
@@ -112,10 +111,6 @@
 
 	<rule from="^http://media\.(monster|newjobs)\.com/"
 		to="https://a248.e.akamai.net/f/1015/8220/1m/media.$1.com/" />
-
-	<!--	Cert doesn't match !www.	-->
-	<rule from="^http://(?:www\.)?myresumeagent\.com/"
-		to="https://www.myresumeagent.com/" />
 
 	<!--	Track is used on third-party websites.	-->
 	<rule from="^http://((css|img|js)-(?:hx|seeker)|track)\.newjobs\.com/"
