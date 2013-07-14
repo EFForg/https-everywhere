@@ -2,6 +2,7 @@
 	CDN buckets:
 
 		- thingiverse-production.s3.amazonaws.com
+		- s3.amazonaws.com/thingiverse-resources/
 
 
 	Nonfunctional subdomains:
@@ -9,19 +10,25 @@
 		- blog
 
 
-	^ doesn't work
+	Problematic subdomains:
+
+		- ^
+		- support	(mismatched, CN: *.tenderapp.com)
 
 -->
 <ruleset name="Thingiverse (partial)">
 
 	<target host="thingiverse.com" />
-	<target host="www.thingiverse.com" />
+	<target host="*.thingiverse.com" />
 
 
-	<securecookie host="^www\.thingiverse\.com$" name=".+" />
+	<securecookie host="^(?:www)?\.thingiverse\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?thingiverse\.com/"
 		to="https://www.thingiverse.com/" />
+
+	<rule from="^http://support\.thingiverse\.com/"
+		to="https://thingiverse.tenderapp.com/" />
 
 </ruleset>
