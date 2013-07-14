@@ -28,6 +28,7 @@
 
 	Nonfunctional domains:
 
+		- cm.npc-morris.overture.com	(dropped)
 		- cm.npc-nydn.overture.com	(dropped)
 
 		- yahoo.co.jp subdomains:
@@ -45,7 +46,7 @@
 			- malaysia.answers ****
 			- cn
 			- help.cn
-			- docs *
+			- docs				(refused)
 			- fr.docs
 			- en-maktoob			(redirects to http; mismatched, CN: www.yahoo.com)
 			- everything
@@ -53,6 +54,8 @@
 			- chart.finance
 			- ichart.finance		(no https)
 			- streamerapi.finance *
+			- groups ***
+			- moderators.groups		(redirects to gh.bouncer.login.yahoo.com; mismatched, CN: groups.yahoo.com)
 			- hsrd				(no https)
 			- visit.webhosting *
 			- ichart
@@ -75,10 +78,11 @@
 			- gossip-ss.us.search
 			- images.search
 			- sports **
+			- suggestions			(refused)
 			- tv **
 			- uk ***
 			- us ***
-			- qos.video
+			- qos.video			(404; mismatched, CN: *.manhattan.yahoo.com)
 			- voices			(redirects to http)
 			- weather **
 			- count.yisou
@@ -113,10 +117,13 @@
 			- feedback	(works, mismatched, CN: *.uservoice.com)
 			- help		(valid cert; 404)
 			- r.m		(404, CN: *.mail.yahoo.com)
+			- us-locdrop.query **
+			- video.query **
 
 		- ep.yimg.com
 
 	* Self-signed
+	** Works; mismatched, CN: yql.yahooapis.com
 
 
 	Partially covered domains:
@@ -151,10 +158,12 @@
 
 			- uk.adserver
 			- us.adserver
+			- beap.adx
 			- c5.ah
 			- cookex.amp
 			- s-cookex.amp
-			- [aoy].analytics
+			- [aoyz].analytics
+			- y3.analytics
 			- global.ard
 
 			- bc subdomains:
@@ -176,6 +185,7 @@
 			- legalredirect
 			- login
 			- us.lrd
+			- gh.bouncer.login
 			- r.m			(→ s.yimg.com)
 			- mail
 
@@ -201,6 +211,7 @@
 			- ucs.netsvs
 			- cookiex.ngd
 			- rtb.pclick
+			- analytics.query
 			- mailapps.query
 			- media.query
 			- ucs.query
@@ -270,15 +281,104 @@
 			- .yahoo.com
 				- AO
 				- B
-					- Set by us.bc.yahoo.com/b
+					- Set by y3.analytics.yahoo.com/itr.pl & us.bc.yahoo.com/b
+
+				- BA
+
+					- t=\d{10}
+
 				- CH
 					- \w{59}/
 				- F
+
+				- HP
+
+					- 0
+
 				- MSC
 					- t=\d{10}X
-				- PH
+				- PH	(set by hjsal)
 				- SSL
+
+				- ucs	(set by ucs.query)
+
+					- bnas=\d
+
+				- V
+
+					- v=\d.\d&cc=0&m=0
+
 				- Y
+
+			- news.yahoo.com
+
+				- AO
+
+					- o=1&s=1&dnt=1
+
+				- grvinsights	(set by rma-api.gravity.com)
+
+					- \w{32}
+
+				- ywadp\d+
+
+					- \d+
+
+			- .news.yahoo.com
+
+				- ywadp\d+
+
+					- \d+
+
+			- .uk.yahoo.com
+
+				- epc
+
+					- 1
+
+				- fpc
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- FPCK
+
+					- \w{50}
+
+				- fpc_s
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- fpt
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- fpps
+
+					- _page=%7B%22wsid%22%3A%22\d{10}%22%7D
+
+			- us.yahoo.com
+
+				- FBISC
+
+					- \d{10}
+
+				- ywadp\d+
+
+					- \d+
+
+			- .us.yahoo.com
+
+				- fpc
+
+					- d=(\w+.){4}\w+-&v=2
+
+				- fpms
+
+					- p_\d{8}=%7B%22stream_filter%22%3A%22%3A%3A\d{13}%22%7D
+
+				- fpt
+
+					- d=\w+.\w+.\w+&v=1
 
 			- .www.yahoo.com
 				- fpc
@@ -295,6 +395,7 @@
 		-->
 	<securecookie host="^\.yahoo\.com$" name="^(?:AO|B|SSL)$" />
 	<securecookie host="^\.(?:analytics|mail)\.yahoo\.com$" name=".+" />
+	<securecookie host="^news\.yahoo\.com$" name="^grvinsights$" />
 	<securecookie host="^.+-c\.c\.yom\.mail\.yahoo\.net$" name=".+" />
 	<securecookie host="^\.s\.yimg\.com$" name=".+" />
 	<securecookie host="^\.zenfs\.com$" name="^BX$" />
@@ -318,7 +419,7 @@
 	<rule from="^http://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|login|us\.l?rd|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:mailapps|media|ucs)\.query|sec|rtb\.pclick\.secure|order\.smallbusiness|au\.totaltravel|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|beap\.adx|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|(?:[aoz]|y3)\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|(?:gh\.bouncer\.)?login|us\.l?rd|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:analytics|mailapps|media|ucs)\.query|sec|rtb\.pclick\.secure|order\.smallbusiness|au\.totaltravel|yep\.video)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
 	<rule from="^http://uk\.health\.lifestyle\.yahoo\.net/images/"
@@ -369,7 +470,7 @@
 	<rule from="^http://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|mi|ok|pj|pp|qa|rq|rx|ugcwidgets|zz)/"
 		to="https://s.yimg.com/$1/" />
 
-	<rule from="^http://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qw|qz|r[luwz]|sc|ts)/"
+	<rule from="^http://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qb|qw|qz|r[luwz]|sc|ts)/"
 		to="https://s.yimg.com/zz/$1/" />
 
 	<rule from="^http://s(ec)?\.yimg\.com/"
