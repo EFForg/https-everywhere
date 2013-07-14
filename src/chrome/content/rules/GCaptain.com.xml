@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- d2m8pnbf2v4ae2.cloudfront.net
+
+			- cfs1
+
+		- d32gw8q6pt8twd.cloudfront.net
+
+			- c
+
+		- d38ecmhxsvwui3.cloudfront.net
+
+			- cf
+
+
+	Problematic subdomains:
+
+		- c *
+		- cf *
+		- cfs1 *
+		- jobs	(pages redirect to http; mismatched, CN: *.jobtarget.com)
+
+	* cloudfront
+
+-->
+<ruleset name="gCaptain.com (partial)">
+
+	<target host="gcaptain.com" />
+	<target host="*.gcaptain.com" />
+
+
+	<securecookie host="^gcaptain\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?gcaptain\.com/"
+		to="https://$1gcaptain.com/" />
+
+	<rule from="^http://c\.gcaptain\.com/"
+		to="https://d32gw8q6pt8twd.cloudfront.net/" />
+
+	<rule from="^http://cf\.gcaptain\.com/"
+		to="https://d38ecmhxsvwui3.cloudfront.net/" />
+
+	<rule from="^http://cfs1\.gcaptain\.com/"
+		to="https://d2m8pnbf2v4ae2.cloudfront.net/" />
+
+</ruleset>
