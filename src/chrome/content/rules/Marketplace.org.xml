@@ -12,12 +12,19 @@
 	Problematic subdomains: 
 
 		- ^		(redirects to http; mismatched, CN: *.publicinsightnetwork.org)
+		- thenumbers	(works; mismatched, CN: *.financialcontent.com)
 		- www		(works, akamai)
 
 
 	Partially covered subdomains:
 
 		- (www.)	(→ akamai)
+
+
+	Fully covered subdomains:
+
+		- thenumbers	(→ markets.financialcontent.com)
+		- tracker
 
 -->
 <ruleset name="Marketplace.org (partial)">
@@ -30,7 +37,16 @@
 		<exclusion pattern="^http://(?:www\.)?marketplace\.org/(?!favicon\.ico|misc/|modules/|sites/)" />
 
 
+	<securecookie host="^\.marketplace\.org$" name="^WT_FPC$" />
+
+
 	<rule from="^http://(?:www\.)?marketplace\.org/"
 		to="https://a248.e.akamai.net/f/38/9212/7m/www.marketplace.org/" />
+
+	<rule from="^http://thenumbers\.marketplace\.org/"
+		to="https://markets.financialcontent.com/" />
+
+	<rule from="^http://tracker\.financialcontent\.com/"
+		to="https://tracker.financialcontent.com/" />
 
 </ruleset>
