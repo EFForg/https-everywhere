@@ -6,18 +6,45 @@
 			- mimage
 
 
+	Nonfunctional subdomains:
+
+		- blogs		(refused)
+		- utility	(shows www; mismatched, CN: utility)
+
+
 	Problematic subdomains:
 
+		- campaigns	(works; mismatched, CN: secure.eloqua.com)
 		- mimage	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- mimage	(→ akamai)
+
+
+	Fully covered subdomains:
+
+		- communities
 
 -->
 <ruleset name="OpenText (partial)">
 
 	<target host="opentext.com" />
-	<target host="www.opentext.com" />
+	<target host="*.opentext.com" />
+		<!--
+			Breaks resource paths:
+						-->
+		<exclusion pattern="^http://mimage\.opentext\.com/alt_content/binary/ot/newmedia/ot_html5/ot_slider/(?:ot_banner_system/default/rs-default|preview-assets/css/smoothness/jquery-ui-1\.8\.22\.custom)\.css" />
 
 
-	<rule from="^http://(www\.)?opentext\.com/"
+	<securecookie host="^www\.opentext\.com$" name=".+" />
+
+
+	<rule from="^http://(communities\.|www\.)?opentext\.com/"
 		to="https://$1opentext.com/" />
+
+	<rule from="^http://mimage\.opentext\.com/"
+		to="https://a248.e.akamai.net/f/248/9057/1d/mimage.opentext.com/" />
 
 </ruleset>
