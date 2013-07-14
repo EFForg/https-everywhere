@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- blog	(works; mismatched, CN: web02.sculpteo.com)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- 3dpcase *
+		- pro *
+
+	* Some pages redirect to http
+
+-->
+<ruleset name="Sculpteo.com (partial)">
+
+	<target host="sculpteo.com" />
+	<target host="*.sculpteo.com" />
+		<exclusion pattern="^http://(?:3dpcase\.|pro\.|www\.)?sculpteo\.com/(?!\w\w/(?:account|jsi18n|jsurl)/|favicon\.ico|media/|static/|terms_\w\w(?:$|[?/]))" />
+
+
+	<!--	^ redirects to www over http,
+		so emulate that behavior:
+						-->
+	<rule from="^http://(?:www\.)?sculpteo\.com/"
+		to="https://www.sculpteo.com/" />
+
+	<rule from="^http://(3dpcase|pro)\.sculpteo\.com/"
+		to="https://$1.sculpteo.com/" />
+
+</ruleset>
