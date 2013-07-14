@@ -1,4 +1,9 @@
 <!--
+	CDN buckets:
+
+		- tiads.timeinc.net.edgesuite.net
+
+
 	Problematic subdomains:
 
 		- business *
@@ -22,17 +27,30 @@
 
 		- www		(404, akamai)
 
+
+	Fully covered subdomains:
+
+		- smetrics
+		- tiads		(→ akamai)
+
 -->
 <ruleset name="TIME.com (partial)">
 
 	<target host="profiles.time.com" />
+	<target host="*.time.com" />
 	<target host="subscription.time.com" />
 
 
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.time\.com$" name="^(?:gpv_\w\d+|sinvisit_\w|s_\w+)$" />
 	<securecookie host="^subscription\.time\.com$" name=".+" />
 
 
-	<rule from="^http://(profiles|subscription)\.time\.com/"
+	<rule from="^http://(profiles|smetrics|subscription)\.time\.com/"
 		to="https://$1.time.com/" />
+
+	<rule from="^http://tiads\.time\.com/"
+		to="https://a248.e.akamai.net/f/259/1/g/tiads.time.com/" />
 
 </ruleset>
