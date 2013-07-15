@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- assets.rollingstone.com.edgesuite.net
+
+			- a402.g.akamai.net
+
+		- www.rollingstone.com.edgesuite.net
+
+			- a1317.g.akamai.net
+
+
+	Problematic subdomains:
+
+		- assets	(works, akamai)
+		- www		($ redirects to http, some paths work; akamai)
+
+-->
+<ruleset name="Rolling Stone.com (partial)">
+
+	<target host="*.rollingstone.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://www\.rollingstone\.com/(?!css/|images/|js/)" />
+		<!--
+			global-2 breaks images/fe/sprite/socialIcons.*
+
+			homepage breaks other image paths
+
+			Hint: pointing to http://www.rollingstone.com/.* would fix this
+											-->
+		<exclusion pattern="^http://www\.rollingstone\.com/css/fe/(?:global-\d|homepage).\w{32}\.css" />
+
+
+	<rule from="^http://rollingstone\.com/"
+		to="https://rollingstone.com/" />
+
+	<rule from="^http://www\.rollingstone\.com/"
+		to="https://a248.e.akamai.net/f/1317/1860/6m/www.rollingstone.com/" />
+
+	<rule from="^http://assets\.rollingstone\.com/"
+		to="https://a248.e.akamai.net/f/402/78/9m/assets.rollingstone.com/" />
+
+</ruleset>
