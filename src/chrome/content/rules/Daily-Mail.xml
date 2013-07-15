@@ -38,11 +38,26 @@
 
 		- dailymail.co.uk subdomains:
 
+			- jobs
+
+				- mismatched, CN: *.jobsite.co.uk
+				- At least some pages redirect to http
+
+				- When rewritten to www.jobsite.co.uk:
+
+					- css/ is different
+					- images/ 404s
+
 			- video *
 
 		- i.mol.im *
 
 	* Works, akamai
+
+
+	Partially covered domains:
+
+		- jobs.dailymail.co.uk	(→ www.jobsite.co.uk)
 
 -->
 <ruleset name="Daily Mail (partial)" default_off="Akamai certificate">
@@ -71,8 +86,11 @@
 	<!--	- Cert: *.jobsite.co.uk
 		- At least some pages 301 to http
 							-->
-	<rule from="^http://jobs\.dailymail\.co\.uk/(css|home|images)/"
-		to="https://jobs.dailymail.co.uk/$1/" />
+	<rule from="^http://jobs\.dailymail\.co\.uk/(cs|image)s/"
+		to="https://jobs.dailymail.co.uk/$1s/" />
+
+	<rule from="^http://jobs\.dailymail\.co\.uk/home/"
+		to="https://www.jobsite.co.uk/home/" />
 
 	<rule from="^http://i\.mol\.im/"
 		to="https://a248.e.akamai.net/f/1434/217/6m/i.mol.im/" />
