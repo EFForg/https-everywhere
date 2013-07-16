@@ -1,0 +1,45 @@
+<!--
+	For other OpenX coverage, see OpenX.xml.
+
+
+	CDN buckets:
+
+		- akamai.openx.org
+
+			- a1051.w7.akamai.net
+			- www
+
+		- d70783jehyk3d.cloudfront.net
+
+			- beacon
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- beacon	(cloudfront)
+		- edit-www *
+		- www		(works; akamai)
+
+	* Works; self-signed, CN: *.openvpx.com
+
+
+	Fully covered subdomains:
+
+		- beacon	(→ d70783jehyk3d.cloudfront.net)
+		- edit-www	(→ akamai)
+
+-->
+<ruleset name="JumpTime.com (partial)">
+
+	<target host="jumptime.com" />
+	<target host="*.jumptime.com" />
+
+
+	<rule from="^http://beacon\.jumptime\.com/"
+		to="https://d70783jehyk3d.cloudfront.net/" />
+
+	<rule from="^http://edit-www\.jumptime\.com/"
+		to="https://a248.e.akamai.net/f/1051/2618/4m/www.jumptime.com/" />
+
+</ruleset>
