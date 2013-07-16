@@ -1,12 +1,31 @@
+<!--
+	Problematic subdomains:
+
+		- mail	(shows www; mismatched, CN: nostarch.com)
+
+
+	Partially covered subdomains:
+
+		- mail	(→ mail.google.com)
+
+-->
 <ruleset name="No Starch Press (partial)">
 
 	<target host="nostarch.com" />
-	<target host="www.nostarch.com" />
+	<target host="*.nostarch.com" />
 
 
-	<!--	At least some pages 302 to http.
+	<!--	Tracking cookies set by google-analytics.com
+								-->
+	<securecookie host="^\.nostarch\.com$" name="^__utm\w$" />
+
+
+	<!--	Some pages 302 to http.
 						-->
-	<rule from="^http://(www\.)?nostarch\.com/(misc|modules|sites)/"
-		to="https://$1nostarch.com/$2/" />
+	<rule from="^http://(www\.)?nostarch\.com/((?:about|catalog|media|writeforus)\.htm|cart(?:$|[?/])|favicon\.ico|images/|misc/|modules/|sites/)"
+		to="https://$1nostarch.com/$2" />
+
+	<rule from="^http://mail\.nostarch\.com/(\?.*)?$"
+		to="https://mail.google.com/a/nostarch.com$1" />
 
 </ruleset>
