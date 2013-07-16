@@ -5,53 +5,59 @@
 	CDN buckets:
 
 		- telegraph.webtrends.akadns.net
+
 			- webtrends.telegraph.co.uk
 
+		- (wac.437a|gs1.wac).edgecastcdn.net/00437A/telegraph/fantasycricket/
+
+			- i.fantasyfootball.telegraph.co.uk
+
 		- telegraph.co.uk.edgesuite.net
+
 			- i.telegraph.co.uk
 			- s.telegraph.co.uk
 			- www.telegraph.co.uk
-
-	(wac.437a|gs1.wac).edgecastcdn.net/00437A/telegraph/fantasycricket/
 
 
 	Nonfunctional domains:
 
 		- is.i2.datinglab.net
-		- blogs		⎫
-		- subscriber	⎭ Akamai, "An error"
-		- dating	⎫
-		- my		⎬ timeout
-		- puzzles	⎭
-		- fashion	Akamai, "Service unavailable"
-		- i		(redirects to http, akamai)
-		- www		(Akamai, shows 404 page)
+		- blogs *
+		- dating **
+		- fashion	(503, akamai)
+		- fashionshop	(works; mismatched, CN: shop.look.co.uk)
+		- i ***
+		- my **
+		- puzzles **
+		- subscriber *
 		- tickets	(tixdaq.com)
+		- www		(404, akamai)
+
+	* 504, akamai
+	** Dropped
+	*** Redirects to http, akamai
 
 -->
 <ruleset name="Telegraph Media Group (partial)">
 
 	<target host="telegraph.co.uk" />
-	<target host="i.fantasyfootball.telegraph.co.uk" />
 	<target host="*.telegraph.co.uk" />
-		<!--	Pages that are not within a directory rewrite to http.	-->
-		<exclusion pattern="^http://jobs\.telegraph\.co\.uk/($|[^/]+\.aspx)" />
+		<exclusion pattern="^http://fantasycricket\.telegraph\.co\.uk/(?!(?:county/|home/)?images/|favicon\.ico)" />
+		<exclusion pattern="^http://fantasyfootball\.telegraph\.co\.uk/(?!favicon\.ico)" />
+		<!--
+			Pages that are not within a directory redirect to http:
+										-->
+		<exclusion pattern="^http://jobs\.telegraph\.co\.uk/(?:$|[^/]+\.aspx)" />
 
 
-	<securecookie host="^(?:announcement|webtrend)s\.telegraph\.co\.uk$" name=".*" />
+	<securecookie host="^(?:announcement|webtrend)s\.telegraph\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://(announcements|auth|jobs|webtrends)\.telegraph\.co\.uk/"
+	<rule from="^http://(announcements|auth|fantasy(?:cricket|football)|jobs|webtrends)\.telegraph\.co\.uk/"
 		to="https://$1.telegraph.co.uk/" />
 
-	<rule from="^http://fantasycricket\.telegraph\.co\.uk/((?:county/|home/)?images/|favicon\.ico$)"
-		to="https://fantasycricket.telegraph.co.uk/$1" />
-
-	<rule from="^http://fantasyfootball\.telegraph\.co\.uk/favicon\.ico$"
-		to="https://fantasyfootball.telegraph.co.uk/favicon.ico" />
-
-	<!--	EdgeCast CDN (cert: gp1.wac.edgecastcdn.net).
-			Same data as !i, but be kind and point to CDN.	-->
+	<!--	Same data as !i, but be kind by pointing to CDN:
+								-->
 	<rule from="^http://i\.fantasyfootball\.telegraph\.co\.uk/"
 		to="https://gs1.wac.edgecastcdn.net/00437A/telegraph/fantasyfootball/" />
 
