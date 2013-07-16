@@ -26,20 +26,22 @@
 		- secure.telegraph.co.uk.edgesuite.net
 
 			- secure[1-9]
+			- secure1\d
+			- secure20
 
 
 	Nonfunctional domains:
 
 		- is.i2.datinglab.net
-		- blogs *
 		- courses	(http reply)
 		- dating **
 		- fashion	(503, akamai)
-		- i ***
 		- my **
 		- puzzles **
 		- secure *
 		- secure[1-9] *
+		- secure1\d *
+		- secure20 *
 		- shares	(refused)
 		- subscriber *
 		- tickets	(tixdaq.com)
@@ -53,20 +55,38 @@
 	Problematic subdomains:
 
 		- fashionshop	(works; mismatched, CN: shop.look.co.uk)
+		- i		(redirects to http, akamai)
 		- s		(works, akamai)
 
 
 	Partially covered subdomains:
 
+		- blogs
 		- fantasycricket
 		- fantasyfootball
+		- fantasygames
+		- blogs.uat
 
 
 	Fully covered subdomains:
 
 		- announcements
 		- auth
+		- i.fantasycricket
 		- i.fantasyfootball
+		- i.fantasygames
+		- i.fantasyracing
+		- fantasyracing
+		- fbapp
+		- i			(→ secure.i)
+		- secure.i
+		- jobs
+		- recruiters.jobs
+		- s			(→ akamai)
+		- secure.s
+		- shop
+		- fbapp.uat
+		- secure.i.uat1
 		- webtrends
 
 -->
@@ -74,18 +94,31 @@
 
 	<target host="telegraph.co.uk" />
 	<target host="*.telegraph.co.uk" />
-		<exclusion pattern="^http://fantasycricket\.telegraph\.co\.uk/(?!(?:county/|home/)?images/|favicon\.ico)" />
-		<exclusion pattern="^http://fantasyfootball\.telegraph\.co\.uk/(?!favicon\.ico)" />
 		<!--
-			Pages that are not within a directory redirect to http:
-										-->
-		<exclusion pattern="^http://jobs\.telegraph\.co\.uk/(?:$|[^/]+\.aspx)" />
+			Pages redirect to http:
+						-->
+		<exclusion pattern="^http://blogs(?:\.uat)?\.telegraph\.co\.uk/(?!\w+/files/|wp-content/)" />
+		<exclusion pattern="^http://fantasycricket\.telegraph\.co\.uk/(?!(?:\w+/)?(?:images|scripts|select-team|xcss)(?:$|[?/])|favicon\.ico)" />
+		<exclusion pattern="^http://fantasy(?:football|games)\.telegraph\.co\.uk/(?!(?:\w+/)?(?:images|scripts|xcss)/|favicon\.ico)" />
 
 
-	<securecookie host="^(?:announcement|webtrend)s\.telegraph\.co\.uk$" name=".+" />
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.(?:\w+\.)?telegraph\.co\.uk$" name="^(?:tmg_web_trends|__utm\w)$" />
+	<securecookie host="^(?:announcements|jobs|recruiters\.jobs|shop|webtrends)\.telegraph\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://(announcements|auth|fantasy(?:cricket|football)|i\.fantasyfootball|jobs|webtrends)\.telegraph\.co\.uk/"
+	<rule from="^http://(announcements|auth|(?:blogs|fbapp)(?:\.uat)?|fantasy(?:cricket|football|games|racing)|i\.fantasy(?:cricket|football|games|racing)|secure\.i\.uat1|jobs|recruiters\.jobs|secure\.s|shop|webtrends)\.telegraph\.co\.uk/"
 		to="https://$1.telegraph.co.uk/" />
+
+	<!--	We could point to akamai if it didn't redirect to http...
+								-->
+	<rule from="^http://(?:secure\.)?i\.telegraph\.co\.uk/"
+		to="https://secure.i.telegraph.co.uk/" />
+
+	<!--	Image paths are relative to stylesheets:
+							-->
+	<rule from="^http://s\.telegraph\.co\.uk/"
+		to="https://a248.e.akamai.net/f/1362/5848/6m/s.telegraph.co.uk/" />
 
 </ruleset>
