@@ -1,0 +1,40 @@
+<!--
+	CDN buckets:
+
+		- monitis-images.s3.amazonaws.com
+		- monitorusportal.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- blog	(refused)
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- dashboard
+		- portal
+
+-->
+<ruleset name="monitis.com (partial)">
+
+	<target host="monitis.com" />
+	<target host="*.monitis.com" />
+
+
+	<securecookie host="^(?:dashboard|portal|www)\.monitis\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?monitis\.com/"
+		to="https://www.monitis.com/" />
+
+	<rule from="^http://(dashboard|portal)\.monitis\.com/"
+		to="https://$1.monitis.com/" />
+
+</ruleset>

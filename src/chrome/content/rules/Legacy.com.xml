@@ -2,6 +2,7 @@
 	CDN buckets:
 
 		- legacy.o.miisolutions.net/...
+
 			- mi-cache.legacy.com
 			- mi-static.legacy.com
 
@@ -13,7 +14,7 @@
 		- mi-cache *
 		- mi-static *
 
-	* CN: *.service.mirror-image.net; 404
+	* 404, CN: *.service.mirror-image.net
 
 
 	Partially covered subdomains:
@@ -21,7 +22,7 @@
 		- (www.) *
 		- memorialwebsites *
 
-	* Some pages redirect to http.
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -38,6 +39,8 @@
 
 	<target host="legacy.com" />
 	<target host="*.legacy.com" />
+		<exclusion pattern="^http://(?:www\.)?legacy\.com/(?!$|favicon\.ico|globalscripts/tracking/AIMWrapper\.js|Images/|(?:[\w/-]+/)?(?:images/|ObitsTileCorner\.axd|scripts/|Styles/)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)" />
+		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?!create(?:account|memorial)\.aspx|images/|styles/)" />
 	<target host="*.legacyconnect.ning.com" />
 
 
@@ -45,24 +48,18 @@
 	<securecookie host="^\.legacyconnect\.ning\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?legacy\.com/($|Images/|(?:[\w\-/]+/)?(?:images/|ObitsTileCorner\.axd|Styles/)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)"
-		to="https://$1legacy.com/$2" />
-
 	<!--	obituaries/Images/ redirects to http.
 							-->
 	<rule from="^http://(www\.)?legacy\.com/obituaries/Images/"
 		to="https://$1legacy.com/obituaries/images/" />
 
-	<rule from="^http://(cache|mi|static)\.legacy\.com/"
-		to="https://$1.legacy.com/" />
+	<rule from="^http://((?:cache|mi|static|memorialwebsites|www)\.)?legacy\.com/"
+		to="https://$1legacy.com/" />
 
-	<rule from="^https?://connect\.legacy\.com/"
+	<rule from="^http://connect\.legacy\.com/"
 		to="https://legacyconnect.ning.com/" />
 
-	<rule from="^http://memorialwebsites\.legacy\.com/(create(?:account|memorial)\.aspx|images/|styles/)"
-		to="https://memorialwebsites.legacy.com/$1" />
-
-	<rule from="^https?://mi-(cache|static)\.legacy\.com/"
+	<rule from="^http://mi-(cache|static)\.legacy\.com/"
 		to="https://$1.legacy.com/" />
 
 </ruleset>

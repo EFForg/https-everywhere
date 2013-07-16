@@ -1,23 +1,41 @@
+<!--
+	Partially covered domains:
+
+		- (www.)clicky.com	(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- cdn.staticstuff.net
+
+-->
 <ruleset name="GetClicky">
 
+	<target host="clicky.com" />
+	<target host="www.clicky.com" />
 	<target host="getclicky.com" />
 	<target host="*.getclicky.com" />
 	<target host="staticstuff.net" />
 	<target host="*.staticstuff.net" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.hello.staticstuff.net" />
 
-	<securecookie host="^(.*\.)?getclicky\.com$" name=".*" />
-	<securecookie host="^(.*\.)?staticstuff\.net$" name=".*" />
 
+	<securecookie host="^(?:.*\.)?getclicky\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?staticstuff\.net$" name=".+" />
+
+
+	<rule from="^http://(www\.)?clicky\.com/(favicon\.ico|user(?:$|\?|/))"
+		to="https://$1clicky.com/$2" />
 
 	<rule from="^http://([^/:@\.]+\.)?getclicky\.com/"
 		to="https://$1getclicky.com/" />
 
+	<rule from="^http://(?:win\.|www\.)?staticstuff\.net/"
+		to="https://win.staticstuff.net/" />
+
 	<rule from="^http://hello\.staticstuff\.net/"
 		to="https://hello.staticstuff.net/" />
 
-	<rule from="^http://(?:win\.|www\.)?staticstuff\.net/"
-		to="https://win.staticstuff.net/" />
+	<rule from="^http;//cdn\.staticstuff\.net/"
+		to="https://cdn.staticstuff.net/" />
 
 </ruleset>

@@ -4,73 +4,91 @@
 
 		- berkeley.edu subdomains:
 
-			- alumni-friends	(cert: asterix.berkeley.edu; prints domain name)
-			- gfael.are *
-			- areweb		(shows nature)
-			- atcal-career		(shows givetocal's data)
-			- awards		(ditto)
-			- builders		(ditto)
-			- cads2			(ditto)
+			- (www.)		(prints "No access to SSL site.")
+			- alumni-friends	(prints domain name; CN: asterix.berkeley.edu)
+			- gfael.are ¹
+			- areweb ²
+			- atcal-career ³
+			- awards ³
+			- builders ³
+			- cads2 ³
 			- cal-demo		(prints "a" over https; acts as atcal over http)
-			- calparents		("No access to the calparents SSL site available.")
-			- calvm			("No access to the calvm SSL site available.")
-			- campaign		(shows givetocal's data)
-			- campuslife		(ssl_error_rx_record_too_long)
+			- calparents ⁴
+			- calvm	⁴
+			- campaign ³
+			- campuslife ⁵
 			- cdms			(shows cosmology; mismatched, CN: cosmology.berkeley.edu)
-			- cfr			(shows givetocal's data)
-			- charterday		(ditto)
-			- compute.cnr		(shows nature)
-			- naturebeta.cnr	(shows nature)
-			- staff.cnr		(shows nature)
-			- cwh			(shows nature)
-			- diller		(403s over http, shows givetocal's data over https)
-			- discovercal		(shows givetocal's data)
-			- environmentalsciences	(shows nature)
-			- forestry		(shows nature)
-			- fundraising		(shows givetocal)
-			- hewlett		(shows givetocal's data)
-			- hewlettchallenge	(cert: devcomm.urel; shows givetocal's data)
+			- cfr ³
+			- charterday ³
+			- compute.cnr ²
+			- naturebeta.cnr ²
+			- staff.cnr ²
+			- cwh ²
+			- diller ³		(403s over http)
+			- discovercal ³
+			- idsg.eecs		(data differs)
+			- environmentalsciences ²
+			- forestry ²
+			- fundraising ³
+			- hewlett ³
+			- hewlettchallenge ³	(CN: devcomm.urel)
 			- homecoming		(prints domain name)
-			- hrweb			(ssl_error_rx_record_too_long)
-			- identity		(shows givetocal's data)
+			- hrweb ⁵
+			- identity ³
 			- ieas
 			- ims			(400; times out over https, so status unknown)
-			- inauguration		(shows givetocal's data)
+			- inauguration ³
 			- lawcat		(502)
 			- ls
 			- blogs.lib		(shows www.lib)
-			- mdp			(shows nature)
+			- mdp ²
 			- www.mip		(403)
-			- newalumnichallenge	(shows givetocal's data)
-			- newscenter		(rx_record_too_long)
-			- nst			(shows nature)
-			- nutrition		(shows nature)
-			- ourenvironment	(shows nature)
-			- socalevents		(rx_record_too_long)
-			- stadium		(shows givetocal's data)
+			- newalumnichallenge ³
+			- newscenter ⁵
+			- nst ²
+			- nutrition ²
+			- ourenvironment ²
+			- socalevents ⁵
+			- stadium ³
 			- systemstatus
 			- tiencenter		(valid cert; "Site Temporarily Unavailable" over http, so status unknown)
-			- urel			(cert: devcomm.urel; shows givetocal's data)
+			- urel ³		(CN: devcomm.urel)
 			- devcomm.urel		(403s over http; redirects to givetocal over https)
 
 		- (www.)ucbsystems.org
 
-	* Times out
+	¹ Times out
+	² Shows nature
+	³ Shows givetocal
+	⁴ Prints "No access to the $foo SSL site available."
+	⁵ http reply
 
 
 	Problematic subdomains:
 
 		- are *
+		- callcenter **
 		- cosmology	(works, self-signed)
+		- cs *
+		- eecs *
+		- graduation	(prints domain name; mismatched, CN: asterix.berkeley.edu)
 		- law *
 		- oskicat	(some [most?] pages redirect to http, scripts/ redirects to screens/ssoauth.html)
+		- ourpromise **
 
 	* Mismatch
+	** Shows givetocal
 
 
 	Partially covered subdomains:
 
-		- blogs		(at least some pages redirect to http)
+		- alumni *
+		- blogs *
+		- callcenter	(→ givetocal)
+		- graduation	(→ commencement)
+		- ourpromise	(→ givetocal)
+
+	* At least some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -79,8 +97,9 @@
 		- auth
 		- beartracks
 		- beartracks-new
+		- callink
 		- calnet.calnet
-		- cas-p[123].calnet
+		- cas-p[1-4].calnet
 		- net-auth.calnet
 		- (www.)cnr
 		- nature.cnr
@@ -92,6 +111,7 @@
 		- (www.)law
 		- (www.)lib
 		- nature
+		- oskicat	(→ oskicatp)
 		- oskicatp
 		- security
 		- fortuna.security
@@ -101,10 +121,11 @@
 		- wikihub-new
 
 
-	These targets are solely for wildcard cookies:
+	Covered wildcard cookies:
 
-		- *.events
-		- *.fortuna.security
+		- .events
+		- .fortuna.security
+		- .security
 
 
 	Other wildcard cookie domains observed:
@@ -112,92 +133,47 @@
 		- .
 		- .blogs.lib
 		- .campuslife
-		- .security
 
 -->
 <ruleset name="University of California, Berkeley (partial)">
 
 	<target host="*.berkeley.edu" />
+		<!--
+			These paths 302s to http:
+
+				- $
+				- community$
+				- donate$
+				- donate/new-alumni-challenge$
+				- events$
+				- join$
+						-->
+		<exclusion pattern="^http://alumni\.berkeley\.edu/(?!sites/)" />
 		<exclusion pattern="^http://blogs\.berkeley\.edu/(?:.+/)?(?:$|\?)" />
-	<target host="www.*.berkeley.edu" />
-	<target host="boinc.berkeley.edu" />
-	<target host="*.calnet.berkeley.edu" />
-	<target host="*.cnr.berkeley.edu" />
-	<target host="*.cs.berkeley.edu" />
-	<target host="*.eecs.berkeley.edu" />
-	<target host="*.events.berkeley.edu" />
-	<target host="services.housing.berkeley.edu" />
-	<target host="blu.is.berkeley.edu" />
-	<target host="*.ist.berkeley.edu" />
-	<target host="*.security.berkeley.edu" />
-	<target host="*.fortuna.security.berkeley.edu" />
-	<target host="*.urel.berkeley.edu" />
 
 
-	<securecookie host="^(?:\w.*|\.events|(?:\.fortuna)?\.security)\.berkeley\.edu$" name=".*" />
+	<securecookie host="^(?:\w.*|\.events|(?:\.fortuna)?\.security)\.berkeley\.edu$" name=".+" />
 
 
-	<!--	- Cert only matches *.berkeley
-
-		These paths 404:
-
-			- $
-			- about/$
-			- calendar/images/
-			- img/target/
-			- nc2.0/
-			- news2/2012/05/FreecyclePhoto60.jpg
-			- style/
-
-	<rule from="^https?://(?:www\.)?berkeley\.edu/()"
-		to="https://www.berkeley.edu/$1" /-->
-
-	<rule from="^http://(airbears|asterix|atcal|atcal-dev|auth|auth-key|beartracks(?:-new)?|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|calmail|(?:[\w\-]+\.)?calnet|career|ccc|ccc-dev|cnr|(nature|www)\.cnr|commencement|convio|code|auto(?:config|discover)\.(?:ee)?cs|developer|(?:auth|buffy)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-(?:code|ezsvn)-prod\.ist|ist|journalism|kb|lib|www\.lib|nature|or|oskicatp|scholarship|(?:fortuna\.)?security|seniors|(?:new)?students|sunsite|(?:urshare-prod1|wiki)\.urel|wikihub(?:-new)?)\.berkeley\.edu/"
+	<rule from="^http://(airbears|alumni|asterix|atcal|atcal-dev|auth|auth-key|beartracks(?:-new)?|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|callink|calmail|(?:[\w-]+\.)?calnet|career|ccc|ccc-dev|cnr|(nature|www)\.cnr|commencement|convio|code|auto(?:config|discover)\.(?:ee)?cs|developer|(?:auth|buffy)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-(?:code|ezsvn)-prod\.ist|ist|journalism|kb|lib|www\.lib|nature|or|oskicatp|scholarship|(?:fortuna\.)?security|seniors|(?:new)?students|sunsite|(?:urshare-prod1|wiki)\.urel|wikihub(?:-new)?)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
-
-	<!--	These paths 302s to http:
-
-			- $
-			- community$
-			- donate$
-			- donate/new-alumni-challenge$
-			- events$
-			- join$
-					-->
-	<rule from="^http://alumni\.berkeley\.edu/sites/"
-		to="https://alumni.berkeley.edu/sites/" />
 
 	<rule from="^http://(?:www\.)?(are|boinc)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
 
-	<!--	- Shows givetocal's data over https
-		- Redirects like so over http
-				-->
-	<rule from="^https?://callcenter\.berkeley\.edu/$"
+	<rule from="^http://callcenter\.berkeley\.edu/$"
 		to="https://givetocal.berkeley.edu/browse/?u=191" />
 
-	<!--	Cert doesn't match //cs, //eecs, nor law.	-->
-	<rule from="^https?://(?:www\.)?(cs|eecs|law)\.berkeley\.edu/"
+	<rule from="^http://(?:www\.)?(cs|eecs|law)\.berkeley\.edu/"
 		to="https://www.$1.berkeley.edu/" />
 
-	<!--	Data differ between http & https.
-	<rule from="^http://idsg\.eecs\.berkeley\.edu/"
-		to="https://idsg.eecs.berkeley.edu/" /-->
-
-	<!--	- Cert: asterix.berkeley.edu
-		- Prints domain name over https
-		- Redirects like so over http
-			-->
-	<rule from="^https?://graduation\.berkeley\.edu/$"
+	<rule from="^http://graduation\.berkeley\.edu/$"
 		to="https://commencement.berkeley.edu/" />
 
 	<rule from="^http://oskicatp?\.berkeley\.edu/"
 		to="https://oskicatp.berkeleye.edu/" />
 
-	<!--	- Shows givetocal's data over https
-		- Redirects like so over http
-			-->
-	<rule from="^https?://ourpromise\.berkeley\.edu/$"
+	<rule from="^http://ourpromise\.berkeley\.edu/$"
 		to="https://givetocal.berkeley.edu/browse/?u=174" />
 
 </ruleset>
