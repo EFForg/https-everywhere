@@ -1,18 +1,33 @@
 <!--
+	For problematic rules, see Popular_Mechanics.com-problematic.xml.
+
 	For other Hearst Corporation coverage, see Hearst-Corporation.xml.
 
+
+	CDN buckets:
+
+		- www.popularmechanics.com.edgesuite.net
+
+			- a1303.g.akamai.net
+
 -->
-<ruleset name="Popular Mechanics" default_off="mismatch">
+<ruleset name="Popular Mechanics (partial)">
 
 	<!--	Cert: subscribe.hearstmags.com	-->
 	<target host="popularmechanics.com" />
 	<!--	Akamai	-->
-	<target host="www.popularmechanics.com" />
+	<target host="*.popularmechanics.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?popularmechanics\.com/(?!cm/|favicon\.ico)" />
+		<!--
+			Paths are given relative to /, thereby breaking images:
+										-->
+		<exclusion pattern="^http://(?:www\.)?popularmechanics\.com/cm/popularmechanics/styles/(?:comments|flipbook3|global|promo_player)\.css" />
 
 
-	<!--	!www 301s to www.
-					-->
 	<rule from="^http://(?:www\.)?popularmechanics\.com/"
-		to="https://www.popularmechanics.com/" />
+		to="https://a248.e.akamai.net/f/1303/5377/4m/www.popularmechanics.com/" />
 
 </ruleset>
