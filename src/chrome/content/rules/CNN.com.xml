@@ -1,0 +1,58 @@
+<!--
+	CDN buckets:
+
+		- do17qa6ql691x.cloudfront.net
+
+		- cnnmoney.jobamatic.com
+
+			- jobsearch.money.cnn.com
+
+		- s.cdn.turner.com/money/
+
+
+	Nonfunctional domains:
+
+		- cnn.com subdomains:
+
+			- ^ *	
+			- ads *
+			- edition **
+			- money *
+			- realestate.money *
+			- svcs *
+			- us **
+			- www **
+
+		- i.cnn.net *
+
+	* Refused
+	** Dropped
+
+
+	Problematic subdomains:
+
+		- jobsearch.money	(works; mismatched, CN: *.jobamatic.com)
+
+
+	Fully covered subdomains:
+
+		- audience
+		- markets.money
+		- portfolio.money
+
+-->
+<ruleset name="CNN.com (partial)">
+
+	<target host="*.cnn.com" />
+
+
+	<securecookie host="^(?:audience|markets\.money)\.cnn\.com$" name=".+" />
+
+
+	<rule from="^http://(audience|(?:markets|portfolio)\.money)\.cnn\.com/"
+		to="https://$1.cnn.com/" />
+
+	<rule from="^http://jobsearch\.money\.cnn\.com/(c/|favicon\.ico)"
+		to="https://cnnmoney.jobamatic.com/$1" />
+
+</ruleset>
