@@ -10,10 +10,20 @@
 			- a1317.g.akamai.net
 
 
+	Nonfunctional subdomains:
+
+		- archive	(dropped)
+
+
 	Problematic subdomains:
 
 		- assets	(works, akamai)
 		- www		($ redirects to http, some paths work; akamai)
+
+
+	Fully covered subdomains:
+
+		- sub
 
 -->
 <ruleset name="Rolling Stone.com (partial)">
@@ -22,7 +32,7 @@
 		<!--
 			Avoid user-visible paths:
 							-->
-		<exclusion pattern="^http://www\.rollingstone\.com/(?!css/|images/|js/)" />
+		<exclusion pattern="^http://www\.rollingstone\.com/(?!assets/|css/|images/|js/)" />
 		<!--
 			global-2 breaks images/fe/sprite/socialIcons.*
 
@@ -39,13 +49,32 @@
 		<exclusion pattern="^http://www\.rollingstone\.com/css/fe/(?:(?:global-\d|homepage|taibbimodule|videos).\w{32}|rsplus)\.css" />
 
 
+	<!--	google-analytics.com tracking cookies:
+							-->
+	<securecookie host="^\.rollingstone\.com$" name="^__utm\w$" />
+	<securecookie host="^sub\.rollingstone\.com$" name=".+" />
+
+
 	<rule from="^http://rollingstone\.com/"
 		to="https://rollingstone.com/" />
+
+	<!--	assets/ redirects to http when rewritten to akamai.net/....www
+
+		This rule must be above the catch-all www rule.
+								-->
+	<rule from="^http://www\.rollingstone\.com/assets/"
+		to="https://a248.e.akamai.net/f/402/78/9m/assets.rollingstone.com/assets/" />
+
+	<rule from="^http://www\.rollingstone\.com/sub-text-link-a(?:\?.*)?$"
+		to="https://www.rollingstonesubscriptions.com/storefront/link/1005317.html" />
 
 	<rule from="^http://www\.rollingstone\.com/"
 		to="https://a248.e.akamai.net/f/1317/1860/6m/www.rollingstone.com/" />
 
 	<rule from="^http://assets\.rollingstone\.com/"
 		to="https://a248.e.akamai.net/f/402/78/9m/assets.rollingstone.com/" />
+
+	<rule from="^http://sub\.rollingstone\.com/"
+		to="https://sub.rollingstone.com/" />
 
 </ruleset>
