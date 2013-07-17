@@ -1,0 +1,117 @@
+<!--
+	For problematic rules, see Louisiana_State_University-problematic.xml.
+
+
+		- lsu.catalog.acalog.com
+
+			- catalog
+
+
+	Nonfunctional subdomains:
+
+		- (www.)bgtplan
+		- catalog	("not available at this address"; mismatched, CN: *.acalogadmin.com)
+		- gradlsu.gs *
+		- www.oip *
+		- www.phys *
+		- uiswcmsweb.prod *
+		- research *
+		- autoconnect	(reset)
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- (www.)familes	(mismatched, CN: studlife-web1.lsu.edu)
+		- my		(works; mismatched, CN: mylsu.apps.lsu.edu)
+		- appl008.ocs	(mismatched, CN: appl008.lsu.edu)
+		- appl037.ocs	(mismatched, CN: appl037.lsu.edu)
+		- www.sg	(mismatched, CN: studlife-web1.lsu.edu)
+
+
+	Partially covered subdomains:
+
+		- careercenter *
+		- (www.)cas *
+		- (www.)deanofstudents *
+		- (www.)families *	(→ studlife-web1)
+		- (www.)fye *
+		- (www.)greeks *
+		- (www.)sfmc *
+		- (www.)sg *		(www → ^)
+		- (www.)studentlife *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- appl00[38]
+		- appl037
+
+		- apps subdomains:
+
+			- calendar
+			- mylsu
+			- myproxy
+			- web
+
+		- grok subdomains:
+
+			- (www.)
+			- connect
+			- moodle2
+			- networking
+
+		- itservice
+		- appl00[38].ocs	(→ appl00[38])
+		- appl037.ocs		(→ appl037)
+		- sso.paws
+		- (www.)saa
+		- jlee.saa
+		- sites01
+		- lsumvs.sncc
+		- piwik.uss
+
+-->
+<ruleset name="Louisiana State University (partial)">
+
+	<target host="lsu.edu" />
+	<target host="*.lsu.edu" />
+		<exclusion pattern="^http://(?:careercenter|(?:www\.)?(?:cas|deanofstudents|families|fye|greeks|sg|sfmc|studentlife))\.lsu\.edu/(?!favicon\.ico|misc/|sites/)" />
+
+
+	<securecookie host="^(?:(?:calendar|mylsu|myproxy|web)\.apps|\.grok|sso\.paws|\.saa|sites01)\.lsu\.edu$" name=".+" />
+
+
+	<!--	Domains for which both ^foo and www.foo exist,
+		but only www.foo works without caveats:
+							-->
+	<rule from="^http://(?:www\.)?lsu\.edu/"
+		to="https://www.lsu.edu/" />
+
+	<rule from="^http://appl0(08|37)(?:\.ocs)?\.lsu\.edu/"
+		to="https://appl0$1.lsu.edu/" />
+
+	<rule from="^http://((?:calendar|careercenter|mylsu|myproxy|web)\.apps|(?:connect|moodle2|networking)\.grok|itservice|sso\.paws|jlee\.saa|sites01|lsumvs\.sncc|piwik\.uss)\.lsu\.edu/"
+		to="https://$1s.lsu.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo
+		exist, and both work, with valid certs:
+							-->
+	<rule from="^http://(www\.)?(cas|deanofstudents|fye|greeks|grok|saa|sfmc|studentlife)\.lsu\.edu/"
+		to="https://$1$2.lsu.edu/" />
+
+	<rule from="^http://(?:www\.)?families\.lsu\.edu/"
+		to="https://studlife-web1.lsu.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo exist,
+		but only ^foo works without caveats:
+							-->
+	<rule from="^http://(?:www\.)?sg\.lsu\.edu/"
+		to="https://sg.lsu.edu/" />
+
+</ruleset>
