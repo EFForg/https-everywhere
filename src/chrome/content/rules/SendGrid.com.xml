@@ -1,0 +1,30 @@
+<!--
+		- sendgrid.zendesk.com
+
+			- support
+
+
+	Problematic subdomains:
+
+		- assets[1-4]	(mismatched, CN: sendgrid.com)
+		- support	(pages redirect to http, zendesk)
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="SendGrid.com (partial)">
+
+	<target host="sendgrid.com" />
+	<target host="www.sendgrid.com" />
+		<!--exclusion pattern="^http://(www\.)?sendgrid\.com/($|\?|newsletter/getSubscriptionWidget)" /-->
+		<exclusion pattern="^http://(?:www\.)?sendgrid\.com/(?!assets_ca/|favicon\.ico|(?:femr/turn_iframe|user)(?:$|[?/])|images/|mkt/assets/)" />
+
+
+	<rule from="^http://(?:assets\d\.|(www\.))?sendgrid\.com/"
+		to="https://$1sendgrid.com/" />
+
+	<rule from="^http://support\.sendgrid\.com/(assets/|favicon\.ico|system/)"
+		to="https://assets.zendesk.com/$1" />
+
+</ruleset>
