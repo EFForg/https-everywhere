@@ -6,50 +6,215 @@
 
 		- yahoo.co.jp subdomains:
 
+			- (www.) *
+			- advertising *
 			- rd.ane *
+
+			- auctions subdomains:
+
+				- ^ *
+				- closeduser *
+				- special *
+
+			- avtimg *
 			- blogs *
 			- img5.blogs *
+			- bookmarks *
+			- business *
+			- card **
+
+			- chiebukuro subdomains:
+
+				- answer *
+				- detail *
+				- list *
+				- my *
+				- note *
+
+			- commerceapp *
+			- creative-award *
+			- crowdsourcing *
+
+			- dailynews subdomains:
+
+				- ^ *
+				- backnumber *
+				- polls *
+
+			- docs *
+			- business.ec *
+			- guide.ec *
+			- geocities *
+			- headlines *
+			- kaitori	(redirects to http, valid cert)
+			- listing *
+			- loco *
+			- locoplace *
+			- mail *
+			- info.mail *
+
+			- news subdomains:
+
+				- bylines *
+				- promo *
+				- public *
+				- zasshi *
+
+			- otonato *
 			- im.ecnavi.ov *
+			- im.ov *
+
+			- partner subdomains:
+
+				- ^ *
+				- edit *
+				- event *
+				- search *
+
+			- premium **
+			- privacy *
+			- promotion *
+			- promotionalads *
+			- rd *
+			- rdsig *
+			- renai *
+			- otona.renai *
+
+			- search subdomains:
+
+				- ^ *
+				- chiebukuro *
+				- info *
+				- news *
+				- promo *
+
+			- searchblog *
+			- searchranking *
+			- seiji **
+			- senkyo *
+
+			- shopping subdomains:
+
+				- ^ *
+				- store *
+				- topics *
+				- tpoint *
+
+			- smartapp *
+			- spmanager *
+			- webtraining.stepup *
+			- worldfriends.stepup *
+			- bs.store *
+			- urd *
+			- yjaxc *
 
 	* Times out
-
+	** 404, valid cert
 
 	Problematic domains:
 
+		- id.yahoo.co.jp	(works; mismatched, CN: docs.id.yahoo.co.jp)
+		- stepup.yahoo.co.jp	(mismatched, CN: secure.stepup.yahoo.co.jp)
+		- item.shopping.c.yimg.jp	(works; mismatched, CN: *.c.yimg.jp)
 		- i.yimg.co.jp ***
+		- k.yimg.jp ***
 
 	*** Dropped
+
+
+	Partially covered domains:
+
+		- omiai.yahoo.co.jp		(at least some pages redirect to http)
+		- custom.search.yahoo.co.jp	(at least $ redirects to http)
 
 
 	Fully covered domains:
 
 		- yahoo.co.jp subdomains:
 
+			- adserver
+			- contact.advertising
+			- ard
 			- b[35-9]
 			- b10
+
+			- business subdomains:
+
+				- forms
+				- ols
+				- yadui
+
+			- biz-form.ec
+			- help
+			- docs.id
+			- login
+			- ms
+			- form.ms
+			- details.payment
 			- pclick
+			- points
+			- biz.points
+			- secure.promotionalads
+			- lot.sample
+			- s.sample
+			- odhistory.shopping
+			- stepup	(→ secure.stepup)
+			- secure.stepup
+			- order.store
+			- yeas
+
+		- www.yahoo-help.jp
 
 		- yimg.jp subdomains:
 
 			- ai		(→ s.yimg.jp)
-			- ident.c
+
+			- *.c:
+				- amd
+				- chie
+				- ident
+				- im
+				- lpt
+				- news
+				- puffer
+				- qr
+				- rpr
+
 			- i		(→ s.yimg.jp)
+			- k		(→ s.yimg.jp)
 			- s
+
+
+	^yahoo-help.jp does not exist.
 
 -->
 <ruleset name="Yahoo! Japan (partial)">
 
 	<target host="*.yahoo.co.jp" />
+		<exclusion pattern="^http://custom\.search\.yahoo\.co\.jp/(?!favicon\.ico|images/)" />
+		<exclusion pattern="^http://omiai\.yahoo\.co\.jp/(?!favicon\.ico)" />
+	<target host="www.yahoo-help.jp" />
 	<target host="*.yimg.jp" />
 
 
-	<rule from="^http://(b\d+|pclick)\.yahoo\.co\.jp/"
+	<securecookie host="^\.yahoo\.co\.jp$" name="^B$" />
+	<securecookie host="^\.forms\.business\.yahoo\.co\.jp$" name=".+" />
+	<securecookie host="^www\.yahoo-help\.jp$" name=".+" />
+
+
+	<rule from="^http://(adserver|contact\.advertising|ard|b\d+|(?:forms|ols|yadui)\.business|biz-form\.ec|help|docs\.id|login|ms|form\.ms|omiai|details\.payment|pclick|(?:biz\.)?points|secure\.promotionalads|(?:lot|s)\.sample|custom\.search|odhistory\.shopping|order\.store|yeas)\.yahoo\.co\.jp/"
 		to="https://$1.yahoo.co.jp/" />
 
-	<rule from="^http://(?:a[hi]?|i|s)\.yimg\.jp/"
+	<rule from="^http://(?:secure\.)?stepup\.yahoo\.co\.jp/"
+		to="https://secure.stepup.yahoo.co.jp/" />
+
+	<rule from="^http://www\.yahoo-help\.jp/"
+		to="https://www.yahoo-help.jp/" />
+
+	<rule from="^http://(?:a[hi]?|[ik]|s)\.yimg\.jp/"
 		to="https://s.yimg.jp/" />
 
-	<rule from="^http://ident\.c\.yimg\.jp/"
-		to="https://ident.c.yimg.jp/" />
+	<rule from="^http://([\w-]+)\.c\.yimg\.jp/"
+		to="https://$1.c.yimg.jp/" />
 
 </ruleset>
