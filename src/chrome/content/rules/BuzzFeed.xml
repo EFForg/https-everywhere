@@ -1,13 +1,18 @@
 <!--
 	CDN buckets:
 
+		- buzzfeed-static.s3.amazonaws.com
+
 		- wac.09fc.edgecastcdn.net/??09FC/
 
+			- s3-ec.buzzfed.com
 			- ct.buzzfeed.com
 
 		- s.buzzfeed.com.edgesuite.net
 
 			- pglb.buzzfed.com
+			- s.buzzfed.com
+			- s3-ak.buzzfed.com
 
 
 	Nonfunctional domains:
@@ -18,8 +23,18 @@
 
 	Problematic domains:
 
-		- s3-ak.buzzfed.com	(akamai)
-		- s3-ec.buzzfed.com	(edgecast)
+		- s.buzzfed.com *
+		- s3-ak.buzzfed.com *
+		- s3-ec.buzzfed.com	(404, edgecast)
+
+	* 503, akamai
+
+
+	Fully covered domains:
+
+		- s.buzzfed.com *
+
+	* → buzzfeed-static.s3.amazonaws.com
 
 -->
 <ruleset name="BuzzFeed">
@@ -35,7 +50,7 @@
 	<rule from="^http://(www\.)?buzzfeed\.com/"
 		to="https://$1buzzfeed.com/" />
 
-	<rule from="^http://s3-(?:ak|ec)\.buzzfed\.com/"
+	<rule from="^http://s(?:3-ak|3-ec)?\.buzzfed\.com/"
 		to="https://buzzfeed-static.s3.amazonaws.com/" />
 
 </ruleset>
