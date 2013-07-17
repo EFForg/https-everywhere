@@ -9,6 +9,9 @@
 
 		- d3j5vwomefv46c.cloudfront.net
 
+		- kaw.stb.s-msn.com.edgekey.net
+		- kaw.stc.s-msn.com.edgekey.net
+
 		- assets.msnbc.msn.com.edgesuite.net
 
 			- assets[1-4]c.msnbc.msn.com
@@ -52,6 +55,11 @@
 
 			- img[123].catalog.video.msn.com
 
+		- wonderwall.vo.msecnd.net
+
+			- static.wonderwall.com
+			- static[1-5].wonderwall.com
+
 
 	Nonfunctional domains:
 
@@ -67,6 +75,10 @@
 			- fitbie		(503, akamai)
 			- healthyliving *
 			- jp
+			- ads1.jp		(404, valid cert)
+			- sankei.jp *
+			- r.sankei.jp *
+			- utm.sankei.jp *
 			- living *
 			- money
 			- onmobile
@@ -82,6 +94,7 @@
 			- prodigy *
 			- static.stratosphere	(400; mismatched, CN: images.partner.windowsphone.com)
 			- socialvoices.uk ***
+			- stjjp *
 			- vfcdn **
 			- www			(404)
 			- co3.www *
@@ -100,6 +113,7 @@
 			- hlc *
 			- hli *
 			- livc *
+			- kaw.st[bc] *
 			- img.widgets.video	(503, akamai)
 
 	* Times out
@@ -114,6 +128,7 @@
 
 		- msn.com subdomains:
 
+			- c.jp			(mismatched, CN: c.msn.co.jp)
 			- assets[1-4]d.msnbc		(works, akamai)
 			- media.msnbc ***
 			- msnbcmedia ***
@@ -156,15 +171,21 @@
 			- img3.catalog.video *
 			- img1.video **
 
+		- static.wonderwall.com ****
+		- static[1-5].wonderwall.com ****
+
 
 	* Works, akamai
 	** CN: *.sharepointonline.com; works
 	*** Sometimes works, sometimes 403s; akamai
+	**** 400; mismatched, CN: images.partner.windowsphone.com
 
 
 	Fully covered domains:
 
 		- static[12]?.glo.com
+
+		- c.msn.co.jp
 
 		- msn.com subdomains:
 
@@ -186,6 +207,8 @@
 			- (www.)hotmail
 			- hp
 			- imgs1-video
+			- c.jp		(→ c.msn.co.jp)
+			- msndata.jp
 
 			- msnbc subdomains:
 
@@ -212,6 +235,7 @@
 			- stratosphere
 			- static.stratosphere	(→ az29590.vo.msecnd.net)
 			- catalog.video
+			- wonderwall
 
 		- s-msn.com subdomains:
 
@@ -221,7 +245,11 @@
 			- media-social
 
 			- blu.st[bc]
+			- kaw.stb
 			- st[cj]-now
+
+		- static.wonderwall.com		(→ wonderwall.msn.com)
+		- static[1-5].wonderwall.com	(→ wonderwall.msn.com)
 
 	* → akamai
 
@@ -229,14 +257,17 @@
 <ruleset name="MSN (partial)">
 
 	<target host="*.glo.com" />
+	<target host="*.msn.co.jp" />
 	<target host="*.msn.com" />
 		<!--exclusion pattern="^http://www.msnbc.msn.com/(?!id/)" /-->
 	<target host="*.s-msn.com" />
+	<target host="*.wonderwall.com" />
 
 
 	<!--	Set by c.atdmt.com:
 						-->
-	<securecookie host="^\.msn\.com$" name="^MUID$" />
+	<securecookie host="^\.msn\.co(?:\.jp|m)$" name="^MUID$" />
+	<securecookie host="^\.msn\.com$" name="^s_\w+$" />
 	<!--securecookie host="^\.msn\.com$" name="(cbus|Sample)$" /-->
 	<securecookie host="^(?:\.c|now)\.msn\.com$" name=".+" />
 
@@ -244,11 +275,14 @@
 	<rule from="^http://static[12]?\.glo\.com/"
 		to="https://glo.msn.com/" />
 
+	<rule from="^http://c\.(?:msn\.co\.jp|jp\.msn\.com)/"
+		to="https://c.msn.co.jp/" />
+
 	<!--	c.msn.com redirects to c.atdmt.com with
 		a unique ID, which then redirects back
 		to c.msn, with the unique ID appended.
 				-->
-	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|eb\.my|now|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|udc|catalog\.video)\.msn\.com/"
+	<rule from="^http://(ac3|accountservices|adsyndication|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|msndata\.jp|eb\.my|now|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|udc|catalog\.video|wonderwall)\.msn\.com/"
 		to="https://$1.msn.com/" />
 
 	<rule from="^http://\w\w\.c\.msn\.com/"
@@ -266,7 +300,7 @@
 	<rule from="^http://static\.stratosphere\.msn\.com/"
 		to="https://az29590.vo.msecnd.net/" />
 
-	<rule from="^http://(entcss|entimg|media-social|blu\.st[bc]|st[cj]-now)\.s-msn\.com/"
+	<rule from="^http://(entcss|entimg|media-social|blu\.st[bc]|kaw\.stb|st[cj]-now)\.s-msn\.com/"
 		to="https://$1.s-msn.com/" />
 
 	<rule from="^http://cpc\.db3\.s-msn\.com/"
@@ -276,5 +310,10 @@
 
 	<rule from="^http://(\w+)\.st(b|c|j)?\d*\.s-msn\.com/"
 		to="https://$1.st$2.s-msn.com/" /-->
+
+	<!--	wonderwall.vo.msecnd.net 400s:
+						-->
+	<rule from="^http://static\d?\.wonderwall\.com/"
+		to="https://wonderwall.msn.com/" />
 
 </ruleset>
