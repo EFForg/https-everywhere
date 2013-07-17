@@ -41,6 +41,10 @@
 			- a1073.g.akamai.net
 			- img2-3.timeinc.net
 
+		- img2-short.timeinc.net.edgesuite.net
+
+			- a760.g.akamai.net
+
 		- i2.akamai.timeinc.net
 
 			- i2.timeinc.net
@@ -56,6 +60,7 @@
 
 		- img2.timeinc.net *
 		- img2-[123].timeinc.net *
+		- img2-short.timeinc.net *
 
 	* Works, akamai
 
@@ -63,6 +68,8 @@
 	Fully covered domains:
 
 		- timeinc.brightcove.com.edgesuite.net	(→ akamai)
+
+		- subscription.timeinc.com
 
 		- timeinc.net subdomains:
 
@@ -76,16 +83,19 @@
 <ruleset name="Time Inc (partial)">
 
 	<target host="timeinc.brightcove.com.edgesuite.net" />
-	<target host="subscription-assets.timeinc.com" />
+	<target host="*.timeinc.com" />
 	<target host="timeinc.net" />
 	<target host="*.timeinc.net" />
+
+
+	<securecookie host="^subscription\.timeinc\.com$" name=".+" />
 
 
 	<rule from="^http://timeinc\.brightcove\.com\.edgesuite\.net/"
 		to="https://a248.e.akamai.net/f/1213/768/4m/timeinc.brightcove.com.edgesuite.net/" />
 
-	<rule from="^http://subscription-assets\.timeinc\.com/"
-		to="https://subscription-assets.timeinc.com/" />
+	<rule from="^http://subscription(-assets)?\.timeinc\.com/"
+		to="https://subscription$1.timeinc.com/" />
 
 	<rule from="^http://(i2\.|www\.)?timeinc\.net/"
 		to="https://$1timeinc.net/" />
@@ -107,5 +117,8 @@
 
 	<rule from="^http://img2-3\.timeinc\.net/"
 		to="https://a248.e.akamai.net/f/1073/96/1m/img2-3.timeinc.net/" />
+
+	<rule from="^http://img2-short\.timeinc\.net/"
+		to="https://a248.e.akamai.net/f/760/1695/4m/img2-short.timeinc.net/" />
 
 </ruleset>
