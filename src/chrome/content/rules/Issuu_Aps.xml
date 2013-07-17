@@ -1,4 +1,10 @@
 <!--
+	CDN buckets:
+
+		- s3.amazonaws.com/feed.issuu.com/
+		- s3.amazonaws.com/sidebar.issuu.com/
+
+
 	Nonfunctional subdomains:
 
 		- (www.)	(200 "PAGE NOT FOUND", valid cert)
@@ -10,10 +16,13 @@
 	<target host="*.issuu.com" />
 
 
+	<rule from="^http://(feed|sidebar)\.issuu\.com/"
+		to="https://s3.amazonaws.com/$1.issuu.com/" />
+
 	<rule from="^http://help\.issuu\.com/(generated|system)/"
 		to="https://assets.zendesk.com/$1/" />
 
-	<rule from="^http://s(kin|tatic)\.issuu\.com/"
-		to="https://s$1.issuu.com/" />
+	<rule from="^http://(image|skin|static)\.issuu\.com/"
+		to="https://$1.issuu.com/" />
 
 </ruleset>
