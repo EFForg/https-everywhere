@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional subdomains:
+
+		- piwik *
+		- www.students *
+		- www.ub **
+
+	* Refused
+	** http reply
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- www.sportzentrum	(works; mismatched, CN: www.uni-passau.de)
+		- (www.)students	(refused)
+		- rz			(cert only matches www.rz)
+
+
+	Partially covered subdomains:
+
+		- (www.) *		(^ → www)
+		- (www.)students	(→ www)
+		- (www.)rz *		(^ → www)
+
+	* $ redirects to http
+
+
+	Fully covered subdomains:
+
+		- blog
+		- uniblog.rzblogs
+
+-->
+<ruleset name="University of Passau (partial)">
+
+	<target host="uni-passau.de" />
+	<target host="*.uni-passau.de" />
+		<exclusion pattern="^http://(?:www\.)?(?:rz\.)?uni-passau\.de/(?:$|\?)" />
+		<!--exclusion pattern="^http://(?:www\.)?uni-passau\.de/(?!favicon\.ico|fileadmin/|kontakt(?:$|[?/])|typo3(?:conf|temp)/|uploads/)" /-->
+
+
+	<securecookie host="^www\.(?:rz\.)?uni-passau\.de$" name="^fe_typo_user$" />
+
+
+	<!--	Domains for which both ^foo and www.foo exist, but
+		only www.foo works and presents a valid cert:
+								-->
+	<rule from="^http://(?:www\.)?(rz\.)?uni-passau\.de/"
+		to="https://www.$1uni-passau.de/" />
+
+	<rule from="^http://(blog|uniblog\.rzblogs)\.uni-passau\.de/"
+		to="https://$1.uni-passau.de/" />
+
+	<rule from="^http://(?:www\.)?students\.uni-passau\.de/(\?.*)?$"
+		to="https:///www.uni-passau.de/hochschulgruppen.html$1" />
+
+</ruleset>
