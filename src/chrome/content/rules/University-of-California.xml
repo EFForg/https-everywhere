@@ -5,7 +5,7 @@
 
 		- ucsb.edu subdomains:
 
-		- www.ia.ucsb.edu	(reset)
+			- www.ia		(reset)
 			- www.presidency	(mismatched, CN: secure.lsit.ucsb.edu)
 
 
@@ -18,33 +18,25 @@
 -->
 <ruleset name="University of California (partial)">
 
-	<target host="ics.uci.edu" />
-	<target host="*.ics.uci.edu" />
-	<target host="*.ucsb.edu"/>
-	<target host="www.admissions.ucsb.edu"/>
-	<target host="www.cs.ucsb.edu" />
-	<target host="extension.ucsb.edu"/>
-	<target host="ftp.ucsb.edu"/>
-	<target host="login.proxy.library.ucsb.edu"/>
+	<target host="*.uci.edu" />
+	<target host="*.ucsb.edu" />
+		<exclusion pattern="^http://extension\.ucsb\.edu/(?!css/|images/|portal/)" />
 
 
-	<securecookie host="^(.*\.)?ics\.uci\.edu$" name=".*" />
+	<securecookie host="^(?:.*\.)?ics\.uci\.edu$" name=".+" />
+	<securecookie host="^www\.admissions\.ucsb\.edu$" name=".+" />
 
 
 	<rule from="^http://(archive\.|www\.)?ics\.uci\.edu/"
 		to="https://$1ics.uci.edu/" />
 
-	<rule from="^http://(www\.)?admissions\.ucsb\.edu/"
-		to="https://www.admissions.ucsb.edu/"/>
+	<rule from="^http://(?:www\.)?admissions\.ucsb\.edu/"
+		to="https://www.admissions.ucsb.edu/" />
 
-	<rule from="^http://(www\.cs|ftp|secure\.lsit)\.ucsb\.edu/" to="https://$1.ucsb.edu/"/>
-
-	<rule from="^http://extension\.ucsb\.edu/(css|images|portal)/"
-		to="https://extension.ucsb.edu/$1s/"/>
+	<rule from="^http://(www\.cs|extension|ftp|secure\.lsit)\.ucsb\.edu/"
+		to="https://$1.ucsb.edu/" />
 
 	<rule from="^http://login\.proxy\.library\.ucsb\.edu(:\d+)?/"
-		to="https://login.proxy.library.ucsb.edu/"/>
+		to="https://login.proxy.library.ucsb.edu/" />
 
-	<securecookie host="^www\.admissions\.ucsb\.edu$" name=".*"/>
-	
 </ruleset>
