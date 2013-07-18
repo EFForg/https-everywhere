@@ -1,0 +1,47 @@
+<!--
+	For problematic rules, see University_of_Tuebingen-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- www-rsec.cs	(http reply)
+
+
+	Problematic subdomains:
+
+		- ^		(invalid cert)
+		- zdv *
+		- www.zdv *
+
+	* Works, invalid cert
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- epv-welt
+		- campus.verwaltung
+		- zdv		(→ www)
+
+
+	Note: ^zdv shows www over http.
+
+-->
+<ruleset name="University of Tübingen (partial)">
+
+	<target host="uni-tuebingen.de" />
+	<target host="*.uni-tuebingen.de" />
+
+
+	<securecookie host="^\.uni-tuebingen\.de$" name="^fe_typo_user$" />
+	<!--securecookie host="^\.uni-tuebingen\.de$" name="^mobile$" /-->
+	<securecookie host="^epv-welt\.uni-tuebingen\.de$" name=".+" />
+
+
+	<rule from="^http://(?:zdv\.|www\.)?uni-tuebingen\.de/"
+		to="https://www.uni-tuebingen.de/" />
+
+	<rule from="^http://(campus\.verwaltung|epv-welt)\.uni-tuebingen\.de/"
+		to="https://$1.uni-tuebingen.de/" />
+
+</ruleset>
