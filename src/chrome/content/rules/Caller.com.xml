@@ -1,0 +1,77 @@
+<!--
+	CDN buckets:
+
+		- media.caller.com.edgesuite.net
+
+			- a1263.g.akamai.net
+
+		- web.caller.com.edgesuite.net
+
+			- a1672.g.akamai.net
+
+		- a05579b1b3cca7a69ff4-7250fbd4027ea93be8cfd439f360b464.r0.cf1.rackcdn.com
+
+
+	Nonfunctional subdomains:
+
+		- cars2 *
+		- homesearch *
+		- links *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- cars *
+		- homes *
+		- jobs *
+		- media **
+		- web **
+
+	* Works; mismatched, CN: push.scrippsing.com
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- jobs		(→ www)
+		- login
+		- media *
+		- web *
+
+	* → akamai
+
+
+	Mixed image on www from links
+
+-->
+<ruleset name="Caller.com (partial)">
+
+	<target host="caller.com" />
+	<target host="*.caller.com" />
+
+
+	<securecookie host="^(?:login)?\.caller\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?caller\.com/"
+		to="https://www.caller.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://jobs\.caller\.com/.*"
+		to="https://www.caller.com/hotjobs" />
+
+	<rule from="^http://login\.caller\.com/"
+		to="https://login.caller.com/" />
+
+	<rule from="^http://media\.caller\.com/"
+		to="https://a248.e.akamai.net/f/1263/6469/4m/media.caller.com/" />
+
+	<rule from="^http://web\.caller\.com/"
+		to="https://a248.e.akamai.net/f/1672/4197/3m/web.caller.com/" />
+
+</ruleset>
