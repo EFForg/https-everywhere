@@ -6,6 +6,11 @@
 
 		- trend-fail.download.trendmicro.com.edgesuite.net
 
+		- global-web.trendmicro.com.edgesuite.net
+
+			- a489.g.akamai.net
+			- countermeasures.trendmicro.eu
+
 
 	Nonfunctional domains:
 
@@ -34,6 +39,11 @@
 
 		- countermeasures.trendmicro.eu		(works, akamai)
 
+
+	Partially covered domains:
+
+		- countermeasures.trendmicro.eu		(→ akamai)
+
 -->
 <ruleset name="Trend Micro (partial)">
 
@@ -41,6 +51,14 @@
 	<target host="*.trendmicro.com" />
 	<target host="trendmicro.eu" />
 	<target host="*.trendmicro.eu" />
+		<!--
+			Exclude user-visible paths:
+							-->
+		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/(?!favicon\.ico|wp-content/)" />
+		<!--
+			styles.css links to image relative to /
+								-->
+		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/wp-content/plugins/youtube-channel-gallery/styles\.css" />
 
 
 	<securecookie host="^esupport\.trendmicro\.com$" name=".+" />
@@ -54,5 +72,8 @@
 
 	<rule from="^http://(partnerlocator\.|www\.)?trendmicro\.eu/"
 		to="https://$1trendmicro.eu/" />
+
+	<rule from="^http://countermeasures\.trendmicro\.eu/"
+		to="https://a248.e.akamai.net/f/489/2696/8m/countermeasures.trendmicro.eu/" />
 
 </ruleset>
