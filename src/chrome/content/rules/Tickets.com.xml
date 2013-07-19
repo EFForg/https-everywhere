@@ -6,25 +6,32 @@
 
 	CDN buckets:
 
-		- a248.e.akamai.net/f/248/8705/1h/images.tickets.com/
+		- a248.e.akamai.net/f/248/8705/1[dh]/images.tickets.com/
+		- d17e7uh9u4v5ad.cloudfront.net
 
 
 	Nonfunctional subdomains:
 
-		- (www.)
-		- purchase
+		- purchase	(refused)
 
 
 	Problematic subdomains:
 
+		- ^			(cert only matches www)
 		- facebook
 		- frontline.images	(works, akamai)
 		- youtube
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www)
 
 -->
 <ruleset name="Tickets.com (partial)">
 
 	<target host="broadcaster.email-tickets.com" />
+	<target host="tickets.com" />
 	<target host="*.tickets.com" />
 
 
@@ -34,6 +41,9 @@
 
 	<rule from="^http://broadcaster\.email-tickets\.com/"
 		to="https://broadcaster.email-tickets.com/" />
+
+	<rule from="^http://(?:www\.)?tickets\.com/(images/|user(?:$|[?/]))"
+		to="https://www.tickets.com/$1" />
 
 	<rule from="^http://facebook\.tickets\.com/[^?]*(\?.*)?"
 		to="https://www.facebook.com/pages/Ticketscom/43749304172$1" />
