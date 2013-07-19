@@ -1,19 +1,74 @@
 <!--
+	CDN buckets:
+
+		- media.tcpalm.com.edgesuite.net
+
+			- a1683.g.akamai.net
+
+		- web.tcpalm.com.edgesuite.net
+
+			- a194.g.akamai.net
+
+		- 8ca6b18bf7d72ef21bc1-160e49a758c1cd43544365a628f11bb4.r40.cf1.rackcdn.com
+
+
+	Nonfunctional subdomains:
+
+		- cars2		(dropped)
+
+
 	Problematic subdomains:
 
-		- media		(works, akamai)
+		- ^ *
+		- cars *
+		- homes *
+		- jobs *
+		- m *
+		- media **
+		- web **
+
+	* Works; mismatched, CN: push.scrippsing.com
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- jobs		(→ www)
+		- login
+		- media *
+		- web *
+
+	* → akamai
 
 -->
-<ruleset name="TCPalm.com" platform="mixedcontent">
+<ruleset name="TCPalm.com (partial)">
 
 	<target host="tcpalm.com" />
-	<target host="www.tcpalm.com" />
+	<target host="*.tcpalm.com" />
 	<target host="tcpalmextras.com" />
 	<target host="www.tcpalmextras.com" />
 
 
+	<securecookie host="^(?:login)?\.tcpalm\.com$" name=".+" />
+
+
 	<rule from="^https?://(?:www\.)?tcpalm\.com/"
 		to="https://www.tcpalm.com/" />
+
+	<!--	Server does not drop path:
+						-->
+	<rule from="^http://jobs\.tcpalm\.com/"
+		to="https://www.tcpalm.com/hotjobs" />
+
+	<rule from="^http://login\.tcpalm\.com/"
+		to="https://login.tcpalm.com/" />
+
+	<rule from="^http://media\.tcpalm\.com/"
+		to="https://a248.e.akamai.net/f/1683/5970/9m/media.tcpalm.com/" />
+
+	<rule from="^http://web\.tcpalm\.com/"
+		to="https://a248.e.akamai.net/f/194/4034/1m/web.tcpalm.com/" />
 
 	<rule from="^http://(www\.)?tcpalmextras\.com/"
 		to="https://$1tcpalmextras.com/" />
