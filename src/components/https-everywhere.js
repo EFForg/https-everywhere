@@ -6,6 +6,10 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
+// PREFERENCE BRANCHES
+PREFBRANCH_ROOT=0;
+PREFBRANCH_RULE_TOGGLE=1;
+
 //---------------
 
 https_domains = {};              // maps domain patterns (with at most one
@@ -179,6 +183,7 @@ function HTTPSEverywhere() {
   this.ApplicableList = ApplicableList;
   
   this.prefs = this.get_prefs();
+  this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -194,6 +199,23 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
+
+  // preference migrations
+  /*var prefs_version = this.prefs.getIntPref("prefs_version");
+  if(prefs_version == 0) {
+    var nBox = gBrowser.getNotificationBox();
+    var strings = document.getElementById('HttpsEverywhereStrings');
+    var msg = strings.getString('https-everywhere.migration.notification0');
+    nBox.appendNotification(
+      msg, 
+      'https-everywhere-migration0', 
+      'chrome://https-everywhere/skin/https-everywhere-24.png', 
+      nBox.PRIORITY_WARNING_MEDIUM
+    );
+
+    this.prefs.setIntPref("prefs_version", prefs_version+1);
+  }*/
+
   return;
 }
 
@@ -596,33 +618,38 @@ HTTPSEverywhere.prototype = {
     return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
-  get_prefs: function() {
-      // get our preferences branch object
-      // FIXME: Ugly hack stolen from https
-      var branch_name = "extensions.https_everywhere.";
-      var o_prefs = false;
-      var o_branch = false;
-      // this function needs to be called from inside https_everywhereLog, so
-      // it needs to do its own logging...
-      var econsole = Components.classes["@mozilla.org/consoleservice;1"]
-          .getService(Components.interfaces.nsIConsoleService);
+  get_prefs: function(prefBranch = PREFBRANCH_ROOT) {
+    // get our preferences branch object
+    // FIXME: Ugly hack stolen from https
+    var branch_namel
+    if(prefBranch == PREFBRANCH_RULE_TOGGLE)
+      branch_name = "extensions.https_everywhere.rule_toggle.";
+    else
+      branch_name = "extensions.https_everywhere.";
+    var o_prefs = false;
+    var o_branch = false;
+    // this function needs to be called from inside https_everywhereLog, so
+    // it needs to do its own logging...
+    var econsole = Components.classes["@mozilla.org/consoleservice;1"]
+      .getService(Components.interfaces.nsIConsoleService);
 
-      o_prefs = Components.classes["@mozilla.org/preferences-service;1"]
-                          .getService(Components.interfaces.nsIPrefService);
+    o_prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                        .getService(Components.interfaces.nsIPrefService);
 
-      if (!o_prefs)
-      {
-          econsole.logStringMessage("HTTPS Everywhere: Failed to get preferences-service!");
-          return false;
-      }
+    if (!o_prefs)
+    {
+      econsole.logStringMessage("HTTPS Everywhere: Failed to get preferences-service!");
+      return false;
+    }
 
-      o_branch = o_prefs.getBranch(branch_name);
-      if (!o_branch)
-      {
-          econsole.logStringMessage("HTTPS Everywhere: Failed to get prefs branch!");
-          return false;
-      }
+    o_branch = o_prefs.getBranch(branch_name);
+    if (!o_branch)
+    {
+      econsole.logStringMessage("HTTPS Everywhere: Failed to get prefs branch!");
+      return false;
+    }
 
+    if(prefBranch == PREFBRANCH_ROOT) {
       // make sure there's an entry for our log level
       try {
         o_branch.getIntPref(LLVAR);
@@ -630,8 +657,9 @@ HTTPSEverywhere.prototype = {
         econsole.logStringMessage("Creating new about:config https_everywhere.LogLevel variable");
         o_branch.setIntPref(LLVAR, WARN);
       }
+    }
 
-      return o_branch;
+    return o_branch;
   },
 
   /**

@@ -31,6 +31,10 @@ if(versionChecker.compare(appInfo.version, "23.0a1") >= 0) {
 
 ruleset_counter = 0;
 function RuleSet(name, xmlName, match_rule, default_off, platform) {
+  if(xmlName == "WordPress.xml" || xmlName == "Github.xml") {
+    this.log(NOTE, "RuleSet( name="+name+", xmlName="+xmlName+", match_rule="+match_rule+", default_off="+default_off+", platform="+platform+" )");
+  }
+
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
@@ -38,7 +42,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.xmlName = xmlName;
   //this.ruleset_match = match_rule;
   this.notes = "";
-  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule)
+  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
@@ -56,15 +60,15 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  this.prefs = HTTPSEverywhere.instance.prefs;
+  
+  this.rule_toggle_prefs = HTTPSEverywhere.instance.rule_toggle_prefs;
+
   try {
     // if this pref exists, use it
-    this.active = this.prefs.getBoolPref(name);
-  } catch (e) {
-    // if not, create it
-    this.log(DBUG, "Creating new pref " + name);
+    this.active = this.rule_toggle_prefs.getBoolPref(name);
+  } catch(e) {
+    // if not, use the default
     this.active = this.on_by_default;
-    this.prefs.setBoolPref(name, this.on_by_default);
   }
 }
 
@@ -101,34 +105,34 @@ RuleSet.prototype = {
     https_everywhereLog(level, msg);
   },
  
- wouldMatch: function(hypothetical_uri, alist) {
-   // return true if this ruleset would match the uri, assuming it were http
-   // used for judging moot / inactive rulesets
-   // alist is optional
+  wouldMatch: function(hypothetical_uri, alist) {
+    // return true if this ruleset would match the uri, assuming it were http
+    // used for judging moot / inactive rulesets
+    // alist is optional
+ 
+    // if the ruleset is already somewhere in this applicable list, we don't
+    // care about hypothetical wouldMatch questions
+    if (alist && (this.name in alist.all)) return false;
+ 
+    this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
+             "?  serial " + (alist && alist.serial));
+     
+    var uri = hypothetical_uri.clone();
+    if (uri.scheme == "https") uri.scheme = "http";
+    var urispec = uri.spec;
+ 
+    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
+      return false;
+ 
+    for (i = 0; i < this.exclusions.length; ++i) 
+      if (this.exclusions[i].pattern_c.test(urispec)) return false;
+ 
+    for (i = 0; i < this.rules.length; ++i) 
+      if (this.rules[i].from_c.test(urispec)) return true;
+    return false;
+  },
 
-   // if the ruleset is already somewhere in this applicable list, we don't
-   // care about hypothetical wouldMatch questions
-   if (alist && (this.name in alist.all)) return false;
-
-   this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
-            "?  serial " + (alist && alist.serial));
-    
-   var uri = hypothetical_uri.clone();
-   if (uri.scheme == "https") uri.scheme = "http";
-   var urispec = uri.spec;
-
-   if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
-     return false;
-
-   for (i = 0; i < this.exclusions.length; ++i) 
-     if (this.exclusions[i].pattern_c.test(urispec)) return false;
-
-   for (i = 0; i < this.rules.length; ++i) 
-     if (this.rules[i].from_c.test(urispec)) return true;
-   return false;
- },
-
- transformURI: function(uri) {
+  transformURI: function(uri) {
     // If no rule applies, return null; if a rule would have applied but was
     // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
@@ -145,19 +149,28 @@ RuleSet.prototype = {
 
   enable: function() {
     // Enable us.
-    this.prefs.setBoolPref(this.name, true);
+    this.rule_toggle_prefs.setBoolPref(this.name, true);
     this.active = true;
   },
 
   disable: function() {
     // Disable us.
-    this.prefs.setBoolPref(this.name, false);
+    this.rule_toggle_prefs.setBoolPref(this.name, false);
     this.active = false;
   },
 
   toggle: function() {
     this.active = !this.active;
-    this.prefs.setBoolPref(this.name, this.active);
+    this.rule_toggle_prefs.setBoolPref(this.name, this.active);
+  },
+
+  clear: function() {
+    try {
+      this.rule_toggle_prefs.clearUserPref(this.name);
+    } catch(e) {
+      // this ruleset has never been toggled
+    }
+    this.active = this.on_by_default;
   }
 };
 
@@ -432,8 +445,7 @@ const HTTPSRules = {
     // Callable from within the prefs UI and also for cleaning up buggy
     // configurations...
     for (var i in this.rulesets) {
-      if (this.rulesets[i].on_by_default) this.rulesets[i].enable();
-      else                                this.rulesets[i].disable();
+      this.rulesets[i].clear();
     }
   },
 
@@ -539,7 +551,7 @@ const HTTPSRules = {
         intoList.push(fromList[i]);
   },
 
-  potentiallyApplicableRulesets: function(host) {  
+  potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = this.global_rulesets.slice(0); // copy global_rulesets
