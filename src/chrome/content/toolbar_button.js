@@ -14,6 +14,148 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
+// avoid polluting global namespace
+if (!httpsEverywhere) { var httpsEverywhere = {}; }
+
+/**
+ * JS Object for used to display toolbar hints to new users and change toolbar
+ * UI for cases such as when the toolbar is disabled.
+ *
+ */
+httpsEverywhere.toolbarButton = {
+
+  /**
+   * Used to determine if a hint has been previously shown.
+   * TODO: Probably extraneous, look into removing
+   */
+  hintShown: false,
+
+  /**
+   * Initialize the toolbar button used to hint new users and update UI on
+   * certain events.
+   */
+  init: function() {
+    HTTPSEverywhere.log(DBUG, 'Removing listener for toolbarButton init.');
+    window.removeEventListener('load', httpsEverywhere.toolbarButton.init, false);
+
+    var tb = httpsEverywhere.toolbarButton;
+
+    // make sure icon is proper color during init
+    tb.changeIcon();
+
+    // show ruleset counter when a tab is changed
+    tb.updateRulesetsApplied();
+    gBrowser.tabContainer.addEventListener(
+      'TabSelect', 
+      tb.updateRulesetsApplied, 
+      false
+    );
+
+    // hook event for when page loads
+    var onPageLoad = function() {
+      // Timeout is used for a number of reasons.
+      // 1) For Performance since we want to defer computation.
+      // 2) Sometimes the page is loaded before all applied rulesets are
+      //    calculated; in such a case, a half-second wait works.
+      setTimeout(tb.updateRulesetsApplied, 500);
+    }
+
+    var appcontent = document.getElementById('appcontent');
+    if (appcontent) {
+      appcontent.addEventListener('load', onPageLoad, true);
+    }
+
+    // decide whether to show toolbar hint
+    let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
+    if(!Services.prefs.getPrefType(hintPref) 
+        || !Services.prefs.getBoolPref(hintPref)) { 
+
+      // only run once
+      Services.prefs.setBoolPref(hintPref, true);
+
+      gBrowser.addEventListener('load', tb.handleShowHint, true);
+    }
+    
+  },
+
+  /**
+   * Shows toolbar hint if previously not shown.
+   */
+  handleShowHint: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    if (!tb.hintShown) {
+      tb.hintShown = true;
+      const faqURL = "https://www.eff.org/https-everywhere/faq";
+
+      gBrowser.selectedTab = gBrowser.addTab(faqURL);
+      var nBox = gBrowser.getNotificationBox();
+
+      var strings = document.getElementById('HttpsEverywhereStrings');
+      var msg = strings.getString('https-everywhere.toolbar.hint');
+      nBox.appendNotification(
+        msg, 
+        'https-everywhere', 
+        'chrome://https-everywhere/skin/https-everywhere-24.png', 
+        nBox.PRIORITY_WARNING_MEDIUM
+      );
+
+    }
+
+    gBrowser.removeEventListener('load', tb.showToolbarHint, true);
+  },
+
+  /**
+   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
+   * is enabled or disabled.
+   */
+  changeIcon: function() {
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    if (enabled) {
+      toolbarbutton.setAttribute('status', 'enabled');
+    } else {
+      toolbarbutton.setAttribute('status', 'disabled');
+    }
+  },
+
+  /**
+   * Update the rulesets applied counter for the current tab.
+   */
+  updateRulesetsApplied: function() {
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+    if (!enabled) { 
+      toolbarbutton.setAttribute('rulesetsApplied', 0);
+      return;
+    }
+
+    var domWin = content.document.defaultView.top;
+    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    if (!alist) {
+      return;
+    }
+    // Make sure the list is up to date
+    alist.populate_list();
+
+    var counter = 0;
+    for (var x in alist.active) {
+      if (!(x in alist.breaking)) {
+        ++counter;
+      }
+    }
+    for (var x in alist.moot) {
+      if (!(x in alist.active)) {
+        ++counter;
+      }
+    }
+
+    toolbarbutton.setAttribute('rulesetsApplied', counter);
+    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+  }
+
+};
+
 function https_everywhere_load() {
   // on first run, put the context menu in the addons bar
   try {
