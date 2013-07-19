@@ -1,0 +1,58 @@
+<!--
+	CDN buckets:
+
+		- media.naplesnews.com.edgesuite.net
+
+			- a1092.g.akamai.net
+
+		- web.naplesnews.com.edgesuite.net
+
+			- a1075.g.akamai.net
+
+		- 4ebe66006af765aa8730-6d1a3af6588f9762b97dc42cf7c97a58.r12.cf1.rackcdn.com
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- homes *
+		- m *
+		- media **
+		- web **
+
+	* Works; mismatched, CN: push.scrippsing.com
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- login
+		- media *
+		- web *
+
+	* → akamai
+
+-->
+<ruleset name="Naples News.com (partial)">
+
+	<target host="naplesnews.com" />
+	<target host="*.naplesnews.com" />
+
+
+	<securecookie host="^(?:login)?\.naplesnews\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?naplesnews\.com/"
+		to="https://www.naplesnews.com/" />
+
+	<rule from="^http://login\.naplesnews\.com/"
+		to="https://login.naplesnews.com/" />
+
+	<rule from="^http://media\.naplesnews\.com/"
+		to="https://a248.e.akamai.net/f/1092/7939/6m/media.naplesnews.com/" />
+
+	<rule from="^http://web\.naplesnews\.com/"
+		to="https://a248.e.akamai.net/f/1075/5672/8m/web.naplesnews.com/" />
+
+</ruleset>
