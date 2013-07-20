@@ -1,9 +1,70 @@
+<!--
+	CDN buckets:
+
+		- static.webs.com.edgesuite.net
+
+			- a1129.g.akamai.net
+			- images.freewebs.com
+			- images.webs.com
+			- static.websimages.com
+
+		- www.webs.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- staticthumbs.freewebs.com *
+
+		- webs.com subdomains:
+
+			- ^ *
+			- blog		(refused)
+			- collector.stats *
+			- thumbs *
+			- www		("Webs is temporarily unavailable", akamai)
+			- \w+ *		(per-client subdomains)
+
+	* Dropped
+
+
+	Problematic domains:
+
+		- images.freewebs.com *
+		- images.webs.com *
+		- static.websimages.com *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- images.freewebs.com *
+
+		- webs.com subdomains:
+
+			- images *
+			- members
+
+		- static.websimages.com *
+
+	* → akamai
+
+-->
 <ruleset name="Webs (partial)">
 
-	<target host="premium.members.webs.com"/>
+	<target host="images.freewebs.com" />
+	<target host="*.webs.com"/>
 	<target host="es.premium.members.webs.com"/>
+	<target host="static.websimages.com" />
 
-	<rule from="^http://(es\.)?premium\.members\.webs\.com/"
-		to="https://$1premium.members.webs.com/"/>
+
+	<securecookie host="^\.?members\.webm\.com$" name=".+" />
+
+
+	<rule from="^http://((?:es\.)?premium\.)?members\.webs\.com/"
+		to="https://$1members.webs.com/"/>
+
+	<rule from="^http://(images\.(?:free)?web|static\.websimage)s\.com/"
+		to="https://a248.e.akamai.net/f/1129/8333/3m/$1s.com/" />
 
 </ruleset>
