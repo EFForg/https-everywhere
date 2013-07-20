@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- wpmedia.business.financialpost.com.edgesuite.net
+
+			- a1467.g1.akamai.net
+
+		- wpmedia.opinion.financialpost.com.edgesuite.net
+
+			- a1582.g1.akamai.net
+
+		- www.financialpost.com.edgesuite.net
+
+		- www.financialpost.idmanagedsolutions.com
+
+			- idms
+
+		- financialpostbusiness.wordpress.com
+
+			- business
+
+		- financialpostopinion.wordpress.com
+
+			- opinion
+
+
+	Nonfunctional subdomains:
+
+		- ^	(dropped)
+		- www	(503, akamai)
+
+
+	Problematic subdomains:
+
+		- business *
+		- wpmedia.business **
+		- idms			(works; mixed css from www, mismatched, CN: www.financialpost.idmanagedsolutions.com)
+		- opinion *
+		- wpmedia.opinion **
+
+	* Wordpress
+	** Works, akamai
+
+
+	Partially covered subdomains:
+
+		- wpmedia.business *
+		- idms			(→ www.financialpost.idmanagedsolutions.com)
+		- wpmedia.opinion *
+
+	* → akamai
+
+-->
+<ruleset name="Financial Post.com (partial)">
+
+	<target host="*.financialpost.com" />
+		<!--
+			Exclude pages pages so as to avoid mixed css:
+									-->
+		<exclusion pattern="^http;//idms\.financialpost\.com/(?!charts/|images/|js/|watchlist/\w+\.ajax\?)" />
+
+
+	<rule from="^http://wpmedia\.business\.financialpost\.com/"
+		to="https://a248.e.akamai.net/f/1467/2885/4d/wpmedia.business.financialpost.com/" />
+
+	<rule from="^http://idms\.financialpost\.com/"
+		to="https://www.financialpost.idmanagedsolutions.com/" />
+
+	<rule from="^http://wpmedia\.opinion\.financialpost\.com/"
+		to="https://a248.e.akamai.net/f/1582/1145/2d/wpmedia.opinion.financialpost.com/" />
+
+</ruleset>
