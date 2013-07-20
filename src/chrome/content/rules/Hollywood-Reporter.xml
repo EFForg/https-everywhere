@@ -5,6 +5,8 @@
 	CDN buckets:
 
 		- www.hollywoodreporter.com.edgesuite.net
+
+			- a1682.g.akamai.net
 			- thr[1-4].pgmcdn.net
 
 
@@ -25,11 +27,23 @@
 -->
 <ruleset name="Hollywood Reporter (partial)">
 
+	<target host="hollywoodreporter.com" />
 	<target host="*.hollywoodreporter.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/(?!favicon\.ico|sites/)" />
+		<!--
+			css_c602cf5d0b126628beb7012985fd4591 links to images relative /
+											-->
+		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/sites/default/files/css/" />
 
 
 	<securecookie host="^.+\.hollywoodreporter\.com$" name=".+" />
 
+
+	<rule from="^http://(?:www\.)?hollywoodreporter\.com/"
+		to="https://a248.e.akamai.net/f/1682/7219/8m/www.hollywoodreporter.com/" />
 
 	<rule from="^http://s(ecure|ubscribe)\.hollywoodreporter\.com/"
 		to="https://s$1.hollywoodreporter.com/" />
