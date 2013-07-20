@@ -1,0 +1,50 @@
+<!--
+	For other Levonline coverage, see Levonline.com.xml.
+
+
+	Problematic domains:
+
+		- (www.)servage.com	(shows another domain; mismatched, CN: *.levonline.com)
+		- webmail.servage.net	(shows www, valid cert)
+
+
+	Partially covered domains:
+
+		- (www.)servage.com	(→ www.servage.net)
+		- webmail.servage.net	(→ secure)
+
+
+	Fully covered servage.net subdomains:
+
+		- (www.)	(^ → www)
+		- livesupport01
+		- secure
+		- static
+
+-->
+<ruleset name="Servage.net">
+
+	<target host="servage.*" />
+	<target host="www.servage.com" />
+	<target host="*.servage.net" />
+
+
+	<securecookie host="^(?:livesupport01|secure|www)\.servage\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?servage\.com/(?:\?.*)?$"
+		to="https://www.servage.net/" />
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?servage\.net/"
+		to="https://www.servage.net/" />
+
+	<rule from="^http://(livesupport01|secure|static)\.servage\.net/"
+		to="https://$1.servage.net/" />
+
+	<rule from="^http://webmail\.servage\.net/(?:\?.*)?$"
+		to="https://secure.servage.net/webmail/" />
+
+</ruleset>
