@@ -4,6 +4,9 @@
 		- esupport.sony.com		(redirects to s01.esupport, which has different data)
 		- www.kb.sony.com
 
+
+	Mixed images on support.us.playstation.com from us.playstation.com
+
 -->
 <ruleset name="Sony (partial)">
 
@@ -11,12 +14,49 @@
 	<target host="*.playstation.com" />
 	<target host="*.us.playstation.com" />
 		<!--
-			302s to http.
+			Many paths now redirect to http:
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001284.html
+				- https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001641.html
 
-				-->
-		<exclusion pattern="^http://us\.playstation\.com/omniture/blogs/s_code\.js" />
+				Including:
+
+					- $
+					- adaptor/?$
+					- adaptor/verify/?$
+					- community/?$
+					- community/liveevents/?$
+					- csimg/
+					- favicon.ico
+					- games/?$
+					- games/.*.html
+					- games-and-media$
+					- games-and-media/franchise/.*.html
+					- grid$
+					- grid/games_events/?$
+					- myprofile$
+					- news/consumeralerts/$
+					- omniture/blogs/s_code.js
+					- ps3/?$
+					- ps3/games-and-media/$
+					- psn/playstation-home/?$
+					- psn/shows-and-tv-series/$
+					- wtb/?$
+					- support/warranties/index.htm
+					- support/warranties/.*/index.htm
+
+				But not including:
+
+					- pscomauth/groups/public/documents/webasset/transparent.gif
+					- psnevent/EventsController.action
+					- uwps/PSNTicketRetrievalGenericServlet
+
+
+				support/?$ does too, but then redirects to a secure url.
+													-->
+		<!--exclusion pattern="^http://us\.playstation\.com/($|\?|(adaptor|community|games|grid|games-and-media|myprofile|news|ps[3n])($|[?/])|csimg/|support/?[^?])" />
+		<exclusion pattern="^http://us\.playstation\.com/omniture/blogs/s_code\.js" /-->
+		<exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" />
 	<target host="webassets.scea.com" />
 	<target host="*.webassets.scea.com" />
 	<target host="sony.com" />
