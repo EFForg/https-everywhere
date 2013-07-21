@@ -3,36 +3,53 @@
 
 		- s3.amazonaws.com/bloomberg.com/
 		- cdn.video.http.2.bloomberg.com.edgesuite.net
+		- www.bloomberg.com.edgesuite.net
 		- static.btrd.net.edgesuite.net
 		- images.businessweek.com.edgesuite.net
 		- res.businessweek.com.edgesuite.net
+
 		- cache.daylife.com/...
+
 			- dlimages.businessweek.com
+
 		- cdn.gotraffic.net.edgesuite.net
+
+
+	Problematic domains:
+
+		- cdn.videos.bloomberg.com	(akamai pointing to cloudfront)
 
 
 	Nonfunctional domains:
 
-		- www.bloomberg.com		(Akamai; 504)
-		- origin-www.bloomberg.com	(timeout)
-		- washpost.bloomberg.com
-		- static.btrd.net		(Akamai; shows bx.businessweek)
+		- bloomberg.com subdomains:
+
+			- ^ *
+			- origin-www *
+			- washpost	(refused)
+			- www **
+
+		- static.btrd.net		(shows bx.businessweek.com, akamai)
 
 		- businessweek.com subdomains:
 
-			- dlimages		(Pantherssl)
-			- images		(Akamai)
-			- origin-images		(cert: bx.businessweek.com; $ 301s to http)
-			- origin-res		(cert: ditto; 504)
-			- res			(Akamai; 301s to origin-res)
+			- dlimages		(403; mismatched, CN: ssl2.cdngc.net)
+			- images		(shows bx.businessweek.com, akamai)
+			- investing		(refused)
+			- origin-images ***
+			- origin-res ***
+			- res			(redirects to origin-res, akamai)
 
-		- cdn.gotraffic.net		(Akamai; 504)
-		- origin-cdn.gotraffic.net	(timeout)
+		- cdn.gotraffic.net **
+		- origin-cdn.gotraffic.net *
+
+	* Dropped
+	** 504, akamai
+	*** Shows bx.businessweek.com; mismatched, CN: bx.businessweek.com
 
 -->
-<ruleset name="Bloomberg (partial)" default_off="mismatch">
+<ruleset name="Bloomberg (partial)" default_off="mismatched">
 
-	<!--	Akamai pointing to CloudFront ...	-->
 	<target host="cdn.videos.bloomberg.com" />
 
 
