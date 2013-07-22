@@ -1,0 +1,31 @@
+<!--
+	Problematic subdomains:
+
+		- mail	(shows www, valid cert)
+		- www	(mismatched, CN: mail.ufies.org)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- mail		(→ www)
+
+-->
+<ruleset name="UFies.org">
+
+	<target host="ufies.org" />
+	<target host="*.ufies.org" />
+
+
+	<securecookie host="^ufies\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ufies\.org/"
+		to="https://$1ufies.org/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://mail\.ufies\.org/[^?]*(\?.*)?"
+		to="https://ufies.org/mail/$1" />
+
+</ruleset>
