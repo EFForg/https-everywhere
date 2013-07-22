@@ -6,6 +6,8 @@
 
 		- software.intel.com.edgesuite.net
 
+			- a163.b.akamai.net
+
 
 	Other Intel rulesets:
  
@@ -38,12 +40,25 @@
 
 		- software.intel.com	(works, akamai)
 
+
+	Partially covered subdomains:
+
+		- software	(→ akamai, avoiding user-visible paths)
+
 -->
 <ruleset name="Intel (partial)">
 
 	<target host="*.intel.co.jp" />
 	<target host="intel.com" />
 	<target host="*.intel.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://software\.intel\.com/(?!favicon\.ico|misc/|sites/)" />
+		<!--
+			Many stylesheets link images relative to /
+								-->
+		<exclusion pattern="^http://software\.intel\.com/(?:sites/\w+/)?sites/default/files/css/(?!css_Lk0i1Rq49zhZknClrYE-0k13DwR38sFSx-F2mXUQfI4\.css)" />
 	<target host="intelfreepress.com" />
 	<target host="www.intelfreepress.com" />
 
@@ -68,6 +83,9 @@
 
 	<rule from="^http://(blogs|educate|engage|freepress|newsroom|our|scoop|sfederation|ssl|staging-(?:blogs|our|scoop)|www-ssl)\.intel\.com/"
 		to="https://$1.intel.com/" />
+
+	<rule from="^http://software\.intel\.com/"
+		to="https://a248.e.akamai.net/f/163/177/2m/software.intel.com/" />
 
 	<rule from="^http://(www\.)?intelfreepress\.com/"
 		to="https://$1intelfreepress.com/" />
