@@ -1,13 +1,62 @@
+<!--
+	CDN buckets:
+
+		- unbouncepages.com
+
+			- premium.slideshare.net
+
+
+	Nonfunctional domains:
+
+		- engineering.slideshare.com *
+		- blog.slideshare.net *
+		- engineering.slideshare.net *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- help.slideshare.com	(zendesk)
+		- premium.slideshare.net	(mismatched, CN: *.unbounce.com)
+
+
+	Partially covered domains:
+
+		- help.slideshare.com	(→ slideshare.zendesk.com)
+
+
+	Fully covered domains:
+
+		- stats.slideshare.net
+
+			- slidesharecdn.com subdomains:
+
+				- image
+
+-->
 <ruleset name="SlideShare.net (partial)">
 
+	<target host="help.slideshare.com" />
 	<target host="slideshare.net" />
-	<target host="www.slideshare.net" />
+	<target host="*.slideshare.net" />
+		<!--exclusion pattern="^http://(www\.)?slideshare\.net/($|\?|(about|business|contact_sales|forgot-password|privacy|terms|widgets)($|\?))" /-->
 	<target host="*.slidesharecdn.com"/>
 
-	<rule from="^http://(www\.)?slideshare\.net/(images/|login/?$|stylesheets/)"
+
+	<securecookie host="^\.slideshare\.net$" name="^(?:_smtLastVisitedHost|__utm\w)$" />
+
+
+	<rule from="^http://help\.slideshare\.com/(attachments/|favicon\.ico|generated/|system/)"
+		to="https://slideshare.zendesk.com/$1" />
+
+	<rule from="^http://(www\.)?slideshare\.net/(elqNow/|favicon\.ico|images/|(?:login|signup)(?:$|[?/])|slideshow/embed_code/|stylesheets/)"
 		to="https://$1slideshare.net/$2"/>
 
-	<rule from="^http://(cdn|public|static)\.slidesharecdn\.com/"
+	<rule from="^http://stats\.slideshare\.net/"
+		to="https://stats.slideshare.net/" />
+
+	<rule from="^http://(cdn|image|public|static)\.slidesharecdn\.com/"
 		to="https://$1.slidesharecdn.com/" />
 
 </ruleset>
