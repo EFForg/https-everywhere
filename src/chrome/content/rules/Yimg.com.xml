@@ -1,0 +1,76 @@
+<!--
+	For other Yahoo! coverage, see Yahoo.xml.
+
+
+	CDN buckets:
+
+		- a248.e.akamai.net/sec.yimg.com/i/
+
+
+	Undiscovered:
+
+		- d.yimg.com/nl/
+		- d.yimg.com/hn/p/i/bcst/yp/cnbc2/
+		- d.yimg.com/oq/
+		- ec.yimg.com/ec?url=
+		- ext.yimg.com/ec?url=
+		- sm-a[1-4].yimg.com
+		- thm-a0[1-4].yimg.com
+
+
+	Nonfunctional domains:
+
+		- cn.yimg.com
+		- ybinst3.ec.yimg.com	(CN: *.l.yimg.com; 404)
+
+
+	Problematic domains:
+
+		- ep.yimg.com
+
+
+	Fully covered domains:
+
+		- yimg.com subdomains:
+
+			- ep		(→ sep)
+			- s
+			- sep
+			- sec
+
+-->
+<ruleset name="Yimg.com (partial)">
+
+	<target host="*.yimg.com" />
+
+
+	<securecookie host="^\.s\.yimg\.com$" name=".+" />
+
+
+	<rule from="^http://ads\.yimg\.com/"
+		to="https://s.yimg.com/zz/" />
+
+	<!--	- l1 to l7 exist.
+		- a appears equivalent to l, except hosted on Akamai.
+			-->
+	<rule from="^http://(?:d|(?:a\.)?l\d?|us\.(?:a2|i1|js2?))\.yimg\.com/(?:a|d|us(?:\.js)?\.yimg\.com)/"
+		to="https://s.yimg.com/lq/" />
+
+	<rule from="^http://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|mi|ok|pj|pp|qa|rq|rx|ugcwidgets|zz)/"
+		to="https://s.yimg.com/$1/" />
+
+	<rule from="^http://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qb|qw|qz|r[luwz]|sc|ts)/"
+		to="https://s.yimg.com/zz/$1/" />
+
+	<rule from="^http://s(ec)?\.yimg\.com/"
+		to="https://s$1.yimg.com/" />
+
+	<rule from="^http://s?ep\.yimg\.com/"
+		to="https://sep.yimg.com/" />
+
+	<!--	s://developer. breakage
+					-->
+	<rule from="^https://s\.yimg\.com/common/img/"
+		to="https://s.yimg.com/kj/ydn/common/img/" />
+
+</ruleset>
