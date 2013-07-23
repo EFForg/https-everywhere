@@ -201,23 +201,7 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
-
-  // preference migrations
-  /*var prefs_version = this.prefs.getIntPref("prefs_version");
-  if(prefs_version == 0) {
-    var nBox = gBrowser.getNotificationBox();
-    var strings = document.getElementById('HttpsEverywhereStrings');
-    var msg = strings.getString('https-everywhere.migration.notification0');
-    nBox.appendNotification(
-      msg, 
-      'https-everywhere-migration0', 
-      'chrome://https-everywhere/skin/https-everywhere-24.png', 
-      nBox.PRIORITY_WARNING_MEDIUM
-    );
-
-    this.prefs.setIntPref("prefs_version", prefs_version+1);
-  }*/
-
+  
   return;
 }
 
@@ -490,8 +474,6 @@ HTTPSEverywhere.prototype = {
           }
         }
       }
-    } else if (topic == "app-startup") {
-      this.log(DBUG,"Got app-startup");
     } else if (topic == "profile-before-change") {
       this.log(INFO, "Got profile-before-change");
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
@@ -522,6 +504,7 @@ HTTPSEverywhere.prototype = {
             SERVICE_CTRID, false, true);
       }
     } else if (topic == "sessionstore-windows-restored") {
+      this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
     }
     return;
