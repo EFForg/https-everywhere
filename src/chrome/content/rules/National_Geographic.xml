@@ -1,14 +1,30 @@
 <!--
+	CDN buckets:
+
 	nationalgeographic.desk.com
 	natgeo.edgeboss.net
+
+		- images.nationalgeographic.com.edgesuite.net
+
+			- a1621.g.akamai.net
+
+		- kids.nationalgeographic.com.edgesuite.net
+
+			- a1966.b.akamai.net
 
 
 	Nonfunctional subdomains:
 
+		- adventureblog *
+		- digitalnomad *
 		- greenliving	(503, akamai)
 		- help		(redirects to http, desk.com)
+		- intelligenttravel *
 		- newswatch
 		- ngm		(504, akamai)
+		- tvblogs *
+
+	* Refused
 
 
 	Problematic domains:
@@ -17,6 +33,7 @@
 
 			- environment *
 			- images *
+			- kids *
 			- news *
 			- photography *
 			- travel *
@@ -32,17 +49,20 @@
 	Partially covered subdomains:
 
 		- (www.)	(→ www-s)
+		- kids		(→ akamai, avoiding user-visible paths)
 
 
 	Fully covered subdomains:
 
 		- channel
 		- genographic
+		- images	(→ akamai)
 		- media-channel
 		- media-members
 		- media-mmdb
 		- media-yourshot
 		- members
+		- metrics
 		- mmdb
 		- natgeotv
 		- stage.natgeotv
@@ -53,11 +73,15 @@
 
 	<target host="nationalgeographic.com" />
 	<target host="*.nationalgeographic.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://kids\.nationalgeographic.com/(?!exposure/core_media/|fastfacts/get_json_fact_list/|favicon\.ico|sites/)" />
 
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.nationalgeographic\.com$" name="^(?:s_\w+|__utm)\w$" />
+	<securecookie host="^\.nationalgeographic\.com$" name="^(?:gpv_p\d+|s_\w+|__utm)\w$" />
 
 
 	<!--	$ is linked to from the footer of channel ("HOME"). Rewriting
@@ -66,7 +90,16 @@
 	<rule from="^https?://(?:www\.)?nationalgeographic\.com/($|\?|leaderboard/quiz/)"
 		to="https://www-s.nationalgeographic.com/$1" />
 
-	<rule from="^http://(channel|genographic|media-(?:channel|members|mmdb|yourshot)|members|mmdb|(?:stage\.)?natgeotv|www-s)\.nationalgeographic\.com/"
+	<rule from="^http://(channel|genographic|media-(?:channel|members|mmdb|yourshot)|members|metrics|mmdb|(?:stage\.)?natgeotv|www-s)\.nationalgeographic\.com/"
 		to="https://$1.nationalgeographic.com/" />
+
+	<!--	All stylesheets appear to link images relative to themselves,
+		so a blanket rewrite should work properly:
+								-->
+	<rule from="^http://images\.nationalgeographic\.com/"
+		to="https://a248.e.akamai.net/f/1621/2601/6h/images.nationalgeographic.com/" />
+
+	<rule from="^http://kids\.nationalgeographic\.com/"
+		to="https://a248.e.akamai.net/f/1966/8789/10f/kids.nationalgeographic.com/" />
 
 </ruleset>
