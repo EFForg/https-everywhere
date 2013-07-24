@@ -103,8 +103,8 @@ httpsEverywhere.toolbarButton = {
 	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
 	}
       );
-      gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
     }
+    gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
   /**
