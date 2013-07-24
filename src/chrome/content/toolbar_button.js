@@ -77,12 +77,7 @@ httpsEverywhere.toolbarButton = {
         || !Services.prefs.getBoolPref(hintPref)) { 
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
-      gBrowser.addEventListener('DOMContentLoaded', function load_tab(event) {
-        const faqURL = "https://www.eff.org/https-everywhere/faq";
-   	gBrowser.selectedTab = gBrowser.addTab(faqURL);
-	gBrowser.addEventListener('DOMContentLoaded', tb.handleShowHint, true); // not the right event to trigger on!
-	gBrowser.removeEventListener('DOMContentLoaded', load_tab, true);
-      }, true);
+      gBrowser.addEventListener("DOMContentLoaded", tb.handleShowHint, true);
     }
   },
 
@@ -93,17 +88,23 @@ httpsEverywhere.toolbarButton = {
     var tb = httpsEverywhere.toolbarButton;
     if (!tb.hintShown){
       tb.hintShown = true;
+      const faqURL = "https://www.eff.org/https-everywhere/faq";
       var nBox = gBrowser.getNotificationBox();
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
-      nBox.appendNotification(
+      var hint = nBox.appendNotification(
         msg, 
         'https-everywhere', 
         'chrome://https-everywhere/skin/https-everywhere-24.png', 
-        nBox.PRIORITY_WARNING_MEDIUM
+        nBox.PRIORITY_WARNING_MEDIUM,
+	[],
+	function(action) {
+	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
+	}
       );
+      gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
     }
-    gBrowser.removeEventListener('DOMContentLoaded', tb.handleShowHint, true);
   },
 
   /**
