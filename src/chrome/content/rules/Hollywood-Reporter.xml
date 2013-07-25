@@ -9,17 +9,24 @@
 			- a1682.g.akamai.net
 			- thr[1-4].pgmcdn.net
 
+		- hollywoodreporter.mobify.com
+
+			- m
+
 
 	Nonfunctional subdomains:
 
-		- m		(cert: *.mobify.com; shows that domain's data)
 		- origin-www	(self-signed; paths not found)
 
 
 	Problematic domains:
 
 		- thr[1-4].pgmcdn.net *		(works, akamai)
+
+		- hollywoodreporter.com subdomains:
+
 		- holywoodreporter.com		(redirects to www, mismatched, CN: *.hollywoodreporter.com)
+			- m		(cert: *.mobify.com; shows that domain's data)
 		- www.holywoodreporter.com *
 
 	*  Wworks, akamai
@@ -36,7 +43,7 @@
 		<!--
 			css_c602cf5d0b126628beb7012985fd4591 links to images relative /
 											-->
-		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/sites/default/files/css/" />
+		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/sites/default/files/css/(?!css_02b3ba95a2adca47bf1e40d170fcaa56\.css)" />
 
 
 	<securecookie host="^.+\.hollywoodreporter\.com$" name=".+" />
@@ -44,6 +51,9 @@
 
 	<rule from="^http://(?:www\.)?hollywoodreporter\.com/"
 		to="https://a248.e.akamai.net/f/1682/7219/8m/www.hollywoodreporter.com/" />
+
+	<rule from="^http://m\.hollywoodreporter\.com/mobify/"
+		to="https://hollywoodreporter.mobify.com/mobify/" />
 
 	<rule from="^http://s(ecure|ubscribe)\.hollywoodreporter\.com/"
 		to="https://s$1.hollywoodreporter.com/" />
