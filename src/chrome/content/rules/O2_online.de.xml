@@ -1,6 +1,40 @@
 <!--
 	For other Telefónica coverage, see Telefonica.xml.
 
+
+	CDN buckets:
+
+		- o2de.lithium.com
+
+			- hilfe
+
+
+	Nonfunctional subdomains:
+
+		- videothek	(dropped)
+
+
+	Problematic subdomains:
+
+		- ^			(works, cert only matches www)
+		- mobilefun		(mismatched, CN: o2-liv.mondiamedia.com)
+		- smartphonevergleich	(works; mismatched, CN: *.o2.vccp.de)
+		- tarifcheck		(works; mismatched, CN: *.interone.de)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cct
+		- cct2
+		- dsl
+		- email
+		- mobilefun	(→ o2-liv.mondiamedia.com)
+		- track
+
+
+	Mixed images on mobilefun from dynimages.handy.de
+
 -->
 <ruleset name="o2 online.de (partial)">
 
@@ -12,6 +46,12 @@
 
 
 	<rule from="^http://(?:www\.)?o2online\.de/"
-		to="https://www.o2online.de/"/>
+		to="https://www.o2online.de/" />
+
+	<rule from="^http://(cct2?|dsl|email|hilfe|track)\.o2online\.de/"
+		to="https://$1.o2online.de/" />
+
+	<rule from="^http://mobilefun\.o2online\.de/"
+		to="https://o2-liv.mondiamedia.com/" />
 
 </ruleset>
