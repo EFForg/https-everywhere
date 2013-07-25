@@ -3,6 +3,7 @@
 
 		- www.corporate-ir.net.edgesuite.net
 
+			- a121.g.akamai.net
 			- investors
 
 		- freescale.https.internapcdn.net
@@ -48,30 +49,45 @@
 		- styles
 		- styles-uat
 
+
+	Overved cookie domains:
+
+		- community
+		- community-uat
+		- community-cache
+		- community-cache-uat
+		- apps.community
+		- apps.community-uat
+		- fdc
+		- images
+		- images-uat
+		- styles
+		- styles-uat
+
 -->
 <ruleset name="Freescale.com (partial)">
 
 	<target host="freescale.com" />
 	<target host="*.freescale.com" />
-		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|\?|/)|js/|recommendation/|shared/)" />
+		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|[?/])|js/|recommendation/|shared/)" />
 
 
-	<securecookie host="^(?:community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|(?:imag|styl)es(?:-uat)?)\.freescale\.com$" name=".+" />
+	<securecookie host="^(?!www\.).+\.freescale\.com$" name=".+" />
 
 
-	<!--	Although ^ works over https, it does not redirect
-		to www as it does over http, so imitate the latter:
-									-->
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
 	<rule from="^http://(?:www\.)?freescale\.com/"
 		to="https://www.freescale.com/" />
 
-	<rule from="^http://(cache(?:-uat)?)\.freescale\.com/"
-		to="https://$1.freescale.com/freescale/ssl/" />
+	<rule from="^http://cache(-uat)?\.freescale\.com/"
+		to="https://cache$1.freescale.com/freescale/ssl/" />
 
-	<rule from="^http://(community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|images(?:-uat)?|styles(?:-uat)?)\.freescale\.com/"
+	<rule from="^http://(community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|(?:imag|styl)es(?:-uat)?)\.freescale\.com/"
 		to="https://$1.freescale.com/" />
 
-	<rule from="^http://investors\.freescale\.com/(client/|WebSideStory/)"
-		to="https://a248.e.akamai.net/f/121/1/1/phx.corporate-ir.net/$1" />
+	<rule from="^http://investors\.freescale\.com/(client|WebSideStory)/"
+		to="https://a248.e.akamai.net/f/121/103/5m/investors.freescale.com/$1/" />
 
 </ruleset>
