@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see PostgreSQL-self-signed.xml.
+
+
 	As of 2012-02-09, known unprotected .org subdomains are:
 
 		- archives
@@ -18,48 +21,42 @@
 	Other nonfunctional domains:
 
 		- (www.)pgfoundry.org
-		- (images.|www.)pgsql.ru
-		- docs.postgresql.fr		(cert: svn.postgresqlfr.org; shows a login page)
-		- www.postgresql.fr		(ditto)
+		- (www.)pgsql.ru
+		- images.pgsql.ru
+		- docs.postgresql.fr *
+		- www.postgresql.fr *
+
+	* Shows login; mismatched, CN: svn.postgresqlfr.org
 
 
-	See PostgreSQL-self-signed.xml for problematic rules.
+	Problematic domains:
+
+		- postgresql.eu
+		- svn.postgresqlfr.org	(self-signed)
+		- postresql.org		(404)
 
 -->
 <ruleset name="PostgreSQL">
 
-	<target host="postgresql.eu"/>
-	<target host="www.postgresql.eu"/>
+	<target host="postgresql.eu" />
+	<target host="www.postgresql.eu" />
 	<target host="postgresql.org" />
 	<target host="*.postgresql.org" />
-	<target host="nagios.postgresql.org" />
-	<target host="planet.postgresql.org" />
-	<target host="redmine.postgresql.org" />
-	<target host="wiki.postgresql.org" />
-	<target host="www.postgresql.org" />
-	<target host="postgresql.us"/>
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.postgresql.us"/>
+	<target host="postgresql.us" />
+	<target host="*.postgresql.us" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.postgresql\.org$" name="^__utm\w$" />
-	<securecookie host="^wiki\.postgresql\.org$" name=".*" />
-	<securecookie host="^\.postgresql.us$" name=".*" />
+	<securecookie host="^wiki\.postgresql\.org$" name=".+" />
+	<securecookie host="^\.postgresql.us$" name=".+" />
 
 
-	<!--	!www doesn't work over https.
-		Redirects to www over http.	-->
 	<rule from="^http://(?:www\.)?postgresql\.eu/"
 		to="https://www.postgresql.eu/" />
 
-	<!--	404s over https
-		Redirects to www over http.	-->
-	<rule from="^http://postgresql\.org/"
-		to="https://www.postgresql.org/" />
-
-	<rule from="^http://www\.postgresql\.org/(account|media)/"
+	<rule from="^http://(?:www\.)?postgresql\.org/(account|media)/"
 		to="https://www.postgresql.org/$1/" />
 
 	<rule from="^http://(commitfest|nagios|planet|redmine|wiki)\.postgresql\.org/"
