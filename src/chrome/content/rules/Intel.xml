@@ -4,6 +4,11 @@
 
 	CDN buckets:
 
+		- software-downloads.intel.com.edgesuite.net
+
+			- a978.b.akamai.net
+			- downloads-software.intel.com
+
 		- software.intel.com.edgesuite.net
 
 			- a163.b.akamai.net
@@ -38,12 +43,21 @@
 
 	Problematic domains:
 
+		- download-software.intel.com *
 		- software.intel.com	(works, akamai)
+
+	* Works, akamai
 
 
 	Partially covered subdomains:
 
 		- software	(→ akamai, avoiding user-visible paths)
+
+
+	Fully covered subdomains:
+
+		- downloads-software	(→ akamai)
+		- secure-software
 
 -->
 <ruleset name="Intel (partial)">
@@ -81,8 +95,13 @@
 	<rule from="^http://(?:www\.)?intel\.com/(etc|newsroom/assets|sites)/"
 		to="https://www-ssl.intel.com/$1/" />
 
-	<rule from="^http://(blogs|educate|engage|freepress|newsroom|our|scoop|sfederation|ssl|staging-(?:blogs|our|scoop)|www-ssl)\.intel\.com/"
+	<rule from="^http://(blogs|educate|engage|freepress|newsroom|our|scoop|secure-software|sfederation|ssl|staging-(?:blogs|our|scoop)|www-ssl)\.intel\.com/"
 		to="https://$1.intel.com/" />
+
+	<!--	Protocol-relative redirects from akamai.net/.../software.:
+									-->
+	<rule from="^https?://download-software\.intel\.com/"
+		to="https://a248.e.akamai.net/f/978/142/6m/download-software.intel.com/" />
 
 	<rule from="^http://software\.intel\.com/"
 		to="https://a248.e.akamai.net/f/163/177/2m/software.intel.com/" />
