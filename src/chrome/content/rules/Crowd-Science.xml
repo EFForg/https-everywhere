@@ -1,16 +1,41 @@
 <!--
-	support.crowdscience.com is handled in Zendesk.com-clients.xml.
+	CDN buckets:
+
+		- yumenet.vo.llnwd.net
+
+			- cdn
+			- static
+
+		- crowdscience.zendesk.com
+
+			- support
 
 
 	Nonfunctional subdomains:
 
-		- (www.)
-		- blog
+		- (www.) *
+		- blog *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- static	(400; mismatched, CN: *.hs.llnwd.net)
+		- support	(zendesk)
 
 
 	Partially covered subdomains:
 
 		- static	(→ secure-static, blog/ 403s)
+		- support	(→ crowdscience.zendesk.com)
+
+
+	Fully covered subdomains:
+
+		- app
+		- aws-app
+		- secure-static
 
 -->
 <ruleset name="Crowd Science (partial)">
@@ -20,13 +45,15 @@
 		<exclusion pattern="http://static\.crowndscience\.com/blog/" />
 
 
-	<rule from="^http://app\.crowdscience\.com/"
-		to="https://app.crowdscience.com/" />
+	<rule from="^http://(aws-)?app\.crowdscience\.com/"
+		to="https://$1app.crowdscience.com/" />
 
 	<!--	- Tracking on 3rd-party websites
-		- static: Akamai
 					-->
 	<rule from="^http://(?:secure-)?static\.crowdscience\.com/"
 		to="https://secure-static.crowdscience.com/" />
+
+	<rule from="^http://support\.crowdscience\.com/(favicon\.ico|generated/|system/|widgets/)"
+		to="https://crowdscience.zendesk.com/$1" />
 
 </ruleset>
