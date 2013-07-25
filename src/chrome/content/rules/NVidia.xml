@@ -8,6 +8,18 @@
 
 			- omniture.nvidia.com
 
+		- blogs.nvidia.com.edgesuite.net
+
+			- a11.g1.akamai.net
+
+		- shield.nvidia.com.edgesuite.net
+
+			- a1017.g2.akamai.net
+
+		- www.nvidia.com.edgesuite.net
+
+			- a1650.g.akamai.net
+
 
 	Nonfunctional subdomains:
 
@@ -21,32 +33,68 @@
 	Problematic subdomains:
 
 		- ^		(times out)
+		- blogs *
 		- shield	(works, akamai)
 		- www *
 
 	* Works, akamai
 
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- blogs *
+		- shield *
+
+	* → akamai, avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- developer
+
 -->
 <ruleset name="nVidia (partial)" platform="mixedcontent">
 
+	<target host="nvidia.com" />
 	<target host="*.nvidia.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?nvidia\.com/(?!content/|favicon\.ico)" />
+		<exclusion pattern="^http://blog\.nvidia\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://shield\.nvidia\.com/(?!favicon\.ico|images/|javascripts/)" />
+		<!--
+			Some stylesheets link images relative to /
+									-->
+		<exclusion pattern="^http://(?:www\.)?nvidia\.com/content/.+(?!/global-nav-home|/masthead-oldtemplate|/reset-min)\.css" />
+		<exclusion pattern="^http://blog\.nvidia\.com/wp-content/.+\.css" />
 		<!--
 			Some pages redirect to http.
 							-->
 		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/)" />
 
 
-	<securecookie host="^(?:\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
+	<securecookie host="^(?:\.?developer|\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
 	<!--
 		Omniture tracking cookies:
 						-->
 	<securecookie host="^\.store\.nvidia\.com$" name="^s_\w+$" />
 
 
-	<rule from="^http://(devtalk|nvidianews|omniture|store)\.nvidia\.com/"
+	<rule from="^http://(?:www\.)?nvidia\.com/"
+		to="https://a248.e.akamai.net/f/1650/3297/9h/www.nvidia.com/" />
+
+	<rule from="^http://blogs\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/11/2817/6m/blogs.nvidia.com/" />
+
+	<rule from="^http://(developer|devtalk|nvidianews|omniture|store)\.nvidia\.com/"
 		to="https://$1.nvidia.com/" />
 
 	<rule from="^http://nsomniture\.nvidia\.com/"
 		to="https://nvidia-com.122.2o7.net/" />
+
+	<rule from="^http://shield\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/1017/6644/6h/www.nvidia.com/shield.nvidia.com/" />
 
 </ruleset>
