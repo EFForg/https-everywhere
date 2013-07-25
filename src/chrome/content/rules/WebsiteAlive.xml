@@ -1,24 +1,83 @@
+<!--
+	Nonfunctional domains:
+
+		- buzz.websitealive.com		(http reply)
+
+
+	Problematic domains:
+
+		- websitealive[1-9].com *
+		- websitealive10.com *
+
+	* Works; mismatched, CN: secure.websitealive.com
+
+
+	Fully covered domains:
+
+		- websitealive.com subdomains:
+
+			- (www.)
+			- a[0-5]
+			- api-stage
+			- api-v1
+			- api-v1-stage
+			- cn1
+			- floorforce
+			- go
+			- godzilla
+			- mmos
+			- monitoring
+			- orrick
+			- pcm
+			- pcmall
+			- team
+			- todaysdigitalsolutions
+			- tracking
+			- tracking-stage
+			- www-stage
+
+		- (www.)websitealive[0-9].com	(^ → www)
+		- (www.)websitealive10.com	(^ → www)
+
+-->
 <ruleset name="WebsiteAlive (partial)">
 
 	<target host="websitealive.com" />
 	<target host="*.websitealive.com" />
+		<!--exclusion pattern="^http://buzz\.websitealive\.com/" /-->
+	<target host="websitealive1.com" />
+	<target host="www.websitealive1.com" />
+	<target host="websitealive2.com" />
+	<target host="www.websitealive2.com" />
+	<target host="websitealive3.com" />
+	<target host="www.websitealive3.com" />
+	<target host="websitealive4.com" />
+	<target host="www.websitealive4.com" />
+	<target host="websitealive5.com" />
+	<target host="www.websitealive5.com" />
+	<target host="websitealive6.com" />
+	<target host="www.websitealive6.com" />
 	<target host="websitealive7.com" />
 	<target host="www.websitealive7.com" />
+	<target host="websitealive8.com" />
+	<target host="www.websitealive8.com" />
+	<target host="websitealive9.com" />
+	<target host="www.websitealive9.com" />
+	<target host="websitealive10.com" />
+	<target host="www.websitealive10.com" />
 
 
-	<securecookie host="^(?:a\d|secure)\.websitealive\.com$" name=".+" />
-	<securecookie host="^www\.websitealive7\.com$" name=".+" />
+	<securecookie host="^(?:(?:a\d|go|images|mmos|pcm|pcmall|secure|tracking(?:-stage)?|\.?www|\.?www-stage)\.)?websitealive\.com$" name=".+" />
+	<securecookie host="^\.websitealive\.com$" name="^(?:incap_ses_\d\d_\d+|nlbi_\d+|__utm\w|visit_incap_\d+)$" />
+	<securecookie host="^www\.websitealive\d+\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?websitealive\.com/images/"
-		to="https://www.websitealive.com/images/" />
-
-	<rule from="^http://(a\d|api|images|secure)\.websitealive\.com/"
-		to="https://$1.websitealive.com/" />
+	<rule from="^http://((?:a\d|api|api-(?:v1-)?stage|api-v1|cn1|floorforce|go|godzilla|images|mmos|monitoring|orrick|pcm|pcmall|secure|team|todaysdigitalsolutions|(?:tracking|www)(?:-stage)?)\.)?websitealive\.com/"
+		to="https://$1websitealive.com/" />
 
 	<!--	Cert doesn't match !www.
 					-->
-	<rule from="^http://(?:www\.)?websitealive7\.com/"
-		to="https://www.websitealive7.com/" />
+	<rule from="^http://(?:www\.)?websitealive(\d+)\.com/"
+		to="https://www.websitealive$1.com/" />
 
 </ruleset>
