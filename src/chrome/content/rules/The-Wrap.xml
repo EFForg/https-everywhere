@@ -2,25 +2,37 @@
 	nonfunctional:
 
 		- (dev.|www.)itsonthegrid.com	(time out)
-		- thegrill.thewrap.com
+		- thegrill.thewrap.com *
+		- thegrilllocations.thewrap.com *
+
+	* Refused
 
 
 	Problematic subdomains:
 
 		- ^		(expired 2010-09-02, self-signed, CN: *.acquia-sites.com)
+		- drupal	(mismatched, CN: www.thewrap.com)
+		- powergrid	(works; mismatched, CN: acquia-sites.com)
 
 
 	Fully covered subdomains:
 
 		- (www.)	(^ → www)
+		- drupal	(→ www)
 
 -->
 <ruleset name="The Wrap (partial) ">
 
 	<target host="thewrap.com"/>
-	<target host="www.thewrap.com"/>
+	<target host="*.thewrap.com"/>
 
-	<rule from="^http://(?:www\.)?thewrap\.com/"
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.thewrap\.com$" name="^__utm\w$" />
+
+
+	<rule from="^http://(?:drupal\.|www\.)?thewrap\.com/"
 		to="https://www.thewrap.com/"/>
 
 </ruleset>
