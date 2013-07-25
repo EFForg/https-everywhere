@@ -1,0 +1,57 @@
+<!--
+	Nonfunctional domains:
+
+		- email.gogobot.com *
+		- push.gogobot.com *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- gbot.me	(dropped)
+
+
+	Fully covered domains:
+
+		- gbot.me subdomains:
+
+			- ^	(→ bit.ly)
+			- be
+			- cdn
+			- cdn[1-4]
+			- static
+			- static-dev
+			- static-mdev
+			- static-stg
+
+		- gogobot.com subdomains:
+
+			- (www.)
+			- api
+			- dev
+			- mdev
+			- stg
+
+-->
+<ruleset name="Gogobot (partial)">
+
+	<target host="gbot.me" />
+	<target host="*.gbot.me" />
+	<target host="gogobot.com" />
+	<target host="*.gogobot.com" />
+
+
+	<securecookie host=".*\.g(?:bot\.me|ogobot\.com)$" name=".+" />
+
+
+	<rule from="^http://gbot\.me/"
+		to="https://bit.ly/" />
+
+	<rule from="^http://(be|cdn\d?|static(?:-m?dev|-stg)?)\.gbot\.me/"
+		to="https://$1.gbot.me/" />
+
+	<rule from="^http://((?:api|be|m?dev|stg|www)\.)?gogobot\.com/"
+		to="https://$1gogobot.com/" />
+
+</ruleset>
