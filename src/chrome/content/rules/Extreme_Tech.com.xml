@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see Ziff-Davis-mismatches.xml.
+
+	For other Ziff Davis coverage, see Ziff-Davis.xml.
+
+
+	CDN buckets:
+
+		- extremetech.com.112.2o7.net
+
+			- metrics
+
+		- www.extremetech.com.edgesuite.net
+
+			- a574.g.akamai.net
+
+
+	Nonfunctional domains:
+
+		- discuss.extremetech.com
+
+
+	Problematic subdomains:
+
+		- ^	(works; expired 2012-06-09, self-signed, cert only matches www)
+		- www	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ akamai, avoiding user-visible paths)
+
+-->
+<ruleset name="Extreme Tech.com (partial)">
+
+	<target host="extremetech.com" />
+	<target host="*.extremetech.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?extremetech\.com/(?!cobrand-header/|wp-content/|wp-includes/)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.extremetech\.com$" name="^(?:s_\w+|__utm)\w$" />
+	<securecookie host="^www\.extremetech\.com$" name="^_chartbeat2$" />
+
+
+	<rule from="^http://(?:www\.)?extremetech\.com/"
+		to="https://a248.e.akamai.net/f/574/7105/8d/www.extremetech.com/" />
+
+	<rule from="^http://metrics\.extremetech\.com/"
+		to="https://extremetech-com.122.2o7.net/"/>
+
+</ruleset>
