@@ -1,25 +1,45 @@
 <!--
-	For problematic rules, see New-Relic-mismatches.xml.
+	CDN buckets:
+
+		- rewrelic.statuspage.io
+
+			- status
+
+		- newrelic.wpengine.com
+
+			- blog
+
+
+	Problematic subdomains:
+
+		- status	(mismatched, CN: *.statuspage.io)
+
+
+	Partially covered subdomains:
+
+		- blog		($ redirects to http)
 
 -->
 <ruleset name="New Relic (partial)">
 
 	<target host="newrelic.com" />
 	<target host="*.newrelic.com" />
-		<!--
-			Handled in -mismatches.xml.
-							-->
-		<exclusion pattern="^http://blog\." />
+		<exclusion pattern="^http://blog\.newrelic\.com/(?!wp-(?:admin(?:$|[?/])|content/|includes/|login\.php))" />
 
 
 	<securecookie host="^(.*\.)?newrelic\.com$" name=".*" />
 
+
+	<rule from="^http://status\.newrelic\.com/"
+		to="https://newrelic.statuspage.io/" />
 
 	<!--	Encountered subdomains:
 
 			- beacon-1
 			- rpm
 			- rpm-images
+			- rpm-instart
+			- staging
 			- staging-beacon-1
 			- support
 				- hosted on Zendesk, but cert matches.
