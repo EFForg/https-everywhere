@@ -1,0 +1,56 @@
+<!--
+	Other Stardock rulesets:
+
+		- Sins_of_a_Solar_Empire.com.xml
+
+
+	CDN buckets:
+
+		- stardock.cachefly.net
+
+
+	Nonfunctional domains:
+
+		- esupport.stardock.com	(refused)
+		- forums.stardock.com	(shows store.edgerunner.com; mismatched, CN: *.edgerunner.com)
+		- draginol.stardock.net	(dropped)
+		- web.stardock.net	(shows www; mismatched, CN: www.stardock.com)
+
+
+	Problematic domains:
+
+		- (www.)stardock.net	(shows .com; mismatched, CN: www.stardock.com)
+
+
+	Fully covered domains:
+
+		- (www.)stardock.com
+		- store.stardock.com
+		- (www.)stardock.net	(→ www.stardock.com)
+		- services.stardock.net
+
+-->
+<ruleset name="Stardock (partial)">
+
+	<target host="stardock.com" />
+	<target host="*.stardock.com" />
+	<target host="stardock.net" />
+	<target host="*.stardock.net" />
+
+
+	<securecookie host="^(?:store\.|www\.)?stardock\.com$" name=".+" />
+	<securecookie host="^services\.stardock\.net$" name=".+" />
+
+
+	<rule from="^http://(store\.|www\.)?stardock\.com/"
+		to="https://$1stardock.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://(?:www\.)?stardock\.net/[^?]*(\?.*)?"
+		to="https://www.stardock.com/corporatesolutions$1" />
+
+	<rule from="^http://services\.stardock\.net/"
+		to="https://services.stardock.net/" />
+
+</ruleset>
