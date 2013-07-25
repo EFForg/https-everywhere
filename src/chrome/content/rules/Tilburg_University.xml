@@ -1,29 +1,41 @@
 <!--
 	Problematic domains:
 
-		- (www.)tilberguniversity.edu	(some paths redirect to osso)
-		- tilburguniversity.nl		(mismatched, CN: images.uvt.nl)
-		- www.tilburgenuniversity.nl	(redirects to osso)
+		- www.kub.nl *
+		- tilburguniversity.nl		(400; mismatched, CN: images.uvt.nl)
+		- www.tilburguniversity.nl	(redirects to osso)
 
 		- uvt.nl subdomains:
 
-			- ^		(mismatched, CN: www.tilburguniversity.edu)
+			- ^		(400; mismatched, CN: www.tilburguniversity.edu)
 			- oudesite	($ redirects to osso)
 			- saml		(shows different data)
 			- www		(redirects to osso)
 
+	* Mismatched, CN: www.tilburguniversity.edu
+
 
 	Partially covered domains:
 
-		- (www.)tilburguniversity.edu
 		- oudesite.uvt.nl
 
 
 	Fully covered domains:
 
+		- www.kub.nl			(→ www.tilburguniversity.edu)
+		- (www.)tilburguniversity.edu
+		- edit.tilburguniversity.edu
+		- (www.)tilburguniversity.nl	(→ www.tilburguniversity.edu)
+
 		- uvt.nl subdomains:
 
 			- (www.)	(→ www.tilburguniversity.edu)
+			- cooper-redir
+			- (www.)curry
+			- (www.)fibonacci
+			- edit.productie.gx
+			- www.productie.gx
+			- (www.)hermite
 			- osso
 			- osso...:4443
 			- sso
@@ -32,25 +44,36 @@
 -->
 <ruleset name="Tilburg University (partial)">
 
+	<target host="www.kub.nl" />
 	<target host="tilburguniversity.edu" />
-	<target host="www.tilburguniversity.edu" />
+	<target host="*.tilburguniversity.edu" />
+	<target host="tilburguniversity.nl" />
+	<target host="www.tilburguniversity.nl" />
+	<target host="uvt.nl" />
 	<target host="*.uvt.nl" />
 		<exclusion pattern="^http://oudesite\.uvt\.nl/(?!imweb2/)" />
 
 
+	<securecookie host="^www\.tilburguniversity\.edu$" name=".+" />
 	<securecookie host="^(?:sso|stuwww)\.uvt\.nl$" name=".+" />
 
 
-	<rule from="^http://(www\.)?tilberguniversity\.edu/imweb2/"
-		to="https://$1tilberguniversity.edu/imweb2/" />
+	<rule from="^http://www\.kub\.nl/[^?]*(\?.*)?"
+		to="https://www.tilburguniversity.edu/nl/alumni/$1" />
 
-	<!--rule from="^http://(?:www\.)?tilberguniversity\.nl/[^\?]*(\?.*)?"
-		to="https://www.tilberguniversity.edu/$1" /-->
+	<rule from="^http://(www\.)?tilberguniversity\.edu/"
+		to="https://$1tilberguniversity.edu/" />
 
-	<!--rule from="^http://(?:www\.)?uvt\.nl/[^\?]*(\?.*)?"
-		to="http://www.tilburguniversity.edu/nl$1" /-->
+	<rule from="^http://edit\.tilburguniversity\.edu/"
+		to="https://edit.tilburguniversity.edu/" />
 
-	<rule from="^http://(o?sso|oudesite|stuwww)\.uvt\.nl/"
+	<rule from="^http://(?:www\.)?tilberguniversity\.nl/[^?]*(\?.*)?"
+		to="https://www.tilberguniversity.edu/$1" />
+
+	<rule from="^http://(?:www\.)?uvt\.nl/[^?]*(\?.*)?"
+		to="https://www.tilburguniversity.edu/nl$1" />
+
+	<rule from="^http://(cooper-redir|(?:www\.)?(?:curry|fibonacci|hermite)|(?:edit|www)\.productie\.gx|o?sso|oudesite|stuwww)\.uvt\.nl/"
 		to="https://$1.uvt.nl/" />
 
 	<rule from="^http://osso\.uvt\.nl:4443/"
