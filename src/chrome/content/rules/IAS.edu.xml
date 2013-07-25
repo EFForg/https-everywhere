@@ -1,0 +1,61 @@
+<!--
+	Institute for Advanced Study
+
+
+	Nonfunctional subdomains:
+
+		- library.hs *
+		- library *
+		- video *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- admin *
+		- hs *
+		- math	(works, cert only matches *.math)
+		- sns *
+
+	* Works, cert only matches www.foo
+
+
+	Partially covered subdomains:
+
+		- (www.)hs *	(^ → www)
+		- morals *
+		- (www.)sss *	(^ → www)
+
+	* $ redirects to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)admin	(^ → www)
+		- crossroads
+		- (www.)math	(^ → www)
+		- mail.math
+		- pcmi
+		- sig
+		- (www.)sns	(^ → www)
+
+-->
+<ruleset name="IAS.edu (partial)">
+
+	<target host="ias.edu" />
+	<target host="*.ias.edu" />
+		<exclusion pattern="^http://(?:(?:www\.)?(?:h|ss)|moral)s\.ias\.edu/(?!files/|sites/)" />
+
+
+	<securecookie host="^(?:\.math|\.mail\.math|\.pcmi|sig|\.sns|www)\.ias\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:crossroads|mail\.math|morals|pcmi|sig|www)\.)?ias\.edu/"
+		to="https://$1ias.edu/" />
+
+	<rule from="^http://(?:www\.)?(admin|hs|math|s[ns]s)\.ias\.edu/"
+		to="https://www.$1.ias.edu/" />
+
+</ruleset>
