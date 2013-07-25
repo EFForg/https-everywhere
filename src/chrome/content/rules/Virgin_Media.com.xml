@@ -1,0 +1,56 @@
+<!--
+	Nonfunctional subdomains:
+
+		- anywhere	(refused)
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- static-content	(refused)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- my		(some pages redirect to holding/)
+		- onlinemovies *
+
+	* $ redirects to http
+
+
+	Fully covered subdomains:
+
+		- allyours
+		- da
+		- help
+		- identity
+		- mail
+		- static-content	(→ www)
+
+-->
+<ruleset name="Virgin Media.com (partial)">
+
+	<target host="virginmedia.com" />
+	<target host="*.virginmedia.com" />
+		<exclusion pattern="^http://(?:www\.)?virginmedia\.com/(?!favicon\.ico|images/|img/|styles/)" />
+		<!--
+			These paths do not redirect to holding/:
+								-->
+		<exclusion pattern="^http://my\.virginmedia\.com/(?!404\.html|content/|images/|includes/)" />
+		<exclusion pattern="^http://onlinemovies\.virginmedia\.com/(?!App_Themes/|[cC]ommon/|COMMON/|favicon\.ico|js/|rfc\d+\.gif|WebResource\.axd)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.virginmedia\.com$" name="^(?:gpv_p\w|s_\w+)$" />
+	<securecookie host="^(?:da|help|identity)\.virginmedia\.com$" name=".+" />
+
+
+	<rule from="^http://(?:static-content\.|www\.)?virginmedia\.com/"
+		to="https://www.virginmedia.com/" />
+
+	<rule from="^http://(allyours|da|help|identity|mail|my|onlinemovies)\.virginmedia\.com/"
+		to="https://$1.virginmedia.com/" />
+
+</ruleset>
