@@ -8,6 +8,7 @@
 		- freescale.https.internapcdn.net
 
 			- cache
+			- cache-uat
 
 		- freescale.https.internapcdn.net
 
@@ -19,6 +20,7 @@
 	Problematic subdomains:
 
 		- cache *
+		- cache-uat *
 		- investors	(works, akamai)
 
 	* Paths are different
@@ -33,21 +35,28 @@
 	Fully covered subdomains:
 
 		- cache
+		- cache-uat
 		- community
+		- apps.community
 		- community-cache
+		- community-cache-uat
+		- community-uat
+		- apps.community-uat
 		- fdc
 		- images
+		- images-uat
 		- styles
+		- styles-uat
 
 -->
 <ruleset name="Freescale.com (partial)">
 
 	<target host="freescale.com" />
 	<target host="*.freescale.com" />
-		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|\?|/)|recommendation/|shared/)" />
+		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|\?|/)|js/|recommendation/|shared/)" />
 
 
-	<securecookie host="^(?:community|fdc)\.freescale\.com$" name=".+" />
+	<securecookie host="^(?:community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|(?:imag|styl)es(?:-uat)?)\.freescale\.com$" name=".+" />
 
 
 	<!--	Although ^ works over https, it does not redirect
@@ -56,10 +65,10 @@
 	<rule from="^http://(?:www\.)?freescale\.com/"
 		to="https://www.freescale.com/" />
 
-	<rule from="^http://(cache)\.freescale\.com/"
+	<rule from="^http://(cache(?:-uat)?)\.freescale\.com/"
 		to="https://$1.freescale.com/freescale/ssl/" />
 
-	<rule from="^http://(community(?:-cache)?|fdc|images|styles)\.freescale\.com/"
+	<rule from="^http://(community(?:-cache)?(?:-uat)?|apps\.community(?:-uat)?|fdc|images(?:-uat)?|styles(?:-uat)?)\.freescale\.com/"
 		to="https://$1.freescale.com/" />
 
 	<rule from="^http://investors\.freescale\.com/(client/|WebSideStory/)"
