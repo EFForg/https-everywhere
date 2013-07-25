@@ -276,7 +276,10 @@ function migratePreferences() {
       let upgrade = false;
       let childList = HTTPSEverywhere.prefs.getChildList("", {});
       for(let i=0; i<childList.length; i++) {
-        if(childList[i] == 'EFF') upgrade = true;
+        if(childList[i] == 'EFF') {
+          upgrade = true;
+          break;
+        }
       }
 
       if(upgrade) {
@@ -294,7 +297,7 @@ function migratePreferences() {
       HTTPSEverywhere.log(WARN, "Migration from prefs_version 0 error: "+e);
     }
 
-    //HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
+    HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
   }
 }
 
