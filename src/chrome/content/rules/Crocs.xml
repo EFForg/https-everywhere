@@ -1,20 +1,53 @@
 <!--
-	Cert only matches www
+		- phx.corporate-ir.net
+
+			- a121.g.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- company	(refused)
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- investors	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- investors	(→ akamai, avoiding user-visible paths)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- espanol
+		- images
 
 -->
 <ruleset name="Crocs">
 
 	<target host="crocs.com" />
 	<target host="*.crocs.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://investors\.crocs\.com/(?!client/|WebSideStory/)" />
 
 
-	<securecookie host="^www\.crocs\.com$" name=".+" />
+	<securecookie host=".*\.crocs\.com$" name="^(?:s_\w+|__utm)\w$" />
+	<securecookie host="^(?:espanol|www)\.crocs\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?crocs\.com/"
 		to="https://www.crocs.com/" />
 
-	<rule from="^http://images\.crocs\.com/"
-		to="https://images.crocs.com/" />
+	<rule from="^http://(espanol|images)\.crocs\.com/"
+		to="https://$1.crocs.com/" />
+
+	<rule from="^http://investors\.crocs\.com/"
+		to="https://a248.akamai.net/f/121/4034/6m/investors.crocs.com/" />
 
 </ruleset>
