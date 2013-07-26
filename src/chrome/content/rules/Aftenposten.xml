@@ -1,8 +1,46 @@
-<ruleset name="Aftenposten">
-        <target host="www.aftenposten.no" />
+<!--
+	Nonfunctional subdomains:
+
+		- bedrift *
+		- papp2 *
+		- sport		(times out)
+
+	* Revoked
+
+
+	Problematic subdomains:
+
+		- atorget *
+		- bedriftfiles		(self-signed, mismatched, CN: hotelladmin.aftenposten.no)
+		- bil *
+		- godetilbud *
+		- kundeservice		(revoked)
+		- reise *
+
+	* Works; mismatched, CN: www.aftenposten.no
+
+
+	Partially covered subdomains:
+
+		- kundeservice		(→ a)
+
+-->
+<ruleset name="Aftenposten" platform="mixedcontent">
+        <target host="*.aftenposten.no" />
         <target host="aftenposten.no" />
 
+
+	<!--securecookie host="^\.aftenposten\.no$" name="^environment$" /-->
+	<securecookie host="^(?:a|kundeweb|onlinesos)\.aftenposten\.no$" name=".+" />
+
+
 	<rule from="^http://(?:www\.)?aftenposten\.no/" to="https://www.aftenposten.no/"/>
+
+	<rule from="^http://(a|kundeweb|onlinesos)\.aftenposten\.no/"
+		to="https://$1.aftenposten.no/" />
+
+	<rule from="^http://kundeservice\.aftenposten\.no/(\?.*)?$"
+		to="https://a.aftenposten.no/kundeservice/$1" />
 
 	<!-- The following rules will generate SSL warnings by default because
 	the cert is only valid for www.aftenposten.no -->

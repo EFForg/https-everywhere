@@ -1,51 +1,59 @@
-<!-- Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
-     URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
-     longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
-     so this file is a lot simpler these days. -->
+<!--
+	Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
+	URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
+	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
+	so this file is a lot simpler these days.
 
-<ruleset name="Wikimedia">
-  <target host="*.wikipedia.org" />
-  <target host="*.wikinews.org" />
-  <target host="*.wikisource.org" />
-  <target host="*.wikibooks.org" />
-  <target host="*.wikiquote.org" />
-  <target host="*.wikiversity.org" />
-  <target host="*.wiktionary.org" />
-  <target host="*.wikimedia.org" />
-	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html	-->
-	<exclusion pattern="^http://lists\.wikimedia\.org/pipermail($|/)" />
-  <target host="wikipedia.org" />
-  <target host="wikinews.org" />
-  <target host="wikisource.org" />
-  <target host="wikibooks.org" />
-  <target host="wikiquote.org" />
-  <target host="wikiversity.org" />
-  <target host="wiktionary.org" />
-  <target host="wikimedia.org" />
-  <target host="mediawiki.org" />
-  <target host="www.mediawiki.org" />
-  <target host="wikimediafoundation.org" />
-  <target host="www.wikimediafoundation.org" />
-  <target host="enwp.org" />
-  <target host="frwp.org" />
-  <target host="*.wikidata.org" />
-  <target host="wikidata.org" />
+-->
+<ruleset name="Wikimedia" platform="mixedcontent">
 
-  <exclusion pattern="^http://(apt|bayes|bayle|brewster|bug-attachment|commonsprototype\.tesla\.usability|commons\.prototype|cs|cz|dataset2|de\.prototype|download|dumps|ekrem|emery|en\.prototype|ersch|etherpad|flaggedrevssandbox|flgrevsandbox|gallium|ganglia|ganglia3|harmon|hume|ipv4\.labs|ipv6and4\.labs|jobs|mlqt\.tesla\.usability|mobile\.tesla\.usability|m|nagios|oldusability|project2|prototype|results\.labs|search|shop|sitemap|snapshot3|stafford|stats|status|test\.prototype|torrus|ubuntu|wiki-mail|yongle|wikitech|wlm)\.wikimedia\.org" />
-  <exclusion pattern="^http://(static|download|m)\.wikipedia\.org/"/>
+	<target host="enwp.org" />
+	<target host="frwp.org" />
+	<target host="mediawiki.org" />
+	<target host="www.mediawiki.org" />
+	<target host="wikibooks.org" />
+	<target host="*.wikibooks.org" />
+	<target host="wikidata.org" />
+	<target host="*.wikidata.org" />
+	<target host="wikimedia.org" />
+	<target host="*.wikimedia.org" />
+		<exclusion pattern="^http://(?:apt|bayes|bayle|brewster|bug-attachment|cs|cz|dataset2|download|dumps|ekrem|emery|ersch|etherpad|harmon|hume|(?:ipv4|ipv6and4|results)\.labs|m|project2|search|sitemap|snapshot3|stafford|statu?s|torrus|ubuntu|wiki-mail|wlm|yongle)\.wikimedia\.org" />
+		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
+		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
+	<target host="wikimediafoundation.org" />
+	<target host="www.wikimediafoundation.org" />
+	<target host="wikinews.org" />
+	<target host="*.wikinews.org" />
+	<target host="wikipedia.org" />
+	<target host="*.wikipedia.org" />
+		<exclusion pattern="^http://(?:download|static)\.wikipedia\.org/" />
+	<target host="*.m.wikipedia.org" />
+	<target host="wikiquote.org" />
+	<target host="*.wikiquote.org" />
+	<target host="wikisource.org" />
+	<target host="*.wikisource.org" />
+	<target host="wikiversity.org" />
+	<target host="*.wikiversity.org" />
+	<target host="wikivoyage.org" />
+	<target host="*.wikivoyage.org" />
+	<target host="wiktionary.org" />
+	<target host="*.wiktionary.org" />
 
-  <rule from="^http://([^@:/]+\.)?wik(ipedia|inews|isource|ibooks|iquote|iversity|tionary|imedia|idata)\.org/"
-          to="https://$1wik$2.org/" />
+	<securecookie host="^.+\.wikipedia\.org$" name=".+" />
 
-  <rule from="^http://(www\.)?mediawiki\.org/"
-	  to="https://$1mediawiki.org/" />
+	<rule from="^http://(en|fr)wp\.org/"
+		to="https://$1.wikipedia.org/wiki/" />
 
-  <rule from="^http://(www\.)?wikimediafoundation\.org/"
-	  to="https://$1wikimediafoundation.org/" />
+	<rule from="^http://(?:www\.)?mediawiki\.org/"
+		to="https://www.mediawiki.org/" />
 
-  <rule from="^http://enwp\.org/"
-	  to="https://en.wikipedia.org/wiki/" />
+	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
+		to="https://$1wik$2.org/" />
 
-  <rule from="^http://frwp\.org/"
-	  to="https://fr.wikipedia.org/wiki/" />
+	<rule from="^http://([^@:/]+)\.planet\.wikimedia\.org/"
+		to="https://$1.planet.wikimedia.org/" />
+
+	<rule from="^http://(www\.)?wikimediafoundation\.org/"
+		to="https://$1wikimediafoundation.org/" />
+
 </ruleset>

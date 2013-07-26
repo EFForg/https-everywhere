@@ -1,38 +1,46 @@
-<ruleset name="Cheezburger">
 <!--
-        As of 2012-08-22, known unprotected subdomains are:
-        - corp        (not listening on https)
-        - blog        (not listening on https)
-        - sites       (unbounce.com certificate)
-        - advertising (unbounce.com certificate)
-        - developer   (mashery.com certificate)
-        - jobs        (theresumator.com certificate)
-        - feedback    (uservoice.com certificate)
+	As of 2012-08-22, known unprotected subdomains are:
 
-        However, there are tens (hundreds?) of subdomains supporting https with
-        a wildcard certificate, so it's not worth whitelisting them one by one.
+		- advertising	(unbounce.com certificate)
+		- blog		(not listening on https)
+		- corp		(not listening on https)
+		- developer	(mashery.com certificate)
+		- feedback	(uservoice.com certificate)
+		- jobs		(theresumator.com certificate)
+		- sites		(unbounce.com certificate)
 
-        Other related unprotected hosts:
-        - chzb.gr
-        - knowyourmeme.com
+	However, there are tens (hundreds?) of subdomains supporting https with
+	a wildcard certificate, so it's not worth whitelisting them one by one.
+
+	Other related unprotected hosts:
+
+		- chzb.gr
+		- knowyourmeme.com
+
 -->
-  <target host="cheezburger.com" />
-  <target host="*.cheezburger.com" />
-  <target host="i.chzbgr.com" />
-  <target host="s.chzbgr.com" />
+<ruleset name="Cheezburger" platform="mixedcontent">
 
-  <exclusion pattern="^http://(corp|blog|sites|advertising|developer|jobs|feedback)\.cheezburger\.com/"/>
+	<target host="cheezburger.com" />
+	<target host="*.cheezburger.com" />
+		<exclusion pattern="^http://(?:corp|blog|sites|advertising|developer|jobs|feedback)\.cheezburger\.com/" />
+	<target host="chzb.gr" />
+	<target host="*.chzbgr.com" />
 
-<!--
-      There are some inconsistent redirects between cheezburger.com and
-      www.cheezburger.com. Don't try to enforce either hostname
--->
-  <rule from="^http://cheezburger\.com/"
-          to="https://cheezburger.com/" />
-  <rule from="^http://([\w\-]+)\.cheezburger\.com/"
-          to="https://$1.cheezburger.com/" />
-  <rule from="^http://(i|s)\.chzbgr\.com/"
-          to="https://$1.chzbgr.com/" />
+
+	<securecookie host="^www\.cheezburger\.com$" name=".*" />
+
+
+	<!--	There are some inconsistent redirects between cheezburger.com and
+		www.cheezburger.com. So don't try to enforce either hostname.
+					-->
+	<rule from="^http://([\w\-]+\.)?cheezburger\.com/"
+		to="https://$1cheezburger.com/" />
+
+	<rule from="^https?://chzb\.gr/"
+		to="https://bit.ly/" />
+
+	<rule from="^http://(i|s|t)\.chzbgr\.com/"
+		to="https://$1.chzbgr.com/" />
 
 	<rule from="^https://(advertising|blog|developer|feedback|jobs|sites)\.cheezburger\.com/?$"
 		to="http://$1.cheezburger.com/" downgrade="1" />

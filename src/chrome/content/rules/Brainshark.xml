@@ -1,11 +1,25 @@
-<ruleset name="Brainshark">
+<!--
+	Problematic subdomains:
+
+
+		- ^		(cert only matches www)
+		- presentation	(mismatch, CN: *.sslcert11.com; works)
+
+-->
+<ruleset name="Brainshark" platform="mixedcontent">
 
 	<target host="brainshark.com"/>
 	<target host="www.brainshark.com"/>
 
 	<securecookie host="^(.*\.)?brainshark\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?brainshark\.com/"
+	<rule from="^https?://presentation.brainshark.com/company/contact_us\.(?:aspx|php)(?:$|\?.*)"
+		to="https://www.brainshark.com/contact-us" />
+
+	<rule from="^https?://presentation\.brainshark\.com/privacy_policy/privacy_policy\.(?:aspx|php)(?:$|\?.*)"
+		to="https://www.brainshark.com/company/privacy-policy.aspx" />
+
+	<rule from="^http://(?:presentation\.|www\.)?brainshark\.com/"
 		to="https://www.brainshark.com/"/>
 
 </ruleset>

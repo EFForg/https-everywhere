@@ -1,50 +1,89 @@
-<!--	Bucket at s3.amazonaws.com/uploadedimages.demandmedia/	-->
-<ruleset name="Demand Media (partial)">
-
-	<!--	/cdn-www.:	Akamai
-		*img.net/:		-->
-	<target host="vs.demandmedia.com"/>
-	<target host="demandstudios.com"/>
-	<target host="*.demandstudios.com"/>
-	<target host="*.dmtracker.com"/>
-	<target host="*.glimg.net"/>
-	<target host="golflink.com"/>
-	<target host="*.golflink.com"/>
-	<target host="golflink.net"/>
-	<target host="www.golflink.net"/>
-	<target host="greencar.com"/>
-	<target host="*.greencar.com"/>
-	<target host="livestrong.com"/>
-	<target host="*.livestrong.com"/>
-	<target host="i.lsimg.net"/>
+<!--
+	For problematic rules, see Demand-Media-mismatches.xml.
 
 
-	<securecookie host="^vs\.demandmedia\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?demandstudios\.com$" name=".*"/>
-	<securecookie host="^.*\.dmtracker\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?greencar\.com$" name=".*"/>
-	<securecookie host="^(.*\.)?livestrong\.org$" name=".*"/>
+	Other Demand Media rulesets:
+
+		- Enom.xml
+		- ENomCentral.xml
+		- Registryrocket.com.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/uploadedimages.demandmedia/
+
+		- wac.5008.edgecastcdn.net/??5008/
+
+			- www.cracked.com
+
+		- i.crackedcdn.com.edgesuite.net
+
+
+	Problematic domains:
+
+		- (www.)blogburst.com		(works; mismatched, CN: www.demandstudios.com)
+		- cracked.com			(works, expired 2012-09-02)
+		- create.demandstudios.com	(works; mismatched, CN: *.sqsp.com)
+		- photos2.demandstudios.com	(works, akamai)
+
+
+	Nonfunctional domains:
+
+		- www.cracked.com		(400; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- demandmedia.com
+		- cdn-www.demandmedia.com	(503, akamai)
+		- new.demandmedia.com
+		- www.demandmedia.com		(503, akamai)
+
+-->
+<ruleset name="Demand Media (partial)" platform="mixedcontent">
+
+	<!--	*img.net/:	Akamai
+				-->
+	<target host="vs.demandmedia.com" />
+	<target host="demandstudios.com" />
+	<target host="*.demandstudios.com" />
+	<target host="*.dmtracker.com" />
+	<target host="*.glimg.net" />
+	<target host="golflink.com" />
+	<target host="*.golflink.com" />
+	<target host="golflink.net" />
+	<target host="www.golflink.net" />
+	<target host="greencar.com" />
+	<target host="*.greencar.com" />
+	<target host="livestrong.com" />
+	<target host="*.livestrong.com" />
+	<target host="i.lsimg.net" />
+
+
+	<securecookie host="^vs\.demandmedia\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?demandstudios\.com$" name=".+" />
+	<securecookie host="^.*\.dmtracker\.com$" name=".+" />
+	<securecookie host="^www\.golflink\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?greencar\.com$" name=".+" />
+	<securecookie host="^(?:.*\.)?livestrong\.org$" name=".+" />
 
 
 	<rule from="^http://vs\.demandmedia\.com/"
-		to="https://vs.demandmedia.com/"/>
+		to="https://vs.demandmedia.com/" />
 
-	<rule from="^http://(?:(?:cdn-)?www\.)?demandstudios\.com/"
-		to="https://www.demandstudios.com/"/>
+	<rule from="^http://((?:cdn-)?(?:staging|www)\.)?demandstudios\.com/"
+		to="https://$1demandstudios.com/" />
 
 	<rule from="^http://(extended|vs)\.dmtracker\.com/"
-		to="https://$1.dmtracker.com/"/>
+		to="https://$1.dmtracker.com/" />
 
-	<rule from="^http://(?:(?:cdn-www)?golflink\.com|(?:www\.)?golflink\.net|u?i\.glimg\.net)/"
-		to="https://www.golflink.com/"/>
+	<rule from="^http://(?:(?:cdn-www\.)?golflink\.com|(?:www\.)?golflink\.net|u?i\.glimg\.net)/"
+		to="https://www.golflink.com/" />
 
 	<rule from="^http://(?:(?:cdn-)?www\.)?greencar\.com/"
-		to="https://www.greencar.com/"/>
+		to="https://www.greencar.com/" />
 
 	<rule from="^http://(?:livestrong\.com|i\.lsimg\.net)/"
-		to="https://www.livestrong.com/"/>
+		to="https://www.livestrong.com/" />
 
-	<rule from="^http://www\.livestrong\.com/(login|re(?:mind|gister))/"
-		to="https://www.livestrong.com/$1/"/>
+	<rule from="^http://www\.livestrong\.com/(login/|remind/|register/|shop(?:$|\?))"
+		to="https://www.livestrong.com/$1" />
 
 </ruleset>

@@ -1,27 +1,69 @@
-<ruleset name="DomainTools (partial)">
+<!--
+	Nonfunctional subdomains:
 
-	<target host="domaintools.com"/>
-	<target host="blog.domaintools.com"/>
-	<target host="directory.domaintools.com"/>
-	<target host="img.domaintools.com"/>
-	<target host="secure.domaintools.com"/>
-	<target host="support.domaintools.com"/>
-	<target host="*.support.domaintools.com"/>
-	<target host="whois.domaintools.com"/>
-	<target host="www.domaintools.com"/>
+		- thumbnails		(times out)
+		- origin.thumbnails
 
-	<rule from="^http://(?:directory\.|whois\.|www\.)?domaintools\.com/(favicon\.png$|composite/|images/)"
-		to="https://secure.domaintools.com/$1"/>
 
-	<rule from="^https://blog\.domaintools\.com/wp-content/"
-		to="https://blog.domaintools.com/wp-content/"/>
+	Problematic subdomains:
+
+		- directory *
+		- img **
+		- origin *
+		- source **
+		- whois	**
+		- www **
+
+	* Directory
+	** Times out
+
+
+	Partially covered subdomains:
+
+		- (www.)		(→ secure)
+		- blog *
+		- directory		(→ secure)
+		- marketplace *
+		- reversewhois *
+		- source		(→ secure)
+		- whois			(→ secure)
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- api
+		- freeapi
+		- img		(→ secure, also on origin.img)
+		- secure
+		- support
+
+
+	Targets solely for wildcard cookies:
+
+		- *.support.domaintools.com
+
+-->
+<ruleset name="DomainTools (partial)" platform="mixedcontent">
+
+	<target host="domaintools.com" />
+	<target host="*.domaintools.com" />
+		<exclusion pattern="^http://(?:origin\.img|marketplace|reversewhois|source)\.domaintools\.com/(?!composite/|images/|ui-elements/|wp-content/|wp-includes/)" />
+	<target host="origin.img.domaintools.com" />
+	<target host="*.support.domaintools.com" />
+
+
+	<securecookie host="^\.support\.domaintools\.com$" name=".+" />
+
+
+	<rule from="^http://(?:directory\.|source\.|whois\.|www\.)?domaintools\.com/(email\.pgif(?:$|\?)|favicon\.png$|composite/|images/)"
+		to="https://secure.domaintools.com/$1" />
+
+	<rule from="^http://(api|blog|freeapi|origin\.img|marketplace|reversewhois|secure|support)\.domaintools\.com/"
+		to="https://$1.domaintools.com/" />
 
 	<rule from="^http://img\.domaintools\.com/"
-		to="https://secure.domaintools.com/images/"/>
-
-	<rule from="^http://s(ecure|upport)\.domaintools\.com/"
-		to="https://s$1.domaintools.com/"/>
-
-	<securecookie host="^\.support\.domaintools\.com$" name=".*"/>
+		to="https://secure.domaintools.com/images/" />
 
 </ruleset>
