@@ -1,12 +1,29 @@
- <ruleset name="Linux.com">
-   <target host="linux.com" />
-   <target host="store.linux.com" />
-   <target host="www.linux.com" />
-   <target host="video.linux.com" />
+<!--
+	Much of jobs.linux.com is handled in JobThread-clients.xml.
 
-   <securecookie host="^video\.linux\.com$" name=".*" />
 
-   <rule from="^http://(?:www\.)?linux\.com/" to="https://www.linux.com/" />
-   <rule from="^http://store\.linux\.com/" to="https://store.linux.com/" />
-   <rule from="^http://video\.linux\.com/" to="https://video.linux.com/" />
- </ruleset>
+	Nonfunctional subdomains:
+
+		- blogs
+
+-->
+<ruleset name="Linux.com" platform="mixedcontent">
+
+	<target host="linux.com" />
+	<target host="*.linux.com" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.store.linux.com" />
+
+
+	<securecookie host="^.*\.linux\.com$" name=".*" />
+
+
+	<rule from="^http://((?:store|video|www)\.)?linux\.com/"
+		to="https://$1linux.com/" />
+
+	<!--	Cert: www.jobthread.com
+					-->
+	<rule from="^https?://jobs\.linux\.com/(image|file|partner)s/"
+		to="https://www.jobthread.com/$1s/" />
+
+</ruleset>

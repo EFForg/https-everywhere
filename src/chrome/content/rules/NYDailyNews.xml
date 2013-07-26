@@ -1,10 +1,30 @@
-<ruleset name="NYDailyNews">
-  <target host="nydailynews.com" />
-  <target host="www.nydailynews.com" />
-  <target host="classifiedads.dailynews.com" />
+<!--
+	- CDN buckets:
 
-  <securecookie host="^([^@:/]+\.)?nydailynews\.com$" name=".*"/>
+		- dailynews.vo.llnwd.net
 
-  <rule from="^http://(?:www\.)?nydailynews\.com/" to="https://www.nydailynews.com/"/>
-  <rule from="^http://(classifiedads)\.nydailynews\.com/" to="https://$1.nydailynews.com/"/>
+			- .hs. doesn't exist
+			- assets.nydailynews.com
+
+
+	Problematic subdomains:
+
+		 - assets	(400, CN: *.hs.llnwd.net)
+
+-->
+<ruleset name="NYDailyNews" platform="mixedcontent">
+
+	<target host="nydailynews.com" />
+	<target host="*.nydailynews.com" />
+
+
+	<securecookie host="^(?:[^@:/]+\.)?nydailynews\.com$" name=".+" />
+
+
+	<rule from="^http://(?:assets\.|www\.)?nydailynews\.com/"
+		to="https://www.nydailynews.com/" />
+
+	<rule from="^http://classifiedads\.nydailynews\.com/"
+		to="https://classifiedads.nydailynews.com/" />
+
 </ruleset>

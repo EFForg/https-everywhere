@@ -1,25 +1,22 @@
 <!--
 	For other RedHat coverage, see RedHat.xml.
 
+
+	Problematic subdomains:
+
+		- www	(cert only matches ^opensource.com)
+
 -->
-<ruleset name="opensource.com (partial)">
+<ruleset name="opensource.com" platform="mixedcontent">
 
-	<target host="174.129.231.240" />
 	<target host="opensource.com" />
-		<!--	Redirects to http.	-->
-		<exclusion pattern="^http://opensource\.com/users/$" />
-	<target host="www.opensource.com" />
+	<target host="*.opensource.com" />
 
 
-	<rule from="^https?://174\.129\.231\.240/sites/"
-		to="https://opensource.com/sites/" />
+	<securecookie host="^\.opensource\.com$" name=".+" />
 
-	<!--	Cert doesn't match www.	-->
-	<rule from="^https?://www\.opensource\.com/"
+
+	<rule from="^http://(?:www\.)?opensource\.com/"
 		to="https://opensource.com/" />
-
-	<!--	At least some pages redirect to http.	-->
-	<rule from="^http://opensource\.com/(misc/|should-be$|sites/|users?/|webcast$)"
-		to="https://opensource.com/$1" />
 
 </ruleset>

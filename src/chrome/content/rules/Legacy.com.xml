@@ -1,23 +1,65 @@
-<ruleset name="Legacy.com (partial)">
+<!--
+	CDN buckets:
 
-	<target host="legacy.com"/>
-	<target host="*.legacy.com"/>
+		- legacy.o.miisolutions.net/...
 
-	<!--	cert invalid for !www	-->
-	<rule from="^http://legacy\.com/"
-		to="https://www.legacy.com/"/>
+			- mi-cache.legacy.com
+			- mi-static.legacy.com
 
-	<rule from="^http://www\.legacy\.com/($|Images/|(?:[\w\-/]+/)?(?:images/|ObitsTileCorner\.axd)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)"
-		to="https://www.legacy.com/$1"/>
 
-	<!--	mi		cert: www.legacy.com
-		static		cert: ditto
-		mi-static	cert: *.service.mirror-image.net; 404	-->
-	<rule from="^http://(?:mi|(?:mi-)?static)\.legacy\.com/"
-		to="https://www.legacy.com/"/>
+	Problematic subdomains:
 
-	<!--	!on www		-->
-	<rule from="^http://mi-cache\.legacy\.com/"
-		to="https://cache.legacy.com/"/>
+		- blog		(handled in WordPress-blogs.xml)
+		- connect	(CN: *.ning.com)
+		- mi-cache *
+		- mi-static *
+
+	* 404, CN: *.service.mirror-image.net
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- memorialwebsites *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- ^
+		- cache
+		- mi
+		- mi-cache
+		- mi-static
+		- static
+
+-->
+<ruleset name="Legacy.com (partial)" platform="mixedcontent">
+
+	<target host="legacy.com" />
+	<target host="*.legacy.com" />
+		<exclusion pattern="^http://(?:www\.)?legacy\.com/(?!$|favicon\.ico|globalscripts/tracking/AIMWrapper\.js|Images/|(?:[\w/-]+/)?(?:images/|ObitsTileCorner\.axd|scripts/|Styles/)|ns/|NS/|OBITUARIES/AffiliateArtwork\.axd)" />
+		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?!create(?:account|memorial)\.aspx|images/|styles/)" />
+	<target host="*.legacyconnect.ning.com" />
+
+
+	<securecookie host="^static\.legacy\.com$" name=".+" />
+	<securecookie host="^\.legacyconnect\.ning\.com$" name=".+" />
+
+
+	<!--	obituaries/Images/ redirects to http.
+							-->
+	<rule from="^http://(www\.)?legacy\.com/obituaries/Images/"
+		to="https://$1legacy.com/obituaries/images/" />
+
+	<rule from="^http://((?:cache|mi|static|memorialwebsites|www)\.)?legacy\.com/"
+		to="https://$1legacy.com/" />
+
+	<rule from="^http://connect\.legacy\.com/"
+		to="https://legacyconnect.ning.com/" />
+
+	<rule from="^http://mi-(cache|static)\.legacy\.com/"
+		to="https://$1.legacy.com/" />
 
 </ruleset>
