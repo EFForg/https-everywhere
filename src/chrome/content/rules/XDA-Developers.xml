@@ -1,14 +1,55 @@
+<!--
+	CDN buckets:
+
+		- wac.8244.edgecastcdn.net/??8244/
+
+			- buttons.media
+			- cdn.media
+			- icons.media
+			- img.media
+			- img[1-4].media
+			- cdn.www
+
+
+	Problematic subdomains:
+
+		- images *
+		- media subdomains:
+
+			- ^ *
+			- buttons *
+			- cdn *
+			- icons *
+			- img *
+			- img[1-4] *
+
+		- cdn.www *
+
+	* 404; mismatched, CN: gp1.wac.edgecastcdn.net
+
+
+	Partially covered subdomains:
+
+		- forum		(at least some pages redirect to http)
+
+-->
 <ruleset name="XDA Developers (partial)">
 
-	<target host="xda-developers.com"/>
-	<target host="*.xda-developers.com"/>
+	<target host="xda-developers.com" />
+	<target host="*.xda-developers.com" />
+		<exclusion pattern="^http://forum\.xda-developers\.com/(?!clientscript/|css/|favicon\.ico|images/)" />
 
-	<securecookie host="^(www\.)?xda-developers\.com$" name=".*"/>
 
-	<rule from="^http://(www\.)?xda-developers\.com/"
-		to="https://$1xda-developers.com/"/>
+	<securecookie host="^(?:www\.)?xda-developers\.com$" name=".+" />
 
-	<rule from="^http://forum\.xda-developers\.com/favicon\.ico"
-		to="https://xda-developers.com/favicon.ico"/>
+
+	<rule from="^http://(forum\.|www\.)?xda-developers\.com/"
+		to="https://$1xda-developers.com/" />
+
+	<rule from="^https://(?:images|(?:(?:buttons|cdn|icons|img\d?)\.)?media)\.xda-developers\.com/"
+		to="https://forum.xda-developers.com/" />
+
+	<rule from="^http://cdn\.www\.xda-developers\.com/"
+		to="https://www.xda-developers.com/" />
 
 </ruleset>

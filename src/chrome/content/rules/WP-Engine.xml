@@ -1,11 +1,44 @@
+<!--
+	CDN buckets:
+
+		- wpe.wpengine.netdna-cdn.com
+
+			- -ssl doesn't exist
+			- cdn.wpengine.com
+
+
+	Problematic subdomains:
+
+		- cdn		(404; mismatched, CN: *.netdna-ssl.com)
+		- press		(mismatched, CN: *.heroku.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cdn		(→ www)
+		- devbox
+		- my
+		- press		(→ wpengine.totemapp.com)
+		- support
+
+-->
 <ruleset name="WP Engine">
 
-	<target host="wpengine.com"/>
-	<target host="*.wpengine.com"/>
+	<target host="wpengine.com" />
+	<target host="*.wpengine.com" />
 
-	<securecookie host="^(.*\.)?wpengine\.com$" name=".*"/>
 
-	<rule from="^http://(w+\.)?wpengine\.com/"
-		to="https://$1wpengine.com/"/>
+	<securecookie host="^(?:.*\.)?wpengine\.com$" name=".+" />
+
+
+	<rule from="^https?://cdn\.wpengine\.com/"
+		to="https://wpengine.com/" />
+
+	<rule from="^https?://press\.wpengine\.com/"
+		to="https://wpengine.totemapp.com/" />
+
+	<rule from="^http://(\w+\.)?wpengine\.com/"
+		to="https://$1wpengine.com/" />
 
 </ruleset>
