@@ -1,4 +1,10 @@
 window.addEventListener("load", https_everywhere_load, true);
+window.addEventListener("load", function load(event) {
+  // need to wrap migratePreferences in another callback so that notification
+  // always displays on browser restart
+  window.removeEventListener("load", load, false);
+  gBrowser.addEventListener("DOMContentLoaded", migratePreferences, true);
+}, false);
 
 const CI = Components.interfaces;
 const CC = Components.classes;
@@ -58,7 +64,7 @@ httpsEverywhere.toolbarButton = {
       // 2) Sometimes the page is loaded before all applied rulesets are
       //    calculated; in such a case, a half-second wait works.
       setTimeout(tb.updateRulesetsApplied, 500);
-    }
+    };
 
     var appcontent = document.getElementById('appcontent');
     if (appcontent) {
@@ -67,15 +73,12 @@ httpsEverywhere.toolbarButton = {
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
-    if(!Services.prefs.getPrefType(hintPref) 
+    if (!Services.prefs.getPrefType(hintPref) 
         || !Services.prefs.getBoolPref(hintPref)) { 
-
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
-
-      gBrowser.addEventListener('load', tb.handleShowHint, true);
+      gBrowser.addEventListener("DOMContentLoaded", tb.handleShowHint, true);
     }
-    
   },
 
   /**
@@ -83,25 +86,25 @@ httpsEverywhere.toolbarButton = {
    */
   handleShowHint: function() {
     var tb = httpsEverywhere.toolbarButton;
-    if (!tb.hintShown) {
+    if (!tb.hintShown){
       tb.hintShown = true;
       const faqURL = "https://www.eff.org/https-everywhere/faq";
-
-      gBrowser.selectedTab = gBrowser.addTab(faqURL);
       var nBox = gBrowser.getNotificationBox();
-
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
-      nBox.appendNotification(
+      var hint = nBox.appendNotification(
         msg, 
         'https-everywhere', 
         'chrome://https-everywhere/skin/https-everywhere-24.png', 
-        nBox.PRIORITY_WARNING_MEDIUM
+        nBox.PRIORITY_WARNING_MEDIUM,
+	[],
+	function(action) {
+	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
+	}
       );
-
     }
-
-    gBrowser.removeEventListener('load', tb.showToolbarHint, true);
+    gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
   /**
@@ -109,8 +112,7 @@ httpsEverywhere.toolbarButton = {
    * is enabled or disabled.
    */
   changeIcon: function() {
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
 
     var toolbarbutton = document.getElementById('https-everywhere-button');
     if (enabled) {
@@ -125,8 +127,7 @@ httpsEverywhere.toolbarButton = {
    */
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
     if (!enabled) { 
       toolbarbutton.setAttribute('rulesetsApplied', 0);
       return;
@@ -154,12 +155,12 @@ httpsEverywhere.toolbarButton = {
 
     toolbarbutton.setAttribute('rulesetsApplied', counter);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
-  }
-
+  } 
 };
 
 
 function https_everywhere_load() {
+  window.removeEventListener('load', https_everywhere_load, true);
   // on first run, put the context menu in the addons bar
   try {
     var first_run;
@@ -267,3 +268,40 @@ function open_in_tab(url) {
 // hook event for showing hint
 HTTPSEverywhere.log(DBUG, 'Adding listener for toolbarButton init.');
 window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);
+
+function migratePreferences() {
+  gBrowser.removeEventListener("DOMContentLoaded", migratePreferences, true);
+  let prefs_version = HTTPSEverywhere.prefs.getIntPref("prefs_version");
+  
+  // first migration loses saved prefs
+  if(prefs_version == 0) {
+    try {
+      // upgrades will have old rules as preferences, such as the EFF rule
+      let upgrade = false;
+      let childList = HTTPSEverywhere.prefs.getChildList("", {});
+      for(let i=0; i<childList.length; i++) {
+        if(childList[i] == 'EFF') {
+          upgrade = true;
+          break;
+        }
+      }
+
+      if(upgrade) {
+        let nBox = gBrowser.getNotificationBox();
+        let strings = document.getElementById('HttpsEverywhereStrings');
+        let msg = strings.getString('https-everywhere.migration.notification0');
+        nBox.appendNotification(
+          msg, 
+          'https-everywhere-migration0', 
+          'chrome://https-everywhere/skin/https-everywhere-24.png', 
+          nBox.PRIORITY_WARNING_MEDIUM
+        );
+      }
+    } catch(e) {
+      HTTPSEverywhere.log(WARN, "Migration from prefs_version 0 error: "+e);
+    }
+
+    HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
+  }
+}
+
