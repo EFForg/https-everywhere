@@ -1,6 +1,9 @@
 pref("extensions.https_everywhere.LogLevel", 5);
 pref("extensions.https_everywhere.globalEnabled",true);
 
+// this is the HTTPS Everywhere preferences version (for migrations)
+pref("extensions.https_everywhere.prefs_version", 0);
+
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
 
