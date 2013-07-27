@@ -1,0 +1,43 @@
+<!--
+	CDN buckets:
+
+		- mycdn-a.akamaihd.net
+
+		- a1778.g.akamai.net/... | qsearch-a.akamaihd.net
+
+			- contextual.media.net
+
+		- srvjs-a.akamaihd.net
+		- www.media.net.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- ^	(refused)
+		- www	(503, akamai)
+
+
+	Problematic subdomains:
+
+		- contextual	(works, akamai)
+
+-->
+<ruleset name="media.net (partial)">
+
+	<target host="*.media.net" />
+
+
+	<!--	Can this be secured safely?
+						-->
+	<!--securecookie host="^\.media\.net$" name="^visitor-id$" /-->
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.media\.net$" name="^(?:__utm\w|wooTracker)$" />
+	<securecookie host="^\.www\.media\.net$" name="^(?:__ar_v4|_te_)$" />
+
+
+	<rule from="^http://contextual\.media\.net/"
+		to="https://qsearch-a.akamaihd.net/" />
+
+</ruleset>
