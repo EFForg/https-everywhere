@@ -1,5 +1,34 @@
+<!--
+	CDN buckets:
+
+		- wildcard.aeriastatic.com.edgekey.net
+
+			- c.aeriastatic.com
+
+		- static.aeriagames.com.edgesuite.net
+
+			- s.aeriastatic.com
+
+
+	Problematic domains:
+
+		- s.aeriastatic.com	(works, akamai)
+
+-->
 <ruleset name="Aeriagames">
 <target host="www.aeriagames.com" />
 <target host="aeriagames.com" />
+	<target host="*.aeriastatic.com" />
+
 <rule from="^http://(?:www\.)?aeriagames\.com/" to="https://www.aeriagames.com/"/>
+
+	<!--	We must rewrite from https://s to c due to protocol-relative
+		links on www.aeriagames.com:
+
+			- https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001650.html
+			- https://bugzilla.mozilla.org/show_bug.cgi?id=879072#c1
+							-->
+	<rule from="^https?://[cs]\.aeriastatic\.com/"
+		to="https://c.aeriastatic.com/" />
+
 </ruleset>
