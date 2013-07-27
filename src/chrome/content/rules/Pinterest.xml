@@ -48,6 +48,10 @@
 
 			- media-cache-lt\d.pinterest.com
 
+		- pinterest.zendesk.com
+
+			- help.pinterest.com
+
 
 	Nonfunctional domains:
 
@@ -98,6 +102,11 @@
 			- assets
 			- blog-assets
 			- help
+
+			- *.help:
+
+				- en
+
 			- m
 			- media-cache
 			- media-cache\d
@@ -120,7 +129,8 @@
 		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:$|\?|board/|pin/)" />
 
 
-	<securecookie host="^help\.pinterest\.com$" name=".+" />
+	<securecookie host="^\.pinterest\.com$" name="^(?:_zendesk(?:_shared)?_session)$" />
+	<securecookie host="^(?:\w\w\.)?help\.pinterest\.com$" name=".+" />
 
 
 	<!--	Handles s-media-cache-ec\d & s-passets-ec.
@@ -128,7 +138,7 @@
 	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
 		to="https://s-$1-ec$2.pinimg.com/" />
 
-	<rule from="^http://((?:about|api|assets|help|m|partners-api|support|www)\.)?pinterest\.com/"
+	<rule from="^http://((?:about|api|assets|help|\w\w\.help|m|partners-api|support|www)\.)?pinterest\.com/"
 		to="https://$1pinterest.com/" />
 
 	<rule from="^https?://blog-assets\.pinterest\.com/"
