@@ -3,20 +3,88 @@
 
 		- footage	(valid & dedicated cert; 403s)
 
+
+	CDN buckets:
+
+		- absinthe.picdn.net.edgesuite.net
+
+			- a1796.g1.akamai.net
+			- absinthe.picdn.net
+
+		- ak.picdn.net.edgesuite.net
+
+		- static.shutterstock.com.edgesuite.net
+
+			- a370.g.akamai.net
+			- static6.shutterstock.com
+
+		- thumb1.shutterstock.com.edgesuite.net
+
+			- image.shutterstock.com
+
+		- thumb[79].shutterstock.com.edgesuite.net
+		- thumb1[015].shutterstock.com.edgesuite.net
+
+
+	Problematic domains:
+
+		- absinthe.picdn.net *
+		- static6.shutterstock.com *
+
+	* Works, akamai
+
+
+	Nonfunctional domains:
+
+		- ak.picdn.net	(504, akamai)
+		- image.shutterstock.com *
+		- thumb[179].shutterstock.com *
+		- thumb1[015].shutterstock.com *
+
+	* 404, akamai
+
+
+	Fully covered domains:
+
+		- absinthe.picdn.net	(→ akamai)
+
+		- shutterstock.com subdomains:
+
+			- absinthe
+			- lilb2
+			- static6	(→ akamai)
+
 -->
 <ruleset name="Shutterstock (partial)">
 
 	<target host="*.picdn.net" />
 	<target host="shutterstock.com" />
-	<target host="www.shutterstock.com" />
+	<target host="*.shutterstock.com" />
+		<!--exclusion pattern="^http://(www\.)?shutterstock\.com/pic\.mhtml" /-->
 
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.shutterstock\.com$" name="^(?:IRF_3|__utm\w)$" />
+
+
+	<rule from="^http://absinthe\.picdn\.net/"
+		to="https://a248.e.akamai.net/f/1796/8888/2f/absinthe.picdn.net/" />
 
 	<!--	Akamai.	-->
 	<rule from="^https?://s\d\.picdn\.net/"
 		to="https://www.shutterstock.com/" />
 
 	<!--	At least the homepage and login(!) page redirect to http.	-->
-	<rule from="^http://(www\.)?shutterstock\.com/(css/|images/|subscribe(?:11)?\.mhtml)"
+	<rule from="^http://(www\.)?shutterstock\.com/(css/|images/|js/|subscribe(?:11)?\.mhtml)"
 		to="https://$1shutterstock.com/$2" />
+
+	<rule from="^http://(absinthe|lilb2)\.shutterstock\.com/"
+		to="https://$1.shutterstock.com/" />
+
+	<!--	Data are also on www
+					-->
+	<rule from="^http://static6\.shutterstock\.com/"
+		to="https://a248.e.akamai.net/f/370/1360/2d/static6.shutterstock.com/" />
 
 </ruleset>
