@@ -13,6 +13,10 @@
 
 	CDN buckets:
 
+		- contextualads.yahoo.net.edgesuite.net
+
+			- a1907.g.akamai.net
+
 		- yahoosports.teamfanshop.com
 
 
@@ -102,6 +106,7 @@
 			- us-locdrop.query **
 			- video.query **
 
+		- contextualads.yahoo.net	(works, akamai)
 		- investor.yahoo.net	(dropped)
 
 	* Self-signed
@@ -120,6 +125,7 @@
 			- developer		(homepage redirects to http)
 			- java.europe		(→ s.yimg.com)
 
+		- contextualads.yahoo.net	(→ akamai, avoiding user-visible paths)
 		- investor.yahoo.net		(→ investor.shareholder.com)
 		- uk.health.lifestyle.yahoo.net	(→ s.yimg.com)
 
@@ -229,6 +235,14 @@
 		<exclusion pattern="^http://(?:uk\.)?contributor\.yahoo\.com/(?!$|\?|account/|contributor/|help/|signup/)" />
 		<exclusion pattern="^https?://developer\.yahoo\.com/(?:$|\?)" />
 	<target host="*.yahoo.net" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://contextualads\.yahoo\.net/(?!js/|style/)" />
+		<!--
+			Links images relative to /
+							-->
+		<exclusion pattern="^http://contextualads\.yahoo\.net/style/screen\.css" />
 	<target host="*.yahoofs.com" />
 	<target host="yhoo.it" />
 	<target host="ymail.com" />
@@ -413,6 +427,9 @@
 
 	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
 		to="https://smallbusiness.yahoo.com/servicecheck.php" />
+
+	<rule from="^http://contextualads\.yahoo\.net/"
+		to="https://a248.e.akamai.net/f/1907/9547/9m/contextualads.yahoo.net/" />
 
 	<rule from="^http://investor\.yahoo\.net/common/"
 		to="https://investor.shareholder.com/common/" />
