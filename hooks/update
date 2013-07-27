@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# Hook script to validate rules and check locales before accepting
+# pushed changes on the server side. 
+# See http://stackoverflow.com/questions/4541417/how-can-i-make-it-so-git-rejects-pushing-code-that-wont-compile
+
+# --- Command line
+refname="$1"
+oldrev="$2"
+newrev="$3"
+
+# --- Safety check
+if [ -z "$GIT_DIR" ]; then
+	echo "Don't run this script from the command line." >&2
+	echo " (if you want, you could supply GIT_DIR then run" >&2
+	echo "  $0 <ref> <oldrev> <newrev>)" >&2
+	exit 1
+fi
+
+if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
+	echo "Usage: $0 <ref> <oldrev> <newrev>" >&2
+	exit 1
+fi
+
+# --- Copy the state of the repository as of the new pushed code
+
+copydir = "./tmp/git_hook_compile_copy"
+
+echo "making copy of $newrev to $copydir" >&2
+rm -rf "$copydir"
+mkdir "$copydir"
+git archive $newrev | tar -x -C $copydir/
+if [ "$?" != "0" ]; then
+	echo "*** unable to make copy of code" >&2
+	exit 1
+fi
+echo "attempting to validate $newrev" >&2
+
+# --- Test build
+
+if [ -f makexpi.sh ]; then
+	./makexpi.sh
+	if [ "$?" != 0 ]; then
+		echo "*** build failed" >&2
+		exit 1
+	else
+		exit 0
+	fi
+else
+	echo "*** could not find makexpi.sh" >&2
+	exit 1
+fi
+
