@@ -3,6 +3,8 @@
 # Hook script to validate rules and check locales before accepting
 # pushed changes on the server side. 
 # See http://stackoverflow.com/questions/4541417/how-can-i-make-it-so-git-rejects-pushing-code-that-wont-compile
+#
+# By default, this should run in the root of the git repository.
 
 # --- Command line
 refname="$1"
@@ -24,7 +26,9 @@ fi
 
 # --- Copy the state of the repository as of the new pushed code
 
-copydir = "./tmp/git_hook_compile_copy"
+maindir=$(git rev-parse --show-toplevel)
+cd "$maindir"
+copydir="./tmp/git_hook_compile_copy"
 
 echo "making copy of $newrev to $copydir" >&2
 rm -rf "$copydir"
