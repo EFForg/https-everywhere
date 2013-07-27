@@ -1,5 +1,36 @@
-<ruleset name="RedIRIS.es">
-  <target host="www.rediris.es"/>
-  <target host="rediris.es"/>
-  <rule from="^http://(www\.)?rediris\.es/" to="https://www.rediris.es/"/>
+<!--
+	Other RedIRIS rulesets:
+
+		- Eduroam_ES.xml
+
+
+	Problematic subdomains:
+
+		- ^	(mismatched)
+		- blog	(works, expired, CN: www.edugain.org)
+
+
+	^rediris.net doesn't exist
+
+-->
+<ruleset name="RedIRIS.es" platform="mixedcontent">
+
+	<target host="pki.irisgrid.es" />
+	<target host="rediris.es" />
+	<target host="*.rediris.es" />
+	<target host="www.rediris.net" />
+
+
+	<securecookie host="^.*\.rediris\.es$" name=".+" />
+
+
+	<rule from="^http://pki\.irisgrid\.es/"
+		to="https://pki.irisgrid.es/" />
+
+	<rule from="^https?://(?:www\.)?rediris\.(es|net)/"
+		to="https://www.rediris.$1/" />
+
+	<rule from="^http://(cmwebber|forja|eu|intranet|jo|ni|papi|sir|stats|wiki|yo)\.rediris\.es/"
+		to="https://$1.rediris.es/" />
+
 </ruleset>

@@ -1,36 +1,58 @@
-<ruleset name="Ecommerce (partial)">
+<!--
+	Other Ecommerce rulesets:
 
-	<target host="ecommerce.com"/>
-	<target host="www.ecommerce.com"/>
-	<target host="ixwebhosting.com"/>
-	<target host="*.ixwebhosting.com"/>
-	<target host="opentransfer.com"/>
-	<target host="*.opentransfer.com"/>
-	<target host="webhost.biz"/>
-	<target host="*.webhost.biz"/>
+		- Hesecure.com.xml
 
 
-	<securecookie host="^(.*\.)?ixwebhosting\.com$" name=".*"/>
-	<securecookie host="^\.webmail\.opentransfer\.com$" name=".*"/>
-	<securecookie host="^manage\.webhost\.biz$" name=".*"/>
+	Nonfunctional domains:
+
+		- status.ixwebhosting.com
+
+-->
+<ruleset name="Ecommerce (partial)" platform="mixedcontent">
+
+	<target host="ecommerce.com" />
+	<target host="www.ecommerce.com" />
+	<target host="ixwebhosting.com" />
+	<target host="*.ixwebhosting.com" />
+	<target host="opentransfer.com" />
+	<target host="*.opentransfer.com" />
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.webmail.opentransfer.com" />
+	<target host="webhost.biz" />
+	<target host="*.webhost.biz" />
+
+
+	<securecookie host="^(.*\.)?ixwebhosting\.com$" name=".*" />
+	<securecookie host="^\.webmail\.opentransfer\.com$" name=".*" />
+	<securecookie host="^manage\.webhost\.biz$" name=".*" />
 
 
 	<rule from="^http://(www\.)?ecommerce\.com/"
-		to="https://$1ecommerce.com/"/>
+		to="https://$1ecommerce.com/" />
 
-	<rule from="^http://((assets|manage|www)\.)?ixwebhosting\.com/"
-		to="https://$1ixwebhosting.com/"/>
+	<rule from="^http://((?:assets|manage|www)\.)?ixwebhosting\.com/"
+		to="https://$1ixwebhosting.com/" />
 
-	<rule from="^http://email\.ixwebhosting\.com/"
-		to="https://webmail.opentransfer.com/"/>
+	<!--	- blog doesn't work over https
+		- $ redirects like so
+			-->
+	<rule from="^https?://blog\.ixwebhosting\.com/"
+		to="https://www.ixwebhosting.com/blog/" />
+
+	<!--	- Cert: *.opentransfer.com
+		- Redirects like so
+				-->
+	<rule from="^https?://email\.ixwebhosting\.com/"
+		to="https://webmail.opentransfer.com/horde/imp/" />
 
 	<rule from="^https?://(?:www\.)?opentransfer\.com/"
-		to="https://ecommerce.com/"/>
+		to="https://ecommerce.com/" />
 
 	<rule from="^http://webmail\.opentransfer\.com/"
-		to="https://webmail.opentransfer.com/"/>
+		to="https://webmail.opentransfer.com/" />
 
 	<rule from="^http://(manage\.|www\.)?webhost\.biz/"
-		to="https://$1webhost.biz/"/>
+		to="https://$1webhost.biz/" />
 
 </ruleset>

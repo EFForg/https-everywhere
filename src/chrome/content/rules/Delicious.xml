@@ -1,12 +1,63 @@
-<ruleset name="Delicious">
-  <target host="delicious.com" />
-  <target host="www.delicious.com" />
-  <target host="icio.us" />
-  <target host="del.icio.us" />
-  <target host="www.icio.us" />
+<!--
+	CDN buckets:
 
-  <securecookie host="^(.+\.)?delicious\.com$" name=".*"/>
 
-  <rule from="^http://(www\.)?delicious\.com/" to="https://$1delicious.com/"/>
-  <rule from="^http://(?:www\.|del\.)?icio\.us/" to="https://delicious.com/"/>
+		- api-688261400.us-west-1.elb.amazonaws.com
+			- images.del.icio.us
+
+		- delicious.imgix.net
+
+
+	Problematic domains:
+
+		- images.del.icio.us	(mismatch)
+
+
+	Nonfunctional subdomains:
+
+		- blog
+
+-->
+<ruleset name="Delicious" platform="mixedcontent">
+
+	<target host="d.me" />
+	<target host="delicious.com" />
+	<target host="www.delicious.com" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.www.delicious.com" />
+	<target host="d-static.com" />
+	<target host="icio.us" />
+	<target host="*.icio.us" />
+	<target host="api.del.icio.us" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.api.del.icio.us" />
+
+
+	<securecookie host="^(.+\.)?delicious\.com$" name=".*" />
+	<securecookie host="^\.api\.del\.icio\.us$" name=".*" />
+
+
+	<!--	delicious.com's cert matches d.me, but d.me presents
+		a different cert for (www.)delicious.com only.
+
+		www.de.me doesn't exist.
+				-->
+	<rule from="^https?://d\.me/"
+		to="https://delicious.com/" />
+
+	<rule from="^http://(www\.)?delicious\.com/"
+		to="https://$1delicious.com/" />
+
+	<rule from="^https?://(?:www\.|del\.)?icio\.us/"
+		to="https://delicious.com/" />
+
+	<rule from="^https?://(?:api|images)\.del\.icio\.us/"
+		to="https://api.del.icio.us/" />
+
+	<rule from="^https?://feeds\.delicious\.com/"
+		to="https://api.del.icio.us/" />
+
+	<rule from="^http://d-static\.com/"
+		to="https://d-static.com/" />
+
 </ruleset>

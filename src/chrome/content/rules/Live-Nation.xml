@@ -1,158 +1,119 @@
-<!--	buckets:
-		a248.e.akamai.net/7/248/11802/MNXWEB9-2-41/www.ticketmaster.nl/
-		a248.e.akamai.net/7/248/17391/MNXWEB9-2-2/www.lippupalvelu.fi/
-		a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/
-		a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/
+<!--
+	Other Live Nation rulesets:
+
+		- Ticketmaster.xml
+		- TicketsNow.xml
+
+
+	buckets:
+
 		a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/
-		a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/
-		a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/
-		a248.e.akamai.net/f/248/15404/24h/i.ticketweb.com/
-		a248.e.akamai.net/f/248/22942/1d/www.billetnet.dk/
+		- s3.amazonaws.com/lntv-beta/
+		- s3.amazonaws.com/lntv/
+		- assets.livenation.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- www.livenation.be		(reset)
+		- media.livenation.co.uk	(shows "UNSUBSCRIBE INFORMATION", akamai)
+		- assets.livenation.com		(503, akamai)
+		- media.livenationinternational.com	(akamai, few paths work)
+
+
+	Problematic domains:
+
+		- ads.livenation.com			(works; mismatched, CN: de.ticketmaster.com)
+		- onenation.livenation.com		(works, akamai)
+
+
+	Partially covered domains:
+
+		- (www.)livenation.com			(at least some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- secure.getmein.com
+		- (www1?.)livenation.ae
+		- (www1?.)livenation.asia
+		- fr.livenation.be
+		- www1.fr.livenation.be
+		- nl.livenation.be
+		- www1.nl.livenation.be
+		- (www1?.)livenation.co.jp
+		- (www1?.)livenation.co.uk
+		- ads.livenation.com		(→ de.ticketmaster.com)
+		- (www1?.)livenation.com.au
+		- (www1?.)livenation.cz
+		- (www1?.)livenation.dk
+		- (www1?.)livenation.es
+		- (www1?.)livenation.fi
+		- (www1?.)livenation.fr
+		- (www1?.)livenation.hu
+		- (www1?.)livenation.it
+		- (www.)livenation.kr
+		- (www1?.)livenation.nl
+		- (www1?.)livenation.no
+		- (www1?.)livenation.pl
+		- (www1?.)livenation.se
+
 -->
-<ruleset name="Live Nation Entertainment (partial)">
+<ruleset name="Live Nation Entertainment (partial)" platform="mixedcontent">
 
-	<target host="admission.com"/>
-	<target host="www.admission.com"/>
-	<target host="billetnet.dk"/>
-	<target host="www.billetnet.dk"/>
-		<!--	Someone's noticed what we're up to =(	-->
-		<exclusion pattern="^http://(www\.)?billetnet\.dk/($|index\.php)" />
-	<target host="billettservice.no"/>
-	<target host="www.billettservice.no"/>
-	<target host="getmein.com"/>
-	<target host="*.getmein.com"/>
-	<target host="lippupalvelu.fi"/>
-	<target host="www.lippupalvelu.fi"/>
-	<target host="livenation.*"/>
-	<target host="www.livenation.*"/>
-	<target host="*.livenation.be"/>
-	<target host="ticketek.cl"/>
-	<target host="www.ticketek.cl"/>
-	<target host="ticketmaster.*"/>
-	<target host="www.ticketmaster.*"/>
-	<target host="*.ticketmaster.com"/>
-	<target host="*.ticketmaster.co.uk"/>
-	<target host="media.ticketmaster.eu"/>
-	<target host="ticketweb.*"/>
-	<target host="*.ticketweb.com"/>
-	<target host="www.ticketweb.co.uk"/>
+	<target host="getmein.com" />
+	<target host="*.getmein.com" />
+	<target host="livenation.*" />
+	<target host="www.livenation.*" />
+	<target host="www1.livenation.*" />
+	<target host="*.livenation.be" />
+	<target host="livenation.co.*" />
+	<target host="www.livenation.co.*" />
+	<target host="www1.livenation.co.*" />
+	<target host="concerts.livenation.com" />
+	<target host="livenation.com.au" />
+	<target host="*.livenation.com.au" />
+	<!--target host="media.livenationinternational.com" /-->
 
 
+	<securecookie host="^(?:.*\.)?getmein\.com$" name=".+" />
+	<!--
+		Omniture cookies:
+					-->
+	<securecookie host="^\.ticketmaster\.com$" name="^s_v\w$" />
+	<!--
+		Other cookie domains:
 
-	<securecookie host="^(.*\.)?getmein\.com$" name=".*"/>
-
-
-
-	<!--	Apply 2o7 rules first, so that matches
-		don't get rewritten by other rules.	-->
-
-	<rule from="^http://(?:www\.)?billetnet\.dk/tm-dkprod\.112\.2O7\.net/"
-		to="https://tm-dkprod.112.2o7.net/"/>
-
-	<rule from="^http://(?:www\.)?billettservice\.no/tm-noprod\.112\.2O7\.net/"
-		to="https://tm-noprod.112.2o7.net/"/>
-
-	<rule from="^http://(?:www\.)?lippupalvelu\.fi/tm-fiprod\.112\.2O7\.net/"
-		to="https://tm-fiprod.112.2o7.net/"/>
-
-	<rule from="^http://(?:www\.)?ticketmaster\.(de|nl)/tm-(?:de|nl)prod\.112\.2O7\.net/"
-		to="https://tm-$1prod.112.2o7.net/"/>
+			- concerts.livenation.com
+			- .concerts.livenation.com
+							-->
+	<securecookie host="^www1?\.(?:fr\.|nl\.)?livenation\.(?:\w\w|co\.jp|co\.uk|com\.au)" name=".+" />
 
 
+	<rule from="^http://(?:www\.)?getmein\.com/"
+		to="https://www.getmein.com/" />
 
-	<rule from="^http://(?:www\.)?admission\.com/(resourc|them)e/"
-		to="https://www.admission.com/$1e/"/>
-
-
-	<rule from="^http://(?:www\.)?billetnet\.dk/"
-		to="https://a248.e.akamai.net/7/248/22942/MNXWEB9-2-3e/www.billetnet.dk/"/>
+	<rule from="^http://secure\.getmein\.com/"
+		to="https://secure.getmein.com/" />
 
 
-	<rule from="^http://(?:www\.)?billetservice\.no/(assets/|myAccount/|resource/|static/|theme/)"
-		to="https://www.billetservice.no/$1"/>
+	<rule from="^http://(?:www(1)?\.)?livenation\.(ae|asia|co\.jp|co\.uk|com\.au|cz|dk|es|fi|fr|hu|it|kr|nl|no|pl|se)/"
+		to="https://www$1.livenation.$2/" />
 
-
-	<rule from="^http://getmein\.com/"
-		to="https://www.getmein.com/"/>
-
-	<rule from="^http://(secure|www)\.getmein\.com/"
-		to="https://$1.getmein.com/"/>
-
-
-	<rule from="^http://(?:www\.)?lippupalvelu\.fi/"
-		to="https://a248.e.akamai.net/f/19/17391/1d/www.lippupalvelu.fi/"/>
-
-
-	<rule from="^http://(?:www\.)?livenation\.(ae|asia|com\.au|cz|dk|es|f[ir]|hu|it|no|pl)/"
-		to="https://www.livenation.$1/"/>
-
-
-	<rule from="^http://(fr|nl)\.livenation\.be/"
-		to="https://$1.livenation.be/"/>
-
+	<rule from="^http://(www1\.)?(fr|nl)\.livenation\.be/"
+		to="https://$1$2.livenation.be/" />
 
 	<rule from="^http://(?:www\.)?livenation\.com/(favicon-ln\.ico|ln/)"
-		to="https://www.livenation.com/$1"/>
+		to="https://www.livenation.com/$1" />
+
+	<rule from="^http://ads\.livenation\.com/"
+		to="https://de.livenation.com/" />
+
+	<rule from="^http://concerts\.livenation\.com/(?!$|concerts)"
+		to="https://concerts.livenation.com/" />
 
 
-	<rule from="^http://media\.livenationinternational\.com/"
-		to="https://a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/"/>
-
-
-	<rule from="^http://(?:www\.)?ticket(?:ek|master)\.cl/"
-		to="https://www.ticketek.cl/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.(ca|com\.(?:au|nz|mx)|ie)/favicon-rebrand\.ico"
-		to="https://www.ticketmaster.$1/favicon-rebrand.ico"/>
-
-
-	<rule from="^http://media\.ticketmaster\.com/"
-		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.com/"/>
-
-	<rule from="^http://mm\.ticketmaster\.com/"
-		to="https://mm.ticketmaster.com/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(favicon\.ico|londonpreparesseries)"
-		to="https://www.ticketmaster.co.uk/$1"/>
-
-	<rule from="^http://media\.ticketmaster\.co\.uk/"
-		to="https://a248.e.akamai.net/f/248/905/10m/origin.media.ticketmaster.co.uk/"/>
-
-	<rule from="^http://reviews\.ticketmaster\.co\.uk/"
-		to="https://a248.e.akamai.net/f/248/905/10m/reviews.ticketmaster.co.uk/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.de/(resource|myAccount|static|theme)/"
-		to="https://www.ticketmaster.de/$1/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.(dk|es)/"
-		to="https://www.billetnet.$1/"/>
-
-
-	<rule from="^http://media\.ticketmaster\.eu/"
-		to="https://media.ticketmaster.eu/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketmaster\.nl/"
-		to="https://a248.e.akamai.net/f/248/11802/1d/www.ticketmaster.nl/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketnet\.fr/(assets|static)/"
-		to="https://www.ticketnet.fr/$1/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketweb\.com/"
-		to="https://www.ticketweb.com/"/>
-
-
-	<rule from="^http://i\.ticketweb\.com/"
-		to="https://a248.e.akamai.net/f/248/15404/24h/i.ticketweb.com/"/>
-
-
-	<rule from="^http://(?:www\.)?ticketweb\.co\.uk/(images/|INFO/|giftcards|member|partners/|section/|styles\.css|twpurple\.html|ukcontent\.css|user/gb_northeast/order/|venuepages/|[\w\-\./]+\.html$|[\w\-]+/artist/\d+)"
-		to="https://www.ticketweb.co.uk/$1"/>
+	<!--rule from="^http://media\.livenationinternational\.com/"
+		to="https://a248.e.akamai.net/f/248/905/10m/media.livenationinternational.com/"/-->
 
 </ruleset>
