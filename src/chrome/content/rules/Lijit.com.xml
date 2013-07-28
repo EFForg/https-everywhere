@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- www.lijit.com.cdngc.net
+
+
+	Problematic subdomains:
+
+		- www	(403; mismatched, CN: support3.cdnetworks.net)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- ce	(web bugs)
+		- secure
+		- www	(→ secure)
+
+
+	Mixed content on secure:
+
+		- scripts:
+
+			- from lijit.disqus.com
+
+		- css:
+
+			- from disqus.com
+
+		- Images:
+
+			- from www *
+			- from www.drivingdelta.com **
+			- from www.gravatar.com via www.gravatar.com *
+
+		- Web bugs:
+
+			- from tags.bluekai.com *
+
+	* Secured by us
+	** Unsecurable, these 404 anyway
+
+-->
+<ruleset name="Lijit.com" platform="mixedcontent">
+
+	<target host="lijit.com" />
+	<target host="*.lijit.com" />
+
+
+	<!--	name="^(kohanasession|kohanasession_data|ljt_reader|ljtrtb|ljt_ts)$"
+							-->
+	<securecookie host="^\.lijit\.com$" name=".+" />
+	<securecookie host="^\.secure\.lijit\.com$" name=".+" />
+
+
+	<rule from="^http://(ce\.)?lijit\.com/"
+		to="https://$1lijit.com/" />
+
+	<rule from="^http://(?:secure|www)\.lijit\.com/"
+		to="https://secure.lijit.com/" />
+
+</ruleset>
