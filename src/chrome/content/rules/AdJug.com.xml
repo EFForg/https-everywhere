@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- vast.adjug.com.edgesuite.net
+
+			- a1051.b.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- us.hosting *	(dropped)
+
+	* Can this be rewritten to hosting safely?
+
+
+	Problematic subdomains:
+
+		- ^	(works; mismatched, CN: www.adjug.com)
+		- vast	(works, akamai)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+
+		- hosting subdomains:
+
+			- ^
+			- de
+			- uk
+
+		- hosting.de
+		- www.de
+		- image
+		- tracking
+		- hosting.uk
+		- www.uk
+		- www.us
+		- vast		(→ akamai)
+
+		- view subdomains:
+
+			- de
+			- uk
+			- us
+
+-->
+<ruleset name="AdJug.com (partial)">
+
+	<target host="adjug.com" />
+	<target host="*.adjug.com" />
+
+
+	<rule from="^http://(?:www\.)?adjug\.com/"
+		to="https://www.adjug.com/" />
+
+	<rule from="^http://((?:hosting|www)\.(?:de|uk)|hosting|(?:de|uk)\.hosting|image|tracking|www\.us|view\.(?:de|uk|us))\.adjug\.com/"
+		to="https://$1.adjug.com/" />
+
+	<rule from="^http://vast\.adjug\.com/"
+		to="https://a248.e.akamai.net/f/1051/7225/4f/vast.adjug.com/" />
+
+</ruleset>
