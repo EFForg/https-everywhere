@@ -1,4 +1,9 @@
 <!--
+	CDN buckets:
+
+		- www.jscache.com.edgesuite.net
+
+
 	Other TripAdvisor rulesets:
 
 		- VirtualTourist.xml
@@ -22,18 +27,25 @@
 	*** Some [all?] pages redirect to http, akamai
 
 
-	Problematic subdomains:
+	Problematic domains:
 
-		- ^	(cert only matches *.tripadvisor.com)
+		- www.jscache.com	(redirects to http, akamai)
+		- tripadvisor.com	(cert only matches *.tripadvisor.com)
 
 
 	Partially covered subdomains:
 
 		- (www.)	(^ → www, some pages redirect to http)
 
+
+	Fully covered domains:
+
+		- www.jscache.com	(→ c1.tacdn.com)
+
 -->
 <ruleset name="TripAdvisor (partial)">
 
+	<target host="www.jscache.com" />
 	<target host="c1.tacdn.com" />
 	<target host="www.t-analytics.com" />
 	<target host="tripadvisor.com" />
@@ -44,7 +56,7 @@
 	<securecookie host="^webmail\.tripadvisor\.com$" name=".+" />
 
 
-	<rule from="^http://c1\.tacdn\.com/"
+	<rule from="^http://(?:www\.jscache|c1\.tacdn)\.com/"
 		to="https://c1.tacdn.com/" />
 
 	<rule from="^http://www\.t-analytics\.com/"
