@@ -6,7 +6,7 @@
 
 	CDN buckets:
 
-	Possible bucket at s3.amazonaws.com/ubi/
+		- Possible bucket at s3.amazonaws.com/ubi/
 
 		- static7.ubi.com.s3.amazonaws.com
 
@@ -17,11 +17,11 @@
 			- static[79].cdn.ubi.com
 
 
-	Nonfunctional:
+	Nonfunctional subdomains:
 
-		- (www.)ubi.com *
-		- forums.ubi.com *
-		- thesettlers.uk.ubi.com *
+		- (www.) *
+		- forums *
+		- thesettlers.uk *
 
 	* Refused
 
@@ -79,18 +79,17 @@
 -->
 <ruleset name="Ubisoft Entertainment (partial)">
 
-	<target host="*.cdn.ubi.com" />
 	<target host="*.ubi.com" />
-		<exclusion pattern="^http://(forums|www)\." />
+		<exclusion pattern="^http://(?:forums|www)\." />
 
 
-	<securecookie host="^.*\.ubi\.com$" name=".*" />
+	<securecookie host=".*\.ubi\.com$" name=".+" />
 
 
 	<rule from="^http://static7\.ubi\.com/"
 		to="https://s3.amazonaws.com/static7.ubi.com/" />
 
-	<rule from="^http://(cs|engineroom|ghost-recon|hbe|secure|static\d(\.cdn)?|support|tools|ubibar|uts)\.ubi\.com/"
+	<rule from="^http://(cs|engineroom|ghost-recon|hbe|secure|static\d(?:\.cdn)?|support|tools|ubibar|uts)\.ubi\.com/"
 		to="https://$1.ubi.com/" />
 
 </ruleset>
