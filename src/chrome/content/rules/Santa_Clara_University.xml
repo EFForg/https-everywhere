@@ -16,7 +16,7 @@
 		- phonebook	(shows www, CN: www.scu.edu)
 		- sierra	(shows default Plesk page)
 
-	* Times out
+	* Dropped
 
 
 	Problematic subdomains:
@@ -52,15 +52,19 @@
 
 	<target host="scu.edu" />
 	<target host="*.scu.edu" />
-	<target host="www.*.scu.edu" />
-	<target host="*.law.scu.edu" />
 
 
 	<securecookie host="^\w.*\.scu\.edu$" name=".+" />
 
 
-	<rule from="^http://((?:(?:www\.)?(?:alumnidirectory|sculib)|angel|feportmgmt|gw|it|quarantine|www)\.)?scu\.edu/"
+	<rule from="^http://((?:angel|feportmgmt|gw|it|quarantine|www)\.)?scu\.edu/"
 		to="https://$1scu.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo
+		exist, and both work without caveats:
+							-->
+	<rule from="^http://(www\.)?(alumnidirectory|sculib)\.scu\.edu/"
+		to="https://$1$2.scu.edu/" />
 
 	<rule from="^https?://digitalcommons\.law\.scu\.edu/assets/"
 		to="https://dcsantaclara.bepress.com/assets/" />
