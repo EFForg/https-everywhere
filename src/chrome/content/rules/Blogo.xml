@@ -1,21 +1,49 @@
 <!--
 	CDN buckets:
 
+		- d2ofxhm151efeq.cloudfront.net
+
+			- static-q
+
 		- d2vgi5skuln6ia.cloudfront.net
+
+			- static
 
 
 	Nonfunctional subdomains:
 
-		- static-a
-		- (www.)
+		- (www.) *
+		- s *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- static-a	(dropped)
+
+
+	Fully covered subdomains:
+
+		- static	(→ d2vgi5skuln6ia.cloudfront.net)
+		- static-a	(→ d2vgi5skuln6ia.cloudfront.net)
+		- static-q	(→ d2ofxhm151efeq.cloudfront.net)
 
 -->
 <ruleset name="blogo (partial)">
 
-	<target host="static.blogo.it" />
+	<target host="*.blogo.it" />
 
 
-	<rule from="^https?://static\.blogo\.it/"
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^(?:www)?\.blogo\.it$" name="^__utm\w$" />
+
+
+	<rule from="^https?://static(?:-a)?\.blogo\.it/"
 		to="https://d2vgi5skuln6ia.cloudfront.net/" />
+
+	<rule from="^http://static-q\.blogo\.it/"
+		to="https://d2ofxhm151efeq.cloudfront.net/" />
 
 </ruleset>
