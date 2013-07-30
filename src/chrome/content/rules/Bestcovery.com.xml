@@ -8,20 +8,44 @@
 
 			- cdn
 
+		- wac.9F9A.edgecastcdn.net/??9F9A/
+
+			- cdn[1-6]
+
+
+	Problematic subdomains:
+
+		- cdn[1-6]	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
 
 	Fully covered subdomains:
 
 		- cdn *
+		- cdn[1-6] *
 
 	* → d20no9q7bar3sq.cloudfront.net
 
 -->
 <ruleset name="Bestcovery.com (partial)">
 
-	<target host="cdn.bestcovery.com"/>
+	<target host="bestcovery.com"/>
+	<target host="*.bestcovery.com"/>
 
 
-	<rule from="^http://cdn\.bestcovery\.com/"
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.bestcovery\.com$" name="^__utm\w$" />
+
+
+	<rule from="^http://(www\.)?bestcovery\.com/(aspect_js\.js|blog/wp-content/|ci/|sites/)"
+		to="https://$1bestcovery.com/$2" />
+
+	<rule from="^http://cdn[1-6]?\.bestcovery\.com/"
 		to="https://d20no9q7bar3sq.cloudfront.net/"/>
 
 </ruleset>
