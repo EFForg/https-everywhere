@@ -1,25 +1,45 @@
-<ruleset name="PriceGrabber (partial)">
+<!--
+	Clients are handled in PriceGrabber-clients.xml.
 
-	<!--	Akamai	-->
-	<target host="i.pgcdn.com"/>
-	<target host="pricegrabber.com"/>
-	<target host="*.pricegrabber.com"/>
 
-	<securecookie host="^[^w]*\.pricegrabber\.com$" name=".*"/>
+	Problematic domains:
 
-	<rule from="^http://(?:i\.pgcdn|ai\.pricegrabber)\.com/"
-		to="https://images.pricegrabber.com/"/>
+		- i.pgcdn.com *
 
-	<rule from="^http://pricegrabber\.com/"
+		- *.pgpartner.com	(works; mismatched, CN: www.pricegrabber.com)
+
+		- pricegrabber.com subdomains:
+
+			- ^	(cert only matches www)
+			- ah *
+			- ai *
+
+	* Akamai
+
+-->
+<ruleset name="PriceGrabber" platform="mixedcontent">
+
+	<target host="i.pgcdn.com" />
+	<target host="pricegrabber.com" />
+	<target host="*.pricegrabber.com" />
+
+
+	<!--	Observed cookie domains:
+
+			- .
+			- images
+			- www
+					-->
+	<securecookie host=".*\.pricegrabber\.com$" name=".+" />
+
+
+	<rule from="^http://i\.pgcdn\.com/"
+		to="https://images.pricegrabber.com/" />
+
+	<rule from="^http://(?:a[hi]\.|www\.)?pricegrabber\.com/"
 		to="https://www.pricegrabber.com/"/>
-
-	<rule from="^http://ah\.pricegrabber\.com/"
-		to="https://www.pricegrabber.com/"/>
-
-	<rule from="^http://(?:www\.)?pricegrabber\.com/pgr_adcall\.php"
-		to="https://www.pricegrabber.com/pgr_adcall.php"/>
 
 	<rule from="^http://(images|partner)\.pricegrabber\.com/"
-		to="https://$1.pricegrabber.com/"/>
+		to="https://$1.pricegrabber.com/" />
 
 </ruleset>

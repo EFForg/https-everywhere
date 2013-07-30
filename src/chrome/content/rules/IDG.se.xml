@@ -1,4 +1,45 @@
-<ruleset name="IDG.se (partial)">
+<!--
+	Other IDG rulesets:
+
+		- CIO.com.au.xml
+		- ComputerWorld.xml
+		- DEMO.xml
+		- IDG.com.au.xml
+		- Infoworld.com.xml
+		- MacWorld.com.xml
+		- NetworkWorld.xml
+		- PCWorld.xml
+
+
+	CDN buckets:
+
+	divzweszgzypc.cloudfront.net
+
+		- pcworld.http.internapcdn.net
+			- images.techhive.com
+
+
+	Nonfunctional domains:
+
+		- (www.)cfoworld.com
+		- (www.)citeworld.com		(times out)
+		- (www.)csoonline.com
+		- careers.idg.com
+		- idgshop.idg.se		(shows another domain; mismatched, CN: *.icommerce.se)
+		- partnerzoner.idg.se
+		- (www.)idgcsmb.com *
+		- info.idgcsmb.com		(times out)
+		- resources.idgenterprise.com
+		- (www.)pcworldmacworld.com	(ditto)
+		- zap[pt][0-5].staticworld.net	(cert: *.https.internapcdn.net; 404)
+		- (www.)techhive.com *
+		- images.techhive.com		(404, CN: *.https.internapcdn.net)
+		- (www.)techworld.com
+
+	* Times out
+
+-->
+<ruleset name="IDG.se (partial)" platform="mixedcontent">
 
 	<target host="idg.se" />
 	<target host="androidguiden.idg.se" />
@@ -31,13 +72,17 @@
 	<target host="vendorsvoice.idg.se" />
 	<target host="www.idg.se" />
 
-	<rule from="^http://(www\.)?idg\.se/"
+
+	<securecookie host="^(?:computersweden|idgmedia)\.idg\.se$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?idg\.se/"
 		to="https://www.idg.se/" />
 
 	<rule from="^http://sifomedia\.idg\.se/"
 		to="https://ssl.sifomedia.se/" />
 
-	<rule from="^http://(www\.)?([a-rt-v]\w+|s[ahm]\w+)\.idg\.se/"
-		to="https://$2.idg.se/" />
+	<rule from="^http://(?:www\.)?([a-rt-v]\w+|s[ahm]\w+)\.idg\.se/"
+		to="https://$1.idg.se/" />
 
 </ruleset>

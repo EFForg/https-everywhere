@@ -1,39 +1,60 @@
-<!-- tracking network, included on lots of sites. may carry banners.
-If we are to download their content, atleast do it by https
+<!--
+	Tracking network, included on lots of sites. may carry banners.
+	If we are to download their content, at least do it by https.
 
-	Nonfunctional subdomains:
 
-		- blog		(cert: pweb2.wt.redux; shows CentOS Apache 2 test page)
-		- kb		(cert: webtrends.com; reset)
-		- optimize	(cert valid; hosted on Akamai; "Service Unavailable")
+	CDN buckets:
 
+		- denvua8xbp3vs.cloudfront.net
+
+		- optimize.webtrends.com.edgekey.net
+
+			- e2550.b.akamaiedge.net/.../
+
+
+	Nonfunctional webtrends.com subdomains:
+
+		- (www.)	(kind folks at Webtrends saw fit to break us [now redirects to http])
+		- blog		(shows CentOS Apache 2 test page, CN: pweb2.wt.redux)
+		- engage *
+		- forums	(redirects to http, mismatched, CN: *.getsatisfaction.com)
+		- go		(shows app-q.marketo.com, mismatched, CN: *.marketo.com)
+		- help
+		- kb		(reset, CN: webtrends.com)
+		- optimize	(503, cert valid; hosted on Akamai)
+		- portal	(redirects to http, mismatched, CN: slotmatching5.salesforce.com)
+		- releasenotes *
+		- sharepoint *
+
+	* Redirects to http, mismatched, CN: webtrends.com
 
 -->
-<ruleset name="WebTrends">
+<ruleset name="Webtrends (partial)" platform="mixedcontent">
 
 	<target host="reinvigorate.net" />
 	<target host="*.reinvigorate.net" />
-	<target host="*.webtrendslive.com"/>
-	<target host="webtrends.com" />
 	<target host="*.webtrends.com" />
+	<target host="*.webtrendslive.com" />
 
 
-	<securecookie host="^m\.webtrends\.com$" name=".*" />
-	<securecookie host="^(.*\.)?webtrendslive\.com$" name=".*"/>
+	<securecookie host="^.*\.webtrends(?:live)?\.com$" name=".+" />
 
 
-	<rule from="^http://(report\.|www\.)?reinvigorate\.net/"
+	<!--	data are also on track.
+						-->
+	<rule from="^https?://include\.reinvigorate\.net/"
+		to="https://denvua8xbp3vs.cloudfront.net/" />
+
+	<rule from="^http://(report\.|track\.|www\.)?reinvigorate\.net/"
 		to="https://$1reinvigorate.net/" />
 
-	<rule from="^http://webtrends\.com/"
-		to="https://webtrends.com/" />
-
-	<rule from="^http://(ads|developer|itservices|ondemand|m|segments|social|statse|www)\.webtrends\.com/"
+	<rule from="^http://(ads|analytics|s?auth|autodiscover|blackberry|(?:(?:apps\.)?uat\.)?connect|developer|email|generator|itservices|m|mobile|ondemand(?:ui)?|s|segments|social|tagbuilder)\.webtrends\.com/"
 		to="https://$1.webtrends.com/"/>
 
-	<!--	At least some pages redirect back.	-->
+	<rule from="^http://statse\.webtrendslive\.com/"
+		to="https://statse.webtrendslive.com/" />
+
 	<rule from="^http://forums\.webtrends\.com/(assets/|favicon\.png)"
 		to="https://getsatisfaction.com/$1" />
 
 </ruleset>
-

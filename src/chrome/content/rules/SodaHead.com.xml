@@ -1,11 +1,39 @@
-<ruleset name="SodaHead.com (partial)">
+<!--
+	CDN buckets:
 
-	<target host="sodahead.com"/>
-	<target host="widgets.sodahead.com"/>
-	<target host="www.sodahead.com"/>
+		- d33lglhhb8q63m.cloudfront.net
+		- d3ict7m6m7fhlt.cloudfront.net | s3.amazonaws.com/widgets.sodahead.com/
+		- d6fekxp9qbg3b.cloudfront.net
 
-	<rule from="^http://(www\.)?sodahead\.com/" to="https://www.sodahead.com/"/>
 
-	<rule from="^http://widgets\.sodahead\.com/" to="https://s3.amazonaws.com/widgets.sodahead.com/"/>
+	Problematic subdomains:
+
+		- images *
+		- statics *
+		- widgets *
+
+	* cloudfront.net
+
+-->
+<ruleset name="SodaHead.com" platform="mixedcontent">
+
+	<target host="sodahead.com" />
+	<target host="*.sodahead.com" />
+
+
+	<securecookie host=".+\.sodahead\.com$" name=".+" />
+
+
+	<rule from="^http://((?:de|latimes|m|partners|www)\.)?sodahead\.com/"
+		to="https://$1sodahead.com/" />
+
+	<rule from="^https?://images\.sodahead\.com/"
+		to="https://d33lglhhb8q63m.cloudfront.net/" />
+
+	<rule from="^https?://statics\.sodahead\.com/"
+		to="https://d6fekxp9qbg3b.cloudfront.net/" />
+
+	<rule from="^https?://widgets\.sodahead\.com/"
+		to="https://d3ict7m6m7fhlt.cloudfront.net/" />
 
 </ruleset>

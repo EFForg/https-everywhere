@@ -1,9 +1,36 @@
-<ruleset name="turku.fi">
-  <target host="www.turku.fi" />
-  <target host="turku.fi" />
+<!--
+	Cert matches only www
 
-  <rule from="^http://(www\.)?turku\.fi/" to="https://www.turku.fi/"/>
-  <rule from="^https://turku\.fi/" to="https://www.turku.fi/"/>
+	Problematic links that need to be excluded:
+		- www.turku.fi/(ahtela|bussar|busses|bussit|paikalla|paplats|
+		ippe|nuorikulttuuri|sustainable-city|...)
+-->
+<ruleset name="Turku.fi" platform="mixedcontent">
+	<target host="www.turku.fi" />
+	<target host="turku.fi" />
+	<target host="www.bussit.turku.fi" />
+	<target host="opaskartta.turku.fi" />
 
-  <securecookie host="^\.(www)?\.?turku\.fi" name=".*" />
+	<rule from="^https?://(?:www\.)?turku\.fi/"
+		to="https://www.turku.fi/" />
+
+	<rule from="^http://opaskartta\.turku\.fi/"
+		to="https://opaskartta.turku.fi/" />
+
+
+	<!-- Match problematic looking links if they are not excluded -->
+	<exclusion pattern="^http://(?:www\.)?turku\.fi/(?!bussit$|buses$|bussar$)[\w-]+$" />
+
+	<!-- Redirect problematic subdomain and links -->
+	<rule from="^https?://www\.bussit\.turku\.fi/$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916" />
+
+	<rule from="^https?://(?:www\.)?turku\.fi/bussit$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=1" />
+	<rule from="^https?://(?:www\.)?turku\.fi/buses$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=2" />
+	<rule from="^https?://(?:www\.)?turku\.fi/bussar$"
+		to="https://www.turku.fi/public/default.aspx?nodeid=11916&#38;contentlan=3" />
+
+	<securecookie host="^\w+\.turku\.fi" name=".+" />
 </ruleset>

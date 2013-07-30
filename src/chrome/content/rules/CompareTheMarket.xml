@@ -1,8 +1,41 @@
-<ruleset name="CompareTheMarket">
-  <target host="comparethemarket.com" />
-  <target host="www.comparethemarket.com" />
+<!--
+	Nonfunctional subdomains:
 
-  <securecookie host="^(.+\.)?comparethemarket\.com$" name=".*"/>
+		- careers	(shows default plesk page; expired 2011-09-30, CN: plesk)
+		- meerkat	(refused)
 
-  <rule from="^http://(?:www\.)?comparethemarket\.com/" to="https://www.comparethemarket.com/"/>
+
+	^ times out
+
+
+	Fully covered domains:
+
+		- email-comparethemarket.com
+
+		- comparethemarket.com subdomains:
+
+			- (www.)	(^ → www)
+			- cdn
+			- contact
+			- quote
+			- rewards
+			- services
+
+-->
+<ruleset name="Compare The Market" platform="mixedcontent">
+
+	<target host="email-comparethemarket.com" />
+	<target host="comparethemarket.com" />
+	<target host="*.comparethemarket.com" />
+
+
+	<securecookie host="^(?:.*\.|email-)?comparethemarket\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.)?comparethemarket\.com/"
+		to="https://www.comparethemarket.com/" />
+
+	<rule from="^http://((?:cdn|contact|quote|rewards|services)\.|email-)comparethemarket\.com/"
+		to="https://$1comparethemarket.com/" />
+
 </ruleset>

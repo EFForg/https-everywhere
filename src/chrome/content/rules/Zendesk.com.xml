@@ -1,16 +1,30 @@
-<ruleset name="Zendesk">
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/zd-assets/ | d16cvnquvjw7pr.cloudfront.net
+
+-->
+<ruleset name="Zendesk (partial)" platform="mixedcontent">
 
 	<target host="zendesk.com" />
 	<target host="*.zendesk.com" />
-	<!-- https://trac.torproject.org/projects/tor/ticket/8198 -->
-		<exclusion pattern="^http://(?:video|developer)\."/>
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/8198
+								-->
+		<exclusion pattern="^http://(?:video|developer)\." />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://[\w-]+\.zendesk\.com/forums(?:$|\?)" />
 
-	<securecookie host="^(.*\.)zendesk\.com$" name=".*"/>
+
+	<!--securecookie host="^(.*\.)?zendesk\.com$" name=".+" /-->
+
 
 	<rule from="^http://cdn\.zendesk\.com/"
-		to="https://s3.amazonaws.com/zd-assets/"/>
+		to="https://d16cvnquvjw7pr.cloudfront.net/" />
 
-	<rule from="^http://([\w\-_]+\.)zendesk\.com/"
+	<rule from="^http://([\w-]+\.)?zendesk\.com/"
 		to="https://$1zendesk.com/" />
 
 </ruleset>
