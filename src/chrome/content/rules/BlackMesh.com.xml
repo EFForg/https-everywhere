@@ -1,0 +1,35 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- autodiscover
+		- mail
+		- portal
+		- webmail
+
+-->
+<ruleset name="BlackMesh.com">
+
+	<target host="blackmesh.com" />
+	<target host="*.blackmesh.com" />
+
+
+	<securecookie host="^(?:mail|portal|webmail|www)\.blackmesh\.com$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?blackmesh\.com/"
+		to="https://www.blackmesh.com/" />
+
+	<!--	Server redirects like so over
+		http, without dropping path:
+						-->
+	<rule from="^http://mail\.blackmesh\.com/"
+		to="https://mail.blackmesh.com/zimbra/" />
+
+	<rule from="^http://(autodiscover|portal|webmail)\.blackmesh\.com/"
+		to="https://$1.blackmesh.com/" />
+
+</ruleset>
