@@ -1,3 +1,14 @@
+<!--
+	Problematic subdomains:
+
+		- contact	(works; mismatched, CN: www.gandi.net)
+
+
+	Fully covered subdomains:
+
+		- contact	(→ www)
+
+-->
 <ruleset name="Gandi">
   <target host="gandi.net" />
   <target host="*.gandi.net" />
@@ -5,4 +16,10 @@
   <rule from="^http://(?:www\.)?gandi\.net/" to="https://www.gandi.net/"/>
 
   <securecookie host="^(www)?\.gandi\.net$" name=".*" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://contact\.gandi\.net/[^?]*(\?.*)?"
+		to="https://www.gandi.net/faq/form_contact_support/$1" />
+
 </ruleset>
