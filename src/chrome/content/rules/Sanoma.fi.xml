@@ -1,0 +1,45 @@
+<!--
+	For other Sanoma Corporation coverage, see Sanoma.com.xml.
+
+
+	Sanoma News
+
+
+	Problematic subdomains:
+
+		- (www.)	(dropped)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ www.sanoma.com)
+		- admp-tc
+		- analytics
+		- cts
+		- sat
+
+-->
+<ruleset name="Sanoma.fi">
+
+	<target host="sanoma.fi" />
+	<target host="*.sanoma.fi" />
+
+
+	<!--	Tracking cookies:
+
+			- evid and evid-synced set by admp-tc
+			- v1st set by analytics
+						-->
+	<securecookie host="^\.sanoma\.fi$" name="^(?:evid|evid-synced|v1st)$" />
+	<securecookie host="^sat\.sanoma\.fi$" name=".+" />
+
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://(?:www\.)?sanoma\.fi/.*"
+		to="https://www.sanoma.com/fi" />
+
+	<rule from="^http://(admp-tc|analytics|cts|sat)\.sanoma\.fi/"
+		to="https://$1.sanoma.fi/" />
+
+</ruleset>
