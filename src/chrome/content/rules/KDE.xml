@@ -1,29 +1,42 @@
 <!--
 	Nonfunctional subdomains:
 
+		- akademy200[6-9] *
 		- api		(503, CN: issa.toshiba.co.jp)
-		- developer
+		- developer **
 		- docs *
+		- dolphin *
+		- downloads	(shows https://files, valid cert)
 		- edu *
 		- ev *
 		- events *
 		- jointhegame *
 		- manifesto *
-		- websvn
+		- planet *
+		- rekonq *
+		- websvn *
 		- wiki *
 		- (www.)	(times out)
 
 	* Times out
+	** Refused
+
+
+	Problematic subdomains:
+
+		- files		(some data differ)
 
 
 	Partially covered subdomains:
 
+		- files
 		- userbase	(some pages redirect to http)
 
 
 	Fully covered subdomains:
 
-		- akademy2013
+		- akademy201[023]
+		- amarok
 		- blogs
 
 		- bugs subdomains:
@@ -39,7 +52,9 @@
 		- forum
 		- identity
 		- mail
+		- nepomuk
 		- news
+		- projects
 		- season
 		- sprints
 		- sysadmin
@@ -53,14 +68,21 @@
 		* for cross-domain cookies.
 						-->
 	<target host="*.forum.kde.org" />
+		<!--exclusion pattern="^http://(api|developer|docs|dolphin|edu|ev|events|jointhegame|manifesto|rekonq|websvn|wiki|www)\." /-->
+		<!--
+			Pages differ, various files 404:
+									-->
+		<!--exclusion pattern="^http://files\.kde\.org/+.+\.(btih|magnet|meta4|metalist|sha1|sha256|torrent)$" /-->
+		<exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gz|install|jpg|kml|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)|PKGBUILD)$" />
 		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
 
 
 	<!--securecookie host="^\.kde\.org$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
 	<securecookie host="^(?!userbase\.).+\.kde\.org$" name=".+" />
+	<securecookie host="^userbase\.kde\.org$" name="^__utm\w+$" />
 
 
-	<rule from="^http://(akademy2013|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|news|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
+	<rule from="^http://(akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
 		to="https://$1.kde.org/" />
 
 </ruleset>
