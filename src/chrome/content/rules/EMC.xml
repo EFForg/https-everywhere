@@ -1,9 +1,73 @@
+<!--
+	EMC Corporation
+
+		- emc.com.102.122.2o7.net
+
+			- ecn-analytics
+
+		- emc.com.122.2o7.net
+
+			- ecn-analytics-nssl
+
+		- emc.122.2o7.net
+		- emc-emccom.122.2o7.net
+		- emc.force.com
+
+
+	Nonfunctional subdomains:
+
+		- emcfeeds	(refused)
+		- mylearn	(dropped)
+
+
+	Problematic subdomains:
+
+		- ^			(dropped)
+		- ecn-analytics-nssl	(mismatched; CN: *.122.2o7.net)
+
+
+	Partially covered subdomains:
+
+		- (www.)		(^ → www, some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- community
+		- developer-content
+		- ecn-analytics
+		- ecn-analytics-nssl	(→ emc-com.122.2o7.net)
+		- education
+		- gallery
+		- powerlink
+		- sso
+
+-->
 <ruleset name="EMC (partial)">
 
-	<target host="community.emc.com" />
+	<target host="emc.com" />
+	<target host="*.emc.com" />
+		<!--exclusion pattern="^http://(www\.)?emc\.com/(emc-plus/index\.htm|index\.htm|legal/emc-corporation-privacy-statement\.htm|nefeed\.htm|userInfo\.htm|utilities/index\.htm)" /-->
+	<target host="emc.force.com" />
 
 
-	<rule from="^http://community\.emc\.com/"
-		to="https://community.emc.com/" />
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.emc\.com$" name="^(?:CampaignHeader|s_\w+|__utm\w)$" />
+	<securecookie host="^www\.emc\.com$" name="^(?:HumanClickSiteContainerID_\w+|lpFPCtest)$" />
+	<securecookie host="^(?:community|education|\.?gallery|powerlink|sso)\.emc\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?emc\.com/(_admin/|emc-plus/support/[\w-]+\.(?:cs|j)s|favicon\.ico|homepage/css/|images/|jcaptcha\.htm|login\.htm|profile/account_information\.htm|R1/|register\.htm|reset_password/email\.htm|rss/[\w-]+\.(?:json|rss)|utilities/(?:css/|globalsiteselect\.jhtml))"
+		to="https://www.emc.com/$1" />
+
+	<rule from="^http://(community|ecn-analytics|education|gallery|powerlink|sso)\.emc\.com/"
+		to="https://$1.emc.com/" />
+
+	<rule from="^http://ecn-analytics-nssl\.emc\.com/"
+		to="https://emc-com.122.2o7.net/" />
+
+	<rule from="^http://emc\.force\.com/"
+		to="https://emc.secure.force.com/" />
 
 </ruleset>
