@@ -37,10 +37,19 @@
 		- patents/\w\w\d+\?hl=\w\w
 
 
-	Problematic subdomains:
+	Problematic domains:
 
-		- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
-		- knol		(404, valid cert)
+		- www.goo.gl		(404; mismatched, CN: *.google.com)
+
+		- google.com subdomains:
+
+			- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
+			- knoll		(404, valid cert)
+			- trends *
+
+		- news.google.cctld	(redirects to http, valid cert)
+
+	* 404, valid cert
 
 
 	Partially covered domains:
@@ -82,7 +91,7 @@
 			- encrypted-tbn[123]
 			- feedburner
 			- fiber
-			- finance		(→ www)
+			- finance
 			- glass
 			- groups
 			- health
@@ -122,7 +131,8 @@
 			- trends		(→ www)
 
 		- partner.googleadservices.com
-		- (www.)googlecode.com		(→ code.google.com)
+		- (www.)googlecode.com
+		- *.googlecode.com	(per-project subdomains)
 		- googlesource.com
 		- *.googlesource.com
 		- pagead2.googlesyndication.com
@@ -225,7 +235,7 @@
 	<rule from="^http://(?:www\.)?google\.com/(appsstatus|buzz|contacts|culturalinstitute|favicon\.ico|glass|insights|mapmaker|news|patents/licensing/|prdhp|products|shopping|webfonts)"
 		 to="https://www.google.com/$1" />
 
-	<rule from="^http://(?:www\.)?google\.com/(analytics|goodtoknow|ig|policies|urchin)($|\?|/)"
+	<rule from="^http://(?:www\.)?google\.com/(analytics|finance|goodtoknow|ig|policies|urchin)($|\?|/)"
 		to="https://www.google.com/$1$2" />
 
 	<!--	This worked for a while but seems to be unstable.
@@ -239,17 +249,11 @@
 	<rule from="^http://(www\.)?g(oogle)?mail\.com/"
 		to="https://$1g$2mail.com/" />
 
-	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w\-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
+	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w\-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|finance|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<rule from="^http://books\.google\.com/(googlebooks|(?:intl/en/)?images)/"
 		to="https://www.google.com/$1/" />
-
-	<rule from="^http://productforums\.google\.com/$"
-		to="https://productforums.google.com/forum/" />
-
-	<rule from="^http://productforums\.google\.com/"
-		to="https://productforums.google.com/" />
 
 	<rule from="^http://scholar\.google\.(?:com|co\.\w\w|\w\w)/intl/(\w\w)/scholar/images/"
 		to="https://www.google.com/intl/$1/scholar/images/" />
@@ -261,11 +265,11 @@
 	<rule from="^http://([^/:@\.]+)\.google\.ca/finance"
 		 to="https://$1.google.ca/finance" />
 
-	<rule from="^http://(?:www\.)?google\.co(m|\.uk)/finance"
-		 to="https://www.google.co$1/finance" />
+	<rule from="^http://(?:www\.)?google\.co\.uk/finance"
+		 to="https://www.google.co.uk/finance" />
 
-	<rule from="^https?://finance\.google\.co(m|\.uk)/"
-		 to="https://www.google.co$1/finance/" />
+	<rule from="^http://finance\.google\.co\.uk/"
+		 to="https://finance.google.co.uk/" />
 
 
 	<rule from="^http://knoll?\.google\.com/"
@@ -283,14 +287,8 @@
 		to="https://groups.google.de/" />
 
 
-	<rule from="^http://(?:www\.)?googlecode\.com/$"
-		 to="https://code.google.com/" />
-
-	<rule from="^http://([^/:@]+)\.googlecode\.com/$"
-		 to="https://code.google.com/p/$1/" />
-
-	<rule from="^http://([^/:@]+)\.googlecode\.com/(.+)"
-		 to="https://$1.googlecode.com/$2" />
+	<rule from="^http://([^/:@]+\.)?googlecode\.com/"
+		 to="https://$1googlecode.com/" />
 
 	<rule from="^http://([^\./]\.)?googlesource\.com/"
 		to="https://$1googlesource.com/" />
