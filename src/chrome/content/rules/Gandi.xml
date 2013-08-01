@@ -1,13 +1,22 @@
 <!--
+	Nonfunctional subdomains:
+
+		- groups	(dropped)
+
+
 	Problematic subdomains:
 
 		- contact	(works; mismatched, CN: www.gandi.net)
+		- en		(refused)
 
 
 	Fully covered subdomains:
 
 		- (www.)
 		- contact	(→ www)
+		- en		(→ www)
+		- webmail
+		- wiki
 
 -->
 <ruleset name="Gandi">
@@ -16,15 +25,18 @@
 	<target host="*.gandi.net" />
 
 
-	<securecookie host="^(?:www)?\.gandi\.net$" name=".+" />
+	<securecookie host="^(?:webmail|wiki|www)?\.gandi\.net$" name=".+" />
 
 
-	<rule from="^http://(www\.)?gandi\.net/"
+	<rule from="^http://((?:webmail|wiki|www)\.)?gandi\.net/"
 		to="https://$1gandi.net/" />
 
 	<!--	Server drops path:
 					-->
 	<rule from="^http://contact\.gandi\.net/[^?]*(\?.*)?"
 		to="https://www.gandi.net/faq/form_contact_support/$1" />
+
+	<rule from="^http://en\.gandi\.net/"
+		to="https://www.gandi.net/" />
 
 </ruleset>
