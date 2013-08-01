@@ -1,9 +1,67 @@
+<!--
+	CDN buckets:
+
+		- kaspersky.122.2o7.net
+
+		- 46qasb3uw5yn639ko4bz2ptr8u.wpengine.netdna-cdn.com
+
+			- blog
+
+
+	Nonfunctional subdomains:
+
+		- academy	(shows www; mismatched, CN: www.kapersky.com)
+		- blog		(403, wpengine)
+		- business	(redirects to http, wpengine)
+		- forum		(dropped)
+		- www		(401, valid cert)
+
+
+	Problematic domains:
+
+		- kasperskycontenthub.com	(403, wpengine)
+
+
+	Partially covered domains:
+
+		kasperskycontenthub.com		(→ eugene.kapersky.com)
+
+
+	Fully covered subdomains:
+
+		- anti-theft
+		- companyaccount
+		- eugene
+		- manage-tablet
+		- my
+		- support
+		- trusted
+		- uis
+
+
+	Mixed content:
+
+		- Images on eugene from kasperskycontenthub.com *
+
+	* Secured by us, doesn't trip MCB anyway
+
+-->
 <ruleset name="Kaspersky.com (partial)">
 
-	<target host="trusted.kaspersky.com" />
+	<target host="*.kaspersky.com" />
+	<target host="kasperskycontenthub.com" />
 
 
-	<rule from="^http://trusted\.kaspersky\.com/"
-		to="https://trusted.kaspersky.com/" />
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.kaspersky\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:\.anti-theft|\.eugene|\.?my|\.?support)\.kaspersky\.com$" name=".+" />
+
+
+	<rule from="^http://(anti-theft|companyaccount|eugene|manage-tablet|my|support|trusted|uis)\.kaspersky\.com/"
+		to="https://$1.kaspersky.com/" />
+
+	<rule from="^http://kasperskycontenthub\.com/eugene/"
+		to="https://eugene.kaspersky.com/" />
 
 </ruleset>
