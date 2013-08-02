@@ -601,7 +601,9 @@ HTTPSEverywhere.prototype = {
     return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
-  get_prefs: function(prefBranch = PREFBRANCH_ROOT) {
+  get_prefs: function(prefBranch) {
+    if(!prefBranch) prefBranch = PREFBRANCH_ROOT;
+
     // get our preferences branch object
     // FIXME: Ugly hack stolen from https
     var branch_namel
