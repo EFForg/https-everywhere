@@ -1,0 +1,65 @@
+<!--
+	CDN buckets:
+
+		- dspages.huawei.com.edgesuite.net
+
+			- www
+
+		- webpages.huawei.com.edgesuite.net
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- ^ *
+		- consumer *
+		- e-learning	(shows edoc-hk; mismatched, CN: edoc-hk.huawei.com)
+		- enterprise	(refused)
+		- learning *
+		- support **
+		- www **
+
+	* http reply
+	** 504, akamai
+
+
+	Fully covered subdomains:
+
+		- autodiscover
+		- edoc-hk
+		- imail\w\w:
+
+			- cn
+			- id
+			- uk
+			- pk
+			- bh
+			- ng
+			- br
+			- ru
+			- sa
+			- us
+			- za
+
+		- imailind
+		- uniportal
+
+-->
+<ruleset name="Huawei.com (partial)">
+
+	<target host="*.huawei.com" />
+
+
+	<securecookie host="^(?:edoc|imail\w\w|imailind|uniportal)\.huawei\.com$" name=".+" />
+
+
+	<!--	Fails to redirect over https:
+						-->
+	<rule from="^http://imail(\w\w|ind)\.huawei\.com/(?:\?.*)?$"
+		to="https://imail$1.huawei.com/OWA" />
+
+	<rule from="^http://(autodiscover|edoc|edoc-hk|imail\w\w|imailind|uniportal)\.huawei\.com/"
+		to="https://$1.huawei.com/" />
+
+</ruleset>
