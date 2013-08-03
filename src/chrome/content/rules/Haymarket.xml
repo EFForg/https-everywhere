@@ -1,10 +1,15 @@
 <!--
+	For problematic rules, see Haymarket-problematic.xml.
+
+
 	Other Haymarket rulesets:
 
 		- ScMagazineUS.com.xml
 
 
 	CDN buckets:
+
+		- haymarketbusinesspublications.122.2o7.net
 
 		- haymarket.vo.llnwd.net
 
@@ -19,21 +24,45 @@
 
 		- www.bit.com.au	(cert: apac.haymarket.com; "This website is currently offline or not configured.")
 
+		- (www.)haymarket.com *
 		- cdn.code.haymarket.com	(400; mismatched, CN: *.hs.llnwd.net)
 		- i.haymarket.net.au
 		- cdn.i.haymarket.net.au	(cert: *.pantherssl.com/*.sslcs.cdngc.net; 403)
 		- www.haymarketmedia.asia	(times out)
 
+	* Dropped
+
+
+	Problematic domains:
+
+		- careers.haymarket.com		(works; mismatched, CN: *.talemetry.com)
+
+
+	Fully covered domains:
+
+		- shop.haymarket.com
+		- subscribe.haymarketmedia.com
+
 -->
 <ruleset name="Haymarket (partial)">
 
 	<target host="apac.haymarket.com" />
+	<target host="shop.haymarket.com" />
+	<target host="*.shop.haymarket.com" />
+	<target host="*.haymarketmedia.com" />
 
 
-	<securecookie host="^apac\.haymarket\.com$" name=".*" />
+	<!--	Tracking cookie:
+					-->
+	<securecookie host="^\.haymarket\.com$" name="^utag_main$" />
+	<securecookie host="^(?:apac|\.?shop)\.haymarket\.com$" name=".*" />
+	<securecookie host="^\.?subscribe\.haymarketmedia\.com$" name=".+" />
 
 
-	<rule from="^http://apac\.haymarket\.com/"
-		to="https://apac.haymarket.com/" />
+	<rule from="^http://(apac|shop)\.haymarket\.com/"
+		to="https://$1.haymarket.com/" />
+
+	<rule from="^http://subscribe\.haymarketmedia\.com/"
+		to="https://subscribe.haymarketmedia.com/" />
 
 </ruleset>
