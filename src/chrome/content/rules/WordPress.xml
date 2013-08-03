@@ -1,16 +1,19 @@
 <!--
 	Nonfunctional domains:
 
-		- wordpress.com subdomains:
-
-			- *.blog *
-			- *.blog.files *
-			- *.forums *
-			- *.support *
-
 		- s-plugins.wordpress.org *
 
-		* How so?
+	* How so?
+
+
+	Problematic domains:
+
+		- *.blog.files.wordpress.com *
+		- *.forums.wordpress.com **
+		- *.support.wordpress.com **
+
+	* Works; mismatched, CN: *.files.wordpress.com
+	** Works; mismatched, CN: *.wordpess.com
 
 
 	Partially covered domains:
@@ -18,7 +21,9 @@
 		- wordpress.com subdomains:
 
 			- ^
+			- *.blog	(per-locale blogs)
 			- *.files	(per-blog subdomains)
+			- *.blog.files	(→ *-blog.files)
 			- r-login
 			- s		(→ www)
 			- s\d		(→ secure)
@@ -44,6 +49,13 @@
 			- s
 			- s\d
 
+
+	Mixed content:
+
+		- Images on *.blog.wordpress.com from *.blog.files.wordpress.com *
+
+	* Secured by us, doesn't trip MCB anyway
+
 -->
 <ruleset name="WordPress (partial)" platform="mixedcontent">
 
@@ -53,7 +65,7 @@
 		<!--
 			These aren't targeted anyway...
 
-		<exclusion pattern="^http://([^/:@\.]+)\.(blog|blog\.files|forums|support)\.wordpress\.com/" /-->
+		<exclusion pattern="^http://([^/:@\.]+)\.(forums|support)\.wordpress\.com/" /-->
         	<exclusion pattern="^http://s-plugins\.wordpress\.org/" />
 	<target host="wordpress.org" />
 	<target host="*.wordpress.org" />
@@ -66,8 +78,11 @@
 	<rule from="^http://wordpress\.(com|org)/"
 		to="https://wordpress.$1/"/>
 
-	<rule from="^http://([^/:@\.]+)\.files\.wordpress\.com/"
-		to="https://$1.files.wordpress.com/"/>
+	<rule from="^http://([^/:@\.]+)\.(blog|files)\.wordpress\.com/"
+		to="https://$1.$2.wordpress.com/"/>
+
+	<rule from="^http://(\w+)\.blog\.files\.wordpress\.com/"
+		to="https://$1-blog.files.wordpress.com/" />
 
 	<rule from="^http://s\.wordpress\.(com|org)/"
 		to="https://www.wordpress.$1/"/>
