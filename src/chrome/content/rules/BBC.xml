@@ -112,6 +112,9 @@
 	* Secured by us
 	** Unsecurable, good riddance for MCB
 
+
+	NB: iplayer has been excluded so as to work around broken MCB.
+
 -->
 <ruleset name="BBC (mixed content)" platform="mixedcontent">
 
@@ -122,6 +125,10 @@
 			Causes censorship bypass to fail.
 								-->
 		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/episode/\w+/(?:hd/)?\w+/?(?:$|\?)" />
+		<!--
+			Avoid false mixed content until MCB works properly:
+										-->
+		<exclusion pattern="^http://(?:www\.)?bbc\.co\.uk/iplayer(?:/?\?|/?$|/radio(?:$|[?/]))" />
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/9136
 
@@ -190,8 +197,10 @@
 	<rule from="^http://polling\.bbc\.co\.uk/modules/onairpanel/include/"
 		to="https://ssl.bbc.co.uk/modules/onairpanel/include/" />
 
-	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
-		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" />
+	<!--	This may be needed again in the future:
+							-->
+	<!--rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
+		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" /-->
 
 	<rule from="^http://emp\.bbci\.co\.uk/emp/releases/"
 		to="https://www.bbc.co.uk/emp/releases/" />
