@@ -8,10 +8,12 @@
 		- electradl.iplayer.bbc.co.uk.edgesuite.net
 		- news.bbc.co.uk.edgesuite.net
 			- newsimg.bbc.co.uk
+			- feeds.bbci.co.uk
 			- news.bbcimg.co.uk
 			- tile[1-4].bbcimg.co.uk
 		- emp.bbci.co.uk.edgesuite.net
 		- ichef.bbci.co.uk.edgesuite.net
+		- node1.bbcimg.co.uk.edgesuite.net
 		- bbcmedia.fcod.llnwd.net
 
 
@@ -54,11 +56,20 @@
 			- stats **
 
 		- (www.)bbcamerica.com	(reset)
-		- emp.bbci.co.uk	(Akamai; 503)
+		- feeds.bbci.co.uk *
 		- open.bbci.co.uk *
 
 	* 503, akamai
 	** Refused
+
+
+	Problematic domains:
+
+		- emp.bbci.co.uk *
+		- feeds.bbci.co.uk *
+		- node1.bbcimg.co.uk	(works, akamai)
+
+	* 503, akamai
 
 
 	Partially covered domains:
@@ -67,15 +78,39 @@
 
 			- crossdomain.xml causes videos to fail; "media selection request failed"
 
+		- emp.bbci.co.uk	(→ www.bbc.co.uk)
+		- feeds.bbci.co.uk	(→ www.bbc.co.uk)
+
 
 	Fully covered domains:
 
 		- www.live.bbc.co.uk
 
 
-	Mixed flash on www from airdownload.adobe.com
+	Mixed content:
 
-	Mixed web bug on www from stats
+		- Flash on www from airdownload.adobe.com
+
+		- Scripts:
+
+			- On www from www *
+			- On www from static.bbci.co.uk *
+			- On www from node1.bbcimg.co.uk *
+
+		- css:
+
+			- On www from static.bbci.co.uk *
+			- On www from node1.bbcimg.co.uk *
+
+		- Images:
+
+			- On www from ichef.bbci.co.uk *
+			- On www from static.bbci.co.uk *
+
+		- Web bug on www from stats.bbc.co.uk **
+
+	* Secured by us
+	** Unsecurable, good riddance for MCB
 
 -->
 <ruleset name="BBC (mixed content)" platform="mixedcontent">
@@ -95,6 +130,7 @@
 				"This content doesn't seem to be working"
 										-->
 		<exclusion pattern="^http://www\.bbc\.co\.uk/iplayer/playlist/\w+$" />
+		<exclusion pattern="^http://open\.live\.bbc\.co\.uk/(?!wurfldemi/(?:network|useragent)\.jsonp|weather/feeds/\w\w/maps/forecast\.json)" />
 	<target host="iplayerhelp.external.bbc.co.uk" />
 	<target host="*.bbci.co.uk" />
 	<!--	Akamai	-->
@@ -103,6 +139,10 @@
 
 	<!--	Tracking cookie set by sa	-->
 	<securecookie host="^\.bbc\.co\.uk$" name="^s1$" />
+	<!--
+		Can any of these be secured safely?
+							-->
+	<!--securecookie host="^\.bbc\.co\.uk$" name="^(BBC-UID|ckns_policy|BGUID|sa_labels|X-AB-iplayer-emp31|X-AB-iplayer-qunit1)" /-->
 	<securecookie host="^(?:iplayerhelp\.external|ssl)\.bbc\.co\.uk$" name=".+" />
 
 
@@ -111,6 +151,9 @@
 
 	<rule from="^http://(?:www(?:img)?\.)?bbc\.co\.uk/(a-z/style|cbbc/(?:all/homepage-background|img|structure)|help/404_img|inc|news/special/shared|player/emp|survey/pulse|tv/js|weather/locales)/"
 		to="https://beta.bbc.co.uk/$1/" />
+
+	<rule from="^http://feeds\.bbc\.co\.uk/modules/comments/"
+		to="https://www.bbc.co.uk/modules/comments/" />
 
 	<!--	ichef: Images.
 					-->
@@ -129,8 +172,8 @@
 	<rule from="^http://(beta|careers|downloads|iplayerhelp\.external|id|ssl)\.bbc\.co\.uk/"
 		to="https://$1.bbc.co.uk/" />
 
-	<rule from="^http://open\.live\.bbc\.co\.uk/wurfldemi/(network|useragent)\.jsonp"
-		to="https://open.live.bbc.co.uk/wurfldemi/$1.jsonp" />
+	<rule from="^http://open\.live\.bbc\.co\.uk/"
+		to="https://open.live.bbc.co.uk/" />
 
 	<rule from="^http://news\.bbc\.co\.uk/(css|furniture|stylesheets)/"
 		to="https://beta.bbc.co.uk/$1/" />
@@ -149,6 +192,9 @@
 
 	<rule from="^https://www\.bbc\.co\.uk/iplayer/episode/(\w+/(?:hd/)?[\w\.]+/?(?:$|\?))"
 		to="http://www.bbc.co.uk/iplayer/episode/$1" downgrade="1" />
+
+	<rule from="^http://emp\.bbci\.co\.uk/emp/releases/"
+		to="https://www.bbc.co.uk/emp/releases/" />
 
         <!--    iPlayer points here, but only when fetched via https.
 
