@@ -38,12 +38,16 @@
 
 	<target host="cheezburger.com" />
 	<target host="*.cheezburger.com" />
-		<exclusion pattern="^http://(?:corp|blog|sites|advertising|jobs|feedback)\.cheezburger\.com/" />
+		<exclusion pattern="^http://(?:advertising|blog|corp|feedback|jobs|sites)\.cheezburger\.com/" />
+		<!--
+			Exclude what *shouldn't* be downgraded:
+								-->
+		<exclusion pattern="^https://corp\.cheezburger\.com/(?!(?:copyright-infringement-notification|privacy-policy|terms-of-service)/$)" />
 	<target host="chzb.gr" />
 	<target host="*.chzbgr.com" />
 
 
-	<securecookie host="^www\.cheezburger\.com$" name=".*" />
+	<securecookie host="^www\.cheezburger\.com$" name=".+" />
 
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001665.html
@@ -56,8 +60,8 @@
 
 	<!--	There are some inconsistent redirects between cheezburger.com and
 		www.cheezburger.com. So don't try to enforce either hostname.
-					-->
-	<rule from="^http://([\w\-]+\.)?cheezburger\.com/"
+									-->
+	<rule from="^http://([\w-]+\.)?cheezburger\.com/"
 		to="https://$1cheezburger.com/" />
 
 	<rule from="^https?://chzb\.gr/"
@@ -66,10 +70,7 @@
 	<rule from="^http://(i|s|t)\.chzbgr\.com/"
 		to="https://$1.chzbgr.com/" />
 
-	<rule from="^https://(advertising|blog|feedback|jobs|sites)\.cheezburger\.com/?$"
+	<rule from="^https://(advertising|blog|corp|feedback|jobs|sites)\.cheezburger\.com/?$"
 		to="http://$1.cheezburger.com/" downgrade="1" />
-
-	<rule from="^https://corp\.cheezburger\.com/(terms-of-service|privacy-policy|copyright-infringement-notification)/$"
-		to="http://corp.cheezburger.com/$1/" downgrade="1" />
 
 </ruleset>
