@@ -1,5 +1,13 @@
 <!--
+	CDN buckets:
+
+		- assets.freshdesk.com.s3.amazonaws.com
 	cdn.freshdesk.com.s3.amazonaws.com
+
+		- d3o14s01j0qbic.cloudfront.net
+
+			- static
+			- static[1-5]
 
 
 	Nonfunctional subdomains:
@@ -14,9 +22,17 @@
 		<exclusion pattern="^http://(?:blog|www)\." />
 
 
+	<rule from="^http://assets\.freshdesk\.com/"
+		to="https://s3.amazonaws.com/assets.freshdesk.com/" />
+
 	<rule from="^https?://cdn\.freshdesk\.com/"
 		to="https://s3.amazonaws.com/cdn.freshdesk.com/" />
 
+	<rule from="^http://static[1-5]?\.freshdesk\.com/"
+		to="https://d3o14s01j0qbic.cloudfront.net/" />
+
+	<!--	Per-client subdomains:
+					-->
 	<rule from="^http://([\w-]+)\.freshdesk\.com/"
 		to="https://$1.freshdesk.com/" />
 
