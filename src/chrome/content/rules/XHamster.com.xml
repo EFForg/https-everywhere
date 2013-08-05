@@ -1,15 +1,39 @@
 <!--
 	Nonfunctional subdomains:
 
-		- et1 *
+		- et\d *
+		- et1\d *
 		- m **
-		- static **
+		- mobile	(shows 
+		- p1 *
 		- upload *
 
 	* Times out
 	** Shows www; mismatched, CN: xhamster.com)
 
-	Mixed css & images on www from static
+
+	Fully covered subdomains:
+
+		- (www.)
+		- eu-st
+		- static
+
+
+	Mixed content:
+
+		- Images, on www from:
+
+			- et\d *
+			- et1\d *
+			- eu-st **
+			- p1 *
+
+		- Web/ads bug on www from adscnt2 ***
+		- Web/ads bug on www from cnt2 ***
+
+	* Unsecurable, doesn't trip MCB anyway
+	** Secured by us, doesn't trip MCB anyway
+	*** Unsecurable
 
 -->
 <ruleset name="xHamster.com (partial)" platform="mixedcontent">
@@ -18,7 +42,10 @@
 	<target host="*.xhamster.com" />
 
 
-	<rule from="^http://(secure\.|www\.)?xhamster\.com/"
+	<securecookie host="^\.xhamster\.com$" name="^stats$" />
+
+
+	<rule from="^http://((?:eu-st|secure|static|www)\.)?xhamster\.com/"
 		to="https://$1xhamster.com/" />
 
 </ruleset>
