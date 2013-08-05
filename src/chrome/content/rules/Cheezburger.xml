@@ -1,10 +1,20 @@
 <!--
+	CDN buckets:
+
+		- wac.1ddb.edgecastcdn.net/??1DDB/
+
+			- images.cheezburger.com
+
+		- cheezburger.freshdesk.com
+
+			- support.cheezburger.com
+
+
 	As of 2012-08-22, known unprotected subdomains are:
 
 		- advertising	(unbounce.com certificate)
 		- blog		(not listening on https)
 		- corp		(not listening on https)
-		- developer	(mashery.com certificate)
 		- feedback	(uservoice.com certificate)
 		- jobs		(theresumator.com certificate)
 		- sites		(unbounce.com certificate)
@@ -17,18 +27,32 @@
 		- chzb.gr
 		- knowyourmeme.com
 
+
+	Problematic domains:
+
+		- images.cheezburger.com	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- support.cheezburger.com	(freshdesk)
+
 -->
 <ruleset name="Cheezburger" platform="mixedcontent">
 
 	<target host="cheezburger.com" />
 	<target host="*.cheezburger.com" />
-		<exclusion pattern="^http://(?:corp|blog|sites|advertising|developer|jobs|feedback)\.cheezburger\.com/" />
+		<exclusion pattern="^http://(?:corp|blog|sites|advertising|jobs|feedback)\.cheezburger\.com/" />
 	<target host="chzb.gr" />
 	<target host="*.chzbgr.com" />
 
 
 	<securecookie host="^www\.cheezburger\.com$" name=".*" />
 
+
+	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001665.html
+							-->
+	<rule from="^http://images\.cheezburger\.com/"
+		to="https://i.chzbgr.com/" />
+
+	<rule from="^http://support\.cheezburger\.com/"
+		to="https://cheezburger.support.com/" />
 
 	<!--	There are some inconsistent redirects between cheezburger.com and
 		www.cheezburger.com. So don't try to enforce either hostname.
@@ -42,7 +66,7 @@
 	<rule from="^http://(i|s|t)\.chzbgr\.com/"
 		to="https://$1.chzbgr.com/" />
 
-	<rule from="^https://(advertising|blog|developer|feedback|jobs|sites)\.cheezburger\.com/?$"
+	<rule from="^https://(advertising|blog|feedback|jobs|sites)\.cheezburger\.com/?$"
 		to="http://$1.cheezburger.com/" downgrade="1" />
 
 	<rule from="^https://corp\.cheezburger\.com/(terms-of-service|privacy-policy|copyright-infringement-notification)/$"
