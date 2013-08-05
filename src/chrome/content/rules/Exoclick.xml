@@ -1,14 +1,22 @@
 <!--
 	Nonfunctional domains:
 
-		- ads.exoclick.com
-		- custom.exoclick.com
+		- ads.exoclick.com *
+		- custom.exoclick.com *
 		- (www.)exoclickmobile.com
+
+	* Dropped
 
 
 	Problematic domains:
 
-		- exoclick.com
+		- exoclick.com 			(refused)
+		- www-static.exoclick.com	(dropped)
+
+
+	Fully covered subdomains:
+
+		- www-static	(→ www)
 
 -->
 <ruleset name="Exoclick (partial)">
@@ -17,7 +25,12 @@
 	<target host="*.exoclick.com" />
 
 
-	<rule from="^https?://(?:www\.)?exoclick\.com/"
+	<!--	name="^(impressions|lng|PHPSESSID|tag|__utm\w)$"
+								-->
+	<securecookie host="^\.exoclick\.com$" name=".+" />
+
+
+	<rule from="^https?://(?:www\.|www-static\.)?exoclick\.com/"
 		to="https://www.exoclick.com/" />
 
 	<rule from="^http://syndication\.exoclick\.com/"
