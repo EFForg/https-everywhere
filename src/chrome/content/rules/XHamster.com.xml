@@ -1,15 +1,28 @@
 <!--
+	CDN buckets:
+
+		- xhamster.uservoice.com
+
+			- suggestions
+
+
 	Nonfunctional subdomains:
 
 		- et\d *
 		- et1\d *
 		- m **
-		- mobile	(shows 
+		- mobile	(shows www)
 		- p1 *
+		- partners *
 		- upload *
 
 	* Times out
 	** Shows www; mismatched, CN: xhamster.com)
+
+
+	Problematic subdomains:
+
+		- suggestions	(works, uservoice.com)
 
 
 	Fully covered subdomains:
@@ -29,7 +42,9 @@
 			- p1 *
 
 		- Web/ads bug on www from adscnt2 ***
+		- Web bug on www from cnt1 ***
 		- Web/ads bug on www from cnt2 ***
+		- Web bug on www from syndication.traffichaus.com ***
 
 	* Unsecurable, doesn't trip MCB anyway
 	** Secured by us, doesn't trip MCB anyway
@@ -42,10 +57,17 @@
 	<target host="*.xhamster.com" />
 
 
-	<securecookie host="^\.xhamster\.com$" name="^stats$" />
+	<securecookie host="^\.xhamster\.com$" name="^(?:splash-\d+|stats|uvts)$" />
+	<!--
+		Can these be secured safely?
+						-->
+	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|prid)$" /-->
 
 
 	<rule from="^http://((?:eu-st|secure|static|www)\.)?xhamster\.com/"
 		to="https://$1xhamster.com/" />
+
+	<rule from="^http://suggestions\.xhamster\.com/track\.gif"
+		to="https://xhamster.uservoice.com/track.gif" />
 
 </ruleset>
