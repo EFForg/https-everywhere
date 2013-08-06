@@ -45,6 +45,7 @@
 			- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
 			- gg		($ 404s)
 			- knoll		(404, valid cert)
+			- scholar	(redirects to http)
 			- trends *
 
 		- news.google.cctld	(redirects to http, valid cert)
@@ -54,12 +55,16 @@
 
 	Partially covered domains:
 
+		- google.cctld subdomains:
+
+			- scholar	(→ www)
+
 		- google.com subdomains:
 
 			- (www.)
-			- books		(some pages redirect to http)
 			- gg		($ 404s)
 			- news		(→ www)
+			- scholar	(→ www)
 
 		- *.googleusercontent.com	(*-opensocial excluded)
 
@@ -76,7 +81,7 @@
 			- adwords
 			- apis
 			- appengine
-			- books
+			- books		(→ encrypted)
 			- calendar
 			- checkout
 			- chrome
@@ -154,18 +159,21 @@
 	<target host="google.*" />
 	<target host="news.google.*" />
 		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
+	<target host="scholar.google.*" />
 	<target host="www.google.*" />
 	<target host="google.co.*" />
 	<target host="*.google.ca" />
 	<target host="news.google.co.*" />
+	<target host="scholar.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="*.google.com" />
 		<exclusion pattern="^http://(?:www\.)?google\.com/analytics/*(?:$|\?|[^/]+(?:\?.*)?$)" />
-		<exclusion pattern="^http://books\.google\.com/(?!books/(?:\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" />
+		<!--exclusion pattern="^http://books\.google\.com/(?!books/(\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" /-->
 		<exclusion pattern="^http://gg\.google\.com/(?!csi(?:$|\?))" />
 	<target host="news.google.com.*" />
 	<target host="google.com.*" />
+	<target host="scholar.google.com.*" />
 	<target host="www.google.com.*" />
 	<target host="groups.google.de" />
 	<target host="partner.googleadservices.com" />
@@ -207,16 +215,10 @@
 	<rule from="^http://(?:www\.)?goo\.gl/"
 		to="https://goo.gl/" />
 
-	<!--	Protocol-relative links from books/css/:
-								-->
-	<rule from="^https?://books\.google\.com/googlebooks/"
-		to="https://www.google.com/googlebooks/" />
-
-	<rule from="^http://books\.google\.com/(googlebooks|(?:intl/en/)?images)/"
-		to="https://www.google.com/$1/" />
-
-	<rule from="^http://books\.google\.com/i(mages|ntl)/"
-		to="https://www.google.com/i$1/" />
+	<!--	Redirects to http when rewritten to www:
+							-->
+	<rule from="^http://books\.google\.com/"
+		to="https://encrypted.google.com/" />
 
 	<rule from="^http://(?:www\.)?google\.c(a|o\.in|o\.uk)/(contacts|prdhp|products|shopping)"
 		 to="https://www.google.c$1/$2" />
@@ -236,7 +238,7 @@
 	<rule from="^http://(?:www\.)?google\.com/(appsstatus|buzz|contacts|culturalinstitute|favicon\.ico|glass|insights|mapmaker|news|prdhp|products|shopping|webfonts)"
 		 to="https://www.google.com/$1" />
 
-	<rule from="^http://(?:www\.)?google\.com/(analytics|finance|goodtoknow|ig|patents|policies|urchin)($|\?|/)"
+	<rule from="^http://(?:www\.)?google\.com/(adwords|analytics|books|finance|goodtoknow|ig|patents|policies|urchin)($|\?|/)"
 		to="https://www.google.com/$1$2" />
 
 	<!--	This worked for a while but seems to be unstable.
@@ -253,8 +255,8 @@
 	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w\-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|finance|gg|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
 		to="https://$1.google.com/" />
 
-	<rule from="^http://scholar\.google\.(?:com|co\.\w\w|\w\w)/intl/(\w\w)/scholar/images/"
-		to="https://www.google.com/intl/$1/scholar/images/" />
+	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
+		to="https://www.google.$1/intl/" />
 
 	<rule from="^http://(?:encrypted-)?tbn2\.google\.com/"
 		to="https://encrypted-tbn2.google.com/" />
