@@ -82,31 +82,24 @@
 	<target host="ning.com" />
 	<target host="*.ning.com" />
 		<!--exclusion pattern="^http://(www\.)?ning\.com/(?!\d\.\d\d\.\d\d(\.\d)?/|(about|blog|help|main)($|/)|payment/|\w+/wp-content/)" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://creators\.ning\.com/(?!(?:[\w-]+/)?(?:cs|image)s/)" />
 		<!--exclusion pattern="^http://status\.ning\.com/" /-->
 		<!--exclusion pattern="^http://uk\.ning\.com/(?!\d\.\d\d\.\d\d(\.\d)?/|favicon\.ico)" /-->
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.developer.ning.com" />
 
 
-	<securecookie host="^.*\.ning\.com$" name=".*" />
+	<securecookie host=".*\.ning\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?ning\.com/"
+	<rule from="^http://((?:about|build|creators|developer|go|help|uk|www)\.)?ning\.com/"
 		to="https://$1ning.com/" />
 
 	<rule from="^http://(?:origin-)?api\.ning\.com/"
 		to="https://origin-api.ning.com/" />
 
-	<rule from="^http://(about|build|developer|go|help)\.ning\.com/"
-		to="https://$1.ning.com/" />
-
-	<rule from="^http://creators\.ning\.com/([\w\-]+/)?(cs|image)s/"
-		to="https://creators.ning.com/$1$2s/" />
-
 	<rule from="^http://static\.ning\.com/([^/]+)/"
 		to="https://$1.ning.com/xn_resources/" />
-
-	<rule from="^http://uk\.ning\.com/"
-		to="https://uk.ning.com/" />
 
 </ruleset>
