@@ -12,20 +12,36 @@
 	Nonfunctional domains:
 
 		- img.zorpia.com *
-		- static.zorpia.com **
 		- uiteam.zorpia.com	(rx_record_too_long)
-		- static.zpcdn.com **
-		- ec.static.zpcdn.com **
 		- img.zpcdn.com *
 
 	* CN: gp1.wac.edgecastcdn.net; 404
+
+
+	Problematic domains:
+
+		- static.zorpia.com **
+		- static.zpcdn.com **
+		- ec.static.zpcdn.com **
+
 	** CN: gp1.wac.edgecastcdn.net; 504
+
+
+	Fully covered domains:
+
+		- zorpia.com subdomains:
+
+			- static	(→ ^)
+
+		- static.zpcdn.com	(→ zorpia.com)
+		- ec.static.zpcdn.com	(→ zorpia.com)
 
 -->
 <ruleset name="Zorpia" platform="mixedcontent">
 
 	<target host="zorpia.com" />
 	<target host="*.zorpia.com" />
+	<target host="*.zpcdn.com" />
 
 
 	<securecookie host="^\.zorpia\.com$" name=".+" />
@@ -33,5 +49,8 @@
 
 	<rule from="^http://(en\.|me\.|www\.)?zorpia\.com/"
 		to="https://$1zorpia.com/" />
+
+	<rule from="^http://(?:static\.zorpia|(?:ec\.)?static\.zpcdn)\.com/"
+		to="https://zorpia.com/" />
 
 </ruleset>
