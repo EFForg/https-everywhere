@@ -1,4 +1,7 @@
 <!--
+	For rules that cause false/broken MCB, see Ning-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- api.ning.com.edgesuite.net
@@ -32,8 +35,11 @@
 
 	Partially covered subdomains:
 
-		- creators	(avoiding false/broken MCB)
+		- creators *
+		- makemodules *
 		- static	(→ per-client subdomains)
+
+	* Avoiding false/broken MCB
 
 
 	Mixed content:
@@ -44,37 +50,45 @@
 
 		- Scripts:
 
-			- On creators from makemodules
+			- On creators from creators *
+			- On creators from makemodules *
 			- On creators from static *
 			- On creators from ajax.googleapis.com *
-			- On makemodules from makemodules
+			- On makemodules from makemodules *
 			- On makemodules from static *
 
 
 		- Frames:
 
-			- On creators from creators
+			- On creators from creators *
 			- On makemodules from www *
 
 		- css:
 
-			- On creators from makemodules
-			- On makemodules from makemodules
-			- On makemodules from makemodules
+			- On creators from makemodules *
+			- On makemodules from makemodules *
 			- On makemodules from static *
 			- On makemodules from www *
 
 		- Images:
 
-			- On creators from makemodules
-			- On makemodules from makemodules
+			- On creators from makemodules *
+			- On makemodules from makemodules *
 
 
 		- Web bugs:
 
-			- On makemodules from www.35.glam.com
+			- On creators from www22.glam.com *
+			- On creators from www35t.glam.com *
+			- On makemodules from www.35.glam.com *
+			- On creators from www.scoop.it
+			- On creators from img.scoop.it *
 
 	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
 
 -->
 <ruleset name="Ning (partial)">
@@ -85,7 +99,8 @@
 		<!--
 			Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://creators\.ning\.com/(?!(?:[\w-]+/)?(?:cs|image)s/)" />
+		<exclusion pattern="^http://creators\.ning\.com/(?!activity/|(?:[\w-]+/)?(?:cs|image)s/|favicon\.ico)" />
+		<exclusion pattern="^http://makemodules\.ning\.com/(?!activity/|colorbox/|(?:[\w-]+/)?(?:css|error|images)/|favicon\.ico|js/|xn/)" />
 		<!--exclusion pattern="^http://status\.ning\.com/" /-->
 		<!--exclusion pattern="^http://uk\.ning\.com/(?!\d\.\d\d\.\d\d(\.\d)?/|favicon\.ico)" /-->
 
@@ -93,7 +108,7 @@
 	<securecookie host=".*\.ning\.com$" name=".+" />
 
 
-	<rule from="^http://((?:about|build|creators|developer|go|help|uk|www)\.)?ning\.com/"
+	<rule from="^http://((?:about|build|creators|developer|go|help|makemodules|uk|www)\.)?ning\.com/"
 		to="https://$1ning.com/" />
 
 	<rule from="^http://(?:origin-)?api\.ning\.com/"
