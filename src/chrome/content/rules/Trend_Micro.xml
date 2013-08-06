@@ -1,4 +1,6 @@
 <!--
+	For rules causing false MCB, see Trend_Micro-falsemixed.xml.
+
 	For problematic rules, see Trend_Micro-problematic.xml.
 
 
@@ -44,6 +46,35 @@
 
 		- countermeasures.trendmicro.eu		(→ akamai)
 
+
+	Fully covered domains:
+
+		- trendmicro.com subdomains:
+
+			- corelib
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On blog from corelib *
+			- On blog from ajax.googleapis.com *
+
+		- css on blog from blog *
+		- Images on blog from blog *
+
+		- Web bugs:
+
+			- On blog from edge.quantserve.com *
+			- On blog from platform.twitter.com *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
 <ruleset name="Trend Micro (partial)">
 
@@ -51,6 +82,10 @@
 	<target host="*.trendmicro.com" />
 	<target host="trendmicro.eu" />
 	<target host="*.trendmicro.eu" />
+		<!--
+			Exclude pages so as to avoid false MCB:
+								-->
+		<exclusion pattern="^http://blog\.trendmicro\.com/(?![\w-]+/files/|wp-content/)" />
 		<!--
 			Exclude user-visible paths:
 							-->
@@ -61,13 +96,13 @@
 		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/wp-content/plugins/youtube-channel-gallery/styles\.css" />
 
 
-	<securecookie host="^esupport\.trendmicro\.com$" name=".+" />
+	<securecookie host="^(?:\.blog|esupport)\.trendmicro\.com$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?trendmicro\.com/"
 		to="https://www.trendmicro.com/" />
 
-	<rule from="^http://(esupport|go)\.trendmicro\.com/"
+	<rule from="^http://(blog|corelib|esupport|go)\.trendmicro\.com/"
 		to="https://$1.trendmicro.com/" />
 
 	<rule from="^http://(partnerlocator\.|www\.)?trendmicro\.eu/"
