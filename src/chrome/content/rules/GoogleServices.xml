@@ -21,9 +21,7 @@
 		- books.google.com			(redirects to google.cctld)
 		- feedproxy.google.com			(404, valid cert)
 		- knol.google.com			(most paths redirect to google.cctld)
-		- scholar.google.com			(redirects to http)
-		- safebrowsing.clients.google.com	(mismatch; 404)
-		- scholar.google.fr			(redirects to http)
+		- safebrowsing.clients.google.com	(404, mismatched)
 		- buttons.googlesyndication.com *
 
 	* 404, valid cert
@@ -44,13 +42,17 @@
 
 			- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
 			- gg		($ 404s)
-			- knoll		(404, valid cert)
-			- scholar	(redirects to http)
+			- knoll *
+			- scholar **
 			- trends *
 
-		- news.google.cctld	(redirects to http, valid cert)
+		- news.google.cctld **
+		- scholar.google.cctld **
+		- *-opensocial.googleusercontent.com ***
 
 	* 404, valid cert
+	** Redirects to http, valid cert
+	*** Breaks followers widget - https://trac.torproject.org/projects/tor/ticket/7294
 
 
 	Partially covered domains:
@@ -72,7 +74,6 @@
 	Fully covered domains:
 
 		- lh[3-6].ggpht.com
-
 		- (www.)goo.gl		(www → ^)
 
 		- google.com subdomains:
@@ -148,6 +149,7 @@
 
 
 	XXX: Needs more testing
+
 -->
 <ruleset name="Google Services">
 
@@ -161,18 +163,18 @@
 		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
 	<target host="scholar.google.*" />
 	<target host="www.google.*" />
-	<target host="google.co.*" />
 	<target host="*.google.ca" />
+	<target host="google.co.*" />
 	<target host="news.google.co.*" />
 	<target host="scholar.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="*.google.com" />
-		<exclusion pattern="^http://(?:www\.)?google\.com/analytics/*(?:$|\?|[^/]+(?:\?.*)?$)" />
+		<exclusion pattern="^http://(?:www\.)?google\.com/analytics/*(?:/[^/]+)?(?:\?.*)?$" />
 		<!--exclusion pattern="^http://books\.google\.com/(?!books/(\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" /-->
 		<exclusion pattern="^http://gg\.google\.com/(?!csi(?:$|\?))" />
-	<target host="news.google.com.*" />
 	<target host="google.com.*" />
+	<target host="news.google.com.*" />
 	<target host="scholar.google.com.*" />
 	<target host="www.google.com.*" />
 	<target host="groups.google.de" />
@@ -187,21 +189,26 @@
 	<target host="www.googletagservices.com" />
 	<target host="googleusercontent.com" />
 	<target host="*.googleusercontent.com" />
+		<!--
+			Necessary for the Followers widget:
+
+				 https://trac.torproject.org/projects/tor/ticket/7294
+											-->
+		<exclusion pattern="http://[^@:\./]+-opensocial\.googleusercontent\.com" />
 
 
-	<!--	Can we enable any of these wildcard cookies safely?
+	<!--	Can we secure any of these wildcard cookies safely?
 									-->
 	<!--securecookie host="^\.google\.com$" name="^(I4SUserLocale|NID|PREF)$" /-->
-	<securecookie host="^(?:accounts|\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|plus|\.?productforums|support)\.google\.[\w\.]{2,6}$" name=".+" />
+	<securecookie host="^(?:accounts|\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
 	<securecookie host="^mail-attachment\.googleusercontent\.com$" name=".+" />
 	<securecookie host="^gmail\.com$" name=".+" />
 	<securecookie host="^www\.gmail\.com$" name=".+" />
 	<securecookie host="^googlemail\.com$" name=".+" />
 	<securecookie host="^www\.googlemail\.com$" name=".+" />
 
+
 	<!--    - lh 3-6 exist
-
-
 		- All appear identical
 		- Identical to lh\d.googleusercontent.com
 					-->
@@ -212,8 +219,12 @@
 		to="https://lh$1.google.ca/" />
 
 
+	<rule from="^http://(www\.)?g(oogle)?mail\.com/"
+		to="https://$1g$2mail.com/" />
+
 	<rule from="^http://(?:www\.)?goo\.gl/"
 		to="https://goo.gl/" />
+
 
 	<!--	Redirects to http when rewritten to www:
 							-->
@@ -223,36 +234,28 @@
 	<rule from="^http://(?:www\.)?google\.c(a|o\.in|o\.uk)/(contacts|prdhp|products|shopping)"
 		 to="https://www.google.c$1/$2" />
 
-	<rule from="^http://(?:www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/(accounts|adplanner|ads|css|hostednews|images|intl|js|landing|logos|tools|googleblogs|s2|support|transparencyreport)/"
-		 to="https://www.google$1/$2/" />
+	<!--	Paths that work on all in google.*
+							-->
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|css|googleblogs|hostednews|intl|js|landing|logos|profiles|s2|support|tools|transparencyreport)/"
+		 to="https://www.google.$1/$2/" />
 
-	<rule from="^http://(?:www\.)?google(?:\.com?)?(?:\.[^/@:][^/@:])?/(calendar|coop|dictionary|trends|url)"
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(calendar|coop|dictionary|trends|url)"
 		 to="https://www.google.com/$1" />
 
-	<rule from="^http://(?:www\.)?google(?:\.com?)?(?:\.[^/@:][^/@:])?/(?:cse|custom)"
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?:cse|custom)"
 		 to="https://www.google.com/cse" />
 
-	<rule from="^http://(?:www\.)?google\.com/(\+|accounts|doodles|doubleclick|extern_js|googlebooks|help|images|moderator|newproducts|nexus|phone|postini|reader|settings|videotargeting|safebrowsing)/"
-		 to="https://www.google.com/$1/" />
-
-	<rule from="^http://(?:www\.)?google\.com/(appsstatus|buzz|contacts|culturalinstitute|favicon\.ico|glass|insights|mapmaker|news|prdhp|products|shopping|webfonts)"
-		 to="https://www.google.com/$1" />
-
-	<rule from="^http://(?:www\.)?google\.com/(adwords|analytics|books|finance|goodtoknow|ig|patents|policies|urchin)($|\?|/)"
+	<!--	Paths that only work on .com
+						-->
+	<rule from="^http://(?:www\.)?google\.com/(\+|adwords|analytics|appstatus|books|buzz|contacts|culturalinstitute|doodles|doubleclick|extern_js|favicon\.ico|finance|glass|goodtoknow|googlebooks|help|ig|images|insights|mapmaker|moderator|newproducts|news|nexus|patents|phone|policies|postini|prdhp|products|reader|safebrowsing|settings|shopping|urchin|videotargetting|webfonts)($|[?/])"
 		to="https://www.google.com/$1$2" />
 
 	<!--	This worked for a while but seems to be unstable.
 
-	<rule from="^http://(?:www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/products"
-		to="https://www.google$1/products" /-->
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/products"
+		to="https://www.google.$1/products" /-->
 
-	<rule from="^http://(?:www\.)?google((?:\.com?)?(?:\.[^/@:][^/@:])?)/profiles"
-		to="https://www.google$1/profiles" />
-
-	<rule from="^http://(www\.)?g(oogle)?mail\.com/"
-		to="https://$1g$2mail.com/" />
-
-	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w\-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|finance|gg|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
+	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|finance|gg|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
@@ -276,7 +279,7 @@
 		to="https://knol.google.com/" />
 
 
-	<rule from="^http://news\.google(?:\.com?)?(?:\.[^/@:][^/@:])?/(?:$|news|newshp)"
+	<rule from="^http://news\.google\.(?:com?\.)?\w{2,3}/(?:$|news|newshp)"
 		to="https://www.google.com/news" />
 
 	<rule from="^http://trends\.google\.com/"
@@ -309,7 +312,5 @@
 	<rule from="^http://([^@:\./]+)\.googleusercontent\.com/"
 		to="https://$1.googleusercontent.com/" />
 	
-  <!-- Necessary for the Followers widget https://trac.torproject.org/projects/tor/ticket/7294 -->
-  <exclusion pattern="http://([^@:\./]+)-opensocial\.googleusercontent\.com" />
 
 </ruleset>
