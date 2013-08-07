@@ -1,0 +1,57 @@
+<!--
+	For rules causing false/broken MCB, see TrustTheVote.org-falsemixed.xml.
+
+
+	Fully covered subdomains:
+
+		- wiki
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- wordpress2 *
+
+	* Avoiding false/broken MCB, rest handled in TrustTheVote.org-falsemixed.xml
+
+
+	Mixed content:
+
+		- Script on wordpress2 from osdv.org *
+
+		- css, on:
+
+			- wordpress2 from osdv.org *
+			- www from www *
+
+		- Images, on:
+
+			- wordpress2 from wordpress2 *
+			- www from www *
+			- www from www.trustlogo.com
+
+	* Secured by us
+
+
+	NB: We secure all active resources, and thus
+	-mixedcontent should be merged for Ffx 24.
+
+-->
+<ruleset name="TrustTheVote.org (partial)">
+
+	<target host="trustthevote.org" />
+	<target host="*.trustthevote.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:wordpress2\.|www\.)?trustthevote\.org/(?!wp-content/|wp-includes/)" />
+
+
+	<securecookie host="^\.(?:wordpress2\.)?trustthevote\.org$" name="^__utm\w$" />
+	<securecookie host="^wiki\.trustthevote\.org$" name=".+" />
+
+
+	<rule from="^http://((?:wiki|wordpress2|www)\.)?trustthevote\.org/"
+		to="https://$1trustthevote.org/" />
+
+</ruleset>
