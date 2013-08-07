@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Zen_Internet-falsemixed.xml.
+
+
 	Problematic subdomains:
 
 		- blog	(shows PHP page, CN: localhost.localdomain)
@@ -6,11 +9,17 @@
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
 		- myaccount
 		- order
 		- portal
 		- webmail
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+
+	* Avoiding broken MCB
 
 
 	Mixed content:
@@ -27,11 +36,19 @@
 
 	* Secured by us
 
+
+	NB: We secure all active resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
-<ruleset name="Zen Internet" platform="mixedcontent">
+<ruleset name="Zen Internet (partial)">
 
   <target host="zen.co.uk" />
   <target host="*.zen.co.uk" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?zen\.co\.uk/blog(?!/wp-content/|/wp-includes/)" />
 
 
 	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|__utm\w|ZenAnonIdCookie)$" /-->
