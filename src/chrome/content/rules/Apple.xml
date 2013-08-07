@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Apple-falsemixed.xml.
+
 	For problematic rules, see Apple-mismatches.xml.
 
 
@@ -73,7 +75,7 @@
 
 		- mzstatic.com subdomains:
 
-			- ^
+			- (www.)	(refused)
 			- a\d *
 			- r *
 			- r[1-8] *
@@ -168,7 +170,6 @@
 			- secure.store
 			- secure\d.store
 			- storeimages		(→ storeimages.apple.com.edgekey.net)
-			- support
 			- km.support		(→ km.support.apple.com.edgekey.net)
 			- supportprofile
 			- swdlp
@@ -192,6 +193,41 @@
 			- s
 			- s[1-5]
 
+
+	Observed cookie domains:
+
+		- .
+		- store
+		- .store
+		- support
+		- supportprofile
+
+
+	Mixed content:
+
+		- Scripts, on:
+
+			- support from images *
+			- support from km.support *
+
+		- css, on:
+
+			- support from images *
+
+		- Images, on:
+
+			- itunes from images *
+			- itunes from ax.phobos.apple.com.edgesuite.net *
+			- itunes from a[1-5].mzstatic.com *
+			- support from images *
+			- support from km.support *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
 <ruleset name="Apple.com (parial)">
 
@@ -213,7 +249,11 @@
 					-->
 	<securecookie host="^\.apple\.com$" name="^s_.+$" />
 	<!--
-		No known problems, just being cautious
+		Can we secured any of these safely?
+							-->
+	<!--securecookie host="^\.apple\.com$" name="^(ccl|dslang|dssid2|geo|POD)$" /-->
+	<!--
+		No known problems, just being cautious:
 							-->
 	<securecookie host="^(?!\.?(?:concierg|stor)e\.apple\.com).+\.apple\.com$" name=".+" />
 
@@ -259,8 +299,7 @@
 	<rule from="^http://(www\.)?me\.com/"
 		to="https://$1me.com/" />
 
-	<!--	- Doesn't work over https
-		- Redirects over http to www.apple.com
+	<!--	Redirects over http to www.apple.com
 							-->
 	<rule from="^http://(?:www\.)?mzstatic\.com/"
 		to="https://www.apple.com/" />
