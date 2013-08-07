@@ -2,17 +2,28 @@
 	Nonfunctional subdomains:
 
 		- ir		(cert: *.shareholder.com; "Directory Listing Denied")
-		- (www.)	(cert: plesk; shows default plesk page)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
 
 -->
 <ruleset name="Mellanox (partial)" default_off="self-signed">
 
-	<!--	Cert:	plesk	-->
-	<target host="calc.mellanox.com" />
+	<target host="mellanox.com" />
+	<target host="*.mellanox.com" />
 
 
 	<securecookie host="^calc\.mellanox\.com$" name=".*" />
+	<securecookie host="^www\.mellanox\.com$" name=".+" />
 
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?mellanox\.com/"
+		to="https://www.mellanox.com/" />
 
 	<rule from="^http://calc\.mellanox\.com/"
 		to="https://calc.mellanox.com/" />
