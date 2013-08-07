@@ -1,4 +1,7 @@
 <!--
+	For rules that cause false/broken MCB, see Zend.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- shop-zend.pantherssl.com
@@ -31,9 +34,15 @@
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
-		- shop
 		- static	(→ (shop|static)-zend.pantherssl.com)
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- shop *
+
+	* Avoiding false/broken MCB, rest handled in Zend.com-falsemixed.xml
 
 
 	Mixed content:
@@ -54,20 +63,30 @@
 
 
 	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
+	-falsemixed should be merged for Ffx 24.
 
 -->
-<ruleset name="Zend (false MCB)" platform="mixedcontent">
+<ruleset name="Zend (partial)">
 
 	<target host="zend.com" />
 	<target host="*.zend.com" />
-	<!--	* for wildcard cookie:	-->
-	<target host="*.shop.zend.com" />
+		<!--
+			Avoiding false/broken MCB:
+							-->
+		<exclusion pattern="^http://(?:www\.)?zend\.com/(?!favicon\.ico|\w\w/user(?:$|[?/]))" />
+		<exclusion pattern="^http://shop\.zend\.com/(?!checkout(?:$|[?/])|favicon\.ico)" />
 
 
-	<!--securecookie host="^\.zend\.com$" name="^(iep|__utm\w)$" /-->
-	<securecookie host="^.*\.zend\.com$" name=".*" />
-	<!--securecookie host="^shop\.zend\.com$" name="^(\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" /-->
+	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
+	<!--
+		Is this safe to secure here?
+						-->
+	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
+	<!--
+		Uncomment this when -falsemixed.xml is merged:
+								-->
+	<!--securecookie host="^.*\.zend\.com$" name=".*" /-->
+	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
 
 
 	<rule from="^http://(?:www\.)?zend\.com/"
