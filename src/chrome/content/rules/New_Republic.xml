@@ -1,16 +1,86 @@
 <!--
-	Problematic subdomains:
+	For problematic rules, see New_Republic.com-problematic.xml.
 
-		- ^	(mismatched, CN: secure.newrepublic.com)
-		- www	(works; mismatched, CN: *.gotpantheon.com)
+
+	CDN buckets:
+
+		- edge.live.getpantheon.com
+
+			- www.newrepublic.com
+			- blogs.tnr.com
+
+		- cdn2.hubspot.net/hub/248084/
+
+		- 248084.group34.sites.hubspot.net
+
+			- a1945.b.akamai.net
+			- info.newrepublic.com
+
+
+	Problematic domains:
+
+		- newrepublic.com subdomains:
+
+			- ^	(mismatched, CN: secure.newrepublic.com)
+			- info	(works, akamai)
+			- www *
+
+		- blogs.tnr.com *
+
+	* Works; mismatched, CN: *.gotpantheon.com
+
+
+	Fully covered domains:
+
+		- secure.newrepublic.com
+
+
+	Partially covered subdomains:
+
+		- (www.)newrepublic.com		(→ secure)
+		- blogs.tnr.com			(→ secure.newrepublic.com)
+
+
+	Observed cookie domains:
+
+		- info.newrepublic.com
+
+
+	Mixed content:
+
+		- iframe, on:
+
+			- www.newrepublic.com from info.newrepublic.com *
+			- blogs.tnr.com from info.newrepublic.com *
+
+		- Script on blogs.tnr.com from api.spokenlayer.com **
+
+		- css on www.newrepublic.com from www.newrepublic.com *
+
+		- Images, on:
+
+			- info.newrepublic.com from signup.tnr.com ***
+			- www.newrepublic.com from www.newrepublic.com ***
+			- www.newrepublic.com from blogs.tnr.com ***
+			- blogs.tnr.com from www.newrepublic.com ***
+
+	* Secured by us
+	** Unsecurable
+	*** Secured by us, doesn't trip MCB anyway
 
 -->
-<ruleset name="New Republic (partial)">
+<ruleset name="New Repubic (partial)">
 
+	<target host="newrepublic.com" />
 	<target host="secure.newrepublic.com" />
+	<target host="www.newrepublic.com" />
+		<!--
+			Pages redirect back:
+						-->
+		<exclusion pattern="^http://(?:(?:www\.)?newrepublic|blogs\.tnr)\.com/(?!favicon\.ico|sites/)" />
 
 
-	<rule from="^http://secure\.newrepublic\.com/"
+	<rule from="^http://(?:(?:secure\.|www\.)?newrepublic|blogs\.tnr)\.com/"
 		to="https://secure.newrepublic.com/" />
 
 </ruleset>
