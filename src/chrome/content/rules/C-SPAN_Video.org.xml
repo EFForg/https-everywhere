@@ -1,0 +1,72 @@
+<!--
+	For rules causing false/broken MCB, see C-SPAN_Video.org-falsemixed.xml.
+
+	CDN buckets:
+
+		- d1k1xzqsosjdry.cloudfront.net
+
+			- images.c-spanvideo.org
+
+		- d29dpj283v14nc.cloudfront.net
+
+			- static.c-spanvideo.org
+
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches www)
+		- css *
+		- images *
+
+	* cloudfront
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+
+	* Avoiding false/broken MCB, rest handled in C-SPAN_Video.org-falsemixed.xml
+
+
+	Fully covered subdomains:
+
+		- images	(→ d1k1xzqsosjdry.cloudfront.net)
+		- static	(→ d29dpj283v14nc.cloudfront.net)
+
+
+	Mixed content:
+
+		- css on www from static *
+
+		- Images, on:
+
+			- www from images *
+			- www from static *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="C-SPAN Video.org (partial)">
+
+	<target host="c-spanvideo.org" />
+	<target host="*.c-spanvideo.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?c-spanvideo\.org/(?!favicon\.ico|videoLibrary/(?:ajax/|assets/|drawMathQuestion\.php))" />
+
+
+	<rule from="^http://(?:www\.)?c-spanvideo\.org/"
+		to="https://www.c-spanvideo.org/" />
+
+	<rule from="^http://images\.c-spanvideo\.org/"
+		to="https://d1k1xzqsosjdry.cloudfront.net/" />
+
+	<rule from="^http://static\.c-spanvideo\.org/"
+		to="https://d29dpj283v14nc.cloudfront.net/" />
+
+</ruleset>
