@@ -159,14 +159,26 @@
 	<target host="goo.gl" />
 	<target host="www.goo.gl" />
 	<target host="google.*" />
+	<target host="adwords.google.*" />
+	<target host="finance.google.*" />
+	<target host="groups.google.*" />
+	<target host="it.google.*" />
 	<target host="news.google.*" />
 		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
+	<target host="picasaweb.google.*" />
 	<target host="scholar.google.*" />
+	<target host="translate.google.*" />
 	<target host="www.google.*" />
 	<target host="*.google.ca" />
 	<target host="google.co.*" />
+	<target host="adwords.google.co.*" />
+	<target host="finance.google.co.*" />
+	<target host="groups.google.co.*" />
+	<target host="id.google.co.*" />
 	<target host="news.google.co.*" />
+	<target host="picasaweb.google.co.*" />
 	<target host="scholar.google.co.*" />
+	<target host="translate.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="*.google.com" />
@@ -174,10 +186,14 @@
 		<!--exclusion pattern="^http://books\.google\.com/(?!books/(\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" /-->
 		<exclusion pattern="^http://gg\.google\.com/(?!csi(?:$|\?))" />
 	<target host="google.com.*" />
+	<target host="adwords.google.com.*" />
+	<target host="groups.google.com.*" />
+	<target host="id.google.com.*" />
 	<target host="news.google.com.*" />
+	<target host="picasaweb.google.com.*" />
 	<target host="scholar.google.com.*" />
+	<target host="translate.google.com.*" />
 	<target host="www.google.com.*" />
-	<target host="groups.google.de" />
 	<target host="partner.googleadservices.com" />
 	<target host="googlecode.com" />
 	<target host="*.googlecode.com" />
@@ -199,8 +215,10 @@
 
 	<!--	Can we secure any of these wildcard cookies safely?
 									-->
-	<!--securecookie host="^\.google\.com$" name="^(I4SUserLocale|NID|PREF)$" /-->
-	<securecookie host="^(?:accounts|\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
+	<!--securecookie host="^\.google\.com$" name="^(hl|I4SUserLocale|NID|PREF|S)$" /-->
+	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
+	<securecookie host="^(?:accounts|adwords|\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|picasaweb|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
+	<securecookie host="^www\.google\.com$" name="^GoogleAccountsLocale_session$" />
 	<securecookie host="^mail-attachment\.googleusercontent\.com$" name=".+" />
 	<securecookie host="^gmail\.com$" name=".+" />
 	<securecookie host="^www\.gmail\.com$" name=".+" />
@@ -231,31 +249,32 @@
 	<rule from="^http://books\.google\.com/"
 		to="https://encrypted.google.com/" />
 
-	<rule from="^http://(?:www\.)?google\.c(a|o\.in|o\.uk)/(contacts|prdhp|products|shopping)"
-		 to="https://www.google.c$1/$2" />
-
 	<!--	Paths that work on all in google.*
 							-->
-	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|css|googleblogs|hostednews|intl|js|landing|logos|profiles|s2|support|tools|transparencyreport)/"
-		 to="https://www.google.$1/$2/" />
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|adwords|analytics|chrome|contacts|coop|cse|css|culturalinstitute|doodles|favicon\.ico|finance|goodtoknow|googleblogs|hostednews|images|intl|js|landing|logos|mapmaker|newproducts|news|nexus|patents|policies|prdhp|profiles|products|reader|s2|settings|shopping|support|tools|transparencyreport|trends|urchin)(?=$|[?/])"
+		 to="https://www.google.$1/$2" />
 
-	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(calendar|coop|dictionary|trends|url)"
+	<!--	Paths that 404 on .ccltd, but work on .com:
+								-->
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(calendar|dictionary|doubleclick|help|postini|url)"
 		 to="https://www.google.com/$1" />
 
-	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?:cse|custom)"
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/custom"
 		 to="https://www.google.com/cse" />
 
-	<!--	Paths that only work on .com
-						-->
-	<rule from="^http://(?:www\.)?google\.com/(\+|adwords|analytics|appstatus|books|buzz|contacts|culturalinstitute|doodles|doubleclick|extern_js|favicon\.ico|finance|glass|goodtoknow|googlebooks|help|ig|images|insights|mapmaker|moderator|newproducts|news|nexus|patents|phone|policies|postini|prdhp|products|reader|safebrowsing|settings|shopping|urchin|videotargetting|webfonts)($|[?/])"
+	<!--	Paths that only exist/work on .com
+							-->
+	<rule from="^http://(?:www\.)?google\.com/(\+|appstatus|books|buzz|extern_js|glass|googlebooks|ig|insights|moderator|phone|safebrowsing|videotargetting|webfonts)($|[?/])"
 		to="https://www.google.com/$1$2" />
 
-	<!--	This worked for a while but seems to be unstable.
+	<!--	Subdomains that work on all in google.*
+							-->
+	<rule from="^http://(adwords|finance|groups|id|picasaweb|translate)\.google\.((?:com?\.)?\w{2,3})/"
+		to="https://$1.google.$2/" />
 
-	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/products"
-		to="https://www.google.$1/products" /-->
-
-	<rule from="^http://(accounts|adwords|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|finance|gg|glass|groups|health|history|(?:hosted)?talkgadget|id|investor|lh\d|(?:chatenabled\.)?mail|pack|picasaweb|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools|translate)\.google\.com/"
+	<!--	Subdomains that only exist/work on .com
+							-->
+	<rule from="^http://(accounts|apis|appengine|books|calendar|checkout|chrome|clients[12]|code|[\w-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|gg|glass||health|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
@@ -263,16 +282,6 @@
 
 	<rule from="^http://(?:encrypted-)?tbn2\.google\.com/"
 		to="https://encrypted-tbn2.google.com/" />
-
-
-	<rule from="^http://([^/:@\.]+)\.google\.ca/finance"
-		 to="https://$1.google.ca/finance" />
-
-	<rule from="^http://(?:www\.)?google\.co\.uk/finance"
-		 to="https://www.google.co.uk/finance" />
-
-	<rule from="^http://finance\.google\.co\.uk/"
-		 to="https://finance.google.co.uk/" />
 
 
 	<rule from="^http://knoll?\.google\.com/"
@@ -284,10 +293,6 @@
 
 	<rule from="^http://trends\.google\.com/"
 		 to="https://www.google.com/trends" />
-
-
-	<rule from="^http://groups\.google\.de/"
-		to="https://groups.google.de/" />
 
 
 	<rule from="^http://([^/:@]+\.)?googlecode\.com/"
