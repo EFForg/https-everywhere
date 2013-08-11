@@ -1,0 +1,84 @@
+<!--
+	Projectplace International
+
+	For problematic domains, see Projectplace.com-problematic.xml.
+
+
+	CDN buckets:
+
+		- projectplace.ideas.dimelo.com
+
+			- ideas.projectplace.com
+
+		- projectplace.users.dimelo.com
+
+
+	Nonfunctional domains:
+
+		- blog.projectplace.com		(redirects to internet; expired 2013-08-09, self-signed)
+
+
+	Problematic domains:
+
+		- ideas.projectplace.com	(mismatched, CN: *.ideas.dimelo.com)
+		- intranet.projectplace.com	(works; expired 2013-08-09, self-signed)
+
+
+	Fully covered domains:
+
+		- projectplace.com subdomains:
+
+			- (www.)
+			- help
+			- ideas		(→ projectplace.ideas.dimelo.com)
+			- service
+			- test-service
+
+		- service.projectplacedocs.com
+
+
+	Observed cookie domains:
+
+		- projectplace.ideas.dimelo.com
+		- projectplace.users.dimelo.com
+
+		- projectplace.com subdomains:
+
+			- . *
+			- .help *
+			- intranet
+			- support
+			- www
+
+	* Only tracking cookies
+
+-->
+<ruleset name="Projectplace.com (partial)">
+
+	<target host="projectplace.*.dimelo.com" />
+	<target host="projectplace.com" />
+	<target host="*.projectplace.com" />
+	<target host="service.projectplacedocs.com" />
+
+
+	<!--	ToDo: Move to a dedicated dimelo ruleset
+								-->
+	<securecookie host="^projectplace\.(?:idea|user)s\.dimelo\.com$" name=".+" />
+	<!--securecookie host="^(\.help|support|www)\.projectplace\.com$" name=".+" /-->
+	<!--
+		There aren't any partially covered subdomains,
+		so blanked coverage shouldn't cause problems:
+								-->
+	<securecookie host=".*\.projectplace\.com$" name=".+" />
+
+
+	<rule from="^http://((?:help|(?:test-)?service|help|support|www)\.)?projectplace\.com/"
+		to="https://$1projectplace.com/" />
+
+	<rule from="^http://ideas\.projectplace\.com/"
+		to="https://projectplace.ideas.dimelo.com/" />
+
+	<rule from="^http://service\.projectplacedocs\.com/"
+		to="https://service.projectplacedocs.com/" />
+
+</ruleset>
