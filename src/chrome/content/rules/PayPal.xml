@@ -4,6 +4,21 @@
 		- PayPal_Forward.xml
 		- Where.com.xml
 
+
+	Fully covered domains:
+
+		- paypal.com subdomains:
+
+			- advertising
+			- campaigns
+			- coupons
+			- pics
+			- pilot-coupons
+			- qa-advertising
+			- qa-coupons
+			- stg-campaigns
+			- stg-coupons
+
 -->
 <ruleset name="PayPal">
 
@@ -14,13 +29,16 @@
 	<target host="paypalobjects.com"/>
 	<target host="www.paypalobjects.com"/>
 
-	<securecookie host="^www\.paypal\.com$" name=".*"/>
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.paypal\.com$" name="^s_\w+$" />
+	<securecookie host="^(?:(?:qa-|stg-)?coupons|www)\.paypal\.com$" name=".*"/>
 
 	<rule from="^http://(?:www\.)?paypal\.co(m|\.uk)/"
 		to="https://www.paypal.co$1/"/>
 
-	<rule from="^http://(cm|image)s\.paypal\.com/"
-		to="https://$1s.paypal.com/"/>
+	<rule from="^http://((?:qa-)?advertising|(?:stg-)?campaigns|cms|(?:pilot-|qa-|stg-)?coupons|images|pics)\.paypal\.com/"
+		to="https://$1.paypal.com/"/>
 
 	<rule from="^http://(?:www\.)?paypalobjects\.com/"
 		to="https://www.paypalobjects.com/"/>
