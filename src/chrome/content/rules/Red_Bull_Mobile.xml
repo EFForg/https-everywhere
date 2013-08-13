@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Red_Bull_Mobile-falsemixed.xml.
+
 	For other Red Bull coverage, see Red_Bull.xml.
 
 
@@ -9,6 +11,7 @@
 
 	Problematic domains:
 
+		- redbullmobile.at		(refused)
 		- www.redbullmobile.com.au	(redirects to http)
 
 
@@ -28,9 +31,52 @@
 			- secure
 			- securea
 
+
+	Partially covered domains:
+
+		- (www.)redbullmobile.at *	(^ → www)
+
+	* Avoiding false/broken MCB, rest handled in Red_Bull_Mobile-falsemixed.xml
+
+
+	Mixed content, on redbullmobile.at:
+
+		- Scripts, from:
+
+			- www.redbullmobile.at *
+			- ajax.googleapis.com *
+
+		- css, from:
+
+			- www.redbullmobile.at *
+			- fonts.googleapis.com *
+
+		- Images from www.redbullmobile.at *
+
+		- Web bugs, from:
+
+			- admin.brightcove.com *
+			- www.googletagmanager.com *
+
+	* Secured by us
+
+
+	redbullmobile.at is in a separate -falsemixed ruleset
+	due to css and scripts from www.redbullmobile.at and
+	ajax.googleapis.com.
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
 <ruleset name="Red Bull Mobile (partial)">
 
+	<target host="redbullmobile.at" />
+	<target host="www.redbullmobile.at" />
+		<!--
+			Avoid false/broken MCB:
+							-->
+		<!--exclusion pattern="^http://(www\.)?redbullmobile\.at/(?!fileadmin/|typo3conf/|typo3temp/|uploads/)" /-->
 	<target host="*.redbullmobile.com" />
 	<target host="redbullmobile.com.au" />
 	<target host="*.redbullmobile.com.au" />
@@ -39,6 +85,9 @@
 	<securecookie host="^(?:fbck|qr|socialposter|trackingtool|worb)\.redbullmobile\.com$" name=".+" />
 	<securecookie host="^(?:securea\.)?redbullmobile\.com\.au$" name=".+" />
 
+
+	<rule from="^http://(?:www\.)?redbullmobile\.at/(?=fileadmin/|typo3conf/|typo3temp/|uploads/)"
+		to="https://www.redbullmobile.at/" />
 
 	<rule from="^http://(fbck|qr|socialposter|trackingtool|worb)\.redbullmobile\.com/"
 		to="https://$1.redbullmobile.com/" />
