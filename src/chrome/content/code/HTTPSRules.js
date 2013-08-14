@@ -18,16 +18,14 @@ function CookieRule(host, cookiename) {
 
 // Firefox 23+ blocks mixed content by default, so rulesets that create
 // mixed content situations should be disabled there
-var appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
-var platformVer = appInfo.platformVersion;
-var versionChecker = CC["@mozilla.org/xpcom/version-comparator;1"]
-                      .getService(CI.nsIVersionComparator);
-if(versionChecker.compare(appInfo.version, "23.0a1") >= 0) {
+
+var appPrefs = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
+var blockMixedContent = appPrefs.getBoolPref("security.mixed_content.block_active_content");
+if(blockMixedContent) {
   localPlatformRegexp = new RegExp("firefox");
 } else {
   localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
 }
-
 
 ruleset_counter = 0;
 function RuleSet(name, xmlName, match_rule, default_off, platform) {
