@@ -430,7 +430,7 @@ HTTPSEverywhere.prototype = {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
       
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
-      var lst = this.getApplicableListForChannel(channel);
+      var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec])
@@ -541,7 +541,7 @@ HTTPSEverywhere.prototype = {
   // nsIChannelEventSink implementation
   onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
-    this.log(DBUG,"Got onChannelRedirect.");
+    this.log(DBUG,"Got onChannelRedirect to "+uri.spec);
     if (!(newChannel instanceof CI.nsIHttpChannel)) {
       this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
       return;

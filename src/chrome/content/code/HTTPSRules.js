@@ -472,11 +472,13 @@ const HTTPSRules = {
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
         // we rewrote the uri
-        if (alist)
+	this.log(DBUG, "Rewrote "+input_uri.spec);
+        if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
-            alist.breaking_rule(rs[i])
+            alist.breaking_rule(rs[i]);
           else 
             alist.active_rule(rs[i]);
+	}
         if (userpass_present) blob.newuri.userPass = input_uri.userPass;
         blob.applied_ruleset = rs[i];
         return blob;
