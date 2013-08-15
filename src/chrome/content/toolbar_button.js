@@ -252,8 +252,8 @@ function reload_window() {
 }
 
 function toggleEnabledState(){
-	HTTPSEverywhere.toggleEnabledState();
-	reload_window();	
+  HTTPSEverywhere.toggleEnabledState();
+  reload_window();	
 
   // Change icon depending on enabled state
   httpsEverywhere.toolbarButton.changeIcon();
