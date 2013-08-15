@@ -1,11 +1,22 @@
 <!--
 	Nonfunctional domains:
+		- ubuntu.com subdomains:
 
-		- cdimage.ubuntu.com
-		- pad.ubuntu.com
-		- summit.ubuntu.com
-		- (www.)ubuntu.com		(times out)
-		- (www.)ubuntuforums.org	(times out)
+			- (www.)		(times out)
+			- archive
+			- cdimage
+			- irclogs		(record_too_long)
+			- odm			(cert: testcases.qa.ubuntu.com_https; 301s there)
+			- old-releases		(cert: uec-images.ubuntu.com; shows uec-images' data)
+			- packages		(times out)
+			- planet		(rx_record_too_long)
+			- popcorn		(rx_record_too_long)
+			- iso.qa		(redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
+			- testcases.qa		(self-signed, 301s to http)
+			- pad
+			- releases
+			- status
+			- summit
 
 -->
 <ruleset name="Ubuntu (partial)">
@@ -13,7 +24,8 @@
 	<target host="*.ubuntu.com" />
 	<target host="ubuntuone.com" />
 	<target host="www.ubuntuone.com" />
-
+	<target host="ubuntuforums.org" />
+	<target host="www.ubuntuforums.org" />
 
 	<rule from="^http://(cloud|help|uds|uec-images|wiki|one)\.ubuntu\.com/"
 		to="https://$1.ubuntu.com/" />
@@ -21,4 +33,6 @@
 	<rule from="^http://(www\.)?ubuntuone\.com/"
 		to="https://$1ubuntuone.com/" />
 
+	<rule from="^http://(www\.)?ubuntuforums\.org/"
+		to="https://$1ubuntuforums.org/" />
 </ruleset>
