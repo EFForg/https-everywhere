@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional domains:
+
+		screenshots.debian.net
+
+		debian.org subdomains:
+
+			- anonscm	(cert: alioth; shows alioth's data)
+			- bugs		(refused)
+			- ca		(cert: db.debian.org; shows that domain's data)
+			- cdimage
+			- incoming	(cert: ftp-master.debian.org; shows that domain's data)
+			- packages
+			- people	(reset; people.debian.org/~joerg/ is displayed
+					after fetching gpg.ganneff.de over http...)
+			- qa
+			- packages.qa	(refused)
+			- search
+			- svn		(cert: alioth; shows alioth's data)
+			- (www.)
+
+-->
+<ruleset name="Debian (partial)" default_off="self-signed">
+
+	<target host="*.debian.net" />
+	<target host="*.debian.org"/>
+	<target host="*.alioth.debian.org"/>
+	<target host="*.debconf.org"/>
+
+	<rule from="^http://(mentors|paste)\.debian\.net/"
+		to="https://$1.debian.net/" />
+
+	<rule from="^http://((?:lists\.)?alioth|buildd|db|ftp-master|lists|nagios|nm)\.debian\.org/"
+		to="https://$1.debian.org/"/>
+
+	<rule from="^http://(wiki|penta|debconf7|db|rt|gallery|svn)\.debconf\.org/"
+		to="https://$1.debconf.org/"/>
+
+</ruleset>
