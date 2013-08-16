@@ -73,7 +73,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
 var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 
 RuleSet.prototype = {
-  _apply: function(urispec) {
+  apply: function(urispec) {
     // return null if it does not apply
     // and the new url if it does apply
     var i;
@@ -134,11 +134,9 @@ RuleSet.prototype = {
     // If no rule applies, return null; if a rule would have applied but was
     // inactive, return 0; otherwise, return a fresh uri instance
     // for the target
-    var newurl = this._apply(uri.spec);
+    var newurl = this.apply(uri.spec);
     if (null == newurl) 
       return null;
-    if (0 == newurl)
-      return 0;
     var newuri = Components.classes["@mozilla.org/network/standard-url;1"].
                  createInstance(CI.nsIStandardURL);
     newuri.init(CI.nsIStandardURL.URLTYPE_STANDARD, 80,
@@ -284,15 +282,16 @@ const RuleWriter = {
       this.parseOneRuleset(xmldom.documentElement, rule_store, file);
     } else {
       // The root of the XML tree is assumed to look like a <rulesetlibrary>
-      if (xmldom.documentElement.getAttribute("gitcommitid")) {
+      if (!xmldom.documentElement.getAttribute("gitcommitid")) {
         // The gitcommitid is a tricky hack to let us display the true full
         // source code of a ruleset, even though we strip out comments at build
         // time, by having the UI fetch the ruleset from the public https git repo.
         this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
-        rule_store.gitcommitid = "HEAD";
+        rule_store.GITCommitID = "HEAD";
       } else {
         rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
       }
+
       var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
       if (rulesets.length == 0 && (file.path.search("00README") == -1))
         this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
@@ -399,7 +398,6 @@ const HTTPSRules = {
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
       this.scanRulefiles(rulefiles);
-      this.checkForBuggyDefaults();
       var t,i;
       for (t in this.targets) {
         for (i = 0 ; i < this.targets[t].length ; i++) {
@@ -438,48 +436,6 @@ const HTTPSRules = {
         if (e.lineNumber)
           this.log(WARN, "(line number: " + e.lineNumber + ")");
       }
-    }
-  },
-
-  checkForBuggyDefaults: function() {
-    // The 2.2 release had a ruleset parsing bug which caused the match_rule
-    // attribute to be misinterpreted as the default_off attribute.  That was
-    // a big problem iff 2.2 was the first version of HTTPS Everywhere
-    // installed in a particular browser profile.  If enough buggy rulesets
-    // are on, conclude that this is such a profile, and reset to the correct
-    // defaults.  More here:
-    //
-    // https://mail1.eff.org/pipermail/https-everywhere/2012-August/001511.html
-    //
-    this.log(DBUG, "Checking for buggy configurations from version 2.2");
-    // All of these were default_off in 2.2, and none of them had a
-    // match_rule:
-    // Many of these have  been deleted in 3.0 stable, which is great and
-    // makes this heuristic safer (since the about:config variables would
-    // still be around for users who upgraded from 2.2)
-    var shouldBeOff = ["SchuelerVZ","Tcodevelopment.com","33Bits","BerliOS",
-                       "BuisnessInsider (broken)","Daft.ie","DVDFab",
-                       "YouMail (buggy)","StudiVZ (disabled)","Woot (broken)"];
-
-    var nonBuggy = 0;
-    for (var ruleindex in shouldBeOff) {
-      // Some of these shouldBeOff rules may be removed in the future, so
-      // tolerate their absence
-      var rulename = shouldBeOff[ruleindex];
-      if (rulename in this.rulesetsByName) {
-        if (!this.rulesetsByName[rulename].active) 
-          nonBuggy += 1;
-      } else {
-        this.log("INFO", "Couldn't check state of ruleset " + rulename);
-      }
-    }
-
-    // Heuristic: a user starting with a buggy config might have disabled up
-    // to 2 of the 10 broken rulesets manually, but we will still conclude
-    // that their config is broken and reset it
-    if (nonBuggy <= 2) {
-      this.log(WARN, "Detected a buggy-looking configuration, probably from HTTPS Everywhere 2.2.  Resetting ruleset states to defaults");
-      this.resetRulesetsToDefaults();
     }
   },
 
@@ -586,13 +542,22 @@ const HTTPSRules = {
     return uri;
   },
 
+  setInsert: function(intoList, fromList) {
+    // Insert any elements from fromList into intoList, if they are not
+    // already there.  fromList may be null.
+    if (!fromList) return;
+    for (var i = 0; i < fromList.length; i++)
+      if (intoList.indexOf(fromList[i]) == -1)
+        intoList.push(fromList[i]);
+  },
 
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
-    var results = this.global_rulesets;
+    var results = this.global_rulesets.slice(0); // copy global_rulesets
     try {
-      if (this.targets[host]) results = results.concat(this.targets[host]);
+      if (this.targets[host])
+        results = results.concat(this.targets[host]);
     } catch(e) {   
       this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
       return [];
@@ -604,15 +569,13 @@ const HTTPSRules = {
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (i = 1; i < segmented.length - 2; ++i) {
+    for (i = 1; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      if (this.targets[t])
-        results = results.concat(this.targets[t]);
+      this.setInsert(results, this.targets[t]);
     }
     this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
@@ -626,14 +589,15 @@ const HTTPSRules = {
     // @applicable_list : an ApplicableList or record keeping
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
-    this.log(DBUG, "  rawhost: " + c.rawHost);
+
+    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
         // Never secure a cookie if this page might be HTTP
-        if (!known_https && !this.safeToSecureCookie(c.rawhost)) 
+        if (!known_https && !this.safeToSecureCookie(c.rawHost))
           continue;
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
@@ -659,31 +623,42 @@ const HTTPSRules = {
     // observing cookie-changed doesn't give us enough context to know the
     // full origin URI.
 
-    // If there are any redirect loops on this domain, don't secure cookies.
-    // XXX This is not a very satisfactory heuristic.  Sometimes we would want
-    // to secure the cookie anyway, because the URLs that loop are not
-    // authenticated or not important.  Also by the time the loop has been
+    // First, if there are any redirect loops on this domain, don't secure
+    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
+    // would want to secure the cookie anyway, because the URLs that loop are
+    // not authenticated or not important.  Also by the time the loop has been
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domain in https_blacklist_domains) return false;
+    if (domain in https_blacklist_domains) {
+      this.log(INFO, "cookies for " + domain + "blacklisted");
+      return false;
+    }
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
 
-    var ios = CC['@mozilla.org/network/io-service;1']
-              .getService(CI.nsIIOService);
     try {
       var nonce_path = "/" + Math.random().toString();
       nonce_path = nonce_path + nonce_path;
-      var test_uri = ios.newURI("http://" + domain + nonce_path, "UTF-8", null);
+      var test_uri = "http://" + domain + nonce_path;
     } catch (e) {
       this.log(WARN, "explosion in safeToSecureCookie for " + domain + "\n" 
                       + "(" + e + ")");
       return false;
     }
-    return wouldMatch(test_uri, null);
+
+    this.log(INFO, "Testing securecookie applicability with " + test_uri);
+    var rs = this.potentiallyApplicableRulesets(domain);
+    for (i = 0; i < rs.length; ++i) {
+      if (!rs[i].active) continue;
+      var rewrite = rs[i].apply(test_uri);
+      if (rewrite) {
+        this.log(INFO, "Yes: " + rewrite);
+        return true;
+      }
+    }
+    this.log(INFO, "(NO)");
+    return false;
   }
-
-
 };
