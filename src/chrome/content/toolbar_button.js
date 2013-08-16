@@ -112,8 +112,7 @@ httpsEverywhere.toolbarButton = {
    * is enabled or disabled.
    */
   changeIcon: function() {
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
 
     var toolbarbutton = document.getElementById('https-everywhere-button');
     if (enabled) {
@@ -128,8 +127,7 @@ httpsEverywhere.toolbarButton = {
    */
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
     if (!enabled) { 
       toolbarbutton.setAttribute('rulesetsApplied', 0);
       return;
@@ -159,6 +157,7 @@ httpsEverywhere.toolbarButton = {
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
   } 
 };
+
 
 function https_everywhere_load() {
   window.removeEventListener('load', https_everywhere_load, true);
@@ -252,8 +251,8 @@ function reload_window() {
 }
 
 function toggleEnabledState(){
-  HTTPSEverywhere.toggleEnabledState();
-  reload_window();	
+	HTTPSEverywhere.toggleEnabledState();
+	reload_window();	
 
   // Change icon depending on enabled state
   httpsEverywhere.toolbarButton.changeIcon();
