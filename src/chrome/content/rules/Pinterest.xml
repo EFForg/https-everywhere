@@ -83,6 +83,11 @@
 
 			- pin/ started redirecting to http
 
+			- as did:
+
+				- ${user}/
+				- ${user}/${gallery}/
+
 
 	Fully covered domains:
 
@@ -104,6 +109,7 @@
 
 				- en
 
+			- log
 			- m
 			- media-cache
 			- media-cache\d
@@ -123,11 +129,12 @@
 	<target host="*.pinimg.com" />
 	<target host="pinterest.com" />
 	<target host="*.pinterest.com" />
-		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:$|\?|board/|pin/)" />
+		<!--exclusion pattern="^http://(www\.)?pinterest\.com/($|\?|favicon\.ico|_/_/about/)" /-->
+		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:board/|pin/|(?:\w+/)?\w+/*(?:$|\?))" />
 
 
 	<!--securecookie host="^\.pinterest\.com$" name="^(csrftoken|_pinterest_sess|__utm\w|_zendesk_session|_zendesk_shared_session)$" /-->
-	<securecookie host="^\.pinterest\.com$" name=".+" />
+	<securecookie host="^\.pinterest\.com$" name="^(?:__utm\w|_zendesk_session|_zendesk_shared_session)$" />
 	<securecookie host="^(?:\w\w\.)?help\.pinterest\.com$" name=".+" />
 
 
@@ -136,7 +143,7 @@
 	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
 		to="https://s-$1-ec$2.pinimg.com/" />
 
-	<rule from="^http://((?:about|api|assets|help|\w\w\.help|m|partners-api|support|www)\.)?pinterest\.com/"
+	<rule from="^http://((?:about|api|assets|help|\w\w\.help|log|m|partners-api|support|www)\.)?pinterest\.com/"
 		to="https://$1pinterest.com/" />
 
 	<rule from="^http://blog-assets\.pinterest\.com/"
@@ -144,6 +151,14 @@
 
 	<rule from="^http://media-cache(?:\d|-\w\w\d)?\.pin(?:img|terest)\.com/"
 		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
+
+	<!--	We can't rewrite this stylesheet to akamai,
+		as it links resources relative to /
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001663.html
+													-->
+	<rule from="^http://passets-\w\w\.pinterest\.com/webapp/app/desktop/bundle\.(\w{8})\.css"
+		to="https://s-passets-ec.pinimg.com/webapp/app/desktop/bundle.$1.css" />
 
 	<rule from="^http://passets-ak\.pinterest\.com/"
 		to="https://a248.e.akamai.net/f/1586/2045/10m/passets-ak.pinterest.com/" />

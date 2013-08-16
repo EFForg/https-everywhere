@@ -4,8 +4,11 @@
 
 	Other Microsoft rulesets:
 
+		- Acik_Akademi.com.xml
 		- ASP.NET.xml
+		- ASPNETcdn.com.xml
 		- Bing.xml
+		- DreamSpark.com.xml
 		- Halo.xml
 		- Live.xml
 		- Microsoft-Atlas.xml
@@ -19,9 +22,11 @@
 		- Photosynth.xml
 		- Skype.xml
 		- S-msn.com.xml
+		- System_Center_Advisor.com.xml
 		- Technet.com.xml
 		- Virtualearth.net.xml
 		- Windows_Azure.xml
+		- Windows.net.xml
 		- Windows_Phone.xml
 		- Xbox.xml
 
@@ -37,6 +42,7 @@
 			- wscont[12].apps.microsoft.com
 
 		- az12410.vo.msecnd.net
+		- az373151.vo.msecnd.net	(used on imaginecup.com)
 		- msstore.vo.msecnd.net
 		- officeimg.vo.msecnd.net
 
@@ -46,6 +52,8 @@
 	Nonfunctional domains:
 
 		- www.buildmypinnedsite.com
+		- (www.)imaginecup.com ***
+		- compete.imaginecup.com ***
 
 		- microsoft.com subdomains:
 
@@ -56,6 +64,7 @@
 			- mymfe			(reset)
 			- officeimages
 			- privacy		(times out)
+			- academic.research ***
 			- sharepoint		(redirects to login.live.com, cert valid)
 			- edir.windowsm		(404)
 			- visio **
@@ -73,10 +82,6 @@
 
 
 	Problematic domains:
-
-		- acikakademi.com *
-		- dreamspark.com *
-		- imaginecup.com *
 
 		- microsoft.com subdomains:
 
@@ -99,7 +104,6 @@
 
 		- widgets.membership.s-msft.com		(akamai)
 		- compass.surface.com **
-		- windows.net				(times out)
 
 	* Cert only matches www
 	** akamai
@@ -108,7 +112,6 @@
 
 	Partially covered domains:
 
-		- (www.)imaginecup.com		(many paths redirect to http or a login page)
 		- answers.microsoft.com		(some pages redirect to http)
 		- code.msdn.microsoft.com	(pages redirect to http)
 
@@ -148,6 +151,7 @@
 			- office15client
 			- officepreview
 			- officeredir
+			- o15.officeredir
 			- rad
 			- scache		(→ www)
 			- profileapi.services
@@ -169,8 +173,6 @@
 			- i-technet
 			- i2-technet
 
-		- msngpm.accesscontrol.windows.net
-
 
 	Wildcard cookies:
 
@@ -180,13 +182,6 @@
 -->
 <ruleset name="Microsoft (partial)">
 
-	<target host="acikakademi.com" />
-	<target host="www.acikakademi.com" />
-	<target host="ajax.aspnetcdn.com" />
-	<target host="dreamspark.com" />
-	<target host="www.dreamspark.com" />
-	<target host="imaginecup.com" />
-	<target host="www.imaginecup.com" />
 	<target host="microsoft.com" />
 	<target host="*.microsoft.com" />
 		<!--
@@ -226,40 +221,21 @@
 	<target host="www.office.com" />
 	<target host="i.s-microsoft.com" />
 	<target host="*.s-msft.com" />
-	<target host="systemcenteradvisor.com" />
-	<target host="*.systemcenteradvisor.com" />
-	<target host="windows.net" />
-	<target host="*.blob.core.windows.net" />
-	<target host="www.windows.net" />
 
 
-	<securecookie host="^www\.acikakademi\.com$" name=".+" />
-	<securecookie host="^www\.dreamspark\.com$" name=".+" />
 	<!--
 		A, MC1, MS0: Cookies set by c.microsoft.com
 		s_.+: Other tracking cookies
 						-->
 	<securecookie host="^\.microsoft\.com$" name="^(?:A|GsfxStatsLog|MC1|MS0|OnlineTrackingV2\.0|R|RioTracking\..+|s_.+)$" />
 	<securecookie host="^(?:feedback\.adcenter|advertising|advertise\.bingads|choice|commerce|ieonline|m|\.?office|office(?:15client|2010|preview|redir)|onlinehelp|corp\.sts|\.?support|\.?www)\.microsoft\.com$" name=".+" />
-	<securecookie host="^www\.(?:office|systemcenteradvisor)\.com$" name=".+" />
+	<securecookie host="^www\.office\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?acikakademi\.com/"
-		to="https://www.acikakademi.com/" />
-
-	<rule from="^http://ajax\.aspnetcdn\.com/"
-		to="https://ajax.aspnetcdn.com/"/>
-
-	<rule from="^https?://(?:www\.)?dreamspark\.com/"
-		to="https://www.dreamspark.com/" />
-
-	<rule from="^https?://(?:www\.)?imaginecup\.com/(App_Themes/|CuteEditorImages/|LoginPopUp\.aspx|Registration)"
-		to="https://www.imaginecup.com/$1" />
-
-	<rule from="^https?://(?:i\d?\.|js\.|search\.|spcache\.)?microsoft\.com/"
+	<rule from="^http://(?:i\d?\.|js\.|search\.|spcache\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ie|ieonline|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|onlinehelp|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
+	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ie|ieonline|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|onlinehelp|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<rule from="^http://wscont\d?\.apps\.microsoft\.com/"
@@ -268,15 +244,15 @@
 	<rule from="^http://i\.s-microsoft\.com/"
 		to="https://i.s-microsoft.com/" />
 
-	<rule from="^https?://i\d\.social\.s-msft\.com/wiki/"
+	<rule from="^http://i\d\.social\.s-msft\.com/wiki/"
 		to="https://social.technet.microsoft.com/wiki/" />
 
 	<!--	Akamai with no valid cert.
 						-->
-	<rule from="^https?://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
+	<rule from="^http://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
 		to="https://$1.microsoft.com/" />
 
-	<rule from="^https?://i\d\.connect\.microsoft\.com/"
+	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
 
 	<rule from="^http://i1\.mobile\.microsoft\.com/"
@@ -285,16 +261,16 @@
 	<rule from="^http://scache\.microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^https?://img3\.store\.microsoft\.com/"
+	<rule from="^http://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
 
-	<rule from="^https?://update\.microsoft\.com/"
+	<rule from="^http://update\.microsoft\.com/"
 		to="https://www.update.microsoft.com/" />
 
-	<rule from="^https?://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
+	<rule from="^http://(?:origin-)?res[12]?\.windows\.microsoft\.com/"
 		to="https://origin-res.windows.microsoft.com/" />
 
-	<rule from="^https?://(?:www\.)?office\.com/"
+	<rule from="^http://(?:www\.)?office\.com/"
 		to="https://www.office.com/" />
 
 	<rule from="^http://([\w-]+)\.sec\.s-msft\.com/"
@@ -303,21 +279,7 @@
 	<rule from="^http://widgets\.membership\.(?:s-ms|microso)ft\.com/"
 		to="https://widgets.membership.microsoft.com/" />
 
-	<rule from="^https?://i\d\.social\.s-msft\.com/"
+	<rule from="^http://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/" />
-
-	<rule from="^http://(login\.|www\.)?systemcenteradvisor\.com/"
-		to="https://$1systemcenteradvisor.com/" />
-
-	<rule from="^https?://(?:www\.)?windows\.net/$"
-		to="https://www.microsoft.com/net" />
-
-	<!--	Clients have unique subdomains.
-						-->
-	<rule from="^http://(\w+)\.blob\.core\.windows\.net/"
-		to="https://$1.blob.core.windows.net/" />
-
-	<rule from="^http://msngpm\.accesscontrol\.windows\.net/"
-		to="https://msngpm.accesscontrol.windows.net/" />
 
 </ruleset>

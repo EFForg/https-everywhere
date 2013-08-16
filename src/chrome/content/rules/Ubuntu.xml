@@ -1,65 +1,74 @@
 <!--
-	Nonfunctional domains:
+    Other Ubuntu rulesets:
 
-		- ubuntu.com subdomains:
-
-			- (www.)		(times out)
-			- archive
-			- cdimage		(refused)
-			- irclogs		(record_too_long)
-			- loco ⁴
-			- odm			(cert: testcases.qa.ubuntu.com_https; 301s there)
-			- old-releases		(cert: uec-images.ubuntu.com; shows uec-images' data)
-			- packages		(times out)
-			- planet		(rx_record_too_long)
-			- popcorn		(rx_record_too_long)
-			- iso.qa		(redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
-			- testcases.qa		(self-signed, 301s to http)
-			- pad
-			- releases
-			- security **
-			- status
-			- summit
+        - Ubuntu_Forums.org.xml
 
 
-	** Refused
-	⁴ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
+    Nonfunctional domains:
+
+        - ubuntu.com subdomains:
+
+            - (www.)        (times out)
+            - archive
+            - cdimage       (refused)
+            - irclogs       (record_too_long)
+            - loco ⁴
+            - odm           (cert: testcases.qa.ubuntu.com_https; 301s there)
+            - old-releases      (cert: uec-images.ubuntu.com; shows uec-images' data)
+            - packages      (times out)
+            - planet        (rx_record_too_long)
+            - popcorn       (rx_record_too_long)
+            - iso.qa        (redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
+            - testcases.qa      (self-signed, 301s to http)
+            - pad
+            - releases
+            - security **
+            - status
+            - summit
+
+    ** Refused
+    ⁴ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
 
 
-	Problematic domains:
+    Problematic domains:
 
-		- shop.ubuntu.com	(mismatched, CN: shop.canonical.com)
+        - shop.ubuntu.com   (mismatched, CN: shop.canonical.com)
 
 
-	Fully covered domains:
+    Fully covered domains:
 
-		- ubuntu.com subdomains:
+        - ubuntu.com subdomains:
 
-			- assets
-			- community
-			- shop		(→ shop.canonical.com)
+            - assets
+            - community
+            - shop      (→ shop.canonical.com)
+
+
+    Mixed content:
+
+        - Images on help from pix.toile-libre.org *
+
+    * Unsecurable, doesn't trip MCB
 
 -->
 <ruleset name="Ubuntu (partial)">
 
-	<target host="*.ubuntu.com" />
-	<target host="ubuntuone.com" />
-	<target host="www.ubuntuone.com" />
-	<target host="ubuntuforums.org" />
-	<target host="www.ubuntuforums.org" />
-
-	<securecookie host="^(apps|login|wiki)\.ubuntu\.com$" name=".*" />
+    <target host="*.ubuntu.com" />
+    <target host="ubuntuone.com" />
+    <target host="www.ubuntuone.com" />
 
 
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|lists|login|one|uds|uec-images|wiki)\.ubuntu\.com/"
-		to="https://$1.ubuntu.com/" />
+    <securecookie host="^(apps|login|wiki)\.ubuntu\.com$" name=".*" />
 
-	<rule from="^http://shop\.ubuntu\.com/"
-		to="https://shop.canonical.com/" />
 
-	<rule from="^http://(www\.)?ubuntuone\.com/"
-		to="https://$1ubuntuone.com/" />
+    <rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|lists|login|one|uds|uec-images|wiki)\.ubuntu\.com/"
+        to="https://$1.ubuntu.com/" />
 
-	<rule from="^http://(www\.)?ubuntuforums\.org/"
-		to="https://$1ubuntuforums.org/" />
+    <rule from="^http://shop\.ubuntu\.com/"
+        to="https://shop.canonical.com/" />
+
+    <rule from="^http://(www\.)?ubuntuone\.com/"
+        to="https://$1ubuntuone.com/" />
+
 </ruleset>
+

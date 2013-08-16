@@ -4,14 +4,28 @@
      for the list of preloads.  Sites are added to the Chromium HSTS
      preload list on request from their administrators, so HTTPS should
      work properly everywhere on this site.
- 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Cloudsecurityalliance.org" platform="firefox">
+
+
+	Fully covered subdomains:
+
+		- blog
+		- ccsk-es
+		- local-cdn
+		- nexus
+
+
+	Observed cookie domains:
+
+		- .
+		- nexus
+		- .nexus
+
+-->
+<ruleset name="Cloudsecurityalliance.org">
   <target host="cloudsecurityalliance.org" />
-  <target host="www.cloudsecurityalliance.org" />
+  <target host="*.cloudsecurityalliance.org" />
 
-  <securecookie host="^cloudsecurityalliance\.org$" name=".+" />
+  <securecookie host="^(?:.*\.)?cloudsecurityalliance\.org$" name=".+" />
 
-  <rule from="^http://(www\.)?cloudsecurityalliance\.org/" to="https://cloudsecurityalliance.org/" />
+  <rule from="^http://((?:blog|ccsk-es|local-cdn|nexus|www)\.)?cloudsecurityalliance\.org/" to="https://$1cloudsecurityalliance.org/" />
 </ruleset>

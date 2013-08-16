@@ -1,21 +1,24 @@
 <!--
 	Nonfunctional subdomains:
 
-		- dev	(times out)
+		- dev *
+		- jigsaw *
+		- validator	(404, valid cert)
+
+	* Dropped
 
 -->
 <ruleset name="W3C (partial)" default_off="W3C does not have a proper HTTPS deployment">
 
 	<target host="w3.org" />
-	<target host="www.w3.org" />
-	<target host="dvcs.w3.org" />
+	<target host="*.w3.org" />
+		<exclusion pattern="^http://(?:www\.)?w3\.org/.+(?:/+|\.html)(?:$|\?)" />
 
-	<rule from="^http://(www\.)?w3\.org/(.+)/"
-		to="https://www.w3.org/$2/" />
 
-    <rule from="^http://dvcs\.w3\.org/"
-        to="https://dvcs.w3.org/" />
+	<rule from="^http://(?:www\.)?w3\.org/(?=.+/)"
+		to="https://www.w3.org/" />
 
-	<exclusion pattern="^http://(www\.)?w3\.org/.+(/|\.html)$" />
+	<rule from="^http://dvcs\.w3\.org/"
+		to="https://dvcs.w3.org/" />
 
 </ruleset>

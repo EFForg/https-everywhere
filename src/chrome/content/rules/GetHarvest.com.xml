@@ -1,0 +1,30 @@
+<!--
+	CDN buckets:
+
+		- getharvestdotcom.s3.amazonaws.com
+
+
+	Problematic subdomains:
+
+		- asset[0-3]	(works; mismatched, CN: www.getharvest.com)
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="getHarvest.com (partial)">
+
+	<target host="getharvest.com" />
+	<target host="*.getharvest.com" />
+		<exclusion pattern="^http://(?:www\.)?getharvest\.com/(?!images/|javascripts/|signup(?:$|[?/])|stylesheets/)" />
+
+
+	<!--	name="^__roia$"
+				-->
+	<securecookie host="^\.getharvest\.com$" name="^__utm\w$" />
+
+
+	<rule from="^http://(?:asset\d\.|(www\.))?getharvest\.com/"
+		to="https://$1getharvest.com/" />
+
+</ruleset>

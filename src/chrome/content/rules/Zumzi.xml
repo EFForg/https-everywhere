@@ -1,12 +1,16 @@
 <!--
 	Nonfunctional domains:
 
-		- img.zumzi.com *
-		- s.zumzi.com *
-		- ss.zumzi.com *
-		- afiliere.zumzi.ro	(times out)
+		- zunzi.com subdomains:
 
-	* Redirects to www.zumzi.ro; mismatched, CN: www.zumzi.ro
+			- img *
+			- s **
+			- ss *
+
+		- afiliere.zumzi.ro *
+
+	* Dropped
+	** Redirects to www.zumzi.ro; mismatched, CN: www.zumzi.ro
 
 
 	Problematic domains:
@@ -15,9 +19,38 @@
 		- biz.zumzi.ro		(works; mismatched, CN: www.zumzi.ro)
 
 
-	Mixed css & js on www from ss
+	Mixed content:
 
-	Mixed images on www from img & s
+		- Script, on www from:
+
+			- ss *
+			- maps.google.com **
+			- www.google.com **
+			- maps.googleapis.com **
+			- maps.gstatic.com **
+
+		- css on www from ss *
+
+		- Images, on www from:
+
+			- img *
+			- s *
+			- www.google.com **
+			- mt[01].googleapis.com **
+			- maps.gstatic.com **
+
+		- Ads/web bugs, on www from:
+
+			- afiliere *
+			- www.google.com **
+			- www.googleadservices.com **
+
+	* Unsecurable
+	** Secured by us
+
+
+	NB: We cannot remove platform until an alternative
+	path for ss scripts and css is provided/found.
 
 -->
 <ruleset name="Zumzi (partial)" platform="mixedcontent">
@@ -27,7 +60,7 @@
 	<target host="*.zumzi.ro" />
 
 
-	<securecookie host="^\.zumzi\.(?:md|ro)$" name=".+" />
+	<securecookie host="^(?:www)?\.zumzi\.(?:md|ro)$" name=".+" />
 
 
 	<rule from="^http://(www\.)?zumzi\.(md|ro)/"
