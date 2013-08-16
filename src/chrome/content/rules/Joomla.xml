@@ -25,11 +25,21 @@
 
 	ideas.joomla.org pages are handled in Uservoice-clients.xml.
 
+
+	Partially covered subdomains:
+
+		- extensions	(some pages redirect to http)
+
 -->
 <ruleset name="Joomla (partial)">
 
 	<target host="joomla.org" />
 	<target host="*.joomla.org" />
+		<!--
+			Started redirecting to http:
+							-->
+		<!--exclusion pattern="^http://extensions\.joomla\.org/+($|\?|(component|extensions)($|[?/]))" /-->
+		<!--exclusion pattern="^http://extensions\.joomla\.org/+(?!components/|favicon\.ico|images/|modules/|templates/)" /-->
 
 
 	<securecookie host="^.*\.joomla\.org$" name=".*" />
@@ -37,7 +47,7 @@
 
 	<!--	joomla.uservoice.com redirects back to ideas.joomla.org	-->
 
-	<rule from="^http://(extensions)\.joomla\.org/"
+	<rule from="^http://(extensions)\.joomla\.org/(?!$|\?|(?:component|extensions)(?:$|[?/]))"
 		to="https://$1.joomla.org/" />
 
 	<rule from="^http://ideas\.joomla\.org/track\.gif"
