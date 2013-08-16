@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional subdomains:
+
+		- smsquare *
+		- thumbs[012] *
+		- users *
+
+	* Redirects to ^picsity.com; mismatched, CN: picsity.com
+
+
+	Problematic subdomains:
+
+		- ps-assets	(works; mismatched, CN: picsity.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- ps-assets	(→ ^)
+
+
+	Mixed images on ^ from smsquare, thumbs[012], and
+	users, not a problem for mixed content blocking.
+
+	All active resources are loaded from ps-assets.
+
+-->
+<ruleset name="Picsity.com (partial)">
+
+	<target host="picsity.com" />
+	<target host="*.picsity.com" />
+
+
+	<securecookie host="^picsity\.com$" name=".+" />
+	<securecookie host="^\.picsity\.com$" name="^_ga$" />
+
+
+	<rule from="^http://(?:ps-assets\.|(www\.))?picsity\.com/"
+		to="https://$1picsity.com/" />
+
+</ruleset>

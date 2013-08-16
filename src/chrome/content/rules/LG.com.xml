@@ -1,0 +1,43 @@
+<!--
+	LG Electronics
+
+
+	Problematic subdomains:
+
+		- www	(valid cert, redirects to wws, pages then redirect back)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ wws, to save on excessive requests)
+		- wws
+		- wwwstg	(pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- akamaitest
+		- admin.cms
+		- wws
+
+-->
+<ruleset name="LG.com (partial)">
+
+	<target host="lg.com" />
+	<target host="*.lg.com" />
+		<exclusion pattern="^http://(?:www(?:stg)?\.)?lg\.com/(?!\w\w/(?:css|foresee|images|js)/|favicon\.ico|lg3-common(?:-v2)?/)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.lg\.com$" name="^(?:s_\w+|__utm)\w$" />
+	<securecookie host="^(?:admin\.cm|ww)s\.lg\.com$" name=".+" />
+
+
+	<rule from="^http://(?:ww[sw]\.)?lg\.com/"
+		to="https://wws.lg.com/" />
+
+	<rule from="^http://(akamaitest|admin\.cms|wwwstg)\.lg\.com/"
+		to="https://$1.lg.com/" />
+
+</ruleset>

@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog		(shows www; mismatched, CN: www.mcmelectronics.com)
+		- electronics	(redirects to http; mismatched, CN: *.resultspage.com)
+		- products	(http reply)
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="MCM Electronics.com (partial)">
+
+	<target host="mcmelectronics.com" />
+	<target host="www.mcmelectronics.com" />
+		<!--exclusion pattern="^http://(www\.)?mcmelectronics\.com/(category\.aspx|product/)" /-->
+		<exclusion pattern="^http://(?:www\.)?mcmelectronics\.com/(?!(?:basket|FreeShipping)\.aspx|browse/|css/|favicon\.ico|images/|login/|rss/|scripts/|services/|WebResource\.axd)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.mcmelectronics\.com$" name="^(?:gpv_p\w|s_\w\w)$" />
+	<!--securecookie host="^www\.mcmelectronics\.com$" name="^(ASP\.NET_SessionId|MSCSProfile|velaront1|velaroret1)$" /-->
+
+
+	<rule from="^http://(?:www\.)?mcmelectronics\.com/"
+		to="https://www.mcmelectronics.com/" />
+
+</ruleset>

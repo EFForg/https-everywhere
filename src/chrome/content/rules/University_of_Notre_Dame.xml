@@ -1,0 +1,84 @@
+<!--
+	Nonfunctional subdomains:
+
+		- rarebooks.library	(redirects to ^library, valid cert)
+
+
+	Problematic subdomains:
+
+		- ndtoday.alumni **
+		- archives		(http reply)
+		- www.archives		(dropped)
+		- www.corecurriculum *
+		- inside		(mismatched, CN: www3.nd.edu)
+		- internationalalumni **
+		- www.latinostudies *
+		- www.law *
+		- onesearch.library	(data differ)
+		- mynotredame **
+		- www.news *
+		- www.opac *
+		- www.provost *
+		- www.registrar ***
+		- www.today *
+		- youngalumni **
+
+	* 403, cert only matches *.nd.edu
+	** Works; mismatched, CN: *.imodules.com
+	*** Works, cert only matches *.nd.edu
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- apps
+		- inside-p.cc
+		- (www.)corecurriculum	(www → ^)
+		- inside		(→ inside-p.cc)
+		- (www.)latinostudies	(www → ^)
+		- (www.)law		(www → ^)
+		- encore.law
+		- (www.)library
+		- asset.library
+		- (www.)news		(www → ^)
+		- (www.)opac
+		- (www.)provost		(www → ^)
+		- (www.)registrar	(www → ^)
+		- sniteartmuseum
+		- (www.)today		(www → ^)
+		- www3
+
+-->
+<ruleset name="University of Notre Dame (partial)">
+
+	<target host="nd.edu" />
+	<target host="*.nd.edu" />
+
+
+	<!--	Can these cookies be secured safely?
+							-->
+	<!--securecookie host="^\.nd\.edu$" name="^III_ENCORE_PATRON$" /-->
+	<!--securecookie host="^\.cc\.nd\.edu$" name="^(badprotocol|fos\.secure\.web\.server|fos\.web\.server)$" /-->
+	<!--securecookie host="^\.library\.nd\.edu$" name="^libraryndedu$" /-->
+	<securecookie host="^(?:inside-p\.cc|encore\.law)\.nd\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:apps|calendar|encore\.law|asset\.libary|sniteartmuseum|www3?)\.)?nd\.edu/"
+		to="https://$1nd.edu/" />
+
+	<rule from="^http://inside(?:-p\.cc)?\.nd\.edu/"
+		to="https://inside-p.cc.nd.edu/" />
+
+	<!--	Domains for which both ^foo and www.foo exist,
+		but only ^foo works without caveats:
+							-->
+	<rule from="^http://(?:www\.)?(corecurriculum|latinostudies|law|news|opac|provost|registrar|today)\.nd\.edu/"
+		to="https://$1.nd.edu/" />
+
+	<!--	Domains for which ^foo and www.foo exist,
+		and both work with valid certs:
+						-->
+	<rule from="^http://(www\.)?(library)\.nd\.edu/"
+		to="https://$1$2.nd.edu/" />
+
+</ruleset>

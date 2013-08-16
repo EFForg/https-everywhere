@@ -1,0 +1,66 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/cms.kiva.org/
+		- s3.amazonaws.com/s3.kiva.org/
+
+		- level3cdn.kiva.org.c.footprint.net
+
+			- l3-[12]
+			- level3cdn
+
+		- s3.kiva.org.c.footprint.net
+
+			- s3
+			- s3-[12]
+
+
+	Problematic subdomains:
+
+		- l3-[12] *
+		- level3cdn *
+		- mail		(interrupted)
+		- s3 *
+		- s3-[12] *
+
+	* Dropped, footprint.net CDN
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- l3-[12]	(→ www)
+		- level3cdn	(→ www)
+		- mail		(→ mail.google.com)
+		- pages
+		- s3		(→ s3.amazonaws.com)
+		- s3-[12]	(→ s3.amazonaws.com)
+
+-->
+<ruleset name="Kiva.org (partial)">
+
+	<target host="kiva.org" />
+	<target host="*.kiva.org" />
+		<exclusion pattern="^http://(?:www\.)?kiva\.org/(?!ajax/|favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)" />
+
+
+	<securecookie host="^\.?pages\.kiva\.org$" name=".+" />
+
+
+	<rule from="^http://(pages\.)?kiva\.org/"
+		to="https://$1kiva.org/" />
+
+	<rule from="^http://(?:l3-[12]|level3cdn|www)\.kiva\.org/"
+		to="https://www.kiva.org/" />
+
+	<rule from="^http://mail\.kiva\.org/"
+		to="https://mail.google.com/a/kiva.org" />
+
+	<rule from="^http://s3(?:-[12])?\.kiva\.org/"
+		to="https://s3.amazonaws.com/s3.kiva.org/" />
+
+</ruleset>

@@ -1,0 +1,97 @@
+<!--
+	CDN buckets:
+
+		- now.eloqua.com.edgesuite.net
+
+			- a578.g.akamai.net
+			- conversation-images.alcatel-lucent.com
+
+
+	Nonfunctional subdomains:
+
+		- enterprise		(refused)
+		- www.partnerlocator	(dropped)
+
+
+	Problematic subdomains:
+
+		- ^		(shows www3; mismatched, CN: alcatel-lucent.com)
+		- conversation	(works; mismatched, CN: secure.eloqua.com)
+		- conversation-images	(works, akamai)
+		- corporatereporting	(mismatched, CN: www.homeretailgroup.com)
+		- webform	(works; mismatched, CN: *.us.neolane.net)
+		- www1		(data differs, valid cert)
+		- www2		("site is unavailable for maintenance purposes"; expired 2006-08-30, invalid, self-signed)
+
+
+	Partially covered subdomains:
+
+		- developer-enterprise	($ shows blank page)
+		- www2			($ → www)
+
+
+	Fully covered domains:
+
+		- alcatel-lucent.com subdomains:
+
+			- (www.)		(^ → www)
+			- applicationpartner
+			- businessportal
+			- conversation-images	(→ akamai)
+			- corporatereporting	(→ www3)
+			- service.esd
+			- market
+			- my-home
+			- support
+			- services.support
+			- www2
+
+		- market.lucent.com
+		- services.support.lucent.com
+
+-->
+<ruleset name="Alcatel-Lucent.com (partial)">
+
+	<target host="alcatel-lucent.com" />
+	<target host="*.alcatel-lucent.com" />
+		<!--
+			These paths show a blank page:
+
+				- $
+				- component/comprofiler/registers
+				- forum/index
+									-->
+		<!--exclusion pattern="^http://developer-enterprise.alcatel-lucent.com/($|\?|component/comprofiler/|forum/index)" /-->
+		<exclusion pattern="^http://developer-enterprise.alcatel-lucent.com/(?!api_content(?:$|[?/])|components/|images/|libraries/|media/|modules/|plugins/|templates/|webapp/)" />
+	<target host="*.lucent.com" />
+
+
+	<!--	Is locale used on unsecurable domains?
+							-->
+	<!--securecookie host"^\.alcatel-lucent\.com$" name="^locale$" /-->
+	<securecookie host="^(?:\.?applicationpartner|businessportal|service\.esd|market|www3)\.alcatel-lucent\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?alcatel-lucent\.com/"
+		to="https://www.alcatel-lucent.com/" />
+
+	<rule from="^http://conversation-images\.alcatel-lucent\.com/"
+		to="https://a248.e.akamai.net/f/578/177/3m/conversation-images.alcatel-lucent.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://corporatereporting\.alcatel-lucent\.com/.*"
+		to="https://www3.alcatel-lucent.com/corporate-portal/corporate-reporting-portal.html" />
+
+	<rule from="^http://(applicationpartner|businessportal|developer-enterprise|service\.esd|market|my-home|(?:services\.)?support|www3)\.alcatel-lucent\.com/"
+		to="https://$1.alcatel-lucent.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://www2\.alcatel-lucent\.com/(?:\?.*)?$"
+		to="https://wwww.alcatel-lucent.com/" />
+
+	<rule from="^http://(market|services\.support)\.lucent\.com/"
+		to="https://$1.lucent.com/" />
+
+</ruleset>

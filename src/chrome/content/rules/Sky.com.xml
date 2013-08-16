@@ -1,0 +1,133 @@
+<!--
+	Other Sky rulesets:
+
+		- SkyViewingHelp.com.xml
+
+
+	CDN buckets:
+
+		- skyidassets-a.akamaihd.net
+
+		- f.chtah.com
+
+			- f.newsletter.sky.com
+
+		- assets.sky.com.edgekey.net
+		- help.sky.com.edgesuite.net
+
+		- prod-diagnostics.herokuapp.com
+
+			- diagnostics.herokuapp.com
+
+		- bskyb.lithium.com
+
+			- helpforum.sky.com
+
+		- sky.com.d1.sc.omtrdc.net
+
+			- metrics.sky.com
+
+
+	Nonfunctional domains:
+
+		- sky.com subdomains:
+
+			- epgstatic *
+			- news *
+			- assets.search **
+			- sky1 *
+			- skyarts *
+			- skyatlantic *
+			- skyliving *
+			- skymovies *
+			- static **
+			- prod.entertainment.telly *
+			- tv *
+			- www *
+
+		- media.skynews.com *
+		- www.skysports.com **
+
+	* 504, akamai
+	** Dropped
+
+
+	Problematic domains:
+
+		- diagnostics.sky.com	(mismatched, CN: *.herokuapp.com)
+		- help.sky.com		(works, akamai)
+		- metrics.sky.com	(mismatched, CN: *.d1.sc.omtrdc.net)
+		- f.newsletter.sky.com		(works; mismatched, CN: *.chtah.com)
+		- reg.newsletter.sky.com	(works; mismatched, CN: *.cheetahmail.com)
+
+
+	Partially covered domains:
+
+		- go.sky.com *
+		- help.sky.com	(→ akamai)
+		- livingforsport.skysports.com *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- sky.com subdomains:
+
+			- accessibility
+			- accessories
+			- activatemychannels
+			- assets
+			- business
+			- buy
+			- contactus
+			- customerrewards
+			- diagnostics	(→ prod-diagnostics.herokuapp.com)
+			- global
+			- helpforum
+			- interest
+			- metrics	(→ sky-com.d1.sc.omtrdc.net)
+			- my
+			- myaccount
+			- myhelprequests
+			- myorders
+			- mysky
+			- newmysky
+			- rainforestrescue
+			- rewards
+			- secure.suggest.search
+			- secure
+			- skyid
+			- smetrics
+			- staging-assets
+
+-->
+<ruleset name="Sky.com (partial)">
+
+	<target host="*.sky.com" />
+		<exclusion pattern="^http://go\.sky\.com/(?!favicon\.ico|resources/|SVOD/|vod/content/Home/Application_Navigation/Sign_in/|vod/page/signUp\.do)" />
+		<exclusion pattern="^http://livingforsport\.skysports\.com/(?!assets/|static/|user/)" />
+
+
+	<!--	Tracking cookie:
+						-->
+	<securecookie host="^\.sky\.com$" name="^(?:mbox|s_\w+)$" />
+	<securecookie host="^(?:accessibility|business|buy|contactus|helpforum|my|myaccount|myorders|rainforestrescue)\.sky\.com$" name=".+" />
+
+
+	<rule from="^http://(accessibility|accessories|activatemychannels|(?:staging-)?assets|business|buy|contactus|customerrewards|global|go|helpforum|interest|secure|smetrics|my|myaccount|myhelprequests|myorders|(?:new)?mysky|rainforestrescue|rewards|secure\.suggest\.search|skyid)\.sky\.com/"
+		to="https://$1.sky.com/" />
+
+	<rule from="^http://diagnostics\.sky\.com/"
+		to="https://prod-diagnostics.herokuapp.com/" />
+
+	<rule from="^http://help\.sky\.com/(favicon\.ico|images/|js/)"
+		to="https://a248.e.akamai.net/f/1982/1/g2/help.sky.com/$1" />
+
+	<rule from="^http://metrics\.sky\.com/"
+		to="https://sky-com.d1.sc.omtrdc.net/" />
+
+	<rule from="^http://livingforsport\.skysports\.com/"
+		to="https://livingforsport.skysports.com/" />
+
+</ruleset>

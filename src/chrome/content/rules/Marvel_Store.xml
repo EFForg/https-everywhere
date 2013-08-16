@@ -1,0 +1,64 @@
+<!--
+	For other Marvel coverage, see Marvel.com.xml.
+
+
+	Nonfunctional subdomains:
+
+		- ^	(refused)
+
+
+	Problematic subdomains:
+
+		- cdn.img *
+		- cdn.s7 *
+		- cdn.static[12] *
+
+	* works, akamai
+
+
+	Partially covered subdomains:
+
+		- www	(some pages redirect to http)
+
+-->
+<ruleset name="Marvel Store.com">
+
+	<target host="marvelstore.com" />
+	<target host="*.marvelstore.com" />
+		<exclusion pattern="^http://www\.marvelstore\.com/(?!marvel/store/(?:DSIAjaxOrderItemAdd|DSIProcessWidget)(?:$|\?)|static/)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.marvelstore\.com$" name="s_(?:per|ses)s$" />
+
+
+	<!--	!www drops path and redirects like so,
+		and since www.../$ redirects to http,
+		there is little point in handling it:
+
+	<rule from="^http://marvelstore\.com/.*"
+		to="https://www.marvelstore.com/" /-->
+
+	<rule from="^http://(img|static1|www)\.marvelstore\.com/"
+		to="https://$1.marvelstore.com/" />
+
+	<rule from="^http://cdn\.img\.marvelstore\.com/"
+		to="https://a248.e.akamai.net/f/1073/1/5m/cdn.img.marvelstore.com/" />
+
+	<rule from="^http://cdn\.s7\.marvelstore\.com/"
+		to="https://a248.e.akamai.net/f/1467/1/5m/cdn.s7.marvelstore.com/" />
+
+	<!--	Causes resources to be loaded from akamai.net/$
+		when rewritten to akamai:
+								-->
+	<rule from="^http://cdn\.static1\.marvelstore\.com/static/\?\?css/"
+		to="https://static1.marvelstore.com/static/??css/" />
+
+	<rule from="^http://cdn\.static1\.marvelstore\.com/"
+		to="https://a248.e.akamai.net/f/1170/1/5m/cdn.static1.marvelstore.com/" />
+
+	<rule from="^http://cdn\.static2\.marvelstore\.com/"
+		to="https://a248.e.akamai.net/f/402/1/5m/cdn.static2.marvelstore.com/" />
+
+</ruleset>

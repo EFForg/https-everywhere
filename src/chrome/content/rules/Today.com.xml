@@ -1,0 +1,52 @@
+<!--
+	CDN buckets:
+
+		- today.msnbc.msn.com.edgesuite.net
+
+			- a205.g.akamai.net
+			- www.today.com
+
+		- nvcdn.today.com.edgesuite.net
+
+			- a1638.g2.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- edp	(404; mismatched, CN: *.msnbc.msn.com)
+
+
+	Problematic subdomains:
+
+		- www *
+		- nvcdn *
+		- on	(dropped)
+
+	* Works, akamai
+
+-->
+<ruleset name="Today.com (partial)">
+
+	<target host="today.com" />
+	<target host="*.today.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:www\.)?today\.com/(?!default\.ashx/id/|favicon\.ico|js/|Today/assets/)" />
+		<exclusion pattern="^http://nvcdn\.today\.com/[^/]*$" />
+		<!--
+			css links images relative to /
+							-->
+		<exclusion pattern="^http://(?:www\.)?today\.com/Today/assets/desktopCss/" />
+
+
+	<rule from="^http://(?:www\.)?today\.com/"
+		to="https://a248.e.akamai.net/f/205/8773/8m/www.today.com/" />
+
+	<rule from="^http://nvcdn\.today\.com/"
+		to="https://a248.e.akamai.net/f/1638/5769/3m/nvcdn.today.com/" />
+
+	<rule from="^http://on\.today\.com/"
+		to="https://bit.ly/" />
+
+</ruleset>

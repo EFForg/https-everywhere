@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- media.independentmail.com.edgesuite.net
+
+			- a1575.g.akamai.net
+
+		- web.independentmail.com.edgesuite.net
+
+			- a1670.g.akamai.net
+
+		- c33522.r22.cf0.rackcdn.com
+
+
+	Nonfunctional subdomains:
+
+		- cars2	(dropped)
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- cars *
+		- m *
+		- media **
+		- web **
+
+	* Works; mismatched, CN: push.scrippsing.com
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- login
+		- media *
+		- web *
+
+	* → akamai
+
+-->
+<ruleset name="Independent Mail.com (partial)">
+
+	<target host="independentmail.com" />
+	<target host="*.independentmail.com" />
+
+
+	<securecookie host="^(?:login)?\.independentmail\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?independentmail\.com/"
+		to="https://www.independentmail.com/" />
+
+	<rule from="^http://login\.independentmail\.com/"
+		to="https://login.independentmail.com/" />
+
+	<rule from="^http://media\.independentmail\.com/"
+		to="https://a248.e.akamai.net/f/1575/9717/6m/media.independentmail.com/" />
+
+	<rule from="^http://web\.independentmail\.com/"
+		to="https://a248.e.akamai.net/f/1670/5173/6m/web.independentmail.com/" />
+
+</ruleset>

@@ -1,0 +1,53 @@
+<!--
+	For rules causing mixed content, see Videotron.com-mixed.xml.
+
+
+	CDN buckets:
+
+		- static-illicoweb.videotron.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- boutiquemobile.videotron.com		(refused)
+		- corpo.videotron.com			(some pages redirect to http, others 404; mismatched, CN: www.videotron.com)
+		- static-illicoweb.videotron.com	(redirects to illicoweb, akamai)
+
+
+	Problematic domains:
+
+		- videotron.com			(cert only matches www)
+		- illicoweb.videotron.com	(mixed css from static-illicoweb)
+		- soutien.videotron.com		(works; mismatched, CN: *.altitude3.net)
+
+
+	Fully covered domains:
+
+		- courrielweb.videotron.ca
+		- clavardage.videotron.com
+
+
+	Some pages redirect to http
+
+-->
+<ruleset name="Videotron.com (partial)">
+
+	<target host="courrielweb.videotron.ca" />
+	<target host="videotron.com" />
+	<target host="*.videotron.com" />
+
+
+	<securecookie host="^courrielweb\.videotron\.ca$" name=".+" />
+	<securecookie host="^clavardage\.videotron\.com$" name=".+" />
+
+
+	<rule from="^http://courrielweb\.videotron\.ca/"
+		to="https://courrielweb.videotron.ca/" />
+
+	<rule from="^http://(?:www\.)?videotron\.com/(client|resources|vcom)/"
+		to="https://www.videotron.com/$1/" />
+
+	<rule from="^http://clavardage\.videotron\.com/"
+		to="https://clavardage.videotron.com/" />
+
+</ruleset>

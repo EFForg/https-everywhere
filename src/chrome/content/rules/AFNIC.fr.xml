@@ -1,0 +1,34 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(works; mismatched, CN: www.afnic.fr)
+
+
+	Fully covered subdomains:
+
+		- ^		(→ www)
+		- www.sandbox
+		- www
+
+
+	^sandbox.nic.fr does not exist
+
+-->
+<ruleset name="AFNIC.fr">
+
+	<target host="afnic.fr" />
+	<target host="*.afnic.fr" />
+
+
+	<securecookie host="^www\.(?:sandbox\.)?afnic\.fr$" name=".+" />
+
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://afnic\.fr/[^?]*(\?.*)?"
+		to="https://www.afnic.fr/$1" />
+
+	<rule from="^http://www\.(sandbox\.)?afnic\.fr/"
+		to="https://www.$1afnic.fr/" />
+
+</ruleset>

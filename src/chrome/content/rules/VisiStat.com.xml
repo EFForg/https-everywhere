@@ -1,0 +1,50 @@
+<!--
+	Nonfunctional subdomains:
+
+		- partner *
+		- partners *
+
+	* Prints domain name; mismatched, CN: www.visistat.com
+
+
+	Problematic domains:
+
+		- (www.)sa-as.com *
+		- demo.visistat.com *
+		- stats.visistat.com	(mismatched, CN: sniff.visistat.com)
+
+	* Works; mismatched, CN: www.visistat.com
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- demo		(→ www)
+		- sniff
+		- stats		(→ sniff)
+
+-->
+<ruleset name="VisiStat.com (partial)">
+
+	<target host="sa-as.com" />
+	<target host="www.sa-as.com" />
+	<target host="visistat.com" />
+	<target host="*.visistat.com" />
+
+
+	<securecookie host="^(?:www\.)?visistat\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?sa-as\.com/tracking/"
+		to="https://www.visistat.com/tracking/" />
+
+	<rule from="^http://(sniff\.|www\.)?visistat\.com/"
+		to="https://$1visistat.com/" />
+
+	<rule from="^http://s(?:niff|tats)\.visistat\.com/"
+		to="https://sniff.visistat.com/" />
+
+	<rule from="^http://demo\.visistat\.com/"
+		to="https://www.visistat.com/demo-login.php" />
+
+</ruleset>

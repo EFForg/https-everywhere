@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- my.qoo10.com.gslb.cdnetworks.com
+		- pg.qoo10.com.gslb.cdnetworks.com
+		- www.qoo10.com.gslb.cdnetworks.com
+		- dp.image-gmkt.com.usgcac.cdnetworks.net
+		- gd.image-gmkt.com.usgcac.cdnetworks.net
+		- static.image-gmkt.com.usgcac.cdnetworks.net
+		- gdssl.image-gmkt.com.gccdn.net
+		- staticssl.image-gmkt.com.gccdn.net
+
+
+	Nonfunctional domains:
+
+		- qoo10.com		(shows admin; mismatched, CN: admin.qoo10.cn)
+		- www.qoo10.com		(403; mismatched, CN: ssl2.cdngc.net)
+
+
+	Problematic domains:
+
+		- dp.image-gmkt.com	(403; mismatched, CN: support4.cdnetworks.net)
+		- dpssl.image-gmkt.com	(mismatched, CN: staticssl.image-gmkt.com)
+		- gd.image-gmkt.com	(403; mismatched, CN: ssl2.cdngc.net)
+
+
+	Fully covered domains:
+
+		- image-gmkt.com subdomains:
+
+			- dp		(→ staticssl)
+			- gd		(→ gdssl)
+			- gdssl
+			- static	(→ staticssl)
+			- staticssl
+
+		- qoo10.com subdomains:
+
+			- kwave
+			- my
+			- pg
+
+-->
+<ruleset name="Qoo10.com (partial)">
+
+	<target host="*.image-gmkt.com" />
+	<target host="*.qoo10.com" />
+
+
+	<securecookie host="^(?:kwave|my)\.qoo10\.com$" name=".+" />
+
+
+	<rule from="^http://dp\.image-gmkt\.com/"
+		to="https://staticssl.image-gmkt.com/" />
+
+	<rule from="^http://(gd|static)(?:ssl)?\.image-gmkt\.com/"
+		to="https://$1ssl.image-gmkt.com/" />
+
+	<rule from="^http://(kwave|my|pg)\.qoo10\.com/"
+		to="https://$1.qoo10.com/" />
+
+</ruleset>

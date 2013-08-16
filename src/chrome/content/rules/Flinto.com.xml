@@ -1,0 +1,46 @@
+<!--
+	CDN buckets:
+
+		- d2pywyedxhrkk1.cloudfront.net
+
+		- d2xxitgvta5ie.cloudfront.net
+
+			- blog
+
+
+	Problematic subdomains:
+
+		- ^	(dropped)
+		- blog	(cloudfront)
+
+
+	Partially covered subdomains:
+
+		- blog	(→ d2xxitgvta5ie.cloudfront.net, avoiding user-visible paths)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+
+-->
+<ruleset name="Flinto.com (partial)">
+
+	<target host="flinto.com" />
+	<target host="*.flinto.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://blog\.flinto\.com/(?!assets/|favicon\.ico)" />
+
+
+	<securecookie host="^www\.flinto\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?flinto\.com/"
+		to="https://www.flinto.com/" />
+
+	<rule from="^http://blog\.flinto\.com/"
+		to="https://d2xxitgvta5ie.cloudfront.net/" />
+
+</ruleset>

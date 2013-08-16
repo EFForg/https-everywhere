@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+
+		- passionfruit.herokuapp.com
+
+			- load
+
+		- miyagi-1186.herokussl.com
+
+			- app
+
+
+	Nonfunctional subdomains:
+
+		- blog		(dropped)
+
+
+	Problematic subdomains:
+
+		- (www.)	(dropped)
+		- load		(mismatched, CN: *.herokuapps.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ app)
+		- app
+		- load		(→ passionfruit.herokuapp.com)
+
+-->
+<ruleset name="Passionfruit Ads.com (partial)">
+
+	<target host="passionfruitads.com" />
+	<target host="*.passionfruitads.com" />
+
+
+	<securecookie host="^app\.passionfruitads\.com$" name=".+" />
+
+
+	<!--	Server does not drop path:
+						-->
+	<rule from="^http://(?:app\.|www\.)?passionfruitads\.com/"
+		to="https://app.passionfruitads.com/" />
+
+	<rule from="^http://load\.passionfruitads\.com/"
+		to="https://passionfruit.herokuapp.com/" />
+
+</ruleset>

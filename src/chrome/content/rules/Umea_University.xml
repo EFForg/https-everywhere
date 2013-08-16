@@ -1,0 +1,51 @@
+<!--
+	Nonfunctionla subdomains:
+
+		- ftp.acc	(refused)
+		- dp.foark *
+		- www.foark *
+		- support.its **
+		- (www.)ub **
+		- ovik.ub **
+
+	* Shows RHEL test page; self-signed, CN: localhost.localdomain
+	** Dropped
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- (www.)student *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)anstalld
+		- www.cambro
+		- cas
+		- (www.)servicedesk.its
+		- intra.ub
+
+-->
+<ruleset name="Umeå University (partial)">
+
+	<target host="umu.se" />
+	<target host="*.umu.se" />
+		<exclusion pattern="^http://(?:www\.)?(?:student\.)?umu\.se/(?!digitalAssets/|DownloadAsset\.action(?:$|\?)|static/)" />
+
+
+	<securecookie host="^(?:(?:www\.)?anstalld|www\.cambro|cas|(?:www\.)?servicedesk\.its)\.umu\.se$" name=".+" />
+
+
+	<rule from="^http://((?:www\.cambro|cas|intra\.ub|www)\.?)umu\.se/"
+		to="https://$1umu.se/" />
+
+	<!--	Domains for which both ^foo and www.foo
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(anstalld|servicesdesk\.its|student)\.umu\.se/"
+		to="https://$1$2.umu.se/" />
+
+</ruleset>

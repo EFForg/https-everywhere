@@ -1,0 +1,49 @@
+<!--
+	For other Demand Media coverage, see Demand-Media.xml.
+
+
+	CDN buckets:
+
+		- cdnsl.coveritlive.com.edgesuite.net
+		- mobile.coveritlive.com.edgesuite.net
+		- www.coveritlive.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- cdnsl *
+		- media *
+		- www *
+
+	* Akamai
+
+
+	Some pages redirect to http://www
+
+
+	Fully covered subdomains:
+
+		- ^
+		- cdnsl		(→ cdnssl)
+		- cdnssl
+		- secure4
+		- wwwssl
+
+-->
+<ruleset name="CoveritLive.com (partial)">
+
+	<target host="coveritlive.com" />
+	<target host="*.coveritlive.com" />
+		<exclusion pattern="^http://www\.coveritlive\.com/(?!favicon\.ico|images/|templates/)" />
+
+
+	<rule from="^http://(?:www\.)?coveritlive\.com/"
+		to="https://coveritlive.com/" />
+
+	<rule from="^http://cdnsl(?:ssl)?\.coveritlive\.com/"
+		to="https://cdnslssl.coveritlive.com/" />
+
+	<rule from="^http://(secure4|wwwssl)\.coveritlive\.com/"
+		to="https://$1.coveritlive.com/" />
+
+</ruleset>

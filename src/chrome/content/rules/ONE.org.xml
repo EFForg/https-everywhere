@@ -1,0 +1,32 @@
+<!--
+	CDN buckets:
+
+		- one.clients.actionkit.com
+
+			- act
+
+		- one.org.s3.amazonaws.com
+
+
+	Problematic subdomains:
+
+		- act	(mismatched, CN: *.actionkit.com)
+
+-->
+<ruleset name="ONE.org">
+
+	<target host="one.org" />
+	<target host="*.one.org" />
+	<target host="one.actionkit.com" />
+
+
+	<securecookie host="^one\.actionkit\.com" name=".+" />
+
+
+	<rule from="^http://(www\.)?one\.org/"
+		to="https://$1one.org/" />
+
+	<rule from="^http://(?:one\.actionkit\.com|give\.one\.org)/"
+		to="https://one.actionkit.com/" />
+
+</ruleset>

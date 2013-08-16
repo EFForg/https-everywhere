@@ -1,0 +1,49 @@
+<!--
+	Problematic domains:
+
+		- ja-sig.org *
+		- (www.)ja-sig.org	(cert only matches *.jasig.org)
+
+		- jasig.org subdomains:
+
+			- ^ *
+			. www.issues **
+			- www.wiki **
+
+	* \w+ redirects to www.../$"
+	** \w+ redirects to www.../$",	cert only matches *.jasig.org
+
+
+	Fully covered domains:
+
+		- (www.)ja-sig.org	(→ www.ja-sig.org)
+
+		- jasig.org subdomains:
+
+			- (www.)	(^ → www)
+			- issues
+			- www.issues	(^ → www.jasig)
+			- wiki
+			- www.wiki	(^ → www.jasig)
+
+-->
+<ruleset name="Jasig.org">
+
+	<target host="ja-sig.org" />
+	<target host="www.ja-sig.org" />
+	<target host="jasig.org" />
+	<target host="*.jasig.org" />
+
+
+	<securecookie host="^(?:issues|wiki|www)?\.jasig\.org$" name=".+" />
+
+
+	<!--	www.issues & www.wiki show www over http.
+							-->
+	<rule from="^http://(?:www(?:\.issues|\.wiki)?\.)?ja-?sig\.org/"
+		to="https://www.jasig.org/" />
+
+	<rule from="^http://(issues|wiki)\.jasig\.org/"
+		to="https://$1.jasig.org/" />
+
+</ruleset>

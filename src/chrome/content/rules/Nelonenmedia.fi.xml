@@ -1,0 +1,35 @@
+<!--
+	Nonfunctional subdomains:
+
+		- gatling	(refused)
+
+
+	Partially covered subdomains:
+
+		- sso	(logout redirects to http)
+
+
+	Fully covered subdomains:
+
+		- crossbow
+
+
+	(www.) do not exist.
+
+-->
+<ruleset name="Nelonmedia.fi (partial)">
+
+	<target host="*.nelonenmedia.fi" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://sso\.nelonenmedia\.fi/logout(?:$|[?/])" />
+
+
+	<securecookie host="^crossbow\.nelonenmedia\.fi$" name=".+" />
+
+
+	<rule from="^http://(crossbow|sso)\.nelonenmedia\.fi/"
+		to="https://$1.nelonenmedia.fi/" />
+
+</ruleset>

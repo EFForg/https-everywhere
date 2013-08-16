@@ -1,0 +1,124 @@
+<!--
+	For problematic rules, see Home_Depot-problematic.xml.
+
+
+	Other Home Depot rulesets:
+
+		- HDserviceproviders.com.xml
+
+
+	CDN buckets:
+
+		- homedepot.com.102.122.2o7.net
+
+			- swsac
+
+		- phoenix.corporate-ir.net
+
+			- ir
+
+
+		- wildcard.promo.eprize.com.edgekey.net
+
+			- www.homedepotcardsweepstakes.com
+
+		- secure2.homedepot.com.edgekey.net
+
+			- secure
+			- secure2
+
+		- www.homedepot.com.edgesuite.net
+		- www6.homedepot.com.edgesuite.net
+
+		- pages.virt.exacttarget.com
+
+			- pages
+
+		- homedepot.lithium.com
+
+			- community
+
+
+	Nonfunctional domains:
+
+		- homedepot.com subdomains:
+
+			- (www.)ecooptions **
+			- ext *
+			- howto *
+			- pages **
+
+		- (www.)homedepotcardsweepstakes.com	(403; ^: mismatched, CN: *.eprize.net; www: akamai)
+
+	* Refused
+	** Dropped
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- (www.)community	(refused)
+		- contractorservices *
+		- ir **
+		- secure *
+		- www		(shows http://secure2, akamai)
+		- www6 **
+
+	* Mismatched, CN: secure2.homedepot.com
+	** Works, akamai
+
+
+
+	Partially covered subdomains:
+
+		- ir	(→ origin-phoenix.corporate-ir.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(→ secure2)
+		- (www.)community	(→ homedepot.i.lithium.com)
+		- corporate
+		- hdapps
+		- hdconnect
+		- homedepotlink
+		- secure2
+		- swsac
+		- thdfed
+
+
+	Observed cookie domains:
+
+		- .
+		- hdapps
+		- hdconnect
+		- homedepotlink
+		- ir
+		- thdfed
+
+-->
+<ruleset name="Home Depot.com (partial)">
+
+	<target host="homedepot.com" />
+	<target host="*.homedepot.com" />
+
+
+	<securecookie host="^(?:hdapps|hdconnect|homedepotlink|thdfed)?\.homedepot\.com$" name=".+" />
+
+
+	<rule from="^http://(?:secure2\.|www\.)?homedepot\.com/"
+		to="https://secure2.homedepot.com/" />
+
+	<rule from="^http://(?:www\.)?community\.homedepot\.com/"
+		to="https://homedepot.i.lithium.com/" />
+
+	<rule from="^http://contractorservices\.homedepot\.com/(\?.*)?$"
+		to="https://secure2.homedpot.com/pro$1" />
+
+	<rule from="^http://(corporate|hdapps|hdconnect|homedepotlink|swsac|thdfed)\.homedepot\.com/"
+		to="https://$1.homedepot.com/" />
+
+	<rule from="^http://ir\.homedepot\.com/(client|WebSideStory)/"
+		to="https://origin-phoenix.corporate-ir.net/$1/" />
+
+</ruleset>

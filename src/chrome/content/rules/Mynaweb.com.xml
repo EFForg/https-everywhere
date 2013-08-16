@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- ddnxkh4q55q4m.cloudfront.net
+
+			- cdn
+
+
+	Problematic subdomains:
+
+		- blog	(works; self-signed, CN: unweb.vm.bytemark.co.uk)
+		- cdn	(cloudfront)
+
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- cdn	(→ ddnxkh4q55q4m.cloudfront.net)
+
+
+	api sets myna cookie on whichver domain it is loaded from
+
+-->
+<ruleset name="Mynaweb.com (partial)">
+
+	<target host="mynaweb.com" />
+	<target host="*.mynaweb.com" />
+
+
+	<securecookie host="^mynaweb\.com$" name=".+" />
+
+
+	<rule from="^http://(api\.|www\.)?mynaweb\.com/"
+		to="https://$1mynaweb.com/" />
+
+	<rule from="^http://cdn\.mynaweb\.com/"
+		to="https://ddnxkh4q55q4m.cloudfront.net/" />
+
+</ruleset>

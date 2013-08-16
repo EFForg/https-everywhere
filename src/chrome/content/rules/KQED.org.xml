@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- blogs.kqed.org	(403/404, valid cert)
+
+
+	Problematic domains:
+
+		- u.s.kqed.org		(shows www.kqed.org; mismatched, CN: *.kqed.org)
+
+
+	Partially covered domains:
+
+		- (www.)kqed.org	(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- a.s.kqed.net
+		- u.s.kqed.net
+		- u.s.kqed.org	(→ u.s.kqed.net)
+
+-->
+<ruleset name="KQED.org (partial)">
+
+	<target host="*.s.kqed.net" />
+	<target host="kqed.org" />
+	<target host="*.kqed.org" />
+
+
+	<securecookie host="^\.kqed\.org$" name="^_(?:chartbeat2|_qca|_utm\w)$" />
+
+
+	<rule from="^http://(a|u)\.s\.kqed\.(?:net|org)/"
+		to="https://$1.s.kqed.net/" />
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?kqed\.org/(assets/|(?:controller|donate)(?:$|[?/])|favicon\.ico|lib/)"
+		to="https://www.kqed.org/$1" />
+
+</ruleset>

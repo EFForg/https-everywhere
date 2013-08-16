@@ -1,0 +1,168 @@
+<!--
+	CDN buckets:
+
+		- nike.112.2o7.net
+
+		- nike.com.112.2o7.net
+
+			- modus
+
+		- nike.com.102.112.2o7.net
+
+			- smodus
+
+		- ak1s.abmr.net/is/secure-store.nike.com
+
+		- images.nike.com.edgesuite.net
+
+			- a471.b.akamai.net
+
+		- nikeplus.nike.com.edgesuite.net
+
+			- a1758.b.akamai.net
+
+		- niketown.nike.com.edgesuite.net
+		- nikevideo.nike.com.edgesuite.net
+		- secure-niketown.nike.com.edgekey.net
+		- secure-store.nike.com.edgekey.net
+		- store.nike.com.edgesuite.net
+
+		- ugc.nikeid.com.edgesuite.net
+
+			- a259.b.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- legacydev	(refused)
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: origin-www.nike.com)
+		- images *
+		- modus		(mismatched, CN: *.112.2o7.net)
+		- nikeplus *
+		- nikevideo *
+		- store		(redirects to secure-store, akamai)
+		- ugc *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, $ redirects to http)
+		- nikeplus	(some pages redirect to http)
+		- nikevideo	(→ akamai)
+
+
+	Fully covered subdomains:
+
+		- developer
+		- help-all
+		- help-de-de
+		- help-de-eu
+		- help-en-cn
+		- help-en-eu
+		- help-en-gb
+		- help-en-us
+		- help-es-eu
+		- help-es-la
+		- help-fr-eu
+		- help-fr-fr
+		- help-it-eu
+		- help-ja-jp
+		- help-nl-eu
+		- help-pt-br
+		- help-zh-tw
+		- images *
+		- modus		(→ nike-com.112.2o7.net)
+		- origin-www
+		- secure-nikeplus
+		- secure-niketown
+		- secure-store
+		- store
+		- smodus
+		- store		(→ secure-store)
+		- ugc *
+
+	* → akamai
+
+
+	Observed cookie domains:
+
+		- .
+		- secure-store
+		- www
+
+
+	Mixed content:
+
+		- css:
+
+			- on secure-store from store *
+
+		- Images:
+
+			- on secure-store from images **
+			- on secure-store from ugc **
+			- on secure-store from www **
+
+	* Secured by us, seems to load custom fonts only.
+	** Secured by us, doesn't trip MCB anyway.
+
+-->
+<ruleset name="Nike.com (partial)">
+
+	<target host="nike.com" />
+	<target host="*.nike.com" />
+		<!--
+			At least one stylesheet links resources relative to /
+										-->
+		<!--exclusion pattern="^http://nikeplus\.nike\.com/plus/static/css/core/($|\?)" /-->
+		<!--exclusion pattern="^http://nikeplus\.nike\.com/(?!plus/(static/css/places_main/|static/css/logged_out_\w+/|static/js/|static/translations($|\?)|web/css/modules/activity_select\.css|web/images/|web/login/images/|web/login/js/)" /-->
+		<exclusion pattern="^http://nikevideo\.nike\.com/(?!\d+/[\w-]+\.jpg)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.nike\.com$" name="^(?:AnalysisUserId|ResonanceSegment|RES_TRACKINGID|s_\w+|utag_main)$" />
+	<securecookie host="^(?:help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|secure-store)\.nike\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?nike\.com/(/?apps/|/?content/|dat/tealeaftarget\.html|/?etc/|nikeos/scripts/)"
+		to="https://www.nike.com/$1" />
+
+	<rule from="^http://(developer|help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|origin-www|secure-nike(?:plus|town)|smodus)\.nike\.com/"
+		to="https://$1.nike.com/" />
+
+	<rule from="^http://images\.nike\.com/"
+		to="https://a248.e.akamai.net/f/471/3529/6d/images.nike.com/" />
+
+	<rule from="^http://modus\.nike\.com/"
+		to="https://nike-com.112.2o7.net/" />
+
+	<!--	First, rewrite what we can to akamai:
+							-->
+	<rule from="^http://nikeplus\.nike\.com/(plus/(?:static/css/(?:places_main|logged_out_\w+)/|static/js/|static/translations(?:$|\?)|web/css/modules/activity_select\.css|web/images/|web/login/(?:image|j)s/))"
+		to="https://a248.e.akamai.net/f/1758/2152/1m/nikeplus.nike.com/" />
+
+	<!--	Now rewrite to secure-nikeplus css that links resources relative to /
+
+		Unfortunately, secure-nikeplus pages redirect to http://nikeplus.,
+		so we cannot do a blanket rewrite.
+							-->
+	<rule from="^http://nikeplus\.nike\.com/plus/static/css/core/"
+		to="https://secure-nikeplus.nike.com/plus/static/css/core/" />
+
+	<rule from="^http://nikevideo\.nike\.com/"
+		to="https://a248.e.akamai.net/f/1758/6850/6f/nikevideo.nike.com/" />
+
+	<rule from="^http://(?:secure-)?store\.nike\.com/"
+		to="https://secure-store.nike.com/" />
+
+	<rule from="^http://ugc\.nike\.com/"
+		to="https://a248.e.akamai.net/f/259/7435/9m/ugc.nike.com/" />
+
+</ruleset>

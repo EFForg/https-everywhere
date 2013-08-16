@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- status-page-blog.s3.amazonaws.com
+		- d13w15pduyzezm.cloudfront.net
+
+		- status-page-blog.herokuapp.com
+
+			- blog
+
+
+	Problematic subdomains:
+
+		- blog		(works; mismatched, CN: *.herokuapp.com)
+
+
+	Fully covered subdomains:
+
+		- blog		(→ status-page-blog.herokuapp.com)
+		- hosted
+		- manage
+		- www
+		- *	(per-client subdomains)
+
+-->
+<ruleset name="StatusPage.io">
+
+	<target host="statuspage.io" />
+	<target host="*.statuspage.io" />
+
+
+	<securecookie host=".*\.statuspage\.io$" name=".+" />
+
+
+	<rule from="^http://blog\.statuspage\.io/"
+		to="https://status-page-blog.herokuapp.com/" />
+
+	<rule from="^http://([\w-]+\.)?statuspage\.io/"
+		to="https://$1statuspage.io/" />
+
+</ruleset>

@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- d19noydrgsp9ie.cloudfront.net
+
+			- cdn2
+
+		- dfe23o0oezpl4.cloudfront.net
+
+			- cdn4
+
+		- s1r30b2exd0ux4.cloudfront.net
+
+			- cdn1
+
+		- s2u565w4df8lrm.cloudfront.net
+
+			- cdn3
+
+
+	Problematic subdomains:
+
+		- www		(cert only matches ^vippy.co)
+		- cdn[1-4]	(cloudfront)
+
+-->
+<ruleset name="Vippy.co">
+
+	<target host="vippy.co" />
+	<target host="*.vippy.co" />
+
+
+	<securecookie host="^\.?vippy\.co$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?vippy\.co/"
+		to="https://vippy.co/" />
+
+	<rule from="^http://cdn1\.vippy\.co/"
+		to="https://s1r30b2exd0ux4.cloudfront.net/" />
+
+	<rule from="^http://cdn2\.vippy\.co/"
+		to="https://d19noydrgsp9ie.cloudfront.net/" />
+
+	<rule from="^http://cdn3\.vippy\.co/"
+		to="https://s2u565w4df8lrm.cloudfront.net/" />
+
+	<rule from="^http://cdn4\.vippy\.co/"
+		to="https://dfe23o0oezpl4.cloudfront.net/" />
+
+</ruleset>
