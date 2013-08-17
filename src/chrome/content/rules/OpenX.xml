@@ -1,76 +1,181 @@
 <!--
+	Other OpenX rulesets:
+
+		- Advertisers-OpenX.com.xml
+		- JumpTime.com.xml
+		- Liftdna.com.xml
+
+
+	CDN buckets:
+
+		- i.fhserve.com.cdn.cloudflare.net
+
+		- i.cdn.openx.com.edgesuite.net
+
+			- a1621.g.akamai.net
+
+		- i.xx.openx.com.edgesuite.net
+
+			- a1773.g.akamai.net
+
+		- i-cdn.servedbyopenx.com.edgesuite.net
+
+			- a1856.g.akamai.net
+
+		- akamai.openx.org
+
+			- a1051.w7.akamai.net
+			- blog.openx.org
+			- support.openx.org
+
+
 	Nonfunctional domains:
 
-		- (www.)fhserve.com	(times out)
-		- openx.com
-		- www.openx.com:	(Akamai, 503; origin, origin-www, and www-origin don't exist
-					presumably data are gathered from //openx.com)
-		- blog.openx.org
-		- forum.openx.org
-		- www.openx.org		(Akamai, 503; 301s over http to www.openx.com)
-		- servedbyopenx.com	(301s to www.openx.org over http)
+		- i.fhserve.com		(521; mismatched, CN: ssl3985.cloudflare.com)
+		- forum.openx.org *
+		- (www.)openx.net *
+
+	* Shows blog.openx.org; self-signed, CN: *.openx.com
 
 
-	(www.)openx.net shows CentOS Apache test page over http
-	openx.org throws 400 over http
-	(www.)openxenterprise.com doesn't exist
-	www.servedbyopenx.com is hosted by Akamai, throws 400s over both https & http
+	Problematic domains:
+
+		- fhserve.com		(shows contact form)
+
+		- openx.com subdomains:
+
+			- i.cdn *
+			- support	(shows blog.openx.org, self-signed)
+			- i.xx *
+
+		- openx.org subdomains:
+
+			- ^ **		(works, self-signed)
+			- blog *
+			- edit-blog **
+			- support	(shows blog.openx.org, akamai)
+
+		- (www.)servedbyopenx.com	(shows blog.openx.org; self-signed, CN: openx.com)
+		- i-cdn.servedbyopenx.com *
+
+	* Works, akamai
+	** Works; self-signed, CN: *.openx.com
+
+
+	Partially covered domains:
+
+		- blog.openx.org *
+		- edit-blog.openx.org *
+
+	* → akamai, avoiding user-visible paths
 
 
 	Fully covered domains:
 
-		openx.com subdomains:
+		- www.fhserve.com	(^ → www)
 
-			- adserver
-			- d1
-			- developer
+		- openx.com subdomains:
+
+			- (www.)
+			- ac
+			- ssl-i.cdn
 			- i-cdn
+			- lift
+			- pc
+			- sso
 			- d.tradex
+			- uk-ac
+			- ssl-i.xx
 
-		openx.net subdomains:
+		- openx.net subdomains:
 
 			- bid
 			- r
 			- u
+			- us-ads
 
-		- oxdemo-d.openxenterprise.com
+		- openx.org subdomains:
+
+			- (www.)	(^ → www)
+			- adserver
+			- d1
+			- developer
+			- svn
+
+		- *-d.openxenterprise.com
+		- (www.)servedbyopenx.com	(→ www.openx.org)
 		- i-cdn.servedbyopenx.com	(→ i-cdn.openx.com)
+
+
+	(www.)openxenterprise.com doesn't exist.
+
+
+	Mixed content:
+
+		- Web bugs, on www.openx.com from:
+
+			- marketing.liftdna.com *
+			- d3.advertisers-openx.com *
+			- u.openx.net *
+			- mediaservices-d.openxenterprise.com *
+			- t3.trackalyzer.com *
+
+	* Secured buy us
+
+
+	We don't care about web bugs, so don't
+	mark this ruleset as mixedcontent.
 
 -->
 <ruleset name="OpenX (partial)">
 
-	<target host="i-cdn.openx.com" />
-	<target host="d.tradex.openx.com" />
+	<target host="openx.com" />
+	<target host="*.openx.com" />
 	<target host="*.openx.net" />
 	<target host="*.openx.org" />
-	<target host="oxdemo-d.openxenterprise.com" />
-	<target host="i-cdn.servedbyopenx.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://(?:edit-)?blog\.openx\.org/(?!wp-content/)" />
+	<target host="*.openxenterprise.com" />
+	<target host="servedbyopenx.com" />
+	<target host="*.servedbyopenx.com" />
 
 
-	<securecookie host="^(?:i-cdn|d\.tradex)\.openx\.com$" name=".+" />
-	<securecookie host="^\.openx\.net$" name=".*" />
+	<!--securecookie host="^\.openx\.com$" name="^(_mkto_trk|__utm\w)$" /-->
+	<securecookie host="^(?:ac|i-cdn|lift|sso|d\.tradex|uk-ac|www)?\.openx\.com$" name=".+" />
+	<securecookie host="^(?:us-ads)?\.openx\.net$" name=".+" />
 	<securecookie host="^(?:adserver|d1|developer)\.openx\.org$" name=".+" />
-	<securecookie host="^oxdemo-d\.openxenterprise\.com$" name=".*" />
+	<securecookie host="^\w+-d\.openxenterprise\.com$" name=".+" />
 
 
-	<rule from="^http://d\.tradex\.openx\.com/"
-		to="https://d.tradex.openx.com/" />
+	<rule from="^http://(?:www\.)?fhserve\.com/"
+		to="https://www.fhserve.com/" />
 
-	<!--	i-cdn.servedbyopenx.com: Akamai	-->
+	<rule from="^http://((?:ac|ssl-i\.cdn|lift|pc|sso|d\.tradex|uk-ac|www|ssl-i\.xx)\.)?openx\.com/"
+		to="https://$1openx.com/" />
+
 	<rule from="^http://i-cdn\.(?:servedby)?openx\.com/"
 		to="https://i-cdn.openx.com/" />
 
-	<rule from="^http://(adserver|d1|developer)\.openx\.org/"
+	<!--	r & u: tracking beacons
+					-->
+	<rule from="^http://(bid|[ru]|us-ads)\.openx\.net/"
+		to="https://$1.openx.net/" />
+
+	<rule from="^http://(?:www\.)?(?:openx\.org|servedbyopenx\.com)/"
+		to="https://www.openx.org/" />
+
+	<rule from="^http://(adserver|d1|developer|svn)\.openx\.org/"
 		to="https://$1.openx.org/" />
 
-	<!--	r & u: tracking beacon.	-->
-	<rule from="^http://(bid|[ru])\.openx\.net/"
-		to="https://$1.openx.net/" />
+	<rule from="^http://(?:edit-)?blog\.openx\.org/"
+		to="https://a248.e.akamai.net/=/1051/7326/7m/blog.openx.org/" />
 
 	<!--	- Tracking beacon
 		- Seems edentical to u.openx.net
-					-->
-	<rule from="^http://oxdemo-d\.openxenterprise\.com/"
-		to="https://oxdemo-d.openxenterprise.com/" />
+						-->
+	<rule from="^http://(\w+)-d\.openxenterprise\.com/"
+		to="https://$1-d.openxenterprise.com/" />
 
 </ruleset>

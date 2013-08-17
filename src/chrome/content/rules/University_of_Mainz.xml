@@ -1,0 +1,136 @@
+<!--
+	Johannes Gutenberg University of Mainz
+
+	For rules causing false/broken MCB, see University_of_Mainz-falsemixed.xml.
+
+	For problematic rules, see University_of_Mainz-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- www.asta *
+		- www.medienzentrum ***
+		- ftpthep.physik **
+		- wwwthep.physik **
+		- www.rewi ***
+
+		- ub subdomains:
+
+			- appserv	(shows another domain, expired 2007-05-27)
+			- pica41	(reset)
+			- www *
+
+		- wiwi ***
+
+	* Shows wwwvh.zdv, valid cert
+	** Refused
+	*** Shows wwwvh.zdv; mismatched, CN: wwwvh.zdv.uni-mainz.de
+
+
+	Problematic subdomains:
+
+		- www.e-learning	(works; mismatched, CN: wwwvh.zdv.uni-mainz.de)
+
+
+	Partially covered subdomains:
+
+		- www.sfz *
+		- www.sport *
+
+		- ub subdomains:
+
+			- lokalsystem **
+			- lokalsystem-test **
+			- pica71 **
+			- pica81 **
+
+		- www *
+		- www.zdv *
+
+	* Avoiding false/broken MCB, rest handled in University_of_Mainz-falsemixed.xml
+	** $ differs
+
+
+	Fully covered subdomains:
+
+		- www.pruefungsamt.jura
+		- ilias
+		- www.staff
+		- www.students
+
+		- ub subdomains:
+
+			- opac
+			- opac-test
+			- pica7
+			- pica8
+
+		- pa.wiwi
+		- webstats.zdv
+		- wwwvh.zdv
+
+
+	Mixed content:
+
+		- Scripts, on:
+
+			- www.e-learning from www.zdv *
+			- www.sfv from www.zdv *
+			- www.sport from www.zdv *
+			- www from www.zdv *
+			- www.zdv from www.zdv *
+
+		- css, on:
+
+			- www.e-learning from www.zdv *
+			- www.sport from www.zdv *
+			- www from www.zdv *
+			- www.zdv from www.zdv *
+			- wwwvh.zdv from www.zdv **
+
+		- Images, on:
+
+			- www.e-learning from www.zdv *
+			- lokalsystem.ub from appserv.ub ***
+			- www.sfv from www.zdv *
+			- www.sport from www.zdv *
+			- www from www.zdv *
+			- www.zdv from www.zdv *
+
+		- Web bug on www.zdv from webstats.zdv *
+
+	* Secured by us
+	** Secured by us, negligible effect
+	*** Unsecurable, doesn't trip MCB
+
+
+	www and www.zdv are in a separate falsemixed
+	ruleset due to css and scripts from www.zdv.
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="University of Mainz (partial)">
+
+	<target host="*.uni-mainz.de" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://www\.(sfv|sport)\.uni-mainz\.de/(?!Bilder_allgemein/|Bilder_zentral/|favicon\.ico)" /-->
+		<!--exclusion pattern="^http://www\.uni-mainz\.de/(?!Bilder_allgemein/|Bilder_zentral/|favicon\.ico|Illustrationen/)" /-->
+		<!--exclusion pattern="^http://www\.zdv\.uni-mainz\.de/(?!\w+\.css|\w+\.js|Bilder_allgemein/|Bilder_zentral/|config/|favicon\.ico|Illustrationen/|pix/)" /-->
+		<exclusion pattern="^http://www(?:\.sfv|\.sport|\.zdv)?\.uni-mainz\.de/(?!\w+\.css|\w+\.js|Bilder_(?:allgemein|zentral)/|config/|favicon\.ico|Illustrationen/|pix/)" />
+		<!--
+			$ differs:
+					-->
+		<exclusion pattern="^http://(?:lokalsystem(?:-test)?|pica[78]1)\.ub\.uni-mainz\.de/(?!cgi-bin/|OPC-IMAGES(?:-NEW)?/)" />
+
+
+	<securecookie host="^(?:ilias|opac(?:-test)?\.ub|pica[78]\.ub)\.uni-mainz\.de$" name=".+" />
+
+
+	<rule from="^http://(ilias|www\.(?:pruefungsamt\.jura|sfv|staff|students)|(?:(?:lokalsystem|opac)(?:-test)?|pica[78]1?)\.ub|pa\.wiwi|www|(?:webstats|www|wwwvh)\.zdv)\.uni-mainz\.de/"
+		to="https://$1.uni-mainz.de/" />
+
+</ruleset>

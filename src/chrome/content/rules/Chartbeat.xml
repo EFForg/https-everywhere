@@ -2,6 +2,21 @@
 	blog.chartbeat.com is handled in WordPress-blogs.xml.
 
 
+	CDN buckets:
+
+		- chartbeat.edgekey.net
+
+			- static
+			- static2
+
+		- static.blog.chartbeat.com.edgesuite.net
+
+			- static.blog
+
+		- chartbeat.wpengine.com
+
+			- blog
+
 	a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/
 
 	Rewriting static.chartbeat.com to a248.e.akamai.net/chartbeat.download.akamai.com/102508/static/
@@ -9,31 +24,62 @@
 
 	Ditto when for rewriting static paths to .../static2/.
 
+
+	Nonfunctional domains:
+
+		- blog.chartbeat.com		(redirects to http, wpengine)
+		- static.blog.chartbeat.com	(redirects to http, akamai)
+
+
+	Problematic domains:
+
+		- support.chartbeat.com		(zendesk)
+
+
+	Partially covered domains:
+
+		- support.chartbeat.com		(→ assets.zendesk.com)
+
+
+	Fully covered domains:
+
+		- chartbeat.com subdomains:
+
+			- (www.)
+			- static
+			- static2
+
+		- ping.chartbeat.net
+		- *.chartbeat.net	(per-client subdomains)
+
+
+	*.charbeat.net sets _chartbeat2 cookie on whichever domain it is loaded from.
+
 -->
 <ruleset name="Chartbeat (partial)">
 
 	<target host="chartbeat.com" />
 	<target host="*.chartbeat.com" />
-	<target host="ping.chartbeat.net" />
+	<target host="*.chartbeat.net" />
 
 
-	<rule from="^http://(www\.)?chartbeat\.com/"
+	<rule from="^http://(static2?\.|www\.)?chartbeat\.com/"
 		to="https://$1chartbeat.com/" />
 
 	<!--	Courtesy of https://s3.amazonaws.com/plug.onswipe.com/on.js	-->
-	<rule from="^https?://static\.chartbeat\.com/"
-		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" />
+	<!--rule from="^http://static\.chartbeat\.com/"
+		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" /-->
 
-	<rule from="^https?://static2\.chartbeat\.com/"
-		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/" />
+	<!--rule from="^http://static2\.chartbeat\.com/"
+		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/" /-->
 
 	<!--	- Cert: *.zendesk.com
 		- Pages redirect to http.
 					-->
-	<rule from="^https?://support\.chartbeat\.com/(assets|generated|images|system)/"
+	<rule from="^http://support\.chartbeat\.com/(assets|generated|images|system)/"
 		to="https://assets.zendesk.com/$1/" />
 
-	<rule from="^http://ping\.chartbeat\.net/"
-		to="https://ping.chartbeat.net/" />
+	<rule from="^http://([\w-]+)\.chartbeat\.net/"
+		to="https://$1.chartbeat.net/" />
 
 </ruleset>

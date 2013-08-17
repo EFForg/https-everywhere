@@ -1,17 +1,14 @@
 <!--
-	For rules with mixed content, see Travel_Republic-mixedcontent.xml.
-
-
 	Nonfunctional travelrepublic.co.uk subdomains:
 
-		- blog		(record_too_long)
-		- static
+		- blog		(http reply)
+		- static	(refused)
 
 
 	Problematic domains:
 
-		- (www.)travelrepublic.com
 		- travelrepublic.co.uk *
+		- (www.)travelrepublic.com *
 
 	* Cert only matches www.travelrepublic.co.uk
 
@@ -20,18 +17,20 @@
 
 	<target host="travelrepublic.co.uk" />
 	<target host="*.travelrepublic.co.uk" />
+	<target host="travelrepublic.com" />
+	<target host="www.travelrepublic.com" />
 
 
-	<securecookie host="^m\.travelrepublic\.co\.uk$" name=".+" />
+	<securecookie host="^(?:m|www)?\.travelrepublic\.co\.uk$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?travelrepublic\.com/(?:.*)"
+	<rule from="^http://(?:www\.)?travelrepublic\.co\.uk/"
 		to="https://www.travelrepublic.co.uk/" />
-
-	<rule from="^https?://(?:www\.)?travelrepublic\.co\.uk/(favicon\.ico|images[vV]\d/|Include/|stylesheets/)"
-		to="https://www.travelrepublic.co.uk/$1" />
 
 	<rule from="^http://m\.travelrepublic\.co\.uk/"
 		to="https://m.travelrepublic.co.uk/" />
+
+	<rule from="^http://(?:www\.)?travelrepublic\.com/.*"
+		to="https://www.travelrepublic.co.uk/" />
 
 </ruleset>

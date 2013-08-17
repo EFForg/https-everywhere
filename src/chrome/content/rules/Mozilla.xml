@@ -31,10 +31,11 @@
 
 		- mozilla.org subdomains:
 
+			- browserquest *
 			- dxr			(times out)
 			- view.e *
-			- pastebin		(403; mismatched, CN: tbpl.mozilla.org)
-			- planet
+			- graphs **
+			- planet **
 			- releases
 			- sfx-images		(refused, banners)
 			- start			(refused)
@@ -43,6 +44,7 @@
 		- blog.webfwd.org		(hosted on Tumblr)
 
 	* Times out
+	** Refused
 
 
 	Problematic domains:
@@ -59,11 +61,14 @@
 			- click.e		(works; mismatched, CN: *.virt.s4.exacttarget.com)
 			- image.e		(works, akamai)
 			- krakenbenchmark	(CN: www.mozilla.org)
+			- labs *
 			- people		(CN: people.mozilla.com)
 			- talkback-public	(404, CN: www.mozilla.org)
 			- videos		(CN: static-cdn.addons.mozilla.net)
 
 		- www.mozillalabs.com		(403, CN: tbpl.mozilla.org)
+
+	* Prompts for LDAP login; mismatched, CN: www.mozilla.com
 
 
 	Fully covered domains:
@@ -135,10 +140,10 @@
 			- input
 			- intlstore
 			- l10n
+			- labs		(→ mozillalabs.com)
 			- ldap
 			- lists
 			- localize
-			- labs
 			- mail
 			- marketplace
 			- metrics
@@ -200,7 +205,10 @@
 	<target host="*.mozilla.net" />
 	<target host="mozilla.org" />
 	<target host="*.mozilla.org" />
-		<exclusion pattern="^http://(?:dxr|krakenbenchmark|pastebin|planet|releases|sfx-images|start|www-archive)\.mozilla\.org/" />
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001649.html
+													-->
+		<exclusion pattern="^http://(?:browserquest|dxr|graphs|krakenbenchmark|planet|releases|sfx-images|start|www-archive)\.mozilla\.org/" />
 		<!--
 			Breaks newsletter:
 
@@ -255,6 +263,9 @@
 
 	<rule from="^https?://beta\.mozilla\.org/"
 		to="https://www.mozilla.org/firefox/channel/" />
+
+	<rule from="^http://labs\.mozilla\.org/"
+		to="https://mozillalabs.com/" />
 
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.com/" />

@@ -1,10 +1,17 @@
 <!--
+	For rules causing false MCB, see Trend_Micro-falsemixed.xml.
+
 	For problematic rules, see Trend_Micro-problematic.xml.
 
 
 	CDN buckets:
 
 		- trend-fail.download.trendmicro.com.edgesuite.net
+
+		- global-web.trendmicro.com.edgesuite.net
+
+			- a489.g.akamai.net
+			- countermeasures.trendmicro.eu
 
 
 	Nonfunctional domains:
@@ -34,6 +41,40 @@
 
 		- countermeasures.trendmicro.eu		(works, akamai)
 
+
+	Partially covered domains:
+
+		- countermeasures.trendmicro.eu		(→ akamai)
+
+
+	Fully covered domains:
+
+		- trendmicro.com subdomains:
+
+			- corelib
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On blog from corelib *
+			- On blog from ajax.googleapis.com *
+
+		- css on blog from blog *
+		- Images on blog from blog *
+
+		- Web bugs:
+
+			- On blog from edge.quantserve.com *
+			- On blog from platform.twitter.com *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
 <ruleset name="Trend Micro (partial)">
 
@@ -41,18 +82,33 @@
 	<target host="*.trendmicro.com" />
 	<target host="trendmicro.eu" />
 	<target host="*.trendmicro.eu" />
+		<!--
+			Exclude pages so as to avoid false MCB:
+								-->
+		<exclusion pattern="^http://blog\.trendmicro\.com/(?![\w-]+/files/|wp-content/)" />
+		<!--
+			Exclude user-visible paths:
+							-->
+		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/(?!favicon\.ico|wp-content/)" />
+		<!--
+			styles.css links to image relative to /
+								-->
+		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/wp-content/plugins/youtube-channel-gallery/styles\.css" />
 
 
-	<securecookie host="^esupport\.trendmicro\.com$" name=".+" />
+	<securecookie host="^(?:\.blog|esupport)\.trendmicro\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?trendmicro\.com/"
+	<rule from="^http://(?:www\.)?trendmicro\.com/"
 		to="https://www.trendmicro.com/" />
 
-	<rule from="^http://(esupport|go)\.trendmicro\.com/"
+	<rule from="^http://(blog|corelib|esupport|go)\.trendmicro\.com/"
 		to="https://$1.trendmicro.com/" />
 
 	<rule from="^http://(partnerlocator\.|www\.)?trendmicro\.eu/"
 		to="https://$1trendmicro.eu/" />
+
+	<rule from="^http://countermeasures\.trendmicro\.eu/"
+		to="https://a248.e.akamai.net/f/489/2696/8m/countermeasures.trendmicro.eu/" />
 
 </ruleset>

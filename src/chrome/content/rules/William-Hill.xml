@@ -2,6 +2,11 @@
 	For problematic rules, see William-Hill-mismatches.xml
 
 
+	Other William Hill rulesets:
+
+		- AffUtd.com.xml
+
+
 	Nonfunctional:
 
 		- jobs-williamhill.com		(self-signed; shows Apache status)
@@ -9,31 +14,42 @@
 		- careers.williamhillplc.com	(interrupted)
 		- www.williamhillplc.com	(cert: www2.myinvestis.com, expired, self-signed; ssl_error_handshake_failure_alert)
 
--->
-<ruleset name="William Hill (partial)">
 
-	<target host="affutd.com" />
-	<target host="www.affutd.com" />
+	Fully covered domains:
+
+		- cmscdn.staticcache.org
+
+		- williamhill.com subdomains:
+
+			- files
+
+-->
+<ruleset name="William Hill (partial)" platform="mixedcontent">
+
+	<target host="cmscdn.staticcache.org" />
 	<target host="williamhill.com" />
 	<target host="*.williamhill.com" />
 
 
-	<securecookie host="^www\.affutd\.com$" name=".*" />
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.williamhill\.com$" name="^(?:banner_(?:domain)?click|clickinfo|fd_click|exp_\w+)" />
 	<!--	Lots of cross-domain cookies.  Are any used on
 		(unsecurable) sports?	-->
+	<!--securecookie host="^\.williamhill\.com$" name="^zname_extension$" /-->
 	<securecookie host="^\w+\.williamhill\.com$" name=".*" />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?affutd\.com/"
-		to="https://www.affutd.com/" />
+	<rule from="^http://cmscdn\.staticcache\.org/"
+		to="https://cmscdn.staticcache.org/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?williamhill\.com/"
+	<rule from="^http://(?:www\.)?williamhill\.com/"
 		to="https://www.williamhill.com/" />
 
-	<rule from="^http://cachemobile\.williamhill\.com/"
-		to="https://cachemobile.williamhill.com/" />
+	<rule from="^http://(cachemobile|files)\.williamhill\.com/"
+		to="https://$1.williamhill.com/" />
 
 	<!--	Advertisements included on 3rd-party websites.
 
@@ -41,7 +57,7 @@
 		path.  When rewritten to serve again with this
 		different path, it *doesn't* redirect back.
 					-->
-	<rule from="^https?://(?:cache)?serve\.williamhill\.com/"
+	<rule from="^http://(?:cache)?serve\.williamhill\.com/"
 		to="https://serve.williamhill.com/" />
 
 	<!--	whdn:
@@ -49,7 +65,7 @@
 			- Displays blank page
 			- Not on www
 					-->
-	<rule from="^https?://(?:sec|wh)dn\.williamhill\.com/"
+	<rule from="^http://(?:sec|wh)dn\.williamhill\.com/"
 		to="https://secdn.williamhill.com/" />
 
 	<!--	At least some pages redirect to http.	-->

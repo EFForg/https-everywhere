@@ -2,15 +2,46 @@
 	For other Gannett Company coverage, see Gannett-Company.xml.
 
 
+	CDN buckets:
+
+		- css.usatoday.com.edgesuite.net
+		- images.usatoday.com.edgesuite.net
+		- usatoday30.usatoday.com.edgesuite.net
+		- www.usatoday.com.edgesuite.net
+		- i.usatoday.net.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- css.usatoday.com *
+		- images.usatoday.com *
+		- usatoday30.usatoday.com *
+		- i.usatoday.net *
+
+	* 503, akamai
+
+
 	 Problematic domains:
 
+		- usatoday.com		(refused)
 		- onlinestore	(pages redirect to http; mismatched, CN: *.nexternal.com)
+		- www.usatoday.com	(works, akamai)
 
 -->
 <ruleset name="USA Today (partial)">
 
+	<target host="usatoday.com" />
 	<target host="*.usatoday.com" />
+		<!--
+			news/ points links to akamai.net/$
 
+			global-plain.css links to resources relative to /
+
+		<exclusion pattern="^http://www\.usatoday\.com/(?:global-plain\.css|news/)" /-->
+
+
+	<rule from="^http://(?:www\.)?usatoday\.com/(favicon\.ico|services/|static/images/)"
+		to="https://a248.e.akamai.net/f/534/1/1/www.usatoday.com/$1" />
 
 	<rule from="^http://onlinestore\.usatoday\.com/Net/"
 		to="https://www.nexternal.com/Net/" />

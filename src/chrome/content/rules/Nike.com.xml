@@ -122,13 +122,14 @@
 										-->
 		<!--exclusion pattern="^http://nikeplus\.nike\.com/plus/static/css/core/($|\?)" /-->
 		<!--exclusion pattern="^http://nikeplus\.nike\.com/(?!plus/(static/css/places_main/|static/css/logged_out_\w+/|static/js/|static/translations($|\?)|web/css/modules/activity_select\.css|web/images/|web/login/images/|web/login/js/)" /-->
-		<exclusion pattern="^http://nikevideo\.nike\.com/(?!\d+/[\w-]+\.jpg)" />
+		<!--exclusion pattern="^http://nikevideo\.nike\.com/(?!\d+/[\w-]+\.jpg)" /-->
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.nike\.com$" name="^(?:AnalysisUserId|ResonanceSegment|RES_TRACKINGID|s_\w+|utag_main)$" />
-	<securecookie host="^(?:help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|secure-store)\.nike\.com$" name=".+" />
+	<!--securecookie host="^(help-(?:all|de-de|de-eu|en-cn|en-eu|en-gb|en-us|es-eu|es-la|fr-eu|fr-fr|it-eu|ja-jp|nl-eu|pt-br|zh-tw)|secure-store)\.nike\.com$" name=".+" /-->
+	<securecookie host="^(?:help-[\w-]+|secure-store)\.nike\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?nike\.com/(/?apps/|/?content/|dat/tealeaftarget\.html|/?etc/|nikeos/scripts/)"
@@ -145,7 +146,7 @@
 
 	<!--	First, rewrite what we can to akamai:
 							-->
-	<rule from="^http://nikeplus\.nike\.com/(plus/(?:static/css/(?:places_main|logged_out_\w+)/|static/js/|static/translations(?:$|\?)|web/css/modules/activity_select\.css|web/images/|web/login/(?:image|j)s/))"
+	<rule from="^http://nikeplus\.nike\.com/(?=plus/(?:static/css/(?:places_main|logged_out_\w+)/|static/js/|static/translations(?:$|\?)|web/css/modules/activity_select\.css|web/images/|web/login/(?:image|j)s/))"
 		to="https://a248.e.akamai.net/f/1758/2152/1m/nikeplus.nike.com/" />
 
 	<!--	Now rewrite to secure-nikeplus css that links resources relative to /
@@ -156,7 +157,7 @@
 	<rule from="^http://nikeplus\.nike\.com/plus/static/css/core/"
 		to="https://secure-nikeplus.nike.com/plus/static/css/core/" />
 
-	<rule from="^http://nikevideo\.nike\.com/"
+	<rule from="^http://nikevideo\.nike\.com/(?=\d+/[\w-]+\.jpg)"
 		to="https://a248.e.akamai.net/f/1758/6850/6f/nikevideo.nike.com/" />
 
 	<rule from="^http://(?:secure-)?store\.nike\.com/"

@@ -1,19 +1,37 @@
 <!--
+	CDN buckets:
+
+		- edge.live.getpantheon.com
+
+			- maps
+
+		- ucsc.service-now.com
+
+
 	Nonfunctional subdomains:
 
 		- (www.) *
 		- admissions *
 		- advising *
+		- bas-04	(prints default page; mismatched, CN: bas-01.ucsc.edu)
+		- events *
 		- financialaid *
 		- its *
+		- maps-dev-d7	(shows clery-dev, valid cert)
 		- microbes	(shows archaea; expired 2009-02-12, CN: localhost.localdomain)
 		- news *
 		- opers1 *
+		- police *
 		- reg *
 		- registrar *
+		- risk *
 		- sbs *
+		- seymourcenter		(shows keys.pbsci; mismatched, CN: keys.pbsci.ucsc.edu)
+		- (www.)ssrc *
+		- ssrc.soe *
 		- static *
 		- studentservices *
+		- tobaccofree *
 
 	* Refused
 
@@ -23,20 +41,30 @@
 		- archaea		(works; expired 2009-02-12, CN: localhost.localdomain)
 		- email			(interrupted)
 		- hgdownload.cse	(works; CN: hgdownload)
+		- itrequest		(refused)
+		- maps			(works; mismatched, CN: *.gotpantheon.com)
+		- keys.pbsci		(works, self-signed)
+		- physicalsecurity	(works, self-signed)
 		- soe			(refused)
+		- ugr			(mismatched, CN: *.soe.ucsc.edu)
 
 
 	Fully covered subdomains:
 
+		- clery-dev
 		- cruzid
 		- cancer2.cse
 		- genome-cancer.cse
 		- email		(→ mail.google.com)
 		- (www.)genome
 		- genome-cancer
+		- itrequest		(→ ucsc.service-now.com)
+		- its-proposals-dev
 		- my
 		- (www.)soe	(^ → www)
 		- cbse.soe
+		- ugr.ue
+		- ugr		(→ ugr.eu)
 		- www1
 
 -->
@@ -49,7 +77,7 @@
 	<securecookie host="^(?:cruzid|(?:cancer2|genome-cancer)\.cse|www1)\.ucsc\.edu$" name=".+" />
 
 
-	<rule from="^http://(cruzid|(?:cancer2|genome-cancer)\.cse|(?:www\.)?genome|genome-cancer|my|cbse\.soe|www1)\.ucsc\.edu/"
+	<rule from="^http://(clery-dev|cruzid|(?:cancer2|genome-cancer)\.cse|(?:www\.)?genome|genome-cancer|its-proposals-dev|my|cbse\.soe|ugr\.ue|www1)\.ucsc\.edu/"
 		to="https://$1.ucsc.edu/" />
 
 	<!--	Server drops path:
@@ -59,5 +87,11 @@
 
 	<rule from="^http://(?:www\.)?soe\.ucsc\.edu/"
 		to="https://www.soe.ucsc.edu/" />
+
+	<rule from="^http://ugr\.ucsc\.edu/"
+		to="https://ugr.ue.ucsc.edu/" />
+
+	<rule from="^http://itrequest\.ucsc\.edu/[^\?]*(\?.*)?"
+		to="https://ucsc.service-now.com/ess/$1" />
 
 </ruleset>

@@ -6,8 +6,10 @@ INFO=3;
 NOTE=4;
 WARN=5;
 
-https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;
-o_httpsprefs = https_everywhere.get_prefs();
+https_everywhere = CC["@eff.org/https-everywhere;1"]
+  .getService(Components.interfaces.nsISupports)
+  .wrappedJSObject;
+
 rulesets = Array.slice(https_everywhere.https_rules.rulesets);
 
 const id_prefix = "he_enable";
@@ -40,7 +42,7 @@ function resetSelected() {
     sel.getRangeAt(t, start, end);
     for (var v = start.value; v <= end.value; v++){
       var rs = treeView.rules[v];
-      rs[rs.on_by_default ? "enable" : "disable"]();
+      rs.clear();
     }
   }
 }
@@ -117,7 +119,15 @@ function getValue(row, col) {
     case "note_col":
       return row.notes;
     case "enabled_col":
-      return o_httpsprefs.getBoolPref(row.name) ? "true" : "false";
+      return https_everywhere.https_rules.rulesetsByName[row.name].active;
+      /*var ruleActive = false;
+      try {
+        if(https_everywhere.rule_toggle_prefs.getBoolPref(row.name))
+          ruleActive = true;
+      } catch(e) {
+        ruleActive = https_everywhere.https_rules.rulesetsByName[row.name].active;
+      }
+      return ruleActive;*/
     default:
       return;
   }

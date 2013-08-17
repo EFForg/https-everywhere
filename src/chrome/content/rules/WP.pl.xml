@@ -1,0 +1,159 @@
+<!--
+	Wirtualna Polska SA
+
+	For problematic rules, see WP.pl-problematic.xml.
+
+
+	CDN buckets:
+
+		- wp.ebrokerpartner.pl
+
+			- finansomat.wp.pl
+
+		- calisto.netpr.pl 
+
+			- dlaprasy.wp.pl
+
+
+	Nonfunctional domains:
+
+		- wp.pl subdomains:
+
+			- (www.) *
+			- biznes *
+			- dlaprasy	(shows secure.netpr.pl; mismatched, CN: secure.netpr.pl)
+			- dzieci *
+			- ebiznes *
+			- ekstraklasa *
+			- erotyka *
+			- euro *
+			- facet *
+			- fantasyliga *
+			- i.fantasyliga *
+			- film *
+			- finanse *
+			- finansomat	(shows panel.cod.org.pl; mismatched, CN: panel.cod.org.pl)
+			- fitness **
+			- i.fitness **
+			- gielda *
+			- gry **
+			- i.gry **
+			- horoskop *
+			- kalendarz *
+			- kobieta *
+			- kontakty *
+			- info.mini *
+			- mobilna *
+			- moto *
+			- muzyka *
+			- newsletter *
+			- ogloszenia *
+			- onas *
+			- outbox *
+			- poczta	(redirects to profil, valid cert)
+			- pogoda *
+			- pomoc *
+			- prawnikonline *
+			- przewodnik *
+			- reklama **
+			- i.reklama **
+			- rekrutacja *
+			- rss *
+			- rtvagd *
+			- sport *
+			- biznes.szukaj *
+			- tech *
+			- topnews *
+			- tv *
+			- twojeip *
+			- wiadomosci *
+			- wikipedia *
+			- get-2.wpapi *
+
+		- x.wpimg.pl *
+		- y.wpimg.pl *
+
+	* Refused
+	** Dropped
+
+
+	Problematic domains:
+
+		- diety.wp.pl	(works; mismatched, CN: *.vitalia.pl)
+		- b.wpimg.pl	(works; mismatched, CN: a.wpimg.pl)
+		- c.wpimg.pl	(works; mismatched, CN: i.wp.pl)
+		- i.wpimg.pl *
+		- j.wpimg.pl *
+
+	* Works; mismatched, CN: ir.i.wp.pl
+
+
+	Partially covered subdomains:
+
+		- agito *
+		- profil *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- wp.pl subdomains:
+
+			- i
+			- ir.i
+			- m.poczta
+			- adv.reklama
+			- si
+			- ticket.www
+
+		- wplimg.pl subdomains:
+
+			- a
+			- b	(→ a)
+			- c	(→ i.wp.pl)
+			- i	(→ ir.i.wp.pl)
+			- j	(→ ir.i.wp.pl)
+
+
+	Mixed content:
+
+		- Images on ticket.www.wp.pl from i.wp.pl *
+
+	* Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="WP.pl (partial)">
+
+	<target host="*.wp.pl" />
+		<!--exclusion pattern="^http://agito\.wp\.pl/(?:$|\?)" /-->
+		<exclusion pattern="^http://agito\.wp\.pl/(?!favicon\.ico|skin/)" />
+		<!--exclusion pattern="^http://profil\.wp\.pl/(?:wizytowka\.html)?(?:$|\?)" /-->
+		<exclusion pattern="^http://profile\.wp\.pl/(?!css/|favicon\.ico|login\.html|obrazek\.html)" />
+		<!--exclusion pattern="^http://www\." /-->
+	<target host="*.wpimg.pl" />
+
+
+	<securecookie host="^\.wp\.pl$" name="^statid$" />
+	<!--
+		Can we secure any of these safely?
+							-->
+	<!--securecookie host="^\.wp\.pl$" name="^(reksticket|rekticket|smarjfyrggredticket|smgredticket|smgrodticket|testwpd|WP-cookie-info|wpdticket)$" /-->
+	<!--securecookie host="^\.poczta\.wp\.pl$" name="^s$" /-->
+	<securecookie host="^(?:i|adv\.reklama|ticket\.www)\.wp\.pl$" name=".+" />
+	<securecookie host="^a\.wpimg\.pl$" name=".+" />
+
+
+	<rule from="^http://(agito|s?i|ir\.i|m\.poczta|profil|adv\.reklama|ticket\.www)\.wp\.pl/"
+		to="https://$1.wp.pl/" />
+
+	<rule from="^http://[ab]\.wpimg\.pl/"
+		to="https://a.wpimg.pl/" />
+
+	<rule from="^http://c\.wpimg\.pl/"
+		to="https://i.wp.pl/" />
+
+	<rule from="^http://[ij]\.wpimg\.pl/"
+		to="https://ir.i.wp.pl/" />
+
+</ruleset>

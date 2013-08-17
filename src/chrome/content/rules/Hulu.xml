@@ -1,15 +1,39 @@
+<!--
+	CDN buckets:
+
+		- t2.hulu.com.edgesuite.net
+
+			- a268.b.akamai.net
+
+		- www.hulu.com.edgesuite.net
+
+		- ib.huluim.com.edgesuite.net
+
+			- a1697.b.akamai.net
+			- ib2.huluim.com
+
+		- static.huluim.com.edgesuite.net
+
+			- a1495.b.akamai.net
+
+-->
 <ruleset name="Hulu (partial)" default_off="mismatch">
 
 	<!--	Akamai	-->
 	<target host="hulu.com" />
-	<target host="www.hulu.com" />
+	<target host="*.hulu.com" />
+		<exclusion pattern="^http://(?:www\.)?hulu\.com/(?!images/)" />
 	<target host="*.huluim.com" />
 
 
-	<!--	(www.)hulu.com 301s to http.
-						-->
-	<rule from="^https?://(?:www\.)?hulu\.com/images/"
-		to="https://static.huluim.com/images/" />
+	<rule from="^http://(?:(?:www\.)?hulu|static\.huluim)\.com/"
+		to="https://a248.e.akamai.net/f/1810/2198/8m/static.huluim.com/" />
+
+	<rule from="^http://t2\.hulu\.com/"
+		to="https://a248.e.akamai.net/f/268/3148/3d/t2.hulu.com/" />
+
+	<rule from="^http://ib(2)?\.huluim\.com/"
+		to="https://a248.e.akamai.net/f/1697/9057/2h/ib$1.huluim.com/" />
 
 	<!--	Observed subdomains:
 
@@ -17,7 +41,7 @@
 			- static
 			- thumbnails
 					-->
-	<rule from="^http://(\w+)\.huluim\.com/"
-		to="https://$1.huluim.com/" />
+	<!--rule from="^http://(\w+)\.huluim\.com/"
+		to="https://$1.huluim.com/" /-->
 
 </ruleset>

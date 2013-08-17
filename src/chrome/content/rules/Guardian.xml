@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see Guardian-problematic.xml.
+
+
 	CDN buckets:
 
 		- soulmates-614848966.eu-west-1.elb.amazonaws.com
@@ -8,11 +11,33 @@
 		- combo.guim.co.uk.edgesuite.net
 		- resource.guim.co.uk.edgesuite.net
 		- static.guim.co.uk.edgesuite.net
+		- m.guardian.co.uk.global.prod.fastly.net
+		- www.guardian.co.uk.global.prod.fastly.net
+
+		- discussion.guardianapis.com.c.footprint.net
+
+			- flxcon.guim.co.uk
+
+		- ssl-pasteup.guim.co.uk.c.footprint.net 
+
+		- static-l3.guim.co.uk.c.footprint.net
+
+			- combo.guim.co.uk
+			- resource.guim.co.uk
+
 		- audio.theguardian.tv.c.footprint.net
 
 		- cdn.theguardian.com.c.footprint.net
 
 			- cdn.theguardian.tv
+
+		- ghs.googlehosted.com
+
+			- discussion.guardian.co.uk
+
+		- partners.simplifydigital.co.uk
+
+			- www.guardiandigitalcomparison.co.uk
 
 
 	- guardian.co.uk.112.2o7.net/b/ss/guardiangu-network,guardiangu-mobile/
@@ -20,16 +45,24 @@
 
 	Nonfunctional domains:
 
+		- discussion.guardian.co.uk ***
 		- discussionapi.guardian.co.uk *
 		- m.guardian.co.uk		(times out)
-		- www.guardian.co.uk *
+		- syndication.guardian.co.uk *
+		- www.guardian.co.uk		(404; mismatched, CN: *.a.ssl.fastly.net)
+		- www.theguardian.com		(404; mismatched, CN: *.a.ssl.fastly.net)
+		- discussion.guardianapis.com *
+		- www.guardiandigitalcomparison.co.uk *
 		- combo.guim.co.uk **
+		- discussion.guim.co.uk ***
+		- flxcon.guim.co.uk *
 		- resource.guim.co.uk **
 		- audio.theguardian.tv *
 		- cdn.theguardian.tv *
 
 	* Times out
 	** 404, Akamai
+	*** Interrupted
 
 
 	Problematic domains:
@@ -39,11 +72,14 @@
 			- download *
 			- hits			(mismatched, CN: *.112.2o7.net)
 			- image *
+			- syndweb		(works, self-signed, CN: localhost.localdomain, expired 2008-10-08)
 
 		- i.guim.co.uk			(times out)
+		- id.guim.co.uk **
 		- static.guim.co.uk		(akamai)
 
 	* Cert only matches (www.)guim.co.uk
+	** Dropped
 
 
 	Partially covered domains:
@@ -69,8 +105,12 @@
 
 		- guim.co.uk subdomains:
 
+			- id		(→ id.guardian.co.uk)
 			- (www.)image
+			- pasteup
 			- (www.)static	(→ image)
+
+		- oas.theguardian.com
 
 -->
 <ruleset name="The Guardian (partial)">
@@ -89,11 +129,17 @@
 	<target host="www.guardianeatright.co.uk" />
 	<target host="*.guardianoffers.co.uk" />
 	<target host="*.guim.co.uk" />
+	<target host="*.theguardian.com" />
 
 
 	<securecookie host="^\.guardian\.co\.uk$" name="^(?:NXCLICK2|OAX|s_.+s)$" />
-	<securecookie host="^(?:soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
+	<securecookie host="^(?:oas|soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
 	<securecookie host="^(?:.*\.)?guardianeatright\.co\.uk$" name=".+" />
+	<!--
+		Tracking cookies set by oas.theguardian.com:
+								-->
+	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH])$" />
+	<securecookie host="^oas\.theguardian\.com$" name=".+" />
 
 
 	<rule from="^https?://www\.guardian\.co\.uk/favicon\.ico"
@@ -119,5 +165,14 @@
 
 	<rule from="^http://(\w+)\.guardianoffers\.co\.uk/(AddtoBasket\.asp|checkout\.asp|(?:BrandImages|images|lib|ProductImages|scripts|SKUImages|styles)/)"
 		to="https://$1.guardianoffers.co.uk/$2" />
+
+	<rule from="^http://id\.guim\.co\.uk/"
+		to="https://id.guardian.co.uk/" />
+
+	<rule from="^http://pasteup\.guim\.co\.uk/"
+		to="https://pasteup.guim.co.uk/" />
+
+	<rule from="^http://oas\.theguardian\.com/"
+		to="https://oas.theguardian.com/" />
 
 </ruleset>

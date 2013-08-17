@@ -3,26 +3,36 @@
 
 		- blog
 
+
+	Problematic subdomains:
+
+		- ^	(dropped)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- ih
+		- js
+		- rh
+
 -->
 <ruleset name="adscale">
 
 	<target host="adscale.de" />
 	<target host="*.adscale.de" />
-	<!--	* for cross-subdomain cookie.	-->
-	<target host="*.ih.adscale.de" />
 
 
-	<securecookie host="^.*\.adscale\.de$" name=".*" />
+	<!--securecookie host="^\.adscale\.de$" name="^uu$" /-->
+	<securecookie host=".*\.adscale\.de$" name=".+" />
 
 
-	<!--	- !www doesn't work over https
-		- !www redirects to www over http
-				-->
-	<rule from="^https?://(?:www\.)?adscale\.de/"
+	<rule from="^http://(?:www\.)?adscale\.de/"
 		to="https://www.adscale.de/" />
 
-	<!--	Included on 3rd-party websites.	-->
-	<rule from="^http://(ih|js)\.adscale\.de/"
+	<!--	Included on 3rd-party websites:
+						-->
+	<rule from="^http://(ih|js|rh)\.adscale\.de/"
 		to="https://$1.adscale.de/" />
 
 </ruleset>

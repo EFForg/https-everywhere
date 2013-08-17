@@ -1,0 +1,38 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(mismatched, CN: www.nbnco.com.au)
+		- www	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ www1)
+		- autodiscover
+		- exch-cas-[12]
+		- outlook
+		- outlook[12]
+		- www[12]
+
+-->
+<ruleset name="NBN Co.com.au">
+
+	<target host="nbnco.com.au" />
+	<target host="*.nbnco.com.au" />
+		<!--exclusion pattern="^http://(www\.)?nbnco\.com\.au/(?!(contact-us|subscriptions($|[?/])|content/|etc/)" /-->
+
+
+	<!--	Tracking cookies:
+					-->
+	<!--securecookie host="^\.nbnco\.com\.au$" name="^(gpv_p\w|mbox|s_\w+)$" /-->
+	<!--securecookie host="^\.nbnco\.com\.au$" name="^cmgvo$" /-->
+	<securecookie host="^(?:www\d?)?\.nbnco\.com\.au$" name=".+" />
+
+
+	<rule from="^http://(?:www1?\.)?nbnco\.com\.au/"
+		to="https://www1.nbnco.com.au/" />
+
+	<rule from="^http://(autodiscover|exch-cas-[12]|outlook\d?|www2)\.nbnco\.com\.au/"
+		to="https://$1.nbnco.com.au/" />
+
+</ruleset>

@@ -1,20 +1,19 @@
 <!--
-	For problematic rules, see ACM.org-mismatches.xml.
-
-
 	CDN buckets:
 
-		- deliveryimages.acm.org.edgesuite.net/.../
+		- deliveryimages.acm.org.edgesuite.net
 
-			- a1907.g.akamai.net/.../
+			- a1907.g.akamai.net
 
 		- portalparts.acm.org.edgesuite.net
+
+			- a1896.g.akamai.net
 
 
 	acm.org lacks proper ssl for the following subdomains
 
 		- awards		<- stacktrace for coldfusion
-		- dev			<- shows www data
+		- dev			<- shows www
 		- jobs			<- sends to jobtarget.com
 		- librarians		<- displays what appears to be
 					   an old version of the website.
@@ -23,7 +22,10 @@
 
 	Problematic subdomains:
 
-		- portalparts		(works, akamai)
+		- deliveryimages *
+		- portalparts *
+
+	* Works, akamai
 
 
 	Partially covered subdomains:
@@ -31,20 +33,61 @@
 		- cacm		(some pages redirect to http)
 
 
-	Mixed image on campus from portalparts
+	Fully covered subdomains:
+
+		- (www.)
+		- cacm
+		- campus
+		- deliveryimages *
+		- dl
+		- myacm
+		- plone
+		- portal
+		- portalparts *
+		- queue
+		- techpack
+
+	* → akamai
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- on www from www *
+
+		- css:
+
+			- On www from www *
+
+		- Images:
+
+			- On campus from portalparts *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	platform should be removed with Ffx 24.
 
 -->
-<ruleset name="ACM.org (partial)">
+<ruleset name="ACM.org (partial)" platform="mixedcontent">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
 		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
 
-	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".*" />
+	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".+" />
 
 
 	<rule from="^http://((?:cacm|campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
 		to="https://$1acm.org/" />
+
+	<rule from="^http://deliveryimages\.acm\.org/"
+		to="https://a248.e.akamai.net/f/1097/1823/7m/deliveryimages.acm.org/" />
+
+	<rule from="^http://portalparts\.acm\.org/"
+		to="https://a248.e.akamai.net/f/1896/8636/1d/portalparts.acm.org/" />
 
 </ruleset>

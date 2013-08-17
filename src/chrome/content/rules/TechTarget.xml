@@ -1,9 +1,51 @@
+<!--
+	CDN buckets:
+
+		- cdn.ttgtmedia.com.cdngc.net
+
+		- irsolutions.snl.com
+
+			- investor
+
+
+	Nonfunctional domains:
+
+		- techtarget.com subdomains:
+
+			- investor *
+			- searchsecurity *
+			- users		(refused)
+
+		- cdn.ttgtmedia.com		(403; mismatched, CN: ssl2.cdngc.net)
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^	(dropped)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- media
+		- techtargetsummit
+
+-->
 <ruleset name="TechTarget (partial)">
 
-	<target host="media.techtarget.com"/>
+	<target host="techtarget.com" />
+	<target host="*.techtarget.com" />
 
-	<rule from="^http://media\.techtarget\.com/" to="https://media.techtarget.com/"/>
 
-	<securecookie host="^media\.techtarget\.com$" name=".*"/>
+	<securecookie host="^(?:media|techtargetsummit|www)\.techtarget\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?techtarget\.com/"
+		to="https://www.techtarget.com/" />
+
+	<rule from="^http://(media|techtargetsummit)\.techtarget\.com/"
+		to="https://$1.techtarget.com/" />
 
 </ruleset>

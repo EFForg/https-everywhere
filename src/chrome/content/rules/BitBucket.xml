@@ -1,15 +1,33 @@
 <!--
 	For problematic rules, see BitBucket-mismatches.xml.
 
+	For other Atlassian coverage, see Atlassian.xml.
 
-	s3.amazonaws.com/bitbucket-assetroot/
-	dwz7u9t8u8usb.cloudfront.net
+
+	CDN buckets:
+
+		- s3.amazonaws.com/bitbucket-assetroot/
+		- dwz7u9t8u8usb.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- blog		(redirects to http, wpengine)
+		- status	(refused)
+
+
+	Problematic subdomains:
+
+		- portix	(works; mismatched, CN: bitbucket.org)
 
 -->
-<ruleset name="BitBucket">
+<ruleset name="BitBucket (partial)">
 
 	<target host="bitbucket.org" />
-	<target host="www.bitbucket.org" />
+	<target host="*.bitbucket.org" />
+
+
+	<securecookie host="^\.?bitbucket\.org$" name=".+" />
 
 
 	<rule from="^http://(www\.)?bitbucket\.org/"

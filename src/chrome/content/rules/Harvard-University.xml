@@ -11,6 +11,7 @@
 		- cleanslate		(redirects to cleanslate-stanford-edu.360designstudio.net; mismatched, CN: *.bluehost.com)
 		- news *
 		- reference.pin		(reused_issuer_and_serial)
+		- people.seas *
 		- worldmap *
 
 	* Times out
@@ -25,9 +26,11 @@
 		- pin *
 		- www.pin	($ redirects to http)
 		- pngu.mgh	(expired)
+		- saas **
 		- yuba			(works; expired 2008-04-16, CN: localhost.localdomain)
 
 	* Mismatched
+	** Cert only matches www.saas
 
 
 	Partially covered subdomains:
@@ -52,6 +55,7 @@
 			- eon *		(→ cyber.law.harvard.edu)
 
 		- www.pin1
+		- (www.)saas		(^ → www)
 
 	* www.foo doesn't exist
 
@@ -60,27 +64,35 @@
 
 		- *.cyber.law.harvard.edu
 
+
+	Mixed content:
+
+		- Image on www.saas from seasdev.prod.acquia-sites.com *
+
+	* Doesn't trip MCB
+
 -->
 <ruleset name="Harvard University (partial)">
 
 	<target host="*.harvard.edu" />
-		<exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" />
+		<!--exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" /-->
+		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
 		<exclusion pattern="^http://isites\.harvard\.edu/(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
 
 
-	<securecookie host="^(?:login\.icommons|.*\.law|www\.pin1)\.harvard\.edu$" name=".+" />
+	<securecookie host="^(?:login\.icommons|.*\.law|www\.pin1|www\.seas)\.harvard\.edu$" name=".+" />
 
 
 	<rule from="^http://www\.pin\.harvard\.edu/(?:$|\?.*)"
 		to="https://www.pin.harvard.edu/home.shtml" />
 
-	<rule from="^https?://(?:www\.)?(berkman|hsph|pin)\.harvard\.edu/"
+	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
 
 	<rule from="^http://(www\.cfa|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
 		to="https://$1.harvard.edu/" />
 
-	<rule from="^https?://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
+	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
 		to="https://cyber.law.harvard.edu/" />
 
 </ruleset>

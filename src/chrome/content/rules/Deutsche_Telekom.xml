@@ -9,17 +9,44 @@
 
 		- tv.telekom.com	(times out)
 
+
+	Fully covered domains:
+
+		- login.idm.telekom.com
+		- accounts.login.idm.telekom.com
+
+		- telekom.de subdomains:
+
+			- (www.)forum
+			- fotoservice
+			- hilfe
+			- konferenzen
+			- kundencenter
+			- mwl
+			- videomeet
+
+		- meinkonto.telekom-dienste.de
+
+
+	Mixed web bug on (www.)forum.telekom.de from stats.t-online.de
+
 -->
 <ruleset name="Deutsche Telekom">
 
 	<target host="telekom.com" />
-	<target host="www.telekom.com" />
+	<target host="*.telekom.com" />
 	<target host="telekom.de" />
 	<target host="www.telekom.de" />
 	<target host="www.wtpx-telekom.com" />
 
 
-	<securecookie host="^www\.telekom\.de$" name=".+" />
+	<securecookie host="^(?:accounts\.login)?\.idm\.telekom\.com$" name=".+" />
+	<!--
+		Are these tracking cookies?
+						-->
+	<!--securecookie host="^\.telekom\.de$" name="^(xtan|xtant|xtvrn)$" /-->
+	<securecookie host="^(?:(?:www\.)?forum|fotoservice|\.?hilfe|konferenzen|kundencenter|mwl|www)\.telekom\.de$" name=".+" />
+	<securecookie host="^meinkonto\.telekom-dienste\.de$" name=".+" />
 	<securecookie host="^www\.wtpx-telekom\.com$" name=".+" />
 
 
@@ -27,6 +54,15 @@
 					-->
 	<rule from="^https?://(?:www\.)?telekom\.(com|de)/"
 		to="https://www.telekom.$1/" />
+
+	<rule from="^http://(accounts\.)?login\.idm\.telekom\.com/"
+		to="https://$1login.idm.telekom.com/" />
+
+	<rule from="^http://((?:www\.)?forum|fotoservice|hilfe|konferenzen|kundencenter|mwl|videomeet)\.telekom\.de/"
+		to="https://$1.telekom.de/" />
+
+	<rule from="^http://meinkonto\.telekom-dienste\.de/"
+		to="https://meinkonto.telekom-dienste.de/" />
 
 	<!--	!www doesn't exist.
 					-->

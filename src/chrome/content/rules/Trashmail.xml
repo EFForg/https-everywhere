@@ -1,6 +1,19 @@
-<ruleset name="Trashmail">
-  <target host="trashmail.net" />
-  <target host="www.trashmail.net" />
+<!--
+	Problematic subdomains:
 
-  <rule from="^http://(?:www\.)?trashmail\.net/" to="https://ssl.trashmail.net/"/>
+		- (www.)	(redirects to ssl; mismatched, CN: ssl.trashmail.net)
+
+-->
+<ruleset name="Trashmail">
+
+	<target host="trashmail.net" />
+	<target host="*.trashmail.net" />
+
+
+	<securecookie host="^\.?ssl\.trashmail\.net$" name=".+" />
+
+
+	<rule from="^http://(?:ssl\.|www\.)?trashmail\.net/"
+		to="https://ssl.trashmail.net/" />
+
 </ruleset>

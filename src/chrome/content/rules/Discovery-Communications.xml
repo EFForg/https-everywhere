@@ -1,17 +1,21 @@
 <!--
-	For problematic rules, see Discovery-Communications-mismatches.xml.
-
-
-	discovery.custhelp.com
-
-
 	CDN buckets:
 
+		- discovery.custhelp.com
 		- dsc.discovery.com.edgesuite.net
 		- games.dsc.discovery.com.edgesuite.net
+
 		- netstorage.discovery.com.edgesuite.net
+
+			- a681.g.akamai.net
+
 		- news.discovery.com.edgesuite.net
-			- a1840.g.akamai.net/.../
+
+			- a1840.g.akamai.net
+
+		- dsc-static.edgesuite.net
+
+			- r.ddmcdn.com
 
 		- static.howstuffworks.com.edgesuite.net
 
@@ -23,22 +27,41 @@
 		- discovery.com subdomains:
 
 			- blogs
-			- dsc		(Akamai; prints "This Discovery web
-					site is down for scheduled maintenance")
-			- games.dsc	(times out)
-			- news		(Akamai; 504)
+			- dsc		(prints "This Discovery web site is down
+					for scheduled maintenance", akamai)
+			- games.dsc	(dropped)
+			- news *
 
-		- static.ddmcdn.com	(504, akamai)
+		- r.ddmcdn.com *
+		- static.ddmcdn.com *
+
+	* 504, akamai
+
+
+	Problematic domains:
+
+		- netstorage.discovery.com *
+		- store.discovery.com *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- discovery.com subdomains:
+
+			- netstorage	(→ akamai)
 
 -->
 <ruleset name="Discovery Communications (partial)">
 
-	<target host="store.discovery.com" />
-	<target host="securestore.discovery.com" />
+	<target host="*.discovery.com" />
 
 
-	<!--	//store.: Akamai	-->
-	<rule from="^https?://(?:secure)?store\.discovery\.com/"
+	<rule from="^http://netstorage\.discovery\.com/"
+		to="https://a248.e.akamai.net/f/681/7401/5m/netstorage.discovery.com/" />
+
+	<rule from="^http://(?:secure)?store\.discovery\.com/"
 		to="https://securestore.discovery.com/" />
 
 </ruleset>

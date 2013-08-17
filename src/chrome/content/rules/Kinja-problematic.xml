@@ -5,10 +5,23 @@
 <ruleset name="Kinja (problematic)" default_off="mismatched">
 
 	<target host="kinja.com" />
-	<target host="www.kinja.com" />
+	<target host="*.kinja.com" />
 
 
-	<rule from="^https?://(?:www\.)?kinja\.com/assets/"
-		to="https://www.kinja.com/assets/" />
+	<securecookie host="^\.?kinja\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?kinja\.com/"
+		to="https://kinja.com/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://gawker\.kinja\.com/"
+		to="https://gawker.com/" />
+
+	<!--	Per-author subdomains:
+					-->
+	<rule from="^http://([\w-]+)\.kinja\.com/"
+		to="https://$1.kinja.com/" />
 
 </ruleset>

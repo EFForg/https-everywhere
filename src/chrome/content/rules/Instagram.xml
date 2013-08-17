@@ -1,8 +1,9 @@
 <!--
 	CDN buckets:
 
-		- distillery.s3.amazonaws.com
-		- s3.amazonaws.com/instagram-static/
+		- distillery.s3.amazonaws.com | d18txuuu339yuz.cloudfront.net
+
+			- images.instagram.com
 
 		- d17c70w5wkxq2m.cloudfront.net
 			- distilleryimage7.instagram.com
@@ -42,7 +43,15 @@
 		- doa9ijhk46qwf.cloudfront.net
 			- distilleryimage3.instagram.com
 
+		- instagram-static.s3.amazonaws.com
+
+		- distilleryimage1.ak.instagram.com.edgesuite.net
+
+			- a1402.dspw40.akamai.net
+
 		- images.ak.instagram.com.edgesuite.net
+
+			- a1404.dspw42.akamai.net
 
 
 	Nonfunctional domains:
@@ -52,7 +61,11 @@
 
 	Problematic domains:
 
-		- help.instagram.com	(works; mismatched, CN: instagram.com)
+		- instagram.com subdomains:
+
+			- images1.ak	(works, akamai)
+			- help		(works; mismatched, CN: instagram.com)
+			- www		(works, cert only matches ^instagram.com)
 
 
 	Partially covered domains:
@@ -62,17 +75,22 @@
 
 	Fully covered instagram.com subdomains:
 
-		- images.ak
+		- images.ak *
+		- images1.ak *
 		- api
 		- badges
-		- distilleryimage[1-9]
-		- distilleryimage1[12]
-		- images
+		- distilleryimage[1-9] **
+		- distilleryimage1[12] **
+		- images *
+
+	* → akamai
+	** → cloudfront
 
 -->
 <ruleset name="Instagram (partial)">
 
 	<target host="instagr.am" />
+	<target host="instagram.com" />
 	<target host="*.instagram.com" />
 
 
@@ -88,40 +106,52 @@
 	<rule from="^http://instagr\.am/(p|static)/"
 		to="https://instagr.am/$1/" />
 
+	<rule from="^http://(?:www\.)?instagram\.com/favicon\.ico"
+		to="https://instagram.com/favicon.ico" />
+
+	<rule from="^http://images\.ak\.instagram\.com/"
+		to="https://a248.e.akamai.net/f/1404/2456/3m/images.ak.instagram.com/" />
+
+	<rule from="^http://images1\.ak\.instagram\.com/"
+		to="https://a248.e.akamai.net/f/1402/3840/4m/images1.ak.instagram.com/" />
+
 	<rule from="^http://(api|badges)\.instagram\.com/"
 		to="https://$1.instagram.com/" />
 
-	<rule from="^https?://distilleryimage([12])\.instagram\.com/"
-		to="https://distilleryimage$1.s3.amazonaws.com/" />
+	<rule from="^http://distilleryimage1\.instagram\.com/"
+		to="https://d1ae3bdqlkjebx.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage3\.instagram\.com/"
+	<rule from="^http://distilleryimage2\.instagram\.com/"
+		to="https://d2vdurooumowqn.cloudfront.net/" />
+
+	<rule from="^http://distilleryimage3\.instagram\.com/"
 		to="https://doa9ijhk46qwf.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage4\.instagram\.com/"
+	<rule from="^http://distilleryimage4\.instagram\.com/"
 		to="https://d24elmu442q75h.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage5\.instagram\.com/"
+	<rule from="^http://distilleryimage5\.instagram\.com/"
 		to="https://d1uysd8m4iv3h8.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage6\.instagram\.com/"
+	<rule from="^http://distilleryimage6\.instagram\.com/"
 		to="https://d2aqnk7wh4vqhb.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage7\.instagram\.com/"
+	<rule from="^http://distilleryimage7\.instagram\.com/"
 		to="https://d17c70w5wkxq2m.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage8\.instagram\.com/"
+	<rule from="^http://distilleryimage8\.instagram\.com/"
 		to="https://d2nms3640z5x8l.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage9\.instagram\.com/"
+	<rule from="^http://distilleryimage9\.instagram\.com/"
 		to="https://d2x3khweh61zds.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage10\.instagram\.com/"
+	<rule from="^http://distilleryimage10\.instagram\.com/"
 		to="https://d34sa3fuqtuf2w.cloudfront.net/" />
 
-	<rule from="^https?://distilleryimage11\.instagram\.com/"
+	<rule from="^http://distilleryimage11\.instagram\.com/"
 		to="https://d1z5wd2gcq19yd.cloudfront.net/" />
 
-	<rule from="^https?://images(?:\.ak)?\.instagram\.com/"
-		to="https://distillery.s3.amazonaws.com/" />
+	<rule from="^http://images\.instagram\.com/"
+		to="https://d18txuuu339yuz.cloudfront.net/" />
 
 </ruleset>

@@ -1,13 +1,46 @@
+<!--
+	CDN buckets:
+
+		- media1.gameinformer.edgesuite.net
+
+		- optimizedresources.gamestop.com.edgesuite.net
+
+			- a1910.b.akamai.net
+			- media-2
+
+
+	Nonfunctional subdomains:
+
+		- media1	(504, akamai)
+
+
+	Problematic subdomains:
+
+		- media-2	(works, akamai)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- media-2	(→ akamai)
+
+
+	Mixed images on www from media1
+
+-->
 <ruleset name="GameInformer (partial)">
 
 	<target host="gameinformer.com" />
-	<target host="www.gameinformer.com" />
+	<target host="*.gameinformer.com" />
 
-	<rule from="^http://gameinformer\.com/"
-		to="https://gameinformer.com/" />
 
-	<!--	This is it.  No, really.	-->
-	<rule from="^http://www\.gameinformer\.com/login\.aspx"
-		to="https://www.gameinformer.com/login.aspx" />
+	<securecookie host="^(?:www)?\.gameinformer\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?gameinformer\.com/"
+		to="https://$1gameinformer.com/" />
+
+	<rule from="^http://media-2\.gameinformer\.com/"
+		to="https://a248.e.akamai.net/f/1910/8732/10h/media-2.gameinformer.com/" />
 
 </ruleset>

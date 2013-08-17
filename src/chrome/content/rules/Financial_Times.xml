@@ -1,8 +1,11 @@
 <!--
 	CDN buckets:
 
+		- media.ft.com.edgesuite.net
 		- s1.media.ft.com.edgesuite.net
 		- search.ft.com.edgesuite.net 
+		- www.ft.com.edgesuite.net
+		- im.ft-static.com.edgesuite.net
 		- s[1-4].ft-static.com.edgesuite.net
 
 
@@ -11,6 +14,7 @@
 		- ft.com subdomains:
 
 			- ^			(times out)
+			- aboutus *
 			- blogs			(503, akamai)
 			- media *
 			- s1.media *
@@ -23,6 +27,7 @@
 		- im.ft-static.com *
 		- s1.ft-static.com *
 
+	* 503, akamai
 	* Redirects to www.ft.com, akamai
 
 
@@ -33,17 +38,35 @@
 
 	Partially covered domains:
 
-		- registration.ft.com		(some pages redirect to http)
+		- markets.ft.com *
+		- registration.ft.com *
+
+	* Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- ft.com subdomains:
+
+			- cdn.markets
+			- stats
+			- track
 
 -->
 <ruleset name="Financial Times (partial)">
 
 	<target host="*.ft.com" />
-		<exclusion pattern="^http://registration\.ft\.com/(?!Common/|registration/barrier)" />
+		<exclusion pattern="^http://markets\.ft\.com/(?!favicon\.ico|RESEARCH/uploadhandler/)" />
+		<exclusion pattern="^http://registration\.ft\.com/(?!Common/|favicon\.ico|registration/barrier)" />
 	<target host="*.ft-static.com" />
 
 
-	<rule from="^http://(force|(?:api|orc)\.memb|registration)\.ft\.com/"
+	<!--	Tracking cookies set by track:
+						-->
+	<securecookie host="^\.ft\.com$" name="^(?:AYSC|AYSC_C|FTUserTrack)$" />
+
+
+	<rule from="^http://(force|(?:cdn\.)?markets|(?:api|orc)\.memb|registration|stats|track)\.ft\.com/"
 		to="https://$1.ft.com/" />
 
 	<rule from="^http://s4\.media\.ft\.com/"

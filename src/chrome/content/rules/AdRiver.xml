@@ -1,22 +1,38 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- ad
+		- ad[rs]
+		- content
+		- edp[12]
+		- masterh[1-8]
+
+-->
 <ruleset name="AdRiver">
 
 	<target host="adriver.ru" />
 	<target host="*.adriver.ru" />
 
 
-	<!--	Set by ad:
-				-->
-	<securecookie host="^\.adriver\.ru$" name="^[cu]id$" />
+	<!--	Tracking cookies:
+
+			name="(1d|ar_sss|cid|rs|sd|sid)
+							-->
+	<securecookie host="^\.adriver\.ru$" name=".+" />
 
 
-	<!--	Cert only matches *.adriver.ru.
-						-->
-	<rule from="^https?://(?:www\.)?adriver\.ru/"
+	<rule from="^http://(?:www\.)?adriver\.ru/"
 		to="https://www.adriver.ru/" />
 
 	<!--	Included on 3rd-party websites.
 						-->
-	<rule from="^http://ad\.adriver\.ru/"
-		to="https://ad.adriver.ru/" />
+	<rule from="^http://(ad[rs]?|content|edp[12]|masterh\d)\.adriver\.ru/"
+		to="https://$1.adriver.ru/" />
 
 </ruleset>

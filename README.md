@@ -4,7 +4,7 @@ HTTPS Everywhere
 Installing Dependencies in Debian or Ubuntu
 -------------------------------------------
 
-    sudo apt-get install python-lxml python-libxml2
+    sudo apt-get install python-lxml python-libxml2 libxml2-utils zip
 
 Installing Dependencies in Mac OS X
 -----------------------------------

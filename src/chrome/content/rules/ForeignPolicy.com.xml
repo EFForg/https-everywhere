@@ -1,19 +1,35 @@
 <!--
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- ideas		(503, akamai
+		- www.foreignpolicy.com.edgesuite.net
+
+			- a1165.g1.akamai.net
+			- blog
+			- ideas
+			- killerapps
+			- www
+
+
+	Problematic subdomains:
+
+		- ^		(refused)
+		- blog *
+		- ideas		(some pages work, others 403; akamai)
+		- jobs **
+		- killerapps *
+		- thecable **
+		- turtlebay **
+		- www *
+
+	* Works, akamai
+	** Works; mismatched, CN: acquia-sites.com
 
 -->
-<ruleset name="ForeignPolicy.com (partial)" default_off="mismatch">
+<ruleset name="ForeignPolicy.com (partial)" default_off="mismatched">
 
-	<target host="foreignpolicy.com" />
 	<target host="*.foreignpolicy.com" />
 
-	<rule from="^http://(?:www\.)?foreignpolicy\.com/"
-		to="https://www.foreignpolicy.com/" />
-
-	<!--	thecable cert: acquia-sites.com		-->
-	<rule from="^http://(blog|jobs|thecable|turtlebay)\.foreignpolicy\.com/"
+	<rule from="^http://(jobs|thecable|turtlebay)\.foreignpolicy\.com/"
 		to="https://$1.foreignpolicy.com/" />
 
 </ruleset>

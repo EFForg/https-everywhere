@@ -1,6 +1,21 @@
+<!--
+	Problematic subdomains:
+
+		- my	(akamai)
+
+-->
 <ruleset name="Safari Books Online">
   <target host="my.safaribooksonline.com" />
+		<!--
+			Paths relative to / cause images to be fetched from akamai.net/$
+											-->
+		<exclusion pattern="^http://my\.safaribooksonline\.com/static/.+\.css" />
   <target host="www.safaribooksonline.com" />
+
+	<!--	Avoid user-visible paths:
+						-->
+	<rule from="^http://my\.safaribooksonline\.com/(favicon\.ico|images/|static/)"
+		to="https://a248.e.akamai.net/f/1543/1/b/my.safaribooksonline.com/$1" />
 
     <rule from="^http://my\.safaribooksonline\.com/login$"
         to="https://ssl.safaribooksonline.com/securelogin"/>

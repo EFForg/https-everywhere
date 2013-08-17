@@ -4,6 +4,8 @@
 		- Flickr.xml
 		- Right-Media.xml
 		- Yahoo_APIs.xml
+		- Yahoo_Japan.xml
+		- Yimg.com.xml
 		- YUI_Library.xml
 
 	feedback.yahoo.com is handled in Uservoice-clients.xml.
@@ -11,38 +13,28 @@
 
 	CDN buckets:
 
-		- a248.e.akamai.net/sec.yimg.com/i/
+		- contextualads.yahoo.net.edgesuite.net
+
+			- a1907.g.akamai.net
+
 		- yahoosports.teamfanshop.com
-
-
-	Undiscovered:
-
-		- d.yimg.com/nl/
-		- d.yimg.com/hn/p/i/bcst/yp/cnbc2/
-		- d.yimg.com/oq/
-		- ec.yimg.com/ec?url=
-		- ext.yimg.com/ec?url=
-		- sm-a[1-4].yimg.com
-		- thm-a0[1-4].yimg.com
 
 
 	Nonfunctional domains:
 
-		- yahoo.co.jp subdomains:
-
-			- rd.ane *
-			- blogs *
-			- img5.blogs *
+		- cm.npc-morris.overture.com	(dropped)
+		- cm.npc-nydn.overture.com	(dropped)
 
 		- yahoo.com subdomains:
 
 			- (www.)			($ redirects to http, other paths 404; valid cert)
 			- advertising **
+			- advertisingcentral		(refused)
 			- answers ****
 			- malaysia.answers ****
 			- cn
 			- help.cn
-			- docs *
+			- docs				(refused)
 			- fr.docs
 			- en-maktoob			(redirects to http; mismatched, CN: www.yahoo.com)
 			- everything
@@ -50,11 +42,13 @@
 			- chart.finance
 			- ichart.finance		(no https)
 			- streamerapi.finance *
+			- groups ***
+			- moderators.groups		(redirects to gh.bouncer.login.yahoo.com; mismatched, CN: groups.yahoo.com)
 			- hsrd				(no https)
 			- visit.webhosting *
 			- ichart
 			- suggestions
-			- info				(cert: secure.help.yahoo.com; redirects to there)
+			- info **
 			- m ****
 			- us.m ****
 			- webservices.mobile *
@@ -63,7 +57,7 @@
 			- news ****
 			- notepad			(cert: *.calendar.yahoo.com; shows calendar's data)
 			- img.omg *
-			- opi
+			- opi				(refused)
 			- ar.rd
 			- research
 			- rightmedia			(cert: www.ce1.com; redirects there)
@@ -72,10 +66,11 @@
 			- gossip-ss.us.search
 			- images.search
 			- sports **
+			- suggestions			(refused)
 			- tv **
 			- uk ***
 			- us ***
-			- qos.video
+			- qos.video			(404; mismatched, CN: *.manhattan.yahoo.com)
 			- voices			(redirects to http)
 			- weather **
 			- count.yisou
@@ -88,8 +83,6 @@
 
 		- ypolicyblog.com		(reset)
 		- www.ypolicyblog.com
-		- cn.yimg.com
-		- ybinst3.ec.yimg.com	(CN: *.l.yimg.com; 404)
 
 	* Times out
 	** 404; mismatched, CN: www.yahoo.com
@@ -110,10 +103,15 @@
 			- feedback	(works, mismatched, CN: *.uservoice.com)
 			- help		(valid cert; 404)
 			- r.m		(404, CN: *.mail.yahoo.com)
+			- us-locdrop.query **
+			- video.query **
 
-		- ep.yimg.com
+		- contextualads.yahoo.net	(works, akamai)
+		- investor.yahoo.net	(dropped)
 
 	* Self-signed
+	** Works; mismatched, CN: yql.yahooapis.com
+	*** Dropped
 
 
 	Partially covered domains:
@@ -127,6 +125,8 @@
 			- developer		(homepage redirects to http)
 			- java.europe		(→ s.yimg.com)
 
+		- contextualads.yahoo.net	(→ akamai, avoiding user-visible paths)
+		- investor.yahoo.net		(→ investor.shareholder.com)
 		- uk.health.lifestyle.yahoo.net	(→ s.yimg.com)
 
 	* Ssome (most?) pages redirect to http
@@ -138,20 +138,16 @@
 
 		- (www.)totaltravel.co.uk	(→ au.totaltravel.yahoo.com)
 
-		- yahoo.co.jp subdomains:
-
-			- b[35-9]
-			- b10
-			- pclick
-
 		yahoo.com subdomains:
 
 			- uk.adserver
 			- us.adserver
+			- beap.adx
 			- c5.ah
 			- cookex.amp
 			- s-cookex.amp
-			- [aoy].analytics
+			- [aoyz].analytics
+			- y3.analytics
 			- global.ard
 
 			- bc subdomains:
@@ -173,6 +169,7 @@
 			- legalredirect
 			- login
 			- us.lrd
+			- gh.bouncer.login
 			- r.m			(→ s.yimg.com)
 			- mail
 
@@ -198,12 +195,14 @@
 			- ucs.netsvs
 			- cookiex.ngd
 			- rtb.pclick
+			- analytics.query
 			- mailapps.query
 			- media.query
 			- ucs.query
 			- us.rd
 			- rtb.pclick.secure
 			- order.smallbusiness
+			- data.toolbar
 			- au.totaltravel
 			- yep.video
 
@@ -212,20 +211,6 @@
 			- image-c.c.yom.mail
 			- lib.store
 			- order.store
-
-		- yimg.com subdomains:
-
-			- ep		(→ sep)
-			- s
-			- sep
-			- sec
-
-		- yimg.jp subdomains:
-
-			- ai		(→ s.yimg.jp)
-			- ident.c
-			- i		(→ s.yimg.jp)
-			- s
 
 
 	Reported to fix bug
@@ -246,15 +231,20 @@
 		<exclusion pattern="^https?://(?:www\.)?totaltravel\.com/images/" />
 	<target host="totaltravel.co.uk" />
 	<target host="www.totaltravel.co.uk" />
-	<target host="*.yahoo.co.jp" />
 	<target host="*.yahoo.com" />
 		<exclusion pattern="^http://(?:uk\.)?contributor\.yahoo\.com/(?!$|\?|account/|contributor/|help/|signup/)" />
 		<exclusion pattern="^https?://developer\.yahoo\.com/(?:$|\?)" />
 	<target host="*.yahoo.net" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://contextualads\.yahoo\.net/(?!js/|style/)" />
+		<!--
+			Links images relative to /
+							-->
+		<exclusion pattern="^http://contextualads\.yahoo\.net/style/screen\.css" />
 	<target host="*.yahoofs.com" />
 	<target host="yhoo.it" />
-	<target host="*.yimg.com" />
-	<target host="*.yimg.jp" />
 	<target host="ymail.com" />
 	<target host="www.ymail.com" />
 	<target host="*.zenfs.com" />
@@ -267,15 +257,111 @@
 			- .yahoo.com
 				- AO
 				- B
-					- Set by us.bc.yahoo.com/b
+					- Set by y3.analytics.yahoo.com/itr.pl & us.bc.yahoo.com/b
+
+				- BA
+
+					- t=\d{10}
+
 				- CH
 					- \w{59}/
 				- F
+
+				- HP
+
+					- 0
+
 				- MSC
 					- t=\d{10}X
-				- PH
+				- PH	(set by hjsal)
 				- SSL
+
+				- ucs	(set by ucs.query)
+
+					- bnas=\d
+
+				- V
+
+					- v=\d.\d&cc=0&m=0
+
 				- Y
+
+
+			- images.search.yahoo.com
+
+				-jr
+
+					- \d
+
+			- news.yahoo.com
+
+				- AO
+
+					- o=1&s=1&dnt=1
+
+				- grvinsights	(set by rma-api.gravity.com)
+
+					- \w{32}
+
+				- ywadp\d+
+
+					- \d+
+
+			- .news.yahoo.com
+
+				- ywadp\d+
+
+					- \d+
+
+			- .uk.yahoo.com
+
+				- epc
+
+					- 1
+
+				- fpc
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- FPCK
+
+					- \w{50}
+
+				- fpc_s
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- fpt
+
+					- d=(\w+.){7}\w+- -&v=1
+
+				- fpps
+
+					- _page=%7B%22wsid%22%3A%22\d{10}%22%7D
+
+			- us.yahoo.com
+
+				- FBISC
+
+					- \d{10}
+
+				- ywadp\d+
+
+					- \d+
+
+			- .us.yahoo.com
+
+				- fpc
+
+					- d=(\w+.){4}\w+-&v=2
+
+				- fpms
+
+					- p_\d{8}=%7B%22stream_filter%22%3A%22%3A%3A\d{13}%22%7D
+
+				- fpt
+
+					- d=\w+.\w+.\w+&v=1
 
 			- .www.yahoo.com
 				- fpc
@@ -292,39 +378,36 @@
 		-->
 	<securecookie host="^\.yahoo\.com$" name="^(?:AO|B|SSL)$" />
 	<securecookie host="^\.(?:analytics|mail)\.yahoo\.com$" name=".+" />
+	<securecookie host="^news\.yahoo\.com$" name="^grvinsights$" />
 	<securecookie host="^.+-c\.c\.yom\.mail\.yahoo\.net$" name=".+" />
-	<securecookie host="^\.s\.yimg\.com$" name=".+" />
 	<securecookie host="^\.zenfs\.com$" name="^BX$" />
 
 
-	<rule from="^https?://i\.acdn\.us/"
+	<rule from="^http://i\.acdn\.us/"
 		to="https://s.yimg.com/ck/" />
 
-	<rule from="^https?://(?:www\.)?totaltravel\.co(?:m|\.uk)/"
+	<rule from="^http://(?:www\.)?totaltravel\.co(?:m|\.uk)/"
 		to="https://au.totaltravel.yahoo.com/" />
 
-	<rule from="^https?://(?:www\.)?(?:rocket|y)mail\.com/"
+	<rule from="^http://(?:www\.)?(?:rocket|y)mail\.com/"
 		to="https://mail.yahoo.com/" />
 
-	<rule from="^http://(b\d+|pclick)\.yahoo\.co\.jp/"
-		to="https://$1.yahoo.co.jp/" />
-
-	<rule from="^https?://java\.europe\.yahoo\.com/uk/"
+	<rule from="^http://java\.europe\.yahoo\.com/uk/"
 		to="https://s.yimg.com/zz/java.europe.yahoo.com/uk/" />
 
-	<rule from="^https?://dps\.msg\.yahoo\.com/"
+	<rule from="^http://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|[ao]\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|login|us\.l?rd|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:mailapps|media|ucs)\.query|sec|rtb\.pclick\.secure|order\.smallbusiness|au\.totaltravel|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|beap\.adx|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|(?:[aosz]|y3)\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|(?:gh\.bouncer\.)?login|us\.l?rd|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:analytics|mailapps|media|ucs)\.query|sec|rtb\.pclick\.secure|order\.smallbusiness|data\.toolbar|au\.totaltravel|yep\.video)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
 
-	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
+	<rule from="^http://uk\.health\.lifestyle\.yahoo\.net/images/"
 		to="https://s.yimg.com/lq/lib/lsl/i/uk/" />
 
-	<rule from="^https?://(?:secure\.)?help\.yahoo\.com/"
+	<rule from="^http://(?:secure\.)?help\.yahoo\.com/"
 		to="https://secure.help.yahoo.com/" />
 
-	<rule from="^https?://r\.m\.yahoo\.com/"
+	<rule from="^http://r\.m\.yahoo\.com/"
 		to="https://s.yimg.com/zz/jg/" />
 
 	<rule from="^http://([\w-]+)\.c\.yom\.mail\.yahoo\.(com|net)/"
@@ -333,7 +416,7 @@
 	<!--	Cert only matches us.rd,
 		all appear equivalent.
 					-->
-	<rule from="^https?://rds?\.yahoo\.com/"
+	<rule from="^http://rds?\.yahoo\.com/"
 		to="https://us.rd.yahoo.com/" />
 
 	<!--	This needs a craptonne of effort to work, as *every* link
@@ -345,46 +428,20 @@
 	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
 		to="https://smallbusiness.yahoo.com/servicecheck.php" />
 
+	<rule from="^http://contextualads\.yahoo\.net/"
+		to="https://a248.e.akamai.net/f/1907/9547/9m/contextualads.yahoo.net/" />
+
+	<rule from="^http://investor\.yahoo\.net/common/"
+		to="https://investor.shareholder.com/common/" />
+
 	<rule from="^http://(lib|order)\.store\.yahoo\.net/"
 		to="https://$1.store.yahoo.net/" />
 
 	<rule from="^http://([\w-]+)\.yahoofs\.com/"
 		to="https://$1.yahoofs.com/" />
 
-	<rule from="^https?://yhoo\.it/"
+	<rule from="^http://yhoo\.it/"
 		to="https://bit.ly/" />
-
-	<rule from="^https?://ads\.yimg\.com/"
-		to="https://s.yimg.com/zz/" />
-
-	<!--	- l1 to l7 exist.
-		- a appears equivalent to l, except hosted on Akamai.
-			-->
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.(?:a2|i1|js2?))\.yimg\.com/(?:a|d|us(?:\.js)?\.yimg\.com)/"
-		to="https://s.yimg.com/lq/" />
-
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|mail)\.yimg\.com/(ao|ck|cv|dh|ea|kj|kx|lo|mi|ok|pj|pp|qa|rq|rx|ugcwidgets|zz)/"
-		to="https://s.yimg.com/$1/" />
-
-	<rule from="^https?://(?:d|(?:a\.)?l\d?|us\.js1?|mail|xa)\.yimg\.com/(bb|bt|dg|(?:eur|us)\.yimg\.com|fg|[ghijqt]|gh|ho|j[ghn]|kq|lh|lm|ml|nn|nq|os|pb|pv|qw|qz|r[luwz]|sc|ts)/"
-		to="https://s.yimg.com/zz/$1/" />
-
-	<rule from="^http://s(ec)?\.yimg\.com/"
-		to="https://s$1.yimg.com/" />
-
-	<rule from="^https?://s?ep\.yimg\.com/"
-		to="https://sep.yimg.com/" />
-
-	<!--	s://developer. breakage
-					-->
-	<rule from="^https://s\.yimg\.com/common/img/"
-		to="https://s.yimg.com/kj/ydn/common/img/" />
-
-	<rule from="^https?://(?:a[hi]?|s)\.yimg\.jp/"
-		to="https://s.yimg.jp/" />
-
-	<rule from="^http://ident\.c\.yimg\.jp/"
-		to="https://ident.c.yimg.jp/" />
 
 	<rule from="^http://(\w+)\.zenfs\.com/"
 		to="https://$1.zenfs.com/" />

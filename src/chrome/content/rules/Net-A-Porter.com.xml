@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- netaporterll3.sslcs.cdngc.net
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cache
+		- fashionfix
+		- weathertop
+		- www-lt
+
+
+	Observed cookie domains:
+
+		- .
+		- .fashionfix
+		- weathertop
+		- www
+		- .www
+		- www-lt
+		- .www-lt
+
+
+	Mixed content:
+
+		- Images:
+
+			- On fashionfix from fashionfix *
+			- On www from cache *
+
+		- Web bugs:
+
+			- On www from www **
+			- On www-lt from www **
+
+	* Secured by us, doesn't trip MCB anyway
+	** Secured by us, but who cares
+
+-->
+<ruleset name="Net-A-Porter.com">
+
+	<target host="net-a-porter.com" />
+	<target host="*.net-a-porter.com" />
+
+
+	<securecookie host=".*\.net-a-porter\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?net-a-porter\.com/"
+		to="https://www.net-a-porter.com/" />
+
+	<rule from="^http://(cache|fashionfix|weathertop|www-lt)\.net-a-porter\.com/"
+		to="https://$1.net-a-porter.com/" />
+
+</ruleset>

@@ -1,0 +1,56 @@
+<!--
+	Other Tieto rulesets:
+
+		- Tietoenator.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- novasupport			(dropped)
+		- leansystemcommunity.portal	(refused)
+
+
+	Problematic subdomains:
+
+		- ^		(works; mismatched, CN: acquia-sites.com)
+		- notes1.bi	(works; expired 2010-09-30, mismatched, CN: notes1.bi.tietoenator.com)
+		- easyedi	(works; mismatched, CN: easyedi.tietoenator.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- easyedi	(→ easyedi.tietoenator.com)
+
+		- *.portal:
+
+			- easit
+			- hcw
+			- share
+
+-->
+<ruleset name="Tieto.com (partial)">
+
+	<target host="tieto.com" />
+	<target host="*.tieto.com" />
+		<exclusion pattern="^http://leansystemcommunity\.portal\." />
+
+
+	<securecookie host="^\.tieto\.com$" name="^__utm\w$" />
+	<securecookie host="^\w+\.portal\.tieto\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?tieto\.com/(?=customer-area(?:$|[?/])|misc/|profiles/\w+/modules/|sites/)"
+		to="https://www.tieto.com/" />
+
+	<rule from="^http://easyedi\.tieto\.com/"
+		to="https://easyedi.tietoenator.com/" />
+
+	<rule from="^http://(\w+)\.portal\.tieto\.com/"
+		to="https://$1.portal.tieto.com/" />
+
+</ruleset>

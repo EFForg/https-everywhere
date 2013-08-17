@@ -1,13 +1,35 @@
-<ruleset name="Zoomerang (partial)">
+<!--
+	For other SurveyMonkey coverage, see SurveyMonkey.xml.
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- static
+
+
+	Mixed content:
+
+		- Web bug on www from edge.quantserve.com *
+
+	* Secured by us
+
+
+	We don't care about web bugs, so don't
+	mark this ruleset as mixedcontent.
+
+-->
+<ruleset name="Zoomerang">
 
 	<target host="zoomerang.com" />
 	<target host="*.zoomerang.com" />
 
 
-	<rule from="^http://(?:www\.)?zoomerang\.com/Survey/((?:App_)?Themes/|TinyMCE\.ashx|ZoomStatic/)"
-		to="https://www.zoomerang.com/Survey/$1" />
+	<!--securecookie host="^\.zoomerang\.com$" name="^(__qca|__utm\w|zTrack)$" /-->
+	<securecookie host="^\.zoomerang\.com$" name=".+" />
 
-	<rule from="^http://static\.zoomerang\.com/"
-		to="https://static.zoomerang.com/" />
+
+	<rule from="^http://(static\.|www\.)?zoomerang\.com/"
+		to="https://$1zoomerang.com/" />
 
 </ruleset>

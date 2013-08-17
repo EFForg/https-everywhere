@@ -53,6 +53,11 @@
 			- ec6.images-amazon.com
 
 
+	Nonfunctional domains:
+
+		- cloudfront-labs.amazonaws.com		(refused)
+
+
 	Problematic domains:
 
 		- z-ak.images-amazon.com			(503, akamai)
@@ -64,6 +69,7 @@
 
 		- images-jp.amazon.com				(→ images-na.ssl-images-amazon.com)
 		- g-images.amazon.com				(→ d1ge0kk1l5kms0.cloudfront.net)
+		- webservices.amazon.com
 
 		- amazonaws.com subdomains:
 
@@ -83,6 +89,7 @@
 -->
 <ruleset name="Amazon Web Services">
 
+	<target host="fls-eu.amazon.co.uk" />
 	<target host="aws.amazon.com" />
 	<target host="signin.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
@@ -92,6 +99,7 @@
 	<target host="images-jp.amazon.com" />
 	<target host="payments.amazon.com" />
 	<target host="sis.amazon.com" />
+	<target host="webservices.amazon.com" />
 	<target host="*.amazonaws.com" />
 		<!--
 			Bloody forced redirection:
@@ -126,7 +134,16 @@
   <exclusion pattern="^http://ecx\.images-amazon\.com/" />
 	<target host="*.ssl-images-amazon.com" />
 
-	<rule from="^http://(signin\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis)\.amazon\.com/"
+
+	<!--	Forced redirect:
+					-->
+	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
+		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
+
+	<rule from="^http://fls-eu\.amazon\.co\.uk/"
+		to="https://fls-eu.amazon.co.uk/" />
+
+	<rule from="^http://(signin\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
 	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-1|-external-\d|-sa-east-1)?\.amazonaws\.com/"
@@ -147,19 +164,19 @@
 	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
 		to="https://s3.amazonaws.com/$1.$2/" />
 
-	<rule from="^https?://(?:www\.)?amazonwebservices\.com/"
+	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
 		to="https://aws.amazon.com/" />
 
 	<rule from="^http://developer\.amazonwebservices\.com/"
 		to="https://developer.amazonwebservices.com/" />
 
-	<rule from="^https?://media\.amazonwebservices\.com/"
+	<rule from="^http://media\.amazonwebservices\.com/"
 		to="https://s3.amazonaws.com/awsmedia/" />
 
-	<rule from="^https?://(?:g-images\.|(?:ec[5x]|g-ecx)\.images-)amazon\.com/"
+	<rule from="^http://(?:g-images\.|(?:ec[5x]|g-ecx)\.images-)amazon\.com/"
 		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
 
-	<rule from="^https?://(?:(?:(?:\w-)?ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
+	<rule from="^http://(?:(?:(?:\w-)?ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
 
 	  	<!--

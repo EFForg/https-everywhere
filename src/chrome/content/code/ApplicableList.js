@@ -84,7 +84,6 @@ ApplicableList.prototype = {
     this.document = document;
     
     var https_everywhere = CC["@eff.org/https-everywhere;1"].getService(Components.interfaces.nsISupports).wrappedJSObject;   
-    var o_httpsprefs = https_everywhere.get_prefs();
    
     // get the menu popup
     this.menupopup = menupopup;
@@ -99,8 +98,8 @@ ApplicableList.prototype = {
     
     var enableLabel = document.createElement('menuitem');
     var text = strings.getString("https-everywhere.menu.globalDisable");
-    if (!o_httpsprefs.getBoolPref("globalEnabled"))
-        text = strings.getString("https-everywhere.menu.globalEnable");
+    if(!https_everywhere.prefs.getBoolPref("globalEnabled"))
+      text = strings.getString("https-everywhere.menu.globalEnable");
         
     enableLabel.setAttribute('label', text);
     enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');    
@@ -108,7 +107,7 @@ ApplicableList.prototype = {
     
     // add the label at the top
     var any_rules = false
-    for (var x in this.all) {
+    for(var x in this.all) {
       any_rules = true;  // how did JavaScript get this ugly?
       break;
     }
@@ -145,28 +144,35 @@ ApplicableList.prototype = {
     var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
     
     if(location.substr(0, 6) == "about:"){
-        //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
+      //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
+        
+      var fromHost = document.getElementById("urlbar").value;  
+      
+      //scheme must be trimmed out to check for applicable rulesets       
+      if(fromHost.indexOf("://") != -1)
+        fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
           
-        var fromHost = document.getElementById("urlbar").value;  
-        
-        //scheme must be trimmed out to check for applicable rulesets       
-        if(fromHost.indexOf("://") != -1)
-            fromHost = fromHost.substr(fromHost.indexOf("://") + 3, fromHost.length);
-            
-        //trim off any page locations - we only want the host - e.g. domain.com
-        if(fromHost.indexOf("/") != -1)
-            fromHost = fromHost.substr(0, fromHost.indexOf("/"));
-                       
-        // Search for applicable rulesets for the host listed in the location bar
-        var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
-        
-        for (var i = 0 ; i < plist.length ; i++){
-            //For each applicable rulset, determine active/inactive, and append to proper list.
-            if(o_httpsprefs.getBoolPref(plist[i].name))
-                this.active_rule(plist[i]);
-            else
-                this.inactive_rule(plist[i]);                   
-        }   
+      //trim off any page locations - we only want the host - e.g. domain.com
+      if(fromHost.indexOf("/") != -1)
+        fromHost = fromHost.substr(0, fromHost.indexOf("/"));
+                     
+      // Search for applicable rulesets for the host listed in the location bar
+      var plist = HTTPSRules.potentiallyApplicableRulesets(fromHost);     
+      for (var i = 0 ; i < plist.length ; i++){
+        //For each applicable rulset, determine active/inactive, and append to proper list.
+        var ruleOn = false;
+        try {
+          if(https_everywhere.rule_toggle_prefs.getBoolPref(plist[i].name))
+            ruleOn = true;
+        } catch(e) {
+          if(https_everywhere.https_rules.rulesetsByName[plist[i].name].active)
+            ruleOn = true;
+        }
+        if(ruleOn)
+          this.active_rule(plist[i]);
+        else
+          this.inactive_rule(plist[i]);                   
+      }   
     }   
     
     // add all applicable commands
@@ -179,7 +185,7 @@ ApplicableList.prototype = {
     for(var x in this.inactive) 
       this.add_command(this.inactive[x]);
 
-    if(o_httpsprefs.getBoolPref("globalEnabled")){
+    if(https_everywhere.prefs.getBoolPref("globalEnabled")){
        // add all the menu items
        for (var x in this.inactive)
           this.add_menuitem(this.inactive[x], 'inactive');

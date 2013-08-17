@@ -14,17 +14,32 @@
 
 		- aka-cdn-ns.adtech.de		(works, akamai)
 
+
+	Fully covered subdomains:
+
+		- adserver
+		- adserverams
+		- aka-cdn
+		- aka-cdn-ns	(→ aka-cdn)
+		- secserv
+		- ums
+
 -->
-<ruleset name="Adtech.de (breaks videos)" default_off="https://eff.org/r.a6rZ">
+<ruleset name="Adtech.de (partial)">
 
 	<target host="*.adtech.de" />
-		<exclusion pattern="http://(?:adserver\.)?adtech\.de/crossdomain\.xml" />
+		<!--
+			Breaks videos:
+
+				https://trac.torproject.org/projects/tor/ticket/7670
+											-->
+		<exclusion pattern="http://(?:adserver\.)?adtech\.de/(?:\?adrawdata/|crossdomain\.xml)" />
 
 
 	<securecookie host="^\.adtech\.de" name=".+" />
 
 
-	<rule from="^http://(adserver|aka-cdn|ums)\.adtech\.de/"
+	<rule from="^http://(adserver(?:ams)?|aka-cdn|secserv|ums)\.adtech\.de/"
 		to="https://$1.adtech.de/" />
 
 	<rule from="^http://aka-cdn-ns\.adtech\.de/"

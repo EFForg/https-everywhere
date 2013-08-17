@@ -1,18 +1,59 @@
+<!--
+	Nonfunctional domains:
+
+		- ucl.ac.be subdomains:
+
+			- fmserver2.sipr	(dropped)
+
+		- uclouvain.be subdomains:
+
+			- faq		(shows webhost-test; mismatched, CN: webhost-test.uclouvain.be)
+			- limesurvey *
+			- svn *
+
+	* Shows webhost-test, valid cert
+
+
+	Fully covered domains:
+
+		- ucl.ac.be subdomains:
+
+			- listes-[123].sipr
+
+		- uclouvain.be subdomains:
+
+			- mysqladm
+			- perso
+			- sites
+			- tools
+			- webhost-test
+
+
+	There would be mixed web bugs on www.uclouvain.be
+	from logi9.xiti.com, were it not for XiTi.com.xml.
+		Regardless, no one would care.
+
+-->
 <ruleset name="Université catholique de Louvain">
 
+	<target host="*.sipr.ucl.ac.be" />
 	<target host="uclouvain.be" />
 	<target host="*.uclouvain.be" />
 
 
-	<securecookie host="^www\.uclouvain\.be$" name=".+" />
+	<securecookie host="^listes-[123]\.sipr\.ucl\.ac\.be$" name=".+" />
+	<securecookie host="^(?:mysqladm|www)\.uclouvain\.be$" name=".+" />
 
+
+	<rule from="^http://listes-([123])\.sipr\.ucl\.ac\.be/"
+		to="https://listes-$1.sipr.ucl.ac.be/" />
 
 	<!--	Cert only matches www.
 					-->
 	<rule from="^https?://(?:www\.)?uclouvain\.be/"
 		to="https://www.uclouvain.be/" />
 
-	<rule from="^http://perso\.uclouvain\.be/"
-		to="https://perso.uclouvain.be/" />
+	<rule from="^http://(mysqladm|perso|sites|tools|webhost-test)\.uclouvain\.be/"
+		to="https://$1.uclouvain.be/" />
 
 </ruleset>

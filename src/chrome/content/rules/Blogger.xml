@@ -4,9 +4,6 @@
 
 	Nonfunctional domains:
 
-		- buttons.blogger.com	(valid cert; 302s to google.cctld)
-			- e.g. buttons.blogger.com/bloggerbutton1.gif
-
 		- \w+.blogspot.be *
 		- \w+.blogspot.ca *
 		- \w+.blogspot.co.uk *
@@ -17,29 +14,26 @@
 		- \w+.blogspot.no *
 		- \w+.blogspot.se *
 
-	* Mismatch, redirects to http
+	* Mismatched, redirects to http
 
 
-	Problematic domains:
-
-		- blogger.com		(503)
+	Partial due to blog posts redirecting to http.
 
 -->
 <ruleset name="Blogger (partial)">
 
 	<target host="blogblog.com" />
 	<target host="*.blogblog.com" />
-	<target host="blogger.com" />
-	<target host="*.blogger.com" />
 	<target host="blogger.co.uk" />
 	<target host="*.blogger.co.uk" />
+	<target host="blogger.com" />
+	<target host="*.blogger.com" />
 	<target host="blogspot.*" />
 	<target host="*.blogspot.be" />
 	<target host="*.blogspot.ca" />
-	<target host="*.bp.blogspot.com" />
-	<target host="*.blogspot.com" />
 	<target host="blogspot.co.uk" />
 	<target host="*.blogspot.co.uk" />
+	<target host="*.blogspot.com" />
 	<target host="*.blogspot.de" />
 	<target host="*.blogspot.fi" />
 	<target host="*.blogspot.fr" />
@@ -48,35 +42,21 @@
 	<target host="*.blogspot.se" />
 
 
-	<securecookie host="^www2?\.blogger\.com$" name=".*" />
+	<securecookie host="^www2?\.blogger\.com$" name=".+" />
 
 
 	<!--	img[12] works as-is now. Thanks Google!
-
-		Observed working www paths:
-
-			- 1kt/
-			- dynamicviews/
-			- tictac_blue/
-					-->
-	<rule from="^http://(img[12]\.|www\.)?blogblog\.com/"
+							-->
+	<rule from="^http://(img\d\.|www\.)?blogblog\.com/"
 		to="https://$1blogblog.com/" />
 
-	<rule from="^https?://(?:www(2)?\.)?blogger\.com/"
-		to="https://www$1.blogger.com/" />
+	<rule from="^http://((?:buttons|help|www2?)\.)?blogger\.com/"
+		to="https://$1blogger.com/" />
 
-	<rule from="^https?://(?:\w+)\.blog(?:ger|spot)\.(?:be|ca|com|co\.uk|de|fi|fr|nl|no|se)/favicon\.ico"
+	<rule from="^http://(?:\w+\.)?blog(?:ger|spot)\.[\w.]{2,5}/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico" />
 
-	<rule from="^http://help\.blogger\.com/"
-		to="https://help.blogger.com/" />
-
-	<!--	- 1-4 in *.bp exist.
-		- All appear identical
-		- Cert: *.blogger.com
-		- Redirect to www.google.cctld
-					-->
-	<rule from="^https?://(?:[1-4]\.bp|bp[0-4])\.blogspot\.com/"
-		to="https://lh3.ggpht.com/" />
+	<rule from="^http://(\d\.bp|bp\d)\.blogspot\.com/"
+		to="https://$1.blogspot.com/" />
 
 </ruleset>

@@ -40,6 +40,11 @@
 
 		- (www.)weebly.com	(mixed css & images from *.editmysite.com)
 
+
+	Fully covered subdomains:
+
+		- teffect
+
 -->
 <ruleset name="Weebly (partial)">
 
@@ -47,13 +52,22 @@
 	<target host="cdn2.editmysite.com" />
 	<target host="weebly.com" />
 	<target host="*.weebly.com" />
-		<exclusion pattern="^http://(?:www\.)?weebly\.com/(?!editor/(?:font|image|librarie)s|images/)" />
+		<exclusion pattern="^http://(?:www\.)?weebly\.com/(?!editor/(?:app|font|image|librarie)s|images/)" />
+
+
+	<!--	Set by editor/apps/showCommentForm-v2.php
+								-->
+	<securecookie host="^\.weebly\.com$" name="^sto-id$" />
+	<!--
+		Set by editor/apps/tracking_frame_static.php
+								-->
+	<securecookie host="^www\.weebly\.com$" name="^wt-\w{6}$" />
 
 
 	<rule from="^https?://cdn\d\.editmysite\.com/(editor/(?:font|image|librarie)s/|images/(?:404background\.jpg|404_textbox\.png))"
 		to="https://www.weebly.com/$1" />
 
-	<rule from="^http://((?:mobileapi|secure|www)\.)?weebly\.com/"
+	<rule from="^http://((?:mobileapi|secure|teffect|www)\.)?weebly\.com/"
 		to="https://$1weebly.com/" />
 
 </ruleset>

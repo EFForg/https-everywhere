@@ -1,10 +1,49 @@
-<ruleset name="Zataz">
+<!--
+	For rules that cause false/broken MCB, see Zataz.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- i[01].wp.com/eromang.zataz.com/
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- eromang *
+
+	* Avoiding false/broken MCB, rest handled in Zataz.com-falsemixed.xml
+
+
+	Mixed content:
+
+		- css, on:
+
+			- eromang from eromang *
+			- www from www *
+
+		- Images, on:
+
+			- eromang from eromang *
+			- www from www *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="Zataz (partial)">
 
 	<target host="zataz.com" />
-	<target host="*.zataz.com" />
-
-
-	<securecookie host="^(?:.*\.)?zataz\.com$" name=".+" />
+	<target host="eromang.zataz.com" />
+	<target host="www.zataz.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?zataz\.com/(?!css/|favicon\.ico|images/)" />
+		<exclusion pattern="^http://eromang\.zataz\.com/(?!favicon\.ico|wp-content/)" />
 
 
 	<rule from="^http://(eromang\.|www\.)?zataz\.com/"

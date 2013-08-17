@@ -1,6 +1,22 @@
-<!--	!functional:
+<!--
+	CDN buckets:
+
+		- ia.imdb.com.edgesuite.net
+
+
+	!functional:
 		(www.)imdb.com
-		ia.media-imdb.com	(Akamai, "Service Unavailable", !at www nor origin-ia nor secure.imdb.com)
+		- s.media-imdb.com	(refused)
+
+	Problematic domains:
+
+		- ia.media-imdb.com	(Akamai, "Service Unavailable", !at www nor origin-ia nor secure.imdb.com)
+
+
+	Fully covered domains:
+
+		- ia.media-imdb.com	(→ images-na.ssl-images-amazon.com)
+
 
 	Rewriting www.imdb.com/(name|title)/ pages to secure redirects to pro.imdb.com.
 -->
@@ -12,10 +28,13 @@
 	<target host="*.media-imdb.com"/>
 	<exclusion pattern="^http://([^/:@]+\.)?imdb\.com/images/a/ifb/doubleclick/expand\.html" />
 
-	<rule from="^http://(?:www\.)?imdb\.com/images/"
-		to="https://secure.imdb.com/images/"/>
+	<rule from="^http://(?:www\.)?imdb\.com/(images|rg)/"
+		to="https://secure.imdb.com/$1/"/>
 
 	<rule from="^http://(?:secure\.|(?:i|www)\.media-)imdb\.com/"
 		to="https://secure.imdb.com/"/>
+
+	<rule from="^http://ia\.media-imdb\.com/"
+		to="https://images-na.ssl-images-amazon.com/" />
 
 </ruleset>

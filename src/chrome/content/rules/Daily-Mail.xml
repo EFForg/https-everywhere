@@ -1,28 +1,41 @@
 <!--
+	For problematic rules, see Daily_Mail-problematic.xml.
+
+
 	CDN buckets:
+
+		- images.anm.co.uk.edgesuite.net
+
+			- a382.g.akamai.net
+			- img.dailymail.co.uk
 
 		- gs.dailymail.co.uk.edgesuite.net
 
-		- f.dailymail.co.uk.edgesuite.net/..
-			- a1913.g.akamai.net/..
+		- f.dailymail.co.uk.edgesuite.net
 
-		- i.dailymail.co.uk.edgesuite.net/..
-			- a1202.g.akamai.net/..
+			- a1913.g.akamai.net
+
+		- i.dailymail.co.uk.edgesuite.net
+
+			- a1202.g.akamai.net
+			- scripts.dailymail.co.uk
 
 		- video.dailymail.co.uk.edgesuite.net
 
-		- www.dailymail.co.uk.edgesuite.net/..
-			- a1613.g.akamai.net/..
+			- a1641.g.akamai.net
 
-		- images.anm.co.uk.edgesuite.net/..
-			- a382.g.akamai.net/..
+		- www.dailymail.co.uk.edgesuite.net
+
+			- a1613.g.akamai.net
 
 		- i.mol.im.edgesuite.net
+
+			- a1158.g.akamai.net
 
 
 	Nonfunctional subdomains:
 
-		- (www.)	(Akamai; 301s to http)
+		- (www.)	(redirects to http, akamai)
 		- gs		(504, akamai)
 		- rta		(404, self-signed)
 		- ted		(redirects to www, self-signed)
@@ -32,14 +45,29 @@
 
 		- dailymail.co.uk subdomains:
 
+			- jobs
+
+				- mismatched, CN: *.jobsite.co.uk
+				- At least some pages redirect to http
+
+				- When rewritten to www.jobsite.co.uk:
+
+					- css/ is different
+					- images/ 404s
+
 			- video *
 
 		- i.mol.im *
 
 	* Works, akamai
 
+
+	Partially covered domains:
+
+		- jobs.dailymail.co.uk	(→ www.jobsite.co.uk)
+
 -->
-<ruleset name="Daily Mail (partial)" default_off="Akamai certificate">
+<ruleset name="Daily Mail (partial) ">
 
 	<target host="*.dailymail.co.uk" />
 	<target host="i.mol.im" />
@@ -50,21 +78,22 @@
 	<securecookie host="^\.dailymail\.co\.uk$" name="^(?:Akamai_?Analytics\w+|__mo|__utm)\w$" />
 
 
-	<!--	Same data, so miminize exceptions needed.
-								-->
-	<rule from="^http://(?:i|img|scripts)\.dailymail\.co\.uk/"
-		to="https://i.dailymail.co.uk/" />
+	<rule from="^http://f\.dailymail\.co\.uk/"
+		to="https://a248.e.akamai.net/f/1913/2926/10m/f.dailymail.co.uk/" />
 
-	<rule from="^http://(f|video)\.dailymail\.co\.uk/"
-		to="https://$1.dailymail.co.uk/" />
+	<rule from="^http://(i|scripts)\.dailymail\.co\.uk/"
+		to="https://a248.e.akamai.net/f/1202/1579/4m/$1.dailymail.co.uk/" />
 
-	<!--	- Cert: *.jobsite.co.uk
-		- At least some pages 301 to http
-							-->
-	<rule from="^http://jobs\.dailymail\.co\.uk/(css|home|images)/"
-		to="https://jobs.dailymail.co.uk/$1/" />
+	<rule from="^http://img\.dailymail\.co\.uk/"
+		to="https://a248.e.akamai.net/f/382/8298/1m/img.dailymail.co.uk/" />
+
+	<rule from="^http://video\.dailymail\.co\.uk/"
+		to="https://a248.e.akamai.net/f/1641/217/4m/video.dailymail.co.uk/" />
+
+	<rule from="^http://jobs\.dailymail\.co\.uk/home/"
+		to="https://www.jobsite.co.uk/home/" />
 
 	<rule from="^http://i\.mol\.im/"
-		to="https://i.mol.im/" />
+		to="https://a248.e.akamai.net/f/1434/217/6m/i.mol.im/" />
 
 </ruleset>

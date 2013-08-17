@@ -5,24 +5,44 @@
 
 			- static.parastorage.com
 			- static.wix.com
+			- static.wixstatic.com
 
 		- wix.go2cloud.org
 			- tracking.wix.com
 
+		- ghs.google.com
+
+			- archive.google.com
+
 
 	Nonfunctional wix.com subdomains:
 
-		- archive
+		- archive *
 		- beat		(interrupted)
 		- jobs		(cert: dns.lc.wix.com; 403)
+
+	* archive
 
 
 	Problematic domains:
 
 		- static.parastorage.com *
 		- static.wix.com *
+		- static.wixstatic.com *
 
 	* Works, akamai
+
+
+	Partially covered domains:
+
+		- archive.wix.com	(→ akamai)
+
+
+	Fully covered domains:
+
+		- publicorigin.wix.com
+		- static.wix.com	(→ akamai)
+		- static.wixstatic.com	(→ akamai)
 
 -->
 <ruleset name="Wix (partial)" platform="mixedcontent">
@@ -33,18 +53,25 @@
 	<target host="*.wix.com" />
 	<target host="dns.lc.wix.com" />
 	<target host="www.dns.lc.wix.com" />
+	<target host="static.wixstatic.com" />
 
 
 	<securecookie host="^\.wix\.com$" name=".+" />
 
 
-	<rule from="^http://(frog\.|(?:www\.)?dns\.lc\.|www\.)?wix\.com/"
+	<rule from="^http://(frog\.|(?:www\.)?dns\.lc\.|publicorigin\.|www\.)?wix\.com/"
 		to="https://$1wix.com/" />
 
-	<rule from="^https?://(?:static|users)\.(?:parastorage|wix)\.com/"
+	<rule from="^http://archive\.wix\.com/sites/"
+		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix.com/sites/" />
+
+	<rule from="^https?://users\.(?:parastorage|wix)\.com/"
 		to="https://users.wix.com/" />
 
 	<rule from="^https?://tracking\.wix\.com/"
 		to="https://wix.go2cloud.org/" />
+
+	<rule from="^http://static\.wix(static)?\.com/"
+		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix$1.com/" />
 
 </ruleset>

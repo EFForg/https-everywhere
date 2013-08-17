@@ -1,6 +1,37 @@
-<ruleset name="38.de">
-  <target host="www.38.de" />
-  <target host="38.de" />
+<!--
+	Problematic subdomains:
 
-  <rule from="^http://(?:www\.)?38\.de/" to="https://www.38.de/"/>
+		- ^
+
+			- [^?].* redirects to login 
+
+
+	Mixed content:
+
+		Videos from www.youtube-nocookie.com *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	platform should be removed with Ffx 24.
+
+-->
+<ruleset name="38.de" platform="mixedcontent">
+
+	<target host="38.de" />
+	<target host="*.38.de" />
+
+
+	<securecookie host="^\.38\.de$" name=".+" />
+
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://38\.de/.*"
+		to="https://www.38.de/" />
+
+	<rule from="^http://www\.38\.de/"
+		to="https://www.38.de/" />
+
 </ruleset>

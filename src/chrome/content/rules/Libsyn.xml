@@ -1,23 +1,48 @@
 <!--
 	CDN buckets:
 
-		- wac.68fd.edgecastcdn.net/...
+		- wac.68fd.edgecastcdn.net/??68FD/
+
 			- static
+
+		- ssl-static.wac.68fd.edgecastcdn.net
+
+			- ssl-static
+
+		- cds.s7w4q6b5.hwcdn.net
+
+			- hwcdn
 
 
 	Nonfunctional domains:
 
-		- assets.libsyn.com
-		- imake.libsyn.com
-		- \w+.libsyn.com *
-		- libsynpro.com		(CN: *.libsyn.com; shows www)
+		- libsyn.com subdomains:
 
-	* Unique subdomains for podcasts, time out.
+			- assets *
+			- html5-player	(shows fusion, valid cert)
+			- hwcdn *
+			- imake *
+			- traffic *
+			- \w+ **
+
+		- libsynpro.com		(shows www; mismatched, CN: *.libsyn.com)
+
+	* Refused
+	** Dropped - unique subdomains for podcasts
 
 
 	Problematic subdomains:
 
-		- static.libsyn.com	(CN: gp1.wac.edgecastcdn.net; works)
+		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- fusion
+		- ssl-static
+		- static	(→ ssl-static)
+		- three
 
 -->
 <ruleset name="libsyn (partial)">
@@ -29,7 +54,10 @@
 	<securecookie host="^\.libsyn\.com$" name=".+" />
 
 
-	<rule from="^http://(fusion\.|three\.|www\.)?libsyn\.com/"
+	<rule from="^http://((?:fusion|three|www)\.)?libsyn\.com/"
 		to="https://$1libsyn.com/" />
+
+	<rule from="^http://(?:ssl-)?static\.libsyn\.com/"
+		to="https://ssl-static.libsyn.com/" />
 
 </ruleset>

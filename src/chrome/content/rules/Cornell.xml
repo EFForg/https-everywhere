@@ -6,11 +6,19 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)law		(no https)
+		- cmsv6.cals *
+		- hort.cals *
+		- www.hort *
+		- (www.)law *
 		- lawschool		(shows cls-maila.law; mismatched, CN: cls-maila.law.cornell.edu)
-		- forum.lawschool	(times out)
-		- www.lawschool		(times out)
+		- forum.lawschool **
+		- www.lawschool **
 		- (www.)news
+		- www.nysaes *
+		- (www.)vivo *
+
+	* Refused
+	** Dropped
 
 
 	Problematic subdomains:
@@ -18,24 +26,29 @@
 		- cls-maila.law		(expired 2012-07-18)
 
 
+	Partially covered subdomains:
+
+		- (www.)cals	(some pages redirect to http)
+
+
 	Fully covered subdomains:
 
 		- ww3.lawschool
+		- embanner.univcomm
 
 -->
-<ruleset name="Cornell University (partial)">
+<ruleset name="Cornell University (partial)" platform="mixedcontent">
 
 	<target host="cornell.edu"/>
 	<target host="*.cornell.edu"/>
-	<target host="www.cs.cornell.edu"/>
-	<target host="www.library.cornell.edu"/>
-	<target host="topeka.ccmr.cornell.edu"/>
+		<!--exclusion pattern="^http://(?:www\.)?cals\.cornell\.edu/(?:$|\?|twitter/$)" /-->
+		<exclusion pattern="^http://(?:www\.)?cals\.cornell\.edu/(?!assets/|favicon\.ico|twitter/jquery\.tweet\.js)" />
 
 
-	<securecookie host="^(.*\.)?cornell\.edu$" name=".*"/>
+	<securecookie host="^(?!cals\.)(?:.*\.)?cornell\.edu$" name=".+" />
 
 
-	<rule from="^http://(topeka\.ccmr\.|(www\.)?(cs|library)\.|ww3\.lawschool\.|www\.)?cornell\.edu/"
+	<rule from="^http://((?:(?:www\.)?(?:cals|cs|library)|topeka\.ccmr|ww3\.lawschool|embanner\.univcomm|www)\.)?cornell\.edu/"
 		to="https://$1cornell.edu/"/>
 
 </ruleset>

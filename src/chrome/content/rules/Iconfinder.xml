@@ -1,26 +1,44 @@
 <!--
 	CDN buckets:
 
+		- iconfinder.cachefly.net
+
+			- cdn[0-6]
+
+		- iconfinder.desk.com
+
+			- support
+
 		- wac.3a7b.edgecastcdn.net/...
+
+		- icons3.iconfinder.netdna-cdn.com
+
+			- cdn
 
 
 	Nonfunctional subdomains:
 
-		- cdn[0-6]	(CN: gp1.wac.edgecastcdn.net; 404)
+		- ^		(refused)
+		- support	(desk.com)
+		- www		(redirects to http, valid cert)
+
+
+	Fully covered subdomains:
+
+		- cdn\d
+		- cdn1[0-2]
+		- track
 
 -->
-<ruleset name="Iconfinder (partial)" default_off="mismatched, self-signed">
+<ruleset name="Iconfinder (partial) ">
 
-	<target host="iconfinder.com" />
 	<target host="*.iconfinder.com" />
 
 
-	<securecookie host="^iconfinder\.com$" name=".+" />
+	<rule from="^http://(cdn\d+|track)\.iconfinder\.com/"
+		to="https://$1.iconfinder.com/" />
 
-
-	<!--	(www.) CN: Parallels Panel
-						-->
-	<rule from="^https?://(?:cdn[0-6]\.|www\.)?iconfinder\.com/"
-		to="https://iconfinder.com/" />
+	<rule from="^http://support\.iconfinder\.com/favicon\.ico"
+		to="https://d3jyn100am7dxp.cloudfront.net/favicon.ico" />
 
 </ruleset>

@@ -1,42 +1,96 @@
+<!--
+	For problematic rules, see Sedo-problematic.xml.
+
+
+	Other Sedo rulesets: 
+
+		- Affili.net.xml
+		- Reussissonsensemble.fr.xml
+		- Sedo_Holding.com.xml
+
+
+	CDN buckets:
+
+		- sedo.cachefly.net
+
+			- img.sedoparking.com
+
+
+	Problematic domains:
+
+		- mail.sedo.com *
+
+		- sedo.de subdomains:
+
+			- cvs **
+			- dba **
+			- mail *
+			- techoffice **
+			- typo3 **
+
+		- (www.)sedo.fr		(works; mismatched, CN: www.sedo.de)
+
+	* Works; mismatched, CN: *.sedoholding.com
+	** Works, expired 2012-03-24
+
+
+	Fully covered domains:
+
+		- (www.)sedo.co.uk
+		- (www.)sedo.com
+		- mail.sedo.com		(→ mail.sedoholding.com)
+
+		- sedo.de subdomains:
+
+			- (www.)
+			- backoffice
+			- mail		(→ mail.sedoholding.com)
+
+		- (www.)sedo.fr		(→ sedo.com)
+		- img.sedoparking.com	(→ sedo.cachefly.net)
+
+
+	Mixed content:
+
+		- Web bugs/ads, on:
+
+			- sedo.co.uk from www.tqlkg.com *
+			- sedo.com from banniere.reussissonsensemble.fr *
+			- sedo.de from ad2.adfarm1.adition.com *
+			- sedo.de from imagesrv.adition.com *
+
+	* Secured by us, and noone cares
+
+-->
 <ruleset name="Sedo.com">
 
-	<target host="affili.net"/>
-	<target host="www.affili.net"/>
-	<target host="sedo.com"/>
-	<target host="*.sedo.com"/>
-	<target host="sedo.co.uk"/>
-	<target host="*.sedo.co.uk"/>
-	<target host="sedo.de"/>
-	<target host="*.sedo.de"/>
-	<target host="sedo.fr"/>
-	<target host="www.sedo.fr"/>
-	<target host="backoffice.sedo.de"/>
-	<target host="cvs.sedo.de"/>
-	<target host="dbe.sedo.de"/>
-	<target host="techoffice.sedo.de"/>
-	<target host="img.sedoparking.com"/>
+	<target host="sedo.co.uk" />
+	<target host="*.sedo.co.uk" />
+	<target host="sedo.com" />
+	<target host="*.sedo.com" />
+	<target host="sedo.de" />
+	<target host="*.sedo.de" />
+	<target host="sedo.fr" />
+	<target host="www.sedo.fr" />
+	<target host="img.sedoparking.com" />
 
 
-	<securecookie host="^www\.affili\.net$" name=".*"/>
-	<securecookie host="^\.sedo\.(co(m|\.uk)|de)$" name=".*"/>
+	<securecookie host="^\.?sedo\.(?:co\.uk|com|de)$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?affili\.net/"
-		to="https://www.affili.net/"/>
+	<rule from="^http://(www\.)?sedo\.(co\.uk|com|de)/"
+		to="https://$1sedo.$2/" />
 
-	<rule from="^http://(?:www\.)?affili\.de/"
-		to="https://www.affili.net/de/"/>
+	<rule from="^http://mail\.sedo\.(?:com|de)/"
+		to="https://mail.sedoholding.com/" />
 
-	<rule from="^http://(?:www\.)?sedo\.(co(m|\.uk)|de)/"
-		to="https://sedo.$1/"/>
+	<rule from="^http://backoffice\.sedo\.de/"
+		to="https://backoffice.sedo.de/" />
 
 	<rule from="^http://(?:www\.)?sedo\.fr/"
-		to="https://sedo.com/fr/home/bienvenue"/>
-
-	<rule from="^http://(backoffice|cvs|dbe|techoffice)\.sedo\.de/"
-		to="https://$1.sedo.de/"/>
+		to="https://sedo.com/fr/home/bienvenue" />
 
 	<rule from="^http://img\.sedoparking\.com/"
-		to="https://sedo.cachefly.net/"/>
+		to="https://sedo.cachefly.net/" />
 
 </ruleset>

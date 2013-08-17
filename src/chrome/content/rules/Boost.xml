@@ -1,7 +1,7 @@
 <!--
 	Nonfunctional subdomains:
 
-		- www	(redirects to http)
+		- (www.)	(redirects to http, valid cert)
 
 -->
 <ruleset name="boost (partial)">
@@ -12,7 +12,12 @@
 	<securecookie host="^svn\.boost\.org$" name=".*" />
 
 
-	<rule from="^http://svn\.boost\.org/"
-		to="https://svn.boost.org/" />
+	<!--	^lists shows RHEL test page over https:
+							-->
+	<rule from="^http://lists\.boost\.org/(?:\?.*)?$"
+		to="https://lists.boost.org/mailman/listinfo.cgi" />
+
+	<rule from="^http://(lists|svn)\.boost\.org/"
+		to="https://$1.boost.org/" />
 
 </ruleset>

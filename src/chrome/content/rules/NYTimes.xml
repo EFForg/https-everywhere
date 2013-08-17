@@ -1,10 +1,18 @@
 <!--
+	NB: https prevents comment threads from
+	loading, with or https-everywhere.
+
+
 	Other New York Times rulesets:
 
 		- The_Boston_Globe.xml
 
 
 	CDN buckets:
+
+		- pimage.timespeople.nytimes.com.amazonaws.com
+
+			- pimage.timespeople.nytimes.com
 
 		- pnytimes.chartbeat.net
 		- js.nyt.com.edgesuite.net
@@ -31,7 +39,7 @@
 
 	Problematic domains:
 
-		- graphics.nytimes.com
+		- pimage.timespeople.nytimes.com	(amazonaws)
 
 
 	Fully covered domains:
@@ -42,9 +50,16 @@
 			- graphics
 			- markets.on
 			- meter-svc
+			- tagx
+			- pimage.timespeople	(→ amazonaws)
+
+
+	This ruleset currently prevents comment threads loading.  Example:
+
+		nytimes.com/2013/07/07/us/in-secret-court-vastly-broadens-powers-of-nsa.html?target=comments
 
 -->
-<ruleset name="NYTimes (mixed content)" platform="mixedcontent">
+<ruleset name="NYTimes (breaks comments)" default_off="comment threads fail to load" platform="mixedcontent">
 
 	<target host="newyorktimes.com" />
 	<target host="www.newyorktimes.com" />
@@ -61,6 +76,10 @@
 												-->
 		<exclusion pattern="^http://(?:www\.)?nytimes\.com/svc/community/V3/requestHandler(?:$|\?)" />
 		<!--
+			404s when rewritten to www:
+							-->
+		<exclusion pattern="^https?://graphics8\.nytimes\.com/bi/js/tagx/tagx\.js" />
+		<!--
 			Breaks slideshow.
 
 				- Lens/data/\d{8}POD.xml redirects to login page
@@ -71,9 +90,15 @@
 
 	<!--	Other cross-domain cookies:
 
-			- RMID
+			- nyt-a
+			- nyt-m		(set by meter-svc)
+			- nyt-recommend
+			- nyt5_disable
+			- RMID *
+			- tagx-[lps]
+			- WT_FPC
 
-			Used on mobile.
+		* Used on mobile.
 
 	NYT-S is the paywall cookie. Securing it may break random bits of the NYTimes site:
 
@@ -99,17 +124,20 @@
 	<rule from="^http://\w+\.blogs\.nytimes\.com/favicon\.ico"
 		to="https://www.nytimes.com/favicon.ico" />
 
-	<rule from="^http://(et|global|homedelivery|meter-svc|mirror-svc|myaccount|wt\.o|markets\.on|static|up)\.nytimes\.com/"
+	<rule from="^http://(et|global|graphics|homedelivery|meter-svc|mirror-svc|myaccount|wt\.o|markets\.on|static|tagx|up)\.nytimes\.com/"
 		to="https://$1.nytimes.com/" />
 
-	<rule from="^http://graphics\d?\.nytimes\.com/"
+	<rule from="^http://graphics\d\.nytimes\.com/"
 		to="https://www.nytimes.com/" />
 
 	<rule from="^http://jobmarket\.nytimes\.com/(adx|images)/"
 		to="https://www.nytimes.com/$1/" />
 
-	<rule from="^https?://json8\.nytimes\.com/"
+	<rule from="^http://json8\.nytimes\.com/"
 		to="https://static.nytimes.com/" />
+
+	<rule from="^http://pimage\.timespeople\.nytimes\.com/"
+		to="https://s3.amazonaws.com/pimage.timespeople.nytimes.com/" />
 
 	<!--		travel.nytimes.com doesn't work, but
 		articles on travel appear to be on www too.
