@@ -32,7 +32,7 @@ if [ -n "$1" ]; then
   fi
 fi
 
-VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
+VERSION=`python -c "import json ; print json.loads(open('chromium/manifest.json').read())['version']"`
 
 echo "Building chrome version" $VERSION
 
@@ -78,9 +78,8 @@ do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-python ./utils/merge-rulesets.py
+. ./utils/merge-rulesets.sh
 
-export RULESETS=chrome/content/rules/default.rulesets
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 echo 'var rule_list = [' > pkg/crx/rule_list.js
