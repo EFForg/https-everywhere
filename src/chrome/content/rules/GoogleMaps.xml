@@ -18,6 +18,11 @@
 <ruleset name="Google Maps">
 
 	<target host="maps.google.*" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/8627
+										-->
+		<exclusion pattern="^http://maps\.google\.com/local_url" />
+		<exclusion pattern="^http://maps\.google\.gr/transitathens" />
 	<target host="maps.google.co.*" />
 	<target host="khms.google.com" />
 	<target host="khms0.google.com" />
@@ -25,24 +30,20 @@
 	<target host="khms2.google.com" />
 	<target host="khms3.google.com" />
 	<target host="maps-api-ssl.google.com" />
-	<target host="maps.google.com.*" />
 	<target host="mw2.google.com" />
+	<target host="maps.google.com.*" />
 	<target host="maps.googleapis.com" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001317.html
-							-->
+														-->
+		<!--exclusion pattern="^http://maps\.googleapis\.com/map(files/lib/map_1_20\.swf|sapi/publicapi\?file=flashapi)" /-->
 		<exclusion pattern="^http://maps\.googleapis\.com/map(?:files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)" />
-		<!--exclusion pattern="^http://maps\.googleapis\.com/map(?:files/lib/map_1_20\.swf|sapi/publicapi\?file=flashapi)" /-->
-		<exclusion pattern="^http://maps\.google\.gr/transitathens" />
-		<!--
-			https://trac.torproject.org/projects/tor/ticket/8627
-										-->
-		<exclusion pattern="^http://maps\.google\.com/local_url" />
 	<target host="maps.gstatic.com" />
 
 
-	<securecookie host="^maps\.google\.(?:com?\.)?(?:au|ca|gh|ie|in|jm|ke|lk|my|n[agz]|pk|rw|sl|sg|ug|uk|za|zw)$" name=".+" />
-	<securecookie host="^maps\.g(?:oogle|static|oogleapis)\.com$" name=".+" />
+	<!--securecookie host="^maps\.google\.(com?\.)?(au|ca|gh|ie|in|jm|ke|lk|my|n[agz]|pk|rw|sl|sg|ug|uk|za|zw)$" name=".+" /-->
+	<securecookie host="^maps\.google\.[\w.]{2,6}$" name=".+" />
+	<securecookie host="^maps\.g(?:oogle|oogleapis|static)\.com$" name=".+" />
 	<securecookie host="^maps-api-ssl\.google\.com$" name=".+" />
 
 
@@ -60,7 +61,7 @@
 	<rule from="^http://maps\.g(oogleapis|static)\.com/"
 		to="https://maps.g$1.com/" />
 
-	<rule from="^https://maps\.googleapis\.com/map(files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)"
-		to="http://maps.googleapis.com/map$1" downgrade="1" />
+	<rule from="^https://maps\.googleapis\.com/map(?=files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)"
+		to="http://maps.googleapis.com/map" downgrade="1" />
 
 </ruleset>
