@@ -604,7 +604,7 @@ HTTPSEverywhere.prototype = {
 
     // get our preferences branch object
     // FIXME: Ugly hack stolen from https
-    var branch_namel
+    var branch_name;
     if(prefBranch == PREFBRANCH_RULE_TOGGLE)
       branch_name = "extensions.https_everywhere.rule_toggle.";
     else
