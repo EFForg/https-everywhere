@@ -40,14 +40,14 @@ RuleSet.prototype = {
       return null;
     }
     // Even so, if we're covered by an exclusion, go home
-    for(i = 0; i < this.exclusions.length; ++i) {
+    for(var i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
     // Okay, now find the first rule that triggers
-    for(i = 0; i < this.rules.length; ++i) {
+    for(var i = 0; i < this.rules.length; ++i) {
       returl = urispec.replace(this.rules[i].from_c,
                                this.rules[i].to);
       if (returl != urispec) {
@@ -163,7 +163,7 @@ RuleSets.prototype = {
       results = results.concat(this.targets[host]);
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
-    for (i = 0; i < segmented.length; ++i) {
+    for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
       t = segmented.join(".");
@@ -173,7 +173,7 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (i = 1; i <= segmented.length - 2; ++i) {
+    for (var i = 1; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
       if (this.targets[t])
         results = results.concat(this.targets[t]);
@@ -182,7 +182,7 @@ RuleSets.prototype = {
     if (results.length == 0)
       log(DBUG, "  None");
     else
-      for (i = 0; i < results.length; ++i)
+      for (var i = 0; i < results.length; ++i)
         log(DBUG, "  " + results[i].name);
     return results;
   },
@@ -203,12 +203,12 @@ RuleSets.prototype = {
       hostname = hostname.slice(1);
 
     var rs = this.potentiallyApplicableRulesets(hostname);
-    for (i = 0; i < rs.length; ++i) {
+    for (var i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
         if (!knownHttps && !this.safeToSecureCookie(hostname))
           continue;
-        for (j = 0; j < ruleset.cookierules.length; j++) {
+        for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
@@ -256,7 +256,7 @@ RuleSets.prototype = {
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
-    for (i = 0; i < rs.length; ++i) {
+    for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
@@ -279,4 +279,3 @@ RuleSets.prototype = {
     return null;
   },
 };
-
