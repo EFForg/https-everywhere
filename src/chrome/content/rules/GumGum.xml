@@ -1,3 +1,26 @@
+<!--
+	For problematic rules, see GumGum-problematic.xml.
+
+
+	CDN buckets:
+
+		- d1u2cbczpt82kt.cloudfront.net
+
+			- c
+
+
+	Problematic subdomains:
+
+		- c	(cloudfront)
+		- g2	(works, expired 2012-04-28)
+
+
+	Fully covered subdomains:
+
+		- ads
+		- c	(→ d1u2cbczpt82kt.cloudfront.net)
+
+-->
 <ruleset name="GumGum (partial)">
 
 	<target host="gumgum.com" />
@@ -7,16 +30,17 @@
 	<!--	Most in \w*$ 301 to http, but append a slash and \w+...
 
 		Only works for the homepage though.
-									-->
-	<rule  from="^http://(www\.)?gumgum\.com/($|\?)"
-		to="https://$1gumgum.com/home/home$2" />
+							-->
+	<rule  from="^http://(www\.)?gumgum\.com/(?=$|\?)"
+		to="https://$1gumgum.com/home/home" />
 		
-	<rule from="^http://(www\.)?gumgum\.com/(images/|(?:login|terms-of-service)(?:/?$|\?))"
-		to="https://$1gumgum.com/$2" />
+	<rule from="^http://(www\.)?gumgum\.com/(?=images/|(?:login|terms-of-service)(?:/?$|\?))"
+		to="https://$1gumgum.com/" />
 
-	<!--	Advertising included on 3rd-party websites.
-								-->
-	<rule from="^http://g2\.gumgum\.com/"
-		to="https://g2.gumgum.com/" />
+	<rule from="^http://ads\.gumgum\.com/"
+		to="https://ads.gumgum.com/" />
+
+	<rule from="^http://c\.gumgum\.com/"
+		to="https://d1u2cbczpt82kt.cloudfront.net/" />
 
 </ruleset>

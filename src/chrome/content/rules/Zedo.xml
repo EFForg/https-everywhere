@@ -5,26 +5,53 @@
 	CDN buckets:
 
 		- c5.2-01-29be-0005.cdx.cedexis.net
+		- d2.2-01-29be-0006.cdx.cedexis.net
 		- d3.2-01-29be-0006.cdx.cedexis.net
+		- axp.2-01-29be-0007.cdx.cedexis.net
 		- d4.zedo.com.edgesuite.net
+
 		- d7.zedo.com.edgesuite.net
+
+			- a124.g.akamai.net
+
 		- r1.zedo.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
 		- c5	(cert: gp1.wac.edgecastcdn.net; 404)
+		- d2
 		- d3	(404)
 		- www	(cert: target.zedo.com; shows target)
+
+
+	Problematic subdomains:
+
+		- axp	(mismatched, CN: saxp.zedo.com)
+		- d7	(works, akamai)
+
+
+	Fully covered subdomains:
+
+		- axp		(→ saxp)
+		- d7		(→ akamai)
+		- saxp
+		- target
 
 -->
 <ruleset name="Zedo (partial)">
 
-	<target host="target.zedo.com" />
+	<target host="*.zedo.com" />
 
 
-	<securecookie host="^target\.zedo\.com$" name=".+" />
+	<securecookie host="^(?:target)?\.zedo\.com$" name=".+" />
 
+
+	<rule from="^http://s?axp\.zedo\.com/"
+		to="https://saxp.zedo.com/" />
+
+	<rule from="^http://d7\.zedo\.com/"
+		to="https://a248.e.akamai.net/f/124/2263/10/d7.zedo.com/" />
 
 	<rule from="^http://target\.zedo\.com/"
 		to="https://target.zedo.com/" />
