@@ -40,7 +40,7 @@ RuleSet.prototype = {
       return null;
     }
     // Even so, if we're covered by an exclusion, go home
-    for(i = 0; i < this.exclusions.length; ++i) {
+    for(var i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         log(DBUG,"excluded uri " + urispec);
         return null;
@@ -263,7 +263,7 @@ RuleSets.prototype = {
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
-    for (i = 0; i < rs.length; ++i) {
+    for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
