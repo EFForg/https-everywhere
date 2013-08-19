@@ -124,10 +124,10 @@ RuleSet.prototype = {
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
  
-    for (i = 0; i < this.exclusions.length; ++i) 
+    for (var i = 0; i < this.exclusions.length; ++i) 
       if (this.exclusions[i].pattern_c.test(urispec)) return false;
  
-    for (i = 0; i < this.rules.length; ++i) 
+    for (var i = 0; i < this.rules.length; ++i) 
       if (this.rules[i].from_c.test(urispec)) return true;
     return false;
   },
@@ -228,7 +228,7 @@ const RuleWriter = {
   },
 
   getRuleDir: function() {
-    loc = "chrome://https-everywhere/content/rules/";
+    var loc = "chrome://https-everywhere/content/rules/";
 
     var file =
       CC["@mozilla.org/file/local;1"]
@@ -652,7 +652,7 @@ const HTTPSRules = {
 
     this.log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
-    for (i = 0; i < rs.length; ++i) {
+    for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
