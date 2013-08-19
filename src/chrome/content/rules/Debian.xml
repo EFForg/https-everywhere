@@ -1,39 +1,71 @@
 <!--
 	Nonfunctional domains:
 
-		screenshots.debian.net
+		screenshots.debian.net *
 
 		debian.org subdomains:
 
-			- anonscm	(cert: alioth; shows alioth's data)
-			- bugs		(refused)
-			- ca		(cert: db.debian.org; shows that domain's data)
-			- cdimage
-			- incoming	(cert: ftp-master.debian.org; shows that domain's data)
-			- packages
+			- (www.) *
+			- anonscm	(redirects to alioth; mismatched, CN: anonscm.debian.org)
+			- bugs *
+			- ca		(shows db; mismatched, CN: db.debian.org)
+			- cdimage *
+			- incoming	(shows ftp-master; mismatched, CN: ftp-master.debian.org)
+			- packages *
 			- people	(reset; people.debian.org/~joerg/ is displayed
 					after fetching gpg.ganneff.de over http...)
-			- qa
-			- packages.qa	(refused)
-			- search
-			- svn		(cert: alioth; shows alioth's data)
-			- (www.)
+			- qa *
+			- packages.qa *
+			- search *
+			- svn		(shows alioth; mismatched, CN: alioth.debian.org)
+
+	* Refused
+
+
+	Fully covered domains:
+
+		- debconf.org subdomains:
+
+			- debconf7
+			- db
+			- gallery
+			- penta
+			- rt
+			- svn
+			- wiki
+
+		- mentors.debian.net
+		- paste.debian.net
+
+		- debian.org subdomains:
+
+			- alioth
+			- lists.alioth
+			- buildd
+			- db
+			- ftp-master
+			- lists
+			- nagios
+			- nm
+			- wiki
 
 -->
 <ruleset name="Debian (partial)" default_off="self-signed">
 
+	<target host="*.debconf.org" />
 	<target host="*.debian.net" />
-	<target host="*.debian.org"/>
-	<target host="*.alioth.debian.org"/>
-	<target host="*.debconf.org"/>
+		<!--exclusion pattern="^http://screenshots\.debian\.net/" /-->
+	<target host="*.debian.org" />
+		<!--exclusion pattern="^http://(anonscm|bugs|ca|cdimage|incoming|packages|people|qa|packages\.qa|search|svn|www)\.debian\.org/" /-->
+
+
+	<rule from="^http://(db|debconf7|gallery|penta|rt|svn|wiki)\.debconf\.org/"
+		to="https://$1.debconf.org/" />
 
 	<rule from="^http://(mentors|paste)\.debian\.net/"
 		to="https://$1.debian.net/" />
 
 	<rule from="^http://((?:lists\.)?alioth|buildd|db|ftp-master|lists|nagios|nm|wiki)\.debian\.org/"
-		to="https://$1.debian.org/"/>
-
-	<rule from="^http://(wiki|penta|debconf7|db|rt|gallery|svn)\.debconf\.org/"
-		to="https://$1.debconf.org/"/>
+		to="https://$1.debian.org/" />
 
 </ruleset>

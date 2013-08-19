@@ -1,0 +1,62 @@
+<!--
+	CDN buckets:
+
+		- content[89].flixster.com.cdngc.net
+
+		- flixster-001.inscname.net
+
+			- instart[0-3]
+
+
+	Problematic domains:
+
+		- content[89].flixster.com	(403; mismatched, CN: ssl2.cdngc.net)
+		- instart[0-3].flixster.com	(504; mismatched, CN: ssl001.insnw.net)
+
+
+	Partially covered domains:
+
+		- (www.)flixster.com	(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- flixster.com subdomains:
+
+			- community
+			- content[67]
+			- content8	(→ content6)
+			- content9	(→ content7)
+			- instart[02]	(→ content6)
+			- instart[13]	(→ content7)
+
+		- static.flixstercdn.com
+
+-->
+<ruleset name="Flixster (partial)">
+
+	<target host="flixster.com" />
+	<target host="*.flixster.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?flixster\.com/(?!docs/|favicon\.ico|(?:login|register)(?:$|[?/])|login-gate/|register-frame/|site/)" />
+	<target host="static.flixstercdn.com" />
+
+
+	<securecookie host="^community\.flixster\.com$" name=".+" />
+
+
+	<rule from="^http://(community\.|www\.)?flixster\.com/"
+		to="https://$1flixster.com/" />
+
+	<rule from="^http://(?:instart[02]|content[68])\.flixster\.com/"
+		to="https://content6.flixster.com/" />
+
+	<rule from="^http://(?:content[79]|instart[13])\.flixster\.com/"
+		to="https://content7.flixster.com/" />
+
+	<rule from="^http://static\.flixstercdn\.com/"
+		to="https://static.flixstercdn.com/" />
+
+</ruleset>
