@@ -1,25 +1,73 @@
 <!--
+	CDN buckets:
+
+		- dlcdnet.asus.com.edgesuite.net
+
+			- a1828.b.akamai.net
+
+		- eee.asus.com.edgesuite.net
+		- event.asus.com.edgesuite.net
+
+		- press.asus.com.edgesuite.net
+
+			- a1479.g.akamai.net
+
+		- rog.asus.com.edgesuite.net
+		- support.asus.com.edgesuite.net
+
+		- zenbook.asus.com.edgesuite.net
+
+			- a1778.b.akamai.net
+
+
 	Nonfunctional subdomains:
 
-		- csr		(404)
-		- event		(403)
+		- csr *
+		- eee **
+		- event		(403, akamai)
 		- rog		(503, akamai)
-		- sonicmaster	(shows a different domain)
+		- (www.)service	(refused)
+		- sonicmaster *
+		- support **
+
+	* 404, valid cert
+	** 404, akamai
 
 
 	Problematic subdomains:
 
-		- ^		(404)
-		- eee *
-		- zenbook *
+		- ^ *
+		- autodiscover *
+		- dlcdnet **
+		- mail *
+		- press **
+		- zenbook **
 
-	* Works, akamai
+	* 404, valid cert
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- account
+
+
+	Observed cookie domains:
+
+		- account
+		- mymail
+		- press
+		- serviceshop
+		- sonicmaster
+		- vip
 
 -->
 <ruleset name="ASUS (partial)">
 
 	<target host="asus.com" />
 	<target host="*.asus.com" />
+		<!--exclusion pattern="^http://(csr|eee|event|rog|sonicmaster|support)\." /-->
 
 
 	<rule from="^http://(?:www\.)?asus\.com/"
