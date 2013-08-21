@@ -1,31 +1,120 @@
 <!--
+	CDN buckets:
+
+		- dlcdnet.asus.com.edgesuite.net
+
+			- a1828.b.akamai.net
+
+		- eee.asus.com.edgesuite.net
+		- event.asus.com.edgesuite.net
+
+		- press.asus.com.edgesuite.net
+
+			- a1479.g.akamai.net
+
+		- rog.asus.com.edgesuite.net
+		- support.asus.com.edgesuite.net
+
+		- zenbook.asus.com.edgesuite.net
+
+			- a1778.b.akamai.net
+
+
 	Nonfunctional subdomains:
 
-		- csr		(404)
-		- event		(403)
+		- csr *
+		- eee **
+		- event		(403, akamai)
 		- rog		(503, akamai)
-		- sonicmaster	(shows a different domain)
+		- (www.)service	(refused)
+		- sonicmaster *
+		- support **
+
+	* 404, valid cert
+	** 404, akamai
 
 
 	Problematic subdomains:
 
-		- ^		(404)
-		- eee *
+		- ^ *
+		- autodiscover *
+		- dlcdnet **
+		- mail *
+		- press **
+		- zenbook **
+
+	* 404, valid cert
+	** Works, akamai
+
+
+	Partially covered subdomains:
+
+		- press *
 		- zenbook *
 
-	* Works, akamai
+	* → akamai, avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- autodiscover	(→ mymail)
+		- account
+		- dlcdnet	(→ akamai)
+		- mail		(→ mymail)
+		- mymail
+		- serviceshop
+		- vip
+
+
+	Observed cookie domains:
+
+		- account
+		- mymail
+		- press
+		- serviceshop
+		- sonicmaster
+		- vip
 
 -->
 <ruleset name="ASUS (partial)">
 
 	<target host="asus.com" />
-	<target host="www.asus.com" />
+	<target host="*.asus.com" />
+		<!--exclusion pattern="^http://(csr|eee|event|rog|sonicmaster|support)\." /-->
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://press\.asus\.com/(?!favicon\.ico|\w+/files/|wp-content/|wp-includes/)" /-->
+		<!--exclusion pattern="^http://zenbook\.asus\.com/(?!favicon\.ico|imgs/|rsc/)" /-->
+		<!--
+			Links images relative to /
+							-->
+		<!--exclusion pattern="^http://press\.asus\.com/wp-content/plugins/(auto-thickbox-plus/thickbox\.min\.css|easy-fancybox/easy-fancybox\.css\.php|shadowbox-js/shadowbox/shadowbox\.css)" /-->
+		<!--exclusion pattern="^http://zenbook\.asus\.com/rsc/all\.css" /-->
 
 
-	<rule from="^https?://(?:www\.)?asus\.com/"
+	<securecookie host=".+\.asus\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?asus\.com/"
 		to="https://www.asus.com/" />
 
-	<rule from="^http://account\.asus\.com/"
-		to="https://account.asus.com/" />
+	<rule from="^http://(account|mymail|serviceshop|vip)\.asus\.com/"
+		to="https://$1.asus.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://(?:autodiscover|mail)\.asus\.com/.*"
+		to="https://mymail.asus.com/owa/" />
+
+	<rule from="^http://dlcdnet\.asus\.com/"
+		to="https://a248.e.akamai.net/f/1828/2290/9f/dlcdnet.asus.com/" />
+
+	<rule from="^http://press\.asus\.com/(?=favicon\.ico|\w+/files/|wp-content/(?!plugins/(?:auto-thickbox-plus|easy-fancybox|shadowbox-js/shadowbox)/[\w.-]+\.css)|wp-includes/)"
+		to="https://a248.e.akamai.net/f/1479/3611/4f/press.asus.com/" />
+
+	<rule from="^http://zenbook\.asus\.com/(?=favicon\.ico|imgs/|rsc/(?!all\.css))"
+		to="https://a248.e.akamai.net/f/1778/5348/10h/zenbook.asus.com/" />
 
 </ruleset>

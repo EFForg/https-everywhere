@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- coresecurity.mktoweb.com
+
+			- ws.coresecurity.com
+
+
+	Nonfunctional domains:
+
+		- www.core-sdi.com *
+		- (www.)coresecurity.com *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ws	(marketo)
+
+
+	Partially covered subdomains:
+
+		- ws	(→ na-d.marketo.com)
+
+
+	Fully covered subdomains:
+
+		- blog
+		- cs
+
+
+	Mixed content:
+
+		- Images on blog from blog *
+
+	* Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="Core Security.com (partial)">
+
+	<target host="*.coresecurity.com" />
+
+
+	<securecookie host="^cs\.coresecurity\.com$" name=".+" />
+
+
+	<rule from="^http://(blog|cs)\.coresecurity\.com/"
+		to="https://$1.coresecurity.com/" />
+
+	<rule from="^http://ws\.coresecurity\.com/(cs|image|j|r)s/"
+		to="https://na-d.marketo.com/$1s/" />
+
+</ruleset>
