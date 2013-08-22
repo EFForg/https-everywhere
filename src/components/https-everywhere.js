@@ -547,7 +547,7 @@ HTTPSEverywhere.prototype = {
     }
     if (was_stable && !shown) {
       this.prefs.setBoolPref("dev_popup_shown", true);
-      this.chrome_opener("https://eff.org");
+      this.tab_opener("chrome://https-everywhere/content/observatory-popup.xul");
     }
   },
 
@@ -696,6 +696,14 @@ HTTPSEverywhere.prototype = {
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', args );
+  },
+
+  tab_opener: function(uri) {
+    var gb = CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator) 
+      .getMostRecentWindow('navigator:browser')
+      .gBrowser;
+    gb.selectedTab = gb.addTab(uri);
   },
 
   toggleEnabledState: function() {
