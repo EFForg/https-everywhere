@@ -13,7 +13,7 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .wrappedJSObject;
 
 function dev_popup_done() {
-//  HTTPSEverywhere.prefs.setBoolPref("dev_popup_shown", true);
+  HTTPSEverywhere.prefs.setBoolPref("dev_popup_shown", true);
   window.close();
 }
 
