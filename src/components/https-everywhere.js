@@ -546,8 +546,7 @@ HTTPSEverywhere.prototype = {
       was_stable = false;
     }
     if (was_stable && !shown) {
-      this.prefs.setBoolPref("dev_popup_shown", true);
-      this.tab_opener("chrome://https-everywhere/content/observatory-popup.xul");
+      this.tab_opener("chrome://https-everywhere/content/dev-popup.xul");
     }
   },
 
