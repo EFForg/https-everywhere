@@ -10,14 +10,18 @@
 	Nonfunctional subdomains:
 
 		- (www.)bgtplan
+		- (www.)caspresentations **
 		- catalog	("not available at this address"; mismatched, CN: *.acalogadmin.com)
 		- gradlsu.gs *
+		- offcampuslife	(redirects to http, valid cert)
 		- www.oip *
 		- www.phys *
 		- uiswcmsweb.prod *
 		- research *
 		- autoconnect	(reset)
+		- urec		(dropped)
 
+	** Shows studlife-web1.psu.edu, valid cert
 	* Refused
 
 
@@ -25,18 +29,25 @@
 
 		- ^		(cert only matches www)
 		- (www.)familes	(mismatched, CN: studlife-web1.lsu.edu)
+		- www.family *
 		- my		(works; mismatched, CN: mylsu.apps.lsu.edu)
 		- appl008.ocs	(mismatched, CN: appl008.lsu.edu)
 		- appl037.ocs	(mismatched, CN: appl037.lsu.edu)
 		- www.sg	(mismatched, CN: studlife-web1.lsu.edu)
+		- tigercard	(shows as)
+
+	* Mismatched, CN: studlife-web1.lsu.edu
 
 
 	Partially covered subdomains:
 
+		- (www.)bengalbound *
 		- careercenter *
 		- (www.)cas *
 		- (www.)deanofstudents *
+		- (www.)disability
 		- (www.)families *	(→ studlife-web1)
+		- (www.)family *	(www → ^)
 		- (www.)fye *
 		- (www.)greeks *
 		- (www.)sfmc *
@@ -59,6 +70,10 @@
 			- myproxy
 			- web
 
+		- (www.)as
+		- (www.)complaints
+		- courses
+
 		- grok subdomains:
 
 			- (www.)
@@ -66,25 +81,40 @@
 			- moodle2
 			- networking
 
+		- housing
 		- itservice
 		- appl00[38].ocs	(→ appl00[38])
 		- appl037.ocs		(→ appl037)
 		- sso.paws
+		- photo-management
+		- photos
 		- (www.)saa
 		- jlee.saa
 		- sites01
 		- lsumvs.sncc
+		- studlife-web1
+		- (www.)tigercard	(→ as)
 		- piwik.uss
+
+
+	Observed cookie domains:
+
+		- .bengalbound
+		- courses
+		- .disability
+		- .family
+		- photo-management
+		- photos
 
 -->
 <ruleset name="Louisiana State University (partial)">
 
 	<target host="lsu.edu" />
 	<target host="*.lsu.edu" />
-		<exclusion pattern="^http://(?:careercenter|(?:www\.)?(?:cas|deanofstudents|families|fye|greeks|sg|sfmc|studentlife))\.lsu\.edu/(?!favicon\.ico|misc/|sites/)" />
+		<exclusion pattern="^http://(?:careercenter|(?:www\.)?(?:bengalbound|cas|deanofstudents|disability|families|family|fye|greeks|sg|sfmc|studentlife))\.lsu\.edu/(?!favicon\.ico|misc/|sites/)" />
 
 
-	<securecookie host="^(?:(?:calendar|mylsu|myproxy|web)\.apps|\.grok|sso\.paws|\.saa|sites01)\.lsu\.edu$" name=".+" />
+	<securecookie host="^(?:(?:calendar|mylsu|myproxy|web)\.apps|\.complaints|courses|\.grok|sso\.paws|photo-management|photos|\.saa|sites01)\.lsu\.edu$" name=".+" />
 
 
 	<!--	Domains for which both ^foo and www.foo exist,
@@ -96,13 +126,13 @@
 	<rule from="^http://appl0(08|37)(?:\.ocs)?\.lsu\.edu/"
 		to="https://appl0$1.lsu.edu/" />
 
-	<rule from="^http://((?:calendar|careercenter|mylsu|myproxy|web)\.apps|(?:connect|moodle2|networking)\.grok|itservice|sso\.paws|jlee\.saa|sites01|lsumvs\.sncc|piwik\.uss)\.lsu\.edu/"
+	<rule from="^http://((?:calendar|careercenter|mylsu|myproxy|web)\.apps|courses|(?:connect|moodle2|networking)\.grok|housing|itservice|sso\.paws|photo-management|photos|jlee\.saa|sites01|lsumvs\.sncc|studlife-web1|piwik\.uss)\.lsu\.edu/"
 		to="https://$1.lsu.edu/" />
 
 	<!--	Domains for which both ^foo and www.foo
 		exist, and both work, with valid certs:
 							-->
-	<rule from="^http://(www\.)?(cas|deanofstudents|fye|greeks|grok|saa|sfmc|studentlife)\.lsu\.edu/"
+	<rule from="^http://(www\.)?(as|bengalbound|cas|complaints|deanofstudents|disability|fye|greeks|groksaa|sfmc|studentlife)\.lsu\.edu/"
 		to="https://$1$2.lsu.edu/" />
 
 	<rule from="^http://(?:www\.)?families\.lsu\.edu/"
@@ -111,7 +141,12 @@
 	<!--	Domains for which both ^foo and www.foo exist,
 		but only ^foo works without caveats:
 							-->
-	<rule from="^http://(?:www\.)?sg\.lsu\.edu/"
-		to="https://sg.lsu.edu/" />
+	<rule from="^http://(?:www\.)?(family|sg)\.lsu\.edu/"
+		to="https://$1.lsu.edu/" />
+
+	<!--	Server doesn't drop path:
+						-->
+	<rule from="^http://(?:www\.)?tigercard\.lsu\.edu/"
+		to="https://as.lsu.edu/tigercard" />
 
 </ruleset>
