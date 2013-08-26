@@ -1,0 +1,98 @@
+<!--
+	For other United Internet coverage, see United-Internet.xml.
+
+
+	CDN buckets:
+
+		- i0.1und1.de.edgesuite.net
+
+			- a1254.g.akamai.net
+
+		- 1und1.ivwbox.de
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- erfolgscenter *
+		- jobs *
+		- press *
+		- service-center *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches www)
+		- i0	(works, akamai)
+		- tv	(works; mismatched, CN: portal.gmx.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- apps
+		- dsl
+		- forum
+		- hilfe-center
+		- home
+		- homepage
+		- hosting
+		- i0		(→ akamai)
+		- ias
+		- img
+		- kunden
+		- login
+		- mein
+		- mobile
+		- pixel
+		- redirect
+		- sec-i0
+		- tt
+
+
+	Observed cookie domains:
+
+		- .
+		- apps
+		- dsl
+		- home
+		- homepage
+		- hosting
+		- ias
+		- jobs
+		- kunden
+		- mobile
+		- presse
+		- redirect
+		- service-center
+		- www
+
+
+	Mixed content:
+
+		- Web bug on hilfe-center from status-1und1.de
+
+-->
+<ruleset name="1und1.de (partial)">
+
+	<target host="1und1.de" />
+	<target host="*.1und1.de" />
+		<!--exclusion pattern="^http://(blog|erfolgscenter|jobs|press|service-center|tv)\." /-->
+
+
+	<!--securecookie host="^\.1und1\.de$" name="^(chocolateChip|NG_USERID|uimid)$" /-->
+	<securecookie host=".*\.1und1\.de$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?1und1\.de/"
+		to="https://www.1und1.de/" />
+
+	<rule from="^http://(apps|dsl|forum|hilfe-center|home|homepage|hosting|ias|img|kunden|login|mein|mobile|pixel|redirect|sec-i0|tt)\.1und1\.de/"
+		to="https://$1.1und1.de/" />
+
+	<rule from="^http://i0\.1und1\.de/"
+		to="https://a248.e.akamai.net/f/1254/284/7h/i0.1und1.de/" />
+
+</ruleset>
