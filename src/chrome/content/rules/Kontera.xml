@@ -1,8 +1,6 @@
 <!--
 	Kontera Technologies, Inc
 
-	For problematic rules, see Kontera-mismatches.xml.
-
 
 	CDN buckets:
 
@@ -39,7 +37,12 @@
 
 	Fully covered subdomains:
 
-		- kona32
+		- images *
+		- kona *
+		- kona3[23]
+		- publishers
+
+	* → akamai
 
 
 	Observed cookie domains:
@@ -51,10 +54,19 @@
 -->
 <ruleset name="Kontera (partial)">
 
-	<target host="kona32.kontera.com" />
+	<target host="*.kontera.com" />
 
 
-	<rule from="^http://kona32\.kontera\.com/"
-		to="https://kona32.kontera.com/" />
+	<securecookie host="^(?:\.?publishers)?\.kona\.com$" name=".+" />
+
+
+	<rule from="^http://images\.kontera\.com/"
+		to="https://a248.e.akamai.net/f/489/5395/2m/images.kontera.com/" />
+
+	<rule from="^http://kona\.kontera\.com/"
+		to="https://a248.e.akamai.net/f/302/9266/9m/kona.kontera.com/" />
+
+	<rule from="^http://(kona3[23]|publishers)\.kontera\.com/"
+		to="https://$1.kontera.com/" />
 
 </ruleset>
