@@ -1,22 +1,39 @@
 <!--
+	whos.amung.us Inc
+
+
 	Nonfunctional subdomains:
 
-		- (www.)
-		- widgets
+		- (www.)	(403, valid cert)
+
+
+	Problematic subdomains:
+
+		- whos		(some paths 403)
+
+
+	Partially covered subdomains:
+
 		- whos
+
+
+	Fully covered subdomains:
+
+		- assets
+		- widgets
 
 -->
 <ruleset name="whos.amung.us (partial)">
 
-	<target host="assets.amung.us" />
+	<target host="*.amung.us" />
+		<!--
+			403:
+				-->
+		<!--exclusion pattern="^http://whos\.amung\.us/+($|\?|(about|blog|contact|learnmore|legal|pro(?!/login/)|showcase)($|[?/])|favicon\.ico|widget/)" /-->
+		<exclusion pattern="^http://whos\.amung\.us/(?!colorgen/|flash/|pro/login/)" />
 
 
-	<!--	At least some pages 404.
-						-->
-	<rule from="^http://whos\.amung\.us/pro/login/"
-		to="https://whos.amung.us/pro/login/" />
-
-	<rule from="^http://assets\.amung\.us/"
-		to="https://assets.amung.us/" />
+	<rule from="^http://(asset|who|widget)s\.amung\.us/"
+		to="https://$1s.amung.us/" />
 
 </ruleset>
