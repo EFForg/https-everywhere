@@ -17,10 +17,16 @@ function dev_popup_done() {
   window.close();
 }
 
+function handle_dev_popup_error() {
+  alert("OOPS! Automatic download failed; please go to https://www.eff.org/https-everywhere instead.");
+}
+
 function download_stable() {
   try {
-    HTTPSEverywhere.tab_opener("https://www.eff.org/files/https-everywhere-latest.xpi");
+    window.location.href = "https://www.eff.org/files/https-everywhere-latest.xpi";
   } catch(e) {
-    alert("OOPS! Automatic download failed; please go to https://www.eff.org/https-everywhere instead.");
+    handle_dev_popup_error();
+  } finally {
+    HTTPSEverywhere.prefs.setBoolPref("dev_popup_shown", true);
   }
 }
