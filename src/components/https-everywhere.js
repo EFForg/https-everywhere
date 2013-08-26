@@ -503,6 +503,7 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
+      this.maybeShowDevPopup();
     }
     return;
   },
@@ -525,6 +526,28 @@ HTTPSEverywhere.prototype = {
     };
     if (!shown && !enabled)
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+  },
+
+  maybeShowDevPopup: function() {
+    /*
+     * Users who installed 3.3.2 accidentally got upgraded to the
+     * dev branch. We need to push this code to a dev release so
+     * that they get a popup letting them know that they can switch
+     * back to the stable branch if they want.
+     */
+    var was_stable = true;
+    var shown = this.prefs.getBoolPref("dev_popup_shown");
+    try {
+      // this pref should exist only for people who used to be stable
+      // since getExperimentalFeatureCohort was never run in the
+      // development channel
+      this.prefs.getIntPref("experimental_feature_cohort");
+    } catch(e) {
+      was_stable = false;
+    }
+    if (was_stable && !shown) {
+      this.tab_opener("chrome://https-everywhere/content/dev-popup.xul");
+    }
   },
 
   getExperimentalFeatureCohort: function() {
@@ -672,6 +695,16 @@ HTTPSEverywhere.prototype = {
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', args );
+  },
+
+  tab_opener: function(uri) {
+    var gb = CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator) 
+      .getMostRecentWindow('navigator:browser')
+      .gBrowser;
+    var tab = gb.addTab(uri);
+    gb.selectedTab = tab;
+    return tab;
   },
 
   toggleEnabledState: function() {

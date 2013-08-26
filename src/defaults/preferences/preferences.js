@@ -4,6 +4,9 @@ pref("extensions.https_everywhere.globalEnabled",true);
 // this is the HTTPS Everywhere preferences version (for migrations)
 pref("extensions.https_everywhere.prefs_version", 0);
 
+// this is a popup asking whether the user really meant to be on the dev branch
+pref("extensions.https_everywhere.dev_popup_shown", false);
+
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
 
