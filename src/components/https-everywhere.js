@@ -702,7 +702,9 @@ HTTPSEverywhere.prototype = {
       .getService(CI.nsIWindowMediator) 
       .getMostRecentWindow('navigator:browser')
       .gBrowser;
-    gb.selectedTab = gb.addTab(uri);
+    var tab = gb.addTab(uri);
+    gb.selectedTab = tab;
+    return tab;
   },
 
   toggleEnabledState: function() {

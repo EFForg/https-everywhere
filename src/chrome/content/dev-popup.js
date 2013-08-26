@@ -23,7 +23,11 @@ function handle_dev_popup_error() {
 
 function download_stable() {
   try {
-    window.location.href = "https://www.eff.org/files/https-everywhere-latest.xpi";
+    var tab = HTTPSEverywhere.tab_opener("https://www.eff.org/https-everywhere");
+    setTimeout(function(){
+      openUILinkIn("https://www.eff.org/files/https-everywhere-latest.xpi", 'current');
+      window.close();
+    }, 500);
   } catch(e) {
     handle_dev_popup_error();
   } finally {
