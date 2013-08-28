@@ -31,6 +31,11 @@ if (!httpsEverywhere) { var httpsEverywhere = {}; }
 httpsEverywhere.toolbarButton = {
 
   /**
+   * Name of preference for determining whether to show ruleset counter.
+   */
+  COUNTER_PREF = "extensions.https_everywhere.show_counter",
+
+  /**
    * Used to determine if a hint has been previously shown.
    * TODO: Probably extraneous, look into removing
    */
@@ -155,7 +160,24 @@ httpsEverywhere.toolbarButton = {
 
     toolbarbutton.setAttribute('rulesetsApplied', counter);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
-  } 
+  },
+
+  /**
+   * Gets whether to show the rulesets applied counter.
+   *
+   * @return {boolean}
+   */
+  shouldShowCounter(): function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var prefExists = !sp.getPrefType(tb.COUNTER_PREF) == PREF_INVALID;
+
+    // the default behavior is to show the rulesets applied counter.
+    // if no preference exists (default) or its enabled, show the counter
+    return !prefExists || sp.getBoolPref(counterPref);
+  }
+
 };
 
 function https_everywhere_load() {
