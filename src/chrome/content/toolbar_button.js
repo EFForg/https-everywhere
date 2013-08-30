@@ -54,6 +54,11 @@ httpsEverywhere.toolbarButton = {
     // make sure icon is proper color during init
     tb.changeIcon();
 
+    // make sure the checkbox for showing counter is properly set
+    var showCounter = tb.shouldShowCounter();
+    var counterItem = document.getElementById('https-everywhere-counter-item');
+    counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
     gBrowser.tabContainer.addEventListener(
@@ -133,7 +138,8 @@ httpsEverywhere.toolbarButton = {
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
     var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-    if (!enabled) { 
+    var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
+    if (!enabled || !showCounter) { 
       toolbarbutton.setAttribute('rulesetsApplied', 0);
       return;
     }
@@ -171,11 +177,25 @@ httpsEverywhere.toolbarButton = {
     var tb = httpsEverywhere.toolbarButton;
     var sp = Services.prefs;
 
-    var prefExists = !sp.getPrefType(tb.COUNTER_PREF) == PREF_INVALID;
+    var prefExists = sp.getPrefType(tb.COUNTER_PREF);
 
     // the default behavior is to show the rulesets applied counter.
     // if no preference exists (default) or its enabled, show the counter
-    return !prefExists || sp.getBoolPref(counterPref);
+    return !prefExists || sp.getBoolPref(tb.COUNTER_PREF);
+  },
+
+  /**
+   * Toggles the user's preference for displaying the rulesets applied counter
+   * and updates the UI.
+   */
+  toggleShowCounter: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var showCounter = tb.shouldShowCounter();
+    sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
+
+    tb.updateRulesetsApplied();
   }
 
 };
