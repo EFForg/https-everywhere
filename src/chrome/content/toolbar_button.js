@@ -33,7 +33,7 @@ httpsEverywhere.toolbarButton = {
   /**
    * Name of preference for determining whether to show ruleset counter.
    */
-  COUNTER_PREF = "extensions.https_everywhere.show_counter",
+  COUNTER_PREF: "extensions.https_everywhere.show_counter",
 
   /**
    * Used to determine if a hint has been previously shown.
@@ -167,7 +167,7 @@ httpsEverywhere.toolbarButton = {
    *
    * @return {boolean}
    */
-  shouldShowCounter(): function() {
+  shouldShowCounter: function() {
     var tb = httpsEverywhere.toolbarButton;
     var sp = Services.prefs;
 
