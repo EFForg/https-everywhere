@@ -1,16 +1,19 @@
 <!--
-	Lots of domains lack (valid) https, e.g.:
+	Nonfunctional subdomains:
 
-		- www.cam.ac.uk
-		- www.lib.cam.ac.uk 
-		- www.mrc-lmb.cam.ac.uk	(self-signed, expired; https breaks styling)
-		- www.sports.cam.ac.uk
-		- www.zoo		(times out)
+		- news.admin	(shows www.admin; mismatched, CN: www.admin.cam.ac.uk)
+		- www.lib
+		- www.mrc-lmb	(https breaks styling; expired, self-signed)
+		- www.sports
+		- www.ucs	(redirects to shib.raven, valid cert)
+		- www
+		- www.zoo	(dropped)
 
 
 	Problematic subdomains:
 
 		- damtp		(cert only matches www.damtp)
+		- www.study	(works; mismatched, CN: www.admin.cam.ac.uk)
 
 
 	Partially covered subdomains:
@@ -24,7 +27,16 @@
 		- www.admin
 		- www.cl
 		- www2.mrc-lmb
+		- raven
+		- shib.raven
 		- www.wolfson
+
+
+	Observed cookie domains:
+
+		- www.admin
+		- shib.raven
+		- www.study
 
 -->
 <ruleset name="University of Cambridge (partial)">
@@ -32,8 +44,11 @@
 	<target host="*.cam.ac.uk" />
 
 
-	<rule from="^http://w(?:ebservices\.admin|ww2\.mrc-lmb|ww\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
-		to="https://w$1.cam.ac.uk/" />
+	<securecookie host="^www\.admin\.cam\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://(webservices\.admin|www2\.mrc-lmb|(?:shib\.)?raven|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
+		to="https://$1.cam.ac.uk/" />
 
 	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
 		to="https://www.damtp.cam.ac.uk/global/" />
