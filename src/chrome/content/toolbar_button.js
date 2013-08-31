@@ -21,12 +21,14 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .wrappedJSObject;
 
 // avoid polluting global namespace
+// see: https://developer.mozilla.org/en-US/docs/Security_best_practices_in_extensions#Code_wrapping
 if (!httpsEverywhere) { var httpsEverywhere = {}; }
 
 /**
- * JS Object for used to display toolbar hints to new users and change toolbar
- * UI for cases such as when the toolbar is disabled.
+ * JS Object that acts as a namespace for the toolbar.
  *
+ * Used to display toolbar hints to new users and change toolbar UI for cases
+ * such as when the toolbar is disabled.
  */
 httpsEverywhere.toolbarButton = {
 
