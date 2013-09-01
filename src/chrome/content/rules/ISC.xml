@@ -1,12 +1,16 @@
 <!--
 	Problematic domains:
 
-		- ise	(shows security)
+		- sie	(shows security)
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- bind10
+		- confluence
+		- kb
+		- store
 
 
 	Observed cookie domains:
@@ -17,7 +21,9 @@
 		- dhcpforum
 		- dlv
 		- kb
+		- lists
 		- security
+		- sie	(→ security)
 		- sns
 		- store
 		- support
@@ -33,10 +39,16 @@
 <ruleset name="ISC">
 
 	<target host="isc.org" />
-	<target host="www.isc.org" />
+	<target host="*.isc.org" />
 
 
-	<rule from="^http://(www\.)?isc\.org/"
+	<securecookie host=".+\.isc\.org$" name=".+" />
+
+
+	<rule from="^http://((?:bind10|bindforum|confluence|dhcpforum|dlv|kb|lists|security|sns|store|support|www)\.)?isc\.org/"
 		to="https://$1isc.org/" />
+
+	<rule from="^http://sie\.isc\.org/"
+		to="https://security.isc.org/" />
 
 </ruleset>
