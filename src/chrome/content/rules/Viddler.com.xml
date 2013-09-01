@@ -31,8 +31,16 @@
 				- terms-of-use/
 				- tools/
 
+		- vidgets	[(?!\?).+ 404s]
+
 
 	Fully covered subdomains:
+
+		- *.cdn-ec:
+
+			- static
+			- static[1-9]
+			- thumbs
 
 		- cdn-static
 		- cdn-static\d\d
@@ -62,13 +70,16 @@
 	<target host="viddler.com" />
 	<target host="*.viddler.com" />
 		<!--exclusion pattern="^http://(www\.)?viddler\.com/+($|\?|(about|addons|features|partners|tools)($|[?/]))" /-->
-		<exclusion pattern="^http://(?:www\.)?viddler\.com/(?!embed/|favicon\.ico|mini/|plans)" />
+		<exclusion pattern="^http://(?:www\.)?viddler\.com/(?!embed/|favicon\.ico|login(?:$|[?/])|mini/|plans|vidgets/)" />
 
 
 	<securecookie host="^(?:support|www)\.viddler\.com$" name=".+" />
 
 
-	<rule from="^http://((?:cdn-static(?:-\d\d)?|cdn-thumbs|support|www)\.)?viddler\.com/"
+	<rule from="^http://((?:\w+\.cdn-ec|cdn-static(?:-\d\d)?|cdn-thumbs|support|www)\.)?viddler\.com/"
 		to="https://$1viddler.com/" />
+
+	<rule from="^http://vidgets\.viddler\.com/(?=\?.*)$"
+		to="https://www.viddler.com/vidgets/" />
 
 </ruleset>
