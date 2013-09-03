@@ -1,44 +1,69 @@
 <!--
-	Nonfunctional domains:
+	Other Ubuntu rulesets:
 
-		- ubuntu.com subdomains:
+		- Ubuntu_Forums.org.xml
 
-			- (www.)		(times out)
-			- archive
-			- cdimage		(refused)
-			- irclogs		(record_too_long)
-			- loco ⁴
-			- odm			(cert: testcases.qa.ubuntu.com_https; 301s there)
-			- old-releases		(cert: uec-images.ubuntu.com; shows uec-images' data)
-			- packages		(times out)
-			- planet		(rx_record_too_long)
-			- popcorn		(rx_record_too_long)
-			- iso.qa		(redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
-			- testcases.qa		(self-signed, 301s to http)
-			- pad
-			- releases
-			- security **
-			- status
-			- summit
 
-		- (www.)ubuntuforums.org	(times out)
+	Nonfunctional subdomains:
 
+		- (www.) *
+		- archive **
+		- cdimage **
+		- irclogs		(shows irclogs.canonical.com; mismatched, CN: irclogs.canonical.com)
+		- loco ³
+		- manpages *
+		- odm ³
+		- old-releases **
+		- packages *
+		- people *
+		- planet		(prints "Page Unavailable"; mismatched, CN: certification.canonical.com)
+		- iso.qa ³
+		- testcases.qa		(redirects to http, self-signed)
+		- pad **
+		- releases **
+		- security **
+		- status **
+		- summit **
+
+	* Dropped
 	** Refused
-	⁴ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com)
+	³ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- shop.ubuntu.com	(mismatched, CN: shop.canonical.com)
+		- shop	(mismatched, CN: shop.canonical.com)
 
 
 	Fully covered domains:
 
 		- ubuntu.com subdomains:
 
+			- apps
 			- assets
+			- cloud
 			- community
+			- developer
+			- myapps.developer
+			- fridge
+			- help
+			- lists
+			- login
+			- one
+			- pay
 			- shop		(→ shop.canonical.com)
+			- uds
+			- uec-images
+			- wiki
+
+		- (www.)ubuntuone.com
+
+
+	Mixed content:
+
+		- Images on help from pix.toile-libre.org *
+
+	* Unsecurable, doesn't trip MCB
 
 -->
 <ruleset name="Ubuntu (partial)">
@@ -48,10 +73,10 @@
 	<target host="www.ubuntuone.com" />
 
 
-	<securecookie host="^(apps|login|wiki)\.ubuntu\.com$" name=".*" />
+	<securecookie host="^(?:apps|login|pay|wiki)\.ubuntu\.com$" name=".+" />
 
 
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|lists|login|one|uds|uec-images|wiki)\.ubuntu\.com/"
+	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|lists|login|one|pay|uds|uec-images|wiki)\.ubuntu\.com/"
 		to="https://$1.ubuntu.com/" />
 
 	<rule from="^http://shop\.ubuntu\.com/"
