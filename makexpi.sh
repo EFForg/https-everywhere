@@ -120,7 +120,7 @@ fi
 if [ "$1" = "--fast" ] ; then
   FAST="--fast"
 fi
-python ./utils/merge-rulesets-deterministic.py $FAST
+python ./utils/merge-rulesets.py $FAST
 
 cd src
 
