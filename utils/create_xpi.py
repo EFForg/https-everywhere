@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+
 import os
 import zipfile
 import sys
 import time
 import glob
+import zlib
 
 xpiName = sys.argv[1]
 exclusionsFile = sys.argv[2]
@@ -25,14 +28,14 @@ def createTmpZipInfo():
         for fi in files:
             filename = os.path.join(root,fi)
             if filename not in map(lambda x: './'+x, exclusions):
-                xpiFileTmp.write(filename)
+                xpiFileTmp.write(filename, compress_type=zipfile.ZIP_DEFLATED)
     xpiFileTmp.close()
     return xpiFileTmp.infolist()
 
 def constructZipDet():
     """
     Create a deterministic zip by setting timestamps and
-    system/version info to hard-coded values
+    system/version info to hard-coded values.
     """
     tmpInfo = createTmpZipInfo()
     for info in tmpInfo:
