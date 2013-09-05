@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Uses the Python zip implementation to create deterministic XPI's
+# Author: Yan Zhu, yan@mit.edu
+
 import os
 import zipfile
 import sys
@@ -34,16 +37,17 @@ def createTmpZipInfo():
 
 def constructZipDet():
     """
-    Create a deterministic zip by setting timestamps and
-    system/version info to hard-coded values.
+    Create a deterministic zip by setting timestamps,
+    operating system, and pkzip version info to hard-coded
+    values. See the pkzip specification at
+    https://www.pkware.com/documents/casestudies/APPNOTE.TXT
     """
     tmpInfo = createTmpZipInfo()
     for info in tmpInfo:
         info.date_time = time.gmtime(1378343307)
-        info.create_system = 3
+        info.create_system = 3 # aka, UNIX
         info.create_version = 20
         info.extract_version = 20
-        print("adding to zip: "+info.filename)
         xpiFile.writestr(info, open(info.filename).read())
 
 constructZipDet()
