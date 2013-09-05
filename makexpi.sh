@@ -126,7 +126,9 @@ cd src
 
 # Build the XPI!
 rm -f "../$XPI_NAME"
-zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+#zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+
+python ../utils/create_xpi.py "../$XPI_NAME"
 
 ret="$?"
 if [ "$ret" != 0 ]; then
