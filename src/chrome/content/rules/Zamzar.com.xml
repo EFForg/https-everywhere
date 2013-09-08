@@ -1,0 +1,44 @@
+<!--
+	Problematic subdomains:
+
+		- blog		(wordpress, handled in WordPress-blogs.xml)
+
+
+	Partially covered subdomains:
+
+		- (www.)	($ redirects to http)
+
+
+	Fully covered subdomains:
+
+		- secure
+
+
+	Observed cookie domains:
+
+		- .
+		- secure
+		- www
+
+-->
+<ruleset name="Zamzar.com (partial)">
+
+	<target host="zamzar.com" />
+	<target host="*.zamzar.com" />
+		<!--exclusion pattern="^http://(www\.)?zamzar\.com/+($|\?)" /-->
+		<!--exclusion pattern="^http://(www\.)?zamzar\.com/+(?!blank\.htm|common/|[\w-]+\.css|favicon\.ico|images/|(signup|tools)($|[?/])|uploader/css/)" /-->
+
+
+	<securecookie host="^secure\.zamzar\.com$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?zamzar\.com/(?!/*$|/*\?)"
+		to="https://www.zamzar.com/" />
+
+	<rule from="^http://secure\.zamzar\.com/"
+		to="https://secure.zamzar.com/" />
+
+</ruleset>
