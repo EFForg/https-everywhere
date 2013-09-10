@@ -4,7 +4,7 @@
 # Author: Yan Zhu, yan@mit.edu
 
 import os
-import zipfile_deterministic as zipfile
+import zipfile2_6 as zipfile
 import sys
 import time
 import glob
