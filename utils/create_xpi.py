@@ -4,11 +4,10 @@
 # Author: Yan Zhu, yan@mit.edu
 
 import os
-import zipfile
+import zipfile_deterministic as zipfile
 import sys
 import time
 import glob
-import zlib
 
 xpiName = sys.argv[1]
 exclusionsFile = sys.argv[2]
