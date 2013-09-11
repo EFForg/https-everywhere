@@ -13,12 +13,13 @@ xpiName = sys.argv[1]
 exclusionsFile = sys.argv[2]
 exclusions = []
 tmpfile = '../pkg/tmp.xpi'
+compress = zipfile.ZIP_STORED
 
 with open(exclusionsFile) as f:
     for line in f:
         exclusions.extend(glob.glob(line.strip()))
 
-xpiFile = zipfile.ZipFile(xpiName, mode='w')
+xpiFile = zipfile.ZipFile(xpiName, mode='w', compression=compress)
 
 def createTmpZipInfo():
     """
@@ -30,7 +31,7 @@ def createTmpZipInfo():
         for fi in files:
             filename = os.path.join(root,fi)
             if filename not in map(lambda x: './'+x, exclusions):
-                xpiFileTmp.write(filename, compress_type=zipfile.ZIP_DEFLATED)
+                xpiFileTmp.write(filename, compress_type=compress)
     xpiFileTmp.close()
     return xpiFileTmp.infolist()
 
