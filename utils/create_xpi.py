@@ -29,15 +29,11 @@ def createTmpZipInfo():
     generated to create a deterministic zip
     """
     xpiFileTmp = zipfile.ZipFile(tmpfile, mode='w', compression=compress)
-    filesToAdd = []  # need to create arr for deterministic sorting
     for root,subfolders,files in os.walk('.'):
         for fi in files:
             filename = os.path.join(root,fi)
             if filename not in map(lambda x: './'+x, exclusions):
-                filesToAdd.append(filename)
-    filesToAdd.sort()
-    for filename in filesToAdd:
-        xpiFileTmp.write(filename, compress_type=compress)
+                xpiFileTmp.write(filename, compress_type=compress)
     xpiFileTmp.close()
     xpiFileTmp.infolist().sort(key = lambda x: x.filename)
     return xpiFileTmp.infolist()
