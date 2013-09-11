@@ -3,6 +3,8 @@
 # Uses the Python zip implementation to create deterministic XPI's
 # Author: Yan Zhu, yan@mit.edu
 
+# ZipFile: infolist, write, writestr,
+
 import os
 import zipfile2_6 as zipfile
 import sys
@@ -26,13 +28,18 @@ def createTmpZipInfo():
     Create a non-deterministic zip in order to use the file info
     generated to create a deterministic zip
     """
-    xpiFileTmp = zipfile.ZipFile(tmpfile, mode='w')
+    xpiFileTmp = zipfile.ZipFile(tmpfile, mode='w', compression=compress)
+    filesToAdd = []  # need to create arr for deterministic sorting
     for root,subfolders,files in os.walk('.'):
         for fi in files:
             filename = os.path.join(root,fi)
             if filename not in map(lambda x: './'+x, exclusions):
-                xpiFileTmp.write(filename, compress_type=compress)
+                filesToAdd.append(filename)
+    filesToAdd.sort()
+    for filename in filesToAdd:
+        xpiFileTmp.write(filename, compress_type=compress)
     xpiFileTmp.close()
+    xpiFileTmp.infolist().sort(key = lambda x: x.filename)
     return xpiFileTmp.infolist()
 
 def constructZipDet():
