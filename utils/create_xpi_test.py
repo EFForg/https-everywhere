@@ -52,7 +52,7 @@ def constructZipDet():
         info.external_attr = 0600 << 16
         info.extract_version = 20
         info.file_size = long(info.file_size)  # is int on some OS's
-        xpiFile.writestr(info, '')
+        xpiFile.writestr(info, open(testfile).read())
 
 constructZipDet()
 xpiFile.close()
