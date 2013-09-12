@@ -1,0 +1,75 @@
+<!--
+	For other Nokia coverage, see Nokia.xml.
+
+
+	CDN buckets:
+
+		- static.here.sc.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- here.com subdomains:
+
+			- ^ *
+			- static **
+			- stg.static **
+			- stg *
+
+		- static.here.sc *
+
+	* Redirects to http
+	** Redirects to here.com
+
+
+	Fully covered domains:
+
+		- here.com subdomains:
+
+			- developer
+			- qa.developer
+			- m
+			- stg.m
+
+		- developer.here.net
+
+
+	Observed cookie domains:
+
+		- here.com subdomains:
+
+			- ^
+			- developer
+			- m
+			- stg.m
+			- static
+			- stg.static
+			- stg
+
+		- developer.here.net
+
+
+	Mixed content:
+
+		- Images on m from [234].maps.nlp.nokia.com *
+
+	* Doesn't trip MCB
+
+-->
+<ruleset name="Here.com (partial)">
+
+	<target host="*.here.com" />
+	<target host="developer.here.net" />
+
+
+	<securecookie host="^(?:developer|m|stg\.m)\.here\.com$" name=".+" />
+	<securecookie host="^developer\.here\.net$" name=".+" />
+
+
+	<rule from="^http://((?:qa\.)?developer|m|stg\.m)\.here\.com/"
+		to="https://$1.here.com/" />
+
+	<rule from="^http://developer\.here\.net/"
+		to="https://developer.here.net/" />
+
+</ruleset>
