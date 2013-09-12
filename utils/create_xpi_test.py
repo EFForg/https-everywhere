@@ -49,7 +49,9 @@ def constructZipDet():
         info.date_time = time.gmtime(1378343307)
         info.create_system = 3 # aka, UNIX
         info.create_version = 20
+        info.external_attr = 0600 << 16
         info.extract_version = 20
+        info.file_size = long(info.file_size)  # is int on some OS's
         xpiFile.writestr(info, '')
 
 constructZipDet()
