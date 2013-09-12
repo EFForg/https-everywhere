@@ -10,6 +10,7 @@ import zipfile2_6 as zipfile
 import sys
 import time
 import glob
+import subprocess
 
 xpiName = sys.argv[1]
 exclusionsFile = sys.argv[2]
@@ -30,6 +31,7 @@ def createTmpZipInfo():
     generated to create a deterministic zip
     """
     xpiFileTmp = zipfile.ZipFile(tmpfile, mode='w', compression=compress)
+    print subprocess.call(['sha1sum', tmpfile])
     xpiFileTmp.write(testfile, compress_type=compress)
     xpiFileTmp.close()
     xpiFileTmp.infolist().sort(key = lambda x: x.filename)
@@ -48,8 +50,9 @@ def constructZipDet():
         info.create_system = 3 # aka, UNIX
         info.create_version = 20
         info.extract_version = 20
-        xpiFile.writestr(info, open(info.filename).read())
+        xpiFile.writestr(info, '')
 
 constructZipDet()
 xpiFile.close()
 os.remove(tmpfile)
+print subprocess.call(['sha1sum', xpiName])
