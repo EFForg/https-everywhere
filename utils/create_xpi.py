@@ -15,7 +15,7 @@ xpiName = sys.argv[1]
 exclusionsFile = sys.argv[2]
 exclusions = []
 tmpfile = '../pkg/tmp.xpi'
-compress = zipfile.ZIP_STORED
+compress = zipfile.ZIP_DEFLATED
 
 with open(exclusionsFile) as f:
     for line in f:
