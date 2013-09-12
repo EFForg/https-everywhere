@@ -51,6 +51,8 @@ def constructZipDet():
         info.create_system = 3 # aka, UNIX
         info.create_version = 20
         info.extract_version = 20
+        info.external_attr = 0600 << 16
+        info.file_size = long(info.file_size)  # is int on some OS's
         xpiFile.writestr(info, open(info.filename).read())
 
 constructZipDet()
