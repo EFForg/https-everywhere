@@ -18,6 +18,7 @@ exclusions = []
 tmpfile = '../pkg/tmp.xpi'
 compress = zipfile.ZIP_STORED
 testfile = 'testfile.txt'
+testfile2 = 'testfile2.txt'
 
 with open(exclusionsFile) as f:
     for line in f:
@@ -33,6 +34,7 @@ def createTmpZipInfo():
     xpiFileTmp = zipfile.ZipFile(tmpfile, mode='w', compression=compress)
     print subprocess.call(['sha1sum', tmpfile])
     xpiFileTmp.write(testfile, compress_type=compress)
+    xpiFileTmp.write(testfile2, compress_type=compress)
     xpiFileTmp.close()
     xpiFileTmp.infolist().sort(key = lambda x: x.filename)
     return xpiFileTmp.infolist()
