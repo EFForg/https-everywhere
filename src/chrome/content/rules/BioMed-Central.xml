@@ -2,13 +2,50 @@
 	For other Springer coverage, see Springer.xml.
 
 
-	Nonfunctional:
+	CDN buckets:
 
-		- (www.)chemistrycentral.com	(times out)
-		- (www.)springeropen.com	(ditto)
+		- oas000359.247realmedia.com
+
+			- oas.biomedcentral.com
+
+
+	Nonfunctional domains:
+
+		- (www.)chemistrycentral.com *
+		- (www.)springeropen.com *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- oas	(mismatched, CN: openadstream-eu1.247realmedia.com)
+		- w01 *
+		- w13 *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- w\d\d		(→ ^)
+
+
+	Mixed content:
+
+		- Video on www from www.youtube.com *
+
+		- css on www from www *
+
+		- Images on www from www *
+
+		- Web bugs on www from oas
+
+	* Secured by us
 
 -->
-<ruleset name="BioMed Central" platform="mixedcontent">
+<ruleset name="BioMed Central (false MCB)" platform="mixedcontent">
 
 	<target host="biomedcentral.com" />
 	<target host="*.biomedcentral.com" />
@@ -17,7 +54,6 @@
 	<securecookie host="^(.*\.)?biomedcentral\.com$" name=".*" />
 
 
-	<!--	w01, w13: cert doesn't match.	-->
 	<rule from="^https?://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
 		to="https://$1biomedcentral.com/" />
 
@@ -28,7 +64,8 @@
              HTTPS URLs generate an incorrect 302 redirect from the
              site to http://www.biomedcentral.com:443/somepath
              which then produces an error; we can apparently fix the
-             effects of this 302 ourselves with a rewrite rule. -->
+             effects of this 302 ourselves with a rewrite rule.
+								-->
 	<rule from="^http://(?:w\d\d\.|(www\.))?biomedcentral\.com:443/"
                 to="https://$1biomedcentral.com/" />
 
