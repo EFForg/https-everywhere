@@ -1,0 +1,39 @@
+<!--
+	For other WebMD coverage, see WebMD.xml.
+
+
+	CDN buckets:
+
+		- images.medicinenet.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- images	(503, akamai)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- images *	(→ ^)
+
+	* Some paths redirect to http://.../$
+
+
+	Fully covered subdomains:
+
+		- images	(→ ^)
+
+-->
+<ruleset name="MedicineNet.com (partial)">
+
+	<target host="medicinenet.com" />
+	<target host="*.medicinenet.com" />
+		<exclusion pattern="^http://images\.medicinenet\.com/css/" />
+		<exclusion pattern="^http://(?:www\.)?medicinenet\.com/(?!images/)" />
+
+
+	<rule from="^http://(?:images\.|(www\.))?medicinenet\.com/"
+		to="https://$1medicinenet.com/" />
+
+</ruleset>
