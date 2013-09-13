@@ -1,0 +1,49 @@
+<!--
+	Fully covered domains:
+
+		- cdn0.modcloth.com:
+
+		- cdn1\d.modcloth.net:
+
+			- [0-36]
+
+		- productshots\d.modcloth.net
+
+			[0-3]
+
+
+	Problematic domains:
+
+		- modcloth.com		(mismatched, CN: *.a.ssl.fastly.net)
+		- www.modcloth.com	(some in /.+ redirect to $)
+
+
+	Partially covered domains:
+
+		- (www.)modcloth.com	(some pages redirect to http)
+
+-->
+<ruleset name="ModCloth.com (partial)">
+
+	<target host="modcloth.com" />
+	<target host="*.modcloth.com" />
+		<!--exclusion pattern="^http://(www\.)?modcloth\.com/+($|\?|api/v1/site_nav_categories/top-rated-fashions|help/terms-of-use|storefront/products/product_feed|stylesheets/)" /-->
+		<!--exclusion pattern="^http://(www\.)?modcloth\.com/+(?!favicon\.ico|customers/accounts/create\.json|customers/logins/create\.json|personalization\.json|storefront/latest/(product|sale_product|sample)_image_url|storefront/latest/header_links|storefront/modal_windows/sign_in_or_join)" /-->
+	<target host="*.modcloth.net" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.modcloth\.com$" name="^s_\w+$" />
+
+
+	<rule from="^http://(?:www\.)?modcloth\.com/(?=favicon\.ico|customers/(?:account|login)s/create\.json|personalization\.json|storefront/(?:latest/(?:\w+_image_url|header_links)|modal_windows/sign_in_or_join)(?:$|[?/]))"
+		to="https://www.modcloth.com/" />
+
+	<rule from="^http://cdn0\.modcloth\.com/"
+		to="https://cdn0.modcloth.com/" />
+
+	<rule from="^http://(cdn1\d|productshots\d)\.modcloth\.net/"
+		to="https://$1.modcloth.net/" />
+
+</ruleset>
