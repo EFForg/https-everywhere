@@ -58,7 +58,7 @@ const HTTPS = {
 
     // Check for the new internal redirect API. If it exists, use it.
     if ("redirectTo" in channel) {
-      this.log(INFO, "Found nsIHttpChannel.redirectTo. Using it.");
+      this.log(INFO, "Using nsIHttpChannel.redirectTo: " + channel.URI.spec + " -> " + uri.spec);
       try {
         channel.redirectTo(uri);
         return true;
