@@ -64,6 +64,11 @@ print("Removing whitespaces and comments...")
 def rulesize():
   return len(open(rulesets_fn).read())
 
+def clean_up(rulefile):
+    """Remove extra whitespace and comments from ruleset library"""
+    comment_and_newline_pattern = re.compile(r"<!--.*?-->|\n|\r", flags=re.DOTALL)
+    rulefile = comment_and_newline_pattern.sub('', rulefile)
+
 crush = rulesize()
 sedcmd = ["sed", "-i", "-e", ":a", "-re"]
 call(sedcmd + [r"s/<!--.*?-->//g;/<!--/N;//ba", rulesets_fn])
