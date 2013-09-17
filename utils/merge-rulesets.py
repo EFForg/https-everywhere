@@ -48,8 +48,8 @@ def clean_up(rulefile):
     to_and_from_pattern = re.compile(r'\s*(to=|from=)')
     rulefile = to_and_from_pattern.sub(r' \1', rulefile)
     rulefile = re.sub(r">\s*<", r"><", rulefile)
-    rulefile = re.sub(r" />", r"/>", rulefile)
-    rulefile = re.sub(r"</ruleset>", r"</ruleset>\n", rulefile)
+    rulefile = re.sub(r"</ruleset>\s*", r"</ruleset>\n", rulefile)
+    rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
     return rulefile
 
 library = open(rulesets_fn,"w")
