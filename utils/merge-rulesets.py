@@ -42,7 +42,7 @@ def rulesize():
   return len(open(rulesets_fn).read())
 
 def clean_up(rulefile):
-    """Remove extra whitespace and comments from ruleset library"""
+    """Remove extra whitespace and comments from a ruleset"""
     comment_and_newline_pattern = re.compile(r"<!--.*?-->|\n|\r", flags=re.DOTALL)
     rulefile = comment_and_newline_pattern.sub('', rulefile)
     to_and_from_pattern = re.compile(r'\s*(to=|from=)')
@@ -54,9 +54,6 @@ def clean_up(rulefile):
 
 library = open(rulesets_fn,"w")
 
-# XXX TODO replace all sed commands with native Python
-#strip_oneline_comment = re.compile(r"<!--.*?-->")
-
 try:
   commit_id = os.environ["GIT_COMMIT_ID"]
   library.write('<rulesetlibrary gitcommitid="%s">' % commit_id)
@@ -67,8 +64,6 @@ except:
 # Include the filename.xml as the "f" attribute
 print("Removing whitespaces and comments...")
 
-crush = rulesize()
-
 for rfile in sorted(xml_ruleset_files):
   ruleset = open(rfile).read()
   fn=os.path.basename(rfile)
@@ -76,13 +71,6 @@ for rfile in sorted(xml_ruleset_files):
   library.write(clean_up(ruleset))
 library.write("</rulesetlibrary>\n")
 library.close()
-
-#sedcmd = ["sed", "-i", "-e", ":a", "-re"]
-#call(sedcmd + [r"s/<!--.*?-->//g;/<!--/N;//ba", rulesets_fn])
-#call(["sed", "-i", r":a;N;$!ba;s/\n//g;s/>[ 	]*</></g;s/[ 	]*to=/ to=/g;s/[ 	]*from=/ from=/g;s/ \/>/\/>/g", rulesets_fn])
-#call(["sed", "-i", r"s/<\/ruleset>/<\/ruleset>\n/g", rulesets_fn])
-
-print("Crushed", crush, "bytes of rulesets into", rulesize())
 
 try:
   if 0 == call(["xmllint", "--noout", rulesets_fn]):
