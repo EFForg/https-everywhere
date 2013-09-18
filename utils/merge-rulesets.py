@@ -14,6 +14,7 @@ from subprocess import call
 import sys
 import traceback
 import re
+import unicodedata
 
 os.chdir("src")
 rulesets_fn="chrome/content/rules/default.rulesets"
@@ -52,6 +53,12 @@ def clean_up(rulefile):
     rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
     return rulefile
 
+def normalize(f):
+    """Turn OSX's weird unicode decomposition for filenames into something normal"""
+    if os.uname()[0] == 'Darwin':
+        f = unicodedata.normalize('NFC', unicode(f, 'utf-8')).encode('utf-8')
+    return f
+
 library = open(rulesets_fn,"w")
 
 try:
@@ -66,7 +73,7 @@ print("Removing whitespaces and comments...")
 
 for rfile in sorted(xml_ruleset_files):
   ruleset = open(rfile).read()
-  fn=os.path.basename(rfile)
+  fn=normalize(os.path.basename(rfile))
   ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)
   library.write(clean_up(ruleset))
 library.write("</rulesetlibrary>\n")
