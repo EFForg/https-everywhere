@@ -16,9 +16,18 @@ import traceback
 import re
 import unicodedata
 
+
+def normalize(f):
+    """
+    OSX and Linux filesystems encode composite characters differently in filenames.
+    We should normalize to NFC: http://unicode.org/reports/tr15/.
+    """
+    f = unicodedata.normalize('NFC', unicode(f, 'utf-8')).encode('utf-8')
+    return f
+
 os.chdir("src")
 rulesets_fn="chrome/content/rules/default.rulesets"
-xml_ruleset_files = glob("chrome/content/rules/*.xml")
+xml_ruleset_files = map(normalize, glob("chrome/content/rules/*.xml"))
 
 # cleanup after bugs :/
 misfile = rulesets_fn + "r"
@@ -53,12 +62,6 @@ def clean_up(rulefile):
     rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
     return rulefile
 
-def normalize(f):
-    """Turn OSX's weird unicode decomposition for filenames into something normal"""
-    if os.uname()[0] == 'Darwin':
-        f = unicodedata.normalize('NFC', unicode(f, 'utf-8')).encode('utf-8')
-    return f
-
 library = open(rulesets_fn,"w")
 
 try:
@@ -73,7 +76,7 @@ print("Removing whitespaces and comments...")
 
 for rfile in sorted(xml_ruleset_files):
   ruleset = open(rfile).read()
-  fn=normalize(os.path.basename(rfile))
+  fn = os.path.basename(rfile)
   ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)
   library.write(clean_up(ruleset))
 library.write("</rulesetlibrary>\n")
