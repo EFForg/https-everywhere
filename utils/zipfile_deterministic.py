@@ -7,6 +7,7 @@ Author: Yan Zhu, yan@mit.edu
 
 import struct, os, time, sys, shutil
 import binascii, cStringIO, stat
+import unicodedata
 
 try:
     import zlib # We may need its compression method
