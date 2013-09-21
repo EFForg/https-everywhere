@@ -39,6 +39,8 @@ ZIP_STORED = 0
 ZIP_DEFLATED = 8
 # Other ZIP compression methods not supported
 
+DEFAULT_DATE = (1980,1,1,0,0,0)  # hard-coded timestamp
+
 # Below are some formats and associated data for reading/writing headers using
 # the struct module.  The names and structures of headers/records are those used
 # in the PKWARE description of the ZIP file format:
@@ -135,6 +137,15 @@ _CD64_OFFSET_START_CENTDIR = 9
 def normalize_unicode(filename):
     """For dealing with different unicode normalizations in filenames."""
     return unicodedata.normalize('NFC', unicode(filename, 'utf-8')).encode('utf-8')
+
+def standardize_filename(filename):
+    """Get OS-independent form of filename"""
+    # This is used to ensure paths in generated ZIP files always use
+    # forward slashes as the directory separator, as required by the
+    # ZIP format specification.
+    if os.sep != "/" and os.sep in filename:
+        filename = filename.replace(os.sep, "/")
+    return normalize_unicode(filename)
 
 def is_zipfile(filename):
     """Quickly see if file is a ZIP file by checking the magic number."""
@@ -264,7 +275,7 @@ class ZipInfo (object):
             '_raw_time',
         )
 
-    def __init__(self, filename="NoName", date_time=(1980,1,1,0,0,0)):
+    def __init__(self, filename="NoName", date_time=DEFAULT_DATE):
         self.orig_filename = filename   # Original file name in archive
 
         # Terminate the file name at the first null byte.  Null bytes in file
@@ -275,10 +286,7 @@ class ZipInfo (object):
         # This is used to ensure paths in generated ZIP files always use
         # forward slashes as the directory separator, as required by the
         # ZIP format specification.
-        if os.sep != "/" and os.sep in filename:
-            filename = filename.replace(os.sep, "/")
-
-        self.filename = normalize_unicode(filename)  # Normalized file name
+        self.filename = standardize_filename(filename)  # Normalized file name
         self.date_time = date_time      # year, month, day, hour, min, sec
         # Standard values:
         self.compress_type = ZIP_STORED # Type of compression for the file
@@ -1005,7 +1013,7 @@ class ZipFile:
             if not self._allowZip64:
                 raise LargeZipFile("Zipfile size would require ZIP64 extensions")
 
-    def write(self, filename, arcname=None, compress_type=None, date_time=(1980,1,1,0,0,0)):
+    def write(self, filename, arcname=None, compress_type=None, date_time=DEFAULT_DATE):
         """Put the bytes from filename into the archive under the name
         arcname."""
         if not self.fp:
@@ -1123,6 +1131,21 @@ class ZipFile:
                   zinfo.file_size))
         self.filelist.append(zinfo)
         self.NameToInfo[zinfo.filename] = zinfo
+
+    def write_from_directory(self, directory, exclusions=None,
+                             compress_type=None, date_time=DEFAULT_DATE)
+        """
+        Create a ZIP package deterministically from a directory.
+        We need to sort the files in an OS-independent way before adding to the archive.
+        """
+        file_dict = {}
+        for root,subfolders,files in os.walk(directory):
+            for fi in files:
+                filename = os.path.join(root, fi)
+                if filename not in exclusions:
+                    file_dict.update({standardize_filename(filename): filename})
+        for new_filename, old_filename in sorted(file_dict.items()):
+            self.write(old_filename, compress_type=compress_type, date_time=date_time)
 
     def __del__(self):
         """Call the "close()" method in case the user forgot."""
