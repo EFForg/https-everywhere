@@ -7,7 +7,6 @@ Author: Yan Zhu, yan@mit.edu
 
 import struct, os, time, sys, shutil
 import binascii, cStringIO, stat
-import unicodedata
 
 try:
     import zlib # We may need its compression method
@@ -279,7 +278,7 @@ class ZipInfo (object):
         if os.sep != "/" and os.sep in filename:
             filename = filename.replace(os.sep, "/")
 
-        self.filename = normalize(filename)  # Normalized file name
+        self.filename = normalize_unicode(filename)  # Normalized file name
         self.date_time = date_time      # year, month, day, hour, min, sec
         # Standard values:
         self.compress_type = ZIP_STORED # Type of compression for the file
@@ -1006,7 +1005,7 @@ class ZipFile:
             if not self._allowZip64:
                 raise LargeZipFile("Zipfile size would require ZIP64 extensions")
 
-    def write(self, filename, arcname=None, compress_type=None):
+    def write(self, filename, arcname=None, compress_type=None, date_time=(1980,1,1,0,0,0)):
         """Put the bytes from filename into the archive under the name
         arcname."""
         if not self.fp:
@@ -1015,8 +1014,6 @@ class ZipFile:
 
         st = os.stat(filename)
         isdir = stat.S_ISDIR(st.st_mode)
-        mtime = time.localtime(st.st_mtime)
-        date_time = mtime[0:6]
         # Create ZipInfo instance to store file information
         if arcname is None:
             arcname = filename
