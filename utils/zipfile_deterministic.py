@@ -7,6 +7,7 @@ Author: Yan Zhu, yan@mit.edu
 
 import struct, os, time, sys, shutil
 import binascii, cStringIO, stat
+import unicodedata
 
 try:
     import zlib # We may need its compression method
@@ -1133,7 +1134,7 @@ class ZipFile:
         self.NameToInfo[zinfo.filename] = zinfo
 
     def write_from_directory(self, directory, exclusions=None,
-                             compress_type=None, date_time=DEFAULT_DATE)
+                             compress_type=None, date_time=DEFAULT_DATE):
         """
         Create a ZIP package deterministically from a directory.
         We need to sort the files in an OS-independent way before adding to the archive.
