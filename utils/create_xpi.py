@@ -5,10 +5,8 @@
 
 # ZipFile: infolist, write, writestr,
 
-import os
 import zipfile_deterministic as zipfile
 import sys
-import time
 import glob
 
 xpiName = sys.argv[1]
