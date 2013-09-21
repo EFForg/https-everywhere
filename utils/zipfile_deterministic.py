@@ -1023,13 +1023,13 @@ class ZipFile:
         if isdir:
             arcname += '/'
         zinfo = ZipInfo(arcname, date_time)
-        zinfo.external_attr = (st[0] & 0xFFFF) << 16L      # Unix attributes
+        zinfo.external_attr = 0600 << 16      # Unix attributes, hard-coded
         if compress_type is None:
             zinfo.compress_type = self.compression
         else:
             zinfo.compress_type = compress_type
 
-        zinfo.file_size = st.st_size
+        zinfo.file_size = long(st.st_size)
         zinfo.flag_bits = 0x00
         zinfo.header_offset = self.fp.tell()    # Start of header bytes
 
