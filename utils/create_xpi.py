@@ -3,23 +3,33 @@
 # Uses the Python zip implementation to create deterministic XPI's
 # Author: Yan Zhu, yan@mit.edu
 
-# ZipFile: infolist, write, writestr,
+"""
+Usage: python create_xpi.py -x <exclusions> -n <name of zipped file> <directory>
+"""
 
 import zipfile_deterministic as zipfile
 import sys
 import glob
+import getopt
 
-xpiName = sys.argv[1]
-exclusionsFile = sys.argv[2]
+opts, args = getopt.getopt(sys.argv[1:], 'x:n:')
+
 exclusions = []
-compress = zipfile.ZIP_DEFLATED
+for o, v in opts:
+    if o == "-x":
+        exclusionsFile = v
+        with open(exclusionsFile) as f:
+            for line in f:
+                exclusions.extend(glob.glob(line.strip()))
+        exclusions = map(lambda x: './'+x, exclusions)
+    elif o == "-n":
+        xpiName = v
 
-with open(exclusionsFile) as f:
-    for line in f:
-        exclusions.extend(glob.glob(line.strip()))
-exclusions = map(lambda x: './'+x, exclusions)
+compress = zipfile.ZIP_DEFLATED
 
 xpiFile = zipfile.ZipFile(xpiName, mode='w', compression=compress)
 
-xpiFile.write_from_directory('.', exclusions, compress_type=compress)
+directory = args[0]
+
+xpiFile.write_from_directory(directory, exclusions, compress_type=compress)
 xpiFile.close()
