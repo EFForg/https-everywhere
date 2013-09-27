@@ -32,6 +32,7 @@
 			- www.motorola.com/staticfiles/.* 302s to homepage
 			- www.motorola.com/Business/.* prints "tcp_error"
 
+		- l.email-motorola.com		(mismatched, CN: s.email-motorola.com)
 		- motorolasolutions.com *
 
 	* Prints "dns_server_failure", valid cert
@@ -42,11 +43,29 @@
 		- (www.)motorola.com			(^ → www)
 		- (www.)motorolasolutions.com		(^ → www, some pages redirect to http)
 
+
+	Fully covered domains:
+
+		- l.email-motorola.com	(→ s)
+		- s.email-motorola.com
+		- cdn.motorola-2.com
+
+
+	Mixed content:
+
+		- Images on cdn.motorola-2.com from cdn.motorola-2.com *
+
+		- Web bugs on cdn.motorola-2.com from l.email-motorola.com *
+
+	* Secured by us
+
 -->
 <ruleset name="Motorola (partial)">
 
+	<target host="*.email-motorola.com" />
 	<target host="*.motorola.com" />
 		<exclusion pattern="^http://(?:www\.)?motorola\.com/(?:Business|staticfiles)/" />
+	<target host="cdn.motorola-2.com" />
 	<target host="motorolasolutions.com" />
 	<target host="*.motorolasolutions.com" />
 
@@ -55,12 +74,17 @@
 	<securecookie host="^mediacenter\.motorolasolutions\.com$" name=".+" />
 
 
+	<rule from="^http://[ls]\.email-motorola\.com/"
+		to="https://s.email-motorola.com/" />
 
 	<rule from="^http://motorola\.com/"
 		to="https://www.motorola.com/" />
 
 	<rule from="^http://(globalrepairtools|mediacenter|membership|sdc|www)\.motorola\.com/"
 		to="https://$1.motorola.com/" />
+
+	<rule from="^http://cdn\.motorola-2\.com/"
+		to="https://cdn.motorola-2.com/" />
 
 	<rule from="^https?://(?:www\.)?motorolasolutions.com/web/"
 		to="https://www.motorolasolutions.com/web/" />
