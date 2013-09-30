@@ -1,13 +1,56 @@
-<ruleset name="Enlightenment" default_off="self-signed">
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- build
+		- docs
+		- download
+		- phab
+		- planet
+		- trac
+		- web
+
+
+	Observed cookie domains:
+
+		- docs
+		- .phab
+		- trac
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- planet, from:
+
+				- www *
+				- ngc891.blogdns.net **
+				- farm\d.static.flickr.com *
+				- i.imgur.com *
+				- feeds.wordpress.com *
+
+			- web from www *
+			- web from api.flattr.com *
+			- www from www *
+			- www from api.flattr.com *
+
+		- Web bugs on planet from stats.wordpress.com *
+
+	* Secured by us, doesn't trip MCB anyway
+	** Self-signed, doesn't trip MCB anyway
+
+-->
+<ruleset name="Enlightenment">
 
 	<target host="enlightenment.org" />
 	<target host="*.enlightenment.org" />
 
 
-	<securecookie host="^(?:trac\.)?enlightenment\.org$" name=".*" />
+	<securecookie host=".*\.enlightenment\.org$" name=".+" />
 
 
-	<rule from="^https?://(?:(trac\.)|www\.)?enlightenment\.org/"
+	<rule from="^http://((?:build|docs|download|phab|planet|trac|web|www)\.)?enlightenment\.org/"
 		to="https://$1enlightenment.org/" />
 
 </ruleset>

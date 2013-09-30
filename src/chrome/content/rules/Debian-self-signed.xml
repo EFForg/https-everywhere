@@ -1,0 +1,54 @@
+<!--
+	For rules that are on by default, see Debian.xml.
+
+
+	Fully covered domains:
+
+		- debconf.org subdomains:
+
+			- debconf7
+			- db
+			- gallery
+			- penta
+			- rt
+			- svn
+
+		- mentors.debian.net
+		- paste.debian.net
+
+		- debian.org subdomains:
+
+			- alioth
+			- lists.alioth
+			- buildd
+			- db
+			- ftp-master
+			- lists
+			- nagios
+			- nm
+			- wiki
+
+-->
+<ruleset name="Debian (self-signed)" default_off="self-signed">
+
+	<target host="*.debconf.org" />
+	<target host="*.debian.net" />
+		<!--exclusion pattern="^http://screenshots\.debian\.net/" /-->
+	<target host="*.debian.org" />
+		<!--exclusion pattern="^http://(anonscm|bugs|ca|cdimage|incoming|packages|people|qa|packages\.qa|search|svn|www)\.debian\.org/" /-->
+		<!--
+			Handled in Debian.xml:
+						-->
+		<!--exclusion pattern="^http://wiki\.debian\.org/" /-->
+
+
+	<rule from="^http://(db|debconf7|gallery|penta|rt|svn|wiki)\.debconf\.org/"
+		to="https://$1.debconf.org/" />
+
+	<rule from="^http://(mentors|paste)\.debian\.net/"
+		to="https://$1.debian.net/" />
+
+	<rule from="^http://((?:lists\.)?alioth|buildd|db|ftp-master|lists|nagios|nm)\.debian\.org/"
+		to="https://$1.debian.org/" />
+
+</ruleset>

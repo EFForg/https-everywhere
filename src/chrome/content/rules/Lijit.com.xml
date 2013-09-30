@@ -6,39 +6,51 @@
 
 	Problematic subdomains:
 
-		- www	(403; mismatched, CN: support3.cdnetworks.net)
+		- www	(403; CN: support3.cdnetworks.net)
 
 
 	Fully covered subdomains:
 
 		- ^
-		- ce	(web bugs)
+		- ap *
+		- ce *
 		- secure
 		- www	(→ secure)
+
+	* Web bugs
 
 
 	Mixed content on secure:
 
-		- scripts:
+		- scripts, from:
 
-			- from lijit.disqus.com
+			- www *
+			- lijit.disqus.com
+			- ajax.googleapis.com *
 
-		- css:
+		- css, from:
 
-			- from disqus.com
+			- www *
+			- disqus.com
 
-		- Images:
+		- Images, from:
 
-			- from www *
-			- from www.drivingdelta.com **
-			- from www.gravatar.com via www.gravatar.com *
+			- www *
+			- www.drivingdelta.com **
+			- www.gravatar.com *
+			- www.gravatar.com via www.gravatar.com *
 
-		- Web bugs:
+		- Web bugs, from:
 
-			- from tags.bluekai.com *
+			- tags.bluekai.com *
+			- widget.quantcast.com *
 
 	* Secured by us
 	** Unsecurable, these 404 anyway
+
+
+	mixedcontent due to scripts and css from
+	www, disqus.com, and ajax.googelapis.com.
 
 -->
 <ruleset name="Lijit.com" platform="mixedcontent">
@@ -53,7 +65,7 @@
 	<securecookie host="^\.secure\.lijit\.com$" name=".+" />
 
 
-	<rule from="^http://(ce\.)?lijit\.com/"
+	<rule from="^http://(ap\.|ce\.)?lijit\.com/"
 		to="https://$1lijit.com/" />
 
 	<rule from="^http://(?:secure|www)\.lijit\.com/"

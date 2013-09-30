@@ -1,44 +1,76 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- video		(at least some pages redirect to http)
+		- video.godaddy.com	(at least some pages redirect to http)
+
+
+	Problematic domains:
+
+		- instantpage.me	(dropped)
+		- www.instantpage.me	(works; mismatched, CN: admin.instantpage.me)
+
+
+	Partially covered domains:
+
+		- support.godaddy.com	(some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- godaddy.com subdomains:
+
+			- (www.)
+			- auctions
+			- certs
+			- community
+			- idp
+			- img
+			- m
+			- \w\w.m
+			- mcc
+			- mya
+			- seal
+			- shops
+			- who
+
+		- (www.)godaddymobile.com
+
+		- instantpage.me subdomains:
+
+			- ^	(→ www.godaddy.com)
+			- admin
+			- www	(→ admin)
+
+		- (www.)tdnam.com
 
 -->
 <ruleset name="GoDaddy (partial)">
 
 	<target host="godaddy.com" />
 	<target host="*.godaddy.com" />
+		<exclusion pattern="^http://support\.godaddy\.com/(?!files/|wp-content/)" />
 	<target host="godaddymobile.com" />
-	<target host="www.godaddymobile.com" />
+	<target host="*.godaddymobile.com" />
 	<target host="instantpage.me" />
 	<target host="*.instantpage.me" />
 	<target host="tdnam.com" />
 	<target host="www.tdnam.com" />
 
 
-	<securecookie host="^(.*\.)?godaddy\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?godaddy\.com$" name=".+" />
+	<securecookie host="^\.godaddymobile\.com$" name=".+" />
 
 
-	<rule from="^http://((?:auctions|certs|community|idp|img|mya|seal|shops|who|www)\.)?godaddy\.com/"
+	<rule from="^http://((?:auctions|certs|community|idp|img|m|\w\w\.m|mcc|mya|seal|shops|support|who|www)\.)?godaddy\.com/"
 		to="https://$1godaddy.com/" />
 
-	<!--	At least some pages redirect to http.	-->
-	<rule from="^http://support\.godaddy\.com/(files|wp-content)/"
-		to="https://support.godaddy.com/$1/" />
+	<rule from="^http://(www\.)?godaddymobile\.com/"
+		to="https://$1godaddymobile.com/" />
 
-	<rule from="^http://(?:www\.)?godaddymobile\.com/"
-		to="https://www.godaddymobile.com/" />
-
-	<!--	- Times out over https
-		- Redirects like so over http.
-			-->
-	<rule from="^https?://instantpage\.me/"
+	<rule from="^http://instantpage\.me/"
 		to="https://www.godaddy.com/default.aspx" />
 
-	<!--	- Cert only matches admin
-		- www redirects like so over http
-				-->
-	<rule from="^https?://(?:admin|www)\.instantpage\.me/"
+	<rule from="^http://(?:admin|www)\.instantpage\.me/"
 		to="https://admin.instantpage.me/" />
 
 	<rule from="^http://(www\.)?tdnam\.com/"

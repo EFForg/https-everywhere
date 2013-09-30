@@ -7,33 +7,79 @@
 		- wac.36f4.edgecastcdn.net/0036F4/
 
 
-	Nonfunctional wolframalpha.com subdomains:
+	Nonfunctional subdomains:
 
 		- blog *
 		- community	(refused)
 		- products *
 
-	* Times out
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- ^	(dropped)
+
+
+	Partially covered subdomains:
+
+		- www\d *
+		- www\d\w *
+
+	* Securing some scripts breaks search
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- volunteer
+
+
+	Mixed content:
+
+		- Scripts, on www from:
+
+			- www\d *
+			- www\d\w *
+
+		- Images, on www from:
+
+			- www\d **
+			- www\d\w **
+
+		- Ads/web bugs, on www from:
+
+			- w.sharethis.com **
+			- www.wolframcdn.com **
+
+	* Securing these breaks search
+	** Secured by us
 
 -->
 <ruleset name="Wolfram Alpha (partial)" platform="mixedcontent">
 
 	<target host="wolframalpha.com" />
 	<target host="*.wolframalpha.com" />
-	<target host="www.wolframcdn.com" />
 		<!--
 			These break search:
 								-->
-		<exclusion pattern="^http://www\d\w\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
+		<exclusion pattern="^http://www\d\w?\.wolframalpha\.com/input/(?:pod|recalculate)\.jsp" />
 
 
 	<!--securecookie host="^(.*\.)?wolframalpha\.com$" name=".+"/-->
+	<!--
+		Could we secure any of these safely?
+							-->
+	<!--securecookie host="^\.wolframalpha\.com$" name="^(wa_pro_first|wa_pro_firstprovisit|WolframAlphaSessionVisits|WolframResultsPageVisits|WR_SID)$" /-->
+	<!--
+		Tracking cookies:
+					-->
 	<securecookie host="^\.wolframalpha\.com$" name="^__utm\w$" />
 	<securecookie host="^(?:volunteer|www)\.wolframalpha\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?wolfram(alpha|cdn)\.com/"
-		to="https://www.wolfram$1.com/" />
+	<rule from="^http://(?:www\.)?wolframalpha\.com/"
+		to="https://www.wolframalpha.com/" />
 
 	<rule from="^http://(volunteer|www\d\w?)\.wolframalpha\.com/"
 		to="https://$1.wolframalpha.com/" />

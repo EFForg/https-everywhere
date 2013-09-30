@@ -1,27 +1,94 @@
 <!--
+	For rules that cause false/broken MCB, see Zend.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- shop-zend.pantherssl.com
+		- static-zend.pantherssl.com
+
+
 	Nonfunctional subdomains:
 
-		- forums	(times out)
+		- forums	(dropped)
 		- framework	(reset)
 
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches www)
+
+
+	Observed cookie domains:
+
+		- .
+		- forums
+		- .forums
+		- framework *
+		- .framework
+		- shop *
+		- .shop
+
+	* Tracking cookies only
+
+
+	Fully covered subdomains:
+
+		- static	(→ (shop|static)-zend.pantherssl.com)
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+		- shop *
+
+	* Avoiding false/broken MCB, rest handled in Zend.com-falsemixed.xml
+
+
+	Mixed content:
+
+		- Script on www from static *
+
+		- css, on:
+
+			- shop from static *
+			- www from static *
+
+		- Images, on:
+
+			- shop from static *
+			- www from static *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
 -->
-<ruleset name="Zend (partial)" platform="mixedcontent">
+<ruleset name="Zend (partial)">
 
 	<target host="zend.com" />
 	<target host="*.zend.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.shop.zend.com" />
+		<!--
+			Avoiding false/broken MCB:
+							-->
+		<exclusion pattern="^http://(?:www\.)?zend\.com/(?!favicon\.ico|\w\w/user(?:$|[?/]))" />
+		<exclusion pattern="^http://shop\.zend\.com/(?!checkout(?:$|[?/])|favicon\.ico)" />
 
 
-	<!--	Observed cookies:
+	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
+	<!--
+		Is this safe to secure here?
+						-->
+	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
+	<!--
+		Uncomment this when -falsemixed.xml is merged:
+								-->
+	<!--securecookie host="^.*\.zend\.com$" name=".*" /-->
+	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
 
-			- \.
-			- \.shop
-					-->
-	<securecookie host="^.*\.zend\.com$" name=".*" />
 
-
-	<!--	Cert doesn't match !www.	-->
 	<rule from="^http://(?:www\.)?zend\.com/"
 		to="https://www.zend.com/" />
 

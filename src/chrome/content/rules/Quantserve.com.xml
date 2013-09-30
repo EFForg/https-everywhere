@@ -1,0 +1,35 @@
+<!--
+	For other Quantcast coverage, see Quantcast.xml.
+
+
+	CDN buckets:
+
+		- map-js.quantserve.com.akadns.net
+
+
+	secure.quantserve.com sets __qca wildcard cookie
+	on whichever domain it is loaded from.
+
+-->
+<ruleset name="Quantserve.com">
+
+	<target host="quantserve.com" />
+	<target host="*.quantserve.com" />
+
+
+	<!--
+  Experiment: disable securecookies to see if it fixes 
+  https://trac.torproject.org/projects/tor/ticket/8406
+	<securecookie host="^\.quantserve\.com$" name=".*" />
+  -->
+	<!--securecookie host="^\.quantserve\.com$" name="^mc$" /-->
+
+
+	<!--	Cert doesn't match.	-->
+	<rule from="^http://edge\.quantserve\.com/"
+		to="https://www.quantserve.com/" />
+
+	<rule from="^http://([^/:@\.]+\.)?quantserve\.com/"
+		to="https://$1quantserve.com/" />
+
+</ruleset>

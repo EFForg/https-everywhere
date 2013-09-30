@@ -1,18 +1,63 @@
 <!--
+	For rules causing false/broken MCB, see Canonical-falsemixed.xml.
+
+
 	Other Canonical rulesets:
 
 		- Launchpad.xml
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(dropped)
+
+
+	Partially covered subdomains:
+
+		- design *
+
+	* Avoiding false/broken MCB, rest covered in Canonical-falsemixed.xml
+
+
+	Fully covered subdomains:
+
+		- blog.bazaar
+		- certification
+		- irclogs
+		- shop
+
+
+	Mixed content:
+
+		- Scripts on design from design *
+		- css on design from design *
+		- Images on design from design *
+		- favicon on design from www.ubuntu.com **
+
+	* Secured by us
+	** Unsecurable, doesn't trip MCB
+
+
+	design is in a separate falsemixed ruleset
+	due to scripts and css from design.
+
+	NB: We secure all resources, and thus
+	falsemixed should be merged for Ffx 24.
 
 -->
 <ruleset name="Canonical (partial)">
 
 	<target host="*.canonical.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://design\.ubuntu\.com/(?!favicon\.ico|wp-content/)" />
 
 
-	<securecookie host="^(?:certification|shop)\.canonical\.com$" name=".+" />
+	<securecookie host="^(?:certification|irclogs|shop)\.canonical\.com$" name=".+" />
 
 
-	<rule from="^http://(blog\.bazaar|certification|design|shop)\.canonical\.com/"
+	<rule from="^http://(blog\.bazaar|certification|design|irclogs|shop)\.canonical\.com/"
 		to="https://$1.canonical.com/" />
 
 </ruleset>

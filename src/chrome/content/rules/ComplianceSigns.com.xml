@@ -1,0 +1,50 @@
+<!--
+	CDN buckets:
+
+		- compliancesigns.http.cdnlayer.com
+
+			- .https. doesn't exist
+			- cdn
+
+
+	Problematic subdomains:
+
+		- ^	(works, cert only matches www)
+		- cdn	(mismatched, CN: edgecastcdn.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cdn		(→ www)
+
+
+	Mixed content:
+
+		- css on www from assets.resultspage.com *
+
+		- Images, on www from:
+
+			- www *
+			- cdn *
+
+		- Web bugs on www from www *
+
+	* Secured by us
+
+-->
+<ruleset name="ComplianceSigns.com">
+
+	<target host="compliancesigns.com" />
+	<target host="*.compliancesigns.com" />
+
+
+	<!--	name="^rv[1-5]$"
+					-->
+	<securecookie host="^\.compliancesigns\.com$" name=".+" />
+
+
+	<rule from="^http://(?:cdn\.|www\.)?compliancesigns\.com/"
+		to="https://www.compliancesigns.com/" />
+
+</ruleset>

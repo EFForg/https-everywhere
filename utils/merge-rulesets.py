@@ -84,5 +84,5 @@ except OSError as e:
 
 # We make default.rulesets at build time, but it shouldn't have a variable
 # timestamp
-call(["touch", "-r", "chrome/content/rules", rulesets_fn])
+call(["touch", "-r", "install.rdf", rulesets_fn])
 

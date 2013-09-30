@@ -158,7 +158,6 @@ httpsEverywhere.toolbarButton = {
   } 
 };
 
-
 function https_everywhere_load() {
   window.removeEventListener('load', https_everywhere_load, true);
   // on first run, put the context menu in the addons bar

@@ -1,0 +1,74 @@
+<!--
+		- onelogin.zendesk.com
+
+			- support
+
+
+	Problematic subdomains:
+
+		- ^		(dropped)
+		- support	(zendesk)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- app
+		- assets[0-3]
+		- support	(→ onelogin.zendesk.com)
+		- staging.www
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On app from ajax.googleapis.com *
+			- On www from www *
+			- On www from fast.wistia.com *
+			- On www from ajax.googleapis.com *
+
+		- css:
+
+			- On www from www **
+			- On www from fast.wistia.net *
+
+		- Images:
+
+			- On app from www ***
+			- On www from www ***
+
+		- Web bugs:
+
+			- On app from munchkin.marketo.net *
+			- On www from t6.trackalyzer.com *
+
+	* Secured by us
+	** Secured by us. These apply to social widgets, and are not at all vital
+	*** Secured by us, doesn't trip MCB anyway
+
+
+	NB: We secure all resources, and thus
+	platform should be removed with Ffx 24.
+
+-->
+<ruleset name="OneLogin.com" platform="mixedcontent">
+
+	<target host="onelogin.com" />
+	<target host="*.onelogin.com" />
+
+
+	<!--securecookie host="^\.onelogin\.com$" name="^(__atuvc|_ga|mp_\w{32}_mixpanel|_mkto_trk|onelogin_referrer|session_onelogin\.com|__utm\w)$" /-->
+	<securecookie host="^(?:www)?\.onelogin\.com$" name=".+" />
+
+
+	<rule from="^http://(?:(staging\.)?www\.)?onelogin\.com/"
+		to="https://$1www.onelogin.com/" />
+
+	<rule from="^http://a(pp|ssets)\.onelogin\.com/"
+		to="https://a$1.onelogin.com/" />
+
+	<rule from="^http://support\.onelogin\.com/"
+		to="https://onelogin.zendesk.com/" />
+
+</ruleset>

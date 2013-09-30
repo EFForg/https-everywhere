@@ -37,7 +37,7 @@ const HTTPS = {
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
 
     var c2 = channel.QueryInterface(CI.nsIHttpChannel);
-    this.log(DBUG,"Redirection limit is " + c2.redirectionLimit);
+    this.log(DBUG, channel.URI.spec+": Redirection limit is " + c2.redirectionLimit);
     // XXX This used to be (c2.redirectionLimit == 1), but that's very
     // inefficient in a case (eg amazon) where this may happen A LOT.
     // Rather than number like 10, we should use the starting value
@@ -58,7 +58,7 @@ const HTTPS = {
 
     // Check for the new internal redirect API. If it exists, use it.
     if ("redirectTo" in channel) {
-      this.log(INFO, "Found nsIHttpChannel.redirectTo. Using it.");
+      this.log(INFO, "Using nsIHttpChannel.redirectTo: " + channel.URI.spec + " -> " + uri.spec);
       try {
         channel.redirectTo(uri);
         return true;

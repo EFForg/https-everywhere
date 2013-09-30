@@ -2,51 +2,52 @@
 	For problematic rules, see QuinStreet-mismatches.xml.
 
 
+	Other QuinStreet rulesets:
+
+		- Qnsr.com.xml
+		- QSstats.com.xml
+
+
 	CDN buckets:
-
-		- o1.qnsr.com.edgesuite.net/...
-
-			- e1.cdn.qnsr.com
 
 		- qshqb2b.edgesuite.net
 
 			- www.enterprisenetworkingplanet.com
+			- www.esecurityplanet.com
+			- www.eweek.com
 
 
 	Nonfunctional domains:
 
-		- enterprisenetworkingplanet.com *
+		- b2btechleadform.com *
+		- enterprisenetworkingplanet.com **
 		- www.enterprisenetworkingplanet.com	(403, Akamai)
-		- (www.)internet.com *
-		- files.internet.com *
+		- esecurityplanet.com **
+		- www.esecurityplanet.com ***
+		- eweek.com *
+		- www.eweek.com ***
+		- (www.)internet.com **
+		- files.internet.com **
 		- investor.quinstreet.com		(403, CN: *.shareholder.com)
+		- hqx.qmp.quinstreet.com *
 
-	* record_too_long
+	* Refused
+	** http reply
+	*** 504, akamai
 
 
 	Problematic domains:
 
-		- e1.cdn.qnsr.com	(akamai)
-		- qsstats.com		(cert only matches www)
 		- quinstreet.com	(cert only matches *.quinstreet.com)
 
 -->
 <ruleset name="QuinStreet">
 
-	<target host="*.qnsr.com" />
-	<target host="qsstats.com" />
-	<target host="www.qsstats.com" />
 	<target host="*.quinstreet.com" />
 
 
-	<securecookie host="^.*\.q(?:sstats|uinstreet)\.com$" name=".+" />
+	<securecookie host="^.*\.quinstreet\.com$" name=".+" />
 
-
-	<rule from="^https?://(?:e1\.cdn|o1)\.qnsr\.com/"
-		to="https://o1.qnsr.com/" />
-
-	<rule from="^https?://(?:www\.)?qsstats\.com/"
-		to="https://www.qsstats.com/" />
 
 	<rule from="^http://(blog|clientservices|publishers|sitegenie-external|www)\.quinstreet\.com/"
 		to="https://$1.quinstreet.com/" />

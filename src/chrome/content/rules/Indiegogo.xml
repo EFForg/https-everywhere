@@ -1,14 +1,28 @@
-<!--	Bucket: d2oadd98wnjs7n.cloudfront.net
+<!--
+	CDN buckets:
+
+		- sc-indiegogo-artwork.s3.amazonaws.com
+		- d2oadd98wnjs7n.cloudfront.net
+
+
+	Fully covered subdomains:
+
+		- images
+
 -->
 <ruleset name="Indiegogo (partial)">
 
-	<target host="indiegogo.com"/>
-	<target host="*.indiegogo.com"/>
+	<target host="indiegogo.com" />
+	<target host="*.indiegogo.com" />
+		<exclusion pattern="^http://(?:www\.)?indiegogo\.com/(?!account/|assets/|blog/|favicon\.(?:ico|png)|images/|project/\d+/widget/|styles/)" />
 
-	<rule from="^http://(www\.)?indiegogo\.com/(account/|assets/|blog/|images/|styles/)"
-		to="https://$1indiegogo.com/$2"/>
 
-	<rule from="^http://web(\d)\.indiegogo\.com/"
-		to="https://web$1.indiegogo.com/"/>
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.indiegogo\.com$" name="^(?:optimizely\w+|__utm\w)$" />
+
+
+	<rule from="^http://((?:images|web\d|www)\.)?indiegogo\.com/"
+		to="https://$1indiegogo.com/" />
 
 </ruleset>

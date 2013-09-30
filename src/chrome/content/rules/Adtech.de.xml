@@ -13,14 +13,18 @@
 	Problematic domains:
 
 		- aka-cdn-ns.adtech.de		(works, akamai)
+		- ad.dc2.adtech.de		(works; mismatched, CN: *.adtech.de)
 
 
 	Fully covered subdomains:
 
 		- adserver
 		- adserverams
+		- adserver-sb-fra
 		- aka-cdn
 		- aka-cdn-ns	(→ aka-cdn)
+		- ad.dc2	(→ adserver)
+		- secserv
 		- ums
 
 -->
@@ -38,10 +42,13 @@
 	<securecookie host="^\.adtech\.de" name=".+" />
 
 
-	<rule from="^http://(adserver(?:ams)?|aka-cdn|ums)\.adtech\.de/"
+	<rule from="^http://(adserver(?:ams|-sb-fra)?|aka-cdn|secserv|ums)\.adtech\.de/"
 		to="https://$1.adtech.de/" />
 
 	<rule from="^http://aka-cdn-ns\.adtech\.de/"
 		to="https://aka-cdn.adtech.de/" />
+
+	<rule from="^http://ad\.dc2\.adtech\.de/"
+		to="https://adserver.adtech.de/" />
 
 </ruleset>

@@ -2,14 +2,20 @@
 	For problematic rules, see Fedora_Project-problematic.xml.
 
 
+	Other Fedora Project rulesets:
+
+		- Fedora_Hosted.org.xml
+
+
 	Nonfunctional domains:
 
-		- git.fedorahosted.org		(CN: fedorahosted.org; redirects there & 404s)
 		- \w+.fedorapeople.org		(unique domain per person)
 
 		- fedoraproject.org subdomains:
 
 			- directory *
+			- infrastructure	(dropped)
+			- ols **
 			- pki *
 			- planet **
 			- publictest04 **
@@ -20,26 +26,66 @@
 
 	Problematic domains:
 
-		- www.fedorahosted.org		(mismatched)
 		- pkgs.fedoraproject.org	(works, self-signed)
+
+
+	Fully covered domains:
+
+		- fedoraproject.org subdomains:
+
+			- (www.)
+			- admin
+			- alt
+			- archives
+			- badges
+			- blogs
+			- boot
+			- dl
+			- docs
+			- download
+			- get
+			- join
+			- lists
+			- meetbot
+			- mirrors
+			- retrace
+			- spins
+			- start
+			- talk		
+
+
+	Mixed content:
+
+		- css on start from ^ ***
+
+		- Images, on:
+
+			- badges from infrastructure **
+			- badges from cdn.libravatar.org *
+			- start from ^ *
+			- start from www *
+
+	* Secured by us
+	** Unsecurable, doesn't trip MCB
+	*** Secured by us, seems to affect printing only
 
 -->
 <ruleset name="Fedora Project">
 
-	<target host="fedorahosted.org" />
-	<target host="www.fedorahosted.org" />
 	<target host="fedoraproject.org" />
 	<target host="*.fedoraproject.org" />
+		<!--
+			Causes false/broken MCB
+
+			Update: seems to have been fixed
+							-->
+		<!--exclusion pattern="^http://start\.fedoraproject\." /-->
 
 
-	<securecookie host="^fedorahosted\.org$" name=".+" />
 	<securecookie host="^(?:.*\.)?fedoraproject\.org$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?fedorahosted\.org/"
-		to="https://fedorahosted.org/" />
-
-	<rule from="^http://((?:admin|alt|archives|blogs|boot|dl|docs|download|get|join|lists|meetbot|mirrors|retrace|spins|start|talk|www)\.)?fedoraproject\.org/"
+	<rule from="^http://((?:admin|alt|archives|badges|blogs|boot|dl|docs|download|get|join|lists|meetbot|mirrors|retrace|spins|start|talk|www)\.)?fedoraproject\.org/"
 		to="https://$1fedoraproject.org/" />
 
 </ruleset>
