@@ -61,7 +61,7 @@ then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
     echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
-    #exit 1
+    exit 1
   fi
 else
   echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
