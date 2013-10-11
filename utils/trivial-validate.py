@@ -210,12 +210,12 @@ for fi in nomes_all():
         if fi[-4:] != ".xml":
             continue
         failure = 1
-        sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
+        sys.stderr.write("%s failed XML validity: %s\n" % (fi, oops))
     if not tree.xpath("/ruleset"):
         continue
     if not test_ruleset_name(tree):
         failure = 1
-        sys.stdout.write("failure: unnamed ruleset: %s\n" % fi)
+        sys.stderr.write("failure: unnamed ruleset: %s\n" % fi)
         continue
     ruleset_name = tree.xpath("/ruleset/@name")[0]
     if ruleset_name in all_names:
@@ -225,7 +225,7 @@ for fi in nomes_all():
     for test in tests:
         if not test(tree):
             failure = 1
-            sys.stdout.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
+            sys.stderr.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
     for target in tree.xpath("/ruleset/target/@host"):
         if target in all_targets and not any(ign.search(target) for ign in ignoredups):
             # suppress warning about duplicate targets if an --ignoredups
