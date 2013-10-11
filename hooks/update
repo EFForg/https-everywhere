@@ -42,16 +42,21 @@ echo "attempting to validate $newrev" >&2
 
 # --- Test build
 
-if [ -f makexpi.sh ]; then
+if [ -f makexpi.sh && -f makecrx.sh ]; then
 	./makexpi.sh
-	if [ "$?" != 0 ]; then
+	XPIBULID=$?
+	
+	./makecrx.sh
+	CRXBUILD=$?
+	
+	if [ "$XPIBULID" != 0 || "$CRXBUILD" != 0 ]; then
 		echo "*** build failed" >&2
 		exit 1
 	else
 		exit 0
 	fi
 else
-	echo "*** could not find makexpi.sh" >&2
+	echo "*** could not find makexpi.sh or makecrx.sh." >&2
 	exit 1
 fi
 
