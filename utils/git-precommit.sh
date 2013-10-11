@@ -12,7 +12,6 @@ git stash -q --keep-index
 RULESET_PATTERN="src/chrome/content/rules/"
 if [ ! $(git diff --cached --name-only | grep "$RULESET_PATTERN") ]; then
     echo "$(date -R): Skipping tests, no changes in $RULESET_PATTERN."
-    exit 0
 else
     echo "$(date -R): Running tests:"
     ./utils/trivial-validate.py src/chrome/content/rules > /dev/null
