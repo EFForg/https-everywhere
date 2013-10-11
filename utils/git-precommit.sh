@@ -12,7 +12,7 @@ git stash -q --keep-index
 RULESET_PATTERN="src/chrome/content/rules/"
 if [ $(git diff --cached --name-only | grep "$RULESET_PATTERN") ]; then
     echo "$(date -R): Running tests:"
-    ./utils/trivial-validate.py src/chrome/content/rules > /dev/null
+    ./utils/trivial-validate.py $RULESET_PATTERN > /dev/null
     RESULT=$?
 
     if [ $RESULT -eq 1 ]; then
