@@ -11,7 +11,7 @@ git stash -q --keep-index
 # Only run tests if our rulesets have been changed.
 RULESET_PATTERN="src/chrome/content/rules/"
 if [ $(git diff --cached --name-only | grep "$RULESET_PATTERN") ]; then
-    echo "$(date -R): Running tests:"
+    echo "$(date -R): Running ruleset validation tests:"
     ./utils/trivial-validate.py $RULESET_PATTERN > /dev/null
     RESULT=$?
 
