@@ -54,3 +54,11 @@ Important directories you might want to know about
     src/chrome/content/code   |
 
     src/chrome/content/rules  The rulesets live here
+
+Precommit Testing
+-----------------
+
+One can run the available test suites automatically by enabling the precommit
+hook provided with:
+
+    $ ln -s ../../hooks/precommit .git/hooks/pre-commit
