@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#   utils/precommit.sh hook script of https-everywhere.
+#   utils/git-precommit.sh hook script of https-everywhere.
 #
 #   Author: Jonathan Davies <jpdavs@gmail.com>
 #
