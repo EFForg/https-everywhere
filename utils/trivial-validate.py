@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-import sys, re, os, getopt
+import argparse
+import sys, re, os
 
 try:
     from lxml import etree
@@ -10,10 +11,25 @@ except ImportError:
     sys.stderr.write("** Please install libxml2 and lxml to permit validation!\n")
     sys.exit(0)
 
-longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups=", "dupdir="])
+parser = argparse.ArgumentParser(
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+    description="Ruleset validation script.")
+parser.add_argument('--ignoredups', type=str, nargs="*",
+    default="",
+    help="Ignore entries."
+    )
+parser.add_argument('--dupdir', type=str, nargs="*",
+    default="",
+    help="Duplicate directory."
+    )
+parser.add_argument('ruleset', metavar='XML directory', type=str, nargs="*",
+    default="src/chrome/content/rules",
+    help='Directory of XML files to validate.')
 
-ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
-dupdir = [val for opt, val in longargs if opt == "--dupdir"]
+args = parser.parse_args()
+
+ignoredups = [re.compile(val) for val in args.ignoredups]
+dupdir = [val for val in args.dupdir]
 
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
