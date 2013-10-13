@@ -5,16 +5,18 @@
 #   Author: Jonathan Davies <jpdavs@gmail.com>
 #
 
+# Stash changes unrelated to the commit in Git.
 echo "$(date -R): Stashing unrelated changes in Git..."
 git stash -q --keep-index
 
+# On exit, revert the stash done above.
 trap 'echo "$(date -R): Reverting Git stash..."; git stash pop -q' EXIT
 
-# Only run tests if our rulesets have been changed.
 RULESET_PATTERN="src/chrome/content/rules/"
 CHANGED_RULESETS="$(git diff --cached --name-only | grep $RULESET_PATTERN)"
 
 if [ "$CHANGED_RULESETS" ]; then
+    # Only run tests if our rulesets have been changed.
     echo "$(date -R): Running ruleset validation tests on changed rulesets:"
 
     for FILE in $CHANGED_RULESETS; do
@@ -23,6 +25,7 @@ if [ "$CHANGED_RULESETS" ]; then
             continue
         fi
 
+        # Errors will go to stderr.
         ./utils/trivial-validate.py $FILE > /dev/null
         RESULT=$?
 
