@@ -8,6 +8,8 @@
 echo "$(date -R): Stashing unrelated changes in Git..."
 git stash -q --keep-index
 
+trap 'echo "$(date -R): Reverting Git stash..."; git stash pop -q' EXIT
+
 # Only run tests if our rulesets have been changed.
 RULESET_PATTERN="src/chrome/content/rules/"
 CHANGED_RULESETS="$(git diff --cached --name-only | grep $RULESET_PATTERN)"
@@ -26,8 +28,5 @@ else
     echo "$(date -R): Skipped ruleset validation tests, no changes in" \
         "$RULESET_PATTERN."
 fi
-
-echo "$(date -R): Reverting Git stash..."
-git stash pop -q
 
 exit $RESULT
