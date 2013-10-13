@@ -16,17 +16,26 @@ CHANGED_RULESETS="$(git diff --cached --name-only | grep $RULESET_PATTERN)"
 
 if [ "$CHANGED_RULESETS" ]; then
     echo "$(date -R): Running ruleset validation tests on changed rulesets:"
-    ./utils/trivial-validate.py $CHANGED_RULESETS > /dev/null
-    RESULT=$?
 
-    if [ $RESULT -eq 1 ]; then
-        echo "$(date -R): Failure encountered during ruleset validation."
-    else
-        echo "$(date -R): Ruleset validation successful."
-    fi
+    for FILE in $CHANGED_RULESETS; do
+        if [ ! -f $FILE ]; then
+            echo "$(date -R): Skipped validation of $FILE - not found."
+            continue
+        fi
+
+        ./utils/trivial-validate.py $i > /dev/null
+        RESULT=$?
+
+        if [ $RESULT -eq 1 ]; then
+            echo "$(date -R): Failure encountered during ruleset validation."
+            exit $RESULT
+        fi
+    done
+
+    echo "$(date -R): Ruleset validation successful."
 else
     echo "$(date -R): Skipped ruleset validation tests, no changes in" \
         "$RULESET_PATTERN."
 fi
 
-exit $RESULT
+exit 0
