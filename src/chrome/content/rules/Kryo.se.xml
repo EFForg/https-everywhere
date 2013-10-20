@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional subdomains:
+
+		- code	(prints "nothing to see here")
+
+
+	Problematic subdomains:
+
+		- www	(prints "nothing to see here")
+		- mail	(interrupted)
+
+
+	- Expired 2008-06-24
+	- CN: localhost
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- dev
+		- mail		(→ mail.google.com)
+
+-->
+<ruleset name="kryo.se (partial)" default_off="expired, self-signed">
+
+	<target host="kryo.se" />
+	<target host="*.kryo.se" />
+
+
+	<securecookie host="^dev\.kryo\.se$" name=".+" />
+
+
+	<rule from="^http://(?:(dev\.)|www\.)?kryo\.se/"
+		to="https://$1kryo.se/" />
+
+	<rule from="^http://mail\.kryo\.se/.*"
+		to="https://mail.google.com/a/kryo.se" />
+
+</ruleset>
