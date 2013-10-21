@@ -1,0 +1,46 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- blogs *
+		- www.eere		(redirects to http)
+		- (www.)eereblogs	(shows www3)
+
+	* Blogs
+
+
+	Problematic subdomains:
+
+		- afdc		(cert only matches www.afdc)
+
+
+	Partially covered subdomains:
+
+		- (www.)afdc	(^ → www, some pages redirects to http)
+
+
+	Fully covered subdomains:
+
+		- www1.eere
+		- www3.eere
+
+-->
+<ruleset name="Energy.gov (partial)">
+
+	<target host="*.energy.gov" />
+		<!--exclusion pattern="^http://(www\.)?afdc\.energy\.gov/(?!(\w+/)?(asset|image)s/)" /-->
+
+
+	<securecookie host="^$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?afdc\.energy\.gov/(?=(?:\w+/)?(?:asset|image)s/)"
+		to="https://www.afdc.energy.gov/" />
+
+	<rule from="^http://www(1|3)\.eere\.energy\.gov/"
+		to="https://www$1.eere.energy.gov/" />
+
+</ruleset>

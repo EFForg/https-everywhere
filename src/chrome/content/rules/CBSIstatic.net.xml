@@ -1,0 +1,54 @@
+<!--
+	For other CBS coverage, see CBS.xml.
+
+
+	CDN buckets:
+
+		- techrepublic.cbsistatic.com.edgesuite.net
+
+			- a1531.b.akamai.net
+			- tr1.cbsistatic.com
+			- tr2.cbsistatic.com
+
+		- i.com.com.edgesuite.net
+
+			- asset\d+.cbsistatic.com
+
+
+	Nonfunctional subdomains:
+
+		- asset[0-3].cbsistatic.com	(503, akamai)
+
+
+	Problematic subdomains:
+
+		- tr1 *
+		- tr2 *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- tr1		(→ akamai, fly/ 404s)
+
+
+	Fully covered subdomains:
+
+		- tr2		(→ akamai)
+
+
+	tr1.cbsistatic.com appears to be pulled from  cdn-origin01.techproresearch.com.
+
+-->
+<ruleset name="CBSIstatic.com (partial)">
+
+	<target host="*.cbsistatic.com" />
+		<!--exclusion pattern="^http://tr1\.cbsistatic\.com/fly/" /-->
+		<!--exclusion pattern="^http://tr[12]\.cbsistatic\.com/(?!hub/)" /-->
+
+
+	<rule from="^http://tr(1|2)\.cbsistatic\.com/(?!fly/)"
+		to="https://a248.e.akamai.net/=/1531/5129/6/tr$1.cbsistatic.com/" />
+
+</ruleset>

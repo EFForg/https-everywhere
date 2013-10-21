@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- www.smugmug.com.edgesuite.net
+
+			- a539.b.akamai.net
+			- cdn.smugmug.com
+			- www.smugmug.com
+
+
+	Problematic subdomains:
+
+		- ^	(works; mismatched, self-signed, CN: *.smugmug.com)
+		- cdn *
+		- www *
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)	(pages redirect back to http://www)
+
+
+	Fully covered subdomains:
+
+		- cdn	(→ akamai & secure)
+		- secure
+
+-->
+<ruleset name="SmugMug.com (partial)">
+
+	<target host="smugmug.com" />
+	<target host="*.smugmug.com" />
+
+
+	<!--	Perhaps some css can be rewritten to
+		akamai safely, but remain cautious until
+		we've explicitly tested doing so.
+							-->
+	<rule from="^http://(cdn\.|www\.)?smugmug\.com/(?=favicon\.ico|img/)"
+		to="https://a248.e.akamai.net/f/539/9092/8m/$1smugmug.com/" />
+
+	<rule from="^http://(?:cdn|secure)\.smugmug\.com/"
+		to="https://secure.smugmug.com/" />
+
+</ruleset>

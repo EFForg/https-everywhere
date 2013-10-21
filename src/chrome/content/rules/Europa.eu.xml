@@ -5,16 +5,22 @@
 	Nonfunctional subdomains:
 
 		- ^	(403, valid cert)
-		- cordis	(redirects to http, valid cert)
 		- ec	(403)
 		- eur-lex	(shows ^; mismatched, CN: europa.eu)
 		- (www.)ombudsman	(times out)
+
+
+	Partially covered subdomains:
+
+		- cordis	(some pages redirect to http)
 
 -->
 <ruleset name="Europa.eu">
 
 	<target host="www.ecb.eu" />
 	<target host="*.europa.eu" />
+		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
+		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
 
 
 	<rule from="^http://www\.ecb(?:\.europa)?\.eu/"
@@ -23,7 +29,7 @@
 	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
 		to="https://www.consilium.europa.eu/" />
 
-	<rule from="^http://joinup\.ec\.europa\.eu/"
-		to="https://joinup.ec.europa.eu/" />
+	<rule from="^http://(cordis|joinup\.ec)\.europa\.eu/"
+		to="https://$1.europa.eu/" />
 
 </ruleset>
