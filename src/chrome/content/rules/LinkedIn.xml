@@ -17,37 +17,26 @@
     LinkedIn users should also enable secure connections from:
     - https://www.linkedin.com/settings/security-v2
 -->
-<ruleset name="LinkedIn (buggy)" default_off="unreliable">
+<ruleset name="LinkedIn">
 
 	<target host="*.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
 
-
 	<!--	Set by analytics/	-->
-	<securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
+    <securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
+
+    <!-- Breaks on non-auth'ed connections with loop. -->
+    <exclusion pattern="https?://www\.linkedin\.com/groups" />
 
 
 	<rule from="^http://((?:[ms][1-4])(?:-s)|static)?\.licdn\.com/"
 		to="https://$1$2.licdn.com/" />
 
-	<!--	- !www times out over https
-		- !www 301s to www over http
-						-->
-	<rule from="^http://(?:www\.)?linkedin\.com/$"
-		to="https://www.linkedin.com/" />
-
-	<!--	These paths redirect to http:
-
-			- groups?gid=\d+
-			- mpr$
-			- static?key=.+
-					-->
-	<rule from="^http://(?:www\.)?linkedin\.com/(analytics|company|home|media|profile|reg|scds|secure|settings|today|uas|ucds)([\?\/].*)?$"
-		to="https://www.linkedin.com/$1$2" />
-
-	<rule from="^http://(?:www\.)?linkedin\.com/(img/|reg/join|mpr/)"
-		to="https://www.linkedin.com/$1" />
+    <rule from="^https?://linkedin\.com/"
+        to="https://www.linkedin.com/" />
+    <rule from="^http://www\.linkedin\.com/"
+        to="https://www.linkedin.com/" />
 
 	<!--	Akamai.
 			-->
