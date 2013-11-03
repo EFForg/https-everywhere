@@ -62,7 +62,7 @@ const INCLUDE = function(name) {
             + name + ".js");
     _INCLUDED[name] = true;
   }
-}
+};
 
 const WP_STATE_START = CI.nsIWebProgressListener.STATE_START;
 const WP_STATE_STOP = CI.nsIWebProgressListener.STATE_STOP;
@@ -104,7 +104,7 @@ const N_COHORTS = 1000;
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
-const DUMMY_FUNC = function() {}
+const DUMMY_FUNC = function() {};
 const DUMMY_ARRAY = [];
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
@@ -151,17 +151,17 @@ StorageController.prototype = {
     [ Components.interfaces.nsISupports,
       Components.interfaces.nsIController ]),
   wrappedJSObject: null,  // Initialized by constructor
-  supportsCommand: function (cmd) {return (cmd == this.command)},
-  isCommandEnabled: function (cmd) {return (cmd == this.command)},
-  onEvent: function(eventName) {return true},
-  doCommand: function() {return true}
+  supportsCommand: function (cmd) {return (cmd == this.command);},
+  isCommandEnabled: function (cmd) {return (cmd == this.command);},
+  onEvent: function(eventName) {return true;},
+  doCommand: function() {return true;}
 };
 
 function StorageController(command) {
   this.command = command;
   this.data = {};
   this.wrappedJSObject = this;
-};
+}
 
 /*var Controller = Class("Controller", XPCOM(CI.nsIController), {
   init: function (command, data) {
@@ -388,7 +388,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     domWin = domWin.top;
-    return domWin
+    return domWin;
   },
 
   // the lists get made when the urlbar is loading something new, but they
@@ -439,7 +439,7 @@ HTTPSEverywhere.prototype = {
       var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
-        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec])
+        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
         else        this.log(WARN,"Failed to indicate breakage in content menu");
         return;
       }
