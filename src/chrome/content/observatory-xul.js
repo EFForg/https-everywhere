@@ -105,13 +105,16 @@ function recursive_set(node, attrib, value) {
     recursive_set(node.childNodes[i], attrib, value)
 }
 
-// called from the popup
 
 function set_obs_anon(val) {
   obsprefs.setBoolPref( "extensions.https_everywhere._observatory.use_custom_proxy", !val);
 }
+
+// called from the popup only
 function enable_observatory() {
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.enabled", true);
+  var torbutton_avail = ssl_observatory.proxy_test_successful;
+  set_obs_anon(torbutton_avail);
 }
 
 function disable_observatory() {
