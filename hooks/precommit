@@ -39,11 +39,10 @@ if [ "$CHANGED_RULESETS" ]; then
             continue
         fi
 
-        # Errors will go to stderr.
-        ./utils/trivial-validate.py $FILE > /dev/null
+        ./utils/trivial-validate.py --quiet $FILE
         RESULT=$?
 
-        if [ $RESULT -eq 1 ]; then
+        if [ $RESULT -ne 0 ]; then
             echo "$(date -R): Failure encountered during ruleset validation."
             exit $RESULT
         fi
