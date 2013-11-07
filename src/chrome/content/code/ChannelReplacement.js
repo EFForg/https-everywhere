@@ -14,7 +14,7 @@ CtxCapturingListener.prototype = {
   onDataAvailable: function(request, ctx, inputStream, offset, count) {},
   onStopRequest: function(request, ctx, statusCode) {},
   QueryInterface: xpcom_generateQI([Ci.nsIStreamListener])
-}
+};
 
 function ChannelReplacement(chan, newURI, newMethod) {
   return this._init(chan, newURI, newMethod);
@@ -241,9 +241,9 @@ ChannelReplacement.prototype = {
       } else {
         // legacy (Gecko < 2)
         self.observeCapture = function(req, ccl) {
-          self.open = function() { self._redirect(ccl) }
+          self.open = function() { self._redirect(ccl); };
           callback(self);
-        }
+        };
         oldChan.cancel(NS_BINDING_REDIRECTED); 
       }
       

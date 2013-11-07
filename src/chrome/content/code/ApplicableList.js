@@ -2,7 +2,7 @@
 // were applied, and which ones weren't but might have been, to the contents
 // of a given page (top level nsIDOMWindow)
 
-serial_number = 0
+serial_number = 0;
 
 function ApplicableList(logger, doc, domWin) {
   this.domWin = domWin;
@@ -24,7 +24,7 @@ function ApplicableList(logger, doc, domWin) {
   serial_number += 1;
   this.serial = serial_number;
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
-};
+}
 
 ApplicableList.prototype = {
 
@@ -106,7 +106,7 @@ ApplicableList.prototype = {
     this.prepend_child(enableLabel);
     
     // add the label at the top
-    var any_rules = false
+    var any_rules = false;
     for(var x in this.all) {
       any_rules = true;  // how did JavaScript get this ugly?
       break;
