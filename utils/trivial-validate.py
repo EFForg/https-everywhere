@@ -227,7 +227,7 @@ for fi in nomes_all():
             continue
         failure = 1
         sys.stderr.write("%s failed XML validity: %s\n" % (fi, oops))
-    if not tree.xpath("/ruleset"):
+    if failure or not tree.xpath("/ruleset"):
         continue
     if not test_ruleset_name(tree):
         failure = 1

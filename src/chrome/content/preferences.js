@@ -259,7 +259,7 @@ function https_prefs_accept() {
                    .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
                    .getInterface(Components.interfaces.nsIDOMWindow); 
 
-  if (outer) outer.close()
+  if (outer) outer.close();
   else alert("no outer space");
 
   return true;  // https://developer.mozilla.org/en/XUL/dialog#a-ondialogaccept
