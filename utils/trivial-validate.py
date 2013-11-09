@@ -10,10 +10,17 @@ except ImportError:
     sys.stderr.write("** Please install libxml2 and lxml to permit validation!\n")
     sys.exit(0)
 
-longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups=", "dupdir="])
+longargs, args = getopt.gnu_getopt(sys.argv[1:], "", ["ignoredups=", "quiet", "dupdir="])
 
 ignoredups = [re.compile(val) for opt, val in longargs if opt == "--ignoredups"]
 dupdir = [val for opt, val in longargs if opt == "--dupdir"]
+quiet = any(opt == "--quiet" for opt, val in longargs)
+
+def warn(s):
+    if not quiet: sys.stdout.write("warning: %s\n" % s)
+
+def fail(s):
+    sys.stdout.write("failure: %s\n" % s)
 
 def test_not_anchored(tree):
     # Rules not anchored to the beginning of a line.
@@ -43,8 +50,8 @@ def test_missing_to(tree):
     """Rule is missing a 'to' value."""
     for rule in tree.xpath("/ruleset/rule"):
 	if not rule.get("to"):
-            sys.stdout.write("warning: 'to' attribute missing in %s. " %fi)
-            sys.stdout.write("Misplaced end or misnamed element?\n")
+            warn("'to' attribute missing in %s. " %fi)
+            warn("Misplaced end or misnamed element?")
             return False
     return True
 
@@ -93,11 +100,9 @@ def test_unencrypted_to(tree):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            sys.stdout.write("warning: downgrade rule in %s redirects " % fi)
-            sys.stdout.write("to http.\n")
+            warn("downgrade rule in %s redirects to http." % fi)
         elif to[:5] == "http:":
-            sys.stdout.write("error: rule in %s redirects to http and " % fi)
-            sys.stdout.write("downgrade attribute not specified.\n")
+            fail("non-downgrade rule in %s redirects to http." % fi)
             return False
     return True
 
@@ -202,7 +207,7 @@ for fi in nomes_all():
         tree = etree.parse(fi)
         if fi[-4:] != ".xml":
             if tree.xpath("/ruleset"):
-                sys.stdout.write("warning: ruleset in file without .xml extension: %s\n" % fi)
+                warn("ruleset in file without .xml extension: %s" % fi)
             else:
                 continue
         seen_file = True
@@ -210,27 +215,27 @@ for fi in nomes_all():
         if fi[-4:] != ".xml":
             continue
         failure = 1
-        sys.stdout.write("%s failed XML validity: %s\n" % (fi, oops))
-    if not tree.xpath("/ruleset"):
+        fail("%s failed XML validity: %s\n" % (fi, oops))
+    if failure or not tree.xpath("/ruleset"):
         continue
     if not test_ruleset_name(tree):
         failure = 1
-        sys.stdout.write("failure: unnamed ruleset: %s\n" % fi)
+        fail("unnamed ruleset: %s" % fi)
         continue
     ruleset_name = tree.xpath("/ruleset/@name")[0]
     if ruleset_name in all_names:
         failure = 1
-        sys.stdout.write("failure: duplicate ruleset name %s\n" % ruleset_name)
+        fail("duplicate ruleset name %s" % ruleset_name)
     all_names.add(ruleset_name)
     for test in tests:
         if not test(tree):
             failure = 1
-            sys.stdout.write("failure: %s failed test: %s\n" % (fi, test.__doc__))
+            fail("%s failed test: %s" % (fi, test.__doc__))
     for target in tree.xpath("/ruleset/target/@host"):
         if target in all_targets and not any(ign.search(target) for ign in ignoredups):
             # suppress warning about duplicate targets if an --ignoredups
             # pattern matches target
-            sys.stdout.write("warning: %s has duplicate target: %s\n" % (fi, target))
+            warn("%s has duplicate target: %s" % (fi, target))
         all_targets.add(target)
 
 if not seen_file:
