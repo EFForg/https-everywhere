@@ -29,7 +29,7 @@ function openStatus() {
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   
-  const numTabs = 10;
+  const numTabs = 6;
   var finished = false;
   var output = [];
   var urls = [];
@@ -70,8 +70,16 @@ function testRunner() {
 
         // detect mixed content blocker
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
-          HTTPSEverywhere.httpseRulesetTests.updateLog("MCB triggered: "+JSON.stringify(urls[number]));
-          //writeout(JSON.stringify(urls[number]));
+          // build output to log
+          ruleset_xmls = '';
+          for(let i=0; i<urls[number].ruleset_names.length; i++) {
+            ruleset_xmls += urls[number].ruleset_names[i].xmlName + ', ';
+          }
+          if(ruleset_xmls != '')
+            ruleset_xmls = ruleset_xmls.substring(ruleset_xmls.length-2, 2);
+          var output = 'MCB triggered: '+urls[number].url+' ('+ruleset_xmls+')';
+
+          HTTPSEverywhere.httpseRulesetTests.updateLog(output);
         }
 
         // close this tab, and open another
