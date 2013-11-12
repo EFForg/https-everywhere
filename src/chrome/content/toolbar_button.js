@@ -217,6 +217,19 @@ function show_applicable_list(menupopup) {
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);
+
+  // should we also show the ruleset tests menu item?
+  if(HTTPSEverywhere.prefs.getBoolPref("show_ruleset_tests")) {
+    let strings = document.getElementById('HttpsEverywhereStrings');
+    let label = strings.getString('https-everywhere.menu.ruleset-tests');
+
+    let item = this.document.createElement('menuitem');
+    item.setAttribute('command', 'https-everywhere-menuitem-ruleset-tests');
+    item.setAttribute('label', label);
+
+    menupopup.appendChild(item);
+  }
+  
 }
 
 function toggle_rule(rule_id) {
