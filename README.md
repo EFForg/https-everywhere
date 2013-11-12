@@ -37,6 +37,13 @@ To build the Chrome version go to the git repository root and run:
 
 After building the extension the xpi files (for Firefox) and crx files (for Chrome) get created in the pkg directory. You can open those files within your browser to install the browser extension.
 
+Ruleset Tests
+-------------
+
+You can run ruleset tests by opening `about:config` and changing `extensions.https_everywhere.show_ruleset_tests` to true. Now when you open the HTTPS Everywhere context menu there will be a "Run HTTPS Everywhere Ruleset Tests" menu item.
+
+When you run the tests, be prepared to let your computer run them for a really long time.
+
 Source Tree
 -----------
 

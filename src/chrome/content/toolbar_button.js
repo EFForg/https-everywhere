@@ -199,6 +199,8 @@ function stitch_context_menu2() {
   }
 }
 
+var rulesetTestsMenuItem = null;
+
 function show_applicable_list(menupopup) {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
@@ -220,14 +222,18 @@ function show_applicable_list(menupopup) {
 
   // should we also show the ruleset tests menu item?
   if(HTTPSEverywhere.prefs.getBoolPref("show_ruleset_tests")) {
-    let strings = document.getElementById('HttpsEverywhereStrings');
-    let label = strings.getString('https-everywhere.menu.ruleset-tests');
 
-    let item = this.document.createElement('menuitem');
-    item.setAttribute('command', 'https-everywhere-menuitem-ruleset-tests');
-    item.setAttribute('label', label);
+    if(!rulesetTestsMenuItem) {
+      let strings = document.getElementById('HttpsEverywhereStrings');
+      let label = strings.getString('https-everywhere.menu.ruleset-tests');
 
-    menupopup.appendChild(item);
+      rulesetTestsMenuItem = this.document.createElement('menuitem');
+      rulesetTestsMenuItem.setAttribute('command', 'https-everywhere-menuitem-ruleset-tests');
+      rulesetTestsMenuItem.setAttribute('label', label);
+    }
+
+    if(!menupopup.contains(rulesetTestsMenuItem)) 
+      menupopup.appendChild(rulesetTestsMenuItem);
   }
   
 }
