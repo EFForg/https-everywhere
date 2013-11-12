@@ -29,7 +29,7 @@ function openStatus() {
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   
-  const numTabs = 5;
+  const numTabs = 10;
   var finished = false;
   var output = [];
   var urls = [];
@@ -63,19 +63,15 @@ function testRunner() {
     if(urls.length) {
 
       // open a new tab
-      var cururl = urls[number].url;
-      console.log(cururl);
-      var tab = gBrowser.addTab(cururl);
-
+      var tab = gBrowser.addTab(urls[number].url);
 
       // wait for the page to load
       var intervalId = window.setTimeout(function(){
 
         // detect mixed content blocker
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
-          popup(cururl);
-          writeout(cururl);
-          // todo: print this in the live window
+          HTTPSEverywhere.httpseRulesetTests.updateLog("MCB triggered: "+JSON.stringify(urls[number]));
+          //writeout(JSON.stringify(urls[number]));
         }
 
         // close this tab, and open another
@@ -101,17 +97,10 @@ function testRunner() {
 
     gBrowser.selectedTab = tab;
     gBrowser.removeCurrentTab();
-    newTab(num);
-  }
 
-  //function to create alerts without interrupting test
-  function popup(text) {
-    try {
-      Components.classes['@mozilla.org/alerts-service;1'].
-      getService(Components.interfaces.nsIAlertsService).
-      showAlertNotification(null, "HTTPS Everywhere Tests", text, false, '', null);
-    } catch(e) {
-      // prevents runtime error on platforms that don't implement nsIAlertsService
+    // open a new tab, if the tests haven't been canceled
+    if(!HTTPSEverywhere.httpseRulesetTests.cancel) {
+      newTab(num);
     }
   }
 

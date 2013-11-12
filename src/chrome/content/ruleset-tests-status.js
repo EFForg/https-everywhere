@@ -9,9 +9,12 @@ function updateStatusBar(current_test, total_tests) {
 }
 
 function updateLog(msg) {
+  document.getElementById("log").value += msg+'\n';
 }
 
 function cancel() {
+  updateLog("Canceling early ...");
+  HTTPSEverywhere.httpseRulesetTests.cancel = true;
 }
 
 function start() {
@@ -21,7 +24,8 @@ function start() {
 
   HTTPSEverywhere.httpseRulesetTests.updateStatusBar = updateStatusBar;
   HTTPSEverywhere.httpseRulesetTests.updateLog = updateLog;
-  HTTPSEverywhere.httpseRulesetTests.cancel = cancel;
+  HTTPSEverywhere.httpseRulesetTests.cancel = false;
 
+  updateLog("Starting ruleset tests ...");
   HTTPSEverywhere.httpseRulesetTests.testRunner();
 }
