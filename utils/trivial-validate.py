@@ -23,7 +23,7 @@ parser.add_argument('--dupdir', type=str, nargs="*",
     help="Duplicate directory."
     )
 parser.add_argument('--quiet', action="store_true",
-    default=False, help="Surpress debug output."
+    default=False, help="Suppress debug output."
     )
 parser.add_argument('ruleset', metavar='XML directory', type=str, nargs="*",
     default="src/chrome/content/rules",
