@@ -36,7 +36,7 @@ function testRunner() {
   var num = 0;
  
   for(var target in HTTPSEverywhere.https_rules.targets) {
-    if(!target.contains("*"))  {
+    if(!target.indexOf("*") != -1)  {
       urls.push({ 
         url: 'https://'+target, 
         target: target, 
