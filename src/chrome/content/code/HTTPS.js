@@ -46,7 +46,7 @@ const HTTPS = {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
       if (!blob.applied_ruleset) {
-        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        this.log(WARN,"Blacklisting rule for: " + channel.URI.spec);
         https_everywhere_blacklist[channel.URI.spec] = true;
       }
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
