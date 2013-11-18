@@ -199,6 +199,8 @@ function stitch_context_menu2() {
   }
 }
 
+var rulesetTestsMenuItem = null;
+
 function show_applicable_list(menupopup) {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
@@ -217,6 +219,23 @@ function show_applicable_list(menupopup) {
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);
+
+  // should we also show the ruleset tests menu item?
+  if(HTTPSEverywhere.prefs.getBoolPref("show_ruleset_tests")) {
+
+    if(!rulesetTestsMenuItem) {
+      let strings = document.getElementById('HttpsEverywhereStrings');
+      let label = strings.getString('https-everywhere.menu.ruleset-tests');
+
+      rulesetTestsMenuItem = this.document.createElement('menuitem');
+      rulesetTestsMenuItem.setAttribute('command', 'https-everywhere-menuitem-ruleset-tests');
+      rulesetTestsMenuItem.setAttribute('label', label);
+    }
+
+    if(!menupopup.contains(rulesetTestsMenuItem)) 
+      menupopup.appendChild(rulesetTestsMenuItem);
+  }
+  
 }
 
 function toggle_rule(rule_id) {

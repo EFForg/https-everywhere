@@ -46,7 +46,7 @@ const HTTPS = {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
       if (!blob.applied_ruleset) {
-        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        this.log(WARN,"Blacklisting rule for: " + channel.URI.spec);
         https_everywhere_blacklist[channel.URI.spec] = true;
       }
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
@@ -243,7 +243,7 @@ const HTTPS = {
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions
-      var expiry = Math.min(c.expiry, Math.pow(2,31))
+      var expiry = Math.min(c.expiry, Math.pow(2,31));
       cookieManager.remove(c.host, c.name, c.path, false);
       cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
     }
@@ -307,7 +307,7 @@ const HTTPS = {
       
     } else {
       this.log(WARN,"Detected unsafe navigation with NoScript-secured cookies: " + origin + " -> " + uri.spec);
-      this.log(WARN,uri.prePath + " cannot support secure cookies because it does not use HTTPS. Consider forcing HTTPS for " + uri.host + " in NoScript's Advanced HTTPS options panel.")
+      this.log(WARN,uri.prePath + " cannot support secure cookies because it does not use HTTPS. Consider forcing HTTPS for " + uri.host + " in NoScript's Advanced HTTPS options panel.");
     }
     
     var cs = CC['@mozilla.org/cookieService;1'].getService(CI.nsICookieService).getCookieString(uri, req);
@@ -320,12 +320,12 @@ const HTTPS = {
 
     if (cs) {
       dcookies.push.apply(
-        dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") } })
-         .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name }) })
+        dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") }; })
+         .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name; }); })
       );
     }
 
-    cs = dcookies.map(function(c) { return c.name + "=" + c.value }).join("; ");
+    cs = dcookies.map(function(c) { return c.name + "=" + c.value; }).join("; ");
 
     this.log(WARN,"Sending Cookie for " + dhost + ": " + cs);
     req.setRequestHeader("Cookie", cs, false); // "false" because merge syntax breaks Cookie header
