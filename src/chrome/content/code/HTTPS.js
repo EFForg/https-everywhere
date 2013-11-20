@@ -31,7 +31,7 @@ const HTTPS = {
   httpsRewrite: null,
   
   replaceChannel: function(applicable_list, channel) {
-    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
+    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
     if (null == blob) return false; // no rewrite
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
