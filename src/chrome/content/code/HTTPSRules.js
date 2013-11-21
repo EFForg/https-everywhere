@@ -549,9 +549,9 @@ const HTTPSRules = {
           catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
         }
     } catch(e3) {
-      this.log(WARN, "uri.host is explosive!");
-      try       { this.log(WARN, "(" + uri.spec + ")"); } 
-      catch(e4) { this.log(WARN, "(and unprintable)"); }
+      this.log(INFO, "uri.host is explosive!");
+      try       { this.log(INFO, "(" + uri.spec + ")"); } 
+      catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
   },
