@@ -1,6 +1,12 @@
 <!--
 	CDN buckets:
 
+		- channel4.com.edgesuite.net
+
+			- paralympics
+
+		- watchlive.channel4.com.edgesuite.net
+
 		- 2a7e9.v.fwmrm.net
 
 			- realmedia.channel4.com
@@ -18,6 +24,8 @@
 
 		- ll.abrstream.channel4.com	(CN: *.hs.llnwd.net; 400)
 		- ll.flash.anno		(interrupted)
+		- blogs			(redirects to http, valid cert)
+		- paralympics		(404, akamai)
 		- watchlive		(503, akamai)
 
 
@@ -25,18 +33,42 @@
 
 		- realmedia	(mismatched, CN: *.v.fwmrm.net)
 
+
+	Partially covered subdomains:
+
+		- (www.) *
+
+	* Some paths redirect to http, including:
+
+		- assets/
+		- media/
+
+
+	Fully covered subdomains:
+
+		- 4id
+		- ais
+		- test
+		- realmedia	(→ 2a7e9.v.fwmrm.net)
+
+
+	Mixed content:
+
+		- css on mailing from www *
+
+		- Images on mailing from www *
+
+	* Secured by us
+
 -->
 <ruleset name="Channel 4 (partial)">
 
 	<target host="channel4.com" />
 	<target host="*.channel4.com" />
+		<!--exclusion pattern="^http://(www\.)?channel4\.com/+(assets|media)/" /-->
+		<!--exclusion pattern="^http://(www\.)?channel4\.com/(?!4me(?:$|\?|/)|static/)" /-->
 
 
-	<!--	These paths 302 to http:
-
-			- assets/
-			- media/
-					-->
 	<rule from="^http://(www\.)?channel4\.com/(4me(?:$|\?|/)|static/)"
 		to="https://$1channel4.com/$2" />
 
