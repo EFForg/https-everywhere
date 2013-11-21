@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Channel_4-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- channel4.com.edgesuite.net
@@ -37,6 +40,7 @@
 	Partially covered subdomains:
 
 		- (www.) *
+		- mailing	(avoiding false/broken MCB)
 
 	* Some paths redirect to http, including:
 
@@ -67,12 +71,16 @@
 	<target host="*.channel4.com" />
 		<!--exclusion pattern="^http://(www\.)?channel4\.com/+(assets|media)/" /-->
 		<!--exclusion pattern="^http://(www\.)?channel4\.com/(?!4me(?:$|\?|/)|static/)" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://mailing\.channel4\.com/public/snowmail/remotebox\.jsp" />
 
 
 	<rule from="^http://(www\.)?channel4\.com/(4me(?:$|\?|/)|static/)"
 		to="https://$1channel4.com/$2" />
 
-	<rule from="^http://(4id|ais)\.channel4\.com/"
+	<rule from="^http://(4id|ais|mailing|test)\.channel4\.com/"
 		to="https://$1.channel4.com/" />
 
 	<rule from="^https?://realmedia\.channel4\.com/"
