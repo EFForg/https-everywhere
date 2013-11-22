@@ -57,32 +57,22 @@ const HTTPS = {
     }
 
     // Check for the new internal redirect API. If it exists, use it.
-    if ("redirectTo" in channel) {
-      this.log(INFO, "Using nsIHttpChannel.redirectTo: " + channel.URI.spec + " -> " + uri.spec);
-      try {
-        channel.redirectTo(uri);
-        return true;
-      } catch(e) {
-        // This should not happen. We should only get exceptions if
-        // the channel was already open.
-        this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
-
-        // Don't return: Fallback to NoScript ChannelReplacement.js
-      }
+    if (!"redirectTo" in channel) {
+      this.log(WARN, "nsIHTTPChannel.redirectTo API is missing. This version of HTTPS Everywhere is useless!!!!\n!!!\n");
+      return false;
     }
 
-    if (ChannelReplacement.supported) {
-      HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
-      HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
-      ChannelReplacement.runWhenPending(channel, function() {
-        var cr = new ChannelReplacement(channel, uri);
-        cr.replace(true,null);
-        cr.open();
-        HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
-      });
+    this.log(INFO, "Using nsIHttpChannel.redirectTo: " + channel.URI.spec + " -> " + uri.spec);
+    try {
+      channel.redirectTo(uri);
       return true;
+    } catch(e) {
+      // This should not happen. We should only get exceptions if
+      // the channel was already open.
+      this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
+
+      // Don't return: Fallback to NoScript ChannelReplacement.js
     }
-    
     this.log(WARN,"Aborting redirection " + channel.name + ", should be HTTPS!");
     IOUtil.abort(channel);
     return false;

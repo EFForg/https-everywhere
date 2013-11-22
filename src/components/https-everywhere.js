@@ -109,6 +109,7 @@ const DUMMY_ARRAY = [];
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
 
+// This is probably obsolete since the switch to the channel.redirectTo API
 const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
 
 // XXX: Better plan for this?
@@ -644,23 +645,6 @@ HTTPSEverywhere.prototype = {
     }
 
     return o_branch;
-  },
-
-  /**
-   * Notify observers of the topic OBSERVER_TOPIC_URI_REWRITE.
-   *
-   * @param nsIURI oldURI
-   * @param string newSpec
-   */
-  notifyObservers: function(oldURI, newSpec) {
-    this.log(INFO, "Notifying observers of rewrite from " + oldURI.spec + " to " + newSpec);
-    try {
-      // The subject has to be an nsISupports and the extra data is a string,
-      // that's why one is an nsIURI and the other is a nsIURI.spec string.
-      this.obsService.notifyObservers(oldURI, OBSERVER_TOPIC_URI_REWRITE, newSpec);
-    } catch (e) {
-      this.log(WARN, "Couldn't notify observers: " + e);
-    }
   },
 
   chrome_opener: function(uri, args) {
