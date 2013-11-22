@@ -276,9 +276,6 @@ HTTPSEverywhere.prototype = {
     {
       category: "app-startup",
     },
-    {
-      category: "content-policy",
-    },
   ],
 
   // QueryInterface implementation, e.g. using the generateQI helper
@@ -286,7 +283,6 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
-      Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
@@ -602,26 +598,6 @@ HTTPSEverywhere.prototype = {
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
         this.onChannelRedirect(oldChannel, newChannel, flags);
         callback.onRedirectVerifyCallback(0);
-  },
-
-  // These implement the nsIContentPolicy API; they allow both yes/no answers
-  // to "should this load?", but also allow us to change the thing.
-
-  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
-       if (shouldLoadTargets[aContentType] != null) {
-         var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-         var scheme = unwrappedLocation.scheme;
-         var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-         this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-         if (isHTTP)
-           HTTPS.forceURI(aContentLocation, null, aContext);
-       } 
-    return true;
-  },
-
-  shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra) {
-    return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
   get_prefs: function(prefBranch) {
