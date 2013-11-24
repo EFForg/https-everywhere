@@ -1,0 +1,34 @@
+<!--
+	Problematic subdomains:
+
+		- (www.) *
+		- dev.secure *
+
+	* Mismatched, CN: secure.webtraffiq.com
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ secure, pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- secure
+		- dev.secure	(→ secure)
+
+-->
+<ruleset name="WebtraffIQ.com (partial)">
+
+	<target host="webtraffiq.com" />
+	<target host="*.webtraffiq.com" />
+		<exclusion pattern="^http://(?:www\.)?webtraffiq\.com/(?!images/|styles/)" />
+
+
+	<securecookie host="^secure\.webtraffiq\.com$" name=".+" />
+
+
+	<rule from="^http://(?:(?:dev\.)?secure\.|www\.)?webtraffiq\.com/"
+		to="https://secure.webtraffiq.com/" />
+
+</ruleset>

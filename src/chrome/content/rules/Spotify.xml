@@ -23,15 +23,13 @@
 	<!--target host="cf.scdn.co" /-->
 	<target host="spotify.com" />
 	<target host="*.spotify.com" />
-	<target host="*.developer.spotify.com" />
-	<!--target host="*.embed.spotify.com" /-->
+		<!--
+			Some (most?) pages 302 to http.
+							-->
+		<exclusion pattern="^http://(?:www\.)?spotify\.com/(?!(?:\w\w/)?signup(?:$|[?/]))" />
 
 
-	<securecookie host="^(?:community|\.developer|embed)\.spotify\.com$" name=".*" />
-	<!--
-		Is this cookie needed on other domains?
-
-	<securecookie host="^\.embed\.spotify\.com$" name=".*" /-->
+	<securecookie host="^(?:community|\.developer|\.?embed)\.spotify\.com$" name=".+" />
 
 
 	<!--	Spotify has (deliberately?) broken us by
@@ -44,13 +42,8 @@
 	<rule from="^https?://cf\.scdn\.co/"
 		to="https://dlfl22czvqywx.cloudfront.net/" /-->
 
-	<!--	Some (most?) pages 302 to http.
-						-->
-	<rule from="^http://(www\.)?spotify\.com/(\w\w/)?signup($|/|\?)"
-		to="https://$1spotify.com/$2signup$3" />
-
-	<rule from="^http://(community|developer|embed)\.spotify\.com/"
-		to="https://$1.spotify.com/" />
+	<rule from="^http://((?:community|developer|embed|www)\.)?spotify\.com/"
+		to="https://$1spotify.com/" />
 
 	<rule from="^https?://download\.spotify\.com/"
 		to="https://d1clcicqv97n4s.cloudfront.net/" />

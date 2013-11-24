@@ -58,7 +58,7 @@ function nsISupportsWrapper(wrapped) {
 }
 nsISupportsWrapper.prototype = {
   QueryInterface: xpcom_generateQI([])
-}
+};
 
 const IOUtil = {
   asyncNetworking: true,
@@ -241,7 +241,7 @@ const IOUtil = {
     if (!this._qsRx.test(qs)) return '';
     
     var cookieNames, hasCookies;
-    if ((hasCookies = !!cookie)) cookieNames = cookie.split(/\s*;\s*/).map(this._splitName)
+    if ((hasCookies = !!cookie)) cookieNames = cookie.split(/\s*;\s*/).map(this._splitName);
     
     let parms = qs.split("&");
     for (j = parms.length; j-- > 0;) {
