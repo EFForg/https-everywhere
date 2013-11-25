@@ -1,7 +1,11 @@
 <!--
+	For problematic rules, see Cam.ac.uk-problematic.xml.
+
+
 	Nonfunctional subdomains:
 
 		- news.admin	(shows www.admin; mismatched, CN: www.admin.cam.ac.uk)
+		- my.alumni *
 		- www.lib
 		- www.mrc-lmb	(https breaks styling; expired, self-signed)
 		- www.sports
@@ -9,11 +13,19 @@
 		- www
 		- www.zoo	(dropped)
 
+	* Dropped
+
 
 	Problematic subdomains:
 
+		- alumni *
 		- damtp		(cert only matches www.damtp)
+		- www.jobs **
+		- www.philanthropy **
 		- www.study	(works; mismatched, CN: www.admin.cam.ac.uk)
+
+	* Cert only matches www.foo
+	** Works; mismatched, CN: www.admin.cam.ac.uk
 
 
 	Partially covered subdomains:
@@ -25,6 +37,7 @@
 
 		- webservices.admin
 		- www.admin
+		- (www.)alumni		(^ → www)
 		- www.cl
 		- www2.mrc-lmb
 		- raven
@@ -44,11 +57,14 @@
 	<target host="*.cam.ac.uk" />
 
 
-	<securecookie host="^www\.admin\.cam\.ac\.uk$" name=".+" />
+	<securecookie host="^www\.a(?:dmin|lumni)\.cam\.ac\.uk$" name=".+" />
 
 
 	<rule from="^http://(webservices\.admin|www2\.mrc-lmb|(?:shib\.)?raven|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
 		to="https://$1.cam.ac.uk/" />
+
+	<rule from="^http://(?:www\.)?alumni\.cam\.ac\.uk/"
+		to="https://www.alumni.cam.ac.uk/" />
 
 	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
 		to="https://www.damtp.cam.ac.uk/global/" />
