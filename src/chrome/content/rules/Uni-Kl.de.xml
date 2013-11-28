@@ -35,11 +35,116 @@
 		- www.verw	(interrupted)
 
 
+	Partially covered subdomains:
+
+		- www.verw		(→ www, some/all paths but $ don't redirect)
+
+
 	Fully covered subdomains:
+
+		- www.alumni *	(→ alumni.kis)
+		- autodiscover.architektur
+		- autodiscover
+
+		- bauing subdomains:
+
+			- autodiscover
+			- www
+			- www.fs
+
+		- autodiscover.bio
+		- www.bio
+		- autodiscover.biologie
+		- autodiscover.chemie
+		- www.chemie
+		- autodiscover.cpk
+
+		- cs subdomains:
+
+			- autodiscover
+			- www.fachschaft
+			- fit
+
+		- autodiscover.disc
+		- www.disc
+		- autodiscover.eit
+		- autodiscover.hochschulsport
+
+		- informatik subdomains:
+
+			- autodiscover
+			- www.fachschaft
+			- fit
+
+		- autodiscover.isgs
+
+		- kis subdomains:
+
+			- alumni *
+			- office *
+			- www *
+
+		- autodiscover.kit
+		- mail
+		- autodiscover.mathematik
+		- autodiscover.mpa
+		- www.mpa
+		- autodiscover.mv
+
+		- physik subdomains:
+
+			- (www.)
+			- alumni
+			- autodiscover
+
+		- autodiscover.rhrk
+		- www.rhrk
+		- autodiscover.ru
+		- www.ru
+		- autodiscover.sowi
+		- autodiscover.sozwi
+		- autodiscover.ub
+		- opac.ub
 
 		- unix-ag subdomains:
 
+			- lists
+			- svn
 			- www
+
+		- autodiscover.verw
+		- wa
+
+		- wiwi subdomains:
+
+			- (www.)
+			- abwl
+			- autodiscover
+			- bisor
+			- enpres
+			- hotline
+			- integrierter-studiengang
+			- international
+			- it-service
+			- lff
+			- luc
+			- marketing
+			- nagios
+			- pmo
+			- step
+			- strama
+			- sustain
+			- marketing-forschung
+			- vwl-makro
+			- vwl-mikro
+			- vwl-wipo
+			- zwr
+
+		- autodiscover.zfl
+		- autodiscover.zfuw
+
+	* Note: server is configured for rc4 only
+
 
 	^uni-kl.de doesn't exist.
 
@@ -48,18 +153,18 @@
 
 		- css, on:
 
-			- www.architektur from www.architektur
+			- www.architektur from www.architektur *
 			- www from www *
 
 		- Images, on:
 
-			- www.architektur from www.architektur
-			- www.chemie from www.chemie
-			- www.fachschaft.cs from www.fachschaft.cs
-			- www.fachschaft.informatik from www.fachschaft.cs
+			- www.architektur from www.architektur *
+			- www.chemie from www.chemie *
+			- www.fachschaft.cs from www.fachschaft.cs *
+			- www.fachschaft.informatik from www.fachschaft.cs *
 			- www from www *
 
-		- Web bugs, from wa on:
+		- Web bugs, from wa on: *
 
 			- www.bauing
 			- www.fs.bauing
@@ -115,10 +220,28 @@
 	<target host="*.uni-kl.de" />
 
 
-	<rule from="^http://www\.uni-kl\.de/"
-		to="https://www.uni-kl.de/" />
+	<securecookie host="^(?:fit\.cs|\.www\.fachschaft\.(?:cs|informatik)|(?:alumni|office|www)\.kis|(?:alumni\.|www\.)?physik|\.www\.rhrk)\.uni-kl\.de$" name=".+" />
 
-	<rule from="^http://www\.unix-ag\.uni-kl\.de/"
-		to="https://www.unix-ag.uni-kl.de/" />
+
+	<rule from="^http://(autodiscover(?:\.\w+)?|fit\.cs|fit\.informatik|(?:alumni|office)\.kis|mail|alumni\.physik|opac\.ub|(?:lists|svn)\.unix-ag|wa|(?:abwl|bisor|enpres|hotline|integrierter-studiengang|international|it-service|lff|luc|marketing|nagios|pmo|step|strama|sustain|marketing-forschung|vwl-makro|vwl-mikro|vwl-wipo|zwr)\.wiwi|www)\.uni-kl\.de/"
+		to="https://$1.uni-kl.de/" />
+
+	<rule from="^http://www\.alumni\.uni-kl\.de/"
+		to="https://alumni.kis.uni-kl.de/" />
+
+	<!--	Subdomains for which ^foo doesn't
+		exist and www.foo does:
+					-->
+	<rule from="^http://www\.(architektur|bauing|fs\.bauing|bio|fachschaft\.(?:cs|informatik)|chemie|disc|kis|mpa|rhrk|ru|unix-ag)\.uni-kl\.de/"
+		to="https://www.$1.uni-kl.de/" />
+
+	<!--	Subdomains for which both ^foo and www.foo
+		exist, and both work unproblematically:
+								-->
+	<rule from="^http://(www\.)?(physik|wiwi)\.uni-kl\.de/"
+		to="https://$1$2.uni-kl.de/" />
+
+	<rule from="^http://www\.verw\.uni-kl\.de/+(?:$|\?.*)"
+		to="https://www.uni-kl.de/" />
 
 </ruleset>
