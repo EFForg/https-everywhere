@@ -1,6 +1,8 @@
 <!--
 	University of Kaiserslautern
 
+	For rules causing false/broken MCB, see Uni-Kl.de-falsemixed.xml.
+
 
 	Nonfunctional subdomains:
 
@@ -37,7 +39,11 @@
 
 	Partially covered subdomains:
 
+		- www.architektur *
 		- www.verw		(→ www, some/all paths but $ don't redirect)
+		- www *
+
+	* Avoiding false/broken MCB
 
 
 	Fully covered subdomains:
@@ -218,6 +224,10 @@
 <ruleset name="Uni-Kl.de (partial)">
 
 	<target host="*.uni-kl.de" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.(?:architektur\.)?uni-kl\.de/+(?!favicon\.ico|fileadmin/|typo3temp/|uploads/)" />
 
 
 	<securecookie host="^(?:fit\.cs|\.www\.fachschaft\.(?:cs|informatik)|(?:alumni|office|www)\.kis|(?:alumni\.|www\.)?physik|\.www\.rhrk)\.uni-kl\.de$" name=".+" />
