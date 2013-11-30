@@ -4,6 +4,11 @@
 		- echr		(redirects to http, valid cert)
 		- hudoc.echr	(redirects to http, depth mismatched)
 
+
+	Problematic subdomains:
+
+		- ^	(recursive redirect)
+
 -->
 <ruleset name="Council of Europe (partial)">
 
@@ -14,7 +19,10 @@
 	<securecookie host="^hub\.coe\.int$" name=".+" />
 
 
-	<rule from="^http://(hub\.|www\.)?coe\.int/"
-		to="https://$1coe.int/" />
+	<rule from="^http://(?:www\.)?coe\.int/"
+		to="https://www.coe.int/" />
+
+	<rule from="^http://hub\.coe\.int/"
+		to="https://hub.coe.int/" />
 
 </ruleset>
