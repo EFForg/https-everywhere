@@ -6,20 +6,44 @@
 		- www		(503)
 
 
+	Problematic subdomains:
+
+		- ^	(refused)
+
+
 	Partially covered subdomains:
 
 		- www2		(pages redirect to app-i.marketo.com)
 
+
+	Mixed content:
+
+		- css on www from www *
+
+		- Images on www from www **
+
+		- Ad on www from ad.doubleclick.net **
+
+	* Secured by us, formatting for a social button
+	** Secured by us
+
 -->
 <ruleset name="FireEye (partial)">
 
+	<target host="fireeeye.com" />
 	<target host="*.fireeeye.com" />
 
+
+	<securecookie host="^www\.fireeye\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?fireeye\.com/"
+		to="https://www.fireeye.com/" />
 
 	<rule from="^http://csportal\.fireeye\.com/"
 		to="https://csportal.fireeye.com/" />
 
-	<rule from="^https?://www2\.fireeye\.com/(cs|image|r)s/"
+	<rule from="^https?://www2\.fireeye\.com/(cs|image|j|r)s/"
 		to="https://na-i.marketo.com/$1s/" />
 
 </ruleset>
