@@ -242,12 +242,20 @@ const shouldLoadTargets = {
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
-// We need to use both ContentPolicy and Observer, because there are some
-// things, such as Favicons, who don't get caught by ContentPolicy; we don't
-// yet know why we don't just use the observer :/
-
+// For FF < 20, we need to use both ContentPolicy and Observer, because there
+// are some things, such as Favicons, who don't get caught by ContentPolicy, 
+// and Observers didn't work for everything until channel.redirectTo landed in FF 20.
+//
 // ChannelEventSink seems to be necessary in order to handle redirects (eg
 // HTTP redirects) correctly.
+
+// Firefox 20 has nsIHTTPChannel.redirectTo
+// it also has https://bugzilla.mozilla.org/show_bug.cgi?id=939180
+var appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
+var platformVer = appInfo.platformVersion;
+var versionChecker = CC["@mozilla.org/xpcom/version-comparator;1"]
+                      .getService(CI.nsIVersionComparator);
+var hasRedirectTo = (versionChecker.compare(appInfo.version, "20.0a1") >= 0);
 
 HTTPSEverywhere.prototype = {
   prefs: null,
@@ -440,7 +448,7 @@ HTTPSEverywhere.prototype = {
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec])
-        else        this.log(WARN,"Failed to indicate breakage in content menu");
+        else        this.log(NOTE,"Failed to indicate breakage in content menu");
         return;
       }
       HTTPS.replaceChannel(lst, channel);
@@ -583,6 +591,9 @@ HTTPSEverywhere.prototype = {
   // to "should this load?", but also allow us to change the thing.
 
   shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
+    // we don't need contentpolicy if we have channel.redirectTo, and it causes problems
+    if (hasRedirectTo) return true;
+
     //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
        if (shouldLoadTargets[aContentType] != null) {
          var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
