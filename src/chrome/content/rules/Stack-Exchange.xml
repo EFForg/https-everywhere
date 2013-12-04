@@ -3,11 +3,13 @@
 
 		- meta.serverfault.com		(cert: *.stackexchange.com; 301s to http)
 		- chat.stackexchange.com	("We are Offline")
+		- meta.*.stackexchange.com      (cert: *.stackexchange.com)
 
 
 	Fully covered domains:
 
 		- (www.)stackoverflow.com
+		- *.stackexchange.com
 
 -->
 <ruleset name="Stack Exchange (partial)">
@@ -30,17 +32,17 @@
 	<target host="www.superuser.com" />
 
 
-	<rule from="^https?://(?:www\.)?(askubuntu|serverfault|superuser)\.com/favicon\.ico"
+	<rule from="^https?://(?:www\.)?(stackexchange|askubuntu|serverfault|superuser)\.com/favicon\.ico"
+		to="https://cdn.sstatic.net/$1/img/favicon.ico" />
+
+	<rule from="^https?://(?:\w+\.)?(\w+)\.stackexchange\.com/favicon\.ico"
 		to="https://cdn.sstatic.net/$1/img/favicon.ico" />
 
 	<rule from="^https?://(?:www\.)?blogoverflow\.com/$"
 		to="https://stackexchange.com/blogs" />
 
-	<rule from="^http://(meta\.|www\.)?stackexchange\.com/"
+	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
-
-	<rule from="^https?://(\w+)\.stackexchange\.com/favicon\.ico"
-		to="https://cdn.sstatic.net/$1/img/favicon.ico" />
 
 	<rule from="^https?://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
@@ -53,5 +55,7 @@
 
 	<rule from="^https?://meta\.superuser\.com/favicon\.ico"
 		to="https://cdn.sstatic.net/superusermeta/img/favicon.ico" />
+
+	<securecookie host="\.stackexchange\.com$" name=".*" />
 
 </ruleset>
