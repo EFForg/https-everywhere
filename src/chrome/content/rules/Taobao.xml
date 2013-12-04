@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Taobao.com-falsemixed.xml.
+
 	Other Taobao rulesets:
 
 		- Cnzz.com.xml
@@ -193,6 +195,9 @@
 		- taobao.com subdomains:
 
 			- login
+			- login.m
+			- u.m
+			- regcheckcode
 
 		- assets.taobaocdn.com	(→ s.tbcdn.cn)
 
@@ -206,9 +211,9 @@
 
 		- Images, on:
 
-			- 101 from regcheckcode
+			- 101 from regcheckcode *
 			- 101 img0\d.taobaocdn.com
-			- login.m from regcheckcode
+			- login.m from regcheckcode *
 			- login.m from mbuf.alipay.com *
 			- u.m from mbuf.alipay.com *
 			- u.m from pin.aliyun.com *
@@ -218,13 +223,16 @@
 -->
 <ruleset name="Taobao (partial)">
 
-	<target host="login.taobao.com" />
+	<target host="*.taobao.com" />
 	<target host="assets.taobaocdn.com" />
 	<target host="*.tbcdn.cn" />
 
 
-	<rule from="^http://login\.taobao\.com/"
-		to="https://login.taobao.com/" />
+	<securecookie host="^\.login\.m\.taobao\.com$" name=".+" />
+
+
+	<rule from="^http://(login|login\.m|u\.m|regcheckcode)\.taobao\.com/"
+		to="https://$1.taobao.com/" />
 
 	<rule from="^http://(?:assets\.taobao|[as]\.tb)cdn\.c(?:om|n)/"
 		to="https://s.tbcdn.cn/" />
