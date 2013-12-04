@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see XDA-Developers.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- wac.8244.edgecastcdn.net/??8244/
@@ -34,12 +37,12 @@
 
 	Partially covered subdomains:
 
+		- (www.)	(avoiding false/broken MCB)
 		- forum		(at least some pages redirect to http)
 
 
 	Fully covered subdomains:
 
-		- (www.)
 		- images *
 
 		- media subdomains: *
@@ -75,14 +78,15 @@
 	* Secured by us
 
 -->
-<ruleset name="XDA Developers (partial)" platform="mixedcontent">
+<ruleset name="XDA Developers (partial)">
 
 	<target host="xda-developers.com" />
 	<target host="*.xda-developers.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?xda-developers\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 		<exclusion pattern="^http://forum\.xda-developers\.com/(?!clientscript/|css/|favicon\.ico|images/)" />
-
-
-	<securecookie host="^(?:www\.)?xda-developers\.com$" name=".+" />
 
 
 	<rule from="^http://(forum\.|www\.)?xda-developers\.com/"
