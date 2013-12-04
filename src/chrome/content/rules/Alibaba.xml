@@ -108,7 +108,11 @@
 
 		- alibaba.com subdomains:
 
+			- 102
+			- job
 			- login
+			- style		(→ stylessl)
+			- stylessl
 
 		- login.aliexpress.com
 
@@ -116,16 +120,19 @@
 <ruleset name="Alibaba (partial)">
 
 	<target host="login.aliexpress.com" />
-	<target host="escrow.alibaba.com" />
+	<target host="*.alibaba.com" />
 
 
-	<securecookie host="^escrow\.alibaba\.com$" name=".*" />
+	<securecookie host="^(?:102|escrow|job)\.alibaba\.com$" name=".*" />
 
 
 	<rule from="^http://login\.aliexpress\.com/"
 		to="https://login.aliexpress.com/" />
 
-	<rule from="^http://escrow\.alibaba\.com/"
-		to="https://escrow.alibaba.com/" />
+	<rule from="^http://(102|escrow|job|login)\.alibaba\.com/"
+		to="https://$1.alibaba.com/" />
+
+	<rule from="^http://style(?:ssl)?\.alibaba\.com/"
+		to="https://stylessl.alibaba.com/" />
 
 </ruleset>
