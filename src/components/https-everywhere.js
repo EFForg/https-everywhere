@@ -437,7 +437,7 @@ HTTPSEverywhere.prototype = {
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
-        else        this.log(WARN,"Failed to indicate breakage in content menu");
+        else        this.log(NOTE,"Failed to indicate breakage in content menu");
         return;
       }
       HTTPS.replaceChannel(lst, channel);
