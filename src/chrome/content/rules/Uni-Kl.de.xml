@@ -1,0 +1,257 @@
+<!--
+	University of Kaiserslautern
+
+	For rules causing false/broken MCB, see Uni-Kl.de-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- www.asta	(data differ)
+		- (www.)cs *
+		- www.eit **	(expired 2005-11-13)
+		- www.hochschulsport	(dropped)
+		- www.ifos *
+
+		- informatik subdomains:
+
+			- (www.) *
+			- dekanat *
+			- sci *
+
+		- www.kit *
+		- www.mathematik	($ redirects to http, some/all in .+ 404)
+		- www.mv **	(expired 2006-12-03)
+		- www.sowi **	(expired 2007-02-03)
+		- www.ub **	(expired 2006-08-12)
+		- produktion.wiwi *
+		- (www.)zfuw	(404; expired 2009-11-25, self-signed)
+
+	* Refused
+	** 403, self-signed
+
+
+	Problematic subdomains:
+
+		- www.alumni	(mismatched, CN: alumni.kis.uni-kl.de)
+		- pamuk.physik	(works; mismatched, CN: www.physik.uni-kl.de, self-signed)
+		- www.verw	(interrupted)
+
+
+	Partially covered subdomains:
+
+		- www.architektur *
+		- www.verw		(→ www, some/all paths but $ don't redirect)
+		- www *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- www.alumni *	(→ alumni.kis)
+		- autodiscover.architektur
+		- autodiscover
+
+		- bauing subdomains:
+
+			- autodiscover
+			- www
+			- www.fs
+
+		- autodiscover.bio
+		- www.bio
+		- autodiscover.biologie
+		- autodiscover.chemie
+		- www.chemie
+		- autodiscover.cpk
+
+		- cs subdomains:
+
+			- autodiscover
+			- www.fachschaft
+			- fit
+
+		- autodiscover.disc
+		- www.disc
+		- autodiscover.eit
+		- autodiscover.hochschulsport
+
+		- informatik subdomains:
+
+			- autodiscover
+			- www.fachschaft
+			- fit
+
+		- autodiscover.isgs
+
+		- kis subdomains:
+
+			- alumni *
+			- office *
+			- www *
+
+		- autodiscover.kit
+		- mail
+		- autodiscover.mathematik
+		- autodiscover.mpa
+		- www.mpa
+		- autodiscover.mv
+
+		- physik subdomains:
+
+			- (www.)
+			- alumni
+			- autodiscover
+
+		- autodiscover.rhrk
+		- www.rhrk
+		- autodiscover.ru
+		- www.ru
+		- autodiscover.sowi
+		- autodiscover.sozwi
+		- autodiscover.ub
+		- opac.ub
+
+		- unix-ag subdomains:
+
+			- lists
+			- svn
+			- www
+
+		- autodiscover.verw
+		- wa
+
+		- wiwi subdomains:
+
+			- (www.)
+			- abwl
+			- autodiscover
+			- bisor
+			- enpres
+			- hotline
+			- integrierter-studiengang
+			- international
+			- it-service
+			- lff
+			- luc
+			- marketing
+			- nagios
+			- pmo
+			- step
+			- strama
+			- sustain
+			- marketing-forschung
+			- vwl-makro
+			- vwl-mikro
+			- vwl-wipo
+			- zwr
+
+		- autodiscover.zfl
+		- autodiscover.zfuw
+
+	* Note: server is configured for rc4 only
+
+
+	^uni-kl.de doesn't exist.
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.architektur from www.architektur *
+			- www from www *
+
+		- Images, on:
+
+			- www.architektur from www.architektur *
+			- www.chemie from www.chemie *
+			- www.fachschaft.cs from www.fachschaft.cs *
+			- www.fachschaft.informatik from www.fachschaft.cs *
+			- www from www *
+
+		- Web bugs, from wa on: *
+
+			- www.bauing
+			- www.fs.bauing
+			- www.bio
+			- www.chemie
+			- www.disc
+			- www.mpa
+			- www.rhrk
+			- www.ru
+			- wiwi
+			- abwl.wiwi
+			- it-service.wiwi
+			- vwl-wipo
+			- zwr.wiwi
+
+	* Secured by us
+
+
+	Observed cookie domains:
+
+		- .
+		- www.alumni
+		- .architektur
+		- .bauing
+		- .bio
+		- .chemie
+		- .www.fachschaft.cs
+		- fit.cs
+		- .disc
+		- .eit
+		- www.ifos
+		- .www.fachschaft.informatik
+		- fit.informatik
+		- alumni.kis
+		- office.kis
+		- www.kis
+		- www.kit
+		- www.mathematik
+		- .mpa
+		- .mv
+		- physik
+		- www.physik
+		- .www.rhrk
+		- .ru
+		- .sowi
+		- .www.ub
+		- www
+		- zfuw
+
+-->
+<ruleset name="Uni-Kl.de (partial)">
+
+	<target host="*.uni-kl.de" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.(?:architektur\.)?uni-kl\.de/+(?!favicon\.ico|fileadmin/|typo3temp/|uploads/)" />
+
+
+	<securecookie host="^(?:fit\.cs|\.www\.fachschaft\.(?:cs|informatik)|(?:alumni|office|www)\.kis|(?:alumni\.|www\.)?physik|\.www\.rhrk)\.uni-kl\.de$" name=".+" />
+
+
+	<rule from="^http://(autodiscover(?:\.\w+)?|fit\.cs|fit\.informatik|(?:alumni|office)\.kis|mail|alumni\.physik|opac\.ub|(?:lists|svn)\.unix-ag|wa|(?:abwl|bisor|enpres|hotline|integrierter-studiengang|international|it-service|lff|luc|marketing|nagios|pmo|step|strama|sustain|marketing-forschung|vwl-makro|vwl-mikro|vwl-wipo|zwr)\.wiwi|www)\.uni-kl\.de/"
+		to="https://$1.uni-kl.de/" />
+
+	<rule from="^http://www\.alumni\.uni-kl\.de/"
+		to="https://alumni.kis.uni-kl.de/" />
+
+	<!--	Subdomains for which ^foo doesn't
+		exist and www.foo does:
+					-->
+	<rule from="^http://www\.(architektur|bauing|fs\.bauing|bio|fachschaft\.(?:cs|informatik)|chemie|disc|kis|mpa|rhrk|ru|unix-ag)\.uni-kl\.de/"
+		to="https://www.$1.uni-kl.de/" />
+
+	<!--	Subdomains for which both ^foo and www.foo
+		exist, and both work unproblematically:
+								-->
+	<rule from="^http://(www\.)?(physik|wiwi)\.uni-kl\.de/"
+		to="https://$1$2.uni-kl.de/" />
+
+	<rule from="^http://www\.verw\.uni-kl\.de/+(?:$|\?.*)"
+		to="https://www.uni-kl.de/" />
+
+</ruleset>

@@ -1,15 +1,31 @@
 <!--
-	Other Free Software Foundation rulesets:
-
-		- GNU.org.xml
+	For other Free Software Foundation coverage, see FSF.xml.
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- ftp.gnu.org		(ssl_error_rx_record_too_long)
-		- ftpmirror.gnu.org
-		- gcc.gnu.org
-		- git.savannah.gnu.org
+		- ftpmirror
+		- gcc
+		- download.savannah	(refused)
+		- git.savannah
+
+
+	Problematic domains:
+
+		- (www.)classpath.org	(shows gnu.org; mismatched, CN: www.gnu.org)
+		- mail.gnu.org		(dropped)
+
+
+	Fully covered domains:
+
+		- (www.)classpath.org	(→ www.gnu.org)
+
+		- gnu.org subdomains:
+
+			- (www.)
+			- lists
+			- mail		(→ lists)
+			- savannah
 
 -->
 <ruleset name="GNU.org (partial)">
@@ -18,10 +34,6 @@
 	<target host="*.gnu.org" />
 
 
-	<!--	- Cert: www.gnu.org
-		- Shows gnu.org data over https
-		- 302s like so over http
-			-->
 	<rule from="^http://(?:www\.)?classpath\.org/$"
 		to="https://www.gnu.org/software/classpath/" />
 
@@ -30,5 +42,8 @@
 
         <rule from="^http://(lists|savannah)\.gnu\.org/"
 		to="https://$1.gnu.org/" />
+
+	<rule from="^http://mail\.gnu\.org/"
+		to="https://lists.gnu.org/" />
 
 </ruleset>

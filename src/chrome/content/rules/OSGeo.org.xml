@@ -1,0 +1,49 @@
+<!--
+	Nonfunctional subdomains:
+
+		- download	(http reply)
+		- geos *
+		- planet *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- osgeo4w	(redirects to http)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- wiki *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- lists
+		- osgeo4w	(→ trac)
+		- svn
+		- trac
+
+-->
+<ruleset name="OSGeo.org (partial)">
+
+	<target host="osgeo.org" />
+	<target host="*.osgeo.org" />
+		<exclusion pattern="^http://(?:www\.)?osgeo\.org/(?!favicon\.ico|files/|images/|misc/|modules/|sites/)" />
+		<exclusion pattern="^http://wiki\.osgeo\.org/(?!favicon\.ico|index\.php\?title=Special:UserLogin|skins/)" />
+
+
+	<securecookie host="^trac\.osgeo\.org$" name=".+" />
+
+
+	<rule from="^http://((?:lists|svn|trac|wiki|www)\.)?osgeo\.org/"
+		to="https://$1osgeo.org/" />
+
+	<rule from="^http://osgeo4w\.osgeo\.org/[^?]*(\?.*)?"
+		to="https://trac.osgeo.org/osgeo4w/$1" />
+
+</ruleset>

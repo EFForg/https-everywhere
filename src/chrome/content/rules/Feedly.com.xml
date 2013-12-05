@@ -1,9 +1,33 @@
-<ruleset name="Feedly.com (partial)">
+<!--
+	Problematic subdomains:
 
-	<target host="s3.feedly.com" />
+		- blog	(wordpress)
 
 
-	<rule from="^http://s3\.feedly\.com/"
-		to="https://s3.feedly.com/" />
+	Fully covered subdomains:
+
+		- (www.)
+		- cloud
+		- s3
+
+
+	Mixed content:
+
+		- Images on www from s3 *
+
+	* Secured by us
+
+-->
+<ruleset name="feedly.com (partial)">
+
+	<target host="feedly.com" />
+	<target host="*.feedly.com" />
+
+
+	<securecookie host="^(?:www\.)?feedly\.com$" name=".+" />
+
+
+	<rule from="^http://((?:cloud|s3|www)\.)?feedly\.com/"
+		to="https://$1feedly.com/" />
 
 </ruleset>
