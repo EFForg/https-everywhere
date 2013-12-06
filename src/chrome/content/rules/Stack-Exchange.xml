@@ -1,15 +1,29 @@
 <!--
 	Nonfunctional domains:
 
-		- meta.serverfault.com		(cert: *.stackexchange.com; 301s to http)
-		- chat.stackexchange.com	("We are Offline")
+		- chat.stackexchange.com	(Mixed content)
 		- meta.*.stackexchange.com      (cert: *.stackexchange.com)
 
 
 	Fully covered domains:
 
-		- (www.)stackoverflow.com
-		- *.stackexchange.com
+        - *.stackexchange.com
+
+    As of Dec., 2013, stackexchange has a cert valid for:
+        - *.stackexchange.com
+        - stackexchange.com
+        - meta.stackexchange.com
+        - *.meta.stackexchange.com
+        - *.stackoverflow.com
+        - stackoverflow.com
+        - serverfault.com
+        - stackauth.com
+        - sstatic.net
+        - meta.serverfault.com
+        - superuser.com
+        - meta.superuser.com
+        - stackapps.com
+        - openid.stackauth.com 
 
 -->
 <ruleset name="Stack Exchange (partial)">
@@ -19,18 +33,19 @@
 	<target host="blogoverflow.com" />
 	<target host="www.blogoverflow.com" />
 	<target host="serverfault.com" />
-	<target host="www.serverfault.com" />
+	<target host="*.serverfault.com" />
 	<target host="sstatic.net" />
 	<target host="cdn.sstatic.net" />
 	<target host="or.cdn.sstatic.net" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
 	<target host="stackoverflow.com" />
-	<target host="www.stackoverflow.com" />
+	<target host="*.stackoverflow.com" />
 	<target host="app.stacktack.com" />
 	<target host="superuser.com" />
-	<target host="www.superuser.com" />
+	<target host="*.superuser.com" />
 
+    <exclusion pattern="^http://chat\.stackexchange\.com/" />
 
 	<rule from="^https?://(?:www\.)?(stackexchange|askubuntu|serverfault|superuser)\.com/favicon\.ico"
 		to="https://cdn.sstatic.net/$1/img/favicon.ico" />
@@ -47,8 +62,14 @@
 	<rule from="^https?://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
 
-	<rule from="^http://(www\.)?stackoverflow\.com/"
+	<rule from="^http://(www\.|meta\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
+    
+    <rule from="^http://(www\.|meta\.)?serverfault\.com/"
+		to="https://$1serverfault.com/" />
+    
+    <rule from="^http://(www\.|meta\.)?superuser\.com/"
+		to="https://$1serverfault.com/" />
 
 	<rule from="^https?://app\.stacktack\.com/"
 		to="https://s3.amazonaws.com/stacktackapp/" />
