@@ -726,9 +726,6 @@ HTTPSEverywhere.prototype = {
             
             this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
-            // XXX: Why is this called twice?
-            HTTPSRules.init();
-
             if(!Thread.hostRunning)
                 Thread.hostRunning = true;
             
