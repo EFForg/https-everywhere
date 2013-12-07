@@ -1,19 +1,22 @@
+// Compilation of RegExps is now delayed until they are first used...
+
 function Rule(from, to) {
-  //this.from = from;
   this.to = to;
-  this.from_c = new RegExp(from);
+  this.from_c = from; // This will become a RegExp after compilation
 }
 
 function Exclusion(pattern) {
-  //this.pattern = pattern;
-  this.pattern_c = new RegExp(pattern);
+  this.pattern_c = pattern; // Will become a RegExp after compilation
 }
 
 function CookieRule(host, cookiename) {
   this.host = host;
-  this.host_c = new RegExp(host);
   this.name = cookiename;
-  this.name_c = new RegExp(cookiename);
+
+  // These will be made during compilation:
+
+  //this.host_c = new RegExp(host);
+  //this.name_c = new RegExp(cookiename);
 }
 
 // Firefox 23+ blocks mixed content by default, so rulesets that create
@@ -38,6 +41,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
+  this.compiled = false;
   this.name = name;
   this.xmlName = xmlName;
   //this.ruleset_match = match_rule;
@@ -75,11 +79,35 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
 var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 
 RuleSet.prototype = {
+
+  ensureCompiled: function() {
+    // Postpone compilation of exclusions, rules and cookies until now, to accelerate
+    // browser load time.
+    if (this.compiled) return;
+    var i;
+
+    for (i = 0; i < this.exclusions.length; ++i) {
+      this.exclusions[i].pattern_c = new RegExp(this.exclusions[i].pattern_c);
+    }
+    for (i = 0; i < this.rules.length; ++i) {
+      this.rules[i].from_c = new RegExp(this.rules[i].from_c);
+    }
+
+    for (i = 0; i < this.cookierules.length; i++) {
+       var cr = this.cookierules[i];
+       cr.host_c = new RegExp(cr.host);
+       cr.name_c = new RegExp(cr.name);
+    }
+
+    this.compiled = true;
+  },
+
   apply: function(urispec) {
     // return null if it does not apply
     // and the new url if it does apply
     var i;
     var returl = null;
+    this.ensureCompiled();
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       this.log(VERB, "ruleset_match_c excluded " + urispec);
@@ -120,6 +148,8 @@ RuleSet.prototype = {
     var uri = hypothetical_uri.clone();
     if (uri.scheme == "https") uri.scheme = "http";
     var urispec = uri.spec;
+
+    this.ensureCompiled();
  
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
@@ -484,13 +514,13 @@ const HTTPSRules = {
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
         // we rewrote the uri
-	this.log(DBUG, "Rewrote "+input_uri.spec);
+        this.log(DBUG, "Rewrote "+input_uri.spec);
         if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i]);
           else 
             alist.active_rule(rs[i]);
-	}
+  }
         if (userpass_present) blob.newuri.userPass = input_uri.userPass;
         blob.applied_ruleset = rs[i];
         return blob;
@@ -598,6 +628,7 @@ const HTTPSRules = {
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
+        ruleset.ensureCompiled();
         // Never secure a cookie if this page might be HTTP
         if (!known_https && !this.safeToSecureCookie(c.rawHost))
           continue;
