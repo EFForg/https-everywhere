@@ -460,10 +460,10 @@ const HTTPSRules = {
     if(versionChecker.compare(appInfo.version, "23.0a1") >= 0
             && prefs.getBoolPref("security.mixed_content.block_active_content")
             && !prefs.getBoolPref("extensions.https_everywhere.enable_mixed_rulesets")) {
-      this.log(INFO, "Not loading rules that trigger mixed content errors.");
+      this.log(INFO, "Not activating rules that trigger mixed content errors.");
       this.localPlatformRegexp = new RegExp("firefox");
     } else {
-      this.log(INFO, "Loading rules that would normally trigger mixed content");
+      this.log(INFO, "Activating rules that would normally trigger mixed content");
       this.localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
     }
   },

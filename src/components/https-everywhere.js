@@ -511,6 +511,8 @@ HTTPSEverywhere.prototype = {
       this.maybeShowObservatoryPopup();
       this.maybeShowDevPopup();
     } else if (topic == "nsPref:changed") {
+	// If the user toggles the Mixed Content Blocker settings, reload the rulesets
+	// to enable/disable the mixedcontent ones
         switch (data) {
             case "security.mixed_content.block_active_content":
             case "extensions.https_everywhere.enable_mixed_rulesets":
