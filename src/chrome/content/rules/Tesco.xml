@@ -16,15 +16,30 @@
 		- Tesco_Photo.com.xml
 
 
-	Problematic subdomains:
-
-		- www	(504, akamai)
-
-
 	Nonfunctional subdomains:
 
 		- origin-img
 		- origin-www	(times out)
+
+
+	Problematic domains:
+
+		- img.tesco.com *
+		- www.tesco.com		(504, akamai)
+		- direct.tescoassets.com *
+		- ui.tescoassets.com *
+
+	* Akamai
+
+
+	Fully covered domains:
+
+		- *.tescoassets.com ¹
+
+			- direct
+			- ui
+
+	¹ → secure.tesco.com
 
 
 	Mixed content:
@@ -37,7 +52,7 @@
 	** Secured by us
 
 -->
-<ruleset name="Tesco">
+<ruleset name="Tesco (partial)">
 
 	<target host="tesco.com" />
 	<target host="*.tesco.com" />
@@ -48,12 +63,10 @@
 	<target host="*.tescoassets.com" />
 
 
-	<securecookie host="^secure\.tesco\.com$" name=".*" />
+	<securecookie host="^secure\.tesco\.com$" name=".+" />
 
 
-	<!--	www: Akamai
-
-		These paths don't work:
+	<!--	These paths don't work:
 
 			- wine/$	(redirects to winestore/)
 			- WINE/Help/$	(404)
@@ -81,23 +94,15 @@
 			- storeLocator/
 			- termsandconditions/privacy.htm$
 					-->
-	<rule from="^http://(?:www\.)?tesco\.com/($|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
-		to="https://secure.tesco.com/$1" />
+	<rule from="^http://(?:www\.)?tesco\.com/(?=$|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
+		to="https://secure.tesco.com/" />
 
 	<rule from="^http://(direct|phone-shop|secure)\.tesco\.com/"
 		to="https://$1.tesco.com/" />
 
-	<!--	Akamai	-->
 	<rule from="^http://img\.tesco\.com/"
 		to="https://secure.tesco.com/" />
 
-	<!--	Akamai
-
-		Observed subdomains:
-
-			- direct
-			- ui
-				-->
 	<rule from="^http://\w+\.tescoassets\.com/"
 		to="https://secure.tesco.com/" />
 
