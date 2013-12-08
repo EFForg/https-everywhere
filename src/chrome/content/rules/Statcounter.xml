@@ -2,10 +2,24 @@
 	For problematic rules, see GS.StatCounter.com.xml.
 
 
-	www-beta is hosted on pantherssl/CDNetworks.  We need to rewrite to www.
+	Problematic subdomains;
 
-	www-beta implies that statcounter's planning to switch to pantherssl,
-	which would result in it breaking unless we can find its ID.
+		- www *
+		- www-beta *
+
+	* 403; mismatched, CN: ssl2.cdngc.net
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- www-beta	(→ ^)
+
+		- *		(web bugs)
+
+			- c
+			- c20
+			- c40
 
 -->
 <ruleset name="Statcounter (partial)">
@@ -21,18 +35,12 @@
 	<securecookie host="^(?!gs\.)(.*\.)?statcounter\.com$" name=".*" />
 
 
-	<!--	Observed subdomains:
-
-			- c
-			- c20
-				-->
 	<rule from="^http://([^/:@\.]+\.)?statcounter\.com/"
 		to="https://$1statcounter.com/" />
 
 	<rule from="^https?://www\.statcounter\.com/"
 		to="https://statcounter.com/" />
 
-	<!--	Pantherssl/CDNetworks	-->
 	<rule from="^https?://www-beta\.statcounter\.com/"
 		to="https://statcounter.com/" />
 
