@@ -7,6 +7,15 @@
 		- s3.amazonaws.com/assets.tumblr.com/
 		- s3.amazonaws.com/data.tumblr.com/
 		- s3.amazonaws.com/static.tumblr.com/
+
+		- d2g9v1gts353nd.cloudfront.net
+
+			- static
+
+		- d2glp9604qyu8g.cloudfront.net
+
+			- assets
+
 		- cs38.wac.edgecastcdn.net/...
 
 		- wac.19b6.edgecastcdn.net/??19B6/
@@ -30,23 +39,18 @@
 
 	Fully covered subdomains:
 
+		- assets	(→ d2glp9604qyu8g.cloudfront.net)
 		- secure.assets
 		- data
 		- media
 		- \d+.media
-		- static
+		- static	(→ d2g9v1gts353nd.cloudfront.net)
 
 -->
 <ruleset name="Tumblr (partial)">
 
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
-		<!--
-			Doesn't work when rewritten.
-
-			https://trac.torproject.org/projects/tor/ticket/7705
-							-->
-		<exclusion pattern="^https?://assets\.tumblr\.com/.*\.htm(?:$|\?)" />
 
 
 	<!--	Tracking cookies:
@@ -84,23 +88,13 @@
 	<rule from="^http://(www\.)?tumblr\.com/($|dmca|examples/share/\w|(?:impixu|teaser)(?:$|\?)|images/|javascript/|login|logout|photo/|register|settings/|svc/log/|svc/teaser(?:$|#|\?|/))"
 		to="https://$1tumblr.com/$2" />
 
-	<!--	Amazon only works for a subset of assets data.
-		The pattern for that subset is a mystery.
-		Forget being kind and just do what works.
-
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001149.html
-
-		swf: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
-
-			-->
-
-	<rule from="^http://(?:secure\.)?assets\.tumblr\.com/"
-		to="https://secure.assets.tumblr.com/" />
+	<rule from="^http://assets\.tumblr\.com/"
+		to="https://d2glp9604qyu8g.cloudfront.net/" />
 
 	<rule from="^http://(?:data|(?:\d+\.)?media)\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
-		to="https://s3.amazonaws.com/static.tumblr.com/" />
+		to="https://d2g9v1gts353nd.cloudfront.net/" />
 
 </ruleset>
