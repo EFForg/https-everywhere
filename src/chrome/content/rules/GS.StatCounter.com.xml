@@ -1,0 +1,33 @@
+<!--
+	For rules that are on by default, see Statcounter.xml.
+
+
+	gs.statcounter. css needs to be rewritten to /statcounter to fix gs.statcounter.
+		Bug: https://trac.torproject.org/projects/tor/ticket/5576
+
+-->
+<ruleset name="GS.StatCounter.com (partial)" default_off="https://eff.org/r.1aq4">
+
+	<target host="gs.statcounter.com" />
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
+
+			press 301s to http.
+						-->
+		<exclusion pattern="^http://gs\.statcounter\.com/($|MSLine\.swf|press($|[\?/]))" />
+
+
+	<rule from="^http://gs\.statcounter\.com/"
+		to="https://gs.statcounter.com/" />
+
+	<!--	Bug 5576
+		images 404 over https
+		css breaks for some reason	-->
+	<rule from="^https?://gs.statcounter.com/(cs|image)s/"
+		to="https://statcounter.com/$1s/" />
+
+	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html-->
+	<rule from="^https://gs\.statcounter\.com/($|MSLine\.swf)"
+		to="http://gs.statcounter.com/$1" downgrade="1" />
+
+</ruleset>
