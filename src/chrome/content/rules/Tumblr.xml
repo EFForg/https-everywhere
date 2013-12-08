@@ -1,5 +1,5 @@
 <!--
-	Buckets:
+	CDN buckets:
 
 		- s3.amazonaws.com/assets.tumblr.com/
 		- s3.amazonaws.com/data.tumblr.com/
@@ -50,14 +50,17 @@
 
 	Nonfunctional subdomains:
 
-		- developers
-		- engineering
-		- staff
+		- developers *
+		- engineering *
+		- staff *
+
+	* Dropped
 
 
 	Problematic subdomains:
 
 		- media		(cert only matches *.media)
+
 
 	Fully covered subdomains:
 
@@ -114,8 +117,11 @@
 			- tips$
 			- upload/image
 					-->
-	<rule from="^http://(www\.)?tumblr\.com/($|dmca|examples/share/\w|(?:impixu|teaser)(?:$|\?)|images/|javascript/|login|logout|photo/|register|settings/|svc/log/|svc/teaser(?:$|#|\?|/))"
-		to="https://$1tumblr.com/$2" />
+	<rule from="^http://(www\.)?tumblr\.com/(?=$|dmca|examples/share/\w|(?:impixu|teaser)(?:$|\?)|images/|javascript/|login|logout|photo/|register|settings/|svc/log/|svc/teaser(?:$|#|\?|/))"
+		to="https://$1tumblr.com/" />
+
+	<rule from="^http://(a|(?:origin|secure)\.assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
+		to="https://$1.tumblr.com/" />
 
 	<rule from="^http://assets\.tumblr\.com/"
 		to="https://d2glp9604qyu8g.cloudfront.net/" />
@@ -125,9 +131,6 @@
 
 	<rule from="^http://media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
-
-	<rule from="^http://(a|(?:origin|secure)\.assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
-		to="https://$1.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
 		to="https://d2g9v1gts353nd.cloudfront.net/" />
