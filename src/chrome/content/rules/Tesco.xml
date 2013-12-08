@@ -1,6 +1,8 @@
 <!--
 	Partial
 
+	For rules causing false/broken MCB, see Tesco.com-falsemixed.xml.
+
 
 	tesco.scene7.com
 
@@ -14,16 +16,35 @@
 		- Tesco_Photo.com.xml
 
 
+	Problematic subdomains:
+
+		- www	(504, akamai)
+
+
 	Nonfunctional subdomains:
 
 		- origin-img
 		- origin-www	(times out)
 
+
+	Mixed content:
+
+		- css on secure from ui.tescoassets.com *
+
+		- Images on secure from www **
+
+	* On groceries/ when rewritten from www; secured by us
+	** Secured by us
+
 -->
-<ruleset name="Tesco" platform="mixedcontent">
+<ruleset name="Tesco">
 
 	<target host="tesco.com" />
 	<target host="*.tesco.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?tesco\.com/groceries/" /-->
 	<target host="*.tescoassets.com" />
 
 
@@ -60,7 +81,7 @@
 			- storeLocator/
 			- termsandconditions/privacy.htm$
 					-->
-	<rule from="^https?://(?:www\.)?tesco\.com/($|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|groceries|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
+	<rule from="^https?://(?:www\.)?tesco\.com/($|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
 		to="https://secure.tesco.com/$1" />
 
 	<rule from="^http://(direct|phone-shop|secure)\.tesco\.com/"
