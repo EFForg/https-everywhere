@@ -16,6 +16,11 @@
 
 			- assets
 
+		- dssedc4qxg7o6.cloudfront.net
+
+			- media
+			- \d+.media
+
 		- cs38.wac.edgecastcdn.net/...
 
 		- wac.19b6.edgecastcdn.net/??19B6/
@@ -37,12 +42,17 @@
 		- platform	(404, edgecast)
 		- staff
 
+
+	Problematic subdomains:
+
+		- media		(cert only matches *.media)
+
 	Fully covered subdomains:
 
 		- assets	(→ d2glp9604qyu8g.cloudfront.net)
 		- secure.assets
 		- data
-		- media
+		- media		(→ 31.media)
 		- \d+.media
 		- static	(→ d2g9v1gts353nd.cloudfront.net)
 
@@ -91,8 +101,14 @@
 	<rule from="^http://assets\.tumblr\.com/"
 		to="https://d2glp9604qyu8g.cloudfront.net/" />
 
-	<rule from="^http://(?:data|(?:\d+\.)?media)\.tumblr\.com/"
+	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
+
+	<rule from="^http://media\.tumblr\.com/"
+		to="https://31.media.tumblr.com/" />
+
+	<rule from="^http://(\d+)\.media\.tumblr\.com/"
+		to="https://$1.media.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
 		to="https://d2g9v1gts353nd.cloudfront.net/" />
