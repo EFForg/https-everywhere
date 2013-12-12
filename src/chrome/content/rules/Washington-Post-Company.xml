@@ -9,12 +9,31 @@
 
 	CDN buckets:
 
+		- d2t2kgdkdgawhh.cloudfront.net
+
+			- wp-eng-static.washingtonpost.com
+
+		- css.washingtonpost.com.edgesuite.net
 		- js.washingtonpost.com.edgesuite.net
 		- media[23]?.washingtonpost.com.edgesuite.net
 		- projects.washingtonpost.com.edgesuite.net
 		- www.washingtonpost.com.edgesuite.net
 		- css.wpdigital.net.edgesuite.net
 		- img[23]?.wpdigital.net.edgesuite.net
+
+		- washingtonpost-001.inscname.net
+
+			- apps.washingtonpost.com
+
+		- s5.parature.com
+
+			- help.washingtonpost.com
+
+
+	Problematic domains:
+
+		- help.washingtonpost.com		(works; mismatched, CN: *.parature.com)
+		- wp-eng-static.washingtonpost.com	(cloudfront)
 
 
 	Nonfunctional domains:
@@ -24,6 +43,8 @@
 		- washingtonpost.com subdomains:
 
 			- ^
+			- apps			(404; mismatched, CN: ssl001.insnw.net)
+			- css **
 			- findnsave		(times out)
 			- img *
 			- js *
@@ -66,18 +87,22 @@
 
 
 	<!--securecookie host="^.*\.washingtonpost\.com$" name=".+" /-->
+	<securecookie host="^(?:account|id)\.washingtonpost\.com$" name=".+" />
 
 
 	<rule from="^http://wapo\.st/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://(id|ssl1?|subscription|voices)\.washingtonpost\.com/"
+	<rule from="^http://(account|id|ssl1?|subscription|voices)\.washingtonpost\.com/"
 		to="https://$1.washingtonpost.com/" />
 
 	<rule from="^http://(?:css|js|media)\.washingtonpost\.com/"
 		to="https://ssl.washingtonpost.com/" />
 
-	<rule from="^http://(media\.|www\.)?washpost\.com/"
+	<rule from="^http://wp-eng-static\.washingtonpost\.com/"
+		to="https://d2t2kgdkdgawhh.cloudfront.net/" />
+
+	<rule from="^http://((?:media|subscription|www)\.)?washpost\.com/"
 		to="https://$1washpost.com/" />
 
 	<rule from="^http://css\.wpdigital\.net/"
