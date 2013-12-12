@@ -181,7 +181,7 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (var i = 1; i <= segmented.length - 2; ++i) {
+    for (var i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
       this.setInsert(results, this.targets[t]);
     }
