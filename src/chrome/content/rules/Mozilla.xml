@@ -12,6 +12,14 @@
 
 	CDN buckets:
 
+		- 2-01-2967-0005.cdx.cedexis.net
+
+			- cdn.mozilla.net
+
+		- wac.1237.edgecastcdn.net/??1237/
+
+			- getpersonas-cdn.mozilla.net
+
 		- images.s4.exacttarget.com.edgesuite.net
 
 			- image.e.mozilla.org
@@ -27,62 +35,61 @@
 
 	Nonfunctional domains:
 
-		- identity.mozilla.com		(hosted on Tumblr)
-		- static.mozilla.com		(404, CN: www.mozilla.com)
+		- identity.mozilla.com ¹
 
 		- mozilla.org subdomains:
 
-			- browserquest *
-			- dxr			(times out)
-			- view.e *
-			- graphs **
-			- planet **
-			- releases
-			- sfx-images		(refused, banners)
-			- start			(refused)
-			- www-archive		(prompts for LDAP login, CN: www.mozilla.com)
+			- browserquest ²
+			- dxr ²
+			- view.e ³
+			- graphs ²
+			- planet ²
+			- releases ³
+			- sfx-images ²		(banners)
+			- start ²
+			- www-archive		(prompts for LDAP login, CN: static-san.mozilla.org)
 
-		- blog.webfwd.org		(hosted on Tumblr)
+		- blog.webfwd.org ³
 
-	* Times out
-	** Refused
+	¹ Hosted on tumblr
+	² Refused
+	³ Dropped
 
 
 	Problematic domains:
 
-		- (www.)firefox.com		(404, CN: www.mozilla.com)
+		- firefox.com
+		- www.firefox.com		(works; mismatched, CN: static-san.mozilla.org)
 		- blog.lizardwrangler.com	(self-signed)
+		- cdn.mozilla.net		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
 		- download.cdn.mozilla.net	(503, akamai)
-		- getpersonas.cdn.mozilla.net	(mismatched, CN: ssl2.cdngc.net)
+		- getpersonas-cdn.mozilla.net	(mismatched, CN: ssl2.cdngc.net)
 
 		- mozilla.org subdomains:
 
-			- affiliates-cdn	(CN: affiliates.mozilla.org)
-			- beta			(prompts for LDAP login, CN: www.mozilla.com)
+			- affiliates-cdn	(works; mismatched, CN: affiliates.mozilla.org)
+			- beta *
 			- click.e		(works; mismatched, CN: *.virt.s4.exacttarget.com)
 			- image.e		(works, akamai)
-			- krakenbenchmark	(CN: www.mozilla.org)
+			- krakenbenchmark	(works; mismatched, CN: static-san.mozilla.org)
 			- labs *
-			- people		(CN: people.mozilla.com)
-			- talkback-public	(404, CN: www.mozilla.org)
-			- videos		(CN: static-cdn.addons.mozilla.net)
+			- talkback-public *
+			- videos		(works; mismatched, CN: static-cdn.addons.mozilla.net)
 
-		- www.mozillalabs.com		(403, CN: tbpl.mozilla.org)
-
-	* Prompts for LDAP login; mismatched, CN: www.mozilla.com
+	* Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
 
 
 	Fully covered domains:
 
 		- drumbeat.org
 		- www.drumbeat.org
-		- firefox.com
+		- (www.)firefox.com		(→ www.mozilla.org)
 		- marketplace.firefox.com
-		- www.firefox.com
 
 		- mozilla.com subdomains:
 
-			- ^
+			- (www.)
+			- addons
 			- air
 			- basket
 			- blog
@@ -92,34 +99,41 @@
 			- input
 			- people
 			- support
-			- www
 
 		- mozilla.net subdomains:
 
-			- ^
+			- (www.)		(→ www.mozilla.org)
 			- static-cdn.addons
 			- static-ssl-cdn.addons
-			- addons.cdn
-			- developer.cdn
-			- download.cdn		(→ ftp.mozilla.org)
-			- download-installer.cdn
-			- fhr.cdn
-			- getpersonas.cdn
-			- marketplace.cdn
-			- mozorg.cdn
-			- support.cdn
+
+			- cdn subdomains:
+
+				- addons
+				- developer
+				- download		(→ ftp.mozilla.org)
+				- download-installer
+				- fhr
+				- getpersonas
+				- marketplace
+				- mozorg
+				- support
+
 			- getpersonas-cdn	(→ getpersonas.cdn)
-			- video-cdn
-			- www
+			- videos-cdn
 
 		- mozilla.org subdomains:
 
-			- ^
-			- forums.addons
-			- pyrepo.addons
-			- services.addons
+			- (www.)
+
+			- addons subdomains:
+
+				- ^
+				- forums
+				- pyrepo
+				- services
+
 			- affiliates
-			- affiliates-cdn
+			- affiliates-cdn	(→ affiliates)
 			- air
 			- basket
 			- beta		(→ mozilla.org/en-US/firefox/channel/)
@@ -132,6 +146,7 @@
 			- creative
 			- developer
 			- directory
+			- dnt
 			- donate
 			- download
 			- education
@@ -143,7 +158,7 @@
 			- foundationwiki
 			- ftp
 			- gameon
-            - gpg
+			- gpg
 			- hacks
 			- hg
 			- inform
@@ -171,20 +186,18 @@
 			- sendto
 			- studentreps
 			- support
-			- talkback-public
+			- talkback-public	(→ crash-stats.mozilla.com)
 			- tbpl
-			- videos
+			- videos	(→ videos-cdn.mozilla.net)
 			- wiki
-			- www
 
 		- mdn.mozillademos.org
-		- mozillaignite.org
+		- (www.)mozillaignite.org
 		- blog.mozillaignite.org
-		- www.mozillaignite.org
 
 		- mozillalabs.com subdomains:
 
-			- ^
+			- (www.)
 			- apps
 			- bespin
 			- bespinplugins
@@ -193,12 +206,10 @@
 			- jetpack
 			- testpilot
 			- webmaker
-			- www
 
 		- planet.mozillamessaging.com
 		- support.mozillamessaging.com
-		- webfwd.org
-		- www.webfwd.org
+		- (www.)webfwd.org
 
 
 	Cookie domains:
