@@ -10,7 +10,7 @@ function Exclusion(pattern) {
 }
 
 function CookieRule(host, cookiename) {
-  this.host = host
+  this.host = host;
   this.host_c = new RegExp(host);
   this.name = cookiename;
   this.name_c = new RegExp(cookiename);
@@ -277,7 +277,7 @@ RuleSets.prototype = {
 
   rewriteURI: function(urispec, host) {
     var i = 0;
-    var newuri = null
+    var newuri = null;
     var rs = this.potentiallyApplicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
       if (rs[i].active && (newuri = rs[i].apply(urispec)))

@@ -38,7 +38,7 @@ function displayPageAction(tabId) {
 }
 
 function AppliedRulesets() {
-  this.active_tab_rules = {}
+  this.active_tab_rules = {};
 
   var that = this;
   chrome.tabs.onRemoved.addListener(function(tabId, info) {
@@ -97,7 +97,7 @@ function onBeforeRequest(details) {
   tmpuri.userinfo('');
 
   var canonical_url = tmpuri.toString();
-  if (details.url != canonical_url && tmpuserinfo == '') {
+  if (details.url != canonical_url && tmpuserinfo === '') {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
