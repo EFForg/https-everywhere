@@ -85,7 +85,16 @@ function RuleSets() {
 }
 
 RuleSets.prototype = {
-  localPlatformRegexp: new RegExp("chromium"),
+
+  localPlatformRegexp: (function() {
+    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+      log(DBUG, 'Detected that we are running Opera');
+      return new RegExp("chromium|mixedcontent");
+    } else {
+      log(DBUG, 'Detected that we are running Chrome/Chromium');
+      return new RegExp("chromium");
+    }
+  })(),
 
   loadRuleSet: function(xhr) {
     // Get file contents
@@ -99,6 +108,7 @@ RuleSets.prototype = {
       this.parseOneRuleset(sets[i]);
     }
   },
+
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
