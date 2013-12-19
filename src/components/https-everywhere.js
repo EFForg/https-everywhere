@@ -250,14 +250,46 @@ const shouldLoadTargets = {
   7 : true
 };
 
+
+
+/*
+In recent versions of Firefox and HTTPS Everywhere, the call stack for performing an HTTP -> HTTPS rewrite looks like this:
+
+1. HTTPSEverywhere.observe() gets a callback with the "http-on-modify-request" topic, and the channel as a subject
+
+    2. HTTPS.replaceChannel() 
+
+       3. HTTPSRules.rewrittenURI() 
+            
+           4. HTTPSRules.potentiallyApplicableRulesets uses <target host=""> elements to identify relevant rulesets
+
+           foreach RuleSet:
+
+               4. RuleSet.transformURI()
+
+                   5. RuleSet.apply() does the tests and rewrites with RegExps, returning a string
+
+               4. RuleSet.transformURI() makes a new uri object for the destination string, if required
+
+    2. HTTPS.replaceChannel() calls channel.redirectTo() if a redirect is needed
+
+
+In addition, the following other important tasks happen along the way:
+
+HTTPSEverywhere.observe()    aborts if there is a redirect loop
+                             finds a reference to the ApplicableList or alist that represents the toolbar context menu
+
+HTTPS.replaceChannel()       notices redirect loops (and used to do much more complex XPCOM API work in the NoScript-based past)
+
+HTTPSRules.rewrittenURI()    works around weird URI types like about: and http://user:pass@example.com/
+                             and notifies the alist of what it should display for each ruleset
+
+*/
+
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
-// We need to use both ContentPolicy and Observer, because there are some
-// things, such as Favicons, who don't get caught by ContentPolicy; we don't
-// yet know why we don't just use the observer :/
-
-// ChannelEventSink seems to be necessary in order to handle redirects (eg
-// HTTP redirects) correctly.
+// ChannelEventSink used to be necessary in order to handle redirects (eg
+// HTTP redirects) correctly.  It may now be obsolete? XXX
 
 HTTPSEverywhere.prototype = {
   prefs: null,
@@ -511,8 +543,8 @@ HTTPSEverywhere.prototype = {
       this.maybeShowObservatoryPopup();
       this.maybeShowDevPopup();
     } else if (topic == "nsPref:changed") {
-	// If the user toggles the Mixed Content Blocker settings, reload the rulesets
-	// to enable/disable the mixedcontent ones
+        // If the user toggles the Mixed Content Blocker settings, reload the rulesets
+        // to enable/disable the mixedcontent ones
         switch (data) {
             case "security.mixed_content.block_active_content":
             case "extensions.https_everywhere.enable_mixed_rulesets":
@@ -582,6 +614,7 @@ HTTPSEverywhere.prototype = {
   },
 
   // nsIChannelEventSink implementation
+  // XXX This was here for rewrites in the past.  Do we still need it?
   onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
     this.log(DBUG,"Got onChannelRedirect to "+uri.spec);

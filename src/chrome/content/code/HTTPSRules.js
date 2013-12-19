@@ -580,7 +580,7 @@ const HTTPSRules = {
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); } 
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
