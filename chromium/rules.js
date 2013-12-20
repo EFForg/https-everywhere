@@ -10,7 +10,7 @@ function Exclusion(pattern) {
 }
 
 function CookieRule(host, cookiename) {
-  this.host = host
+  this.host = host;
   this.host_c = new RegExp(host);
   this.name = cookiename;
   this.name_c = new RegExp(cookiename);
@@ -85,7 +85,16 @@ function RuleSets() {
 }
 
 RuleSets.prototype = {
-  localPlatformRegexp: new RegExp("chromium"),
+
+  localPlatformRegexp: (function() {
+    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+      log(DBUG, 'Detected that we are running Opera');
+      return new RegExp("chromium|mixedcontent");
+    } else {
+      log(DBUG, 'Detected that we are running Chrome/Chromium');
+      return new RegExp("chromium");
+    }
+  })(),
 
   loadRuleSet: function(xhr) {
     // Get file contents
@@ -99,6 +108,7 @@ RuleSets.prototype = {
       this.parseOneRuleset(sets[i]);
     }
   },
+
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
@@ -181,7 +191,7 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (var i = 1; i <= segmented.length - 2; ++i) {
+    for (var i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
       this.setInsert(results, this.targets[t]);
     }
@@ -277,7 +287,7 @@ RuleSets.prototype = {
 
   rewriteURI: function(urispec, host) {
     var i = 0;
-    var newuri = null
+    var newuri = null;
     var rs = this.potentiallyApplicableRulesets(host);
     for(i = 0; i < rs.length; ++i) {
       if (rs[i].active && (newuri = rs[i].apply(urispec)))
