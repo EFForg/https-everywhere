@@ -12,6 +12,21 @@
 		- www.isg	(some paths 404, valid cert)
 
 
+	Fully covered subdomains:
+
+		- cimhelpdesk	(→ helpdesk.ma)
+		- helpdesk.ma
+
+
+	Observed cookie domains:
+
+		- cimhelpdesk
+		- isg
+		- www.isg
+		- helpdesk.ma
+		- www
+
+
 	Mixed content:
 
 		- Images, on:
@@ -30,11 +45,17 @@
 		<!--exclusion pattern="^http://(www\.)?isg\.rhul\.ac\.uk/+(?!$|\?|bin($|[?/])|static/)" /-->
 
 
-	<securecookie host="^www\.rhul\.ac\.uk$" name=".+" />
+	<securecookie host="^(?:cimhelpdesk|helpdesk\.ma|www)\.rhul\.ac\.uk$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?rhul\.ac\.uk/"
 		to="https://www.rhul.ac.uk/" />
+
+	<!--	cimhelpdesk redirects to helpdesk.ma
+		over http, so copy that behavior:
+						-->
+	<rule from="^http://(?:cimhelpdesk|helpdesk\.ma)\.rhul\.ac\.uk/"
+		to="https://helpdesk.ma.rhul.ac.uk/" />
 
 	<rule from="^http://(www\.)?isg\.rhul\.ac\.uk/"
 		to="https://$1isg.rhul.ac.uk/" />
