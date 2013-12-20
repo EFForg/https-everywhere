@@ -7,6 +7,17 @@
 
 	CDN buckets:
 
+		- akacdn.valve.com.edgesuite.net
+
+			- a1507.d.akamai.net
+			- cdn4
+			- cloud-3
+			- repo
+
+		- content2.steampowered.com.c.footprint.net
+
+			- cloud-4
+
 		- cds.w2n5c2t7.hwcdn.net
 			- cloud-2.steampowered.com
 
@@ -21,33 +32,32 @@
 
 		- cdn.steampowered.com		(CN: *.hs.llnwd.net; 400)
 		- cloud.steampowered.com	(CN: *.hs.llnwd.net; 400)
-		- cloud-2.steampowered.com
+		- cloud-2.steampowered.com	(refused)
+		- cloud-3	(404, akamai)
+		- cloud-4	(dropped)
 		- media.steampowered.com	(CN: *.hs.llnwd.net; 400)
+		- repo		(504, akamai)
+
+
+	Problematic subdomains:
+
+		- cdn4	(works, akamai)
 
 -->
 <ruleset name="Steam (partial, broken)" default_off="breaks some forum embeds">
 
-	<target host="steamcommunity.com" />
-	<target host="*.steamcommunity.com" />
-		<!--
-			Breaks news/screenshot/video loading.
-					-->
-		<exclusion pattern="^http://(?:www\.)?steamcommunity\.com/app/\d+/(?:homecontent|news|screenshots|videos)" />
-
 	<target host="steampowered.com" />
 	<target host="*.steampowered.com" />
 		<exclusion pattern="http://www\.steampowered\.com/status/survey\.html" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://store\.steampowered\.com/about/" /-->
 	<target host="cdn.store.steampowered.com" />
 
 
-	<securecookie host="^steamcommunity\.com$" name=".+" />
 	<securecookie host="^\.steampowered\.com$" name=".+" />
 
-
-	<!--	www: cert only matches ^streamcommunity.com.
-								-->
-	<rule from="^http://(?:cdn\.|www\.)?steamcommunity\.com/"
-		to="https://steamcommunity.com/" />
 
 	<rule from="^http://store\.steampowered\.com/(jo|log)in"
 		to="https://store.steampowered.com/$1in" />

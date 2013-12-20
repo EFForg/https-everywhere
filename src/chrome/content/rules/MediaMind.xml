@@ -2,52 +2,66 @@
 	Other MediaMind rulesets:
 
 		- Peer39.xml
+		- Serving-sys.com.xml
 
 
 	CDN buckets:
 
-		- www.eyeblaster-ds.com.edgesuite.net
+		- www.eyeblasterwiz.com.edgekey.net
+		- www.mediamind.com.edgekey.net
 
-			- ds.serving-sys.com
+
+	Nonfunctional domains:
+
+		- pilot.eyeblasterwiz.com	(403; mismatched, CN: platform.mediamind.com)
+		- mediamind.com			(refused)
+		- www.mediamind.com		(503, valid cert)
 
 
 	Problematic domains:
 
-		- demo.eyeblaster.com	(works, akamai)
-		- ds.servingsys.com	(works, akamai)
+		- demo.eyeblaster.com		(works, akamai)
+		- eyeblasterwiz.com		(400; mismatched, CN: platform.mediamind.com)
+		- www2.mediamind.com		(works; mismatched, CN: origin.demo.mediamind.com)
 
 
-	Nonfunctional:
+	Fully covered domains:
 
-		- mediamind.com		(cert: creativezone.mediamind.com; shows that domain's data)
-		- www.mediamind.com	(Akamai; "An error occurred")
-		- www2.mediamind.com	(interrupted)
+		- (www.)eyeblasterwiz.com	(^ → www)
+
+		- mediamind.com subdomains:
+
+			- creativezone
+			- demo
+			- origin.demo
+			- platform
+			- sandbox
+
+		- a.pgtb.me
+
+
+	Observed cookie domains:
+
+		- creativezone
+		- platform
 
 -->
 <ruleset name="MediaMind (partial)">
 
 	<target host="*.mediamind.com" />
 	<target host="a.pgtb.me" />
-	<target host="*.serving-sys.com" />
 
 
-	<securecookie host="^creativezone\.mediamind\.com$" name=".*" />
-	<securecookie host="^bs\.serving-sys\.com$" name=".*" />
+	<securecookie host="^(?:creativezone|platform)\.mediamind\.com$" name=".*" />
 
 
-	<rule from="^http://(creativezone|platform)\.mediamind\.com/"
+	<rule from="^http://(?:www\.)?eyeblasterwiz\.com/"
+		to="https://www.eyeblasterwiz.com/" />
+
+	<rule from="^http://(creativezone|demo|origin\.demo|platform|sandbox)\.mediamind\.com/"
 		to="https://$1.mediamind.com/" />
 
 	<rule from="^http://a\.pgtb\.me/"
 		to="https://a.pgtb.me/" />
-
-	<rule from="^http://bs\.serving-sys\.com/"
-		to="https://bs.serving-sys.com/" />
-
-	<rule from="^http://ds\.serving-sys\.com/"
-		to="https://a248.e.akamai.net/f/50/1/5m/ds.serving-sys.com/" />
-
-	<rule from="^http://secure-ds\.serving-sys\.com/"
-		to="https://secure-ds.serving-sys.com/" />
 
 </ruleset>

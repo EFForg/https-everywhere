@@ -1,0 +1,73 @@
+<!--
+	For other LogMeIn coverage, see LogMeIn.xml.
+
+
+	Nonfunctional subdomains:
+
+		- help	(shows www)
+
+
+	Problematic subdomains:
+
+		- autodiscover	(refused)
+		- solutions	(works; mismatched, CN: *.pages04.net)
+
+
+	Fully covered subdomains:
+
+		- (www.) *
+		- autodiscover	(→ autodiscover.mex07a.emailsrvr.com)
+		- blog
+		- cbi
+		- hometab
+		- images *
+		- livechat
+		- my
+		- report
+		- reports
+		- test *
+		- vms
+		- vmss
+		- web
+
+	* Server is configured for rc4 only
+
+
+	Observed cookie domains:
+
+		- ^
+		- .
+		- livechat
+		- my
+		- report
+		- reports
+		- setup
+		- solutions
+		- test
+		- vms
+		- vmss
+		- web
+		- www
+
+-->
+<ruleset name="BoldChat.com (partial)">
+
+	<target host="boldchat.com" />
+	<target host="*.boldchat.com" />
+
+
+	<securecookie host="^(?:.*\.)?boldchat\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?boldchat\.com/"
+		to="https://$1boldchat.com/" />
+
+	<rule from="^http://(blog|cbi|hometab|images|livechat|my|reports?|setup|test|vmss?|web)\.boldchat\.com/"
+		to="https://$1.boldchat.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://autodiscover\.boldchat\.com/.*"
+		to="https://autodiscover.mex07a.emailsrvr.com/autodiscover/autodiscover.xml" />
+
+</ruleset>

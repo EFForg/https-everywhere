@@ -1,7 +1,25 @@
 <!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- amp	(refused)
+
+
+	Partially covered subdomains:
+
+		- amp	(→ www)
+
+
 	Fully covered subdomains:
 
 		- seal
+
+
+	Mixed content:
+
+		- Web bug on www from netsolglobal.112.2o7.net *
+
+	* Secured by us
 
 -->
 <ruleset name="Network Solutions" platform="mixedcontent">
@@ -10,22 +28,23 @@
 	<target host="*.networksolutions.com" />
 
 
+	<securecookie host="^\.networksolutions\.com$" name="^s_\w+$" />
 	<securecookie host="^www\.networksolutions\.com$" name=".*" />
 
 
-	<!--	Cert doesn't match !www.	-->
 	<rule from="^http://(?:www\.)?networksolutions\.com(:443)?/"
 		to="https://www.networksolutions.com$1/" />
 
 	<rule from="^http://(about|seal)\.networksolutions\.com/"
 		to="https://$1.networksolutions.com/" />
 
-	<!--	amp doesn't work over https.
-		Redirects as so, sans-https.	-->
+	<!--	Redirects as so, sans-https:
+						-->
 	<rule from="^http://amp\.networksolutions\.com/$"
 		to="https://www.networksolutions.com/" />
 
-	<!--	Ditto.	-->
+	<!--	Ditto:
+			-->
 	<rule from="^http://amp\.networksolutions\.com/landing\?code=(\w+)$"
 		to="https://www.networksolutions.com/affiliates/select-unknown.jsp?siteid=100&amp;channelid=$1" />
 
