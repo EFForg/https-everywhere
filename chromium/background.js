@@ -264,10 +264,17 @@ function onCompleted(details) {
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
+
+// This watches cookies sent via HTTP.
+// We do *not* watch HTTPS cookies -- they're already being sent over HTTPS -- yay!
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["http://*/*"]},
+
+// This parses HTTPS cookies and may set their secure flag.
+// We never do this for cookies set by HTTP.
+wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
                                     ["responseHeaders", "blocking"]);
+
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
 wr.onErrorOccurred.addListener(onErrorOccurred,
