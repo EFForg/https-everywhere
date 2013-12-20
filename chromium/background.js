@@ -183,11 +183,6 @@ function onHeadersReceived(details) {
   a.href = details.url;                 //
   var host = a.hostname;
 
-  if(a.protocol != "https:") {
-    // Never flag a cookie as secure if it's being set over HTTP
-    return;
-  }
-
   // TODO: Verify this with wireshark
   for (var h in details.responseHeaders) {
     if (details.responseHeaders[h].name == "Set-Cookie") {
@@ -222,11 +217,6 @@ function onBeforeSendHeaders(details) {
   var a = document.createElement("a");
   a.href = details.url;
   var host = a.hostname;
-
-  if(a.protocol == "https:") {
-    // All cookies may be sent over https...
-    return;
-  }
 
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
@@ -274,10 +264,9 @@ function onCompleted(details) {
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
-wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["https://*/*", "http://*/*"]}, //{urls: ["*://*/*"]},
+wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
-// FIXME: We probably do want all urls.. or at least http+https+spdy?
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http://*/*"]},
+wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["http://*/*"]},
                                     ["responseHeaders", "blocking"]);
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
