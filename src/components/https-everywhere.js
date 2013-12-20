@@ -31,7 +31,6 @@ const Cc = Components.classes;
 const Cu = Components.utils;
 const Cr = Components.results;
 
-const CP_SHOULDPROCESS = 4;
 
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
@@ -99,8 +98,6 @@ const HTML_NS = "http://www.w3.org/1999/xhtml";
 const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
-
-const N_COHORTS = 1000;  // For partial feature deployment
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
@@ -235,19 +232,6 @@ const TYPE_MEDIA = 15;
 // ACCEPT = 1
 
 
-// Some of these types are known by arbitrary assertion at
-// https://bugzilla.mozilla.org/show_bug.cgi?id=677643#c47
-// TYPE_FONT was required to fix https://trac.torproject.org/projects/tor/ticket/4194
-// TYPE_SUBDOCUMENT was required to fix https://trac.torproject.org/projects/tor/ticket/4149
-// I have NO IDEA why JS won't let me use the constants above in defining this
-const shouldLoadTargets = {
-  1 : true,
-  3 : true,
-  5 : true,
-  12 : true,
-  14 : true,
-  7 : true
-};
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -551,20 +535,6 @@ HTTPSEverywhere.prototype = {
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
   },
 
-  getExperimentalFeatureCohort: function() {
-    // This variable is used for gradually turning on features for testing and
-    // scalability purposes.  It is a random integer [0,N_COHORTS) generated
-    // once and stored thereafter.
-    var cohort;
-    try {
-      cohort = this.prefs.getIntPref("experimental_feature_cohort");
-    } catch(e) {
-      cohort = Math.round(Math.random() * N_COHORTS);
-      this.prefs.setIntPref("experimental_feature_cohort", cohort);
-    }
-    return cohort;
-  },
-
   // nsIChannelEventSink implementation
   onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
@@ -601,29 +571,6 @@ HTTPSEverywhere.prototype = {
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
         this.onChannelRedirect(oldChannel, newChannel, flags);
         callback.onRedirectVerifyCallback(0);
-  },
-
-  // These implement the nsIContentPolicy API; they allow both yes/no answers
-  // to "should this load?", but also allow us to change the thing.
-
-  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    // we don't need contentpolicy if we have channel.redirectTo, and it causes problems
-    if (hasRedirectTo) return true;
-
-    //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
-       if (shouldLoadTargets[aContentType] != null) {
-         var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-         var scheme = unwrappedLocation.scheme;
-         var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-         this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-         if (isHTTP)
-           HTTPS.forceURI(aContentLocation, null, aContext);
-       } 
-    return true;
-  },
-
-  shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra) {
-    return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
   get_prefs: function(prefBranch) {
