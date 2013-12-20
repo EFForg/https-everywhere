@@ -1,3 +1,7 @@
+// A cache for potentiallyApplicableRulesets
+// Size chosen /completely/ arbitrarily.
+var ruleCache = new LRUCache(2048);
+
 function Rule(from, to) {
   //this.from = from;
   this.to = to;
@@ -176,6 +180,15 @@ RuleSets.prototype = {
   
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
+
+    // Have we cached this result? If so, return it!
+    var cached_item = ruleCache.get(host);
+    if (cached_item !== undefined) {
+        log(DBUG, "Rulseset cache hit for " + host);
+        return cached_item;
+    }
+    log(DBUG, "Ruleset cache miss for " + host);
+
     var i, tmp, t;
     var results = this.global_rulesets.slice(0); // copy global_rulesets
     if (this.targets[host])
@@ -201,6 +214,9 @@ RuleSets.prototype = {
     else
       for (var i = 0; i < results.length; ++i)
         log(DBUG, "  " + results[i].name);
+
+    // Insert results into the ruleset cache
+    ruleCache.set(host, results);
     return results;
   },
 
