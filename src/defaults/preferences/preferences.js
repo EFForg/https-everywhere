@@ -1,4 +1,4 @@
-pref("extensions.https_everywhere.LogLevel", 5);
+pref("extensions.https_everywhere.LogLevel", 1);
 pref("extensions.https_everywhere.globalEnabled",true);
 
 // this is the HTTPS Everywhere preferences version (for migrations)
