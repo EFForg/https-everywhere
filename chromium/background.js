@@ -27,7 +27,7 @@ function displayPageAction(tabId) {
 
   if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
     chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) == "undefined") {
+      if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
       }
       else {
@@ -57,10 +57,10 @@ AppliedRulesets.prototype = {
   },
 
   getRulesets: function(tabId) {
-    if (tabId in this.active_tab_rules)
+    if (tabId in this.active_tab_rules) {
       return this.active_tab_rules[tabId];
-    else
-      return null;
+    }
+    return null;
   },
 
   removeTab: function(tabId) {
@@ -86,8 +86,9 @@ function onBeforeRequest(details) {
   // Normalise hosts such as "www.example.com."
   var tmphost = tmpuri.hostname();
   if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".")
+    while (tmphost.charAt(tmphost.length - 1) == ".") {
       tmphost = tmphost.slice(0,-1);
+    }
   tmpuri.hostname(tmphost);  // No need to update the hostname unless it's changed.
   }
 
