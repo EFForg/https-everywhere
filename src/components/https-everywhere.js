@@ -201,10 +201,7 @@ HTTPSEverywhere.prototype = {
   _xpcom_categories: [
     {
       category: "app-startup",
-    },
-    {
-      category: "content-policy",
-    },
+    }
   ],
 
   // QueryInterface implementation, e.g. using the generateQI helper
@@ -212,7 +209,6 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
-      Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
