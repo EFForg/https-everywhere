@@ -116,17 +116,17 @@ function onBeforeRequest(details) {
     redirectCounter[details.requestId] += 1;
     log(DBUG, "Got redirect id "+details.requestId+
         ": "+redirectCounter[details.requestId]);
+
+    if (redirectCounter[details.requestId] > 9) {
+        log(NOTE, "Redirect counter hit for "+canonical_url);
+        urlBlacklist[canonical_url] = true;
+        var hostname = tmpuri.hostname();
+        domainBlacklist[hostname] = true;
+        log(WARN, "Domain blacklisted " + hostname);
+        return;
+    }
   } else {
     redirectCounter[details.requestId] = 0;
-  }
-
-  if (redirectCounter[details.requestId] > 9) {
-    log(NOTE, "Redirect counter hit for "+canonical_url);
-    urlBlacklist[canonical_url] = true;
-    var hostname = tmpuri.hostname();
-    domainBlacklist[hostname] = true;
-    log(WARN, "Domain blacklisted " + hostname);
-    return;
   }
 
   var newuristr = null;
