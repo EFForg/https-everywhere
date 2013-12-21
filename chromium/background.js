@@ -88,8 +88,8 @@ function onBeforeRequest(details) {
   if (tmphost.charAt(tmphost.length - 1) == ".") {
     while (tmphost.charAt(tmphost.length - 1) == ".")
       tmphost = tmphost.slice(0,-1);
+  tmpuri.hostname(tmphost);  // No need to update the hostname unless it's changed.
   }
-  tmpuri.hostname(tmphost);
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
@@ -134,8 +134,9 @@ function onBeforeRequest(details) {
   var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr)
+    if (rs[i].active && !newuristr) {
       newuristr = rs[i].apply(canonical_url);
+    }
   }
 
   displayPageAction(details.tabId);
