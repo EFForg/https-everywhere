@@ -131,10 +131,8 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  var i = 0;
-
   var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
-  for(i = 0; i < rs.length; ++i) {
+  for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr)
       newuristr = rs[i].apply(canonical_url);
@@ -197,7 +195,7 @@ function onHeadersReceived(details) {
       if (cookie.indexOf("; Secure") == -1) {
         log(INFO, "Got insecure cookie header: "+cookie);
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:a.hostname, name:cookie.split("=")[0]};
+        var fake = {domain:host, name:cookie.split("=")[0]};
         var ruleset = all_rules.shouldSecureCookie(fake, true);
         if (ruleset) {
           activeRulesets.addRulesetToTab(details.tabId, ruleset);
@@ -236,7 +234,7 @@ function onBeforeSendHeaders(details) {
 
       for (var c in cookies) {
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:a.hostname, name:cookies[c].split("=")[0]};
+        var fake = {domain:host, name:cookies[c].split("=")[0]};
         // XXX I have no idea whether the knownHttp parameter should be true
         // or false here.  We're supposedly inside a race condition or
         // something, right?

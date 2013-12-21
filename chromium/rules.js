@@ -176,7 +176,7 @@ RuleSets.prototype = {
   
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
-    var i, tmp, t;
+    var tmp, t;
     var results = this.global_rulesets.slice(0); // copy global_rulesets
     if (this.targets[host])
       results = results.concat(this.targets[host]);
@@ -213,7 +213,6 @@ RuleSets.prototype = {
     //log(DBUG, "  host: " + cookie.host);
     //log(DBUG, "  domain: " + cookie.domain);
     //log(DBUG, "  rawhost: " + cookie.rawHost);
-    var i,j;
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
@@ -286,10 +285,9 @@ RuleSets.prototype = {
   },
 
   rewriteURI: function(urispec, host) {
-    var i = 0;
     var newuri = null;
     var rs = this.potentiallyApplicableRulesets(host);
-    for(i = 0; i < rs.length; ++i) {
+    for(var i = 0; i < rs.length; ++i) {
       if (rs[i].active && (newuri = rs[i].apply(urispec)))
         return newuri;
     }
