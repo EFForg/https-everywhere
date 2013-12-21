@@ -206,20 +206,26 @@ function onHeadersReceived(details) {
 }
 
 // This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, becuase the cookie API is non-blocking..
+// update and cookie transmission, because the cookie API is non-blocking.
 // It would be less perf impact to have a blocking version of the cookie API
 // available instead.
+// WARNING: This is a very hot function.
 function onBeforeSendHeaders(details) {
   // XXX this function appears to enforce something equivalent to the secure
   // cookie flag by independent means.  Is that really what it's supposed to
   // do?
-  var a = document.createElement("a");
-  a.href = details.url;
-  var host = a.hostname;
-
+  // @@@ Agreed, this function is really weird. I'm not sure it's even useful
+  // since we block WebRequests to HTTP sites (and maybe rewrite them to SSL)
+  // we force cookies to be sent over HTTPS even if they don't have the flag
+  // "Secure" set. (Unless I'm reading this wrong?)
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
+      // Per RFC 6265, Chrome sends only ONE cookie header, period.
+      var a = document.createElement("a");
+      a.href = details.url;
+      var host = a.hostname;
+
       var newCookies = [];
       var cookies = details.requestHeaders[h].value.split(";");
 
@@ -239,6 +245,9 @@ function onBeforeSendHeaders(details) {
       }
       details.requestHeaders[h].value = newCookies.join(";");
       log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
+
+      // We've seen the one cookie header, so let's get out of here!
+      break;
     }
   }
 
