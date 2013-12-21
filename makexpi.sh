@@ -1,5 +1,6 @@
 #!/bin/sh
 APP_NAME=https-everywhere
+ANDROID_APP_ID=org.mozilla.firefox
 
 # builds a .xpi from the git repository, placing the .xpi in the root
 # of the repository.
@@ -138,6 +139,13 @@ else
   echo >&2 "Total included rules: `find chrome/content/rules -name "*.xml" | wc -l`"
   echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
   echo >&2 "Created $XPI_NAME"
+  # Push to Android Firefox
+  echo Pushing "$XPI_NAME" to /sdcard/"$XPI_NAME"
+  adb push "../$XPI_NAME" /sdcard/"$XPI_NAME"
+  adb shell am start -a android.intent.action.VIEW \
+                     -c android.intent.category.DEFAULT \
+                     -d file:///mnt/sdcard/"$XPI_NAME" \
+                     -n $ANDROID_APP_ID/.App
   if [ -n "$BRANCH" ]; then
     cd ../..
     cp $SUBDIR/$XPI_NAME pkg
