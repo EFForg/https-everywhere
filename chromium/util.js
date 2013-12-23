@@ -17,7 +17,8 @@ function log(level, str) {
         if (level === WARN) {
             // Show warning with a little yellow icon in Chrome.
             console.warn(str);
+        } else {
+            console.log(str);
         }
-        console.log(str);
     }
 }
