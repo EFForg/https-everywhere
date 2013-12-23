@@ -1,4 +1,6 @@
 <!--
+	For problematic rules, see National_Archives.gov.uk-problematic.xml.
+
 	For other UK government coverage, see GOV.UK.xml.
 
 
@@ -18,9 +20,16 @@
 		- labs	(works; expired 2012-06-23, self-signed)
 
 
+	Partially covered subdomains:
+
+		- discovery	(some pages redirect to http)
+
+
 	Fully covered subdomains:
 
 		- (www.) *	(^ → www)
+		- community
+		- images
 
 	* Server is only configured for RC4 and weaker ciphers
 
@@ -28,23 +37,26 @@
 	Observed cookie domains:
 
 		- bookshop ¹
-		- discovery
-		- images
-		- labs
+		- discovery ²
+		- images ³
+		- labs ⁴
 		- smartsource ¹
 
 	¹ Not secured by us <= we don't touch http cookies
+	² Not secured by us <= incomplete coverage
+	³ Secured by us
+	⁴ Secured by us when set via https (rule off by default)
 
 
 	Mixed content:
 
 		- css, on:
 
-			- labs from labs
+			- labs from labs ¹
 			- labs from www ¹
 			- www from fonts.googleapis.com ¹
 
-		- Images on labs from labs
+		- Images on labs from labs ¹
 
 		- Web bugs on community, images, and labs from smartsource ²
 
@@ -55,7 +67,11 @@
 <ruleset name="NationalArchivesGovUK (partial)">
 
 	<target host="nationalarchives.gov.uk" />
-	<target host="www.nationalarchives.gov.uk" />
+	<target host="*.nationalarchives.gov.uk" />
+		<!--
+			Some pages redirect to http:
+							-->
+		<exclusion pattern="^http://discovery\.nationalarchives\.gov\.uk/+(?!SearchUI/Content/)" />
 
 
 	<securecookie host=".+\.nationalarchives\.gov\.uk$" name=".+" />
@@ -63,5 +79,8 @@
 
 	<rule from="^http://(?:www\.)?nationalarchives\.gov\.uk/"
 		to="https://www.nationalarchives.gov.uk/" />
+
+	<rule from="^http://(community|discovery|images)\.nationalarchives\.gov\.uk/"
+		to="https://$1.nationalarchives.gov.uk/" />
 
 </ruleset>
