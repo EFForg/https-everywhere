@@ -8,28 +8,30 @@
 		- dfdbz2tdq3k01.cloudfront.net
 
 
-	Nonfunctional subdomains:
+	Fully covered subdomains:
 
-		- (www.)	(dropped)
+		- (www.)
+		- scripts
+		- services
 
 
-	Problematic subdomains:
+	Mixed content:
 
-		- scripts	(cloudfront)
+		- Web bug on (www.) from widget.quantcast.com *
+
+	* Secured by us
 
 -->
-<ruleset name="WebSpectator.com (partial)">
+<ruleset name="WebSpectator.com">
 
+	<target host="webspectator.com" />
 	<target host="*.webspectator.com" />
 
 
-	<!--securecookie host="^\.webspectator\.com$" name="^\d\d:webspectracking$" /-->
+	<securecookie host="^\.webspectator\.com$" name=".+" />
 
 
-	<rule from="^http://scripts\.webspectator\.com/"
-		to="https://d1a9mcs2flbk7j.cloudfront.net/" />
-
-	<rule from="^http://services\.webspectator\.com/"
-		to="https://services.webspectator.com/" />
+	<rule from="^http://((?:scripts|services|www)\.)?webspectator\.com/"
+		to="https://$1webspectator.com/" />
 
 </ruleset>

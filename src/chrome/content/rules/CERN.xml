@@ -4,12 +4,22 @@
 
 	Nonfunctional domains:
 
-		- cernvm.cern.ch	(redirects to login.cern.ch, self-signed)
-		- line-mode.cern.ch	(dropped)
-		- alpha.web.cern.ch *
-		- first-website.web.cern.ch *
-		- itssb.web.cern.ch *
-		- home.web.cern.ch	(redirects to login.cern.ch, valid cert)
+		- cern.ch subdomains:
+
+			- cernvm	(redirects to login.cern.ch, self-signed)
+			- library	(shows invenio-demo; mismatched, CN: invenio-demo.cern.ch)
+			- line-mode	(dropped)
+			- lxroot02	(shows root, self-signed)
+
+			- web subdomains:
+
+				- alpha *
+				- first-website *
+				- itssb *
+				- home *
+				- library *
+				- photoclub *
+
 		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
 		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
 
@@ -18,15 +28,11 @@
 
 	Problematic cern.ch subdomains:
 
-		- bulletin *
 		- info		(404; mismatched, CN: *.web.cern.ch)
-		- sft.its **
-		- root **
-		- web *
-		- listboxservices.web *
-
-	* Mismatched, CN: www.cern.ch
-	** Works, self-signed
+		- sft.its	(works, self-signed)
+		- photoclub	(works; mismatched, CN: CERN.CH)
+		- root		($ 403s, drupal/ works; self-signed)
+		- listboxservices.web	(mismatched, CN: *.cern.ch)
 
 
 	Partially covered subdomains:
@@ -37,8 +43,9 @@
 	Fully covered subdomains:
 
 		- (www.)
-		- bulletin	(→ webservices.web)
+		- bulletin
 		- cds
+		- cdsmedia
 		- cdsweb
 		- edms
 		- ert
@@ -50,7 +57,7 @@
 
 		- web subdomains:
 
-			- ^			(→ webservices.web)
+			- ^
 			- ab-dep-op-elogbook
 			- atlas
 			- committees
@@ -77,13 +84,30 @@
 			- webservices
 
 
-	Observed cooke domains:
+	Observed cookie domains:
 
-		- sft.its
-		- root
-		- savannah
+		- cds ¹
+		- cdsweb ¹
+		- cernvm ²
+		- .cernvm ²
+		- invenio-demo
+		- sft.its ³
+		- root ³
+		- .root ³
+		- savannah ¹
 
-DNS Name: lxroot02.cern.ch
+		- web subdomains:
+
+			- alpha ²
+			- first-website ²
+			- home ²
+			- itssb ²
+			- library ²
+			- photoclub ²
+
+	¹ Secured by us <= complete coverage
+	² Not secured by us <= we don't touch http cookies
+	³ Secured by us when set via https
 
 -->
 <ruleset name="CERN (partial)">
@@ -95,18 +119,8 @@ DNS Name: lxroot02.cern.ch
 	<securecookie host=".*\.cern\.ch$" name=".+" />
 
 
-	<rule from="^http://((?:association|cds|cdsweb|edms|ert|espace|indico|login|mtf|(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|savannah|service-portal|simba3|user|webservices)\.web|www)\.)?cern\.ch/"
+	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
 		to="https://$1cern.ch/" />
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^https?://bulletin\.cern\.ch/"
-		to="https://cdsweb.cern.ch/journal/CERNBulletin/" />
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^https?://web\.cern\.ch/"
-		to="https://webservices.web.cern.ch/webservices/" />
 
 	<!--	Redirects like so:
 					-->
