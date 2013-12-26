@@ -27,7 +27,7 @@ function displayPageAction(tabId) {
 
   if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
     chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) == "undefined") {
+      if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
       }
       else {
@@ -57,10 +57,10 @@ AppliedRulesets.prototype = {
   },
 
   getRulesets: function(tabId) {
-    if (tabId in this.active_tab_rules)
+    if (tabId in this.active_tab_rules) {
       return this.active_tab_rules[tabId];
-    else
-      return null;
+    }
+    return null;
   },
 
   removeTab: function(tabId) {
@@ -86,10 +86,11 @@ function onBeforeRequest(details) {
   // Normalise hosts such as "www.example.com."
   var tmphost = tmpuri.hostname();
   if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".")
+    while (tmphost.charAt(tmphost.length - 1) == ".") {
       tmphost = tmphost.slice(0,-1);
+    }
+  tmpuri.hostname(tmphost);  // No need to update the hostname unless it's changed.
   }
-  tmpuri.hostname(tmphost);
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
@@ -116,17 +117,17 @@ function onBeforeRequest(details) {
     redirectCounter[details.requestId] += 1;
     log(DBUG, "Got redirect id "+details.requestId+
         ": "+redirectCounter[details.requestId]);
+
+    if (redirectCounter[details.requestId] > 9) {
+        log(NOTE, "Redirect counter hit for "+canonical_url);
+        urlBlacklist[canonical_url] = true;
+        var hostname = tmpuri.hostname();
+        domainBlacklist[hostname] = true;
+        log(WARN, "Domain blacklisted " + hostname);
+        return;
+    }
   } else {
     redirectCounter[details.requestId] = 0;
-  }
-
-  if (redirectCounter[details.requestId] > 9) {
-    log(NOTE, "Redirect counter hit for "+canonical_url);
-    urlBlacklist[canonical_url] = true;
-    var hostname = tmpuri.hostname();
-    domainBlacklist[hostname] = true;
-    log(WARN, "Domain blacklisted " + hostname);
-    return;
   }
 
   var newuristr = null;
@@ -134,8 +135,9 @@ function onBeforeRequest(details) {
   var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr)
+    if (rs[i].active && !newuristr) {
       newuristr = rs[i].apply(canonical_url);
+    }
   }
 
   displayPageAction(details.tabId);
@@ -205,20 +207,26 @@ function onHeadersReceived(details) {
 }
 
 // This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, becuase the cookie API is non-blocking..
+// update and cookie transmission, because the cookie API is non-blocking.
 // It would be less perf impact to have a blocking version of the cookie API
 // available instead.
+// WARNING: This is a very hot function.
 function onBeforeSendHeaders(details) {
   // XXX this function appears to enforce something equivalent to the secure
   // cookie flag by independent means.  Is that really what it's supposed to
   // do?
-  var a = document.createElement("a");
-  a.href = details.url;
-  var host = a.hostname;
-
+  // @@@ Agreed, this function is really weird. I'm not sure it's even useful
+  // since we block WebRequests to HTTP sites (and maybe rewrite them to SSL)
+  // we force cookies to be sent over HTTPS even if they don't have the flag
+  // "Secure" set. (Unless I'm reading this wrong?)
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
+      // Per RFC 6265, Chrome sends only ONE cookie header, period.
+      var a = document.createElement("a");
+      a.href = details.url;
+      var host = a.hostname;
+
       var newCookies = [];
       var cookies = details.requestHeaders[h].value.split(";");
 
@@ -238,6 +246,9 @@ function onBeforeSendHeaders(details) {
       }
       details.requestHeaders[h].value = newCookies.join(";");
       log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
+
+      // We've seen the one cookie header, so let's get out of here!
+      break;
     }
   }
 
