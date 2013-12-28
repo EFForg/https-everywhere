@@ -8,8 +8,6 @@
 		- Yimg.com.xml
 		- YUI_Library.xml
 
-	feedback.yahoo.com is handled in Uservoice-clients.xml.
-
 
 	CDN buckets:
 
@@ -36,7 +34,9 @@
 			- docs ²
 			- fr.docs ²
 			- en-maktoob ³
+			- java.europe		(→ adgallery.zenfs.com)
 			- everything ¹
+			- feedback		(→ yahoo.uservoice.com)
 
 			- finance subdomains:
 
@@ -129,14 +129,7 @@
 	Partially covered domains:
 
 		- (www.)totaltravel.com		(→ au.totaltravel.yahoo.com, haven't found images/)
-
-		- yahoo.com subdomains:
-
-			- contributor
-			- uk.contributor
-			- developer		(homepage redirects to http)
-			- java.europe		(→ adgallery.zenfs.com)
-
+		- developer.yahoo.com		(homepage redirects to http)
 		- contextualads.yahoo.net	(→ akamai, avoiding user-visible paths)
 		- investor.yahoo.net		(→ investor.shareholder.com)
 		- uk.health.lifestyle.yahoo.net	(→ s.yimg.com)
@@ -154,6 +147,7 @@
 			- us.adserver
 			- beap.adx
 			- c5.ah
+			- c5a.ah
 			- cookex.amp
 			- s-cookex.amp
 			- [aoyz].analytics
@@ -170,6 +164,8 @@
 
 			- migration.cn
 			- br.contribuidores
+			- contributor
+			- uk.contributor
 			- edit
 			- na.edit
 			- edit.europe
@@ -191,6 +187,7 @@
 				- \w+-c.c.yom
 
 			- mlogin
+			- movies
 
 			- *.msg:
 
@@ -205,17 +202,26 @@
 			- ucs.netsvs
 			- news
 			- cookiex.ngd
+			- omg
 			- rtb.pclick
 			- analytics.query
 			- mailapps.query
 			- media.query
 			- ucs.query
+			- us-locdrop.query
+			- video.query
 			- us.rd
+			- screen
+			- search
+			- images.search
 			- rtb.pclick.secure
+			- shine
 			- order.smallbusiness
 			- data.toolbar
 			- au.totaltravel
+			- qos.video
 			- yep.video
+			- weather
 
 		- yahoo.net subdomains:
 
@@ -253,12 +259,11 @@
 	<target host="rocketmail.com" />
 	<target host="www.rocketmail.com" />
 	<target host="totaltravel.com" />
-	<target host="www.totaltravel.com" />
+	<target host="*.totaltravel.com" />
 		<exclusion pattern="^https?://(?:www\.)?totaltravel\.com/images/" />
 	<target host="totaltravel.co.uk" />
 	<target host="www.totaltravel.co.uk" />
 	<target host="*.yahoo.com" />
-		<exclusion pattern="^http://(?:uk\.)?contributor\.yahoo\.com/(?!$|\?|account/|contributor/|help/|signup/)" />
 		<exclusion pattern="^https?://developer\.yahoo\.com/(?:$|\?)" />
 	<target host="*.yahoo.net" />
 		<!--
@@ -276,7 +281,7 @@
 	<target host="*.zenfs.com" />
 
 
-	<!--	*All* Yahoo cookies are cross-domain cookies.
+	<!--	Some Yahoo cookies are cross-domain cookies.
 		It's a case of figuring out which ones
 		aren't needed on unsecurable pages.
 
@@ -311,27 +316,6 @@
 					- v=\d.\d&cc=0&m=0
 
 				- Y
-
-
-			- images.search.yahoo.com
-
-				-jr
-
-					- \d
-
-			- news.yahoo.com
-
-				- AO
-
-					- o=1&s=1&dnt=1
-
-				- grvinsights	(set by rma-api.gravity.com)
-
-					- \w{32}
-
-				- ywadp\d+
-
-					- \d+
 
 			- .news.yahoo.com
 
@@ -404,7 +388,7 @@
 		-->
 	<securecookie host="^\.yahoo\.com$" name="^(?:AO|B|SSL)$" />
 	<securecookie host="^\.(?:analytics|mail)\.yahoo\.com$" name=".+" />
-	<securecookie host="^news\.yahoo\.com$" name="^grvinsights$" />
+	<securecookie host="^(?:movies|news|(?:us-locdrop|video)\.query|images\.search)\.yahoo\.com$" name=".+" />
 	<securecookie host="^.+-c\.c\.yom\.mail\.yahoo\.net$" name=".+" />
 	<securecookie host="^\.zenfs\.com$" name="^BX$" />
 
@@ -415,17 +399,23 @@
 	<rule from="^http://(?:www\.)?totaltravel\.co(?:m|\.uk)/"
 		to="https://au.totaltravel.yahoo.com/" />
 
+	<rule from="^http://builder\.totaltravel\.com/"
+		to="https://builder.totaltravel.com/" />
+
 	<rule from="^http://(?:www\.)?(?:rocket|y)mail\.com/"
 		to="https://mail.yahoo.com/" />
 
-	<rule from="^http://java\.europe\.yahoo\.com/uk/"
-		to="https://adgallery.zenfs.com/uk/" />
+	<rule from="^http://java\.europe\.yahoo\.com/"
+		to="https://adgallery.zenfs.com/" />
 
 	<rule from="^http://dps\.msg\.yahoo\.com/"
 		to="https://ycpi-mail-dps.msg.yahoo.com/" />
 
-	<rule from="^http://(u[ks]\.adserver|beap\.adx|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|(?:[aosz]|y3)\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|(?:gh\.bouncer\.)?login|us\.l?rd|r\.m|(?:[\w-]+\.)?mail|mlogin|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|rtb\.pclick|(?:analytics|mailapps|media|ucs)\.query|sec|rtb\.pclick\.secure|order\.smallbusiness|data\.toolbar|au\.totaltravel|yep\.video)\.yahoo\.com/"
+	<rule from="^http://(u[ks]\.adserver|beap\.adx|c5\.ah|y\.analytics|calendar|(?:s-)?cookex\.amp|(?:[aosz]|y3)\.analytics|global\.ard|(?:clicks\.beap|csc\.beap|pn1|row|us)\.bc|migration\.cn|br\.contribuidores|(?:uk\.)?contributor|developer|(?:na\.)?edit|edit\.europe|geo|legalredirect|(?:gh\.bouncer\.)?login|us\.l?rd|r\.m|(?:[\w-]+\.)?mail|mlogin|movies|[\w\.-]+\.msg|ucs\.netsvs|cookiex\.ngd|omg|rtb\.pclick|(?:analytics|mailapps|media|ucs|us-locdrop|video)\.query|screen|search|images\.search|sec|rtb\.pclick\.secure|shine|order\.smallbusiness|data\.toolbar|au\.totaltravel|(?:qos|yep)\.video|weather)\.yahoo\.com/"
 		to="https://$1.yahoo.com/" />
+
+	<rule fromm="^http://feedback\.yahoo\.com/"
+		to="https://yahoo.uservoice.com/" />>
 
 	<rule from="^http://uk\.health\.lifestyle\.yahoo\.net/images/"
 		to="https://s.yimg.com/lq/lib/lsl/i/uk/" />
@@ -441,12 +431,6 @@
 					-->
 	<rule from="^http://rds?\.yahoo\.com/"
 		to="https://us.rd.yahoo.com/" />
-
-	<!--	This needs a craptonne of effort to work, as *every* link
-		points towards s.yimg.com/foo instead of shine.yahoo.com/foo.
-
-	<rule from="^https?://shine\.yahoo\.com/"
-		to="https://s.yimg.com/zz/shine.yahoo.com/" /-->
 
 	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
 		to="https://smallbusiness.yahoo.com/servicecheck.php" />
