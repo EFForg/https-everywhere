@@ -1,6 +1,7 @@
 var backgroundPage = null;
 var stableRules = null;
 var unstableRules = null;
+var switchPlannerDiv = null;
 var hostReg = /.*\/\/[^$/]*\//;
 
 function toggleRuleLine(checkbox, ruleset) {
@@ -59,6 +60,17 @@ function createRuleLine(ruleset) {
 }
 
 function gotTab(tab) {
+  if (backgroundPage.switchPlannerMode) {
+    // XXX: Call URI here, but it's not in-scope. Need to make it in-scope.
+    var tab_host = tab.url.match(/https?:\/\/([^\/]*)/)[1];
+    var switchPlannerTextDiv = document.createElement("div");
+    var switchPlannerText = backgroundPage.sortSwitchPlanner(tab_host);
+    switchPlannerTextDiv.innerHTML = switchPlannerText;
+    switchPlannerDiv.appendChild(switchPlannerTextDiv);
+    switchPlannerDiv.style.position = "static";
+    switchPlannerDiv.style.visibility = "visible";
+  }
+
   var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
 
   for (var r in rulesets) {
@@ -76,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
   backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
+  switchPlannerDiv = document.getElementById("SwitchPlanner");
   chrome.tabs.getSelected(null, gotTab);
 
   // auto-translate all elements with i18n attributes

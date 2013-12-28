@@ -1,3 +1,6 @@
+var switchPlannerMode = true;
+var switchPlanner = {};
+  console.log("XXX TESTING XXX");
 
 var all_rules = new RuleSets();
 var wr = chrome.webRequest;
@@ -81,32 +84,29 @@ var redirectCounter = {};
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
-  var tmpuri = new URI(details.url);
+  var uri = new URI(details.url);
 
   // Normalise hosts such as "www.example.com."
-  var tmphost = tmpuri.hostname();
-  if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".")
-      tmphost = tmphost.slice(0,-1);
+  var canonical_host = uri.hostname();
+  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+      canonical_host = canonical_host.slice(0,-1);
   }
-  tmpuri.hostname(tmphost);
+  uri.hostname(canonical_host);
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = tmpuri.userinfo();
-  tmpuri.userinfo('');
+  var tmpuserinfo = uri.userinfo();
+  uri.userinfo('');
 
-  var canonical_url = tmpuri.toString();
+  var canonical_url = uri.toString();
   if (details.url != canonical_url && tmpuserinfo === '') {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return;
+    return null;
   }
-
-  var a = document.createElement("a");
-  a.href = canonical_url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
@@ -123,15 +123,14 @@ function onBeforeRequest(details) {
   if (redirectCounter[details.requestId] > 9) {
     log(NOTE, "Redirect counter hit for "+canonical_url);
     urlBlacklist[canonical_url] = true;
-    var hostname = tmpuri.hostname();
-    domainBlacklist[hostname] = true;
-    log(WARN, "Domain blacklisted " + hostname);
-    return;
+    domainBlacklist[canonical_host] = true;
+    log(WARN, "Domain blacklisted " + canonical_host);
+    return null;
   }
 
   var newuristr = null;
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  var rs = all_rules.potentiallyApplicableRulesets(canonical_host);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr)
@@ -140,15 +139,129 @@ function onBeforeRequest(details) {
 
   displayPageAction(details.tabId);
 
-  if (newuristr) {
+  if (newuristr && tmpuserinfo != "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
     finaluri.userinfo(tmpuserinfo);
-    var finaluristr = finaluri.toString();
-    log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
-    return {redirectUrl: finaluristr};
+    newuristr = finaluri.toString();
   }
+
+  // In Switch Planner Mode, record any non-rewriteable
+  // HTTP URIs by parent hostname, along with the resource type.
+  if (switchPlannerMode && uri.protocol() !== "https") {
+    // In order to figure out the document requesting this resource,
+    // have to get the tab. TODO: any cheaper way?
+    // XXX: Because this is async it's actually inaccurate during quick page
+    // switches. Maybe it only matters when you're switching domains though?
+    chrome.tabs.get(details.tabId, function(tab) {
+      var tab_host = new URI(tab.url).hostname();
+      if (tab_host !== canonical_host) {
+        writeToSwitchPlanner(details.type,
+                             tab_host,
+                             canonical_host,
+                             details.url,
+                             newuristr);
+      }
+    });
+  }
+
+  if (newuristr) {
+    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
+    return {redirectUrl: newuristr};
+  } else {
+    return null;
+  }
+}
+
+
+// Map of which values for the `type' enum denote active vs passive content.
+// https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
+var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
+// We consider sub_frame to be passive even though it can contain JS or Flash.
+// This is because code running the sub_frame cannot access the main frame's
+// content, by same-origin policy. This is true even if the sub_frame is on the
+// same domain but different protocol - i.e. HTTP while the parent is HTTPS -
+// because same-origin policy includes the protocol. This also mimics Chrome's
+// UI treatment of insecure subframes.
+var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
+
+// Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
+// use in determining which resources need to be ported to HTTPS.
+// TODO: Maybe unique by resource URL, so reloading a single page doesn't double
+// the counts?
+function writeToSwitchPlanner(type, tab_host, resource_host, resource_url, rewritten_url) {
+  var rw = "rw";
+  if (rewritten_url == null)
+    rw = "no";
+
+  var active_content = 0;
+  if (activeTypes[type]) {
+    active_content = 1;
+  } else if (passiveTypes[type]) {
+    active_content = 0;
+  } else {
+    log(WARN, "Unknown type from onBeforeRequest details: `" + type + "', assuming active");
+    active_content = 1;
+  }
+
+  // Only add if we were unable to rewrite this URL.
+  // TODO: Maybe also count rewritten URLs separately.
+  if (rewritten_url != null) return;
+
+  if (!switchPlanner[tab_host])
+    switchPlanner[tab_host] = {};
+  if (!switchPlanner[tab_host][resource_host])
+    switchPlanner[tab_host][resource_host] = {};
+  if (!switchPlanner[tab_host][resource_host][active_content])
+    switchPlanner[tab_host][resource_host][active_content] = {};
+
+  switchPlanner[tab_host][resource_host][active_content][resource_url] = 1;
+}
+
+// Return the number of properties in an object. For associative maps, this is
+// their size.
+function objSize(obj) {
+  if (typeof obj == 'undefined') return 0;
+  var size = 0, key;
+  for (key in obj) {
+    if (obj.hasOwnProperty(key)) size++;
+  }
+  return size;
+}
+
+// Format the switch planner output for presentation to a user.
+function sortSwitchPlanner(tab_host) {
+  var output = "";
+
+  var asset_host_list = [];
+  var parentInfo = switchPlanner[tab_host];
+  // Make an array of asset hosts by score so we can sort them,
+  // presenting the most important ones first.
+  for (var asset_host in parentInfo) {
+    var ah = parentInfo[asset_host];
+    var activeCount = objSize(ah[1]);
+    var passiveCount = objSize(ah[0]);
+    asset_host_list.push([activeCount * 100 + passiveCount, activeCount, passiveCount, asset_host]);
+  }
+  asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  for (var i = asset_host_list.length - 1; i >= 0; i--) {
+    var host = asset_host_list[i][3];
+    var activeCount = asset_host_list[i][1];
+    var passiveCount = asset_host_list[i][2];
+
+    output += host + ": ";
+    if (activeCount > 0) {
+      output += activeCount + " active";
+      if (passiveCount > 0)
+        output += ", ";
+    }
+    if (passiveCount > 0) {
+      output += passiveCount + " passive";
+    }
+    output += "\n";
+  }
+  return output;
 }
 
 function onCookieChanged(changeInfo) {
