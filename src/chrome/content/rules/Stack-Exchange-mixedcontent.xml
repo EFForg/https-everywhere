@@ -26,7 +26,7 @@
         - openid.stackauth.com 
 
 -->
-<ruleset name="Stack Exchange (mixed content)" platform="mixedcontent">
+<ruleset name="Stack Exchange (partial)">
 
 	<target host="askubuntu.com" />
 	<target host="www.askubuntu.com" />
@@ -46,6 +46,8 @@
 	<target host="*.superuser.com" />
     <target host="stackapps.com" />
     <target host="www.stackapps.com" />
+    <exclusion pattern="^http://chat\.stackexchange\.com/" />
+    <exclusion pattern="^http://(\w+\.)?stackexchange\.com/search\?" />
 
 	<rule from="^https?://(?:www\.)?(stackexchange|askubuntu|serverfault|superuser)\.com/favicon\.ico"
 		to="https://cdn.sstatic.net/$1/img/favicon.ico" />
@@ -79,6 +81,10 @@
 
 	<rule from="^https?://meta\.superuser\.com/favicon\.ico"
 		to="https://cdn.sstatic.net/superusermeta/img/favicon.ico" />
+
+    <rule from="^https://(\w+\.)?stackexchange\.com/search\?"
+        to="http://$1stackexchange.com/search?"
+        downgrade="1" />
 
 	<securecookie host="\.stackexchange\.com$" name=".*" />
 
