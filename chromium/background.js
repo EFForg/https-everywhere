@@ -87,7 +87,9 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var tmpuserinfo = tmpuri.userinfo();
-  tmpuri.userinfo('');
+  if (tmpuserinfo) {
+      tmpuri.userinfo('');
+  }
 
   var canonical_url = tmpuri.toString();
   if (details.url != canonical_url && tmpuserinfo === '') {
@@ -141,7 +143,9 @@ function onBeforeRequest(details) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
-    finaluri.userinfo(tmpuserinfo);
+    if (tmpuserinfo) {
+        finaluri.userinfo(tmpuserinfo);
+    }
     var finaluristr = finaluri.toString();
     log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
     return {redirectUrl: finaluristr};
