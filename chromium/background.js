@@ -275,12 +275,15 @@ wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
 wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
                                     ["responseHeaders", "blocking"]);
 
+// Remove a tab from the redirectCounter when we've started a response.
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
 
-
+// Add the small HTTPS Everywhere icon in the address bar if any rules apply to this tab.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
 });
 
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
+// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
