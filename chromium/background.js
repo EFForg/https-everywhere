@@ -17,7 +17,7 @@ for (r in rs) {
 // If a ruleset could apply to a tab, then add the little HTTPS
 // Everywhere icon to the address bar.
 function displayPageAction(tabId) {
-  if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
+  if (tabId !== -1 && this.activeRulesets.getRulesets(tabId)) {
     chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
@@ -105,6 +105,10 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
+  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  // If no rulesets could apply, let's get out of here!
+  if (rs.length === 0) { return; }
+
   if (details.requestId in redirectCounter) {
     redirectCounter[details.requestId] += 1;
     log(DBUG, "Got redirect id "+details.requestId+
@@ -124,7 +128,6 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr) {
