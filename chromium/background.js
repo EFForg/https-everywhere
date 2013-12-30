@@ -137,6 +137,8 @@ function onBeforeRequest(details) {
     }
   }
 
+  displayPageAction(details.tabId);
+
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
@@ -256,24 +258,3 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
 // so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
-
-
-// Intermittently call displayPageAction(). chrome.tabs.onUpdated (above) adds the HTTPS Everywhere icon
-// via displayPageAction to 99.9% of pages. In the /rare/ case where /absolutely no elements/ of a tab have
-// any applicable rulesets, but the page later loads one (without triggering chrome.tabs.onUpdated), this will
-// add the HTTPS Everywhere icon.
-//
-// In practice, this is incredibly rare. If people don't mind the HTTPS Everywhere icon being always visible in
-// either the address bar or via pageAction, we could consider having it /always/ visible (it usually is anyway),
-// or adding a browser_action instead, which would change the UI/UX slightly.
-function periodically_displayPageAction() {
-    // Get all available active tabs
-    chrome.tabs.query({active: true},
-        function(tabs_array) {
-            // Pass active tabIDs to displayPageAction
-            tabs_array.map(function(tab){return tab.id}).map(displayPageAction);
-        } );
-    // Call ourself every 10 seconds.
-    setTimeout(periodically_displayPageAction, 10000);
-}
-periodically_displayPageAction();
