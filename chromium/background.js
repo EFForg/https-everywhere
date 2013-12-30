@@ -177,35 +177,6 @@ function onCookieChanged(changeInfo) {
   }
 }
 
-// Check to see if a newly set cookie in an HTTP request should be secured
-function onHeadersReceived(details) {
-  var a = document.createElement("a");  // hack to parse URLs
-  a.href = details.url;                 //
-  var host = a.hostname;
-
-  // TODO: Verify this with wireshark
-  for (var h in details.responseHeaders) {
-    if (details.responseHeaders[h].name == "Set-Cookie") {
-      log(INFO,"Deciding whether to secure cookies in " + details.url);
-      var cookie = details.responseHeaders[h].value;
-
-      if (cookie.indexOf("; Secure") == -1) {
-        log(INFO, "Got insecure cookie header: "+cookie);
-        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:host, name:cookie.split("=")[0]};
-        var ruleset = all_rules.shouldSecureCookie(fake, true);
-        if (ruleset) {
-          activeRulesets.addRulesetToTab(details.tabId, ruleset);
-          details.responseHeaders[h].value = cookie+"; Secure";
-          log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
-        }
-      }
-    }
-  }
-
-  return {responseHeaders:details.responseHeaders};
-}
-
 // This event is needed due to the potential race between cookie permissions
 // update and cookie transmission, because the cookie API is non-blocking.
 // It would be less perf impact to have a blocking version of the cookie API
@@ -278,11 +249,6 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 // We do *not* watch HTTPS cookies -- they're already being sent over HTTPS -- yay!
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
-
-// This parses HTTPS cookies and may set their secure flag.
-// We never do this for cookies set by HTTP.
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
-                                    ["responseHeaders", "blocking"]);
 
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
