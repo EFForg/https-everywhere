@@ -263,14 +263,6 @@ function onResponseStarted(details) {
   }
 }
 
-function onErrorOccurred(details) {
-  displayPageAction(details.tabId);
-}
-
-function onCompleted(details) {
-  displayPageAction(details.tabId);
-}
-
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
 // This watches cookies sent via HTTP.
@@ -285,10 +277,7 @@ wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
 
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
-wr.onErrorOccurred.addListener(onErrorOccurred,
-                               {urls: ["https://*/*", "http://*/*"]});
-wr.onCompleted.addListener(onCompleted,
-                           {urls: ["https://*/*", "http://*/*"]});
+
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
