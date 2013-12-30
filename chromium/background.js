@@ -14,17 +14,9 @@ for (r in rs) {
 }
 */
 
+// If a ruleset could apply to a tab, then add the little HTTPS
+// Everywhere icon to the address bar.
 function displayPageAction(tabId) {
-  // Right now, the call to chrome.tabs.get creates
-  // a console error for a missing tab, even in a try/catch
-  // block. As it still provides a good test of whether a tab
-  // exists (if it does not then 'tab' in the callback is undefined)
-  // Reading forums on chrome extensions, it seems the only way
-  // to avoid a console error is to loop through all windows
-  // and explicitly check for the tabid in question. This seems
-  // expensive and not necessary so we are living with console errors
-  // of the form: "Error during tabs.get: No tab with id: 370"
-
   if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
     chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) === "undefined") {
