@@ -14,10 +14,10 @@ for (r in rs) {
 }
 */
 
-// If a ruleset could apply to a tab, then add the little HTTPS
-// Everywhere icon to the address bar.
+// Add the HTTPS Everywhere icon to the URL address bar.
+// TODO: Switch from pageAction to browserAction?
 function displayPageAction(tabId) {
-  if (tabId !== -1 && this.activeRulesets.getRulesets(tabId)) {
+  if (tabId !== -1) {
     chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
@@ -137,8 +137,6 @@ function onBeforeRequest(details) {
     }
   }
 
-  displayPageAction(details.tabId);
-
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
@@ -250,9 +248,18 @@ wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
 
-// Add the small HTTPS Everywhere icon in the address bar if any rules apply to this tab.
+
+// Add the small HTTPS Everywhere icon in the address bar.
+// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
+// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
+});
+
+// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
+// See http://crbug.com/109557
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+    displayPageAction(addedTabId);
 });
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
