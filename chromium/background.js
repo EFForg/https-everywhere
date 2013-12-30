@@ -1,5 +1,6 @@
+// TODO: This keeps around history across "clear history" events. Fix that.
 var switchPlannerMode = true;
-var switchPlanner = {};
+var switchPlannerInfo = {};
   console.log("XXX TESTING XXX");
 
 var all_rules = new RuleSets();
@@ -209,14 +210,14 @@ function writeToSwitchPlanner(type, tab_host, resource_host, resource_url, rewri
   // TODO: Maybe also count rewritten URLs separately.
   if (rewritten_url != null) return;
 
-  if (!switchPlanner[tab_host])
-    switchPlanner[tab_host] = {};
-  if (!switchPlanner[tab_host][resource_host])
-    switchPlanner[tab_host][resource_host] = {};
-  if (!switchPlanner[tab_host][resource_host][active_content])
-    switchPlanner[tab_host][resource_host][active_content] = {};
+  if (!switchPlannerInfo[tab_host])
+    switchPlannerInfo[tab_host] = {};
+  if (!switchPlannerInfo[tab_host][resource_host])
+    switchPlannerInfo[tab_host][resource_host] = {};
+  if (!switchPlannerInfo[tab_host][resource_host][active_content])
+    switchPlannerInfo[tab_host][resource_host][active_content] = {};
 
-  switchPlanner[tab_host][resource_host][active_content][resource_url] = 1;
+  switchPlannerInfo[tab_host][resource_host][active_content][resource_url] = 1;
 }
 
 // Return the number of properties in an object. For associative maps, this is
@@ -230,27 +231,36 @@ function objSize(obj) {
   return size;
 }
 
-// Format the switch planner output for presentation to a user.
+// Make an array of asset hosts by score so we can sort them,
+// presenting the most important ones first.
 function sortSwitchPlanner(tab_host) {
-  var output = "";
-
   var asset_host_list = [];
-  var parentInfo = switchPlanner[tab_host];
-  // Make an array of asset hosts by score so we can sort them,
-  // presenting the most important ones first.
+  var parentInfo = switchPlannerInfo[tab_host];
   for (var asset_host in parentInfo) {
     var ah = parentInfo[asset_host];
     var activeCount = objSize(ah[1]);
     var passiveCount = objSize(ah[0]);
-    asset_host_list.push([activeCount * 100 + passiveCount, activeCount, passiveCount, asset_host]);
+    var score = activeCount * 100 + passiveCount;
+    asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
   asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  return asset_host_list;
+}
+
+// Format the switch planner output for presentation to a user.
+function switchPlannerSmallHtml(tab_host) {
+  var asset_host_list = sortSwitchPlanner(tab_host);
+  if (asset_host_list.length == 0) {
+    return "<b>none</b>";
+  }
+
+  var output = "";
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
     var host = asset_host_list[i][3];
     var activeCount = asset_host_list[i][1];
     var passiveCount = asset_host_list[i][2];
 
-    output += host + ": ";
+    output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
       output += activeCount + " active";
       if (passiveCount > 0)
@@ -259,7 +269,41 @@ function sortSwitchPlanner(tab_host) {
     if (passiveCount > 0) {
       output += passiveCount + " passive";
     }
-    output += "\n";
+    output += "<br/>";
+  }
+  return output;
+}
+
+function linksFromKeys(map) {
+  if (typeof map == 'undefined') return "";
+  var output = "";
+  for (var key in map) {
+    if (map.hasOwnProperty(key)) {
+      output += "<a href='" + key + "'>" + key + "</a><br/>";
+    }
+  }
+  return output;
+}
+
+function switchPlannerDetailsHtml(tab_host) {
+  var asset_host_list = sortSwitchPlanner(tab_host);
+  var output = "";
+
+  for (var i = asset_host_list.length - 1; i >= 0; i--) {
+    var host = asset_host_list[i][3];
+    var activeCount = asset_host_list[i][1];
+    var passiveCount = asset_host_list[i][2];
+
+    output += "<b>" + host + "</b>: ";
+    if (activeCount > 0) {
+      output += activeCount + " active<br/>";
+      output += linksFromKeys(switchPlannerInfo[tab_host][host][1]);
+    }
+    if (passiveCount > 0) {
+      output += "<br/>" + passiveCount + " passive<br/>";
+      output += linksFromKeys(switchPlannerInfo[tab_host][host][0]);
+    }
+    output += "<br/>";
   }
   return output;
 }

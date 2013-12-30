@@ -62,13 +62,21 @@ function createRuleLine(ruleset) {
 function gotTab(tab) {
   if (backgroundPage.switchPlannerMode) {
     // XXX: Call URI here, but it's not in-scope. Need to make it in-scope.
-    var tab_host = tab.url.match(/https?:\/\/([^\/]*)/)[1];
+    var tab_hostname = tab.url.match(/https?:\/\/([^\/]*)/)[1];
+
+    var detailsLink = document.getElementById("SwitchPlannerDetails");
+    detailsLink.onclick = function() {
+      window.open("switch-planner.html?host=" + tab_hostname);
+    };
+
     var switchPlannerTextDiv = document.createElement("div");
-    var switchPlannerText = backgroundPage.sortSwitchPlanner(tab_host);
+    var switchPlannerText = backgroundPage.switchPlannerSmallHtml(tab_hostname);
     switchPlannerTextDiv.innerHTML = switchPlannerText;
-    switchPlannerDiv.appendChild(switchPlannerTextDiv);
+    switchPlannerDiv.className = "switch_planner_info";
     switchPlannerDiv.style.position = "static";
     switchPlannerDiv.style.visibility = "visible";
+
+    switchPlannerDiv.insertBefore(switchPlannerTextDiv, detailsLink);
   }
 
   var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
