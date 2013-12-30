@@ -14,18 +14,10 @@ for (r in rs) {
 }
 */
 
+// If a ruleset could apply to a tab, then add the little HTTPS
+// Everywhere icon to the address bar.
 function displayPageAction(tabId) {
-  // Right now, the call to chrome.tabs.get creates
-  // a console error for a missing tab, even in a try/catch
-  // block. As it still provides a good test of whether a tab
-  // exists (if it does not then 'tab' in the callback is undefined)
-  // Reading forums on chrome extensions, it seems the only way
-  // to avoid a console error is to loop through all windows
-  // and explicitly check for the tabid in question. This seems
-  // expensive and not necessary so we are living with console errors
-  // of the form: "Error during tabs.get: No tab with id: 370"
-
-  if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
+  if (tabId !== -1 && this.activeRulesets.getRulesets(tabId)) {
     chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
@@ -95,7 +87,9 @@ function onBeforeRequest(details) {
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var tmpuserinfo = tmpuri.userinfo();
-  tmpuri.userinfo('');
+  if (tmpuserinfo) {
+      tmpuri.userinfo('');
+  }
 
   var canonical_url = tmpuri.toString();
   if (details.url != canonical_url && tmpuserinfo === '') {
@@ -112,6 +106,10 @@ function onBeforeRequest(details) {
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
+
+  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  // If no rulesets could apply, let's get out of here!
+  if (rs.length === 0) { return; }
 
   if (details.requestId in redirectCounter) {
     redirectCounter[details.requestId] += 1;
@@ -132,7 +130,6 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr) {
@@ -140,13 +137,13 @@ function onBeforeRequest(details) {
     }
   }
 
-  displayPageAction(details.tabId);
-
   if (newuristr) {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
-    finaluri.userinfo(tmpuserinfo);
+    if (tmpuserinfo) {
+        finaluri.userinfo(tmpuserinfo);
+    }
     var finaluristr = finaluri.toString();
     log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
     return {redirectUrl: finaluristr};
@@ -235,14 +232,6 @@ function onResponseStarted(details) {
   }
 }
 
-function onErrorOccurred(details) {
-  displayPageAction(details.tabId);
-}
-
-function onCompleted(details) {
-  displayPageAction(details.tabId);
-}
-
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
 // This watches cookies sent via HTTP.
@@ -252,13 +241,33 @@ wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
 
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
-wr.onErrorOccurred.addListener(onErrorOccurred,
-                               {urls: ["https://*/*", "http://*/*"]});
-wr.onCompleted.addListener(onCompleted,
-                           {urls: ["https://*/*", "http://*/*"]});
 
+// Add the small HTTPS Everywhere icon in the address bar if any rules apply to this tab.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
 });
 
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
+// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
+
+// Intermittently call displayPageAction(). chrome.tabs.onUpdated (above) adds the HTTPS Everywhere icon
+// via displayPageAction to 99.9% of pages. In the /rare/ case where /absolutely no elements/ of a tab have
+// any applicable rulesets, but the page later loads one (without triggering chrome.tabs.onUpdated), this will
+// add the HTTPS Everywhere icon.
+//
+// In practice, this is incredibly rare. If people don't mind the HTTPS Everywhere icon being always visible in
+// either the address bar or via pageAction, we could consider having it /always/ visible (it usually is anyway),
+// or adding a browser_action instead, which would change the UI/UX slightly.
+function periodically_displayPageAction() {
+    // Get all available active tabs
+    chrome.tabs.query({active: true},
+        function(tabs_array) {
+            // Pass active tabIDs to displayPageAction
+            tabs_array.map(function(tab){return tab.id}).map(displayPageAction);
+        } );
+    // Call ourself every 10 seconds.
+    setTimeout(periodically_displayPageAction, 10000);
+}
+periodically_displayPageAction();
