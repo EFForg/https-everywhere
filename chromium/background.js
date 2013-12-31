@@ -190,9 +190,8 @@ function onBeforeSendHeaders(details) {
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
       // Per RFC 6265, Chrome sends only ONE cookie header, period.
-      var a = document.createElement("a");
-      a.href = details.url;
-      var host = a.hostname;
+      var uri = new URI(details.url);
+      var host = uri.hostname();
 
       var newCookies = [];
       var cookies = details.requestHeaders[h].value.split(";");
