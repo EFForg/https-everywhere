@@ -73,35 +73,31 @@ var redirectCounter = {};
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
-  var tmpuri = new URI(details.url);
+  var uri = new URI(details.url);
 
   // Normalise hosts such as "www.example.com."
-  var tmphost = tmpuri.hostname();
-  if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".") {
-      tmphost = tmphost.slice(0,-1);
-    }
-  tmpuri.hostname(tmphost);  // No need to update the hostname unless it's changed.
+  var canonical_host = uri.hostname();
+  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+      canonical_host = canonical_host.slice(0,-1);
+    uri.hostname(canonical_host);
   }
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = tmpuri.userinfo();
+  var tmpuserinfo = uri.userinfo();
   if (tmpuserinfo) {
-      tmpuri.userinfo('');
+    uri.userinfo('');
   }
 
-  var canonical_url = tmpuri.toString();
+  var canonical_url = uri.toString();
   if (details.url != canonical_url && tmpuserinfo === '') {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return;
+    return null;
   }
-
-  var a = document.createElement("a");
-  a.href = canonical_url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
@@ -119,7 +115,7 @@ function onBeforeRequest(details) {
     if (redirectCounter[details.requestId] > 9) {
         log(NOTE, "Redirect counter hit for "+canonical_url);
         urlBlacklist[canonical_url] = true;
-        var hostname = tmpuri.hostname();
+        var hostname = uri.hostname();
         domainBlacklist[hostname] = true;
         log(WARN, "Domain blacklisted " + hostname);
         return;
@@ -137,16 +133,19 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr) {
+  if (newuristr && tmpuserinfo != "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
-    if (tmpuserinfo) {
-        finaluri.userinfo(tmpuserinfo);
-    }
-    var finaluristr = finaluri.toString();
-    log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
-    return {redirectUrl: finaluristr};
+    finaluri.userinfo(tmpuserinfo);
+    newuristr = finaluri.toString();
+  }
+
+  if (newuristr) {
+    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
+    return {redirectUrl: newuristr};
+  } else {
+    return null;
   }
 }
 
