@@ -230,15 +230,6 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
 
-<<<<<<< HEAD
-// This parses HTTPS cookies and may set their secure flag.
-// We never do this for cookies set by HTTP.
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
-                                    ["responseHeaders", "blocking"]);
-
-// Remove a tab from the redirectCounter when we've started a response.
-=======
->>>>>>> 900bedc... Simplify onBeforeRequest a little bit and remove call into the DOM.
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
 
