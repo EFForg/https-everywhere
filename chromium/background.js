@@ -103,7 +103,7 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return; }
 
