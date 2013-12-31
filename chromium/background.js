@@ -174,18 +174,11 @@ function onCookieChanged(changeInfo) {
 }
 
 // This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, because the cookie API is non-blocking.
-// It would be less perf impact to have a blocking version of the cookie API
-// available instead.
+// update and cookie transmission (because the cookie API is non-blocking).
+// Without this function, an aggressive attacker could race to steal a not-yet-secured
+// cookie if they controlled & could redirect the user to a non-SSL subdomain.
 // WARNING: This is a very hot function.
 function onBeforeSendHeaders(details) {
-  // XXX this function appears to enforce something equivalent to the secure
-  // cookie flag by independent means.  Is that really what it's supposed to
-  // do?
-  // @@@ Agreed, this function is really weird. I'm not sure it's even useful
-  // since we block WebRequests to HTTP sites (and maybe rewrite them to SSL)
-  // we force cookies to be sent over HTTPS even if they don't have the flag
-  // "Secure" set. (Unless I'm reading this wrong?)
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
