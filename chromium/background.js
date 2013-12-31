@@ -14,18 +14,10 @@ for (r in rs) {
 }
 */
 
+// Add the HTTPS Everywhere icon to the URL address bar.
+// TODO: Switch from pageAction to browserAction?
 function displayPageAction(tabId) {
-  // Right now, the call to chrome.tabs.get creates
-  // a console error for a missing tab, even in a try/catch
-  // block. As it still provides a good test of whether a tab
-  // exists (if it does not then 'tab' in the callback is undefined)
-  // Reading forums on chrome extensions, it seems the only way
-  // to avoid a console error is to loop through all windows
-  // and explicitly check for the tabid in question. This seems
-  // expensive and not necessary so we are living with console errors
-  // of the form: "Error during tabs.get: No tab with id: 370"
-
-  if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
+  if (tabId !== -1) {
     chrome.tabs.get(tabId, function(tab) {
       if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
@@ -81,37 +73,39 @@ var redirectCounter = {};
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
-  var tmpuri = new URI(details.url);
+  var uri = new URI(details.url);
 
   // Normalise hosts such as "www.example.com."
-  var tmphost = tmpuri.hostname();
-  if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".") {
-      tmphost = tmphost.slice(0,-1);
-    }
-  tmpuri.hostname(tmphost);  // No need to update the hostname unless it's changed.
+  var canonical_host = uri.hostname();
+  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+      canonical_host = canonical_host.slice(0,-1);
+    uri.hostname(canonical_host);
   }
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
   var tmpuserinfo = tmpuri.userinfo();
-  tmpuri.userinfo('');
+  if (tmpuserinfo) {
+      tmpuri.userinfo('');
+  }
 
-  var canonical_url = tmpuri.toString();
+  var canonical_url = uri.toString();
   if (details.url != canonical_url && tmpuserinfo === '') {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return;
+    return null;
   }
-
-  var a = document.createElement("a");
-  a.href = canonical_url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
+
+  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  // If no rulesets could apply, let's get out of here!
+  if (rs.length === 0) { return; }
 
   if (details.requestId in redirectCounter) {
     redirectCounter[details.requestId] += 1;
@@ -132,7 +126,6 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
   for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr) {
@@ -140,16 +133,19 @@ function onBeforeRequest(details) {
     }
   }
 
-  displayPageAction(details.tabId);
-
-  if (newuristr) {
+  if (newuristr && tmpuserinfo != "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
     finaluri.userinfo(tmpuserinfo);
-    var finaluristr = finaluri.toString();
-    log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
-    return {redirectUrl: finaluristr};
+    newuristr = finaluri.toString();
+  }
+
+  if (newuristr) {
+    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
+    return {redirectUrl: newuristr};
+  } else {
+    return null;
   }
 }
 
@@ -175,35 +171,6 @@ function onCookieChanged(changeInfo) {
       chrome.cookies.set(cookie);
     }
   }
-}
-
-// Check to see if a newly set cookie in an HTTP request should be secured
-function onHeadersReceived(details) {
-  var a = document.createElement("a");  // hack to parse URLs
-  a.href = details.url;                 //
-  var host = a.hostname;
-
-  // TODO: Verify this with wireshark
-  for (var h in details.responseHeaders) {
-    if (details.responseHeaders[h].name == "Set-Cookie") {
-      log(INFO,"Deciding whether to secure cookies in " + details.url);
-      var cookie = details.responseHeaders[h].value;
-
-      if (cookie.indexOf("; Secure") == -1) {
-        log(INFO, "Got insecure cookie header: "+cookie);
-        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:host, name:cookie.split("=")[0]};
-        var ruleset = all_rules.shouldSecureCookie(fake, true);
-        if (ruleset) {
-          activeRulesets.addRulesetToTab(details.tabId, ruleset);
-          details.responseHeaders[h].value = cookie+"; Secure";
-          log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
-        }
-      }
-    }
-  }
-
-  return {responseHeaders:details.responseHeaders};
 }
 
 // This event is needed due to the potential race between cookie permissions
@@ -264,14 +231,6 @@ function onResponseStarted(details) {
   }
 }
 
-function onErrorOccurred(details) {
-  displayPageAction(details.tabId);
-}
-
-function onCompleted(details) {
-  displayPageAction(details.tabId);
-}
-
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
 // This watches cookies sent via HTTP.
@@ -279,20 +238,23 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
 
-// This parses HTTPS cookies and may set their secure flag.
-// We never do this for cookies set by HTTP.
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*"]},
-                                    ["responseHeaders", "blocking"]);
-
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
-wr.onErrorOccurred.addListener(onErrorOccurred,
-                               {urls: ["https://*/*", "http://*/*"]});
-wr.onCompleted.addListener(onCompleted,
-                           {urls: ["https://*/*", "http://*/*"]});
 
+
+// Add the small HTTPS Everywhere icon in the address bar.
+// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
+// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
 });
 
+// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
+// See http://crbug.com/109557
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+    displayPageAction(addedTabId);
+});
+
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
+// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
