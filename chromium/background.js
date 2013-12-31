@@ -84,14 +84,14 @@ function onBeforeRequest(details) {
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
+    uri.hostname(canonical_host);
   }
-  uri.hostname(canonical_host);
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = tmpuri.userinfo();
+  var tmpuserinfo = uri.userinfo();
   if (tmpuserinfo) {
-      tmpuri.userinfo('');
+    uri.userinfo('');
   }
 
   var canonical_url = uri.toString();
@@ -107,7 +107,7 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return; }
 
@@ -119,7 +119,7 @@ function onBeforeRequest(details) {
     if (redirectCounter[details.requestId] > 9) {
         log(NOTE, "Redirect counter hit for "+canonical_url);
         urlBlacklist[canonical_url] = true;
-        var hostname = tmpuri.hostname();
+        var hostname = uri.hostname();
         domainBlacklist[hostname] = true;
         log(WARN, "Domain blacklisted " + hostname);
         return;
@@ -137,7 +137,7 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && tmpuserinfo != "") {
+  if (newuristr && tmpuserinfo !== "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
@@ -330,25 +330,17 @@ function onCookieChanged(changeInfo) {
 }
 
 // This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, because the cookie API is non-blocking.
-// It would be less perf impact to have a blocking version of the cookie API
-// available instead.
+// update and cookie transmission (because the cookie API is non-blocking).
+// Without this function, an aggressive attacker could race to steal a not-yet-secured
+// cookie if they controlled & could redirect the user to a non-SSL subdomain.
 // WARNING: This is a very hot function.
 function onBeforeSendHeaders(details) {
-  // XXX this function appears to enforce something equivalent to the secure
-  // cookie flag by independent means.  Is that really what it's supposed to
-  // do?
-  // @@@ Agreed, this function is really weird. I'm not sure it's even useful
-  // since we block WebRequests to HTTP sites (and maybe rewrite them to SSL)
-  // we force cookies to be sent over HTTPS even if they don't have the flag
-  // "Secure" set. (Unless I'm reading this wrong?)
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
       // Per RFC 6265, Chrome sends only ONE cookie header, period.
-      var a = document.createElement("a");
-      a.href = details.url;
-      var host = a.hostname;
+      var uri = new URI(details.url);
+      var host = uri.hostname();
 
       var newCookies = [];
       var cookies = details.requestHeaders[h].value.split(";");
