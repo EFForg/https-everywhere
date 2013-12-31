@@ -1,12 +1,26 @@
 <!--
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- support.wechat.com	(mismatched, CN: weixin.qq.com)
+		- dev *
+		- developers *
+
+	* Shows another domain; mismatched, CN: weixin.qq.com
 
 
-	Problematic domains:
+	Fully covered subdomains:
 
-		- www.wechat.com	(mismatched, CN: www.wechatapp.com)
+		- admin
+		- compass.admin
+		- api
+		- file[12]
+		- login
+		- res
+		- support
+		- video
+		- web
+		- web[12]
+		- webpush
+		- webpush[12]
 
 -->
 <ruleset name="WeChat (partial)">
@@ -15,7 +29,12 @@
 	<target host="*.wechat.com" />
 
 
-	<rule from="^https?://(?:www\.)?wechat\.com/"
-		to="https://wechat.com/" />
+	<!--	Could we secure either of these safely?
+								-->
+	<!--securecookie host="^\.wechat\.com$" name="^(mm_lang|webwxuvid)$" /-->
+
+
+	<rule from="^http://((?:admin|compass\.admin|api|file\d|login|res|support|video|web\d?|webpush\d?|www)\.)?wechat\.com/"
+		to="https://$1wechat.com/" />
 
 </ruleset>

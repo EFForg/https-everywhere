@@ -65,7 +65,7 @@ RuleSet.prototype = {
               +" had an applicable match-rule but no matching rules");
     }
     return null;
-  },
+  }
 
 };
 
@@ -307,5 +307,5 @@ RuleSets.prototype = {
         return newuri;
     }
     return null;
-  },
+  }
 };

@@ -3,15 +3,34 @@
 
 		- uTorrent.xml
 
+
 	CDN buckets:
 
-		- s3.amazonaws.com/live-installer-autoupdate/
 		- s3.amazonaws.com/bittorrent-live-thumbnail/
+		- s3.amazonaws.com/live-installer-autoupdate/
 
 		- bittorrent.vo.llnwd.net
+
 			- bittorent.hs doesn't exist
+			- www
 
 		- bittorrent.gyre.wpengine.com
+
+			- blog
+			- engineering
+
+
+	Nonfunctional subdomains:
+
+		- ^	(403, valid cert)
+		- blog ¹
+		- engineering ¹
+		- bundles ²
+		- labs ²
+		- www	(400, CN: *.hs.llnwd.net)
+
+	¹ Redirects to http, wpengine
+	² Refused
 
 
 	Partially covered subdomains:
@@ -19,17 +38,33 @@
 		- live	(some pages redirect to http)
 
 
-	Nonfunctional subdomains:
+	Fully covered subdomains:
 
-		- blog	(cert: *.wpengine.com; 301s to http)
-		- bundles	(no https)
-		- www	(cert: *.hs.llnwd.net; 400)
+		- forum
+		- live
+		- remote
+		- torque
+
+
+	Observed cookie domains:
+
+		- forum
+
+
+	Mixed content:
+
+		- css on forum from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="BitTorrent (partial)">
 
 	<target host="*.bittorrent.com" />
 		<exclusion pattern="^http://live\.bittorrent\.com/(?!create|css/|img/|js/|login|styles/)" />
+
+
+	<securecookie host="^forum\.bittorrent\.com$" name=".+" />
 
 
 	<rule from="^http://(forum|live|remote|torque)\.bittorrent\.com/"
