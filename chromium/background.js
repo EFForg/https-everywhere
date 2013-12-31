@@ -133,7 +133,7 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && tmpuserinfo != "") {
+  if (newuristr && tmpuserinfo !== "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
