@@ -1,13 +1,31 @@
 <!--
-	Nonfunctional subdomains:
+	Partially covered subdomains:
 
-		- (www.)
+		- (www.) *
+
+	* Some pages redirect to http
 
 -->
 <ruleset name="Find n Save (partial)">
 
+	<target host="findnsave.com" />
 	<target host="*.findnsave.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?findnsave\.com/+(national_sitemap|privacy|trademark)($|[?/])" /-->
+		<!--exclusion pattern="^http://(www\.)?findnsave\.com/+(?!$|\?|static/)" /-->
 
+
+	<!--securecookie host="^www\.findnsave\.com$" name="^csrftoken$" /-->
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.www\.findnsave\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?findnsave\.com/(?=$|\?|static/)"
+		to="https://$1findnsave.com/" />
 
 	<rule from="^http://cdn\.findnsave\.com/"
 		to="https://d3ne1tggqg4fzy.cloudfront.net/" />
