@@ -85,9 +85,9 @@ function onBeforeRequest(details) {
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = tmpuri.userinfo();
+  var tmpuserinfo = uri.userinfo();
   if (tmpuserinfo) {
-      tmpuri.userinfo('');
+    uri.userinfo('');
   }
 
   var canonical_url = uri.toString();
@@ -115,7 +115,7 @@ function onBeforeRequest(details) {
     if (redirectCounter[details.requestId] > 9) {
         log(NOTE, "Redirect counter hit for "+canonical_url);
         urlBlacklist[canonical_url] = true;
-        var hostname = tmpuri.hostname();
+        var hostname = uri.hostname();
         domainBlacklist[hostname] = true;
         log(WARN, "Domain blacklisted " + hostname);
         return;
