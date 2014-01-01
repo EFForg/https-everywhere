@@ -180,8 +180,6 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
 // Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
 // use in determining which resources need to be ported to HTTPS.
-// TODO: Maybe unique by resource URL, so reloading a single page doesn't double
-// the counts?
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
   if (rewritten_url == null)
