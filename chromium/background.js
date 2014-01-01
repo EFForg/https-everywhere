@@ -1,7 +1,10 @@
-// TODO: This keeps around history across "clear history" events. Fix that.
+// Records which tabId's are active in the HTTPS Switch Planner (see
+// devtools-panel.js).
 var switchPlannerEnabledFor = {};
+// Detailed information recorded when the HTTPS Switch Planner is active.
+// Structure is:
+//   switchPlannerInfo[tabId][resource_host][active_content][url];
 var switchPlannerInfo = {};
-  console.log("XXX TESTING XXX");
 
 var all_rules = new RuleSets();
 var wr = chrome.webRequest;
@@ -147,21 +150,12 @@ function onBeforeRequest(details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (uri.protocol() !== "https") {
-    // In order to figure out the document requesting this resource,
-    // have to get the tab. TODO: any cheaper way?
-    // XXX: Because this is async it's actually inaccurate during quick page
-    // switches. Maybe it only matters when you're switching domains though?
-    chrome.tabs.get(details.tabId, function(tab) {
-      var tab_host = new URI(tab.url).hostname();
-      if (tab_host !== canonical_host) {
-        writeToSwitchPlanner(details.type,
-                             tab_host,
-                             canonical_host,
-                             details.url,
-                             newuristr);
-      }
-    });
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol() !== "https") {
+    writeToSwitchPlanner(details.type,
+                         details.tabId,
+                         canonical_host,
+                         details.url,
+                         newuristr);
   }
 
   if (newuristr) {
@@ -188,7 +182,7 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 // use in determining which resources need to be ported to HTTPS.
 // TODO: Maybe unique by resource URL, so reloading a single page doesn't double
 // the counts?
-function writeToSwitchPlanner(type, tab_host, resource_host, resource_url, rewritten_url) {
+function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
   if (rewritten_url == null)
     rw = "no";
@@ -207,14 +201,14 @@ function writeToSwitchPlanner(type, tab_host, resource_host, resource_url, rewri
   // TODO: Maybe also count rewritten URLs separately.
   if (rewritten_url != null) return;
 
-  if (!switchPlannerInfo[tab_host])
-    switchPlannerInfo[tab_host] = {};
-  if (!switchPlannerInfo[tab_host][resource_host])
-    switchPlannerInfo[tab_host][resource_host] = {};
-  if (!switchPlannerInfo[tab_host][resource_host][active_content])
-    switchPlannerInfo[tab_host][resource_host][active_content] = {};
+  if (!switchPlannerInfo[tab_id])
+    switchPlannerInfo[tab_id] = {};
+  if (!switchPlannerInfo[tab_id][resource_host])
+    switchPlannerInfo[tab_id][resource_host] = {};
+  if (!switchPlannerInfo[tab_id][resource_host][active_content])
+    switchPlannerInfo[tab_id][resource_host][active_content] = {};
 
-  switchPlannerInfo[tab_host][resource_host][active_content][resource_url] = 1;
+  switchPlannerInfo[tab_id][resource_host][active_content][resource_url] = 1;
 }
 
 // Return the number of properties in an object. For associative maps, this is
@@ -230,11 +224,11 @@ function objSize(obj) {
 
 // Make an array of asset hosts by score so we can sort them,
 // presenting the most important ones first.
-function sortSwitchPlanner(tab_host) {
+function sortSwitchPlanner(tab_id) {
   var asset_host_list = [];
-  var parentInfo = switchPlannerInfo[tab_host];
-  for (var asset_host in parentInfo) {
-    var ah = parentInfo[asset_host];
+  var tabInfo = switchPlannerInfo[tab_id];
+  for (var asset_host in tabInfo) {
+    var ah = tabInfo[asset_host];
     var activeCount = objSize(ah[1]);
     var passiveCount = objSize(ah[0]);
     var score = activeCount * 100 + passiveCount;
@@ -245,8 +239,8 @@ function sortSwitchPlanner(tab_host) {
 }
 
 // Format the switch planner output for presentation to a user.
-function switchPlannerSmallHtml(tab_host) {
-  var asset_host_list = sortSwitchPlanner(tab_host);
+function switchPlannerSmallHtml(tab_id) {
+  var asset_host_list = sortSwitchPlanner(tab_id);
   if (asset_host_list.length == 0) {
     return "<b>none</b>";
   }
@@ -282,8 +276,8 @@ function linksFromKeys(map) {
   return output;
 }
 
-function switchPlannerDetailsHtml(tab_host) {
-  var asset_host_list = sortSwitchPlanner(tab_host);
+function switchPlannerDetailsHtml(tab_id) {
+  var asset_host_list = sortSwitchPlanner(tab_id);
   var output = "";
 
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
@@ -294,11 +288,11 @@ function switchPlannerDetailsHtml(tab_host) {
     output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
       output += activeCount + " active<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_host][host][1]);
+      output += linksFromKeys(switchPlannerInfo[tab_id][host][1]);
     }
     if (passiveCount > 0) {
       output += "<br/>" + passiveCount + " passive<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_host][host][0]);
+      output += linksFromKeys(switchPlannerInfo[tab_id][host][0]);
     }
     output += "<br/>";
   }
@@ -407,13 +401,35 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
 // so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
+function disableSwitchPlannerFor(tabId) {
+  delete switchPlannerEnabledFor[tabId];
+  // Clear stored URL info.
+  delete switchPlannerInfo[tabId];
+}
+
+function enableSwitchPlannerFor(tabId) {
+  switchPlannerEnabledFor[tabId] = true;
+}
+
 // Listen for connection from the DevTools panel so we can set up communication.
-chrome.runtime.onMessage.addListener(function(message){
-  console.log(message);
-  if (message.hasOwnProperty('enable')) {
-    var enable = message.enable;
-    switchPlannerEnabledFor[message.tabId] = enable;
-    if (!enable)
-      switchPlannerInfo = {};
+chrome.runtime.onConnect.addListener(function (port) {
+  if (port.name == "devtools-page") {
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+      var tabId = message.tabId;
+
+      var disableOnCloseCallback = function(port) {
+        log(DBUG, "Devtools window for tab " + tabId + " closed, clearing data.");
+        disableSwitchPlannerFor(tabId);
+      };
+
+      if (message.type === "enable") {
+        enableSwitchPlannerFor(tabId);
+        port.onDisconnect.addListener(disableOnCloseCallback);
+      } else if (message.type === "disable") {
+        disableSwitchPlannerFor(tabId);
+      } else if (message.type === "getSmallHtml") {
+        sendResponse({html: switchPlannerSmallHtml(tabId)});
+      }
+    });
   }
 });
