@@ -1,5 +1,5 @@
 // TODO: This keeps around history across "clear history" events. Fix that.
-var switchPlannerMode = true;
+var switchPlannerEnabledFor = {};
 var switchPlannerInfo = {};
   console.log("XXX TESTING XXX");
 
@@ -147,7 +147,7 @@ function onBeforeRequest(details) {
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerMode && uri.protocol() !== "https") {
+  if (uri.protocol() !== "https") {
     // In order to figure out the document requesting this resource,
     // have to get the tab. TODO: any cheaper way?
     // XXX: Because this is async it's actually inaccurate during quick page
@@ -406,3 +406,14 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
 // so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);
+
+// Listen for connection from the DevTools panel so we can set up communication.
+chrome.runtime.onMessage.addListener(function(message){
+  console.log(message);
+  if (message.hasOwnProperty('enable')) {
+    var enable = message.enable;
+    switchPlannerEnabledFor[message.tabId] = enable;
+    if (!enable)
+      switchPlannerInfo = {};
+  }
+});

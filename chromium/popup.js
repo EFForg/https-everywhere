@@ -62,7 +62,7 @@ function createRuleLine(ruleset) {
 }
 
 function gotTab(tab) {
-  if (backgroundPage.switchPlannerMode) {
+  if (backgroundPage.switchPlannerEnabledFor[tab.id]) {
     // XXX: Call URI here, but it's not in-scope. Need to make it in-scope.
     var tab_hostname = tab.url.match(/https?:\/\/([^\/]*)/)[1];
 
