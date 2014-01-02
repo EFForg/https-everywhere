@@ -85,7 +85,6 @@ function RuleSets() {
     xhr.send(null);
     this.loadRuleSet(xhr);
   }
-  this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
 }
 
 RuleSets.prototype = {
@@ -190,7 +189,7 @@ RuleSets.prototype = {
     log(DBUG, "Ruleset cache miss for " + host);
 
     var tmp, t;
-    var results = this.global_rulesets.slice(0); // copy global_rulesets
+    var results = [];
     if (this.targets[host])
       results = results.concat(this.targets[host]);
     // replace each portion of the domain with a * in turn
