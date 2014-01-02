@@ -190,8 +190,11 @@ RuleSets.prototype = {
 
     var tmp, t;
     var results = [];
-    if (this.targets[host])
-      results = results.concat(this.targets[host]);
+    if (this.targets[host]) {
+      // Copy the host targets so we don't modify them.
+      results = this.targets[host].slice();
+    }
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (var i = 0; i < segmented.length; ++i) {
