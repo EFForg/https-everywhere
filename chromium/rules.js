@@ -192,21 +192,21 @@ RuleSets.prototype = {
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
-    var tmp, t;
+    var tmp;
     var results = [];
     if (this.targets[host]) {
       // Copy the host targets so we don't modify them.
       results = this.targets[host].slice();
     }
 
-    // replace each portion of the domain with a * in turn
+    // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
-    for (var i = 0; i < segmented.length; ++i) {
+    // length-1 to skip the TLD (there are no www.domain.* rules).
+    for (var i = 0; i < segmented.length - 1; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
-      t = segmented.join(".");
+      this.setInsert(results, this.targets[segmented.join(".")]);
       segmented[i] = tmp;
-      this.setInsert(results, this.targets[t]);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
