@@ -2,6 +2,9 @@
 // Size chosen /completely/ arbitrarily.
 var ruleCache = new LRUCache(1000);
 
+// A cache for cookie hostnames.
+var cookieHostCache = new LRUCache(100);
+
 function Rule(from, to) {
   //this.from = from;
   this.to = to;
@@ -275,6 +278,12 @@ RuleSets.prototype = {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
+    var cached_item = cookieHostCache.get(domain);
+    if (cached_item !== undefined) {
+        log(DBUG, "Cookie host cache hit for " + domain);
+        return cached_item;
+    }
+    log(DBUG, "Cookie host cache miss for " + domain);
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
@@ -286,6 +295,7 @@ RuleSets.prototype = {
     } catch (e) {
       log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
                       + "(" + e + ")");
+      cookieHostCache.set(domain, false);
       return false;
     }
 
@@ -295,11 +305,13 @@ RuleSets.prototype = {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        log(INFO, "Yes: " + rewrite);
+        log(INFO, "Cookie domain could be secured: " + rewrite);
+        cookieHostCache.set(domain, true);
         return true;
       }
     }
-    log(INFO, "(NO)");
+    log(INFO, "Cookie domain could NOT be secured.");
+    cookieHostCache.set(domain, false);
     return false;
   },
 
