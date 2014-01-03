@@ -240,12 +240,14 @@ RuleSets.prototype = {
     while (hostname.charAt(0) == ".")
       hostname = hostname.slice(1);
 
+    if (!knownHttps && !this.safeToSecureCookie(hostname)) {
+        return null;
+    }
+
     var rs = this.potentiallyApplicableRulesets(hostname);
     for (var i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
-        if (!knownHttps && !this.safeToSecureCookie(hostname))
-          continue;
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
