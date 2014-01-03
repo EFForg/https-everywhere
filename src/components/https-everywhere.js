@@ -199,16 +199,7 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
-
-  var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
-      .getService(Components.interfaces.nsIPrefBranchInternal);
-  var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
-
-  branch.addObserver("extensions.https_everywhere.enable_mixed_rulesets",
-                         this, false);
-  branch.addObserver("security.mixed_content.block_active_content",
-                         this, false);
-
+  
   return;
 }
 
@@ -520,13 +511,6 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
-    } else if (topic == "nsPref:changed") {
-        switch (data) {
-            case "security.mixed_content.block_active_content":
-            case "extensions.https_everywhere.enable_mixed_rulesets":
-                HTTPSRules.init();
-                break;
-        }
     }
     return;
   },
@@ -740,7 +724,6 @@ HTTPSEverywhere.prototype = {
             
             this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
-            // XXX: Why is this called twice?
             HTTPSRules.init();
 
             if(!Thread.hostRunning)
