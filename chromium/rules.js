@@ -180,7 +180,7 @@ RuleSets.prototype = {
   
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
-
+    var tmp, t;
     // Have we cached this result? If so, return it!
     var cached_item = ruleCache.get(host);
     if (cached_item !== undefined) {
@@ -189,7 +189,6 @@ RuleSets.prototype = {
     }
     log(DBUG, "Ruleset cache miss for " + host);
 
-    var tmp, t;
     var results = this.global_rulesets.slice(0); // copy global_rulesets
     if (this.targets[host])
       results = results.concat(this.targets[host]);
