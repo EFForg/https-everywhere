@@ -735,7 +735,7 @@ HTTPSEverywhere.prototype = {
             catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
                 SERVICE_CTRID, false, true);            
             
-            HTTPSRules.init();          
+            // HTTPSRules.init();  why indeed is that called twice?
             this.prefs.setBoolPref("globalEnabled", true);
         }
         catch(e){
