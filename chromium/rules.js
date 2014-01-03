@@ -1,6 +1,6 @@
 // A cache for potentiallyApplicableRulesets
 // Size chosen /completely/ arbitrarily.
-var ruleCache = new LRUCache(2048);
+var ruleCache = new LRUCache(1000);
 
 function Rule(from, to) {
   //this.from = from;
