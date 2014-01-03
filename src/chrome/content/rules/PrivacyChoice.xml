@@ -5,18 +5,34 @@
 		- Privacyscore.com.xml
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- blog		(shows www; mismatched, CN: www.privacychoice.org)
+		- images.privacychoice.org.s3.amazonaws.com
 
 
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
+		- ^		(cert only matches www)
+		- blog		(works; mismatched, CN: www.privacychoice.org)
+		- images	(amazonws)
 
 
-	- $ redirects to http
-	- Some pages 404
+	Mixed content:
+
+		- video on blog from www.washingtonpost.com
+
+		- css, on:
+
+			- blog from blog
+			- www from fonts.googleapis.com *
+
+		- Images, on blog from:
+
+			- blog
+			- www *
+			- thumbnails.visually.netdna-cdn.com
+
+	* Secured by us
 
 -->
 <ruleset name="PrivacyChoice (partial)">
@@ -25,7 +41,7 @@
 	<target host="www.privacychoice.org" />
 
 
-	<rule from="^http://(?:www\.)?privacychoice\.org/(css|images|js|scrollbar)/"
-		to="https://www.privacychoice.org/$1/" />
+	<rule from="^http://(?:www\.)?privacychoice\.org/"
+		to="https://www.privacychoice.org/" />
 
 </ruleset>
