@@ -56,7 +56,8 @@ fi
 
 if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
 then
-  if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
+  # Use find and xargs to avoid "too many args" error on Mac OS X
+  if find src/chrome/content/rules/ -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
   then
     echo Validation of rulesets with RELAX NG grammar completed. >&2
   else
