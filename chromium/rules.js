@@ -38,18 +38,19 @@ function RuleSet(set_name, match_rule, default_state, note) {
 RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
-    // If a rulset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
-    }
-    // Even so, if we're covered by an exclusion, go home
+    // If we're covered by an exclusion, go home
     for(var i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
+    // If a rulset has a match_rule and it fails, go no further
+    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
+      log(VERB, "ruleset_match_c excluded " + urispec);
+      return null;
+    }
+
     // Okay, now find the first rule that triggers
     for(var i = 0; i < this.rules.length; ++i) {
       returl = urispec.replace(this.rules[i].from_c,
