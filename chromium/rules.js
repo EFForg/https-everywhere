@@ -201,8 +201,7 @@ RuleSets.prototype = {
 
     // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
-    // length-1 to skip the TLD (there are no www.domain.* rules).
-    for (var i = 0; i < segmented.length - 1; ++i) {
+    for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
       this.setInsert(results, this.targets[segmented.join(".")]);
