@@ -1,7 +1,25 @@
+var USER_RULE_KEY = 'userRules';
 
+var getStoredUserRules = function() {
+  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRules = []
+  if (oldUserRuleString) {
+    oldUserRules = JSON.parse(oldUserRuleString);
+  }
+  return oldUserRules;
+};
 var all_rules = new RuleSets();
 var wr = chrome.webRequest;
+var loadStoredUserRules = function() {
+  var rules = getStoredUserRules();
+  var i;
+  for (i = 0; i < rules.length; ++i) {
+    all_rules.addUserRule(rules[i]);
+  }
+  log('INFO', 'loaded ' + i + ' stored user rules');
+};
 
+loadStoredUserRules();
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -28,6 +46,24 @@ function displayPageAction(tabId) {
     });
   }
 }
+
+
+var addNewRule = function(params, cb) {
+  if (all_rules.addUserRule(params)) {
+    // If we successfully added the user rule, save it in local 
+    // storage so it's automatically applied when the extension is 
+    // reloaded.
+    var oldUserRules = getStoredUserRules();
+    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // client windows in different event loops.
+    oldUserRules.push(params);
+    // TODO: can we exceed the max size for storage?
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    cb(true);
+  } else {
+    cb(false);
+  }
+};
 
 function AppliedRulesets() {
   this.active_tab_rules = {};

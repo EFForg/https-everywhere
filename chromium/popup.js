@@ -90,3 +90,46 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("whatIsThis").setAttribute("title", chrome.i18n.getMessage("chrome_what_is_this_title"));
 });
 
+
+var escapeForRegex = function( value ) {
+  return value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, "\\$&");
+};
+
+$(function() {
+  $('#add-rule-link').click(function() {
+
+    chrome.tabs.getSelected(null, function(tab) {
+      
+      $('#add-rule-link').hide();
+      $('#add-new-rule-div').show();
+      var newUrl = new URI(tab.url);
+      newUrl.scheme('https');
+      $('#new-rule-host').val(newUrl.host());
+      var oldUrl = new URI(tab.url);
+      oldUrl.scheme('http');
+      var oldMatcher = '^' + escapeForRegex(oldUrl.scheme() + '://' + oldUrl.host() + '/');
+      $('#new-rule-regex').val(oldMatcher);
+      var redirectPath = newUrl.scheme() + '://' + newUrl.host() + '/';
+      $('#new-rule-redirect').val(redirectPath);
+      $('#new-rule-name').val('Manual rule for ' + oldUrl.host());
+      $('#add-new-rule-button').click(function() {
+        var params = {
+          host : $('#new-rule-host').val(),
+          redirectTo : $('#new-rule-redirect').val(),
+          urlMatcher : $('#new-rule-regex').val(),
+        };
+        backgroundPage.addNewRule(params,
+          function() {
+            location.reload();
+          });
+      });
+
+      $('#cancel-new-rule').click(function() {
+        $('#add-rule-link').show();
+        $('#add-new-rule-div').hide();
+      });
+    });
+  });
+  return false;
+
+});
