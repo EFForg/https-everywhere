@@ -1,3 +1,4 @@
+// Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 1;
 function log(){};
 
@@ -70,7 +71,7 @@ RuleSet.prototype = {
 };
 
 
-function RuleSets(userAgent, cache) {
+function RuleSets(userAgent, cache, rule_xml) {
   // Load rules into structure
   this.targets = {};
   this.userAgent = userAgent;
@@ -82,16 +83,9 @@ function RuleSets(userAgent, cache) {
   // A cache for cookie hostnames.
   this.cookieHostCache = new cache(100);
 
-  for(var i = 0; i < rule_list.length; i++) {
-    var xhr = new XMLHttpRequest();
-    // Use blocking XHR to ensure everything is loaded by the time
-    // we return.
-    //var that = this;
-    //xhr.onreadystatechange = function() { that.loadRuleSet(xhr); }
-    xhr.open("GET", chrome.extension.getURL(rule_list[i]), false);
-    //xhr.open("GET", chrome.extension.getURL(rule_list[i]), true);
-    xhr.send(null);
-    this.loadRuleSet(xhr);
+  var sets = rule_xml.getElementsByTagName("ruleset");
+  for (var i = 0; i < sets.length; ++i) {
+    this.parseOneRuleset(sets[i]);
   }
 }
 
@@ -106,19 +100,6 @@ RuleSets.prototype = {
       return new RegExp("chromium");
     }
   })(),
-
-  loadRuleSet: function(xhr) {
-    // Get file contents
-    if (xhr.readyState != 4) {
-      return;
-    }
-
-    // XXX: Validation + error checking
-    var sets = xhr.responseXML.getElementsByTagName("ruleset");
-    for (var i = 0; i < sets.length; ++i) {
-      this.parseOneRuleset(sets[i]);
-    }
-  },
 
   parseOneRuleset: function(ruletag) {
     var default_state = true;
@@ -330,3 +311,4 @@ RuleSets.prototype = {
     return null;
   }
 };
+exports.RuleSets = RuleSets;
