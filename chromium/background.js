@@ -1,5 +1,5 @@
 
-var all_rules = new RuleSets();
+var all_rules = new RuleSets(navigator.userAgent, LRUCache);
 var wr = chrome.webRequest;
 
 /*

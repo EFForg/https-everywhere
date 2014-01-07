@@ -1,9 +1,5 @@
-// A cache for potentiallyApplicableRulesets
-// Size chosen /completely/ arbitrarily.
-var ruleCache = new LRUCache(1000);
-
-// A cache for cookie hostnames.
-var cookieHostCache = new LRUCache(100);
+var DBUG = 1;
+function log(){};
 
 function Rule(from, to) {
   //this.from = from;
@@ -74,9 +70,17 @@ RuleSet.prototype = {
 };
 
 
-function RuleSets() {
+function RuleSets(userAgent, cache) {
   // Load rules into structure
   this.targets = {};
+  this.userAgent = userAgent;
+
+  // A cache for potentiallyApplicableRulesets
+  // Size chosen /completely/ arbitrarily.
+  this.ruleCache = new cache(1000);
+
+  // A cache for cookie hostnames.
+  this.cookieHostCache = new cache(100);
 
   for(var i = 0; i < rule_list.length; i++) {
     var xhr = new XMLHttpRequest();
@@ -94,7 +98,7 @@ function RuleSets() {
 RuleSets.prototype = {
 
   localPlatformRegexp: (function() {
-    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
+    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(this.userAgent)) {
       log(DBUG, 'Detected that we are running Opera');
       return new RegExp("chromium|mixedcontent");
     } else {
@@ -185,7 +189,7 @@ RuleSets.prototype = {
     // Return a list of rulesets that apply to this host
 
     // Have we cached this result? If so, return it!
-    var cached_item = ruleCache.get(host);
+    var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
         log(DBUG, "Rulseset cache hit for " + host);
         return cached_item;
@@ -221,7 +225,7 @@ RuleSets.prototype = {
         log(DBUG, "  " + results[i].name);
 
     // Insert results into the ruleset cache
-    ruleCache.set(host, results);
+    this.ruleCache.set(host, results);
     return results;
   },
 
@@ -279,7 +283,7 @@ RuleSets.prototype = {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
-    var cached_item = cookieHostCache.get(domain);
+    var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
         log(DBUG, "Cookie host cache hit for " + domain);
         return cached_item;
@@ -296,7 +300,7 @@ RuleSets.prototype = {
     } catch (e) {
       log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
                       + "(" + e + ")");
-      cookieHostCache.set(domain, false);
+      this.cookieHostCache.set(domain, false);
       return false;
     }
 
@@ -307,12 +311,12 @@ RuleSets.prototype = {
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
         log(INFO, "Cookie domain could be secured: " + rewrite);
-        cookieHostCache.set(domain, true);
+        this.cookieHostCache.set(domain, true);
         return true;
       }
     }
     log(INFO, "Cookie domain could NOT be secured.");
-    cookieHostCache.set(domain, false);
+    this.cookieHostCache.set(domain, false);
     return false;
   },
 
