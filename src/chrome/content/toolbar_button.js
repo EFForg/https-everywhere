@@ -309,32 +309,11 @@ function show_applicable_list(menupopup) {
 function toggle_rule(rule_id) {
   // toggle the rule state
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
-  var domWin = content.document.defaultView.top;
-  /*if (domWin instanceof CI.nsIDOMWindow) {
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
-    if (alist) alist.empty();
-  }*/
   reload_window();
 }
 
 function reload_window() {
-  var domWin = content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    HTTPSEverywhere.log(WARN, domWin + " is not an nsIDOMWindow");
-    return null;
-  }
-  try {
-    var webNav =  domWin.QueryInterface(CI.nsIInterfaceRequestor)
-                        .getInterface(CI.nsIWebNavigation)
-                        .QueryInterface(CI.nsIDocShell);
-  } catch(e) {
-    HTTPSEverywhere.log(WARN,"failed to get webNav");
-    return null;
-  }
-  // The choice of LOAD_FLAGS_CHARSET_CHANGE comes from NoScript's quickReload
-  // function; not sure if it's optimal
-  let flags = webNav.LOAD_FLAGS_BYPASS_CACHE & webNav.LOAD_FLAGS_CHARSET_CHANGE;
-  webNav.reload(flags);
+  gBrowser.reloadTab(gBrowser.selectedTab);
 }
 
 function toggleEnabledState(){
