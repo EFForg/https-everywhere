@@ -49,7 +49,7 @@
 		- openid.stackauth.com
 
 -->
-<ruleset name="Stack Exchange (mixed content)" platform="mixedcontent">
+<ruleset name="Stack Exchange (partial)">
 
 	<target host="blogoverflow.com" />
 	<target host="www.blogoverflow.com" />
@@ -60,6 +60,8 @@
 	<target host="www.stackapps.com" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
+		<exclusion pattern="^http://(?:\w+\.)?stackexchange\.com/search\?" />
+		<exclusion pattern="^http://chat\.stackexchange\.com/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
 	<target host="app.stacktack.com" />
@@ -85,6 +87,10 @@
 
 	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
+
+	<rule from="^https://(\w+\.)?stackexchange\.com/search\?"
+		to="http://$1stackexchange.com/search?"
+	downgrade="1" />
 
 	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
