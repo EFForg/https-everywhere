@@ -16,7 +16,7 @@ function getRuleXml() {
   return output;
 }
 
-var all_rules = new RuleSets(navigator.userAgent, LRUCache, getRuleXml());
+var all_rules = new RuleSets(navigator.userAgent, LRUCache, getRuleXml(), localStorage);
 var wr = chrome.webRequest;
 
 /*

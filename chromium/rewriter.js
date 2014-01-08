@@ -1,21 +1,41 @@
+var fs = require("fs");
+var DOMParser = require('xmldom').DOMParser;
+
 var lrucache = require("./lru");
 var rules = require("./rules");
-var rules = require("./rules");
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-function getRuleXml() {
-    var xhr = new XMLHttpRequest();
-    // Use blocking XHR to ensure everything is loaded by the time
-    // we return.
-    xhr.open("GET", "file:///home/jsha/https-everywhere/chromium/rules/default.rulesets", false);
-    xhr.send(null);
-    // Get file contents
-    if (xhr.readyState != 4) {
-      return "yy";
-    }
-    return xhr.responseXML;
+var URI = require("URIjs");
+
+var ruleSets = null;
+
+function processFile() {
+  fs.readFile('/home/jsha/index.html',
+    {encoding: 'utf-8'},
+    function (err, data) {
+      if (err) throw err;
+      var result = URI.withinString(data, function(url) {
+        var uri = new URI(url);
+        if (uri.protocol() != 'http') return url;
+
+        uri.normalize();
+        var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
+        if (rewritten) {
+          console.log(uri.toString(), rewritten);
+          return rewritten;
+        } else {
+          return url;
+        }
+      });
+    });
 }
 
-new rules.RuleSets("foo", lrucache.LRUCache,
-  getRuleXml());
-console.log("ok");
+fs.readFile('rules/default.rulesets',
+  {encoding: 'utf-8'},
+  function (err, data) {
+  if (err) throw err;
+  var xml = new DOMParser().parseFromString(data, 'text/xml');
+  ruleSets = new rules.RuleSets("foo", lrucache.LRUCache, xml, {});
+  console.log("ok");
+
+  processFile();
+});

@@ -71,7 +71,7 @@ RuleSet.prototype = {
 };
 
 
-function RuleSets(userAgent, cache, rule_xml) {
+function RuleSets(userAgent, cache, ruleXml, ruleActiveStates) {
   // Load rules into structure
   this.targets = {};
   this.userAgent = userAgent;
@@ -83,7 +83,10 @@ function RuleSets(userAgent, cache, rule_xml) {
   // A cache for cookie hostnames.
   this.cookieHostCache = new cache(100);
 
-  var sets = rule_xml.getElementsByTagName("ruleset");
+  // A hash of rule name -> active status (true/false).
+  this.ruleActiveStates = ruleActiveStates;
+
+  var sets = ruleXml.getElementsByTagName("ruleset");
   for (var i = 0; i < sets.length; ++i) {
     this.parseOneRuleset(sets[i]);
   }
@@ -125,8 +128,8 @@ RuleSets.prototype = {
                                note.trim());
 
     // Read user prefs
-    if (rule_set.name in localStorage) {
-      rule_set.active = (localStorage[rule_set.name] == "true");
+    if (rule_set.name in this.ruleActiveStates) {
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
     }
 
     var rules = ruletag.getElementsByTagName("rule");
