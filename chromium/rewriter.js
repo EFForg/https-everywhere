@@ -1,5 +1,7 @@
 var fs = require("fs");
 var DOMParser = require('xmldom').DOMParser;
+var readdirp = require('readdirp'); 
+var es = require('event-stream');
 
 var lrucache = require("./lru");
 var rules = require("./rules");
@@ -8,33 +10,59 @@ var URI = require("URIjs");
 
 var ruleSets = null;
 
-function processFile(filename) {
-  fs.readFile(filename,
-    {encoding: 'utf-8'},
-    function (err, data) {
-      if (err) throw err;
-      var result = URI.withinString(data, function(url) {
-        var uri = new URI(url);
-        if (uri.protocol() != 'http') return url;
+function processDir(dir) {
+  var stream = readdirp({
+    root: dir,
+    fileFilter: '*.html'
+  });
 
-        uri.normalize();
-        var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
-        if (rewritten) {
-          console.log(uri.toString(), rewritten);
-          return rewritten;
-        } else {
-          return url;
-        }
-      });
-    });
+  stream
+  .on('warn', function (err) { 
+    console.error('non-fatal error', err); 
+    // optionally call stream.destroy() here in order to abort and cause 'close' to be emitted
+  })
+  .on('error', function (err) { console.error('fatal error', err); })
+  .pipe(es.mapSync(function (entry) {
+    var filename = dir + '/' + entry.path;
+    console.log("Rewriting " + filename);
+    processFile(filename);
+  }));
 }
 
-fs.readFile('rules/default.rulesets',
-  {encoding: 'utf-8'},
-  function (err, data) {
-  if (err) throw err;
-  var xml = new DOMParser().parseFromString(data, 'text/xml');
-  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
+function processFile(filename) {
+  var contents = fs.readFileSync(filename, {encoding: 'utf-8'});
+  var rewrittenFile = URI.withinString(contents, function(url) {
+    var uri = new URI(url);
+    if (uri.protocol() != 'http') return url;
 
-  processFile('/home/jsha/index.html');
-});
+    uri.normalize();
+    var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
+    if (rewritten) {
+      // If the rewrite was just a protocol change, output protocol-relative
+      // URIs.
+      var rewrittenUri = new URI(rewritten).protocol('http');
+      if (rewrittenUri.toString() === uri.toString()) {
+        return rewrittenUri.protocol('').toString();
+      } else {
+        return rewritten;
+      }
+    } else {
+      return url;
+    }
+  });
+
+  fs.writeFileSync(filename + ".new", rewrittenFile);
+  //fs.renameSync(filename, filename + ".bak");
+  //fs.renameSync(filename + ".new", filename);
+}
+
+function loadRuleSets() {
+  var fileContents = fs.readFileSync('rules/default.rulesets', {encoding: 'utf-8'});
+  var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
+  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
+}
+
+loadRuleSets();
+for (var i = 2; i < process.argv.length; i++) {
+  processDir(process.argv[i]);
+}
