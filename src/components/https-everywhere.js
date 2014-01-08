@@ -513,7 +513,6 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
-      this.maybeShowDevPopup();
     } else if (topic == "nsPref:changed") {
         switch (data) {
             case "security.mixed_content.block_active_content":
