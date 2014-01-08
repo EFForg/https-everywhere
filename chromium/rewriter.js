@@ -8,8 +8,8 @@ var URI = require("URIjs");
 
 var ruleSets = null;
 
-function processFile() {
-  fs.readFile('/home/jsha/index.html',
+function processFile(filename) {
+  fs.readFile(filename,
     {encoding: 'utf-8'},
     function (err, data) {
       if (err) throw err;
@@ -34,8 +34,7 @@ fs.readFile('rules/default.rulesets',
   function (err, data) {
   if (err) throw err;
   var xml = new DOMParser().parseFromString(data, 'text/xml');
-  ruleSets = new rules.RuleSets("foo", lrucache.LRUCache, xml, {});
-  console.log("ok");
+  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
 
-  processFile();
+  processFile('/home/jsha/index.html');
 });
