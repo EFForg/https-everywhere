@@ -1,12 +1,13 @@
-var fs = require("fs");
-var DOMParser = require('xmldom').DOMParser;
-var readdirp = require('readdirp'); 
-var es = require('event-stream');
+var path = require("path"),
+    fs = require("fs"),
+    DOMParser = require('xmldom').DOMParser,
+    readdirp = require('readdirp'),
+    es = require('event-stream'),
 
-var lrucache = require("./lru");
-var rules = require("./rules");
+    lrucache = require("./lru"),
+    rules = require("./rules"),
 
-var URI = require("URIjs");
+    URI = require("URIjs");
 
 var ruleSets = null;
 
@@ -23,7 +24,7 @@ function processDir(dir) {
   })
   .on('error', function (err) { console.error('fatal error', err); })
   .pipe(es.mapSync(function (entry) {
-    var filename = dir + '/' + entry.path;
+    var filename = path.join(dir, entry.path);
     console.log("Rewriting " + filename);
     processFile(filename);
   }));
@@ -57,7 +58,7 @@ function processFile(filename) {
 }
 
 function loadRuleSets() {
-  var fileContents = fs.readFileSync('rules/default.rulesets', {encoding: 'utf-8'});
+  var fileContents = fs.readFileSync(path.join(__dirname, 'rules/default.rulesets'), {encoding: 'utf-8'});
   var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
   ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
 }
