@@ -1,0 +1,28 @@
+<!--
+	For other Salesforce coverage, see Salesforce.com.xml.
+
+-->
+<ruleset name="Cloudforce.com">
+
+	<target host="cloudforce.com" />
+		<!--
+			.+ 404s, even ...com//$
+						-->
+		<exclusion pattern="^http://cloudforce\.com/.+" />
+	<target host="*.cloudforce.com" />
+
+
+	<securecookie host="^$" name=".+" />
+
+
+	<!--	For www, server drops path and args:
+							-->
+	<rule from="^http://(?:www\.)?cloudforce\.com/.*"
+		to="https://www.salesforce.com/events/" />
+
+	<!--	Per-client domains:
+					-->
+	<rule from="^http://([\w-]+)\.cloudforce\.com/"
+		to="https://$1.cloudforce.com/" />
+
+</ruleset>

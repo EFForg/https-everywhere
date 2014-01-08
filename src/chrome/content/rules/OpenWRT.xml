@@ -4,8 +4,24 @@
 
 	Nonfunctional subdomains:
 
-		- downloads	(cert: www.openwrt.org; shows that domain's data)
-		- kamikaze	(ditto)
+		- downloads *
+		- git		(refused)
+		- kamikaze *
+
+	* Shows www; mismatched, CN: www.openwrt.org
+
+
+	Problematic subdomains:
+
+		- wiki	(works; mismatched, CN: subsignal.org)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- dev
+		- forum
+		- lists
 
 -->
 <ruleset name="OpenWRT (partial)">
@@ -14,14 +30,13 @@
 	<target host="*.openwrt.org" />
 
 
-	<securecookie host="^.*\.openwrt\.org$" name=".*" />
+	<securecookie host="^(?:.*\.)?openwrt\.org$" name=".*" />
 
 
 	<rule from="^http://openwrt\.org/"
 		to="https://openwrt.org/" />
 
-	<!--	git shows www data over both http and https.	-->
-	<rule from="^http://(dev|forum|git|lists|www)\.openwrt\.org/"
+	<rule from="^http://(dev|forum|lists|www)\.openwrt\.org/"
 		to="https://$1.openwrt.org/" />
 
 	<rule from="^https?://wiki\.openwrt\.org/lib/tpl/ameoto/images/(bg(?:-2)?|footer|openwrt-logo)\.png$"

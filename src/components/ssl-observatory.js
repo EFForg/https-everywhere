@@ -19,7 +19,7 @@ MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried
 TIMEOUT = 60000;
 
 ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
-ASN_IMPLICIT = -2     // ASN can be learned from connecting IP
+ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
 ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
 // XXX: We should make the _observatory tree relative.
@@ -51,7 +51,7 @@ const INCLUDE = function(name) {
       dump("INCLUDE " + name + ": " + e + "\n");
     }
   }
-}
+};
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');

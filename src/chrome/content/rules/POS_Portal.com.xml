@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, most paths redirect to http)
+
+
+	Fully covered subdomains:
+
+		- buy
+
+-->
+<ruleset name="POS Portal.com (partial)">
+
+	<target host="posportal.com" />
+	<target host="*.posportal.com" />
+
+
+	<securecookie host="^\.buy\.posportal\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?posportal\.com/(cam|mmc|omc)(?=$|[?/])"
+		to="https://www.posportal.com/$1" />
+
+	<rule from="^http://buy\.posportal\.com/"
+		to="https://buy.posportal.com/" />
+
+</ruleset>

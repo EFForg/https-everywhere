@@ -1,0 +1,40 @@
+<!--
+	CDN buckets:
+
+		- bcassets.starbucks.com.edgesuite.net
+
+			- a259.g.akamai.net
+			- bcassets.starbucks.com
+
+		- globalassets.starbucks.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- globalassets	(503, akamai)
+		- news		(interrupted)
+
+
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: *.starbucks.com)
+		- bcassets *
+		- investor *
+
+	* Works, akamai
+
+-->
+<ruleset name="Starbucks.com (partial)">
+
+	<target host="starbucks.com" />
+	<target host="*.starbucks.com" />
+		<!--exclusion pattern="^http://(www\.)?starbucks\.com/([aA]ccounts($|[?/])|favicon\.ico|resources/|static/|sysiplocation/)" /-->
+
+
+	<rule from="^http://(?:www\.)?starbucks\.com/(?=[aA]ccounts(?:$|[?/])|favicon\.ico|resources/|static/|sysiplocation/)"
+		to="https://www.starbucks.com/" />
+
+	<rule from="^http://bcassets\.starbucks\.com/"
+		to="https://a248.e.akamai.net/f/259/7942/2/bcassets.starbucks.com/" />
+
+</ruleset>

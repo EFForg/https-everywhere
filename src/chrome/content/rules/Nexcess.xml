@@ -1,15 +1,47 @@
-<!--	!functional:
-		lghttp.nex.nexcesscdn.net	(cert: edgecastcdn.net; 404)
-		(www.)nexess-status.com		(cert: *.nozonenet.com; shows H-Sphere default page)
+<!--
+	CDN buckets:
+
+		- wpc.3313.edgecastcdn.net/803313/
+
+			- lghttp.nex.nexcesscdn.net
+
+
+	Nonfunctional domains:
+
+		- lghttp.nex.nexcesscdn.net	(404, CN: edgecastcdn.net)
+		- (www.)nexess-status.com	(shows H-Sphere default page, CN: *.nozonenet.com)
+
+
+	Problematic subdomains:
+
+		- ^	(mismatched, CN: www.nexcess.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- affiliates
+		- blog
+		- docs
+		- nocworx
+		- order
+		- portal
+		- static
+
 -->
 <ruleset name="Nexcess (partial)">
 
-	<target host="nexcess.net"/>
-	<target host="*.nexcess.net"/>
+	<target host="nexcess.net" />
+	<target host="*.nexcess.net" />
 
-	<securecookie host="^(.*\.)?nexcess\.net$" name=".*"/>
 
-	<rule from="^http://(affiliates\.|blog\.|docs\.|portal\.|static\.|www\.)?nexcess\.net/"
-		to="https://$1nexcess.net/"/>
+	<securecookie host=".*\.nexcess\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?nexcess\.net/"
+		to="https://www.nexcess.net/" />
+
+	<rule from="^http://(affiliates|blog|docs|nocworx|order|portal|static)\.nexcess\.net/"
+		to="https://$1.nexcess.net/" />
 
 </ruleset>

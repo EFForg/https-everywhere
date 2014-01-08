@@ -1,0 +1,34 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- campusship	(404, cert only matches www.campusship)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- www.apps
+		- (www.)campusship	(^ → www)
+		- wwwapps
+
+-->
+<ruleset name="UPS.com (broken)" default_off="redirect loops">
+
+	<target host="ups.com" />
+	<target host="*.ups.com" />
+
+
+	<securecookie host="^www\.campusship\.ups\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?ups\.com/"
+		to="https://www.ups.com/" />
+
+	<rule from="^http://www(\.)?apps\.ups\.com/"
+		to="https://www$1apps.ups.com/" />
+
+	<rule from="^http://(?:www\.)?campusship\.ups\.com/"
+		to="https://www.campusship.ups.com/" />
+
+</ruleset>

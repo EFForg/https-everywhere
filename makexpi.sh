@@ -73,7 +73,7 @@ if [ "$1" != "--fast" ] ; then
 
   if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
   then
-    if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
+    if find src/chrome/content/rules -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
     then
       echo Validation of rulesets with RELAX NG grammar completed. >&2
     else
@@ -126,7 +126,9 @@ cd src
 
 # Build the XPI!
 rm -f "../$XPI_NAME"
-zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+#zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+
+python ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
 if [ "$ret" != 0 ]; then

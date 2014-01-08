@@ -1,0 +1,67 @@
+<!--
+	For problematic rules, see Alwaysdata.com-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- blog *
+		- forum	*
+
+	* Works; mismatched, CN: *.alwaysdata.net
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- admin
+		- help
+		- phpmyadmin
+		- phppgadmin
+		- static
+		- status
+		- webmail
+
+
+	Observed cookie domains:
+
+		- admin ¹
+		- blog ²
+		- .blog ²
+		- forum ²
+		- help ¹
+		- phpmyadmin ¹
+		- phppgadmin ¹
+		- status ¹
+		- webmail ¹
+		- www ¹
+
+	¹ Secured by us
+	² Secured in -problematic
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from blog ¹
+			- blog and forum from static ²
+
+		- Images on blog and forum from static ²
+
+	¹ Secured in -problematic
+	² Secured by us
+
+-->
+<ruleset name="alwaysdata.com (partial)">
+
+	<target host="alwaysdata.com" />
+	<target host="*.alwaysdata.com" />
+
+
+	<securecookie host="^(?!blog\.|forum\.)\w+\.alwaysdata\.com$" name=".+" />
+
+
+	<rule from="^http://((?:admin|help|php(?:my|pg)admin|static|status|webmail|www)\.)?alwaysdata\.com/"
+		to="https://$1alwaysdata.com/" />
+
+</ruleset>

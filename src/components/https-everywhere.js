@@ -62,7 +62,7 @@ const INCLUDE = function(name) {
             + name + ".js");
     _INCLUDED[name] = true;
   }
-}
+};
 
 const WP_STATE_START = CI.nsIWebProgressListener.STATE_START;
 const WP_STATE_STOP = CI.nsIWebProgressListener.STATE_STOP;
@@ -104,11 +104,12 @@ const N_COHORTS = 1000;
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
-const DUMMY_FUNC = function() {}
+const DUMMY_FUNC = function() {};
 const DUMMY_ARRAY = [];
 
 const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
 
+// This is probably obsolete since the switch to the channel.redirectTo API
 const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
 
 // XXX: Better plan for this?
@@ -151,17 +152,17 @@ StorageController.prototype = {
     [ Components.interfaces.nsISupports,
       Components.interfaces.nsIController ]),
   wrappedJSObject: null,  // Initialized by constructor
-  supportsCommand: function (cmd) {return (cmd == this.command)},
-  isCommandEnabled: function (cmd) {return (cmd == this.command)},
-  onEvent: function(eventName) {return true},
-  doCommand: function() {return true}
+  supportsCommand: function (cmd) {return (cmd == this.command);},
+  isCommandEnabled: function (cmd) {return (cmd == this.command);},
+  onEvent: function(eventName) {return true;},
+  doCommand: function() {return true;}
 };
 
 function StorageController(command) {
   this.command = command;
   this.data = {};
   this.wrappedJSObject = this;
-};
+}
 
 /*var Controller = Class("Controller", XPCOM(CI.nsIController), {
   init: function (command, data) {
@@ -199,7 +200,16 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
-  
+
+  var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
+      .getService(Components.interfaces.nsIPrefBranchInternal);
+  var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
+
+  branch.addObserver("extensions.https_everywhere.enable_mixed_rulesets",
+                         this, false);
+  branch.addObserver("security.mixed_content.block_active_content",
+                         this, false);
+
   return;
 }
 
@@ -240,14 +250,46 @@ const shouldLoadTargets = {
   7 : true
 };
 
+
+
+/*
+In recent versions of Firefox and HTTPS Everywhere, the call stack for performing an HTTP -> HTTPS rewrite looks like this:
+
+1. HTTPSEverywhere.observe() gets a callback with the "http-on-modify-request" topic, and the channel as a subject
+
+    2. HTTPS.replaceChannel() 
+
+       3. HTTPSRules.rewrittenURI() 
+            
+           4. HTTPSRules.potentiallyApplicableRulesets uses <target host=""> elements to identify relevant rulesets
+
+           foreach RuleSet:
+
+               4. RuleSet.transformURI()
+
+                   5. RuleSet.apply() does the tests and rewrites with RegExps, returning a string
+
+               4. RuleSet.transformURI() makes a new uri object for the destination string, if required
+
+    2. HTTPS.replaceChannel() calls channel.redirectTo() if a redirect is needed
+
+
+In addition, the following other important tasks happen along the way:
+
+HTTPSEverywhere.observe()    aborts if there is a redirect loop
+                             finds a reference to the ApplicableList or alist that represents the toolbar context menu
+
+HTTPS.replaceChannel()       notices redirect loops (and used to do much more complex XPCOM API work in the NoScript-based past)
+
+HTTPSRules.rewrittenURI()    works around weird URI types like about: and http://user:pass@example.com/
+                             and notifies the alist of what it should display for each ruleset
+
+*/
+
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
-// We need to use both ContentPolicy and Observer, because there are some
-// things, such as Favicons, who don't get caught by ContentPolicy; we don't
-// yet know why we don't just use the observer :/
-
-// ChannelEventSink seems to be necessary in order to handle redirects (eg
-// HTTP redirects) correctly.
+// ChannelEventSink used to be necessary in order to handle redirects (eg
+// HTTP redirects) correctly.  It may now be obsolete? XXX
 
 HTTPSEverywhere.prototype = {
   prefs: null,
@@ -276,9 +318,6 @@ HTTPSEverywhere.prototype = {
     {
       category: "app-startup",
     },
-    {
-      category: "content-policy",
-    },
   ],
 
   // QueryInterface implementation, e.g. using the generateQI helper
@@ -286,7 +325,6 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
-      Components.interfaces.nsIContentPolicy,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
@@ -388,7 +426,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     domWin = domWin.top;
-    return domWin
+    return domWin;
   },
 
   // the lists get made when the urlbar is loading something new, but they
@@ -439,8 +477,8 @@ HTTPSEverywhere.prototype = {
       var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
-        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec])
-        else        this.log(WARN,"Failed to indicate breakage in content menu");
+        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
+        else        this.log(NOTE,"Failed to indicate breakage in content menu");
         return;
       }
       HTTPS.replaceChannel(lst, channel);
@@ -504,6 +542,15 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
       this.maybeShowDevPopup();
+    } else if (topic == "nsPref:changed") {
+        // If the user toggles the Mixed Content Blocker settings, reload the rulesets
+        // to enable/disable the mixedcontent ones
+        switch (data) {
+            case "security.mixed_content.block_active_content":
+            case "extensions.https_everywhere.enable_mixed_rulesets":
+                HTTPSRules.init();
+                break;
+        }
     }
     return;
   },
@@ -567,6 +614,7 @@ HTTPSEverywhere.prototype = {
   },
 
   // nsIChannelEventSink implementation
+  // XXX This was here for rewrites in the past.  Do we still need it?
   onChannelRedirect: function(oldChannel, newChannel, flags) {  
     const uri = newChannel.URI;
     this.log(DBUG,"Got onChannelRedirect to "+uri.spec);
@@ -602,26 +650,6 @@ HTTPSEverywhere.prototype = {
   asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
         this.onChannelRedirect(oldChannel, newChannel, flags);
         callback.onRedirectVerifyCallback(0);
-  },
-
-  // These implement the nsIContentPolicy API; they allow both yes/no answers
-  // to "should this load?", but also allow us to change the thing.
-
-  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aInternalCall) {
-    //this.log(WARN,"shouldLoad for " + unwrappedLocation.spec + " of type " + aContentType);
-       if (shouldLoadTargets[aContentType] != null) {
-         var unwrappedLocation = IOUtil.unwrapURL(aContentLocation);
-         var scheme = unwrappedLocation.scheme;
-         var isHTTP = /^https?$/.test(scheme);   // s? -> either http or https
-         this.log(VERB,"shoulLoad for " + aContentLocation.spec);
-         if (isHTTP)
-           HTTPS.forceURI(aContentLocation, null, aContext);
-       } 
-    return true;
-  },
-
-  shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra) {
-    return this.shouldLoad(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, CP_SHOULDPROCESS);
   },
 
   get_prefs: function(prefBranch) {
@@ -668,23 +696,6 @@ HTTPSEverywhere.prototype = {
     }
 
     return o_branch;
-  },
-
-  /**
-   * Notify observers of the topic OBSERVER_TOPIC_URI_REWRITE.
-   *
-   * @param nsIURI oldURI
-   * @param string newSpec
-   */
-  notifyObservers: function(oldURI, newSpec) {
-    this.log(INFO, "Notifying observers of rewrite from " + oldURI.spec + " to " + newSpec);
-    try {
-      // The subject has to be an nsISupports and the extra data is a string,
-      // that's why one is an nsIURI and the other is a nsIURI.spec string.
-      this.obsService.notifyObservers(oldURI, OBSERVER_TOPIC_URI_REWRITE, newSpec);
-    } catch (e) {
-      this.log(WARN, "Couldn't notify observers: " + e);
-    }
   },
 
   chrome_opener: function(uri, args) {
@@ -747,8 +758,6 @@ HTTPSEverywhere.prototype = {
             dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
             
             this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
-
-            HTTPSRules.init();
 
             if(!Thread.hostRunning)
                 Thread.hostRunning = true;

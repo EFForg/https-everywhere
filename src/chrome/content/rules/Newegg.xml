@@ -1,16 +1,39 @@
 <!--
-	For problematic rules, see Newegg-problematic.xml.
-
-
 	CDN buckets:
 
 		- ssl-images.newegg.com.edgekey.net
 
 		- images10.newegg.com.edgesuite.net	(maps directly)
-			- a200.g.akamai.net/.../
 
-		- images17.newegg.com.edgesuite.net/.../
-			- a1268.g.akamai.net/.../
+			- a200.g.akamai.net
+
+		- images17.newegg.com.edgesuite.net
+
+			- a1268.g.akamai.net
+
+		- promotion.newegg.com.edgesuite.net
+
+			- a363.g.akamai.net
+
+
+	Partially covered domains:
+
+		- images10.newegg.com *
+		- c1.neweggimages.com *
+
+	* → ssl-images.newegg.com
+
+
+	Fully covered newegg.com subdomains:
+
+		- content
+		- images17 *
+		- nm
+		- promotions *
+		- secure
+		- ssl-images
+
+	* → akamai
 
 -->
 <ruleset name="Newegg (partial)">
@@ -23,12 +46,24 @@
 	<target host="c1.neweggimages.com" />
 
 
-	<rule from="^http://secure\.newegg\.com/"
-		to="https://secure.newegg.com/" />
+	<securecookie host="^content\.newegg\.com$" name=".+" />
 
-	<!--	- Akamai
+
+	<rule from="^http://(content|nm|secure)\.newegg\.com/"
+		to="https://$1.newegg.com/" />
+
+	<!--	Akamai
 					-->
 	<rule from="^http://(?:(?:images10|ssl-images)\.newegg|c1\.neweggimages)\.com/"
 		to="https://ssl-images.newegg.com/" />
+
+	<!--	- Akamai
+		- Not on ssl-images
+					-->
+	<rule from="^http://images17\.newegg\.com/"
+		to="https://a248.e.akamai.net/f/1268/6718/1/images17.newegg.com/" />
+
+	<rule from="^http://promotions\.newegg\.com/"
+		to="https://a248.e.akamai.net/f/363/9331/6/promotions.newegg.com/" />
 
 </ruleset>

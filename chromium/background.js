@@ -14,20 +14,12 @@ for (r in rs) {
 }
 */
 
+// Add the HTTPS Everywhere icon to the URL address bar.
+// TODO: Switch from pageAction to browserAction?
 function displayPageAction(tabId) {
-  // Right now, the call to chrome.tabs.get creates
-  // a console error for a missing tab, even in a try/catch
-  // block. As it still provides a good test of whether a tab
-  // exists (if it does not then 'tab' in the callback is undefined)
-  // Reading forums on chrome extensions, it seems the only way
-  // to avoid a console error is to loop through all windows
-  // and explicitly check for the tabid in question. This seems
-  // expensive and not necessary so we are living with console errors
-  // of the form: "Error during tabs.get: No tab with id: 370"
-
-  if (tabId != -1 && this.activeRulesets.getRulesets(tabId)) {
+  if (tabId !== -1) {
     chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) == "undefined") {
+      if(typeof(tab) === "undefined") {
         log(DBUG, "Not a real tab. Skipping showing pageAction.");
       }
       else {
@@ -38,7 +30,7 @@ function displayPageAction(tabId) {
 }
 
 function AppliedRulesets() {
-  this.active_tab_rules = {}
+  this.active_tab_rules = {};
 
   var that = this;
   chrome.tabs.onRemoved.addListener(function(tabId, info) {
@@ -57,10 +49,10 @@ AppliedRulesets.prototype = {
   },
 
   getRulesets: function(tabId) {
-    if (tabId in this.active_tab_rules)
+    if (tabId in this.active_tab_rules) {
       return this.active_tab_rules[tabId];
-    else
-      return null;
+    }
+    return null;
   },
 
   removeTab: function(tabId) {
@@ -81,75 +73,79 @@ var redirectCounter = {};
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
-  var tmpuri = new URI(details.url);
+  var uri = new URI(details.url);
 
   // Normalise hosts such as "www.example.com."
-  var tmphost = tmpuri.hostname();
-  if (tmphost.charAt(tmphost.length - 1) == ".") {
-    while (tmphost.charAt(tmphost.length - 1) == ".")
-      tmphost = tmphost.slice(0,-1);
+  var canonical_host = uri.hostname();
+  if (canonical_host.charAt(canonical_host.length - 1) == ".") {
+    while (canonical_host.charAt(canonical_host.length - 1) == ".")
+      canonical_host = canonical_host.slice(0,-1);
+    uri.hostname(canonical_host);
   }
-  tmpuri.hostname(tmphost);
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = tmpuri.userinfo();
-  tmpuri.userinfo('');
+  var tmpuserinfo = uri.userinfo();
+  if (tmpuserinfo) {
+    uri.userinfo('');
+  }
 
-  var canonical_url = tmpuri.toString();
-  if (details.url != canonical_url && tmpuserinfo == '') {
+  var canonical_url = uri.toString();
+  if (details.url != canonical_url && tmpuserinfo === '') {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return;
+    return null;
   }
-
-  var a = document.createElement("a");
-  a.href = canonical_url;
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
 
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
+  // If no rulesets could apply, let's get out of here!
+  if (rs.length === 0) { return; }
+
   if (details.requestId in redirectCounter) {
     redirectCounter[details.requestId] += 1;
     log(DBUG, "Got redirect id "+details.requestId+
         ": "+redirectCounter[details.requestId]);
+
+    if (redirectCounter[details.requestId] > 9) {
+        log(NOTE, "Redirect counter hit for "+canonical_url);
+        urlBlacklist[canonical_url] = true;
+        var hostname = uri.hostname();
+        domainBlacklist[hostname] = true;
+        log(WARN, "Domain blacklisted " + hostname);
+        return;
+    }
   } else {
     redirectCounter[details.requestId] = 0;
   }
 
-  if (redirectCounter[details.requestId] > 9) {
-    log(NOTE, "Redirect counter hit for "+canonical_url);
-    urlBlacklist[canonical_url] = true;
-    var hostname = tmpuri.hostname();
-    domainBlacklist[hostname] = true;
-    log(WARN, "Domain blacklisted " + hostname);
-    return;
-  }
-
   var newuristr = null;
 
-  var i = 0;
-
-  var rs = all_rules.potentiallyApplicableRulesets(a.hostname);
-  for(i = 0; i < rs.length; ++i) {
+  for(var i = 0; i < rs.length; ++i) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr)
+    if (rs[i].active && !newuristr) {
       newuristr = rs[i].apply(canonical_url);
+    }
   }
 
-  displayPageAction(details.tabId);
-
-  if (newuristr) {
+  if (newuristr && tmpuserinfo !== "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
     var finaluri = new URI(newuristr);
     finaluri.userinfo(tmpuserinfo);
-    var finaluristr = finaluri.toString();
-    log(DBUG, "Redirecting from "+a.href+" to "+finaluristr);
-    return {redirectUrl: finaluristr};
+    newuristr = finaluri.toString();
+  }
+
+  if (newuristr) {
+    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
+    return {redirectUrl: newuristr};
+  } else {
+    return null;
   }
 }
 
@@ -177,66 +173,25 @@ function onCookieChanged(changeInfo) {
   }
 }
 
-// Check to see if a newly set cookie in an HTTP request should be secured
-function onHeadersReceived(details) {
-  var a = document.createElement("a");  // hack to parse URLs
-  a.href = details.url;                 //
-  var host = a.hostname;
-
-  if(a.protocol != "https:") {
-    // Never flag a cookie as secure if it's being set over HTTP
-    return;
-  }
-
-  // TODO: Verify this with wireshark
-  for (var h in details.responseHeaders) {
-    if (details.responseHeaders[h].name == "Set-Cookie") {
-      log(INFO,"Deciding whether to secure cookies in " + details.url);
-      var cookie = details.responseHeaders[h].value;
-
-      if (cookie.indexOf("; Secure") == -1) {
-        log(INFO, "Got insecure cookie header: "+cookie);
-        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:a.hostname, name:cookie.split("=")[0]};
-        var ruleset = all_rules.shouldSecureCookie(fake, true);
-        if (ruleset) {
-          activeRulesets.addRulesetToTab(details.tabId, ruleset);
-          details.responseHeaders[h].value = cookie+"; Secure";
-          log(INFO, "Secured cookie: "+details.responseHeaders[h].value);
-        }
-      }
-    }
-  }
-
-  return {responseHeaders:details.responseHeaders};
-}
-
 // This event is needed due to the potential race between cookie permissions
-// update and cookie transmission, becuase the cookie API is non-blocking..
-// It would be less perf impact to have a blocking version of the cookie API
-// available instead.
+// update and cookie transmission (because the cookie API is non-blocking).
+// Without this function, an aggressive attacker could race to steal a not-yet-secured
+// cookie if they controlled & could redirect the user to a non-SSL subdomain.
+// WARNING: This is a very hot function.
 function onBeforeSendHeaders(details) {
-  // XXX this function appears to enforce something equivalent to the secure
-  // cookie flag by independent means.  Is that really what it's supposed to
-  // do?
-  var a = document.createElement("a");
-  a.href = details.url;
-  var host = a.hostname;
-
-  if(a.protocol == "https:") {
-    // All cookies may be sent over https...
-    return;
-  }
-
   // TODO: Verify this with wireshark
   for (var h in details.requestHeaders) {
     if (details.requestHeaders[h].name == "Cookie") {
+      // Per RFC 6265, Chrome sends only ONE cookie header, period.
+      var uri = new URI(details.url);
+      var host = uri.hostname();
+
       var newCookies = [];
       var cookies = details.requestHeaders[h].value.split(";");
 
       for (var c in cookies) {
         // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:a.hostname, name:cookies[c].split("=")[0]};
+        var fake = {domain:host, name:cookies[c].split("=")[0]};
         // XXX I have no idea whether the knownHttp parameter should be true
         // or false here.  We're supposedly inside a race condition or
         // something, right?
@@ -250,6 +205,9 @@ function onBeforeSendHeaders(details) {
       }
       details.requestHeaders[h].value = newCookies.join(";");
       log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
+
+      // We've seen the one cookie header, so let's get out of here!
+      break;
     }
   }
 
@@ -265,29 +223,30 @@ function onResponseStarted(details) {
   }
 }
 
-function onErrorOccurred(details) {
-  displayPageAction(details.tabId);
-}
-
-function onCompleted(details) {
-  displayPageAction(details.tabId);
-}
-
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
-wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["https://*/*", "http://*/*"]}, //{urls: ["*://*/*"]},
+
+// This watches cookies sent via HTTP.
+// We do *not* watch HTTPS cookies -- they're already being sent over HTTPS -- yay!
+wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
-// FIXME: We probably do want all urls.. or at least http+https+spdy?
-wr.onHeadersReceived.addListener(onHeadersReceived, {urls: ["https://*/*", "http://*/*"]},
-                                    ["responseHeaders", "blocking"]);
+
 wr.onResponseStarted.addListener(onResponseStarted,
                                  {urls: ["https://*/*", "http://*/*"]});
-wr.onErrorOccurred.addListener(onErrorOccurred,
-                               {urls: ["https://*/*", "http://*/*"]});
-wr.onCompleted.addListener(onCompleted,
-                           {urls: ["https://*/*", "http://*/*"]});
 
+
+// Add the small HTTPS Everywhere icon in the address bar.
+// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
+// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
     displayPageAction(tabId);
 });
 
+// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
+// See http://crbug.com/109557
+chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
+    displayPageAction(addedTabId);
+});
+
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
+// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
 chrome.cookies.onChanged.addListener(onCookieChanged);

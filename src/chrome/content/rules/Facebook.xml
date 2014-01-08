@@ -44,6 +44,7 @@
 			- external.ak *
 			- profile.ak *
 			- connect *
+			- www.connect	(shows www)
 
 		- on.fb.me
 		- dragon.ak.fbcdn.net *
@@ -82,10 +83,15 @@
 			- dragon.ak		(→ fbcdn-dragon-a.akamaihd.net)
 			- photos-[a-h].ak
 			- s-static.ak
-			- profile-a.xx
-			- scontent-02.xx
-			- sphotos.xx
-			- sphotos-b.xx
+
+			- *.xx:
+
+				- profile-a
+				- profile-a-ord
+				- scontent-02
+				- scontent-b-ord
+				- sphotos
+				- sphotos-b
 
 -->
 <ruleset name="Facebook">
@@ -109,107 +115,102 @@
 
 
 	<securecookie host="^(?:.*\.)?facebook\.com$" name="(?:c_user|lu|sct|xs)" />
-	<!--
-		Observed cookies:
-
-			- datr
-			- lsd
-			- reg_fb_gate
-			- reg_fb_ref
-
-	If you have a Facebook account, please test with this uncommented!
-
-	<securecookie host="^\.facebook\.com$" name=".+" /-->
+    <securecookie host="^\.facebook\.com$" name=".+" />
 	<securecookie host="^newsroom\.fb\.com$" name=".+" />
 
+	<rule from="^https?://f(?:acebook|b)\.com/"
+		to="https://www.facebook.com/" />
 
-	<rule from="^http://(www\.)?f(?:acebook|b)\.com/"
-		to="https://$1facebook.com/" />
+	<rule from="^https?://www\.f(?:acebook|b)\.com/"
+		to="https://www.facebook.com/" />
 
-	<rule from="^http://(\w\w-\w\w|(?:b\.)?s-static\.ak|api|api-read|apps|badge|blog|connect|developers|graph|login|m|pixel|ssl|static-ak|www\.v6)\.facebook\.com/"
+	<rule from="^https?://(\w\w-\w\w|(?:b\.)?s-static\.ak|api|api-read|apps|badge|blog|connect|developers|graph|login|m|pixel|ssl|static-ak|www\.v6)\.facebook\.com/"
 		to="https://$1.facebook.com/" />
 
 	<!--	Also on fbstatic-a.akamaihd.net, but this is what the servers do.
 								-->
-	<rule from="^http://static\.ak\.facebook\.com/"
+	<rule from="^https?://static\.ak\.facebook\.com/"
 		to="https://s-static.ak.facebook.com/" />
+
+	<rule from="^http://www\.connect\.facebook\.com/"
+		to="https://connect.facebook.com/" />
 
 	<!--		Cert doesn't match and
 		this is what the server does.
 						-->
-	<rule from="^http://(?:www\.)?facebook\.(?:be|is|it|nl|us)/"
+	<rule from="^https?://(?:www\.)?facebook\.(?:be|is|it|nl|us)/"
 		to="https://www.facebook.com/" />
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:de-de\.|fr-fr\.|www\.)?facebook\.(de|fr)/"
+	<rule from="^https?://(?:de-de\.|fr-fr\.|www\.)?facebook\.(de|fr)/"
 		to="https://$1-$1.facebook.com/"/>
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:da-dk\.|www\.)?facebook\.dk/"
+	<rule from="^https?://(?:da-dk\.|www\.)?facebook\.dk/"
 		to="https://da-dk.facebook.com/" />
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:es-es\.|www\.)?facebook\.(?:es|mx)/"
+	<rule from="^https?://(?:es-es\.|www\.)?facebook\.(?:es|mx)/"
 		to="https://es-es.facebook.com/" />
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:ja-jp\.|www\.)?facebook\.jp/"
+	<rule from="^https?://(?:ja-jp\.|www\.)?facebook\.jp/"
 		to="https://ja-jp.facebook.com/" />
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:nb-no\.|www\.)?facebook\.no/"
+	<rule from="^https?://(?:nb-no\.|www\.)?facebook\.no/"
 		to="https://nb-no.facebook.com/" />
 
 	<!--	Ditto.
 			-->
-	<rule from="^http://(?:sv-se\.|www\.)?facebook\.se/"
+	<rule from="^https?://(?:sv-se\.|www\.)?facebook\.se/"
 		to="https://sv-se.facebook.com/" />
 
-	<rule from="^http://connect\.facebook\.net/"
+	<rule from="^https?://connect\.facebook\.net/"
 		to="https://connect.facebook.net/"/>
 
-	<rule from="^http://newsroom\.fb\.com/"
+	<rule from="^https?://newsroom\.fb\.com/"
 		to="https://newsroom.fb.com/" />
 
-	<rule from="^http://on\.fb\.me/"
+	<rule from="^https?://on\.fb\.me/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://dragon\.ak\.fbcdn\.net/"
+	<rule from="^https?://dragon\.ak\.fbcdn\.net/"
 		to="https://fbcdn-dragon-a.akamaihd.net/" />
 
 	<!--	Akamai.
 			-->
-	<rule from="^http://external\.ak\.fbcdn\.net/"
+	<rule from="^https?://external\.ak\.fbcdn\.net/"
 		to="https://fbexternal-a.akamaihd.net/" />
 
-	<rule from="^http://photos-([a-h])\.ak\.fbcdn\.net/"
+	<rule from="^https?://photos-([a-h])\.ak\.fbcdn\.net/"
 		to="https://fbcdn-sphotos-$1-a.akamaihd.net/" />
 
-	<rule from="^http://profile\.ak\.fbcdn\.net/"
+	<rule from="^https?://profile\.ak\.fbcdn\.net/"
 		to="https://fbcdn-profile-a.akamaihd.net/" />
 
-	<rule from="^http://(?:a\d\.)?sphotos\.ak\.fbcdn\.net/"
+	<rule from="^https?://(?:a\d\.)?sphotos\.ak\.fbcdn\.net/"
 		to="https://fbcdn-sphotos-a.akamaihd.net/" />
 
 	<!--	- Akamai
 		- Data are also on static.facebook.com
 							-->
-	<rule from="^http://(?:static\.connect|(?:s-)?static)\.ak\.fbcdn\.net/"
+	<rule from="^https?://(?:static\.connect|(?:s-)?static)\.ak\.fbcdn\.net/"
 		to="https://s-static.ak.fbcdn.net/" />
 
-	<rule from="^http://([^@:\./]+)(\.xx)?\.fbcdn\.net/"
+	<rule from="^https?://([^@:\./]+)(\.xx)?\.fbcdn\.net/"
 		to="https://$1$2.fbcdn.net/" />
 
 	<!--	Bing maps. Should be generalized and moved at some point.
 
 		Cert only matches *.tiles.virtualearth.net.
 								-->
-	<rule from="^http://fb\.ecn\.api\.tiles\.virtualearth\.net/"
+	<rule from="^https?://fb\.ecn\.api\.tiles\.virtualearth\.net/"
 		to="https://api.tiles.virtualearth.net/" />
 
 </ruleset>

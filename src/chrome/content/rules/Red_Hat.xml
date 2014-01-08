@@ -1,0 +1,119 @@
+<!--
+	magazine & servicesblog.redhat.com are handled in WordPress-blogs.xml.
+
+
+	Other Red Hat rulesets:
+
+		- JBoss.xml
+		- Opensource.com.xml
+		- OpenShift.xml
+		- Spice-space.org.xml
+
+
+	rhat.client.shareholder.com
+
+			- investors
+
+
+	Nonfunctional subdomains:
+
+		- et		(refused)
+		- ftp *
+		- investors *
+		- spacewalk	(shows www)
+		- sources *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- apac		(cert only matches www.apac)
+		- europe	(cert only matches www.europe)
+		- jobs		(mismatched, CN: *.sc.hodesdigital.com)
+		- magazine *
+		- servicesblog *
+
+	* Mismatched, CN: *.wordpress.com
+
+
+	Partially covered subdomains:
+
+		- investors	(→ investor.shareholder.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- academy
+		- access
+		- (www.)apac	(^ → www)
+		- ar
+		- archive
+		- at
+		- au
+		- be
+		- br
+		- bugzilla
+		- ca
+		- careers
+		- cn
+		- de
+		- docs
+		- engage
+		- es
+		- (www.)europe	(^ → www)
+		- fr
+		- gb
+		- hardware
+		- id
+		- in
+		- it
+		- jobs		(→ redhat.sc.hodesdigital.com)
+		- jp
+		- listman
+		- lk
+		- mx
+		- openshift
+		- people
+		- ph
+		- rhn
+		- ru
+		- sg
+		- smtrcs
+		- support
+		- webmail
+
+
+	Mixed content:
+
+		- Web bug on www from s7.addthis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Red Hat">
+
+	<target host="redhat.com" />
+	<target host="*.redhat.com" />
+
+
+	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?redhat\.com/"
+		to="https://www.redhat.com/" />
+
+	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|de|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|sg|smtrcs|support|webmail)\.redhat\.com/"
+		to="https://$1.redhat.com/" />
+
+	<rule from="^http://(?:www\.)?(apac|europe)\.redhat\.com/"
+		to="https://www.$1.redhat.com/" />
+
+	<rule from="^http://investors\.redhat\.com/common/"
+		to="https://investor.shareholder.com/common/" />
+
+	<rule from="^http://jobs\.redhat\.com/"
+		to="https://redhat.sc.hodesdigital.com/" />
+
+</ruleset>

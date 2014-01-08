@@ -1,25 +1,123 @@
 <!--
-	fsecured.i.lithium.com
+	For problematic rules, see F-Secure.com-breakchat.xml.
+
+
+	CDN buckets:
+
+		- fs-freedome-production.s3.amazonaws.com
+
+		- f-secure.com.edgesuite.net
+
+			- campaigns
+
+		- fs-freedome-production-site.herokuapp.com
+
+			- freedome
+
+		- fsecured.i.lithium.com
 
 
 	Problematic subdomains:
 
-		- ^	(CN: europe.f-secure.com)
+		- backup	(mismatched, CN: backup.ob.f-secure.com)
+		- campaigns	(works, akamai)
+		- freedome	(mismatched, CN: *.herokuapp.com)
+		- safeandsavvy	(wordpress)
+		- sp		(works, mismatched, CN: europe.f-secure.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(avoiding breaking chat)
+		- campaigns	(→ www, [^?/]+ 404s)
+		- freedome	(→ fs-freedome-production-site.herokuapp.com, $ redirects back)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- backup
+		- browsingprotection
+		- cgi
+		- community
+		- download
+		- estore	(→ my)
+		- europe
+		- kic
+		- login
+		- msp
+		- my
+		- mysafe
+		- newsletter
+		- backup.ob
+		- partnerportal
+		- safelinks
+		- safeprofile
+		- search
+		- shop
+		- download.sp
+		- sp		(→ www)
+		- store
+		- webmail *
+		- webmailmy *
+
+	* Server is configured for rc4 only
+
+
+	Mixed content:
+
+		- Script on www from www ¹
+
+		- Images on www from www ¹
+
+		- Web bugs, on:
+
+			- community, freedome, shop, and www from fsecure.122.2o7.net ¹
+			- freedome from www ¹
+
+			- www from:
+
+				- www ¹
+				- www.haloscan.com ²
+				- statse.webtrendslive.com ¹
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
-<ruleset name="F-Secure (default off)" default_off="breaks support chats">
+<ruleset name="F-Secure (partial)">
 
-	<target host="f-secure.com" />
+	<!--	Avoiding duplicate
+		target warning...
+					-->
+	<!--target host="f-secure.com" /-->
 	<target host="*.f-secure.com" />
+		<!--
+			Avoid breaking chat:
+						-->
+		<exclusion pattern="^http://www\.f-secure\.com/+(?!.+\.(?:css|gif|ico|jpg|js|png)$)" />
+		<!--
+			[^?/]+ 404s
+					-->
+		<exclusion pattern="^http://campaign\.f-secure\.com/+(?!\?).+" />
 
 
 	<securecookie host="^(?:.*\.)?f-secure\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?f-secure\.com/"
+	<rule from="^http://(www\.)?f-secure\.com/"
+		to="https://$1f-secure.com/" />
+
+	<rule from="^http://(analysis|backup(?:\.ob)?|cgi|community|browsingprotection|download(?:\.sp)?|europe|kic|login|msp|my|mysafe|newsletter|partnerportal|safelinks|safeprofile|search|shop|store|webmail|webmailmy)\.f-secure\.com/"
+		to="https://$1.f-secure.com/" />
+
+	<rule from="^http://(?:campaign|sp)\.f-secure\.com/"
 		to="https://www.f-secure.com/" />
 
-	<rule from="^http://(analysis|backup(?:\.ob)?|community|browsingprotection|europe|msp|my|partnerportal|safelinks)\.f-secure\.com/"
-		to="https://$1.f-secure.com/" />
+	<rule from="^http://estore\.f-secure\.com/"
+		to="https://my.f-secure.com/" />
+
+	<rule from="^http://freedome\.f-secure\.com/(?=img/|js/)"
+		to="https://fs-freedome-production-site.herokuapp.com/" />
 
 </ruleset>

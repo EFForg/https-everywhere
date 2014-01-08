@@ -1,24 +1,83 @@
 <!--
-	For problematic rules, see Kontera-mismatches.xml.
+	Kontera Technologies, Inc
 
 
 	CDN buckets:
 
 		- images.kontera.com.edgesuite.net
+
+			- a489.g.akamai.net
+
 		- kona.kontera.com.edgesuite.net
+
+			- a302.g.akamai.net
+			- konac.kontera.com
+
+		- konax.kontera.com.edgesuite.net
+
+			- a1850.g.akamai.net
+
+		- kontera.edgesuite.net
+
 
 	Nonfunctional domains:
 
-		- tapestry.kontera.com		(times out)
+		- (www.)	(504, akamai)
+		- blog *
+		- kb *
+		- platform **
+		- tapestry **
 
+	* Refused
+	** Dropped
+
+
+	Problematic subdomains:
+
+		- images *
+		- kona *
+		- konac *
+		- konax *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- images *
+		- kona *
+		- kona3[23]
+		- publishers
+		- secure-js
+
+	* → akamai
+
+
+	Observed cookie domains:
+
+		- .
+		- platform
+		- publishers
 
 -->
 <ruleset name="Kontera (partial)">
 
-	<target host="kona32.kontera.com" />
+	<target host="*.kontera.com" />
 
 
-	<rule from="^http://kona32\.kontera\.com/"
-		to="https://kona32.kontera.com/" />
+	<securecookie host="^(?:\.?publishers)?\.kona\.com$" name=".+" />
+
+
+	<rule from="^http://images\.kontera\.com/"
+		to="https://a248.e.akamai.net/f/489/5395/2m/images.kontera.com/" />
+
+	<rule from="^http://kona(c)?\.kontera\.com/"
+		to="https://a248.e.akamai.net/f/302/9266/9m/kona$1.kontera.com/" />
+
+	<rule from="^http://(kona3[23]|publishers)\.kontera\.com/"
+		to="https://$1.kontera.com/" />
+
+	<rule from="^http://konax\.kontera\.com/"
+		to="https://a248.e.akamai.net/f/1850/7709/10/konax.kontera.com/" />
 
 </ruleset>

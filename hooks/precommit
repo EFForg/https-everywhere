@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+#   hooks/precommit hook script of https-everywhere.
+#
+#   Copyright (C) 2013, Jonathan Davies <jpdavs@gmail.com>
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Stash changes unrelated to the commit in Git.
+echo "$(date -R): Stashing unrelated changes in Git..."
+git stash -q --keep-index
+
+# On exit, revert the stash done above.
+trap 'echo "$(date -R): Reverting Git stash..."; git stash pop -q' EXIT
+
+RULESET_PATTERN="src/chrome/content/rules/"
+CHANGED_RULESETS="$(git diff --cached --name-only | grep $RULESET_PATTERN)"
+
+if [ "$CHANGED_RULESETS" ]; then
+    # Only run tests if our rulesets have been changed.
+    echo "$(date -R): Running ruleset validation tests on changed rulesets:"
+
+    for FILE in $CHANGED_RULESETS; do
+        if [ ! -f $FILE ]; then
+            # File may have been removed from Git.
+            echo "$(date -R): Skipped validation of $FILE - not found."
+            continue
+        fi
+
+        ./utils/trivial-validate.py --quiet $FILE
+        RESULT=$?
+
+        if [ $RESULT -ne 0 ]; then
+            echo "$(date -R): Failure encountered during ruleset validation."
+            exit $RESULT
+        fi
+    done
+
+    echo "$(date -R): Ruleset validation successful."
+else
+    echo "$(date -R): Skipped ruleset validation tests, no changes in" \
+        "$RULESET_PATTERN."
+fi
+
+exit 0

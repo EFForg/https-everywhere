@@ -1,4 +1,11 @@
 <!--
+	CDN buckets:
+
+		- qzone.qq.com.edgesuite.net
+
+			- imgcache.qq.com
+
+
 	Nonfunctional domains:
 
 
@@ -7,6 +14,8 @@
 		- qq.com subdomains:
 
 			- ^ *
+			- imgcache		(504, akamai)
+			- kf *
 			- stockweb.mail		(503)
 			- wpa			(shows api.pay.qplus.com; mismatched, CN: api.pay.qplus.com)
 			- www **
@@ -39,13 +48,30 @@
 			- wp
 			- ws
 
+		- weixin subdomains:
+
+			- api
+			- login
+			- mp
+			- open
+			- web
+			- webpush
+
+		- wx
+		- res.wx
+
 -->
 <ruleset name="QQ (partial)">
 
 	<target host="*.qq.com" />
 
 
-	<rule from="^http://((?:cnc\.)?exmail\.|mail\.|(?:en|res|rl|ptlogin2|wp|ws)\.mail)\.qq\.com/"
+	<!--	Could we secure any of these safely?
+							-->
+	<!--securecookie host="^\.qq\.com$" name="^(mm_lang|webwxuvid)$" /-->
+
+
+	<rule from="^http://((?:cnc\.)?exmail|mail|(?:en|res|rl|ptlogin2|wp|ws)\.mail|(?:api|login|mp|open|web|webpush)\.weixin|wx|res\.wx)\.qq\.com/"
 		to="https://$1.qq.com/" />
 
 </ruleset>

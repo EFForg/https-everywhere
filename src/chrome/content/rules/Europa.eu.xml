@@ -5,16 +5,40 @@
 	Nonfunctional subdomains:
 
 		- ^	(403, valid cert)
-		- cordis	(redirects to http, valid cert)
 		- ec	(403)
 		- eur-lex	(shows ^; mismatched, CN: europa.eu)
+		- www.europarl *
 		- (www.)ombudsman	(times out)
+
+	* Dropped
+
+
+	Partially covered subdomains:
+
+		- cordis	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- www.europol
+
+
+	Mixed content:
+
+		- Image on www.europol from www.europol *
+	
+	* Secured by us
 
 -->
 <ruleset name="Europa.eu">
 
 	<target host="www.ecb.eu" />
 	<target host="*.europa.eu" />
+		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
+		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
+
+
+	<!--securecookie host="^\.europol\.europa\.eu$" name="^SESS\w32$" /-->
 
 
 	<rule from="^http://www\.ecb(?:\.europa)?\.eu/"
@@ -23,7 +47,9 @@
 	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
 		to="https://www.consilium.europa.eu/" />
 
-	<rule from="^http://joinup\.ec\.europa\.eu/"
-		to="https://joinup.ec.europa.eu/" />
+	<rule from="^http://(cordis|joinup\.ec|www\.europol)\.europa\.eu/"
+		to="https://$1.europa.eu/" />
 
+    <rule from="^http://(?:www\.)?easa\.europa\.eu/"
+        to="https://www.easa.europa.eu/" />
 </ruleset>

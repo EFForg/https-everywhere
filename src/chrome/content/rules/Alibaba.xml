@@ -1,68 +1,139 @@
 <!--
-	For problematic rules, see Alibaba-mismatches.xml.
+	Other Alibaba rulesets:
+
+		- Alipay.com.xml
+		- Aliyun.com.xml
 
 
 	CDN buckets:
 
+		- img.alibaba.com.edgesuite.net
+
+			- style.alibaba.com
+
+		- gd[1-4].alicdn.com.danuoyi.tbcache.com
+
+		- gju1.alicdn.com.danuoyi.tbcache.com
+
+		- gw[123].alicdn.com.danuoyi.tbcache.com
+
+		- gi3.md.alicdn.com.danuoyi.tbcache.com
+
 		- i0[123].i.aliimg.com.edgesuite.net
 
-		- img0[1-4].taobaocdn.com.danuoyi.tbcache.com
-			- taurus0[1-4].danuoyi.tbcache.com
+		- style.aliunicorn.com.edgesuite.net
 
 
 	Nonfunctional domains:
 
-		- alibaba subdomains:
+		- (www.)alibaba.co.jp ¹
+		- image.alibaba.co.jp ¹
 
-			- (www.)
-			- china
-			- dmtracking	(reset)
-			- news
+		- alibaba.com subdomains:
 
-		- (www.)alibaba.co.jp
-		- image.alibaba.co.jp
+			- (www.) ¹
+			- activities ¹
+			- buyer ¹
+			- campus ³
+			- china ¹
+			- chinasuppliers ¹
+			- credit ¹
+			- creditma ¹
+			- customs ¹
+			- dmtracking ²
+			- expo ¹
+			- us.favorite ¹
+			- download.im ¹
+			- img ⁴
+			- importer ¹
+			- inspection ¹
+			- legal ¹
+			- us.my ³
+			- news ¹
+			- notification ³
+			- us.enmatch.p4p ¹
+			- sa ¹
+			- seller ¹
+			- sourcing ¹
+			- hz.sourcing ¹
+			- style ⁴
+			- trademanager ¹
+
+		- alicdn.com subdomains:
+
+			- gd[1-4] ¹
+			- gju1 ¹
+			- gqrcode ¹
+			- gtms0[1-4] ¹
+			- gw[123] ¹
+			- gi3.md ¹
+			- g.search ¹
+			- g.search[123] ¹
 
 		- aliexpress.com subdomains:
 
-			- (www.)
-			- compare	(times out)
-			- de
-			- es
-			- fr
-			- it
-			- ja
-			- ko
-			- m
-			- nl
-			- pt
-			- ru
+			- ^ ³
+			- compare ³
+			- de ¹
+			- es ¹
+			- fr ¹
+			- gaga ¹
+			- it ¹
+			- ja ¹
+			- ko ¹
+			- m ¹
+			- nl ¹
+			- promotion ¹
+			- pt ¹
+			- ru ¹
+			- seller ³
+			- www ¹
 
-		- static.c.aliimg.com
-		- i0[123].i.aliimg.com *
-		- style.aliunicorn.com	(503, akamai)
+		- aliimg.com subdomains:
 
-		- x.limgs.cn
-		- list.taobao.com	(reset)
-		- s.taobao.com		(ditto)
-		- www.taobao.com	(cert: s.taobao.com; 403)
-		- img02.taobaocdn.com
+			- static.c ³
+			- stat.gmonitor ¹
+			- i0[0123].i ⁴
 
-	* 503, akamai
+		- style.aliunicorn.com ⁴
+
+		- x.limgs.cn ¹
+
+	¹ Refused
+	² Reset
+	³ Dropped
+	⁴ 504, akamai
+
+
+	Fully covered domains:
+
+		- alibaba.com subdomains:
+
+			- 102
+			- job
+			- login
+			- style		(→ stylessl)
+			- stylessl
+
+		- login.aliexpress.com
 
 -->
 <ruleset name="Alibaba (partial)">
 
 	<target host="login.aliexpress.com" />
-	<target host="escrow.alibaba.com" />
+	<target host="*.alibaba.com" />
 
 
-	<securecookie host="^escrow\.alibaba\.com$" name=".*" />
+	<securecookie host="^(?:102|escrow|job)\.alibaba\.com$" name=".*" />
 
 
 	<rule from="^http://login\.aliexpress\.com/"
 		to="https://login.aliexpress.com/" />
 
-	<rule from="^http://escrow\.alibaba\.com/"
-		to="https://escrow.alibaba.com/" />
+	<rule from="^http://(102|escrow|job|login)\.alibaba\.com/"
+		to="https://$1.alibaba.com/" />
+
+	<rule from="^http://style(?:ssl)?\.alibaba\.com/"
+		to="https://stylessl.alibaba.com/" />
 
 </ruleset>

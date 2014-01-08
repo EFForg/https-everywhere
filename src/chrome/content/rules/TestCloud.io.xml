@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional domains:
+
+		- blog.testcloud.de	(404)
+
+
+	Fully covered domains:
+
+		- testcloud.de subdomains:
+
+			- (www.)
+			- app
+			- cdn[0-3]
+			- staticcdn
+			- tester
+
+		- testcloud.io subdomains:
+
+			- (www.)
+			- app
+			- tester
+
+		- (www.)thetestcloud.com
+		- app.thetestcloud.com
+
+-->
+<ruleset name="testCloud.io (partial)">
+
+	<target host="testcloud.de" />
+	<target host="*.testcloud.de" />
+	<target host="testcloud.io" />
+	<target host="*.testcloud.io" />
+	<target host="*.thetestcloud.com" />
+
+
+	<securecookie host="^\.(?:the)?testcloud\.(?:com|de|io)$" name=".+" />
+
+
+	<rule from="^http://((?:app|cdn\d|staticcdn|tester|www)\.)?testcloud\.de/"
+		to="https://$1testcloud.de/" />
+
+	<rule from="^http://((?:app|tester|www)\.)?testcloud\.io/"
+		to="https://$1testcloud.io/" />
+
+	<rule from="^http://(app\.|www\.)?thetestcloud\.com/"
+		to="https://$1thetestcloud.com/" />
+
+</ruleset>

@@ -1,0 +1,77 @@
+<!--
+	For problematic rules, see PLD-Linux.org-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- buildlogs ¹
+		- chroots ¹
+		- cvsweb	(shows svn)
+		- forum ²
+		- livecd ³
+		- gnome.livecd ³
+		- kde4.livecd ³
+		- planet ¹
+		- poldek ³
+		- ppcrcd ³
+		- rescuecd ¹
+		- security ¹
+		- sparcrcd ²
+		- team		(prints "e"; expired 2007-07-07, self-signed)
+		- src.th ³
+
+	¹ Refused
+	² Prints "e"; mismatched, CN: team.pld-linux.org
+	³ Shows src.ac
+
+	Problematic subdomains:
+
+		- src.ac *
+		- cri		(works; mismatched, CN: furud.net)
+		- ep09 *
+		- docs		(shows www)
+		- lists		(works, self-signed)
+
+	* Works; expired 2002-04-09, CN: localhost
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cvs
+		- docs		(→ www)
+		- git
+		- svn
+
+
+	Mixed content:
+
+		- Images on git from www *
+
+	* Secured by us
+
+-->
+<ruleset name="PLD-Linux.org (partial)">
+
+	<target host="pld-linux.org" />
+	<target host="*.pld-linux.org" />
+
+
+	<securecookie host="^www\.pld-linux\.org$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?pld-linux\.org/"
+		to="https://www.pld-linux.org/" />
+
+	<rule from="^http://(cvs|git|svn)\.pld-linux\.org/"
+		to="https://$1.pld-linux.org/" />
+
+	<!--	Server doesn't drop path:
+						-->
+	<rule from="^http://docs\.pld-linux\.org/"
+		to="https://www.pld-linux.org/Docs/man" />
+
+</ruleset>

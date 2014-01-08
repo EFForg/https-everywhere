@@ -1,0 +1,42 @@
+<!--
+	For other Valve coverage, see Valve.xml.
+
+
+	Mixed content:
+
+		- Images, on ^ from:
+
+			- cdn *
+			- cdn4.steampowered.com
+			- media.steampowered.com
+
+	* Secured by us
+
+-->
+<ruleset name="Steam Community.com (partial, broken)" default_off="breaks some forum embeds">
+
+	<target host="steamcommunity.com" />
+	<target host="*.steamcommunity.com" />
+		<!--
+			Redirects to http
+						-->
+		<exclusion pattern="^http://steamcommunity\.com/+($|\?)" />
+		<!--
+			Breaks news/screenshot/video loading.
+					-->
+		<exclusion pattern="^http://(?:www\.)?steamcommunity\.com/app/\d+/(?:homecontent|news|screenshots|videos)" />
+		<!--
+			Breaks thread loading:
+						-->
+		<exclusion pattern="^http://(?:www\.)?steamcommunity\.com/groups/" />
+
+
+	<securecookie host="^steamcommunity\.com$" name=".+" />
+
+
+	<!--	www: cert only matches ^streamcommunity.com.
+								-->
+	<rule from="^http://(?:cdn\.|www\.)?steamcommunity\.com/"
+		to="https://steamcommunity.com/" />
+
+</ruleset>

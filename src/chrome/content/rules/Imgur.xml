@@ -14,13 +14,11 @@
 	Nonfunctional subdomains:
 
 		- stack		(refused)
-		- i.stack	(404; mismatched, CN: edgecastcdn.net)
 
 
 	Problematic subdomains:
 
 		- img	(refused)
-		- s	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
 
 
 	Partially covered subdomains:
@@ -34,7 +32,8 @@
 		- i
 		- img		(→ i)
 		- origin
-		- s		(→ ^)
+		- s
+		- i.stack
 		- store		(→ imgur-store.myshopify.com)
 
 -->
@@ -47,21 +46,21 @@
 
 			https://bugzilla.mozilla.org/show_bug.cgi?id=866986#c7
 										-->
-		<exclusion pattern="^http://(?:www\.)?imgur\.com/(?!(?:images|include|min|register|signin)(?:/|\?|$))" />
+		<!--exclusion pattern="^http://(?:www\.)?imgur\.com/(?!(?:images|include|min|register|signin)(?:/|\?|$))" /-->
 
 
-	<!--securecookie host="^\.?imgur\.com" name=".+" /-->
+	<securecookie host="^\.?imgur\.com" name=".+" />
 
 
-	<rule from="^http://(?:s\.)?imgur\.com/"
-		to="https://imgur.com/"/>
+	<rule from="^http://(s\.)?imgur\.com/"
+		to="https://$1imgur.com/"/>
 
 	<!--	This rule breaks the Imgur Uploader Firefox extension:
 
 	<rule from="^http://api\.imgur\.com/"
 		to="https://api.imgur.com/" /-->
 
-	<rule from="^http://(i|origin|www)\.imgur\.com/"
+	<rule from="^http://(i|origin|i\.stack|www)\.imgur\.com/"
 		to="https://$1.imgur.com/" />
 
 	<rule from="^http://img\.imgur\.com/"

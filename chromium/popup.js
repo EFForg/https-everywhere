@@ -11,6 +11,8 @@ function toggleRuleLine(checkbox, ruleset) {
   } else {
     delete localStorage[ruleset.name];
   }
+  // Now reload the selected tab of the current window.
+  chrome.tabs.reload();
 }
 
 function createRuleLine(ruleset) {
@@ -30,7 +32,7 @@ function createRuleLine(ruleset) {
   }
   checkbox.onchange = function(ev) {
     toggleRuleLine(checkbox, ruleset);
-  }
+  };
   label.appendChild(checkbox);
 
   // favicon (from chrome's cache)
@@ -61,7 +63,7 @@ function createRuleLine(ruleset) {
 function gotTab(tab) {
   var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
 
-  for (r in rulesets) {
+  for (var r in rulesets) {
     var listDiv = stableRules;
     if (!rulesets[r].default_state) {
       listDiv = unstableRules;

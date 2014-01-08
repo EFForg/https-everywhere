@@ -1,0 +1,35 @@
+<!--
+	Nonfunctional subdomains:
+
+		- castlehill *
+		- play *
+
+	* Shows www
+
+
+	Problematic subdomains:
+
+		- newsletters	(mismatched, CN: ecm74.com)
+
+
+	$ and index.php redirect to http.
+
+-->
+<ruleset name="Powerhouse Museum.com (partial)">
+
+	<target host="powerhousemuseum.com" />
+	<target host="*.powerhousemuseum.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?powerhousemuseum\.com/+(index\.php)?($|\?)" /-->
+		<!--exclusion pattern="^http://newsletters\.powerhousemuseum\.com/+rp/1115/ContestForm\.clsp" /-->
+
+
+	<rule from="^http://(www\.)?powerhousemuseum\.com/(?!/*(?:index\.php)?(?:$|\?))"
+		to="https://$1powerhousemuseum.com/" />
+
+	<rule from="^http://newsletters\.powerhousemuseum\.com/(?=contenteditor/formValidate\.js|LiveAssets/|rp/Content/)"
+		to="https://ecm74.com/" />
+
+</ruleset>

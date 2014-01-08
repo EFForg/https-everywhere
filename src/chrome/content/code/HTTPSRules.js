@@ -1,33 +1,23 @@
+// Compilation of RegExps is now delayed until they are first used...
+
 function Rule(from, to) {
-  //this.from = from;
   this.to = to;
-  this.from_c = new RegExp(from);
+  this.from_c = from; // This will become a RegExp after compilation
 }
 
 function Exclusion(pattern) {
-  //this.pattern = pattern;
-  this.pattern_c = new RegExp(pattern);
+  this.pattern_c = pattern; // Will become a RegExp after compilation
 }
 
 function CookieRule(host, cookiename) {
   this.host = host;
-  this.host_c = new RegExp(host);
   this.name = cookiename;
-  this.name_c = new RegExp(cookiename);
-}
 
-// Firefox 23+ blocks mixed content by default, so rulesets that create
-// mixed content situations should be disabled there
-var appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
-var platformVer = appInfo.platformVersion;
-var versionChecker = CC["@mozilla.org/xpcom/version-comparator;1"]
-                      .getService(CI.nsIVersionComparator);
-if(versionChecker.compare(appInfo.version, "23.0a1") >= 0) {
-  localPlatformRegexp = new RegExp("firefox");
-} else {
-  localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
-}
+  // These will be made during compilation:
 
+  //this.host_c = new RegExp(host);
+  //this.name_c = new RegExp(cookiename);
+}
 
 ruleset_counter = 0;
 function RuleSet(name, xmlName, match_rule, default_off, platform) {
@@ -38,6 +28,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.id="httpseR" + ruleset_counter;
   ruleset_counter += 1;
   this.on_by_default = true;
+  this.compiled = false;
   this.name = name;
   this.xmlName = xmlName;
   //this.ruleset_match = match_rule;
@@ -52,7 +43,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
     this.on_by_default = false;
   }
   if (platform)
-    if (platform.search(localPlatformRegexp) == -1) {
+    if (platform.search(HTTPSRules.localPlatformRegexp) == -1) {
       this.on_by_default = false;
       this.notes = "Only for " + platform;
     }
@@ -75,11 +66,35 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
 var dom_parser = Cc["@mozilla.org/xmlextras/domparser;1"].createInstance(Ci.nsIDOMParser);
 
 RuleSet.prototype = {
+
+  ensureCompiled: function() {
+    // Postpone compilation of exclusions, rules and cookies until now, to accelerate
+    // browser load time.
+    if (this.compiled) return;
+    var i;
+
+    for (i = 0; i < this.exclusions.length; ++i) {
+      this.exclusions[i].pattern_c = new RegExp(this.exclusions[i].pattern_c);
+    }
+    for (i = 0; i < this.rules.length; ++i) {
+      this.rules[i].from_c = new RegExp(this.rules[i].from_c);
+    }
+
+    for (i = 0; i < this.cookierules.length; i++) {
+       var cr = this.cookierules[i];
+       cr.host_c = new RegExp(cr.host);
+       cr.name_c = new RegExp(cr.name);
+    }
+
+    this.compiled = true;
+  },
+
   apply: function(urispec) {
     // return null if it does not apply
     // and the new url if it does apply
     var i;
     var returl = null;
+    this.ensureCompiled();
     // If a rulset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       this.log(VERB, "ruleset_match_c excluded " + urispec);
@@ -120,6 +135,8 @@ RuleSet.prototype = {
     var uri = hypothetical_uri.clone();
     if (uri.scheme == "https") uri.scheme = "http";
     var urispec = uri.spec;
+
+    this.ensureCompiled();
  
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
@@ -396,6 +413,7 @@ const HTTPSRules = {
       this.rulesetsByID = {};
       this.rulesetsByName = {};
       var t1 = new Date().getTime();
+      this.checkMixedContentHandling();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
       rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
@@ -424,6 +442,30 @@ const HTTPSRules = {
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
     return;
+  },
+
+  checkMixedContentHandling: function() {
+    // Firefox 23+ blocks mixed content by default, so rulesets that create
+    // mixed content situations should be disabled there
+    var appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
+    var platformVer = appInfo.platformVersion;
+    var versionChecker = CC["@mozilla.org/xpcom/version-comparator;1"]
+                          .getService(CI.nsIVersionComparator);
+    var prefs = Components.classes["@mozilla.org/preferences-service;1"]
+                        .getService(Components.interfaces.nsIPrefService).getBranch("");
+
+
+    // If mixed content is present and enabled, and the user hasn't opted to enable
+    // mixed content triggering rules, leave them out. Otherwise add them in.
+    if(versionChecker.compare(appInfo.version, "23.0a1") >= 0
+            && prefs.getBoolPref("security.mixed_content.block_active_content")
+            && !prefs.getBoolPref("extensions.https_everywhere.enable_mixed_rulesets")) {
+      this.log(INFO, "Not activating rules that trigger mixed content errors.");
+      this.localPlatformRegexp = new RegExp("firefox");
+    } else {
+      this.log(INFO, "Activating rules that would normally trigger mixed content");
+      this.localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
+    }
   },
 
   scanRulefiles: function(rulefiles) {
@@ -484,13 +526,13 @@ const HTTPSRules = {
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
         // we rewrote the uri
-	this.log(DBUG, "Rewrote "+input_uri.spec);
+        this.log(DBUG, "Rewrote "+input_uri.spec);
         if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i]);
           else 
             alist.active_rule(rs[i]);
-	}
+  }
         if (userpass_present) blob.newuri.userPass = input_uri.userPass;
         blob.applied_ruleset = rs[i];
         return blob;
@@ -537,9 +579,9 @@ const HTTPSRules = {
           catch(e2) {this.log(WARN, "bang" + e + " & " + e2 + " & "+ input_uri);}
         }
     } catch(e3) {
-      this.log(WARN, "uri.host is explosive!");
-      try       { this.log(WARN, "(" + uri.spec + ")"); } 
-      catch(e4) { this.log(WARN, "(and unprintable)"); }
+      this.log(INFO, "uri.host is explosive!");
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
+      catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
   },
@@ -598,6 +640,7 @@ const HTTPSRules = {
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
+        ruleset.ensureCompiled();
         // Never secure a cookie if this page might be HTTP
         if (!known_https && !this.safeToSecureCookie(c.rawHost))
           continue;

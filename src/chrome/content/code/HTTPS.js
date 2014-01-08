@@ -31,7 +31,7 @@ const HTTPS = {
   httpsRewrite: null,
   
   replaceChannel: function(applicable_list, channel) {
-    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI);
+    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
     if (null == blob) return false; // no rewrite
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
@@ -46,7 +46,7 @@ const HTTPS = {
       this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
       if (!blob.applied_ruleset) {
-        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        this.log(WARN,"Blacklisting rule for: " + channel.URI.spec);
         https_everywhere_blacklist[channel.URI.spec] = true;
       }
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
@@ -57,134 +57,29 @@ const HTTPS = {
     }
 
     // Check for the new internal redirect API. If it exists, use it.
-    if ("redirectTo" in channel) {
-      this.log(INFO, "Found nsIHttpChannel.redirectTo. Using it.");
-      try {
-        channel.redirectTo(uri);
-        return true;
-      } catch(e) {
-        // This should not happen. We should only get exceptions if
-        // the channel was already open.
-        this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
-
-        // Don't return: Fallback to NoScript ChannelReplacement.js
-      }
+    if (!"redirectTo" in channel) {
+      this.log(WARN, "nsIHTTPChannel.redirectTo API is missing. This version of HTTPS Everywhere is useless!!!!\n!!!\n");
+      return false;
     }
 
-    if (ChannelReplacement.supported) {
-      HTTPSEverywhere.instance.notifyObservers(channel.URI, uri.spec);
-      HTTPS.log(INFO,"Scheduling channel replacement for "+channel.URI.spec);
-      ChannelReplacement.runWhenPending(channel, function() {
-        var cr = new ChannelReplacement(channel, uri);
-        cr.replace(true,null);
-        cr.open();
-        HTTPS.log(INFO,"Ran channel replacement for "+channel.URI.spec);
-      });
+    this.log(INFO, "Using nsIHttpChannel.redirectTo: " + channel.URI.spec + " -> " + uri.spec);
+    try {
+      channel.redirectTo(uri);
       return true;
+    } catch(e) {
+      // This should not happen. We should only get exceptions if
+      // the channel was already open.
+      this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
+
+      // Don't return: Fallback to NoScript ChannelReplacement.js
     }
-    
     this.log(WARN,"Aborting redirection " + channel.name + ", should be HTTPS!");
     IOUtil.abort(channel);
     return false;
   },
- 
-  rewriteInPlace: function(old_uri, new_uri) {
-    // Strategy 1: replace the parts of the old_uri piecewise.  Often this
-    // works.  In some cases it doesn't.
-    this.log(NOTE,"Rewriting " + old_uri.spec + " -> " + new_uri.spec + "\n");
 
-    old_uri.scheme = new_uri.scheme;
-    old_uri.userPass = new_uri.userPass;
-    old_uri.username = new_uri.username;
-    if (new_uri.password)
-      old_uri.password = new_uri.password;
-    old_uri.host = new_uri.host;
-    old_uri.port = new_uri.port;
-    old_uri.path = new_uri.path;
-    return true;
-  },
-
-  getApplicableListForContext: function(ctx, uri) {
-    var alist = null; 
-    var domWin = null;
-    if (!ctx) {
-      this.log(NOTE, "No context loading " + uri.spec);
-      return null;
-    }
-    if (ctx instanceof CI.nsIDOMWindow) {
-      domWin = ctx.QueryInterface(CI.nsIDOMWindow);
-      doc = domWin.document;
-    } else if (ctx instanceof CI.nsIDOMNode) {
-      var doc = ctx.QueryInterface(CI.nsIDOMNode).ownerDocument;
-      if (! doc) {
-        this.log(NOTE, "No Document for request " + uri.spec);
-        return null;
-      }
-      domWin = doc.defaultView;
-      //this.log(DBUG,"Coerced nsIDOMWin from Node: " + domWin);
-    } else {
-      this.log(WARN, "Context for " + uri.spec + 
-                     "is some bizarre unexpected thing: " + ctx);
-      return null;
-    }
-    return HTTPSEverywhere.instance.getApplicableListForDOMWin(domWin, "for context/forceURI");
-  },
-
-  forceURI: function(uri, fallback, ctx) {
-  // Switch some uris to https; ctx is either nsIDOMNode or nsIDOMWindow as
-  // per the ContentPolicy API.
-  // Returns true if everything worked out (either correct replacement or no 
-  // replacement needed).  Retun False if all attempts to rewrite failed.
-    
-    // first of all we need to get the applicable rules list to keep track of
-    // what rulesets might have applied to this page
-    this.log(VERB, "Context is " + ctx);
-    var alist = this.getApplicableListForContext(ctx, uri);
-    var blob = HTTPSRules.rewrittenURI(alist, uri);
-    if (null == blob) return true;                          // no applicable rule
-    var newuri = blob.newuri;
-
-    try {
-      HTTPSEverywhere.instance.notifyObservers(uri, newuri.spec);
-      if (this.rewriteInPlace(uri, newuri)) 
-        this.log(INFO,"Forced URI " + uri.spec);
-      return true;
-    } catch(e) {
-        
-      if (ctx &&
-           (ctx instanceof CI.nsIDOMHTMLImageElement
-            || ctx instanceof CI.nsIDOMHTMLInputElement
-            || ctx instanceof CI.nsIObjectLoadingContent)) {
-
-        var type, attr;
-        if (ctx instanceof CI.nsIObjectLoadingContent) {
-          type = "Object";
-          attr = "data";
-        } else {
-          type = "Image";
-          attr = "src";
-        }
-        // XXX Isn't this a security flaw?  Have to bug Georgio about
-        // this... the content policy docs claim to require it, but
-        // it looks like a race condition nightmare.
-        Thread.asap(function() { ctx.setAttribute(attr, newuri.spec); });
-
-        var msg = type + " HTTP->HTTPS redirection to " + newuri.spec;
-
-        this.log(INFO,msg);  
-        throw msg;
-      }
-      
-      if (fallback && fallback()) {
-         this.log(INFO, "Channel redirection fallback on " + uri.spec);
-         return true;
-      }
-      
-      this.log(WARN,"Firefox wouldn't set https on " + uri.spec);
-      this.log(INFO,"(error was " + e + ")");
-    }
-    return false;
-  },
+  // getApplicableListForContext was remove along with the nsIContentPolicy
+  // bindings and the and forceURI path that used them.
   
   onCrossSiteRequest: function(channel, origin, browser, rw) {
     try {
@@ -243,7 +138,7 @@ const HTTPS = {
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions
-      var expiry = Math.min(c.expiry, Math.pow(2,31))
+      var expiry = Math.min(c.expiry, Math.pow(2,31));
       cookieManager.remove(c.host, c.name, c.path, false);
       cookieManager.add(c.host, c.path, c.name, c.value, true, c.isHTTPOnly, c.isSession, expiry);
     }
@@ -307,7 +202,7 @@ const HTTPS = {
       
     } else {
       this.log(WARN,"Detected unsafe navigation with NoScript-secured cookies: " + origin + " -> " + uri.spec);
-      this.log(WARN,uri.prePath + " cannot support secure cookies because it does not use HTTPS. Consider forcing HTTPS for " + uri.host + " in NoScript's Advanced HTTPS options panel.")
+      this.log(WARN,uri.prePath + " cannot support secure cookies because it does not use HTTPS. Consider forcing HTTPS for " + uri.host + " in NoScript's Advanced HTTPS options panel.");
     }
     
     var cs = CC['@mozilla.org/cookieService;1'].getService(CI.nsICookieService).getCookieString(uri, req);
@@ -320,12 +215,12 @@ const HTTPS = {
 
     if (cs) {
       dcookies.push.apply(
-        dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") } })
-         .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name }) })
+        dcookies, cs.split(/\s*;\s*/).map(function(cs) { var nv = cs.split("="); return { name: nv.shift(), value: nv.join("=") }; })
+         .filter(function(c) { return dcookies.every(function(x) { return x.name != c.name; }); })
       );
     }
 
-    cs = dcookies.map(function(c) { return c.name + "=" + c.value }).join("; ");
+    cs = dcookies.map(function(c) { return c.name + "=" + c.value; }).join("; ");
 
     this.log(WARN,"Sending Cookie for " + dhost + ": " + cs);
     req.setRequestHeader("Cookie", cs, false); // "false" because merge syntax breaks Cookie header

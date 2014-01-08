@@ -1,7 +1,60 @@
 <!--
 	Nonfunctional:
 
-		pipex.net	(redirects to talktalkbusiness.co.uk)
+		- pipex.net		(redirects to talktalkbusiness.co.uk)
+		- error.talktalk.co.uk	(dropped)
+		- mobile.talktalk.co.uk	(redirects to secure-mobiles.com; mismatched, CN: *.secure-mobiles.com)
+
+
+	Problematic domains:
+
+		- careers.talktalk.co.uk	(works, CN: Parallels Panel)
+		- webmail.talktalk.co.uk	(dropped)
+
+
+	Partially covered subdomains:
+
+		- webmail	(→ www, [^?/]+ 404s)
+
+
+	Fully covered domains:
+
+		- talktalk.co.uk subdomains:
+
+			- (www.)	(^ → www)
+			- help
+			- help2
+			- my
+			- myaccount
+			- sales
+			- sso
+
+
+	Mixed content:
+
+		- css on help2.talktalk.co.uk from fonts.googleapis.com *
+
+		- Images, on:
+
+			- community.talktalk.co.uk from community.talktalk.co.uk *
+			- community.talktalk.co.uk from imageshack.us *
+			- help2.talktalk.co.uk from m\d.ttxm.co.uk *
+			- www.talktalk.co.uk from m\d.ttxm.co.uk *
+
+		- Web bugs, on www.talktalk.co.uk from:
+
+			- fls.doubleclick.net *
+			- b.scorecardresearch.com *
+			- statse.webtrendslive.com *
+
+	* Secured by us
+
+
+	Observed cookie domains:
+
+		- .talktalk.co.uk
+		- community.talktalk.co.uk
+		- my.talktalk.co.uk
 
 -->
 <ruleset name="TalkTalk (partial)">
@@ -24,8 +77,11 @@
 	<rule from="^https?://(?:www\.)?t(?:alktalk|iscali)\.co\.uk/"
 		to="https://www.talktalk.co.uk/"/>
 
-	<rule from="^http://(help|myaccount|sales|sso)\.talktalk\.co\.uk/"
+	<rule from="^http://(community|help2?|my|myaccount|sales|sso)\.talktalk\.co\.uk/"
 		to="https://$1.talktalk.co.uk/"/>
+
+	<rule from="^http://webmail\.talktalk\.co\.uk/+(?:\?.*)?$"
+		to="https://www.talktalk.co.uk/mail/?from=aol" />
 
 	<rule from="^http://billing\.mytalktalkbusiness\.co\.uk/"
 		to="https://billing.mytalktalkbusiness.co.uk/"/>

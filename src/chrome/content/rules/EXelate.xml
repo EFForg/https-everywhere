@@ -1,28 +1,46 @@
 <!--
-	load.s3.amazonaws.com
+	CDN buckets:
+
+		- load.s3.amazonaws.com
 
 
 	Cert also matches these domains:
 
-		- dlxapi.exelate.com		(times out)
-		- texi.exelate.com		(ditto)
-		- texiapi.exelate.com		(ditto)
-		- loadxl.exelator.biz		(times out)
-		- insight.exelator.com
-		- www.load.exelator.com		(doesn't exist)
-		- datalinxapi.exelator.net	(rx_record_too_long)
-		- loadan.exelator.net		(ditto)
+		- datalinxng.exelate.com ¹
+		- dlxapi.exelate.com		(refused)
+		- texiapi.exelate.com ¹
+		- loadxl.exelator.biz ¹
+		- insight.exelator.com ²
+		- www.load.exelator.com ²
+
+	¹ Dropped
+	² Doesn't exist
 
 
 	Nonfunctional domains:
 
-		- (www.)exelate.com	(ssl_error_rx_record_too_long)
-		- datalinx.exelate.com	(shows optix login, valid cert)
+		- (www.)exelate.com
+		- datalinx.exelate.com ²
+		- exchange.exelate.com ²
+		- datalinxapi.exelator.net ¹
+
+	¹ http reply
+	² Refused
+
+
+	Problematic domains:
+
+		- ad.exelate.com	(mismatched, CN: ad.yieldmanager.com)
+		- loadan.exelator.com *
+		- www.exelator.com *
+
+	* Mismatched, CN: load.exelator.com
 
 
 	Fully covered domains:
 
 		- ad.exelate.com	(→ ad.yieldmanager.com)
+		- texi.exelate.com
 
 		- exelator.com subdomains:
 
@@ -36,9 +54,9 @@
 			- sandbox
 
 
-	Problematic domains:
+	Observed cookie domains:
 
-		- loadan.exelator.com	(mismatched)
+		- texi.exelate.com
 
 -->
 <ruleset name="eXelate">
@@ -47,11 +65,15 @@
 	<target host="*.exelator.com" />
 
 
+	<securecookie host="^texi\.exelate\.com$" name=".+" />
 	<securecookie host="^\.exelator\.com$" name=".+" />
 
 
 	<rule from="^https?://ad\.exelate\.com/"
 		to="https://ad.yieldmanager.com/" />
+
+	<rule from="^http://texi\.exelate\.com/"
+		to="https://texi.exelate.com/" />
 
 	<rule from="^http://(load(?:eu|m|r|us|xl)?|sandbox)\.exelator\.com/"
 		to="https://$1.exelator.com/" />

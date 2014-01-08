@@ -4,27 +4,51 @@
 
 	Nonfunctional domains:
 
-		- www.manageengine.jp	(presents 2 certs in succession:
-						- *.zoho.jp
-						- ssl.zoho.co.jp;
-					redirects to http)
+		- www.manageengine.jp	(shows zoho.jp; mismatched, CN: www.zoho.jp)
+		- blogs.manageengine.jp	(403, valid cert)
+
+
+	Problematic domains:
+
+		- training.manageengine.com	(shows www)
+
+
+	Fully covered domains:
+
+		- manageengine.com subdomains:
+
+			- (www.)
+			- blogs
+			- community
+			- forums
+			- ondemand
+			- pitstop *
+			- store
+
+	* Server is configured for rc4 only
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- blogs.manageengine.com from blogs.manageengine.com ¹
+			- forums.manageengine.com from uploads.zohocorp.com ²
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
 <ruleset name="ManageEngine">
 
 	<target host="manageengine.com" />
 	<target host="*.manageengine.com" />
-	<target host="blogs.manageengine.jp" />
 
 
 	<securecookie host="^forums\.manageengine\.com$" name=".+" />
-	<securecookie host="^blogs\.manageengine\.jp$" name=".*" />
 
 
-	<rule from="^http://((?:community|forums|ondemand|store|www)\.)?manageengine\.com/"
+	<rule from="^http://((?:blogs|community|forums|ondemand|pitstop|store|www)\.)?manageengine\.com/"
 		to="https://$1manageengine.com/" />
-
-	<rule from="^http://blogs\.manageengine\.jp/"
-		to="https://blogs.manageengine.jp/" />
 
 </ruleset>

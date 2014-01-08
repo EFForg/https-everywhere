@@ -1,6 +1,7 @@
 <!--
 	Other Nokia rulesets:
 
+		- Here.com.xml
 		- NAVTEQ.xml
 
 
@@ -16,7 +17,9 @@
 		- nokia.com subdomains:
 
 			- advertising		(self-signed)
+			- qt			(works; mismatched, CN: *.digia.com)
 			- blog.qt *
+			- developer.qt		(works; mismatched, CN: qt-project.org)
 			- labs.qt *
 			- doc.qt		(times out)
 
@@ -53,13 +56,14 @@
 			- maps
 			- api.maps
 			- maps.nlp
+			- \d.maps.nlp
 			- primeplace
 
 			- qt subdomains:
 
-				- ^
+				- ^		(→ qt.digia.com)
 				- blog		(→ blog.qt.digia.com)
-				- developer
+				- developer	(→ qt-project.org)
 				- labs		(→ blog.qt.digia.com)
 
 		- (www.)nokia.de	(^ → www)
@@ -94,8 +98,14 @@
 	<rule from="^https?://advertising\.nokia\.com/"
 		to="https://primeplace.nokia.com/" />
 
-	<rule from="^http://((?:account|(?:(?:analytics|projects|sso|www)\.)?developer|discussions\.europe|[ir](?:\.prod)?|maps(?:\.nlp)?|api\.maps|primeplace|(?:developer\.)?qt|www)\.)?nokia\.com/"
+	<rule from="^http://((?:account|(?:(?:analytics|projects|sso|www)\.)?developer|discussions\.europe|[ir](?:\.prod)?|maps(?:\.nlp)?|api\.maps|\d\.maps\.nlp|primeplace|www)\.)?nokia\.com/"
 		to="https://$1nokia.com/" />
+
+	<rule from="^http://developer\.nokia\.com/"
+		to="https://qt-project.org/" />
+
+	<rule from="^http://qt\.nokia\.com/"
+		to="https://qt.digia.com/" />
 
 	<rule from="^https?://(?:blog|labs)\.qt\.nokia\.com/"
 		to="https://blog.qt.digia.com/" />
