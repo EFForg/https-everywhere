@@ -63,11 +63,50 @@ const INCLUDE = function(name) {
   }
 }
 
+const WP_STATE_START = CI.nsIWebProgressListener.STATE_START;
+const WP_STATE_STOP = CI.nsIWebProgressListener.STATE_STOP;
+const WP_STATE_DOC = CI.nsIWebProgressListener.STATE_IS_DOCUMENT;
+const WP_STATE_START_DOC = WP_STATE_START | WP_STATE_DOC;
+const WP_STATE_RESTORING = CI.nsIWebProgressListener.STATE_RESTORING;
+
+const LF_VALIDATE_ALWAYS = CI.nsIRequest.VALIDATE_ALWAYS;
+const LF_LOAD_BYPASS_ALL_CACHES = CI.nsIRequest.LOAD_BYPASS_CACHE | CI.nsICachingChannel.LOAD_BYPASS_LOCAL_CACHE;
+
+const NS_OK = 0;
+const NS_BINDING_ABORTED = 0x804b0002;
+const NS_BINDING_REDIRECTED = 0x804b0003;
+const NS_ERROR_UNKNOWN_HOST = 0x804b001e;
+const NS_ERROR_REDIRECT_LOOP = 0x804b001f;
+const NS_ERROR_CONNECTION_REFUSED = 0x804b000e;
+const NS_ERROR_NOT_AVAILABLE = 0x804b0111;
+
+const LOG_CONTENT_BLOCK = 1;
+const LOG_CONTENT_CALL = 2;
+const LOG_CONTENT_INTERCEPT = 4;
+const LOG_CHROME_WIN = 8;
+const LOG_XSS_FILTER = 16;
+const LOG_INJECTION_CHECK = 32;
+const LOG_DOM = 64;
+const LOG_JS = 128;
+const LOG_LEAKS = 1024;
+const LOG_SNIFF = 2048;
+const LOG_CLEARCLICK = 4096;
+const LOG_ABE = 8192;
+
+const HTML_NS = "http://www.w3.org/1999/xhtml";
+
+const WHERE_UNTRUSTED = 1;
+const WHERE_TRUSTED = 2;
+const ANYWHERE = 3;
+
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
 const DUMMY_FUNC = function() {}
 const DUMMY_ARRAY = [];
 
+const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object");
+
+// This is probably obsolete since the switch to the channel.redirectTo API
 const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
 
 // XXX: Better plan for this?
@@ -90,7 +129,14 @@ function xpcom_generateQI(iids) {
   return new Function("iid", src + "throw Components.results.NS_ERROR_NO_INTERFACE;");
 }
 
-INCLUDE('ChannelReplacement', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+function xpcom_checkInterfaces(iid,iids,ex) {
+  for (var j = iids.length; j-- >0;) {
+    if (iid.equals(iids[j])) return true;
+  }
+  throw ex;
+}
+
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -115,6 +161,13 @@ function StorageController(command) {
   this.wrappedJSObject = this;
 };
 
+/*var Controller = Class("Controller", XPCOM(CI.nsIController), {
+  init: function (command, data) {
+      this.command = command;
+      this.data = data;
+  },
+  supportsCommand: function (cmd) cmd === this.command
+});*/
 
 function HTTPSEverywhere() {
 
@@ -157,6 +210,65 @@ function HTTPSEverywhere() {
   return;
 }
 
+
+// nsIContentPolicy interface
+// we use numeric constants for performance sake: 
+const TYPE_OTHER = 1;
+const TYPE_SCRIPT = 2;
+const TYPE_IMAGE = 3;
+const TYPE_STYLESHEET = 4;
+const TYPE_OBJECT = 5;
+const TYPE_DOCUMENT = 6;
+const TYPE_SUBDOCUMENT = 7;
+const TYPE_REFRESH = 8;
+const TYPE_XBL = 9;
+const TYPE_PING = 10;
+const TYPE_XMLHTTPREQUEST = 11;
+const TYPE_OBJECT_SUBREQUEST = 12;
+const TYPE_DTD  = 13;
+const TYPE_FONT = 14;
+const TYPE_MEDIA = 15;  
+// --------------
+// REJECT_SERVER = -3
+// ACCEPT = 1
+
+
+
+
+
+/*
+In recent versions of Firefox and HTTPS Everywhere, the call stack for performing an HTTP -> HTTPS rewrite looks like this:
+
+1. HTTPSEverywhere.observe() gets a callback with the "http-on-modify-request" topic, and the channel as a subject
+
+    2. HTTPS.replaceChannel() 
+
+       3. HTTPSRules.rewrittenURI() 
+            
+           4. HTTPSRules.potentiallyApplicableRulesets uses <target host=""> elements to identify relevant rulesets
+
+           foreach RuleSet:
+
+               4. RuleSet.transformURI()
+
+                   5. RuleSet.apply() does the tests and rewrites with RegExps, returning a string
+
+               4. RuleSet.transformURI() makes a new uri object for the destination string, if required
+
+    2. HTTPS.replaceChannel() calls channel.redirectTo() if a redirect is needed
+
+
+In addition, the following other important tasks happen along the way:
+
+HTTPSEverywhere.observe()    aborts if there is a redirect loop
+                             finds a reference to the ApplicableList or alist that represents the toolbar context menu
+
+HTTPS.replaceChannel()       notices redirect loops (and used to do much more complex XPCOM API work in the NoScript-based past)
+
+HTTPSRules.rewrittenURI()    works around weird URI types like about: and http://user:pass@example.com/
+                             and notifies the alist of what it should display for each ruleset
+
+*/
 
 // This defines for Mozilla what stuff HTTPSEverywhere will implement.
 
@@ -400,6 +512,8 @@ HTTPSEverywhere.prototype = {
       }
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
+      this.maybeShowObservatoryPopup();
+      this.maybeShowDevPopup();
     } else if (topic == "nsPref:changed") {
         switch (data) {
             case "security.mixed_content.block_active_content":
@@ -409,6 +523,26 @@ HTTPSEverywhere.prototype = {
         }
     }
     return;
+  },
+
+  maybeShowObservatoryPopup: function() {
+    // Show the popup at most once.  Users who enabled the Observatory before
+    // a version that would have shown it to them, don't need to see it
+    // again.
+    var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
+                      .getService(Components.interfaces.nsISupports)
+                      .wrappedJSObject;
+    var shown = ssl_observatory.myGetBoolPref("popup_shown");
+    var enabled = ssl_observatory.myGetBoolPref("enabled");
+    var that = this;
+    var obs_popup_callback = function(result) {
+      if (result) that.log(INFO, "Got positive proxy test.");
+      else        that.log(INFO, "Got negative proxy text.");
+      // We are now ready to show the popup in its most informative state
+      that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
+    };
+    if (!shown && !enabled)
+      ssl_observatory.registerProxyTestNotification(obs_popup_callback);
   },
 
   // nsIChannelEventSink implementation
