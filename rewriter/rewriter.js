@@ -1,11 +1,24 @@
+// HTTPS Rewriter.
+//
+// Uses the rulesets from HTTPS to recursively rewrite URL references in a
+// given directory to HTTPS. Uses protocol-relative URLs wherever possible.
+// Makes a copy of each file at filename.bak.
+//
+// Usage:
+//  (install node and npm)
+//  cd https-everywhere
+//  ./makecrx.sh
+//  cd rewriter
+//  js rewriter.js ~/path/to/my/webapp
+
 var path = require("path"),
     fs = require("fs"),
     DOMParser = require('xmldom').DOMParser,
     readdirp = require('readdirp'),
     es = require('event-stream'),
 
-    lrucache = require("./lru"),
-    rules = require("./rules"),
+    lrucache = require("../chromium/lru"),
+    rules = require("../chromium/rules"),
 
     URI = require("URIjs");
 
@@ -14,7 +27,10 @@ var ruleSets = null;
 function processDir(dir) {
   var stream = readdirp({
     root: dir,
-    fileFilter: '*.html'
+    fileFilter: ['*.html', '*.js', '*.rb', '*.erb', '*.mustache', 
+                 '*.scala', '*.c', '*.cc', '*.cpp', '*.cxx',
+                 '*.java', '*.go', '*.php', '*.css', '*.pl', '*.py',
+                 '*.rhtml', '*.sh', '*.yaml']
   });
 
   stream
@@ -58,7 +74,7 @@ function processFile(filename) {
 }
 
 function loadRuleSets() {
-  var fileContents = fs.readFileSync(path.join(__dirname, 'rules/default.rulesets'), {encoding: 'utf-8'});
+  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), {encoding: 'utf-8'});
   var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
   ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
 }
