@@ -144,39 +144,12 @@ INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'Applic
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-// This is black magic for storing Expando data w/ an nsIDOMWindow 
-// See http://pastebin.com/qY28Jwbv , 
-// https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIControllers
-
-StorageController.prototype = {
-  QueryInterface: XPCOMUtils.generateQI(
-    [ Components.interfaces.nsISupports,
-      Components.interfaces.nsIController ]),
-  wrappedJSObject: null,  // Initialized by constructor
-  supportsCommand: function (cmd) {return (cmd == this.command);},
-  isCommandEnabled: function (cmd) {return (cmd == this.command);},
-  onEvent: function(eventName) {return true;},
-  doCommand: function() {return true;}
-};
-
-function StorageController(command) {
-  this.command = command;
-  this.data = {};
-  this.wrappedJSObject = this;
-}
-
-/*var Controller = Class("Controller", XPCOM(CI.nsIController), {
-  init: function (command, data) {
-      this.command = command;
-      this.data = data;
-  },
-  supportsCommand: function (cmd) cmd === this.command
-});*/
-
 function HTTPSEverywhere() {
 
   // Set up logging in each component:
   HTTPS.log = HTTPSRules.log = RuleWriter.log = this.log = https_everywhereLog;
+
+  this.expandoMap = new WeakMap();
 
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;
@@ -307,128 +280,128 @@ HTTPSEverywhere.prototype = {
   },
 
   // An "expando" is an attribute glued onto something.  From NoScript.
-  getExpando: function(domWin, key) {
-    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
-    try {
-      if (c) {
-        c = c.wrappedJSObject;
-        //this.log(DBUG, "Found a controller, returning data");
-        return c.data[key];
-      } else {
-        this.log(INFO, "No controller attached to " + domWin);
+  getExpando: function(browser, key) {
+    let obj = this.expandoMap.get(browser);
+    if (!obj) {
+      dump(new Error().stack);
+        this.log(INFO, "No expando for " + browser);
         return null;
-      }
-    } catch(e) {
-      // Firefox 3.5
-      this.log(WARN,"exception in getExpando");
-      this.getExpando = this.getExpando_old;
-      this.setExpando = this.setExpando_old;
-      return this.getExpando_old(domWin, key, null);
     }
-  },
-  setExpando: function(domWin, key, value) {
-    var c = domWin.controllers.getControllerForCommand("https-everywhere-storage");
-    try {
-      if (!c) {
-        this.log(DBUG, "Appending new StorageController for " + domWin);
-        c = new StorageController("https-everywhere-storage");
-        domWin.controllers.appendController(c);
-      } else {
-        c = c.wrappedJSObject;
-      }
-      c.data[key] = value;
-    } catch(e) {
-      this.log(WARN,"exception in setExpando");
-      this.getExpando = this.getExpando_old;
-      this.setExpando = this.setExpando_old;
-      this.setExpando_old(domWin, key, value);
-    }
+    return obj[key];
   },
 
-  // This method is straight out of NoScript... we fall back to it in FF 3.*?
-  getExpando_old: function(domWin, key, defValue) {
-    var domObject = domWin.document;
-    return domObject && domObject.__httpsEStorage && domObject.__httpsEStorage[key] || 
-           (defValue ? this.setExpando(domObject, key, defValue) : null);
-  },
-  setExpando_old: function(domWin, key, value) {
-    var domObject = domWin.document;
-    if (!domObject) return null;
-    if (!domObject.__httpsEStorage) domObject.__httpsEStorage = {};
-    if (domObject.__httpsEStorage) domObject.__httpsEStorage[key] = value;
-    else this.log(WARN, "Warning: cannot set expando " + key + " to value " + value);
-    return value;
+  setExpando: function(browser, key, value) {
+    dump("SET EXPANDO\n");
+    dump(new Error().stack);
+    if (!this.expandoMap.has(browser)) {
+      this.expandoMap.set(browser, {});
+    }
+    let obj = this.expandoMap.get(browser);
+    obj[key] = value;
   },
 
+  onStateChange: function(wp, req, flags, status) {
+    if ((flags & CI.nsIWebProgressListener.STATE_START) &&
+        (flags & CI.nsIWebProgressListener.STATE_IS_DOCUMENT) &&
+        wp.isTopLevel) {
+      dump("\nDOC START\n\n");
+      let channel = req.QueryInterface(CI.nsIChannel);
+      let browser = this.getBrowserForChannel(channel);
+      if (!browser) {
+        this.log(WARN, "Unable to get <browser>");
+        return;
+      }
+      dump("ON LOCATION $$$$$$$$$$\n");
+      if (!this.newApplicableListForBrowser(browser)) 
+        this.log(WARN,"Something went wrong in onLocationChange");
+    }
+  },
+/*
   // We use onLocationChange to make a fresh list of rulesets that could have
   // applied to the content in the current page (the "applicable list" is used
   // for the context menu in the UI).  This will be appended to as various
   // content is embedded / requested by JavaScript.
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
-      if (!this.newApplicableListForDOMWin(wp.DOMWindow)) 
+      let location = uri.spec;
+      if(location.substr(0, 6) == "about:"){
+        return;
+      }
+      if (!req || !(req instanceof CI.nsIChannel)) {
+        this.log(WARN, "Bad request " + req + " for " + uri.spec);
+        return;
+      }
+      let browser = this.getBrowserForChannel(req);
+      if (!browser) {
+        this.log(WARN, "Unable to get browser for " + uri.spec);
+        return;
+      }
+      dump("ON LOCATION $$$$$$$$$$\n");
+      if (!this.newApplicableListForBrowser(browser)) 
         this.log(WARN,"Something went wrong in onLocationChange");
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }
   },
-
-  getWindowForChannel: function(channel) {
+*/
+  getBrowserForChannel: function(channel) {
     // Obtain an nsIDOMWindow from a channel
-    let loadContext;
+    let nc;
     try {
-      loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
+      nc = channel.notificationCallbacks ?
+           channel.notificationCallbacks :
+           channel.loadGroup.notificationCallbacks;
     } catch(e) {
-      try {
-        loadContext = channel.loadGroup.notificationCallbacks.getInterface(CI.nsILoadContext);
-      } catch(e) {
-        this.log(NOTE, "No loadContext for " + channel.URI.spec);
-        return null;
-      }
-    }
-
-    let domWin = loadContext.associatedWindow;
-    if (!domWin) {
-      this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
+      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
       return null;
     }
-
-    domWin = domWin.top;
-    return domWin;
+    if (!nc) {
+      return null;
+    }
+    try {
+      var loadContext = nc.getInterface(CI.nsILoadContext);
+      dump("loadContext = " + loadContext + "\n");
+      var browser = loadContext.topFrameElement;
+    } catch(e) {
+      this.log(INFO, "No <browser> element associated with request: " + channel.URI.spec);
+      return null;
+    }
+    if (!browser) {
+      this.log(NOTE, "failed to get <browser> for " + channel.URI.spec);
+      return null;
+    }
+    return browser;
   },
 
   // the lists get made when the urlbar is loading something new, but they
   // need to be appended to with reference only to the channel
   getApplicableListForChannel: function(channel) {
-    var domWin = this.getWindowForChannel(channel);
-    return this.getApplicableListForDOMWin(domWin, "on-modify-request w " + domWin);
+    var browser = this.getBrowserForChannel(channel);
+    return this.getApplicableListForBrowser(browser, "on-modify-request w " + browser);
   },
 
-  newApplicableListForDOMWin: function(domWin) {
-    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
-      this.log(WARN, "Get alist without domWin");
+  newApplicableListForBrowser: function(browser) {
+    if (!browser || !(browser instanceof CI.nsIContent)) {
+      this.log(WARN, "Get alist without browser");
       return null;
     }
-    var dw = domWin.top;
-    var alist = new ApplicableList(this.log,dw.document,dw);
-    this.setExpando(dw,"applicable_rules",alist);
+    var alist = new ApplicableList(this.log,browser);
+    this.setExpando(browser,"applicable_rules",alist);
     return alist;
   },
 
-  getApplicableListForDOMWin: function(domWin, where) {
-    if (!domWin || !(domWin instanceof CI.nsIDOMWindow)) {
-      //this.log(WARN, "Get alist without domWin");
+  getApplicableListForBrowser: function(browser, where) {
+    if (!browser || !(browser instanceof CI.nsIContent)) {
       return null;
     }
-    var dw = domWin.top;
-    var alist= this.getExpando(dw,"applicable_rules",null);
+    var alist= this.getExpando(browser,"applicable_rules");
     if (alist) {
       //this.log(DBUG,"get AL success in " + where);
       return alist;
     } else {
-      //this.log(DBUG, "Making new AL in getApplicableListForDOMWin in " + where);
-      alist = new ApplicableList(this.log,dw.document,dw);
-      this.setExpando(dw,"applicable_rules",alist);
+      //this.log(DBUG, "Making new AL in getApplicableListForBrowser in " + where);
+      alist = new ApplicableList(this.log,browser);
+      this.setExpando(browser,"applicable_rules",alist);
     }
     return alist;
   },
@@ -548,7 +521,7 @@ HTTPSEverywhere.prototype = {
 
         var dls = CC['@mozilla.org/docloaderservice;1']
             .getService(CI.nsIWebProgress);
-        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
+        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_ALL);
         this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
         HTTPSRules.init();
@@ -672,19 +645,19 @@ HTTPSEverywhere.prototype = {
     // If the new channel doesn't yet have a list of applicable rulesets, start
     // with the old one because that's probably a better representation of how
     // secure the load process was for this page
-    var domWin = this.getWindowForChannel(oldChannel);
+    var browser = this.getBrowserForChannel(oldChannel);
     var old_alist = null;
-    if (domWin) 
-      old_alist = this.getExpando(domWin,"applicable_rules", null);
-    domWin = this.getWindowForChannel(newChannel);
-    if (!domWin) return null;
-    var new_alist = this.getExpando(domWin,"applicable_rules", null);
+    if (browser) 
+      old_alist = this.getExpando(browser,"applicable_rules", null);
+    browser = this.getBrowserForChannel(newChannel);
+    if (!browser) return null;
+    var new_alist = this.getExpando(browser,"applicable_rules", null);
     if (old_alist && !new_alist) {
       new_alist = old_alist;
-      this.setExpando(domWin,"applicable_rules",new_alist);
+      this.setExpando(browser,"applicable_rules",new_alist);
     } else if (!new_alist) {
-      new_alist = new ApplicableList(this.log, domWin.document, domWin);
-      this.setExpando(domWin,"applicable_rules",new_alist);
+      new_alist = new ApplicableList(this.log, browser);
+      this.setExpando(browser,"applicable_rules",new_alist);
     }
     return new_alist;
   },

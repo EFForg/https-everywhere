@@ -4,17 +4,16 @@
 
 serial_number = 0;
 
-function ApplicableList(logger, doc, domWin) {
-  this.domWin = domWin;
-  this.uri = doc.baseURIObject.clone();
+function ApplicableList(logger, browser) {
+  this.uri = browser.currentURI.clone();
   if (!this.uri) {
     this.log(WARN,"NULL CLONING URI " + doc);
-    if (doc) 
-      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject);
-    if (doc.baseURIObject) 
-      this.log(WARN,"NULL CLONING URI " + doc.baseURIObject.spec);
+    if (browser) 
+      this.log(WARN,"NULL CLONING URI " + browser.currentURI);
+    if (browser.currentURI) 
+      this.log(WARN,"NULL CLONING URI " + browser.currentURI.spec);
   }
-  this.home = doc.baseURIObject.spec; // what doc we're housekeeping for
+  this.home = browser.currentURI.spec; // what doc we're housekeeping for
   this.log = logger;
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
@@ -40,14 +39,14 @@ ApplicableList.prototype = {
 
   active_rule: function(ruleset) {
     this.log(INFO,"active rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.active[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
 
   breaking_rule: function(ruleset) {
     this.log(NOTE,"breaking rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.breaking[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
@@ -55,7 +54,7 @@ ApplicableList.prototype = {
   inactive_rule: function(ruleset) {
 
     this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home +" -> " +
-             this.domWin.document.baseURIObject.spec+ " serial " + this.serial);
+             this.uri.spec+ " serial " + this.serial);
     this.inactive[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
@@ -140,8 +139,8 @@ ApplicableList.prototype = {
     var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
                      .getService(Components.interfaces.nsIWindowMediator);
                      
-    var domWin = wm.getMostRecentWindow("navigator:browser").content.document.defaultView.top;  
-    var location = domWin.document.baseURIObject.asciiSpec; //full url, including about:certerror details
+    var browser = wm.getMostRecentWindow("navigator:browser").gBrowser.selectedBrowser;
+    var location = browser.currentURI.asciiSpec; //full url, including about:certerror details
     
     if(location.substr(0, 6) == "about:"){
       //"From" portion of the rule is retrieved from the location bar via document.getElementById("urlbar").value
