@@ -250,6 +250,19 @@ HTTPSEverywhere.prototype = {
     }
   },
 
+  // We use onLocationChange to make a fresh list of rulesets that could have
+  // applied to the content in the current page (the "applicable list" is used
+  // for the context menu in the UI).  This will be appended to as various
+  // content is embedded / requested by JavaScript.
+  onLocationChange: function(wp, req, uri) {
+    if (wp instanceof CI.nsIWebProgress) {
+      if (!this.newApplicableListForDOMWin(wp.DOMWindow)) 
+        this.log(WARN,"Something went wrong in onLocationChange");
+    } else {
+      this.log(WARN,"onLocationChange: no nsIWebProgress");
+    }
+  },
+
   getWindowForChannel: function(channel) {
     // Obtain an nsIDOMWindow from a channel
     try {
