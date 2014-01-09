@@ -1,22 +1,20 @@
-function getRuleXml() {
-  var output = "";
-  for(var i = 0; i < rule_list.length; i++) {
-    var xhr = new XMLHttpRequest();
-    // Use blocking XHR to ensure everything is loaded by the time
-    // we return.
-    xhr.open("GET", chrome.extension.getURL(rule_list[i]), false);
-    xhr.send(null);
-    // Get file contents
-    if (xhr.readyState != 4) {
-      return;
-    }
-    // XXX TODO: I think you can't concat XML objects like this
-    output += xhr.responseXML;
+function getRuleXml(url) {
+  var xhr = new XMLHttpRequest();
+  // Use blocking XHR to ensure everything is loaded by the time
+  // we return.
+  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.send(null);
+  // Get file contents
+  if (xhr.readyState != 4) {
+    return;
   }
-  return output;
+  return xhr.responseXML;
 }
 
-var all_rules = new RuleSets(navigator.userAgent, LRUCache, getRuleXml(), localStorage);
+var all_rules = new RuleSets(navigator.userAgent, LRUCache,  localStorage);
+for (var i = 0; i < rule_list.length; i++) {
+  all_rules.addFromXml(getRuleXml(rule_list[i]));
+}
 var wr = chrome.webRequest;
 
 /*
