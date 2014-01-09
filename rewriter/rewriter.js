@@ -81,8 +81,8 @@ function processFile(filename) {
   });
 
   fs.writeFileSync(filename + ".new", rewrittenFile);
-  //fs.renameSync(filename, filename + ".bak");
-  //fs.renameSync(filename + ".new", filename);
+  fs.renameSync(filename, filename + ".bak");
+  fs.renameSync(filename + ".new", filename);
 }
 
 function loadRuleSets() {
