@@ -45,7 +45,11 @@ function processDir(dir) {
   .pipe(es.mapSync(function (entry) {
     var filename = path.join(dir, entry.path);
     console.log("Rewriting " + filename);
-    processFile(filename);
+    try {
+      processFile(filename);
+    } catch(e) {
+      console.log(filename, e);
+    }
   }));
 }
 
