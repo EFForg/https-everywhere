@@ -3,7 +3,8 @@
 var switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
-//   switchPlannerInfo[tabId][resource_host][active_content][url];
+//   switchPlannerInfo[tabId]["rw"/"nrw"[resource_host][active_content][url];
+// rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
 var all_rules = new RuleSets();
@@ -183,7 +184,7 @@ var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
   if (rewritten_url == null)
-    rw = "no";
+    rw = "nrw";
 
   var active_content = 0;
   if (activeTypes[type]) {
@@ -195,18 +196,17 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
     active_content = 1;
   }
 
-  // Only add if we were unable to rewrite this URL.
-  // TODO: Maybe also count rewritten URLs separately.
-  if (rewritten_url != null) return;
-
-  if (!switchPlannerInfo[tab_id])
+  if (!switchPlannerInfo[tab_id]) {
     switchPlannerInfo[tab_id] = {};
-  if (!switchPlannerInfo[tab_id][resource_host])
-    switchPlannerInfo[tab_id][resource_host] = {};
-  if (!switchPlannerInfo[tab_id][resource_host][active_content])
-    switchPlannerInfo[tab_id][resource_host][active_content] = {};
+    switchPlannerInfo[tab_id]["rw"] = {};
+    switchPlannerInfo[tab_id]["nrw"] = {};
+  }
+  if (!switchPlannerInfo[tab_id][rw][resource_host])
+    switchPlannerInfo[tab_id][rw][resource_host] = {};
+  if (!switchPlannerInfo[tab_id][rw][resource_host][active_content])
+    switchPlannerInfo[tab_id][rw][resource_host][active_content] = {};
 
-  switchPlannerInfo[tab_id][resource_host][active_content][resource_url] = 1;
+  switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
 }
 
 // Return the number of properties in an object. For associative maps, this is
@@ -222,9 +222,13 @@ function objSize(obj) {
 
 // Make an array of asset hosts by score so we can sort them,
 // presenting the most important ones first.
-function sortSwitchPlanner(tab_id) {
+function sortSwitchPlanner(tab_id, rewritten) {
   var asset_host_list = [];
-  var tabInfo = switchPlannerInfo[tab_id];
+  if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
+      typeof switchPlannerInfo[tab_id][rewritten] === 'undefined') {
+    return [];
+  }
+  var tabInfo = switchPlannerInfo[tab_id][rewritten];
   for (var asset_host in tabInfo) {
     var ah = tabInfo[asset_host];
     var activeCount = objSize(ah[1]);
@@ -237,8 +241,8 @@ function sortSwitchPlanner(tab_id) {
 }
 
 // Format the switch planner output for presentation to a user.
-function switchPlannerSmallHtml(tab_id) {
-  var asset_host_list = sortSwitchPlanner(tab_id);
+function switchPlannerSmallHtmlSection(tab_id, rewritten) {
+  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   if (asset_host_list.length == 0) {
     return "<b>none</b>";
   }
@@ -263,6 +267,19 @@ function switchPlannerSmallHtml(tab_id) {
   return output;
 }
 
+function switchPlannerRenderSections(tab_id, f) {
+  return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
+         "these domains and add them to HTTPS Everywhere):<br/>" +
+         f(tab_id, "nrw") +
+         "<br/>Resources rewritten successfully from this tab (update these " +
+         "in your source code):<br/>" +
+         f(tab_id, "rw");
+}
+
+function switchPlannerSmallHtml(tab_id) {
+  return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
+}
+
 function linksFromKeys(map) {
   if (typeof map == 'undefined') return "";
   var output = "";
@@ -275,7 +292,11 @@ function linksFromKeys(map) {
 }
 
 function switchPlannerDetailsHtml(tab_id) {
-  var asset_host_list = sortSwitchPlanner(tab_id);
+  return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
+}
+
+function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
+  var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   var output = "";
 
   for (var i = asset_host_list.length - 1; i >= 0; i--) {
@@ -286,11 +307,11 @@ function switchPlannerDetailsHtml(tab_id) {
     output += "<b>" + host + "</b>: ";
     if (activeCount > 0) {
       output += activeCount + " active<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][host][1]);
+      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][1]);
     }
     if (passiveCount > 0) {
       output += "<br/>" + passiveCount + " passive<br/>";
-      output += linksFromKeys(switchPlannerInfo[tab_id][host][0]);
+      output += linksFromKeys(switchPlannerInfo[tab_id][rewritten][host][0]);
     }
     output += "<br/>";
   }
