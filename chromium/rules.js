@@ -71,7 +71,7 @@ RuleSet.prototype = {
 };
 
 
-function RuleSets(userAgent, cache, ruleXml, ruleActiveStates) {
+function RuleSets(userAgent, cache, ruleActiveStates) {
   // Load rules into structure
   this.targets = {};
   this.userAgent = userAgent;
@@ -85,14 +85,15 @@ function RuleSets(userAgent, cache, ruleXml, ruleActiveStates) {
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
-
-  var sets = ruleXml.getElementsByTagName("ruleset");
-  for (var i = 0; i < sets.length; ++i) {
-    this.parseOneRuleset(sets[i]);
-  }
 }
 
 RuleSets.prototype = {
+  addFromXml: function(ruleXml) {
+    var sets = ruleXml.getElementsByTagName("ruleset");
+    for (var i = 0; i < sets.length; ++i) {
+      this.parseOneRuleset(sets[i]);
+    }
+  },
 
   localPlatformRegexp: (function() {
     if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(this.userAgent)) {
@@ -314,4 +315,7 @@ RuleSets.prototype = {
     return null;
   }
 };
-exports.RuleSets = RuleSets;
+
+// Export for HTTPS Rewriter if applicable.
+if (typeof exports != 'undefined')
+  exports.RuleSets = RuleSets;

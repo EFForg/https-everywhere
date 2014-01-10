@@ -5,11 +5,14 @@
 // Makes a copy of each file at filename.bak.
 //
 // Usage:
-//  (install node and npm)
 //  cd https-everywhere
-//  ./makecrx.sh
+//  ./makecrx.sh # to build default.rulesets
 //  cd rewriter
-//  js rewriter.js ~/path/to/my/webapp
+//  (install node and npm)
+//  npm install
+//  node rewriter.js ~/path/to/my/webapp
+//  cd ~/path/to/my/webapp
+//  git diff
 
 var path = require("path"),
     fs = require("fs"),
@@ -42,9 +45,22 @@ function processDir(dir) {
   .pipe(es.mapSync(function (entry) {
     var filename = path.join(dir, entry.path);
     console.log("Rewriting " + filename);
-    processFile(filename);
+    try {
+      processFile(filename);
+    } catch(e) {
+      console.log(filename, e);
+    }
   }));
 }
+
+// Overwrite the default URI find_uri_expression with a modified one that
+// mitigates a catastrophic backtracking issue common in CSS.
+// The workaround was to insist that URLs start with http, since those are the
+// only ones we want to rewrite anyhow. Note that this may still go exponential
+// on certain inputs. http://www.regular-expressions.info/catastrophic.html
+// Example string that blows up URI.withinString:
+//  image:url(http://img.youtube.com/vi/x7f
+URI.find_uri_expression = /\b((?:http:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+)+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
 
 function processFile(filename) {
   var contents = fs.readFileSync(filename, 'utf8');
@@ -69,14 +85,15 @@ function processFile(filename) {
   });
 
   fs.writeFileSync(filename + ".new", rewrittenFile);
-  //fs.renameSync(filename, filename + ".bak");
-  //fs.renameSync(filename + ".new", filename);
+  fs.renameSync(filename, filename + ".bak");
+  fs.renameSync(filename + ".new", filename);
 }
 
 function loadRuleSets() {
-  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf-8');
-  var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
-  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
+  console.log("Loading rules...");
+  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
+  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, {});
+  ruleSets.addFromXml(xml);
 }
 
 loadRuleSets();
