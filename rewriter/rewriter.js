@@ -47,7 +47,7 @@ function processDir(dir) {
 }
 
 function processFile(filename) {
-  var contents = fs.readFileSync(filename, {encoding: 'utf-8'});
+  var contents = fs.readFileSync(filename, 'utf8');
   var rewrittenFile = URI.withinString(contents, function(url) {
     var uri = new URI(url);
     if (uri.protocol() != 'http') return url;
@@ -74,7 +74,7 @@ function processFile(filename) {
 }
 
 function loadRuleSets() {
-  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), {encoding: 'utf-8'});
+  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf-8');
   var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
   ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, xml, {});
 }
