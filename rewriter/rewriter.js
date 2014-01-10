@@ -92,6 +92,7 @@ function processFile(filename) {
 function loadRuleSets() {
   console.log("Loading rules...");
   var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
+  var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
   ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, {});
   ruleSets.addFromXml(xml);
 }
