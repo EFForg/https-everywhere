@@ -3,7 +3,7 @@
 var switchPlannerEnabledFor = {};
 // Detailed information recorded when the HTTPS Switch Planner is active.
 // Structure is:
-//   switchPlannerInfo[tabId]["rw"/"nrw"[resource_host][active_content][url];
+//   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
