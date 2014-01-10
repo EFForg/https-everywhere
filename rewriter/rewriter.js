@@ -97,6 +97,25 @@ function loadRuleSets() {
   ruleSets.addFromXml(xml);
 }
 
+function usage() {
+  console.log("Usage: \n   nodejs rewriter.js /path/to/my/webapp \n");
+  process.exit(1);
+}
+
+if (process.argv.length <= 2) {
+  usage();
+}
+
+for (var i = 2; i < process.argv.length; i++) {
+  var rewritePath = process.argv[i];
+  if (rewritePath.indexOf('-') == 0)
+    usage();
+  if (!fs.existsSync(rewritePath)) {
+    console.log("Path doesn't exist: " + rewritePath);
+    process.exit(1);
+  }
+}
+
 loadRuleSets();
 for (var i = 2; i < process.argv.length; i++) {
   processDir(process.argv[i]);
