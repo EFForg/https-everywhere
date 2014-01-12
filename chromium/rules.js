@@ -126,7 +126,6 @@ RuleSets.prototype = {
     }
     ruleCache.remove(params.host);
     // TODO: maybe promote this rule?
-    // TODO: look for duplicates.
     this.targets[params.host].push(new_rule_set);
     log(INFO, 'done adding rule');
     return true;

@@ -126,7 +126,7 @@ function addManualRule() {
       var params = {
         host : e("new-rule-host").value,
         redirectTo : e("new-rule-redirect").value,
-        urlMatcher : e("new-rule-regex").value,
+        urlMatcher : e("new-rule-regex").value
       };
       backgroundPage.addNewRule(params, function() {
         location.reload();
@@ -137,5 +137,13 @@ function addManualRule() {
       show(e("add-rule-link"));
       hide(e("add-new-rule-div"));
     });
+    e("new-rule-show-advanced-link").addEventListener("click", function() {
+      show(e("new-rule-advanced"));
+      hide(e("new-rule-regular-text"));
+    });
+    e("new-rule-hide-advanced-link").addEventListener("click", function() {
+      hide(e("new-rule-advanced"));
+      show(e("new-rule-regular-text"));
+    });
   });
-};
+}

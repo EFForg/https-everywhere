@@ -2,7 +2,7 @@ var USER_RULE_KEY = 'userRules';
 
 var getStoredUserRules = function() {
   var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
-  var oldUserRules = []
+  var oldUserRules = [];
   if (oldUserRuleString) {
     oldUserRules = JSON.parse(oldUserRuleString);
   }
