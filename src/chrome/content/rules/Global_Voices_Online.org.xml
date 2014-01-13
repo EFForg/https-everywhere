@@ -1,0 +1,98 @@
+<!--
+	CDN buckets:
+
+		- static.globalvoices.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- img		(404, valid cert)
+		- summit2012	("server error", valid cert)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- advocacy
+		- ar
+		- ay
+		- aym
+		- bn
+		- books
+		- da
+		- de
+		- el
+		- es
+		- fa
+		- fr
+		- hu
+		- id
+		- it
+		- jp
+		- ko
+		- mg
+		- mk
+		- nl
+		- pl
+		- pt
+		- rising
+		- ru
+		- sr
+		- sv
+		- sw
+		- zh
+
+
+	Mixed content:
+
+		- css on advocacy and rising from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- ^, advocacy, ar, ay, bn, books, el, es, fa, it, jp, ko, mk, pt, and rising from $self ¹
+			- ar, ay, aym, bn, ca, de, el, es, fa, fr, hu, id, jp, ko, mk, mg, nl, pl, pt, ru, sr, sv, sw, and zh from ^ ¹
+			- es and mk from advocacy ¹
+			- aym from ay ¹
+			- da from bn ¹
+			- it from books ¹
+			- ay, aym, ca, de, pl, and sv from es ¹
+			- mk from fr ¹
+			- ar, bn, el, es, fa, fr, hu, id, pl, and sr from img ²
+			- id from jp ¹
+			- ar, de, fr, and sv from pt ¹
+			- ar, ay, aym, and mk from rising ¹
+			- da from summit2012 ²
+			- id from www ¹
+			- ^, advocacy, ar, ay, aym, bn, ca, da, de, el, es, fa, hu, id, it, jp, ko, mg, mk, nl, pl, pt, rising, ru, sr, sv, sw, and zh from static.globalvoices.s3.amazonaws.com ¹
+			- hu from atlatszo.hu ³
+			- bn from photos1.blogger.com ¹
+			- advocacy and rising from creativecommons.org ¹
+			- fr from farm\d.static.flickr.com ¹
+			- fr from a\d.twimg.com ¹
+			- da from verdensnyt.dk ²
+
+		- Web bugs, on:
+
+			- ^ from pixel.quantserve.com ¹
+			- advocacy, es, and fr from www.facebook.com ¹
+			- id from badge.facebook.com ¹
+
+	¹ Secured by us
+	² Unsecurable
+	³ Rule disabled by default
+
+-->
+<ruleset name="Global Voices Online.org (partial)">
+
+	<target host="globalvoicesonline.org" />
+	<target host="*.globalvoicesonline.org" />
+		<!--exclusion pattern="^http://(img|summit2012)\." /-->
+
+
+	<securecookie host="^\.(?:\w+\.)?globalvoicesonline\.org$" name=".+" />
+
+
+	<rule from="^http://((?:advocacy|ar|aym?|bn|books|da|de|el|es|fa|fr|hu|id|it|jp|ko|mg|mk|nl|pl|pt|rising|ru|s[rvw]|www|zh)\.)?globalvoicesonline\.org/"
+		to="https://$1globalvoicesonline.org/" />
+
+</ruleset>
