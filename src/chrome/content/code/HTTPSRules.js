@@ -416,19 +416,32 @@ const HTTPSRules = {
       this.rulesets = [];
       this.targets = {};  // dict mapping target host patterns -> lists of
                           // applicable rules
-      // dict listing target host patterns that don't exist in the DB
-      // (aka negative cache)
-      // TODO: Make this an LRU cache; clear it on history clear
-      this.nonTargets = {};
       this.rulesetsByID = {};
       this.rulesetsByName = {};
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
 
       // Initialize database connection.
-      var dbFile = FileUtils.getFile("ProfD", ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
-      var mDBConn = Services.storage.openDatabase(dbFile);
-      this.queryForTarget = mDBConn.createStatement("select id, contents from targets, rulesets where targets.ruleset_id = rulesets.id and host = :target;");
+      var dbFile = FileUtils.getFile("ProfD",
+        ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
+      var rulesetDBConn = Services.storage.openDatabase(dbFile);
+      this.queryForTarget = rulesetDBConn.createStatement(
+        "select id, contents from targets, rulesets " +
+        "where targets.ruleset_id = rulesets.id and host = :target;");
+
+      // Preload the list of which targets are available in the DB.
+      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
+      // but is faster than loading all of the rulesets. If this becomes a
+      // bottleneck, change it to load in a background webworker, or load
+      // a smaller bloom filter instead.
+      this.targetsAvailable = new Set(); // Firefox-specific
+      var targetsQuery = rulesetDBConn.createStatement("select host from targets");
+      this.log(WARN, "Adding targets...");
+      while (targetsQuery.executeStep()) {
+        var host = targetsQuery.row.host;
+        this.targetsAvailable.add(host);
+      }
+      this.log(WARN, "Done adding targets.");
     } catch(e) {
       this.log(WARN,"Rules Failed: "+e);
     }
@@ -598,15 +611,18 @@ const HTTPSRules = {
   // so we only hit the DB when we know there is something to be had.
   queryTarget: function(target) {
     this.log(WARN, "Querying DB for " + target);
+    var output = [];
+
     var statement = this.queryForTarget.clone();
     statement.params.target = target;
 
     try {
-      if (statement.executeStep())
-        return statement.row.contents;
+      while (statement.executeStep())
+        output.push(statement.row.contents);
     } finally {
       statement.reset();
     }
+    return output;
   },
 
   potentiallyApplicableRulesets: function(host) {
@@ -616,20 +632,21 @@ const HTTPSRules = {
 
     var attempt = function(target) {
       // First check for this target in our in-memory negative cache
-      if (this.nonTargets[target]) {
-        return;
-      } else if (this.targets[target] && // Then our positive cache
+      if (this.targets[target] && // Then our positive cache
           this.targets[target].length > 0) {
         this.setInsert(results, this.targets[target]);
-      } else {
+      } else if (this.targetsAvailable.has(target)) {
         // If not found there, check the DB and load the ruleset as appropriate
         // TODO: Add negative caching so we don't repeatedly query the DB for
         // things that aren't there.
-        var ruleset = this.queryTarget(target);
-        if (ruleset != null) {
-          this.log(INFO, "Found ruleset in DB for " + host + ": " + ruleset);
-          RuleWriter.readFromString(ruleset, this);
-          this.setInsert(results, this.targets[target]);
+        var rulesets = this.queryTarget(target);
+        if (rulesets.length > 0) {
+          for (var i = 0; i < rulesets.length; i++) {
+            var ruleset = rulesets[i];
+            this.log(INFO, "Found ruleset in DB for " + host + ": " + ruleset);
+            RuleWriter.readFromString(ruleset, this);
+            this.setInsert(results, this.targets[target]);
+          }
         } else {
           this.nonTargets[target] = 1;
         }
