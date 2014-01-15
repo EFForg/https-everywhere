@@ -38,9 +38,9 @@ c.execute('''CREATE TABLE rulesets
               contents TEXT)''')
 c.execute('''DROP TABLE IF EXISTS targets''')
 c.execute('''CREATE TABLE targets
-             (
-              host TEXT,
+             (host TEXT,
               ruleset_id INTEGER)''')
+c.execute('''CREATE INDEX host_index on targets(host)''')
 
 parser = etree.XMLParser(remove_blank_text=True)
 
