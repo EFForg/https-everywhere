@@ -1,0 +1,35 @@
+<!--
+	For rules causing false/broken MCB, see Jarian_Gibson.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css, from:
+
+			- $self *
+			- fonts.googleapis.com *
+
+		- Images from cdn *
+
+	* Secured by us
+
+-->
+<ruleset name="Jarian Gibson.com (partial)">
+
+	<target host="jariangibson.com" />
+	<target host="cdn.jariangibson.com" />
+	<target host="www.jariangibson.com" />
+		<!--
+			As https://j... redirects to http://www...,
+			we can avoid a duplicate target warning by
+			blanket-rewriting !www in this ruleset.
+
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="http://www\.jariangibson\.com/(?!\?custom-css=1|favicon\.ico)" />
+
+
+	<rule from="^http://(cdn\.|www\.)?jariangibson\.com/"
+		to="https://$1jariangibson.com/" />
+
+</ruleset>
