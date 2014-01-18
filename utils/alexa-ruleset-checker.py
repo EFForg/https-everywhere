@@ -13,9 +13,12 @@
 
 import csv
 import xml.etree.ElementTree as etree
+import subprocess
+import random
 
 # Variables and constants
 sitesList = []
+tmpRulesFileName = "/tmp/rulesDiff-" + format(random.randrange(1,65535)) # Feel free to enlarge if needed
 
 # Functions
 def ruleLookup(target):
@@ -24,6 +27,9 @@ def ruleLookup(target):
         return 1
     except:
         return 0
+
+# Fetch the Alexa Top 1M
+
 
 # Handles reading the Alexa Top 1M and pushing all sites in a list
 sitesReader = csv.reader(open('top-1m.csv'), delimiter=',', quotechar='"')
@@ -35,16 +41,22 @@ for row in sitesReader:
     except csv.Error as e:
             sys.exit('file %s, line %d: %s' % (filename, reader.line_num, e))
 
-# TODO: Somebody needs to write a function that generates a diff from the STABLE and UNSTABLE branch
-# I'll go manually with `git diff --name-status master..remotes/origin/stable src/chrome/content/rules` and call the file "newRules.diff"
-rulesList = open('newRules.diff', 'r')
+# `git diff` the master revision against stable, rules folder only
+try:
+    tmpRulesFile = open(tmpRulesFileName,"w")
+    subprocess.call(['git', 'diff', '--name-status', 'master..remotes/origin/stable', '../src/chrome/content/rules'], stdout=tmpRulesFile)
+    tmpRulesFile.close()
+except OSError as e:
+    sys.exit('An OSError exception was raised: %s' % (e))
+
+rulesList = open(tmpRulesFileName, 'r')
 for line in rulesList:
     try:
         # Split into "file mode in commit + file path"
         ruleFile = line.split()
         found = 0
         # If file mode is "A" (add)
-        if ruleFile[0] == "A": #If file was "added", parse
+        if ruleFile[0] == "A": # If file was "added", parse
             ruleText = etree.parse(ruleFile[1])
             for target in ruleText.findall('target'):
                 FQDN = target.get('host') # URL of the website
@@ -60,4 +72,5 @@ for line in rulesList:
         print("File not found:", ruleFile[1])
         pass
 
-
+# Close the rules file
+rulesList.close()
