@@ -631,14 +631,12 @@ const HTTPSRules = {
     var results = [];
 
     var attempt = function(target) {
-      // First check for this target in our in-memory negative cache
-      if (this.targets[target] && // Then our positive cache
+      // First try the in-memory rulesets
+      if (this.targets[target] &&
           this.targets[target].length > 0) {
         this.setInsert(results, this.targets[target]);
       } else if (this.targetsAvailable.has(target)) {
         // If not found there, check the DB and load the ruleset as appropriate
-        // TODO: Add negative caching so we don't repeatedly query the DB for
-        // things that aren't there.
         var rulesets = this.queryTarget(target);
         if (rulesets.length > 0) {
           for (var i = 0; i < rulesets.length; i++) {
@@ -653,6 +651,8 @@ const HTTPSRules = {
       }
     }.bind(this);
 
+    attempt(host);
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
@@ -664,7 +664,7 @@ const HTTPSRules = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (i = 1; i <= segmented.length - 2; ++i) {
+    for (i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
       attempt(t);
     }
