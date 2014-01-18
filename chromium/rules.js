@@ -76,6 +76,7 @@ RuleSet.prototype = {
 
 function RuleSets() {
   // Load rules into structure
+  var t1 = new Date().getTime();
   this.targets = {};
 
   for(var i = 0; i < rule_list.length; i++) {
@@ -89,6 +90,8 @@ function RuleSets() {
     xhr.send(null);
     this.loadRuleSet(xhr);
   }
+  var t2 =  new Date().getTime();
+  log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
 }
 
 RuleSets.prototype = {
