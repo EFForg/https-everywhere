@@ -638,20 +638,24 @@ const HTTPSRules = {
     req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
     req.send();
     var domains = req.response.split("\n");
-    this.log(WARN, "Got array of length " + domains.length);
     var domains_l = domains.length - 1; // The last entry in this thing is bogus
+    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
+    var count = 0;
     var t1 = new Date().getTime();
     for (var n = 0; n < domains_l; n++) {
-      this.potentiallyApplicableRulesets("www." + domains[n]);
+      if (this.potentiallyApplicableRulesets("www." + domains[n]).length != 0)
+        count++;
     }
     var t2 = new Date().getTime();
-    this.log(NOTE,domains_l + " calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
+    count = 0;
     t1 = new Date().getTime();
     for (var n = 0; n < domains_l; n++) {
-      this.potentiallyApplicableRulesets("www." + domains[n]);
+      if (this.potentiallyApplicableRulesets("www." + domains[n]).length != 0)
+        count++;
     }
     t2 = new Date().getTime();
-    this.log(NOTE,domains_l + " subsequent calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
   shouldSecureCookie: function(applicable_list, c, known_https) {
