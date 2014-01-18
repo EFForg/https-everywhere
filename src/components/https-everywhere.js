@@ -185,6 +185,7 @@ function HTTPSEverywhere() {
   this.https_rules = HTTPSRules;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
+  this.browser_initialised = false; // the browser is completely loaded
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
@@ -545,12 +546,21 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
       this.maybeShowDevPopup();
+      this.browser_initialised = true;
     } else if (topic == "nsPref:changed") {
         // If the user toggles the Mixed Content Blocker settings, reload the rulesets
         // to enable/disable the mixedcontent ones
+
+        // this pref gets set to false and then true during FF 26 startup!
+        // so do nothing if we're being notified during startup
+	if (!this.browser_initialised)
+            return;
         switch (data) {
             case "security.mixed_content.block_active_content":
             case "extensions.https_everywhere.enable_mixed_rulesets":
+                var p = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
+    		var val = p.getBoolPref("security.mixed_content.block_active_content");
+		this.log(INFO,"nsPref:changed for "+data + " to " + val);
                 HTTPSRules.init();
                 break;
         }
