@@ -441,7 +441,13 @@ const HTTPSRules = {
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
-    this.testRulesetRetrievalPerformance();
+    try {
+      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
+        this.testRulesetRetrievalPerformance();
+      }
+    } catch(e) {
+      this.log(WARN, "Explosion during testing " + e);
+    }
     return;
   },
 
