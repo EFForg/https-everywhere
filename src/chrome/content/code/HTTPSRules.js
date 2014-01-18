@@ -607,6 +607,7 @@ const HTTPSRules = {
       this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
       return [];
     }
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
@@ -641,15 +642,15 @@ const HTTPSRules = {
     var domains_l = domains.length - 1; // The last entry in this thing is bogus
     var t1 = new Date().getTime();
     for (var n = 0; n < domains_l; n++) {
-      this.potentiallyApplicableRulesets(domains[n]);
+      this.potentiallyApplicableRulesets("www." + domains[n]);
     }
     var t2 = new Date().getTime();
     this.log(NOTE,domains_l + " calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
-    var t1 = new Date().getTime();
+    t1 = new Date().getTime();
     for (var n = 0; n < domains_l; n++) {
-      this.potentiallyApplicableRulesets(domains[n]);
+      this.potentiallyApplicableRulesets("www." + domains[n]);
     }
-    var t2 = new Date().getTime();
+    t2 = new Date().getTime();
     this.log(NOTE,domains_l + " subsequent calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
   },
 
