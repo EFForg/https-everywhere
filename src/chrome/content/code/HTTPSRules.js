@@ -441,6 +441,7 @@ const HTTPSRules = {
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    this.testRulesetRetrievalPerformance();
     return;
   },
 
@@ -625,6 +626,31 @@ const HTTPSRules = {
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
+  },
+
+  testRulesetRetrievalPerformance: function() {
+    // We can use this function to measure the impact of changes in the ruleset
+    // storage architecture, potentiallyApplicableRulesets() caching
+    // implementations, etc. 
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
+    req.send();
+    var domains = req.response.split("\n");
+    this.log(WARN, "Got array of length " + domains.length);
+    var domains_l = domains.length - 1; // The last entry in this thing is bogus
+    var t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      this.potentiallyApplicableRulesets(domains[n]);
+    }
+    var t2 = new Date().getTime();
+    this.log(NOTE,domains_l + " calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    var t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      this.potentiallyApplicableRulesets(domains[n]);
+    }
+    var t2 = new Date().getTime();
+    this.log(NOTE,domains_l + " subsequent calls to potentiallyApplicableRulesets took " + (t2 - t1) / 1000.0 + " seconds");
   },
 
   shouldSecureCookie: function(applicable_list, c, known_https) {
