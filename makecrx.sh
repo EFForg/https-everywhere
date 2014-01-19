@@ -37,7 +37,7 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 echo "Building chrome version" $VERSION
 
 if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+	VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
 elif [ -x utils/trivial-validate ] ; then
   # This case probably never happens
 	VALIDATE=./utils/trivial-validate
@@ -117,7 +117,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 
 # zip up the crx dir
 cwd=$(pwd -P)
-(cd "$dir" && python ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
 echo >&2 "Unsigned package has shasum: `shasum "$cwd/$zip"`" 
 
 # signature

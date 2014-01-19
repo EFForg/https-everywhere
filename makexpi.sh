@@ -52,7 +52,7 @@ fi
 
 if [ "$1" != "--fast" ] ; then
   if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
     VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -x utils/trivial-validate ] ; then
@@ -128,7 +128,7 @@ cd src
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
-python ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
 if [ "$ret" != 0 ]; then
