@@ -441,6 +441,13 @@ const HTTPSRules = {
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    try {
+      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
+        this.testRulesetRetrievalPerformance();
+      }
+    } catch(e) {
+      this.log(WARN, "Explosion during testing " + e);
+    }
     return;
   },
 
@@ -606,6 +613,7 @@ const HTTPSRules = {
       this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
       return [];
     }
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
@@ -625,6 +633,36 @@ const HTTPSRules = {
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
+  },
+
+  testRulesetRetrievalPerformance: function() {
+    // We can use this function to measure the impact of changes in the ruleset
+    // storage architecture, potentiallyApplicableRulesets() caching
+    // implementations, etc. 
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
+    req.send();
+    var domains = req.response.split("\n");
+    var domains_l = domains.length - 1; // The last entry in this thing is bogus
+    var prefix = "";
+    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
+    var count = 0;
+    var t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    var t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
+    count = 0;
+    t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
   shouldSecureCookie: function(applicable_list, c, known_https) {
