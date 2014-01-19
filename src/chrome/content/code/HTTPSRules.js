@@ -425,25 +425,24 @@ const HTTPSRules = {
       var dbFile = FileUtils.getFile("ProfD",
         ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
       var rulesetDBConn = Services.storage.openDatabase(dbFile);
-      this.queryForTarget = rulesetDBConn.createStatement(
-        "select id, contents from targets, rulesets " +
-        "where targets.ruleset_id = rulesets.id and host = :target;");
+      this.queryForRuleset = rulesetDBConn.createStatement(
+        "select contents from rulesets where id = :id");
 
       // Preload the list of which targets are available in the DB.
       // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
       // but is faster than loading all of the rulesets. If this becomes a
       // bottleneck, change it to load in a background webworker, or load
       // a smaller bloom filter instead.
-      this.targetsAvailable = new Set(); // Firefox-specific
-      var targetsQuery = rulesetDBConn.createStatement("select host from targets");
-      this.log(WARN, "Adding targets...");
+      this.targetsAvailable = {};
+      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
+      this.log(DBUG, "Adding targets...");
       while (targetsQuery.executeStep()) {
         var host = targetsQuery.row.host;
-        this.targetsAvailable.add(host);
+        this.targetsAvailable[host] = targetsQuery.row.ruleset_id;
       }
-      this.log(WARN, "Done adding targets.");
+      this.log(DBUG, "Done adding targets.");
     } catch(e) {
-      this.log(WARN,"Rules Failed: "+e);
+      this.log(DBUG,"Rules Failed: "+e);
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
@@ -610,17 +609,16 @@ const HTTPSRules = {
   // flow? Perhaps we can preload all targets from the DB into memory at startup
   // so we only hit the DB when we know there is something to be had.
   queryTarget: function(target) {
-    this.log(WARN, "Querying DB for " + target);
+    this.log(DBUG, "Querying DB for " + target);
     var output = [];
 
-    var statement = this.queryForTarget.clone();
-    statement.params.target = target;
+    this.queryForRuleset.params.id = this.targetsAvailable[target];
 
     try {
-      while (statement.executeStep())
-        output.push(statement.row.contents);
+      while (this.queryForRuleset.executeStep())
+        output.push(this.queryForRuleset.row.contents);
     } finally {
-      statement.reset();
+      this.queryForRuleset.reset();
     }
     return output;
   },
@@ -635,7 +633,7 @@ const HTTPSRules = {
       if (this.targets[target] &&
           this.targets[target].length > 0) {
         this.setInsert(results, this.targets[target]);
-      } else if (this.targetsAvailable.has(target)) {
+      } else if (this.targetsAvailable[target]) {
         // If not found there, check the DB and load the ruleset as appropriate
         var rulesets = this.queryTarget(target);
         if (rulesets.length > 0) {
