@@ -62,6 +62,7 @@ ApplicableList.prototype = {
   moot_rule: function(ruleset) {
     this.log(INFO,"moot rule " + ruleset.name +" in "+ this.home + " serial " + this.serial);
     this.moot[ruleset.name] = ruleset;
+    this.active[ruleset.name] = ruleset; // in Fennec, count moot as active
     this.all[ruleset.name] = ruleset;
   },
 };

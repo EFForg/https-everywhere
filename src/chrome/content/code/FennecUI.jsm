@@ -38,7 +38,7 @@ function unloadFromWindow() {
 }
 
 function popupToggleMenu(aWindow) {
- buttons = [
+ var buttons = [
    {
       label: "Yes",
       callback: function() {
@@ -49,7 +49,7 @@ function popupToggleMenu(aWindow) {
       callback: function() {
       }
     }
- ]
+ ];
  aWindow.NativeWindow.doorhanger.show("Would you like to turn off HTTPS Everywhere?", "doorhanger-test", buttons);
 }
 
@@ -63,10 +63,10 @@ var urlbarOptions = {
   title: "HTTPS Everywhere",
   icon: "chrome://https-everywhere/skin/https-everywhere-128.png",
   clickCallback: function() {
-    rulesPrompt.setMultiChoiceItems(ruleItems);
+    rulesPrompt.setMultiChoiceItems(getRuleItems());
     rulesPrompt.show(function(data) {
-      aWindow.alert(JSON.stringify(getApplicableList()));
-    })
+      aWindow.alert(JSON.stringify(data));
+    });
   }
 };
 
@@ -76,21 +76,30 @@ var rulesPrompt = new Prompt({
   title: "Enable/disable rules"
 });
 
-// Rulesets to show in the list
-var ruleItems = [
-  { label: "rule 1" },
-  { label: "rule 2", disabled: true },
-  { label: "rule 3", selected: true }
-];
-
 function getApplicableList() {
   var domWin = aWindow.content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
     aWindow.console.log('something went wrong getting top window');
     return null;
   }
-  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
-  return alist.all;
+  return HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+}
+
+// Show active/inactive rules in the popup
+function getRuleItems() {
+  var ruleItems = [];
+  var alist = getApplicableList();
+  for (var activeRule in alist.active) {
+    if (alist.active.hasOwnProperty(activeRule)) {
+      ruleItems.push({ label: activeRule, selected: true });
+    }
+  }
+  for (var inactiveRule in alist.inactive) {
+    if (alist.inactive.hasOwnProperty(inactiveRule)) {
+      ruleItems.push({ label: inactiveRule });
+    }
+  }
+  return ruleItems;
 }
 
 function toggleRule(rule_id) {
