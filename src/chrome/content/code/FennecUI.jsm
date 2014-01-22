@@ -84,7 +84,7 @@ var ruleItems = [
 ];
 
 function getApplicableList() {
-  var domWin = getWindow().content.document.defaultView.top;
+  var domWin = aWindow.content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
     aWindow.console.log('something went wrong getting top window');
     return null;
