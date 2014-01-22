@@ -1,3 +1,10 @@
+// A cache for potentiallyApplicableRulesets
+// Size chosen /completely/ arbitrarily.
+var ruleCache = new LRUCache(1000);
+
+// A cache for cookie hostnames.
+var cookieHostCache = new LRUCache(100);
+
 function Rule(from, to) {
   //this.from = from;
   this.to = to;
@@ -34,18 +41,19 @@ function RuleSet(set_name, match_rule, default_state, note) {
 RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
-    // If a rulset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
-    }
-    // Even so, if we're covered by an exclusion, go home
+    // If we're covered by an exclusion, go home
     for(var i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         log(DBUG,"excluded uri " + urispec);
         return null;
       }
     }
+    // If a rulset has a match_rule and it fails, go no further
+    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
+      log(VERB, "ruleset_match_c excluded " + urispec);
+      return null;
+    }
+
     // Okay, now find the first rule that triggers
     for(var i = 0; i < this.rules.length; ++i) {
       returl = urispec.replace(this.rules[i].from_c,
@@ -61,13 +69,14 @@ RuleSet.prototype = {
               +" had an applicable match-rule but no matching rules");
     }
     return null;
-  },
+  }
 
 };
 
 
 function RuleSets() {
   // Load rules into structure
+  var t1 = new Date().getTime();
   this.targets = {};
 
   for(var i = 0; i < rule_list.length; i++) {
@@ -81,7 +90,8 @@ function RuleSets() {
     xhr.send(null);
     this.loadRuleSet(xhr);
   }
-  this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
+  var t2 =  new Date().getTime();
+  log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
 }
 
 RuleSets.prototype = {
@@ -176,18 +186,29 @@ RuleSets.prototype = {
   
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that apply to this host
-    var i, tmp, t;
-    var results = this.global_rulesets.slice(0); // copy global_rulesets
-    if (this.targets[host])
-      results = results.concat(this.targets[host]);
-    // replace each portion of the domain with a * in turn
+
+    // Have we cached this result? If so, return it!
+    var cached_item = ruleCache.get(host);
+    if (cached_item !== undefined) {
+        log(DBUG, "Rulseset cache hit for " + host);
+        return cached_item;
+    }
+    log(DBUG, "Ruleset cache miss for " + host);
+
+    var tmp;
+    var results = [];
+    if (this.targets[host]) {
+      // Copy the host targets so we don't modify them.
+      results = this.targets[host].slice();
+    }
+
+    // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
-      t = segmented.join(".");
+      this.setInsert(results, this.targets[segmented.join(".")]);
       segmented[i] = tmp;
-      this.setInsert(results, this.targets[t]);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
@@ -201,6 +222,9 @@ RuleSets.prototype = {
     else
       for (var i = 0; i < results.length; ++i)
         log(DBUG, "  " + results[i].name);
+
+    // Insert results into the ruleset cache
+    ruleCache.set(host, results);
     return results;
   },
 
@@ -213,18 +237,19 @@ RuleSets.prototype = {
     //log(DBUG, "  host: " + cookie.host);
     //log(DBUG, "  domain: " + cookie.domain);
     //log(DBUG, "  rawhost: " + cookie.rawHost);
-    var i,j;
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
       hostname = hostname.slice(1);
 
+    if (!knownHttps && !this.safeToSecureCookie(hostname)) {
+        return null;
+    }
+
     var rs = this.potentiallyApplicableRulesets(hostname);
     for (var i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
-        if (!knownHttps && !this.safeToSecureCookie(hostname))
-          continue;
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
@@ -257,6 +282,12 @@ RuleSets.prototype = {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
+    var cached_item = cookieHostCache.get(domain);
+    if (cached_item !== undefined) {
+        log(DBUG, "Cookie host cache hit for " + domain);
+        return cached_item;
+    }
+    log(DBUG, "Cookie host cache miss for " + domain);
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
@@ -268,6 +299,7 @@ RuleSets.prototype = {
     } catch (e) {
       log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
                       + "(" + e + ")");
+      cookieHostCache.set(domain, false);
       return false;
     }
 
@@ -277,22 +309,23 @@ RuleSets.prototype = {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        log(INFO, "Yes: " + rewrite);
+        log(INFO, "Cookie domain could be secured: " + rewrite);
+        cookieHostCache.set(domain, true);
         return true;
       }
     }
-    log(INFO, "(NO)");
+    log(INFO, "Cookie domain could NOT be secured.");
+    cookieHostCache.set(domain, false);
     return false;
   },
 
   rewriteURI: function(urispec, host) {
-    var i = 0;
     var newuri = null;
     var rs = this.potentiallyApplicableRulesets(host);
-    for(i = 0; i < rs.length; ++i) {
+    for(var i = 0; i < rs.length; ++i) {
       if (rs[i].active && (newuri = rs[i].apply(urispec)))
         return newuri;
     }
     return null;
-  },
+  }
 };

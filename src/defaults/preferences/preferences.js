@@ -4,9 +4,6 @@ pref("extensions.https_everywhere.globalEnabled",true);
 // this is the HTTPS Everywhere preferences version (for migrations)
 pref("extensions.https_everywhere.prefs_version", 0);
 
-// enable rulesets that trigger mixed content blocking
-pref("extensions.https_everywhere.enable_mixed_rulesets", false);
-
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
 

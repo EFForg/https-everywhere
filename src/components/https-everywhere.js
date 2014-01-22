@@ -197,16 +197,7 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
-
-  var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
-      .getService(Components.interfaces.nsIPrefBranchInternal);
-  var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
-
-  branch.addObserver("extensions.https_everywhere.enable_mixed_rulesets",
-                         this, false);
-  branch.addObserver("security.mixed_content.block_active_content",
-                         this, false);
-
+  
   return;
 }
 
@@ -677,7 +668,6 @@ HTTPSEverywhere.prototype = {
             
             this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
-            // XXX: Why is this called twice?
             HTTPSRules.init();
 
             if(!Thread.hostRunning)
@@ -689,7 +679,7 @@ HTTPSEverywhere.prototype = {
             catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
                 SERVICE_CTRID, false, true);            
             
-            HTTPSRules.init();          
+            // HTTPSRules.init();  why indeed is that called twice?
             this.prefs.setBoolPref("globalEnabled", true);
         }
         catch(e){
