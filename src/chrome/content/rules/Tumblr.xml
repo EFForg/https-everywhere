@@ -96,7 +96,7 @@
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
 		<!--
-			These scripts now break when rewritten to secure.assets or cloudfront:
+			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
 				- dashboard.js breaks "like"ing
 				- jquery_backbone_lodash.js and polyfills.js individually cause the editor to spawn another page
@@ -109,7 +109,7 @@
 		<!--
 			And so was one "oh, fsck it."
 							-->
-		<!--exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" /-->
+		<exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" />
 
 
 	<!--	Tracking cookies:
@@ -148,11 +148,8 @@
 	<rule from="^http://(?:25\.)?media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
 
-	<rule from="^http://(a|(?:origin|secure)\.assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
+	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
 		to="https://$1.tumblr.com/" />
-
-	<rule from="^http://assets\.tumblr\.com/(?!assets/scripts/)"
-		to="https://d2glp9604qyu8g.cloudfront.net/" />
 
 	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
