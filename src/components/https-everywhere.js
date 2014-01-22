@@ -31,6 +31,9 @@ const Cc = Components.classes;
 const Cu = Components.utils;
 const Cr = Components.results;
 
+Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://gre/modules/FileUtils.jsm");
+
 const CP_SHOULDPROCESS = 4;
 
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
