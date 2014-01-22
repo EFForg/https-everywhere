@@ -502,7 +502,6 @@ HTTPSEverywhere.prototype = {
         this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
         HTTPSRules.init();
-
         Thread.hostRunning = true;
         var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
@@ -512,7 +511,9 @@ HTTPSEverywhere.prototype = {
       }
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
-      this.maybeShowObservatoryPopup();
+      this.log(WARN, "Initializing Fennec UI");
+      Cu.import("chrome://https-everywhere/content/code/FennecUI.jsm");
+      FennecUI.init();
     } else if (topic == "nsPref:changed") {
         switch (data) {
             case "security.mixed_content.block_active_content":
@@ -522,26 +523,6 @@ HTTPSEverywhere.prototype = {
         }
     }
     return;
-  },
-
-  maybeShowObservatoryPopup: function() {
-    // Show the popup at most once.  Users who enabled the Observatory before
-    // a version that would have shown it to them, don't need to see it
-    // again.
-    var ssl_observatory = CC["@eff.org/ssl-observatory;1"]
-                      .getService(Components.interfaces.nsISupports)
-                      .wrappedJSObject;
-    var shown = ssl_observatory.myGetBoolPref("popup_shown");
-    var enabled = ssl_observatory.myGetBoolPref("enabled");
-    var that = this;
-    var obs_popup_callback = function(result) {
-      if (result) that.log(INFO, "Got positive proxy test.");
-      else        that.log(INFO, "Got negative proxy text.");
-      // We are now ready to show the popup in its most informative state
-      that.chrome_opener("chrome://https-everywhere/content/observatory-popup.xul");
-    };
-    if (!shown && !enabled)
-      ssl_observatory.registerProxyTestNotification(obs_popup_callback);
   },
 
   // nsIChannelEventSink implementation
