@@ -60,12 +60,28 @@ function popupToggleMenu(aWindow) {
  */
 
 var urlbarOptions = {
+
   title: "HTTPS Everywhere",
+
   icon: "chrome://https-everywhere/skin/https-everywhere-128.png",
+
   clickCallback: function() {
-    rulesPrompt.setMultiChoiceItems(getRuleItems());
+
+    var popupInfo = getPopupInfo();
+
+    rulesPrompt.setMultiChoiceItems(popupInfo.ruleItems);
+
     rulesPrompt.show(function(data) {
-      aWindow.alert(JSON.stringify(data));
+      if (data.button === -1) { return null; }
+      for (var i=0; i<data.button.length; i++) {
+        if (popupInfo.ruleStatus[i] !== data.button[i]) {
+          popupInfo.rules[i].toggle();
+          aWindow.console.log("toggling: "+JSON.stringify(popupInfo.rules[i]));
+        } else {
+          aWindow.console.log("skipping: "+JSON.stringify(popupInfo.rules[i]));
+        }
+      }
+      reloadTab();
     });
   }
 };
@@ -73,7 +89,8 @@ var urlbarOptions = {
 // The prompt that shows up when someone clicks on the icon
 var rulesPrompt = new Prompt({
   window: aWindow,
-  title: "Enable/disable rules"
+  title: "Enable/disable rules",
+  buttons: ["Apply changes"]
 });
 
 function getApplicableList() {
@@ -86,26 +103,26 @@ function getApplicableList() {
 }
 
 // Show active/inactive rules in the popup
-function getRuleItems() {
+function getPopupInfo() {
   var ruleItems = [];
+  var rules = [];
+  var ruleStatus = [];
   var alist = getApplicableList();
   for (var activeRule in alist.active) {
     if (alist.active.hasOwnProperty(activeRule)) {
       ruleItems.push({ label: activeRule, selected: true });
+      ruleStatus.push(true);
+      rules.push(alist.active[activeRule]);
     }
   }
   for (var inactiveRule in alist.inactive) {
     if (alist.inactive.hasOwnProperty(inactiveRule)) {
       ruleItems.push({ label: inactiveRule });
+      ruleStatus.push(false);
+      rules.push(alist.inactive[inactiveRule]);
     }
   }
-  return ruleItems;
-}
-
-function toggleRule(rule_id) {
-  // toggle the rule state
-  HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
-  reloadTab();
+  return { ruleItems: ruleItems, rules: rules, ruleStatus: ruleStatus };
 }
 
 function reloadTab() { return; }
