@@ -75,8 +75,8 @@ var urlbarOptions = {
       if (data.button === -1) { return null; }
       for (var i=0; i<data.button.length; i++) {
         if (popupInfo.ruleStatus[i] !== data.button[i]) {
-          popupInfo.rules[i].toggle();
           aWindow.console.log("toggling: "+JSON.stringify(popupInfo.rules[i]));
+          popupInfo.rules[i].toggle();
         } else {
           aWindow.console.log("skipping: "+JSON.stringify(popupInfo.rules[i]));
         }
@@ -125,7 +125,10 @@ function getPopupInfo() {
   return { ruleItems: ruleItems, rules: rules, ruleStatus: ruleStatus };
 }
 
-function reloadTab() { return; }
+function reloadTab() {
+  // There seems to be no API to do this directly?
+  aWindow.BrowserApp.selectedTab.window.location.reload();
+}
 
 function toggleEnabledState(){
   HTTPSEverywhere.toggleEnabledState();
