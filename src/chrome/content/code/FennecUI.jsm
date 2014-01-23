@@ -67,7 +67,7 @@ var popupInfo = {
   getApplicableList: function () {
     var domWin = aWindow.BrowserApp.selectedTab.window;
     if (!(domWin instanceof CI.nsIDOMWindow)) {
-      aWindow.console.log('something went wrong getting top window');
+      HTTPSEverywhere.log(5,'something went wrong getting top window');
       return null;
     }
     return HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
@@ -75,7 +75,7 @@ var popupInfo = {
   fill: function() {
     this.clear();
     this.alist = this.getApplicableList();
-    //aWindow.console.log("applicable list: "+JSON.stringify(this.alist));
+    HTTPSEverywhere.log(5,"applicable list: "+JSON.stringify(this.alist.active));
     for (var activeRule in this.alist.active) {
       if (this.alist.active.hasOwnProperty(activeRule)) {
         this.ruleItems.push({ label: activeRule, selected: true });
@@ -117,13 +117,13 @@ var urlbarOptions = {
       if (popupInfo.rules.length !== db.length) {
         // Why does db sometimes have an extra entry that doesn't correspond
         // to any of the ruleItems? No idea, but let's log it.
-        aWindow.console.log("popupInfo length not same as button response");
-        aWindow.console.log(JSON.stringify(popupInfo.rules));
-        aWindow.console.log(JSON.stringify(db));
+        HTTPSEverywhere.log(5,"popupInfo length not same as button response");
+        HTTPSEverywhere.log(5,JSON.stringify(popupInfo.rules));
+        HTTPSEverywhere.log(5,JSON.stringify(db));
       }
       for (var i=0; i<popupInfo.rules.length; i++) {
         if (popupInfo.ruleStatus[i] !== db[i]) {
-          aWindow.console.log("toggling: "+JSON.stringify(popupInfo.rules[i]));
+          HTTPSEverywhere.log(5,"toggling: "+JSON.stringify(popupInfo.rules[i]));
           popupInfo.rules[i].toggle();
         }
       }
