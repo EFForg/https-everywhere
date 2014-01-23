@@ -59,6 +59,46 @@ function popupToggleMenu(aWindow) {
  * rule list dynamically.
  */
 
+var popupInfo = {
+  rules: [],
+  ruleItems: [],
+  ruleStatus: [],
+  alist: null,
+  getApplicableList: function () {
+    var domWin = aWindow.BrowserApp.selectedTab.window;
+    if (!(domWin instanceof CI.nsIDOMWindow)) {
+      aWindow.console.log('something went wrong getting top window');
+      return null;
+    }
+    return HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+  },
+  fill: function() {
+    this.clear();
+    this.alist = this.getApplicableList();
+    //aWindow.console.log("applicable list: "+JSON.stringify(this.alist));
+    for (var activeRule in this.alist.active) {
+      if (this.alist.active.hasOwnProperty(activeRule)) {
+        this.ruleItems.push({ label: activeRule, selected: true });
+        this.ruleStatus.push(true);
+        this.rules.push(this.alist.active[activeRule]);
+      }
+    }
+    for (var inactiveRule in this.alist.inactive) {
+      if (this.alist.inactive.hasOwnProperty(inactiveRule)) {
+        this.ruleItems.push({ label: inactiveRule });
+        this.ruleStatus.push(false);
+        this.rules.push(this.alist.inactive[inactiveRule]);
+      }
+    }
+  },
+  clear: function() {
+    this.rules = [];
+    this.ruleItems = [];
+    this.ruleStatus = [];
+    this.alist = {};
+  }
+};
+
 var urlbarOptions = {
 
   title: "HTTPS Everywhere",
@@ -67,21 +107,28 @@ var urlbarOptions = {
 
   clickCallback: function() {
 
-    var popupInfo = getPopupInfo();
+    popupInfo.fill();
 
     rulesPrompt.setMultiChoiceItems(popupInfo.ruleItems);
 
     rulesPrompt.show(function(data) {
-      if (data.button === -1) { return null; }
-      for (var i=0; i<data.button.length; i++) {
-        if (popupInfo.ruleStatus[i] !== data.button[i]) {
+      var db = data.button;
+      if (db === -1) { return null; } // user didn't click the accept button
+      if (popupInfo.rules.length !== db.length) {
+        // Why does db sometimes have an extra entry that doesn't correspond
+        // to any of the ruleItems? No idea, but let's log it.
+        aWindow.console.log("popupInfo length not same as button response");
+        aWindow.console.log(JSON.stringify(popupInfo.rules));
+        aWindow.console.log(JSON.stringify(db));
+      }
+      for (var i=0; i<popupInfo.rules.length; i++) {
+        if (popupInfo.ruleStatus[i] !== db[i]) {
           aWindow.console.log("toggling: "+JSON.stringify(popupInfo.rules[i]));
           popupInfo.rules[i].toggle();
-        } else {
-          aWindow.console.log("skipping: "+JSON.stringify(popupInfo.rules[i]));
         }
       }
       reloadTab();
+      return null;
     });
   }
 };
@@ -92,38 +139,6 @@ var rulesPrompt = new Prompt({
   title: "Enable/disable rules",
   buttons: ["Apply changes"]
 });
-
-function getApplicableList() {
-  var domWin = aWindow.content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    aWindow.console.log('something went wrong getting top window');
-    return null;
-  }
-  return HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
-}
-
-// Show active/inactive rules in the popup
-function getPopupInfo() {
-  var ruleItems = [];
-  var rules = [];
-  var ruleStatus = [];
-  var alist = getApplicableList();
-  for (var activeRule in alist.active) {
-    if (alist.active.hasOwnProperty(activeRule)) {
-      ruleItems.push({ label: activeRule, selected: true });
-      ruleStatus.push(true);
-      rules.push(alist.active[activeRule]);
-    }
-  }
-  for (var inactiveRule in alist.inactive) {
-    if (alist.inactive.hasOwnProperty(inactiveRule)) {
-      ruleItems.push({ label: inactiveRule });
-      ruleStatus.push(false);
-      rules.push(alist.inactive[inactiveRule]);
-    }
-  }
-  return { ruleItems: ruleItems, rules: rules, ruleStatus: ruleStatus };
-}
 
 function reloadTab() {
   // There seems to be no API to do this directly?
@@ -139,5 +154,8 @@ function toggleEnabledState(){
 var FennecUI = {
   init: function() {
     loadIntoWindow();
+  },
+  shutdown: function() {
+    unloadFromWindow();
   }
 };
