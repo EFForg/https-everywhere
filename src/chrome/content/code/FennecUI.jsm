@@ -23,10 +23,13 @@ function loadIntoWindow() {
   if (!aWindow) {
     return;
   }
-  menuId = aWindow.NativeWindow.menu.add("HTTPS Everywhere", null, function() {
-    popupToggleMenu(aWindow);
-  });
-  urlbarId = aWindow.NativeWindow.pageactions.add(urlbarOptions);
+  var enabled = HTTPSEverywhere.isEnabled();
+  addToggleItemToMenu(enabled);
+  if (enabled) {
+    urlbarId = aWindow.NativeWindow.pageactions.add(urlbarOptions);
+  } else if (urlbarId) {
+    aWindow.NativeWindow.pageactions.remove(urlbarId);
+  }
 }
 
 function unloadFromWindow() {
@@ -37,20 +40,31 @@ function unloadFromWindow() {
   aWindow.NativeWindow.pageactions.remove(urlbarId);
 }
 
-function popupToggleMenu(aWindow) {
- var buttons = [
-   {
+function addToggleItemToMenu(enabled) {
+  if (menuId) { aWindow.NativeWindow.menu.remove(menuId); };
+  var menuLabel = enabled ? "HTTPS Everywhere on" : "HTTPS Everywhere off";
+  menuId = aWindow.NativeWindow.menu.add(menuLabel, null, function() {
+    popupToggleMenu(aWindow, enabled);
+  });
+}
+
+function popupToggleMenu(aWindow, enabled) {
+  var buttons = [
+    {
       label: "Yes",
       callback: function() {
-        aWindow.NativeWindow.toast.show("HTTPS Everywhere disabled!", "short");
+        toggleEnabledState();
+        var msg = enabled ? "HTTPS Everywhere disabled!" : "HTTPS Everywhere enabled!";
+        aWindow.NativeWindow.toast.show(msg, "short");
+        return true;
       }
     }, {
       label: "No",
-      callback: function() {
-      }
+      callback: function() { return false; }
     }
- ];
- aWindow.NativeWindow.doorhanger.show("Would you like to turn off HTTPS Everywhere?", "doorhanger-test", buttons);
+  ];
+  var newState = enabled ? "off?" : "on?";
+  aWindow.NativeWindow.doorhanger.show("Would you like to turn HTTPS Everywhere "+newState, "doorhanger", buttons);
 }
 
 /*
@@ -71,7 +85,8 @@ var popupInfo = {
   fill: function() {
     this.clear();
     this.alist = this.getApplicableList();
-    HTTPSEverywhere.log(5,"applicable list: "+JSON.stringify(this.alist.active));
+    HTTPSEverywhere.log(5,"applicable list active: "+JSON.stringify(this.alist.active));
+    HTTPSEverywhere.log(5,"applicable list inactive: "+JSON.stringify(this.alist.inactive));
     for (var activeRule in this.alist.active) {
       if (this.alist.active.hasOwnProperty(activeRule)) {
         this.ruleItems.push({ label: activeRule, selected: true });
@@ -143,6 +158,7 @@ function reloadTab() {
 
 function toggleEnabledState(){
   HTTPSEverywhere.toggleEnabledState();
+  loadIntoWindow();
   reloadTab();
 }
 

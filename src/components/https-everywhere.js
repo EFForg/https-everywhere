@@ -192,12 +192,13 @@ function HTTPSEverywhere() {
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
                     
-  if(this.prefs.getBoolPref("globalEnabled")){
+  if (this.prefs.getBoolPref("globalEnabled")){
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+  } else {
+    this.obsService.addObserver(this, "sessionstore-windows-restored", false);
   }
-  
   return;
 }
 
@@ -626,6 +627,8 @@ HTTPSEverywhere.prototype = {
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', args );
   },
+
+  isEnabled: function() { return this.prefs.getBoolPref("globalEnabled"); },
 
   toggleEnabledState: function() {
     if(this.prefs.getBoolPref("globalEnabled")){    
