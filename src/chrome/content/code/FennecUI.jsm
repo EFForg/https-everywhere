@@ -64,13 +64,9 @@ var popupInfo = {
   ruleItems: [],
   ruleStatus: [],
   alist: null,
-  getApplicableList: function () {
+  getApplicableList: function() {
     var domWin = aWindow.BrowserApp.selectedTab.window;
-    if (!(domWin instanceof CI.nsIDOMWindow)) {
-      HTTPSEverywhere.log(5,'something went wrong getting top window');
-      return null;
-    }
-    return HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    return HTTPSEverywhere.getApplicableListForDOMWin(domWin);
   },
   fill: function() {
     this.clear();
