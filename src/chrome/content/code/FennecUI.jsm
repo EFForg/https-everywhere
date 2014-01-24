@@ -1,5 +1,3 @@
-var EXPORTED_SYMBOLS = ["FennecUI"];
-
 const CC = Components.classes;
 const CI = Components.interfaces;
 const CU = Components.utils;
@@ -13,11 +11,10 @@ var menuId;
 var urlbarId;
 var aWindow = getWindow();
 
-function getWindow() {
-  return CC['@mozilla.org/appshell/window-mediator;1']
-      .getService(CI.nsIWindowMediator)
-      .getMostRecentWindow('navigator:browser');
-}
+
+/*
+ * Setup/Teardown for the UI
+ */
 
 function loadIntoWindow() {
   if (!aWindow) {
@@ -39,6 +36,11 @@ function unloadFromWindow() {
   aWindow.NativeWindow.menu.remove(menuId);
   aWindow.NativeWindow.pageactions.remove(urlbarId);
 }
+
+
+/*
+ * Add a menu item to toggle HTTPS Everywhere
+ */
 
 function addToggleItemToMenu(enabled) {
   if (menuId) { aWindow.NativeWindow.menu.remove(menuId); };
@@ -66,6 +68,7 @@ function popupToggleMenu(aWindow, enabled) {
   var newState = enabled ? "off?" : "on?";
   aWindow.NativeWindow.doorhanger.show("Would you like to turn HTTPS Everywhere "+newState, "doorhanger", buttons);
 }
+
 
 /*
  * The HTTPS Everywhere icon in the URL bar shows a menu of rules that the
@@ -144,12 +147,16 @@ var urlbarOptions = {
   }
 };
 
-// The prompt that shows up when someone clicks on the icon
 var rulesPrompt = new Prompt({
   window: aWindow,
   title: "Enable/disable rules",
   buttons: ["Apply changes"]
 });
+
+
+/*
+ * Some useful utils
+ */
 
 function reloadTab() {
   // There seems to be no API to do this directly?
@@ -162,7 +169,21 @@ function toggleEnabledState(){
   reloadTab();
 }
 
-// Here's the external API to this UI module
+function resetToDefaults() {
+  return HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
+}
+
+function getWindow() {
+  return CC['@mozilla.org/appshell/window-mediator;1']
+      .getService(CI.nsIWindowMediator)
+      .getMostRecentWindow('navigator:browser');
+}
+
+
+/*
+ *  Here's the external API to this UI module
+ */
+
 var FennecUI = {
   init: function() {
     loadIntoWindow();
@@ -171,3 +192,5 @@ var FennecUI = {
     unloadFromWindow();
   }
 };
+
+var EXPORTED_SYMBOLS = ["FennecUI"];
