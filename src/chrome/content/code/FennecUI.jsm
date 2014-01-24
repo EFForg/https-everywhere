@@ -43,7 +43,7 @@ function unloadFromWindow() {
  */
 
 function addToggleItemToMenu(enabled) {
-  if (menuId) { aWindow.NativeWindow.menu.remove(menuId); };
+  if (menuId) { aWindow.NativeWindow.menu.remove(menuId); }
   var menuLabel = enabled ? "HTTPS Everywhere on" : "HTTPS Everywhere off";
   menuId = aWindow.NativeWindow.menu.add(menuLabel, null, function() {
     popupToggleMenu(aWindow, enabled);
@@ -71,9 +71,8 @@ function popupToggleMenu(aWindow, enabled) {
 
 
 /*
- * The HTTPS Everywhere icon in the URL bar shows a menu of rules that the
- * user can activate/deactivate. Here's some code to create it and update the
- * rule list dynamically.
+ * The HTTPS Everywhere icon in the URL bar shows a popup of rules that the
+ * user can activate/deactivate. On long click, reset all rules to defaults.
  */
 
 var popupInfo = {
@@ -120,11 +119,8 @@ var urlbarOptions = {
   icon: "chrome://https-everywhere/skin/https-everywhere-128.png",
 
   clickCallback: function() {
-
     popupInfo.fill();
-
     rulesPrompt.setMultiChoiceItems(popupInfo.ruleItems);
-
     rulesPrompt.show(function(data) {
       var db = data.button;
       if (db === -1) { return null; } // user didn't click the accept button
@@ -144,7 +140,9 @@ var urlbarOptions = {
       reloadTab();
       return null;
     });
-  }
+  },
+
+  longClickCallback: function() { popupResetDefaultsMenu(aWindow); }
 };
 
 var rulesPrompt = new Prompt({
@@ -152,6 +150,24 @@ var rulesPrompt = new Prompt({
   title: "Enable/disable rules",
   buttons: ["Apply changes"]
 });
+
+function popupResetDefaultsMenu(aWindow) {
+  var buttons = [
+    {
+      label: "Yes",
+      callback: function() {
+        resetToDefaults();
+        var msg = "Default rules reset.";
+        aWindow.NativeWindow.toast.show(msg, "short");
+        return true;
+      }
+    }, {
+      label: "No",
+      callback: function() { return false; }
+    }
+  ];
+  aWindow.NativeWindow.doorhanger.show("Reset all HTTPS Everywhere rules to defaults?", "doorhanger2", buttons);
+}
 
 
 /*
@@ -170,7 +186,8 @@ function toggleEnabledState(){
 }
 
 function resetToDefaults() {
-  return HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
+  HTTPSEverywhere.https_rules.resetRulesetsToDefaults();
+  reloadTab();
 }
 
 function getWindow() {
