@@ -6,7 +6,6 @@ About
 
 This is a hard alpha of HTTPS Everywhere for Fennec (Firefox Mobile), based on HTTPS Everywhere 3.4.5 (stable). Send bug reports to yan@eff.org or open as issues on Github: https://github.com/diracdeltas/https-everywhere.
 
-Screenshot:
 ![](/httpsemobile.png "Screenshot 1")
 
 Features
