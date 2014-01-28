@@ -59,6 +59,13 @@ for fi in nomes_all():
     # pointing into the ruleset table.
     etree.strip_tags(tree,'target')
 
+    # Store the filename in the `f' attribute so "view source XML" for rules in
+    # FF version can find it.
+    try:
+      tree.xpath("/ruleset")[0].attrib["f"] = os.path.basename(fi)
+    except Exception as oops:
+      print "Error setting attribute: f=", os.path.basename(fi), oops
+
     ruleset_name = tree.xpath("/ruleset/@name")[0]
     c.execute('''INSERT INTO rulesets (name, contents) VALUES(?, ?)''', (ruleset_name, etree.tostring(tree)));
     ruleset_id = c.lastrowid
