@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- textmagic.cachefly.net
+
+
+	Nonfunctional subdomains:
+
+		- api	(http reply)
+
+
+	Some pages redirect to http.
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+		- Web bug on www from images.scanalert.com *
+
+	* Secured by us
+
+-->
+<ruleset name="TextMagic.com (partial)">
+
+	<target host="textmagic.com" />
+	<target host="www.textmagic.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?textmagic\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?textmagic\.com/+(?!(app|blog)($|[?/])|favicon\.ico|img/)" /-->
+
+
+	<rule from="^http://(www\.)?textmagic\.com/(?=(?:app|blog)(?:$|[?/])|favicon\.ico|img/)"
+		to="https://$1textmagic.com/" />
+
+</ruleset>
