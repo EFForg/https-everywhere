@@ -327,7 +327,6 @@ HTTPSEverywhere.prototype = {
   // QueryInterface implementation, e.g. using the generateQI helper
   QueryInterface: XPCOMUtils.generateQI(
     [ Components.interfaces.nsIObserver,
-      Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
