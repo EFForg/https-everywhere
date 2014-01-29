@@ -19,14 +19,12 @@ function CookieRule(host, cookiename) {
   //this.name_c = new RegExp(cookiename);
 }
 
-ruleset_counter = 0;
 function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   if(xmlName == "WordPress.xml" || xmlName == "Github.xml") {
     this.log(NOTE, "RuleSet( name="+name+", xmlName="+xmlName+", match_rule="+match_rule+", default_off="+default_off+", platform="+platform+" )");
   }
 
   this.id=id;
-  ruleset_counter += 1;
   this.on_by_default = true;
   this.compiled = false;
   this.name = name;
@@ -39,10 +37,9 @@ function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
     // "valueless"
     this.on_by_default = false;
   }
-  if (platform)
-    if (platform.search(HTTPSRules.localPlatformRegexp) == -1) {
-      this.on_by_default = false;
-    }
+  if (platform && platform.search(HTTPSRules.localPlatformRegexp) == -1) {
+    this.on_by_default = false;
+  }
 
   this.rules = [];
   this.exclusions = [];
