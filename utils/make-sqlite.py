@@ -25,7 +25,6 @@ c = conn.cursor()
 c.execute('''DROP TABLE IF EXISTS rulesets''')
 c.execute('''CREATE TABLE rulesets
              (id INTEGER PRIMARY KEY,
-              name TEXT,
               contents TEXT)''')
 c.execute('''DROP TABLE IF EXISTS targets''')
 c.execute('''CREATE TABLE targets
@@ -61,13 +60,9 @@ for fi in nomes_all():
 
     # Store the filename in the `f' attribute so "view source XML" for rules in
     # FF version can find it.
-    try:
-      tree.xpath("/ruleset")[0].attrib["f"] = os.path.basename(fi)
-    except Exception as oops:
-      print "Error setting attribute: f=", os.path.basename(fi), oops
+    tree.xpath("/ruleset")[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
 
-    ruleset_name = tree.xpath("/ruleset/@name")[0]
-    c.execute('''INSERT INTO rulesets (name, contents) VALUES(?, ?)''', (ruleset_name, etree.tostring(tree)));
+    c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),));
     ruleset_id = c.lastrowid
     for target in targets:
         c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id));
