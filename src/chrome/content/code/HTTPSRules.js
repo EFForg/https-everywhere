@@ -29,17 +29,21 @@ function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   this.compiled = false;
   this.name = name;
   this.xmlName = xmlName;
+  this.notes = "";
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
     // "valueless"
+    this.notes = default_off;
     this.on_by_default = false;
   }
-  if (platform && platform.search(HTTPSRules.localPlatformRegexp) == -1) {
-    this.on_by_default = false;
-  }
+  if (platform)
+    if (platform.search(HTTPSRules.localPlatformRegexp) == -1) {
+      this.on_by_default = false;
+      this.notes = "Only for " + platform;
+    }
 
   this.rules = [];
   this.exclusions = [];
