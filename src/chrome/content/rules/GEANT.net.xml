@@ -1,0 +1,51 @@
+<!--
+	Fully covered subdomains:
+
+		- crowd
+		- weblogin2
+
+
+	Partially covered subdomains:
+
+		- geant3.archive ¹
+		- www ²
+
+	¹ Some paths redirect to weblogin.dante.net
+	² Some paths redirect to weblogin2
+
+
+	Observed cookie domains:
+
+		- crowd
+		- www
+
+-->
+<ruleset name="GEANT.net (partial)">
+
+	<target host="*.geant.net" />
+		<!--
+			These paths redirect to weblogin.dante.net:
+									-->
+		<!--exclusion pattern="^http://geant3\.archive\.geant\.net/+($|\?|pages/home\.aspx|PublishingImages/)" /-->
+		<!--
+			These paths redirect to weblogin2
+								-->
+		<!--exclusion pattern="^http://www\.geant\.net/+($|\?|Documents/|MediaCentreEvents/news/|pages/contact\.aspx|Pages/default\.aspx|PublishingImages/|Resources/Media_Library/|Services/_layouts/)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://(geant3\.archive|www)\.geant\.net/favicon\.ico" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://geant3\.archive\.geant\.net/(?!_layouts/|_login/|[sS]tyle%20Library/|_trust/|WebResource\.axd)" />
+		<exclusion pattern="^http://www\.geant\.net/+(?!_catalogs/|_layouts/|_login/|Style%20Library/|_trust/|WebResource\.axd)" />
+
+
+	<securecookie host="^crowd\.geant\.net$" name=".+" />
+
+
+	<rule from="^http://(geant3\.archive|crowd|weblogin2|www)\.geant\.net/"
+		to="https://$1.geant.net/" />
+
+</ruleset>
