@@ -525,7 +525,7 @@ const HTTPSRules = {
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
-      this.log(WARN, 'Could not check applicable rules for '+uri.spec + '\n'+e);
+      this.log(NOTE, 'Could not check applicable rules for '+uri.spec + '\n'+e);
       return null;
     }
 
