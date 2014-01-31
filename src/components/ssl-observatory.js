@@ -5,6 +5,7 @@ const Cr = Components.results;
 const CI = Components.interfaces;
 const CC = Components.classes;
 const CR = Components.results;
+const CU = Components.utils;
 
 // Log levels
 VERB=1;
@@ -70,6 +71,10 @@ function SSLObservatory() {
   } catch(e) {
     this.torbutton_installed = false;
   }
+
+  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
 
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
@@ -318,7 +323,8 @@ SSLObservatory.prototype = {
 
     if ("http-on-examine-response" == topic) {
 
-      if (!this.observatoryActive()) return;
+      var channel = subject;
+      if (!this.observatoryActive(channel)) return;
 
       var host_ip = "-1";
       var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
@@ -364,7 +370,7 @@ SSLObservatory.prototype = {
     }
   },
 
-  observatoryActive: function() {
+  observatoryActive: function(channel) {
                          
     if (!this.myGetBoolPref("enabled"))
       return false;
@@ -390,12 +396,30 @@ SSLObservatory.prototype = {
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
+      return (! this.inPrivateBrowsingMode(channel));
+    }
+
+    return false;
+  },
+
+  inPrivateBrowsingMode: function(channel) {
+    // In classic firefox fashion, there are multiple versions of this API
+    // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
+    try {
+        // Firefox 20+, this state is per-window
+        if (!(channel instanceof CI.nsIHttpChannel)) {
+          this.log(WARN, "observatoryActive() without a channel");
+          throw "no window for private browsing detection, trying the old way";
+        }
+        var win = this.HTTPSEverywhere.getWindowForChannel(channel);
+        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+        if (PrivateBrowsingUtils.isWindowPrivate(win)) return true;
+    } catch (e) {
+      // Firefox < 20, this state is global
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) return false;
+        if (pbs.privateBrowsingEnabled) return true;
       } catch (e) { /* seamonkey or old firefox */ }
-    
-      return true;
     }
 
     return false;
@@ -608,10 +632,7 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-    var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
-                            .getService(Components.interfaces.nsISupports)
-                            .wrappedJSObject;
-    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = channel ? this.HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
