@@ -90,18 +90,27 @@ var popupInfo = {
     this.alist = this.getApplicableList();
     HTTPSEverywhere.log(4,"applicable list active: "+JSON.stringify(this.alist.active));
     HTTPSEverywhere.log(4,"applicable list inactive: "+JSON.stringify(this.alist.inactive));
-    for (var activeRule in this.alist.active) {
-      if (this.alist.active.hasOwnProperty(activeRule)) {
-        this.ruleItems.push({ label: activeRule, selected: true });
+    for (var rule in this.alist.all) {
+      if (this.alist.active.hasOwnProperty(rule)) {
+        // active rules are checked and toggleable
+        this.ruleItems.push({ label: rule, selected: true });
         this.ruleStatus.push(true);
-        this.rules.push(this.alist.active[activeRule]);
-      }
-    }
-    for (var inactiveRule in this.alist.inactive) {
-      if (this.alist.inactive.hasOwnProperty(inactiveRule)) {
-        this.ruleItems.push({ label: inactiveRule });
+        this.rules.push(this.alist.active[rule]);
+      } else if (this.alist.moot.hasOwnProperty(rule)) {
+        // moot rules are checked and toggleable too
+        this.ruleItems.push({ label: rule, selected: true });
+        this.ruleStatus.push(true);
+        this.rules.push(this.alist.moot[rule]);
+      } else if (this.alist.inactive.hasOwnProperty(rule)) {
+        // inactive rules are unchecked and toggleable
+        this.ruleItems.push({ label: rule });
         this.ruleStatus.push(false);
-        this.rules.push(this.alist.inactive[inactiveRule]);
+        this.rules.push(this.alist.inactive[rule]);
+      } else if (this.alist.breaking.hasOwnProperty(rule)) {
+        // breaking rules are unchecked and untoggleable
+        this.ruleItems.push({ label: rule, disabled: true });
+        this.ruleStatus.push(false);
+        this.rules.push(this.alist.breaking[rule]);
       }
     }
   },
