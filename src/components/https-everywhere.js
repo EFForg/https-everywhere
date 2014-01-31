@@ -503,7 +503,7 @@ HTTPSEverywhere.prototype = {
       }
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
-      this.log(WARN, "Initializing Fennec UI");
+      this.log(INFO, "Initializing Fennec UI");
       Cu.import("chrome://https-everywhere/content/code/FennecUI.jsm");
       FennecUI.init();
     } else if (topic == "nsPref:changed") {
@@ -682,7 +682,6 @@ HTTPSEverywhere.prototype = {
             catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
                 SERVICE_CTRID, false, true);            
             
-            // HTTPSRules.init();  why indeed is that called twice?
             this.prefs.setBoolPref("globalEnabled", true);
         }
         catch(e){

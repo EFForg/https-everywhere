@@ -66,7 +66,8 @@ function popupToggleMenu(aWindow, enabled) {
     }
   ];
   var newState = enabled ? "off?" : "on?";
-  aWindow.NativeWindow.doorhanger.show("Would you like to turn HTTPS Everywhere "+newState, "doorhanger", buttons);
+  aWindow.NativeWindow.doorhanger.show("Would you like to turn HTTPS Everywhere "+newState,
+                                       "doorhanger-toggle", buttons);
 }
 
 
@@ -87,8 +88,8 @@ var popupInfo = {
   fill: function() {
     this.clear();
     this.alist = this.getApplicableList();
-    HTTPSEverywhere.log(5,"applicable list active: "+JSON.stringify(this.alist.active));
-    HTTPSEverywhere.log(5,"applicable list inactive: "+JSON.stringify(this.alist.inactive));
+    HTTPSEverywhere.log(4,"applicable list active: "+JSON.stringify(this.alist.active));
+    HTTPSEverywhere.log(4,"applicable list inactive: "+JSON.stringify(this.alist.inactive));
     for (var activeRule in this.alist.active) {
       if (this.alist.active.hasOwnProperty(activeRule)) {
         this.ruleItems.push({ label: activeRule, selected: true });
@@ -127,13 +128,13 @@ var urlbarOptions = {
       if (popupInfo.rules.length !== db.length) {
         // Why does db sometimes have an extra entry that doesn't correspond
         // to any of the ruleItems? No idea, but let's log it.
-        HTTPSEverywhere.log(5,"popupInfo length not same as button response");
-        HTTPSEverywhere.log(5,JSON.stringify(popupInfo.rules));
-        HTTPSEverywhere.log(5,JSON.stringify(db));
+        HTTPSEverywhere.log(5,"Got length mismatch between popupInfo.ruleItems and data.button");
+        HTTPSEverywhere.log(4,"Applicable rules: "+JSON.stringify(popupInfo.rules));
+        HTTPSEverywhere.log(4, "data.button: "+JSON.stringify(db));
       }
       for (var i=0; i<popupInfo.rules.length; i++) {
         if (popupInfo.ruleStatus[i] !== db[i]) {
-          HTTPSEverywhere.log(5,"toggling: "+JSON.stringify(popupInfo.rules[i]));
+          HTTPSEverywhere.log(4, "toggling: "+JSON.stringify(popupInfo.rules[i]));
           popupInfo.rules[i].toggle();
         }
       }
@@ -166,7 +167,8 @@ function popupResetDefaultsMenu(aWindow) {
       callback: function() { return false; }
     }
   ];
-  aWindow.NativeWindow.doorhanger.show("Reset all HTTPS Everywhere rules to defaults?", "doorhanger2", buttons);
+  aWindow.NativeWindow.doorhanger.show("Reset all HTTPS Everywhere rules to defaults?",
+                                       "doorhanger-reset", buttons);
 }
 
 

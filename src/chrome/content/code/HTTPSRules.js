@@ -471,7 +471,7 @@ const HTTPSRules = {
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
-      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      this.log(NOTE, 'Could not check applicable rules for '+uri.spec);
       return null;
     }
 
@@ -541,7 +541,7 @@ const HTTPSRules = {
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
       try       { this.log(INFO, "(" + uri.spec + ")"); } 
-      catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
+      catch(e4) { this.log(INFO, "(and unprintable!!!!!!)"); }
     }
     return uri;
   },

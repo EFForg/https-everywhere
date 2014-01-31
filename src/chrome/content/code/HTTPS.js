@@ -43,10 +43,10 @@ const HTTPS = {
     // Rather than number like 10, we should use the starting value
     // in network.http.redirection-limit minus some counter
     if (c2.redirectionLimit < 10) {
-      this.log(WARN, "Redirection loop trying to set HTTPS on:\n  " +
+      this.log(NOTE, "Redirection loop trying to set HTTPS on:\n  " +
       channel.URI.spec +"\n(falling back to HTTP)");
       if (!blob.applied_ruleset) {
-        this.log(WARN,"DEATH\nDEATH\nDEATH\nDEATH");
+        this.log(WARN, "DEATH\nDEATH\nDEATH\nDEATH");
         https_everywhere_blacklist[channel.URI.spec] = true;
       }
       https_everywhere_blacklist[channel.URI.spec] = blob.applied_ruleset;
