@@ -98,6 +98,10 @@ function SSLObservatory() {
   // Used to track current number of pending requests to the server
   this.current_outstanding_requests = 0;
 
+  // We can't always know private browsing state per request, sometimes
+  // we have to guess based on what we've seen in the past
+  this.everSeenPrivateBrowsing = false;
+
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
@@ -396,29 +400,38 @@ SSLObservatory.prototype = {
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
-      return (! this.inPrivateBrowsingMode(channel));
+      var pbm = this.inPrivateBrowsingMode(channel);
+      this.log(NOTE, "Private browsing mode: " + pbm);
+      return !pbm;
     }
-
-    return false;
   },
 
   inPrivateBrowsingMode: function(channel) {
     // In classic firefox fashion, there are multiple versions of this API
     // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
     try {
+        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
         // Firefox 20+, this state is per-window
         if (!(channel instanceof CI.nsIHttpChannel)) {
           this.log(WARN, "observatoryActive() without a channel");
-          throw "no window for private browsing detection, trying the old way";
+          // This is a windowless request. We cannot tell if private browsing
+          // applies. Conservatively, if we have ever seen PBM, it might be
+          // active now
+          return this.everSeenPrivateBrowsing;
         }
         var win = this.HTTPSEverywhere.getWindowForChannel(channel);
-        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
-        if (PrivateBrowsingUtils.isWindowPrivate(win)) return true;
+        if (PrivateBrowsingUtils.isWindowPrivate(win)) {
+          this.everSeenPrivateBrowsing = true;
+          return true;
+        }
     } catch (e) {
       // Firefox < 20, this state is global
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) return true;
+        if (pbs.privateBrowsingEnabled) {
+          this.everSeenPrivateBrowsing = true;
+          return true;
+        }
       } catch (e) { /* seamonkey or old firefox */ }
     }
 
