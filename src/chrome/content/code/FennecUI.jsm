@@ -107,9 +107,11 @@ var popupInfo = {
         this.ruleStatus.push(false);
         this.rules.push(this.alist.inactive[rule]);
       } else if (this.alist.breaking.hasOwnProperty(rule)) {
-        // breaking rules are unchecked and untoggleable
-        this.ruleItems.push({ label: rule, disabled: true });
-        this.ruleStatus.push(false);
+        // breaking rules are get a unicode clockwise arrow next to them
+        var ruleLabel = "\u21B7"+rule;
+        var isSelected = this.alist.breaking[rule].active;
+        this.ruleItems.push({ label: ruleLabel, selected: isSelected });
+        this.ruleStatus.push(isSelected);
         this.rules.push(this.alist.breaking[rule]);
       }
     }
