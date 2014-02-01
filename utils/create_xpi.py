@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/env python
 
 # Uses the Python zip implementation to create deterministic XPI's
 # Author: Yan Zhu, yan@mit.edu

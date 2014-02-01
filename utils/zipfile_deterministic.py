@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 A fork of the Zipfile module to read and write ZIP files from Python 2.6.
 This module aims to create deterministic, byte-for-byte identical zip files.

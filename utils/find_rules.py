@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyleft 2013 Osama Khalid.
 
