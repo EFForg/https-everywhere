@@ -38,7 +38,7 @@ alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
 # Temporary file name, to aboid conflicts
 tmpAlexaFileName = "/tmp/alexa-top1M-" + format(random.randrange(1,65535)) + ".csv"
 
-# Logfile. Records the same output as the script (FOUND and "File not found" messages)
+# Logfile. Records the same output as the script
 logFileName = "/tmp/alexa-ruleset-log-" + format(random.randrange(1,65535)) + ".log"
 
 # Filename of the CSV file contained in the Alexa zipfile
@@ -55,6 +55,9 @@ tmpAlexaZipFileContents = 'top-1m.csv'
 # gitRepositoryPath = os.path.abspath(os.path.join(os.curdir, os.pardir))
 gitRepositoryPath = os.path.abspath(os.path.join(os.curdir, os.pardir)) + "/"
 
+# Maximum number of websites to use in the Alexa Top 1M (i.e. it's no longer 1M but maxSitesNumber)
+# Set to -1 for 'unlimited'
+maxSitesNumber = 1000
 
 # Functions
 def ruleLookup(target):
@@ -96,6 +99,9 @@ for row in sitesReader:
     try:
         # Since some Alexa sites are not FQDNs, split where there's a "/" and keep ony the first part
         siteFQDN = sitesList.append(row[1].split("/",1)[0])
+        # print("Line %s: %s" % (sitesReader.line_num, sitesList[len(sitesList) - 1])) # Outputs the current line
+        if sitesReader.line_num == maxSitesNumber:
+            break
     except csv.Error as e:
             sys.exit('file %s, line %d: %s' % (tmpAlexaFileName, sitesReader.line_num, e))
 
@@ -113,23 +119,38 @@ rulesList = open(tmpRulesFileName, 'r')
 logFile = open(logFileName,'w')
 logFile.write("Log file generated on %s.\nPaths are relative to the root directory of the git repo.\n\n"  % time.strftime("%Y-%m-%d %H:%M:%S"))
 
+# Let's keep track of how many rules were added and how many were modified
+# Must be declared here or won't be available at the end of the loop
+countAddedRules = 0
+countEditedRules = 0
+
+# Start parsing the list
 for line in rulesList:
     try:
         # Split into "file mode in commit + file path"
         ruleFile = line.split()
         found = 0
-        # If file mode is "A" (add)
-        if ruleFile[0] == "A": # If file was "added", parse
-            ruleText = etree.parse(gitRepositoryPath + ruleFile[1]) # ADJUST FILE PATH (here is '../' IF YOU MOVE THE SCRIPT
+        # If file mode is "A" (add) or "M" (edited)
+        if ruleFile[0] == "A" or ruleFile[0] == "M": # If file was added or edited between stable and master, parse
+            ruleText = etree.parse(gitRepositoryPath + ruleFile[1]) # ADJUST FILE PATH (here is '../') IF YOU MOVE THE SCRIPT - XXX: Obsolete warning?
             for target in ruleText.findall('target'):
                 FQDN = target.get('host') # URL of the website
                 if ruleLookup(FQDN) == 1: # Look it up in the sitesList
-                    found = 1
-                    break
-        # If found, print it
-        if found == 1:
-            print("FOUND: ", ruleFile[1])
-            logFile.write("FOUND: %s\n" % ruleFile[1])
+                    # Message different according to file mode
+                    if ruleFile[0] == "A": # New 
+                        found = "NEW"
+                        countAddedRules = countAddedRules + 1
+                        break
+                    elif ruleFile[0] == "M": # Edited
+                        found = "EDITED"
+                        countEditedRules = countEditedRules + 1
+                        break
+
+        # If found, print it TABULATED
+        if found != 0:
+            print("%s:\t%s" % (found, ruleFile[1]))
+            logFile.write("%s:\t%s" % (found, ruleFile[1]))
+
         # else ignore
         # There are some problems with file name encoding. So, for now, just print an error and pass
     except FileNotFoundError as e: # Won't happen before line.split() is invoked
@@ -137,6 +158,11 @@ for line in rulesList:
 #        logFile.write ("File not found: %s\n" % ruleFile[1])
         logFile.write("%s\n" % e)
         pass
+
+# Print our simple statistics
+print("\n\nStatistics:\nParsed rules: %s\nNewly added rules: %s\nEdited rules: %d" % (maxSitesNumber, countAddedRules, countEditedRules))
+logFile.write("\n\nStatistics:\nParsed rules: %s\nNewly added rules: %s\nEdited rules: %d" % (maxSitesNumber, countAddedRules, countEditedRules))
+print("\n\nLog file can be found at %s" % logFileName)
 
 # Close the rules file
 rulesList.close()
