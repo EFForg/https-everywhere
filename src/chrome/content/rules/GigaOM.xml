@@ -2,23 +2,73 @@
 	about & event.gigaom.com are handled in WordPress-blogs.xml.
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- ^	(301s to http)
+		- gigaom-pro-files.s3.amazonaws.com
+
+
+	Problematic subdomains:
+
+		- (www.) *
+		- about *
+		- events *
+		- jobs		(200 "error"; mismatched, CN: www.jobthread.com)
+		- support	(zendesk)
+		- techjobs	(works; mismatched, CN: www.jobthread.com)
+
+	* wordpress
+
+
+	Observed cookie domains:
+
+		- .
+		- go
+		- pro
+		- research
+		- support
+
+
+	Mixed content:
+
+		- css on techjobs from s0.wp.com *
+
+		- Web bugs on ^ from b.scorecardresearch.com *
+
+		- Images, on:
+
+			- ^ from gigaom2.files.wordpress.com *
+			- events from 1.gravatar.com *
+			- go from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="GigaOM (partial)">
 
 	<target host="*.gigaom.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://research\.gigaom\.com/+($|\?|(topic/buyers-lens|webinars)($|[?/]))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://research\.gigaom\.com/+(?!favicon\.ico|(?:analysts|subscription|wp-admin)(?:$|[?/])|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^pro\.gigaom\.com$" name=".*" />
+	<securecookie host="^\.gigaom\.com$" name="^wordpress_test_cookie$" />
+	<securecookie host="^(?:go|pro)\.gigaom\.com$" name=".*" />
 
 
 	<rule from="^https?://jobs\.gigaom\.com/(image|file|partner)s/"
 		to="https://www.jobthread.com/$1s/" />
 
-	<rule from="^http://pro\.gigaom\.com/"
-		to="https://pro.gigaom.com/" />
+	<!--	Redirects to http before appending slash:
+								-->
+	<rule from="^http://research\.gigaom\.com/analysts(?=$|\?)"
+		to="https://research.gigaom.com/analysts" />
+
+	<rule from="^http://(go|pro|research)\.gigaom\.com/"
+		to="https://$1.gigaom.com/" />
 
 </ruleset>
