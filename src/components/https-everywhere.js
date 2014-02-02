@@ -203,6 +203,7 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+    this.obsService.addObserver(this, "browser:purge-session-history", false);
   }
 
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
@@ -327,7 +328,6 @@ HTTPSEverywhere.prototype = {
   // QueryInterface implementation, e.g. using the generateQI helper
   QueryInterface: XPCOMUtils.generateQI(
     [ Components.interfaces.nsIObserver,
-      Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
@@ -552,17 +552,22 @@ HTTPSEverywhere.prototype = {
 
         // this pref gets set to false and then true during FF 26 startup!
         // so do nothing if we're being notified during startup
-	if (!this.browser_initialised)
+        if (!this.browser_initialised)
             return;
         switch (data) {
             case "security.mixed_content.block_active_content":
             case "extensions.https_everywhere.enable_mixed_rulesets":
                 var p = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
-    		var val = p.getBoolPref("security.mixed_content.block_active_content");
-		this.log(INFO,"nsPref:changed for "+data + " to " + val);
+                var val = p.getBoolPref("security.mixed_content.block_active_content");
+                this.log(INFO,"nsPref:changed for "+data + " to " + val);
                 HTTPSRules.init();
                 break;
         }
+    } else if (topic == "browser:purge-session-history") {
+      // The list of rulesets that have been loaded from the sqlite DB
+      // constitutes a parallel history store, so we have to clear it.
+      this.log(DBUG, "History cleared, reloading HTTPSRules to avoid information leak.");
+      HTTPSRules.init();
     }
     return;
   },
