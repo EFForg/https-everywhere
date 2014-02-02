@@ -9,14 +9,17 @@
 
 	Problematic subdomains:
 
-		- about *
-		- events *
-		- jobs		(200 "error"; mismatched, CN: www.jobthread.com)
-		- support	(zendesk)
-		- techjobs	(works; mismatched, CN: www.jobthread.com)
-		- www *
+		- about ¹
+		- events ¹
+		- jobs ²
+		- support ³
+		- techjobs ⁴
+		- www ¹
 
-	* wordpress
+	¹ wordpress
+	² 200 "error"; mismatched, CN: www.jobthread.com
+	³ zendesk
+	⁴ Works; mismatched, CN: www.jobthread.com
 
 
 	Observed cookie domains:
@@ -32,13 +35,13 @@
 
 		- css on techjobs from s0.wp.com *
 
-		- Web bugs on ^ from b.scorecardresearch.com *
-
 		- Images, on:
 
 			- ^ from gigaom2.files.wordpress.com *
 			- events from 1.gravatar.com *
 			- go from $self *
+
+		- Web bugs on ^ from b.scorecardresearch.com *
 
 	* Secured by us
 
@@ -58,14 +61,11 @@
 
 
 	<securecookie host="^\.gigaom\.com$" name="^wordpress_test_cookie$" />
-	<securecookie host="^(?:go|pro)\.gigaom\.com$" name=".*" />
+	<securecookie host="^(?:go|pro)\.gigaom\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?gigaom\.com/"
 		to="https://gigaom.com/" />
-
-	<rule from="^https?://jobs\.gigaom\.com/(image|file|partner)s/"
-		to="https://www.jobthread.com/$1s/" />
 
 	<!--	Redirects to http before appending slash:
 								-->
@@ -74,5 +74,8 @@
 
 	<rule from="^http://(go|pro|research)\.gigaom\.com/"
 		to="https://$1.gigaom.com/" />
+
+	<rule from="^http://jobs\.gigaom\.com/(?=images/|files/|partners/)"
+		to="https://www.jobthread.com/" />
 
 </ruleset>
