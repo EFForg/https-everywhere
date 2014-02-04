@@ -401,7 +401,7 @@ SSLObservatory.prototype = {
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
       var pbm = this.inPrivateBrowsingMode(channel);
-      this.log(NOTE, "Private browsing mode: " + pbm);
+      this.log(DBUG, "Private browsing mode: " + pbm);
       return !pbm;
     }
   },
@@ -410,16 +410,19 @@ SSLObservatory.prototype = {
     // In classic firefox fashion, there are multiple versions of this API
     // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
     try {
+        // Firefox 20+, this state is per-window;
+        //  should raise an exception on FF < 20
         CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
-        // Firefox 20+, this state is per-window
         if (!(channel instanceof CI.nsIHttpChannel)) {
-          this.log(WARN, "observatoryActive() without a channel");
+          this.log(NOTE, "observatoryActive() without a channel");
           // This is a windowless request. We cannot tell if private browsing
           // applies. Conservatively, if we have ever seen PBM, it might be
           // active now
           return this.everSeenPrivateBrowsing;
         }
         var win = this.HTTPSEverywhere.getWindowForChannel(channel);
+        if (!win) return this.everSeenPrivateBrowsing;  // windowless request
+
         if (PrivateBrowsingUtils.isWindowPrivate(win)) {
           this.everSeenPrivateBrowsing = true;
           return true;
@@ -432,9 +435,8 @@ SSLObservatory.prototype = {
           this.everSeenPrivateBrowsing = true;
           return true;
         }
-      } catch (e) { /* seamonkey or old firefox */ }
+      } catch (e) { /* seamonkey or very old firefox */ }
     }
-
     return false;
   },
 
