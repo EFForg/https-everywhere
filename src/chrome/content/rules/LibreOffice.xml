@@ -6,11 +6,28 @@
 
 	* Times out
 
+
+	Mixed content:
+
+		- css on conference and extensions from $self *
+
+		- Images on conference and extensions from $self *
+
+		- Web bugs on extensions from piwik.documentfoundation.org *
+
+	* Secured by us
+
 -->
-<ruleset name="LibreOffice">
+<ruleset name="LibreOffice (partial)">
 
 	<target host="libreoffice.org" />
 	<target host="*.libreoffice.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://extensions\.libreoffice\.org/+(?!.+(/logo|\.png|/\w+_thumb)($|\?)|favicon\.ico|portal_[ck]ss/)" /-->
+		<!--exclusion pattern="^http;//conference\.libreoffice\.org/+(?!.+(@download/image|\.ico|\.gif|\.png)($|\?)|\d+/portal_[ck]ss/)" /-->
+		<exclusion pattern="^http;//(?:conference|extensions)\.libreoffice\.org/+(?!.+(?:@download/image|\.gif|\.ico|/logo|\.png|/\w+_thumb)(?:$|\?)|(?:\d+/)?portal_[ck]ss/)" />
 
 
 	<securecookie host="^(?:donate|help|www)\.libreoffice\.org$" name=".*" />
@@ -19,7 +36,7 @@
 	<rule from="^http://(?:www\.)?libreoffice\.org/"
 		to="https://www.libreoffice.org/" />
 
-	<rule from="^http://(donate|gerrit|help)\.libreoffice\.org/"
+	<rule from="^http://(conference|donate|extensions|gerrit|help)\.libreoffice\.org/"
 		to="https://$1.libreoffice.org/" />
 
 </ruleset>

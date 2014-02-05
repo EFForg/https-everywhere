@@ -5,6 +5,7 @@ const Cr = Components.results;
 const CI = Components.interfaces;
 const CC = Components.classes;
 const CR = Components.results;
+const CU = Components.utils;
 
 // Log levels
 VERB=1;
@@ -71,6 +72,10 @@ function SSLObservatory() {
     this.torbutton_installed = false;
   }
 
+  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
+
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
   this.proxy_test_successful = null;
@@ -92,6 +97,10 @@ function SSLObservatory() {
 
   // Used to track current number of pending requests to the server
   this.current_outstanding_requests = 0;
+
+  // We can't always know private browsing state per request, sometimes
+  // we have to guess based on what we've seen in the past
+  this.everSeenPrivateBrowsing = false;
 
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
@@ -318,7 +327,8 @@ SSLObservatory.prototype = {
 
     if ("http-on-examine-response" == topic) {
 
-      if (!this.observatoryActive()) return;
+      var channel = subject;
+      if (!this.observatoryActive(channel)) return;
 
       var host_ip = "-1";
       var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
@@ -364,7 +374,7 @@ SSLObservatory.prototype = {
     }
   },
 
-  observatoryActive: function() {
+  observatoryActive: function(channel) {
                          
     if (!this.myGetBoolPref("enabled"))
       return false;
@@ -390,14 +400,43 @@ SSLObservatory.prototype = {
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
+      var pbm = this.inPrivateBrowsingMode(channel);
+      this.log(DBUG, "Private browsing mode: " + pbm);
+      return !pbm;
+    }
+  },
+
+  inPrivateBrowsingMode: function(channel) {
+    // In classic firefox fashion, there are multiple versions of this API
+    // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
+    try {
+        // Firefox 20+, this state is per-window;
+        //  should raise an exception on FF < 20
+        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
+        if (!(channel instanceof CI.nsIHttpChannel)) {
+          this.log(NOTE, "observatoryActive() without a channel");
+          // This is a windowless request. We cannot tell if private browsing
+          // applies. Conservatively, if we have ever seen PBM, it might be
+          // active now
+          return this.everSeenPrivateBrowsing;
+        }
+        var win = this.HTTPSEverywhere.getWindowForChannel(channel);
+        if (!win) return this.everSeenPrivateBrowsing;  // windowless request
+
+        if (PrivateBrowsingUtils.isWindowPrivate(win)) {
+          this.everSeenPrivateBrowsing = true;
+          return true;
+        }
+    } catch (e) {
+      // Firefox < 20, this state is global
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) return false;
-      } catch (e) { /* seamonkey or old firefox */ }
-    
-      return true;
+        if (pbs.privateBrowsingEnabled) {
+          this.everSeenPrivateBrowsing = true;
+          return true;
+        }
+      } catch (e) { /* seamonkey or very old firefox */ }
     }
-
     return false;
   },
 
@@ -608,10 +647,7 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-    var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
-                            .getService(Components.interfaces.nsISupports)
-                            .wrappedJSObject;
-    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = channel ? this.HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
