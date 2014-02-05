@@ -590,7 +590,36 @@ HTTPSEverywhere.prototype = {
     };
     if (!shown && !enabled)
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+
+    if (shown && enabled)
+      this.maybeCleanupObservatoryPrefs(ssl_observatory);
   },
+
+  maybeCleanupObservatoryPrefs: function(ssl_observatory) {
+    // Recover from a past UI processing bug that would leave the Obsevatory
+    // accidentally disabled for some users
+    // https://trac.torproject.org/projects/tor/ticket/10728
+    var clean = ssl_observatory.myGetBoolPref("clean_config");
+    if (clean) return;
+
+    // unchanged: returns true if a pref has not been modified
+    var unchanged = function(p){return !ssl_observatory.prefs.prefHasUserValue("extensions.https_everywhere._observatory."+p)};
+    var cleanup_obsprefs_callback = function(tor_avail) {
+      // we only run this once
+      ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.clean_config", true);
+      if (!tor_avail) {
+        // use_custom_proxy is the variable that is often false when it should be true;
+        if (!ssl_observatory.myGetBoolPref("use_custom_proxy")) {
+           // however don't do anything if any of the prefs have been set by the user
+           if (unchanged("alt_roots") && unchanged("self_signed") && unchanged ("send_asn") && unchanged("priv_dns")) {
+             ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
+           }
+        }
+      }
+    }
+    ssl_observatory.registerProxyTestNotification(cleanup_obsprefs_callback);
+  },
+
 
   getExperimentalFeatureCohort: function() {
     // This variable is used for gradually turning on features for testing and
