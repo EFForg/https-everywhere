@@ -1,11 +1,30 @@
 <!--
+	For problematic rules, see Envato.com-problematic.xml.
+
+
+	Other Envato rulesets:
+
+		- Envato-static.com.xml
+
+
 	CDN buckets:
 
 		- d1ohp0h9n9u652.cloudfront.net
 
+		- d2mdw063ttlqtq.cloudfront.net
 
-	^: refused
-	www: mismatched, CN: *.herokuapp.com
+			- [0-3].s3
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- [0-3].s3 ²
+		- www ³
+
+	¹ Refused
+	² cloudfront
+	³ Works; mismatched, CN: *.herokuapp.com
 
 
 	Mixed content:
@@ -15,16 +34,12 @@
 	* Secured by us
 
 -->
-<ruleset name="Envato.com" default_off="mismatched">
+<ruleset name="Envato.com (partial)">
 
-	<target host="envato.com" />
-	<target host="www.envato.com" />
-
-
-	<securecookie host="^www\.envato\.com$" name=".+" />
+	<target host="*.s3.envato.com" />
 
 
-	<rule from="^http://(?:www\.)?envato\.com/"
-		to="https://www.envato.com/" />
+	<rule from="^http://\d\.s3\.envato\.com/"
+		to="https://d2mdw063ttlqtq.cloudfront.net/" />
 
 </ruleset>

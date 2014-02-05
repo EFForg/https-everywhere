@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see ABC_News-falsemixed.xml.
+
+
 	Problematic domains:
 
 		- a.abcnews.com *
@@ -7,14 +10,18 @@
 	* 503, akamai
 
 -->
-<ruleset name="ABC News">
+<ruleset name="ABC News (partial)">
 
 	<target host="a.abcnews.com" />
 	<target host="abcnews.go.com" />
 	<target host="a.abcnews.go.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://abcnews\.go\.com/+(?!assets/|favicon\.ico|images/)" />
 
 
-	<rule from="^https?://a(?:\.abcnews|(?:\.a)?bcnews\.go)\.com/"
+	<rule from="^http://a(?:\.abcnews|(?:\.a)?bcnews\.go)\.com/"
 		to="https://abcnews.go.com/" />
 
 </ruleset>

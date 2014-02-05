@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- cdn.overstock.com.edgesuite.net
+
+			- a1696.g.akamai.net
+			- ak1.ostkcdn.com
+
+
+	Problematic domains:
+
+		- ak1.ostkcdn.com ¹
+		- overstock.com ²
+
+	¹ Works, akamai
+	² Cert only matches www
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="Overstock.com (partial)">
+
+	<target host="*.ostkcdn.com" />
+	<target host="overstock.com" />
+	<target host="*.overstock.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?overstock.com/+($|\?|Clothing-Shoes/7/store\.html|Coupons$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?overstock.com/+(?!css/|(dlp|intlcheckout)($|[?/])|favicon\.ico|img/)" /-->
+
+
+	<!--	css references resources relative to root.
+								-->
+	<rule from="^http://ak1\.ostkcdn\.com/img/"
+		to="https://a248.e.akamai.net/f/1696/5554/8/ak1.ostkcdn.com/img/" />
+
+	<rule from="^http://ak(?:1|-s)\.ostkcdn\.com/"
+		to="https://ak-s.ostkcdn.com/" />
+
+	<rule from="^http://(?:www\.)?overstock\.com/(?=css/|(?:dlp|intlcheckout)(?:$|[?/])|favicon\.ico|img/)"
+		to="https://www.overstock.com/" />
+
+	<rule from="^http://help\.overstock\.com/"
+		to="https://help.overstock.com/" />
+
+</ruleset>
