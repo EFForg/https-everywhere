@@ -19,6 +19,14 @@
 
 			- a11.g1.akamai.net
 
+		- http.developer.nvidia.com.edgesuite.net
+
+			- a1890.g.akamai.net
+
+		- developer.download.nvidia.com.edgesuite.net
+
+			- a862.d.akamai.net
+
 		- shield.nvidia.com.edgesuite.net
 
 			- a1017.g2.akamai.net
@@ -30,14 +38,19 @@
 
 	Nonfunctional subdomains:
 
+		- news.developer ¹
 		- forums		(503, akamai)
 		- origin-forums		(dropped)
+
+	¹ Dropped
 
 
 	Problematic subdomains:
 
 		- ^		(times out)
 		- blogs *
+		- http.developer *
+		- developer.download *
 		- shield *
 		- www *
 
@@ -56,6 +69,11 @@
 	Fully covered subdomains:
 
 		- developer
+		- http.developer *
+		- developer.download *
+		- nvdeveloper
+
+	* → akamai
 
 -->
 <ruleset name="nVidia (partial) ">
@@ -80,7 +98,7 @@
 		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/)" />
 
 
-	<securecookie host="^(?:\.?developer|\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
+	<securecookie host="^(?:\.?developer|\.?devtalk|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
 	<!--
 		Omniture tracking cookies:
 						-->
@@ -93,8 +111,14 @@
 	<rule from="^http://blogs\.nvidia\.com/(?=favicon\.ico|wp-content/(?!.+\.css)|wp-includes/)"
 		to="https://a248.e.akamai.net/f/11/2817/6m/blogs.nvidia.com/" />
 
-	<rule from="^http://(developer|devtalk|nvidianews|omniture|store)\.nvidia\.com/"
+	<rule from="^http://(developer|devtalk|nvdeveloper|nvidianews|omniture|store)\.nvidia\.com/"
 		to="https://$1.nvidia.com/" />
+
+	<rule from="^http://http\.developer\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/1890/806/6/http.developer.nvidia.com/" />
+
+	<rule from="^http://developer\.download\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/862/5658/3/developer.download.nvidia.com/" />
 
 	<rule from="^http://nsomniture\.nvidia\.com/"
 		to="https://nvidia-com.122.2o7.net/" />
