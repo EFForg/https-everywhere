@@ -32,8 +32,8 @@ sitesList = []
 tmpRulesFileName = "/tmp/rulesDiff-" + format(random.randrange(1,65535)) # Feel free to enlarge if needed
 
 # URL of the Alexa Top1M
-alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
-# alexaTop1MURL = "http://127.0.0.1/top-1m.csv.zip"
+# alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
+alexaTop1MURL = "http://127.0.0.1/top-1m.csv.zip"
 
 # Temporary file name, to aboid conflicts
 tmpAlexaFileName = "/tmp/alexa-top1M-" + format(random.randrange(1,65535)) + ".csv"
@@ -132,7 +132,8 @@ for line in rulesList:
         found = 0
         # If file mode is "A" (add) or "M" (edited)
         if ruleFile[0] == "A" or ruleFile[0] == "M": # If file was added or edited between stable and master, parse
-            ruleText = etree.parse(gitRepositoryPath + ruleFile[1]) # ADJUST FILE PATH (here is '../') IF YOU MOVE THE SCRIPT - XXX: Obsolete warning?
+            ruleFileObject= open(gitRepositoryPath + ruleFile[1])
+            ruleText = etree.parse(ruleFileObject) # ADJUST FILE PATH (here is '../') IF YOU MOVE THE SCRIPT - XXX: Obsolete warning?
             for target in ruleText.findall('target'):
                 FQDN = target.get('host') # URL of the website
                 if ruleLookup(FQDN) == 1: # Look it up in the sitesList
@@ -158,6 +159,13 @@ for line in rulesList:
 #        logFile.write ("File not found: %s\n" % ruleFile[1])
         logFile.write("%s\n" % e)
         pass
+    except IOError as ioe: #Treated same as FileNotFoundError
+        print("File not found:", ruleFile[1])
+#       logFile.write ("File not found: %s\n" % ruleFile[1])
+        logFile.write("%s\n" % e)
+        pass
+
+
 
 # Print our simple statistics
 print("\n\nStatistics:\nParsed rules: %s\nNewly added rules: %s\nEdited rules: %d" % (maxSitesNumber, countAddedRules, countEditedRules))
