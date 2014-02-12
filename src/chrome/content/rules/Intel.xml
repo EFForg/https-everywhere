@@ -12,14 +12,14 @@
 
 			- a1578.b.akamai.net
 
+		- software.intel.com.edgesuite.net
+
+			- a163.b.akamai.net
+
 		- software-downloads.intel.com.edgesuite.net
 
 			- a978.b.akamai.net
 			- downloads-software.intel.com
-
-		- software.intel.com.edgesuite.net
-
-			- a163.b.akamai.net
 
 
 	Other Intel rulesets:
@@ -38,30 +38,32 @@
 
 	Nonfunctional domains:
 
-
 		- intel.com subdomains:
 
-			- ark			(redirects to http, akamai)
-			- cache-www		(Akamai; 503)
-			- corpredirect		(Akamai; 503)
+			- ark ¹
+			- cache-www ²
+			- corpredirect ²
 			- downloadmirror ³
 			- mysearch ⁴
-			- www			(Akamai; "Page Unavailable")
+			- www ²
 
-		- itcommunity.intel.co.uk	(times out)
+		- itcommunity.intel.co.uk ⁵
 
-		intellinuxgraphics.org
+		- intellinuxgraphics.org
 
+	¹ Redirects to http, akamai
+	² 503, akamai
 	³ Shows another domain, akamai
 	⁴ Refused
+	⁵ Dropped
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- download-software.intel.com *
-		- inside.intel.com *
-		- search.intel.com ²
-		- software.intel.com	(works, akamai)
+		- download-software ¹
+		- inside ¹
+		- search ²
+		- software ¹
 
 	* Works, akamai
 	² Works, self-signed
@@ -70,9 +72,10 @@
 	Partially covered subdomains:
 
 		- newsroom ¹
-		- software	(→ akamai, avoiding user-visible paths)
+		- software ²
 
 	¹ Avoiding false/broken MCB, rest handled in -falsemixed.xml
+	² → akamai, avoiding user-visible paths
 
 
 	Fully covered subdomains:
@@ -90,18 +93,18 @@
 
 	Observed cookie domains:
 
-		- .intel.com
-		- communities.intel.com
-		- embedded.communities.intel.com
-		- downloadcenter.intel.com
-		- edc.intel.com
-		- engage.intel.com
-		- freepress.intel.com
-		- newsroom.intel.com
-		- scoop.intel.com
-		- sfederation.intel.com
-		- thehub.intel.com
-		- www.intel.com
+		- .
+		- communities
+		- embedded.communities
+		- downloadcenter
+		- edc
+		- engage
+		- freepress
+		- newsroom
+		- scoop
+		- sfederation
+		- thehub
+		- www
 
 
 	These altnames don't exist:
@@ -151,22 +154,25 @@
 		<!--
 			Avoid user-visible paths:
 							-->
-		<exclusion pattern="^http://software\.intel\.com/(?!favicon\.ico|misc/|sites/)" />
+		<!--exclusion pattern="^http://software\.intel\.com/(?!favicon\.ico|misc/|sites/)" /-->
 		<!--
 			Many stylesheets link images relative to /
 								-->
 		<exclusion pattern="^http://software\.intel\.com/(?:sites/\w+/)?sites/default/files/css/(?!css_Lk0i1Rq49zhZknClrYE-0k13DwR38sFSx-F2mXUQfI4\.css)" />
+		<!--
+			https://lists.eff.org/pipermail/https-everywhere-rules/2013-November/001732.html
+													-->
+		<!--exclusion pattern="^http://www\.intel\.com/newsroom/assets/bio/" /-->
 
 
-	<securecookie host="^.+\.intel\.com$" name=".+" />
+	<securecookie host=".+\.intel\.com$" name=".+" />
 
-	<exclusion pattern="^http://www\.intel\.com/newsroom/assets/bio/" />
 
 
 	<!--	Without this, there would be mixed content on newsroom:
 									-->
-	<rule from="^http://(?:www\.)?intel\.com/(etc|newsroom/assets|sites)/"
-		to="https://www-ssl.intel.com/$1/" />
+	<rule from="^http://(?:www\.)?intel\.com/(?=etc/|newsroom/assets/(?!bio/)|sites/)"
+		to="https://www-ssl.intel.com/" />
 
 	<rule from="^http://(blogs|(?:embedded\.)?communities|downloadcenter|educate|engage|freepress|newsroom|our|scoop|secure-software|sfederation|ssl|sfederation|staging-(?:blogs|our|scoop)|thehub|www-ssl)\.intel\.com/"
 		to="https://$1.intel.com/" />
@@ -179,7 +185,7 @@
 	<rule from="^http://(?:secure-)?inside\.intel\.com/"
 		to="https://secure-inside.intel.com/" />
 
-	<rule from="^http://software\.intel\.com/"
+	<rule from="^http://software\.intel\.com/(?!favicon\.ico|misc/|sites/)"
 		to="https://a248.e.akamai.net/f/163/177/2m/software.intel.com/" />
 
 </ruleset>
