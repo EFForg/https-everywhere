@@ -1,8 +1,16 @@
 <!--
+	For rules causing false/broken MCB, see Intel.com-falsemixed.xml.
+
 	For problematic rules, see Intel-mismatches.xml.
 
 
 	CDN buckets:
+
+		- downloadmirror.intel.com.edgesuite.net
+
+		- inside.intel.com.edgesuite.net
+
+			- a1578.b.akamai.net
 
 		- software-downloads.intel.com.edgesuite.net
 
@@ -34,32 +42,102 @@
 			- ark			(redirects to http, akamai)
 			- cache-www		(Akamai; 503)
 			- corpredirect		(Akamai; 503)
-			- downloadcenter
+			- downloadmirror ³
+			- mysearch ⁴
 			- www			(Akamai; "Page Unavailable")
 
 		- itcommunity.intel.co.uk	(times out)
 
 		intellinuxgraphics.org
 
+	³ Shows another domain, akamai
+	⁴ Refused
+
 
 	Problematic domains:
 
 		- download-software.intel.com *
+		- inside.intel.com *
+		- search.intel.com ²
 		- software.intel.com	(works, akamai)
+		- (www.)intelfreepress.com ³
 
 	* Works, akamai
+	² Works, self-signed
+	³ Works; mismatched, CN: blogs.intel.com
 
 
 	Partially covered subdomains:
 
+		- newsroom ¹
 		- software	(→ akamai, avoiding user-visible paths)
+
+	¹ Avoiding false/broken MCB, rest handled in -falsemixed.xml
 
 
 	Fully covered subdomains:
 
 		- communities
+		- embedded.communities
+		- downloadcenter
 		- downloads-software	(→ akamai)
+		- inside		(→ secure-inside)
+		- secure-inside
 		- secure-software
+		- sfederation
+		- thehub
+
+
+	Observed cookie domains:
+
+		- .intel.com
+		- communities.intel.com
+		- embedded.communities.intel.com
+		- downloadcenter.intel.com
+		- edc.intel.com
+		- engage.intel.com
+		- freepress.intel.com
+		- newsroom.intel.com
+		- scoop.intel.com
+		- sfederation.intel.com
+		- thehub.intel.com
+		- www.intel.com
+
+
+	These altnames don't exist:
+
+		- downloadcenter-prd.intel.com
+		- downloadcenter01-prd.intel.com
+		- downloadcenter02-prd.intel.com
+		- intelsearch.intel.com
+
+
+	Mixed content:
+
+		- css on newsroom from www ¹
+
+		- Images, on:
+
+			- blogs, from:
+
+				- $self ¹
+				- scoop ¹
+				- www ¹
+
+			- embedded.communities from $self ¹
+			- engage from $self ¹
+			- newsroom from www ¹
+
+			- scoop, from:
+
+				- blogs ¹
+				- www ¹
+				- farm\d.staticflickr.com ¹
+
+		- Ad/web bug on engage from intel.airprojects.org ²
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
 <ruleset name="Intel (partial)">
@@ -67,6 +145,10 @@
 	<target host="*.intel.co.jp" />
 	<target host="intel.com" />
 	<target host="*.intel.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://newsroom\.intel\.com/+(?!favicon\.ico|(?:\d\.\d\.\d/)?(?:images/|plugins/|themes?/)|people/\w+/avatar/)" />
 		<!--
 			Avoid user-visible paths:
 							-->
@@ -98,13 +180,16 @@
 	<rule from="^https?://(?:www\.)?intel\.com/(etc|newsroom/assets|sites)/"
 		to="https://www-ssl.intel.com/$1/" />
 
-	<rule from="^http://(blogs|communities|educate|engage|freepress|our|scoop|secure-software|sfederation|ssl|staging-(?:blogs|our|scoop)|www-ssl)\.intel\.com/"
+	<rule from="^http://(blogs|(?:embedded\.)?communities|downloadcenter|educate|engage|freepress|newsroom|our|scoop|secure-software|sfederation|ssl|sfederation|staging-(?:blogs|our|scoop)|thehub|www-ssl)\.intel\.com/"
 		to="https://$1.intel.com/" />
 
 	<!--	Protocol-relative redirects from akamai.net/.../software.:
 									-->
 	<rule from="^https?://download-software\.intel\.com/"
 		to="https://a248.e.akamai.net/f/978/142/6m/download-software.intel.com/" />
+
+	<rule from="^http://(?:secure-)?inside\.intel\.com/"
+		to="https://secure-inside.intel.com/" />
 
 	<rule from="^http://software\.intel\.com/"
 		to="https://a248.e.akamai.net/f/163/177/2m/software.intel.com/" />
