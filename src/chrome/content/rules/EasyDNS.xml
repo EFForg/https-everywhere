@@ -1,21 +1,25 @@
 <!--
 	Nonfunctional domains:
 
-		- images.easydns.com ¹
-		- helpwiki.easydns.com ²
-		- mediawiki.easydns.com ²
+		- blog.easydns.com ¹
+		- images.easydns.com ²
+		- helpwiki.easydns.com ¹
+		- mediawiki.easydns.com ¹
 		- parked.easydns.com ³
 
-	¹ 200 "does not exist", valid cert
-	² Dropped
+	¹ Dropped
+	² 200 "does not exist", valid cert
 	³ Refused
+
 
 
 	Problematic domains:
 
-		- blog.easydns.org *
+		- (www.)easydns.net ¹
+		- blog.easydns.org ²
 
-	* Works; mismatched, CN: *.easypress.ca
+	¹ Mismatched
+	² Works; mismatched, CN: *.easypress.ca
 
 
 	Fully covered domains:
@@ -24,6 +28,11 @@
 
 			- cp
 			- web
+
+		- (www.)easydns.net	(→ www.easydns.com)
+		- [\w-]+.easydns.net *
+
+	* Per-client domains
 
 
 	Observed cookie domains:
@@ -34,23 +43,20 @@
 -->
 <ruleset name="easyDNS (partial)">
 
-	<target host="easydns.net"/>
-	<target host="*.easydns.net"/>
-	<target host="easydns.com"/>
-	<target host="*.easydns.com"/>
-		<!--	blog & helpwiki time out	-->
-		<exclusion pattern="^http://(blog2?|helpwiki|mediawiki|parked)\.easydns\.com/"/>
+	<target host="easydns.net" />
+	<target host="*.easydns.net" />
+	<target host="easydns.com" />
+	<target host="*.easydns.com" />
+		<exclusion pattern="^http://(?:blog2?|helpwiki|mediawiki|parked)\.easydns\.com/" />
 
-	<securecookie host="^.*\.easydns\.(com|net)$" name=".*"/>
 
-	<!--	Cert isn't valid for .net.
-		This is what the server does,
-		aside from https.		-->
+	<securecookie host=".*\.easydns\.(?:com|net)$" name=".+" />
+
+
 	<rule from="^http://(?:www\.)?easydns\.net/"
-		to="https://www.easydns.com/"/>
+		to="https://www.easydns.com/" />
 
-	<!--	clients have unique .net subdomains	-->
-	<rule from="^http://([\w\-]+\.)?easydns\.(com|net)/"
-		to="https://$1easydns.$2/"/>
+	<rule from="^http://([\w-]+\.)?easydns\.(com|net)/"
+		to="https://$1easydns.$2/" />
 
 </ruleset>
