@@ -7,17 +7,8 @@
 
 		- eee.asus.com.edgesuite.net
 		- event.asus.com.edgesuite.net
-
-		- press.asus.com.edgesuite.net
-
-			- a1479.g.akamai.net
-
 		- rog.asus.com.edgesuite.net
 		- support.asus.com.edgesuite.net
-
-		- zenbook.asus.com.edgesuite.net
-
-			- a1778.b.akamai.net
 
 
 	Nonfunctional subdomains:
@@ -25,13 +16,16 @@
 		- csr *
 		- eee **
 		- event		(403, akamai)
+		- press *
 		- rog		(503, akamai)
 		- (www.)service	(refused)
 		- sonicmaster *
 		- support **
+		- zenbook ⁵
 
 	* 404, valid cert
 	** 404, akamai
+	⁵ Refused
 
 
 	Problematic subdomains:
@@ -40,19 +34,9 @@
 		- autodiscover *
 		- dlcdnet **
 		- mail *
-		- press **
-		- zenbook **
 
 	* 404, valid cert
 	** Works, akamai
-
-
-	Partially covered subdomains:
-
-		- press *
-		- zenbook *
-
-	* → akamai, avoiding user-visible paths
 
 
 	Fully covered subdomains:
@@ -81,17 +65,7 @@
 
 	<target host="asus.com" />
 	<target host="*.asus.com" />
-		<!--exclusion pattern="^http://(csr|eee|event|rog|sonicmaster|support)\." /-->
-		<!--
-			Avoid user-visible paths:
-							-->
-		<!--exclusion pattern="^http://press\.asus\.com/(?!favicon\.ico|\w+/files/|wp-content/|wp-includes/)" /-->
-		<!--exclusion pattern="^http://zenbook\.asus\.com/(?!favicon\.ico|imgs/|rsc/)" /-->
-		<!--
-			Links images relative to /
-							-->
-		<!--exclusion pattern="^http://press\.asus\.com/wp-content/plugins/(auto-thickbox-plus/thickbox\.min\.css|easy-fancybox/easy-fancybox\.css\.php|shadowbox-js/shadowbox/shadowbox\.css)" /-->
-		<!--exclusion pattern="^http://zenbook\.asus\.com/rsc/all\.css" /-->
+		<!--exclusion pattern="^http://(csr|eee|event|press|rog|sonicmaster|support|zenbook)\." /-->
 
 
 	<securecookie host=".+\.asus\.com$" name=".+" />
@@ -110,11 +84,5 @@
 
 	<rule from="^http://dlcdnet\.asus\.com/"
 		to="https://a248.e.akamai.net/f/1828/2290/9f/dlcdnet.asus.com/" />
-
-	<rule from="^http://press\.asus\.com/(?=favicon\.ico|\w+/files/|wp-content/(?!plugins/(?:auto-thickbox-plus|easy-fancybox|shadowbox-js/shadowbox)/[\w.-]+\.css)|wp-includes/)"
-		to="https://a248.e.akamai.net/f/1479/3611/4f/press.asus.com/" />
-
-	<rule from="^http://zenbook\.asus\.com/(?=favicon\.ico|imgs/|rsc/(?!all\.css))"
-		to="https://a248.e.akamai.net/f/1778/5348/10h/zenbook.asus.com/" />
 
 </ruleset>
