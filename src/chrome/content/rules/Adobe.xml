@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Adobe.com-falsemixed.xml.
+
 	For problematic rules, see Adobe-mismatches.xml.
 
 
@@ -43,7 +45,6 @@
 	Nonfunctional subdomains:
 
 		- experiencedelivers	(redirects to www; mismatched, CN: *.day.com)
-		- forums		(dropped)
 		- labs *
 		- training *
 
@@ -56,6 +57,7 @@
 
 			- ^ *
 			- airdownload **
+			- forums ³
 			- gaming *
 			- get2		(mismatched, CN: get.adobe.com)
 			- html *
@@ -69,13 +71,17 @@
 
 	* Works, mismatched, CN: www.adobe.com
 	** Works, akamai
+	³ Mixed css from $self
 
 
 	Partially covered subdomains:
 
 		- blogs		(webplatform blog redirects to http)
+		- forums ²
 		- fpdownload	(crossdomain.xml excluded)
 		- ns		(→ www)
+
+	² Avoiding false/broken MCB
 
 
 	Fully covered domains:
@@ -127,9 +133,24 @@
 	* → akamai
 
 
+	Observed cookie domains:
+
+		- forums.adobe.com *
+
+	* Secured by us <= not secured by server
+
+
 	Mixed content:
 
+		- css on forums from $self *
+
 		- Images, on
+
+			- forums, from:
+
+				- www *
+				- imageshack.us *
+				- upload.macromedia.com
 
 			- tv from thumbnails.tv *
 			- www from wwwimages *
@@ -156,6 +177,10 @@
 		<exclusion pattern="^http://blogs\.adobe\.com/webplatform(?:$|[?/])" />
 		<!--exclusion pattern="^http://blogs\.adobe\.com/(?!$|\?|(?:acrobat|adobe(connect|ingovernment|life)|aftereffects|captivate|conversations|creativelayer|digital(marketing|dmedia|publishing)|dreamweaver|educationleaders|experiencedelivers|globalization|gunar|indesigndocs|iwamoto|lightroomjournal|photoshopdotcom|premierepro|presenter|readermobile|vikrant)($|\?|/)|wp-content/)" /-->
 		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://forums\.adobe\.com/+(?!\d\.\d\.\d/(?:images/|resources/|styles/|themes/)|favicon\.ico|people/[\w.]+/avatar/|plugins/|styles/|themes?/)" />
+		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
 			Breaks video playback:
@@ -171,7 +196,7 @@
 	<rule from="^http://adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
+	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|forums|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
 		to="https://$1.adobe.com/" />
 
 	<rule from="^http://get2\.adobe\.com/"
