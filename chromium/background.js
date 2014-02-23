@@ -22,21 +22,6 @@ for (r in rs) {
 }
 */
 
-// Add the HTTPS Everywhere icon to the URL address bar.
-// TODO: Switch from pageAction to browserAction?
-function displayPageAction(tabId) {
-  if (tabId !== -1) {
-    chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) === "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction.");
-      }
-      else {
-        chrome.pageAction.show(tabId);
-      }
-    });
-  }
-}
-
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
@@ -407,13 +392,21 @@ wr.onResponseStarted.addListener(onResponseStarted,
 // Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
 // pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    displayPageAction(tabId);
+    if (changeInfo.status === "loading") {
+        chrome.pageAction.show(tabId);
+    }
 });
 
 // Pre-rendered tabs / instant experiments sometimes skip onUpdated.
 // See http://crbug.com/109557
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    displayPageAction(addedTabId);
+    chrome.tabs.get(addedTabId, function(tab) {
+        if(typeof(tab) === "undefined") {
+            log(DBUG, "Not a real tab. Skipping showing pageAction.");
+        } else {
+            chrome.pageAction.show(tabId);
+        }
+    });
 });
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
