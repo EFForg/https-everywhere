@@ -16,24 +16,32 @@
 	Fully covered subdomains:
 
 		- (www.)
+		- blog
+		- bugs
+		- forums
+		- shop
+		- talk	(→ webchat.freenode.net)
 		- wiki
 
 
 	Observed cookie domains:
 
-		- ^
-		- bugs
+		- ^ ¹
+		- bugs ¹
 		- .forums ²
-		- .shop
-		- wiki
-		- www
+		- .shop ¹
+		- wiki ¹
+		- www ¹
 
+	¹ Secured by us <= not secured by server
 	² Secured by server
 
 
 	Mixed content:
 
-		- Images on blog from $self
+		- Images on blog from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Amahi.org (partial)">
@@ -46,13 +54,21 @@
 		<!--exclusion pattern="^http://docs\.amahi\.org/" /-->
 
 
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:(?:bugs|\.shop|wiki|www)\.)?amahi\.org$" name=".+" />
 	<!--
 		Secured by server:
 					-->
 	<!--securecookie host="^\.forums\.amahi\.org$" name=".+" /-->
 
 
-	<rule from="^http://((?:wiki|www)\.)?amahi\.org/"
+	<rule from="^http://((?:blog|bugs|forums|shop|wiki|www)\.)?amahi\.org/"
 		to="https://$1amahi.org/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://talk\.amahi\.org/.*"
+		to="https://webchat.freenode.net/?channels=amahi" />
 
 </ruleset>
