@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
+
+
 	Other Ubuntu rulesets:
 
 		- Ubuntu_Forums.org.xml
@@ -36,7 +39,17 @@
 
 	Problematic subdomains:
 
+		- developer ¹
 		- shop	(mismatched, CN: shop.canonical.com)
+
+	¹ Mixed css from $self and assets
+
+
+	Partially covered subdomains:
+
+		- developer *
+
+	* Avoiding false/broken MCB, rest handled in -falsemixed.xml
 
 
 	Fully covered domains:
@@ -47,7 +60,6 @@
 			- assets
 			- cloud
 			- community
-			- developer
 			- myapps.developer
 			- fridge
 			- help
@@ -68,14 +80,26 @@
 
 	Mixed content:
 
+		- css, on developer from:
+
+			- $self ¹
+			- assets ¹
+			- fonts.googleapis.com ¹
+
+		- Images on developer from $self ¹
 		- Images on help from pix.toile-libre.org *
 
+	¹ Secured by us
 	* Unsecurable, doesn't trip MCB
 
 -->
 <ruleset name="Ubuntu (partial)">
 
 	<target host="*.ubuntu.com" />
+		<!--
+			Avoid false/broken MCB:
+							-->
+		<exclusion pattern="^http://developer\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 	<target host="ubuntuone.com" />
 	<target host="www.ubuntuone.com" />
 
