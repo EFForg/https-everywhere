@@ -332,7 +332,8 @@ HTTPSEverywhere.prototype = {
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
       Components.interfaces.nsIWebProgressListener2,
-      Components.interfaces.nsIChannelEventSink ]),
+      Components.interfaces.nsIChannelEventSink,
+      Components.interfaces.nsIContentPolicy ]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -740,6 +741,26 @@ HTTPSEverywhere.prototype = {
     return tab;
   },
 
+  realMCB: Cc['@mozilla.org/mixedcontentblocker;1']
+    .getService(Components.interfaces.nsIContentPolicy),
+
+  shouldLoad: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aExtra, aRequestPrincipal) {
+    var newContentLocation = aContentLocation;
+    blob = HTTPSRules.rewrittenURI(null, aContentLocation);
+    if (blob) {
+      newContentLocation = Cc["@mozilla.org/network/io-service;1"]
+        .getService(Ci.nsIIOService)
+        .newURI(blob.newuri, null, null);
+    }
+    var result = this.realMCB.shouldLoad(aContentType, newContentLocation, aRequestOrigin, aContext, aMimeTypeGuess, aExtra, aRequestPrincipal);
+    return result ? result : Ci.nsIContentPolicy.ACCEPT;
+  },
+
+  shouldProcess: function(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra, aRequestPrincipal) {
+    var result = this.realMCB.shouldProcess(aContentType, aContentLocation, aRequestOrigin, aContext, aMimeType, aExtra, aRequestPrincipal);
+    return result ? result : Ci.nsIContentPolicy.ACCEPT;
+  },
+
   toggleEnabledState: function() {
     if(this.prefs.getBoolPref("globalEnabled")){    
         try{    
@@ -754,6 +775,9 @@ HTTPSEverywhere.prototype = {
             var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
             catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
+
+            catman.deleteCategoryEntry("content-policy", "@mozilla.org/mixedcontentblocker;1", false);
+            catman.addCategoryEntry("content-policy", "@mozilla.org/mixedcontentblocker;1", "@mozilla.org/mixedcontentblocker;1", false, true);
                         
             var dls = CC['@mozilla.org/docloaderservice;1']
             .getService(CI.nsIWebProgress);
@@ -791,6 +815,10 @@ HTTPSEverywhere.prototype = {
                 SERVICE_CTRID, false, true);            
             
             HTTPSRules.init();          
+
+            catman.deleteCategoryEntry("content-policy", "@mozilla.org/mixedcontentblocker;1", false);
+            catman.addCategoryEntry("content-policy", "@mozilla.org/mixedcontentblocker;1", SERVICE_CTRID, false, true);
+
             this.prefs.setBoolPref("globalEnabled", true);
         }
         catch(e){
