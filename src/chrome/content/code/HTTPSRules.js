@@ -241,6 +241,30 @@ const RuleWriter = {
     return rv;
   },
 
+  read: function(file, rule_store, ruleset_id) {
+    if (!file.exists())
+      return null;
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
+      this.log(WARN, "TARGETS IS NULL");
+    var data = "";
+    var fstream = CC["@mozilla.org/network/file-input-stream;1"]
+        .createInstance(CI.nsIFileInputStream);
+    var sstream = CC["@mozilla.org/scriptableinputstream;1"]
+        .createInstance(CI.nsIScriptableInputStream);
+    fstream.init(file, -1, 0, 0);
+    sstream.init(fstream);
+
+    var str = sstream.read(4096);
+    while (str.length > 0) {
+      data += str;
+      str = sstream.read(4096);
+    }
+
+    sstream.close();
+    fstream.close();
+    return this.readFromString(data, rule_store, ruleset_id);
+  },
+
   readFromString: function(data, rule_store, ruleset_id) {
     try {
       var xmlruleset = dom_parser.parseFromString(data, "text/xml");
@@ -272,6 +296,23 @@ const RuleWriter = {
       return null;
     }
 
+    // Add this ruleset id into HTTPSRules.targets if it's not already there.
+    // This should only happen for custom user rules. Built-in rules get
+    // their ids preloaded into the targets map, and have their <target>
+    // tags stripped when the sqlite database is built.
+    var targets = xmlruleset.getElementsByTagName("target");
+    for (var i = 0; i < targets.length; i++) {
+      var host = targets[i].getAttribute("host");
+      if (!host) {
+        this.log(WARN, "<target> missing host in " + xmlruleset.getAttribute("name"));
+        return null;
+      }
+      if (! rule_store.targets[host])
+        rule_store.targets[host] = [];
+      this.log(DBUG, "Adding " + host + " to targets, pointing at " + ruleset_id);
+      rule_store.targets[host].push(ruleset_id);
+    }
+
     var exclusions = xmlruleset.getElementsByTagName("exclusion");
     for (var i = 0; i < exclusions.length; i++) {
       var exclusion = new Exclusion(exclusions[i].getAttribute("pattern"));
@@ -296,7 +337,6 @@ const RuleWriter = {
     rule_store.rulesets.push(rs);
     rule_store.rulesetsByID[rs.id] = rs;
     rule_store.rulesetsByName[rs.name] = rs;
-
   },
 
   enumerate: function(dir) {
@@ -324,6 +364,8 @@ const HTTPSRules = {
       this.rulesetsByName = {};
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
+      var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
+      this.scanRulefiles(rulefiles);
 
       // Initialize database connection.
       var dbFile = FileUtils.getFile("ProfD",
@@ -391,6 +433,22 @@ const HTTPSRules = {
     } else {
       this.log(INFO, "Activating rules that would normally trigger mixed content");
       this.localPlatformRegexp = new RegExp("(firefox|mixedcontent)");
+    }
+  },
+
+  scanRulefiles: function(rulefiles) {
+    var i = 0;
+    var r = null;
+    for(i = 0; i < rulefiles.length; ++i) {
+      try {
+        this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
+        var ruleset_id = "custom_" + i;
+        RuleWriter.read(rulefiles[i], this, ruleset_id);
+      } catch(e) {
+        this.log(WARN, "Error in ruleset file: " + e);
+        if (e.lineNumber)
+          this.log(WARN, "(line number: " + e.lineNumber + ")");
+      }
     }
   },
 
