@@ -11,10 +11,13 @@
 
 			- cinesport.boston.com
 
+		- cache.boston.com.global.prod.fastly.net
 		- bostoncom.http.internapcdn.net
 
-			- c.o0bc.com
-			- cache.boston.com
+		- boston.nimblebuy.com
+
+			- deals
+			- finds
 
 
 	Nonfunctional domains:
@@ -25,8 +28,34 @@
 	Problematic domains:
 
 		- boston.com *
+		- cache.boston.com ²
+		- weather.boston.com ⁴
 
 	* Expired 2014-02-07, ocsp request failure
+	² Works; mismatched, CN: *.a.ssl.fastly.net
+	⁴ Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cache		(→ graphics)
+		- graphics
+
+
+	Mixed content:
+
+		- css on www from cache ¹
+
+		- Images, on www from:
+
+			- $self ¹
+			- cache ¹
+
+		- Ads on www from cinesport ²
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
 <ruleset name="Boston.com (partial)">
@@ -44,17 +73,13 @@
 	<rule from="^http://graphics\.boston\.com/"
 		to="https://graphics.boston.com/" />
 
-	<!--	- cache doesn't work
-		- cache CN: *.https.internapcdn.net
-							-->
 	<rule from="^http://cache\.boston\.com/"
 		to="https://graphics.boston.com/" />
 
 	<rule from="^http://deals\.boston\.com/(favicon\.ico|signup|views/)"
 		to="https://deals.boston.com/$1" />
 
-	<!--	- Weather doesn't work
-		- This is what the server does, aside from https
+	<!--	Server redirects as so, aside from https:
 							-->
 	<rule from="^http://weather\.boston\.com/"
 		to="https://www.boston.com/weather/" />
