@@ -1,0 +1,67 @@
+<!--
+	Nonfunctional subdomains:
+
+		- landing *
+
+	* Dropped
+
+
+	Partially covered subdomains:
+
+		- www *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- ^
+		- myaccount
+		- widgets
+
+
+	Observed cookie domains:
+
+		- ¹
+		- . ²
+		- myaccount ¹
+		- widgets ¹
+		- www ³
+
+	¹ Secured by us <= not secured by server
+	² Partially secured by us <= accounting for possible use on unsecurable subdomains
+	³ Not secured by us <= incomplete tls support
+
+-->
+<ruleset name="TopOption.com (partial)">
+
+	<target host="topoption.com" />
+	<target host="*.topoption.com" />
+		<!--exclusion pattern="^http://landing\.topoption\.com/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.topoption.com/+(Error)?($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.topoption.com/+(?!AppProxy/|ContactUsmediaProxy/|css/|favicon\.ico|homemediaProxy/|images/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:myaccount\.|widgets\.)?topoption\.com$" name=".+" />
+	<!--
+		Tracking cookies:
+					-->
+	<securecookie host="^\.topoption\.com$" name="^(?:apTracker|campaignId|subCampaignId)$" />
+	<!--
+		Could we secure any of these safely?
+							-->
+	<!--securecookie host="^\.topoption\.com$" name="^(incap_ses_[\d_]+|nlbi_\d+|spotsession_\d+|___utmv\w+|visid_incap_\d+)$" /-->
+
+
+	<rule from="^http://((?:myaccount|widgets|www)\.)?topoption\.com/"
+		to="https://$1topoption.com/" />
+
+</ruleset>
