@@ -3,5 +3,5 @@
 	<target host="www.watson.ch"/>
 
 	<rule from="^http://(?:www\.)?watson\.ch/"
-		to="https://www.watson.ch"/>
+		to="https://www.watson.ch/"/>
 </ruleset>
