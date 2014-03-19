@@ -25,8 +25,12 @@
 	Problematic domains:
 
 		- c.o0bc.com	(404; mismatched, CN: *.internapcdn.net)
-		- www.boston.com	(akamai)
+		- boston.com *
+		- deals.boston.com ³
 		- bostonglobe.com	(dropped)
+
+	* Expired 2014-02-07, ocsp request failure
+	³ Works; mismatched, CN: finds.boston.com
 
 
 	Fully covered domains:
@@ -53,10 +57,13 @@
 
 
 	<rule from="^http://c\.o0bc\.com/"
-		to="https://boston.com/" />
+		to="https://www.boston.com/" />
 
-	<rule from="^http://(?:(graphics\.)|www\.)?boston\.com/"
-		to="https://$1boston.com/" />
+	<rule from="^http://(?:www\.)?boston\.com/"
+		to="https://www.boston.com/" />
+
+	<rule from="^http://graphics\.boston\.com/"
+		to="https://graphics.boston.com/" />
 
 	<!--	- cache doesn't work
 		- cache CN: *.https.internapcdn.net
@@ -64,14 +71,14 @@
 	<rule from="^http://cache\.boston\.com/"
 		to="https://graphics.boston.com/" />
 
-	<rule from="^http://deals\.boston\.com/(favicon\.ico|signup|views/)"
-		to="https://deals.boston.com/$1" />
+	<rule from="^http://deals\.boston\.com/+(favicon\.ico|signup|views/)"
+		to="https://finds.boston.com/$1" />
 
 	<!--	- Weather doesn't work
 		- This is what the server does, aside from https
 							-->
 	<rule from="^http://weather\.boston\.com/"
-		to="https://boston.com/weather/" />
+		to="https://www.boston.com/weather/" />
 
 	<rule from="^http://services\.bostonglobe\.com/"
 		to="https://services.bostonglobe.com/" />
