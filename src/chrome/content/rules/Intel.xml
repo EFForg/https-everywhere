@@ -78,15 +78,18 @@
 
 	Partially covered subdomains:
 
+		- communities.edc ³	(→ embedded.communities)
 		- newsroom ¹
 		- software ²
 
 	¹ Avoiding false/broken MCB, rest handled in -falsemixed.xml
 	² → akamai, avoiding user-visible paths
+	³ Inconsistent redirection behavior
 
 
 	Fully covered subdomains:
 
+		- chi1
 		- communities
 		- embedded.communities
 		- downloadcenter
@@ -185,13 +188,18 @@
 	<rule from="^http://(?:www\.)?intel\.com/(?=content/|etc/|favicon\.ico|newsroom/assets/(?!bio/)|sites/)"
 		to="https://www-ssl.intel.com/" />
 
-	<rule from="^http://(blogs|(?:embedded\.)?communities|downloadcenter|educate|engage|freepress|newsroom|our|scoop|secure-software|sfederation|ssl|sfederation|staging-(?:blogs|our|scoop)|thehub|www-ssl)\.intel\.com/"
+	<rule from="^http://(blogs|chi1|(?:embedded\.)?communities|downloadcenter|educate|engage|freepress|newsroom|our|scoop|secure-software|sfederation|ssl|sfederation|staging-(?:blogs|our|scoop)|thehub|www-ssl)\.intel\.com/"
 		to="https://$1.intel.com/" />
 
 	<!--	Protocol-relative redirects from akamai.net/.../software.:
 									-->
 	<rule from="^https?://download-software\.intel\.com/"
 		to="https://a248.e.akamai.net/f/978/142/6m/download-software.intel.com/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://embedded\.edc\.intel\.com/+(?:$|\?.*)"
+		to="https://embedded.communities.intel.com/" />
 
 	<rule from="^http://(?:secure-)?inside\.intel\.com/"
 		to="https://secure-inside.intel.com/" />
