@@ -23,6 +23,10 @@ ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
 ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
+HASHLENGTH = 64;      // hex(sha1 + md5)
+MIN_WHITELIST=1000;   // do not tolerate whitelists outside these bounds
+MAX_WHITELIST=10000;
+
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
@@ -129,6 +133,8 @@ function SSLObservatory() {
   }
 
   this.testProxySettings();
+
+  this.updateCertWhitelist();
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -443,6 +449,67 @@ SSLObservatory.prototype = {
   myGetBoolPref: function(prefstring) {
     // syntactic sugar
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
+  loadCertWhitelist: function() {
+    var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
+    var file =
+      CC["@mozilla.org/file/local;1"]
+      .createInstance(CI.nsILocalFile);
+    file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
+    var data = this.HTTPSEverywhere.rw.read(file);
+    this.whitelist = JSON.parse(data);
+    this.log(DBUG, "yay\n" + data);
+  },
+
+  saveCertWhitelist: function() {
+    var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
+    var file =
+      CC["@mozilla.org/file/local;1"]
+      .createInstance(CI.nsILocalFile);
+    file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
+    var data = this.HTTPSEverywhere.rw.write(file, JSON.stringify(this.whitelist));
+  },
+
+
+  updateCertWhitelist: function() {
+        var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+
+    req.open("GET", "https://s.eff.org/files/X509ChainWhitelist.json", true);
+    req.responseType = "json";
+
+    var that = this;
+    req.onreadystatechange = function() {
+      if (req.status == 200) {
+        if (typeof req.response != "object") {
+          that.log(5, "INSUFFICIENT WHITELIST OBJECTIVITY");
+          return false;
+        }
+        var whitelist = req.response;
+        var c = 0;
+        for (var hash in whitelist) {
+          c++;
+          if (typeof hash != "string" || hash.length != 64 ) {
+            that.log(5, "UNACCEPTABLE WHITELIST HASH " + hash);
+            return false;
+          }
+        }
+        if (c < MIN_WHITELIST || c > MAX_WHITELIST) {
+          that.log(5, "Invalid chain whitelist of size " + c);
+          return false;
+        }
+        that.log(4, "Replacing chain whitelist...");
+        that.whitelist = whitelist;
+        that.log(5, "Got valid whitelist..." + JSON.stringify(whitelist));
+        that.saveCertWhitelist();
+      } else {
+        that.log(4, "Unexpected response status " + req.status + " fetching chain whitelist");
+        return false;
+      }
+    }
+    req.send();
+
   },
 
   isChainWhitelisted: function(chainhash) {
