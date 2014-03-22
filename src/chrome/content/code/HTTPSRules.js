@@ -241,7 +241,6 @@ const RuleWriter = {
     return rv;
   },
 
- 
   read: function(file) {
     if (!file.exists())
       return null;
@@ -260,6 +259,19 @@ const RuleWriter = {
     }
 
     sstream.close();
+    fstream.close();
+    return data;
+  },
+
+  write: function(file, data) {
+    if (!file.exists())
+      return null;
+    var data = "";
+    var fstream = CC["@mozilla.org/network/file-output-stream;1"]
+        .createInstance(CI.nsIFileOutputStream);
+    fstream.init(file, -1, 0, 0);
+
+    fstream.write(data, data.length);
     fstream.close();
     return data;
   },
