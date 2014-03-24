@@ -412,7 +412,7 @@ HTTPSEverywhere.prototype = {
     try {
       var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
     } catch(e) {
-      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
+      this.log(INFO,"no loadgroup notificationCallbacks for "+channel.URI.spec);
       return null;
     }
     if (!nc) {
