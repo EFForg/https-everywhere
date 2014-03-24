@@ -409,26 +409,24 @@ HTTPSEverywhere.prototype = {
 
   getWindowForChannel: function(channel) {
     // Obtain an nsIDOMWindow from a channel
+    let loadContext;
     try {
-      var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+      loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
     } catch(e) {
-      this.log(INFO,"no loadgroup notificationCallbacks for "+channel.URI.spec);
-      return null;
+      try {
+        loadContext = channel.loadGroup.notificationCallbacks.getInterface(CI.nsILoadContext);
+      } catch(e) {
+        console.log(NOTE, "No loadContext for " + channel.URI.spec);
+        return null;
+      }
     }
-    if (!nc) {
-      this.log(DBUG, "no window for " + channel.URI.spec);
-      return null;
-    } 
-    try {
-      var domWin = nc.getInterface(CI.nsIDOMWindow);
-    } catch(e) {
-      this.log(INFO, "No window associated with request: " + channel.URI.spec);
-      return null;
-    }
+
+    let domWin = loadContext.associatedWindow;
     if (!domWin) {
       this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
+
     domWin = domWin.top;
     return domWin;
   },
