@@ -416,7 +416,7 @@ HTTPSEverywhere.prototype = {
       try {
         loadContext = channel.loadGroup.notificationCallbacks.getInterface(CI.nsILoadContext);
       } catch(e) {
-        console.log(NOTE, "No loadContext for " + channel.URI.spec);
+        this.log(NOTE, "No loadContext for " + channel.URI.spec);
         return null;
       }
     }
