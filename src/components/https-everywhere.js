@@ -815,7 +815,7 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    dump(str+"\n");
+    dump("HTTPS Everywhere: "+str+"\n");
     econsole.logStringMessage("HTTPS Everywhere: " +str);
   }
 }
