@@ -115,21 +115,13 @@ function onBeforeRequest(details) {
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return; }
 
-  if (details.requestId in redirectCounter) {
-    redirectCounter[details.requestId] += 1;
-    log(DBUG, "Got redirect id "+details.requestId+
-        ": "+redirectCounter[details.requestId]);
-
-    if (redirectCounter[details.requestId] > 9) {
-        log(NOTE, "Redirect counter hit for "+canonical_url);
-        urlBlacklist[canonical_url] = true;
-        var hostname = uri.hostname();
-        domainBlacklist[hostname] = true;
-        log(WARN, "Domain blacklisted " + hostname);
-        return;
-    }
-  } else {
-    redirectCounter[details.requestId] = 0;
+  if (redirectCounter[details.requestId] >= 8) {
+    log(NOTE, "Redirect counter hit for " + canonical_url);
+    urlBlacklist[canonical_url] = true;
+    var hostname = uri.hostname();
+    domainBlacklist[hostname] = true;
+    log(WARN, "Domain blacklisted " + hostname);
+    return null;
   }
 
   var newuristr = null;
@@ -383,13 +375,17 @@ function onBeforeSendHeaders(details) {
   return {requestHeaders:details.requestHeaders};
 }
 
-function onResponseStarted(details) {
-
-  // redirect counter workaround
-  // TODO: Remove this code if they ever give us a real counter
-  if (details.requestId in redirectCounter) {
-    delete redirectCounter[details.requestId];
-  }
+function onBeforeRedirect(details) {
+    // Catch HTTPs -> HTTP redirect loops, ignoring about:blank, HTTPS 302s, etc.
+    if (details.redirectUrl.substring(0, 7) === "http://") {
+        if (details.requestId in redirectCounter) {
+            redirectCounter[details.requestId] += 1;
+            log(DBUG, "Got redirect id "+details.requestId+
+                ": "+redirectCounter[details.requestId]);
+        } else {
+            redirectCounter[details.requestId] = 1;
+        }
+    }
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
@@ -399,8 +395,8 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
 
-wr.onResponseStarted.addListener(onResponseStarted,
-                                 {urls: ["https://*/*", "http://*/*"]});
+// Try to catch redirect loops on URLs we've redirected to HTTPS.
+wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 
 // Add the small HTTPS Everywhere icon in the address bar.
