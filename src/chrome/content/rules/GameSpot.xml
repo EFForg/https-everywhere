@@ -27,6 +27,7 @@
 
 	Fully covered subdomains:
 
+		- auth
 		- fuse
 		- uk
 		- us
@@ -41,7 +42,7 @@
 
 	¹ Not secured by us <= no tls support
 	² Not secured by us <= accounting for possible use on unsecurable domains
-	³ Not secured by server
+	³ Secured by us <= not secured by server
 
 
 	Mixed content:
@@ -54,9 +55,22 @@
 <ruleset name="GameSpot (partial)">
 
 	<target host="*.gamespot.com" />
+		<!--
+			References resources relative to root:
+								-->
+		<!--exclusion pattern="^http://static\.gamespot\.com/bundles/gamespotsite/css/gamespot_white-[0-9a-f]{32}\.css$" /-->
+		<!--exclusion pattern="^http://static\.gamespot\.com/.+\.css(?:$|\?)" /-->
 
 
-	<rule from="^http://(fuse|u[ks])\.gamespot\.com/"
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^auth\.gamespot\.com$" name=".+" />
+
+
+	<rule from="^http://(auth|fuse|u[ks])\.gamespot\.com/"
 		to="https://$1.gamespot.com/" />
+
+	<rule from="^http://static\.gamespot\.com/(?!.+\.css(?:$|\?))"
+		to="https://a248.e.akamai.net/f/50/31/6/static.gamespot.com/" />
 
 </ruleset>
