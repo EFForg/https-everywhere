@@ -1,36 +1,50 @@
 <!--
 	Nonfunctional subdomains:
 
-		- bugs			(shows blank tree; expired 2012-05-23, CN: localhost.localdomain)
 		- lists			(refused)
 		- mirror-status		(403; md5 signed, expired 2007-04-05)
-		- wiki			(db connection failure, valid cert)
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- bugs
 		- projects
+		- wiki
 
 
 	Observed cookie domains:
 
 		- ^
-		- bugs
+		- bugs *
 		- www
+
+	* Secured by server
+
+
+	Mixed content:
+
+		- Images on wiki from $self *
+
+		- Web bugs on wiki from creativecommons.org *
+
+	* Secured by us
 
 -->
 <ruleset name="CentOS.org (partial)">
 
 	<target host="centos.org" />
 	<target host="*.centos.org" />
-		<exclusion pattern="^http://(?:bugs|wiki)\." />
 
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^bugs.centos.org$" name="PHPSESSID" /-->
 
 	<securecookie host="^(?:www\.)?centos\.org$" name=".+" />
 
 
-	<rule from="^http://(projects\.|www\.)?centos\.org/"
+	<rule from="^http://((?:projects|wiki|www)\.)?centos\.org/"
 		to="https://$1centos.org/" />
 
 </ruleset>
