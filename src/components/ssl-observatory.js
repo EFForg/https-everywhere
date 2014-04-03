@@ -311,6 +311,8 @@ SSLObservatory.prototype = {
   },
 
   // onSecurity is used to listen for bad cert warnings
+  // There is also onSecurityStateChange, but it does not handle subdocuments.  See git
+  // history for an implementation stub.
   onStateChange: function(aProgress, aRequest, aState, aStatus) {
       if (!aRequest) return;
       var chan = null;
@@ -324,29 +326,6 @@ SSLObservatory.prototype = {
          var certchain = this.getSSLCertChain(chan);
          if (certchain) {
            this.log(INFO, "Got state cert chain for "
-                  + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
-           this.submitCertChainForChannel(certchain, chan);
-         }
-      }
-  },
-
-  // onSecurityStateChange is used to listen for bad cert warnings
-  // XXX: This is disabled. It does not handle subdocuments, but onStateChange does.
-  onSecurityChange: function(aProgress, aRequest, aState) {
-      if (!aRequest) return;
-      var chan = null;
-      try {
-         chan = aRequest.QueryInterface(Ci.nsIHttpChannel);
-      } catch(e) {
-         return;
-      }
-      if (chan) {
-         if (!this.observatoryActive(chan)) return;
-         this.log(INFO, "Got security state change for "
-                  + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
-         var certchain = this.getSSLCertChain(chan);
-         if (certchain) {
-           this.log(INFO, "Got cert chain for "
                   + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
            this.submitCertChainForChannel(certchain, chan);
          }
@@ -390,46 +369,47 @@ SSLObservatory.prototype = {
   },
 
   submitCertChainForChannel: function(certchain, channel) {
-    if (certchain) {
-      var host_ip = "-1";
-      var httpchannelinternal = channel.QueryInterface(Ci.nsIHttpChannelInternal);
-      try { 
-        host_ip = httpchannelinternal.remoteAddress;
-      } catch(e) {
-          this.log(INFO, "Could not get server IP address.");
-      }
+    if (!certchain) {
+      return;
+    }
+    var host_ip = "-1";
+    var httpchannelinternal = channel.QueryInterface(Ci.nsIHttpChannelInternal);
+    try {
+      host_ip = httpchannelinternal.remoteAddress;
+    } catch(e) {
+        this.log(INFO, "Could not get server IP address.");
+    }
 
-      channel.QueryInterface(Ci.nsIHttpChannel);
-      var chainEnum = certchain.getChain();
-      var chainArray = [];
-      var chainArrayFpStr = '';
-      var fps = [];
-      for(var i = 0; i < chainEnum.length; i++) {
-        var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
-        chainArray.push(cert);
-        var fp = this.ourFingerprint(cert);
-        fps.push(fp);
-        chainArrayFpStr = chainArrayFpStr + fp;
-      }
-      var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
-      this.log(INFO, "SHA-256 hash of cert chain for "+new String(channel.URI.host)+" is "+ chain_hash);
+    channel.QueryInterface(Ci.nsIHttpChannel);
+    var chainEnum = certchain.getChain();
+    var chainArray = [];
+    var chainArrayFpStr = '';
+    var fps = [];
+    for(var i = 0; i < chainEnum.length; i++) {
+      var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+      chainArray.push(cert);
+      var fp = this.ourFingerprint(cert);
+      fps.push(fp);
+      chainArrayFpStr = chainArrayFpStr + fp;
+    }
+    var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+    this.log(INFO, "SHA-256 hash of cert chain for "+new String(channel.URI.host)+" is "+ chain_hash);
 
-      if(!this.myGetBoolPref("use_whitelist")) {
-        this.log(WARN, "Not using whitelist to filter cert chains.");
-      }
-      else if (this.isChainWhitelisted(chain_hash)) {
-        this.log(INFO, "This cert chain is whitelisted. Not submitting.");
-        return;
-      }
-      else {
-        this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-      }
+    if(!this.myGetBoolPref("use_whitelist")) {
+      this.log(WARN, "Not using whitelist to filter cert chains.");
+    }
+    else if (this.isChainWhitelisted(chain_hash)) {
+      this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+      return;
+    }
+    else {
+      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+    }
 
-      if (channel.URI.port == -1) {
-          this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, false);
-      } else {
-          this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, false);
-      }
+    if (channel.URI.port == -1) {
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, false);
+    } else {
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, false);
     }
   },
 
