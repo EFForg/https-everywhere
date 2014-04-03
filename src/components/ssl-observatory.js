@@ -327,7 +327,8 @@ SSLObservatory.prototype = {
          if (certchain) {
            this.log(INFO, "Got state cert chain for "
                   + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
-           this.submitCertChainForChannel(certchain, chan);
+           var warning = true;
+           this.submitCertChainForChannel(certchain, chan, warning);
          }
       }
   },
@@ -364,11 +365,12 @@ SSLObservatory.prototype = {
       if (!this.observatoryActive(channel)) return;
 
       var certchain = this.getSSLCertChain(subject);
-      this.submitCertChainForChannel(certchain, channel);
+      var warning = false;
+      this.submitCertChainForChannel(certchain, channel, warning);
     }
   },
 
-  submitCertChainForChannel: function(certchain, channel) {
+  submitCertChainForChannel: function(certchain, channel, warning) {
     if (!certchain) {
       return;
     }
@@ -407,9 +409,9 @@ SSLObservatory.prototype = {
     }
 
     if (channel.URI.port == -1) {
-        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, false);
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false);
     } else {
-        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, false);
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false);
     }
   },
 
@@ -614,7 +616,7 @@ SSLObservatory.prototype = {
     return true;
   },
 
-  submitChainArray: function(certArray, fps, domain, channel, host_ip, resubmitting) {
+  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
@@ -631,7 +633,7 @@ SSLObservatory.prototype = {
       if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
         if (!(c.fps[0] in this.delayed_submissions)) {
           this.log(WARN, "Planning to retry submission...");
-          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, true); };
+          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
           this.delayed_submissions[c.fps[0]] = retry;
         }
       return;
@@ -658,16 +660,20 @@ SSLObservatory.prototype = {
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
-    }
-    else {
+    } else {
       reqParams.push("client_asn="+this.client_asn);
     }
 
     if (this.myGetBoolPref("priv_dns")) {
       reqParams.push("private_opt_in=1");
-    }
-    else {
+    } else {
       reqParams.push("private_opt_in=0");
+    }
+
+    if (warning) {
+      reqParams.push("browser_warning=1");
+    } else {
+      reqParams.push("browser_warning=0");
     }
 
     var params = reqParams.join("&") + "&padding=0";
@@ -733,7 +739,7 @@ SSLObservatory.prototype = {
           if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
             if (!(c.fps[0] in that.delayed_submissions)) {
               that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, true); };
+              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
               that.delayed_submissions[c.fps[0]] = retry;
             }
 
