@@ -108,8 +108,17 @@ function SSLObservatory() {
 
   this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 
+  // XXX: We shouldn't register any observers or listeners unless the enabled
+  // pref is set. This goes for the cookie-changed observer above, too..
+  // (But for this, we need a pref-changed observer)
+  //
   // Register observer
   OS.addObserver(this, "http-on-examine-response", false);
+
+  var dls = CC['@mozilla.org/docloaderservice;1']
+      .getService(CI.nsIWebProgress);
+  dls.addProgressListener(this,
+                          Ci.nsIWebProgress.NOTIFY_STATE_REQUEST);
 
   // Register protocolproxyfilter
   this.pps = CC["@mozilla.org/network/protocol-proxy-service;1"]
@@ -139,7 +148,9 @@ SSLObservatory.prototype = {
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
       //CI.nsIWifiListener,
-      CI.nsIBadCertListener2]),
+      CI.nsIWebProgressListener,
+      CI.nsISupportsWeakReference,
+      CI.nsIInterfaceRequestor]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -149,7 +160,7 @@ SSLObservatory.prototype = {
   contractID:       SERVICE_CTRID,
 
   // https://developer.mozilla.org/En/How_to_check_the_security_state_of_an_XMLHTTPRequest_over_SSL
-  getSSLCert: function(channel) {
+  getSSLCertChain: function(channel) {
     try {
         // Do we have a valid channel argument?
         if (!channel instanceof Ci.nsIChannel) {
@@ -299,6 +310,29 @@ SSLObservatory.prototype = {
     return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
+  // onSecurity is used to listen for bad cert warnings
+  // There is also onSecurityStateChange, but it does not handle subdocuments.  See git
+  // history for an implementation stub.
+  onStateChange: function(aProgress, aRequest, aState, aStatus) {
+      if (!aRequest) return;
+      var chan = null;
+      try {
+         chan = aRequest.QueryInterface(Ci.nsIHttpChannel);
+      } catch(e) {
+         return;
+      }
+      if (chan) {
+         if (!this.observatoryActive(chan)) return;
+         var certchain = this.getSSLCertChain(chan);
+         if (certchain) {
+           this.log(INFO, "Got state cert chain for "
+                  + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
+           var warning = true;
+           this.submitCertChainForChannel(certchain, chan, warning);
+         }
+      }
+  },
+
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
@@ -330,47 +364,54 @@ SSLObservatory.prototype = {
       var channel = subject;
       if (!this.observatoryActive(channel)) return;
 
-      var host_ip = "-1";
-      var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
-      try { 
-        host_ip = httpchannelinternal.remoteAddress;
-      } catch(e) {
-          this.log(INFO, "Could not get server IP address.");
-      }
-      subject.QueryInterface(Ci.nsIHttpChannel);
-      var certchain = this.getSSLCert(subject);
-      if (certchain) {
-        var chainEnum = certchain.getChain();
-        var chainArray = [];
-        var chainArrayFpStr = '';
-        var fps = [];
-        for(var i = 0; i < chainEnum.length; i++) {
-          var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
-          chainArray.push(cert);
-          var fp = this.ourFingerprint(cert);
-          fps.push(fp);
-          chainArrayFpStr = chainArrayFpStr + fp;
-        }
-        var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
-        this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
+      var certchain = this.getSSLCertChain(subject);
+      var warning = false;
+      this.submitCertChainForChannel(certchain, channel, warning);
+    }
+  },
 
-        if(!this.myGetBoolPref("use_whitelist")) {
-          this.log(WARN, "Not using whitelist to filter cert chains.");
-        }
-        else if (this.isChainWhitelisted(chain_hash)) {
-          this.log(INFO, "This cert chain is whitelisted. Not submitting.");
-          return;
-        }
-        else {
-          this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-        }
+  submitCertChainForChannel: function(certchain, channel, warning) {
+    if (!certchain) {
+      return;
+    }
+    var host_ip = "-1";
+    var httpchannelinternal = channel.QueryInterface(Ci.nsIHttpChannelInternal);
+    try {
+      host_ip = httpchannelinternal.remoteAddress;
+    } catch(e) {
+        this.log(INFO, "Could not get server IP address.");
+    }
 
-        if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
-        } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
-        }
-      }
+    channel.QueryInterface(Ci.nsIHttpChannel);
+    var chainEnum = certchain.getChain();
+    var chainArray = [];
+    var chainArrayFpStr = '';
+    var fps = [];
+    for(var i = 0; i < chainEnum.length; i++) {
+      var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+      chainArray.push(cert);
+      var fp = this.ourFingerprint(cert);
+      fps.push(fp);
+      chainArrayFpStr = chainArrayFpStr + fp;
+    }
+    var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+    this.log(INFO, "SHA-256 hash of cert chain for "+new String(channel.URI.host)+" is "+ chain_hash);
+
+    if(!this.myGetBoolPref("use_whitelist")) {
+      this.log(WARN, "Not using whitelist to filter cert chains.");
+    }
+    else if (this.isChainWhitelisted(chain_hash)) {
+      this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+      return;
+    }
+    else {
+      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+    }
+
+    if (channel.URI.port == -1) {
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false);
+    } else {
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false);
     }
   },
 
@@ -575,7 +616,7 @@ SSLObservatory.prototype = {
     return true;
   },
 
-  submitChain: function(certArray, fps, domain, channel, host_ip, resubmitting) {
+  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
@@ -592,7 +633,7 @@ SSLObservatory.prototype = {
       if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
         if (!(c.fps[0] in this.delayed_submissions)) {
           this.log(WARN, "Planning to retry submission...");
-          let retry = function() { this.submitChain(certArray, fps, domain, channel, host_ip, true); };
+          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
           this.delayed_submissions[c.fps[0]] = retry;
         }
       return;
@@ -619,16 +660,20 @@ SSLObservatory.prototype = {
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
-    }
-    else {
+    } else {
       reqParams.push("client_asn="+this.client_asn);
     }
 
     if (this.myGetBoolPref("priv_dns")) {
       reqParams.push("private_opt_in=1");
-    }
-    else {
+    } else {
       reqParams.push("private_opt_in=0");
+    }
+
+    if (warning) {
+      reqParams.push("browser_warning=1");
+    } else {
+      reqParams.push("browser_warning=0");
     }
 
     var params = reqParams.join("&") + "&padding=0";
@@ -694,7 +739,7 @@ SSLObservatory.prototype = {
           if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
             if (!(c.fps[0] in that.delayed_submissions)) {
               that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
               that.delayed_submissions[c.fps[0]] = retry;
             }
 
