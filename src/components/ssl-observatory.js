@@ -89,7 +89,6 @@ function SSLObservatory() {
   // Clear these on cookies-cleared observer event
   this.already_submitted = {};
   this.delayed_submissions = {};
-  OS.addObserver(this, "cookie-changed", false);
 
   // Figure out the url to submit to
   this.submit_host = null;
@@ -108,17 +107,22 @@ function SSLObservatory() {
 
   this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 
-  // XXX: We shouldn't register any observers or listeners unless the enabled
-  // pref is set. This goes for the cookie-changed observer above, too..
-  // (But for this, we need a pref-changed observer)
-  //
-  // Register observer
-  OS.addObserver(this, "http-on-examine-response", false);
+  var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
+      .getService(Components.interfaces.nsIPrefBranchInternal);
+  var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
 
-  var dls = CC['@mozilla.org/docloaderservice;1']
-      .getService(CI.nsIWebProgress);
-  dls.addProgressListener(this,
-                          Ci.nsIWebProgress.NOTIFY_STATE_REQUEST);
+  branch.addObserver("extensions.https_everywhere._observatory.enabled",
+                     this, false);
+
+  if (this.myGetBoolPref("enabled")) {
+    OS.addObserver(this, "cookie-changed", false);
+    OS.addObserver(this, "http-on-examine-response", false);
+
+    var dls = CC['@mozilla.org/docloaderservice;1']
+        .getService(CI.nsIWebProgress);
+    dls.addProgressListener(this,
+                        Ci.nsIWebProgress.NOTIFY_STATE_REQUEST);
+  }
 
   // Register protocolproxyfilter
   this.pps = CC["@mozilla.org/network/protocol-proxy-service;1"]
@@ -341,16 +345,13 @@ SSLObservatory.prototype = {
       return;
     }
 
-    if (topic == "nsPref:changed") {
-      // XXX: We somehow need to only call this once. Right now, we'll make
-      // like 3 calls to getClientASN().. The only thing I can think
-      // of is a timer...
-      if (data == "network.proxy.ssl" || data == "network.proxy.ssl_port" ||
-          data == "network.proxy.socks" || data == "network.proxy.socks_port") {
-        this.log(INFO, "Proxy settings have changed. Getting new ASN");
-        this.getClientASN();
-      }
-      return;
+    if ("http-on-examine-response" == topic) {
+      var channel = subject;
+      if (!this.observatoryActive(channel)) return;
+
+      var certchain = this.getSSLCertChain(subject);
+      var warning = false;
+      this.submitCertChainForChannel(certchain, channel, warning);
     }
 
     if (topic == "network:offline-status-changed" && data == "online") {
@@ -359,15 +360,50 @@ SSLObservatory.prototype = {
       return;
     }
 
-    if ("http-on-examine-response" == topic) {
+    if (topic == "nsPref:changed") {
+      // If the user toggles the SSL Observatory settings, we need to add or remove
+      // our observers
+      switch (data) {
+        case "network.proxy.ssl":
+        case "network.proxy.ssl_port":
+        case "network.proxy.socks":
+        case "network.proxy.socks_port":
+          // XXX: We somehow need to only call this once. Right now, we'll make
+          // like 3 calls to getClientASN().. The only thing I can think
+          // of is a timer...
+          this.log(INFO, "Proxy settings have changed. Getting new ASN");
+          this.getClientASN();
+          break;
+        case "extensions.https_everywhere._observatory.enabled":
+          if (this.myGetBoolPref("enabled")) {
+            this.pps.registerFilter(this, 0);
+            OS.addObserver(this, "cookie-changed", false);
+            OS.addObserver(this, "http-on-examine-response", false);
 
-      var channel = subject;
-      if (!this.observatoryActive(channel)) return;
+            var dls = CC['@mozilla.org/docloaderservice;1']
+                .getService(CI.nsIWebProgress);
+            dls.addProgressListener(this,
+                                Ci.nsIWebProgress.NOTIFY_STATE_REQUEST);
+            this.log(INFO,"SSL Observatory is now enabled via pref change!");
+          } else {
+            try {
+              this.pps.unregisterFilter(this);
+              OS.removeObserver(this, "cookie-changed");
+              OS.removeObserver(this, "http-on-examine-response");
 
-      var certchain = this.getSSLCertChain(subject);
-      var warning = false;
-      this.submitCertChainForChannel(certchain, channel, warning);
+              var dls = CC['@mozilla.org/docloaderservice;1']
+                  .getService(CI.nsIWebProgress);
+              dls.removeProgressListener(this);
+              this.log(INFO,"SSL Observatory is now disabled via pref change!");
+            } catch(e) {
+                this.log(WARN, "Removing SSL Observatory observers failed: "+e);
+            }
+          }
+          break;
+      }
+      return;
     }
+
   },
 
   submitCertChainForChannel: function(certchain, channel, warning) {
@@ -821,6 +857,7 @@ SSLObservatory.prototype = {
           if(req.status == 200) {
             if(!req.responseXML) {
               that.log(INFO, "Tor check failed: No XML returned by check service.");
+              that.proxyTestFinished();
               return;
             }
 
@@ -845,6 +882,7 @@ SSLObservatory.prototype = {
             that.proxy_test_callback(that.proxy_test_successful);
             that.proxy_test_callback = null;
           }
+          that.proxyTestFinished();
         }
       };
       req.send(null);
@@ -858,6 +896,13 @@ SSLObservatory.prototype = {
         this.proxy_test_callback(this.proxy_test_successful);
         this.proxy_test_callback = null;
       }
+      that.proxyTestFinished();
+    }
+  },
+
+  proxyTestFinished: function() {
+    if (!this.myGetBoolPref("enabled")) {
+      this.pps.unregisterFilter(this);
     }
   },
 
