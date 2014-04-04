@@ -321,17 +321,24 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
-      var cookie = {name:changeInfo.cookie.name,value:changeInfo.cookie.value,
-                    domain:changeInfo.cookie.domain,path:changeInfo.cookie.path,
+      var cookie = {name:changeInfo.cookie.name,
+                    value:changeInfo.cookie.value,
+                    path:changeInfo.cookie.path,
                     httpOnly:changeInfo.cookie.httpOnly,
                     expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId};
-      cookie.secure = true;
-      // FIXME: What is with this url noise? are we just supposed to lie?
+                    storeId:changeInfo.cookie.storeId,
+                    secure: true};
+
+      // Host-only cookies don't set the domain field.
+      if (!changeInfo.cookie.hostOnly) {
+          cookie.domain = changeInfo.cookie.domain;
+      }
+
+      // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (cookie.domain[0] == ".") {
-        cookie.url = "https://www"+cookie.domain+cookie.path;
+          cookie.url = "https://www" + cookie.domain + cookie.path;
       } else {
-        cookie.url = "https://"+cookie.domain+cookie.path;
+          cookie.url = "https://" + cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
