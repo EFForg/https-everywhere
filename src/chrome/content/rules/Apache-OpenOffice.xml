@@ -3,11 +3,45 @@
 
 		- Apache.xml
 
+
+	Nonfunctional subdomains:
+
+		- survey *
+
+	* http reply
+
+
+	Fully covered subdomains:
+
+		- (www.)
+
+
+	Observed cookie domains:
+
+		- .forum ¹
+		- survey ²
+
+	¹ Secured by server
+	² Not secured by us <= no tls support
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="Apache OpenOffice">
+<ruleset name="Apache OpenOffice (partial)">
 
 	<target host="openoffice.org" />
-	<target host="www.openoffice.org" />
+	<target host="*.openoffice.org" />
+		<!--exclusion pattern="^http://survey\.openoffice\.org/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.forum\.openoffice\.org$" name="^(phpbb3_\w{5}_k|phpbb3_\w{5}_sid|phpbb3_\w{5}_u)$" /-->
 
 
 	<rule from="^http://(www\.)?openoffice\.org/"
