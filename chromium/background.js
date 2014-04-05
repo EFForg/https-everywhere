@@ -312,15 +312,15 @@ function onCookieChanged(changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (cookie.domain[0] == ".") {
-          cookie.url = "https://www" + cookie.domain + cookie.path;
+      if (changeInfo.cookie.domain[0] == ".") {
+          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + cookie.domain + cookie.path;
+          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie "+cookie.name+" for "+cookie.domain+", was secure="+changeInfo.cookie.secure);
+       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
