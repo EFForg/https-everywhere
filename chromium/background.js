@@ -22,21 +22,6 @@ for (r in rs) {
 }
 */
 
-// Add the HTTPS Everywhere icon to the URL address bar.
-// TODO: Switch from pageAction to browserAction?
-function displayPageAction(tabId) {
-  if (tabId !== -1) {
-    chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) === "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction.");
-      }
-      else {
-        chrome.pageAction.show(tabId);
-      }
-    });
-  }
-}
-
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
@@ -115,21 +100,13 @@ function onBeforeRequest(details) {
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return; }
 
-  if (details.requestId in redirectCounter) {
-    redirectCounter[details.requestId] += 1;
-    log(DBUG, "Got redirect id "+details.requestId+
-        ": "+redirectCounter[details.requestId]);
-
-    if (redirectCounter[details.requestId] > 9) {
-        log(NOTE, "Redirect counter hit for "+canonical_url);
-        urlBlacklist[canonical_url] = true;
-        var hostname = uri.hostname();
-        domainBlacklist[hostname] = true;
-        log(WARN, "Domain blacklisted " + hostname);
-        return;
-    }
-  } else {
-    redirectCounter[details.requestId] = 0;
+  if (redirectCounter[details.requestId] >= 8) {
+    log(NOTE, "Redirect counter hit for " + canonical_url);
+    urlBlacklist[canonical_url] = true;
+    var hostname = uri.hostname();
+    domainBlacklist[hostname] = true;
+    log(WARN, "Domain blacklisted " + hostname);
+    return null;
   }
 
   var newuristr = null;
@@ -321,17 +298,24 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
-      var cookie = {name:changeInfo.cookie.name,value:changeInfo.cookie.value,
-                    domain:changeInfo.cookie.domain,path:changeInfo.cookie.path,
+      var cookie = {name:changeInfo.cookie.name,
+                    value:changeInfo.cookie.value,
+                    path:changeInfo.cookie.path,
                     httpOnly:changeInfo.cookie.httpOnly,
                     expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId};
-      cookie.secure = true;
-      // FIXME: What is with this url noise? are we just supposed to lie?
+                    storeId:changeInfo.cookie.storeId,
+                    secure: true};
+
+      // Host-only cookies don't set the domain field.
+      if (!changeInfo.cookie.hostOnly) {
+          cookie.domain = changeInfo.cookie.domain;
+      }
+
+      // The cookie API is magical -- we must recreate the URL from the domain and path.
       if (cookie.domain[0] == ".") {
-        cookie.url = "https://www"+cookie.domain+cookie.path;
+          cookie.url = "https://www" + cookie.domain + cookie.path;
       } else {
-        cookie.url = "https://"+cookie.domain+cookie.path;
+          cookie.url = "https://" + cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
@@ -383,13 +367,17 @@ function onBeforeSendHeaders(details) {
   return {requestHeaders:details.requestHeaders};
 }
 
-function onResponseStarted(details) {
-
-  // redirect counter workaround
-  // TODO: Remove this code if they ever give us a real counter
-  if (details.requestId in redirectCounter) {
-    delete redirectCounter[details.requestId];
-  }
+function onBeforeRedirect(details) {
+    // Catch HTTPs -> HTTP redirect loops, ignoring about:blank, HTTPS 302s, etc.
+    if (details.redirectUrl.substring(0, 7) === "http://") {
+        if (details.requestId in redirectCounter) {
+            redirectCounter[details.requestId] += 1;
+            log(DBUG, "Got redirect id "+details.requestId+
+                ": "+redirectCounter[details.requestId]);
+        } else {
+            redirectCounter[details.requestId] = 1;
+        }
+    }
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
@@ -399,21 +387,29 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
                                    ["requestHeaders", "blocking"]);
 
-wr.onResponseStarted.addListener(onResponseStarted,
-                                 {urls: ["https://*/*", "http://*/*"]});
+// Try to catch redirect loops on URLs we've redirected to HTTPS.
+wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 
 // Add the small HTTPS Everywhere icon in the address bar.
 // Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
 // pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    displayPageAction(tabId);
+    if (changeInfo.status === "loading") {
+        chrome.pageAction.show(tabId);
+    }
 });
 
 // Pre-rendered tabs / instant experiments sometimes skip onUpdated.
 // See http://crbug.com/109557
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    displayPageAction(addedTabId);
+    chrome.tabs.get(addedTabId, function(tab) {
+        if(typeof(tab) === "undefined") {
+            log(DBUG, "Not a real tab. Skipping showing pageAction.");
+        } else {
+            chrome.pageAction.show(tabId);
+        }
+    });
 });
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
