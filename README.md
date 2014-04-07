@@ -23,7 +23,7 @@ Important directories you might want to know about
 Installing Dependencies in Debian or Ubuntu
 -------------------------------------------
 
-    sudo apt-get install python-lxml python-libxml2 libxml2-utils zip
+    sudo apt-get install python-lxml python-libxml2 libxml2-utils sqlite3 zip
 
 Installing Dependencies in Mac OS X
 -----------------------------------

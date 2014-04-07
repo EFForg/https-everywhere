@@ -1,16 +1,35 @@
 <!--
-	Nonfunctional subdomains:
+	www: redirects to id.trove-stg.com; mismatched, CN: *.socialreader-stg.com
 
-		- ^	(dropped)
-		- www	(refused)
+
+	Nonfunctional domains:
+
+		- blog.trove.com *
+		- info.trove.com *
+
+	* tumblr
 
 -->
 <ruleset name="Trove.com (partial)">
 
+	<target host="trove.com" />
 	<target host="*.trove.com" />
+	<target host="id.trove-stg.com" />
 
 
-	<rule from="^http://(id|moneta)\.trove\.com/"
-		to="https://$1.trove.com/" />
+	<!--securecookie host="^\.trove\.com$" name="^(treatment|wapo_sess_id)$" /-->
+	<securecookie host="^(?:id)?\.trove\.com$" name=".+" />
+
+
+	<rule from="^http://(id\.|moneta\.)?trove\.com/"
+		to="https://$1trove.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://www\.trove\.com/+[^?]*(?=\?)?"
+		to="https://trove.com/" />
+
+	<rule from="^http://id\.trove-stg\.com/"
+		to="https://id.trove-stg.com/" />
 
 </ruleset>

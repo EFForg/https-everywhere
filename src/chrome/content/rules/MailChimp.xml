@@ -10,6 +10,7 @@
 			- experts-production		(used on experts)
 			- int-dir			(used on connect.; doesn't have "blog" in filenames)
 
+		- s3.amazonaws.com/downloads.mailchimp.com/ | d1zgderxoe1a.cloudfront.net
 
 		- dbfv8p2wljo34.cloudfront.net
 
@@ -20,7 +21,9 @@
 			- equivalent to cdn-images.mailchimp.com.s3.amazonaws.com
 			- cdn-images.mailchimp.com
 
-		- mcid.heroku.com
+		- fukui-9447.herokussl.com
+
+			- connect.mailchimp.com
 
 		- mc-experts.herokuapp.com
 
@@ -47,10 +50,15 @@
 		- status		(mismatched, CN: *.herokuapp.com)
 
 
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+
 	Fully covered subdomains:
 
-		- (www.)
 		- admin
+		- downloads	(→ d1zgderxoe1a.cloudfront.net)
 
 		- \w+.admin:
 
@@ -58,7 +66,7 @@
 
 		- blog
 		- cdn-images
-		- connect	(→ mcid.heroku.com)
+		- connect
 		- experts	(→ mc-experts.herokuapp.com)
 		- login
 		- sfbloghost
@@ -70,6 +78,11 @@
 
 	<target host="mailchimp.com" />
 	<target host="*.mailchimp.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://mailchimp\.com/+($|\?|(about|about/jobs|contact/abuse|favicon\.ico|features|more|pricing|resources/mailchimp-at-work|search)($|[?/]))" /-->
+		<exclusion pattern="^http://mailchimp\.com/+(?!(?:blog|login|signup)(?:$|[?/])|assets/)" />
 
 
 	<!--	is wildcard login cookie used on unsecureable pages?
@@ -77,16 +90,16 @@
 	<securecookie host="^.+\.mailchimp\.com$" name=".+" />
 
 
-	<rule from="^http://((?:(?:\w+\.)?admin|blog|cdn-images|login|sfbloghost|www)\.)?mailchimp\.com/"
+	<rule from="^http://((?:(?:\w+\.)?admin|blog|cdn-images|connect|login|sfbloghost|www)\.)?mailchimp\.com/"
 		to="https://$1mailchimp.com/" />
 
-	<rule from="^https?://connect\.mailchimp\.com/"
-		to="https://mcid.heroku.com/" />
+	<rule from="^http://downloads\.mailchimp\.com/"
+		to="https://d1zgderxoe1a.cloudfront.net/" />
 
-	<rule from="^https?://experts\.mailchimp\.com/"
+	<rule from="^http://experts\.mailchimp\.com/"
 		to="https://mc-experts.herokuapp.com/" />
 
-	<rule from="^https?://static\.mailchimp\.com/"
+	<rule from="^http://static\.mailchimp\.com/"
 		to="https://dbfv8p2wljo34.cloudfront.net/" />
 
 </ruleset>

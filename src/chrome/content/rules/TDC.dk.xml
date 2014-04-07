@@ -1,0 +1,80 @@
+<!--
+	Other TDC rulesets:
+
+		- TDC.no.xml
+		- TDC_online.se.xml
+		- TDC_Service_Online.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- aarsrapport2012	(dropped)
+		- play			(refused)
+
+
+	Problematic subdomains:
+
+		- forum		(lithium)
+
+
+	Fully covered subdomains:
+
+		- (www.) *
+		- erhverv *
+		- fly *
+		- forum		(→ tdc.i.lithium.com)
+		- kundeservice *
+		- mail
+		- om *
+		- privat *
+		- privatalarm
+		- selfcare *
+		- shop
+		- wholesale
+
+	* Server is configured for rc4 only.
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- privatalarm ²
+		- shop ²
+
+	¹ Partially secured by us <= accounting
+	  for possible use on uncovered domains
+
+	² Secured by us <= complete coverage
+
+-->
+<ruleset name="TDC.dk (partial)">
+
+	<target host="tdc.dk" />
+	<target host="*.tdc.dk" />
+	<target host="tdc-wholesale.com" />
+	<target host="www.tdc-wholesale.com" />
+
+
+	<!--	Set by shop:
+				-->
+	<securecookie host="^\.tdc\.dk$" name="^salg_dwbc$" />
+	<!--
+		Could we  secure either of these safely?
+							-->
+	<!--securecookie host="^\.tdc\.dk$" name="^(ObSSOCookie|VISITORID)$" /-->
+	<securecookie host="^(?:privatalarm|shop)\.tdc\.dk$" name=".+" />
+
+
+	<rule from="^http://((?:erhverv|fly|kundeservice|mail|om|privat|privatalarm|selfcare|shop|wholesale|www)\.)?tdc\.dk/"
+		to="https://$1tdc.dk/" />
+
+	<rule from="^http://forum\.tdc\.tk/"
+		to="https://tdc.i.lithium.com/" />
+
+	<!--	- //+ redirects to http://$
+		- \w+ 404s
+				-->
+	<rule from="^http://(?:www\.)?tdc-wholesale\.com/(?:[?.][?./]*)?"
+		to="https://wholesale.tdc.dk/nordic/" />
+
+</ruleset>

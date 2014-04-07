@@ -31,6 +31,9 @@ const Cc = Components.classes;
 const Cu = Components.utils;
 const Cr = Components.results;
 
+Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://gre/modules/FileUtils.jsm");
+
 const CP_SHOULDPROCESS = 4;
 
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
@@ -182,6 +185,7 @@ function HTTPSEverywhere() {
   this.https_rules = HTTPSRules;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
+  this.browser_initialised = false; // the browser is completely loaded
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
@@ -199,6 +203,7 @@ function HTTPSEverywhere() {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+    this.obsService.addObserver(this, "browser:purge-session-history", false);
   }
 
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
@@ -323,7 +328,6 @@ HTTPSEverywhere.prototype = {
   // QueryInterface implementation, e.g. using the generateQI helper
   QueryInterface: XPCOMUtils.generateQI(
     [ Components.interfaces.nsIObserver,
-      Components.interfaces.nsIMyInterface,
       Components.interfaces.nsISupports,
       Components.interfaces.nsISupportsWeakReference,
       Components.interfaces.nsIWebProgressListener,
@@ -405,26 +409,24 @@ HTTPSEverywhere.prototype = {
 
   getWindowForChannel: function(channel) {
     // Obtain an nsIDOMWindow from a channel
+    let loadContext;
     try {
-      var nc = channel.notificationCallbacks ? channel.notificationCallbacks : channel.loadGroup.notificationCallbacks;
+      loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
     } catch(e) {
-      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
-      return null;
+      try {
+        loadContext = channel.loadGroup.notificationCallbacks.getInterface(CI.nsILoadContext);
+      } catch(e) {
+        this.log(NOTE, "No loadContext for " + channel.URI.spec);
+        return null;
+      }
     }
-    if (!nc) {
-      this.log(DBUG, "no window for " + channel.URI.spec);
-      return null;
-    } 
-    try {
-      var domWin = nc.getInterface(CI.nsIDOMWindow);
-    } catch(e) {
-      this.log(INFO, "No window associated with request: " + channel.URI.spec);
-      return null;
-    }
+
+    let domWin = loadContext.associatedWindow;
     if (!domWin) {
       this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
       return null;
     }
+
     domWin = domWin.top;
     return domWin;
   },
@@ -541,16 +543,29 @@ HTTPSEverywhere.prototype = {
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
       this.maybeShowObservatoryPopup();
-      this.maybeShowDevPopup();
+      this.browser_initialised = true;
     } else if (topic == "nsPref:changed") {
         // If the user toggles the Mixed Content Blocker settings, reload the rulesets
         // to enable/disable the mixedcontent ones
+
+        // this pref gets set to false and then true during FF 26 startup!
+        // so do nothing if we're being notified during startup
+        if (!this.browser_initialised)
+            return;
         switch (data) {
             case "security.mixed_content.block_active_content":
             case "extensions.https_everywhere.enable_mixed_rulesets":
+                var p = CC["@mozilla.org/preferences-service;1"].getService(CI.nsIPrefBranch);
+                var val = p.getBoolPref("security.mixed_content.block_active_content");
+                this.log(INFO,"nsPref:changed for "+data + " to " + val);
                 HTTPSRules.init();
                 break;
         }
+    } else if (topic == "browser:purge-session-history") {
+      // The list of rulesets that have been loaded from the sqlite DB
+      // constitutes a parallel history store, so we have to clear it.
+      this.log(DBUG, "History cleared, reloading HTTPSRules to avoid information leak.");
+      HTTPSRules.init();
     }
     return;
   },
@@ -573,29 +588,36 @@ HTTPSEverywhere.prototype = {
     };
     if (!shown && !enabled)
       ssl_observatory.registerProxyTestNotification(obs_popup_callback);
+
+    if (shown && enabled)
+      this.maybeCleanupObservatoryPrefs(ssl_observatory);
   },
 
-  maybeShowDevPopup: function() {
-    /*
-     * Users who installed 3.3.2 accidentally got upgraded to the
-     * dev branch. We need to push this code to a dev release so
-     * that they get a popup letting them know that they can switch
-     * back to the stable branch if they want.
-     */
-    var was_stable = true;
-    var shown = this.prefs.getBoolPref("dev_popup_shown");
-    try {
-      // this pref should exist only for people who used to be stable
-      // since getExperimentalFeatureCohort was never run in the
-      // development channel
-      this.prefs.getIntPref("experimental_feature_cohort");
-    } catch(e) {
-      was_stable = false;
+  maybeCleanupObservatoryPrefs: function(ssl_observatory) {
+    // Recover from a past UI processing bug that would leave the Obsevatory
+    // accidentally disabled for some users
+    // https://trac.torproject.org/projects/tor/ticket/10728
+    var clean = ssl_observatory.myGetBoolPref("clean_config");
+    if (clean) return;
+
+    // unchanged: returns true if a pref has not been modified
+    var unchanged = function(p){return !ssl_observatory.prefs.prefHasUserValue("extensions.https_everywhere._observatory."+p)};
+    var cleanup_obsprefs_callback = function(tor_avail) {
+      // we only run this once
+      ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.clean_config", true);
+      if (!tor_avail) {
+        // use_custom_proxy is the variable that is often false when it should be true;
+        if (!ssl_observatory.myGetBoolPref("use_custom_proxy")) {
+           // however don't do anything if any of the prefs have been set by the user
+           if (unchanged("alt_roots") && unchanged("self_signed") && unchanged ("send_asn") && unchanged("priv_dns")) {
+             ssl_observatory.prefs.setBoolPref("extensions.https_everywhere._observatory.use_custom_proxy", true);
+           }
+        }
+      }
     }
-    if (was_stable && !shown) {
-      this.tab_opener("chrome://https-everywhere/content/dev-popup.xul");
-    }
+    ssl_observatory.registerProxyTestNotification(cleanup_obsprefs_callback);
   },
+
 
   getExperimentalFeatureCohort: function() {
     // This variable is used for gradually turning on features for testing and
@@ -793,7 +815,7 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    dump(str+"\n");
+    dump("HTTPS Everywhere: "+str+"\n");
     econsole.logStringMessage("HTTPS Everywhere: " +str);
   }
 }

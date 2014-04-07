@@ -1,0 +1,44 @@
+<!--
+	For problematic rules, see Checkmarx.com-problematic.xml.
+
+
+	Other Checkmarx rulesets:
+
+		- Cxcloud.com.xml
+
+
+	Problematic subdomains:
+
+		- lp *
+
+	* Works; mismatched, CN: *.unbounce.com
+
+
+	Some pages redirect to http.
+
+
+	Mixed content:
+
+		- Images on lp from www.googleadservices.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Checkmarx.com (partial)">
+
+	<target host="checkmarx.com" />
+	<target host="www.checkmarx.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?checkmarx\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?checkmarx\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" /-->
+
+
+	<rule from="^http://(www\.)?checkmarx\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://$1checkmarx.com/" />
+
+</ruleset>

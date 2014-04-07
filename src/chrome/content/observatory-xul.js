@@ -52,6 +52,7 @@ function observatory_prefs_init(doc) {
 // again
 function popup_done() {
   obsprefs.setBoolPref("extensions.https_everywhere._observatory.popup_shown", true);
+  obsprefs.setBoolPref("extensions.https_everywhere._observatory.clean_config", true);
   window.close();
 }
 
