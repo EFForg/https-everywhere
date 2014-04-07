@@ -32,8 +32,8 @@ sitesList = []
 tmpRulesFileName = "/tmp/rulesDiff-" + format(random.randrange(1,65535)) # Feel free to enlarge if needed
 
 # URL of the Alexa Top1M
-# alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
-alexaTop1MURL = "http://127.0.0.1/top-1m.csv.zip"
+alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
+# alexaTop1MURL = "http://127.0.0.1/top-1m.csv.zip"
 
 # Temporary file name, to aboid conflicts
 tmpAlexaFileName = "/tmp/alexa-top1M-" + format(random.randrange(1,65535)) + ".csv"
@@ -42,7 +42,7 @@ tmpAlexaFileName = "/tmp/alexa-top1M-" + format(random.randrange(1,65535)) + ".c
 logFileName = "/tmp/alexa-ruleset-log-" + format(random.randrange(1,65535)) + ".log"
 
 # Filename of the CSV file contained in the Alexa zipfile
-tmpAlexaZipFileContents = 'top-1m.csv' 
+tmpAlexaZipFileContents = 'top-1m.csv'
 
 # Absolute path of the git repo (the folder containing src/)
 # Remember to change this accordingly to your system, if you ever move the script
@@ -138,7 +138,7 @@ for line in rulesList:
                 FQDN = target.get('host') # URL of the website
                 if ruleLookup(FQDN) == 1: # Look it up in the sitesList
                     # Message different according to file mode
-                    if ruleFile[0] == "A": # New 
+                    if ruleFile[0] == "A": # New
                         found = "NEW"
                         countAddedRules = countAddedRules + 1
                         break
