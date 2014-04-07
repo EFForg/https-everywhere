@@ -1,3 +1,4 @@
+var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
 var switchPlannerEnabledFor = {};
@@ -7,9 +8,26 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+var getStoredUserRules = function() {
+  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRules = [];
+  if (oldUserRuleString) {
+    oldUserRules = JSON.parse(oldUserRuleString);
+  }
+  return oldUserRules;
+};
 var all_rules = new RuleSets();
 var wr = chrome.webRequest;
+var loadStoredUserRules = function() {
+  var rules = getStoredUserRules();
+  var i;
+  for (i = 0; i < rules.length; ++i) {
+    all_rules.addUserRule(rules[i]);
+  }
+  log('INFO', 'loaded ' + i + ' stored user rules');
+};
 
+loadStoredUserRules();
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -21,6 +39,39 @@ for (r in rs) {
   log(DBUG, rs[r].name +": "+ rs[r].default_state);
 }
 */
+
+// Add the HTTPS Everywhere icon to the URL address bar.
+// TODO: Switch from pageAction to browserAction?
+function displayPageAction(tabId) {
+  if (tabId !== -1) {
+    chrome.tabs.get(tabId, function(tab) {
+      if(typeof(tab) === "undefined") {
+        log(DBUG, "Not a real tab. Skipping showing pageAction.");
+      }
+      else {
+        chrome.pageAction.show(tabId);
+      }
+    });
+  }
+}
+
+
+var addNewRule = function(params, cb) {
+  if (all_rules.addUserRule(params)) {
+    // If we successfully added the user rule, save it in local 
+    // storage so it's automatically applied when the extension is 
+    // reloaded.
+    var oldUserRules = getStoredUserRules();
+    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // client windows in different event loops.
+    oldUserRules.push(params);
+    // TODO: can we exceed the max size for storage?
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    cb(true);
+  } else {
+    cb(false);
+  }
+};
 
 function AppliedRulesets() {
   this.active_tab_rules = {};
