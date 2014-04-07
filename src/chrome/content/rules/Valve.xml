@@ -1,33 +1,41 @@
 <!--
-	Other Valve rulesets:
-
-		- Steam.xml
-		- Steam_Community.com.xml
-
-
-	CDN buckets:
-
-		- valve.vo.llnwd.net/...
-			- .hs. doesn't exist
-			- www.l4d.com
-
-
-	Nonfunctional domains:
-
-		- www.l4d.com
-		- blogs.valvesoftware.com
-		- (www.)valvesoftware.com	(CN: *.steampowered.com; redirects to store.steampowered.com)
-
+	ToDo: Find hs.llnwd.net bucket
 -->
-<ruleset name="Valve (partial)">
+<ruleset name="Valve (partial, broken)" default_off="breaks some forum embeds">
 
-	<target host="developer.valvesoftware.com" />
+	<target host="steamcommunity.com"/>
+	<target host="*.steamcommunity.com"/>
+		<!--
+			Breaks news/screenshot/video loading.
+					-->
+		<exclusion pattern="^http://(?:www\.)?steamcommunity\.com/app/\d+/(?:homecontent|news|screenshots|videos)" />
+	<target host="steampowered.com"/>
+	<target host="*.steampowered.com"/>
+	<target host="cdn.store.steampowered.com"/>
 
 
-	<securecookie host="^developer\.valvesoftware\.com$" name=".+" />
+	<securecookie host="^steamcommunity\.com$" name=".*"/>
+	<securecookie host="^\.steampowered\.com$" name=".*"/>
 
+  <exclusion pattern="http://www\.steampowered\.com/status/survey\.html" />
 
-	<rule from="^http://developer\.valvesoftware\.com/"
-		to="https://developer.valvesoftware.com/" />
+	<rule from="^http://(?:cdn\.|www\.)?steamcommunity\.com/"
+		to="https://steamcommunity.com/"/>
+
+	<rule from="^http://store\.steampowered\.com/(jo|log)in"
+		to="https://store.steampowered.com/$1in"/>
+
+	<rule from="^http://steampowered\.com/"
+		to="https://www.steampowered.com/"/>
+
+	<rule from="^http://(cafe|support|www)\.steampowered\.com/"
+		to="https://$1.steampowered.com/"/>
+
+	<rule from="^http://store\.steampowered\.com/public/images/"
+		to="https://store.steampowered.com/public/images/"/>
+
+	<!---	cdn.steampowered cert: *.hs.llnwd.net; 400	-->
+	<rule from="^https?://cdn\.(store\.)?steampowered\.com/"
+		to="https://$1steampowered.com/"/>
 
 </ruleset>

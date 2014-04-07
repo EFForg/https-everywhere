@@ -1,64 +1,40 @@
 <!--
-	Other Gawker rulesets:
+	Other Gawker Media rulesets:
 
-		- Deadspin.com.xml
-		- Gawkerassets.com.xml
-		- Gizmodo.com.xml
-		- Io9.com.xml
-		- Jalopnik.com.xml
-		- Jezebel.com.xml
-		- Kotaku.com.xml
-		- Lifehacker.com.xml
+		- Jalopnik.xml
 
 
-	CDN buckets:
+	Nonfunctional:
 
-		- kinja.desk.com
-
-			- help.gawker.com
-
-		- a.prod.fastly.net
-
-			- api.gawker.com
-			- cache.gawker.com
-			- login.gawker.com
-
-
-	Nonfunctional domains:
-
-		- advertising.gawker.com	(http reply)
-		- feeds.gawker.com		(interrupted)
-
-
-	Problematic domains:
-
-		- (www.)gawker.com *
-		- api.gawker.com *
-		- cache.gawker.com *
-		- feeds.gawker.com	(interrupted)
-		- help.gawker.com	(desk.com)
-		- login.gawker.com *
-
-	* Works; mismatched, CN: *.a.ssl.fastly.net
+		- fonts.gawker.com
+		- hyperion.gawker.com
+		- ganja.gawkerassets.com	(reset)
+		- img.gawkerassets.com		(ditto)
 
 -->
-<ruleset name="Gawker" default_off="mismatched">
+<ruleset name="Gawker (breaks comments)" default_off="https://eff.org/r.a9q3">
 
 	<target host="gawker.com" />
 	<target host="*.gawker.com" />
-	<target host="cache.gawkerassets.com" />
+	<target host="ganja.gawkerassets.com" />
+	<target host="lifehacker.com" />
+	<target host="*.lifehacker.com" />
 
 
-	<securecookie host="^(?:.*\.)?gawker\.com$" name=".+" />
+	<securecookie host="^(.*\.)?gawker\.com$" name=".*" />
 
 
-	<rule from="^http://(?:((?:api|cache|login)\.)|www\.)?gawker\.com/"
+
+	<rule from="^http://((?:api|login|www)\.)?gawker\.com/"
 		to="https://$1gawker.com/" />
 
-	<rule from="^http://help\.gawker\.com/images/"
-		to="https://d3jyn100am7dxp.cloudfront.net/images/" />
+	<!--	None work over https.	-->
+	<rule from="^https?://(?:cache\.(?:gawker|lifehacker)|ganja\.gawkerassets)\.com/"
+		to="https://gawker.com/" />
 
-	<rule from="^http://cache\.gawkerassets\.com/"
-		to="https://cache.gawkerassets.com/" />
+	<!--	Cert: gawker.com
+		At least some pages redirect to http.	-->
+	<rule from="^https?://(?:www\.)?lifehacker\.com/assets/"
+		to="https://gawker.com/assets/" />
 
 </ruleset>

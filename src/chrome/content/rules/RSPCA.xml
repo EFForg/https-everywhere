@@ -1,65 +1,30 @@
 <!--
-	Royal Society for the Prevention of Cruelty to Animals
-
-
-	Other RSPCA rulesets:
-
-		- RSPCA_shop.co.uk.xml
-
-
 	Problematic subdomains:
 
 		- ^ *
-		- ask		(works; mismatched, CN: service.nibcdirect.nl)
 		- content.www *
 
 	* Cert only matches *.rspca.org.uk
 
-
-	Partially covered domains:
-
-		- (www.)rspca.org.uk	(home pages redirects to http)
-
-
-	Fully covered domains:
-
-		- donations.rspca.org.uk *
-		- content.www.rspca.org.uk	(→ www)
-
-	* Server is configured for rc4 only
-
-
-	Mixed content:
-
-		- Images, on www from:
-
-			- www *
-			- content.www *
-
-		- Ads/web bugs, on www from:
-
-			- s7.addthis.com *
-			- s3.amazonaws.com/new.cetrk.com/ *
-			- www.googleadservices.com *
-
-	* Secured by us
-
 -->
-<ruleset name="RSPCA (partial)">
+<ruleset name="RSPCA (partial)" platform="mixedcontent">
 
 	<target host="rspca.org.uk" />
 	<target host="*.rspca.org.uk" />
 		<!--
 			Homepage redirects to http
 							-->
-		<exclusion pattern="^http://www\.rspca\.org\.uk/+(?:home)?(?:\?.*)?$" />
+		<exclusion pattern="^http://www\.rspca\.org\.uk/(?:home)?$" />
+	<target host="rspcashop.co.uk" />
+	<target host="*.rspcashop.co.uk" />
 
 
-	<securecookie host="^donations\.rspca\.org\.uk$" name=".+" />
+	<securecookie host="^(?:donation|\.gift)s\.rspca\.org\.uk$" name=".+" />
 	<!--
-		cookie set by data rewritten from content.www
+		cookie from data rewritten from content.www
 								-->
 	<securecookie host="^www\.rspca\.org\.uk$" name="^CMS_PRD_SESSIONID$" />
+	<securecookie host="^(?:.*\.)?rspcashop\.co\.uk$" name=".+" />
 
 
 	<rule from="^http://(?:(?:content\.)?www\.)?rspca\.org\.uk/"
@@ -67,5 +32,8 @@
 
 	<rule from="^http://donations\.rspca\.org\.uk/"
 		to="https://donations.rspca.org.uk/" />
+
+	<rule from="^http://(www\.)?rspcashop\.co\.uk/"
+		to="https://$1rspcashop.co.uk/" />
 
 </ruleset>

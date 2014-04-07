@@ -1,53 +1,27 @@
 <!--
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- blog.imageshack.com	(refused)
-		- kb.imageshack.us
-
-
-	Fully covered domains:
+		- kb
 
 
-		- (www.)imageshack.com
+	Fully covered subdomains:
 
-		- imageshack.us subdomains:
-
-			- api
-			- imagizer
-			- post
-			- register
-
-
-	Mixed content:
-
-		- Images on imageshack.us from imageshack.us *
-
-		- Web bugs, on imageshack.us from:
-
-			- s3.buysellads.com *
-			- partner.googleadservices.com *
-			- s2.gumgum.com *
-			- pixel.quantserve.com *
-
-	* Secured by us
+		- post
+		- register
 
 -->
-<ruleset name="ImageShack (partial)">
+<ruleset name="ImageShack (partial)" platform="mixedcontent">
 
-	<target host="imageshack.*" />
-	<target host="www.imageshack.com" />
+	<target host="imageshack.us" />
 	<target host="*.imageshack.us" />
 		<exclusion pattern="^http://imageshack\.us/f/.*" />
-		<exclusion pattern="^http://iload\d\.imageshack\.us/$" />
 		<exclusion pattern="^http://img\d{1,3}\.imageshack\.us/(?!img\d{1,3}/\d+/\w+\.)" />
 		<exclusion pattern="^http://kb\.imageshack\.us/(?!img/favicon\.ico$)" />
+		<exclusion pattern="^http://iload\d\.imageshack\.us/$" />
 
 
-	<securecookie host="^(?:.*\.)?imageshack\.us$" name=".+" />
+	<securecookie host="^(?:.*\.)?imageshack\.us$" name=".*" />
 
-
-	<rule from="^http://(www\.)?imageshack\.com/"
-		to="https://$1imageshack.com/" />
 
 	<rule from="^http://kb\.imageshack\.us/img/favicon\.ico$"
 		to="https://imageshack.us/favicon.ico" />
@@ -58,11 +32,10 @@
 	<rule from="^http://img\d{1,3}\.imageshack\.us/(img\d{1,3}/\d+/\w+)\.(th\.)?(bmp|gif|jpe?g|png|tiff?)(\?|$)"
 		to="https://imageshack.us/a/$1.$2$3$4" />
 
-	<rule from="^http://(?:www\.)?([ac-r]\w+\.)?imageshack\.us/"
+	<rule from="^http://(?:www\.)?([c-r]\w+\.)?imageshack\.us/"
 		to="https://$1imageshack.us/" />
 
-	<!--	https://trac.torproject.org/projects/tor/ticket/5727
-									-->
+	<!--	https://trac.torproject.org/projects/tor/ticket/5727	-->
 	<rule from="^https://iload(\d)\.imageshack\.us/"
 		to="http://iload$1.imageshack.us/" downgrade="1" />
 

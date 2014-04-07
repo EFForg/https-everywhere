@@ -1,23 +1,29 @@
-<ruleset name="VK (experimental new rule)">
+<!--
+	Nonfunctional:
 
+		- cs\d*.userapi.com
+
+-->
+<ruleset name="VK (partial; buggy)" default_off="logins/signups broken">
+
+	<target host="st0.userapi.com" />
 	<target host="vk.com" />
+	<!--	* for cross-domain cookies.	-->
 	<target host="*.vk.com" />
-	<target host="vk.me" />
-	<target host="*.vk.me" />
-	<target host="vkontakte.ru" />
-	<target host="www.vkontakte.ru" />
 
         <exclusion pattern="^http://cs(\w*\.)vk.me/" />
 
 	<securecookie host="^.*\.vk\.com$" name=".*" />
 
-	<rule from="^http://([\w+\-\.]+\.)?vk\.me/"
-		to="https://$1vk.me/" />
 
-	<rule from="^http://((?:login|m|www)\.)?vk\.com/"
-		to="https://$1vk.com/" />
+	<!--	Cert doesn't match userapi	-->
+	<rule from="^http://st0\.userapi\.com/"
+		to="https://vk.com/" />
 
-	<rule from="^http://([\w+\-\.]+\.)?vkontakte\.ru/"
-		to="https://$1vk.com/" />
+	<rule from="^http://www\.vk\.com/"
+		to="https://www.vk.com/" />
+
+	<rule from="^http://vk\.com/(images/|login\.php)"
+		to="https://vk.com/$1" />
 
 </ruleset>

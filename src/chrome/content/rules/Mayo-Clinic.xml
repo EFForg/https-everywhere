@@ -1,32 +1,18 @@
-<!--
-	Nonfunctional domains:
-
-		- www.mayo.edu	(times out)
-
-
-	Problematic domains:
-
-		- mayoclinic.com	(cert only matches www)
-
+<!--	!functional:
+		-*.mayo.edu
 -->
 <ruleset name="Mayo Clinic (partial)" platform="mixedcontent">
 
-	<target host="mayoclinic.com" />
-	<target host="*.mayoclinic.com" />
-	<target host="mayoclinic.org" />
-	<target host="*.mayoclinic.org" />
+	<target host="mayoclinic.com"/>
+	<target host="*.mayoclinic.com"/>
 
+	<securecookie host="^(.*\.)?mayoclinic\.com$" name=".*"/>
 
-	<securecookie host="^(?:.*\.)?mayoclinic\.(?:com|org)$" name=".+" />
-
-
+	<!--	cert !valid for !www	-->
 	<rule from="^https?://mayoclinic\.com/"
-		to="https://www.mayoclinic.com/" />
+		to="https://www.mayoclinic.com/"/>
 
-	<rule from="^http://(healthletter|(?:book)?store|www)\.mayoclinic\.com/"
-		to="https://$1.mayoclinic.com/" />
-
-	<rule from="^http://(www\.)?mayoclinic\.org/"
-		to="https://$1mayoclinic.org/" />
+	<rule from="^http://(healthletter|store|www)\.mayoclinic\.com/"
+		to="https://$1.mayoclinic.com/"/>
 
 </ruleset>

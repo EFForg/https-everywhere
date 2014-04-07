@@ -2,12 +2,8 @@
 	Other Hearst Corporation rulesets:
 
 		- Delish.xml
-		- Elle.com.xml
 		- Hearst-Corporation-self-signed.xml
-		- Hearst_Magazines.xml
-		- Houston_Chronicle.xml
 		- LocalEdge.xml
-		- Popular-Mechanics.xml
 
 
 	Nonfunctional domains:
@@ -22,7 +18,7 @@
 							shows RHEL Apache test page, redirects to www over http)
 		- contribute.ctpost.com
 		- www.ctpost.com			(reset)
-		- ww[1-4].hdnux.com			(shows RHEL test page, akamai)
+		- ww[1-4].hdnux.com
 		- ctextras.hearstdigitalnews.com	(cert: docuwiki.heartdigitalnews.com; shows that domain's data)
 		- ux.hearstdigitalnews.com		(cert: 273251-sdev1.hearstnp.com, expired,
 							self-signed; shows RHEL Apache test page)
@@ -32,23 +28,26 @@
 		- newstimes.com				(cert: 236135-pweb2.hearstnp.com, expired,
 							self-signed; shows RHEL Apache test page)
 		- www.newstimes.com			(reset)
-		- sfgate.com				(cert: 236135-pweb2.hearstnp.com, expired,
-							self-signed; shows RHEL test page)
-		- extras.sfgate.com			(shows docuwiki, akamai)
-		- www.sfgate.com			(ditto)
-		- web.timesunion.com			(504, akamai)
-		- wcvb.com				(times out)d
-		- www.wcvb.com				(akamai, 503)
 
 -->
 <ruleset name="Hearst Corporation (partial)" platform="mixedcontent">
 
+	<target host="*.chron.com"/>
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.hearstmags.com" />
 	<target host="myhearstnewspaper.com"/>
 	<target host="www.myhearstnewspaper.com"/>
 
 
+	<securecookie host="^\.hearstmags\.com$" name=".*" />
 	<securecookie host="^(.*\.)?myhearstnewspaper\.com$" name=".*"/>
 
+
+	<rule from="^http://(dailydeal|file)\.chron\.com/"
+		to="https://$1.chron.com/"/>
+
+	<rule from="^http://subscribe\.hearstmags\.com/"
+		to="https://subscribe.hearstmags.com/" />
 
 	<rule from="^http://(www\.)?myhearstnewspaper\.com/"
 		to="https://$1myhearstnewspaper.com/"/>

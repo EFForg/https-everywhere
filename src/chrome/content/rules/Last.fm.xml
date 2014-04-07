@@ -1,27 +1,29 @@
 <!--
-	For other CBS coverage, see CBS.xml.
+	Nonfunctional:
 
+		- asset\d?.cbsistatic.com	(Akamai, 404)
+		- (bwp|www).cnet.com
+		- ads.com.com			(timeout; data on www.cnet.com)
+		- i.i.com.com			(Akamai; "Service Unavailable")
+		- image.com.com			(Akamai; "An error occurred")
+		- (www.)findarticles.com
+		- userimage.gamespot.com	(ditto)
+		- im(age|g[12].gamespotcdn.net	(Akamai; "An error occurred"; all equivalent)
 
-	CDN buckets:
-
-		- static2.last.fm.edgesuite.net
-			- cdn.last.fm
-			- userserve-ak.last.fm
-			- cdn.lst.fm
-
-
-	Nonfunctional domains:
-
-		- userserve
-		- userserve-ak	(Akamai; 503)
+	asset\d		≍	i.i.com.com
 
 -->
 <ruleset name="Last.fm (buggy)" default_off="breaks streaming">
 
+	<target host="*.gamespot.com" />
+	<!--	/cdn.la?st.fm, userserve(-ak)?.last.fm: Akamai, 404s	-->
 	<target host="last.fm" />
 	<target host="*.last.fm" />
 	<target host="cdn.lst.fm" />
 
+
+	<rule from="^http://(fuse|u[ks])\.gamespot\.com/"
+		to="https://$1.gamespot.com/" />
 
 	<rule from="^https?://last\.fm/"
 		to="https://www.last.fm/" />

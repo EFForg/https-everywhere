@@ -1,36 +1,22 @@
 <!--
 	Nonfunctional subdomains:
-
-		- (www.)	(redirects to http; CN: ask.linaro.org)
-		- connect	(shows ask; CN: ask.linaro.org)
-		- android.git *
-		- review.android.git *
-		- planet	(dropped)
-
-	* http reply
-	** Dropped
-
-
-	Fully covered subdomains:
-
-		- android-build
-		- cards
-		- git
-		- lists
-		- patches
-		- releases
-		- status
+		- (www.)	(cert: ask.linaro.org; redirects to http)
+		- connect	(cert: ditto; 404)
+		- status	(cert: wiki.linaro.org; redirects to http)
 
 -->
 <ruleset name="Linaro (partial)" default_off="webmaster request">
 
-	<target host="*.linaro.org" />
+	<target host="ask.linaro.org"/>
+	<target host="planet.linaro.org"/>
+	<target host="wiki.linaro.org"/>
 
+	<securecookie host="^(ask|wiki)\.linaro\.org$" name=".*"/>
 
-	<securecookie host="^(?:android-built|ask|cards|patches|releases|status|support|wiki)\.linaro\.org$" name=".+" />
+	<rule from="^http://(ask|wiki)\.linaro\.org/"
+		to="https://$1.linaro.org/"/>
 
-
-	<rule from="^http://(android-build|ask|cards|git|lists|patches|releases|status|support|wiki)\.linaro\.org/"
-		to="https://$1.linaro.org/" />
+	<rule from="^http://planet\.linaro\.org/openid/"
+		to="https://planet.linaro.org/openid/"/>
 
 </ruleset>

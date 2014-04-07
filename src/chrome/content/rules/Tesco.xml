@@ -1,87 +1,48 @@
 <!--
 	Partial
 
-	For rules causing false/broken MCB, see Tesco.com-falsemixed.xml.
-
 
 	tesco.scene7.com
 
 
-	Other Tesco rulesets:
+	Nonfunctional subdomains:
 
-		- Clothing_at_Tesco.com.xml
-		- Tesco_Compare.com.xml
-		- Tesco_Bank.com.xml
-		- Tesco_Diets.com.xml
-		- Tesco_Photo.com.xml
-
-
-	Nonfunctional domains:
-
-		- origin-img.tesco.com
-		- origin-www.tesco.com *
-		- (www.)tescoliving.com *
-		- www.tescomagazine.com *
-
-	* Dropped
-
-
-	Problematic domains:
-
-		- tesco.com subdomains:
-
-			- ^	(dropped)
-			- img *
-			- www	(504, akamai)
-
-		- direct.tescoassets.com *
-		- ui.tescoassets.com *
-
-	* Akamai
-
-
-	Fully covered domains:
-
-		- tesco.com subdomains:
-
-			- direct
-			- img ¹
-			- phone-shop
-			- secure
-
-		- *.tescoassets.com ¹
-
-			- direct
-			- ui
-
-	¹ → secure.tesco.com
-
-
-	Mixed content:
-
-		- css on secure from ui.tescoassets.com *
-
-		- Images on secure from www **
-
-	* On groceries/ when rewritten from www; secured by us
-	** Secured by us
+		- origin-img
+		- origin-www	(times out)
 
 -->
-<ruleset name="Tesco (partial)">
+<ruleset name="Tesco" platform="mixedcontent">
 
+	<target host="clothingattesco.com" />
+	<target host="www.clothingattesco.com" />
 	<target host="tesco.com" />
 	<target host="*.tesco.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://(www\.)?tesco\.com/groceries/" /-->
 	<target host="*.tescoassets.com" />
+	<target host="tescobank.com" />
+	<target host="www.tescobank.com" />
+	<target host="tescocompare.com" />
+	<target host="www.tescocompare.com" />
+	<target host="tescodiets.com" />
+	<target host="www.tescodiets.com" />
+	<target host="tescofinance.com" />
+	<target host="www.tescofinance.com" />
+	<target host="tescogetinvolved.com" />
+	<target host="www.tescogetinvolved.com" />
+	<target host="tescophoto.com" />
+	<target host="www.tescophoto.com" />
 
 
-	<securecookie host="^secure\.tesco\.com$" name=".+" />
+	<securecookie host="^secure\.tesco\.com$" name=".*" />
+	<securecookie host="^(.*\.)?tesco(?:bank|compare|diets|getinvolved|photo)\.com$" name=".*" />
+	<securecookie host="^(.*\.)?clothingattesco\.com$" name=".*" />
 
 
-	<!--	These paths don't work:
+	<rule from="^https?://(?:www\.)?clothingattesco\.com/"
+		to="https://www.clothingattesco.com/" />
+
+	<!--	www: Akamai
+
+		These paths don't work:
 
 			- wine/$	(redirects to winestore/)
 			- WINE/Help/$	(404)
@@ -109,16 +70,27 @@
 			- storeLocator/
 			- termsandconditions/privacy.htm$
 					-->
-	<rule from="^http://(?:www\.)?tesco\.com/(?=$|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
-		to="https://secure.tesco.com/" />
+	<rule from="^https?://(?:www\.)?tesco\.com/($|exchange|(?:books|c/css|clubcard/clubcard|css|directuiassets|groceries|grocery/images|homepages/default|offer|store[lL]ocator|termsandconditions|whatsinstore|Wine/MarketingContent|wine/UIAssets)/)"
+		to="https://secure.tesco.com/$1" />
 
 	<rule from="^http://(direct|phone-shop|secure)\.tesco\.com/"
 		to="https://$1.tesco.com/" />
 
-	<rule from="^http://img\.tesco\.com/"
+	<!--	Akamai	-->
+	<rule from="^https?://img\.tesco\.com/"
 		to="https://secure.tesco.com/" />
 
-	<rule from="^http://\w+\.tescoassets\.com/"
+	<!--	Akamai
+
+		Observed subdomains:
+
+			- direct
+			- ui
+				-->
+	<rule from="^https?://\w+\.tescoassets\.com/"
 		to="https://secure.tesco.com/" />
+
+	<rule from="^https?://(?:www\.)?tesco(bank|compare|diets|finance|getinvolved|photo)\.com/"
+		to="https://www.tesco$1.com/" />
 
 </ruleset>

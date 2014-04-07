@@ -2,149 +2,57 @@
 	For problematic rules, see EBay-mismatches.xml.
 
 
-	Other eBay rulesets:
-
-		- CSdata1.com.xml
-		- Shopping.com.xml
-
-
 	Nonfunctional domains:
 
-		- ebay.com subdomains:
-
-			- announcements
-			- answercenter
-			- community
-			- deals
-			- feedback
-			- forums		(at least some paths redirect to http)
-			- frame
-			- garden
-			- groups
-			- motors
-			- hub.motors
-			- my
-			- myworld	(refused)
-			- parts
-			- qu
-			- shop
-			- socom
-			- stores
-			- viv
-
-		- cgi5.ebay.com.sg
-		- deals.ebay.co.uk
-		- myworld.ebay.co.uk
-		- vi.raptor.ebaydesc.co.uk
+		- announcements.ebay.com
+		- answercenter.ebay.com
+		- cgi5.ebay.com
+		- community.ebay.com
+		- deals.ebay.com
+		- forums.ebay.com		(at least some paths redirect to http)
+		- garden.ebay.com
+		- groups.ebay.com
+		- motors.ebay.com
+		- hub.motors.ebay.com
+		- my.ebay.com
+		- parts.motors.ebay.com
+		- qu.ebay.com
+		- shop.ebay.com
+		- stores.ebay.com
+		- viv.ebay.com
 		- i.ebayimg.com			(times out; doesn't translate directly to securepics)
 		- (www.)ebayinc.com		(times out)
 		- ebay-stories.com		(ditto)
-		- portalconsole.backends.ebay.eu	(redirects to login)
-
-
-	Problematic domains:
-
-			- cgi[15].ebay.com
-
-
-	Fully covered domains:
-
-		ebay.com subdomains:
-
-			- certificates
-			- cgi[15]		(→ scgi.ebay.com)
-			- giftcertificates
-			- spages.half
-			- merch
-			- ocs
-			- payments
-			- reco
-			- rover
-			- rtm			(→ srtm.ebay.com)
-			- scgi
-			- securethumbs
-			- signin
-			- srtm
-			- svcs
-			- thumbs		(→ securethumbs.ebay.com)
-
-		- cgi5.ebay.com.sg		(→ scgi.ebay.com.sg)
-		- scgi.ebay.com.sg
-		- gatekeeper.psnt.ebay.eu
-		- ebayclassifieds.com		(→ www.ebayclassifieds.com)
-		- static.ebayclassifieds.com
-		- www.ebayclassifieds.com
-		- srv.\w+.ebayrtm.com
-		- srx.\w+.ebayrtm.com		(→ srv.\w+\.ebayrtm.com)
-		- srv.ebayrtm.com
-		- srx.ebayrtm.com		(→ srv.ebayrtm.com)
-
-		- ebaystatic.com subdomains:
-
-			- gh
-			- include		(→ secureinclude.ebaystatic.com)
-			- ir			(→ secureir.ebaystatic.com)
-			- p			(→ securepics.ebaystatic.com)
-			- pics			(→ securepics.ebaystatic.com)
-			- q			(→ securepics.ebaystatic.com)
-			- rtm			(→ securertm.ebaystatic.com)
-			- secureinclude
-			- secureir
-			- securepics
-			- securertm
-			- \d.thumbs		(→ securethumbs.ebay.com)
-
-
-	Wildcard cookies:
-
-		- .gatekeeper.psnt.ebay.eu
 
 -->
 <ruleset name="eBay (buggy)" default_off="https://eff.org/r.b6G9">
 
-	<target host="payments.ebay.*" />
 	<target host="*.ebay.com" />
-	<target host="payments.ebay.com.*" />
-	<target host="*.ebay.com.sg" />
-	<target host="payments.ebay.co.uk" />
-	<target host="*.psnt.ebay.eu" />
+	<target host="spages.half.ebay.com" />
 	<target host="ebayclassifieds.com" />
 	<target host="www.ebayclassifieds.com" />
 	<target host="*.ebayrtm.com" />
+	<target host="srv.*.ebayrtm.com" />
+	<target host="srx.*.ebayrtm.com" />
 	<target host="ebaystatic.com" />
 	<target host="*.ebaystatic.com" />
 
 
-	<securecookie host="^\.?gatekeeper\.psnt\.ebay\.eu$" name=".+" />
 	<securecookie host="^\.ebayrtm\.com$" name="^CT$" />
 
 
-	<rule from="^http://((?:gift)?certificates|merch|reco|rover|scgi|securethumbs|signin|spages\.half|ocs|svcs)\.ebay\.com/"
-		to="https://$1.ebay.com/" />
-
-	<rule from="^https?://cgi[15]\.ebay\.com/"
-		to="https://scgi.ebay.com/" />
-
-	<rule from="^http://payments\.ebay\.([\w\.]{2,6})/"
-		to="https://payments.ebay.$1/" />
+	<rule from="^http://((?:gift)?certificates|securethumbs|signin|spages\.half|ocs)\.ebay\.com/"
+		to="https://$1.ebay.com/"/>
 
 	<rule from="^https?://s?rtm\.ebay\.com/"
 		to="https://srtm.ebay.com/" />
 
-	<!--	- thumbs\d?.ebaystatic:	Akamai, "An error occurred"
-		- thumbs.ebay: times out
-							-->
+	<!--	thumbs\d?.ebaystatic:	Akamai, "An error occurred"
+		thumbs.ebay:		times out	-->
 	<rule from="^https?://thumbs\d?\.ebay(?:static)?\.com/"
 		to="https://securethumbs.ebay.com/" />
 
-	<rule from="^https?://(?:cgi5|scgi)\.ebay\.com\.sg/"
-		to="https://scgi.ebay.com.sg/" />
-
-	<rule from="^http://gatekeeper\.psnt\.ebay\.eu/"
-		to="https://gatekeeper.psnt.ebay.eu/" />
-
-	<!--	Cert only matches *.ebayclassifieds.
-							-->
+	<!--	Cert only matches *.ebayclassifieds.	-->
 	<rule from="^https?://(?:www\.)?ebayclassifieds\.com/"
 		to="https://www.ebayclassifieds.com/" />
 
@@ -182,15 +90,11 @@
 	<rule from="^https?://sr[vx](\.\w+)?\.ebayrtm\.com/"
 		to="https://srv$1.ebayrtm.com/" />
 
-	<rule from="^https?://gh\.ebaystatic\.com/"
-		to="https://gh.ebaystatic.com/" />
-
-	<!--	!secure: Akamai
-				-->
+	<!--	!secure: Akamai	-->
 	<rule from="^https?://(?:secure)?(include|ir|pics|rtm)\.ebaystatic\.com/"
 		to="https://secure$1.ebaystatic.com/" />
 
 	<rule from="^https?://[pq]\.ebaystatic\.com/"
-		to="https://securepics.ebaystatic.com/" />
+		to="https://securepics.ebaystatic.com/"/>
 
 </ruleset>

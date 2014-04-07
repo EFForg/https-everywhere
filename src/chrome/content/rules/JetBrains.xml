@@ -1,96 +1,17 @@
 <!--
-	CDN buckets:
-
-		- up-20131014-174310-staticss3bucket-11pv7uv2jov7b.s3-eu-west-1.amazonaws.com
-
-		- jetbrains.vo.llnwd.net
-
-			- .hs. doesn't exist
-			- download-ln
-
-		- dotnettools.zendesk.com
-
-			- dotnettools-support
-
-		- resharper.zendesk.com
-
-			- reshaper-support
-
-
 	Nonfunctional subdomains:
 
-		- blogs ¹
-		- confluence ¹
-		- devnet ²
-		- download ¹
-		- download-ln	(400, CN: *.hs.llnwd.net)
-		- forum ¹
-		- kotlin-demo ¹
-		- plugins ¹
-		- teamcity ²
-
-	¹ Refused
-	² Dropped
-
-
-	Problematic subdomains:
-
-		- ^		(cert only matches www)
-		- jetpeople *
-		- youtrack *
-
-	* Works, self-signed
-
-
-	Partially covered subdomains:
-
-		- dotnettools-support	(→ dotnettools.zendesk.com)
-		- info			(→ na-lon02.marketo.com)
-		- reshaper-support	(→ reshaper.zendesk.com)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- account
-		- intellij-support
-		- sso
-
-
-	Observed cookie domains:
-
-		- account
-		- intellij-support
-		- sso
-		- www
-
-
-	Mixed content:
-
-		- Ads on www from www.googleadservices.com *
-
-	* Secured by us
+		- blogs		(refused)
 
 -->
-<ruleset name="JetBrains (partial)">
+<ruleset name="JetBrains (partial)" platform="mixedcontent">
 
-	<target host="jetbrains.com" />
-	<target host="*.jetbrains.com" />
+	<target host="jetbrains.com"/>
+	<target host="*.jetbrains.com"/>
 
-
-	<securecookie host="^(?:account|intellij-support|sso|www)\.jetbrains\.com$" name=".+" />
-
+	<securecookie host="^(.*\.)?jetbrains\.com$" name=".*"/>
 
 	<rule from="^http://(?:www\.)?jetbrains\.com/"
-		to="https://www.jetbrains.com/" />
-
-	<rule from="^http://(account|intellij-support|sso)\.jetbrains\.com/"
-		to="https://$1.jetbrains.com/" />
-
-	<rule from="^http://(dotnettools|reshaper)-support\.jetbrains\.com/(?=favicon\.ico|generated/|images/|system/)"
-		to="https://$1.zendeskcom/" />
-
-	<rule from="^http://info\.jetbrains\.com/(?=css/|images/|js/|rs/)"
-		to="https://na-lon02.marketo.com/" />
+		to="https://www.jetbrains.com/"/>
 
 </ruleset>

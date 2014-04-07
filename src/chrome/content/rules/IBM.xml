@@ -2,43 +2,6 @@
 	IBM has lots of resources, besides software,
 	also developerworks and redbooks.
 
-
-	Other IBM rulesets:
-
-		- CoreMetrics.xml
-		- Lotus.xml
-
-
-	Nonfunctional domains:
-
-		- sysrun.haifa.il.ibm.com	(refused)
-		- researcher.ibm.com *
-		- research.ihost.com *
-		- (www.)smartercommerceblog.com		(http reply)
-
-	* Times out
-
-
-	Problematic domains:
-
-		- stats.www.ibm.com *
-		- www-1.ibm.com *
-		- www-306.ibm.com *
-
-	* Mismatched; CN: redirect.www.ibm.com
-
-
-	Partially covered doains:
-
-		- www-958.ibm.com	(some paths redirect to http)
-
-
-	Fully covered domains:
-
-		- ibm.com subdomains:
-
-			- www14.software
-
 -->
 <ruleset name="IBM" default_off="Support section redirect loops">
 
@@ -46,10 +9,7 @@
 	<target host="1.www.s81c.com" />
 	<target host="ibm.com" />
 	<target host="*.ibm.com" />
-		<exclusion pattern="^http://www-958\.ibm\.com/(?!software/data/cognos/manyeyes/(?:image|stylesheet)s/)" />
-		<exclusion pattern="^http://www\.research\.ibm\.com/(?!$|\?|irl(?:$|\?|/))" />
 	<target host="publib.boulder.ibm.com" />
-	<target host="pic.dhe.ibm.com" />
 	<target host="www.redbooks.ibm.com" />
 	<target host="redirect.www.ibm.com" />
 
@@ -63,8 +23,8 @@
 	<!--	- Redirects to http before en/us/
 		- https://trac.torproject.org/projects/tor/ticket/5686
 					-->
-	<rule from="^https?://(?:www\.)?ibm.com/($|\?)"
-		to="https://www.ibm.com/us/en/$1" />
+	<rule from="^https?://(?:www\.)?ibm.com/$"
+		to="https://www.ibm.com/us/en/" />
 
 	<!--	!www:
 			- cert: redirect.www.ibm.com
@@ -73,14 +33,8 @@
 	<rule from="^https?://(?:www\.)?ibm\.com/"
 		to="https://www.ibm.com/" />
 
-	<rule from="^http://(publib\.boulder|pic\.dhe|www\.re(?:dbooks|search)|www14\.software|redirect\.www|www-(?:0[136]|304|947|95[08]))\.ibm\.com/"
+	<rule from="^http://(publib\.boulder|www\.redbooks|redirect\.www|www-(?:01|947))\.ibm\.com/"
 		to="https://$1.ibm.com/" />
-
-	<rule from="^https?://stats\.www\.ibm\.com/rc/images/uc\.GIF"
-		to="https://www.ibm.com/i/c.gif" />
-
-	<rule from="^https?://www-1\.ibm\.com/support/search\.wss"
-		to="https://www.ibm.com/support/search.wss" />
 
 	<!--	- Redirects as so, sans-https.
 		- Link found at https://buysub.com/

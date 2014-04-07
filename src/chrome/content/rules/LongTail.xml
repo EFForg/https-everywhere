@@ -1,98 +1,19 @@
-<!--
-	CDN buckets:
+<ruleset name="LongTail (partial)" platform="mixedcontent">
 
-		- cs28.wpc.edgecastcdn.net
+	<target host="longtailvideo.com"/>
+	<target host="dashboard.longtailvideo.com"/>
+	<target host="plugins.longtailvideo.com"/>
+	<target host="www.longtailvideo.com"/>
+	<target host="s0-www.ltvimg.com"/>
+	<target host="s1-www.ltvimg.com"/>
 
-			- p.jwpcdn.com
+	<rule from="^http://(www\.)?longtailvideo\.com/(content|jw)/"
+		to="https://www.longtailvideo.com/$2/"/>
 
+	<rule from="^http://(dashboard|plugins)\.longtailvideo\.com/"
+		to="https://$1.longtailvideo.com/"/>
 
-	Nonfunctional subdomains:
-
-		- developer	(cert: secure; 301s to http)
-
-
-	Problematic domains:
-
-		- cdn.s.jwpcdn.com	(akamai)
-
-
-	Fully covered domains:
-
-		- longtailvideo.com subdomains:
-
-			- securelp
-
-		- jwpcdn.com subdomains:
-
-			- ssl.p
-
--->
-<ruleset name="LongTail (partial)">
-
-	<target host="dashboard.bitsontherun.com" />
-	<target host="*.jwpcdn.com" />
-	<target host="*.jwpltx.com" />
-	<target host="longtail.tv" />
-	<target host="www.longtail.tv" />
-	<target host="longtailvideo.com" />
-	<target host="*.longtailvideo.com" />
-	<target host="ltvimg.com" />
-	<target host="*.ltvimg.com" />
-		<!--
-			302 to http.
-					-->
-		<exclusion pattern="^https?://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/(?!community/)\w+/images/\w+\.png$" />
-
-
-	<securecookie host="^\w\.jwpltx\.com$" name=".+" />
-	<securecookie host="^.+\.longtailvideo\.com$" name=".+" />
-
-
-	<!--	At least some pages 303 to http.
-							-->
-	<rule from="^http://dashboard\.bitsontherun\.com/static/"
-		to="https://dashboard.bitsontherun.com/static/" />
-
-	<rule from="^http://(a|v)\.jwpcdn\.com/"
-		to="https://$1.jwpcdn.com/" />
-
-	<rule from="^http://(?:cdn\.|ssl\.)?p\.jwpcdn\.com/"
-		to="https://ssl.p.jwpcdn.com/" />
-
-	<rule from="^http://(i|s)\.jwpltx\.com/"
-		to="https://$1.jwpltx.com/" />
-
-	<!--	- Cert valid for www, but $ 404s
-		- 301s like so
-						-->
-	<rule from="^http://(?:www\.)?longtail\.tv/"
-		to="https://www.longtailvideo.com/" />
-
-	<!--	- !www cert only matches secure
-		- Some (most?) pages redirect to http
-		- As do these paths:
-
-			- addons/images/
-						-->
-	<rule from="^http://(?:www\.)?longtailvideo\.com/(bits-on-the-run/sign-up|content/|jw/|sites/)"
-		to="https://www.longtailvideo.com/$1" />
-
-	<rule from="^http://(content|dashboard|l|lp|player|plugins|secure|securelp)\.longtailvideo\.com/"
-		to="https://$1.longtailvideo.com/" />
-
-	<!--	- !www CN: edgecastcdn.net
-		- www CN: *.longtailvideo.com
-		- Both 404
-					-->
-	<rule from="^http://(?:www\.)?ltvimg\.com/"
-		to="https://s0-www.ltvimg.com/" />
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^http://s(?:0|1)-www\.ltvimg\.com/(\?.*)?$"
-		to="https://www.longtailvideo.com/$1" />
-
-	<rule from="^http://s(0|1)-www\.ltvimg\.com/"
-		to="https://s$1-www.ltvimg.com/" />
+	<rule from="^http://s(\d)-www\.ltvimg\.com/"
+		to="https://s$1-www.ltvimg.com/"/>
 
 </ruleset>

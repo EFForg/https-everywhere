@@ -1,46 +1,26 @@
-<!--
-	For other Cupid plc coverage, see Cupid_plc.com.xml
-
-
-	Nonfunctional subdomains:
-
-		- affiliates	(dropped)
-
-
-	Problematic subdomains:
-
-		- ^	(.+ redirects to www...$, cert only matches www)
-
-
-	Partially covered domains:
-
-		- (www.)cupid.com
-		- ed.cupid.com *
-
-	* $ redirects to http
-
-
-	Fully covered domains:
-
-		- cdn.cupid.com
-
--->
 <ruleset name="Cupid (partial)">
 
+	<target host="becoquin.com"/>
+	<target host="www.becoquin.com"/>
+	<target host="benaughty.com"/>
+	<target host="www.benaughty.com"/>
 	<target host="cupid.com"/>
-	<target host="*.cupid.com"/>
-		<!--exclusion pattern="^http://www\.cupid\.com/($|\?|\w\w-\w\w/|ajax_savetimezoneoffset\.php|find-a-date\.aspx|helpprivacy\.asp|helptandc\.asp|internet-dating-conduct\.aspx|join\.asp|lostpsswd\.asp|personal-ads-membership\.aspx|privacy-statement\.aspx|spd_stories\.new\.php|static\.php)" /-->
-		<!--exclusion pattern="^http://ed.cupid.com/($|\?|helpprivacy\.asp|helptandc\.asp|static\.php)" /-->
-		<exclusion pattern="^http://ed\.cupid\.com/(?!ext\.php)" />
+	<target host="www.cupid.com"/>
+	<target host="stat.ed.cupidplc.com"/>
+	<target host="whitelabeldating.cupidplc.com"/>
 
 
-	<securecookie host="^\.cupid\.com$" name="^TRACK_\w+$" />
+	<securecookie host="^(.*\.)?be(coquin|naughty)\.com$" name=".*"/>
+	<securecookie host="^whitelabeldating\.cupidplc\.com$" name=".*"/>
 
 
-	<rule from="^http://(cdn|ed)\.cupid\.com/"
-		to="https://$1.cupid.com/" />
+	<rule from="^http://(?:www\.)?be(coquin|naughty)\.com/"
+		to="https://www.be$1.com/"/>
 
-	<rule from="^http://(?:www\.)?cupid\.com/((?:aff|oth)\.php|api/|favicon\.ico|static/)"
-		to="https://www.cupid.com/$1"/>
+	<rule from="^http://(?:www\.)?cupid\.com/(aff|oth)\.php"
+		to="https://www.cupid.com/$1.php"/>
+
+	<rule from="^http://(stat\.ed|whitelabeldating)\.cupidplc\.com/"
+		to="https://$1.cupidplc.com/"/>
 
 </ruleset>

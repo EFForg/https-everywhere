@@ -2,203 +2,89 @@
 	For problematic rules, see Adobe-mismatches.xml.
 
 
-	Other Adobe rulesets:
-
-		- Adobe_Connect.xml
-		- Adobe-Digital-Marketing.xml
-		- Adobetag.com.xml
-		- Hitbox.com.xml
-		- Offermatica.com.xml
-		- Scene7.xml
-		- Typekit.xml
-
-
-	CDN buckets:
-
-		- thumbnails-tv.adobe.com.edgekey.net
-		- wwwimages2.adobe.com.edgekey.net
-
-		- airdownload.adobe.com.edgesuite.net
-
-			- a1396.b.akamai.net
-
-		- new-tv.adobe.com.edgesuite.net
-
-			- a1355.d.akamai.net
-			- thumbnails.tv
-
-		- wwwimages.adobe.com.edgesuite.net
-
-			- a1953.x.akamai.net
-
-		- adobe.com.d1.sc.omtrdc.net
-
-			- stats.adobe.com
-
-		- adobe.com.ssl.d1.sc.omtrdc.net
-
-			- sstats.adobe.com
-
-
-	Nonfunctional subdomains:
-
-		- experiencedelivers	(redirects to www; mismatched, CN: *.day.com)
-		- forums		(dropped)
-		- labs *
-		- training *
-
-	* Refused
-
-
-	Problematic domains:
-
-		- adobe.com subdomains:
-
-			- ^ *
-			- airdownload **
-			- gaming *
-			- get2		(mismatched, CN: get.adobe.com)
-			- html *
-			- kb2 *
-			- ns		(404; mismatched, CN: www.adobe.com)
-			- stats		(mismatched, CN: *.d1.sc.omtrdc.net)
-			- thumbnails.tv **
-			- wwwimages **
-
-		- macromedia.com	(cert only matches www)
-
-	* Works, mismatched, CN: www.adobe.com
-	** Works, akamai
-
-
-	Partially covered subdomains:
-
-		- blogs		(webplatform blog redirects to http)
-		- fpdownload	(crossdomain.xml excluded)
-		- ns		(→ www)
-
-
-	Fully covered domains:
-
-		- adobe.com subdomains:
-
-			- (www.)
-			- entitlement.auth
-			- sp.auth
-			- bugbase
-			- community
-			- cookbooks
-			- creative
-
-			- \w\w.creative:
-
-				- ap
-				- d[0-3]
-				- eu
-				- us
-
-			- edexchange
-			- cem.events
-			- get
-			- get2		(→ get)
-			- get3
-			- helpx
-			- images-tv
-			- kuler
-			- max
-			- adobeid-na1.services
-			- sstats
-			- stats		(→ mxmacromedia.d1.sc.omtrdc.net)
-			- store1
-			- success
-			- thumbnails-tv
-			- tv
-			- thumbnails.tv *
-			- verify
-			- wwwimages *
-			- wwwimages2
-
-		- macromedia.com subdomains:
-
-			- (www.)		(^ → www)
-			- download
-			- fpdownload
-
-	* → akamai
-
-
-	Mixed content:
-
-		- Images, on
-
-			- tv from thumbnails.tv *
-			- www from wwwimages *
-
-		- Ads/web bugs, on:
-
-			- get from stats *
-			- helpx from events.foreseeresults.com *
-			- tv from www.facebook.com *
-			- www from wwwimages *
-
-	* Secured by us
+	Bucket at a248.e.akamai.net/demdex.download.akamai.com/
 
 -->
-<ruleset name="Adobe">
+<ruleset name="Adobe" platform="mixedcontent">
 
 	<target host="adobe.com" />
 	<target host="*.adobe.com" />
-		<!--
-			Some pages redirect to http:
-
-				https://trac.torproject.org/projects/tor/ticket/8604
-											-->
-		<exclusion pattern="^http://blogs\.adobe\.com/webplatform(?:$|[?/])" />
-		<!--exclusion pattern="^http://blogs\.adobe\.com/(?!$|\?|(?:acrobat|adobe(connect|ingovernment|life)|aftereffects|captivate|conversations|creativelayer|digital(marketing|dmedia|publishing)|dreamweaver|educationleaders|experiencedelivers|globalization|gunar|indesigndocs|iwamoto|lightroomjournal|photoshopdotcom|premierepro|presenter|readermobile|vikrant)($|\?|/)|wp-content/)" /-->
-		<!--
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
-
-			Breaks video playback:
-						-->
-		<exclusion pattern="^http://fpdownload\.adobe\.com/(?:pub/swz/)?crossdomain\.xml$" />
+	<target host="cem.events.adobe.com" />
+	<target host="*.demdex.com" />
+	<target host="login.hitbox.com" />
+	<target host="fpdownload.macromedia.com" />
 	<target host="macromedia.com" />
-	<target host="*.macromedia.com" />
+	<target host="omniture.com" />
+	<target host="*.omniture.com" />
+	<target host="admin.testandtarget.omniture.com" />
+	<target host="omniture-static.com" />
+	<target host="www.omniture-static.com" />
+	<target host="*.tt.omtrdc.net" />
+	<target host="scene7.com" />
+	<target host="www.scene7.com" />
+	<target host="www1.scene7.com" />
+	<target host="www.macromedia.com" />
+	<target host="typekit.com" />
+	<target host="use.typekit.com" />
+	<target host="use.typekit.net" />
+	<target host="worldsecuresystems.com" />
+	<target host="*.worldsecuresystems.com" />
 
 
-	<securecookie host=".*\.adobe\.com$" name=".+" />
+	<securecookie host="^\.adobe\.com$" name=".*" />
+	<securecookie host="^bank\.demdex\.com$" name=".*" />
+	<securecookie host="(.*\.)?om(niture\.com|trdc\.net)$" name=".*" />
+	<securecookie host="^www1\.scene7\.com$" name=".*" />
+	<securecookie host="^(.*\.)?worldsecuresystems\.com$" name=".*" />
 
 
-	<rule from="^http://adobe\.com/"
+	<rule from="^https?://adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
+	<rule from="^http://(community|cookbooks|edexchange|cem\.events|fpdownload|get|kuler|www)\.adobe\.com/"
 		to="https://$1.adobe.com/" />
 
-	<rule from="^http://get2\.adobe\.com/"
-		to="https://get.adobe.com/" />
-
-	<rule from="^http://ns\.adobe\.com/$"
+	<rule from="^https?://wwwimages\.adobe\.com/www\.adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://ns\.adobe\.com/xap/"
-		to="https://www.adobe.com/products/xmp/" />
+	<rule from="^http://bank\.demdex\.com/"
+		to="https://bank.demdex.com/" />
 
-	<rule from="^http://stats\.adobe\.com/"
-		to="https://mxmacromedia.d1.sc.omtrdc.net/" />
+	<rule from="^https?://cdn\.demdex\.net/"
+		to="https://a248.e.akamai.net/demdex.download.akamai.com/" />
 
-	<rule from="^http://thumbnails\.tv\.adobe\.com/"
-		to="https://a248.e.akamai.net/f/1355/4224/3m/thumbnails.tv.adobe.com/" />
+	<rule from="^http://login\.hitbox\.com/"
+		to="https://login.hitbox.com/" />
 
-	<!--rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/"
-		to="https://www.adobe.com/" /-->
-
-	<rule from="^http://wwwimages\.adobe\.com/"
-		to="https://a248.e.akamai.net/f/1953/8974/2h/wwwimages.adobe.com/" />
-
-	<rule from="^http://(?:www\.)?macromedia\.com/"
+	<rule from="^https?://(?:www\.)?macromedia\.com/"
 		to="https://www.macromedia.com/" />
 
-	<rule from="^http://(fp)?download\.macromedia\.com/"
-		to="https://$1download.macromedia.com/" />
+	<rule from="^http://fpdownload\.macromedia\.com/"
+		to="https://fpdownload.macromedia.com/" />
+
+	<rule from="^https?://omniture\.com/"
+		to="https://www.omniture.com/" />
+
+	<rule from="^http://(assets|my|publish|sc-css-1|searchandpromote|(?:admin\.)?testandtarget|style|www)\.omniture\.com/"
+		to="https://$1.omniture.com/" />
+
+	<rule from="^https?://(?:www\.)?omniture-static\.com/"
+		to="https://www.omniture-static.com/" />
+
+	<rule from="^http://(\w+)\.tt\.omtrdc\.net/"
+		to="https://$1.tt.omtrdc.net/" />
+
+	<!--	!www cert: www1.scene7.com	-->
+	<rule from="^https?://(?:www(1)?\.)?scene7\.com/"
+		to="https://www$1.scene7.com/" />
+
+	<rule from="^http://typekit\.com/"
+		to="https://typekit.com/" />
+
+	<rule from="^http://use\.typekit\.(com|net)/"
+		to="https://use.typekit.$1/" />
+
+	<rule from="^http://worldsecuresystems\.com/"
+		to="https://worldsecuresystems.com/" />
 
 </ruleset>

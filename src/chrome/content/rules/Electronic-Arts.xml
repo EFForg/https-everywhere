@@ -2,8 +2,6 @@
 	Other Electronic Arts rulesets:
 
 		- BioWare.xml
-		- EA_Sports.com.xml
-		- Sim_City.com.xml
 
 
 	CDN buckets:
@@ -24,6 +22,7 @@
 		- investor.ea.com		(cert: *.shareholder.com; 403)
 		- preferences.ea.com		(times out)
 		- eamobile.com			(cert: synergy-stage.eamobile.com; shows that domain's data)
+		- content.easports.com		(Akamai; "An error occurred")
 		- insideea.com			(ssl_error_rx_record_too_long)
 -->
 <ruleset name="Electronic Arts (partial)" platform="mixedcontent">
@@ -32,6 +31,11 @@
 	<target host="*.ea.com"/>
 	<target host="om.eamobile.com"/>
 	<target host="synergy-stage.eamobile.com"/>
+	<target host="easports.com"/>
+	<target host="www.easports.com"/>
+	<!--	* for cross-domain cookie
+		Also matches cdn	-->
+	<target host="*.www.easports.com"/>
 	<target host="origin.com"/>
 	<target host="*.origin.com"/>
 	<target host="thesims3.com"/>
@@ -43,6 +47,7 @@
 		.ea s_ : omniture cookies	-->
 	<securecookie host="^\.ea\.com$" name="^(CEM-session|s_.*)$"/>
 	<securecookie host="^(help|jobs|profile|ssl\.resources)\.ea\.com$" name=".*"/>
+	<securecookie host="\.www\.easports\.com$" name=".*"/>
 	<securecookie host="^sso\.origin\.com$" name=".*"/>
 	<securecookie host="^(forum|\w\w|www)?\.thesims\.com$" name=".*"/>
 
@@ -69,6 +74,11 @@
 
 	<rule from="^http://synergy-stage\.eamobile\.com/"
 		to="https://synergy-stage.eamobile.com/"/>
+
+	<!--	cdn: Akamai
+		cert !match !www	-->
+	<rule from="^http://(?:(?:cdn\.)?www\.)?easports\.com/"
+		to="https://www.easports.com/"/>
 
 	<!--	cert !match !www	-->
 	<rule from="^http://origin\.com/"

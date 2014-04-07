@@ -2,104 +2,24 @@
 	For problematic rules, see NVidia-mismatches.xml.
 
 
-	Other nVidia rulesets:
-
-		- 3D_Vision_Live.com.xml
+	nvidiaus.122.2o7.net/b/ss/nvidiausdev/1/
 
 
-	CDN buckets:
+	Nonfunctional:
 
-		- nvidia.com.122.2o7.net
-
-		- nvidiaus.122.2o7.net/b/ss/nvidiausdev/1/
-
-			- omniture.nvidia.com
-
-		- blogs.nvidia.com.edgesuite.net
-
-			- a11.g1.akamai.net
-
-		- shield.nvidia.com.edgesuite.net
-
-			- a1017.g2.akamai.net
-
-		- www.nvidia.com.edgesuite.net
-
-			- a1650.g.akamai.net
-
-
-	Nonfunctional subdomains:
-
-		- forums		(503, akamai)
-		- origin-forums		(dropped)
-
-
-	Problematic subdomains:
-
-		- ^		(times out)
-		- blogs *
-		- shield *
-		- www *
-
-	* Works, akamai
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- blogs *
-		- shield *
-
-	* → akamai, avoiding user-visible paths
-
-
-	Fully covered subdomains:
-
-		- developer
+		- /				(times out)
+		- forums			(Akamai; "An error occurred")
+		- forum-archive.developer	(times out)
+		- origin-forums			(ditto)
+		- www.				(Akamai; "An error occurred")
 
 -->
-<ruleset name="nVidia (partial) ">
+<ruleset name="nVidia (partial)">
 
-	<target host="nvidia.com" />
-	<target host="*.nvidia.com" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<!--exclusion pattern="^http://(?:www\.)?nvidia\.com/(?!content/|docs/.+\.(jpg|png)$|Download/NvidiaDownload\.css|favicon\.ico|props/)" /-->
-		<!--exclusion pattern="^http://blogs\.nvidia\.com/(?!favicon\.ico|wp-content/|wp-includes/)" /-->
-		<!--exclusion pattern="^http://shield\.nvidia\.com/(?!favicon\.ico|images/|javascripts/|stylesheets/)" /-->
-		<!--
-			Some stylesheets link images relative to /
-									-->
-		<exclusion pattern="^http://(?:www\.)?nvidia\.com/content/(?!.+/global-nav-home|.+/masthead-oldtemplate|.+/nvidia_nav_us|.+/reset-min|.+/share-2013).+\.css" />
-		<!--exclusion pattern="^http://blogs\.nvidia\.com/wp-content/.+\.css" /-->
-		<!--exclusion pattern="^http://shield\.nvidia\.com/stylesheets/(?!normalize\.min\.css)" /-->
-		<!--
-			Some pages redirect to http.
-							-->
-		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/)" />
+	<target host="omniture.nvidia.com" />
 
 
-	<securecookie host="^(?:\.?developer|\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
-	<!--
-		Omniture tracking cookies:
-						-->
-	<securecookie host="^\.store\.nvidia\.com$" name="^s_\w+$" />
-
-
-	<rule from="^http://(?:www\.)?nvidia\.com/(?=content/|docs/.+\.(?:jp|pn)g$|Download/NvidiaDownload\.css|favicon\.ico|props/)"
-		to="https://a248.e.akamai.net/f/1650/3297/9h/www.nvidia.com/" />
-
-	<rule from="^http://blogs\.nvidia\.com/(?=favicon\.ico|wp-content/(?!.+\.css)|wp-includes/)"
-		to="https://a248.e.akamai.net/f/11/2817/6m/blogs.nvidia.com/" />
-
-	<rule from="^http://(developer|devtalk|nvidianews|omniture|store)\.nvidia\.com/"
-		to="https://$1.nvidia.com/" />
-
-	<rule from="^http://nsomniture\.nvidia\.com/"
-		to="https://nvidia-com.122.2o7.net/" />
-
-	<rule from="^http://shield\.nvidia\.com/(?=favicon\.ico|images/|javascripts/|stylesheets/normalize\.min\.css)"
-		to="https://a248.e.akamai.net/f/1017/6644/6h/shield.nvidia.com/" />
+	<rule from="^https?://omniture\.nvidia\.com/"
+		to="https://nvidiaus.122.2o7.net/" />
 
 </ruleset>

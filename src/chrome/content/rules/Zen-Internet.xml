@@ -1,79 +1,16 @@
-<!--
-	For rules causing false/broken MCB, see Zen_Internet-falsemixed.xml.
+<ruleset name="Zen Internet" platform="mixedcontent">
+
+  <target host="zen.co.uk" />
+  <target host="*.zen.co.uk" />
 
 
-	Problematic subdomains:
-
-		- blog	(shows PHP page, CN: localhost.localdomain)
+	<securecookie host="^(.*\.)?zen\.co\.uk$" name=".*" />
 
 
-	Fully covered subdomains:
+  <rule from="^http://zen\.co\.uk/"
+          to="https://www.zen.co.uk/" />
 
-		- forum
-		- livesupport
-		- myaccount
-		- order
-		- portal
-		- status
-		- webmail
-
-
-	Partially covered subdomains:
-
-		- (www.) *	(^ → www)
-		- blog *	(→ www)
-		- support *
-
-	* Avoiding broken MCB
-
-
-	Mixed content:
-
-		- Scripts on www from blog *
-
-		- css:
-
-			- on support from support *
-			- On www from blog *
-			- On www from www *
-			- On www from fast.fonts.com *
-
-		- Images on support from support *
-
-		- Web bug on www from apis.google.com *
-
-	* Secured by us
-
-
-	NB: We secure all active resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
--->
-<ruleset name="Zen Internet (partial)">
-
-	<target host="zen.co.uk" />
-	<target host="*.zen.co.uk" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?zen\.co\.uk/blog(?!/wp-content/|/wp-includes/)" />
-		<exclusion pattern="^http://support\.zen\.co\.uk/(?!kb/(?:(?:Knowledgebase/)?BotDetectCaptcha\.ashx|Globalization/|js/|Logon/|(?:Script|Web)Resource\.axd|Skins/)|template/)" />
-
-
-	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|__utm\w|ZenAnonIdCookie)$" /-->
-	<securecookie host="(?!support\.).*\.zen\.co\.uk$" name=".+" />
-
-
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?zen\.co\.uk/"
-		to="https://www.zen.co.uk/" />
-
-	<rule from="^http://blog\.zen\.co\.uk/wp-(content|includes)/"
-		to="https://www.zen.co.uk/blog/wp-$1/" />
-
-	<rule from="^http://(forum|livesupport|myaccount|order|portal|status|support|webmail)\.zen\.co\.uk/"
-		to="https://$1.zen.co.uk/" />
+  <rule from="^http://(myaccount|order|portal|webmail|www)\.zen\.co\.uk/"
+          to="https://$1.zen.co.uk/" />
 
 </ruleset>

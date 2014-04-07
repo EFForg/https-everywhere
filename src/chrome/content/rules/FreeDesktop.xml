@@ -1,121 +1,27 @@
 <!--
-	Nonfunctional domains:
+	nonfunctional:
 
-		- (www.)cairographics.org *
-		- lists.cairographics.org **
-
-		- freedesktop.org subdomains:
-
-			- cgit		(refused)
-			- download *
-			- gstreamer *
-			- lists **
-			- patchwork *
-			- planet *
-			- poppler *
-			- portland *
-			- specifications **
-			- standards **
-			- wayland *
-			- xcb *
-			- xorg *
-
-	* Shows secure.freedesktop.org; mismatched, CN: secure.freedesktop.org
-	** http reply
-
-
-	Problematic subdomains:
-
-		- (www.) *
-		- apoc *
-		- bugzilla	(mismatched, CN: bugs.freedesktop.org)
-		- dri *
-		- gypsy *
-		- ldtp *
-		- libbsd *
-		- libdlo *
-		- liboil *
-		- libopenraw *
-		- nice *
-		- nouveau *
-		- people	($ 404s, ~.../ works; mismatched, CN: secure.freedesktop.org)
-		- pm-utils *
-		- sitewranglers *
-		- swfdec *
-		- telepathy *
-		- testrepo *
-		- wiki		(mismatched, CN: secure.freedesktop.org)
-
-	* Shows secure.freedesktop.org
-
-
-	Partially covered subdomains:
-
-		- people	(→ secure, $ 404s)
-		- (www.)	(→ ^, software/ 404s)
-
-
-	Fully covered subdomains:
-
-		- apoc *
-		- dri *
-		- bugs
-		- bugzilla	(→ bugs)
-		- gypsy *
-		- ldtp *
-		- libbsd *
-		- libdlo *
-		- liboil *
-		- libopenraw *
-		- nice *
-		- nouveau *
-		- pm-utils *
-		- secure
-		- sitewranglers *
-		- swfdec *
-		- telepathy *
-		- testrepo *
-		- wiki *
-
-	* → freedesktop.org
+		- (www.)cairographics.org	(displays bugzilla data)
+		- lists.cairographics.org	(ssl_error_rx_record_too_long)
+		- .freedesktop.org:
+			- download		(displays bugzilla data)
+			- gstreamer		(ditto)
+			- ldtp			(ssl_error_rx_record_too_long)
+			- poppler		(displays bugzilla data)
+			- portland		(ssl_error_rx_record_too_long)
+			- specifications	(ditto)
+			- xcb			(displays bugzilla data)
+			- xorg			(ditto)
 
 -->
-<ruleset name="freedesktop.org (partial)">
+<ruleset name="FreeDesktop Bugzilla">
 
-	<target host="freedesktop.org" />
-	<target host="*.freedesktop.org" />
-		<!--
-			404:
-				-->
-		<exclusion pattern="^http://(?:www\.)?freedesktop\.org/software(?:$|[?/])" />
-		<!--
-			$ is not identical:
-						-->
-		<exclusion pattern="^http://people\.freedesktop\.org/(?!~)" />
+	<target host="bugs.freedesktop.org"/>
+	<target host="bugzilla.freedesktop.org"/>
 
-
-	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
-
-
-	<rule from="^http://freedesktop\.org/wiki(\?.*)?$"
-		to="https://freedesktop.org/www$1" />
-
-	<rule from="^http://freedesktop\.org/(?:wiki/)?"
-		to="https://freedesktop.org/www/" />
-
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/wiki(\?.*)?$"
-		to="https://freedesktop.org/$1$2" />
-
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/(?:wiki/)?"
-		to="https://freedesktop.org/$1/" />
+	<securecookie host="^bugs\.freedesktop\.org$" name=".*"/>
 
 	<rule from="^http://bug(?:s|zilla)\.freedesktop\.org/"
-		to="https://bugs.freedesktop.org/" />
-
-	<rule from="^http://(?:peopl|secur)e\.freedesktop\.org/"
-		to="https://secure.freedesktop.org/" />
-
-	<rule from="^http://wiki\.freedesktop\.org/"
-		to="https://freedesktop.org/" />
+		to="https://bugs.freedesktop.org/"/>
 
 </ruleset>

@@ -1,45 +1,12 @@
-<!--
-	CDN buckets:
-
-		- s3.amazonaws.com/mibbit/
-
-
-	Nonfunctional subdomains:
-
-		- a *
-		- blog		(shows www, valid cert)
-		- wiki *
-
-	* 401, valid cert
-
-
-	Fully covered subdomains:
-
-		- (www.)
-
-		- chat subdomains:
-
-			- ^
-			- 02
-			- client01
-
-		- data
-		- search
-		- widget
-		- widget0[1-4]
-		- widgetmanager
-
--->
 <ruleset name="Mibbit">
+  <target host="*.mibbit.com"/>
+  <target host="*.chat.mibbit.com"/>
 
-	<target host="mibbit.com" />
-	<target host="*.mibbit.com" />
+  <securecookie host="^(.*\.)?mibbit.com$" name=".*" />
 
-
-	<securecookie host="^(?:.*\.)?mibbit.com$" name=".+" />
-
-
-	<rule from="^http://((?:chat|(?:02|client01)\.chat|data|search|widget(?:0\d|manager)?|www)\.)?mibbit\.com/"
-		to="https://$1mibbit.com/" />
-
+  <!-- Forcing SSL on homepage would redirect to Mibbit chat page -->
+  <rule from="^http://chat\.mibbit\.com/" to="https://chat.mibbit.com/"/>
+  <rule from="^http://data\.mibbit\.com/" to="https://data.mibbit.com/"/>
+  <rule from="^http://02\.chat\.mibbit\.com/" to="https://02.chat.mibbit.com/"/>
+  <rule from="^http://widgetmanager\.mibbit\.com/" to="https://widgetmanager.mibbit.com/"/>
 </ruleset>

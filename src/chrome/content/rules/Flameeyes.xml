@@ -1,47 +1,14 @@
-<!--
-	Problematic subdomains:
+<ruleset name="Flameeyes (partial)" platform="mixedcontent">
 
-		- ^		(refused)
+	<target host="flameeyes.eu"/>
+	<target host="*.flameeyes.eu"/>
 
+	<securecookie host="^blog\.flameeyes\.eu$" name=".*"/>
 
-	Fully covered subdomains:
+	<rule from="^http://www\.flameeyes\.eu/img/"
+		to="https://blog.flameeyes.eu/images/theme/"/>
 
-		- (www.)	(^ → www)
-		- blog
-
-
-	Mixed content:
-
-		- Ad on www from api.flattr.com *
-
-	* Secured by us
-
--->
-<ruleset name="Flameeyes">
-
-	<target host="flameeyes.eu" />
-	<target host="*.flameeyes.eu" />
-
-
-	<securecookie host="^blog\.flameeyes\.eu$" name=".+" />
-
-
-	<!--	Server drops args with path:
-						-->
-	<rule from="^http://flameeyes\.eu/+(?=[^?]+)(?:\?.*)?"
-		to="https://www.flameeyes.eu/" />
-
-	<!--	But not without:
-					-->
-	<rule from="^http://flameeyes\.eu/+(?=\?.+)"
-		to="https://www.flameeyes.eu/" />
-
-	<!--	And drops singular ?:
-					-->
-	<rule from="^http://flameeyes\.eu/+\?$"
-		to="https://www.flameeyes.eu/" />
-
-	<rule from="^http://(blog|www)\.flameeyes\.eu/"
-		to="https://$1.flameeyes.eu/" />
+	<rule from="^http://(blog\.)?flameeyes\.eu/"
+		to="https://$1flameeyes.eu/"/>
 
 </ruleset>

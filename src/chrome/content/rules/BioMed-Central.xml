@@ -2,59 +2,34 @@
 	For other Springer coverage, see Springer.xml.
 
 
-	CDN buckets:
+	Nonfunctional:
 
-		- oas000359.247realmedia.com
-
-			- oas.biomedcentral.com
-
-
-	Nonfunctional domains:
-
-		- (www.)chemistrycentral.com *
-		- (www.)springeropen.com *
-
-	* Dropped
-
-
-	Problematic subdomains:
-
-		- oas	(mismatched, CN: openadstream-eu1.247realmedia.com)
-		- w13 *
-		- w14 *
-
-	* Dropped
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- oas		(→ oasc-eu1.247realmedia.com)
-		- w\d\d		(→ ^)
-
-
-	Mixed content:
-
-		- Script on www from ajax.googleapis.com *
-
-		- Images on www from www *
-
-	* Secured by us
+		- (www.)chemistrycentral.com	(times out)
+		- (www.)springeropen.com	(ditto)
 
 -->
-<ruleset name="BioMed Central (false MCB)" platform="mixedcontent">
+<ruleset name="BioMed Central" platform="mixedcontent">
 
 	<target host="biomedcentral.com" />
 	<target host="*.biomedcentral.com" />
 
 
-	<securecookie host="^(?:.*\.)?biomedcentral\.com$" name=".+" />
+	<securecookie host="^(.*\.)?biomedcentral\.com$" name=".*" />
 
 
-	<rule from="^http://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
+	<!--	w01, w13: cert doesn't match.	-->
+	<rule from="^https?://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
 		to="https://$1biomedcentral.com/" />
 
-	<rule from="^http://oas\.biomedcentral\.com/"
-		to="https://oasc-eu1.247realmedia.com/" />
+ 	<rule from="^https?://(?:w\d\d\.|(www\.))?biomedcentral\.com/"
+ 		to="https://$1biomedcentral.com/" />
+ 
+        <!-- This is really ugly, but some (not all!) BiomedCentral
+             HTTPS URLs generate an incorrect 302 redirect from the
+             site to http://www.biomedcentral.com:443/somepath
+             which then produces an error; we can apparently fix the
+             effects of this 302 ourselves with a rewrite rule. -->
+	<rule from="^http://(?:w\d\d\.|(www\.))?biomedcentral\.com:443/"
+                to="https://$1biomedcentral.com/" />
 
 </ruleset>

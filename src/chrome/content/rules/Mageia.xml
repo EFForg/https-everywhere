@@ -1,65 +1,18 @@
-<!--
-	Problematic subdomains:
+<ruleset name="Mageia (partial)">
 
-		- svn	(prints "it works!")
+	<target host="mageia.org"/>
+	<target host="*.mageia.org"/>
+		<!--	cert valid, prints "It works!"	-->
+		<exclusion pattern="^http://planet\."/>
+	<!--	* for cross-domain cookie	-->
+	<target host="*.forums.mageia.org"/>
 
+	<securecookie host="^(.*\.)?mageia\.org$" name=".*"/>
 
-	Fully covered subdomains:
+	<rule from="^http://mageia\.org/"
+		to="https://www.mageia.org/"/>
 
-		- (www.)
-		- blog
-		- bugs
-		- doc
-		- forums
-		- identity
-		- ml
-		- nav
-		- planet
-		- svn		(→ svnweb)
-		- svnweb
-		- wiki
-
-
-	Observed cookie domains:
-
-		- bugs
-		- .forums
-		- ml
-		- wiki
-
-
-	Mixed content:
-
-		- Images, on:
-
-			- blog from blog *
-
-			- planet, from:
-
-				- blog *
-				- blogs.gnome.org *
-				- farm\d.staticflickr.com *
-				- feeds.wordpress.com *
-				- s0.wp.com *
-
-		- Web bug on planet from stats.wordpress.com *
-
-	* Secured by us
-
--->
-<ruleset name="Mageia">
-
-	<target host="mageia.org" />
-	<target host="*.mageia.org" />
-
-
-	<securecookie host="^(?:.*\.)?mageia\.org$" name=".+" />
-
-
-	<rule from="^http://((?:blog|bugs|doc|forums|identity|ml|nav|planet|wiki|www)\.)?mageia\.org/"
-		to="https://$1mageia.org/" />
-
-	<rule from="^http://svn(?:web)?\.mageia\.org/"
-		to="https://svnweb.mageia.org/" />
+	<rule from="^http://(blog|bugs|forums|identity|wiki|www)\.mageia\.org/"
+		to="https://$1.mageia.org/"/>
 
 </ruleset>

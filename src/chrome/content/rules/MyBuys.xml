@@ -1,72 +1,22 @@
 <!--
-	For rules causing false/broken MCB, see MyBuys.com-falsemixed.xml.
-
-
-		- mybuys.mktoweb.com
-
-			- www2
-
-
 	Nonfunctional subdomains:
 
-		- a.p		(dropped)
-
-
-	Partially covered subdomains:
-
-		- (www.)	(avoiding false/broken MCB)
-		- www2		($ redirects to app-sjh.marketo.com)
-
-
-	Fully covered subdomains:
-
-		- p subdomains:
-
-			- bi5
-			- portal
-			- t
-			- w
-
-
-	Observed cookie domains:
-
-		- .		(tracking cookies)
-		- portal.p
-		- www2
-
-
-	Mixed content:
-
-		- css on www from www *
-
-		- Images on www from www *
-
-		- Web bugs, on www from:
-
-			- t.p *
-			- formalyzer.com *
-			- t1.trackalyzer.com *
-
-	* Secured by us
+		- a.p		(times out)
 
 -->
-<ruleset name="MyBuys (partial)">
+<ruleset name="MyBuys (partial)" platform="mixedcontent">
 
-	<target host="mybuys.com" />
-	<target host="*.mybuys.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?mybuys\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<target host="mybuys.com"/>
+	<target host="*.p.mybuys.com"/>
+	<target host="www.mybuys.com"/>
 
+	<rule from="^http://(?:www\.)?mybuys\.com/favicon\.ico"
+		to="https://portal.p.mybuys.com/portal/VAADIN/themes/mybuys/favicon.ico"/>
 
-	<securecookie host=".*\.mybuys\.com$" name=".+" />
+	<rule from="^http://(?:www\.)?mybuys\.com/portal"
+		to="https://portal.p.mybuys.com/"/>
 
-
-	<rule from="^http://((?:(?:bi5|portal|t|w)\.p|www)\.)?mybuys\.com/"
-		to="https://$1mybuys.com/" />
-
-	<rule from="^http://www2\.mybuys\.com/(?=css/|js/|images/|rs/)"
-		to="https://na-sjh.marketo.com/" />
+	<rule from="^http://(bi5|portal|t|w)\.p\.mybuys\.com/"
+		to="https://$1.p.mybuys.com/"/>
 
 </ruleset>

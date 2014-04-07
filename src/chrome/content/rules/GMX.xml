@@ -1,74 +1,6 @@
 <!--
 	For other United Internet coverage, see United-Internet.xml.
 
-
-		CDN buckets:
-
-			- gmx.con-tech.de
-
-				- kino.gmx.de
-
-			- gmx.ivwbox.de
-
-
-	Nonfunctional domains:
-
-		- kino.gmx.de		(redirects to www.govento.de; mismatched, CN: ct-cds.con-tech.de)
-		- newsroom.gmx.net	(refused)
-
-
-	Fully covered domains:
-
-		- (www.)gmx.at		(^ → www)
-		- (www.)gmx.ca		(→ www.gmx.com)
-		- (www.)gmx.ch		(^ → www)
-		- (www.)gmx.co.uk	(^ → www)
-
-		- gmx.com subdomains:
-
-			- (www.)	(^ → www)
-			- help
-			- images
-			- service
-			- storage-file-eu
-
-		- (www.)gmx.de		(→ www.gmx.net)
-		- mobile.gmx.de
-		- (www.)gmx.fr		(^ → www)
-		- (www.)gmx.it		(→ www.gmx.com)
-
-		- gmx.net subdomains:
-
-			- (www.)	(^ → www)
-			- dl
-			- hilfe
-			- images
-			- img
-			- js
-			- mailings
-			- registrierung
-			- sec-i0
-			- service
-			- suche
-
-		- (www.)gmx.ru		(→ www.gmx.com)
-		- (www.)gmx.se		(→ www.gmx.com)
-		- logout.gmx.uimserv.net
-
-
-	Observed cookie domains:
-
-		- .gmx.de
-		- mobile.gmx.de
-
-		- gmx.net subdomains:
-
-			- .
-			- .suche
-			- service
-			- www
-			- .www
-
 -->
 <ruleset name="GMX" platform="mixedcontent">
 
@@ -77,60 +9,46 @@
 	<target host="gmx.co.uk"/>
 	<target host="www.gmx.co.uk" />
 	<target host="*.gmx.com" />
-	<target host="mobile.gmx.de" />
 	<target host="*.gmx.net" />
-	<target host="logout.gmx.uimserv.net" />
 
 
-	<!--securecookie host="^\.gmx\.de$" name="^(NG_USERID|ns_sample)$" /-->
-	<securecookie host="^mobile\.gmx\.de$" name=".+" />
-	<!--securecookie host="^\.gmx\.net$" name="^(emos_webde_sid|emos_webde_vid|ns_sample|ps-cid|psid|SSID|SSLB_P|SSRT|SSSC)$" /-->
-	<securecookie host="^(?:service|\.suche|\.?www)?\.gmx\.net$" name=".+" />
-
-
-	<rule from="^http://(dl|hilfe|images|img|js|mailings|registrierung|sec-i0|suche)\.gmx\.net/"
+	<rule from="^http://(img|js|sec-i0)\.gmx\.net/"
 		to="https://$1.gmx.net/" />
 
-	<!--	In countries like se, it, ca, and ru, www.gmx.cctld redirects
+	<!--
+		In countries like se, it, ca, and ru, www.gmx.cctld redirects
 		to www.gmx.com; we may as well secure that a bit but it should
-		work regardless of whether we got all of these countries.
+		work regardless of whether we got all of these countries
 	-->
+
 	<rule from="^http://(?:www\.)?gmx\.(?:ca|it|se|ru)/"
 		to="https://www.gmx.com/"/>
 
-	<!--	In these domains GMX supports SSL right at the homepage
+	<!--
+		In these domains GMX supports SSL right at the homepage
 
 		https://gmx.com appears to work but hopefully
 		redirecting away won't break anything.
 	-->
+
 	<rule from="^http://(?:www\.)?gmx\.(at|ch|com|co\.uk|fr|net)/"
 		to="https://www.gmx.$1/" />
 
-	<!--	gmx.de lives at gmx.net
-					-->
+	<!--	gmx.de lives at gmx.net	-->
+
 	<rule from="^http://(?:www\.)?gmx\.de/"
 		to="https://www.gmx.net/" />
 
-	<!--	A lot of the back-end work is reportedly done by service.gmx.*
-										-->
+	<!--	A lot of the back-end work is reportedly done by service.gmx.*	-->
+
 	<rule from="^http://service\.gmx\.(com|net)/"
 		to="https://service.gmx.$1/" />
 
-	<rule from="^http://(help|images)\.gmx\.com/"
-		to="https://$1.gmx.com/" />
+	<rule from="^http://help\.gmx\.com/"
+		to="https://help.gmx.com/" />
 	
-	 <!--	Gmx file storage service (WebDAV)
-							-->
+	 <!--	Gmx file storage service (WebDAV)	-->
 	<rule from="^http://storage-file-eu\.gmx\.com/"
 		to="https://storage-file-eu.gmx.com/" />
-
-	<rule from="^http://mobile\.gmx\.de/"
-		to="https://mobile.gmx.de/" />
-		
-	<!--	Logout redicts to uimserv.net
-							-->
-		
-	<rule from="^http://logout\.gmx\.uimserv\.net/"
-		to="https://logout.gmx.uimserv.net/" />
 
 </ruleset>

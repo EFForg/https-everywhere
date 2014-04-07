@@ -1,68 +1,58 @@
 <!--
+	For problematic rules, see Gentoo-mismatches.xml.
+
+
 	Nonfunctional subdomains:
 
-		- anoncvs *
+		- anoncvs
+		- archives	(sec_error_reused_issuer_and_serial)
+		- bouncer	(times out)
+		- devmanual	(times out)
 		- distfiles	(support varies between mirrors resolved to)
-		- mirrorstats *
-		- sources *
-		- viewcvstest *
-
-	* Times out
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- ads
-		- archives
-		- blogs
-		- bouncer
-		- bugs
-		- \d+.bugs
-		- council
-		- council-webapp
-		- dev
-		- devmanual
 		- foundation
-		- forums
-		- forums-lb
-		- forums-web[12]
-		- games
-		- overlays
-		- git.overlays
-		- svn.overlays
 		- packages
-		- piwik
-		- planet
-		- qa-reports
+		- planet	(times out)
 		- security
-		- sidebar
-		- store
-		- wiki
-
-
-	Mixed images on planet from various domains.
+		- sources	(times out)
+		- torrent
+		- www
 
 -->
-<ruleset name="Gentoo (partial) ">
+<ruleset name="Gentoo (partial)" platform="cacert">
 
-	<target host="gentoo.org" />
 	<target host="*.gentoo.org" />
-		<exclusion pattern="^http://(?:anoncvs|distfiles|mirrorstats|sources|viewcvstest)\." />
+		<!--	git.overlays & sidebar are handled in Gentoo-mismatches.xml.	-->
+		<exclusion pattern="^http://(anoncvs|archives|blogs|bouncer|devmanual|distfiles|foundation|git\.overlays|packages|planet|security|sidebar|sources|torrent|www)\." />
+	<target host="*.bugs.gentoo.org" />
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.forums.gentoo.org" />
 
 
-	<!--	Observed cookie subdomains:
+	<!--	Observed cookies:
 
-			- blogs
 			- bugs
 			- ^\.forums
 			- overlays
-			- wiki
 					-->
-	<securecookie host=".*\.gentoo\.org$" name=".+" />
+	<securecookie host="^.*\.gentoo\.org$" name=".*" />
 
 
-	<rule from="^http://([\w\.-]+\.)?gentoo\.org/"
-		to="https://$1gentoo.org/" />
+	<!--	This is what the server does	-->
+	<rule from="^https?://store\.gentoo\.org/"
+		to="https://www.cafepress.com/officialgentoo" />
+
+	<!--	Matched domains:
+
+			- blogs
+			- bugs
+			- \d+.bugs
+			- dev
+			- forums
+			- overlays
+			- piwik
+			- wiki
+					-->	
+	<rule from="^http://((?:\d+\.)?\w+)\.gentoo\.org/"
+		to="https://$1.gentoo.org/" />
 
 </ruleset>

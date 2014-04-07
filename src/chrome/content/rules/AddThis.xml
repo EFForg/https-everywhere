@@ -1,98 +1,16 @@
-<!--
-	Other Clearspring rulesets:
+<ruleset name="AddThis">
 
-		- AddThisedge.com.xml
-		- XGraph.xml
+	<target host="addthis.com"/>
+	<target host="*.addthis.com"/>
+	<target host="cache.addthiscdn.com"/>
 
+	<rule from="^http://(?:www\.)?addthis\.com/bookmark\.php"
+		to="https://www.addthis.com/bookmark.php"/>
 
-	CDN buckets:
-
-		- wildcard.addthis.com.edgekey.net
-		- wildcard.addthiscdn.com.edgekey.net
-
-
-	Nonfunctional domains:
-
-		- s4.addthis.com	(shows empty tree, mismatched, CN: xiaomufwq.com)
-
-		- support.addthis.com	(redirects to http, CN: *.assistly.com)
-
-			- So does addthis.assistly.com  & addthis.desk.com
-
-
-	Partially covered domains:
-
-		- (www.)addthis.com	(some pages redirect to http)
-
-
-	Fully covered domains:
-
-		- addthis.com subdomains:
-
-			- api
-			- cache
-			- cf
-			- ct[01345]
-			- ds
-			- m
-			- s[3579]
-			- secure
-			- su
-
-		- cache.addthiscdn.com
-
--->
-<ruleset name="AddThis (partial)">
-
-	<target host="addthis.com" />
-	<target host="*.addthis.com" />
-	<!--
-		These paths 302 to http:
-
-			- about$
-			- about/team$
-			- advertising-choices$
-			- browser-extensions$
-			- careers$
-			- contact$
-			- get$
-			- get/welcome$
-			- logos$
-			- privacy/opt-out$
-			- privacy/partners$
-			- privacy/privacy-policy$
-			- technology$
-			- technology/web-intents$
-			- tos$
-
-		These paths don't:
-
-			- blog$
-			- blog/
-			- download/
-			- get/just-analytics
-			- get/sharing
-			- get/trending
-			- images/
-			- landing$
-			- login
-			- press$
-			- register
-					-->
-		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get(?:/just-analytics|/sharing|/trending)?|landing|login|press|register)(?:$|\?))" />
-	<target host="cache.addthiscdn.com" />
-
-
-	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|di|uid|xtc)$" />
-
-
-	<rule from="^http://(www\.)?addthis\.com/get($|\?)"
-		to="https://$1addthis.com/get/sharing$2" />
-
-	<rule from="^http://((?:api|cache|cf|ct\d|ds|m|s[3579u]|secure|www)\.)?addthis\.com/"
-		to="https://$1addthis.com/" />
+	<rule from="^http://(api|cache|ds|s[3579])\.addthis\.com/"
+		to="https://$1.addthis.com/"/>
 
 	<rule from="^http://cache\.addthiscdn\.com/"
-		to="https://cache.addthiscdn.com/" />
+		to="https://cache.addthiscdn.com/"/>
 
 </ruleset>

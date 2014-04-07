@@ -1,59 +1,13 @@
-<!--
-	CDN buckets:
-
-		- 50grove-cdn.wistia.com.cdngc.net
-
-		- wistia.sslcs.cdngc.net
-
-		- wpc.4ab5.edgecastcdn.net/??4AB5/
-
-			- embed-ssl
-
-
-	Nonfunctional subdomains:
-
-		- (www.)	(redirects to http, valid cert)
-		- prime-cdn	(pantherssl)
-
-
-	Problematic subdomains:
-
-		- 50grove	(pages redirect to http, resources don't; mismatched, CN: *.heroku.com)
-		- embed		(404; mismatched, CN: edgecastcdn.net)
-		- 50grove-cdn	(403; mismatched, CN: ssl.cdngc.net)
-
-
-	Fully covered domains:
-
-		- wistia.com subdomains:
-
-			- embed-ssl
-			- grove-cdn	(→ wistia.sslcs.cdngc.net)
-			- prime
-
--->
 <ruleset name="Wistia (partial)">
 
-	<target host="*.wistia.com" />
-	<target host="fast.wistia.net" />
+<!--	Nonfunctional pantherssl: (embed|prime-cdn).wistia.com	-->
 
+	<target host="*.wistia.com"/>
 
-	<!--	Set by login page on secure:
-						-->
-	<!--securecookie host="^\.wistia\.com$" name="^_w_session$" /-->
-	<securecookie host="^(?:embed-ssl|prime)\.wistia\.com$" name=".+" />
-
-
-	<rule from="^http://(app|buy|embed-ssl|fast|prime|(?:rs-)?static|secure)\.wistia\.com/"
-		to="https://$1.wistia.com/" />
-
-	<rule from="^http://(?:embed|grove-cdn)\.wistia\.com/"
-		to="https://wistia.sslcs.cdngc.net/" />
+	<rule from="^http://(app|buy|fast|rs-static|secure)\.wistia\.com/"
+		to="https://$1.wistia.com/"/>
 
 	<rule from="^http://home\.wistia\.com/images/"
-		to="https://home.wistia.com/images/" />
-
-	<rule from="^http://fast\.wistia\.net/"
-		to="https://fast.wistia.net/" />
+		to="https://home.wistia.com/images/"/>
 
 </ruleset>

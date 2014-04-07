@@ -1,36 +1,22 @@
 <!--
-	CDN buckets:
-
-		- cdns.gigya.com.edgekey.net
-		- cdn.gigya.com.edgesuite.net
-
-
 	Nonfunctional subdomains:
 
 		- blog
-		- developers	(at least some pages & files redirect to http, CN: *.mindtouch.us)
-		- info		(/ redirects to app-f.marketo.com, other paths 404; CN: *.marketo.com)
-
-
-	Problematic subdomains:
-
-		- cdn	(akamai)
+		- developers (cert: *.mindtouch.us; at least some pages & files redirect to http)
+		- info	(cert: *.marketo.com; / redirects to app-f.marketo.com; other paths 404)
 
 -->
 <ruleset name="Gigya (partial)" platform="mixedcontent">
 
 	<target host="gigya.com" />
 	<target host="*.gigya.com" />
-		<exclusion pattern="^http://(?:www\.)?gigya\.com/(?:careers/|company/?|contact-us/|media-coverage/|press-room/|privacy-board/|social-media-resources/)$" />
-
+		<exclusion pattern="^http://info\." />
 
 	<rule from="^http://((?:counters|origin|www)\.)?gigya\.com/"
 		to="https://$1gigya.com/" />
 
-	<rule from="^https://(www\.)?gigya\.com/(careers/|company/?|contact-us/|media-coverage/|press-room/|privacy-board/|social-media-resources/)$"
-		to="http://$1gigya.com/$2" downgrade="1" />
-
-	<rule from="^http://cdns?\.gigya\.com/"
-		to="https://cdns.gigya.com/" />
+	<!--	Akamai	-->
+	<rule from="^https?://cdn\.gigya\.com/"
+		to="https://origin.gigya.com/" />
 
 </ruleset>

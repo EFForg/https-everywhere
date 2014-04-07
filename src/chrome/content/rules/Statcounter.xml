@@ -1,44 +1,50 @@
-<!--
-	Nonfunctional subdomains:
+<!--	www-beta is hosted on pantherssl/CDNetworks.  We need to rewrite to www.
 
-		- gs	(redirects to http)
+	gs.statcounter. css needs to be rewritten to /statcounter to fix gs.statcounter.
+		Bug: https://trac.torproject.org/projects/tor/ticket/5576
 
-
-	Problematic subdomains;
-
-		- www *
-		- www-beta *
-
-	* 403; mismatched, CN: ssl2.cdngc.net
-
-
-	Fully covered subdomains:
-
-		- (www.)	(www → ^)
-		- www-beta	(→ ^)
-
-		- *		(web bugs)
-
-			- c
-			- c20
-			- c40
+	www-beta implies that statcounter's planning to switch to pantherssl, which would
+	result in it breaking unless we can find its ID.
 
 -->
-<ruleset name="Statcounter (partial)">
+<ruleset name="Statcounter (buggy)" default_off="https://eff.org/r.1aq4">
 
 	<target host="statcounter.com" />
 	<target host="*.statcounter.com" />
-		<!--exclusion pattern="^http://gs\.statcounter\.com/" /-->
+		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
+
+			press 301s to http.
+						-->
+		<exclusion pattern="^http://gs\.statcounter\.com/($|MSLine\.swf|press($|[\?/]))" />
 
 
-	<securecookie host="^(?!gs\.)(?:.*\.)?statcounter\.com$" name=".+" />
+	<securecookie host="^(.*\.)?statcounter\.com$" name=".*" />
 
 
-	<rule from="^https?://www(?:-beta)?\.statcounter\.com/"
+	<!--	Observed subdomains:
+
+			- c
+				-->
+	<rule from="^http://([^/:@\.]+\.)?statcounter\.com/"
+		to="https://$1statcounter.com/" />
+
+	<rule from="^https?://www\.statcounter\.com/"
 		to="https://statcounter.com/" />
 
-	<rule from="^http://(?!gs\.)([^/:@\.]+\.)?statcounter\.com/"
-		to="https://$1statcounter.com/" />
+	<!--	Bug 5576	-->
+
+	<!--	images 404 over https
+		css breaks for some reason	-->
+	<rule from="^https?://gs.statcounter.com/(cs|image)s/"
+		to="https://statcounter.com/$1s/" />
+
+	<!--	Pantherssl/CDNetworks	-->
+	<rule from="^https?://www-beta\.statcounter\.com/"
+		to="https://statcounter.com/" />
+
+	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html	-->
+	<rule from="^https://gs\.statcounter\.com/($|MSLine\.swf)"
+		to="http://gs.statcounter.com/$1" downgrade="1" />
 
 </ruleset>
 

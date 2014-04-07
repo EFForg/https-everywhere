@@ -1,28 +1,20 @@
 <!--
-	CDN buckets:
-
-		- s3.amazonaws.com/siteassets.etsy.com/
+	For problematic rules, see Etsy-mismatches.xml.
 
 -->
-<ruleset name="Etsy (partial)">
+<ruleset name="Etsy (buggy)" default_off="https://eff.org/r.5bGt">
 
-	<target host="etsy.com" />
-	<target host="*.etsy.com" />
-		<exclusion pattern="^http://(?:de\.|fr\.|www\.)?etsy\.com/(?:\w\w/)?(?:about|android|apps|browse|community|error\.php|forums(?:_user_threads\.php)?|help|ipad|iphone|listing/\d+|mobile|people|press|registry|reopen_account\.php|sell|teams|treasury)(?:$|\?|/)" />
-		<!--exclusion pattern="^http://(www\.)?etsy\.com/(?!assets/|(blog|(\w\w/)?(cart|signin)|clientlog)($|[?/])|(\w\w/)?forgot_password\.php|images/)" /-->
-	<target host="*.etsystatic.com" />
-
-
-	<!--	This site has rewrites back to HTTP and various other issues.
-		That makes asecurecookie directive highly inadvisable.
-
-	<securecookie host="^\.etsy\.com$" name=".+" /-->
+	<target host="etsy.com"/>
+	<!--	* for cross-domain cookies.	-->
+	<target host="*.etsy.com"/>
+	<target host="site.etsystatic.com"/>
 
 
-	<rule from="^http://((?:de|fr|ny-image\d|system|www)\.)?etsy\.com/"
-		to="https://$1etsy.com/" />
+	<rule from="^http://(www\.)?etsy\.com/([\w\-]+/)?(asset|file|image|stylesheet)s/"
+		to="https://$1etsy.com/$2$3s/"/>
 
-	<rule from="^http://(img\d|site|www)\.etsystatic\.com/"
-		to="https://$1.etsystatic.com/" />
+	<!--	Akamai	-->
+	<rule from="^https?://site\.etsystatic\.com/"
+		to="https://www.etsy.com/"/>
 
 </ruleset>

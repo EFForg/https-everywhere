@@ -1,116 +1,28 @@
 <!--
-	For rules that break image zoom, see AmazonAWS-breakzoom.xml.
-
-	For other Amazon coverage, see Amazon.xml.
-
-
-	CDN buckets:
-
-		- ec7.images-amazon.com.cdn20.com
-
-			- ec7.images-amazon.com
-
-		- ec4.images-amazon.chinacache.net
-
-			- ec4.images-amazon.com
-
-		- d1ge0kk1l5kms0.cloudfront.net
-
-			- ec[5x].images-amazon.com
-			- g-ecx.images-amazon.com 
-
-		- d36cz9buwru1tt.cloudfront.net
-		- s3.amazonaws.com/awsmedia/
-		- s3.amazonaws.com/rodica-work/
-		- images-(eu|fe|na).ssl-images-amazon.com.edgekey.net
-
-		- ecx.images-amazon.com.c.footprint.net
-
-			- images.amazon.com
-			- images-jp.amazon.com
-			- rcm-images.amazon.com
-
-		- ec2.images-amazon.com.edgesuite.net
-
-			- ec2.images.amazon.com
-
-		- ec8.images-amazon.com.edgesuite.net
-
-			- ec8.images-amazon.com
-
-		- ec3.images-amazon.com.c.footprint.net
-
-			- ec[13].images-amazon.com
-
-		- g-ecx.images-amazon.com.c.footprint.net 
-
-			- g-images.amazon.com
-
-		- z-ecx.images-amazon.com.edgesuite.net
-
-			- z-ak.images-amazon.com
-
-		- amazonrtl.vo.llnwd.net
-
-			- ec6.images-amazon.com
-
-
-	Nonfunctional domains:
-
-		- cloudfront-labs.amazonaws.com		(refused)
-
-
-	Problematic domains:
-
-		- z-ak.images-amazon.com			(503, akamai)
-		- (.+.)s3-website-eu-west-1.amazonaws.com
-		- (.+.)s3-website-us-east-1.amazonaws.com
-
-
-	Fully covered domains:
-
-		- images-jp.amazon.com				(→ images-na.ssl-images-amazon.com)
-		- g-images.amazon.com				(→ d1ge0kk1l5kms0.cloudfront.net)
-		- webservices.amazon.com
-
-		- amazonaws.com subdomains:
-
-			- (.+.)s3
-			- (.+.)s3-ap-northeast-1
-			- (.+.)s3-ap-southeast-1
-			- (.+.)s3-external-[123]
-			- (.+.)s3-eu-west-1
-			- (.+.)s3-sa-east-1
-			- (.+.)s3-us-west-1
-			- (.+.)s3-us-west-2
-			- (.+.)s3-website-eu-west-1		(→ s3-eu-west-1)
-			- (.+.)s3-website-us-east-1		(→ s3)
-
-		- g-ecx.images-amazon.com			(→ d1ge0kk1l5kms0.cloudfront.net)
-		- z-ak.images-amazon.com
+	d36cz9buwru1tt.cloudfront.net
+	s3.amazonaws.com/awsmedia/
+	s3.amazonaws.com/rodica-work/
 
 -->
 <ruleset name="Amazon Web Services">
 
-	<target host="fls-eu.amazon.co.uk" />
 	<target host="aws.amazon.com" />
 	<target host="signin.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
-	<target host="fls-eu.amazon.com" />
-	<target host="fls-na.amazon.com" />
 	<target host="images.amazon.com" />
-	<target host="images-jp.amazon.com" />
 	<target host="payments.amazon.com" />
+	<target host="rcm-images.amazon.com" />
 	<target host="sis.amazon.com" />
-	<target host="webservices.amazon.com" />
-	<target host="*.amazonaws.com" />
+	<target host="ws.amazon.com" />
+	<target host="s3.amazonaws.com" />
+	<target host="*.s3.amazonaws.com" />
 		<!--
 			Bloody forced redirection:
 
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001100.html
- 			https://trac.torproject.org/projects/tor/ticket/4199
+      https://trac.torproject.org/projects/tor/ticket/4199 
 											-->
-		<exclusion pattern="^http://(?:static\.via\.me|img\.wired\.co\.uk|s3\.sandbaguk\.com|spiegeltv-ivms2-restapi|www\.mercyships\.org|www-prod-storage\.cloud\.caltech\.edu)\.s3\.amazonaws\.com/" />
+		<exclusion pattern="^http://(?:static\.via\.me|img\.wired\.co\.uk|s3\.sandbaguk\.com|spiegeltv-ivms2-restapi|spiegeltv-prod-static|www-prod-storage\.cloud\.caltech\.edu)\.s3\.amazonaws\.com/" />
 		<!--
 			Breaks soundsjustlike.com audio:
 							-->
@@ -121,54 +33,36 @@
 			Breaks images:
 					-->
 		<exclusion pattern="^http://em\.css\.s3\.amazonaws\.com/style\.css" />
-		<exclusion pattern="^http://s3\.lbrcdn\.net\.s3-external-3\.amazonaws.com/" />
-   		<!--
-			This one looks slightly different:
- 
-				https://trac.torproject.org/projects/tor/ticket/7608 
-											 -->
+    <!--  This one looks slightly different
+    https://trac.torproject.org/projects/tor/ticket/7608 
+    -->
 		<exclusion pattern="^http://charts-datawrapper\.s3\.amazonaws\.com/" />
-	<target host="amazonwebservices.com" />
-	<target host="*.amazonwebservices.com" />
+		<exclusion pattern="^http://soundcloud-upload\.s3\.amazonaws\.com/" />
+
+	<target host="cdn.*.s3.amazonaws.com" />
+	<target host="s3-eu-west-1.amazonaws.com" />
+	<target host="*.s3-eu-west-1.amazonaws.com" />
+	<target host="cdn.*.s3-eu-west-1.amazonaws.com" />
 	<target host="*.images-amazon.com" />
   <!-- Zeitgeist MP3 player https://trac.torproject.org/projects/tor/ticket/7594 -->
   <exclusion pattern="^http://g-ecx\.images-amazon\.com/.*([mM][pP]3|zeitgeist|digital/music)" />
   <!-- https://trac.torproject.org/projects/tor/ticket/7539 -->
   <exclusion pattern="^http://ecx\.images-amazon\.com/" />
-	<target host="*.ssl-images-amazon.com" />
+  <exclusion pattern="^http://ecx\.images-amazon\.com/" />
+	<target host="amazonwebservices.com" />
+	<target host="*.amazonwebservices.com" />
 
-
-	<!--	Forced redirects:
-					-->
-	<rule from="^http://dis(\.resized)?\.images\.s3\.amazonaws\.com/"
-		to="https://s3-eu-west-1.amazonaws.com/dis$1.images/" />
-
-	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
-		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
-
-	<rule from="^http://fls-eu\.amazon\.co\.uk/"
-		to="https://fls-eu.amazon.co.uk/" />
-
-	<rule from="^http://(signin\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
+	<rule from="^http://(signin\.aws|aws(-portal)?|payments|sis|ws)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
-	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+	<rule from="^http://s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://$1.s3$2.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(-eu-west-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
-
-	<rule from="^http://s3-website-us-east-1\.amazonaws\.com/"
-		to="https://s3.amazonaws.com/" />
-
-	<rule from="^http://([^@:\.]+)\.s3-website-us-east-1\.amazonaws\.com/"
-		to="https://$1.s3.amazonaws.com/" />
-
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
-		to="https://s3.amazonaws.com/$1.$2/" />
 
 	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
 		to="https://aws.amazon.com/" />
@@ -179,25 +73,15 @@
 	<rule from="^http://media\.amazonwebservices\.com/"
 		to="https://s3.amazonaws.com/awsmedia/" />
 
-	<rule from="^http://(?:g-images\.|(?:ec[5x]|g-ecx)\.images-)amazon\.com/"
-		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
-
-	<rule from="^http://(?:(?:(?:\w-)?ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
+	<rule from="^http://(?:(?:\w-)?ec[2x]\.images-|(?:rcm-)?images\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
 
-	  	<!--
-			Exclusions for Amazon's Zeitgeist MP3 Player:
-
-				https://trac.torproject.org/projects/tor/ticket/7000
-
-		note that the second exclusion can't be scoped to
-		the ssl-images-amazon domain, though it could have
-		copied the crazy pattern from the rule above.
-									-->
-		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws.com/" />
-		<exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
-
-	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
-		to="https://images-$1.ssl-images-amazon.com/" />
+  <!-- Exclusions for Amazon's Zeitgeist MP3 Player
+       https://trac.torproject.org/projects/tor/ticket/7000 
+       note that the second exclusion can't be scoped to the ssl-images-amazon
+       domain, though it could have copied the crazy pattern from the rule
+       above -->
+  <exclusion pattern="^http://amazon-zg\.s3\.amazonaws.com/" />
+  <exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
 
 </ruleset>

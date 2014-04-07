@@ -1,197 +1,34 @@
 <!--
-	For other US government coverage, see US-government.xml.
+	Other US government rulesets:
 
-
-	stiesx2-ntrs.larc.nasa.gov, ntrs.larc.nasa.gov, &
-	ntrs.nasa.gov are handled in US-government-mismatches.xml.
-
-
-	CDN buckets:
-
-		- landingimagecatalog-1450153822.us-west-1.elb.amazonaws.com
-
-		- d1p01lglytwktu.cloudfront.net
-
-			- marsrovers.jpl.nasa.gov
-
-		- d2cj35nmzi9erd.cloudfront.net
-
-			- mars.jpl.nasa.gov
-
-		- d3r05mwudimf00.cloudfront.net
-
-			- marsstaticcdn.jpl.nasa.gov
-
-		- msfcnasa.r3h.net/.../
-			- www.msfc.nasa.gov.edgesuite.net/.../
-				- a974.dscg.akamai.net/.../
-
-		- spaceflight.nasa.gov.speedera.net
-			- spaceflight.nasa.gov.edgesuite.net/.../
-				- a1295.dscg.akamai.net/.../
-
-		- www.nasa.gov.speedera.net
-			- www.nasa.gov.edgesuite.net/.../
-				- a1718.dscg.akamai.net/.../
+		- US-government.xml
+		- US-government-mismatches.xml
 
 
 	Nonfunctional domains:
 
-		- (www.)hubblesite.org *
-		- m.hubblesite.org *
-
+		- (www.)hubblesite.org	(times out)
+		- m.hubblesite.org	(ditto)
 		- nasa.gov subdomains:
-
 			- apod
-			- aquarius *
-			- impact.arc		(shows astrobiology2.arc; mismatched, CN: astrobiology.nasa.gov)
-			- www.argo *
-			- www.cdscc		(redirects infinitely, CN: TS Series NAS)
-			- climate
-			- earthobservatory *
-			- data.giss *
-
-			- gsfc subdomains:
-
-				- eclipse *
-				- fermi		(redirects to http, expired 2011-12-31)
-				- jdem
-				- nssdc *
-				- sdo *
-				- sunearthday *
-				- svs *
-				- venustransit *
-				- voyager
-
-			- history		(shows www.hq, CN: www.hq.nasa.gov)
-			- dayton.hq *
-			- grin.hq *
-
-			- jpl subdomains:
-
-				- ^ *			(redirects to www over http)
-				- blogs **
-				- directory		(redirects to http, valid cert)
-				- genesismission **
-				- hydro *
-				- maps *
-				- neo *
-				- photojournal *
-				- planetquest
-				- saturn *
-				- space *
-				- ssd *
-				- stardust **
-				- trs-new *
-				- voyager
-				- www *
-				- www-robotics *
-
+			- www.cdscc	(cert: TS Series NAS; redirects infinitely)
+			- nssdc.gsfc	(times out)
+			- jpl		(times out; redirects to www over http)
 			- www.jps
-			- eol.jsc
-			- (www.)jwst
-			- kepler		(shows astrobiology, CN: astrobiology)
-			- science.ksc
-			- www-pao.ksc *
-			- www.msfc		(301s to http, akamai)
-			- sohowww.nascom *
-			- stereo-ssc.nascom *
-			- pds *
-			- spaceflight		(504, akamai)
-			- (www.)spaceplace **
-			- sunearthday		(some paths 404, others work-ToDo: sort which ones; akamai)
-			- venustransit *
-			- visibleearth *
-
-	* Times out
-	** No https
-
-
-	Problematic subdomains:
-
-		- astrobiology2.arc	(works; mismatched, CN: astrobiology.nasa.gov)
-		- heasarc	(cert only matches heasarc.gsfc)
-		- mars.jpl *
-		- marsrovers.jpl *
-		- marsstaticcdn.jpl *
-		- mars *
-
-	* Cloudfront
-
-
-	Fully covered subdomains:
-
-		- airbornescience
-		- cloud1.arc
-		- astrobiology
-		- ws1.ems.eosdis	(tracking beacon)
-		- esdpubs
-		- (www.)espo
-		- espoarchive
-		- eyes
-		- rt.grs
-		- heasarc.gsfc
-		- heasarc	(→ heasarc.gsfc)
-		- corts.hq
-		- www.hq
-
-		- jpl subdomains:
-
-			- acquisition
-			- beacon
-			- careerlaunch
-			- dir
-			- enose
-			- icis
-			- jpldataeval
-			- jplnet
-			- jplspaceship
-			- mars			(→ d2cj35nmzi9erd.cloudfront.net)
-			- marsrovers		(→ d1p01lglytwktu.cloudfront.net)
-			- marsstaticcdn		(→ d3r05mwudimf00.cloudfront.net)
-			- metrics		(→ jpl-nasa-gov.122.2o7.net)
-			- nightsky
-			- pds
-			- ras
-			- science
-			- scienceandtechnology
-			- solarsystem
-			- sse
-			- studentprograms
-			- telework
-
-		- mars		(→ d2cj35nmzi9erd.cloudfront.net)
-		- people
-		- solarsystem
-		- (www.)spacecomm
+			- pds		(timeout)
+			- visibleearth	(times out)
 
 -->
 <ruleset name="NASA">
 
-	<target host="*.nasa.gov" />
+	<target host="corts.hq.nasa.gov" />
+	<target host="solarsystem.nasa.gov" />
 
 
-	<securecookie host="^.*\.nasa\.gov$" name=".+" />
+	<securecookie host="^(corts\.hq|solarsystem).nasa.gov$" name=".*" />
 
 
-	<rule from="^http://(airbornescience|cloud1\.arc|astrobiology|ws1\.ems\.eosdis|esdpubs|(?:www\.)?(?:espo|spacecomm)|espoarchive|eyes|rt\.grc|heasarc\.gsfc|(?:corts|www)\.hq|(?:acquisition|beacon|careerlaunch|dir|enose|icis|jpldataeval|jplnet|jplspaceship|nightsky|pds|science(?:andtechnology)?|solarsystem|sse|studentprograms|telework)\.jpl|people|ras|solarsystem)\.nasa\.gov/"
+	<rule from="^http://(corts\.hq|solarsystem)\.nasa\.gov/"
 		to="https://$1.nasa.gov/" />
-
-	<rule from="^https?://heasarc\.nasa\.gov/"
-		to="https://heasarc.gsfc.nasa.gov/" />
-
-	<rule from="^http://mars\.(?:jpl\.)?nasa\.gov/"
-		to="https://d2cj35nmzi9erd.cloudfront.net/" />
-
-	<rule from="^http://marsrovers\.jpl\.nasa\.gov/"
-		to="https://d1p01lglytwktu.cloudfront.net/" />
-
-	<rule from="^http://marsstaticcdn\.jpl\.nasa\.gov/"
-		to="https://d3r05mwudimf00.cloudfront.net/" />
-
-	<!--	Protocol-relative links from scienceandtechnology.jpl:
-							-->
-	<rule from="^https?://metrics\.jpl\.nasa\.gov/"
-		to="https://jpl-nasa-gov.122.2o7.net/" />
 
 </ruleset>

@@ -1,50 +1,20 @@
-<!--
-	For other Microsoft coverage, see Microsoft.xml.
-
-
-	CDN buckets:
-
-		- a248.e.akamai.net/img.atdmt.com/
-
-		- atlasdmt.vo.msecnd.net
-
-			- cdn.atdmt.com
-	
-
-	Problematic subdomains:
-
-		- cdn		(mismatched, CN: *.sharepointonline.com)
-		- exch-eu	(mismatched, CN: view.atdmt.com)
-		- spe		(akamai)
-
-
-	c.atdmt.com sets MUID wildcard cookie on
-	whichever domain it is loaded from.
-
+<!--	a248.e.akamai.net/img.atdmt.com/
 -->
 <ruleset name="Microsoft Atlas">
 
-	<target host="*.atdmt.com" />
-		<exclusion pattern="^http://view\.atdmt\.com/action/windows_downloads_Upgrade" />
+	<target host="*.atdmt.com"/>
+		<exclusion pattern="^http://view\.atdmt\.com/action/windows_downloads_Upgrade"/>
+	<!--	* for cross-domain cooke.	-->
+	<target host="*.c.atdmt.com" />
 
 
-	<!--securecookie host="^\.atdmt\.com$" name="^(AA002|MUID)$" /-->
-	<securecookie host="^(?:.*\.)?atdmt\.com$" name=".+" />
+	<securecookie host="^(.*\.)?atdmt\.com$" name=".*"/>
 
 
-	<rule from="^http://(c1?|clk|flex|h|image|rad|switch|view)\.atdmt\.com/"
-		to="https://$1.atdmt.com/" />
-
-	<rule from="^http://cdn\.atdmt\.com/"
-		to="https://atlasdmt.vo.msecnd.net/" />
-
-	<rule from="^http://exch-eu\.atdmt\.com/"
-		to="https://view.atdmt.com/" />
+	<rule from="^http://(c|clk|switch|view)\.atdmt\.com/"
+		to="https://$1.atdmt.com/"/>
 
 	<rule from="^http://img\.atdmt\.com/"
-		to="https://a248.e.akamai.net/img.atdmt.com/" />
-
-	<rule from="^http://spe\.atdmt\.com/"
-		to="https://image.atdmt.com/" />
+		to="https://a248.e.akamai.net/img.atdmt.com/"/>
 
 </ruleset>

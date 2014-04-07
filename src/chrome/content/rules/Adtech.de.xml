@@ -1,54 +1,17 @@
-<!--
-	For other AOL coverage, see AOL.xml.
-
-
-	Banner network.
-
-
-	CDN buckets:
-
-		- aka-cdn-ns.adtech.de.edgesuite.net
-
-
-	Problematic domains:
-
-		- aka-cdn-ns.adtech.de		(works, akamai)
-		- ad.dc2.adtech.de		(works; mismatched, CN: *.adtech.de)
-
-
-	Fully covered subdomains:
-
-		- adserver
-		- adserverams
-		- adserver-sb-fra
-		- aka-cdn
-		- aka-cdn-ns	(→ aka-cdn)
-		- ad.dc2	(→ adserver)
-		- secserv
-		- ums
-
+<!--	banner network.
 -->
-<ruleset name="Adtech.de (partial)">
+<ruleset name="Adtech.de (breaks videos)" default_off="https://eff.org/r.a6rZ">
 
-	<target host="*.adtech.de" />
+	<target host="*.adtech.de"/>
 		<!--
 			Breaks videos:
 
 				https://trac.torproject.org/projects/tor/ticket/7670
 											-->
-		<exclusion pattern="http://(?:adserver\.)?adtech\.de/(?:\?adrawdata/|crossdomain\.xml)" />
+  <exclusion pattern="http://(adserver\.)?adtech\.de/(?:\?adrawdata/|crossdomain\.xml)" />
 
-
-	<securecookie host="^\.adtech\.de" name=".+" />
-
-
-	<rule from="^http://(adserver(?:ams|-sb-fra)?|aka-cdn|secserv|ums)\.adtech\.de/"
-		to="https://$1.adtech.de/" />
-
-	<rule from="^http://aka-cdn-ns\.adtech\.de/"
-		to="https://aka-cdn.adtech.de/" />
-
-	<rule from="^http://ad\.dc2\.adtech\.de/"
-		to="https://adserver.adtech.de/" />
+	<rule from="^http://adserver\.adtech\.de/"
+		to="https://adserver.adtech.de/"/>
 
 </ruleset>
+

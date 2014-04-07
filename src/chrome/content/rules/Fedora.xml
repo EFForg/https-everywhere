@@ -1,92 +1,38 @@
 <!--
-	For problematic rules, see Fedora_Project-problematic.xml.
-
-
-	Other Fedora Project rulesets:
-
-		- Fedora_Hosted.org.xml
-
-
-	Nonfunctional domains:
-
-		- \w+.fedorapeople.org		(unique domain per person)
-
-		- fedoraproject.org subdomains:
-
-			- directory ¹
-			- infrastructure ²
-			- kojipkgs ²
-			- ols ³
-			- pki ¹
-			- planet ³
-			- publictest04 ³
-			- torrent ³
-
-	¹ Redirects to www.aeolusproject.org; mismatched, CN: *.aeolusproject.org
-	² Dropped
-	³ Refused
-
-
-	Problematic domains:
-
-		- pkgs.fedoraproject.org	(works, self-signed)
-		- koji.fedoraproject.org	(works mostly, self-signed)
-
-
-	Fully covered domains:
-
-		- fedoraproject.org subdomains:
-
-			- (www.)
-			- admin
-			- alt
-			- apps
-			- archives
-			- ask
-			- badges
-			- blogs
-			- boot
-			- dl
-			- docs
-			- download
-			- get
-			- join
-			- lists
-			- meetbot
-			- mirrors
-			- paste
-			- retrace
-			- spins
-			- start
-			- talk		
+	For rules causing false/broken MCB, see Fedora-falsemixed.xml.
 
 
 	Mixed content:
 
-		- css on start from ^ ¹
+		- css on start from ^ *
+		- Images on start from ^ *
+		- Images on start from www *
 
-		- Images, on:
+	* Secured by us.
 
-			- badges from infrastructure ²
-			- badges from cdn.libravatar.org ³
-			- start from ^ ³
-			- start from www ³
 
-	¹ Secured by us, seems to affect printing only
-	² Unsecurable, doesn't trip MCB
-	³ Secured by us
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
 
 -->
 <ruleset name="Fedora Project">
 
+	<target host="fedorahosted.org" />
+	<target host="www.fedorahosted.org" />
 	<target host="fedoraproject.org" />
 	<target host="*.fedoraproject.org" />
+		<!--
+			Causes false/broken MCB:
+							-->
+		<exclusion pattern="^http://start\.fedoraproject\." />
 
+	<rule from="^http://(www\.)?fedorahosted\.org/"
+		to="https://fedorahosted.org/" />
 
-	<securecookie host="^(?:.*\.)?fedoraproject\.org$" name=".+" />
+	<rule from="^http://fedoraproject\.org/"
+		to="https://fedoraproject.org/" />
 
-
-	<rule from="^http://((?:admin|alt|apps|archives|ask|badges|blogs|boot|dl|docs|download|get|join|lists|meetbot|mirrors|paste|retrace|spins|start|talk|www)\.)?fedoraproject\.org/"
-		to="https://$1fedoraproject.org/" />
+	<rule from="^http://(admin|alt|archives|blogs|boot|dl|docs|lists|mirrors|spins|start|talk|www)\.fedoraproject\.org/"
+		to="https://$1.fedoraproject.org/" />
 
 </ruleset>

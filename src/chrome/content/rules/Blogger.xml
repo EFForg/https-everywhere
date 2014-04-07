@@ -2,61 +2,49 @@
 	For other Google coverage, see GoogleServices.xml.
 
 
-	Nonfunctional domains:
-
-		- \w+.blogspot.be *
-		- \w+.blogspot.ca *
-		- \w+.blogspot.co.uk *
-		- \w+.blogspot.de *
-		- \w+.blogspot.fi *
-		- \w+.blogspot.fr *
-		- \w+.blogspot.nl *
-		- \w+.blogspot.no *
-		- \w+.blogspot.se *
-
-	* Mismatched, redirects to http
-
-
-	Partial due to blog posts redirecting to http.
-
 -->
 <ruleset name="Blogger (partial)">
 
-	<target host="blogblog.com" />
 	<target host="*.blogblog.com" />
-	<target host="blogger.co.uk" />
-	<target host="*.blogger.co.uk" />
 	<target host="blogger.com" />
 	<target host="*.blogger.com" />
-	<target host="blogspot.*" />
-	<target host="*.blogspot.be" />
-	<target host="*.blogspot.ca" />
+	<target host="blogger.co.uk" />
+	<target host="*.blogger.co.uk" />
+	<target host="blogspot.com" />
+	<target host="*.bp.blogspot.com" />
+	<target host="*.blogspot.com" />
 	<target host="blogspot.co.uk" />
 	<target host="*.blogspot.co.uk" />
-	<target host="*.blogspot.com" />
-	<target host="*.blogspot.de" />
-	<target host="*.blogspot.fi" />
-	<target host="*.blogspot.fr" />
-	<target host="*.blogspot.nl" />
-	<target host="*.blogspot.no" />
-	<target host="*.blogspot.se" />
 
 
-	<securecookie host="^www2?\.blogger\.com$" name=".+" />
+	<!--	comment-iframe.g uses cookies blogger_TID & S
+		Said path redirects to http
+
+		Possibly related:
+
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001201.html
+
+	<securecookie host="^www\.blogger\.com$" name=".*" /-->
 
 
-	<!--	img[12] works as-is now. Thanks Google!
-							-->
-	<rule from="^http://(img\d\.|www\.)?blogblog\.com/"
-		to="https://$1blogblog.com/" />
+	<!--	Works as-is now. Thanks Google!
+					-->
+	<rule from="^http://img([12])\.blogblog\.com/"
+		to="https://img$1.blogblog.com/" />
 
-	<rule from="^http://((?:buttons|help|photos1|www2?)\.)?blogger\.com/"
-		to="https://$1blogger.com/" />
+	<!--	dyn-css/authorization.css redirects to http.	-->
+	<rule from="^https?://(?:www\.)?blogger\.com/(buttons|img|static)/"
+		to="https://www.blogger.com/$1/" />
 
-	<rule from="^http://(?:\w+\.)?blog(?:ger|spot)\.[\w.]{2,5}/favicon\.ico"
+	<rule from="^https?://(?:\w+)\.blog(?:ger|spot)\.co(?:m|\.uk)/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico" />
 
-	<rule from="^http://(\d\.bp|bp\d)\.blogspot\.com/"
-		to="https://$1.blogspot.com/" />
+	<!--	- 1-4 in *.bp exist.
+		- All appear identical
+		- Cert: *.blogger.com
+		- Redirect to www.google.ccltd
+					-->
+	<rule from="^https?://[1-4]\.bp\.blogspot\.com/"
+		to="https://lh3.ggpht.com/" />
 
 </ruleset>

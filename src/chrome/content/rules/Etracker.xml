@@ -1,40 +1,14 @@
-<!--
-	Problematic domains:
-
-		- (www.)sedotracker.com		(mismatched)
-
-
-	code.etracker.com sets ist and _vm_u cookies
-	on whichever domain it is loaded from.
-
--->
 <ruleset name="etracker">
 
-	<target host="etracker.com" />
-	<target host="*.etracker.com" />
-	<target host="etracker.de" />
-	<target host="www.etracker.de" />
-	<target host="visitormotion.com" />
-	<target host="www.visitormotion.com" />
+	<target host="etracker.com"/>
+	<target host="*.etracker.com"/>
 
+	<securecookie host="^(.*\.)?etracker\.com$" name=".*"/>
 
-	<securecookie host="^(.*\.)?etracker\.(com|de)$" name=".*" />
+	<rule from="^http://etracker\.com/"
+		to="https://www.etracker.com/"/>
 
-
-	<!--	!www: cert mismatch.
-				-->
-	<rule from="^http://(?:www\.)?etracker\.(com|de)/"
-		to="https://www.etracker.$1/" />
-
-	<rule from="^http://(\w+)\.etracker\.(com|de)/"
-		to="https://$1.etracker.$2/" />
-
-	<rule from="^http://(?:www\.)?sedotracker\.com/"
-		to="https://www.etracker.de/" />
-
-	<!--	Cert mismatch.
-				-->
-	<rule from="^http://(?:www\.)?visitormotion\.com/"
-		to="https://www.visitormotion.com/" />
+	<rule from="^http://(\w+)\.etracker\.com/"
+		to="https://$1.etracker.com/"/>
 
 </ruleset>

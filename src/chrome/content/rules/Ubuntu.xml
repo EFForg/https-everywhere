@@ -1,119 +1,29 @@
 <!--
-	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
+    Other Ubuntu rulesets:
+
+        - Ubuntu_Forums.org.xml
 
 
-	Other Ubuntu rulesets:
+    Nonfunctional domains:
 
-		- Ubuntu_Forums.org.xml
-
-
-	Nonfunctional subdomains:
-
-		- (www.) ¹
-		- archive ²
-		- cdimage ²
-		- font			(http reply)
-		- irclogs		(shows irclogs.canonical.com; mismatched, CN: irclogs.canonical.com)
-		- kernel ¹
-		- loco ³
-		- manpages ¹
-		- odm ³
-		- old-releases ²
-		- packages ¹
-		- packages-import ¹
-		- people ¹
-		- planet		(prints "Page Unavailable"; mismatched, CN: certification.canonical.com)
-		- iso.qa ³
-		- testcases.qa		(redirects to http, self-signed)
-		- pad ²
-		- releases ²
-		- security ²
-		- status ²
-		- summit ²
-		- women ¹
-
-	¹ Dropped
-	² Refused
-	³ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com
-
-
-	Problematic subdomains:
-
-		- developer ¹
-		- shop	(mismatched, CN: shop.canonical.com)
-
-	¹ Mixed css from $self and assets
-
-
-	Partially covered subdomains:
-
-		- developer *
-
-	* Avoiding false/broken MCB, rest handled in -falsemixed.xml
-
-
-	Fully covered domains:
-
-		- ubuntu.com subdomains:
-
-			- apps
-			- assets
-			- cloud
-			- community
-			- myapps.developer
-			- fridge
-			- help
-			- lists
-			- login
-			- maas
-			- one
-			- patches
-			- pay
-			- jenkins.qa
-			- shop		(→ shop.canonical.com)
-			- uds
-			- uec-images
-			- wiki
-
-		- (www.)ubuntuone.com
-
-
-	Mixed content:
-
-		- css, on developer from:
-
-			- $self ¹
-			- assets ¹
-			- fonts.googleapis.com ¹
-
-		- Images on developer from $self ¹
-		- Images on help from pix.toile-libre.org *
-
-	¹ Secured by us
-	* Unsecurable, doesn't trip MCB
+        - cdimage.ubuntu.com
+        - pad.ubuntu.com
+        - summit.ubuntu.com
+        - (www.)ubuntu.com      (times out)
 
 -->
 <ruleset name="Ubuntu (partial)">
 
-	<target host="*.ubuntu.com" />
-		<!--
-			Avoid false/broken MCB:
-							-->
-		<exclusion pattern="^http://developer\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
-	<target host="ubuntuone.com" />
-	<target host="www.ubuntuone.com" />
+    <target host="*.ubuntu.com" />
+    <target host="ubuntuone.com" />
+    <target host="www.ubuntuone.com" />
 
 
-	<securecookie host="^(?:apps|login|pay|jenkins\.qa|wiki)\.ubuntu\.com$" name=".+" />
+    <rule from="^http://(cloud|help|uds|uec-images|wiki|one)\.ubuntu\.com/"
+        to="https://$1.ubuntu.com/" />
 
-
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|wiki)\.ubuntu\.com/"
-		to="https://$1.ubuntu.com/" />
-
-	<rule from="^http://shop\.ubuntu\.com/"
-		to="https://shop.canonical.com/" />
-
-	<rule from="^http://(www\.)?ubuntuone\.com/"
-		to="https://$1ubuntuone.com/" />
+    <rule from="^http://(www\.)?ubuntuone\.com/"
+        to="https://$1ubuntuone.com/" />
 
 </ruleset>
+

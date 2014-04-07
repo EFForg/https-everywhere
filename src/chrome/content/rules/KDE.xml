@@ -1,93 +1,16 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.) *
-		- akademy200[6-9] *
-		- api		(revoked)
-		- developer **
-		- docs *
-		- dolphin *
-		- downloads	(shows https://files, valid cert)
-		- edu *
-		- ev *
-		- events *
-		- jointhegame *
-		- l10n **
-		- manifesto *
-		- planet *
-		- rekonq *
-		- utils *
-		- websvn *
-		- wiki *
-
-	* Dropped
-	** Refused
-
-
-	Problematic subdomains:
-
-		- files		(some data differ)
-		- lists		(works, CN: localhost)
-		- reviewboard	(shows git.reviewboard; mismatched, CN: git.reviewboard.kde.org)
-
-
-	Partially covered subdomains:
-
-		- files
-		- userbase	(some pages redirect to http)
-
-
-	Fully covered subdomains:
-
-		- akademy201[023]
-		- amarok
-		- blogs
-
-		- bugs subdomains:
-
-			- ^
-			- admin
-			- sandbox
-
-		- cdn
-		- community
-		- conf
-		- dot
-		- forum
-		- identity
-		- mail
-		- nepomuk
-		- news
-		- projects
-		- reviewboard		(→ git.reviewboard)
-		- git.reviewboard
-		- season
-		- sprints
-		- sysadmin
-		- techbase
+		- developer
+		- www
 
 -->
 <ruleset name="KDE (partial)">
 
 	<target host="*.kde.org" />
-		<!--exclusion pattern="^http://(akademy200\d|api|developer|docs|dolphin|downloads|edu|ev|events|jointhegame|l10n|lists|manifesto|planet|rekonq|utils|websvn|wiki|www)\." /-->
-		<!--
-			Pages differ, various files 404:
-									-->
-		<!--exclusion pattern="^http://files\.kde\.org/+.+\.(btih|magnet|meta4|metalist|sha1|sha256|torrent)$" /-->
-		<exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gz|install|jpg|kml|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)|PKGBUILD)$" />
-		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
 
 
-	<!--securecookie host="^\.kde\.org$" name="^(incap_ses_\d+|visid_incap)_\d+$" /-->
-	<securecookie host="^(?!userbase\.).+\.kde\.org$" name=".+" />
-	<securecookie host="^userbase\.kde\.org$" name="^__utm\w+$" />
-
-
-	<rule from="^http://(akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
+	<rule from="^http://(blogs|bugs|mail)\.kde\.org/"
 		to="https://$1.kde.org/" />
-
-	<rule from="^http://(?:git\.)?reviewboard\.kde\.org/"
-		to="https://git.reviewboard.kde.org/" />
 
 </ruleset>

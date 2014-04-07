@@ -1,8 +1,8 @@
 <!--
 	CDN buckets:
 
-		- api-688261400.us-west-1.elb.amazonaws.com
 
+		- api-688261400.us-west-1.elb.amazonaws.com
 			- images.del.icio.us
 
 		- delicious.imgix.net
@@ -10,56 +10,12 @@
 
 	Problematic domains:
 
-		- d.me			(mismatched, CN: *.delicious.com)
-		- feeds.delicious.com *
-		- images.del.icio.us *
-
-	* Mismatched, CN: api.del.icio.us
+		- images.del.icio.us	(mismatch)
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- blog.delicious.com	(dropped)
-
-
-	Fully covered domains:
-
-		- d.me		(→ delicious.com)
-
-		- delicious.com subdomains:
-
-			- (www.)
-			- feeds		(→ api.del.icio.us)
-			- next
-			- previous
-
-		- d-static.com
-
-		- icio.us subdomains:
-
-			- (www.)	(→ delicious.com)
-			- api
-			- del		(→ delicious.com)
-			- images	(→ api)
-
-
-	Observed cookie domains:
-
-		- .previous.delicious.com
-		- .www.delicious.com
-		- .api.del.icio.us
-
-
-	Mixed content:
-
-		- Scripts, on:
-
-			- api.del.icio.us from feeds.delicious.com *
-			- api.del.icio.us from previous.delicious.com *
-
-		- Ads, on previous.delicious.com and www.delicious.com from api.mixbit.com *
-
-	* Secured by us
+		- blog
 
 -->
 <ruleset name="Delicious" platform="mixedcontent">
@@ -67,11 +23,13 @@
 	<target host="d.me" />
 	<target host="delicious.com" />
 	<target host="www.delicious.com" />
+	<!--	* for cross-domain cookie.	-->
 	<target host="*.www.delicious.com" />
 	<target host="d-static.com" />
 	<target host="icio.us" />
 	<target host="*.icio.us" />
 	<target host="api.del.icio.us" />
+	<!--	* for cross-domain cookie.	-->
 	<target host="*.api.del.icio.us" />
 
 
@@ -79,10 +37,15 @@
 	<securecookie host="^\.api\.del\.icio\.us$" name=".*" />
 
 
+	<!--	delicious.com's cert matches d.me, but d.me presents
+		a different cert for (www.)delicious.com only.
+
+		www.de.me doesn't exist.
+				-->
 	<rule from="^https?://d\.me/"
 		to="https://delicious.com/" />
 
-	<rule from="^http://((?:next|previous|www)\.)?delicious\.com/"
+	<rule from="^http://(www\.)?delicious\.com/"
 		to="https://$1delicious.com/" />
 
 	<rule from="^https?://(?:www\.|del\.)?icio\.us/"

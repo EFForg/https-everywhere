@@ -1,51 +1,41 @@
-<!--
-	For problematic rules, see ZeniMax-Media-mismatches.xml.
-
-
-	Other ZeniMax Media rulesets:
-
-		- Arkane-Studios.xml
-		- Bethsoft.com.xml
-		- Id-Software.xml
-
-
-	There's a bucket at s3.amazonaws.com/zenimax/
-
-	Possibly another bucket at zm-static.s3.amazonaws.com
+<!--	There's a bucket at https://s3.amazonaws.com/zenimax/
 
 
 	CDN buckets:
 
-		- d1z7bw3wiqzsm4.cloudfront.net
-			- static.zenimax.com
+		- d1ys1uetzexz61.cloudfront.net
+			- cdnstatic.bethsoft.com
+
+		- d1bjnur3wbumt5.cloudfront.net
+			- cdn.bethsoft.com
+
+		- d3o0v0yx1apq2.cloudfront.net
+			- content.bethsoft.com
 
 
-	Problematic domains:
+	Nonfunctional domains:
 
-		- (www.)bethblog.com *
-		- (www.)dishonored.com *
-		- (www.)elderscrolls.com *
-		- (www.)zenimax.com *
-		- jobs.zenimax.com *
-		- (www.)zenimaxonline.com *
-
-	* Mismatch, CN: *.bethsoft.com
-
-
-	Fully covered domains:
-
-		- static.zenimax.com
+		- geck.bethsoft.com	(shows login page)
 
 -->
-<ruleset name="ZeniMax Media (partial)">
+<ruleset name="ZeniMax Media (partial)" platform="mixedcontent">
 
-	<target host="cms.elderscrolls.com" />
-	<target host="static.zenimax.com" />
+	<target host="bethsoft.com"/>
+	<target host="*.bethsoft.com"/>
+		<exclusion pattern="^http://(?:geck|support)\."/>
 
+	<securecookie host="^(.*\.)?bethsoft\.com$" name=".*"/>
 
-	<!--	Protocol-relative links on forums.bethsoft.com:
-								-->
-	<rule from="^https?://static\.zenimax\.com/"
-		to="https://d1z7bw3wiqzsm4.cloudfront.net/" />
+	<rule from="^https?://cdn\.bethsoft\.com/"
+		to="https://d1bjnur3wbumt5.cloudfront.net/" />
+
+	<rule from="^https?://cdnstatic\.bethsoft\.com/"
+		to="https://d1ys1uetzexz61.cloudfront.net/" />
+
+	<rule from="^https?://content\.bethsoft\.com/"
+		to="https://d3o0v0yx1apq2.cloudfront.net/" />
+
+	<rule from="^http://(\w+\.)?bethsoft\.com/"
+		to="https://$1bethsoft.com/"/>
 
 </ruleset>

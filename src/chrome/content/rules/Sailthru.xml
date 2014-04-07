@@ -1,34 +1,26 @@
 <!--
-	CDN buckets:
-
-		- dyrkrau635c04.cloudfront.net
+	dyrkrau635c04.cloudfront.net
 
 -->
-<ruleset name="Sailthru">
+<ruleset name="Sailthru (partial)">
 
-	<target host="sailthru.com" />
-	<target host="*.sailthru.com" />
+	<target host="sailthru.com"/>
+	<target host="*.sailthru.com"/>
+		<exclusion pattern="^http://getstarted\."/>
 
+	<securecookie host="^my\.getstarted\.com$" name=".*"/>
 
-	<!--	Observed cookie domains:
-
-			- .getstarted
-			- my
-					-->
-
-	<securecookie host=".+\.sailthru\.com$" name=".+" />
-
-
-	<!--	Observed subdomains:
-
-			- ak
+	<!--	Observed domains:
 			- blog
 			- cb
 			- getstarted
 			- my
-			- www
-					-->
-	<rule from="^http://(\w+\.)?sailthru\.com/"
-		to="https://$1sailthru.com/" />
+			- www		-->
+	<rule from="^http://([^b]\w*\.)?sailthru\.com/"
+		to="https://$1sailthru.com/"/>
+
+	<!--	blog pages break via https	-->
+	<rule from="^http://blog\.sailthru\.com/wp-content/"
+		to="https://blog.sailthru.com/wp-content/"/>
 
 </ruleset>
