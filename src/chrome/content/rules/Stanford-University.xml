@@ -29,7 +29,6 @@
 		- startx		("not yet configured")
 		- store			($ redirects to http; at least some paths 404)
 		- theory		(shows Fedora test page, self-signed)
-		- www-cs-students	(shows xenon; mismatched, CN: xenon.stanford.edu)
 
 	** Refused
 
@@ -46,6 +45,7 @@
 		- soe			(refused)
 		- studentservicescenter **
 		- thestanfordchallenge	(works, mismatched, CN: ood-web1.stanford.edu)
+		- www-cs-students	(mismatched, CN: xenon.stanford.edu)
 		- www-ee		(mismatched, CN: ee.stanford.edu)
 
 
@@ -56,6 +56,7 @@
 	Partially covered subdomains:
 
 		- soe	(→ engineering, [^/?]+ 404s)
+		- www-cs-students ²	(→ xenon)
 		- xenon ²
 
 	² Personal dirs 404
@@ -146,7 +147,7 @@
 		<!--
 			Personal dirs 404
 					-->
-		<exclusion pattern="^http://xenon\.stanford\.edu/+~" />
+		<exclusion pattern="^http://(?:www-cs-students|xenon)\.stanford\.edu/+~" />
 
 
 	<!--securecookie host="^(\.cs|\.engineering)?\.stanford\.edu$" name=".+" /-->
@@ -185,5 +186,8 @@
 
 	<rule from="^http://studentservicescenter\.stanford\.edu/"
 		to="https://www.stanford.edu/group/studentservicescenter/" />
+
+	<rule from="^http://www-cs-students\.stanford\.edu/"
+		to="https://xenon.stanford.edu/" />
 
 </ruleset>
