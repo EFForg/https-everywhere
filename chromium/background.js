@@ -312,59 +312,18 @@ function onCookieChanged(changeInfo) {
       }
 
       // The cookie API is magical -- we must recreate the URL from the domain and path.
-      if (cookie.domain[0] == ".") {
-          cookie.url = "https://www" + cookie.domain + cookie.path;
+      if (changeInfo.cookie.domain[0] == ".") {
+          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-          cookie.url = "https://" + cookie.domain + cookie.path;
+          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie "+cookie.name+" for "+cookie.domain+", was secure="+changeInfo.cookie.secure);
+       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
-}
-
-// This event is needed due to the potential race between cookie permissions
-// update and cookie transmission (because the cookie API is non-blocking).
-// Without this function, an aggressive attacker could race to steal a not-yet-secured
-// cookie if they controlled & could redirect the user to a non-SSL subdomain.
-// WARNING: This is a very hot function.
-function onBeforeSendHeaders(details) {
-  // TODO: Verify this with wireshark
-  for (var h in details.requestHeaders) {
-    if (details.requestHeaders[h].name == "Cookie") {
-      // Per RFC 6265, Chrome sends only ONE cookie header, period.
-      var uri = new URI(details.url);
-      var host = uri.hostname();
-
-      var newCookies = [];
-      var cookies = details.requestHeaders[h].value.split(";");
-
-      for (var c in cookies) {
-        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:host, name:cookies[c].split("=")[0]};
-        // XXX I have no idea whether the knownHttp parameter should be true
-        // or false here.  We're supposedly inside a race condition or
-        // something, right?
-        var ruleset = all_rules.shouldSecureCookie(fake, false);
-        if (ruleset) {
-          activeRulesets.addRulesetToTab(details.tabId, ruleset);
-          log(INFO, "Woah, we lost the race on updating a cookie: "+details.requestHeaders[h].value);
-        } else {
-          newCookies.push(cookies[c]);
-        }
-      }
-      details.requestHeaders[h].value = newCookies.join(";");
-      log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
-
-      // We've seen the one cookie header, so let's get out of here!
-      break;
-    }
-  }
-
-  return {requestHeaders:details.requestHeaders};
 }
 
 function onBeforeRedirect(details) {
@@ -381,11 +340,6 @@ function onBeforeRedirect(details) {
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
-
-// This watches cookies sent via HTTP.
-// We do *not* watch HTTPS cookies -- they're already being sent over HTTPS -- yay!
-wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
-                                   ["requestHeaders", "blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
@@ -412,8 +366,7 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
     });
 });
 
-// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
-// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
 function disableSwitchPlannerFor(tabId) {
