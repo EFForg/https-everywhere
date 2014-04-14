@@ -1,18 +1,139 @@
-<ruleset name="Verizon (broken)" platform="mixedcontent" default_off="redirects to HTTP">
-  <target host="www.verizon.com" />
-  <target host="www22.verizon.com" />
-  <target host="verizon.com" />
-  <target host="www.verizonwireless.com" />
-  <target host="verizonwireless.com" />
+<!--
+	Other Verizon rulesets:
 
-  <!-- Ugh horrible exclusion to work around Verizon security bugs
-  https://mail1.eff.org/pipermail/https-everywhere/2011-November/001237.html
-  https://mail1.eff.org/pipermail/https-everywhere-rules/2012-February/001003.html
-  -->
-  <exclusion pattern="^http://www22\.verizon\.com/secure/pages/viewbill/" />
-  <exclusion pattern="^http://www22\.verizon\.com/Foryourhome/MyAccount/Unprotected/" />
+		- Share_the_Network.xml
+		- Verizon_Enterprise.xml
+		- Verizon_Wireless.xml
 
-  <rule from="^http://(?:www\.)?verizon\.com/" to="https://www22.verizon.com/"/>
-  <rule from="^http://www22\.verizon\.com/" to="https://www22.verizon.com/"/>
-  <rule from="^http://(?:www\.)?verizonwireless\.com/" to="https://www.verizonwireless.com/"/>
+
+	CDN buckets:
+
+		- ak1s.abmr.net/is/www22.verizon.com
+		- vznews.convio.net
+
+		- wildcard.verizon.net.edgekey.net
+			- static-business.verizon.net
+
+		- ehg-verizon.hitbox.com
+		- vzw.jiwire.com
+
+		- vrzn.i.lithium.com
+
+		- vrzn.lithium.com
+			- forums.verizon.com
+			- businessforums.verizon.net
+
+
+	Nonfunctional domains:
+
+		- (www.)thinkfinity.org
+		- (www.)community.thinkfinity.org
+		- developer.verizon.com *
+		- foundation.verizon.com	(shows RHEL test page; self-signed, CN: ph1025101.bwi40g.vzbi.caas)
+		- mail.verizon.com *
+		- newscenter2.verizon.com	(no https)
+		- publicpolicy.verizon.com	(redirects to forums; mismatched, CN: responsibility.verizon.com)
+		- webmail.verizon.com *
+
+	* Times out.
+
+
+	Problematic domains:
+
+		- about.verizon.com		(works; self-signed, CN: vz-about-dev.com)
+		- entertainment.verizon.com	(some pages work, at least games/index.php 404s)
+		- searchresults.verizon.com	(works; mismatched, CN: entertainmentlogin.verizon.com)
+		- verizon.net *
+		- businessforums.verizon.net **
+		- verizonbusiness.com *
+
+	* Cert only matches www
+	** CN: secure02.lithium.com, works. Handled mostly in Lithium-clients.xml.
+
+
+	Partially covered domains:
+
+		- collaborateext.verizon.com ¹
+		- collaborateextstg.verizon.com ¹
+		- www22.verizon.com *
+		- www98.verizon.com ***
+		- business.verizon.net **
+		- (www.)verizonbusiness.com ***
+
+	¹ $ redirects to ...:449
+
+	* See: 
+		- https://mail1.eff.org/pipermail/https-everywhere/2011-November/001237.html
+		- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-February/001003.html
+
+	NB: Has this been fixed? It doesn't seem to loop...
+
+	* The login page, and only the login page(!), redirects to http.
+	*** Some (most?) pages redirect to http.
+
+
+	Fully covered domains:
+
+		- verizon.com subdomains:
+
+			- (www.)
+			- auth
+			- enterprisecenter
+			- entertainmentlogin
+			- espanol
+			- forums
+			- responsibility
+			- signin
+			- smallbusiness
+			- webmail
+
+		- (www.)verizon.net
+		- static-business.verizon.net
+
+-->
+<ruleset name="Verizon (partial)">
+
+	<target host="verizon.com" />
+	<target host="*.verizon.com" />
+		<exclusion pattern="^http://collaborateext(?:stg)?\.verizon\.com/(?:$|\?|aims/main/ext_index\.jsp)" />
+		<!--
+			investor/DocServlet 404s
+							-->
+		<exclusion pattern="^http://www22\.verizon\.com/(?:Foryourhome/MyAccount/Unprotected|investor/DocServlet|secure/pages/viewbill)/" />
+		<exclusion pattern="^http://www98\.verizon\.com/(?:$|\?)" />
+	<target host="verizon.net" />
+	<target host="*.verizon.net" />
+		<exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" />
+	<target host="verizonbusiness.com" />
+	<target host="www.verizonbusiness.com" />
+
+
+	<securecookie host="^(?:enterprisecenter|espanol|forums|responsibility|signin|smallbusiness|webmail)\.verizon\.com$" name=".+" />
+	<!--securecookie host="^\.verizon\.com$" name=".+" /-->
+	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
+	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
+	<!--securecookie host="^.*\.verizon\.net$" name=".+" /-->
+
+
+	<rule from="^http://(?:www(?:22)?\.)?verizon\.com/(?:$|\?.*)"
+		to="https://www22.verizon.com/home/verizonglobalhome/ghp_landing.aspx" />
+
+	<rule from="^http://(?:www(22|98)?\.)?verizon\.com/"
+		to="https://www$1.verizon.com/" />
+
+	<rule from="^http://(auth|collaborateext(?:stg)?|enterprisecenter|entertainmentlogin|espanol|forums|responsibility|smallbusiness|signon|webmail)\.verizon\.com/"
+		to="https://$1.verizon.com/" />
+
+	<rule from="^https?://(?:www\.)?verizon\.net/"
+		to="https://www.verizon.net/" />
+
+	<rule from="^http://(static-)?business\.verizon\.net/"
+		to="https://$1business.verizon.net/" />
+
+	<rule from="^https?://businessforums\.verizon\.net/html/"
+		to="https://forums.verizon.com/html/" />
+
+	<rule from="^https?://(?:www\.)?verizonbusiness\.com/(gfx|support/myaccount|templates)/"
+		to="https://www.verizonbusiness.com/$1/" />
+
 </ruleset>

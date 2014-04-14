@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ppmobileapps	(dropped)
+
+
+	Problematic subdomains:
+
+		- ^	(mismatched, CN: *.know-where.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some paths redirect to http)
+
+
+	Fully covered subdomains:
+
+		- dpmbapps
+		- dpmbappsqa
+		- images
+		- lwscomdtq8
+		- lwssvcs
+		- m
+		- mobileapps
+		- mobileimages
+		- pplwssvcs
+		- ppm
+		- ppmobileimages
+		- sadclwscom
+		- www[17]
+
+
+	Mixed images on m from www
+
+-->
+<ruleset name="Lowes.com (partial)">
+
+	<target host="ak1.abmr.net" />
+	<target host="lowes.com" />
+	<target host="*.lowes.com" />
+
+
+	<securecookie host="^(?:lwssvcs|m|pplwssvcs|ppm|www7)\.lowes\.com$" name=".+" />
+
+
+	<!--	This makes some images redirect to https:
+								-->
+	<rule from="^http://ak1\.abmr\.net/is/www\.lowes\.com\?"
+		to="https://ak1s.abmr.net/is/www.lowes.com?" />
+
+	<rule from="^http://(?:www\.)?lowes\.com/(css/|favicon\.ico|(?:espot/.+/)?images/|javascript/|pdf/|UserAccountLanding(?:$|\?|/)|wcstore/|webapp/)"
+		to="https://www.lowes.com/$1" />
+
+	<rule from="^http://(dpmbapps(?:qa)?|images|lwscomdtq8|(?:pp)?(?:lwssvcs|m|mobileimages)|mobileapps|sadclwscom|www[17])\.lowes\.com/"
+		to="https://$1.lowes.com/" />
+
+</ruleset>

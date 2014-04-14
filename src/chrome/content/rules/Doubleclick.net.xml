@@ -1,24 +1,94 @@
 <!--
-	if we are going to include ads and tracking info, lets atleast do it by https.
+	For other Google coverage, see GoogleServices.xml.
+
+
+	If we are going to include ads and tracking info, let's at least do it by https.
+
+
+	Problematic domains:
+
+		- doubleclick.com	(mismatched, CN: *.doubleclick.net)
+
+		- doubleclick.net subdomains:
+
+			- *.es *
+			- *.nl *
+			- *.no *
+
+	* Mismatched
+
+
+	Fully covered domains:
+
+		- (www.)doubleclick.com		(^ → www)
+
+		- *.doubleclick.net:
+
+			- ad
+			- ad-ace
+			- ad-apac
+			- ad-emea
+			- *.au
+			- *.de
+			- *.es		(→ *)
+			- fls
+
+			- *.fls:
+
+				- \d+
+
+			- *.fr
+
+			- *.g:
+
+				- cm
+				- feedads
+				- googleads
+				- securepubads
+				- stats
+				- survey
+
+			- *.jp
+			- *.mo
+			- *.nl		(→ *)
+			- *.no		(→ *)
+			- s[01]
+			- *.uk
+
+			- static
+
+		- www.googleadservices.com
+	
+
+	NB: If there's still any breakage *give details*.
+
 -->
-<ruleset name="Doubleclick.net (disabled)" default_off="breaks some news sites">
+<ruleset name="Doubleclick.net (testing)">
 
-	<target host="doubleclick.net"/>
-	<target host="*.doubleclick.net"/>
-	<target host="*.au.doubleclick.net"/>
-	<target host="*.g.doubleclick.net"/>
-	<target host="*.uk.doubleclick.net"/>
-	<target host="www.googleadservices.com"/>
+	<target host="doubleclick.com" />
+	<target host="www.doubleclick.com" />
+	<target host="doubleclick.net" />
+	<target host="*.doubleclick.net" />
+	<target host="www.googleadservices.com" />
 
-	<securecookie host="^\.doubleclick\.net$" name=".*"/>
+
+	<!--	name="^(id|test_cookie)$" /-->
+	<securecookie host="^\.doubleclick\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?doubleclick\.com/"
+		to="https://www.doubleclick.com/" />
 
 	<rule from="^http://doubleclick\.net/"
-		to="https://doubleclick.net/"/>
+		to="https://doubleclick.net/" />
 
-	<rule from="^http://([^/:@\.]+)(\.(au|g|uk))?\.doubleclick\.net/"
-		to="https://$1$2.doubleclick.net/"/>
+	<rule from="^http://([^/:@\.]+)\.(?:es|nl|no)\.doubleclick\.net/"
+		to="https://$1.doubleclick.net/" />
+
+	<rule from="^http://([^/:@\.]+)(\.(?:au|de|fls|fr|g|jp|mo|uk))?\.doubleclick\.net/"
+		to="https://$1$2.doubleclick.net/" />
 
 	<rule from="^http://www\.googleadservices\.com/"
-		to="https://www.googleadservices.com/"/>
+		to="https://www.googleadservices.com/" />
 
 </ruleset>

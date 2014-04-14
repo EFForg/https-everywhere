@@ -1,0 +1,61 @@
+<!--
+	For problematic rules, see Suddeutsche_Zeitung-problematic.xml.
+
+
+	Other Süddeutsche Zeitung rulesets:
+
+		- Suddeutsche_Zeitung_Tickets.xml
+
+
+	Nonfunctional domains:
+
+		- pixfinanzen.sueddeutsche.de	(times out)
+
+
+	Problematic domains:
+
+		- sueddeutsche.com		(cert only matches *.sueddeutsche.com)
+		- polpix.sueddeutsche.com	(times out)
+		- englisch.sueddeutsche.de	(works, mismatched, CN: www.gymglish.com)
+		- mediadaten.sueddeutsche.de	(mismatched, CN: www.rehmnetz.de)
+
+
+	Partially covered domains:
+
+		- (www.)sueddeutsche.de		(^ → www, some [most?] paths redirect to http)
+		- polpix.sueddeutsche.com	(→ www.sueddeutsche.de)
+
+
+	Fully covered sueddeutsche.de subdomains:
+
+		- anzeigen
+		- anzeigen-buchen
+		- epaper
+		- immobilienmarkt
+		- motormarkt
+		- service
+		- stellenmarkt
+		- sz-media
+		- sz-shop
+
+-->
+<ruleset name="Süddeutsche Zeitung (partial)">
+
+	<target host="polpix.sueddeutsche.com" />
+	<target host="sueddeutsche.de" />
+	<target host="*.sueddeutsche.de" />
+
+
+	<securecookie host="^(?:anzeigen-buchen|epaper|sz-media|sz-shop)\.sueddeutsche\.de$" name=".+" />
+
+
+	<rule from="^https?://(?:polpix\.sueddeutsche\.com|(?:www\.)?sueddeutsche\.de)/static_assets/"
+		to="https://www.sueddeutsche.de/static_assets/" />
+
+	<rule from="^http://(anzeigen(?:-buchen)?|epaper|(?:immobilien|motor|stellen)markt|service|sz-media|sz-shop)\.sueddeutsche\.de/"
+		to="https://$1.sueddeutsche.de/" />
+
+	<rule from="^https?://mediadaten.sueddeutsche.de/(?:home/)?(?:$|\?)"
+		to="https://sz-media.sueddeutsche.de/" />
+
+</ruleset>

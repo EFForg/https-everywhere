@@ -1,0 +1,37 @@
+<!--
+	CDN buckets:
+
+		- d3lid0uad1kwsj.cloudfront.net
+		- d3mapax0c3izpi.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- k30.kn3.net
+		- a03.t26.net
+		- a08.t26.net
+		- a19.t26.net
+
+
+	Problematic domains:
+
+		- o1.r26.net	(cert only matches l)
+		- i.t.net.ar	(mismatched, CN: l.r26.net)
+		- taringa.net	(cert only matches www)
+
+-->
+<ruleset name="Taringa (partial)">
+
+	<target host="*.r26.net" />
+	<target host="i.t.net.ar" />
+	<target host="taringa.net" />
+	<target host="www.taringa.net" />
+
+
+	<rule from="^http://(?:(?:l|o1)\.r26\.net|i\.t\.net\.ar)/"
+		to="https://l.r26.net/" />
+
+	<rule from="^https?://(?:www\.)?taringa.net/(login|recuperar-(?:clave|nick)|registro(?:-reenviar)?)($|\?|/)"
+		to="https://www.taringa.net/$1$2" />
+
+</ruleset>

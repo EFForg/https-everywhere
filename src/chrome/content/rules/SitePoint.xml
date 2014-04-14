@@ -1,0 +1,75 @@
+<!--
+	Other SitePoint rulesets:
+
+		- Earl.xml
+
+
+	CDN buckets:
+
+		- wac.41aa.edgecastcdn.net/??41AA/
+
+			- cdn
+
+
+	Nonfunctional domains:
+
+		- sitepoint.com subdomains:
+
+			- cdn		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+			- downtime *
+			- i2 *
+			- products *
+			- tools *
+
+		- (www.)sitepointstatic.com *
+		- 1.sitepointstatic.com *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- sitepoint.com subdomains:
+
+			- reference *
+			- xmas *
+
+		- (www.)sitepointmarket.com	(times out)
+
+	* Works; mismatched, CN: sitepoint.com
+
+
+	Partially covered domains:
+
+		- (www.)sitepoint.com
+
+			- Some pages redirect to http
+			- wp-content/ 404s
+
+
+	Fully covered domains:
+
+		- i2.sitepoint.com		(→ www)
+		- (www.)sitepointmarket.com	(→ flippa.com)
+
+-->
+<ruleset name="SitePoint (partial)">
+
+	<target host="sitepoint.com" />
+	<target host="*.sitepoint.com" />
+	<target host="sitepointmarket.com" />
+	<target host="www.sitepointmarket.com" />
+
+
+	<rule from="^http://(www\.)?sitepoint\.com/(bookstore|forums|images)/"
+		to="https://$1sitepoint.com/forums/" />
+
+	<rule from="^http://i2\.sitepoint\.com/"
+		to="https://www.sitepoint.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://(?:www\.)?sitepointmarket\.com/.*"
+		to="https://flippa.com/classifieds?spm=1" />
+
+</ruleset>

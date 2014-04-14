@@ -1,5 +1,19 @@
 <!--
-	For other Yahoo coverage, see YahooNew.xml.
+	For other Yahoo coverage, see Yahoo.xml.
+
+
+	Problematic domains:
+
+		- flickr.com subdomains:
+
+			- ^
+			- api
+			- code
+
+		- blog.flickr.net *
+		- code.flickr.net *	
+
+	* Mismatched, handled in WordPress-blogs.xml
 
 -->
 <ruleset name="Flickr (partial)">
@@ -7,30 +21,30 @@
 	<target host="flic.kr" />
 	<target host="flickr.com" />
 	<target host="*.flickr.com" />
-	<target host="*.static.flickr.com" />
+		<exclusion pattern="^http://api\.flickr.com/(?!services/)" />
 	<target host="*.staticflickr.com" />
 
 
-	<rule from="^https?://flic\.kr/f/"
-		to="https://secure.flickr.com/short_urls.gne?favorites=" />
+	<securecookie host=".*\.flickr\.com$" name=".+" />
 
-	<rule from="^https?://flic\.kr/p/"
-		to="https://secure.flickr.com/photo.gne?short=" />
 
-	<rule from="^https?://flic\.kr/ps/"
-		to="https://secure.flickr.com/short_urls.gne?photostream=" />
+	<rule from="^http://flic\.kr/f/"
+		to="https://www.flickr.com/short_urls.gne?favorites=" />
 
-	<rule from="^https?://flic\.kr/s/"
-		to="https://secure.flickr.com/short_urls.gne?photoset=" />
+	<rule from="^http://flic\.kr/p/"
+		to="https://www.flickr.com/photo.gne?short=" />
 
-	<rule from="^https?://(?:secure\.|www\.)?flickr\.com/"
-		to="https://secure.flickr.com/" />
+	<rule from="^http://flic\.kr/ps/"
+		to="https://www.flickr.com/short_urls.gne?photostream=" />
 
-	<rule from="^https?://api\.flickr\.com/services/"
-		to="https://api.flickr.com/services/" />
+	<rule from="^http://flic\.kr/s/"
+		to="https://www.flickr.com/short_urls.gne?photoset=" />
 
-	<rule from="^http://static\.flickr\.com/"
-		to="https://static.flickr.com/" />
+	<rule from="^http://(?:api\.|www\.)?flickr\.com/"
+		to="https://www.flickr.com/" />
+
+	<rule from="^http://s(ecure|tatic)\.flickr\.com/"
+		to="https://s$1.flickr.com/" />
 
 	<rule from="^http://farm(\d+)\.static(\.)?flickr\.com/"
 		to="https://farm$1.static$2flickr.com/" />

@@ -1,22 +1,57 @@
+<!--
+	Nonfunctional subdomains:
+
+		- visitor.r20 *
+		- visitor *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- blogs		(mismatched)
+		- ih		(akamai)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+		- blogs *
+		- developer	(→ www)
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- img.f2	(→ imgssl)
+		- ih		(→ origin.ih)
+		- origin.ih
+		- img		(→ imgssl)
+		- imgssl
+		- survey
+
+-->
 <ruleset name="Constant Contact (partial)">
 
-	<target host="constantcontact.com"/>
-	<target host="*.constantcontact.com"/>
+	<target host="constantcontact.com" />
+	<target host="*.constantcontact.com" />
+		<exclusion pattern="^http://blogs\.constantcontact\.com/(?!wp-admin(?:$|[?/])|wp-content/|wp-includes/|wp-login\.php)" />
 
 
-	<securecookie host="^community\.constantcontact\.com$" name=".*"/>
+	<securecookie host="^(?:community|origin\.ih|survey)\.constantcontact\.com$" name=".+" />
 
 
-	<rule from="^http://constantcontact\.com/"
-		to="https://constantcontact.com/"/>
+	<rule from="^http://((?:blogs|community|origin\.ih|survey)\.)?constantcontact\.com/"
+		to="https://$1constantcontact.com/" />
 
-	<rule from="^http://(?:developer|www)\.constantcontact\.com/(favicon\.ico|features/signup\.jsp|(?:global-(?:login|nav)|login|styles)\.jsp|_styles/|)"
-		to="https://www.constantcontact.com/$1"/>
+	<rule from="^http://(?:developer|www)\.constantcontact\.com/(favicon\.ico|features/signup\.jsp|(?:global-(?:login|nav)|login|styles)\.jsp|_styles/)"
+		to="https://www.constantcontact.com/$1" />
 
-	<rule from="^http://community\.constantcontact\.com/"
-		to="https://community.constantcontact.com/"/>
+	<rule from="^http://ih\.constantcontact\.com/"
+		to="https://origin.ih.constantcontact.com/" />
 
 	<rule from="^http://img(?:\.f2|ssl)?\.constantcontact\.com/"
-		to="https://imgssl.constantcontact.com/"/>
+		to="https://imgssl.constantcontact.com/" />
 
 </ruleset>

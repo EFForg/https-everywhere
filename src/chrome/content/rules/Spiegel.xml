@@ -1,0 +1,44 @@
+<!--
+	Other Spiegel Group rulesets:
+
+		- Spiegel-QC.xml
+
+
+	CDN buckets:
+
+		- cdn.spiegel.de.edgesuite.net
+
+			- cdn
+			- cdn[1-4]
+
+
+	Nonfunctional subdomains:
+
+		- forum
+		- tvprogramm
+		- wetter	(cert: plesk; shows default Parallels Plesk page)
+
+-->
+<ruleset name="Spiegel (partial)">
+
+	<target host="spiegel.de" />
+	<target host="*.spiegel.de" />
+
+
+	<securecookie host="^(?:count|shop)\.spiegel\.de$" name=".*" />
+
+
+	<!--	- Cert only matches www
+		- Unsupported paths redirect to http
+		- cdn\d?: Akamai
+				-->
+	<rule from="^http://(?:cdn\d?\.)?spiegel\.de/"
+		to="https://www.spiegel.de/" />
+
+	<rule from="^http://www\.spiegel\.de/(images/|img/|layout/|static/|staticgen/)"
+		to="https://www.spiegel.de/$1" />
+
+	<rule from="^http://(abo|count|shop|wissen)\.spiegel\.de/"
+		to="https://$1.spiegel.de/" />
+
+</ruleset>

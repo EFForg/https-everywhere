@@ -1,6 +1,47 @@
-<ruleset name="Foursquare.com">
-  <target host="foursquare.com" />
-  <target host="www.foursquare.com" />
+<!--
+	CDN buckets:
 
-  <rule from="^http://(?:www\.)?foursquare\.com/" to="https://foursquare.com/" />
+		- foursquare.wpengine.netdna-cdn.com
+
+			- blog.foursquare.com
+
+		- foursquareeng.wpengine.netdna-cdn.com
+
+			- engineering.foursquare.com
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- engineering *
+
+	* Redirects to http
+
+
+	Problematic subdomains:
+
+		- business	(works, mismatched, CN: *.sqarespace.com)
+		- redirect	(mismatched, CN: foursquare.com)
+		- support	(mismatched, CN: *.zendesk.com)
+
+-->
+<ruleset name="Foursquare.com (partial)">
+
+	<target host="*.4sqi.net" />
+	<target host="foursquare.com" />
+	<target host="*.foursquare.com" />
+
+
+	<securecookie host="^(?:.*\.)?foursquare\.com$" name=".+" />
+
+
+	<rule from="^http://(is\d|ss[01l])\.4sqi\.net/"
+		to="https://$1.4sqi.net/" />
+
+	<rule from="^http://((?:api|de|developer|es|fr|id|it|ja|ko|lv|pt|ru|th|tr|translate|www)\.)?foursquare\.com/"
+		to="https://$1foursquare.com/" />
+
+	<rule from="^https?://support\.foursquare\.com/generated/"
+		to="https://generated.zendesk.com/generated/" />
+
 </ruleset>

@@ -1,0 +1,57 @@
+<!--
+	CDN buckets:
+
+		- 487998493.r.cdn77.net
+
+			- c1.popads.net
+
+		- 780499803.r.cdn77.net
+
+			- world.popadscdn.net
+
+		- c2popadsadcode.popads.netdna-cdn.com
+
+			- c2.popads.net
+
+
+	Problematic domains:
+
+		- c1.popads.net		(works, CN: *.r.worldssl.net)
+		- c2.popads.net		(404, CN: *.netdna-ssl.com)
+		- world.popadscdn.net	(400, CN: *.r.worldssl.net)
+
+
+	Fully covered domains:
+
+		- popads.net subdomains:
+
+			- (www.)
+			- blog
+			- c[12]		(→ static)
+			- serve
+			- static
+			- world
+
+		- world.popadscdn.net	(→ www.popads.net)
+
+-->
+<ruleset name="PopAds">
+
+	<target host="popads.net" />
+	<target host="*.popads.net" />
+	<target host="world.popadscdn.net" />
+
+
+	<securecookie host=".*\.popads\.net$" name=".+" />
+
+
+	<rule from="^http://((?:blog|serve|static|world|www)\.)?popads\.net/"
+		to="https://$1popads.net/" />
+
+	<rule from="^http://c[12]\.popads\.net/"
+		to="https://static.popads.net/" />
+
+	<rule from="^http://world\.popadscdn\.net/"
+		to="https://www.popads.net/" />
+
+</ruleset>

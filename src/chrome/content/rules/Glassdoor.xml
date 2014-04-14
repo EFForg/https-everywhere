@@ -1,0 +1,45 @@
+<!--
+	Problematic domains:
+
+		- glassdoor.ca *
+		- ads.glassdoor.com	(cloudfront)
+		- glassdoor.com.au *
+		- glassdoor.co.in *
+		- glassdoor.co.uk *
+
+	* Mismatched, CN: *.glassdoor.com
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+-->
+<ruleset name="Glassdoor (partial)">
+
+	<target host="glassdoor.com" />
+	<target host="*.glassdoor.com" />
+		<exclusion pattern="^http://(?:www\.)?glassdoor\.c(?:a|om|om\.au|o\.in|o\.uk)/(?!images/|profile/)" />
+	<target host="glassdoor.com.au" />
+	<target host="*.glassdoor.com.au" />
+	<target host="glassdoor.co.*" />
+	<target host="*.glassdoor.co.in" />
+	<target host="*.glassdoor.co.uk" />
+
+
+	<securecookie host="^static\.glassdoor\.com$" name=".+" />
+
+
+	<rule from="^http://(media\.|static\.|www\.)?glassdoor\.com/"
+		to="https://$1glassdoor.com/" />
+
+	<rule from="^https?://ads\.glassdoor\.com/"
+		to="https://d3uryx0fdgatve.cloudfront.net/" />
+
+	<rule from="^https?://glassdoor\.c(a|om\.au|o\.in|o\.uk)/"
+		to="https://www.glassdoor.c$1/" />
+
+	<rule from="^http://(static|www)\.glassdoor\.c(a|om\.au|o\.in|o\.uk)/"
+		to="https://$1.glassdoor.c$2/" />
+
+</ruleset>

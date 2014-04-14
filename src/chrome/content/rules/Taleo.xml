@@ -10,7 +10,7 @@
 	<target host="*.taleo.com"/>
 	<target host="taleo.net"/>
 	<target host="*.taleo.net"/>
-	<target host="staticiad.tbe.taleo.net"/>
+	<target host="*.tbe.taleo.net"/>
 
 
 	<!--	encountered cookies:
@@ -20,14 +20,22 @@
 				- ^tbe
 				- ^staticiad.tbe	-->
 	<securecookie host="^www\.taleo\.com$" name=".*"/>
+	<securecookie host="^(?:.+\.)?tbe\.taleo\.net$" name=".+" />
 
 
 	<!--	cert is not valid for www nor net	-->
 	<rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
 		to="https://www.taleo.com/"/>
 
-	<!--	domain for clients	-->
-	<rule from="^http://(staticiad\.)?tbe\.taleo\.net/"
+	<!--	domain for clients
+
+		Observed subdomains:
+
+			- ch
+			- staticiad
+			- staticord
+					-->
+	<rule from="^http://(\w+\.)?tbe\.taleo\.net/"
 		to="https://$1tbe.taleo.net/"/>
 
 	<!--	times out over https.  This redirection
