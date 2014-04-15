@@ -88,9 +88,12 @@ ChannelReplacement.prototype = {
 // By removing this flag, we allow Flash to see the "originalURI" attirubte of newChan,
 // which contains the HTTP (non-HTTPS) URL that Flash requested before HTTPS-Everywhere
 // redirected the channel.
-// 
+// XXX: May have unintended side effects. Needs more investigation.
+//
 //    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
     
+    newChan.loadFlags = loadFlags;
+
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
     
