@@ -398,9 +398,10 @@ wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 // Add the small HTTPS Everywhere icon in the address bar.
 // Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
-// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
+// pageActions on URL change.
+// TODO: "complete" may be needed due to icon disappearing on Debian/Chrome 34, maybe?
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (changeInfo.status === "loading") {
+    if (changeInfo.status === "loading" || changeInfo.status === "complete") {
         chrome.pageAction.show(tabId);
     }
 });
