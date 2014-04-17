@@ -412,7 +412,7 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
         if(typeof(tab) === "undefined") {
             log(DBUG, "Not a real tab. Skipping showing pageAction.");
         } else {
-            chrome.pageAction.show(tabId);
+            chrome.pageAction.show(addedTabId);
         }
     });
 });
