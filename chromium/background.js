@@ -40,21 +40,6 @@ for (r in rs) {
 }
 */
 
-// Add the HTTPS Everywhere icon to the URL address bar.
-// TODO: Switch from pageAction to browserAction?
-function displayPageAction(tabId) {
-  if (tabId !== -1) {
-    chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) === "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction.");
-      }
-      else {
-        chrome.pageAction.show(tabId);
-      }
-    });
-  }
-}
-
 
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
