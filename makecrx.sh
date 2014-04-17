@@ -79,9 +79,8 @@ do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-python ./utils/merge-rulesets.py
+. ./utils/merge-rulesets.sh || exit 1
 
-export RULESETS=chrome/content/rules/default.rulesets
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
 echo 'var rule_list = [' > pkg/crx/rule_list.js

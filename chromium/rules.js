@@ -119,6 +119,21 @@ RuleSets.prototype = {
     }
   },
 
+  addUserRule : function(params) {
+    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
+    var new_rule_set = new RuleSet(params.host, null, true, "user rule");
+    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    new_rule_set.rules.push(new_rule);
+    if (!(params.host in this.targets)) {
+      this.targets[params.host] = [];
+    }
+    ruleCache.remove(params.host);
+    // TODO: maybe promote this rule?
+    this.targets[params.host].push(new_rule_set);
+    log(INFO, 'done adding rule');
+    return true;
+  },
+
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
