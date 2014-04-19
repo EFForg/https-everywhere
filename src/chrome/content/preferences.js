@@ -10,7 +10,7 @@ https_everywhere = CC["@eff.org/https-everywhere;1"]
   .getService(Components.interfaces.nsISupports)
   .wrappedJSObject;
 
-rulesets = Array.slice(https_everywhere.https_rules.rulesets);
+rulesets = [];
 
 const id_prefix = "he_enable";
 const pref_prefix = "extensions.https_everywhere.";
@@ -149,7 +149,9 @@ function compareRules(a, b, col) {
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
-  
+  https_everywhere.https_rules.loadAllRulesets();
+  rulesets = Array.slice(https_everywhere.https_rules.rulesets);
+
   // GLOBAL VARIABLE!
   treeView = {
     rules: rulesets,
