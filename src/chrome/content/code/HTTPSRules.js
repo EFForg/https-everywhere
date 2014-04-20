@@ -264,12 +264,13 @@ const RuleWriter = {
   },
 
   write: function(file, data) {
-    if (!file.exists())
-      return null;
+    //if (!file.exists())
+    //  return null;
+    this.log(WARN, "Opening " + file.path + "for writing");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-output-stream;1"]
         .createInstance(CI.nsIFileOutputStream);
-    fstream.init(file, -1, 0, 0);
+    fstream.init(file, -1, -1, 0);
 
     fstream.write(data, data.length);
     fstream.close();

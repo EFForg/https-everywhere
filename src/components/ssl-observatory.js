@@ -134,7 +134,8 @@ function SSLObservatory() {
 
   this.testProxySettings();
 
-  this.updateCertWhitelist();
+  //this.updateCertWhitelist();
+  this.loadCertWhitelist();
 
   this.log(DBUG, "Loaded observatory component!");
 }
