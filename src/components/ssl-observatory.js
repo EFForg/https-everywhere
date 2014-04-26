@@ -149,6 +149,7 @@ function SSLObservatory() {
 
   //this.updateCertWhitelist();
   this.loadCertWhitelist();
+  this.saveCertWhitelist();
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -545,7 +546,10 @@ SSLObservatory.prototype = {
     var file =
       CC["@mozilla.org/file/local;1"]
       .createInstance(CI.nsILocalFile);
-    file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
+    var path = this.HTTPSEverywhere.rw.chromeToPath(loc);
+    this.log(WARN,"SAVING cert whitelist to " + path);
+    file.initWithPath(path);
+    this.log(WARN,"got " + file);
     var data = this.HTTPSEverywhere.rw.write(file, JSON.stringify(this.whitelist));
   },
 
@@ -580,7 +584,7 @@ SSLObservatory.prototype = {
         that.log(4, "Replacing chain whitelist...");
         that.whitelist = whitelist;
         that.log(5, "Got valid whitelist..." + JSON.stringify(whitelist));
-        that.saveCertWhitelist();
+        that.updateCertWhitelist();
       } else {
         that.log(4, "Unexpected response status " + req.status + " fetching chain whitelist");
         return false;
