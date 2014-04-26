@@ -27,6 +27,12 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; there might be something
+  # better (vmtouch? readahead?) that tells the IO subsystem to read the files
+  # in whatever order it wants...
+  nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
   ./makexpi.sh $1 --no-recurse || exit 1
@@ -47,6 +53,10 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   rm -rf $SUBDIR
   exit 0
 fi
+
+# Same optimisation
+nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+
 
 # =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales
