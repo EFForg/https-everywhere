@@ -54,7 +54,8 @@ else
   exit 1
 fi
 
-if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
+command -v xmllint > /dev/null
+if [ "$?" -eq 0 -a -f utils/relaxng.xml ] >&2
 then
   # Use find and xargs to avoid "too many args" error on Mac OS X
   if find src/chrome/content/rules/ -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml

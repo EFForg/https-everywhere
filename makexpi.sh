@@ -80,7 +80,8 @@ if [ "$1" != "--fast" ] ; then
     exit 1
   fi
 
-  if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
+  command -v xmllint > /dev/null
+  if [ "$?" -eq 0 -a -f utils/relaxng.xml ] >&2
   then
     if find src/chrome/content/rules -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
     then
@@ -137,7 +138,7 @@ rm -f "../$XPI_NAME"
 ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
-if [ "$ret" != 0 ]; then
+if [ "$ret" -ne 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
