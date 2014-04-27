@@ -63,9 +63,7 @@ nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
 
 if [ "$1" != "--fast" ] ; then
   if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -f trivial-validate.py ] ; then
-    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -x utils/trivial-validate ] ; then
     # This case probably never happens
     VALIDATE=./utils/trivial-validate
@@ -110,7 +108,7 @@ fi
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
   echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py src/chrome/content/rules
+  ./utils/make-sqlite.py src/chrome/content/rules
 fi
 
 # The name/version of the XPI we're building comes from src/install.rdf
@@ -136,7 +134,7 @@ cd src
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
-python2.7 ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
 if [ "$ret" != 0 ]; then
