@@ -37,12 +37,12 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 echo "Building chrome version" $VERSION
 
 if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+  VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
 elif [ -x utils/trivial-validate ] ; then
   # This case probably never happens
-	VALIDATE=./utils/trivial-validate
+  VALIDATE=./utils/trivial-validate
 else
-	VALIDATE=./trivial-validate
+  VALIDATE=./trivial-validate
 fi
 
 if $VALIDATE src/chrome/content/rules >&2

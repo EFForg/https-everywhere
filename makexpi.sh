@@ -21,12 +21,12 @@ RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 # If the command line argument is a tag name, check that out and build it
 if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
-	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
-	SUBDIR=checkout
-	[ -d $SUBDIR ] || mkdir $SUBDIR
-	cp -r -f -a .git $SUBDIR
-	cd $SUBDIR
-	git reset --hard "$1"
+  BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
+  SUBDIR=checkout
+  [ -d $SUBDIR ] || mkdir $SUBDIR
+  cp -r -f -a .git $SUBDIR
+  cd $SUBDIR
+  git reset --hard "$1"
   # This is an optimization to get the OS reading the rulesets into RAM ASAP;
   # it's useful on machines with slow disk seek times; there might be something
   # better (vmtouch? readahead?) that tells the IO subsystem to read the files
@@ -42,7 +42,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-	XPI_NAME="$APP_NAME-$1.xpi"
+  XPI_NAME="$APP_NAME-$1.xpi"
   # In this mad recursive situation, sometimes old buggy build scripts make
   # the xpi as ./pkg :(
   if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
@@ -116,9 +116,9 @@ fi
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
-	XPI_NAME="$XPI_NAME.xpi"
+  XPI_NAME="$XPI_NAME.xpi"
 else
-	XPI_NAME="$XPI_NAME~pre.xpi"
+  XPI_NAME="$XPI_NAME~pre.xpi"
 fi
 
 [ -d pkg ] || mkdir pkg
@@ -127,7 +127,7 @@ fi
 GIT_OBJECT_FILE=".git/refs/heads/master"
 export GIT_COMMIT_ID="HEAD"
 if [ -e "$GIT_OBJECT_FILE" ]; then
-	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
+  export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
 cd src
