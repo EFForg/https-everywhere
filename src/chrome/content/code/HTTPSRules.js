@@ -564,6 +564,18 @@ const HTTPSRules = {
         intoList.push(fromList[i]);
   },
 
+  loadAllRulesets: function() {
+    for (var host in this.targets) {
+      var ruleset_ids = this.targets[host];
+      for (var i = 0; i < ruleset_ids.length; i++) {
+        var id = ruleset_ids[i];
+        if (!this.rulesetsByID[id]) {
+          this.loadRulesetById(id);
+        }
+      }
+    }
+  },
+
   // Load a ruleset by numeric id, e.g. 234
   // NOTE: This call runs synchronously, which can lock up the browser UI. Is
   // there any way to fix that, given that we need to run blocking in the request
