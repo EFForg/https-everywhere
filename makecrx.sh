@@ -118,7 +118,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has shasum: `sha1sum "$cwd/$zip"`"
+echo >&2 "Unsigned package has shasum: `openssl dgst -sha1 "$cwd/$zip" | cut -d ' ' -f 2`"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"
