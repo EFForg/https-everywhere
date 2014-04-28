@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- dimrh7ecexr02.cloudfront.net
+
+			- cdn
+
+
+	At least some pages redirect to http.
+
+-->
+<ruleset name="Komoona.com (partial)">
+
+	<target host="komoona.com" />
+	<target host="*.komoona.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.komoona\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.komoona\.com/+(?!favicon\.ico|new/css/|new/images/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(a|stat)\.komoona\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:a|stat)\.komoona\.com$" name=".+" />
+
+
+	<rule from="^http://((?:a|admin|stat|www)\.)?komoona\.com/"
+		to="https://$1komoona.com/" />
+
+	<rule from="^http://cdn\.komoona\.com/"
+		to="https://dimrh7ecexr02.cloudfront.net/" />
+
+</ruleset>
