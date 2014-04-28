@@ -1,0 +1,65 @@
+<!--
+	Nonfunctional subdomains:
+
+		- air ¹
+		- ariel ²
+		- www.cosp ³
+		- ariel.ctu ³
+		- fastutil.di ⁴
+		- lsr.di ⁵
+		- www.docucity ³
+		- www.bpe.europresse.com.pros.lib ⁶
+		- opac ³
+		- portalevideo ³
+		- riviste ⁶
+		- www.sba ³
+		- unimia ³
+		- (www.)vespa ³
+		- eng.vespa ³
+		- www.veterinaria ³
+		- www.vetesc ⁶
+
+	¹ http reply
+	² Interrupted
+	³ Refused
+	⁴ Shows lsr.di; mismatched, CN: lsr.di.unimi.it
+	⁵ Data differ, valid cert
+	⁶ Dropped
+
+
+	^: cert only matches www
+
+-->
+<ruleset name="Unimi.it (partial)">
+
+	<target host="unimi.it" />
+	<target host="*.unimi.it" />
+		<!--exclusion pattern="^http://(ariel|www\.cosp|ariel\.ctu|lsr\.di|www\.docucity|www\.bpe\.europresse\.com\.pros\.lib|opac|portalevideo|riviste|www\.sba|unimia|vespa|(eng|www)\.vespa|www\.veterinaria|www\.vetesc)\.unimi\.it/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.unimi\.it/+($|\?|cataloghi/divsi/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.unimi\.it/+(?!css/|img/|registrazione/registra\.keb|registrazione/riepilogo\.keb)" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^securemail\.unimi\.it$" name="^(JROUTE|securemail)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^securemail\.unimi\.it$" name="^iwc-auth$" /-->
+
+	<securecookie host="^securemail\.unimi\.it$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?unimi\.it/(?=css/|img/|registrazione/\w+\.keb)"
+		to="https://www.unimi.it/" />
+
+	<rule from="^http://(cas|www\.elearning|securemail)\.unimi\.it/"
+		to="https://$1.unimi.it/" />
+
+</ruleset>
