@@ -68,4 +68,5 @@ for fi in nomes_all():
         c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id));
 
 conn.commit()
+conn.execute("VACUUM")
 conn.close()
