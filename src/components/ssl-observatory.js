@@ -60,7 +60,6 @@ const INCLUDE = function(name) {
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
-INCLUDE('X509ChainWhitelist');
 INCLUDE('NSS');
 
 function SSLObservatory() {
@@ -616,11 +615,11 @@ SSLObservatory.prototype = {
   },
 
   isChainWhitelisted: function(chainhash) {
-    if (X509ChainWhitelist == null) {
+    if (this.whitelist == null) {
       this.log(WARN, "Could not find whitelist of popular certificate chains, so ignoring whitelist");
       return false;
     }
-    if (X509ChainWhitelist[chainhash] != null) {
+    if (this.whitelist[chainhash] != null) {
       return true;
     }
     return false;
