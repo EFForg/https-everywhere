@@ -266,13 +266,13 @@ const RuleWriter = {
   write: function(file, data) {
     //if (!file.exists())
     //  return null;
-    this.log(WARN, "Opening " + file.path + " for writing");
+    this.log(DBUG, "Opening " + file.path + " for writing");
     var fstream = CC["@mozilla.org/network/file-output-stream;1"]
         .createInstance(CI.nsIFileOutputStream);
     fstream.init(file, -1, -1, 0);
 
     var retval = fstream.write(data, data.length);
-    this.log(WARN, "Got retval " + retval);
+    this.log(DBUG, "Got retval " + retval);
     fstream.close();
     return data;
   },

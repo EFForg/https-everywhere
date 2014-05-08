@@ -602,9 +602,9 @@ SSLObservatory.prototype = {
           that.log(WARN, "Invalid chain whitelist of size " + c);
           return false;
         }
-        that.log(NOTE, "Replacing chain whitelist...");
+        that.log(WARN, "Routine update of SSL Observatory cert whitelist");
         that.whitelist = whitelist;
-        that.log(WARN, "Got valid whitelist..." + JSON.stringify(whitelist));
+        that.log(NOTE, "Got valid whitelist..." + JSON.stringify(whitelist));
         that.saveCertWhitelist();
       } else {
         that.log(NOTE, "Unexpected response status " + req.status + " fetching chain whitelist");
