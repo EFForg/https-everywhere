@@ -147,9 +147,8 @@ function SSLObservatory() {
 
   this.testProxySettings();
 
-  //this.updateCertWhitelist();
   this.loadCertWhitelist();
-  this.saveCertWhitelist();
+  this.maybeUpdateCertWhitelist();
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -554,8 +553,22 @@ SSLObservatory.prototype = {
   },
 
 
-  updateCertWhitelist: function() {
-        var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+  maybeUpdateCertWhitelist: function() {
+    var due_pref = "extensions.https_everywhere._observatory.whitelist_update_due";
+    var update_due = this.prefs.getIntPref(due_pref);
+    var now = Date.now() / 1000; // Date.now() is milliseconds, but let's be
+                                 // safe with int pref storage on 32 bit
+                                 // systems
+    var next = now + (1 + 2 * Math.random()) * 3600 * 24;  // 1-3 days from now
+    if (last_updated == 0) {
+       // first run
+       this.prefs.setIntPref(due_pref,next);
+       return null;
+    }
+    if (now <= update_due) {
+      return null;
+    }
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
 
     req.open("GET", "https://s.eff.org/files/X509ChainWhitelist.json", true);
@@ -565,7 +578,7 @@ SSLObservatory.prototype = {
     req.onreadystatechange = function() {
       if (req.status == 200) {
         if (typeof req.response != "object") {
-          that.log(5, "INSUFFICIENT WHITELIST OBJECTIVITY");
+          that.log(WARN, "INSUFFICIENT WHITELIST OBJECTIVITY");
           return false;
         }
         var whitelist = req.response;
@@ -573,20 +586,21 @@ SSLObservatory.prototype = {
         for (var hash in whitelist) {
           c++;
           if (typeof hash != "string" || hash.length != 64 ) {
-            that.log(5, "UNACCEPTABLE WHITELIST HASH " + hash);
+            that.log(WARN, "UNACCEPTABLE WHITELIST HASH " + hash);
             return false;
           }
         }
         if (c < MIN_WHITELIST || c > MAX_WHITELIST) {
-          that.log(5, "Invalid chain whitelist of size " + c);
+          that.log(WARN, "Invalid chain whitelist of size " + c);
           return false;
         }
-        that.log(4, "Replacing chain whitelist...");
+        that.log(NOTE, "Replacing chain whitelist...");
         that.whitelist = whitelist;
-        that.log(5, "Got valid whitelist..." + JSON.stringify(whitelist));
-        that.updateCertWhitelist();
+        that.log(WARN, "Got valid whitelist..." + JSON.stringify(whitelist));
+        that.saveCertWhitelist();
+        that.prefs.setIntPref(due_pref,next);
       } else {
-        that.log(4, "Unexpected response status " + req.status + " fetching chain whitelist");
+        that.log(NOTE, "Unexpected response status " + req.status + " fetching chain whitelist");
         return false;
       }
     }
