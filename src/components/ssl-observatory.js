@@ -417,6 +417,9 @@ SSLObservatory.prototype = {
     if (!certchain) {
       return;
     }
+
+    this.maybeUpdateCertWhitelist();
+
     var host_ip = "-1";
     var httpchannelinternal = channel.QueryInterface(Ci.nsIHttpChannelInternal);
     try {
@@ -546,9 +549,8 @@ SSLObservatory.prototype = {
       CC["@mozilla.org/file/local;1"]
       .createInstance(CI.nsILocalFile);
     var path = this.HTTPSEverywhere.rw.chromeToPath(loc);
-    this.log(WARN,"SAVING cert whitelist to " + path);
+    this.log(NOTE,"SAVING cert whitelist to " + path);
     file.initWithPath(path);
-    this.log(WARN,"got " + file);
     var data = this.HTTPSEverywhere.rw.write(file, JSON.stringify(this.whitelist));
   },
 
@@ -560,7 +562,7 @@ SSLObservatory.prototype = {
                                  // safe with int pref storage on 32 bit
                                  // systems
     var next = now + (1 + 2 * Math.random()) * 3600 * 24;  // 1-3 days from now
-    if (last_updated == 0) {
+    if (update_due == 0) {
        // first run
        this.prefs.setIntPref(due_pref,next);
        return null;
@@ -568,6 +570,12 @@ SSLObservatory.prototype = {
     if (now <= update_due) {
       return null;
     }
+
+    // Updating the certlist might yet fail.  But that's okay, we can
+    // always live with a slightly older one.
+    this.prefs.setIntPref(due_pref,next);
+    this.log(INFO, "Next whitelist update due at " + next);
+
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
 
@@ -598,7 +606,6 @@ SSLObservatory.prototype = {
         that.whitelist = whitelist;
         that.log(WARN, "Got valid whitelist..." + JSON.stringify(whitelist));
         that.saveCertWhitelist();
-        that.prefs.setIntPref(due_pref,next);
       } else {
         that.log(NOTE, "Unexpected response status " + req.status + " fetching chain whitelist");
         return false;
