@@ -108,8 +108,6 @@ function SSLObservatory() {
   // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
 
-  this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
       .getService(Components.interfaces.nsIPrefBranchInternal);
   var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
@@ -782,9 +780,9 @@ SSLObservatory.prototype = {
     if (this.myGetBoolPref("testing")) {
       reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
-      reqParams.push("fplist="+this.compatJSON.encode(c.fps));
+      reqParams.push("fplist="+JSON.stringify(c.fps));
     }
-    reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
+    reqParams.push("certlist="+JSON.stringify(base64Certs));
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
