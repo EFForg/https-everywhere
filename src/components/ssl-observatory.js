@@ -612,7 +612,7 @@ SSLObservatory.prototype = {
     }
 
     if (this.whitelist[chainhash] != null) {
-      this.log(NOTE, "whitelist entry for " + chainhash);
+      this.log(INFO, "whitelist entry for " + chainhash);
       return true;
     }
     return false;
