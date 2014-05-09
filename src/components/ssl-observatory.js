@@ -442,19 +442,17 @@ SSLObservatory.prototype = {
 
     if(!this.myGetBoolPref("use_whitelist")) {
       this.log(WARN, "Not using whitelist to filter cert chains.");
-    }
-    else if (this.isChainWhitelisted(chain_hash)) {
-      this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+    } else if (this.isChainWhitelisted(chain_hash)) {
+      this.log(INFO, "This cert chain is whitelisted. Not submitting. ");
       return;
-    }
-    else {
-      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+    } else {
+      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission");
     }
 
     if (channel.URI.port == -1) {
-        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false);
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
     } else {
-        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false);
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
     }
   },
 
@@ -531,9 +529,7 @@ SSLObservatory.prototype = {
 
   loadCertWhitelist: function() {
     var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
-    var file =
-      CC["@mozilla.org/file/local;1"]
-      .createInstance(CI.nsILocalFile);
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
     file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
     var data = this.HTTPSEverywhere.rw.read(file);
     this.whitelist = JSON.parse(data);
@@ -542,13 +538,12 @@ SSLObservatory.prototype = {
 
   saveCertWhitelist: function() {
     var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
-    var file =
-      CC["@mozilla.org/file/local;1"]
-      .createInstance(CI.nsILocalFile);
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
     var path = this.HTTPSEverywhere.rw.chromeToPath(loc);
     this.log(NOTE,"SAVING cert whitelist to " + path);
     file.initWithPath(path);
-    var data = this.HTTPSEverywhere.rw.write(file, JSON.stringify(this.whitelist));
+    var store = JSON.stringify(this.whitelist, null, " ");
+    var data = this.HTTPSEverywhere.rw.write(file, store);
   },
 
 
@@ -561,12 +556,10 @@ SSLObservatory.prototype = {
     var next = now + (1 + 2 * Math.random()) * 3600 * 24;  // 1-3 days from now
     if (update_due == 0) {
        // first run
-       this.prefs.setIntPref(due_pref,next);
-       return null;
+       this.prefs.setIntPref(due_pref, next);
+       return;
     }
-    if (now <= update_due) {
-      return null;
-    }
+    if (now < update_due) return;
 
     // Updating the certlist might yet fail.  But that's okay, we can
     // always live with a slightly older one.
@@ -615,9 +608,11 @@ SSLObservatory.prototype = {
   isChainWhitelisted: function(chainhash) {
     if (this.whitelist == null) {
       this.log(WARN, "Could not find whitelist of popular certificate chains, so ignoring whitelist");
-      return false;
+      return null;
     }
+
     if (this.whitelist[chainhash] != null) {
+      this.log(NOTE, "whitelist entry for " + chainhash);
       return true;
     }
     return false;
@@ -742,7 +737,7 @@ SSLObservatory.prototype = {
     return true;
   },
 
-  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting) {
+  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting, chain_hash) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
@@ -759,7 +754,7 @@ SSLObservatory.prototype = {
       if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
         if (!(c.fps[0] in this.delayed_submissions)) {
           this.log(WARN, "Planning to retry submission...");
-          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
+          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true, chain_hash); };
           this.delayed_submissions[c.fps[0]] = retry;
         }
       return;
@@ -829,7 +824,7 @@ SSLObservatory.prototype = {
         that.log(DBUG, "Popping one off of outstanding requests, current num is: "+that.current_outstanding_requests);
 
         if (req.status == 200) {
-          that.log(INFO, "Successful cert submission");
+          that.log(NOTE, "Successful cert submission for " + domain + " " + chain_hash);
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
             if (c.fps[0] in that.already_submitted)
               delete that.already_submitted[c.fps[0]];
@@ -856,7 +851,7 @@ SSLObservatory.prototype = {
           if (c.fps[0] in that.already_submitted)
             delete that.already_submitted[c.fps[0]];
           try {
-            that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
+            that.log(WARN, "Cert submission failure "+req.status+ " for " + domain + ": "+req.responseText);
           } catch(e) {
             that.log(WARN, "Cert submission failure and exception: "+e);
           }
@@ -865,7 +860,7 @@ SSLObservatory.prototype = {
           if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
             if (!(c.fps[0] in that.delayed_submissions)) {
               that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
+              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true, chain_hash); };
               that.delayed_submissions[c.fps[0]] = retry;
             }
 
