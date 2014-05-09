@@ -753,13 +753,15 @@ SSLObservatory.prototype = {
             if (++n >= 2) break;
           }
         } else if (req.status == 403) {
-          that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
-          try {
-            var warningObj = JSON.parse(req.responseText);
-            if (win) that.warnUser(warningObj, win, c.certArray[0]);
-          } catch(e) {
-            that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
-            that.log(WARN, req.responseText);
+          that.log(INFO, "The SSL Observatory has issued a warning about this certificate for " + domain);
+          if(!warning && that.prefs.getBoolPref("extensions.https_everywhere._observatory.show_cert_warning")) {
+            try {
+              var warningObj = JSON.parse(req.responseText);
+              if (win) that.warnUser(warningObj, win, c.certArray[0]);
+            } catch(e) {
+              that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
+              that.log(WARN, req.responseText);
+            }
           }
         } else {
           // Submission failed
