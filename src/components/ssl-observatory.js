@@ -546,8 +546,8 @@ SSLObservatory.prototype = {
     var data = this.HTTPSEverywhere.rw.write(file, store);
   },
 
-
   maybeUpdateCertWhitelist: function() {
+    // We aim to update the cert whitelist every 1-3 days
     var due_pref = "extensions.https_everywhere._observatory.whitelist_update_due";
     var update_due = this.prefs.getIntPref(due_pref);
     var now = Date.now() / 1000; // Date.now() is milliseconds, but let's be
@@ -566,6 +566,11 @@ SSLObservatory.prototype = {
     this.prefs.setIntPref(due_pref,next);
     this.log(INFO, "Next whitelist update due at " + next);
 
+    this.updateCertWhitelist();
+  },
+
+  updateCertWhitelist: function() {
+    // Fetch a new certificate whitelist by XHR and save it to disk
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
 
@@ -583,7 +588,7 @@ SSLObservatory.prototype = {
         var c = 0;
         for (var hash in whitelist) {
           c++;
-          if (typeof hash != "string" || hash.length != 64 ) {
+          if (typeof hash != "string" || hash.length != HASHLENGTH ) {
             that.log(WARN, "UNACCEPTABLE WHITELIST HASH " + hash);
             return false;
           }
@@ -602,7 +607,6 @@ SSLObservatory.prototype = {
       }
     }
     req.send();
-
   },
 
   isChainWhitelisted: function(chainhash) {
