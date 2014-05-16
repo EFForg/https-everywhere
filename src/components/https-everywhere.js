@@ -183,6 +183,7 @@ function HTTPSEverywhere() {
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
+  this.rw = RuleWriter;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
   this.browser_initialised = false; // the browser is completely loaded
