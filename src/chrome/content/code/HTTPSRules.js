@@ -241,11 +241,9 @@ const RuleWriter = {
     return rv;
   },
 
-  read: function(file, rule_store, ruleset_id) {
+  read: function(file) {
     if (!file.exists())
       return null;
-    if ((rule_store.targets == null) && (rule_store.targets != {}))
-      this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
         .createInstance(CI.nsIFileInputStream);
@@ -262,6 +260,28 @@ const RuleWriter = {
 
     sstream.close();
     fstream.close();
+    return data;
+  },
+
+  write: function(file, data) {
+    //if (!file.exists())
+    //  return null;
+    this.log(DBUG, "Opening " + file.path + " for writing");
+    var fstream = CC["@mozilla.org/network/file-output-stream;1"]
+        .createInstance(CI.nsIFileOutputStream);
+    fstream.init(file, -1, -1, 0);
+
+    var retval = fstream.write(data, data.length);
+    this.log(DBUG, "Got retval " + retval);
+    fstream.close();
+    return data;
+  },
+
+  rulesetFromFile: function(file, rule_store, ruleset_id) {
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
+      this.log(WARN, "TARGETS IS NULL");
+    var data = this.read(file);
+    if (!data) return null;
     return this.readFromString(data, rule_store, ruleset_id);
   },
 
@@ -368,8 +388,7 @@ const HTTPSRules = {
       this.scanRulefiles(rulefiles);
 
       // Initialize database connection.
-      var dbFile = FileUtils.getFile("ProfD",
-        ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
+      var dbFile = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite"));
       var rulesetDBConn = Services.storage.openDatabase(dbFile);
       this.queryForRuleset = rulesetDBConn.createStatement(
         "select contents from rulesets where id = :id");

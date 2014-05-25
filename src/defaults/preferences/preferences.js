@@ -40,5 +40,8 @@ pref("extensions.https_everywhere._observatory.alt_roots",false);
 pref("extensions.https_everywhere._observatory.self_signed",true);
 pref("extensions.https_everywhere._observatory.priv_dns",false);
 pref("extensions.https_everywhere._observatory.send_asn",true);
+pref("extensions.https_everywhere._observatory.show_cert_warning",true);
 pref("extensions.https_everywhere._observatory.use_whitelist",true);
 pref("extensions.https_everywhere._observatory.clean_config",false);
+
+pref("extensions.https_everywhere._observatory.whitelist_update_due",0);
