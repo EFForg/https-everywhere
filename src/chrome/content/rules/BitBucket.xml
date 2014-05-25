@@ -9,16 +9,17 @@
 		- s3.amazonaws.com/bitbucket-assetroot/
 		- dwz7u9t8u8usb.cloudfront.net
 
+		- bitbucket.statuspage.io
 
-	Nonfunctional subdomains:
-
-		- blog		(redirects to http, wpengine)
-		- status	(refused)
+			- status
 
 
 	Problematic subdomains:
 
 		- portix	(works; mismatched, CN: bitbucket.org)
+		- status ²
+
+	² Refused; mismatched, CN: *.statuspage.io
 
 -->
 <ruleset name="BitBucket (partial)">
@@ -30,7 +31,10 @@
 	<securecookie host="^\.?bitbucket\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?bitbucket\.org/"
+	<rule from="^http://(blog\.|www\.)?bitbucket\.org/"
 		to="https://$1bitbucket.org/" />
+
+	<rule from="^http://status\.bitbucket\.org/"
+		to="https://bitbucket.statuspage.io/" />
 
 </ruleset>
