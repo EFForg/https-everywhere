@@ -14,6 +14,8 @@ function toggleRuleLine(checkbox, ruleset) {
     localStorage[ruleset.name] = ruleset.active;
   } else {
     delete localStorage[ruleset.name];
+    // purge the name from the cache so that this unchecking is persistent.
+    backgroundPage.ruleCache.remove(ruleset.name);
   }
   // Now reload the selected tab of the current window.
   chrome.tabs.reload();
