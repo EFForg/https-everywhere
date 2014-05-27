@@ -18,37 +18,6 @@ More details about this specification can be found in the github gist:
 https://gist.github.com/redwire/2e1d8377ea58e43edb40
 Commentary can be read on the HTTPS Everywhere mailing list:
 https://lists.eff.org/pipermail/https-everywhere/2014-May/002069.html
-
-The following is an example of interacting with this program to build a JSON manifest.
-The hash and signature values do not need to use uppercase letters, and are not real hash
-or signature values.
-The program outputs the serialized update object so that it can be signed.
-Once all of the fields are collected, the full manifest is printed.
-
-$ python ruleset_update_manifest.py
-<type 'str'> hash: 537C641B4BBC15A542B9452D78626A4914C83DAB5844370CBC64949E6FE9C3A1
-<type 'int'> format_version: not an integer
-Error: not an integer could not be converted to type <type 'int'>
-<type 'int'> format_version: 1
-<type 'str'> db_signature: 2D2DD86DBBDCD715B86F797332B613C599BF685D8D171B908282FA90A506330F
-<type 'str'> source: https://eff.org/files/https-everywhere/ruleset.db
-<type 'str'> branch: stable
-<type 'float'> date: May 22nd
-Error: May 22nd could not be converted to type <type 'float'>
-<type 'float'> date: 20140522.01
-<type 'str'> changes: This is an example
-Serialized JSON for "update" object:
-{"hash": "537C641B4BBC15A542B9452D78626A4914C83DAB5844370CBC64949E6FE9C3A1", "format_version": 1, "db_signature":
-"2D2DD86DBBDCD715B86F797332B613C599BF685D8D171B908282FA90A506330F", "source":
-"https://eff.org/files/https-everywhere/ruleset.db", "branch": "stable", "date": 20140522.01, "changes": "This is an
-example"}
-<type 'str'> update_signature: 6C383E37B8B5997F487C3D947322142B8867CEFE6CE1EFD20FF130111CC4AF11
-Serialized JSON manifest:
-{"update_signature": "6C383E37B8B5997F487C3D947322142B8867CEFE6CE1EFD20FF130111CC4AF11", "update": {"hash":
-"537C641B4BBC15A542B9452D78626A4914C83DAB5844370CBC64949E6FE9C3A1", "format_version": 1, "db_signature":
-"2D2DD86DBBDCD715B86F797332B613C599BF685D8D171B908282FA90A506330F", "source":
-"https://eff.org/files/https-everywhere/ruleset.db", "branch": "stable", "date": 20140522.01, "changes": "This is an
-example"}}
 """
 
 import json
