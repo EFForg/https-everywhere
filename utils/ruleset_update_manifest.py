@@ -8,7 +8,6 @@
     "changes"        : <a short description of recent changes>,
     "format_version" : <ruleset database version>,
     "hash"           : <the hash of the db file>,
-    "db_signature"   : <the signature of the ruleset database>,
     "source"         : <the URL serving the updated ruleset db>
   },
   "update_signature" : <the signature of the serialized update object>
@@ -29,18 +28,17 @@ PYTHON_VERSION_3 = (3, 0)
 
 # Map the field name to the expected type.
 update_fields = {
-  "branch" : str,
-  "date" : float,
-  "changes" : str,
-  "format_version" : int,
-  "hash" : str,
-  "db_signature" : str,
-  "source" : str
+    "branch" : str,
+    "date" : float,
+    "changes" : str,
+    "format_version" : int,
+    "hash" : str,
+    "source" : str
 }
 
 # The update field will be inserted into the main JSON object
 main_fields = {
-  "update_signature" : str
+    "update_signature" : str
 }
 
 # We could use OptParse or argparse from python 2 and 3 respectively, but in order to print
