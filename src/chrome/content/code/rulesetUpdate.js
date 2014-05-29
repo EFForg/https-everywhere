@@ -63,7 +63,7 @@ RulesetUpdater.prototype = {
   conditionallyApplyUpdate: function(updateObj) {
     var validSignature = verifyUpdateSignature(
                            JSON.stringify(updateObj.update),
-                           convertToACString(updateObj.update_signature));
+                           updateObj.update_signature);
     if (!validSignature) {
       this.log(WARN, 'Validation of the update signature provided failed');
       return; // DO NOT continue past here
@@ -73,16 +73,16 @@ RulesetUpdater.prototype = {
     var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
-    var data = convertToACString(updateStr);
+    var data = convertString(updateStr, 'UTF-8');
     checkHash.init(checkHash.SHA1);
     checkHash.update(data, data.length);
     var hash = checkHash.finish(false);
-    return verifier.verifyData(hash, signature, convertToACString(RULESET_UPDATE_KEY));
+    return verifier.verifyData(hash, signature, RULESET_UPDATE_KEY);
   },
-  convertToACString: function(str) {
+  convertString: function(str, encoding) {
     var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
                       .createInstance(ci.nsIScriptableUnicodeConverter);
-    converter.charset = 'UTF-8';
+    converter.charset = encoding;
     var result = {}; // An out paramter used by converter.convertToByteArray.
     var data = converter.convertToByteArray(updateStr, result);
     return data;
