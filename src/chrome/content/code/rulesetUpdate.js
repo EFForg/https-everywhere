@@ -24,7 +24,20 @@ const RULESET_UPDATE_KEY = '';
  * This is the key used to set and obtain the date value of the most recently
  * downloaded ruleset release as a preference.
  */
-const UPDATE_PREF_DATE = 'ruleset_release_date';
+const UPDATE_PREF_DATE = 'extensions.https_everywhere.rulesets_last_updated';
+
+/* database file path
+ * This is the path to the database file containing the ruleset.
+ * The early implementation of this update mechanism will simply replace this file
+ * to apply an update.
+ */
+const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
+
+/* temporary database zipfile path
+ * The path to the temporary file used to store the contents of the downloaded
+ * ruleset database zipfile.
+ */
+const TMP_DBZIP_PATH = 'chrome://https-everywhere/content/rulesetdb.zip';
 
 /* RulesetUpdate
  * Provides the functionality of obtaining, verifying the authenticity of, and
@@ -48,9 +61,10 @@ RulesetUpdater.prototype = {
   log: function(level, msg) {
     https_everywhereLog(level, msg);  
   },
+
   fetchUpdate: function() {
     var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
-    xhr.open('get', this.manifestSrc, true);
+    xhr.open('GET', this.manifestSrc, true);
     xhr.onreadystatechange = function() {
       var status;
       var data;
@@ -66,6 +80,7 @@ RulesetUpdater.prototype = {
     };
     xhr.send();
   },
+
   conditionallyApplyUpdate: function(updateObj) {
     var validSignature = verifyUpdateSignature(
                            JSON.stringify(updateObj.update),
@@ -93,6 +108,7 @@ RulesetUpdater.prototype = {
     // Ask about this.
     HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
   },
+
   verifyUpdateSignature: function(updateStr, signature) {
     var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
@@ -103,6 +119,7 @@ RulesetUpdater.prototype = {
     var hash = checkHash.finish(false);
     return verifier.verifyData(hash, signature, RULESET_UPDATE_KEY);
   },
+
   convertString: function(str, encoding) {
     var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
                       .createInstance(ci.nsIScriptableUnicodeConverter);
@@ -111,19 +128,38 @@ RulesetUpdater.prototype = {
     var data = converter.convertToByteArray(updateStr, result);
     return data;
   },
+
   fetchRulesetDBFile: function(url, hash) {
     var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
-    xhr.open('get', url, true);
+    xhr.open('GET', url, true);
     xhr.onreadystatechange = function() {
-      var data;
       if (xhr.readyState === 4) { // complete
         if (xhr.status === 200) { // OK
-          // xhr.responseText contains the raw DB file zip content
-          // extract the data and the compute and compare hashes
-          // Finally, apply the update.
-          return; // temporary
+          this.storeDBFileZip(xhr.responseText);
+          this.extractTmpDBFile();
+          var newHash = this.computeTmpDBFileHash();
+          if (newHash === hash) {
+            this.applyNewRuleset();
+          }
         }
       }
     };
+    xhr.send();
+  },
+
+  storeDBFileZip: function(zipSource) {
+    return; // Temporary
+  },
+
+  extractTmpDBFile: function() {
+    return; // Temporary
+  },
+
+  computeTmpDBFileHash: function() {
+    return null; // Temporary
+  },
+
+  applyNewRuleset: function() {
+    return; // Temporary
   }
 };
