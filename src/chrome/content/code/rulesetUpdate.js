@@ -85,10 +85,12 @@ RulesetUpdater.prototype = {
     if (newVersion <= currentVersion) {
       return; // No new version to download.
     }
-    // Fetch the zipped DB file
-    // Unzip the DB file
-    // Check the hash of the file obtained matches the one in the updateObj
-    // Apply the changes
+    this.fetchRulesetDBFile(updateObj.update.source, updateObj.update.hash);
+    // Even if the hashes of the database file contents and the one provided don't match,
+    // the ruleset update preference should be updated so that this faulty release is
+    // not downloaded again.
+    // TODO
+    // Ask about this.
     HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
   },
   verifyUpdateSignature: function(updateStr, signature) {
@@ -108,5 +110,20 @@ RulesetUpdater.prototype = {
     var result = {}; // An out paramter used by converter.convertToByteArray.
     var data = converter.convertToByteArray(updateStr, result);
     return data;
+  },
+  fetchRulesetDBFile: function(url, hash) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', url, true);
+    xhr.onreadystatechange = function() {
+      var data;
+      if (xhr.readyState === 4) { // complete
+        if (xhr.status === 200) { // OK
+          // xhr.responseText contains the raw DB file zip content
+          // extract the data and the compute and compare hashes
+          // Finally, apply the update.
+          return; // temporary
+        }
+      }
+    };
   }
 };
