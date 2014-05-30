@@ -49,7 +49,7 @@ RulesetUpdater.prototype = {
     https_everywhereLog(level, msg);  
   },
   fetchUpdate: function() {
-    var xhr = new XMLHttpRequest();
+    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
     xhr.open('get', this.manifestSrc, true);
     xhr.onreadystatechange = function() {
       var status;
@@ -112,7 +112,7 @@ RulesetUpdater.prototype = {
     return data;
   },
   fetchRulesetDBFile: function(url, hash) {
-    var xhr = new XMLHttpRequest();
+    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
     xhr.open('get', url, true);
     xhr.onreadystatechange = function() {
       var data;
