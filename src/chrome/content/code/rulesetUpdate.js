@@ -20,6 +20,12 @@
 // Set this value.
 const RULESET_UPDATE_KEY = '';
 
+/* release date preference key
+ * This is the key used to set and obtain the date value of the most recently
+ * downloaded ruleset release as a preference.
+ */
+const UPDATE_PREF_DATE = 'ruleset_release_date';
+
 /* RulesetUpdate
  * Provides the functionality of obtaining, verifying the authenticity of, and
  * applying updates.
@@ -66,8 +72,24 @@ RulesetUpdater.prototype = {
                            updateObj.update_signature);
     if (!validSignature) {
       this.log(WARN, 'Validation of the update signature provided failed');
-      return; // DO NOT continue past here
+      return; // Not an authentic release!
     }
+    var newVersion = parseFloat(updateObj.update.date);
+    if (isNaN(newVersion)) {
+      this.log(WARN, 'date field in update JSON (' + updateObj.update.date + ') not valid format');
+      return; // Cannot determine whether update is new with invalid date field.
+    }
+    // TODO
+    // Make sure this is the correct way to persistently store this data.
+    var currentVersion = HTTPSEverywhere.instance.prefs.getFloatPref(UPDATE_PREF_DATE);
+    if (newVersion <= currentVersion) {
+      return; // No new version to download.
+    }
+    // Fetch the zipped DB file
+    // Unzip the DB file
+    // Check the hash of the file obtained matches the one in the updateObj
+    // Apply the changes
+    HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
   },
   verifyUpdateSignature: function(updateStr, signature) {
     var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
