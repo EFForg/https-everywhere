@@ -363,8 +363,9 @@ function onCookieChanged(changeInfo) {
 }
 
 function onBeforeRedirect(details) {
-    // Catch HTTPs -> HTTP redirect loops, ignoring about:blank, HTTPS 302s, etc.
-    if (details.redirectUrl.substring(0, 7) === "http://") {
+    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+    var prefix = details.redirectUrl.substring(0, 5);
+    if (prefix === "http:" || prefix === "https") {
         if (details.requestId in redirectCounter) {
             redirectCounter[details.requestId] += 1;
             log(DBUG, "Got redirect id "+details.requestId+
