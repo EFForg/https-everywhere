@@ -26,18 +26,14 @@ const RULESET_UPDATE_KEY = '';
  */
 const UPDATE_PREF_DATE = 'extensions.https_everywhere.rulesets_last_updated';
 
-/* database file path
- * This is the path to the database file containing the ruleset.
- * The early implementation of this update mechanism will simply replace this file
- * to apply an update.
- */
-const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
-
-/* temporary database zipfile path
+/* database file paths
  * The path to the temporary file used to store the contents of the downloaded
- * ruleset database zipfile.
+ * ruleset database zipfile and the extracted sqlite file, as well as the
+ * location of the sqlite database file used by the extension to load rules.
  */
 const TMP_DBZIP_PATH = 'chrome://https-everywhere/content/rulesetdb.zip';
+const TMP_DBFILE_PATH = 'chrome://https-everywhere/content/tmprulesetdb.sqlite';
+const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
 
 /* RulesetUpdate
  * Provides the functionality of obtaining, verifying the authenticity of, and
@@ -53,25 +49,20 @@ function RulesetUpdater(updateManifestSource) {
   this.manifestSrc = updateManifestSource;
 }
 
-/* Prototype functionality notes
- * verifyUpdateSignature 
- *   The hash can be initialized to use MD2, MD5, SHA1, SHA256, SHA384, or SHA512
- */
 RulesetUpdater.prototype = {
   log: function(level, msg) {
     https_everywhereLog(level, msg);  
   },
 
+  /* Should be periodically called to check for a new update to the extension's ruleset library.
+   */
   fetchUpdate: function() {
     var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
     xhr.open('GET', this.manifestSrc, true);
     xhr.onreadystatechange = function() {
-      var status;
-      var data;
       if (xhr.readyState === 4) { // complete
-        status = xhr.status;
-        if (status === 200) { // OK
-          data = JSON.parse(xhr.responseText);
+        if (xhr.status === 200) { // OK
+          var data = JSON.parse(xhr.responseText);
           this.conditionallyApplyUpdate(data);
         } else {
           this.log(WARN, 'Could not fetch update manifest at ' + this.manifestSrc);
@@ -81,6 +72,10 @@ RulesetUpdater.prototype = {
     xhr.send();
   },
 
+  /* Verifies the signature on the updateObj.update and then issues a request that
+   * will fetch and test the hash on the newly released ruleset database file.
+   * updateObj - The JSON manifest of the update information for the ruleset update.
+   */
   conditionallyApplyUpdate: function(updateObj) {
     var validSignature = verifyUpdateSignature(
                            JSON.stringify(updateObj.update),
@@ -94,8 +89,6 @@ RulesetUpdater.prototype = {
       this.log(WARN, 'date field in update JSON (' + updateObj.update.date + ') not valid format');
       return; // Cannot determine whether update is new with invalid date field.
     }
-    // TODO
-    // Make sure this is the correct way to persistently store this data.
     var currentVersion = HTTPSEverywhere.instance.prefs.getFloatPref(UPDATE_PREF_DATE);
     if (newVersion <= currentVersion) {
       return; // No new version to download.
@@ -109,6 +102,12 @@ RulesetUpdater.prototype = {
     HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
   },
 
+ /* Tests using the hardcoded RULESET_UPDATE_KEY that the signature of the update object
+  * validates and that the update is thus authentic.
+  * The hash can be initialized to use MD2, MD5, SHA1, SHA256, SHA384, or SHA512
+  * updateStr - The stringified update object from the update manifest.
+  * signature - The signature over the update object provided by the update manifest.
+  */
   verifyUpdateSignature: function(updateStr, signature) {
     var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
@@ -120,6 +119,10 @@ RulesetUpdater.prototype = {
     return verifier.verifyData(hash, signature, RULESET_UPDATE_KEY);
   },
 
+ /* Convert a regular string into a ByteArray with a given encoding (such as UTF-8).
+  * str      - The standard javascript string to convert.
+  * encoding - The encoding to use as a string, such as 'UTF-8'.
+  */
   convertString: function(str, encoding) {
     var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
                       .createInstance(ci.nsIScriptableUnicodeConverter);
@@ -129,6 +132,11 @@ RulesetUpdater.prototype = {
     return data;
   },
 
+ /* Issues a request to download a new, zipped ruleset database file and then determines whether
+  * its hash matches the one provided in the verified update manifest before applying the changes.
+  * url  - The full URL to fetch the file from, MUST be using HTTPS!
+  * hash - The hash of the database file provided by the update manifest verified previously.
+  */
   fetchRulesetDBFile: function(url, hash) {
     var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
     xhr.open('GET', url, true);
@@ -147,18 +155,28 @@ RulesetUpdater.prototype = {
     xhr.send();
   },
 
+ /* Stores the zipped database file contents to a local file to be extracted from.
+  * zipSource - The raw zip file contents to store in TMP_DBZIP_PATH (see const def).
+  */
   storeDBFileZip: function(zipSource) {
     return; // Temporary
   },
 
+ /* Extracts the zipped database file stored at TMP_DBZIP_PATH into TMP_DBFILE_PATH.
+  */
   extractTmpDBFile: function() {
     return; // Temporary
   },
 
+ /* Computes the hash of the database file stored at TMP_DBFILE_PATH.
+  */
   computeTmpDBFileHash: function() {
     return null; // Temporary
   },
 
+ /* Applies the new ruleset database file by replacing the old one and reinitializing 
+  * the mapping of targets to applicable rules.
+  */
   applyNewRuleset: function() {
     return; // Temporary
   }
