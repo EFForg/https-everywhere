@@ -41,12 +41,9 @@ const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
  * updateManifestSource - the URL from which the update.json file is fetched.
  *                        e.g. https://eff.org/files/https-everywhere/update.json
  */
-// TODO
-// Move class instances into only the functions they are needed in.
-// Leave them here for a reference for now.
 function RulesetUpdater(updateManifestSource) {
-  this.unzip = Cc['@mozilla.org/libjar/zip-reader;1'].createInstance(Ci.nsIZipReader);
   this.manifestSrc = updateManifestSource;
+  this.HTTPSEverywhere = Cc['@eff.org/https-everywhere;1'].getService(Ci.nsISupports).wrappedJSObject;
 }
 
 RulesetUpdater.prototype = {
@@ -112,7 +109,7 @@ RulesetUpdater.prototype = {
     var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
-    var data = convertString(updateStr, 'UTF-8');
+    var data = this.convertString(updateStr, 'UTF-8');
     checkHash.init(checkHash.SHA1);
     checkHash.update(data, data.length);
     var hash = checkHash.finish(false);
@@ -159,25 +156,51 @@ RulesetUpdater.prototype = {
   * zipSource - The raw zip file contents to store in TMP_DBZIP_PATH (see const def).
   */
   storeDBFileZip: function(zipSource) {
-    return; // Temporary
+    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBZIP_PATH);
+    file.initWithPath(path);
+    this.HTTPSEverywhere.rw.write(file, zipSource);
   },
 
  /* Extracts the zipped database file stored at TMP_DBZIP_PATH into TMP_DBFILE_PATH.
   */
   extractTmpDBFile: function() {
-    return; // Temporary
+    var zipr = Cc['@mozilla.org/libjar/zip-reader;1'].createInstance(Ci.nsIZipReader);
+    var infile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    var outfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    var inPath = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBZIP_PATH);
+    var outPath = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
+    infile.initWithPath(inPath);
+    outfile.initWithPath(outPath);
+    zipr.open(infile);
+    zipr.extract(outPath, outfile);
+    zipr.close();
   },
 
  /* Computes the hash of the database file stored at TMP_DBFILE_PATH.
   */
   computeTmpDBFileHash: function() {
-    return null; // Temporary
+    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    var hash = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
+    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
+    hash.init(hash.SHA1);
+    file.initWithPath(path);
+    var content = this.convertString(this.HTTPSEverywhere.rw.read(file), 'UTF-8');
+    hash.update(content, content.length);
+    var dbfHash = hash.finish(false);
+    return dbfHash;
   },
 
  /* Applies the new ruleset database file by replacing the old one and reinitializing 
   * the mapping of targets to applicable rules.
   */
   applyNewRuleset: function() {
-    return; // Temporary
+    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
+    var dbfileParts = RULESET_DBFILE_PATH.split('/');
+    var dbFileName = dbfileParts[dbfileParts.length - 1];
+    file.initWithPath(path);
+    file.renameTo(null, dbFileName);
+    HTTPSRules.init();
   }
 };
