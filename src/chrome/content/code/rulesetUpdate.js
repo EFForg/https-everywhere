@@ -26,6 +26,12 @@ const RULESET_UPDATE_KEY = '';
  */
 const UPDATE_PREF_DATE = 'extensions.https_everywhere.rulesets_last_updated';
 
+/* extension release type preference
+ * This is the key to the preference that states the release type of the client,
+ * such as "development" or "stable" for dev and stable releases respectively.
+ */
+const RELEASE_TYPE_PREF = 'extensions.https_everywhere.release_type';
+
 /* database file paths
  * The path to the temporary file used to store the contents of the downloaded
  * ruleset database zipfile and the extracted sqlite file, as well as the
@@ -86,9 +92,16 @@ RulesetUpdater.prototype = {
       this.log(WARN, 'date field in update JSON (' + updateObj.update.date + ') not valid format');
       return; // Cannot determine whether update is new with invalid date field.
     }
+    // TODO
+    // Make sure this is the right way to access preferences even with
+    // this.HTTPSEverywhere existing.
     var currentVersion = HTTPSEverywhere.instance.prefs.getFloatPref(UPDATE_PREF_DATE);
+    var releaseType = HTTPSEverywhere.instance.prefs.getStringPref(RELEASE_TYPE_PREF);
     if (newVersion <= currentVersion) {
       return; // No new version to download.
+    }
+    if (updateObj.update.branch !== releaseType) {
+      return; // Incorrect release type.
     }
     this.fetchRulesetDBFile(updateObj.update.source, updateObj.update.hash);
     // Even if the hashes of the database file contents and the one provided don't match,
