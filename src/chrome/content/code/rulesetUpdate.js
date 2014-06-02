@@ -74,7 +74,7 @@ RulesetUpdater.prototype = {
    * updateObj - The JSON manifest of the update information for the ruleset update.
    */
   conditionallyApplyUpdate: function(updateObj) {
-    var validSignature = verifyUpdateSignature(
+    var validSignature = this.verifyUpdateSignature(
                            JSON.stringify(updateObj.update),
                            updateObj.update_signature);
     if (!validSignature) {
