@@ -95,9 +95,10 @@ RulesetUpdater.prototype = {
     // TODO
     // Make sure this is the right way to access preferences even with
     // this.HTTPSEverywhere existing.
-    var currentVersion = HTTPSEverywhere.instance.prefs.getFloatPref(UPDATE_PREF_DATE);
-    var releaseType = HTTPSEverywhere.instance.prefs.getStringPref(RELEASE_TYPE_PREF);
-    if (newVersion <= currentVersion) {
+    // Preferencs can only be stored as ints, strings, and bools, parse float from a string.
+    var currentVersion = parseFloat(HTTPSEverywhere.instance.prefs.getCharPref(UPDATE_PREF_DATE));
+    var releaseType = HTTPSEverywhere.instance.prefs.getCharPref(RELEASE_TYPE_PREF);
+    if (!isNaN(currentVersion) && newVersion <= currentVersion) {
       return; // No new version to download.
     }
     if (updateObj.update.branch !== releaseType) {
