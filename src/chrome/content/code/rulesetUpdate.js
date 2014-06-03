@@ -32,6 +32,12 @@ const UPDATE_PREF_DATE = 'extensions.https_everywhere.rulesets_last_updated';
  */
 const RELEASE_TYPE_PREF = 'extensions.https_everywhere.release_type';
 
+/* database format version preference
+ * This is the key to the preference that details the format version of the
+ * ruleset database supported by the user's version of the extension.
+ */
+const DB_FORMAT_PREF = 'extensions.https_everywhere.database_format_version';
+
 /* database file paths
  * The path to the temporary file used to store the contents of the downloaded
  * ruleset database zipfile and the extracted sqlite file, as well as the
@@ -92,24 +98,16 @@ RulesetUpdater.prototype = {
       this.log(WARN, 'date field in update JSON (' + updateObj.update.date + ') not valid format');
       return; // Cannot determine whether update is new with invalid date field.
     }
-    // TODO
-    // Make sure this is the right way to access preferences even with
-    // this.HTTPSEverywhere existing.
-    // Preferencs can only be stored as ints, strings, and bools, parse float from a string.
-    var currentVersion = parseFloat(HTTPSEverywhere.instance.prefs.getCharPref(UPDATE_PREF_DATE));
-    var releaseType = HTTPSEverywhere.instance.prefs.getCharPref(RELEASE_TYPE_PREF);
-    if (!isNaN(currentVersion) && newVersion <= currentVersion) {
-      return; // No new version to download.
-    }
-    if (updateObj.update.branch !== releaseType) {
-      return; // Incorrect release type.
+    if (!this.checkVersionRequirements(
+           newVersion,
+           updateObj.update.branch,
+           updateObj.update.format_version)) {
+      this.log(NOTE, 'Downloaded an update manifest for an unsupported ruleset library.');
+      return; 
     }
     this.fetchRulesetDBFile(updateObj.update.source, updateObj.update.hash);
-    // Even if the hashes of the database file contents and the one provided don't match,
-    // the ruleset update preference should be updated so that this faulty release is
-    // not downloaded again.
     // TODO
-    // Ask about this.
+    // Is this the right thing to do?
     HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
   },
 
@@ -141,6 +139,27 @@ RulesetUpdater.prototype = {
     var result = {}; // An out paramter used by converter.convertToByteArray.
     var data = converter.convertToByteArray(updateStr, result);
     return data;
+  },
+
+ /* Check to make sure that the version of the release is new, the branch the ruleset
+  * library applies to is the same one the extension was released for, and that the
+  * format of the database is supported- all by investigating the relevant preferences.
+  * version  - The release version of the ruleset DB.
+  * branch   - The branch name of the build of the extension the update is for.
+  * dbformat - The integer format version that the new ruleset DB uses.
+  */
+  // TODO
+  // Make sure this is the right way to access preferences even with
+  // this.HTTPSEverywhere existing.
+  checkVersionRequirements: function(version, branch, dbformat) {
+    // Preferencs can only be stored as ints, strings, and bools, parse float from a string.
+    var currentVersion = parseFloat(HTTPSEverywhere.instance.prefs.getCharPref(UPDATE_PREF_DATE));
+    var releaseType = HTTPSEverywhere.instance.prefs.getCharPref(RELEASE_TYPE_PREF);
+    var formatVersion = HTTPSEverywhere.instance.prefs.getIntPref(DB_FORMAT_PREF);
+    return !isNaN(currentVersion) 
+        && version > currentVersion
+        && releaseType === branch
+        && formatVersion === dbformat;
   },
 
  /* Issues a request to download a new, zipped ruleset database file and then determines whether
