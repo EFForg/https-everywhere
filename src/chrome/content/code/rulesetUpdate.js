@@ -237,3 +237,16 @@ RulesetUpdater.prototype = {
     HTTPSRules.init();
   }
 };
+
+/* Produces a closure that can initiate a check for an update to the extension's ruleset library.
+ * Checking for updates using setInterval(updater.fetchUpdate, X) would not work as
+ * the function object would not contain a reference to the correct `this` parameter.
+ * Using this, checking for updates is done by calling:
+ *   setInterval(checkRulesetUpdates(updater), timeout);
+ * updater - An initialized RulesetUpdater (stores the URL to fetch the update manifest from).
+ */
+function checkRulesetUpdates(updater) {
+  return function() {
+    updater.fetchUpdate();
+  };
+}
