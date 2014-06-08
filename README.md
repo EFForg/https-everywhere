@@ -85,6 +85,8 @@ To build the Chrome version go to the git repository root and run:
 
 After building the extension the xpi files (for Firefox) and crx files (for Chrome) get created in the pkg directory. You can open those files within your browser to install the browser extension.
 
+To construct ruleset file in Windows use `./utils/merge-rulesets.js`
+
 Ruleset Tests
 -------------
 
