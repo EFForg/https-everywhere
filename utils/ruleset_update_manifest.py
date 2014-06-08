@@ -3,12 +3,12 @@
 """Creates a ruleset update JSON manifest file with the following format
 {
   update: {
-    "branch"         : <ruleset branch>,
-    "date"           : <the date the new db was released>,
-    "changes"        : <a short description of recent changes>,
-    "format_version" : <ruleset database version>,
-    "hash"           : <the hash of the db file>,
-    "source"         : <the URL serving the updated ruleset db>
+    "branch"  : <ruleset branch>,
+    "date"    : <the date the new db was released>,
+    "changes" : <a short description of recent changes>,
+    "version" : <ruleset library version>,
+    "hash"    : <the hash of the db file>,
+    "source"  : <the URL serving the updated ruleset db>
   },
   "update_signature" : <the signature of the serialized update object>
 }
@@ -19,6 +19,7 @@ Commentary can be read on the HTTPS Everywhere mailing list:
 https://lists.eff.org/pipermail/https-everywhere/2014-May/002069.html
 """
 
+import time
 import json
 import sys
 
@@ -29,9 +30,8 @@ PYTHON_VERSION_3 = (3, 0)
 # Map the field name to the expected type.
 update_fields = {
     "branch" : str,
-    "date" : float,
     "changes" : str,
-    "format_version" : int,
+    "version" : str,
     "hash" : str,
     "source" : str
 }
@@ -51,7 +51,11 @@ main_fields = {
 if sys.version_info >= MIN_PYTHON_VER and sys.version_info < PYTHON_VERSION_3:
     input = raw_input
 elif sys.version_info < MIN_PYTHON_VER:
-    raise 'Versions of python older than %f are not supported.' %('.'.join(MIN_PYTHON_VER))
+    raise 'Versions of python older than %s are not supported.' %('.'.join(MIN_PYTHON_VER))
+
+def formatted_time():
+    """ Return the date in a nice, human-readable format """
+    return time.strftime('%d %B, %Y', time.gmtime())
 
 def field_entry(value, expected_type):
     """ Convert a value into its expected type """
@@ -80,6 +84,7 @@ def main():
         prompt = '{0} {1}: '.format(update_fields[field], field)
         value = retrieve_valid_input(prompt, update_fields[field])
         update[field] = value
+    update['date'] = formatted_time()
     print('Serialized JSON for "update" object:')
     print(json.dumps(update))
     for field in main_fields.keys():
