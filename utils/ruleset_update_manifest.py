@@ -19,6 +19,7 @@ Commentary can be read on the HTTPS Everywhere mailing list:
 https://lists.eff.org/pipermail/https-everywhere/2014-May/002069.html
 """
 
+import hashlib
 import time
 import json
 import sys
@@ -32,7 +33,6 @@ update_fields = {
     "branch" : str,
     "changes" : str,
     "version" : str,
-    "hash" : str,
     "source" : str
 }
 
@@ -56,6 +56,15 @@ elif sys.version_info < MIN_PYTHON_VER:
 def formatted_time():
     """ Return the date in a nice, human-readable format """
     return time.strftime('%d %B, %Y', time.gmtime())
+
+def hash_simple_json_object(obj):
+    """ Compute the SHA1 hash of a JSON object by serializing it to a list of key-value pairs sorted by key """
+    hex_str = lambda chars: ''.join([hex(ord(c))[2:] for c in chars])
+    # Just as Array.sort in JS, Python's sorted sorts to ascending order.
+    keys = sorted(obj.keys())
+    data = str([[key, obj[key]] for key in keys]).replace("'", '"')
+    hashval = hashlib.sha1(data).digest()
+    return hex_str(hashval)
 
 def field_entry(value, expected_type):
     """ Convert a value into its expected type """
@@ -85,8 +94,9 @@ def main():
         value = retrieve_valid_input(prompt, update_fields[field])
         update[field] = value
     update['date'] = formatted_time()
-    print('Serialized JSON for "update" object:')
-    print(json.dumps(update))
+    update['hash'] = hash_simple_json_object(update)
+    print('Hash computed for the update object (this is what must be signed for update_signature):')
+    print(update['hash'])
     for field in main_fields.keys():
         prompt = '{0} {1}: '.format(main_fields[field], field)
         value = retrieve_valid_input(prompt, main_fields[field])
