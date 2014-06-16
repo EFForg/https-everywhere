@@ -21,6 +21,7 @@ import base64
 import time
 import json
 import sys
+import re
 
 # The lowest version of Python expected to be supported
 MIN_PYTHON_VER = (2, 6) 
@@ -54,6 +55,27 @@ def formatted_time():
     """ Return the date in a nice, human-readable format """
     return time.strftime(TIME_FORMAT, time.gmtime())
 
+def valid_eff_url(updateObj):
+    """ Make sure the supplied source points to an eff.org URL """
+    # This regex works the same way in Javascript.
+    regex = "^https:\/\/(www\.)?eff\.org\/[\w\-_\/]+\.sqlite$"
+    matched = re.match(regex, updateObj['source']) is not None
+    if not matched:
+        print("### Source is not a valid eff.org URL")
+    return matched
+
+def valid_branch_name(updateObj):
+    """ Test to make sure the branch name is recognized """
+    valid_branches = ["development", "stable"]
+    matched = any([updateObj['branch'] == branch for branch in valid_branches])
+    if not matched:
+        print("### Branch is neither of " + '/'.join(valid_branches))
+    return matched
+
+# A list of sanity-testing functions used to verify that the values provided to
+# build the update object with make sense.
+SANITY_CHECKS = [valid_eff_url, valid_branch_name]
+
 update = {}
 print("Please supply the necessary fields to build update.json")
 for field in UPDATE_FIELDS.keys():
@@ -68,17 +90,19 @@ while update['hash'] is None:
     except IOError:
         print("Could not compute the hash of the contents of " + dbfile_path)
         update['hash'] = None 
-data_written = False
-while not data_written:
+done = not all(map(lambda test: test(update), SANITY_CHECKS))
+if done: # Any test failed
+    print("Since one or more of the sanity checks failed, the JSON data will not be written.")
+while not done:
     file_name = input("Where should the JSON contents be stored? ")
     try:
         open(file_name, 'w').write(json.dumps(update))
         print("The update contents have been successfully written.")
-        data_written = True
+        done = True
     except IOError:
         print("Could not open " + file_name + " for writing.")
     except TypeError:
         print("Something really strange happened and the update data could not be serialized!")
         print("Please get in touch with a maintainer of HTTPS-Everywhere to have the issue investigated.")
-        data_written = True # Lie, because breaking out of (otherwise infinite) while loops isn't "pythonic"
+        done = True # Lie, because breaking out of (otherwise infinite) while loops isn't "pythonic"
 print("Exiting...")
