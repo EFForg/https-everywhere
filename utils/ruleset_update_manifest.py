@@ -2,15 +2,12 @@
 
 """Creates a ruleset update JSON manifest file with the following format
 {
-  update: {
-    "branch"  : <ruleset branch>,
-    "date"    : <the date the new db was released>,
-    "changes" : <a short description of recent changes>,
-    "version" : <ruleset library version>,
-    "hash"    : <the hash of the db file>,
-    "source"  : <the URL serving the updated ruleset db>
-  },
-  "update_signature" : <the signature of the serialized update object>
+  "branch"  : <ruleset branch>,
+  "date"    : <the date the new db was released>,
+  "changes" : <a short description of recent changes>,
+  "version" : <ruleset library version>,
+  "hash"    : <the hash of the db file>,
+  "source"  : <the URL serving the updated ruleset db>
 }
 
 More details about this specification can be found in the github gist:
@@ -20,6 +17,7 @@ https://lists.eff.org/pipermail/https-everywhere/2014-May/002069.html
 """
 
 import hashlib
+import base64
 import time
 import json
 import sys
@@ -28,22 +26,21 @@ import sys
 MIN_PYTHON_VER = (2, 6) 
 PYTHON_VERSION_3 = (3, 0)
 
-# Map the field name to the expected type.
-update_fields = {
-    "branch" : str,
-    "changes" : str,
-    "version" : str,
-    "source" : str
-}
+# The time format for the date field
+TIME_FORMAT = "%d %B, %Y" # dayNum Month, year
 
-# The update field will be inserted into the main JSON object
-main_fields = {
-    "update_signature" : str
-}
+# The hash function used on the contents of the databse file.
+# Options are: md5, sha1, sha224, sha256, sha384, and sha512.
+HASH = hashlib.sha1
 
-# We could use OptParse or argparse from python 2 and 3 respectively, but in order to print
-# out the serialised `update` object in order to collect the signature of it while this
-# program is running, we will instead collect the required data from stdin.
+# Dictionary of field names for the JSON object to build that need to be
+# supplied by a human. Maps the field name to a short description.
+UPDATE_FIELDS = {
+    "branch": "the ruleset branch",
+    "changes": "a short description of recent changes",
+    "version": "a subversion of the target extension",
+    "source": "a valid eff.org URL pointing to the database file"
+}
 
 # Python 3's `input` returns a string the way python 2's raw_input does.
 # Type checking will be done at each step regardless, so we will just use the input function
@@ -55,55 +52,33 @@ elif sys.version_info < MIN_PYTHON_VER:
 
 def formatted_time():
     """ Return the date in a nice, human-readable format """
-    return time.strftime('%d %B, %Y', time.gmtime())
+    return time.strftime(TIME_FORMAT, time.gmtime())
 
-def hash_simple_json_object(obj):
-    """ Compute the SHA1 hash of a JSON object by serializing it to a list of key-value pairs sorted by key """
-    hex_str = lambda chars: ''.join([hex(ord(c))[2:] for c in chars])
-    # Just as Array.sort in JS, Python's sorted sorts to ascending order.
-    keys = sorted(obj.keys())
-    data = str([[key, obj[key]] for key in keys]).replace("'", '"')
-    hashval = hashlib.sha1(data).digest()
-    return hex_str(hashval)
-
-def field_entry(value, expected_type):
-    """ Convert a value into its expected type """
+update = {}
+print("Please supply the necessary fields to build update.json")
+for field in UPDATE_FIELDS.keys():
+    update[field] = input(field + ', ' + UPDATE_FIELDS[field] + ": ")
+update['date'] = formatted_time()
+update['hash'] = None
+while update['hash'] is None:
+    dbfile_path = input("Enter the path to the database file on disk: ")
     try:
-        modified_value = expected_type(value)
-        return modified_value
-    except ValueError as ve:
-        raise ValueError('{0} could not be converted to type {1}'.format(value, expected_type))
-
-def retrieve_valid_input(prompt, expected_type):
-    """ Prompt for input until it is provided as the correct type """
-    value = None
-    while not value:
-        try:
-            value = field_entry(input(prompt), expected_type)
-        except ValueError as ve:
-            print('Error: ' + ve.message)
-            value = None
-    return value
-
-def main():
-    """ Prompt for the fields needed to build the JSON manifest and create said manifest """
-    update = {}
-    main_obj = {}
-    for field in update_fields.keys():
-        prompt = '{0} {1}: '.format(update_fields[field], field)
-        value = retrieve_valid_input(prompt, update_fields[field])
-        update[field] = value
-    update['date'] = formatted_time()
-    update['hash'] = hash_simple_json_object(update)
-    print('Hash computed for the update object (this is what must be signed for update_signature):')
-    print(update['hash'])
-    for field in main_fields.keys():
-        prompt = '{0} {1}: '.format(main_fields[field], field)
-        value = retrieve_valid_input(prompt, main_fields[field])
-        main_obj[field] = value
-    main_obj['update'] = update 
-    print('Serialized JSON manifest:')
-    print(json.dumps(main_obj))
-
-if __name__ == '__main__':
-    main()
+        hashed_data = HASH(open(dbfile_path, 'r').read()).digest()
+        update['hash'] = base64.standard_b64encode(hashed_data)
+    except IOError:
+        print("Could not compute the hash of the contents of " + dbfile_path)
+        update['hash'] = None 
+data_written = False
+while not data_written:
+    file_name = input("Where should the JSON contents be stored? ")
+    try:
+        open(file_name, 'w').write(json.dumps(update))
+        print("The update contents have been successfully written.")
+        data_written = True
+    except IOError:
+        print("Could not open " + file_name + " for writing.")
+    except TypeError:
+        print("Something really strange happened and the update data could not be serialized!")
+        print("Please get in touch with a maintainer of HTTPS-Everywhere to have the issue investigated.")
+        data_written = True # Lie, because breaking out of (otherwise infinite) while loops isn't "pythonic"
+print("Exiting...")
