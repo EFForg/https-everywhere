@@ -36,7 +36,9 @@ Fetching
 
 Retrieving updates for only a part of an extension is not possible using the builtin
 extension update mechanisms supported by Firefox.  However, fetching files using standard
-XMLHTTPRequests from within the extension is trivial to accomplish and standards-compliant.
+XMLHTTPRequests from within the extension is trivial to accomplish and doesn't require trying
+to force the browser to prematurely check for updates or apply changes only to parts of the
+extension.
 Thus, a simple XHR will be used to fetch `update.json` from eff.org.
 
 A signature over the raw bytes of `update.json` will be served as `update.json.sig` from a
