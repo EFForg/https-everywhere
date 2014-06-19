@@ -30,9 +30,15 @@ PYTHON_VERSION_3 = (3, 0)
 # The time format for the date field
 TIME_FORMAT = "%d %B, %Y" # dayNum Month, year
 
-# The hash function used on the contents of the databse file.
-# Options are: md5, sha1, sha224, sha256, sha384, and sha512.
-HASH = hashlib.sha1
+# A dictionary mapping the names of hash functions supported by both
+# Python's hashlib and the Gecko XPCOM interface nsICryptoHash.
+HASH_FUNCTIONS = {
+    "md5" : hashlib.md5,
+    "sha1" : hashlib.sha1,
+    "sha256" : hashlib.sha256,
+    "sha384" : hashlib.sha384,
+    "sha512" : hashlib.sha512
+}
 
 # Dictionary of field names for the JSON object to build that need to be
 # supplied by a human. Maps the field name to a short description.
@@ -40,7 +46,8 @@ UPDATE_FIELDS = {
     "branch": "the ruleset branch",
     "changes": "a short description of recent changes",
     "version": "a subversion of the target extension",
-    "source": "a valid eff.org URL pointing to the database file"
+    "source": "a valid eff.org URL pointing to the database file",
+    "hashfn": "the hash function to use (md5/sha1/sha256/sha384/sha512)"
 }
 
 # Python 3's `input` returns a string the way python 2's raw_input does.
@@ -72,9 +79,16 @@ def valid_branch_name(updateObj):
         print("### Branch is neither of " + '/'.join(valid_branches))
     return matched
 
+def valid_hash_function(updateObj):
+    """ Test to make sure the hash function is supported """
+    matched = updateObj['hashfn'] in HASH_FUNCTIONS.keys()
+    if not matched:
+        print("### " + updateObj['hashfn'] + " is not a supported hash function.")
+    return matched
+
 # A list of sanity-testing functions used to verify that the values provided to
 # build the update object with make sense.
-SANITY_CHECKS = [valid_eff_url, valid_branch_name]
+SANITY_CHECKS = [valid_eff_url, valid_branch_name, valid_hash_function]
 
 update = {}
 print("Please supply the necessary fields to build update.json")
@@ -82,17 +96,19 @@ for field in UPDATE_FIELDS.keys():
     update[field] = input(field + ', ' + UPDATE_FIELDS[field] + ": ")
 update['date'] = formatted_time()
 update['hash'] = None
+done = not all(map(lambda test: test(update), SANITY_CHECKS))
+if done: # Any test failed
+    print("Since one or more of the sanity checks failed, the JSON data will not be written.")
+    sys.exit(1)
+hash_fn = HASH_FUNCTIONS[update['hashfn']]
 while update['hash'] is None:
     dbfile_path = input("Enter the path to the database file on disk: ")
     try:
-        hashed_data = HASH(open(dbfile_path, 'r').read()).digest()
+        hashed_data = hash_fn(open(dbfile_path, 'r').read()).digest()
         update['hash'] = base64.standard_b64encode(hashed_data)
     except IOError:
         print("Could not compute the hash of the contents of " + dbfile_path)
         update['hash'] = None 
-done = not all(map(lambda test: test(update), SANITY_CHECKS))
-if done: # Any test failed
-    print("Since one or more of the sanity checks failed, the JSON data will not be written.")
 while not done:
     file_name = input("Where should the JSON contents be stored? ")
     try:
