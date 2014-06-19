@@ -20,9 +20,14 @@ generate with the command
     openssl genrsa -out privkey.pem 2048
     
 So that `privkey.pem` becomes your private key. The signature over the `update.json`
-file can be created and stored (with a base64 encoding) in `update.json.sig` via the commands
+file can be created and stored in `signtmp.sig` via the command
 
     openssl rsautl -sign -in update.json -out signtmp.sig -inkey privkey.pem
+
+Next, the header and footer of the signature from `signtmp.sig` need to be removed.
+
+Now, you can base64-encode the signature and store the result in `update.json.sig` via
+
     openssl base64 -in signtmp.sig -out update.json.sig
     rm signtmp.sig # OPTIONAL - remove the binary-encoded signature
     
