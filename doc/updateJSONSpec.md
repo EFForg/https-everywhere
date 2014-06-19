@@ -87,9 +87,9 @@ Updating
 
 For an early implementation of the ruleset update mechanism, the extension will update its
 ruleset library (stored as a SQLite database) by fetching a SQLite database file from eff.org
-containing the new ruleset library, and replace its local database file.  This will, of course,
-only occur after the extension has determined that an update to the ruleset database is
-available, and verified the content of the `update.json` file to be authentic.
+containing the new ruleset library, and replace its local database file.
+Replacing the local rulesets library will only occur after validating `update.json`
+(pseudocode below).
 
 Manifest
 ========
