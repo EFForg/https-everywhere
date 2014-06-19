@@ -109,7 +109,8 @@ ruleset library to be used by all target applications.
 The meanings of each field are explained as follows:
 
 * `branch` is a machine-readable target extension branch, e.g "stable", "developer", "willeatyourpc", etc. The extension SHOULD check that this field matches the extension's branch preference and MAY refuse to accept updates it doesn't like, e.g. stable extension release MAY refuse to update to  developer rulesets.
-* `date` is a formatted date string detailing the date that the release to the ruleset was released, and will be set automatically by the `ruleset_update_manifest.py` utility. The format for the date is "<day num> <month>, <year>". For example, "08 June, 2014".
+* `date` is a formatted date string detailing the date that the release to the ruleset was released, and will be set
+automatically by the `ruleset_update_manifest.py` utility. The format for the date is "dd-mm-yyyy". For example, "08-06-2014".
 * `changes` is a short human-readable description of what has been changed, perhaps a list of the biggest or most requested fixes
 * `version` is the ruleset release version, which is a subversion of the extension release version and MUST be checked by the updater to determine whether the advertised release is newer than the currently installed ruleset library. A ruleset release with a version number such as "3.5.1.2" must ONLY be accepted by HTTPS-Everywhere version 3.5.1, and so on.
 * `hash` is a SHA1 (for now) hash of the database file's raw content.
