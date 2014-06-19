@@ -50,9 +50,10 @@ A signature over the raw bytes of `update.json` will be served as `update.json.s
 separate hard-coded URL.
 
 The extension should check for ruleset updates when the browser is started, and then again
-every 3 (subject to change) hours.  If an attempt to fetch or verify an update fails, the
-extension should request `update.json` again every 5 + R minutes, where R is a random number
-between 0 and 5.  The extension should attempt this a maximum of 6 times until it is
+every 10800000 milliseconds (3 hours).
+If an attempt to fetch or verify an update fails, the extension should request `update.json` 
+again every 300000 + R milliseconds, where R is a random number between 0 and 300000.
+The extension should attempt this a maximum of 6 times until it is
 able to fetch `update.json` and verify the contents before defaulting back to waiting 3 hours.
 
 Every time the extension finds that the data provided by `update.json` to be inauthentic,
