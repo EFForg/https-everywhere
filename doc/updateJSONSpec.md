@@ -149,11 +149,8 @@ The following is a high-level description of how the update mechanism is expecte
                     dbFile := openFile(RULESET_DB_FILE)
                     write(databaseSource, dbFile)
                     HTTPSRules.init()
-                else
-                    inauthentic := true
+                    inauthentic := false
                 endif
-            else
-                inauthentic := true
             endif
         endif
         if inauthentic then
