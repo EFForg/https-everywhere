@@ -1,3 +1,9 @@
+Previous Commentary
+===================
+
+This document used to be hosted as a Gist, and there was some commentary on the document
+on the relevant gist page.  That commentary can be [found here](https://gist.github.com/redwire/2e1d8377ea58e43edb40).
+
 update.json and update.json.sig
 ===============================
 
@@ -136,3 +142,4 @@ The following is a high-level description of how the update mechanism is expecte
             XHR.post(REPORT_INAUTHENTIC_UPDATE_URL, updateData)
         endif
     endfunction
+
