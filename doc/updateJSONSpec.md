@@ -103,7 +103,8 @@ ruleset library to be used by all target applications.
         "changes" : <a short description of recent changes>,
         "version" : <ruleset release version>,
         "hash"    : <the hash of the db file>,
-        "source"  : <the URL serving the updated ruleset db>
+        "source"  : <the URL serving the updated ruleset db>,
+        "hashfn"  : <The name of the hash function to use>
     }
 
 The meanings of each field are explained as follows:
@@ -115,6 +116,7 @@ automatically by the `ruleset_update_manifest.py` utility. The format for the da
 * `version` is the ruleset release version, which is a subversion of the extension release version and MUST be checked by the updater to determine whether the advertised release is newer than the currently installed ruleset library. A ruleset release with a version number such as "3.5.1.2" must ONLY be accepted by HTTPS-Everywhere version 3.5.1, and so on.
 * `hash` is a SHA1 (for now) hash of the database file's raw content.
 * `source` is the URL from which the most recently released database file is to be fetched. The URL must address a valid eff.org location and must not be overwritten by the extension.
+* `hashfn` is the name of the hash function used to compute the hash of the database file and MUST be one of md5, sha1, sha256, sha384, or sha512.
 
 Pseudocode of update procedure
 ==============================
