@@ -28,7 +28,7 @@ MIN_PYTHON_VER = (2, 6)
 PYTHON_VERSION_3 = (3, 0)
 
 # The time format for the date field
-TIME_FORMAT = "%d %B, %Y" # dayNum Month, year
+TIME_FORMAT = "%d-%m-%Y" # dd-mm-yyyy
 
 # A dictionary mapping the names of hash functions supported by both
 # Python's hashlib and the Gecko XPCOM interface nsICryptoHash.
