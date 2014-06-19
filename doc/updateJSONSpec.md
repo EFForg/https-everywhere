@@ -58,8 +58,9 @@ able to fetch `update.json` and verify the contents before defaulting back to wa
 
 Every time the extension finds that the data provided by `update.json` to be inauthentic,
 either as a result of the hash of the database file not matching or the signature not verifying,
-the extension must send a POST request to a hardcoded url containing the data in the `update.json`
-file that it tried and failed to verify.
+the extension must send a POST request to a hardcoded failure-reporting url containing the data 
+in the `update.json` file that it tried and failed to verify.  The format for failure reports
+has yet to be determined.
 
 Verification and Version Checking
 =================================
