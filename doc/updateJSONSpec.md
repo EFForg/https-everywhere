@@ -20,14 +20,9 @@ generate with the command
     openssl genrsa -out privkey.pem 2048
     
 So that `privkey.pem` becomes your private key. The signature over the `update.json`
-file can be created and stored in `signtmp.sig` via the command
+file can be created and stored, base64-encoded, in `update.json.sig` via the commands
 
     openssl rsautl -sign -in update.json -out signtmp.sig -inkey privkey.pem
-
-Next, the header and footer of the signature from `signtmp.sig` need to be removed.
-
-Now, you can base64-encode the signature and store the result in `update.json.sig` via
-
     openssl base64 -in signtmp.sig -out update.json.sig
     rm signtmp.sig # OPTIONAL - remove the binary-encoded signature
     
@@ -35,6 +30,9 @@ And finally, the public key to hardcode into the HTTPS-Everywhere extension to e
 to verify such signatures can be output to `pubkey.pem` via the command
 
     openssl rsa -in privkey.pem -pubout -out pubkey.pem
+
+Before you can include the contents of pubkey.pem in the extension, the header and footer
+must be removed so that only the key itself is present.
 
 Fetching
 ========
