@@ -67,7 +67,7 @@ Verification and Version Checking
 
 In order to compute the hash of the database file, the nsICryptoHash class will be used.
 https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsICryptoHash
-SHA1 currently being used as the hashing algorithm.
+SHA1 is currently being used as the hashing algorithm.
 
 In order to verify the signature over `update.json` file contents, which is the content of `update.json.sig`,
 the nsIDataSignatureVerifier class will be used.
@@ -127,16 +127,23 @@ The following is a high-level description of how the update mechanism is expecte
         updateSigURL := preferences.get("updateSigURL")
         branchName := preferences.get("branchName")
         currentVersion := preferences.get("rulesetVersion")
-        updateJSON := XHR.get(updateURL)
+        # tryFetch tries to request data up to 6 times in randomly padded intervals
+        # See the "Fetching" section
+        updateJSON := tryFetch(updateURL)
         updateData := JSON.parse(upateJSON)
-        shouldUpdate := update.version > currentVersion and\
+        shouldUpdate := updateJSON != null and\ # Were able to receive data
+                        updateData.version > currentVersion and\
                         isSubversion(updateData.version, EXTENSION_VERSION) and\
-                        branchName == updateData.branch
+                        branchName == updateData.branch and\
+                        isValidSource(updateData.source)
+        inauthentic := true
         if shouldUpdate then
-            signature := XHR.get(updateSigURL)
-            inauthentic := false
+            signature := tryFetch(updateSigURL)
             if isValidSignature(signature, updateJSON, PUBLIC_SIGNING_KEY) then
-                databaseSource := XHR.get(updateData.source)
+                databaseSource := tryFetch(updateData.source)
+                if databaseSource == null then
+                    return
+                endif
                 dbHash := SHA1Hash(databaseSource)
                 if dbHash == updateData.hash then
                     dbFile := openFile(RULESET_DB_FILE)
@@ -148,8 +155,10 @@ The following is a high-level description of how the update mechanism is expecte
             else
                 inauthentic := true
             endif
+        endif
         if inauthentic then
-            XHR.post(REPORT_INAUTHENTIC_UPDATE_URL, updateData)
+            # tryPost works like tryFetch, but also sends data with a POST request
+            tryPost(REPORT_INAUTHENTIC_UPDATE_URL, updateData)
         endif
     endfunction
 
