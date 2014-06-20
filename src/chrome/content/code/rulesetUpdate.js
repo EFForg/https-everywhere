@@ -12,50 +12,39 @@
  * part of the process of creating the update.json manifest data.
  */
 
-/* ruleset update key
- * This is a hardcoded public key required to verify the signature over the
- * stringified update object within the whole update manifest object.
- */
 // TODO
 // Set this value.
+/* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = '';
 
-/* release date preference key
- * This is the key used to set and obtain the date value of the most recently
- * downloaded ruleset release as a preference.
- */
-const UPDATE_PREF_DATE = 'extensions.https_everywhere.rulesets_last_updated';
+/* extension release branch preference key */
+const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
 
-/* extension release type preference
- * This is the key to the preference that states the release type of the client,
- * such as "development" or "stable" for dev and stable releases respectively.
- */
-const RELEASE_TYPE_PREF = 'extensions.https_everywhere.release_type';
+/* extension release version preference key */
+const VERSION_PREF = 'extensions.https_everywhere.release_version';
 
-/* database format version preference
- * This is the key to the preference that details the format version of the
- * ruleset database supported by the user's version of the extension.
- */
-const DB_FORMAT_PREF = 'extensions.https_everywhere.database_format_version';
+/* installed ruleset version preference key */
+const RULESET_VERSION_PREF = 'extesnsions.https_everywhere.ruleset_version';
 
-/* database file paths
- * The path to the temporary file used to store the contents of the downloaded
- * ruleset database zipfile and the extracted sqlite file, as well as the
- * location of the sqlite database file used by the extension to load rules.
- */
-const TMP_DBZIP_PATH = 'chrome://https-everywhere/content/rulesetdb.zip';
-const TMP_DBFILE_PATH = 'chrome://https-everywhere/content/tmprulesetdb.sqlite';
+/* path to the ruleset library database file */
 const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
+
+/* maximum number of attempts to fetch ruleset updates */
+const MAX_RSUPDATE_FETCHES = 6;
 
 /* RulesetUpdate
  * Provides the functionality of obtaining, verifying the authenticity of, and
  * applying updates.
  * updateManifestSource - the URL from which the update.json file is fetched.
  *                        e.g. https://eff.org/files/https-everywhere/update.json
+ * updateSigSource      - the URL from which update.json.sig is fetched.
  */
-function RulesetUpdater(updateManifestSource) {
+function RulesetUpdater(updateManifestSource, updateSigSource) {
   this.manifestSrc = updateManifestSource;
-  this.HTTPSEverywhere = Cc['@eff.org/https-everywhere;1'].getService(Ci.nsISupports).wrappedJSObject;
+  this.sigFileSrc = updateSigSource;
+  this.HTTPSEverywhere = Cc['@eff.org/https-everywhere;1']
+                         .getService(Ci.nsISupports)
+                         .wrappedJSObject;
 }
 
 RulesetUpdater.prototype = {
@@ -63,69 +52,56 @@ RulesetUpdater.prototype = {
     https_everywhereLog(level, msg);  
   },
 
-  /* Should be periodically called to check for a new update to the extension's ruleset library.
-   */
+ /* Initiates the check for updates and tests of authenticity.
+  * Must be wrapped in a function to call from setInterval, i.e.:
+  * setInterval(function() { updater.fetchUpdate(); }, interval);
+  */
   fetchUpdate: function() {
-    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
-    xhr.open('GET', this.manifestSrc, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) { // complete
-        if (xhr.status === 200) { // OK
-          var data = JSON.parse(xhr.responseText);
-          this.conditionallyApplyUpdate(data);
-        } else {
-          this.log(WARN, 'Could not fetch update manifest at ' + this.manifestSrc);
-        }
+    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.manifestSrc,
+      function(responseText) {
+        this.conditionallyApplyUpdate(responseText);
       }
-    };
-    xhr.send();
+    );
   },
 
-  /* Verifies the signature on the updateObj.update and then issues a request that
-   * will fetch and test the hash on the newly released ruleset database file.
-   * updateObj - The JSON manifest of the update information for the ruleset update.
-   */
-  conditionallyApplyUpdate: function(updateObj) {
-    var validSignature = this.verifyUpdateSignature(
-                           JSON.stringify(updateObj.update),
-                           updateObj.update_signature);
-    if (!validSignature) {
-      this.log(WARN, 'Validation of the update signature provided failed');
-      return; // Not an authentic release!
-    }
-    var newVersion = parseFloat(updateObj.update.date);
-    if (isNaN(newVersion)) {
-      this.log(WARN, 'date field in update JSON (' + updateObj.update.date + ') not valid format');
-      return; // Cannot determine whether update is new with invalid date field.
-    }
-    if (!this.checkVersionRequirements(
-           newVersion,
-           updateObj.update.branch,
-           updateObj.update.format_version)) {
-      this.log(NOTE, 'Downloaded an update manifest for an unsupported ruleset library.');
+ /* Verifies the signature on the updateObj.update and then issues a request that
+  * will fetch and test the hash on the newly released ruleset database file.
+  * updateObj - The JSON manifest of the update information for the ruleset update.
+  */
+  conditionallyApplyUpdate: function(update) {
+    var updateObj = JSON.parse(update);
+    var extVersion = HTTPSEverywhere.instance.prefs.getCharPref(VERSION_PREF);
+    var extBranch = HTTPSEverywhere.instance.prefs.getCharPref(BRANCH_PREF);
+    var rulesetVersion = HTTPSEverywhere.instance.prefs.getCharPref(RULESET_VERSION_PREF);
+    if (!this.checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
+      this.log(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
       return; 
     }
-    this.fetchRulesetDBFile(updateObj.update.source, updateObj.update.hash);
-    // TODO
-    // Is this the right thing to do?
-    HTTPSEverywhere.instance.prefs.setFloatPref(UPDATE_PREF_DATE, newVersion);
+    if (updateObj.branch !== extBranch) {
+      this.log(WARN, 'Downloaded a ruleset update for the incorrect branch.');
+      return;
+    }
+    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.sigFileSrc,
+      function(signature) {
+        if (this.verifyUpdateSignature(update, signature)) {
+          this.fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
+        } else {
+          this.log(WARN, 'Validation of the update signature provided failed.');
+          // TODO
+          // Ping the verification-failure-reporting URL
+        }
+      }
+    );
+    HTTPSEverywhere.instance.prefs.setFloatPref(RULESET_VERSION_PREF, updateObj.version);
   },
 
- /* Tests using the hardcoded RULESET_UPDATE_KEY that the signature of the update object
-  * validates and that the update is thus authentic.
-  * The hash can be initialized to use MD2, MD5, SHA1, SHA256, SHA384, or SHA512
-  * updateStr - The stringified update object from the update manifest.
-  * signature - The signature over the update object provided by the update manifest.
+ /* Attempts to verify the provided signature over updateStr using
+  * the hardcoded RULESET_UPDATE_KEY public key.
   */
   verifyUpdateSignature: function(updateStr, signature) {
-    var checkHash = Cc["@mozilla.org/security/hash;1"].createInstance(Ci.nsICryptoHash);
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
-    var data = this.convertString(updateStr, 'UTF-8');
-    checkHash.init(checkHash.SHA1);
-    checkHash.update(data, data.length);
-    var hash = checkHash.finish(false);
-    return verifier.verifyData(hash, signature, RULESET_UPDATE_KEY);
+    return verifier.verifyData(updateStr, signature, RULESET_UPDATE_KEY);
   },
 
  /* Convert a regular string into a ByteArray with a given encoding (such as UTF-8).
@@ -141,25 +117,15 @@ RulesetUpdater.prototype = {
     return data;
   },
 
- /* Check to make sure that the version of the release is new, the branch the ruleset
-  * library applies to is the same one the extension was released for, and that the
-  * format of the database is supported- all by investigating the relevant preferences.
-  * version  - The release version of the ruleset DB.
-  * branch   - The branch name of the build of the extension the update is for.
-  * dbformat - The integer format version that the new ruleset DB uses.
+ /* Checks that the ruleset version to download is greater than the current ruleset library
+  * version (rsVersion) and is a subversion of the extension version (extVersion).
   */
-  // TODO
-  // Make sure this is the right way to access preferences even with
-  // this.HTTPSEverywhere existing.
-  checkVersionRequirements: function(version, branch, dbformat) {
-    // Preferencs can only be stored as ints, strings, and bools, parse float from a string.
-    var currentVersion = parseFloat(HTTPSEverywhere.instance.prefs.getCharPref(UPDATE_PREF_DATE));
-    var releaseType = HTTPSEverywhere.instance.prefs.getCharPref(RELEASE_TYPE_PREF);
-    var formatVersion = HTTPSEverywhere.instance.prefs.getIntPref(DB_FORMAT_PREF);
-    return !isNaN(currentVersion) 
-        && version > currentVersion
-        && releaseType === branch
-        && formatVersion === dbformat;
+  checkVersionRequirements: function(extVersion, rsVersion, newVersion) {
+    var verCompare = Cc['@mozilla.org/xpcom/version-comparator;1']
+                       .getService(Ci.nsIVersionComparator);
+    var newRulesetExtVer = newVersion.slice(0, newVersion.lastIndexOf('.'));
+    return verCompare.compare(extVersion, newRulesetExtVer) === 0\
+        && verCompare.compare(newVersion, rsVersion) > 0;
   },
 
  /* Issues a request to download a new, zipped ruleset database file and then determines whether
@@ -167,7 +133,12 @@ RulesetUpdater.prototype = {
   * url  - The full URL to fetch the file from, MUST be using HTTPS!
   * hash - The hash of the database file provided by the update manifest verified previously.
   */
-  fetchRulesetDBFile: function(url, hash) {
+  fetchRulesetDBFile: function(url, hashfn, hash) {
+    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE, 'GET', url,
+      function(dbfileContent) {
+
+      }
+    );
     var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
     xhr.open('GET', url, true);
     xhr.onreadystatechange = function() {
