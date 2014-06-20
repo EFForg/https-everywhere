@@ -13,11 +13,27 @@ from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5 as pkcs
 from Crypto.Hash import SHA
 
-print('WARNING: None of the data in this directory should be deployed or used for signing!')
+print('WARNING: None of the data in this directory should be deployed ' +
+      'or used for signing in the extension itself!')
 
-pubkey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwNFv2HXZ5YdXa18irhRRrzGGQERbzEKGhE/5NHY5go75dpt0eIe3AMhRNkeDaF3fiV6yABAjre6EZlxRvzzxW9iSdSqkbHk7nvqQMnWLQCKW0e5VlVCGdIZ71kJREEFjaeuyWIQef7gEsoFRd0Xd6L1LLCAamJ2cf+Qx4ARGyUwsfQGWpmt/qTV1Ts7t3VDD7kOMBkI6rRzEvNblgpJ39BDbQap6Dua1kFxdrY77Pkarh+ziaOQ3TWbO3qFOy9RpKZ4TusJp1qlOymmiclpCtMeTAbZr4aYzUJ/fqe4RPWReWji4fwdsHR6zXWCTbTunCUMluMe7zyCa84TzZv/oywIDAQAB"
+pubkey = ''.join([
+    'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwNFv2HXZ5YdXa18irhRR',
+    'rzGGQERbzEKGhE/5NHY5go75dpt0eIe3AMhRNkeDaF3fiV6yABAjre6EZlxRvzzx',
+    'W9iSdSqkbHk7nvqQMnWLQCKW0e5VlVCGdIZ71kJREEFjaeuyWIQef7gEsoFRd0Xd',
+    '6L1LLCAamJ2cf+Qx4ARGyUwsfQGWpmt/qTV1Ts7t3VDD7kOMBkI6rRzEvNblgpJ3',
+    '9BDbQap6Dua1kFxdrY77Pkarh+ziaOQ3TWbO3qFOy9RpKZ4TusJp1qlOymmiclpC',
+    'tMeTAbZr4aYzUJ/fqe4RPWReWji4fwdsHR6zXWCTbTunCUMluMe7zyCa84TzZv/o',
+    'ywIDAQAB'
+])
 
-sig = "A8d0Jg82SM5OIehJ+HA+sFFABWWbLMDkDVtRhgKYEa5r/R8zrduNb3mp/DBlQcC8HLWKBcT3XPQyxuBmh34en9y/v5YhPUs0ecyk2+ORB+4rMU6pQK/jcyMubumwpILZ52EF2vWxQ/aY44/6UgjEm+ZHZ5afSaB1vmXMxa3q/1+R3cqWmaZGlbYWk3BA/JKbhfmPTO3/PwArFwtBVMRdrHszj8TAuRntujpdjT8gkasLVwI6NZKMgk7t5sGtBSCoOo4hEhOe2Z5y22K7BynXNmLI67nsBs0eyRO5ZqkNtGkPQ70TFgemNuRd0qz/+/LGU+jhkgy2qwENqp/7OP9rkg=="
+sig = ''.join([
+    'Rhp1a6wiOxEOqpcx/pjED+lxm8EaXzHukzdXZhZ01UVPMihl0HcYg+tF3WFWZ90p',
+    'PYQ9uuWo1/pfOp/TJXhcbCJnr+0oDQWtV3UVFWeimm+He9Dl4ck+hTltxz0Y6i3J',
+    'oz30SBuKFFR5L9tsKAeXG93etUL55UcfW0ENVwam6nfzjfV0JHQkoQ8cbIrO8yeh',
+    'NxOk1H+ohJewCyVJUZODVPQ9bC0NZC/jJ7gB/kY5jjNBiOJsTN4RVhk3p8+V94DZ',
+    'ChqRrJTmo5JLGyfmReCb01PTRqJafDHlwrBBFIjHBpNJgTNRk065Zc6N2OCfmIaT',
+    'SHnsd+mPHI483CJkyLWojw=='
+])
 
 json_path = os.curdir + os.sep + 'update.json'
 
@@ -25,7 +41,7 @@ keyPEM = base64.standard_b64decode(pubkey)
 keyPub = RSA.importKey(keyPEM)
 
 try:
-  content = open(json_path).read()
+  content = open(json_path, "rb").read()
 except IOError:
   print('Could not read content from ' + json_path)
   print('This program expects an update.json file to exist in the same directory.')
