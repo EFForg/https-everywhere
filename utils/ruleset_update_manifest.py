@@ -1,23 +1,12 @@
 #! /usr/bin/env python
 
-"""Creates a ruleset update JSON manifest file with the following format
-{
-  "branch"  : <ruleset branch>,
-  "changes" : <a short description of recent changes>,
-  "date"    : <the date the new db was released>,
-  "hash"    : <the hash of the db file>,
-  "source"  : <the URL serving the updated ruleset db>,
-  "version" : <ruleset library version>
-}
-
-More details about this specification can be found in the github gist:
-https://gist.github.com/redwire/2e1d8377ea58e43edb40
+"""Creates a ruleset update JSON manifest file according to the format
+specified in https-everywhere/doc/updateJSONSpec.md
 Commentary can be read on the HTTPS Everywhere mailing list:
 https://lists.eff.org/pipermail/https-everywhere/2014-May/002069.html
 """
 
 import hashlib
-import base64
 import time
 import json
 import sys
@@ -57,6 +46,10 @@ if sys.version_info >= MIN_PYTHON_VER and sys.version_info < PYTHON_VERSION_3:
     input = raw_input
 elif sys.version_info < MIN_PYTHON_VER:
     raise 'Versions of python older than %s are not supported.' %('.'.join(MIN_PYTHON_VER))
+
+def hex_str(data):
+    """ Convert data into a hex string """
+    return ''.join([hex(ord(char))[2:] for char in data])
 
 def formatted_time():
     """ Return the date in a nice, human-readable format """
@@ -105,7 +98,7 @@ while update['hash'] is None:
     dbfile_path = input("Enter the path to the database file on disk: ")
     try:
         hashed_data = hash_fn(open(dbfile_path, 'r').read()).digest()
-        update['hash'] = base64.standard_b64encode(hashed_data)
+        update['hash'] = hex_str(hashed_data)
     except IOError:
         print("Could not compute the hash of the contents of " + dbfile_path)
         update['hash'] = None 
