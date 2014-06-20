@@ -3,11 +3,11 @@
 """Creates a ruleset update JSON manifest file with the following format
 {
   "branch"  : <ruleset branch>,
-  "date"    : <the date the new db was released>,
   "changes" : <a short description of recent changes>,
-  "version" : <ruleset library version>,
+  "date"    : <the date the new db was released>,
   "hash"    : <the hash of the db file>,
-  "source"  : <the URL serving the updated ruleset db>
+  "source"  : <the URL serving the updated ruleset db>,
+  "version" : <ruleset library version>
 }
 
 More details about this specification can be found in the github gist:
