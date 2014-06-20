@@ -130,7 +130,7 @@ RulesetUpdater.prototype = {
         if (dbHash === hash) {
           this.applyNewRuleset(dbfileContent);
         } else {
-          this.log(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.");
+          this.log(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.');
           // TODO
           // Ping URL for verification-failure-reporting
         }
