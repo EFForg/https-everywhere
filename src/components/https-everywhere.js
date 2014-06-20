@@ -42,6 +42,9 @@ const SERVICE_NAME = "Encrypts your communications with a number of major websit
 
 const LLVAR = "LogLevel";
 
+const MIN_REATTEMPT_REQ_INTERVAL = 300000;
+const RULESET_UPDATE_CHECK_INTERVAL = 10800000;
+
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
@@ -719,6 +722,36 @@ HTTPSEverywhere.prototype = {
     }
 
     return o_branch;
+  },
+
+  /* Try to make an XHR to the specified URL with a given method (GET/POST/...),
+   * and call the onSuccess function if the request succeeds.
+   * The function will attempt at most maxCalls requests.
+   */
+  try_request: function(maxCalls, method, url, onSuccess) {
+    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1']
+                .createInstance(Ci.nsIXMLHttpRequest);
+    xhr.open(method, url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) { // Complete
+        if (xhr.status === 200) { // OK
+          onSuccess(xhr.responseText);
+        } else {
+          // TODO
+          // Include code to ping a verification-error-reporting URL
+          if (maxCalls > 0) {
+            var timePadding = (1000000 * Math.random()) % 300000;
+            setTimeout(
+              function() {
+                this.try_request(maxCalls - 1, method, url, onSuccess);
+              }, 
+              MIN_REATTEMPT_REQ_INTERVAL + timePadding
+            );
+          }
+        }
+      }
+    };
+    xhr.send();
   },
 
   chrome_opener: function(uri, args) {
