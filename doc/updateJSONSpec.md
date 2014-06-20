@@ -12,22 +12,31 @@ ruleset library.  The file contains the same kind of information as is stored in
 `update.rdf` file used to tell the HTTPS Everywhere extension where to fetch and how to
 verify updates to the whole extension.
 
-The file `update.json.sig` contains the signature of `update.json`.  Its contents are used
-to verify the authenticity of the latter's contents.
-The key used to generate this signature should be a 2048-bit RSA key, which you might
-generate with the command
+The utility script `https_everywhere/utils/ruleset_update_manifest.py` automates most of
+the process of creating `update.json`, and is simply run with the command:
+
+    python utils/ruleset_update_manifest.py
+
+The key used to for signing should be a 2048-bit RSA key, which you could
+generate with the command:
 
     openssl genrsa -out privkey.pem 2048
     
-So that `privkey.pem` becomes your private key. The signature over the `update.json`
-file can be created and stored, base64-encoded, in `update.json.sig` via the commands
+Once `update.json` has been created and a private key is present to sign with,
+the next step is to compute the sha256 digest of `update.json`, which we will sign later.
+To compute the digest and store it in `update.digest`, issue the command:
 
-    openssl rsautl -sign -in update.json -out signtmp.sig -inkey privkey.pem
+    digest=`openssl sha -sha256 -hex update.json` && echo ${digest#* } > update.digest
+
+Now the signature over the digest can be computed, converted to base64, and stored in
+`update.json.sig` via the commands:
+
+    openssl rsautl -sign -in update.digest -out signtmp.sig -inkey privkey.pem
     openssl base64 -in signtmp.sig -out update.json.sig
     rm signtmp.sig # OPTIONAL - remove the binary-encoded signature
     
 And finally, the public key to hardcode into the HTTPS-Everywhere extension to enable it
-to verify such signatures can be output to `pubkey.pem` via the command
+to verify such signatures can be output to `pubkey.pem` via the command:
 
     openssl rsa -in privkey.pem -pubout -out pubkey.pem
 
@@ -39,7 +48,7 @@ Fetching
 
 Retrieving updates for only a part of an extension is not possible using the builtin
 extension update mechanisms supported by Firefox.  However, fetching files using standard
-XMLHTTPRequests from within the extension is trivial to accomplish and doesn't require trying
+XMLHTTPRequests from within the extension is trivial to accomplish and does not require trying
 to force the browser to prematurely check for updates or apply changes only to parts of the
 extension.
 Thus, a simple XHR will be used to fetch `update.json` from eff.org.
