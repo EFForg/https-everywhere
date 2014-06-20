@@ -32,6 +32,9 @@ const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
 /* maximum number of attempts to fetch ruleset updates */
 const MAX_RSUPDATE_FETCHES = 6;
 
+/* name of the hash function to use to compute the digest of update.json content */
+const SIGNING_DIGEST_FN = 'sha256';
+
 /* RulesetUpdate
  * Provides the functionality of obtaining, verifying the authenticity of, and
  * applying updates.
@@ -83,7 +86,8 @@ RulesetUpdater.prototype = {
     }
     this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.sigFileSrc,
       function(signature) {
-        if (this.verifyUpdateSignature(update, signature)) {
+        var updateHash = computeHash(update, SIGNING_DIGEST_FN);
+        if (this.verifyUpdateSignature(updateHash, signature)) {
           this.fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
         } else {
           this.log(WARN, 'Validation of the update signature provided failed.');
@@ -92,7 +96,6 @@ RulesetUpdater.prototype = {
         }
       }
     );
-    HTTPSEverywhere.instance.prefs.setFloatPref(RULESET_VERSION_PREF, updateObj.version);
   },
 
  /* Attempts to verify the provided signature over updateStr using
@@ -102,19 +105,6 @@ RulesetUpdater.prototype = {
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
     return verifier.verifyData(updateStr, signature, RULESET_UPDATE_KEY);
-  },
-
- /* Convert a regular string into a ByteArray with a given encoding (such as UTF-8).
-  * str      - The standard javascript string to convert.
-  * encoding - The encoding to use as a string, such as 'UTF-8'.
-  */
-  convertString: function(str, encoding) {
-    var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
-                      .createInstance(ci.nsIScriptableUnicodeConverter);
-    converter.charset = encoding;
-    var result = {}; // An out paramter used by converter.convertToByteArray.
-    var data = converter.convertToByteArray(updateStr, result);
-    return data;
   },
 
  /* Checks that the ruleset version to download is greater than the current ruleset library
@@ -136,88 +126,50 @@ RulesetUpdater.prototype = {
   fetchRulesetDBFile: function(url, hashfn, hash) {
     this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE, 'GET', url,
       function(dbfileContent) {
-
-      }
-    );
-    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
-    xhr.open('GET', url, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) { // complete
-        if (xhr.status === 200) { // OK
-          this.storeDBFileZip(xhr.responseText);
-          this.extractTmpDBFile();
-          var newHash = this.computeTmpDBFileHash();
-          if (newHash === hash) {
-            this.applyNewRuleset();
-          }
+        var dbHash = computeHash(dbFileContent, hashfn);
+        if (dbHash === hash) {
+          this.applyNewRuleset(dbfileContent);
+        } else {
+          this.log(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.");
+          // TODO
+          // Ping URL for verification-failure-reporting
         }
       }
-    };
-    xhr.send();
+    );
   },
 
- /* Stores the zipped database file contents to a local file to be extracted from.
-  * zipSource - The raw zip file contents to store in TMP_DBZIP_PATH (see const def).
-  */
-  storeDBFileZip: function(zipSource) {
-    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBZIP_PATH);
-    file.initWithPath(path);
-    this.HTTPSEverywhere.rw.write(file, zipSource);
-  },
 
- /* Extracts the zipped database file stored at TMP_DBZIP_PATH into TMP_DBFILE_PATH.
-  */
-  extractTmpDBFile: function() {
-    var zipr = Cc['@mozilla.org/libjar/zip-reader;1'].createInstance(Ci.nsIZipReader);
-    var infile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var outfile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var inPath = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBZIP_PATH);
-    var outPath = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
-    infile.initWithPath(inPath);
-    outfile.initWithPath(outPath);
-    zipr.open(infile);
-    zipr.extract(outPath, outfile);
-    zipr.close();
-  },
-
- /* Computes the hash of the database file stored at TMP_DBFILE_PATH.
-  */
-  computeTmpDBFileHash: function() {
-    var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var hash = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
-    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
-    hash.init(hash.SHA1);
-    file.initWithPath(path);
-    var content = this.convertString(this.HTTPSEverywhere.rw.read(file), 'UTF-8');
-    hash.update(content, content.length);
-    var dbfHash = hash.finish(false);
-    return dbfHash;
+ /* Compute the hash using a function specified by hashfn of data and encode as hex */
+  computeHash: function(data, hashfn) {
+    var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
+                      .createInstance(ci.nsIScriptableUnicodeConverter);
+    var hashing = Cc['@mozilla.org/security/hash;1']
+                    .createInstance(Ci.interfaces.nsICryptoHash);
+    function toHexString(charCode) {
+      return ('0' + charCode.toString(16)).slice(-2);
+    }
+    converter.encoding = 'UTF-8';
+    var result = {};
+    var converted = converter.convertToByteArray(data, result);
+    if      (hashfn === 'md5')    hashing.init(hashing.MD5);
+    else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
+    else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
+    else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
+    else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
+    else return null; // It's a better idea to fail than do the wrong thing here.
+    hashing.update(converted, converted.length);
+    var hash = hashing.finish(false);
+    return [toHexString(hash.charCodeAt(i)) for (i in hash)].join('');
   },
 
  /* Applies the new ruleset database file by replacing the old one and reinitializing 
   * the mapping of targets to applicable rules.
   */
-  applyNewRuleset: function() {
+  applyNewRuleset: function(dbsource) {
     var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var path = this.HTTPSEverywhere.rw.chromeToPath(TMP_DBFILE_PATH);
-    var dbfileParts = RULESET_DBFILE_PATH.split('/');
-    var dbFileName = dbfileParts[dbfileParts.length - 1];
+    var path = this.HTTPSEverywhere.rw.chromeToPath(RULESET_DBFILE_PATH);
     file.initWithPath(path);
-    file.renameTo(null, dbFileName);
+    this.HTTPSEverywhere.rw.write(file, dbsource);
     HTTPSRules.init();
   }
 };
-
-/* Produces a closure that can initiate a check for an update to the extension's ruleset library.
- * Checking for updates using setInterval(updater.fetchUpdate, X) would not work as
- * the function object would not contain a reference to the correct `this` parameter.
- * Using this, checking for updates is done by calling:
- *   setInterval(checkRulesetUpdates(updater), timeout);
- * updater - An initialized RulesetUpdater (stores the URL to fetch the update manifest from).
- */
-function checkRulesetUpdates(updater) {
-  return function() {
-    updater.fetchUpdate();
-  };
-}
