@@ -109,7 +109,7 @@ ruleset library to be used by all target applications.
         "changes" : <a short description of recent changes>,
         "date"    : <the date the new db was released>,
         "hash"    : <the hash of the db file>,
-        "hashfn"  : <The name of the hash function to use>
+        "hashfn"  : <The name of the hash function to use>,
         "source"  : <the URL serving the updated ruleset db>,
         "version" : <ruleset release version>
     }
