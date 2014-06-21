@@ -23,6 +23,10 @@ ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
 ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
 ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
+HASHLENGTH = 64;      // hex(sha1 + md5)
+MIN_WHITELIST=1000;   // do not tolerate whitelists outside these bounds
+MAX_WHITELIST=10000;
+
 // XXX: We should make the _observatory tree relative.
 LLVAR="extensions.https_everywhere.LogLevel";
 
@@ -56,7 +60,6 @@ const INCLUDE = function(name) {
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
-INCLUDE('X509ChainWhitelist');
 INCLUDE('NSS');
 
 function SSLObservatory() {
@@ -105,8 +108,6 @@ function SSLObservatory() {
   // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
 
-  this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
-
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
       .getService(Components.interfaces.nsIPrefBranchInternal);
   var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
@@ -142,6 +143,9 @@ function SSLObservatory() {
   }
 
   this.testProxySettings();
+
+  this.loadCertWhitelist();
+  this.maybeUpdateCertWhitelist();
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -410,6 +414,9 @@ SSLObservatory.prototype = {
     if (!certchain) {
       return;
     }
+
+    this.maybeUpdateCertWhitelist();
+
     var host_ip = "-1";
     var httpchannelinternal = channel.QueryInterface(Ci.nsIHttpChannelInternal);
     try {
@@ -435,19 +442,17 @@ SSLObservatory.prototype = {
 
     if(!this.myGetBoolPref("use_whitelist")) {
       this.log(WARN, "Not using whitelist to filter cert chains.");
-    }
-    else if (this.isChainWhitelisted(chain_hash)) {
-      this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+    } else if (this.isChainWhitelisted(chain_hash)) {
+      this.log(INFO, "This cert chain is whitelisted. Not submitting. ");
       return;
-    }
-    else {
-      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+    } else {
+      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission");
     }
 
     if (channel.URI.port == -1) {
-        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false);
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
     } else {
-        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false);
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
     }
   },
 
@@ -522,12 +527,96 @@ SSLObservatory.prototype = {
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
-  isChainWhitelisted: function(chainhash) {
-    if (X509ChainWhitelist == null) {
-      this.log(WARN, "Could not find whitelist of popular certificate chains, so ignoring whitelist");
-      return false;
+  loadCertWhitelist: function() {
+    var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+    file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
+    var data = this.HTTPSEverywhere.rw.read(file);
+    this.whitelist = JSON.parse(data);
+    this.log(DBUG, "yay\n" + data);
+  },
+
+  saveCertWhitelist: function() {
+    var loc = "chrome://https-everywhere/content/code/X509ChainWhitelist.json";
+    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+    var path = this.HTTPSEverywhere.rw.chromeToPath(loc);
+    this.log(NOTE,"SAVING cert whitelist to " + path);
+    file.initWithPath(path);
+    var store = JSON.stringify(this.whitelist, null, " ");
+    var data = this.HTTPSEverywhere.rw.write(file, store);
+  },
+
+  maybeUpdateCertWhitelist: function() {
+    // We aim to update the cert whitelist every 1-3 days
+    var due_pref = "extensions.https_everywhere._observatory.whitelist_update_due";
+    var update_due = this.prefs.getIntPref(due_pref);
+    var now = Date.now() / 1000; // Date.now() is milliseconds, but let's be
+                                 // safe with int pref storage on 32 bit
+                                 // systems
+    var next = now + (1 + 2 * Math.random()) * 3600 * 24;  // 1-3 days from now
+    if (update_due == 0) {
+       // first run
+       this.prefs.setIntPref(due_pref, next);
+       return;
     }
-    if (X509ChainWhitelist[chainhash] != null) {
+    if (now < update_due) return;
+
+    // Updating the certlist might yet fail.  But that's okay, we can
+    // always live with a slightly older one.
+    this.prefs.setIntPref(due_pref,next);
+    this.log(INFO, "Next whitelist update due at " + next);
+
+    this.updateCertWhitelist();
+  },
+
+  updateCertWhitelist: function() {
+    // Fetch a new certificate whitelist by XHR and save it to disk
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+
+    req.open("GET", "https://s.eff.org/files/X509ChainWhitelist.json", true);
+    req.responseType = "json";
+
+    var that = this;
+    req.onreadystatechange = function() {
+      if (req.status == 200) {
+        if (typeof req.response != "object") {
+          that.log(WARN, "INSUFFICIENT WHITELIST OBJECTIVITY");
+          return false;
+        }
+        var whitelist = req.response;
+        var c = 0;
+        for (var hash in whitelist) {
+          c++;
+          if (typeof hash != "string" || hash.length != HASHLENGTH ) {
+            that.log(WARN, "UNACCEPTABLE WHITELIST HASH " + hash);
+            return false;
+          }
+        }
+        if (c < MIN_WHITELIST || c > MAX_WHITELIST) {
+          that.log(WARN, "Invalid chain whitelist of size " + c);
+          return false;
+        }
+        that.log(WARN, "Routine update of SSL Observatory cert whitelist");
+        that.whitelist = whitelist;
+        that.log(NOTE, "Got valid whitelist..." + JSON.stringify(whitelist));
+        that.saveCertWhitelist();
+      } else {
+        that.log(NOTE, "Unexpected response status " + req.status + " fetching chain whitelist");
+        return false;
+      }
+    }
+    req.send();
+  },
+
+  isChainWhitelisted: function(chainhash) {
+    if (this.whitelist == null) {
+      this.log(WARN, "Could not find whitelist of popular certificate chains, so ignoring whitelist");
+      return null;
+    }
+
+    if (this.whitelist[chainhash] != null) {
+      this.log(INFO, "whitelist entry for " + chainhash);
       return true;
     }
     return false;
@@ -652,7 +741,7 @@ SSLObservatory.prototype = {
     return true;
   },
 
-  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting) {
+  submitChainArray: function(certArray, fps, domain, channel, host_ip, warning, resubmitting, chain_hash) {
     var base64Certs = [];
     // Put all this chain data in one object so that it can be modified by
     // subroutines if required
@@ -669,7 +758,7 @@ SSLObservatory.prototype = {
       if (Object.keys(this.delayed_submissions).length < MAX_DELAYED)
         if (!(c.fps[0] in this.delayed_submissions)) {
           this.log(WARN, "Planning to retry submission...");
-          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
+          let retry = function() { this.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true, chain_hash); };
           this.delayed_submissions[c.fps[0]] = retry;
         }
       return;
@@ -690,9 +779,9 @@ SSLObservatory.prototype = {
     if (this.myGetBoolPref("testing")) {
       reqParams.push("testing=1");
       // The server can compute these, but they're a nice test suite item!
-      reqParams.push("fplist="+this.compatJSON.encode(c.fps));
+      reqParams.push("fplist="+JSON.stringify(c.fps));
     }
-    reqParams.push("certlist="+this.compatJSON.encode(base64Certs));
+    reqParams.push("certlist="+JSON.stringify(base64Certs));
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
@@ -739,7 +828,7 @@ SSLObservatory.prototype = {
         that.log(DBUG, "Popping one off of outstanding requests, current num is: "+that.current_outstanding_requests);
 
         if (req.status == 200) {
-          that.log(INFO, "Successful cert submission");
+          that.log(NOTE, "Successful cert submission for " + domain + " " + chain_hash);
           if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
             if (c.fps[0] in that.already_submitted)
               delete that.already_submitted[c.fps[0]];
@@ -753,20 +842,22 @@ SSLObservatory.prototype = {
             if (++n >= 2) break;
           }
         } else if (req.status == 403) {
-          that.log(WARN, "The SSL Observatory has issued a warning about this certificate for " + domain);
-          try {
-            var warningObj = JSON.parse(req.responseText);
-            if (win) that.warnUser(warningObj, win, c.certArray[0]);
-          } catch(e) {
-            that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
-            that.log(WARN, req.responseText);
+          that.log(INFO, "The SSL Observatory has issued a warning about this certificate for " + domain);
+          if(!warning && that.prefs.getBoolPref("extensions.https_everywhere._observatory.show_cert_warning")) {
+            try {
+              var warningObj = JSON.parse(req.responseText);
+              if (win) that.warnUser(warningObj, win, c.certArray[0]);
+            } catch(e) {
+              that.log(WARN, "Failed to process SSL Observatory cert warnings :( " + e);
+              that.log(WARN, req.responseText);
+            }
           }
         } else {
           // Submission failed
           if (c.fps[0] in that.already_submitted)
             delete that.already_submitted[c.fps[0]];
           try {
-            that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
+            that.log(WARN, "Cert submission failure "+req.status+ " for " + domain + ": "+req.responseText);
           } catch(e) {
             that.log(WARN, "Cert submission failure and exception: "+e);
           }
@@ -775,7 +866,7 @@ SSLObservatory.prototype = {
           if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
             if (!(c.fps[0] in that.delayed_submissions)) {
               that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true); };
+              let retry = function() { that.submitChainArray(certArray, fps, domain, channel, host_ip, warning, true, chain_hash); };
               that.delayed_submissions[c.fps[0]] = retry;
             }
 

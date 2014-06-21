@@ -46,7 +46,7 @@ After running this close your terminal and then open it again. Then install lxml
 Hacking on the Source Code
 --------------------------
 
-Please work off of the "3.0" branch if you're submitting changes to the latest stable release and use "master" if you're submitting changes to the latest development release.
+Please work off of the "3.5" branch if you're submitting changes to the latest stable release and use "master" if you're submitting changes to the latest development release.
 
 ### Writing rulesets
 
@@ -84,6 +84,8 @@ To build the Chrome version go to the git repository root and run:
     ./makecrx.sh
 
 After building the extension the xpi files (for Firefox) and crx files (for Chrome) get created in the pkg directory. You can open those files within your browser to install the browser extension.
+
+To construct ruleset file in Windows use `./utils/merge-rulesets.js`
 
 Ruleset Tests
 -------------
