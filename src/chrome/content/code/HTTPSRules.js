@@ -479,6 +479,21 @@ const HTTPSRules = {
     }
   },
 
+  shouldIgnoreURI: function(uri) {
+    // Ignore all non-http(s) requests?
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
+    // Ignore OCSP requests
+    let OCSP_SERVERS = ["ocsp.digicert.com",
+                        "evintl-ocsp.verisign.com",
+                        "evsecure-ocsp.verisign.com",
+                        "clients1.google.com"];
+    if (OCSP_SERVERS.indexOf(uri.host) !== -1) {
+      this.log(NOTE, "got ocsp request "+uri.spec);
+      return true;
+    }
+    return false;
+  },
+
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
@@ -486,6 +501,7 @@ const HTTPSRules = {
     // the new uri if there was a rewrite.  Now it returns a JS object with a
     // newuri attribute and an applied_ruleset attribute (or null if there's
     // no rewrite).
+    if (this.shouldIgnoreURI(input_uri)) { return null; }
     var i = 0; 
     userpass_present = false; // Global so that sanitiseURI can tweak it.
                               // Why does JS have no tuples, again?
