@@ -1,6 +1,10 @@
 <!--
 	CDN buckets:
 
+		- c573862.r62.cf0.rackcdn.com
+
+			- payload.cargocollective.com
+
 		- c3426899.r99.cf0.rackcdn.com
 
 			- payload56.cargocollective.com
@@ -26,15 +30,28 @@
 			- payload141.cargocollective.com
 
 
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
-		- (www.)	(refused)
+		- (www.) *
+
+	* Works; mixed css from payloud
 
 -->
 <ruleset name="Cargo (partial)">
 
+	<target host="cargocollective.com" />
 	<target host="*.cargocollective.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?cargocollective\.com/(?!_css/|favicon\.ico|_gfx/|stylesheet/)" /-->
 
+
+	<rule from="^http://(www\.)?cargocollective\.com/(?=_css/|favicon\.ico|_gfx/|stylesheet/)"
+		to="https://$1cargocollective.com/" />
+
+	<rule from="^http://payload\.cargocollective\.com/"
+		to="https://c573862.ssl.cf0.rackcdn.com/" />
 
 	<rule from="^http://payload56\.cargocollective\.com/"
 		to="https://c3426899.ssl.cf0.rackcdn.com/" />
