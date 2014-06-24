@@ -46,7 +46,7 @@ After running this close your terminal and then open it again. Then install lxml
 Hacking on the Source Code
 --------------------------
 
-Please work off of the "3.0" branch if you're submitting changes to the latest stable release and use "master" if you're submitting changes to the latest development release.
+Please work off of the "3.5" branch if you're submitting changes to the latest stable release and use "master" if you're submitting changes to the latest development release.
 
 ### Writing rulesets
 
