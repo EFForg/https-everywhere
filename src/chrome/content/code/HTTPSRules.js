@@ -462,7 +462,7 @@ const HTTPSRules = {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
         var ruleset_id = "custom_" + i;
-        RuleWriter.read(rulefiles[i], this, ruleset_id);
+        RuleWriter.rulesetFromFile(rulefiles[i], this, ruleset_id);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
