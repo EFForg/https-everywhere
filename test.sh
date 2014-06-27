@@ -4,7 +4,7 @@ set -e
 cd "`dirname $0`"
 
 # dummy Jetpack addon that contains tests
-TEST_ADDON_PATH=../https-everywhere-tests/
+TEST_ADDON_PATH=./https-everywhere-tests/
 LATEST_SDK_VERSION=1.16
 
 # firefox profile that has HTTPS Everywhere installed
