@@ -10,12 +10,12 @@ LATEST_SDK_VERSION=1.16
 # firefox profile that has HTTPS Everywhere installed
 PROFILE_DIRECTORY=/tmp/test_profile
 
-if [ ! -d "$TEST_ADDON_PATH"]; then
+if [ ! -d "$TEST_ADDON_PATH" ]; then
   echo "Test addon path does not exist"
   exit 1
 fi
 
-if [ ! -d "$PROFILE_DIRECTORY"]; then
+if [ ! -d "$PROFILE_DIRECTORY" ]; then
   echo "Firefox profile directory does not exist"
   exit 1
 fi
