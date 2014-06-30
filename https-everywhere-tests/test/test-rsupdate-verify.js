@@ -36,11 +36,11 @@ function hashSHA256(data) {
                     .createInstance(Ci.nsIScriptableUnicodeConverter);
   let hashing = Cc['@mozilla.org/security/hash;1']
                   .createInstance(Ci.nsICryptoHash);
-  function toHexString(string) {
+  function toHexString(charCode) {
     return ('0' + charCode.toString(16)).slice(-2);
   }
   hashing.init(hashing.SHA256);
-  converter.encoding = 'UTF-8';
+  converter.charset = 'UTF-8';
   let result = {};
   let converted = converter.convertToByteArray(data, result);
   hashing.update(converted, converted.length);
@@ -65,9 +65,6 @@ exports['test update JSON parsing'] = function(assert) {
 
 exports['test update JSON signature validity'] = function(assert) {
   let hashed = hashSHA256(UPDATE_JSON);
-  assert.equal(hashed,
-    'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
-    'Test that the update.json data hashed to the right value.');
   assert.ok(validUpdateData(hashed, UPDATE_JSON_SIG),
     'Test that the update.json raw data is authentic');
 };
