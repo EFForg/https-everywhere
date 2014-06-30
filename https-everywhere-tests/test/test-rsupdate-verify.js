@@ -2,10 +2,6 @@
 
 const { Cc, Ci } = require('chrome');
 
-// URLs of gist raws containing some example data
-const UPDATE_JSON = 'https://gist.githubusercontent.com/redwire/c9b668ae3360e0d91691/raw/eb7e5897b51be660991c80dc0fca3bf93da823e0/example_update_json';
-const UPDATE_JSON_SIG = 'https://gist.githubusercontent.com/redwire/f0d28c982fff5387568b/raw/be62109572d2a9416901f882984aceb76dae8f62/example_update_json_sig';
-
 const PUBKEY = [
   'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwNFv2HXZ5YdXa18irhRR',
   'rzGGQERbzEKGhE/5NHY5go75dpt0eIe3AMhRNkeDaF3fiV6yABAjre6EZlxRvzzx',
@@ -16,16 +12,24 @@ const PUBKEY = [
   'ywIDAQAB'
 ].join('');
 
-function makeRequest(method, url, onResponse) {
-  let xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1']
-              .createInstance(Ci.nsIXMLHttpRequest);
-  xhr.open(method, url, true);
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) { // Complete
-      onResponse(xhr);
-    }
-  };
-}
+const UPDATE_JSON = [
+  '{"branch": "stable"',
+  ',"changes": "Testing signature verification"',
+  ',"date": "30-06-2014"',
+  ',"hash": "df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b"',
+  ',"hashfn": "sha256"',
+  ',"source": "https://eff.org/files/https-everywhere/database.sqlite"',
+  ',"version": "3.5.3.1"}'
+].join('\n');
+
+const UPDATE_JSON_SIG = [
+  'qe6iRKKmxpd9pgFL46QBQXgLi9u/cE0EQ1eBXcBDZaOkbvHqdjvy0Z7YyxnQbKFb',
+  'XLi1MBLraMUsBSMnEqduoi1bbaCrFa+Z0lIW9mXl04/LWTjbQFpfC5svtmGghF9b',
+  'xP+hExtC3281GniKjk7XGC4G26bAF3feIIzg+4G26XOEJYvVgjfRBfD7q4MAHh5/',
+  '58kd2Xz9GERK39xxu4LGW30Q/StOtuNX2MSLPebyY4Grsv96kB/dZKTvMKahhJbr',
+  'Iubt2OcyBVq4SLHlm85bx7B86id3KfUVtrnqjHFOD6Hk+zqpB6sft4q4sTjgoCiP',
+  '2M4CSUM9vYijpUYNu5NBOg=='
+].join('');
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -51,34 +55,21 @@ function validUpdateData(updateHash, signature) {
 }
 
 exports['test update JSON parsing'] = function(assert) {
-  makeRequest('GET', UPDATE_JSON, function(xhr) {
-    assert.strictEqual(xhr.status, 200, 'Test that update.json data was received');
-    assert.strictEqual(xhr.responseText.length, 272, // update.json contains 272 bytes
-      'Test that the right amount of data was received.');
-    let updateObj = JSON.parse(xhr.responseText);
-    assert.equal(updateObj.hash, 
-      'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
-      'Test that the data was parsed into JSON properly');
-  });
+  let updateObj = JSON.parse(UPDATE_JSON);
+  // This test is just meant to make sure that the object was parsed into JSON
+  // properly and that the attributes of the object created can be read.
+  assert.equal(updateObj.hash, 
+    'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
+    'Test that the data was parsed into JSON properly');
 };
 
 exports['test update JSON signature validity'] = function(assert) {
-  makeRequest('GET', UPDATE_JSON, function(xhr1) {
-    if (xhr1.status === 200) {
-      makeRequest('GET', UPDATE_JSON_SIG, function(xhr2) {
-        assert.strictEqual(xhr2.status, 200,
-          'Test that the update.json.sig data was received');
-        assert.strictEqual(xhr2.responseText.length, 349, 
-          'Test that the right amount of data was received');
-        let hashed = hashSHA256(xhr1.responseText);
-        assert.equal(hashed,
-          'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
-          'Test that the update.json data hashed to the right value.');
-        assert.ok(validUpdateData(hashed, xhr2.responseText),
-          'Test that the update.json raw data is authentic');
-      });
-    }
-  });
+  let hashed = hashSHA256(UPDATE_JSON);
+  assert.equal(hashed,
+    'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
+    'Test that the update.json data hashed to the right value.');
+  assert.ok(validUpdateData(hashed, UPDATE_JSON_SIG),
+    'Test that the update.json raw data is authentic');
 };
 
 require('sdk/test').run(exports);
