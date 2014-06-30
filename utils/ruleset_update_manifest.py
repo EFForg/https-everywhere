@@ -105,7 +105,7 @@ while update['hash'] is None:
 while not done:
     file_name = input("Where should the JSON contents be stored? ")
     try:
-        json_data = json.dumps(update, sort_keys=True).replace(', ', '\n')
+        json_data = json.dumps(update, sort_keys=True).replace(', ', '\n,')
         open(file_name, 'w').write(json_data)
         print("The update contents have been successfully written.")
         done = True
