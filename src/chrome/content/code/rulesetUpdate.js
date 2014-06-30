@@ -144,7 +144,7 @@ RulesetUpdater.prototype = {
     var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
                       .createInstance(ci.nsIScriptableUnicodeConverter);
     var hashing = Cc['@mozilla.org/security/hash;1']
-                    .createInstance(Ci.interfaces.nsICryptoHash);
+                    .createInstance(Ci.nsICryptoHash);
     function toHexString(charCode) {
       return ('0' + charCode.toString(16)).slice(-2);
     }
