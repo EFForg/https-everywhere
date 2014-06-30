@@ -49,9 +49,9 @@ function hashSHA256(data) {
 }
 
 function validUpdateData(updateHash, signature) {
-  let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
-                   .createInstance(Ci.nsIDataSignatureVerifier);
-  return verifier.verifyData(updateHash, signature, PUBKEY);
+  return Cc['@mozilla.org/security/datasignatureverifier;1']
+           .createInstance(Ci.nsIDataSignatureVerifier)
+           .verifyData(updateHash, signature, PUBKEY);
 }
 
 exports['test update JSON parsing'] = function(assert) {
