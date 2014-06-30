@@ -148,7 +148,7 @@ RulesetUpdater.prototype = {
     function toHexString(charCode) {
       return ('0' + charCode.toString(16)).slice(-2);
     }
-    converter.encoding = 'UTF-8';
+    converter.charset = 'UTF-8';
     var result = {};
     var converted = converter.convertToByteArray(data, result);
     if      (hashfn === 'md5')    hashing.init(hashing.MD5);
