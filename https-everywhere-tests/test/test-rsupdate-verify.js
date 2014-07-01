@@ -12,12 +12,12 @@ const PUBKEY = '' +
   'ywIDAQAB';
 
 const UPDATE_JSON = '' +
-  '{"branch": "stable"' +
-  ',"changes": "Testing signature verification"' +
-  ',"date": "30-06-2014"' +
-  ',"hash": "df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b"' +
-  ',"hashfn": "sha256"' +
-  ',"source": "https://eff.org/files/https-everywhere/database.sqlite"' +
+  '{"branch": "stable"\n' +
+  ',"changes": "Testing signature verification"\n' +
+  ',"date": "30-06-2014"\n' +
+  ',"hash": "df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b"\n' +
+  ',"hashfn": "sha256"\n' +
+  ',"source": "https://eff.org/files/https-everywhere/database.sqlite"\n' +
   ',"version": "3.5.3.1"}';
 
 const UPDATE_JSON_SIG = '' +
@@ -26,7 +26,7 @@ const UPDATE_JSON_SIG = '' +
   'xP+hExtC3281GniKjk7XGC4G26bAF3feIIzg+4G26XOEJYvVgjfRBfD7q4MAHh5/' +
   '58kd2Xz9GERK39xxu4LGW30Q/StOtuNX2MSLPebyY4Grsv96kB/dZKTvMKahhJbr' +
   'Iubt2OcyBVq4SLHlm85bx7B86id3KfUVtrnqjHFOD6Hk+zqpB6sft4q4sTjgoCiP' +
-  '2M4CSUM9vYijpUYNu5NBOg'
+  '2M4CSUM9vYijpUYNu5NBOg==';
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -63,6 +63,9 @@ exports['test update JSON parsing'] = function(assert) {
 
 exports['test update JSON signature validity'] = function(assert) {
   let hashed = hashSHA256(UPDATE_JSON);
+  assert.equal(hashed,
+    '86694a08634f58f0586d66594a654c799dfbeaf06e1f7eeee3a4f5168ca289b0',
+    'Test that the update.json data hashed to the right value');
   assert.ok(validUpdateData(hashed, UPDATE_JSON_SIG),
     'Test that the update.json raw data is authentic');
 };
