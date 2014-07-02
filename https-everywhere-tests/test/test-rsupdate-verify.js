@@ -41,7 +41,7 @@ function hashSHA256(data) {
   let result = {};
   let converted = converter.convertToByteArray(data, result);
   hashing.update(converted, converted.length);
-  var hashed = hashing.finish(false);
+  let hashed = hashing.finish(false);
   return [toHexString(hashed.charCodeAt(i)) for (i in hashed)].join('');
 }
 
@@ -63,10 +63,13 @@ exports['test update JSON parsing'] = function(assert) {
 
 exports['test update JSON signature validity'] = function(assert) {
   let hashed = hashSHA256(UPDATE_JSON);
+  let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
+                   .createInstance(Ci.nsIDataSignatureVerifier);
   assert.equal(hashed,
     '86694a08634f58f0586d66594a654c799dfbeaf06e1f7eeee3a4f5168ca289b0',
     'Test that the update.json data hashed to the right value');
-  assert.ok(validUpdateData(hashed, UPDATE_JSON_SIG),
+  assert.equal(typeof verifier, 'object', 'Test verifier creation success');
+  assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
     'Test that the update.json raw data is authentic');
 };
 
