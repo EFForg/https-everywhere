@@ -75,7 +75,7 @@ exports['test update JSON signature validity'] = function(assert) {
     '073fba85f17718a511aac4019ddd220f05b14adb99649c9fcbd78f0ba88b974c',
     'Test that the update.json data hashed to the right value');
   assert.equal(typeof verifier, 'object', 'Test verifier creation success');
-  assert.ok(verifier.verifyData(hashed, atob(UPDATE_JSON_SIG), PUBKEY),
+  assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
     'Test that the update.json raw data is authentic');
 };
 
