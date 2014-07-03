@@ -1,6 +1,7 @@
 // Test the signature verification of the sha256 hash of update.json
 
-const { Cc, Ci } = require('chrome');
+const { Cc, Ci, Cu } = require('chrome');
+const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
 const PUBKEY = '' +
   'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuBGrCtHS1L1wE0loA/ay'+
@@ -50,6 +51,11 @@ function validUpdateData(updateHash, signature) {
            .createInstance(Ci.nsIDataSignatureVerifier)
            .verifyData(updateHash, signature, PUBKEY);
 }
+
+exports['test binary-base64 encoding'] = function(assert) {
+  assert.strictEqual('hello', atob(btoa('hello')), 
+    'Test that binary/base64 encoding works.');
+};
 
 /* This test is just meant to make sure that the object was parsed into JSON
  * properly and that the attributes of the object created can be read.
