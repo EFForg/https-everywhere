@@ -18,7 +18,7 @@ const UPDATE_JSON = '' +
   ',"hash": "df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b"\n'+
   ',"hashfn": "sha256"\n'+
   ',"source": "https://eff.org/files/https-everywhere/ruleset.sqlite"\n'+
-  ',"version": "3.5.2.2"}';
+  ',"version": "3.5.2.2"}\n';
 
 const UPDATE_JSON_SIG = '' +
   'b5B2vjy2efKWQ7VPVODrTjScnzF+PCoUALc4MOZFSoovCP2bVsANo9khWymsi5fF'+
