@@ -21,10 +21,20 @@ The key used to for signing should be a 2048-bit RSA key, which you could
 generate with the command:
 
     openssl genrsa -out privkey.pem 2048
+    
+Once `update.json` has been created and a private key is present to sign with,
+the next step is to compute the sha256 digest of `update.json`, which we will sign later.
+To compute the digest and store it in `update.digest`, issue the command:
 
-To sign 
-    openssl dgst -sign privkey.pem -out update.json.sig update.json
+    digest=`openssl sha -sha256 -hex update.json` && echo ${digest#* } > update.digest
 
+Now the signature over the digest can be computed, converted to base64, and stored in
+`update.json.sig` via the commands:
+
+    openssl rsautl -sign -in update.digest -out signtmp.sig -inkey privkey.pem
+    openssl base64 -in signtmp.sig -out update.json.sig
+    rm signtmp.sig # OPTIONAL - remove the binary-encoded signature
+    
 And finally, the public key to hardcode into the HTTPS-Everywhere extension to enable it
 to verify such signatures can be output to `pubkey.pem` via the command:
 
