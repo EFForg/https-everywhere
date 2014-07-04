@@ -3,14 +3,11 @@
 const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
-const PUBKEY = '' +
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmjKxzFnKCXiyRYKi4gKN'+
-  'OJQjGKgeMXTwTZeKSD0vfNJnXQfJS4irxZ6O5EcKpgOY0zAp3QcotKA4S4GSLRXv'+
-  'H3erwfh6b/HOGMELbi/Lm2cLiZFkWjZDagVyJ6D6mJdrv6kGho8CrrkeLm4kSiXV'+
-  '089+nnxdn7E/ZWJLF0vb1oCqkxqPUGtgFbBQ0/sr0FmtPBTY+f5Ps4t3+9iB2bli'+
-  '02lFYWSaYhhIDUClE/28JVbmlhJZOWrOZ+KgsKrsvgQ/oJ5KQdfwB2mD7qq7Qh5/'+
-  'D2lBHFMFe0CU3HKq95UuWacIQ+iEXMCq10G4mFWB3YcyMRvtudVCWSrMIOruG+B2'+
-  'PwIDAQAB';
+const PUBKEY = ''+
+  'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2zPk2N6p2re361bqNCPmQRgaX'+
+  '+CQcnrOa2OeQ0HfwEz/9uC1JmwToCYCqXLx4KDNUD9TXGTyN/y8QwpqTC9csFc+n'+
+  'AUbg5gQ/YaL5Jt0n9H7iPr16aoB4BBX3T+yJLleaLSpoqRVpEtyx6XyogsXjJzbQ'+
+  'PRskjDetZDTUc/6/pQIDAQAB';
 
 const UPDATE_JSON = '' +
   '{"branch": "stable"\n'+
@@ -22,12 +19,9 @@ const UPDATE_JSON = '' +
   ',"version": "3.5.3.2"}\n';
 
 const UPDATE_JSON_SIG = '' +
-  'K0Kj9EbDU6fXkJGWoqO/lWmOvAaMmFRQlTHD7nps0jONkGxDrQO5NAnbY6Io5RMy'+
-  'cUmhLPLqGIlqN9l0vQzJwkCze01qUK1/eZNBTm901azLS2l+mdL2IX7cDuK+QJ7O'+
-  '5XHFLyjWlAv80gY/Erv2cMxJSCnweQdAbzwGoJg29I8RyTcH0nCIo7UkBqnIvYMi'+
-  '+q1bH+Kulx9pQurr774w9nqtAPnIXEVMEd0J64auT8zbsdrrwn9kZpu1aZfBGBFU'+
-  'HY7xqi6dGukdYcx18BGFQ9OR/gSO34f7lRjAM5Z9HAd1KziDgHwJa555xXOtzxSu'+
-  'FjOP4Egaiz5PODhSbYFHfA==';
+  'IS3xOEJZ3E5zsScccgqfmnESnobyHKwdi2o+27T3fTe7BgbynU/a5HdKgKOK2lNP'+
+  '9MEeiijuPbLJ8XkbrYsxZ6ylg66fR4ZRRH8KOzny60UC/r9Pmhe8A85ciXnDapp/'+
+  'Ryiaknk+nShRxD1QyqCXl6mP1ZyOG3oQoaIY2Ku7nNA=';
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
