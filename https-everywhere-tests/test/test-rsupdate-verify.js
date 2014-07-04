@@ -22,12 +22,12 @@ const UPDATE_JSON = '' +
   ',"version": "3.5.3.2"}\n';
 
 const UPDATE_JSON_SIG = '' +
-  'b5B2vjy2efKWQ7VPVODrTjScnzF+PCoUALc4MOZFSoovCP2bVsANo9khWymsi5fF'+
-  '466u5xOfmJwwY24v/GqdPtXDLVtT1HGBA4+CNFekQP7KnyZUpcjkNjcbnxWJftx/'+
-  'OifqTFngcQqWLajqbCIhux6kIHc5bltn1aBDscV/MwDKn9kqmqQVjjkhYGehKN6X'+
-  'iduWCY8gygv5OOF5GZGYYkaCLW5xqPphQ84d+ZY/18emDBzA6R16qfPM8jT7PzrN'+
-  'IuIaMdZ3YjXF7dQbS7xo+gXYa/pQnCeYhGQKeomc0x4gfcQB9cJB/o++IZRPYFTP'+
-  '6t59nUaCm2fSQGse/OairQ==';
+  'K0Kj9EbDU6fXkJGWoqO/lWmOvAaMmFRQlTHD7nps0jONkGxDrQO5NAnbY6Io5RMy'+
+  'cUmhLPLqGIlqN9l0vQzJwkCze01qUK1/eZNBTm901azLS2l+mdL2IX7cDuK+QJ7O'+
+  '5XHFLyjWlAv80gY/Erv2cMxJSCnweQdAbzwGoJg29I8RyTcH0nCIo7UkBqnIvYMi'+
+  '+q1bH+Kulx9pQurr774w9nqtAPnIXEVMEd0J64auT8zbsdrrwn9kZpu1aZfBGBFU'+
+  'HY7xqi6dGukdYcx18BGFQ9OR/gSO34f7lRjAM5Z9HAd1KziDgHwJa555xXOtzxSu'+
+  'FjOP4Egaiz5PODhSbYFHfA==';
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -63,7 +63,7 @@ exports['test binary-base64 encoding'] = function(assert) {
 exports['test update JSON parsing'] = function(assert) {
   let updateObj = JSON.parse(UPDATE_JSON);
   assert.equal(updateObj.hash, 
-    'df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b',
+    'edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357',
     'Test that the data was parsed into JSON properly');
 };
 
