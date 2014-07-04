@@ -106,7 +106,7 @@ while not done:
     file_name = input("Where should the JSON contents be stored? ")
     try:
         json_data = json.dumps(update, sort_keys=True).replace(', ', '\n,')
-        open(file_name, 'w').write(json_data)
+        open(file_name, 'w').write(json_data + '\n')
         print("The update contents have been successfully written.")
         done = True
     except IOError:
