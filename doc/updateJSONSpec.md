@@ -28,17 +28,22 @@ To compute the digest and store it in `update.digest`, issue the command:
 
     digest=`openssl sha -sha256 -hex update.json` && echo ${digest#* } > update.digest
 
-Now the signature over the digest can be computed, converted to base64, and stored in
-`update.json.sig` via the commands:
+The signature over `update.digest` using our private key can now be generated and stored
+in `update.json.sig`, and optionally converted to base64 and stored in `update.json.sigb64`
+via the commands:
 
-    openssl rsautl -sign -in update.digest -out signtmp.sig -inkey privkey.pem
-    openssl base64 -in signtmp.sig -out update.json.sig
-    rm signtmp.sig # OPTIONAL - remove the binary-encoded signature
-    
+    openssl dgst -sign privkey.pem -out update.json.sig update.digest
+    openssl base64 -in update.json.sig -out update.json.sigb64
+
 And finally, the public key to hardcode into the HTTPS-Everywhere extension to enable it
 to verify such signatures can be output to `pubkey.pem` via the command:
 
     openssl rsa -in privkey.pem -pubout -out pubkey.pem
+
+You can verify that your public key can be used to successfully verify the signature
+generated with the command:
+
+    openssl dgst -verify pubkey.pem -signature update.json.sig update.digest
 
 Before you can include the contents of pubkey.pem in the extension, the header and footer
 must be removed so that only the key itself is present.
