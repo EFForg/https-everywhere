@@ -4,22 +4,22 @@ const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
 const PUBKEY = '' +
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuBGrCtHS1L1wE0loA/ay'+
-  'WpQHt7212x9yCNFo0YPHiWJhhIclxC4T7cy8MGyugjSn1h8dvPczF1iFrSDTFid8'+
-  'nc5rBZMvmm1GfNJBjsxWssUtlSQowi/QWuBZIYIx/UF7euF0h25lBTGwzluTndPS'+
-  '5VNoyg3O1Lipp5PmkU/hc4Xgdner8fCz/lsQhiYRiWmuR9NLBuzj38DHm67gamUz'+
-  'gP8vatVToojR4hMB9iSOys3GjK5hrvyMeQTm0l9mQUc7KnJSBqRvzBS5kk1It4NZ'+
-  'gKv6jYnh2d9BsX3Qit66DDGgKXhcFsTIntNGdUdh8R5EqL1v5K7A3tnfz73Yw9XO'+
-  'kwIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmjKxzFnKCXiyRYKi4gKN'+
+  'OJQjGKgeMXTwTZeKSD0vfNJnXQfJS4irxZ6O5EcKpgOY0zAp3QcotKA4S4GSLRXv'+
+  'H3erwfh6b/HOGMELbi/Lm2cLiZFkWjZDagVyJ6D6mJdrv6kGho8CrrkeLm4kSiXV'+
+  '089+nnxdn7E/ZWJLF0vb1oCqkxqPUGtgFbBQ0/sr0FmtPBTY+f5Ps4t3+9iB2bli'+
+  '02lFYWSaYhhIDUClE/28JVbmlhJZOWrOZ+KgsKrsvgQ/oJ5KQdfwB2mD7qq7Qh5/'+
+  'D2lBHFMFe0CU3HKq95UuWacIQ+iEXMCq10G4mFWB3YcyMRvtudVCWSrMIOruG+B2'+
+  'PwIDAQAB';
 
 const UPDATE_JSON = '' +
   '{"branch": "stable"\n'+
-  ',"changes": "Testing the signature verification process"\n'+
-  ',"date": "02-07-2014"\n'+
-  ',"hash": "df1453c7116d3ebef93ab5ea79d693fdf0ea4eacc01cfa687418fa23319c36b"\n'+
+  ',"changes": "Generating some new data again"\n'+
+  ',"date": "04-07-2014"\n'+
+  ',"hash": "edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357"\n'+
   ',"hashfn": "sha256"\n'+
   ',"source": "https://eff.org/files/https-everywhere/ruleset.sqlite"\n'+
-  ',"version": "3.5.2.2"}\n';
+  ',"version": "3.5.3.2"}\n';
 
 const UPDATE_JSON_SIG = '' +
   'b5B2vjy2efKWQ7VPVODrTjScnzF+PCoUALc4MOZFSoovCP2bVsANo9khWymsi5fF'+
@@ -72,7 +72,7 @@ exports['test update JSON signature validity'] = function(assert) {
   let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                    .createInstance(Ci.nsIDataSignatureVerifier);
   assert.equal(hashed,
-    '073fba85f17718a511aac4019ddd220f05b14adb99649c9fcbd78f0ba88b974c',
+    '9234260c8285fcd940a74a58078985d09b74f4bf97b77ae36f8f6c6fbd774282',
     'Test that the update.json data hashed to the right value');
   assert.equal(typeof verifier, 'object', 'Test verifier creation success');
   assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
