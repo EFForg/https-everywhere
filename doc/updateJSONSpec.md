@@ -46,7 +46,12 @@ generated with the command:
     openssl dgst -verify pubkey.pem -signature update.json.sig update.digest
 
 Before you can include the contents of pubkey.pem in the extension, the header and footer
-must be removed so that only the key itself is present.
+must be removed so that only the key itself is present. This is the same as doing:
+
+    openssl rsa -in privkey.pem -pubout -outform DER -out pubkey.der
+    openssl base64 -in pubkey.der -out public.key
+
+and then using the content of `public.key`.
 
 Fetching
 ========
