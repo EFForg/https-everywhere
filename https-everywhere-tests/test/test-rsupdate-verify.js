@@ -86,7 +86,7 @@ exports['test ruleset version comparison'] = function(assert) {
     'Test that equal version numbers are confirmed equal by version comparator');
   assert.ok(vcmp.compare('4.0development.17', '3.5.3') > 0,
     'Test that 4.0development.17 > 3.5.3');
-  assert.ok(vcmp.compare('3.5.3.2', '3.5.3.1') < 0,
+  assert.ok(vcmp.compare('3.5.3.1', '3.5.3.2') < 0,
     'Test that ruleset version 3.5.3.2 > 3.5.3.1');
 };
 
