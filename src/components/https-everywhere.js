@@ -44,6 +44,8 @@ const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
 const RULESET_UPDATE_CHECK_INTERVAL = 10800000;
+const RSUPDATE_URL_PREF = 'ruleset-update-url';
+const RSUPDATE_SIG_URL_PREF = 'ruleset-update-signature-url';
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -193,6 +195,18 @@ function HTTPSEverywhere() {
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
+
+  // Initialize the ruleset updater, carry out the first test for updates
+  // and start checking for ruleset updates in an interval.
+  var updateJsonURL = this.prefs.getCharPref(RSUPDATE_URL_PREF);
+  var updateJsonSigURL = this.prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
+  this.ruleset_updater = RulesetUpdater(updateJsonURL, updateJsonSigURL);
+  this.ruleset_updater.fetchUpdate();
+  this.rsupdate_interval_id = setInterval(
+    function() {
+      this.ruleset_updater.fetchUpdate();
+    },
+    RULESET_UPDATE_CHECK_INTERVAL);
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
