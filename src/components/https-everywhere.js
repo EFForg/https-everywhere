@@ -145,7 +145,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList', 'rulesetUpdate');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -181,7 +181,7 @@ function StorageController(command) {
 function HTTPSEverywhere() {
 
   // Set up logging in each component:
-  HTTPS.log = HTTPSRules.log = RuleWriter.log = this.log = https_everywhereLog;
+  HTTPS.log = HTTPSRules.log = RuleWriter.log = RulesetUpdater.log = this.log = https_everywhereLog;
 
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;

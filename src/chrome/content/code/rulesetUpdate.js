@@ -51,10 +51,6 @@ function RulesetUpdater(updateManifestSource, updateSigSource) {
 }
 
 RulesetUpdater.prototype = {
-  log: function(level, msg) {
-    https_everywhereLog(level, msg);  
-  },
-
  /* Initiates the check for updates and tests of authenticity.
   * Must be wrapped in a function to call from setInterval, i.e.:
   * setInterval(function() { updater.fetchUpdate(); }, interval);
