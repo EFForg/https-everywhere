@@ -15,6 +15,9 @@ pref("extensions.https_everywhere.performance_tests", false);
 // enable rulesets that trigger mixed content blocking
 pref("extensions.https_everywhere.enable_mixed_rulesets", false);
 
+pref("extensions.https_everywhere.branch_name", "development");
+pref("extensions.https_everywhere.release_version", "4.0.17"); // TODO: is this right?
+pref("extensions.https_everywhere.ruleset_version", "4.0.17.1");
 
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
