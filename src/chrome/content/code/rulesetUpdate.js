@@ -110,8 +110,9 @@ RulesetUpdater.prototype = {
     var verCompare = Cc['@mozilla.org/xpcom/version-comparator;1']
                        .getService(Ci.nsIVersionComparator);
     var newRulesetExtVer = newVersion.slice(0, newVersion.lastIndexOf('.'));
-    return verCompare.compare(extVersion, newRulesetExtVer) === 0\
-        && verCompare.compare(newVersion, rsVersion) > 0;
+    var sameExtVer = verCompare.compare(extVersion, newRulesetExtVer) === 0;
+    var newRSVer = verCompare.compare(newVersion, rsVersion) > 0;
+    return sameExtVer && newRSVer;
   },
 
  /* Issues a request to download a new, zipped ruleset database file and then determines whether
