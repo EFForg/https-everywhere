@@ -52,6 +52,35 @@ function validUpdateData(updateHash, signature) {
            .verifyData(updateHash, signature, PUBKEY);
 }
 
+/* Try to make an XHR to the specified URL with a given method (GET/POST/...),
+ * and call the onSuccess function if the request succeeds.
+ * The function will attempt at most maxCalls requests.
+ */
+function try_request(maxCalls, method, url, onSuccess) {
+  var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1']
+              .createInstance(Ci.nsIXMLHttpRequest);
+  xhr.open(method, url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) { // Complete
+      if (xhr.status === 200) { // OK
+        onSuccess(xhr.responseText);
+      } else {
+        console.log('Did not get STATUS 200 OK in request.');
+        if (maxCalls > 0) {
+          var timePadding = (1000000 * Math.random()) % 300000;
+          setTimeout(
+            function() {
+              this.try_request(maxCalls - 1, method, url, onSuccess);
+            },
+            MIN_REATTEMPT_REQ_INTERVAL + timePadding
+          );
+        }
+      }
+    }
+  };
+  xhr.send();
+}
+
 exports['test binary-base64 encoding'] = function(assert) {
   assert.strictEqual('hello', atob(btoa('hello')), 
     'Test that binary/base64 encoding works.');
@@ -90,4 +119,26 @@ exports['test ruleset version comparison'] = function(assert) {
     'Test that ruleset version 3.5.3.2 > 3.5.3.1');
 };
 
+exports['test data fetching with try_request'] = function(assert) {
+  var updateJSONReceived = false;
+  var updateJSON = '';
+  try_request(3, 'GET', '/data/update.json', function(response) {  
+    updateJSONReceived = true;
+    updateJSON = response;
+  });
+  // Tests cannot be placed inside callback functions, and Javascript doesn't
+  // have a sleep function like Python's `time.sleep`, so we are forced to
+  // manually synchronize things.
+  while (!updateJSONReceived);
+  assert.equal(UPDATE_JSON, updateJSON, 'Test that the XHR received the right data');
+
+  var updateJSONSigReceived = false;
+  var updateJSONSig = '';
+  try_request(3, 'GET', '/data/update.json.sig', function(response) {
+    updateJSONSigReceived = true;
+    updateJSONSig = response;
+  });
+  while (!updateJSONSigReceived);
+  assert.equal(UPDATE_JSON_SIG, UpdateJSONSig, 'Test that the XHR received the right signature');
+};
 require('sdk/test').run(exports);
