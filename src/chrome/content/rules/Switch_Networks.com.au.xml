@@ -1,19 +1,32 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://switchnetworks.com.au/ => https://switchnetworks.com.au/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	^switchnetworks.com.au: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
 	Fully covered subdomains:
 
-		- (www.)?
-		- whmcs
+		- (www.)?	(^ → www)
+		- vweb02...:2083
+		- vweb02...:2096
 
 -->
-<ruleset name="Switch Networks.com.au" default_off='failed ruleset test'>
+<ruleset name="Switch Networks.com.au">
 
 	<target host="switchnetworks.com.au" />
 	<target host="*.switchnetworks.com.au" />
 
+		<test url="http://www.switchnetworks.com.au/" />
 
-	<rule from="^http://(whmcs\.|www\.)?switchnetworks\.com\.au/"
-		to="https://$1switchnetworks.com.au/" />
+
+	<rule from="^http://switchnetworks\.com\.au/"
+		to="https://www.switchnetworks.com.au/" />
+
+	<rule from="^http://vweb02\.switchnetworks\.com\.au:20(83|96)/"
+		to="https://vweb02.switchnetworks.com.au:20$1/" />
+
+		<test url="http://vweb02.switchnetworks.com.au:2083/" />
+		<test url="http://vweb02.switchnetworks.com.au:2096/" />
+
+	<rule from="^http://www\.switchnetworks\.com\.au/"
+		to="https://www.switchnetworks.com.au/" />
 
 </ruleset>
