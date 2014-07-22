@@ -1,8 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://illumina.com/ => https://www.illumina.com/: (7, 'Failed to connect to www.illumina.com port 443: Connection refused')
 	Nonfunctional subdomains:
 
+		- (www.)? *
 		- designstudio *
 		- support *
 
@@ -11,50 +10,50 @@ Fetch error: http://illumina.com/ => https://www.illumina.com/: (7, 'Failed to c
 
 	Problematic subdomains:
 
-		- ^ ¹
-		res ²
+		- assets ¹
+		- blog.basespace ²
+		- res ²
 
-	¹ Mismatched, CN: *.azurewebsites.net
-	² Mismatched, CN: *.vo.msecnd.net
-
-
-	Insecure cookies are set for these domains:
-
-		- my
-		- www
-		- .www
+	¹ Cloudfront
+	² Mismatched
 
 
-	Mixed content:
+	Insecure cookies are set for these domains and hosts:
 
-		- css on www from fast.fonts.com ¹
-		- Images on www from res ²
-		- favicon from res ²
-		- Bug on www from $self ¹
-
-	¹ Secured by us
-	² Not secured by us <= mismatched
+		- .basespace.illumina.com
+		- my.illumina.com
 
 -->
-<ruleset name="Illumina.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Illumina.com (partial)">
 
-	<target host="illumina.com" />
-	<target host="*.illumina.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="accounts.illumina.com" />
+	<target host="basespace.illumina.com" />
+
+	<target host="api.basespace.illumina.com" />
+	<target host="developer.basespace.illumina.com" />
+	<target host="help.basespace.illumina.com" />
+
+	<target host="my.illumina.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="assets.illumina.com" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^my\.illumina\.com$" name="^icb$" /-->
-	<!--securecookie host="^www\.illumina\.com$" name="^ASP\.NET_SessionId$" /-->
-	<!--securecookie host="^\.www\.illumina\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^\.basespace\.illumina\.com$" name="^BasespaceLogin$" /-->
+	<!--securecookie host="^my\.illumina\.com$" name="^BIGipServer[\w.~]+$" /-->
 
-	<securecookie host="^(?:my|\.?www)\.illumina\.com$" name=".+" />
+	<securecookie host="^my\.illumina\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?illumina\.com/"
-		to="https://www.illumina.com/" />
+	<!--rule from="^http://assets\.illumina\.com/"
+		to="https://???.cloudfront.net/" /-->
 
-	<rule from="^http://(developer\.basespace|my)\.illumina\.com/"
-		to="https://$1.illumina.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
