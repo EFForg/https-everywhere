@@ -17,28 +17,58 @@
 
 	Problematic subdomains:
 
-		- ^ *
+		- ^ ¹ ² ³
 
-	* Mismatched, CN: secure.smugmug.com
+	¹ Expired
+	² Mismatched, CN: secure.smugmug.com
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	Fully covered subdomains:
 
 		- (www.)	(^ → www)
+		- dance
 		- cdn
 		- secure
+
+
+	Insecure cookies are set for these domains:
+
+		- .smugmug.com
+
+
+	Mixed content:
+
+		- Images on dance from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="SmugMug.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.smugmug.com" />
+	<target host="dance.smugmug.com" />
+	<target host="secure.smugmug.com" />
+	<target host="www.smugmug.com" />
+
+	<!--	Complications:
+				-->
 	<target host="smugmug.com" />
-	<target host="*.smugmug.com" />
 
 
-	<rule from="^http://(?:www\.)?smugmug\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.smugmug\.com$" name="^(?:__cfduid|_ss|SMSESS|cf_clearance)$" /-->
+
+	<securecookie host="^\.smugmug\.com$" name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http://smugmug\.com/"
 		to="https://www.smugmug.com/" />
 
-	<rule from="^http://(cdn|secure)\.smugmug\.com/"
-		to="https://$1.smugmug.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
