@@ -4,15 +4,27 @@
 		- ftp			(cert valid; shows www's data)
 		- (www.)linux-mtd	(cert: www.infradead.org; shows that domain's data)
 
--->
-<ruleset name="infradead.org (partial)" default_off="expired" platform="cacert">
 
+	^infradead.org: Refused
+	www.infradead.org: Mismatched
+
+-->
+<ruleset name="infradead.org (partial)" platform="cacert">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="casper.infradead.org"/>
+
+	<!--	Complications:
+				-->
 	<target host="infradead.org"/>
 	<target host="www.infradead.org"/>
 
 
-	<!--	!www doesn't work	-->
 	<rule from="^http://(?:www\.)?infradead\.org/"
-		to="https://www.infradead.org/"/>
+		to="https://casper.infradead.org/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
