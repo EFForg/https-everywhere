@@ -1,49 +1,143 @@
 <!--
 	Disabled per https://github.com/EFForg/https-everywhere/issues/1641
+
+
+	For rules causing false/broken MCB, see Kaltura.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- akamai.kaltura.com.edgesuite.net/.../
 
-			- a1870.g.akamai.net/.../
-
 
 	Nonfunctional domains:
+
+		- exchange.kaltura.com ¹
+		- site.kaltura.com ²
 
 		- (www.)kaltura.org
 		- blog.kultura.org
 		- cdn.kultura.org	(Akamai; 503)
 
+	¹ Dropped
+	² Marketo
+
 
 	Problematic subdomains:
 
 		- cdnapi	(akamai)
+		- connect	(Mixed css)
+		- knowledge ³
+		- cdnknowledge ¹
+
+	¹ Akamai
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- cfvod
 		- cdnakmi	(-> cdnsecakmi)
 		- cdnapi	(-> cdnapisec)
 		- cdnapisec
 		- cdnsecakmi
+		- corp
 		- www-stats
+
+
+	These altnames don't exist:
+
+		- www.connect.kaltura.com
+
+
+	Mixed content:
+
+		- iframe on connect from cdnapi.kaltura.com
+
+		- Images, on:
+
+			- connect from $self
+			- knowledge from cdnknowledge.kaltura.com
 
 -->
 <ruleset name="Kaltura (partial)" default_off="Breaks abc.go.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="kaltura.com" />
-	<target host="*.kaltura.com" />
+	<target host="cfvod.kaltura.com" />
+	<target host="cdnapisec.kaltura.com" />
+	<target host="cdnsecakmi.kaltura.com" />
+	<!--target host="connect.kaltura.com" /-->
+	<target host="corp.kaltura.com" />
+	<!--target host="knowledge.kaltura.com" /-->
+	<target host="www.kaltura.com" />
+	<target host="www-stats.kaltura.com" />
+
+	<!--	Complications:
+				-->
+	<target host="akamai.kaltura.com" />
+	<target host="cdn.kaltura.com" />
+	<target host="cdnakmi.kaltura.com" />
+	<target host="cdnapi.kaltura.com" />
+	<target host="cdnb.kaltura.com" />
+	<target host="cdnbakmi.kaltura.com" />
+	<!--target host="cdnknowledge.kaltura.com" /-->
+	<target host="site.kaltura.com" />
+
+		<exclusion pattern="^http://site\.kaltura\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://site.kaltura.com/Blackboard-Video-Walk-Through.html" />
+			<test url="http://site.kaltura.com/Education_Survey.html" />
+			<test url="http://site.kaltura.com/Forrester_Wave_Report_2015.html" />
+			<test url="http://site.kaltura.com/HTML5Video.orgContactUs.html" />
+			<test url="http://site.kaltura.com/Kaltura_Application_Framework.html" />
+			<test url="http://site.kaltura.com/Kaltura_Enterprise_Survey.html" />
+			<test url="http://site.kaltura.com/Kaltura_Survey_State_of_Video_in_Education_2015.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://site.kaltura.com/css/mktLPSupport.css" />
+			<test url="http://site.kaltura.com/rs/kaltura/images/logo_0.png" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.kaltura\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.kaltura\.com$" name="^(?:__cfduid|cf_clearance)$" />
 
 
 	<rule from="^http://(?:akamai|cdnb?|cdnbakmi)\.kaltura\.com/"
 		to="https://www.kaltura.com/" />
 
-	<rule from="^http://((?:corp|www|www-stats)\.)?kaltura\.com/"
-		to="https://$1kaltura.com/" />
-
-	<rule from="^http://cdn(?:sec)?akmi\.kaltura\.com/"
+	<rule from="^http://cdnakmi\.kaltura\.com/"
 		to="https://cdnsecakmi.kaltura.com/" />
 
-	<rule from="^http://cdnapi(?:sec)?\.kaltura\.com/"
+	<rule from="^http://cdnapi\.kaltura\.com/"
 		to="https://cdnapisec.kaltura.com/" />
+
+	<!--rule from="^http://cdnknowledge\.kaltura\.com/"
+		to="https://knowledge.kaltura.com/" /-->
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://site\.kaltura\.com/+(?:\?.*)?$"
+		to="https://corp.marketo.com/" />
+
+		<test url="http://site.kaltura.com/?" />
+		<test url="http://site.kaltura.com/?f" />
+		<test url="http://site.kaltura.com/?o" />
+		<test url="http://site.kaltura.com//?o" />
+		<test url="http://site.kaltura.com/?b" />
+
+	<rule from="^http://site\.kaltura\.com/"
+		to="https://na-sjg.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
