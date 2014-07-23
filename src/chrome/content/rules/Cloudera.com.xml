@@ -10,19 +10,19 @@
 
 	Nonfunctional subdomains:
 
-		- vision *
+		- blog ¹
+		- vision ²
 
-	* Refused
+	¹ 404
+	² Refused
 
 
 	Problematic subdomains:
 
-		- blog ¹
 		- files ²
 		- go ³
 		- images.go ⁴
 
-	¹ Mixed css
 	² AmazonAWS
 	³ Works; mismatched, CN: secure.eloqua.com
 	⁴ Works, Akamai
@@ -62,11 +62,6 @@
 
 	<target host="cloudera.com" />
 	<target host="*.cloudera.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://blog\.cloudera\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" />
-
 
 	<!--	Not secured by server:
 					-->
@@ -80,7 +75,7 @@
 	<securecookie host="^(?:\.|ccp\.|university\.|www\.)?cloudera\.com$" name=".+" />
 
 
-	<rule from="^http://((?:blog|ccp|community|university|www)\.)?cloudera\.com/"
+	<rule from="^http://((?:ccp|community|university|www)\.)?cloudera\.com/"
 		to="https://$1cloudera.com/" />
 
 	<rule from="^http://files\.cloudera\.com/"
@@ -88,5 +83,12 @@
 
 	<rule from="^http://images\.go\.cloudera\.com/"
 		to="https://secure.eloqua.com/" />
+
+	<test url="http://ccp.cloudera.com/" />
+	<test url="http://community.cloudera.com/" />
+	<test url="http://files.cloudera.com/" />
+	<test url="http://images.go.cloudera.com/" />
+	<test url="http://university.cloudera.com/" />
+	<test url="http://www.cloudera.com/" />
 
 </ruleset>
