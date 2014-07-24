@@ -38,6 +38,11 @@ httpsEverywhere.toolbarButton = {
   COUNTER_PREF: "extensions.https_everywhere.show_counter",
 
   /**
+   * Name of preference for whether HTTP Nowhere is on.
+   */
+  HTTP_NOWHERE_PREF: "extensions.https_everywhere.http_nowhere.enabled",
+
+  /**
    * Used to determine if a hint has been previously shown.
    * TODO: Probably extraneous, look into removing
    */
@@ -60,6 +65,14 @@ httpsEverywhere.toolbarButton = {
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
     counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+
+    // make sure UI for HTTP Nowhere mode is properly set
+    var httpNowhereItem = document.getElementById('http-nowhere-item');
+    var showHttpNowhere = tb.shouldShowHttpNowhere();
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
+    toolbarbutton.setAttribute('http_nowhere',
+                               showHttpNowhere ? 'true' : 'false');
 
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
@@ -187,6 +200,17 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
+   * Gets whether to show HTTP Nowhere UI.
+   *
+   * @return {boolean}
+   */
+  shouldShowHttpNowhere: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+    return sp.getBoolPref(tb.HTTP_NOWHERE_PREF);
+  },
+
+  /**
    * Toggles the user's preference for displaying the rulesets applied counter
    * and updates the UI.
    */
@@ -198,8 +222,20 @@ httpsEverywhere.toolbarButton = {
     sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
 
     tb.updateRulesetsApplied();
-  }
+  },
 
+  /**
+   * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
+   */
+  toggleHttpNowhere: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    HTTPSEverywhere.toggleHttpNowhere();
+    var showHttpNowhere = tb.shouldShowHttpNowhere();
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    toolbarbutton.setAttribute('http_nowhere',
+                               showHttpNowhere ? 'true' : 'false');
+    reload_window();
+  }
 };
 
 function https_everywhere_load() {

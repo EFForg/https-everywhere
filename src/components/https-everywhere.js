@@ -804,17 +804,19 @@ HTTPSEverywhere.prototype = {
     let prefService = Services.prefs;
     let thisBranch =
       prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+    let networkBranch = prefService.getBranch("network.");
+    let securityBranch = prefService.getBranch("security.");
 
     // Proxy type. 0: none, 1: manual, 2: autoconfig by URL, 3: same as 0,
     // 4: autodetect proxy settings, 5: use system proxy settings (default)
-    let PROXY_TYPE = "network.proxy.type";
+    let PROXY_TYPE = "proxy.type";
     // HTTP proxy host
-    let PROXY_HTTP = "network.proxy.http";
+    let PROXY_HTTP = "proxy.http";
     // HTTP proxy port
-    let PROXY_PORT = "network.proxy.http_port";
+    let PROXY_PORT = "proxy.http_port";
 
     // Whether cert is treated as invalid when OCSP connection fails
-    let OCSP_REQUIRED = "security.ocsp.require";
+    let OCSP_REQUIRED = "OCSP.require";
 
     // Original settings
     let ORIG_PROXY_TYPE = "orig.proxy.type";
@@ -827,39 +829,39 @@ HTTPSEverywhere.prototype = {
       // Restore original proxy/OCSP settings. TODO: What if user manually edits
       // these while HTTP Nowhere is enabled?
       let origProxyType = thisBranch.getIntPref(ORIG_PROXY_TYPE);
-      prefService.setIntPref(PROXY_TYPE, origProxyType);
+      networkBranch.setIntPref(PROXY_TYPE, origProxyType);
 
       let origProxyHttp = thisBranch.getCharPref(ORIG_PROXY_HTTP);
-      prefService.setCharPref(PROXY_HTTP, origProxyHttp);
+      networkBranch.setCharPref(PROXY_HTTP, origProxyHttp);
 
       let origProxyPort = thisBranch.getIntPref(ORIG_PROXY_PORT);
-      prefService.setIntPref(PROXY_PORT, origProxyPort);
+      networkBranch.setIntPref(PROXY_PORT, origProxyPort);
 
       let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
-      prefService.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+      securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
 
       thisBranch.setBoolPref("enabled", false);
     } else {
       // Save original proxy settings in HTTP Nowhere preferences branch.
-      let origProxyType = prefService.getIntPref(PROXY_TYPE);
+      let origProxyType = networkBranch.getIntPref(PROXY_TYPE);
       thisBranch.setIntPref(ORIG_PROXY_TYPE, origProxyType);
 
-      let origProxyHttp = prefService.getCharPref(PROXY_HTTP);
+      let origProxyHttp = networkBranch.getCharPref(PROXY_HTTP);
       thisBranch.setCharPref(ORIG_PROXY_HTTP, origProxyHttp);
 
-      let origProxyPort = prefService.getIntPref(PROXY_PORT);
+      let origProxyPort = networkBranch.getIntPref(PROXY_PORT);
       thisBranch.setIntPref(ORIG_PROXY_PORT, origProxyPort);
 
-      let origOcspRequired = prefService.getBoolPref(OCSP_REQUIRED);
+      let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
       thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
 
       // Set a null proxy for HTTP requests
-      prefService.setIntPref(PROXY_TYPE, 1); // manual
-      prefService.setCharPref(PROXY_HTTP, "localhost");
-      prefService.setIntPref(PROXY_PORT, 4); // any arbitrary unused port
+      networkBranch.setIntPref(PROXY_TYPE, 1); // manual
+      networkBranch.setCharPref(PROXY_HTTP, "localhost");
+      networkBranch.setIntPref(PROXY_PORT, 4); // any arbitrary unused port
 
       // Disable OCSP enforcement
-      thisBranch.setBoolPref(OCSP_REQUIRED, false);
+      securityBranch.setBoolPref(OCSP_REQUIRED, false);
 
       thisBranch.setBoolPref("enabled", true);
     }
