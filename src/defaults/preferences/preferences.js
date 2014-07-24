@@ -15,6 +15,12 @@ pref("extensions.https_everywhere.performance_tests", false);
 // enable rulesets that trigger mixed content blocking
 pref("extensions.https_everywhere.enable_mixed_rulesets", false);
 
+// HTTP Nowhere preferences
+pref("extensions.https_everywhere.http_nowhere.enabled", false);
+pref("extensions.https_everywhere.http_nowhere.orig.proxy.type", 0);
+pref("extensions.https_everywhere.http_nowhere.orig.proxy.http", "");
+pref("extensions.https_everywhere.http_nowhere.orig.proxy.http_port", 0);
+pref("extensions.https_everywhere.http_nowhere.orig.ocsp.required", false);
 
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);

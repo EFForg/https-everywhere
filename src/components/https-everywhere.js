@@ -742,61 +742,126 @@ HTTPSEverywhere.prototype = {
   },
 
   toggleEnabledState: function() {
-    if(this.prefs.getBoolPref("globalEnabled")){    
-        try{    
-            this.obsService.removeObserver(this, "profile-before-change");
-            this.obsService.removeObserver(this, "profile-after-change");
-            this.obsService.removeObserver(this, "sessionstore-windows-restored");      
-            OS.removeObserver(this, "cookie-changed");
-            OS.removeObserver(this, "http-on-modify-request");
-            OS.removeObserver(this, "http-on-examine-merged-response");
-            OS.removeObserver(this, "http-on-examine-response");  
-            
-            var catman = Components.classes["@mozilla.org/categorymanager;1"]
-           .getService(Components.interfaces.nsICategoryManager);
-            catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
-                        
-            var dls = CC['@mozilla.org/docloaderservice;1']
-            .getService(CI.nsIWebProgress);
-            dls.removeProgressListener(this);
-            
-            this.prefs.setBoolPref("globalEnabled", false);
-        }
-        catch(e){
-            this.log(WARN, "Couldn't remove observers: " + e);          
-        }
-    }
-    else{   
-        try{      
-            this.obsService.addObserver(this, "profile-before-change", false);
-            this.obsService.addObserver(this, "profile-after-change", false);
-            this.obsService.addObserver(this, "sessionstore-windows-restored", false);      
-            OS.addObserver(this, "cookie-changed", false);
-            OS.addObserver(this, "http-on-modify-request", false);
-            OS.addObserver(this, "http-on-examine-merged-response", false);
-            OS.addObserver(this, "http-on-examine-response", false);  
-            
-            var dls = CC['@mozilla.org/docloaderservice;1']
-            .getService(CI.nsIWebProgress);
-            dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
-            
-            this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
+    if (this.prefs.getBoolPref("globalEnabled")) {
+      try {
+        this.obsService.removeObserver(this, "profile-before-change");
+        this.obsService.removeObserver(this, "profile-after-change");
+        this.obsService.removeObserver(this, "sessionstore-windows-restored");
+        OS.removeObserver(this, "cookie-changed");
+        OS.removeObserver(this, "http-on-modify-request");
+        OS.removeObserver(this, "http-on-examine-merged-response");
+        OS.removeObserver(this, "http-on-examine-response");
 
-            if(!Thread.hostRunning)
-                Thread.hostRunning = true;
-            
-            var catman = Components.classes["@mozilla.org/categorymanager;1"]
-            .getService(Components.interfaces.nsICategoryManager);
-            // hook on redirections (non persistent, otherwise crashes on 1.8.x)
-            catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
-                SERVICE_CTRID, false, true);            
-            
-            HTTPSRules.init();          
-            this.prefs.setBoolPref("globalEnabled", true);
+        var catman = CC["@mozilla.org/categorymanager;1"]
+                       .getService(CI.nsICategoryManager);
+        catman.deleteCategoryEntry("net-channel-event-sinks",
+                                   SERVICE_CTRID, true);
+
+        var dls = CC['@mozilla.org/docloaderservice;1']
+                    .getService(CI.nsIWebProgress);
+        dls.removeProgressListener(this);
+
+        this.prefs.setBoolPref("globalEnabled", false);
+      } catch(e) {
+        this.log(WARN, "Couldn't remove observers: " + e);
+      }
+    } else {
+      try {
+        this.obsService.addObserver(this, "profile-before-change", false);
+        this.obsService.addObserver(this, "profile-after-change", false);
+        this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+        OS.addObserver(this, "cookie-changed", false);
+        OS.addObserver(this, "http-on-modify-request", false);
+        OS.addObserver(this, "http-on-examine-merged-response", false);
+        OS.addObserver(this, "http-on-examine-response", false);
+
+        var dls = CC['@mozilla.org/docloaderservice;1']
+                    .getService(CI.nsIWebProgress);
+        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
+
+        this.log(INFO,
+                 "ChannelReplacement.supported = "+ChannelReplacement.supported);
+
+        if (!Thread.hostRunning) {
+          Thread.hostRunning = true;
         }
-        catch(e){
-            this.log(WARN, "Couldn't add observers: " + e);         
-        }
+
+        var catman = CC["@mozilla.org/categorymanager;1"]
+                       .getService(CI.nsICategoryManager);
+        // hook on redirections (non persistent, otherwise crashes on 1.8.x)
+        catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
+                                SERVICE_CTRID, false, true);
+
+        HTTPSRules.init();
+        this.prefs.setBoolPref("globalEnabled", true);
+      } catch(e) {
+        this.log(WARN, "Couldn't add observers: " + e);
+      }
+    }
+  },
+
+  toggleHttpNowhere: function() {
+    let prefService = Services.prefs;
+    let thisBranch =
+      prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+
+    // Proxy type. 0: none, 1: manual, 2: autoconfig by URL, 3: same as 0,
+    // 4: autodetect proxy settings, 5: use system proxy settings (default)
+    let PROXY_TYPE = "network.proxy.type";
+    // HTTP proxy host
+    let PROXY_HTTP = "network.proxy.http";
+    // HTTP proxy port
+    let PROXY_PORT = "network.proxy.http_port";
+
+    // Whether cert is treated as invalid when OCSP connection fails
+    let OCSP_REQUIRED = "security.ocsp.require";
+
+    // Original settings
+    let ORIG_PROXY_TYPE = "orig.proxy.type";
+    let ORIG_PROXY_HTTP = "orig.proxy.http";
+    let ORIG_PROXY_PORT = "orig.proxy.http_port";
+    let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
+
+
+    if (thisBranch.getBoolPref("enabled")) {
+      // Restore original proxy/OCSP settings. TODO: What if user manually edits
+      // these while HTTP Nowhere is enabled?
+      let origProxyType = thisBranch.getIntPref(ORIG_PROXY_TYPE);
+      prefService.setIntPref(PROXY_TYPE, origProxyType);
+
+      let origProxyHttp = thisBranch.getCharPref(ORIG_PROXY_HTTP);
+      prefService.setCharPref(PROXY_HTTP, origProxyHttp);
+
+      let origProxyPort = thisBranch.getIntPref(ORIG_PROXY_PORT);
+      prefService.setIntPref(PROXY_PORT, origProxyPort);
+
+      let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
+      prefService.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+
+      thisBranch.setBoolPref("enabled", false);
+    } else {
+      // Save original proxy settings in HTTP Nowhere preferences branch.
+      let origProxyType = prefService.getIntPref(PROXY_TYPE);
+      thisBranch.setIntPref(ORIG_PROXY_TYPE, origProxyType);
+
+      let origProxyHttp = prefService.getCharPref(PROXY_HTTP);
+      thisBranch.setCharPref(ORIG_PROXY_HTTP, origProxyHttp);
+
+      let origProxyPort = prefService.getIntPref(PROXY_PORT);
+      thisBranch.setIntPref(ORIG_PROXY_PORT, origProxyPort);
+
+      let origOcspRequired = prefService.getBoolPref(OCSP_REQUIRED);
+      thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
+
+      // Set a null proxy for HTTP requests
+      prefService.setIntPref(PROXY_TYPE, 1); // manual
+      prefService.setCharPref(PROXY_HTTP, "localhost");
+      prefService.setIntPref(PROXY_PORT, 4); // any arbitrary unused port
+
+      // Disable OCSP enforcement
+      thisBranch.setBoolPref(OCSP_REQUIRED, false);
+
+      thisBranch.setBoolPref("enabled", true);
     }
   }
 };
