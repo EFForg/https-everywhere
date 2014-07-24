@@ -488,7 +488,6 @@ const HTTPSRules = {
     // the new uri if there was a rewrite.  Now it returns a JS object with a
     // newuri attribute and an applied_ruleset attribute (or null if there's
     // no rewrite).
-    if (this.shouldIgnoreURI(input_uri)) { return null; }
     var i = 0; 
     userpass_present = false; // Global so that sanitiseURI can tweak it.
                               // Why does JS have no tuples, again?
