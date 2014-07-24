@@ -478,6 +478,11 @@ HTTPSEverywhere.prototype = {
       
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
       var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
+      // Firefox 32+ lets us infer whether this is an OCSP request
+      if ("allowSTS" in channel && !channel.allowSTS) {
+        this.log(INFO, "Channel with HTTPS rewrites forbidden, probably OCSP, for " + channel.URI.spec);
+        return;
+      }
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
         if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
