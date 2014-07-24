@@ -417,14 +417,6 @@ const HTTPSRules = {
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
-    // Load the list of OCSP responders
-    try {
-      this.loadOCSPList();
-    } catch(e) {
-      this.log(NOTE, "Failed to load OCSP list");
-      this.ocspList = [];
-    }
-
     var gitCommitQuery = rulesetDBConn.createStatement("select git_commit from git_commit");
     if (gitCommitQuery.executeStep()) {
       this.GITCommitID = gitCommitQuery.row.git_commit;
@@ -488,24 +480,6 @@ const HTTPSRules = {
     }
   },
 
-  loadOCSPList: function() {
-    var loc = "chrome://https-everywhere/content/code/commonOCSP.json";
-    var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
-    file.initWithPath(RuleWriter.chromeToPath(loc));
-    var data = RuleWriter.read(file);
-    this.ocspList = JSON.parse(data);
-  },
-
-  shouldIgnoreURI: function(uri) {
-    // Ignore all non-http(s) requests?
-    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
-    // Ignore OCSP requests
-    if (this.ocspList.indexOf(uri.spec.replace(/\/$/,'')) !== -1) {
-      this.log(NOTE, "got ocsp request "+uri.spec);
-      return true;
-    }
-    return false;
-  },
 
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
