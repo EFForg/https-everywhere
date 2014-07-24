@@ -474,7 +474,8 @@ HTTPSEverywhere.prototype = {
   // These are the highest level heuristics for figuring out whether
   // we should consider rewriting a URI.  Everything here should be simple
   // and avoid dependence on the ruleset library
-  shouldIgnoreURI: function(uri, alist) {
+  shouldIgnoreURI: function(channel, alist) {
+    var uri = channel.URI;
     // Ignore all non-http(s) requests?
     if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
 
@@ -533,7 +534,7 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
 
       var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
-      if (this.shouldIgnoreURI(channel.URI, lst)) return;
+      if (this.shouldIgnoreURI(channel, lst)) return;
       HTTPS.replaceChannel(lst, channel);
 
     } else if (topic == "http-on-examine-response") {
