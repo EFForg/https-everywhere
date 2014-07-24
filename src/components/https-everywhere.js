@@ -183,7 +183,8 @@ function HTTPSEverywhere() {
   this.log = https_everywhereLog;
   this.wrappedJSObject = this;
   this.https_rules = HTTPSRules;
-  this.rw = RuleWriter;
+  this.rw = RuleWriter;    // currently used for some file IO helpers, though that
+                           // should probably be refactored
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
   this.browser_initialised = false; // the browser is completely loaded
@@ -263,6 +264,9 @@ In recent versions of Firefox and HTTPS Everywhere, the call stack for performin
 
 1. HTTPSEverywhere.observe() gets a callback with the "http-on-modify-request" topic, and the channel as a subject
 
+1. HTTPSEverywhere.shouldIgnoreURI() checks for very quick reasons to ignore a
+request, such as redirection loops, non-HTTP[S] URIs, and OCSP
+
     2. HTTPS.replaceChannel() 
 
        3. HTTPSRules.rewrittenURI() 
@@ -282,8 +286,7 @@ In recent versions of Firefox and HTTPS Everywhere, the call stack for performin
 
 In addition, the following other important tasks happen along the way:
 
-HTTPSEverywhere.observe()    aborts if there is a redirect loop
-                             finds a reference to the ApplicableList or alist that represents the toolbar context menu
+HTTPSEverywhere.observe()    finds a reference to the ApplicableList or alist that represents the toolbar context menu
 
 HTTPS.replaceChannel()       notices redirect loops (and used to do much more complex XPCOM API work in the NoScript-based past)
 
@@ -468,6 +471,59 @@ HTTPSEverywhere.prototype = {
     return alist;
   },
 
+  // These are the highest level heuristics for figuring out whether
+  // we should consider rewriting a URI.  Everything here should be simple
+  // and avoid dependence on the ruleset library
+  shouldIgnoreURI: function(channel, alist) {
+    var uri = channel.URI;
+    // Ignore all non-http(s) requests?
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
+
+    // These are URIs we've seen redirecting back in loops after we redirect them
+    if (uri.spec in https_everywhere_blacklist) {
+        this.log(DBUG, "Avoiding blacklisted " + uri.spec);
+        if (alist) {
+          alist.breaking_rule(https_everywhere_blacklist[uri.spec]);
+        } else {
+          this.log(NOTE,"Failed to indicate breakage in content menu");
+        }
+        return true;
+    }
+
+    // OCSP (currently) needs to be HTTP to avoid cert validation loops
+    // though someone should rev the spec to allow opportunistic encryption
+    if ("allowSTS" in channel) {
+      // Firefox 32+ lets us infer whether this is an OCSP request
+      if (!channel.allowSTS) {
+        this.log(INFO, "Channel with HTTPS rewrites forbidden, deeming OCSP, for " + channel.URI.spec);
+        return true;
+      }
+    } else {
+      // Firefox <32 requires a more hacky estimate
+      // load the list opportunistically to speed startup & FF 32+
+      if (this.ocspList == undefined) { this.loadOCSPList(); }
+      if (this.ocspList.indexOf(uri.spec.replace(/\/$/,'')) !== -1) {
+        this.log(INFO, "Known ocsp request "+uri.spec);
+        return true;
+      }
+    }
+
+    return false;
+  },
+
+  loadOCSPList: function() {
+    try {
+      var loc = "chrome://https-everywhere/content/code/commonOCSP.json";
+      var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
+      file.initWithPath(this.rw.chromeToPath(loc));
+      var data = this.rw.read(file);
+      this.ocspList = JSON.parse(data);
+    } catch(e) {
+      this.log(WARN, "Failed to load OCSP list: " + e);
+      this.ocspList = [];
+    }
+  },
+
   observe: function(subject, topic, data) {
     // Top level glue for the nsIObserver API
     var channel = subject;
@@ -475,16 +531,12 @@ HTTPSEverywhere.prototype = {
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
-      
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
+
       var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
-      if (channel.URI.spec in https_everywhere_blacklist) {
-        this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
-        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
-        else        this.log(NOTE,"Failed to indicate breakage in content menu");
-        return;
-      }
+      if (this.shouldIgnoreURI(channel, lst)) return;
       HTTPS.replaceChannel(lst, channel);
+
     } else if (topic == "http-on-examine-response") {
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
