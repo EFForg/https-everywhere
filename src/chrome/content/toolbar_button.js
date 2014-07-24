@@ -347,9 +347,10 @@ function reload_window() {
     HTTPSEverywhere.log(WARN,"failed to get webNav");
     return null;
   }
-  // This choice of flags comes from NoScript's quickReload function; not sure
-  // if it's optimal
-  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);  
+  // The choice of LOAD_FLAGS_CHARSET_CHANGE comes from NoScript's quickReload
+  // function; not sure if it's optimal
+  let flags = webNav.LOAD_FLAGS_BYPASS_CACHE & webNav.LOAD_FLAGS_CHARSET_CHANGE;
+  webNav.reload(flags);
 }
 
 function toggleEnabledState(){
