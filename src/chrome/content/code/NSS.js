@@ -31,8 +31,10 @@ NSS.initialize = function(nssPath) {
   try {
     sharedLib = ctypes.open(nssPath);    
   } catch (e) {
-    dump("Failed to find nss3 in installed directory, checking system paths.\n");
-    sharedLib = ctypes.open(ctypes.libraryName("nss3"));
+    Components.utils.import("resource://gre/modules/Services.jsm");
+    var nssFile = Services.dirsvc.get("GreD", Ci.nsILocalFile);
+    nssFile.append(ctypes.libraryName("nss3"));
+    sharedLib = ctypes.open(nssFile.path);
   }
 
   NSS.types = new Object();
