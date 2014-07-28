@@ -190,6 +190,8 @@ function HTTPSEverywhere() {
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
+
+  this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -475,16 +477,21 @@ HTTPSEverywhere.prototype = {
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
-      
+
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
-      var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
+      // lst is null if no window is associated (ex: some XHR)
+      var lst = this.getApplicableListForChannel(channel);
       if (channel.URI.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + channel.URI.spec);
-        if (lst) lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
-        else        this.log(NOTE,"Failed to indicate breakage in content menu");
+        if (lst) {
+           lst.breaking_rule(https_everywhere_blacklist[channel.URI.spec]);
+        }
+        else {
+          this.log(NOTE,"Failed to indicate breakage in content menu");
+        }
         return;
       }
-      HTTPS.replaceChannel(lst, channel);
+      HTTPS.replaceChannel(lst, channel, this.httpNowhereEnabled);
     } else if (topic == "http-on-examine-response") {
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
@@ -520,13 +527,13 @@ HTTPSEverywhere.prototype = {
       Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
-      
+
       if(this.prefs.getBoolPref("globalEnabled")){
         OS.addObserver(this, "cookie-changed", false);
         OS.addObserver(this, "http-on-modify-request", false);
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
-        
+
         var dls = CC['@mozilla.org/docloaderservice;1']
             .getService(CI.nsIWebProgress);
         dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
@@ -804,66 +811,33 @@ HTTPSEverywhere.prototype = {
     let prefService = Services.prefs;
     let thisBranch =
       prefService.getBranch("extensions.https_everywhere.http_nowhere.");
-    let networkBranch = prefService.getBranch("network.");
     let securityBranch = prefService.getBranch("security.");
-
-    // Proxy type. 0: none, 1: manual, 2: autoconfig by URL, 3: same as 0,
-    // 4: autodetect proxy settings, 5: use system proxy settings (default)
-    let PROXY_TYPE = "proxy.type";
-    // HTTP proxy host
-    let PROXY_HTTP = "proxy.http";
-    // HTTP proxy port
-    let PROXY_PORT = "proxy.http_port";
 
     // Whether cert is treated as invalid when OCSP connection fails
     let OCSP_REQUIRED = "OCSP.require";
 
-    // Original settings
-    let ORIG_PROXY_TYPE = "orig.proxy.type";
-    let ORIG_PROXY_HTTP = "orig.proxy.http";
-    let ORIG_PROXY_PORT = "orig.proxy.http_port";
+    // Branch to save original settings
     let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
 
 
     if (thisBranch.getBoolPref("enabled")) {
-      // Restore original proxy/OCSP settings. TODO: What if user manually edits
+      // Restore original OCSP settings. TODO: What if user manually edits
       // these while HTTP Nowhere is enabled?
-      let origProxyType = thisBranch.getIntPref(ORIG_PROXY_TYPE);
-      networkBranch.setIntPref(PROXY_TYPE, origProxyType);
-
-      let origProxyHttp = thisBranch.getCharPref(ORIG_PROXY_HTTP);
-      networkBranch.setCharPref(PROXY_HTTP, origProxyHttp);
-
-      let origProxyPort = thisBranch.getIntPref(ORIG_PROXY_PORT);
-      networkBranch.setIntPref(PROXY_PORT, origProxyPort);
-
       let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
       securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
 
       thisBranch.setBoolPref("enabled", false);
+      this.httpNowhereEnabled = false;
     } else {
-      // Save original proxy settings in HTTP Nowhere preferences branch.
-      let origProxyType = networkBranch.getIntPref(PROXY_TYPE);
-      thisBranch.setIntPref(ORIG_PROXY_TYPE, origProxyType);
-
-      let origProxyHttp = networkBranch.getCharPref(PROXY_HTTP);
-      thisBranch.setCharPref(ORIG_PROXY_HTTP, origProxyHttp);
-
-      let origProxyPort = networkBranch.getIntPref(PROXY_PORT);
-      thisBranch.setIntPref(ORIG_PROXY_PORT, origProxyPort);
-
+      // Save original OCSP settings in HTTP Nowhere preferences branch.
       let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
       thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
-
-      // Set a null proxy for HTTP requests
-      networkBranch.setIntPref(PROXY_TYPE, 1); // manual
-      networkBranch.setCharPref(PROXY_HTTP, "localhost");
-      networkBranch.setIntPref(PROXY_PORT, 4); // any arbitrary unused port
 
       // Disable OCSP enforcement
       securityBranch.setBoolPref(OCSP_REQUIRED, false);
 
       thisBranch.setBoolPref("enabled", true);
+      this.httpNowhereEnabled = true;
     }
   }
 };
