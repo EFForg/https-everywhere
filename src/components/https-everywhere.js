@@ -44,8 +44,8 @@ const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
 const RULESET_UPDATE_CHECK_INTERVAL = 10800000;
-const RSUPDATE_URL_PREF = 'ruleset-update-url';
-const RSUPDATE_SIG_URL_PREF = 'ruleset-update-signature-url';
+const RSUPDATE_URL_PREF = 'ruleset_update_url';
+const RSUPDATE_SIG_URL_PREF = 'ruleset_update_signature_url';
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
