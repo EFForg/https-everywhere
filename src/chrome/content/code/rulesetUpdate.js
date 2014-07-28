@@ -15,7 +15,14 @@
 // TODO
 // Set this value.
 /* Hardcoded public key used to verify the signature over the update data */
-const RULESET_UPDATE_KEY = '';
+const RULESET_UPDATE_KEY = ''+
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMH3pA27nFhz6BpLFB6B'+
+  'wtuRPrfGVIlZ6R9gprfTUJEcZxqC0T2tzxBgQqjEJPeL61YIuXOqXNMsTmHjooxW'+
+  'qeUPUiBqTeXuM3dz+XgL6sxfydN1IwiWYsdD0bQmN9/ixgOamzBKTYxAx+g5TalD'+
+  'Dv+xeHcBpf0Htu0JZPTaZZtmclxS4LvZXlYJYkcnv04jP/nRd0W/u/d8SYFvayld'+
+  'saSiV00+AuHeQwWM5fmMK7t8OlQzXWp7TwqyzFaSaRZnKtzMBdWxK4IzIMYg3T5h'+
+  'YY76I3E0t9s2eqFOH9b4cVvsEFzJl9QOXRPeSGLoF1mTsdLKw1BK+7l7/gUd8ZbI'+
+  'bwIDAQAB';
 
 /* extension release branch preference key */
 const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
@@ -170,3 +177,4 @@ RulesetUpdater.prototype = {
     HTTPSRules.init();
   }
 };
+
