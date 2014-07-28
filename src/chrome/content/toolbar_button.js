@@ -58,9 +58,6 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure icon is proper color during init
-    tb.changeIcon();
-
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
@@ -73,8 +70,9 @@ httpsEverywhere.toolbarButton = {
     httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-    httpNowhereItem.setAttribute('disabled', enabled ? 'false' : 'true');
+
+    // make sure UI is set depending on whether HTTPS-E is enabled
+    toggleEnabledUI();
 
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
@@ -134,20 +132,6 @@ httpsEverywhere.toolbarButton = {
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
-  /**
-   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
-   * is enabled or disabled.
-   */
-  changeIcon: function() {
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (enabled) {
-      toolbarbutton.setAttribute('status', 'enabled');
-    } else {
-      toolbarbutton.setAttribute('status', 'disabled');
-    }
-  },
 
   /**
    * Update the rulesets applied counter for the current tab.
@@ -355,15 +339,21 @@ function reload_window() {
 
 function toggleEnabledState(){
 	HTTPSEverywhere.toggleEnabledState();
-	reload_window();	
+	reload_window();
+  toggleEnabledUI();
+}
 
-  // Disable/enable toggling HTTP Nowhere mode
-  var httpNowhereItem = document.getElementById('http-nowhere-item');
+function toggleEnabledUI() {
+  // Add/remove menu items depending on whether HTTPS-E is enabled
+  var items = document.querySelectorAll(".hide-on-disable");
   var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-  httpNowhereItem.setAttribute('disabled', enabled ? 'false' : 'true');
+  for (let i = 0; i < items.length; i++) {
+    items[i].hidden = !enabled;
+  }
 
   // Change icon depending on enabled state
-  httpsEverywhere.toolbarButton.changeIcon();
+  var toolbarbutton = document.getElementById('https-everywhere-button');
+  toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
 }
 
 function open_in_tab(url) {
