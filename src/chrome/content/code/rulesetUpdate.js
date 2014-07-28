@@ -63,8 +63,10 @@ RulesetUpdater.prototype = {
   * setInterval(function() { updater.fetchUpdate(); }, interval);
   */
   fetchUpdate: function() {
+    this.log(INFO, "Calling fetchUpdate");
     this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.manifestSrc,
       function(responseText) {
+        this.log(INFO, "Successfully fetched update.json file data");
         this.conditionallyApplyUpdate(responseText);
       }
     );
@@ -79,6 +81,7 @@ RulesetUpdater.prototype = {
     var extVersion = HTTPSEverywhere.instance.prefs.getCharPref(VERSION_PREF);
     var extBranch = HTTPSEverywhere.instance.prefs.getCharPref(BRANCH_PREF);
     var rulesetVersion = HTTPSEverywhere.instance.prefs.getCharPref(RULESET_VERSION_PREF);
+    this.log(INFO, "Inside call to conditionallyApplyUpdate");
     if (!this.checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
       this.log(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
       return; 
@@ -89,8 +92,10 @@ RulesetUpdater.prototype = {
     }
     this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.sigFileSrc,
       function(signature) {
+        this.log(INFO, "Successfully fetched update.json.sig file data");
         var updateHash = computeHash(update, SIGNING_DIGEST_FN);
         if (this.verifyUpdateSignature(updateHash, signature)) {
+          this.log(INFO, "Ruleset update data signature verified successfully");
           this.fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
         } else {
           this.log(WARN, 'Validation of the update signature provided failed.');
@@ -107,6 +112,7 @@ RulesetUpdater.prototype = {
   verifyUpdateSignature: function(updateStr, signature) {
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
+    this.log(INFO, "Created instance of nsIDAtaSignatureVerifier");
     return verifier.verifyData(updateStr, signature, RULESET_UPDATE_KEY);
   },
 
@@ -116,6 +122,8 @@ RulesetUpdater.prototype = {
   checkVersionRequirements: function(extVersion, rsVersion, newVersion) {
     var verCompare = Cc['@mozilla.org/xpcom/version-comparator;1']
                        .getService(Ci.nsIVersionComparator);
+    this.log(INFO, "Checking version requirements with extension version " + extVersion +
+                   " and ruleset version " + rsVersion);
     var newRulesetExtVer = newVersion.slice(0, newVersion.lastIndexOf('.'));
     var sameExtVer = verCompare.compare(extVersion, newRulesetExtVer) === 0;
     var newRSVer = verCompare.compare(newVersion, rsVersion) > 0;
@@ -128,10 +136,13 @@ RulesetUpdater.prototype = {
   * hash - The hash of the database file provided by the update manifest verified previously.
   */
   fetchRulesetDBFile: function(url, hashfn, hash) {
+    this.log(INFO, "Making request to get database file at " + url);
     this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE, 'GET', url,
       function(dbfileContent) {
+        this.log(INFO, "Successfully received ruleset database file content");
         var dbHash = computeHash(dbFileContent, hashfn);
         if (dbHash === hash) {
+          this.log(INFO, "Hash of database file content matches the hash provided by update.json");
           this.applyNewRuleset(dbfileContent);
         } else {
           this.log(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.');
@@ -155,14 +166,17 @@ RulesetUpdater.prototype = {
     converter.charset = 'UTF-8';
     var result = {};
     var converted = converter.convertToByteArray(data, result);
+    this.log(INFO, "Trying to initialize hash function as " + hashfn);
     if      (hashfn === 'md5')    hashing.init(hashing.MD5);
     else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
     else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
     else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
     else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
     else return null; // It's a better idea to fail than do the wrong thing here.
+    this.log(INFO, "Hash function was recognized and initialization successful");
     hashing.update(converted, converted.length);
     var hash = hashing.finish(false);
+    this.log(INFO, "Hash computation completed");
     return [toHexString(hash.charCodeAt(i)) for (i in hash)].join('');
   },
 
@@ -173,8 +187,10 @@ RulesetUpdater.prototype = {
     var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
     var path = this.HTTPSEverywhere.rw.chromeToPath(RULESET_DBFILE_PATH);
     file.initWithPath(path);
+    this.log(INFO, "Initialized file writer with path to " + path);
     this.HTTPSEverywhere.rw.write(file, dbsource);
     HTTPSRules.init();
+    this.log(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
   }
 };
 
