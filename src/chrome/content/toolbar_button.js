@@ -73,6 +73,8 @@ httpsEverywhere.toolbarButton = {
     httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+    httpNowhereItem.setAttribute('disabled', enabled ? 'false' : 'true');
 
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
@@ -228,9 +230,11 @@ httpsEverywhere.toolbarButton = {
    * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
    */
   toggleHttpNowhere: function() {
-    var tb = httpsEverywhere.toolbarButton;
     HTTPSEverywhere.toggleHttpNowhere();
+    var tb = httpsEverywhere.toolbarButton;
     var showHttpNowhere = tb.shouldShowHttpNowhere();
+
+    // Change icon color to red if HTTP nowhere is enabled
     var toolbarbutton = document.getElementById('https-everywhere-button');
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
@@ -352,6 +356,11 @@ function reload_window() {
 function toggleEnabledState(){
 	HTTPSEverywhere.toggleEnabledState();
 	reload_window();	
+
+  // Disable/enable toggling HTTP Nowhere mode
+  var httpNowhereItem = document.getElementById('http-nowhere-item');
+  var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+  httpNowhereItem.setAttribute('disabled', enabled ? 'false' : 'true');
 
   // Change icon depending on enabled state
   httpsEverywhere.toolbarButton.changeIcon();
