@@ -17,9 +17,6 @@ pref("extensions.https_everywhere.enable_mixed_rulesets", false);
 
 // HTTP Nowhere preferences
 pref("extensions.https_everywhere.http_nowhere.enabled", false);
-pref("extensions.https_everywhere.http_nowhere.orig.proxy.type", 0);
-pref("extensions.https_everywhere.http_nowhere.orig.proxy.http", "none");
-pref("extensions.https_everywhere.http_nowhere.orig.proxy.http_port", 0);
 pref("extensions.https_everywhere.http_nowhere.orig.ocsp.required", false);
 
 // SSl Observatory preferences
