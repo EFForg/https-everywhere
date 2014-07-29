@@ -191,6 +191,8 @@ function HTTPSEverywhere() {
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
+
+  this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -479,6 +481,11 @@ HTTPSEverywhere.prototype = {
     // Ignore all non-http(s) requests?
     if (!(uri.schemeIs("http") || uri.schemeIs("https"))) { return true; }
 
+    // If HTTP Nowhere is enabled, skip the rest of the shouldIgnoreURI checks
+    if (this.httpNowhereEnabled) {
+      return false;
+    }
+
     // These are URIs we've seen redirecting back in loops after we redirect them
     if (uri.spec in https_everywhere_blacklist) {
         this.log(DBUG, "Avoiding blacklisted " + uri.spec);
@@ -531,12 +538,12 @@ HTTPSEverywhere.prototype = {
 
     if (topic == "http-on-modify-request") {
       if (!(channel instanceof CI.nsIHttpChannel)) return;
+
       this.log(DBUG,"Got http-on-modify-request: "+channel.URI.spec);
-
-      var lst = this.getApplicableListForChannel(channel); // null if no window is associated (ex: xhr)
+      // lst is null if no window is associated (ex: some XHR)
+      var lst = this.getApplicableListForChannel(channel);
       if (this.shouldIgnoreURI(channel, lst)) return;
-      HTTPS.replaceChannel(lst, channel);
-
+      HTTPS.replaceChannel(lst, channel, this.httpNowhereEnabled);
     } else if (topic == "http-on-examine-response") {
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
@@ -572,13 +579,13 @@ HTTPSEverywhere.prototype = {
       Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
-      
+
       if(this.prefs.getBoolPref("globalEnabled")){
         OS.addObserver(this, "cookie-changed", false);
         OS.addObserver(this, "http-on-modify-request", false);
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
-        
+
         var dls = CC['@mozilla.org/docloaderservice;1']
             .getService(CI.nsIWebProgress);
         dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
@@ -698,7 +705,7 @@ HTTPSEverywhere.prototype = {
       return;
     }
     var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
-    HTTPS.replaceChannel(alist,newChannel);
+    HTTPS.replaceChannel(alist, newChannel, this.httpNowhereEnabled);
   },
 
   juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
@@ -794,61 +801,95 @@ HTTPSEverywhere.prototype = {
   },
 
   toggleEnabledState: function() {
-    if(this.prefs.getBoolPref("globalEnabled")){    
-        try{    
-            this.obsService.removeObserver(this, "profile-before-change");
-            this.obsService.removeObserver(this, "profile-after-change");
-            this.obsService.removeObserver(this, "sessionstore-windows-restored");      
-            OS.removeObserver(this, "cookie-changed");
-            OS.removeObserver(this, "http-on-modify-request");
-            OS.removeObserver(this, "http-on-examine-merged-response");
-            OS.removeObserver(this, "http-on-examine-response");  
-            
-            var catman = Components.classes["@mozilla.org/categorymanager;1"]
-           .getService(Components.interfaces.nsICategoryManager);
-            catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
-                        
-            var dls = CC['@mozilla.org/docloaderservice;1']
-            .getService(CI.nsIWebProgress);
-            dls.removeProgressListener(this);
-            
-            this.prefs.setBoolPref("globalEnabled", false);
-        }
-        catch(e){
-            this.log(WARN, "Couldn't remove observers: " + e);          
-        }
-    }
-    else{   
-        try{      
-            this.obsService.addObserver(this, "profile-before-change", false);
-            this.obsService.addObserver(this, "profile-after-change", false);
-            this.obsService.addObserver(this, "sessionstore-windows-restored", false);      
-            OS.addObserver(this, "cookie-changed", false);
-            OS.addObserver(this, "http-on-modify-request", false);
-            OS.addObserver(this, "http-on-examine-merged-response", false);
-            OS.addObserver(this, "http-on-examine-response", false);  
-            
-            var dls = CC['@mozilla.org/docloaderservice;1']
-            .getService(CI.nsIWebProgress);
-            dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
-            
-            this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
+    if (this.prefs.getBoolPref("globalEnabled")) {
+      try {
+        this.obsService.removeObserver(this, "profile-before-change");
+        this.obsService.removeObserver(this, "profile-after-change");
+        this.obsService.removeObserver(this, "sessionstore-windows-restored");
+        OS.removeObserver(this, "cookie-changed");
+        OS.removeObserver(this, "http-on-modify-request");
+        OS.removeObserver(this, "http-on-examine-merged-response");
+        OS.removeObserver(this, "http-on-examine-response");
 
-            if(!Thread.hostRunning)
-                Thread.hostRunning = true;
-            
-            var catman = Components.classes["@mozilla.org/categorymanager;1"]
-            .getService(Components.interfaces.nsICategoryManager);
-            // hook on redirections (non persistent, otherwise crashes on 1.8.x)
-            catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
-                SERVICE_CTRID, false, true);            
-            
-            HTTPSRules.init();          
-            this.prefs.setBoolPref("globalEnabled", true);
+        var catman = CC["@mozilla.org/categorymanager;1"]
+                       .getService(CI.nsICategoryManager);
+        catman.deleteCategoryEntry("net-channel-event-sinks",
+                                   SERVICE_CTRID, true);
+
+        var dls = CC['@mozilla.org/docloaderservice;1']
+                    .getService(CI.nsIWebProgress);
+        dls.removeProgressListener(this);
+
+        this.prefs.setBoolPref("globalEnabled", false);
+      } catch(e) {
+        this.log(WARN, "Couldn't remove observers: " + e);
+      }
+    } else {
+      try {
+        this.obsService.addObserver(this, "profile-before-change", false);
+        this.obsService.addObserver(this, "profile-after-change", false);
+        this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+        OS.addObserver(this, "cookie-changed", false);
+        OS.addObserver(this, "http-on-modify-request", false);
+        OS.addObserver(this, "http-on-examine-merged-response", false);
+        OS.addObserver(this, "http-on-examine-response", false);
+
+        var dls = CC['@mozilla.org/docloaderservice;1']
+                    .getService(CI.nsIWebProgress);
+        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
+
+        this.log(INFO,
+                 "ChannelReplacement.supported = "+ChannelReplacement.supported);
+
+        if (!Thread.hostRunning) {
+          Thread.hostRunning = true;
         }
-        catch(e){
-            this.log(WARN, "Couldn't add observers: " + e);         
-        }
+
+        var catman = CC["@mozilla.org/categorymanager;1"]
+                       .getService(CI.nsICategoryManager);
+        // hook on redirections (non persistent, otherwise crashes on 1.8.x)
+        catman.addCategoryEntry("net-channel-event-sinks", SERVICE_CTRID,
+                                SERVICE_CTRID, false, true);
+
+        HTTPSRules.init();
+        this.prefs.setBoolPref("globalEnabled", true);
+      } catch(e) {
+        this.log(WARN, "Couldn't add observers: " + e);
+      }
+    }
+  },
+
+  toggleHttpNowhere: function() {
+    let prefService = Services.prefs;
+    let thisBranch =
+      prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+    let securityBranch = prefService.getBranch("security.");
+
+    // Whether cert is treated as invalid when OCSP connection fails
+    let OCSP_REQUIRED = "OCSP.require";
+
+    // Branch to save original settings
+    let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
+
+
+    if (thisBranch.getBoolPref("enabled")) {
+      // Restore original OCSP settings. TODO: What if user manually edits
+      // these while HTTP Nowhere is enabled?
+      let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
+      securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+
+      thisBranch.setBoolPref("enabled", false);
+      this.httpNowhereEnabled = false;
+    } else {
+      // Save original OCSP settings in HTTP Nowhere preferences branch.
+      let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
+      thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
+
+      // Disable OCSP enforcement
+      securityBranch.setBoolPref(OCSP_REQUIRED, false);
+
+      thisBranch.setBoolPref("enabled", true);
+      this.httpNowhereEnabled = true;
     }
   }
 };
