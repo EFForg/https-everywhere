@@ -16,13 +16,11 @@
 // Set this value.
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = ''+
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMH3pA27nFhz6BpLFB6B'+
-  'wtuRPrfGVIlZ6R9gprfTUJEcZxqC0T2tzxBgQqjEJPeL61YIuXOqXNMsTmHjooxW'+
-  'qeUPUiBqTeXuM3dz+XgL6sxfydN1IwiWYsdD0bQmN9/ixgOamzBKTYxAx+g5TalD'+
-  'Dv+xeHcBpf0Htu0JZPTaZZtmclxS4LvZXlYJYkcnv04jP/nRd0W/u/d8SYFvayld'+
-  'saSiV00+AuHeQwWM5fmMK7t8OlQzXWp7TwqyzFaSaRZnKtzMBdWxK4IzIMYg3T5h'+
-  'YY76I3E0t9s2eqFOH9b4cVvsEFzJl9QOXRPeSGLoF1mTsdLKw1BK+7l7/gUd8ZbI'+
-  'bwIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz54rPDNwzbvHLQkUeCqgztanMfj58LWEbXSY0Y3go'+
+  '28zWntSZ7bUljHi8QlBdRVZocWZlWiZ9PRZ51hIktLe6pcRfgdivCbomPeB86aCB0n1yuusRYGss0TkSq2na7'+
+  'cilRc6d6mm1bOA2iYb1PBSKRQIHbf4mY2xgZV6lH3ZquPSbDBNA9R5xo1aN4hMFsyltobJboHRk3E5vdJvXWx'+
+  'BkSOPWRJ7pUZBZ/6uQhB/f03uZIqvGvaWoXE8HpZFqn6DcPyzziEKX8Rqy+S0FKEnQ99pC5AVLsTVckmNAY6c'+
+  'OWJZAcOzcYadw38Rr7GK2U5SBoGos61LlCSM2rP5jg2mIwIDAQAB';
 
 /* extension release branch preference key */
 const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
