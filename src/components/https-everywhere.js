@@ -705,7 +705,7 @@ HTTPSEverywhere.prototype = {
       return;
     }
     var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
-    HTTPS.replaceChannel(alist,newChannel);
+    HTTPS.replaceChannel(alist, newChannel, this.httpNowhereEnabled);
   },
 
   juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
