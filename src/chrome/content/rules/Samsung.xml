@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Samsung-falsemixed.xml.
+
+
 	Other Samsung rulesets:
 
 		- AllShare_Play.xml
@@ -67,12 +70,25 @@
 			- findmymobile2
 			- images
 			- nmetrics	(→ samsung-com.112.2o7.net)
+			- smetrics
 			- secureus
 			- smm
+			- stg-account
 			- support-cn
 			- us
 
 		- (www.)samsung.com.cn
+
+
+	Mixed content:
+
+		- css on link.samsung.com from pub.content.samsung.com *
+
+	* Secured by us
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
 
 -->
 <ruleset name="Samsung (partial)">
@@ -81,7 +97,8 @@
 	<target host="*.samsung.cn" />
 	<target host="samsung.com" />
 	<target host="*.samsung.com" />
-		<exclusion pattern="^http://opensource\.samsung\.com/(?!img/)" />
+		<!--exclusion pattern="^http://opensource\.samsung\.com/+($|\?|community/(ajax/|community/|community\.do|guest/|proj/)|iframeMain\.do|reception/receptionSub\.do|reception\.do)" /-->
+		<exclusion pattern="^http://opensource\.samsung\.com/(?!community/(?:css/|images/|img2?/|img_model/|js2?/|org\.ditchnet\.taglib/|repository/|scmShowFileRevision(?:$|\?)|stylesheet/|usageStatistics\.do|wikiTreeMessage(?:$|\?))|css/|img/|js/)" />
 		<exclusion pattern="^http://shop\.us\.samsung\.com/store\?[aA]ction=[dD]isplay[dD][rR][cC]art[sS]ummary" />
 	<target host="samsung.com.cn" />
 	<target host="www.samsung.com.cn" />
@@ -94,16 +111,16 @@
 	<rule from="^http://(img\.|pub\.)?content\.samsumg\.cn/"
 		to="https://$1content.samsung.cn/" />
 
-	<rule from="^https?://(?:www\.)?samsung\.com/"
+	<rule from="^http://(?:www\.)?samsung\.com/"
 		to="https://www.samsung.com/" />
 
-	<rule from="^https?://chaton\.samsung\.com/"
+	<rule from="^http://chaton\.samsung\.com/"
 		to="https://web.samsungchaton.com/" />
 
-	<rule from="^https?://nmetrics\.samsung\.com/"
+	<rule from="^http://nmetrics\.samsung\.com/"
 		to="https://samsung-com.112.2o7.net/" />
 
-	<rule from="^http://(account|allshareplay|apps|(?:img\.|pub\.)?content|findmymobile2?|images|opensource|secureus|smm|support-cn|us|shop\.us)\.samsung\.com/"
+	<rule from="^http://((?:stg-)?account|allshareplay|apps|(?:img\.|pub\.)?content|findmymobile2?|images|opensource|secureus|smetrics|smm|support-cn|us|shop\.us)\.samsung\.com/"
 		to="https://$1.samsung.com/" />
 
 	<rule from="^http://(www\.)?samsung\.(?:com\.)?cn/"

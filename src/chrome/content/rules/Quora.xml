@@ -1,17 +1,47 @@
+<!--
+	CDN buckets:
+
+		- d2o7bfz2il9cb7.cloudfront.net
+
+			- qph.cf.quoracdn.net
+
+
+	Fully covered domains:
+
+		- *.tch.quora.com:
+
+			- tch\d{6}
+
+		- *.cf.quoracdn.net:
+
+			- qph	(→ d2o7bfz2il9cb7.cloudfront.net)
+
+		- *.is.quoracdn.net:
+
+			- qph
+			- qs[cf]
+
+-->
 <ruleset name="Quora">
 
 	<target host="quora.com" />
 	<target host="*.quora.com" />
-	<target host="*.cf.quoracdn.net" />
+	<target host="*.quoracdn.net" />
 
 
 	<securecookie host="^\.quora\.com$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?quora\.com/"
-		to="https://www.quora.com/" />
+	<rule from="^http://(\w+\.tch\.|www\.)?quora\.com/"
+		to="https://$1quora.com/" />
 
-	<rule from="^https?://(\w+)\.cf\.quoracdn\.net/"
+	<rule from="^http://qph\.cf\.quoracdn\.net/"
+		to="https://d2o7bfz2il9cb7.cloudfront.net/" />
+
+	<rule from="^http://(\w+)\.cf\.quoracdn\.net/"
 		to="https://$1.s3.amazonaws.com/" />
+
+	<rule from="^http://(\w+)\.is\.quoracdn\.net/"
+		to="https://$1.is.quoracdn.net/" />
 
 </ruleset>

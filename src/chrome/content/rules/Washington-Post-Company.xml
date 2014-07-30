@@ -2,80 +2,37 @@
 	For problematic rules, see Washington-Post-Company-mismatches.xml.
 
 
-	CDN buckets:
+	Nonfunctional:
 
-		- js.washingtonpost.com.edgesuite.net
-		- media[23]?.washingtonpost.com.edgesuite.net
-		- projects.washingtonpost.com.edgesuite.net
-		- www.washingtonpost.com.edgesuite.net
-		- css.wpdigital.net.edgesuite.net
-		- img[23]?.wpdigital.net.edgesuite.net
+		- washingtonpost.com
+		- findnsave.washingtonpost.com	(times out)
+		- origin.washingtonpost.com		(redirects to www)
 
+	Nonfunctional Akamai:
 
-	Nonfunctional domains:
-
-		- www.slate.com *
-
-		- washingtonpost.com subdomains:
-
-			- ^
-			- findnsave		(times out)
-			- img *
-			- js *
-			- media[23]? **
-			- origin		(redirects to www)
-			- projects **
-			- www *
-
-		- wpdigital.net subdomains:
-
-			- css *		(data also exist on www.washingtonpost.com)
-			- img *
-			- img[23] *
-
-	* 504, akamai
-	** 503, akamai
-
-
-	Problematic domains:
-
-		- (www.)wapo.st				(times out)
-		- (www.)washingtonpostmedia.com		(mismatched, CN: washpost.com)
-		- (www.)washpostco.com			(akamai, mostly corporate-ir.net)
-
-
-	www no longer works when rewritten to ssl.
+		- media(\d)?.washingtonpost.com		("Service Unavailable")
+		- projects.washingtonpost.com
+		- www.washingtonpost.com		("An error occurred")
+		- css.wpdigital.net			("An error occurred")
+			- Data also exist on www.washingtonpost.com
+		- img.wpdigital.net/wp-adv/		("An error occurred")
+		- img3.wpdigital.net 
 
 -->
-<ruleset name="Washington Post Company (unreliable)" default_off="needs testing">
+<ruleset name="Washington Post Company (partial)" platform="mixedcontent">
 
-	<target host="wapo.st" />
 	<target host="washpost.com" />
 	<target host="*.washpost.com" />
-	<target host="*.washingtonpost.com" />
-		<!--
-			404 when rewritten to ssl1.
-							-->
-	<exclusion pattern="^https?://(?:js\.|www\.)?washingtonpost\.com/wp-srv/(?:ad|javascript|blogs)/" />
-	<target host="*.wpdigital.net" />
+	<target host="subscription.washingtonpost.com" />
 
 
-	<!--securecookie host="^.*\.washingtonpost\.com$" name=".+" /-->
+	<securecookie host="^subscription\.washingtonpost\.com$" name=".*" />
 
 
-	<rule from="^http://wapo\.st/"
-		to="https://bit.ly/" />
-
-	<rule from="^http://(id|ssl1?|subscription|voices)\.washingtonpost\.com/"
-		to="https://$1.washingtonpost.com/" />
-
-	<rule from="^https?://js\.washingtonpost\.com/"
-		to="https://ssl.washingtonpost.com/" />
+	<rule from="^http://subscription\.washingtonpost\.com/"
+		to="https://subscription.washingtonpost.com/" />
 
 	<rule from="^http://(media\.|www\.)?washpost\.com/"
 		to="https://$1washpost.com/" />
-
-	<rule from="^https?://css\.wpdigital\.net/"
-		to="https://ssl.washingtonpost.com/" />
 
 </ruleset>

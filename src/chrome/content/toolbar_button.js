@@ -1,4 +1,10 @@
 window.addEventListener("load", https_everywhere_load, true);
+window.addEventListener("load", function load(event) {
+  // need to wrap migratePreferences in another callback so that notification
+  // always displays on browser restart
+  window.removeEventListener("load", load, false);
+  gBrowser.addEventListener("DOMContentLoaded", migratePreferences, true);
+}, false);
 
 const CI = Components.interfaces;
 const CC = Components.classes;
@@ -15,14 +21,21 @@ HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .wrappedJSObject;
 
 // avoid polluting global namespace
+// see: https://developer.mozilla.org/en-US/docs/Security_best_practices_in_extensions#Code_wrapping
 if (!httpsEverywhere) { var httpsEverywhere = {}; }
 
 /**
- * JS Object for used to display toolbar hints to new users and change toolbar
- * UI for cases such as when the toolbar is disabled.
+ * JS Object that acts as a namespace for the toolbar.
  *
+ * Used to display toolbar hints to new users and change toolbar UI for cases
+ * such as when the toolbar is disabled.
  */
 httpsEverywhere.toolbarButton = {
+
+  /**
+   * Name of preference for determining whether to show ruleset counter.
+   */
+  COUNTER_PREF: "extensions.https_everywhere.show_counter",
 
   /**
    * Used to determine if a hint has been previously shown.
@@ -43,6 +56,11 @@ httpsEverywhere.toolbarButton = {
     // make sure icon is proper color during init
     tb.changeIcon();
 
+    // make sure the checkbox for showing counter is properly set
+    var showCounter = tb.shouldShowCounter();
+    var counterItem = document.getElementById('https-everywhere-counter-item');
+    counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
     gBrowser.tabContainer.addEventListener(
@@ -58,7 +76,7 @@ httpsEverywhere.toolbarButton = {
       // 2) Sometimes the page is loaded before all applied rulesets are
       //    calculated; in such a case, a half-second wait works.
       setTimeout(tb.updateRulesetsApplied, 500);
-    }
+    };
 
     var appcontent = document.getElementById('appcontent');
     if (appcontent) {
@@ -67,15 +85,12 @@ httpsEverywhere.toolbarButton = {
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
-    if(!Services.prefs.getPrefType(hintPref) 
+    if (!Services.prefs.getPrefType(hintPref) 
         || !Services.prefs.getBoolPref(hintPref)) { 
-
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
-
-      gBrowser.addEventListener('load', tb.handleShowHint, true);
+      gBrowser.addEventListener("DOMContentLoaded", tb.handleShowHint, true);
     }
-    
   },
 
   /**
@@ -83,25 +98,25 @@ httpsEverywhere.toolbarButton = {
    */
   handleShowHint: function() {
     var tb = httpsEverywhere.toolbarButton;
-    if (!tb.hintShown) {
+    if (!tb.hintShown){
       tb.hintShown = true;
       const faqURL = "https://www.eff.org/https-everywhere/faq";
-
-      gBrowser.selectedTab = gBrowser.addTab(faqURL);
       var nBox = gBrowser.getNotificationBox();
-
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
-      nBox.appendNotification(
+      var hint = nBox.appendNotification(
         msg, 
         'https-everywhere', 
         'chrome://https-everywhere/skin/https-everywhere-24.png', 
-        nBox.PRIORITY_WARNING_MEDIUM
+        nBox.PRIORITY_WARNING_MEDIUM,
+	[],
+	function(action) {
+	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
+	}
       );
-
     }
-
-    gBrowser.removeEventListener('load', tb.showToolbarHint, true);
+    gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
   /**
@@ -109,8 +124,7 @@ httpsEverywhere.toolbarButton = {
    * is enabled or disabled.
    */
   changeIcon: function() {
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
 
     var toolbarbutton = document.getElementById('https-everywhere-button');
     if (enabled) {
@@ -125,9 +139,9 @@ httpsEverywhere.toolbarButton = {
    */
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    var prefs = HTTPSEverywhere.get_prefs();
-    var enabled = prefs.getBoolPref("globalEnabled");
-    if (!enabled) { 
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+    var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
+    if (!enabled || !showCounter) { 
       toolbarbutton.setAttribute('rulesetsApplied', 0);
       return;
     }
@@ -154,12 +168,42 @@ httpsEverywhere.toolbarButton = {
 
     toolbarbutton.setAttribute('rulesetsApplied', counter);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+  },
+
+  /**
+   * Gets whether to show the rulesets applied counter.
+   *
+   * @return {boolean}
+   */
+  shouldShowCounter: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var prefExists = sp.getPrefType(tb.COUNTER_PREF);
+
+    // the default behavior is to show the rulesets applied counter.
+    // if no preference exists (default) or its enabled, show the counter
+    return !prefExists || sp.getBoolPref(tb.COUNTER_PREF);
+  },
+
+  /**
+   * Toggles the user's preference for displaying the rulesets applied counter
+   * and updates the UI.
+   */
+  toggleShowCounter: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var showCounter = tb.shouldShowCounter();
+    sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
+
+    tb.updateRulesetsApplied();
   }
 
 };
 
-
 function https_everywhere_load() {
+  window.removeEventListener('load', https_everywhere_load, true);
   // on first run, put the context menu in the addons bar
   try {
     var first_run;
@@ -199,6 +243,8 @@ function stitch_context_menu2() {
   }
 }
 
+var rulesetTestsMenuItem = null;
+
 function show_applicable_list(menupopup) {
   var domWin = content.document.defaultView.top;
   if (!(domWin instanceof CI.nsIDOMWindow)) {
@@ -217,6 +263,23 @@ function show_applicable_list(menupopup) {
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);
+
+  // should we also show the ruleset tests menu item?
+  if(HTTPSEverywhere.prefs.getBoolPref("show_ruleset_tests")) {
+
+    if(!rulesetTestsMenuItem) {
+      let strings = document.getElementById('HttpsEverywhereStrings');
+      let label = strings.getString('https-everywhere.menu.ruleset-tests');
+
+      rulesetTestsMenuItem = this.document.createElement('menuitem');
+      rulesetTestsMenuItem.setAttribute('command', 'https-everywhere-menuitem-ruleset-tests');
+      rulesetTestsMenuItem.setAttribute('label', label);
+    }
+
+    if(!menupopup.contains(rulesetTestsMenuItem)) 
+      menupopup.appendChild(rulesetTestsMenuItem);
+  }
+  
 }
 
 function toggle_rule(rule_id) {
@@ -267,3 +330,40 @@ function open_in_tab(url) {
 // hook event for showing hint
 HTTPSEverywhere.log(DBUG, 'Adding listener for toolbarButton init.');
 window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);
+
+function migratePreferences() {
+  gBrowser.removeEventListener("DOMContentLoaded", migratePreferences, true);
+  let prefs_version = HTTPSEverywhere.prefs.getIntPref("prefs_version");
+  
+  // first migration loses saved prefs
+  if(prefs_version == 0) {
+    try {
+      // upgrades will have old rules as preferences, such as the EFF rule
+      let upgrade = false;
+      let childList = HTTPSEverywhere.prefs.getChildList("", {});
+      for(let i=0; i<childList.length; i++) {
+        if(childList[i] == 'EFF') {
+          upgrade = true;
+          break;
+        }
+      }
+
+      if(upgrade) {
+        let nBox = gBrowser.getNotificationBox();
+        let strings = document.getElementById('HttpsEverywhereStrings');
+        let msg = strings.getString('https-everywhere.migration.notification0');
+        nBox.appendNotification(
+          msg, 
+          'https-everywhere-migration0', 
+          'chrome://https-everywhere/skin/https-everywhere-24.png', 
+          nBox.PRIORITY_WARNING_MEDIUM
+        );
+      }
+    } catch(e) {
+      HTTPSEverywhere.log(WARN, "Migration from prefs_version 0 error: "+e);
+    }
+
+    HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
+  }
+}
+

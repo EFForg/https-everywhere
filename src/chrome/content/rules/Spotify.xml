@@ -4,12 +4,22 @@
 
 	CDN buckets:
 
+		- s3.amazonaws.com/scdn/
+
 		- d1clcicqv97n4s.cloudfront.net
+
+			- download
+
 		- d2b1xqaw2ss8na.cloudfront.net
+
+		- d2c87l0yth4zbw.cloudfront.net
+
+			- cf.scdn.co
+
+		- d2ig1kx3difw30.cloudfront.net
 		- d3d188a7ymhk4r.cloudfront.net
 		- dlfl22czvqywx.cloudfront.net
 		- spotify.i.lithium.com
-		- s3.amazonaws.com/scdn/
 
 
 	Problematic domains:
@@ -17,42 +27,51 @@
 		- cf.scdn.co			(cloudfront)
 		- origin.scdn.co		(mismatched, CN: *.spotify.com)
 
+
+	Fully covered domains:
+
+		- cf.scdn.co	(→ d2c87l0yth4zbw.cloudfront.net)
+
+		- spotify.com subdomains:
+
+			- (www.)
+			- community
+			- developer
+			- download	(→ d1clcicqv97n4s.cloudfront.net)
+			- embed
+			- support
+
+
+	Mixed content:
+
+		- Images, on community from:
+
+			- community *
+			- www.airplane-pictures.net **
+
+		- Web bugs on community from files.quizsnack.com *
+
+	* Secured by us
+	** Unsecurable
+
 -->
 <ruleset name="Spotify (partial)">
 
-	<!--target host="cf.scdn.co" /-->
+	<target host="cf.scdn.co" />
 	<target host="spotify.com" />
 	<target host="*.spotify.com" />
-	<target host="*.developer.spotify.com" />
-	<!--target host="*.embed.spotify.com" /-->
 
 
-	<securecookie host="^(?:community|\.developer|embed)\.spotify\.com$" name=".*" />
-	<!--
-		Is this cookie needed on other domains?
-
-	<securecookie host="^\.embed\.spotify\.com$" name=".*" /-->
+	<securecookie host="^(?:community|\.developer|\.?embed|www)?\.spotify\.com$" name=".+" />
 
 
-	<!--	Spotify has (deliberately?) broken us by
-		starting to redirect to www.spotify.com.
+	<rule from="^http://cf\.scdn\.co/"
+		to="https://d2c87l0yth4zbw.cloudfront.net/" />
 
-		Possibly related:
+	<rule from="^http://((?:community|developer|embed|support|www)\.)?spotify\.com/"
+		to="https://$1spotify.com/" />
 
-		https://trac.torproject.org/projects/tor/ticket/7888
-
-	<rule from="^https?://cf\.scdn\.co/"
-		to="https://dlfl22czvqywx.cloudfront.net/" /-->
-
-	<!--	Some (most?) pages 302 to http.
-						-->
-	<rule from="^http://(www\.)?spotify\.com/(\w\w/)?signup($|/|\?)"
-		to="https://$1spotify.com/$2signup$3" />
-
-	<rule from="^http://(community|developer|embed)\.spotify\.com/"
-		to="https://$1.spotify.com/" />
-
-	<rule from="^https?://download\.spotify\.com/"
+	<rule from="^http://download\.spotify\.com/"
 		to="https://d1clcicqv97n4s.cloudfront.net/" />
 
 </ruleset>

@@ -1,46 +1,98 @@
 <!--
+	Other GitHub rulesets:
+
+		- Guag.es.xml
+		- Speaker_Deck.com.xml
+
+
 	CDN buckets:
 
+		- github.global.ssl.fastly.net
 		- a248.e.akamai.net/assets.github.com/
 		- a248.e.akamai.net/camo.github.com/
-		- s3.amazonaws.com/github/
-		- speakerd.s3.amazonaws.com
+		- s3.amazonaws.com/github/ | d24z2fz21y4fag.cloudfront.net
+		- github.myshopify.com
+
+
+	Nonfunctional domains:
+
+		- shop.github.com	(redirects to http)
+
+
+	Problematic domains:
+
+		- support.github.com	(works; mismatched, CN: github.com)
+
+
+	Fully covered domains:
+
+		- github.com subdomains:
+
+			- (www.)
+			- assets\d+
+			- cloud		(→ bugs.genivi.org)
+			- f.cloud
+			- codeload
+			- developer
+			- eclipse
+			- enterprise
+			- gist
+			- help
+			- identicons
+			- jobs
+			- mac
+			- mobile
+			- nodeload
+			- octodex
+			- pages
+			- raw
+			- rg3
+			- status
+			- support	(→ ^github.com)
+			- wiki
+			- windows
+
+		- collector.githubapp.com
+
+		- github.io
+
+		- githubusercontent.com
+
 -->
 <ruleset name="GitHub">
 
 	<target host="github.com" />
 	<target host="*.github.com" />
-	<target host="*.gaug.es" />
-	<target host="speakerdeck.com" />
-	<target host="www.speakerdeck.com" />
+	<target host="github.io" />
+	<target host="*.github.io" />
+	<target host="*.githubusercontent.com" />
+	<target host="collector.githubapp.com" />
 
 
 	<securecookie host="^(?:.*\.)?github\.com$" name=".+" />
-	<securecookie host="^speakerdeck\.com$" name=".+" />
 
 
-	<rule from="^http://((?:assets\d+|f\.cloud|developer|eclipse|enterprise|gist|help|jobs|mac|mobile|nodeload|octodex|pages|raw|status|wiki|windows|www)\.)?github\.com/"
+	<rule from="^http://((?:assets\d+|f\.cloud|codeload|developer|eclipse|enterprise|gist|help|identicons|jobs|mac|mobile|nodeload|octodex|pages|raw|rg3|status|wiki|windows|www)\.)?github\.com/"
 		to="https://$1github.com/" />
 
-	<rule from="^https?://cloud\.github\.com/"
-		to="https://github.s3.amazonaws.com/" />
+	<rule from="^http://cloud\.github\.com/"
+		to="https://d24z2fz21y4fag.cloudfront.net/" />
 
-	<!--	- Cert: github.com
-		- Redirects like so
-				-->
-	<rule from="^https?://support\.github\.com/"
-		to="https://github.com/contact" />
+	<!--	Server drops path:
+					-->
+	<rule from="^http://support\.github\.com/[^?]*(\?.*)?"
+		to="https://github.com/contact$1" />
 
-	<rule from="^https?://get\.gaug\.es/theme/.*/stylesheets/images/favicon\.png$"
-		to="https://secure.guag.es/favicon.png" />
+	<rule from="^http://collector\.githubapp\.com/"
+		to="https://collector.githubapp.com/" />
 
-	<rule from="^http://secure\.gaug\.es/"
-		to="https://secure.gaug.es/" />
+	<rule from="^https?://github\.io/"
+		to="https://pages.github.com/" />
 
-	<!--	- www doesn't work over https
-		- Redirects to !www over http
-			-->
-	<rule from="^https?://(?:www\.)?speakerdeck\.com/"
-		to="https://speakerdeck.com/" />
+	<rule from="^http://([^/@:\.]+)\.github\.io/"
+		to="https://$1.github.io/" />
+
+	<rule from="^http://([^/@:\.]+)\.githubusercontent\.com/"
+		to="https://$1.githubusercontent.com/" />
 
 </ruleset>

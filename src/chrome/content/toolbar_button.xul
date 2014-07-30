@@ -8,6 +8,7 @@
 
 <overlay id="https-everywhere-button-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript" src="chrome://https-everywhere/content/toolbar_button.js"/>
+  <script type="application/x-javascript" src="chrome://https-everywhere/content/ruleset-tests.js"/>
   
     <stringbundleset id="stringbundleset">
         <stringbundle id="HttpsEverywhereStrings"
@@ -30,7 +31,6 @@
   <toolbarpalette id="BrowserToolbarPalette">
     <toolbarbutton 
       id="https-everywhere-button"
-      class="toolbarbutton-1 chromeclass-toolbar-additional"
       tooltiptext="&https-everywhere.about.ext_name;"
       label="HTTPS"
       context="https-everywhere-context-menu"
@@ -42,6 +42,9 @@
 
       <menupopup id="https-everywhere-context" onpopupshowing="show_applicable_list(this)">
         <!-- entries will be written here by ApplicableList.populate_menu() -->
+        <menuseparator />
+        <menuitem type="checkbox" id="https-everywhere-counter-item" label="&https-everywhere.menu.showCounter;" 
+          oncommand="httpsEverywhere.toolbarButton.toggleShowCounter()" />
         <menuseparator />
         <menuitem label="&https-everywhere.menu.observatory;" command="https-everywhere-menuitem-observatory" />
         <menuitem label="&https-everywhere.menu.about;" command="https-everywhere-menuitem-about" />
@@ -61,6 +64,8 @@
       oncommand="open_in_tab('https://www.eff.org/donate');" />
     <command id="https-everywhere-menuitem-donate-tor" 
       oncommand="open_in_tab('https://www.torproject.org/donate');" />
+    <command id="https-everywhere-menuitem-ruleset-tests" 
+      oncommand="openStatus();" />
   </commandset>
 </overlay>
 

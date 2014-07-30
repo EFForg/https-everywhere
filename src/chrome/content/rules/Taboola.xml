@@ -9,11 +9,25 @@
 		- cdn.taboolasyndication.com
 		- trc.taboolasyndication.com
 
+
+	Partially covered subdomains:
+
+		- trc	(libtrc/\w+/rbox.js 502s)
+
+
+	Fully covered subdomains:
+
+		- images
+
 -->
 <ruleset name="Taboola (partial)">
 
 	<target host="taboola.com" />
-	<target host="www.taboola.com" />
+	<target host="*.taboola.com" />
+		<!--
+			502:
+				-->
+		<exclusion pattern="^http://trc\.taboola\.com/libtrc/" />
 
 
 	<securecookie host="^www\.taboola\.com$" name=".*" />
@@ -21,7 +35,10 @@
 
 	<!--	Cert only matches *.taboola.com.
 							-->
-	<rule from="^https?://(?:www\.)?taboola\.com/"
+	<rule from="^http://(?:www\.)?taboola\.com/"
 		to="https://www.taboola.com/" />
+
+	<rule from="^http://(images|trc)\.taboola\.com/"
+		to="https://$1.taboola.com/" />
 
 </ruleset>

@@ -1,13 +1,36 @@
 <!--
+	CDN buckets:
+
+		- s3.amazonaws.com/status-livejournal/
+		- l-stat.livejournal.com.cdngc.net
+		- l-userpic.livejournal.com.cdngc.net
+		- ic.pics.livejournal.com.cdngc.net
+
+
 	Nonfunctional subdomains:
 
-		- l-files	(cert: *.pantherssl.com; displays blank page)
-			- files doesn't exist
-			- Not on www
+		- files		(redirects to www)
+		- l-userpic	(403, CN: ssl.cdngc.net)
+		- ic.pics	(reset)
+		- xc3.services	(dropped)
+		- user		(404)
 
-		- l-userpic	(ditto)
-		- ic.pics	(403, mismatched, CN: ssl2.cdngc.net)
-		- user		(404 via https)
+
+	Problematic subdomains:
+
+		- l-stat	(403, CN: ssl2.cdngc.net)
+
+
+	Partially covered subdomains:
+
+		- (www.)
+		- status	(→ s3.amazonaws.com)
+
+
+	Fully covered subdomains:
+
+		- l-stat	(→ s3.amazonaws.com & stat)
+		- stat
 
 
 	Caution: LiveJournal breaks us proactively.
@@ -23,30 +46,29 @@
 
 		.n|n, LJ.
 			-->
-	<rule from="^http://(www\.)?livejournal\.com/((?:changepassword|create|login)\.html|manage/|shop/)"
-		to="https://$1livejournal.com/$2" />
+	<rule from="^http://(www\.)?livejournal\.com/(?=(?:changepassword|create|login)\.html|manage/|shop/)"
+		to="https://$1livejournal.com/" />
 
-	<rule from="^https?://status\.livejournal\.com/img/"
+	<rule from="^http://status\.livejournal\.com/img/"
 		to="https://s3.amazonaws.com/status-livejournal/img/" />
 
 	<!--	Also on stat.livejournal.com, but as these are
-		on a CDN too, be kind and point there instead.	-->
-	<rule from="^http://(?:l-)stat\.livejournal\.com/img/error-pages/(bg-error-page\.jpg|bullet-round-grey\.gif|frank\.png|logo-lj\.png|rule-grey\.gif)"
-		to="https://s3.amazonaws.com/status-livejournal/img/$1" />
+		on a CDN too, be kind and point there instead.
+								-->
+	<rule from="^http://(?:l-)stat\.livejournal\.com/img/error-pages/(?=bg-error-page\.jpg|bullet-round-grey\.gif|frank\.png|logo-lj\.png|rule-grey\.gif)"
+		to="https://s3.amazonaws.com/status-livejournal/img/" />
 
-	<!--	l-stat cert: pantherssl.com
-		user 404s via http		-->
-	<rule from="^https?://(?:l-)?stat\.livejournal\.com/"
+	<rule from="^http://(?:l-)?stat\.livejournal\.com/"
 		to="https://stat.livejournal.com/" />
 
 	<!--	User journal entries work, but user pages redirect to www.
 
-		...or not, 'thanks' for 'fixing' this oversight
+		This broke, but appears to work again.
+							-->
+	<rule from="^http://([\w-]+)\.livejournal\.com/(?=\d+\.html)"
+		to="https://$1.livejournal.com/" />
 
-	<rule from="^http://([\w-]+)\.livejournal\.com/(\d+)\.html"
-		to="https://$1.livejournal.com/$2.html" /-->
-
-	<rule from="^https://www\.livejournal\.com/stc/img/error-pages/"
-		to="https://www.livejournal.com/img/error-pages/" />
+	<!--rule from="^https://www\.livejournal\.com/stc/img/error-pages/"
+		to="https://www.livejournal.com/img/error-pages/" /-->
 
 </ruleset>

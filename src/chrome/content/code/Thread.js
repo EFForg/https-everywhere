@@ -17,7 +17,7 @@ var Thread = {
   
   _spinInternal: function(ctrl) {
     var t = ctrl.startTime;
-    var maxTime = parseInt(ctrl.maxTime)
+    var maxTime = parseInt(ctrl.maxTime);
     if (maxTime) {
       while(ctrl.running && this.hostRunning) {
         this.yield();

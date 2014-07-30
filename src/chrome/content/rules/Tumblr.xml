@@ -1,13 +1,47 @@
 <!--
-	For problematic rules, see Tumblr-mismatches.xml.
+	For rules causing false/broken MCB, see Tumblr.com-falsemixed.xml.
 
 
-	Buckets:
+	CDN buckets:
 
 		- s3.amazonaws.com/assets.tumblr.com/
 		- s3.amazonaws.com/data.tumblr.com/
 		- s3.amazonaws.com/static.tumblr.com/
+
+		- d2g9v1gts353nd.cloudfront.net
+
+			- a
+			- v
+
+		- d2glp9604qyu8g.cloudfront.net
+
+			- assets
+
+		- d2pi0bc9ewx28h.cloudfront.net
+
+			- static
+
+		- degx20iof9o2c.cloudfront.net
+
+			- vt
+
+		- dssedc4qxg7o6.cloudfront.net
+
+			- media
+			- \d+.media
+
+		- duktadvmmowhi.cloudfront.net
+
+			- secure.static
+
 		- cs38.wac.edgecastcdn.net/...
+
+			- secure.assets
+
+		- wac.19b6.edgecastcdn.net/??19B6/
+
+			- platform.tumblr.com
+
 		- gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/
 		- a.tumblr.com.edgesuite.net
 		- assets.tumblr.com.edgesuite.net
@@ -18,18 +52,46 @@
 
 	Nonfunctional subdomains:
 
-		- developers
-		- engineering
-		- platform	(404, edgecast)
-		- staff
+		- developers *
+		- engineering *
+		- staff *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- media		(cert only matches *.media)
+		- 25.media	(akamai)
+		- 34.media	(akamai)
+		- 35.media	(akamai)
+		- 37.media	(akamai)
+
 
 	Fully covered subdomains:
 
+		- a
+		- assets	(→ d2glp9604qyu8g.cloudfront.net)
+		- origin.assets
 		- secure.assets
 		- data
-		- media
-		- \d+.media
-		- static
+		- media		(→ 31.media)
+		- \d+.media:
+		- platform
+		- origin.platform
+		- static	(→ d2g9v1gts353nd.cloudfront.net)
+		- secure.static
+		- v
+		- vt
+
+
+	Mixed content:
+
+		- Scripts on www from assets *
+
+		- Images on www from assets *
+
+	* Secured by us
 
 -->
 <ruleset name="Tumblr (partial)">
@@ -37,11 +99,20 @@
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
 		<!--
-			Doesn't work when rewritten.
+			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
-			https://trac.torproject.org/projects/tor/ticket/7705
+				- dashboard.js breaks "like"ing
+				- jquery_backbone_lodash.js and polyfills.js individually cause the editor to spawn another page
+				- posting.js breaks opening the editor
+				- tiny_mce.js breaks editing
+
+			and lo, many bellyfeel boos were heard.
+								-->
+		<!--exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/(dashboard|polyfills|posting|vendor/(jquery_backbone_lodash|tiny_mce_3_5_10/tiny_mce))\.js" /-->
+		<!--
+			And so was one "oh, fsck it."
 							-->
-		<exclusion pattern="^https?://assets\.tumblr\.com/.*\.htm(?:$|\?)" />
+		<exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" />
 
 
 	<!--	Tracking cookies:
@@ -67,8 +138,6 @@
 			- policy/en/terms_of_service$
 			- press$
 			- reblog/
-			- register$
-			- register/
 			- share$
 			- sponsors$
 			- submit_form_js/
@@ -76,26 +145,19 @@
 			- tips$
 			- upload/image
 					-->
-	<rule from="^http://(www\.)?tumblr\.com/($|dmca|examples/share/\w|impixu(?:$|\?)|images/|javascript/|login|logout|photo/|register|settings/|svc/log/)"
-		to="https://$1tumblr.com/$2" />
+	<rule from="^http://(www\.)?tumblr\.com/(?=$|(?:dmca|forgot_password|impixu|login|logout|register|svc/teaser|teaser)(?:$|[#?/])|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/)"
+		to="https://$1tumblr.com/" />
 
-	<!--	Amazon only works for a subset of assets data.
-		The pattern for that subset is a mystery.
-		Forget being kind and just do what works.
+	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
+		to="https://31.media.tumblr.com/" />
 
-		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001149.html
+	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
+		to="https://$1.tumblr.com/" />
 
-		swf: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001095.html
-
-			-->
-
-	<rule from="^https?://(?:secure\.)?assets\.tumblr\.com/"
-		to="https://secure.assets.tumblr.com/" />
-
-	<rule from="^https?://(?:data|(?:\d+\.)?media)\.tumblr\.com/"
+	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
-	<rule from="^https?://static\.tumblr\.com/"
-		to="https://s3.amazonaws.com/static.tumblr.com/" />
+	<rule from="^http://static\.tumblr\.com/"
+		to="https://d2pi0bc9ewx28h.cloudfront.net/" />
 
 </ruleset>

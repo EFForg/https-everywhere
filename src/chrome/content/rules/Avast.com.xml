@@ -1,24 +1,37 @@
-<ruleset name="Avast (partial)">
-
-	<!--	Avast has started reditecting HTTPS to HTTP on its main site :(
-
-			https://trac.torproject.org/projects/tor/ticket/3779
-
-	<target host="avast.com" /-->
-	<target host="*.avast.com" />
+<!-- Av vendor. Static.avast.com lacks https.
 
 
-	<securecookie host="^\.avast\.com$" name="^s_vi$" />
-	<securecookie host="^(?:blog|my)\.avast\.com$" name=".+" />
+	CDN buckets:
+
+		- avast.com.edgesuite.net
+
+			- a1639.g1.akamai.net
+			- sf0.iavs.net
 
 
-	<!--rule from="^http://(?:www\.)?avast\.com/"
-		to="https://www.avast.com/" /-->
+	Problematic domains:
 
-	<rule from="^https?://an\.avast\.com/"
-		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
+		- sf0.iavs.net	(works, akamai)
 
-	<rule from="^http://(ans|blog|forum|id|my|static|support)\.avast\.com/"
-		to="https://$1.avast.com/" />
+ -->
+<ruleset name="Avast" platform="mixedcontent">
+  <!-- Avast as started reditecting HTTPS to HTTP on its main site :(
+       https://trac.torproject.org/projects/tor/ticket/3779 -->
+
+	<!--
+  <target host="avast.com" />
+	<target host="www.avast.com" />
+  -->
+	<target host="forum.avast.com" />
+	<target host="support.avast.com" />
+	<target host="sf0.iavs.net" />
+	<!--
+  <rule from="^http://www\.avast\.com/" to="https://www.avast.com/"/>
+	<rule from="^http://avast\.com/" to="https://www.avast.com/"/>
+  -->
+	<rule from="^http://(forum|support)\.avast\.com/" to="https://$1.avast.com/"/>
+
+	<rule from="^http://sf0\.iavs\.net/"
+		to="https://a248.e.akamai.net/f/1639/9783/9m/sf0.iavs.net/" />
 
 </ruleset>

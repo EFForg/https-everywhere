@@ -1,29 +1,15 @@
-<!--
-	Nonfunctional:
-
-		- docs		(http reply)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- forums
-		- manage2
-		- mt
-		- tickets
-
+<!--	!functional:
+		- docs		(ssl_error_rx_record_too_long)
 -->
-<ruleset name="cPanel (partial)">
+<ruleset name="cPanel (partial)" platform="mixedcontent">
 
-	<target host="cpanel.net" />
-	<target host="*.cpanel.net" />
-		<exclusion pattern="^http://docs\." />
+	<target host="cpanel.net"/>
+	<target host="*.cpanel.net"/>
+		<exclusion pattern="^http://docs\."/>
 
+	<securecookie host="^(.*\.)?cpanel\.net$" name=".*"/>
 
-	<securecookie host="^(?:.*\.)?cpanel\.net$" name=".+" />
-
-
-	<rule from="^http://((forums|manage2|mt|tickets|www)\.)?cpanel\.net/"
-		to="https://$1cpanel.net/" />
+	<rule from="^http://((forums|mt|tickets|www)\.)?cpanel\.net/"
+		to="https://$1cpanel.net/"/>
 
 </ruleset>

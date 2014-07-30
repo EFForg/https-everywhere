@@ -1,17 +1,29 @@
 <!--
-	dellideas.force.com 
+	CDN buckets:
+
+		- ccdn-global.dell.com.edgesuite.net
+
+			- a1058.g.akamai.net
+
+				- i
+
+		- dellideas.force.com 
 
 
 	Nonfunctional subdomains:
 
-		- community	(times out)
-		- content	(times out)
+		- community *
+		- content *
+		- accessories.euro	(503, akamai)
+
+	* Dropped
 
 
 	Problematic subdomains:
 
-		- i *
 		- accessories-cdn *
+		- media.community	(504, akamai)
+		- i *
 		- www1.la *
 		- www1-cdn.la *
 		- accessories.us	(mismatched, CN: accessories.dell.com)
@@ -24,20 +36,21 @@
 
 		- community subdomains:
 
-				- de *
-				- en *
-				- es *
-				- fr *
-				- ja *
-				- ko *
-				- media		(→ en.community; 504, akamai)
-				- pt *
-				- zh *
+				- de ¹
+				- en ¹
+				- es ¹
+				- fr ¹
+				- ja ¹
+				- ko ¹
+				- media		(→ en.community)
+				- pt ¹
+				- zh ¹
 
-		- partnerdirect **
+		- partnerdirect ²
+		- linux ²
 
-	* cfs-file.ashx & resized-image.ashx 404, at least some pages redirect to http
-	** At least some pages redirect to http
+	¹ cfs-file.ashx & resized-image.ashx 404, at least some pages redirect to http
+	² At least some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -63,7 +76,7 @@
 		- ecomm
 		- ecomm2
 		- support.euro
-		- i			(→ si.cdn)
+		- i			(→ akamai)
 		- img
 		- mobility
 		- premier
@@ -72,15 +85,30 @@
 		- support
 		- supportapj
 		- pbar.us
+		- www1-cdn
 		- www-cdn		(→ www)
 
+
+	Mixed content:
+
+		- css on www from www-cdn *
+
+		- Images on accessories from i *
+
+	* Secured by us
+
 -->
-<ruleset name="Dell (partial)" platform="mixedcontent">
+<ruleset name="Dell (partial)">
 
 	<target host="dell.com" />
 	<target host="*.dell.com" />
 		<exclusion pattern="^http://(?:\w\w|media)\.community\.dell\.com/(?![tT]hemes/)" />
 		<exclusion pattern="^http://partnerdirect\.dell\.com/(?!sites/channel/(?:Style\ Library/|\w\w_\w\w/pages/loginpage\.aspx))" />
+		<!--
+			False/broken MCB:
+						-->
+		<exclusion pattern="^http://(www\.)?dell\.com/+(?!content/|favicon\.ico)" />
+		<exclusion pattern="^http://linux\.dell\.com/(?:wiki|$)" />
 	<target host="ideastorm.com" />
 	<target host="www.ideastorm.com" />
 
@@ -89,22 +117,22 @@
 	<securecookie host="^(?:accessories|ecomm|support\.euro|mobility|premier|signin|support(?:apj)?)\.dell\.com$" name=".+" />
 
 
-	<rule from="^https?://(www(?:-cdn)?\.)?dell\.com/"
+	<rule from="^http://(www(?:-cdn)?\.)?dell\.com/"
 		to="https://www.dell.com/" />
 
-	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|mobility|partnerdirect|premier|signin|sso|support(?:apj)?|pbar\.us)\.dell\.com/"
+	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|linux|mobility|partnerdirect|premier|signin|sso|support(?:apj)?|pbar\.us|www1-cdn)\.dell\.com/"
 		to="https://$1.dell.com/" />
 
-	<rule from="^https?://accessories-cdn\.dell\.com/"
+	<rule from="^http://accessories-cdn\.dell\.com/"
 		to="https://accessories.dell.com/" />
 
-	<rule from="^https?://media\.community\.dell\.com/"
+	<rule from="^http://media\.community\.dell\.com/"
 		to="https://en.community.dell.com/" />
 
-	<rule from="^https?://i\.dell\.com/"
-		to="https://si.cdn.dell.com/" />
+	<rule from="^http://i\.dell\.com/"
+		to="https://a248.e.akamai.net/f/1058/5566/8/i.dell.com/" />
 
-	<rule from="^https?://(?:www\.)?ideastorm\.com/"
+	<rule from="^http://(?:www\.)?ideastorm\.com/"
 		to="https://dellideas.secure.force.com/" />
 
 </ruleset>

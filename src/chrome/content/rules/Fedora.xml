@@ -1,23 +1,18 @@
 <!--
-	Nonfunctional domains:
-
-		- git.fedorahosted.org		(CN: fedorahosted.org; redirects there & 404s)
-		- \w+.fedorapeople.org		(unique domain per person)
-
-		- fedoraproject.org subdomains:
-
-			- directory *
-			- pki *
-			- planet **
-			- publictest04 **
-
-	* Redirects to www.aeolusproject.org; mismatched, CN: *.aeolusproject.org
-	** Refused
+	For rules causing false/broken MCB, see Fedora-falsemixed.xml.
 
 
-	Problematic domains:
+	Mixed content:
 
-		- www.fedorahosted.org		(mismatched)
+		- css on start from ^ *
+		- Images on start from ^ *
+		- Images on start from www *
+
+	* Secured by us.
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
 
 -->
 <ruleset name="Fedora Project">
@@ -26,16 +21,18 @@
 	<target host="www.fedorahosted.org" />
 	<target host="fedoraproject.org" />
 	<target host="*.fedoraproject.org" />
+		<!--
+			Causes false/broken MCB:
+							-->
+		<exclusion pattern="^http://start\.fedoraproject\." />
 
-
-	<securecookie host="^fedorahosted\.org$" name=".+" />
-	<securecookie host="^(?:.*\.)?fedoraproject\.org$" name=".+" />
-
-
-	<rule from="^https?://(?:www\.)?fedorahosted\.org/"
+	<rule from="^http://(www\.)?fedorahosted\.org/"
 		to="https://fedorahosted.org/" />
 
-	<rule from="^http://((?:admin|alt|archives|blogs|boot|dl|docs|download|get|join|lists|meetbot|mirrors|retrace|spins|start|talk|www)\.)?fedoraproject\.org/"
-		to="https://$1fedoraproject.org/" />
+	<rule from="^http://fedoraproject\.org/"
+		to="https://fedoraproject.org/" />
+
+	<rule from="^http://(admin|alt|archives|blogs|boot|dl|docs|lists|mirrors|spins|start|talk|www)\.fedoraproject\.org/"
+		to="https://$1.fedoraproject.org/" />
 
 </ruleset>

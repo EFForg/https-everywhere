@@ -85,7 +85,7 @@ Cookie.prototype = {
           v = true;
           break;
         default:
-          n = 'unknown'
+          n = 'unknown';
       }
       this[n] = v;
     }
@@ -145,4 +145,4 @@ Cookie.prototype = {
   status: 0,
   QueryInterface: xpcom_generateQI([Ci.nsICookie, Ci.nsICookie2])
   
-}
+};

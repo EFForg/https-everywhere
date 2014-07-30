@@ -1,12 +1,107 @@
+<!--
+	For other United Internet coverage, see United-Internet.xml.
+
+
+	CDN buckets:
+
+		- i0.web.de.edgesuite.net
+
+			- a1123.g.akamai.net
+
+		- ui.webde.gd.gameduell.net
+
+			- duellspiele.web.de
+
+		- webdssl.ivwbox.de
+
+		- allianceframework.monster.com
+
+			- jobboerse.web.de
+
+
+	Nonfunctional subdomains:
+
+		- duellspiele	(prints "test"; expired 2011-05-25, self-signed, CN: media-5)
+		- jobboerse	(dropped)
+		- kino		(redirects to www.con-tech.de; mismatched, CN: ct-cds.con-tech.de)
+		- route		($ redirects to http, .+ redirects to $; mismatched, CN: web.de)
+		- status	($ redirects to http, .+ redirects to $; valid cert)
+		- tv		(shows ^web.de; mismatched, CN: web.de)
+		- user		(redirects to http; mismatched, CN: portal.gmx.net)
+
+
+	Problematic subdomains:
+
+		- i0		(works, akamai)
+		- magazine	(redirects to http; mismatched, CN: portal.gmx.net)
+
+
+	Partially covered subdomains:
+
+		- magazine	(→ ^)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- agb
+		- dl
+		- exklusiv
+		- freemail
+		- hilfe.freemail
+		- giroloyal
+		- hilfe
+		- i0		(→ akamai)
+		- img
+		- jobs
+		- www2.jobs
+		- js
+		- kundencenter
+		- kundenservice
+		- www2.kundenservice
+		- lotto
+		- maildomain
+		- millionenklick
+		- netbank-ratenkredit
+		- oekostrom
+		- pc-sicherheit
+		- www2.pc-sicherheit
+		- produkte
+		- r
+		- registrierung
+		- sec-i0
+		- shop
+		- targobank-kredit
+		- webde-freemail-cards
+
+
+	Observed cookie domains:
+
+		- kundencenter
+		- lotto
+		- millionenklick
+		- produkte
+		- registrierung
+		- shop
+
+-->
 <ruleset name="web.de (buggy)" default_off="breaks videos">
-  <target host="web.de"/>
-  <target host="*.web.de"/>
-  <target host="www.web.de"/>
-  <target host="logout.webde.uimserv.net"/>
 
-  <securecookie host="^(.*\.)?web\.de$" name=".*" />
+	<target host="web.de" />
+	<target host="*.web.de" />
+		<!--exclusion pattern="^http://(duellspiele|jobboerse|kino|route|status|tv|user)\." /-->
 
-  <rule from="^http://(?:www\.)?web\.de/" to="https://web.de/"/>
-  <rule from="^http://web\.de/" to="https://web.de/"/>
-  <rule from="^http://logout\.webde\.uimserv\.net/" to="https://logout.webde.uimserv.net/"/>
+
+	<securecookie host="^(?:.*\.)?web\.de$" name=".+" />
+
+
+	<rule from="^http://((?:agb|dl|exklusiv|(?:hilfe\.)?freemail|giroloyal|hilfe|img|(?:www2\.)?jobs|js|kundencenter|(?:www2\.)?kundenservice|lotto|maildomain|millionenklick|netbank-ratenkredit|oekostrom|(?:www2\.)?pc-sicherheit|produkte|r|registrierung|sec-i0|shop|targobank-kredit|webde-freemail-cards|www)\.)?web\.de/"
+		to="https://$1web.de/" />
+
+	<rule from="^http://i0\.web\.de/"
+		to="https://a248.e.akamai.net/f/1123/498/7m/i0.web.de/" />
+
+	<rule from="^http://magazine\.web\.de/+(\?.*)?$"
+		to="https://web.de/magazine/nachrichten/index.html" />
+
 </ruleset>

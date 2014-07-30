@@ -1,8 +1,51 @@
 <!--
-	Mixed images from content[89].flixter.com
+	CDN buckets:
+
+		- images.rottentomatoescdn.com.cdngc.net
+
+
+	Problematic domains:
+
+		- images.rottentomatoes.com	(dropped)
+
+
+	Fully covered domains:
+
+		- (www.)rottentomatoes.com
+		- images.rottentomatoes.com	(→ images.rottentomatoescdn.com)
+		- images.rottentomatoescdn.com
+
+
+	Mixed content, on www:
+
+		- Scripts, from:
+
+			- jsapi.netflix.com *
+
+		- Images, from:
+
+			- images **
+			- content.internetvideoarchive.com ***
+			- images.rottentomatoescdn.com **
+			- content[6-9].flixster.com **
+			- instart[0-3].flixster.com **
+
+		- Web bugs, from:
+
+			- warnerbros.112.2o7.net **
+			- segs.btrll.com **
+			- static.ak.fbcdn.net **
+			- www2.glam.com **
+			- edge.quantserve.com **
+			- pixel.quantserve.com **
+			- b.scorecardresearch.com **
+
+	* Secured by us, but not by default
+	** Secured by us
+	*** Unsecurable, doesn't trip MCB
 
 -->
-<ruleset name="Rottentomatoes">
+<ruleset name="Rottentomatoes" platform="mixedcontent">
 
 	<target host="rottentomatoes.com" />
 	<target host="*.rottentomatoes.com" />
@@ -15,9 +58,7 @@
 	<rule from="^http://(www\.)?rottentomatoes\.com/"
 		to="https://$1rottentomatoes.com/" />
 
-	<!--	images.rottentomatoes.com times out.
-							-->
-	<rule from="^https?://images\.rottentomatoes(?:cdn)?\.com/"
+	<rule from="^http://images\.rottentomatoes(?:cdn)?\.com/"
 		to="https://images.rottentomatoescdn.com/" />
 
 </ruleset>

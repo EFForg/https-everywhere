@@ -1,15 +1,28 @@
+<!--
+	Fully covered domains:
+
+		- rum-collector.pingdom.net
+
+-->
 <ruleset name="Pingdom (partial)">
 
-	<target host="pingdom.com"/>
-	<target host="*.pingdom.com"/>
-		<!--	404	-->
-		<exclusion pattern="^http://stats\."/>
+	<target host="pingdom.com" />
+	<target host="*.pingdom.com" />
+		<!--
+			404:
+				-->
+		<exclusion pattern="^http://stats\." />
+		<exclusion pattern="^http://www\.pingdom\.com/(?!_css/|_img/|signup)" />
+	<target host="*.pingdom.net" />
 
 
-	<rule from="^http://(my\.|pp\.|rum-static\.)?pingdom\.com/"
+	<securecookie host="^\.pingdom\.net$" name=".+" />
+
+
+	<rule from="^http://((?:my|pp|www)\.)?pingdom\.com/"
 		to="https://$1pingdom.com/"/>
 
-	<rule from="^http://www\.pingdom\.com/(_css/|_img/|signup)"
-		to="https://www.pingdom.com/$1"/>
+	<rule from="^http://rum-(collector|static)\.pingdom\.net/"
+		to="https://rum-$1.pingdom.net/" />
 
 </ruleset>

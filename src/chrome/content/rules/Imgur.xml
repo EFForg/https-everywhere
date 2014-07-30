@@ -1,31 +1,27 @@
 <!--
-	CDN buckets:
+	Imgur now has full HTTPS support on all subdomains.
+	Previously, there were issues as discussed :
 
-		- wac.4220.edgecastcdn.net/??4220/
+		- https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001645.html
+		- https://bugzilla.mozilla.org/show_bug.cgi?id=866986#c7
 
+	Ruleset simplified and fixed by bryn@imgur.com, January 2014.
+
+
+	Fully covered domains:
+
+		- imgur.com
+
+		- *.imgur.com:
+
+			- i
+			- origin
 			- s
 			- i.stack
+			- www
 
-
-	Nonfunctional subdomains:
-
-		- stack		(refused)
-		- i.stack	(404; mismatched, CN: edgecastcdn.net)
-
-
-	Problematic subdomains:
-
-		- img	(refused)
-		- s	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- i
-		- img		(→ i)
-		- origin
-		- s		(→ ^)
+		- img.imgur.com		(→ i)
+		- store.imgur.com	(→ imgur-store.myshopify.com)
 
 -->
 <ruleset name="Imgur">
@@ -37,18 +33,16 @@
 	<securecookie host="^\.?imgur\.com" name=".+" />
 
 
-	<rule from="^http://(?:s\.)?imgur\.com/"
-		to="https://imgur.com/"/>
-
-	<!--	This rule breaks the Imgur Uploader Firefox extension:
-
-	<rule from="^http://api\.imgur\.com/"
-		to="https://api.imgur.com/" /-->
-
-	<rule from="^http://(i|origin|www)\.imgur\.com/"
-		to="https://$1.imgur.com/" />
+	<rule from="^http://imgur\.com/"
+		to="https://imgur.com/" />
 
 	<rule from="^http://img\.imgur\.com/"
 		to="https://i.imgur.com/" />
+
+	<rule from="^http://store\.imgur\.com/"
+		to="https://imgur-store.myshopify.com/" />
+
+	<rule from="^http://([\w.]+\.)?imgur\.com/"
+		to="https://$1imgur.com/" />
 
 </ruleset>

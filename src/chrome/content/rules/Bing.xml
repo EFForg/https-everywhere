@@ -1,61 +1,57 @@
 <!--
-	For problematic rules, see Microsoft-mismatches.xml.
-
-
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	DNS buckets:
+	CDN buckets:
 
-		- a134.lm.akamai.net/...
+		- a134.lm.akamai.net
+
 			- akam.bing.com
 			- ts[1-4].mm.bing.net
 
+		- ssl.bing.com.edgekey.net
 
-		- ssl.bing.com.edgekey.net/...
 			- ssl.bing.com
 
 
 	Nonfunctional domains:
 
 		- bing.com:
+
 			images/ *
 			notifications/ *	not in fd/
 			thumb/ *
 
-		- api.bing.com			(akami; 404)
-		- db3.api.bing.com		(CN: bing.com; blank page)
+		- api.bing.com			(404, akamai)
+		- db3.api.bing.com		(404; mismatched, CN: bedrock.msn.com)
 
-	* Redirects to http.
+	* Redirects to http
 
 
 	Problematic domains:
 
-		- www.bing.com		(mismatch)
+		- www.bing.com		(redirects to http, akamai)
 		- ts[1-4].mm.bing.net	(akamai)
 
 
 	Partially covered domains:
 
-		- (www.)bing.com
+		- (www.)bing.com	(→ ssl.bing.com)
 
 
 	Fully covered domains:
 
-		- c.bing.com		(tracking beacons)
-		- h.bing.com
-		- ssl.bing.com
+		- bing.com subdomains:
+
+			- c.bing		(tracking beacons)
+			- h.bing
+			- ssl.bing
+			- udc.bing
+
 		- ts[1-4].mm.bing.net
 
-		- virtualearth.net subdomains:
-
-			- dev
-			- ecn.dev
-			- ecn.t[0-7].tiles
-			- venuemaps
-
 -->
-<ruleset name="Bing (partial, buggy)" default_off="breaks points dashboard">
+<ruleset name="Bing (partial, buggy)" default_off="breaks points dashboard" platform="mixedcontent">
 
 	<target host="bing.com" />
 	<target host="*.bing.com" />
@@ -64,31 +60,26 @@
 			Breaks login menu
 
 				https://trac.torproject.org/projects/tor/ticket/7092
-						-->
+										-->
 		<exclusion pattern="^https?://(?:www\.)?bing\.com/fd/fb/mulmfg" />
-	<target host="*.virtualearth.net" />
 
 
 	<securecookie host="^(?:\.c|ssl)\.bing\.com$" name=".+" />
-	<securecookie host="^.*\.virtualearth\.net$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|news/s/|s/as/|sa/|th(?:$|\?))"
+	<rule from="^http://(?:www\.)?bing\.com/(az/|fd/|HPImageArchive\.aspx|mm/|news/s/|s/as/|sa/|th(?:$|\?))"
 		to="https://ssl.bing.com/$1" />
 
 	<!--	- fd/s/ is equivalent and fd/ seems to work always, so redirect there
 		- /bing and /ssl.bing are the same here, but ssl has an EV
 								-->
-	<rule from="^https?://(?:www\.)?bing\.com/s/"
+	<rule from="^http://(?:www\.)?bing\.com/s/"
 		to="https://ssl.bing.com/fd/s/" />
 
-	<rule from="^http://(c|h|ssl)\.bing\.com/"
+	<rule from="^http://(c|h|ssl|udc)\.bing\.com/"
 		to="https://$1.bing.com/" />
 
-	<rule from="^https?://ts[1-4]\.mm\.bing\.net/"
+	<rule from="^http://ts[1-4]\.mm\.bing\.net/"
 		to="https://ssl.bing.com/"/>
-
-	<rule from="^http://(dev|ecn\.(?:dev|t\d\.tiles)|api\.tiles|venuemaps)\.virtualearth\.net/"
-		to="https://$1.virtualearth.net/" />
 
 </ruleset>

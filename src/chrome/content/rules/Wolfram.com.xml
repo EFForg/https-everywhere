@@ -1,28 +1,17 @@
-<!--
-	Other Wolfram Research rulesets:
-
-		- Wolfram_Alpha.xml
-
-
-	Nonfunctional subdomains:
-
-		- support	(times out)
-
+<!-- Breaks on Chromium:
+     https://trac.torproject.org/projects/tor/ticket/8204
 -->
-<ruleset name="Wolfram.com (partial) ">
+<ruleset name="Wolfram.com (default off)" platform="firefox" default_off="sometimes causes results not to appear">
+  <target host="wolfram.com" />
+  <target host="www.wolfram.com" />
+  <target host="www.wolframcdn.com" />
+  <target host="wolframalpha.com" />
+  <target host="*.wolframalpha.com" />
 
-	<target host="wolfram.com" />
-	<target host="*.wolfram.com" />
+	<securecookie host="^(.*\.)?wolframalpha\.com$" name=".*"/>
 
-
-	<!--securecookie host="^\.wolfram\.com$" name="^WR_SID$" /-->
-	<securecookie host="^user\.wolfram\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?wolfram\.com/"
-		to="https://www.wolfram.com/" />
-
-	<rule from="^http://user\.wolfram\.com/"
-		to="https://user.wolfram.com/" />
-
+  <rule from="^http://(?:www\.)?wolfram\.com/" to="https://www.wolfram.com/" />
+  <rule from="^http://(?:www\.)?wolframalpha\.com/" to="https://www.wolframalpha.com/" />
+  <rule from="^http://www([0-9][a-z]?)\.wolframalpha\.com/" to="https://www$1.wolframalpha.com/" />
+  <rule from="^http://www\.?wolframcdn\.com/" to="https://www.wolframcdn.com/" />
 </ruleset>

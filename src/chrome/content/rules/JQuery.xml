@@ -1,8 +1,9 @@
 <!--
-	For problematic rules, see JQuery-mismatches.xml.
-
-
 	CDN buckets:
+
+		- wac.1257.edgecastcdn.net/??1257/
+
+			- static.jquery.com
 
 		- learningjquery.kswedberg.netdna-cdn.com
 
@@ -15,53 +16,36 @@
 
 		- jquery.com subdomains:
 
-			- blog
-			- bugs
-			- code *
-			- static *
+			- blog *
+			- bugs *
+			- archive.plugins *
+			- static	(504, CN: gp1.wac.edgecastcdn.net)
+			- try		(unrecognized name)
 
-		- (www.)jquerymobile.com
-
-		- jqueryui.com subdomains:
-
-			- blog
-			- bugs
-
-	* 504, CN: gp1.wac.edgecastcdn.net
-	** Shows blog.jquery.org; CN: blog.jquery.org
+	* Refused
 
 
-	Problematic domains:
+	Fully covered domains:
 
-		- jquery.com subdomains:
-
-			- (www.) *
-			- meetups	(works, CN: *.ning.com)
-			- plugins *
-
-		- jqueryui.com subdomains:
-
-			- ^ *
-			- api *
-			- www
-
-	* Works; mismatched, CN: jquery.org
+		- (www.)jquery.com
+		- api.jquery.com
+		- code.jquery.com
+		- forum.jquery.com
+		- learn.jquery.com
+		- meetups.jquery.com
+		- plugins.jquery.com
 
 -->
 <ruleset name="jQuery (partial)">
 
-	<!--	CN: accet87.net
-					-->
-	<target host="forum.jquery.com" />
+	<target host="jquery.com" />
+	<target host="*.jquery.com" />
 
 
-	<securecookie host="^forum\.jquery\.com$" name=".+" />
+	<securecookie host="^(?:forum|meetups)\.jquery\.com$" name=".+" />
 
 
-	<rule from="^http://forum\.jquery\.com/"
-		to="https://forum.jquery.com/" />
-
-	<rule from="^https?://meetups\.jquery\.com/xn_resources/"
-		to="https://jquery-groups.ning.com/xn_resources/" />
+	<rule from="^http://((?:api|code|forum|learn|meetups|plugins|www)\.)?jquery\.com/"
+		to="https://$1jquery.com/" />
 
 </ruleset>

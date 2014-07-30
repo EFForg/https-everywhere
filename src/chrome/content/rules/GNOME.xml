@@ -1,108 +1,55 @@
 <!--
-	Nonfunctional domains:
+	Nonfunctional:
 
-		- gnome.asia subdomains:
+		- gnome.asia		(cert: guzheng.lyrical.net; shows empty tree)
+		- 2012.gnome.asia	(ditto)
+		- www.gnome.asia	(ditto)
 
-			- (www.) *
-			- 2012 *
-			- 2013 *
-
-		- gnome.org subdomains:
-
-			- art		(prints "ok"; self-signed, CN: CentOS-63-64-minimal)
-			- ftp		(refused)
-			- jabber **
-			- webapps **
-			- webapps2 **
-
-	* Shows empty tree, CN: guzheng.lyrical.net
-	** http reply
-
-
-	Problematic domains:
+		- gnomejournal.org		(cert: rt.gnome.org, expired, shows that domain's data)
 
 		- gnome.org subdomains:
 
-			- ldap		(http reply)
-			- src		(mismatched, CN: bugzilla.gnome.org)
-
-		- (www.)gnomejournal.org	(identical to gnome.org; mismatched, CN: bugzilla.org)
-		- (www.)gupnp.org		(mismatched, CN: www.webstreams.de)
-
-
-	Fully covered domains:
-
-		- gnome.org subdomains:
-
-			- (www.)
-			- admin
-			- api
+			- art			(cert: www, expired; 404)
 			- blogs
-			- bugzilla
-			- bugzilla-attachments
-			- *.bugzilla-attachments
-			- build
-			- cloud
-			- developer
-			- download
-			- etherpad
-			- extensions
-			- foundation
+			- developer		(cert: rt, expired)
+			- foundation		(cert: www; shows www's data)
 			- git
-			- help
-			- ldap		(→ www)
-			- l10n
-			- library
-			- mail
-			- mango
-			- meetbot
-			- nagios
-			- news
-			- live
-			- ostree
-			- planet
-			- people
-			- progress
-			- projects
-			- rt
-			- src		(→ git)
-			- usability
-			- vote
-			- webstats
-			- wiki
-			- www-old
-
-		- (www.)gnomejournal.org	(→ www.gnome.org)
-		- (www.)gupnp.org		(→ live.gnome.org)
+			- ldap			(cert: live; shows live's data)
+			- label			(ditto)
+			- library		(cert: rt, expired; shows rt's data)
+			- menubar		(cert: mail, shows mail's data)
+			- news			(cert: rt, expired; shows rt's data)
+			- people		(cert: www, expired; 404)
+			- planet		(cert: rt, expired; shows rt's data)
+			- projects		(cert: www, expired; 404)
+			- webstats		(cert: live, shows live's data)
+			- vote			(cert: rt, expired; shows rt's data)
+			- usability		(ditto)
+			- webapps		(ditto)
+			- www-old		(cert: www, expired; 404)
 
 -->
-<ruleset name="GNOME (partial)">
+<ruleset name="GNOME (partial)" platform="mixedcontent">
 
 	<target host="gnome.org" />
 	<target host="*.gnome.org" />
-	<target host="gnomejournal.org" />
-	<target host="www.gnomejournal.org" />
-	<target host="gupnp.org" />
-	<target host="www.gupnp.org" />
+		<!--	projects/: 404, redirects to projects.gnome.org
+			~: 404, redirects to people.gnome.org	-->
+		<exclusion pattern="^http://www\.gnome\.org/(projects/|~)" />
 
 
-	<securecookie host="^(?:.*\.)?gnome\.org$" name=".+" />
+	<securecookie host="^.*\.gnome\.org$" name=".*" />
 
 
-	<rule from="^http://((?:admin|api|blogs|bugzilla|(?:\w+\.)?bugzilla-attachments|build|cloud|developer|download|etherpad|extensions|foundation|git|help|l10n|library|live|mail|mango|meetbot|nagios|news|ostree|people|planet|progress|projects|rt|usability|vote|webstats|wiki|www)\.)?gnome\.org/"
+	<rule from="^http://((?:bugzilla|extensions|mail|mango|live|rt|www)\.)?gnome\.org/"
 		to="https://$1gnome.org/" />
 
-	<rule from="^https?://ldap\.gnome\.org/"
-		to="https://www.gnome.org/" />
+	<!--	Redirects as so over http.	-->
+	<rule from="^https?://foundation\.gnome\.org/"
+		to="https://www.gnome.org/foundation/" />
 
-	<rule from="^http://src\.gnome\.org/"
-		to="https://git.gnome.org/" />
-
-	<rule from="^http://(?:www\.)?gnomejournal\.org/"
-		to="https://www.gnome.org/" />
-
-	<rule from="^http://(?:www\.)?gupnp\.org/"
-		to="https://live.gnome.org/GUPnP/" />
-
+	<!--	Redirects as so over http.	-->
+	<rule from="^https?://usability\.gnome\.org/"
+		to="https://live.gnome.org/UsabilityProject" />
 
 </ruleset>

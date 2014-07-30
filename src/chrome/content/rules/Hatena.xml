@@ -2,23 +2,37 @@
 	CDN buckets:
 
 		- cdn.b.st-hatena.com.edgesuite.net
+
+		- cdn.favicon.st-hatena.com.edgesuite.net
+
+			- a336.g.akamai.net
+
 		- cdn.www.st-hatena.com.edgesuite.net
+
+			- a1075.g.akamai.net
+			- cdn1.www.st-hatena.com
 
 
 	Nonfunctional domains:
 
-		- b.hatena.ne.jp	(not identical to d)
-		- b.st-hatena.com
+		- counter.hatena.ne.jp ¹
+		- r.hatena.ne.jp ¹
 		- cdn.b.st-hatena.com *
 		- cdn-ak.b.st-hatena.com *
+		- cdn-ak.favicon.st-hatena.com	(works, akamai)
 
+	¹ Refused
 	* 503, akamai
 
 
 	Problematic domains:
 
+		- b.st-hatena.com	(mismatched, CN: b.hatena.ne.jp)
 		- www.st-hatena.com	(mismatch, CN: www.hatena.ne.jp)
 		- cdn.www.st-hatena.com	(akamai)
+		- cdn1.www.st-hatena.com *
+
+	* Works, akamai
 
 
 	Partially covered domains:
@@ -41,17 +55,22 @@
 
 	<target host="hatena.ne.jp" />
 	<target host="*.hatena.ne.jp" />
-	<target host="www.st-hatena.com" />
-	<target host="cdn.www.st-hatena.com" />
+	<target host="*.st-hatena.com" />
 
 
-	<rule from="^https?://(?:www\.)?hatena\.ne\.jp/(css/|images/|login(?:$|\?|/)|statics/)"
+	<rule from="^http://(?:www\.)?hatena\.ne\.jp/(css/|images/|login(?:$|\?|/)|statics/)"
 		to="https://www.hatena.ne.jp/$1" />
 
-	<rule from="^http://d\.hatena\.ne\.jp/images/"
-		to="https://d.hatena.ne.jp/images/" />
+	<rule from="^http://(b|d)\.(?:hatena\.ne\.jp|st-hatena\.com)/images/"
+		to="https://$1.hatena.ne.jp/images/" />
 
-	<rule from="^https?://(?:cdn\.)?www\.st-hatena\.com/"
+	<rule from="^http://cdn-ak\.favicon\.st-hetena\.com/"
+		to="https://a248.e.akamai.net/m/336/3102/4/cdn-ak.favicon.st-hatena.com/" />
+
+	<rule from="^http://(?:cdn\.)?www\.st-hatena\.com/"
 		to="https://www.hatena.ne.jp/" />
+
+	<rule from="^http://cdn1\.www\.st-hatena\.com/"
+		to="https://a248.e.akamai.net/f/1075/6343/5/cdn1.www.st-hatena.com/" />
 
 </ruleset>

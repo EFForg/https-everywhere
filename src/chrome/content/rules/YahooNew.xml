@@ -1,0 +1,192 @@
+<!--
+	Other Yahoo rulesets:
+
+		- Flickr.xml
+
+
+	Undiscovered:
+		- geo.yahoo.com
+		- d.yimg.com/nl/
+		- ec.yimg.com/ec?url=
+		- ext.yimg.com/ec?url=
+		- sm-a[1-4].yimg.com
+		- thm-a0[1-4].yimg.com
+
+	Nonfunctional:
+		- (advertising|my|news|sports).yahoo.com	(mismatch, "Your requested URL was not found.")
+		- answers.yahoo.com				(cert: *.mail.yahoo.com; 404)
+		- docs.yahoo.com				(times out)
+		- fr.docs.yahoo.com
+		- everything.yahoo.com				(times out)
+		- ((ichart.)finance|suggestions).yahoo.com
+		- info.yahoo.com				(cert: secure.help.yahoo.com; redirects to http)
+		- movies.yahoo.com				(mismatch, "Your requested URL was not found.")
+		- img.omg.yahoo.com		(times out)
+		- yhoo.it			(times out)
+		- ypolicyblog.com		(reset)
+		- www.ypolicyblog.com
+
+-->
+<ruleset name="Yahoo! (experimental)" default_off="needs testing">
+
+	<!-- Reported to fix bug
+		https://trac.torproject.org/projects/tor/ticket/4441	-->
+
+	<target host="ads.bluelithium.com"/>
+	<target host="rocketmail.com"/>
+	<target host="www.rocketmail.com"/>
+	<target host="*.yahoo.com"/>
+	<target host="uk.adserver.yahoo.com" />
+	<target host="cookex.amp.yahoo.com"/>
+	<target host="*.analytics.yahoo.com"/>
+	<target host="global.ard.yahoo.com"/>
+	<target host="*.bc.yahoo.com"/>
+	<target host="csc.beap.bc.yahoo.com"/>
+	<target host="na.edit.yahoo.com"/>
+	<target host="*.europe.yahoo.com"/>
+	<target host="secure.help.yahoo.com"/>
+	<target host="us.lrd.yahoo.com"/>
+	<target host="*.mail.yahoo.com"/>
+		<!--
+			Cert mismatch.
+					-->
+		<exclusion pattern="^http://us\.mg6\.mail\.yahoo\.com/" />
+	<target host="ucs.netsvs.yahoo.com" />
+	<target host="rtb.pclick.yahoo.com"/>
+	<target host="us.rd.yahoo.com"/>
+	<target host="order.smallbusiness.yahoo.com" />
+	<target host="uk.health.lifestyle.yahoo.net" />
+	<target host="yui.yahooapis.com" />
+	<!--
+		400 when rewritten to s.yimg.com/zz/d/lib/yui/
+
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001284.html
+						-->
+		<exclusion pattern="^http://yui\.yahooapis\.com/combo\?3\.5\.1/" />
+	<target host="*.yahoofs.com"/>
+	<target host="yhoo.it" />
+	<target host="*.yimg.com"/>
+	<target host="*.l.yimg.com"/>
+	<!--	* for cross-domain cookie.	-->
+	<target host="*.s.yimg.com" />
+	<target host="us.*.yimg.com"/>
+		<!--	401s when rewritten to s.yimg, as observed on newswhip.com.	-->
+		<exclusion pattern="^http://\w+\.yimg\.com/bt/api/res/" />
+	<target host="ymail.com"/>
+	<target host="www.ymail.com"/>
+	<target host="yuilibrary.com"/>
+	<target host="www.yuilibrary.com"/>
+	<target host="*.zenfs.com"/>
+
+
+	<!--	*All* Yahoo cookies are cross-domain cookies.
+		It's a case of figuring out which ones
+		aren't needed on unsecurable pages.
+
+			- .yahoo.com
+				- AO
+				- B
+					- Set by us.bc.yahoo.com/b
+				- CH
+					- \w{59}/
+				- MSC
+					- t=\d{10}X
+			- .www.yahoo.com
+				- fpc
+					- d=.\w{14}.\w{56}.\w{27}.\w{22}._.\w{39}.\w{4}.\w{28}-&v=\d
+			- .s.yimg.com
+				- XCNM
+
+		Others observed:
+
+			- .search.yahoo.com
+				- sSN
+					-  \w{63}\.\w{22}\-{2}
+
+		-->
+	<securecookie host="^\.yahoo\.com$" name="^(AO|B)$" />
+	<securecookie host="^\.s\.yimg\.com$" name=".*" />
+
+
+	<rule from="^http://ads\.bluelithium\.com/"
+		to="https://ads.bluelithium.com/"/>
+
+	<rule from="^https?://(?:www\.)?(?:rocketmail|ymail)\.com/"
+		to="https://mail.yahoo.com/"/>
+
+	<rule from="^https?://java\.europe\.yahoo\.com/uk/"
+		to="https://s.yimg.com/zz/java.europe.yahoo.com/uk/"/>
+
+	<rule from="^http://(uk\.adserver|cookex\.amp|[ao]\.analytics|global\.ard|(?:csc\.beap|pn1|row|us)\.bc|developer|(?:na\.)?edit|edit\.europe|legalredirect|login|us\.l?rd|mail|ucs\.netsvs|rtb\.pclick|sec|order\.smallbusiness)\.yahoo\.com/"
+		to="https://$1.yahoo.com/"/>
+
+	<rule from="^https?://uk\.health\.lifestyle\.yahoo\.net/images/"
+		to="https://s.yimg.com/lq/lib/lsl/i/uk/" />
+
+	<rule from="^https?://(?:secure\.)?help\.yahoo\.com/"
+		to="https://secure.help.yahoo.com/"/>
+
+	<rule from="^http://(\w+(?:\.\w+)?)\.mail\.yahoo\.com/"
+		to="https://$1.mail.yahoo.com/"/>
+
+	<!--	Cert only matches us.rd,
+		all appear equivalent.	-->
+	<rule from="^https?://rds?\.yahoo\.com/"
+		to="https://us.rd.yahoo.com/" />
+
+	<!--	This needs a craptonne of effort to work, as *every* link
+		points towards s.yimg.com/foo instead of shine.yahoo.com/foo.
+	<rule from="^https?://shine\.yahoo\.com/"
+		to="https://s.yimg.com/zz/shine.yahoo.com/" /-->
+
+	<rule from="^http://smallbusiness\.yahoo\.com/servicecheck\.php"
+		to="https://smallbusiness.yahoo.com/servicecheck.php" />
+
+	<!--	e.g.
+		http://yui.yahooapis.com/combo?2.8.0r4/build/button/assets/skins/sam/button.css&2.8.0r4/build/container/assets/skins/sam/container.css
+		http://yui.yahooapis.com/2.8.0r4/build/button/assets/skins/sam/button.css
+				-->
+	<rule from="^https?://yui\.yahooapis\.com/"
+		to="https://s.yimg.com/zz/d/lib/yui/" />
+
+	<rule from="^http://([\w\-]+)\.yahoofs\.com/"
+		to="https://$1.yahoofs.com/"/>
+
+	<!--	Just like bit.ly, only inferior.	-->
+	<rule from="^https?://yhoo\.it/"
+		to="https://bit.ly/" />
+
+	<rule from="^https?://ads\.yimg\.com/"
+		to="https://s.yimg.com/zz/"/>
+
+	<rule from="^https?://d\.yimg\.com/(i|fg)/"
+		to="https://s.yimg.com/zz/$1/"/>
+
+	<!--	l1 to l7 exist.
+		a appears equivalent to l, except hosted on Akamai.	-->
+	<rule from="^https?://((?:a\.)?l\d?|us\.(?:a2|i1|js2))\.yimg\.com/(?:[ad]|us(?:\.js)?\.yimg\.com)/"
+		to="https://s.yimg.com/lq/"/>
+
+	<rule from="^https?://(?:a\.)?l\d?\.yimg\.com/(cv|dh|k[jx]|lo|pj|zz)/"
+		to="https://s.yimg.com/$1/"/>
+
+	<rule from="^https?://(?:(?:a\.)?l\d?|us\.js1)\.yimg\.com/(bt|dg|(?:eur|us)\.yimg\.com|[ghiqt]|ho|j[hn]|kq|lm|nn|ml|os|pv|qz|r[uwz])/"
+		to="https://s.yimg.com/zz/$1/"/>
+
+	<rule from="^http://s(ec)?\.yimg\.com/"
+		to="https://s$1.yimg.com/"/>
+
+	<!--	s://developer. breakage	-->
+	<rule from="^https://s\.yimg\.com/common/img/"
+		to="https://s.yimg.com/kj/ydn/common/img/"/>
+
+	<rule from="^https?://xa\.yimg\.com/kq/"
+		to="https://s.yimg.com/zz/kq/"/>
+
+	<rule from="^http://(www\.)?yuilibrary\.com/"
+		to="https://$1yuilibrary.com/"/>
+
+	<rule from="^http://(\w+)\.zenfs\.com/"
+		to="https://$1.zenfs.com/"/>
+
+</ruleset>

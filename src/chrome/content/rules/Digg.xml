@@ -2,20 +2,32 @@
 	CDN buckets:
 
 		- d1ld5yzzwsuv6i.cloudfront.net
+
 			- static.digg.com
+
 
 	Nonfunctional subdomains:
 
-		- (www.)
 		- blog		(shows secure.static.tumblr.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- static
+		- widgets
 
 -->
 <ruleset name="Digg (partial)">
 
-	<target host="static.digg.com" />
+	<target host="digg.com" />
+	<target host="*.digg.com" />
 
 
-	<rule from="^https?://static\.digg\.com/"
-		to="https://d1ld5yzzwsuv6i.cloudfront.net/" />
+	<securecookie host="^\.?digg\.com$" name=".+" />
+
+
+	<rule from="^http://((?:static|widgets|www)\.)?digg\.com/"
+		to="https://$1digg.com/" />
 
 </ruleset>

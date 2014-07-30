@@ -14,7 +14,7 @@ CtxCapturingListener.prototype = {
   onDataAvailable: function(request, ctx, inputStream, offset, count) {},
   onStopRequest: function(request, ctx, statusCode) {},
   QueryInterface: xpcom_generateQI([Ci.nsIStreamListener])
-}
+};
 
 function ChannelReplacement(chan, newURI, newMethod) {
   return this._init(chan, newURI, newMethod);
@@ -81,8 +81,19 @@ ChannelReplacement.prototype = {
     
     newChan.loadGroup = chan.loadGroup;
     newChan.notificationCallbacks = chan.notificationCallbacks;
-    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
+
+// The following line has been commented out, because it appears to interfere with the Flash plugin.
+// For example, on https://www.youtube.com, if the LOAD_REPLACE flag is included in newChan's
+// loadFlag, the Flash plugin reports an error and video streaming does not take place.
+// By removing this flag, we allow Flash to see the "originalURI" attirubte of newChan,
+// which contains the HTTP (non-HTTPS) URL that Flash requested before HTTPS-Everywhere
+// redirected the channel.
+// XXX: May have unintended side effects. Needs more investigation.
+//
+//    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
     
+    newChan.loadFlags = loadFlags;
+
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
     
@@ -241,9 +252,9 @@ ChannelReplacement.prototype = {
       } else {
         // legacy (Gecko < 2)
         self.observeCapture = function(req, ccl) {
-          self.open = function() { self._redirect(ccl) }
+          self.open = function() { self._redirect(ccl); };
           callback(self);
-        }
+        };
         oldChan.cancel(NS_BINDING_REDIRECTED); 
       }
       

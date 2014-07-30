@@ -1,7 +1,4 @@
 <!--
-	For rules that break logged-in functions, see Pinterest-break-pinning.xml.
-
-
 	Yo Dawg:
 
 		- a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/
@@ -34,6 +31,8 @@
 
 			- passets-cdn.pinterest.com
 
+		- passets-ak.pinterest.com.edgesuite.net
+
 		- pinit-cdn.pinterest.com.edgesuite.net
 
 			- pinit-cdn.pinterest.com
@@ -45,6 +44,10 @@
 		- cdn.pinterest.com.c.footprint.net/...
 
 			- media-cache-lt\d.pinterest.com
+
+		- pinterest.zendesk.com
+
+			- help.pinterest.com
 
 
 	Nonfunctional domains:
@@ -60,6 +63,7 @@
 		- pinterest.com subdomains:
 
 			- blog-assets	(cloudfront)
+			- passets-ak **
 			- passets-cdn **
 			- passets-ec *
 			- passets-lt	(times out)
@@ -77,9 +81,12 @@
 
 				https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001339.html
 
-			- pin/ breaks repinning
+			- pin/ started redirecting to http
 
-				- https://trac.torproject.org/projects/tor/ticket/7825
+			- as did:
+
+				- ${user}/
+				- ${user}/${gallery}/
 
 
 	Fully covered domains:
@@ -97,17 +104,25 @@
 			- assets
 			- blog-assets
 			- help
+
+			- *.help:
+
+				- en
+
+			- log
 			- m
 			- media-cache
 			- media-cache\d
 			- media-cache-ec\d
 			- media-cache-lt\d
 			- partners-api
+			- passets-ak
 			- passets-cdn
 			- passets-ec
 			- passets-lt	(→ akamai)
 			- pinit-cdn
 			- support
+			- widgets
 
 -->
 <ruleset name="Pinterest (partial)">
@@ -115,10 +130,13 @@
 	<target host="*.pinimg.com" />
 	<target host="pinterest.com" />
 	<target host="*.pinterest.com" />
-		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:$|\?|board/|pin/)" />
+		<!--exclusion pattern="^http://(www\.)?pinterest\.com/($|\?|favicon\.ico|_/_/about/)" /-->
+		<exclusion pattern="^http://(?:www\.)?pinterest\.com/(?:board/|pin/|(?:\w+/)?\w+/*(?:$|\?))" />
 
 
-	<securecookie host="^help\.pinterest\.com$" name=".+" />
+	<!--securecookie host="^\.pinterest\.com$" name="^(csrftoken|_pinterest_sess|__utm\w|_zendesk_session|_zendesk_shared_session)$" /-->
+	<securecookie host="^\.pinterest\.com$" name="^(?:__utm\w|_zendesk_session|_zendesk_shared_session)$" />
+	<securecookie host="^(?:\w\w\.)?help\.pinterest\.com$" name=".+" />
 
 
 	<!--	Handles s-media-cache-ec\d & s-passets-ec.
@@ -126,16 +144,27 @@
 	<rule from="^http://s-([\w-]+)-ec(\d)?\.pinimg\.com/"
 		to="https://s-$1-ec$2.pinimg.com/" />
 
-	<rule from="^http://((?:about|api|assets|help|m|partners-api|support|www)\.)?pinterest\.com/"
+	<rule from="^http://((?:about|api|assets|help|\w\w\.help|log|m|partners-api|support|widgets|www)\.)?pinterest\.com/"
 		to="https://$1pinterest.com/" />
 
-	<rule from="^https?://blog-assets\.pinterest\.com/"
+	<rule from="^http://blog-assets\.pinterest\.com/"
 		to="https://d5eppwnwxs8d9.cloudfront.net/" />
 
-	<rule from="^https?://media-cache(?:\d|-\w\w\d)?\.pin(?:img|terest)\.com/"
+	<rule from="^http://media-cache(?:\d|-\w\w\d)?\.pin(?:img|terest)\.com/"
 		to="https://a248.e.akamai.net/media.pinterest.com.s3.amazonaws.com/" />
 
-	<rule from="^https?://p(?:assets-(?:cdn|ec|lt)|init-cdn)\.pinterest\.com/"
+	<!--	We can't rewrite this stylesheet to akamai,
+		as it links resources relative to /
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-August/001663.html
+													-->
+	<rule from="^http://passets-\w\w\.pinterest\.com/webapp/app/desktop/bundle\.(\w{8})\.css"
+		to="https://s-passets-ec.pinimg.com/webapp/app/desktop/bundle.$1.css" />
+
+	<rule from="^http://passets-ak\.pinterest\.com/"
+		to="https://a248.e.akamai.net/f/1586/2045/10m/passets-ak.pinterest.com/" />
+
+	<rule from="^http://p(?:assets-(?:cdn|ec|lt)|init-cdn)\.pinterest\.com/"
 		to="https://a248.e.akamai.net/passets.pinterest.com.s3.amazonaws.com/" />
 
 </ruleset>

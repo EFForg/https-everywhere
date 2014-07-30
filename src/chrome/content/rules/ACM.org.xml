@@ -2,15 +2,6 @@
 	For problematic rules, see ACM.org-mismatches.xml.
 
 
-	CDN buckets:
-
-		- deliveryimages.acm.org.edgesuite.net/.../
-
-			- a1907.g.akamai.net/.../
-
-		- portalparts.acm.org.edgesuite.net
-
-
 	acm.org lacks proper ssl for the following subdomains
 
 		- awards		<- stacktrace for coldfusion
@@ -19,32 +10,19 @@
 		- librarians		<- displays what appears to be
 					   an old version of the website.
 		- mags
-
-
-	Problematic subdomains:
-
-		- portalparts		(works, akamai)
-
-
-	Partially covered subdomains:
-
-		- cacm		(some pages redirect to http)
-
-
-	Mixed image on campus from portalparts
+		- portalparts
 
 -->
-<ruleset name="ACM.org (partial)">
+<ruleset name="ACM.org (partial)" platform="mixedcontent">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
-		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
 
-	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".*" />
+	<securecookie host="^.*\.acm\.org$" name=".*" />
 
 
-	<rule from="^http://((?:cacm|campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
+	<rule from="^http://((?:campus|dl|myacm|plone|portal|queue|techpack)\.)?acm\.org/"
 		to="https://$1acm.org/" />
 
 </ruleset>

@@ -4,19 +4,53 @@
 
 	Nonfunctional xkcd.com subdomains:
 
-		- blag
-		- blog
-		- dynamic
-		- es
-		- fora
-		- forums
-		- wiki
+		- blag *
+		- blog *
+		- es *
+		- fora *
+		- forums *
+		- wiki *
+
+	* Refused
 
 
-	Problematic xkcd.com sudomains:
+	Problematic domains:
 
-		- imgs
-		- (www.)store		(redirects to http, CN: *.myshopify.com)
+		- (www.)store.xkcd.com		(redirects to http; mismatched, CN: *.myshopify.com)
+		- (www.)xkcd.org *
+		- m.xkcd.org *
+
+	* Works; mismatched, CN: *.xkcd.com
+
+
+	Fully covered domains:
+
+		- xkcd.com subdomains:
+
+			- (www.)
+			- 3d
+			- c0
+			- dynamic
+			- imgs
+			- m
+			- sslimgs
+			- (www.)store	(→ store-xkcd-com.myshopify.com)
+			- uni
+			- whatif
+			- what-if
+
+		- (www.)xkcd.org	(→ xkcd.com)
+		- m.xkcd.org		(→ m.xkcd.com)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- ^ from imgs *
+			- m from imgs *
+
+	* Secured by us, doesn't trip MCB
 
 -->
 <ruleset name="xkcd">
@@ -30,13 +64,10 @@
 	<rule from="^http://(www\.|m\.)?xkcd\.(?:com|org)/"
 		to="https://$1xkcd.com/" />
 
-	<rule from="^http://(3d|c0|uni|what-?if)\.xkcd\.com/"
+	<rule from="^http://(3d|c0|dynamic|imgs|sslimgs|uni|what-?if)\.xkcd\.com/"
 		to="https://$1.xkcd.com/" />
 
-	<rule from="^https?://(?:ssl)?imgs\.xkcd\.com/"
-		to="https://sslimgs.xkcd.com/" />
-
-	<rule from="^https?://(?:www\.)?store\.xkcd\.com/"
+	<rule from="^http://(?:www\.)?store\.xkcd\.com/"
 		to="https://store-xkcd-com.myshopify.com/" />
 
 </ruleset>

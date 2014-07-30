@@ -1,41 +1,9 @@
 <!--
-	go.brightcove.com is handled in Eloqua-clients.xml.
+	Nonfunctional:
 
-
-	Nonfunctional domains:
-
-		- brightcove.com subdomains:
-
-			- (www.)
-			- blog
-			- developer
-			- feeds *
-			- forum
-			- goku			(refused)
-			- investor		(403, CN: *.shareholder.com)
-			- link
-			- brightcove04.o	(503, Akamai)
-			- status *
-
-		- brightcove.vo.llnwd.net	(400; CN: *.hs.llnwd.net, .hs. doesn't exist)
-
-	* Reset
-
-
-	Problematic domains:
-
-		- admin.brightcove.com		(akamai)
-		- services.brightcove.com	(504, valid cert)
-
-
-	- brightcove.vo.llnwd.net/d21/unsecured/media/
-	- brightcove.vo.llnwd.net/d22/unsecured/media/
-	- brightcove.vo.llnwd.net/e1/pd
-	- brightcove01.brightcove.com/23/
-	- brightcove04.brightcove.com/4/	(Akamai; 404...but somethings there...outdated?)
-	- rainbow.brightcove.com.edgesuite.net
-
-	/101716/rtmp_pd
+		- brightcove04.o.brightcove.com	(Akamai; "Service Unavailable")
+		- c.brightcove.com
+		- brightcove.vo.llnwd.net	(cert: *.hs.llnwd.net; blank page; brightcove.hs.llnwd.net doesn't exist)
 
 -->
 <ruleset name="Brightcove (partial)">
@@ -50,28 +18,11 @@
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001587.html
 													-->
-		<exclusion pattern="^http://admin\.brightcove\.com/viewer/us20[\d\.]+/BrightcoveBootloader\.swf(?:\?|$)" />
-		<!--exclusion pattern="^https?://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
 
+		<exclusion pattern="^http://admin\.brightcove\.com/viewer/.+\.swf(?:\?|$)" />
 
-	<securecookie host="^\w.*\.brightcove\.com$" name=".+" />
-
-
-	<rule from="^http://c\.brightcove\.com/services/viewer/"
-		to="https://secure.brightcove.com/services/viewer/" />
-
-	<rule from="^http://(appcloud|files|img|metrics|my|register|secure|signin)\.brightcove\.com/"
-		to="https://$1.brightcove.com/" />
-
-	<!--	At least the homepage redirects to http.
-							-->
-	<rule from="^http://support\.brightcove\.com/(en/contact$|sites/)"
-		to="https://support.brightcove.com/$1" />
-
+	<!--	admin:	Akamai	-->
 	<rule from="^https?://s?admin\.brightcove\.com/"
 		to="https://sadmin.brightcove.com/" />
-
-	<rule from="^http://services\.brightcove\.com/"
-		to="https://secure.brightcove.com/" />
 
 </ruleset>
