@@ -40,21 +40,6 @@ for (r in rs) {
 }
 */
 
-// Add the HTTPS Everywhere icon to the URL address bar.
-// TODO: Switch from pageAction to browserAction?
-function displayPageAction(tabId) {
-  if (tabId !== -1) {
-    chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) === "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction.");
-      }
-      else {
-        chrome.pageAction.show(tabId);
-      }
-    });
-  }
-}
-
 
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
@@ -378,8 +363,9 @@ function onCookieChanged(changeInfo) {
 }
 
 function onBeforeRedirect(details) {
-    // Catch HTTPs -> HTTP redirect loops, ignoring about:blank, HTTPS 302s, etc.
-    if (details.redirectUrl.substring(0, 7) === "http://") {
+    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+    var prefix = details.redirectUrl.substring(0, 5);
+    if (prefix === "http:" || prefix === "https") {
         if (details.requestId in redirectCounter) {
             redirectCounter[details.requestId] += 1;
             log(DBUG, "Got redirect id "+details.requestId+
@@ -412,7 +398,7 @@ chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
         if(typeof(tab) === "undefined") {
             log(DBUG, "Not a real tab. Skipping showing pageAction.");
         } else {
-            chrome.pageAction.show(tabId);
+            chrome.pageAction.show(addedTabId);
         }
     });
 });

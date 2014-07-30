@@ -205,7 +205,7 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host);
+        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
         return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);

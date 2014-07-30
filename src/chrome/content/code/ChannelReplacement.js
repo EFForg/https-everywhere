@@ -81,18 +81,7 @@ ChannelReplacement.prototype = {
     
     newChan.loadGroup = chan.loadGroup;
     newChan.notificationCallbacks = chan.notificationCallbacks;
-
-// The following line has been commented out, because it appears to interfere with the Flash plugin.
-// For example, on https://www.youtube.com, if the LOAD_REPLACE flag is included in newChan's
-// loadFlag, the Flash plugin reports an error and video streaming does not take place.
-// By removing this flag, we allow Flash to see the "originalURI" attirubte of newChan,
-// which contains the HTTP (non-HTTPS) URL that Flash requested before HTTPS-Everywhere
-// redirected the channel.
-// XXX: May have unintended side effects. Needs more investigation.
-//
-//    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
-    
-    newChan.loadFlags = loadFlags;
+    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
 
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
