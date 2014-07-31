@@ -519,8 +519,8 @@ HTTPSEverywhere.prototype = {
         this.maybeShowObservatoryPopup();
       } else {
         this.log(WARN, "Initializing Firefox for Android UI");
-        Cu.import("chrome://https-everywhere/content/code/FennecUI.jsm");
-        FennecUI.init();
+        Cu.import("chrome://https-everywhere/content/code/AndroidUI.jsm");
+        AndroidUI.init();
       }
       this.browser_initialised = true;
     } else if (topic == "nsPref:changed") {

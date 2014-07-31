@@ -214,7 +214,7 @@ function getWindow() {
  *  Here's the external API to this UI module
  */
 
-var FennecUI = {
+var AndroidUI = {
   init: function() {
     loadIntoWindow();
   },
@@ -223,4 +223,4 @@ var FennecUI = {
   }
 };
 
-var EXPORTED_SYMBOLS = ["FennecUI"];
+var EXPORTED_SYMBOLS = ["AndroidUI"];
