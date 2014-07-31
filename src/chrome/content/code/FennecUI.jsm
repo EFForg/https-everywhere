@@ -20,7 +20,7 @@ function loadIntoWindow() {
   if (!aWindow) {
     return;
   }
-  var enabled = HTTPSEverywhere.isEnabled();
+  var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
   addToggleItemToMenu(enabled);
   if (enabled) {
     urlbarId = aWindow.NativeWindow.pageactions.add(urlbarOptions);
