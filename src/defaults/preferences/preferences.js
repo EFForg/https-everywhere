@@ -24,6 +24,10 @@ pref("extensions.https_everywhere.ruleset_update_url", "http://0.0.0.0:8000/data
 pref("extensions.https_everywhere.ruleset_update_signature_url",
      "http://0.0.0.0:8000/data/update.json.sig");
 
+// HTTP Nowhere preferences
+pref("extensions.https_everywhere.http_nowhere.enabled", false);
+pref("extensions.https_everywhere.http_nowhere.orig.ocsp.required", false);
+
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
 
