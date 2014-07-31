@@ -31,6 +31,10 @@ const VERSION_PREF = 'extensions.https_everywhere.release_version';
 /* installed ruleset version preference key */
 const RULESET_VERSION_PREF = 'extesnsions.https_everywhere.ruleset_version';
 
+/* key for the preference that holds the url to fetch update.json and update.json.sig from */
+const RSUPDATE_URL_PREF = 'extensions.https_everywhere.ruleset_update_url';
+const RSUPDATE_SIG_URL_PREF = 'extensions.https_everywhere.ruleset_update_signature_url';
+
 /* path to the ruleset library database file */
 const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
 
@@ -40,31 +44,21 @@ const MAX_RSUPDATE_FETCHES = 6;
 /* name of the hash function to use to compute the digest of update.json content */
 const SIGNING_DIGEST_FN = 'sha256';
 
-/* RulesetUpdate
- * Provides the functionality of obtaining, verifying the authenticity of, and
- * applying updates.
- * updateManifestSource - the URL from which the update.json file is fetched.
- *                        e.g. https://eff.org/files/https-everywhere/update.json
- * updateSigSource      - the URL from which update.json.sig is fetched.
- */
-function RulesetUpdater(updateManifestSource, updateSigSource) {
-  this.manifestSrc = updateManifestSource;
-  this.sigFileSrc = updateSigSource;
-  this.HTTPSEverywhere = Cc['@eff.org/https-everywhere;1']
-                         .getService(Ci.nsISupports)
-                         .wrappedJSObject;
-}
+const RulesetUpdater = {
+  _prefs: CC["@mozilla.org/preferences-service;1"]
+            .getService(CI.nsIPrefService)
+            .getBranch(""),
 
-RulesetUpdater.prototype = {
  /* Initiates the check for updates and tests of authenticity.
   * Must be wrapped in a function to call from setInterval, i.e.:
   * setInterval(function() { updater.fetchUpdate(); }, interval);
   */
   fetchUpdate: function() {
-    this.log(INFO, "Calling fetchUpdate");
-    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.manifestSrc,
+    https_everywhereLog(INFO, "Calling fetchUpdate");
+    var manifestSrc = this._prefs.getCharPref(RSUPDATE_URL_PREF);
+    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', manifestSrc,
       function(responseText) {
-        this.log(INFO, "Successfully fetched update.json file data");
+        https_everywhereLog(INFO, "Successfully fetched update.json file data");
         this.conditionallyApplyUpdate(responseText);
       }
     );
@@ -76,27 +70,28 @@ RulesetUpdater.prototype = {
   */
   conditionallyApplyUpdate: function(update) {
     var updateObj = JSON.parse(update);
-    var extVersion = HTTPSEverywhere.instance.prefs.getCharPref(VERSION_PREF);
-    var extBranch = HTTPSEverywhere.instance.prefs.getCharPref(BRANCH_PREF);
-    var rulesetVersion = HTTPSEverywhere.instance.prefs.getCharPref(RULESET_VERSION_PREF);
-    this.log(INFO, "Inside call to conditionallyApplyUpdate");
+    var extVersion = this._prefs.getCharPref(VERSION_PREF);
+    var extBranch = this._prefs.getCharPref(BRANCH_PREF);
+    var rulesetVersion = this._prefs.getCharPref(RULESET_VERSION_PREF);
+    https_everywhereLog(INFO, "Inside call to conditionallyApplyUpdate");
     if (!this.checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
-      this.log(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
+      https_everywhereLog(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
       return; 
     }
     if (updateObj.branch !== extBranch) {
-      this.log(WARN, 'Downloaded a ruleset update for the incorrect branch.');
+      https_everywhereLog(WARN, 'Downloaded a ruleset update for the incorrect branch.');
       return;
     }
-    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE_FETCHES, 'GET', this.sigFileSrc,
+    var sigFileSrc = this._prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
+    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc,
       function(signature) {
-        this.log(INFO, "Successfully fetched update.json.sig file data");
+        https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
         var updateHash = computeHash(update, SIGNING_DIGEST_FN);
         if (this.verifyUpdateSignature(updateHash, signature)) {
-          this.log(INFO, "Ruleset update data signature verified successfully");
+          https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
           this.fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
         } else {
-          this.log(WARN, 'Validation of the update signature provided failed.');
+          https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
           // TODO
           // Ping the verification-failure-reporting URL
         }
@@ -110,7 +105,7 @@ RulesetUpdater.prototype = {
   verifyUpdateSignature: function(updateStr, signature) {
     var verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                      .createInstance(Ci.nsIDataSignatureVerifier);
-    this.log(INFO, "Created instance of nsIDAtaSignatureVerifier");
+    https_everywhereLog(INFO, "Created instance of nsIDAtaSignatureVerifier");
     return verifier.verifyData(updateStr, signature, RULESET_UPDATE_KEY);
   },
 
@@ -120,7 +115,7 @@ RulesetUpdater.prototype = {
   checkVersionRequirements: function(extVersion, rsVersion, newVersion) {
     var verCompare = Cc['@mozilla.org/xpcom/version-comparator;1']
                        .getService(Ci.nsIVersionComparator);
-    this.log(INFO, "Checking version requirements with extension version " + extVersion +
+    https_everywhereLog(INFO, "Checking version requirements with extension version " + extVersion +
                    " and ruleset version " + rsVersion);
     var newRulesetExtVer = newVersion.slice(0, newVersion.lastIndexOf('.'));
     var sameExtVer = verCompare.compare(extVersion, newRulesetExtVer) === 0;
@@ -134,16 +129,16 @@ RulesetUpdater.prototype = {
   * hash - The hash of the database file provided by the update manifest verified previously.
   */
   fetchRulesetDBFile: function(url, hashfn, hash) {
-    this.log(INFO, "Making request to get database file at " + url);
-    this.HTTPSEverywhere.try_fetch(MAX_RSUPDATE, 'GET', url,
+    https_everywhereLog(INFO, "Making request to get database file at " + url);
+    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE, 'GET', url,
       function(dbfileContent) {
-        this.log(INFO, "Successfully received ruleset database file content");
+        https_everywhereLog(INFO, "Successfully received ruleset database file content");
         var dbHash = computeHash(dbFileContent, hashfn);
         if (dbHash === hash) {
-          this.log(INFO, "Hash of database file content matches the hash provided by update.json");
+          https_everywhereLog(INFO, "Hash of database file content matches the hash provided by update.json");
           this.applyNewRuleset(dbfileContent);
         } else {
-          this.log(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.');
+          https_everywhereLog(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.');
           // TODO
           // Ping URL for verification-failure-reporting
         }
@@ -164,17 +159,17 @@ RulesetUpdater.prototype = {
     converter.charset = 'UTF-8';
     var result = {};
     var converted = converter.convertToByteArray(data, result);
-    this.log(INFO, "Trying to initialize hash function as " + hashfn);
+    https_everywhereLog(INFO, "Trying to initialize hash function as " + hashfn);
     if      (hashfn === 'md5')    hashing.init(hashing.MD5);
     else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
     else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
     else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
     else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
     else return null; // It's a better idea to fail than do the wrong thing here.
-    this.log(INFO, "Hash function was recognized and initialization successful");
+    https_everywhereLog(INFO, "Hash function was recognized and initialization successful");
     hashing.update(converted, converted.length);
     var hash = hashing.finish(false);
-    this.log(INFO, "Hash computation completed");
+    https_everywhereLog(INFO, "Hash computation completed");
     return [toHexString(hash.charCodeAt(i)) for (i in hash)].join('');
   },
 
@@ -183,12 +178,12 @@ RulesetUpdater.prototype = {
   */
   applyNewRuleset: function(dbsource) {
     var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-    var path = this.HTTPSEverywhere.rw.chromeToPath(RULESET_DBFILE_PATH);
+    var path = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
     file.initWithPath(path);
-    this.log(INFO, "Initialized file writer with path to " + path);
-    this.HTTPSEverywhere.rw.write(file, dbsource);
+    https_everywhereLog(INFO, "Initialized file writer with path to " + path);
+    HTTPSEverywhere.instance.rw.write(file, dbsource);
     HTTPSRules.init();
-    this.log(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
+    https_everywhereLog(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
   }
 };
 
