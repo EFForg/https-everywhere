@@ -53,12 +53,12 @@ httpsEverywhere.toolbarButton = {
 
     // Start checking for ruleset updates in an interval
     // now that the extension has been loaded
-    HTTPSEverywhere.ruleset_updater.fetchUpdate();
+    HTTPSEverywhere.ruleset_updater.fetch_update();
     HTTPSEverywhere.log(INFO, 'First ruleset update retrieval started');
     HTTPSEverywhere.rsupdate_interval_id = window.setInterval(
       function() {
         HTTPSEverywhere.log(INFO, 'Retrieving ruleset update information');
-        HTTPSEverywhere.ruleset_updater.fetchUpdate();
+        HTTPSEverywhere.ruleset_updater.fetch_update();
       },
       HTTPSEverywhere.RULESET_UPDATE_CHECK_INTERVAL());
 
