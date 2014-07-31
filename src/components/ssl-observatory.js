@@ -893,7 +893,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
-    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://www.eff.org/r.22c");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
