@@ -428,7 +428,7 @@ HTTPSEverywhere.prototype = {
       return null;
     }
     var dw = domWin.top;
-    var alist= this.getExpando(dw,"applicable_rules",null);
+    var alist= this.getExpando(dw,"applicable_rules");
     if (alist) {
       //this.log(DBUG,"get AL success in " + where);
       return alist;
@@ -634,10 +634,10 @@ HTTPSEverywhere.prototype = {
     var domWin = this.getWindowForChannel(oldChannel);
     var old_alist = null;
     if (domWin) 
-      old_alist = this.getExpando(domWin,"applicable_rules", null);
+      old_alist = this.getExpando(domWin,"applicable_rules");
     domWin = this.getWindowForChannel(newChannel);
     if (!domWin) return null;
-    var new_alist = this.getExpando(domWin,"applicable_rules", null);
+    var new_alist = this.getExpando(domWin,"applicable_rules");
     if (old_alist && !new_alist) {
       new_alist = old_alist;
       this.setExpando(domWin,"applicable_rules",new_alist);

@@ -147,7 +147,7 @@ httpsEverywhere.toolbarButton = {
     }
 
     var domWin = content.document.defaultView.top;
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules");
     if (!alist) {
       return;
     }
@@ -252,7 +252,7 @@ function show_applicable_list(menupopup) {
     return null;
   }
 
-  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules");
   var weird=false;
   
   if (!alist) {
@@ -287,7 +287,7 @@ function toggle_rule(rule_id) {
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
   var domWin = content.document.defaultView.top;
   /*if (domWin instanceof CI.nsIDOMWindow) {
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules");
     if (alist) alist.empty();
   }*/
   reload_window();
