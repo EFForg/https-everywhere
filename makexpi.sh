@@ -21,12 +21,12 @@ RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 # If the command line argument is a tag name, check that out and build it
 if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
-	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
-	SUBDIR=checkout
-	[ -d $SUBDIR ] || mkdir $SUBDIR
-	cp -r -f -a .git $SUBDIR
-	cd $SUBDIR
-	git reset --hard "$1"
+  BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
+  SUBDIR=checkout
+  [ -d $SUBDIR ] || mkdir $SUBDIR
+  cp -r -f -a .git $SUBDIR
+  cd $SUBDIR
+  git reset --hard "$1"
   # This is an optimization to get the OS reading the rulesets into RAM ASAP;
   # it's useful on machines with slow disk seek times; there might be something
   # better (vmtouch? readahead?) that tells the IO subsystem to read the files
@@ -42,7 +42,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-	XPI_NAME="$APP_NAME-$1.xpi"
+  XPI_NAME="$APP_NAME-$1.xpi"
   # In this mad recursive situation, sometimes old buggy build scripts make
   # the xpi as ./pkg :(
   if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
@@ -63,9 +63,7 @@ nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
 
 if [ "$1" != "--fast" ] ; then
   if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -f trivial-validate.py ] ; then
-    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -x utils/trivial-validate ] ; then
     # This case probably never happens
     VALIDATE=./utils/trivial-validate
@@ -82,7 +80,8 @@ if [ "$1" != "--fast" ] ; then
     exit 1
   fi
 
-  if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
+  command -v xmllint > /dev/null
+  if [ "$?" -eq 0 -a -f utils/relaxng.xml ] >&2
   then
     if find src/chrome/content/rules -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
     then
@@ -110,15 +109,15 @@ fi
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
   echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py src/chrome/content/rules
+  ./utils/make-sqlite.py src/chrome/content/rules
 fi
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
-	XPI_NAME="$XPI_NAME.xpi"
+  XPI_NAME="$XPI_NAME.xpi"
 else
-	XPI_NAME="$XPI_NAME~pre.xpi"
+  XPI_NAME="$XPI_NAME~pre.xpi"
 fi
 
 [ -d pkg ] || mkdir pkg
@@ -127,7 +126,7 @@ fi
 GIT_OBJECT_FILE=".git/refs/heads/master"
 export GIT_COMMIT_ID="HEAD"
 if [ -e "$GIT_OBJECT_FILE" ]; then
-	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
+  export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
 cd src
@@ -136,10 +135,10 @@ cd src
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
-python2.7 ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
-if [ "$ret" != 0 ]; then
+if [ "$ret" -ne 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else

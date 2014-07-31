@@ -37,12 +37,12 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 echo "Building chrome version" $VERSION
 
 if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+  VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
 elif [ -x utils/trivial-validate ] ; then
   # This case probably never happens
-	VALIDATE=./utils/trivial-validate
+  VALIDATE=./utils/trivial-validate
 else
-	VALIDATE=./trivial-validate
+  VALIDATE=./trivial-validate
 fi
 
 if $VALIDATE src/chrome/content/rules >&2
@@ -54,7 +54,8 @@ else
   exit 1
 fi
 
-if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
+command -v xmllint > /dev/null
+if [ "$?" -eq 0 -a -f utils/relaxng.xml ] >&2
 then
   # Use find and xargs to avoid "too many args" error on Mac OS X
   if find src/chrome/content/rules/ -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
@@ -117,7 +118,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 # zip up the crx dir
 cwd=$(pwd -P)
 (cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
-echo >&2 "Unsigned package has shasum: `shasum "$cwd/$zip"`" 
+echo >&2 "Unsigned package has shasum: `openssl dgst -sha1 "$cwd/$zip" | cut -d ' ' -f 2`"
 
 # signature
 openssl sha1 -sha1 -binary -sign "$key" < "$zip" > "$sig"
