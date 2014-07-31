@@ -44,8 +44,6 @@ const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
 const RULESET_UPDATE_CHECK_INTERVAL = 10800000;
-const RSUPDATE_URL_PREF = 'ruleset_update_url';
-const RSUPDATE_SIG_URL_PREF = 'ruleset_update_signature_url';
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -191,23 +189,17 @@ function HTTPSEverywhere() {
   this.rw = RuleWriter;
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
+  this.ruleset_updater = RulesetUpdater;
   this.browser_initialised = false; // the browser is completely loaded
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
+  this.rsupdate_interval_id = null; // Interval ID for ruleset update checking function
+  // Wrap interval constants in a method so that they can be accessed from any component
+  // with a reference to the HTTPSEverywhere object without making the values mutable.
+  this.MIN_REATTEMPT_REQ_INTERVAL = function() { return MIN_REATTEMPT_REQ_INTERVAL; };
+  this.RULESET_UPDATE_CHECK_INTERVAL = function() { return RULESET_UPDATE_CHECK_INTERVAL; };
 
-  // Initialize the ruleset updater, carry out the first test for updates
-  // and start checking for ruleset updates in an interval.
-  var updateJsonURL = this.prefs.getCharPref(RSUPDATE_URL_PREF);
-  var updateJsonSigURL = this.prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
-  this.ruleset_updater = RulesetUpdater(updateJsonURL, updateJsonSigURL);
-  this.ruleset_updater.fetchUpdate();
-  this.rsupdate_interval_id = setInterval(
-    function() {
-      this.ruleset_updater.fetchUpdate();
-    },
-    RULESET_UPDATE_CHECK_INTERVAL);
-  
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
@@ -755,12 +747,11 @@ HTTPSEverywhere.prototype = {
           // Include code to ping a verification-error-reporting URL
           if (maxCalls > 0) {
             var timePadding = (1000000 * Math.random()) % 300000;
-            setTimeout(
-              function() {
-                this.try_request(maxCalls - 1, method, url, onSuccess);
-              }, 
-              MIN_REATTEMPT_REQ_INTERVAL + timePadding
-            );
+            var timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+            timer.initWithCallback(
+              function() { this.try_request(maxCalls - 1, method, url, onSuccess); }, 
+              MIN_REATTEMPT_REQ_INTERVAL + timePadding,
+              timer.TYPE_ONE_SHOT);
           }
         }
       }
@@ -876,5 +867,4 @@ if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([HTTPSEverywhere]);
 else
     var NSGetModule = XPCOMUtils.generateNSGetModule([HTTPSEverywhere]);
-
 /* vim: set tabstop=4 expandtab: */
