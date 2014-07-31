@@ -51,6 +51,17 @@ httpsEverywhere.toolbarButton = {
     HTTPSEverywhere.log(DBUG, 'Removing listener for toolbarButton init.');
     window.removeEventListener('load', httpsEverywhere.toolbarButton.init, false);
 
+    // Start checking for ruleset updates in an interval
+    // now that the extension has been loaded
+    HTTPSEverywhere.ruleset_updater.fetchUpdate();
+    HTTPSEverywhere.log(INFO, 'First ruleset update retrieval started');
+    HTTPSEverywhere.rsupdate_interval_id = window.setInterval(
+      function() {
+        HTTPSEverywhere.log(INFO, 'Retrieving ruleset update information');
+        HTTPSEverywhere.ruleset_updater.fetchUpdate();
+      },
+      HTTPSEverywhere.RULESET_UPDATE_CHECK_INTERVAL());
+
     var tb = httpsEverywhere.toolbarButton;
 
     // make sure icon is proper color during init
