@@ -17,7 +17,7 @@ pref("extensions.https_everywhere.enable_mixed_rulesets", false);
 
 pref("extensions.https_everywhere.branch_name", "development");
 pref("extensions.https_everywhere.release_version", "4.0.17");
-pref("extensions.https_everywhere.ruleset_version", "4.0.17.1");
+pref("extensions.https_everywhere.ruleset_version", "4.0.17.0");
 // TODO
 // Replace testing URLs with real ones
 pref("extensions.https_everywhere.ruleset_update_url", "http://0.0.0.0:8000/data/update.json");
