@@ -392,6 +392,8 @@ HTTPSEverywhere.prototype = {
       }
     }
 
+    if (!loadContext) { return null; }
+
     let domWin = loadContext.associatedWindow;
     if (!domWin) {
       this.log(NOTE, "failed to get DOMWin for " + channel.URI.spec);
