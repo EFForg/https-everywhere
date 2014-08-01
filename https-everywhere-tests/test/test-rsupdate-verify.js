@@ -4,10 +4,30 @@ const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
 const PUBKEY = ''+
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMH3pA27nFhz6BpLFB6B'+
+  'wtuRPrfGVIlZ6R9gprfTUJEcZxqC0T2tzxBgQqjEJPeL61YIuXOqXNMsTmHjooxW'+
+  'qeUPUiBqTeXuM3dz+XgL6sxfydN1IwiWYsdD0bQmN9/ixgOamzBKTYxAx+g5TalD'+
+  'Dv+xeHcBpf0Htu0JZPTaZZtmclxS4LvZXlYJYkcnv04jP/nRd0W/u/d8SYFvayld'+
+  'saSiV00+AuHeQwWM5fmMK7t8OlQzXWp7TwqyzFaSaRZnKtzMBdWxK4IzIMYg3T5h'+
+  'YY76I3E0t9s2eqFOH9b4cVvsEFzJl9QOXRPeSGLoF1mTsdLKw1BK+7l7/gUd8ZbI'+
+  'bwIDAQAB';
 
 const UPDATE_JSON = '' +
+  '{"branch": "stable"\n'+
+  ',"changes": "Generating some new data again"\n'+
+  ',"date": "04-07-2014"\n'+
+  ',"hash": "edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357"\n'+
+  ',"hashfn": "sha256"\n'+
+  ',"source": "https://eff.org/files/https-everywhere/ruleset.sqlite"\n'+
+  ',"version": "3.5.3.2"}\n';
 
 const UPDATE_JSON_SIG = '' +
+  'MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEApCzWF1KJ2GQno8CxFr6jUNJrPkxU/Wg5'+
+  '9s3ikuOb3sXoXzW2FUFI2AdQtTI4b1WTRmphi+vERfxysY0kMhq1eoz+LL4NDQQm'+
+  'fQro021QrIRTvku+MQVwp7E3eS52WS+F2hnuBVpA0t+Zm84v3Xpd6M/VdxkqyZPx'+
+  'MttinAZtyn21tqEWaUF6Rle2VUBK7zAdxCGjXyMx2U9HRgYlwmmQuAXHl+GMNQgq'+
+  'WL01d+2EjV35GlWcwhu4+k4/GjD7sZqiG4TSuokpBevZMWTu7K9tTtb9VmHX6bn+'+
+  'rhVYXVXYCYtEooH4yJYKgyOLn/U4XReR969+sTXW7NbKG3hMMVUFOg==';
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
