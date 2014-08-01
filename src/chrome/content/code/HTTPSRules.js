@@ -30,6 +30,7 @@ function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   this.name = name;
   this.xmlName = xmlName;
   this.notes = "";
+
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
@@ -478,6 +479,7 @@ const HTTPSRules = {
       this.rulesets[i].clear();
     }
   },
+
 
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be

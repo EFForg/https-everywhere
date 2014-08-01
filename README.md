@@ -87,6 +87,11 @@ After building the extension the xpi files (for Firefox) and crx files (for Chro
 
 To construct ruleset file in Windows use `./utils/merge-rulesets.js`
 
+Running Extension Tests
+-------------
+
+See [this README](https-everywhere-tests/README.md).
+
 Ruleset Tests
 -------------
 

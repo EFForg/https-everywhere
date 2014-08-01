@@ -7,24 +7,14 @@
 		- a134.lm.akamai.net
 
 			- akam.bing.com
-			- ts[1-4].mm.bing.net
-
-		- ssl.bing.com.edgekey.net
-
-			- ssl.bing.com
+			- *.mm.bing.net
 
 
 	Nonfunctional domains:
 
-		- api.bing.com			(404, akamai)
-		- db3.api.bing.com		(404; mismatched, CN: bedrock.msn.com)
-
-	* Redirects to http
-
-
-	Problematic domains:
-
-		- ts[1-4].mm.bing.net	(akamai)
+		- m2.cn.bing.com
+		- origin.bj1.bing.com
+		- blogs.bing.com
 
 
 	Fully covered domains:
@@ -33,34 +23,34 @@
 
 			- (www.)
 			- c.bing		(tracking beacons)
+			- cn.bing
 			- h.bing
-			- ssl.bing
+			- ssl
+			- testfamilysafety.bing
 			- udc.bing
+			- (www.)bing
 
-		- ts[1-4].mm.bing.net
+		- *.mm.bing.net
+		- api.bing.com
 
 -->
-<ruleset name="Bing (partial)">
+<ruleset name="Bing">
 
 	<target host="bing.com" />
 	<target host="*.bing.com" />
 	<target host="*.mm.bing.net" />
 
 
-	<securecookie host="^(?:\.c|ssl|www)\.bing\.com$" name=".+" />
-	<!--
-		Could we secure any of these safely?
-							-->
-	<!--securecookie host="^\.bing\.com$" name="(_HOP|_IDP|MUID|SRCHD|SRCHUSR|_SS)$" /-->
+	<securecookie host=".*\.bing\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?bing\.com/"
+	<rule from="^http://((?:c|cn|h|ssl|testfamilysafety|udc|www)\.)?bing\.com/"
 		to="https://$1bing.com/" />
 
-	<rule from="^http://(c|h|ssl|udc)\.bing\.com/"
-		to="https://$1.bing.com/" />
+	<rule from="^http://([^/:@]*)\.mm\.bing\.net/"
+		to="https://$1.mm.bing.com/"/>
 
-	<rule from="^http://ts[1-4]\.mm\.bing\.net/"
-		to="https://ssl.bing.com/"/>
+	<rule from="^http://([^/:@]*)\.api\.bing\.net/"
+		to="https://$1.api.bing.com/"/>
 
 </ruleset>
