@@ -4,10 +4,28 @@ const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
 const PUBKEY = ''+
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqBMFDg+bPpGeAAqJ8v24Y9oHYuwtb'+
+  'ZPtlwqWoUb9sdS8t6pPG6zpjnLVvDxk9PdJytsM82dZ3Ewlq5ZGvwhNZ1zhKLQYaeaBTh8Ucx'+
+  'qW6BUdw5jaHVBd6+qWJWQZYdrGwa2A47nyH3mPSM81iHNZN0RFOPlkos51KxZO7b+2R0in0Vb'+
+  '7mDX0r3LuFVdpjiyHbaYzztikuQ2b8lDNkQidnJ+8YFzvq7/zsRPDRhckluewhMGR7CTcBkCX'+
+  '6ggj7SDco5+/Qz8xI5XKq4UXozw+mky4dFctS73dBdV/Si9Bxsn4NhthzSdpuXaT+82QaWrX/'+
+  'F/nPUhQFUY0jV1hzvsWEQIDAQAB';
 
 const UPDATE_JSON = '' +
+  '{"branch": "development"\n'+
+  ',"changes": "Testing the ruleset update feature"\n'+
+  ',"date": "29-07-2014"\n'+
+  ',"hash": "b48331bfd0848bf658fe1184578dbd0218cd99a4838de6caddc0624a56b43a"\n'+
+  ',"hashfn": "sha256"\n'+
+  ',"source": "http://0.0.0.0:8000/data/rulesets.sqlite"\n'+
+  ',"version": "4.0.17.1"}\n';
 
 const UPDATE_JSON_SIG = '' +
+  'MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAPKm08M7KF+P0BEeQCWfNv1oVurBpGywzGcdARX46nN'+
+  'YjCd7NquqcuinetoBHmAvVa4P4y1aiMx2ZHUn43U/gFFWoyQpxB5OJ/bbT90rMkSmNyDBL4kX5'+
+  'QE9UZgU4NHIT3iO2MMtgag9/Ng9Y3+z6U0VjiGMXDQab5I6C0UzMyhkVcBmfNejjQFIKT0Ryqr'+
+  'jxjdmhXugpGQuXHheadVQCYxeII4doLJTw+30uxTxoggazQm4gdxwKXPGDNn6PiTdiCwwG53eo'+
+  'rAcnisjr/9geRvWTa29lom/M+BY91JNoloshF9XF8IBBZAzVGF2plBzbQ5OMWa08IJCpxc/kzjrlvw==';
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -43,7 +61,7 @@ exports['test binary-base64 encoding'] = function(assert) {
 exports['test update JSON parsing'] = function(assert) {
   let updateObj = JSON.parse(UPDATE_JSON);
   assert.equal(updateObj.hash, 
-    'edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357',
+    'b48331bfd0848bf658fe1184578dbd0218cd99a4838de6caddc0624a56b43a',
     'Test that the data was parsed into JSON properly');
 };
 
@@ -52,7 +70,7 @@ exports['test update JSON signature validity'] = function(assert) {
   let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                    .createInstance(Ci.nsIDataSignatureVerifier);
   assert.equal(hashed,
-    '9234260c8285fcd940a74a58078985d09b74f4bf97b77ae36f8f6c6fbd774282',
+    '65ebd0e39069cedc1fdfedcc5e791a73381bf03ebb5d8696b5b25d788229f5a4', 
     'Test that the update.json data hashed to the right value');
   assert.equal(typeof verifier, 'object', 'Test verifier creation success');
   assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
