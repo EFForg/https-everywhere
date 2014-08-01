@@ -30,13 +30,18 @@
 			Seems only/mostly to be used for ads
 
 
-	No pages are covered, therefore there
-	*CANNOT* be any mixed content!
+	Problematic domains:
+
+		- (www.)reddit.com *
+
+	* Works, akamai
 
 -->
 <ruleset name="Reddit (partial)">
 
 	<target host="reddit.com" />
+	<target host="i.reddit.com" />
+	<target host="en-us.reddit.com" />
 	<target host="ssl.reddit.com" />
 	<target host="static.reddit.com" />
 	<target host="thumbs.reddit.com" />
@@ -50,8 +55,16 @@
 	<target host="www.redditstatic.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reddit\.com$" name="^_recentclicks2$" /-->
+
+
 	<rule from="^http://(?:ssl\.|www\.)?reddit\.com/"
 		to="https://ssl.reddit.com/" />
+
+	<rule from="^http://(i|en-us)\.reddit\.com/"
+		to="https://$1.reddit.com/" />
 
 	<rule from="^http://(static|thumbs)\.reddit\.com/"
 		to="https://s3.amazonaws.com/$1.reddit.com/" />
@@ -59,7 +72,10 @@
 	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
 		to="https://s3.amazonaws.com/$1thumbs.redditmedia.com/" />
 
-	<rule from="^http://(?:www\.)?redditstatic\.com/"
+	<rule from="^http://redditstatic\.com/"
 		to="https://redditstatic.s3.amazonaws.com/" />
+
+	<rule from="^http://www\.redditstatic\.com/"
+		to="https://www.redditstatic.com/" />
 
 </ruleset>

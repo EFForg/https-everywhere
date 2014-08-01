@@ -1,17 +1,68 @@
 <!--
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- ^
-		- www		(503, akamai)
+		- trust.turn.com.edgesuite.net
+
+			- a1505.g1.akamai.net
+
+		- www.turn.com.edgesuite.net
+
+			- a1049.g1.akamai.net
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- trust ²
+		- www ²
+
+	¹ Works, cert only matches www, self-signed
+	² Works, akamai
+
+
+	Mixed content:
+
+		- Web bugs, on www from:
+
+			- d
+			- t3.trackalyzer.com
 
 -->
 <ruleset name="Turn.com">
 
+	<target host="turn.com" />
 	<target host="*.turn.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://(trust\.|www\.)?turn\.com/+(?!bootstrap/|favicon\.ico|includes/|sites/)" /-->
+		<!--
+			At least some stylesheets reference images relative to root.
+
+			The names of said stylesheets are hashes/guids/something
+			to that effect, and their persistence is unknown.
+										-->
+		<!--exclusion pattern="^http://(www\.)?turn\.com/+(sites/default/files/css/)" /-->
+		<!--
+			References images relative to root:
+								-->
+		<!--exclusion pattern="^http://trust\.turn\.com/includes/trust\.css" /-->
+		<!--
+			Reference images relative to self:
+								-->
+		<!--exclusion pattern="^http://turn\.turn\.com/bootstrap/css/(?!bootstrap(-responsive)?\.min\.css)" /-->
 
 
-	<!--securecookie host="^\.turn\.com$" name="^uid$" /-->
+	<!--	Set by d, not secured by server:
+						-->
+	<securecookie host="^\.turn\.com$" name="^uid$" />
 
+
+	<rule from="^http://(?:www\.)?turn\.com/(?=favicon\.ico|sites/(?!default/files/css/))"
+		to="https://a248.e.akamai.net/f/1049/8588/3/www.turn.com/" />
+
+	<rule from="^http://trust\.turn\.com/(?=bootstrap/|includes/(?!trust\.css))"
+		to="https://a248.e.akamai.net/f/1505/4670/8/trust.turn.com/" />
 
 	<rule from="^http://(akamai|console|d|r)\.turn\.com/"
 		to="https://$1.turn.com/" />

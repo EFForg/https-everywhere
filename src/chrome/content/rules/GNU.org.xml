@@ -4,10 +4,14 @@
 
 	Nonfunctional subdomains:
 
+		- alpha ¹
 		- ftpmirror
-		- gcc			(shows sourceware.org; mismatched, CN: www.sourceware.org)
 		- download.savannah	(refused)
-		- git.savannah
+		- git.savannah ⁴
+		- git.sv ⁴
+
+	¹ Shows ftp
+	⁴ Reset
 
 
 	Problematic domains:
@@ -23,9 +27,18 @@
 		- gnu.org subdomains:
 
 			- (www.)
+			- elpa
+			- gcc
+			- ftp
 			- lists
 			- mail		(→ lists)
 			- savannah
+
+
+	These altnames don't exist:
+
+		- www.elpa.gnu.org
+		- www.gcc.gnu.org
 
 -->
 <ruleset name="GNU.org (partial)">
@@ -34,13 +47,24 @@
 	<target host="*.gnu.org" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^Bugzilla_login_request_cookie$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^DEFAULTFORMAT$" /-->
+
+	<securecookie host="^gcc\.gnu\.org$" name=".+" />
+
+
 	<rule from="^http://(?:www\.)?classpath\.org/$"
 		to="https://www.gnu.org/software/classpath/" />
 
         <rule from="^http://(www\.)?gnu\.org/"
 		to="https://$1gnu.org/" />
 
-        <rule from="^http://(lists|savannah)\.gnu\.org/"
+        <rule from="^http://(elpa|ftp|gcc|lists|savannah)\.gnu\.org/"
 		to="https://$1.gnu.org/" />
 
 	<rule from="^http://mail\.gnu\.org/"

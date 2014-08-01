@@ -1,20 +1,40 @@
-<!--	d35wfru2rucjcz.cloudfront.net
+<!--
+	CDN buckets:
+
+		- d35wfru2rucjcz.cloudfront.net
+
+
+	Partially covered subdomains:
+
+		- uk *
+
+	* Some pages redirect to http
+
 -->
-<ruleset name="Reputation.com">
+<ruleset name="Reputation.com (partial)">
 
-	<target host="reputation.com"/>
-	<target host="t.reputation.com"/>
-	<target host="www.reputation.com"/>
+	<target host="reputation.com" />
+	<target host="*.reputation.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://uk\.reputation\.com/+($|\?|(contact|pub/contact|pub/index)$)" /-->
+		<!--
+			Exeptions:
+					-->
+		<exclusion pattern="^http://uk\.reputation\.com/+(?!favicon\.ico|pub/assets/)" />
 
-	<securecookie host="^t\.reputation\.com$" name=".*"/>
+
+	<securecookie host="^t\.reputation\.com$" name=".+" />
+
 
 	<rule from="^http://reputation\.com/"
-		to="https://www.reputation.com/"/>
+		to="https://www.reputation.com/" />
 
-	<rule from="^http://www\.reputation\.com/([\w\-/]*images|min|secure)/"
-		to="https://www.reputation.com/$1/"/>
+	<rule from="^http://(t|uk)\.reputation\.com/"
+		to="https://$1.reputation.com/" />
 
-	<rule from="^http://t\.reputation\.com/"
-		to="https://t.reputation.com/"/>
+	<rule from="^http://www\.reputation\.com/(?=[\w/-]*images/|min/|secure/)"
+		to="https://www.reputation.com/" />
 
 </ruleset>

@@ -1,0 +1,77 @@
+<!--
+	For rules causing valid MCB, see Bild.de-mixed.xml.
+
+
+	CDN buckets:
+
+		- bilder.bild.de.edgesuite.net
+		- wetter.bild.de.edgesuite.net
+		- www.bild.de.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		^ ¹
+		- bilder ²
+		- epaper ³
+		- impressum ¹
+		- wetter ⁴
+		- www ²
+
+	¹ Dropped
+	² 504, akamai
+	³ Redirects to http; expired 2012-06-01, mismatched, CN: shop.fussball.de
+	⁴ 503, akamai
+
+
+	Problematic subdomains:
+
+		- email *
+
+	* Works; mismatched, CN: www.fagms.net
+
+
+	Partially covered subdomains:
+
+		- email *	(→ www.fagms.net)
+
+	* Embeds css from an unsecurable domain, namely www.bild.de.
+	  The rest, causing valid MCB, is handled in Bild.de-mixedcontent.xml.
+
+
+	Mixed content:
+
+		- css on email from www ¹
+
+		- Images, on email from:
+
+			- $self ²
+			- bilder ¹
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Bild.de (partial)">
+
+	<target host="*.bild.de" />
+		<!--
+			Avoid valid MCB:
+						-->
+		<!--exclusion pattern="^http://email\.bild\.de/+host/" /-->
+
+
+	<!--	Server secures:
+				-->
+	<!--securecookie host="^don\.bild\.de$" name=".+" /-->
+
+
+	<rule from="^http://(don|offer)\.bild\.de/"
+		to="https://$1.bild.de/" />
+
+	<!--	Appears to behave exactly the same:
+							-->
+	<rule from="^http://email\.bild\.de/(?!/*host/)"
+		to="https://www.fagms.net/" />
+
+</ruleset>

@@ -14,8 +14,11 @@
 		- jointhegame *
 		- l10n **
 		- manifesto *
+		- phonon *
 		- planet *
+		- quickgit **
 		- rekonq *
+		- solid *
 		- utils *
 		- websvn *
 		- wiki *
@@ -28,17 +31,24 @@
 
 		- files		(some data differ)
 		- lists		(works, CN: localhost)
+		- pim ³
 		- reviewboard	(shows git.reviewboard; mismatched, CN: git.reviewboard.kde.org)
+
+	³ Dropped
 
 
 	Partially covered subdomains:
 
 		- files
+		- pim ¹		(→ community)
 		- userbase	(some pages redirect to http)
+
+	¹ Not all paths redirect
 
 
 	Fully covered subdomains:
 
+		- akademy
 		- akademy201[023]
 		- amarok
 		- blogs
@@ -59,12 +69,33 @@
 		- nepomuk
 		- news
 		- projects
+		- relate
 		- reviewboard		(→ git.reviewboard)
 		- git.reviewboard
 		- season
 		- sprints
 		- sysadmin
 		- techbase
+
+
+	Mixed content:
+
+		- Images on akademy from $self *
+
+		- Images on dot from dot *
+
+	* Secured by us
+
+
+	Observed cookie domains:
+
+		- .
+		- community
+		- dot
+		- quickgit ²
+		- .relate
+
+	² Not secured by us <= no tls support
 
 -->
 <ruleset name="KDE (partial)">
@@ -76,6 +107,7 @@
 									-->
 		<!--exclusion pattern="^http://files\.kde\.org/+.+\.(btih|magnet|meta4|metalist|sha1|sha256|torrent)$" /-->
 		<exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gz|install|jpg|kml|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)|PKGBUILD)$" />
+		<!--exclusion pattern="^http://pim\.kde\.org/+(?!(akonadi/*)?($|\?))" /-->
 		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
 
 
@@ -84,8 +116,18 @@
 	<securecookie host="^userbase\.kde\.org$" name="^__utm\w+$" />
 
 
-	<rule from="^http://(akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
+	<rule from="^http://(akademy|akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|relate|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
 		to="https://$1.kde.org/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://pim\.kde\.org/+(?:\?.*)?$"
+		to="https://community.kde.org/KDE_PIM" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://pim\.kde\.org/akonadi/*(?:\?.*)?$"
+		to="https://community.kde.org/KDE_PIM/Akonadi" />
 
 	<rule from="^http://(?:git\.)?reviewboard\.kde\.org/"
 		to="https://git.reviewboard.kde.org/" />

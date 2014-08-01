@@ -2,18 +2,76 @@
 	For other CBS coverage, see CBS.xml.
 
 
+	CDN buckets:
+
+		- static.gamespot.com.edgesuite.net
+
+			- a50.g.akamai.net
+
+
 	Nonfunctional domains:
 
-		- userimage.gamespot.com	(ditto)
+		- (www.)gamespot.com ¹
+		- userimage.gamespot.com	(↓ ditto)
 		- im(age|g[12].gamespotcdn.net	(Akamai; "An error occurred"; all equivalent)
+
+	¹ Redirects to http, valid cert
+
+
+	Problematic subdomains:
+
+		- static *
+		- static[1-4] *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- auth
+		- fuse
+		- uk
+		- us
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- . ²
+		- auth ³
+		- www ¹
+
+	¹ Not secured by us <= no tls support
+	² Not secured by us <= accounting for possible use on unsecurable domains
+	³ Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Web bugs on auth from dw.cbsi.com *
+
+	* Secured by us
 
 -->
 <ruleset name="GameSpot (partial)">
 
 	<target host="*.gamespot.com" />
+		<!--
+			References resources relative to root:
+								-->
+		<!--exclusion pattern="^http://static\.gamespot\.com/bundles/gamespotsite/css/gamespot_white-[0-9a-f]{32}\.css$" /-->
+		<!--exclusion pattern="^http://static\.gamespot\.com/.+\.css(?:$|\?)" /-->
 
 
-	<rule from="^http://(fuse|u[ks])\.gamespot\.com/"
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^auth\.gamespot\.com$" name=".+" />
+
+
+	<rule from="^http://(auth|fuse|u[ks])\.gamespot\.com/"
 		to="https://$1.gamespot.com/" />
+
+	<rule from="^http://static(\d)?\.gamespot\.com/(?!.+\.css(?:$|\?))"
+		to="https://a248.e.akamai.net/f/50/31/6/static$1.gamespot.com/" />
 
 </ruleset>

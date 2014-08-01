@@ -1,5 +1,4 @@
 <!--
-
 	CDN buckets:
 
 		- coverity.mktoweb.com
@@ -9,15 +8,21 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)	(dropped)
-		- scan		(refused)
+		- (www.) ¹
+		- scan5 ²
+
+	¹ Refused
+	² Redirects to http...:8080
 
 
 	Problematic subdomains:
 
-		- autodiscover		(refused)
-		- blog			(dropped)
-		- softwareintegrity	(redirects to app-sjf.marketo.com)
+		- autodiscover ¹
+		- blog ¹
+		- softwareintegrity ²
+
+	¹ Refused
+	² Redirects to app-sjf.marketo.com
 
 
 	Partially covered subdomains:
@@ -30,7 +35,29 @@
 
 		- communities
 		- uat.communities
-		- apps.uat
+		- apps.uat.communities
+		- (www.)scan
+		- trial
+
+
+	These altnames don't exist:
+
+		- www.communities.coverity.com
+
+
+	Observed cookie domains:
+
+		- communities ¹
+		- uat.communities ¹
+		- apps.uat.communities ¹
+		- scan ¹
+		- www.scan ¹
+		- scan5 ²
+		- trial ³
+
+	¹ Secured by us <= not secured by server
+	³ Not secured by us <= tls unsupported
+	³ Secured by server
 
 -->
 <ruleset name="Coverity.com (partial)">
@@ -38,19 +65,23 @@
 	<target host="*.coverity.com" />
 
 
-	<securecookie host="^(?:(?:uat\.)?communities|apps\.uat)\.coverity\.com$" name=".+" />
+	<securecookie host="^(?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan)\.coverity\.com$" name=".+" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^trial\.coverity\.com$" name="^_session_id$" /-->
 
 
 	<rule from="^http://autodiscover\.coverity\.com/"
 		to="https://autodiscover-s.outlook.com/" />
 
-	<rule from="^http://blog\.coverity\.com/[^?]*(\?.*)?"
-		to="https://communities.coverity.com/blogs/software-integrity-blog/$1" />
+	<rule from="^http://blog\.coverity\.com/[^?]*(?=$|\?)"
+		to="https://communities.coverity.com/blogs/software-integrity-blog/" />
 
-	<rule from="^http://((?:uat\.)?communities|apps\.uat)\.coverity\.com/"
+	<rule from="^http://((?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|trial)\.coverity\.com/"
 		to="https://$1.coverity.com/" />
 
-	<rule from="^http://softwareintegrity\.coverity\.com/(cs|image|j|r)s/"
-		to="https://na-sjf.marketo.com/$1s/" />
+	<rule from="^http://softwareintegrity\.coverity\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sjf.marketo.com/" />
 
 </ruleset>

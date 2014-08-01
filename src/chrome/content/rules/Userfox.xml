@@ -3,10 +3,29 @@
 
 		- d2y71mjhnajxcg.cloudfront.net
 
+			- static
+
 
 	Problematic subdomains:
 
 		- ^	(works; mismatched, CN: *.heroku.com)
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+		- favicon on www from static
+
+	* Secured by us
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- app
+		- manage
+		- static	(→ d2y71mjhnajxcg.cloudfront.net)
 
 -->
 <ruleset name="userfox">
@@ -14,6 +33,10 @@
 	<target host="userfox.com" />
 	<target host="*.userfox.com" />
 
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^app\.userfox\.com$" name="^_userfox-2_session$" /-->
 
 	<securecookie host="^app\.userfox\.com$" name=".+" />
 
@@ -23,5 +46,8 @@
 
 	<rule from="^http://(app|manage)\.userfox\.com/"
 		to="https://$1.userfox.com/" />
+
+	<rule from="^http://static\.userfox\.com/"
+		to="https://d2y71mjhnajxcg.cloudfront.net/" />
 
 </ruleset>

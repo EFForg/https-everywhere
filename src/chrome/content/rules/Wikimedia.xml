@@ -4,6 +4,16 @@
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
 	so this file is a lot simpler these days.
 
+
+	Mixed content:
+
+		- Images, on:
+
+			- stats.wikimedia.org from upload.wikimedia.org *
+			- stats.wikimedia.org from wikimediafoundation.org *
+
+	* Secured by us
+
 -->
 <ruleset name="Wikimedia">
 
@@ -14,7 +24,7 @@
 	<target host="www.mediawiki.org" />
 	<target host="wikimedia.org" />
 	<target host="*.wikimedia.org" />
-		<exclusion pattern="^http://(?:apt|brewster|bug-attachment|cs|cz|dataset2|download|ekrem|emery|labs-ns0|labs-ns1|search|status|sitemap|torrus|ubuntu|virt0)\.wikimedia\.org" />
+		<exclusion pattern="^http://(?:apt|cs|cz|parsoid-lb\.eqiad|status|torrus|ubuntu)\.wikimedia\.org" />
 		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
 		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
 	<target host="wikimediafoundation.org" />
@@ -29,7 +39,6 @@
 	<target host="*.wikinews.org" />
 	<target host="wikipedia.org" />
 	<target host="*.wikipedia.org" />
-		<exclusion pattern="^http://(?:download|static)\.wikipedia\.org/" />
 	<target host="wikiquote.org" />
 	<target host="*.wikiquote.org" />
 	<target host="wikisource.org" />
@@ -61,11 +70,26 @@
 	<rule from="^http://(?:www\.)?mediawiki\.org/"
 		to="https://www.mediawiki.org/" />
 
+	<rule from="^https?://download\.wikipedia\.org/"
+		to="https://dumps.wikimedia.org/" />
+
+	<rule from="^https?://(download|dataset2|sitemap)\.wikimedia\.org/"
+		to="https://dumps.wikimedia.org/" />
+
+	<rule from="^https?://(labs-ns[01]|virt0)\.wikimedia\.org/"
+		to="https://wikitech.wikimedia.org/" />	
+
+	<rule from="^https?://noboard\.chapters\.wikimedia\.org/"
+		to="https://noboard-chapters.wikimedia.org/" />
+
+	<rule from="^https?://wg\.en\.wikipedia\.org/"
+		to="https://wg-en.wikipedia.org/" />
+
+	<rule from="^https?://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
+		to="https://wg-$1.wikipedia.org/" />
+
 	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
 		to="https://$1wik$2.org/" />
-
-	<rule from="^http://([^@:/]+)\.planet\.wikimedia\.org/"
-		to="https://$1.planet.wikimedia.org/" />
 
 	<rule from="^http://(www\.)?wikimediafoundation\.org/"
 		to="https://$1wikimediafoundation.org/" />
@@ -73,6 +97,6 @@
 	<rule from="^http://(www\.)?wikimedia\.ca/"
 		to="https://wikimedia.ca/" />
 
-	<rule from="^http://(tools|icinga|ganglia)\.wmflabs\.org/"
+	<rule from="^http://([^@:/]+)\.wmflabs\.org/"
 		to="https://$1.wmflabs.org/" />
 </ruleset>

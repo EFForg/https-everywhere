@@ -1,32 +1,35 @@
 <!--
-	Other Oracle rulesets:
-
-		- MySQL.xml
-		- Oracle.xml
-		- Oracle-mismatches.xml
+	For other Oracle coverage, see Oracle.xml.
 
 
 	Nonfunctional subdomains:
 
-		- bits		(times out)
-		- edu		(cert: forums; displays planetnetbeans.org data)
-		- plugins	(times out)
-		- wiki		(ditto)
-		- (www.)	(cert: forums; displays planetnetbeans.org data)
+		- bits ¹
+		- edu ²
+		- plugins ¹
+		- wiki ¹
+
+	¹ Dropped
+	² Shows planetnetbeans.org; mismatched,CN: forums.netbeans.org
 
 
-	See Oracle-mismatches for problematic rules.
+	www: redirect differs
 
 -->
 <ruleset name="NetBeans (partial)">
 
-	<target host="forums.netbeans.org"/>
+	<target host="netbeans.org" />
+	<target host="*.netbeans.org" />
 
 
-	<securecookie host="^forums\.netbeans\.org$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^netbeans\.org$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:forums|www)\.netbeans\.org$" name=".+" />
 
 
-	<rule from="^http://forums\.netbeans\.org/"
-		to="https://forums.netbeans.org/"/>
+	<rule from="^http://(?:(forums\.)|www\.)?netbeans\.org/"
+		to="https://$1netbeans.org/" />
 
 </ruleset>
