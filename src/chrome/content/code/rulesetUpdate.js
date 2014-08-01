@@ -16,11 +16,15 @@
 // Set this value.
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = ''+
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz54rPDNwzbvHLQkUeCqgztanMfj58LWEbXSY0Y3go'+
-  '28zWntSZ7bUljHi8QlBdRVZocWZlWiZ9PRZ51hIktLe6pcRfgdivCbomPeB86aCB0n1yuusRYGss0TkSq2na7'+
-  'cilRc6d6mm1bOA2iYb1PBSKRQIHbf4mY2xgZV6lH3ZquPSbDBNA9R5xo1aN4hMFsyltobJboHRk3E5vdJvXWx'+
-  'BkSOPWRJ7pUZBZ/6uQhB/f03uZIqvGvaWoXE8HpZFqn6DcPyzziEKX8Rqy+S0FKEnQ99pC5AVLsTVckmNAY6c'+
-  'OWJZAcOzcYadw38Rr7GK2U5SBoGos61LlCSM2rP5jg2mIwIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA'+
+  'qBMFDg+bPpGeAAqJ8v24Y9oHYuwtbZPtlwqWoUb9sdS8'+
+  't6pPG6zpjnLVvDxk9PdJytsM82dZ3Ewlq5ZGvwhNZ1zh'+
+  'KLQYaeaBTh8UcxqW6BUdw5jaHVBd6+qWJWQZYdrGwa2A'+
+  '47nyH3mPSM81iHNZN0RFOPlkos51KxZO7b+2R0in0Vb7'+
+  'mDX0r3LuFVdpjiyHbaYzztikuQ2b8lDNkQidnJ+8YFzv'+
+  'q7/zsRPDRhckluewhMGR7CTcBkCX6ggj7SDco5+/Qz8x'+
+  'I5XKq4UXozw+mky4dFctS73dBdV/Si9Bxsn4NhthzSdp'+
+  'uXaT+82QaWrX/F/nPUhQFUY0jV1hzvsWEQIDAQAB';
 
 /* extension release branch preference key */
 const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
@@ -104,6 +108,10 @@ function conditionallyApplyUpdate(update) {
     function(signature) {
       https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
       var updateHash = computeHash(update, SIGNING_DIGEST_FN);
+      https_everywhereLog(INFO, 
+        "Should compute hash 65ebd0e39069cedc1fdfedcc5e791a73381bf03ebb5d8696b5b25d788229f5a4 "+
+        "for sha256(update). Got...")
+      https_everywhereLog(INFO, updateHash);
       if (verifyUpdateSignature(updateHash, signature)) {
         https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
         fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
