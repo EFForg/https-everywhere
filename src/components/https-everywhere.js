@@ -729,9 +729,10 @@ HTTPSEverywhere.prototype = {
   toggleEnabledState: function() {
     if(this.prefs.getBoolPref("globalEnabled")){    
         try{    
+            // toggling some of these after startup may be inconsequential...
+            // this.obsService.removeObserver(this, "sessionstore-windows-restored");
             this.obsService.removeObserver(this, "profile-before-change");
             this.obsService.removeObserver(this, "profile-after-change");
-            this.obsService.removeObserver(this, "sessionstore-windows-restored");      
             OS.removeObserver(this, "cookie-changed");
             OS.removeObserver(this, "http-on-modify-request");
             OS.removeObserver(this, "http-on-examine-merged-response");
@@ -755,7 +756,7 @@ HTTPSEverywhere.prototype = {
         try{      
             this.obsService.addObserver(this, "profile-before-change", false);
             this.obsService.addObserver(this, "profile-after-change", false);
-            this.obsService.addObserver(this, "sessionstore-windows-restored", false);      
+            // this.obsService.addObserver(this, "sessionstore-windows-restored", false);
             OS.addObserver(this, "cookie-changed", false);
             OS.addObserver(this, "http-on-modify-request", false);
             OS.addObserver(this, "http-on-examine-merged-response", false);
