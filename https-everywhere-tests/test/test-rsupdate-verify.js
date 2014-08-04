@@ -4,30 +4,29 @@ const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
 const PUBKEY = ''+
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwMH3pA27nFhz6BpLFB6B'+
-  'wtuRPrfGVIlZ6R9gprfTUJEcZxqC0T2tzxBgQqjEJPeL61YIuXOqXNMsTmHjooxW'+
-  'qeUPUiBqTeXuM3dz+XgL6sxfydN1IwiWYsdD0bQmN9/ixgOamzBKTYxAx+g5TalD'+
-  'Dv+xeHcBpf0Htu0JZPTaZZtmclxS4LvZXlYJYkcnv04jP/nRd0W/u/d8SYFvayld'+
-  'saSiV00+AuHeQwWM5fmMK7t8OlQzXWp7TwqyzFaSaRZnKtzMBdWxK4IzIMYg3T5h'+
-  'YY76I3E0t9s2eqFOH9b4cVvsEFzJl9QOXRPeSGLoF1mTsdLKw1BK+7l7/gUd8ZbI'+
-  'bwIDAQAB';
+  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7wJz/Ekn4loB+GX/TnObTo"+
+  "/5J0/aq1hBl+xeSyCUX/fggjju5jnRnbnQx10OaZ655Yft4Cs2IfdIh95NYsN+gfi6"+
+  "HVesy/Q9G72BjhpW6+gTlkW9vW56xwjv+Cpi5/20SKbvMZCMXTvR50HqLaLiOeLyAO"+
+  "Qv06FKlyF5kbgQwpayExii75KFJL3HlH5+mZfNfKElNK9Oyiig7sqnVTOdovNCFnW8"+
+  "zom2fS3YyODaFvPUSmo1Yd7Mr0xWjE5rAV7k70aZlR1NEze/Tfcf42LEhY5XkflczI"+
+  "Wh+cse/v/sbZadS9jxbD2SgEJuLatF5zupmd0acvj1II8do2RE95FQCQIDAQAB";
 
 const UPDATE_JSON = '' +
-  '{"branch": "stable"\n'+
-  ',"changes": "Generating some new data again"\n'+
-  ',"date": "04-07-2014"\n'+
-  ',"hash": "edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357"\n'+
+  '{"branch": "development"\n'+
+  ',"changes": "Still trying to get signature verification working"\n'+
+  ',"date": "04-08-2014"\n'+
+  ',"hash": "8476a3638e2e95b6381aba4367e8c1c0f361bdaed501cd2f6f91b74e4545"\n'+
   ',"hashfn": "sha256"\n'+
-  ',"source": "https://eff.org/files/https-everywhere/ruleset.sqlite"\n'+
-  ',"version": "3.5.3.2"}\n';
+  ',"source": "http://0.0.0.0:8000/data/rulesets.sqlite"\n'+
+  ',"version": "5.0.0.1"}\n';
 
 const UPDATE_JSON_SIG = '' +
-  'MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEApCzWF1KJ2GQno8CxFr6jUNJrPkxU/Wg5'+
-  '9s3ikuOb3sXoXzW2FUFI2AdQtTI4b1WTRmphi+vERfxysY0kMhq1eoz+LL4NDQQm'+
-  'fQro021QrIRTvku+MQVwp7E3eS52WS+F2hnuBVpA0t+Zm84v3Xpd6M/VdxkqyZPx'+
-  'MttinAZtyn21tqEWaUF6Rle2VUBK7zAdxCGjXyMx2U9HRgYlwmmQuAXHl+GMNQgq'+
-  'WL01d+2EjV35GlWcwhu4+k4/GjD7sZqiG4TSuokpBevZMWTu7K9tTtb9VmHX6bn+'+
-  'rhVYXVXYCYtEooH4yJYKgyOLn/U4XReR969+sTXW7NbKG3hMMVUFOg==';
+  "MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAXzVK9wHhSEPPWKmUkX47v8fIMFivMqU7Bx"+
+  "nDPaApc9CpJdC6xT8RT5Hp2Ajus1bWrYFaj7FoEht47TFZHUouWl/l6KDFaUOfxhnc"+
+  "6eet+uly+gqdnO5NQZxftnRUmeG3nbipy9hRzkskBpRGCKrtS95vJQXlFN3ugkTcKm"+
+  "anGlAfIZIBL14Mz+NgS7syznGwddv3zn0elldncDv6t5RdxkuvXRpnOOY2GYe2ijbE"+
+  "a4UHrQc6O5xlCYAKM/8ABuA6yAs/RetnuC56NtF7DgM9bDAXHv29BPeG2GEgImg8Jf"+
+  "LJS9Ck91SxA9Q4kaOCgHmkd/AI5qxEm2FMfgzsT+8VAA=="; 
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -63,7 +62,7 @@ exports['test binary-base64 encoding'] = function(assert) {
 exports['test update JSON parsing'] = function(assert) {
   let updateObj = JSON.parse(UPDATE_JSON);
   assert.equal(updateObj.hash, 
-    'edc03d4985d37da1c23039b815c56d4f78931dfa668a1e2530af3c8c3357',
+    '8476a3638e2e95b6381aba4367e8c1c0f361bdaed501cd2f6f91b74e4545',
     'Test that the data was parsed into JSON properly');
 };
 
@@ -72,7 +71,7 @@ exports['test update JSON signature validity'] = function(assert) {
   let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                    .createInstance(Ci.nsIDataSignatureVerifier);
   assert.equal(hashed,
-    '9234260c8285fcd940a74a58078985d09b74f4bf97b77ae36f8f6c6fbd774282',
+    'e05c92fcb9ed93344d8f5e9b358e64f7e0ab13eb8cd3a6fce2581f1d8cc73832',
     'Test that the update.json data hashed to the right value');
   assert.equal(typeof verifier, 'object', 'Test verifier creation success');
   assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
