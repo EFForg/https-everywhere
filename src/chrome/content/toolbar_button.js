@@ -82,6 +82,10 @@ httpsEverywhere.toolbarButton = {
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
 
+    // make sure UI for ruleset updater toggle is properly set
+    var rulesetUpdaterItem = document.getElementById('ruleset-updater-item');
+    rulesetUpdaterItem.setAttribute('checked', rulesetUpdaterEnabled.toString());
+
     // make sure UI is set depending on whether HTTPS-E is enabled
     toggleEnabledUI();
 
