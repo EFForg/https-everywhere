@@ -23,6 +23,7 @@ pref("extensions.https_everywhere.ruleset_version", "4.0.17.0");
 pref("extensions.https_everywhere.ruleset_update_url", "http://0.0.0.0:8000/data/update.json");
 pref("extensions.https_everywhere.ruleset_update_signature_url",
      "http://0.0.0.0:8000/data/update.json.sig");
+pref("extensions.https_everywhere.ruleset_updater.enabled", true);
 
 // HTTP Nowhere preferences
 pref("extensions.https_everywhere.http_nowhere.enabled", false);

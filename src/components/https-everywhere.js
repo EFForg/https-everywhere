@@ -195,8 +195,9 @@ function HTTPSEverywhere() {
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
-  
-  this.rsupdate_interval_id = null; // Interval ID for ruleset update checking function
+
+  this.rsupdate_fetch_timer = null; // nsITimer object fetching ruleset updates
+
   // Wrap interval constants in a method so that they can be accessed from any component
   // with a reference to the HTTPSEverywhere object without making the values mutable.
   this.MIN_REATTEMPT_REQ_INTERVAL = function() { return MIN_REATTEMPT_REQ_INTERVAL; };
@@ -817,6 +818,40 @@ HTTPSEverywhere.prototype = {
       }
     };
     xhr.send();
+  },
+
+  /* Start the ruleset updater up. Makes the first update retrieval call
+   * and starts the interval-based repeating update tests.
+   */
+  start_ruleset_updater: function() {
+    if (this.rsupdate_fetch_timer !== null) {
+      this.log(INFO, 'Cannot restart ruleset updater because it is already running');
+      return false; // False -> Already running
+    }
+    this.rsupdate_fetch_timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+    this.rsupdate_fetch_timer.initWithCallback(
+      function() {
+        this.log(INFO, 'Retrieving ruleset update information');
+        this.ruleset_updater.fetch_update();
+      },
+      RULESET_UPDATE_CHECK_INTERVAL,
+      this.rsupdate_fetch_timer.TYPE_REPEATING_SLACK);
+    this.ruleset_updater.fetch_update();
+    this.log(INFO, 'First ruleset update retrieval started');
+    return true; // True -> Started successfully
+  },
+
+  /* Stop the ruleset update fetching mechanism if it's running.
+   */
+  cancel_rulset_updater: function() {
+    if (this.rsupdate_fetch_timer === null) {
+      this.log(INFO, 'Ruleset updater could not be cancelled because it is not running');
+      return false; // False -> Not running
+    }
+    this.rsupdate_fetch_timer.cancel();
+    this.rsupdate_fetch_timer = null;
+    this.log(INFO, 'Ruleset updater was cancelled successfully');
+    return true; // True -> Cancelled successfully
   },
 
   chrome_opener: function(uri, args) {

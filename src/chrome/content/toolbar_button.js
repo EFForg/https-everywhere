@@ -31,6 +31,11 @@ if (!httpsEverywhere) { var httpsEverywhere = {}; }
  * such as when the toolbar is disabled.
  */
 httpsEverywhere.toolbarButton = {
+  
+  /**
+   * Name of the preference for enabling/disabling the ruleset updater.
+   */
+  RULESET_UPDATER_PREF: "extensions.https_everywhere.ruleset_updater.enabled",
 
   /**
    * Name of preference for determining whether to show ruleset counter.
@@ -56,16 +61,11 @@ httpsEverywhere.toolbarButton = {
     HTTPSEverywhere.log(DBUG, 'Removing listener for toolbarButton init.');
     window.removeEventListener('load', httpsEverywhere.toolbarButton.init, false);
 
-    // Start checking for ruleset updates in an interval
-    // now that the extension has been loaded
-    HTTPSEverywhere.ruleset_updater.fetch_update();
-    HTTPSEverywhere.log(INFO, 'First ruleset update retrieval started');
-    HTTPSEverywhere.rsupdate_interval_id = window.setInterval(
-      function() {
-        HTTPSEverywhere.log(INFO, 'Retrieving ruleset update information');
-        HTTPSEverywhere.ruleset_updater.fetch_update();
-      },
-      HTTPSEverywhere.RULESET_UPDATE_CHECK_INTERVAL());
+    // Now that HTTPSE has been initialized, start the ruleset updater if enabled.
+    var rulestUpdaterEnabled = HTTPSEverywhere.prefs.getBoolPref(RULESET_UPDATER_PREF);
+    if (rulesetUpdaterEnabled) {
+      HTTPSEverywhere.start_ruleset_updater();
+    }
 
     var tb = httpsEverywhere.toolbarButton;
 
