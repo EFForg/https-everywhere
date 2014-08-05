@@ -15,6 +15,7 @@ pref("extensions.https_everywhere.performance_tests", false);
 // enable rulesets that trigger mixed content blocking
 pref("extensions.https_everywhere.enable_mixed_rulesets", false);
 
+// Preferences required by the ruleset updater
 pref("extensions.https_everywhere.branch_name", "development");
 pref("extensions.https_everywhere.release_version", "4.0.17");
 pref("extensions.https_everywhere.ruleset_version", "4.0.17.0");
@@ -24,6 +25,7 @@ pref("extensions.https_everywhere.ruleset_update_url", "http://0.0.0.0:8000/data
 pref("extensions.https_everywhere.ruleset_update_signature_url",
      "http://0.0.0.0:8000/data/update.json.sig");
 pref("extensions.https_everywhere.ruleset_updater.enabled", true);
+pref("extensions.https_everywhere.ruleset_updater.interval", 10800000); // Milliseconds
 
 // HTTP Nowhere preferences
 pref("extensions.https_everywhere.http_nowhere.enabled", false);

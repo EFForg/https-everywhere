@@ -43,7 +43,7 @@ const SERVICE_NAME = "Encrypts your communications with a number of major websit
 const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
-const RULESET_UPDATE_CHECK_INTERVAL = 10800000;
+const RULESET_FETCH_INTERVAL_PREF = "extensions.https_everywhere.ruleset_updater.interval";
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -834,7 +834,7 @@ HTTPSEverywhere.prototype = {
         this.log(INFO, 'Retrieving ruleset update information');
         this.ruleset_updater.fetch_update();
       },
-      RULESET_UPDATE_CHECK_INTERVAL,
+      this.prefs.getIntPref(RULESET_FETCH_INTERVAL_PREF),
       this.rsupdate_fetch_timer.TYPE_REPEATING_SLACK);
     this.ruleset_updater.fetch_update();
     this.log(INFO, 'First ruleset update retrieval started');
