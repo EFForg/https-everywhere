@@ -16,12 +16,12 @@
 // Set this value.
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = ''+
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqBMFDg+bPpGeAAqJ8v24Y9oHYuwtb'+
-  'ZPtlwqWoUb9sdS8t6pPG6zpjnLVvDxk9PdJytsM82dZ3Ewlq5ZGvwhNZ1zhKLQYaeaBTh8Ucx'+
-  'qW6BUdw5jaHVBd6+qWJWQZYdrGwa2A47nyH3mPSM81iHNZN0RFOPlkos51KxZO7b+2R0in0Vb'+
-  '7mDX0r3LuFVdpjiyHbaYzztikuQ2b8lDNkQidnJ+8YFzvq7/zsRPDRhckluewhMGR7CTcBkCX'+
-  '6ggj7SDco5+/Qz8xI5XKq4UXozw+mky4dFctS73dBdV/Si9Bxsn4NhthzSdpuXaT+82QaWrX/F'+
-  '/nPUhQFUY0jV1hzvsWEQIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrJKpqX5kbiSX6DEKNcFO8U/K'+
+  'w3jn1z+im+hSwCHNCXUzJ1IkwtRe2QkK66g1kCGnQ9rxnaOnLRSi8DK6Yypobm0paG71/'+
+  'WtHyRQzKDASPbVhy0UMen/3sGBOIOlT1JbZskHxVdEBJfb7YOr+a1BSgaIsrbaI7n9tmr'+
+  'TysC5ECN5i5ETFQz0Hni7iqKWUB/a2dfDu0U4VDsJHIt1PKsduIJGaACT7+CZuaw3Jvc/'+
+  'utCOh0tgMHXxtxrezRu56ouVcttsQSuVQ56gxSwnASElECsmUgs6ci+ts4LMDrF8l/J1t'+
+  '778lIPQb2jf3QrNxsgVLKFSePJ2bwONkTSaj48I2wIDAQAB';
 
 /* extension release branch preference key */
 const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
@@ -87,6 +87,11 @@ function fetchUpdate() {
  * updateObj - The JSON manifest of the update information for the ruleset update.
  */
 function conditionallyApplyUpdate(update) {
+  https_everywhereLog(INFO, "Got update data:");
+  https_everywhereLog(INFO, update);
+  https_everywhereLog(INFO, '' + update.charCodeAt(update.length - 3) + 
+                                 update.charCodeAt(update.length - 2) +
+                                 update.charCodeAt(update.length - 1));
   var updateObj = JSON.parse(update);
   var extVersion = _prefs.getCharPref(VERSION_PREF);
   var extBranch = _prefs.getCharPref(BRANCH_PREF);
@@ -103,13 +108,17 @@ function conditionallyApplyUpdate(update) {
   var sigFileSrc = _prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
   HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc,
     function(signature) {
+      signature = signature.trim();
       https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
+      /*
       var updateHash = computeHash(update, SIGNING_DIGEST_FN);
       https_everywhereLog(INFO, 
         "Should compute hash 65ebd0e39069cedc1fdfedcc5e791a73381bf03ebb5d8696b5b25d788229f5a4 "+
         "for sha256(update). Got...")
       https_everywhereLog(INFO, updateHash);
-      if (verifyUpdateSignature(updateHash, signature)) {
+      */
+      //if (verifyUpdateSignature(updateHash, signature)) {
+      if (verifyUpdateSignature(update, signature)) {
         https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
         fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
       } else {
