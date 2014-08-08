@@ -61,13 +61,13 @@ httpsEverywhere.toolbarButton = {
     HTTPSEverywhere.log(DBUG, 'Removing listener for toolbarButton init.');
     window.removeEventListener('load', httpsEverywhere.toolbarButton.init, false);
 
+    var tb = httpsEverywhere.toolbarButton;
+
     // Now that HTTPSE has been initialized, start the ruleset updater if enabled.
-    var rulestUpdaterEnabled = HTTPSEverywhere.prefs.getBoolPref(RULESET_UPDATER_PREF);
+    var rulesetUpdaterEnabled = Services.prefs.getBoolPref(tb.RULESET_UPDATER_PREF);
     if (rulesetUpdaterEnabled) {
       HTTPSEverywhere.start_ruleset_updater();
     }
-
-    var tb = httpsEverywhere.toolbarButton;
 
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();

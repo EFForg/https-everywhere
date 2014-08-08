@@ -43,7 +43,7 @@ const SERVICE_NAME = "Encrypts your communications with a number of major websit
 const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
-const RULESET_FETCH_INTERVAL_PREF = "extensions.https_everywhere.ruleset_updater.interval";
+const RULESET_FETCH_INTERVAL_PREF = "ruleset_updater.interval";
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
