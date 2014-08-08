@@ -1,15 +1,25 @@
-#!/bin/bash
-
-set -e
+#!/bin/bash -ex
 cd "`dirname $0`"
 
 # dummy Jetpack addon that contains tests
 TEST_ADDON_PATH=./https-everywhere-tests/
 LATEST_SDK_VERSION=1.16
 
-# firefox profile that has HTTPS Everywhere installed
-PROFILE_DIRECTORY=./test_profile
-HTTPSE_INSTALL_DIRECTORY=./test_profile/extensions/https-everywhere@eff.org
+# We'll create a Firefox profile here and install HTTPS Everywhere into it.
+PROFILE_DIRECTORY="$(mktemp -d)"
+trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
+HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/extensions/https-everywhere@eff.org
+
+# Build the XPI to run all the validations in makexpi.sh, and to ensure that
+# we test what is actually getting built.
+./makexpi.sh
+XPI_NAME="pkg/`ls -tr pkg/ | tail -1`"
+
+# Set up a skeleton profile and then install into it.
+# The skeleton contains a few files required to trick Firefox into thinking
+# that the extension was fully installed rather than just unpacked.
+rsync -a https-everywhere-tests/test_profile_skeleton/ $PROFILE_DIRECTORY
+unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
 
 if [ ! -d "$TEST_ADDON_PATH" ]; then
   echo "Test addon path does not exist"
@@ -28,6 +38,8 @@ fi
 
 if ! type cfx > /dev/null; then
   echo "Please activate the Firefox Addon SDK before running this script."
+  echo "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack/addon-sdk-1.16.tar.gz"
+  echo "Unpack and run 'source addon-adk-1.16/bin/activate'"
   exit 1
 fi
 
@@ -36,9 +48,6 @@ if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
     exit 1
 fi
 
-cd src/
-rsync -av --exclude-from="../.build_exclusions" . ../$HTTPSE_INSTALL_DIRECTORY
-
-cd ../$TEST_ADDON_PATH
+cd $TEST_ADDON_PATH
 echo "running tests"
-cfx test --profiledir="../$PROFILE_DIRECTORY" --verbose
+cfx test --profiledir="$PROFILE_DIRECTORY" --verbose

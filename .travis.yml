@@ -1,9 +1,20 @@
 language: python
 python:
   - "2.7"
+addons:
+  # Firefox 31 doesn't seem to be available on travis-ci.org yet.
+  firefox: "30.0"
 before_install:
-  - "sudo apt-get -qq update"
+  - wget -q https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack/addon-sdk-1.16.tar.gz
+  - tar xpzf addon-sdk-1.16.tar.gz
+  - cd addon-sdk-1.16; source bin/activate; cd -
+  # Note: We'd prefer to install the system version of lxml because it's faster,
+  # but for some reason it fails to import.
+  #- sudo apt-get install python-lxml
 install:
-  - "sudo apt-get -qq install libxml2-dev libxslt-dev python-dev"
-  - "pip install -r requirements.txt"
-script: "./makexpi.sh"
+  - pip install --user -r requirements.txt
+before_script:
+  - sh -e /etc/init.d/xvfb start
+env:
+  - DISPLAY=':99.0'
+script: ./test.sh
