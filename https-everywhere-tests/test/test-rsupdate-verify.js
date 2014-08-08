@@ -3,13 +3,7 @@
 const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
-const PUBKEY = ''+
-  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7wJz/Ekn4loB+GX/TnObTo"+
-  "/5J0/aq1hBl+xeSyCUX/fggjju5jnRnbnQx10OaZ655Yft4Cs2IfdIh95NYsN+gfi6"+
-  "HVesy/Q9G72BjhpW6+gTlkW9vW56xwjv+Cpi5/20SKbvMZCMXTvR50HqLaLiOeLyAO"+
-  "Qv06FKlyF5kbgQwpayExii75KFJL3HlH5+mZfNfKElNK9Oyiig7sqnVTOdovNCFnW8"+
-  "zom2fS3YyODaFvPUSmo1Yd7Mr0xWjE5rAV7k70aZlR1NEze/Tfcf42LEhY5XkflczI"+
-  "Wh+cse/v/sbZadS9jxbD2SgEJuLatF5zupmd0acvj1II8do2RE95FQCQIDAQAB";
+const PUBKEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrJKpqX5kbiSX6DEKNcFO8U/Kw3jn1z+im+hSwCHNCXUzJ1IkwtRe2QkK66g1kCGnQ9rxnaOnLRSi8DK6Yypobm0paG71/WtHyRQzKDASPbVhy0UMen/3sGBOIOlT1JbZskHxVdEBJfb7YOr+a1BSgaIsrbaI7n9tmrTysC5ECN5i5ETFQz0Hni7iqKWUB/a2dfDu0U4VDsJHIt1PKsduIJGaACT7+CZuaw3Jvc/utCOh0tgMHXxtxrezRu56ouVcttsQSuVQ56gxSwnASElECsmUgs6ci+ts4LMDrF8l/J1t778lIPQb2jf3QrNxsgVLKFSePJ2bwONkTSaj48I2wIDAQAB";
 
 const UPDATE_JSON = '' +
   '{"branch": "development"\n'+
@@ -20,13 +14,7 @@ const UPDATE_JSON = '' +
   ',"source": "http://0.0.0.0:8000/data/rulesets.sqlite"\n'+
   ',"version": "5.0.0.1"}\n';
 
-const UPDATE_JSON_SIG = '' +
-  "MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAXzVK9wHhSEPPWKmUkX47v8fIMFivMqU7Bx"+
-  "nDPaApc9CpJdC6xT8RT5Hp2Ajus1bWrYFaj7FoEht47TFZHUouWl/l6KDFaUOfxhnc"+
-  "6eet+uly+gqdnO5NQZxftnRUmeG3nbipy9hRzkskBpRGCKrtS95vJQXlFN3ugkTcKm"+
-  "anGlAfIZIBL14Mz+NgS7syznGwddv3zn0elldncDv6t5RdxkuvXRpnOOY2GYe2ijbE"+
-  "a4UHrQc6O5xlCYAKM/8ABuA6yAs/RetnuC56NtF7DgM9bDAXHv29BPeG2GEgImg8Jf"+
-  "LJS9Ck91SxA9Q4kaOCgHmkd/AI5qxEm2FMfgzsT+8VAA=="; 
+const UPDATE_JSON_SIG = "MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAWi6AThn723ovBCri3iuxu9g2mQGvKrWzeOBPW/2kc8U0DwVMn/v17ZtjWJuFnFyCpWFT88/gnCa+QV3+fupw4D9RwkFvdyKAp8ok7jGdrDl78jEmpqbqlc9Oz7WXDFr5OpxSjkd4jn4Pks0ImhZejuoWE1dLg7qLQhJ3gYzAT4IRKVVzBTkAzHHxKvuHzWpD3Q7pI/GkqUcygyJdVwYv6LQesnmdMzwIpyfgf/6acznoQj3LsNn0W1Q6so64ng7aWx+2gFZp/f9Y8I5llWHaO55wEgKOBZ4n7OOvTLn0jyfbwkySzjaXmFgE1be6TmZ/dXggaI0w0uG5L2QIxfOhhg==";
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
@@ -68,13 +56,19 @@ exports['test update JSON parsing'] = function(assert) {
 
 exports['test update JSON signature validity'] = function(assert) {
   let hashed = hashSHA256(UPDATE_JSON);
+  console.log("###############################################################");
+  console.log(hashed);
+  console.log(hashed.charCodeAt(hashed.length - 1));
+  console.log("###############################################################");
   let verifier = Cc['@mozilla.org/security/datasignatureverifier;1']
                    .createInstance(Ci.nsIDataSignatureVerifier);
   assert.equal(hashed,
     'e05c92fcb9ed93344d8f5e9b358e64f7e0ab13eb8cd3a6fce2581f1d8cc73832',
     'Test that the update.json data hashed to the right value');
   assert.equal(typeof verifier, 'object', 'Test verifier creation success');
-  assert.ok(verifier.verifyData(hashed, UPDATE_JSON_SIG, PUBKEY),
+  assert.ok(verifier.verifyData(
+    UPDATE_JSON, UPDATE_JSON_SIG, PUBKEY),
+    //hashed, UPDATE_JSON_SIG, PUBKEY),
     'Test that the update.json raw data is authentic');
 };
 
