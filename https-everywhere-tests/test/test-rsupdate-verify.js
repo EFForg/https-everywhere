@@ -3,7 +3,15 @@
 const { Cc, Ci, Cu } = require('chrome');
 const { atob, btoa} = Cu.import('resource://gre/modules/Services.jsm', {});
 
-const PUBKEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrJKpqX5kbiSX6DEKNcFO8U/Kw3jn1z+im+hSwCHNCXUzJ1IkwtRe2QkK66g1kCGnQ9rxnaOnLRSi8DK6Yypobm0paG71/WtHyRQzKDASPbVhy0UMen/3sGBOIOlT1JbZskHxVdEBJfb7YOr+a1BSgaIsrbaI7n9tmrTysC5ECN5i5ETFQz0Hni7iqKWUB/a2dfDu0U4VDsJHIt1PKsduIJGaACT7+CZuaw3Jvc/utCOh0tgMHXxtxrezRu56ouVcttsQSuVQ56gxSwnASElECsmUgs6ci+ts4LMDrF8l/J1t778lIPQb2jf3QrNxsgVLKFSePJ2bwONkTSaj48I2wIDAQAB";
+const PUBKEY = ""+
+  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrJKpqX5"+
+  "kbiSX6DEKNcFO8U/Kw3jn1z+im+hSwCHNCXUzJ1IkwtRe2QkK66g"+
+  "1kCGnQ9rxnaOnLRSi8DK6Yypobm0paG71/WtHyRQzKDASPbVhy0U"+
+  "Men/3sGBOIOlT1JbZskHxVdEBJfb7YOr+a1BSgaIsrbaI7n9tmrT"+
+  "ysC5ECN5i5ETFQz0Hni7iqKWUB/a2dfDu0U4VDsJHIt1PKsduIJG"+
+  "aACT7+CZuaw3Jvc/utCOh0tgMHXxtxrezRu56ouVcttsQSuVQ56g"+
+  "xSwnASElECsmUgs6ci+ts4LMDrF8l/J1t778lIPQb2jf3QrNxsgV"+
+  "LKFSePJ2bwONkTSaj48I2wIDAQAB";
 
 const UPDATE_JSON = '' +
   '{"branch": "development"\n'+
@@ -14,7 +22,14 @@ const UPDATE_JSON = '' +
   ',"source": "http://0.0.0.0:8000/data/rulesets.sqlite"\n'+
   ',"version": "5.0.0.1"}\n';
 
-const UPDATE_JSON_SIG = "MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAWi6AThn723ovBCri3iuxu9g2mQGvKrWzeOBPW/2kc8U0DwVMn/v17ZtjWJuFnFyCpWFT88/gnCa+QV3+fupw4D9RwkFvdyKAp8ok7jGdrDl78jEmpqbqlc9Oz7WXDFr5OpxSjkd4jn4Pks0ImhZejuoWE1dLg7qLQhJ3gYzAT4IRKVVzBTkAzHHxKvuHzWpD3Q7pI/GkqUcygyJdVwYv6LQesnmdMzwIpyfgf/6acznoQj3LsNn0W1Q6so64ng7aWx+2gFZp/f9Y8I5llWHaO55wEgKOBZ4n7OOvTLn0jyfbwkySzjaXmFgE1be6TmZ/dXggaI0w0uG5L2QIxfOhhg==";
+const UPDATE_JSON_SIG = ""+
+  "MIIBFDANBgkqhkiG9w0BAQUFAAOCAQEAWi6AThn723ovBCri3iuxu"+
+  "9g2mQGvKrWzeOBPW/2kc8U0DwVMn/v17ZtjWJuFnFyCpWFT88/gnC"+
+  "a+QV3+fupw4D9RwkFvdyKAp8ok7jGdrDl78jEmpqbqlc9Oz7WXDFr"+
+  "5OpxSjkd4jn4Pks0ImhZejuoWE1dLg7qLQhJ3gYzAT4IRKVVzBTkA"+
+  "zHHxKvuHzWpD3Q7pI/GkqUcygyJdVwYv6LQesnmdMzwIpyfgf/6ac"+
+  "znoQj3LsNn0W1Q6so64ng7aWx+2gFZp/f9Y8I5llWHaO55wEgKOBZ"+
+  "4n7OOvTLn0jyfbwkySzjaXmFgE1be6TmZ/dXggaI0w0uG5L2QIxfOhhg==";
 
 function hashSHA256(data) {
   let converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
