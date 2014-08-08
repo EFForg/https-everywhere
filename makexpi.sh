@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
