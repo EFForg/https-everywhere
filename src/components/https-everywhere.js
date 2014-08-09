@@ -35,6 +35,7 @@ Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/Task.jsm");
+Cu.import("resource://gre/modules/osfile.jsm");
 
 const CP_SHOULDPROCESS = 4;
 
@@ -42,13 +43,15 @@ const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
 const SERVICE_NAME = "Encrypts your communications with a number of major websites";
 
+const RULESET_DATABASE_FILE = "chrome://https-everywhere/content/rulesets.sqlite";
+
 const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
 const RULESET_FETCH_INTERVAL_PREF = "ruleset_updater.interval";
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
-const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
+const ObsServ = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
 const _INCLUDED = {};
 
@@ -594,10 +597,10 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, "Got profile-after-change");
 
       if(this.prefs.getBoolPref("globalEnabled")){
-        OS.addObserver(this, "cookie-changed", false);
-        OS.addObserver(this, "http-on-modify-request", false);
-        OS.addObserver(this, "http-on-examine-merged-response", false);
-        OS.addObserver(this, "http-on-examine-response", false);
+        ObsServ.addObserver(this, "cookie-changed", false);
+        ObsServ.addObserver(this, "http-on-modify-request", false);
+        ObsServ.addObserver(this, "http-on-examine-merged-response", false);
+        ObsServ.addObserver(this, "http-on-examine-response", false);
 
         var dls = CC['@mozilla.org/docloaderservice;1']
             .getService(CI.nsIWebProgress);
@@ -882,10 +885,10 @@ HTTPSEverywhere.prototype = {
         this.obsService.removeObserver(this, "profile-before-change");
         this.obsService.removeObserver(this, "profile-after-change");
         this.obsService.removeObserver(this, "sessionstore-windows-restored");
-        OS.removeObserver(this, "cookie-changed");
-        OS.removeObserver(this, "http-on-modify-request");
-        OS.removeObserver(this, "http-on-examine-merged-response");
-        OS.removeObserver(this, "http-on-examine-response");
+        ObsServ.removeObserver(this, "cookie-changed");
+        ObsServ.removeObserver(this, "http-on-modify-request");
+        ObsServ.removeObserver(this, "http-on-examine-merged-response");
+        ObsServ.removeObserver(this, "http-on-examine-response");
 
         var catman = CC["@mozilla.org/categorymanager;1"]
                        .getService(CI.nsICategoryManager);
@@ -905,10 +908,10 @@ HTTPSEverywhere.prototype = {
         this.obsService.addObserver(this, "profile-before-change", false);
         this.obsService.addObserver(this, "profile-after-change", false);
         this.obsService.addObserver(this, "sessionstore-windows-restored", false);
-        OS.addObserver(this, "cookie-changed", false);
-        OS.addObserver(this, "http-on-modify-request", false);
-        OS.addObserver(this, "http-on-examine-merged-response", false);
-        OS.addObserver(this, "http-on-examine-response", false);
+        ObsServ.addObserver(this, "cookie-changed", false);
+        ObsServ.addObserver(this, "http-on-modify-request", false);
+        ObsServ.addObserver(this, "http-on-examine-merged-response", false);
+        ObsServ.addObserver(this, "http-on-examine-response", false);
 
         var dls = CC['@mozilla.org/docloaderservice;1']
                     .getService(CI.nsIWebProgress);
