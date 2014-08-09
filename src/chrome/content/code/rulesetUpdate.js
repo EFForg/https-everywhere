@@ -39,6 +39,9 @@ const RSUPDATE_SIG_URL_PREF = 'extensions.https_everywhere.ruleset_update_signat
 /* path to the ruleset library database file */
 const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
 
+/* path to the temporary file for newly downloaded ruleset databases */
+const TMP_RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.new.sqlite';
+
 /* maximum number of attempts to fetch ruleset updates */
 const MAX_RSUPDATE_FETCHES = 6;
 
@@ -183,7 +186,7 @@ function hashFile(path, hashfn) {
  */
 function fetchRulesetDBFile(url, hashfn, hash) {
   https_everywhereLog(INFO, "Making request to get database file at " + url);
-  var tmpFilePath = OS.Path.join(OS.Constants.Path.tmpDir, 'rulesets.sqlite.new');
+  var tmpFilePath = HTTPSEverywhere.instance.rw.chromeToPath(TMP_RULESET_DBFILE_PATH);
   Task.spawn(function() {
     yield Downloads.fetch(url, tmpFilePath);
     https_everywhereLog('Successfully received ruleset database file content');
@@ -196,9 +199,11 @@ function fetchRulesetDBFile(url, hashfn, hash) {
     } else {
       https_everywhereLog(WARN, 'Hash of database file did not match the hash in update.json');
     }
-  }).then(null, function() {
+  }).then(null, function(e) {
     // TODO
     // Ping URL for verification-failure-reporting
+    https_everywhereLog(WARN, 'Downloading rulesets.sqlite failed');
+    https_everywhereLog(INFO, e);
   });
   /* 
   HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', url,
@@ -259,9 +264,14 @@ function applyNewRuleset(tmpFilePath) {
   var dbPath = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
   tmpFile.initWithPath(tmpFilePath);
   dbFile.initWithPath(dbPath);
+  https_everywhereLog(INFO, 'Initialized both the actual and temporary database files');
   var dbFileParent = dbFile.parent;
   dbFile.remove();
+  https_everywhereLog(INFO, 'Removed original database file');
   tmpFile.copyTo(dbFileParent, dbPath);
+  https_everywhereLog(INFO, 'Copied temporary database file into original database file');
+  tmpFile.remove();
+  https_everywhereLog(INFO, 'Removed temporary database file');
   HTTPSRules.init();
   https_everywhereLog(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
 }
