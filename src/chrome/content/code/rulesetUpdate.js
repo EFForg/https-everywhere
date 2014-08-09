@@ -3,7 +3,7 @@
  * for updating the extension's database of rulesets.
  * This "module" handles the tasks of fetching an update.json[1] manifest and:
  * 1) determining whether an update to the ruleset library has been released, and
- * 2) verifyies that the update is authentic before applying the new ruleset.
+ * 2) verifies that the update is authentic before applying the new ruleset.
  *
  * [1] The format and specification of the update.json file is detailed within a
  *     Github gist, at https://gist.github.com/redwire/2e1d8377ea58e43edb40
@@ -16,12 +16,12 @@
 // Set this value.
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = ''+
-  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrJKpqX5kbiSX6DEKNcFO8U/K'+
-  'w3jn1z+im+hSwCHNCXUzJ1IkwtRe2QkK66g1kCGnQ9rxnaOnLRSi8DK6Yypobm0paG71/'+
-  'WtHyRQzKDASPbVhy0UMen/3sGBOIOlT1JbZskHxVdEBJfb7YOr+a1BSgaIsrbaI7n9tmr'+
-  'TysC5ECN5i5ETFQz0Hni7iqKWUB/a2dfDu0U4VDsJHIt1PKsduIJGaACT7+CZuaw3Jvc/'+
-  'utCOh0tgMHXxtxrezRu56ouVcttsQSuVQ56gxSwnASElECsmUgs6ci+ts4LMDrF8l/J1t'+
-  '778lIPQb2jf3QrNxsgVLKFSePJ2bwONkTSaj48I2wIDAQAB';
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA7wJz/Ekn4loB+GX/TnObTo/5J0/aq1hBl'+
+  '+xeSyCUX/fggjju5jnRnbnQx10OaZ655Yft4Cs2IfdIh95NYsN+gfi6HVesy/Q9G72BjhpW6+gTlk'+
+  'W9vW56xwjv+Cpi5/20SKbvMZCMXTvR50HqLaLiOeLyAOQv06FKlyF5kbgQwpayExii75KFJL3HlH5'+
+  '+mZfNfKElNK9Oyiig7sqnVTOdovNCFnW8zom2fS3YyODaFvPUSmo1Yd7Mr0xWjE5rAV7k70aZlR1N'+
+  'Eze/Tfcf42LEhY5XkflczIWh+cse/v/sbZadS9jxbD2SgEJuLatF5zupmd0acvj1II8do2RE95FQC'+
+  'QIDAQAB';
 
 /* extension release branch preference key */
 const BRANCH_PREF= 'extensions.https_everywhere.branch_name';
@@ -154,6 +154,28 @@ function checkVersionRequirements(extVersion, rsVersion, newVersion) {
   return sameExtVer && newRSVer;
 }
 
+function hashFile(path, hashfn) {
+  var f = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+  var istream = Cc['@mozilla.org/network/file-input-stream;1']
+                  .createInstance(Ci.nsIFileInputStream);
+  var hashing = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
+  const PR_UINT32_MAX = 0xffffff;
+  if      (hashfn === 'md5')    hashing.init(hashing.MD5);
+  else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
+  else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
+  else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
+  else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
+  else return null; // It's a better idea to fail than do the wrong thing here.
+  f.initWithPath(path);
+  istream.init(f, 0x01, 04444, 0);
+  hashing.updateFromStream(istream, PR_UINT32_MAX);
+  var hash = hashing.finish(false); // Get binary data back
+  function toHexStr(charCode) {
+    return ('0' + charCode.toString(16)).slice(-2);
+  }
+  return [toHexStr(hash.charCodeAt(i)) for (i in hash)].join('');
+}
+
 /* Issues a request to download a new, zipped ruleset database file and then determines whether
  * its hash matches the one provided in the verified update manifest before applying the changes.
  * url  - The full URL to fetch the file from, MUST be using HTTPS!
@@ -161,10 +183,32 @@ function checkVersionRequirements(extVersion, rsVersion, newVersion) {
  */
 function fetchRulesetDBFile(url, hashfn, hash) {
   https_everywhereLog(INFO, "Making request to get database file at " + url);
-  HTTPSEverywhere.instance.try_request(MAX_RSUPDATE, 'GET', url,
+  var tmpFilePath = OS.Path.join(OS.Constants.Path.tmpDir, 'rulesets.sqlite.new');
+  Task.spawn(function() {
+    yield Downloads.fetch(url, tmpFilePath);
+    https_everywhereLog('Successfully received ruleset database file content');
+    var dbHash = hashFile(tmpFilePath, hashfn); 
+    https_everywhereLog(INFO, 'Calculated hash of db = ' + dbHash);
+    https_everywhereLog(INFO, 'Comparing to ' + hash);
+    if (dbHash === hash) {
+      https_everywhereLog(INFO, 'Hash o fdatabase file matched the hash provided in update.json');
+      applyNewRuleset(tmpFilePath);
+    } else {
+      https_everywhereLog(WARN, 'Hash of database file did not match the hash in update.json');
+    }
+  }).then(null, function() {
+    // TODO
+    // Ping URL for verification-failure-reporting
+  });
+  /* 
+  HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', url,
     function(dbfileContent) {
+      dbfileContent = dbfileContent.trim();
       https_everywhereLog(INFO, "Successfully received ruleset database file content");
-      var dbHash = computeHash(dbFileContent, hashfn);
+      https_everywhereLog(INFO, dbfileContent);
+      var dbHash = computeHash(dbfileContent, hashfn);
+      https_everywhereLog(INFO, 'Calculated hash of db = ' + dbHash);
+      https_everywhereLog(INFO, 'Comparing to ' + hash);
       if (dbHash === hash) {
         https_everywhereLog(INFO, "Hash of database file content matches the hash provided by update.json");
         applyNewRuleset(dbfileContent);
@@ -174,10 +218,12 @@ function fetchRulesetDBFile(url, hashfn, hash) {
         // Ping URL for verification-failure-reporting
       }
     });
+  */
 }
 
 
 /* Compute the hash using a function specified by hashfn of data and encode as hex */
+/*
 function computeHash(data, hashfn) {
   var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
                     .createInstance(CI.nsIScriptableUnicodeConverter);
@@ -202,16 +248,20 @@ function computeHash(data, hashfn) {
   https_everywhereLog(INFO, "Hash computation completed");
   return [toHexString(hash.charCodeAt(i)) for (i in hash)].join('');
 }
+*/
 
 /* Applies the new ruleset database file by replacing the old one and reinitializing 
  * the mapping of targets to applicable rules.
  */
-function applyNewRuleset(dbsource) {
-  var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-  var path = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
-  file.initWithPath(path);
-  https_everywhereLog(INFO, "Initialized file writer with path to " + path);
-  HTTPSEverywhere.instance.rw.write(file, dbsource);
+function applyNewRuleset(tmpFilePath) {
+  var tmpFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+  var dbFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+  var dbPath = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
+  tmpFile.initWithPath(tmpFilePath);
+  dbFile.initWithPath(dbPath);
+  var dbFileParent = dbFile.parent;
+  dbFile.remove();
+  tmpFile.copyTo(dbFileParent, dbPath);
   HTTPSRules.init();
   https_everywhereLog(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
 }
