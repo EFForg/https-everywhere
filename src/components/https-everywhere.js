@@ -185,6 +185,37 @@ function StorageController(command) {
   supportsCommand: function (cmd) cmd === this.command
 });*/
 
+/* To be able to actually replace the rulesets database file, it has to be stored
+ * in a location not in the extension's own XPI basepath.  This function moves the
+ * original database file created when the extension was compiled into the user's
+ * profile directory. Called before HTTPSRules.init in observe method.
+ */
+function initVolatileDB() {
+  // The original rulesets.sqlite file created when the addon is built
+  var dbFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+  dbFile.initWithPath(
+    HTTPSEverywhere.instance.rw.chromeToPath(
+      'chrome://https-everywhere/content/rulesets.sqlite'));
+  HTTPSEverywhere.log(INFO, 'Initialized original database file');
+  // The volatile copy of the rulesets file
+  var dbFileVol = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+  dbFileVol.initWithPath(
+    HTTPSEverywhere.instance.RULESET_DATABASE_FILE());
+  HTTPSEverywhere.log(INFO, 'Initialized volatile database file');
+  if (dbFile.exists()) {
+    if (!dbFileVol.exists()) {
+      dbFile.copyTo(
+        dbFileVol.parent, 
+        OS.Path.basename(HTTPSEVerywhere.instance.RULESET_DATABASE_FILE()));
+      HTTPSEverywhere.log(INFO, 'Copied original db file into volatile db file');
+    }
+    // TODO
+    // Might not want to delete the original rulesets database here 
+    dbFile.remove();
+    HTTPSEverywhere.log(INFO, 'Removed original database file');
+  }
+}
+
 function HTTPSEverywhere() {
 
   // Set up logging in each component:
@@ -610,6 +641,7 @@ HTTPSEverywhere.prototype = {
         dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
         this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
+        initVolatileDB();
         HTTPSRules.init();
 
         Thread.hostRunning = true;

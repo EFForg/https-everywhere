@@ -243,9 +243,6 @@ httpsEverywhere.toolbarButton = {
 
 function https_everywhere_load() {
   window.removeEventListener('load', https_everywhere_load, true);
-  // on first run, put the context menu in the addons bar and make sure that the
-  // rulesets database file has been copied to the profile directory so it can be
-  // replaced and reinitialized by the ruleset updater.
   try {
     var first_run;
     try {
@@ -262,25 +259,6 @@ function https_everywhere_load() {
         navbar.setAttribute('currentset', set);
         navbar.currentSet = set;
         document.persist('nav-bar', 'currentset');
-      }
-      // The original rulesets.sqlite file created when the addon is built
-      var dbFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-      dbFile.initWithPath(
-        HTTPSEverywhere.instance.rw.chromeToPath(
-          'chrome://https-everywhere/content/rulesets.sqlite'));
-      // The volatile copy of the rulesets file
-      var dbFileVol = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-      dbFileVol.initWithPath(
-        HTTPSEverywhere.instance.RULESET_DATABASE_FILE());
-      if (dbFile.exists()) {
-        if (!dbFileVol.exists()) {
-          dbFile.copyTo(
-            dbFileVol.parent, 
-            OS.Path.basename(HTTPSEVerywhere.instance.RULESET_DATABASE_FILE()));
-        }
-        // TODO
-        // Might not want to delete the original rulesets database here 
-        dbFile.remove();
       }
     }
   } catch(e) { }
