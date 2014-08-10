@@ -11,27 +11,53 @@
 			- wp
 
 
+	Nonfunctional subdomains:
+
+		- help *
+
+	* Desk.com
+
+
 	Problematic subdomains:
 
+		- ^ ¹
+		- blog ⁴
+		- selfserve ²
 		- wp ³
+		- www ⁵
 
+	¹ Cert only matches *.outbrain.com
+	⁴ Redirects to www, which has mixed css
+	² Works; mismatched, CN: *.unbounce.com
 	³ Works, akamai
+	⁵ Mixed css from $self
 
 
 	Fully covered subdomains:
 
+		- editorial
+		- images
 		- my
+		- paid
+		- traffic
+		- u
+		- widgets *
 		- wp		(→ www)
+
+	* Bugs served on 3rd-party websites
 
 
 	Mixed content:
 
 		- css, on:
 
+			- selfserve from unbouncepages-com.s3.amazonaws.com *
+			- selfserve from dl.dropbox.com *
 			- www from www *
 
 		- Images, on:
 
+			- selfserve from dl.dropbox.com *
 			- www from wp *
 			- www from www *
 
@@ -44,6 +70,7 @@
 
 	<target host="outbrain.com" />
 	<target host="*.outbrain.com" />
+		<!--exclusion pattern="^http://(help|selfserve)\.outbrain\.com/" /-->
 		<!--
 			Avoid false/broken MCB:
 						-->
@@ -59,11 +86,9 @@
 	<securecookie host="^\w+\.outbrain\.com$" name=".*" />
 
 
-	<!--	Cert only matches *.outbrain.com	-->
 	<rule from="^http://(?:wp\.|www\.)?outbrain\.com/"
 		to="https://www.outbrain.com/" />
 
-	<!--	widgets: included on 3rd-party websites.	-->
 	<rule from="^http://(editorial|u|widgets|images|my|paid|traffic)\.outbrain\.com/"
 		to="https://$1.outbrain.com/" />
 
