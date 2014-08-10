@@ -1,11 +1,34 @@
 <!--
+	For rules causing false/broken MCB, see Outbrain.com-falsemixed.xml.
+
 	For problematic rules, see Outbrain-mismatches.xml.
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from www *
+
+		- Images, on:
+
+			- www from wp *
+			- www from www *
+
+		- Bugs on www from widgets *
+
+	* Secured by us
 
 -->
 <ruleset name="Outbrain (partial)">
 
 	<target host="outbrain.com" />
 	<target host="*.outbrain.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://blog\.outbrain\.com/" /-->
+		<exclusion pattern="^http://(?:www\.)?outbrain\.com/+(?!wp-content/|wp-includes/)" />
 
 
 	<!--	Not secured by server:
@@ -19,12 +42,6 @@
 	<!--	Cert only matches *.outbrain.com	-->
 	<rule from="^http://(?:www\.)?outbrain\.com/"
 		to="https://www.outbrain.com/" />
-
-	<!--	NB: secure.bluehoust.com throws 200 TOO FAT for large files.
-		wp-content/uploads/ is thus handled in Outbrain-mismatches.xml.
-			-->
-	<rule from="^http://blog\.outbrain\.com/wp-(content/(?:plugin|theme)|include)s/"
-		to="https://secure.bluehost.com/~outbrain/blog.outbrain.com/wp-$1s/" />
 
 	<!--	widgets: included on 3rd-party websites.	-->
 	<rule from="^http://(editorial|u|widgets|images|paid|traffic)\.outbrain\.com/"
