@@ -1,0 +1,40 @@
+<!--
+	Lunds Tekniska Högskola
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- student ²
+		-  www.student ³
+
+	¹ Cert only matches www
+	² Shows doc.ddg; mismatched
+	³ Works; mismatched, CN: www.lth.se
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ -> www)
+		- doc.ddg
+
+
+	Mixed content:
+
+		- Image on www from www.lu.se
+
+-->
+<ruleset name="LTH.se (partial)">
+
+	<target host="lth.se" />
+	<target host="www.lth.se" />
+		<!--exclusion pattern="^http://www\.student\.lth\.se/" /-->
+
+
+	<rule from="^http://(?:www\.)?lth\.se/"
+		to="https://www.lth.se/" />
+
+	<rule from="^http://doc\.ddg\.lth\.se/"
+		to="https://doc.ddg.lth.se/" />
+
+</ruleset>
