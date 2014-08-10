@@ -111,14 +111,6 @@ function conditionallyApplyUpdate(update) {
     function(signature) {
       signature = signature.trim();
       https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
-      /*
-      var updateHash = computeHash(update, SIGNING_DIGEST_FN);
-      https_everywhereLog(INFO, 
-        "Should compute hash 65ebd0e39069cedc1fdfedcc5e791a73381bf03ebb5d8696b5b25d788229f5a4 "+
-        "for sha256(update). Got...")
-      https_everywhereLog(INFO, updateHash);
-      */
-      //if (verifyUpdateSignature(updateHash, signature)) {
       if (verifyUpdateSignature(update, signature)) {
         https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
         fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
@@ -202,55 +194,7 @@ function fetchRulesetDBFile(url, hashfn, hash) {
     https_everywhereLog(WARN, 'Downloading rulesets.sqlite failed');
     https_everywhereLog(INFO, e);
   });
-  /* 
-  HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', url,
-    function(dbfileContent) {
-      dbfileContent = dbfileContent.trim();
-      https_everywhereLog(INFO, "Successfully received ruleset database file content");
-      https_everywhereLog(INFO, dbfileContent);
-      var dbHash = computeHash(dbfileContent, hashfn);
-      https_everywhereLog(INFO, 'Calculated hash of db = ' + dbHash);
-      https_everywhereLog(INFO, 'Comparing to ' + hash);
-      if (dbHash === hash) {
-        https_everywhereLog(INFO, "Hash of database file content matches the hash provided by update.json");
-        applyNewRuleset(dbfileContent);
-      } else {
-        https_everywhereLog(WARN, hashfn + ' hash of downloaded ruleset library did not match provided hash.');
-        // TODO
-        // Ping URL for verification-failure-reporting
-      }
-    });
-  */
 }
-
-
-/* Compute the hash using a function specified by hashfn of data and encode as hex */
-/*
-function computeHash(data, hashfn) {
-  var converter = Cc['@mozilla.org/intl/scriptableunicodeconverter']
-                    .createInstance(CI.nsIScriptableUnicodeConverter);
-  var hashing = Cc['@mozilla.org/security/hash;1']
-                  .createInstance(Ci.nsICryptoHash);
-  function toHexString(charCode) {
-    return ('0' + charCode.toString(16)).slice(-2);
-  }
-  converter.charset = 'UTF-8';
-  var result = {};
-  var converted = converter.convertToByteArray(data, result);
-  https_everywhereLog(INFO, "Trying to initialize hash function as " + hashfn);
-  if      (hashfn === 'md5')    hashing.init(hashing.MD5);
-  else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
-  else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
-  else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
-  else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
-  else return null; // It's a better idea to fail than do the wrong thing here.
-  https_everywhereLog(INFO, "Hash function was recognized and initialization successful");
-  hashing.update(converted, converted.length);
-  var hash = hashing.finish(false);
-  https_everywhereLog(INFO, "Hash computation completed");
-  return [toHexString(hash.charCodeAt(i)) for (i in hash)].join('');
-}
-*/
 
 /* Applies the new ruleset database file by replacing the old one and reinitializing 
  * the mapping of targets to applicable rules.
