@@ -36,11 +36,9 @@ const RULESET_VERSION_PREF = 'extensions.https_everywhere.ruleset_version';
 const RSUPDATE_URL_PREF = 'extensions.https_everywhere.ruleset_update_url';
 const RSUPDATE_SIG_URL_PREF = 'extensions.https_everywhere.ruleset_update_signature_url';
 
-/* path to the ruleset library database file */
-const RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.sqlite';
-
 /* path to the temporary file for newly downloaded ruleset databases */
-const TMP_RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.new.sqlite';
+const TMP_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.profileDir,
+                                             'https_everywhere_rulesets_new.sqlite');
 
 /* maximum number of attempts to fetch ruleset updates */
 const MAX_RSUPDATE_FETCHES = 6;
@@ -186,16 +184,15 @@ function hashFile(path, hashfn) {
  */
 function fetchRulesetDBFile(url, hashfn, hash) {
   https_everywhereLog(INFO, "Making request to get database file at " + url);
-  var tmpFilePath = HTTPSEverywhere.instance.rw.chromeToPath(TMP_RULESET_DBFILE_PATH);
   Task.spawn(function() {
-    yield Downloads.fetch(url, tmpFilePath);
+    yield Downloads.fetch(url, TMP_RULESET_DBFILE_PATH);
     https_everywhereLog('Successfully received ruleset database file content');
-    var dbHash = hashFile(tmpFilePath, hashfn); 
+    var dbHash = hashFile(TMP_RULESET_DBFILE_PATH, hashfn); 
     https_everywhereLog(INFO, 'Calculated hash of db = ' + dbHash);
     https_everywhereLog(INFO, 'Comparing to ' + hash);
     if (dbHash === hash) {
       https_everywhereLog(INFO, 'Hash o fdatabase file matched the hash provided in update.json');
-      applyNewRuleset(tmpFilePath);
+      applyNewRuleset();
     } else {
       https_everywhereLog(WARN, 'Hash of database file did not match the hash in update.json');
     }
@@ -258,17 +255,17 @@ function computeHash(data, hashfn) {
 /* Applies the new ruleset database file by replacing the old one and reinitializing 
  * the mapping of targets to applicable rules.
  */
-function applyNewRuleset(tmpFilePath) {
+function applyNewRuleset() {
   var tmpFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
   var dbFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-  var dbPath = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
-  tmpFile.initWithPath(tmpFilePath);
+  var dbPath = HTTPSEverywhere.instance.RULESET_DATABASE_FILE();
+  tmpFile.initWithPath(TMP_RULESET_DATABASE_FILE);
   dbFile.initWithPath(dbPath);
   https_everywhereLog(INFO, 'Initialized both the actual and temporary database files');
   var dbFileParent = dbFile.parent;
   dbFile.remove();
   https_everywhereLog(INFO, 'Removed original database file');
-  tmpFile.copyTo(dbFileParent, dbPath);
+  tmpFile.copyTo(dbFileParent, OS.Path.basename(dbPath));
   https_everywhereLog(INFO, 'Copied temporary database file into original database file');
   tmpFile.remove();
   https_everywhereLog(INFO, 'Removed temporary database file');

@@ -43,7 +43,9 @@ const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
 const SERVICE_NAME = "Encrypts your communications with a number of major websites";
 
-const RULESET_DATABASE_FILE = "chrome://https-everywhere/content/rulesets.sqlite";
+// We can't overwrite files in the XPI's basedir, so we need to store the ruleset library
+// somewhere else where it will always be accessible from.
+const RULESET_DATABASE_FILE = OS.Path.join(OS.Constants.Path.profileDir, 'https_everywhere_rulesets.sqlite');
 
 const LLVAR = "LogLevel";
 
@@ -203,10 +205,11 @@ function HTTPSEverywhere() {
 
   this.rsupdate_fetch_timer = null; // nsITimer object fetching ruleset updates
 
-  // Wrap interval constants in a method so that they can be accessed from any component
-  // with a reference to the HTTPSEverywhere object without making the values mutable.
+  // Wrap useful constants in a method so that they can be accessed from any component
+  // with a reference to the HTTPSEverywhere object without directly exposing the variables.
   this.MIN_REATTEMPT_REQ_INTERVAL = function() { return MIN_REATTEMPT_REQ_INTERVAL; };
   this.RULESET_UPDATE_CHECK_INTERVAL = function() { return RULESET_UPDATE_CHECK_INTERVAL; };
+  this.RULESET_DATABASE_FILE = function() { return RULESET_DATABASE_FILE; };
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   
