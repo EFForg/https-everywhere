@@ -12,8 +12,24 @@
 
 	Fully covered subdomains:
 
+		- (?!laws\.|news\.)\w+:
+
+			- browsercheck
+			- community
+			- pci
+			- qualysguard
+			- seal
+			- www
+
 		- laws	(→ community)
 		- news	(→ community)
+
+
+	Observed cookie domains:
+
+			- .
+			- browsercheck
+			- community
 
 -->
 <ruleset name="Qualys (partial)">
@@ -21,13 +37,8 @@
 	<target host="qualys.com" />
 	<target host="*.qualys.com" />
 
-	<!--	Observed cookies:
 
-			- \.
-			- browsercheck
-			- community
-					-->
-	<securecookie host="^.*\.qualys\.com$" name=".*"/>
+	<securecookie host=".*\.qualys\.com$" name=".+" />
 
 
 	<!--	Redirect keeps path and args,
@@ -42,16 +53,7 @@
 	<rule from="^http://news\.qualys\.com/+"
 		to="https://community.qualys.com/blogs/news/" />
 
-	<!--	Observed working subdomains:
-
-			- browsercheck
-			- community
-			- pci
-			- qualysguard
-			- seal
-			- www
-				-->
 	<rule from="^http://(\w+\.)?qualys\.com/"
-		to="https://$1qualys.com/"/>
+		to="https://$1qualys.com/" />
 
 </ruleset>
