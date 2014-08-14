@@ -49,7 +49,8 @@ elif sys.version_info < MIN_PYTHON_VER:
 
 def hex_str(data):
     """ Convert data into a hex string """
-    return ''.join([hex(ord(char))[2:] for char in data])
+    pad = lambda c: ('0' + c) if len(str(c)) == 1 else c
+    return ''.join([pad(hex(ord(char))[2:]) for char in data])
 
 def formatted_time():
     """ Return the date in a nice, human-readable format """
