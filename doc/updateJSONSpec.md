@@ -26,9 +26,9 @@ A signing key can be created using the following commands:
 
     # Make the NSS keyring directory
     mkdir nssdb
-    # Initialize the directory to be used as a keyrin
+    # Initialize the directory to be used as a keyring
     certutil -N -d nssdb
-    # Generate a 2048-bit self-signed object signing certificate nicknames "httpse"
+    # Generate a 2048-bit self-signed object signing certificate nicknamed "httpse"
     certutil -S -n httpse -g 2048 -d nssdb -t "p,p,u" -s "CN=EFF" -x
 
 Finally, issuing the following command will output both the signature of `update.json`
