@@ -220,22 +220,37 @@ function fetchRulesetDBFile(url, hashfn, hash) {
 /* Applies the new ruleset database file by replacing the old one and reinitializing 
  * the mapping of targets to applicable rules.
  */
-function applyNewRuleset(tmpFilePath) {
-  var tmpFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-  var dbFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-  var dbPath = HTTPSEverywhere.instance.rw.chromeToPath(RULESET_DBFILE_PATH);
-  tmpFile.initWithPath(tmpFilePath);
-  dbFile.initWithPath(dbPath);
-  https_everywhereLog(INFO, 'Initialized both the actual and temporary database files');
-  var dbFileParent = dbFile.parent;
-  dbFile.remove();
-  https_everywhereLog(INFO, 'Removed original database file');
-  tmpFile.copyTo(dbFileParent, dbPath);
-  https_everywhereLog(INFO, 'Copied temporary database file into original database file');
-  tmpFile.remove();
+function applyNewRuleset() {
+  https_everywhereLog(INFO, 'In applyNewRuleset');
+  var tempDB = Services.storage.openDatabase(new FileUtils.File(
+    TMP_RULESET_DBFILE_PATH));
+  var mainDB = Services.storage.openDatabase(new FileUtils.File(
+    RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite")));
+  https_everywhereLog(INFO, 'Opened database connections for copying');
+  mainDB.createStatement("drop table rulesets").execute();
+  mainDB.createStatement("drop table targets").execute();
+  https_everywhereLog(INFO, 'Dropped data from rulesets database');
+  var selectStmt = tempDB.createStatement("select host, ruleset_id from targets");
+  var insertStmt = mainDB.createStatement("insert into targets (host, ruleset_id) values(:host, :ruleset_id)");
+  while (selectStmt.executeStep()) {
+    insertStmt.params.host = selectStmt.row.host;
+    insertStmt.params.ruleset_id = selectStmt.row.ruleset_id;
+    insertStmt.execute();
+  }
+  https_everywhereLog(INFO, 'Inserted new targets data into database');
+  selectStmt = tempDB.createStatement("select contents from rulesets");
+  insertStmt = mainDB.createStatement("insert into rulesets (contents) values(:contents)");
+  while (selectStmt.executeStep()) {
+    insertStmt.params.contents = selectStmt.row.contents;
+    insertStmt.execute();
+  }
+  https_everywhereLog(INFO, 'Inserted new rulesets data into database');
+  var tmpFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFIle);
+  tmpFile.initWithPath(TMP_RULESET_DBFILE_PATH);
+  tmpFile.remove(false);
   https_everywhereLog(INFO, 'Removed temporary database file');
   HTTPSRules.init();
-  https_everywhereLog(INFO, "Wrote new ruleset database file content and reinitialized HTTPSRules");
+  https_everywhereLog(INFO, 'Reinitialized HTTPSRules');
 }
 
 // Export only fetchUpdate
