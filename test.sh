@@ -39,7 +39,7 @@ fi
 if ! type cfx > /dev/null; then
   echo "Please activate the Firefox Addon SDK before running this script."
   echo "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack/addon-sdk-1.16.tar.gz"
-  echo "Unpack and run 'source addon-adk-1.16/bin/activate'"
+  echo "Unpack and run 'cd addon-adk-1.16; source bin/activate'"
   exit 1
 fi
 
@@ -49,5 +49,11 @@ if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
 fi
 
 cd $TEST_ADDON_PATH
-echo "running tests"
-cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+# If you just want to run Firefox with the latest code:
+if [ "$1" == "--justrun" ]; then
+  echo "running firefox"
+  firefox -profile "$PROFILE_DIRECTORY"
+else
+  echo "running tests"
+  cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+fi
