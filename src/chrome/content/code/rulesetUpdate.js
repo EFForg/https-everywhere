@@ -36,15 +36,8 @@ const RULESET_VERSION_PREF = 'extensions.https_everywhere.ruleset_version';
 const RSUPDATE_URL_PREF = 'extensions.https_everywhere.ruleset_update_url';
 const RSUPDATE_SIG_URL_PREF = 'extensions.https_everywhere.ruleset_update_signature_url';
 
-/* path to the temporary file for newly downloaded ruleset databases */
-const TMP_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.profileDir,
-                                             'https_everywhere_rulesets_new.sqlite');
-
 /* path to the temporary download location of new ruleset database files */
 const TMP_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.tmpDir, "new_rulesets.sqlite");
-
-/* path to the temporary file for newly downloaded ruleset databases */
-const TMP_RULESET_DBFILE_PATH = 'chrome://https-everywhere/content/rulesets.new.sqlite';
 
 /* maximum number of attempts to fetch ruleset updates */
 const MAX_RSUPDATE_FETCHES = 6;
