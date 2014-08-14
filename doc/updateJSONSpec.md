@@ -17,41 +17,24 @@ the process of creating `update.json`, and is simply run with the command:
 
     python utils/ruleset_update_manifest.py
 
-The key used to for signing should be a 2048-bit RSA key, which you could
-generate with the command:
+Signing the `update.json` file requires the use of NSS tools and pk1sign, which should
+come with the NSS tools. They can be installed on Debian-based Gnu+Linux systems via:
 
-    openssl genrsa -out privkey.pem 2048
-    
-Once `update.json` has been created and a private key is present to sign with,
-the next step is to compute the sha256 digest of `update.json`, which we will sign later.
-To compute the digest and store it in `update.digest`, issue the command:
+    sudo apt-get install libnss3-tools
 
-    digest=`openssl sha -sha256 -hex update.json` && echo ${digest#* } > update.digest
+A signing key can be created using the following commands:
 
-The signature over `update.digest` using our private key can now be generated and stored
-in `update.json.sig`, and optionally converted to base64 and stored in `update.json.sigb64`
-via the commands:
+    # Make the NSS keyring directory
+    mkdir nssdb
+    # Initialize the directory to be used as a keyrin
+    certutil -N -d nssdb
+    # Generate a 2048-bit self-signed object signing certificate nicknames "httpse"
+    certutil -S -n httpse -g 2048 -d nssdb -t "p,p,u" -s "CN=EFF" -x
 
-    openssl dgst -sign privkey.pem -out update.json.sig update.digest
-    openssl base64 -in update.json.sig -out update.json.sigb64
+Finally, issuing the following command will output both the signature of `update.json`
+and the public key used to verify it, both base64 encoded.
 
-And finally, the public key to hardcode into the HTTPS-Everywhere extension to enable it
-to verify such signatures can be output to `pubkey.pem` via the command:
-
-    openssl rsa -in privkey.pem -pubout -out pubkey.pem
-
-You can verify that your public key can be used to successfully verify the signature
-generated with the command:
-
-    openssl dgst -verify pubkey.pem -signature update.json.sig update.digest
-
-Before you can include the contents of pubkey.pem in the extension, the header and footer
-must be removed so that only the key itself is present. This is the same as doing:
-
-    openssl rsa -in privkey.pem -pubout -outform DER -out pubkey.der
-    openssl base64 -in pubkey.der -out public.key
-
-and then using the content of `public.key`.
+    pk1sign -i update.json -k httpse -d nssdb
 
 Fetching
 ========
