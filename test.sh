@@ -42,8 +42,6 @@ if ! type cfx > /dev/null; then
   echo "Unpack and run 'cd addon-adk-1.16; source bin/activate'"
   exit 1
 fi
-  exit 1
-fi
 
 if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
     echo "Please use the latest stable SDK version or edit this script to the current version."
