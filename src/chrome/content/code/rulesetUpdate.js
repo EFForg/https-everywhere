@@ -146,13 +146,12 @@ function checkVersionRequirements(extVersion, rsVersion, newVersion) {
   return sameExtVer && newRSVer;
 }
 
-function hashBinaryFile(path, hashfn) {
+function hashBinaryFile(path, length, hashfn) {
   var f = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
   var istream = Cc['@mozilla.org/network/file-input-stream;1']
                   .createInstance(Ci.nsIFileInputStream);
   var binaryIn = Cc['@mozilla.org/binaryinputstream;1'].createInstance(Ci.nsIBinaryInputStream);
   var hashing = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
-  const PR_UINT32_MAX = 0xffffff;
   if      (hashfn === 'md5')    hashing.init(hashing.MD5);
   else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
   else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
@@ -162,7 +161,7 @@ function hashBinaryFile(path, hashfn) {
   f.initWithPath(path);
   istream.init(f, 0x01, 0444, 0);
   binaryIn.setInputStream(istream);
-  hashing.updateFromStream(binaryIn, PR_UINT32_MAX);
+  hashing.updateFromStream(binaryIn, length);
   var hash = hashing.finish(false); // Get binary data back
   istream.close();
   function toHexStr(charCode) {
@@ -178,7 +177,7 @@ function hashBinaryFile(path, hashfn) {
  */
 function fetchRulesetDBFile(url, hashfn, hash) {
   https_everywhereLog(INFO, "Making request to get database file at " + url);
-  var xhr = Cc['@mozilla.org/xmlextraas/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
+  var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
   xhr.open("GET", url, true);
   xhr.responseType = 'arraybuffer';
   xhr.onload = function(evt) {
@@ -194,7 +193,7 @@ function fetchRulesetDBFile(url, hashfn, hash) {
       binout.setOutputStream(outstream);
       binout.writeByteArray(byteArray, byteArray.length);
       outstream.close();
-      dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, hashfn);
+      dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
       if (dbHash == hash) {
         https_everywhereLog(INFO, 
           'Hash of database file downloaded matches the hash provided by update.json');
