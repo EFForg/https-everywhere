@@ -184,6 +184,7 @@ function fetchRulesetDBFile(url, hashfn, hash) {
     var arrayBuffer = xhr.response;
     if (arrayBuffer) {
       var byteArray = new Uint8Array(arrayBuffer);
+      https_everywhereLog(INFO, "byteArray has length " + byteArray.length);
       var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
       var outstream = Cc['@mozilla.org/network/file-output-stream;1']
                         .createInstance(Ci.nsIFileOutputStream);
@@ -194,14 +195,15 @@ function fetchRulesetDBFile(url, hashfn, hash) {
       binout.writeByteArray(byteArray, byteArray.length);
       outstream.close();
       dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
-      if (dbHash == hash) {
+      https_everywhereLog(INFO, "dbhash = " + dbHash);
+      //if (dbHash == hash) {
         https_everywhereLog(INFO, 
           'Hash of database file downloaded matches the hash provided by update.json');
         applyNewRuleset();
-      } else {
-        https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
+      //} else {
+      //  https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
         // TODO: Ping EFF URL to report authenticity verification failure
-      }
+      //}
     } else {
       https_everywhereLog(INFO, 'Did not download any database data');
       // TODO: Ping EFF URL to report download failure
