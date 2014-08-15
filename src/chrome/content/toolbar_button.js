@@ -320,6 +320,16 @@ function show_applicable_list(menupopup) {
   
 }
 
+function toggleRulesetUpdater() {
+  var rulesetUpdaterItem = document.getElementById('ruleset-updater-item');
+  var checked = rulesetUpdaterItem.getAttribute('checked');
+  if (checked === 'true' || checked === true) {
+    HTTPSEverywhere.start_ruleset_updater();
+  } else {
+    HTTPSEverywhere.cancel_ruleset_updater();
+  }
+}
+
 function toggle_rule(rule_id) {
   // toggle the rule state
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
