@@ -97,15 +97,13 @@ Manifest
 The following is the format for a simple `update.json` containing information about a single
 ruleset library to be used by all target applications.
 
-    {
-        "branch"  : <ruleset branch>,
-        "changes" : <a short description of recent changes>,
-        "date"    : <the date the new db was released>,
-        "hash"    : <the hash of the db file>,
-        "hashfn"  : <The name of the hash function to use>,
-        "source"  : <the URL serving the updated ruleset db>,
-        "version" : <ruleset release version>
-    }
+    {"branch": <ruleset branch>
+    ,"changes": <a short description of recent changes>
+    ,"date": <the date the new db was released>
+    ,"hash": <the hash of the db file>
+    ,"hashfn": <The name of the hash function to use>
+    ,"source": <the URL serving the updated ruleset db>
+    ,"version": <ruleset release version>}
 
 The meanings of each field are explained as follows:
 
@@ -113,10 +111,10 @@ The meanings of each field are explained as follows:
 * `date` is a formatted date string detailing the date that the release to the ruleset was released, and will be set
 automatically by the `ruleset_update_manifest.py` utility. The format for the date is "dd-mm-yyyy". For example, "08-06-2014".
 * `changes` is a short human-readable description of what has been changed, perhaps a list of the biggest or most requested fixes
-* `version` is the ruleset release version, which is a subversion of the extension release version and MUST be checked by the updater to determine whether the advertised release is newer than the currently installed ruleset library. A ruleset release with a version number such as "3.5.1.2" must ONLY be accepted by HTTPS-Everywhere version 3.5.1, and so on.
-* `hash` is a SHA1 (for now) hash of the database file's raw content, encoded in hex.
-* `source` is the URL from which the most recently released database file is to be fetched. The URL must address a valid eff.org location and must not be overwritten by the extension.
+* `hash` is a hash of the database file's content, encoded in hex. The hash function to use is specified by `hashfn`.
 * `hashfn` is the name of the hash function used to compute the hash of the database file and MUST be one of md5, sha1, sha256, sha384, or sha512.
+* `source` is the URL from which the most recently released database file is to be fetched. The URL must address a valid eff.org location and must not be overwritten by the extension.
+* `version` is the ruleset release version, which is a subversion of the extension release version and MUST be checked by the updater to determine whether the advertised release is newer than the currently installed ruleset library. A ruleset release with a version number such as "3.5.1.2" must ONLY be accepted by HTTPS-Everywhere version 3.5.1, and so on.
 
 Pseudocode of update procedure
 ==============================
@@ -136,8 +134,7 @@ The following is a high-level description of how the update mechanism is expecte
         shouldUpdate := updateJSON != null and\ # Were able to receive data
                         updateData.version > currentVersion and\
                         isSubversion(updateData.version, EXTENSION_VERSION) and\
-                        branchName == updateData.branch and\
-                        isValidSource(updateData.source)
+                        branchName == updateData.branch
         inauthentic := true
         if shouldUpdate then
             signature := tryFetch(updateSigURL)
@@ -146,7 +143,7 @@ The following is a high-level description of how the update mechanism is expecte
                 if databaseSource == null then
                     return
                 endif
-                dbHash := SHA1Hash(databaseSource)
+                dbHash := hashFunctions[updateData.hashfn](databaseSource)
                 if dbHash == updateData.hash then
                     dbFile := openFile(RULESET_DB_FILE)
                     write(databaseSource, dbFile)
