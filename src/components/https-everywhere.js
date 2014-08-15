@@ -149,7 +149,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList', 'rulesetUpdate');
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList', 'RulesetUpdater');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
