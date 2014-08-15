@@ -2,23 +2,14 @@
 #
 # Builds an sqlite DB containing all the rulesets, indexed by target.
 
-import subprocess
+import glob
+import os
+import re
 import sqlite3
-import sys, re, os
+import subprocess
+import sys
 
 from lxml import etree
-
-def nomes_all(where=sys.argv[1:]):
-    """Returns generator to extract all files from a list of files/dirs"""
-    if not where: where=['.']
-    for i in where:
-        if os.path.isfile(i):
-            yield i
-        elif os.path.isdir(i):
-            for r, d, f in os.walk(i):
-                for fi in f:
-                    yield os.path.join(r, fi)
-
 
 conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
 c = conn.cursor()
@@ -39,28 +30,33 @@ c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
 
 parser = etree.XMLParser(remove_blank_text=True)
 
+def nomes_all(where=sys.argv[1:]):
+    """Returns generator to extract all files from a list of files/dirs"""
+    return glob.glob('src/chrome/content/rules/*.xml')
+
+# Precompile xpath expressions that get run repeatedly.
+xpath_host = etree.XPath("/ruleset/target/@host")
+xpath_ruleset = etree.XPath("/ruleset")
+
 for fi in nomes_all():
     try:
         tree = etree.parse(fi, parser)
     except Exception as oops:
-        if fi[-4:] != ".xml":
-            continue
         print("%s failed XML validity: %s\n" % (fi, oops))
-    if not tree.xpath("/ruleset"):
-        continue
+        sys.exit(1)
 
     # Remove comments to save space.
     etree.strip_tags(tree,etree.Comment)
 
-    targets = tree.xpath("/ruleset/target/@host")
+    targets = xpath_host(tree)
     # Strip out the target tags. These aren't necessary in the DB because
     # targets are looked up in the target table, which has a foreign key
     # pointing into the ruleset table.
-    etree.strip_tags(tree,'target')
+    etree.strip_tags(tree, 'target')
 
     # Store the filename in the `f' attribute so "view source XML" for rules in
     # FF version can find it.
-    tree.xpath("/ruleset")[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
+    xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
 
     c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),));
     ruleset_id = c.lastrowid
