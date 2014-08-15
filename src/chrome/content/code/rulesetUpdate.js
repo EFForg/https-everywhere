@@ -197,7 +197,7 @@ function fetchRulesetDBFile(url, hashfn, hash) {
       outstream.close();
       dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
       https_everywhereLog(INFO, "dbhash = " + dbHash);
-      if (dbHash == hash) {
+      if (dbHash === hash) {
         https_everywhereLog(INFO, 
           'Hash of database file downloaded matches the hash provided by update.json');
         applyNewRuleset();
