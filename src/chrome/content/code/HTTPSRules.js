@@ -389,7 +389,16 @@ const HTTPSRules = {
       this.scanRulefiles(rulefiles);
 
       // Initialize database connection.
-      var dbFile = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite"));
+      // Use the rulesets database file downloaded in an update if one exists.
+      var updatedPath = HTTPSEverywhere.instance.UPDATED_RULESET_DBFILE_PATH();
+      var updatedDBFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+      updatedDBFile.initWithPath(updatedPath);
+      if (updatedDBFile.exists()) {
+        var dbFile = new FileUtils.File(updatedPath);
+      } else {
+        var dbFile = new FileUtils.File(RuleWriter.chromeToPath(
+          "chrome://https-everywhere/content/rulesets.sqlite"));
+      }
       var rulesetDBConn = Services.storage.openDatabase(dbFile);
       this.queryForRuleset = rulesetDBConn.createStatement(
         "select contents from rulesets where id = :id");

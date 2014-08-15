@@ -45,6 +45,9 @@ const LLVAR = "LogLevel";
 
 const MIN_REATTEMPT_REQ_INTERVAL = 300000;
 const RULESET_FETCH_INTERVAL_PREF = "ruleset_updater.interval";
+const UPDATED_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.profileDir,
+                                                 "HTTPSEverywhereRulesetUpdates",
+                                                 "rulesets.sqlite");
 
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
 const ObsServ = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
@@ -203,6 +206,7 @@ function HTTPSEverywhere() {
   // with a reference to the HTTPSEverywhere object without directly exposing the variables.
   this.MIN_REATTEMPT_REQ_INTERVAL = function() { return MIN_REATTEMPT_REQ_INTERVAL; };
   this.RULESET_UPDATE_CHECK_INTERVAL = function() { return this.prefs.getIntPref(RULESET_FETCH_INTERVAL_PREF); };
+  this.UPDATED_RULESET_DBFILE_PATH = function() { return UPDATED_RULESET_DBFILE_PATH; };
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   
