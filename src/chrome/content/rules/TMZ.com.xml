@@ -15,11 +15,26 @@
 				- ll-assets.tmz.com
 				- ll-media.tmz.com
 
+
+	Mixed content:
+
+		- Ads/bugs, on www from:
+
+			- js.adsonar.com *
+			- cdnapi.kaltura.com *
+			- tmz.vo.llnwd.net *
+			- b.scorecardresearch.com *
+			- cdn.taboolasyndication.com *
+			- c4.zedo.com
+
+	* Secured by us
+
 -->
 <ruleset name="TMZ.com">
 
 	<target host="tmz.com" />
 	<target host="*.tmz.com" />
+	<target host="tmz.vo.llnwd.net" />
 
 
 	<securecookie host="^\.www\.tmz\.com$" name=".+" />
@@ -28,7 +43,10 @@
 	<rule from="^http://(?:ll-)?(assets|media)\.tmz\.com/"
 		to="https://s3.amazonaws.com/$1.tmz.com/" />
 
-	<rule from="^http://(www\.)?tmz\.com/"
+	<rule from="^http://(ssl-cdn-(?:assets|media)\.|www\.)?tmz\.com/"
 		to="https://$1tmz.com/" />
+
+	<rule from="^http://tmz\.vo\.llnwd\.net/"
+		to="https://tmz.hs.llnwd.net/" />
 
 </ruleset>
