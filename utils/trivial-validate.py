@@ -194,7 +194,6 @@ xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
-print args.db
 conn = sqlite3.connect(args.db)
 c = conn.cursor()
 for row in c.execute('''SELECT contents from rulesets'''):
