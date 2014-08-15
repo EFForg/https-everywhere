@@ -21,34 +21,34 @@ XPI_NAME="pkg/`ls -tr pkg/ | tail -1`"
 rsync -a https-everywhere-tests/test_profile_skeleton/ $PROFILE_DIRECTORY
 unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
 
-if [ ! -d "$TEST_ADDON_PATH" ]; then
-  echo "Test addon path does not exist"
+die() {
+  echo "$@"
   exit 1
-fi
+}
 
-if [ ! -d "$PROFILE_DIRECTORY" ]; then
-  echo "Firefox profile directory does not exist"
-  exit 1
+if [ ! -f "addon-sdk/bin/activate" ]; then
+  die "Addon SDK not available. Run git submodule update."
 fi
 
 if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
-  echo "Firefox profile does not have HTTPS Everywhere installed"
-  exit 1
+  die "Firefox profile does not have HTTPS Everywhere installed"
 fi
 
+# Activate the Firefox Addon SDK.
+pushd addon-sdk
+source bin/activate
+popd
+
 if ! type cfx > /dev/null; then
-  echo "Please activate the Firefox Addon SDK before running this script."
-  echo "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack/addon-sdk-1.16.tar.gz"
-  echo "Unpack and run 'cd addon-adk-1.16; source bin/activate'"
-  exit 1
+  die "Addon SDK failed to activiate."
 fi
 
 if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
-    echo "Please use the latest stable SDK version or edit this script to the current version."
-    exit 1
+  die "Please use the latest stable SDK version or edit this script to the current version."
 fi
 
 cd $TEST_ADDON_PATH
+
 # If you just want to run Firefox with the latest code:
 if [ "$1" == "--justrun" ]; then
   echo "running firefox"
