@@ -49,6 +49,10 @@ for fi in nomes_all():
     etree.strip_tags(tree,etree.Comment)
 
     targets = xpath_host(tree)
+    if not targets:
+      print 'File %s has no targets' % fi
+      sys.exit(1)
+
     # Strip out the target tags. These aren't necessary in the DB because
     # targets are looked up in the target table, which has a foreign key
     # pointing into the ruleset table.
