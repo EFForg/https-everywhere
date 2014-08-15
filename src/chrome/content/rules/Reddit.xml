@@ -29,13 +29,6 @@
 
 			Seems only/mostly to be used for ads
 
-
-	Problematic domains:
-
-		- (www.)reddit.com *
-
-	* Works, akamai
-
 -->
 <ruleset name="Reddit (partial)">
 
@@ -46,10 +39,6 @@
 	<target host="static.reddit.com" />
 	<target host="thumbs.reddit.com" />
 	<target host="www.reddit.com" />
-		<!--
-			static/ contains social media widgets:
-								-->
-		<exclusion pattern="^http://(?:www\.)?reddit\.com/(?!static/)" />
 	<target host="*.redditmedia.com" />
 	<target host="redditstatic.com" />
 	<target host="www.redditstatic.com" />
@@ -60,17 +49,14 @@
 	<!--securecookie host="^\.reddit\.com$" name="^_recentclicks2$" /-->
 
 
-	<rule from="^http://(?:ssl\.|www\.)?reddit\.com/"
-		to="https://ssl.reddit.com/" />
-
-	<rule from="^http://(i|en-us)\.reddit\.com/"
-		to="https://$1.reddit.com/" />
+	<rule from="^http://((?:i|en-us|ssl|www)\.)?reddit\.com/"
+		to="https://$1reddit.com/" />
 
 	<rule from="^http://(static|thumbs)\.reddit\.com/"
 		to="https://s3.amazonaws.com/$1.reddit.com/" />
 
 	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
-		to="https://s3.amazonaws.com/$1thumbs.redditmedia.com/" />
+		to="https://$1thumbs.redditmedia.com/" />
 
 	<rule from="^http://redditstatic\.com/"
 		to="https://redditstatic.s3.amazonaws.com/" />
