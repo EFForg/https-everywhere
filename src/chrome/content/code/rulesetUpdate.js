@@ -197,14 +197,14 @@ function fetchRulesetDBFile(url, hashfn, hash) {
       outstream.close();
       dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
       https_everywhereLog(INFO, "dbhash = " + dbHash);
-      //if (dbHash == hash) {
+      if (dbHash == hash) {
         https_everywhereLog(INFO, 
           'Hash of database file downloaded matches the hash provided by update.json');
         applyNewRuleset();
-      //} else {
-      //  https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
+      } else {
+        https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
         // TODO: Ping EFF URL to report authenticity verification failure
-      //}
+      }
     } else {
       https_everywhereLog(INFO, 'Did not download any database data');
       // TODO: Ping EFF URL to report download failure
