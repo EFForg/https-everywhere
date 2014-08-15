@@ -17,7 +17,7 @@
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = '';
 
-/* extension release branch preference key */
+/* extension release branch pereference key */
 const BRANCH_PREF = 'extensions.https_everywhere.branch_name';
 
 /* extension release version preference key */
@@ -74,8 +74,9 @@ function fetchUpdate() {
 function conditionallyApplyUpdate(update) {
   https_everywhereLog(INFO, "Got update data:");
   https_everywhereLog(INFO, update);
+  var em = Cc['@mozilla.org/extensions/manager;1'].getService(Ci.nsIExtensionManager);
   var updateObj = JSON.parse(update);
-  var extVersion = _prefs.getCharPref(VERSION_PREF);
+  var extVersion = em.getItemForID("https-everywhere@eff.org").version;
   var extBranch = _prefs.getCharPref(BRANCH_PREF);
   var rulesetVersion = _prefs.getCharPref(RULESET_VERSION_PREF);
   https_everywhereLog(INFO, "Inside call to conditionallyApplyUpdate");
@@ -94,7 +95,7 @@ function conditionallyApplyUpdate(update) {
       https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
       if (verifyUpdateSignature(update, signature)) {
         https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
-        fetchRulesetDBFile(updateObj.source, updateObj.hashfn, updateObj.hash);
+        fetchVerifyAndApplyDBFile(updateObj.source, updateObj.version, updateObj.hashfn, updateObj.hash);
       } else {
         https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
         // TODO
@@ -145,19 +146,24 @@ function checkVersionRequirements(extVersion, rsVersion, newVersion) {
  * @return string - The hex-encoded hash of the file's contents.
  */
 function hashBinaryFile(path, length, hashfn) {
+  var READONLY = 0x01;
+  var READ_PERMISSIONS = 0444;
+  var NOFLAGS = 0;
   var f = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
   var istream = Cc['@mozilla.org/network/file-input-stream;1']
                   .createInstance(Ci.nsIFileInputStream);
   var binaryIn = Cc['@mozilla.org/binaryinputstream;1'].createInstance(Ci.nsIBinaryInputStream);
   var hashing = Cc['@mozilla.org/security/hash;1'].createInstance(Ci.nsICryptoHash);
-  if      (hashfn === 'md5')    hashing.init(hashing.MD5);
-  else if (hashfn === 'sha1')   hashing.init(hashing.SHA1);
-  else if (hashfn === 'sha256') hashing.init(hashing.SHA256);
-  else if (hashfn === 'sha384') hashing.init(hashing.SHA384);
-  else if (hashfn === 'sha512') hashing.init(hashing.SHA512);
-  else return null; // It's a better idea to fail than do the wrong thing here.
+  switch (hashfn) {
+    case 'md5':    hashing.init(hashing.MD5);    break;
+    case 'sha1':   hashing.init(hashing.SHA1);   break;
+    case 'sha256': hashing.init(hashing.SHA256); break;
+    case 'sha384': hashing.init(hashing.SHA384); break;
+    case 'sha512': hashing.init(hashing.SHA512); break;
+    default: return '';
+  }
   f.initWithPath(path);
-  istream.init(f, 0x01, 0444, 0);
+  istream.init(f, READONLY, READ_PERMISSIONS, NOFLAGS);
   binaryIn.setInputStream(istream);
   hashing.updateFromStream(binaryIn, length);
   var hash = hashing.finish(false); // Get binary data back
@@ -172,51 +178,66 @@ function hashBinaryFile(path, length, hashfn) {
  * matches what update.json says it should be, and then makes the call to apply the new
  * rulesets database.
  *
- * @param url    - The URL from which to fetch the new rulesets database file.
- * @param hashfn - The name of the hash function to use when hashingthe database file.
- * @param hash   - The hash provided by update.json.
+ * @param url     - The URL from which to fetch the new rulesets database file.
+ * @param version - The ruleset version (eg: 5.0.0.1).
+ * @param hashfn  - The name of the hash function to use when hashingthe database file.
+ * @param hash    - The hash provided by update.json.
  */
-function fetchRulesetDBFile(url, hashfn, hash) {
-  https_everywhereLog(INFO, "Making request to get database file at " + url);
-  var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
-  xhr.open("GET", url, true);
-  xhr.responseType = 'arraybuffer';
-  xhr.onload = function(evt) {
-    var arrayBuffer = xhr.response;
-    if (arrayBuffer) {
-      var byteArray = new Uint8Array(arrayBuffer);
-      https_everywhereLog(INFO, "byteArray has length " + byteArray.length);
-      var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
-      var outstream = Cc['@mozilla.org/network/file-output-stream;1']
-                        .createInstance(Ci.nsIFileOutputStream);
-      var binout = Cc['@mozilla.org/binaryoutputstream;1'].createInstance(Ci.nsIBinaryOutputStream);
-      file.initWithPath(TMP_RULESET_DBFILE_PATH);
-      outstream.init(file, -1, -1, 0);
-      binout.setOutputStream(outstream);
-      binout.writeByteArray(byteArray, byteArray.length);
-      outstream.close();
-      dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
-      https_everywhereLog(INFO, "dbhash = " + dbHash);
-      if (dbHash === hash) {
-        https_everywhereLog(INFO, 
-          'Hash of database file downloaded matches the hash provided by update.json');
-        applyNewRuleset();
+function fetchVerifyAndApplyDBFile(url, version, hashfn, hash) {
+  var DEFAULT_PERMISSIONS = -1;
+  var NOFLAGS = 0;
+  (function recur(max_times) {
+    https_everywhereLog(INFO, "Making request to get database file at " + url);
+    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1'].createInstance(Ci.nsIXMLHttpRequest);
+    xhr.open("GET", url, true);
+    xhr.responseType = 'arraybuffer';
+    xhr.onload = function(evt) {
+      var arrayBuffer = xhr.response;
+      if (arrayBuffer) {
+        var byteArray = new Uint8Array(arrayBuffer);
+        https_everywhereLog(INFO, "byteArray has length " + byteArray.length);
+        var file = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
+        var outstream = Cc['@mozilla.org/network/file-output-stream;1']
+                          .createInstance(Ci.nsIFileOutputStream);
+        var binout = Cc['@mozilla.org/binaryoutputstream;1'].createInstance(Ci.nsIBinaryOutputStream);
+        file.initWithPath(TMP_RULESET_DBFILE_PATH);
+        outstream.init(file, DEFAULT_PERMISSIONS, DEFAULT_PERMISSIONS, NOFLAGS);
+        binout.setOutputStream(outstream);
+        binout.writeByteArray(byteArray, byteArray.length);
+        outstream.close();
+        var dbHash = hashBinaryFile(TMP_RULESET_DBFILE_PATH, byteArray.length, hashfn);
+        https_everywhereLog(INFO, "dbhash = " + dbHash);
+        if (dbHash === hash) {
+          https_everywhereLog(INFO, 
+            'Hash of database file downloaded matches the hash provided by update.json');
+          applyNewRuleset(version);
+        } else {
+          https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
+          if (max_times > 0) { // Strict limit test
+            recur(max_times - 1);
+          }
+          // TODO: Ping EFF URL to report authenticity verification failure
+        }
       } else {
-        https_everywhereLog(INFO, 'Hash of database file did not match the one in update.json');
-        // TODO: Ping EFF URL to report authenticity verification failure
+        https_everywhereLog(INFO, 'Did not download any database data');
+        if (max_times > 0) { // Strict limit test
+          recur(max_times - 1);
+        }
+        // TODO: Ping EFF URL to report download failure
       }
-    } else {
-      https_everywhereLog(INFO, 'Did not download any database data');
-      // TODO: Ping EFF URL to report download failure
-    }
-  };
-  xhr.send(null);
+    };
+    xhr.send(null);
+  })(MAX_RSUPDATE_FETCHES);
 }
 
 /* Moves the downloaded rulesets database into a permanent location and reinitializes
  * HTTPSRules to use the rulesets.
+ *
+ * @param version - The ruleset version.
  */
-function applyNewRuleset() {
+function applyNewRuleset(version) {
+  var DIRECTORY_TYPE = 1;
+  var DIRECTORY_PERMISSIONS = 0777;
   https_everywhereLog(INFO, 'In applyNewRuleset');
   var updatedPath = HTTPSEverywhere.instance.UPDATED_RULESET_DBFILE_PATH();
   var permFile = Cc['@mozilla.org/file/local;1'].createInstance(Ci.nsILocalFile);
@@ -229,7 +250,7 @@ function applyNewRuleset() {
     permFile.remove(false);
     https_everywhereLog(INFO, 'Removed existing updated database file');
   } else if (!permParent.exists()) {
-    permParent.create(1, 0777);
+    permParent.create(DIRECTORY_TYPE, DIRECTORY_PERMISSIONS);
     https_everywhereLog(INFO, 'Created directory for downloaded ruleset database files');
   }
   tempFile.moveTo(
@@ -237,6 +258,7 @@ function applyNewRuleset() {
     OS.Path.basename(updatedPath));
   https_everywhereLog(INFO, 'Copied new database file to permanent location');
   HTTPSRules.init();
+  _prefs.setCharPref(RULESET_VERSION_PREF, version);
   https_everywhereLog(INFO, 'Reinitialized HTTPSRules with new database');
 }
 
