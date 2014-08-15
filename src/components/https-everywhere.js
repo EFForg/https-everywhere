@@ -848,7 +848,7 @@ HTTPSEverywhere.prototype = {
 
   /* Stop the ruleset update fetching mechanism if it's running.
    */
-  cancel_rulset_updater: function() {
+  cancel_ruleset_updater: function() {
     if (this.rsupdate_fetch_timer === null) {
       this.log(INFO, 'Ruleset updater could not be cancelled because it is not running');
       return false; // False -> Not running
