@@ -21,9 +21,8 @@ pref("extensions.https_everywhere.release_version", "5.0.0");
 pref("extensions.https_everywhere.ruleset_version", "5.0.0.0");
 // TODO
 // Replace testing URLs with real ones
-pref("extensions.https_everywhere.ruleset_update_url", "http://0.0.0.0:8000/data/update.json");
-pref("extensions.https_everywhere.ruleset_update_signature_url",
-     "http://0.0.0.0:8000/data/update.json.sig");
+pref("extensions.https_everywhere.ruleset_update_url", "");
+pref("extensions.https_everywhere.ruleset_update_signature_url", "");
 pref("extensions.https_everywhere.ruleset_updater.enabled", true);
 pref("extensions.https_everywhere.ruleset_updater.interval", 10800000); // Milliseconds
 
