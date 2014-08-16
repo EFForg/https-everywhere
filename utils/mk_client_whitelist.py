@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 # Make a list of the current top 1,000 certs to whitelist from the
 # Decentralized SSL Observatory's client submissions, to live in
