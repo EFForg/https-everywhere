@@ -103,24 +103,23 @@ function conditionallyApplyUpdate(update) {
       return; 
     }
     if (updateObj.branch !== extBranch) {
-      https_everywhereLog(WARN, 'Downloaded a ruleset update for the incorrect branch.');
+      https_everywhereLog(NOTE, 'Downloaded a ruleset update for the incorrect branch.');
       return;
     }
     var sigFileSrc = _prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
-    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc,
-      function(signature) {
-        signature = signature.trim();
-        https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
-        if (verifyUpdateSignature(update, signature)) {
-          https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
-          fetchVerifyAndApplyDBFile(updateObj.source, updateObj.version, updateObj.hashfn, updateObj.hash);
-        } else {
-          https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
-          // TODO
-          // Ping the verification-failure-reporting URL
-        }
-      });
-  }
+    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc, function(signature) {
+      signature = signature.trim();
+      https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
+      if (verifyUpdateSignature(update, signature)) {
+        https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
+        fetchVerifyAndApplyDBFile(updateObj.source, updateObj.version, updateObj.hashfn, updateObj.hash);
+      } else {
+        https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
+        // TODO
+        // Ping the verification-failure-reporting URL
+      }
+    });
+  });
 }
 
 /* Attempts to verify the provided signature over updateStr using
