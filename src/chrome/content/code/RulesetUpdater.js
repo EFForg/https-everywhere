@@ -17,12 +17,6 @@
 /* Hardcoded public key used to verify the signature over the update data */
 const RULESET_UPDATE_KEY = '';
 
-/* extension release branch pereference key */
-const BRANCH_PREF = 'extensions.https_everywhere.branch_name';
-
-/* extension release version preference key */
-const VERSION_PREF = 'extensions.https_everywhere.release_version';
-
 /* installed ruleset version preference key */
 const RULESET_VERSION_PREF = 'extensions.https_everywhere.ruleset_version';
 
@@ -65,6 +59,20 @@ function fetchUpdate() {
     });
 }
 
+/* Get the branch name of the installed extension.
+ * Assumes that, if "development" is in the version string, the branch is "development",
+ * otherwise, that it is "stable".
+ *
+ * @param version - The version string of the extension.
+ * @return string - The branch name of the extension ("development" or "stable").
+ */
+function extensionBranchName(version) {
+  if (version.indexOf("development") >= 0) {
+    return "development";
+  }
+  return "stable";
+}
+
 /* Ensures that the ruleset update described by the downloaded update.json file is
  * appropriate for this version of the extension and is new, verifies update.json's
  * authenticity, and fetches the database file containing the updated rulesets.
@@ -77,7 +85,7 @@ function conditionallyApplyUpdate(update) {
   var updateObj = JSON.parse(update);
   AddonManager.getAddonByID("https-everywhere@eff.org", function (addon) {
     var extVersion = addon.version;
-    var extBranch = _prefs.getCharPref(BRANCH_PREF);
+    var extBranch = extensionBranchName(extVersion);
     var rulesetVersion = _prefs.getCharPref(RULESET_VERSION_PREF);
     https_everywhereLog(INFO, "Inside call to conditionallyApplyUpdate");
     if (!checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
