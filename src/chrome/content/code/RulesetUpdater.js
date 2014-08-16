@@ -25,14 +25,24 @@ const RSUPDATE_URL_PREF = 'extensions.https_everywhere.ruleset_update_url';
 const RSUPDATE_SIG_URL_PREF = 'extensions.https_everywhere.ruleset_update_signature_url';
 
 /* path to the temporary download location of new ruleset database files */
-const TMP_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.tmpDir,
-                                             "new_rulesets.sqlite");
+const TMP_RULESET_DBFILE_PATH = OS.Path.join(
+  OS.Constants.Path.tmpDir,
+  nonceForTmpFile(32) + "new_rulesets.sqlite");
 
 /* maximum number of attempts to fetch ruleset updates */
 const MAX_RSUPDATE_FETCHES = 6;
 
 const _prefs = CC["@mozilla.org/preferences-service;1"]
                  .getService(CI.nsIPrefService).getBranch("");
+
+function nonceForTmpFile(numBytes) {
+  var rng = Cc['@mozilla.org/security/random-generator;1']
+              .createInstance(Ci.nsIRandomGenerator);
+  var buffer = new Array(numBytes);
+  rng.generateRandomBytes(numBytes, buffer);
+  var s = [("0" + b.toString(16)).slice(-2) for each (b in bytes)].join("");
+  return s;
+}
 
 /*******************************************************************************
  *** Design Explanation                                                        *
