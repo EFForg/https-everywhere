@@ -74,34 +74,35 @@ function fetchUpdate() {
 function conditionallyApplyUpdate(update) {
   https_everywhereLog(INFO, "Got update data:");
   https_everywhereLog(INFO, update);
-  var em = Cc['@mozilla.org/extensions/manager;1'].getService(Ci.nsIExtensionManager);
   var updateObj = JSON.parse(update);
-  var extVersion = em.getItemForID("https-everywhere@eff.org").version;
-  var extBranch = _prefs.getCharPref(BRANCH_PREF);
-  var rulesetVersion = _prefs.getCharPref(RULESET_VERSION_PREF);
-  https_everywhereLog(INFO, "Inside call to conditionallyApplyUpdate");
-  if (!checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
-    https_everywhereLog(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
-    return; 
+  AddonManager.getAddonByID("https-everywhere@eff.org", function (addon) {
+    var extVersion = addon.version;
+    var extBranch = _prefs.getCharPref(BRANCH_PREF);
+    var rulesetVersion = _prefs.getCharPref(RULESET_VERSION_PREF);
+    https_everywhereLog(INFO, "Inside call to conditionallyApplyUpdate");
+    if (!checkVersionRequirements(extVersion,  rulesetVersion, updateObj.version)) {
+      https_everywhereLog(NOTE, 'Downloaded an either incompatible ruleset library or not a new one.');
+      return; 
+    }
+    if (updateObj.branch !== extBranch) {
+      https_everywhereLog(WARN, 'Downloaded a ruleset update for the incorrect branch.');
+      return;
+    }
+    var sigFileSrc = _prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
+    HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc,
+      function(signature) {
+        signature = signature.trim();
+        https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
+        if (verifyUpdateSignature(update, signature)) {
+          https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
+          fetchVerifyAndApplyDBFile(updateObj.source, updateObj.version, updateObj.hashfn, updateObj.hash);
+        } else {
+          https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
+          // TODO
+          // Ping the verification-failure-reporting URL
+        }
+      });
   }
-  if (updateObj.branch !== extBranch) {
-    https_everywhereLog(WARN, 'Downloaded a ruleset update for the incorrect branch.');
-    return;
-  }
-  var sigFileSrc = _prefs.getCharPref(RSUPDATE_SIG_URL_PREF);
-  HTTPSEverywhere.instance.try_request(MAX_RSUPDATE_FETCHES, 'GET', sigFileSrc,
-    function(signature) {
-      signature = signature.trim();
-      https_everywhereLog(INFO, "Successfully fetched update.json.sig file data");
-      if (verifyUpdateSignature(update, signature)) {
-        https_everywhereLog(INFO, "Ruleset update data signature verified successfully");
-        fetchVerifyAndApplyDBFile(updateObj.source, updateObj.version, updateObj.hashfn, updateObj.hash);
-      } else {
-        https_everywhereLog(WARN, 'Validation of the update signature provided failed.');
-        // TODO
-        // Ping the verification-failure-reporting URL
-      }
-    });
 }
 
 /* Attempts to verify the provided signature over updateStr using

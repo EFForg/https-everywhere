@@ -34,6 +34,7 @@ const Cr = Components.results;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/osfile.jsm");
+Cu.import("resource://gre/modules/AddonManager.jsm");
 
 const CP_SHOULDPROCESS = 4;
 
