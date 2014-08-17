@@ -1,9 +1,8 @@
 <!--
-	For full coverage via pay.reddit.com, see Reddit_via_pay.xml.
-
-
 	For other Condé Nast coverage, see Conde-Nast.xml.
 
+	As of Aug. 2014, Reddit supports lots more SSL!
+	We can probably prune some of the old static rules here.
 
 	CDN buckets:
 
@@ -18,7 +17,6 @@
 	Nonfunctional domains:
 
 		- blog.reddit.com	(blogger)
-		- buttons.reddit.com	(503, akamai)
 
 		- pixel.redditmedia.com	(dropped)
 
@@ -30,15 +28,10 @@
 			Seems only/mostly to be used for ads
 
 -->
-<ruleset name="Reddit (partial)">
+<ruleset name="Reddit">
 
 	<target host="reddit.com" />
-	<target host="i.reddit.com" />
-	<target host="en-us.reddit.com" />
-	<target host="ssl.reddit.com" />
-	<target host="static.reddit.com" />
-	<target host="thumbs.reddit.com" />
-	<target host="www.reddit.com" />
+	<target host="*.reddit.com" />
 	<target host="*.redditmedia.com" />
 	<target host="redditstatic.com" />
 	<target host="www.redditstatic.com" />
@@ -48,8 +41,10 @@
 					-->
 	<!--securecookie host="^\.reddit\.com$" name="^_recentclicks2$" /-->
 
+	<securecookie host=".*\.reddit\.com$" name=".+" />
 
-	<rule from="^http://((?:i|en-us|ssl|www)\.)?reddit\.com/"
+
+	<rule from="^http://((?:i|en-us|pay|ssl|www)\.)?reddit\.com/"
 		to="https://$1reddit.com/" />
 
 	<rule from="^http://(static|thumbs)\.reddit\.com/"
@@ -58,10 +53,7 @@
 	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
 		to="https://$1thumbs.redditmedia.com/" />
 
-	<rule from="^http://redditstatic\.com/"
-		to="https://redditstatic.s3.amazonaws.com/" />
-
-	<rule from="^http://www\.redditstatic\.com/"
+	<rule from="^http://(?:www\.)?redditstatic\.com/"
 		to="https://www.redditstatic.com/" />
 
 </ruleset>

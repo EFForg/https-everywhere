@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
@@ -118,7 +118,8 @@ XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' |
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
 	XPI_NAME="$XPI_NAME.xpi"
 else
-	XPI_NAME="$XPI_NAME~pre.xpi"
+  # During development, generate packages named with the short hash of HEAD.
+	XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`.xpi"
 fi
 
 [ -d pkg ] || mkdir pkg
