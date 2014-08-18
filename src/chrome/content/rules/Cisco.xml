@@ -4,26 +4,83 @@
 		- bam-prd1
 		- blogs		(cert: 184964-nc-web1.cisco.com, self-signed, expired; shows RHEL Apache test page)
 		- homecommunity
+		- mkto ⁴
 		- newsroom	(times out)
+
+	⁴ Marketo
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- eir-stage ²
+		- home ³
+		- homesupport ⁴
+		- video ⁵
+
+	¹ Mismatched
+	² Self-signed, CN: eir-stage
+	³ Mismatched, CN: homesupport.cisco.com
+	⁴ Expired 2014-03-07
+	⁵ Works; self-signed, CN: constellation
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www)
 
 
 	Fully covered subdomains:
 
+		- communities
 		- csc-stage
 		- csc-test[1-4]
+		- home
+		- homesupport
 		- learningnetwork
+		- sso
 		- supportforums
+		- tools
 
 
 	Observed cookie domains:
 
+		- . ¹
+		- communities ²
 		- csc-stage
 		- csc-test[1-4]
-		- learningnetwork
+		- .developer ³
+		- learningnetwork ²
+		- learningnetworkstore ²
+		- sso ²
 		- supportforums
 
+	¹ Not secured by us <= accounting for possible use on unsecurable domains
+	² Secured by us <= not secured by server
+	³ Secured by server
+
+
+	Mixed content:
+
+		- css on video from www *
+
+		- Images, on:
+
+			- csr from $self
+			- eir from eir-stage
+			- from services-sj.mediusviewer.com
+			- video from images.gallery.brightcove.com *
+			- Images on www3 from www.static-cisco.com *
+
+		- Bugs, on:
+
+			- solucoespme from community.spiceworks.com *
+			- video from admin.brightcove.com
+
+	* Secured by us
+
 -->
-<ruleset name="Cisco" default_off="Needs review">
+<ruleset name="Cisco (partial)" default_off="Needs review">
 
 	<target host="cisco.com" />
 	<target host="*.cisco.com" />
@@ -33,10 +90,23 @@
 			They redirect to HTTPS secured pages, though.
 									-->
 		<exclusion pattern="^http://(?:www\.)?cisco\.com/go" />
+		<!--exclusion pattern="^http://(mkto|video)\.cisco\.com/" /-->
 	<target host="ciscoconnectcloud.com" />
 	<target host="www.ciscoconnectcloud.com" />
 	<target host="www.static-cisco.com" />
 
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.developer\.cisco\.com$" name="^DP_SESSION_ID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.cisco\.com$" name="^(ObSSOCookie|TOOLS-Loc)$" /-->
+	<!--securecookie host="^communities\.cisco\.com$" name="^(BIGipServerm\w+-\d+-pool|JSESSIONID|jive\.security\.context)$" /-->
+	<!--securecookie host="^learningnetwork\.cisco\.com$" name="^(BIGipServerm\w+-40-pool|JSESSIONID|jive\.recentHistory\.-1|jive\.server\.info)$" /-->
+	<!--securecookie host="^learningnetworkstore\.cisco\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^sso\.cisco\.com$" name="^ObFormLoginCookie$" /-->
 
 	<securecookie host="^[chlst].*\.cisco\.com$" name=".*" />
 
