@@ -35,10 +35,10 @@ def warn(s):
 def fail(s):
     sys.stdout.write("failure: %s\n" % s)
 
-def test_not_anchored(tree, fi, fm, to):
+def test_not_anchored(tree, filename, from_attrib, to):
     # Rules not anchored to the beginning of a line.
     """The 'from' rule is not anchored to beginning of line using the ^ symbol."""
-    for f in fm:
+    for f in from_attrib:
         if not f or f[0] != "^":
             return False
     return True
@@ -47,10 +47,10 @@ def test_not_anchored(tree, fi, fm, to):
 xpath_exlusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_pattern = etree.XPath("/ruleset/securecookie/@host")
 
-def test_bad_regexp(tree, fi, fm, to):
+def test_bad_regexp(tree, filename, from_attrib, to):
     # Rules with invalid regular expressions.
     """The 'from' rule contains an invalid extended regular expression."""
-    patterns = fm + xpath_exlusion_pattern(tree) + xpath_cookie_pattern(tree)
+    patterns = from_attrib + xpath_exlusion_pattern(tree) + xpath_cookie_pattern(tree)
     for pat in patterns:
         try:
             re.compile(pat)
@@ -59,25 +59,25 @@ def test_bad_regexp(tree, fi, fm, to):
     return True
 
 xpath_rule = etree.XPath("/ruleset/rule")
-def test_missing_to(tree, fi, fm, to):
+def test_missing_to(tree, filename, from_attrib, to):
     # Rules that are terminated before setting 'to'.
     # These cases are probably either due to a misplaced
     # rule end or intended to be different elements.
     """Rule is missing a 'to' value."""
     for rule in xpath_rule(tree):
         if not rule.get("to"):
-            warn("'to' attribute missing in %s. " % fi)
+            warn("'to' attribute missing in %s. " % filename)
             warn("Misplaced end or misnamed element?")
             return False
     return True
 
-def test_unescaped_dots(tree, fi, fm, to):
+def test_unescaped_dots(tree, filename, from_attrib, to):
     # Rules containing unescaped dots outside of brackets and before slash.
     # Note: this is meant to require example\.com instead of example.com,
     # but it also forbids things like .* which usually ought to be replaced
     # with something like ([^/:@\.]+)
     """The 'from' rule contains unescaped period in regular expression.  Try escaping it with a backslash."""
-    for f in fm:
+    for f in from_attrib:
         escaped = False
         bracketed = False
         s = re.sub("^\^https?://", "", f)
@@ -96,7 +96,7 @@ def test_unescaped_dots(tree, fi, fm, to):
                escaped = False
     return True
 
-def test_space_in_to(tree, fi, fm, to):
+def test_space_in_to(tree, filename, from_attrib, to):
     # Rules where the to pattern contains a space.
     """The 'to' rule contains a space."""
     for t in to:
@@ -104,7 +104,7 @@ def test_space_in_to(tree, fi, fm, to):
             return False
     return True
 
-def test_unencrypted_to(tree, fi, fm, to):
+def test_unencrypted_to(tree, filename, from_attrib, to):
     # Rules that redirect to something other than https or http.
     # This used to test for http: but testing for lack of https: will
     # catch more kinds of mistakes.
@@ -116,13 +116,13 @@ def test_unencrypted_to(tree, fi, fm, to):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            warn("downgrade rule in %s redirects to http." % fi)
+            warn("downgrade rule in %s redirects to http." % filename)
         elif to[:5] == "http:":
-            fail("non-downgrade rule in %s redirects to http." % fi)
+            fail("non-downgrade rule in %s redirects to http." % filename)
             return False
     return True
 
-def test_backslash_in_to(tree, fi, fm, to):
+def test_backslash_in_to(tree, filename, from_attrib, to):
     # Rules containing backslashes in to pattern.
     """The 'to' rule contains a backslash."""
     for t in to:
@@ -132,7 +132,7 @@ def test_backslash_in_to(tree, fi, fm, to):
 
 RE_TRAILING_SLASH = re.compile("//.*/")
 
-def test_no_trailing_slash(tree, fi, fm, to):
+def test_no_trailing_slash(tree, filename, from_attrib, to):
     # Rules not containing trailing slash in from or to pattern.
     """Rule omits forward slash after host name."""
     for r in xpath_rule(tree):
@@ -145,7 +145,7 @@ def test_no_trailing_slash(tree, fi, fm, to):
 
 printable_characters = set(map(chr, list(range(32, 127))))
 
-def test_non_ascii(tree, fi, fm, to):
+def test_non_ascii(tree, filename, from_attrib, to):
     # Rules containing non-printable characters.
     """Rule contains non-printable character in 'to' pattern."""
     for t in to:
@@ -171,8 +171,8 @@ def nomes_all(where=sys.argv[1:]):
             yield i
         elif os.path.isdir(i):
             for r, d, f in os.walk(i):
-                for fi in f:
-                    yield os.path.join(r, fi)
+                for filename in f:
+                    yield os.path.join(r, filename)
 
 tests = [test_not_anchored,
          test_bad_regexp,
@@ -210,10 +210,10 @@ for row in c.execute('''SELECT contents from rulesets'''):
         fail("unnamed ruleset")
         continue
     rf = xpath_ruleset_name(tree)[0]
-    fm = xpath_from(tree)
+    from_attrib = xpath_from(tree)
     to = xpath_to(tree)
     for test in tests:
-        if not test(tree, rf, fm=fm, to=to):
+        if not test(tree, rf, from_attrib=from_attrib, to=to):
             failure = 1
             fail("%s failed test: %s" % (rf, test.__doc__))
 
