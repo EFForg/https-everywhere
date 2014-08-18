@@ -28,19 +28,36 @@
 	Partially covered subdomains:
 
 		- (www.)	(^ → www)
+		- csr *
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
+		- beli
+		- chinasmbmarketplace
+		- ciscobusinesslink
+		- cisco-images
 		- communities
 		- csc-stage
 		- csc-test[1-4]
+		- developer
+		- eir
+		- eir-stage		(→ eir)
 		- home			(→ support.linksys.com)
 		- homesupport		(→ support.linksys.com)
+		- indiasmbmarketplace
 		- learningnetwork
+		- smbmarketplace
+		- solucionespyme
+		- solucoespme
 		- sso
+		- sso-prod[0-3]
 		- supportforums
 		- tools
+		- tools[123]
+		- www[12]
 
 
 	Observed cookie domains:
@@ -66,8 +83,8 @@
 
 		- Images, on:
 
-			- csr from $self
-			- eir from eir-stage
+			- csr from $self *
+			- eir from eir-stage *
 			- from services-sj.mediusviewer.com
 			- video from images.gallery.brightcove.com *
 			- Images on www3 from www.static-cisco.com *
@@ -84,6 +101,7 @@
 
 	<target host="cisco.com" />
 	<target host="*.cisco.com" />
+		<exclusion pattern="^http://csr\.cisco\.com/+pages/" />
 		<exclusion pattern="^http://www\.cisco\.com/cgi-bin/login" />
 		<!--
 			Cisco redirection pages do not support HTTPS, so we exclude them.
@@ -117,8 +135,11 @@
 	<rule from="^http://(?:www\.)?cisco\.com/"
 		to="https://www.cisco.com/" />
 
-	<rule from="^http://(csc-stage|csc-test\d|learningnetwork|sso|supportforums|tools)\.cisco\.com/"
+	<rule from="^http://(beli|chinasmbmarketplace|ciscobusinesslink|cisco-images|communities|csc-stage|csc-test\d|csr|developer|indiasmbmarketplace|learningnetwork|learningnetworkstore|smbmarketplace|solucionespyme|solucoespme|sso|sso-prod[0-3]|supportforums|tools[123]?|www[123])\.cisco\.com/"
 		to="https://$1.cisco.com/" />
+
+	<rule from="^http://eir(?:-stage)?\.cisco\.com/"
+		to="https://eir.cisco.com/" />
 
 	<rule from="^http://home(?:support)?\.cisco\.com/+"
 		to="https://support.linksys.com/" />
