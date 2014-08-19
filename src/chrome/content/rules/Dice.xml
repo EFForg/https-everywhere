@@ -1,5 +1,5 @@
 <!--
-	For problematic rules, see Dice-problematic.xml.
+	For rules causing false/broken MCB, see Dice-problematic.xml.
 
 
 	Other Dice Holdings rulesets:
@@ -9,16 +9,58 @@
 		- Slashdot_Media.xml
 
 
+	CDN buckets:
+
+		- d1i4601q19kpjz.cloudfront.net
+
+			- cdn
+
+
 	Nonfunctional subdomains:
 
 		- media
 		- news		(times out)
 		- seeker
+		- techtalk ³
+
+	³ Mismatched, CN: www.dice.com
 
 
 	Problematic subdomains:
 
-		- (www.)	(works; mismatched, CN: secure.dice.com)
+		- ^ ¹
+		- www ²
+
+	¹ Mismatched, CN: secure.dice.com
+	² Mixed css from $self
+
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- assets
+		- cdn		(→ d1i4601q19kpjz.cloudfront.net)
+		- employer
+		- images
+		- secure
+
+
+	These altnames don't exist:
+
+		- www.secure.dice.com
+
+
+	Mixed content:
+
+		- Mixed css on www from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Dice (partial)">
@@ -27,13 +69,13 @@
 	<target host="*.dice.com" />
 
 
-	<rule from="^https?://(?:www\.)?dice\.com/assets/"
-		to="https://secure.dice.com/assets/" />
-
-	<rule from="^https?://(?:www\.)?dice\.com/content/"
-		to="https://images.dice.com/external/content/" />
+	<rule from="^http://(?:www\.)?dice\.com/(?=assets/|content/)"
+		to="https://www.dice.com/" />
 
 	<rule from="^http://(assets|employer|images|secure)\.dice\.com/"
 		to="https://$1.dice.com/" />
+
+	<rule from="^http://cdn\.dice\.com/"
+		to="https://d1i4601q19kpjz.cloudfront.net/" />
 
 </ruleset>

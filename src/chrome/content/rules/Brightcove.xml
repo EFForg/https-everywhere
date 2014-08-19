@@ -9,6 +9,10 @@
 
 	CDN buckets:
 
+		- brightcove01.brightcove.com.edgesuite.net
+
+			- a948.ga.akamai.net
+
 		- brightcove04.brightcove.com.edgesuite.net
 
 			- brightcove04
@@ -41,9 +45,12 @@
 	Problematic domains:
 
 		- admin.brightcove.com		(akamai)
+		- brightcove01.brightcove.com ¹
 		- go.brightcove.com		(works; mismatched, CN: secure.eloqua.com)
 		- opensource.brightcove.com	(works; mismatched, CN: *.vorpal.io)
 		- services.brightcove.com	(504, valid cert)
+
+	¹ Works, akamai
 
 
 	Partially covered subdomains:
@@ -58,10 +65,13 @@
 
 		- api
 		- read.appcloud
+		- transcode.appcloud
 		- write.appcloud
+		- brightcove01		(→ akamai & brightcove01-secure)
 		- brightcove01-secure
 		- developer
 		- docs
+		- images.gallery
 		- videocloud
 
 
@@ -73,6 +83,11 @@
 	- rainbow.brightcove.com.edgesuite.net
 
 	/101716/rtmp_pd
+
+
+	These altnames don't exist:
+
+		- www.images.gallery.brightcove.com
 
 -->
 <ruleset name="Brightcove (partial)">
@@ -99,8 +114,22 @@
 	<rule from="^http://c\.brightcove\.com/services/viewer/"
 		to="https://secure.brightcove.com/services/viewer/" />
 
-	<rule from="^http://((?:api|(?:read\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|img|metrics|my|register|secure|signin|videocloud|www)\.)?brightcove\.com/"
+	<rule from="^http://((?:api|(?:read\.|transcode\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|images\.gallery|img|metrics|my|register|secure|signin|videocloud|www)\.)?brightcove\.com/"
 		to="https://$1brightcove.com/" />
+
+	<!--	First, rewrite images to cdn (presumably preferred by
+		Brightcove[?])
+
+		If this breaks, just comment it out, the following rule will
+		take over.
+									-->
+	<rule from="^http://brightcove01\.brightcove\.com/(?=.+\.jpg(?:$|\?))"
+		to="https://a248.e.akamai.net/f/948/9820/10/brightcove01.brightcove.com/" />
+
+	<!--	Then everything else to -secure.
+							-->
+	<rule from="^http://brightcove01\.brightcove\.com/"
+		to="https://brightcove01-secure.brightcove.com/" />
 
 	<!--	At least the homepage redirects to http.
 							-->

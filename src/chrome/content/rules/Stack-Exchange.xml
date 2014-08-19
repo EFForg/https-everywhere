@@ -6,28 +6,34 @@
 		- Server_Fault.com.xml
 
 
-	Nonfunctional domains:
-
-		- chat.stackexchange.com	(mixed content)
-		- meta.*.stackexchange.com      (mismatched, CN: *.stackexchange.com)
-
-
 	Problematic domains:
 
 		- www.stackapps.com *
+		- meta.*.stackexchange.com ²
+		- chat.stackexchange.com ³
 
 	* Mismatched
-
+	² Works; mismatched, CN: *.stackexchange.com
+	³ Mixed css from cdn-chat.sstatic.net
 
 	Fully covered domains:
 
+		- cdn-careers.sstatic.com
 		- cdn-chat.sstatic.com
         	- *.stackexchange.com
+		- teststackoverflow.com
+
+
+	www.teststackoverflow.com doesn't exist.
 
 
 	Mixed content:
 
+		- css, on:
+
 		- css on chat.stackexchange.com from cdn-chat.sstatic.net *
+
+			- blog.stackoverflow.com from $self
 
 		- Images on chat.stackexchange.com, from:
 
@@ -35,9 +41,28 @@
 			- i.stack.imgur.com *
 			- cdn.sstatic.net *
 
-		- Web bugs on *.stackexchange.com from pixel.quantserve.com *
+		- Images, on:
+
+			- blog.stackoverflow.com, from:
+
+				- $self *
+				- www.google.com *
+				- \d.gravatar.com *
+				- i.stack.imgur.com *
+
+		- favicon on blog.stackoverflow.com from cdn.sstatic.net *
+		- favicon on chat.stackexchange.com from cdn.sstatic.net *
+
+		- Web bugs, on:
+
+		- Web bugs on *.stackexchange.com from pixel.quantserve.com **
+
+			- blog.stackoverflow.com from i.creativecommons.org *
+			- careers.stackoverflow.com from www.esri.com ²
 
 	* Secured by us
+	** Rewritten to https with js enabled, secured by us otherwise
+	² Unsecurable <= 503
 
 
 	As of Dec., 2013, stackexchange has a cert valid for:
@@ -76,10 +101,13 @@
 	<target host="app.stacktack.com" />
 	<target host="superuser.com" />
 	<target host="*.superuser.com" />
+	<target host="teststackoverflow.com" />
+	<target host="*.teststackoverflow.com" />
 
 
 	<securecookie host="^\.sstatic\.net$" name=".+" />
 	<securecookie host="\.stackexchange\.com$" name=".+" />
+	<securecookie host="^\.teststackoverflow\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?blogoverflow\.com/$"
@@ -88,8 +116,8 @@
 	<rule from="^http://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
 
-	<rule from="^http://cdn-chat\.sstatic\.net/"
-		to="https://cdn-chat.sstatic.net/" />
+	<rule from="^http://cdn-c(areers|hat)\.sstatic\.net/"
+		to="https://cdn-c$1.sstatic.net/" />
 
 	<rule from="^http://(?:www\.)?stackapps\.com/"
 		to="https://stackapps.com/" />
@@ -109,5 +137,8 @@
 
 	<rule from="^http://(www\.|meta\.)?superuser\.com/"
 		to="https://$1superuser.com/" />
+
+	<rule from="^http://teststackoverflow\.com/"
+		to="https://teststackoverflow.com/" />
 
 </ruleset>

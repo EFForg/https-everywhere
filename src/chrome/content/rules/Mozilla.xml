@@ -1,6 +1,7 @@
 <!--
 	Other Mozilla rulesets:
 
+		- Allizom.org.xml
 		- BrowserID.xml
 		- Bugzilla.xml
 		- GetPersonas.xml
@@ -95,10 +96,16 @@
 		- www.drumbeat.org
 		- (www.)firefox.com		(→ www.mozilla.org)
 		- marketplace.firefox.com
+		- accounts.firefox.com
+		- api.accounts.firefox.com
+		- oauth.accounts.firefox.com
+		- profile.accounts.firefox.com
+		- verifier.accounts.firefox.com
 
 		- mozilla.com subdomains:
 
 			- (www.)
+			- activations
 			- addons
 			- air
 			- basket
@@ -107,11 +114,21 @@
 			- crash-analysis
 			- crash-stats
 			- data
+			- fhr.data
 			- input
 			- mail
 			- people
 			- mail.corp.phx1
-			- location.services
+
+			- services subdomains:
+
+				- ^
+				- account
+				- auth
+				- location
+				- setup
+
+			- snippets
 			- support
 
 		- mozilla.net subdomains:
@@ -122,6 +139,7 @@
 
 			- cdn subdomains:
 
+				- activations
 				- addons
 				- developer
 				- download		(→ ftp.mozilla.org)
@@ -140,6 +158,8 @@
 
 			- (www.)
 
+			- activations
+
 			- addons subdomains:
 
 				- ^
@@ -150,12 +170,15 @@
 			- affiliates
 			- affiliates-cdn	(→ affiliates)
 			- air
+			- aus3
+			- aus4
 			- basket
 			- beta		(→ mozilla.org/en-US/firefox/channel/)
 			- blog
 			- boardwiki
 			- bugzilla
 			- bzr
+			- calendar
 			- careers
 			- communitystore
 			- creative
@@ -164,6 +187,7 @@
 			- dnt
 			- donate
 			- download
+			- dragnet
 			- education
 			- etherpad
 			- fb-affiliates
@@ -197,6 +221,7 @@
 			- nightly
 			- outgoing
 			- people	(→ people.mozilla.com)
+			- pfs
 			- quality
 			- reps
 			- securitywiki
@@ -205,6 +230,7 @@
 			- support
 			- talkback-public	(→ crash-stats.mozilla.com)
 			- tbpl
+			- incoming.telemetry
 			- videos	(→ videos-cdn.mozilla.net)
 			- wiki
 
@@ -229,6 +255,11 @@
 		- (www.)webfwd.org
 
 
+	These altnames don't exist:
+
+		- scrypt.accounts.firefox.com
+
+
 	Cookie domains:
 
 		- mail.mozilla.com
@@ -239,7 +270,14 @@
 
 	Mixed content:
 
-		- Image on www.mozilla.org from www.seamonkey-project.org
+		- Images, on:
+
+			- blog.mozilla.org from $self *
+			- www.mozilla.org from www.seamonkey-project.org
+
+		- Ad on activations.cdn.mozilla.net from getpocket.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Mozilla">
@@ -289,8 +327,8 @@
 	<rule from="^https?://(?:www\.)?firefox\.com/"
 		to="https://www.mozilla.org/firefox/" />
 
-	<rule from="^http://marketplace\.firefox\.com/"
-		to="https://marketplace.firefox.com/" />
+	<rule from="^http://(accounts|(?:api|oauth|profile|verifier)\.accounts|marketplace)\.firefox\.com/"
+		to="https://$1.firefox.com/" />
 
 	<rule from="^http://([\w.-]+\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />

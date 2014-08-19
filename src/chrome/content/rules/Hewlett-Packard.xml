@@ -11,13 +11,32 @@
 		- hp.com subdomains:
 
 			- h10060.www1	(404, mismatched)
-			- h17007.www1	(handshake failure)
+			- h17007.www1	(reset)
 			- h18004.www1	(shows h18000.www1, mismatched)
 
 		- hpwebos.com		(CN: palm.com)
 		- www.hpwebos.com	(redirects to http, Akamai)
+		- welcome.hp-ww.com ⁷
 
 	* http reply
+	⁷ Dropped
+
+
+	Fully covered domains:
+
+		- *.www3.hp.com:
+
+			- h30499
+
+
+	Mixed content:
+
+		- Image on h30499.www3.hp.com from $self *
+
+		- favicon on h30499.www3.hp.com from welcome.hp-ww.com *
+
+	* Secured by us
+
 
 -->
 <ruleset name="HP (buggy?)" default_off="testing">
@@ -26,7 +45,8 @@
 	<target host="www.compaq.com" />
 	<target host="eds.com" />
 	<target host="*.eds.com" />
-	<target host="secure.hp-ww.com" />
+	<target host="*.hp-ww.com" />
+		<exclusion pattern="^http://welcome\.hp-ww\.com/+(?!(?:img/+)?favicon\.ico)" />
 	<target host="hp.com" />
 	<target host="*.hp.com" />
 
@@ -45,7 +65,7 @@
 
 	<securecookie host="^esca(?:2\.americas|5\.asiapac|3\.europe)\.hp\.com$" name=".+" />
 	<securecookie host="^(?:(?:www\.)?register|shopping)\.hp\.com$" name=".+" />
-	<securecookie host="^h(?:20141\.www2|41183\.www4)\.hp\.com$" name=".+" />
+	<securecookie host="^h(?:20141\.www2|30499\.www3|41183\.www4)\.hp\.com$" name=".+" />
 	<!--
 		Stats cookie set by met1.hp.com
 						-->
@@ -98,7 +118,7 @@
 	<rule from="^http://([^/:@]*)\.hp\.com/"
 		to="https://$1.hp.com/" />
 
-	<rule from="^http://secure\.hp-ww\.com/"
+	<rule from="^http://(?:secure|welcome)\.hp-ww\.com/"
 		to="https://secure.hp-ww.com/" />
 
 	<rule from="^http://developer\.palm\.com/"

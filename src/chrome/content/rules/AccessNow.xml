@@ -1,13 +1,32 @@
-<ruleset name="AccessNow.org" platform="mixedcontent">
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/access.3cdn.net/
+
+
+	Observed cookie domains:
+
+		- . *
+		- .donate *
+		- www *
+
+	* Secured by us <= not secured by server
+
+-->
+<ruleset name="AccessNow.org">
 
 	<target host="accessnow.org" />
 	<target host="*.accessnow.org" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^fakedomains\.accessnow\.org$" name="^token$" /-->
+
 	<securecookie host="^.*\.accessnow\.org$" name=".*" />
 
 
-	<rule from="^http://(donate\.|www\.)?accessnow\.org/"
+	<rule from="^http://((?:donate|fakedomains|www)\.)?accessnow\.org/"
 		to="https://$1accessnow.org/" />
 
 </ruleset>

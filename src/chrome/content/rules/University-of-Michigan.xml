@@ -1,10 +1,11 @@
 <!--
 	Nonfunctional umich.edu subdomains:
 
-		- (www.) *
 		- (www.)bi			(CN: www.businessintelligence.umich.edu; 302s there)
 		- (www.)businessintelligence *
 		- (www.)cio *
+		- visicad.eecs		(shows photon.eecs)
+		- (www.)engin ³
 		- (www.)solarcar.engin *
 		- rcgd.isr **
 		- itcs ***
@@ -22,10 +23,12 @@
 		- orsp
 		- (www.)provost *
 		- (www.)regents *
+		- arc.research *
 		- (www.)sustainablecomputing ***
 		- www-personal *
 
 	* Redirects to weblogin
+	³ Redirects to http
 	** Times out
 	*** record_too_long
 
@@ -34,25 +37,32 @@
 
 		- cse			(cert only matches www.cse)
 		- www.ctools		(cert only matches ^ctools)
+		- photon.eecs ³
 		- lsa			(cert only matches *.lsa)
 		- www.weblogin		(cert only matches ^weblogin)
+
+	³ Expired, self-signed
 
 
 	Fully covered subdomains:
 
+		- (www.)
 		- (www.)cse	(^ → www)
+		- web.eecs
 
 -->
 <ruleset name="University of Michigan (partial)">
 
+	<target host="umich.edu" />
 	<target host="*.umich.edu" />
+		<!--exclusion pattern="^http://((photon|visicad)\.eecs|(www\.)?engin|arc\.research)\.umich\.edu/" /-->
 
 
 	<securecookie host="^.+\.umich\.edu$" name=".+" />
 
 
-	<rule from="^http://((?:www\.)?eecs|eram|eresearch|erpm|friend|(?:www\.)?law|webapps\.lsa|servicerequest|wolverineaccess)\.umich\.edu/"
-		to="https://$1.umich.edu/" />
+	<rule from="^http://(((?:web\.|www\.)?eecs|eram|eresearch|erpm|friend|(?:www\.)?law|webapps\.lsa|servicerequest|wolverineaccess|www)\.)?umich\.edu/"
+		to="https://$1umich.edu/" />
 
 	<rule from="^http://(?:www\.)?cse\.umich\.edu/"
 		to="https://www.cse.umich.edu/" />

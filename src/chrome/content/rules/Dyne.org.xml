@@ -2,20 +2,61 @@
 	Nonfunctional subdomains:
 
 		- apt	(shows another domain)
+		- pix ²
+
+	² 404
 
 
-	Some pages redirect to http.
+	Problematic subdomains:
+
+		- new *
+
+	* 404
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- irc
+		- lab
+		- lists
+		- mailinglists
+		- new
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- lab, from:
+
+				- new ¹	(-> www)
+				- pix ²
+				- www ¹
+				- cvs.cinelerra.org ³
+				- freej.org ⁴
+				- www.ondarossa.info ⁵
+
+			- lists from ^ ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+	³ Unsecurable <= refused
+	⁴ Unsecurable <= redirects to dyn.org
+	⁵ Rule disabled by default <= CAcert
 
 -->
 <ruleset name="Dyne.org (partial)">
 
 	<target host="dyne.org" />
-	<target host="www.dyne.org" />
-		<!--exclusion pattern="^http://(www\.)?dyne\.org/($|\?|category/community/)" /-->
-		<!--exclusion pattern="^http://(www\.)?dyne\.org/(?!donate($|[?/])|favicon\.ico|wp-content/|wp-includes/)" /-->
+	<target host="*.dyne.org" />
+		<!--exclusion pattern="^http://(apt|pix)\.dyne\.org/" /-->
 
 
-	<rule from="^http://(www\.)?dyne\.org/(?=donate(?:$|[?/])|favicon\.ico|wp-content/|wp-includes/)"
+	<rule from="^http://((?:irc|lab|lists|mailinglists|www)\.)?dyne\.org/"
 		to="https://$1dyne.org/" />
+
+	<rule from="^http://new\.dyne\.org/"
+		to="https://www.dyne.org/" />
 
 </ruleset>

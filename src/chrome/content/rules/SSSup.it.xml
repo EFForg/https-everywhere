@@ -1,0 +1,82 @@
+<!--
+	Nonfunctional subdomains:
+
+		- international *
+
+	* Redirects to http, tls unsupported by redirect destination
+
+
+	Partially covered subdomains:
+
+		- allievi ¹
+		- forms ²
+		- www ³
+
+	¹ Avoiding mixed css on techblog/
+	² Accounting for possible excluded paths wrt redirect
+	³ Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- didactive
+		- pay
+
+
+	Observed cookie domains:
+
+		- allievi ¹
+		- didactive ²
+		- forms ¹
+		- pay ²
+		- www ³
+
+	¹ Not secured by us <= accounting for possible use on excluded paths
+	² Secured by us <= not secured by server & coverage complete
+	³ Not secured by us <= incomplete tls support
+
+
+	Mixed content:
+
+		- css on allievi from $self *
+
+		- Images on allievi from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="SSSup.it (partial)">
+
+	<target host="*.sssup.it" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://allievi\.sssup\.it/+techblog(?!/wp-content/|wp-includes/)" />
+		<!--
+			No known matches, just being cautious:
+								-->
+		<exclusion pattern="^http://forms\.sssup\.it/+(?!$|\?|didactive(?:$|[?/]))" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.sssup\.it/+($|\?|context\.jsp|context_elenco\.jsp|default\.jsp)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sssup\.it/+(?!(?:ammissione|ammissione-dottorati-perfezionamento|ateneo|concorso-ammissione|master|orientamento|ufficiostampa)(?:$|[?/])|customcss/|favicon\.ico|images/|images_new/|intranet_logon\.jsp|isipcss/|mappa\.jsp|search\.jsp|UploadDocs/|UploadImgs/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:didactive|pay)\.sssup\.it$" name=".+" />
+
+
+	<!--	Redirects to http first, dropping args:
+							-->
+	<rule from="^http;//forms\.sssup\.it/+(?:$|\?.*)"
+		to="https://forms.sssup.it/didactive" />
+
+	<rule from="^http://(allievi|didactive|forms|pay|www)\.sssup\.it/"
+		to="https://$1.sssup.it/" />
+
+</ruleset>

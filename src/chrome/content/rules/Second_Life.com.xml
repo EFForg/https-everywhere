@@ -1,0 +1,88 @@
+<!--
+	CDN buckets:
+
+		- static.search.secondlife.com.s3.amazonaws.com
+		- lecs-static-secondlife-com.s3.amazonaws.com
+		- d1yjxggot69855.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- blogs ¹
+		- community ²
+		- maps ²
+
+	¹ Redirects to http, valid cert
+	² Refused
+
+
+	Partially covered subdomains:
+
+		- wiki *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- id
+		- land
+		- lists
+		- marketplace
+		- search
+		- support
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- . ²
+		- marketplace ³
+		- search ¹
+		- support ¹
+		- wiki ⁴
+		- www ¹
+
+	¹ Secured by us <= not secured by server
+	² Some secured by server, others by us
+	³ Secured by server
+	⁴ Not secured by us <= incomplete tls support
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.) from lecs-static-secondlife-com.s3.amazonaws.com *
+			- search from static.search.secondlife.com.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Second Life.com (partial)">
+
+	<target host="secondlife.com" />
+	<target host="*.secondlife.com" />
+		<!--exclusion pattern="^http://(blogs|community)\.secondlife\.com/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://wiki\.secondlife\.com/+(wiki/Issue_tracker($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://wiki\.secondlife\.com/+(?!favicon\.ico|static/|w/)" />
+
+
+	<securecookie host="^(?:\.|search\.|support\.|www\.)?secondlife\.com$" name=".+" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^marketplace\.secondlife\.com$" name="^_slm_session$" /-->
+
+
+	<rule from="^http://((?:id|land|lists|marketplace|search|support|wiki|www)\.)?secondlife\.com/"
+		to="https://$1secondlife.com/" />
+
+</ruleset>

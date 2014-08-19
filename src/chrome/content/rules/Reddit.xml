@@ -1,6 +1,6 @@
 <!--
 	For other Condé Nast coverage, see Conde-Nast.xml.
-	
+
 	As of Aug. 2014, Reddit supports lots more SSL!
 	We can probably prune some of the old static rules here.
 
@@ -8,6 +8,7 @@
 
 		- s3.amazonaws.com/reddit/
 		- s3.amazonaws.com/redditads/
+		- s3.amazonaws.com/redditstatic/
 		- s3.amazonaws.com/static.reddit.com/
 		- s3.amazonaws.com/(\w\.)?thumbs.redditmedia.com/
 		- buttons.reddit.com.edgesuite.net
@@ -25,29 +26,34 @@
 		- www.redditmedia.com	(refused)
 
 			Seems only/mostly to be used for ads
+
 -->
 <ruleset name="Reddit">
 
+	<target host="reddit.com" />
 	<target host="*.reddit.com" />
-
 	<target host="*.redditmedia.com" />
 	<target host="redditstatic.com" />
 	<target host="www.redditstatic.com" />
 
 
-	<rule from="^http://(?:ssl\.|www\.|pay\.)?reddit\.com/"
-		to="https://www.reddit.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reddit\.com$" name="^_recentclicks2$" /-->
+
+	<securecookie host=".*\.reddit\.com$" name=".+" />
+
+
+	<rule from="^http://((?:dr|fp|gr|i|en-us|pay|pr|rd|sl|sv|ssl|www)\.)?reddit\.com/"
+		to="https://$1reddit.com/" />
 
 	<rule from="^http://(static|thumbs)\.reddit\.com/"
 		to="https://s3.amazonaws.com/$1.reddit.com/" />
 
 	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
-		to="https://s3.amazonaws.com/$1thumbs.redditmedia.com/" />
+		to="https://$1thumbs.redditmedia.com/" />
 
 	<rule from="^http://(?:www\.)?redditstatic\.com/"
 		to="https://www.redditstatic.com/" />
-
-
-	<securecookie host=".*\.reddit\.com$" name=".+" />
 
 </ruleset>

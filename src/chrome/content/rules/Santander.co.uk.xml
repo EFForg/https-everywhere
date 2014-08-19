@@ -1,15 +1,58 @@
 <!--
+	Other Santander rulesets:
+
+		- International_Payments.co.uk.xml
+		- Santander_BillPayment.co.uk.xml
+
+
 	Nonfunctional subdomains:
 
-		- businesshelpcenter	(times out)
-		- helpcenter
-		- info		(404)
-		- products
+		- businesshelpcenter *
+		- corporatehelpcenter *
+		- helpcenter *
+
+	* Dropped
 
 
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
+		- ^ ¹
+		- products ²
+
+	¹ Cert only matches www
+	² Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- apply
+		- applyonline
+		- bbsavings
+		- business
+		- desk.business
+		- onlinesalessavings
+		- products	(→ www)
+		- retail
+		- retail2
+
+
+	Observed cookie domains:
+
+		- apply ¹
+		- bbsavings ²
+		- business ¹
+		- retail ¹
+
+	¹ Secured by us <= complete support
+	² Secured by server
+
+
+	Mixed content:
+
+		- Web bugs on apply from www.sptag.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Santander.co.uk (partial)">
@@ -18,13 +61,22 @@
 	<target host="*.santander.co.uk" />
 
 
-	<securecookie host="^retail\.santander\.co\.uk$" name=".+" />
+	<securecookie host="^(?:apply|business|retail)\.santander\.co\.uk$" name=".+" />
+	<!--
+		Server sets Secure for:
+					-->
+	<!--securecookie host="^bbsavings\.santander\.co\.uk$" name=".+" /-->
 
 
 	<rule from="^http://(?:www\.)?santander\.co\.uk/"
 		to="https://www.santander.co.uk/" />
 
-	<rule from="^http://(apply(?:online)?|bbsavings|onlinesalessavings|retail2?)\.santander\.co\.uk/"
+	<rule from="^http://(apply(?:online)?|bbsavings|(?:desk\.)?business|onlinesalessavings|retail2?)\.santander\.co\.uk/"
 		to="https://$1.santander.co.uk/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://products\.santander\.co\.uk/.*"
+		to="https://www.santander.co.uk/" />
 
 </ruleset> 

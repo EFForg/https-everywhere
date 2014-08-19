@@ -16,8 +16,18 @@
 
 	Problematic subdomains:
 
-		- static.cms	(cloudfront)
-		- info		(redirects to app-sjn.marketo.com)
+		- static.cms ¹
+		- info ²
+
+	¹ cloudfront
+	² Redirects to app-sjn.marketo.com
+
+
+	Mixed content:
+
+		- Images on newsdaily.cms from images *
+
+	* Secured by us
 
 -->
 <ruleset name="NewsCred.com (partial)">
@@ -28,10 +38,10 @@
 	<rule from="^http://static\.cms\.newscred\.com/"
 		to="https://d35o6c6ifjoa8g.cloudfront.net/" />
 
-	<rule from="^http://images\.newscred\.com/"
-		to="https://images.newscred.com/" />
+	<rule from="^http://(newsdaily\.cms|images)\.newscred\.com/"
+		to="https://$1.newscred.com/" />
 
-	<rule from="^http://info\.newscred\.com/(cs|image|j)s/"
-		to="https://na-sjn.marketo.com/$1s/" />
+	<rule from="^http://info\.newscred\.com/(?=css/|images/|js/)"
+		to="https://na-sjn.marketo.com/" />
 
 </ruleset>

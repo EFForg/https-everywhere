@@ -11,10 +11,12 @@
 		- cleanslate		(redirects to cleanslate-stanford-edu.360designstudio.net; mismatched, CN: *.bluehost.com)
 		- news *
 		- reference.pin		(reused_issuer_and_serial)
+		- mirrors.seas ⁴
 		- people.seas *
 		- worldmap *
 
 	* Times out
+	⁴ Refused
 
 
 	Problematic subdomains:
@@ -46,6 +48,7 @@
 		- (www.)berkman
 		- hbdm.hbsp
 		- (www.)hsph		(^ → www)
+		- osc.hul
 		- login.icommons
 
 		- law subdomains:
@@ -61,15 +64,21 @@
 	* www.foo doesn't exist
 
 
-	Targets solely for wildcard cookies:
+	Observed cookie domains:
 
-		- *.cyber.law.harvard.edu
+		- .hul.harvard.edu ¹
+		- .cyber.law.harvard.edu
+
+	¹ Not secured by us <= accounting for possible use on unsecured domains
 
 
 	Mixed content:
 
+		- Images on osc.hul from $self ¹
+
 		- Image on www.saas from seasdev.prod.acquia-sites.com *
 
+	¹ Secured by us
 	* Doesn't trip MCB
 
 -->
@@ -79,7 +88,12 @@
 		<!--exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" /-->
 		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
 		<exclusion pattern="^http://isites\.harvard\.edu/(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
+		<!--exclusion pattern="^http://mirrors\.seas\.harvard\.edu/" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hul\.harvard\.edu$" name="^SESS[\da-f]{32}$" /-->
 
 	<securecookie host="^(?:login\.icommons|.*\.law|www\.pin1|www\.seas)\.harvard\.edu$" name=".+" />
 
@@ -90,7 +104,7 @@
 	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
 
-	<rule from="^http://(www\.cfa|hbdm\.hbsp|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
+	<rule from="^http://(www\.cfa|hbdm\.hbsp|osc\.hul|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
 		to="https://$1.harvard.edu/" />
 
 	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"

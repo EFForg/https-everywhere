@@ -2,6 +2,11 @@
 	For problematic rules, see UCSD.edu-self-signed.xml.
 
 
+	Other UCSD rulesets:
+
+		- SDSC.edu.xml
+
+
 	Nonfunctional subdomains:
 
 		- apsys11		(shows www.sysnet; mismatched, CN: www.sysnet.ucsd.edu)
@@ -10,15 +15,17 @@
 		- (www.)jacobsschool	(404)
 
 
-	Problematic subdomains:
-
-		- cseweb	(expired 2012-08-18)
-
-
 	Nonfunctional subdomains:
 
 		- irps	(redirects to a4.ucsd.edu)
 		- spiff	(cert: www.iod.ucsd.edu, shows that domain's data
+
+
+	Fully covered subdomains:
+
+		- cseweb
+		- lists
+		- mailman
 
 -->
 <ruleset name="UCSD" platform="mixedcontent">
@@ -134,6 +141,8 @@
    <target host="webmail.ucsd.edu" />
    <target host="www-acs.ucsd.edu" />
 
+	<target host="*.ucsd.edu" />
+
 <!-- Other things could stand to have securecookie, but these are the most important:
      a4 is used for login pages and some embedded scripts related to the login system. It doesn't yet flag its cookies as https-only.
      acs-webmail uses at least two cookies, only one of which is normally flagged https-only. -->
@@ -242,4 +251,7 @@
            to="https://acms.ucsd.edu/students/" />
 
    <securecookie host=".*\.ucsd\.edu" name=".*" />
+
+	<rule from="^http://(cseweb|lists|mailman)\.ucsd\.edu/"
+		to="https://$1.ucsd.edu/" />
 </ruleset>

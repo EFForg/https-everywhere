@@ -5,6 +5,7 @@
 	Other nVidia rulesets:
 
 		- 3D_Vision_Live.com.xml
+		- GeForce.com.xml
 
 
 	CDN buckets:
@@ -19,6 +20,22 @@
 
 			- a11.g1.akamai.net
 
+		- http.developer.nvidia.com.edgesuite.net
+
+			- a1890.g.akamai.net
+
+		- developer.download.nvidia.com.edgesuite.net
+
+			- a862.d.akamai.net
+
+		- international.download.nvidia.com.edgesuite.net
+
+			- a551.d.akamai.net
+
+		- us.download.nvidia.com.edgesuite.net
+
+			- a1437.d.akamai.net
+
 		- shield.nvidia.com.edgesuite.net
 
 			- a1017.g2.akamai.net
@@ -30,18 +47,26 @@
 
 	Nonfunctional subdomains:
 
-		- forums		(503, akamai)
-		- origin-forums		(dropped)
+		- news.developer ¹
+		- forums ²
+		- origin-forums ¹
+
+	¹ Dropped
+	² 503, akamai
 
 
 	Problematic subdomains:
 
 		- ^		(times out)
-		- blogs *
-		- shield *
-		- www *
+		- blogs ²
+		- http.developer ²
+		- developer.download ²
+		- us.downloads ²
+		- shield ²
+		- www ²
 
-	* Works, akamai
+	¹ Dropped
+	² Works, akamai
 
 
 	Partially covered subdomains:
@@ -56,6 +81,47 @@
 	Fully covered subdomains:
 
 		- developer
+		- http.developer *
+		- developer.download *
+		- international.download *
+		- us.download *
+		- nvdeveloper
+		- research
+
+	* → akamai
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- .developer ²
+		- devtalk ³
+		- .devtalk ²
+		- nvdeveloper ³
+		- nvidianews ³
+		- store ⁴
+
+	¹ Some secured by us <= incomplete support
+	² Secured by server
+	³ Some secured by server, others by us
+	⁴ One secured by server, others untouched by us <= incomplete support
+
+
+	Mixed content:
+
+		- Images on nvidianews from blogs *
+
+		- Web bugs, on:
+
+			- nvidianews from:
+
+				- s7.addthis.com *
+				- platform.linkedin.com *
+				- platform.twitter.com *
+
+			- store from omniture *
+
+	* Secured by us
 
 -->
 <ruleset name="nVidia (partial) ">
@@ -77,14 +143,14 @@
 		<!--
 			Some pages redirect to http.
 							-->
-		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/)" />
+		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/|store\?Action=(?:DisplayEditProfilePage|DisplayHelpPage)(?:$|&amp;))" />
 
 
-	<securecookie host="^(?:\.?developer|\.?devtalk|nvidianews)\.nvidia\.com$" name=".+" />
+	<securecookie host="^\.?(?:developer|devtalk|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
 	<!--
 		Omniture tracking cookies:
 						-->
-	<securecookie host="^\.store\.nvidia\.com$" name="^s_\w+$" />
+	<securecookie host="^\.(?:store\.)?nvidia\.com$" name="^s_\w+$" />
 
 
 	<rule from="^http://(?:www\.)?nvidia\.com/(?=content/|docs/.+\.(?:jp|pn)g$|Download/NvidiaDownload\.css|favicon\.ico|props/)"
@@ -93,8 +159,20 @@
 	<rule from="^http://blogs\.nvidia\.com/(?=favicon\.ico|wp-content/(?!.+\.css)|wp-includes/)"
 		to="https://a248.e.akamai.net/f/11/2817/6m/blogs.nvidia.com/" />
 
-	<rule from="^http://(developer|devtalk|nvidianews|omniture|store)\.nvidia\.com/"
+	<rule from="^http://(developer|devtalk|nvdeveloper|nvidianews|omniture|research|store)\.nvidia\.com/"
 		to="https://$1.nvidia.com/" />
+
+	<rule from="^http://http\.developer\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/1890/806/6/http.developer.nvidia.com/" />
+
+	<rule from="^http://developer\.download\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/862/5658/3/developer.download.nvidia.com/" />
+
+	<rule from="^http://international\.download\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/551/5082/2/international.download.nvidia.com/" />
+
+	<rule from="^http://us\.download\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/1437/8432/10/us.download.nvidia.com/" />
 
 	<rule from="^http://nsomniture\.nvidia\.com/"
 		to="https://nvidia-com.122.2o7.net/" />

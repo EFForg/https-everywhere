@@ -1,0 +1,40 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- blogs *
+		- doc *
+		- labs *
+		- planet *
+		- translate *
+
+	* Shows default page, valid cert
+
+
+	Mixed content:
+
+		- css on store from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Zentyal.org (partial)">
+
+	<target host="*.zentyal.org" />
+		<!--exclusion pattern="^http://(blogs|doc|labs|planet|translate|www)\.zentyal\.org/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.zentyal\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.store\.zentyal\.org$" name="^(frontend|store)$" /-->
+	<!--securecookie host="^tracker\.zentyal\.org$" name="^_redmine_session$" /-->
+	<!--securecookie host="^wiki\.zentyal\.org$" name="^wikiorg_session$" /-->
+
+	<securecookie host="^(?:forum|\.store|tracker|wiki)\.zentyal\.org$" name=".+" />
+
+
+	<rule from="^http://(forum|store|tracker|wiki)\.zentyal\.org/"
+		to="https://$1.zentyal.org/" />
+
+</ruleset>

@@ -28,8 +28,10 @@
 
 			- apps
 			- cart
+			- images.cdn	(→ 034d24a88b3e71fd72a6-f083e9a6295a3f0714fa019ffdca65c3.ssl.cf1.rackcdn.com)
 			- cp
 			- my
+			- mycloud
 
 		- (*).cdn.cloudfiles.rackspace.com	(→ (*).ssl.cf0.rackcdn.com)
 		- (*).cdn1.cloudfiles.rackspace.com	(→ (*).ssl.cf1.rackcdn.com)
@@ -45,6 +47,20 @@
 		- (www.)rackspacecloud.com		(^ → www)
 		- manage.rackspacecloud.com
 		- lon.manage.rackspacecloud.com
+
+
+	Observed cookie domains:
+
+		- mycloud.rackspace.com *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Images on www.rackspace.com from images.cdn.rackspace.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Rackspace (partial)" platform="mixedcontent">
@@ -68,7 +84,7 @@
 
 
 	<securecookie host="^(?:www)?\.rackspace\.(?:com|co\.uk|co\.za|dk|nl|no|se)$" name=".+" />
-	<securecookie host="^(?:apps|cart|community|my)\.rackspace\.com$" name=".+" />
+	<securecookie host="^(?:apps|cart|community|my|mycloud)\.rackspace\.com$" name=".+" />
 	<securecookie host="^manage\.rackspacecloud\.com$" name=".+" />
 
 
@@ -81,8 +97,11 @@
 	<rule from="^https?://(?:www\.)?rackspace(cloud)?\.(com|co\.uk|co\.za|dk|nl|no|se)/"
 		to="https://www.rackspace$1.$2/" />
 
-	<rule from="^http://(apps|cart|community|cp|my)\.rackspace\.com/"
+	<rule from="^http://(apps|cart|community|cp|my|mycloud)\.rackspace\.com/"
 		to="https://$1.rackspace.com/" />
+
+	<rule from="^http://images\.cdn\.rackspace\.com/"
+		to="https://034d24a88b3e71fd72a6-f083e9a6295a3f0714fa019ffdca65c3.ssl.cf1.rackcdn.com/" />
 
 	<rule from="^https?://(?:www\.)?rackspace(?:\.com)?\.hk/"
 		to="https://www.rackspace.hk/" />
