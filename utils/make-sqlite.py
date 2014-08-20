@@ -33,7 +33,15 @@ parser = etree.XMLParser(remove_blank_text=True)
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_ruleset = etree.XPath("/ruleset")
 
-for fi in glob.iglob('src/chrome/content/rules/*.xml'):
+for fi in glob.iglob('src/chrome/content/rules/*'):
+    if fi.endswith('/00README') or fi.endswith('/make-trivial-rule'):
+        continue
+
+    if " " in fi:
+        print("%s failed validity: Rule filenames cannot contain spaces" % (fi))
+    if not fi.endswith('.xml'):
+        print("%s failed validity: Rule filenames must end in .xml" % (fi))
+
     try:
         tree = etree.parse(fi, parser)
     except Exception as oops:
