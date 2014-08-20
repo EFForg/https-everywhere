@@ -90,12 +90,6 @@ cd ../..
 
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
-echo 'var rule_list = [' > pkg/crx/rule_list.js
-for i in $(find pkg/crx/rules/ -maxdepth 1 \( -name '*.xml' -o -name '*.rulesets' \))
-do
-    echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
-done
-echo '];' >> pkg/crx/rule_list.js
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
