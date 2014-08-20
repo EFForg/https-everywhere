@@ -4,7 +4,6 @@
 
 import glob
 import os
-import re
 import sqlite3
 import subprocess
 import sys
@@ -42,12 +41,12 @@ for fi in glob.iglob('src/chrome/content/rules/*.xml'):
         sys.exit(1)
 
     # Remove comments to save space.
-    etree.strip_tags(tree,etree.Comment)
+    etree.strip_tags(tree, etree.Comment)
 
     targets = xpath_host(tree)
     if not targets:
-      print 'File %s has no targets' % fi
-      sys.exit(1)
+        print('File %s has no targets' % fi)
+        sys.exit(1)
 
     # Strip out the target tags. These aren't necessary in the DB because
     # targets are looked up in the target table, which has a foreign key
@@ -58,10 +57,10 @@ for fi in glob.iglob('src/chrome/content/rules/*.xml'):
     # FF version can find it.
     xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
 
-    c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),));
+    c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),))
     ruleset_id = c.lastrowid
     for target in targets:
-        c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id));
+        c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id))
 
 conn.commit()
 conn.execute("VACUUM")
