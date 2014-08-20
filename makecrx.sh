@@ -36,6 +36,13 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 
 echo "Building chrome version" $VERSION
 
+# Build the SQLite DB even though we don't yet use it in the Chrome extension,
+# because trivial-validate.py depends on it.
+if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  echo "Generating sqlite DB"
+  python2.7 ./utils/make-sqlite.py src/chrome/content/rules
+fi
+
 if [ -f utils/trivial-validate.py ]; then
 	VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
 elif [ -x utils/trivial-validate ] ; then
