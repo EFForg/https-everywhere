@@ -52,7 +52,7 @@ cd $TEST_ADDON_PATH
 # If you just want to run Firefox with the latest code:
 if [ "$1" == "--justrun" ]; then
   echo "running firefox"
-  firefox -profile "$PROFILE_DIRECTORY"
+  firefox -no-remote -profile "$PROFILE_DIRECTORY" "$@"
 else
   echo "running tests"
   cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
