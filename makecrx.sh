@@ -40,7 +40,7 @@ echo "Building chrome version" $VERSION
 # because trivial-validate.py depends on it.
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
   echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py src/chrome/content/rules
+  python2.7 ./utils/make-sqlite.py
 fi
 
 if [ -f utils/trivial-validate.py ]; then

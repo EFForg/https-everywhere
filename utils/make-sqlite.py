@@ -30,7 +30,7 @@ c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
 
 parser = etree.XMLParser(remove_blank_text=True)
 
-def nomes_all(where=sys.argv[1:]):
+def nomes_all():
     """Returns generator to extract all files from a list of files/dirs"""
     return glob.glob('src/chrome/content/rules/*.xml')
 
