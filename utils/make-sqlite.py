@@ -30,15 +30,11 @@ c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
 
 parser = etree.XMLParser(remove_blank_text=True)
 
-def nomes_all():
-    """Returns generator to extract all files from a list of files/dirs"""
-    return glob.glob('src/chrome/content/rules/*.xml')
-
 # Precompile xpath expressions that get run repeatedly.
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_ruleset = etree.XPath("/ruleset")
 
-for fi in nomes_all():
+for fi in glob.iglob('src/chrome/content/rules/*.xml'):
     try:
         tree = etree.parse(fi, parser)
     except Exception as oops:
