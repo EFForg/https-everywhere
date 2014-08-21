@@ -60,7 +60,7 @@ nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
   echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py src/chrome/content/rules
+  python2.7 ./utils/make-sqlite.py
 fi
 
 # =============== BEGIN VALIDATION ================
