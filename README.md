@@ -1,4 +1,4 @@
-HTTPS Everywhere
+HTTPS Everywhere [![Build Status](https://travis-ci.org/EFForg/https-everywhere.svg?branch=master)](https://travis-ci.org/EFForg/https-everywhere)
 ================
 
 Source Tree
@@ -29,7 +29,7 @@ Installing Dependencies in Mac OS X
 -----------------------------------
 
 We recommend Mac users install dependencies using Homebrew:
-http://mxcl.github.io/homebrew/
+http://brew.sh/
 
 Once you have Homebrew and Xcode installed, run this to install HTTPS Everywhere dependencies.
 
