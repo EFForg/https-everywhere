@@ -14,15 +14,12 @@
 	² "SSL Not Supported"
 
 
-	Partially covered subdomains:
-
-		- www2
-
-
 	Fully covered subdomains:
 
 		- (www.)	(^ → www)
-		- csportal
+		- blog		(→ www)
+		- tfs
+		- www2
 
 
 	Mixed content:
@@ -32,7 +29,7 @@
 		- Images, on:
 
 			- www from www **
-			- www2 from www2
+			- www2 from www2 **
 
 		- Ads/bugs, on www from:
 
@@ -57,10 +54,12 @@
 	<rule from="^http://(?:www\.)?fireeye\.com/"
 		to="https://www.fireeye.com/" />
 
-	<rule from="^http://csportal\.fireeye\.com/"
-		to="https://csportal.fireeye.com/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://blog\.fireeye\.com/[^?]*"
+		to="https://www.fireeye.com/blog/" />
 
-	<rule from="^https?://www2\.fireeye\.com/(cs|image|j|r)s/"
-		to="https://na-i.marketo.com/$1s/" />
+	<rule from="^http://(csportal|tfs|www2)\.fireeye\.com/"
+		to="https://$1.fireeye.com/" />
 
 </ruleset>
