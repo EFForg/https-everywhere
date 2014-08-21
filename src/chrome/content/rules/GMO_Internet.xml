@@ -27,6 +27,13 @@
 	* Refused
 
 
+	Partially covered subdomains:
+
+		- cloud *
+
+	* At least some pages redirect to http
+
+
 	Fully covered subdomains:
 
 		- cache.img
@@ -34,17 +41,34 @@
 		- secure
 		- support
 
+
+	Mixed content:
+
+		- css on cloud from cache.img *
+
+		- Images on cloud from cache.img *
+
+	* Secured by us
+
 -->
 <ruleset name="GMO Internet (partial)">
 
 	<target host="gmo.jp" />
 	<target host="*.gmo.jp" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://cloud\.gmo\.jp/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://cloud\.gmo\.jp/+(?!common/|favicon\.ico|(?:\w+/)?images/|\w+/style\.css|this\.css)" />
 
 
 	<securecookie host="^mng\.gmo\.jp$" name=".+" />
 
 
-	<rule from="^http://((?:mng|secure|support|www)\.)?gmo\.jp/"
+	<rule from="^http://((?:cloud|mng|secure|support|www)\.)?gmo\.jp/"
 		to="https://$1gmo.jp/" />
 
 	<rule from="^http://(?:cache\.)?img\.gmo\.jp/"
