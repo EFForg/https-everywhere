@@ -8,15 +8,19 @@
 
 	Problematic subdomains:
 
-		- mail	(shows www; mismatched, CN: nostarch.com)
+		- mail ¹
 		- media ²
 
+	¹ Shows www; mismatched, CN: nostarch.com
 	² cloudfront
 
 
 	Partially covered subdomains:
 
+		- (www.) *
 		- mail		(→ mail.google.com)
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -35,13 +39,11 @@
 	<securecookie host="^\.nostarch\.com$" name="^__utm\w$" />
 
 
-	<!--	Some pages 302 to http.
-						-->
-	<rule from="^http://(www\.)?nostarch\.com/((?:about|catalog|media|writeforus)\.htm|cart(?:$|[?/])|downloads/|favicon\.ico|images/|misc/|modules/|sites/)"
-		to="https://$1nostarch.com/$2" />
+	<rule from="^http://(www\.)?nostarch\.com/(?=(?:about|catalog|media|writeforus)\.htm|cart(?:$|[?/])|downloads/|favicon\.ico|images/|misc/|modules/|sites/)"
+		to="https://$1nostarch.com/" />
 
-	<rule from="^http://mail\.nostarch\.com/(\?.*)?$"
-		to="https://mail.google.com/a/nostarch.com$1" />
+	<rule from="^http://mail\.nostarch\.com/(?=$|\?)"
+		to="https://mail.google.com/a/nostarch.com" />
 
 	<rule from="^http://media\.nostarch\.com/"
 		to="https://d19tnq0ilrg6a.cloudfront.net/" />
