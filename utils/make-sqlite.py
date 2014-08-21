@@ -8,6 +8,7 @@ import sqlite3
 import subprocess
 import sys
 
+from collections import Counter
 from lxml import etree
 
 conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
@@ -33,14 +34,25 @@ parser = etree.XMLParser(remove_blank_text=True)
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_ruleset = etree.XPath("/ruleset")
 
-for fi in glob.iglob('src/chrome/content/rules/*'):
-    if fi.endswith('/00README') or fi.endswith('/make-trivial-rule'):
+filenames = glob.glob('src/chrome/content/rules/*')
+
+counted_lowercase_names = Counter([name.lower() for name in filenames])
+most_common_entry = counted_lowercase_names.most_common(1)[0]
+if most_common_entry[1] > 1:
+    print("%s failed case-insensitivity testing." % (most_common_entry[0]))
+    print("Rules exist with identical case-insensitive names, which breaks some filesystems.")
+    sys.exit(1)
+
+for fi in filenames:
+    if fi.endswith('/00README') or fi.endswith('/make-trivial-rule') or fi.endswith('/default.rulesets'):
         continue
 
     if " " in fi:
         print("%s failed validity: Rule filenames cannot contain spaces" % (fi))
+        sys.exit(1)
     if not fi.endswith('.xml'):
         print("%s failed validity: Rule filenames must end in .xml" % (fi))
+        sys.exit(1)
 
     try:
         tree = etree.parse(fi, parser)
