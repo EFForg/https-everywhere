@@ -2,7 +2,7 @@
 #
 # Build the extension and run a chromium extension with it installed.
 #
-set -o errexit -o xtrace -o nounbound
+set -o errexit -o xtrace
 cd $(dirname $0)
 source makecrx.sh
 PROFILE_DIRECTORY="$(mktemp -d)"
