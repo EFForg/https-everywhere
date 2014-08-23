@@ -47,35 +47,39 @@
 
 	Nonfunctional subdomains:
 
-		- news.developer ¹
-		- forums ²
-		- origin-forums ¹
+		- careers ¹
+		- news.developer ²
+		- investor ²
+		- origin-forums ²
 
-	¹ Dropped
-	² 503, akamai
+	¹ 504, akamai
+	² Dropped
 
 
 	Problematic subdomains:
 
-		- ^		(times out)
-		- blogs ²
+		- ^ ¹
 		- http.developer ²
 		- developer.download ²
-		- us.downloads ²
+		- us.download ²
+		- forums ³
+		- images ²
 		- shield ²
 		- www ²
 
-	¹ Dropped
+	¹ Refused
 	² Works, akamai
+	³ Mismatched, CN: forums.geforce.com
 
 
 	Partially covered subdomains:
 
-		- (www.) *
-		- blogs *
-		- shield *
+		- (www.) ¹
+		- blogs ²
+		- shield ¹
 
-	* → akamai, avoiding user-visible paths
+	¹ → akamai, avoiding user-visible paths
+	² At least some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -85,7 +89,10 @@
 		- developer.download *
 		- international.download *
 		- us.download *
+		- forums	(→ forums.geforce.com)
+		- images *
 		- nvdeveloper
+		- nvidianews
 		- research
 
 	* → akamai
@@ -110,6 +117,9 @@
 	Mixed content:
 
 		- Images on nvidianews from blogs *
+		- Images on nvidianews from www *
+		- Images on nvidianews from l.ytimg.com *
+		- Images on www from images *
 
 		- Web bugs, on:
 
@@ -121,6 +131,9 @@
 
 			- store from omniture *
 
+			- www from $self
+			- www from www.google.com *
+
 	* Secured by us
 
 -->
@@ -129,16 +142,23 @@
 	<target host="nvidia.com" />
 	<target host="*.nvidia.com" />
 		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://blogs\.nvidia\.com/+($|\?|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blogs\.nvidia\.com/+(?!wp-content/|wp-includes/)" />
+
+		<!--
 			Avoid user-visible paths:
 							-->
 		<!--exclusion pattern="^http://(?:www\.)?nvidia\.com/(?!content/|docs/.+\.(jpg|png)$|Download/NvidiaDownload\.css|favicon\.ico|props/)" /-->
-		<!--exclusion pattern="^http://blogs\.nvidia\.com/(?!favicon\.ico|wp-content/|wp-includes/)" /-->
 		<!--exclusion pattern="^http://shield\.nvidia\.com/(?!favicon\.ico|images/|javascripts/|stylesheets/)" /-->
 		<!--
 			Some stylesheets link images relative to /
 									-->
 		<exclusion pattern="^http://(?:www\.)?nvidia\.com/content/(?!.+/global-nav-home|.+/masthead-oldtemplate|.+/nvidia_nav_us|.+/reset-min|.+/share-2013).+\.css" />
-		<!--exclusion pattern="^http://blogs\.nvidia\.com/wp-content/.+\.css" /-->
 		<!--exclusion pattern="^http://shield\.nvidia\.com/stylesheets/(?!normalize\.min\.css)" /-->
 		<!--
 			Some pages redirect to http.
@@ -156,10 +176,7 @@
 	<rule from="^http://(?:www\.)?nvidia\.com/(?=content/|docs/.+\.(?:jp|pn)g$|Download/NvidiaDownload\.css|favicon\.ico|props/)"
 		to="https://a248.e.akamai.net/f/1650/3297/9h/www.nvidia.com/" />
 
-	<rule from="^http://blogs\.nvidia\.com/(?=favicon\.ico|wp-content/(?!.+\.css)|wp-includes/)"
-		to="https://a248.e.akamai.net/f/11/2817/6m/blogs.nvidia.com/" />
-
-	<rule from="^http://(developer|devtalk|nvdeveloper|nvidianews|omniture|research|store)\.nvidia\.com/"
+	<rule from="^http://(blogs|developer|devtalk|international\.download|nvdeveloper|nvidianews|omniture|research|store)\.nvidia\.com/"
 		to="https://$1.nvidia.com/" />
 
 	<rule from="^http://http\.developer\.nvidia\.com/"
@@ -168,11 +185,14 @@
 	<rule from="^http://developer\.download\.nvidia\.com/"
 		to="https://a248.e.akamai.net/f/862/5658/3/developer.download.nvidia.com/" />
 
-	<rule from="^http://international\.download\.nvidia\.com/"
-		to="https://a248.e.akamai.net/f/551/5082/2/international.download.nvidia.com/" />
-
 	<rule from="^http://us\.download\.nvidia\.com/"
 		to="https://a248.e.akamai.net/f/1437/8432/10/us.download.nvidia.com/" />
+
+	<rule from="^http://forums\.nvidia\.com/"
+		to="https://forums.geforce.com/" />
+
+	<rule from="^http://images\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/248/2862/10/images.nvidia.com/" />
 
 	<rule from="^http://nsomniture\.nvidia\.com/"
 		to="https://nvidia-com.122.2o7.net/" />
