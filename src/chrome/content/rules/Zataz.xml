@@ -7,10 +7,17 @@
 		- i[01].wp.com/eromang.zataz.com/
 
 
+	Nonfunctional subdomains:
+
+		- eromang *
+
+	* Refused
+
+
 	Partially covered subdomains:
 
 		- (www.) *
-		- eromang *
+		- new
 
 	* Avoiding false/broken MCB, rest handled in Zataz.com-falsemixed.xml
 
@@ -24,29 +31,26 @@
 
 		- Images, on:
 
+			- archives from $self *
+			- archives from www *
 			- eromang from eromang *
 			- www from www *
 
 	* Secured by us
 
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
 -->
 <ruleset name="Zataz (partial)">
 
 	<target host="zataz.com" />
-	<target host="eromang.zataz.com" />
-	<target host="www.zataz.com" />
+	<target host="*.zataz.com" />
+		<!--exclusion pattern="^http://eromang\.zataz\.com/" /-->
 		<!--
 			Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://(?:www\.)?zataz\.com/(?!css/|favicon\.ico|images/)" />
-		<exclusion pattern="^http://eromang\.zataz\.com/(?!favicon\.ico|wp-content/)" />
+		<exclusion pattern="^http://(?:new\.|www\.)?zataz\.com/(?!css/|favicon\.ico|favicon-\d+x\d+\.png|images/|wp-content/|wp-includes/)" />
 
 
-	<rule from="^http://(eromang\.|www\.)?zataz\.com/"
+	<rule from="^http://((?:archives|new|www)\.)?zataz\.com/"
 		to="https://$1zataz.com/" />
 
 </ruleset>
