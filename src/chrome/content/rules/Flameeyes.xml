@@ -1,20 +1,10 @@
 <!--
-	Problematic subdomains:
-
-		- ^		(refused)
-
-
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
+		- assets
 		- blog
-
-
-	Mixed content:
-
-		- Ad on www from api.flattr.com *
-
-	* Secured by us
+		- earhart
 
 -->
 <ruleset name="Flameeyes">
@@ -26,22 +16,7 @@
 	<securecookie host="^blog\.flameeyes\.eu$" name=".+" />
 
 
-	<!--	Server drops args with path:
-						-->
-	<rule from="^http://flameeyes\.eu/+(?=[^?]+)(?:\?.*)?"
-		to="https://www.flameeyes.eu/" />
-
-	<!--	But not without:
-					-->
-	<rule from="^http://flameeyes\.eu/+(?=\?.+)"
-		to="https://www.flameeyes.eu/" />
-
-	<!--	And drops singular ?:
-					-->
-	<rule from="^http://flameeyes\.eu/+\?$"
-		to="https://www.flameeyes.eu/" />
-
-	<rule from="^http://(blog|www)\.flameeyes\.eu/"
-		to="https://$1.flameeyes.eu/" />
+	<rule from="^http://((?:assets|blog|earhart|www)\.)?flameeyes\.eu/"
+		to="https://$1flameeyes.eu/" />
 
 </ruleset>
