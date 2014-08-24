@@ -39,6 +39,14 @@ def fail(s):
 xpath_exlusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_pattern = etree.XPath("/ruleset/securecookie/@host")
 
+# Load lists of ruleset names whitelisted for downgrade & duplicate rules
+thispath = os.path.dirname(os.path.realpath(__file__))
+with open(thispath + '/downgrade-whitelist.txt') as downgrade_fh:
+    downgrade_allowed_list = [x.rstrip('\n') for x in downgrade_fh.readlines()]
+with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
+    duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
+
+
 def test_bad_regexp(tree, filename, from_attrib, to):
     # Rules with invalid regular expressions.
     """The 'from' rule contains an invalid extended regular expression."""
@@ -88,7 +96,11 @@ def test_unencrypted_to(tree, filename, from_attrib, to):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            warn("downgrade rule in %s redirects to http." % filename)
+            if filename in downgrade_allowed_list:
+                warn("whitelisted downgrade rule in %s redirects to http." % filename)
+            else:
+                fail("non-whitelisted downgrade rule in %s redirects to http." % filename)
+                return False
         elif to[:5] == "http:":
             fail("non-downgrade rule in %s redirects to http." % filename)
             return False
@@ -168,9 +180,13 @@ for row in c.execute('''SELECT contents from rulesets'''):
 for (host, count) in c.execute('''
   select host, count(host) as c from targets group by host;'''):
     if count > 1:
-      warn("Hostname %s shows up in %d different rulesets." % (host, count))
+        if host in duplicate_allowed_list:
+            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, count))
+        else:
+            failure = 1
+            fail("Hostname %s shows up in %d different rulesets." % (host, count))
     if not is_valid_target_host(host):
-      failure = 1
-      fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
+        failure = 1
+        fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
 
 sys.exit(failure)
