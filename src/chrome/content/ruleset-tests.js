@@ -40,7 +40,7 @@ function testRunner() {
       urls.push({ 
         url: 'https://'+target, 
         target: target, 
-        ruleset_names: HTTPSEverywhere.https_rules.targets[target]
+        ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
       });
     }
   }
@@ -72,8 +72,8 @@ function testRunner() {
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
           // build output to log
           ruleset_xmls = '';
-          for(let i=0; i<urls[number].ruleset_names.length; i++) {
-            ruleset_xmls += urls[number].ruleset_names[i].xmlName + ', ';
+          for(let i=0; i<urls[number].ruleset_ids.length; i++) {
+            ruleset_xmls += urls[number].ruleset_ids[i].xmlName + ', ';
           }
           if(ruleset_xmls != '')
             ruleset_xmls = ruleset_xmls.substring(ruleset_xmls.length-2, 2);
