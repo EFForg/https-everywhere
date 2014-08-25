@@ -36,12 +36,21 @@ function testRunner() {
   var num = 0;
  
   for(var target in HTTPSEverywhere.https_rules.targets) {
+    var active_ids = [];
     if(!target.indexOf("*") != -1)  {
-      urls.push({ 
-        url: 'https://'+target, 
-        target: target, 
-        ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
-      });
+      var ruleset_ids = HTTPSEverywhere.https_rules.targets[target];
+      for (var n = 0; n < ruleset_ids.length; n++) {
+        var rs_id = ruleset_ids[n];
+        var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+        if (rs.active) { active_ids.push(rs_id) };
+      }
+      if (active_ids.length > 0) {
+        urls.push({
+          url: 'https://'+target,
+          target: target,
+          ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
+        });
+      }
     }
   }
 
