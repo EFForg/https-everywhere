@@ -40,7 +40,7 @@ function testRunner() {
     if(!target.indexOf("*") != -1)  {
       var ruleset_ids = HTTPSEverywhere.https_rules.targets[target];
       for (var rs_id in ruleset_ids) {
-        var rs = HTTPSEverywhere.https_rules.rulesetByID[rs_id];
+        var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
         if (rs.active) { active_ids.push(rs_id) };
       }
       if (active_ids.length > 0) {
