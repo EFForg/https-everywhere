@@ -49,7 +49,7 @@ function testRunner() {
           target: target,
           ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
         });
-      }}
+      }
     }
   }
 
