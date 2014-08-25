@@ -45,7 +45,7 @@ function testRunner() {
       }
       if (active_ids.length > 0) {
         urls.push({
-          url: 'https://'+target,
+          url: 'http://'+target,
           target: target,
           ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
         });
