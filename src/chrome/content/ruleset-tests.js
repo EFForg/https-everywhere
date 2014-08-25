@@ -36,12 +36,21 @@ function testRunner() {
   var num = 0;
  
   for(var target in HTTPSEverywhere.https_rules.targets) {
+    var active_ids = [];
     if(!target.indexOf("*") != -1)  {
-      urls.push({ 
-        url: 'https://'+target, 
-        target: target, 
-        ruleset_names: HTTPSEverywhere.https_rules.targets[target]
-      });
+      var ruleset_ids = HTTPSEverywhere.https_rules.targets[target];
+      for (var n = 0; n < ruleset_ids.length; n++) {
+        var rs_id = ruleset_ids[n];
+        var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+        if (rs.active) { active_ids.push(rs_id) };
+      }
+      if (active_ids.length > 0) {
+        urls.push({
+          url: 'http://'+target,
+          target: target,
+          ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
+        });
+      }
     }
   }
 
@@ -72,8 +81,8 @@ function testRunner() {
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
           // build output to log
           ruleset_xmls = '';
-          for(let i=0; i<urls[number].ruleset_names.length; i++) {
-            ruleset_xmls += urls[number].ruleset_names[i].xmlName + ', ';
+          for(let i=0; i<urls[number].ruleset_ids.length; i++) {
+            ruleset_xmls += urls[number].ruleset_ids[i].xmlName + ', ';
           }
           if(ruleset_xmls != '')
             ruleset_xmls = ruleset_xmls.substring(ruleset_xmls.length-2, 2);
