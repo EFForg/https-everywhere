@@ -39,7 +39,7 @@ function testRunner() {
     var active_ids = [];
     if(!target.indexOf("*") != -1)  {
       var ruleset_ids = HTTPSEverywhere.https_rules.targets[target];
-      for (var n = 0; n <i ruleset_ids.length; n++) {
+      for (var n = 0; n < ruleset_ids.length; n++) {
         var rs_id = ruleset_ids[n];
         var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
         if (rs.active) { active_ids.push(rs_id) };
