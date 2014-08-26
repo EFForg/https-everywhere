@@ -42,13 +42,22 @@ function testRunner() {
       for (var n = 0; n < ruleset_ids.length; n++) {
         var rs_id = ruleset_ids[n];
         var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+        if (!rs) {
+          // most rulesets will need to be fetched from the database
+          HTTPSEverywhere.https_rules.loadRulesetById(rs_id);
+          rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+          if (!rs) {
+            HTTPSEverywhere.log(5, "ARGH unexpected missing ruleset");
+          }
+        }
         if (rs.active) { active_ids.push(rs_id) };
       }
+      // Some rulesets that might rewrite this target, let's test them
       if (active_ids.length > 0) {
         urls.push({
           url: 'http://'+target,
           target: target,
-          ruleset_ids: HTTPSEverywhere.https_rules.targets[target]
+          ruleset_ids: active_ids
         });
       }
     }
