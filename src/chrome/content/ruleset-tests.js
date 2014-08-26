@@ -38,6 +38,7 @@ function testRunner() {
   for(var target in HTTPSEverywhere.https_rules.targets) {
     var active_ids = [];
     if(!target.indexOf("*") != -1)  {
+      HTTPSEverywhere.log(5, "target is " + target);
       var ruleset_ids = HTTPSEverywhere.https_rules.targets[target];
       for (var n = 0; n < ruleset_ids.length; n++) {
         var rs_id = ruleset_ids[n];
