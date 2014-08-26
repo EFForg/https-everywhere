@@ -140,7 +140,8 @@ else
   echo >&2 "Created $XPI_NAME"
 
   # Push to Android Firefox if device is connected
-  if type adb > /dev/null; then
+  # XXX on some systems, adb may require sudo...
+  if type adb > /dev/null && adb devices > /dev/null 2>/dev/null ; then
     ADB_FOUND=`adb devices | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
     if [ "$ADB_FOUND" != "List of devices attached" ]; then
       echo Pushing "$XPI_NAME" to /sdcard/"$XPI_NAME"

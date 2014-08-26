@@ -28,7 +28,6 @@ function openStatus() {
 function addTestTarget(urls, target, ruleset_ids) {
   // Add one target and associated metadata to the list of
   // URLs to be tested, performing housekeeping along the way
-  HTTPSEverywhere.log(5, "target is " + target);
   var active_ids = [];
   for (var n = 0; n < ruleset_ids.length; n++) {
     var rs_id = ruleset_ids[n];
@@ -61,16 +60,18 @@ function testRunner() {
   var output = [];
   var urls = [];
   var num = 0;
-  var targets = HTTPSEverywhere.https_rules.targets;
+  var targets_to_ids = HTTPSEverywhere.https_rules.targets;
+  var ruleset_ids;
  
-  for(var target in targets) {
+  for(var target in targets_to_ids) {
     var t;
+    ruleset_ids = targets_to_ids[target];
     if(target.indexOf("*") == -1)  {
-      addTestTarget(urls, target, targets[target]);
+      addTestTarget(urls, target, ruleset_ids);
     } else {
       // target is like *.example.wildcard.com, let's see what we can do...
       t = target.replace("*.", "www.");
-      if (!(t in targets)) { addTestTarget(urls, t, targets[target]); }
+      if (!(t in targets_to_ids)) { addTestTarget(urls, t, ruleset_ids); }
     }
   }
 
