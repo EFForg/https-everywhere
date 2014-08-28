@@ -52,6 +52,8 @@ function addTestTarget(urls, target, ruleset_ids) {
   }
 }
 
+var left_star = new RegExp("^\\*\\."); // *.example.com
+
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   
@@ -64,14 +66,20 @@ function testRunner() {
   var ruleset_ids;
  
   for(var target in targets_to_ids) {
-    var t;
     ruleset_ids = targets_to_ids[target];
     if(target.indexOf("*") == -1)  {
       addTestTarget(urls, target, ruleset_ids);
     } else {
-      // target is like *.example.wildcard.com, let's see what we can do...
-      t = target.replace("*.", "www.");
-      if (!(t in targets_to_ids)) { addTestTarget(urls, t, ruleset_ids); }
+      // target is like *.example.wildcard.com, or www.example.*
+      // let's see what we can do...
+      var t = target.replace(left_star, "www.");
+      if (t.indexOf("*") != -1) {
+        HTTPSEverywhere.log(5, "WARNING target with illegal 2nd star");
+        continue;
+      }
+      if (!(t in targets_to_ids)) {
+        addTestTarget(urls, t, ruleset_ids);
+      }
     }
   }
 
