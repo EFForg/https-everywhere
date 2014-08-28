@@ -1,15 +1,10 @@
 # Tests for HTTPS Everywhere
 
 ## Prerequisites
-* Latest release of the Firefox Add-On SDK: https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation
+* Latest release of the Firefox Add-On SDK as a submodule:
+    git submodule update
 
-## Instructions
-### First time
-1. Create a clean Firefox profile and install HTTPS Everywhere.
-2. Copy the profile to `./test_profile` (TODO: make this configurable).
-
-### Every time
-1. Activate the Add-on SDK.
-2. cd to your HTTPS Everywhere repository root and run `./test.sh`.
+# Running
+    bash test.sh
 
 To add tests, put them in `./https-everywhere-tests/tests`.
