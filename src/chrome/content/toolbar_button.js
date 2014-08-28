@@ -10,13 +10,13 @@ const CI = Components.interfaces;
 const CC = Components.classes;
 
 // LOG LEVELS ---
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+let HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
