@@ -38,14 +38,6 @@ function addTestTarget(urls, target, ruleset_ids) {
   for (var n = 0; n < ruleset_ids.length; n++) {
     var rs_id = ruleset_ids[n];
     var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
-    if (!rs) {
-      // most rulesets will need to be fetched from the database
-      HTTPSEverywhere.https_rules.loadRulesetById(rs_id);
-      rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
-      if (!rs) {
-        HTTPSEverywhere.log(5, "ARGH unexpected missing ruleset");
-      }
-    }
     if (rs.active) { active_ids.push(rs_id) };
   }
   // Some rulesets that might rewrite this target, let's test them
@@ -71,6 +63,9 @@ function testRunner() {
   var ruleset_ids;
   accepted_test_targets = {};  // reset each time
  
+  // we need every ruleset loaded from DB to check if it's active
+  HTTPSEverywhere.https_rules.loadAllRulesets();
+
   for(var target in targets_to_ids) {
     ruleset_ids = targets_to_ids[target];
     if(target.indexOf("*") == -1)  {
@@ -80,7 +75,6 @@ function testRunner() {
       // let's see what we can do...
       var t = target.replace(left_star, "www.");
       if (t.indexOf("*") != -1) {
-        HTTPSEverywhere.log(5, "WARNING target with illegal 2nd star");
         continue;
       }
       addTestTarget(urls, t, ruleset_ids);
