@@ -14,4 +14,4 @@ fi
 pip install --user -r requirements.txt
 
 # Install a hook to run tests before pushing.
-ln -s ../test.sh .git/hooks/pre-push
+ln -sf ../../test.sh .git/hooks/pre-push
