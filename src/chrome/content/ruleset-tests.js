@@ -25,10 +25,16 @@ function openStatus() {
   gBrowser.selectedTab = statusTab;
 }
 
+// FIXME use a class rather than global state
+var left_star = new RegExp("^\\*\\."); // *.example.com
+var accepted_test_targets = {}
+
 function addTestTarget(urls, target, ruleset_ids) {
   // Add one target and associated metadata to the list of
   // URLs to be tested, performing housekeeping along the way
   var active_ids = [];
+  if (target in accepted_test_targets) return;
+
   for (var n = 0; n < ruleset_ids.length; n++) {
     var rs_id = ruleset_ids[n];
     var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
@@ -52,7 +58,6 @@ function addTestTarget(urls, target, ruleset_ids) {
   }
 }
 
-var left_star = new RegExp("^\\*\\."); // *.example.com
 
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
@@ -64,6 +69,7 @@ function testRunner() {
   var num = 0;
   var targets_to_ids = HTTPSEverywhere.https_rules.targets;
   var ruleset_ids;
+  accepted_test_targets = {};  // reset each time
  
   for(var target in targets_to_ids) {
     ruleset_ids = targets_to_ids[target];
@@ -77,9 +83,7 @@ function testRunner() {
         HTTPSEverywhere.log(5, "WARNING target with illegal 2nd star");
         continue;
       }
-      if (!(t in targets_to_ids)) {
-        addTestTarget(urls, t, ruleset_ids);
-      }
+      addTestTarget(urls, t, ruleset_ids);
     }
   }
 
