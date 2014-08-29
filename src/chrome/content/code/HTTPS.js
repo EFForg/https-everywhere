@@ -29,7 +29,18 @@ const HTTPS = {
   httpsForced: null,
   httpsForcedExceptions: null,
   httpsRewrite: null,
-  
+
+  /**
+   * Given a channel and a list of potentially applicable rules,
+   * redirect or abort a request if appropriate.
+   *
+   * @param {RuleSet[]} applicable_list A list of potentially applicable rules
+   *   (i.e. those that match on a hostname basis).
+   * @param {nsIChannel} channel The channel to be manipulated.
+   * @param {boolean} httpNowhereEnabled Whether to abort non-https requests.
+   * @returns {boolean} True if the request was redirected; false if it was
+   *   untouched or aborted.
+   */
   replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
     if (blob === null) {
