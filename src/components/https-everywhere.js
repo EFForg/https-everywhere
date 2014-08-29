@@ -34,8 +34,6 @@ const Cr = Components.results;
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
 
-const CP_SHOULDPROCESS = 4;
-
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
 const SERVICE_NAME = "Encrypts your communications with a number of major websites";
@@ -221,44 +219,6 @@ function HTTPSEverywhere() {
 
   return;
 }
-
-
-// nsIContentPolicy interface
-// we use numeric constants for performance sake: 
-const TYPE_OTHER = 1;
-const TYPE_SCRIPT = 2;
-const TYPE_IMAGE = 3;
-const TYPE_STYLESHEET = 4;
-const TYPE_OBJECT = 5;
-const TYPE_DOCUMENT = 6;
-const TYPE_SUBDOCUMENT = 7;
-const TYPE_REFRESH = 8;
-const TYPE_XBL = 9;
-const TYPE_PING = 10;
-const TYPE_XMLHTTPREQUEST = 11;
-const TYPE_OBJECT_SUBREQUEST = 12;
-const TYPE_DTD  = 13;
-const TYPE_FONT = 14;
-const TYPE_MEDIA = 15;  
-// --------------
-// REJECT_SERVER = -3
-// ACCEPT = 1
-
-
-// Some of these types are known by arbitrary assertion at
-// https://bugzilla.mozilla.org/show_bug.cgi?id=677643#c47
-// TYPE_FONT was required to fix https://trac.torproject.org/projects/tor/ticket/4194
-// TYPE_SUBDOCUMENT was required to fix https://trac.torproject.org/projects/tor/ticket/4149
-// I have NO IDEA why JS won't let me use the constants above in defining this
-const shouldLoadTargets = {
-  1 : true,
-  3 : true,
-  5 : true,
-  12 : true,
-  14 : true,
-  7 : true
-};
-
 
 
 /*
