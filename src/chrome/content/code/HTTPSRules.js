@@ -488,16 +488,10 @@ const HTTPSRules = {
     // the new uri if there was a rewrite.  Now it returns a JS object with a
     // newuri attribute and an applied_ruleset attribute (or null if there's
     // no rewrite).
-    var i = 0;
+    var i = 0; 
     userpass_present = false; // Global so that sanitiseURI can tweak it.
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
-
-    // Only bother to rewrite http or https URIs
-    if (input_uri.indexOf("http") === -1) {
-      return null;
-    }
-
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
     this.log(NOTE, "Processing " + input_uri.spec);
 
@@ -554,7 +548,7 @@ const HTTPSRules = {
         uri = input_uri.clone();
         userpass_present = true; // tweaking a global in our caller :(
         uri.userPass = null;
-      }
+      } 
     } catch(e) {}
 
     // example.com.  is equivalent to example.com
