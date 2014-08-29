@@ -261,7 +261,7 @@ HTTPSEverywhere.prototype = {
   _xpcom_categories: [
     {
       category: "app-startup",
-    },
+    }
   ],
 
   // QueryInterface implementation, e.g. using the generateQI helper
@@ -361,7 +361,8 @@ HTTPSEverywhere.prototype = {
     try {
       var loadContext = nc.getInterface(CI.nsILoadContext);
       dump("loadContext = " + loadContext + "\n");
-      var browser = loadContext.topFrameElement;
+      let domWin = loadContext.associatedWindow;
+      var browser = gBrowser.getBrowserForDocument(domWin.top.document);
     } catch(e) {
       this.log(INFO, "No <browser> element associated with request: " + channel.URI.spec);
       return null;
