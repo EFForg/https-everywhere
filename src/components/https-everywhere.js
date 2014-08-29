@@ -1,25 +1,21 @@
 // LOG LEVELS ---
 
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
 // PREFERENCE BRANCHES
-PREFBRANCH_ROOT=0;
-PREFBRANCH_RULE_TOGGLE=1;
+let PREFBRANCH_ROOT=0;
+let PREFBRANCH_RULE_TOGGLE=1;
 
-//---------------
-
-https_domains = {};              // maps domain patterns (with at most one
-                                 // wildcard) to RuleSets
-
-https_everywhere_blacklist = {}; // URLs we've given up on rewriting because
-                                 // of redirection loops
-
-https_blacklist_domains = {};    // domains for which there is at least one
-                                 // blacklisted URL
+// maps domain patterns (with at most one  wildcard) to RuleSets
+let https_domains = {};
+// URLs we've given up on rewriting because of redirection loops
+let https_everywhere_blacklist = {};
+// domains for which there is at least one blacklisted URL
+let https_blacklist_domains = {};
 
 //
 const CI = Components.interfaces;
