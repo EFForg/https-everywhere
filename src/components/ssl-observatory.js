@@ -533,7 +533,6 @@ SSLObservatory.prototype = {
     file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
     var data = this.HTTPSEverywhere.rw.read(file);
     this.whitelist = JSON.parse(data);
-    this.log(DBUG, "yay\n" + data);
   },
 
   saveCertWhitelist: function() {
