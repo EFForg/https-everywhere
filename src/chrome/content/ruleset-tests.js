@@ -74,10 +74,9 @@ function testRunner() {
       // target is like *.example.wildcard.com, or www.example.*
       // let's see what we can do...
       var t = target.replace(left_star, "www.");
-      if (t.indexOf("*") != -1) {
-        continue;
+      if (t.indexOf("*") == -1) {
+        addTestTarget(urls, t, ruleset_ids);
       }
-      addTestTarget(urls, t, ruleset_ids);
     }
   }
 
@@ -108,7 +107,7 @@ function testRunner() {
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
           // build output to log
           ruleset_xmls = '';
-          for(let i=0; i<urls[number].ruleset_ids.length; i++) {
+          for(let i=0; i < urls[number].ruleset_ids.length; i++) {
             ruleset_xmls += urls[number].ruleset_ids[i].xmlName + ', ';
           }
           if(ruleset_xmls != '')
