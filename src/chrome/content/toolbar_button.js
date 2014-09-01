@@ -58,6 +58,11 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
+    // make sure the checkbox for showing counter is properly set
+    var showCounter = tb.shouldShowCounter();
+    var counterItem = document.getElementById('https-everywhere-counter-item');
+    counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+
     // make sure UI for HTTP Nowhere mode is properly set
     var httpNowhereItem = document.getElementById('http-nowhere-item');
     var showHttpNowhere = tb.shouldShowHttpNowhere();
@@ -68,6 +73,23 @@ httpsEverywhere.toolbarButton = {
 
     // make sure UI is set depending on whether HTTPS-E is enabled
     toggleEnabledUI();
+
+    // show ruleset counter when a tab is changed
+    tb.updateRulesetsApplied();
+    gBrowser.tabContainer.addEventListener(
+      'TabSelect', 
+      tb.updateRulesetsApplied, 
+      false
+    );
+
+    // hook event for when page loads
+    var onPageLoad = function() {
+      // Timeout is used for a number of reasons.
+      // 1) For Performance since we want to defer computation.
+      // 2) Sometimes the page is loaded before all applied rulesets are
+      //    calculated; in such a case, a half-second wait works.
+      setTimeout(tb.updateRulesetsApplied, 500);
+    };
 
     var appcontent = document.getElementById('appcontent');
     if (appcontent) {
@@ -100,14 +122,67 @@ httpsEverywhere.toolbarButton = {
         'https-everywhere', 
         'chrome://https-everywhere/skin/https-everywhere-24.png', 
         nBox.PRIORITY_WARNING_MEDIUM,
-	      [],
-	      function(action) {
-	        // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
-	        gBrowser.selectedTab = gBrowser.addTab(faqURL);
-	      }
+	[],
+	function(action) {
+	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
+	}
       );
     }
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
+  },
+
+
+  /**
+   * Update the rulesets applied counter for the current tab.
+   */
+  updateRulesetsApplied: function() {
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+    var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
+    if (!enabled || !showCounter) { 
+      toolbarbutton.setAttribute('rulesetsApplied', 0);
+      return;
+    }
+
+    var browser = window.gBrowser.selectedBrowser;
+    var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules", null);
+    if (!alist) {
+      return;
+    }
+    // Make sure the list is up to date
+    alist.populate_list();
+
+    var counter = 0;
+    for (var x in alist.active) {
+      if (!(x in alist.breaking)) {
+        ++counter;
+      }
+    }
+    for (var x in alist.moot) {
+      if (!(x in alist.active)) {
+        ++counter;
+      }
+    }
+
+    toolbarbutton.setAttribute('rulesetsApplied', counter);
+    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+  },
+
+  /**
+   * Gets whether to show the rulesets applied counter.
+   *
+   * @return {boolean}
+   */
+  shouldShowCounter: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var prefExists = sp.getPrefType(tb.COUNTER_PREF);
+
+    // the default behavior is to show the rulesets applied counter.
+    // if no preference exists (default) or its enabled, show the counter
+    return !prefExists || sp.getBoolPref(tb.COUNTER_PREF);
   },
 
   /**
@@ -119,6 +194,20 @@ httpsEverywhere.toolbarButton = {
     var tb = httpsEverywhere.toolbarButton;
     var sp = Services.prefs;
     return sp.getBoolPref(tb.HTTP_NOWHERE_PREF);
+  },
+
+  /**
+   * Toggles the user's preference for displaying the rulesets applied counter
+   * and updates the UI.
+   */
+  toggleShowCounter: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var showCounter = tb.shouldShowCounter();
+    sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
+
+    tb.updateRulesetsApplied();
   },
 
   /**
@@ -134,21 +223,6 @@ httpsEverywhere.toolbarButton = {
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
     reload_window();
-  },
-
-  /**
-   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
-   * is enabled or disabled.
-   */
-  changeIcon: function() {
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (enabled) {
-      toolbarbutton.setAttribute('status', 'enabled');
-    } else {
-      toolbarbutton.setAttribute('status', 'disabled');
-    }
   }
 };
 
