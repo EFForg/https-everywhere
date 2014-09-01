@@ -286,7 +286,6 @@ function show_applicable_list(menupopup) {
   }
 
   var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
-  dump("got alist for: "+alist.home+"\n");
   var weird=false;
 
   if (!alist) {

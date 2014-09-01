@@ -6,7 +6,6 @@ serial_number = 0;
 
 function ApplicableList(logger, browser) {
   this.log = logger;
-  dump("browser currentURI is " + browser.currentURI.spec);
   this.uri = browser.currentURI.clone();
   if (!this.uri) {
     this.log(WARN,"NULL CLONING URI " + doc);
