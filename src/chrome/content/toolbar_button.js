@@ -82,6 +82,15 @@ httpsEverywhere.toolbarButton = {
       false
     );
 
+    // add listener for top-level location change across all tabs
+    let httpseProgressListener = {
+      onLocationChange: function(aBrowser, aWebProgress, aRequest, aLoc) {
+        HTTPSEverywhere.log(DBUG, "Got on location change!");
+        HTTPSEverywhere.onLocationChange(aBrowser);
+      }
+    };
+    gBrowser.addTabsProgressListener(httpseProgressListener);
+
     // hook event for when page loads
     var onPageLoad = function() {
       // Timeout is used for a number of reasons.

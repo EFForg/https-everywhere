@@ -269,8 +269,6 @@ HTTPSEverywhere.prototype = {
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsISupports,
       Components.interfaces.nsISupportsWeakReference,
-      Components.interfaces.nsIWebProgressListener,
-      Components.interfaces.nsIWebProgressListener2,
       Components.interfaces.nsIChannelEventSink ]),
 
   wrappedJSObject: null,  // Initialized by constructor
@@ -298,47 +296,15 @@ HTTPSEverywhere.prototype = {
     obj[key] = value;
   },
 
-  // XXX: This never fires in e10s
-  onStateChange: function(wp, req, flags, status) {
-    if ((flags & CI.nsIWebProgressListener.STATE_START) &&
-        (flags & CI.nsIWebProgressListener.STATE_IS_DOCUMENT) &&
-        wp.isTopLevel) {
-      let channel = req.QueryInterface(CI.nsIChannel);
-      let browser = this.getBrowserForChannel(channel);
-      if (!browser) {
-        this.log(WARN, "Unable to get <browser> for "+channel.URI.spec);
-        return;
-      }
-      dump("In on location change\n");
-      this.newApplicableListForBrowser(browser);
-    }
-  },
-
   // We use onLocationChange to make a fresh list of rulesets that could have
   // applied to the content in the current page (the "applicable list" is used
   // for the context menu in the UI).  This will be appended to as various
   // content is embedded / requested by JavaScript.
-  // XXX: This never fires in e10s
-  onLocationChange: function(wp, req, uri) {
-    if (wp instanceof CI.nsIWebProgress) {
-      let location = uri.spec;
-      if(location.substr(0, 6) == "about:"){
-        return;
-      }
-      if (!req || !(req instanceof CI.nsIChannel)) {
-        this.log(WARN, "Bad request " + req + " for " + uri.spec);
-        return;
-      }
-      let browser = this.getBrowserForChannel(req);
-      if (!browser) {
-        this.log(WARN, "Unable to get browser for " + uri.spec);
-        return;
-      }
-      dump("ON LOCATION $$$$$$$$$$\n");
-      if (!this.newApplicableListForBrowser(browser))
-        this.log(WARN,"Something went wrong in onLocationChange");
-    } else {
-      this.log(WARN,"onLocationChange: no nsIWebProgress");
+  onLocationChange: function(browser) {
+    try {
+      this.newApplicableListForBrowser(browser);
+    } catch (e) {
+      this.log(WARN, "Couldn't make applicable list"+e);
     }
   },
 
