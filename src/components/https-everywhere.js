@@ -283,16 +283,14 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      dump(new Error().stack);
-        this.log(INFO, "No expando for " + browser);
-        return null;
+      this.log(WARN, "No expando for " + browser.currentURI);
+      return null;
     }
     return obj[key];
   },
 
   setExpando: function(browser, key, value) {
-    dump("SET EXPANDO\n");
-    dump(new Error().stack);
+    this.log(WARN, "setting expandomap value: "+value);
     if (!this.expandoMap.has(browser)) {
       this.expandoMap.set(browser, {});
     }
@@ -300,27 +298,27 @@ HTTPSEverywhere.prototype = {
     obj[key] = value;
   },
 
+  // XXX: This never fires in e10s
   onStateChange: function(wp, req, flags, status) {
     if ((flags & CI.nsIWebProgressListener.STATE_START) &&
         (flags & CI.nsIWebProgressListener.STATE_IS_DOCUMENT) &&
         wp.isTopLevel) {
-      dump("\nDOC START\n\n");
       let channel = req.QueryInterface(CI.nsIChannel);
       let browser = this.getBrowserForChannel(channel);
       if (!browser) {
-        this.log(WARN, "Unable to get <browser>");
+        this.log(WARN, "Unable to get <browser> for "+channel.URI.spec);
         return;
       }
-      dump("ON LOCATION $$$$$$$$$$\n");
-      if (!this.newApplicableListForBrowser(browser)) 
-        this.log(WARN,"Something went wrong in onLocationChange");
+      dump("In on location change\n");
+      this.newApplicableListForBrowser(browser);
     }
   },
-/*
+
   // We use onLocationChange to make a fresh list of rulesets that could have
   // applied to the content in the current page (the "applicable list" is used
   // for the context menu in the UI).  This will be appended to as various
   // content is embedded / requested by JavaScript.
+  // XXX: This never fires in e10s
   onLocationChange: function(wp, req, uri) {
     if (wp instanceof CI.nsIWebProgress) {
       let location = uri.spec;
@@ -337,40 +335,33 @@ HTTPSEverywhere.prototype = {
         return;
       }
       dump("ON LOCATION $$$$$$$$$$\n");
-      if (!this.newApplicableListForBrowser(browser)) 
+      if (!this.newApplicableListForBrowser(browser))
         this.log(WARN,"Something went wrong in onLocationChange");
     } else {
       this.log(WARN,"onLocationChange: no nsIWebProgress");
     }
   },
-*/
+
   getBrowserForChannel: function(channel) {
-    // Obtain an nsIDOMWindow from a channel
-    let nc;
+    // Obtain a browser element from a channel
+    let loadContext;
     try {
-      nc = channel.notificationCallbacks ?
-           channel.notificationCallbacks :
-           channel.loadGroup.notificationCallbacks;
+      loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
     } catch(e) {
-      this.log(WARN,"no loadgroup notificationCallbacks for "+channel.URI.spec);
+      try {
+        loadContext = channel.loadGroup.notificationCallbacks
+          .getInterface(CI.nsILoadContext);
+      } catch(e) {
+        this.log(INFO, "no loadgroup notificationCallbacks for "
+                 + channel.URI.spec + e);
+        return null;
+      }
+    }
+    if (!loadContext) {
+      this.log(WARN, "No loadContext for: " + channel.URI.spec);
       return null;
     }
-    if (!nc) {
-      return null;
-    }
-    try {
-      var loadContext = nc.getInterface(CI.nsILoadContext);
-      dump("loadContext = " + loadContext + "\n");
-      let domWin = loadContext.associatedWindow;
-      var browser = gBrowser.getBrowserForDocument(domWin.top.document);
-    } catch(e) {
-      this.log(INFO, "No <browser> element associated with request: " + channel.URI.spec);
-      return null;
-    }
-    if (!browser) {
-      this.log(NOTE, "failed to get <browser> for " + channel.URI.spec);
-      return null;
-    }
+    let browser = loadContext.topFrameElement;
     return browser;
   },
 
@@ -378,11 +369,11 @@ HTTPSEverywhere.prototype = {
   // need to be appended to with reference only to the channel
   getApplicableListForChannel: function(channel) {
     var browser = this.getBrowserForChannel(channel);
-    return this.getApplicableListForBrowser(browser, "on-modify-request w " + browser);
+    return this.getApplicableListForBrowser(browser);
   },
 
   newApplicableListForBrowser: function(browser) {
-    if (!browser || !(browser instanceof CI.nsIContent)) {
+    if (!browser) {
       this.log(WARN, "Get alist without browser");
       return null;
     }
@@ -391,16 +382,15 @@ HTTPSEverywhere.prototype = {
     return alist;
   },
 
-  getApplicableListForBrowser: function(browser, where) {
-    if (!browser || !(browser instanceof CI.nsIContent)) {
+  getApplicableListForBrowser: function(browser) {
+    if (!browser) {
+      //this.log(WARN, "Get alist without browser");
       return null;
     }
     var alist= this.getExpando(browser,"applicable_rules");
     if (alist) {
-      //this.log(DBUG,"get AL success in " + where);
       return alist;
     } else {
-      //this.log(DBUG, "Making new AL in getApplicableListForBrowser in " + where);
       alist = new ApplicableList(this.log,browser);
       this.setExpando(browser,"applicable_rules",alist);
     }

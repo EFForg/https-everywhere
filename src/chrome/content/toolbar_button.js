@@ -197,9 +197,15 @@ var rulesetTestsMenuItem = null;
 
 function show_applicable_list(menupopup) {
   var browser = gBrowser.selectedBrowser;
+  if (!browser) {
+    HTTPSEverywhere.log(WARN, "No browser for applicable list");
+    return;
+  }
+
   var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
+  dump("got alist for: "+alist.home+"\n");
   var weird=false;
-  
+
   if (!alist) {
     // This case occurs for error pages and similar.  We need a dummy alist
     // because populate_menu lives in there.  Would be good to refactor this
@@ -224,7 +230,6 @@ function show_applicable_list(menupopup) {
     if(!menupopup.contains(rulesetTestsMenuItem)) 
       menupopup.appendChild(rulesetTestsMenuItem);
   }
-  
 }
 
 function toggle_rule(rule_id) {

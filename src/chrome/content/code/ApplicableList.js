@@ -5,6 +5,8 @@
 serial_number = 0;
 
 function ApplicableList(logger, browser) {
+  this.log = logger;
+  dump("browser currentURI is " + browser.currentURI.spec);
   this.uri = browser.currentURI.clone();
   if (!this.uri) {
     this.log(WARN,"NULL CLONING URI " + doc);
@@ -14,7 +16,6 @@ function ApplicableList(logger, browser) {
       this.log(WARN,"NULL CLONING URI " + browser.currentURI.spec);
   }
   this.home = browser.currentURI.spec; // what doc we're housekeeping for
-  this.log = logger;
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
   this.inactive = {};
