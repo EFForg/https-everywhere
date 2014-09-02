@@ -300,6 +300,9 @@ HTTPSEverywhere.prototype = {
   // for the context menu in the UI).  This will be appended to as various
   // content is embedded / requested by JavaScript.
   onLocationChange: function(browser) {
+    if (!this.prefs.getBoolPref("globalEnabled")) {
+      return;
+    }
     try {
       this.newApplicableListForBrowser(browser);
     } catch (e) {
