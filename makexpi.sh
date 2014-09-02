@@ -135,7 +135,11 @@ if [ "$1" ] && [ "$1" != "--fast" ] ; then
 	XPI_NAME="$XPI_NAME.xpi"
 else
   # During development, generate packages named with the short hash of HEAD.
-	XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`.xpi"
+	XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`"
+        if ! git diff-index --quiet HEAD; then
+            XPI_NAME="$XPI_NAME-dirty"
+        fi
+        XPI_NAME="$XPI_NAME.xpi"
 fi
 
 [ -d pkg ] || mkdir pkg
