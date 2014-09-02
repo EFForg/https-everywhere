@@ -281,14 +281,13 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      this.log(WARN, "No expando for " + browser.currentURI);
+      this.log(NOTE, "No expando for " + browser.currentURI);
       return null;
     }
     return obj[key];
   },
 
   setExpando: function(browser, key, value) {
-    this.log(WARN, "setting expandomap value: "+value);
     if (!this.expandoMap.has(browser)) {
       this.expandoMap.set(browser, {});
     }
@@ -318,13 +317,13 @@ HTTPSEverywhere.prototype = {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
-        this.log(INFO, "no loadgroup notificationCallbacks for "
+        this.log(NOTE, "no loadgroup notificationCallbacks for "
                  + channel.URI.spec + e);
         return null;
       }
     }
     if (!loadContext) {
-      this.log(WARN, "No loadContext for: " + channel.URI.spec);
+      this.log(NOTE, "No loadContext for: " + channel.URI.spec);
       return null;
     }
     let browser = loadContext.topFrameElement;
@@ -476,9 +475,6 @@ HTTPSEverywhere.prototype = {
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
 
-        var dls = CC['@mozilla.org/docloaderservice;1']
-            .getService(CI.nsIWebProgress);
-        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_ALL);
         this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
         HTTPSRules.init();
@@ -605,10 +601,10 @@ HTTPSEverywhere.prototype = {
     var browser = this.getBrowserForChannel(oldChannel);
     var old_alist = null;
     if (browser) 
-      old_alist = this.getExpando(browser,"applicable_rules", null);
+      old_alist = this.getExpando(browser,"applicable_rules");
     browser = this.getBrowserForChannel(newChannel);
     if (!browser) return null;
-    var new_alist = this.getExpando(browser,"applicable_rules", null);
+    var new_alist = this.getExpando(browser,"applicable_rules");
     if (old_alist && !new_alist) {
       new_alist = old_alist;
       this.setExpando(browser,"applicable_rules",new_alist);
@@ -706,10 +702,6 @@ HTTPSEverywhere.prototype = {
         catman.deleteCategoryEntry("net-channel-event-sinks",
                                    SERVICE_CTRID, true);
 
-        var dls = CC['@mozilla.org/docloaderservice;1']
-                    .getService(CI.nsIWebProgress);
-        dls.removeProgressListener(this);
-
         this.prefs.setBoolPref("globalEnabled", false);
       } catch(e) {
         this.log(WARN, "Couldn't remove observers: " + e);
@@ -723,10 +715,6 @@ HTTPSEverywhere.prototype = {
         OS.addObserver(this, "http-on-modify-request", false);
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
-
-        var dls = CC['@mozilla.org/docloaderservice;1']
-                    .getService(CI.nsIWebProgress);
-        dls.addProgressListener(this, CI.nsIWebProgress.NOTIFY_LOCATION);
 
         this.log(INFO,
                  "ChannelReplacement.supported = "+ChannelReplacement.supported);
