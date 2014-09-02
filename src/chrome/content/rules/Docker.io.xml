@@ -1,58 +1,78 @@
 <!--
-	For rules causing false/broken MCB, see Docker.io-falsemixed.xml.
+	!NB remove Docker.io-falsemixed.xml!
 
 
-	Problematic subdomains:
+	Nonfunctional domains:
 
-		- ^	(dropped)
+		- posts.docker.com *
 
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- docs
-		- index
+	* Redirects to http; mismatched, CN: *.scoop.it
 
 
-	Partially covered subdomains:
+	Problematic domains:
 
-		- blog *
+		- blog.docker.io *
+		- docs.docker.io *
 
-	* Avoiding false/broken MCB, rest handled in Docker.io-falsemixed.xml.
+	* Cert only matches *.docker.com
+
+
+	Fully covered domains:
+
+		- docker.com subdomains:
+
+			- (www.)
+			- blog
+			- docs
+			- forums
+			- hub
+			- registry.hub
+			- status
+
+		- docker.io subdomains:
+
+			- (www.)
+			- blog		(→ blog.docker.com)
+			- docs		(→ docs.docker.com)
+			- index
 
 
 	Mixed content:
 
-		- css, on blog from:
-
-			- $self *
-			- fonts.googleapis.com *
-
 		- Images, on blog from:
 
 			- $self *
-			- www *
+			- blog.docker.io *
 
 	* Secured by us
 
 -->
-<ruleset name="docker.io (partial)">
+<ruleset name="Docker.io (partial)">
 
+	<target host="docker.com" />
+	<target host="*.docker.com" />
 	<target host="docker.io" />
 	<target host="*.docker.io" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://blog\.docker\.io/+(?!\?mcsf_action=|assets/|favicon\.ico|plugins/|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^www\.docker\.io$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^hub\.docker\.com$" name="^csrftoken$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^status\.docker\.com$" name="^(SERVERID|connect\.sid)$" /-->
+
+	<securecookie host="^(?:status|www)\.docker\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?docker\.io/"
-		to="https://www.docker.io/" />
+	<rule from="^http://((?:forums|hub|registry\.hub|status|www)\.)?docker\.com/"
+		to="https://$1docker.com/" />
 
-	<rule from="^http://(blog|docs|index)\.docker\.io/"
-		to="https://$1.docker.io/" />
+	<rule from="^http://(blog|docs)\.docker\.(?:com|io)/"
+		to="https://$1.docker.com/" />
+
+	<rule from="^http://(index\.|www\.)?docker\.io/"
+		to="https://$1docker.io/" />
 
 </ruleset>
