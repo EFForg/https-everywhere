@@ -84,26 +84,20 @@ httpsEverywhere.toolbarButton = {
 
     // add listener for top-level location change across all tabs
     let httpseProgressListener = {
-      onLocationChange: function(aBrowser, aWebProgress, aRequest, aLoc) {
+      onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
         HTTPSEverywhere.log(DBUG, "Got on location change!");
         HTTPSEverywhere.onLocationChange(aBrowser);
+      },
+      onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
+        if ((gBrowser.selectedBrowser === aBrowser) &&
+            (aFlags & CI.nsIWebProgressListener.STATE_STOP) &&
+            aWebProgress.isTopLevel) {
+          HTTPSEverywhere.log(DBUG, "Got on state change");
+          tb.updateRulesetsApplied();
+        }
       }
     };
     gBrowser.addTabsProgressListener(httpseProgressListener);
-
-    // hook event for when page loads
-    var onPageLoad = function() {
-      // Timeout is used for a number of reasons.
-      // 1) For Performance since we want to defer computation.
-      // 2) Sometimes the page is loaded before all applied rulesets are
-      //    calculated; in such a case, a half-second wait works.
-      setTimeout(tb.updateRulesetsApplied, 500);
-    };
-
-    var appcontent = document.getElementById('appcontent');
-    if (appcontent) {
-      appcontent.addEventListener('load', onPageLoad, true);
-    }
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
