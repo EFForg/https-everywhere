@@ -155,7 +155,7 @@ httpsEverywhere.toolbarButton = {
     }
 
     var browser = window.gBrowser.selectedBrowser;
-    var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules", null);
+    var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
     if (!alist) {
       return;
     }
