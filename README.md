@@ -92,7 +92,9 @@ to make sure that your rule is free of common mistakes.
 
 ### Writing translations
 
-If you would like to help translate HTTPS Everywhere into another language, you can do that through Transifex: https://www.transifex.com/projects/p/torproject/resources/.
+If you would like to help translate HTTPS Everywhere into your language,
+you can do that through the Tor Project's Transifex page:
+https://www.transifex.com/p/torproject/resources/.
 
 ### Bug trackers and mailing lists
 
@@ -105,9 +107,9 @@ Tests
 
 There are some very basic unittests under https-everywhere-tests/. These are run with
 
-   bash test.sh
+    bash test.sh
 
-We need a lot more tests and welcome additions.
+Please help write more unittests and integration tests!
 
 There are also ruleset tests, which aim to find broken rulesets by actually
 loading URLs in a browser and watching for Mixed Content Blocking to fire.
