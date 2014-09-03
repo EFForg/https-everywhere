@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see GameSpot.com-falsemixed.xml.
+
 	For other CBS coverage, see CBS.xml.
 
 
@@ -11,23 +13,23 @@
 
 	Nonfunctional domains:
 
-		- (www.)gamespot.com ¹
 		- userimage.gamespot.com	(↓ ditto)
 		- im(age|g[12].gamespotcdn.net	(Akamai; "An error occurred"; all equivalent)
-
-	¹ Redirects to http, valid cert
 
 
 	Problematic subdomains:
 
 		- static *
 		- static[1-4] *
+		- www ²
 
 	* Works, akamai
+	² Mixed css from static1
 
 
 	Fully covered subdomains:
 
+		- ^
 		- auth
 		- fuse
 		- uk
@@ -39,6 +41,7 @@
 		- ^ ¹
 		- . ²
 		- auth ³
+		- us ³
 		- www ¹
 
 	¹ Not secured by us <= no tls support
@@ -48,13 +51,21 @@
 
 	Mixed content:
 
-		- Web bugs on auth from dw.cbsi.com *
+		- css on www from static1 *
+
+		- Images on www from static[1-5] *
+
+		- Web bugs, on:
+
+			- auth from dw.cbsi.com *
+			- www from tags.bkrtx.com *
 
 	* Secured by us
 
 -->
 <ruleset name="GameSpot (partial)">
 
+	<target host="gamespot.com" />
 	<target host="*.gamespot.com" />
 		<!--
 			References resources relative to root:
@@ -65,11 +76,17 @@
 
 	<!--	Not secured by server:
 					-->
-	<securecookie host="^auth\.gamespot\.com$" name=".+" />
+	<!--securecookie host="^\.gamespot\.com$" name="^(AD_SESSION|PHPSESSID|ads_firstpg)$" /-->
+	<!--securecookie host="^auth\.gamespot\.com$" name="^(device_view|fly_device|_promos_seen)$" /-->
+	<!--securecookie host="^us\.gamespot\.com$" name="^(ANON_REMEMBERME|fly_device|vguid|xcab|xcr)$" /-->
+	<!--securecookie host="^www\.gamespot\.com$" name="^(ANON_REMEMBERME|vguid|xcab|xcr|)$" /-->
+
+	<securecookie host="^\.gamespot\.com$" name="^(?:AD_SESSION|ads_firstpg)$" />
+	<securecookie host="^(?:auth|us)\.gamespot\.com$" name=".+" />
 
 
-	<rule from="^http://(auth|fuse|u[ks])\.gamespot\.com/"
-		to="https://$1.gamespot.com/" />
+	<rule from="^http://((?:auth|fuse|u[ks])\.)?gamespot\.com/"
+		to="https://$1gamespot.com/" />
 
 	<rule from="^http://static(\d)?\.gamespot\.com/(?!.+\.css(?:$|\?))"
 		to="https://a248.e.akamai.net/f/50/31/6/static$1.gamespot.com/" />

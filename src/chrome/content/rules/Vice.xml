@@ -6,12 +6,9 @@
 
 		- (www.)noisey.cn
 		- (www.)thecreatorsproject.com	(interrupted)
-		- vice.com			(cert: manage.vice.com, self-signed; 503)
 		- hbo.vice.com ⁴
 		- i-d.vice.com ⁵
 		- shop.vice.com ⁶
-		- www.vice.com
-		- motherboard.vice.com		(reset)
 		- noisey.vice.com
 		- socials.uk.vice.com		(cert: socials.vice.com; reset)
 		- scs.viceland.com		(shows default plesk page; expired 2010-11-15, self-signed)
@@ -43,16 +40,21 @@
 
 		- dm07ef02yemve.cloudfront.net
 		- dz6snzmhpcl6f.cloudfront.net
+		- motherboard.vice.com.edgesuite.net
+		- motherboard-cdn-assets.vice.com.edgesuite.net
 
 
 	Problematic subdomains:
 
 		- ^ ¹
 		- assets ²
+		- motherboard ³
+		- motherboard-cdn-assets ³
 		- assets.thump ²
 
 	¹ "error"
 	² cloudfront
+	³ Works, akamai
 
 
 	Fully covered subdomains:
@@ -62,6 +64,7 @@
 		- assets-i-d	(→ d1wzhalc7g55g3.cloudfront.net)
 		- assets-news
 		- assets-sports
+		- embeds
 		- munchies
 		- news
 		- sports
@@ -74,13 +77,17 @@
 
 		- Images, on:
 
+			- motherboard from motherboard-cdn-assets *
+			- motherboard from lh3.ggpht.com *
 			- munchies from images *
 			- thump from assets.thump *
 			- www from assets *
 
 		- Bugs, on:
 
-			- munchies from b.scorecardresearch.com *
+			- motherboard from pixel.adsafeprotected.com
+			- motherboard from storage.googleapis.com *
+			- motherboard and munchies from b.scorecardresearch.com *
 			- www from platform.tumblr.com *
 			- www from platform.twitter.com *
 
@@ -95,6 +102,10 @@
 	<target host="vice.com" />
 	<target host="*.vice.com" />
 		<!--exclusion pattern="^http://(hbo|i-d|shop)\.vice\.com/" /-->
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://motherboard\.vice\.com/+(?!assets/(?:favicon|font|image)s/)" />
 
 
 	<rule from="^http://assets\.motherboard\.tv/"
@@ -122,11 +133,17 @@
 	<rule from="^http://assets-i-d\.vice\.com/"
 		to="https://d1wzhalc7g55g3.cloudfront.net/" />
 
-	<rule from="^http://(assets-(?:news|sports)|images|munchies|news|socials|sports|staging-assets-news|thump)\.vice\.com/"
+	<rule from="^http://(assets-(?:news|sports)|embeds|images|munchies|news|socials|sports|staging-assets-news|thump)\.vice\.com/"
 		to="https://$1.vice.com/" />
 
 	<!--rule from="^http://hbo\.vice\.com/.*"
 		to="https://connect.hbo.com/vice/" /-->
+
+	<rule from="^http://motherboard(-cdn-assets)?\.vice\.com/"
+		to="https://a248.e.akamai.net/f/248/4735/10/motherboard$1.vice.com/" />
+
+	<!--rule from="^http://store\.vice\.com/"
+		to="https://vice.myshopify.com/" /-->
 
 	<rule from="^http://assets\.thump\.vice\.com/"
 		to="https://df5qbu832tmne.cloudfront.net/" />

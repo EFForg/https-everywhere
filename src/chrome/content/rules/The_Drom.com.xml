@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- static2 *
+		- static3 *
+
+	Mismatched, CN: www.thedrum.com
+
+
+	Some (most?) pages redirect to http.
+
+
+	Mixed content:
+
+		- Images on www from static3 *
+
+	* Secured by us
+
+-->
+<ruleset name="The Drum.com (partial)">
+
+	<target host="thedrum.com" />
+	<target host="*.thedrum.com" />
+
+
+	<rule from="^http://(www\.)?thedrum\.com/(?=(?:account/login|cart/add/\d+|store|user/login)(?:$|[?/])|uploads/)"
+		to="https://$1thedrum.com/" />
+
+	<rule from="^http://static\d\.thedrum\.com/"
+		to="https://www.thedrum.com/" />
+
+</ruleset>

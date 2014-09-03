@@ -6,14 +6,18 @@
 
 	Nonfunctional subdomains:
 
-		- survey *
+		- extensions.services ¹
+		- templates.services ¹
+		- survey ²
 
-	* http reply
+	¹ Refused
+	² http reply
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- download
 		- forum
 		- forums
 		- wiki
@@ -23,6 +27,7 @@
 
 		- .forum ¹
 		- survey ²
+		- wiki ¹
 
 	¹ Secured by server
 	² Not secured by us <= no tls support
@@ -39,15 +44,16 @@
 
 	<target host="openoffice.org" />
 	<target host="*.openoffice.org" />
-		<!--exclusion pattern="^http://survey\.openoffice\.org/" /-->
+		<!--exclusion pattern="^http://(extensions\.services|templates\.services|survey)\.openoffice\.org/" /-->
 
 
 	<!--	Secured by server:
 					-->
 	<!--securecookie host="^\.forum\.openoffice\.org$" name="^(phpbb3_\w{5}_k|phpbb3_\w{5}_sid|phpbb3_\w{5}_u)$" /-->
+	<!--securecookie host="^wiki\.openoffice\.org$" name="^wikiaoo_session$" /-->
 
 
-	<rule from="^http://((?:forums?|wiki|www)\.)?openoffice\.org/"
+	<rule from="^http://((?:download|forums?|wiki|www)\.)?openoffice\.org/"
 		to="https://$1openoffice.org/" />
 
 </ruleset>
