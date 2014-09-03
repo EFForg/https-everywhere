@@ -1,5 +1,9 @@
 #!/bin/bash -ex
-cd "`dirname $0`"
+# Run tests for HTTPS Everywhere
+
+# We have to change to the right directory because this is sometimes invoked
+# through a symlink in .git/hooks/pre-push.
+cd $(dirname $(readlink -f $0))
 
 # dummy Jetpack addon that contains tests
 TEST_ADDON_PATH=./https-everywhere-tests/
