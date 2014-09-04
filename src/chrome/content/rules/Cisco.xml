@@ -8,7 +8,6 @@
 	Nonfunctional subdomains:
 
 		- bam-prd1
-		- blogs		(cert: 184964-nc-web1.cisco.com, self-signed, expired; shows RHEL Apache test page)
 		- homecommunity
 		- mkto ⁴
 		- newsroom	(times out)
@@ -69,6 +68,7 @@
 	Observed cookie domains:
 
 		- . ¹
+		- blogs ²
 		- communities ²
 		- csc-stage
 		- csc-test[1-4]
@@ -89,6 +89,7 @@
 
 		- Images, on:
 
+			- blogs from $self *
 			- csr from $self *
 			- eir from eir-stage *
 			- from services-sj.mediusviewer.com *
@@ -97,6 +98,8 @@
 
 		- Bugs, on:
 
+			- blogs from apis.google.com *
+			- blogs from platform.linkedin.com *
 			- solucoespme from community.spiceworks.com *
 			- video from admin.brightcove.com
 
@@ -127,12 +130,13 @@
 		Not secured by server:
 					-->
 	<!--securecookie host="^\.cisco\.com$" name="^(ObSSOCookie|TOOLS-Loc)$" /-->
+	<!--securecookie host="^blogs\.cisco\.com$" name="^wpmp_switcher$" /-->
 	<!--securecookie host="^communities\.cisco\.com$" name="^(BIGipServerm\w+-\d+-pool|JSESSIONID|jive\.security\.context)$" /-->
 	<!--securecookie host="^learningnetwork\.cisco\.com$" name="^(BIGipServerm\w+-40-pool|JSESSIONID|jive\.recentHistory\.-1|jive\.server\.info)$" /-->
 	<!--securecookie host="^learningnetworkstore\.cisco\.com$" name="^JSESSIONID$" /-->
 	<!--securecookie host="^sso\.cisco\.com$" name="^ObFormLoginCookie$" /-->
 
-	<securecookie host="^[chlst].*\.cisco\.com$" name=".*" />
+	<securecookie host="^[bchlst].*\.cisco\.com$" name=".*" />
 
 
 	<!--	Default: Replace with HTTPS.  Redirect at Logout
@@ -141,7 +145,7 @@
 	<rule from="^http://(?:www\.)?cisco\.com/"
 		to="https://www.cisco.com/" />
 
-	<rule from="^http://(beli|chinasmbmarketplace|ciscobusinesslink|cisco-images|communities|csc-stage|csc-test\d|csr|developer|indiasmbmarketplace|learningnetwork|learningnetworkstore|smbmarketplace|solucionespyme|solucoespme|sso|sso-prod[0-3]|supportforums|tools[123]?|www[123])\.cisco\.com/"
+	<rule from="^http://(beli|blogs|chinasmbmarketplace|ciscobusinesslink|cisco-images|communities|csc-stage|csc-test\d|csr|developer|indiasmbmarketplace|learningnetwork|learningnetworkstore|smbmarketplace|solucionespyme|solucoespme|sso|sso-prod[0-3]|supportforums|tools[123]?|www[123])\.cisco\.com/"
 		to="https://$1.cisco.com/" />
 
 	<rule from="^http://eir(?:-stage)?\.cisco\.com/"
