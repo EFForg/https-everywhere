@@ -1,4 +1,6 @@
 <!--
+	For rules subject to javascript redirect loops, see Alipay.com-noscript.xml.
+
 	For other Alibaba coverage, see Alibaba.xml.
 
 
@@ -18,11 +20,13 @@
 
 	Problematic domains:
 
+		- fun.alipay.com ¹
 		- job.alipay.com	(works; mismatched, CN: *.alibaba.com)
 
 		- pic.alipayobjects.com *
 		- static.alipayobjects.com *
 
+	¹ Redirect to http via javascript
 	* Refused
 
 
@@ -101,6 +105,11 @@
 	<target host="alipay.com" />
 	<target host="*.alipay.com" />
 		<!--exclusion pattern="^http://(blog|club|help|help\.lab|home|qudao)\.alipay\.com/" /-->
+		<!--
+			All other resources appearto be loaded solely
+			from *objects.com:
+								-->
+		<exclusion pattern="^http://fun\.alipay\.com/+(?!favicon\.ico)" />
 	<target host="*.alipayobjects.com" />
 
 
@@ -119,7 +128,7 @@
 			-->
 	<!--securecookie host="^egg\.alipay\.com$" name="^sec_token" /-->
 
-	<securecookie host=".*\.alipay\.com$" name=".+" />
+	<securecookie host="^(?!fun\.).*\.alipay\.com$" name=".+" />
 
 
 	<rule from="^http://job\.alipay\.com/"
