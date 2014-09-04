@@ -1,0 +1,66 @@
+<!--
+	Ruhr-Universitaet Bochum
+
+
+	^ruhr-uni-bochum.de: mismatched
+
+
+	Problematic domains:
+
+		- aktuell.ruhr-uni-bochum.de ¹
+		- ruhr-uni-bochum.de ²
+
+	¹ Mismatched, CN: www5.rz.ruhr-uni-bochum.de
+	² Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ -> www)
+		- www.rz
+
+
+	Partially covered subdomains:
+
+		- www.cits *
+
+	* Avoiding false/broken MCB
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.cits from www.rz ¹ 
+			- www5.rz from www.rz.ruhr-uni-bochum.de ¹
+
+		- Images, on:
+
+			- www.cits from www.rz ¹ 
+			- www.rz from aktuell.rub.de
+			- www5.rz from www.rz ¹
+			- www5.rz from www ¹
+			- www from aktuell.rub.de ² 
+			- www from aktuell.ruhr-uni-bochum.de ²
+
+	¹ Secured by us
+	² Not secured by us <= mismatched 
+
+-->
+<ruleset name="Ruhr-Uni-Bochum.de (partial)">
+
+	<target host="ruhr-uni-bochum.de" />
+	<target host="*.ruhr-uni-bochum.de" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.cits\.ruhr-uni-bochum\.de/+(?!imperia/md/(?:content|images)/)" />
+
+
+	<rule from="^http://(?:www\.)?ruhr-uni-bochum\.de/"
+		to="https://www.ruhr-uni-bochum.de/" />
+
+	<rule from="^http://(www\.cits|(?:helpdesk|www)\.rz)\.ruhr-uni-bochum\.de/"
+		to="https://$1.ruhr-uni-bochum.de/" />
+
+</ruleset>
