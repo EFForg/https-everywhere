@@ -15,7 +15,6 @@ if(HTTPSEverywhere) {
   };
 }
 
-
 function openStatus() {
   // make sure mixed content blocking preferences are correct
   Services.prefs.setBoolPref("security.mixed_content.block_display_content", false);
@@ -26,6 +25,34 @@ function openStatus() {
   gBrowser.selectedTab = statusTab;
 }
 
+function addTestTarget(urls, target, ruleset_ids) {
+  // Add one target and associated metadata to the list of
+  // URLs to be tested, performing housekeeping along the way
+  HTTPSEverywhere.log(5, "target is " + target);
+  var active_ids = [];
+  for (var n = 0; n < ruleset_ids.length; n++) {
+    var rs_id = ruleset_ids[n];
+    var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+    if (!rs) {
+      // most rulesets will need to be fetched from the database
+      HTTPSEverywhere.https_rules.loadRulesetById(rs_id);
+      rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+      if (!rs) {
+        HTTPSEverywhere.log(5, "ARGH unexpected missing ruleset");
+      }
+    }
+    if (rs.active) { active_ids.push(rs_id) };
+  }
+  // Some rulesets that might rewrite this target, let's test them
+  if (active_ids.length > 0) {
+    urls.push({
+      url: 'http://'+target,
+      target: target,
+      ruleset_ids: active_ids
+    });
+  }
+}
+
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   
@@ -34,14 +61,16 @@ function testRunner() {
   var output = [];
   var urls = [];
   var num = 0;
+  var targets = HTTPSEverywhere.https_rules.targets;
  
-  for(var target in HTTPSEverywhere.https_rules.targets) {
-    if(!target.indexOf("*") != -1)  {
-      urls.push({ 
-        url: 'https://'+target, 
-        target: target, 
-        ruleset_names: HTTPSEverywhere.https_rules.targets[target]
-      });
+  for(var target in targets) {
+    var t;
+    if(target.indexOf("*") == -1)  {
+      addTestTarget(urls, target, targets[target]);
+    } else {
+      // target is like *.example.wildcard.com, let's see what we can do...
+      t = target.replace("*.", "www.");
+      if (!(t in targets)) { addTestTarget(urls, t, targets[target]); }
     }
   }
 
@@ -72,8 +101,8 @@ function testRunner() {
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
           // build output to log
           ruleset_xmls = '';
-          for(let i=0; i<urls[number].ruleset_names.length; i++) {
-            ruleset_xmls += urls[number].ruleset_names[i].xmlName + ', ';
+          for(let i=0; i<urls[number].ruleset_ids.length; i++) {
+            ruleset_xmls += urls[number].ruleset_ids[i].xmlName + ', ';
           }
           if(ruleset_xmls != '')
             ruleset_xmls = ruleset_xmls.substring(ruleset_xmls.length-2, 2);
