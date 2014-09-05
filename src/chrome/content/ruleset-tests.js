@@ -25,6 +25,7 @@ function openStatus() {
   gBrowser.selectedTab = statusTab;
 }
 
+
 // FIXME use a class rather than global state
 var left_star = new RegExp(/^\*\./); // *.example.com
 var accepted_test_targets = {}
@@ -49,7 +50,6 @@ function addTestTarget(urls, target, ruleset_ids) {
     });
   }
 }
-
 
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
