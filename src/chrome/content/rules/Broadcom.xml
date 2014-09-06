@@ -4,20 +4,25 @@
 		- Broadcom_Foundation.org.xml
 
 
-		- broadcom.jobs2web.com
-
-			- jobs
+	broadcom.jobs2web.com <=> jobs.broadcom.com
 
 
 	Nonfunctional subdomains:
 
-		- investor	(cert: *.shareholder.com; 403)
-		- websearch	(cert: foo.ent.google.com, expired, self-signed; redirects to http)
+		- investor ¹
+		- websearch ²
+
+	¹ 403; mismatched, CN: *.shareholder.com
+	² Redirects to http; expired, self-signed, CN: foo.ent.google.com
 
 
 	Problematic subdomains:
 
-		- jobs		(works; mismatched, CN: *.jobs2web.com)
+		- ^ ¹
+		- jobs ²
+
+	¹ Cert only matches www.broadcom.com
+	² Works; mismatched, CN: *.jobs2web.com
 
 
 	Partially covered subdomains:
@@ -41,14 +46,13 @@
 	<securecookie host="^blog\.broadcom\.com$" name=".+" />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?broadcom\.com/"
+	<rule from="^http://(?:www\.)?broadcom\.com/"
 		to="https://www.broadcom.com/" />
 
 	<rule from="^http://blog\.broadcom\.com/"
 		to="https://blog.broadcom.com/" />
 
-	<rule from="^http://jobs\.broadcom\.com/(css|sites|view)/"
-		to="https://broadcom.jobs2web.com/$1/" />
+	<rule from="^http://jobs\.broadcom\.com/(?=css/|sites/|view/)"
+		to="https://broadcom.jobs2web.com/" />
 
 </ruleset>

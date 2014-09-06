@@ -1,4 +1,6 @@
 <!--
+	For rules subject to javascript redirect loops, see Alipay.com-noscript.xml.
+
 	For other Alibaba coverage, see Alibaba.xml.
 
 
@@ -18,11 +20,13 @@
 
 	Problematic domains:
 
+		- fun.alipay.com ¹
 		- job.alipay.com	(works; mismatched, CN: *.alibaba.com)
 
 		- pic.alipayobjects.com *
 		- static.alipayobjects.com *
 
+	¹ Redirect to http via javascript
 	* Refused
 
 
@@ -31,32 +35,41 @@
 		- *.alipay.com:
 
 			- (www.)
+			- 110
 			- ab
 			- abc
 			- accounts
+			- alipass
 			- apimg
 			- app
 			- auth
 			- b
 			- ccprod
+			- cshall
 			- download
 			- ebppprod
 			- egg
+			- fama
 			- financeprod
 			- fun
+			- fuwu
 			- hi
 			- hongbao
+			- huiyuan
 			- img
 			- jf
 			- jiaofei
 			- job		(→ job.alibaba.com)
 			- kuai
 			- lab
+			- life
 			- mbuf
 			- memberprod
 			- mobile
+			- mp
 			- my
 			- omeo
+			- openhome
 			- overseas
 			- passport
 			- securitycenter
@@ -65,15 +78,26 @@
 			- shenghuo
 			- static
 			- tfsimg
+			- wifi
 			- ynuf
+			- zhaocaibao
 			- zht
 
 		- alipayobjects.com subdomains:
 
 			- a
+			- d
 			- i
 			- pic		(→ i)
 			- static	(→ a)
+			- t
+
+
+	Mixed content:
+
+		- Images on fun from i.alipayobjects.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Alipay.com (partial)">
@@ -81,10 +105,30 @@
 	<target host="alipay.com" />
 	<target host="*.alipay.com" />
 		<!--exclusion pattern="^http://(blog|club|help|help\.lab|home|qudao)\.alipay\.com/" /-->
+		<!--
+			All other resources appearto be loaded solely
+			from *objects.com:
+								-->
+		<exclusion pattern="^http://fun\.alipay\.com/+(?!favicon\.ico)" />
 	<target host="*.alipayobjects.com" />
 
 
-	<securecookie host=".*\.alipay\.com$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="(110|accounts|alipass|app|b|auth|cshall|download|egg|fama|financeprod|fun|fuwu|img|huiyan|lab|memberprod|life|mobile|mp|my|openhome|securitycenter|shenghuo|static|survey|tfsimg|wifi|www|zhaocaibao)\.alipay\.com$" name="^spanner$" /-->
+	<!--securecookie host="^(alipass|b|fuwu|life)\.alipay\.com$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.alipay\.com$" name="^(ALIPAYJSESSIONID|ctoken|umt)$" /-->
+	<!--securecookie host="(110|accounts|app|auth|cshall|fama|financeprod|fun|huiyuan|lab|memberprod|mobile|mp|my|openhome|shenghuo|wifi|zhaocaibao)\.alipay\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(egg|survey)\.alipay\.com$" name="^PHPSESSID$" /-->
+	<!--
+		"Oops?"
+			-->
+	<!--securecookie host="^egg\.alipay\.com$" name="^sec_token" /-->
+
+	<securecookie host="^(?!fun\.).*\.alipay\.com$" name=".+" />
 
 
 	<rule from="^http://job\.alipay\.com/"
@@ -95,6 +139,9 @@
 
 	<rule from="^http://(?:a|static)\.alipayobjects\.com/"
 		to="https://a.alipayobjects.com/" />
+
+	<rule from="^http://(d|t)\.alipayobjects\.com/"
+		to="https://$1.alipayobjects.com/" />
 
 	<rule from="^http://(?:i|pic)\.alipayobjects\.com/"
 		to="https://i.alipayobjects.com/" />

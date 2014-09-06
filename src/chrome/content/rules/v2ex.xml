@@ -1,6 +1,39 @@
-<ruleset name="v2ex">
-  <target host="www.v2ex.com" />
-  <target host="v2ex.com" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(www\.)?v2ex\.com/" to="https://v2ex.com/"/>
+		- livid *
+
+	* github
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cdn
+		- workspace
+
+
+	These altnames don't exist:
+
+		- www.cdn.v2ex.com
+		- www.workspace.v2ex.com
+
+-->
+<ruleset name="v2ex (partial)">
+
+	<target host="v2ex.com" />
+	<target host="*.v2ex.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?v2ex\.com$" name="^PB3_SESSION$" /-->
+	<!--securecookie host="^(workspace\.|www\.)?v2ex\.com$" name="^V2EX_LANG" /-->
+
+	<securecookie host="^(?:workspace\.|www\.)?v2ex\.com$" name=".+" />
+
+
+	<rule from="^http://((?:cdn|workspace|www)\.)?v2ex\.com/"
+		to="https://$1v2ex.com/" />
+
 </ruleset>

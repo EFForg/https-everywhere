@@ -4,6 +4,7 @@
 
 	Other Brightcove rulesets:
 
+		- Bcove.me.xml
 		- Zencoder.xml
 
 
@@ -29,13 +30,11 @@
 
 			- feeds *
 			- forum **
-			- goku			(refused)
 			- investor ***
-			- link
 			- brightcove04.o	(503, Akamai)
 			- status *
 
-		- brightcove.vo.llnwd.net	(400; CN: *.hs.llnwd.net, .hs. doesn't exist)
+		- brightcove.vo.llnwd.net	(400; .hs. doesn't exist)
 
 	* Reset
 	** Refused
@@ -47,31 +46,31 @@
 		- admin.brightcove.com		(akamai)
 		- brightcove01.brightcove.com ¹
 		- go.brightcove.com		(works; mismatched, CN: secure.eloqua.com)
-		- opensource.brightcove.com	(works; mismatched, CN: *.vorpal.io)
-		- services.brightcove.com	(504, valid cert)
+		- opensource.brightcove.com	(refused)
 
 	¹ Works, akamai
 
 
-	Partially covered subdomains:
-
-		- (www.) *
-		- blog *
-
-	* Some pages redirect to http
-
-
 	Fully covered subdomains:
 
+		- (www.) *
 		- api
 		- read.appcloud
 		- transcode.appcloud
 		- write.appcloud
+		- blog
 		- brightcove01		(→ akamai & brightcove01-secure)
 		- brightcove01-secure
 		- developer
 		- docs
 		- images.gallery
+		- goku
+		- img
+		- link
+		- opensource	(→ docs)
+		- signin
+		- solutions
+		- support
 		- videocloud
 
 
@@ -88,13 +87,23 @@
 	These altnames don't exist:
 
 		- www.images.gallery.brightcove.com
+		- www.goku.brightcove.com
+		- www.services.brightcove.com
+		- www.signin.brightcove.com
+		- www.solutions.brightcove.com
+		- www.support.brightcove.com
+
+
+	Mixed content:
+
+		- Images on support from img *
+
+	* Secured by us
 
 -->
 <ruleset name="Brightcove (partial)">
 
 	<target host="*.brightcove.com" />
-		<exclusion pattern="^http://(?:www\.)?brightcove\.com/(?!sites/|timetrade-iframe\.html)" />
-		<exclusion pattern="^http://blog\.brightcove\.com/(?!sites/)" />
 		<!--
 			Videos fail to load.
 
@@ -122,7 +131,7 @@
 	<rule from="^http://c\.brightcove\.com/services/viewer/"
 		to="https://secure.brightcove.com/services/viewer/" />
 
-	<rule from="^http://((?:api|(?:read\.|transcode\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|images\.gallery|img|metrics|my|register|secure|signin|videocloud|www)\.)?brightcove\.com/"
+	<rule from="^http://((?:api|(?:read\.|transcode\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|images\.gallery|goku|img|link|metrics|my|register|secure|services|signin|solutions|support|videocloud|www)\.)?brightcove\.com/"
 		to="https://$1brightcove.com/" />
 
 	<!--	First, rewrite images to cdn (presumably preferred by
@@ -139,15 +148,12 @@
 	<rule from="^http://brightcove01\.brightcove\.com/"
 		to="https://brightcove01-secure.brightcove.com/" />
 
-	<!--	At least the homepage redirects to http.
-							-->
-	<rule from="^http://support\.brightcove\.com/(en/contact$|sites/)"
-		to="https://support.brightcove.com/$1" />
-
 	<rule from="^https?://s?admin\.brightcove\.com/"
 		to="https://sadmin.brightcove.com/" />
 
-	<rule from="^http://services\.brightcove\.com/"
-		to="https://secure.brightcove.com/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://opensource\.brightcove\.com/+[^?]*"
+		to="https://docs.brightcove.com/en/video-cloud/open-source/" />
 
 </ruleset>

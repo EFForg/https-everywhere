@@ -27,13 +27,19 @@
 
 			Seems only/mostly to be used for ads
 
+
+	Problematic subdomains:
+
+		- www.np.reddit.com *
+
+	* Mismatched
+
 -->
 <ruleset name="Reddit">
 
 	<target host="reddit.com" />
 	<target host="*.reddit.com" />
 	<target host="*.redditmedia.com" />
-	<target host="redditstatic.com" />
 	<target host="www.redditstatic.com" />
 
 
@@ -42,10 +48,14 @@
 	<!--securecookie host="^\.reddit\.com$" name="^_recentclicks2$" /-->
 
 	<securecookie host=".*\.reddit\.com$" name=".+" />
+	<securecookie host="^\.redditmedia\.com$" name="^__cfduid$" />
 
 
 	<rule from="^http://((?:dr|fp|gr|i|en-us|pay|pr|rd|sl|sv|ssl|www)\.)?reddit\.com/"
 		to="https://$1reddit.com/" />
+
+	<rule from="^http://(?:www\.)?np\.reddit\.com/"
+		to="https://np.reddit.com/" />
 
 	<rule from="^http://(static|thumbs)\.reddit\.com/"
 		to="https://s3.amazonaws.com/$1.reddit.com/" />
@@ -53,7 +63,7 @@
 	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
 		to="https://$1thumbs.redditmedia.com/" />
 
-	<rule from="^http://(?:www\.)?redditstatic\.com/"
+	<rule from="^http://www\.redditstatic\.com/"
 		to="https://www.redditstatic.com/" />
 
 </ruleset>

@@ -1,8 +1,10 @@
 <!--
 	Nonfunctional domains:
 
-		- status.twitter.com
+		- status.twitter.com *
 		- status.twitter.jp
+
+	* Dropped
 
 
 	CDN buckets:
@@ -36,8 +38,6 @@
 
 			- urls.api *
 			- platform[0-3]		(403, akamai)
-			- anywhere.platform *
-			- widgets.platform	(mismatched, CN: si0.twimg.com)
 
 	* akamai
 
@@ -50,8 +50,10 @@
 
 			- a\d		(→ si0)
 			- abs
+			- dnt
 			- ea
 			- g
+			- g2
 			- gu
 			- hca
 			- jp
@@ -65,6 +67,9 @@
 			- si[0-5]
 			- syndication
 			- cdn.syndication
+			- tailfeather
+			- ton
+			- v
 			- widgets
 
 		- twitter.com subdomains:
@@ -100,13 +105,21 @@
 			- pic
 			- platform
 			- platform[0-3]		(→ platform)
-			- anywhere.platform	(→ platform)
-			- widgets.platform	(→ platform)
+			- widgets.platform
 			- search
 			- static
 			- support
 			- transparency
 			- upload
+
+
+	These altnames don't exist:
+
+		- i3.twimg.com
+		- p-dev.twimg.com
+		- vmtc.twimg.com
+
+		- cdn-dev.api.twitter.com
 
 -->
 <ruleset name="Twitter">
@@ -118,6 +131,14 @@
 	<target host="*.twitter.com" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.twitter\.com$" name="^_twitter_sess$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.twitter\.com$" name="^guest_id$" /-->
+
 	<securecookie host="^\.t\.co$" name=".+" />
 	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
 
@@ -128,13 +149,13 @@
 	<rule from="^http://a\d\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(abs|ea|gu?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|widgets)\.twimg\.com/"
+	<rule from="^http://(abs|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
 	<rule from="^http://s\.twimg\.com/"
 		to="https://d2rdfnizen5apl.cloudfront.net/" />
 
-	<rule from="^http://((?:201\d|ads|analytics|blog|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
+	<rule from="^http://((?:201\d|ads|analytics|blog|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
 		to="https://$1twitter.com/" />
 
 	<rule from="^http://urls\.api\.twitter\.com/"
@@ -143,7 +164,7 @@
 	<rule from="^http://(?:blo|engineerin)g\.twitter\.com/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico"/>
 
-	<rule from="^http://(?:anywhere\.|widgets\.)?platform\d?\.twitter\.com/"
+	<rule from="^http://platform\d\.twitter\.com/"
 		to="https://platform.twitter.com/" />
 
 </ruleset>

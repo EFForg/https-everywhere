@@ -1,0 +1,59 @@
+<!--
+	Other RebelMouse rulesets:
+
+		- Rbl.Ms.xml
+
+
+	CDN buckets:
+
+		- partners.rebelmouse.com.s3.amazonaws.com
+
+			- partners
+
+
+	Problematic subdomains:
+
+		- partners *
+
+	* Mismatched, CN: *.s3.amazonaws.com
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- about
+		- blog
+		- partners	(-> s3.amazonaws.com)
+
+
+	Mixed content:
+
+		- Add on www from partner *
+
+	* Secured by us
+
+-->
+<ruleset name="RebelMouse.com">
+
+	<target host="rebelmouse.com" />
+	<target host="*.rebelmouse.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.rebelmouse\.com$" name="^csrftoken$" /-->
+	<!--
+		Trackers
+				-->
+	<!--securecookie host="^\.rebelmouse\.com$" name="^(__utm\w+|k.+|optimizely.+)$" /-->
+
+	<securecookie host="^\.rebelmouse\.com$" name=".+" />
+
+
+	<rule from="^http://((?:about|blog|www)\.)?rebelmouse\.com/"
+		to="https://$1rebelmouse.com/" />
+
+	<rule from="^http://partners\.rebelmouse\.com/"
+		to="https://s3.amazonaws.com/partners.rebelmouse.com/" />
+
+</ruleset>

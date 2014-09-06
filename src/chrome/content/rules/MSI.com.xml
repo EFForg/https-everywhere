@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see MSI.com-falsemixed.xml.
+
+
 	Other MSI rulesets:
 
 		- MSI_Computer.com.xml
@@ -120,6 +123,8 @@
 
 	Mixed content:
 
+		- css on frsupport from $self *
+
 		- Web bugs, on:
 
 			- cz from static.ak.connect.facebook.com *
@@ -133,18 +138,26 @@
 
 	<target host="msi.com" />
 	<target host="*.msi.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://frsupport\.msi\.com/+(?!__swift/|favicon\.ico|images/|index\.php\?/(?:Base|Core)/)" />
 
+
+	<!--    Not secured by server:
+					-->
+	<!--securecookie host="^frsupport\.msi\.com$" name="^(SWIFT_client|SWIFT_sessionid\d+)$" /-->
 
 	<!--securecookie host="^\.msi\.com$" name="^PHPSESSID$" /-->
 	<securecookie host="^\.?(?:be|cz|dk|dragoonarmy|es|fi|forum-(?:en|fr|pl|ru)|fr|gr|hu|nl|no|pl|pt|register|ro|rs|ru|se|ua|uk)\.msi\.com$" name=".+" />
 
 
-	<rule from="^http://(be|by|cz|dk|dragoonarmy|es|eu|euinline|euscripts|fi|forum-(?:en|fr|pl|ru)|fr|game-static|gr|hu|media|nl|no|pl|pt|register|ro|rs|ru|se|sk|ua|uk)\.msi\.com/"
+	<rule from="^http://(be|by|cz|dk|dragoonarmy|es|eu|euinline|euscripts|fi|forum-(?:en|fr|pl|ru)|fr|frsupport|game-static|gr|hu|media|nl|no|pl|pt|register|ro|rs|ru|se|sk|ua|uk)\.msi\.com/"
 		to="https://$1.msi.com/" />
 
 	<!--	Server drops path:
 					-->
-	<rule from="^http://support\.msi\.com/[^?]+(?=$|\?)"
+	<rule from="^http://support\.msi\.com/[^?]*"
 		to="https://register.msi.com/" />
 
 </ruleset>

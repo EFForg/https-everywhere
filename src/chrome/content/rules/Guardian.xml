@@ -1,4 +1,9 @@
 <!--
+	Other Guardian rulesets:
+
+		- Guardian_Subscriptions.co.uk.xml
+
+
 	CDN buckets:
 
 		- guardian.co.uk.112.2o7.net
@@ -57,12 +62,7 @@
 
 		- guardian.co.uk subdomains:
 
-			- ^ ¹
 			- discussion ²
-			- m ³
-			- syndication ³
-			- syndweb ³
-			- www ³
 
 		- discussion.guardianapis.com ¹
 		- www.guardiandigitalcomparison.co.uk ¹
@@ -78,9 +78,10 @@
 			- ^ ¹
 			- discussion ²
 			- feeds ⁴
+			- jobs ¹
+			- observer ⁵
 			- subscribe ²
 			- syndication ¹
-			- syndweb	(duplicate serial)
 			- www ⁶
 
 		- audio.theguardian.tv ¹
@@ -90,28 +91,36 @@
 	² Interrupted
 	³ 404; mismatched, CN: *.a.ssl.fastly.net
 	⁴ Refused
-	⁶ Redirects to http; mismatched, CN: *.a.ssl.fastly.net
+	⁵ Redirects to www; mismatched, CN: *.a.ssl.fastly.net
+	⁶ Redirects to http, valid cert
 
 
 	Problematic domains:
 
 		- guardian.co.uk subdomains:
 
+			- ^ ³
 			- download ¹
 			- hits			(mismatched, CN: *.d1.sc.omtrdc.net)
 			- image ¹
+			- m ²
+			- syndication  ²
+			- www ²
 
 		- guim.co.uk subdomains:
 
+			- assets ³
 			- i ²
-			- id ²
-			- static ²
+			- id ³
+			- static ³
 
-		- hits.theguardian.com ³
+		- hits.theguardian.com ⁴
+		- next.theguardian.com ²
 
 	¹ Cert only matches (www.)image.guim.co.uk
-	² Dropped
-	³ Mismatched, CN: *.d1.sc.omtrdc.net
+	² Works; mismatched, CN: *.a.ssl.fastly.net
+	³ Dropped
+	⁴ Mismatched, CN: *.d1.sc.omtrdc.net
 
 
 	Partially covered domains:
@@ -136,32 +145,54 @@
 
 		- (www.)guardianeatright.co.uk
 
+		- entertainment.guardianoffers.co.uk
+
 		- guim.co.uk subdomains:
 
+			- assets	(→ assets-secure)
+			- assets-secure
 			- id		(→ id.guardian.co.uk)
-			- (www.)image
+			- image
 			- pasteup
 			- soulmates
-			- (www.)static	(→ image)
+			- static	(→ image)
 			- static-secure
 
 		- theguardian.com subdomains:
 
 			- hits		(→ theguardian-com.d1.sc.omtrdc.net)
+			- hits-secure
 			- id
+			- membership
 			- oas
+			- profile
 			- register
+			- securedrop
 			- soulmates
 			- witness
 
 
+	These altnames don't exist:
+
+		- www.entertainment.guardianoffers.co.uk
+		- www.assets-secure.guim.co.uk
+		- www.static-secure.guim.co.uk
+		- www.profile.theguardian.com
+		- www.securedrop.theguardian.com
+		- www.soulmates.theguardian.com
+
+
 	Mixed content:
 
-		- Images on next from next
+		- Images, on:
 
-		- Web bugs on witness.guardian.com from hits.guardian.co.uk *
+			- next from next ¹
+			- soulmates from soulmates.s3.amazonaws.com ²
 
-	* Secured by us
+		- Web bugs on witness.guardian.com from hits.guardian.co.uk ²
+
+	¹ Not secured by us <= mismatched
+	² Secured by us
 
 -->
 <ruleset name="The Guardian (partial)">
@@ -183,9 +214,19 @@
 	<target host="*.theguardian.com" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^entertainment\.guardianoffers\.co\.uk$" name="^CSPSESSIONID-SP-443-UP-$" /-->
+	<!--securecookie host="^membership\.theguardian\.com$" name="^PLAY_SESSION$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^entertainment\.guardianoffers\.co\.uk$" name="^CSPWSERVERID$" /-->
+
 	<securecookie host="^\.guardian\.co\.uk$" name="^(?:NXCLICK2|OAX|s_.+s)$" />
 	<securecookie host="^(?:oas|soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
 	<securecookie host="^(?:.*\.)?guardianeatright\.co\.uk$" name=".+" />
+	<securecookie host="^entertainment\.guardianoffers\.co\.uk$" name=".+" />
 	<!--
 		Tracking cookies set by oas.theguardian.com:
 								-->
@@ -214,6 +255,12 @@
 	<rule from="^http://(\w+)\.guardianoffers\.co\.uk/(?=AddtoBasket\.asp|checkout\.asp|(?:BrandImages|images|lib|ProductImages|scripts|SKUImages|styles)/)"
 		to="https://$1.guardianoffers.co.uk/" />
 
+	<rule from="^http://entertainment\.guardianoffers\.co\.uk/"
+		to="https://entertainment.guardianoffers.co.uk/" />
+
+	<rule from="^http://assets(?:-secure)?\.guim\.co\.uk/"
+		to="https://assets-secure.guim.co.uk/" />
+
 	<rule from="^http://i\.guim\.co\.uk/n/"
 		to="https://image.guim.co.uk/" />
 
@@ -226,7 +273,7 @@
 	<rule from="^http://hits\.theguardian\.com/"
 		to="https://theguardian-com.d1.sc.omtrdc.net/" />
 
-	<rule from="^http://(id|oas|register|soulmates|witness)\.theguardian\.com/"
+	<rule from="^http://(hits-secure|id|oas|membership|profile|register|securedrop|soulmates|witness)\.theguardian\.com/"
 		to="https://$1.theguardian.com/" />
 
 </ruleset>

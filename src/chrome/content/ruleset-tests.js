@@ -15,7 +15,6 @@ if(HTTPSEverywhere) {
   };
 }
 
-
 function openStatus() {
   // make sure mixed content blocking preferences are correct
   Services.prefs.setBoolPref("security.mixed_content.block_display_content", false);
@@ -26,6 +25,32 @@ function openStatus() {
   gBrowser.selectedTab = statusTab;
 }
 
+// FIXME use a class rather than global state
+var left_star = new RegExp(/^\*\./); // *.example.com
+var accepted_test_targets = {}
+
+function addTestTarget(urls, target, ruleset_ids) {
+  // Add one target and associated metadata to the list of
+  // URLs to be tested, performing housekeeping along the way
+  var active_ids = [];
+  if (target in accepted_test_targets) return;
+
+  for (var n = 0; n < ruleset_ids.length; n++) {
+    var rs_id = ruleset_ids[n];
+    var rs = HTTPSEverywhere.https_rules.rulesetsByID[rs_id];
+    if (rs.active) { active_ids.push(rs_id) };
+  }
+  // Some rulesets that might rewrite this target, let's test them
+  if (active_ids.length > 0) {
+    urls.push({
+      url: 'http://'+target,
+      target: target,
+      ruleset_ids: active_ids
+    });
+  }
+}
+
+
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   
@@ -34,14 +59,24 @@ function testRunner() {
   var output = [];
   var urls = [];
   var num = 0;
+  var targets_to_ids = HTTPSEverywhere.https_rules.targets;
+  var ruleset_ids;
+  accepted_test_targets = {};  // reset each time
  
-  for(var target in HTTPSEverywhere.https_rules.targets) {
-    if(!target.indexOf("*") != -1)  {
-      urls.push({ 
-        url: 'https://'+target, 
-        target: target, 
-        ruleset_names: HTTPSEverywhere.https_rules.targets[target]
-      });
+  // we need every ruleset loaded from DB to check if it's active
+  HTTPSEverywhere.https_rules.loadAllRulesets();
+
+  for(var target in targets_to_ids) {
+    ruleset_ids = targets_to_ids[target];
+    if(target.indexOf("*") == -1)  {
+      addTestTarget(urls, target, ruleset_ids);
+    } else {
+      // target is like *.example.wildcard.com, or www.example.*
+      // let's see what we can do...
+      var t = target.replace(left_star, "www.");
+      if (t.indexOf("*") == -1) {
+        addTestTarget(urls, t, ruleset_ids);
+      }
     }
   }
 
@@ -72,8 +107,8 @@ function testRunner() {
         if(PopupNotifications.getNotification("mixed-content-blocked", gBrowser.getBrowserForTab(tab))) {
           // build output to log
           ruleset_xmls = '';
-          for(let i=0; i<urls[number].ruleset_names.length; i++) {
-            ruleset_xmls += urls[number].ruleset_names[i].xmlName + ', ';
+          for(let i=0; i < urls[number].ruleset_ids.length; i++) {
+            ruleset_xmls += urls[number].ruleset_ids[i].xmlName + ', ';
           }
           if(ruleset_xmls != '')
             ruleset_xmls = ruleset_xmls.substring(ruleset_xmls.length-2, 2);

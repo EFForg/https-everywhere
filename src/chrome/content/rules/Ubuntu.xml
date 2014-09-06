@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
+
+
 	Other Ubuntu rulesets:
 
 		- Ubuntu_Forums.org.xml
@@ -40,7 +43,10 @@
 
 	Problematic subdomains:
 
+		- community ¹
 		- shop	(mismatched, CN: shop.canonical.com)
+
+	¹ Mixed css from assets and $self
 
 
 	Fully covered domains:
@@ -55,6 +61,7 @@
 			- myapps.developer
 			- fridge
 			- help
+			- insights
 			- lists
 			- login
 			- maas
@@ -79,9 +86,18 @@
 
 	Mixed content:
 
-		- Images on apps from screenshots ²
-		- Images on developer from $self ¹
-		- Images on help from pix.toile-libre.org *
+		- css, on:
+
+			- community from $self ¹
+			- community from assets ¹
+
+		- Images, on:
+
+			- apps from screenshots ²
+			- community from $self ¹
+			- developer from $self ¹
+			- help from pix.toile-libre.org *
+			- insights from $self ¹
 
 	¹ Secured by us
 	² Unsecurable <= 404
@@ -91,6 +107,10 @@
 <ruleset name="Ubuntu (partial)">
 
 	<target host="*.ubuntu.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://community\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 	<target host="ubuntuone.com" />
 	<target host="www.ubuntuone.com" />
 
@@ -98,7 +118,7 @@
 	<securecookie host="^(?:apps|login|pay|jenkins\.qa|wiki)\.ubuntu\.com$" name=".+" />
 
 
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|unity|wiki)\.ubuntu\.com/"
+	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|insights|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|unity|wiki)\.ubuntu\.com/"
 		to="https://$1.ubuntu.com/" />
 
 	<rule from="^http://shop\.ubuntu\.com/"

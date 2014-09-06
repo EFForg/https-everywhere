@@ -4,7 +4,9 @@
 
 	Problematic subdomains:
 
-		- blog	(shows PHP page, CN: localhost.localdomain)
+		- blog *
+
+	* Shows PHP page, CN: localhost.localdomain
 
 
 	Fully covered subdomains:
@@ -57,10 +59,11 @@
 			Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://(?:www\.)?zen\.co\.uk/blog(?!/wp-content/|/wp-includes/)" />
-		<exclusion pattern="^http://support\.zen\.co\.uk/(?!kb/(?:(?:Knowledgebase/)?BotDetectCaptcha\.ashx|Globalization/|js/|Logon/|(?:Script|Web)Resource\.axd|Skins/)|template/)" />
+		<exclusion pattern="^http://support\.zen\.co\.uk/+(?=kb/+(?!(?:Knowledgebase/)?BotDetectCaptcha\.ashx|Globalization/|js/|Logon/|(?:Script|Web)Resource\.axd|Skins/)|template/)" />
 
 
 	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|__utm\w|ZenAnonIdCookie)$" /-->
+
 	<securecookie host="(?!support\.).*\.zen\.co\.uk$" name=".+" />
 
 
@@ -70,8 +73,8 @@
 	<rule from="^http://(?:www\.)?zen\.co\.uk/"
 		to="https://www.zen.co.uk/" />
 
-	<rule from="^http://blog\.zen\.co\.uk/wp-(content|includes)/"
-		to="https://www.zen.co.uk/blog/wp-$1/" />
+	<rule from="^http://blog\.zen\.co\.uk/wp-(?=content/|includes/)"
+		to="https://www.zen.co.uk/blog/wp-" />
 
 	<rule from="^http://(forum|livesupport|myaccount|order|portal|status|support|webmail)\.zen\.co\.uk/"
 		to="https://$1.zen.co.uk/" />

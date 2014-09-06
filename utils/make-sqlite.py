@@ -3,6 +3,7 @@
 # Builds an sqlite DB containing all the rulesets, indexed by target.
 
 import glob
+import locale
 import os
 import sqlite3
 import subprocess
@@ -10,6 +11,12 @@ import sys
 
 from collections import Counter
 from lxml import etree
+
+# Explicitly set locale so sorting order for filenames is consistent.
+# This is important for deterministic builds.
+# https://trac.torproject.org/projects/tor/ticket/11630#comment:20
+# It's also helpful to ensure consistency for the lowercase check below.
+locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
 
 conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
 c = conn.cursor()
@@ -34,7 +41,8 @@ parser = etree.XMLParser(remove_blank_text=True)
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_ruleset = etree.XPath("/ruleset")
 
-filenames = glob.glob('src/chrome/content/rules/*')
+# Sort filenames so output is deterministic.
+filenames = sorted(glob.glob('src/chrome/content/rules/*'))
 
 counted_lowercase_names = Counter([name.lower() for name in filenames])
 most_common_entry = counted_lowercase_names.most_common(1)[0]

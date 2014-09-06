@@ -1,0 +1,45 @@
+<!--
+	Other Schwab rulesets:
+
+		- Schwab_CDN.com.xml
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- client
+		- content
+		- eac
+
+
+	Mixed content:
+
+		- Images on www from content *
+
+	* Secured by us
+
+-->
+<ruleset name="Schwab.com">
+
+	<target host="schwab.com" />
+	<target host="*.schwab.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.schwab\.com$" name="^(ASP\.NET_SessionId|pod|sstate)$" /-->
+	<!--securecookie host="^eac\.schwab\.com$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.schwab\.com$" name="^(NP2|NS2|SchwabCookie|eacLogin|lang)$" /-->
+	<!--securecookie host="^client\.schwab\.com$" name="^\.ASPXANONYMOUS$" /-->
+	<!--securecookie host="^\.eac\.schwab\.com$" name="^hsteac$" /-->
+
+	<securecookie host="^(?:client|\.eac)?\.schwab\.com$" name=".+" />
+
+
+	<rule from="^http://((?:client|content|eac|www)\.)?schwab\.com/"
+		to="https://$1schwab.com/" />
+
+</ruleset>

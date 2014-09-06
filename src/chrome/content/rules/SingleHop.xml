@@ -9,19 +9,30 @@
 		- hub		(works, akamai)
 
 
-	Partially covered subdomains:
+	Mixed content:
 
-		- (www.)	(some paths redirect to http)
+		- Images, on:
+
+			- hub from cdn1.hubspot.com *
+			- www from $self *
+
+		- favicon on hub from cdn1.hubspot.com *
+
+	* Secured by us
 
 -->
 <ruleset name="SingleHop (partial)">
 
 	<target host="singlehop.com" />
 	<target host="*.singlehop.com" />
-		<exclusion pattern="^http://www\.singlehop\.com/(?!\?css=stylesheet|fonts/|images/|images-v\d-\d+/|js/|js_v\d_\d+/|order/|resources/|scripts/)" />
 
 
-	<securecookie host="^leap3\.singlehop\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?singlehop\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.singlehop\.com$" name="^site_theme$" /-->
+
+	<securecookie host="^(?:\.|leap3\.|www\.)?singlehop\.com$" name=".+" />
 
 
 	<rule from="^http://(leap3\.|www\.)?singlehop\.com/"
