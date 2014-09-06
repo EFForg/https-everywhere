@@ -1,9 +1,43 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/cdn.propublica.net/
+		- propublica.s3.amazonaws.com
+		- d3i4wq2ul46tvd.cloudfront.net
+
+
+	Problematic domains:
+
+		- (www.)propublica.net *
+
+	* Works; mismatched, CN: www.propublica.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www, from:
+
+				- (www.) *
+				- s3.amazonaws.com *
+				- cdn.propublica.net.s3.amazonaws.com *
+				- propublica.s3.amazonaws.com *
+				- cdn.propublica.net *
+
+	* Secured by us
+
+-->
 <ruleset name="ProPublica.org" platform="mixedcontent">
 
 	<target host="propublica.net"/>
 	<target host="*.propublica.net"/>
 	<target host="propublica.org"/>
 	<target host="*.propublica.org"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.propublica\.org$" name="^(PHPSESSID|pp-tracking)$" /-->
 
 	<securecookie host="^(.*\.)?propublica\.org$" name=".*"/>
 
