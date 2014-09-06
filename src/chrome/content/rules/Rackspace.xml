@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Rackspace.com-falsemixed.xml.
+
+
 	Nonfunctional domains:
 
 		- status.apps.rackspace.com
@@ -7,6 +10,31 @@
 	Mismatches:
 
 		- mosso.com	(cert: *.rackspacecloud.com; redirects to www.rackspace.com/cloud/)
+
+
+	Partially covered domains:
+
+		- (www.)rackspace.com *			(cloud/ doesn't work [NB: elaborate, in what way?])
+
+	* knowledge_center/ redirects to http, avoiding false/broken MCB on talent/
+
+
+	Mixed content:
+
+		- iframes on www from www.youtube.com *
+
+		- css, on:
+
+			- www from www *
+			- www from fonts.googleapis.com *
+
+		- Images, on:
+
+			- www from images.cdn.rackspace.com *
+			- www from \w+.r\d+.cf\d.rackcdn.com *
+			- www from images.cdn.rackspace.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Rackspace (partial)" platform="mixedcontent">
@@ -47,6 +75,10 @@
 	<target host="*.rackspace.com" />
 		<exclusion pattern="^http://www\.rackspace\.com/cloud/" />
 		<exclusion pattern="^http://www\.rackspace\.com/knowledge_center/" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.rackspace\.com/+talent(?!/wp-content/|/wp-includes/)" />
 	<target host="rackspace.com.hk" />
 	<target host="www.rackspace.com.hk" />
 	<target host="rackspace.co.uk" />
