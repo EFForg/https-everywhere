@@ -35,6 +35,7 @@
 
 			- developer	(→ openapi)
 			- openapi
+			- pan
 			- passport
 
 		- apps.bdimg.com	(→ openapi.baidu.com)
@@ -47,10 +48,18 @@
 	<target host="*.bdimg.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^openapi\.baidu\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.yun\.baidu\.com$" name="^PANWEB$" /-->
+
+	<securecookie host="^openapi\.baidu\.com$" name=".+" />
+
+
 	<rule from="^https?://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
 		to="https://openapi.baidu.com/" />
 
-	<rule from="^http://passport\.baidu\.com/"
-		to="https://passport.baidu.com/" />
+	<rule from="^http://(pan|passport)\.baidu\.com/"
+		to="https://$1.baidu.com/" />
 
 </ruleset>
