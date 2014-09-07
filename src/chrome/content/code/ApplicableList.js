@@ -4,17 +4,16 @@
 
 serial_number = 0;
 
-function ApplicableList(logger, browser) {
+function ApplicableList(logger, uri) {
   this.log = logger;
-  this.uri = browser.currentURI.clone();
+  this.uri = uri.clone();
   if (!this.uri) {
     this.log(WARN,"NULL CLONING URI " + doc);
-    if (browser) 
-      this.log(WARN,"NULL CLONING URI " + browser.currentURI);
-    if (browser.currentURI) 
-      this.log(WARN,"NULL CLONING URI " + browser.currentURI.spec);
+    if (uri) {
+      this.log(WARN,"NULL CLONING URI " + uri.spec);
+    }
   }
-  this.home = browser.currentURI.spec; // what doc we're housekeeping for
+  this.home = uri.spec; // what doc we're housekeeping for
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
   this.inactive = {};

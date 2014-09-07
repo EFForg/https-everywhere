@@ -286,7 +286,7 @@ function show_applicable_list(menupopup) {
     // This case occurs for error pages and similar.  We need a dummy alist
     // because populate_menu lives in there.  Would be good to refactor this
     // away.
-    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, browser);
+    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, browser.currentURI);
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);

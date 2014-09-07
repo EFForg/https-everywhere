@@ -341,7 +341,7 @@ HTTPSEverywhere.prototype = {
       this.log(WARN, "Get alist without browser");
       return null;
     }
-    var alist = new ApplicableList(this.log,browser);
+    var alist = new ApplicableList(this.log, browser.currentURI);
     this.setExpando(browser,"applicable_rules",alist);
     return alist;
   },
@@ -355,7 +355,7 @@ HTTPSEverywhere.prototype = {
     if (alist) {
       return alist;
     } else {
-      alist = new ApplicableList(this.log,browser);
+      alist = new ApplicableList(this.log, browser.currentURI);
       this.setExpando(browser,"applicable_rules",alist);
     }
     return alist;
@@ -608,7 +608,7 @@ HTTPSEverywhere.prototype = {
       new_alist = old_alist;
       this.setExpando(browser,"applicable_rules",new_alist);
     } else if (!new_alist) {
-      new_alist = new ApplicableList(this.log, browser);
+      new_alist = new ApplicableList(this.log, browser.currentURI);
       this.setExpando(browser,"applicable_rules",new_alist);
     }
     return new_alist;
