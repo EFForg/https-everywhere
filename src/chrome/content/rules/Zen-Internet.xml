@@ -2,15 +2,19 @@
 	For rules causing false/broken MCB, see Zen_Internet-falsemixed.xml.
 
 
-	Problematic subdomains:
+	Problematic domains:
 
-		- blog *
+		- ^ ¹
+		- support ²
 
-	* Shows PHP page, CN: localhost.localdomain
+	¹ 404, valid cert
+	² Mixed css from $self
 
 
 	Fully covered subdomains:
 
+		- (www.)
+		- blog
 		- forum
 		- livesupport
 		- myaccount
@@ -22,8 +26,6 @@
 
 	Partially covered subdomains:
 
-		- (www.) *	(^ → www)
-		- blog *	(→ www)
 		- support *
 
 	* Avoiding broken MCB
@@ -31,18 +33,14 @@
 
 	Mixed content:
 
-		- Scripts on www from blog *
+		- css on support from $self *
 
-		- css:
+		- Images on blog and support from $self *
 
-			- on support from support *
-			- On www from blog *
-			- On www from www *
-			- On www from fast.fonts.com *
+		- Web bugs, on:
 
-		- Images on support from support *
-
-		- Web bug on www from apis.google.com *
+			- blog from blog *
+			- blog from apis.google.com *
 
 	* Secured by us
 
@@ -58,25 +56,27 @@
 		<!--
 			Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://(?:www\.)?zen\.co\.uk/blog(?!/wp-content/|/wp-includes/)" />
 		<exclusion pattern="^http://support\.zen\.co\.uk/+(?=kb/+(?!(?:Knowledgebase/)?BotDetectCaptcha\.ashx|Globalization/|js/|Logon/|(?:Script|Web)Resource\.axd|Skins/)|template/)" />
 
 
-	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|__utm\w|ZenAnonIdCookie)$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|ZenAnonIdCookie)$" /-->
+	<!--securecookie host="^forum\.zen\.co\.uk$" name="^(CommunityServer-LastVisitUpdated-\d+|CommunityServer-UserCookie\d+)$" /-->
+	<!--securecookie host="^(myaccount|order|portal|status|www)\.zen\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^myaccount\.zen\.co\.uk$" name="^CookiesAllowed$" /-->
+	<!--securecookie host="^support\.zen\.co\.uk$" name="^(IKB_CurrentURL|IKB_InstantKBLastVisit)$" /-->
+	<!--securecookie host="^webmail\.zen\.co\.uk$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="^\.zen\.co\.uk$" name="^__utm\w$" /-->
 
 	<securecookie host="(?!support\.).*\.zen\.co\.uk$" name=".+" />
 
 
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
 	<rule from="^http://(?:www\.)?zen\.co\.uk/"
 		to="https://www.zen.co.uk/" />
 
-	<rule from="^http://blog\.zen\.co\.uk/wp-(?=content/|includes/)"
-		to="https://www.zen.co.uk/blog/wp-" />
-
-	<rule from="^http://(forum|livesupport|myaccount|order|portal|status|support|webmail)\.zen\.co\.uk/"
+	<rule from="^http://(blog|forum|livesupport|myaccount|order|portal|status|support|webmail)\.zen\.co\.uk/"
 		to="https://$1.zen.co.uk/" />
 
 </ruleset>
