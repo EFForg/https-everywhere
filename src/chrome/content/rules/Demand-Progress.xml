@@ -1,24 +1,28 @@
 <!--
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- blog		(reset)
-		- (www.)	(cert: *.jottit.com; redirects there)
+		- s3.demandprogress.org.s3.amazonaws.com
+		- d3si65a7to6ipq.cloudfront.net
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- act
+		- s3	(-> s3.amazonaws.com)
 
 -->
-<ruleset name="Demand Progress (partial)">
+<ruleset name="Demand Progress">
 
 	<target host="demandprogress.org" />
 	<target host="*.demandprogress.org" />
 
 
-	<securecookie host="^act\.demandprogress\.org$" name=".*" />
+	<securecookie host="^(?:act)?\.demandprogress\.org$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?demandprogress\.org/(cs|image)s/"
-		to="https://s3.amazonaws.com/s3.demandprogress.org/$1s/" />
-
-	<rule from="^http://act\.demandprogress\.org/"
-		to="https://act.demandprogress.org/" />
+	<rule from="^http://(act\.|www\.)?demandprogress\.org/"
+		to="https://$1demandprogress.org/" />
 
 	<rule from="^http://s3\.demandprogress\.org/"
 		to="https://s3.amazonaws.com/s3.demandprogress.org/" />
