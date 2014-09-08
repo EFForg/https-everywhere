@@ -2,6 +2,35 @@
 		- ziza.qip.ru	(redirects back to http)
 
 
+	Problematic subdomains:
+
+		- mblogi *
+
+	* Redirect differs
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- download
+		- help
+		- kards
+		- maps
+		- mail
+		- mblogi	(→ ^)
+		- memori
+		- news
+		- partner
+		- pass
+		- photo
+		- pip
+		- s
+		- search
+		- shot
+		- welcome
+
+
 	Mixed content:
 
 		- css, on:
@@ -45,5 +74,13 @@
 
 	<securecookie host="^.qip.ru$" name=".*"/>
 
-  <rule from="^http://(?:www\.)?qip\.ru/" to="https://qip.ru/"/>
+  <rule from="^http://((?:api|download|help|kards|lstats|maps|mail|memori|news|partner|pass|photo|pip|s|shot|search|welcome|www)\.)?qip\.ru/" to="https://$1qip.ru/"/>
+
+	<!--	Redirect drop path but not args:
+						-->
+	<rule from="^http://mblogi\.qip\.ru/+\??$"
+		to="https://qip.ru/?mblogi" />
+
+	<rule from="^http://mblogi\.qip\.ru/+[^?]*\?"
+		to="https://qip.ru/?mblogi&amp;" />
 </ruleset>
