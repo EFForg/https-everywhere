@@ -1,11 +1,29 @@
-<ruleset name="LINBIT">
+<!--
+	For rules causing false/broken MCB, see LINBIT.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css on ^ from $self *
+
+		- Images, on:
+
+			- ^ from $self *
+			- blogs from $self
+
+		- favicon on my from www *
+
+	* Secured by us
+
+-->
+<ruleset name="LINBIT (partial)">
 
 	<target host="linbit.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.linbit.com" />
-
-
-	<securecookie host="^(.*\.)?linbit\.com$" name=".*" />
+	<target host="www.linbit.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?linbit\.com/+(?!components/|favicon\.ico|images/|libraries/|modules/|plugins/)" />
 
 
 	<rule from="^http://(www\.)?linbit\.com/"
