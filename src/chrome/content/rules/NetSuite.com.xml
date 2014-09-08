@@ -1,0 +1,33 @@
+<!--
+	^: dropped
+	www: 504, akamai
+
+
+	Fully covered subdomains:
+
+		- checkout
+		- forms
+		- system
+
+-->
+<ruleset name="NetSuite.com (partial)">
+
+	<target host="*.netsuite.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.netsuite\.com$" name="^mbox$" /-->
+	<!--securecookie host="^checkout\.netsuite\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.checkout\.netsuite\.com$" name="^(NLShopperId|NLVisitorId|NS_VER|gc)$" /-->
+	<!--securecookie host="^forms\.netsuite\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.forms\.netsuite\.com$" name="^NS_VER$" /-->
+	<!--securecookie host="^\.system\.com$" name="^country$" /-->
+
+	<securecookie host="^\.?(?:checkout|forms|system)\.netsuite\.com$" name=".+" />
+
+
+	<rule from="^http://(checkout|forms|system)\.netsuite\.com/"
+		to="https://$1.netsuite.com/" />
+
+</ruleset>
