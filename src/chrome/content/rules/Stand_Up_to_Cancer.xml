@@ -1,12 +1,70 @@
+<!--
+	CDN buckets:
+
+		- d3ltd4zpclv1en.cloudfront.net
+
+			- su2c.standup2cancer.org
+
+
+	Problematic domains:
+
+		- standup2cancer.ca ¹
+		- standup2cancer.org ¹
+		- su2c.standup2cancer.org ²
+
+	¹ Dropped
+	² cloudfront
+
+
+	Fully covered domains:
+
+		- (www.)standup2cancer.ca	(^ → www)
+
+		- standup2cancer.com subdomains:
+
+			- (www.)
+			- secure
+			- shop
+			- si
+
+
+	Mixed content:
+
+		- Images on su2c from $self *
+
+		- favicon on su2c from $self *
+
+		- Bug on su2c from leadback.advertising.com *
+
+	* Secured by us
+
+-->
 <ruleset name="Stand Up to Cancer (partial)">
 
-	<target host="secure.standup2cancer.org" />
+	<target host="standup2cancer.ca" />
+	<target host="*.standup2cancer.ca" />
+	<target host="standup2cancer.org" />
+	<target host="*.standup2cancer.org" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="http://su2c\.standup2cancer\.org/+(?!_www_images/|favicon\.ico|styles/)" /-->
 
 
-	<securecookie host="^secure\.standup2cancer\.org$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^shop\.standup2cancer\.(?:ca|org)$" name="^xsessionid$" /-->
+
+	<securecookie host="^(?:secure)?\.standup2cancer\.(?:ca|org)$" name=".+" />
 
 
-	<rule from="^http://secure\.standup2cancer\.org/"
-		to="https://secure.standup2cancer.org/" />
+	<rule from="^http://(?:www\.)?standup2cancer\.(ca|org)/"
+		to="https://www.standup2cancer.$1/" />
+
+	<rule from="^http://s(ecure|hop|i)\.standup2cancer\.org/"
+		to="https://s$1.standup2cancer.org/" />
+
+	<rule from="^http://su2c\.standup2cancer\.org/(?=_www_images/|favicon\.ico|styles/)"
+		to="https://d3ltd4zpclv1en.cloudfront.net/" />
 
 </ruleset>

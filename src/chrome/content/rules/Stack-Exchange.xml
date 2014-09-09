@@ -31,13 +31,10 @@
 
 		- css, on:
 
-		- css on chat.stackexchange.com from cdn-chat.sstatic.net *
-
 			- blog.stackoverflow.com from $self
 
 		- Images on chat.stackexchange.com, from:
 
-			- www.gravatar.com *
 			- i.stack.imgur.com *
 			- cdn.sstatic.net *
 
@@ -47,7 +44,6 @@
 
 				- $self *
 				- www.google.com *
-				- \d.gravatar.com *
 				- i.stack.imgur.com *
 
 		- favicon on blog.stackoverflow.com from cdn.sstatic.net *
@@ -93,8 +89,6 @@
 	<target host="www.stackapps.com" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
-		<exclusion pattern="^http://(?:\w+\.)?stackexchange\.com/search\?" />
-		<exclusion pattern="^http://chat\.stackexchange\.com/" />
         <exclusion pattern="^http://(?:\w+\.)?(stackexchange|stackoverflow)\.com/users/authenticate/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
@@ -105,8 +99,14 @@
 	<target host="*.teststackoverflow.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^stackoverflow\.com$" name="^rk-\d+$" /-->
+	<!--securecookie host="^\.stackoverflow\.com$" name="^prov$" /-->
+
 	<securecookie host="^\.sstatic\.net$" name=".+" />
 	<securecookie host="\.stackexchange\.com$" name=".+" />
+	<securecookie host="^stackoverflow\.com$" name=".+" />
 	<securecookie host="^\.teststackoverflow\.com$" name=".+" />
 
 
@@ -124,10 +124,6 @@
 
 	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
-
-	<rule from="^https://(\w+\.)?stackexchange\.com/search\?"
-		to="http://$1stackexchange.com/search?"
-	downgrade="1" />
 
 	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
