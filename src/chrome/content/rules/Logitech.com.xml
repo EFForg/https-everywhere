@@ -1,24 +1,70 @@
 <!--
 	Nonfunctional subdomains:
 
+		- gaming *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
 		- ^ ¹
+		- origin2 ¹
 		- www ²
 
 	¹ Refused
-	² Dropped	
+	² Dropped
+
+
+	Fully covered subdomains:
+
+		- alert
+		- buy
+		- forums
+		- register
+		- secure
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- alert from www.adobe.com *
+			- forums from dl.dropbox.com *
+			- forums and register from www *
+
+	* Unsecurable <= dropped
 
 -->
 <ruleset name="Logitech.com (partial)">
 
-	<target host="buy.logitech.com" />
+	<target host="logitech.com" />
+	<target host="*.logitech.com" />
+		<!--
+			Handling any pages but those under country_code-locale/
+			would require nontrivial effort, so ToDo:
+									-->
+		<exclusion pattern="^http://(?:origin2\.|www\.)?logitech\.com/+(?!\w\w-\w+(?:$|[?/])||assets/|images/|js/|styles/)" />
 
 
-	<!--	Some, but not all, secured by server:
-							-->
-	<securecookie host="^buy\.logitech\.com$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^buy\.logitech\.com$" name="^gc_ss_logib2c$" /-->
+	<!--securecookie host="^forums\.logitech\.com$" name="^LiSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^buy\.logitech\.com$" name="^(BIGipServerp-\w+-prd-active-\w+-\w+|JSESSIONID|VISITOR_ID|X-DR-CURRENCY|X-DR-LOCALE|X-DR-THEME)$" /-->
+	<!--securecookie host="^forums\.logitech\.com$" name="^LithiumVisitor$" /-->
+	<!--securecookie host="^secure\.logitech\.com$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:buy|forums|secure)\.logitech\.com$" name=".+" />
 
 
-	<rule from="^http://buy\.logitech\.com/"
-		to="https://buy.logitech.com/" />
+	<rule from="^http://(?:(?:origin2|secure|www)\.)?logitech\.com/"
+		to="https://secure.logitech.com/" />
+
+	<rule from="^http://(alert|buy|forums|register)\.logitech\.com/"
+		to="https://$1.logitech.com/" />
 
 </ruleset>
