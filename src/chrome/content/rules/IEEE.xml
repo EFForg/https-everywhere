@@ -7,23 +7,63 @@
 		- IEEE_eLearning_Library.xml
 
 
+	CDN buckets:
+
+		- www.spectrum.ieee.org.edgesuite.net
+		- staticieeexplore.ieee.org.edgesuite.net
+
+
 	Nonfunctional subdomains:
 
 		- grouper ¹
+		- sites ²
 		- spectrum	(Akamai; 503)
+		- theinstitute ⁴
 
 	¹ Refused
+	² Dropped
+	³ 503, akamai
 
 
 	Problematic subdomains:
 
+		- ewh ¹
 		- www.ewh	(cert only matches ^ewh)
 		- jobs		(mismatched, CN: sitemanager2.adico.com)
+		- www.spectrum ⁴
+		- staticieeexplore ⁴
+
+	¹ Configured for rc4 only
+	⁴ Works, akamai
 
 
 	Partially covered subdomains:
 
 		- eleccomm	(homepage 403s)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- (www.)ewh	(www → ^)
+		- ieeexplore
+		- mentor
+		- securesso
+		- standards
+		- uce
+		- origin.www
+
+
+	Mixed content:
+
+		- css on ieeexplore from staticieeexplore
+
+		- Images, on:
+
+			- ieeexplore from staticieeexplore
+			- on standards from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="IEEE (partial)">
@@ -33,7 +73,13 @@
 		<exclusion pattern="^http://eleccomm\.ieee\.org/(?:aliase|cs|image)s/" />
 
 
-	<!--	Observed cookie subdomains:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ieee\.org$" name="^(ISA4|cookieCheck|ipCheck)$" /-->
+	<!--securecookie host="^(ieeexplore)?\.ieee\.org$" name="^TS[0-9]a-f]{8}$" /-->
+	<!--securecookie host="^ieeexplore\.ieee\.org$" name="^(JSESSIONID|WLSESSION)$" /-->
+	<!--
+		Observed cookie subdomains:
 
 			- ^.
 			- ^origin.www
