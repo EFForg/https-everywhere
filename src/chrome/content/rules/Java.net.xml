@@ -1,16 +1,50 @@
 <!--
 	For other Oracle coverage, see Oracle.xml.
 
+
+	Fully covered subdomains:
+
+		- (www.)
+
+		- asset-\d+:
+
+			- asset-[0-3]
+
+		- glassfish
+		- home
+		- jax-rs-spec
+		- jersey
+		- jsr311
+		- wiki.openjdk
+		- tyrus
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- home from $self *
+			- jax-rs-spec from jersey *
+
+	* Secured by us
+
 -->
 <ruleset name="Java.net (partial)">
 
-	<target host="wiki.openjdk.java.net" />
+	<target host="java.net" />
+	<target host="*.java.net" />
 
 
-	<securecookie host="^wiki\.openjdk\.java\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.java\.net$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^(jax-rs-spec|jsr311)?\.java\.net$" name="^_junction2_session$" /-->
+	<!--securecookie host="^home\.java\.net$" name="^poll-\d+$" /-->
+
+	<securecookie host="^(?:home|jax-rs-spec|jsr311|wiki\.openjdk)?\.java\.net$" name=".+" />
 
 
-	<rule from="^http://wiki\.openjdk\.java\.net/"
-		to="https://wiki.openjdk.java.net/" />
+	<rule from="^http://((?:asset-\d+|glassfish|home|jax-rs-spec|jersey|jsr311|wiki\.openjdk|tyrus|www)\.)?java\.net/"
+		to="https://$1java.net/" />
 
 </ruleset>
