@@ -14,6 +14,8 @@
 		- clickbank.com subdomains:
 
 			- (www.)
+			- accounts
+			- support
 
 
 	Mixed content:
@@ -31,14 +33,23 @@
 		- www.ssl.clickbank.net
 
 -->
-<ruleset name="ClickBank (partial)">
+<ruleset name="ClickBank">
 
 	<target host="clickbank.com"/>
 	<target host="*.clickbank.com"/>
 	<target host="clickbank.net"/>
 	<target host="*.clickbank.net"/>
 
-	<rule from="^http://(www\.)?clickbank\.com/"
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^accounts\.clickbank\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^support\.clickbank\.com$" name="^(_zendesk_session|_zendesk_shared_session)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.accounts\.clickbank\.com$" name="^locale$" /-->
+
+	<rule from="^http://((?:accounts|support|www)\.)?clickbank\.com/"
 		to="https://$1clickbank.com/"/>
 
 	<!--	Redirect behavior differs between !www and www:
@@ -52,7 +63,7 @@
 	<rule from="^http://ssl\.clickbank\.net/"
 		to="https://ssl.clickbank.net/"/>
 
-	<securecookie host="^(www)?\.clickbank\.com$" name=".*"/>
+	<securecookie host="^(\.accounts|www)?\.clickbank\.com$" name=".*"/>
 	<securecookie host="^(ssl)?\.clickbank\.net$" name=".*"/>
 
 </ruleset>
