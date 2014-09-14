@@ -6,17 +6,38 @@
 		- kundecentertest *
 		- subtest *
 		- tildoeren *
-		- web		(refused)
+		- weekly *
 
-	* Times out
+	* Refused
+
+
+	Problematic subdomains:
+
+		- nyhedsbreve ¹
+		- web ²
+
+	¹ Works; mismatched, CN: *.peytz.dk
+	² Refused
 
 
 	Partially covered subdomains:
 
 		- plus *
 		- shop *
+		- web ²		(→ ^)
 
 	* Some pages redirect to http
+	² [^/?]+ doesn't redirect
+
+
+	Mixed content:
+
+		- Images on nyhedsbreve from $self ¹
+
+		- Ads on ^ from ads.creative-serving.com *
+
+	¹ Not secured by us <= mismatched
+	* Secured by us
 
 -->
 <ruleset name="Politiken.dk (partial)">
@@ -24,7 +45,7 @@
 	<target host="multimedia.pol.dk" />
 	<target host="politiken.dk" />
 	<target host="*.politiken.dk" />
-		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/)" />
+		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/|favicon\.ico)" />
 
 
 	<rule from="^http://multimedia\.pol\.dk/"
@@ -32,5 +53,10 @@
 
 	<rule from="^http://((?:plus|shop|www)\.)?politiken\.dk/"
 		to="https://$1politiken.dk/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://web\.politiken\.dk/+(?:$|\?.*)"
+		to="https://politiken.dk/VisArtikel.iasp?PageID=1" />
 
 </ruleset>

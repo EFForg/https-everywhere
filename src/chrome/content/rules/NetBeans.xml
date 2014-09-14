@@ -5,15 +5,33 @@
 	Nonfunctional subdomains:
 
 		- bits ¹
-		- edu ²
-		- plugins ¹
+		- plugins ²
 		- wiki ¹
 
-	¹ Dropped
-	² Shows planetnetbeans.org; mismatched,CN: forums.netbeans.org
+	¹ Refused
+	² Reset
 
 
 	www: redirect differs
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www -> ^)
+
+		- asset-\d+:
+
+			- asset-[012]
+
+		- edu
+		- forums
+
+
+	Mixed content:
+
+		- Images on edu from (www.) *
+
+	* Secured by us
 
 -->
 <ruleset name="NetBeans (partial)">
@@ -25,11 +43,12 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^netbeans\.org$" name="^PHPSESSID$" /-->
+	<securecookie host="^netbeans\.org$" name="^_junction2_session$" />
 
 	<securecookie host="^(?:forums|www)\.netbeans\.org$" name=".+" />
 
 
-	<rule from="^http://(?:(forums\.)|www\.)?netbeans\.org/"
+	<rule from="^http://(?:((?:assets-\d+|edu|forums)\.)|www\.)?netbeans\.org/"
 		to="https://$1netbeans.org/" />
 
 </ruleset>

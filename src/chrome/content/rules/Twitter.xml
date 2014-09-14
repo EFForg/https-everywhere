@@ -1,10 +1,15 @@
 <!--
+	Other Twitter rulesets:
+
+		- Twitter_Community.com.xml
+
+
 	Nonfunctional domains:
 
 		- status.twitter.com *
-		- status.twitter.jp
+		- status.twitter.jp *
 
-	* Dropped
+	* Tumblr
 
 
 	CDN buckets:
@@ -28,15 +33,11 @@
 
 		- twimg.com subdomains:
 
-			- a[12]		(mismatched, CN: gp1.wac.edgecastcdn.net)
-			- a3 *
-			- a4		(mismatched, CN: si0.twimg.com)
 			- a5 *
 			- s		(cloudfront)
 
 		- twitter.com subdomains:
 
-			- urls.api *
 			- platform[0-3]		(403, akamai)
 
 	* akamai
@@ -48,7 +49,8 @@
 
 		- twimg.com subdomains:
 
-			- a\d		(→ si0)
+			- a[5-9]	(→ si0)
+			- a\d
 			- abs
 			- dnt
 			- ea
@@ -76,11 +78,12 @@
 
 			- (www.)
 			- 201[012]
+			- about
 			- ads
 			- analytics
 			- api
 			- cdn.api
-			- urls.api	(→ cdn.api)
+			- urls.api
 			- blog
 			- business
 			- preview.cdn
@@ -134,6 +137,7 @@
 	<!--	Secured by server:
 					-->
 	<!--securecookie host="^\.twitter\.com$" name="^_twitter_sess$" /-->
+	<!--securecookie host="^support\.twitter\.com$" name="^_help_center_session$" /-->
 	<!--
 		Not secured by server:
 					-->
@@ -147,23 +151,17 @@
 	<rule from="^http://(?:www\.)?t\.co/"
 		to="https://t.co/" />
 
-	<rule from="^http://a\d\.twimg\.com/"
+	<rule from="^http://a[5-9]\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(abs|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
+	<rule from="^http://(abs|a\d|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
 	<rule from="^http://s\.twimg\.com/"
 		to="https://d2rdfnizen5apl.cloudfront.net/" />
 
-	<rule from="^http://((?:201\d|ads|analytics|blog|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
+	<rule from="^http://((?:201\d|about|ads|analytics|blog|(?:cdn\.|urls\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
 		to="https://$1twitter.com/" />
-
-	<rule from="^http://urls\.api\.twitter\.com/"
-		to="https://cdn.api.twitter.com/" />
-
-	<rule from="^http://(?:blo|engineerin)g\.twitter\.com/favicon\.ico"
-		to="https://www.blogger.com/favicon.ico"/>
 
 	<rule from="^http://platform\d\.twitter\.com/"
 		to="https://platform.twitter.com/" />

@@ -1,35 +1,132 @@
 <!--
+	Problematic domains:
+
+		- which.resultspage.com ¹
+		- staticwhich.co.uk ²
+		- search.which.co.uk ³
+		- static.which.net ⁴
+		- subscribe.which.net ⁵
+
+	¹ Mixed css from search.which.co.uk, www.staticwhich.co.uk, and www.which.co.uk
+	² Mixed css from www.staticwhich.co.uk
+	³ Redirects to http; mismatched, CN: *.resultspage.com
+	⁴ Works; mismatched, CN: www.staticwhich.co.uk
+	⁵ Shows another domain, expired 2013-04-30
+
+
 	Partially covered domains:
 
-		- blogs.which.co.uk *
+		- staticwhich.co.uk ¹
 
-	* At least some pages redirect to http
+		- blogs.which.co.uk ²
+		- search.which.co.uk ³
+		- www.which.co.uk ²
+
+		- (www.)which.net ²
+
+	¹ Avoiding mixed css from www.staticwhich.co.uk
+	² At least some pages redirect to http
+	³ Avoiding mixed css from (search|www).which.co.uk and www.staticwhich.co.uk
+
+
+	Fully covered domains:
+
+		- www.staticwhich.net
+		- info.which.co.uk
+		- subscribe.which.net	(→ www.which.net)
+
+
+	These altnames don't exist:
+
+		- www.blogs.which.co.uk
+		- www.subscribe.which.net
+
+
+	Mixed content:
+
+		- iframe on staticwhich.co.uk from www.youtube.com *
+
+		- css, on:
+
+			- which.resultspage.com from www.staticwhich.co.uk *
+			- which.resultspage.com from search.which.co.uk *
+			- which.resultspage.com from www.which.co.uk *
+			- staticwhich.co.uk from www.staticwhich.co.uk *
+
+		- Images on staticwhich.co.uk from www.staticwhich.co.uk *
+
+		- favicon, on:
+
+			- which.resultspage.com from search.which.co.uk *
+			- which.resultspage.com from www.which.co.uk *
+
+	* Secured by us
 
 -->
 <ruleset name="Which? (partial)">
 
-	<target host="which.co.uk" />
-	<target host="*.which.co.uk" />
-		<exclusion pattern="^http://blogs\.which\.co\.uk/+(?!\w+/wp-(?:content|includes)/)" />
-	<target host="static.which.net" />
 	<target host="staticwhich.co.uk" />
 	<target host="www.staticwhich.co.uk" />
+	<target host="which.co.uk" />
+	<target host="*.which.co.uk" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://staticwhich\.co\.uk/+(?:$|\?)" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://blogs\.which\.co\.uk/+($|\?)" /-->
+		<!--exclusion pattern="^http://www\.which\.co\.uk/+($|\?|(accessibility|privacy-policy/cookie-policy)/?($|\?))" /-->
+		<!--exclusion pattern="^http://www\.which\.net/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blogs\.which\.co\.uk/+(?!\w+/(?:(?:login|register)(?:$|[?/])|wp-(?:content|includes)/)|favicon\.ico)" />
+		<exclusion pattern="^http://www\.which\.co\.uk/+(?!assets/|components/eprivacy\.html|favicon\.ico|(?:login|signup)(?:$|[?/])|media/)" />
+		<!--exclusion pattern="^http://(www\.)?which\.net/+(?!(about|account|services|support|webmail)($|[?/])|assets/|favicon\.ico|images/|styles/)" /-->
+	<target host="which.net" />
+	<target host="*.which.net" />
 
 
-	<securecookie host="^(www\.)?staticwhich\.co\.uk$" name=".*" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.which\.net$" name="^SQMSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^staticwhich\.co\.uk$" name="^(JSESSIONID|b1Pz|lastPageName)$" /-->
+	<!--securecookie host="^(www\.)?staticwhich\.co\.uk$" name="^b1P$" /-->
+	<securecookie host="^which\.net$" name="^SQMSESSID$" />
+	<!--securecookie host="^(www\.)?which\.net$" name="^INFO$" /-->
 
+	<securecookie host="^(?:www\.)?staticwhich\.co\.uk$" name=".+" />
 
-	<rule from="^http://(www\.)?which\.co\.uk/(assets/|favicon\.ico|login/?$|media/|signup/?$)"
-		to="https://$1which.co.uk/$2" />
-
-	<rule from="^http://(blogs|info)\.which\.co\.uk/"
-		to="https://$1.which.co.uk/" />
-
-	<!--	Cert doesn't match.	-->
-	<rule from="^http://static\.which\.net/"
-		to="https://staticwhich.co.uk/" />
 
 	<rule from="^http://(www\.)?staticwhich\.co\.uk/"
 		to="https://$1staticwhich.co.uk/" />
+
+	<rule from="^http://((?:blogs|info|www)\.)?which\.co\.uk/"
+		to="https://$1which.co.uk/" />
+
+	<rule from="^http://search\.which\.co\.uk/(?=favicon\.ico|sli_styles\.css)"
+		to="https://which.resultspage.com/" />
+
+	<rule from="^http://(www\.)?which\.net/(?=(?:about|services|support)(?:$|[?/])|assets/|favicon\.ico|images/|styles/)"
+		to="https://$1which.net/" />
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?which\.net/(?=(?:account|webmail)(?:$|[?/]))"
+		to="https://www.which.net/" />
+
+	<rule from="^http://static\.which\.net/"
+		to="https://www.staticwhich.co.uk/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://subscribe\.which\.net/+[^?]*"
+		to="https://www.which.net/account" />
 
 </ruleset>

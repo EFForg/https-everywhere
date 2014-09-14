@@ -7,23 +7,65 @@
 		- IEEE_eLearning_Library.xml
 
 
+	CDN buckets:
+
+		- www.spectrum.ieee.org.edgesuite.net
+		- staticieeexplore.ieee.org.edgesuite.net
+
+
 	Nonfunctional subdomains:
 
 		- grouper ¹
+		- sites ²
 		- spectrum	(Akamai; 503)
+		- theinstitute ⁴
 
 	¹ Refused
+	² Dropped
+	³ 503, akamai
 
 
 	Problematic subdomains:
 
+		- ewh ¹
 		- www.ewh	(cert only matches ^ewh)
 		- jobs		(mismatched, CN: sitemanager2.adico.com)
+		- www.spectrum ⁴
+		- staticieeexplore ⁴
+
+	¹ Configured for rc4 only
+	⁴ Works, akamai
 
 
 	Partially covered subdomains:
 
 		- eleccomm	(homepage 403s)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- (www.)ewh	(www → ^)
+		- ieeexplore
+		- mentor
+		- securesso
+		- standards
+		- development.standards
+		- staticieeexplore	(→ akamai)
+		- uce
+		- origin.www
+
+
+	Mixed content:
+
+		- css on ieeexplore from staticieeexplore *
+
+		- Images,:
+
+			- ieeexplore from staticieeexplore *
+			- on standards from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="IEEE (partial)">
@@ -33,7 +75,13 @@
 		<exclusion pattern="^http://eleccomm\.ieee\.org/(?:aliase|cs|image)s/" />
 
 
-	<!--	Observed cookie subdomains:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ieee\.org$" name="^(ISA4|cookieCheck|ipCheck)$" /-->
+	<!--securecookie host="^(ieeexplore)?\.ieee\.org$" name="^TS[0-9]a-f]{8}$" /-->
+	<!--securecookie host="^ieeexplore\.ieee\.org$" name="^(JSESSIONID|WLSESSION)$" /-->
+	<!--
+		Observed cookie subdomains:
 
 			- ^.
 			- ^origin.www
@@ -57,10 +105,15 @@
 	<rule from="^http://(?:www\.)?ieee\.org/"
 		to="https://www.ieee.org/" />
 
-	<rule from="^http://(eleccomm|ieeexplore|mentor|securesso|standards|uce|origin\.www)\.ieee\.org/"
+	<rule from="^http://(eleccomm|ieeexplore|mentor|securesso|(?:development\.)?standards|uce|origin\.www)\.ieee\.org/"
 		to="https://$1.ieee.org/" />
 
 	<rule from="^http://(?:www\.)?ewh\.ieee\.org/"
 		to="https://ewh.ieee.org/" />
+
+	<!--	css seems to use self-relative paths, so this should work:
+										-->
+	<rule from="^http://staticieeexplore\.ieee\.org/"
+		to="https://a248.e.akamai.net/f/248/815/10/staticieeexplore.ieee.org/" />
 
 </ruleset>

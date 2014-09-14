@@ -10,6 +10,7 @@
 		- Mozilla_Persona.xml
 		- Mozilla_Webmaker.xml
 		- Open_Badges.xml
+		- Public_Suffix.org.xml
 
 
 	CDN buckets:
@@ -68,6 +69,7 @@
 
 		- firefox.com
 		- www.firefox.com		(works; mismatched, CN: static-san.mozilla.org)
+		- labs.mozilla.com *
 		- cdn.mozilla.net		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
 		- download.cdn.mozilla.net	(503, akamai)
 		- getpersonas-cdn.mozilla.net	(mismatched, CN: ssl2.cdngc.net)
@@ -116,6 +118,7 @@
 			- data
 			- fhr.data
 			- input
+			- labs		(→ mozillalabs.com)
 			- mail
 			- people
 			- mail.corp.phx1
@@ -317,9 +320,14 @@
 	<target host="www.webfwd.org" />
 
 
-	<!--	Not secured by server:
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^support\.mozilla\.org$" name="^(anoncsrf|sessionid)$" /-->
+	<!--
+		Not secured by server:
 					-->
 	<!--securecookie host="^addons\.mozilla\.org$" name="^(multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
+	<!--securecookie host="^support\.mozilla\.org$" name="^dwf_surveygizmo$" /-->
 
 
 	<securecookie host="^marketplace\.firefox\.com$" name=".+" />
@@ -337,6 +345,9 @@
 
 	<rule from="^http://(accounts|(?:api|oauth|profile|verifier)\.accounts|marketplace)\.firefox\.com/"
 		to="https://$1.firefox.com/" />
+
+	<rule from="^http://labs\.mozilla\.(?:com|org)/+"
+		to="https://mozillalabs.com/" />
 
 	<rule from="^http://([\w.-]+\.)?mozilla\.com/"
 		to="https://$1mozilla.com/" />
@@ -360,9 +371,6 @@
 
 	<rule from="^https?://beta\.mozilla\.org/"
 		to="https://www.mozilla.org/firefox/channel/" />
-
-	<rule from="^http://labs\.mozilla\.org/"
-		to="https://mozillalabs.com/" />
 
 	<rule from="^https?://people\.mozilla\.org/"
 		to="https://people.mozilla.org/" />

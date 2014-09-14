@@ -3,27 +3,47 @@
 
 		- pingdom.com subdomains:
 
+			- my
 			- share
+			- support
 
 		- rum-collector.pingdom.net
+
+
+	Nonfunctional subdomains:
+
+		- dnscheck ¹
+		- fpt
+		- royal ²
+		- stats ³
+		- tools ¹
+
+	¹ 521
+	² Redirects to http
+	³ Refused
 
 -->
 <ruleset name="Pingdom (partial)">
 
 	<target host="pingdom.com" />
 	<target host="*.pingdom.com" />
-		<!--
-			404:
-				-->
-		<exclusion pattern="^http://stats\." />
-		<exclusion pattern="^http://www\.pingdom\.com/(?!_css/|_img/|signup)" />
+		<!--exclusion pattern="^http://(dnscheck|fpt|royal|stats|tools)\." /-->
 	<target host="*.pingdom.net" />
 
 
-	<securecookie host="^\.pingdom\.net$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^my\.pingdom\.com$" name="^mysess$" /-->
+	<!--securecookie host="^www\.pingdom\.com$" name="^PHPSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^support\.pingdom\.com$" name="^(SWIFT_client|SWIFT_sessionid40)$" /-->
+
+	<securecookie host="^(?:support)?\.pingdom\.net$" name=".+" />
 
 
-	<rule from="^http://((?:my|pp|share|www)\.)?pingdom\.com/"
+	<rule from="^http://((?:my|pp|share|support|www)\.)?pingdom\.com/"
 		to="https://$1pingdom.com/"/>
 
 	<rule from="^http://rum-(collector|static)\.pingdom\.net/"

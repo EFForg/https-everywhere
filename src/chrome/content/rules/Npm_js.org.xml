@@ -2,13 +2,35 @@
 	For other Joyent coverage, see Joyent.xml.
 
 
-	Problematic subdomains:
+	Nonfunctional subdomains:
 
-		- couch *
-		- registry	(works, self-signed)
-		- scratch *
+		- blog *
 
+	* Tumblr
+
+
+	Problematic domains:
+
+		- npmjs.com ¹
+		- www.npmjs.com ²
+
+		- npmjs.org subdomains:
+
+			- couch *
+			- registry	(works, self-signed)
+			- scratch *
+			- status ⁵
+
+	¹ 404; self-signed, CN: Isaac Z. Schlueter
+	² Squarespace
 	* Works; mismatched, CN: registry.npmjs.org
+	⁵ StatusPage
+
+
+	Fully covered domains:
+
+		- preview.npmjs.com
+		- status.npmjs.org	(-> npmjs.statuspage.io)
 
 -->
 <ruleset name="npm js.org (partial)">
@@ -17,13 +39,21 @@
 	<target host="npm.im" />
 	<target host="www.npm.im" />
 	<target host="npmjs.org" />
-	<target host="www.npmjs.org" />
+	<target host="*.npmjs.org" />
+	<target host="preview.npmjs.com" />
 
 
 	<!--	Secured by server:
 					-->
 	<!--securecookie host="^www\.npmjs\.org$" name="^(s|s\.sig)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="\.npmjs\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^preview\.npmjs\.com$" name="^crumb$" /-->
+	<!--securecookie host="^www\.npmjs\.com$" name="^(JSESSIONID|crumb)$" /-->
 
+	<securecookie host="^preview\.npmjs\.com$" name=".+" />
 	<securecookie host="^npmjs\.org$" name=".+" />
 
 
@@ -32,5 +62,11 @@
 
 	<rule from="^http://(www\.)?npm(\.im|js\.org)/"
 		to="https://$1npm$2/" />
+
+	<rule from="^http://preview\.npmjs\.com/"
+		to="https://preview.npmjs.com/" />
+
+	<rule from="^http://status\.npmjs\.org/"
+		to="https://npmjs.statuspage.io/" />
 
 </ruleset>
