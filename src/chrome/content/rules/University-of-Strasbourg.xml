@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see UniStra.fr-falsemixed.xml.
+
+
 	Nonfunctional:
 
 		- newlsiit.u-strasbg.fr
@@ -12,11 +15,35 @@
 
 	¹ Cert only matches *.unistra.fr
 
+
+	Partially covered subdomains:
+
+		- (www.) *	(^ → www)
+
+	* Avoiding mixed css from $self
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from www *
+
+		- Images, on:
+
+			- www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="University of Strasbourg (partial)" platform="mixedcontent">
+<ruleset name="University of Strasbourg (partial)">
 
 	<target host="unistra.fr" />
 	<target host="*.unistra.fr" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.unistra\.fr/+plans(?!/commun/|styles/)" />
 
 
 	<!--	Observed cookies:
