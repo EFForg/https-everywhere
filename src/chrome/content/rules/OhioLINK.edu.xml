@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ead ¹
+		- ebooks ²
+
+	¹ Dropped
+	² Redirects to http, valid cert
+
+
+	Problematic subdomains:
+
+		- drc ¹
+		- music ²
+
+	¹ Configured for rc4 only
+	² Works, expired
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- databases
+		- drc
+		- etd
+		- olc1
+
+-->
+<ruleset name="OhioLINK.edu (partial)">
+
+	<target host="ohiolink.edu" />
+	<target host="*.ohiolink.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?ohiolink\.edu$" name="^BIGipServerPool_ohiolink-web_Prod_443$" /-->
+	<!--securecookie host="^(databases|etd)\.ohiolink\.edu$" name="^BIGipServerPool_Apex_Prod" /-->
+	<!--securecookie host="^etd\.ohiolink\.edu$" name="^(ORA_WWV_RAC_INSTANCE|WWV_CUSTOM-F_\d+_\d+)$" /-->
+	<!--securecookie host="^olc1\.ohiolink\.edu$" name="^SESSION_SCOPE$" /-->
+
+	<securecookie host="^(?:(?:databases|etd|olc1|www)\.)?ohiolink\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:auth|databases|drc|etd|olc1|www)\.)?ohiolink\.edu/"
+		to="https://$1ohiolink.edu/" />
+
+</ruleset>
