@@ -19,12 +19,15 @@
 	Problematic domains:
 
 		- uk.playstation.com		(works; mismatched, CN: secure.eu.playstation.com)
+		- us.playstation.com ²
 		- www.us.playstation.com	(mismatched)
+
+	² Works, akamai
 
 
 	Partially covered domains:
 
-		- (www.)us.playstation.com	(www → ^, many paths redirect to http)
+		- (www.)us.playstation.com	(→ support.us)
 
 
 	Fully covered domains:
@@ -98,7 +101,7 @@
 				support/?$ does too, but then redirects to a secure url.
 													-->
 		<!--exclusion pattern="^http://us\.playstation\.com/($|\?|(adaptor|community|games|grid|games-and-media|myprofile|news|ps[3n]|wtb)($|[?/])|csimg/|omniture/|support/?[^?])" /-->
-		<exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" />
+		<!--exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" /-->
 	<target host="*.playstation.net" />
 
 
@@ -109,13 +112,8 @@
 	<rule from="^http://((?:secure|software|webtrends)\.eu|store|(?:blog|community|service1|support)\.us)\.playstation\.com/"
 		to="https://$1.playstation.com/" />
 
-	<!--	Redirects to http first:
-					-->
 	<rule from="^http://(?:www\.)?us\.playstation\.com/support/?(\?.*)?$"
 		to="https://support.us.playstation.com/$1" />
-
-	<rule from="^http://(?:www\.)?us\.playstation\.com/"
-		to="https://us.playstation.com/" />
 
 	<rule from="^http://(static-resource\.np\.community|en-support\.psm)\.playstation\.net/"
 		to="https://$1.playstation.net/" />
