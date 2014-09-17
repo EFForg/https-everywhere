@@ -5,6 +5,7 @@
 	Other Rackspace rulesets:
 
 		- RackCDN.com.xml
+		- Rackspace_Cloud.com.xml
 
 
 	Nonfunctional domains:
@@ -69,9 +70,6 @@
 		- (www.)rackspace.nl			(^ → www)
 		- (www.)rackspace.no			(^ → www)
 		- (www.)rackspace.se			(^ → www)
-		- (www.)rackspacecloud.com		(^ → www)
-		- manage.rackspacecloud.com
-		- lon.manage.rackspacecloud.com
 
 
 	Observed cookie domains:
@@ -84,8 +82,6 @@
 		- my.rackspace.com
 		- mycloud.rackspace.com ²
 		- www.rackspace.com *
-
-		- manage.rackspacecloud.com ²
 
 	* Secured by us <= not secured by server
 	² Some secured by server, rest by us
@@ -137,8 +133,6 @@
 	<target host="*.rackspace.nl" />
 	<target host="*.rackspace.no" />
 	<target host="*.rackspace.se" />
-	<target host="rackspacecloud.com" />
-	<target host="*.rackspacecloud.com" />
 
 
 	<!--	Not secured by server:
@@ -149,18 +143,16 @@
 	<!--securecookie host="^manage\.rackspace\.com$" name="^X-Mapping-php\w+$" /-->
 	<!--securecookie host="^mycloud\.rackspace\.com$" name="^csrftoken$" /-->
 	<!--securecookie host="^www\.rackspace\.com$" name="^(BigIP_Cookie|PHPSESSID)$" /-->
-	<!--securecookie host="^manage\.rackspacecloud\.com$" name="^(X-Mapping-php\w+)$" /-->
 
 	<securecookie host="^(?:www)?\.rackspace\.(?:com|co\.uk|co\.za|dk|nl|no|se)$" name=".+" />
 	<securecookie host="^(?:apps|cart|community|my|mycloud)\.rackspace\.com$" name=".+" />
-	<securecookie host="^manage\.rackspacecloud\.com$" name=".+" />
 
 
 	<rule from="^http://cdn\.cloudfiles\.mosso\.com/(\w+)/"
 		to="https://$1.ssl.cf0.rackcdn.com/" />
 
-	<rule from="^http://(?:www\.)?rackspace(cloud)?\.(com|co\.uk|co\.za|dk|nl|no|se)/"
-		to="https://www.rackspace$1.$2/" />
+	<rule from="^http://(?:www\.)?rackspace\.(com|co\.uk|co\.za|dk|nl|no|se)/"
+		to="https://www.rackspace.$1/" />
 
 	<rule from="^http://(apps|cart|community|cp|my|mycloud)\.rackspace\.com/"
 		to="https://$1.rackspace.com/" />
@@ -175,14 +167,5 @@
 
 	<rule from="^http://(?:www\.)?rackspace(?:\.com)?\.hk/"
 		to="https://www.rackspace.hk/" />
-
-	<rule from="^http://(lon\.)?manage\.rackspacecloud\.com/"
-		to="https://$1manage.rackspacecloud.com/" />
-
-	<rule from="^http://(\w+)\.cdn\.cloudfiles\.rackspacecloud\.com/"
-		to="https://$1.ssl.cf0.rackcdn.com/" />
-
-	<rule from="^http://(\w+)\.cdn(1|2)\.cloudfiles\.rackspacecloud\.com/"
-		to="https://$1.ssl.cf$2.rackcdn.com/" />
 
 </ruleset>
