@@ -1,6 +1,8 @@
 <!--
 	Mixed content:
 
+		- css on www from fonts.googleapis.com *
+
 		- Images on www from www *
 
 	* Secured by us
@@ -9,13 +11,18 @@
 <ruleset name="Zoner.fi">
 
 	<target host="zoner.fi" />
-	<target host="www.zoner.fi" />
+	<target host="*.zoner.fi" />
 
 
-	<securecookie host="^www\.zoner\.fi$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^oma\.zoner\.fi$" name="^csrftoken$" /-->
+	<!--securecookie host="^tuki\.zoner\.fi$" name="^(SWIFT_client|SWIFT_sessionid40)$" /-->
+
+	<securecookie host="^(?:oma|tuki|www)\.zoner\.fi$" name=".+" />
 
 
-	<rule from="^http://(www\.)?zoner\.fi/"
+	<rule from="^http://((?:oma|tuki|www)\.)?zoner\.fi/"
 		to="https://$1zoner.fi/" />
 
 </ruleset>
