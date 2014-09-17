@@ -48,6 +48,8 @@
 
 		- careers ¹
 		- news.developer ²
+		- download.gfe ²
+		- download-dce-2.gfe ²
 		- investor ²
 		- origin-forums ²
 
@@ -58,6 +60,7 @@
 	Problematic subdomains:
 
 		- ^ ¹
+		- cdn ²
 		- http.developer ²
 		- developer.download ²
 		- us.download ²
@@ -85,19 +88,28 @@
 
 	Fully covered subdomains:
 
+		- account
 		- developer
 		- http.developer *
 		- developer.download *
 		- international.download
 		- us.download *
 		- forums	(→ forums.geforce.com)
+		- download-cdn.gfe
 		- images *
+		- nbound
 		- nvdeveloper
 		- nvidianews
 		- omniture	(→ nvidia-com.122.2o7.net)
+		- es.pforce
 		- research
 
 	* → akamai
+
+
+	These altnames don't exist:
+
+		- account-stage.nvidia.com
 
 
 	Observed cookie domains:
@@ -106,6 +118,8 @@
 		- .developer ²
 		- devtalk ³
 		- .devtalk ²
+		- nbound ³
+		- .nbound ²
 		- nvdeveloper ³
 		- nvidianews ³
 		- store ⁴
@@ -151,7 +165,6 @@
 			Exceptions:
 					-->
 		<exclusion pattern="^http://blogs\.nvidia\.com/+(?!wp-content/|wp-includes/)" />
-
 		<!--
 			Avoid user-visible paths:
 							-->
@@ -169,7 +182,19 @@
 		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/|store\?Action=(?:DisplayEditProfilePage|DisplayHelpPage)(?:$|&amp;))" />
 
 
-	<securecookie host="^\.?(?:developer|devtalk|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
+	<!--	Incapsula cookies:
+					-->
+	<securecookie host="^\.nvidia\.com$" name="^(?:incap_ses_\d+_\d+|visid_incap_\d+)$" />
+	<!--securecookie host="^(devtalk|nbound)\.nvidia\.com$" name="^___utm\w+$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.nvidia\.com$" name="^idm-\d+$" /-->
+	<!--securecookie host="^developer\.nvidia\.com$" name="^NSC_\w{32}$" /-->
+	<!--securecookie host="^nvdeveloper\.nvidia\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
+	<!--securecookie host="^nvidianews\.nvidia\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\.?(?:developer|devtalk|nbound|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
 	<!--
 		Omniture tracking cookies:
 						-->
@@ -179,7 +204,7 @@
 	<rule from="^http://(?:www\.)?nvidia\.com/(?=content/|docs/.+\.(?:jp|pn)g$|Download/NvidiaDownload\.css|favicon\.ico|props/)"
 		to="https://a248.e.akamai.net/f/1650/3297/9h/www.nvidia.com/" />
 
-	<rule from="^http://(blogs|developer|devtalk|international\.download|nvdeveloper|nvidianews|research|store)\.nvidia\.com/"
+	<rule from="^http://(account|blogs|developer|devtalk|international\.download|download-cdn\.gfe|nbound|nvdeveloper|nvidianews|es\.pforce|research|store)\.nvidia\.com/"
 		to="https://$1.nvidia.com/" />
 
 	<rule from="^http://http\.developer\.nvidia\.com/"
