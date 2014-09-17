@@ -96,6 +96,8 @@
 
 	Problematic domains:
 
+		- gu.com ³
+
 		- guardian.co.uk subdomains:
 
 			- ^ ³
@@ -103,7 +105,7 @@
 			- hits			(mismatched, CN: *.d1.sc.omtrdc.net)
 			- image ¹
 			- m ²
-			- syndication  ²
+			- syndication ⁵
 			- www ²
 
 		- guim.co.uk subdomains:
@@ -119,6 +121,7 @@
 	² Works; mismatched, CN: *.a.ssl.fastly.net
 	³ Dropped
 	⁴ Mismatched, CN: *.d1.sc.omtrdc.net
+	⁵ Refused
 
 
 	Partially covered domains:
@@ -130,6 +133,8 @@
 
 
 	Fully covered domains:
+
+		- gu.com	(→ www.theguardian.com)
 
 		- guardian.co.uk subdomains:
 
@@ -167,6 +172,7 @@
 			- register
 			- securedrop
 			- soulmates
+			- syndication	(→ www)
 			- witness
 
 
@@ -195,6 +201,7 @@
 -->
 <ruleset name="The Guardian (partial)">
 
+	<target host="gu.com" />
 	<target host="*.guardian.co.uk" />
 	<target host="guardianbookshop.co.uk" />
 	<target host="www.guardianbookshop.co.uk" />
@@ -231,6 +238,9 @@
 	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH])$" />
 	<securecookie host="^(?:\.?id|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
 
+
+	<rule from="^http://gu\.com/"
+		to="https://www.theguardian.com/" />
 
 	<rule from="^http://www\.guardian\.co\.uk/favicon\.ico"
 		to="https://image.guim.co.uk/favicon.ico" />
@@ -270,5 +280,10 @@
 
 	<rule from="^http://(hits-secure|id|oas|membership|profile|register|securedrop|soulmates|witness)\.theguardian\.com/"
 		to="https://$1.theguardian.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://syndication\.theguardian\.com/[^?]*"
+		to="https://www.theguardian.com/info/syndication-and-terms-of-use" />
 
 </ruleset>
