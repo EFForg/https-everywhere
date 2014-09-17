@@ -8,13 +8,14 @@
 
 	Problematic domains:
 
-		- www.stackapps.com *
+		- www.stackapps.com ¹
 		- meta.*.stackexchange.com ²
 		- chat.stackexchange.com ³
 
-	* Mismatched
+	¹ Mismatched
 	² Works; mismatched, CN: *.stackexchange.com
 	³ Mixed css from cdn-chat.sstatic.net
+
 
 	Fully covered domains:
 
@@ -33,32 +34,31 @@
 
 			- blog.stackoverflow.com from $self
 
-		- Images on chat.stackexchange.com, from:
-
-			- i.stack.imgur.com *
-			- cdn.sstatic.net *
-
 		- Images, on:
+
+			- chat.stackexchange.com from i.stack.imgur.com ¹
+			- chat.stackexchange.com from cdn.sstatic.net ¹
 
 			- blog.stackoverflow.com, from:
 
-				- $self *
-				- www.google.com *
-				- i.stack.imgur.com *
+				- $self ¹
+				- www.google.com ¹
+				- i.stack.imgur.com ¹
 
-		- favicon on blog.stackoverflow.com from cdn.sstatic.net *
-		- favicon on chat.stackexchange.com from cdn.sstatic.net *
+		- favicons, on:
+
+			- chat.stackexchange.com from cdn.sstatic.net ¹
+			- blog.stackoverflow.com from cdn.sstatic.net ¹
 
 		- Web bugs, on:
 
-		- Web bugs on *.stackexchange.com from pixel.quantserve.com **
+			- *.stackexchange.com from pixel.quantserve.com ²
+			- blog.stackoverflow.com from i.creativecommons.org ¹
+			- careers.stackoverflow.com from www.esri.com ³
 
-			- blog.stackoverflow.com from i.creativecommons.org *
-			- careers.stackoverflow.com from www.esri.com ²
-
-	* Secured by us
-	** Rewritten to https with js enabled, secured by us otherwise
-	² Unsecurable <= 503
+	¹ Secured by us
+	² Rewritten to https with js enabled, secured by us otherwise
+	³ Unsecurable <= 503
 
 
 	As of Dec., 2013, stackexchange has a cert valid for:
@@ -89,7 +89,7 @@
 	<target host="www.stackapps.com" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
-        <exclusion pattern="^http://(?:\w+\.)?(stackexchange|stackoverflow)\.com/users/authenticate/" />
+        	<exclusion pattern="^http://(?:\w+\.)?(?:stackexchange|stackoverflow)\.com/users/authenticate/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
 	<target host="app.stacktack.com" />
@@ -125,7 +125,7 @@
 	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
 
-	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
+	<rule from="^http://((?:careers|meta|www)\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
 
 	<rule from="^http://app\.stacktack\.com/"
