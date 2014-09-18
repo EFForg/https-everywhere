@@ -1,18 +1,86 @@
+<!--
+	For other InterContinental Hotels Group PLC coverage, see IHG_PLC.com.xml.
+
+
+	CDN buckets:
+
+		- development.ihg.com.edgesuite.net.globalredir.akadns.net
+		- contact.ihg.com.edgesuite.net
+		- qa.contact.ihg.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- development.ihg.com *
+
+	* 503, akamai
+
+
+	Problematic domains:
+
+		- contact.ihg.com *
+		- qa.contact.ihg.com *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- ihg.com		(^ → www)
+
+		- (?!contact.|qa.contact.|development.).+.ihg.com:
+
+			- qap.secure.contact
+			- guestapi
+			- beta.guestapi
+			- prodcache.internal
+			- servicecenter.loyalty
+			- servicecenter-int.loyalty
+			- servicecenter-proj.loyalty
+			- servicecenter-qa.loyalty
+			- m
+			- beta.m
+			- m.secure
+			- beta.m.secure
+
+
+	These altnames don't exist:
+
+		- aci-qap.secure.contact.ihg.com
+
+-->
 <ruleset name="InterContinental Hotels Group">
-    <target host="ihg.com" />
-    <target host="www.ihg.com" />
-    <target host="ihgagent.com" />
-    <target host="www.ihgagent.com" />
 
-    <securecookie host="^(.*\.)?ihg\.com$" name=".+" />
+	<target host="ihg.com" />
+	<target host="*.ihg.com" />
+		<exclusion pattern="^http://(?:contact|qa\.contact|development)\.ihg\.com/" />
+	<target host="ihgagent.com" />
+	<target host="www.ihgagent.com" />
 
-    <rule from="^https?://ihg\.com/"
-        to="https://www.ihg.com/" />
-    <rule from="^http://([^/:@]+)?\.ihg\.com/"
-        to="https://$1.ihg.com/" />
 
-    <rule from="^https?://ihgagent\.com/"
-        to="https://www.ihgagent.com/" />
-    <rule from="^http://([^/:@]+)?\.ihgagent\.com/"
-        to="https://$1.ihgagent.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ihg\.com$" name="^(TLTSID|TLTUID|X-IHG-LOC|X-IHG-SRV|X-IHG-TrueClient_IP|searchRequest)" /-->
+	<!--securecookie host="^(contact|qa\.contact|qap\.secure\.contact|servicecenter-qa\.loyalty|m|beta\.m)\.ihg\.com$" name="^BlueStripe\.PVN$" /-->
+	<!--securecookie host="^\.contact\.ihg\.com$" name="^(ISESSIONID|datacenternode|servernode)$" /-->
+	<!--securecookie host="^qa\.contact\.ihg\.com$" name="^ADRUM_BT$" /-->
+	<!--securecookie host="^servicecenter-qa\.loyalty\.ihg\.com$" name="^BIGipServerservicecenter-qa-pool$" /-->
+	<!--securecookie host="^www\.ihg\.com$" name="^(ADRUM_BT|JSESSIONID|country_language|dp|hotelicopterCookie|ibean" /-->
+	<!--securecookie host="^\.www\.ihg\.com$" name="^(BlueStripe\.PVN|X-IHG-SRV|datacenternode|recentlyViewed)$" /-->
+
+	<securecookie host="^(?:.*\.)?ihg\.com$" name=".+" />
+
+
+	<rule from="^https?://ihg\.com/"
+		to="https://www.ihg.com/" />
+
+	<rule from="^http://([^/:@]+)?\.ihg\.com/"
+		to="https://$1.ihg.com/" />
+
+	<rule from="^https?://ihgagent\.com/"
+		to="https://www.ihgagent.com/" />
+
+	<rule from="^http://([^/:@]+)?\.ihgagent\.com/"
+		to="https://$1.ihgagent.com/" />
+
 </ruleset>

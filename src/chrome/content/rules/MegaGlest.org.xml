@@ -1,0 +1,69 @@
+<!--
+	For rules causing false/broken MCB, see MegaGlest.org-falsemixed.xml.
+
+
+	Problematic subdomains:
+
+		- faq *
+		- readme *
+		- wiki *
+		- www *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
+		- docs
+		- faq		(→ docs)
+		- forum
+		- readme	(→ raw.github.com)
+		- wiki		(→ docs)
+
+
+	Mixed content:
+
+		- css on ^ from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="MegaGlest.org (partial)">
+
+	<target host="megaglest.org" />
+	<target host="*.megaglest.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?megaglest\.org/+(?!megaglest\.ico|tmp/|uploads/)" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.docs\.megaglest\.org$" name="^docs_session$" /-->
+	<!--securecookie host="^\.forum\.megaglest\.org$" name="^PHPSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^megaglest\.org$" name="^CMSSESSID[0-9a-f]{8}$" /-->
+
+
+	<rule from="^http://(?:(docs\.|forum\.)|www\.)?megaglest\.org/"
+		to="https://$1megaglest.org/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://faq\.megaglest\.org/"
+		to="https://docs.megaglest.org/MG/FAQ" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://readme\.megaglest\.org/"
+		to="https://raw.github.com/MegaGlest/megaglest-source/master/docs/README.txt" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://wiki\.megaglest\.org/"
+		to="https://docs.megaglest.org/MG" />
+
+</ruleset>

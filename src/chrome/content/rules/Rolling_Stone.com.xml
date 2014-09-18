@@ -19,72 +19,62 @@
 
 	Nonfunctional subdomains:
 
-		- archive	(dropped)
-		- assets-s3 ²
+		- archive *
 
-	² Redirects to http, akamai
+	* Refused
 
 
-	Problematic subdomains:
+	Partially covered subdomains:
 
-		- assets	(works, akamai)
-		- www		($ redirects to http, some paths work; akamai)
+		- assets-s3 *
+
+	* At least some pages redirect to http
 
 
 	Fully covered subdomains:
 
-		- sub
+		- (www.)
+		- assets
+		- subscribe
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from assets *
+			- www from www.thedailybeast.com *
+
+		- favicon on subscribe from www *
+
+	* Secured by us
 
 -->
 <ruleset name="Rolling Stone.com (partial)">
 
+	<target host="rollingstone.com" />
 	<target host="*.rollingstone.com" />
 		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://www\.rollingstone\.com/(?!assets/|css/|images/|js/)" />
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://assets-s3\.rollingstone\.com/+($|\?|css/)" /-->
 		<!--
-			global-2 breaks images/fe/sprite/socialIcons.*
-
-			homepage breaks other image paths
-
-			rsplus breaks images/rsplus/
-
-			taibbimodule breaks images/fe/h2-newTaibbi.png
-
-			videos breaks images/fe/videos/
-
-			Hint: pointing to http://www.rollingstone.com/.* would fix this
-											-->
-		<exclusion pattern="^http://www\.rollingstone\.com/css/fe/(?:(?:global-\d|homepage|taibbimodule|videos).\w{32}|rsplus)\.css" />
+			Exceptions:
+					-->
+		<exclusion pattern="^http://assets-s3\.rollingstone\.com/+(?!assets/|favicon\.ico|images/)" />
 
 
-	<!--	google-analytics.com tracking cookies:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^subscribe\.rollingstone\.com$" name="^(JSESSIONID|TI_SPLIT_RANDOM|customerSessionGuid)$" /-->
+	<!--
+		google-analytics.com tracking cookies:
 							-->
 	<securecookie host="^\.rollingstone\.com$" name="^__utm\w$" />
-	<securecookie host="^sub\.rollingstone\.com$" name=".+" />
+	<securecookie host="^subscribe\.rollingstone\.com$" name=".+" />
 
 
-	<rule from="^http://rollingstone\.com/"
-		to="https://rollingstone.com/" />
-
-	<!--	assets/ redirects to http when rewritten to akamai.net/....www
-
-		This rule must be above the catch-all www rule.
-								-->
-	<rule from="^http://www\.rollingstone\.com/assets/"
-		to="https://a248.e.akamai.net/f/402/78/9m/assets.rollingstone.com/assets/" />
-
-	<rule from="^http://www\.rollingstone\.com/sub-text-link-a(?:\?.*)?$"
-		to="https://www.rollingstonesubscriptions.com/storefront/link/1005317.html" />
-
-	<rule from="^http://www\.rollingstone\.com/"
-		to="https://a248.e.akamai.net/f/1317/1860/6m/www.rollingstone.com/" />
-
-	<rule from="^http://assets\.rollingstone\.com/"
-		to="https://a248.e.akamai.net/f/402/78/9m/assets.rollingstone.com/" />
-
-	<rule from="^http://sub\.rollingstone\.com/"
-		to="https://sub.rollingstone.com/" />
+	<rule from="^http://((?:assets|assets-s3|subscribe|www)\.)?rollingstone\.com/"
+		to="https://$1rollingstone.com/" />
 
 </ruleset>
