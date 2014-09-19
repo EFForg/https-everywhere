@@ -6,19 +6,24 @@
 
 	Nonfunctional domains:
 
-		- (www.)arcsight.com	(record_too_long)
+		- (www.)arcsight.com
 
 		- hp.com subdomains:
 
-			- h10060.www1	(404, mismatched)
-			- h17007.www1	(reset)
-			- h18004.www1	(shows h18000.www1, mismatched)
+			- h10060.www1 ²
+			- h17007.www1 ³
+			- h18004.www1 ⁴
 
-		- hpwebos.com		(CN: palm.com)
-		- www.hpwebos.com	(redirects to http, Akamai)
+		- hpwebos.com ⁵
+		- www.hpwebos.com ⁶
 		- welcome.hp-ww.com ⁷
 
-	* http reply
+	¹ Plaintext reply
+	² 404, mismatched
+	³ Reset
+	⁴ Shows h18000.www1, mismatched
+	⁵ Mismatched, CN: palm.com
+	⁶ Redirects to http, Akamai
 	⁷ Dropped
 
 
@@ -49,31 +54,19 @@
 	<target host="www.compaq.com" />
 	<target host="eds.com" />
 	<target host="*.eds.com" />
-	<target host="*.hp-ww.com" />
-		<exclusion pattern="^http://welcome\.hp-ww\.com/+(?!(?:img/+)?favicon\.ico)" />
 	<target host="hp.com" />
 	<target host="*.hp.com" />
-
-	<exclusion pattern="^http://m\.hp\.com"/>
-	<exclusion pattern="^http://welcome\.hp\.com"/>
-	<exclusion pattern="^http://www\.hpl\.hp\.com"/>
-	<exclusion pattern="^http://h10060\.www1\.hp\.com"/>
-	<exclusion pattern="^http://h17007\.www1\.hp\.com"/>
-	<exclusion pattern="^http://h18004\.www1\.hp\.com"/>
-	<exclusion pattern="^http://h30261\.www3\.hp\.com"/>
-	<exclusion pattern="^http://h30434\.www3\.hp\.com"/>
-
-	<!--<exclusion pattern="^http://www\.hp\.com/(?!img/)" /> 404s over https-->
-	<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
+		<exclusion pattern="^http://(?:www\.hpl|m|welcome|h1(?:0060|7007|8004)\.www1|h30(?:261|434)\.www3)\.hp\.com" />
+		<!--<exclusion pattern="^http://www\.hp\.com/(?!img/)" /> 404s over https -->
+		<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
+	<target host="*.hp-ww.com" />
+		<exclusion pattern="^http://welcome\.hp-ww\.com/+(?!(?:img/+)?favicon\.ico)" />
 	<target host="developer.palm.com" />
 
-	<securecookie host="^esca(?:2\.americas|5\.asiapac|3\.europe)\.hp\.com$" name=".+" />
-	<securecookie host="^(?:(?:www\.)?register|shopping)\.hp\.com$" name=".+" />
-	<securecookie host="^h(?:20141\.www2|30499\.www3|41183\.www4)\.hp\.com$" name=".+" />
-	<!--
-		Stats cookie set by met1.hp.com
+	<!--	Stats cookie set by met1.hp.com
 						-->
 	<securecookie host="^\.hp\.com$" name="^s_vi$" />
+	<securecookie host="^(?:esca(?:2\.americas|5\.asiapac|3\.europe)|(?:www\.)?register|shopping|h20141\.www2|h30499\.www3|h41183\.www4)\.hp\.com$" name=".+" />
 	<securecookie host="^developer\.palm\.com$" name=".+" />
 
 
@@ -83,46 +76,16 @@
 	<rule from="^http://(www(?:-mo)?\.)?eds\.com/"
 		to="https://$1eds.com/" />
 
-	<rule from="^http://([^/:@]*)\.austin\.hp\.com/"
+	<rule from="^http://([^/:@]+)\.(americas|asiapac|austin|europe|www[1-7])\.hp\.com/"
 		to="https://$1.austin.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.americas\.hp\.com/"
-		to="https://$1.americas.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.asiapac\.hp\.com/"
-		to="https://$1.asiapac.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.europe\.hp\.com/"
-		to="https://$1.europe.hp.com/" />
-	
-	<rule from="^http://([^/:@]*)\.www1\.hp\.com/"
-		to="https://$1.www1.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www2\.hp\.com/"
-		to="https://$1.www2.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www3\.hp\.com/"
-		to="https://$1.www3.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www4\.hp\.com/"
-		to="https://$1.www4.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www5\.hp\.com/"
-		to="https://$1.www5.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www6\.hp\.com/"
-		to="https://$1.www6.hp.com/" />
-
-	<rule from="^http://([^/:@]*)\.www7\.hp\.com/"
-		to="https://$1.www7.hp.com/" />
 
 	<rule from="^http://www8\.hp\.com/"
 		to="https://ssl.www8.hp.com/" />
 		
-	<rule from="^http://([^/:@]*)\.hp\.com/"
+	<rule from="^http://([^/:@]+)\.hp\.com/"
 		to="https://$1.hp.com/" />
 
-	<rule from="^http://(?:secure|welcome)\.hp-ww\.com/"
+	<rule from="^http://(?:secur|welcom)e\.hp-ww\.com/"
 		to="https://secure.hp-ww.com/" />
 
 	<rule from="^http://developer\.palm\.com/"
