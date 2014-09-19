@@ -59,24 +59,25 @@
 		<!--
 			Redirect to http:
 						-->
-		<!--exclusion pattern="^http://store\.steampowered\.com/(about|news)/" /-->
-	<target host="cdn.store.steampowered.com" />
+		<!--exclusion pattern="^http://store\.steampowered\.com/(about|app/\d+|freestuff/demos|news|recommended|stats)/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://store\.steampowered\.com/+(?!favicon\.ico|(?:join|login|psn/beginsetup|search|software)(?:$|[?/])|public/images/)" />
 
 
-	<securecookie host="^\.steampowered\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^partner\.steampowered\.com$" name="(dateEnd|dateStart)$" /-->
 
+	<securecookie host="^(?:partner)?\.steampowered\.com$" name=".+" />
 
-	<rule from="^http://store\.steampowered\.com/(jo|log)in"
-		to="https://store.steampowered.com/$1in" />
 
 	<rule from="^http://steampowered\.com/"
 		to="https://www.steampowered.com/" />
 
-	<rule from="^http://(support|www)\.steampowered\.com/"
+	<rule from="^http://(api|kgs|partner|partnerupload[01]|store|support|www)\.steampowered\.com/"
 		to="https://$1.steampowered.com/" />
-
-	<rule from="^http://store\.steampowered\.com/public/images/"
-		to="https://store.steampowered.com/public/images/" />
 
 	<rule from="^https?://cdn\.(store\.)?steampowered\.com/"
 		to="https://$1steampowered.com/" />
