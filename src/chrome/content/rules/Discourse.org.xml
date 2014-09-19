@@ -1,6 +1,7 @@
 <!--
 	CDN buckets:
 
+		- try-discourse.global.ssl.fastly.net
 		- meta-discourse.r.worldssl.net
 
 
@@ -13,6 +14,20 @@
 	¹ Redirects to http, valid cert
 	² Refused
 
+
+	Problematic subdomains:
+
+		- cdn *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
+		- cdn		(→ try-discourse.global.ssl.fastly.net)
+		- meta
+		- payments
+
 -->
 <ruleset name="Discourse.org (partial)">
 
@@ -20,7 +35,10 @@
 		<!--exclusion pattern="^http://(blog|try|www)\.discourse\.org/" /-->
 
 
-	<rule from="^http://meta\.discourse\.org/"
-		to="https://meta.discourse.org/" />
+	<rule from="^http://(meta|payments)\.discourse\.org/"
+		to="https://$1.discourse.org/" />
+
+	<rule from="^http://cdn\.discourse\.org/"
+		to="https://try-discourse.global.ssl.fastly.net/" />
 
 </ruleset>
