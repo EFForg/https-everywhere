@@ -1,7 +1,4 @@
 <!--
-	about & event.gigaom.com are handled in WordPress-blogs.xml.
-
-
 	CDN buckets:
 
 		- gigaom-pro-files.s3.amazonaws.com
@@ -9,14 +6,12 @@
 
 	Problematic subdomains:
 
-		- about ¹
-		- events ¹
+		- event ¹
 		- jobs ²
 		- support ³
 		- techjobs ⁴
-		- www ¹
 
-	¹ wordpress
+	¹ Refused
 	² 200 "error"; mismatched, CN: www.jobthread.com
 	³ zendesk
 	⁴ Works; mismatched, CN: www.jobthread.com
@@ -24,27 +19,41 @@
 
 	Fully covered subdomains:
 
+		- (www.)
+		- about
 		- accounts
+		- event		(-> events)
+		- events
+		- go
+		- pro
 
 
 	Observed cookie domains:
 
 		- .
+		- accounts *
 		- go
 		- pro
 		- research
 		- support
 
+	* Secured by us <= not secured by server
+
 
 	Mixed content:
 
-		- css on techjobs from s0.wp.com *
+		- css, on:
+
+			- techjobs from gigaom.com *
+			- techjobs from s[01].wp.com *
 
 		- Images, on:
 
 			- ^ from gigaom2.files.wordpress.com *
 			- events from 1.gravatar.com *
 			- go from $self *
+
+		- favicon on about from s2.wp.com *
 
 		- Web bugs on ^ from b.scorecardresearch.com *
 
@@ -65,20 +74,29 @@
 		<exclusion pattern="^http://research\.gigaom\.com/+(?!favicon\.ico|(?:analysts|subscription|wp-admin)(?:$|[?/])|wp-content/|wp-includes/)" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^accounts\.gigaom\.com$" name="^PHPSESSID$" /-->
+
 	<securecookie host="^\.gigaom\.com$" name="^wordpress_test_cookie$" />
-	<securecookie host="^(?:go|pro)\.gigaom\.com$" name=".+" />
+	<securecookie host="^(?:accounts|go|pro)\.gigaom\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?gigaom\.com/"
-		to="https://gigaom.com/" />
+	<rule from="^http://(www\.)?gigaom\.com/"
+		to="https://$1gigaom.com/" />
 
 	<!--	Redirects to http before appending slash:
 								-->
 	<rule from="^http://research\.gigaom\.com/analysts(?=$|\?)"
 		to="https://research.gigaom.com/analysts/" />
 
-	<rule from="^http://(accounts|go|pro|research)\.gigaom\.com/"
+	<rule from="^http://(about|accounts|events|go|pro|research)\.gigaom\.com/"
 		to="https://$1.gigaom.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://event\.gigaom\.com/[^?]*"
+		to="https://events.gigaom.com/" />
 
 	<rule from="^http://jobs\.gigaom\.com/(?=images/|files/|partners/)"
 		to="https://www.jobthread.com/" />
