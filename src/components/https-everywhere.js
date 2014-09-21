@@ -191,6 +191,7 @@ function HTTPSEverywhere() {
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
 
+  this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   this.isMobile = this.doMobileCheck();
 
   // We need to use observers instead of categories for FF3.0 for these:
@@ -456,7 +457,7 @@ HTTPSEverywhere.prototype = {
         else        this.log(NOTE,"Failed to indicate breakage in content menu");
         return;
       }
-      HTTPS.replaceChannel(lst, channel);
+      HTTPS.replaceChannel(lst, channel, this.httpNowhereEnabled);
     } else if (topic == "http-on-examine-response") {
          this.log(DBUG, "Got http-on-examine-response @ "+ (channel.URI ? channel.URI.spec : '') );
          HTTPS.handleSecureCookies(channel);
@@ -624,7 +625,7 @@ HTTPSEverywhere.prototype = {
       return;
     }
     var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
-    HTTPS.replaceChannel(alist,newChannel);
+    HTTPS.replaceChannel(alist,newChannel, this.httpNowhereEnabled);
   },
 
   juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
@@ -783,6 +784,40 @@ HTTPSEverywhere.prototype = {
         catch(e){
             this.log(WARN, "Couldn't add observers: " + e);         
         }
+    }
+  },
+
+  toggleHttpNowhere: function() {
+    let prefService = Services.prefs;
+    let thisBranch =
+      prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+    let securityBranch = prefService.getBranch("security.");
+
+    // Whether cert is treated as invalid when OCSP connection fails
+    let OCSP_REQUIRED = "OCSP.require";
+
+    // Branch to save original settings
+    let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
+
+
+    if (thisBranch.getBoolPref("enabled")) {
+      // Restore original OCSP settings. TODO: What if user manually edits
+      // these while HTTP Nowhere is enabled?
+      let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
+      securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+
+      thisBranch.setBoolPref("enabled", false);
+      this.httpNowhereEnabled = false;
+    } else {
+      // Save original OCSP settings in HTTP Nowhere preferences branch.
+      let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
+      thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
+
+      // Disable OCSP enforcement
+      securityBranch.setBoolPref(OCSP_REQUIRED, false);
+
+      thisBranch.setBoolPref("enabled", true);
+      this.httpNowhereEnabled = true;
     }
   }
 };
