@@ -15,20 +15,28 @@
 
 	acm.org lacks proper ssl for the following subdomains
 
-		- awards		<- stacktrace for coldfusion
+		- amturing ¹
+		- awards ²
 		- dev			<- shows www
 		- jobs			<- sends to jobtarget.com
 		- librarians		<- displays what appears to be
 					   an old version of the website.
 		- mags
 
+	² Shows awards, valid cert
+	² Redirects to http, valid cert
+
 
 	Problematic subdomains:
 
 		- deliveryimages *
+		- jobs ²
 		- portalparts *
+		- store ³
 
 	* Works, akamai
+	² Partially works; mismatched, CN: *.jobtarget.com
+	³ Shows an old version of the website
 
 
 	Partially covered subdomains:
@@ -57,17 +65,24 @@
 
 	Mixed content:
 
-		- Scripts:
+		- Scripts, on:
 
-			- on www from www *
+			- www from www *
 
-		- css:
+		- css, on:
 
-			- On www from www *
+			- util from myacm *
+			- www from www *
 
 		- Images:
 
-			- On campus from portalparts *
+			- campus from portalparts *
+			- dl from $self *
+			- queue from deliveryimages *
+			- util from $self
+			- util from www *
+
+		- favicons on myacm and util from www *
 
 	* Secured by us
 
@@ -82,6 +97,13 @@
 		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
 		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?acm\.org$" name="^I18N_LANGUAGE$" /-->
+	<!--securecookie host="^\.acm\.org$" name="^MYACM$" /-->
+	<!--securecookie host="^(dl|myacm)\.acm\.org$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^jobs\.acm\.org$" name="^JTSUBREF$" /-->
 
 	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".+" />
 
