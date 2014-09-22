@@ -38,10 +38,8 @@ chrome.storage.sync.get({httpNowhere: false}, function(item) {
 });
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync') {
-    for (key in changes) {
-      if (key !== 'httpNowhere') {
-        return;
-      } else {
+    for (var key in changes) {
+      if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         setIconColor();
       }
@@ -75,7 +73,7 @@ var setIconColor = function() {
   chrome.browserAction.setIcon({
     path: newIconPath
   });
-}
+};
 
 /*
 for (var v in localStorage) {
@@ -307,7 +305,7 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  asset_host_list.sort(function(a,b){return a[0]-b[0];});
   return asset_host_list;
 }
 
