@@ -1,0 +1,69 @@
+<!--
+	For other American Heart Foundation coverage, see American_Heart.org.xml.
+
+
+	Nonfunctional subdomains:
+
+		- mylifecheck ¹
+		- mlnetwork ²
+
+	¹ Interrupted
+	² Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- my ²
+		- newsroom ³
+
+	¹ Cert only matches www
+	² Mismatched, CN: 
+	³ Works; mismatched, CN: cms.iprsoftware.com
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- donate
+		- extranet
+		- my		(-> my.americanheart.org)
+		- static
+		- volunteer
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- newsroom from static *
+			- newsroom from cms.ipressroom.com.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Heart.org (partial)">
+
+	<target host="heart.org" />
+	<target host="*.heart.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.heart\.org$" name="^KNTASESSION$" /-->
+	<!--securecookie host="^donate\.heart\.org$" name="^([0-9A-F]{32}|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^newsroom\.heart\.org$" name="^ipr_i$" /-->
+
+	<securecookie host="^donate\.heart\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?heart\.org/"
+		to="https://www.heart.org/" />
+
+	<rule from="^http://(extranet|donate|static|volunteer)\.heart\.org/"
+		to="https://$1.heart.org/" />
+
+	<rule from="^http://my\.heart\.org/"
+		to="https://my.americanheart.org/" />
+
+</ruleset>
