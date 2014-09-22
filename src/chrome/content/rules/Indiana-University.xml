@@ -5,17 +5,26 @@
 	Nonfunctional domains:
 
 		- iubio.bio.indiana.edu ¹
+		- bursar.indiana.edu ⁴
 		- lkml.indiana.edu *
 
 		- iu.edu subdomains:
 
 			- cacr *
 			- info		(shows PHP installation info, valid cert)
+			- it ⁴
+			- ithelplive *
+			- itnews ⁴
+			- ittrainingtips ⁴
 			- newsinfo	(shows info; mismatched, CN: info.iu.edu)
+			- ovpit ⁴
+			- uits ⁴
 			- (www.)uwsg *
+
 
 	¹ Dropped
 	* http reply
+	⁴ Refused
 
 
 	Partially covered domains:
@@ -40,10 +49,45 @@
 
 			- spout.ussg
 
+		- iu.edu subdomains:
+
+			- cloudtools.access
+			- ams
+			- assets
+			- canvas
+			- cas
+			- cloudstorage
+			- www.exchange
+			- fonts
+			- idp
+			- imail
+			- itaccounts
+			- ittraining
+			- iuanyware
+			- iuware
+			- kb
+			- media.kb
+			- oncourse
+			- onestart
+			- internal.pti
+			- slfed.uits
+			- umail
+			- webmail
+
 
 	Mixed content:
 
+		Images, on:
+
+			- pti.iu.edu from $self *
+			- pti.iu.edu from internal.pti *
+
+		- favicons, on:
+
 		- favicon on (www.)soic.indiana.edu from www.indiana.edu
+			- ams.iu.edu from itnews ²
+			- stcweb.stc from $self  *
+
 
 		- Web bugs, on (www.)soic.indiana.edu, from:
 
@@ -52,6 +96,7 @@
 			- passets-ec.pinterest.com *
 
 	* Secured by us
+	² Unsecurable <= refused
 
 -->
 <ruleset name="Indianna University (partial)">
@@ -59,6 +104,10 @@
 	<target host="*.indiana.edu" />
 	<target host="iu.edu" />
 	<target host="*.iu.edu" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.iu\.edu/$" /-->
 		<!--
 			At least some pages redirect to http.
 
@@ -70,16 +119,28 @@
 		<exclusion pattern="^http://(?:www\.)?iu\.edu/(?!css|img|~\w+|[\w/-]+/_image)/" />
 
 
-	<securecookie host="^cas\.iu\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^stcweb\.stc\.indiana\.edu$" name="^(CFCLIENT_SECURITY|CFGLOBALS|CFID|CFTOKEN|CFGLOBALS)$" /-->
+	<!--securecookie host="^((ams|assets|canvas|fonts|kb|oncourse|umail|www)\.)?iu\.edu$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^\.cloudtools\.access\.iu\.edu$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^(ams|ittraining|iuware)\.iu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(webmail|www)\.cs\.iu\.edu$" name="^bla$" /-->
+	<!--securecookie host="^ittraining\.iu\.edu$" name="^ITTE_CartID$" /-->
+	<!--securecookie host="^one\.iu\.edu$" name="^(VisitorGuid|XSRF-TOKEN)$" /-->
+	<!--securecookie host="^\.internal\.pti\.iu\.edu$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^stcweb\.stc\.indiana\.edu$" name=".+" />
+	<securecookie host="^(?:ams|assets|cas|w(?:ebnail|www)\.cs|fonts|ittraining|kb|oncourse|one|\.internal\.pti|iuware|umail)\.iu\.edu$" name=".+" />
 
 
 	<rule from="^https?://(?:www\.)?soic\.indiana\.edu/"
 		to="https://www.soic.indiana.edu/" />
 
-	<rule from="^http://spout\.ussg\.indiana\.edu/"
-		to="https://spout.ussg.indiana.edu/" />
+	<rule from="^http://(stcweb\.stc|spout\.ussg)\.indiana\.edu/"
+		to="https://$1.indiana.edu/" />
 
-	<rule from="^http://(cas\.|kb\.|www\.)?iu\.edu/"
+	<rule from="^http://((?:cloudtools\.access|ams|assets|canvas|cas|cloudstorage|www\.exchange|fonts|idp|imail|itaccounts|ittraining|iuanyware|iuware|kb|media\.kb|oncourse|one|onestart|internal\.pti|slfed\.uits|umail|webmail|www)\.)?iu\.edu/"
 		to="https://$1iu.edu/" />
 
 	<rule from="^https?://(?:www\.)?osl\.iu\.edu/"
