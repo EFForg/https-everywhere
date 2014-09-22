@@ -45,18 +45,17 @@
 
 		- mozilla.org subdomains:
 
-			- bonsai		(prompts for LDAP login; mismatched, CN: tinderbox.mozilla.org)
+			- bonsai ²
 			- browserquest ²
 			- dxr ²
 			- view.e ³
 			- graphs ²
-			- planet ²
-			- releases ³
+			- krakenbenchmark ²
+			- releases ²
 			- sfx-images ²		(banners)
-			- start ²
-			- telemetry ²
+			- start ³
 			- website-archive ²
-			- www-archive		(prompts for LDAP login, CN: static-san.mozilla.org)
+			- www-archive ²
 
 		- blog.webfwd.org ³
 
@@ -67,23 +66,24 @@
 
 	Problematic domains:
 
-		- labs.mozilla.com *
+		- labs.mozilla.com ¹
 		- cdn.mozilla.net		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
-		- download.cdn.mozilla.net	(503, akamai)
-		- getpersonas-cdn.mozilla.net	(mismatched, CN: ssl2.cdngc.net)
+		- download.cdn.mozilla.net	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- getpersonas-cdn.mozilla.net	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
 		- hardhat.mozilla.net ⁵
+		- www.mozilla.net *
 
 		- mozilla.org subdomains:
 
 			- affiliates-cdn	(works; mismatched, CN: affiliates.mozilla.org)
 			- click.e		(works; mismatched, CN: *.virt.s4.exacttarget.com)
 			- image.e		(works, akamai)
-			- krakenbenchmark	(works; mismatched, CN: static-san.mozilla.org)
-			- labs *
+			- labs ¹
 			- talkback-public *
 
 		- hardhat.mozilla.net ⁵
 
+	¹ Refused
 	⁵ Works; mismatched, CN: gp1.wac.edgecastcdn.net
 	* Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
 
@@ -109,6 +109,7 @@
 			- basket
 			- blog
 			- brasstacks
+			- careers
 			- crash-analysis
 			- crash-stats
 			- data
@@ -234,7 +235,14 @@
 			- talkback-public	(→ crash-stats.mozilla.com)
 			- telemetry
 			- tbpl
+
+			- telemetry
+			- fxos.telemetry
+			- hotfix.telemetry
 			- incoming.telemetry
+			- loop.telemetry
+
+			- telemetry-dash
 			- videos
 			- wiki
 
@@ -262,6 +270,8 @@
 	These altnames don't exist:
 
 		- scrypt.accounts.firefox.com
+		- generic-san.mozilla.org
+		- analysis.telemetry.mozilla.org
 
 
 	Cookie domains:
@@ -276,6 +286,7 @@
 
 		- Images, on:
 
+			- hardhat.cdn.mozilla.net from www.mozilla.org *
 			- blog.mozilla.org from $self *
 			- www.mozilla.org from www.seamonkey-project.org
 
@@ -320,8 +331,10 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^addons\.mozilla\.org$" name="^(multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
+	<!--securecookie host="^addons\.mozilla\.org$" name="^(apps/files/tabstops|multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
+	<!--securecookie host="^bugzilla\.mozilla\.org$" name="^(BUGLIST|LASTORDER)$" /-->
 	<!--securecookie host="^support\.mozilla\.org$" name="^dwf_surveygizmo$" /-->
+	<!--securecookie host="^telemetry-dash\.mozilla\.org$" name="^session$" /-->
 
 
 	<securecookie host="^marketplace\.firefox\.com$" name=".+" />
@@ -357,6 +370,14 @@
 
 	<rule from="^https?://affiliates-cdn\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
+
+	<!--	Would these rules be safe?
+
+	<rule from="^http://click\.e\.mozilla\.org/"
+		to="https://click.virt.s4.exacttarget.com/" />
+
+	<rule from="^http://image\.e\.mozilla\.org/"
+		to="https://image.s4.exacttarget.com/" /-->
 
 	<!--	Redirects like so over http.
 						-->
