@@ -9,7 +9,7 @@
 
 	Fully covered domains:
 
-		- \w+.vo.msecnd.net:
+		- (?!az(?!83882|94986)\d+)\w+.vo.msecnd.net:
 
 			- az83882.vo.msecnd.net		(on windowsazure.com
                         - az94986.vo.msecnd.net		(on so.cl)
@@ -27,7 +27,15 @@
 				https://trac.torproject.org/projects/tor/ticket/9026
 				https://trac.torproject.org/projects/tor/ticket/11418
 					-->
-		<exclusion pattern="^http://(?:az307127|az31465|az13800[78]|az13801[0127]|az354189|az373151|az412849|msnchansea|msrvideo)\.vo\.msecnd\.net/" />
+		<!--exclusion pattern="^http://(?:az307127|az31465|az13800[78]|az13801[0127]|az354189|az373151|az412849|msnchansea|msrvideo)\.vo\.msecnd\.net/" /-->
+		<!--
+			More conservatively, exclude all in az\d+ that isn't explicitly known to work:
+													-->
+		<!--exclusion pattern="^http://az(?!83882|94986)\d+\.vo\.msecnd\.net/" /-->
+		<!--
+			Summated again:
+					-->
+		<exclusion pattern="^http://(?:az(?!83882\.|94986\.)\d+|msnchansea|msrvideo)\.vo\.msecnd\.net/" />
 
 
 	<rule from="^http://(\w+)\.vo\.msecnd\.net/"
