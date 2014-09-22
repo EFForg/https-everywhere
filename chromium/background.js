@@ -242,6 +242,8 @@ function onBeforeRequest(details) {
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
 var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 
+// We consider sub_frame to be passive even though it can contain JS or flash.
+// This is because code running in the sub_frame cannot access the main frame's
 // content, by same-origin policy. This is true even if the sub_frame is on the
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
