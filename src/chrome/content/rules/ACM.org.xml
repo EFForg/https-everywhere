@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see ACM.org-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- deliveryimages.acm.org.edgesuite.net
@@ -30,12 +33,14 @@
 
 	Partially covered subdomains:
 
+		- (www.) ¹
 		- cacm		(some pages redirect to http)
+
+	¹ Avoiding mixed stylesheets
 
 
 	Fully covered subdomains:
 
-		- (www.)
 		- cacm
 		- campus
 		- deliveryimages *
@@ -66,15 +71,15 @@
 
 	* Secured by us
 
-
-	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
-
 -->
-<ruleset name="ACM.org (partial)" platform="mixedcontent">
+<ruleset name="ACM.org (partial)">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
 		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
 
