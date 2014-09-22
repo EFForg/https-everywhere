@@ -95,6 +95,7 @@
 		- google.com subdomains:
 
 			- accounts
+			- admin
 			- adwords
 			- apis
 			- appengine
@@ -103,6 +104,7 @@
 			- checkout
 			- chrome
 			- clients[12]
+			- cloud
 			- code
 			- *.corp
 			- developers
@@ -110,6 +112,7 @@
 			- docs
 			- docs\d
 			- \d.docs
+			- domains
 			- drive
 			- earth		(→ www)
 			- encrypted
@@ -155,6 +158,7 @@
 			- tbn2			(→ encrypted-tbn2)
 			- tools
 			- trends		(→ www)
+			- wallet
 
 		- partner.googleadservices.com
 		- (www.)googlecode.com
@@ -233,7 +237,11 @@
 		<exclusion pattern="http://[^@:\./]+-opensocial\.googleusercontent\.com" />
 
 
-	<!--	Can we secure any of these wildcard cookies safely?
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.google\.com$" name="^NID$" /-->
+	<!--
+		Can we secure any of these wildcard cookies safely?
 									-->
 	<!--securecookie host="^\.google\.com$" name="^(hl|I4SUserLocale|NID|PREF|S)$" /-->
 	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
@@ -276,7 +284,7 @@
 
 	<!--	Paths that work on all in google.*
 							-->
-	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|adsense|adwords|analytics|bookmarks|chrome|contacts|coop|cse|css|culturalinstitute|doodles|earth|favicon\.ico|finance|get|goodtoknow|googleblogs|grants|green|hostednews|images|intl|js|landing|logos|mapmaker|newproducts|news|nexus|patents|policies|prdhp|profiles|products|reader|s2|settings|shopping|support|tisp|tools|transparencyreport|trends|urchin|webmasters)(?=$|[?/])"
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|adsense|adwords|analytics|bookmarks|chrome|contacts|coop|cse|css|culturalinstitute|doodles|earth|favicon\.ico|finance|get|goodtoknow|googleblogs|grants|green|hangouts|hostednews|images|intl|js|landing|logos|mapmaker|newproducts|news|nexus|patents|policies|prdhp|profiles|products|reader|s2|script|settings|shopping|support|tisp|tools|transparencyreport|trends|urchin|webmasters)(?=$|[?/])"
 		 to="https://www.google.$1/$2" />
 
 	<!--	Paths that 404 on .ccltd, but work on .com:
@@ -299,7 +307,7 @@
 
 	<!--	Subdomains that only exist/work on .com
 							-->
-	<rule from="^http://(apis|appengine|books|calendar|cbks0|chat|checkout|chrome|clients[12]|code|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|fonts|gg|glass||health|helpouts|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
+	<rule from="^http://(admin|apis|appengine|books|calendar|cbks0|chat|checkout|chrome|clients[12]|cloud|code|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|fonts|gg|glass||health|helpouts|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
