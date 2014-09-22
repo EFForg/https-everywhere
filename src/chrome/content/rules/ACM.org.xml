@@ -1,5 +1,6 @@
 <!--
-	For problematic rules, see ACM.org-mismatches.xml.
+	For rules causing false/broken MCB, see ACM.org-falsemixed.xml.
+
 
 
 	acm.org lacks proper ssl for the following subdomains
@@ -12,11 +13,32 @@
 		- mags
 		- portalparts
 
+
+	Mixed content:
+
+		- Scripts:
+
+			- on www from www *
+
+		- css:
+
+			- On www from www *
+
+		- Images:
+
+			- On campus from portalparts *
+
+	* Secured by us
+
 -->
-<ruleset name="ACM.org (partial)" platform="mixedcontent">
+<ruleset name="ACM.org (partial)">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
 
 
 	<securecookie host="^.*\.acm\.org$" name=".*" />
