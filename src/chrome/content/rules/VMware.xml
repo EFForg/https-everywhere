@@ -9,9 +9,25 @@
 
 		- vmware.com subdomains:
 
+			- ir ¹
 			- kb *
+			- nlblogs ³
+			- partnerlocator ⁴
 
+		- www.vmwareblogs.com ⁵
+
+	¹ Shareholder
 	* 503, akamai
+	³ Refused
+	⁴ Salesforce
+	⁵ Google
+
+
+	Problematic subdomains:
+
+		- store ²
+
+	² Digital River
 
 -->
 <ruleset name="VMware (partial)" platform="mixedcontent">
@@ -21,7 +37,8 @@
 		<!--	communities: Akamai; "An error occurred"
 			info is handled in Eloqua-clients.xml.
 			kb times out.	-->
-		<exclusion pattern="^http://(communities|forum|info|kb)\." />
+		<exclusion pattern="^http://(communities|forum|info|ir|kb|nlblogs|partnerlocator)\." />
+		<exclusion pattern="^http://store\.vmware\.com/(?!DRHM/Storefront/Site/|favicon\.ico)" />
 
 
 	<!--	Observed cookie domains:
@@ -34,7 +51,7 @@
 			- ^solutionexchange
 			- ^www
 					-->
-	<securecookie host="^(.*\.)?vmware\.com$" name=".*" />
+	<securecookie host="^(?!store\.)(.*\.)?vmware\.com$" name=".*" />
 
 
 	<!--	Observed subdomains:
@@ -44,6 +61,7 @@
 			- downloads
 			- my
 			- solutionexchange
+			- store
 			- www
 				-->
 	<rule from="^http://(\w+\.)?vmware\.com/"
