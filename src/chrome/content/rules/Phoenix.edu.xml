@@ -1,0 +1,53 @@
+<!--
+	Nonfunctional subdomains:
+
+		- kb *
+		- store *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- metrics *
+
+	* Omniture
+
+
+	Mixed content:
+
+		- Image on ecampus from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Phoenix.edu (partial)">
+
+	<target host="cdn.assets-phoenix.net" />
+	<target host="phoenix.edu" />
+	<target host="*.phoenix.edu" />
+	<target host="assetscdn.students.uophx.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.phoenix\.edu$" name="^__sitemap__$" /-->
+	<!--securecookie host="^assets\.phoenix\.edu$" name="^assets-lb$" /-->
+	<!--securecookie host="^ecampus\.phoenix\.edu$" name="^(ASP\.NET_SessionId|ASPSESSIONID\w{8})$" /-->
+
+	<securecookie host="^(?:assets|ecampus)\.phoenix\.edu$" name=".+" />
+
+
+	<rule from="^http://cdn\.assets-phoenix\.net/"
+		to="https://cdn.assets-phoenix.net/" />
+
+	<rule from="^http://((?:alumni|assets|content|ecampus|portal|sso|www)\.)?phoenix\.edu/"
+		to="https://$1phoenix.edu/" />
+
+	<rule from="^http://metrics\.phoenix\.edu/"
+		to="https://phoenix-edu.d1.sc.omtrdc.net/" />
+
+	<rule from="^http://assetscdn\.students\.uophx\.edu/"
+		to="https://assetscdn.students.uophx.edu/" />
+
+</ruleset>
