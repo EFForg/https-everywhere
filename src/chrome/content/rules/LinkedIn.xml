@@ -14,7 +14,7 @@
 
 		- licdn.com subdomains:
 
-			- m.c.lnkd	(dropped)
+			- m.c.lnkd	(400; mismatched, CN: *.hs.llnwd.net)
 
 
 	Fully covered domains:
@@ -31,32 +31,20 @@
 	<target host="*.linkedin.com" />
 
 
-	<!--	Set by analytics/	-->
-	<securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linkedin\.com$" name="^(bcookie|lang|lidc|lihc_auth_en|li_loc|li_trk)$" /-->
+	<!--securecookie host="^help\.linkedin\.com$" name="^cp_session$" /-->
+	<!--securecookie host="^www\.linkedin\.com$" name="^(leo_auth_token|visit)$" /-->
+	<!--securecookie host="^\.www\.linkedin\.com$" name="^JSESSIONID" /-->
+
+	<securecookie host="^(?:help|www)?\.linkedin\.com$" name=".+" />
 
 
 	<rule from="^http://static\.licdn\.com/"
 		to="https://static.licdn.com/" />
 
-	<!--	- !www times out over https
-		- !www 301s to www over http
-						-->
-	<rule from="^http://(?:www\.)?linkedin\.com/$"
-		to="https://www.linkedin.com/" />
-
-	<!--	These paths redirect to http:
-
-			- groups?gid=\d+
-			- mpr$
-			- static?key=.+
-					-->
-	<rule from="^http://(?:www\.)?linkedin\.com/(analytics|company|home|media|profile|reg|scds|secure|settings|today|uas|ucds)([\?\/].*)?$"
-		to="https://www.linkedin.com/$1$2" />
-
-	<rule from="^http://(?:www\.)?linkedin\.com/(img/|reg/join|mpr/)"
-		to="https://www.linkedin.com/$1" />
-
-	<rule from="^http://platform\.linkedin\.com/"
-		to="https://platform.linkedin.com/" />
+	<rule from="^http://((?:help|platform|www)\.)?linkedin\.com/"
+		to="https://$1linkedin.com/" />
 
 </ruleset>
