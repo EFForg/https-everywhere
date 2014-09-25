@@ -20,9 +20,16 @@
 <ruleset name="Gitorious">
   <target host="gitorious.org" />
   <target host="*.gitorious.org" />
-	<exclusion pattern="^http://(blog|en|issues|status)\.gitorious\.org/"/>
+	<exclusion pattern="^http://(?:blog|en)\.gitorious\.org/"/>
+		<exclusion pattern="^http://issues\.gitorious\.org/+(?!$|\?)" />
 
 	<securecookie host=".*\.gitorious\.org$" name=".*"/>
+
+	<rule from="^http://issues\.gitorious\.org/+(?=$|\?)"
+		to="https://gitorious.org/projects/gitorious/issues" />
+
+	<rule from="^http://status\.gitorious\.org/"
+		to="https://gitorious-status.herokuapp.com/" />
 
   <rule from="^http://gitorious\.org/"
 	  to="https://gitorious.org/"/>
