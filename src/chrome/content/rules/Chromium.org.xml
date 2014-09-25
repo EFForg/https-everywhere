@@ -4,39 +4,51 @@
 
 	Nonfunctional subdomains:
 
-		- ^		(503, mismatched, CN: *.google.com)
 		- blog *
-		- dev *
-		- www *
 
-	* Interrupted
+	* Redirects to http, valid cert
 
 
 	Problematic domains:
 
-		- build.chromium.org
-		- crbug.com		(no https)
+		- chromium.org ¹
+		- (www.)crbug.com ²
+
+	¹ 404, valid cert
+	² Configured for rc4 only
+
+
+	Mixed content:
+
+		- Images on planet from various domains
 
 -->
 <ruleset name="Chromium.org">
 
+	<target host="chromium.org" />
 	<target host="*.chromium.org" />
 	<target host="crbug.com" />
+	<target host="www.crbug.com" />
+	<target host="crrev.com" />
+	<target host="www.crrev.com" />
 
 
 	<securecookie host="^codereview\.chromium\.org$" name=".+" />
 
 
+	<rule from="^http://(?:www\.)?chromium\.org/"
+		to="https://www.chromium.org/" />
+
 	<rule from="^https?://blog\.chromium\.org/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico" />
 
-	<rule from="^https?://build\.chromium\.org/(?:\?.*)?$"
-		to="https://chromium-build.appspot.com/p/chromium/console" />
-
-	<rule from="^http://(codereview|gerrit|git|src)\.chromium\.org/"
+	<rule from="^http://(bugs|build|codereview|codesearch|cs|dev|developer|gerrit|git|planet|src)\.chromium\.org/"
 		to="https://$1.chromium.org/" />
 
-	<rule from="^http://crbug\.com/"
+	<rule from="^http://(?:www\.)?crbug\.com/"
 		to="https://bugs.chromium.org/" />
+
+	<rule from="^http://(www\.)?crrev\.com/"
+		to="https://$1crrev.com/" />
 
 </ruleset>
