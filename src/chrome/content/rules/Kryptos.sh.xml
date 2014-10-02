@@ -1,0 +1,38 @@
+<!--
+	For rules causing false/broken MCB, see Kryptos.sh-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css, from:
+
+			- $self *
+			- fonts.googleapis.com *
+
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Kryptos.sh (partial)">
+
+	<target host="kryptos.sh" />
+	<target host="www.kryptos.sh" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.kryptos\.sh/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?kryptos\.sh$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.www\.kryptos\.sh$" name="^pll_language$" /-->
+
+	<securecookie host="^kryptos\.sh$" name=".+" />
+
+
+	<rule from="^http://(www\.)?kryptos\.sh/"
+		to="https://$1kryptos.sh/" />
+
+</ruleset>
