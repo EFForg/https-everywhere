@@ -1,0 +1,30 @@
+<!--
+	www: dropped over both http and https
+
+
+	Mixed content:
+
+		- iframe on blog from imgur.com *
+		- css on blog from $self *
+		- Images on blog from i.imgur.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Player.FM (partial)">
+
+	<target host="player.fm" />
+	<target host="*.player.fm" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.player\.fm/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+
+	<securecookie host="^\.player\.fm$" name=".+" />
+
+
+	<rule from="^http://((?:a\d|blog|suggest)\.)?player\.fm/"
+		to="https://$1player.fm/" />
+
+</ruleset>
