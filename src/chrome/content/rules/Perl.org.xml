@@ -8,13 +8,15 @@
 
 	Problematic domains:
 
+		- ^ ¹
 		- perldoc		(works; mismatched, CN: *.a.ssl.fastly.net)
 		- svn.perl.org		(works, self-signed)
+
+	¹ Refused
 
 
 	Nonfunctional perl.org subdomains:
 
-		- (www.) *
 		- blob *
 		- blogs *
 		- books *
@@ -23,6 +25,7 @@
 		- cpansearch	(times out)
 		- dbi *
 		- dev *
+		- perl5.git *
 		- history *
 		- irc		(http reply)
 		- www.irc *
@@ -42,11 +45,15 @@
 -->
 <ruleset name="Perl.org (partial)">
 
+	<target host="perl.org" />
 	<target host="*.perl.org" />
 
 
 	<securecookie host="^rt\.perl\.org$" name=".+" />
 
+
+	<rule from="^http://(?:www\.)?perl\.org/"
+		to="https://www.perl.org/" />
 
 	<rule from="^http://log\.perl\.org/favicon\.ico"
 		to="https://www.blogger.com/favicon.ico" />

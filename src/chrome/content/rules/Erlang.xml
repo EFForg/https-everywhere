@@ -1,14 +1,19 @@
-<ruleset name="Erlang (partial)" default_off="expired, mismatch">
+<!--
+	^: dropped
+	www CN: demo.erlang.org
 
-	<!--	Cert: demo.erlang.org	-->
+-->
+<ruleset name="Erlang (partial)" default_off="expired, mismatched">
+
 	<target host="erlang.org" />
 	<target host="www.erlang.org" />
+		<!--
+			Some pages redirect to http:
+							-->
+		<!--exclusion pattern="^http://www\.erlang\.org/(?!\w+\.css$|doc/|images/|upload/)" /-->
 
 
-	<!--	- !www times out
-		- At least some pages 302 to http
-					-->
-	<rule from="^https://(?:www\.)?erlang\.org/(\w+\.css$|images/|upload/)"
-		to="https://www.erlang.org/$1" />
+	<rule from="^https://(?:www\.)?erlang\.org/(?=\w+\.css$|doc/|images/|upload/)"
+		to="https://www.erlang.org/" />
 
 </ruleset>
