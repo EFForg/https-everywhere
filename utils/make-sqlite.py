@@ -16,7 +16,13 @@ from lxml import etree
 # This is important for deterministic builds.
 # https://trac.torproject.org/projects/tor/ticket/11630#comment:20
 # It's also helpful to ensure consistency for the lowercase check below.
-locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
+# Systems differ on UTF8 or UTF-8. Use try to test both to avoid failures.
+try :
+     locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
+except :
+       locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+else : 
+     raise
 
 conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
 c = conn.cursor()
