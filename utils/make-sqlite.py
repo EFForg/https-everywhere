@@ -21,8 +21,6 @@ try :
      locale.setlocale(locale.LC_ALL, 'en_US.UTF8')
 except :
        locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-else : 
-     raise
 
 conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
 c = conn.cursor()
