@@ -119,7 +119,7 @@ if [ "$1" != "--fast" ] ; then
 
   if [ -x ./utils/compare-locales.sh ] >&2
   then
-    if bash ./utils/compare-locales.sh >&2
+    if sh ./utils/compare-locales.sh >&2
     then
       echo Validation of included locales completed. >&2
     else
