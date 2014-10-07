@@ -8,7 +8,7 @@
 
 status=0
 
-pushd src/chrome/locale
+cd src/chrome/locale
 for lang in *
 do
    comm -2 -3 <(grep '^<!ENTITY' en/* | cut -d' ' -f2 | sort -u) <(grep '^<!ENTITY' $lang/* | cut -d' ' -f2 | sort -u) | grep . && echo "\_ missing for locale" $lang && status=1
