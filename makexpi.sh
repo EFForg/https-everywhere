@@ -1,5 +1,5 @@
-#!/bin/bash
-set -o errexit -o pipefail
+#!/bin/sh
+set -o errexit
 APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
