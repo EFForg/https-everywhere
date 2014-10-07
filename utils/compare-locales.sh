@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -eu;
+
 # Check whether all included rules include every entity defined in the
 # English locale DTDs.  (Missing an entity is a fatal error.)
 
