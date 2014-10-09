@@ -30,11 +30,22 @@ const HTTPS = {
   httpsForcedExceptions: null,
   httpsRewrite: null,
   
-  replaceChannel: function(applicable_list, channel) {
+  replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
-    if (null == blob) return false; // no rewrite
+    if (null === blob) {
+      // Abort insecure requests when HTTP Nowhere is on
+      if (httpNowhereEnabled && channel.URI.schemeIs("http")) {
+        IOUtil.abort(channel);
+      }
+      return false; // no rewrite
+    }
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
+
+    // Abort downgrading if HTTP Nowhere is on
+    if (httpNowhereEnabled && uri.schemeIs("http")) {
+      IOUtil.abort(channel);
+    }
 
     var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG, channel.URI.spec+": Redirection limit is " + c2.redirectionLimit);

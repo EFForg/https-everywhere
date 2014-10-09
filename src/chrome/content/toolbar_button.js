@@ -10,13 +10,13 @@ const CI = Components.interfaces;
 const CC = Components.classes;
 
 // LOG LEVELS ---
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+let HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                       .getService(Components.interfaces.nsISupports)
                       .wrappedJSObject;
 
@@ -38,6 +38,11 @@ httpsEverywhere.toolbarButton = {
   COUNTER_PREF: "extensions.https_everywhere.show_counter",
 
   /**
+   * Name of preference for whether HTTP Nowhere is on.
+   */
+  HTTP_NOWHERE_PREF: "extensions.https_everywhere.http_nowhere.enabled",
+
+  /**
    * Used to determine if a hint has been previously shown.
    * TODO: Probably extraneous, look into removing
    */
@@ -53,13 +58,21 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure icon is proper color during init
-    tb.changeIcon();
-
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
     counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+
+    // make sure UI for HTTP Nowhere mode is properly set
+    var httpNowhereItem = document.getElementById('http-nowhere-item');
+    var showHttpNowhere = tb.shouldShowHttpNowhere();
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
+    toolbarbutton.setAttribute('http_nowhere',
+                               showHttpNowhere ? 'true' : 'false');
+
+    // make sure UI is set depending on whether HTTPS-E is enabled
+    toggleEnabledUI();
 
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
@@ -119,20 +132,6 @@ httpsEverywhere.toolbarButton = {
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
-  /**
-   * Changes HTTPS Everywhere toolbar icon based on whether HTTPS Everywhere
-   * is enabled or disabled.
-   */
-  changeIcon: function() {
-    var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (enabled) {
-      toolbarbutton.setAttribute('status', 'enabled');
-    } else {
-      toolbarbutton.setAttribute('status', 'disabled');
-    }
-  },
 
   /**
    * Update the rulesets applied counter for the current tab.
@@ -187,6 +186,17 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
+   * Gets whether to show HTTP Nowhere UI.
+   *
+   * @return {boolean}
+   */
+  shouldShowHttpNowhere: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+    return sp.getBoolPref(tb.HTTP_NOWHERE_PREF);
+  },
+
+  /**
    * Toggles the user's preference for displaying the rulesets applied counter
    * and updates the UI.
    */
@@ -198,8 +208,22 @@ httpsEverywhere.toolbarButton = {
     sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
 
     tb.updateRulesetsApplied();
-  }
+  },
 
+  /**
+   * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
+   */
+  toggleHttpNowhere: function() {
+    HTTPSEverywhere.toggleHttpNowhere();
+    var tb = httpsEverywhere.toolbarButton;
+    var showHttpNowhere = tb.shouldShowHttpNowhere();
+
+    // Change icon color to red if HTTP nowhere is enabled
+    var toolbarbutton = document.getElementById('https-everywhere-button');
+    toolbarbutton.setAttribute('http_nowhere',
+                               showHttpNowhere ? 'true' : 'false');
+    reload_window();
+  }
 };
 
 function https_everywhere_load() {
@@ -307,17 +331,29 @@ function reload_window() {
     HTTPSEverywhere.log(WARN,"failed to get webNav");
     return null;
   }
-  // This choice of flags comes from NoScript's quickReload function; not sure
-  // if it's optimal
-  webNav.reload(webNav.LOAD_FLAGS_CHARSET_CHANGE);  
+  // The choice of LOAD_FLAGS_CHARSET_CHANGE comes from NoScript's quickReload
+  // function; not sure if it's optimal
+  let flags = webNav.LOAD_FLAGS_BYPASS_CACHE & webNav.LOAD_FLAGS_CHARSET_CHANGE;
+  webNav.reload(flags);
 }
 
 function toggleEnabledState(){
 	HTTPSEverywhere.toggleEnabledState();
-	reload_window();	
+	reload_window();
+  toggleEnabledUI();
+}
+
+function toggleEnabledUI() {
+  // Add/remove menu items depending on whether HTTPS-E is enabled
+  var items = document.querySelectorAll(".hide-on-disable");
+  var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
+  for (let i = 0; i < items.length; i++) {
+    items[i].hidden = !enabled;
+  }
 
   // Change icon depending on enabled state
-  httpsEverywhere.toolbarButton.changeIcon();
+  var toolbarbutton = document.getElementById('https-everywhere-button');
+  toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
 }
 
 function open_in_tab(url) {
