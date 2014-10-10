@@ -2,34 +2,48 @@
 	For problematic rules, see HootSuite-mismatches.xml.
 
 
-	unbouncepages-com.s3.amazonaws.com/signup.hootsuite.com/
+	CDN buckets:
+
+		- unbouncepages-com.s3.amazonaws.com/signup.hootsuite.com/
+		- d1ue63gpusfv5w.cloudfront.net
+		- d2l6uygi1pgnys.cloudfront.net
+		- dpjw5kqcbwqqv.cloudfront.net
 
 
 	Nonfunctional subdomains:
 
-		- blog		(valid cert; 404)
-		- media		(valid cert; 404)
-		- translate	(valid cert; shows www's data)
+		- blog ¹
+		- media ¹
+		- translate ²
+
+	¹ 404, valid cert
+	² Shows www, valid cert
+
+
+	Problematic subdomains:
+
+		- signup *
+
+	* Mismatched, CN: *.unbounce.com
 
 -->
 <ruleset name="HootSuite">
 
 	<target host="hootsuite.com" />
 	<target host="*.hootsuite.com" />
-	<target host="*.static.hootsuite.com" />
 
 
-	<securecookie host="^(.*\.)?hootsuite\.com$" name=".*" />
+	<securecookie host="^(?:.*\.)?hootsuite\.com$" name=".+" />
 
 
 	<rule from="^http://(www\.)?hootsuite\.com/"
 		to="https://$1hootsuite.com/" />
 
-	<rule from="^https?://feedback\.hootsuite\.com/(css/|images/|packages/|track\.gif)"
-		to="https://hootsuite.uservoice.com/$1" />
+	<rule from="^https?://feedback\.hootsuite\.com/(?=css/|images/|packages/|track\.gif)"
+		to="https://hootsuite.uservoice.com/" />
 
-	<rule from="^https?://help\.hootsuite\.com/(assets|external|generated|images|registration|system)/"
-		to="https://hootsuite.zendesk.com/$1/" />
+	<rule from="^https?://help\.hootsuite\.com/(?=(?:assets|external|generated|images|registration|system)/)"
+		to="https://hootsuite.zendesk.com/" />
 
 	<rule from="^https?://s0\.static\.hootsuite\.com/"
 		to="https://d2l6uygi1pgnys.cloudfront.net/" />

@@ -15,7 +15,11 @@
 		- images.huffingtonpost.com.edgesuite.net
 		- e.huffpost.com.edgesuite.net
 		- i.huffpost.com.edgesuite.net
+
 		- s.huffpost.com.edgesuite.net
+
+			- a1428.g.akamai.net
+			- s[01].huffpost.com
 
 
 	Nonfunctional domains:
@@ -29,6 +33,9 @@
 		- bug.assets.huffingtonpost.com
 		- i.huffpost.com
 		- s.huffpost.com	(redirects to i, prints Amazon Web Services "Access Denied")
+		- s[12].huffpost.com ²
+
+	² Works, akamai
 
 
 	Fully covered domains:
@@ -44,6 +51,7 @@
 
 			- i	(→ s-i)
 			- s	(→ s-s)
+			- s[01]	(→ akamai)
 			- s-i
 			- s-s
 
@@ -51,6 +59,8 @@
 	Mixed content:
 
 		- css, on secure.huffingtonpost.com from s.huffpost.com *
+
+		- css on secure.huffingtonpost.com from  s[01].huffpost.com *
 
 		- Images, on secure.huffingtonpost.com from:
 
@@ -60,6 +70,7 @@
 			- i.huffpost.com *
 			- s.huffpost.com *
 			- s.huffpost.com via s-s.huffpost.com *
+			- s[01].huffpost.com *
 
 		- Web bug, on secure.huffingtonpost.com from:
 
@@ -78,6 +89,14 @@
 	<target host="huffingtonpost.com" />
 	<target host="*.huffingtonpost.com" />
 	<target host="*.huffpost.com" />
+		<!--
+			css embeds resources relative to root => rewriting to akamai breaks:
+												-->
+		<!--exclusion pattern="^http://s[01]\.huffpost\.com/+assets/css\.php\?f=liveblog\.css" /-->
+		<!--
+			css embeds resources absolutely => rewriting to akamai works:
+											-->
+		<!--exclusion pattern="^http://s[01]\.huffpost\.com/+assets/css\.php\?f=(?!phoenix\.css)" /-->
 
 
 	<rule from="^http://(?:secure\.|www\.)?huffingtonpost\.com/"
@@ -98,5 +117,15 @@
 						-->
 	<rule from="^http://(?:s-)?([is])\.huffpost\.com/"
 		to="https://s-$1.huffpost.com/" />
+
+	<!--	First, send everything for which doing so works to cdn:
+									-->
+	<rule from="^http://s(1|2)\.huffpost\.com/(?!assets/css\.php\?f=(?!liveblog\.css))"
+		to="https://a248.e.akamai.net/f/1428/2056/10/s$1.huffpost.com/" />
+
+	<!--	And then everything else to s-:
+						-->
+	<rule from="^http://s[12]\.huffpost\.com/"
+		to="https://s-s.huffpost.com/" />
 
 </ruleset>

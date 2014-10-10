@@ -1,18 +1,31 @@
 <!--
 	Nonfunctional subdomains:
 
-		- blog		(ssl_error_rx_record_too_long)
-		- forums	(ditto)
-		- mail		(cert: mail.idig.net, expired; shows IIS7 default page)
+		- blog ¹
+		- forums ¹
+		- mail ²
+
+	¹ Plaintext reply
+	² Shows IIS7 defeault page; CN: mail.idig.net, expired
 
 -->
-<ruleset name="Canadian Web Hosting (partial)" platform="mixedcontent">
+<ruleset name="Canadian Web Hosting (partial)">
 
 	<target host="canadianwebhosting.com" />
 	<target host="*.canadianwebhosting.com" />
 
 
-	<securecookie host="^(.*\.)?canadianwebhosting\.com$" name=".*" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(www\.)?canadianwebhosting\.com$" name="^ASPSESSIONID\w+$" /-->
+	<!--securecookie host="^helpdesk\.canadianwebhosting\.com$" name="^(SWIFT_client|SWIFT_sessionid\d+)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?canadianwebhosting\.com$" name="^(ASP\.NET_SessionId|Referer)$" /-->
+
+
+	<securecookie host="^(?:.*\.)?canadianwebhosting\.com$" name=".+" />
 
 
 	<rule from="^http://(helpdesk\.|www\.)?canadianwebhosting\.com/"

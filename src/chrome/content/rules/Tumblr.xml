@@ -81,8 +81,18 @@
 		- origin.platform
 		- static	(→ d2g9v1gts353nd.cloudfront.net)
 		- secure.static
+		- tm319
 		- v
 		- vt
+
+
+	Observed cookie domains:
+
+		- tm319.tumblr.com ¹
+		- safe.txmblr.com ²
+
+	¹ Secured by server
+	² Secured by us <= not secured by server
 
 
 	Mixed content:
@@ -92,6 +102,18 @@
 		- Images on www from assets *
 
 	* Secured by us
+
+
+	Users should enable tls support in tumblr settings:
+
+		http://staff.tumblr.com/post/75482980993/you-can-now-take-extra-precaution-against-hackers
+
+	We can't enforce https until it becomes the default, as otherwise
+	(presumably?) we'd cause a redirect loop back to http for anyone who
+	hadn't enabled that setting.
+
+	Unfortunately, per-user subdomains don't support https either, so users
+	are still vulnerable whenever they browse blogs while logged in. :(
 
 -->
 <ruleset name="Tumblr (partial)">
@@ -112,46 +134,63 @@
 		<!--
 			And so was one "oh, fsck it."
 							-->
-		<exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" />
+		<!--exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" /-->
+		<!--
+			...but secure css:
+						-->
+		<exclusion pattern="^http://assets\.tumblr\.com/+assets/scripts/(?!vendor/\w+/plugins/\w+/css/)" />
+		<!--
+			Breaks hover interaction:
+						-->
+		<!--exclusion pattern="^http://(www\.)?tumblr\.com/svc/[\w-]+/posts/highlighted\?" /-->
+		<!--
+			Breaks "like"ing, strangely enough:
+								-->
+		<!--exclusion pattern="^http://(www\.)?tumblr\.com/svc/like\?" /-->
+		<!--
+			Breaks dashboard post loading:
+							-->
+		<!--exclusion pattern="^http://(www\.)?tumblr\.com/svc/post/fetch\?" /-->
+	<target host="safe.txmblr.com" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^(?:secure\.assets|www)\.tumblr\.com$" name="^__utmf$" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^tm319\.tumblr\.com$" name=".+" /-->
+	<!--securecookie host="^www\.tumblr\.com$" name="^pfs$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.tumblr\.com$" name="^(language|logged_in)$" /-->
+	<!--securecookie host="^www\.tumblr\.com$" name="^(capture|devicePixelRatio|documentWidth|last_toast|pfe|pfp|pfu|tmgioct)$" /-->
+
+	<securecookie host="^safe\.txmblr\.com$" name=".+" />
+	<securecookie host="^www\.tumblr\.com$" name="^d(?:evicePixelRatio|ocumentWidth)$" />
 
 
 	<!--	These paths 302 to http:
 
-			- about$
-			- apps$
 			- audio_file/
 			- dashboard$
 			- dashboard/iframe
-			- developers$
-			- docs/en/api/v2$
-			- docs/en/buttons$
 			- goto/
-			- jobs$
 			- like/
-			- policy/en/community$
-			- policy/en/privacy$
-			- policy/en/terms_of_service$
-			- press$
 			- reblog/
 			- share$
-			- sponsors$
 			- submit_form_js/
-			- themes/
-			- tips$
 			- upload/image
 					-->
-	<rule from="^http://(www\.)?tumblr\.com/(?=$|(?:dmca|forgot_password|impixu|login|logout|register|svc/teaser|teaser)(?:$|[#?/])|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/)"
+	<rule from="^http://(www\.)?tumblr\.com/(?=$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)"
 		to="https://$1tumblr.com/" />
 
 	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
 
-	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
+	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|tm319|vt?)\.tumblr\.com/"
 		to="https://$1.tumblr.com/" />
 
 	<rule from="^http://data\.tumblr\.com/"
@@ -159,5 +198,10 @@
 
 	<rule from="^http://static\.tumblr\.com/"
 		to="https://d2pi0bc9ewx28h.cloudfront.net/" />
+
+	<!--	When you bareback over the net, you're totally...
+								-->
+	<rule from="^http://safe\.txmblr\.com/"
+		to="https://safe.txmblr.com/" />
 
 </ruleset>

@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see Qubes-OS.org-problematic.xml.
+
+
 	Nonfunctional subdomains:
 
 		- files		(shows keys)
@@ -7,10 +10,11 @@
 
 	Problematic subdomains:
 
-		- ^	(cert only matches www)
+		- keys ¹
+		- www ²
 
-
-	Expired 2011-04-06
+	¹ Expired 2011-04-06, self-signed
+	² Mismatched, CN: wiki.qubes-os.org
 
 
 	Mixed content:
@@ -18,19 +22,16 @@
 		- Images on www from files
 
 -->
-<ruleset name="Qubes-OS.org" default_off="expired, self-signed">
+<ruleset name="Qubes-OS.org (partial)">
 
 	<target host="qubes-os.org" />
 	<target host="*.qubes-os.org" />
 
 
-	<securecookie host="^www\.qubes-os\.org$" name=".+" />
+	<securecookie host="^qubes-os\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?qubes-os\.org/"
-		to="https://www.qubes-os.org/" />
-
-	<rule from="^http://keys\.qubes-os\.org/"
-		to="https://keys.qubes-os.org/" />
+	<rule from="^http://(?:(wiki\.)|www\.)?qubes-os\.org/"
+		to="https://$1qubes-os.org/" />
 
 </ruleset>

@@ -1,24 +1,61 @@
+<!--
+	Mixed content:
+
+		- Images, on:
+
+			- www from www.static ¹
+			- www from www.culture.be ²
+
+	¹ Unsecurable <= refused
+	² Secured by us
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- boutique
+		- podcasting
+		- rss			(→ ssl-ds.static)
+		- ds.static
+		- ds[1-5].ds.static	(→ ssl-ds.static)
+		- sgc.static		(→ ssl-sgc.static)
+		- ssl-ds.static
+		- ssl-sgc.static
+		- ssl-www.static
+		- www.static		(→ ssl-www.static)
+
+-->
 <ruleset name="Rtbf.be Belgian Television">
 
-  <target host="rtbf.be" />
-  <target host="*.rtbf.be" />
+	<target host="rtbf.be" />
+	<target host="*.rtbf.be" />
 
-  <rule from="^http://(www\.)?rtbf\.be/"
-        to="https://www.rtbf.be/" />
 
-  <rule from="^http://www\.static\.rtbf\.be/" 
-        to="https://ssl-www.static.rtbf.be/" />
-  
-  <rule from="^http://sgc\.static\.rtbf\.be/" 
-        to="https://ssl-sgc.static.rtbf.be/" />
-  
-  <rule from="^http://ds\.static\.rtbf\.be/" 
-        to="https://ds.static.rtbf.be/" />
-  
-  <rule from="^http://ds[1-5]\.ds\.static\.rtbf\.be/" 
-        to="https://ssl-ds.static.rtbf.be/" />
-  
-  <rule from="^http://rss\.rtbf\.be/"
-        to="https://ssl-ds.static.rtbf.be/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rtbf\.br$" name="^rtbf_internal$" /-->
+	<!--securecookie host="^boutique\.rtbf\.be$" name="^symfony$" /-->
+	<!--securecookie host="^www\.rtbf\.br$" name="^(PHPSESSID|rtbfEmbedvolume)$" /-->
 
+	<securecookie host="^(?:boutique|www)\.rtbf\.br$" name=".+" />
+
+
+	<rule from="^http://((?:boutique|podcasting|www)\.)?rtbf\.be/"
+		to="https://$1rtbf.be/" />
+
+	<rule from="^http://rss\.rtbf\.be/"
+		to="https://ssl-ds.static.rtbf.be/" />
+
+	<rule from="^http://ds\.static\.rtbf\.be/" 
+		to="https://ds.static.rtbf.be/" />
+  
+	<rule from="^http://(?:ds[1-5]\.|ssl-)ds\.static\.rtbf\.be/"
+		to="https://ssl-ds.static.rtbf.be/" />
+
+	<rule from="^http://(?:ssl-)?sgc\.static\.rtbf\.be/"
+		to="https://ssl-sgc.static.rtbf.be/" />
+  
+	<rule from="^http://(?:ssl-)?www\.static\.rtbf\.be/"
+		to="https://ssl-www.static.rtbf.be/" />
+  
 </ruleset>

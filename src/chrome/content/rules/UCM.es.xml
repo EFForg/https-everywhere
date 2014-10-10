@@ -1,0 +1,69 @@
+<!--
+	Nonfunctional subdomains:
+
+		- eprints ¹
+		- alfama.sim ²
+
+	¹ Prints default page
+	² Refused
+
+
+	Problematic subdomains:
+
+		- biblioteca ¹
+		- cisne.sim ²
+		- 0-papers.nber.org.cisne.sim ³
+		- guaix.fis ⁴
+
+	¹ Mixed css from $self
+	² Mixed iframe from www
+	³ Works; mismatched, CN: cisne.sim.ucm.es
+	⁴ Works, self-signed
+
+
+	Partially covered subdomains:
+
+		- biblioteca *
+		- cisne.sim *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- pendientedemigracion
+		- www
+
+
+	^ucm.es doesn't exist.
+
+
+	Mixed content:
+
+		- iframe on cisne.sim from www *
+
+		- css on biblioteca from $self *
+
+		- Images, on:
+
+			- biblioteca from $self *
+			- cisne.sim from www *
+
+	* Secured by us
+
+-->
+<ruleset name="UCM.es (partial)">
+
+	<target host="*.ucm.es" />
+		<!--exclusion pattern="^http://(eprints|0-papers\.nber\.org\.cisne\.sim|alfama\.sim)\.ucm\.es/" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://biblioteca\.ucm\.es/+(?!media/|temas/)" />
+		<exclusion pattern="^http://cisne\.sim\.ucm\.es/+(?!screens/|scripts/)" />
+
+
+	<rule from="^http://(biblioteca|pendientedemigracion|cisne\.sim|www)\.ucm\.es/"
+		to="https://$1.ucm.es/" />
+
+</ruleset>

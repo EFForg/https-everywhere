@@ -1,0 +1,91 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) ⁴
+		- (www.)alumni ¹
+		- (www.)bedrijfswetenschappen ²
+		- cdh ²
+		- (www.)hum ¹
+		- www.iclon ¹
+		- (www.)issc ¹
+		- (www.)languagecentre ²
+		- (www.)law ¹
+		- live ¹
+		- (www.)nieuws ¹
+		- (www.)nieuwsbrief ³
+		- onderwijs ¹
+		- (www.)organisatie ¹
+		- (www.)plexus ¹
+		- (www.)students-faq ⁴
+		- (www.)students
+
+	¹ Refused
+	² Redirects to http
+	³ 500
+	⁴ "Error"
+
+
+	Partially covered subdomains:
+
+		- biosyn.lic ¹
+		- physics ²
+		- science ³
+
+	¹ At last some pages redirect to http
+	² Mismatched
+	³ Works, expired
+
+
+	Fully covered subdomains:
+
+		- (www.)beeldbank
+		- blackboard
+		- (www.)disc
+		- lic
+		- www.math
+		- media
+		- nepo
+		- openaccess
+		- (www.)physics		(^ → www)
+		- socrates
+		- lcserver.strw
+		- studiegids
+		- uaccess
+		- login.uaccess
+		- usis
+		- weblog
+		- webmail
+
+
+	These altnames don't exist:
+
+		- nepo-p.leidenuniv.nl
+
+
+	Mixed content:
+
+		- css on nepo from www ¹
+
+		- Images, on:
+
+			- blackboard from $self ²
+			- nepo from www ¹
+			- www.physics from $self ²
+
+	¹ Unsecurable
+	² Secured by us
+
+-->
+<ruleset name="Leiden Univ.nl (partial)">
+
+	<target host="*.leidenuniv.nl" />
+		<exclusion pattern="^http://biosyn\.lic\.leidenuniv\.nl/+(?!files/|modules/|sites/)" />
+
+
+	<rule from="^http://((?:www\.)?beeldbank|blackboard|(?:www\.)?disc|lic|biosyn\.lic|www\.math|media|nepo|openaccess|socrates|lcserver\.strw|studiegids|(?:login\.)?uaccess|usis|weblog|webmail)\.leidenuniv\.nl/"
+		to="https://$1.leidenuniv.nl/" />
+
+	<rule from="^http://(?:www\.)?physics\.leidenuniv\.nl/"
+		to="https://www.physics.leidenuniv.nl/" />
+
+</ruleset>

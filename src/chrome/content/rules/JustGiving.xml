@@ -1,16 +1,50 @@
-<ruleset name="JustGiving">
+<!--
+	CDN buckets:
+
+		- marketo.justgiving.com.s3-external-3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- pages ²
+
+	* Revoked
+	² Marketo, redirects to app-lon02
+
+
+	Problematic subdomains:
+
+		- marketo *
+
+	* AmazonAWS
+-->
+<ruleset name="JustGiving (partial)">
 
 	<target host="justgiving.com" />
 	<target host="*.justgiving.com" />
+		<!--
+			References resources relative to root:
+								-->
+		<!--exclusion pattern="^http://marketo\.justgiving\.com/css/marketo-2\.css" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.justgiving\.com$" name="^(ASP.NET_SessionId|COOKIE_PREFERENCES)$" /-->
+	<!--securecookie host="^apimanagement\.justgiving\.com$" name="^_system_session$" /-->
+	<!--securecookie host="^www\.justgiving\.com$" name="^BIGipServerjustgiving\.com_443_pool$" /-->
 
 	<securecookie host="^(?:apimanagement|www)?\.justgiving\.com$" name=".+" />
 
 
-	<rule from="^https?://justgiving\.com/"
-		to="https://www.justgiving.com/" />
+	<rule from="^http://((?:api|apimanagement|images|www)\.)?justgiving\.com/"
+		to="https://$1justgiving.com/" />
 
-	<rule from="^http://(apimanagement|secure|www)\.justgiving\.com/"
-		to="https://$1.justgiving.com/" />
+	<rule from="^http://marketo\.justgiving\.com/(?!css/marketo-2\.css)"
+		to="https://s3-eu-west-1.amazonaws.com/marketo.justgiving.com/" />
+
+	<rule from="^http://pages\.justgiving\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-lon02.marketo.com/" />
 
 </ruleset>

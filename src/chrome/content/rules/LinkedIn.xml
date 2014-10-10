@@ -4,76 +4,47 @@
 	for sections of the site that I know allow it.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- blog
-		- press	(expired; 403)
+		- m.c.lnkd.licdn.com ¹
+		- blog.linkedin.com
+		- press.linkedin.com ²
 
-
-	Problematic domains:
-
-		- licdn.com subdomains:
-
-			- m.c.lnkd	(dropped)
-			- m[1-4]	(400; mismatched, CN: *.llnw.com)
-			- s[1-4]	(works, akamai)
+	¹ 400; mismatched, CN: *.hs.llnwd.net
+	² 403, expired
 
 
 	Fully covered domains:
 
 		- static.licdn.com
 
-    LinkedIn users should also enable secure connections from:
-    - https://www.linkedin.com/settings/security-v2
--->
-<ruleset name="LinkedIn (buggy)" default_off="unreliable">
 
-	<target host="*.licdn.com" />
+	LinkedIn users should also enable secure connections from:
+
+		- https://www.linkedin.com/settings/security-v2
+
+-->
+<ruleset name="LinkedIn (partial)">
+
+	<target host="static.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
 
 
-	<!--	Set by analytics/	-->
-	<securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linkedin\.com$" name="^(bcookie|lang|lidc|lihc_auth_en|li_loc|li_trk)$" /-->
+	<!--securecookie host="^help\.linkedin\.com$" name="^cp_session$" /-->
+	<!--securecookie host="^www\.linkedin\.com$" name="^(leo_auth_token|visit)$" /-->
+	<!--securecookie host="^\.www\.linkedin\.com$" name="^JSESSIONID" /-->
 
+	<securecookie host="^(?:help|www)?\.linkedin\.com$" name=".+" />
 
-	<rule from="^http://m\.c\.lnkd\.licdn\.com/"
-		to="https://m1-s.licdn.com/" />
-
-	<rule from="^http://([ms][1-4])(?:-s)?\.licdn\.com/"
-		to="https://$1-s.licdn.com/" />
 
 	<rule from="^http://static\.licdn\.com/"
 		to="https://static.licdn.com/" />
 
-	<!--	- !www times out over https
-		- !www 301s to www over http
-						-->
-	<rule from="^http://(?:www\.)?linkedin\.com/$"
-		to="https://www.linkedin.com/" />
-
-	<!--	These paths redirect to http:
-
-			- groups?gid=\d+
-			- mpr$
-			- static?key=.+
-					-->
-	<rule from="^http://(?:www\.)?linkedin\.com/(analytics|company|home|media|profile|reg|scds|secure|settings|today|uas|ucds)([\?\/].*)?$"
-		to="https://www.linkedin.com/$1$2" />
-
-	<rule from="^http://(?:www\.)?linkedin\.com/(img/|reg/join|mpr/)"
-		to="https://www.linkedin.com/$1" />
-
-	<!--	Akamai.
-			-->
-	<rule from="^http://media(?:0[1-4])?\.linkedin\.com/"
-		to="https://www.linkedin.com/" />
-
-	<rule from="^http://platform\.linkedin\.com/"
-		to="https://platform.linkedin.com/" />
-
-	<!--	Akamai	-->
-	<rule from="^http://static0([1-4])\.linkedin\.com/"
-		to="https://s$1-s.licdn.com/" />
+	<rule from="^http://((?:help|platform|www)\.)?linkedin\.com/"
+		to="https://$1linkedin.com/" />
 
 </ruleset>

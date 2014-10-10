@@ -8,27 +8,27 @@ const CR = Components.results;
 const CU = Components.utils;
 
 // Log levels
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-BASE_REQ_SIZE=4096;
-MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
-MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
-TIMEOUT = 60000;
+let BASE_REQ_SIZE=4096;
+let MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
+let MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
+let TIMEOUT = 60000;
 
-ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
-ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
-ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
+let ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
+let ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
+let ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
-HASHLENGTH = 64;      // hex(sha1 + md5)
-MIN_WHITELIST=1000;   // do not tolerate whitelists outside these bounds
-MAX_WHITELIST=10000;
+let HASHLENGTH = 64;      // hex(sha1 + md5)
+let MIN_WHITELIST=1000;   // do not tolerate whitelists outside these bounds
+let MAX_WHITELIST=10000;
 
 // XXX: We should make the _observatory tree relative.
-LLVAR="extensions.https_everywhere.LogLevel";
+let LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
@@ -137,7 +137,7 @@ function SSLObservatory() {
     this.setupASNWatcher();
 
   try {
-    NSS.initialize("");
+    NSS.initialize(ctypes.libraryName("nss3"));
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
@@ -533,7 +533,6 @@ SSLObservatory.prototype = {
     file.initWithPath(this.HTTPSEverywhere.rw.chromeToPath(loc));
     var data = this.HTTPSEverywhere.rw.read(file);
     this.whitelist = JSON.parse(data);
-    this.log(DBUG, "yay\n" + data);
   },
 
   saveCertWhitelist: function() {
@@ -893,7 +892,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
-    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://www.eff.org/r.22c");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");

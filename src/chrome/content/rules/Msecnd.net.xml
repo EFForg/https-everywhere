@@ -1,0 +1,44 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Nonfunctional domains:
+
+		- msrvideo.vo.msecnd.net	(400)
+
+
+	Fully covered domains:
+
+		- (?!az(?!83882|94986)\d+)\w+.vo.msecnd.net:
+
+			- az83882.vo.msecnd.net		(on windowsazure.com
+                        - az94986.vo.msecnd.net		(on so.cl)
+                        - officeimg.vo.msecnd.net
+			- s1-word-view-15.vo.msecnd.net
+
+-->
+<ruleset name="msecnd.net (partial)">
+
+	<target host="*.vo.msecnd.net" />
+		<!--
+			400:
+
+				https://github.com/EFForg/https-everywhere/issues/596
+				https://trac.torproject.org/projects/tor/ticket/9026
+				https://trac.torproject.org/projects/tor/ticket/11418
+					-->
+		<!--exclusion pattern="^http://(?:az307127|az31465|az13800[78]|az13801[0127]|az354189|az373151|az412849|msnchansea|msrvideo)\.vo\.msecnd\.net/" /-->
+		<!--
+			More conservatively, exclude all in az\d+ that isn't explicitly known to work:
+													-->
+		<!--exclusion pattern="^http://az(?!83882|94986)\d+\.vo\.msecnd\.net/" /-->
+		<!--
+			Summated again:
+					-->
+		<exclusion pattern="^http://(?:az(?!83882\.|94986\.)\d+|msnchansea|msrvideo)\.vo\.msecnd\.net/" />
+
+
+	<rule from="^http://(\w+)\.vo\.msecnd\.net/"
+		to="https://$1.vo.msecnd.net/" />
+
+</ruleset>

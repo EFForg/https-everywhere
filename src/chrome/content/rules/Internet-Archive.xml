@@ -2,18 +2,29 @@
 	Other Internet Archive rulesets:
 
 		- Archive.org_Way_Back_Machine.xml
+		- Open_Library.org.xml
 
 
 	Nonfunctional subdomains:
 
 		- blog	(refused)
+		- pgdp01.us ²
+
+	² Refused
+
+
+	Problematic subdomains:
+
+		- blog.openlibrary *
+
+	* Works, cert only matches *.archive.org
 
 -->
 <ruleset name="Internet Archive">
 
 	<target host="archive.org" />
 	<target host="*.archive.org" />
-		<exclusion pattern="^http://(?:graphite|s3)\.us\.archive\.org/" />
+		<exclusion pattern="^http://(?:graphite|pgdp01|s3)\.us\.archive\.org/" />
 		<!--
 			The rule does not handle web anyway:
 
@@ -25,5 +36,8 @@
 
 	<rule from="^http://(\w+\.us\.|www\.)?archive\.org/"
 		to="https://$1archive.org/" />
+
+	<rule from="^http://blog\.openlibrary\.archive\.org/"
+		to="https://blog.openlibrary.org/" />
 
 </ruleset>

@@ -1,20 +1,58 @@
-<ruleset name="ProPublica.org" platform="mixedcontent">
+<!--
+	CDN buckets:
 
-	<target host="propublica.net"/>
-	<target host="*.propublica.net"/>
-	<target host="propublica.org"/>
-	<target host="*.propublica.org"/>
+		- s3.amazonaws.com/cdn.propublica.net/
+		- propublica.s3.amazonaws.com
+		- d3i4wq2ul46tvd.cloudfront.net
 
-	<securecookie host="^(.*\.)?propublica\.org$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?propublica\.(:?net|org)/"
-		to="https://www.propublica.org/"/>
+	Problematic domains:
 
-	<rule from="^http://projects\.propublica\.org/"
-		to="https://projects.propublica.org/"/>
+		- (www.)propublica.net *
+
+	* Works; mismatched, CN: www.propublica.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www, from:
+
+				- (www.) *
+				- s3.amazonaws.com *
+				- cdn.propublica.net.s3.amazonaws.com *
+				- propublica.s3.amazonaws.com *
+				- cdn.propublica.net *
+
+	* Secured by us
+
+-->
+<ruleset name="ProPublica.org">
+
+	<target host="propublica.net" />
+	<target host="*.propublica.net" />
+	<target host="propublica.org" />
+	<target host="*.propublica.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.propublica\.org$" name="^(PHPSESSID|pp-tracking)$" /-->
+
+	<securecookie host="^(?:.*\.)?propublica\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?propublica\.net/+"
+		to="https://www.propublica.org/" />
 
 	<rule from="^http://cdn\.propublica\.net/"
-		to="https://s3.amazonaws.com/cdn.propublica.net/"/>
+		to="https://s3.amazonaws.com/cdn.propublica.net/" />
+
+	<rule from="^http://(projects\.|www\.)?propublica\.org/"
+		to="https://$1propublica.org/" />
+
+	<rule from="^http://tiles-[abcd]\.propublica\.org/"
+		to="https://d3i4wq2ul46tvd.cloudfront.net/" />
 
 </ruleset>
-

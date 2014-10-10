@@ -1,11 +1,26 @@
+<!--
+	Mixed content:
+
+		- css on (www.) from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
 <ruleset name="OwnCube">
 
-	<target host="owncube.com"/>
-	<target host="www.owncube.com"/>
+	<target host="owncube.com" />
+	<target host="*.owncube.com" />
 
-	<securecookie host="^owncube\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?owncube\.com/"
-		to="https://owncube.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?owncube\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^billing\.owncube\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^(?:billing\.|www\.)?owncube\.com$" name=".+" />
+
+
+	<rule from="^http://(billing\.|www\.)?owncube\.com/"
+		to="https://$1owncube.com/" />
 
 </ruleset>

@@ -1,0 +1,38 @@
+<!--
+	For rules causing false/broken MCB, see Tango.me-falsemixed.xml.
+
+
+	Problematic subdomains:
+
+		- support *
+
+	* zendesk
+
+
+	Mixed content:
+
+		- Images from $self and ^ *
+
+		- css from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Tango.me (partial)">
+
+	<target host="tango.me" />
+	<target host="support.tango.me" />
+	<target host="www.tango.me" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?tango\.me/+(?!css/|favicon\.ico|images/|wp-content/|wp-includes/)" /-->
+
+
+	<rule from="^http://(www\.)?tango\.me/(?=css/|favicon\.ico|images/|wp-content/|wp-includes/)"
+		to="https://$1tango.me/" />
+
+	<rule from="^http://support\.tango\.me/(?=favicon\.ico|generated/|images/|system/)"
+		to="https://tangome.zendesk.com/" />
+
+</ruleset>

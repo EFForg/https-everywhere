@@ -8,21 +8,12 @@
 
 	CDN buckets:
 
+		- github-images.s3.amazonaws.com
 		- github.global.ssl.fastly.net
 		- a248.e.akamai.net/assets.github.com/
 		- a248.e.akamai.net/camo.github.com/
 		- s3.amazonaws.com/github/ | d24z2fz21y4fag.cloudfront.net
 		- github.myshopify.com
-
-
-	Nonfunctional domains:
-
-		- shop.github.com	(redirects to http)
-
-
-	Problematic domains:
-
-		- support.github.com	(works; mismatched, CN: github.com)
 
 
 	Fully covered domains:
@@ -31,13 +22,16 @@
 
 			- (www.)
 			- assets\d+
-			- cloud		(→ bugs.genivi.org)
+			- assets-cdn
+			- bounty
+			- cloud
 			- f.cloud
 			- codeload
 			- developer
 			- eclipse
 			- enterprise
 			- gist
+			- gist-assets
 			- help
 			- identicons
 			- jobs
@@ -48,8 +42,11 @@
 			- pages
 			- raw
 			- rg3
+			- shop
 			- status
-			- support	(→ ^github.com)
+			- support
+			- training
+			- try
 			- wiki
 			- windows
 
@@ -67,19 +64,15 @@
 	<target host="collector.githubapp.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^status\.github\.com$" name="^rack\.session$" /-->
+
 	<securecookie host="^(?:.*\.)?github\.com$" name=".+" />
 
 
-	<rule from="^http://((?:assets\d+|f\.cloud|codeload|developer|eclipse|enterprise|gist|help|identicons|jobs|mac|mobile|nodeload|octodex|pages|raw|rg3|status|wiki|windows|www)\.)?github\.com/"
+	<rule from="^http://((?:assets\d+|assets-cdn|bounty|cloud|f\.cloud|codeload|developer|eclipse|enterprise|gist|gist-assets|help|identicons|jobs|mac|mobile|nodeload|octodex|pages|raw|rg3|shop|status|support|training|try|wiki|windows|www)\.)?github\.com/"
 		to="https://$1github.com/" />
-
-	<rule from="^http://cloud\.github\.com/"
-		to="https://d24z2fz21y4fag.cloudfront.net/" />
-
-	<!--	Server drops path:
-					-->
-	<rule from="^http://support\.github\.com/[^?]*(\?.*)?"
-		to="https://github.com/contact$1" />
 
 	<rule from="^http://collector\.githubapp\.com/"
 		to="https://collector.githubapp.com/" />

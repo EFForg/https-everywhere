@@ -24,11 +24,17 @@
 -->
 <ruleset name="Urban Dictionary (partial)" default_off="mismatch">
 
+	<target host="*.udimg.com" />
 	<target host="urbandictionary.com"/>
 	<target host="*.urbandictionary.com"/>
-		<!--	Handled in TheResumator.com-clients.xml
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?urbandictionary\.com/+(?:$|\?)" />
+		<!--
+			Handled in TheResumator.com-clients.xml
 			due to this ruleset being off by default.	-->
-		<exclusion pattern="^http://jobs\."/>
+		<!--exclusion pattern="^http://jobs\."/-->
 
 	<!--	observed cookies:
 			- ^\.
@@ -36,6 +42,9 @@
 			- ^www
 				- country	-->
 	<securecookie host="^(www)?\.urbandictionary\.com$" name=".*"/>
+
+	<rule from="^http://(a|d)\.udimg\.com/"
+		to="https://$1.udimg.com/" />
 
 	<rule from="^http://(?:origin\.|static[0-3]\.|www\.)?urbandictionary\.com/"
 		to="https://www.urbandictionary.com/"/>

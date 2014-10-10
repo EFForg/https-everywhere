@@ -5,11 +5,15 @@
 	Nonfunctional subdomains:
 
 		- ^	(403, valid cert)
+		- curia ¹
 		- ec	(403)
+		- eacea.ec ²
 		- eur-lex	(shows ^; mismatched, CN: europa.eu)
 		- www.europarl *
 		- (www.)ombudsman	(times out)
 
+	¹ 403, valid cert
+	² Redirect to http, valid cert
 	* Dropped
 
 
@@ -20,6 +24,7 @@
 
 	Fully covered subdomains:
 
+		- (www.)enisa
 		- www.europol
 
 
@@ -37,6 +42,7 @@
 		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
 		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
 
+		<exclusion pattern="^https://oami\.europa\.eu/knowledge/"/>
 
 	<!--securecookie host="^\.europol\.europa\.eu$" name="^SESS\w32$" /-->
 
@@ -47,9 +53,14 @@
 	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
 		to="https://www.consilium.europa.eu/" />
 
-	<rule from="^http://(cordis|joinup\.ec|www\.europol)\.europa\.eu/"
+	<rule from="^http://(cordis|joinup\.ec|(?:www\.)?enisa|www\.europol)\.europa\.eu/"
 		to="https://$1.europa.eu/" />
 
     <rule from="^http://(?:www\.)?easa\.europa\.eu/"
         to="https://www.easa.europa.eu/" />
+
+    <rule from="^https?://(?:www\.)?enisa\.europa\.eu/"
+        to="https://www.enisa.europa.eu/" />
+
+    <rule from="^http://oami\.europa\.eu/" to="https://oami.europa.eu/" />
 </ruleset>

@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, Stack-Exchange-mixedcontent.xml.
+
+
 	Other Stack Exchange rulesets:
 
 		- Ask_Ubuntu.com.xml
@@ -6,38 +9,66 @@
 		- Server_Fault.com.xml
 
 
-	Nonfunctional domains:
-
-		- chat.stackexchange.com	(mixed content)
-		- meta.*.stackexchange.com      (mismatched, CN: *.stackexchange.com)
-
-
 	Problematic domains:
 
-		- www.stackapps.com *
+		- www.stackapps.com ¹
+		- meta.*.stackexchange.com ²
+		- chat.stackexchange.com ³
 
-	* Mismatched
+	¹ Mismatched
+	² Works; mismatched, CN: *.stackexchange.com
+	³ Mixed css from cdn-chat.sstatic.net
+
+
+	Partially covered domains:
+
+		- blog.stackoverflow.com *
+
+	* Avoiding false/broken MCB
 
 
 	Fully covered domains:
 
+		- cdn-careers.sstatic.com
 		- cdn-chat.sstatic.com
         	- *.stackexchange.com
+		- teststackoverflow.com
+
+
+	www.teststackoverflow.com doesn't exist.
 
 
 	Mixed content:
 
-		- css on chat.stackexchange.com from cdn-chat.sstatic.net *
+		- css, on:
 
-		- Images on chat.stackexchange.com, from:
+			- blog.stackoverflow.com from $self
 
-			- www.gravatar.com *
-			- i.stack.imgur.com *
-			- cdn.sstatic.net *
+		- Images, on:
 
-		- Web bugs on *.stackexchange.com from pixel.quantserve.com *
+			- chat.stackexchange.com from i.stack.imgur.com ¹
+			- chat.stackexchange.com from cdn.sstatic.net ¹
 
-	* Secured by us
+			- blog.stackoverflow.com, from:
+
+				- $self ¹
+				- www.google.com ¹
+				- i.stack.imgur.com ¹
+
+		- favicons, on:
+
+			- chat.stackexchange.com from cdn.sstatic.net ¹
+			- blog.stackoverflow.com from cdn.sstatic.net ¹
+
+		- Web bugs, on:
+
+			- *.stackexchange.com from pixel.quantserve.com ²
+			- blog.stackoverflow.com from i.creativecommons.org ¹
+			- careers.stackoverflow.com from www.esri.com ³
+
+	¹ Secured by us
+	² Rewritten to https with js enabled, secured by us otherwise
+	³ Unsecurable <= 503
 
 
 	As of Dec., 2013, stackexchange has a cert valid for:
@@ -68,18 +99,35 @@
 	<target host="www.stackapps.com" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
-		<exclusion pattern="^http://(?:\w+\.)?stackexchange\.com/search\?" />
-		<exclusion pattern="^http://chat\.stackexchange\.com/" />
-        <exclusion pattern="^http://(?:\w+\.)?(stackexchange|stackoverflow)\.com/users/authenticate/" />
+		<!--
+			https://github.com/EFForg/https-everywhere/issues/58
+
+			Breaks OpenID login:
+						-->
+        	<exclusion pattern="^http://(?:\w+\.)?(?:stackexchange|stackoverflow)\.com/users/authenticate/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.stackoverflow\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 	<target host="app.stacktack.com" />
 	<target host="superuser.com" />
 	<target host="*.superuser.com" />
+	<target host="teststackoverflow.com" />
+	<target host="*.teststackoverflow.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.stackexchange\.com$" name="^prov$" /-->
+	<!--securecookie host="^stackoverflow\.com$" name="^rk-\d+$" /-->
+	<!--securecookie host="^\.stackoverflow\.com$" name="^prov$" /-->
 
 	<securecookie host="^\.sstatic\.net$" name=".+" />
 	<securecookie host="\.stackexchange\.com$" name=".+" />
+	<securecookie host="^stackoverflow\.com$" name=".+" />
+	<securecookie host="^\.teststackoverflow\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?blogoverflow\.com/$"
@@ -88,8 +136,8 @@
 	<rule from="^http://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
 
-	<rule from="^http://cdn-chat\.sstatic\.net/"
-		to="https://cdn-chat.sstatic.net/" />
+	<rule from="^http://cdn-c(areers|hat)\.sstatic\.net/"
+		to="https://cdn-c$1.sstatic.net/" />
 
 	<rule from="^http://(?:www\.)?stackapps\.com/"
 		to="https://stackapps.com/" />
@@ -97,11 +145,10 @@
 	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
 
-	<rule from="^https://(\w+\.)?stackexchange\.com/search\?"
-		to="http://$1stackexchange.com/search?"
-	downgrade="1" />
+	<rule from="^http://meta\.(\w+)\.stackexchange\.com/"
+		to="https://meta.$1.stackexchange.com/" />
 
-	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
+	<rule from="^http://((?:blog|www|meta|careers)\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
 
 	<rule from="^http://app\.stacktack\.com/"
@@ -113,4 +160,6 @@
 	<rule from="^http://meta\.(\w+)\.stackexchange\.com/"
 		to="https://meta.$1.stackexchange.com/" />
 
+	<rule from="^http://teststackoverflow\.com/"
+		to="https://teststackoverflow.com/" />
 </ruleset>

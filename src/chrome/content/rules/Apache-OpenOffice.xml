@@ -3,17 +3,57 @@
 
 		- Apache.xml
 
--->
-<ruleset name="Apache OpenOffice (mismatches)" default_off="cert mismatch">
 
-	<!--	Cert: *.apache.org	-->
+	Nonfunctional subdomains:
+
+		- extensions.services ¹
+		- templates.services ¹
+		- survey ²
+
+	¹ Refused
+	² http reply
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- download
+		- forum
+		- forums
+		- wiki
+
+
+	Observed cookie domains:
+
+		- .forum ¹
+		- survey ²
+		- wiki ¹
+
+	¹ Secured by server
+	² Not secured by us <= no tls support
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Apache OpenOffice (partial)">
 
 	<target host="openoffice.org" />
-	<target host="www.openoffice.org" />
+	<target host="*.openoffice.org" />
+		<!--exclusion pattern="^http://(extensions\.services|templates\.services|survey)\.openoffice\.org/" /-->
 
 
-	<!--	!www redirects to www.	-->
-	<rule from="^https?://(?:www\.)?openoffice\.org/"
-		to="https://www.openoffice.org/" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.forum\.openoffice\.org$" name="^(phpbb3_\w{5}_k|phpbb3_\w{5}_sid|phpbb3_\w{5}_u)$" /-->
+	<!--securecookie host="^wiki\.openoffice\.org$" name="^wikiaoo_session$" /-->
+
+
+	<rule from="^http://((?:download|forums?|wiki|www)\.)?openoffice\.org/"
+		to="https://$1openoffice.org/" />
 
 </ruleset>

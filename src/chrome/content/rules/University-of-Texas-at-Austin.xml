@@ -21,6 +21,7 @@
 		- www.geo ***
 		- he			(prints "It works!")
 		- www.hrc
+		- wiki.lib ⁶
 		- nees
 		- ssc **
 		- synergyx.tacc
@@ -32,11 +33,11 @@
 	* Shows affirmed.as
 	** Times out
 	*** Interrupted
+	⁶ Refused
 
 
 	Problematic subdomains:
 
-		- ^ 
 		- www.advertising	(broken redirect to ^advertising)
 		- affirmed.as *
 		- www.affirmed **
@@ -44,12 +45,13 @@
 		- directory
 		- jsg **
 		- (www.)la **
+		- lib ⁴
 		- ma
 		- (www.)music **
-		- www.tacc **
 
 	* Self-signed
 	** Mismatch
+	⁴ Cert only matches www.foo
 
 
 	Partially covered subdomains:
@@ -89,28 +91,42 @@
 		- cbth.ig
 		- www.ig
 		- www.ischool
+
 		- fc.its
 		- help.its
 		- idmanager.its
+		- utlogin-api.its
+		- utlogin-core.its
+		- wc-ops-p01.its
+
 		- apps.jsg
 		- edger.jsg
 		- knightcenter
 		- sites.la
 		- (www.)laits
 		- (www.)landmarks
-		- (www.)lib
+
+		- (www.)lib	(^ → www)
 		- catalog.lib
 		- dev.lib
 		- metalib.lib
 		- repositories.lib
+
+		- login
 		- m
 		- mail
 		- www.mccombs
 		- registrar
 		- www.ph
 		- rtf
+		- security
 		- (www.)soa
+
+		- (www.)tacc
+		- m.tacc
 		- portal.tacc
+		- team.tacc
+
 		- techstaff
 		- utdirect
 		- utmail
@@ -118,6 +134,13 @@
 		- webmail
 		- webspace
 		- wikis
+		- auth.www
+
+
+	These altnames don't exist:
+
+		- wc-ops-p02.its.utexas.edu
+		- senf.security.utexas.edu
 
 
 	Wildcard cookies:
@@ -149,18 +172,18 @@
 	<target host="*.utexas.edu" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^idmanager\.its\.utexas\.edu$" name="^ut_persist$" /-->
+	<!--securecookie host="^\.lib\.utexas\.edu$" name="^(III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^catalog\.lib\.utexas\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^utdirect\.utexas\.edu$" name="^NSC_\w+_443$" /-->
+
 	<securecookie host="^.*\.utexas\.edu$" name=".*" />
 
 
-	<!--	It appears that HTTPS connections cannot be established to
-		https://utexas.edu/ as of June 1, 2011, so redirect
-		https://utexas.edu/ to https://www.utexas.edu/
-				-->
-	<rule from="^https?://(?:www\.)?utexas\.edu/"
-		to="https://www.utexas.edu/" />
-
-	<rule from="^http://((?:autodiscover|wmail|ww4)\.austin|(?:www\.)?(?:biosci|che|cm|cs|edb|energy|engr|finearts|ig|ischool|laits|landmarks|mccombs|ph|soa)|blogs|(?:advisorycouncil|elements|vhost)\.cns|courses|steelresearch\.geo|giving|ideas|\w+\.ig|\w+\.its|(?:apps|edger)\.jsg|knightcenter|sites\.la|\w+\.lib|m|mail|registrar|rtf|smartvoice|portal\.tacc|techstaff|utdirect|utmail|get\.utmail|webmail|webspace|wikis)\.utexas\.edu/"
-		to="https://$1.utexas.edu/" />
+	<rule from="^http://((?:(?:autodiscover|wmail|ww4)\.austin|(?:www\.)?(?:biosci|che|cm|cs|edb|energy|engr|finearts|ig|ischool|laits|landmarks|mccombs|ph|soa)|blogs|(?:advisorycouncil|elements|vhost)\.cns|courses|steelresearch\.geo|giving|ideas|\w+\.ig|[\w-]+\.its|(?:apps|edger)\.jsg|knightcenter|sites\.la|\w+\.lib|login|m|mail|registrar|rtf|security|smartvoice|(?:(?:m|portal|team|www)\.)?tacc|techstaff|utdirect|utmail|get\.utmail|webmail|webspace|wikis|www|auth\.www)\.)?utexas\.edu/"
+		to="https://$1utexas.edu/" />
 
 	<rule from="^http://(?:www\.)?advertising\.utexas\.edu/(modul|sit)es/"
 		to="https://advertising.utexas.edu/$1es/" />
@@ -173,6 +196,9 @@
 
 	<rule from="^https?://(?:www\.)?la\.utexas\.edu/(?:.*)"
 		to="https://www.utexas.edu/cola" />
+
+	<rule from="^http://lib\.utexas\.edu/"
+		to="https://www.lib.utexas.edu/" />
 
 	<rule from="^https?://(?:www\.)?(jsg|ma)\.utexas\.edu/"
 		to="https://www.$1.utexas.edu/" />

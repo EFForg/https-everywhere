@@ -31,33 +31,32 @@
 
 		- www.jscache.com	(redirects to http, akamai)
 		- tripadvisor.com	(cert only matches *.tripadvisor.com)
+		- c1.tacdn.com	        (redirects to http)
 
 
 	Partially covered subdomains:
 
 		- (www.)	(^ → www, some pages redirect to http)
 
-
-	Fully covered domains:
-
-		- www.jscache.com	(→ c1.tacdn.com)
-
 -->
 <ruleset name="TripAdvisor (partial)">
 
-	<target host="www.jscache.com" />
-	<target host="c1.tacdn.com" />
 	<target host="www.t-analytics.com" />
 	<target host="tripadvisor.com" />
 	<target host="*.tripadvisor.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tripadvisor\.com$" name="^(ServerPool|TACds|TASession|TATravelInfo|TAUnique)$" /-->
+
 	<securecookie host="^www\.t-analytics\.com$" name=".+" />
+	<!--
+		Set by badges:
+				-->
+	<securecookie host="^\.tripadvisor\.com$" name="^(?:ServerPool|TACds|TASession|TAUnique)$" />
 	<securecookie host="^webmail\.tripadvisor\.com$" name=".+" />
 
-
-	<rule from="^http://(?:www\.jscache|c1\.tacdn)\.com/"
-		to="https://c1.tacdn.com/" />
 
 	<rule from="^http://www\.t-analytics\.com/"
 		to="https://www.t-analytics.com/" />

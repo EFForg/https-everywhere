@@ -2,35 +2,11 @@
 	For other Floor64 coverage, see Floor64.xml.
 
 
-	ToDo: Find sstatic bucket
-
-
 	CDN buckets:
 
 		- techdirt1.floor64inc.netdna-cdn.com 
 
 			- Equivalent to cdn.techdirt.com
-
-
-	Nonfunctional subdomains:
-
-		- rtb	(interrupted)
-
-
-	Mixed content:
-
-		- Images on www from i.imgur.com *
-
-		- Ads/web bugs, on www from :
-
-			- ad.doubleclick.net **
-			- www.kickstarter.com **
-			- www.indiegogo.com **
-			- a.postrelease.com **
-			- b.scorecardresearch.com **
-
-	* Secured by us, doesn't trip MCB
-	** Secured by us, and no one cares
 
 -->
 <ruleset name="Techdirt">
@@ -39,10 +15,14 @@
 	<target host="*.techdirt.com" />
 
 
-	<securecookie host="^(?:www)?\.techdirt\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.techdirt\.com$" name="^tdukey$" /-->
+
+	<securecookie host="^(?:www)?\.techdirt\.com$" name=".+" />
 
 
-	<rule from="^http://(cdn\.|ii\.|www\.)?techdirt\.com/"
+	<rule from="^http://((?:cdn|ii|rtb|www)\.)?techdirt\.com/"
 		to="https://$1techdirt.com/" />
 
 </ruleset>

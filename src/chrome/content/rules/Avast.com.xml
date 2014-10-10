@@ -1,7 +1,4 @@
 <!--
-	For rules causing false/broken MCB, see Avast.com-falsemixed.xml.
-
-
 	CDN buckets:
 
 		- avast.com.edgesuite.net
@@ -16,13 +13,20 @@
 
 	Nonfunctional subdomains:
 
-		- ^		(403, valid cert)
-		- www		(redirects to http, valid cert)
+		- ^ ¹
+		- press ²
+		- www ³
+
+	¹ Redirects to http, mismatched
+	² 403, valid cert
+	³ Redirects to http, valid cert
 
 
 	Problematic domains:
 
-		- sf0.iavs.net	(works, akamai)
+		- sf0.iavs.net *
+
+	* Works, akamai
 
 
 	Fully covered domains:
@@ -32,9 +36,11 @@
 			- an	(→ avast-co-jp-ldc.d3.sc.omtrdc.net)
 			- ans
 			- blog
+			- forum
 			- id
 			- my
 			- static
+			- static2
 			- support
 
 		- sf0.iavs.net	(→ akamai)
@@ -42,18 +48,14 @@
 
 	Mixed content:
 
-		- css on forum from sf0.iavs.net *
-		- Images on forum from sf0.iavs.net *
-		- Web bug on forum from an *
+		- css, on:
+
+			- blog from fonts.googleapis.com *
+
+		- Bug on blog from survey.g.doubleclick.net ²
 
 	* Secured by us
-
-
-	forum is in a separate falsemixed ruleset
-	due to css from sf0.iavs.net.
-
-	NB: We secure all resources, and thus
-	falsemixed should be merged for Ffx 24.
+	² Rule disabled by default
 
 -->
 <ruleset name="Avast (partial)">
@@ -64,10 +66,6 @@
 
 	<target host="avast.com" /-->
 	<target host="*.avast.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://forum\." />
 	<target host="sf0.iavs.net" />
 
 
@@ -81,7 +79,7 @@
 	<rule from="^http://an\.avast\.com/"
 		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
 
-	<rule from="^http://(ans|blog|forum|id|my|static|support)\.avast\.com/"
+	<rule from="^http://(ans|blog|forum|id|my|static2?|support)\.avast\.com/"
 		to="https://$1.avast.com/" />
 
 	<rule from="^http://sf0\.iavs\.net/"

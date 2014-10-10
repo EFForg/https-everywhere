@@ -45,6 +45,9 @@
 
 		- blogs		(http & https data differ)
 		- www.cse	(personal spaces 404)
+		- e-education ³
+
+	³ Cert only matches www.e-education
 
 -->
 <ruleset name="Pennsylvania State University (partial)">
@@ -59,7 +62,11 @@
 	<target host="appnew.outreach.psu.edu" />
 
 
-	<securecookie host="^(?:cms|elion(?:facadv\.oas)?|secureapps\.libraries|appnew\.outreach|webaccess)\.psu\.edu$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.e-education\.psu\.edu$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^(?:cms|\.e-education|elion(?:facadv\.oas)?|secureapps\.libraries|appnew\.outreach|webaccess)\.psu\.edu$" name=".*" />
 
 
 	<rule from="^http://(alumni|blogs|cms|www\.cse|elion|(?:cat|ill)\.libraries|elionfacadv\.oas|(?:(?:appnew|www)\.)?outreach|portal|webaccess|webmail)\.psu\.edu/"
@@ -68,6 +75,9 @@
 	<!--	At least some paths redirect to http.	-->
 	<rule from="^http://citeseerx\.ist\.psu\.edu/m(csutils/newAccount|yciteseer/login)"
 		to="https://citeseerx.ist.psu.edu/m$1" />
+
+	<rule from="^http://(?:www\.)?e-education\.psu\.edu/"
+		to="https://www.e-education.psu.edu/" />
 
 	<!--	- Certs don't match !www.
 		- //libraries redirects to www.libraries

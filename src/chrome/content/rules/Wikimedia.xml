@@ -4,6 +4,16 @@
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
 	so this file is a lot simpler these days.
 
+
+	Mixed content:
+
+		- Images, on:
+
+			- stats.wikimedia.org from upload.wikimedia.org *
+			- stats.wikimedia.org from wikimediafoundation.org *
+
+	* Secured by us
+
 -->
 <ruleset name="Wikimedia">
 
@@ -14,7 +24,7 @@
 	<target host="www.mediawiki.org" />
 	<target host="wikimedia.org" />
 	<target host="*.wikimedia.org" />
-		<exclusion pattern="^http://(?:apt|cs|cz|status|torrus|ubuntu)\.wikimedia\.org" />
+		<exclusion pattern="^http://(?:apt|cs|cz|parsoid-lb\.eqiad|status|torrus|ubuntu)\.wikimedia\.org" />
 		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
 		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
 	<target host="wikimediafoundation.org" />
@@ -49,6 +59,11 @@
 	<target host="icinga.wmflabs.org" />
 	<target host="ganglia.wmflabs.org" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wiki(books|mediafoundation|ipedia)\.org$" name="^GeoIP$" /-->
+
+	<securecookie host="^\.wik(?:ibooks|idata|imedia|imediafoundation|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name="^GeoIP$" />
 	<securecookie host="^([^@:/]+\.)?wik(ibooks|idata|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name=".*" />
 	<securecookie host="^(species|commons|meta|incubator|wikitech).wikimedia.org$" name=".*" />
 	<securecookie host="^(?:www\.)?mediawiki\.org$" name=".*" />
@@ -69,11 +84,17 @@
 	<rule from="^https?://(labs-ns[01]|virt0)\.wikimedia\.org/"
 		to="https://wikitech.wikimedia.org/" />	
 
+	<rule from="^https?://noboard\.chapters\.wikimedia\.org/"
+		to="https://noboard-chapters.wikimedia.org/" />
+
+	<rule from="^https?://wg\.en\.wikipedia\.org/"
+		to="https://wg-en.wikipedia.org/" />
+
+	<rule from="^https?://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
+		to="https://arbcom-$1.wikipedia.org/" />
+
 	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
 		to="https://$1wik$2.org/" />
-
-	<rule from="^http://([^@:/]+)\.planet\.wikimedia\.org/"
-		to="https://$1.planet.wikimedia.org/" />
 
 	<rule from="^http://(www\.)?wikimediafoundation\.org/"
 		to="https://$1wikimediafoundation.org/" />

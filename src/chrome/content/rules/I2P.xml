@@ -1,11 +1,34 @@
-<ruleset name="I2P" default_off="expired, CAcert, self-signed">
-  <target host="i2p2.de" />
-  <target host="docs.i2p2.de" />
-  <target host="forum.i2p2.de" />
-  <target host="trac.i2p2.de" />
-  <target host="syndie.i2p2.de" />
-  <target host="www.i2p2.de" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://(?:www\.)?i2p2\.de/" to="https://www.i2p2.de/"/>
-  <rule from="^http://([d-t.+])\.i2p2\.de/" to="https://$1.i2p2.de/"/>
+		- syndie *
+
+	* Shows ^; mismatched, CN: geti2p.net
+
+
+	Fully covered subdomains:
+
+		- ^
+		- docs
+		- forum
+		- trac
+		- www
+
+-->
+<ruleset name="I2P (partial)">
+
+	<target host="i2p2.de" />
+	<target host="*.i2p2.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^trac\.i2p2\.de$" name="^(trac_form_token|trac_session)$" /-->
+
+	<securecookie host="^trac\.i2p2\.de$" name=".+" />
+
+
+	<rule from="^http://((?:docs|forum|trac|www)\.)?i2p2\.de/"
+		to="https://$1i2p2.de/" />
+
 </ruleset>

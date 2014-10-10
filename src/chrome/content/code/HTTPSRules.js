@@ -30,6 +30,7 @@ function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   this.name = name;
   this.xmlName = xmlName;
   this.notes = "";
+
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
@@ -479,6 +480,7 @@ const HTTPSRules = {
     }
   },
 
+
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
@@ -676,7 +678,7 @@ const HTTPSRules = {
     // implementations, etc. 
     var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
                  .createInstance(Ci.nsIXMLHttpRequest);
-    req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
+    req.open("GET", "https://www.eff.org/files/alexa-top-10000-global.txt", false);
     req.send();
     var domains = req.response.split("\n");
     var domains_l = domains.length - 1; // The last entry in this thing is bogus

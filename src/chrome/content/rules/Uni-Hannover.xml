@@ -1,0 +1,61 @@
+<!--
+	University of Hannover
+
+
+	Fully covered subdomains:
+
+		- cc.dcsec
+		- www.dcsec
+		- www.piwik.rrzn
+		- www.rrzn
+		- qis.verwaltung
+		- www
+
+
+	^uni-hannover.de doesn't exist.
+
+
+	Observed cookie domains:
+
+		- www.dcsec ¹
+		- www.piwik.rrzn ²
+		- www.rrzn ¹
+		- qis.verwaltung ²
+
+	¹ Secured by us <= not secured by server
+	² Secured by server
+
+
+	Mixed content:
+
+		- favicon on www.dcsec from $self *
+
+		- Web bugs, on:
+
+			- www.dcsec and www.rrzn from www.piwik.rrzn *
+			- www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Uni-Hannover.de (partial)">
+
+	<target host="*.uni-hannover.de" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.piwik\.rrzn\.uni-hannover\.de$" name="^PIWIK_SESSID$" /-->
+	<!--securecookie host="^qis\.verwaltung\.uni-hannover\.de$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^www\.(dcsec|rrzn)\.uni-hannover\.de$" name="^fe_typo_user$" /-->
+
+	<securecookie host="^www\.(?:dcsec|rrzn)\.uni-hannover\.de$" name=".+" />
+
+
+	<rule from="^http://((?:cc|www)\.dcsec|www\.(?:piwik\.)?rrzn|qis\.verwaltung|www)\.uni-hannover\.de/"
+		to="https://$1.uni-hannover.de/" />
+
+</ruleset>

@@ -4,19 +4,26 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)
 		- forge		(403, CN: *.digium.com)
+		- www ²
+
+	² Redirects to http, valid cert
 
 -->
 <ruleset name="Asterisk (partial)">
 
-	<target host="wiki.asterisk.org" />
+	<target host="asterisk.org" />
+	<target host="*.asterisk.org" />
 
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^issues\.asterisk\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
 	<securecookie host="^wiki\.asterisk\.org$" name=".+" />
 
 
-	<rule from="^http://wiki\.asterisk\.org/"
-		to="https://wiki.asterisk.org/" />
+	<rule from="^http://(issues\.|wiki\.)?asterisk\.org/"
+		to="https://$1asterisk.org/" />
 
 </ruleset>

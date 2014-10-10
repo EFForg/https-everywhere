@@ -5,15 +5,20 @@
 	CDN buckets:
 
 		- static2.last.fm.edgesuite.net
+
 			- cdn.last.fm
 			- userserve-ak.last.fm
 			- cdn.lst.fm
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
+		- imagegen ¹
 		- userserve
-		- userserve-ak	(Akamai; 503)
+		- userserve-ak ²
+
+	¹ Refused
+	² 503, akamai
 
 -->
 <ruleset name="Last.fm (buggy)" default_off="breaks streaming">
@@ -23,13 +28,13 @@
 	<target host="cdn.lst.fm" />
 
 
-	<rule from="^https?://last\.fm/"
+	<rule from="^http://last\.fm/"
 		to="https://www.last.fm/" />
 
-	<rule from="^http://www\.last\.fm/(join|login|settings/lost(?:password|username))"
-		to="https://www.last.fm/$1" />
+	<rule from="^http://www\.last\.fm/(?=join|login|settings/lost(?:password|username))"
+		to="https://www.last.fm/" />
 
-	<rule from="^https?://cdn\.la?st\.fm/"
+	<rule from="^http://cdn\.la?st\.fm/"
 		to="https://www.last.fm/static/" />
 
 </ruleset>

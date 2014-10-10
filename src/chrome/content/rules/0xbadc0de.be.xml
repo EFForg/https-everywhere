@@ -1,0 +1,57 @@
+<!--
+	Problematic subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Shows libssh.org; mismatched, CN: www.libssh.org
+	² http reply
+
+
+	Fully covered subdomains:
+
+		- ^
+		- blog
+		- stats
+
+
+	Mixed content:
+
+		- Images, on blog from:
+
+			- $self ¹
+			- www.cryptosmith.com ²
+			- upload.wikimedia.org ¹
+
+	¹ Secured by us
+	¹ Unsecurable (http reply)
+
+-->
+<ruleset name="0xbadc0de.be (partial)">
+
+	<target host="0xbadc0de.be" />
+	<target host="*.0xbadc0de.be" />
+		<!--
+			Doesn't redirect to blog:
+							-->
+		<!--exclusion pattern="^http://www\.0xbadc0de.be/+wiki/+(?!$|\?)" /-->
+
+
+	<!--	Server secures:
+				-->
+	<securecookie host="^stats\.0xbadc0de\.be$" name=".+" />
+
+
+	<rule from="^http://0xbadc0de\.be/"
+		to="https://0xbadc0de.be/" />
+
+	<rule from="^http://www\.0xbadc0de\.be/+(?:\?.*)?$"
+		to="https://blog.0xbadc0de.be/" />
+
+	<rule from="^http://www\.0xbadc0de\.be/+wiki/*(?=$|\?.*)"
+		to="https://blog.0xbadc0de.be/" />
+
+	<rule from="^http://(blog|stats)\.0xbadc0de\.be/"
+		to="https://$1.0xbadc0de.be/" />
+
+</ruleset>

@@ -13,7 +13,6 @@
 
 	Nonfunctional subdomains:
 
-		- ^			(shows ICT page)
 		- neocam.ipac		(rx_record_too_long)
 		- kiss
 		- www.ligo
@@ -23,14 +22,13 @@
 
 	Problematic subdomains:
 
-		- ^
+		- ^ ¹
 		- cliara	(self-signed)
 		- dabney	(ditto)
 		- gps		(cert only matches www.gps)
 		- courses.hss	(self-signed)
-		- imss		(CN: cliara.caltech.edu)
-		- www.imss
-		- www		(CN: cliara.caltech.edu)
+
+	¹ Shows web; mismatched, CN: web.caltech.edu
 
 
 	Partially covered subdomains:
@@ -40,14 +38,18 @@
 
 	Fully covered subdomains:
 
+		- (www.)	(^ → www)
 		- access *
 		- www.access **
+		- odb.acs
 		- mail.alumni
 		- business-query ***
+		- www.cco
 		- imss-website-storage.cloud
 		- courses *
+		- (www.)imss
 		- irsecure ****
-		- its **
+		- (www.)its **
 		- utils.its
 		- www.its *****
 		- moodle **
@@ -70,9 +72,24 @@
 	***** Supports https but doesn't use it by default. Some pages weren't
 	      designed w/ https in mind and have insecure third-party content.
 
+
+	These altnames don't exist:
+
+		- www.web.caltech.edu
+
+
+	Mixed content:
+
+		- Images on (www.)imss from www-prod-storage.cloud.caltech.edu.s3.amazonaws.com *
+
+		- Ads on (www.)imss imss-test-storage.ads.caltech.edu.s3.amazonaws.com *
+
+	* Secured by us
+
 -->
 <ruleset name="Caltech">
 
+	<target host="imss-test-storage.ads.caltech.edu.s3.amazonaws.com" />
 	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
 	<target host="*.caltech.edu" />
 		<exclusion pattern="^https?://(?:www\.)?gps\.caltech\.edu/(?!pics/|stylesheets/|uploads/)" />
@@ -82,15 +99,23 @@
 	<securecookie host="^.+\.caltech\.edu$" name=".+" />
 
 
+	<rule from="^http://(?:www\.)?caltech\.edu/"
+		to="https://www.caltech.edu/" />
+
 	<!--	Handily, this bucket forces redirect from s3.amazonaws.com/foo to foo.s3.amazonaws.com.
 										-->
-	<rule from="^https?://www-prod-storage.cloud.caltech.edu.s3.amazonaws.com/"
+	<rule from="^https?://imss-test-storage\.ads\.caltech\.edu\.s3\.amazonaws.com/"
+		to="https://s3-us-west-1.amazonaws.com/imss-test-storage.ads.caltech.edu/" />
+
+	<!--	Ditto.
+			-->
+	<rule from="^https?://www-prod-storage\.cloud\.caltech\.edu\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/www-prod-storage.cloud.caltech.edu/" />
 
 	<rule from="^http://(?:www\.)?access\.caltech\.edu/"
 		to="https://access.caltech.edu/" />
 
-	<rule from="^http://(mail\.alumni|insecure|utils\.its|pcard|scriptor|techne1|x-tmt-web1\.tmt|tqfr|web|webmail|webvpn)\.caltech\.edu/"
+	<rule from="^http://(odb\.acs|mail\.alumni|www\.cco|(?:www\.)?imss|insecure|(?:utils\.|www\.)?its|pcard|scriptor|techne1|x-tmt-web1\.tmt|tqfr|web|webmail|webvpn)\.caltech\.edu/"
 		to="https://$1.caltech.edu/" />
 
 	<rule from="^http://business-query\.caltech\.edu:8181/"
@@ -102,8 +127,8 @@
 	<rule from="^http://(?:courses|moodle)\.caltech\.edu/"
 		to="https://courses.caltech.edu/" />
 
-	<rule from="^http://(?:www\.)?(gp|it)s\.caltech\.edu/"
-		to="https://www.$1s.caltech.edu/" />
+	<rule from="^http://(?:www\.)?gps\.caltech\.edu/"
+		to="https://www.gps.caltech.edu/" />
 
 	<rule from="^http://nassau\.caltech\.edu:4444/"
 		to="https://nassau.caltech.edu:4444/" />

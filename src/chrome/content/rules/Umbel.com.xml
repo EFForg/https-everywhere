@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- sitemedia-umbel.netdna-ssl.com
+
+
+	^: dropped
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ -> www)
+		- api
+		- tags.api
+		- audience
+		- media
+
+-->
+<ruleset name="Umbel.com">
+
+	<target host="umbel.com" />
+	<target host="*.umbel.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(audience|www)\.umbel\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^audience\.umbel\.com$" name="^sessionid$" /-->
+
+	<securecookie host="^(?:audience|www)\.umbel\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?umbel\.com/"
+		to="https://www.umbel.com/" />
+
+	<rule from="^http://(api|tags\.api|audience|media)\.umbel\.com/"
+		to="https://$1.umbel.com/" />
+
+</ruleset>

@@ -2,6 +2,11 @@
 	For problematic rules, see Web.com-expired.xml.
 
 
+	CDN buckets:
+
+		- wpc.016b.edgecastcdn.net/00016B/
+
+
 	Other Web.com rulesets:
 
 		- Cactus_Complete_Commerce.xml
@@ -22,14 +27,41 @@
 
 		- ir	(times out)
 
+
+	^: cert only matches www
+
+
+	Mixed content:
+
+		- css on www.web.com from wpc.016b.edgecastcdn.net ¹
+
+		- Bugs, on:
+
+			- www.web.com from fls.doubleclick.net ²
+			- www.web.com from pixel.fetchback.com ³
+
+	¹ Secured by us, causes slight alignment difference
+	² Rule disabled by default
+	³ Secured by us
+
 -->
 <ruleset name="Web.com (partial)">
 
+	<target host="wpc.016b.edgecastcdn.net" />
 	<target host="web.com" />
 	<target host="*.web.com" />
 
 
-	<securecookie host="^.*\.web\.com$" name=".*" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^secure2\.web\.com$" name="^(ASP\.NET_SessionId|pname)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(support)?\.web\.com$" name="^(affdata|inurl)$" /-->
+	<!--securecookie host="^((support|www)\.)?web\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?:.*\.)?web\.com$" name=".*" />
 
 
 	<!--	Cert only matches www.	-->
@@ -38,5 +70,8 @@
 
 	<rule from="^http://(support|webmail)\.web\.com/"
 		to="https://$1.web.com/" />
+
+	<rule from="^http://wpc\.016b\.edgecastcdn\.net/00016B/"
+		to="https://ne1.wpc.edgecastcdn.net/00016B/" />
 
 </ruleset>

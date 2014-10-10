@@ -6,23 +6,96 @@
 
 		- (www.)noisey.cn
 		- (www.)thecreatorsproject.com	(interrupted)
-		- vice.com			(cert: manage.vice.com, self-signed; 503)
-		- www.vice.com
-		- motherboard.vice.com		(reset)
+		- hbo.vice.com ⁴
+		- i-d.vice.com ⁵
+		- motherboard.vice.com ³
+		- shop.vice.com ⁶
 		- noisey.vice.com
 		- socials.uk.vice.com		(cert: socials.vice.com; reset)
 		- scs.viceland.com		(shows default plesk page; expired 2010-11-15, self-signed)
 
+	⁴ "error", destination doesn't support tls
+	⁵ Refused
+	³ Redirects to http, valid cert
+	⁶ shopify
+
 
 	CDN buckets:
 
+
 		- ec2-184-73-100-150.compute-1.amazonaws.com
+		- scs-assets.s3.amazonaws.com
 		- d19o6jcqbnxtyy.cloudfront.net
+
 		- d1qzzfctbfyh6r.cloudfront.net
+
+			- assets.vice.com
+
+		- d1wzhalc7g55g3.cloudfront.net
+
+			- assets-i-d.vice.com
+
 		- d1ymkg0yqrfr5q.cloudfront.net
 		- d7qfuicnb8zug.cloudfront.net
+
+		- df5qbu832tmne.cloudfront.net
+
+			- assets.thumb.vice.com
+
 		- dm07ef02yemve.cloudfront.net
 		- dz6snzmhpcl6f.cloudfront.net
+		- motherboard.vice.com.edgesuite.net
+		- motherboard-cdn-assets.vice.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- assets ²
+		- motherboard-cdn-assets ³
+		- assets.thump ²
+
+	¹ "error"
+	² cloudfront
+	³ Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- assets	(→ d1qzzfctbfyh6r.cloudfront.net)
+		- assets-i-d	(→ d1wzhalc7g55g3.cloudfront.net)
+		- assets-news
+		- assets-sports
+		- embeds
+		- munchies
+		- news
+		- sports
+		- staging-assets-news
+		- thump
+		- assets.thump	(→ df5qbu832tmne.cloudfront.net)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- motherboard from motherboard-cdn-assets *
+			- motherboard from lh3.ggpht.com *
+			- munchies from images *
+			- thump from assets.thump *
+			- www from assets *
+			- www from scs-assets.s3.amazonaws.com *
+
+		- Bugs, on:
+
+			- motherboard from pixel.adsafeprotected.com
+			- motherboard from storage.googleapis.com *
+			- motherboard, munchies, and www from b.scorecardresearch.com *
+			- www from platform.tumblr.com *
+			- www from platform.twitter.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Vice (partial)">
@@ -30,28 +103,53 @@
 	<target host="*.motherboard.tv" />
 	<target host="assets.noisey.*" />
 	<target host="assets.thecreatorsproject.com" />
+	<target host="vice.com" />
 	<target host="*.vice.com" />
+		<!--exclusion pattern="^http://(hbo|i-d|shop)\.vice\.com/" /-->
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://motherboard\.vice\.com/+(?!assets/(?:favicon|font|image)s/)" />
 
 
-	<rule from="^https?://assets\.motherboard\.tv/"
+	<rule from="^http://assets\.motherboard\.tv/"
 		to="https://dz6snzmhpcl6f.cloudfront.net/" />
 
-	<rule from="^https?://assets2\.motherboard\.tv/"
+	<rule from="^http://assets2\.motherboard\.tv/"
 		to="https://d7qfuicnb8zug.cloudfront.net/" />
 
-	<rule from="^https?://assets\.noisey\.cn/"
+	<rule from="^http://assets\.noisey\.cn/"
 		to="https://d1ymkg0yqrfr5q.cloudfront.net/" />
 
-	<rule from="^https?://assets\.noisey\.com/"
+	<rule from="^http://assets\.noisey\.com/"
 		to="https://d19o6jcqbnxtyy.cloudfront.net/" />
 
-	<rule from="^https?://assets\.thecreatorsproject\.com/"
+	<rule from="^http://assets\.thecreatorsproject\.com/"
 		to="https://dm07ef02yemve.cloudfront.net/" />
 
-	<rule from="^https?://assets\.vice\.com/"
+
+	<rule from="^http://(?:www\.)?vice\.com/"
+		to="https://www.vice.com/" />
+
+	<rule from="^http://assets\.vice\.com/"
 		to="https://d1qzzfctbfyh6r.cloudfront.net/" />
 
-	<rule from="^http://socials\.vice\.com/"
-		to="https://socials.vice.com/" />
+	<rule from="^http://assets-i-d\.vice\.com/"
+		to="https://d1wzhalc7g55g3.cloudfront.net/" />
+
+	<rule from="^http://(assets-(?:news|sports)|embeds|images|munchies|news|socials|sports|staging-assets-news|thump)\.vice\.com/"
+		to="https://$1.vice.com/" />
+
+	<!--rule from="^http://hbo\.vice\.com/.*"
+		to="https://connect.hbo.com/vice/" /-->
+
+	<rule from="^http://motherboard(-cdn-assets)?\.vice\.com/"
+		to="https://a248.e.akamai.net/f/248/4735/10/motherboard$1.vice.com/" />
+
+	<!--rule from="^http://store\.vice\.com/"
+		to="https://vice.myshopify.com/" /-->
+
+	<rule from="^http://assets\.thump\.vice\.com/"
+		to="https://df5qbu832tmne.cloudfront.net/" />
 
 </ruleset>

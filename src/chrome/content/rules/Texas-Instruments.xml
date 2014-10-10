@@ -15,15 +15,21 @@
 	Problematic subdomains:
 
 		- ^			(cert only matches www)
+		- e2e-uat ²
 		- www-k.ext		(times out)
 		- trainingcenter	(mismatched, CN: *.vsearch2.net)
 		- videos		(redirects to www; mismatched, CN: www.ti.com)
+
+	² Self-signed, mismatched, CN: 515969-UAT1.saas.telligent.com
 
 
 	Partially covered subdomains:
 
 		- e2e		(support/other_analog/default.aspx redirects to http)
 		- www-k.ext	(→ www)
+		- processors.wiki ³
+
+	³ Avoiding false/broken MCB
 
 
 	Fully covered domains:
@@ -32,10 +38,25 @@
 
 		- ti.com subdomains:
 
+			- e2e-uat	(→ e2e)
 			- fedid.ext
 
 
+	Mixed content:
+
+		- css on processors.wiki from $self *
+
+		- Images, on:
+
+			- processors.wiki from $self *
+			- processors.wiki from e2e-uat *
+			- www from focus *
+
 	Mixed images from reviews.ti.com on www.ti.com
+
+		- Web bugs on processors.wiki from i.creativecommons.org *
+
+	* Secured by us
 
 -->
 <ruleset name="Texas Instruments (partial)">
@@ -45,9 +66,17 @@
 	<target host="ti.com" />
 	<target host="*.ti.com" />
 		<exclusion pattern="^http://e2e\.ti\.com/(?!.+/css/|cfs-file\.ashx|favicon\.ico|resized-image\.ashx|[tT]hemes/)" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://processors\.wiki\.ti\.com/+(?!extensions/|images/|load\.php|skins/)" />
 
 
-	<!--	Cookie domains:
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^processors\.wiki\.ti.com$" name="^davincid_wikidb_session$" /-->
+	<!--
+		Cookie domains:
 
 			- .
 			- e2e
@@ -71,8 +100,11 @@
 	<rule from="^http://(?:www\.)?ti\.com/"
 		to="https://www.ti.com/" />
 
-	<rule from="^http://(commerce|e2e|estore|fedid\.ext|focus|my|myportal)\.ti\.com/"
+	<rule from="^http://(commerce|e2e|estore|fedid\.ext|focus|my|myportal|processors\.wiki)\.ti\.com/"
 		to="https://$1.ti.com/" />
+
+	<rule from="^http://e2e-uat\.ti\.com/"
+		to="https://e2e.ti.com/" />
 
 	<rule from="^http://www-k\.ext\.ti\.com/sc/technical-support/pic/americas\.htm(?:\?.*)?$"
 		to="https://www.ti.com/ww/en/csc/support-Americas.html" />

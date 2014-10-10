@@ -1,28 +1,35 @@
 <!--
 	Nonfunctional subdomains:
 
-		- demo		(refused)
-		- doc		(blank page; mismatched, CN: www.owncloud.org)
+		- demo ¹
+		- doc ²
+		- docs ²
+		- stats ¹
+
+	¹ Refused
+	² Shows blank page; mismatched, CN: www.owncloud.org
 
 
-	Problematic subdomains:
+	Mixed content:
 
-		- stats		(works; self-signed, CN: owncloud.com)
+		- Images on forum from www.gravatar.com ¹
 
+		- Bug on www from stats ²
 
-	Mixed web bug on www from stats
+	¹ Secured by us
+	² Unsecurable <= refused
 
 -->
-<ruleset name="ownCloud (partial)">
+<ruleset name="ownCloud.org (partial)">
 
 	<target host="owncloud.org" />
 	<target host="*.owncloud.org" />
 
 
-	<securecookie host="^\.forum\.owncloud\.org$" name=".+" />
+	<securecookie host="^(?:\.forum\.)?owncloud\.org$" name=".+" />
 
 
-	<rule from="^http://(download\.|forum\.|www\.)?owncloud\.org/"
+	<rule from="^http://((?:download|forum|www)\.)?owncloud\.org/"
 		to="https://$1owncloud.org/" />
 
 </ruleset>

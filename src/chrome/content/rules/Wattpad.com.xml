@@ -1,0 +1,50 @@
+<!--
+	wattpad.zendesk.com <=> support.zendesk.com
+
+
+	Nonfunctional subdomains
+
+		- blog ¹
+		- support ²
+
+	¹ Refused
+	² zendesk, redirects back
+
+
+	^: refused
+
+
+	Some pages redirect to http.
+
+
+	Mixed content:
+
+		- favicon on shop and www from a *
+
+	* Secured by us
+
+-->
+<ruleset name="Wattpad.com (partial)">
+
+	<target host="wattpad.com" />
+	<target host="*.wattpad.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://www\.wattpad\.com/(about|press|stories|user_password|writers)($|\?)" /-->
+		<!--
+			Exceptions
+					-->
+		<!--exclusion pattern="http://www\.wattpad\.com/(?!$|\?|(?:dialog/send_download_link|user_login)(?:$|[?/]))" /-->
+
+
+	<rule from="^http://(?:www\.)?wattpad\.com/(?=$|\?|user_login(?:$|[?/]))"
+		to="https://www.wattpad.com/" />
+
+	<rule from="^http://(a|shop)\.wattpad\.com/"
+		to="https://$1.wattpad.com/" />
+
+	<!--rule from="^http://support\.wattpad\.com/"
+		to="https://wattpad.zendesk.com/" /-->
+
+</ruleset>

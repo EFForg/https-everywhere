@@ -7,6 +7,37 @@
 		- (www.)gsas
 		- stern		(times out)
 
+
+	Fully covered subdomains:
+
+		- home
+		- its.law
+
+		- library
+		- arch.library
+		- getit.library
+		- login.library
+
+		- nursing
+		- frms.nursing
+		- orientation.nursing
+		- admin.portal
+		- shibboleth
+		- start
+		- steinhardt
+		- web.home.syr
+		- wikis
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- library and web1.library from library *
+			- wikis from www *
+
+	* Secured by us
+
 -->
 <ruleset name="New York University (partial)" platform="mixedcontent">
 
@@ -16,6 +47,15 @@
 	<target host="vlg.cs.nyu.edu" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^its\.law\.nyu\.edu$" name="^(CFID|CFTOKEN|JSESSIONID)$" /-->
+	<!--securecookie host="\.library\.nyu\.edu$" name="^(attempted_sso|xerxessession_)$" /-->
+	<!--securecookie host="^getit\.library\.nyu\.edu$" name="^_getit_session$" /-->
+	<!--securecookie host="^admin\.portal\.nyu\.edu$" name="^BIGipServerPeopleSoft-Portal[\d.]+-PT\d+-Prod-Pool$" /-->
+	<!--securecookie host="^steinhardt\.nyu\.edu$" name="^symfony$" /-->
+	<!--securecookie host="^web\.home\.syr\.nyu\.edu$" name="^BIGipServer~ES-PROD-MEDIUM~WWW-HTTP$" /-->
+
 	<!--	Cross-domain cookies observed:
 
 			- AMAuthCookie
@@ -23,27 +63,27 @@
 
 		Not handled here in case they're used on unsecurable pages.
 				-->
-	<securecookie host="^\w+\.nyu\.edu$" name=".*" />
+	<securecookie host="^\w+[\w.]+\.nyu\.edu$" name=".*" />
 
 
 	<!--	- !www doesn't work over https
 		- Redirects to www over http
 		- Cert doesn't match //bookstores.
 					-->
-	<rule from="^https?://(?:www\.)?(bookstores\.)?nyu\.edu/"
+	<rule from="^http://(?:www\.)?(bookstores\.)?nyu\.edu/"
 		to="https://www.$1nyu.edu/" />
 
 	<!--	- Cert: www.nyu.edu
 		- Redirects like so
 				-->
-	<rule from="^https?://admissions\.nyu\.edu/"
+	<rule from="^http://admissions\.nyu\.edu/"
 		to="https://www.nyu.edu/admissions/undergraduate-admissions.html" />
 
 	<!--	Cert doesn't match www.	-->
-	<rule from="^https?://(?:www\.)?(cims|cs|g4li|home|math|mrl|steinhardt)\.nyu\.edu/"
+	<rule from="^http://(?:www\.)?(cims|cs|g4li|home|math|mrl|steinhardt)\.nyu\.edu/"
 		to="https://$1.nyu.edu/" />
 
-	<rule from="^http://(vlg\.cs|login)\.nyu\.edu/"
+	<rule from="^http://(vlg\.cs|its\.law|(?:(?:arch|getit|login)\.)?library|login|(?:frms\.|orientation\.)?nursing|admin\.portal|shibboleth|start|steinhardt|web\.home\.syr|wikis)\.nyu\.edu/"
 		to="https://$1.nyu.edu/" />
 
 </ruleset>

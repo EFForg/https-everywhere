@@ -11,18 +11,25 @@
 
 	<target host="*.microsoftonline.com" />
 	<target host="*.login.microsoftonline.com" />
+	<target host="secure.aadcdn.microsoftonline-p.com" />
 	<target host="secure.aadcdn.microsoftonline-p.net" />
 	<target host="accountservices.microsoftonline-p.net" />
 
 
-	<securecookie host="^(?:\.?login|portal)\.microsoftonline\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^loginex\.microsoftonline\.com$" name="^MSPRequ$" /-->
 
+	<securecookie host="^(?:\.?login|loginex|portal)\.microsoftonline\.com$" name=".+" />
 
 	<rule from="^https?://go\.microsoftonline\.com/"
 		to="https://g.live.com/" />
 
-	<rule from="^http://(login|portal)\.microsoftonline\.com/"
+	<rule from="^http://(login|loginex|portal)\.microsoftonline\.com/"
 		to="https://$1.microsoftonline.com/" />
+
+	<rule from="^http://secure\.aadcdn\.microsoftonline-p\.com/"
+		to="https://secure.aadcdn.microsoftonline-p.com/" />
 
 	<rule from="^http://(secure\.aadcdn|accountservices)\.microsoftonline-p\.net/"
 		to="https://$1.microsoftonline-p.net/" />

@@ -1,56 +1,52 @@
 <!--
 	sitemason.vanderbilt.edu/files/b/b4VCI8/CrimeAlert.xml
 
--->
-<ruleset name="Sitemason">
+	sitemason.zendesk.com <=> support.sitemason.com
 
-	<target host="moses.com" />
+
+	Nonfunctional domains:
+
+		- (www.)moses.com *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- (www.)sitemasonmail.com.moses.com *
+		- sitemason.com *
+		- webmail.sitemason.com *
+		- (www.)sitemasonmail.com *
+		- webmail.sitemasonmail.com *
+
+	* Refused
+
+-->
+<ruleset name="Sitemason (partial)">
+
 	<target host="*.moses.com" />
-	<target host="sitemasonmail.com.moses.com" />
-	<target host="www.sitemasonmail.com.moses.com" />
 	<target host="sitemason.com" />
 	<target host="*.sitemason.com" />
 	<target host="sitemasonmail.com" />
 	<target host="*.sitemasonmail.com" />
 
 
-	<!--	Presumably this domain belongs to Sitemason, as
-		www.moses.org redirects to www.sitemason.com.	-->
-	<rule from="^http://secure\.moses\.org/"
-		to="https://secure.moses.org/" />
+	<rule from="^http://(?:www\.)?sitemasonmail\.com\.moses\.com/"
+		to="https://secure.sitemason.com/www.sitemasonmail.com/" />
 
-	<!--	For sitemason.com:
-			- !www 403s
-			- www: cert invalid, redirects as so.	-->
-	<rule from="^https?://(?:www\.)?(?:moses|sitemason)\.com/"
-		to="https://secure.sitemason.com/www.sitemason.com/" />
+	<rule from="^http://(?:www\.)?sitemason\.com/"
+		to="https://www.sitemason.com/" />
 
-	<!--	Same here.	-->
-	<rule from="^https?://developer\.sitemason\.com/"
-		to="https://secure.sitemason.com/developer.sitemason.com/" />
+	<rule from="^http://developer\.sitemason\.com/+"
+		to="https://www.sitemason.com/developers/" />
 
 	<rule from="^http://secure\.sitemason\.com/"
 		to="https://secure.sitemason.com/" />
 
-	<!--	Zendesk, at least some pages redirect to http.
-		sitemason.zendesk.com redirects back.	-->
-	<rule from="^https?://support\.sitemason\.com/(assets|generated|images|system)/"
-		to="https://sitemason.zendesk.com/$1/" />
+	<rule from="^http://support\.sitemason\.com/(?=assets/|generated/|images/|system/)"
+		to="https://sitemason.zendesk.com/" />
 
-	<!--	sitemasonmail.com: same story as above.
-
-		sitemasonmail.com.moses.com:
-
-			- Cert: secure.moses.com
-			- redirects to secure.sitemason.com/www.sitemasonmail.com.moses.com
-			- 404s
-
-		The same data are present on sitemasonmail.com.
-				-->
-	<rule from="^https?://(?:www\.)?sitemasonmail\.com(?:\.moses\.com)?/"
-		to="https://secure.sitemason.com/www.sitemasonmail.com/" />
-
-	<rule from="^http://webmail\.sitemasonmail\.com/"
-		to="https://webmail.sitemasonmail.com/" />
+	<rule from="^http://(?:webmail\.sitemason|(?:webmail\.|www\.)?sitemasonmail)\.com/+"
+		to="https://apps.rackspace.com/" />
 
 </ruleset>

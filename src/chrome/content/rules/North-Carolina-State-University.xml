@@ -5,18 +5,84 @@
 	Nonfunctional subdomains:
 
 		- www7.acs
-		- giving	(ssl_error_rx_record_too_long)
-		- news		(cert: ssl; shows ssl's data)
-		- v3prod.news	(ditto)
+		- ced ¹
+		- dic.fi ²
+		- giving ¹
+		- info ¹
+		- news ³
+		- v3prod.news		(cert: ssl; shows ssl's data)
+		- oied ⁵
 		- oncampus
-		- policies	(ssl_error_rx_record_too_long)
-		- web		(ditto)
+		- policies ¹
+		- web		(ssl_error_rx_record_too_long)
+
+	¹ Shows default page
+	² Redirects to http, valid cert
+	³ Refused
+	⁵ Shows another domain; mismatched, CN: *.fi.ncsu.edu
 
 
 	Problematic subdomains:
 
 		- www.cs	(mismatched, CN: www.csc.ncsu.edu)
 		- www.csc	(self-signed)
+		- fi ³
+		- miso.fi ⁴
+		- golinks ⁵
+		- miso ⁶
+
+	³ Redirects to http before www
+	⁴ Mixed css from www
+	⁵ Works; mismatched, CN: go.ncsu.edu
+	⁶ Works; mismatched, CN: *.fi.ncsu.edu
+
+
+	Partially covered subdomains:
+
+		- miso.fi *
+
+	* Avoiding mixed css from www
+
+
+	Fully covered subdomains:
+
+		- ^
+		- mypack.acs
+		- portalsp.acs
+		- www.acs
+		- cdn
+
+		- fi subdomains:
+
+			- eval
+			- ptmt
+			- stem
+			- surveys
+
+		- go
+		- (www\.)?mypack
+		- shib
+		- webauth
+
+
+	These altnames don't exist:
+
+		- acs.ncsu.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- eval.fi from fonts.googleapis.com ¹
+			- miso.fi from www ²
+
+		- Images on miso.fi from miso ¹
+
+		- favicon on oit from $self ¹
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
 <ruleset name="North Carolina State University (partial)">
@@ -29,13 +95,28 @@
 										-->
 		<exclusion pattern="^http://libraryh3lp\.com/(?:chat/|follow/)" />
 	<target host="ncsu.edu" />
-	<target host="*.ncsu.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://miso\.(fi\.)?ncsu\.edu/+(?!wp-content/|wp-includes/)" /-->
 	<target host="www.*.ncsu.edu" />
 	<target host="portalsp.acs.ncsu.edu" />
 	<target host="*.lib.ncsu.edu" />
 
 
 	<securecookie host="^libraryh3lp\.com$" name=".*" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^shib\.ncsu\.edu$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+						-->
+	<!--securecookie host="\.ncsu\.edu$" name="^(PAC|WRAP16|WRAP_REFERER)$" /-->
+	<!--securecookie host="^surveys\.fi\.ncsu\.edu$" name="^dvc$" /-->
+	<!--securecookie host="^(go|golinks)\.ncsu\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.oit\.ncsu\.edu$" name="^SESS[0-9a-f]{32}$" /-->
+
 	<securecookie host="^(.*\.)?ncsu\.edu$" name=".*" />
 
 
@@ -45,7 +126,15 @@
 	<rule from="^https?://(?:www\.)?ncsu\.edu/directory/"
 		to="https://www.ncsu.edu/directory/" />
 
-	<rule from="^http://(portalsp\.acs|jobs|(?:(?:my|staff|www)\.)?lib|oit|ssl|webauth)\.ncsu\.edu/"
-		to="https://$1.ncsu.edu/" />
+	<rule from="^http://((?:(?:mypack|portalsp|www)\.acs|cdn|(?:eval|ptmt|stem|surveys)\.fi|go|jobs|(?:(?:my|staff|www)\.)?lib|(?:www\.)?mypack|oit|shib|ssl|webauth)\.)?ncsu\.edu/"
+		to="https://$1ncsu.edu/" />
+
+	<!--	!www redirects to http before www:
+							-->
+	<rule from="^http://(?:www\.)?fi\.ncsu\.edu/(?=wp-content/|wp-includes/)"
+		to="https://www.fi.ncsu.edu/" />
+
+	<rule from="^http://miso\.(?:fi\.)?ncsu\.edu/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://miso.fi.ncsu.edu/" />
 
 </ruleset>

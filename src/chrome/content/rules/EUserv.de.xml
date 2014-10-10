@@ -1,0 +1,26 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- forum ²
+		- www.support ³
+
+	¹ Refused
+	² Shows ssl
+	³ Shows ssl, behaves differently from ^support
+
+-->
+<ruleset name="EUserv.de (partial)">
+
+	<target host="euserv.de" />
+	<target host="*.euserv.de" />
+		<exclusion pattern="^http://(?:www\.)?euserv\.de/+(?!favicon\.ico|pic/)" />
+
+
+	<rule from="^http://(?:(www\.)?ssl\.|www\.)?euserv\.de/"
+		to="https://$1ssl.euserv.de/" />
+
+	<rule from="^http://support\.euserv\.de/"
+		to="https://support.euserv.de/" />
+
+</ruleset>

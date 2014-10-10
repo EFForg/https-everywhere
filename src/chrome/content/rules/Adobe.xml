@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Adobe.com-falsemixed.xml.
+
 	For problematic rules, see Adobe-mismatches.xml.
 
 
@@ -6,6 +8,7 @@
 
 		- Adobe_Connect.xml
 		- Adobe-Digital-Marketing.xml
+		- Adobe_login.com.xml
 		- Adobetag.com.xml
 		- Hitbox.com.xml
 		- Offermatica.com.xml
@@ -42,40 +45,51 @@
 
 	Nonfunctional subdomains:
 
-		- experiencedelivers	(redirects to www; mismatched, CN: *.day.com)
-		- forums		(dropped)
-		- labs *
-		- training *
+		- experiencedelivers ¹
+		- labs ²
+		- training ²
 
-	* Refused
+	¹ Redirects to www; mismatched, CN: *.day.com
+	² Refused
 
 
 	Problematic domains:
 
 		- adobe.com subdomains:
 
-			- ^ *
-			- airdownload **
-			- gaming *
-			- get2		(mismatched, CN: get.adobe.com)
-			- html *
-			- kb2 *
-			- ns		(404; mismatched, CN: www.adobe.com)
-			- stats		(mismatched, CN: *.d1.sc.omtrdc.net)
-			- thumbnails.tv **
-			- wwwimages **
+			- ^ ¹
+			- airdownload ²
+			- forums ³
+			- gaming ¹
+			- get2 ⁴
+			- html ¹
+			- kb2 ¹
+			- ns ⁵
+			- stats ⁶
+			- thumbnails.tv ²
+			- wwwimages ²
 
-		- macromedia.com	(cert only matches www)
+		- macromedia.com ⁷
 
-	* Works, mismatched, CN: www.adobe.com
-	** Works, akamai
+	¹ Works, mismatched, CN: www.adobe.com
+	² Works, akamai
+	³ Mixed css from $self
+	⁴ Mismatched, CN: get.adobe.com
+	⁵ 404; mismatched, CN: www.adobe.com
+	⁶ Mismatched, CN: *.d1.sc.omtrdc.net
+	⁷ Cert only matches www
 
 
 	Partially covered subdomains:
 
-		- blogs		(webplatform blog redirects to http)
-		- fpdownload	(crossdomain.xml excluded)
+		- blogs ¹
+		- forums ²
+		- fpdownload ³
 		- ns		(→ www)
+
+	¹ webplatform blog redirects to http
+	² Avoiding false/broken MCB
+	³ crossdomain.xml excluded
 
 
 	Fully covered domains:
@@ -127,9 +141,24 @@
 	* → akamai
 
 
+	Observed cookie domains:
+
+		- forums.adobe.com *
+
+	* Secured by us <= not secured by server
+
+
 	Mixed content:
 
-		- Images, on
+		- css on forums from $self *
+
+		- Images, on:
+
+			- forums, from:
+
+				- www *
+				- imageshack.us *
+				- upload.macromedia.com
 
 			- tv from thumbnails.tv *
 			- www from wwwimages *
@@ -156,6 +185,10 @@
 		<exclusion pattern="^http://blogs\.adobe\.com/webplatform(?:$|[?/])" />
 		<!--exclusion pattern="^http://blogs\.adobe\.com/(?!$|\?|(?:acrobat|adobe(connect|ingovernment|life)|aftereffects|captivate|conversations|creativelayer|digital(marketing|dmedia|publishing)|dreamweaver|educationleaders|experiencedelivers|globalization|gunar|indesigndocs|iwamoto|lightroomjournal|photoshopdotcom|premierepro|presenter|readermobile|vikrant)($|\?|/)|wp-content/)" /-->
 		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://forums\.adobe\.com/+(?!\d\.\d\.\d/(?:images/|resources/|styles/|themes/)|favicon\.ico|people/[\w.]+/avatar/|plugins/|styles/|themes?/)" />
+		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
 			Breaks video playback:
@@ -171,7 +204,7 @@
 	<rule from="^http://adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
+	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|forums|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
 		to="https://$1.adobe.com/" />
 
 	<rule from="^http://get2\.adobe\.com/"

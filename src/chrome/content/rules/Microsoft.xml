@@ -10,6 +10,8 @@
 		- ASP.NET.xml
 		- ASPNETcdn.com.xml
 		- Bing.xml
+		- Ch9.ms.xml
+		- Codeplex.xml
 		- DreamSpark.com.xml
 		- Halo.xml
 		- Live.xml
@@ -18,16 +20,20 @@
 		- Microsoft_Store.xml
 		- Moreinterop.com.xml
 		- MSDN.xml
+		- Msecnd.net.xml
 		- MSN.xml
 		- Newsvine.com.xml
+		- OneDrive.com.xml
 		- Outlook_Live.xml
 		- Photosynth.xml
 		- Skype.xml
 		- S-msn.com.xml
+		- Sway.xml
 		- System_Center_Advisor.com.xml
 		- Technet.com.xml
 		- Virtualearth.net.xml
 		- Windows_Azure.xml
+		- Windows.com.xml
 		- Windows.net.xml
 		- Windows_Phone.xml
 		- Xbox.xml
@@ -38,6 +44,10 @@
 		- i.g.mobile.ms.akadns.net
 
 			- i1.mobile.microsoft.com
+
+		- i.g.social.ms.akadns.net
+
+			- i1.social.s-msft.com
 
 		- res.windows.microsoft.com.edgesuite.net
 
@@ -74,6 +84,7 @@
 			- privacy		(times out)
 			- academic.research ***
 			- sharepoint		(redirects to login.live.com, cert valid)
+			- vepexp		(refused)
 			- edir.windowsm		(404)
 			- visio **
 			- (www.)windows **
@@ -81,7 +92,6 @@
 		- msimg.com
 		- blogs.office.com ***
 		- blog.surface.com		(handshake fails)
-		- blogs.windows.com		(reset)
 		- (www.)windowsteamblog.com
 
 	* 503, akamai
@@ -105,6 +115,7 @@
 			- search **
 			- spcache		(504, akamai)
 			- img3.store		(mismatched)
+			- social.technet
 			- update *
 			- res[12].windows **
 
@@ -116,12 +127,15 @@
 	* Cert only matches www
 	** akamai
 	*** Times out
-
+	⁷ Mixed css from i3.technet.microsoft.com and i1.social.s-msft.com
 
 	Partially covered domains:
 
 		- answers.microsoft.com		(some pages redirect to http)
 		- code.msdn.microsoft.com	(pages redirect to http)
+		- social.technet.microsoft.com *
+
+	* Avoiding false/broken MCB
 
 
 	Fully covered domains:
@@ -167,7 +181,6 @@
 			- services.social
 			- spcache		( → www)
 			- corp.sts
-			- social.technet
 			- res[12].windows	(→ akamai)
 
 		- (www.)office.com			(^ → www)
@@ -177,21 +190,43 @@
 		- *.sec.s-msft.com:
 
 			- download-codeplex
+			- i1.social		(→ social.microsoft.com)
 			- i-technet
 			- i2-technet
 
 
-	Wildcard cookies:
+	These altnames don't exist:
 
-		- *.office.microsoft.com
-		- *.support.microsoft.com
+		- secure.answers.microsoft.com
+		- answers-sancert.microsoft.com
+
+
+	Observed cookie domains:
+
+		- .office.microsoft.com
+		- support.microsoft.com *
+		- .support.microsoft.com
+		- .technet.microsoft.com ²
+		- social.technet.microsoft.com ³
+
+	* Secured by us <= not secured by server
+	² Not secured by us <= used on domains subject to false MCB
+	³ Some secured by us <= not secured by server
 
 
 	Mixed content:
 
+		- css, on:
 		- css on onlinehelp from i3.onlinehelp *
+			- social.technet from i3.technet *
+			- social.technet from i1.social.s-msft.com *
 
+		- Images, on:
 		- Images on onlinehelp from i.onlinehelp *
+			- support from $self *
+		- Images on smallbusiness.support from support
+		- Images on smallbusiness.support from www *
+			- social.technet from i1.social.s-msft.com *
 
 	* Secured by us
 
@@ -236,11 +271,27 @@
 									-->
 		<exclusion pattern="^https?://search\.microsoft\.com/(?!global/oneMscomSettings/|shared/)" />
 		<exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^\.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|\?|/)))" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://social\.technet\.microsoft\.com/Forums(?:$|[?/])" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://social\.technet\.microsoft\.com/+wiki(?!/CustomWidgets/|/themes/|/Utility/)" />
 	<target host="office.com" />
 	<target host="www.office.com" />
 	<target host="i.s-microsoft.com" />
 	<target host="*.s-msft.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.microsoft\.com$" name="^msdn$" /-->
+	<!--securecookie host="^support\.microsoft\.com$" name="^(\.ASPXANONYMOUS|SMC_SAGE|smcexpsessionticket|smcexpticket)$" /-->
+	<!--securecookie host="^smallbusiness\.support\.microsoft.com$" name="^(breadcrumb|culture|exitinfo)$" /-->
+	<!--securecookie host="^\.technet\.microsoft\.com$" name="^AuthorizationCookie$" /-->
+	<!--securecookie host="^social\.technet\.microsoft\.com$" name="^CSExtendedAnalytics(Session)?$" /-->
 
 	<!--
 		A, MC1, MS0: Cookies set by c.microsoft.com
@@ -248,6 +299,7 @@
 						-->
 	<securecookie host="^\.microsoft\.com$" name="^(?:A|GsfxStatsLog|MC1|MS0|OnlineTrackingV2\.0|R|RioTracking\..+|s_.+)$" />
 	<securecookie host="^(?:feedback\.adcenter|advertising|advertise\.bingads|choice|commerce|ieonline|m|\.?office|office(?:15client|2010|preview|redir)|corp\.sts|\.?support|\.?www)\.microsoft\.com$" name=".+" />
+	<securecookie host="^social\.technet\.microsoft\.com$" name="^CSExtendedAnalytics(?:Session)?$" />
 	<securecookie host="^www\.office\.com$" name=".+" />
 
 

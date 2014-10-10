@@ -1,0 +1,58 @@
+<!--
+	For problematic rules, see Gemalto.com-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- support *
+
+	* Works; expired 2012-12-06, self-signed, CN: vgerndvud358
+
+
+	Observed cookie domains:
+
+		- boutique ¹
+		- support ²
+		- www ¹
+
+	¹ Secured by us <= not secured by server
+	² Secured in -problematic.xml <= not secured by server & default_off
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- boutique from www ¹
+			- boutique and www from $self ¹
+
+		- favicon on support from $self ²
+
+		- Web bugs, on:
+
+			- boutique and www from fr.sitestat.com ¹
+			- www from content.mkt51.net ¹
+
+	¹ Secured by us
+	² Secured in -problematic.xml <= bad cert
+
+-->
+<ruleset name="Gemalto.com (partial)">
+
+	<target host="gemalto.com" />
+	<target host="*.gemalto.com" />
+		<!--
+			Bad cert:
+					-->
+		<!--exclusion pattern="^http://support\.gemalto\.com/" /-->
+
+
+	<!--	Server doesn't secure:
+					-->
+	<securecookie host="^(?:boutique|www)\.gemalto\.com$" name=".+" />
+
+
+	<rule from="^http://(boutique\.|www\.)?gemalto\.com/"
+		to="https://$1gemalto.com/" />
+
+</ruleset>

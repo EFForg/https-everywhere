@@ -6,19 +6,36 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)
+		- (www.) *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
 		- cdn
+		- static
+
+
+	These altnames don't exist:
+
+		- www.cdn.mediaworks.co.nz
+		- www.static.mediaworks.co.nz
 
 -->
 <ruleset name="MediaWorks (partial)">
 
-	<target host="static.mediaworks.co.nz" />
+	<target host="*.mediaworks.co.nz" />
 
 
-	<securecookie host="^static\.mediaworks\.co\.nz$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cdn\.mediaworks\.co\.nz$" name="^BIGipServercdn\.mediaworks\.co\.nz_pool$" /-->
+
+	<securecookie host="^(?:cdn|static)\.mediaworks\.co\.nz$" name=".+" />
 
 
-	<rule from="^http://static\.mediaworks\.co\.nz/"
-		to="https://static.mediaworks.co.nz/" />
+	<rule from="^http://(cdn|static)\.mediaworks\.co\.nz/"
+		to="https://$1.mediaworks.co.nz/" />
 
 </ruleset>

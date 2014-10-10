@@ -1,0 +1,43 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/fundrazr-platform/
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- business ¹
+		- support ²
+
+	¹ Redirects to http, valid cert
+	² zendesk
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- poweredby
+
+-->
+<ruleset name="FundRazr.com (partial)">
+
+	<target host="fundrazr.com" />
+	<target host="*.fundrazr.com" />
+
+
+	<!--	Some, but not all, secured by server:
+							-->
+	<securecookie host="^(?:www\.)?fundrazr\.com$" name=".+" />
+
+
+	<rule from="^http://(poweredby\.|www\.)?fundrazr\.com/"
+		to="https://$1fundrazr.com/" />
+
+	<!--	Most (all?) other resources loaded from
+		^fndrazr.com or zendesk cdn:
+						-->
+	<rule from="^http://support\.fundrazr\.com/favicon\.ico"
+		to="https://fundrazr.zendesk.com/favicon.ico" />
+
+</ruleset>

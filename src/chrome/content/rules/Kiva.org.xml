@@ -2,6 +2,7 @@
 	CDN buckets:
 
 		- s3.amazonaws.com/cms.kiva.org/
+		- s3.amazonaws.com/media.zip.kiva.org/
 		- s3.amazonaws.com/s3.kiva.org/
 
 		- level3cdn.kiva.org.c.footprint.net
@@ -33,12 +34,21 @@
 
 	Fully covered subdomains:
 
+		- fellowsblog
 		- l3-[12]	(→ www)
 		- level3cdn	(→ www)
 		- mail		(→ mail.google.com)
 		- pages
 		- s3		(→ s3.amazonaws.com)
 		- s3-[12]	(→ s3.amazonaws.com)
+		- zip
+
+
+	Mixed content:
+
+		- images on fellowsblog from pages *
+
+	* Secured by us
 
 -->
 <ruleset name="Kiva.org (partial)">
@@ -48,13 +58,22 @@
 		<exclusion pattern="^http://(?:www\.)?kiva\.org/(?!ajax/|favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)" />
 
 
-	<securecookie host="^\.?pages\.kiva\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^zip\.kiva\.org$" name="^_session_id$" /-->
+
+	<securecookie host="^(?:\.?pages|zip)\.kiva\.org$" name=".+" />
 
 
-	<rule from="^http://(pages\.)?kiva\.org/"
+	<!--	Protocol-relative links from fellowsblog:
+								-->
+	<rule from="^https://cms\.kiva\.org\.s3\.amazonaws\.com/"
+		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org.s3.amazonaws.com/" />
+
+	<rule from="^http://(fellowsblog\.|pages\.)?kiva\.org/"
 		to="https://$1kiva.org/" />
 
-	<rule from="^http://(?:l3-[12]|level3cdn|www)\.kiva\.org/"
+	<rule from="^http://(?:l3-[12]|level3cdn|www|zip)\.kiva\.org/"
 		to="https://www.kiva.org/" />
 
 	<rule from="^http://mail\.kiva\.org/"

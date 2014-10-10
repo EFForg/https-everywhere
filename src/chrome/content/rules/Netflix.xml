@@ -1,55 +1,91 @@
 <!--
+	For problematic rules, see Netflix.com-problematic.xml.
+
+
 	CDN buckets:
 
-		- netflix.hs.llnwd.net/e1/us/
+		- images.netflix.com.edgesuite.net
 
 			- jsapi
+
+		- netflix.gilroystaging.co.uk
+		- netflix.hs.llnwd.net/e1/us/
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- developer ²
+		- ir ³
+		- techblog ¹
+		- ukirelandblog ¹
+
+	¹ Blogger
+	² Mashery
+	³ Shareholder
 
 
 	Problematic subdomains:
 
-		- jsapi	(400; mismatched, CN: *.hs.llnwd.net)
+		- jsapi *
+
+	* Works, akamai
 
 
 	Fully covered subdomains:
 
-		- jsapi		(→ netflix.hs.llnwd.net)
+		- (www.)
+		- account
+		- contactus
+		- help
+		- image
+		- jobs
+		- ncds
+		- secure
+		- signup
+		- www[123]
+
+
+	Mixed content:
+
+		- Images on help from secure *
+
+	* Secured by us
 
 -->
-<ruleset name="Netflix (buggy)" default_off="various things break">
+<ruleset name="Netflix (partial)">
 
 	<target host="netflix.com" />
-	<target host="*.netflix.com" />
+	<target host="account.netflix.com" />
+	<target host="contactus.netflix.com" />
+	<target host="help.netflix.com" />
+	<target host="image.netflix.com" />
+	<target host="jobs.netflix.com" />
+	<target host="ncds.netflix.com" />
+	<target host="secure.netflix.com" />
+	<target host="signup.netflix.com" />
+	<target host="www.netflix.com" />
+	<target host="www1.netflix.com" />
+	<target host="www2.netflix.com" />
+	<target host="www3.netflix.com" />
 		<!--
-			blog, techblog, ukirelandblog:
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://ca\.netflix\.com/($|\?)" /-->
+		<!--exclusion pattern="^http://(blog|ca|developer|ir|techblog|ukirelandblog)\.netflix\.com/" /-->
 
-				- Hosted on Blogger
-				- Shows Google 404 page
 
-			developer:
-
-				- Handled in Mashery-clients.xml
-
-			ir:
-
-				- Cert: *.shareholder.com
-				- Throws 403
-
-			jobs:
-
-				- reset
-
-			-->
-		<exclusion pattern="^http://(blog|developer|ir|jobs|techblog|ukirelandblog)\.netflix\.com/" />
-
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.netflix\.com$" name="^(NetflixId|SID|memclid|tlr|zuulrgn)$" /-->
+	<!--securecookie host="^\.cl\.netflix\.com$" name="^cL$" /-->
+	<!--securecookie host="^\.(contactus|help)\.netflix\.com$" name="^hcVisitorId$" /-->
+	<!--securecookie host="^help\.netflix\.com$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^(contactus|signup)\.netflix\.com$" name=".*" />
 
 
-	<rule from="^http://jsapi\.netflix\.com/"
-		to="https://netflix.hs.llnwd.net/e1/" />
-
-	<rule from="^http://([^/:@\.]+\.)?netflix\.com/"
+	<rule from="^http://((?:account|contactus|help|image|jobs|ncds|secure|signup|www[123]?)\.)?netflix\.com/"
 		to="https://$1netflix.com/" />
 
 </ruleset>

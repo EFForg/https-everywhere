@@ -3,39 +3,49 @@
 
 		- INet-Interactive.xml
 
+
+	Expired 2014-07-20
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+		- favicon  from $self *
+
+		- Bug from s.skimresources.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Overclockers.com (partial)" platform="mixedcontent">
+<ruleset name="Overclockers.com (partial)" default_off="expired" platform="mixedcontent">
 
-	<target host="ocforums.com"/>
-	<target host="www.ocforums.com"/>
-	<target host="overclockers.com"/>
-	<!--	* for cross-domain cookies.	-->
-	<target host="*.overclockers.com"/>
+	<target host="ocforums.com" />
+	<target host="www.ocforums.com" />
+	<target host="overclockers.com" />
+	<target host="*.overclockers.com" />
 
 
-	<!--	Covers:
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.overclockers\.com$" name="^(bbforum_view|bblastactivity|bblastvisit)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.overclockers\.com$" name="^bbsessionhash$" /-->
 
-			- bbforum_view
-			- bblastactivity
-			- bblastvisit
-			- bbsessionhash
-
-	Blanket coverage not included in case there
-	are some cookies needed for article pages.
-							-->
-	<securecookie host="^\.overclockers\.com$" name="^bb\w+$"/>
+	<securecookie host="^\.overclockers\.com$" name=".+" />
 
 
 	<!--	Cert isn't valid for ocforums.com.
 		Server redirects as so.
 					-->
 	<rule from="^http://(?:www\.)ocforums\.com/"
-		to="https://www.overclockers.com/forums/"/>
+		to="https://www.overclockers.com/forums/" />
 
-	<!--	\w+$ redirects to \w+/, so we
-		can't secure articles. =(
-						-->
-	<rule from="^http://(www\.)?overclockers\.com/($|\w+/)"
-		to="https://$1overclockers.com/$2"/>
+	<rule from="^http://(www\.)?overclockers\.com/"
+		to="https://$1overclockers.com/" />
 
 </ruleset>

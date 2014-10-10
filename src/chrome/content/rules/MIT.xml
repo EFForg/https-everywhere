@@ -7,27 +7,39 @@
 		- Touchstone_Network.xml
 
 
+	CDN buckets:
+
+		- d1baxxa0joomi3.cloudfront.net
+		- duqmab81lwd47.cloudfront.net
+		- ocw.mit.edu.edgesuite.net
+
+
 	Nonfunctional mit.edu subdomains:
 
 		- arts *
 		- artscal **
 		- civic		(no https)
+		- connect **
 		- csail		(cert: inquir.csail.mit.edu; handshake fails)
-		- css.csail *
+		- bigdata.csail ***
 		- inquir.csail	(cert: inquir.csail.mit.edu; handshake fails)
-		- www.csail	(handshake_failure)
+		- research.csail ***
 		- development ***
+		- economics	(refused)
 		- events	(interruped)
 		- executive
+		- gambit	(shows default page; self-signed, mismatched, CN: commonname.com)
 		- img		(shows web; mismatched, CN: web.mit.edu)
 		- web.media
 		- mvl		(self-signed, expired; 403)
 		- ocw		(503, Akamai)
 		- scratch	(times out)
+		- ssg		(shows lids; mismatched, CN: lids.mit.edu)
 		- student	(redirects to idp, valid cert)
 		- stuff *
 		- tech		(cert: the-tech.mit.edu; 401)
 		- the-tech	(401)
+		- video *
 		- web ****
 		- xvm ***
 		- websis	(shows student; mismatched, CN: student.mit.edu)
@@ -36,13 +48,14 @@
 	* No https
 	** Times out
 	*** Handshake fails
-	**** Redirects to cert_error/
+	**** "client certificate was invalid or not provided"
 
 
 	Problematic subdomains:
 
 		- 3down		(works, self-signed)
 		- calendar	(works, expired 2013-01-27)
+		- www.csail ³
 		- cluedumps *
 		- hacks *
 		- ideabank	(mismatched, CN: future.mit.edu)
@@ -50,6 +63,7 @@
 		- techblogs	($ works, at least some pages 404, expired, self-signed)
 		- techtime	(mismatched, CN: calendar.mit.edu)
 
+	³ Cert only matches ^foo
 	* Works; mismatched, CN: *.scripts.mit.edu
 
 
@@ -60,6 +74,7 @@
 		- alumsso
 		- athena10
 		- ca
+		- (www.)csail	(www → ^)
 		- pdos.csail
 		- debathena
 		- future
@@ -67,25 +82,50 @@
 		- gsc
 		- ideabank	(→ future)
 		- idp
+		- lids
 		- linerva
 		- immersion.media
 		- mit150
+		- newsoffice
 		- odge
 		- orgchart
 		- pgp
 		- picker
 		- sipb
+		- slice
 		- stellar
+		- techtv
 		- webpub
 		- whereis
 		- wikis
 
 
+	Observed cookie domains:
+
+		. .eecs ¹
+		- lids *
+		- techtv *
+
+	¹ Secured by server
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
 	Mixed image on picker from web
+
+
+		- Images, on:
+
+			- slice from $self *
+		- Image on techtv from duqmab81lwd47.cloudfront.net *
+
+	* Secured by us
 
 -->
 <ruleset name="Massachusetts Institute of Technology (partial)">
 
+	<target host="mit.edu" />
 	<target host="*.mit.edu" />
 	<target host="www.*.mit.edu" />
 	<target host="people.csail.mit.edu" />
@@ -93,7 +133,15 @@
 	<target host="www.mitpressjournals.org" />
 
 
-	<!--	Observed cookie domains:
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.eecs\.mit\.edu$" name="^SSESS[0-9a-f]{32}$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^lids\.mit\.edu$" name="^[0-9a-f]{32}$" /-->
+	<!--
+		Observed cookie domains:
 
 			- alum
 			- .alum
@@ -118,7 +166,7 @@
 			- whereis
 			- wikis
 				-->
-	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|mitpress|scripts|stellar|webpub|wikis).mit\.edu$" name=".*" />
+	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|webpub|wikis).mit\.edu$" name=".*" />
 	<!--securecookie host="^\.alum\.mist\.edu$" name="^S?SESS\w{32}$" /-->
 	<!--securecookie host="^\.future\.mist\.edu$" name="^SSESS\w{32}$" /-->
 	<!--securecookie host="^\.ist\.mist\.edu$" name="^SSESS\w{32}$" /-->
@@ -129,13 +177,13 @@
 	<rule from="^http://mit\.edu/"
 		to="https://mit.edu/" />
 
-	<rule from="^http://(alum|alumsso|athena10|ca|(?:groups|pdos|people)\.csail|debathena|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|linerva|mail|immersion\.media|mit150|odge|orgchart|pgp|picker|(?:www\.|zyan\.)?scripts|sipb|stellar|wayf|webpub|whereis|wikis)\.mit\.edu/"
+	<rule from="^http://(alum|alumsso|athena10|ca|(?:groups|pdos|people)\.csail|debathena|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|lids|linerva|mail|immersion\.media|mit150|newsoffice|odge|orgchart|pgp|picker|(?:www\.|zyan\.)?scripts|sipb|slice|stellar|techtv|wayf|webpub|whereis|wikis)\.mit\.edu/"
 		to="https://$1.mit.edu/" />
 
 	<rule from="^http://ideabank\.mit\.edu/"
 		to="https://future.mit.edu/" />
 
-	<rule from="^https?://(?:www\.)?mitpress\.mit\.edu/"
+	<rule from="^http://(?:www\.)?(csail|mitpress)\.mit\.edu/"
 		to="https://mitpress.mit.edu/" />
 
 	<rule from="^http://scripts\.mit\.edu:444/"

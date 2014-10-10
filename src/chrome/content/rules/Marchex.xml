@@ -2,10 +2,18 @@
 	Nonfunctional domains:
 
 		- (www.)enhance.com
-		- (www.)marchex.com
 
 
 	investors.marchex.com is handled in Thomson-Reuters-clients.xml.
+
+
+	Problematic domains:
+
+		- blog.marchex.com ¹
+		- investors.marchex.com ²
+
+	¹ Works; self-signed, CN: Parallels Panel
+	² Works, akamai
 
 
 	Fully covered domains:
@@ -14,6 +22,29 @@
 
 			- images
 			- shlinks
+
+		- (www.)marchex.com
+		- dcm.marchex.com
+
+		- (www.)voicestar.com	(-> www.marchex.com)
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog.marchex.com and investors.marchex.com from www.marchex.com ¹
+			- investors.marchex.com from phx.corporate-ir.net ¹
+
+		- Images, on:
+
+			- blog.marchex.com from $self ²
+			- investors from media.corporate-ir.net ¹
+
+		- favicon on www.marchex.com from $self ¹
+
+	¹ Secured by us
+	² Not secured by us <= invalid cert
 
 -->
 <ruleset name="Marchex (partial)">
@@ -25,11 +56,20 @@
 		Homepage 302s to http.
 					-->
 		<exclusion pattern="^http://www\.industrybrains\.com/(?:$|\?)" />
-	<target host="ppc.adhere.marchex.com" />
+	<target host="marchex.com" />
+	<target host="*.marchex.com" />
+	<target host="voicestar.com" />
+	<target host="www.voicestar.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dcm\.marchex\.com$" name="^_pfc_ui_session$" /-->
+	<!--securecookie host="^www\.marchex\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^www\.industrybrains\.com$" name=".+" />
 	<securecookie host="^ppc\.adhere\.marchex\.com$" name=".+" />
+	<securecookie host="^(?:dcm|www)\.marchex\.com$" name=".+" />
 
 
 	<rule from="^http://c\.enhance\.com/"
@@ -44,7 +84,12 @@
 	<rule from="^http://(image|jlink|shlink)s\.industrybrains\.com/"
 		to="https://$1s.industrybrains.com/" />
 
-	<rule from="^http://ppc\.adhere\.marchex\.com/"
-		to="https://ppc.adhere.marchex.com/" />
+	<rule from="^http://((?:dcm|ppc\.adhere|www)\.)?marchex\.com/"
+		to="https://$1marchex.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?voicestar\.com/[^?]*"
+		to="https://www.marchex.com/call-tracking/analytics/" />
 
 </ruleset>

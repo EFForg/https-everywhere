@@ -1,0 +1,86 @@
+<!--
+	For other NetDNA coverage, see NetDNA.xml.
+
+
+	CDN buckets:
+
+		- maxcdn.wpengine.netdna-cdn.com
+
+			- maxcdn-wpengine.netdna-ssl.com doesn't exist
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- support ²
+		- tools ³
+
+	¹ wpengine
+	² Revoked
+	³ Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- status ²
+
+	¹ Revoked
+	² StatusPage.io
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cp
+		- rws
+		- secure
+		- secure-cdn
+		- status	(→ maxcdn.statuspage.io)
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="MaxCDN.com (partial)">
+
+	<target host="maxcdn.com" />
+	<target host="*.maxcdn.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(cp|rws)\.maxcdn\.com$" name="^PHPSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^secure(-cdn)?\.maxcdn\.com$" name="^PHPSESSID$" /-->
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.(?:[\w-]\.)?maxcdn\.com$" name="^optimizely\w+$" />
+	<securecookie host="^secure(?:-cdn)?\.maxcdn\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?maxcdn\.com/"
+		to="https://www.maxcdn.com/" />
+
+	<rule from="^http://blog\.maxcdn\.com/wp-content/plugins/lytebox/"
+		to="https://www.maxcdn.com/wp-content/plugins/lytebox/" />
+
+	<rule from="^http://blog\.maxcdn\.com/wp-content/themes/Akdesigner2/"
+		to="https://www.maxcdn.com/wp-content/themes/AKD2/" />
+
+	<rule from="^http://(cp|rws|secure|secure-cdn)\.maxcdn\.com/"
+		to="https://$1.maxcn.com/" />
+
+	<rule from="^http://status\.maxcdn\.com/"
+		to="https://maxcdn.statuspage.io/" />
+
+</ruleset>

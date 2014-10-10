@@ -1,0 +1,44 @@
+<!--
+	CDN buckets:
+
+		- londonist.wpengine.netdna-cdn.com
+
+			- cdn
+
+
+	Problematic subdomains:
+
+		- cdn *
+
+	* 404; mismatched, CN: *.netdna-ssl.com
+
+
+	At least some pages redirect to http.
+
+-->
+<ruleset name="Londonist.com (partial)">
+
+	<target host="londonist.com" />
+	<target host="*.londonist.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://londonist\.com/+($|\?|subscribe$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://londonist\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" /-->
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.londonist\.com$" name="^__qca$" />
+
+
+	<rule from="^http://(www\.)?londonist\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://$1londonist.com/" />
+
+	<rule from="^http://cdn\.londonist\.com/"
+		to="https://londonist.wpengine.com/" />
+
+</ruleset>

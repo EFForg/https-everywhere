@@ -1,14 +1,41 @@
-<ruleset name="LinuxMIPS" platform="cacert">
+<!--
+	Problematic subdomains:
 
-	<target host="linux-mips.org"/>
-	<target host="www.linux-mips.org"/>
+		- cvs *
+
+	* Works; expired 2011-07-10, self-signed, mismatched, CN: eddie.linux-mips.org
 
 
-	<securecookie host="^www\.linux-mips\.org$" name=".*"/>
+	Fully covered subdomains:
+
+		- eddie
+		- ftp
+		- git
+		- mail
+		- marvin
+		- operation-cambridge
+		- patchwork
 
 
-	<!--	!www doesn't work	-->
-	<rule from="^http://(?:www\.)?linux-mips\.org/"
-		to="https://www.linux-mips.org/"/>
+	^linux-mips.org doesn't exist.
+
+
+	Observed cookie domains:
+
+		- operation-cambridge *
+
+	* Secured by us <= not secured by server
+
+-->
+<ruleset name="LinuxMIPS (partial)" platform="cacert">
+
+	<target host="*.linux-mips.org" />
+
+
+	<securecookie host="^(?:operation-cambridge|www)\.linux-mips\.org$" name=".+" />
+
+
+	<rule from="^http://(eddie|ftp|git|mail|marvin|operation-cambridge|patchwork|www)\.linux-mips\.org/"
+		to="https://$1.linux-mips.org/" />
 
 </ruleset>

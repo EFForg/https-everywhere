@@ -1,13 +1,169 @@
 <!--
 	See ExactTarget-mismatches.xml for problematic rules.
 
+	Other ExactTarget rulesets:
+
+		- Fuelcdn.com.xml
+		- IGoDigital.com.xml
+
+
+	CDN buckets:
+
+		- akamai-san1.exacttarget.com.edgekey.net
+
+			- image.s4
+
+		- image.s100.exacttarget.com.edgesuite.net
+
+			- prg-image-dr.global
+
+		- images.s4.exacttarget.com.edgesuite.net
+
+			- images.s4
+
+		- images.s5.exacttarget.com.edgesuite.net
+
+			- image.boa
+
+		- images.s6.exacttarget.com.edgesuite.net
+
+			- prg-image.global
+
+
+	Nonfunctional subdomains:
+
+		- click.poc *
+		- view.virt ²
+
+	* Dropped *
+
+
+	Problematic subdomains:
+
+		- image.boa ¹
+		- prg-image.global ¹
+		- prg-image-dr.global ¹
+		- images.s4 ¹
+		- auth.s5 ²
+		- images.s5 ¹
+		- imh.s5 ³
+
+	¹ Works, akamai
+	² Mismatched, CN: auth.boa.exacttarget.com
+	³ Mismatched, CN: *.boa.exacttarget.com
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- 3sixty
+
+		- auth.boa
+		- click.boa
+		- imh.boa
+		- mc.boa
+
+		- brandcdn
+		- click
+		- email
+		- image
+		- imh
+		- mc
+		- members
+		- nexus
+		- pages
+		- partners
+
+		- auth.poc
+		- imh.poc
+		- mc.poc
+
+		- auth.s1.qa1
+		- imh.s1.qa1
+		- mc.s1.qa1
+		- auth.s2.qa1
+		- imh.s2.qa1
+		- mc.s2.qa1
+
+		- auth.s1.qa2
+		- imh.s1.qa2
+		- mc.s1.qa2
+		- auth.s2.qa2
+		- imh.s2.qa2
+		- mc.s2.qa2
+
+		- imh.s1.qa3
+		- mc.s1.qa3
+
+		- auth.s1
+		- mc.s1
+		- auth.s100
+		- mc.s100
+
+		- auth.s4
+		- click.s4
+		- image.s4
+		- images.s4	(→ image.s4)
+		- imh.s4
+		- mc.s4
+		- members.s4
+
+		- mc.s5
+		- members.s5
+
+		- auth.s6
+		- click.s6
+		- image.s6
+		- imh.s6
+		- mc.s6
+		- members.s6
+
+		- auth.s7
+		- click.s7
+		- image.s7
+		- mc.s7
+		- members.s7
+
+		- auth.s8
+		- click.s8
+		- image.s8
+		- members.s8
+		- mc.s8
+
+		- auth.test
+		- mc.test
+		- members.test
+
+
+	These altnames don't exist:
+
+		- akamai-san1.exacttarget.com
+		- akamai-san4.exacttarget.com
+		- akamai-san5.exacttarget.com
+		- akamai-san6.exacttarget.com
+		- auth.exacttarget.com
+		- auth-san.exacttarget.com
+		- auth.global.exacttarget.com
+		- auth.qa1.exacttarget.com
+		- auth.qa2.exacttarget.com
+		- auth.qa3.exacttarget.com
+		- click.test.exacttarget.com
+
+
+	Mixed content:
+
+		- Images on members.s7 from image.exct.net
+
 -->
-<ruleset name="ExactTarget (partial)" platform="mixedcontent">
+<ruleset name="ExactTarget (partial)">
 
 	<target host="exacttarget.com" />
-	<target host="auth.s1.exacttarget.com" />
 	<target host="*.exacttarget.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^3sixty\.exacttarget\.com$" name="^(\.ASPXANONYMOUS|language)$" /-->
 
 	<securecookie host="^(.*\.)?exacttarget\.com$" name=".*" />
 
@@ -16,7 +172,10 @@
 	<rule from="^http://(?:www\.)?exacttarget\.com/"
 		to="https://www.exacttarget.com/" />
 
-	<rule from="^http://(3sixty|members|nexus|pages|auth\.s1)\.exacttarget\.com/"
+	<rule from="^http://(3sixty|(?:auth|click|imh|mc)\.boa|brandcdn|click|email|image|imh|mc|members|nexus|pages|partners|(?:auth|imh|mc)\.poc|(?:auth|imh|mc)\.s[12]\.qa[123]|(?:auth|mc)\.s1|(?:auth|mc)\.s100|(?:auth|click|image|imh|mc|members)\.s4|(?:mc|members)\.s5|(?:auth|click|image|imh|mc|members)\.s6|(?:auth|click|image|mc|members)\.s7|(?:auth|click|image|mc|members)\.s8|(?:auth|mc|members)\.test)\.exacttarget\.com/"
 		to="https://$1.exacttarget.com/" />
+
+	<rule from="^http://images\.s4\.exacttarget\.com/"
+		to="https://image.s4.exacttarget.com/" />
 
 </ruleset>

@@ -1,0 +1,50 @@
+<!--
+	Other PeopleFluent rulesets:
+
+		- Peopleclick.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- network *
+
+	* wpengine
+
+
+	^: mismatched, CN: *.peopleclick.com
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- customers
+		- idp
+
+
+	These altnames don't exist:
+
+		- www.customers.peoplefluent.com
+		- www.idp.peoplefluent.com
+
+-->
+<ruleset name="PeopleFluent.com (partial)">
+
+	<target host="peoplefluent.com" />
+	<target host="*.peoplefluent.com" />
+		<!--exclusion pattern="^http://network\.peoplefluent\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.peoplefluent\.com$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^\.peoplefluent\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?peoplefluent\.com/"
+		to="https://www.peoplefluent.com/" />
+
+	<rule from="^http://(customers|idp)\.peoplefluent\.com/"
+		to="https://$1.peoplefluent.com/" />
+
+</ruleset>

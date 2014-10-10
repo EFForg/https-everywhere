@@ -1,13 +1,39 @@
-<ruleset name="Fused (partial)">
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- clients
+
+		- s\d+:
+
+			- s7
+			- s1[56]
+
+		- soapbox
+		- support
+
+
+	Mixed content:
+
+		- favicon on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Fused">
 
 	<target host="fused.com" />
 	<target host="*.fused.com" />
 
 
-	<securecookie host="^support\.fused\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^clients\.fused\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^(?:clients|support)\.fused\.com$" name=".+" />
 
 
-	<rule from="^http://((?:s7|s16|support|www)\.)?fused\.com/"
+	<rule from="^http://((?:clients|s\d+|soapbox|support|www)\.)?fused\.com/"
 		to="https://$1fused.com/" />
 
 </ruleset>

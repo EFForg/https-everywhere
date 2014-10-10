@@ -1,0 +1,59 @@
+<!--
+	CDN buckets:
+
+		- d2z2eomnanw2yj.cloudfront.net
+
+			- www
+
+		- d3aaj1j1egndck.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- check *
+		- new *
+		- resources *
+
+	* Shows affiliate
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- support ²
+		- www ³
+
+	¹ Interrupted
+	² desk.com
+	³ cloudfront
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- support ²
+
+	¹ → d2z2eomnanw2yj.cloudfront.net, avoiding user-visible paths
+	² → unblock.desk.com
+
+-->
+<ruleset name="Unblock-Us.com (partial)">
+
+	<target host="*.unblock-us.com" />
+
+
+	<!--	Server doesn't set Secure for:
+						-->
+	<securecookie host="^(?:affiliate|portal)\.unblock-us\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?unblock-us\.com/(?=css/|favicon\.ico|images/)"
+		to="https://d2z2eomnanw2yj.cloudfront.net/" />
+
+	<rule from="^http://(affiliate|portal)\.unblock-us\.com/"
+		to="https://$1.unblock-us.com/" />
+
+	<rule from="^http://support\.unblock-us\.com/favicon\.ico"
+		to="https://unblock.desk.com/favicon.ico" />
+
+</ruleset>

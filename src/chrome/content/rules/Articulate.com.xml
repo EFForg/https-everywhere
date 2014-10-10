@@ -1,0 +1,53 @@
+<!--
+	For rules causing false/broken MCB, see Articulate.com-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- community *
+
+	* 404, valid cert
+
+
+	^: refused
+
+
+	Mixed content:
+
+		- css, from www:
+
+			- $self ¹
+			- fonts.googleapis.com ¹
+
+		- Images, from www:
+
+			- $self ¹
+			- community ²
+			- pbs.twimg.com ¹
+
+	¹ Secured by us
+	² Unsecurable
+
+-->
+<ruleset name="Articulate.com (partial)">
+
+	<target host="articulate.com" />
+	<target host="*.articulate.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="http://(www\.)?articulate\.com/+(?!blog/wp-content/|blog/wp-includes/|favicon\.ico|images/|javascripts/|stylesheets/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.?store\.articulate\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?articulate\.com/(?=blog/wp-(?:content|includes)/|favicon\.ico|images/|javascripts/|stylesheets/)"
+		to="https://www.articulate.com/" />
+
+	<rule from="^http://store\.articulate\.com/"
+		to="https://store.articulate.com/" />
+
+</ruleset>

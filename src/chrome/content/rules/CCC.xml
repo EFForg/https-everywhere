@@ -1,14 +1,19 @@
 <!--
 	Problematic subdomains:
 
-		- ^			(cert only matches www)
-		- chaosradio *
-		- blog.chaosradio *
-		- dasalte		(revoked)
-		- ds			(different data)
-		- static.media		(works; mismatched, CN: media.koeln.ccc.de)
+		- ^ ¹
+		- chaosradio ²
+		- blog.chaosradio ²
+		- dasalte ³
+		- ds ⁴
+		- berlin.ftp.media ⁵
+		- static.media ⁵
 
-	* Works; mismatched, CN: wiki.chaosradio.ccc.de
+	¹ Cert only matches www
+	² Works; mismatched, CN: wiki.chaosradio.ccc.de
+	³ Revoked
+	⁴ Different data
+	⁵ Works; mismatched, CN: media.koeln.ccc.de
 
 -->
 <ruleset name="ccc.de (CAcert)" platform="cacert">
@@ -16,6 +21,9 @@
 	<target host="ccc.de" />
 	<target host="*.ccc.de" />
 		<exclusion pattern="^http://(?:(?:blog\.)?chaosradio|desalte|ds)\.ccc\.de/" />
+
+
+	<securecookie host="^svn\.berlin\.ccc\.de$" name=".+" />
 
 
 	<rule from="^http://ccc\.de/"

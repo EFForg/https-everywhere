@@ -1,17 +1,45 @@
 <!--
 	For other Epic Games coverage, see Epic_Games.xml.
 
+
+	CDN buckets:
+
+		- d26ilriwvtzlb.cloudfront.net
+		- de45xmedrsdbp.cloudfront.net
+
+
+	Mixed content:
+
+		- Web bugs, on:
+
+			- docs from www.google.com *
+			- forums from mystatus.skype.com
+
+	* Secured by us
+
 -->
 <ruleset name="Unreal Engine">
 
 	<target host="unrealengine.com" />
-	<target host="www.unrealengine.com" />
+	<target host="*.unrealengine.com" />
 
 
-	<securecookie host="^(?:www\.)?unrealengine\.com$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^answers\.unrealengine\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^wiki\.unrealengine\.com$" name="^my_wiki_session$" /-->
+	<!--securecookie host="^www\.unrealengine\.com$" name="^EPIC_COOKIE$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^answers\.unrealengine\.com$" name="^(AWSELB|TH_CSRF)$" /-->
+	<!--securecookie host="^forums\.unrealengine\.com$" name="^(AWSELB|bb_lastactivity|bb_lastvisit|bb_sessionhash)$" /-->
+	<!--securecookie host="^(wiki|www)\.unrealengine\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:(?:answers|forums|wiki|www)\.)?unrealengine\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?unrealengine\.com/"
+	<rule from="^http://((?:answers|docs|forums|wiki|www)\.)?unrealengine\.com/"
 		to="https://$1unrealengine.com/" />
 
 </ruleset>
