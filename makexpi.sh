@@ -90,7 +90,7 @@ if [ "$1" != "--fast" ] ; then
     echo >&2
   else
     die "Validation of rulesets failed."
-  fi &
+  fi
 
   # Check for xmllint.
   type xmllint >/dev/null || die "xmllint not available"
@@ -108,7 +108,6 @@ if [ "$1" != "--fast" ] ; then
     }
     if validate_grammar 2>/dev/null
     then
-      wait;
       echo Validation of rulesets against $GRAMMAR succeeded. >&2
     else
       validate_grammar 2>&1 | grep -v validates
