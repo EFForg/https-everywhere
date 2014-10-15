@@ -2,26 +2,51 @@
 	For domains causing false/broken MCB, see Focus.de-mixedcontent.xml.
 
 
+	CDN buckets:
+
+		- prog.focus.de.edgesuite.net
+
+			- p[45]
+
+		- focus-online.webshopapp.com
+
+			- pdf
+
+
 	Nonfunctional subdomains:
 
-		- festgeld
-		- images.fragen
-		- tagesgeld
-		- unternehmen
-		- wetter
+		- festgeld ¹
+		- images.fragen ¹
+		- gutscheine ¹
+		- medipreis ²
+		- onlinespiele ¹
+		- stellenangebote ¹
+		- tagesgeld ¹
+		- unternehmen ¹
+
+	¹ Refused
+	² Redirects to www.medipreis.de
 
 
 	Problematic subdomains:
 
-		- ^		(cert only matches *.focus.de)
 		- bausparen	(works, mismatched, CN: rechner.fmh.de)
 		- p4		(akamai)
+		- p5 ²
+		- pdf ³
 		- strompreise	(works, mismatched, CN: partner.vxcp.de)
+		- wetter ⁵
+
+	² Akamai
+	³ Mismatched, CN: *.webshopapp.com
+	⁵ Mismatched, CN: *.wetter.com
 
 
 	Mixed content:
 
 		- css on m from $self *
+
+		- Ad on wetter from partnervermittlung.elitepartner.de *
 
 	* Secured by us
 
@@ -36,6 +61,10 @@
 		<exclusion pattern="^http://m\.focus\.de/+(?!favicon\.ico|resources/)" />
 	<target host="*.tfag.de"/>
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pdf\.focus\.de$" name="^session_id$" /-->
 
 	<!--securecookie host="^(?:www)?\.focus\.de$" name=".+" /-->
 
