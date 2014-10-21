@@ -1,33 +1,48 @@
 <!--
 	Nonfunctional subdomains:
 
-		- autodiscover *
+		- autodiscover ¹
 		- blog
-		- owa *
-		- recruiting
-		- web		(redirects to app-a.marketo.com; mismatched, CN: *.marketo.com)
+		- owa ¹
+		- web ³
 
-	* Data differ between http & https
+	¹ Data differ between http & https
+	³ Marketo
+
+
+	These altnames don't exist:
+
+		- jvi-exc01.corp.jobvite.com
+		- www.owa.jobvite-inc.com
 
 -->
 <ruleset name="Jobvite (partial)">
 
 	<target host="jobvite.com" />
 	<target host="*.jobvite.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.jobvite\.com/($|\?sccss=1&amp;ver=3\.9\.2|contact-us/|support/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.jobvite\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^(?!hire(?:-stg)?\.)(?:.+\.)?jobvite\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.jobvite\.com$" name="^server$" /-->
+	<!--securecookie host="^hire\.jobvite\.com$" name="^(ASP\.NET_SessionId|AWSELB|guestidc)$" /-->
+	<!--securecookie host="^hire-stg.jobvite.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?:.+\.)?jobvite\.com$" name=".*" />
 
 
-	<rule from="^http://((?:careers|demo|search|source|source-stg|www|www-stg)\.)?jobvite\.com/"
+	<rule from="^http://((?:careers|demo|hire|hire-stg|recruiting|search|source|source-stg|www|www-stg)\.)?jobvite\.com/"
 		to="https://$1jobvite.com/" />
 
-	<!--	Some pages 302 to http.
-							-->
-	<rule from="^http://hire(-stg)?\.jobvite\.com/([\w/]+\.css$|CompanyJobs/Careers\.aspx|favicon\.ico|images2/|Login/|logo/)"
-		to="https://hire$1.jobvite.com/$2" />
-
-	<rule from="^https?://web\.jobvite\.com/(cs|image|rs)s/"
-		to="https://na-a.marketo.com/$1s/" />
+	<rule from="^http://web\.jobvite\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-a.marketo.com/" />
 
 </ruleset>

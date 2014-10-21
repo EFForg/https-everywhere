@@ -1,6 +1,50 @@
-<ruleset name="Xtube.com">
+<!--
+	CDN buckets:
+
+		- cdn1.static.xtube.com.swiftcdn1.com
+
+
+	Nonfunctional subdomains:
+
+		- mobile ¹
+		- cdn1.static ²
+		- support ¹
+
+	¹ Refused
+	² Dropped
+
+
+	Problematic subdomains:
+
+		- feedback *
+
+	* Uservoice
+
+
+	Mixed content:
+
+		- css from cdn1.static *
+
+		- Images from cdn1.static *
+
+	* Secured by us
+
+-->
+<ruleset name="Xtube.com" platform="mixedcontent">
   <target host="xtube.com" />
   <target host="www.xtube.com" />
 
-  <rule from="^http://(www\.)?xtube\.com/" to="https://www.xtube.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?xtube\.com$" name="^RNLBSERVERID$" /-->
+	<!--securecookie host="^\.xtube\.com$" name="^(IM_NUM|PHPSESSID|is_really_pc|split)$" /-->
+	<!--securecookie host="^feedback\.xtube\.com$" name="^(_session_id|_rf)$" /-->
+
+	<securecookie host="^(?:www\.)?xtube\.com$" name=".+" />
+
+
+  <rule from="^http://(www\.)?xtube\.com/" to="https://$1xtube.com/" />
+
+	<rule from="^http://cdn\.static\.xtube\.com/(?=img/|newcss/|newjs/)"
+		to="https://www.xtube.com/" />
 </ruleset>

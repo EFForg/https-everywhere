@@ -1,29 +1,31 @@
 <!--
-	Partially covered subdomains:
-
-		- marketplace	(some pages redirect to http)
-
-
 	Fully covered subdomains:
 
 		- (www.)
 		- ads
+		- cdn\d*:
+
+			- cdn10
+
+		- marketplace
 
 -->
-<ruleset name="TrafficJunky (partial)">
+<ruleset name="TrafficJunky">
 
 	<target host="trafficjunky.net" />
 	<target host="*.trafficjunky.net" />
-		<!--exclusion pattern="^http://marketplace\.trafficjunky\.net/+($|\?|(about-us|advertisers|contact-us|home|mobile|networks|privacy-policy|publishers|rules-and-regulations|sitemap|terms-of-use)($|[?/]))" /-->
-		<exclusion pattern="^http://marketplace\.trafficjunky\.net/+(?!bundles/|favicon\.ico|(?:member|signin|signup)(?:$|[?/]))" />
 
 
-	<securecookie host="^www\.trafficjunky\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^marketplace\.trafficjunky\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:marketplace|www)\.trafficjunky\.net$" name=".+" />
 
 
 	<!--	ads: included on 3rd-party websites.
 							-->
-	<rule from="^http://((?:ads|marketplace|www)\.)?trafficjunky\.net/"
+	<rule from="^http://((?:ads|cdn\d*|marketplace|www)\.)?trafficjunky\.net/"
 		to="https://$1trafficjunky.net/" />
 
 </ruleset>

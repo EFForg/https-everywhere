@@ -9,6 +9,7 @@ let WARN=5;
 // PREFERENCE BRANCHES
 let PREFBRANCH_ROOT=0;
 let PREFBRANCH_RULE_TOGGLE=1;
+let PREFBRANCH_NONE=2;
 
 // maps domain patterns (with at most one  wildcard) to RuleSets
 let https_domains = {};
@@ -189,6 +190,11 @@ function HTTPSEverywhere() {
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
+
+  // Disable SSLv3 to prevent POODLE attack.
+  // https://www.imperialviolet.org/2014/10/14/poodle.html
+  var root_prefs = this.get_prefs(PREFBRANCH_NONE);
+  root_prefs.setIntPref("security.tls.version.min", 1);
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
@@ -736,8 +742,10 @@ HTTPSEverywhere.prototype = {
     // get our preferences branch object
     // FIXME: Ugly hack stolen from https
     var branch_name;
-    if(prefBranch == PREFBRANCH_RULE_TOGGLE)
+    if(prefBranch === PREFBRANCH_RULE_TOGGLE)
       branch_name = "extensions.https_everywhere.rule_toggle.";
+    else if (prefBranch === PREFBRANCH_NONE)
+      branch_name = "";
     else
       branch_name = "extensions.https_everywhere.";
     var o_prefs = false;

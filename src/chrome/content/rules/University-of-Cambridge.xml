@@ -4,28 +4,54 @@
 
 	Nonfunctional subdomains:
 
-		- news.admin	(shows www.admin; mismatched, CN: www.admin.cam.ac.uk)
-		- my.alumni *
-		- www.lib
-		- www.mrc-lmb	(https breaks styling; expired, self-signed)
-		- www.sports
-		- www.ucs	(redirects to shib.raven, valid cert)
-		- www
-		- www.zoo	(dropped)
+		- (www.) ¹
+		- www.environment.admin ²
+		- news.admin ³
+		- my.alumni ⁴
+		- www.mbone.cl ⁵
+		- ceid.educ ⁶
 
-	* Dropped
+		- www.eng ⁷
+		- www2.eng ⁴
+		- www-g.eng ⁴
+		- www-h.eng ⁴
+		- www-sigproc.eng ⁴
+		- www-womeninengineering.eng ⁸
+
+		- www.lib ⁹
+		- search.lib ⁴
+		- admin.map ᵃ
+		- preview.map ᵃ
+		- www.sports
+		- talks ᵃ
+		- www.ucs ⁸
+		- www.zoo ⁴
+
+	¹ Redirects to http, valid cert
+	² Reset; mismatched, CN: www.cam.ac.uk
+	³ Shows www.admin; mismatched, CN: www.admin.cam.ac.uk
+	⁴ Dropped
+	⁵ Shows CentOS test page, valid cert
+	⁶ Redirects to www-new; mismatched, CN: skinnerweb.educ.cam.ac.uk
+	⁷ Shows CentOS test page, CN: drupal1-vm
+	⁸ Redirects to shib.raven, valid cert
+	⁹ 403, valid cert
+	ᵃ Refused
 
 
 	Problematic subdomains:
 
-		- alumni *
-		- damtp		(cert only matches www.damtp)
-		- www.jobs **
-		- www.philanthropy **
-		- www.study	(works; mismatched, CN: www.admin.cam.ac.uk)
+		- www.epe.admin ¹
+		- alumni ²
+		- damtp ²
+		- www.jobs ¹
+		- www.mrc-lmb ³
+		- www.philanthropy ¹
+		- www.study ¹
 
-	* Cert only matches www.foo
-	** Works; mismatched, CN: www.admin.cam.ac.uk
+	¹ Works; mismatched, CN: www.admin.cam.ac.uk
+	² Cert only matches www.foo
+	³ https breaks styling; expired, self-signed
 
 
 	Partially covered subdomains:
@@ -35,14 +61,34 @@
 
 	Fully covered subdomains:
 
+		- hrsystems.admin
+		- sales.admin
 		- webservices.admin
 		- www.admin
+
 		- (www.)alumni		(^ → www)
+		- www.campaign
+		- sysdata.cl
 		- www.cl
+
+		- jotter.educ
+		- thinkingtogether.educ
+		- www.educ
+		- www-new.educ
+
+		- www.ice
+		- map
 		- www2.mrc-lmb
 		- raven
 		- shib.raven
+		- search
+		- api.search
 		- www.wolfson
+
+
+	These altnames don't exist:
+
+		- www.ftp.cl.cam.ac.uk
 
 
 	Observed cookie domains:
@@ -51,16 +97,50 @@
 		- shib.raven
 		- www.study
 
+
+	Mixed content:
+
+		- css, on:
+
+			- www3.eng from www.eng ¹
+			- www.study from www ²
+
+		- Images, on:
+
+			- www.admin from www ²
+			- www.educ from $self ³
+			- www3.eng from www.eng ¹
+			- www.study from $self ⁴
+
+		- favicon on www3.eng from www.eng ¹
+
+	¹ Unsecurable <= test page
+	² Unsecurable <= redirect to http
+	³ Secured by us
+	⁴ Not secured by us <= mismatched
+
 -->
 <ruleset name="University of Cambridge (partial)">
 
 	<target host="*.cam.ac.uk" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?cam\.ac\.uk/(profiles/cam/themes/cam/assets/images/|site/accessibility/|sites/www\.cam\.ac\.uk/files/)" /-->
 
 
-	<securecookie host="^www\.a(?:dmin|lumni)\.cam\.ac\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^sysdata\.cl\.cam\.ac\.uk$" name="^Ucam-WebAuth-Session$" /-->
+	<!--securecookie host="^www\.educ\.cam\.ac\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^hrsystems\.admin\.cam\.ac\.uk$" name="^(JSESSIONID|X-Mapping-\w+)$" /-->
+	<!--securecookie host="^(www\.epe\.admin|webservices\.admin|www\.admin|www\.jobs|www\.study)\.cam\.ac\.uk$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^www\.ice\.cam\.ac\.uk$" name="^[0-9a-f]{32}$" /-->
+
+	<securecookie host="^(?:(?:hrsystems|webservices)\.admin|www\.a(?:dmin|lumni)|www\.educ|sysdata\.cl|www\.ice)\.cam\.ac\.uk$" name=".+" />
 
 
-	<rule from="^http://(webservices\.admin|www2\.mrc-lmb|(?:shib\.)?raven|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
+	<rule from="^http://((?:hrsystems|sales|webservices|www)\.admin|www\.campaign|sysdata\.cl|(?:jotter|thinkingtogether|www|www-new)\.educ|www\.ice|map|www2\.mrc-lmb|(?:shib\.)?raven|search|api\.search|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
 		to="https://$1.cam.ac.uk/" />
 
 	<rule from="^http://(?:www\.)?alumni\.cam\.ac\.uk/"

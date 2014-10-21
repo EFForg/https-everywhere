@@ -1,7 +1,137 @@
+<!--
+	Nonfunctional subdomains:
+
+		- classes ¹
+		- economics ²
+		- envs ³
+		- global ²
+		- map ¹
+		- pages ¹
+		- physiology ²
+		- uocatalog ¹
+
+	¹ Refused
+	² Shows CentOS test page
+	³ Redirects to http
+
+
+	Problematic subdomains:
+
+		- caspages ¹
+		- cheminfo ¹
+		- chemistry ¹
+		- crwr ¹
+		- duckweb ²
+		- geography ¹
+		- homelessness.philosophy ¹
+		- physics ¹
+		- (www.)registrar ³
+		- rl ¹
+		- religion ¹
+
+	¹ Mismatched, CN: blogs.uoregon.edu
+	² Configured for rc4 only
+	³ Mismatched, CN: secureserver.uoregon.edu; mixed css
+
+
+	Partially covered subdomains:
+
+		- ba
+		- parking
+		- safetyweb
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blogs
+		- casadmin
+		- casit
+		- casitdocs
+		- casitforms
+		- casitjobs
+		- casitweb
+		- cinema
+		- videos.cinema
+		- duckweb
+		- english
+		- geogadvising
+		- gradschool
+		- gradweb
+		- inventory
+		- secureserver
+		- shibboleth
+
+
+	Insecure cookies are set for these domains:
+
+		- ^
+		- .
+		- blogs
+		- .casadmin
+		- casitforms
+		- caspages
+		- cheminfo
+		- chemistry
+		- crwr
+		- duckweb
+		- geogadvising
+		- .geogadvising
+		- geography
+		- gradschool
+		- gradweb
+		- inventory
+		- it
+		- .it
+		- homelessness.philosophy
+		- physics
+		- religion
+		- rl
+		- www
+
+
+	Mixed content:
+
+		- css, on:
+
+			- cheminfo from fonts.googleapis.com ¹
+			- registrar from $self ²
+
+		- Images, on:
+
+			- ^ from $self ¹
+			- blogs, chemistry, geography, homelessness.philosophy from blogs ¹
+			- cinema from $self ¹
+			- english from $self ¹
+			- cheminfo, geography, it, and rl from it ¹
+			- gradschool from $self ¹
+			- registrar from $self ²
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
 <ruleset name="UOregon (Partial!)">
+	<target host="uoregon.edu" />
   <target host="*.uoregon.edu" />
-  <rule from="^http://(oregoncis|blackboard|distanceeducation|counseling|duckweb|hr2|ir|it|pcs|budgetmotel|brp|libweb|lcb|odt|scholarsbank|wiki|systems\.cs|www2\.lcb|www\.(cs|law|lcb))\.uoregon\.edu/"
-          to="https://$1.uoregon.edu/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?uoregon\.edu$" name="^wc-www_cookie$" /-->
+	<!--securecookie host="^\.(casadmin\.|geogadvising\.)?uoregon\.edu$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^(blogs|caspages|cheminfo|chemistry|crwr|geography|homelessness\.philosophy|physics|religion|rl)\.uoregon\.edu$" name="^(spo_\d+_\w+|xid)$" /-->
+	<!--securecookie host="^casitforms\.uoregon\.edu$" name="^(_shibstate_\d+_[0-9a-f]+|uo_drupal_prod_session)$" /-->
+	<!--securecookie host="^(casitjobs|geogadvising|gradschool|inventory)\.uoregon\.edu$" name="^uo_drupal_prod_session$" /-->
+	<!--securecookie host="^crwr\.uoregon\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^duckweb\.uoregon\.edu$" name="^TESTID$" /-->
+	<!--securecookie host="^gradweb\.uoregon\.edu$" name="ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^it\.uoregon\.edu$" name="^(UUID|uo_sticky_session)$" /-->
+	<!--securecookie host="^\.it\.uoregon\.edu$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^(?:(?:blogs|\.casadmin|\.?geogadvising|gradschool|gradweb|inventory|it|www)\.)?uoregon\.edu$" name=".+" />
+
+  <rule from="^http://((?:oregoncis|blackboard|blogs|casadmin|casit(?:docs|forms|jobs|web)?|(?:videos\.)?cinema|distanceeducation|counseling|duckweb|english|geogadvising|gradschool|gradweb|hr2|inventory|ir|it|pcs|budgetmotel|brp|libweb|lcb|odt|scholarsbank|secureserver|shibboleth|wiki|systems\.cs|www2\.lcb|www\.(cs|law|lcb))\.)?uoregon\.edu/"
+          to="https://$1uoregon.edu/"/>
   <rule from="^http://(ba|safetyweb)\.uoregon\.edu/sites/"
           to="https://$1.uoregon.edu/sites/"/>
   <rule from="^http://parking\.uoregon\.edu/(sites|misc|_images)/"

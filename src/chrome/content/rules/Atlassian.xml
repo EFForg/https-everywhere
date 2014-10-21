@@ -29,22 +29,20 @@
 	* Secured by us
 
 -->
-<ruleset name="Atlassian">
+<ruleset name="Atlassian (partial)">
 
 	<target host="atlassian.com" />
 	<target host="*.atlassian.com" />
-	<target host="*.extranet.atlassian.com" />
+		<exclusion pattern="http://click\.mailer\.atlassian\.com/" />
+		<!--
+			Added by Atlassian:
+						-->
+		<exclusion pattern="^http://.+\.(?:ams|dyn\.syd|inf|internal|sf)\.atlassian\.com/" />
 	<target host="atlassian.wpengine.netdna-cdn.com" />
 
-	<exclusion pattern="http://click\.mailer\.atlassian\.com/" />
-	<exclusion pattern="^http://(.*\.)(?:ams|dyn\.syd|inf|internal|sf)\.atlassian\.com" />
 
 	<securecookie host="^(?:ace|answers|aug|confluence|developer|id|jira|marketplace|my|openid|support)\.atlassian\.com$" name=".+" />
 
-
-	<!--	!www 404s	-->
-	<rule from="^http://(?:www\.)?atlassian\.com/"
-		to="https://www.atlassian.com/"/>
 
 	<rule from="^http://status\.atlassian\.com/"
 		to="https://atlassian.statuspage.io/" />
@@ -69,10 +67,9 @@
 			- studio
 			- summit
 			- support
-
-		There doesn't appear to be any unsupported domains.	-->
-	<rule from="^http://([\w\.]+)\.atlassian\.com/"
-		to="https://$1.atlassian.com/" />
+					-->
+	<rule from="^http://([\w.]+\.)?atlassian\.com/"
+		to="https://$1atlassian.com/" />
 
 	<!--	Cert: *.userzoom.com
 		/$ 403s, rest 404s.	-->

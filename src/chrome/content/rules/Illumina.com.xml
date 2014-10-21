@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional subdomains:
+
+		- designstudio *
+		- support *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		res ²
+
+	¹ Mismatched, CN: *.azurewebsites.net
+	² Mismatched, CN: *.vo.msecnd.net
+
+
+	Insecure cookies are set for these domains:
+
+		- my
+		- www
+		- .www
+
+
+	Mixed content:
+
+		- css on www from fast.fonts.com ¹
+		- Images on www from res ²
+		- favicon from res ²
+		- Bug on www from $self ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
+<ruleset name="Illumina.com (partial)">
+
+	<target host="illumina.com" />
+	<target host="*.illumina.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.illumina\.com$" name="^icb$" /-->
+	<!--securecookie host="^www\.illumina\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.www\.illumina\.com$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^(?:my|\.?www)\.illumina\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?illumina\.com/"
+		to="https://www.illumina.com/" />
+
+	<rule from="^http://(developer\.basespace|my)\.illumina\.com/"
+		to="https://$1.illumina.com/" />
+
+</ruleset>

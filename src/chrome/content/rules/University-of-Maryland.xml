@@ -1,16 +1,77 @@
 <!--
+	CDN buckets:
+
+		- s3.amazonaws.com/wrapper.umd.edu/
+
+
+	Nonfunctional subdomains:
+
+		- agnr ¹
+		- alumni ¹
+		- (www.)president *
+
+	¹ Dropped
+	² Redirects to www; mismatched, CN: umd.edu
+
+
 	Partially covered subdomains:
 
-		- terpconnect	(some data differ from http)
+		- (www.)provost ¹
+		- terpconnect ²
+
+	¹ Avoiding broken MCB
+	² Some data differ from http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)arch
+		- carma.astro
+		- (www.)eng
+		- (www.)it
+
+
+	Insecure cookies are set for these domains:
+
+		- (www.)provost
+
+
+	Mixed content:
+
+		- css on www.provost from $self *
+
+		- Images, on:
+
+			- (www.)provost from $self *
+			- www from s3.amazonaws.com *
+
+	* Secured by us
 
 -->
 <ruleset name="University of Maryland (partial)">
 
+	<target host="umd.edu" />
 	<target host="*.umd.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.provost\.umd\.edu/+(?!favicon\.ico|images/|includes/|masthead\.jpg|photos/|resources/)" />
 		<exclusion pattern="^http://terpconnect\.umd\.edu/(?!~)" />
 
 
-	<rule from="^http://(carma\.astro|(?:www\.)?eng|terpconnect)\.umd\.edu/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?provost\.umd\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+
+	<!--	Domains for which both !www and www
+		exist, and both are unproblematic:
+							-->
+	<rule from="^http://(www\.)((?:arch|eng|it|provost)\.)?umd\.edu/"
+		to="https://$1$2umd.edu/" />
+
+	<rule from="^http://(carma\.astro|terpconnect)\.umd\.edu/"
 		to="https://$1.umd.edu/" />
 
 </ruleset>

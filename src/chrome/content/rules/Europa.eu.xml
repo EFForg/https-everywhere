@@ -1,25 +1,31 @@
 <!--
-	Almost everything on europa.eu is missconfigured. but there are some exceptions.
+	Almost everything on europa.eu is missconfigured, but there are some exceptions.
 
 
 	Nonfunctional subdomains:
 
-		- ^	(403, valid cert)
+		- ^ ¹
 		- curia ¹
-		- ec	(403)
+		- ec ³
 		- eacea.ec ²
-		- eur-lex	(shows ^; mismatched, CN: europa.eu)
-		- www.europarl *
-		- (www.)ombudsman	(times out)
+		- trade.ec ⁴
+		- eur-lex ⁵
+		- www.europarl ⁶
+		- (www.)ombudsman ⁶
 
 	¹ 403, valid cert
 	² Redirect to http, valid cert
-	* Dropped
+	³ 403
+	⁴ 403; mismatched, CN: europa.eu
+	⁵ Shows ^; mismatched, CN: europa.eu
+	⁶ Dropped
 
 
 	Partially covered subdomains:
 
-		- cordis	(some pages redirect to http)
+		- cordis *
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -41,8 +47,8 @@
 	<target host="*.europa.eu" />
 		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
 		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
+		<exclusion pattern="^https://oami\.europa\.eu/knowledge/" />
 
-		<exclusion pattern="^https://oami\.europa\.eu/knowledge/"/>
 
 	<!--securecookie host="^\.europol\.europa\.eu$" name="^SESS\w32$" /-->
 
@@ -50,17 +56,10 @@
 	<rule from="^http://www\.ecb(?:\.europa)?\.eu/"
 		to="https://www.ecb.europa.eu/" />
 
-	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
-		to="https://www.consilium.europa.eu/" />
+	<rule from="^http://(?:www\.)?(consilium|easa|enisa)\.europa\.eu/"
+		to="https://www.$1.europa.eu/" />
 
-	<rule from="^http://(cordis|joinup\.ec|(?:www\.)?enisa|www\.europol)\.europa\.eu/"
+	<rule from="^http://(cordis|joinup\.ec|(?:www\.)?enisa|www\.europol|oami)\.europa\.eu/"
 		to="https://$1.europa.eu/" />
 
-    <rule from="^http://(?:www\.)?easa\.europa\.eu/"
-        to="https://www.easa.europa.eu/" />
-
-    <rule from="^https?://(?:www\.)?enisa\.europa\.eu/"
-        to="https://www.enisa.europa.eu/" />
-
-    <rule from="^http://oami\.europa\.eu/" to="https://oami.europa.eu/" />
 </ruleset>

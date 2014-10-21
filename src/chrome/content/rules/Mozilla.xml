@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see Mozilla-problematic.xml.
+
+
 	Other Mozilla rulesets:
 
 		- Allizom.org.xml
@@ -71,6 +74,8 @@
 	Problematic domains:
 
 		- labs.mozilla.com ¹
+        - *.phish-report.mozilla.com (mismatched)
+		- status.mozilla.com *
 
 		- mozilla.net subdomains:
 
@@ -89,6 +94,7 @@
 			- talkback-public ⁴
 
 	¹ Refused
+	* Mismatched, CN: status.io.watchmouse.com
 	² 404; mismatched, CN: gp1.wac.edgecastcdn.net
 	³ Works; mismatched, CN: gp1.wac.edgecastcdn.net
 	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
@@ -129,6 +135,8 @@
 				- auth
 				- location
 				- setup
+				- tiles
+				- tracking
 
 			- snippets
 			- support
@@ -165,6 +173,7 @@
 			- addons subdomains:
 
 				- ^
+				- blocklist
 				- forums
 				- pyrepo
 				- services
@@ -274,6 +283,7 @@
 
 		- Images, on:
 
+			- status.mozilla.com from wmpsp.s3.amazonaws.com *
 			- hardhat.cdn.mozilla.net from www.mozilla.org *
 			- blog.mozilla.org from $self *
 			- www.mozilla.org from www.seamonkey-project.org
@@ -289,7 +299,8 @@
 	<target host="www.drumbeat.org" />
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
-		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|www-trunk\.stage)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|www-trunk\.stage|status)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:[\w\.-]+\.)?phish-report\.mozilla\.com/" />
 	<target host="*.mozilla.net" />
 		<exclusion pattern="^http://(?:cdn|hardhat)\.mozilla\.net/" />
 	<target host="mozilla.org" />
@@ -314,6 +325,7 @@
 					-->
 	<!--securecookie host="^addons\.mozilla\.org$" name="^(apps/files/tabstops|multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
 	<!--securecookie host="^bugzilla\.mozilla\.org$" name="^(BUGLIST|LASTORDER)$" /-->
+	<!--securecookie host="^\.sendto\.mozilla\.org$" name="^X-CheckNode$" /-->
 	<!--securecookie host="^support\.mozilla\.org$" name="^dwf_surveygizmo$" /-->
 	<!--securecookie host="^telemetry-dash\.mozilla\.org$" name="^session$" /-->
 

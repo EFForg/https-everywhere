@@ -1,12 +1,28 @@
+<!--
+	^: mismatched, CN: www2.costco.com
+
+
+	These altnames don't exist:
+
+		- www.www2.costco.com
+
+-->
 <ruleset name="Costco">
 
 	<target host="costco.com"/>
 	<target host="*.costco.com"/>
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="www\.costco\.com$" name="^(JSESSIONID|WC_PERSISTENT)$" /-->
+
 	<securecookie host="^(.*\.)?costco\.com$" name=".*"/>
 
-	<rule from="^http://(shop\.|www\.)?costco\.com/"
-		to="https://$1costco.com/"/>
+	<rule from="^http://(?:www\.)?costco\.com/"
+		to="https://www.costco.com/"/>
+
+	<rule from="^http://(shop|www2)\.costco\.com/"
+		to="https://$1.costco.com/"/>
 
 	<!-- The content of content and www are actually not identical. -->
 	<!-- <rule from="^https?://content\.costco\.com/"
