@@ -8,12 +8,8 @@
 
 	Partially covered subdomains:
 
-		- chat *
-		- company *
-		- downloads *
 		- games *
-		- greetings *
-		- people *
+		- people
 
 	* → www
 
@@ -22,6 +18,9 @@
 
 		- (www.)
 		- c
+		- chat
+		- download
+		- greetings
 		- wlogin
 		- xtraz
 
@@ -38,12 +37,11 @@
 
 	<target host="icq.com" />
 	<target host="*.icq.com" />
-		<exclusion pattern="^http://chat\.icq\.com/(?!$|\?|icqchat(?:$|\?|/)|img/|js/)" />
-		<exclusion pattern="^http://company\.icq\.com/(?!$|\?|info(?:$|\?|/))" />
-		<exclusion pattern="^http://downloads\.icq\.com/(?!$|\?|assets/|cached/|downloads(?:$|\?|/))" />
 		<exclusion pattern="^http://games\.icq\.com/(?!$|\?|games(?:$|\?|/))" />
-		<exclusion pattern="^http://greetings\.icq\.com/(?!$|\?|greetings(?:$\?|/))" />
-		<exclusion pattern="^http://people\.icq\.com/(?!$|\?|people(?:$|\?|/))" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://people\.icq\.com/(?!$|\?|css/|favicon\.ico|img/)" />
 
 
 	<!--	Not secured by server:
@@ -51,22 +49,16 @@
 	<!--securecookie host="^\.icq\.com$" name="^(geo|icq_lang|icq_ln_personal)$" /-->
 	<!--securecookie host="^chat\.icq\.com$" name="^icq_lang$" /-->
 
-	<securecookie host="^(?:www)?\.icq\.com$" name=".+" />
+	<securecookie host="^(?:chat|www)?\.icq\.com$" name=".+" />
 
-
-	<rule from="^http://chat\.icq\.com/(\?.*)?$"
-		to="https://www.icq.com/icqchat/$1" />
 
 	<rule from="^http://company\.icq\.com/(\?.*)?$"
 		to="https://www.icq.com/info/$1" />
 
-	<rule from="^http://download\.icq\.com/(\?.*)?$"
-		to="https://www.icq.com/download/icq/$1" />
+	<rule from="^http://games\.icq\.com/(?=$|\?.*)"
+		to="https://www.icq.com/games/" />
 
-	<rule from="^http://(games|greetings|people)\.icq\.com/(\?.*)$"
-		to="https://www.icq.com/$1/$2" />
-
-	<rule from="^http://((?:c|chat|greetings|people|wlogin|www|xtraz)\.)?icq\.com/"
+	<rule from="^http://((?:c|chat|download|greetings|people|wlogin|www|xtraz)\.)?icq\.com/"
 		to="https://$1icq.com/" />
 
 </ruleset>
