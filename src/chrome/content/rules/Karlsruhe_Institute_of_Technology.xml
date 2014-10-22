@@ -1,6 +1,75 @@
 <!--
 	For problematic rules, see Karlsruhe_Institute_of_Technology-problematic.xml.
 
+
+	Nonfunctional domains:
+
+		- rz.uni-karlsruhe.de *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- kit.edu subdomains:
+
+			- ^ ¹
+			- bibliothek ¹
+			- blog.bibliothek ²
+			- (www.)cs ³
+			- informatik ¹
+			- innovation ¹
+			- lists ¹
+			- ptka ¹
+			- rsm ¹
+			- scc ¹
+
+		- www.rz.uni-karlsruhe.de ⁴
+
+	¹ Cert only matches www.foo
+	² Mixed css
+	³ Mismatched, CN: www.informatik.kit.edu
+	⁴ Mismatched, CN: www.scc.kit.edu
+
+
+	Fully covered domains:
+
+		- kit.edu subdomains:
+
+			- (www.)		(^ → www)
+			- (www.)bibliothek	(^ → www)
+			- (www.)rsm		(^ → www)
+			- (www.)scc		(^ → www)
+			- idp.scc
+			- stadium
+			- ilias.stadium
+
+		- uni-karlsruhe.de subdomains:
+
+			- mensa.akk
+			- www.rz	(→ www.scc.kit.edu)
+			- www.ubka
+
+
+	Mixed content:
+
+		- css on blog.bibliothek from $self
+
+		- Images, on:
+
+			- blog.bibliothek from $self
+			- blog.bibliothek from www.ubka.uni-karlsruhe.de
+			- www.informatik from www-gf.ira.uka.de ²
+			- www.ptka from wsm10.scc
+			- www from $self ¹
+
+			- www.ubka.uni-karlsruhe.de from $self ¹
+
+		- Bug on www.bibliothek from dbspixel.hbz-nrw.de ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
 -->
 <ruleset name="Karlsruhe Institute of Technology (partial)">
 
@@ -14,6 +83,11 @@
 	<target host="www.*.uni-karlsruhe.de" />
 	<target host="mensa.akk.uni-karlsruhe.de" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.bibliothek|www\.informatik|www\.innovation|www\.intl|www\.ptka|www\.rsm|www\.scc|www)\.kit\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^wsm10\.scc\.kit\.edu$" name="^ASPSESSIONID[A-Z]{8}$" /-->
 
 	<securecookie host="^.+\.kit\.edu$" name=".+" />
 
