@@ -27,6 +27,33 @@
 	* Cert only matches *.itc
 
 
+	Partially covered subdomains:
+
+		- its *
+
+	* home.php 404s when rewritten to www.its, other pages untested
+
+
+	Fully covered subdomains:
+
+		- sisuva.admin
+		- www.cs
+		- mail.eservices
+		- gwis
+		- (www.)itc	(^ → www)
+		- collab.itc
+		- eventcal.itc
+		- www.its
+		- lists
+		- www.mail
+		- netbadge
+		- news
+		- admin.people
+		- rabi.phys
+		- standard.pki
+		- uvaemergency
+
+
 	Insecure cookies are set for these domains:
 
 		- .admin
@@ -41,9 +68,9 @@
 	* Secured by us
 
 -->
-<ruleset name="University of Virginia" default_off="expired">
+<ruleset name="University of Virginia (partial)" default_off="expired">
 
-	<target host="cti.itc.virginia.edu" />
+	<target host="*.virginia.edu" />
 
 
 	<!--	Not secured by server:
@@ -52,8 +79,16 @@
 	<!--securecookie host="^sisuva\.admin\.virginia\.edu$" name="^BIGipServer~SIS~SIS(-\d+){3}$" /-->
 	<!--securecookie host="^collab\.itc\.virginia\.edu$" name="^BIGipServercollab-pool$" /-->
 
+	<securecookie host="^(?:sisuva\.admin|collab\.itc)\.virginia\.edu$" name=".+" />
 
-	<rule from="^http://cti\.itc\.virginia\.edu/"
-		to="https://cti.itc.virginia.edu/" />
+
+	<rule from="^http://(sisuva\.admin|www\.cs|mail\.eservices|gwis|(?:collab|eventcal)\.itc|www\.its|lists|www\.mail|netbadge|news|admin\.people|rabi\.phys|standard\.pki|uvaemergency)\.virginia\.edu/"
+		to="https://$1.virginia.edu/" />
+
+	<rule from="^http://(?:www\.)?itc\.virginia\.edu/"
+		to="https://www.itc.virginia.edu/" />
+
+	<rule from="^http://its\.virginia\.edu/(?=css/|images/)"
+		to="https://www.its.virginia.edu/" />
 
 </ruleset>
