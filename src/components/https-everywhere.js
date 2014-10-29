@@ -194,7 +194,10 @@ function HTTPSEverywhere() {
   // Disable SSLv3 to prevent POODLE attack.
   // https://www.imperialviolet.org/2014/10/14/poodle.html
   var root_prefs = this.get_prefs(PREFBRANCH_NONE);
-  root_prefs.setIntPref("security.tls.version.min", 1);
+  var TLS_MIN = "security.tls.version.min";
+  if (root_prefs.getIntPref(TLS_MIN) < 1) {
+    root_prefs.setIntPref(TLS_MIN, 1);
+  }
   
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
