@@ -1,0 +1,36 @@
+<!--
+	CDN buckets:
+
+		- pmd.flixkart.com.edgesuite.net
+
+			- img5a
+
+
+	Problematic subdomains:
+
+		- img[568]a *
+
+	* Akamai
+
+-->
+<ruleset name="Flixcart.com (partial)">
+
+	<target host="flixcart.com" />
+	<target host="*.flixcart.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.flixcart\.com/+(flipkart-first|mobile-apps|notifications)?($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.flixcart\.com/+(?!(?:account|s/contact)(?:$|[?/])|favicon\.ico)" />
+
+
+	<rule from="^http://((?:img1a|secure|www)\.)?flixcart\.com/"
+		to="https://$1flixcart.com/" />
+
+	<rule from="^http://img(\d)a\.flixcart\.com/"
+		to="https://a248.e.akamai.net/f/248/10/10/img$1a.flixcart.com/" />
+
+</ruleset>
