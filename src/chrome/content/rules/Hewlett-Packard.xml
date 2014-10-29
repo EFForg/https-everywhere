@@ -56,6 +56,8 @@
 
 	Fully covered domains:
 
+		- protect724.arcsight.com
+
 		- [^.]*.hp.com:
 
 			- protect724
@@ -63,6 +65,11 @@
 			- shopping1
 			- sprout
 			- www8		(→ ssl.www8)
+
+		- community.dev.hp.com
+		- apps.protect724.hp.com
+		- uat.protect724.hp.com
+		- apps.uat.protect724.hp.com
 
 		- *.www1.hp.com:
 
@@ -82,6 +89,10 @@
 		- *.www4.hp.com:
 
 			- h41183
+
+		- ssl.www8.hp.com
+
+		- ssl-product-images.www8-hp.com
 
 
 	Insecure cookies are set for these domains:
@@ -124,6 +135,7 @@
 -->
 <ruleset name="HP (buggy?)" default_off="testing">
 
+	<target host="protect724.arcsight.com" />
 	<target host="eds.com" />
 	<target host="*.eds.com" />
 	<target host="hp.com" />
@@ -142,6 +154,7 @@
 		<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
 	<target host="*.hp-ww.com" />
 		<exclusion pattern="^http://welcome\.hp-ww\.com/+(?!(?:img/+)?favicon\.ico)" />
+	<target host="ssl-product-images.www8-hp.com" />
 
 
 	<!--	Not secured by server:
@@ -160,11 +173,16 @@
 	<!--securecookie host="^h71016\.www7\.hp.com$" name="^(ASPSESSIONID[A-Z]{8}|DCCPRO%5FDPLUS%5F[\w%]+)$" /-->
 	<!--securecookie host="^ssl\.www8\.hp\.com$" name="^JSESSIONID$" /-->
 
-	<!--	Stats cookie set by met1.hp.com
+	<securecookie host="^protect724\.arcsight\.com$" name=".+" />
+	<!--
+		Stats cookie set by met1.hp.com
 						-->
 	<securecookie host="^\.hp\.com$" name="^s_vi$" />
-	<securecookie host="^(?:esca(?:2\.americas|5\.asiapac|3\.europe)|(?:www\.)?register|shopping|h20141\.www2|h30499\.www3|h41183\.www4)\.hp\.com$" name=".+" />
+	<securecookie host="^(?:esca(?:2\.americas|5\.asiapac|3\.europe)|community\.dev|(?:uat\.)?protect724|(?:www\.)?register|shopping|h20141\.www2|h30(?:434|499|507)\.www3|h41183\.www4|h71016\.www7|ssl\.www8)\.hp\.com$" name=".+" />
 
+
+	<rule from="^http://protect724\.arcsight\.com/"
+		to="https://protect724.arcsight.com/" />
 
 	<rule from="^http://(www(?:-mo)?\.)?eds\.com/"
 		to="https://$1eds.com/" />
@@ -172,13 +190,16 @@
 	<rule from="^http://([^/:@]+)\.(americas|asiapac|austin|europe|www[1-7])\.hp\.com/"
 		to="https://$1.austin.hp.com/" />
 
-	<rule from="^http://www8\.hp\.com/"
+	<rule from="^http://(?:ssl\.)?www8\.hp\.com/"
 		to="https://ssl.www8.hp.com/" />
 		
-	<rule from="^http://([^/:@.]+)\.hp\.com/"
+	<rule from="^http://([^/:@.]+|community\.dev|(?:apps|uat|apps\.uat)\.protect724)\.hp\.com/"
 		to="https://$1.hp.com/" />
 
 	<rule from="^http://(?:secur|welcom)e\.hp-ww\.com/"
 		to="https://secure.hp-ww.com/" />
+
+	<rule from="^http://ssl-product-images\.www8-hp\.com/"
+		to="https://ssl-product-images.www8-hp.com/" />
 
 </ruleset>
