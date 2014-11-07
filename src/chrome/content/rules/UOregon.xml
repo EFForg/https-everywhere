@@ -80,18 +80,33 @@
 
 	Partially covered subdomains:
 
+		- aaeo ¹
 		- ba ²
+		- (www.)law ³
 		- parking
 		- safetyweb
+		- sapp ³
 
+	¹ $ redirects to adr/
 	² $ redirects to http
+	³ Avoiding mixed css
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- aaa
+		- academicaffairs
+		- academicextension
+		- admissions
+		- ae			(→ academicextension)
+		- aim
 		- around
+		- asap
 		- blogs
+		- calendar
+		- campusops
+		- career
 		- casadmin
 		- casit
 		- casitdocs
@@ -100,18 +115,46 @@
 		- casitweb
 		- cinema
 		- videos.cinema
+		- cmae
+		- commencement
+		- conferences
+		- counseling
+		- des
 		- digital
 		- duckid
 		- duckweb
+		- (www.)emu		(www → ^)
 		- english
+		- faprod
+		- ffp
 		- geogadvising
+		- giving		(→ securelb.imodules.com)
 		- gradschool
 		- gradweb
+		- graphicacy
+		- healthcenter
+		- healthycampus
+		- hr
 		- inventory
+		- library
+		- lists
+		- lists-prod
+		- newsletter	(→ studentlife)
+		- oem
+		- pde
 		- proofpoint
+		- sa-web
 		- secureserver
 		- shibboleth
+		- studentlife
+		- sustainablemap
+		- svpe
+		- swat
+		- tembo
+		- uodos
 		- uonews
+		- uoresearch
+		- vpsa		(→ studentlife)
 		- webmail
 
 
@@ -199,7 +242,7 @@
 
 			- cheminfo, uodos from fonts.googleapis.com ¹
 			- registrar from $self ²
-			- sapp from academicextension
+			- sapp from academicextension ¹
 
 		- Images, on:
 
@@ -221,6 +264,20 @@
 <ruleset name="UOregon (Partial!)">
 	<target host="uoregon.edu" />
   <target host="*.uoregon.edu" />
+		<exclusion pattern="^http://aaeo\.uoregon\.edu/+(?!adr(?:$|[?/]))" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://ba\.uoregon\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ba\.uoregon\.edu/+(?!favicon\.ico|misc/|sites/)" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?law\.uoregon\.edu/+(?!assets/|favicon\.ico|wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://sapp\.uoregon\.edu/+(?!favicon\.ico|images/|style\.css)" />
 
 	<!--	Not secured by server:
 					-->
@@ -244,14 +301,46 @@
 	<!--securecookie host="^it\.uoregon\.edu$" name="^(UUID|uo_sticky_session)$" /-->
 	<!--securecookie host="^webmail\.uoregon\.edu$" name="^roundcube_sessid$" /-->
 
-	<securecookie host="^(?:(?:around|blogs|\.casadmin|digital|\.?geogadvising|gradschool|gradweb|inventory|it|uonews|webmail|www)\.)?uoregon\.edu$" name=".+" />
+	<securecookie host="^(?:(?:academicextension|aim|around|blackboard|blogs|calendar|campusops|\.casadmin|commencement|conferences|counseling|des|digital|emu|ffp|\.?geogadvising|gradschool|gradweb|healthcenter|inventory|it|oem|studentlife|sustainablemap|svpe|swat|tembo|uonews|uoresearch|webmail|www)\.)?uoregon\.edu$" name=".+" />
 
-  <rule from="^http://((?:around|oregoncis|blackboard|blogs|casadmin|casit(?:docs|forms|jobs|web)?|(?:videos\.)?cinema|distanceeducation|counseling|digital|duckid|duckweb|english|geogadvising|gradschool|gradweb|hr2|inventory|ir|it|pcs|budgetmotel|brp|libweb|lcb|odt|proofpoint|scholarsbank|secureserver|shibboleth|wiki|systems\.cs|uonews|www2\.lcb|www\.(cs|law|lcb)|webmail|www)\.)?uoregon\.edu/"
+  <rule from="^http://((?:aaa|aaeo|academicaffairs|academicextension|aim|around|asap|ba|oregoncis|blackboard|blogs|calendar|campusops|career|casadmin|casit(?:docs|forms|jobs|web)?|(?:videos\.)?cinema|cmae|commencement|conferences|distanceeducation|counseling|des|digital|duckid|duckweb|english|faprod|ffp|geogadvising|gradschool|gradweb|graphicacy|healthcenter|healthycampus|housing|hr2?|inventory|ir|it|pcs|budgetmotel|brp|library|libweb|lcb|lists|lists-prod|odt|oem|pde|proofpoint|sa-web|sapp|scholarsbank|secureserver|shibboleth|studentlife|sustainablemap|svpe|swat|tembo|wiki|systems\.cs|uodos|uonews|www2\.lcb|www\.(cs|law|lcb)|uoresearch|webmail|www)\.)?uoregon\.edu/"
           to="https://$1uoregon.edu/"/>
   <rule from="^http://(ba|safetyweb)\.uoregon\.edu/sites/"
           to="https://$1.uoregon.edu/sites/"/>
+
+	<rule from="^http://ae\.uoregon\.edu/"
+		to="https://academicextension.uoregon.edu/" />
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works unproblematically:
+							-->
+	<rule from="^http://(?:www\.)?emu\.uoregon\.edu/"
+		to="https://emu.uoregon.edu/" />
+
+	<rule from="^http://giving\.uoregon\.edu/(?=$|\?)"
+		to="https://securelb.imodules.com/s/1540/development/start.aspx?gid=2&amp;pgid=61" />
+
+	<rule from="^http://giving\.uoregon\.edu/"
+		to="https://securelb.imodules.com/" />
+
+	<!--	Domains for which both !www and www exist,
+		and both work unproblematically:
+						-->
+	<rule from="^http://(www\.)?law\.uoregon\.edu/"
+		to="https://$1law.uoregon.edu/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://newsletter\.uoregon\.edu/.*"
+		to="https://studentlife.uoregon.edu/" />
+
   <rule from="^http://parking\.uoregon\.edu/(sites|misc|_images)/"
           to="https://parking.uoregon.edu/$1/"/>
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://vpsa\.uoregon\.edu/[^?]*"
+		to="https://studentlife.uoregon.edu/" />
           
 </ruleset>
 
