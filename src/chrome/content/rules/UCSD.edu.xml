@@ -9,19 +9,125 @@
 
 	Nonfunctional subdomains:
 
+		- alumni ¹
+		- anthro ²
 		- apsys11		(shows www.sysnet; mismatched, CN: www.sysnet.ucsd.edu)
+		- artisanalfisheries ⁴
+		- aventeur ⁵
+		- (www.)aquarium ⁶
+		- campusclimate ²
+		- ccis ²
+		- chancellor ²
+		- chemistry ⁶
+		- cisweb2 ⁷
+		- cmbb ⁸
+		- cmbc ⁸
+		- www.cogsci ²
+		- communication ²
+		- crl ⁶
+		- ctri ⁹
+		- diversity ᵃ
+		- doctors ⁹
+		- econ ²
+		- economics ⁹
+		- econweb ²
+		- founders ²
+		- gig ᵇ
+		- globalcalifornia ²
+		- health ⁶
+		- (www.)hdp ²
+		- heartcenter ᶜ
 		- hmi			(times out)
+		- hsevents ⁹
+		- hydraulicslab ⁷
+		- invent ¹
+		- irps ᵈ
+		- (www.)jacobsschool ᵉ
+		- ling ²
+		- maps ⁶
+		- memorydisorders ᶜ
+		- www.mpl ²
+		- mstp ᶠ
+		- myhealth ᵍ
 		- oec-vmweb02
-		- (www.)jacobsschool	(404)
+		- pharmacy ʰ
+		- plan ²
+		- psychservices ²
+		- psy ʰ
+		- rady ⁹
+		- scrippsblogs ⁴
+		- scrippsscholars ⁶
+		- (www.)sio ⁱ
+		- sociology ²
+		- som ²
+		- sportsclubs ²
+		- success ᵇ
+		- thezone ²
+		- ucsdnews ²
+		- www-chancellor ²
+		- www-chem ⁶
+		- www-tep ²
+		- vac ʲ
+		- volunteer50 ²
+		- ypp ᵏ
+
+	¹ Dropped
+	² Refused
+	⁴ Shows tuna
+	⁵ Redirects to offline.php
+	⁶ Redirects to http
+	⁷ Shows RHEL test page
+	⁸ Shows aquarium
+	⁹ Interrupted
+	ᵃ 404; mismatched, CN: myosd.ucsd.edu
+	ᵇ Shows as
+	ᶜ Shows health2
+	ᵈ Shows gardner
+	ᵉ "If you are looking for http://www.jacobsschool.ucsd.edu/ click here."
+	ᶠ Shows healthspan
+	ᵍ Mismatched, CN: *.staywellsolutionsonline.com
+	ʰ Blank tree
+	ⁱ Redirects to scripps
+	ʲ Shows aventeur
+	ᵏ Shows physics
 
 
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
+		- accb *
+		- asgrants *
+		- asgraphicstudio *
+		- bookstore ²
+		- www.chd ³
+		- collections ⁴
+		- courses ⁵
+		- www.ethnicstudies ³
+		- gardner ⁶
+		- (www.)giftplanning.ucsd.edu ⁷
 		- goto ¹
+		- healthspan ²
 		- irps	(redirects to a4.ucsd.edu)
+		- physicalsciences ᵃ
+		- psychology ᵇ
+		- www.psychology ³
+		- scrippsnews ⁴
 		- spiff	(cert: www.iod.ucsd.edu, shows that domain's data
+		- studenthealth ᵇ
+		- (www.)supportscripps ᵈ
+		- tuna ᵉ
 
+	* Mismatched, CN: as.ucsd.edu
+	² Expired 2012
+	³ Cert only matches *.ucsd.edu
+	⁴ Shows aquarium
+	⁵ Mismatched, CN: IWDC-WEB1.AD.UCSD.EDU; mixed css
+	⁶ Self-signed
+	⁷ Mismatched, CN: *.giftlegacy.com
 	¹ Works, self-signed
+	ᵃ Expired 2014, self-signed
+	ᵇ Mixed active content
+	ᵈ Shows scrippsscholars
+	ᵉ Some paths 404
 
 
 	Fully covered subdomains:
@@ -29,6 +135,57 @@
 		- cseweb
 		- lists
 		- mailman
+
+
+	These altnames don't exist:
+
+		- admin.eng.ucsd.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- 
+		- a4
+		- academicconnections
+		- act
+		- calendar
+		- courses
+		- csmp.ucop.edu
+		- ersys-webapps
+		- extension
+		- (www.)giftplanning
+		- hdh
+		- igppwiki
+		- jobs
+		- m
+		- meded
+		- mentorship
+		- myextension
+		- profiles
+		- recreation
+		- roger
+		- studenthealth
+		- ted
+		- www-er
+
+
+	Mixed content:
+
+		- iframe on studenthealth from www.google.com *
+
+		- css, on:
+
+			- academicconnections, admissions, biology from fonts.googleapis.com *
+			- courses from acms *
+
+			- hdh from m *
+			- hdh from www *
+			- hdh from ajax.googleapis.com *
+
+			- psychology from $self *
+			- psychology from www *
+
+	* Secured by us
 
 -->
 <ruleset name="UCSD" platform="mixedcontent">
@@ -144,6 +301,23 @@
    <target host="www-acs.ucsd.edu" />
 
 	<target host="*.ucsd.edu" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ucsd\.edu$" name="^(III_EXPT_FILE|III_SESSION_ID|PHPSESSID|SESSION_LANGUAGE|jlinkauthserver|jlinksessionidx)$" /-->
+	<!--securecookie host="^(a4|act|m)\.ucsd\.edu$" name="^sto-id$" /-->
+	<!--securecookie host="^a4\.ucsd\.edu$" name="^(_idp_authn_lc_key|JSESSIONID)$" /-->
+	<!--securecookie host="^(academicconnections|extension|meded)\.ucsd\.edu$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^act\.ucsd\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(calendar|ersys-webapps|www-er)\.ucsd\.edu$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^(courses|hdh|jobs|mentorship|profiles|studenthealth)\.ucsd\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^csmp\.ucop\.edu$" name="^ci_session$" /-->
+	<!--securecookie host="^(www\.)?giftplanning\.ucsd\.edu$" name="^(VisitID|VisitTerm)$" /-->
+	<!--securecookie host="^igppwiki\.ucsd\.edu$" name="^cc\.collabd_session_guid$" /-->
+	<!--securecookie host="^myextension\.ucsd\.edu$" name="^_myex_session$" /-->
+	<!--securecookie host="^recreation\.ucsd\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^roger\.ucsd\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^ted\.ucsd\.edu$" name="^session_id$" /-->
 
 <!-- Other things could stand to have securecookie, but these are the most important:
      a4 is used for login pages and some embedded scripts related to the login system. It doesn't yet flag its cookies as https-only.
