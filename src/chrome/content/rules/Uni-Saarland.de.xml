@@ -23,7 +23,23 @@
 
 	Fully covered subdomains:
 
+		- (www.)cispa
+		- www-int.coli
+
+		- (www.)csl.cs
+		- (www.)crypto.cs
+		- (www.)cybersicherheit.cs
 		- epica.cs
+		- (www.)infsec.cs
+		- (www.)lbs.cs
+		- (www.)sps.cs
+		- www-infsec.cs
+
+		- (www.)cybersicherheit
+		- datscha
+		- www.lsf
+		- www.lsv
+		- (www.)mmci		(→ www.mmci)
 
 
 	Insecure cookies are set for these domains:
@@ -39,7 +55,8 @@
 -->
 <ruleset name="Uni-Saarland.de (partial)">
 
-	<target host="epica.cs.uni-saarland.de" />
+	<target host="uni-saarland.de" />
+	<target host="*.uni-saarland.de" />
 		<!--
 			Redirect to http:
 						-->
@@ -47,7 +64,7 @@
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://www\.uni-saarland\.de/+(?!favicon\.ico|fileadmin/|typo3temp/|uploads/)" /-->
+		<exclusion pattern="^http://www\.uni-saarland\.de/+(?!favicon\.ico|fileadmin/|typo3temp/|uploads/)" />
 
 
 	<!--	Not secured by server:
@@ -56,10 +73,23 @@
 	<!--securecookie host="^((www\.)?cispa|www\.mmci)\.uni-saarland\.de$" name="^session$" /-->
 	<!--securecookie host="^(www\.)?cybersicherheit\.cs\.uni-saarland\.de$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^epica\.cs\.uni-saarland\.de$" name=".+" />
+	<securecookie host="^(?:(?:www\.)?cispa|(?:epica\.|www\.)?cs|(?:www\.)?cybersicherheit\.cs|www\.lsv)\.uni-saarland\.de$" name=".+" />
 
 
-	<rule from="^http://epica\.cs\.uni-saarland\.de/"
-		to="https://epica.cs.uni-saarland.de/" />
+	<!--	Domains for which both !www and www exist,
+		and both work unproblematically:
+						-->
+	<rule from="^http://(?:www\.)?(mmci\.)?uni-saarland\.de/"
+		to="https://www.$1uni-saarland.de/" />
+
+	<rule from="^http://(www-int\.coli|epica\.cs|www-infsec\.cs|datscha|www\.ls[fv])\.uni-saarland\.de/"
+		to="https://$1.uni-saarland.de/" />
+
+	<!--	Domains for which both !www and www exist,
+		and both work unproblematically:
+						-->
+	<rule from="^http://(www\.)?(cispa|cs|(?:crypto|csl|cybersicherheit|infsec|lbs|sps)\.cs|cybersicherheit)\.uni-saarland\.de/"
+		to="https://$1$2.uni-saarland.de/" />
+
 
 </ruleset>
