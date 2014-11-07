@@ -130,11 +130,110 @@
 	ᵉ Some paths 404
 
 
+	Partially covered subdomains:
+
+		- collections ¹		(→ scripps)
+		- extension ²
+		- hdh ³
+		- (www.)psycholog ³
+		- scrippsnews ¹		(→ scripps)
+		- studenthealth	³
+		- tuna ⁴
+
+	¹ Some paths don't redirect
+	² Some paths redirect to http
+	³ Avoiding broken MCB
+	⁴ Some paths 404
+
+
 	Fully covered subdomains:
 
+		- (www.)
+		- academicconnections
+		- admissions
+		- as
+		- assets
+		- artsandhumanities
+		- biology
+		- blink
+		- caesar
+		- calendar
+		- career
+		- cfr
+		- cgs
+		- (www.)chd			(www → ^)
+		- cilas
+		- create
+		- crlpsandiego
 		- cseweb
+		- csmp
+		- cwo
+		- dbsportal
+		- dah
+		- disabilities
+		- eaop
+		- ersys-webapps
+		- (www.)ethnicstudies		(www → ^)
+		- foundation
+		- (www.)giftplanning		(→ ucsd.giftlegacy.com)
+		- giving
+		- globalhealthprogram
+		- health2
+		- healthsciences
+		- hsreservations
+		- igpp
+		- igppticket
+		- igppwiki
+		- iod
+		- isp
+		- jobs
+		- libguides
+		- libraries
 		- lists
+		- m
 		- mailman
+		- (www.)math
+		- mathlink
+		- mathlink2
+		- meded
+		- mobile
+		- myextension
+		- myosd
+		- mytritonlink
+		- myucsdchart
+		- ocfr
+		- ocga
+		- onthego
+		- pao
+		- parents
+		- physics
+		- podcast
+		- polisci
+		- preuss
+		- profiles
+		- recreation
+		- rmp
+		- saber
+		- sarc
+		- sciencestudies
+		- scripps
+		- sdawp
+		- ships
+		- socialsciences
+		- studentparents
+		- students
+		- studentsupport
+		- (www.)supportscripps		(→ scripps)
+		- sustainability
+		- trio
+		- ucsdfoundation
+		- ui
+		- unex-shibboleth
+		- usmex
+		- usp
+		- www-act
+		- www-er
+		- yankelovichcenter
 
 
 	These altnames don't exist:
@@ -207,7 +306,6 @@
    <target host="webctweb.ucsd.edu" /> (superseded by ted)
    <target host="www-no.ucsd.edu" /> (Network Operations, used by ResNet registration etc. not sure if https enforced.
                                       www-ono.ucsd.edu seems to exist too - Old Network Operations?)
-   <target host="www.ucsd.edu" /> (supports https for some embedded content on TritonLink)
 
      TritonLink used to be called StudentLink according to https://sites.google.com/site/ucsdecegsc/information-for-new-students/tips-for-new-students
      This info is several years old and not worth worrying about.
@@ -300,7 +398,30 @@
    <target host="webmail.ucsd.edu" />
    <target host="www-acs.ucsd.edu" />
 
+	<target host="ucsd.edu" />
 	<target host="*.ucsd.edu" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://extension\.ucsd\.edu/index\.cfm" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://extension\.ucsd\.edu/+(?!cart/images/|css/|favicon\.ico|images/|profile/index\.cfm|programapplications/index\.cfm)" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://hdh\.ucsd\.edu/+mobile(?:$|[?/])" />
+		<exclusion pattern="^http://(?:www\.)?psychology\.ucsd\.edu/+(?!favicon\.ico|_images/|_resources/)" />
+		<exclusion pattern="^http://studenthealth\.ucsd\.edu/+(?!css/|favicon\.ico|img/)" />
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://tuna\.ucsd\.edu/hydro/sites/tuna\.ucsd\.edu\.hydro/files/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://tuna\.ucsd\.edu/+(?!$|\?)" />
 
 	<!--	Not secured by server:
 					-->
@@ -413,8 +534,8 @@
            to="https://a4.ucsd.edu/lms/" />
 <!-- redirects to acms go below -->
 <!-- cri ultimately redirects to the ACMS homepage because the CRI dept was closed, although this rule is correct for the initial bounce. That isn't our problem
-     NB: These have subpages. resnet has been tested fairly well, except the conference guest registration (resnet.ucsd.edu/conf) which might not exist anymore, but software and maybe iwdc need more testing. -->
-   <rule from="^http://(cri|desktop|iwdc|resnet|software|sysstaff)\.ucsd\.edu/"
+     NB: These have subpages. resnet has been tested fairly well, except the conference guest registration (resnet.ucsd.edu/conf) which might not exist anymore, but software needs more testing. -->
+   <rule from="^http://(cri|desktop|resnet|software|sysstaff)\.ucsd\.edu/"
            to="https://acms.ucsd.edu/units/$1/" />
 <!-- was https://acms.ucsd.edu/troublereport/, which is now a redirect; note that a.ucsd.edu is also officially part of ACMS -->
    <rule from="^http://(www-)?acs\.ucsd\.edu/troublereport/?$"
@@ -428,6 +549,47 @@
 
    <securecookie host=".*\.ucsd\.edu" name=".*" />
 
-	<rule from="^http://(cseweb|lists|mailman)\.ucsd\.edu/"
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://collections\.ucsd\.edu/+(?=$|\?)"
+		to="https://scripps.ucsd.edu/collections" />
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works unproblematically:
+							-->
+	<rule from="^http://(?:www\.)?(chd|ethnicstudies)\.ucsd\.edu/"
 		to="https://$1.ucsd.edu/" />
+
+	<rule from="^http://(?:www\.)?giftplanning\.ucsd\.edu/"
+		to="https://ucsd.giftlegacy.com/" />
+
+	<!--	Domains for which both !www and www exist,
+		and both work unproblematically.
+						-->
+	<rule from="^http://(www\.)?math\.ucsd\.edu/"
+		to="https://$1math.ucsd.edu/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://psy\.ucsd\.edu/+(?:$|\?.*)"
+		to="https://psychology.ucsd.edu/" />
+
+	<rule from="^http://(?:www\.)?psychology\.ucsd\.edu/"
+		to="https://psychology.ucsd.edu/" />
+
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://scrippsnews\.ucsd\.edu/+(?=$|\?)"
+		to="https://scripps.ucsd.edu/news" />
+
+	<rule from="^http://scrippsnews\.ucsd\.edu/Releases/"
+		to="https://scripps.ucsd.edu/news" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?supportscripps\.ucsd\.edu/[^?]*"
+		to="https://scripps.ucsd.edu/giving" />
+
+	<rule from="^http://((?:admissions|academicconnections|as|assets|artsandhumanities|biology|blink|caesar|calendar|career|cfr|cgs|cilas|create|crlpsandiego|cseweb|csmp|cwo|dah|dbsportal|disabilities|eaop|ersys-webapps|extension|foundation|giving|globalhealthprogram|health2|healthsciences|hdh|hsreservations|igpp|igppticket|igppwiki|iod|isp|iwdc|jobs|libguides|libraries|lists|m|mailman|mathlink2?|meded|mobile|myextension|myosd|mytritonlink|myucsdchart|ocfr|ocga|onthego|pao|parents|physics|podcast|polisci|preuss|profiles|recreation|rmp|saber|sarc|sciencestudies|scripps|sdawp|ships|socialsciences|student(?:health|parents|s|support)|sustainability|trio|tuna|ucsdfoundation|ui|unex-shibboleth|usmex|usp|www|www-act|www-er|yankelovichcenter)\.)?ucsd\.edu/"
+		to="https://$1ucsd.edu/" />
 </ruleset>
