@@ -82,19 +82,22 @@ httpsEverywhere.toolbarButton = {
       false
     );
 
-    // hook event for when page loads
-    var onPageLoad = function() {
-      // Timeout is used for a number of reasons.
-      // 1) For Performance since we want to defer computation.
-      // 2) Sometimes the page is loaded before all applied rulesets are
-      //    calculated; in such a case, a half-second wait works.
-      setTimeout(tb.updateRulesetsApplied, 500);
+    // add listener for top-level location change across all tabs
+    let httpseProgressListener = {
+      onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
+        HTTPSEverywhere.log(DBUG, "Got on location change!");
+        HTTPSEverywhere.onLocationChange(aBrowser);
+      },
+      onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
+        if ((gBrowser.selectedBrowser === aBrowser) &&
+            (aFlags & CI.nsIWebProgressListener.STATE_STOP) &&
+            aWebProgress.isTopLevel) {
+          HTTPSEverywhere.log(DBUG, "Got on state change");
+          tb.updateRulesetsApplied();
+        }
+      }
     };
-
-    var appcontent = document.getElementById('appcontent');
-    if (appcontent) {
-      appcontent.addEventListener('load', onPageLoad, true);
-    }
+    gBrowser.addTabsProgressListener(httpseProgressListener);
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
@@ -145,8 +148,8 @@ httpsEverywhere.toolbarButton = {
       return;
     }
 
-    var domWin = content.document.defaultView.top;
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+    var browser = window.gBrowser.selectedBrowser;
+    var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
     if (!alist) {
       return;
     }
@@ -270,20 +273,20 @@ function stitch_context_menu2() {
 var rulesetTestsMenuItem = null;
 
 function show_applicable_list(menupopup) {
-  var domWin = content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    alert(domWin + " is not an nsIDOMWindow");
-    return null;
+  var browser = gBrowser.selectedBrowser;
+  if (!browser) {
+    HTTPSEverywhere.log(WARN, "No browser for applicable list");
+    return;
   }
 
-  var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
+  var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
   var weird=false;
-  
+
   if (!alist) {
     // This case occurs for error pages and similar.  We need a dummy alist
     // because populate_menu lives in there.  Would be good to refactor this
     // away.
-    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, document, domWin);
+    alist = new HTTPSEverywhere.ApplicableList(HTTPSEverywhere.log, browser.currentURI);
     weird = true;
   }
   alist.populate_menu(document, menupopup, weird);
@@ -303,38 +306,16 @@ function show_applicable_list(menupopup) {
     if(!menupopup.contains(rulesetTestsMenuItem)) 
       menupopup.appendChild(rulesetTestsMenuItem);
   }
-  
 }
 
 function toggle_rule(rule_id) {
   // toggle the rule state
   HTTPSEverywhere.https_rules.rulesetsByID[rule_id].toggle();
-  var domWin = content.document.defaultView.top;
-  /*if (domWin instanceof CI.nsIDOMWindow) {
-    var alist = HTTPSEverywhere.getExpando(domWin,"applicable_rules", null);
-    if (alist) alist.empty();
-  }*/
   reload_window();
 }
 
 function reload_window() {
-  var domWin = content.document.defaultView.top;
-  if (!(domWin instanceof CI.nsIDOMWindow)) {
-    HTTPSEverywhere.log(WARN, domWin + " is not an nsIDOMWindow");
-    return null;
-  }
-  try {
-    var webNav =  domWin.QueryInterface(CI.nsIInterfaceRequestor)
-                        .getInterface(CI.nsIWebNavigation)
-                        .QueryInterface(CI.nsIDocShell);
-  } catch(e) {
-    HTTPSEverywhere.log(WARN,"failed to get webNav");
-    return null;
-  }
-  // The choice of LOAD_FLAGS_CHARSET_CHANGE comes from NoScript's quickReload
-  // function; not sure if it's optimal
-  let flags = webNav.LOAD_FLAGS_BYPASS_CACHE & webNav.LOAD_FLAGS_CHARSET_CHANGE;
-  webNav.reload(flags);
+  gBrowser.reloadTab(gBrowser.selectedTab);
 }
 
 function toggleEnabledState(){
@@ -402,4 +383,3 @@ function migratePreferences() {
     HTTPSEverywhere.prefs.setIntPref("prefs_version", prefs_version+1);
   }
 }
-
