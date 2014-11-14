@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Consumer_Reports.com-falsemixed.xml.
+
 	consumerreports.custhelp.com is handled in RightNow-clients.xml.
 
 
@@ -15,15 +17,34 @@
 
 		- news.consumerreports.org
 
+
+	Problematic domains:
+
+		- (www.)consumerreports.org *
+
+	* Mixed css
+
+
+	Mixed content:
+
+		- css on web and www from static[1-4].consumerreportscdn.org *
+
+	* Secured by us
+
 -->
-<ruleset name="Consumer Reports" platform="mixedcontent">
+<ruleset name="Consumer Reports (partial)">
 
 	<target host="consumerreports.org" />
-	<target host="*.consumerreports.org" />
+	<target host="ec.consumerreports.org" />
+	<target host="www.consumerreports.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?consumerreports\.org/+(?!etc/|favicon\.ico)" />
 	<target host="*.consumerreportscdn.org" />
 
 
-	<securecookie host="^.*\.consumerreports\.org$" name=".+" />
+	<securecookie host="^ec\.consumerreports\.org$" name=".+" />
 
 
 	<!--	Cert only matches www.
