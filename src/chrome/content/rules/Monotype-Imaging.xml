@@ -2,9 +2,38 @@
 	For rules subject to javascript redirect loops, see Fonts.com-noscript.xml.
 
 
+	CDN buckets:
+
+		- cs26.wac.edgecastcdn.net
+
+			- cdnbadge.fonts.net
+			- cdncms.fonts.net
+
+
 	Nonfunctional domains:
 
+		- cdnbadge.fonts.net ¹
 		- (www.)fontslive.com	(reset)
+
+	¹ 404
+
+
+	Problematic domains:
+
+		- blog.fonts.com ¹
+		- cdncms.fonts.net ²
+
+	¹ Mismatched, CN: *.azurewebsites.net
+	² Works; mismatched, CN: *.fonts.com
+
+
+	Mixed content:
+
+		- css on blog.fonts.com from fast.fonts.net
+
+		- Images on www.fonts.com from cdncms.fonts.net *
+
+	* Not secured by us <= mismatched
 
 -->
 <ruleset name="Monotype Imaging (partial)">
@@ -25,6 +54,13 @@
 	<target host="www.webfonts.fonts.com"/>
 	<target host="webfonts.fontslive.com"/>
 	<target host="frs.monotypeimaging.com"/>
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blog\.fonts\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^www\.fonts\.com$" name="^ProfileTicket$" /-->
+
 
 	<rule from="^http://(?:www\.)?ascenderfonts\.com/(account/login|af|local)/"
 		to="https://www.ascenderfonts.com/$1/"/>

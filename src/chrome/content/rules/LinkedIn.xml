@@ -14,9 +14,23 @@
 	² 403, expired
 
 
+	Problematic domains:
+
+		- lnkd.in *
+
+	* Mismatched
+
+
 	Fully covered domains:
 
 		- static.licdn.com
+
+		- \w\w.linkedin.com:
+
+			- es
+			- us
+
+		- lnkd.in	(→ www.linkedin.com)
 
 
 	LinkedIn users should also enable secure connections from:
@@ -29,11 +43,14 @@
 	<target host="static.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
+	<target host="lnkd.in" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.linkedin\.com$" name="^(bcookie|lang|lidc|lihc_auth_en|li_loc|li_trk)$" /-->
+	<!--securecookie host="^\w\w\.linkedin\.com$" name="^(L1c|leo_auth_token|visit)$" /-->
+	<!--securecookie host="^\.\w\w\.linkedin\.com$" name="^JSESSIONID$" /-->
 	<!--securecookie host="^help\.linkedin\.com$" name="^cp_session$" /-->
 	<!--securecookie host="^www\.linkedin\.com$" name="^(leo_auth_token|visit)$" /-->
 	<!--securecookie host="^\.www\.linkedin\.com$" name="^JSESSIONID" /-->
@@ -44,7 +61,15 @@
 	<rule from="^http://static\.licdn\.com/"
 		to="https://static.licdn.com/" />
 
-	<rule from="^http://((?:help|platform|www)\.)?linkedin\.com/"
+	<rule from="^http://((?:\w\w|help|platform|www)\.)?linkedin\.com/"
 		to="https://$1linkedin.com/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://lnkd\.in/+([^?]*)(?:\?)?$"
+		to="https://www.linkedin.com/slink?code=$1" />
+
+	<rule from="^http://lnkd\.in/+([^?]*)\?"
+		to="https://www.linkedin.com/slink?code=$1&amp;" />
 
 </ruleset>

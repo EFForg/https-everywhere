@@ -4,22 +4,21 @@
 
 	CDN buckets:
 
-		- s3.amazonaws.com/f.cl.ly/
-		- d9yac136u048z.cloudfront.net
 		- cloudapp.herokuapp.com
 
 	- cloudapp.assistly.com
 	- cloudapp.desk.com	(redirects back to support.getcloudapp.com)
 
 
+	Problematic domains:
+
+		- store.getcloudapp.com *
+
+	* Refused
+
+
 	List of related domains:
 
-		- cl.ly
-		- f.cl.ly
-		- my.cl.ly
-		- api.cld.me
-		- my.cld.me
-		- assets.my.cld.me
 		- getcloudapp.com
 		- blog.getcloudapp.com
 		- developer.getcloudapp.com
@@ -29,34 +28,22 @@
 -->
 <ruleset name="Linerunner (partial)">
 
-	<target host="f.cl.ly" />
-	<target host="my.cl.ly" />
-	<target host="api.cld.me" />
-	<target host="my.cld.me" />
-	<target host="assets.my.cld.me" />
-	<target host="store.getcloudapp.com" />
+	<target host="getcloudapp.com" />
+	<target host="*.getcloudapp.com" />
 
 
-	<rule from="^https?://f\.cl\.ly/"
-		to="https://s3.amazonaws.com/f.cl.ly/" />
+	<rule from="^http://(api\.|www\.)?getcloudapp\.com/"
+		to="https://$1getcloudapp.com/" />
 
-	<!--	Rewriting to herokuapp.com avoids writing
-		special cases for different paths.
-						-->
-	<rule from="^https?://(?:cl\.ly|api\.cld\.me)/"
-		to="https://cloudapp.herokuapp.com/" />
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://store\.getcloudapp\.com//+([^?]+)"
+		to="https://my.cl.ly/plans/$1" />
 
-	<!--	At least some pages 302 back.
-						-->
-	<rule from="^https?://my\.cl(?:\.ly|d\.me)/stylesheets/"
-		to="https://d9yac136u048z.cloudfront.net/stylesheets/" />
+	<rule from="^http://store\.getcloudapp\.com//+\?.*"
+		to="https://my.cl.ly/plans" />
 
-	<rule from="^https?://assets\.my\.cld\.me/"
-		to="https://d9yac136u048z.cloudfront.net/" />
-
-	<!--	http 301s back, but https doesn't.
-							-->
-	<rule from="^https?://store\.getcloudapp\.com/"
-		to="https://cloudapp.myshopify.com/" />
+	<rule from="^http://store\.getcloudapp\.com/"
+		to="https://my.cl.ly/plans" />
 
 </ruleset>

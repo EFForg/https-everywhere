@@ -7,22 +7,32 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)	(200 "PAGE NOT FOUND", valid cert)
-		- help		(zendesk)
+		- help *
+
+	* zendesk
  
 -->
 <ruleset name="Issuu Aps (partial)">
 
+	<target host="issuu.com" />
 	<target host="*.issuu.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://issu\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://issu\.com/+(?!favicon\.ico|signin(?:$|[?/]))" />
 
 
 	<rule from="^http://(feed|sidebar)\.issuu\.com/"
 		to="https://s3.amazonaws.com/$1.issuu.com/" />
 
-	<rule from="^http://help\.issuu\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<rule from="^http://help\.issuu\.com/(?=favicon\.ico|generated/|images/|system/)"
+		to="https://issuu.zendesk.com/" />
 
-	<rule from="^http://(image|skin|static)\.issuu\.com/"
-		to="https://$1.issuu.com/" />
+	<rule from="^http://((?:image|skin|static|www)\.)?issuu\.com/"
+		to="https://$1issuu.com/" />
 
 </ruleset>

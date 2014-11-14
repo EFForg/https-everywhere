@@ -8,7 +8,9 @@
 		- EndNote_Web.xml
 		- Mark-Monitor.xml
 		- Reuters.com.xml
+		- Thomson.com.xml
 		- Web_of_Knowledge.xml
+		- Westlaw.com.xml
 
 
 	counterparties-assets.s3.amazonaws.com
@@ -19,39 +21,74 @@
 		- (www.)ccbn.com
 		- (www.)counterparties.com
 		- (www.)reuters.com		(sec_error_reused_issuer_and_serial)
+
+		- careers.thomsonreuters.com ³
 		- ip-science.thomsonreuters.com
 		- staging.thomsonreuters.com
+		- thehub.thomsonreuters.com
 		- (www.)thomsonreuters.com
 
+	³ Shows insidecareers
 
-	Fully covered domains:
 
-		- info.legalsolutions.thomsonreuters.com
+	Problematic subdomains:
+
+		- jobs *
+
+	* Jobs2Web
+
+
+	Partially covered subdomains:
+
+		- newsandinsight *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- assets.gcs
+		- insidecareers
+		- info.legalsolutions
+		- myaccount
+		- newsandinsight
+		- signon
+		- thehub
+
+
+	Insecure cookies are set for these domains:
+
+		- assets.gcs
+		- myaccount
+		- signon
+		- thehub
 
 -->
 <ruleset name="Thomson Reuters (partial)">
 
-	<target host="*.west.thomson.com" />
 	<target host="*.thomsonreuters.com" />
-	<target host="*.westlaw.com" />
-	<target host="images.store.westlaw.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://legalsolutions\.thomsonreuters\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://legalsolutions\.thomsonreuters\.com/+(?!favicon\.ico|law-products/(?:_ui|onlineopinionV5|static|stylesheets)/|medias/)" />
+		<exclusion pattern="^http://newsandinsight\.thomsonreuters\.com/(?!favicon\.ico$|(?:Help|Legal/Login|PrivacyPolicy|TermsOfUse)\.aspx|uploadedimages/|UserSettings\.aspx|Web/)" />
 
 
-	<securecookie host="^(images|myaccount)\.west\.thomson\.com$" name=".*" />
-	<securecookie host="^info\.legalsolutions\.thomsonreuters\.com$" name=".+" />
-	<securecookie host="^store\.westlaw\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^assets\.gcs\.thomsonreuters\.com$" name="^X-Mapping-[a-z]{8}$" /-->
+	<!--securecookie host="^myaccount\.thomsonreuters\.com$" name="^MA_ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^signon\.thomsonreuters\.com$" name="^(bhCookiePerm|bhCookieSess)$" /-->
+	<!--securecookie host="^thehub\.thomsonreuters\.com$" name="^(BIGipServerpool_thehub\.thomsonreuters\.com|jive\.login\.ts|jive\.security\.context)$" /-->
+
+	<securecookie host="^(?:assets\.gcs|info\.legalsolutions|myaccount|signon|thehub)\.thomsonreuters\.com$" name=".+" />
 
 
-	<rule from="^http://myaccount\.west\.thomson\.com/"
-		to="https://myaccount.west.thomson.com/" />
-
-	<rule from="^http://info\.legalsolutions\.thomsonreuters\.com/"
-		to="https://info.legalsolutions.thomsonreuters.com/" />
-
-	<rule from="^http://newsandinsight\.thomsonreuters\.com/(favicon\.ico$|(?:Help|Legal/Login|PrivacyPolicy|TermsOfUse)\.aspx|uploadedimages/|UserSettings\.aspx|Web/)"
-		to="https://newsandinsight.thomsonreuters.com/$1" />
-
-	<rule from="^http://(onepass|(?:images\.)?store)\.westlaw\.com/"
-		to="https://$1.westlaw.com/" />
+	<rule from="^http://(assets\.gcs|insidecareers|legalsolutions|info\.legalsolutions|myaccount|newsandinsight|signon|thehub)\.thomsonreuters\.com/"
+		to="https://$1.thomsonreuters.com/" />
 
 </ruleset>

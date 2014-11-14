@@ -8,18 +8,38 @@
 
 		- agnr ¹
 		- alumni ¹
-		- (www.)president *
+		- kb ³
+		- mith ⁴
+		- (www.)nethics ⁴
+		- (www.)password ²
+		- (www.)president ²
+		- (www.)sas ⁵
+		- (www.)terp ⁶
+		- (www.)terpvision ²
+		- (www.)testudo ⁵
+		- thestamp
+		- (www.)transportation ⁷
 
 	¹ Dropped
-	² Redirects to www; mismatched, CN: umd.edu
+	³ Plaintext reply
+	⁴ Refused
+	² Redirects to www
+	⁵ 401
+	⁶ Shows default page
+	⁷ 500
 
 
 	Partially covered subdomains:
 
+		- (www.)helpdesk ¹
+		- kb ³			(→ www.itsc)
+		- www.lib ⁴
 		- (www.)provost ¹
 		- terpconnect ²
 
 	¹ Avoiding broken MCB
+	³ $ doesn't redirect
+	⁴ $ redirects to http
 	² Some data differ from http
 
 
@@ -28,23 +48,44 @@
 		- (www.)
 		- (www.)arch
 		- carma.astro
+		- catalog
+		- cgi
 		- (www.)eng
+		- (www.)glue
+		- (www.)inform
+		- (www.)irpa
 		- (www.)it
+		- (www.)itsc
+		- lib
+		- aeon.lib
+		- login
+		- ntst
+		- (www.)oit
+		- researchport
+		- (www.)umdrightnow
+
+
+	These altnames don't exist:
+
+		- suap01cms.ad.umd.edu
 
 
 	Insecure cookies are set for these domains:
 
+		- (www.)
+		- .
 		- (www.)provost
+		- .www
 
 
 	Mixed content:
 
+		- css on helpdesk from www *
 		- css on www.provost from $self *
 
 		- Images, on:
 
 			- (www.)provost from $self *
-			- www from s3.amazonaws.com *
 
 	* Secured by us
 
@@ -56,22 +97,39 @@
 		<!--
 			Avoid false/broken MCB:
 						-->
+		<exclusion pattern="^http://helpdesk\.umd\.edu/+(?!favicon\.ico|images/|web\.support/)" />
 		<exclusion pattern="^http://www\.provost\.umd\.edu/+(?!favicon\.ico|images/|includes/|masthead\.jpg|photos/|resources/)" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.lib\.umd\.edu/($|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.lib\.umd\.edu/+(?!binaries/|css/|images/)" />
 		<exclusion pattern="^http://terpconnect\.umd\.edu/(?!~)" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.?(www\.)?umd\.edu$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^(www\.)?provost\.umd\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:www\.)?umd\.edu$" name=".+" />
 
 
 	<!--	Domains for which both !www and www
 		exist, and both are unproblematic:
 							-->
-	<rule from="^http://(www\.)((?:arch|eng|it|provost)\.)?umd\.edu/"
+	<rule from="^http://(www\.)((?:arch|eng|helpdesk|glue|inform|irpa|it|itsc|lib|oit|provost|umdrightnow)\.)?umd\.edu/"
 		to="https://$1$2umd.edu/" />
 
-	<rule from="^http://(carma\.astro|terpconnect)\.umd\.edu/"
+	<rule from="^http://(carma\.astro|catalog|cgi|aeon\.lib|login|ntst|researchport|terpconnect)\.umd\.edu/"
 		to="https://$1.umd.edu/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://kb\.umd\.edu/+(\d+)(?:\?.*)?"
+		to="https://www.itsc.umd.edu/MRcgi/MRTicketPage.pl?USER=&amp;MRP=0&amp;PROJECTID=1&amp;MR=$1" />
 
 </ruleset>

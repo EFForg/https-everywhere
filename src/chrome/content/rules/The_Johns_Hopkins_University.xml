@@ -5,55 +5,156 @@
 	Nonfunctional domains:
 
 		- ssc.jhmi.edu	(shows ess.erp.johnhopkins.edu, CN: *.johnshopkins.edu)
+
+		- alumni.jhu.edu ¹
+		- benefits.jhu.edu **
+		- carey.jhu.edu ²
+		- education.jhu.edu ¹
+		- gazette.jhu.edu ⁴
+		- hrnt.jhu.edu ²
 		- isi.jhu.edu ²
 		- spar.isi.jhu.edu ²
+		- krieger.jhu.edu ⁴
 		- www.jhu.edu	(CN: *.johnshopkins.edu)
 		- (www.)library.jhu.edu
+		- m.jh.edu ⁷
+		- magazine.jhu.edu ²
+		- (www.)nursing.jhu.edu ⁴
+		- preview.peabody.jhu.edu ⁸
+		- releases.jhu.edu ²
+		- web.jhu.edu ⁴
 
+		- esgwebproxy.johnshopkins.edu ⁴
+
+	¹ Dropped
+	** Shows hrnt
 	² Refused
+	⁴ Shows activtracker.johnshopkins.edu
+	⁷ Redirects to login
+	⁸ Reset
 
 
 	Problematic domains:
 
+		- caportal.cis.jhu.edu ¹
+		- gallery.cis.jhu.edu ²
 		- cs.jhu.edu	(cert only matches www.cs)
+		- (www.)giving.jhu.edu ⁴
+		- nanjing.jhu.edu ⁵
+		- peabody.jhu.edu ⁶
+
+	¹ Mismatched, CN: gallery.cis.jhu.edu
+	² Self-signed
+	⁴ Refused
+	⁵ Mismatched, CN: www.sais-jhu.edu
+	⁶ Mismatched, CN: beta.jhu.edu
 
 
 	Fully covered domains:
 
 		- orchid.hosts.jhmi.edu
 
-		- (www.)cs.jhu.edu	(^ → www)
-		- webapps.jhu.edu
+		- jhu.edu subdomains:
+
+			- beta
+			- (www.)cs	(^ → www)
+			- jhweb.dev
+			- engineering
+			- ep
+			- hrnt
+			- hub
+			- isis
+			- m
+			- my
+			- (www.)peabody	(^ → www)
+			- (www.)rising
+			- (www.)security
+			- webapps
 
 		- johnshopkins.edu subdomains:
 
+			- activtracker
+			- e210
 			- ess.erp
+			- login
 			- my
 			- portal
 			- portalcontent
+
+
+	These altnames don't exist:
+
+		- io17.cis.jhu.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- gallery.cis.jhu.edu
+		- hrnt.jhu.edu
+		- hub.jhu.edu
+		- (www.)peabody.jhu.edu
+
+		- portalcontent.johnshopkins.edu
+
+
+	Mixed content:
+
+		- css on www.peabody from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="The Johns Hopkins University (partial)">
 
 	<target host="orchid.hosts.jhmi.edu" />
-	<target host="webapps.jhu.edu" />
+	<target host="*.jhu.edu" />
 	<target host="*.johnshopkins.edu" />
 	<target host="ess.erp.johnshopkins.edu" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?peabody\.jhu\.edu$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^gallery\.cis\.jhu\.edu$" name="^GallerySession$" /-->
+	<!--securecookie host="^hrnt\.jhu\.edu$" name="^(CFID|CFTOKEN|JHUJOBS_ID|JHUJOBS_USER|JSESSIONID)$" /-->
+	<!--securecookie host="^hub\.jhu\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^isis\.jhu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^m\.jh\.edu$" name="^(Johns-Hopkins|deviceClassification)$" /-->
+	<!--securecookie host="^portalcontent\.johnshopkins\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:gallery\.cis|hrnt|hub|isis|m|(?:www\.)?peabody)\.jhu\.edu$" name=".+" />
 	<securecookie host="^.+\.johnshopkins\.edu$" name=".+" />
 
 
 	<rule from="^http://orchid\.hosts\.jhmi\.edu/"
 		to="https://orchid.hosts.jhmi.edu/" />
 
-	<rule from="^https?://(?:www\.)?cs\.jhu\.edu/"
-		to="https://www.cs.jhu.edu/" />
+	<!--	Domains for which both !www and www exist,
+		but only www works unproblematically:
+							-->
+	<rule from="^http://(?:www\.)?(cs|peabody)\.jhu\.edu/"
+		to="https://www.$1.jhu.edu/" />
 
-	<rule from="^http://webapps\.jhu\.edu/"
-		to="https://webapps.jhu.edu/" />
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?giving\.jhu\.edu/+"
+		to="https://rising.jhu.edu/" />
 
-	<rule from="^http://(ess\.erp|my|portal(?:content)?)\.johnshopkins\.edu/"
+	<rule from="^http://(beta|jhweb\.dev|engineering|ep|hub|isis|my?|webapps)\.jhu\.edu/"
+		to="https://$1.jhu.edu/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://nanjing\.jhu\.edu/[^?]*"
+		to="https://www.sais-jhu.edu/graduate-studies/campuses/nanjing-china" />
+
+	<!--	Domains for which both !www and
+		www work unproblematically:
+						-->
+	<rule from="^http://(www\.)?(rising|secure)\.jhu\.edu/"
+		to="https://$1$2.jhu.edu/" />
+
+	<rule from="^http://(activtracker|e210|ess\.erp|login|my|portal(?:content)?)\.johnshopkins\.edu/"
 		to="https://$1.johnshopkins.edu/" />
 
 </ruleset>

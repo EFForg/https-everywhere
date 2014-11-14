@@ -7,7 +7,10 @@
 
 	Problematic subdomains:
 
+		- images.cdn ¹
 		- t	(works; mismatched, CN: 9gag.com)
+
+	¹ Cloudfront
 
 
 	Partially covered subdomains:
@@ -23,6 +26,7 @@
 		- admin
 		- api
 		- comment
+		- images-cdn	(→ d24w6bsrhbeh9d.cloudfront.net)
 
 -->
 <ruleset name="9gag (partial)">
@@ -34,6 +38,7 @@
 		<!--exclusion pattern="^http://m\.9gag\.com/+($|\?|gag/\w+($|\?))" /-->
 		<!--exclusion pattern="^http://m\.9gag\.com/+(?!favicon\.ico|img/|(login|recover|signup)($|\?))" /-->
 		<exclusion pattern="^http://(?:m\.|www\.)?9gag\.com/+(?!(?:about|advertise|faq|login|privacy|recover|signup|tos)(?:$|[?/])|favicon\.ico|img/)" />
+	<target host="assets-9gag-lol.9cache.com" />
   
   
 	<securecookie host="^admin\.9gag\.com$" name=".+" />
@@ -41,5 +46,11 @@
 
 	<rule from="^http://((?:admin|api|comment|m|www)\.)?9gag\.com/"
 		to="https://$19gag.com/" />
+
+	<rule from="^http://images-cdn\.9gag\.com/"
+		to="https://d24w6bsrhbeh9d.cloudfront.net/" />
+
+	<rule from="^http://assets-9gag-lol\.9cache\.com/"
+		to="https://assets-9gag-lol.9cache.com/" />
 
 </ruleset>

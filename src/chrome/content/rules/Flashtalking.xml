@@ -6,21 +6,31 @@
 			- www.flashtalking.com
 
 
-	Nonfunctional domains:
+	Mixed content:
 
-		- flashtalking.com	(404; mismatched, CN: *.flashtalking.net)
-		- www.flashtalking.com	(404, akamai)
+		- css on www.flashtalking.com from ajax.googleapis.com *
+		- css on www.flashtalking.com from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Flashtalking (partial)">
 
+	<target host="flashtalking.com" />
 	<target host="*.flashtalking.com" />
 	<target host="flashtalking.net" />
 	<target host="*.flashtalking.net" />
 
 
-	<rule from="^http://(cdn|servedby)\.flashtalking\.com/"
-		to="https://$1.flashtalking.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flashtalking\.com$" name="^flashtalkingad1$" /-->
+
+	<securecookie host="^\.flashtalking\.com$" name=".+" />
+
+
+	<rule from="^http://((?:cdn|servedby)\.)?flashtalking\.com/"
+		to="https://$1flashtalking.com/" />
 
 	<rule from="^http://(www\.)?flashtalking\.net/"
 		to="https://$1flashtalking.net/" />
