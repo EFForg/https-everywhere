@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Walmart.com-falsemixed.xml.
+
+
 	Other Wal-Mart rulesets:
 
 		- ASDA.xml
@@ -15,26 +18,29 @@
 	Problematic subdomains:
 
 		- ^		(cert only matches www)
+		- help ³
 		- p13n-assets	(works, akamai)
+
+	³ Avoiding broken MCB
 
 
 	Fully covered subdomains:
 
-		- help
 		- p13n-assets	(→ akamai)
 
 
 	Observed cookie domains:
 
 		- . ¹
-		- help ² 
+		- help ¹
 		- www ¹
 
 	¹ Not secured by us <= incomplete support
-	² Secured by us
 
 
 	Mixed content:
+
+		- css on help from i2.walmartimages.com *
 
 		- Images on help from i2.walmartimages.com *
 
@@ -53,9 +59,9 @@
 			Exceptions:
 					-->
 		<!--exclusion pattern="^http://(www\.)?walmart\.com/+(?!client_side_redirect\.gsp|cservice($|[?/])|favicon\.ico|i/|logout\.do)" /-->
-
-
-	<securecookie host="^help\.walmart\.com$" name=".+" />
+		<!--	Avoid broken MCB:
+						-->
+		 <exclusion pattern="^http://help\.walmart\.com/+(?!euf/(?:assets|rightnow)/|favicon\.ico)" />
 
 
 	<rule from="^http://(?:www\.)?walmart\.com/(?=client_side_redirect\.gsp|cservice(?:$|[?/])|favicon\.ico|i/|logout\.do)"
