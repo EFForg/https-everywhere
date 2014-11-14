@@ -32,14 +32,28 @@
 	⁴ Mismatched, CN: www.scc.kit.edu
 
 
+	Partially covered domains:
+
+		- blog.bibliothek.kit.edu *
+
+	* Avoiding broken MCB
+
+
 	Fully covered domains:
 
 		- kit.edu subdomains:
 
 			- (www.)		(^ → www)
 			- (www.)bibliothek	(^ → www)
+			- (www.)cs		(→ www.informatik)
+			- (www.)informatik	(^ → www)
+			- (www.)innovation	(^ → www)
+			- intranet
+			- (www.)lists		(^ → www)
+			- (www.)ptka		(^ → www)
 			- (www.)rsm		(^ → www)
 			- (www.)scc		(^ → www)
+			- wsm10.scc
 			- idp.scc
 			- stadium
 			- ilias.stadium
@@ -53,14 +67,14 @@
 
 	Mixed content:
 
-		- css on blog.bibliothek from $self
+		- css on blog.bibliothek from $self ¹
 
 		- Images, on:
 
-			- blog.bibliothek from $self
-			- blog.bibliothek from www.ubka.uni-karlsruhe.de
+			- blog.bibliothek from $self ¹
+			- blog.bibliothek from www.ubka.uni-karlsruhe.de ¹
 			- www.informatik from www-gf.ira.uka.de ²
-			- www.ptka from wsm10.scc
+			- www.ptka from wsm10.scc ¹
 			- www from $self ¹
 
 			- www.ubka.uni-karlsruhe.de from $self ¹
@@ -75,6 +89,11 @@
 
 	<target host="kit.edu" />
 	<target host="*.kit.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.bibliothek\.kit\.edu/+(?!\w+/wp-(?:content|includes)/)" />
+
 	<target host="uni-karlsruhe.de" />
 	<target host="*.uni-karlsruhe.de" />
 
@@ -95,13 +114,18 @@
 
 	<!--	^pst, ^radio: self-signed
 					-->
-	<rule from="^http://(?:www\.)?((?:bibliothek|pst|radio|rsm|scc)\.)?kit\.edu/"
+	<rule from="^http://(?:www\.)?((?:bibliothek|informatik|innovation|lists|pst|ptka|radio|rsm|scc)\.)?kit\.edu/"
 		to="https://www.$1kit.edu/" />
 
 	<!--	^stiftung.kit.edu doesn't exist.
 							-->
-	<rule from="^http://((?:campus|owa|idp\.scc|(?:ilias\.)?stadium|www\.stiftung)\.)?kit\.edu/"
-		to="https://$1kit.edu/" />
+	<rule from="^http://(blog\.bibliothek|campus|(?:jplag|svn)\.ipd|intranet|owa|(?:idp|wsm10)\.scc|(?:ilias\.)?stadium|www\.stiftung)\.kit\.edu/"
+		to="https://$1.kit.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?cs\.kit\.edu/+"
+		to="https://www.informatik.kit.edu/" />
 
 	<!--	- CN: www.kit.edu
 		- ^zib doesn't exist
@@ -117,5 +141,10 @@
 
 	<rule from="^http://(mensa\.akk|www\.ubka)\.uni-karlsruhe\.de/"
 		to="https://$1.uni-karlsruhe.de/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://www\.rz\.uni-karlsruhe\.de/+"
+		to="https://www.scc.kit.edu/" />
 
 </ruleset>
