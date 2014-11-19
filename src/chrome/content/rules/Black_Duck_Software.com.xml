@@ -1,0 +1,45 @@
+<!--
+	Problematic subdomains:
+
+		- ^ ¹
+		- osdelivers ²
+
+	¹ Mismatched
+	² Mixed css
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- dev
+		- stg
+
+
+	Mixed content:
+
+		- css, on:
+
+			- osdelivers from $self *
+			- osdelivers from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Black Duck Software.com (partial)">
+
+	<target host="blackducksoftware.com" />
+	<target host="*.blackducksoftware.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="http://osdelivers\.blackducksoftware\.com/+(?!wp-content/|wp-includes/)" />
+
+
+	<rule from="^http://(?:www\.)?blackducksoftware\.com/"
+		to="https://www.blackducksoftware.com/" />
+
+	<rule from="^http://(dev|osdelivers|stg)\.blackducksoftware\.com/"
+		to="https://$1.blackducksoftware.com/" />
+
+</ruleset>
+
