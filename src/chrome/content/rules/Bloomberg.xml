@@ -44,6 +44,20 @@
 	** 504, akamai
 
 
+	Partially covered subdomains:
+
+		- (www.) *
+		- origin-www *
+
+	* Avoiding valid MCB
+
+
+	Fully covered subdomains:
+
+		- careers
+		- service
+
+
 	Insecure cookies are set for these domains:
 
 		- careers
@@ -62,6 +76,12 @@
 -->
 <ruleset name="Bloomberg (partial)" default_off="mismatched">
 
+	<target host="bloomberg.com" />
+	<target host="*.bloomberg.com" />
+		<!--
+			Avoid MCB:
+						-->
+		<exclusion pattern="^http://(?:origin-www\.|www\.)?bloomberg\.com/+(?!favicon\.ico|images/|styles/)" />
 	<target host="cdn.videos.bloomberg.com" />
 
 
@@ -73,6 +93,14 @@
 	<!--securecookie host="^(origin-www|www)\.bloomberg\.com$" name="^(_blp3_session|BCMAP|request_method)$" /-->
 	<!--securecookie host="^origin-www\.bloomberg\.com$" name="^BCOM$" /-->
 
+	<securecookie host="^(?:careers|service)\.bloomberg\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?bloomberg\.com/"
+		to="https://www.bloomberg.com/" />
+
+	<rule from="^http://(careers|origin-www|service)\.bloomberg\.com/"
+		to="https://$1.bloomberg.com/" />
 
 	<rule from="^http://cdn\.videos\.bloomberg\.com/"
 		to="https://cdn.videos.bloomberg.com/" />
