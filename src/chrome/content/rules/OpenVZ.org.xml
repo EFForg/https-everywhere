@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see OpenVZ.org-falsemixed.xml.
+
+
 		- openvz.livejournal.com
 
 			- blog
@@ -15,8 +18,10 @@
 
 	Partially covered subdomains:
 
+		- forum ¹
 		- static *
 
+	¹ Avoiding broken MCB
 	* Some paths show www
 
 
@@ -24,11 +29,12 @@
 
 		- (www.)
 		- bugzilla
-		- forum
 		- wiki
 
 
 	Mixed content:
+
+		- css on forum from $self *
 
 		- Image on wiki from static *
 
@@ -39,6 +45,10 @@
 
 	<target host="openvz.org" />
 	<target host="*.openvz.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://forum\.openvz\.org/+(?!favicon\.ico|js/|theme/)" />
 		<!--
 			Shows www:
 					-->
@@ -54,7 +64,7 @@
 	<!--securecookie host="^bugzilla\.openvz\.org$" name="^DEFAULTFORMAT$" /-->
 	<!--securecookie host="^\.forum\.openvz\.org$" name="^fud_session_\d{10}$" /-->
 
-	<securecookie host="^(?:bugzilla|\.forum|www\.)?openvz\.org$" name=".+" />
+	<securecookie host="^(?:bugzilla\.|www\.)?openvz\.org$" name=".+" />
 
 
 	<rule from="^http://((?:bugzilla|forum|static|wiki|www)\.)?openvz\.org/"
