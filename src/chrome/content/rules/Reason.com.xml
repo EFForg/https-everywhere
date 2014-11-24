@@ -5,16 +5,22 @@
 
 			- cloudfront-assets
 
-
-	Nonfunctional subdomains:
-
-		- (www.)	(redirects to http, valid cert)
-
 -->
-<ruleset name="Reason.com (partial)">
+<ruleset name="Reason.com">
 
-	<target host="cloudfront-assets.reason.com" />
+	<target host="reason.com" />
+	<target host="*.reason.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reason\.com$" name="^ng_session$" /-->
+
+	<securecookie host="^\.reason\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?reason\.com/"
+		to="https://$1reason.com/" />
 
 	<rule from="^http://cloudfront-assets\.reason\.com/"
 		to="https://d1ai9qtk9p41kl.cloudfront.net/" />
