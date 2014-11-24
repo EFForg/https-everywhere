@@ -16,11 +16,13 @@
 	Problematic domains:
 
 		- bloomberg.com ¹
+		- jobs.bloomberg.com *
 		- www.bloomberg.com ²
 		- origin-www.bloomberg.com ³
 		- cdn.videos.bloomberg.com	(akamai pointing to cloudfront)
 
-	¹ Dropped
+	¹ Mismatched, CN: origin-www.bloomberg.com
+	* Jobs2Web
 	² Mixed css
 	³ Mixed css, unsafe regenotiation
 
@@ -29,6 +31,8 @@
 
 		- bloomberg.com subdomains:
 
+			- about *
+			- quote *
 			- washpost	(refused)
 
 		- static.btrd.net		(shows bx.businessweek.com, akamai)
@@ -40,9 +44,18 @@
 	** 504, akamai
 
 
+	Insecure cookies are set for these domains:
+
+		- careers
+		- jobs
+		- origin-www
+		- service
+		- www
+
+
 	Mixed content:
 
-		- css on origin and origin-www from cdn.gotraffic *
+		- css on origin and origin-www from cdn.gotraffic.net *
 
 	* Unsecurable <= 504
 
@@ -50,6 +63,15 @@
 <ruleset name="Bloomberg (partial)" default_off="mismatched">
 
 	<target host="cdn.videos.bloomberg.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^careers\.bloomberg\.com$" name="^(l|SRV)$" /-->
+	<!--securecookie host="^jobs\.bloomberg\.com$" name="^(JSESSIONID|PERSIST)$" /-->
+	<!--securecookie host="^service\.bloomberg\.com$" name="^(SRV|locale|session)$" /-->
+	<!--securecookie host="^(origin-www|www)\.bloomberg\.com$" name="^(_blp3_session|BCMAP|request_method)$" /-->
+	<!--securecookie host="^origin-www\.bloomberg\.com$" name="^BCOM$" /-->
 
 
 	<rule from="^http://cdn\.videos\.bloomberg\.com/"
