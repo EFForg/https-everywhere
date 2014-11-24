@@ -26,7 +26,7 @@ exports["test sample ruleset"] = function(assert, done) {
     url: "http://www.reddit.com/robots.txt",
     onOpen: function(tab) {
       tab.on('load', function(tab) {
-        assert.equal(tab.url, "http://www.reddit.com/robots.txt",
+        assert.equal(tab.url, "https://www.reddit.com/robots.txt",
           "Test that Reddit URLs are rewritten to HTTPS.");
         tab.close();
         done();
