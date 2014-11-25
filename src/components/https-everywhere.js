@@ -334,7 +334,7 @@ HTTPSEverywhere.prototype = {
           .getInterface(CI.nsILoadContext);
       } catch(e) {
         this.log(NOTE, "no loadGroup notificationCallbacks for "
-                 + channel.URI.spec + ': ' + e);
+                 + channel.URI.spec + ": " + e);
         return null;
       }
     }
