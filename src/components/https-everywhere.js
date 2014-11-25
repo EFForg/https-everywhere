@@ -315,8 +315,16 @@ HTTPSEverywhere.prototype = {
     }
   },
 
+  // Given an nsIChannel (essentially, a container for an HTTP or similar
+  // resource request), try to find the relevant tab if there is one.
+  // Specifically, find the XUL <browser> element for that tab. Note
+  // there are multiple meanings for the word 'browser' in Firefox, described at:
+  // https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser
+  // We're looking for this one:
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XUL/browser
+  // Also note some requests, like Safe Browsing requests, will have no
+  // associated tab.
   getBrowserForChannel: function(channel) {
-    // Obtain a browser element from a channel
     let loadContext;
     try {
       loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
@@ -325,17 +333,47 @@ HTTPSEverywhere.prototype = {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
-        this.log(NOTE, "no loadgroup notificationCallbacks for "
-                 + channel.URI.spec + e);
+        this.log(NOTE, "no loadGroup notificationCallbacks for "
+                 + channel.URI.spec + ': ' + e);
         return null;
       }
     }
-    if (!loadContext) {
-      this.log(NOTE, "No loadContext for: " + channel.URI.spec);
+    // On e10s (multiprocess, aka electrolysis) Firefox,
+    // loadContext.topFrameElement gives us a reference to the XUL <browser>
+    // element we need. However, on non-e10s Firefox, topFrameElement is null.
+    if (loadContext && loadContext.topFrameElement) {
+      return loadContext.topFrameElement;
+    } else if (loadContext) {
+      // For non-e10s Firefox, get the XUL <browser> element using this rather
+      // magical / opaque code cribbed from
+      // https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser#Getting_the_browser_that_fires_the_http-on-modify-request_notification_(example_code_updated_for_loadContext)
+
+      // this is the HTML DOM window of the page that just loaded
+      var contentWindow = loadContext.associatedWindow;
+      // aDOMWindow this is the firefox window holding the tab
+      var aDOMWindow = contentWindow.top.QueryInterface(Ci.nsIInterfaceRequestor)
+        .getInterface(Ci.nsIWebNavigation)
+        .QueryInterface(Ci.nsIDocShellTreeItem)
+        .rootTreeItem
+        .QueryInterface(Ci.nsIInterfaceRequestor)
+        .getInterface(Ci.nsIDOMWindow);
+      // this is the gBrowser object of the firefox window this tab is in
+      var gBrowser = aDOMWindow.gBrowser;
+      // this is the clickable tab xul element, the one found in the tab strip
+      // of the firefox window, aTab.linkedBrowser is same as browser var above
+      var aTab = gBrowser._getTabForContentWindow(contentWindow.top);
+      // this is the browser within the tab
+      if (aTab) {
+        var browser = aTab.linkedBrowser;
+        return browser;
+      } else {
+        this.log(NOTE, "getBrowserForChannel: aTab was null.");
+      }
+    } else {
+      this.log(NOTE, "getBrowserForChannel: No loadContext for: " +
+        channel.URI.spec);
       return null;
     }
-    let browser = loadContext.topFrameElement;
-    return browser;
   },
 
   // the lists get made when the urlbar is loading something new, but they
