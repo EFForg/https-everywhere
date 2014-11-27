@@ -1,9 +1,29 @@
 <!--
+	CDN buckets:
+
+		- my.safaribooksonline.com.global.prod.fastly.net
+		- techbus.safaribooksonline.com.global.prod.fastly.net
+
+		- safaribooksonline.force.com
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- support *
+
+	* Force.com
+
+
 	Problematic subdomains:
 
 		- my ¹
+		- ssl ²
+		- techbus ¹
 
 	¹ Fastly
+	² Insecure renegotiation
 
 
 	Fully covered subdomains:
@@ -15,9 +35,14 @@
 
 	Insecure cookies are set for these domains:
 
+		- my
+		- .my
 		- ssl
 		- .ssl
+		- techbus
+		- .techbus
 		- www
+		- .www
 
 -->
 <ruleset name="Safari Books Online">
@@ -27,8 +52,8 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="ssl\.safaribooksonline\.com$" name="^cookie-monster$" /-->
-	<!--securecookie host="\.ssl\.safaribooksonline\.com$" name="^Safari$" /-->
+	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
+	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
 	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
 
 	<securecookie host="(?:ssl|www)\.safaribooksonline\.com$" name=".+" />
