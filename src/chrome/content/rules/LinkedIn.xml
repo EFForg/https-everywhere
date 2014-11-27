@@ -16,19 +16,35 @@
 
 	Problematic domains:
 
+		- business.linkedin.com	 ¹
+		- developer.linkedin.com ¹
+		- engineering.linkedin.com ¹
+		- forms.linkedin.com ¹
+		- members.linkedin.com ¹
+		- sales.linkedin.com		(Expired 2014)
+
 		- lnkd.in *
 
+	¹ Insecure renegotiation
 	* Mismatched
 
 
 	Fully covered domains:
 
+		- media.licdn.com
 		- static.licdn.com
 
 		- \w\w.linkedin.com:
 
 			- es
 			- us
+
+		- business.linkedin.com
+		- developer.linkedin.com
+		- engineering.linkedin.com
+		- forms.linkedin.com
+		- members.linkedin.com
+		- premium.linkedin.com
 
 		- lnkd.in	(→ www.linkedin.com)
 
@@ -40,7 +56,7 @@
 -->
 <ruleset name="LinkedIn (partial)">
 
-	<target host="static.licdn.com" />
+	<target host="*.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
 	<target host="lnkd.in" />
@@ -50,19 +66,22 @@
 					-->
 	<!--securecookie host="^\.linkedin\.com$" name="^(bcookie|lang|lidc|lihc_auth_en|li_loc|li_trk)$" /-->
 	<!--securecookie host="^\w\w\.linkedin\.com$" name="^(L1c|leo_auth_token|visit)$" /-->
-	<!--securecookie host="^\.\w\w\.linkedin\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(\.\w\w|business|premium)\.linkedin\.com$" name="^JSESSIONID$" /-->
 	<!--securecookie host="^help\.linkedin\.com$" name="^cp_session$" /-->
 	<!--securecookie host="^www\.linkedin\.com$" name="^(leo_auth_token|visit)$" /-->
 	<!--securecookie host="^\.www\.linkedin\.com$" name="^JSESSIONID" /-->
 
-	<securecookie host="^(?:help|www)?\.linkedin\.com$" name=".+" />
+	<securecookie host="^(?:business|help|www)?\.linkedin\.com$" name=".+" />
 
 
-	<rule from="^http://static\.licdn\.com/"
-		to="https://static.licdn.com/" />
+	<rule from="^http://(media|static)\.licdn\.com/"
+		to="https://$1.licdn.com/" />
 
-	<rule from="^http://((?:\w\w|help|platform|www)\.)?linkedin\.com/"
+	<rule from="^http://((?:\w\w|business|developer|engineering|forms|help|members|platform|premium|www)\.)?linkedin\.com/"
 		to="https://$1linkedin.com/" />
+
+	<rule from="^http://sales\.linkedin\.com/$"
+		to="https://business.linkedin.com/sales-solutions" />
 
 	<!--	Redirects like so:
 					-->
