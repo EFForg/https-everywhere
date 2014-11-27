@@ -35,14 +35,13 @@
 	Problematic domains:
 
 		- sbnation.com ¹
-		- www.sbnation.com *
 
 	¹ Refused
-	* Mismatched, CN: *.a.ssl.fastly.net
 
 
 	Fully covered domains:
 
+		- (www.)sbnation.com	(^ → www)
 		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
 		- fonts.sbnation.com	(→ d1jcofl6pfjesh.cloudfront.net)
 
@@ -52,10 +51,20 @@
 -->
 <ruleset name="SB Nation (partial)">
 
+	<target host="sbnation.com" />
 	<target host="*.sbnation.com" />
 	<target host="share.sbndev.net" />
 	<target host="jobs.voxmedia.com" />
 
+
+	<!--	Observed cookies:
+			- _session_id
+		-->
+	<securecookie host="^www\.sbnation\.com$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?sbnation\.com/"
+		to="https://www.sbnation.com/" />
 
 	<rule from="^http://assets\.sbnation\.com/"
 		to="https://s3.amazonaws.com/assets.sbnation.com/" />
