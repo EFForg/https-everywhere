@@ -5,11 +5,36 @@
 
 	¹ Fastly
 
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- ssl
+
+
+	Insecure cookies are set for these domains:
+
+		- ssl
+		- .ssl
+		- www
+
 -->
 <ruleset name="Safari Books Online">
-  <target host="my.safaribooksonline.com" />
-  <target host="www.safaribooksonline.com" />
+  <target host="safaribooksonline.com" />
+  <target host="*.safaribooksonline.com" />
 
-    <rule from="^http://www\.safaribooksonline\.com/Corporate/Index/logIn\.php$"
-        to="https://ssl.safaribooksonline.com/securelogin"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="ssl\.safaribooksonline\.com$" name="^cookie-monster$" /-->
+	<!--securecookie host="\.ssl\.safaribooksonline\.com$" name="^Safari$" /-->
+	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+
+	<securecookie host="(?:ssl|www)\.safaribooksonline\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|ssl|www)\.)?safaribooksonline\.com/"
+		to="https://$1safaribooksonline.com/" />
+
 </ruleset>
