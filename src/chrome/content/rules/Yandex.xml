@@ -35,6 +35,18 @@
 		- yandex.ru subdomains:
 
 			- advertising	(dropped)
+			- auto ¹
+			- m.auto ¹
+			- www.market ¹
+			- rabota ¹
+			- repo ³
+			- shad ¹
+			- uslugi ¹
+			- pda.yaca ²
+
+	¹ Redirects to http
+	² Dropped
+	³ Refused
 
 
 	Problematic domains:
@@ -73,6 +85,14 @@
     <target host="*.yandex.net" />
     <target host="yandex.ru" />
     <target host="*.yandex.ru" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://yandex\.ru/(video/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://yandex\.ru/(?!cycounter(?:$|\?)|images/)" />
 
 
 	<!--securecookie host="^\.yandex\.ru$" name="^yandexuid$" /-->
@@ -155,7 +175,10 @@
     <!--    12. Drop down menu UI bugs -->
 
     <exclusion pattern="^http://tune\.yandex\.ru/" />
-
+		<!--
+			Miscellanious:
+					-->
+		<exclusion pattern="http://(?:auto|m\.auto|www\.market|rabota|repo|shad|uslugi|pda\.yaca)\.yandex\.ru/" />
 
 
 	<!--	Not secured by server:
@@ -175,9 +198,6 @@
     <rule from="^http://(?:www\.)?yandex\.(net|st)/"
         to="https://yandex.$1/" />
 
-    <!--    Redirects to www for pages.
-            In particular, this catches counters.
-                                -->
     <rule from="^http://yandex\.ru/"
         to="https://yandex.ru/" />
 
