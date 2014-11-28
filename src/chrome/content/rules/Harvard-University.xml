@@ -25,6 +25,7 @@
 	Problematic subdomains:
 
 		- berkman *
+		- cbmi.catalyst	(Mixed css)
 		- hsph
 		- www.cyber.law *
 		- eon.law	(shows adam.law, mismatched, CN: adam.law.harvard.edu)
@@ -40,6 +41,7 @@
 
 	Partially covered subdomains:
 
+		- cbmi.catalyst	(Avoiding broken MCB)
 		- www.cfa *	(image_archive/ 404s)
 		- isites *
 
@@ -49,6 +51,10 @@
 	Fully covered subdomains:
 
 		- (www.)berkman
+		- catalyst
+		- connects.catalyst
+		- dome
+		- dspace
 		- hbdm.hbsp
 		- (www.)hsph		(^ → www)
 		- osc.hul
@@ -69,10 +75,13 @@
 
 	Insecure cookies are set for these domains:
 
+		- connects.catalyst.harvard.edu
 		- .hul.harvard.edu
 
 
 	Mixed content:
+
+		- css on cbmi.catalyst from catalyst ¹
 
 		- Images on osc.hul from $self ¹
 
@@ -85,6 +94,10 @@
 <ruleset name="Harvard University (partial)">
 
 	<target host="*.harvard.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://cbmi\.catalyst\.harvard\.edu/(?!formsJsf/javax\.faces\.resource/|formsJsf/resources/)" />
 		<!--exclusion pattern="^http://www\.cfa\.harvard\.edu/(?!common/)" /-->
 		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
 		<exclusion pattern="^http://isites\.harvard\.edu/(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
@@ -93,9 +106,10 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^connects\.catalyst\.harvard\.edu$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^\.hul\.harvard\.edu$" name="^SESS[\da-f]{32}$" /-->
 
-	<securecookie host="^(?:login\.icommons|.*\.law|www\.pin1|www\.seas)\.harvard\.edu$" name=".+" />
+	<securecookie host="^(?:connects\.catalyst|login\.icommons|.*\.law|www\.pin1|www\.seas)\.harvard\.edu$" name=".+" />
 
 
 	<rule from="^http://www\.pin\.harvard\.edu/(?:$|\?.*)"
@@ -104,7 +118,7 @@
 	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
 
-	<rule from="^http://(www\.cfa|hbdm\.hbsp|osc\.hul|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
+	<rule from="^http://(catalyst|(?:cbmi|connects)\.catalyst|www\.cfa|dome|dspace|hbdm\.hbsp|osc\.hul|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
 		to="https://$1.harvard.edu/" />
 
 	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
