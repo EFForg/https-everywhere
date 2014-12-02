@@ -1100,7 +1100,12 @@ SSLObservatory.prototype = {
       threshold = WARN;
     }
     if (level >= threshold) {
-      dump("SSL Observatory: "+str+"\n");
+      // dump() prints to browser stdout. That's sometimes undesireable,
+      // so only do it when a pref is set (running from test.sh enables
+      // this pref).
+      if (this.prefs.getBoolPref("log_to_stdout")) {
+	dump("SSL Observatory " + level + ": " + str + "\n");
+      }
       econsole.logStringMessage("SSL Observatory: " +str);
     }
   }

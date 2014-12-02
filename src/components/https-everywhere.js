@@ -286,7 +286,7 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      this.log(NOTE, "No expando for " + browser.currentURI);
+      this.log(NOTE, "No expando for " + browser.currentURI.spec);
       return null;
     }
     return obj[key];
@@ -835,8 +835,15 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    dump("HTTPS Everywhere: "+str+"\n");
-    econsole.logStringMessage("HTTPS Everywhere: " +str);
+    var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][+level];
+    var prefix = "HTTPS Everywhere " + levelName + ": ";
+    // dump() prints to browser stdout. That's sometimes undesireable,
+    // so only do it when a pref is set (running from test.sh enables
+    // this pref).
+    if (prefs.getBoolPref("log_to_stdout")) {
+      dump(prefix + str + "\n");
+    }
+    econsole.logStringMessage(prefix + str);
   }
 }
 
