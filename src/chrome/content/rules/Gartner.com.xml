@@ -22,7 +22,7 @@
 
 		- css, on:
 
-			- blogs from $self
+			- blogs from $self *
 			- investor from www *
 			- investor from phx.corporate-ir.net *
 			- my from $self *
@@ -41,9 +41,13 @@
 	<target host="gartner.com" />
 	<target host="*.gartner.com" />
 		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blogs\.gartner\.com/+(?!favicon\.ico|gbn-feed(?:$|[?/])|wp-content/|wp-includes/)" />
+		<!--
 			Started redirecting to http.
 							-->
-		<exclusion pattern="^http://www\.gartner\.com/.+\.jsp(?:$|\?)" />
+		<exclusion pattern="^http://www\.gartner\.com/(?!SignIn\.jsp).+\.jsp(?:$|\?)" />
 
 
 	<!--	Not secured by server:
@@ -52,6 +56,7 @@
 	<!--securecookie host="^my\.gartner\.com$" name="^(MY_GARTNER_JSESSIONID|TS[\d0-9]{8})$" /-->
 	<!--securecookie host="^www\.gartner\.com$" name="^(_op_aixPageId|LoginWLSessionID|TS[\d0-9]{8})$" /-->
 
+	<securecookie host="^my\.gartner\.com$" name=".+" />
 	<!--
 		Commented for the reason above.
 
@@ -61,7 +66,7 @@
 	<rule from="^http://(?:(?:na\d\.)?www\.)?gartner\.com/"
 		to="https://www.gartner.com/" />
 
-	<rule from="^http://(imagesrv|my)\.gartner\.com/"
+	<rule from="^http://(blogs|imagesrv|my)\.gartner\.com/"
 		to="https://$1.gartner.com/" />
 
 </ruleset>
