@@ -2,18 +2,20 @@
 	For other Active Network coverage, see Active.com.xml.
 
 -->
-<ruleset name="RegOnline.com (partial)">
+<ruleset name="RegOnline.com">
 
 	<target host="regonline.com" />
 	<target host="www.regonline.com" />
 
 
-	<!--	Register/Checkin.aspx?EventID=\d+$ 301s to http.
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(www\.)?regonline\.com/([rR])egister/([cC])heckin\.aspx\?EventID=(\d+)$"
-		to="https://$1regonline.com/$2egister/$3heckin.aspx?EventID=$4&amp;MethodId=0&amp;EventSessionId=&amp;startnewreg=1" />
+	<!--securecookie host="^www\.regonline\.com$" name="^(ASP\.NET_SessionId|BIGipServer~SPORTS~acmpool5_http|CurrentROLSession|CurrentSiteID)$" /-->
 
-	<rule from="^http://(www\.)?regonline\.com/((?:__404|privacy|[rR]egister/(?:[cC]heckin|dialogs/passwordReset|login))\.aspx|Builder/WebResource\.axd|__images/|RadControls/|registrations/|__styles/)"
-		to="https://$1regonline.com/$2" />
+	<securecookie host="^www\.regonline\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?regonline\.com/"
+		to="https://$1regonline.com/" />
 
 </ruleset>
