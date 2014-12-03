@@ -50,16 +50,19 @@
 		- nation *
 		- newsfeed *
 		- science *
+		- subscription-assets ²	(-> Akamai)
 		- swampland *
 		- techland *
 		- world *
 
 	* Rest handled in WordPress-blogs.xml.
+	² Avoiding user-visible paths
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- auth
 		- smetrics
 		- tiads		(→ akamai)
 
@@ -80,6 +83,10 @@
 
 	<target host="time.com" />
 	<target host="*.time.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://subscription-assets\.time\.com/(?!.+\.png(?:$|\?)|favicon\.ico)" />
 
 
 	<!--	Not secured by server:
@@ -92,7 +99,7 @@
 	<securecookie host="^subscription\.time\.com$" name=".+" />
 
 
-	<rule from="^http://((?:profiles|smetrics|subscription|www)\.)?time\.com/"
+	<rule from="^http://((?:auth|profiles|smetrics|subscription|www)\.)?time\.com/"
 		to="https://$1time.com/" />
 
 	<rule from="^http://(business|entertainment|newsfeed|science|world)\.time\.com/+(?:$|\?.*)"
@@ -106,6 +113,9 @@
 
 	<rule from="^http://nation\.time\.com/+(?:$|\?.*)"
 		to="https://time.com/us" />
+
+	<rule from="^http://subscription-assets\.time\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/subscription-assets.time.com/" />
 
 	<rule from="^http://swampland\.time\.com/+(?:$|\?.*)"
 		to="https://time.com/politics" />
