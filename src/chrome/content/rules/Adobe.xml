@@ -194,6 +194,14 @@
 			Breaks video playback:
 						-->
 		<exclusion pattern="^http://fpdownload\.adobe\.com/(?:pub/swz/)?crossdomain\.xml$" />
+		<!--
+			These stylesheets reference resources relative to root:
+										-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/labs_import\.css" /-->
+		<!--
+			While these do not:
+						-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/(?!assistive|features_test|handheld|print)\.css" /-->
 	<target host="macromedia.com" />
 	<target host="*.macromedia.com" />
 
@@ -222,8 +230,11 @@
 	<rule from="^http://thumbnails\.tv\.adobe\.com/"
 		to="https://a248.e.akamai.net/f/1355/4224/3m/thumbnails.tv.adobe.com/" />
 
-	<!--rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/"
-		to="https://www.adobe.com/" /-->
+	<!--	For all css we haven't explicitly checked
+		for references to root in, rewrite to www:
+								-->
+	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/(?!(?:assistive|features_test|handheld|print)\.css)"
+		to="https://www.adobe.com/" />
 
 	<rule from="^http://wwwimages\.adobe\.com/"
 		to="https://a248.e.akamai.net/f/1953/8974/2h/wwwimages.adobe.com/" />
