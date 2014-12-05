@@ -1,5 +1,4 @@
-// LOG LEVELS ---
-
+// LOG LEVELS
 let VERB=1;
 let DBUG=2;
 let INFO=3;
@@ -18,15 +17,10 @@ let https_everywhere_blacklist = {};
 // domains for which there is at least one blacklisted URL
 let https_blacklist_domains = {};
 
-//
 const CI = Components.interfaces;
 const CC = Components.classes;
-const CU = Components.utils;
-const CR = Components.results;
 const Ci = Components.interfaces;
-const Cc = Components.classes;
 const Cu = Components.utils;
-const Cr = Components.results;
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
@@ -286,7 +280,7 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      this.log(NOTE, "No expando for " + browser.currentURI);
+      this.log(NOTE, "No expando for " + browser.currentURI.spec);
       return null;
     }
     return obj[key];
@@ -333,7 +327,9 @@ HTTPSEverywhere.prototype = {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
-        this.log(NOTE, "no loadGroup notificationCallbacks for "
+        // Lots of requests have no notificationCallbacks, mostly background
+        // ones like OCSP checks or smart browsing fetches.
+        this.log(DBUG, "no loadGroup notificationCallbacks for "
                  + channel.URI.spec + ": " + e);
         return null;
       }
@@ -835,8 +831,15 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    dump("HTTPS Everywhere: "+str+"\n");
-    econsole.logStringMessage("HTTPS Everywhere: " +str);
+    var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
+    var prefix = "HTTPS Everywhere " + levelName + ": ";
+    // dump() prints to browser stdout. That's sometimes undesireable,
+    // so only do it when a pref is set (running from test.sh enables
+    // this pref).
+    if (prefs.getBoolPref("log_to_stdout")) {
+      dump(prefix + str + "\n");
+    }
+    econsole.logStringMessage(prefix + str);
   }
 }
 
