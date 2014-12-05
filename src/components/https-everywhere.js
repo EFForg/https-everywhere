@@ -19,12 +19,8 @@ let https_blacklist_domains = {};
 
 const CI = Components.interfaces;
 const CC = Components.classes;
-const CU = Components.utils;
-const CR = Components.results;
 const Ci = Components.interfaces;
-const Cc = Components.classes;
 const Cu = Components.utils;
-const Cr = Components.results;
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
