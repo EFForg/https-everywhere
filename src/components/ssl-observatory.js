@@ -502,10 +502,13 @@ SSLObservatory.prototype = {
           // active now
           return this.everSeenPrivateBrowsing;
         }
-        var win = this.HTTPSEverywhere.getWindowForChannel(channel);
-        if (!win) return this.everSeenPrivateBrowsing;  // windowless request
+        var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
+        // windowless request
+        if (!browser || !browser.contentWindow) {
+          return this.everSeenPrivateBrowsing;
+	}
 
-        if (PrivateBrowsingUtils.isWindowPrivate(win)) {
+        if (PrivateBrowsingUtils.isWindowPrivate(browser.contentWindow)) {
           this.everSeenPrivateBrowsing = true;
           return true;
         }
@@ -816,7 +819,11 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-    var win = channel ? this.HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = null
+    if (channel) {
+      var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
+      var win = browser.contentWindow;
+    }
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
