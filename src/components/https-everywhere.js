@@ -1,5 +1,4 @@
-// LOG LEVELS ---
-
+// LOG LEVELS
 let VERB=1;
 let DBUG=2;
 let INFO=3;
@@ -18,7 +17,6 @@ let https_everywhere_blacklist = {};
 // domains for which there is at least one blacklisted URL
 let https_blacklist_domains = {};
 
-//
 const CI = Components.interfaces;
 const CC = Components.classes;
 const CU = Components.utils;
@@ -333,7 +331,9 @@ HTTPSEverywhere.prototype = {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
-        this.log(NOTE, "no loadGroup notificationCallbacks for "
+        // Lots of requests have no notificationCallbacks, mostly background
+        // ones like OCSP checks or smart browsing fetches.
+        this.log(DBUG, "no loadGroup notificationCallbacks for "
                  + channel.URI.spec + ": " + e);
         return null;
       }
@@ -835,7 +835,7 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][+level];
+    var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
     var prefix = "HTTPS Everywhere " + levelName + ": ";
     // dump() prints to browser stdout. That's sometimes undesireable,
     // so only do it when a pref is set (running from test.sh enables
