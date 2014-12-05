@@ -1,10 +1,4 @@
 INCLUDE('Cookie');
-// XXX: Disable STS for now.
-var STS = {
-  isSTSURI : function(uri) {
-    return false;
-  }
-};
 
 // Hack. We only need the part of the policystate that tracks content
 // policy loading.
