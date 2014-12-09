@@ -167,6 +167,7 @@ else
   echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
   echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
   echo >&2 "Created $XPI_NAME"
+  ../utils/android-push.sh "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
     cd ../..
     cp $SUBDIR/$XPI_NAME pkg

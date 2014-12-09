@@ -355,15 +355,29 @@ HTTPSEverywhere.prototype = {
         .getInterface(Ci.nsIDOMWindow);
       // this is the gBrowser object of the firefox window this tab is in
       var gBrowser = aDOMWindow.gBrowser;
-      // this is the clickable tab xul element, the one found in the tab strip
-      // of the firefox window, aTab.linkedBrowser is same as browser var above
-      var aTab = gBrowser._getTabForContentWindow(contentWindow.top);
-      // this is the browser within the tab
-      if (aTab) {
-        var browser = aTab.linkedBrowser;
-        return browser;
+      // On Firefox for Android, gBrowser is not available. Instead use the
+      // BrowserApp API:
+      // https://developer.mozilla.org/en-US/Add-ons/Firefox_for_Android/API/BrowserApp
+      if (gBrowser) {
+        var aTab = gBrowser._getTabForContentWindow(contentWindow.top);
+        // this is the clickable tab xul element, the one found in the tab strip
+        // of the firefox window, aTab.linkedBrowser is same as browser var above
+        // this is the browser within the tab
+        if (aTab) {
+          var browser = aTab.linkedBrowser;
+          return browser;
+        } else {
+          this.log(NOTE, "getBrowserForChannel: aTab was null.");
+        }
       } else {
-        this.log(NOTE, "getBrowserForChannel: aTab was null.");
+        // This code gets called on Android.
+        var mTab = aDOMWindow.BrowserApp.getTabForWindow(contentWindow.top);
+        if (mTab) {
+          var browser = mTab.browser;
+          return browser;
+        } else {
+          this.log(NOTE, "getBrowserForChannel: mTab was null");
+        }
       }
     } else {
       this.log(NOTE, "getBrowserForChannel: No loadContext for: " +
