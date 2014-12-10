@@ -636,7 +636,7 @@ const HTTPSRules = {
         }
       }
     } else {
-      this.log(INFO, "For target " + target + ", found no ids in DB");
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
     }
     return output;
   },
