@@ -156,7 +156,7 @@ httpsEverywhere.toolbarButton = {
     } else if (window.BrowserApp) {
       return window.BrowserApp.selectedBrowser;
     }
-  }
+  },
 
   /**
    * Update the rulesets applied counter for the current tab.
@@ -170,7 +170,7 @@ httpsEverywhere.toolbarButton = {
       return;
     }
 
-    var browser = httpsEverywhere.toolbarbutton.selectedBrowser();
+    var browser = httpsEverywhere.toolbarButton.selectedBrowser();
     if (!browser) {
       return;
     }
@@ -299,7 +299,7 @@ function stitch_context_menu2() {
 var rulesetTestsMenuItem = null;
 
 function show_applicable_list(menupopup) {
-  var browser = httpsEverywhere.toolbarbutton.selectedBrowser();
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
   if (!browser) {
     HTTPSEverywhere.log(WARN, "No browser for applicable list");
     return;
