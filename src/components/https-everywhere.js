@@ -319,27 +319,42 @@ HTTPSEverywhere.prototype = {
   // Also note some requests, like Safe Browsing requests, will have no
   // associated tab.
   getBrowserForChannel: function(channel) {
-    let loadContext;
+    let loadContext, topFrameElement, associatedWindow;
+    let spec = channel.URI.spec;
     try {
       loadContext = channel.notificationCallbacks.getInterface(CI.nsILoadContext);
     } catch(e) {
+    }
+
+    if (!loadContext) {
       try {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
         // Lots of requests have no notificationCallbacks, mostly background
         // ones like OCSP checks or smart browsing fetches.
-        this.log(DBUG, "no loadGroup notificationCallbacks for "
-                 + channel.URI.spec + ": " + e);
+        this.log(DBUG, "getBrowserForChannel: no loadContext for " + spec);
         return null;
       }
     }
+
+    if (loadContext) {
+      topFrameElement = loadContext.topFrameElement;
+      try {
+        // If loadContext is an nsDocShell, associatedWindow is present.
+        // Otherwise, if it's just a LoadContext, accessing it will throw
+        // NS_ERROR_UNEXPECTED.
+        associatedWindow = loadContext.associatedWindow;
+      } catch (e) {
+      }
+    }
+
     // On e10s (multiprocess, aka electrolysis) Firefox,
     // loadContext.topFrameElement gives us a reference to the XUL <browser>
     // element we need. However, on non-e10s Firefox, topFrameElement is null.
-    if (loadContext && loadContext.topFrameElement) {
-      return loadContext.topFrameElement;
-    } else if (loadContext) {
+    if (topFrameElement) {
+      return topFrameElement;
+    } else if (associatedWindow) {
       // For non-e10s Firefox, get the XUL <browser> element using this rather
       // magical / opaque code cribbed from
       // https://developer.mozilla.org/en-US/Add-ons/Code_snippets/Tabbed_browser#Getting_the_browser_that_fires_the_http-on-modify-request_notification_(example_code_updated_for_loadContext)
@@ -355,33 +370,40 @@ HTTPSEverywhere.prototype = {
         .getInterface(Ci.nsIDOMWindow);
       // this is the gBrowser object of the firefox window this tab is in
       var gBrowser = aDOMWindow.gBrowser;
-      // On Firefox for Android, gBrowser is not available. Instead use the
-      // BrowserApp API:
-      // https://developer.mozilla.org/en-US/Add-ons/Firefox_for_Android/API/BrowserApp
       if (gBrowser) {
         var aTab = gBrowser._getTabForContentWindow(contentWindow.top);
         // this is the clickable tab xul element, the one found in the tab strip
         // of the firefox window, aTab.linkedBrowser is same as browser var above
         // this is the browser within the tab
         if (aTab) {
-          var browser = aTab.linkedBrowser;
-          return browser;
+          return aTab.linkedBrowser;
         } else {
-          this.log(NOTE, "getBrowserForChannel: aTab was null.");
+          this.log(NOTE, "getBrowserForChannel: aTab was null for " + spec);
+          return null;
         }
-      } else {
-        // This code gets called on Android.
+      } else if (aDOMWindow.BrowserApp) {
+        // gBrowser is unavailable in Firefox for Android, and in some desktop
+        // contexts, like the fetches for new tab tiles (which have an
+        // associatedWindow, but no gBrowser)?
+        // If available, try using the BrowserApp API:
+        // https://developer.mozilla.org/en-US/Add-ons/Firefox_for_Android/API/BrowserApp
+        // TODO: We don't get the toolbar icon on android. Probably need to fix
+        // the gBrowser reference in toolbar_button.js.
+        // Also TODO: Where are these log messages going? They don't show up in
+        // remote debug console.
         var mTab = aDOMWindow.BrowserApp.getTabForWindow(contentWindow.top);
         if (mTab) {
-          var browser = mTab.browser;
-          return browser;
+          return mTab.browser;
         } else {
-          this.log(NOTE, "getBrowserForChannel: mTab was null");
+          this.log(WARN, "getBrowserForChannel: mTab was null for " + spec);
+          return null;
         }
+      } else {
+        this.log(INFO, "getBrowserForChannel: No gBrowser and no BrowserApp for " + spec);
+        return null;
       }
     } else {
-      this.log(NOTE, "getBrowserForChannel: No loadContext for: " +
-        channel.URI.spec);
+      this.log(NOTE, "getBrowserForChannel: No loadContext for " + spec);
       return null;
     }
   },
