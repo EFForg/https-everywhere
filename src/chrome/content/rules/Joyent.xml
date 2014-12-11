@@ -1,37 +1,54 @@
 <!--
 	Other Joyent rulesets:
 
+		- Nodejs.org.xml
 		- Npm_js.org.xml
 
 
 	Problematic domains:
 
-		- jobs.nodejs.org	(works; mismatched, CN: *.jobamatic.com)
+		- joyent.com ¹
+
+	¹ Dropped
 
 
 	Nonfunctional domains:
 
-		- (www.)nodejs.org *
-		- blog.nodejs.org *
-		- build.nodejs.org *
-		- logs.nodejs.org *
+		- lpage.joyent.com ¹
 
-	* Refused
+	¹ Marketo
+
+
+	Insecure cookies are set for these domains:
+
+		- my.joyent.com
+		- sso.joyent.com
+		- wiki.joyent.com
 
 -->
 <ruleset name="Joyent (partial)">
 
 	<target host="joyent.com"/>
 	<target host="*.joyent.com"/>
+		<exclusion pattern="^http://lpage\.joyent\.com/(?!css/|images/|js/|rs/)" />
 	<target host="*.joyentcloud.com"/>
 	<target host="no.de"/>
 	<target host="www.no.de"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.joyent\.com$" name="^(X-Mapping-\w+|connect\.sid)$" /-->
+	<!--securecookie host="^sso\.joyent\.com$" name="^connect\.sess$" /-->
+	<!--securecookie host="^wiki\.joyent\.com$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^(.*\.)?(joyent\.com|no\.de)$" name=".*"/>
     <exclusion pattern="^http://pkgsrc[\w\-]*\.joyent\.com/"/>
 
 	<rule from="^http://joyent\.com/"
 		to="https://www.joyent.com/"/>
+
+	<rule from="^http://lpage\.joyent\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sjf.marketo.com/" />
 
 	<rule from="^http://(\w+)\.joyent\.com/"
 		to="https://$1.joyent.com/"/>

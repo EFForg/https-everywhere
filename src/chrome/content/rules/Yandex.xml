@@ -2,6 +2,11 @@
 	Other Yandex rulests:
 
 		- Loginza.ru.xml
+		- YaDi.sk.xml
+		- Yandex.com.xml
+		- Yandex.st.xml
+		- Yandex.ua.xml
+		- Yastatic.net.xml
 
 
     For any questions please contact Artyom Gavrichenkov <ximaera@yandex.ru>.
@@ -31,20 +36,46 @@
     Nonfunctional domains:
 
         - clubs.ya.ru       (redirects to http)
+	- my.ya.ru ¹
+	- yatechnologies.ya.ru ¹
 
 		- yandex.ru subdomains:
 
 			- advertising	(dropped)
+			- auto ¹
+			- m.auto ¹
+			- business ³
+			- cards ²
+			- (www.)market ¹
+			- narod ³
+			- pogoda ³
+			- rabota ¹
+			- repo ³
+			- shad ¹
+			- soft ²
+			- uslugi ¹
+			- wdgt ⁴
+			- widgets ⁴
+			- pda.yaca ²
+
+	¹ Redirects to http
+	² Dropped
+	³ Refused
+	⁴ 403
 
 
 	Problematic domains:
 
-		- www.yandex.ru		(dropped)
+		- img.encyc.yandex.net		(Mismatched, CN: yastatic.net)
+
+		- mobile-feedback.yandex.ru	(Mismatched, CN: validator.yandex.ru)
+		- money.yandex.ru		(Blocks Tor users)
 
 
 	Partially covered domains:
 
-		- www.yandex.ru		(→ ^)
+		- (www.)yandex.ru		(www → ^)
+		- video.yandex.ru		(Apparently breaks player)
 
 
 	Fully covered domains:
@@ -52,14 +83,84 @@
 		- awaps.yandex.by
 		- awaps.yandex.com.au
 		- awaps.yandex.kz
+
+		- avatars.yandex.net
+		- a.captcha.yandex.net
+		- cache-default05h.cdn.yandex.net
+		- cache-default06f.cdn.yandex.net
+		- download.cdn.yandex.net
+		- \d.cs-ellpic.yandex.net
+		- disk.yandex.net
 		- favicon.yandex.net
+		- img-css.friends.yandex.net
+		- img.yandex.net
+		- img-fotki.yandex.net
+		- img\d-fotki.yandex.net
+		- st.kp.yandex.net
+		- mdata.yandex.net
+		- resize.yandex.net
+		- wi.yandex.net
 
+		- afisha.yandex.ru
+		- api.yandex.ru
 		- awaps.yandex.ru
+		- ba.yandex.ru
+		- browsers.yandex.ru
 		- bs.yandex.ru
+		- calendar.yandex.ru
+		- clck.yandex.ru
+		- company.yandex.ru
+		- direct.yandex.ru
+		- disk.yandex.ru
+		- element.yandex.ru
+		- feedback2.yandex.ru
+		- fotki.yandex.ru
+		- help.yandex.ru
+		- images.yandex.ru
+		- img.yandex.ru
+		- img-fotki.yandex.ru
 		- kiks.yahdex.ru
+		- legal.yahdex.ru
+		- m.legal.yandex.ru
+		- mail.yandex.ru
+		- maps.yandex.ru
+		- metrika.yandex.ru
+		- mobile.yandex.ru
+		- money.yandex.ru
+		- partner.yandex.ru
+		- pass.yandex.ru
+		- passport.yandex.ru
+		- people.yandex.ru
+		- pdd.yandex.ru
+		- site.yandex.ru
+		- slovari.yandex.ru
+		- sprav.yandex.ru
+		- stat.yandex.ru
+		- taxi.yandex.ru
+		- tech.yandex.ru
+		- tv.yandex.ru
+		- video.yandex.ru
+		- static.video.yandex.ru
+		- yabs.yandex.ru
+		- yaca.yandex.ru
 
-		- awaps.yandex.ua
+		- m.zakladki.yandex.ru
+
 		- awaps.yandex.ru
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.ru
+		- afisha.yandex.ru
+		- feedback2.yandex.ru
+		- .fotki.yandex.ru
+		- mail.yandex.ru
+		- mobile.yandex.ru
+		- pass.yandex.ru
+		- slovari.yandex.ru
+		- stat.yandex.ru
+		- tech.yandex.ru
 
 -->
 <ruleset name="Yandex">
@@ -73,10 +174,31 @@
     <target host="*.yandex.net" />
     <target host="yandex.ru" />
     <target host="*.yandex.ru" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://yandex\.ru/(video/$)" /-->
+		<!--exclusion pattern="^http://m\.auto\.yandex\.ru/$" /-->
+		<!--exclusion pattern="^http://market\.yandex\.ru/$" /-->
+		<!--exclusion pattern="^http://www\.yandex\.ru/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?yandex\.ru/(?!cycounter(?:$|\?)|images/)" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.ru$" name="^(Cookie_check|fuid01|my|yandexuid|ys)$" /-->
+	<!--securecookie host="^afisha\.yandex\.ru$" name="^ys$" /-->
+	<!--securecookie host="^feedback2\.yandex\.ru$" name="^feedback2-sid$" /-->
+	<!--securecookie host="^\.fotki\.yandex\.ru$" name="^FSession_id$" /-->
+	<!--securecookie host="^mail\.yandex\.ru$" name="^ni$" /-->
+	<!--securecookie host="^mobile\.yandex\.ru$" name="^family$" /-->
+	<!--securecookie host="^pass\.yandex\.ru$" name="^M__yandex_\w\w$" /-->
+	<!--securecookie host="^slovari\.yandex\.ru$" name="^(slovari-state|uid)$" /-->
+	<!--securecookie host="^stat\.yandex\.ru$" name="^uid$" /-->
 
-	<!--securecookie host="^\.yandex\.ru$" name="^yandexuid$" /-->
-    <securecookie host="(?:mc|\.video)\.yandex\.ru$" name=".*" />
+    <securecookie host="(?:afisha|feedback2|mail|mc|mobile|pass|slovari|stat|\.video)\.yandex\.ru$" name=".*" />
 
 
     <!--
@@ -87,7 +209,7 @@
 
         1. Public services without HTTPS support (or with broken support)
                                         -->
-    <exclusion pattern="^http://(?:bar-widgets|blogs|cards|cs-ellpic|cs-thumb|dict|dzen|encyclopedia|feedback|fotki|images|lingvo|ll|metro|mirror|music|newmoscow|news|openid|pogoda|presocial|rasp|slovari|sprav|static-maps|tv|twitter|wdgt|weather|wordstat|xml)\.yandex\.ru/" />
+    <exclusion pattern="^http://(?:bar-widgets|blogs|cards|cs-ellpic|cs-thumb|dict|dzen|encyclopedia|feedback|images|lingvo|ll|metro|mirror|music|newmoscow|news|openid|pogoda|presocial|rasp|slovari|static-maps|twitter|wdgt|weather|wordstat|xml)\.yandex\.ru/" />
 		<exclusion pattern="^http://www\.yandex\.ru/(?!cycounter(?:$|\?))" />
 
     <!--
@@ -127,7 +249,7 @@
 
     <!--    6. Mobile services
                     -->
-    <exclusion pattern="^http://(?:m|mobile)\.yandex\.ru/" />
+    <exclusion pattern="^http://m\.yandex\.ru/" />
 
     <!--    7. Internet.Yandex.Ru (connection rate detection breaks with HTTPS)
                                             -->
@@ -135,8 +257,8 @@
 
     <!--    8. Various click counters and content storages.
                                 -->
-    <exclusion pattern="^http://(?:clck|copy|hghltd|print|market-click\d+|wrz)\.yandex\.ru/" />
-    <exclusion pattern="^http://mdata\.yandex\.(?:ru|net)/" />
+    <exclusion pattern="^http://(?:copy|hghltd|print|market-click\d+|wrz)\.yandex\.ru/" />
+    <exclusion pattern="^http://mdata\.yandex\.ru/" />
 
     <!--    9. Data clusters for Maps and Video
                             -->
@@ -146,7 +268,7 @@
 
     <!--    10. More subdomains without SSL from Aleksey Kosterin.
                                     -->
-    <exclusion pattern="^http://(?:advertising|afisha|api|browser|business|collection|fx|help|kapersky|keyboard|large|market|nahodki|navigator|online|opera|punto|site|skype|time|yaca|zakladki)\.yandex\.ru/" />
+    <exclusion pattern="^http://(?:advertising|business|collection|fx|kapersky|keyboard|large|market|nahodki|navigator|online|opera|punto|site|skype|time|zakladki)\.yandex\.ru/" />
 
     <!--    11. Some cert warnings.
                     -->
@@ -155,7 +277,10 @@
     <!--    12. Drop down menu UI bugs -->
 
     <exclusion pattern="^http://tune\.yandex\.ru/" />
-
+		<!--
+			Miscellanious:
+					-->
+		<exclusion pattern="http://(?:auto|m\.auto|www\.market|rabota|repo|shad|uslugi|pda\.yaca)\.yandex\.ru/" />
 
 
 	<!--	Not secured by server:
@@ -175,9 +300,6 @@
     <rule from="^http://(?:www\.)?yandex\.(net|st)/"
         to="https://yandex.$1/" />
 
-    <!--    Redirects to www for pages.
-            In particular, this catches counters.
-                                -->
     <rule from="^http://yandex\.ru/"
         to="https://yandex.ru/" />
 
@@ -197,7 +319,7 @@
     <rule from="^http://(?:www\.)?moikrug\.ru/"
         to="https://moikrug.ru/" />
 
-	<rule from="^http://awaps\.yandex\.(com\.au|by|kz|ua)/"
+	<rule from="^http://awaps\.yandex\.(com\.au|by|kz)/"
 		to="https://awaps.yandex.$1/" />
 
 

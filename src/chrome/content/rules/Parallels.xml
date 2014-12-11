@@ -10,26 +10,65 @@
 		- download *
 		- forum
 		- kb
+		- forum.sp ³
+		- kb.sp ³
 
 	* 504; mismatched, CN: edgecastcdn.net
+	³ Refused
 
 
 	Problematic domains:
 
+		- parallels.com *
 		- i3.parallels.com ¹
+		- spblog.parallels.com **
 		- (www.)psoft.com ²
 
+	* Mismatched, CN: sp.parallels.com
 	¹ EdgeCast
+	** Squarespace
 	² Shows license; expired, mismatched, CN: license.psoft.com
+
+
+	Partially covered subdomains:
+
+		- sp *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- www.sp
+
+
+	Insecure cookies are set for these domains:
+
+		- .parallels.com
+		- spblog.parallels.com
 
 -->
 <ruleset name="Parallels (partial)">
 
 	<target host="parallels.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://sp\.parallels\.com/($|hcap/subscribe/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://sp\.parallels\.com/+(?!favicon\.ico|fileadmin/|typo3conf/|typo3temp/)" />
 	<target host="*.parallels.com" />
 	<target host="psoft.net" />
 	<target host="*.psoft.net" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.parallels\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^spblog\.parallels\.com$" name="^(JSESSIONID|crumb)$" /-->
 
 	<!--	Tracking cookies:
 					-->
@@ -38,8 +77,8 @@
 	<securecookie host="^\w+\.psoft\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?parallels\.com/(?=favicon\.ico|file(?:admin|s)/|r/|typo3(?:conf|temp)/|uploads/)"
-		to="https://$1parallels.com/" />
+	<rule from="^http://(?:www\.)?parallels\.com/"
+		to="https://www.parallels.com/" />
 
 	<rule from="^http://blogs\.parallels\.com/"
 		to="https://parallelsblog.squarespace.com/" />
@@ -47,8 +86,8 @@
 	<rule from="^http://i3\.parallels\.com/"
 		to="https://www.parallels.com/" />
 
-	<rule from="^http://store\.parallels\.com/"
-		to="https://store.parallels.com/" />
+	<rule from="^http://(sp|www\.sp|store)\.parallels\.com/"
+		to="https://$1.parallels.com/" />
 
 	<rule from="^http://(?:www\.)?psoft\.com/"
 		to="https://www.parallels.com/psoft" />

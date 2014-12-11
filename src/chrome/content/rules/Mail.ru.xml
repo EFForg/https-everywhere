@@ -2,46 +2,96 @@
 	Other Mail.ru rulesets:
 
 		- Imgs_Mail.ru.xml
+		- List.ru.xml
 		- Mradx.net.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- afisha.mail.ru	(timeout)
-		- blogs.mail.ru
-		- internet.mail.ru	(timeout)
-		- r2.mail.ru ¹
-		- d4.c8.b0.a2.top.mail.ru
+		- aa *
+		- rfr.agent ²
+		- afisha ³
+		- pic.afisha ³
+		- auto ³
+		- touch.auto ³
+		- blogs ⁴
+		- dobro *
+		- internet ¹
+		- mailblog *
+		- pogoda *
+		- r2 ¹
+		- sales *
+		- team ³
+		- d4.c8.b0.a2.top
+		- torg ³
+		- img.torg ³
+		- m.torg ³
 
+	* Refused
+	² Plaintext reply
+	³ Redirects to http
+	⁴ Shows another domain
 	¹ Dropped
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- top.list.ru *
-		- \w\d.\w\d.\w\d.\w\d.top.mail.ru *
+		- s1.amigo *
+		- cdn.connect *
+		- imgs2 ²
+		- \w\d.\w\d.\w\d.\w\d.top *
 
 	* Mismatched, CN: *.mail.ru
+	² 403
 
 
-	Fully covered domains:
+	Fully covered subdomains:
 
-		- (www.)mail.ru
-		- top.list.ru				(→ top-fwz1.mail.ru)
-		- \w\d.\w\d.\w\d.\w\d.top.mail.ru	(→ top-fwz1.mail.ru)
-		- top-fwz1.mail.ru
+		- (www.)
+		- 1link
+		- agent
+		- amigo
+		- auto
+		- biz
+		- cp-filin
+		- e
+		- games
+		- help
+		- hi-tech
+		- minigames
+		- money
+		- riot
+		- target
+		- \w\d.\w\d.\w\d.\w\d.top	(→ top-fwz1.mail.ru)
+		- top-fwz1
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- 1link
+		- .agent
+		- .games
+		- hi-tech
+		- .tv
 
 -->
 <ruleset name="Mail.ru (partial)">
 
 	<target host="mail.ru" />
 	<target host="*.mail.ru" />
-		<!--	afisha & internet time out.	-->
-		<exclusion pattern="^http://(afisha|blogs|internet|www)\." />
-	<target host="cdn.connect.mail.ru" />
-	<target host="avt.foto.mail.ru" />
-	<target host="m.news.mail.ru" />
-	<target host="*.tv.mail.ru" />
+		<exclusion pattern="^http://(?:afisha|blogs|internet)\.mail\.ru/" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://afisha\.mail\.ru/cinema/articles/\d+/$" /-->
+		<!--exclusion pattern="^http://auto\.mail\.ru/article/\d+-[\w-]+$" /-->
+		<!--exclusion pattern="^http://touch\.auto\.mail\.ru/$" /-->
+		<!--exclusion pattern="^http://deti\.mail\.ru/news/[\w-]+/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://deti\.mail\.ru/+(?!favicon\.ico|.+\.(?:css|jpe?g|png)(?:$|\?))" />
 		<exclusion pattern="^http://lady\.mail\.ru/(?![^/]+\.css)" />
 		<exclusion pattern="^http://news\.mail\.ru/(?!_css/|favicon\.ico$|img/|pic/|prev\d{1,6}/)" />
 
@@ -49,17 +99,21 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.mail\.ru$" name="^(mrcu|p)$" /-->
+	<!--securecookie host="^1link\.mail\.ru$" name="^c_\d+_\d+$" /-->
+	<!--securecookie host="^\.agent\.mail\.ru$" name="^agent_family$" /-->
+	<!--securecookie host="^\.games\.mail\.ru$" name="^targeting$" /-->
+	<!--securecookie host="^hi-tech\.mail\.ru$" name="^last_visits$" /-->
 
-  <!-- Disable securecokie for this?
-  https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001422.html
-  -->
-	<!-- <securecookie host="^\.mail\.ru$" name=".*" /> -->
-	<!--	Are .tv.mail.ru cookies used on unsecurable pages?	-->
+	<!--	Disable securecookie for this?
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001422.html
+  	-->
+	<!--securecookie host="^\.mail\.ru$" name=".+" /-->
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.mail\.ru$" name="^(?:FT|V)ID$" />
+	<securecookie host="^(?:1link|hi-tech)\.mail\.ru$" name=".+" />
 
 
 	<!--	cert doesn't match img.tv
@@ -67,11 +121,10 @@
 	<rule from="^http://(?:(img)(?:\.tv)?|(?:my\.)?(tv))\.mail\.ru/"
 		to="https://$1$2.mail.ru/" />
 
-	<!--	Cert only matches *.mail.ru	-->
 	<rule from="^http://(?:cdn\.)?connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
 
-	<rule from="^http://((?:ad|corp|avt\.foto|lady|news|r3?|sales|showbiz|status|www)\.)?mail\.ru/"
+	<rule from="^http://((?:1link|ad|agent|amigo|biz|corp|cp-filin|deti|e|avt\.foto|games|help|hi-tech|lady|minigames|money|news|r3?|riot|sales|showbiz|status|target|www)\.)?mail\.ru/"
 		to="https://$1mail.ru/" />
 
 	<!--	cert doesn't match m.news	-->
@@ -81,7 +134,7 @@
 	<rule from="^http://r[2s]\.mail\.ru/"
 		to="https://rs.mail.ru/" />
 
-	<rule from="^http://(?:top\.list|(?:\w\d\.){4}top\.mail|top-fwz1\.mail)\.ru/"
+	<rule from="^http://(?:(?:\w\d\.){4}top|top-fwz1)\.mail\.ru/"
 		to="https://top-fwz1.mail.ru/" />
 
 </ruleset>

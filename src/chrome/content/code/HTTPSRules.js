@@ -493,7 +493,7 @@ const HTTPSRules = {
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
-    this.log(NOTE, "Processing " + input_uri.spec);
+    this.log(DBUG, "Processing " + input_uri.spec);
 
     var uri = this.sanitiseURI(input_uri);
 
@@ -709,7 +709,7 @@ const HTTPSRules = {
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
 
-    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
+    this.log(DBUG,"  rawhost: " + c.rawHost + " name: " + c.name + " host" + c.host);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {

@@ -6,14 +6,24 @@
 -->
 <ruleset name="Gumroad.com">
 
+	<target host="gum.co" />
+	<target host="*.gum.co" />
 	<target host="gumroad.com" />
-	<target host="www.gumroad.com" />
+	<target host="*.gumroad.com" />
 
 
-	<securecookie host="^gumroad\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(api\.)?gumroad\.com$" name="^ie_warning$" /-->
+
+	<securecookie host="^(?:\.|www\.)?gum\.co$" name=".+" />
+	<securecookie host="^(?:\.|api\.|www\.)?gumroad\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?gumroad\.com/"
+	<rule from="^http://(www\.)?gum\.co/"
+		to="https://$1gum.co/" />
+
+	<rule from="^http://((?:api|help|static-[12]|www)\.)?gumroad\.com/"
 		to="https://$1gumroad.com/" />
 
 </ruleset>

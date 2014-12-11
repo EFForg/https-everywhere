@@ -1,5 +1,34 @@
 <!--
-	(www.): redirects to http, valid cert
+	Other Embedly rulesets:
+
+		- Embedly.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- blog ²
+		- support ³
+
+	¹ Redirects to http
+	² Tumblr
+	³ Zendesk
+
+
+	Fully covered subdomains:
+
+		- api
+		- api-cdn
+		- app
+		- cdn
+		- i
+		- t
+		- www
+
+
+	Insecure cookies are set for these domains:
+
+		- api.embed.ly
 
 -->
 <ruleset name="Embed.ly (partial)">
@@ -7,10 +36,17 @@
 	<target host="*.embed.ly" />
 
 
-	<securecookie host="^app\.embed\.ly$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^api\.embed\.ly$" name="^em_beagle_eid$" /-->
+
+	<securecookie host="^ap[ip]\.embed\.ly$" name=".+" />
 
 
-	<rule from="^http://(app|cdn|i)\.embed\.ly/"
+	<rule from="^http://(api|api-cdn|app|cdn|i|t|www)\.embed\.ly/"
 		to="https://$1.embed.ly/" />
+
+	<rule from="^http://support\.embed\.ly/(?=favicon\.ico|generated/|images/|support/)"
+		to="https://embedly.zendesk.com/" />
 
 </ruleset>

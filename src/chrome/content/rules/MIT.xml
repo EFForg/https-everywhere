@@ -1,9 +1,12 @@
 <!--
+	Massachusetts Institute of Technology
+
 	For problematic rules, see MIT-mismatches.xml.
 
 
 	Other MIT rulesets:
 
+		- MIT_Press_Journals.org.xml
 		- Touchstone_Network.xml
 
 
@@ -20,24 +23,34 @@
 		- arts *
 		- artscal **
 		- civic		(no https)
+		- classics	(401)
 		- connect **
-		- csail		(cert: inquir.csail.mit.edu; handshake fails)
+
 		- bigdata.csail ***
 		- inquir.csail	(cert: inquir.csail.mit.edu; handshake fails)
+		- publications.csail ***
 		- research.csail ***
+		- tig.csail ***
+		- wireless.csail ***
+
 		- development ***
 		- economics	(refused)
 		- events	(interruped)
 		- executive
 		- gambit	(shows default page; self-signed, mismatched, CN: commonname.com)
 		- img		(shows web; mismatched, CN: web.mit.edu)
+		- libguides
+		- lsc ***
+		- pantheon.media *
+		- tangible.media	(Refused)
 		- web.media
+		- mitworld	(Refused)
 		- mvl		(self-signed, expired; 403)
 		- ocw		(503, Akamai)
+		- odl		(400)
 		- scratch	(times out)
 		- ssg		(shows lids; mismatched, CN: lids.mit.edu)
 		- student	(redirects to idp, valid cert)
-		- stuff *
 		- tech		(cert: the-tech.mit.edu; 401)
 		- the-tech	(401)
 		- video *
@@ -57,7 +70,7 @@
 
 		- 3down		(works, self-signed)
 		- calendar	(works, expired 2013-01-27)
-		- www.csail ³
+		- csail		(cert: inquir.csail.mit.edu; handshake fails)
 		- cluedumps *
 		- hacks *
 		- ideabank	(mismatched, CN: future.mit.edu)
@@ -65,21 +78,26 @@
 		- techblogs	($ works, at least some pages 404, expired, self-signed)
 		- techtime	(mismatched, CN: calendar.mit.edu)
 
-	³ Cert only matches ^foo
 	* Works; mismatched, CN: *.scripts.mit.edu
 
 
 
 	Fully covered subdomains:
 
+		- 3down
 		- alum
 		- alumsso
 		- athena10
 		- ca
-		- (www.)csail	(www → ^)
+
+		- (www.)csail	(^ → www)
+		- calendar.csail
+		- cap.csail
 		- pdos.csail
 		- projects.csail
+
 		- debathena
+		- athena.dialup
 		- future
 		- giving
 		- gsc
@@ -89,31 +107,40 @@
 		- linerva
 		- immersion.media
 		- mit150
+		- mit-amps
 		- newsoffice
 		- odge
+		- oeit-tsa
 		- orgchart
 		- pgp
 		- picker
 		- sipb
 		- slice
 		- stellar
+		- stuff
+		- teachingexcellence
 		- techtv
+		- webmail
 		- webpub
 		- whereis
 		- wikis
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		. .eecs ¹
-		- lids *
-		- techtv *
-
-	¹ Secured by server
-	* Secured by us <= not secured by server
+		- .csail
+		- lids
+		- .mit150
+		- techtv
+		- webmail
 
 
 	Mixed content:
+
+		- css, on:
+
+			- libraries from fonts.googleapis.com *
+			- scripts from web
 
 	Mixed image on picker from web
 
@@ -123,76 +150,43 @@
 			- slice from $self *
 		- Image on techtv from duqmab81lwd47.cloudfront.net *
 
+		- Ad on scripts from www.kaltura.com *
+
 	* Secured by us
 
 -->
-<ruleset name="Massachusetts Institute of Technology (partial)">
+<ruleset name="MIT.edu (partial)">
 
 	<target host="mit.edu" />
 	<target host="*.mit.edu" />
-	<target host="www.*.mit.edu" />
-	<target host="people.csail.mit.edu" />
-	<target host="mitpressjournals.org" />
-	<target host="www.mitpressjournals.org" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^\.eecs\.mit\.edu$" name="^SSESS[0-9a-f]{32}$" /-->
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^lids\.mit\.edu$" name="^[0-9a-f]{32}$" /-->
-	<!--
-		Observed cookie domains:
+	<!--securecookie host="^(\.csail|\.mit150)\.mist\.edu$" name="^SESS\w{32}$" /-->
+	<!--securecookie host="^techtv\.mit\.edu$" name="^_TechTV_session$" /-->
+	<!--securecookie host="^webmail\.mit\.edu$" name="^BIGipServerwebmail$" /-->
 
-			- alum
-			- .alum
-			- alumsso
-			- athena10
-			- ca
-			- cluedumps
-			- debathena
-			- .future
-			- giving
-			- gsc
-			- idp
-			- .ist
-			- kb
-			- .mit150
-			- mitpress
-			- scripts
-			- stellar
-			- student
-			- wayf
-			- webpub
-			- whereis
-			- wikis
-				-->
-	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|webpub|wikis).mit\.edu$" name=".*" />
-	<!--securecookie host="^\.alum\.mist\.edu$" name="^S?SESS\w{32}$" /-->
-	<!--securecookie host="^\.future\.mist\.edu$" name="^SSESS\w{32}$" /-->
-	<!--securecookie host="^\.ist\.mist\.edu$" name="^SSESS\w{32}$" /-->
-	<!--securecookie host="^\.mit150\.mist\.edu$" name="^SESS\w{32}$" /-->
-	<securecookie host="^wayf\.mit\.edu$" name=".*" />
+	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|wayf|webmail|webpub|wikis).mit\.edu$" name=".*" />
 
 
-	<rule from="^http://mit\.edu/"
-		to="https://mit.edu/" />
-
-	<rule from="^http://(alum|alumsso|athena10|ca|(?:groups|pdos|people|projects)\.csail|debathena|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|lids|linerva|mail|immersion\.media|mit150|newsoffice|odge|orgchart|pgp|picker|(?:www\.|zyan\.)?scripts|sipb|slice|stellar|techtv|wayf|webpub|whereis|wikis)\.mit\.edu/"
-		to="https://$1.mit.edu/" />
+	<rule from="^http://((?:alum|alumsso|athena10|ca|(?:calendar|cap|groups|pdos|people|projects)\.csail|debathena|athena\.dialup|oeit-tsa|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|lids|linerva|mail|immersion\.media|mit150|mit-amps|newsoffice|odge|orgchart|pgp|picker|(?:www\.|zyan\.)?scripts|sipb|slice|stellar|stuff|teachingexcellence|techtv|wayf|webmail|webpub|whereis|wikis)\.)?mit\.edu/"
+		to="https://$1mit.edu/" />
 
 	<rule from="^http://ideabank\.mit\.edu/"
 		to="https://future.mit.edu/" />
 
-	<rule from="^http://(?:www\.)?(csail|mitpress)\.mit\.edu/"
+	<rule from="^http://(?:www\.)?csail\.mit\.edu/"
+		to="https://www.csail.mit.edu/" />
+
+	<rule from="^http://(?:www\.)?mitpress\.mit\.edu/"
 		to="https://mitpress.mit.edu/" />
+
+	<rule from="^http://libguides\.mit\.edu/(?=css\d*/|favicon\.ico|include/|js\d*/)"
+		to="https://libguides.com/" />
 
 	<rule from="^http://scripts\.mit\.edu:444/"
 		to="https://scripts.mit.edu:444/" />
-
-	<rule from="^http://(www\.)?mitpressjournals\.org/((?:entityImage|na101|sda|templates|userimages)/|action/(?:registration|showLogin)$)"
-		to="https://www.mitpressjournals.org/$2" />
 
 </ruleset>

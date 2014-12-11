@@ -1,9 +1,15 @@
 <!--
+	Nonfunctional subdomains:
+
+		- cacr		("Gone")
+
+
 	Problematic subdomains:
 
 		- campaign	(refused)
 		- development	(refused)
 		- cecs		(shows info; mismatched, CN: uwaterloo.ca)
+		- hr		(redirects to ^.../$)
 		- info		(redirects to ^.../$, valid cert)
 
 
@@ -18,9 +24,13 @@
 		- (www.)
 		- cecs			(→ ^)
 		- cecspilot.cecssys
+		- crysp
 		- (www.)cs
 		- csclub
 		- development		( → ^)
+		- hr			(→ ^)
+		- (www.)math
+		- ripple
 
 -->
 <ruleset name="University of Waterloo (partial)">
@@ -29,21 +39,26 @@
 	<target host="*.uwaterloo.ca" />
 
 
-	<rule from="^http://((?:cecspilot\.cecssys|csclub|(?:www\.)?cs|www)\.)?uwaterloo\.ca/"
+	<rule from="^http://((?:cecspilot\.cecssys|crysp|csclub|(?:www\.)?cs|(?:www\.)?math|ripple|www)\.)?uwaterloo\.ca/"
 		to="https://$1uwaterloo.ca/" />
 
-	<rule from="^http://campaign\.uwaterloo\.ca/(\?.*)?$"
-		to="https://uwaterloo.ca/support/$1" />
+	<rule from="^http://campaign\.uwaterloo\.ca/(?=$|\?)"
+		to="https://uwaterloo.ca/support/" />
 
 	<!--	Server drops path:
 					-->
 	<rule from="^http://cecs\.uwaterloo\.ca/.*"
 		to="https://uwaterloo.ca/co-operative-education" />
 
-	<rule from="^http://development\.uwaterloo\.ca/[^\?]*(\?.*)?"
-		to="https://uwaterloo.ca/support/$1" />
+	<rule from="^http://development\.uwaterloo\.ca/[^?]*(?=$|\?)"
+		to="https://uwaterloo.ca/support/" />
 
-	<rule from="^http://info\.uwaterloo\.ca/(\?.*)?$"
-		to="https://uwaterloo.ca/central-stores/$1" />
+	<!--	Redirects path but not args:
+						-->
+	<rule from="^http://hr\.uwaterloo\.ca/[^?]*(?=$|\?)"
+		to="https://uwaterloo.ca/human-resources/" />
+
+	<rule from="^http://info\.uwaterloo\.ca/+(?=$|\?)"
+		to="https://uwaterloo.ca/central-stores/" />
 
 </ruleset>

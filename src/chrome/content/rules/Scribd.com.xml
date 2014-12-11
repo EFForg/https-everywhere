@@ -43,6 +43,7 @@
 
 		- scribd.com subdomains:
 
+			- blog ¹
 			- d *
 			- img				(AmazonWS: "NoSuchBucket")
 			- rat				(times out)
@@ -55,6 +56,7 @@
 			- imgv2 *
 			- imgv2-[1-4] **
 
+	¹ wpengine
 	* 403, CN: ssl2.cdngc.net
 	** 403, CN: ssl.cdngc.net
 
@@ -62,11 +64,6 @@
 	Problematic domains:
 
 		- scribd.com subdomains:
-
-			- www
-
-				- Many pages redirect to http
-				- docs don't, but login from docs does and so breaks
 
 			- html				(mismatched, CN: s3.amazonaws.com)
 			- s *
@@ -87,6 +84,13 @@
 	** 403, CN: ssl2.cdngc.net
 
 
+	Partially covered domains:
+
+		- (www.)scribd.com *
+
+	* docs/ redirects to http
+
+
 	Fully covered domains:
 
 		- scribd.com subdomains:
@@ -104,19 +108,33 @@
 			- html[1-4]		(→ s3.amazonaws.com/html.scribd.com/)
 			- htmlimg		(→ s3.amazonaws.com/html.scribd.com/)
 			- htmlimg[1-4]		(→ s3.amazonaws.com/html.scribd.com/)
+			- imgv2-[12]-f
 			- s[1-8]		(→ origin-s.scribd.com)
+			- s[12]-f
 
 -->
 <ruleset name="Scribd.com (partial)">
 
 	<target host="scribd.com" />
 	<target host="*.scribd.com" />
-		<exclusion pattern="^http://(?:www\.)?scribd\.com/(?!aggregated/|embeds/|images/|login(?:$|\?/)|options/|ssi/)" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://www\.scribd\.com/doc/\d+/[\w-]+$" />
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.scribd\.com/(?!aggregated/|embeds/|favicon\.ico|images/|(?:about|account-settings|adchoices|archive|books?|browse|contact|copyright|developers|faq|fullscreen|giftcards|jobs|leadership|login|mobile|notifications|payments|privacy|profiles|publishers|read|[Ss]cribd|static|store_purchase|subscribe|terms|upload-document)(?:$|\?/)|options/|ssi/)" />
 	<target host="*.scribdassets.com" />
 
 
-	<rule from="^http://(?:www\.)?scribd\.com/"
-		to="https://www.scribd.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.scribd\.com$" name="^(_scribd_session|scribd_ubtc)$" /-->
+
+
+	<rule from="^http://(www\.)?scribd\.com/"
+		to="https://$1scribd.com/" />
 
 	<rule from="^http://fonts\d?\.scribd(?:assets)?\.com/"
 		to="https://fonts.scribd.com/" />
@@ -130,10 +148,13 @@
 	<rule from="^http://s\d?\.scribd(?:assets)?\.com/"
 		to="https://origin-s.scribd.com/" />
 
-	<rule from="^https?://sprited-images\.scribd\.com/"
+	<rule from="^http://sprited-images\.scribd\.com/"
 		to="https://s3.amazonaws.com/sprited-images.scribd.com/" />
 
-	<rule from="^https?://support\.scribd\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<rule from="^http://support\.scribd\.com/(?=favicon\.ico|generated/|images/|system/)"
+		to="https://assets.zendesk.com/" />
+
+	<rule from="^http://(imgv2-[12]|s[12])-f\.scribdassets\.com/"
+		to="https://$1-f.scribdassets.com/" />
 
 </ruleset>

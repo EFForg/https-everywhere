@@ -20,6 +20,7 @@
 				- home *
 				- library *
 				- photoclub *
+				- press *
 
 		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
 		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
@@ -39,7 +40,10 @@
 
 	Partially covered subdomains:
 
+		- linux.web *
 		- listboxservices.web	(→ simba3.web)
+
+	* Avoiding broken MCB
 
 
 	Fully covered subdomains:
@@ -77,7 +81,6 @@
 			- job
 			- oraweb
 			- outreach
-			- press
 			- project-voisins
 			- public
 			- service-portal
@@ -111,17 +114,28 @@
 	² Not secured by us <= we don't touch http cookies
 	³ Secured by us when set via https
 
+
+	Mixed content:
+
+		- css on linux.web.cern.ch from $self *
+
+	* Secured by us
+
 -->
 <ruleset name="CERN (partial)">
 
 	<target host="cern.ch" />
 	<target host="*.cern.ch" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://linux\.web\.cern\.ch/(?!.+(?:css|jpg|png)$|linux/layout/)" />
 
 
 	<securecookie host=".*\.cern\.ch$" name=".+" />
 
 
-	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
+	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|linux|oraweb|outreach|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
 		to="https://$1cern.ch/" />
 
 	<!--	Redirects like so:

@@ -1,15 +1,74 @@
 <!--
+	Other Rambler rulesets:
+
+		- Rambler.su.xml
+		- Rl0.ru.xml
+
+
 	Nonfunctional domains:
 
+		- finance ¹
+		- help ¹
+		- horo2014 ¹
+		- horoscopes ¹
+		- m.horoscopes ¹
+		- reklama ²
+		- m ³
+		- news ³
 		- top100-images.rambler.ru	(redirects to www.rambler.ru, valid cert)
-		- i.rl0.ru	(cert: *.rambler.ru; 403)
+		- weather ³
+		- www ⁵
+
+	¹ 403
+	² Redirects to login
+	³ Refused
+	⁵ Redirects to p://www.../$
+
+
+	Problematic subdomains:
+
+		- cntcerber *
+
+	* Expired 2014-05
+
+
+	Partially covered subdomains:
+
+		- kassa *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- assist
+		- cnt
+		- counter	(→ scounter)
+		- i
+		- id
+		- images
+		- m.kassa
+		- mail
+		- mail-pda
+		- scounter
+		- soft
+		- sync
+		- update
 
 -->
 <ruleset name="Rambler (partial)">
 
 	<target host="*.rambler.ru" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://kassa\.rambler\.ru/(?:cinemapartnership|concerts|partners|refund|sport|theatre|unsubscribe)?(?:$|\?)" />
 		<exclusion pattern="^http://www\." />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^id\.rambler\.ru$" name="^request\.key$" /-->
 
 	<!--	Observed cookies:
 
@@ -18,14 +77,15 @@
 				- top100rb
 
 			Both set by scounter.		-->
-	<securecookie host="^\.rambler\.com$" name=".*" />
+	<securecookie host="^(?:id)?\.rambler\.com$" name=".*" />
+
 
 
 	<!--	This is another of those 1px tracking services.	-->
 	<rule from="^http://s?counter\.rambler\.ru/"
 		to="https://scounter.rambler.ru/" />
 
-	<rule from="^http://(cnt|id?|images|kassa|mail)\.rambler\.ru/"
+	<rule from="^http://(assist|cnt|id?|images|kassa|m\.kassa|mail|mail-pda|soft|sync|update)\.rambler\.ru/"
 		to="https://$1.rambler.ru/" />
 
 </ruleset>

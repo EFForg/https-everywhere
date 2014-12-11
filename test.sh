@@ -51,7 +51,7 @@ if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
   die "Please use the latest stable SDK version or edit this script to the current version."
 fi
 
-cd $TEST_ADDON_PATH
+pushd $TEST_ADDON_PATH
 
 # If you just want to run Firefox with the latest code:
 if [ "$1" == "--justrun" ]; then
@@ -61,3 +61,7 @@ else
   echo "running tests"
   cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
 fi
+
+popd
+
+echo -e "Git commit `git rev-parse HEAD`\nsha256sum  `sha256sum $XPI_NAME`"

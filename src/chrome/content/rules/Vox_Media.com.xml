@@ -1,0 +1,64 @@
+<!--
+	For other Vox Media coverage, see Vox.com.xml.
+
+
+	CDN buckets:
+
+		- d8wuu9msfgurd.cloudfront.net
+
+			- ea-cdn.voxmedia.com
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Tumblr
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- ea-cdn ²
+		- jobs ¹
+		- status ³
+
+	¹ Refused
+	² Cloudfront
+	³ StatusPage
+
+
+	Mixed content:
+
+		- css, on www from:
+
+			- ea-cdn *
+			- assets.sbnation.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Vox Media.com (false MCB)" platform="mixedcontent">
+
+	<target host="voxmedia.com" />
+	<target host="*.voxmedia.com" />
+
+
+	<rule from="^http://(?:www\.)?voxmedia\.com/"
+		to="https://www.voxmedia.com/" />
+
+	<rule from="^http://ea-cdn\.voxmedia\.com/"
+		to="https://d8wuu9msfgurd.cloudfront.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://jobs\.voxmedia\.com/[^?]*"
+		to="https://www.voxmedia.com/careers" />
+
+	<rule from="^http://product\.voxmedia\.com/"
+		to="https://product.voxmedia.com/" />
+
+	<rule from="^http://status\.voxmedia\.com/"
+		to="https://voxmedia.statuspage.io/" />
+
+</ruleset>

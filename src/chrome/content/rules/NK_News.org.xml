@@ -1,30 +1,53 @@
 <!--
 	Nonfunctional subdomains:
 
-		- kcnawatch	(shows www)
+		- kcnawatch *
+
+	* Shows www
 
 
-	Some pages redirect to http.
+	Problematic subdomains:
+
+		signup *
+
+	* Unbounce
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- shop
+
+
+	Insecure cookies are set for these domains:
+
+		- nknews.org
+		- .nknews.org
+		- shop.nknews.org
+		- www.nknews.org
 
 
 	Mixed content:
 
-		- Images on shop from shop *
+		- iframe on www from kcnawatch *
 
-	* Secured by us
+	* Unsecurable
 
 -->
 <ruleset name="NK News.org (partial)">
+  <target host="nknews.org" />
+  <target host="*.nknews.org" />
 
-	<target host="nknews.org" />
-	<target host="*.nknews.org" />
-		<exclusion pattern="^http://(?:www\.)?nknews\.org/+(?!favicon\.ico|register(?:$|[?/])|wp-content/|wp-includes/)" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nknews\.org$" name="^(__cfduid|ubvt|wordpress_test_cookie)$" /-->
+	<!--securecookie host="^(www\.)?nknews\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^signup\.nknews\.org$" name="^(ubpv|ubvs$)" /-->
 
+	<securecookie host="^(\.|www\.)?nknews\.org$" name="^PHPSESSID$" />
 
-	<securecookie host="^shop\.nknews\.org$" name=".+" />
+  <securecookie host="^shop\.nknews\.org$" name=".+" />
 
-
-	<rule from="^http://(shop\.|www\.)?nknews\.org/"
-		to="https://$1nknews.org/" />
-
+  <rule from="^http://(shop\.|www\.)?nknews\.org/"
+    to="https://$1nknews.org/" />
 </ruleset>

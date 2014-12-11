@@ -3,6 +3,9 @@
 
 		- books		(revoked)
 
+
+	^: expired
+
 -->
 <ruleset name="Scientific American (partial)" platform="mixedcontent">
 
@@ -10,6 +13,14 @@
 	<target host="www.sciamdigital.com" />
 	<target host="scientificamerican.com" />
 	<target host="*.scientificamerican.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.scientificamerican\.com/article/[\w-]+/$" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://www\.scientificamerican\.com/article/" />
 
 
 	<!--	Observed cookies:
@@ -18,7 +29,7 @@
 			- ^subscribe
 			- ^www
 				-->
-	<securecookie host=".*\.scientificamerican.com$" name=".*" />
+	<securecookie host="subscribe\.scientificamerican.com$" name=".*" />
 
 
 	<!--	There may be more pages that
@@ -42,7 +53,10 @@
 	<rule from="^https?://www\.scientificamerican\.com/(.+)\.pagespeed\..*$"
 		to="https://www.scientificamerican.com/$1" />
 
-	<rule from="^http://(subscribe\.|www\.)?scientificamerican\.com/"
-		to="https://$1scientificamerican.com/" />
+	<rule from="^http://(?:www\.)?scientificamerican\.com/"
+		to="https://www.scientificamerican.com/" />
+
+	<rule from="^http://subscribe\.scientificamerican\.com/"
+		to="https://subscribe.scientificamerican.com/" />
 
 </ruleset>

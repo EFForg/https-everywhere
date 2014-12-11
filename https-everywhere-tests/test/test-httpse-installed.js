@@ -1,6 +1,7 @@
 // Test that HTTPS Everywhere component is installed and accessible
 
 const { Cc, Ci } = require("chrome");
+var tabs = require("sdk/tabs");
 
 let HTTPSEverywhere = Cc["@eff.org/https-everywhere;1"]
                         .getService(Ci.nsISupports)
@@ -21,15 +22,17 @@ exports["test httpse potentiallyApplicableRulesets"] = function(assert) {
 }
 
 exports["test sample ruleset"] = function(assert, done) {
-  var tabs = require("sdk/tabs");
-
-  tabs.on('ready', function(tab) {
-    assert.equal(tab.url, "https://www.reddit.com/robots.txt",
-      "Test that Reddit URLs are rewritten to HTTPS.");
-    done();
+  tabs.open({
+    url: "http://www.reddit.com/robots.txt",
+    onOpen: function(tab) {
+      tab.on('load', function(tab) {
+        assert.equal(tab.url, "https://www.reddit.com/robots.txt",
+          "Test that Reddit URLs are rewritten to HTTPS.");
+        tab.close();
+        done();
+      });
+    }
   });
-
-  tabs.open("http://www.reddit.com/robots.txt");
 }
 
 require("sdk/test").run(exports);

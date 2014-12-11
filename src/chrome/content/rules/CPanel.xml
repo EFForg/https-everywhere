@@ -1,29 +1,71 @@
 <!--
-	Nonfunctional:
+	CDN buckets:
 
-		- docs		(http reply)
+		- appcat.flyasite.com
+
+			- applications
+
+
+	Nonfunctional subdomains:
+
+		- features ¹
+		- httpupdate ²
+
+	¹ Plaintext reply
+	² Refused
+
+
+	Problematic subdomains:
+
+		- applications *
+
+	* Mismatched, CN: *.flyasite.com; mixed css
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- blog
+		- docs
+		- documentation
 		- forums
 		- manage2
 		- mt
+		- partnernoc
+		- podcast
 		- tickets
+		- verify
+		- videos
+
+
+	Insecure cookies are set for these domains:
+
+		- forums
+		- tickets
+
+
+	Mixed content:
+
+		- css on applications from assets[01].flyasite.com *
+
+	* Secured by us
 
 -->
 <ruleset name="cPanel (partial)" platform="mixedcontent">
 
 	<target host="cpanel.net" />
 	<target host="*.cpanel.net" />
-		<exclusion pattern="^http://docs\." />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forums\.cpanel\.net$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^tickets\.cpanel\.net$" name="^TKTSCUSTSESSID$" /-->
 
 	<securecookie host="^(?:.*\.)?cpanel\.net$" name=".+" />
 
 
-	<rule from="^http://((forums|manage2|mt|tickets|www)\.)?cpanel\.net/"
+	<rule from="^http://((?:blog|docs|documentation|forums|manage2|mt|partnernoc|podcast|tickets|verify|videos|www)\.)?cpanel\.net/"
 		to="https://$1cpanel.net/" />
 
 </ruleset>

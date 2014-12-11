@@ -1,34 +1,42 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.) *
-		- docs *
+		- cdimage ¹
+		- docs ²
+		- git ¹
+		- images ¹
+		- tools ¹
 
-	* Dropped
-
-
-	Mixed content:
-
-		- Scripts on forums from forums *
-		- css on forums from forums *
-		- Images on forums from forums *
-
-	* Secured by us
+	¹ Refused
+	² Dropped
 
 
-	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
+	Fully covered subdomains:
+
+		- (www.)
+		- bugs
+		- forums
+
+
+	Insecure cookies are set for these domains:
+
+		- forums
 
 -->
-<ruleset name="Kali Linux.org (false MCB)" platform="mixedcontent">
+<ruleset name="Kali.org (partial)">
 
-	<target host="forums.kali.org" />
+	<target host="kali.org" />
+	<target host="*.kali.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forums\.kali\.org$" name="^bb_sessionhash$" /-->
 
 	<securecookie host="^forums\.kali\.org$" name=".+" />
 
 
-	<rule from="^http://forums\.kali\.org/"
-		to="https://forums.kali.org/" />
+	<rule from="^http://((?:bugs|forums|www)\.)?kali\.org/"
+		to="https://$1kali.org/" />
 
 </ruleset>

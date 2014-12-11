@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Reason.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- d1ai9qtk9p41kl.cloudfront.net
@@ -6,15 +9,33 @@
 			- cloudfront-assets
 
 
-	Nonfunctional subdomains:
+	Mixed content:
 
-		- (www.)	(redirects to http, valid cert)
+		- css from cloudfront-assets *
+
+	* Secured by us
 
 -->
 <ruleset name="Reason.com (partial)">
 
+	<target host="reason.com" />
 	<target host="cloudfront-assets.reason.com" />
+	<target host="www.reason.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?reason\.com/+(?:$|\?)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reason\.com$" name="^ng_session$" /-->
+
+	<!--securecookie host="^\.reason\.com$" name=".+" /-->
+
+
+	<rule from="^http://(www\.)?reason\.com/"
+		to="https://$1reason.com/" />
 
 	<rule from="^http://cloudfront-assets\.reason\.com/"
 		to="https://d1ai9qtk9p41kl.cloudfront.net/" />

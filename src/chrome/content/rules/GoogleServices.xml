@@ -3,7 +3,10 @@
 
 		- 2mdn.net.xml
 		- Admeld.xml
+		- Android.xml
 		- ChannelIntelligence.com.xml
+		- Chrome_Status.com.xml
+		- Chromium.org.xml
 		- Doubleclick.net.xml
 		- FeedBurner.xml
 		- Go_Lang.org.xml
@@ -18,11 +21,11 @@
 		- Polymer-Project.org.xml
 		- Postini.xml
 		- WebM_Project.org.xml
+		- With_Google.com.xml
 
 
 	Nonfunctional domains:
 
-		- feedproxy.google.com			(404, valid cert)
 		- partnerpage.google.com *
 		- picasa.google.com *
 		- www.picasa.google.com ²
@@ -39,7 +42,6 @@
 		- analytics	(redirects to http)
 		- imgres
 		- gadgets *
-		- hangouts	(404)
 		- u/		(404)
 
 	* Redirects to http
@@ -120,6 +122,7 @@
 			- encrypted
 			- encrypted-tbn[123]
 			- feedburner
+			- feedproxy
 			- fiber
 			- finance
 			- glass
@@ -191,7 +194,7 @@
 	<target host="groups.google.*" />
 	<target host="it.google.*" />
 	<target host="news.google.*" />
-		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
+		<exclusion pattern="^http://(?:news\.)?google\.com?(\.[a-z][a-z])?/(?:archivesearch|newspapers)" />
 	<target host="picasaweb.google.*" />
 	<target host="scholar.google.*" />
 	<target host="www.google.*" />
@@ -242,7 +245,7 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.google\.com$" name="^(NID|PREF)$" /-->
+	<!--securecookie host="^\.google\.com$" name="^(APISID|HSID|NID|PREF|SID)$" /-->
 	<!--
 		Can we secure any of these wildcard cookies safely?
 									-->
@@ -292,7 +295,7 @@
 
 	<!--	Paths that 404 on .ccltd, but work on .com:
 								-->
-	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|doubleclick|help|ideas|pacman|postini|powermeter|url)"
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|doubleclick|foobar|help|ideas|pacman|postini|powermeter|url|webdesigner)"
 		 to="https://www.google.com/" />
 
 	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/custom"
@@ -310,7 +313,7 @@
 
 	<!--	Subdomains that only exist/work on .com
 							-->
-	<rule from="^http://(admin|apis|appengine|books|calendar|cast|cbks0|chat|checkout|chrome|clients[12]|cloud|code|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|fonts|gg|glass||goto|health|helpouts|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
+	<rule from="^http://(admin|apis|appengine|books|calendar|cast|cbks0|chat|checkout|chrome|clients[12]|cloud|code|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|feedproxy|fiber|fonts|gg|glass||goto|health|helpouts|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>

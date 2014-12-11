@@ -1,0 +1,31 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog
+		- helpdesk ²
+
+	² Zendesk
+
+
+	www: mismatched
+
+-->
+<ruleset name="Bitnami.com">
+
+	<target host="bitnami.com" />
+	<target host="*.bitnami.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bitnami\.com$" name="^_bitnami_session$" /-->
+	<!--securecookie host="^google\.bitnami\.com$" name="^(XSRF-TOKEN|_google-launchpad_session)$" /-->
+	<!--securecookie host="^wiki\.bitnami\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:google\.|www\.)?bitnami\.com$" name=".+" />
+
+
+	<rule from="^http://(?:((?:assets|google|wiki)\.)|www\.)?bitnami\.com/"
+		to="https://$1bitnami.com/" />
+
+</ruleset>
