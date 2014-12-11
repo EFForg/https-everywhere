@@ -24,6 +24,8 @@ const Cu = Components.utils;
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
+Cu.import("resource://gre/modules/osfile.jsm");
+Cu.import("resource://gre/modules/AddonManager.jsm");
 
 const SERVICE_CTRID = "@eff.org/https-everywhere;1";
 const SERVICE_ID=Components.ID("{32c165b4-fe5e-4964-9250-603c410631b4}");
@@ -31,8 +33,14 @@ const SERVICE_NAME = "Encrypts your communications with a number of major websit
 
 const LLVAR = "LogLevel";
 
+const MIN_REATTEMPT_REQ_INTERVAL = 300000;
+const RULESET_FETCH_INTERVAL_PREF = "ruleset_updater.interval";
+const UPDATED_RULESET_DBFILE_PATH = OS.Path.join(OS.Constants.Path.profileDir,
+                                                 "HTTPSEverywhereRulesetUpdates",
+                                                 "rulesets.sqlite");
+
 const IOS = CC["@mozilla.org/network/io-service;1"].getService(CI.nsIIOService);
-const OS = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
+const ObsServ = CC['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 const LOADER = CC["@mozilla.org/moz/jssubscript-loader;1"].getService(CI.mozIJSSubScriptLoader);
 const _INCLUDED = {};
 
@@ -131,14 +139,14 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList', 'RulesetUpdater');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 function HTTPSEverywhere() {
 
   // Set up logging in each component:
-  HTTPS.log = HTTPSRules.log = RuleWriter.log = this.log = https_everywhereLog;
+  HTTPS.log = HTTPSRules.log = RuleWriter.log = RulesetUpdater.log = this.log = https_everywhereLog;
 
   this.expandoMap = new WeakMap();
 
@@ -149,10 +157,19 @@ function HTTPSEverywhere() {
                            // should probably be refactored
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
+  this.ruleset_updater = RulesetUpdater;
   this.browser_initialised = false; // the browser is completely loaded
   
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
+
+  this.rsupdate_fetch_timer = null; // nsITimer object fetching ruleset updates
+
+  // Wrap useful constants in a method so that they can be accessed from any component
+  // with a reference to the HTTPSEverywhere object without directly exposing the variables.
+  this.MIN_REATTEMPT_REQ_INTERVAL = function() { return MIN_REATTEMPT_REQ_INTERVAL; };
+  this.RULESET_UPDATE_CHECK_INTERVAL = function() { return this.prefs.getIntPref(RULESET_FETCH_INTERVAL_PREF); };
+  this.UPDATED_RULESET_DBFILE_PATH = function() { return UPDATED_RULESET_DBFILE_PATH; };
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
 
@@ -512,10 +529,10 @@ HTTPSEverywhere.prototype = {
       this.log(DBUG, "Got profile-after-change");
 
       if(this.prefs.getBoolPref("globalEnabled")){
-        OS.addObserver(this, "cookie-changed", false);
-        OS.addObserver(this, "http-on-modify-request", false);
-        OS.addObserver(this, "http-on-examine-merged-response", false);
-        OS.addObserver(this, "http-on-examine-response", false);
+        ObsServ.addObserver(this, "cookie-changed", false);
+        ObsServ.addObserver(this, "http-on-modify-request", false);
+        ObsServ.addObserver(this, "http-on-examine-merged-response", false);
+        ObsServ.addObserver(this, "http-on-examine-response", false);
 
         this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
 
@@ -710,6 +727,69 @@ HTTPSEverywhere.prototype = {
     return o_branch;
   },
 
+  /* Try to make an XHR to the specified URL with a given method (GET/POST/...),
+   * and call the onSuccess function if the request succeeds.
+   * The function will attempt at most maxCalls requests.
+   */
+  try_request: function(maxCalls, method, url, onSuccess) {
+    var xhr = Cc['@mozilla.org/xmlextras/xmlhttprequest;1']
+                .createInstance(Ci.nsIXMLHttpRequest);
+    xhr.open(method, url, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) { // Complete
+        if (xhr.status === 200) { // OK
+          onSuccess(xhr.responseText);
+        } else {
+          // TODO
+          // Include code to ping a verification-error-reporting URL
+          if (maxCalls > 0) {
+            var timePadding = (1000000 * Math.random()) % 300000;
+            var timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+            timer.initWithCallback(
+              function() { this.try_request(maxCalls - 1, method, url, onSuccess); }, 
+              MIN_REATTEMPT_REQ_INTERVAL + timePadding,
+              timer.TYPE_ONE_SHOT);
+          }
+        }
+      }
+    };
+    xhr.send();
+  },
+
+  /* Start the ruleset updater up. Makes the first update retrieval call
+   * and starts the interval-based repeating update tests.
+   */
+  start_ruleset_updater: function() {
+    if (this.rsupdate_fetch_timer !== null) {
+      this.log(INFO, 'Cannot restart ruleset updater because it is already running');
+      return false; // False -> Already running
+    }
+    this.rsupdate_fetch_timer = CC["@mozilla.org/timer;1"].createInstance(CI.nsITimer);
+    this.rsupdate_fetch_timer.initWithCallback(
+      function() {
+        this.log(INFO, 'Retrieving ruleset update information');
+        this.ruleset_updater.fetch_update();
+      },
+      this.prefs.getIntPref(RULESET_FETCH_INTERVAL_PREF),
+      this.rsupdate_fetch_timer.TYPE_REPEATING_SLACK);
+    this.ruleset_updater.fetch_update();
+    this.log(INFO, 'First ruleset update retrieval started');
+    return true; // True -> Started successfully
+  },
+
+  /* Stop the ruleset update fetching mechanism if it's running.
+   */
+  cancel_ruleset_updater: function() {
+    if (this.rsupdate_fetch_timer === null) {
+      this.log(INFO, 'Ruleset updater could not be cancelled because it is not running');
+      return false; // False -> Not running
+    }
+    this.rsupdate_fetch_timer.cancel();
+    this.rsupdate_fetch_timer = null;
+    this.log(INFO, 'Ruleset updater was cancelled successfully');
+    return true; // True -> Cancelled successfully
+  },
+
   chrome_opener: function(uri, args) {
     // we don't use window.open, because we need to work around TorButton's 
     // state control
@@ -736,10 +816,10 @@ HTTPSEverywhere.prototype = {
         this.obsService.removeObserver(this, "profile-before-change");
         this.obsService.removeObserver(this, "profile-after-change");
         this.obsService.removeObserver(this, "sessionstore-windows-restored");
-        OS.removeObserver(this, "cookie-changed");
-        OS.removeObserver(this, "http-on-modify-request");
-        OS.removeObserver(this, "http-on-examine-merged-response");
-        OS.removeObserver(this, "http-on-examine-response");
+        ObsServ.removeObserver(this, "cookie-changed");
+        ObsServ.removeObserver(this, "http-on-modify-request");
+        ObsServ.removeObserver(this, "http-on-examine-merged-response");
+        ObsServ.removeObserver(this, "http-on-examine-response");
 
         var catman = CC["@mozilla.org/categorymanager;1"]
                        .getService(CI.nsICategoryManager);
@@ -755,10 +835,10 @@ HTTPSEverywhere.prototype = {
         this.obsService.addObserver(this, "profile-before-change", false);
         this.obsService.addObserver(this, "profile-after-change", false);
         this.obsService.addObserver(this, "sessionstore-windows-restored", false);
-        OS.addObserver(this, "cookie-changed", false);
-        OS.addObserver(this, "http-on-modify-request", false);
-        OS.addObserver(this, "http-on-examine-merged-response", false);
-        OS.addObserver(this, "http-on-examine-response", false);
+        ObsServ.addObserver(this, "cookie-changed", false);
+        ObsServ.addObserver(this, "http-on-modify-request", false);
+        ObsServ.addObserver(this, "http-on-examine-merged-response", false);
+        ObsServ.addObserver(this, "http-on-examine-response", false);
 
         this.log(INFO,
                  "ChannelReplacement.supported = "+ChannelReplacement.supported);
@@ -851,5 +931,4 @@ if (XPCOMUtils.generateNSGetFactory)
     var NSGetFactory = XPCOMUtils.generateNSGetFactory([HTTPSEverywhere]);
 else
     var NSGetModule = XPCOMUtils.generateNSGetModule([HTTPSEverywhere]);
-
 /* vim: set tabstop=4 expandtab: */

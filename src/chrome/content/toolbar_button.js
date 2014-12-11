@@ -31,6 +31,11 @@ if (!httpsEverywhere) { var httpsEverywhere = {}; }
  * such as when the toolbar is disabled.
  */
 httpsEverywhere.toolbarButton = {
+  
+  /**
+   * Name of the preference for enabling/disabling the ruleset updater.
+   */
+  RULESET_UPDATER_PREF: "extensions.https_everywhere.ruleset_updater.enabled",
 
   /**
    * Name of preference for determining whether to show ruleset counter.
@@ -58,6 +63,12 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
+    // Now that HTTPSE has been initialized, start the ruleset updater if enabled.
+    var rulesetUpdaterEnabled = Services.prefs.getBoolPref(tb.RULESET_UPDATER_PREF);
+    if (rulesetUpdaterEnabled) {
+      HTTPSEverywhere.start_ruleset_updater();
+    }
+
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
@@ -70,6 +81,10 @@ httpsEverywhere.toolbarButton = {
     httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
+
+    // make sure UI for ruleset updater toggle is properly set
+    var rulesetUpdaterItem = document.getElementById('ruleset-updater-item');
+    rulesetUpdaterItem.setAttribute('checked', rulesetUpdaterEnabled.toString());
 
     // make sure UI is set depending on whether HTTPS-E is enabled
     toggleEnabledUI();
@@ -231,7 +246,6 @@ httpsEverywhere.toolbarButton = {
 
 function https_everywhere_load() {
   window.removeEventListener('load', https_everywhere_load, true);
-  // on first run, put the context menu in the addons bar
   try {
     var first_run;
     try {
@@ -305,6 +319,16 @@ function show_applicable_list(menupopup) {
 
     if(!menupopup.contains(rulesetTestsMenuItem)) 
       menupopup.appendChild(rulesetTestsMenuItem);
+  }
+}
+
+function toggleRulesetUpdater() {
+  var rulesetUpdaterItem = document.getElementById('ruleset-updater-item');
+  var checked = rulesetUpdaterItem.getAttribute('checked');
+  if (checked === 'true' || checked === true) {
+    HTTPSEverywhere.start_ruleset_updater();
+  } else {
+    HTTPSEverywhere.cancel_ruleset_updater();
   }
 }
 
