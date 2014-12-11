@@ -41,9 +41,21 @@
 
 	Partially covered subdomains:
 
+		- accessibility *
 		- cbmi.catalyst	(Avoiding broken MCB)
 		- www.cfa *	(image_archive/ 404s)
+		- cqh *
+		- economics *
+		- static.hwpi *
+		- static.projects.iq *
+		- psr.iq *
 		- isites *
+
+		- iacs.seas *
+		- robobees.seas *
+
+		- (www.)wcfia *
+		- programs.wcfia *
 
 	* At least some pages redirect to http
 
@@ -102,6 +114,14 @@
 		<exclusion pattern="^http://www\.cfa\.harvard\.edu/image_archive/" />
 		<exclusion pattern="^http://isites\.harvard\.edu/(?!favicon\.ico|[fj]s/|icb/calendar/themes/|icb/[\w-]\.css)" />
 		<!--exclusion pattern="^http://mirrors\.seas\.harvard\.edu/" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(accessibility|cqh|economics|static\.hwpi|(projects|static\.projects|psr)\.iq|(iacs|robobees)\.seas|((programs|www)\.)?wcfia)\.harvard\.edu/($|fellows$|user/password|user/pin\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(accessibility|cqh|economics|static\.hwpi|(?:projects|static\.projects|psr)\.iq|(?:iacs|robobees)\.seas|(?:(?:programs|www)\.)?wcfia)\.harvard\.edu/+(?!favicon\.ico|files/|modules/|profiles/|user(?:$|\?))" />
 
 
 	<!--	Not secured by server:
@@ -118,10 +138,16 @@
 	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
 
-	<rule from="^http://(catalyst|(?:cbmi|connects)\.catalyst|www\.cfa|dome|dspace|hbdm\.hbsp|osc\.hul|login\.icommons|isites|adam\.law|blogs\.law|www\.pin1)\.harvard\.edu/"
+	<rule from="^http://(accessibility|catalyst|(?:cbmi|connects)\.catalyst|www\.cfa|cqh|dome|dspace|economics|hbdm\.hbsp|osc\.hul|static\.hwpi|login\.icommons|(?:projects|static\.projects|psr)\.iq|isites|adam\.law|blogs\.law|www\.pin1|(?:iacs|robobees)\.seas|programs\.wcfia)\.harvard\.edu/"
 		to="https://$1.harvard.edu/" />
 
 	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
 		to="https://cyber.law.harvard.edu/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+		<rule from="^http://(www\.)?(wcfia)\.harvard\.edu/"
+			to="https://$1$2.harvard.edu/" />
 
 </ruleset>
