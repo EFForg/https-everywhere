@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see PLoS.org-falsemixed.xml.
+
 	For problematic rules, see Public-Library-of-Science-mismatches.xml
 
 
@@ -17,14 +19,36 @@
 		- (www.)plospathogens.org
 		- (www.)plusone.org
 
+
+	Partially covered subdomains:
+
+		- (www.)? *
+		- currents *
+
+	* Avoiding broken MCB
+
+
+	Mixed content:
+
+		- css, on:
+
+			- currents, www from $self *
+			- www from fonts.googleapis.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Public Library of Science (partial)" platform="mixedcontent">
+<ruleset name="Public Library of Science (partial)">
 
 	<target host="plos.org" />
 	<target host="*.plos.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:currents\.|www\.)?plos\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^(.*\.)?plos\.org$" name=".*" />
+	<securecookie host="^(?:(?!(?:currents|www)\.).+\.)?plos\.org$" name=".*" />
 
 
 	<rule from="^http://(currents\.|register\.|www\.)?plos\.org/"
