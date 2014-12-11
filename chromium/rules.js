@@ -249,11 +249,6 @@ RuleSets.prototype = {
     // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure.  knownHttps is true if the context for this
     // cookie being set is known to be https.
-    //log(DBUG, "Testing cookie:");
-    //log(DBUG, "  name: " + cookie.name);
-    //log(DBUG, "  host: " + cookie.host);
-    //log(DBUG, "  domain: " + cookie.domain);
-    //log(DBUG, "  rawhost: " + cookie.rawHost);
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
@@ -272,10 +267,6 @@ RuleSets.prototype = {
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
-          //log(WARN, "no match domain " + cr.host_c.test(cookie.domain) +
-          //          " name " + cr.name_c.test(cookie.name));
-          //log(WARN, "with " + cookie.domain + " " + cookie.name);
-          //log(WARN, "and " + cr.host + " " + cr.name);
         }
       }
     }

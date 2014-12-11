@@ -150,12 +150,12 @@ httpsEverywhere.fetchSource = {
 
 // TODO: Test resizing on mulitple platforms
 // adjust window resizing
-window.onresize = function() {
+window.addEventListener("resize", function() {
   var textBox = document.getElementById("source-text");
   // TODO: Move to constants
   textBox.width = window.innerWidth - 100;
   textBox.height = window.innerHeight - 150;
-};
+}, false);
 
 // hook event for init
 window.addEventListener("load", httpsEverywhere.fetchSource.init, false);

@@ -1,10 +1,4 @@
 INCLUDE('Cookie');
-// XXX: Disable STS for now.
-var STS = {
-  isSTSURI : function(uri) {
-    return false;
-  }
-};
 
 // Hack. We only need the part of the policystate that tracks content
 // policy loading.
@@ -156,7 +150,7 @@ const HTTPS = {
 
   handleInsecureCookie: function(c) {
     if (HTTPSRules.shouldSecureCookie(null, c, false)) {
-      this.log(INFO, "Securing cookie from event: " + c.domain + " " + c.name);
+      this.log(INFO, "Securing cookie from event: " + c.host + " " + c.name);
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions

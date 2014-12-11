@@ -1,0 +1,52 @@
+<!--
+	Other Active Network rulesets:
+
+		- Active.com.xml
+		- Active-Events.xml
+		- RegOnline.com.xml
+
+
+	CDN buckets:
+
+		- www.activenetwork.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Mismatched
+	² Akamai
+
+
+	Mixed content:
+
+		- css on www from www
+
+-->
+<ruleset name="Active Network.com (partial)">
+
+	<target host="activenetwork.com" />
+	<target host="*.activenetwork.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="http://www\.activenetwork\.com/+(?!asset\d+\.aspx|[Aa]ssets/|favicon\.ico|sites/)" /-->
+		<!--
+			References resources relative to root:
+								-->
+		<!--exclusion pattern="https://www\.activenetwork\.com/assets/global/stylesheets/(activenetwork-global|corporate-b2b-bootstrap)\.css" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="http://(?:www\.)?activenetwork\.com/+(?![Aa]ssets/(?!.+\.css(?:$|\?))|asset\d+\.aspx|favicon\.ico|sites/)" /> 
+
+
+	<rule from="^http://(?:www\.)?activenetwork\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/www.activenetwork.com/" />
+
+	<rule from="^http://regonlineportal\.activenetwork\.com/"
+		to="https://regonlineportal.activenetwork.com/" />
+
+</ruleset>
