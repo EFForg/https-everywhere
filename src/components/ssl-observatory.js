@@ -5,7 +5,6 @@ const Cr = Components.results;
 const CI = Components.interfaces;
 const CC = Components.classes;
 const CR = Components.results;
-const CU = Components.utils;
 
 // Log levels
 let VERB=1;
@@ -56,7 +55,7 @@ const INCLUDE = function(name) {
       dump("INCLUDE " + name + ": " + e + "\n");
     }
   }
-};
+}
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
@@ -75,10 +74,6 @@ function SSLObservatory() {
     this.torbutton_installed = false;
   }
 
-  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
-                            .getService(Components.interfaces.nsISupports)
-                            .wrappedJSObject;
-
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
   this.proxy_test_successful = null;
@@ -92,6 +87,7 @@ function SSLObservatory() {
   // Clear these on cookies-cleared observer event
   this.already_submitted = {};
   this.delayed_submissions = {};
+  OS.addObserver(this, "cookie-changed", false);
 
   // Figure out the url to submit to
   this.submit_host = null;
@@ -100,30 +96,14 @@ function SSLObservatory() {
   // Used to track current number of pending requests to the server
   this.current_outstanding_requests = 0;
 
-  // We can't always know private browsing state per request, sometimes
-  // we have to guess based on what we've seen in the past
-  this.everSeenPrivateBrowsing = false;
-
   // Generate nonce to append to url, to catch in nsIProtocolProxyFilter
   // and to protect against CSRF
   this.csrf_nonce = "#"+Math.random().toString()+Math.random().toString();
 
-  var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
-      .getService(Components.interfaces.nsIPrefBranchInternal);
-  var branch = pref_service.QueryInterface(Components.interfaces.nsIPrefBranchInternal);
+  this.compatJSON = Cc["@mozilla.org/dom/json;1"].createInstance(Ci.nsIJSON);
 
-  branch.addObserver("extensions.https_everywhere._observatory.enabled",
-                     this, false);
-
-  if (this.myGetBoolPref("enabled")) {
-    OS.addObserver(this, "cookie-changed", false);
-    OS.addObserver(this, "http-on-examine-response", false);
-
-    var dls = CC['@mozilla.org/docloaderservice;1']
-        .getService(CI.nsIWebProgress);
-    dls.addProgressListener(this,
-                        Ci.nsIWebProgress.NOTIFY_STATE_REQUEST);
-  }
+  // Register observer
+  OS.addObserver(this, "http-on-examine-response", false);
 
   // Register protocolproxyfilter
   this.pps = CC["@mozilla.org/network/protocol-proxy-service;1"]
@@ -156,9 +136,7 @@ SSLObservatory.prototype = {
     [ CI.nsIObserver,
       CI.nsIProtocolProxyFilter,
       //CI.nsIWifiListener,
-      CI.nsIWebProgressListener,
-      CI.nsISupportsWeakReference,
-      CI.nsIInterfaceRequestor]),
+      CI.nsIBadCertListener2]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -168,7 +146,7 @@ SSLObservatory.prototype = {
   contractID:       SERVICE_CTRID,
 
   // https://developer.mozilla.org/En/How_to_check_the_security_state_of_an_XMLHTTPRequest_over_SSL
-  getSSLCertChain: function(channel) {
+  getSSLCert: function(channel) {
     try {
         // Do we have a valid channel argument?
         if (!channel instanceof Ci.nsIChannel) {
@@ -318,29 +296,6 @@ SSLObservatory.prototype = {
     return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
-  // onSecurity is used to listen for bad cert warnings
-  // There is also onSecurityStateChange, but it does not handle subdocuments.  See git
-  // history for an implementation stub.
-  onStateChange: function(aProgress, aRequest, aState, aStatus) {
-      if (!aRequest) return;
-      var chan = null;
-      try {
-         chan = aRequest.QueryInterface(Ci.nsIHttpChannel);
-      } catch(e) {
-         return;
-      }
-      if (chan) {
-         if (!this.observatoryActive(chan)) return;
-         var certchain = this.getSSLCertChain(chan);
-         if (certchain) {
-           this.log(INFO, "Got state cert chain for "
-                  + chan.originalURI.spec + "->" + chan.URI.spec + ", state: " + aState);
-           var warning = true;
-           this.submitCertChainForChannel(certchain, chan, warning);
-         }
-      }
-  },
-
   observe: function(subject, topic, data) {
     if (topic == "cookie-changed" && data == "cleared") {
       this.already_submitted = {};
@@ -425,38 +380,51 @@ SSLObservatory.prototype = {
         this.log(INFO, "Could not get server IP address.");
     }
 
-    channel.QueryInterface(Ci.nsIHttpChannel);
-    var chainEnum = certchain.getChain();
-    var chainArray = [];
-    var chainArrayFpStr = '';
-    var fps = [];
-    for(var i = 0; i < chainEnum.length; i++) {
-      var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
-      chainArray.push(cert);
-      var fp = this.ourFingerprint(cert);
-      fps.push(fp);
-      chainArrayFpStr = chainArrayFpStr + fp;
-    }
-    var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
-    this.log(INFO, "SHA-256 hash of cert chain for "+new String(channel.URI.host)+" is "+ chain_hash);
+    if (!this.observatoryActive()) return;
 
-    if(!this.myGetBoolPref("use_whitelist")) {
-      this.log(WARN, "Not using whitelist to filter cert chains.");
-    } else if (this.isChainWhitelisted(chain_hash)) {
-      this.log(INFO, "This cert chain is whitelisted. Not submitting. ");
-      return;
-    } else {
-      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission");
+    var host_ip = "-1";
+    var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
+    try { 
+      host_ip = httpchannelinternal.remoteAddress;
+    } catch(e) {
+        this.log(INFO, "Could not get server IP address.");
     }
+    subject.QueryInterface(Ci.nsIHttpChannel);
+    var certchain = this.getSSLCert(subject);
+    if (certchain) {
+      var chainEnum = certchain.getChain();
+      var chainArray = [];
+      var chainArrayFpStr = '';
+      var fps = [];
+      for(var i = 0; i < chainEnum.length; i++) {
+        var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+        chainArray.push(cert);
+        var fp = this.ourFingerprint(cert);
+        fps.push(fp);
+        chainArrayFpStr = chainArrayFpStr + fp;
+      }
+      var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+      this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
 
-    if (channel.URI.port == -1) {
-        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
-    } else {
-        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
+      if(!this.myGetBoolPref("use_whitelist")) {
+        this.log(WARN, "Not using whitelist to filter cert chains.");
+      }
+      else if (this.isChainWhitelisted(chain_hash)) {
+        this.log(INFO, "This cert chain is whitelisted. Not submitting.");
+        return;
+      } else {
+        this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
+      }
+
+      if (channel.URI.port == -1) {
+          this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
+      } else {
+          this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
+      }
     }
   },
 
-  observatoryActive: function(channel) {
+  observatoryActive: function() {
                          
     if (!this.myGetBoolPref("enabled"))
       return false;
@@ -482,43 +450,14 @@ SSLObservatory.prototype = {
       // submit certs without strong anonymisation.  Because the
       // anonymisation is weak, we avoid submitting during private browsing
       // mode.
-      var pbm = this.inPrivateBrowsingMode(channel);
-      this.log(DBUG, "Private browsing mode: " + pbm);
-      return !pbm;
-    }
-  },
-
-  inPrivateBrowsingMode: function(channel) {
-    // In classic firefox fashion, there are multiple versions of this API
-    // https://developer.mozilla.org/EN/docs/Supporting_per-window_private_browsing
-    try {
-        // Firefox 20+, this state is per-window;
-        //  should raise an exception on FF < 20
-        CU.import("resource://gre/modules/PrivateBrowsingUtils.jsm");
-        if (!(channel instanceof CI.nsIHttpChannel)) {
-          this.log(NOTE, "observatoryActive() without a channel");
-          // This is a windowless request. We cannot tell if private browsing
-          // applies. Conservatively, if we have ever seen PBM, it might be
-          // active now
-          return this.everSeenPrivateBrowsing;
-        }
-        var win = this.HTTPSEverywhere.getWindowForChannel(channel);
-        if (!win) return this.everSeenPrivateBrowsing;  // windowless request
-
-        if (PrivateBrowsingUtils.isWindowPrivate(win)) {
-          this.everSeenPrivateBrowsing = true;
-          return true;
-        }
-    } catch (e) {
-      // Firefox < 20, this state is global
       try {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
-        if (pbs.privateBrowsingEnabled) {
-          this.everSeenPrivateBrowsing = true;
-          return true;
-        }
-      } catch (e) { /* seamonkey or very old firefox */ }
+        if (pbs.privateBrowsingEnabled) return false;
+      } catch (e) { /* seamonkey or old firefox */ }
+    
+      return true;
     }
+
     return false;
   },
 
@@ -709,7 +648,7 @@ SSLObservatory.prototype = {
   shouldSubmit: function(chain, domain) {
     // Return true if we should submit this chain to the SSL Observatory
     var rootidx = this.findRootInChain(chain.certArray);
-    var ss = false;  // ss: self-signed
+    var ss= false;
 
     if (chain.leaf.issuerName == chain.leaf.subjectName) 
       ss = true;
@@ -784,20 +723,16 @@ SSLObservatory.prototype = {
 
     if (resubmitting) {
       reqParams.push("client_asn="+ASN_UNKNOWABLE);
-    } else {
+    }
+    else {
       reqParams.push("client_asn="+this.client_asn);
     }
 
     if (this.myGetBoolPref("priv_dns")) {
       reqParams.push("private_opt_in=1");
-    } else {
-      reqParams.push("private_opt_in=0");
     }
-
-    if (warning) {
-      reqParams.push("browser_warning=1");
-    } else {
-      reqParams.push("browser_warning=0");
+    else {
+      reqParams.push("private_opt_in=0");
     }
 
     var params = reqParams.join("&") + "&padding=0";
@@ -816,7 +751,10 @@ SSLObservatory.prototype = {
 
     var that = this; // We have neither SSLObservatory nor this in scope in the lambda
 
-    var win = channel ? this.HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
+    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
@@ -947,7 +885,6 @@ SSLObservatory.prototype = {
           if(req.status == 200) {
             if(!req.responseXML) {
               that.log(INFO, "Tor check failed: No XML returned by check service.");
-              that.proxyTestFinished();
               return;
             }
 
@@ -972,7 +909,6 @@ SSLObservatory.prototype = {
             that.proxy_test_callback(that.proxy_test_successful);
             that.proxy_test_callback = null;
           }
-          that.proxyTestFinished();
         }
       };
       req.send(null);
@@ -986,13 +922,6 @@ SSLObservatory.prototype = {
         this.proxy_test_callback(this.proxy_test_successful);
         this.proxy_test_callback = null;
       }
-      that.proxyTestFinished();
-    }
-  },
-
-  proxyTestFinished: function() {
-    if (!this.myGetBoolPref("enabled")) {
-      this.pps.unregisterFilter(this);
     }
   },
 

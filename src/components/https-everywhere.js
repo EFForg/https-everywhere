@@ -150,11 +150,13 @@ function HTTPSEverywhere() {
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
   this.browser_initialised = false; // the browser is completely loaded
-  
+
+
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
+  this.isMobile = this.doMobileCheck();
 
   // Disable SSLv3 to prevent POODLE attack.
   // https://www.imperialviolet.org/2014/10/14/poodle.html
@@ -163,7 +165,7 @@ function HTTPSEverywhere() {
   if (root_prefs.getIntPref(TLS_MIN) < 1) {
     root_prefs.setIntPref(TLS_MIN, 1);
   }
-  
+
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
@@ -173,11 +175,16 @@ function HTTPSEverywhere() {
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
                     
-  if(this.prefs.getBoolPref("globalEnabled")){
+  if (this.prefs.getBoolPref("globalEnabled")) {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
     this.obsService.addObserver(this, "browser:purge-session-history", false);
+  } else {
+    // Need this to initialize FF for Android UI even when HTTPS-E is off
+    if (this.isMobile) {
+      this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+    }
   }
 
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
@@ -530,7 +537,13 @@ HTTPSEverywhere.prototype = {
       }
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
-      this.maybeShowObservatoryPopup();
+      if (!this.isMobile) {
+        this.maybeShowObservatoryPopup();
+      } else {
+        this.log(WARN, "Initializing Firefox for Android UI");
+        Cu.import("chrome://https-everywhere/content/code/AndroidUI.jsm");
+        AndroidUI.init();
+      }
       this.browser_initialised = true;
     } else if (topic == "nsPref:changed") {
         // If the user toggles the Mixed Content Blocker settings, reload the rulesets
@@ -710,6 +723,13 @@ HTTPSEverywhere.prototype = {
     return o_branch;
   },
 
+  // Are we on Firefox for Android?
+  doMobileCheck: function() {
+    let appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
+    let ANDROID_ID = "{aa3c5121-dab2-40e2-81ca-7ea25febc110}";
+    return (appInfo.ID === ANDROID_ID);
+  },
+
   chrome_opener: function(uri, args) {
     // we don't use window.open, because we need to work around TorButton's 
     // state control
@@ -778,6 +798,40 @@ HTTPSEverywhere.prototype = {
       } catch(e) {
         this.log(WARN, "Couldn't add observers: " + e);
       }
+    }
+  },
+
+  toggleHttpNowhere: function() {
+    let prefService = Services.prefs;
+    let thisBranch =
+      prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+    let securityBranch = prefService.getBranch("security.");
+
+    // Whether cert is treated as invalid when OCSP connection fails
+    let OCSP_REQUIRED = "OCSP.require";
+
+    // Branch to save original settings
+    let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
+
+
+    if (thisBranch.getBoolPref("enabled")) {
+      // Restore original OCSP settings. TODO: What if user manually edits
+      // these while HTTP Nowhere is enabled?
+      let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
+      securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+
+      thisBranch.setBoolPref("enabled", false);
+      this.httpNowhereEnabled = false;
+    } else {
+      // Save original OCSP settings in HTTP Nowhere preferences branch.
+      let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
+      thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
+
+      // Disable OCSP enforcement
+      securityBranch.setBoolPref(OCSP_REQUIRED, false);
+
+      thisBranch.setBoolPref("enabled", true);
+      this.httpNowhereEnabled = true;
     }
   },
 
