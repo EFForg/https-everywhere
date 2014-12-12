@@ -17,6 +17,7 @@ APP_NAME=https-everywhere
 
 cd "`dirname $0`"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+ANDROID_APP_ID=org.mozilla.firefox
 
 [ -d pkg ] || mkdir pkg
 
@@ -152,6 +153,7 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 fi
 
 cd src
+
 
 # Build the XPI!
 rm -f "../$XPI_NAME"

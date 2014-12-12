@@ -13,3 +13,6 @@ user_pref("general.warnOnAboutConfig", false);
 // Minimize unnecesary requests.
 user_pref("browser.safebrowsing.enabled", false);
 user_pref("browser.safebrowsing.malware.enabled", false);
+// Enable browser debugging in test mode.
+user_pref("devtools.debugger.remote-enabled", true);
+user_pref("devtools.chrome.enabled", true);

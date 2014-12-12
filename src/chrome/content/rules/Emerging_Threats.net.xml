@@ -1,0 +1,43 @@
+<!--
+	For rules causing false/broken MCB, see Emerging_Threats.net-falsemixed.xml.
+
+
+	Insecure cookies are set for these domains:
+
+		- portal.emergingthreats.net
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^ from $self *
+			- ^ from fonts.googleapis.com *
+
+		- Images on ^ from $self *
+		- Bugs on ^ from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Emerging Threats.net (partial)">
+
+	<target host="emergingthreats.net" />
+	<target host="*.emergingthreats.net" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="http://emergingthreats\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^portal\.emergingthreats\.net$" name="^(AWSELB|beaker\.session\.id)$" /-->
+
+	<securecookie host="^portal\.emergingthreats\.net$" name=".+" />
+
+
+	<rule from="^http://((?:lists|portal|www)\.)?emergingthreats\.net/"
+		to="https://$1emergingthreats.net/" />
+
+</ruleset>
