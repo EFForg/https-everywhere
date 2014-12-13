@@ -1,4 +1,3 @@
-const Cc = Components.classes;
 // Compilation of RegExps is now delayed until they are first used...
 
 function Rule(from, to) {

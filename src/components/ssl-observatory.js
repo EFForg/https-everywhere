@@ -67,9 +67,12 @@ function SSLObservatory() {
 
   try {
     // Check for torbutton
-    this.tor_logger = CC["@torproject.org/torbutton-logger;1"]
-          .getService(CI.nsISupports).wrappedJSObject;
-    this.torbutton_installed = true;
+    var tor_logger_component = CC["@torproject.org/torbutton-logger;1"];
+    if (tor_logger_component) {
+      this.tor_logger =
+        tor_logger_component.getService(CI.nsISupports).wrappedJSObject;
+      this.torbutton_installed = true;
+    }
   } catch(e) {
     this.torbutton_installed = false;
   }
@@ -380,47 +383,34 @@ SSLObservatory.prototype = {
         this.log(INFO, "Could not get server IP address.");
     }
 
-    if (!this.observatoryActive()) return;
-
-    var host_ip = "-1";
-    var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
-    try { 
-      host_ip = httpchannelinternal.remoteAddress;
-    } catch(e) {
-        this.log(INFO, "Could not get server IP address.");
+    channel.QueryInterface(Ci.nsIHttpChannel);
+    var chainEnum = certchain.getChain();
+    var chainArray = [];
+    var chainArrayFpStr = '';
+    var fps = [];
+    for(var i = 0; i < chainEnum.length; i++) {
+      var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
+      chainArray.push(cert);
+      var fp = this.ourFingerprint(cert);
+      fps.push(fp);
+      chainArrayFpStr = chainArrayFpStr + fp;
     }
-    subject.QueryInterface(Ci.nsIHttpChannel);
-    var certchain = this.getSSLCert(subject);
-    if (certchain) {
-      var chainEnum = certchain.getChain();
-      var chainArray = [];
-      var chainArrayFpStr = '';
-      var fps = [];
-      for(var i = 0; i < chainEnum.length; i++) {
-        var cert = chainEnum.queryElementAt(i, Ci.nsIX509Cert);
-        chainArray.push(cert);
-        var fp = this.ourFingerprint(cert);
-        fps.push(fp);
-        chainArrayFpStr = chainArrayFpStr + fp;
-      }
-      var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
-      this.log(INFO, "SHA-256 hash of cert chain for "+new String(subject.URI.host)+" is "+ chain_hash);
+    var chain_hash = sha256_digest(chainArrayFpStr).toUpperCase();
+    this.log(INFO, "SHA-256 hash of cert chain for "+new String(channel.URI.host)+" is "+ chain_hash);
 
-      if(!this.myGetBoolPref("use_whitelist")) {
-        this.log(WARN, "Not using whitelist to filter cert chains.");
-      }
-      else if (this.isChainWhitelisted(chain_hash)) {
-        this.log(INFO, "This cert chain is whitelisted. Not submitting.");
-        return;
-      } else {
-        this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission.");
-      }
+    if(!this.myGetBoolPref("use_whitelist")) {
+      this.log(WARN, "Not using whitelist to filter cert chains.");
+    } else if (this.isChainWhitelisted(chain_hash)) {
+      this.log(INFO, "This cert chain is whitelisted. Not submitting. ");
+      return;
+    } else {
+      this.log(INFO, "Cert chain is NOT whitelisted. Proceeding with submission");
+    }
 
-      if (channel.URI.port == -1) {
-          this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
-      } else {
-          this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
-      }
+    if (channel.URI.port == -1) {
+        this.submitChainArray(chainArray, fps, new String(channel.URI.host), channel, host_ip, warning, false, chain_hash);
+    } else {
+        this.submitChainArray(chainArray, fps, channel.URI.host+":"+channel.URI.port, channel, host_ip, warning, false, chain_hash);
     }
   },
 
