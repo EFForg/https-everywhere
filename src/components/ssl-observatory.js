@@ -77,6 +77,10 @@ function SSLObservatory() {
     this.torbutton_installed = false;
   }
 
+  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
+
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
   this.proxy_test_successful = null;
@@ -1024,8 +1028,8 @@ SSLObservatory.prototype = {
       // dump() prints to browser stdout. That's sometimes undesireable,
       // so only do it when a pref is set (running from test.sh enables
       // this pref).
-      if (this.prefs.getBoolPref("log_to_stdout")) {
-	dump(prefix + str + "\n");
+      if (this.prefs.getBoolPref("extensions.https_everywhere.log_to_stdout")) {
+        dump(prefix + str + "\n");
       }
       econsole.logStringMessage(prefix + str);
     }
