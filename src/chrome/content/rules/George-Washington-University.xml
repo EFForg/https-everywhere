@@ -5,10 +5,30 @@
 		- docs.law
 		- www.law
 
+
+	Partially covered subdomains:
+
+		- www.seas *
+
+	* Avoiding broken MCB
+
+
+	Mixed content:
+
+		- css on www.seas from $self *
+		- Images on www.seas from $self *
+		- favicon on www.seas from $self *
+
+	* Secured by us
+
 -->
 <ruleset name="George Washington University (partial)">
 
 	<target host="*.gwu.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.seas\.gwu\.edu/+(?!~|favicon\.ico|sites/)" />
 
 
 	<securecookie host="^.*\.gwu\.edu$" name=".*" />
@@ -16,7 +36,7 @@
 
 	<!--	!www doesn't exist.
 					-->
-	<rule from="^http://(gwtoday|www)\.gwu\.edu/"
+	<rule from="^http://(gwtoday|www\.seas|www)\.gwu\.edu/"
 		to="https://$1.gwu.edu/" />
 
 </ruleset>
