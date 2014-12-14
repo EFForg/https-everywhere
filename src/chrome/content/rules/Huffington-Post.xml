@@ -38,11 +38,17 @@
 	² Works, akamai
 
 
+	Partially covered domains:
+
+		- (www.)huffingtonpost.com *	(→ secure)
+
+	* Some pages redirect back
+
+
 	Fully covered domains:
 
 		- huffingtonpost.com subdomains:
 
-			- (www.)	(→ secure)
 			- big.assets	(→ s3.amazonaws.com/big.assets.huffingtonpost.com/)
 			- images	(→ s-i.huffpost.com)
 			- secure
@@ -84,10 +90,18 @@
 	** Unsecurable
 
 -->
-<ruleset name="Huffington Post" platform="mixedcontent">
+<ruleset name="Huffington Post (partial)" platform="mixedcontent">
 
 	<target host="huffingtonpost.com" />
 	<target host="*.huffingtonpost.com" />
+		<!--
+			Redirects back to www:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+\d{4}/\d\d/\d\d/[\w-]+_\d+\.html(?:$|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+(?!images/)" />
 	<target host="*.huffpost.com" />
 		<!--
 			css embeds resources relative to root => rewriting to akamai breaks:
