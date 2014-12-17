@@ -10,6 +10,7 @@
 
 	Problematic subdomains:
 
+		- (www.) ¹
 		- atorget *
 		- bedriftfiles		(self-signed, mismatched, CN: hotelladmin.aftenposten.no)
 		- bil *
@@ -19,19 +20,47 @@
 		- reise *
 		- rubrikkcache *
 
+	¹ Mixed css
 	* Works; mismatched, CN: www.aftenposten.no
 
 
 	Partially covered subdomains:
 
+		- (www.)		(^ → www)
 		- kundeservice		(→ a)
 
+
+	Insecure cookies are set for these domains:
+
+		- www.aftenposten.no
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from www.bt.no *
+
+	* Secured by us
+
 -->
-<ruleset name="Aftenposten" platform="mixedcontent">
+<ruleset name="Aftenposten (partial)">
         <target host="*.aftenposten.no" />
         <target host="aftenposten.no" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.aftenposten\.no/$" /-->
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.aftenposten\.no/+(?!.+\.(?:css|gif|jpg|png)(?:$|\?)|\?service=css|favicon\.ico|skins/)" />
 	<target host="ap.mnocdn.no" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.aftenposten\.no$" name="^(VPW_Quota_\d+|VPW_QuotaInfo_\d+)$" /-->
 
 	<!--securecookie host="^\.aftenposten\.no$" name="^environment$" /-->
 	<securecookie host="^(?:a|kundeweb|onlinesos)\.aftenposten\.no$" name=".+" />

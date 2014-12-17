@@ -1,0 +1,63 @@
+<!--
+	Lawrence Berkeley National Laboratory
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Problematic subdomains:
+
+		- photos ¹
+		- wwwdev ²
+
+	¹ Mismatched, CN: *.webdamdb.com)
+	² Self-signed
+
+
+	Fully covered subdomains:
+
+		- www
+		- newscenter
+		- search
+		- wwwdev	(→ www)
+
+
+	^lbl.gov doesn't exist.
+
+
+	Insecure cookies are set for these domains:
+
+		- photos
+
+
+	Mixed content:
+
+		- css on newscenter from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- newscenter, photos, www from www ¹
+			- photos from $self ²
+			- today from $self ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
+<ruleset name="LBL.gov (partial)">
+
+	<target host="lbl.gov" />
+	<target host="*.lbl.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^photos\.lbl\.gov$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http://wwwdev\.lbl\.gov/"
+		to="https://www.lbl.gov/" />
+
+	<rule from="^http://(newscenter|search|today|www)\.lbl\.gov/"
+		to="https://$1.lbl.gov/" />
+
+</ruleset>
