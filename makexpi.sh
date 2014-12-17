@@ -172,7 +172,7 @@ else
 
   # Push to Android Firefox if device is connected
   # XXX on some systems, adb may require sudo...
-  if type adb > /dev/null && adb devices > /dev/null 2>/dev/null ; then
+  if type adb > /dev/null 2>/dev/null && adb devices > /dev/null 2>/dev/null ; then
     ADB_FOUND=`adb devices | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
     if [ "$ADB_FOUND" != "List of devices attached" ]; then
       echo Pushing "$XPI_NAME" to /sdcard/"$XPI_NAME"
@@ -182,6 +182,8 @@ else
                          -d file:///mnt/sdcard/"$XPI_NAME" \
                          -n $ANDROID_APP_ID/.App
     fi
+  else
+    echo >&2 "Warning: adb not found, no android version"
   fi
 
   if [ -n "$BRANCH" ]; then
