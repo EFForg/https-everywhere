@@ -182,8 +182,6 @@ else
                          -d file:///mnt/sdcard/"$XPI_NAME" \
                          -n $ANDROID_APP_ID/.App
     fi
-  else
-    echo >&2 "Warning: adb not found, no android version"
   fi
 
   if [ -n "$BRANCH" ]; then
