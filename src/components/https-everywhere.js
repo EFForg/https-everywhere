@@ -1,5 +1,4 @@
-// LOG LEVELS ---
-
+// LOG LEVELS
 let VERB=1;
 let DBUG=2;
 let INFO=3;
@@ -18,15 +17,11 @@ let https_everywhere_blacklist = {};
 // domains for which there is at least one blacklisted URL
 let https_blacklist_domains = {};
 
-//
 const CI = Components.interfaces;
 const CC = Components.classes;
-const CU = Components.utils;
-const CR = Components.results;
 const Ci = Components.interfaces;
 const Cc = Components.classes;
 const Cu = Components.utils;
-const Cr = Components.results;
 
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
@@ -156,11 +151,13 @@ function HTTPSEverywhere() {
   this.INCLUDE=INCLUDE;
   this.ApplicableList = ApplicableList;
   this.browser_initialised = false; // the browser is completely loaded
-  
+
+
   this.prefs = this.get_prefs();
   this.rule_toggle_prefs = this.get_prefs(PREFBRANCH_RULE_TOGGLE);
 
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
+  this.isMobile = this.doMobileCheck();
 
   // Disable SSLv3 to prevent POODLE attack.
   // https://www.imperialviolet.org/2014/10/14/poodle.html
@@ -169,7 +166,7 @@ function HTTPSEverywhere() {
   if (root_prefs.getIntPref(TLS_MIN) < 1) {
     root_prefs.setIntPref(TLS_MIN, 1);
   }
-  
+
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
@@ -179,11 +176,16 @@ function HTTPSEverywhere() {
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
                     
-  if(this.prefs.getBoolPref("globalEnabled")){
+  if (this.prefs.getBoolPref("globalEnabled")) {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
     this.obsService.addObserver(this, "sessionstore-windows-restored", false);
     this.obsService.addObserver(this, "browser:purge-session-history", false);
+  } else {
+    // Need this to initialize FF for Android UI even when HTTPS-E is off
+    if (this.isMobile) {
+      this.obsService.addObserver(this, "sessionstore-windows-restored", false);
+    }
   }
 
   var pref_service = Components.classes["@mozilla.org/preferences-service;1"]
@@ -286,7 +288,7 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      this.log(NOTE, "No expando for " + browser.currentURI);
+      this.log(NOTE, "No expando for " + browser.currentURI.spec);
       return null;
     }
     return obj[key];
@@ -333,7 +335,9 @@ HTTPSEverywhere.prototype = {
         loadContext = channel.loadGroup.notificationCallbacks
           .getInterface(CI.nsILoadContext);
       } catch(e) {
-        this.log(NOTE, "no loadGroup notificationCallbacks for "
+        // Lots of requests have no notificationCallbacks, mostly background
+        // ones like OCSP checks or smart browsing fetches.
+        this.log(DBUG, "no loadGroup notificationCallbacks for "
                  + channel.URI.spec + ": " + e);
         return null;
       }
@@ -534,7 +538,13 @@ HTTPSEverywhere.prototype = {
       }
     } else if (topic == "sessionstore-windows-restored") {
       this.log(DBUG,"Got sessionstore-windows-restored");
-      this.maybeShowObservatoryPopup();
+      if (!this.isMobile) {
+        this.maybeShowObservatoryPopup();
+      } else {
+        this.log(WARN, "Initializing Firefox for Android UI");
+        Cu.import("chrome://https-everywhere/content/code/AndroidUI.jsm");
+        AndroidUI.init();
+      }
       this.browser_initialised = true;
     } else if (topic == "nsPref:changed") {
         // If the user toggles the Mixed Content Blocker settings, reload the rulesets
@@ -714,6 +724,13 @@ HTTPSEverywhere.prototype = {
     return o_branch;
   },
 
+  // Are we on Firefox for Android?
+  doMobileCheck: function() {
+    let appInfo = CC["@mozilla.org/xre/app-info;1"].getService(CI.nsIXULAppInfo);
+    let ANDROID_ID = "{aa3c5121-dab2-40e2-81ca-7ea25febc110}";
+    return (appInfo.ID === ANDROID_ID);
+  },
+
   chrome_opener: function(uri, args) {
     // we don't use window.open, because we need to work around TorButton's 
     // state control
@@ -817,6 +834,40 @@ HTTPSEverywhere.prototype = {
       thisBranch.setBoolPref("enabled", true);
       this.httpNowhereEnabled = true;
     }
+  },
+
+  toggleHttpNowhere: function() {
+    let prefService = Services.prefs;
+    let thisBranch =
+      prefService.getBranch("extensions.https_everywhere.http_nowhere.");
+    let securityBranch = prefService.getBranch("security.");
+
+    // Whether cert is treated as invalid when OCSP connection fails
+    let OCSP_REQUIRED = "OCSP.require";
+
+    // Branch to save original settings
+    let ORIG_OCSP_REQUIRED = "orig.ocsp.required";
+
+
+    if (thisBranch.getBoolPref("enabled")) {
+      // Restore original OCSP settings. TODO: What if user manually edits
+      // these while HTTP Nowhere is enabled?
+      let origOcspRequired = thisBranch.getBoolPref(ORIG_OCSP_REQUIRED);
+      securityBranch.setBoolPref(OCSP_REQUIRED, origOcspRequired);
+
+      thisBranch.setBoolPref("enabled", false);
+      this.httpNowhereEnabled = false;
+    } else {
+      // Save original OCSP settings in HTTP Nowhere preferences branch.
+      let origOcspRequired = securityBranch.getBoolPref(OCSP_REQUIRED);
+      thisBranch.setBoolPref(ORIG_OCSP_REQUIRED, origOcspRequired);
+
+      // Disable OCSP enforcement
+      securityBranch.setBoolPref(OCSP_REQUIRED, false);
+
+      thisBranch.setBoolPref("enabled", true);
+      this.httpNowhereEnabled = true;
+    }
   }
 };
 
@@ -835,8 +886,15 @@ function https_everywhereLog(level, str) {
     threshold = WARN;
   }
   if (level >= threshold) {
-    dump("HTTPS Everywhere: "+str+"\n");
-    econsole.logStringMessage("HTTPS Everywhere: " +str);
+    var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
+    var prefix = "HTTPS Everywhere " + levelName + ": ";
+    // dump() prints to browser stdout. That's sometimes undesireable,
+    // so only do it when a pref is set (running from test.sh enables
+    // this pref).
+    if (prefs.getBoolPref("log_to_stdout")) {
+      dump(prefix + str + "\n");
+    }
+    econsole.logStringMessage(prefix + str);
   }
 }
 

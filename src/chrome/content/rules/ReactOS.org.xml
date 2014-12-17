@@ -1,19 +1,35 @@
 <!--
 	Nonfunctional subdomains:
 
+		- community *
 		- doxygen *
-		- svn *
 
-	* Dropped
+	* Refused
+
+
+	Problematic subdomains:
+
+		- old *
+
+	* Mixed css
 
 
 	Fully covered subdomains:
 
 		- (www.)
 		- jira
+		- svn
+
+
+	Insecure cookies are set for these domains:
+
+		- .reactos.org
+		- jira.reactos.org
 
 
 	Mixed content:
+
+		- css on old from $self *
 
 		- Images on (www.) from upload.wikimedia.org *
 
@@ -24,12 +40,21 @@
 
 	<target host="reactos.org" />
 	<target host="*.reactos.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://old\.reactos\.org/+(?!(?:\w+/)?(?:cs|image)s/|\w\w/dox\.css|favicon\.ico|mailman(?:$|[?/])|media/|style\.css)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.reactos\.org$" name="^(LoggedOut|phpbb3_\w+_k|phpbb3_\w+_sid|phpbb3_\w+_u|roscms_usrset_lang|roscmslang)$" /-->
+	<!--securecookie host="^jira\.reactos\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
 	<securecookie host="^(?:jira)?\.reactos\.org$" name=".+" />
 
 
-	<rule from="^http://(jira\.|www\.)?reactos\.org/"
+	<rule from="^http://((?:jira|old|svn|www)\.)?reactos\.org/"
 		to="https://$1reactos.org/" />
 
 </ruleset>

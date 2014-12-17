@@ -1,7 +1,4 @@
 <!--
-	NB: Add blogs to WordPress-blogs.xml
-
-
 	Harvard Business Review
 
 	For other Harvard University coverage, see Harvard-University.xml.
@@ -17,59 +14,43 @@
 
 	Problematic subdomains:
 
-		- blogs *	(wordpress)
 		- static	(400; mismatched, CN: *.llnwd.net)
-		- web		(works; mismatched, CN: hbdm.hbsp.harvard.edu)
+		- web ²
 
-	* Handled in WordPress-blogs.xml
+	² Refused
 
 
 	Fully covered subdomains:
 
+		- (www.)
+		- blogs
 		- ox-d
 		- static	(→ ^)
 		- web		(→ hbdm.hbsp.harvard.edu)
 
 
-	Mixed content:
+	Insecure cookies are set for these domains:
 
-		- css on blogs from disqus.com
-
-		- Images, on:
-
-			- ^ and blogs from static *
-			- blogs from hbrblogs.files.wordpress.com *
-
-		- Web bugs, on:
-
-			- ^ and blogs from ox-d *
-			- ^ and blogs from web *
-			- blogs from pixel.quantserve.com *
-
-	* Secured by us
+		- hbr.org
+		- blogs.hbr.org
+		- www.hbr.org
 
 -->
-<ruleset name="HBR.org (partial)">
+<ruleset name="HBR.org">
 
 	<target host="hbr.org" />
 	<target host="*.hbr.org" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?hbr\.org/+($|\?|(books|corporate/about|registration-details|shopping-cart)($|[?/])|favicon\.ico)" /-->
-		<!--
-			Exceptions:
+
+
+	<!--	Not secured by server:
 					-->
-		<exclusion pattern="^http://(www\.)?hbr\.org/+(?!(?:checkout|forgot-password|register|sign-in|speed-pay)(?:$|[?/])|hbrg-main/)" />
+	<!--securecookie host="^hbr\.org$" name="^(AWSELB|JSESSIONID)$" /-->
+	<!--securecookie host="^(blogs|www).hbr\.org$" name="^HBRGSTICKY$" /-->
+
+	<securecookie host="^(?:\.|ox-d\.|www\.)?hbr\.org$" name=".+" />
 
 
-	<!--securecookie host="^hbr\.org$" name="^(hbr_u|JSESSIONID)$" /-->
-	<securecookie host="^\.hbr\.org$" name="^__qca$" />
-	<securecookie host="^ox-d\.hbr\.org$" name=".+" />
-	<!--securecookie host="^(www\.)?hbr\.org$" name="^HBRGSTICKY$" /-->
-
-
-	<rule from="^http://(?:static\.|(ox-d\.|www\.))?hbr\.org/"
+	<rule from="^http://(?:static\.|((?:blogs|ox-d|www)\.))?hbr\.org/"
 		to="https://$1hbr.org/" />
 
 	<rule from="^http://web\.hbr\.org/"

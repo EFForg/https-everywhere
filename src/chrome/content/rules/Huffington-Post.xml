@@ -38,11 +38,17 @@
 	² Works, akamai
 
 
+	Partially covered domains:
+
+		- (www.)huffingtonpost.com *	(→ secure)
+
+	* Some pages redirect back
+
+
 	Fully covered domains:
 
 		- huffingtonpost.com subdomains:
 
-			- (www.)	(→ secure)
 			- big.assets	(→ s3.amazonaws.com/big.assets.huffingtonpost.com/)
 			- images	(→ s-i.huffpost.com)
 			- secure
@@ -51,7 +57,11 @@
 
 			- i	(→ s-i)
 			- s	(→ s-s)
-			- s[01]	(→ akamai)
+
+			- s\d:	(→ akamai)
+
+				- [0-3]
+
 			- s-i
 			- s-s
 
@@ -84,10 +94,18 @@
 	** Unsecurable
 
 -->
-<ruleset name="Huffington Post" platform="mixedcontent">
+<ruleset name="Huffington Post (partial)">
 
 	<target host="huffingtonpost.com" />
 	<target host="*.huffingtonpost.com" />
+		<!--
+			Redirects back to www:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+\d{4}/\d\d/\d\d/[\w-]+_\d+\.html(?:$|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+(?!images/)" />
 	<target host="*.huffpost.com" />
 		<!--
 			css embeds resources relative to root => rewriting to akamai breaks:
@@ -120,12 +138,12 @@
 
 	<!--	First, send everything for which doing so works to cdn:
 									-->
-	<rule from="^http://s(1|2)\.huffpost\.com/(?!assets/css\.php\?f=(?!liveblog\.css))"
+	<rule from="^http://s(\d)\.huffpost\.com/(?!assets/css\.php\?f=(?!liveblog\.css))"
 		to="https://a248.e.akamai.net/f/1428/2056/10/s$1.huffpost.com/" />
 
 	<!--	And then everything else to s-:
 						-->
-	<rule from="^http://s[12]\.huffpost\.com/"
+	<rule from="^http://s\d\.huffpost\.com/"
 		to="https://s-s.huffpost.com/" />
 
 </ruleset>

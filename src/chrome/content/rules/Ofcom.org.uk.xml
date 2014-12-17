@@ -1,0 +1,67 @@
+<!--
+	For rules causing false/broken MCB, see Ofcom.org.uk-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- consumers ²
+		- images
+		- media
+
+	¹ Redirects to http
+	² Refused
+
+
+	Problematic subdomains:
+
+		- ask ¹
+		- licensing ²
+		- styles ²
+
+	¹ Mismatched, CN: *.metafaq.com
+	² Mixed css
+
+
+	Insecure cookies are set for these domains:
+
+		- licensing
+		- styles
+
+
+	Mixed content:
+
+		- css on licensing, styles from $self *
+		- Images on licensing, styles from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Ofcom.org.uk (partial)">
+
+	<target host="*.ofcom.org.uk" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?ofcom\.org\.uk/($|email-updates/$|favicon\.ico|widgets/defaultpagewidgets/ttgifpng)" /-->
+		<!--exclusion pattern="^http://stakeholders\.ofcom\.org\.uk/($|favicon\.ico|tell-us/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://stakeholders\.ofcom\.org\.uk/(?!tell-us/contact-the-webmaster(?:$|\?))" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:licensing|styles)\.ofcom\.org\.uk/+(?!favicon\.ico|html5/|images/|styles/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^licensing\.ofcom\.org\.uk$" name="^(JSESSIONID|Stakeholders)$" /-->
+	<!--securecookie host="^(licensing|styles)\.ofcom\.org\.uk$" name="^ofclb$" /-->
+
+
+	<rule from="^http://(licensing|stakeholders|styles)\.ofcom\.org\.uk/"
+		to="https://$1.ofcom.org.uk/" />
+
+</ruleset>

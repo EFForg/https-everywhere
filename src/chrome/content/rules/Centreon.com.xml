@@ -1,0 +1,69 @@
+<!--
+	CDN buckets:
+
+		- forum-merethis.netdna-ssl.com
+
+
+	Nonfunctional subdomains:
+
+		- documentation *
+
+	* 502
+
+
+	Problematic subdomains:
+
+		- forum *
+
+	* Mixed css
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- download
+		- forge
+		- login
+
+
+	Insecure cookies are set for these domains:
+
+		- centreon.com
+		- forge.centreon.com
+		- .forum.centreon.com
+		- www.centreon.com
+
+
+	Mixed content:
+
+		- iframe on www from maps.google.fr *
+
+		- css on forum from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Centreon.com (partial)">
+
+	<target host="centreon.com" />
+	<target host="*.centreon.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://forum\.centreon\.com/+(?!css\.php|favicon\.ico)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?centreon\.com$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^forge\.centreon\.com$" name="^_redmine_session$" /-->
+	<!--securecookie host="^\.forum\.centreon\.com$" name="^bb_sessionhash$" /-->
+
+	<securecookie host="^(?:forge\.|www\.)?centreon\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|download|forge|forum|login|www)\.)?centreon\.com/"
+		to="https://$1centreon.com/" />
+
+</ruleset>

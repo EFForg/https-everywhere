@@ -1,5 +1,14 @@
 <!--
-	^: cert only matches *.replicant.us
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- redmine
+
+
+	Insecure cookies are set by these domains:
+
+		- redmine.replicant.us
 
 -->
 <ruleset name="Replicant.us" platform="cacert">
@@ -10,13 +19,15 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^redmine\.replicant\.us$" name="^_redmine_session$" /-->
+
 	<securecookie host="^redmine\.replicant\.us$" name=".+" />
 
 
-	<rule from="^http://(?:ww\.)?replicant\.us/"
-		to="https://www.replicant.us/" />
+	<rule from="^http://(www\.)?replicant\.us/"
+		to="https://$1replicant.us/" />
 
-	<rule from="^http://redmine\.replicant\.us/"
-		to="https://redmine.replicant.us/" />
+	<rule from="^http://(blog|redmine)\.replicant\.us/"
+		to="https://$1.replicant.us/" />
 
 </ruleset>
