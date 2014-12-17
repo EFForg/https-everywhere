@@ -1,10 +1,11 @@
 <!--
 	Nonfunctional subdomains:
 
-		- bedrift *
+		- bedrift ¹
 		- papp2 *
 		- sport		(times out)
 
+	¹ Dropped
 	* Revoked
 
 
@@ -16,12 +17,16 @@
 		- bil *
 		- godetilbud *
 		- kundeservice		(revoked)
+		- leserpanel ⁵
 		- ocacache *
 		- reise *
 		- rubrikkcache *
 
+		- ap.mnocdn.no *
+
 	¹ Mixed css
 	* Works; mismatched, CN: www.aftenposten.no
+	⁵ Mismatched, CN: hotellweb1.schibsted-it.no
 
 
 	Partially covered subdomains:
@@ -30,16 +35,33 @@
 		- kundeservice		(→ a)
 
 
+	Fully covered subdomains:
+
+		- a
+		- kundeweb
+		- onlinesos
+
+
 	Insecure cookies are set for these domains:
 
+		- kundesenter.aftenposten.no
 		- www.aftenposten.no
 
 
 	Mixed content:
 
+		- css on www from $self *
+
 		- Images, on:
 
+			- leserpanel from $self
+			- www from $self *
 			- www from www.bt.no *
+			- www from ap.mnocdn.no *
+
+		- favicon on www from $self *
+
+		- Bugs on www from ocacache.medianorge.no
 
 	* Secured by us
 
@@ -52,6 +74,10 @@
 						-->
 		<!--exclusion pattern="^http://www\.aftenposten\.no/$" /-->
 		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.aftenposten\.no/(?!nyheter($|[?/]))" /-->
+		<!--
 			Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://www\.aftenposten\.no/+(?!.+\.(?:css|gif|jpg|png)(?:$|\?)|\?service=css|favicon\.ico|skins/)" />
@@ -60,6 +86,7 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^kundesenter\.aftenposten\.no$" name="^_wp_session$" /-->
 	<!--securecookie host="^www\.aftenposten\.no$" name="^(VPW_Quota_\d+|VPW_QuotaInfo_\d+)$" /-->
 
 	<!--securecookie host="^\.aftenposten\.no$" name="^environment$" /-->
