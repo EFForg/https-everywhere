@@ -88,7 +88,7 @@
 
 			- www.jps
 			- eol.jsc
-			- (www.)jwst
+			- (www.)?jwst
 			- kepler		(shows astrobiology, CN: astrobiology)
 			- science.ksc **
 			- www-pao.ksc *
@@ -97,7 +97,7 @@
 			- stereo-ssc.nascom *
 			- pds *
 			- spaceflight		(504, akamai)
-			- (www.)spaceplace **
+			- (www.)?spaceplace **
 			- sunearthday		(some paths 404, others work-ToDo: sort which ones; akamai)
 			- venustransit *
 			- visibleearth *
@@ -108,26 +108,29 @@
 
 	Problematic subdomains:
 
-		- astrobiology2.arc	(works; mismatched, CN: astrobiology.nasa.gov)
-		- www.grc		($ differs between http and https)
-		- heasarc	(cert only matches heasarc.gsfc)
-		- mars.jpl *
-		- marsrovers.jpl *
-		- marsstaticcdn.jpl *
+		- astrobiology2.arc ¹
+		- www.grc ²
+		- heasarc ³
+		- mars.jpl ⁴
+		- marsrovers.jpl ⁴
+		- marsstaticcdn.jpl ⁴
 		- rosetta.jpl ³
-		- mars *
+		- stiprod.larc ⁵
+		- mars ⁴
 
-	³ Mixed css
-	* Cloudfront
+	¹ Mismatched, CN: astrobiology.nasa.gov
+	² $ differs between http and https
+	³ Cert only matches heasarc.gsfc
+	⁴ Cloudfront
 
 
 	Partially covered subdomains:
 
 		- www.grc ¹
-		- rosetta.jpl *
+		- rosetta.jpl ²
 
 	¹ Accounting for possibly differing redirects
-	* Avoiding broken MCB
+	² Avoiding broken MCB
 
 
 	Fully covered subdomains:
@@ -137,7 +140,7 @@
 		- astrobiology
 		- ws1.ems.eosdis	(tracking beacon)
 		- esdpubs
-		- (www.)espo
+		- (www.)?espo
 		- espoarchive
 		- eyes
 
@@ -181,7 +184,7 @@
 		- mars		(→ d2cj35nmzi9erd.cloudfront.net)
 		- people
 		- solarsystem
-		- (www.)spacecomm
+		- (www.)?spacecomm
 		- www
 
 	* Server is configured for rc4 only
@@ -197,9 +200,9 @@
 
 	Mixed content:
 
-		- css from rosetta.jpl from $self *
+		- css from rosetta.jpl from $self ¹
 
-	* Secured by us
+	¹ Secured by us
 
 -->
 <ruleset name="NASA.gov">
@@ -215,7 +218,7 @@
 					-->
 	<!--securecookie host="^scienceandtechnology\.jpl\.nasa\.gov$" name="^(CFID|CFTOKEN)$" /-->
 
-	<securecookie host="^.*\.nasa\.gov$" name=".+" />
+	<securecookie host=".*\.nasa\.gov$" name=".+" />
 
 
 	<rule from="^http://www\.grc\.nasa\.gov/+(?=$|\?)"
@@ -239,8 +242,9 @@
 	<rule from="^http://marsstaticcdn\.jpl\.nasa\.gov/"
 		to="https://d3r05mwudimf00.cloudfront.net/" />
 
-	<!--	Protocol-relative links from scienceandtechnology.jpl:
-							-->
+	<!--	s? for protocol-relative links
+		from scienceandtechnology.jpl:
+						-->
 	<rule from="^https?://metrics\.jpl\.nasa\.gov/"
 		to="https://jpl-nasa-gov.122.2o7.net/" />
 
