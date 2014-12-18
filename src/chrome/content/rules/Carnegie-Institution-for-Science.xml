@@ -1,6 +1,13 @@
 <!--
 	Cert matches portal.carnegiescience.edu, but portal times out over both http & https.
 
+
+	Problematic domains:
+
+		- (www.)?ciw.edu *
+
+	* Cert only matches carnegiescience.edu
+
 -->
 <ruleset name="Carnegie Institution for Science">
 
@@ -10,24 +17,19 @@
 	<target host="*.ciw.edu" />
 
 
-	<securecookie host="^.*\.carnegiescience\.edu$" name=".*" />
-	<securecookie host="^(\.hazen\.gl|mail)\.ciw\.edu$" name=".*" />
-	<securecookie host="^\.gl\.ciw\.edu$" name=".+" />
+	<securecookie host=".*\.carnegiescience\.edu$" name=".+" />
+	<securecookie host="^(?:\.gl|\.hazen\.gl|mail)\.ciw\.edu$" name=".+" />
 
 
 	<rule from="^http://((?:board|hr|vpn|www)\.)?carnegiescience\.edu/"
 		to="https://$1carnegiescience.edu/" />
 
-	<!--	- Cert only matches carnegiescience.edu
-		- Redirects like so
-			-->
+	<!--	Redirects like so:
+					-->
 	<rule from="^http://(?:www\.)?ciw\.edu/"
 		to="https://carnegiescience.edu/" />
 
-	<rule from="^http://(hazen|people|www)\.gl\.ciw\.edu/"
-		to="https://$1.gl.ciw.edu/" />
-
-	<rule from="^http://mail\.ciw\.edu/"
-		to="https://mail.ciw.edu/" />
+	<rule from="^http://((?:hazen|people|www)\.gl|mail)\.ciw\.edu/"
+		to="https://$1.ciw.edu/" />
 
 </ruleset>
