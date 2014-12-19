@@ -4,9 +4,23 @@
 		- MND_CDN.com.xml
 
 
+	CDN buckets:
+
+		- get-mynewsdesk.herokuapp.com
+
+			- get
+
+
 	Nonfunctional subdomains:
 
 		- people	(dropped)
+
+
+	Problematic subdomains:
+
+		- get *
+
+	* Herokuapp
 
 
 	Fully covered subdomains:
@@ -16,7 +30,15 @@
 		- publish
 
 
+	Insecure cookies are set for these domains:
+
+		- .mynewsdesk.com
+		- get.mynewsdesk.com
+
+
 	Mixed content:
+
+		- Images on get and www from a1.mndcdn.com *
 
 		Web bugs, on:
 
@@ -30,10 +52,22 @@
 
 	<target host="mynewsdesk.com" />
 	<target host="*.mynewsdesk.com" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://get\.mynewsdesk\.com/(?!assets/|favicon\.ico)" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mynewsdesk.com$" name="^(_mynewsdesk_session|origin_site|picked_site)$" /-->
+	<!--securecookie host="^get\.mynewsdesk\.com$" name="^(_get-mynewsdesk_session|site)$" /-->
 
 	<securecookie host="^\.mynewsdesk.com$" name=".+" />
 
+
+	<rule from="^http://get\.mynewsdesk\.com/(?=assets/|favicon\.ico)"
+		to="https://get-mynewsdesk.herokuapp.com/" />
 
 	<rule from="^http://((?:insight|publish|www)\.)?mynewsdesk\.com/"
 		to="https://$1mynewsdesk.com/" />
