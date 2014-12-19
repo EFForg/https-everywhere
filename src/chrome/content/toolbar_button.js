@@ -95,7 +95,7 @@ httpsEverywhere.toolbarButton = {
       let httpseProgressListener = {
         onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
           HTTPSEverywhere.log(DBUG, "Got on location change!");
-          HTTPSEverywhere.onLocationChange(aBrowser);
+          HTTPSEverywhere.resetApplicableList(aBrowser);
         },
         onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
           if ((gBrowser.selectedBrowser === aBrowser) &&
