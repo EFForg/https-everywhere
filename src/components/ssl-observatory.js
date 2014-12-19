@@ -64,12 +64,19 @@ function SSLObservatory() {
 
   try {
     // Check for torbutton
-    this.tor_logger = CC["@torproject.org/torbutton-logger;1"]
-          .getService(CI.nsISupports).wrappedJSObject;
-    this.torbutton_installed = true;
+    var tor_logger_component = CC["@torproject.org/torbutton-logger;1"];
+    if (tor_logger_component) {
+      this.tor_logger =
+        tor_logger_component.getService(CI.nsISupports).wrappedJSObject;
+      this.torbutton_installed = true;
+    }
   } catch(e) {
     this.torbutton_installed = false;
   }
+
+  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
 
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
@@ -890,7 +897,7 @@ SSLObservatory.prototype = {
       // dump() prints to browser stdout. That's sometimes undesireable,
       // so only do it when a pref is set (running from test.sh enables
       // this pref).
-      if (this.prefs.getBoolPref("log_to_stdout")) {
+      if (this.prefs.getBoolPref("extensions.https_everywhere.log_to_stdout")) {
         dump(prefix + str + "\n");
       }
       econsole.logStringMessage(prefix + str);
