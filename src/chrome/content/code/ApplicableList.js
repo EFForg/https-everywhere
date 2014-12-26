@@ -2,7 +2,7 @@
 // were applied, and which ones weren't but might have been, to the contents
 // of a given page (top level nsIDOMWindow)
 
-serial_number = 0;
+var serial_number = 0;
 
 function ApplicableList(logger, uri) {
   this.log = logger;

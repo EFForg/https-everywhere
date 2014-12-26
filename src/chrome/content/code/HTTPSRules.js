@@ -635,7 +635,7 @@ const HTTPSRules = {
         }
       }
     } else {
-      this.log(INFO, "For target " + target + ", found no ids in DB");
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
     }
     return output;
   },
@@ -768,17 +768,17 @@ const HTTPSRules = {
       return false;
     }
 
-    this.log(INFO, "Testing securecookie applicability with " + test_uri);
+    this.log(DBUG, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        this.log(INFO, "Yes: " + rewrite);
+        this.log(DBUG, "Safe to secure cookie for " + test_uri + ": " + rewrite);
         return true;
       }
     }
-    this.log(INFO, "(NO)");
+    this.log(DBUG, "Unsafe to secure cookie for " + test_uri);
     return false;
   }
 };
