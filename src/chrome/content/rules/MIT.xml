@@ -20,67 +20,83 @@
 	Nonfunctional mit.edu subdomains:
 
 		- alloy ¹
-		- arts *
-		- artscal **
-		- civic		(no https)
-		- classics	(401)
-		- connect **
+		- arts ²
+		- artscal ³
+		- civic ²
+		- classics ⁴
+		- connect ³
 
-		- bigdata.csail ***
-		- inquir.csail	(cert: inquir.csail.mit.edu; handshake fails)
-		- publications.csail ***
-		- research.csail ***
-		- tig.csail ***
-		- wireless.csail ***
+		- bigdata.csail ⁵
+		- inquir.csail ⁵
+		- publications.csail ⁵
+		- research.csail ⁵
+		- tig.csail ⁵
+		- wireless.csail ⁵
 
-		- development ***
-		- eaps4 **
-		- economics	(refused)
-		- events	(interruped)
+		- development ⁵
+		- eaps4 ³
+		- economics ²
+		- events ⁶
 		- executive
-		- gambit	(shows default page; self-signed, mismatched, CN: commonname.com)
-		- img		(shows web; mismatched, CN: web.mit.edu)
+		- gambit ⁷
+		- img ⁸
 		- libguides
-		- lsc ***
-		- pantheon.media *
-		- tangible.media	(Refused)
+		- lsc ⁵
+		- pantheon.media ²
+		- tangible.media ²
 		- web.media
-		- mitworld	(Refused)
-		- mvl		(self-signed, expired; 403)
-		- ocw		(503, Akamai)
-		- odl		(400)
-		- scratch	(times out)
-		- ssg		(shows lids; mismatched, CN: lids.mit.edu)
-		- student	(redirects to idp, valid cert)
-		- tech		(cert: the-tech.mit.edu; 401)
-		- the-tech	(401)
-		- video *
-		- web ****
-		- xvm ***
-		- websis	(shows student; mismatched, CN: student.mit.edu)
-		- www ****
+		- mitworld ²
+		- mvl ⁹
+		- ocw ᵃ
+		- odl ᵇ
+		- scratch ³
+		- ssg ᶜ
+		- student ᵈ
+		- tech ⁴
+		- the-tech ⁴
+		- video ²
+		- web ᵉ
+		- xvm ⁵
+		- websis ᶠ
+		- www ᵉ
 
 	¹ Shows projects.csail
-	* No https
-	** Times out
-	*** Handshake fails
-	**** "client certificate was invalid or not provided"
+	² Refused
+	³ Times out
+	⁴ 401
+	⁵ Handshake fails
+	⁶ Interruped
+	⁷ Shows default page
+	⁸ Shows web
+	⁹ 403
+	ᵃ 503
+	ᵇ 400
+	ᶜ Shows lids
+	ᵈ Redirects to idp
+	ᵉ "client certificate was invalid or not provided"
+	ᶠ Shows student
 
 
 	Problematic subdomains:
 
-		- 3down		(works, self-signed)
-		- calendar	(works, expired 2013-01-27)
-		- csail		(cert: inquir.csail.mit.edu; handshake fails)
-		- cluedumps *
-		- hacks *
-		- ideabank	(mismatched, CN: future.mit.edu)
-		- itinfo	(redirects to ist; mismatched, CN: ist.mit.edu)
-		- techblogs	($ works, at least some pages 404, expired, self-signed)
-		- techtime	(mismatched, CN: calendar.mit.edu)
+		- 3down ¹
+		- calendar ²
+		- csail ³
+		- cluedumps ⁴
+		- hacks ⁴
+		- ideabank ⁵
+		- itinfo ⁶
+		- techblogs ⁷
+		- techtime ⁸
 
-	* Works; mismatched, CN: *.scripts.mit.edu
-
+	¹ Self-signed
+	² Expired 2013-01-27
+	³ Handshake fails
+	⁴ Mismatched, CN: *.scripts.mit.edu
+	⁵ Mismatched, CN: future.mit.edu
+	⁶ Redirects to ist
+	⁷ $ works, at least some pages 404, expired, self-signed
+	⁸ Mismatched, CN: calendar.mit.edu
 
 
 	Fully covered subdomains:
@@ -91,7 +107,7 @@
 		- athena10
 		- ca
 
-		- (www.)csail	(^ → www)
+		- (www.)?csail	(^ → www)
 		- calendar.csail
 		- cap.csail
 		- pdos.csail
@@ -130,11 +146,11 @@
 
 	Insecure cookies are set for these domains:
 
-		- .csail
-		- lids
-		- .mit150
-		- techtv
-		- webmail
+		- .csail.mit.edu
+		- lids.mit.edu
+		- .mit150.mit.edu
+		- techtv.mit.edu
+		- webmail.mit.edu
 
 
 	Mixed content:
@@ -144,13 +160,11 @@
 			- libraries from fonts.googleapis.com *
 			- scripts from web
 
-	Mixed image on picker from web
-
-
 		- Images, on:
 
+			- picker from web
 			- slice from $self *
-		- Image on techtv from duqmab81lwd47.cloudfront.net *
+			- techtv from duqmab81lwd47.cloudfront.net *
 
 		- Ad on scripts from www.kaltura.com *
 
@@ -170,17 +184,17 @@
 	<!--securecookie host="^techtv\.mit\.edu$" name="^_TechTV_session$" /-->
 	<!--securecookie host="^webmail\.mit\.edu$" name="^BIGipServerwebmail$" /-->
 
-	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|wayf|webmail|webpub|wikis).mit\.edu$" name=".*" />
+	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|wayf|webmail|webpub|wikis).mit\.edu$" name=".+" />
 
 
 	<rule from="^http://((?:alum|alumsso|athena10|ca|(?:calendar|cap|groups|pdos|people|projects)\.csail|debathena|athena\.dialup|oeit-tsa|future|giving|gsc|idp|ist|kb|librar(?:ies|y)|lids|linerva|mail|immersion\.media|mit150|mit-amps|mosh|newsoffice|odge|orgchart|pgp|picker|(?:www\.|zyan\.)?scripts|sipb|slice|stellar|stuff|teachingexcellence|techtv|wayf|webmail|webpub|whereis|wikis)\.)?mit\.edu/"
 		to="https://$1mit.edu/" />
 
-	<rule from="^http://ideabank\.mit\.edu/"
-		to="https://future.mit.edu/" />
-
 	<rule from="^http://(?:www\.)?csail\.mit\.edu/"
 		to="https://www.csail.mit.edu/" />
+
+	<rule from="^http://ideabank\.mit\.edu/"
+		to="https://future.mit.edu/" />
 
 	<rule from="^http://(?:www\.)?mitpress\.mit\.edu/"
 		to="https://mitpress.mit.edu/" />
