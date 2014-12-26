@@ -1,7 +1,16 @@
 <!--
-	Nonfunctional subdomains:
+	Partially covered subdomains:
 
-		- education	(times out)
+		- ebooks ²
+		- journals ²
+
+	² Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- mobile.journals	(→ jnls.cup.org)
+		- shibboleth
 
 
 	dictionaryblog.cambridge.org is handled in WordPress-blogs.xml.
@@ -11,6 +20,11 @@
 
 	<target host="cambridge.org" />
 	<target host="*.cambridge.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://ebooks\.cambridge\.org/(?!.+\.(?:css|ico|jpg|png)(?:$|\?))" />
+		<exclusion pattern="^http://journals\.cambridge\.org/+(?!css/|favicon\.ico|images/)" />
 
 
 	<securecookie host="^(?:assets|dictionary)\.cambridge\.org$" name=".*" />
@@ -19,10 +33,15 @@
 	<!--	- Cert only matches www
 		- At least some pages redirect to www
 					-->
-	<rule from="^http://(?:www\.)?cambridge\.org/((?:generated|other)_files/|login(?:$|[/\?]))"
+	<rule from="^http://(?:www\.)?cambridge\.org/(files/|(?:generated|other)_files/|login(?:$|[?/])|packages/)"
 		to="https://www.cambridge.org/$1" />
 
-	<rule from="^http://(assets|dictionary)\.cambridge\.org/"
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://mobile\.journals\.cambridge\.org/+"
+		to="https://jnls.cup.org/" />
+
+	<rule from="^http://(assets|dictionary|ebooks|journals|shibboleth)\.cambridge\.org/"
 		to="https://$1.cambridge.org/" />
 
 </ruleset>
