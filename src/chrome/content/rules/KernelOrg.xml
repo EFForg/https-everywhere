@@ -1,11 +1,13 @@
 <!--
-	As of 2012-05-14, known unprotected domains are:
+	Nonfunctional subdomains:
 
-		- planet *
-		- vger		(dropped)
-		- wireless	(404, CN: sipsolutions.net)
+		- planet ¹
+		- vger ²
+		- wireless ³
 
-	* rx_record_too_long
+	¹ Plaintext reply
+	² Dropped
+	³ 404, CN: sipsolutions.net
 
 
 	Problematic subdomains:
@@ -15,24 +17,30 @@
 	* Mismatched
 
 
-	Fully covered subdomains:
+	Fully covered domains:
 
-		- (www.)?
-		- accounts
-		- all
-		- archive
-		- boot
-		- bugzilla
-		- eu
-		- ftp
-		- git
-		- [\w-]+.git
-		- mirrors
-		- patchwork
-		- pub
-		- userweb
-		- wiki
-		- [\w-]+.wiki
+		- kernel.org
+
+		- [\w.-]+.kernel.org: *
+
+			- (www.)?
+			- accounts
+			- all
+			- archive
+			- boot
+			- bugzilla
+			- eu
+			- ftp
+			- git
+			- [\w-]+.git
+			- mirrors
+			- patchwork
+			- pub
+			- userweb
+			- wiki
+			- [\w-]+.wiki
+
+	* Except where excluded below
 
 -->
 <ruleset name="Kernel.org">
@@ -42,13 +50,13 @@
 		<exclusion pattern="^http://(?:planet|vger|wireless)\." />
 
 
-	<securecookie host="^.*\.kernel\.org$" name=".+" />
+	<securecookie host=".*\.kernel\.org$" name=".+" />
 
 
 	<rule from="^http://mirrors\.\w\w\.kernel\.org/"
 		to="https://mirrors.kernel.org/" />
 
-	<rule from="^http://([\w\.-]+\.)?kernel\.org/"
+	<rule from="^http://([\w.-]+\.)?kernel\.org/"
 		to="https://$1kernel.org/" />
 
 </ruleset>
