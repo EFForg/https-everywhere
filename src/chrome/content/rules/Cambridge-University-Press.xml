@@ -1,9 +1,18 @@
 <!--
+	Problematic subdomains:
+
+		- ^ ¹
+
+	¹ Cert only matches www
+
+
 	Partially covered subdomains:
 
+		- (www.)? ¹	(^ → www)
 		- ebooks ²
 		- journals ²
 
+	¹ Some pages redirect to http
 	² Avoiding broken MCB
 
 
@@ -30,11 +39,8 @@
 	<securecookie host="^(?:assets|dictionary)\.cambridge\.org$" name=".*" />
 
 
-	<!--	- Cert only matches www
-		- At least some pages redirect to www
-					-->
-	<rule from="^http://(?:www\.)?cambridge\.org/(files/|(?:generated|other)_files/|login(?:$|[?/])|packages/)"
-		to="https://www.cambridge.org/$1" />
+	<rule from="^http://(?:www\.)?cambridge\.org/(?=files/|(?:generated|other)_files/|login(?:$|[?/])|packages/)"
+		to="https://www.cambridge.org/" />
 
 	<!--	Redirect keeps path and args:
 						-->
