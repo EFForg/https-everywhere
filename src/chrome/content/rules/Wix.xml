@@ -41,8 +41,8 @@
 	Fully covered domains:
 
 		- publicorigin.wix.com
-		- static.wix.com	(→ akamai)
-		- static.wixstatic.com	(→ akamai)
+		- static.wix.com	(→ sslstatic & akamai)
+		- static.wixstatic.com	(→ sslstatic.wix.com & akamai)
 
 -->
 <ruleset name="Wix (partial)" platform="mixedcontent">
@@ -68,6 +68,12 @@
 
 	<rule from="^http://tracking\.wix\.com/"
 		to="https://wix.go2cloud.org/" />
+
+	<!--	At least some stylesheets reference resources relative
+		to root, so rewrite css to sslstatic:
+							-->
+	<rule from="^http://static\.wix(?:static)?\.com/"
+		to="https://sslstatic.wix.com/" />
 
 	<rule from="^http://static\.wix(static)?\.com/"
 		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix$1.com/" />
