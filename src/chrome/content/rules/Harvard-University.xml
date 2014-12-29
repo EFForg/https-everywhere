@@ -26,13 +26,16 @@
 
 		- berkman *
 		- cbmi.catalyst	(Mixed css)
+		- employment		(Shows static.fas)
 		- hsph
+		- ksgexecprogram	(Refused)
 		- www.cyber.law *
 		- eon.law	(shows adam.law, mismatched, CN: adam.law.harvard.edu)
 		- pin *
 		- www.pin	($ redirects to http)
 		- pngu.mgh	(expired)
 		- saas **
+		- trademark		(Mismatched, CN: hwp.harvard.edu)
 		- yuba			(works; expired 2008-04-16, CN: localhost.localdomain)
 
 	* Mismatched
@@ -46,6 +49,9 @@
 		- www.cfa *	(image_archive/ 404s)
 		- cqh *
 		- economics *
+		- pearson.eps *
+		- hr *
+		- huit *
 		- static.hwpi *
 		- static.projects.iq *
 		- psr.iq *
@@ -54,6 +60,7 @@
 		- iacs.seas *
 		- robobees.seas *
 
+		- (www.)?trademark *	(www → ^)
 		- (www.)wcfia *
 		- programs.wcfia *
 
@@ -67,10 +74,19 @@
 		- connects.catalyst
 		- dome
 		- dspace
+		- employment		(→ hr)
+		- static.fas
 		- hbdm.hbsp
+
+		- exed.hks
+		- knet.hks
+		- research.hks
+
 		- (www.)hsph		(^ → www)
+		- intranet.huit
 		- osc.hul
 		- login.icommons
+		- ksgexecprogram	(→ exed.hks)
 
 		- law subdomains:
 
@@ -117,11 +133,14 @@
 		<!--
 			Redirects to http:
 						-->
-		<!--exclusion pattern="^http://(accessibility|cqh|economics|static\.hwpi|(projects|static\.projects|psr)\.iq|(iacs|robobees)\.seas|((programs|www)\.)?wcfia)\.harvard\.edu/($|fellows$|user/password|user/pin\?)" /-->
+		<!--exclusion pattern="^http://(accessibility|cqh|economics|huit|static\.hwpi|(projects|static\.projects|psr)\.iq|(iacs|robobees)\.seas|trademark|((programs|www)\.)?wcfia)\.harvard\.edu/($|fellows$|user/password|user/pin\?)" /-->
+		<!--exclusion pattern="^http://pearson\.eps\.harvard\.edu/$" /-->
+		<!--exclusion pattern="^http://hr\.harvard\.edu/($|jobs/?$)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://(accessibility|cqh|economics|static\.hwpi|(?:projects|static\.projects|psr)\.iq|(?:iacs|robobees)\.seas|(?:(?:programs|www)\.)?wcfia)\.harvard\.edu/+(?!favicon\.ico|files/|modules/|profiles/|user(?:$|\?))" />
+		<exclusion pattern="^http://(accessibility|cqh|economics|hr|huit|static\.hwpi|(?:projects|static\.projects|psr)\.iq|(?:iacs|robobees)\.seas|trademark|(?:(?:programs|www)\.)?wcfia)\.harvard\.edu/+(?!favicon\.ico|files/|modules/|profiles/|user(?:$|\?))" />
+		<exclusion pattern="^http://pearson\.eps\.harvard\.edu/+(?!favicon\.ico|misc/)" />
 
 
 	<!--	Not secured by server:
@@ -138,11 +157,24 @@
 	<rule from="^http://(?:www\.)?(berkman|hsph|pin|saas)\.harvard\.edu/"
 		to="https://www.$1.harvard.edu/" />
 
-	<rule from="^http://(accessibility|catalyst|(?:cbmi|connects)\.catalyst|www\.cfa|cqh|dome|dspace|economics|hbdm\.hbsp|osc\.hul|static\.hwpi|login\.icommons|(?:projects|static\.projects|psr)\.iq|isites|adam\.law|blogs\.law|www\.pin1|(?:iacs|robobees)\.seas|programs\.wcfia)\.harvard\.edu/"
+	<rule from="^http://(accessibility|catalyst|(?:cbmi|connects)\.catalyst|www\.cfa|cqh|dome|dspace|economics|pearson\.eps|static\.fas|hbdm\.hbsp|(?:exed|knet|research)\.hks|hr|huit|intranet\.huit|osc\.hul|static\.hwpi|login\.icommons|(?:projects|static\.projects|psr)\.iq|isites|adam\.law|blogs\.law|www\.pin1|(?:iacs|robobees)\.seas|programs\.wcfia)\.harvard\.edu/"
 		to="https://$1.harvard.edu/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://employment\.harvard\.edu/[^?]*"
+		to="https://hr.harvard.edu/jobs/" />
 
 	<rule from="^http://(?:www\.)?(?:cyber|eon)\.law\.harvard\.edu/"
 		to="https://cyber.law.harvard.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://ksgexecprogram\.harvard\.edu/+"
+		to="https://exed.hks.harvard.edu/" />
+
+	<rule from="^http://(?:www\.)?trademark\.harvard\.edu/"
+		to="https://trademark.harvard.edu/" />
 
 	<!--	Domains for which both !www and www
 		exist, and both work without caveat:
