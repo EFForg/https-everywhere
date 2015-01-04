@@ -24,6 +24,10 @@
 	Fully covered domains:
 
 		- ccc.de
+		- blog.chaosradio.ccc.de
+		- wiki.chaosradio.ccc.de
+		- www.hamburg.ccc.de
+		- cdn.media.ccc.de
 		- static.media.ccc.de	(→ media)
 
 		- [^/:@\.]+.ccc.de: *
@@ -33,19 +37,25 @@
 			- pads
 			- www
 
+		- \w+.pads.ccc.de:
+
+			- ffhh
+
 	* Except where excluded below
 
 
 	Mixed content:
 
-		- css on cdn.media from $self
+		- css on cdn.media from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="ccc.de (CAcert)" platform="cacert">
 
 	<target host="ccc.de" />
 	<target host="*.ccc.de" />
-		<exclusion pattern="^http://(?:(?:blog\.)?chaosradio|desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" />
+		<exclusion pattern="^http://(?:desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" />
 
 
 	<securecookie host="^svn\.berlin\.ccc\.de$" name=".+" />
@@ -57,7 +67,7 @@
 	<rule from="^http://static\.media\.ccc\.de/"
 		to="https://media.ccc.de/" />
 
-	<rule from="^http://([^/:@\.]+)\.ccc\.de/"
+	<rule from="^http://([^/:@\.]+|(?:blog|wiki)\.chaosradio|www\.hamburg|cdn\.media|\w+\.pads)\.ccc\.de/"
 		to="https://$1.ccc.de/" />
 
 </ruleset>
