@@ -1,13 +1,30 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- (www.)		(times out)
+		- (www.)?sunysb.edu ¹
+		- lists.fsl.cs.sunysb.edu ²
+		- ssh.fsl.cs.sunysb.edu ³
+
+	¹ Dropped
+	² Data differ from http
+	³ 401
+
+
+	Problematic domains:
+
+		- fsl.cs.sunysb.edu *
+
+	* Cert only matches www.foo
 
 
 	Fully covered domains:
 
 		- www3.cs.stonybrook.edu
 
+		- (www.)?fsl.cs.sunysb.edu	(^ → www)
+		- avatar.fsl.cs.sunysb.edu
+		- bugzilla.fsl.cs.sunysb.edu
+		- rt.fsl.cs.sunysb.edu
 		- www3.cs.sunysb.edu
 
 -->
@@ -25,7 +42,10 @@
 	<rule from="^http://(www3?|(?:set-)?hiring)\.cs\.stonybrook\.edu/"
 		to="https://$1.cs.stonybrook.edu/" />
 
-	<rule from="^http://www(3)?\.cs\.sunysb\.edu/"
-		to="https://www$1.cs.sunysb.edu/" />
+	<rule from="^http://(?:www\.)?fsl\.cs\.sunysb\.edu/"
+		to="https://www.fsl.cs.sunysb.edu/" />
+
+	<rule from="^http://((?:avatar|bugzilla|rt)\.fsl|www3?)\.cs\.sunysb\.edu/"
+		to="https://$1.cs.sunysb.edu/" />
 
 </ruleset>

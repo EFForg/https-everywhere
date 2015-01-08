@@ -27,6 +27,16 @@ function loadIntoWindow() {
   } else if (urlbarId) {
     aWindow.NativeWindow.pageactions.remove(urlbarId);
   }
+
+  // When navigating away from a page, we want to clear the applicable list for
+  // that page. There are a few different APIs to do this, but this is the one
+  // that work on mobile. We trigger on pagehide rather than pageshow because we
+  // want to capture subresources during load.
+  var BrowserApp = aWindow.BrowserApp;
+  BrowserApp.deck.addEventListener("pagehide", function(evt) {
+    var browser = BrowserApp.getBrowserForDocument(evt.target);
+    HTTPSEverywhere.resetApplicableList(browser);
+  }, true);
 }
 
 function unloadFromWindow() {

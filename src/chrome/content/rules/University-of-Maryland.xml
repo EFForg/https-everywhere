@@ -29,10 +29,18 @@
 	⁷ 500
 
 
+	Problematic subdomains:
+
+		- password *
+
+	* Redirects to www
+
+
 	Partially covered subdomains:
 
 		- (www.)helpdesk ¹
 		- kb ³			(→ www.itsc)
+		- ldap ¹
 		- www.lib ⁴
 		- (www.)provost ¹
 		- terpconnect ²
@@ -50,6 +58,12 @@
 		- carma.astro
 		- catalog
 		- cgi
+
+		- (www.)?cs
+		- undergrad.cs
+		- webapps.cs
+
+		- (www.)?directory
 		- (www.)eng
 		- (www.)glue
 		- (www.)inform
@@ -61,13 +75,17 @@
 		- login
 		- ntst
 		- (www.)oit
+		- password		(→ www.it)
 		- researchport
 		- (www.)umdrightnow
+		- (www.)?umiacs
+		- wiki.umiacs
 
 
 	These altnames don't exist:
 
 		- suap01cms.ad.umd.edu
+		- www.ldap.umd.edu
 
 
 	Insecure cookies are set for these domains:
@@ -80,11 +98,12 @@
 
 	Mixed content:
 
-		- css on helpdesk from www *
+		- css on helpdesk, ldap from www *
 		- css on www.provost from $self *
 
 		- Images, on:
 
+			- ldap from www *
 			- (www.)provost from $self *
 
 	* Secured by us
@@ -98,6 +117,7 @@
 			Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://helpdesk\.umd\.edu/+(?!favicon\.ico|images/|web\.support/)" />
+		<exclusion pattern="^http://ldap\.umd\.edu/+(?!favicon\.ico|images/|Pictures/)" />
 		<exclusion pattern="^http://www\.provost\.umd\.edu/+(?!favicon\.ico|images/|includes/|masthead\.jpg|photos/|resources/)" />
 		<!--
 			Redirect to http:
@@ -121,15 +141,20 @@
 	<!--	Domains for which both !www and www
 		exist, and both are unproblematic:
 							-->
-	<rule from="^http://(www\.)((?:arch|eng|helpdesk|glue|inform|irpa|it|itsc|lib|oit|provost|umdrightnow)\.)?umd\.edu/"
+	<rule from="^http://(www\.)((?:arch|cs|directory|eng|helpdesk|glue|inform|irpa|it|itsc|lib|oit|provost|umdrightnow|umiacs)\.)?umd\.edu/"
 		to="https://$1$2umd.edu/" />
 
-	<rule from="^http://(carma\.astro|catalog|cgi|aeon\.lib|login|ntst|researchport|terpconnect)\.umd\.edu/"
+	<rule from="^http://(carma\.astro|catalog|cgi|(?:undergrad|webapps)\.cs|ldap|aeon\.lib|login|ntst|researchport|terpconnect|wiki\.umiacs)\.umd\.edu/"
 		to="https://$1.umd.edu/" />
 
 	<!--	Redirect drops args:
 					-->
 	<rule from="^http://kb\.umd\.edu/+(\d+)(?:\?.*)?"
 		to="https://www.itsc.umd.edu/MRcgi/MRTicketPage.pl?USER=&amp;MRP=0&amp;PROJECTID=1&amp;MR=$1" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://password\.umd\.edu/[^?]*"
+		to="https://www.it.umd.edu/password" />
 
 </ruleset>
