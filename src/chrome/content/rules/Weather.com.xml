@@ -1,0 +1,48 @@
+<!--
+	Problematic subdomains:
+
+		- ^ ¹
+		- forecastfactor ²
+		- press ²
+		- preview ²
+		- www ²
+
+	¹ Refused
+	² Akamai
+
+
+	Fully covered subdomains:
+
+		- careers
+		- profile
+
+
+	Mixed content:
+
+		- Images on www from s.w-x.co *
+
+		- favicons, on:
+
+			- careers from $self *
+			- feedback from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Weather.com (partial)">
+
+	<target host="weather.com" />
+	<target host="*.weather.com" />
+		<!--
+			Avoid user-visible paths and css:
+								-->
+		<exclusion pattern="^http://(?:www\.)?weather\.com/(?!.+\.(?:gif|ico|jpg|png)(?:$|\?))" />
+
+
+	<rule from="^http://(?:www\.)?weather\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/" />
+
+	<rule from="^http://(careers|profile)\.weather\.com/"
+		to="https://$1.weather.com/" />
+
+</ruleset>
