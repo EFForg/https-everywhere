@@ -621,7 +621,9 @@ SSLObservatory.prototype = {
     var win = null
     if (channel) {
       var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
-      var win = browser.contentWindow;
+      if (browser) {
+        var win = browser.contentWindow;
+      }
     }
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
