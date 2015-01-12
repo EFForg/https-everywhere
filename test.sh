@@ -7,7 +7,6 @@ cd $(dirname $(readlink -f $0))
 
 # dummy Jetpack addon that contains tests
 TEST_ADDON_PATH=./https-everywhere-tests/
-LATEST_SDK_VERSION=1.16
 
 # We'll create a Firefox profile here and install HTTPS Everywhere into it.
 PROFILE_DIRECTORY="$(mktemp -d)"
@@ -45,10 +44,6 @@ popd
 
 if ! type cfx > /dev/null; then
   die "Addon SDK failed to activiate."
-fi
-
-if ! cfx --version | grep -q "$LATEST_SDK_VERSION"; then
-  die "Please use the latest stable SDK version or edit this script to the current version."
 fi
 
 pushd $TEST_ADDON_PATH

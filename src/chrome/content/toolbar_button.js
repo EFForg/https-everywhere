@@ -3,7 +3,11 @@ window.addEventListener("load", function load(event) {
   // need to wrap migratePreferences in another callback so that notification
   // always displays on browser restart
   window.removeEventListener("load", load, false);
-  gBrowser.addEventListener("DOMContentLoaded", migratePreferences, true);
+  if (gBrowser) {
+    gBrowser.addEventListener("DOMContentLoaded",
+      migratePreferences.bind(null, gBrowser),
+      true);
+  }
 }, false);
 
 const CI = Components.interfaces;
@@ -76,28 +80,34 @@ httpsEverywhere.toolbarButton = {
 
     // show ruleset counter when a tab is changed
     tb.updateRulesetsApplied();
-    gBrowser.tabContainer.addEventListener(
-      'TabSelect', 
-      tb.updateRulesetsApplied, 
-      false
-    );
 
-    // add listener for top-level location change across all tabs
-    let httpseProgressListener = {
-      onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
-        HTTPSEverywhere.log(DBUG, "Got on location change!");
-        HTTPSEverywhere.onLocationChange(aBrowser);
-      },
-      onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
-        if ((gBrowser.selectedBrowser === aBrowser) &&
-            (aFlags & CI.nsIWebProgressListener.STATE_STOP) &&
-            aWebProgress.isTopLevel) {
-          HTTPSEverywhere.log(DBUG, "Got on state change");
-          tb.updateRulesetsApplied();
+    // There is no gBrowser object on Android. Instead Android uses the
+    // window.BrowserApp object:
+    // https://developer.mozilla.org/en-US/Add-ons/Firefox_for_Android/API/BrowserApp
+    if (gBrowser) {
+      gBrowser.tabContainer.addEventListener(
+        'TabSelect',
+        tb.updateRulesetsApplied,
+        false
+      );
+
+      // add listener for top-level location change across all tabs
+      let httpseProgressListener = {
+        onLocationChange: function(aBrowser, aWebProgress, aReq, aLoc) {
+          HTTPSEverywhere.log(DBUG, "Got on location change!");
+          HTTPSEverywhere.resetApplicableList(aBrowser);
+        },
+        onStateChange: function(aBrowser, aWebProgress, aReq, aFlags, aStatus) {
+          if ((gBrowser.selectedBrowser === aBrowser) &&
+              (aFlags & CI.nsIWebProgressListener.STATE_STOP) &&
+              aWebProgress.isTopLevel) {
+            HTTPSEverywhere.log(DBUG, "Got on state change");
+            tb.updateRulesetsApplied();
+          }
         }
-      }
-    };
-    gBrowser.addTabsProgressListener(httpseProgressListener);
+      };
+      gBrowser.addTabsProgressListener(httpseProgressListener);
+    }
 
     // decide whether to show toolbar hint
     let hintPref = "extensions.https_everywhere.toolbar_hint_shown";
@@ -105,14 +115,19 @@ httpsEverywhere.toolbarButton = {
         || !Services.prefs.getBoolPref(hintPref)) { 
       // only run once
       Services.prefs.setBoolPref(hintPref, true);
-      gBrowser.addEventListener("DOMContentLoaded", tb.handleShowHint, true);
+      // gBrowser unavailable on Android, see above.
+      if (gBrowser) {
+        gBrowser.addEventListener("DOMContentLoaded",
+          tb.handleShowHint.bind(null, gBrowser),
+          true);
+      }
     }
   },
 
   /**
    * Shows toolbar hint if previously not shown.
    */
-  handleShowHint: function() {
+  handleShowHint: function(gBrowser) {
     var tb = httpsEverywhere.toolbarButton;
     if (!tb.hintShown){
       tb.hintShown = true;
@@ -121,20 +136,27 @@ httpsEverywhere.toolbarButton = {
       var strings = document.getElementById('HttpsEverywhereStrings');
       var msg = strings.getString('https-everywhere.toolbar.hint');
       var hint = nBox.appendNotification(
-        msg, 
-        'https-everywhere', 
-        'chrome://https-everywhere/skin/https-everywhere-24.png', 
+        msg,
+        'https-everywhere',
+        'chrome://https-everywhere/skin/https-everywhere-24.png',
         nBox.PRIORITY_WARNING_MEDIUM,
-	[],
-	function(action) {
-	  // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
-	  gBrowser.selectedTab = gBrowser.addTab(faqURL);
-	}
-      );
+      [],
+      function(action) {
+        // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+        gBrowser.selectedTab = gBrowser.addTab(faqURL);
+      });
     }
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
 
+  selectedBrowser: function() {
+    // gBrowser is unavailable on Android, see above.
+    if (window.gBrowser) {
+      return window.gBrowser.selectedBrowser;
+    } else if (window.BrowserApp) {
+      return window.BrowserApp.selectedBrowser;
+    }
+  },
 
   /**
    * Update the rulesets applied counter for the current tab.
@@ -148,7 +170,11 @@ httpsEverywhere.toolbarButton = {
       return;
     }
 
-    var browser = window.gBrowser.selectedBrowser;
+    var browser = httpsEverywhere.toolbarButton.selectedBrowser();
+    if (!browser) {
+      return;
+    }
+
     var alist = HTTPSEverywhere.getExpando(browser,"applicable_rules");
     if (!alist) {
       return;
@@ -273,7 +299,7 @@ function stitch_context_menu2() {
 var rulesetTestsMenuItem = null;
 
 function show_applicable_list(menupopup) {
-  var browser = gBrowser.selectedBrowser;
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
   if (!browser) {
     HTTPSEverywhere.log(WARN, "No browser for applicable list");
     return;
@@ -315,12 +341,15 @@ function toggle_rule(rule_id) {
 }
 
 function reload_window() {
-  gBrowser.reloadTab(gBrowser.selectedTab);
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
+  if (browser) {
+    browser.reload();
+  }
 }
 
 function toggleEnabledState(){
-	HTTPSEverywhere.toggleEnabledState();
-	reload_window();
+  HTTPSEverywhere.toggleEnabledState();
+  reload_window();
   toggleEnabledUI();
 }
 
@@ -348,10 +377,10 @@ function open_in_tab(url) {
 HTTPSEverywhere.log(DBUG, 'Adding listener for toolbarButton init.');
 window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);
 
-function migratePreferences() {
+function migratePreferences(gBrowser) {
   gBrowser.removeEventListener("DOMContentLoaded", migratePreferences, true);
   let prefs_version = HTTPSEverywhere.prefs.getIntPref("prefs_version");
-  
+
   // first migration loses saved prefs
   if(prefs_version == 0) {
     try {
