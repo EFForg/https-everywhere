@@ -2,11 +2,15 @@
 	TomTom International
 
 
-	!functional subdomains:
-		- corporate		(cert: *.shareholder.com; 403 & 404)
-		- lbs			(reset)
-		- routes		(ditto)
-		- static.routes		(cert: *.tomtom.com; reset)
+	Nonfunctional subdomains:
+
+		- corporate ¹
+		- lbs ²
+		- routes ²
+		- static.routes ²
+
+	¹ Shareholder
+	² Reset
 
 
 	Partially covered subdomains:
@@ -23,20 +27,25 @@
 -->
 <ruleset name="TomTom.com (partial)" platform="mixedcontent">
 
-	<target host="tomtom.com"/>
-	<target host="business.tomtom.com"/>
-	<target host="www.tomtom.com"/>
-		<!--	redirect to http	-->
-		<exclusion pattern="^http://(?:www\.)?tomtom\.com/(?:products|support)/"/>
+	<target host="tomtom.com" />
+	<target host="*.tomtom.com" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?tomtom\.com/(?:products|support)/" />
+		<!--
+			Pages within a directory seem to work:
+								-->
+		<exclusion pattern="^http://(?:www\.)?tomtom\.com/(?!\w+/)" />
 
-	<securecookie host="^business.tomtom.com$" name=".*"/>
 
-	<!--	pages within a directory seem to work		-->
-	<rule from="^http://(www\.)?tomtom\.com/(\w+)/"
-		to="https://$1tomtom.com/$2/"/>
+	<securecookie host="^business\.tomtom\.com$" name=".+" />
+
+
+	<rule from="^http://(www\.)?tomtom\.com/"
+		to="https://$1tomtom.com/" />
 
 	<rule from="^http://business\.tomtom\.com/"
 		to="https://business.tomtom.com/"/>
 
 </ruleset>
-	
