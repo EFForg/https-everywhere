@@ -125,6 +125,20 @@
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
 		<!--
+			These paths 302 to http:
+
+				- audio_file/
+				- dashboard$
+				- dashboard/iframe
+				- goto/
+				- like/
+				- reblog/
+				- share$
+				- submit_form_js/
+				- upload/image
+						-->
+		<exclusion pattern="^http://(?:www\.)?tumblr\.com/(?!$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|search|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)" />
+		<!--
 			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
 				- dashboard.js breaks "like"ing
@@ -169,19 +183,7 @@
 	<securecookie host="^www\.tumblr\.com$" name="^d(?:evicePixelRatio|ocumentWidth)$" />
 
 
-	<!--	These paths 302 to http:
-
-			- audio_file/
-			- dashboard$
-			- dashboard/iframe
-			- goto/
-			- like/
-			- reblog/
-			- share$
-			- submit_form_js/
-			- upload/image
-					-->
-	<rule from="^http://(www\.)?tumblr\.com/(?=$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|search|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)"
+	<rule from="^http://(www\.)?tumblr\.com/"
 		to="https://$1tumblr.com/" />
 
 	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
