@@ -50,8 +50,42 @@
 	Partially covered subdomains:
 
 		- (www.)? *	(^ → www)
+		- directory *
 
 	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- abqg
+		- at
+		- cascade
+		- cio
+		- (www.)?cs	(^ → www)
+		- emanage
+		- fastinfo
+		- learningcentral.health
+		- help
+		- hscssl
+		- it
+		- loboalerts
+		- login
+		- lynda
+		- my
+		- help.people
+		- pinnacle
+		- police
+		- portalchannels
+		- search
+		- shac
+		- shea		(→ srs)
+		- (www.)?soe	(www → ^)
+		- soemep
+		- srs
+		- studentinfo
+		- unmjobs
+		- webcore
+		- webmaster
 
 
 	These altnames don't exist:
@@ -65,19 +99,19 @@
 
 		- css, on:
 
-			- cio, www from webcore
-			- directory from search
+			- cio, www from webcore ¹
+			- directory from search ¹
 			- ne from fonts.googleapis.com ¹
 
 		- Images, on:
 
-			- at, directory, loboalerts, search, www from webcore
+			- at, directory, loboalerts, search, www from webcore ¹
 			- emanage from www ¹
 			- emanage from www.adobe.com ¹
-			- search from $self
+			- search from $self ¹
 			- shac, soemep from www ¹
-			- soe from $self
-			- webmaster from $self
+			- soe from $self ¹
+			- webmaster from $self ¹
 
 		- Bugs, on:
 
@@ -90,15 +124,35 @@
 -->
 <ruleset name="UNM (partial)">
   <target host="unm.edu" />
-  <target host="www.unm.edu" />
+  <target host="*.unm.edu" />
 		<!--
 			Avoid broken MCB:
 						-->
-		<exclusion pattern="^http://(?:www\.)?unm\.edu/+(?!~emanage/|common/|favicon\.ico|images_nl/)" />
+		<exclusion pattern="^http://(?:directory\.|www\.)?unm\.edu/+(?!~emanage/|common/|favicon\.ico|images_nl/)" />
 		<!--
 			Redirects to http:
 						-->
 		<!--exclusion pattern="^http://hospitals\.unm\.edu/($|_includes/|CarePages/|favicon\.ico|images/|index\.shtml)" /-->
 
   <rule from="^http://(?:www\.)?unm\.edu/" to="https://www.unm.edu/"/>
+
+	<!--	Domains for which both !www and www exist,
+		but only www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?cs\.unm\.edu/"
+		to="https://www.cs.unm.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://shea\.unm\.edu/+"
+		to="https://srs.unm.edu/" />
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?soe\.unm\.edu/"
+		to="https://soe.unm.edu/" />
+
+	<rule from="^http://(abqg|cascade|cio|directory|emanage|fastinfo|learningcentral\.health|help|hscssl|it|loboalerts|login|lynda|my|netid|help\.people|pinnacle|police|portalchannels|search|shac|srs|studentinfo|unmjobs|webcore|webmaster)\.unm\.edu/"
+		to="https://$1.unm.edu/" />
 </ruleset>
