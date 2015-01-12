@@ -1,16 +1,50 @@
 <!--
+	University of New Mexico
+
 	For rules causing false/broken MCB, see UNM.edu-mixedcontent.xml.
 
 	For problematic rules, see UNM.edu-problematic.xml.
 
 
+	Nonfunctional subdomains:
+
+		- mail.cs ¹
+		- ecc ²
+		- hsc ¹
+		- hscapp ³
+		- iservicedesk ²
+		- mitigationplan ⁴
+		- unmevents ⁵
+
+	¹ Refused
+	² Dropped
+	³ Shows hscssl
+	⁴ Shows RHEL test page
+	⁵ Reset
+
+
 	Problematic subdomains:
 
+		- ^ ¹
+		- as2 ²
+		- cars ³
+		- www.cars ⁴
+		- cs ⁵
+		- directory ⁶
+		- ece ⁵
 		- www.ece ⁷
+		- shea ⁸
+		- www.soe ¹
 		- www ⁶
 
+	¹ Cert only matches *.unm.edu
+	² Expired 2010, self-signed
+	³ Shows admin interface
+	⁴ Mismatched, CN: luria.cars.unm.edu
+	⁵ Cert only matches www.foo
 	⁶ Mixed css
 	⁷ Expired 2014
+	⁸ Mismatched, CN: srs.unm.edu
 
 
 	Partially covered subdomains:
@@ -18,6 +52,40 @@
 		- (www.)? *	(^ → www)
 
 	* Avoiding broken MCB
+
+
+	These altnames don't exist:
+
+		- luria.cars.unm.edu
+
+
+	Mixed content:
+
+		- iframe on soe from www.youtube.com ¹
+
+		- css, on:
+
+			- cio, www from webcore
+			- directory from search
+			- ne from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- at, directory, loboalerts, search, www from webcore
+			- emanage from www ¹
+			- emanage from www.adobe.com ¹
+			- search from $self
+			- shac, soemep from www ¹
+			- soe from $self
+			- webmaster from $self
+
+		- Bugs, on:
+
+			- as2 from jigsaw.w3.org ²
+			- as2 from www.w3.org ²
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
 <ruleset name="UNM (partial)">
@@ -27,6 +95,10 @@
 			Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://(?:www\.)?unm\.edu/+(?!~emanage/|common/|favicon\.ico|images_nl/)" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://hospitals\.unm\.edu/($|_includes/|CarePages/|favicon\.ico|images/|index\.shtml)" /-->
 
   <rule from="^http://(?:www\.)?unm\.edu/" to="https://www.unm.edu/"/>
 </ruleset>
