@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see SigFig.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- d12ofxxpqkq4dm.cloudfront.net
@@ -9,8 +12,14 @@
 
 		- (www.)?
 		- beta
-		- blog
 		- secure
+
+
+	Partially covered subdomains:
+
+		- blog *
+
+	* Avoiding false/broken MCB
 
 
 	These altnames don't exist:
@@ -36,10 +45,14 @@
 	* Secured by us
 
 -->
-<ruleset name="SigFig">
+<ruleset name="SigFig (partial)">
 
 	<target host="sigfig.com" />
 	<target host="*.sigfig.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.sigfig\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
 	<securecookie host="^\.www\.sigfig\.com$" name=".+" />
