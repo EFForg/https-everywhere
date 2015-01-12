@@ -105,23 +105,49 @@
 	⁶ Mismatched, CN: beta.jhu.edu
 
 
+	Partially covered domains:
+
+		- www.ams.jhu.edu *	(→ engineering)
+
+	* Some paths 404
+
+
 	Fully covered domains:
 
 		- orchid.hosts.jhmi.edu
 
 		- jhu.edu subdomains:
 
+			- apply
 			- beta
+			- blackboard
+			- (www.)?ce	(→ engineering)
+			- connect
 			- (www.)cs	(^ → www)
+			- archive.data
 			- jhweb.dev
 			- engineering
 			- ep
+			- folio		(→ engineering)
+			- hmt
 			- hrnt
 			- hub
+			- api.hub
 			- isis
+			- (www.)?it	(→ it.johnshopkins.edu)
+			- sites.krieger
+
+			- (www.)?library
+			- catalyst.library
+			- findit.library
+			- rooms.library
+
 			- m
+			- mathnt.mat	(→ www.mathematics)
 			- my
 			- (www.)peabody	(^ → www)
+			- mail.pha
+			- wiki.pha
 			- (www.)rising
 			- (www.)security
 			- webapps
@@ -131,10 +157,13 @@
 			- activtracker
 			- e210
 			- ess.erp
+			- (www.)?it	(www → ^)
 			- login
+			- (www.)?mathematics	(^ → www)
 			- my
 			- portal
 			- portalcontent
+			- web1
 
 
 	These altnames don't exist:
@@ -199,22 +228,43 @@
 	<rule from="^http://orchid\.hosts\.jhmi\.edu/"
 		to="https://orchid.hosts.jhmi.edu/" />
 
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://www\.ams\.jhu\.edu/+(?=$|\?)"
+		to="https://engineering.jhu.edu/ams/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?ce\.jhu\.edu/[^?]*"
+		to="https://engineering.jhu.edu/civil/" />
+
 	<!--	Domains for which both !www and www exist,
 		but only www works unproblematically:
 							-->
 	<rule from="^http://(?:www\.)?(cs|peabody)\.jhu\.edu/"
 		to="https://www.$1.jhu.edu/" />
 
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://folio\.jhu\.edu/[^?]*"
+		to="https://engineering.jhu.edu/faculty/" />
+
 	<!--	Redirect keeps path and args:
 						-->
 	<rule from="^http://(?:www\.)?giving\.jhu\.edu/+"
 		to="https://rising.jhu.edu/" />
 
-	<rule from="^http://(beta|jhweb\.dev|engineering|ep|hub|isis|my?|webapps)\.jhu\.edu/"
+	<rule from="^http://(?:www\.)?it\.j(?:hu|ohnshopkins)\.edu/"
+		to="https://it.johnshopkins.edu/" />
+
+	<rule from="^http://(apply|beta|blackboard|connect|(?:archive|dmp)\.data|jhweb\.dev|engineering|ep|hmt|hrnt|hub|api\.hub|isis|sites\.krieger|(?:catalyst|findit|rooms)\.library|my?|(?:mail|wiki)\.pha|webapps)\.jhu\.edu/"
 		to="https://$1.jhu.edu/" />
 
 	<!--rule from="^http://ask\.library\.jhu\.edu/(?=css/|favicon\.ico|images/)"
 		to="https://???.libanswers.com/" /-->
+
+	<rule from="^http://(?:mathnt\.mat|(?:www\.)?mathematics)\.jhu\.edu/"
+		to="https://www.mathematics.jhu.edu/" />
 
 	<!--	Redirect drops path but not args:
 							-->
@@ -224,10 +274,10 @@
 	<!--	Domains for which both !www and
 		www work unproblematically:
 						-->
-	<rule from="^http://(www\.)?(rising|secure)\.jhu\.edu/"
+	<rule from="^http://(www\.)?(library|rising|secure)\.jhu\.edu/"
 		to="https://$1$2.jhu.edu/" />
 
-	<rule from="^http://(activtracker|e210|ess\.erp|login|my|portal(?:content)?)\.johnshopkins\.edu/"
+	<rule from="^http://(activtracker|e210|ess\.erp|login|my|portal(?:content)?|web1)\.johnshopkins\.edu/"
 		to="https://$1.johnshopkins.edu/" />
 
 </ruleset>
