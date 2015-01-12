@@ -1,4 +1,10 @@
 <!--
+	Other LinkedIn rulesets:
+
+		- LI_CDN.com.xml
+		- Lnkd.In.xml
+
+
 	There are lots of places where it doesn't work, so rather
 	than add lots of exclusions, I've only added added rules
 	for sections of the site that I know allow it.
@@ -6,23 +12,16 @@
 
 	Nonfunctional domains:
 
-		- m.c.lnkd.licdn.com ¹
-		- s.c.lnkd.licdn.com ¹
-
 		- blog.linkedin.com		(Redirects to http)
 		- compass.linkedin.com ³
 		- investors.linkedin.com
 		- ourstory.linkedin.com		(Refused)
 		- static01.linkedin.com		(Refused)
 
-	¹ 400; mismatched, CN: *.hs.llnwd.net
 	³ Refused
 
 
 	Problematic domains:
-
-		- dlc1-s.licdn.com ¹
-		- dlc2-s.licdn.com ¹
 
 		- \w\w.linkedin.com ¹
 		- cms.linkedin.com ¹
@@ -59,19 +58,11 @@
 		- volunteer.linkedin.com ¹
 		- volunteers.linkedin.com ¹
 
-		- lnkd.in *
-
 	¹ Insecure renegotiation
 	² Refused
-	* Mismatched
 
 
 	Fully covered domains:
-
-		- dlc1-s.licdn.com
-		- dlc2-s.licdn.com
-		- media.licdn.com
-		- static.licdn.com
 
 		- \w\w.linkedin.com:
 
@@ -148,8 +139,6 @@
 		- volunteers.linkedin.com
 		- yardim.linkedin.com
 
-		- lnkd.in	(→ www.linkedin.com)
-
 
 	These altnames don't exist:
 
@@ -206,7 +195,6 @@
 -->
 <ruleset name="LinkedIn (partial)">
 
-	<target host="*.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
 		<!--
@@ -214,7 +202,6 @@
 						-->
 		<!--exclusion pattern="^http://blog\.linkedin\.com/($|favicon\.ico|wp-content/)" /-->
 		<!--exclusion pattern="^http://marketing\.linkedin\.com/$" /-->
-	<target host="lnkd.in" />
 
 
 	<!--	Not secured by server:
@@ -229,9 +216,6 @@
 
 	<securecookie host="^(?:aide|a[jy]uda|asistenta|(?:in|ms)\.bantuan|business|gsk|guida|help|\w\w\.help|\w\w-\w\w\.help|hilfe|hj[ae]lp|hjaelp|hulp|linkedinforgood|mobile|pomoc|www|yardim)?\.linkedin\.com$" name=".+" />
 
-
-	<rule from="^http://(dlc[12]-s|media|static)\.licdn\.com/"
-		to="https://$1.licdn.com/" />
 
 	<rule from="^http://((?:\w\w|aide|a[jy]uda|asistenta|(?:in|ms)\.bantuan|cms|developers?|e|engineering|forms|guida|help|(?:\w\w|\w\w-\w\w)\.help|help-(?:enterprise|internal|test2?)|hilfe|hj[ae]lp|hjaelp|hulp|napoveda|nonprofits|platform|polls|pomoc|specialedition|talent|tulong|volunteers|www|yardim)\.)?linkedin\.com/"
 		to="https://$1linkedin.com/" />
@@ -250,13 +234,5 @@
 
 	<rule from="^http://sales\.linkedin\.com/$"
 		to="https://business.linkedin.com/sales-solutions" />
-
-	<!--	Redirects like so:
-					-->
-	<rule from="^http://lnkd\.in/+([^?]*)(?:\?)?$"
-		to="https://www.linkedin.com/slink?code=$1" />
-
-	<rule from="^http://lnkd\.in/+([^?]*)\?"
-		to="https://www.linkedin.com/slink?code=$1&amp;" />
 
 </ruleset>
