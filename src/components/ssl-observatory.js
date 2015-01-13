@@ -618,7 +618,7 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = null
+    var win = null;
     if (channel) {
       var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
       if (browser) {
