@@ -1,7 +1,7 @@
 <!--
-	For other Gannett Company coverage, see Gannett-Company.xml.
+	For problematic rules, see USA_Today.com-problematic.xml.
 
-	usat.ly is handled in Bit.ly_vanity_domains.xml.
+	For other Gannett Company coverage, see Gannett-Company.xml.
 
 
 	CDN buckets:
@@ -10,27 +10,83 @@
 		- images.usatoday.com.edgesuite.net
 		- usatoday30.usatoday.com.edgesuite.net
 		- www.usatoday.com.edgesuite.net
-		- i.usatoday.net.edgesuite.net
 
 
 	Nonfunctional domains:
 
-		- css.usatoday.com *
-		- images.usatoday.com *
-		- usatoday30.usatoday.com *
-		- i.usatoday.net *
+		- crosswords.usatoday.com ¹
+		- css.usatoday.com ²
+		- ee.usatoday.com ²
+		- games.usatoday.com ³
+		- images.usatoday.com ²
+		- puzzles.usatoday.com ³
+		- usatoday30.usatoday.com ²
+		- video-network.usatoday.com ¹
 
-	* 503, akamai
+	¹ Refused
+	² 503, akamai
+	³ Dropped
 
 
-	 Problematic domains:
+	 Problematic subdomains:
 
-		- usatoday.com		(refused)
-		- onlinestore	(pages redirect to http; mismatched, CN: *.nexternal.com)
-		- www.usatoday.com	(works, akamai)
+		- ^ ¹
+		- college ²
+		- reg.e ³
+		- onlinestore ⁴
+		- static ⁵
+		- www ⁵
+
+	¹ Refused
+	² WordPress
+	³ ExactTarget
+	⁴ Nexternal
+	⁵ Akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)? ¹	(^ → a248.e.akamai.net)
+		- onlinestore ²
+
+	¹ Avoiding user-visible paths
+	² Pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- offers
+		- portfoliotracker
+		- service
+		- videos
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- reg.e, static from www ¹
+			- www from api.recaptcha.net ²
+
+		- css, on:
+
+			- reg.e from css ⁴
+			- static from gannettdigital-static-web.s3.amazonaws.com ²
+			- reg.e, static, www from www.gannett-cdn.com ²
+
+		- Images, on:
+
+			- college from scontent-\w.cdinstagram.com ²
+			- www from www.gannett-cdn.com ³
+			- www from i.usatoday.net ⁴
+
+	¹ Not secured by us <= generates links to a248.e.akamai.net <= embeds self-relative links
+	² Secured by us
+	³ Some secured by us; others unsecurable <= 503
+	⁴ Unsecurable <= 503
 
 -->
-<ruleset name="USA Today (partial)">
+<ruleset name="USA Today.com (partial)">
 
 	<target host="usatoday.com" />
 	<target host="*.usatoday.com" />
@@ -42,13 +98,13 @@
 		<exclusion pattern="^http://www\.usatoday\.com/(?:global-plain\.css|news/)" /-->
 
 
-	<rule from="^http://(?:www\.)?usatoday\.com/(favicon\.ico|services/|static/images/)"
-		to="https://a248.e.akamai.net/f/534/1/1/www.usatoday.com/$1" />
+	<rule from="^http://(?:www\.)?usatoday\.com/(?=favicon\.ico|services/|static/images/)"
+		to="https://a248.e.akamai.net/f/534/1/1/www.usatoday.com/" />
 
 	<rule from="^http://onlinestore\.usatoday\.com/Net/"
 		to="https://www.nexternal.com/Net/" />
 
-	<rule from="^http://(service|videos)\.usatoday\.com/"
+	<rule from="^http://(offers|portfoliotracker|service|videos)\.usatoday\.com/"
 		to="https://$1.usatoday.com/" />
 
 </ruleset>

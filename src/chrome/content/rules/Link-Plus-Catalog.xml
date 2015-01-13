@@ -1,5 +1,6 @@
 <ruleset name="Link+ Catalog">
 	<target host="csul.iii.com" />
+		<exclusion pattern="^https://csul\.iii\.com/search~S0\?/(?:[^/]+/){3}bibimage(:$|[^a-zA-Z])" />
 
 	<!-- The following rule (including the downgrade to HTTP) handles a situation
 	where the user is on the info page for a specific title. (For example, the URL
@@ -10,8 +11,8 @@
 	"Cover Image," and "Product Details." From what it appears, these hyperlinks
 	will not work unless the rule given below is present (noted on Sept 12, 2012.)
 	-->
-	<rule from="^https://csul\.iii\.com/search~S0\?/([^/]+)/([^/]+)/([^/]+)/bibimage($|[^a-zA-Z])"
-		to="http://csul.iii.com/search~S0?/$1/$2/$3/bibimage$4" downgrade="1" />
+	<rule from="^https://csul\.iii\.com/(?=search~S0\?/(?:[^/]+/){3}/bibimage(?:$|[^a-zA-Z]))"
+		to="http://csul.iii.com/" downgrade="1" />
 
 	<!-- For other situations, simply redirect to HTTPS (as expected.) -->
 	<rule from="^http://csul\.iii\.com/" to="https://csul.iii.com/" />
