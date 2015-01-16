@@ -73,7 +73,7 @@ die() {
   exit 1
 }
 
-if [ "$1" != "--fast" ] ; then
+if [ "$1" != "--fast" -a -z "$FAST" ] ; then
   if [ -f utils/trivial-validate.py ]; then
     VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
