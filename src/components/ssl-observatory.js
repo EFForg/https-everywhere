@@ -294,7 +294,7 @@ SSLObservatory.prototype = {
 
   ourFingerprint: function(cert) {
     // Calculate our custom fingerprint from an nsIX509Cert
-    return cert.sha1Fingerprint.replace(":", "", "g");
+    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
   observe: function(subject, topic, data) {
