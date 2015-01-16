@@ -52,7 +52,12 @@ fi
 # =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales
 
-if [ "$1" != "--fast" ] ; then
+die() {
+  echo >&2 "ERROR:" "$@"
+  exit 1
+}
+
+if [ "$1" != "--fast" -a -z "$FAST" ] ; then
   if [ -f utils/trivial-validate.py ]; then
     VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
