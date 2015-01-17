@@ -14,6 +14,36 @@
 		- elections	(cert: www; 307s to http)
 		- labor		(cert: www; 301s to http)
 
+
+	Problematic subdomains:
+
+		- campaigns ¹
+		- helpdesk ²
+		- images ³
+
+	¹ Salsa Labs
+	² Uservoice
+	³ Fastly
+
+
+	Mixed content:
+
+		- css on campaigns from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- www from images ²
+			- www from images[12] ²
+
+		- Ads, on:
+
+			- www from www.googleadservices.com ³
+			- www from cloudfront.assets.stitcher.com
+
+	¹ Secured by us
+	² Some secured by us, others not <= 404
+	³ Rule disabled by default
+
 -->
 <ruleset name="Dailykos (buggy)" default_off="Breaks commenting and polls">
 
@@ -101,10 +131,5 @@
 
 	<rule from="^http://images[12]?\.dailykos\.com/"
 		to="https://www.dailykos.com/" />
-
-	<!--	Doesn't fix login popout.
-
-	<rule from="^https://www\.dailykos\.com/j/([\w\-]+)\.js($|\?)"
-		to="http://www.dailykos.com/j/$1.js$2" downgrade="1" /-->
 
 </ruleset>
