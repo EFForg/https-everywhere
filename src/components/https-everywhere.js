@@ -125,25 +125,12 @@ var ABE = {
   }
 };
 
-function xpcom_generateQI(iids) {
-  var checks = [];
-  for each (var iid in iids) {
-    checks.push("CI." + iid.name + ".equals(iid)");
-  }
-  var src = checks.length
-    ? "if (" + checks.join(" || ") + ") return this;\n"
-    : "";
-  return new Function("iid", src + "throw Components.results.NS_ERROR_NO_INTERFACE;");
-}
-
 function xpcom_checkInterfaces(iid,iids,ex) {
   for (var j = iids.length; j-- >0;) {
     if (iid.equals(iids[j])) return true;
   }
   throw ex;
 }
-
-INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
