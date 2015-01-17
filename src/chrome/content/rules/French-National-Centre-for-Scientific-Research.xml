@@ -46,6 +46,23 @@
 	* $ 403s, some paths redirect to http
 
 
+	Fully covered subdomains:
+
+		- ccsdlib.ccsd
+		- ccsdlib-preprod.ccsd
+		- thumb.ccsd
+
+		- cnrsformation
+		- www.dgdr
+		- docutiles
+		- wayf.dsi
+		- emploi
+		- intranet
+		- lejournal
+		- www.sg	(→ www.dgdr)
+		- www2
+
+
 	^cnrs.fr doesn't exist.
 
 
@@ -64,7 +81,7 @@
 -->
 <ruleset name="CNRS.fr (partial)">
 
-	<target host="www.cnrs.fr" />
+	<target host="*.cnrs.fr" />
 		<!--
 			403:
 				-->
@@ -83,7 +100,12 @@
 		<!--exclusion pattern="^http://www2\.cnrs\.fr/(band/3\.htm|presse/communique/|sites/)" /-->
 
 
-	<rule from="^http://www\.cnrs\.fr/"
-		to="https://www.cnrs.fr/" />
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://www\.sg\.cnrs\.fr/[^?]*"
+		to="https://www.dgdr.cnrs.fr/" />
+
+	<rule from="^http://((?:ccsdlib|ccsdlib-preprod|thumb)\.ccsd|cnrsformation|www\.dgdr|docutiles|wayf\.dsi|emploi|intranet|lejournal|www)\.cnrs\.fr/"
+		to="https://$1.cnrs.fr/" />
 
 </ruleset>
