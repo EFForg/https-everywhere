@@ -1,0 +1,56 @@
+<!--
+	For rules causing false/broken MCB, see 101domain.com-falsemixed.xml.
+
+
+	Partially covered subdomains:
+
+		- portuguese *
+		- spanish *
+
+	* Avoiding broken MCB
+
+
+	Problematic subdomains:
+
+		- russian *
+
+	* Mismatched, CN: www.101domain.ru
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- blog
+		- cdn
+		- my
+		- russian	(→ www.101domain.ru)
+
+
+	Mixed content:
+
+		- css on portuguese from $self *
+
+		- Images on portuguese from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="101domain.com (partial)">
+
+	<target host="101domain.com" />
+	<target host="*.101domain.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:portuguese|spanish)\.101domain\.com/+(?!css/|favicon\.ico|images/)" />
+
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://russian\.101domain\.com/[^?]*"
+		to="https://www.101domain.ru/" />
+
+	<rule from="^http://((?:blog|cdn|my|portuguese|spanish|www)\.)?101domain\.com/"
+		to="https://$1101domain.com/" />
+
+</ruleset>
