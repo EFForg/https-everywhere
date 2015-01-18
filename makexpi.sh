@@ -1,5 +1,5 @@
-#!/bin/bash
-set -o errexit -o pipefail
+#!/bin/sh
+set -o errexit
 APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
@@ -17,6 +17,7 @@ APP_NAME=https-everywhere
 
 cd "`dirname $0`"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+ANDROID_APP_ID=org.mozilla.firefox
 
 [ -d pkg ] || mkdir pkg
 
@@ -72,7 +73,7 @@ die() {
   exit 1
 }
 
-if [ "$1" != "--fast" ] ; then
+if [ "$1" != "--fast" -a -z "$FAST" ] ; then
   if [ -f utils/trivial-validate.py ]; then
     VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
@@ -119,7 +120,7 @@ if [ "$1" != "--fast" ] ; then
 
   if [ -x ./utils/compare-locales.sh ] >&2
   then
-    if bash ./utils/compare-locales.sh >&2
+    if sh ./utils/compare-locales.sh >&2
     then
       echo Validation of included locales completed. >&2
     else
@@ -153,6 +154,7 @@ fi
 
 cd src
 
+
 # Build the XPI!
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
@@ -167,6 +169,7 @@ else
   echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
   echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
   echo >&2 "Created $XPI_NAME"
+  ../utils/android-push.sh "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
     cd ../..
     cp $SUBDIR/$XPI_NAME pkg

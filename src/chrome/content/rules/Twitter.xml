@@ -14,6 +14,8 @@
 
 	CDN buckets:
 
+		- twimg0-0.akamaihd.net
+
 		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
 
 			- platform2.twitter.com
@@ -52,6 +54,7 @@
 			- a[5-9]	(→ si0)
 			- a\d
 			- abs
+			- amp
 			- dnt
 			- ea
 			- g
@@ -84,6 +87,7 @@
 			- api
 			- cdn.api
 			- urls.api
+			- apps
 			- blog
 			- business
 			- preview.cdn
@@ -124,6 +128,14 @@
 
 		- cdn-dev.api.twitter.com
 
+
+	Insecure cookies are set for these domains:
+
+		- .t.co
+		- twitter.com
+		- .twitter.com
+		- mobile.twitter.com
+
 -->
 <ruleset name="Twitter">
 
@@ -137,7 +149,8 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.t\.co$" name="^muc$" /-->
-	<!--securecookie host="^\.twitter\.com$" name="^guest_id$" /-->
+	<!--securecookie host="^twitter\.com$" name="^external_referer$" /-->
+	<!--securecookie host="^\.twitter\.com$" name="^(_twitter_sess|guest_id)$" /-->
 	<!--securecookie host="^mobile\.twitter\.com$" name="^(req_country|req_country_code|req_ip)$" /-->
 
 	<securecookie host="^\.t\.co$" name=".+" />
@@ -150,13 +163,13 @@
 	<rule from="^http://a[5-9]\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(abs|a\d|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
+	<rule from="^http://(abs|a\d|amp|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
 	<rule from="^http://s\.twimg\.com/"
 		to="https://d2rdfnizen5apl.cloudfront.net/" />
 
-	<rule from="^http://((?:201\d|about|ads|analytics|blog|(?:cdn\.|urls\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
+	<rule from="^http://((?:201\d|about|ads|analytics|apps|blog|(?:cdn\.|urls\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
 		to="https://$1twitter.com/" />
 
 	<rule from="^http://platform\d\.twitter\.com/"

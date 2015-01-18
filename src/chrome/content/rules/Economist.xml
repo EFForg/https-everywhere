@@ -13,7 +13,11 @@
 
 	Problematic domains:
 
-		- cdn.static-economist.com	(works; mismatched, CN: ssl2.cdngc.net)
+		- economist.com ¹
+		- cdn.static-economist.com ²
+
+	¹ Reset
+	² Works; mismatched, CN: ssl2.cdngc.net
 
 
 	Fully covered domains:
@@ -28,16 +32,22 @@
 	<target host="cdn.static-economist.com" />
 
 
+	<!--	Incapsula cookies:
+					-->
+	<securecookie host="^\.economist\.com$" name="^___utm\w+$" />
+	<securecookie host="^www\.economist\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+
+
 	<!--	Some pages 302 to http.
 					-->
-	<rule from="^http://(?:www\.)?economist\.com/(debate(?:$|[\?/])|favicon\.ico|sites/|user)"
-		to="https://www.economist.com/$1" />
-
-	<rule from="^http://(libertymutual|media|(?:www\.)?store)\.economist\.com/"
-		to="https://$1.economist.com/" />
+	<rule from="^http://(?:www\.)?economist\.com/(?=debate(?:$|[?/])|favicon\.ico|sites/|user)"
+		to="https://www.economist.com/" />
 
 	<rule from="^http://stats\.economist\.com/"
 		to="https://economistcomprod.122.2o7.net/" />
+
+	<rule from="^http://(libertymutual|media|(?:www\.)?store)\.economist\.com/"
+		to="https://$1.economist.com/" />
 
 	<rule from="^http://cdn\.static-economist\.com/"
 		to="https://media.economist.com/" />

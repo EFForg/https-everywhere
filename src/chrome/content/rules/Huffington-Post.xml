@@ -24,25 +24,35 @@
 
 	Nonfunctional domains:
 
+		- elections.huffingtonpost.com ¹
 		- entry-stats.huffpost.com	(refused)
+
+	¹ 503, Akamai
 
 
 	Problematic domains:
 
 		- (www.)huffingtonpost.com
 		- bug.assets.huffingtonpost.com
-		- i.huffpost.com
+		- i.huffpost.com	(503, Akamai)
 		- s.huffpost.com	(redirects to i, prints Amazon Web Services "Access Denied")
 		- s[12].huffpost.com ²
 
 	² Works, akamai
 
 
+	Partially covered domains:
+
+		- (www.)huffingtonpost.com *	(→ a248.e.akamai.net)
+		- e.huffpost.com		(→ a248.e.akamai.net)
+
+	* Some pages redirect back
+
+
 	Fully covered domains:
 
 		- huffingtonpost.com subdomains:
 
-			- (www.)	(→ secure)
 			- big.assets	(→ s3.amazonaws.com/big.assets.huffingtonpost.com/)
 			- images	(→ s-i.huffpost.com)
 			- secure
@@ -51,7 +61,11 @@
 
 			- i	(→ s-i)
 			- s	(→ s-s)
-			- s[01]	(→ akamai)
+
+			- s\d:	(→ akamai)
+
+				- [0-3]
+
 			- s-i
 			- s-s
 
@@ -84,11 +98,20 @@
 	** Unsecurable
 
 -->
-<ruleset name="Huffington Post" platform="mixedcontent">
+<ruleset name="Huffington Post (partial)">
 
 	<target host="huffingtonpost.com" />
 	<target host="*.huffingtonpost.com" />
+		<!--
+			Redirects back to www:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+\d{4}/\d\d/\d\d/[\w-]+_\d+\.html(?:$|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+(?!favicon\.ico|images/)" />
 	<target host="*.huffpost.com" />
+		<exclusion pattern="^http://e\.huffpost\.com/+(?!\w+/images/)" />
 		<!--
 			css embeds resources relative to root => rewriting to akamai breaks:
 												-->
@@ -99,14 +122,20 @@
 		<!--exclusion pattern="^http://s[01]\.huffpost\.com/+assets/css\.php\?f=(?!phoenix\.css)" /-->
 
 
-	<rule from="^http://(?:secure\.|www\.)?huffingtonpost\.com/"
-		to="https://secure.huffingtonpost.com/" />
+	<rule from="^http://(?:www\.)?huffingtonpost\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/www.huffingtonpost.com/" />
 
 	<rule from="^http://big\.assets\.huffingtonpost\.com/"
 		to="https://s3.amazonaws.com/big.assets.huffingtonpost.com/" />
 
 	<rule from="^http://images\.huffingtonpost\.com/"
 		to="https://s-i.huffpost.com/" />
+
+	<rule from="^http://secure\.huffingtonpost\.com/"
+		to="https://secure.huffingtonpost.com/" />
+
+	<rule from="^http://e\.huffpost\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/" />
 
 	<!--	404s on s-s.huffpost.com.
 						-->
@@ -120,12 +149,12 @@
 
 	<!--	First, send everything for which doing so works to cdn:
 									-->
-	<rule from="^http://s(1|2)\.huffpost\.com/(?!assets/css\.php\?f=(?!liveblog\.css))"
+	<rule from="^http://s(\d)\.huffpost\.com/(?!assets/css\.php\?f=(?!liveblog\.css))"
 		to="https://a248.e.akamai.net/f/1428/2056/10/s$1.huffpost.com/" />
 
 	<!--	And then everything else to s-:
 						-->
-	<rule from="^http://s[12]\.huffpost\.com/"
+	<rule from="^http://s\d\.huffpost\.com/"
 		to="https://s-s.huffpost.com/" />
 
 </ruleset>

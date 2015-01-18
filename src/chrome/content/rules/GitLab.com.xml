@@ -1,7 +1,27 @@
-<ruleset name="GitLab.com">
+<!--
+	Nonfuctional subdomains:
+
+		- doc *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- feedback *
+
+	* Tor users blocked by CloudFlare settings
+
+
+	These altnames don't exist:
+
+		- www.about.gitlab.com
+
+-->
+<ruleset name="GitLab.com (partial)">
 
 	<target host="gitlab.com" />
-	<target host="www.gitlab.com" />
+	<target host="*.gitlab.com" />
 
 
 	<!--	Secured by server:
@@ -13,9 +33,10 @@
 	<!--securecookie host="^gitlab\.com$" name="^request_method$" /-->
 
 	<securecookie host="^gitlab\.com$" name=".+" />
+	<securecookie host="^\.gitlab\.com$" name="^__cfduid$" />
 
 
-	<rule from="^http://(www\.)?gitlab\.com/"
+	<rule from="^http://(about\.|www\.)?gitlab\.com/"
 		to="https://$1gitlab.com/" />
 
 </ruleset>

@@ -1,12 +1,83 @@
-<ruleset name="Freifunk (partial)" default_off="expired, mismatch" platform="cacert">
+<!--
+	For domains with CAcert certificates, see Freifunk.net-cacert.xml.
+
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- bug ¹
+		- global ¹
+		- blog.guetersloh ¹
+		- pad ¹
+		- paderborn ¹
+
+	¹ Refused
+
+
+	Problematic subdomains:
+
+		- community ¹
+		- events ²
+		- facebook ¹
+		- impress ¹
+		- mailinglisten ¹
+		- twitter ¹
+		- vimeo ¹
+		- wiki ³
+		- youtube ¹
+
+	¹ CAcert, expired, mismatched
+	² CAcert, expired
+	³ CAcert
+
+
+	Fully covered subdomains:
+
+		- facebook	(→ www.facebook.com)
+		- forum
+		- hamburg
+		- twitter	(→ twitter.com)
+		- vimeo		(→ vimeo.com)
+		- www
+		- youtube	(→ www.youtube.com)
+
+-->
+<ruleset name="Freifunk.net (partial)">
 
 	<target host="freifunk.net"/>
 	<target host="*.freifunk.net"/>
-		<exclusion pattern="^http://blog\.freifunk\.net"/>
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://freifunk\.net/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://freifunk\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
-	<rule from="^http://(\w+\.)?freifunk\.net/"
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://facebook\.freifunk\.net/[^?]*"
+		to="https://www.facebook.com/pages/Freifunk/54553170762" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://twitter\.freifunk\.net/[^?]*"
+		to="https://twitter.com/freifunk" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://vimeo\.freifunk\.net/[^?]*"
+		to="https://vimeo.com/user20804353" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://youtube\.freifunk\.net/[^?]*"
+		to="https://www.youtube.com/user/FREIFUNK2013" />
+
+	<rule from="^http://((?:forum|hamburg|www)\.)?freifunk\.net/"
 		to="https://$1freifunk.net/"/>
 
-	<securecookie host=".*freifunk\.net$" name=".*"/>
+	<!--securecookie host=".*freifunk\.net$" name=".*"/-->
 
 </ruleset>

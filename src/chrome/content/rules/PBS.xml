@@ -15,6 +15,10 @@
 
 			- www-tc.pbs.org
 
+		- d3i6fh83elv35t.cloudfront.net
+
+			- newshour-tc.pbs.org
+
 		- dnn506yrbagrg.cloudfront.net
 
 
@@ -32,14 +36,16 @@
 -->
 <ruleset name="Public Broadcasting Service (partial)" platform="mixedcontent">
 
-	<target host="video.pbs.org" />
-	<target host="www-tc.pbs.org" />
+	<target host="*.pbs.org" />
 	<target host="shoppbs.org" />
 	<target host="www.shoppbs.org" />
 
 
 	<securecookie host="^www\.shoppbs\.org$" name=".+" />
 
+
+	<rule from="^http://newshour-tc\.pbs\.org/"
+		to="https://d3i6fh83elv35t.cloudfront.net/" />
 
 	<!--	This broke Washington Week videos, like http://www.pbs.org/weta/washingtonweek/watch/watch%20the%20show/34039
 
@@ -50,10 +56,10 @@
 	<rule from="^http://video\.pbs\.org/"
 		to="https://video.pbs.org/" /-->
 
-	<rule from="^http://www-tc\.pbs\.org/s3/pbs\.(merlin\.cdn\.prod|pbsorg-prod\.mediafiles)/"
-		to="https://s3.amazonaws.com/pbs.$1/" />
+	<rule from="^http://www-tc\.pbs\.org/s3/pbs\.(?=merlin\.cdn\.prod/|pbsorg-prod\.mediafiles/)"
+		to="https://s3.amazonaws.com/pbs." />
 
-	<rule from="^https?://gchrome\.cdn\.pbs\.org/"
+	<rule from="^http://gchrome\.cdn\.pbs\.org/"
 		to="https://d2nu96cf2r9spk.cloudfront.net/" />
 
 	<rule from="^http://(www\.)?shoppbs\.org/"

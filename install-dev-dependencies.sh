@@ -4,14 +4,14 @@
 set -o errexit -o xtrace
 if type apt-get >/dev/null ; then
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    firefox chromium-browser zip sqlite3
+    firefox chromium-browser zip sqlite3 python-pip
 elif type brew >/dev/null ; then
   brew install python libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
 fi
-pip install --user -r requirements.txt
+pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
 # Get the addon SDK submodule
 git submodule init
 git submodule update

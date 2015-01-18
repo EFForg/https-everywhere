@@ -1,36 +1,56 @@
 <!--
-  Nonfunctional:
-
-    - image.bayimg.com
-    - (www.)thepiratebay.sx		(http reply)
+	For problematic rules, see ThePirateBay-mismatches.xml.
 
 
-  For problematic rules, see ThePirateBay-mismatches.xml.
+	Nonfunctional domains:
+
+		- image.bayimg.com
+		- (www.)?thepiratebay.sx *
+
+	* Plaintext reply
+
+
+	Problematic domains:
+
+		- (www.)?suprbay.org *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .thepiratebay.cr
 
 -->
 <ruleset name="The Pirate Bay (partial)">
 
-  <target host="suprbay.org" />
-  <target host="*.suprbay.org" />
-  <!--	* for cross-domain cookie	-->
-  <target host="*.forum.suprbay.org" />
-  <target host="thepiratebay.org"/>
-  <target host="*.thepiratebay.org"/>
-  <target host="thepiratebay.se"/>
-  <target host="*.thepiratebay.se"/>
-
-  <securecookie host="^.*\.suprbay\.org$" name=".*" />
-  <securecookie host="^(.*\.)?thepiratebay\.se$" name=".*"/>
+	<target host="thepiratebay.cr" />
+	<target host="*.thepiratebay.cr" />
+	<target host="thepiratebay.org" />
+	<target host="*.thepiratebay.org" />
+	<target host="thepiratebay.se" />
+	<target host="*.thepiratebay.se" />
+	<target host="suprbay.org" />
+	<target host="*.suprbay.org" />
 
 
-  <!--	Cert doesn't match (www.), redirects like so.	-->
-  <rule from="^https?://(?:forum\.|www\.)?suprbay\.org/"
-    to="https://forum.suprbay.org/" />
+	<!--	Incapsula cookies:
+					-->
+	<!--securecookie host="^\.thepiratebay\.cr$" name="^(incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
 
-  <rule from="^http://(?:www\.)?thepiratebay\.(?:org|se)/"
-    to="https://thepiratebay.se/"/>
+	<securecookie host="^(?:.*\.)?thepiratebay\.cr$" name=".+" />
+	<securecookie host=".*\.suprbay\.org$" name=".+" />
 
-  <rule from="^http://(rss|static|torrents)\.thepiratebay\.(?:org|se)/"
-    to="https://$1.thepiratebay.se/"/>
+
+	<rule from="^http://(?:www\.)?thepiratebay\.(?:cr|org|se)/"
+		to="https://thepiratebay.cr/" />
+
+	<rule from="^http://(rss|static|torrents)\.thepiratebay\.(?:cr|org|se)/"
+		to="https://$1.thepiratebay.cr/" />
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://(?:forum\.|www\.)?suprbay\.org/"
+		to="https://forum.suprbay.org/" />
 
 </ruleset>

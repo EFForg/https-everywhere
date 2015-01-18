@@ -9,45 +9,110 @@
 
 	Nonfunctional subdomains:
 
-		- (www.) *
-		- api *
-		- cdn		(404, CN edgecastcdn.net)
-		- community *
-		- docs *
-		- demo **
-		- developer **
-		- events *
-		- forum *
-		- magazine *
-		- people	(refused)
-		- resources *
-		- shop *
-		- ux *
+		- cdn ¹
+		- code ²
+		- developer ³
+		- forum ²
+		- framework ³
+		- ideas ⁴
+		- issues ³
+		- people ⁵
 
-	* Dropped
-	** http reply
+	¹ 404, NetDNA
+	² Dropped
+	³ Shows default page
+	⁴ Uservoice
+	⁵ Refused
+
+
+	Problematic subdomains:
+
+		- forum *
+
+	* Tor users blocked by CloudFlare settings; mismatched, CN: ssl2000.cloudflare.com
 
 
 	Partially covered subdomains:
 
-		- extensions	(some pages redirect to http)
+		- extensions *
+
+	* Some pages redirect to http
 
 
-	joomla.uservoice.com redirects back to ideas.joomla.org
+	Fully covered subdomains:
+
+		- (www.)?
+		- api
+		- community
+		- conference
+		- demo
+		- docs
+		- events
+		- magazine
+		- resources
+		- shop
+		- ux
+		- vel
+
+
+	Insecure cookies are set for these domains:
+
+		- .joomla.org
+		- community.joomla.org
+		- .demo.joomla.org
+		- events.joomla.org
+		- magazine.joomla.org
+		- resources.joomla.org
+		- shop.joomla.org
+		- ux.joomla.org
+		- vel.joomla.org
+		- www.joomla.org
+
+
+	Mixed content:
+
+		- css, on:
+
+			- events, resources, shop, vel from fonts.googleaps.com ¹
+			- vel from $self ¹
+
+		- Images, on:
+
+			- community from $self ¹
+			- community, magazine, ux, www from cdn ²
+			- community from vel ¹
+
+		- Ads/bugs, on:
+
+			- www from www.arvixe.com ¹
+			- www from assets.pinterest.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
 
 -->
-<ruleset name="Joomla (partial)">
+<ruleset name="Joomla.org (partial)">
 
 	<target host="*.joomla.org" />
 		<!--
 			extensions.joomla.org itself is a redirect loop
 							-->
-		<exclusion pattern="^http://extensions\.joomla\.org/+($|\?|(component|extensions)($|[?/]))" />
+		<exclusion pattern="^http://extensions\.joomla\.org/+(?:$|\?|(?:component|extensions)(?:$|[?/]))" />
 		<exclusion pattern="^http://extensions\.joomla\.org/+(?!components/|favicon\.ico|images/|modules/|templates/)" />
 
 
-	<!--securecookie host=".*\.joomla\.org$" name=".+" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.joomla\.org$" name="^__cfduid$" /-->
+	<!--securecookie host="(community|events|magazine|resources|shop|ux|vel|www)\.joomla\.org$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="\.demo\.joomla\.org$" name="^PHPSESSID$" /-->
 
+	<!--securecookie host=".*\.joomla\.org$" name=".+" /-->
+	<securecookie host="(?:community|events|magazine|resources|shop|ux|vel|www)\.joomla\.org$" name=".+" />
+
+
+	<rule from="^http://((?:api|community|conference|demo|docs|events|magazine|resources|shop|ux|vel|www)\.)?joomla\.org/"
+		to="https://$1joomla.org/" />
 
 	<rule from="^http://extensions\.joomla\.org/(?!$|\?|(?:component|extensions)(?:$|[?/]))"
 		to="https://extensions.joomla.org/" />

@@ -1,0 +1,54 @@
+<!--
+	For rules causing false/broken MCB, see Hostoople.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- hostooplecms.hostooplecom.netdna-cdn.com
+
+			- -ssl doesn't exist
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Shows affiliate
+	² Mixed css
+
+
+	Fully covered subdomains:
+
+		- affiliate
+		- customer
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from fonts.googleapis.com *
+			- www from hostooplecms.hostooplecom.netdna-cdn.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Hostoople.com (partial)">
+
+	<target host="hostoople.com" />
+	<target host="*.hostoople.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:(?:www\.)?hostoople|hostooplecms\.hostooplecom\.netdna-cdn)\.com/+(?!favicon\.ico|images/|wp-content/|wp-includes/)" />
+	<target host="hostooplecms.hostooplecom.netdna-cdn.com" />
+
+
+	<rule from="^http://(?:(?:www\.)?hostoople|hostooplecms\.hostooplecom\.netdna-cdn)\.com/"
+		to="https://www.hostoople.com/" />
+
+	<rule from="^http://(affiliate|customer)\.hostoople\.com/"
+		to="https://$1.hostoople.com/" />
+
+</ruleset>

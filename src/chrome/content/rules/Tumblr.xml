@@ -1,6 +1,11 @@
 <!--
 	For rules causing false/broken MCB, see Tumblr.com-falsemixed.xml.
 
+	Other Tumblr rulesets:
+
+		- Tmblr.co.xml
+		- Txmblr.com.xml
+
 
 	CDN buckets:
 
@@ -55,17 +60,22 @@
 		- developers *
 		- engineering *
 		- staff *
+		- \w+ *
 
 	* Dropped
+	* Dropped, per-account vhosts
 
 
 	Problematic subdomains:
 
-		- media		(cert only matches *.media)
-		- 25.media	(akamai)
-		- 34.media	(akamai)
-		- 35.media	(akamai)
-		- 37.media	(akamai)
+		- media ¹
+		- 25.media ²
+		- 34.media ²
+		- 35.media ²
+		- 37.media ²
+
+	¹ Cert only matches *.media
+	² Akamai
 
 
 	Fully covered subdomains:
@@ -86,13 +96,10 @@
 		- vt
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		- tm319.tumblr.com ¹
-		- safe.txmblr.com ²
-
-	¹ Secured by server
-	² Secured by us <= not secured by server
+		- .tumblr.com
+		- www.tumblr.com
 
 
 	Mixed content:
@@ -116,10 +123,24 @@
 	are still vulnerable whenever they browse blogs while logged in. :(
 
 -->
-<ruleset name="Tumblr (partial)">
+<ruleset name="Tumblr.com (partial)">
 
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
+		<!--
+			These paths 302 to http:
+
+				- audio_file/
+				- dashboard$
+				- dashboard/iframe
+				- goto/
+				- like/
+				- reblog/
+				- share$
+				- submit_form_js/
+				- upload/image
+						-->
+		<exclusion pattern="^http://(?:www\.)?tumblr\.com/(?!$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|search|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)" />
 		<!--
 			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
@@ -151,57 +172,30 @@
 			Breaks dashboard post loading:
 							-->
 		<!--exclusion pattern="^http://(www\.)?tumblr\.com/svc/post/fetch\?" /-->
-	<target host="safe.txmblr.com" />
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^(?:secure\.assets|www)\.tumblr\.com$" name="^__utmf$" />
 	<!--
-		Secured by server:
-					-->
-	<!--securecookie host="^tm319\.tumblr\.com$" name=".+" /-->
-	<!--securecookie host="^www\.tumblr\.com$" name="^pfs$" /-->
-	<!--
 		Not secured by server:
 					-->
 	<!--securecookie host="^\.tumblr\.com$" name="^(language|logged_in)$" /-->
 	<!--securecookie host="^www\.tumblr\.com$" name="^(capture|devicePixelRatio|documentWidth|last_toast|pfe|pfp|pfu|tmgioct)$" /-->
 
-	<securecookie host="^safe\.txmblr\.com$" name=".+" />
 	<securecookie host="^www\.tumblr\.com$" name="^d(?:evicePixelRatio|ocumentWidth)$" />
 
-
-	<!--	These paths 302 to http:
-
-			- audio_file/
-			- dashboard$
-			- dashboard/iframe
-			- goto/
-			- like/
-			- reblog/
-			- share$
-			- submit_form_js/
-			- upload/image
-					-->
-	<rule from="^http://(www\.)?tumblr\.com/(?=$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)"
-		to="https://$1tumblr.com/" />
-
-	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
-		to="https://31.media.tumblr.com/" />
-
-	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|tm319|vt?)\.tumblr\.com/"
-		to="https://$1.tumblr.com/" />
 
 	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
+	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
+		to="https://31.media.tumblr.com/" />
+
 	<rule from="^http://static\.tumblr\.com/"
 		to="https://d2pi0bc9ewx28h.cloudfront.net/" />
 
-	<!--	When you bareback over the net, you're totally...
-								-->
-	<rule from="^http://safe\.txmblr\.com/"
-		to="https://safe.txmblr.com/" />
+	<rule from="^http://((?:a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|tm319|vt?|www)\.)?tumblr\.com/"
+		to="https://$1tumblr.com/" />
 
 </ruleset>

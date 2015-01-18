@@ -1,16 +1,24 @@
 <!--
-	Nonfunctional domains:
+	Problematic domains:
 
-		- (www.)	(no https)
+		- ^ ¹
+		- www ²
+
+	¹ Dropped
+	² CloudFlare settings block Tor
 
 -->
-<ruleset name="QuakeNet (partial)">
+<ruleset name="QuakeNet.org">
 
+	<target host="quakenet.org" />
 	<target host="*.quakenet.org" />
 
 
-	<securecookie host="^auth\.quakenet\.org$" name=".*" />
+	<securecookie host="^(?:auth)?\.quakenet\.org$" name=".*" />
 
+
+	<rule from="^http://(?:www\.)?quakenet\.org/"
+		to="https://www.quakenet.org/" />
 
 	<rule from="^http://(auth|hg|webchat)\.quakenet\.org/"
 		to="https://$1.quakenet.org/" />

@@ -13,11 +13,9 @@
 
 		- www.stackapps.com ¹
 		- meta.*.stackexchange.com ²
-		- chat.stackexchange.com ³
 
 	¹ Mismatched
 	² Works; mismatched, CN: *.stackexchange.com
-	³ Mixed css from cdn-chat.sstatic.net
 
 
 	Partially covered domains:
@@ -33,6 +31,7 @@
 		- cdn-chat.sstatic.com
         	- *.stackexchange.com
 		- teststackoverflow.com
+		- *.blogoverflow.com
 
 
 	www.teststackoverflow.com doesn't exist.
@@ -46,18 +45,13 @@
 
 		- Images, on:
 
-			- chat.stackexchange.com from i.stack.imgur.com ¹
-			- chat.stackexchange.com from cdn.sstatic.net ¹
-
 			- blog.stackoverflow.com, from:
 
 				- $self ¹
 				- www.google.com ¹
-				- i.stack.imgur.com ¹
 
 		- favicons, on:
 
-			- chat.stackexchange.com from cdn.sstatic.net ¹
 			- blog.stackoverflow.com from cdn.sstatic.net ¹
 
 		- Web bugs, on:
@@ -87,6 +81,15 @@
 		- meta.superuser.com
 		- stackapps.com
 		- openid.stackauth.com
+		- *.blogoverflow.com (Dec., 2014)
+
+
+	Insecure cookies are set for the following domains:
+
+		- .serverfault.com
+		- .stackexchange.com
+		- stackoverflow.com
+		- .stackoverflow.com
 
 -->
 <ruleset name="Stack Exchange (partial)">
@@ -104,7 +107,7 @@
 
 			Breaks OpenID login:
 						-->
-        	<exclusion pattern="^http://(?:\w+\.)?(?:stackexchange|stackoverflow)\.com/users/authenticate/" />
+		<exclusion pattern="^http://(?:\w+\.)?stack(?:exchange|overflow)\.com/users/authenticate/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
 		<!--
@@ -120,6 +123,7 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.serverfault\.com$" name="^prov$" /-->
 	<!--securecookie host="^\.stackexchange\.com$" name="^prov$" /-->
 	<!--securecookie host="^stackoverflow\.com$" name="^rk-\d+$" /-->
 	<!--securecookie host="^\.stackoverflow\.com$" name="^prov$" /-->
@@ -132,6 +136,9 @@
 
 	<rule from="^http://(?:www\.)?blogoverflow\.com/$"
 		to="https://stackexchange.com/blogs" />
+	
+	<rule from="^http://([^\/]+)\.blogoverflow\.com/"
+		to="https://$1.blogoverflow.com/" />
 
 	<rule from="^http://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
@@ -142,7 +149,7 @@
 	<rule from="^http://(?:www\.)?stackapps\.com/"
 		to="https://stackapps.com/" />
 
-	<rule from="^http://(\w+\.)?stackexchange\.com/"
+	<rule from="^http://((?:\w+|meta\.\w+|discuss\.area51)\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
 
 	<rule from="^http://((?:blog|www|meta|careers)\.)?stackoverflow\.com/"
@@ -156,5 +163,4 @@
 
 	<rule from="^http://teststackoverflow\.com/"
 		to="https://teststackoverflow.com/" />
-
 </ruleset>

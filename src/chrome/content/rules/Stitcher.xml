@@ -3,6 +3,10 @@
 
 		- stitcher.assets.s3.amazonaws.com
 
+		- d1e7rotcsmgpz9.cloudfront.net
+
+			- cloudfront.assets
+
 		- stitcher.vo.llnwd.net
 
 			- .hs. doesn't exist
@@ -23,20 +27,26 @@
 	Problematic subdomains:
 
 		- ^			(cert only matches www)
+		- cloudfront.assets ²
 		- limelight.assets	(400, CN: *.hs.llnwd.net)
+
+	² Cloudfront
 
 
 -->
-<ruleset name="Stitcher (partial)">
+<ruleset name="Stitcher.com (partial)">
 
 	<target host="stitcher.com" />
 	<target host="*.stitcher.com" />
 
 
-	<rule from="^https?://(?:www\.)?stitcher\.com/"
+	<rule from="^http://(?:www\.)?stitcher\.com/"
 		to="https://www.stitcher.com/" />
 
-	<rule from="^https?://limelight\.assets\.stitcher\.com/"
+	<rule from="^http://cloudfront\.assets\.stitcher\.com/"
+		to="https://d1e7rotcsmgpz9.cloudfront.net/" />
+
+	<rule from="^http://limelight\.assets\.stitcher\.com/"
 		to="https://s3.amazonaws.com/stitcher.assets/" />
 
 </ruleset>

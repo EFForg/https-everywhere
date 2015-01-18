@@ -2,15 +2,26 @@
 	For rules that are on by default, see Suddeutsche_Zeitung.xml.
 
 -->
-<ruleset name="Süddeutsche Zeitung (problematic)" default_off="mismatched">
+<ruleset name="Süddeutsche Zeitung (problematic)" default_off="mismatched" platform="mixedcontent">
 
+	<target host="sueddeutsche.de" />
 	<target host="englisch.sueddeutsche.de" />
+	<target host="mediadaten.sueddeutsche.de" />
+	<target host="sz-media.sueddeutsche.de" />
+	<target host="szshop.sueddeutsche.de" />
+	<target host="www.sueddeutsche.de" />
 
 
-	<securecookie host="^englisch\.sueddeutsche\.de$" name=".+" />
+	<securecookie host="^(?:englisch|sz-media|www)\.sueddeutsche\.de$" name=".+" />
 
 
-	<rule from="^http://englisch\.sueddeutsche\.de/"
-		to="https://englisch.sueddeutsche.de/" />
+	<rule from="^http://(?:www\.)?sueddeutsche\.de/"
+		to="https://www.sueddeutsche.de/" />
+
+	<rule from="^http://(englisch|sz-media|szshop|www)\.sueddeutsche\.de/"
+		to="https://$1.sueddeutsche.de/" />
+
+	<rule from="^http://mediadaten\.sueddeutsche\.de/(?:home/)?(?:$|\?)"
+		to="https://sz-media.sueddeutsche.de/" />
 
 </ruleset>

@@ -5,12 +5,24 @@
      preload list on request from their administrators, so HTTPS should
      work properly everywhere on this site.
 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Simple.com" platform="firefox">
-<target host="bank.simple.com" />
 
-<securecookie host="^bank\.simple\.com$" name=".+" />
+	Problematic subdomains:
 
-<rule from="^http://bank\.simple\.com/" to="https://bank.simple.com/" />
+		- status *
+
+	* Wordpress
+
+-->
+<ruleset name="Simple.com (partial)">
+
+	<target host="simple.com" />
+	<target host="*.simple.com" />
+
+
+	<securecookie host="^bank\.simple\.com$" name=".+" />
+
+
+	<rule from="^http://(bank\.|www\.)?simple\.com/"
+		to="https://$1simple.com/" />
+
 </ruleset>

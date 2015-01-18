@@ -94,7 +94,7 @@ to make sure that your rule is free of common mistakes.
 
 If you would like to help translate HTTPS Everywhere into your language,
 you can do that through the Tor Project's Transifex page:
-https://www.transifex.com/p/torproject/resources/.
+https://www.transifex.com/projects/p/torproject/.
 
 ### Bug trackers and mailing lists
 

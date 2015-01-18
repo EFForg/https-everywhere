@@ -1,32 +1,67 @@
 <!--
+	Nonfunctional subdomains:
+
+		- events *
+
+	* Shows www
+
+
 	Problematic subdomains:
 
+		- ^ ¹
 		- middleware	(shows www; mismatched, CN: www.internet2.edu)
+
+	¹ Mismatched
 
 
 	Partially covered subdomains:
 
 		- middleware	(→ www)
-		- (www.)	(some pages redirect to http; contentslider-1k.css, images/, index.cfm, & pubs/ 404)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- lists
+		- mail
+		- meetings
+		- service1
+		- spaces
+		- wiki
+
+
+	Insecure cookies are set for these domains:
+
+		- meetings
+		- saltweb
+		- www
+
+
+	Mixed content:
+
+		- css on meetings and www from fast.fonts.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Internet2 (partial)">
 
 	<target host="internet2.edu" />
 	<target host="*.internet2.edu" />
-		<exclusion pattern="^http://(?:www\.)?internet2\.edu/(?!includes/|middleware(?:$|\?|/))" />
 
 
-	<securecookie host="^(?:\.lists|service1|spaces|wiki)\.internet2\.edu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(meetings|saltweb|www)\.internet2\.edu$" name="^django_language$" /-->
+
+	<securecookie host="^(?:\.lists|service1|spaces|wiki|www)\.internet2\.edu$" name=".+" />
 
 
-	<!--	$ & /$ 404:
-				-->
-	<rule from="^http://(?:www\.)?internet2\.edu/middleware/?(?:\?.*)?$"
-		to="https://www.internet2.edu/middleware/index.cfm" />
+	<rule from="^http://(?:www\.)?internet2\.edu/"
+		to="https://www.internet2.edu/" />
 
-	<rule from="^http://((?:lists|mail|service1|spaces|wiki|www)\.)?internet2\.edu/"
-		to="https://$1internet2.edu/" />
+	<rule from="^http://(lists|mail|meetings|service1|spaces|wiki)\.internet2\.edu/"
+		to="https://$1.internet2.edu/" />
 
 	<rule from="^http://middleware\.internet2\.edu/(?:\?.*)?$"
 		to="https://www.internet2.edu/middleware/index.cfm" />

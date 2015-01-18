@@ -1,14 +1,28 @@
-<ruleset name="Midnight Commander" default_off="self-signed">
+<!--
+	Mixed content:
+
+		- Images, from:
+
+			- sw.transifex.net *
+			- www.transifex.net *
+
+	* Not secured by us <= expired
+
+-->
+<ruleset name="Midnight Commander">
 
 	<target host="midnight-commander.org" />
 	<target host="www.midnight-commander.org" />
 
 
-	<securecookie host="^www\.midnight-commander\.org$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?midnight-commander\.org$" name="^(trac_form_token|trac_session)$" /-->
+
+	<securecookie host="^(?:www\.)?midnight-commander\.org$" name=".*" />
 
 
-	<!--	Cert doesn't match www, but !www redirects to www.	-->
-	<rule from="^http://(?:www\.)?midnight-commander\.org/"
-		to="https://www.midnight-commander.org/" />
+	<rule from="^http://(www\.)?midnight-commander\.org/"
+		to="https://$1midnight-commander.org/" />
 
 </ruleset>

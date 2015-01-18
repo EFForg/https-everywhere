@@ -92,6 +92,7 @@
 		- www.cuit *
 		- outlook.cuit			(mismatched, CN: outlook1.cuit)
 		- www.cuitalerts *
+		- www.cup ⁶
 		- www.directory *
 		- bulletin.engineering *	(works)
 		- www.engineering *
@@ -135,14 +136,17 @@
 		- www.w2aee ***
 
 	* Cert only matches *.
+	⁶ Cert only matches ^foo
 	** Cert only matches *.cdrs
 	*** Shows www1, CN: www1)
+
 
 
 	Partially covered domains:
 
 		- (www.)		(→ cuit)
 		- (www.)advance		(some pages redirect to http, some paths redirect to Error.aspx, ^ → www)
+		- www.cs *
 		- (www.)gs *		(www → ^)
 		- (www.)library *	(www → ^)
 		- (www.)procurement *
@@ -169,6 +173,7 @@
 		- www.college
 		- (www.)communityservice	(www → ^)
 		- (www.)courseworks		(www → ^)
+		- mice.cs
 		- (www.)cuit			(www → ^)
 		- outlook.cuit			(→ outlook1.cuit)
 		- outlook1.cuit
@@ -176,6 +181,7 @@
 		- haydn.cul
 		- roomreservations.cul
 		- scholcomm-dev.cul
+		- (www.)cup			(www → ^)
 		- (www.)directory		(www → ^)
 		- (www.)engineering		(www → ^)
 		- (www.)eoaa			(www → ^)
@@ -279,6 +285,18 @@
 <ruleset name="Columbia University (partial)">
 
 	<target host="*.columbia.edu" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.cs\.columbia\.edu/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.cs\.columbia\.edu/(css/|images/|mice/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.cs\.columbia\.edu/(?!icons/)" />
 		<exclusion pattern="^http://www\.giving\.columbia\.edu/(?!$|ccvolunteers/(?:App_Themes/|Telerik\.Web\.UI\.WebResource\.axd)|volunteer/)" />
 		<exclusion pattern="^http://gs\.columbia\.edu/(?!files/|misc/|sites/)" />
 		<exclusion pattern="^http://library\.columbia\.edu/(?!apps/|content/|etc/)" />
@@ -294,13 +312,13 @@
 	<rule from="^http://(?:www\.)?columbia\.edu/cuit/index\.html($|\?.*)"
 		to="https://cuit.columbia.edu/$1" />
 
-	<rule from="^http://(www\.ais|cas|(?:cubemail|ingo|rascalprod|uniapp)\.cc|www\.college|wikis\.cuit|(?:haydn|roomreservations|scholcomm-dev)\.cul|www\.facil|forms\.finance|admissions\.gs|(?:apply|gsas-2l12p-01)\.gsas|(?:apply|gear|www[024678]|www-1)\.gsb|housingportal|isso|www\.law|lexington|alumni-friends\.library|newcourseworks|portal\.seas|(?:www\.)?procurement|ssol|(?:undergraduate-admissions\.|www\.)?studentaffairs|(?:auth|careers|my)\.tc|wind|www1)\.columbia\.edu/"
+	<rule from="^http://(www\.ais|cas|(?:cubemail|ingo|rascalprod|uniapp)\.cc|www\.college|(?:mice|www)\.cs|wikis\.cuit|(?:haydn|roomreservations|scholcomm-dev)\.cul|www\.facil|forms\.finance|admissions\.gs|(?:apply|gsas-2l12p-01)\.gsas|(?:apply|gear|www[024678]|www-1)\.gsb|housingportal|isso|www\.law|lexington|alumni-friends\.library|newcourseworks|portal\.seas|(?:www\.)?procurement|ssol|(?:undergraduate-admissions\.|www\.)?studentaffairs|(?:auth|careers|my)\.tc|wind|www1)\.columbia\.edu/"
 		to="https://$1.columbia.edu/" />
 
-	<rule from="^https?://(?:www\.)?alice\.columbia\.edu/(?:.*)"
+	<rule from="^http://(?:www\.)?alice\.columbia\.edu/(?:.*)"
 		to="https://health.columbia.edu/services/alice" />
 
-	<rule from="^http://(?:www\.)?(alumni(?:clubs)?|arch|arts|bme|communityservice|courseworks|cuit|cuitalerts|directory|engineering|eoaa|evpr|facets|facilities|facultyhouse|finance|giving|goaskalice|gs|health|housingservices|hr|library|mail|my|news|policylibrary|printservices|registar|researchinitiatives|spa|universityprograms|worklife|worldleaders)\.columbia\.edu/"
+	<rule from="^http://(?:www\.)?(alumni(?:clubs)?|arch|arts|bme|communityservice|courseworks|cuit|cuitalerts|cup|directory|engineering|eoaa|evpr|facets|facilities|facultyhouse|finance|giving|goaskalice|gs|health|housingservices|hr|library|mail|my|news|policylibrary|printservices|registar|researchinitiatives|spa|universityprograms|worklife|worldleaders)\.columbia\.edu/"
 		to="https://$1.columbia.edu/" />
 
 	<rule from="^http://(?:www\.)?(giving|gsas|gsb|infoed|math|rascal|tc)\.columbia\.edu/"

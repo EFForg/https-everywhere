@@ -4,29 +4,43 @@
 		- 500px.org.xml
 
 
-	Some pages redirect to http.
+	Fully covered subdomains:
+
+		- (www.)
+		- developers
+		- iso
+		- prime
+		- support
+
+
+	These altnames don't exist:
+
+		- www.support.500px.com
+
+
+	Insecure cookies are set for these domains:
+
+		- 500px.com
+		- .500px.com
+		- developers.500px.com
 
 -->
-<ruleset name="500px.com (partial)">
+<ruleset name="500px.com">
 
 	<target host="500px.com" />
 	<target host="*.500px.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?500px\.com/+($|\?|popular$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:www\.)?500px\.com/+(?!assets/|favicon\.ico|(?:login|signup)(?:$|[?/])|v3/)" />
 
 
 	<!--	Not secured by server:
 					-->
-	<securecookie host="^prime\.500px\.com$" name=".+" />
+	<!--securecookie host="^(www\.)?500px\.com$" name="^(landing_page|onboarding|referrer_type|upload_cta)$" /-->
+	<!--securecookie host="^\.500px\.com$" name="^_hpx1$" /-->
+	<!--securecookie host="^developers\.500px\.com$" name="^(landing_page|onboarding|referrer_type|upload_cta)$" /-->
+
+	<securecookie host="^(?:(?:developers|prime|www)\.)?500px\.com$" name=".+" />
 
 
-	<rule from="^http://(prime\.|www\.)?500px\.com/"
+	<rule from="^http://((?:developers|iso|prime|support|www)\.)?500px\.com/"
 		to="https://$1500px.com/" />
 
 </ruleset>

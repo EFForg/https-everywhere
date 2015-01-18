@@ -17,6 +17,12 @@
 		- (www.)	(^ → www)
 		- account
 		- manage
+		- www.remoteapp
+
+
+	Insecure cookies are set for these domains:
+
+		- www.remoteapp
 
 -->
 <ruleset name="Windows Azure">
@@ -25,13 +31,17 @@
 	<target host="*.windowsazure.com" />
 
 
-	<securecookie host="^\.windowsazure\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.remoteapp\.windowsazure\.com$" name="^ActivityId$" /-->
+
+	<securecookie host="^(?:www\.remoteapp)?\.windowsazure\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?windowsazure\.com/"
 		to="https://www.windowsazure.com/" />
 
-	<rule from="^http://(account|manage)\.windowsazure\.com/"
+	<rule from="^http://(account|manage|www\.remoteapp)\.windowsazure\.com/"
 		to="https://$1.windowsazure.com/" />
 
 </ruleset>

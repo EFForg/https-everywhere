@@ -1,0 +1,102 @@
+<!--
+	Tampa Bay Times
+
+
+	Nonfunctional subdomains:
+
+		- clients ¹
+		- eedition ²
+		- homes ¹
+		- jobs ¹
+		- tampa-weather ³
+		- m.weather ³
+
+	¹ Refused
+	² Dropped
+	³ WUnderground
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- video ²
+
+	¹ Blocks Tor users
+	² Mismatched, CN: *.newsinc.com
+
+
+	Partially covered subdomains:
+
+		- homes ¹	(→ www)
+		- jobs ¹	(→ www)
+
+	¹ Some paths 404 when rewritten
+
+
+	Mixed content:
+
+		- css, on:
+
+			- video from vault.studio.ndnmediaservices.com ¹
+			- www from ^ ¹
+
+		- Images, on:
+
+			- video from vault.studio.ndnmediaservices.com ¹
+			- www from (www.)? ¹
+			- www from (www.)?sptimes.com ²
+			- www from media.cmgdigital.com ¹
+
+		- favicon on www from ^ ¹
+
+		- Ads/bugs, on:
+
+			- www from homes ²
+			- www from media.monster.com ¹
+			- www from tampabay.mycapture.com ²
+			- www from img-seeker.newjobs.com ¹
+			- www from www.renttampabay.com ²
+			- www from snapwidget.com ¹
+			- www from metric.sptimes.com ¹
+			- www from www.zillow.com
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Tampa Bay.com (partial)">
+
+	<target host="tampabay.com" />
+	<target host="*.tampabay.com" />
+		<!--
+			404s when rewriten to www:
+							-->
+		<!--exclusion pattern="^http://homes\.tampabay\.com/images/" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.tampabay\.com/($|features/$|news/$|news/politics/$|opinion/$|sports/$|things-to-do/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.tampabay\.com/+(?!(?:404\.page|bay|cars|company|edeals|homes|jobs|marketplace|mediakit|postad|publication|search|shopping|subscribe|tb-two)(?:$|[?/])|components/|favicon\.ico|iwov-resources/|media/|resources/|specials/$|universal/(?:css|graphics|images|media|nav|static)/|wunderground/)" />
+		<!--
+			(triggers MCB):
+					-->
+		<!--exclusion pattern="^http://www\.tampabay\.com/(specials/\d{4}/\w+/[\w-]+/$|universal/standard_of_accur\.shtml)" /-->
+
+
+	<!--	2o7.net cookies:
+				-->
+	<securecookie host="^\.tampabay\.com$" name="^s_\w\w(?:_.*)?$" />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://(home|job)s\.tampabay\.com/+(?:\?.*)?$"
+		to="https://www.tampabay.com/$1s/" />
+
+	<rule from="^http://(placead\.|www\.)?tampabay\.com/"
+		to="https://$1tampabay.com/" />
+
+</ruleset>

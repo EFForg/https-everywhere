@@ -1,6 +1,104 @@
-<ruleset name="LboroAcUk">
-  <target host="*.lboro.ac.uk"/>
+<!--
+	Loughborough University
 
-  <securecookie host="^(bestmaths|dspace|email(admin)?|engskills|lists|luis|lorls|oss|pdwww|wfa)\.lboro\.ac\.uk$" name=".*"/>
-  <rule  from="^http://(bestmaths|dspace|email(admin)?|engskills|lists|luis|lorls|oss|pdwww|wfa)\.lboro\.ac\.uk/" to="https://$1.lboro.ac.uk/"/>
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- www.arts ²
+		- jobs ³
+		- maps ⁴
+		- shortcourse ⁵
+
+	¹ Blank page
+	² Dropped
+	³ Shows castrovalva
+	⁴ Plaintext reply
+	⁵ 401
+
+
+	Problematic subdomains:
+
+		- lumen *
+
+	* Mixed css
+
+
+	Fully covered subdomains:
+
+		- alumni
+		- availability
+		- bestmaths
+		- booklab
+		- campuslife
+		- cash-plus
+		- castrovalva
+		- dspace
+		- domains
+		- easimap
+		- email
+		- emailadmin
+		- engskills
+		- epay
+		- lists
+		- lorls
+		- luis
+		- mec
+		- mondas
+		- mooc		(→ easimap)
+		- moochost	(→ easimap)
+		- oss
+		- pdwww
+		- pma
+		- prospectus
+		- rapid
+		- skaro		(→ easimap)
+		- webdiss
+		- wfa
+
+
+	Insecure cookies are set for these domains:
+
+		- alumni.lboro.ac.uk
+		- cash-plus.lboro.ac.uk
+		- epay.lboro.ac.uk
+
+
+	Mixed content:
+
+		- css on lumen from www *
+
+	* Unsecurable <= 404
+
+-->
+<ruleset name="LboroAcUk">
+
+	<target host="*.lboro.ac.uk" />
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://learn\.lboro\.ac\.uk/lumenlogin/$" /-->
+		<!--
+			Avoid valid MCB:
+						-->
+		<exclusion pattern="^http://lumen\.lboro\.ac\.uk/+(?!css/|favicon\.ico|images/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^alumni\.lboro\.ac\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^cash-plus\.lboro\.ac\.uk$" name="^(imago|imago_csrf_cookie)$" /-->
+	<!--securecookie host="^epay\.lboro\.ac\.uk$" name="^ASPSESSION[A-Z]+$" /-->
+
+	<securecookie host="^(?:alumni|bestmaths|cash-plus|dspace|email(?:admin)?|engskills|epay|lists|luis|lorls|oss|pdwww|wfa)\.lboro\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://(alumni|availability|bestmaths|booklab|campuslife|cash-plus|castrovalva|domains|dspace|easimap|email(?:admin)?|engskills|epay|lists|luis|lorls|lumen|mec|mondas|oss|pdwww|pma|prospectus|rapid|vacancies|webdiss|wfa)\.lboro\.ac\.uk/"
+		to="https://$1.lboro.ac.uk/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:mooc|moochost|skaro)\.lboro\.ac\.uk/+"
+		to="https://easimap.lboro.ac.uk/" />
+
 </ruleset>

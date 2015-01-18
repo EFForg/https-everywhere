@@ -1,0 +1,69 @@
+<!--
+	Other Groupon rulesets:
+
+		- Groupon.xml
+		- Groupon.gr.xml
+		- Groupon_Works.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- investor *
+
+	* Shareholder
+
+
+	www: blocks Tor
+
+
+	Partially covered subdomains:
+
+		- touch *
+
+	* subscriptions/ redirects to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- engineering
+		- jobs
+		- m
+		- merchants
+		- touch2
+		- test.uat
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- merchants
+
+-->
+<ruleset name="Groupon.com (partial)">
+
+	<target host="groupon.com" />
+	<target host="*.groupon.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://touch\.groupon\.com/subscriptions($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://touch\.groupon\.com/+(?!assets/|favicon\.ico)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.groupon\.com$" name="^(b|bucket|intercept_bypass|subscription_displayed|user_locale)$" /-->
+	<!--securecookie host="^merchants\.groupon\.com$" name="^_session_id$" /-->
+
+	<securecookie host="^merchants\.groupon\.com$" name=".+" />
+
+
+	<rule from="^http://((?:api|engineering|jobs|m|merchants|touch2?|test\.uat|www)\.)?groupon\.com/"
+		to="https://$1groupon.com/" />
+
+</ruleset>

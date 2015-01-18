@@ -1,8 +1,17 @@
 <ruleset name="Cloudfront">
-  <target host="cloudfront.net" />
-  <target host="*.cloudfront.net" />
 
-  <rule from="^http://([^/:@\.]+)\.cloudfront\.net/"  to="https://$1.cloudfront.net/"/>
+	<target host="*.cloudfront.net" />
+	<target host="www.cloudfront.net" />
+
+
+	<rule from="^http://([^/:@\.]+)\.cloudfront\.net/" 
+		to="https://$1.cloudfront.net/" />
+
+
+	<!--
+		and this is a generalised precaution from turntable.fm
+									-->
+	<exclusion pattern="^http://(?:[^/:@\.]+)\.cloudfront\.net/crossdomain\.xml" />
 
   <!-- See https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html
     Policies contain the protocol, so a signature for http will not work for https

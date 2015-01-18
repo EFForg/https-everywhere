@@ -1,44 +1,77 @@
 <!--
+	For other Active Network coverage, see Active_Network.com.xml.
+
+
 	CDN buckets:
 
 		- gcs-assets.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- developer *
+
+	* Mashery
+
+
+	Partially covered subdomains:
+
+		- schwaggle *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- assets-results2
+		- community
+		- m
+		- mobile
+		- myevents
+		- results
+		- roleassets
+		- sites
+		- sso
+
+
+	Insecure cookies are set for these domains:
+
+		- .active.com
+		- mobile.active.com
+		- myevents.active.com
+		- sites.active.com
+		- www.active.com
 
 -->
 <ruleset name="Active.com (partial)">
 
 	<target host="active.com" />
 	<target host="*.active.com" />
-	<target host="activestatic.net" />
-	<target host="www.activestatic.net" />
-	<target host="regonline.com" />
-	<target host="www.regonline.com" />
 
 
-	<securecookie host="^(community\.|sso\.|www\.)?active\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.active\.com$" name="^(a3userLocation|lat_lon)$" /-->
+	<!--securecookie host="^mobile\.active\.com$" name="^BIGipServer~SPORTS~acmpool5_http$" /-->
+	<!--securecookie host="^myevents\.active\.com$" name="^(BIGipServer~Platform_Services~aw_prod_myeventsui_pool|JSESSIONID)$" /-->
+	<!--securecookie host="^sites\.active\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.active\.com$" name="^(_A3_session|BIGipServer~Platform_Services~a3core\.active\.com_http)$" /-->
+
+	<securecookie host="^(?:(?:community|mobile|myevents|sso|sites|www)\.)?active\.com$" name=".+" />
 
 
-	<rule from="^http://((?:assets-results2|community|results|rolassets|sso|www)\.)?active\.com/"
+	<rule from="^http://((?:assets-results2|community|m|mobile|myevents|results|rolassets|sites|sso|www)\.)?active\.com/"
 		to="https://$1active.com/" />
 
 	<!--	help/faq/$ 302s to http.
 					-->
-	<rule from="^http://schwaggle\.active\.com/help/faq/?"
+	<rule from="^http://schwaggle\.active\.com/help/faq/?(?=$|\?)"
 		to="https://schwaggle.active.com/help/faq" />
 
 	<!--	More pages 302 to http.
 					-->
 	<rule from="^http://schwaggle\.active\.com/content/"
 		to="https://schwaggle.active.com/content/" />
-
-	<rule from="^http://(www\.)?activestatic\.net/"
-		to="https://$1activestatic.net/" />
-
-	<!--	Register/Checkin.aspx?EventID=\d+$ 301s to http.
-					-->
-	<rule from="^http://(www\.)?regonline\.com/([rR])egister/([cC])heckin\.aspx\?EventID=(\d+)$"
-		to="https://$1regonline.com/$2egister/$3heckin.aspx?EventID=$4&amp;MethodId=0&amp;EventSessionId=&amp;startnewreg=1" />
-
-	<rule from="^http://(www\.)?regonline\.com/((?:__404|privacy|[rR]egister/(?:[cC]heckin|dialogs/passwordReset|login))\.aspx|Builder/WebResource\.axd|__images/|RadControls/|registrations/|__styles/)"
-		to="https://$1regonline.com/$2" />
 
 </ruleset>

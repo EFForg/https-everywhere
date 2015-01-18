@@ -50,26 +50,27 @@
 
 	Problematic subdomains:
 
-		- ^ ¹
 		- assets ²
 		- motherboard-cdn-assets ³
 		- assets.thump ²
 
-	¹ "error"
 	² cloudfront
 	³ Works, akamai
 
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- assets	(→ d1qzzfctbfyh6r.cloudfront.net)
+		- assets2
 		- assets-i-d	(→ d1wzhalc7g55g3.cloudfront.net)
 		- assets-news
 		- assets-sports
 		- embeds
+		- motherboard-images
 		- munchies
 		- news
+		- noisey
 		- sports
 		- staging-assets-news
 		- thump
@@ -80,18 +81,15 @@
 
 		- Images, on:
 
-			- motherboard from motherboard-cdn-assets *
-			- motherboard from lh3.ggpht.com *
 			- munchies from images *
+			- noisey from assets.noisey.com *
 			- thump from assets.thump *
 			- www from assets *
 			- www from scs-assets.s3.amazonaws.com *
 
 		- Bugs, on:
 
-			- motherboard from pixel.adsafeprotected.com
-			- motherboard from storage.googleapis.com *
-			- motherboard, munchies, and www from b.scorecardresearch.com *
+			- munchies and www from b.scorecardresearch.com *
 			- www from platform.tumblr.com *
 			- www from platform.twitter.com *
 
@@ -107,9 +105,9 @@
 	<target host="*.vice.com" />
 		<!--exclusion pattern="^http://(hbo|i-d|shop)\.vice\.com/" /-->
 		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://motherboard\.vice\.com/+(?!assets/(?:favicon|font|image)s/)" />
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://motherboard\.vice\.com/" /-->
 
 
 	<rule from="^http://assets\.motherboard\.tv/"
@@ -128,23 +126,17 @@
 		to="https://dm07ef02yemve.cloudfront.net/" />
 
 
-	<rule from="^http://(?:www\.)?vice\.com/"
-		to="https://www.vice.com/" />
-
 	<rule from="^http://assets\.vice\.com/"
 		to="https://d1qzzfctbfyh6r.cloudfront.net/" />
 
 	<rule from="^http://assets-i-d\.vice\.com/"
 		to="https://d1wzhalc7g55g3.cloudfront.net/" />
 
-	<rule from="^http://(assets-(?:news|sports)|embeds|images|munchies|news|socials|sports|staging-assets-news|thump)\.vice\.com/"
-		to="https://$1.vice.com/" />
+	<rule from="^http://((?:assets-(?:news|sports)|assets2|embeds|images|motherboard-images|munchies|news|noisey|socials|sports|staging-assets-news|thump|www)\.)?vice\.com/"
+		to="https://$1vice.com/" />
 
 	<!--rule from="^http://hbo\.vice\.com/.*"
 		to="https://connect.hbo.com/vice/" /-->
-
-	<rule from="^http://motherboard(-cdn-assets)?\.vice\.com/"
-		to="https://a248.e.akamai.net/f/248/4735/10/motherboard$1.vice.com/" />
 
 	<!--rule from="^http://store\.vice\.com/"
 		to="https://vice.myshopify.com/" /-->

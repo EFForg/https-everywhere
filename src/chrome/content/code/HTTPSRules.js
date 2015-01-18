@@ -493,7 +493,7 @@ const HTTPSRules = {
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
-    this.log(NOTE, "Processing " + input_uri.spec);
+    this.log(DBUG, "Processing " + input_uri.spec);
 
     var uri = this.sanitiseURI(input_uri);
 
@@ -635,7 +635,7 @@ const HTTPSRules = {
         }
       }
     } else {
-      this.log(INFO, "For target " + target + ", found no ids in DB");
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
     }
     return output;
   },
@@ -709,7 +709,7 @@ const HTTPSRules = {
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
 
-    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
+    this.log(DBUG,"  rawhost: " + c.rawHost + " name: " + c.name + " host" + c.host);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
@@ -768,17 +768,17 @@ const HTTPSRules = {
       return false;
     }
 
-    this.log(INFO, "Testing securecookie applicability with " + test_uri);
+    this.log(DBUG, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        this.log(INFO, "Yes: " + rewrite);
+        this.log(DBUG, "Safe to secure cookie for " + test_uri + ": " + rewrite);
         return true;
       }
     }
-    this.log(INFO, "(NO)");
+    this.log(DBUG, "Unsafe to secure cookie for " + test_uri);
     return false;
   }
 };

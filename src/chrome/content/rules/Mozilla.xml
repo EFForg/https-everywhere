@@ -1,18 +1,25 @@
 <!--
+	For problematic rules, see Mozilla-problematic.xml.
+
+
 	Other Mozilla rulesets:
 
 		- Allizom.org.xml
+		- Are_We_Slim_Yet.com.xml
 		- BrowserID.xml
 		- Bugzilla.xml
 		- Firefox.com.xml
 		- GetPersonas.xml
 		- Lizard_Wrangler.com.xml
 		- Mozilla.com.tw.xml
+		- Mozilla.jp.xml
+		- Mozilla-Community.org.xml
 		- Mozilla_Labs.com.xml
 		- Mozilla_Persona.xml
 		- Mozilla_Webmaker.xml
 		- Open_Badges.xml
 		- Public_Suffix.org.xml
+		- TogetherJS.com.xml
 
 
 	CDN buckets:
@@ -26,7 +33,7 @@
 			- getpersonas-cdn.mozilla.net
 			- hardhat.mozilla.net
 
-		- images.s4.exacttarget.com.edgesuite.net
+		- a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/
 
 			- image.e.mozilla.org
 
@@ -45,6 +52,7 @@
 
 			- www.authstage ¹
 			- identity ²
+			- *.malware-error *
 			- www-trunk.stage ¹
 
 		- mozilla.org subdomains:
@@ -55,6 +63,7 @@
 			- view.e ¹
 			- graphs ³
 			- krakenbenchmark ³
+			- mig ³
 			- releases ³
 			- sfx-images ³		(banners)
 			- start ¹
@@ -65,12 +74,15 @@
 
 	¹ Dropped
 	² Hosted on tumblr
+	* https://trac.torproject.org/projects/tor/ticket/14022
 	³ Refused
 
 
 	Problematic domains:
 
 		- labs.mozilla.com ¹
+        - *.phish-report.mozilla.com (mismatched)
+		- status.mozilla.com *
 
 		- mozilla.net subdomains:
 
@@ -89,6 +101,7 @@
 			- talkback-public ⁴
 
 	¹ Refused
+	* Mismatched, CN: status.io.watchmouse.com
 	² 404; mismatched, CN: gp1.wac.edgecastcdn.net
 	³ Works; mismatched, CN: gp1.wac.edgecastcdn.net
 	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
@@ -129,9 +142,12 @@
 				- auth
 				- location
 				- setup
+				- tiles
+				- tracking
 
 			- snippets
 			- support
+			- v
 
 		- mozilla.net subdomains:
 
@@ -142,6 +158,7 @@
 
 				- activations
 				- addons
+				- air
 				- developer
 				- download		(→ ftp.mozilla.org)
 				- download-installer
@@ -165,6 +182,7 @@
 			- addons subdomains:
 
 				- ^
+				- blocklist
 				- forums
 				- pyrepo
 				- services
@@ -199,6 +217,7 @@
 			- foundationwiki
 			- ftp
 			- gameon
+			- gear
 			- gpg
 			- hacks
 			- hg
@@ -245,6 +264,7 @@
 			- loop.telemetry
 
 			- telemetry-dash
+			- treeherder
 			- videos
 			- wiki
 
@@ -262,18 +282,21 @@
 		- analysis.telemetry.mozilla.org
 
 
-	Cookie domains:
+	Insecure cookies are set for these domains:
 
-		- mail.mozilla.com
-		- mail.corp.phx1.mozilla.com
+		- .mozilla.org
 		- addons.mozilla.org
-		- reps.mozilla.org
+		- bugzilla.mozilla.org
+		- .sendto.mozilla.org
+		- support.mozilla.org
+		- telemetry.mozilla.org
 
 
 	Mixed content:
 
 		- Images, on:
 
+			- status.mozilla.com from wmpsp.s3.amazonaws.com *
 			- hardhat.cdn.mozilla.net from www.mozilla.org *
 			- blog.mozilla.org from $self *
 			- www.mozilla.org from www.seamonkey-project.org
@@ -289,7 +312,8 @@
 	<target host="www.drumbeat.org" />
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
-		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|www-trunk\.stage)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage|status)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:[\w\.-]+\.)?phish-report\.mozilla\.com/" />
 	<target host="*.mozilla.net" />
 		<exclusion pattern="^http://(?:cdn|hardhat)\.mozilla\.net/" />
 	<target host="mozilla.org" />
@@ -301,19 +325,30 @@
 
 				https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001635.html
 													-->
-		<exclusion pattern="^http://(?:bonsai|browserquest|trychooser\.pub\.build|dxr|\w+\.e|graphs|krakenbenchmark|releases|sfx-images|start|w(?:ebsite|ww)-archive)\.mozilla\.org/" />
+		<exclusion pattern="^http://(?:bonsai|browserquest|trychooser\.pub\.build|dxr|(?!image)\w+\.e|graphs|krakenbenchmark|mig|releases|sfx-images|start|w(?:ebsite|ww)-archive)\.mozilla\.org/" />
 	<target host="mdn.mozillademos.org" />
 	<target host="mozillaignite.com" />
 	<target host="*.mozillaignite.com" />
 	<target host="*.mozillamessaging.com" />
 	<target host="webfwd.org" />
 	<target host="www.webfwd.org" />
+	
+	<!-- Images in e-mail newsletters
+	
+	Example:
+	http://image.e.mozilla.org/lib/fe9915707361037e75/m/1/headerLogo_112x90.jpg
+	https://a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/lib/fe9915707361037e75/m/1/headerLogo_112x90.jpg
+	-->
+	<rule from="^http://image\.e\.mozilla\.org/"
+		to="https://a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.mozilla\.org$" name="^(optimizelyBuckets|optimizelyEndUserId|optimizelyPendingLogEvents|optimizelySegments)$" /-->
 	<!--securecookie host="^addons\.mozilla\.org$" name="^(apps/files/tabstops|multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
 	<!--securecookie host="^bugzilla\.mozilla\.org$" name="^(BUGLIST|LASTORDER)$" /-->
+	<!--securecookie host="^\.sendto\.mozilla\.org$" name="^X-CheckNode$" /-->
 	<!--securecookie host="^support\.mozilla\.org$" name="^dwf_surveygizmo$" /-->
 	<!--securecookie host="^telemetry-dash\.mozilla\.org$" name="^session$" /-->
 
@@ -329,32 +364,29 @@
 
 	<!--	Redirects as so over http.
 						-->
-	<rule from="^https?://www\.mozilla\.net/"
+	<rule from="^http://www\.mozilla\.net/"
 		to="https://www.mozilla.org/" />
 
-	<rule from="^https?://download\.cdn\.mozilla\.net/"
+	<rule from="^http://download\.cdn\.mozilla\.net/"
 		to="https://ftp.mozilla.org/" />
 
-	<rule from="^https?://getpersonas-cdn\.mozilla\.net/"
+	<rule from="^http://getpersonas-cdn\.mozilla\.net/"
 		to="https://getpersonas.cdn.mozilla.net/" />
 
 	<rule from="^http://([\w.-]+)\.mozilla\.net/"
 		to="https://$1.mozilla.net/" />
 
-	<rule from="^https?://affiliates-cdn\.mozilla\.org/"
+	<rule from="^http://affiliates-cdn\.mozilla\.org/"
 		to="https://affiliates.mozilla.org/" />
 
 	<!--	Would these rules be safe?
 
 	<rule from="^http://click\.e\.mozilla\.org/"
-		to="https://click.virt.s4.exacttarget.com/" />
-
-	<rule from="^http://image\.e\.mozilla\.org/"
-		to="https://image.s4.exacttarget.com/" /-->
+		to="https://click.virt.s4.exacttarget.com/" /-->
 
 	<!--	Redirects like so over http.
 						-->
-	<rule from="^https?://talkback-public\.mozilla\.org/"
+	<rule from="^http://talkback-public\.mozilla\.org/"
 		to="https://crash-stats.mozilla.com/" />
 
 	<rule from="^http://([\w.-]+\.)?mozilla\.(com|org)/"

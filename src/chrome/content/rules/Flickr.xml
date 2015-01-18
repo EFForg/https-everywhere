@@ -7,6 +7,19 @@
 		- www.blog.flickr.net
 		- www.code.flickr.net
 
+
+	Insecure cookies are set for these domains:
+
+		- .flic.kr
+		- .flickr.com
+		- www.flickr.com
+		- blog.flickr.net
+
+	Note: current_identity (.flickr.com) is read
+	via script and so cannot be secured.
+
+		https://github.com/EFForg/https-everywhere/issues/239
+
 -->
 <ruleset name="Flickr">
 
@@ -21,9 +34,12 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.flic\.kr$" name="^BX$" /-->
+	<!--securecookie host="^\.flickr\.com$" name="^(BX|admsort|cookie_session|current_identity|density|ffs|fldetectedlang|flrb|flrbgdrp|flrbgrp|flrbp|flrbs|fltoto|just_registered|localization|memsort|modsort|photoPHS|photoPWS|vp|xb)$" /-->
+	<!--securecookie host="^www\.flickr\.com$" name="^(liqph|liqpw|ywandp)" /-->
+	<!--securecookie host="^blog\.flickr\.net$" name="^cookie_l10n$" /-->
 
 	<securecookie host="^\.flic\.kr$" name=".+" />
-	<securecookie host=".*\.flickr\.com$" name=".+" />
+	<securecookie host=".*\.flickr\.com$" name="^(?!current_identity$).+" />
 
 
 	<rule from="^http://flic\.kr/"

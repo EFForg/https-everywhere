@@ -50,7 +50,6 @@ function addTestTarget(urls, target, ruleset_ids) {
   }
 }
 
-
 function testRunner() {
   Components.utils.import("resource://gre/modules/PopupNotifications.jsm");
   

@@ -41,13 +41,16 @@ component {32c165b4-fe5e-4964-9250-603c410631b4} components/https-everywhere.js
 contract @eff.org/https-everywhere;1 {32c165b4-fe5e-4964-9250-603c410631b4}
 
 category profile-after-change HTTPSEverywhere @eff.org/https-everywhere;1
-category content-policy HTTPSEverywhere @eff.org/https-everywhere;1
 
-overlay chrome://browser/content/browser.xul chrome://https-everywhere/content/toolbar_button.xul
-overlay chrome://navigator/content/navigator.xul chrome://https-everywhere/content/toolbar_button.xul
+# XUL gets included in every non-mobile build
+# Android has some non-XUL UI that is loaded from the
+# sessionstore-windows-restored observer in https-everywhere.js
+overlay chrome://browser/content/browser.xul chrome://https-everywhere/content/toolbar_button.xul application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} application={3550f703-e582-4d05-9a08-453d09bdfdc6} application={a79fe89b-6662-4ff4-8e88-09950ad4dfde}
+overlay chrome://navigator/content/navigator.xul chrome://https-everywhere/content/toolbar_button.xul application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} application={3550f703-e582-4d05-9a08-453d09bdfdc6} application={a79fe89b-6662-4ff4-8e88-09950ad4dfde}
 
 style chrome://global/content/customizeToolbar.xul chrome://https-everywhere/skin/https-everywhere.css
-component {0f9ab521-986d-4ad8-9c1f-6934e195c15c} components/ssl-observatory.js
-contract @eff.org/ssl-observatory;1 {0f9ab521-986d-4ad8-9c1f-6934e195c15c}
 
-category profile-after-change SSLObservatory @eff.org/ssl-observatory;1
+# Observatory does not yet have mobile-friendly UI
+component {0f9ab521-986d-4ad8-9c1f-6934e195c15c} components/ssl-observatory.js application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} application={3550f703-e582-4d05-9a08-453d09bdfdc6} application={a79fe89b-6662-4ff4-8e88-09950ad4dfde}
+contract @eff.org/ssl-observatory;1 {0f9ab521-986d-4ad8-9c1f-6934e195c15c} application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} application={3550f703-e582-4d05-9a08-453d09bdfdc6} application={a79fe89b-6662-4ff4-8e88-09950ad4dfde}
+category profile-after-change SSLObservatory @eff.org/ssl-observatory;1 application={ec8030f7-c20a-464f-9b0e-13a3a9e97384} application={92650c4d-4b8e-4d2a-b7eb-24ecf4f6b63a} application={3550f703-e582-4d05-9a08-453d09bdfdc6} application={a79fe89b-6662-4ff4-8e88-09950ad4dfde}

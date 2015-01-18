@@ -1,18 +1,18 @@
-<!--
-	Mixed content:
-
-		- Image on forum from www *
-
-	* Secured by us
-
--->
 <ruleset name="Proxmox.com">
 
 	<target host="proxmox.com" />
 	<target host="*.proxmox.com" />
 
 
-	<rule from="^http://(forum\.|www\.)?proxmox\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.proxmox\.com$" name="^(PHPSESSID|bb_sessionhash)$" /-->
+	<!--securecookie host="^(www\.)?proxmox\.com$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^(?:forum\.|www\.)?proxmox\.com$" name=".+" />
+
+
+	<rule from="^http://((?:forum|pve|www)\.)?proxmox\.com/"
 		to="https://$1proxmox.com/" />
 
 </ruleset>

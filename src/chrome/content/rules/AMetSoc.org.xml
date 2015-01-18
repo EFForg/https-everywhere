@@ -1,0 +1,67 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- (www.) ¹
+		- shib ²
+
+	¹ Mixed iframe
+	² Insecure renegotiation
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- annual ²
+		- bookstore ²
+		- journals ²
+
+	¹ Avoiding broken MCB
+	² Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.shib.ametsoc.org
+
+
+	Mixed content:
+
+		- iframe on www from meltwaternews.com *
+
+	* Secured by us
+
+-->
+<ruleset name="AMetSoc.org (partial)">
+
+	<target host="ametsoc.org" />
+	<target host="*.ametsoc.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?ametsoc\.org/(?!favicon\.ico|.+(?:css|gif|jpg|png)(?:$|\?))" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://annual\.ametsoc\.org/$" /-->
+		<!--exclusion pattern="^http://bookstore\.ametsoc\.org/($|catalog/book/[\w-]+|favicon\.ico)$" /-->
+		<!--exclusion pattern="^http://journals\.ametsoc\.org/doi/full/[\d.]+/[0-9A-Z.-]+$" /-->
+		<!--exclusion pattern="^http://www2\.ametsoc\.org/ams/index\.cfm/publications/subscription-information/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://annual\.ametsoc\.org/(?!\d{4}/includes/|cssfiles/|includes/)" />
+		<exclusion pattern="^http://bookstore\.ametsoc\.org/(?!(?:cart|user/login)(?:$|\?)|sites/)" />
+		<exclusion pattern="^http://journals\.ametsoc\.org/(?!action/showLogin|favicon\.ico|na101/home/literatum/publisher/\w+/journals/|templates/|userimages/)" />
+
+
+	<rule from="^http://((?:annual|bookstore|journals|shib|www)\.)?ametsoc\.org/"
+		to="https://$1ametsoc.org/" />
+
+</ruleset>

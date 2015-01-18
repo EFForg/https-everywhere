@@ -8,54 +8,40 @@
 
 	Nonfunctional subdomains:
 
-		- (www.) *
-		- akademy200[6-9] *
-		- api		(revoked)
-		- developer **
-		- docs *
-		- dolphin *
-		- downloads	(shows https://files, valid cert)
-		- edu *
-		- ev *
-		- events *
-		- jointhegame *
+		- api ¹
 		- l10n **
-		- manifesto *
-		- phonon *
 		- planet *
 		- quickgit **
-		- rekonq *
-		- solid *
-		- utils *
 		- websvn *
-		- wiki *
 
+	¹ "not supported for api.kde.org"
 	* Dropped
 	** Refused
 
 
 	Problematic subdomains:
 
+		- developer ¹
 		- files		(some data differ)
-		- lists		(works, CN: localhost)
-		- pim ³
-		- reviewboard	(shows git.reviewboard; mismatched, CN: git.reviewboard.kde.org)
+		- lists ³
+		- reviewboard ⁴
 
-	³ Dropped
+	¹ Refused
+	³ Mismatched, CN: marc.info
+	⁴ Shows git.reviewboard
 
 
 	Partially covered subdomains:
 
 		- files
-		- pim ¹		(→ community)
-		- userbase	(some pages redirect to http)
-
-	¹ Not all paths redirect
 
 
 	Fully covered subdomains:
 
+		- (www.)
+		- accessibility
 		- akademy
+		- akademy200[6-9]
 		- akademy201[023]
 		- amarok
 		- blogs
@@ -69,72 +55,75 @@
 		- cdn
 		- community
 		- conf
+		- conference200[4-9]
+		- conference2010
+		- developer		(→ techbase)
+		- docs
+		- dolphin
 		- dot
+		- edu
+		- ev
+		- events
 		- forum
 		- identity
+		- jointhegame
+		- kopete
 		- mail
+		- manifesto
 		- nepomuk
 		- news
+		- phonon
+		- pim
 		- projects
+		- rekonq
 		- relate
 		- reviewboard		(→ git.reviewboard)
 		- git.reviewboard
 		- season
+		- solid
 		- sprints
 		- sysadmin
 		- techbase
+		- userbase
+		- utils
+		- wiki
 
 
 	Mixed content:
 
-		- Images on akademy from $self *
-
-		- Images on dot from dot *
+		- css on phonon from fonts.googleapis.com *
 
 	* Secured by us
 
 
-	Observed cookie domains:
+	Insecure cookies are set by these domains:
 
-		- .
-		- community
-		- dot
-		- quickgit ²
-		- .relate
-
-	² Not secured by us <= no tls support
+		- .akademy2010
+		- sysadmin
 
 -->
 <ruleset name="KDE (partial)">
 
 	<target host="*.kde.org" />
-		<!--exclusion pattern="^http://(akademy200\d|api|developer|docs|dolphin|downloads|edu|ev|events|jointhegame|l10n|lists|manifesto|planet|rekonq|utils|websvn|wiki|www)\." /-->
+		<!--exclusion pattern="^http://(api|downloads|l10n|lists|planet|websvn)\." /-->
 		<!--
 			Pages differ, various files 404:
 									-->
 		<!--exclusion pattern="^http://files\.kde\.org/+.+\.(btih|magnet|meta4|metalist|sha1|sha256|torrent)$" /-->
 		<exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gz|install|jpg|kml|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)|PKGBUILD)$" />
-		<!--exclusion pattern="^http://pim\.kde\.org/+(?!(akonadi/*)?($|\?))" /-->
-		<exclusion pattern="^http://userbase\.kde\.org/(?!extensions/|favicon\.ico|images\.userbase/|index\.php\?title=Special:(?:Captcha/help|OpenIDLogin|UserLogin)|load\.php|skins/)" />
 
 
-	<!--securecookie host="^\.kde\.org$" name="^(incap_ses_\d+|visid_incap)_\d+$" /-->
-	<securecookie host="^(?!userbase\.).+\.kde\.org$" name=".+" />
-	<securecookie host="^userbase\.kde\.org$" name="^__utm\w+$" />
+	<securecookie host="^\.kde\.org$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+	<securecookie host="^.+\.kde\.org$" name=".+" />
 
 
-	<rule from="^http://(akademy|akademy201[023]|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|dot|forum|identity|mail|nepomuk|news|projects|relate|season|sprints|sysadmin|techbase|userbase)\.kde\.org/"
-		to="https://$1.kde.org/" />
+	<rule from="^http://((?:accessibility|akademy|akademy20(?:0[6-9]|1[023])|amarok|blogs|bugs|(?:admin|sandbox)\.bugs|cdn|community|conf|conference20(?:0[4-9]|10)|docs|dolphin|dot|edu|ev|events|forum|identity|jointhegame|kopete|mail|manifesto|nepomuk|news|phonon|pim|projects|rekonq|relate|season|solid|sprints|sysadmin|techbase|userbase|utils|wiki)\.)?kde\.org/"
+		to="https://$1kde.org/" />
 
-	<!--	Redirect drops args:
-					-->
-	<rule from="^http://pim\.kde\.org/+(?:\?.*)?$"
-		to="https://community.kde.org/KDE_PIM" />
-
-	<!--	Redirect drops args:
-					-->
-	<rule from="^http://pim\.kde\.org/akonadi/*(?:\?.*)?$"
-		to="https://community.kde.org/KDE_PIM/Akonadi" />
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://developer\.kde\.org/+"
+		to="https://techbase.kde.org/" />
 
 	<rule from="^http://(?:git\.)?reviewboard\.kde\.org/"
 		to="https://git.reviewboard.kde.org/" />

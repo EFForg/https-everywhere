@@ -1,0 +1,155 @@
+<!--
+	For other Naver Corporation coverage, see Naver_Corp.com.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- a11ybooth ¹
+		- blog ²
+		- guestbook.blog ¹
+		- section.blog ¹
+		- section.cafe ³
+		- event2.checkout ¹
+		- comic	 ³
+		- dic ²
+		- displayad ⁴
+		- finance ¹
+		- info.finance ¹
+		- imgfinance ²
+		- jr ¹
+		- kin ¹
+		- localshop ⁵
+		- mktg ¹
+		- map ¹
+		- moneybook ¹
+		- movie ¹
+		- music ¹
+		- navercast ¹
+		- news ³
+		- sports.news ¹
+		- newspaper ¹
+		- newsstand ³
+		- nstore ¹
+		- saedu	⁴
+		- search ¹
+		- news.search ¹
+		- shop ¹
+		- shopping ⁶
+		- castbox.shopping ¹
+		- crossmedia.static ¹
+		- stock ¹
+		- storefarm ¹
+		- story ¹
+		- tvguide ¹
+		- weather ¹
+		- webmastertool ¹
+		- woorikids ¹
+
+	¹ Refused
+	² 503, akamai
+	³ 504, akamai
+	⁴ Redirects to http
+	⁵ 404
+	⁶ 403
+
+
+	Problematic subdomains:
+
+		- cafe ¹
+		- land ²
+		- landad ²
+		- mileage ²
+		- searchad ³
+		- ips.shop ⁴
+		- join.shopping ³
+		- sstatic ¹
+
+	¹ Akamai
+	² Cert only matches *.foo
+	³ Mixed css
+	⁴ Expired
+
+
+	Partially covered subdomains:
+
+		- help.checkout *
+		- crossmedia *
+		- partners *
+		- ips.storefarm
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- calendar
+		- checkout
+		- admin.checkout
+		- order.checkout
+		- happybean
+		- help
+		- mail
+		- mail1
+		- mail2
+		- m.mail
+		- m.mail1
+		- m.mail2
+		- mileage	(→ ssl.mileage)
+		- ssl.mileage
+		- nid
+		- static.nid
+		- img.searchad
+		- sell.shop
+		- sstatic	(→ akamai)
+		- sell.storefarm
+		- submit
+
+
+	Insecure cookies are set for these domains:
+
+		- checkout
+		- admin.checkout
+		- order.checkout
+		- mileage
+		- sell.storefarm
+
+
+	Mixed content:
+
+		- css, on:
+
+			- searchad from img.searchad *
+			- join.shopping from static.shopping.navar.net
+
+		- Images on searchad from img.searchad *
+
+	* Secured by us
+
+-->
+<ruleset name="Naver.com (partial)">
+
+	<target host="*.naver.com" />
+		<exclusion pattern="^http://crossmedia\.naver\.com/+(?!css/|favicon\.ico|renewal_\d+/)" />
+		<exclusion pattern="^http://help\.checkout\.naver\.com/+(?!fpsfiles/|static/)" />
+		<exclusion pattern="^http://partners\.naver\.com/+(?!css/|img/)" />
+		<exclusion pattern="^http://ips\.storefarm\.naver\.com/+(?!css/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^((admin\.|order\.)?checkout|mileage|sell\.storefarm)\.naver\.com$" name="^WMONID$" /-->
+
+	<securecookie host="^(?:(?:admin\.|order\.)?checkout|sell\.storefarm)\.naver\.com$" name=".+" />
+
+
+	<rule from="^http://(calendar|(?:(?:admin|help|order)\.)?checkout|crossmedia|happybean|help|(?:m\.)?mail[12]?|ssl\.mileage|nid|static\.nid|partners|img\.searchad|sell\.shop|(?:ips|sell)\.storefarm|submit)\.naver\.com/"
+		to="https://$1.naver.com/" />
+
+	<rule from="^http://(?:ssl\.)?mileage\.naver\.com/"
+		to="https://ssl.mileage.naver.com/" />
+
+	<rule from="^http://sstatic\.naver\.com/"
+		to="https://a248.e.akamai.net/f/248/10/10/sstatic.naver.com/" />
+
+</ruleset>

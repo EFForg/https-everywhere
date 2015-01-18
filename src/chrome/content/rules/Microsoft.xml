@@ -1,4 +1,10 @@
 <!--
+	commit msg:
+
+		https://github.com/EFForg/https-everywhere/issues/672
+		https://trac.torproject.org/projects/tor/ticket/11380
+
+
 	For rules causing false/broken MCB, see Microsoft.com-falsemixed.xml.
 
 	For problematic rules, see Microsoft-mismatches.xml.
@@ -13,11 +19,13 @@
 		- Ch9.ms.xml
 		- Codeplex.xml
 		- DreamSpark.com.xml
+		- Get_Tag.mobi.xml
 		- Halo.xml
 		- Live.xml
 		- Microsoft-Atlas.xml
 		- Microsoft_Online_Services.xml
 		- Microsoft_Store.xml
+		- Modern.IE.xml
 		- Moreinterop.com.xml
 		- MSDN.xml
 		- Msecnd.net.xml
@@ -80,6 +88,7 @@
 			- samples.msdn		(refused)
 			- visualstudiogallery.msdn	(redirects to http, valid cert)
 			- mymfe			(reset)
+			- news			(Redirects to http)
 			- officeimages
 			- privacy		(times out)
 			- academic.research ***
@@ -109,6 +118,7 @@
 			- i[1-4].connect **
 			- i **
 			- i\d **
+			- ie	(mismatched, CN: *.azurewebsites.net)
 			- js **
 			- i1.mobile **
 			- scache **
@@ -133,8 +143,10 @@
 
 		- answers.microsoft.com		(some pages redirect to http)
 		- code.msdn.microsoft.com	(pages redirect to http)
+		- tag.microsoft.com ¹
 		- social.technet.microsoft.com *
 
+	¹ Some pages redirect to http
 	* Avoiding false/broken MCB
 
 
@@ -269,12 +281,17 @@
 		<!--
 			Some data exist on www, exclude the rest here.
 									-->
-		<exclusion pattern="^https?://search\.microsoft\.com/(?!global/oneMscomSettings/|shared/)" />
+		<exclusion pattern="^http://search\.microsoft\.com/(?!global/oneMscomSettings/|shared/)" />
 		<exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^\.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|\?|/)))" />
 		<!--
 			Redirect to http:
 						-->
 		<exclusion pattern="^http://social\.technet\.microsoft\.com/Forums(?:$|[?/])" />
+		<!--exclusion pattern="^http://tag\.microsoft\.com/home\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://tag\.microsoft\.com/+(?![Aa]pp_[Tt]hemes/|favicon\.ico|Images/|[Ll]ibraries/|[Ww]eb[Rr]esource\.axd)" />
 		<!--
 			Avoid false/broken MCB:
 						-->
@@ -306,7 +323,7 @@
 	<rule from="^http://(?:i\d?\.|js\.|search\.|spcache\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ie|ieonline|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate)\.microsoft\.com/"
+	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ieonline|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support|tag|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 	<rule from="^http://wscont\d?\.apps\.microsoft\.com/"

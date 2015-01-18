@@ -11,9 +11,16 @@
 
 	Problematic subdomains:
 
+		- cdn.lib ¹
 		- m.static *
 
+	¹ Akamai
 	* Works, akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .newsvine.com
 
 -->
 <ruleset name="newsvine.com (partial)">
@@ -27,6 +34,10 @@
 	<target host="www.*.newsvine.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.newsvine\.com$" name="^vid$" /-->
+
 	<securecookie host="^\.newsvine\.com$" name=".*" />
 
 
@@ -34,7 +45,7 @@
 		- www.cdn: Akamai
 		- i times out as-is
 					-->
-	<rule from="^https?://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
+	<rule from="^http://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
 		 to="https://www.newsvine.com/" />
 
 	<rule from="^http://(?:(?:cdn\.|www\.)?(bonosrama|lib)|(log))\.newsvine\.com/"

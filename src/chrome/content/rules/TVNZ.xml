@@ -1,3 +1,32 @@
+<!--
+	CDN buckets:
+
+		- download.tvnz.co.nz.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- careers ¹
+		- download ²
+		- shop ³
+
+	¹ Configured for rc4 only
+	² Works, akamai
+	³ BigCommerce
+
+
+	Mixed content:
+
+		- css on ^ from images ¹
+
+		- Images on ^ and shop from images ²
+
+		- Bugs on ^ from metrics
+
+	¹ Secured by us, effect seems minimal
+	² Secured by us
+
+-->
 <ruleset name="TVNZ">
 
 	<target host="tvnz.co.nz" />
@@ -7,7 +36,13 @@
 	<securecookie host="^\.?tvnz\.co\.nz$" name=".+" />
 
 
-	<rule from="^http://(images\.|www\.)?tvnz\.co\.nz/"
+	<rule from="^http://((?:(?:www\.)?careers|images|www)\.)?tvnz\.co\.nz/"
 		to="https://$1tvnz.co.nz/" />
+
+	<rule from="^http://download\.tvnz\.co\.nz/"
+		to="https://images.tvnz.co.nz/" />
+
+	<rule from="^http://shop\.tvnz\.co\.nz/"
+		to="https://store-prbg35.mybigcommerce.com/" />
 
 </ruleset>

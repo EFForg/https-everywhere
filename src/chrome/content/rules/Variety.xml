@@ -1,36 +1,44 @@
-<ruleset name="Variety (partial)">
+<!--
+	CDN buckets:
+
+		- dxcdzflj3dom3.cloudfront.net
+
+			images[1-3]?
+
+
+	Nonfunctional subdomains:
+
+		- careers *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- jobs ¹
+		- www ²
+
+	¹ Adicio
+	² Expired
+
+-->
+<ruleset name="Variety.com (partial)">
 
 	<target host="variety.com" />
 	<target host="*.variety.com" />
-		<exclusion pattern="^http://images[1-3]\.variety\.com/([gG]lobal|graphics/photos)/" />
 
 
-	<!--	Many paths 404.	-->
-	<rule from="^http://(www\.)?variety\.com/(css/|graphics/|promo($|\?)|subscribe\.asp|subtxtad$)"
-		to="https://$1variety.com/$2" />
+	<securecookie host="^(?:www)?\.variety\.com$" name=".+" />
 
-	<!--	- Cert only matches (www.)
 
-		- These paths 404:
+	<rule from="^http://(?:(login\.)|www\.)?variety\.com/"
+		to="https://$1variety.com/" />
 
-			- global/cssimages/variety/
-			- Global/CSSImages/variety/
-			- graphics/photos/_mugr/
-
-		- These paths don't:
-
-			- graphics/exclamation_red_11x16.gif
-			- graphics/css/
-			- graphics/icons/
-			- graphics/images/
-			- graphics/variety/
-				-->
-	<rule from="^https?://images[1-3]\.variety\.com/"
-		to="https://www.variety.com/" />
-
+	<rule from="^http://images[1-3]?\.variety\.com/"
+		to="https://dxcdzflj3dom3.cloudfront.net/" />
 
 	<!--	Cert only matches haas.reedbusiness.nl.	-->
-	<rule from="^https?://haas\.variety\.com/"
+	<rule from="^http://haas\.variety\.com/"
 		to="https://haas.reedbusiness.nl/" />
 
 </ruleset>

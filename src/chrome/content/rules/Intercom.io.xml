@@ -14,27 +14,49 @@
 	preload list on request from their administrators, so HTTPS should
 	work properly everywhere on this site.
 
-	Because Chromium and derived browsers automatically force HTTPS for
-	every access to this site, this rule applies only to Firefox.
+
+	CDN buckets:
+
+		- intercom-seminar.herokuapp.com
+
+			- webinars
 
 
 	Problematic subdomains:
 
 		- docs *
+		- webinars ²
 
 	* Works; mismatched, CN: *.helpjuice.com
+	² herokuapp
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- widget
+
+
+	Insecure cookies are set for these domains:
+
+		- webinars
 
 -->
-<ruleset name="Intercom.io" platform="firefox">
+<ruleset name="Intercom.io">
 
 	<target host="intercom.io" />
 	<target host="*.intercom.io" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^webinars\.intercom\.io$" name="^request_method$" /-->
+
 	<securecookie host="^(?:api\.|www\.)?intercom\.io$" name=".+" />
 
 
-	<rule from="^http://((?:api|www)\.)?intercom\.io/"
+	<rule from="^http://((?:api|widget|www)\.)?intercom\.io/"
 		to="https://$1intercom.io/" />
 
 </ruleset>

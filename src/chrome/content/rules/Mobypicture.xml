@@ -23,12 +23,17 @@
 
 	Nonfunctional subdomains:
 
+		- developers ¹
 		- i
+
+	¹ Refused
 
 
 	Problematic subdomains:
 
-		- www
+		- secure *
+
+	* Mismatched, CN: api.mobypicture.com
 
 
 	Fully covered subdomains:
@@ -37,8 +42,22 @@
 		- (www.)api
 		- img		(→ d2d8v8ddwfpkhk.cloudfront.net)
 		- a\d.img	(→ d2d8v8ddwfpkhk.cloudfront.net)
-		- secure
-		- www		(→ secure.mobypicture.com)
+		- secure	(→ www.mobypicture.com)
+		- www
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+
+
+	Mixed content:
+
+		- css on (www.)mobypicture.com from fonts.googleapis.com *
+
+		- Bug on (www.)mobypicture.com from www.facebook.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Mobypicture">
@@ -47,29 +66,32 @@
 	<target host="*.media.mobyhub.com" />
 	<target host="mobypicture.com" />
 	<target host="*.mobypicture.com" />
-	<target host="www.api.mobypicture.com" />
-	<target host="*.img.mobypicture.com" />
 
 
-	<rule from="^https?://(?:\w+\.)?media\.mobyhub\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mobypicture\.com$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http://(?:\w+\.)?media\.mobyhub\.com/"
 		to="https://d1u33j8blhxgzy.cloudfront.net/" />
 
-	<rule from="^http://((?:www\.)?api\.|secure\.)?mobypicture\.com/"
+	<rule from="^http://((?:www\.)?api\.|www\.)?mobypicture\.com/"
 		to="https://$1mobypicture.com/" />
 
-	<rule from="^http://www\.mobypicture\.com/"
-		to="https://secure.mobypicture.com/" />
+	<rule from="^http://secure\.mobypicture\.com/"
+		to="https://www.mobypicture.com/" />
 
-	<rule from="^https?://(?:a\d\.)?img\.mobypicture\.com/"
+	<rule from="^http://(?:a\d\.)?img\.mobypicture\.com/"
 		to="https://d2d8v8ddwfpkhk.cloudfront.net/" />
 
-	<rule from="^https?://layout\.mobypicture\.com/"
+	<rule from="^http://layout\.mobypicture\.com/"
 		to="https://dq8u4hkdxtrwa.cloudfront.net/" />
 
-	<rule from="^https?://static\.mobypicture\.com/"
+	<rule from="^http://static\.mobypicture\.com/"
 		to="https://d3l076gtvxuom7.cloudfront.net/" />
 
-	<rule from="^https?://vid\.mobypicture\.com/"
+	<rule from="^http://vid\.mobypicture\.com/"
 		to="https://dxujr96dorra9.cloudfront.net/" />
 
 </ruleset>

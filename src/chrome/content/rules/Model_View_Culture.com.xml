@@ -1,9 +1,10 @@
 <!--
-	CN: *.a.ssl.fastly.net
+	For rules causing false/broken MCB, see Model_View_Culture.com-falsemixed.xml.
 
 
 	Mixed content:
 
+		- css from $self *
 		- css from fonts.googlapis.com *
 
 		- Images from images *
@@ -11,13 +12,17 @@
 	* Secured by us
 
 -->
-<ruleset name="Model View Culture.com" default_off="mismatched">
+<ruleset name="Model View Culture.com (partial)" platform="mixedcontent">
 
 	<target host="modelviewculture.com" />
 	<target host="*.modelviewculture.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?modelviewculture.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<rule from="^http://(?:(images\.)|www\.)?modelviewculture\.com/"
+	<rule from="^http://(images\.|www\.)?modelviewculture\.com/"
 		to="https://$1modelviewculture.com/" />
 
 </ruleset>

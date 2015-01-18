@@ -4,20 +4,30 @@
 		- d2jsycj2ly2vqh.cloudfront.net
 
 
-	Nonfunctional subdomains:
+	Fully covered subdomains:
 
-		- (www.)	(times out)
+		- (www.)
+		- accounts
+		- cdn
+		- editor
+		- share
 
 -->
 <ruleset name="Flipboard (partial)">
 
+	<target host="flipboard.com" />
 	<target host="*.flipboard.com" />
 
 
-	<securecookie host="^editor\.flipboard\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^accounts\.flipboard\.com$" name="^(_csrfKey|cc)$" /-->
+	<!--securecookie host="^editor\.flipboard\.com$" name="^_csrfKey$" /-->
+
+	<securecookie host="^(?:accounts|editor)\.flipboard\.com$" name=".+" />
 
 
-	<rule from="^http://(editor|share)\.flipboard\.com/"
-		to="https://$1.flipboard.com/" />
+	<rule from="^http://((?:accounts|cdn|editor|share|www)\.)?flipboard\.com/"
+		to="https://$1flipboard.com/" />
 
 </ruleset>

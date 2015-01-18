@@ -1,21 +1,29 @@
 <!--
+	University of Maine System
+
 	For problematic rules, see University_of_Maine_System-problematic.xml.
-
-
-	Nonfunctional subdomains:
-
-		- ^	(shows tree; expired 2011-07-14, self-signed, CN: cps.maine.edu)
 
 
 	Problematic subdomains:
 
+		- ^ ¹
+		- web.eece ²
+		- livehelp.its ²
+		- umsweb2013lb.its ³
 		- online			(works; expired 2012-12-19, self-signed)
 		- thinkmissionexcellence	(works, self-signed)
+
+	¹ Refused
+	² Self-signed
+	³ Mismatched
 
 
 	Partially covered subdomains:
 
-		- www	(some data differ)
+		- umsweb2013lb.its *	(→ www)
+		- (www.) *		(^ → www)
+
+	* Avoiding broken MCB
 
 
 	Fully covered subdomains:
@@ -23,20 +31,62 @@
 		- learn
 		- mainestreet
 		- peportal
+		- staticweb
 		- think
 
+
+	Insecure cookies are set for these domains:
+
+		- livehelp.its.maine.edu
+		- think.maine.edu
+		- www.maine.edu
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- online from livehelp.its
+			- online from $self
+			- www from $self *
+			- www from umsweb2013lb.its *
+
+		- css, on:
+
+			- www from $self *
+			- www from fonts.googleapis.com *
+
+	* Secured by us
+
 -->
-<ruleset name="University of Maine System (partial)">
+<ruleset name="Maine.edu (partial)">
 
 	<target host="*.maine.edu" />
-		<exclusion pattern="^http://www\.maine\.edu/(?!favicon\.ico|peoplesearch(?:$|\?|/))" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:umsweb2013lb\.its\.|www\.)?maine\.edu/+(?!favicon\.ico|peoplesearch(?:$|\?|/)|wp-content/|wp-includes/)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^livehelp\.its\.maine\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^think\.maine\.edu$" name="^(BIGipServer~PublicWeb~Think_Maine_ipv4_https.app~Think_Maine_ipv4_https_pool|PHPSESSID)$" /-->
+	<!--securecookie host="^www\.maine\.edu$" name="^avr_(\d+_0){3}$" /-->
 
 	<!--securecookie host="^\.maine\.edu$" name=".+" /-->
-	<securecookie host="^peportal\.maine\.edu$" name=".+" />
+	<securecookie host="^(?:peportal|think)\.maine\.edu$" name=".+" />
 
 
-	<rule from="^http://(learn|mainestreet|peportal|think|www)\.maine\.edu/"
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://maine\.edu/.*"
+		to="https://www.maine.edu/" />
+
+	<rule from="^http://umsweb2013lb\.its\.maine\.edu/"
+		to="https://www.maine.edu/" />
+
+	<rule from="^http://(learn|mainestreet|peportal|staticweb|think|www)\.maine\.edu/"
 		to="https://$1.maine.edu/" />
 
 </ruleset>

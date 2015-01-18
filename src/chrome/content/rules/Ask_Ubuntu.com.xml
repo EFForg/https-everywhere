@@ -2,13 +2,27 @@
 	For other Stack Exchange coverage, see Stack-Exchange.xml.
 
 
+	Problematic subdomains:
+
+		- www *
+
+	* Doesn't work; mismatched, CN: askubuntu.com
+
+
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?	(www → ^)
 		- meta
 
 
+	Insecure cookies are set for these domains:
+
+		- .askubuntu.com
+
+
 	Mixed content:
+
+		- favicon on ^ from cdn.sstatic.net *
 
 		- Web bugs on ^ and meta from pixel.quantserve.com *
 
@@ -21,10 +35,13 @@
 	<target host="*.askubuntu.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.askubuntu\.com$" name="^prov$" /-->
+
 	<securecookie host="^\.(?:meta\.)?askubuntu\.com$" name=".+" />
 
-
-	<rule from="^http://(meta\.|www\.)?askubuntu\.com/"
+	<rule from="^http://(?:(meta\.)?|www\.)?askubuntu\.com/"
 		to="https://$1askubuntu.com/" />
 
 </ruleset>

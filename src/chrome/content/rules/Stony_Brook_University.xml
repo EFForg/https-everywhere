@@ -1,13 +1,37 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- (www.)		(times out)
+		- (www.)?sunysb.edu ¹
+		- lists.fsl.cs.sunysb.edu ²
+		- ssh.fsl.cs.sunysb.edu ³
+
+	¹ Dropped
+	² Data differ from http
+	³ 401
+
+
+	Problematic domains:
+
+		- fsl.cs.sunysb.edu *
+
+	* Cert only matches www.foo
+
+
+	Fully covered domains:
+
+		- www3.cs.stonybrook.edu
+
+		- (www.)?fsl.cs.sunysb.edu	(^ → www)
+		- avatar.fsl.cs.sunysb.edu
+		- bugzilla.fsl.cs.sunysb.edu
+		- rt.fsl.cs.sunysb.edu
+		- www3.cs.sunysb.edu
 
 -->
 <ruleset name="Stony Brook University (partial)">
 
 	<target host="*.cs.stonybrook.edu" />
-	<target host="www.cs.sunysb.edu" />
+	<target host="*.cs.sunysb.edu" />
 		<!--
 			- $ prompts for login
 			- js/ 404s
@@ -15,10 +39,13 @@
 		<exclusion pattern="^http://www\.cs\.s(?:tonybrook|unysb)\.edu/(?!~|all\.css|css/|images/)" />
 
 
-	<rule from="^http://(www|(?:set-)?hiring)\.cs\.stonybrook\.edu/"
+	<rule from="^http://(www3?|(?:set-)?hiring)\.cs\.stonybrook\.edu/"
 		to="https://$1.cs.stonybrook.edu/" />
 
-	<rule from="^http://www\.cs\.sunysb\.edu/"
-		to="https://www.cs.sunysb.edu/" />
+	<rule from="^http://(?:www\.)?fsl\.cs\.sunysb\.edu/"
+		to="https://www.fsl.cs.sunysb.edu/" />
+
+	<rule from="^http://((?:avatar|bugzilla|rt)\.fsl|www3?)\.cs\.sunysb\.edu/"
+		to="https://$1.cs.sunysb.edu/" />
 
 </ruleset>

@@ -9,21 +9,52 @@
 
 	Nonfunctional domains:
 
+		- branchenbuch.sueddeutsche.de ¹
+		- finanzen.sueddeutsche.de ²
+		- international.sueddeutsche.de ³
+		- llm.sueddeutsche.de ⁴
+		- medienberufe.sueddeutsche.de ⁴
+		- pix.sueddeutsche.de ²
 		- pixfinanzen.sueddeutsche.de	(times out)
+		- reiseangebote.sueddeutsche.de ⁴
+		- sportal-cdn.sueddeutsche.de ²
+		- sportergebnisse.sueddeutsche.de ²
+		- szmobil.sueddeutsche.de ⁵
+		- sz-veranstaltungen.sueddeutsche.de ²
+		- trauer.sueddeutsche.de ⁵
+
+	¹ Redirects to login
+	² Dropped
+	³ Tumblr
+	⁴ Redirects to http
+	⁵ Refused
 
 
 	Problematic domains:
 
 		- sueddeutsche.com		(cert only matches *.sueddeutsche.com)
 		- polpix.sueddeutsche.com	(times out)
+
+		- anzeigen-buchen.sueddeutsche.de	(Insecure renegotiation
+		- archiv.sueddeutsche.de	(mismatched, CN: *.sz.de)
 		- englisch.sueddeutsche.de	(works, mismatched, CN: www.gymglish.com)
-		- mediadaten.sueddeutsche.de	(mismatched, CN: www.rehmnetz.de)
+		- ladenwelten.sueddeutsche.de		(Mismatched, CN: *.hjr-verlag.de)
+		- maps.sueddeutsche.de			(Mixed active content)
+		- mediadaten.sueddeutsche.de	(mismatched, CN: www.cfmueller.de)
+		- sz-media.sueddeutsche.de		(Mismatched, CN: *.hjr-verlag.de)
+		- szshop.sueddeutsche.de		(Mixed active content)
+		- tickets.sueddeutsche.de		(Plaintext reply)
+		- www.sueddeutsche.de			(Mixed active content)
 
 
 	Partially covered domains:
 
-		- (www.)sueddeutsche.de		(^ → www, some [most?] paths redirect to http)
 		- polpix.sueddeutsche.com	(→ www.sueddeutsche.de)
+
+		- immobilienmarkt.sueddeutsche.de	($ redirects to http)
+		- maps.sueddeutsche.de			(Avoiding broken MCB)
+		- szshop.sueddeutsche.de		(Avoiding broken MCB)
+		- www.sueddeutsche.de			(Avoiding MCB)
 
 
 	Fully covered sueddeutsche.de subdomains:
@@ -31,31 +62,93 @@
 		- anzeigen
 		- anzeigen-buchen
 		- epaper
-		- immobilienmarkt
+		- geoservice
+		- maerkte
 		- motormarkt
 		- service
 		- stellenmarkt
-		- sz-media
 		- sz-shop
+		- weiterbildung
+
+
+	Insecure cookies are set for these domains:
+
+		- .sueddeutsche.de
+		- anzeigen-buchen.sueddeutsche.de
+		- archiv.sueddeutsche.de
+		- epaper.sueddeutsche.de
+		- id.sueddeutsche.de
+		- ladenwelten.sueddeutsche.de
+		- service.sueddeutsche.de
+		- stellenmarkt.sueddeutsche.de
+		- sz-media.sueddeutsche.de
+		- szshop.sueddeutsche.de
+		- weiterbildung.sueddeutsche.de
+		- www.sueddeutsche.de
+
+
+	Mixed content:
+
+		- iframe on www from finanzen
+
+		- css, on:
+
+			- ladenwelten from ladenwelten
+			- maps from geoservice
+			- szshop from szshop
+			- www from polpix.sueddeutsche.com
+
+		- Image on maerkte from www.tripod.de
 
 -->
-<ruleset name="Süddeutsche Zeitung (partial)" default_off="mixedcontent">
+<ruleset name="Süddeutsche Zeitung (partial)">
 
 	<target host="polpix.sueddeutsche.com" />
-	<target host="sueddeutsche.de" />
 	<target host="*.sueddeutsche.de" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://immobilienmarkt\.sueddeutsche\.de/$" /-->
+		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/(images/|uploads/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://immobilienmarkt\.sueddeutsche\.de/+(?!cms/fileadmin/|cms/uploads/|css/|favicon\.ico|gfx/)" />
+		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/(?!sz\.css)" /-->
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://maps\.sueddeutsche\.de/+(?!css/|fonts/)" />
+		<exclusion pattern="^http://szshop\.sueddeutsche\.de/+(?!favicon\.ico|out/sz/src/)" />
+		<exclusion pattern="^http://www\.sueddeutsche\.de/+(?!favicon\.ico)" />
 
 
-	<securecookie host="^(?:anzeigen-buchen|epaper|sz-media|sz-shop)\.sueddeutsche\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sueddeutsche\.de$" name="^creid$" /-->
+	<!--securecookie host="^anzeigen-buchen\.sueddeutsche\.de$" name="^startquery$" /-->
+	<!--securecookie host="^archiv\.sueddeutsche\.de$" name="^BIGipServerlb-redirect_80$" /-->
+	<!--securecookie host="^epaper\.sueddeutsche\.de$" name="^(BIGipServerlb-epaper-prod_app|BIGipServerlb-pay_http)$" /-->
+	<!--securecookie host="^id\.sueddeutsche\.de$" name="^(BIGipServerlb-szid_http|szid)$" /-->
+	<!--securecookie host="^ladenwelten\.sueddeutsche\.de$" name="^(BIGipServerlb-hjrnew2_http|PHPSESSID)$" /-->
+	<!--securecookie host="^service\.sueddeutsche\.de$" name="^BIGipServerszosc-app2_http$" /-->
+	<!--securecookie host="^stellenmarkt\.sueddeutsche\.de$" name="^BIGipServerlb-moslive_http$" /-->
+	<!--securecookie host="^sz-media.sueddeutsche.de$" name="^(BIGipServerlb-hjrnew2_http|ID)$" /-->
+	<!--securecookie host="^szshop\.sueddeutsche\.de$" name="^language$" /-->
+	<!--securecookie host="^weiterbildung\.sueddeutsche\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.sueddeutsche\.de$" name="^BIGipServerlb-phpapp_http$" /-->
+
+	<securecookie host="^(?:anzeigen-buchen|epaper|id|service|stellenmarkt|sz-shop|weiterbildung)\.sueddeutsche\.de$" name=".+" />
 
 
-	<rule from="^https?://(?:polpix\.sueddeutsche\.com|(?:www\.)?sueddeutsche\.de)/"
+	<rule from="^http://polpix\.sueddeutsche\.com/"
 		to="https://www.sueddeutsche.de/" />
 
-	<rule from="^http://(anzeigen(?:-buchen)?|epaper|(?:immobilien|motor|stellen)markt|service|sz-media|sz-shop|szshop|www)\.sueddeutsche\.de/"
+	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|id|maerkte|(?:immobilien|motor|stellen)markt|maps|service|sz-shop|szshop|weiterbildung|www)\.sueddeutsche\.de/"
 		to="https://$1.sueddeutsche.de/" />
-
-	<rule from="^https?://mediadaten.sueddeutsche.de/(?:home/)?(?:$|\?)"
-		to="https://sz-media.sueddeutsche.de/" />
 
 </ruleset>
