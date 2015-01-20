@@ -212,7 +212,7 @@ ApplicableList.prototype = {
 
   add_command: function(rule) {
       var command = this.document.createElement("command");
-      command.setAttribute('id', rule.id+'-command');
+      command.setAttribute('id', JSON.stringify(rule.id)+'-command');
       command.setAttribute('label', rule.name);
       command.setAttribute('oncommand', 'toggle_rule("'+JSON.stringify(rule.id)+'")');
       this.commandset.appendChild(command);
