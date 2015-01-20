@@ -57,7 +57,7 @@ function nsISupportsWrapper(wrapped) {
   this.wrappedJSObject = wrapped;
 }
 nsISupportsWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([])
+  QueryInterface: XPCOMUtils.generateQI([])
 };
 
 const IOUtil = {
