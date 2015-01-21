@@ -32,6 +32,7 @@
 	Fully covered subdomains:
 
 		- (www.)?
+		- autodiscover		(→ outlook.office365.com)
 
 		- communities
 		- uat.communities
@@ -79,8 +80,15 @@
 	<securecookie host="^(?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan)\.coverity\.com$" name=".+" />
 
 
-	<rule from="^http://autodiscover\.coverity\.com/"
-		to="https://autodiscover-s.outlook.com/" />
+	<!--	For /+\w.*, redirect keeps path but not args:
+								-->
+	<rule from="^http://autodiscover\.coverity\.com/+([^?]+).*"
+		to="https://outlook.office365.com/$1" />
+
+	<!--	For /+\?.*, drops args:
+						-->
+	<rule from="^http://autodiscover\.coverity\.com/.*"
+		to="https://outlook.office365.com/owa/" />
 
 	<!--	Broken by Coverity:
 					-->
