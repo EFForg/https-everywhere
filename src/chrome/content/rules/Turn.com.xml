@@ -2,33 +2,63 @@
 	CDN buckets:
 
 		- trust.turn.com.edgesuite.net
-
-			- a1505.g1.akamai.net
-
 		- www.turn.com.edgesuite.net
 
-			- a1049.g1.akamai.net
+
+	Nonfunctional subdomains:
+
+		- static *
+
+	* Shows www
 
 
 	Problematic subdomains:
 
 		- ^ ¹
+		- e *
 		- trust ²
-		- www ²
 
-	¹ Works, cert only matches www, self-signed
+	¹ Fastly
+	* Eloqua
 	² Works, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)? *	(→ a248.e.akamai.net)
+		- turn *	(→ a248.e.akamai.net)
+
+	* Avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- akamai
+		- analytics
+		- console
+		- d
+		- r
+
+
+	Insecure cookies are set for these domains:
+
+		- .turn.com
 
 
 	Mixed content:
 
+		- Images on console, www from static ¹
+
 		- Web bugs, on www from:
 
-			- d
-			- t3.trackalyzer.com
+			- d ²
+			- t3.trackalyzer.com ²
+
+	¹ Unsecurable <= 404
+	² Secured by us
 
 -->
-<ruleset name="Turn.com">
+<ruleset name="Turn.com (partial)">
 
 	<target host="turn.com" />
 	<target host="*.turn.com" />
