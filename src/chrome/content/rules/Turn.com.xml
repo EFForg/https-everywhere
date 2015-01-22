@@ -2,47 +2,71 @@
 	CDN buckets:
 
 		- trust.turn.com.edgesuite.net
-
-			- a1505.g1.akamai.net
-
 		- www.turn.com.edgesuite.net
 
-			- a1049.g1.akamai.net
+
+	Nonfunctional subdomains:
+
+		- static *
+
+	* Shows www
 
 
 	Problematic subdomains:
 
 		- ^ ¹
+		- e *
 		- trust ²
-		- www ²
 
-	¹ Works, cert only matches www, self-signed
+	¹ Fastly
+	* Eloqua
 	² Works, akamai
+
+
+	Partially covered subdomains:
+
+		- turn *	(→ a248.e.akamai.net)
+
+	* Avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- analytics
+		- akamai
+		- analytics
+		- console
+		- d
+		- r
+
+
+	Insecure cookies are set for these domains:
+
+		- .turn.com
 
 
 	Mixed content:
 
+		- Images on console, www from static ¹
+
 		- Web bugs, on www from:
 
-			- d
-			- t3.trackalyzer.com
+			- d ²
+			- t3.trackalyzer.com ²
+
+	¹ Unsecurable <= 404
+	² Secured by us
 
 -->
-<ruleset name="Turn.com">
+<ruleset name="Turn.com (partial)">
 
 	<target host="turn.com" />
 	<target host="*.turn.com" />
 		<!--
 			Avoid user-visible paths:
 							-->
-		<!--exclusion pattern="^http://(trust\.|www\.)?turn\.com/+(?!bootstrap/|favicon\.ico|includes/|sites/)" /-->
-		<!--
-			At least some stylesheets reference images relative to root.
-
-			The names of said stylesheets are hashes/guids/something
-			to that effect, and their persistence is unknown.
-										-->
-		<!--exclusion pattern="^http://(www\.)?turn\.com/+(sites/default/files/css/)" /-->
+		<!--exclusion pattern="^http://trust\.turn\.com/+(?!bootstrap/|favicon\.ico|includes/|sites/)" /-->
 		<!--
 			References images relative to root:
 								-->
@@ -58,13 +82,13 @@
 	<securecookie host="^\.turn\.com$" name="^uid$" />
 
 
-	<rule from="^http://(?:www\.)?turn\.com/(?=favicon\.ico|sites/(?!default/files/css/))"
-		to="https://a248.e.akamai.net/f/1049/8588/3/www.turn.com/" />
+	<rule from="^http://(?:www\.)?turn\.com/"
+		to="https://www.turn.com/" />
 
 	<rule from="^http://trust\.turn\.com/(?=bootstrap/|includes/(?!trust\.css))"
 		to="https://a248.e.akamai.net/f/1505/4670/8/trust.turn.com/" />
 
-	<rule from="^http://(akamai|console|d|r)\.turn\.com/"
+	<rule from="^http://(akamai|analytics|console|d|r)\.turn\.com/"
 		to="https://$1.turn.com/" />
 
 </ruleset>

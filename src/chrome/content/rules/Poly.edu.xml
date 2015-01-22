@@ -5,12 +5,50 @@
      preload list on request from their administrators, so HTTPS should
      work properly everywhere on this site.
 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Poly.edu" platform="firefox">
-<target host="csawctf.poly.edu" />
+
+	Nonfunctional subdomains:
+
+		- cyfor.isis ¹
+		- www.isis ²
+
+	¹ Refused
+	² Reset
+
+
+	Fully covered subdomains:
+
+		- crissp
+		- csawctf
+
+		- isis
+		- ctf.isis
+		- csaw.isis
+		- esc.isis
+		- hsf.isis
+		- policy.isis
+		- quiz.isis
+		- research.isis
+
+		- isisblogs
+
+
+	These altnames don't exist:
+
+		- www.crissp.poly.edu
+		- www.isisblogs.poly.edu
+
+
+	Mixed content:
+
+		- favicon on csaw.isis, esc.isis, hsf.isis, quiz.isis, research.isis from localhost:5000 *
+
+	* False alarm for our purposes, obviously
+
+-->
+<ruleset name="Poly.edu (partial)">
+<target host="*.poly.edu" />
 
 <securecookie host="^csawctf\.poly\.edu$" name=".+" />
 
-<rule from="^http://csawctf\.poly\.edu/" to="https://csawctf.poly.edu/" />
+<rule from="^http://(crissp|csawctf|isis|(?:ctf|csaw|esc|hsf|policy|quiz|research)\.isis|isisblogs)\.poly\.edu/" to="https://$1.poly.edu/" />
 </ruleset>

@@ -1,40 +1,40 @@
 <!--
-	Credit: https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001629.html
-
-
 	Nonfunctional subdomains:
 
-		- ftp		(times out)
-		- portsmon *
-		- tinderbox *
+		- ftp ¹
+		- portsmon ²
+		- tinderbox ²
 
-	* Refused
+	¹ Dropped
+	² Refused
 
 
 	Problematic subdomains:
 
-		- bwwwdyn **
-		- docs *
-		- election **
-		- p4db *
-		- portaudit *
-		- security *
-		- svn		(refused)
+		- bwwwdyn ¹
+		- docs ²
+		- election ¹
+		- p4db ²
+		- portaudit ²
+		- svn ³
 
-	** Works; expired 2013-04-02, self-signed
-	* Works; mismatched, CN: www.freebsd.org
+	¹ Expired 2013-04-02, self-signed
+	² Mismatched, CN: www.freebsd.org
+	³ Refused
 
 
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?
 		- admbugs
 		- bugs
 		- forums
 		- lists
 		- people
-		- security	(→ www)
+		- security
 		- svn		(→ svnweb)
+		- svnweb
+		- wiki
 
 
 	These altnames don't exist:
@@ -45,10 +45,10 @@
 
 	Insecure cookies are set for these domains:
 
-		- .bugs
+		- .bugs.freebsd.org
 
 -->
-<ruleset name="FreeBSD (partial) ">
+<ruleset name="FreeBSD.org (partial)">
 
 	<target host="freebsd.org" />
 	<target host="*.freebsd.org" />
@@ -61,16 +61,10 @@
 	<securecookie host="^(?:admbug|\.bug|forum)s\.freebsd\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?freebsd\.org/"
-		to="https://$1freebsd.org/" />
-
-	<rule from="^http://(admbugs|bugs|forums|lists|people|svnweb|wiki)\.freebsd\.org/"
-		to="https://$1.freebsd.org/" />
-
-	<rule from="^http://security\.freebsd\.org/"
-		to="https://www.freebsd.org/security/" />
-
 	<rule from="^http://svn\.freebsd\.org/"
 		to="https://svnweb.freebsd.org/" />
+
+	<rule from="^http://((?:admbugs|bugs|forums|lists|people|security|svnweb|wiki|www)\.)?freebsd\.org/"
+		to="https://$1freebsd.org/" />
 
 </ruleset>

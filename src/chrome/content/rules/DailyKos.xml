@@ -19,6 +19,7 @@
 
 	Problematic subdomains:
 
+		- assets ³
 		- campaigns ¹
 		- helpdesk ²
 		- images ³
@@ -116,11 +117,14 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://images[12]?\.dailykos\.com/+(?!i/)" />
+		<exclusion pattern="^http://images[12]?\.dailykos\.com/+(?!i/|images/)" />
 
 
 	<rule from="^http://(www\.)?dailykos\.com/"
 		to="https://$1dailykos.com/" />
+
+	<rule from="^http://assets\.dailykos\.com/"
+		to="https://www.dailykos.com/assets/" />
 
 	<!--	At least some pages 404:
 					-->
@@ -129,6 +133,9 @@
 
 	<rule from="^http://helpdesk\.dailykos\.com/(?=help/|pkg/|stylesheets/)"
 		to="https://dailykos.tenderapp.com/" />
+
+	<rule from="^http://images[12]?\.dailykos\.com/(?=images/)"
+		to="https://s3.amazonaws.com/dk-production/" />
 
 	<rule from="^http://images[12]?\.dailykos\.com/"
 		to="https://www.dailykos.com/" />
