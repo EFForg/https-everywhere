@@ -132,6 +132,8 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
+INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 // This is black magic for storing Expando data w/ an nsIDOMWindow 
