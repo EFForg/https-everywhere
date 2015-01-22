@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function Cookie(s, host) {
   this.parse(s, host);
 }

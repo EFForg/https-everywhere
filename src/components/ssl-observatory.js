@@ -57,7 +57,6 @@ INCLUDE('Root-CAs');
 INCLUDE('sha256');
 INCLUDE('X509ChainWhitelist');
 INCLUDE('NSS');
-INCLUDE('md5');
 
 function SSLObservatory() {
   this.prefs = CC["@mozilla.org/preferences-service;1"]

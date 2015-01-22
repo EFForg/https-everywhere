@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const IO = {
   readFile: function(file, charset) {
     var res;
