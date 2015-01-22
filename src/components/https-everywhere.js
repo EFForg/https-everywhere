@@ -182,11 +182,6 @@ function HTTPSEverywhere() {
   this.httpNowhereEnabled = this.prefs.getBoolPref("http_nowhere.enabled");
   this.isMobile = this.doMobileCheck();
 
-  // Disable SSLv3 to prevent POODLE attack.
-  // https://www.imperialviolet.org/2014/10/14/poodle.html
-  var root_prefs = this.get_prefs(PREFBRANCH_NONE);
-  root_prefs.setIntPref("security.tls.version.min", 1);
-  
   // We need to use observers instead of categories for FF3.0 for these:
   // https://developer.mozilla.org/en/Observer_Notifications
   // https://developer.mozilla.org/en/nsIObserverService.
