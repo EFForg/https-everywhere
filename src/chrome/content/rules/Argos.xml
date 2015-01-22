@@ -1,6 +1,18 @@
 <!--
 	For problematic rules, see Argos-mismatches.
 
+
+	Problematic domains:
+
+		- (www.)?argos-spain.co.uk *
+
+	* Handshake fails
+
+
+	Fully covered domains:
+
+		- (www.)?argos-spain.co.uk	(→ www.argosonline.es)
+
 -->
 <ruleset name="Argos (partial)" platform="mixedcontent">
 
@@ -31,9 +43,9 @@
 	<securecookie host="^www\.wearechoosy\.com$" name=".*" />
 
 
-	<!--	Certs only match www.	-->
-	<rule from="^http://(?:www\.)?argos(emails|-spain)?\.co\.uk/"
-		to="https://www.argos$1.co.uk/" />
+	<!--	Cert only matches www.	-->
+	<rule from="^http://(?:www\.)?argosemails\.co\.uk/"
+		to="https://www.argosemails.co.uk/" />
 
 	<rule from="^http://image\.email\.argos\.co\.uk/"
 		to="https://image.email.argos.co.uk/" />
@@ -44,6 +56,11 @@
 
 	<rule from="^http://competitions\.argos\.ie/"
 		to="https://competitions.argos.ie/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?argos-spain\.co\.uk/.*"
+		to="https://www.argosonline.es/webapp/wcs/stores/servlet/LogonForm" />
 
 	<!--	!www: interrupted	-->
 	<rule from="^http://(?:www\.)?argoscareers\.com/"
