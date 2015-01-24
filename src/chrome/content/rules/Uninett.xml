@@ -15,9 +15,15 @@
 	* Redirects to www
 
 
+	Problematic domains:
+
+		- www.gigacampus.no ¹
+
 	Problematic subdomains:
 
 		- (www.)gn3campus	(redirects to www)
+
+	¹ Shows loggregator.paas.uninett.no
 
 
 	Fully covered subdomains:
@@ -26,6 +32,7 @@
 		- ansatt
 		- bildebase
 		- ca
+		- cert
 		- www.dike
 		- disco
 		- drupal
@@ -34,11 +41,17 @@
 		- metanav
 		- nav
 		- openwiki
+
+		- api.paas
+		- loggregator.paas
+		- uaa.paas
+
 		- rt
 		- surveytest
 		- tjenester
 		- test.tjenester
 		- www3
+		- www-ecampus
 		- www-feide
 
 -->
@@ -51,7 +64,12 @@
 	<securecookie host="^(?:\.ansatt|\.?bildebase|\.?eureka|nav|openwiki|\.rt|surveytest|\.(?:test\.)?tjenester|\.www)\.uninett\.no$" name=".+" />
 
 
-	<rule from="^http://((?:ansatt|bildebase|ca|www\.dike|disco|drupal|eureka|metanav|nav|openwiki|rt|surveytest|(?:test\.)?tjenester|www3?|www-feide)\.)?uninett\.no/"
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://www\.gigacampus\.no/.*"
+		to="https://openwiki.uninett.no/gigacampus:start" />
+
+	<rule from="^http://((?:ansatt|bildebase|ca|cert\.|www\.dike|disco|drupal|eureka|metanav|nav|openwiki|(?:api|loggregator|uaa)\.paas|rt|surveytest|(?:test\.)?tjenester|www3?|www-ecampus|www-feide)\.)?uninett\.no/"
 		to="https://$1uninett.no/" />
 
 	<rule from="^http://(?:www\.)?gn3campus\.uninett\.no/"
