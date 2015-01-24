@@ -1,0 +1,56 @@
+<!--
+	For rules causing false/broken MCB, see Fundinfo.com-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- tv *
+
+	* Shows www
+
+
+	Partially covered subdomains
+
+		- about *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- datahub
+		- media
+		- mobile
+		- paperboy
+
+
+	Mixed content:
+
+		- css, on:
+
+			- about from $self *
+			- about from fonts.googleapis.com *
+
+		- Images, on:
+
+			- about from $self *
+			- about from media *
+
+	* Secured by us
+
+-->
+<ruleset name="fundinfo.com (partial)">
+
+	<target host="fundinfo.com" />
+	<target host="*.fundinfo.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://about\.fundinfo.com/+(?!wp-content/|wp-includes/)" />
+
+
+	<rule from="^http://((?:about|datahub|media|mobile|paperboy|www)\.)?fundinfo\.com/"
+		to="https://$1fundinfo.com/" />
+
+</ruleset>
