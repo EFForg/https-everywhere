@@ -82,22 +82,10 @@
 
 	CDN buckets:
 
-		- i.g.mobile.ms.akadns.net
-
-			- i1.mobile.microsoft.com
-
-		- i.g.social.ms.akadns.net
-
-			- i1.social.s-msft.com
-
-		- res.windows.microsoft.com.edgesuite.net
-
-			- res2.windows.microsoft.com
-
-		- wscont.apps.microsoft.com.edgesuite.net
-
-			- wscont[12].apps.microsoft.com
-
+		- i.g.mobile.ms.akadns.net	← i1.mobile.microsoft.com
+		- i.g.social.ms.akadns.net	← i1.social.s-msft.com
+		- res.windows.microsoft.com.edgesuite.net	← res2.windows.microsoft.com
+		- wscont.apps.microsoft.com.edgesuite.net	← wscont[12].apps.microsoft.com
 		- az12410.vo.msecnd.net
 		- az373151.vo.msecnd.net	(used on imaginecup.com)
 		- msstore.vo.msecnd.net
@@ -114,6 +102,7 @@
 
 		- microsoft.com subdomains:
 
+			- advertise.bingads ʳ
 			- innovation.connect	(redirects to connect.microsoft.com)
 			- services.connect	(Mismatched)
 			- developer		(404)
@@ -159,9 +148,12 @@
 			- (www.)? ¹
 			- adcenter		(expired)
 			- feedback.adcenter	(Dropped)
+			- fp.advertising ⁴
 			- apps			(works; mismatched, CN: *.apps.microsoft.com)
 			- wscont[12].apps	(works, akamai)
 			- i[1-4].connect **
+			- silverlight.dlservice **
+			- go2 **
 			- i\d **
 			- ie	(mismatched, CN: *.azurewebsites.net)
 			- i1.mobile **
@@ -186,11 +178,13 @@
 	¹ Sets HSTS, thereby breaking oem/; however, Microsoft's website links to https://www....
 	* Cert only matches www
 	** akamai
+	⁴ 404
 	⁷ Mixed css from i3.technet.microsoft.com and i1.social.s-msft.com
+
 
 	Partially covered microsoft.com subdomains:
 
-		- answers		(some pages redirect to http)
+		- answers ¹
 		- learning ¹
 		- snackbox		(→ learning.microsoft.com)
 		- tag ¹
@@ -200,78 +194,6 @@
 	¹ Some pages redirect to http
 	* Avoiding false/broken MCB
 	³ Attempting to avoid breaking Silverlight: https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
-
-
-	Fully covered microsoft.com subdomains:
-
-		- (www.)?
-		- account
-		- accountservices
-		- feedback.adcenter	(→ bingads.uservoice.com)
-		- ajax
-		- fb.answers
-		- wscont.apps
-		- wscont[12].apps	(→ wscont.apps)
-		- assets
-		- azure
-		- advertise.bingads
-		- secure.bingads
-		- blogs
-		- c
-		- c1
-		- choice
-		- commerce
-		- compass-ssl
-
-		- connect subdomains:
-
-			- ^
-			- i[1-4]		(→ connect.microsoft.com)
-			- services		(→ connect.microsoft.com)
-
-		- sas.css
-		- curah
-		- social.expression
-		- events			(→ msevents.microsoft.com)
-		- g
-		- js
-
-		- msdn
-		- apisandbox.msdn
-		- code.msdn
-		- i[1-4].code.msdn		(→ i1.code.s-msft.com)
-		- events.msdn
-		- i[23]?.msdn			(→ msdn.microsoft.com)
-		- lab.msdn
-		- social.msdn
-		- visualstudiogallery.msdn
-
-		- msevents
-		- mspartner
-		- logobuilder.mspartner
-		- mspartnerlp.mspartner
-
-		- mvastorage
-		- news
-		- office15client
-		- office365			(→ www.microsoft.com)
-		- officepreview
-		- officeredir
-		- o15.officeredir
-		- training.partner
-		- rad
-		- readytogo
-		- profileapi.services
-		- social
-		- services.social
-		- corp.sts
-		- support
-		- sxp
-
-		- technet
-		- gallery.technet
-		- i[1-4].gallery.technet	(→ i1.gallery.technet.s-msft.com)
-		- i[23]?.technet		(→ technet.microsoft.com)
 
 
 	m, mobile: Dropped over http & https
@@ -296,6 +218,8 @@
 
 		- .microsoft.com
 		- account.microsoft.com
+		- .bingads.microsoft.com
+		- help.bingads.microsoft.com
 		- careers.microsoft.com
 		- choice.microsoft.com
 		- connect.microsoft.com
@@ -363,8 +287,148 @@
 -->
 <ruleset name="Microsoft.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="account.microsoft.com" />
+	<target host="accountservices.microsoft.com" />
+	<target host="advertising.microsoft.com" />
+	<target host="ajax.microsoft.com" />
+	<target host="answers.microsoft.com" />
+	<target host="fb.answers.microsoft.com" />
+	<target host="wscont.apps.microsoft.com" />
+	<target host="assets.microsoft.com" />
+	<target host="azure.microsoft.com" />
+	<target host="bingads.microsoft.com" />
+
+	<target host="help.bingads.microsoft.com" />
+	<target host="resources.bingads.microsoft.com" />
+	<target host="secure.bingads.microsoft.com" />
+	<target host="ui.bingads.microsoft.com" />
+
+	<target host="blogs.microsoft.com" />
+	<target host="c.microsoft.com" />
+	<target host="c1.microsoft.com" />
+	<target host="careers.microsoft.com" />
+	<target host="choice.microsoft.com" />
+	<target host="commerce.microsoft.com" />
+	<target host="compass-ssl.microsoft.com" />
+	<target host="connect.microsoft.com" />
+	<target host="services.connect.microsoft.com" />
+	<target host="sas.css.microsoft.com" />
+	<target host="curah.microsoft.com" />
+	<target host="downloads.microsoft.com" />
+	<target host="social.expression.microsoft.com" />
+	<target host="g.microsoft.com" />
+	<target host="go.microsoft.com" />
+	<target host="i.microsoft.com" />
+	<target host="ieonline.microsoft.com" />
+	<target host="js.microsoft.com" />
+	<target host="learning.microsoft.com" />
+	<target host="mbs.microsoft.com" />
+	<target host="code.msdn.microsoft.com" />
+	<target host="msdn.microsoft.com" />
+
+	<target host="apisandbox.msdn.microsoft.com" />
+	<target host="events.msdn.microsoft.com" />
+	<target host="lab.msdn.microsoft.com" />
+	<target host="social.msdn.microsoft.com" />
+	<target host="visualstudiogallery.msdn.microsoft.com" />
+
+	<target host="msevents.microsoft.com" />
+	<target host="mspartner.microsoft.com" />
+	<target host="logobuilder.mspartner.microsoft.com" />
+	<target host="mspartnerlp.mspartner.microsoft.com" />
+
+	<target host="mvastorage.microsoft.com" />
+	<target host="news.microsoft.com" />
+	<!--target host="oem.microsoft.com" /-->
+	<target host="office.microsoft.com" />
+	<target host="office15client.microsoft.com" />
+	<target host="office2010.microsoft.com" />
+	<target host="officepreview.microsoft.com" />
+	<target host="officeredir.microsoft.com" />
+	<target host="o15.officeredir.microsoft.com" />
+	<target host="training.partner.microsoft.com" />
+	<target host="pinpoint.microsoft.com" />
+	<target host="profile.microsoft.com" />
+	<target host="rad.microsoft.com" />
+	<target host="readytogo.microsoft.com" />
+	<target host="profileapi.services.microsoft.com" />
+	<target host="signature.microsoft.com" />
+	<target host="social.microsoft.com" />
+
+	<target host="services.social.microsoft.com" />
+	<target host="i1.services.social.microsoft.com" />
+	<target host="i2.services.social.microsoft.com" />
+	<target host="i3.services.social.microsoft.com" />
+	<target host="i4.services.social.microsoft.com" />
+
+	<target host="store.microsoft.com" />
+	<target host="corp.sts.microsoft.com" />
+	<target host="support.microsoft.com" />
+	<target host="support2.microsoft.com" />
+	<target host="sxp.microsoft.com" />
+	<target host="tag.microsoft.com" />
+	<target host="technet.microsoft.com" />
+	<target host="gallery.technet.microsoft.com" />
+	<target host="social.technet.microsoft.com" />
+	<target host="origin-res.windows.microsoft.com" />
+	<target host="www.microsoft.com" />
+
+	<!--	Complications:
+				-->
 	<target host="microsoft.com" />
-	<target host="*.microsoft.com" />
+	<target host="events.microsoft.com" />
+	<target host="feedback.adcenter.microsoft.com" />
+	<target host="fp.advertising.microsoft.com" />
+
+	<target host="i.answers.microsoft.com" />
+	<target host="i2.answers.microsoft.com" />
+	<target host="i3.answers.microsoft.com" />
+
+	<target host="wscont1.apps.microsoft.com" />
+	<target host="wscont2.apps.microsoft.com" />
+
+	<target host="i1.connect.microsoft.com" />
+	<target host="i2.connect.microsoft.com" />
+	<target host="i3.connect.microsoft.com" />
+	<target host="i4.connect.microsoft.com" />
+
+	<target host="go2.microsoft.com" />
+
+	<target host="i1.microsoft.com" />
+	<target host="i2.microsoft.com" />
+	<target host="i3.microsoft.com" />
+	<target host="i4.microsoft.com" />
+
+	<target host="i1.code.msdn.microsoft.com" />
+	<target host="i2.code.msdn.microsoft.com" />
+	<target host="i3.code.msdn.microsoft.com" />
+	<target host="i4.code.msdn.microsoft.com" />
+	<target host="i.msdn.microsoft.com" />
+	<target host="i2.msdn.microsoft.com" />
+	<target host="i3.msdn.microsoft.com" />
+
+	<target host="office365.microsoft.com" />
+	<target host="scache.microsoft.com" />
+	<target host="search.microsoft.com" />
+	<target host="snackbox.microsoft.com" />
+
+	<target host="i1.social.microsoft.com" />
+	<target host="i2.social.microsoft.com" />
+	<target host="i3.social.microsoft.com" />
+	<target host="i4.social.microsoft.com" />
+
+	<target host="spcache.microsoft.com" />
+	<target host="img3.store.microsoft.com" />
+
+	<target host="i1.gallery.technet.microsoft.com" />
+	<target host="i2.gallery.technet.microsoft.com" />
+	<target host="i3.gallery.technet.microsoft.com" />
+	<target host="i4.gallery.technet.microsoft.com" />
+	<target host="i.technet.microsoft.com" />
+	<target host="i2.technet.microsoft.com" />
+	<target host="i3.technet.microsoft.com" />
 
 		<!-- Produces a 502 Gateway Timeout on HTTPS.
 				 Reported by tweet: https://twitter.com/MarcGLib/status/620931025653342208 -->
@@ -542,94 +606,6 @@
 									-->
 			<test url="http://go.microsoft.com/fwlink/?LinkID=219472&amp;clcid=0x409" />
 
-		<!--	https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
-
-			Attempt to avoid breaking Silverlight:
-								-->
-		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+\.(?:gif|png|svg)(?:$|\?))" />
-
-			<!--	+ve:
-					-->
-			<test url="http://res1.windows.microsoft.com//" />
-			<test url="http://res2.windows.microsoft.com/resbox/en/windows/2013-responsive/f5745732-f501-4d2b-a945-c7d6b2ad8b67_5.css" />
-			<test url="http://res1.windows.microsoft.com/resbox/en/windows/main/15d2470f-0fcf-45e9-bf5b-c943236a61cf_496.css" />
-			<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/css/windows8_site_ltr.css" />
-			<test url="http://res1.windows.microsoft.com/siteresources/siteresource.ashx" />
-
-			<!--	-ve:
-					-->
-			<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_site.svg" />
-
-		<test url="http://account.microsoft.com/" />
-		<test url="http://accountservices.microsoft.com/" />
-		<test url="http://advertising.microsoft.com/" />
-		<test url="http://ajax.microsoft.com/" />
-		<test url="http://wscont.apps.microsoft.com/" />
-		<test url="http://fb.answers.microsoft.com/" />
-		<test url="http://assets.microsoft.com/" />
-		<test url="http://azure.microsoft.com/" />
-		<test url="http://blogs.microsoft.com/" />
-		<test url="http://c.microsoft.com/" />
-		<test url="http://c1.microsoft.com/" />
-		<test url="http://choice.microsoft.com/" />
-		<test url="http://commerce.microsoft.com/" />
-		<test url="http://compass-ssl.microsoft.com/" />
-		<test url="http://connect.microsoft.com/" />
-		<test url="http://sas.css.microsoft.com/" />
-		<test url="http://curah.microsoft.com/" />
-		<test url="http://downloads.microsoft.com/" />
-		<test url="http://social.expression.microsoft.com/" />
-		<test url="http://g.microsoft.com/" />
-		<test url="http://go.microsoft.com/" />
-		<test url="http://i.microsoft.com/" />
-		<test url="http://ieonline.microsoft.com/" />
-		<test url="http://js.microsoft.com/" />
-		<test url="http://learning.microsoft.com/" />
-		<test url="http://mbs.microsoft.com/" />
-
-		<test url="http://msdn.microsoft.com/" />
-		<test url="http://apisandbox.msdn.microsoft.com/" />
-		<test url="http://code.msdn.microsoft.com/" />
-		<test url="http://events.msdn.microsoft.com/" />
-		<test url="http://lab.msdn.microsoft.com/" />
-		<test url="http://social.msdn.microsoft.com/" />
-		<test url="http://visualstudiogallery.msdn.microsoft.com/" />
-
-		<test url="http://msevents.microsoft.com/" />
-		<test url="http://mspartner.microsoft.com/" />
-		<test url="http://logobuilder.mspartner.microsoft.com/" />
-		<test url="http://mspartnerlp.mspartner.microsoft.com/" />
-
-		<test url="http://mvastorage.microsoft.com/" />
-		<test url="http://news.microsoft.com/" />
-		<!--test url="http://oem.microsoft.com/" /-->
-		<test url="http://office.microsoft.com/" />
-		<test url="http://office15client.microsoft.com/" />
-		<test url="http://office2010.microsoft.com/" />
-		<test url="http://officepreview.microsoft.com/" />
-		<test url="http://officeredir.microsoft.com/" />
-		<test url="http://o15.officeredir.microsoft.com/" />
-		<test url="http://training.partner.microsoft.com/" />
-		<test url="http://pinpoint.microsoft.com/" />
-		<test url="http://profile.microsoft.com/" />
-		<test url="http://rad.microsoft.com/" />
-		<test url="http://readytogo.microsoft.com/" />
-		<test url="http://profileapi.services.microsoft.com/" />
-		<test url="http://signature.microsoft.com/" />
-		<test url="http://snackbox.microsoft.com/" />
-		<test url="http://social.microsoft.com/" />
-		<test url="http://services.social.microsoft.com/" />
-		<test url="http://store.microsoft.com/" />
-		<test url="http://corp.sts.microsoft.com/" />
-		<test url="http://support.microsoft.com/" />
-		<test url="http://support2.microsoft.com/" />
-		<test url="http://sxp.microsoft.com/" />
-		<test url="http://tag.microsoft.com/" />
-		<test url="http://gallery.technet.microsoft.com/" />
-		<test url="http://social.technet.microsoft.com/" />
-		<test url="http://origin-res.windows.microsoft.com/" />
-		<test url="http://www.microsoft.com/" />
-
 		<!--	Formerly problematic:
 						-->
 		<test url="http://www.microsoft.com/en-us/health/default.aspx" />
@@ -641,6 +617,8 @@
 					-->
 	<!--securecookie host="^\.microsoft\.com$" name="^(A|FedCountryOfChoice|MC1|MS-CV|MS0|gssLANG|msdn|smcexpsessionticket|smcexpticket|smcflighting)$" /-->
 	<!--securecookie host="^account\.microsoft\.com$" name="^oref$" /-->
+	<!--securecookie host="^\.bingads\.microsoft\.com$" name="^ckyAdCenter$" /-->
+	<!--securecookie host="^help\.bingads\.microsoft\.com$" name="^__RequestVerificationToken$" /-->
 	<!--securecookie host="^(careers|support)\.microsoft\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^choice\.microsoft\.com$" name="^PPLState$" /-->
 	<!--securecookie host="^(connect|mbs)\.microsoft\.com$" name="^BlueStripe\.PVN$" /-->
@@ -677,74 +655,61 @@
 	<rule from="^http://(?:s(?:cache|earch|pcache)\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
-		<test url="http://scache.microsoft.com/" />
 		<test url="http://scache.microsoft.com//" />
-		<test url="http://search.microsoft.com/" />
-		<test url="http://spcache.microsoft.com/" />
-
-	<!--	Redirect drops path, args, and forward slash:
-								-->
-	<rule from="^http://events\.microsoft\.com/.*"
-		to="https://msevents.microsoft.com/cui/default.aspx?culture=en-US&amp;community=1" />
-
-		<test url="http://events.microsoft.com/" />
-		<test url="http://events.microsoft.com/favicon.ico" />
 
 	<!--	Redirect drops path, args, and forward slash:
 								-->
 	<rule from="^http://feedback\.adcenter\.microsoft\.com/.*"
 		to="https://bingads.uservoice.com/" />
 
-		<test url="http://feedback.adcenter.microsoft.com/" />
 		<test url="http://feedback.adcenter.microsoft.com/favicon.ico" />
 
-	<rule from="^http://wscont\d\.apps\.microsoft\.com/"
-		to="https://wscont.apps.microsoft.com/" />
-
-		<test url="http://wscont1.apps.microsoft.com/" />
-
-	<rule from="^http://i\d\.microsoft\.com/"
-		to="https://i.microsoft.com/" />
-
-		<test url="http://i1.microsoft.com/" />
+	<rule from="^http://fp\.advertising\.microsoft\.com/"
+		to="https://advertising.microsoft.com/" />
 
 	<!--	Akamai without valid cert.
 						-->
-	<rule from="^http://i\d?\.(answers|msdn|(?:services\.)?social|technet)\.microsoft\.com/"
+	<rule from="^http://i\d?\.(answers|msdn|social|technet)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 		<test url="http://i.answers.microsoft.com/static/css/core.css" />
 		<test url="http://i2.answers.microsoft.com/static/css/pagecontrols.css" />
 		<test url="http://i3.answers.microsoft.com/static/css/search.css" />
-		<test url="http://i.msdn.microsoft.com/" />
-		<test url="http://i.msdn.microsoft.com//" />
-		<test url="http://i.services.social.microsoft.com/" />
+
+	<rule from="^http://wscont\d\.apps\.microsoft\.com/"
+		to="https://wscont.apps.microsoft.com/" />
 
 	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
 
-		<test url="http://i1.connect.microsoft.com/" />
-		<test url="http://services.connect.microsoft.com/" />
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://events\.microsoft\.com/.*"
+		to="https://msevents.microsoft.com/cui/default.aspx?culture=en-US&amp;community=1" />
 
-	<rule from="^http://i[1-4]\.(code\.msdn|gallery\.technet)\.microsoft\.com/"
+		<test url="http://events.microsoft.com/favicon.ico" />
+
+	<rule from="^http://go2\.microsoft\.com/"
+		to="https://go.microsoft.com/" />
+
+	<rule from="^http://i\d\.microsoft\.com/"
+		to="https://i.microsoft.com/" />
+
+	<rule from="^http://i\d\.(code\.msdn|gallery\.technet)\.microsoft\.com/"
 		to="https://i1.$1.s-msft.com/" />
 
-		<test url="http://i1.code.msdn.microsoft.com/" />
-		<test url="http://i1.code.msdn.microsoft.com//" />
 		<test url="http://i1.code.msdn.microsoft.com/content/common/trans.gif" />
-		<test url="http://i1.gallery.technet.microsoft.com/" />
 
 	<!--	Redirect drops path, args, and forward slash:
 								-->
 	<rule from="^http://office365\.microsoft\.com/.*"
 		to="https://www.microsoft.com/en-us/office365/" />
 
-		<test url="http://office365.microsoft.com/" />
 		<test url="http://office365.microsoft.com/favicon.ico" />
 
 	<!--	Direct drops args:
 					-->
-	<rule from="^http://snackbox\.microsoft\.com/(?:\?.*)?"
+	<rule from="^http://snackbox\.microsoft\.com/.*"
 		to="https://learning.microsoft.com/" />
 
 		<test url="http://snackbox.microsoft.com/?" />
@@ -754,9 +719,7 @@
 	<rule from="^http://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
 
-		<test url="http://img3.store.microsoft.com/" />
-
-	<rule from="^http://(account|accountservices|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|connect|services\.connect|sas\.css|curah|downloads|social\.expression|go?|i|ieonline|js|learning|mbs|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|msevents|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|news|office(?:15client|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|profileapi\.services|signature|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|www)\.microsoft\.com/"
-		to="https://$1.microsoft.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
