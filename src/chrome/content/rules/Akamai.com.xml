@@ -4,31 +4,23 @@
 
 	CDN buckets:
 
-		- /=/529/248063/9999d/blaze-cdn.s3.amazonaws.com/Z/i/
-
-			- 1.kc.blz.io
+		- /=/529/248063/9999d/blaze-cdn.s3.amazonaws.com/Z/i/	← 1.kc.blz.io
 
 
-	Nonfunctional hosts in *akamai.com
+	Nonfunctional hosts in *akamai.com:
 
 		- apps-community-uat ¹
-		- it ²
-		- spanish ²
-		- www ²
 
 	¹ 503
-	² Redirects to http
 
 
-	Fully covered hosts in *akamai.com:
+	Problematic hosts in *akamai.com:
 
-		- ^
-		- blogs
-		- apps-community
-		- community
-		- community-uat
-		- developer
-		- http2
+		- www.ir ᵐ
+		- it ᵐ
+		- spanish ᵐ
+
+	ᵐ Mismatched
 
 
 	Insecure cookies are set for these hosts:
@@ -41,8 +33,6 @@
 -->
 <ruleset name="Akamai.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="akamai.com" />
 	<target host="apps-community.akamai.com" />
 	<target host="blogs.akamai.com" />
@@ -51,6 +41,7 @@
 	<target host="control.akamai.com" />
 	<target host="developer.akamai.com" />
 	<target host="http2.akamai.com" />
+	<target host="www.akamai.com" />
 
 
 	<!--	Not secured by server:
@@ -58,7 +49,8 @@
 	<!--securecookie host="^community(-uat)?\.akamai\.com$" name="^(BIGipServer[\w-]+|jive\.login\.ts|jive\.security\.context)$" /-->
 	<!--securecookie host="^(it|www)\.akamai\.com$" name="^cm_sessionid$" /-->
 
-	<securecookie host="^community(?:-uat)?\.akamai\.com$" name=".+" />
+	<securecookie host="^\." name="^_(?:_qca|gat?)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"
