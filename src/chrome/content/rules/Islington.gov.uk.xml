@@ -1,0 +1,86 @@
+<!--
+	London Borough of Islington Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *islington.gov.uk:
+
+		- bookofremembrance ᵈ
+		- directory ᵃ
+		- events ᶠ
+		- jobs ᵃ
+		- linksforliving ᵃ
+		- planning ᵈ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *islington.gov.uk:
+
+		- ^ ᵐ
+		- www.energyadvice ᵐ
+		- evidencehub ᵐ
+		- toughchoices ᵐ ˣ
+
+	ᵐ Mismatched
+	ˣ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.energyadvice.islington.gov.uk
+		- myeaccount.islington.gov.uk
+		- secure.islington.gov.uk
+		- toughchoices.islington.gov.uk
+
+
+	Mixed content:
+
+		- css on touchchoices from $self ᵐ
+
+		- Images, on:
+		
+			- democracy from $self ˢ
+			- www.energyadvice, touchchoices from $self ᵐ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us
+
+-->
+<ruleset name="Islington.gov.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="democracy.islington.gov.uk" />
+	<target host="myeaccount.islington.gov.uk" />
+	<target host="secure.islington.gov.uk" />
+	<target host="www.islington.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="islington.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://secure.islington.gov.uk/payments/sales/launchinternet.aspx?payableonly=true" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^myeaccount\.islington\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^secure\.islington\.gov\.uk$" name="^EForm\ (?:LIMIT\ TEST|Options)$" /-->
+	<!--securecookie host="^(?:www\.energyadvice|toughchoices)\.islington\.gov\.uk$" name="^DYNSRV$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://islington\.gov\.uk/"
+		to="https://www.islington.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
