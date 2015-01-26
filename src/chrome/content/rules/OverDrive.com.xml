@@ -1,0 +1,76 @@
+<!--
+	For rules causing false/broken MCB, see OverDrive.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *overdrive.com:
+
+		- blogs ᵈ
+		- help ʰ
+
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *overdrive.com:
+
+		- company ˣ
+		- ox-i ᴬ
+		- partners ˣ
+
+	ᴬ Akamai/mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- ox-d.overdrive.com
+
+
+	Mixed content:
+
+		- css on company, partners from $self ˢ
+		- Images on company, partners from $self ˢ
+		- Bug on partners from ox-d.overdrive.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="OverDrive.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="overdrive.com" />
+	<target host="app.overdrive.com" />
+	<target host="libraryreserve.cdn.overdrive.com" />
+	<!--target host="company.overdrive.com" /-->
+	<target host="omc.overdrive.com" />
+	<target host="ox-d.overdrive.com" />
+	<!--target host="partners.overdrive.com" /-->
+	<target host="www.overdrive.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ox-i.overdrive.com" />
+	
+		<test url="http://libraryreserve.cdn.overdrive.com/100429/50/1.40/spacer.gif" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://ox-d.overdrive.com/w/1.0/afr?auid=&amp;cb=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ox-d\.overdrive\.com$" name="^OX_u$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|s_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://ox-i\.overdrive\.com/"
+		to="https://ssl-i.cdn.openx.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
