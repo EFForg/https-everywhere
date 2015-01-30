@@ -33,17 +33,22 @@
 		- aweber.com subdomains:
 
 			- analytics
+			- blog
+			- engineering
 			- forms
 			- help
 			- hosted	(→ s3.amazonaws.com)
 			- labs
+			- status	(→ aweber.statuspage.io)
 
 		- cdn[1-5].aweber-static.com
 
 
 	Mixed content:
 
-		- Images on blog.aweber.com from $self
+		- Images on blog.aweber.com from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="AWeber (partial)">
@@ -74,7 +79,7 @@
 				- order.htm
 				- signup.htm
 
-		<exclusion pattern="^http://(?:www\.)?aweber\.com/(?:(?:(?:affiliates|antispam|email-marketing-features|priving|privacy)\.htm)?(?:$|\?)|blog(?:/|[?/]))" /-->
+		<exclusion pattern="^http://(?:www\.)?aweber\.com/(?:(?:(?:affiliates|antispam|email-marketing-features|priving|privacy)\.htm)?(?:$|\?))" /-->
 	<target host="*.aweber-static.com" />
 
 
@@ -82,10 +87,13 @@
 	<securecookie host=".*\.aweber-static\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?aweber\.com/(?=banners/|blog(?:$|[?/])|(?:(?:contact-us|login|order)\.htm)(?:$|\?)|images/|img/)"
+	<rule from="^http://status\.aweber\.com/"
+		to="https://aweber.statuspage.io/" />
+
+	<rule from="^http://(www\.)?aweber\.com/(?=assets/|banners/|blog(?:$|[?/])|(?:(?:contact-us|login|order|signup)\.htm)(?:$|\?)|favicon\.ico|images/|img/)"
 		to="https://$1aweber.com/"/>
 
-	<rule from="^http://(analytics|forms|help|labs)\.aweber\.com/"
+	<rule from="^http://(analytics|blog|engineering|forms|help|labs)\.aweber\.com/"
 		to="https://$1.aweber.com/" />
 
 	<rule from="^http://cdn([1-5])\.aweber-static\.com/"
