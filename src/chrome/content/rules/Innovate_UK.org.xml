@@ -3,14 +3,16 @@
 
 		- ^ ¹
 		- engage ²
+		- www ³
 
 	¹ Shows another domain
 	² Works; mismatched, CN: *.communigator.co.uk
+	³ Mismatched, CN: www.gov.uk
 
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)	(^ → www.gov.uk)
 		- connect
 		- login
 		- projects
@@ -24,8 +26,10 @@
 	<target host="*.innovateuk.org" />
 
 
-	<rule from="^http://(?:www\.)?innovateuk\.org/"
-		to="https://www.innovateuk.org/" />
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://(?:www\.)?innovateuk\.org/+([^?]*)(?:\?.*)?"
+		to="https://www.gov.uk/government/organisations/innovate-uk$1" />
 
 	<rule from="^http://(connect|login|projects|reports|vouchers)\.innovateuk\.org/"
 		to="https://$1.innovateuk.org/" />
