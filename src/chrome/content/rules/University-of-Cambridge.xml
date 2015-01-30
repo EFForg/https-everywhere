@@ -80,7 +80,10 @@
 
 	Fully covered subdomains:
 
+		- (www.)?		(^ → www)
+
 		- hrsystems.admin
+		- iceintranet.admin
 		- sales.admin
 		- webservices.admin
 		- www.admin
@@ -96,12 +99,17 @@
 		- www-new.educ
 
 		- www.ice
+		- old-webmail.hermes
+		- webmail.hermes
+		- lists
 		- map
 		- www2.mrc-lmb
 		- raven
 		- shib.raven
 		- search
 		- api.search
+		- print-server.st-edmunds...:9192
+		- wiki
 		- www.wolfson
 
 
@@ -131,7 +139,7 @@
 			- www3.eng from www.eng ¹
 			- www.study from $self ⁴
 
-		- favicon on wiki from www
+		- favicon on wiki from www ³
 		- favicon on www3.eng from www.eng ¹
 
 	¹ Unsecurable <= test page
@@ -142,6 +150,7 @@
 -->
 <ruleset name="Cam.ac.uk (partial)">
 
+	<target host="cam.ac.uk" />
 	<target host="*.cam.ac.uk" />
 		<!--
 			Redirect to http:
@@ -160,11 +169,11 @@
 	<securecookie host="^(?:(?:hrsystems|webservices)\.admin|www\.a(?:dmin|lumni)|www\.educ|sysdata\.cl|www\.ice)\.cam\.ac\.uk$" name=".+" />
 
 
-	<rule from="^http://((?:hrsystems|sales|webservices|www)\.admin|www\.campaign|sysdata\.cl|(?:jotter|thinkingtogether|www|www-new)\.educ|www\.ice|map|www2\.mrc-lmb|(?:shib\.)?raven|search|api\.search|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
-		to="https://$1.cam.ac.uk/" />
+	<rule from="^http://((?:hrsystems|iceintranet|sales|webservices|www)\.admin|www\.campaign|sysdata\.cl|(?:jotter|thinkingtogether|www|www-new)\.educ|www\.ice|(?:old-)?webmail\.hermes|lists|map|www2\.mrc-lmb|(?:shib\.)?raven|search|api\.search|print-server\.st-edmunds|wiki|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk(:9192)?/"
+		to="https://$1.cam.ac.uk$2/" />
 
-	<rule from="^http://(?:www\.)?alumni\.cam\.ac\.uk/"
-		to="https://www.alumni.cam.ac.uk/" />
+	<rule from="^http://(?:www\.)?(alumni\.)?cam\.ac\.uk/"
+		to="https://www.$1cam.ac.uk/" />
 
 	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
 		to="https://www.damtp.cam.ac.uk/global/" />
