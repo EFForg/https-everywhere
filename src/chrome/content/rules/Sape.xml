@@ -1,8 +1,41 @@
 <!--
 	Nonfunctional subdomains:
 
-		- blog
-		- forum
+		- blog *
+		- forum *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- wizard ²
+
+	¹ Cert only matches *.sape.ru
+	² Mismatched, CN: *.seowizard.ru
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- articles
+		- help
+		- passport
+		- pr
+		- static
+
+
+	Insecure cookies are set for these domains:
+
+		- .sape.ru
+
+
+	Mixed content:
+
+		- Bug on ideas from www.facebook.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Sape (partial)">
@@ -11,11 +44,13 @@
 	<target host="*.sape.ru" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sape\.ru$" name="^SAPE$" /-->
+
 	<securecookie host="^.*\.sape\.ru$" name=".+" />
 
 
-	<!--	Cert only matches *.sape.ru.
-						-->
 	<rule from="^http://(?:www\.)?sape\.ru/"
 		to="https://www.sape.ru/" />
 
