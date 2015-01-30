@@ -3,16 +3,20 @@
 	CDN buckets:
 
 		- hostedimages.aweber-static.com.s3.amazonaws.com
+
 		- blogcontent.awebercommunicat.netdna-cdn.com
+
+			- -ssl doesn't exist
 			- blog-cdn.aweber-static.com
-			- blogcontent-awebercommunicat.netdna-ssl.com doesn't exist
 
 	aweber.zendesk.com
 
 
 	Nonfunctional domains:
 
-		- blog-cdn.aweber-static.com	(cert: netdna-ssl.com; 404)
+		- blog-cdn.aweber-static.com ²
+
+	² 404, NetDNA
 
 
 	Targets solely for wildcard cookies:
@@ -45,20 +49,20 @@
 				- login.htm
 				- order.htm
 
-		<exclusion pattern="^http://(?:www\.)?aweber\.com/(?:(?:(?:affiliates|antispam|email-marketing-features|priving|privacy)\.htm)?(?:$|\?)|blog(?:/|\?|/))" /-->
+		<exclusion pattern="^http://(?:www\.)?aweber\.com/(?:(?:(?:affiliates|antispam|email-marketing-features|priving|privacy)\.htm)?(?:$|\?)|blog(?:/|[?/]))" /-->
 	<target host="*.forms.aweber.com" />
 	<target host="*.aweber-static.com" />
 
 
 	<securecookie host="^(?:\.?forms|help|labs)\.aweber\.com$" name=".+" />
-	<securecookie host="^.*\.aweber-static\.com$" name=".+" />
+	<securecookie host=".*\.aweber-static\.com$" name=".+" />
 
 
 	<!--	Cert is valid for !www, but doesn't
 		work even over http (blank page).
 							-->
-	<rule from="^http://(?:www\.)?aweber\.com/(banners/|blog(?:$|\?|/)|(?:(?:contact-us|login|order)\.htm)(?:$|\?)|images/|img/)"
-		to="https://www.aweber.com/$1"/>
+	<rule from="^http://(?:www\.)?aweber\.com/(?=banners/|blog(?:$|[?/])|(?:(?:contact-us|login|order)\.htm)(?:$|\?)|images/|img/)"
+		to="https://www.aweber.com/"/>
 
 	<rule from="^http://(analytics|forms|help|labs)\.aweber\.com/"
 		to="https://$1s.aweber.com/" />
