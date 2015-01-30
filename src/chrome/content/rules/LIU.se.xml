@@ -25,6 +25,14 @@
 	* Shows another domain
 
 
+	Partially covered subdomains:
+
+		- planet.lysator *	(→ www.lysator)
+		- www.lysator *
+
+	* Avoiding broken MCB
+
+
 	Fully covered subdomains:
 
 		- (www.)?	(^ → www)
@@ -35,17 +43,22 @@
 		- www.isak
 		- www.isv
 		- (www.)?lith
+
+		- bugzilla.lysator
+		- datorhandbok.lysator
+		- jskom.lysator
+
 		- (www.)?student
 		- www.tema
 
 
 	Mixed content:
 
-		- css on www.lysator from $self
+		- css on www.lysator from $self ¹
 
 		- Images, on:
 
-			- www.lysator from $self
+			- www.lysator from $self ¹
 			- www.lysator from micro.dentarg.net
 			- www.lysator from dory.nu
 			- www.lysator from familjen-persson.se
@@ -59,12 +72,23 @@
 
 	<target host="liu.se" />
 	<target host="*.liu.se" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://planet\.lysator\.liu\.se/+(?!images/|planet\.css)" />
+		<exclusion pattern="^http://www\.lysator\.liu\.se/+planet/+(?!images/|planet\.css)" />
 
 
 	<rule from="^http://(?:www\.)?(lith\.|student\.)?liu\.se/"
 		to="https://www.$1liu.se/" />
 
-	<rule from="^http://www\.(hu|ibl|ida|imh|isak|isv|tema)\.liu\.se/"
+	<rule from="^http://planet\.lysator\.liu\.se/+"
+		to="https://www.lysator.liu.se/planet/" />
+
+	<rule from="^http://www\.(hu|ibl|ida|imh|isak|isv|lysator|tema)\.liu\.se/"
 		to="https://www.$1.liu.se/" />
+
+	<rule from="^http://(bugzilla|datorhandbok|jskom)\.lysator\.liu\.se/"
+		to="https://$1.lysator.liu.se/" />
 
 </ruleset>
