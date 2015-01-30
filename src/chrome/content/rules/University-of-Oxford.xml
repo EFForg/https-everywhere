@@ -4,11 +4,21 @@
 
 	!functional:
 		- www			(timeout)
+		- www.bfriars		(Redirects to http/404s)
 		- genizah.bodleian	(timeout)
-		- www.bodleian		(timeout)
 		- lmb.bioch *
 		- www.campaign
+
+		- blogs.conted ²
+		- onlinesupport.conted *
+		- tallblog.conted ²
+		- trainforpedhiv.conted	("Incorrect access"
+
+		- www.iccp ²
+		- www.ict		(Redirects to http
 		- www.inet		(timeout)
+		- mediapub.it		(Redirects to webauth
+		- openspires.it		(Shows default page
 
 		- blogs.oii ²
 		- cii.oii ²
@@ -18,8 +28,11 @@
 		- webcast.oii *
 		- www.oii *
 
+		- mirror ²
 		- www.oxfordmartin	(timeout)
 		- blog.practicalethics ²
+		- talks			(Redirects to webauth
+		- www.tall ²
 
 	* Dropped
 	² Refused
@@ -27,8 +40,10 @@
 
 	Problematic subdomains:
 
+		- mail.bfriars ¹
 		- (www.)biop
 
+	¹ Blank page
 	* Dropped
 
 
@@ -39,12 +54,44 @@
 
 	Fully covered subdomains:
 
+		- www.admin
 		- www.cs
+		- weblearn
+
+
+	Mixed content:
+
+		- Fonts on www.bodleian from $self
+
+		- Images, on:
+
+			- www.bodleian from $self
+			- blogs.it from $self
 
 -->
 <ruleset name="Ox.ac.uk (partial)">
 
 	<target host="*.ox.ac.uk"/>
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/$" /-->
+		<!--
+			404s:
+				-->
+		<!--exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/hall/las-casas/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/+(?!horde/)" /-->
+		<!--
+			403:
+				-->
+		<!--exclusion pattern="^http://solo(-prd)?\.bodleian\.ox\.ac\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://solo(?:-prd)?\.bodleian\.ox\.ac\.uk/+(?!cgi-bin/|pds\?|shib/)" /-->
 
 	<rule from="^http://(www\.admin|www\.cs|weblearn)\.ox\.ac\.uk/"
 		to="https://$1.ox.ac.uk/"/>
