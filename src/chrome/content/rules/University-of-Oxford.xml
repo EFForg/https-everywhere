@@ -50,23 +50,55 @@
 	Partially covered subdomains:
 
 		- (www.)biop	(→ www2.mrc-lmb.cam.ac.uk)
+		- solo.bodleian *
+		- solo-prd.bodleian *
+
+	* $ 403s
 
 
 	Fully covered subdomains:
 
 		- www.admin
+		- mail.bfriars		(→ www.bfriars)
+		- www.bodleian
+		- www.campaign
+
+		- cascade.conted
+		- cll.conted
+		- www.conted
+
 		- www.cs
-		- weblearn
+
+		- .it
+		- blogs.it
+		- courses.it
+		- help.it
+		- portfolio.it
+		- register.it
+		- www.it
+
+		- owa.nexus
+		- sharepoint.nexus
+		- blogs.oucs
+		- www.oucs
+		- podcasts
+		- media.podcasts
+		- idp.shibboleth
+		- skillstoolkit
+		- webauth
+		- (www.)?weblearn
 
 
 	Mixed content:
 
-		- Fonts on www.bodleian from $self
+		- Fonts on www.bodleian from $self *
 
 		- Images, on:
 
-			- www.bodleian from $self
-			- blogs.it from $self
+			- www.bodleian from $self *
+			- blogs.it from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Ox.ac.uk (partial)">
@@ -83,7 +115,7 @@
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/+(?!horde/)" /-->
+		<exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/+(?!horde/)" />
 		<!--
 			403:
 				-->
@@ -91,12 +123,23 @@
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://solo(?:-prd)?\.bodleian\.ox\.ac\.uk/+(?!cgi-bin/|pds\?|shib/)" /-->
+		<exclusion pattern="^http://solo(?:-prd)?\.bodleian\.ox\.ac\.uk/+(?!cgi-bin/|pds\?|shib/)" />
 
-	<rule from="^http://(www\.admin|www\.cs|weblearn)\.ox\.ac\.uk/"
+	<rule from="^http://(www\.admin|www\.bfriars|(?:solo|solo-prd|www)\.bodleian|www\.campaign|(?:cascade|cll|www)\.conted|www\.cs|(?:blogs|courses|help|podcasts|media\.podcasts|portfolio|register|www)\.it|(?:owa|sharepoint)\.nexus|(?:blogs|www)\.oucs|idp\.shibboleth|skillstoolkit|webauth)\.ox\.ac\.uk/"
 		to="https://$1.ox.ac.uk/"/>
 
 	<rule from="^http://(?:www\.)?biop\.ox\.ac\.uk/coot"
 		to="https://www2.mrc-lmb.cam.ac.uk/Personal/pemsley/coot" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://mail\.bfriars\.ox\.ac\.uk/[^?]*"
+		to="https://www.bfriars.ox.ac.uk/horde/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?weblearn\.ox\.ac\.uk/"
+		to="https://$1weblearn.ox.ac.uk/" />
 
 </ruleset>
