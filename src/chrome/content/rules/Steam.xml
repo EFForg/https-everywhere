@@ -2,14 +2,13 @@
 	For other Valve coverage, see Valve.xml.
 
 
-	ToDo: Find hs.llnwd.net bucket
-
-
 	CDN buckets:
+
+		- steamcdn-a.akamaihd.net
+		- steamstore-a.akamaihd.net
 
 		- akacdn.valve.com.edgesuite.net
 
-			- a1507.d.akamai.net
 			- cdn4
 			- cloud-3
 			- repo
@@ -19,9 +18,11 @@
 			- cloud-4
 
 		- cds.w2n5c2t7.hwcdn.net
+
 			- cloud-2.steampowered.com
 
 		- valve.vo.llnwd.net/...
+
 			- .hs. doesn't exist
 			- cdn.steampowered.com
 			- cloud.streampowered.com
@@ -30,48 +31,69 @@
 
 	Nonfunctional domains:
 
-		- cdn.steampowered.com		(CN: *.hs.llnwd.net; 400)
-		- cloud.steampowered.com	(CN: *.hs.llnwd.net; 400)
-		- cloud-2.steampowered.com	(refused)
-		- cloud-3	(404, akamai)
-		- cloud-4	(dropped)
-		- media.steampowered.com	(CN: *.hs.llnwd.net; 400)
-		- repo		(504, akamai)
+		- cafe ¹
+		- cafesupport ²
+		- cdn ³
+		- cloud ³
+		- cloud-2 ⁴
+		- cloud-3 ⁵
+		- cloud-4 ¹
+		- forums ⁶
+		- media ³
+		- repo ⁷
+
+	¹ Dropped
+	² 403; mismatched, CN: store.steampowered.com
+	³ 400; mismatched, CN: *.hs.llnwd.net
+	⁴ Refused
+	⁵ 404, akamai
+	⁶ 503, valid cert
+	⁷ 504, akamai
 
 
 	Problematic subdomains:
 
-		- cdn4	(works, akamai)
+		- ^ ¹
+		- cdn4 ²
+
+	¹ 403; mismatched, CN: store.steampowered.com
+	² Works, akamai
 
 -->
-<ruleset name="Steam (partial, broken)" default_off="breaks some forum embeds">
+<ruleset name="Steam Powered.com (partial, broken)" default_off="breaks some forum embeds">
 
 	<target host="steampowered.com" />
 	<target host="*.steampowered.com" />
-		<exclusion pattern="http://www\.steampowered\.com/status/survey\.html" />
+		<!--
+			Redirects to $:
+					-->
+		<!--exclusion pattern="^http://www\.steampowered\.com/steamworks/(gettingstarted\.php|images/bg_vtile\.gif|index\.php)" /-->
+		<exclusion pattern="^http://(?:www\.)?steampowered\.com/(?:status/survey\.html|steamworks(?:$|[?/]))" />
 		<!--
 			Redirect to http:
 						-->
-		<!--exclusion pattern="^http://store\.steampowered\.com/about/" /-->
-	<target host="cdn.store.steampowered.com" />
+		<!--exclusion pattern="^http://store\.steampowered\.com/(about|app/\d+|freestuff/demos|news|recommended|stats)/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://store\.steampowered\.com/+(?!favicon\.ico|(?:join|login|psn/beginsetup|search|software)(?:$|[?/])|public/images/)" />
 
 
-	<securecookie host="^\.steampowered\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.steampowered\.com$" name="^(dp_user_language|dp_user_sessionid)$" /-->
+	<!--securecookie host="^partner\.steampowered\.com$" name="(dateEnd|dateStart)$" /-->
+
+	<securecookie host="^(?:partner)?\.steampowered\.com$" name=".+" />
 
 
-	<rule from="^http://store\.steampowered\.com/(jo|log)in"
-		to="https://store.steampowered.com/$1in" />
-
-	<rule from="^http://steampowered\.com/"
+	<rule from="^http://(?:www\.)?steampowered\.com/"
 		to="https://www.steampowered.com/" />
 
-	<rule from="^http://(cafe|support|www)\.steampowered\.com/"
+	<rule from="^http://(api|kgs|partner|partnerupload[01]|store|support)\.steampowered\.com/"
 		to="https://$1.steampowered.com/" />
 
-	<rule from="^http://store\.steampowered\.com/public/images/"
-		to="https://store.steampowered.com/public/images/" />
-
-	<rule from="^https?://cdn\.(store\.)?steampowered\.com/"
+	<rule from="^http://cdn\.(store\.)?steampowered\.com/"
 		to="https://$1steampowered.com/" />
 
 </ruleset>

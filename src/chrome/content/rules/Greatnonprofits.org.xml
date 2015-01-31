@@ -1,0 +1,45 @@
+<!--
+	CDN buckets:
+
+		- ?.cloudfront.net
+
+			- cdn
+
+
+	Problematic subdomains:
+
+		- api	(dropped)
+		- cdn	(cloudfront)
+
+
+	Mixed content:
+
+		- Web bugs on ^ from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Greatnonprofits.org (partial)">
+
+	<target host="greatnonprofits.org" />
+	<target host="*.greatnonprofits.org" />
+		<!--
+			$ 403s.
+				-->
+		<!--exclusion pattern="^http://api\.greatnonprofits\.org/$" /-->
+		<!--
+			The following redirects to ^
+							-->
+		<exclusion pattern="^http://api\.greatnonprofits\.org/+(?!whitelabel/reviews/[\w-]+(?:$|\?))" />
+
+
+	<securecookie host="^greatnonprofits\.org$" name=".+" />
+
+
+	<rule from="^http://(?:api\.|(www\.))?greatnonprofits\.org/"
+		to="https://$1greatnonprofits.org/" />
+
+	<rule from="^http://(?:cdn|static)\.greatnonprofits\.org/"
+		to="https://static.greatnonprofits.org/" />
+
+</ruleset>

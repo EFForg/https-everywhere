@@ -7,11 +7,15 @@
 
 			- eiv *
 			- gimg *
+			- hi *
+			- tb.himg *
 			- img *
 			- imgsrc *
+			- qingting *
 			- bdimg.share *
 			- tieba *
 			- static.tieba *
+			- wanba *
 			- wap *
 
 		- cdn.iknow.bdimg.com *
@@ -35,10 +39,23 @@
 
 			- developer	(→ openapi)
 			- openapi
+			- pan
 			- passport
 
 		- apps.bdimg.com	(→ openapi.baidu.com)
 		- apps\d.bdimg.com	(→ openapi.baidu.com)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- openapi from developer ¹
+			- openapi from gimg ²
+			- openapi from apps.bdimg.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= dropped
 
 -->
 <ruleset name="Baidu (partial)">
@@ -47,10 +64,19 @@
 	<target host="*.bdimg.com" />
 
 
-	<rule from="^https?://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.baidu\.com$" name="^BAIDUID$" /-->
+	<!--securecookie host="^openapi\.baidu\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.yun\.baidu\.com$" name="^PANWEB$" /-->
+
+	<securecookie host="^openapi\.baidu\.com$" name=".+" />
+
+
+	<rule from="^http://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
 		to="https://openapi.baidu.com/" />
 
-	<rule from="^http://passport\.baidu\.com/"
-		to="https://passport.baidu.com/" />
+	<rule from="^http://(www|yun|pan|passport)\.baidu\.com/"
+		to="https://$1.baidu.com/" />
 
 </ruleset>

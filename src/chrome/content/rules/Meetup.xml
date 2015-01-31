@@ -1,26 +1,32 @@
 <!--
-	CDN buckets:
+	Other Meetup rulesets:
 
-		- img1.meetupstatic.com.edgesuite.net
-		- img2.meetupstatic.com.edgesuite.net
-		- static1.meetupstatic.com.edgesuite.net
-		- static2.meetupstatic.com.edgesuite.net
+		- Meetup_static.com.xml
 
 
 	Nonfunctional domains:
 
+		- making.meetup.com ¹
 		- www.meetup.com	(prints "our server wasn't
 					able to process your request")
 		- meetupblog.meetup.com	(hosted on Tumblr)
 
+	¹ Refused
+
 -->
 <ruleset name="Meetup (partial)">
 
-	<target host="secure.meetup.com" />
-	<target host="*.meetupstatic.com" />
+	<target host="meetup.com" />
+	<target host="*.meetup.com" />
 
 
-	<rule from="^https?://(?:img[12]|secure|static[12])\.meetup\.com/"
+	<securecookie host="^\.meetup\.com$" name="^MEETUP_(?:AFFIL|TRACK)$" />
+
+
+	<rule from="^http://(www\.)?meetup\.com/(?=favicon\.ico)"
+		to="https://$1meetup.com/" />
+
+	<rule from="^http://(?:secure|static[12])\.meetup\.com/"
 		to="https://secure.meetup.com/" />
 
 </ruleset>

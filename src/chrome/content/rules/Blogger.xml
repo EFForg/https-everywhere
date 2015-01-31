@@ -4,6 +4,8 @@
 
 	Nonfunctional domains:
 
+		- (www.)?blogger.co.uk ¹
+
 		- \w+.blogspot.be *
 		- \w+.blogspot.ca *
 		- \w+.blogspot.co.uk *
@@ -14,7 +16,8 @@
 		- \w+.blogspot.no *
 		- \w+.blogspot.se *
 
-	* Mismatched, redirects to http
+	¹ Handshake fails
+	* Redirects to http
 
 
 	Partial due to blog posts redirecting to http.
@@ -24,7 +27,8 @@
 
 	<target host="blogblog.com" />
 	<target host="*.blogblog.com" />
-	<target host="blogger.co.uk" />
+	<!--target host="blogger.co.uk" /-->
+		<exclusion pattern="^http://(?:www\.)?blogger\.co\.uk/" />
 	<target host="*.blogger.co.uk" />
 	<target host="blogger.com" />
 	<target host="*.blogger.com" />
@@ -50,11 +54,11 @@
 	<rule from="^http://(img\d\.|www\.)?blogblog\.com/"
 		to="https://$1blogblog.com/" />
 
-	<rule from="^http://((?:buttons|help|www2?)\.)?blogger\.com/"
+	<rule from="^http://((?:buttons|help|photos1|www2?)\.)?blogger\.com/"
 		to="https://$1blogger.com/" />
 
-	<rule from="^http://(?:\w+\.)?blog(?:ger|spot)\.[\w.]{2,5}/favicon\.ico"
-		to="https://www.blogger.com/favicon.ico" />
+	<rule from="^http://(\w+\.)?blog(?:ger|spot)\.([\w.]{2,5})/favicon\.ico"
+		to="https://$1blogger.$2/favicon.ico" />
 
 	<rule from="^http://(\d\.bp|bp\d)\.blogspot\.com/"
 		to="https://$1.blogspot.com/" />

@@ -3,6 +3,25 @@
 
 	For other Microsoft coverage, see Microsoft.xml.
 
+
+	CDN buckets:
+
+		- m.static.newsvine.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- cdn.lib ¹
+		- m.static *
+
+	¹ Akamai
+	* Works, akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .newsvine.com
+
 -->
 <ruleset name="newsvine.com (partial)">
 
@@ -15,6 +34,10 @@
 	<target host="www.*.newsvine.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.newsvine\.com$" name="^vid$" /-->
+
 	<securecookie host="^\.newsvine\.com$" name=".*" />
 
 
@@ -22,7 +45,7 @@
 		- www.cdn: Akamai
 		- i times out as-is
 					-->
-	<rule from="^https?://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
+	<rule from="^http://(?:i\.|www\.(?:cdn\.)?)?newsvine\.com/"
 		 to="https://www.newsvine.com/" />
 
 	<rule from="^http://(?:(?:cdn\.|www\.)?(bonosrama|lib)|(log))\.newsvine\.com/"
@@ -37,5 +60,11 @@
 		NB: Most polls pages are handled in MSN.com.xml.	-->
 	<rule from="^http://(?:www\.)?polls\.newsvine\.com/_(static|vine)/"
 		to="https://www.newsvine.com/_$1/" />
+
+	<rule from="^http://m\.static\.newsvine\.com/(?=servista/imagesizer\?)"
+		to="https://a248.e.akamai.net/f/248/9206/10/m.static.newsvine.com/" />
+
+	<rule from="^http://m\.static\.newsvine\.com/"
+		to="https://m.newsvine.com/" />
 
 </ruleset>

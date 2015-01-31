@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see Consumer_Reports.com-falsemixed.xml.
+
 	consumerreports.custhelp.com is handled in RightNow-clients.xml.
 
 
@@ -15,15 +17,47 @@
 
 		- news.consumerreports.org
 
+
+	Problematic domains:
+
+		- (www.)consumerreports.org *
+		- web.consumerreports.org *
+
+	* Mixed css
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- ec
+
+
+	Mixed content:
+
+		- css on web and www from static[1-4].consumerreportscdn.org *
+
+	* Secured by us
+
 -->
-<ruleset name="Consumer Reports" platform="mixedcontent">
+<ruleset name="Consumer Reports (partial)">
 
 	<target host="consumerreports.org" />
-	<target host="*.consumerreports.org" />
+	<target host="ec.consumerreports.org" />
+	<target host="web.consumerreports.org" />
+	<target host="www.consumerreports.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:web\.|www\.)?consumerreports\.org/+(?!etc/|favicon\.ico)" />
 	<target host="*.consumerreportscdn.org" />
 
 
-	<securecookie host="^.*\.consumerreports\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.consumerreports\.org$" name="^(userKeycodes|userReferrer)$" /-->
+	<!--securecookie host="^ec\.consumerreports\.org$" name="^(JSESSIONID|pwipersist)$" /-->
+
+	<securecookie host="^ec\.consumerreports\.org$" name=".+" />
 
 
 	<!--	Cert only matches www.
@@ -33,13 +67,13 @@
 
 	<!--	Many (all?) paths 301 back.
 
-	<rule from="^https?://custhelp\.consumerreports\.org/"
+	<rule from="^http://custhelp\.consumerreports\.org/"
 		to="https://consumerreports.custhelp.com/" /-->
 
-	<rule from="^http://ec\.consumerreports\.org/"
-		to="https://ec.consumerreports.org/" />
+	<rule from="^http://(ec|web)\.consumerreports\.org/"
+		to="https://$1.consumerreports.org/" />
 
-	<rule from="^https?://static[1-4]\.consumerreportscdn\.org/"
+	<rule from="^http://static[1-4]\.consumerreportscdn\.org/"
 		to="https://dffe75s34hxl9.cloudfront.net/" />
 
 </ruleset>

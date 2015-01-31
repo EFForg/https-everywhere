@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- lists *
+
+	* 403/404; mismatched, CN: www.luv.asn.au
+
+
+	Problematic subdomains:
+
+		- (www.) ¹
+		- wiki ²
+
+	¹ Works, expired 2013-12-13
+	² Works; mismatched, CN: www.luv.asn.au
+
+
+	Mixed content:
+
+		- Images on ^ from $self *
+
+		- Bugs on ^ from i.creativecommons.org *
+
+	* Secured by us
+
+-->
+<ruleset name="LUV.asn.au (partial)" default_off="expired, mismatched">
+
+	<target host="luv.asn.au" />
+	<target host="*.luv.asn.au" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.linux\.org\.au$" name="^luv_wiki_session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.linux\.org\.au$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^www\.linux\.org\.au$" name="^PHPSESSID" /-->
+
+	<securecookie host="^(?:www)?\.linux\.org\.au$" name=".+" />
+
+
+	<rule from="^http://(?:(wiki\.)|www\.)?luv\.asn\.au/"
+		to="https://$1luv.asn.au/" />
+
+</ruleset>

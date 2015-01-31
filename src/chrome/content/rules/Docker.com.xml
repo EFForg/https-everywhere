@@ -1,0 +1,75 @@
+<!--
+	Nonfunctional domains:
+
+		- posts.docker.com *
+
+	* Redirects to http; mismatched, CN: *.scoop.it
+
+
+	Problematic domains:
+
+		- blog.docker.io *
+		- docs.docker.io *
+
+	* Cert only matches *.docker.com
+
+
+	Fully covered domains:
+
+		- docker.com subdomains:
+
+			- (www.)
+			- blog
+			- docs
+			- forums
+			- hub
+			- registry.hub
+			- status
+
+		- docker.io subdomains:
+
+			- (www.)
+			- blog		(→ blog.docker.com)
+			- docs		(→ docs.docker.com)
+			- index
+
+
+	Mixed content:
+
+		- Images, on blog from:
+
+			- $self *
+			- blog.docker.io *
+
+	* Secured by us
+
+-->
+<ruleset name="Docker.com (partial)">
+
+	<target host="docker.com" />
+	<target host="*.docker.com" />
+	<target host="docker.io" />
+	<target host="*.docker.io" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^hub\.docker\.com$" name="^csrftoken$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^status\.docker\.com$" name="^(SERVERID|connect\.sid)$" /-->
+
+	<securecookie host="^(?:status|www)\.docker\.com$" name=".+" />
+
+
+	<rule from="^http://((?:forums|hub|registry\.hub|status|www)\.)?docker\.com/"
+		to="https://$1docker.com/" />
+
+	<rule from="^http://(blog|docs)\.docker\.(?:com|io)/"
+		to="https://$1.docker.com/" />
+
+	<rule from="^http://(index\.|www\.)?docker\.io/"
+		to="https://$1docker.io/" />
+
+</ruleset>

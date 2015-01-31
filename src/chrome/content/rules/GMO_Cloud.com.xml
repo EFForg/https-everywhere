@@ -1,0 +1,78 @@
+<!--
+	For other GMO coverage, see GMO_Internet.xml.
+
+
+	Nonfunctional subdomains:
+
+		- th *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- w *
+
+	* Works; expired, self-signed
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- contact
+		- home
+		- ir
+		- order
+		- partner
+		- private
+		- private-c
+		- shared
+		- support
+		- us
+		- vps
+		- vpsportal
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from $self ¹
+			- us from fonts.googleapis.com ²
+
+		- Images, on:
+
+			- home, ir, private, private-c, vps, w, from cache.img.gmo.jp
+			- ir from www.stockweather.co.jp ³
+
+		- Bugs, on private, private-c, shared, support, vps, from www.google.com ²
+
+	¹ Secured by us, minor
+	² Secured by us
+	³ Unsecurable <= 404
+
+-->
+<ruleset name="GMO Cloud.com (partial)">
+
+	<target host="gmocloud.com" />
+	<target host="*.gmocloud.com" />
+		<!--exclusion pattern="^http://(th|w)\.gmocloud\.com/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^vpsportal\.gmocloud\.com$" name="^vpsportal2$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^contact\.gmocloud\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^order\.gmocloud\.com$" name="^(ASP\.NET_SessionId|gmocloudneworder)$" /-->
+
+	<securecookie host="^(?:contact|order)\.gmocloud\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|contact|home|ir|order|partner|private|private-c|shared|support|us|vps|vpsportal|www)\.)?gmocloud\.com/"
+		to="https://$1gmocloud.com/" />
+
+</ruleset>

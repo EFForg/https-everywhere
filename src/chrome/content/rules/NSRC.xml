@@ -1,9 +1,27 @@
-<ruleset name="NSRC" platform="mixedcontent">
+<!--
+	Mixed content:
+
+		- favicon from ^ *
+
+		- Ad from www.google.com *
+
+	* Secured by us
+
+-->
+<ruleset name="NSRC">
 
 	<target host="nsrc.org"/>
-	<target host="www.nsrc.org"/>
+	<target host="*.nsrc.org"/>
 
-	<rule from="^http://(www\.)?nsrc\.org/"
-		to="https://nsrc.org/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?nsrc\.org$" name="^trac_session$" /-->
+
+	<securecookie host="^(?:www\.)?nsrc\.org$" name=".+" />
+
+
+	<rule from="^http://(photos\.|www\.)?nsrc\.org/"
+		to="https://$1nsrc.org/"/>
 
 </ruleset>

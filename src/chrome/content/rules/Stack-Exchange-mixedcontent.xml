@@ -1,83 +1,21 @@
 <!--
-	Nonfunctional domains:
-
-		- chat.stackexchange.com	(Mixed content)
-		- meta.*.stackexchange.com      (cert: *.stackexchange.com)
-
-
-	Fully covered domains:
-
-        - *.stackexchange.com
-
-    As of Dec., 2013, stackexchange has a cert valid for:
-        - *.stackexchange.com
-        - stackexchange.com
-        - meta.stackexchange.com
-        - *.meta.stackexchange.com
-        - *.stackoverflow.com
-        - stackoverflow.com
-        - serverfault.com
-        - stackauth.com
-        - sstatic.net
-        - meta.serverfault.com
-        - superuser.com
-        - meta.superuser.com
-        - stackapps.com
-        - openid.stackauth.com 
+	For rules not causing false/broken MCB, see Stack-Exchange.xml.
 
 -->
-<ruleset name="Stack Exchange (partial)">
+<ruleset name="Stack Exchange (mixed content)" platform="mixedcontent">
 
-	<target host="blogoverflow.com" />
-	<target host="www.blogoverflow.com" />
-	<target host="serverfault.com" />
-	<target host="*.serverfault.com" />
-	<target host="sstatic.net" />
-	<target host="cdn.sstatic.net" />
-	<target host="or.cdn.sstatic.net" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
-	<target host="stackoverflow.com" />
-	<target host="*.stackoverflow.com" />
-	<target host="app.stacktack.com" />
-	<target host="superuser.com" />
-	<target host="*.superuser.com" />
-    <target host="stackapps.com" />
-    <target host="www.stackapps.com" />
-    <exclusion pattern="^http://chat\.stackexchange\.com/" />
-    <exclusion pattern="^http://(\w+\.)?stackexchange\.com/search\?" />
+	<target host="blog.stackoverflow.com" />
 
-	<rule from="^https?://(?:www\.)?blogoverflow\.com/$"
-		to="https://stackexchange.com/blogs" />
+
+	<securecookie host="\.stackexchange\.com$" name=".+" />
+
 
 	<rule from="^http://(\w+\.)?stackexchange\.com/"
 		to="https://$1stackexchange.com/" />
 
-	<rule from="^https?://(?:(or\.)?cdn\.)?sstatic\.net/"
-		to="https://$1cdn.sstatic.net/" />
-
-	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
-		to="https://$1stackoverflow.com/" />
-
-    <rule from="^http://(www\.|meta\.)?serverfault\.com/"
-		to="https://$1serverfault.com/" />
-
-    <rule from="^http://(www\.|meta\.)?superuser\.com/"
-		to="https://$1superuser.com/" />
-
-    <rule from="^http://(www\.)?stackapps\.com/"
-        to="https://$1stackapps.com/" />
-
-	<rule from="^https?://app\.stacktack\.com/"
-		to="https://s3.amazonaws.com/stacktackapp/" />
-
-	<rule from="^https?://meta\.superuser\.com/favicon\.ico"
-		to="https://cdn.sstatic.net/superusermeta/img/favicon.ico" />
-
-    <rule from="^https://(\w+\.)?stackexchange\.com/search\?"
-        to="http://$1stackexchange.com/search?"
-        downgrade="1" />
-
-	<securecookie host="\.stackexchange\.com$" name=".*" />
+	<rule from="^http://blog\.stackoverflow\.com/"
+		to="https://blog.stackoverflow.com/" />
 
 </ruleset>

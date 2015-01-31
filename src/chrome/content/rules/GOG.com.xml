@@ -1,0 +1,65 @@
+<!--
+	CDN buckets:
+
+		- wac.11df.edgecastcdn.net/??11DF/
+
+			- static
+
+		- beta.gog.com.edgesuite.net
+
+			- a1949.b.akamai.net
+			- www
+
+
+	Nonfunctional subdomains:
+
+		- static ¹
+		- www ²
+
+	¹ 404; mismatched, CN: gp1.wac.edgecastcdn.net
+	² Works, akamai
+
+
+	Mixed content:
+
+		- css on www from static *
+
+		- Images on www from static *
+
+	* Secured by us
+
+-->
+<ruleset name="GOG.com">
+
+	<target host="gog.com" />
+	<target host="*.gog.com" />
+		<!--
+			Avoid user-visible paths
+
+			Uncomment this if secure starts redirecting to www.
+										-->
+		<!--exclusion pattern="^http://www\.gog\.com/+(?!favicon\.ico|upload/images/|www/default/)" /-->
+
+
+	<!--	If secure starts redirecting to www, this may need to
+		be commented out (server doesn't secure):
+								-->
+	<securecookie host="^\.gog\.com$" name=".+" />
+
+
+	<!--	While ^gog.com works and presents a valid cert, pages
+		redirect to www.
+					-->
+	<rule from="^http://(?:www\.|secure\.)?gog\.com/"
+		to="https://secure.gog.com/" />
+
+	<!--	As stylesheets reference resources absolutely, a blanket
+		rewrite from static to (akamai.../)www should work.
+									-->
+	<rule from="^http://static\.gog\.com/"
+		to="https://a248.e.akamai.net/f/1949/7734/9/www.gog.com/" />
+
+	<rule from="^http://www\.gog\.com/(?=favicon\.ico|upload/images/|www/default/)"
+		to="https://a248.e.akamai.net/f/1949/7734/9/www.gog.com/" />
+
+</ruleset>

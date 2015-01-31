@@ -1,4 +1,7 @@
 <!--
+	blog is handled in WordPress-blogs.xml.
+
+
 	Nonfunctional subdomains:
 
 		- nabble	(refused)
@@ -8,6 +11,52 @@
 
 		- blog		(wordpress)
 
+
+	Fully covered subdomains:
+
+		- (www.)
+		- download
+		- downloadarchive
+		- owncloud
+		- piwik
+		- planet
+		- redmine
+		- translations
+		- wiki
+
+
+	Observed cookie domains:
+
+		- owncloud ¹
+		- redmine ¹
+		- translations ¹
+		- wiki ²
+		- www ¹
+
+	¹ Secured by us
+	² Secured by server
+
+
+	Mixed content:
+
+		- Images, on planet from:
+
+			- erack.org ¹
+			- people.freedesktop.org ²
+			- kohei.us ¹
+			- standardsandfreedom.net ¹
+			- feeds.wordpress.com ²
+			- \w+.files.wordpress.com ²
+
+		- Web bugs, on:
+
+			- planet from i.creativecommons.org ²
+			- planet from stats.wordpress.com ²
+			- wiki from piwik ²
+
+	² Secured by us
+	¹ Unsecurable
+
 -->
 <ruleset name="The Document Foundation">
 
@@ -15,13 +64,17 @@
 	<target host="*.documentfoundation.org" />
 
 
-	<securecookie host="^www\.documentfoundation\.org$" name=".+" />
+	<securecookie host="^(?:owncloud|piwik|redmine|translations|wiki|www)\.documentfoundation\.org$" name=".+" />
+	<!--
+		Server sets Secure for:
+					-->
+	<!--securecookie host="^wiki\.documentfoundation\.org$" name=".+" /-->
 
 
-	<rule from="^http://(?:www\.)?documentfoundation\.org/"
-		to="https://www.documentfoundation.org/" />
+	<rule from="^http://(www\.)?documentfoundation\.org/"
+		to="https://$1documentfoundation.org/" />
 
-	<rule from="^http://(download|piwik)\.documentfoundation\.org/"
+	<rule from="^http://(download(archive)?|owncloud|piwik|planet|redmine|translations|wiki)\.documentfoundation\.org/"
 		to="https://$1.documentfoundation.org/" />
 
 </ruleset>

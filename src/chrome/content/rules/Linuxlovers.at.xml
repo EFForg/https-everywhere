@@ -1,0 +1,43 @@
+<!--
+	For rules causing false/broken MCB, see Linuxlovers.at-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css on wiki from $self ¹
+
+		- Images, on:
+
+			- tools from static.np-edv.at ²
+			- wiki from $self ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+
+-->
+<ruleset name="Linuxlovers.at (partial)">
+
+	<target host="linuxlovers.at" />
+	<target host="*.linuxlovers.at" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://wiki\.linuxlovers\.at/+(?!lib/)" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^git\.linuxlovers\.at$" name="^_gitlab_session$" /-->
+	<!--securecookie host="^wiki\.linuxlovers\.at$" name="^DokuWiki$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^git\.linuxlovers\.at$" name="^request_method$" /-->
+
+	<securecookie host="^git\.linuxlovers\.at$" name=".+" />
+
+
+	<rule from="^http://((?:chat|git|jabber|mb|tools|wiki|www)\.)?linuxlovers\.at/"
+		to="https://$1linuxlovers.at/" />
+
+</ruleset>

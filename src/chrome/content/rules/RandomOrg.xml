@@ -1,6 +1,26 @@
-<ruleset name="Random.org (broken)" default_off="Breaks random number generator">
-  <target host="www.random.org" />
-  <target host="random.org" />
+<!--
+	These altnames don't exist:
 
-  <rule from="^http://(?:www\.)?random\.org/" to="https://www.random.org/"/>
+		- codes.random.org
+		- feeds.random.org
+		- raffles.random.org
+		- widgets.random.org
+
+-->
+<ruleset name="Random.org">
+
+	<target host="random.org" />
+	<target host="*.random.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.random\.org$" name="^RDOSESSION$" /-->
+
+	<securecookie host="\.random\.org$" name=".+" />
+
+
+	<rule from="^http://((?:api|draws|files|games|tuples|www)\.)?random\.org/"
+		to="https://$1random.org/" />
+
 </ruleset>

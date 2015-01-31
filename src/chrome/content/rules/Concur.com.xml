@@ -1,0 +1,31 @@
+<!--
+	assets, fusion, and www: server is configured for rc4 only.
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- assets
+		- developer
+		- fusion
+
+-->
+<ruleset name="Concur.com">
+
+	<target host="concur.com" />
+	<target host="*.concur.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^concur\.com$" name="^BIGipServerwww\.concur\.com$" /-->
+	<!--securecookie host="^developer\.concur\.com$" name="^BIGipServerdeveloper\.concur\.com$" /-->
+	<!--securecookie host="^\.developer\.concur\.com$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^(?:\.?developer\.)?concur\.com$" name=".+" />
+
+
+	<rule from="^http://((?:assets|developer|fusion|www)\.)?concur\.com/"
+		to="https://$1concur.com/" />
+
+</ruleset>

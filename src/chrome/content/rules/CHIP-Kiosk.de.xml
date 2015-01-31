@@ -1,0 +1,34 @@
+<!--
+	Problematic domains:
+
+		- (www.)?chip-app.de ¹
+		- chip-kiosk.de ²
+
+	¹ Plaintext reply
+	² Cert only matches www
+
+-->
+<ruleset name="CHIP-Kiosk.de">
+
+	<target host="chip-app.de" />
+	<target host="www.chip-app.de" />
+	<target host="chip-kiosk.de" />
+	<target host="*.chip-kiosk.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.chip-kiosk\.de$" name="^frontend$" /-->
+
+	<securecookie host="^\.www\.chip-kiosk\.de$" name=".+" />
+
+
+	<!--	[^/?]+ doesn't redirect:
+						-->
+	<rule from="^http://(?:www\.)?chip-app\.de/+(?:$|\?.*)"
+		to="https://www.chip-kiosk.de/chip#chip-tablet-edition" />
+
+	<rule from="^http://(?:www\.)?chip-kiosk\.de/"
+		to="https://www.chip-kiosk.de/" />
+
+</ruleset>

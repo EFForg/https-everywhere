@@ -1,0 +1,43 @@
+<!--
+	Other DANTE rulesets:
+
+		- DANTE-analytics.net.xml
+		- GEANT.net.xml
+
+
+	Fully covered subdomains:
+
+		- weblogin
+
+
+	Partially covered subdomains:
+
+		- news *
+		- www *
+
+	* Some paths redirect to weblogin2.geant.net
+
+-->
+<ruleset name="DANTE.net (partial)">
+
+	<target host="*.dante.net" />
+		<!--
+			These paths redirect to weblogin2.geant.net:
+									-->
+		<!--exclusion pattern="^http://news\.dante\.net/+($|\?)" /-->
+		<!--exclusion pattern="^http://www\.dante\.net/+Documents/" /-->
+		<!--
+			400:
+				-->
+		<!--exclusion pattern="^http://news\.dante\.net/_vti_bin/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://news\.dante\.net/+(?!_layouts/|SiteCollectionImages/)" />
+		<exclusion pattern="^http://www\.dante\.net/+(?!_catalogs/|_layouts/|_login/|_trust/)" />
+
+
+	<rule from="^http://(news|weblogin|www)\.dante\.net/"
+		to="https://$1.dante.net/" />
+
+</ruleset>

@@ -1,6 +1,46 @@
+<!--
+	CDN buckets:
+
+		- s3.mediamatters.org.s3.amazonaws.com
+
+			- s3.mediamatters.org
+
+		- dnqv4na4axyak.cloudfront.net
+
+			- cloudfront.mediamatters.org
+
+
+	Nonfunctional subdomains:
+
+		- mythopedia *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- action ¹
+		- cloudfront ²
+		- s3 ³
+
+	¹ NationBuilder, Tor users blocked by CloudFlare settings
+	² Cloudfront
+	² AmazonAWS
+
+
+	Fully covered subdomains:
+
+		- cloudfront	(→ dnqv4na4axyak.cloudfront.net)
+		- s3		(→ s3.mediamatters.org.s3.amazonaws.com)
+
+-->
 <ruleset name="MediaMatters.org (partial)">
 
 	<target host="mediamatters.org" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://mediamatters\.org/($|css/|js/|layout/)" /-->
 		<!--
 			At least two stylesheets 403
 
@@ -12,7 +52,13 @@
 	<target host="www.mediamatters.org" />
 
 
-	<rule from="^http://([csw]\w+\.)?mediamatters\.org/static/"
-		to="https://s3.amazonaws.com/s3.mediamatters.org/static/" />
+	<rule from="^http://(?:www\.)?mediamatters\.org/static/"
+		to="https://dnqv4na4axyak.cloudfront.net/static/" />
+
+	<rule from="^http://cloudfront\.mediamatters\.org/"
+		to="https://dnqv4na4axyak.cloudfront.net/" />
+
+	<rule from="^http://s3\.mediamatters\.org/"
+		to="https://s3.amazonaws.com/s3.mediamatters.org/" />
 
 </ruleset>

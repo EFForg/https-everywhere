@@ -71,6 +71,7 @@
 			- www0.info *
 			- dzc.itunes		(data differ)
 			- ping.itunes *
+			- prod.lists ³
 			- www.lists		(mismatched, CN: lists.apple.com)
 			- a1.phobos *
 			- a1721.phobos *
@@ -92,6 +93,7 @@
 			- store *
 
 	* Akamai
+	³ Mismatched, CN: lists.apple.com
 
 
 	Partially covered domains:
@@ -118,6 +120,7 @@
 			- certifications
 			- configuration
 			- connect
+			- consultants-locator
 			- csat
 			- daw
 			- developer
@@ -153,6 +156,7 @@
 				- buy
 				- c
 				- client-api
+				- collection
 				- du
 				- feeds
 				- files
@@ -179,6 +183,7 @@
 				- pd-nk
 				- pd-st
 				- play
+				- redeem
 				- rss
 				- s
 				- sandbox
@@ -213,8 +218,7 @@
 			- nwk-buyiphone
 			- nwk-unbrick[12]
 			- onetoone
-			- opensource
-			- www.opensource
+			- (www.)opensource	(www → ^)
 			- phobos
 			- portal
 			- register
@@ -235,9 +239,11 @@
 			- uptodate
 			- wdg2
 
+		- reserve.cdn-apple.com
 		- hrweb.cdn-apple.com
 		- store.storeimages.cdn-apple.com	(→ storeimages.apple.com.edgekey.net)
 		- ax.phobos.apple.com.edgesuite.net	(→ s.mzstatic.com)
+		- (www.)icloud.com			(^ → www)
 		- (www.)iwork.com			(^ → www)
 		- (www.)me.com
 
@@ -251,11 +257,23 @@
 			- r		(→ s)
 			- s
 			- s[1-5]
+		- (www.)itunes.com
+
+
+	These altnames don't exist:
+
+		- imix.itunes.apple.com
+
+
+	These altnames don't exist:
+
+		- imix.itunes.apple.com
 
 
 	Observed cookie domains:
 
 		- .
+		- consultants-locator
 		- genius-download.itunes
 		- genius-upload.itunes
 		- sitemanager.itunes
@@ -276,12 +294,17 @@
 		- css, on:
 
 			- support from images *
+			- support from km.support *
 
 		- Images, on:
 
+			- consultants-locator from images *
+			- www.info from www0.info
+			- www.info from a772.g.akamai.net
 			- itunes from images *
 			- itunes from ax.phobos.apple.com.edgesuite.net *
 			- itunes from a[1-5].mzstatic.com *
+			- rss.itunes from images *
 			- support from images *
 			- support from km.support *
 
@@ -292,20 +315,25 @@
 	-falsemixed should be merged for Ffx 24.
 
 -->
-<ruleset name="Apple.com (parial)">
+<ruleset name="Apple.com (partial)">
 
+	<target host="a772.g.akamai.net" />
 	<target host="apple.com" />
 	<target host="*.apple.com" />
 		<exclusion pattern="^http://concierge\.apple\.com/(?!resources/)" />
 		<exclusion pattern="^http://store\.apple\.com/(?!Catalog/|[\w/]+/css/|rs/)" />
 	<target host="*.cdn-apple.com" />
 	<target host="ax.phobos.apple.com.edgesuite.net" />
+	<target host="icloud.com" />
+	<target host="www.icloud.com" />
 	<target host="iwork.com" />
 	<target host="www.iwork.com" />
 	<target host="me.com" />
 	<target host="www.me.com" />
 	<target host="mzstatic.com" />
 	<target host="*.mzstatic.com" />
+	<target host="itunes.com" />
+	<target host="www.itunes.com" />
 
 
 	<!--	Tracking cookies:
@@ -320,7 +348,11 @@
 							-->
 	<securecookie host="^(?!\.?(?:concierg|stor)e\.apple\.com).+\.apple\.com$" name=".+" />
 
-	<rule from="^http://((?:albert|appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone\d?|certifications|concierge|configuration|connect|csat|daw|developer|devforums|discussions(?:japan)?|ecommerce|service\d?\.ess|expresslane|gsx|gsxapp|help|hrweb|ia?d|idmsa|iforgot|(?:(?:affiliate|api|autolinkmaker|banners|bookkeeper|buy|c|client-api|du|feeds|files|genius(?:-download|-upload)?(?:-2)?|homesharing|init|itunesu|ld-(?:\d|nk11|st11)|linkmaker|my|myapp|p\d+-buy|p100-sandbox|p[12]-u|partiality|pd-nk|pd-st|play|rss|s|sandbox|sc|se|search|sidebar|sitemanager|sp|static|stations|su|tl|tl-activity|upp|userpub|volume|vpp|widgets)\.)?itunes|itunesconnect|jointventure|jobs|prod\.lists|locate|mypage|n(?:c|wk)-(?:buyiphone|unbrick1)|nwk-unbrick2|onetoone|(www\.)?opensource|phobos|portal|register|remoteadvisor|reportingitc|reseller|reserve|salestraining|securemetrics|selfsolve|store|secure\d?\.store|supportprofile|swdlp|uptodate|wdg2|www)\.)?apple\.com/"
+
+	<rule from="^http://a772\.g\.akamai\.net/7/772/51/ef865529940b9e/www\.apple\.com/"
+		to="https://a248.e.akamai.net/7/772/51/ef865529940b9e/www.apple.com/" />
+
+	<rule from="^http://((?:albert|appleid|application|(?:nc-|nwk-)?as-images|bugreport|buyiphone\d?|certifications|concierge|configuration|connect|consultants-locator|csat|daw|developer|devforums|discussions(?:japan)?|ecommerce|service\d?\.ess|expresslane|gsx|gsxapp|help|hrweb|ia?d|idmsa|iforgot|(?:(?:affiliate|api|autolinkmaker|banners|bookkeeper|buy|c|client-api|collection|du|feeds|files|genius(?:-download|-upload)?(?:-2)?|homesharing|init|itunesu|ld-(?:\d|nk11|st11)|linkmaker|my|myapp|p\d+-buy|p100-sandbox|p[12]-u|partiality|pd-nk|pd-st|play|redeem|rss|s|sandbox|sc|se|search|sidebar|sitemanager|sp|static|stations|su|tl|tl-activity|upp|userpub|volume|vpp|widgets)\.)?itunes|itunesconnect|jointventure|jobs|locate|mypage|n(?:c|wk)-(?:buyiphone|unbrick1)|nwk-unbrick2|onetoone|phobos|portal|register|remoteadvisor|reportingitc|reseller|reserve|salestraining|securemetrics|selfsolve|store|secure\d?\.store|supportprofile|swdlp|uptodate|wdg2|www)\.)?apple\.com/"
 		to="https://$1apple.com/" />
 
 	<rule from="^http://appldnld\.apple\.com/"
@@ -341,20 +373,28 @@
 	<rule from="^http://www0\.info\.apple\.com/"
 		to="https://a248.e.akamai.net/7/1300/51/20120908/www0.info.apple.com/" />
 
-	<rule from="^http://(?:www\.)?lists\.apple\.com/"
+	<rule from="^http://(?:prod\.|www\.)?lists\.apple\.com/"
 		to="https://lists.apple.com/" />
 
 	<rule from="^http://store(?:images\.|\.storeimages\.cdn-)apple\.com/"
 		to="https://storeimages.apple.com.edgekey.net/" />
 
-	<rule from="^http://hrweb\.cdn-apple\.com/"
-		to="https://hrweb.cdn-apple.com/" />
+	<rule from="^http://(hrweb|reserve)\.cdn-apple\.com/"
+		to="https://$1.cdn-apple.com/" />
+
+	<rule from="^http://(?:www\.)?opensource\.apple\.com/"
+		to="https://opensource.apple.com/" />
 
 	<rule from="^http://ax\.phobos\.apple\.com\.edgesuite\.net/"
 		to="https://s.mzstatic.com/" />
 
 	<rule from="^http://km\.support\.apple\.com/"
 		to="https://km.support.apple.com.edgekey.net/" />
+
+    <rule from="^http://icloud\.com/"
+        to="https://www.icloud.com/" />
+    <rule from="^http://([^/:@]+)\.icloud\.com/"
+        to="https://$1.icloud.com/" />
 
 	<rule from="^http://(?:www\.)?iwork\.com/"
 		to="https://www.iwork.com/" />
@@ -376,6 +416,9 @@
 	<rule from="^http://r\.mzstatic\.com/"
 		to="https://s.mzstatic.com/" />
 
-	<rule from="^https?://trailers\.apple\.com/"
+	<rule from="^https://trailers\.apple\.com/"
 		to="http://trailers.apple.com/" downgrade="1" />
+
+	<rule from="^http://(www\.)?itunes\.com/"
+		to="https://$1itunes.com/" />
 </ruleset>

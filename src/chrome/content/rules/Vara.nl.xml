@@ -1,0 +1,76 @@
+<!--
+	^: cert only matches *.vara.nl
+
+
+	Partially covered subdomains:
+
+		- humortv *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- media-service
+		- omroep
+		- shop
+		- static
+		- tickets
+		- www
+
+
+	These altnames don't exist:
+
+		- www.shop.vara.nl
+
+
+	Insecure cookies are set for these domains:
+
+		- humortv
+		- .humortv
+		- media-service
+		- omroep
+		- .omroep
+		- .shop
+		- static
+		- .tickets
+		- www
+		- .www
+
+
+	Mixed content:
+
+		css on humortv from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Vara.nl (partial)">
+
+	<target host="*.vara.nl" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://humortv\.vara\.nl/+(?!favicon\.ico|fileadmin/|typo3conf/|typo3temp/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^humortv\.vara\.nl$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(humortv|media-service|omroep|www)\.vara\.nl$" name="^http-cookie-VARA21_[A-Z-]+-PROD$" /-->
+	<!--securecookie host="^(humortv|omroep)\.vara\.nl$" name="^fe_typo_user$" /-->
+	<!--
+		Redirection behavior appears to involve setting
+		npo_cc, so be cautious about securing it...:
+								-->
+	<!--securecookie host="^\.(humortv|omroep|shop|www)\.vara\.nl$" name="^npo_cc$" /-->
+	<!--securecookie host="^\.(shop|tickets)\.vara\.nl$" name="^frontend$" /-->
+
+	<securecookie host="^(?:media-service|omroep|static|www)\.vara\.nl$" name=".+" />
+	<securecookie host="^\.(?:shop|tickets)\.vara\.nl$" name="^frontend$" />
+
+
+	<rule from="^http://(humortv|media-service|omroep|shop|static|tickets|www)\.vara\.nl/"
+		to="https://$1.vara.nl/" />
+
+</ruleset>

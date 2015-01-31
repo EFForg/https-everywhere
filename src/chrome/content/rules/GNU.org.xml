@@ -4,16 +4,25 @@
 
 	Nonfunctional subdomains:
 
+		- alpha ¹
 		- ftpmirror
-		- gcc			(shows sourceware.org; mismatched, CN: www.sourceware.org)
-		- download.savannah	(refused)
-		- git.savannah
+		- download.savannah ³
+		- cvs.savannah ⁴
+		- git.savannah ⁴
+		- git.sv ⁴
+
+	¹ Shows ftp
+	³ Refused
+	⁴ Reset
 
 
 	Problematic domains:
 
-		- (www.)classpath.org	(shows gnu.org; mismatched, CN: www.gnu.org)
-		- mail.gnu.org		(dropped)
+		- (www.)classpath.org ¹
+		- mail.gnu.org ²
+
+	¹ Shows gnu.org; mismatched, CN: www.gnu.org
+	² Dropped
 
 
 	Fully covered domains:
@@ -23,9 +32,20 @@
 		- gnu.org subdomains:
 
 			- (www.)
+			- elpa
+			- debbugs
+			- gcc
+			- ftp
 			- lists
 			- mail		(→ lists)
 			- savannah
+
+
+	These altnames don't exist:
+
+		- www.debbugs.gnu.org
+		- www.elpa.gnu.org
+		- www.gcc.gnu.org
 
 -->
 <ruleset name="GNU.org (partial)">
@@ -34,13 +54,24 @@
 	<target host="*.gnu.org" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^Bugzilla_login_request_cookie$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^DEFAULTFORMAT$" /-->
+
+	<securecookie host="^gcc\.gnu\.org$" name=".+" />
+
+
 	<rule from="^http://(?:www\.)?classpath\.org/$"
 		to="https://www.gnu.org/software/classpath/" />
 
         <rule from="^http://(www\.)?gnu\.org/"
 		to="https://$1gnu.org/" />
 
-        <rule from="^http://(lists|savannah)\.gnu\.org/"
+        <rule from="^http://(debbugs|elpa|ftp|gcc|lists|savannah)\.gnu\.org/"
 		to="https://$1.gnu.org/" />
 
 	<rule from="^http://mail\.gnu\.org/"

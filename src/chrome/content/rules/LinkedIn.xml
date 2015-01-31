@@ -1,64 +1,244 @@
 <!--
+	NB: massively important => backport this
+
+
+	Other LinkedIn rulesets:
+
+		- LI_CDN.com.xml
+		- Lnkd.In.xml
+
+
 	There are lots of places where it doesn't work, so rather
 	than add lots of exclusions, I've only added added rules
 	for sections of the site that I know allow it.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- blog
-		- press	(expired; 403)
+		- blog ¹
+		- compass ²
+		- investors ²
+		- ourstory ²
+		- static01 ²
+
+	¹ Redirects to http
+	² Refused
 
 
-	Fully covered domains:
+	Problematic subdomains:
 
-		- static.licdn.com
+		- \w\w ¹
+		- cms ¹
+		- brand ¹
+		- bringinyourparents ¹
+		- business	 ¹
+		- certification ¹
+		- commsconnect ¹
+		- developer ¹
+		- developers ¹
+		- economicgraph ²
+		- engineering ¹
+		- (www.)?financeconnect ¹
+		- forms ¹
+		- gsk ¹
+		- imagine ¹
+		- (www.)?lifg ¹
+		- linkedinforgood ¹
+		- (www.)?live ¹
+		- members ¹
+		- mobile ¹
+		- nonprofit ¹
+		- nonprofits ¹
+		- press ³
+		- sales ⁴
+		- (www.)?salesconnect ¹
+		- smallbusiness ¹
+		- specialedition ¹
+		- studentcareers ¹
+		- students ¹
+		- talent ¹
+		- university ¹
+		- veterans ¹
+		- volunteer ¹
+		- volunteers ¹
 
-    LinkedIn users should also enable secure connections from:
-    - https://www.linkedin.com/settings/security-v2
+	¹ Insecure renegotiation
+	² Refused
+	³ Mismatched, CN: *.presscentre.com
+	⁴ Expired 2014
+
+
+	Fully covered subdomains:
+
+		- \w\w:
+
+			- es
+			- us
+
+		- aide
+		- ajuda
+		- asistenta
+		- ayuda
+		- in.bantuan
+		- ms.bantuan
+		- (www.)?brand
+		- (www.)?bringinyourparents
+		- (www.)?business
+		- (www.)?certification
+		- cms
+		- (www.)?commsconnect
+		- developer
+		- developers
+		- e
+		- engineering
+		- (www.)?financeconnect
+		- forms
+		- (www.)?gsk
+		- guida
+		- hilfe
+		- (www.)?imagine
+
+		- \w\w.help:
+
+			- ja
+			- ko
+			- ru
+
+		- \w\w-\w\w.help:
+
+			- ar-ae
+			- th-th
+			- zh-cn
+			- zh-tw
+
+		- help-enterprise
+		- help-internal
+		- help-test
+		- help-test2
+		- hilfe
+		- hjalp
+		- hjaelp
+		- hjelp
+		- hulp
+		- (www.)?lifg
+		- (www.)?linkedinforgood
+		- (www.)?live
+		- (www.)?members
+		- (www.)?mobile
+		- napoveda
+		- (www.)?nonprofit
+		- nonprofits
+		- polls
+		- pomoc
+		- (www.)?premium
+		- (www.)?purchasing
+		- (www.)?salesconnect
+		- (www.)?smallbusiness
+		- specialedition
+		- (www.)?studentcareers
+		- (www.)?students
+		- talent
+		- tulong
+		- (www.)?university
+		- (www.)?veterans
+		- (www.)?volunteer
+		- volunteers
+		- yardim
+
+
+	These altnames don't exist:
+
+		- byip.linkedin.com
+		- www.byip.linkedin.com
+		- www.compass.linkedin.com
+		- www.developer.linkedin.com
+		- mstr.linkedin.com
+		- www.nonprofits.linkedin.com
+		- security.linkedin.com
+		- www.security.linkedin.com
+		- www.volunteers.linkedin.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .linkedin.com
+		- \w\w.linkedin.com
+		- .\w\w.linkedin.com
+		- aide.linkedin.com
+		- ajuda.linkedin.com
+		- asistenta.linkedin.com
+		- ayuda.linkedin.com
+		- in.bantuan.linkedin.com
+		- ms.bantuan.linkedin.com
+		- business.linkedin.com
+		- developer.linkedin.com
+		- gsk.linkedin.com
+		- guida.linkedin.com
+		- help.linkedin.com
+		- \w\w.help.linkedin.com
+		- \w\w-\w\w.help.linkedin.com
+		- hilfe.linkedin.com
+		- hjaelp.linkedin.com
+		- hjalp.linkedin.com
+		- hjelp.linkedin.com
+		- hulp.linkedin.com
+		- linkedinforgood.linkedin.com
+		- mobile.linkedin.com
+		- napoveda.linkedin.com
+		- pomoc.linkedin.com
+		- premium.linkedin.com
+		- smallbusiness.linkedin.com
+		- students.linkedin.com
+		- www.linkedin.com
+		- .www.linkedin.com
+		- yardim.linkedin.com
+
+
+	LinkedIn users should also enable secure connections from:
+
+		- https://www.linkedin.com/settings/security-v2
+
 -->
-<ruleset name="LinkedIn (buggy)" default_off="unreliable">
+<ruleset name="LinkedIn.com (partial)">
 
-	<target host="*.licdn.com" />
 	<target host="linkedin.com" />
 	<target host="*.linkedin.com" />
-
-
-	<!--	Set by analytics/	-->
-	<securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
-
-
-	<rule from="^http://((?:[ms][1-4])(?:-s)|static)?\.licdn\.com/"
-		to="https://$1$2.licdn.com/" />
-
-	<!--	- !www times out over https
-		- !www 301s to www over http
+		<!--
+			Redirects to http:
 						-->
-	<rule from="^http://(?:www\.)?linkedin\.com/$"
-		to="https://www.linkedin.com/" />
+		<!--exclusion pattern="^http://blog\.linkedin\.com/($|favicon\.ico|wp-content/)" /-->
+		<!--exclusion pattern="^http://marketing\.linkedin\.com/$" /-->
 
-	<!--	These paths redirect to http:
 
-			- groups?gid=\d+
-			- mpr$
-			- static?key=.+
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?linkedin\.com/(analytics|company|home|media|profile|reg|scds|secure|settings|today|uas|ucds)([\?\/].*)?$"
-		to="https://www.linkedin.com/$1$2" />
+	<!--securecookie host="^\.linkedin\.com$" name="^(bcookie|cookie_support|lang|lidc|lihc_auth_\w\w|li_loc|li_trk)$" /-->
+	<!--securecookie host="^\w\w\.linkedin\.com$" name="^(L1c|leo_auth_token|visit)$" /-->
+	<!--securecookie host="^(\.\w\w|business|gsk|linkedinforgood|mobile|premium|smallbusiness|students)\.linkedin\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(aide|ajuda|asistenta|ayuda|in\.bantuan|ms\.bantuan|guida|help|\w\w\.help|\w\w-\w\w\.help|hilfe|hjalp|hjaelp|hjelp|hulp|napoveda|pomoc|yardim)\.linkedin\.com$" name="^cp_session$" /-->
+	<!--securecookie host="^press\.linkedin\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.linkedin\.com$" name="^(leo_auth_token|visit)$" /-->
+	<!--securecookie host="^\.www\.linkedin\.com$" name="^JSESSIONID" /-->
 
-	<rule from="^http://(?:www\.)?linkedin\.com/(img/|reg/join|mpr/)"
-		to="https://www.linkedin.com/$1" />
+	<securecookie host="^(?:aide|a[jy]uda|asistenta|(?:in|ms)\.bantuan|business|gsk|guida|help|\w\w\.help|\w\w-\w\w\.help|hilfe|hj[ae]lp|hjaelp|hulp|linkedinforgood|mobile|pomoc|www|yardim)?\.linkedin\.com$" name=".+" />
 
-	<!--	Akamai.
-			-->
-	<rule from="^http://media(?:0[1-4])?\.linkedin\.com/"
-		to="https://www.linkedin.com/" />
 
-	<rule from="^http://platform\.linkedin\.com/"
-		to="https://platform.linkedin.com/" />
+	<rule from="^http://economicgraph\.linkedin\.com/$"
+		to="https://www.linkedin.com/company/linkedin-economic-graph" />
 
-	<!--	Akamai	-->
-	<rule from="^http://static0([1-4])\.linkedin\.com/"
-		to="https://s$1.licdn.com/" />
+	<rule from="^http://marketing\.linkedin\.com/$"
+		to="https://business.linkedin.com/marketing-solutions" />
+
+	<rule from="^http://sales\.linkedin\.com/$"
+		to="https://business.linkedin.com/sales-solutions" />
+
+	<rule from="^http://((?:\w\w|aide|a[jy]uda|asistenta|(?:in|ms)\.bantuan|cms|developers?|e|engineering|forms|guida|help|(?:\w\w|\w\w-\w\w)\.help|help-(?:enterprise|internal|test2?)|hilfe|hj[ae]lp|hjaelp|hulp|napoveda|nonprofits|platform|polls|pomoc|specialedition|talent|tulong|volunteers|www|yardim)\.)?linkedin\.com/"
+		to="https://$1linkedin.com/" />
+
+	<!--	Domains for which both !www and www exist,
+		and both work without caveat:
+						-->
+	<rule from="^http://(www\.)?(brand|bringinyourparents|business|certification|commsconnect|financeconnect|gsk|imagine|lifg|linkedinforgood|live|members|mobile|nonprofit|premium|purchasing|salesconnect|smallbusiness|students|studentcareers|university|veterans|volunteer)\.linkedin\.com/"
+		to="https://$1$2.linkedin.com/" />
 
 </ruleset>

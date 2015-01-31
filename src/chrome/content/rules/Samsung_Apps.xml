@@ -4,7 +4,9 @@
 
 	Nonfunctional subdomains:
 
-		- img		(403; mismatched, CN: ssl2.cdngc.net)
+		- img *
+
+	* 400; mismatched: *.hs.llnwd.net
 
 
 	Problematic subdomains:
@@ -42,17 +44,28 @@
 		- mkt-odc
 		- tv
 
+
+	Insecure cookies are set for these domains:
+
+		- .samsungapps.com
+		- www.samsungapps.com
+
 -->
-<ruleset name="Samsung Apps (partial)">
+<ruleset name="Samsung Apps.com (partial)">
 
 	<target host="samsungapps.com" />
 	<target host="*.samsungapps.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.samsungapps\.com$" name="^COUNTRY_CODE$" /-->
+	<!--securecookie host="^www\.samsungapps\.com$" name="^(EXPAND_SCHEDULED|JSESSIONID|WMONID)$" /-->
+
 	<securecookie host="^(?:.*\.)?samsungapps\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?samsungapps\.com/"
+	<rule from="^http://(?:www\.)?samsungapps\.com/"
 		to="https://www.samsungapps.com/" />
 
 	<rule from="^http://(\w\w-odc|mkt-odc|tv)\.samsungapps\.com/"

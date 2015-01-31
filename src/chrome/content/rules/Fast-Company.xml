@@ -1,21 +1,47 @@
 <!--
+	Other Fast Company rulesets:
+
+		- Fast_Co_Design.com.xml
+
+
 	CDN buckets:
 
 		- d1ajghcs7o3h5q.cloudfront.net
 
-			- [a-e].fastcompany.net
+			- [a-h].fastcompany.net
+
+
+	Nonfunctional subdomains:
+
+		- mediakit *
+
+	* Refused
 
 
 	Problematic subdomains:
 
 		- ^	(refused)
-		- [a-e]	(cloudfront)
+
+
+	Fully covered subdomains:
+
+		- \w.fastcompany.net:
+
+			- [a-h]
+
+
+	Mixed content:
+
+		- Ad on www from www *
+
+	* Secured by us
 
 -->
 <ruleset name="Fast Company (partial)">
 
 	<target host="fastcompany.com" />
 	<target host="*.fastcompany.com" />
+	<target host="*.fastcompany.net" />
 
 
 	<securecookie host="^magazine\.fastcompany\.com$" name=".*" />
@@ -24,10 +50,8 @@
 	<rule from="^http://(?:www\.)?fastcompany\.com/"
 		to="https://www.fastcompany.com/" />
 
-	<!--	Protocol-relative links from www:
-							-->
-	<rule from="^https?://[a-e]\.fastcompany\.net/"
-		to="https://d1ajghcs7o3h5q.cloudfront.net/" />
+	<rule from="^http://(\w)\.fastcompany\.net/"
+		to="https://$1.fastcompany.net/" />
 
 	<rule from="^http://magazine\.fastcompany\.com/"
 		to="https://magazine.fastcompany.com/" />

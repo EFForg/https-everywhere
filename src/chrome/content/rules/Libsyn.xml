@@ -3,6 +3,7 @@
 
 		- wac.68fd.edgecastcdn.net/??68FD/
 
+			- ec
 			- static
 
 		- ssl-static.wac.68fd.edgecastcdn.net
@@ -20,7 +21,6 @@
 
 			- hwcdn *
 			- imake *
-			- traffic	(redirects to static-ssl)
 			- \w+ **
 
 		- libsynpro.com		(shows www; mismatched, CN: *.libsyn.com)
@@ -31,16 +31,22 @@
 
 	Problematic subdomains:
 
+		- ec *
 		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+
+	Mismatched, CN: edgecastcdn.net
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- assets
 		- fusion
+		- html5-player
 		- ssl-static
 		- static	(→ ssl-static)
 		- three
+		- traffic
 
 -->
 <ruleset name="libsyn (partial)">
@@ -49,10 +55,14 @@
 	<target host="*.libsyn.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.libsyn\.com$" name="^libsyn-paywall$" /-->
+
 	<securecookie host="^\.libsyn\.com$" name=".+" />
 
 
-	<rule from="^http://((?:assets|fusion|html5-player|three|www)\.)?libsyn\.com/"
+	<rule from="^http://((?:assets|fusion|html5-player|three|traffic|www)\.)?libsyn\.com/"
 		to="https://$1libsyn.com/" />
 
 	<rule from="^http://(?:ssl-)?static\.libsyn\.com/"

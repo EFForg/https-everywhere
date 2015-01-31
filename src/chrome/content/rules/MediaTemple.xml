@@ -2,19 +2,69 @@
 	Nonfunctional domains:
 
 		- weblog.mediatemple.net
-		- wiki.mediatemple.net
+
+
+	Problematic domains:
+
+		- status.mediatemple.net *
+
+	* StatusPage.io
+
+
+	Partially covered domains:
+
+		- mediatemple.net *
+
+	* blog/ redirects to http
+
+
+	Fully covered domains:
+
+		- mediatemple.net subdomains:
+
+			- ac
+			- accountcenter
+			- affiliate
+			- api
+			- bin
+			- forum
+			- forums
+			- kb
+			- nova
+			- static
+			- status	(→ mtmediatemple.statuspage.io)
+			- wiki
+			- www
+
+		- origin.mt-cdn.net	(→ mediatemple.net)
+		- s\d.mt-cdn.net	(→ mediatemple.net)
+
+
+	Insecure cookies are set for these domains:
+
+		- .mediatemple.net
+		- ac.mediatemple.net
 
 -->
-<ruleset name="Media Temple (partial)" platform="mixedcontent">
+<ruleset name="Media Temple (partial)">
 
 	<target host="gridserver.com" />
 	<target host="*.gridserver.com" />
 	<target host="mediatemple.net" />
 	<target host="*.mediatemple.net" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://mediatemple\.net/blog(?:$|[?/])" />
 	<target host="*.mt-cdn.net" />
 
 
-	<securecookie host=".*\.mediatemple\.net$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.mediatemple\.net$" name="^(ipb_session_id|session)$" /-->
+	<!--securecookie host="^ac\.mediatemple\.net$" name="^psc$" /-->
+
+	<securecookie host=".*\.mediatemple\.net$" name=".+" />
 
 
 	<!--	e.g.
@@ -23,13 +73,13 @@
 	<rule from="^http://(s\d+\.)?gridserver\.com/"
 		to="https://$1gridserver.com/" />
 
-	<rule from="^http://mediatemple\.net/"
-		to="https://mediatemple.net/" />
+	<rule from="^http://status\.mediatemple\.net/"
+		to="https://mtmediatemple.statuspage.io/" />
 
-	<rule from="^http://(ac|affiliate|api|bin|forum|www)\.mediatemple\.net/"
-		to="https://$1.mediatemple.net/" />
+	<rule from="^http://((?:ac|accountcenter|affiliate|api|bin|forums?|kb|nova|static|wiki|www)\.)?mediatemple\.net/"
+		to="https://$1mediatemple.net/" />
 
 	<rule from="^http://(?:origin|s\d)\.mt-cdn\.net/"
-		to="https://www.mediatemple.net/" />
+		to="https://mediatemple.net/" />
 
 </ruleset>

@@ -1,6 +1,103 @@
-<ruleset name="University of Texas at Dallas">
-	<target host="utdallas.edu" />
-	<target host="www.utdallas.edu" />
+<!--
+	For problematic rules, see UT_Dallas.edu-problematic.xml.
 
+
+	Problematic subdomains:
+
+		- catalog ¹
+		- elearningtest ²
+		- honors ¹
+		- sacscoc ¹
+
+	¹ Works; mismatched, CN: provost.utdallas.edu
+	² Works; mismatched, CN: *.blackboard.com; redirects to https without us
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- autodiscover
+		- coursebook
+		- dali
+		- dox
+		- eforms
+		- elearning
+		- elearningpilot
+		- elearningstaging
+		- elearningtest
+		- eval
+		- galaxy
+		- go
+		- goto
+		- input
+		- oue
+		- pages
+		- policy
+		- provost
+		- ptg
+		- qep
+		- rodin
+		- sacs
+		- sacscoc		(→ sacs)
+		- sis-portal-prod
+		- v
+		- webmail
+
+
+	These altnames don't exist:
+
+		- exchange.utdallas.edu
+
+
+	Mixed content:
+
+		- css on pages and provost from provost ¹
+
+		- Images, on:
+
+			- catalog from provost ²
+			- coursebook from provost ²
+			- elearning and elearningpilot from www ²
+			- honors from provost ²
+			- oue from provost ²
+			- sacs and sacscoc from pages ²
+
+		- favicon on coursebook from provost ²
+
+	¹ Secured by us, just custom fonts.
+	² Secured by us
+
+-->
+<ruleset name="University of Texas at Dallas (partial)">
+	<target host="utdallas.edu" />
+	<target host="*.utdallas.edu" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.utdallas\.edu$" name="^(ExpirePage|PS_LOGINLIST|PS_TOKEN|PS_TOKENEXPIRE|SignOnDefault)$" /-->
+	<!--securecookie host="^elearning(pilot|staging|test)?\.utdallas\.edu$" name="^(JSESSIONID|s_session_id)$" /-->
+	<!--securecookie host="^elearningtest\.utdallas\.edu$" name="^web_client_cache_guid$" /-->
+	<!--
+		Not secured by server:
+						-->
+	<!--securecookie host="^(www\.)?utdallas\.edu$" name="^(BIGipServerUTD_Prd_main_web_server_pool_443|UTDPHPSESSID)$" /-->
+	<!--securecookie host="^\.utdallas\.edu$" name="^(PTGSESSID|utdpraw-\d+-PORTAL-PSJSESSIONID)$" /-->
+	<!--securecookie host="^(autodiscover|webmail)\.utdallas\.edu$" name="^cookieTest$" /-->
+	<!--securecookie host="^elearning(pilot|staging)?\.utdallas\.edu$" name="^(NSC_\d+_\w+_(\d\.){4}\w+|session_id)$" /-->
+	<!--securecookie host="^elearningtest\.utdallas\.edu$" name="^session_id$" /-->
+	<!--securecookie host="^sis-portal-prod\.utdallas\.edu$" name="^BIGipServerpl_sisepprd-utd_SSL$" /-->
+
+	<securecookie host="^(?:(?:autodiscover|elearning(?:pilot|staging|test)?|sis-portal-prod|webmail|www)\.)?utdallas\.edu$" name=".+" />
+
+
+	<!--	^ redirects to www over http, so copy that behavior:
+									-->
 	<rule from="^http://(?:www\.)?utdallas\.edu/" to="https://www.utdallas.edu/" />
+
+	<rule from="^http://(autodiscover|coursebook|dali|dox|eforms|elearning(?:pilot|staging|test)?|eval|galaxy|go|goto|input|oue|pages|policy|provost|ptg|qep|rodin|sis-portal-prod|v|webmail)\.utdallas\.edu/"
+		to="https://$1.utdallas.edu/" />
+
+	<rule from="^http://sacs(?:coc)?\.utdallas\.edu/"
+		to="https://sacs.utdallas.edu/" />
 </ruleset>

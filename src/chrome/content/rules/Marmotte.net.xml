@@ -1,0 +1,39 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)dsl *
+		- ftp *
+
+	* Refused
+
+
+	^: cert only matches *.marmotte.net
+
+
+	Mixed content:
+
+		- favicon on git from thias *
+
+	* Secured by us
+
+-->
+<ruleset name="marmotte.net (partial)" platform="cacert">
+
+	<target host="marmotte.net" />
+	<target host="*.marmotte.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mail\.marmotte\.net$" name="^roundcube_sessid$" /-->
+
+	<securecookie host="^mail\.marmotte\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?marmotte\.net/"
+		to="https://www.marmotte.net/" />
+
+	<rule from="^http://(git|mail|thias)\.marmotte\.net/"
+		to="https://$1.marmotte.net/" />
+
+</ruleset>

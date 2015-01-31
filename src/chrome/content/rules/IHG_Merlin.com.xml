@@ -1,0 +1,45 @@
+<!--
+	For other InterContinental Hotels Group PLC coverage, see IHG_PLC.com.xml.
+
+
+	CDN buckets:
+
+		- videos.ihgmerlin.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- videos *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- images
+		- imagesqa
+		- me2
+		- me2qa
+		- qa
+
+-->
+<ruleset name="IHG Merlin.com (partial)">
+
+	<target host="ihgmerlin.com" />
+	<target host="*.ihgmerlin.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?ihgmerlin\.com$" name="^BIGipServermerlin_Web_\d+-\$+" /-->
+	<!--securecookie host="^qa\.ihgmerlin\.com$" name="^BIGipServerPortal$" /-->
+	<!--securecookie host="^www\.ihgmerlin\.com$" name="^(BIGipServermerlin_Weblogic|JSESSIONID|X-Japan-IP|plloginoccured)$" /-->
+
+	<securecookie host="^(?:qa\.|www\.)?ihgmerlin\.com$" name=".+" />
+
+
+	<rule from="^http://((?:images|imagesqa|me2|me2qa|qa|www)\.)?ihgmerlin\.com/"
+		to="https://$1ihgmerlin.com/" />
+
+</ruleset>

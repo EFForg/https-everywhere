@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- cs *
+
+	* Plaintext reply
+
+
+	Problematic subdomains:
+
+		- sites *
+
+	* Mixed css
+
+
+	Mixed content:
+
+		- css, on:
+
+			- sites from www *
+			- sites from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Colorado College.edu (partial)">
+
+	<target host="coloradocollege.edu" />
+	<target host="*.coloradocollege.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://sites\.coloradocollege\.edu/+(?:$|\?)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?coloradocollege\.edu$" name="^dmid$" /-->
+	<!--securecookie host="^sites.coloradocollege.edu$" name="^([\da-f]{32}|bb2_screener_|wfvt_\d+)$" /-->
+	<!--securecookie host="^www\.coloradocollege\.edu$" name="^BIGipServerPROD_DOTCMS_https$" /-->
+
+	<securecookie host="^(?:www\.)?coloradocollege\.edu$" name=".+" />
+
+
+	<rule from="^http://(sites\.|www\.)?coloradocollege\.edu/"
+		to="https://$1coloradocollege.edu/" />
+
+</ruleset>

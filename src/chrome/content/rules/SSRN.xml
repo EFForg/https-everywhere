@@ -1,5 +1,38 @@
 <!--	!functional:
 		- (www.)ssrnblog.com	(cert: *.myhostcenter.com; presents default cPanel page)
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- piwik ²
+		- static
+
+	¹ Secured by us <= not secured by server
+	² Secured by server
+
+
+	Mixed content:
+
+		- css, on papers from:
+
+			- hq *
+			- static *
+
+		- Images, on papers from:
+
+			- $self *
+			- hq *
+			- static *
+
+		- Web bugs, on:
+
+			- hq and papers from piwik *
+			- papers from  ²
+
+	* Secured by us
+	² Unsecurable <= 404
+
 -->
 <ruleset name="SSRN (partial)" platform="mixedcontent">
 
@@ -8,7 +41,10 @@
 
   <exclusion pattern="http://poseidon[0-9]*\.ssrn\.com/" />
 
-	<securecookie host="^(.*\.)?ssrn\.com$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.ssrn\.com$" name="^(CFGLOBALS|CFID|CFTOKEN|SITEID)$" /-->
+	<securecookie host="^(?:.*\.)?ssrn\.com$" name=".*"/>
 
 	<!--	cert !valid for !www, "Bad Request"	-->
 	<rule from="^http://ssrn\.com/"

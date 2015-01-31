@@ -1,9 +1,74 @@
-<ruleset name="Amahi.org">
-  <target host="www.amahi.org" />
-  <target host="wiki.amahi.org" />
-  <target host="amahi.org" />
-  <rule from="^http://www\.amahi\.org/" to="https://www.amahi.org/"/>
-  <rule from="^http://wiki\.amahi\.org/" to="https://wiki.amahi.org/"/>
-  <rule from="^http://amahi\.org/" to="https://amahi.org/"/>
-</ruleset>
+<!--
+	Nonfunctional subdomains:
 
+		- docs *
+
+	*404; mismatched, CN: *.github.com
+
+
+	Problematic subdomains:
+
+		- talk *
+
+	* Redirects to wiki, valid cert
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- bugs
+		- forums
+		- shop
+		- talk	(→ webchat.freenode.net)
+		- wiki
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- bugs ¹
+		- .forums ²
+		- .shop ¹
+		- wiki ¹
+		- www ¹
+
+	¹ Secured by us <= not secured by server
+	² Secured by server
+
+
+	Mixed content:
+
+		- Images on blog from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Amahi.org (partial)">
+
+	<target host="amahi.org" />
+	<target host="*.amahi.org" />
+		<!--
+			404s:
+				-->
+		<!--exclusion pattern="^http://docs\.amahi\.org/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:(?:bugs|\.shop|wiki|www)\.)?amahi\.org$" name=".+" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^\.forums\.amahi\.org$" name=".+" /-->
+
+
+	<rule from="^http://((?:blog|bugs|forums|shop|wiki|www)\.)?amahi\.org/"
+		to="https://$1amahi.org/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://talk\.amahi\.org/.*"
+		to="https://webchat.freenode.net/?channels=amahi" />
+
+</ruleset>

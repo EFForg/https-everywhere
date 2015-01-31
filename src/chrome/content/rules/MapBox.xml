@@ -1,40 +1,42 @@
 <!--
 	CDN buckets:
 
-		- dnv9my2eseobd.cloudfront.net
+		- d3eju24r2ptc5d.cloudfront.net
 
 			- api.tiles.mapbox.com
+
+		- dnv9my2eseobd.cloudfront.net
 
 		- mapbox.tenderapp.com
 
 			- support.mapbox.com
 
 
-	Nonfunctional subdomains:
+	Problematic subdomains:
+
+		- support *
+
+	* Works; mismatched, CN: *.tenderapp.com
+
+
+	Fully covered subdomains:
 
 		- (www.)
 
-
-	Problematic subdomains:
-
-		- support	(works; mismatched, CN: *.tenderapp.com)
-
 -->
-<ruleset name="MapBox (partial)">
+<ruleset name="MapBox">
 
+	<target host="mapbox.com" />
 	<target host="*.mapbox.com" />
 
 
 	<securecookie host="^mapbox\.tenderapp\.com$" name=".+" />
 
 
-	<rule from="^https?://support\.mapbox\.com/"
+	<rule from="^http://((?:tiles|api\.tiles|www)\.)?mapbox\.com/"
+		to="https://$1mapbox.com/" />
+
+	<rule from="^http://support\.mapbox\.com/"
 		to="https://mapbox.tenderapp.com/" />
-
-	<rule from="^http://tiles\.mapbox\.com/"
-		to="https://tiles.mapbox.com/" />
-
-	<rule from="^https?://api\.tiles\.mapbox\.com/"
-		to="https://dnv9my2eseobd.cloudfront.net/" />
 
 </ruleset>

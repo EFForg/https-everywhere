@@ -1,23 +1,53 @@
 <!--
 	Nonfunctional subdomains:
 
-		- devel *
-		- listas	(redirects to http; mismatched, CN: www.trisquel.info)
-		- packages *
+		- archive ¹
+		- listas ²
+		- oldarchive ¹
+		- packages ¹
 
-	* Refused
+	¹ Redirects to devel
+	² Redirects to ^
+
+
+	Problematic subdomains:
+
+		- cn.archive *
+
+	* Mismatched, CN: mirrors.ustc.edu.cn
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cn.archive	(→ mirrors.ustc.edu.cn)
+		- devel
+
+
+	Insecure cookies are set for these domains:
+
+		- .trisquel.info
+		- devel.trisquel.info
 
 -->
-<ruleset name="Trisquel">
+<ruleset name="Trisquel.info (partial)">
 
 	<target host="trisquel.info" />
 	<target host="*.trisquel.info" />
 
 
-	<securecookie host="^\.trisquel\.info$" name="^SESS\w{32}$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.trisquel\.info$" name="^SESS\w{32}$" /-->
+	<!--securecookie host="^devel\.trisquel\.info$" name="^request_method$" /-->
+
+	<securecookie host="^(?:devel)?\.trisquel\.info$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?trisquel\.info/"
-		to="https://trisquel.info/" />
+	<rule from="^http://(devel\.|www\.)?trisquel\.info/"
+		to="https://$1trisquel.info/" />
+
+	<rule from="^http://cn\.archive\.trisquel\.info/"
+		to="https://mirrors.ustc.edu.cn/" />
 
 </ruleset>

@@ -1,0 +1,42 @@
+<!--
+	Partially covered subdomains:
+
+		- wiki *
+
+	* (?!$|\?) 403s
+
+
+	Mixed content:
+
+		- Bug on forum from m.c.lnkd.licdn.com *
+
+	* Unsecurable <= 400
+
+-->
+<ruleset name="Ethereum.org (partial)">
+
+	<target host="ethereum.org" />
+	<target host="*.ethereum.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ethereum\.org$" name="^vf_ethereum_\w+-tk$" /-->
+	<!--
+		Incapsula cookies:
+					-->
+	<!--securecookie host="^\.ethereum\.org$" name="^(incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^www\.ethereum\.org$" name="^___utm\w+$" /-->
+
+	<securecookie host="^(?:www)?\.ethereum\.org$" name=".+" />
+
+
+	<rule from="^http://((?:code|forum|www)\.)?ethereum\.org/"
+		to="https://$1ethereum.org/" />
+
+	<!--	Redirects as so:
+				-->
+	<rule from="^http://wiki\.ethereum\.org/(?:$|\?.*)"
+		to="https://github.com/ethereum/wiki/wiki" />
+
+</ruleset>

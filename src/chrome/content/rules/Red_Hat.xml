@@ -4,9 +4,14 @@
 
 	Other Red Hat rulesets:
 
+		- Beaker-Project.org.xml
+		- Cygwin.com.xml
+		- Enterprisers_Project.com.xml
+		- Gluster.org.xml
 		- JBoss.xml
 		- Opensource.com.xml
 		- OpenShift.xml
+		- RH_Cloud.com.xml
 		- Spice-space.org.xml
 
 
@@ -32,6 +37,7 @@
 		- europe	(cert only matches www.europe)
 		- jobs		(mismatched, CN: *.sc.hodesdigital.com)
 		- magazine *
+		- rhelblog *
 		- servicesblog *
 
 	* Mismatched, CN: *.wordpress.com
@@ -58,10 +64,12 @@
 		- ca
 		- careers
 		- cn
+		- community
 		- de
 		- docs
 		- engage
 		- es
+		- et		(→ community)
 		- (www.)europe	(^ → www)
 		- fr
 		- gb
@@ -79,10 +87,17 @@
 		- ph
 		- rhn
 		- ru
+		- securityblog
 		- sg
 		- smtrcs
 		- support
 		- webmail
+
+
+	Insecure cookies are set for these domains:
+
+		- .bugzilla
+		- .www
 
 
 	Mixed content:
@@ -98,17 +113,27 @@
 	<target host="*.redhat.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bugzilla\.redhat\.com$" name="^(BROWSE_PRODUCT|Bugzilla_login_request_cookie|DEFAULTFORMAT)$" /-->
+	<!--securecookie host="^\.www\.redhat\.com$" name="^DCID$" /-->
+
 	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?redhat\.com/"
 		to="https://www.redhat.com/" />
 
-	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|de|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|sg|smtrcs|support|webmail)\.redhat\.com/"
+	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|community|de|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|securityblog|sg|smtrcs|support|webmail)\.redhat\.com/"
 		to="https://$1.redhat.com/" />
 
 	<rule from="^http://(?:www\.)?(apac|europe)\.redhat\.com/"
 		to="https://www.$1.redhat.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://et\.redhat\.com/[^?]*"
+		to="https://community.redhat.com/software/" />
 
 	<rule from="^http://investors\.redhat\.com/common/"
 		to="https://investor.shareholder.com/common/" />

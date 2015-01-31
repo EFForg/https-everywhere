@@ -1,26 +1,43 @@
 <!--
-	Almost everything on europa.eu is missconfigured. but there are some exceptions.
+	Almost everything on europa.eu is missconfigured, but there are some exceptions.
 
 
 	Nonfunctional subdomains:
 
-		- ^	(403, valid cert)
-		- ec	(403)
-		- eur-lex	(shows ^; mismatched, CN: europa.eu)
-		- www.europarl *
-		- (www.)ombudsman	(times out)
+		- ^ ¹
+		- curia ¹
+		- eacea.ec ²
+		- trade.ec ⁴
+		- eur-lex ⁵
+		- www.europarl ⁶
+		- (www.)ombudsman ⁶
 
-	* Dropped
+	¹ 403, valid cert
+	² Redirect to http, valid cert
+	⁴ 403; mismatched, CN: europa.eu
+	⁵ Shows ^; mismatched, CN: europa.eu
+	⁶ Dropped
 
 
 	Partially covered subdomains:
 
-		- cordis	(some pages redirect to http)
+		- cordis *
+		- ec ²
+
+	* Some pages redirect to http
+	² $ 403s
 
 
 	Fully covered subdomains:
 
+		- www.eba
+		- (www.)enisa
 		- www.europol
+
+
+	Insecure cookies are set for these domains:
+
+		- www.ecb.europa.eu
 
 
 	Mixed content:
@@ -30,26 +47,39 @@
 	* Secured by us
 
 -->
-<ruleset name="Europa.eu">
+<ruleset name="Europa.eu (partial)">
 
 	<target host="www.ecb.eu" />
 	<target host="*.europa.eu" />
 		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
 		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
+		<!--
+			403:
+				-->
+		<!--exclusion pattern="^http://ec\.europa\.eu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ec\.europa\.eu/+(?!commission(?:$|[?/]))" />
+		<exclusion pattern="^https://oami\.europa\.eu/knowledge/" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.ecb\.europa\.eu$" name="^BIGipServerPOOL\.www\.ecb\.europa\.eu_HTTPS$" /-->
 
 	<!--securecookie host="^\.europol\.europa\.eu$" name="^SESS\w32$" /-->
+
+	<securecookie host="^www\.ecb\.europa\.eu$" name=".+" />
 
 
 	<rule from="^http://www\.ecb(?:\.europa)?\.eu/"
 		to="https://www.ecb.europa.eu/" />
 
-	<rule from="^http://(?:www\.)?consilium\.europa\.eu/"
-		to="https://www.consilium.europa.eu/" />
+	<rule from="^http://(?:www\.)?(consilium|easa|enisa)\.europa\.eu/"
+		to="https://www.$1.europa.eu/" />
 
-	<rule from="^http://(cordis|joinup\.ec|www\.europol)\.europa\.eu/"
+	<rule from="^http://(cordis|www\.eba|ec|joinup\.ec|(?:www\.)?enisa|www\.europol|oami)\.europa\.eu/"
 		to="https://$1.europa.eu/" />
 
-    <rule from="^http://(?:www\.)?easa\.europa\.eu/"
-        to="https://www.easa.europa.eu/" />
 </ruleset>

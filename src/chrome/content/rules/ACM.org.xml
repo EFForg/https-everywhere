@@ -1,5 +1,10 @@
 <!--
+	For rules causing false/broken MCB, see ACM.org-falsemixed.xml.
+
+
 	CDN buckets:
+
+		- delivery.acm.org.edgesuite.net
 
 		- deliveryimages.acm.org.edgesuite.net
 
@@ -12,39 +17,55 @@
 
 	acm.org lacks proper ssl for the following subdomains
 
-		- awards		<- stacktrace for coldfusion
+		- amturing ¹
+		- awards ²
+		- delivery ³
 		- dev			<- shows www
 		- jobs			<- sends to jobtarget.com
 		- librarians		<- displays what appears to be
 					   an old version of the website.
 		- mags
 
+	² Shows awards, valid cert
+	² Redirects to http, valid cert
+	³ 504, akamai
+
 
 	Problematic subdomains:
 
 		- deliveryimages *
+		- jobs ²
 		- portalparts *
+		- store ³
 
 	* Works, akamai
+	² Partially works; mismatched, CN: *.jobtarget.com
+	³ Shows an old version of the website
 
 
 	Partially covered subdomains:
 
+		- (www.) ¹
 		- cacm		(some pages redirect to http)
+
+	¹ Avoiding mixed stylesheets
 
 
 	Fully covered subdomains:
 
-		- (www.)
 		- cacm
 		- campus
 		- deliveryimages *
 		- dl
+		- learning
 		- myacm
+		- pd
 		- plone
 		- portal
 		- portalparts *
 		- queue
+		- spam
+		- store		(→ campus)
 		- techpack
 
 	* → akamai
@@ -52,36 +73,51 @@
 
 	Mixed content:
 
-		- Scripts:
+		- Scripts, on:
 
-			- on www from www *
+			- www from www *
 
-		- css:
+		- css, on:
 
-			- On www from www *
+			- util from myacm *
+			- www from www *
 
 		- Images:
 
-			- On campus from portalparts *
+			- campus from portalparts *
+			- dl from $self *
+			- queue from deliveryimages *
+			- util from $self
+			- util from www *
+
+		- favicons on myacm and util from www *
 
 	* Secured by us
 
-
-	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
-
 -->
-<ruleset name="ACM.org (partial)" platform="mixedcontent">
+<ruleset name="ACM.org (partial)">
 
 	<target host="acm.org" />
 	<target host="*.acm.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
 		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?acm\.org$" name="^I18N_LANGUAGE$" /-->
+	<!--securecookie host="^\.acm\.org$" name="^MYACM$" /-->
+	<!--securecookie host="^cacm\.acm\.org$" name="^_cacm_session$" /-->
+	<!--securecookie host="^(dl|learning|myacm|techpack)\.acm\.org$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^jobs\.acm\.org$" name="^JTSUBREF$" /-->
 
 	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".+" />
 
 
-	<rule from="^http://((?:cacm|campus|dl|myacm|plone|portal|queue|techpack|www)\.)?acm\.org/"
+	<rule from="^http://((?:cacm|campus|dl|myacm|pd|learning|myacm|plone|portal|queue|spam|techpack|www)\.)?acm\.org/"
 		to="https://$1acm.org/" />
 
 	<rule from="^http://deliveryimages\.acm\.org/"
@@ -89,5 +125,10 @@
 
 	<rule from="^http://portalparts\.acm\.org/"
 		to="https://a248.e.akamai.net/f/1896/8636/1d/portalparts.acm.org/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://store\.acm\.org/[^?]*"
+		to="https://campus.acm.org/public/Estore_window/estore_foyer2.cfm" />
 
 </ruleset>

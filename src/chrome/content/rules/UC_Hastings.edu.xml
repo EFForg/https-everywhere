@@ -1,0 +1,70 @@
+<!--
+	For rules causing false/broken MCB, see UC_Hastings.edu-falsemixed.xml.
+
+
+	Problematic subdomains:
+
+		- journals ¹
+		- library ¹
+		- librarysource ²
+
+	¹ Mixed css from (www.)
+	² Mixed css from $self
+
+
+	Partially covered subdomains:
+
+		- library *
+		- librarysource *
+
+	* Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cio2
+		- events
+		- webadvisor
+
+
+	These altnames don't exist:
+
+		- www.events.uchastings.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- journals from (www.) *
+			- journals from fonts.googleapis.com *
+			- library from ^ *
+			- librarysource from $self *
+
+		- Images, on:
+
+			- (www.) from $self *
+			- journals and library from www *
+
+		- favicon on journals from www *
+
+	* Secured by us
+
+-->
+<ruleset name="UC Hastings.edu (partial)">
+
+	<target host="uchastings.edu" />
+	<target host="*.uchastings.edu" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://journals\.uchastings\.edu/" /-->
+		<exclusion pattern="^http://library\.uchastings\.edu/+(?!images/|_site_support/)" />
+		<exclusion pattern="^http://librarysource\.uchastings\.edu/+(?!sp/assets/)" />
+
+
+	<rule from="^http://((?:cio2|events|library|librarysource|webadvisor|www)\.)?uchastings\.edu/"
+		to="https://$1uchastings.edu/" />
+
+</ruleset>

@@ -1,19 +1,67 @@
 <!--
+	For rules causing false/broken MCB, see RSF.org-falsemixed.xml.
+
+
 	Problematic domains:
 
-		- agir.rsf.org		(mismatched, CN: slotmatching14.salesforce.com)
+		- 12mars.rsf.org ¹
+		- agir.rsf.org ²
+
+	¹ Mixed css from $self
+	² Mismatched, CN: slotmatching14.salesforce.com
 
 
-	Mixed image from agir.rsf.org
+	Observed cookie domains:
+
+		- 12mars.org *
+
+	* Secured in RSF.org-falsemixed.xml <= mixed css
+
+
+	Observed cookie domains:
+
+		- 12mars.org *
+
+	* Secured in RSF.org-falsemixed.xml <= mixed css
+
+
+	Mixed content:
+
+		- css, on 12mars from:
+
+			- $self ¹
+			- fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- From agir.rsf.org
+
+			- 12mars, from:
+
+				- $self ¹
+				- s.gravatar.com ¹
+				- pbs.twimg.com ¹
+
+		- Web bugs on 12mars from stats.wordpress.com ¹
+
+	¹ Secured by us
 
 -->
 <ruleset name="Reporters Without Borders">
 
 	<target host="rsf.org" />
 	<target host="*.rsf.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://12mars\.rsf\.org/+(?!favicon\.ico|(?:[\w-]+/)?wp-(?:content|includes)/)" />
 
+	<target host="reporter-ohne-grenzen.de" />
+	<target host="www.reporter-ohne-grenzen.de" />
 
-	<rule from="^http://((?:donate|en|fr|surveillance|www)\.)?rsf\.org/"
+	<rule from="^http://((?:donate|en|fr|12mars|surveillance|www)\.)?rsf\.org/"
 		to="https://$1rsf.org/" />
+
+	<rule from="^http://(?:www\.)?reporter-ohne-grenzen\.de/" to="https://www.reporter-ohne-grenzen.de/" />
 
 </ruleset>

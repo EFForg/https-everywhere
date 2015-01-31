@@ -73,6 +73,7 @@ RuleSet.prototype = {
 
 function RuleSets(userAgent, cache, ruleActiveStates) {
   // Load rules into structure
+  var t1 = new Date().getTime();
   this.targets = {};
   this.userAgent = userAgent;
 
@@ -96,14 +97,31 @@ RuleSets.prototype = {
   },
 
   localPlatformRegexp: (function() {
-    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(this.userAgent)) {
-      log(DBUG, 'Detected that we are running Opera');
+    var isOpera = navigator.userAgent.match(/(?:OPR|Opera)[\/\s](\d+)(?:\.\d+)/);
+    if (isOpera && isOpera.length === 2 && parseInt(isOpera[1]) < 23) {
+      // Opera <23 does not have mixed content blocking
+      log(DBUG, 'Detected that we are running Opera < 23');
       return new RegExp("chromium|mixedcontent");
     } else {
       log(DBUG, 'Detected that we are running Chrome/Chromium');
       return new RegExp("chromium");
     }
   })(),
+
+  addUserRule : function(params) {
+    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
+    var new_rule_set = new RuleSet(params.host, null, true, "user rule");
+    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    new_rule_set.rules.push(new_rule);
+    if (!(params.host in this.targets)) {
+      this.targets[params.host] = [];
+    }
+    ruleCache.remove(params.host);
+    // TODO: maybe promote this rule?
+    this.targets[params.host].push(new_rule_set);
+    log(INFO, 'done adding rule');
+    return true;
+  },
 
   parseOneRuleset: function(ruletag) {
     var default_state = true;
@@ -176,7 +194,7 @@ RuleSets.prototype = {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Rulseset cache hit for " + host);
+        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
         return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
@@ -218,11 +236,6 @@ RuleSets.prototype = {
     // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure.  knownHttps is true if the context for this
     // cookie being set is known to be https.
-    //log(DBUG, "Testing cookie:");
-    //log(DBUG, "  name: " + cookie.name);
-    //log(DBUG, "  host: " + cookie.host);
-    //log(DBUG, "  domain: " + cookie.domain);
-    //log(DBUG, "  rawhost: " + cookie.rawHost);
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
@@ -241,10 +254,6 @@ RuleSets.prototype = {
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
-          //log(WARN, "no match domain " + cr.host_c.test(cookie.domain) +
-          //          " name " + cr.name_c.test(cookie.name));
-          //log(WARN, "with " + cookie.domain + " " + cookie.name);
-          //log(WARN, "and " + cr.host + " " + cr.name);
         }
       }
     }

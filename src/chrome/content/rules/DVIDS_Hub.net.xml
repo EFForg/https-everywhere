@@ -1,0 +1,48 @@
+<!--
+	Problematic domains:
+
+		- d[123].static.dvidshub.net *
+		- (www.)nasaimages.org *
+
+	* Cert only matches *.dvidshub.net
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+
+		- Images, from:
+
+			- static *
+			- d[123].static *
+
+	* Secured by us
+
+-->
+<ruleset name="DVIDS Hub.net">
+
+	<target host="dvidshub.net" />
+	<target host="*.dvidshub.net" />
+	<target host="nasaimages.org" />
+	<target host="www.nasaimages.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dvidshub\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.dvidshub\.net$" name=".+" />
+
+
+	<rule from="^http://(www\.)?dvidshub\.net/"
+		to="https://$1dvidshub.net/" />
+
+	<rule from="^http://(?:d\d\.)?static\.dvidshub\.net/"
+		to="https://static.dvidshub.net/" />
+
+	<!--	Redirect preserves path and args:
+							-->
+	<rule from="^http://(?:www\.)?nasaimages\.org/+"
+		to="https://www.dvidshub.net/unit/NASA" />
+
+</ruleset>

@@ -1,84 +1,232 @@
 <!--
-	Nonfunctional domains:
+	Other Mail.ru rulesets:
 
-		- afisha.mail.ru	(timeout)
-		- blogs.mail.ru
-		- internet.mail.ru	(timeout)
-		- limg.imgsmail.ru	(cert: *.mail.ru; 403)
-		- r2.mail.ru
-		- d4.c8.b0.a2.top.mail.ru
-		- (www.)mail.ru
+		- Imgs_Mail.ru.xml
+		- List.ru.xml
+		- Mradx.net.xml
 
 
-	Problematic domains:
+	Nonfunctional subdomains:
 
-		- top.list.ru *
-		- \w\d.\w\d.\w\d.\w\d.top.mail.ru *
+		- aa ¹
+		- m.agent *
+		- rfr.agent ²
+		- pic.afisha ³
+		- click.my	(400)
+		- horo ³
+		- images.lady ³
+		- internet	(403)
+		- love		(Shows partner.wamba.com)
+		- mailblog *
+		- mra ²
+		- otvet ³
+		- pogoda *
+		- r2 ¹
+
+		- realty		(403)
+		- img.pre.realty	(403)
+		- pro.realty		(403)
+
+		- team ³
+		- d4.c8.b0.a2.top
+		- torg ³
+		- img.torg ³
+		- m.torg ³
+
+		- tv ³
+
+	* Refused
+	² Plaintext reply
+	³ Redirects to http
+	⁴ Shows another domain
+	¹ Dropped
+
+
+	Problematic subdomains:
+
+		- s1.amigo *
+		- blogs **
+		- cdn.connect *
+		- imgs2 ²
+		- m.my *
+		- stat.my *
+		- \w\d.\w\d.\w\d.\w\d.top *
 
 	* Mismatched, CN: *.mail.ru
+	** Shows another domain
+	² 403
 
 
-	Fully covered domains:
+	Partially covered subdomains:
 
-		- top.list.ru				(→ top-fwz1.mail.ru)
-		- \w\d.\w\d.\w\d.\w\d.top.mail.ru	(→ top-fwz1.mail.ru)
-		- top-fwz1.mail.ru
+		- afisha *
+		- touch.afisha *	(→ afisha)
+		- games *
+		- go *
+		- news *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- 1-lview
+		- 1link
+		- portal.1link
+		- agent
+		- amigo
+		- auto
+		- touch.auto
+		- biz
+		- blogs		(→ my)
+		- c
+		- cars
+		- cloud
+		- cp-filin
+		- deti
+		- static.dl
+		- dobro
+		- e
+		- filin
+
+		- avt-\d+.foto:
+
+			- [1-9]
+			- [12]\d
+			- 30
+
+		- forum.games
+		- health
+		- help
+		- hi-tech
+		- m
+		- maps
+		- minigames
+		- money
+		- m.money
+		- my
+		- filed\d+-\d+.my
+		- content.foto.my
+
+		- content-\d+.foto.my:
+
+			- [3468]
+			- 1[048]
+			- 2[267-9]
+			- 30
+
+		- stat.my		(→ my)
+
+		- riot
+		- sales
+		- security
+		- swa
+		- tanks
+		- target
+		- \w\d.\w\d.\w\d.\w\d.top	(→ top-fwz1.mail.ru)
+		- top-fwz1
+		- wot
+
+
+	Insecure cookies are set for these domains:
+
+		- .mail.ru
+		- 1link.mail.ru
+		- .agent.mail.ru
+		- .games.mail.ru
+		- hi-tech.mail.ru
+		- .tv.mail.ru
+
+
+	Mixed content:
+
+		- Images on dobro from $self
 
 -->
 <ruleset name="Mail.ru (partial)">
 
+	<target host="mail.ru" />
 	<target host="*.mail.ru" />
-		<!--	afisha & internet time out.	-->
-		<exclusion pattern="^http://(afisha|blogs|internet|www)\." />
-	<target host="cdn.connect.mail.ru" />
-	<target host="avt.foto.mail.ru" />
-	<target host="m.news.mail.ru" />
-	<target host="*.tv.mail.ru" />
-	<target host="*.imgsmail.ru" />
+		<exclusion pattern="^http://(?:blogs|internet)\.mail\.ru/" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://afisha\.mail\.ru/($|bem-toolkit/blocks-desktop/common/__fonts/_fonts/|cinema/articles/\d+/$|favicon\.ico|img/|imgv2/)" /-->
+		<!--exclusion pattern="^http://touch\.afisha\.mail\.ru/($|favicon\.ico|img/mobile/touch/)" /-->
+		<!--exclusion pattern="^http://auto\.mail\.ru/article/\d+-[\w-]+$" /-->
+		<!--exclusion pattern="^http://touch\.auto\.mail\.ru/$" /-->
+		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$|support/tanks/$)" /-->
+		<!--exclusion pattern="^http://go\.mail\.ru/$" /-->
+		<!--exclusion pattern="^http://horo\.mail\.ru/($|bem/horo/web/web\.bundles/common/|favicon\.ico|img/horo/)" /-->
+		<!--exclusion pattern="^http://lady\.mail\.ru/($|article/\d+-[\w-]+/$|css/modules/|favicon\.ico|feedback/$|img/|pic/column/|shrink/80/ext/pic/\d+/)" /-->
+		<!--exclusion pattern="^http://images\.lady\.mail\.ru/(footer|main|square)/ext/pic/\d+/" /-->
+		<!--exclusion pattern="^http://otvet\.mail\.ru/(auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
+		<!--exclusion pattern="^http://pic\.afisha\.mail\.ru/\d+/$" /-->
+		<!--exclusion pattern="^http://tv\.mail\.ru/($|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://afisha\.mail\.ru/+(?!bem/web/web\.bundles/common/|img/mobile/|mobile/touch/)" />
+		<exclusion pattern="^http://touch\.afisha\.mail\.ru/+(?!mobile/touch/)" />
+		<exclusion pattern="^http://games\.mail\.ru/+(?!css/|favicon\.ico|img/|pic/|pre_big2?_crop/|r/)" />
+		<exclusion pattern="^http://go\.mail\.ru/+(?!favicon\.ico|static/)" />
+		<exclusion pattern="^http://lady\.mail\.ru/(?![^/]+\.css)" />
+		<exclusion pattern="^http://news\.mail\.ru/(?!_css/|ext/pic/\d+/|favicon\.ico$|img/|pic/|prev\d{1,6}/)" />
 
 
-  <!-- Disable securecokie for this?
-  https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001422.html
-  -->
-	<!-- <securecookie host="^\.mail\.ru$" name=".*" /> -->
-	<!--	Are .tv.mail.ru cookies used on unsecurable pages?	-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mail\.ru$" name="^(mrcu|p)$" /-->
+	<!--securecookie host="^1link\.mail\.ru$" name="^c_\d+_\d+$" /-->
+	<!--securecookie host="^\.agent\.mail\.ru$" name="^agent_family$" /-->
+	<!--securecookie host="^\.games\.mail\.ru$" name="^targeting$" /-->
+	<!--securecookie host="^hi-tech\.mail\.ru$" name="^last_visits$" /-->
+
+	<!--	Disable securecookie for this?
+		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001422.html
+  	-->
+	<!--securecookie host="^\.mail\.ru$" name=".+" /-->
 
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.mail\.ru$" name="^(?:FT|V)ID$" />
+	<securecookie host="^(?:1link|hi-tech)\.mail\.ru$" name=".+" />
 
+
+	<rule from="^http://touch\.afisha\.mail\.ru/"
+		to="https://afisha.mail.ru/" />
 
 	<!--	cert doesn't match img.tv
 		ditto my.tv.  my.tv appears identical to tv	-->
-	<rule from="^http://(?:(ad|corp|avt\.foto|r3?|sales|showbiz|status)|(img)(?:\.tv)?|(?:my\.)?(tv))\.mail\.ru/"
-		to="https://$1$2$3.mail.ru/" />
+	<rule from="^http://(?:(img)(?:\.tv)?|my\.(tv))\.mail\.ru/"
+		to="https://$1$2.mail.ru/" />
 
-	<!--	Cert only matches *.mail.ru	-->
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://blogs\.mail\.ru/.*"
+		to="https://my.mail.ru/" />
+
 	<rule from="^http://(?:cdn\.)?connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
 
-	<rule from="^http://lady\.mail\.ru/([^/])\.css"
-		to="https://lady.mail.ru/$1.css" />
-
-	<rule from="^http://news\.mail\.ru/(_css/|favicon\.ico$|img/|pic/|prev\d{1,6}/)"
-		to="https://news.mail.ru/$1" />
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://stat\.my\.mail\.ru/"
+		to="https://my.mail.ru/" />
 
 	<!--	cert doesn't match m.news	-->
 	<rule from="^http://m\.news\.mail\.ru/(_css/|favicon\.ico$|img/)"
 		to="https://news.mail.ru/$1" />
 
-	<rule from="^http://r[23s]\.mail\.ru/"
+	<rule from="^http://r[2s]\.mail\.ru/"
 		to="https://rs.mail.ru/" />
 
-	<rule from="^http://(?:top\.list|(?:\w\d\.){4}top\.mail|top-fwz1\.mail)\.ru/"
+	<rule from="^http://(?:(?:\w\d\.){4}top|top-fwz1)\.mail\.ru/"
 		to="https://top-fwz1.mail.ru/" />
 
-	<rule from="^http://go\.imgsmail\.ru/"
-		to="https://go.imgsmail.ru/" />
-
-	<!--	also on img.mail.ru	-->
-	<rule from="^http://l?img\.imgsmail\.ru/"
-		to="https://img.imgsmail.ru/" />
+	<rule from="^http://((?:1-lview|1link|portal\.1link|ad|agent|amigo|auto|touch\.auto|biz|c|cars|cloud|corp|cp-filin|static\.dl|deti|dobro|e|filin|(?:avt|content)(?:-\d+)?\.foto|games|forum\.games|health|help|hi-tech|lady|m|maps|minigames|money|m\.money|my|filed\d+-\d+\.my|news|r3?|riot|sales|security|showbiz|status|swa|tanks|target|wot|www)\.)?mail\.ru/"
+		to="https://$1mail.ru/" />
 
 </ruleset>

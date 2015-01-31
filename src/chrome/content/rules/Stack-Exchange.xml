@@ -1,105 +1,175 @@
 <!--
+	For rules causing false/broken MCB, Stack-Exchange-mixedcontent.xml.
+
+
 	Other Stack Exchange rulesets:
 
 		- Ask_Ubuntu.com.xml
 		- MathOverflow.net.xml
+		- Server_Fault.com.xml
 
 
-	Nonfunctional domains:
+	Problematic domains:
 
-		- chat.stackexchange.com	(Mixed content)
-		- meta.*.stackexchange.com      (cert: *.stackexchange.com)
+		- www.stackapps.com ¹
+		- meta.*.stackexchange.com ²
+
+	¹ Mismatched
+	² Works; mismatched, CN: *.stackexchange.com
+
+
+	Partially covered domains:
+
+		- blog.stackoverflow.com *
+
+	* Avoiding false/broken MCB
 
 
 	Fully covered domains:
 
+		- cdn-careers.sstatic.com
 		- cdn-chat.sstatic.com
-        - *.stackexchange.com
+        	- *.stackexchange.com
+		- teststackoverflow.com
+		- *.blogoverflow.com
+
+
+	www.teststackoverflow.com doesn't exist.
 
 
 	Mixed content:
 
-		- css on chat.stackexchange.com from cdn-chat.sstatic.net *
+		- css, on:
 
-		- Images on chat.stackexchange.com, from:
+			- blog.stackoverflow.com from $self
 
-			- www.gravatar.com *
-			- i.stack.imgur.com *
-			- cdn.sstatic.net *
+		- Images, on:
 
-	* Secured by us
+			- blog.stackoverflow.com, from:
+
+				- $self ¹
+				- www.google.com ¹
+
+		- favicons, on:
+
+			- blog.stackoverflow.com from cdn.sstatic.net ¹
+
+		- Web bugs, on:
+
+			- *.stackexchange.com from pixel.quantserve.com ²
+			- blog.stackoverflow.com from i.creativecommons.org ¹
+			- careers.stackoverflow.com from www.esri.com ³
+
+	¹ Secured by us
+	² Rewritten to https with js enabled, secured by us otherwise
+	³ Unsecurable <= 503
 
 
-    As of Dec., 2013, stackexchange has a cert valid for:
-        - *.stackexchange.com
-        - stackexchange.com
-        - meta.stackexchange.com
-        - *.meta.stackexchange.com
-        - *.stackoverflow.com
-        - stackoverflow.com
-        - serverfault.com
-        - stackauth.com
-        - sstatic.net
-        - meta.serverfault.com
-        - superuser.com
-        - meta.superuser.com
-        - stackapps.com
-        - openid.stackauth.com 
+	As of Dec., 2013, stackexchange has a cert valid for:
+
+		- *.stackexchange.com
+		- stackexchange.com
+		- meta.stackexchange.com
+		- *.meta.stackexchange.com
+		- *.stackoverflow.com
+		- stackoverflow.com
+		- serverfault.com
+		- stackauth.com
+		- sstatic.net
+		- meta.serverfault.com
+		- superuser.com
+		- meta.superuser.com
+		- stackapps.com
+		- openid.stackauth.com
+		- *.blogoverflow.com (Dec., 2014)
+
+
+	Insecure cookies are set for the following domains:
+
+		- .serverfault.com
+		- .stackexchange.com
+		- stackoverflow.com
+		- .stackoverflow.com
 
 -->
-<ruleset name="Stack Exchange (mixed content)" platform="mixedcontent">
+<ruleset name="Stack Exchange (partial)">
 
 	<target host="blogoverflow.com" />
 	<target host="www.blogoverflow.com" />
-	<target host="serverfault.com" />
-	<target host="*.serverfault.com" />
 	<target host="sstatic.net" />
 	<target host="*.sstatic.net" />
-	<target host="or.cdn.sstatic.net" />
+	<target host="stackapps.com" />
+	<target host="www.stackapps.com" />
 	<target host="stackexchange.com" />
 	<target host="*.stackexchange.com" />
+		<!--
+			https://github.com/EFForg/https-everywhere/issues/58
+
+			Breaks OpenID login:
+						-->
+		<exclusion pattern="^http://(?:\w+\.)?stack(?:exchange|overflow)\.com/users/authenticate/" />
 	<target host="stackoverflow.com" />
 	<target host="*.stackoverflow.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.stackoverflow\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 	<target host="app.stacktack.com" />
 	<target host="superuser.com" />
 	<target host="*.superuser.com" />
-    <target host="stackapps.com" />
-    <target host="www.stackapps.com" />
+	<target host="teststackoverflow.com" />
+	<target host="*.teststackoverflow.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.serverfault\.com$" name="^prov$" /-->
+	<!--securecookie host="^\.stackexchange\.com$" name="^prov$" /-->
+	<!--securecookie host="^stackoverflow\.com$" name="^rk-\d+$" /-->
+	<!--securecookie host="^\.stackoverflow\.com$" name="^prov$" /-->
 
 	<securecookie host="^\.sstatic\.net$" name=".+" />
+	<securecookie host="\.stackexchange\.com$" name=".+" />
+	<securecookie host="^stackoverflow\.com$" name=".+" />
+	<securecookie host="^\.teststackoverflow\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?blogoverflow\.com/$"
 		to="https://stackexchange.com/blogs" />
-
-	<rule from="^http://(\w+\.)?stackexchange\.com/"
-		to="https://$1stackexchange.com/" />
+	
+	<rule from="^http://([^\/]+)\.blogoverflow\.com/"
+		to="https://$1.blogoverflow.com/" />
 
 	<rule from="^http://(?:(or\.)?cdn\.)?sstatic\.net/"
 		to="https://$1cdn.sstatic.net/" />
 
-	<rule from="^http://cdn-chat\.sstatic\.net/"
-		to="https://cdn-chat.sstatic.net/" />
+	<rule from="^http://cdn-c(areers|hat)\.sstatic\.net/"
+		to="https://cdn-c$1.sstatic.net/" />
 
-	<rule from="^http://(www\.|meta\.|careers\.)?stackoverflow\.com/"
+	<rule from="^http://(?:www\.)?stackapps\.com/"
+		to="https://stackapps.com/" />
+
+	<rule from="^http://((?:\w+|meta\.\w+|discuss\.area51)\.)?stackexchange\.com/"
+		to="https://$1stackexchange.com/" />
+
+	<rule from="^http://((?:blog|www|meta|careers)\.)?stackoverflow\.com/"
 		to="https://$1stackoverflow.com/" />
-
-    <rule from="^http://(www\.|meta\.)?serverfault\.com/"
-		to="https://$1serverfault.com/" />
-
-    <rule from="^http://(www\.|meta\.)?superuser\.com/"
-		to="https://$1superuser.com/" />
-
-    <rule from="^http://(www\.)?stackapps\.com/"
-        to="https://$1stackapps.com/" />
 
 	<rule from="^http://app\.stacktack\.com/"
 		to="https://s3.amazonaws.com/stacktackapp/" />
 
-	<rule from="^http://meta\.superuser\.com/favicon\.ico"
-		to="https://cdn.sstatic.net/superusermeta/img/favicon.ico" />
+	<rule from="^http://(www\.|meta\.)?superuser\.com/"
+		to="https://$1superuser.com/" />
 
-	<securecookie host="\.stackexchange\.com$" name=".*" />
+	<rule from="^http://(\w\w)\.stackoverflow\.com/"
+		to="https://$1.stackoverflow.com/" />
 
+	<rule from="^http://meta\.(\w\w)\.stackoverflow\.com/"
+		to="https://meta.$1.stackoverflow.com/" />
+
+	<rule from="^http://discuss\.area51\.stackexchange\.com/"
+		to="https://discuss.area51.stackexchange.com/" />
+
+	<rule from="^http://teststackoverflow\.com/"
+		to="https://teststackoverflow.com/" />
 </ruleset>

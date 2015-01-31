@@ -1,0 +1,32 @@
+<!--
+	For rules causing false/broken MCB, see Threat_Metrix.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="ThreatMetrix.com (partial)">
+
+	<target host="threatmetrix.com" />
+	<target host="www.threatmetrix.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?threatmetrix\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?threatmetrix\.com$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http://(www\.)?threatmetrix\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://$1threatmetrix.com/" />
+
+</ruleset>

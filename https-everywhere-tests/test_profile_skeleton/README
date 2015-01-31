@@ -1,0 +1,15 @@
+Method to produce this skeleton Firefox profile directory:
+
+Create an empty profile directory.
+Unpack the XPI into $PROFILE_DIRECTORY/extensions/https-everywhere@eff.org.
+This "installs" the extension but doesn't really install it. At first start of
+Firefox, you will be prompted whether you want to install the extension.
+
+Run firefox -profile $PROFILE_DIRECTORY, but *do not* click install yet.
+Instead, cp -r $PROFILE_DIRECTORY to $PROFILE_DIRECTORY.copy. Then go back to
+Firefox and click install. Quit Firefox, and run diff -r $PROFILE_DIRECTORY,
+$PROFILE_DIRECTORY.copy. The files that differ are the ones that are required
+for Firefox to consider the extension installed. Use some judgement to determine
+which ones are critical, modify them as necessary (for instance, enable verbose
+logging in prefs.js), and save them to this skeleton directory.
+

@@ -1,0 +1,84 @@
+<!--
+	For rules causing false/broken MCB, see Mirror_Bingo.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- techcorp.edgesuite.net
+
+			- cachegames
+			- cachewww
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- cachegames ²
+		- cachewww ²
+		- games ¹
+
+	¹ Mixed css
+	² Akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .mirrorbingo.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- games from cachegames *
+			- www from cachewww *
+
+		- Images, on:
+
+			- (www.)? from cachewww *
+			- games from cachegames *
+
+	* Secured by us
+
+-->
+<ruleset name="Mirror Bingo.com (partial)">
+
+	<target host="mirrorbingo.com" />
+	<target host="cachegames.mirrorbingo.com" />
+	<target host="cachewww.mirrorbingo.com" />
+	<target host="games.mirrorbingo.com" />
+	<target host="www.mirrorbingo.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:games\.|www\.)?mirrorbingo\.com/+(?!favicon\.ico|getcss/|html/|image/|library/|mirror-theme/)" />
+		<!--
+			References resources relative to root:
+								-->
+		<!--exclusion pattern="^http://cachewww\.mirrorbingo\.com/mirror-theme/css/main\.css($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://cachewww\.mirrorbingo\.com/+(?!getcss/bingo\.css|html/css/main\.css|html/portlet/journal_content/css/main\.css).+\.css($|\?)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mirrorbingo\.com$" name="^(GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+
+
+	<!--	First, rewrite to !cache css which hasn't been
+		observed to reference resources relatively:
+								-->
+	<rule from="^http://cache(games|www)\.mirrorbingo\.com/+(?!(?!getcss/bingo\.css|html/css/main\.css|html/portlet/journal_content/css/main\.css).+\.css(?:$|\?))"
+		to="https://$1.mirrorbingo.com/" />
+
+	<!--	Then, rewrite the rest to Akamai:
+							-->
+	<rule from="^http://cache(games|www)\.mirrorbingo\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/cache$1.mirrorbingo.com/" />
+
+	<rule from="^http://(games\.|www\.)?mirrorbingo\.com/"
+		to="https://$1mirrorbingo.com/" />
+
+</ruleset>
