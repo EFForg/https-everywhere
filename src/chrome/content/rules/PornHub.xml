@@ -10,14 +10,50 @@
 		- cdn3.image.pornhub.phncdn.com.swiftcdn1.com
 			- cdn3.image.pornhub.phncdn.com
 
+
+	Nonfunctional subdomains:
+
+		- img *
+
+	* Dropped
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+	* Secured by us
+
 -->
 <ruleset name="PornHub (partial)">
 
 	<target host="pornhub.com" />
 	<target host="www.pornhub.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+($|\?|create_account|login($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+(favicon\.ico|insights($|[?/]))" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="http://www\.pornhub\.com/+insights(?!/wp-content|/wp-includes/)" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="http://www\.pornhub\.com/+(?!favicon\.ico|insights(?:/wp-content|/wp-includes/))" />
 
 
-	<securecookie host="^(?:www\.)?pornhub\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.pornhub\.com$" name="^RNLBSERVERID$" /-->
+
+	<!--securecookie host="^(?:www\.)?pornhub\.com$" name=".+" /-->
 
 
 	<rule from="^http://(www\.)?pornhub\.com/"

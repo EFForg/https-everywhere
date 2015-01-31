@@ -5,18 +5,38 @@
 		- campusship	(404, cert only matches www.campusship)
 
 
+	Partially covered subdomains
+
+		- (www.) *		(^ → www)
+
+	* Some (most?) pages started redirecting to http
+
+
 	Fully covered subdomains:
 
-		- (www.)		(^ → www)
 		- www.apps
 		- (www.)campusship	(^ → www)
 		- wwwapps
 
 -->
-<ruleset name="UPS.com (broken)" default_off="redirect loops">
+<ruleset name="UPS.com (partial)">
 
 	<target host="ups.com" />
 	<target host="*.ups.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ups\.com/content/globalentry$" /-->
+		<!--
+			all ur pkgs r now belong to nsa
+
+			(Now redirects to login:
+						-->
+		<!--exclusion pattern="^http://www\.ups\.com/WebTracking/track($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ups\.com/+(?!assets/|favicon\.ico|img/|styles/|stylesheets/)" />
 
 
 	<securecookie host="^www\.campusship\.ups\.com$" name=".+" />

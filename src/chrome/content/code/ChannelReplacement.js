@@ -82,7 +82,7 @@ ChannelReplacement.prototype = {
     newChan.loadGroup = chan.loadGroup;
     newChan.notificationCallbacks = chan.notificationCallbacks;
     newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
-    
+
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
     

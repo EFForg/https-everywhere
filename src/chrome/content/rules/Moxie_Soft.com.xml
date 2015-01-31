@@ -1,0 +1,45 @@
+<!--
+	Nonfunctional domains:
+
+		- resources.moxiesoft.com *
+
+	* Marketo
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www.gomoxie.com from $self *
+			- www.gomoxie.com from farm\d.static.flickr.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Moxie Soft.com">
+
+	<target host="gomoxie.com" />
+	<target host="*.gomoxie.com" />
+	<target host="moxiesoft.com" />
+	<target host="*.moxiesoft.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^support\.gomoxie\.com$" name="^BIGipServerPool_ITSM_Prod_Admin_SSL$" /-->
+	<!--securecookie host="^(www\.)?(gomoxie|moxiesoft)\.com$" name="^(cbc_country_code|cbc_country_name)$" /-->
+
+	<securecookie host="^(?:www\.)?(?:gomoxie|moxiesoft)\.com$" name=".+" />
+	<securecookie host="^support\.gomoxie\.com$" name="^$" />
+
+
+	<rule from="^http://(support\.|www\.)?gomoxie\.com/"
+		to="https://$1gomoxie.com/" />
+
+	<rule from="^http://(www\.)?moxiesoft\.com/"
+		to="https://$1moxiesoft.com/" />
+
+	<rule from="^http://resources\.moxiesoft\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sjg.marketo.com/" />
+
+</ruleset>

@@ -1,32 +1,83 @@
 <!--
+	For rules causing false/broken MCB, see CyanogenMod.org-falsemixed.xml.
+
+
+	Other CyanogenMod rulesets:
+
+		- Get.CM.xml
+
+
 	Nonfunctional subdomains:
 
-		- ^ *
-		- forum *
+		- beta.download ¹
 		- review	(refused)
-		- stats		(dropped)
-		- wiki *
-		- www	(520)
 
-	* 522
+	¹ 404
+
+
+	Problematic subdomains:
+
+		- mirror.slc ¹
+		- wiki *
+		- www *
+
+	¹ Mismatched, CN: ssl2786.cloudflare.com
+	* Mixed css from $self
 
 
 	Fully covered subdomains:
 
+		- ^
 		- account
 		- download
+		- forum
 		- jira
+		- stats
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- jira
+
+
+	Mixed content:
+
+		- css wiki and www from $self *
+
+		- Images on www from $self *
+
+		- favicon on www from $self *
+
+		- Web bug on www from www.twilio.com *
+
+	* Secured by us
 
 -->
 <ruleset name="CyanogenMod.org (partial)">
 
+	<target host="cyanogenmod.org" />
 	<target host="*.cyanogenmod.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://wiki\.cyanogenmod\.org/+(?!extensions/|favicon\.ico|images/|load\.php|skins/)" />
+		<exclusion pattern="^http://www\.cyanogenmod\.org/+(?!wp-content/|wp-includes/)" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^wiki\.cyanogenmod\.org$" name="^mediawiki_cmw__session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^jira\.cyanogenmod\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
+
+	<securecookie host="^\.cyanogenmod\.org$" name="^__cfduid$" />
 	<securecookie host="^jira\.cyanogenmod\.org$" name=".+" />
 
 
-	<rule from="^http://(account|download|jira)\.cyanogenmod\.org/"
-		to="https://$1.cyanogenmod.org/" />
+	<rule from="^http://((?:account|download|forum|jira|stats|wiki|www)\.)?cyanogenmod\.org/"
+		to="https://$1cyanogenmod.org/" />
 
 </ruleset>

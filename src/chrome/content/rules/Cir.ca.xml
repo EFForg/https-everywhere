@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- s3-us-west-2.amazonaws.com/titleimages.cir.ca/
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- backupblog
+		- blog
+		- help
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- blog and backupblog from \w+.files.wordpress.com *
+			- blog and backupblog backupblog from ^ *
+			- blog and backupblog from blog *
+			- blog and backupblog from backupblog *
+			- blog and backupblog from media.giphy.com *
+			- blog and backupblog from media[12].giphy.com *
+			- blog  and backupblog backupblog from i2.cdn.turner.com *
+			- (www.) from s3-us-west-2.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Cir.ca">
+
+	<target host="cir.ca" />
+	<target host="*.cir.ca" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cir\.ca$" name="^gacid$" /-->
+	<!--securecookie host="^(www\.)?cir\.ca$" name="^auth_token$" /-->
+
+	<securecookie host="^(?:\.|www\.)?cir\.ca$" name=".+" />
+
+
+	<rule from="^http://((?:backupblog|blog|help|www)\.)?cir\.ca/"
+		to="https://$1cir.ca/" />
+
+</ruleset>

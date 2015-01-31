@@ -1,3 +1,45 @@
+<!--
+	For rules causing false/broken MCB, see MoveOn.org-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- d83190g0d3lhr.cloudfront.net
+
+			- static.petitions.moveon.org
+
+		- moveon.wpengine.com
+
+			- front.moveon.org
+
+
+	Nonfunctional domains:
+
+		- front.moveon.org	(redirects to http, valid cert)
+
+
+	Fully covered domains:
+
+		- static.petitions.moveon.org	(→ d83190g0d3lhr.cloudfront.net)
+
+
+	Mixed content:
+
+		- Videos on petitions.moveon.org from www.youtube.com ¹
+
+		- css, on petitions.moveon.org from:
+
+			- ^ ¹
+			- fonts.google.com ¹
+
+		- Images, on petitions.moveon.org from:
+
+			- moveon.wpengine.netdna-cdn.com ²
+
+	¹ Secured by us
+	² Unsecurable
+
+-->
 <ruleset name="MoveOn">
 	<target host="moveon.org" />
 	<target host="*.moveon.org" />
@@ -8,8 +50,8 @@
 	there is no trailing slash, add a trailing slash when
 	changing the URL to HTTPS (the previous URL becomes
 	https://www.moveon.org/press/ for instance.) -->
-	<rule from="^https?://(?:www\.)?moveon\.org/([a-z0-9]+)$" to="https://www.moveon.org/$1/" />
-	<rule from="^https?://(pol|civic|civ)\.moveon\.org/([a-z0-9]+)$" to="https://$1.moveon.org/$2/" />
+	<rule from="^http://(?:www\.)?moveon\.org/([a-z0-9]+)$" to="https://www.moveon.org/$1/" />
+	<rule from="^http://(pol|civic|civ)\.moveon\.org/([a-z0-9]+)$" to="https://$1.moveon.org/$2/" />
 
 	<!-- As of April 23, 2011, the URL https://www.moveon.org/keepmeposted/ redirects to the
 	https://civic.moveon.org/keepmeposted// URL. This is probably an error-the correct URL
@@ -26,6 +68,11 @@
 	<rule from="^http://(?:www\.)?moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]{2,}\?)|(?:[a-qs-z0-9]\?)|(?:[a-z0-9]+[^a-z0-9?]+)){1}" to="https://www.moveon.org/$1" />
 	<rule from="^http://(pol|civ)\.moveon\.org/([^a-z0-9]+|(?:[a-z0-9]+[^a-z0-9]+)|$){1}" to="https://$1.moveon.org/$2" />
 	<rule from="^http://civic\.moveon\.org/((?:[^a-z0-9]+)|(?:[a-z0-9]+[^a-z0-9/]+)|(?:[a-z0-9]+/(?:$|[^/]+))|$){1}" to="https://civic.moveon.org/$1" />
+
+	<!--	A protocol-relative reference exists on petitions.moveon.org:
+										-->
+	<rule from="^https?://static\.petitions\.moveon\.org/"
+		to="https://d83190g0d3lhr.cloudfront.net/" />
 
 	<!-- Handle URLs for the moveonpac.org domain. -->
 	<rule from="^http://(?:www\.)?moveonpac\.org/" to="https://www.moveonpac.org/" />

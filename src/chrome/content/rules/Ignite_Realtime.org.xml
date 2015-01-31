@@ -1,0 +1,42 @@
+<!--
+	Problematic subdomains:
+
+		- issues *
+
+	* Mismatched, CN: igniterealtime.org
+
+
+	Mixed content:
+
+		- Images on (www.) from community *
+
+	* Secured by us
+
+-->
+<ruleset name="Ignite Realtime.org">
+
+	<target host="igniterealtime.org" />
+	<target host="*.igniterealtime.org" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(www\.)?igniterealtime\.org$" name="^atlassian\.xsrf\.token$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(community\.|www\.)?igniterealtime\.org$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^community\.igniterealtime\.org$" name="^jive\.server\.info$" /-->
+
+	<securecookie host="^(?:community\.|www\.)?igniterealtime\.org$" name=".+" />
+
+
+	<rule from="^http://(community\.|www\.)?igniterealtime\.org/"
+		to="https://$1igniterealtime.org/" />
+
+	<!--	Redirect preserves path and args:
+							-->
+	<rule from="^http://issues\.igniterealtime\.org/+"
+		to="https://igniterealtime.org/issues/" />
+
+</ruleset>

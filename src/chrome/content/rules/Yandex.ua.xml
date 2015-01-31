@@ -1,0 +1,107 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- market ¹
+		- news ²
+		- soft ²
+
+	¹ Redirects to http
+	² Refused
+
+
+	Problematic subdomains:
+
+		- m.images ¹
+		- m.money ²
+
+	¹ Mismatched, CN: yandex.ru
+	² Mismatched, CN: money.yandex.ru
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- avia
+		- awaps
+		- blogs
+		- browser
+		- feedback
+		- m.feedback
+		- fotki
+		- m.fotki
+		- help
+		- kiks
+		- images
+		- legal
+		- m.legal
+		- m
+		- mail
+		- maps
+		- mobile
+		- pass
+		- slovari
+		- stat
+		- translate
+		- tune
+		- video
+		- yabs
+		- zno
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.ua
+		- mail.yandex.ua
+		- mobile.yandex.ua
+		- slovari.yandex.ua
+		- stat.yandex.ua
+		- translate.yandex.ua
+
+
+	Mixed content:
+
+		- favicon on maps from yandex.st *
+
+	* Secured by us
+
+-->
+<ruleset name="Yandex.ua (partial)">
+
+	<target host="yandex.ua" />
+	<target host="*.yandex.ua" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.yandex\.ua/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://yandex\.au/(?!images/)" />
+		<exclusion pattern="^http://www\.yandex\.ua/(?!all$)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.ua$" name="^(Cookie_check|Session_id|my|yandexuid|yp|ys)$" /-->
+	<!--securecookie host="^mail\.yandex\.ua$" name="^ni$" /-->
+	<!--securecookie host="^mobile\.yandex\.ua$" name="^family$" /-->
+	<!--securecookie host="^slovari\.yandex\.ua$" name="^(slovari-state|uid)$" /-->
+	<!--securecookie host="^stat\.yandex\.ua$" name="^uid$" /-->
+	<!--securecookie host="^translate\.yandex\.ua$" name="^(first_visit_src|stoken)$" /-->
+
+	<securecookie host="^(?:mail|mobile|slovari|stat|translate)\.yandex\.ua$" name=".+" />
+
+
+	<rule from="^http://((?:avia|awaps|blogs|browser|feedback|m\.feedback|fotki|m\.fotki|help|images|kiks|legal|m\.legal|m|mail|maps|mobile|pass|slovari|stat|translate|tune|video|www|yabs|zno)\.)?yandex\.ua/"
+		to="https://$1yandex.ua/" />
+
+</ruleset>

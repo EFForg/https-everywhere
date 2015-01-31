@@ -1,0 +1,41 @@
+<!--
+	CDN buckets:
+
+		- gocoin-developers.s3.amazonaws.com
+
+
+	Problematic subdomains:
+
+		- help *
+
+	* Tender
+
+
+	Mixed content:
+
+		- Images on help from gocoin-developers.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="GoCoin.com">
+
+	<target host="gocoin.com" />
+	<target host="*.gocoin.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?gocoin\.com$" name="^keystone\.sid$" /-->
+	<!--securecookie host="^dashboard\.gocoin\.com$" name="^connect\.sid$" /-->
+
+	<securecookie host="^(?:\.|dashboard\.|www\.)?gocoin\.com$" name=".+" />
+
+
+	<rule from="^http://(dashboard\.|www\.)?gocoin\.com/"
+		to="https://$1gocoin.com/" />
+
+	<rule from="^http://help\.gocoin\.com/"
+		to="https://gocoin.tenderapp.com/" />
+
+</ruleset>

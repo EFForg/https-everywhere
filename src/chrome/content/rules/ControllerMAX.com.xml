@@ -1,0 +1,45 @@
+<!--
+	For rules causing false/broken MCB, see ControllerMAX.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css from ^ ¹
+
+		- Images, from:
+
+			- www ¹
+			- cdn.printfriendly.com ¹
+			- www.team-xecuter.com ²
+
+	¹ Secured by us
+	² Unsecurable <= http reply
+
+-->
+<ruleset name="ControllerMAX.com (partial)">
+
+	<target host="controllermax.com" />
+	<target host="www.controllermax.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://(www\.)?controllermax\.com/+(forums(?!/clientscript/|/css\.php|/customavatars/|/favicon\.ico|/images/))" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(www\.)?controllermax\.com$" name="^(cr_lastactivity|cr_lastvisit)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?controllermax\.com$" name="^(cr_sessionhash|PHPSESSID)$" /-->
+	<!--
+		Avoiding forum cookies:
+					-->
+	<securecookie host="^(?:www\.)?controllermax\.com$" name="^PHPSESSID$" />
+
+
+	<rule from="^http://(www\.)?controllermax\.com/(?!forums(?!/clientscript/|/css\.php|/customavatars/|/favicon\.ico|/images/))"
+		to="https://$1controllermax.com/" />
+
+</ruleset>

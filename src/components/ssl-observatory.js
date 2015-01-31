@@ -7,23 +7,23 @@ const CC = Components.classes;
 const CR = Components.results;
 
 // Log levels
-VERB=1;
-DBUG=2;
-INFO=3;
-NOTE=4;
-WARN=5;
+let VERB=1;
+let DBUG=2;
+let INFO=3;
+let NOTE=4;
+let WARN=5;
 
-BASE_REQ_SIZE=4096;
-MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
-MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
-TIMEOUT = 60000;
+let BASE_REQ_SIZE=4096;
+let TIMEOUT = 60000;
+let MAX_OUTSTANDING = 20; // Max # submission XHRs in progress
+let MAX_DELAYED = 32;     // Max # XHRs are waiting around to be sent or retried 
 
-ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
-ASN_IMPLICIT = -2;     // ASN can be learned from connecting IP
-ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
+let ASN_PRIVATE = -1;     // Do not record the ASN this cert was seen on
+let ASN_IMPLICIT = -2;    // ASN can be learned from connecting IP
+let ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Internet access
 
 // XXX: We should make the _observatory tree relative.
-LLVAR="extensions.https_everywhere.LogLevel";
+let LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
@@ -51,7 +51,7 @@ const INCLUDE = function(name) {
       dump("INCLUDE " + name + ": " + e + "\n");
     }
   }
-};
+}
 
 INCLUDE('Root-CAs');
 INCLUDE('sha256');
@@ -64,12 +64,19 @@ function SSLObservatory() {
 
   try {
     // Check for torbutton
-    this.tor_logger = CC["@torproject.org/torbutton-logger;1"]
-          .getService(CI.nsISupports).wrappedJSObject;
-    this.torbutton_installed = true;
+    var tor_logger_component = CC["@torproject.org/torbutton-logger;1"];
+    if (tor_logger_component) {
+      this.tor_logger =
+        tor_logger_component.getService(CI.nsISupports).wrappedJSObject;
+      this.torbutton_installed = true;
+    }
   } catch(e) {
     this.torbutton_installed = false;
   }
+
+  this.HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
+                            .getService(Components.interfaces.nsISupports)
+                            .wrappedJSObject;
 
   /* The proxy test result starts out null until the test is attempted.
    * This is for UI notification purposes */
@@ -285,9 +292,31 @@ SSLObservatory.prototype = {
   },
   */
 
+  // Calculate the MD5 fingerprint for a cert. This is the fingerprint of the
+  // DER-encoded form, same as the result of
+  // openssl x509 -md5 -fingerprint -noout
+  // We use this because the SSL Observatory depends in many places on a special
+  // fingerprint which is the concatenation of MD5+SHA1, and the MD5 fingerprint
+  // is no longer available on the cert object.
+  // Implementation cribbed from
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsICryptoHash
+  md5Fingerprint: function(cert) {
+    var len = new Object();
+    var derData = cert.getRawDER(len);
+    var ch = CC["@mozilla.org/security/hash;1"].createInstance(CI.nsICryptoHash);
+    ch.init(ch.MD5);
+    ch.update(derData,derData.length);
+    var h = ch.finish(false);
+
+    function toHexString(charCode) {
+      return ("0" + charCode.toString(16)).slice(-2);
+    }
+    return [toHexString(h.charCodeAt(i)) for (i in h)].join("").toUpperCase();
+  },
+
   ourFingerprint: function(cert) {
     // Calculate our custom fingerprint from an nsIX509Cert
-    return (cert.md5Fingerprint+cert.sha1Fingerprint).replace(":", "", "g");
+    return (this.md5Fingerprint(cert)+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
   observe: function(subject, topic, data) {
@@ -322,10 +351,10 @@ SSLObservatory.prototype = {
 
       var host_ip = "-1";
       var httpchannelinternal = subject.QueryInterface(Ci.nsIHttpChannelInternal);
-      try { 
+      try {
         host_ip = httpchannelinternal.remoteAddress;
       } catch(e) {
-          this.log(INFO, "Could not get server IP address.");
+        this.log(INFO, "Could not get server IP address.");
       }
       subject.QueryInterface(Ci.nsIHttpChannel);
       var certchain = this.getSSLCert(subject);
@@ -356,16 +385,16 @@ SSLObservatory.prototype = {
         }
 
         if (subject.URI.port == -1) {
-            this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
+          this.submitChain(chainArray, fps, new String(subject.URI.host), subject, host_ip, false);
         } else {
-            this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
+          this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
     }
   },
 
   observatoryActive: function() {
-                         
+
     if (!this.myGetBoolPref("enabled"))
       return false;
 
@@ -394,7 +423,7 @@ SSLObservatory.prototype = {
         var pbs = CC["@mozilla.org/privatebrowsing;1"].getService(CI.nsIPrivateBrowsingService);
         if (pbs.privateBrowsingEnabled) return false;
       } catch (e) { /* seamonkey or old firefox */ }
-    
+
       return true;
     }
 
@@ -453,7 +482,7 @@ SSLObservatory.prototype = {
     if (!convergence || !convergence.enabled) return null;
 
     this.log(INFO, "Convergence uses its own internal root certs; not submitting those");
-    
+
     //this.log(WARN, convergence.certificateStatus.getVerificiationStatus(chain.certArray[0]));
     try {
       var certInfo = this.extractRealLeafFromConveregenceLeaf(chain.certArray[0]);
@@ -505,7 +534,7 @@ SSLObservatory.prototype = {
   shouldSubmit: function(chain, domain) {
     // Return true if we should submit this chain to the SSL Observatory
     var rootidx = this.findRootInChain(chain.certArray);
-    var ss = false;  // ss: self-signed
+    var ss= false;
 
     if (chain.leaf.issuerName == chain.leaf.subjectName) 
       ss = true;
@@ -611,7 +640,13 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = null;
+    if (channel) {
+      var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
+      if (browser) {
+        var win = browser.contentWindow;
+      }
+    }
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 
@@ -623,10 +658,11 @@ SSLObservatory.prototype = {
 
         if (req.status == 200) {
           that.log(INFO, "Successful cert submission");
-          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted")) 
-            if (c.fps[0] in that.already_submitted)
-              delete that.already_submitted[c.fps[0]];
-          
+          if (!that.prefs.getBoolPref("extensions.https_everywhere._observatory.cache_submitted") &&
+              c.fps[0] in that.already_submitted) {
+            delete that.already_submitted[c.fps[0]];
+          }
+
           // Retry up to two previously failed submissions
           let n = 0;
           for (let fp in that.delayed_submissions) {
@@ -646,8 +682,9 @@ SSLObservatory.prototype = {
           }
         } else {
           // Submission failed
-          if (c.fps[0] in that.already_submitted)
+          if (c.fps[0] in that.already_submitted) {
             delete that.already_submitted[c.fps[0]];
+          }
           try {
             that.log(WARN, "Cert submission failure "+req.status+": "+req.responseText);
           } catch(e) {
@@ -655,13 +692,12 @@ SSLObservatory.prototype = {
           }
           // If we don't have too many delayed submissions, and this isn't
           // (somehow?) one of them, then plan to retry this submission later
-          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED)
-            if (!(c.fps[0] in that.delayed_submissions)) {
-              that.log(WARN, "Planning to retry submission...");
-              let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
-              that.delayed_submissions[c.fps[0]] = retry;
-            }
-
+          if (Object.keys(that.delayed_submissions).length < MAX_DELAYED &&
+              c.fps[0] in that.delayed_submissions) {
+            that.log(WARN, "Planning to retry submission...");
+            let retry = function() { that.submitChain(certArray, fps, domain, channel, host_ip, true); };
+            that.delayed_submissions[c.fps[0]] = retry;
+          }
         }
       }
     };
@@ -685,7 +721,7 @@ SSLObservatory.prototype = {
 
     // Send the proper header information along with the request
     // Do not set gzip header.. It will ruin the padding
-    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://eff.org/r.22c");
+    req.setRequestHeader("X-Privacy-Info", "EFF SSL Observatory: https://www.eff.org/r.22c");
     req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     req.setRequestHeader("Content-length", params.length);
     req.setRequestHeader("Connection", "close");
@@ -873,7 +909,7 @@ SSLObservatory.prototype = {
 
   encString: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
   encStringS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_',
-  
+
   log: function(level, str) {
     var econsole = CC["@mozilla.org/consoleservice;1"]
       .getService(CI.nsIConsoleService);
@@ -884,8 +920,15 @@ SSLObservatory.prototype = {
       threshold = WARN;
     }
     if (level >= threshold) {
-      dump("SSL Observatory: "+str+"\n");
-      econsole.logStringMessage("SSL Observatory: " +str);
+      var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
+      var prefix = "SSL Observatory " + levelName + ": ";
+      // dump() prints to browser stdout. That's sometimes undesireable,
+      // so only do it when a pref is set (running from test.sh enables
+      // this pref).
+      if (this.prefs.getBoolPref("extensions.https_everywhere.log_to_stdout")) {
+        dump(prefix + str + "\n");
+      }
+      econsole.logStringMessage(prefix + str);
     }
   }
 };

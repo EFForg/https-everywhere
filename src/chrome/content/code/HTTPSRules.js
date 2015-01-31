@@ -19,20 +19,18 @@ function CookieRule(host, cookiename) {
   //this.name_c = new RegExp(cookiename);
 }
 
-ruleset_counter = 0;
-function RuleSet(name, xmlName, match_rule, default_off, platform) {
+function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
   if(xmlName == "WordPress.xml" || xmlName == "Github.xml") {
     this.log(NOTE, "RuleSet( name="+name+", xmlName="+xmlName+", match_rule="+match_rule+", default_off="+default_off+", platform="+platform+" )");
   }
 
-  this.id="httpseR" + ruleset_counter;
-  ruleset_counter += 1;
+  this.id=id;
   this.on_by_default = true;
   this.compiled = false;
   this.name = name;
   this.xmlName = xmlName;
-  //this.ruleset_match = match_rule;
   this.notes = "";
+
   if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
   else              this.ruleset_match_c = null;
   if (default_off) {
@@ -51,7 +49,7 @@ function RuleSet(name, xmlName, match_rule, default_off, platform) {
   this.rules = [];
   this.exclusions = [];
   this.cookierules = [];
-  
+
   this.rule_toggle_prefs = HTTPSEverywhere.instance.rule_toggle_prefs;
 
   try {
@@ -244,26 +242,9 @@ const RuleWriter = {
     return rv;
   },
 
-  getRuleDir: function() {
-    var loc = "chrome://https-everywhere/content/rules/";
-
-    var file =
-      CC["@mozilla.org/file/local;1"]
-      .createInstance(CI.nsILocalFile);  
-    file.initWithPath(this.chromeToPath(loc));
-
-    if (!file.isDirectory()) {
-      // XXX: Arg, death!
-      this.log(WARN,"Catastrophic failure: extension directory is not a directory");
-    }
-    return file;
-  },
-
-  read: function(file, rule_store) {
+  read: function(file) {
     if (!file.exists())
       return null;
-    if ((rule_store.targets == null) && (rule_store.targets != {}))
-      this.log(WARN, "TARGETS IS NULL");
     var data = "";
     var fstream = CC["@mozilla.org/network/file-input-stream;1"]
         .createInstance(CI.nsIFileInputStream);
@@ -280,86 +261,77 @@ const RuleWriter = {
 
     sstream.close();
     fstream.close();
-    // XXX: With DOMParser, we probably do not need to throw away the XML
-    // declaration anymore nowadays.
-    data = data.replace(/<\?xml[^>]*\?>/, ""); 
+    return data;
+  },
+
+  write: function(file, data) {
+    //if (!file.exists())
+    //  return null;
+    this.log(DBUG, "Opening " + file.path + " for writing");
+    var fstream = CC["@mozilla.org/network/file-output-stream;1"]
+        .createInstance(CI.nsIFileOutputStream);
+    fstream.init(file, -1, -1, 0);
+
+    var retval = fstream.write(data, data.length);
+    this.log(DBUG, "Got retval " + retval);
+    fstream.close();
+    return data;
+  },
+
+  rulesetFromFile: function(file, rule_store, ruleset_id) {
+    if ((rule_store.targets == null) && (rule_store.targets != {}))
+      this.log(WARN, "TARGETS IS NULL");
+    var data = this.read(file);
+    if (!data) return null;
+    return this.readFromString(data, rule_store, ruleset_id);
+  },
+
+  readFromString: function(data, rule_store, ruleset_id) {
     try {
-      var xmlrulesets = dom_parser.parseFromString(data, "text/xml");
+      var xmlruleset = dom_parser.parseFromString(data, "text/xml");
     } catch(e) { // file has been corrupted; XXX: handle error differently
-      this.log(WARN,"Error in XML file: " + file.path + "\n" + e);
+      this.log(WARN,"Error in XML data: " + e + "\n" + data);
       return null;
     }
-    this.parseXmlRulesets(xmlrulesets, rule_store, file);
+    this.parseOneRuleset(xmlruleset.documentElement, rule_store, ruleset_id);
   },
 
-  parseXmlRulesets: function(xmldom, rule_store, file) {
-    // XML input files can either be a <ruleset> in a file, or a
-    // <rulesetlibrary> with many <rulesets> inside it (the latter form exists
-    // because ZIP does a much better job of compressing it).
-    if (xmldom.documentElement.nodeName == "ruleset") {
-      // This is a single ruleset.
-      this.parseOneRuleset(xmldom.documentElement, rule_store, file);
-    } else {
-      // The root of the XML tree is assumed to look like a <rulesetlibrary>
-      if (!xmldom.documentElement.getAttribute("gitcommitid")) {
-        // The gitcommitid is a tricky hack to let us display the true full
-        // source code of a ruleset, even though we strip out comments at build
-        // time, by having the UI fetch the ruleset from the public https git repo.
-        this.log(DBUG, "gitcommitid tag not found in <xmlruleset>");
-        rule_store.GITCommitID = "HEAD";
-      } else {
-        rule_store.GITCommitID = xmldom.documentElement.getAttribute("gitcommitid");
-      }
-
-      var rulesets = xmldom.documentElement.getElementsByTagName("ruleset");
-      if (rulesets.length == 0 && (file.path.search("00README") == -1))
-        this.log(WARN, "Probable <rulesetlibrary> with no <rulesets> in "
-                        + file.path + "\n" +  xmldom);
-      for (var j = 0; j < rulesets.length; j++)
-        this.parseOneRuleset(rulesets[j], rule_store, file);
-    }
-  },
-
-  parseOneRuleset: function(xmlruleset, rule_store, file) {
+  parseOneRuleset: function(xmlruleset, rule_store, ruleset_id) {
     // Extract an xmlruleset into the rulestore
     if (!xmlruleset.getAttribute("name")) {
       this.log(WARN, "This blob: '" + xmlruleset + "' is not a ruleset\n");
       return null;
     }
 
-    this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name") + " from " + file.path);
+    this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name"));
 
     var match_rl = xmlruleset.getAttribute("match_rule");
     var dflt_off = xmlruleset.getAttribute("default_off");
     var platform = xmlruleset.getAttribute("platform");
-    var rs = new RuleSet(xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
-
-    var targets = xmlruleset.getElementsByTagName("target");
-    if (targets.length == 0) {
-      var msg = "Error: As of v0.3.0, XML rulesets require a target domain entry,";
-      msg = msg + "\nbut " + file.path + " is missing one.";
-      this.log(WARN, msg);
-      return null;
-    }
+    var rs = new RuleSet(ruleset_id, xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
 
     // see if this ruleset has the same name as an existing ruleset;
     // if so, this ruleset is ignored; DON'T add or return it.
     if (rs.name in rule_store.rulesetsByName) {
-      this.log(WARN, "Error: found duplicate rule name " + rs.name + " in file " + file.path);
+      this.log(WARN, "Error: found duplicate rule name " + rs.name);
       return null;
     }
 
-    // add this ruleset into HTTPSRules.targets with all of the applicable
-    // target host indexes
+    // Add this ruleset id into HTTPSRules.targets if it's not already there.
+    // This should only happen for custom user rules. Built-in rules get
+    // their ids preloaded into the targets map, and have their <target>
+    // tags stripped when the sqlite database is built.
+    var targets = xmlruleset.getElementsByTagName("target");
     for (var i = 0; i < targets.length; i++) {
       var host = targets[i].getAttribute("host");
       if (!host) {
-        this.log(WARN, "<target> missing host in " + file.path);
+        this.log(WARN, "<target> missing host in " + xmlruleset.getAttribute("name"));
         return null;
       }
       if (! rule_store.targets[host])
         rule_store.targets[host] = [];
-      rule_store.targets[host].push(rs);
+      this.log(DBUG, "Adding " + host + " to targets, pointing at " + ruleset_id);
+      rule_store.targets[host].push(ruleset_id);
     }
 
     var exclusions = xmlruleset.getElementsByTagName("exclusion");
@@ -386,7 +358,6 @@ const RuleWriter = {
     rule_store.rulesets.push(rs);
     rule_store.rulesetsByID[rs.id] = rs;
     rule_store.rulesetsByName[rs.name] = rs;
-
   },
 
   enumerate: function(dir) {
@@ -408,39 +379,56 @@ const HTTPSRules = {
   init: function() {
     try {
       this.rulesets = [];
-      this.targets = {};  // dict mapping target host patterns -> lists of
-                          // applicable rules
+      this.targets = {};  // dict mapping target host pattern -> list of
+                          // applicable ruleset ids
       this.rulesetsByID = {};
       this.rulesetsByName = {};
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
-      rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      this.scanRulefiles(rulefiles);
-      var t,i;
-      for (t in this.targets) {
-        for (i = 0 ; i < this.targets[t].length ; i++) {
-          this.log(INFO, t + " -> " + this.targets[t][i].name);
+
+      // Initialize database connection.
+      var dbFile = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite"));
+      var rulesetDBConn = Services.storage.openDatabase(dbFile);
+      this.queryForRuleset = rulesetDBConn.createStatement(
+        "select contents from rulesets where id = :id");
+
+      // Preload the mapping of hostname target -> ruleset ID from DB.
+      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
+      // but is faster than loading all of the rulesets. If this becomes a
+      // bottleneck, change it to load in a background webworker, or load
+      // a smaller bloom filter instead.
+      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
+      this.log(DBUG, "Loading targets...");
+      while (targetsQuery.executeStep()) {
+        var host = targetsQuery.row.host;
+        var id = targetsQuery.row.ruleset_id;
+        if (!this.targets[host]) {
+          this.targets[host] = [id];
+        } else {
+          this.targets[host].push(id);
         }
       }
-
-      // for any rulesets with <target host="*">
-      // every URI needs to be checked against these rulesets
-      // (though currently we don't ship any)
-      this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
-
-      this.rulesets.sort(
-        function(r1,r2) {
-            if (r1.name.toLowerCase() < r2.name.toLowerCase()) return -1;
-            else return 1;
-        }
-      );
+      this.log(DBUG, "Loading adding targets.");
     } catch(e) {
-      this.log(WARN,"Rules Failed: "+e);
+      this.log(DBUG,"Rules Failed: "+e);
     }
     var t2 =  new Date().getTime();
-    this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
+
+    var gitCommitQuery = rulesetDBConn.createStatement("select git_commit from git_commit");
+    if (gitCommitQuery.executeStep()) {
+      this.GITCommitID = gitCommitQuery.row.git_commit;
+    }
+
+    try {
+      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
+        this.testRulesetRetrievalPerformance();
+      }
+    } catch(e) {
+      this.log(WARN, "Exception during testing " + e);
+    }
     return;
   },
 
@@ -474,7 +462,8 @@ const HTTPSRules = {
     for(i = 0; i < rulefiles.length; ++i) {
       try {
         this.log(DBUG,"Loading ruleset file: "+rulefiles[i].path);
-        RuleWriter.read(rulefiles[i], this);
+        var ruleset_id = "custom_" + i;
+        RuleWriter.rulesetFromFile(rulefiles[i], this, ruleset_id);
       } catch(e) {
         this.log(WARN, "Error in ruleset file: " + e);
         if (e.lineNumber)
@@ -491,6 +480,7 @@ const HTTPSRules = {
     }
   },
 
+
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
@@ -503,7 +493,7 @@ const HTTPSRules = {
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
-    this.log(NOTE, "Processing " + input_uri.spec);
+    this.log(DBUG, "Processing " + input_uri.spec);
 
     var uri = this.sanitiseURI(input_uri);
 
@@ -511,7 +501,7 @@ const HTTPSRules = {
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
-      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      this.log(NOTE, 'Could not check applicable rules for '+uri.spec + '\n'+e);
       return null;
     }
 
@@ -595,17 +585,72 @@ const HTTPSRules = {
         intoList.push(fromList[i]);
   },
 
+  loadAllRulesets: function() {
+    for (var host in this.targets) {
+      var ruleset_ids = this.targets[host];
+      for (var i = 0; i < ruleset_ids.length; i++) {
+        var id = ruleset_ids[i];
+        if (!this.rulesetsByID[id]) {
+          this.loadRulesetById(id);
+        }
+      }
+    }
+  },
+
+  // Load a ruleset by numeric id, e.g. 234
+  // NOTE: This call runs synchronously, which can lock up the browser UI. Is
+  // there any way to fix that, given that we need to run blocking in the request
+  // flow? Perhaps we can preload all targets from the DB into memory at startup
+  // so we only hit the DB when we know there is something to be had.
+  loadRulesetById: function(ruleset_id) {
+    this.log(DBUG, "Querying DB for ruleset id " + ruleset_id);
+    this.queryForRuleset.params.id = ruleset_id;
+
+    try {
+      if (this.queryForRuleset.executeStep()) {
+        this.log(INFO, "Found ruleset in DB for id " + ruleset_id);
+        RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
+      } else {
+        this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);
+      }
+    } finally {
+      this.queryForRuleset.reset();
+    }
+  },
+
+  // Get all rulesets matching a given target, lazy-loading from DB as necessary.
+  rulesetsByTarget: function(target) {
+    var rulesetIds = this.targets[target];
+
+    var output = [];
+    if (rulesetIds) {
+      this.log(INFO, "For target " + target + ", found ids " + rulesetIds.toString());
+      for (var i = 0; i < rulesetIds.length; i++) {
+        var id = rulesetIds[i];
+        if (!this.rulesetsByID[id]) {
+          this.loadRulesetById(id);
+        }
+        if (this.rulesetsByID[id]) {
+          output.push(this.rulesetsByID[id]);
+        }
+      }
+    } else {
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
+    }
+    return output;
+  },
+
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
-    var results = this.global_rulesets.slice(0); // copy global_rulesets
-    try {
-      if (this.targets[host])
-        results = results.concat(this.targets[host]);
-    } catch(e) {   
-      this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
-      return [];
-    }
+    var results = [];
+
+    var attempt = function(target) {
+      this.setInsert(results, this.rulesetsByTarget(target));
+    }.bind(this);
+
+    attempt(host);
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
@@ -613,18 +658,48 @@ const HTTPSRules = {
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
-      this.setInsert(results, this.targets[t]);
+      attempt(t);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (i = 1; i <= segmented.length - 2; ++i) {
+    for (i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      this.setInsert(results, this.targets[t]);
+      attempt(t);
     }
     this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
+  },
+
+  testRulesetRetrievalPerformance: function() {
+    // We can use this function to measure the impact of changes in the ruleset
+    // storage architecture, potentiallyApplicableRulesets() caching
+    // implementations, etc. 
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("GET", "https://www.eff.org/files/alexa-top-10000-global.txt", false);
+    req.send();
+    var domains = req.response.split("\n");
+    var domains_l = domains.length - 1; // The last entry in this thing is bogus
+    var prefix = "";
+    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
+    var count = 0;
+    var t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    var t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
+    count = 0;
+    t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
   shouldSecureCookie: function(applicable_list, c, known_https) {
@@ -634,7 +709,7 @@ const HTTPSRules = {
     // @c : an nsICookie2
     // @known_https : true if we know the page setting the cookie is https
 
-    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
+    this.log(DBUG,"  rawhost: " + c.rawHost + " name: " + c.name + " host" + c.host);
     var i,j;
     var rs = this.potentiallyApplicableRulesets(c.host);
     for (i = 0; i < rs.length; ++i) {
@@ -693,17 +768,17 @@ const HTTPSRules = {
       return false;
     }
 
-    this.log(INFO, "Testing securecookie applicability with " + test_uri);
+    this.log(DBUG, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        this.log(INFO, "Yes: " + rewrite);
+        this.log(DBUG, "Safe to secure cookie for " + test_uri + ": " + rewrite);
         return true;
       }
     }
-    this.log(INFO, "(NO)");
+    this.log(DBUG, "Unsafe to secure cookie for " + test_uri);
     return false;
   }
 };

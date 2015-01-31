@@ -2,35 +2,33 @@
 	Nonfunctional subdomains:
 
 		- awstats	(data differs)
-		- bugs
-		- ftp		(redirects to drweb.fr, mismatched, CN: *.drweb.fr)
-		- forum
-		- info		(shows https://awstats)
-		- live
-		- people
-		- update	(data differs, mismatched, CN: *.drweb.fr)
-		- us		(shows blank tree)
-		- us1
+		- ftp ²
+		- forum ³
+		- live ³
+		- people ⁴
+		- us ²
+		- us1 ²
 
-
-	Problematic subdomains:
-
-		^	(.+ redirects to www.drweb.com/$)
+	² 404
+	³ Plaintext reply
+	⁴ Refused
 
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- antifraud
 		- antitheft
 		- beta
 		- blogs
+		- bugs
 		- buy
 		- company
 		- customers
 		- download
 		- estore
 		- f2
+		- info
 		- license
 		- mobi
 		- my
@@ -50,6 +48,7 @@
 		- stat
 		- support
 		- training
+		- update
 		- vms
 		- wiki
 
@@ -60,13 +59,14 @@
 	<target host="*.drweb.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.drweb\.com$" name="^(drwse|lng)$" /-->
+
 	<securecookie host="^.*\.drweb\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?drweb\.com/"
-		to="https://www.drweb.com/" />
-
-	<rule from="^http://(antifraud|antitheft|beta|blogs|buy|company|customers|download|estore|f2|license|mobi|my|network|news|online\d?|osp|pa|partners|pda|products|promotions|solutions|st|stat|(?:new-)?support|training|vms|wiki)\.drweb\.com/"
-		to="https://$1.drweb.com/" />
+	<rule from="^http://((?:antifraud|antitheft|beta|blogs|bugs|buy|company|customers|download|estore|f2|info|license|mobi|my|network|news|online\d?|osp|pa|partners|pda|products|promotions|solutions|st|stat|(?:new-)?support|training|update|vms|wiki|www)\.)?drweb\.com/"
+		to="https://$1drweb.com/" />
 
 </ruleset>

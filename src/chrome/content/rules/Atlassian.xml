@@ -1,7 +1,9 @@
 <!--
 	Other Atlassian rulesets:
 
+		- Atlassian.net.xml
 		- BitBucket.xml
+		- HipChat.com.xml
 
 
 	CDN buckets:
@@ -12,41 +14,32 @@
 
 			- downloads
 
--->
-<ruleset name="Atlassian">
 
-	<target host="atlassian.com" />
-	<target host="*.atlassian.com" />
-	<target host="*.extranet.atlassian.com" />
-	<target host="atlassian.wpengine.netdna-cdn.com" />
+	Nonfunctional subdomains:
 
+		- go *
 
-  <!-- excluding downloads. and disabling the securecookie clause in response to 
-       https://trac.torproject.org/projects/tor/ticket/7206
-       with further research this might be improvable -->
-
-	<!-- 
-      <securecookie host="^(.*\.)?atlassian\.com$" name=".*" /> 
+	* Google
 
 
-	UPDATE: looks like downloads is properly configured now.
-								-->
-  <!--exclusion pattern="http://downloads\.atlassian\.com/" /-->
+	Problematic subdomains:
 
-	<exclusion pattern="http://click\.mailer\.atlassian\.com/" />
+		- status *
 
-	<securecookie host="^(?:ace|answers|aug|confluence|developer|jira|marketplace|my)\.atlassian\.com$" name=".+" />
+	* StatusPage.io
 
 
-	<!--	!www 404s	-->
-	<rule from="^http://(?:www\.)?atlassian\.com/"
-		to="https://www.atlassian.com/"/>
+	Fully covered subdomains:
 
-	<!--	Matches:
+		- atlassian.com
+		- status.atlassian.com		(→ atlassian.statuspage.io)
+
+		- [\w.-]+.atlassian.com: *
 
 			- ace
 			- answers
 			- aug
+			- aui-cdn
 			- blogs
 			- confluence
 			- developer
@@ -54,6 +47,7 @@
 			- downloads
 			- extranet
 			- bamboo.extranet
+			- id
 			- jira
 			- marketplace
 			- my
@@ -62,18 +56,56 @@
 			- summit
 			- support
 
-		There doesn't appear to be any unsupported domains.	-->
-	<rule from="^http://([\w\.]+)\.atlassian\.com/"
-		to="https://$1.atlassian.com/" />
+	* Except where excluded below
+
+
+	Insecure cookies are set for these domains:
+
+		- .atlassian.com
+		- answers.atlassian.com
+
+
+	Mixed content:
+
+		- Web bugs on confluence from ace *
+
+	* Secured by us
+
+-->
+<ruleset name="Atlassian.com (partial)">
+
+	<target host="atlassian.com" />
+	<target host="*.atlassian.com" />
+		<exclusion pattern="http://click\.mailer\.atlassian\.com/" />
+		<!--
+			Added by Atlassian:
+						-->
+		<exclusion pattern="^http://(?:.+\.(?:ams|dyn\.syd|inf|internal|sf)|go)\.atlassian\.com/" />
+	<target host="atlassian.wpengine.netdna-cdn.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.atlassian\.com$" name="^__atl_path$" /-->
+	<!--securecookie host="^answers\.atlassian\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:ace|answers|aug|confluence|developer|id|jira|marketplace|my|openid|support)\.atlassian\.com$" name=".+" />
+
+
+	<rule from="^http://status\.atlassian\.com/"
+		to="https://atlassian.statuspage.io/" />
+
+	<rule from="^http://([\w.-]+\.)?atlassian\.com/"
+		to="https://$1atlassian.com/" />
 
 	<!--	Cert: *.userzoom.com
 		/$ 403s, rest 404s.	-->
-	<rule from="^https?://atlassian\.wpengine\.netdna-cdn\.com/"
+	<rule from="^http://atlassian\.wpengine\.netdna-cdn\.com/"
 		to="https://blogs.atlassian.com/" />
 
 	<!--	Cert: gp1.wac.edgecastcdn.net
 		Actually redirects as so.	-->
-	<rule from="^https?://wac\.29c4\.edgecastcdn\.net/8029C4/wac-small//wac/"
+	<rule from="^http://wac\.29c4\.edgecastcdn\.net/8029C4/wac-small//wac/"
 		to="https://summit.atlassian.com/" />
 
 </ruleset>

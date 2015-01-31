@@ -24,6 +24,7 @@
 			- game
 			- open		(times out)
 			- service	(refused)
+			- widget	(refused)
 
 	*  403; mismatched, CN: *.pantherssl.com
 
@@ -49,6 +50,11 @@
 			- static
 
 
+	These altnames don't exist:
+
+		- www.yahoo.tw.weibo.com
+
+
 	Mixed css on weihr.sinaapp.com from img.t.sinajs.cn
 
 -->
@@ -60,7 +66,11 @@
 	<target host="*.weibo.com" />
 
 
-	<securecookie host="^upload\.api\.weibo\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^yahoo\.tw\.weibo\.com$" name="^laravel_session$" /-->
+
+	<securecookie host="^(?:upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
 
 
 	<rule from="^http://tp\d\.sinaimg\.cn/"
@@ -69,7 +79,7 @@
 	<rule from="^http://(tpssl\.|www\.)?weibo\.cn/"
 		to="https://$1weibo.cn/" />
 
-	<rule from="^http://(api|upload\.api|static)\.weibo\.com/"
+	<rule from="^http://(api|upload\.api|static|yahoo\.tw)\.weibo\.com/"
 		to="https://$1.weibo.com/" />
 
 	<rule from="^http://hr\.weibo\.com/"

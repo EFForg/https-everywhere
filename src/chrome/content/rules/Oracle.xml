@@ -6,12 +6,17 @@
 
 		- Atgsvcs.com.xml
 		- ATG_Web_Commerce.xml
+		- Compendium.com.xml
 		- Eloqua.xml
 		- Estara.com.xml
 		- Java.net.xml
+		- JCP.org.xml
+		- Kenai.com.xml
 		- Linksys.xml
 		- MySQL.xml
 		- NetBeans.zml
+		- Responsys.com.xml
+		- Responsys.xml
 		- RightNow.xml
 		- VirtualBox.xml
 
@@ -19,17 +24,10 @@
 	CDN buckets:
 
 		- oracle.112.2o7.net
-
 		- sun.edgeboss.net
-
-			- a147.g.akamai.net
-
 		- pressroom.oracle.com.edgekey.net
 		- www.oracleimg.com.edgekey.net
-
 		- docs.oracle.com.edgesuite.net
-
-			- a1049.d.akamai.net
 
 		- oraclejapan.presscentre.com
 
@@ -38,37 +36,43 @@
 
 	Nonfunctional subdomains:
 
-		- isdportal *
-		- jdevadf	(dropped)
-		- oukc *
-		- pressroom	(503, akamai with valid cert)
-		- tahiti *
+		- isdportal ¹
+		- jdevadf ²
+		- oukc ¹
+		- pressroom ³
+		- tahiti ¹
 
-	* Refused
+	¹ Refused
+	² Dropped
+	³ 503
 
 
 	Problematic domains:
 
 		- oracle.com subdomains:
 
-			- ^			(refused)
-			- crmondemand *
-			- docs			(works, akamai)
-			- japanmediacentre **	(works; mismatched, CN: *.presscentre.com)
+			- ^ ¹
+			- crmondemand ²
+			- docs ³
+			- download ⁴
+			- japanmediacentre ⁵
 
-		- oracleimg.com *
+		- oracleimg.com ²
 
-	* Redirects to http; mismatched, CN: java.sun.com
+	¹ Refused
+	² Redirects to http; mismatched, CN: java.sun.com
+	³ Insecure renegotiation
+	⁴ Mismatched
+	⁵ Mismatched, CN: *.presscentre.com
 
 
 	Partially covered domains:
 
-		- (www.)oracle.com *
-		- docs.oracle.com **
-		- (www.)oracleimg.com *
+		- (www.)oracle.com ¹
+		- (www.)oracleimg.com ¹
 
-	* ^ → www, some paths redirect to http
-	** → akamai, avoiding user-visible paths, rest handled in Oracle-mismatches.xml
+	¹ ^ → www, some paths redirect to http
+	² → akamai, avoiding user-visible paths, rest handled in Oracle-mismatches.xml
 
 
 	There are probably some data identical across shop and www that could be grabbed for www.
@@ -122,6 +126,7 @@
 			- crmondemand		(→ www)
 			- digitalmedia
 			- dne
+			- docs
 			- download
 			- edelivery
 			- edelivery-hqdc-test
@@ -177,6 +182,7 @@
 			- search
 			- shop
 			- solutions
+			- status-ksplice
 			- stbeehive
 			- strtc
 			- suppliers
@@ -246,42 +252,44 @@
 
 	Mixed content:
 
-		- Script on medianetwork from www.oracleimg.com *
+		- Script on medianetwork from www.oracleimg.com ¹
 
 		- Images, on:
 
 			- medianetwork from sun.edgeboss.net
-			- medianetwork from www.oracleimg.com *
-			- medianetwork from www.oracleimg.com **
+			- medianetwork from www.oracleimg.com ¹
+			- medianetwork from www.oracleimg.com ²
 
 		- Web bugs, on:
 
-			- events from dnn506yrbagrg.cloudfront.net *
-			- events from consent.truste.com *
-			- medianetwork from www.oracleimg.com *
+			- events from dnn506yrbagrg.cloudfront.net ¹
+			- events from consent.truste.com ¹
+			- medianetwork from www.oracleimg.com ¹
 
-	* Secured by us
-	** Unsecurable, doesn't trip MCB
+	¹ Secured by us
+	² Unsecurable, doesn't trip MCB
 
 -->
 <ruleset name="Oracle (partial)">
 
 	<target host="oracle.com" />
 	<target host="*.oracle.com" />
-		<!--exclusion pattern="^http://(docs|isdportal|jdevadf|oukc|pressroom|tahiti)\.oracle\.com/" /-->
+		<!--exclusion pattern="^http://(isdportal|jdevadf|oukc|pressroom|tahiti)\.oracle\.com/" /-->
 		<!--
 			Very stingy https support
 			most paths redirect to http
 							-->
-		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$)"/>
-		<!--
-			Avoid user-visible paths:
-							-->
-		<!--exclusion pattern="^http://docs\.oracle\.com/(?!.+/css/|favicon\.ico|.+/graphics/)" /-->
+		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|javaone(?:$|[?/]))"/>
 	<target host="oracleimg.com" />
 	<target host="www.oracleimg.com" />
 	<target host="*.oracleoutsourcing.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.oracle\.com$" name="^(Order_MarketingCampaignSuccess|Order_MarketingTrigger|p_cur_URL|p_lang|p_mcc|p_org_id)$" /-->
+	<!--securecookie host="^blogs\.oracle\.com$" name="^BIGipServerblogs_prod_pool$" /-->
+	<!--securecookie host="^education\.oracle\.com$" name="^BIGipServerfapap-education_http_pool$" /-->
 
 	<securecookie host="^(?:\w+|\.edelivery)\.oracle\.com$" name=".+" />
 	<!--
@@ -291,25 +299,22 @@
 	<!--
 		Tracking cookies
 					-->
-	<securecookie host="^\.oracle\.com$" name="^(?:gpw_e24|s_(?:cc|nr|sq))$" />
+	<securecookie host="^\.oracle\.com$" name="^(?:Order_Marketing(?:CampaignSuccess|Trigger)|gpw_e24|s_(?:cc|nr|sq))$" />
 
 
-	<rule from="^http://(?:www\.)?oracle(img)?\.com/us/([^/]+)\.(css|gif|jpg|js|png)$"
-		to="https://www.oracle$1.com/us/assets/$2.$3" />
+	<rule from="^http://(?:www\.)?oracle(img)?\.com/us/(?=[^/]+\.(?:css|gif|jpg|js|png)$)"
+		to="https://www.oracle$1.com/us/assets/" />
 
-	<rule from="^https?://(?:www\.)?oracle(img)?\.com/"
+	<rule from="^http://(?:www\.)?oracle(img)?\.com/"
 		to="https://www.oracle$1.com/" />
 
-	<!--	Server doesn't drop path:
-						-->
-	<rule from="^http://crmondemand\.oracle\.com/"
-		to="https://www.oracle.com/us/products/applications/crmondemand/index.html" />
-
-	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|download|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
+	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|docs|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|status-ksplice|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
 		to="https://$1.oracle.com/" />
 
-	<rule from="^http://docs\.oracle\.com/(?=favicon\.ico|.+/(?:cs|graphic)s/)"
-		to="https://a248.e.akamai.net/f/1049/1606/6m/docs.oracle.com/" />
+	<!--	Redirect keeps path:
+					-->
+	<rule from="^http://crmondemand\.oracle\.com/"
+		to="https://www.oracle.com/us/products/applications/crmondemand/index.html" />
 
 	<rule from="^http://(bi|crm|fin|fs|[hs]cm|ic|pr[cj])-(\w+)\.oracleoutsourcing\.com/"
 		to="https://$1-$2.oracleoutsourcing.com/" />

@@ -10,16 +10,25 @@
 <ruleset name="Behance (partial)">
 
 	<target host="behance.net" />
-	<target host="www.behance.net" />
-		<!--	Pages have started redirecting to http :(	-->
-		<exclusion pattern="^http://www\.behance\.net/(gallery/[\w\-]+/\d+)?$" />
+	<target host="*.behance.net" />
 
 
-	<securecookie host="^www\.behance\.net$" name=".*" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^help\.behance\.net$" name="^(_zendesk_session|_zendesk_shared_session)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(a2|www)\.behance\.net$" name="^BehanceLLC$" /-->
+
+	<securecookie host="^(?:a2|www)\.behance\.net$" name=".*" />
 
 
 	<!--	Cert doesn't match !www.	-->
-	<rule from="^https?://(?:www\.)?behance\.net/"
+	<rule from="^http://(?:www\.)?behance\.net/"
 		to="https://www.behance.net/" />
+
+	<rule from="^http://(a2|help)\.behance\.net/"
+		to="https://$1.behance.net/" />
 
 </ruleset>

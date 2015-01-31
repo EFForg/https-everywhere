@@ -15,6 +15,7 @@
 
 		Doesn't work:
 
+			- gp/product/\w{10}
 			- gp/search\?
 			- lm/
 			- /mn/search/
@@ -31,8 +32,10 @@
 	<target host="*.amazon.co.uk" />
 		<!--
 			Search redirects to http, for all sites.
-									-->
-		<exclusion pattern="^http://www\.amazon\.[\w.]+/(?:gp/search\?|lm/|mn/search(?:$|\?)|s[?/])" />
+
+			Product pages started doing so more recently, too.
+										-->
+		<exclusion pattern="^http://www\.amazon\.[\w.]+/(?:gp/product/\w{10}\?|gp/search\?|lm/|mn/search(?:$|\?)|s[?/])" />
 
 
 	<!--	Verified as working for UK, other sites matched appear to function identically.
@@ -42,6 +45,8 @@
 		secure and non-secure cookies with the same ID as one cookie, instead of two.
 			If our handling were correct, this securecookie rule would have only
 		one problem, namely that basket information would be missing on search pages.
+
+		Update: Amazon has intentionally broken tls support, for the most part.
 												-->
 	<!--securecookie host="^(www)?\.amazon\.(co\.uk|de|es|fr|it)$" name=".+" /-->
 	<securecookie host="^local\.amazon\.co\.uk$" name=".+" />

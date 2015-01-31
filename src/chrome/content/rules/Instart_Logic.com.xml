@@ -6,18 +6,43 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)	(502, valid cert)
+		- go *
+
+	* Marketo
+
+
+	Problematic subdomains:
+
+		- status *
+
+	* StatusPage
 
 -->
 <ruleset name="Instart Logic.com (partial)">
 
+	<target host="instartlogic.com" />
 	<target host="*.instartlogic.com" />
 
 
-	<securecookie host="^\.customer\.instartlogic\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?instartlogic\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:\.customer\.|www\.)?instartlogic\.com$" name=".+" />
 
 
-	<rule from="^http://customer\.instartlogic\.com/"
-		to="https://customer.instartlogic.com/" />
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://go\.instartlogic\.com/+(?:$|\?.*)"
+		to="https://www.instartlogic.com/" />
+
+	<rule from="^http://go\.instartlogic\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sj07.marketo.com/" />
+
+	<rule from="^http://status\.instartlogic\.com/"
+		to="https://instartlogic.statuspage.io/" />
+
+	<rule from="^http://(customer\.|www\.)?instartlogic\.com/"
+		to="https://$1instartlogic.com/" />
 
 </ruleset>

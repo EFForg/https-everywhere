@@ -1,0 +1,47 @@
+<!--
+	Nonfunctional subdomains:
+
+		- login *
+		- next *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- blog ²
+
+	¹ Cert only matches www
+	² Works; mismatched, CN: *.compendiumblog.com
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com ²
+
+		- favicons on blog and www from next ¹
+
+		- Bug on www from ^ ²
+
+	¹ Unsecurable <= refused
+	² Secured by us
+
+-->
+<ruleset name="SRDS.com (partial)">
+
+	<target host="srds.com" />
+	<target host="www.srds.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.srds\.com$" name="^(_srds_session|WEBTRENDS_ID)$" /-->
+
+	<securecookie host="^www\.srds\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?srds\.com/"
+		to="https://www.srds.com/" />
+
+</ruleset>

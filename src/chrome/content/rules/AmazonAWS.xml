@@ -1,4 +1,6 @@
 <!--
+	For rules that break image zoom, see AmazonAWS-breakzoom.xml.
+
 	For other Amazon coverage, see Amazon.xml.
 
 
@@ -67,6 +69,7 @@
 
 	Fully covered domains:
 
+		- forums.aws.amazon.com
 		- images-jp.amazon.com				(→ images-na.ssl-images-amazon.com)
 		- g-images.amazon.com				(→ d1ge0kk1l5kms0.cloudfront.net)
 		- webservices.amazon.com
@@ -92,7 +95,9 @@
 
 	<target host="fls-eu.amazon.co.uk" />
 	<target host="aws.amazon.com" />
+	<target host="forums.aws.amazon.com" />
 	<target host="signin.aws.amazon.com" />
+	<target host="docs.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
 	<target host="fls-eu.amazon.com" />
 	<target host="fls-na.amazon.com" />
@@ -126,25 +131,32 @@
 				https://trac.torproject.org/projects/tor/ticket/7608 
 											 -->
 		<exclusion pattern="^http://charts-datawrapper\.s3\.amazonaws\.com/" />
+		<!--
+			Breaks forecast.io radar images
+							-->
+		<exclusion pattern="^http://darkskysatellite(?:maps)?\.s3\.amazonaws\.com/" />
 	<target host="amazonwebservices.com" />
 	<target host="*.amazonwebservices.com" />
 	<target host="*.images-amazon.com" />
   <!-- Zeitgeist MP3 player https://trac.torproject.org/projects/tor/ticket/7594 -->
-  <exclusion pattern="^http://g-ecx\.images-amazon\.com/.*([mM][pP]3|zeitgeist|digital/music)" />
+  <exclusion pattern="^http://g-ecx\.images-amazon\.com/.*(?:[mM][pP]3|zeitgeist|digital/music)" />
   <!-- https://trac.torproject.org/projects/tor/ticket/7539 -->
   <exclusion pattern="^http://ecx\.images-amazon\.com/" />
 	<target host="*.ssl-images-amazon.com" />
 
 
-	<!--	Forced redirect:
+	<!--	Forced redirects:
 					-->
+	<rule from="^http://dis(\.resized)?\.images\.s3\.amazonaws\.com/"
+		to="https://s3-eu-west-1.amazonaws.com/dis$1.images/" />
+
 	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
 
 	<rule from="^http://fls-eu\.amazon\.co\.uk/"
 		to="https://fls-eu.amazon.co.uk/" />
 
-	<rule from="^http://(signin\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
+	<rule from="^http://((?:docs|forums|signin)\.aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
 	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"

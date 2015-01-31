@@ -1,0 +1,59 @@
+<!--
+	For problematic rules, see USNI.org-problematic.xml.
+
+
+	United States Naval Institute
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- cdn0[2346-9] *
+		- news *
+
+	* Expired 2014-08-07
+
+
+	(www.): at least some pages redirect to http
+
+
+	Mixed content:
+
+		- iframe on blog from www.scribd.com *
+
+		- css on blog and news from blog *
+		- css on news from $self *
+		- css on news from fonts.googleapis.com *
+
+		- Images on blog from $self *
+		- Images on blog and news from i[012].wp.com *
+		- Images on news from $self *
+
+		- Bugs on blog and www from i.creativecommons.org *
+		- Bugs on blog from cdn.socialtwist.com *
+		- Bugs on blog from images.socialtwist.com *
+		- Bugs on news from w.sharethis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="USNI.org (partial)">
+
+	<target host="usni.org" />
+	<target host="*.usni.org" />
+		<!--exclusion pattern="^http://(www\.)?usni\.org/(?!(about|cart|membership|user)($|[?/])|sites/)" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<!--exclusion pattern="^http://blog\.usni\.org/+(?!\?mcsf_action=|favicon\.ico|mc_news\.css|wp-content/|wp-includes/)" /-->
+		<!--exclusion pattern="^http://news\.unsi\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" /-->
+		<exclusion pattern="^http://(?:blog|news)\.usni\.org/+(?!\?mcsf_action=|favicon\.ico|mc_news\.css|wp-content/|wp-includes/)" />
+
+
+	<rule from="^http://(?:www\.)?usni\.org/(?=(?:about|cart|membership|user)(?:$|[?/])|sites/)"
+		to="https://www.usni.org/" />
+
+	<rule from="^http://(blog|cdn\d+|news)\.usni\.org/"
+		to="https://$1.usni.org/" />
+
+</ruleset>

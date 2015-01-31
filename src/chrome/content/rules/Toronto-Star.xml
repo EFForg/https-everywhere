@@ -1,18 +1,66 @@
 <!--
+	Toronto Star
+
+
 	thestar.com.122.2o7.net
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- (www.)thestar.com	(times out)
+		- www3 *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- n ²
+
+	¹ Refused
+	² Mismatched, CN: *.122.2o7.net
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- emarketing
+		- n		(→ thestar-com.122.2o7.net)
+		- s
+		- secure
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+		- Web bugs, on:
+		- Web bugs on www from n *
+			- www from www.facebook.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Toronto Star (partial)">
+<ruleset name="The Star.com (partial)">
 
-	<target host="n.thestar.com" />
+	<target host="thestar.com" />
+	<target host="*.thestar.com" />
 
 
-	<rule from="^https?://n\.thestar\.com/"
+	<securecookie host="^\.thestar\.com$" name="^s_\w+$" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^secure\.thestar\.com$" name="^JSESSIONID$" /-->
+
+
+	<rule from="^http://(?:www\.)?thestar\.com/"
+		to="https://www.thestar.com/" />
+
+	<rule from="^http://(emarketing|s|secure)\.thestar\.com/"
+		to="https://$1.thestar.com/" />
+
+	<rule from="^http://n\.thestar\.com/"
 		to="https://thestar-com.122.2o7.net/" />
 
 </ruleset>

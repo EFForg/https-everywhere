@@ -1,0 +1,65 @@
+<!--
+	National Radio Astronomy Observatory
+
+
+	Nonfunctional subdomains:
+
+		- www.aips ¹
+		- www.alma ²
+		- www.aoc ¹
+		- casa ³
+		- www.gb ⁴
+		- gbtidl ²
+		- images ²
+		- legacy ²
+		- www.ska ¹
+		- status ⁵
+		- www.tuc ²
+		- www.vla ¹
+		- www.vlba ¹
+
+	¹ Redirects to bugs
+	² "currently unavailable"
+	³ Redirects to http
+	⁴ Redirects to my
+	⁵ Refused
+
+
+	Problematic domains:
+
+		- rsync.aoc *
+
+	* Shows svn.aoc
+
+
+	Mixed content:
+
+		- Image on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="NRAO.edu (partial)">
+
+	<target host="nrao.edu" />
+	<target host="*.nrao.edu" />
+		<!--exclusion pattern="^http://(www\.aips|www\.alma|www\.aoc|casa|www\.gb|gbtidl|images|legacy|www\.ska|status|www\.tuc|www\.vla|www\.vlba)\.nrao\.edu/" /-->
+
+
+	<securecookie host="^(?:bugs|www)?\.nrao\.edu$" name=".+" />
+	<!--
+		Server sets Secure:
+					-->
+	<!--securecookie host="^(archive|my|safe)\.nrao\.edu$" name=".+" /-->
+
+
+	<rule from="^http://((?:svn\.aoc|archive|blogs|bugs|svn\.cv|www\.cv|inside|my|public|safe|science|search|staff|www)\.)?nrao\.edu/"
+		to="https://$1nrao.edu/" />
+
+	<rule from="^http://rsync\.aoc\.nrao\.edu/+"
+		to="https://svn.aoc.nrao.edu/" />
+
+	<rule from="^http://www\.vla\.nrao\.edu/genpub/tours(?=$|\?)"
+		to="https://public.nrao.edu/tours/visitvla" />
+
+</ruleset>

@@ -1,5 +1,12 @@
 <!--
+	For problematic rules, see TechRepublic.com-problematic.xml.
+
 	For other CBS coverage, see CBS.xml.
+
+
+	CDN buckets:
+
+		- techrepublic-a.akamaihd.net
 
 
 	Nonfunctional domains:
@@ -8,32 +15,56 @@
 		- techrepublic.com.com		(cert: www.techrepublic.com; 301s there)
 		- i.techrepublic.com.com	(Akamai; 504)
 		- techrepublic.com		(301s to http)
-		- www.techrepublic.com		(Akamai; 301s to http)
 		- \w+.trstatic.com		(Akamai, "An error occurred")
-
-
-	origin.techrepublic.com/images/foo.ext 301s to img.com.com/i/tr/foo.ext
 
 
 	Problematic domains:
 
-		- origin.techrepublic.com	(some paths redirect to http, mismatched)
+		- www.techrepublic.com *
+
+	* Works, akamai
+
+
+	Partially covered sudomains:
+
+		- www *		(→ techrepublic-a.akamaihd.net)
+
+	* Avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- ^
+		- secure
+
+
+	Mixed content:
+
+		- Images on secure and www from b2b.cbsimg.net *
+		- Images on www from tpr1.cbsistatic.com **
+
+	* Unsecurable <= 504
+	** Secured by us
 
 -->
-<ruleset name="TechRepublic (partial)">
+<ruleset name="TechRepublic.com (partial)">
 
 	<target host="techrepublic.com" />
 	<target host="*.techrepublic.com" />
-	<target host="*.trstatic.com" />
 
 
-	<securecookie host="^ssl\.techrepublic\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.techrepublic\.com$" name="^(PHPSESSID|fly_device|fly_edition|fly_geo)$" /-->
+	<!--securecookie host="^(secure|www)\.techrepublic\.com$" name="^techrepublic_ad$" /-->
+
+	<securecookie host="^secure\.techrepublic\.com$" name=".+" />
 
 
-	<rule from="^http://(ssl\.)?techrepublic\.com/"
+	<rule from="^http://www\.techrepublic\.com/(?=.+\.(?:ico|jpg|png)(?:$|[?/]))"
+		to="https://techrepublic-a.akamaihd.net/" />
+
+	<rule from="^http://(secure\.)?techrepublic\.com/"
 		to="https://$1techrepublic.com/" />
-
-	<rule from="^http://(?:(?:origin|www)\.techrepublic|i\d\.trstatic)\.com/(cs|image)s/"
-		to="https://ssl.techrepublic.com/s/$1s/" />
 
 </ruleset>

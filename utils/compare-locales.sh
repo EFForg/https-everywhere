@@ -1,17 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/sh
+
+set -eu;
 
 # Check whether all included rules include every entity defined in the
 # English locale DTDs.  (Missing an entity is a fatal error.)
 
-# Requires bash in order to avoid making temporary files.  We could
-# change this but we'd probably need to create temporary files.
+status=0;
 
-status=0
+cd src/chrome/locale;
 
-pushd src/chrome/locale
-for lang in *
-do
-   comm -2 -3 <(grep '^<!ENTITY' en/* | cut -d' ' -f2 | sort -u) <(grep '^<!ENTITY' $lang/* | cut -d' ' -f2 | sort -u) | grep . && echo "\_ missing for locale" $lang && status=1
-done
+grep '^<!ENTITY' en/* | cut -d' ' -f2 | sort -u > ../en_entities;
 
-exit $status
+lang_entities_list() {
+   grep '^<!ENTITY' "$lang/"* | cut -d' ' -f2 | sort -u;
+}
+
+compare_lang() {
+   comm -2 -3 -- ../en_entities -;
+}
+
+for lang in *; do
+   lang_entities_list | compare_lang | grep . && echo "\_ missing for locale" "$lang" && status=1;
+done;
+
+rm ../en_entities;
+
+exit "$status";

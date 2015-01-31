@@ -3,29 +3,39 @@
 
 		- 2mdn.net.xml
 		- Admeld.xml
+		- Android.xml
 		- ChannelIntelligence.com.xml
+		- Chrome_Status.com.xml
+		- Chromium.org.xml
 		- Doubleclick.net.xml
 		- FeedBurner.xml
+		- Go_Lang.org.xml
 		- Google.org.xml
 		- GoogleAPIs.xml
 		- Google_App_Engine.xml
 		- GoogleImages.xml
 		- GoogleShopping.xml
 		- Ingress.xml
+		- Made_with_Code.com.xml
 		- Meebo.xml
 		- Orkut.xml
+		- Polymer-Project.org.xml
 		- Postini.xml
+		- WebM_Project.org.xml
+		- With_Google.com.xml
 
 
 	Nonfunctional domains:
 
-		- feedproxy.google.com			(404, valid cert)
 		- partnerpage.google.com *
+		- picasa.google.com *
+		- www.picasa.google.com ²
 		- safebrowsing.clients.google.com	(404, mismatched)
 		- (www.)googlesyndicatedsearch.com	(404; mismatched, CN: google.com)
 		- buttons.googlesyndication.com *
 
 	* 404, valid cert
+	² 404; mismatched, CN: www.google.com
 
 
 	Nonfunctional google.com paths:
@@ -33,7 +43,6 @@
 		- analytics	(redirects to http)
 		- imgres
 		- gadgets *
-		- hangouts	(404)
 		- u/		(404)
 
 	* Redirects to http
@@ -43,10 +52,12 @@
 
 		- www.goo.gl		(404; mismatched, CN: *.google.com)
 
+		- www.news.google.ca ²
+
 		- google.com subdomains:
 
-			- books		(googlebooks/, images/, & intl/ 404, but works when rewritten to www)
 			- cbks0 ****
+			- earth *
 			- gg		($ 404s)
 			- knoll *
 			- scholar **
@@ -56,6 +67,7 @@
 		- scholar.google.cctld **
 		- *-opensocial.googleusercontent.com ***
 
+	² Mismatched, CN: google.com
 	**** $ 404s
 	* 404, valid cert
 	** Redirects to http, valid cert
@@ -87,27 +99,33 @@
 		- google.com subdomains:
 
 			- accounts
+			- admin
 			- adwords
 			- apis
 			- appengine
-			- books		(→ encrypted)
 			- calendar
 			- checkout
 			- chrome
 			- clients[12]
+			- cloud
 			- code
 			- *.corp
 			- developers
 			- dl
 			- docs
 			- docs\d
+			- \d.docs
+			- domains
 			- drive
+			- earth		(→ www)
 			- encrypted
 			- encrypted-tbn[123]
 			- feedburner
+			- feedproxy
 			- fiber
 			- finance
 			- glass
+			- goto
 			- groups
 			- health
 			- helpouts
@@ -115,6 +133,7 @@
 			- hostedtalkgadget
 			- id
 			- investor
+			- ipv4
 			- knol
 			- knoll		(→ knol)
 			- lh\d
@@ -134,6 +153,7 @@
 			- sb-ssl
 			- script
 			- security
+			- services
 			- servicessites
 			- sites
 			- spreadsheets
@@ -143,8 +163,8 @@
 			- talkgadget
 			- tbn2			(→ encrypted-tbn2)
 			- tools
-			- translate
 			- trends		(→ www)
+			- wallet
 
 		- partner.googleadservices.com
 		- (www.)googlecode.com
@@ -174,10 +194,9 @@
 	<target host="groups.google.*" />
 	<target host="it.google.*" />
 	<target host="news.google.*" />
-		<exclusion pattern="^http://(?:news\.)?google\.com/(?:archivesearch|newspapers)" />
+		<exclusion pattern="^http://(?:news\.)?google\.com?(?:\.[a-z][a-z])?/(?:archivesearch|newspapers)" />
 	<target host="picasaweb.google.*" />
 	<target host="scholar.google.*" />
-	<target host="translate.google.*" />
 	<target host="www.google.*" />
 	<target host="*.google.ca" />
 	<target host="google.co.*" />
@@ -189,12 +208,10 @@
 	<target host="news.google.co.*" />
 	<target host="picasaweb.google.co.*" />
 	<target host="scholar.google.co.*" />
-	<target host="translate.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="*.google.com" />
 		<exclusion pattern="^http://(?:www\.)?google\.com/analytics/*(?:/[^/]+)?(?:\?.*)?$" />
-		<!--exclusion pattern="^http://books\.google\.com/(?!books/(\w+\.js|css/|javascript/)|favicon\.ico|googlebooks/|images/|intl/)" /-->
 		<exclusion pattern="^http://cbks0\.google\.com/(?:$|\?)" />
 		<exclusion pattern="^http://gg\.google\.com/(?!csi(?:$|\?))" />
 	<target host="google.com.*" />
@@ -205,7 +222,6 @@
 	<target host="news.google.com.*" />
 	<target host="picasaweb.google.com.*" />
 	<target host="scholar.google.com.*" />
-	<target host="translate.google.com.*" />
 	<target host="www.google.com.*" />
 	<target host="partner.googleadservices.com" />
 	<target host="googlecode.com" />
@@ -226,7 +242,11 @@
 		<exclusion pattern="http://[^@:\./]+-opensocial\.googleusercontent\.com" />
 
 
-	<!--	Can we secure any of these wildcard cookies safely?
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.google\.com$" name="^(APISID|HSID|NID|PREF|SID)$" /-->
+	<!--
+		Can we secure any of these wildcard cookies safely?
 									-->
 	<!--securecookie host="^\.google\.com$" name="^(hl|I4SUserLocale|NID|PREF|S)$" /-->
 	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
@@ -256,41 +276,43 @@
 	<rule from="^http://(?:www\.)?goo\.gl/"
 		to="https://goo.gl/" />
 
-
-	<!--	Redirects to http when rewritten to www:
-							-->
-	<rule from="^http://books\.google\.com/"
-		to="https://encrypted.google.com/" />
+	<!--	tisp$ 404s:
+				-->
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/tisp(?=$|\?)"
+		to="https://www.google.$1/tisp/" />
 
 	<!--	Paths that work on all in google.*
 							-->
-	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|adsense|adwords|analytics|bookmarks|chrome|contacts|coop|cse|css|culturalinstitute|doodles|favicon\.ico|finance|goodtoknow|googleblogs|hostednews|images|intl|js|landing|logos|mapmaker|newproducts|news|nexus|patents|policies|prdhp|profiles|products|reader|s2|settings|shopping|support|tools|transparencyreport|trends|urchin|webmasters)(?=$|[?/])"
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(accounts|adplanner|ads|adsense|adwords|analytics|bookmarks|books|chrome|chromecast|contacts|coop|cse|css|culturalinstitute|doodles|earth|favicon\.ico|finance|get|goodtoknow|googleblogs|grants|green|hangouts|hostednews|images|intl|js|landing|logos|mapmaker|newproducts|news|nexus|patents|policies|prdhp|profiles|products|reader|s2|script|settings|shopping|support|tisp|tools|transparencyreport|trends|urchin|webmasters)(?=$|[?/])"
 		 to="https://www.google.$1/$2" />
 
 	<!--	Paths that 404 on .ccltd, but work on .com:
 								-->
-	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(calendar|dictionary|doubleclick|help|ideas|postini|url)"
-		 to="https://www.google.com/$1" />
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|doubleclick|foobar|help|ideas|pacman|partners|postini|powermeter|url|webdesigner)"
+		 to="https://www.google.com/" />
 
 	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/custom"
 		 to="https://www.google.com/cse" />
 
 	<!--	Paths that only exist/work on .com
 							-->
-	<rule from="^http://(?:www\.)?google\.com/(\+|appsstatus|books|buzz|extern_js|glass|googlebooks|ig|insights|moderator|phone|safebrowsing|videotargetting|webfonts)($|[?/])"
-		to="https://www.google.com/$1$2" />
+	<rule from="^http://(?:www\.)?google\.com/(\+|appsstatus|buzz|chat|chromeos|extern_js|glass|googlebooks|ig|insights|moderator|phone|safebrowsing|videotargetting|webfonts)(?=$|[?/])"
+		to="https://www.google.com/$1" />
 
 	<!--	Subdomains that work on all in google.*
 							-->
-	<rule from="^http://(accounts|adwords|finance|groups|id|picasaweb|translate)\.google\.((?:com?\.)?\w{2,3})/"
+	<rule from="^http://(accounts|adwords|finance|groups|id|picasaweb|)\.google\.((?:com?\.)?\w{2,3})/"
 		to="https://$1.google.$2/" />
 
 	<!--	Subdomains that only exist/work on .com
 							-->
-	<rule from="^http://(apis|appengine|books|calendar|cbks0|chat|checkout|chrome|clients[12]|code|[\w-]+\.corp|developers|dl|docs\d?|drive|encrypted|encrypted-tbn[123]|feedburner|fiber|fonts|gg|glass||health|helpouts|history|(?:hosted)?talkgadget|investor|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|servicessites|sites|spreadsheets\d?|support|talk|tools)\.google\.com/"
+	<rule from="^http://(admin|apis|appengine|calendar|cast|cbks0|chat|checkout|chrome|clients[12]|cloud|code|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|feedproxy|fiber|fonts|gg|glass||goto|health|helpouts|history|(?:hosted)?talkgadget|investor|ipv4|lh\d|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
+
+	<rule from="^http://earth\.google\.com/"
+		to="https://www.google.com/earth/" />
 
 	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
 		to="https://www.google.$1/intl/" />
@@ -310,7 +332,7 @@
 		 to="https://www.google.com/trends" />
 
 
-	<rule from="^http://([^/:@]+\.)?googlecode\.com/"
+	<rule from="^http://([^/:@\.]+\.)?googlecode\.com/"
 		 to="https://$1googlecode.com/" />
 
 	<rule from="^http://([^\./]\.)?googlesource\.com/"

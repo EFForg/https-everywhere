@@ -1,18 +1,71 @@
-<ruleset name="ClickBank (partial)">
+<!--
+	Problematic domains:
 
-	<target host="clickbank.com"/>
-	<target host="*.clickbank.com"/>
-	<target host="clickbank.net"/>
-	<target host="*.clickbank.net"/>
+		- (www.)clickbank.net *
 
-	<rule from="^http://(?:www\.)?clickbank\.(?:com|net)/"
-		to="https://www.clickbank.com/"/>
+	* Refused
+
+
+	Fully covered domains:
+
+		- (www.)clickbank.net	(→ www.clickbank.com)
+		- ssl.clickbank.net
+
+		- clickbank.com subdomains:
+
+			- (www.)
+			- accounts
+			- support
+
+
+	Mixed content:
+
+		- css on www.clickbank.com from $self ¹
+
+		- Images on www.clickbank.com from $self ²
+
+	¹ Secured by us, minimal effect
+	² Secured by us
+
+
+	These altnames don't exist:
+
+		- www.ssl.clickbank.net
+
+-->
+<ruleset name="ClickBank">
+
+	<target host="clickbank.com" />
+	<target host="*.clickbank.com" />
+	<target host="clickbank.net" />
+	<target host="*.clickbank.net" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^accounts\.clickbank\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^support\.clickbank\.com$" name="^(_zendesk_session|_zendesk_shared_session)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.accounts\.clickbank\.com$" name="^locale$" /-->
+
+	<securecookie host="^(?:\.accounts|www)?\.clickbank\.com$" name=".+" />
+	<securecookie host="^(?:ssl)?\.clickbank\.net$" name=".+" />
+
+
+	<rule from="^http://((?:accounts|support|www)\.)?clickbank\.com/"
+		to="https://$1clickbank.com/" />
+
+	<!--	Redirect behavior differs between !www and www:
+								-->
+	<rule from="^http://www\.clickbank\.net/+\??$"
+		to="https://www.clickbank.com/" />
+
+	<rule from="^http://(?:www\.)?clickbank\.net/.*"
+		to="https://www.clickbank.com/network_abuse.html" />
 
 	<rule from="^http://ssl\.clickbank\.net/"
-		to="https://ssl.clickbank.net/"/>
-
-	<securecookie host="^(www)?\.clickbank\.com$" name=".*"/>
-	<securecookie host="^(ssl)?\.clickbank\.net$" name=".*"/>
+		to="https://ssl.clickbank.net/" />
 
 </ruleset>
-

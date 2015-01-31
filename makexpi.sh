@@ -1,4 +1,5 @@
 #!/bin/sh
+set -o errexit
 APP_NAME=https-everywhere
 
 # builds a .xpi from the git repository, placing the .xpi in the root
@@ -15,6 +16,8 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
+RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+ANDROID_APP_ID=org.mozilla.firefox
 
 [ -d pkg ] || mkdir pkg
 
@@ -26,6 +29,12 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 	cp -r -f -a .git $SUBDIR
 	cd $SUBDIR
 	git reset --hard "$1"
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; there might be something
+  # better (vmtouch? readahead?) that tells the IO subsystem to read the files
+  # in whatever order it wants...
+  nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
   ./makexpi.sh $1 --no-recurse || exit 1
@@ -47,14 +56,28 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   exit 0
 fi
 
+# Same optimisation
+nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+
+
+if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  echo "Generating sqlite DB"
+  python2.7 ./utils/make-sqlite.py
+fi
+
 # =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales
 
-if [ "$1" != "--fast" ] ; then
+die() {
+  echo >&2 "ERROR:" "$@"
+  exit 1
+}
+
+if [ "$1" != "--fast" -a -z "$FAST" ] ; then
   if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
-    VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -x utils/trivial-validate ] ; then
     # This case probably never happens
     VALIDATE=./utils/trivial-validate
@@ -67,31 +90,41 @@ if [ "$1" != "--fast" ] ; then
     echo Validation of included rulesets completed. >&2
     echo >&2
   else
-    echo ERROR: Validation of rulesets failed. >&2
-    exit 1
+    die "Validation of rulesets failed."
   fi
 
-  if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
+  # Check for xmllint.
+  type xmllint >/dev/null || die "xmllint not available"
+
+  GRAMMAR="utils/relaxng.xml"
+  if [ -f "$GRAMMAR" ]
   then
-    if find src/chrome/content/rules -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
+    # xmllint spams stderr with "<FILENAME> validates, even with the --noout
+    # flag. We can't grep -v for that line, because the pipeline will mask error
+    # status from xmllint. Instead we run it once going to /dev/null, and if
+    # there's an error run it again, showing only error output.
+    validate_grammar() {
+      find src/chrome/content/rules -name "*.xml" | \
+       xargs xmllint --noout --relaxng utils/relaxng.xml
+    }
+    if validate_grammar 2>/dev/null
     then
-      echo Validation of rulesets with RELAX NG grammar completed. >&2
+      echo Validation of rulesets against $GRAMMAR succeeded. >&2
     else
-      echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
-      exit 1
+      validate_grammar 2>&1 | grep -v validates
+      die "Validation of rulesets against $GRAMMAR failed."
     fi
   else
-    echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
-  fi 2>&1 | grep -v validates
+    echo Validation of rulesets against $GRAMMAR SKIPPED. >&2
+  fi
 
   if [ -x ./utils/compare-locales.sh ] >&2
   then
-    if ./utils/compare-locales.sh >&2
+    if sh ./utils/compare-locales.sh >&2
     then
       echo Validation of included locales completed. >&2
     else
-      echo ERROR: Validation of locales failed. >&2
-      exit 1
+      die "Validation of locales failed."
     fi
   fi
 fi
@@ -102,7 +135,12 @@ XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' |
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
 	XPI_NAME="$XPI_NAME.xpi"
 else
-	XPI_NAME="$XPI_NAME~pre.xpi"
+  # During development, generate packages named with the short hash of HEAD.
+	XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`"
+        if ! git diff-index --quiet HEAD; then
+            XPI_NAME="$XPI_NAME-dirty"
+        fi
+        XPI_NAME="$XPI_NAME.xpi"
 fi
 
 [ -d pkg ] || mkdir pkg
@@ -114,30 +152,24 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
-# Unless we're in a hurry and there's already a ruleset library, build it from
-# the ruleset .xml files
-
-if [ "$1" = "--fast" ] ; then
-  FAST="--fast"
-fi
-python ./utils/merge-rulesets.py $FAST
-
 cd src
+
 
 # Build the XPI!
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
-python ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+python2.7 ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
 if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
-  echo >&2 "Total included rules: `find chrome/content/rules -name "*.xml" | wc -l`"
+  echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
   echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
   echo >&2 "Created $XPI_NAME"
+  ../utils/android-push.sh "$XPI_NAME"
   if [ -n "$BRANCH" ]; then
     cd ../..
     cp $SUBDIR/$XPI_NAME pkg

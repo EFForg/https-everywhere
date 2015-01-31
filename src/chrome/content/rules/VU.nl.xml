@@ -1,0 +1,75 @@
+<!--
+	VU University Amsterdam
+
+
+	Nonfunctional subdomains:
+
+		- (www.)feweb *
+
+	* 404; mismatched, CN: www.few.vu.nl
+
+
+	Problematic subdomains:
+
+		- (www.)fpp *	(→ www.psy)
+
+	* 404; mismatched, CN: www.few.vu.nl
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- (www.)fpp ²
+
+	² At least some paths don't redirect
+
+
+	Problematic subdomains:
+
+		- cs ¹
+		- falw ²
+		- fbw ²
+		- few ¹
+		- godgeleerdheid ²
+		- let ²
+		- psy ²
+
+	¹ Mismatched, CN: www.few.vu.nl
+	² Mismatched, CN: www.vu.nl
+
+
+	Fully covered subdomains:
+
+		- vunet
+
+-->
+<ruleset name="VU.nl (partial)">
+
+	<target host="*.vu.nl" />
+		<!--exclusion pattern="^http://(www\.)?vu\.nl/+(?!\w\w/css/|\w\w/[Ii]mages/)" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.(falw|fbw|godgeleerdheid|let|psy)\.vu\.nl$" name="^ASPSESSIONID\w{8}$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^www\.(cs|few)\.vu\.nl$" name="^ASPSESSIONID\w{8}$" /-->
+
+	<securecookie host="^www\.(?:cs|few)\.vu\.nl$" name=".+" />
+
+
+	<rule from="^http://(www\.)?vu\.nl/+(?=\w\w/css/|\w\w/[Ii]mages/)"
+		to="https://$1vu.nl/" />
+
+	<rule from="^http://(?:www\.)?(cs|falw|fbw|few|godgeleerdheid|let|psy)\.vu\.nl/"
+		to="https://www.$1.vu.nl/" />
+
+	<rule from="^http://(?:www\.)?fpp\.vu\.nl/+(?=$|\?)"
+		to="https://www.psy.vu.nl/" />
+
+	<rule from="^http://vunet\.vu\.nl/"
+		to="https://vunet.vu.nl/" />
+
+</ruleset>

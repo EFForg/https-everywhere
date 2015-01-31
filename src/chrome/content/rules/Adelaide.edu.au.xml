@@ -1,0 +1,87 @@
+<!--
+	The University of Adelaide
+
+
+	Nonfunctional subdomains:
+
+		- alumni ¹
+		- www.alumni ²
+
+	¹ Dropped
+	² Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- apps
+		- auth
+		- blogs
+		- cas-prd.auth
+		- global
+		- international
+		- login
+		- m
+		- myuni
+		- orbit
+		- password
+		- shop
+		- unified
+
+
+	These altnames don't exist:
+
+		- blitzwing.auth.adelaide.edu.au
+		- blurr.auth.adelaide.edu.au
+		- casappprd1.auth.adelaide.edu.au
+		- casappprd2.auth.adelaide.edu.au
+		- cas-prd.adelaide.edu.au
+		- cas1.login.adelaide.edu.au
+		- cas2.login.adelaide.edu.au
+		- www.password.adelaide.edu.au
+		- blitzwing.services.adelaide.edu.au
+		- blurr.services.adelaide.edu.au
+		- cas-prd1.services.adelaide.edu.au
+		- cas-prd2.services.adelaide.edu.au
+		- www.shop.adelaide.edu.au
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- blog from media
+			- m from $self *
+
+		- Bugs on www from s7.addthis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Adelaide.edu.au (partial)">
+
+	<target host="adelaide.edu.au" />
+	<target host="*.adelaide.edu.au" />
+		<!--exclusion pattern="http://(www\.)?alumni\.adelaide\.edu\.au/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(auth|cas-prd\.auth|login|password|unified)\.adelaide\.edu\.au$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^myuni\.adelaide\.edu\.au" name="^(JSESSIONID|s_session_id)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^apps\.adelaide\.edu\.au$" name="^(RAILS-PRD-ACE|_gmail_session|_session_id)$" /-->
+	<!--securecookie host="^blogs\.adelaide\.edu\.au$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^myuni\.adelaide\.edu\.au" name="^session_id$" /-->
+	<!--securecookie host="^orbit\.adelaide\.edu\.au" name="^_StudentProfiles_session$" /-->
+	<!--securecookie host="^shop\.adelaide\.edu\.au$" name="^(CUSTOMER_UUID|JSESSIONID|KONAKART-PRD-80-ST-ACE)$" /-->
+
+	<securecookie host="^(?:apps|blogs|myuni|orbit|shop)\.adelaide\.edu\.au$" name=".+" />
+
+
+	<rule from="^http://((?:apps|auth|cas-prd\.auth|blogs|global|international|login|m|myuni|orbit|password|shop|unified|www)\.)?adelaide\.edu\.au/"
+		to="https://$1adelaide.edu.au/" />
+
+</ruleset>

@@ -1,0 +1,51 @@
+<!--
+	3M Company
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- solutions ²
+
+	¹ Some pages have mixed css, others 404
+	² Some paths 404
+
+
+	Fully covered subdomains:
+
+		- metricscst
+
+
+	Mixed content:
+
+		- css on www from solutions *
+
+		- Web bugs on www from metricscst *
+
+	* Secured by us
+
+-->
+<ruleset name="3M.com (partial)">
+
+	<target host="3m.com" />
+	<target host="*.3m.com" />
+		<!--
+			- $ loads mixed stylesheets as described above
+			- us$ redirects to http
+							-->
+		<!--exclusion pattern="^http://(www\.)?3m\.com/+(us)?($|[/?])" /-->
+		<exclusion pattern="^http://(?:www\.)?3m\.com/+(?!product/)" />
+		<!--
+			innovation/en_US$ & innovation/assets/ 404
+									-->
+		<!--exclusion pattern="^http://solutions\.3m\.com/+innovation/" /-->
+		<!--
+			This is enough to secure resources on www.../$
+									-->
+		<exclusion pattern="^http://solutions\.3m\.com/+(?!3M/themes/|3MContentRetrievalAPI/|wps/)" />
+
+
+	<rule from="^http://((?:metricscst|solutions|www)\.)?3m\.com/"
+		to="https://$13m.com/" />
+
+</ruleset>

@@ -1,0 +1,16 @@
+# Config copied from
+#  http://www.theautomatedtester.co.uk/blog/2012/using-travis-ci-for-building-and-testing-firefox-addons.html
+# Use node_js because there are maybe more workers?
+language: python
+python:
+  - "2.7"
+addons:
+  firefox: "35.0"
+install:
+  - sudo apt-get -qq install libxml2-dev libxslt-dev python-dev
+  - pip install -r requirements.txt
+before_script:
+  - sh -e /etc/init.d/xvfb start
+env:
+  - DISPLAY=':99.0'
+script: ./test.sh

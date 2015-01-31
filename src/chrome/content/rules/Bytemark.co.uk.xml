@@ -1,35 +1,48 @@
 <!--
-	Bytemark Hosting
+	Other Bytemark Hosting rulesets:
+
+		- BigV.io.xml
 
 
 	Nonfunctional subdomains:
 
-		- (www.)	(dropped)
-		- blog		(redirects to http, valid cert)
+		- symbiosis (http only)
 
 
 	Fully covered subdomains:
 
+		- blog
+		- www
 		- forum
-		- order2009
+		- order20\d\d:
+			- 09
+			- 13
 		- panel
+		- panel-beta
 
 
 	Observed cookie domains:
 
 		- .forum
-		- order2009
+		- order2009 *
+		- order2013 *
 		- panel
 		- webmail
+
+	* Not secured by server
 
 -->
 <ruleset name="Bytemark.co.uk (partial)">
 
+	<target host="bytemark.co.uk" />
 	<target host="*.bytemark.co.uk" />
-		<!--exclusion pattern="^http://(blog|www)\." /-->
+		<!--exclusion pattern="^http://(symbiosis)\." /-->
 
+	<securecookie host=".+\.bytemark\.co\.uk$" name=".+" />
 
-	<rule from="^http://(forum|order2009|panel)\.bytemark\.co\.uk/"
+	<rule from="^http://(?:www\.)?bytemark\.co\.uk/"
+		to="https://www.bytemark.co.uk/" />
+
+	<rule from="^http://(blog|forum|order20\d\d|panel|panel-beta)\.bytemark\.co\.uk/"
 		to="https://$1.bytemark.co.uk/" />
-
 </ruleset>

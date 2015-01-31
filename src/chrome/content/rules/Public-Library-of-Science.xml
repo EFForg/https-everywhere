@@ -1,10 +1,14 @@
 <!--
+	Public Library of Science
+
+	For rules causing false/broken MCB, see PLoS.org-falsemixed.xml.
+
 	For problematic rules, see Public-Library-of-Science-mismatches.xml
 
 
 	Nonfunctional:
 
-		- dx.plos.org
+		- dx.plos.org ¹
 		- hubs.plos.org
 		- (www.)plosbiology.org
 		- (www.)ploscollections.org
@@ -17,17 +21,55 @@
 		- (www.)plospathogens.org
 		- (www.)plusone.org
 
+	¹ Refused
+
+
+	Partially covered subdomains:
+
+		- (www.)? *
+		- blogs *
+		- currents *
+
+	* Avoiding broken MCB
+
+
+	Insecure cookies  are set for these domains:
+
+		- plos.org
+		- blogs.plos.org
+		- currents.plos.org
+		- www.plos.org
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blogs, currents, www from $self *
+			- www from fonts.googleapis.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Public Library of Science (partial)" platform="mixedcontent">
+<ruleset name="PLoS.org (partial)">
 
 	<target host="plos.org" />
 	<target host="*.plos.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:blogs\.|currents\.|www\.)?plos\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^(.*\.)?plos\.org$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?plos\.org$" name="Coyote-\d-\d+\w$" /-->
+	<!--securecookie host="^blogs\.plos\.org$" name="^kpg_stop_spammers_time$" /-->
+
+	<securecookie host="^(?:(?!(?:blogs|currents|www)\.).+\.)?plos\.org$" name=".*" />
 
 
-	<rule from="^http://(currents\.|register\.|www\.)?plos\.org/"
+	<rule from="^http://(blogs\.|currents\.|register\.|www\.)?plos\.org/"
 		to="https://$1plos.org/" />
 
 </ruleset>

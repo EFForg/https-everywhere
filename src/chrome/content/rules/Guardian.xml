@@ -1,4 +1,9 @@
 <!--
+	Other Guardian rulesets:
+
+		- Guardian_Subscriptions.co.uk.xml
+
+
 	CDN buckets:
 
 		- guardian.co.uk.112.2o7.net
@@ -25,7 +30,6 @@
 		- static-l3.guim.co.uk.c.footprint.net
 
 			- combo.guim.co.uk
-			- i.guim.co.uk
 			- id.guim.co.uk
 			- resource.guim.co.uk
 			- static.guim.co.uk
@@ -57,12 +61,7 @@
 
 		- guardian.co.uk subdomains:
 
-			- ^ ¹
 			- discussion ²
-			- m ³
-			- syndication ³
-			- syndweb ³
-			- www ³
 
 		- discussion.guardianapis.com ¹
 		- www.guardiandigitalcomparison.co.uk ¹
@@ -77,10 +76,12 @@
 
 			- ^ ¹
 			- discussion ²
-			- feeds		(refused)
+			- feeds ⁴
+			- jobs ¹
+			- observer ⁵
+			- subscribe ²
 			- syndication ¹
-			- syndweb	(duplicate serial)
-			- www		(404; mismatched, CN: *.a.ssl.fastly.net)
+			- www ⁶
 
 		- audio.theguardian.tv ¹
 		- cdn.theguardian.tv ¹
@@ -88,39 +89,52 @@
 	¹ Dropped
 	² Interrupted
 	³ 404; mismatched, CN: *.a.ssl.fastly.net
+	⁴ Refused
+	⁵ Redirects to www; mismatched, CN: *.a.ssl.fastly.net
+	⁶ Redirects to http, valid cert
 
 
 	Problematic domains:
 
+		- gu.com ³
+
 		- guardian.co.uk subdomains:
 
-			- download *
+			- ^ ³
+			- download ¹
 			- hits			(mismatched, CN: *.d1.sc.omtrdc.net)
-			- image *
+			- image ¹
+			- m ²
+			- syndication ⁵
+			- www ²
 
 		- guim.co.uk subdomains:
 
-			- i **
-			- id **
-			- static **
+			- assets ³
+			- id ³
+			- static ³
 
-		- hits.theguardian.com ***
+		- hits.theguardian.com ⁴
+		- next.theguardian.com ²
 
-	* Cert only matches (www.)image.guim.co.uk
-	** Dropped
-	*** Mismatched, CN: *.d1.sc.omtrdc.net
+	¹ Cert only matches (www.)image.guim.co.uk
+	² Works; mismatched, CN: *.a.ssl.fastly.net
+	³ Dropped
+	⁴ Mismatched, CN: *.d1.sc.omtrdc.net
+	⁵ Refused
 
 
 	Partially covered domains:
 
 		- (www.)guardianbookshop.co.uk *
 		- \w+.guardianoffers.co.uk *		
-		- i.guim.co.uk			(→ image.guim.co.uk)
 
 	* Some [most?] pages redirect to http
 
 
 	Fully covered domains:
+
+		- gu.com	(→ www.theguardian.com)
 
 		- guardian.co.uk subdomains:
 
@@ -133,26 +147,61 @@
 
 		- (www.)guardianeatright.co.uk
 
+		- entertainment.guardianoffers.co.uk
+
 		- guim.co.uk subdomains:
 
+			- assets	(→ assets-secure)
+			- assets-secure
+			- i
 			- id		(→ id.guardian.co.uk)
-			- (www.)image
+			- image
 			- pasteup
 			- soulmates
-			- (www.)static	(→ image)
+			- static	(→ image)
+			- static-secure
 
 		- theguardian.com subdomains:
 
 			- hits		(→ theguardian-com.d1.sc.omtrdc.net)
+			- hits-secure
 			- id
+			- membership
 			- oas
+			- profile
 			- register
+			- securedrop
 			- soulmates
+			- syndication	(→ www)
 			- witness
+
+
+	These altnames don't exist:
+
+		- www.entertainment.guardianoffers.co.uk
+		- www.assets-secure.guim.co.uk
+		- www.static-secure.guim.co.uk
+		- www.profile.theguardian.com
+		- www.securedrop.theguardian.com
+		- www.soulmates.theguardian.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- next from next ¹
+			- soulmates from soulmates.s3.amazonaws.com ²
+
+		- Web bugs on witness.guardian.com from hits.guardian.co.uk ²
+
+	¹ Not secured by us <= mismatched
+	² Secured by us
 
 -->
 <ruleset name="The Guardian (partial)">
 
+	<target host="gu.com" />
 	<target host="*.guardian.co.uk" />
 	<target host="guardianbookshop.co.uk" />
 	<target host="www.guardianbookshop.co.uk" />
@@ -170,15 +219,28 @@
 	<target host="*.theguardian.com" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^entertainment\.guardianoffers\.co\.uk$" name="^CSPSESSIONID-SP-443-UP-$" /-->
+	<!--securecookie host="^membership\.theguardian\.com$" name="^PLAY_SESSION$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^entertainment\.guardianoffers\.co\.uk$" name="^CSPWSERVERID$" /-->
+
 	<securecookie host="^\.guardian\.co\.uk$" name="^(?:NXCLICK2|OAX|s_.+s)$" />
 	<securecookie host="^(?:oas|soulmates|\.witness)\.guardian\.co\.uk$" name=".+" />
 	<securecookie host="^(?:.*\.)?guardianeatright\.co\.uk$" name=".+" />
+	<securecookie host="^entertainment\.guardianoffers\.co\.uk$" name=".+" />
 	<!--
 		Tracking cookies set by oas.theguardian.com:
 								-->
 	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH])$" />
 	<securecookie host="^(?:\.?id|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
 
+
+	<rule from="^http://gu\.com/"
+		to="https://www.theguardian.com/" />
 
 	<rule from="^http://www\.guardian\.co\.uk/favicon\.ico"
 		to="https://image.guim.co.uk/favicon.ico" />
@@ -201,19 +263,27 @@
 	<rule from="^http://(\w+)\.guardianoffers\.co\.uk/(?=AddtoBasket\.asp|checkout\.asp|(?:BrandImages|images|lib|ProductImages|scripts|SKUImages|styles)/)"
 		to="https://$1.guardianoffers.co.uk/" />
 
-	<rule from="^http://i\.guim\.co\.uk/n/"
-		to="https://image.guim.co.uk/" />
+	<rule from="^http://entertainment\.guardianoffers\.co\.uk/"
+		to="https://entertainment.guardianoffers.co.uk/" />
+
+	<rule from="^http://assets(?:-secure)?\.guim\.co\.uk/"
+		to="https://assets-secure.guim.co.uk/" />
 
 	<rule from="^http://id\.guim\.co\.uk/"
 		to="https://id.guardian.co.uk/" />
 
-	<rule from="^http://(pasteup|soulmates)\.guim\.co\.uk/"
+	<rule from="^http://(i|pasteup|soulmates|static-secure)\.guim\.co\.uk/"
 		to="https://$1.guim.co.uk/" />
 
 	<rule from="^http://hits\.theguardian\.com/"
 		to="https://theguardian-com.d1.sc.omtrdc.net/" />
 
-	<rule from="^http://(id|oas|register|soulmates|witness)\.theguardian\.com/"
+	<rule from="^http://(hits-secure|id|oas|membership|profile|register|securedrop|soulmates|witness)\.theguardian\.com/"
 		to="https://$1.theguardian.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://syndication\.theguardian\.com/[^?]*"
+		to="https://www.theguardian.com/info/syndication-and-terms-of-use" />
 
 </ruleset>

@@ -1,0 +1,33 @@
+<!--
+	^: cert only matches www
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- payments
+		- portal
+		- smartscan
+
+-->
+<ruleset name="ControlScan.com">
+
+	<target host="controlscan.com" />
+	<target host="*.controlscan.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?controlscan\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.controlscan\.com$" name="^ci_session$" /-->
+
+	<securecookie host="^(?:\.|www\.)?controlscan\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?controlscan\.com/"
+		to="https://controlscan.com/" />
+
+	<rule from="^http://(payments|portal|smartscan)\.controlscan\.com/"
+		to="https://$1.controlscan.com/" />
+
+</ruleset>

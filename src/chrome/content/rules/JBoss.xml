@@ -9,6 +9,7 @@
 			- (www.)
 			- community
 			- design
+			- developer
 			- docs
 			- hudson
 			- issues
@@ -19,6 +20,12 @@
 			- static
 			- wiki
 
+
+	Insecure cookies are set for these domains:
+
+		- developer.jboss.org
+		- issues.jboss.org
+
 -->
 <ruleset name="JBoss">
 
@@ -27,12 +34,17 @@
 		<!--
 			downloads 404s.
 					-->
-		<exclusion pattern="^http://downloads?\.jboss\.(com|org)/" />
+		<exclusion pattern="^http://downloads?\.jboss\.(?:com|org)/" />
 	<target host="jboss.org" />
 	<target host="*.jboss.org" />
 
 
-	<securecookie host="^(.*\.)?jboss\.(com|org)$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^issues\.jboss\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^developer\.jboss\.org$" name="(JSESSIONID|jive\.security\.context)$" /-->
+
+	<securecookie host="^(?:.*\.)?jboss\.(?:com|org)$" name=".+" />
 
 
 	<rule from="^http://([^/@:]+\.)?jboss\.(com|org)/"

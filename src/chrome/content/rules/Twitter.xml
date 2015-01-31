@@ -1,13 +1,20 @@
 <!--
+	Other Twitter rulesets:
+
+		- Twitter_Community.com.xml
+
+
 	Nonfunctional domains:
 
-		- blog.twitter.com		(hosted on Blogger)
-		- engineering.twitter.com	(hosted on Blogger; interrupted)
-		- status.twitter.com
-		- status.twitter.jp
+		- status.twitter.com *
+		- status.twitter.jp *
+
+	* Tumblr
 
 
 	CDN buckets:
+
+		- twimg0-0.akamaihd.net
 
 		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
 
@@ -28,18 +35,12 @@
 
 		- twimg.com subdomains:
 
-			- a[12]		(mismatched, CN: gp1.wac.edgecastcdn.net)
-			- a3 *
-			- a4		(mismatched, CN: si0.twimg.com)
 			- a5 *
 			- s		(cloudfront)
 
 		- twitter.com subdomains:
 
-			- urls.api *
 			- platform[0-3]		(403, akamai)
-			- anywhere.platform *
-			- widgets.platform	(mismatched, CN: si0.twimg.com)
 
 	* akamai
 
@@ -50,10 +51,14 @@
 
 		- twimg.com subdomains:
 
-			- a\d		(→ si0)
+			- a[5-9]	(→ si0)
+			- a\d
 			- abs
+			- amp
+			- dnt
 			- ea
 			- g
+			- g2
 			- gu
 			- hca
 			- jp
@@ -67,17 +72,23 @@
 			- si[0-5]
 			- syndication
 			- cdn.syndication
+			- tailfeather
+			- ton
+			- v
 			- widgets
 
 		- twitter.com subdomains:
 
 			- (www.)
 			- 201[012]
+			- about
 			- ads
 			- analytics
 			- api
 			- cdn.api
-			- urls.api	(→ cdn.api)
+			- urls.api
+			- apps
+			- blog
 			- business
 			- preview.cdn
 			- preview-dev.cdn
@@ -85,6 +96,7 @@
 			- de
 			- dev
 			- en
+			- engineering
 			- es
 			- firefox
 			- fr
@@ -97,15 +109,32 @@
 			- music
 			- oauth
 			- p
+			- pic
 			- platform
 			- platform[0-3]		(→ platform)
-			- anywhere.platform	(→ platform)
-			- widgets.platform	(→ platform)
+			- widgets.platform
 			- search
 			- static
 			- support
 			- transparency
 			- upload
+
+
+	These altnames don't exist:
+
+		- i3.twimg.com
+		- p-dev.twimg.com
+		- vmtc.twimg.com
+
+		- cdn-dev.api.twitter.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .t.co
+		- twitter.com
+		- .twitter.com
+		- mobile.twitter.com
 
 -->
 <ruleset name="Twitter">
@@ -117,6 +146,13 @@
 	<target host="*.twitter.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.t\.co$" name="^muc$" /-->
+	<!--securecookie host="^twitter\.com$" name="^external_referer$" /-->
+	<!--securecookie host="^\.twitter\.com$" name="^(_twitter_sess|guest_id)$" /-->
+	<!--securecookie host="^mobile\.twitter\.com$" name="^(req_country|req_country_code|req_ip)$" /-->
+
 	<securecookie host="^\.t\.co$" name=".+" />
 	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
 
@@ -124,25 +160,19 @@
 	<rule from="^http://(?:www\.)?t\.co/"
 		to="https://t.co/" />
 
-	<rule from="^http://a\d\.twimg\.com/"
+	<rule from="^http://a[5-9]\.twimg\.com/"
 		to="https://si0.twimg.com/" />
 
-	<rule from="^http://(abs|ea|gu?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|widgets)\.twimg\.com/"
+	<rule from="^http://(abs|a\d|amp|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
 		to="https://$1.twimg.com/" />
 
 	<rule from="^http://s\.twimg\.com/"
 		to="https://d2rdfnizen5apl.cloudfront.net/" />
 
-	<rule from="^http://((?:201\d|ads|analytics|(?:cdn\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
+	<rule from="^http://((?:201\d|about|ads|analytics|apps|blog|(?:cdn\.|urls\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
 		to="https://$1twitter.com/" />
 
-	<rule from="^http://urls\.api\.twitter\.com/"
-		to="https://cdn.api.twitter.com/" />
-
-	<rule from="^http://(?:blo|engineerin)g\.twitter\.com/favicon\.ico"
-		to="https://www.blogger.com/favicon.ico"/>
-
-	<rule from="^http://(?:anywhere\.|widgets\.)?platform\d?\.twitter\.com/"
+	<rule from="^http://platform\d\.twitter\.com/"
 		to="https://platform.twitter.com/" />
 
 </ruleset>

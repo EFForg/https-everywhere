@@ -61,18 +61,18 @@
 
 	<!--	The game at http://www.va.gov/kids/k-5/drawer.asp
 		does not appear to work when HTTPS is used	-->
-	<exclusion pattern="^http://www\.va\.gov/kids($|/)" />
+	<exclusion pattern="^http://www\.va\.gov/kids(?:$|/)" />
 
 	<!--	The jobsearch.vaforvets.va.gov subdomain (among other possible subdomains) does not support HTTPS as of now.
 		Because of subdomains such as this, secure cookies are not applied to the vaforvets.va.gov subdomain or the
 		vba.va.gov subdomain or the va.gov domain. At the same time, secure cookies are applied to certain subdomains
 		of the vaforvets.va.gov subdomain and the vba.va.gov subdomain, such as login.vaforvets.va.gov and tas.vba.va.gov	-->
-	<securecookie host="^www\.(ebenefits|vendorportal\.ecms|vis\.fsc|1010ez\.med|myhealth|pay|tms|valu|vba|visn23?)\.va\.gov$" name=".+" />
-	<securecookie host="^(\.)?(((pki|register)\.eauth)|iris|uploads|www4)\.va\.gov$" name=".+" />
-	<securecookie host="^((www)?\.)?(fasttrack|gibill|move|vacanteen|vacareers|voa)\.va\.gov$" name=".+" />
+	<securecookie host="^www\.(?:ebenefits|vendorportal\.ecms|vis\.fsc|1010ez\.med|myhealth|pay|tms|valu|vba|visn23?)\.va\.gov$" name=".+" />
+	<securecookie host="^\.?(?:(?:pki|register)\.eauth|iris|uploads|www4)\.va\.gov$" name=".+" />
+	<securecookie host="^(?:\.|www\.)?(?:fasttrack|gibill|move|vacanteen|vacareers|voa)\.va\.gov$" name=".+" />
 	<securecookie host="^www\.vip\.vetbiz\.gov$" name=".+" />
-	<securecookie host="^((www)?\.)?(insurance|((tas|vabenefits|vaonce|vip)\.vba))\.va\.gov$" name=".+" />
-	<securecookie host="^((www)?\.)?((assessments|login|mst|my|users|vct)\.)vaforvets\.va\.gov$" name=".+" />
+	<securecookie host="^(?:\.|www\.)?insurance|(?:tas|vabenefits|vaonce|vip)\.vba\.va\.gov$" name=".+" />
+	<securecookie host="^(?:\.|www\.)?(?:assessments|login|mst|my|users|vct)\.aforvets\.va\.gov$" name=".+" />
 	<securecookie host="^www\.va\.gov$" name=".+" />
 
 	<!--	Some "This URL has moved" pages may not automatically redirect
@@ -95,17 +95,17 @@
 
 	<!--	Handle the situation where a subdomain might have a www. prefix
 		and such a prefix should be added if not already present	-->
-	<rule from="^https?://(?:www\.)?(fasttrack|gibill|move|vacanteen|vacareers|voa)\.va\.gov/"
+	<rule from="^http://(?:www\.)?(fasttrack|gibill|move|vacanteen|vacareers|voa)\.va\.gov/"
 		to="https://www.$1.va.gov/" />
-	<rule from="^http://(www\.)?vip\.vetbiz\.gov/"
+	<rule from="^http://(?:www\.)?vip\.vetbiz\.gov/"
 		to="https://www.vip.vetbiz.gov/" />
 
 	<!--	Handle the situation where a subdomain might have a www.
 		prefix and such a prefix should be removed if present	-->
-	<rule from="^https?://(?:www\.)?(insurance|(?:(?:assessments|login|mst|my|users|vct)\.)?vaforvets|(?:tas|vabenefits|vaonce|vip)\.vba)\.va\.gov/"
+	<rule from="^http://(?:www\.)?(insurance|(?:(?:assessments|login|mst|my|users|vct)\.)?vaforvets|(?:tas|vabenefits|vaonce|vip)\.vba)\.va\.gov/"
 		to="https://$1.va.gov/" />
 
-	<rule from="^https?://(?:www1?)\.va\.gov/"
+	<rule from="^http://(?:www1?)\.va\.gov/"
 		to="https://www.va.gov/" />
 
 </ruleset>

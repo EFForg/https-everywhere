@@ -15,7 +15,7 @@
 	Nonfunctional domains:
 
 		- media.ch9.ms			(CN: *.sharepointonline.com; 400)
-		- files.channel9.msdn.com	(CN: *.sharepointonline.com; 400)
+		- files.channel9.msdn.com	(400; CN: *.vo.msecnd.net)
 
 
 	Partially covered msdn.com subdomains:
@@ -36,6 +36,25 @@
 		- social
 		- i1.social
 
+
+	Observed cookie domains:
+
+		- blogs.msdn.com *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- css on blogs from i1.blogs *
+
+		- Images on channel9 from files.channel9
+		- Images on channel9 from video.ch9.ms *
+
+		- Web bugs on blogs from msstomsdnblogs.112.2o7.net *
+
+	* Secured by us
+
 -->
 <ruleset name="MSDN (partial)">
 
@@ -49,7 +68,11 @@
 	<target host="*.create.msdn.com" />
 
 
-	<!--	Observed cookie subdomains:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blogs\.msdn\.com$" name="^AuthorizationCookie$" /-->
+	<!--
+		Observed cookie subdomains:
 
 			- blogs
 			- forums.create
@@ -58,7 +81,7 @@
 
 	<!--	i1: Akamai
 				-->
-	<rule from="^https?://(?:i1\.)?(blogs|social)\.msdn\.com/"
+	<rule from="^http://(?:i1\.)?(blogs|social)\.msdn\.com/"
 		to="https://$1.msdn.com/" />
 
 	<rule from="^http://(channel9|(?:(?:forums|profile|users|windowsphone|www)\.)?create)\.msdn\.com/"
@@ -66,7 +89,7 @@
 
 	<!--	Cert doesn't match public
 						-->
-	<rule from="^https?://public\.create\.msdn\.com/assets/"
+	<rule from="^http://public\.create\.msdn\.com/assets/"
 		to="https://www.create.msdn.com/assets/" />
 
 </ruleset>

@@ -3,10 +3,14 @@
 
 		- tum.de subdomains:
 
+			- (www.)
 			- adm9.in.tum.de
 			- ias.in
+			- sec.in
 			- www.lehre
 			- www.lehren
+			- www.piwik
+			- mediatum.ub
 			- www
 
 		- ias.cs.tum.edu
@@ -20,15 +24,22 @@
 
 	Observed cookie domains:
 
+		- in.tum.de
 		- adm9.in.tum.de
 		- ias.in.tum.de
+		- www.in.tum.de
+		- www.tum.de
 		- ias.cs.tum.edu
 		- ias.informatik.tu-muenchen.de
 
 
 	Mixed content:
 
-		- Web bug on ias.in.tum.de from adm9.in.tum.de *
+		- Web bugs, on:
+
+			- ias.in.tum.de from adm9.in.tum.de *
+			- www.in from www.etracker.de *
+			- www.tum.de from www.piwik.tum.de *
 
 	* Secured by us
 
@@ -40,21 +51,29 @@
 	<target host="*.tu-muenchen.de" />
 
 
-	<securecookie host="^(?:adm9\.in|ias\.in|www(?:\.lehren?))?\.tum\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sec\.in\.tum\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^mediatum\.ub\.tum\.de$" name="^PSESSION$" /-->
+
+	<securecookie host="^(?:in|(?:adm9|ias|sec|www)\.in|mediatum\.ub|www(?:\.lehren?)?)?\.tum\.de$" name=".+" />
 	<securecookie host="^ias\.cs\.tum\.edu$" name=".+" />
 	<securecookie host="^(?:www|ias\.informatik)\.tu-muenchen\.de$" name=".+" />
 
 
-	<rule from="^http://www(\.lehren?)?\.tum\.de/"
+	<rule from="^http://www(\.lehren?|\.piwik)?\.tum\.de/"
 		to="https://www$1.tum.de/" />
 
-	<rule from="^http://ias\.in\.tum\.de/"
-		to="https://ias.in.tum.de/" />
+	<rule from="^http://((?:ias\.|sec\.|www\.)?in|mediatum\.ub)\.tum\.de/"
+		to="https://$1.tum.de/" />
 
 	<rule from="^http://ias\.cs\.tum\.edu/"
 		to="https://ias.cs.tum.edu/" />
 
 	<rule from="^http://(ias\.informatik|www)\.tu-muenchen\.de/"
 		to="https://$1.tu-muenchen.de/" />
+
+	<rule from="^http://isabelle\.in\.tum\.de/"
+		to="https://isabelle.in.tum.de/" />
 
 </ruleset>

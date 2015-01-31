@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see DailyKos.com-problematic.xml.
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/dk-production/
@@ -7,12 +10,45 @@
 
 	Nonfunctional subdomains:
 
-		- comics	(cert: www; 307s to http)
-		- elections	(cert: www; 307s to http)
-		- labor		(cert: www; 301s to http)
+		- comics *
+		- elections *
+		- labor *
+
+	* Redirects to http
+
+
+	Problematic subdomains:
+
+		- assets ³
+		- campaigns ¹
+		- helpdesk ²
+		- images ³
+
+	¹ Salsa Labs
+	² Uservoice
+	³ Fastly
+
+
+	Mixed content:
+
+		- css on campaigns from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- www from images ²
+			- www from images[12] ²
+
+		- Ads, on:
+
+			- www from www.googleadservices.com ³
+			- www from cloudfront.assets.stitcher.com ¹
+
+	¹ Secured by us
+	² Some secured by us, others not <= 404
+	³ Rule disabled by default
 
 -->
-<ruleset name="Dailykos (buggy)" default_off="Breaks commenting and polls">
+<ruleset name="DailyKos.com (partial)">
 
 	<target host="dailykos.com" />
 	<target host="*.dailykos.com" />
@@ -22,78 +58,86 @@
 
 			These paths 307 to http:
 
-				- accounts
+				- $
 				- blog$
 				- blog/\w+$
+				- contactus$
 				- diaries$
 				- group$
 				- group/
 				- groups$
 				- groups/$
-				- login$
 				- news$
 				- news/\w[^/]*$
 				- newuser$
 				- part/user/popup/login$
 				- people$
 				- people/$
+				- special/media$
+				- story/\d{4}/\d\d/\d\d/
 				- user$
 				- user/
 
 
 			These paths do not:
 
-				- $
+				- accounts$
+				- assets/
 				- c/
 				- donate$
+				- favicon.ico
+				- helpdesk_redirect$
 				- i/
 				- j/
 				- images/
-				- story/\d{4}/\d\d/\d\d/
+				- login$
+				- signup$
 				- subscribe$
+				- users/password/new$
+				- users/sign_in
 
 
 			- These paths 403:
 
 				- newthread/\w+
 
+			- These paths 404:
 
-			https breaks login 'popup'. Works fine without JS enabled.
+				- jobs$
+				- masthead$
+				- privacy$
+
 							-->
-		<exclusion pattern="^http://(?:www\.)?dailykos\.com/+(?:$|\?)" />
-		<exclusion pattern="^http://(?:www\.)?dailykos\.com/(?:accounts|blog|diaries|groups?|login|new(?:s|thread|user)|part/user/popup/login|people|user)(?:$|\?|/)" />
+		<!--exclusion pattern="^http://(?:www\.)?dailykos\.com/(?:$|\?|blog|contactus|diaries|groups?|jobs|masthead|new(?:s|thread|user)|part/user/popup/login|people|privacy|special|story|user)(?:$|\?|/)" /-->
+		<exclusion pattern="^http://(?:www\.)?dailykos\.com/+(?!(?:accounts|assets|c|donate|helpdesk_redirect|i|images|login|signup|subscribe|users)(?:$|[?/])|favicon\.ico)" />
 		<!--
 			404s.
 				-->
-		<exclusion pattern="^http://images[12]?\.dailykos\.com/assets/" />
+		<!--exclusion pattern="^http://images[12]?\.dailykos\.com/(?:assets|images)/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://images[12]?\.dailykos\.com/+(?!i/|images/)" />
 
 
 	<rule from="^http://(www\.)?dailykos\.com/"
 		to="https://$1dailykos.com/" />
 
+	<rule from="^http://assets\.dailykos\.com/"
+		to="https://www.dailykos.com/assets/" />
 
-	<!--	At least some pages 404.
+	<!--	At least some pages 404:
 					-->
-	<rule from="^https?://campaigns\.dailykos\.com/(dia|o|salsa)/"
-		to="https://kos.salsalabs.com/$1/" />
+	<rule from="^http://campaigns\.dailykos\.com/(?=dia/|o/|salsa/)"
+		to="https://kos.salsalabs.com/" />
 
-	<rule from="^https?://helpdesk\.dailykos\.com/(help|pkg|stylesheets)/"
-		to="https://dailykos.tenderapp.com/$1/" />
+	<rule from="^http://helpdesk\.dailykos\.com/(?=help/|pkg/|stylesheets/)"
+		to="https://dailykos.tenderapp.com/" />
 
-	<!--	404.
-			-->
-	<rule from="^https?://images[12]?\.dailykos\.com/"
+	<rule from="^http://images[12]?\.dailykos\.com/(?=images/)"
+		to="https://s3.amazonaws.com/dk-production/" />
+
+	<rule from="^http://images[12]?\.dailykos\.com/"
 		to="https://www.dailykos.com/" />
-
-	<!--	- i/ 301s to images
-		- c/ & j/ do not
-				-->
-	<rule from="^https?://(?:comics|elections|labor)\.dailykos\.com/([cij])/"
-		to="https://www.dailykos.com/$1/" />
-
-	<!--	Doesn't fix login popout.
-
-	<rule from="^https://www\.dailykos\.com/j/([\w\-]+)\.js($|\?)"
-		to="http://www.dailykos.com/j/$1.js$2" downgrade="1" /-->
 
 </ruleset>

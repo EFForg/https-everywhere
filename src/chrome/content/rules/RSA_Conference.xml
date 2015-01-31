@@ -1,11 +1,29 @@
+<!--
+	CDN buckets:
+
+		- rsa.edgeboss.net
+
+			- a127.g.akamai.net
+
+-->
 <ruleset name="RSA Conference (partial)">
 
+	<target host="rsa.edgeboss.net" />
 	<target host="rsaconference.com" />
 	<target host="*.rsaconference.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://www\.rsaconference\.com/+(?:podcasts|videos)(?:$|[?/])" />
 
 
 	<securecookie host="^(?:365|beta)\.rsaconference\.com$" name=".+" />
 
+
+	<!--	podcast audio:
+				-->
+	<rule from="^http://rsa\.edgeboss\.net/"
+		to="https://a248.e.akamai.net/f/127/3048/5/rsa.edgeboss.net/" />
 
 	<rule from="^http://((?:365|beta|dev|uat|www)\.)?rsaconference\.com/"
 		to="https://$1rsaconference.com/" />

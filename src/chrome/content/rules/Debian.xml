@@ -2,65 +2,138 @@
 	For problematic rules, see Debian-self-signed.xml.
 
 
+	Other Debian rulesets:
+
+		- DebConf.org.xml
+
+
 	Nonfunctional domains:
 
-		screenshots.debian.net *
+		- buildd-clang.debian.net ¹
+		- debile.debian.net ¹
+		- forums.debian.net ¹
+		- meetings-archive.debian.net ¹
 
-		debian.org subdomains:
+		- debian.org subdomains:
 
-			- (www.) *
-			- anonscm	(redirects to alioth; mismatched, CN: alioth.debian.org)
-			- bugs *
 			- ca		(shows db; mismatched, CN: db.debian.org)
-			- cdimage *
+			- clang		(Shows webmail.ecranbleu.org)
+			- ftp.de ¹
 			- incoming	(shows ftp-master; mismatched, CN: ftp-master.debian.org)
-			- packages *
-			- people	(reset; people.debian.org/~joerg/ is displayed
-					after fetching gpg.ganneff.de over http...)
-			- popcon *
-			- qa *
-			- packages.qa *
-			- search *
-			- svn		(shows alioth; mismatched, CN: alioth.debian.org)
+			- manpages ¹
+			- popcon ¹
+			- search	(shows www; mismatched, CN: debian.org)
+			- security-team	(shows www; mismatched, CN: debian.org)
+			- snapshot ¹
 
-	* Refused
+	¹ Refused
 
 
 	Problematic domains:
 
-		- debconf.org subdomains:
-
-			- debconf7 *
-			- db *
-			- gallery *
-			- penta *
-			- rt *
-			- svn *
-
-		- mentors.debian.net *
-		- paste.debian.net *
-
+		- mentors.debian.net ¹
 		- debian.org subdomains:
 
-			- alioth *
-			- lists.alioth *
-			- buildd *
-			- db *
-			- ftp-master *
-			- lists *
-			- nagios *
-			- nm *
-			- wiki *
+			- security ²
 
-	* Works, self-signed
+	¹ Works, self-signed
+	² Refused
+
+
+	Partially covered domains:
+
+		- security.debian.org ¹ (→ www)
+
+	¹ At least some paths 404
+
+
+	Fully covered debian.org subdomains:
+
+		- (www.)?
+		- alioth
+		- *.alioth
+		- anonscm
+		- arch
+		- bits
+		- openstack.bm
+		- bugs
+		- bugs-master
+		- buildd
+		- bzr
+		- contributors
+		- cvs
+		- darcs
+		- db
+		- dsa
+		- ftp-master
+		- git
+		- hg
+		- lintian
+		- lists
+		- munin
+		- nagios
+		- nm
+		- packages
+		- people
+		- piuparts
+		- puppet-dashboard
+		- qa
+		- packages.qa
+		- release
+		- rt
+		- rtc
+		- security-master
+		- security-tracker
+		- sp-ws
+		- sso
+		- svn
+		- tracker
+		- udd
+		- vote
+		- wiki
+
+
+	altnames that don't exist:
+
+		- www.bugs.debian.org
+		- www.buildd.debian.org
+		- www.db.debian.org
+		- www.ftp-master.debian.org
+		- www.lists.debian.org
+		- www.nagios.debian.org
+		- www.nm.debian.org
+		- www.packages.debian.org
+		- scm.debian.org
+		- www.security-tracker.debian.org
+		- www.udd.debian.org
+		- www.wiki.debian.org
+
+
+	Observed cookie domains:
+
+		- nm.debian.org
 
 -->
 <ruleset name="Debian (partial)">
 
-	<target host="wiki.debian.org" />
+	<target host="debian.org" />
+	<target host="*.debian.org" />
+	<target host="*.debian.net" />
+	<target host="*.debian-ports.org" />
 
 
-	<rule from="^http://wiki\.debian\.org/"
-		to="https://wiki.debian.org/" />
+	<securecookie host="^nm\.debian\.org$" name=".+" />
 
+
+	<rule from="^http://((?:anonscm|(?:[^/:@]+\.)?alioth|arch|bits|bugs(?:-master)?|buildd|bzr|contributors|cvs|darcs|db|dsa|ftp-master|git|hg|lintian|lists|munin|nagios|nm|openstack\.bm|packages|people|piuparts|puppet-dashboard|(?:packages\.)?qa|release|rt|rtc|security-(?:tracker|master)|sip-ws|sso|svn|tracker|udd|vote|wiki|www)\.)?debian\.org/"
+		to="https://$1debian.org/" />
+
+	<rule from="^http://security\.debian\.org/+(?=$|\?)"
+		to="https://www.debian.org/security/" />
+
+	<rule from="^http://(france|paste|screenshots|sources|codesearch)\.debian\.net/"
+		to="https://$1.debian.net/" />
+
+	<rule from="^http://(buildd)\.debian-ports\.org/"
+		to="https://$1.debian-ports.org/" />
 </ruleset>

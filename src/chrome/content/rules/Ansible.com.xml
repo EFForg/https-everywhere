@@ -1,0 +1,60 @@
+<!--
+	For problematic rules, see Ansible.com-problematic.xml.
+
+
+	Other Ansible rulesets:
+
+		- Ansible_works.com.xml
+
+
+	CDN buckets:
+
+		- 330046.group46.sites.hubspot.net
+
+			- www
+
+
+	Nonfunctional subdomains:
+
+		- docs *
+		- releases *
+
+	* 503, valid cert
+
+
+	www: works, akamai
+
+
+	These altnames don't exist:
+
+		- www.galaxy.ansible.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from $self ¹
+			- www from cdn2.hubspot.net ²
+
+	¹ Rule disabled by default <= mismatched
+	² Secured by us
+
+-->
+<ruleset name="Ansible.com (partial)">
+
+	<target host="ansible.com" />
+	<target host="*.ansible.com" />
+
+
+	<securecookie host="^\.ansible\.com$" name="^__cfduid$" />
+	<!--
+		Not secured by server:
+					-->
+	<securecookie host="^galaxy\.ansible\.com$" name=".+" />
+
+
+	<rule from="^http://(galaxy\.)?ansible\.com/"
+		to="https://$1ansible.com/" />
+
+</ruleset>

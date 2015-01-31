@@ -1,13 +1,18 @@
 <!--
+	For rules causing false/broken MCB, see Adobe.com-falsemixed.xml.
+
 	For problematic rules, see Adobe-mismatches.xml.
 
 
 	Other Adobe rulesets:
 
+		- 2o7.net.xml
 		- Adobe_Connect.xml
 		- Adobe-Digital-Marketing.xml
+		- Adobe_login.com.xml
 		- Adobetag.com.xml
 		- Hitbox.com.xml
+		- Macromedia.com.xml
 		- Offermatica.com.xml
 		- Scene7.xml
 		- Typekit.xml
@@ -19,117 +24,104 @@
 		- wwwimages2.adobe.com.edgekey.net
 
 		- airdownload.adobe.com.edgesuite.net
-
-			- a1396.b.akamai.net
-
 		- new-tv.adobe.com.edgesuite.net
-
-			- a1355.d.akamai.net
-			- thumbnails.tv
-
 		- wwwimages.adobe.com.edgesuite.net
 
-			- a1953.x.akamai.net
-
 		- adobe.com.d1.sc.omtrdc.net
-
-			- stats.adobe.com
-
 		- adobe.com.ssl.d1.sc.omtrdc.net
-
-			- sstats.adobe.com
 
 
 	Nonfunctional subdomains:
 
-		- experiencedelivers	(redirects to www; mismatched, CN: *.day.com)
-		- forums		(dropped)
-		- labs *
-		- training *
+		- experiencedelivers ¹
+		- labs ²
+		- training ²
 
-	* Refused
+	¹ Redirects to www; mismatched, CN: *.day.com
+	² Refused
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- adobe.com subdomains:
+		- ^ ¹
+		- airdownload ²
+		- gaming ¹
+		- get2 ⁴
+		- html ¹
+		- kb2 ¹
+		- ns ⁵
+		- stats ⁶
+		- thumbnails.tv ²
+		- wwwimages ²
 
-			- ^ *
-			- airdownload **
-			- gaming *
-			- get2		(mismatched, CN: get.adobe.com)
-			- html *
-			- kb2 *
-			- ns		(404; mismatched, CN: www.adobe.com)
-			- stats		(mismatched, CN: *.d1.sc.omtrdc.net)
-			- thumbnails.tv **
-			- wwwimages **
-
-		- macromedia.com	(cert only matches www)
-
-	* Works, mismatched, CN: www.adobe.com
-	** Works, akamai
+	¹ Works, mismatched, CN: www.adobe.com
+	² Works, akamai
+	⁴ Mismatched, CN: get.adobe.com
+	⁵ 404; mismatched, CN: www.adobe.com
+	⁶ Mismatched, CN: *.d1.sc.omtrdc.net
 
 
 	Partially covered subdomains:
 
-		- blogs		(webplatform blog redirects to http)
-		- fpdownload	(crossdomain.xml excluded)
+		- blogs ¹
+		- fpdownload ³
 		- ns		(→ www)
 
+	¹ webplatform blog redirects to http
+	³ crossdomain.xml excluded
 
-	Fully covered domains:
 
-		- adobe.com subdomains:
+	Fully covered subdomains:
 
-			- (www.)
-			- entitlement.auth
-			- sp.auth
-			- bugbase
-			- community
-			- cookbooks
-			- creative
+		- (www.)
+		- aihdownload
+		- entitlement.auth
+		- sp.auth
+		- bugbase
+		- community
+		- cookbooks
+		- creative
 
-			- \w\w.creative:
+		- \w\w.creative:
 
-				- ap
-				- d[0-3]
-				- eu
-				- us
+			- ap
+			- d[0-3]
+			- eu
+			- us
 
-			- edexchange
-			- cem.events
-			- get
-			- get2		(→ get)
-			- get3
-			- helpx
-			- images-tv
-			- kuler
-			- max
-			- adobeid-na1.services
-			- sstats
-			- stats		(→ mxmacromedia.d1.sc.omtrdc.net)
-			- store1
-			- success
-			- thumbnails-tv
-			- tv
-			- thumbnails.tv *
-			- verify
-			- wwwimages *
-			- wwwimages2
-
-		- macromedia.com subdomains:
-
-			- (www.)		(^ → www)
-			- download
-			- fpdownload
+		- edexchange
+		- cem.events
+		- forums
+		- get
+		- get2		(→ get)
+		- get3
+		- helpx
+		- images-tv
+		- kuler
+		- max
+		- adobeid-na1.services
+		- sstats
+		- stats		(→ mxmacromedia.d1.sc.omtrdc.net)
+		- store1
+		- success
+		- thumbnails-tv
+		- tv
+		- thumbnails.tv *
+		- verify
+		- wwwimages *
+		- wwwimages2
 
 	* → akamai
 
 
+	Insecure cookies are set for these domains:
+
+		- forums.adobe.com
+
+
 	Mixed content:
 
-		- Images, on
+		- Images, on:
 
 			- tv from thumbnails.tv *
 			- www from wwwimages *
@@ -144,7 +136,7 @@
 	* Secured by us
 
 -->
-<ruleset name="Adobe">
+<ruleset name="Adobe.com">
 
 	<target host="adobe.com" />
 	<target host="*.adobe.com" />
@@ -161,8 +153,14 @@
 			Breaks video playback:
 						-->
 		<exclusion pattern="^http://fpdownload\.adobe\.com/(?:pub/swz/)?crossdomain\.xml$" />
-	<target host="macromedia.com" />
-	<target host="*.macromedia.com" />
+		<!--
+			These stylesheets reference resources relative to root:
+										-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/labs_import\.css" /-->
+		<!--
+			While these do not:
+						-->
+		<!--exclusion pattern="^http://wwwimages\.adobe.com/www\.adobe\.com/css/(?!assistive|features_test|handheld|print)\.css" /-->
 
 
 	<securecookie host=".*\.adobe\.com$" name=".+" />
@@ -171,7 +169,7 @@
 	<rule from="^http://adobe\.com/"
 		to="https://www.adobe.com/" />
 
-	<rule from="^http://((?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www|wwwimages2)\.adobe\.com/"
+	<rule from="^http://(aihdownload|(?:entitlement|sp)\.auth|blogs|bugbase|community|cookbooks|(?:\w\w\.)?creative|edexchange|cem\.events|forums|fpdownload|get3?|helpx|images-tv|kuler|max|adobeid-na1\.services|sstats|store1|success|thumbnails-tv|tv|verify|www(?:images2)?)\.adobe\.com/"
 		to="https://$1.adobe.com/" />
 
 	<rule from="^http://get2\.adobe\.com/"
@@ -189,16 +187,13 @@
 	<rule from="^http://thumbnails\.tv\.adobe\.com/"
 		to="https://a248.e.akamai.net/f/1355/4224/3m/thumbnails.tv.adobe.com/" />
 
-	<!--rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/"
-		to="https://www.adobe.com/" /-->
+	<!--	For all css we haven't explicitly checked
+		for references to root in, rewrite to www:
+								-->
+	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/(?!(?:assistive|features_test|handheld|print)\.css)"
+		to="https://www.adobe.com/" />
 
 	<rule from="^http://wwwimages\.adobe\.com/"
 		to="https://a248.e.akamai.net/f/1953/8974/2h/wwwimages.adobe.com/" />
-
-	<rule from="^http://(?:www\.)?macromedia\.com/"
-		to="https://www.macromedia.com/" />
-
-	<rule from="^http://(fp)?download\.macromedia\.com/"
-		to="https://$1download.macromedia.com/" />
 
 </ruleset>

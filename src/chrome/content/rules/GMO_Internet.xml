@@ -1,21 +1,91 @@
 <!--
+	Other GMO rulesets:
+
+		- Click-Sec.com.xml
+		- ConoHa.jp.xml
+		- FX_Prime.com.xml
+		- GlobalSign.xml
+		- GMO_BB.jp.xml
+		- GMO_Cloud.com.xml
+		- GMO_Cloud.us.xml
+		- GMO_Registry.com.xml
+		- Hello.tokyo.xml
+		- Heteml.jp.xml
+		- InterQ.or.jp.xml
+		- Isle.jp.xml
+		- MakeShop.jp.xml
+		- MyVPS.jp.xml
+		- OmakaseWeb.com.xml
+		- Onamae.com.xml
+		- Onamae-server.com.xml
+		- Quicktranslate.com.xml
+		- RapidSite.jp.xml
+		- Rentalserver.jp.xml
+		- Rocketnet.jp.xml
+		- Tenten.vn.xml
+		- Win-is.com.xml
+		- Win-rd.jp.xml
+		- Win-sv.jp.xml
+
+
 	Nonfunctional subdomains:
 
 		- error
-		- img
 		- cache.im	(reset)
+
+
+	Problematic subdomains:
+
+		- img *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- cloud *
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- cache.img
+		- img		(-> cache.img)
+		- secure
+		- support
+
+
+	Mixed content:
+
+		- css on cloud from cache.img *
+
+		- Images on cloud from cache.img *
+
+	* Secured by us
 
 -->
 <ruleset name="GMO Internet (partial)">
 
 	<target host="gmo.jp" />
 	<target host="*.gmo.jp" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://cloud\.gmo\.jp/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://cloud\.gmo\.jp/+(?!common/|favicon\.ico|(?:\w+/)?images/|\w+/style\.css|this\.css)" />
 
 
 	<securecookie host="^mng\.gmo\.jp$" name=".+" />
 
 
-	<rule from="^http://(mng\.|www\.)?gmo\.jp/"
+	<rule from="^http://((?:cloud|mng|secure|support|www)\.)?gmo\.jp/"
 		to="https://$1gmo.jp/" />
+
+	<rule from="^http://(?:cache\.)?img\.gmo\.jp/"
+		to="https://cache.img.gmo.jp/" />
 
 </ruleset>

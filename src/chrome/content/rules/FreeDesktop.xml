@@ -1,58 +1,65 @@
 <!--
 	Nonfunctional domains:
 
-		- (www.)cairographics.org *
-		- lists.cairographics.org **
+		- (www.)cairographics.org ¹
+		- lists.cairographics.org ²
 
 		- freedesktop.org subdomains:
 
-			- cgit		(refused)
-			- download *
-			- gstreamer *
-			- lists **
-			- patchwork *
-			- planet *
-			- poppler *
-			- portland *
-			- specifications **
-			- standards **
-			- wayland *
-			- xcb *
-			- xorg *
+			- cgit ³
+			- download ¹
+			- gstreamer ¹
+			- lists ²
+			- patchwork ¹
+			- planet ¹
+			- poppler ¹
+			- portland ¹
+			- specifications ²
+			- standards ²
+			- wayland ¹
 
-	* Shows secure.freedesktop.org; mismatched, CN: secure.freedesktop.org
-	** http reply
+	¹ Shows patchwork.freedesktop.org
+	² http reply
+	³ Refused
 
 
 	Problematic subdomains:
 
-		- (www.) *
-		- apoc *
-		- bugzilla	(mismatched, CN: bugs.freedesktop.org)
-		- dri *
-		- gypsy *
-		- ldtp *
-		- libbsd *
-		- libdlo *
-		- liboil *
-		- libopenraw *
-		- nice *
-		- nouveau *
-		- people	($ 404s, ~.../ works; mismatched, CN: secure.freedesktop.org)
-		- pm-utils *
-		- sitewranglers *
-		- swfdec *
-		- telepathy *
-		- testrepo *
-		- wiki		(mismatched, CN: secure.freedesktop.org)
+		- (www.) ¹
+		- apoc ¹
+		- bugzilla ²
+		- dri ¹
+		- gypsy ¹
+		- ldtp ¹
+		- libbsd ¹
+		- libdlo ¹
+		- liboil ¹
+		- libopenraw ¹
+		- nice ¹
+		- nouveau ¹
+		- people ³
+		- pm-utils ¹
+		- sitewranglers ¹
+		- swfdec ¹
+		- telepathy ¹
+		- testrepo ¹
+		- xcb ¹
+		- xorg ¹
 
-	* Shows secure.freedesktop.org
+	¹ Shows patchwork.freedesktop.org
+	² Mismatched, CN: bugs.freedesktop.org
+	³ $ 404s, ~.../ works; mismatched, CN: secure.freedesktop.org
 
 
 	Partially covered subdomains:
 
-		- people	(→ secure, $ 404s)
+		- people ¹	(→ secure, $ 404s)
+		- xcb		(→ secure, dist/ 404s)
 		- (www.)	(→ ^, software/ 404s)
+
+	¹ $ 404s
+	² dist/ 404s
+	³ software/ 404s
 
 
 	Fully covered subdomains:
@@ -75,9 +82,10 @@
 		- swfdec *
 		- telepathy *
 		- testrepo *
-		- wiki *
+		- wiki
+		- xorg *
 
-	* → freedesktop.org
+	* → wiki.freedesktop.org
 
 -->
 <ruleset name="freedesktop.org (partial)">
@@ -87,27 +95,31 @@
 		<!--
 			404:
 				-->
-		<exclusion pattern="^http://(?:www\.)?freedesktop\.org/software(?:$|[?/])" />
+		<exclusion pattern="^http://(?:www\.)?freedesktop\.org/(?:software|standards)(?:$|[?/])" />
 		<!--
 			$ is not identical:
 						-->
 		<exclusion pattern="^http://people\.freedesktop\.org/(?!~)" />
+		<!--
+			dist isn't present on secure:
+							-->
+		<exclusion pattern="^http://xcb\.freedesktop\.org/+(?!dist(?:$|[?/]))" />
 
 
 	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
 
 
-	<rule from="^http://freedesktop\.org/wiki(\?.*)?$"
-		to="https://freedesktop.org/www$1" />
+	<rule from="^http://freedesktop\.org/wiki(?=$|\?)"
+		to="https://wiki.freedesktop.org/www" />
 
 	<rule from="^http://freedesktop\.org/(?:wiki/)?"
-		to="https://freedesktop.org/www/" />
+		to="https://wiki.freedesktop.org/www/" />
 
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/wiki(\?.*)?$"
-		to="https://freedesktop.org/$1$2" />
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/wiki(?=$|\?)"
+		to="https://wiki.freedesktop.org/$1" />
 
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www)\.freedesktop\.org/(?:wiki/)?"
-		to="https://freedesktop.org/$1/" />
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/(?:wiki/)?"
+		to="https://wiki.freedesktop.org/$1/" />
 
 	<rule from="^http://bug(?:s|zilla)\.freedesktop\.org/"
 		to="https://bugs.freedesktop.org/" />
@@ -116,6 +128,9 @@
 		to="https://secure.freedesktop.org/" />
 
 	<rule from="^http://wiki\.freedesktop\.org/"
-		to="https://freedesktop.org/" />
+		to="https://wiki.freedesktop.org/" />
+
+	<rule from="^http://xcb\.freedesktop\.org/"
+		to="https://wiki.freedesktop.org/xcb/" />
 
 </ruleset>

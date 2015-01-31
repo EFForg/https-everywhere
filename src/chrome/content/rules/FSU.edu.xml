@@ -1,0 +1,100 @@
+<!--
+	Florida State University
+
+
+	Nonfunctional subdomains:
+
+		- www.academic-guide ¹
+		- brightfutures ²
+		- calendar ³
+		- care ⁴
+		- acm.cs ⁵
+		- visit.cs ⁶
+		- ww2.cs ⁷
+		- facsenate ⁴
+		- learningforlife ⁴
+		- www.sc.my ⁴
+		- servicecenter ⁴
+		- undergrad ¹
+
+	¹ Dropped
+	² Shows www
+	³ Interrupted
+	⁴ Refused
+	⁵ Shows CentOS test page, valid cert
+	⁶ Shows visitwww.cs
+	⁷ Works, self-signed
+
+
+	Problematic subdomains:
+
+		- smtpin.cs *
+		- visitwww.cs *
+
+	* Works; Expired, self-signed
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)admissions
+		- campus
+		- cas
+
+		- service.cs
+		- system.cs
+		- webmail.cs
+		- www.cs
+		- www1.cs
+
+		- financialaid
+		- foundation
+		- (www.)my
+		- one
+		- apps.oti
+		- cfprd.oti
+		- (www.)registrar
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- apps.oti from $self ¹
+			- (www.)registrar from registrar ¹
+			- (www.)registrar from brightfutures ²
+
+		- favicons on financialaid and www from www ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+
+-->
+<ruleset name="FSU.edu (partial)">
+
+	<target host="fsu.edu" />
+	<target host="*.fsu.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?admissions\.fsu\.edu$" name="^BIGipServer~ITS-MSTS~cf_admissions_https_pool$" /-->
+	<!--securecookie host="^(www\.)?(admissions|registrar)\.fsu\.edu$" name="^avr(_\d+){6}$" /-->
+	<!--securecookie host="^campus\.fsu\.edu$" name="^^(BIGipServer~ODL~bb_campus_https_pool|session_id)$" /-->
+	<!--securecookie host="^cas\.fsu\.edu$" name="^BIGipServer~ITS-Middleware~casprd-https-pool$" /-->
+	<!--securecookie host="^smtpin\.cs\.fsu\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(webmail|www)\.cs\.fsu\.edu$" name="^bla$" /-->
+	<!--securecookie host="^foundation\.fsu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(www\.)?my\.fsu\.edu$" name="^1HourCookie$" /-->
+	<!--securecookie host="^one\.fsu\.edu$" name="^(ASP\.NET_SessionId|VisitorGuid)$" /-->
+	<!--securecookie host="^apps\.oti\.fsu\.edu$" name="^BIGipServer~Middleware-SecureApps~appsprd_https_pool$" /-->
+	<!--securecookie host="^cfprd\.oti\.fsu\.edu$" name="^(BIGipServer~Middleware-SecureApps~cfprd_https_pool|CFID|CFTOKEN|JSESSIONID)$" /-->
+	<!--securecookie host="^(www\.)?registrar\.fsu\.edu$" name="^BIGipServer~ITS-MSTS~cf_registrar_https_pool$" /-->
+
+	<securecookie host="^(?:(?:www\.)?admissions|campus|cas|w(?:ebmail|ww)\.cs|foundation|(?:www\.)?my|one|(?:apps|cfprd)\.oti|(?:www\.)?registrar)\.fsu\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:(?:www\.)?admissions|campus|cas|(?:service|system|webmail|www1?)\.cs|financialaid|foundation|(?:www\.)?my|one|(?:cfprd|apps)\.oti|(?:www\.)?registrar|www)\.)?fsu\.edu/"
+		to="https://$1fsu.edu/" />
+
+</ruleset>

@@ -12,33 +12,66 @@
 
 	Nonfunctional domains:
 
+		- feeds.wired.com ¹
 		- howto.wired.com	(Akamai; 503)
+		- innovationinsights.wired.com ³
+
+	¹ Refused
+	³ 404; mismatched, CN: www.cntraveler.com
 
 
-	Some pages redirect to http, including:
+	Problematic subdomains:
 
-		- epicenter/wp-content/
-		- favicon.ico
-		- images_blogs/
-		- opinion/wp-content/
+		- ^ ¹
+		- secure ²
+
+	¹ Akamai
+	² Expired 2014-04-16
+
+
+	Mixed content:
+
+		- css on www from $self ¹
+
+		- Images, on www from:
+
+			- $self ¹
+			- innovationinsights ²
+
+		- Ads/web bugs, on www from:
+
+			- $self ¹
+			- condenast.112.2o7.net ¹
+			- pagead2.googlesyndication.com ¹
+			- assets.pinterest.com ¹
+			- b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Unsecurable
 
 -->
-<ruleset name="Wired (partial; buggy)" default_off="strange behavior with images">
+<ruleset name="Wired (false MCB, partial)" platform="mixedcontent">
 
 	<target host="wired.com" />
 	<target host="*.wired.com" />
 	<target host="cdni.wired.co.uk" />
-        	<!--exclusion pattern="^http://(?:www\.)?wired\.com/images/1x1\.trans\.gif" /-->
-		<exclusion pattern="^https?://(?:www\.)?wired\.com/(?!css/|images/(?!1x1\.trans\.gif)|js/|sandbox/|usr/log(?:in|out))" />
+		<!--exclusion pattern="^http://innovationinsights\.wired\.com/" /-->
+	<target host="wrd.cm" />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?wired\.com/"
-		to="https://secure.wired.com/" />
+	<securecookie host="^subscriptions\.wired\.com$" name=".+" />
 
-	<rule from="^http://subscri(?:be|ptions)\.wired\.com/"
-		to="https://subscri$1.wired.com/" />
 
-	<rule from="^https?://cdni\.wired\.co\.uk/"
+	<rule from="^http://(?:www\.)?wired\.com/"
+		to="https://www.wired.com/" />
+
+	<rule from="^http://s(ecure|ubscribe|ubcriptions)\.wired\.com/"
+		to="https://s$1.wired.com/" />
+
+	<rule from="^http://cdni\.wired\.co\.uk/"
 		to="https://d2f0ban6dhfdsw.cloudfront.net/" />
+
+	<rule from="^http://wrd\.cm/"
+		to="https://bit.ly/" />
 
 </ruleset>

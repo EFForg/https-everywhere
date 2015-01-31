@@ -36,37 +36,77 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 
 echo "Building chrome version" $VERSION
 
-if [ -f utils/trivial-validate.py ]; then
-	VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-elif [ -x utils/trivial-validate ] ; then
-  # This case probably never happens
-	VALIDATE=./utils/trivial-validate
-else
-	VALIDATE=./trivial-validate
+# Build the SQLite DB even though we don't yet use it in the Chrome extension,
+# because trivial-validate.py depends on it.
+if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  echo "Generating sqlite DB"
+  python2.7 ./utils/make-sqlite.py
 fi
 
-if $VALIDATE src/chrome/content/rules >&2
-then
-  echo Validation of included rulesets completed. >&2
-  echo >&2
-else
-  echo ERROR: Validation of rulesets failed. >&2
+# =============== BEGIN VALIDATION ================
+# Unless we're in a hurry, validate the ruleset library & locales
+
+die() {
+  echo >&2 "ERROR:" "$@"
   exit 1
-fi
+}
 
-if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
-then
-  # Use find and xargs to avoid "too many args" error on Mac OS X
-  if find src/chrome/content/rules/ -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
-  then
-    echo Validation of rulesets with RELAX NG grammar completed. >&2
+if [ "$1" != "--fast" ] ; then
+  if [ -f utils/trivial-validate.py ]; then
+    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+  elif [ -f trivial-validate.py ] ; then
+    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
+  elif [ -x utils/trivial-validate ] ; then
+    # This case probably never happens
+    VALIDATE=./utils/trivial-validate
   else
-    echo ERROR: Validation of rulesets with RELAX NG grammar failed. >&2
-    exit 1
+    VALIDATE=./trivial-validate
   fi
-else
-  echo Validation of rulesets with RELAX NG grammar was SKIPPED. >&2
+
+  if $VALIDATE src/chrome/content/rules >&2
+  then
+    echo Validation of included rulesets completed. >&2
+    echo >&2
+  else
+    die "Validation of rulesets failed."
+  fi
+
+  # Check for xmllint.
+  type xmllint >/dev/null || die "xmllint not available"
+
+  GRAMMAR="utils/relaxng.xml"
+  if [ -f "$GRAMMAR" ]
+  then
+    # xmllint spams stderr with "<FILENAME> validates, even with the --noout
+    # flag. We can't grep -v for that line, because the pipeline will mask error
+    # status from xmllint. Instead we run it once going to /dev/null, and if
+    # there's an error run it again, showing only error output.
+    validate_grammar() {
+      find src/chrome/content/rules -name "*.xml" | \
+       xargs xmllint --noout --relaxng utils/relaxng.xml
+    }
+    if validate_grammar 2>/dev/null
+    then
+      echo Validation of rulesets against $GRAMMAR succeeded. >&2
+    else
+      validate_grammar 2>&1 | grep -v validates
+      die "Validation of rulesets against $GRAMMAR failed."
+    fi
+  else
+    echo Validation of rulesets against $GRAMMAR SKIPPED. >&2
+  fi
+
+  if [ -x ./utils/compare-locales.sh ] >&2
+  then
+    if ./utils/compare-locales.sh >&2
+    then
+      echo Validation of included locales completed. >&2
+    else
+      die "Validation of locales failed."
+    fi
+  fi
 fi
+# =============== END VALIDATION ================
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
@@ -79,17 +119,10 @@ do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
 
-python ./utils/merge-rulesets.py
+. ./utils/merge-rulesets.sh || exit 1
 
-export RULESETS=chrome/content/rules/default.rulesets
 cp src/$RULESETS pkg/crx/rules/default.rulesets
 
-echo 'var rule_list = [' > pkg/crx/rule_list.js
-for i in $(find pkg/crx/rules/ -maxdepth 1 \( -name '*.xml' -o -name '*.rulesets' \))
-do
-    echo "\"rules/$(basename $i)\"," >> pkg/crx/rule_list.js
-done
-echo '];' >> pkg/crx/rule_list.js
 sed -i -e "s/VERSION/$VERSION/g" pkg/crx/manifest.json
 #sed -i -e "s/VERSION/$VERSION/g" pkg/crx/updates.xml
 #sed -e "s/VERSION/$VERSION/g" pkg/updates-master.xml > pkg/crx/updates.xml
@@ -117,7 +150,7 @@ trap 'rm -f "$pub" "$sig" "$zip"' EXIT
 
 # zip up the crx dir
 cwd=$(pwd -P)
-(cd "$dir" && python ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
+(cd "$dir" && ../../utils/create_xpi.py -n "$cwd/$zip" -x "../../.build_exclusions" .)
 echo >&2 "Unsigned package has shasum: `shasum "$cwd/$zip"`" 
 
 # signature
@@ -136,7 +169,7 @@ version_hex="0200 0000" # 2
 pub_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$pub" | awk '{print $5}')))
 sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
 (
-  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | xxd -r -p
+  echo "$crmagic_hex $version_hex $pub_len_hex $sig_len_hex" | sed -e 's/\s//g' -e 's/\([0-9A-F]\{2\}\)/\\\\\\x\1/gI' | xargs printf
   cat "$pub" "$sig" "$zip"
 ) > "$crx"
 #rm -rf pkg/crx
