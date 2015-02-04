@@ -326,5 +326,6 @@ RuleSets.prototype = {
 };
 
 // Export for HTTPS Rewriter if applicable.
-if (typeof exports != 'undefined')
+if (typeof exports != 'undefined') {
   exports.RuleSets = RuleSets;
+}

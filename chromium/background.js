@@ -1,3 +1,6 @@
+/**
+ * Fetch and parse XML to be loaded as RuleSets.
+ */
 function getRuleXml(url) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
