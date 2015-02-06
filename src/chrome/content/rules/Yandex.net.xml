@@ -2,80 +2,87 @@
 	For other Yandex coverage, see Yandex.xml.
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- img.encyc.yandex.net		(Mismatched, CN: yastatic.net)
+		- img.encyc *
+
+	* Mismatched, CN: yastatic.net
 
 
-	Fully covered domains:
+	Fully covered subdomains:
 
-		- avatars.yandex.net
-		- \d+.avatars.yandex.net
-		- a.captcha.yandex.net
-		- cache-default04e.cdn.yandex.net
-		- cache-default05h.cdn.yandex.net
-		- cache-default06f.cdn.yandex.net
-		- download.cdn.yandex.net
-		- \d.cs-ellpic.yandex.net
-		- disk.yandex.net
-		- favicon.yandex.net
-		- img-css.friends.yandex.net
-		- img.yandex.net
-		- img-fotki.yandex.net
-		- img\d-fotki.yandex.net
-		- img.yandex.net
-		- img5-fotki.yandex.net
-		- st.kp.yandex.net
-		- mdata.yandex.net
-		- money.yandex.net
-		- resize.yandex.net
-		- lego.static.yandex.net
-		- translate.yandex.net
-		- wi.yandex.net
+		- (www.)?	(www → ^)
+
+		- ((www.)?[^.]+|[^.]+.[^.]+): *	(www → ^)
+
+			- avatars
+			- \d+.avatars
+			- a.captcha
+			- cache-default04e.cdn
+			- cache-default05h.cdn
+			- cache-default06f.cdn
+			- download.cdn
+			- \d.cs-ellpic
+			- disk
+			- favicon
+			- img-css.friends
+			- img
+			- img-fotki
+			- img\d-fotki
+			- img
+			- img5-fotki
+			- st.kp
+			- mdata
+			- money
+			- resize
+			- lego.static
+			- translate
+			- wi
+
+	* Except where excluded below
 
 -->
 <ruleset name="Yandex.net (partial)">
 
-    <target host="yandex.net" />
-    <target host="*.yandex.net" />
+	<target host="yandex.net" />
+	<target host="*.yandex.net" />
+		<!--
+			Data clusters for Maps and Video:
+								-->
+		<exclusion pattern="^http://(?:jgo|vec\d+|stv\d+)\.maps\.yandex\.net/" />
+		<exclusion pattern="^http://[^.]+-tub(?:-[^.]+)?\.yandex\.net/" />
+		<!--
+			Search suggestions:
+						-->
+		<exclusion pattern="^http://suggest-[a-z]+\.yandex\.net/" />
+		<!--
+			Needed for Yandex video player to work:
+								-->
+		<exclusion pattern="^http://[^.]+\.video\.yandex\.net/" />
 
 
-    <!--
-            Needed for Yandex video player to work. 
-                                                                                -->
-    <exclusion pattern="^http://[^.]+\.video\.yandex\.net/" />
+	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
 
-    <!--    4. Search suggestions
-                    -->
-    <exclusion pattern="^http://suggest-[a-z]+\.yandex\.net/" />
+	<rule from="^http://(?:www\.)?yandex\.net/"
+		to="https://yandex.net/" />
 
-    <!--    9. Data clusters for Maps and Video
-                            -->
-    <exclusion pattern="^http://(?:jgo|vec\d+|stv\d+)\.maps\.yandex\.net/" />
-    <exclusion pattern="^http://[^.]+-tub(?:-[^.]+)?\.yandex\.net/" />
+	<!--	Here we can enable 4+ level domains with a single regexp,
+		but I've never seen any domains more that 4 levels deep
+		in Yandex network, so I wouldn't enable them now -
+		it may be unconvenient and may broke some services.
+		Only 4-level domains match.
+						-->
+	<rule from="^http://([^.]+)\.([^.]+)\.yandex\.net/"
+		to="https://$1.$2.yandex.net/" />
 
 
-    <rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
-        to="https://$1.yandex.net/" />
+	<!--	Timeout
 
-    <rule from="^http://(?:www\.)?yandex\.net/"
-        to="https://yandex.net/" />
-
-    <!--
-        Here we can enable 4+ level domains with a single regexp,
-        but I've never seen any domains more that 4 levels deep
-        in Yandex network, so I wouldn't enable them now -
-        it may be unconvenient and may broke some services.
-        Only 4-level domains match.
-                        -->
-    <rule from="^http://([^.]+)\.([^.]+)\.yandex\.net/"
-        to="https://$1.$2.yandex.net/" />
-
-    <!--    timeout
-        Example:    https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
-        List:       https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html
-                                -->
-    <rule from="^https://(cs-ellpic)\.yandex\.net/"
-        to="http://$1.yandex.net/" downgrade="1" />
+		Example: https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
+		List: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html
+				-->
+	<rule from="^https://cs-ellpic\.yandex\.net/"
+		to="http://cs-ellpic.yandex.net/" downgrade="1" />
 
 </ruleset>
