@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function CtxCapturingListener(tracingChannel, captureObserver) {
   this.originalListener = tracingChannel.setNewListener(this);
   this.captureObserver = captureObserver;
