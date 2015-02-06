@@ -2,14 +2,135 @@
 	For other Yandex coverage, see Yandex.xml.
 
 
+	Nonfunctional subdomains:
+
+		- an ¹
+		- bs ¹
+		- bs-meta ¹
+		- clck ¹
+		- contact ¹
+		- contact2 ¹
+		- family ²
+		- informer ¹
+		- m.internet ¹
+		- market ²
+		- mc ¹
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
+		- soft ¹
+		- (www.)?store ¹
+		- wdgt ³
+		- interactive-answers.webmaster ²
+
+	¹ Dropped
+	² Redirects to http
+	³ 403
+
+
+	Problematic subdomains:
+
+		- www.browser ¹
+		- interactive-answers ²
+		- m ³
+		- mobile ³
+		- money ⁴
+		- opera ¹
+		- (www.)?site ¹
+		- (www.)?webmaster ¹
+		- (www.)?yaca ¹
+
+	¹ 404
+	² Mismatched
+	³ Differs from http
+	⁴ Blocks Tor users
+
+
+	Partially covered subdomains:
+
+		- beta *
+		- www *
+
+	* Some pages redirects to http
+
+
 	Fully covered subdomains:
 
 		- awaps
+
+
+	These altnames don't exist:
+
+		- beta.disk.yandex.kz
+		- m.feedback2.yandex.kz
+		- support.yandex.kz
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.kz
+		- auto.yandex.kz
+		- city.yandex.kz
+		- feedback2.yandex.kz
+		- gorod.yandex.kz
+		- internet.yandex.kz
+		- islands.yandex.kz
+		- mail.yandex.kz
+		- www.master.yandex.kz
+		- pogoda.yandex.kz
+		- rabota.yandex.kz
+		- m.rabota.yandex.kz
+		- realty.yandex.kz
+		- slovari.yandex.kz
+		- m.slovari.yandex.kz
+		- translate.yandex.kz
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- b, m.blogs, export, m.pogoda from img.yandex.net ¹
+			- b, export from awaps.yandex.ru ¹
+			- m.feedback from yandex.st ¹
+
+		- favicon on legal from yandex.st ¹
+
+		- Bugs, on:
+
+			- advq, ba, blogs, direct, rabota, wordstat, from kiks.yandex.ru ¹
+			- m.blogs from clck.yandex.ru ¹
+			- m.fotki from c.waplog.net ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
 
 -->
 <ruleset name="Yandex.kz (partial)">
 
 	<target host="awaps.yandex.kz" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://market\.yandex\.kz/($|search\.xml)" /-->
+		<!--exclusion pattern="^http://(beta|interactive-answers\.webmaster|www)\.yandex\.kz/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:beta|www)\.yandex\.kz/+(?!(?:all|images|people|video|yandsearch)(?:$|[?/])|favicon\.ico)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.kz$" name="^(yandexuid|ys)$" /-->
+	<!--securecookie host="^feedback2\.yandex\.kz$" name="^feedback2-sid$" /-->
+	<!--securecookie host="^internet\.yandex\.kz$" name="^(csrftoken|test)$" /-->
+	<!--securecookie host="^mail\.yandex\.kz$" name="^ni$" /-->
+	<!--securecookie host="^(auto|city|gorod|islands|www\.master|rabota|m\.rabota|realty|slovari|m\.slovari)\.yandex\.kz$" name="^uid$" /-->
+	<!--securecookie host="^pogoda\.yandex\.kz$" name="^yw_lc$" /-->
+	<!--securecookie host="^realty\.yandex\.kz$" name="^from$" /-->
+	<!--securecookie host="^slovari\.yandex\.kz$" name="^slovari-state$" /-->
+	<!--securecookie host="^translate\.yandex\.kz$" name="^(first_visit_src|stoken)$" /-->
 
 
 	<rule from="^http://awaps\.yandex\.kz/"
