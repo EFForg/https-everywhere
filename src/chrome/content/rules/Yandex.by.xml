@@ -2,14 +2,113 @@
 	For other Yandex coverage, see Yandex.xml.
 
 
+	Nonfunctional subdomains:
+
+		- an ¹
+		- bs ¹
+		- bs-meta ¹
+		- clck ¹
+		- contact ¹
+		- m.contact ¹
+		- contact2 ¹
+		- informer ¹
+		- interactive-answers ²
+		- m.internet ¹
+		- market ³
+		- mc ¹
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
+		- (www.)?store ¹
+		- www.video ²
+		- interactive-answers.webmaster ³
+
+	¹ Dropped
+	² Differs from http
+	³ Redirects to http
+
+
+	Problematic subdomains:
+
+		- www.browser ¹
+		- m ²
+		- mobile ²
+		- money ³
+		- opera ²
+		- www.rasp ²
+		- (www.)?site ⁴
+		- (www.)?webmaster ⁴
+
+	¹ 404
+	² Redirect differs
+	³ Blocks Tor users
+	⁴ Mismatched
+
+
 	Fully covered subdomains:
 
 		- awaps
+
+
+	These altnames don't exist:
+
+		- m.feedback2.yandex.by
+		- support.yandex.by
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.by
+		- auto.yandex.by
+		- city.yandex.by
+		- internet.yandex.by
+		- mail.yandex.by
+		- rabota.yandex.by
+		- realty.yandex.by
+		- translate.yandex.by
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- b, export from awaps.yandex.ru ¹
+			- m.blogs from img.yandex.net ¹
+			- m.pogoda from img.yandex.net ¹
+			- www from yastatic.net ¹
+
+		- favicon on legal from yandex.st ¹
+
+		- Bugs, on:
+
+			- advq, ba, blogs, (www.)?cat, (www.)?catalog, (www.)?catalogue, direct, (www.)?katalog, maps, rabota, wordstat, yaca from kiks.yandex.ru ¹
+			- m.blogs from clck.yandex.ru ¹
+			- m.fotki from c.waplog.net ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
 
 -->
 <ruleset name="Yandex.by (partial)">
 
 	<target host="awaps.yandex.by" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(family|market|www)\.yandex\.by/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:beta|www)\.yandex\.by/+(?!(?:all|images|people|video|yandsearch)(?:$|[?/]))" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.by$" name="^Cookie_check$" /-->
+	<!--securecookie host="^internet\.yandex\.by$" name="^(csrftoken|test)$" /-->
+	<!--securecookie host="^(auto|city|rabota|realty)\.yandex\.by$" name="^uid$" /-->
+	<!--securecookie host="^realty\.yandex\.by$" name="^from$" /-->
+	<!--securecookie host="^translate\.yandex\.by$" name="^(first_visit_src|stoken)$" /-->
 
 
 	<rule from="^http://awaps\.yandex\.by/"
