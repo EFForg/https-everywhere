@@ -3,18 +3,23 @@
 	<target host="trakt.tv" />
 	<target host="*.trakt.tv" />
 
-	<!-- For securecookie rule below (used for some images) -->
+	<!-- For securecookie rule below (host used for movie etc. images) -->
 	<target host="*.trakt.us" />
+
+	<test url="http://www.trakt.tv/" />
+	<test url="http://support.trakt.tv/" />
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.trakt\.(tv|us)$" name="^__cfduid$" /-->
-	<!--securecookie host="^trakt\.tv$" name="^(_traktsession|AWSELB|trakt_username|remember_user_token)$" /-->
+	<!--securecookie host="^\.?support\.trakt\.tv$" name="^_session_id$" /-->
+	<!--securecookie host="^(www\.)?trakt\.tv$" name="^(_traktsession|AWSELB|trakt_username|remember_user_token)$" /-->
 
-	<securecookie host="^(www\.|\.)?trakt\.tv$" name=".+" />
+	<securecookie host="^(\.|www\.)?trakt\.tv$" name=".+" />
+	<securecookie host="^\.?support\.trakt\.tv$" name=".*" />
 	<securecookie host="^\.trakt\.us$" name=".+" />
 
-	<rule from="^http://(www\.)?trakt\.tv/"
+	<rule from="^http://(www\.|support\.)?trakt\.tv/"
 		to="https://$1trakt.tv/" />
 
 </ruleset>
