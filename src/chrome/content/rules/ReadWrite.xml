@@ -1,6 +1,7 @@
-<!--
-	Note: server is configured for rc4 only.
-
+<!--	
+	Problematic subdomains:
+		- api ** (site breaks without it)
+		- www (no secure protocols supported)
 
 	Mixed content:
 
@@ -9,15 +10,16 @@
 		- Web bug on b.comcardresearch. om *
 
 	* Secured by us
+	** cert mismatch
 
 -->
-<ruleset name="ReadWrite">
+<ruleset name="ReadWrite" default_off="breaks site">
 
 	<target host="readwrite.com" />
-	<target host="www.readwrite.com" />
+	<target host="*.readwrite.com" />
 
 
-	<rule from="^http://(www\.)?readwrite\.com/"
-		to="https://$1readwrite.com/" />
+	<rule from="^http://(?:www\.)?readwrite\.com/"
+		to="https://readwrite.com/" />
 
 </ruleset>
