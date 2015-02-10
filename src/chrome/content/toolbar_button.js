@@ -181,21 +181,29 @@ httpsEverywhere.toolbarButton = {
     }
     // Make sure the list is up to date
     alist.populate_list();
-
-    var counter = 0;
+    
+    var totalCounter = 0;
+    for (var x in alist.all) {
+      ++totalCounter;
+    }
+    var activeCounter = 0;
     for (var x in alist.active) {
       if (!(x in alist.breaking)) {
-        ++counter;
+        ++activeCounter;
       }
     }
     for (var x in alist.moot) {
       if (!(x in alist.active)) {
-        ++counter;
+        ++activeCounter;
       }
     }
-
-    toolbarbutton.setAttribute('rulesetsApplied', counter);
-    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+    if (totalCounter != 0) {
+      var counterLabel = activeCounter + '/' + totalCounter;
+    } else {
+      var counterLabel = 0;
+    }
+    toolbarbutton.setAttribute('rulesetsApplied', counterLabel);
+    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counterLabel);
   },
 
   /**
