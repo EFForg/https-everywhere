@@ -197,10 +197,10 @@ httpsEverywhere.toolbarButton = {
         ++activeCounter;
       }
     }
-    if (totalCounter != 0) {
+    if (totalCounter != activeCounter) {
       var counterLabel = activeCounter + '/' + totalCounter;
     } else {
-      var counterLabel = 0;
+      var counterLabel = totalCounter;
     }
     toolbarbutton.setAttribute('rulesetsApplied', counterLabel);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counterLabel);
