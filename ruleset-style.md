@@ -1,7 +1,7 @@
-# Ruleset style guide
+# Ruleset Style Guide
 
-Goal: Rules should be written in a way that is consistent, easy for humans to
-read and debug, and reduces the chance of errors, and makes testing easy.
+Goal: rules should be written in a way that is consistent, easy for humans to
+read and debug, reduces the chance of errors, and makes testing easy.
 
 To that end, here are some style guidelines for writing or modifying rulesets.
 They are intended to help and simplify in places where choices are ambiguous,
@@ -26,7 +26,9 @@ http://www.wolframalpha.com/input/?i=_YOUR_DOMAIN_GOES_HERE_.
 If there are a handful of tricky subdomains, but most subdomains can handle the
 plain rewrite from "^http:" to "^https:", specify the rules for the tricky
 subdomains first, and then then plain rule last. Earlier rules will take
-precedence, and processing stops at the first matching rule.
+precedence, and processing stops at the first matching rule. There may be a tiny
+performance hit for processing exception cases earlier in the ruleset and the
+common case last, but in most cases the performance issue is trumped by readability.
 
 Avoid regexes with long strings of subdomains, e.g. &lt;rule
 from="^http://(foo|bar|baz|bananas).example.com" /&gt;. These are hard to read and
