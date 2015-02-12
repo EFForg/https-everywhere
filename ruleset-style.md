@@ -7,12 +7,17 @@ To that end, here are some style guidelines for writing or modifying rulesets.
 They are intended to help and simplify in places where choices are ambiguous,
 but like all guidelines they can be broken if the circumstances require it.
 
+Avoid using the left-wildcard ("target host='*.example.com'") for unless you
+really mean it. Many rules today specify a left-wildcard target, but the
+rewrite rules only rewrite an explicit list of hostnames.
+
 Prefer listing explicit target hosts and a single rewrite from "^http:" to
 "^https:". This saves you time as a ruleset author because each explicit target
 host automatically creates a test URL, reducing the need to add your own test
-URLs.
+URLs. These also make it easier for someone reading the ruleset to figure out
+which subdomains are covered.
 
-If all subdomains of a given domain support HTTPS, go ahead and use a
+If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from "^http:" to "^https:". Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
 sure what subdomains might exist, check the 'subdomain tab on Wolfram Alpha:
