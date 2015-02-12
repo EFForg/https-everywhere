@@ -1,26 +1,26 @@
 # Ruleset style guide
 
 Goal: Rules should be written in a way that is consistent, easy for humans to
-read and debug, and makes errors less likely.
+read and debug, and reduces the chance of errors, and makes testing easy.
 
 To that end, here are some style guidelines for writing or modifying rulesets.
 They are intended to help and simplify in places where choices are ambiguous,
 but like all guidelines they can be broken if the circumstances require it.
 
-Avoid using the left-wildcard ("target host='*.example.com'") for unless you
+Avoid using the left-wildcard ("&lt;target host='*.example.com'&gt;") unless you
 really mean it. Many rules today specify a left-wildcard target, but the
 rewrite rules only rewrite an explicit list of hostnames.
 
-Prefer listing explicit target hosts and a single rewrite from "^http:" to
+Instead, prefer listing explicit target hosts and a single rewrite from "^http:" to
 "^https:". This saves you time as a ruleset author because each explicit target
-host automatically creates a test URL, reducing the need to add your own test
-URLs. These also make it easier for someone reading the ruleset to figure out
+host automatically creates a an implicit test URL, reducing the need to add your
+own test URLs. These also make it easier for someone reading the ruleset to figure out
 which subdomains are covered.
 
 If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from "^http:" to "^https:". Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
-sure what subdomains might exist, check the 'subdomain tab on Wolfram Alpha:
+sure what subdomains might exist, check the 'subdomain' tab on Wolfram Alpha:
 http://www.wolframalpha.com/input/?i=_YOUR_DOMAIN_GOES_HERE_.
 
 If there are a handful of tricky subdomains, but most subdomains can handle the
@@ -28,17 +28,16 @@ plain rewrite from "^http:" to "^https:", specify the rules for the tricky
 subdomains first, and then then plain rule last. Earlier rules will take
 precedence, and processing stops at the first matching rule.
 
-Avoid regexes with long strings of subdomains, e.g. <rule
-from="^http://(foo|bar|baz|bananas).example.com" />. These are hard to read and
+Avoid regexes with long strings of subdomains, e.g. &lt;rule
+from="^http://(foo|bar|baz|bananas).example.com" /&gt;. These are hard to read and
 maintain, and are usually better expressed with a longer list of target hosts,
 plus a plain rewrite from "^http:" to "^https:".
 
-Prefer dashes over underscores in filenames.
+Prefer dashes over underscores in filenames. Dashes are easier to type.
 
 When matching an arbitrary DNS label (a single component of a hostname), prefer
 `([\w-]+)` for a single label (i.e www), or `([\w-.]+)` for multiple labels
-(i.e. www.beta). Avoid the more visually complicated `([^/:@\.]+\.)?`, seen in
-some rules.
+(i.e. www.beta). Avoid more visually complicated options like `([^/:@\.]+\.)?`.
 
 For `securecookie` tags, it's common to match any cookie name. For these, prefer
 `.+` over `.*`. They are functionally equivalent, but it's nice to be
@@ -82,6 +81,8 @@ test URLs:
 
   <test url="http://html.spec.whatwg.org/" />
   <test url="http://fetch.spec.whatwg.org/" />
+  <test url="http://xhr.spec.whatwg.org/" />
+  <test url="http://dom.spec.whatwg.org/" />
 
   <rule from="^http:"
           to="https:" />
