@@ -1,20 +1,25 @@
 <ruleset name="Cloudfront">
 
 	<target host="*.cloudfront.net" />
-	<target host="www.cloudfront.net" />
-
 
 	<rule from="^http://([^/:@\.]+)\.cloudfront\.net/" 
 		to="https://$1.cloudfront.net/" />
 
+	<!-- from src/chrome/content/rules/Guild-Wars-2.xml  -->
+	<test url="http://d15glo5zfrmw71.cloudfront.net/" />
+	<test url="http://d1ej19d7kwigfi.cloudfront.net/" />
+	<test url="http://d1h9a8s8eodvjz.cloudfront.net/" />
 
 	<!--
 		and this is a generalised precaution from turntable.fm
+		(rewriting this file seems to break cross origin in flash)
 									-->
 	<exclusion pattern="^http://(?:[^/:@\.]+)\.cloudfront\.net/crossdomain\.xml" />
+		<test url="http://d1h9a8s8eodvjz.cloudfront.net/crossdomain.xml" />
 
   <!-- See https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html
     Policies contain the protocol, so a signature for http will not work for https
   -->
   <exclusion pattern="&amp;Signature=" />
+  	<test url="http://d1h9a8s8eodvjz.cloudfront.net/test.txt?a=b&amp;Signature=1234" />
 </ruleset>

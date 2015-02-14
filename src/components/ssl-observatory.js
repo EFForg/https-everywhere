@@ -292,9 +292,31 @@ SSLObservatory.prototype = {
   },
   */
 
+  // Calculate the MD5 fingerprint for a cert. This is the fingerprint of the
+  // DER-encoded form, same as the result of
+  // openssl x509 -md5 -fingerprint -noout
+  // We use this because the SSL Observatory depends in many places on a special
+  // fingerprint which is the concatenation of MD5+SHA1, and the MD5 fingerprint
+  // is no longer available on the cert object.
+  // Implementation cribbed from
+  // https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsICryptoHash
+  md5Fingerprint: function(cert) {
+    var len = new Object();
+    var derData = cert.getRawDER(len);
+    var ch = CC["@mozilla.org/security/hash;1"].createInstance(CI.nsICryptoHash);
+    ch.init(ch.MD5);
+    ch.update(derData,derData.length);
+    var h = ch.finish(false);
+
+    function toHexString(charCode) {
+      return ("0" + charCode.toString(16)).slice(-2);
+    }
+    return [toHexString(h.charCodeAt(i)) for (i in h)].join("").toUpperCase();
+  },
+
   ourFingerprint: function(cert) {
     // Calculate our custom fingerprint from an nsIX509Cert
-    return cert.sha1Fingerprint.replace(":", "", "g");
+    return (this.md5Fingerprint(cert)+cert.sha1Fingerprint).replace(":", "", "g");
   },
 
   observe: function(subject, topic, data) {
@@ -618,7 +640,13 @@ SSLObservatory.prototype = {
     var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
                             .getService(Components.interfaces.nsISupports)
                             .wrappedJSObject;
-    var win = channel ? HTTPSEverywhere.getWindowForChannel(channel) : null;
+    var win = null;
+    if (channel) {
+      var browser = this.HTTPSEverywhere.getBrowserForChannel(channel);
+      if (browser) {
+        var win = browser.contentWindow;
+      }
+    }
     var req = this.buildRequest(params);
     req.timeout = TIMEOUT;
 

@@ -13,6 +13,9 @@ user_pref("general.warnOnAboutConfig", false);
 // Minimize unnecesary requests.
 user_pref("browser.safebrowsing.enabled", false);
 user_pref("browser.safebrowsing.malware.enabled", false);
-// Enable browser debugging in test mode.
-user_pref("devtools.debugger.remote-enabled", true);
+// These two preferences allow debugging the extension
+// using Tools > Web Developer > Browser Toolbox
+// (Note: Since this is not an SDK extension, you can't use the Addon
+// Debugger, but the Browser Toolbox is just about as good).
 user_pref("devtools.chrome.enabled", true);
+user_pref("devtools.debugger.remote-enabled", true);

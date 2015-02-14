@@ -1,8 +1,17 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection timed out after 10000 milliseconds')
 	Other Marketo rulesets:
 
 		- Crowd-Factory.xml
 		- Mktoresp.com.xml
+
+
+	Nonfunctional domains:
+
+		- blog.marketo.com *
+
+	* Redirects to http
 
 
 	Problematic domains:
@@ -11,6 +20,13 @@
 		- (www.)marketo.net *
 
 	* Cert only matches *.marketo.com
+
+
+	Partially covered domains:
+
+		- developers.marketo.com *
+
+	* blog/ redirects to $
 
 
 	Fully covered domains:
@@ -29,7 +45,7 @@
 				- -sj[fghn]
 
 			- b2c-mlm
-			- blog
+			- launchpoint
 			- micro
 			- munchkin	(→ munchkin.marketo.net)
 
@@ -49,14 +65,46 @@
 			- ssl-munchkin
 
 
+	Mixed content:
+
+		- css on developers from $self
+
+		- Images on developers from $self
+
+		- favicons, on:
+
+			- developers from $self
+			- developers from ^ ¹
+
+		- Bug on developers from www.googletagmanager.com
+
+	¹ Secured by us
+
+
 	munchkin sets a "_mkto_trk" wildcard cookie on whichever domain it is
 	loaded from.
 
 -->
-<ruleset name="Marketo">
+<ruleset name="Marketo (partial)" default_off='failed ruleset test'>
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.marketo\.com/($|\?source=|favicon\.ico|wp-content/)" /-->
+		<!--
+			Redirects to ...:443 or .../$
+							-->
+		<!--exclusion pattern="^http://developers\.marketo\.com/blog(?:$|[?/])" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://developers\.marketo\.com/(?!$|assets/|favicon\.ico|foundationforms/|support/|themes/)" /-->
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://developers\.marketo\.com/+(?!assets/|favicon\.ico|foundationforms/|themes/)" />
 	<target host="marketo.net" />
 	<target host="*.marketo.net" />
 
@@ -67,7 +115,7 @@
 	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
 		to="https://www.marketo.com/" />
 
-	<rule from="^http://(app(?:-\w+)?|b2c-mlm|blog|micro|na-\w+)\.marketo\.com/"
+	<rule from="^http://(app(?:-\w+)?|b2c-mlm|developers|launchpoint|micro|na-\w+)\.marketo\.com/"
 		to="https://$1.marketo.com/" />
 
 	<!--	Server redirects as so:
