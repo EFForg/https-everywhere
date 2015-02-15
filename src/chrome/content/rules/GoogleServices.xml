@@ -297,8 +297,25 @@
 
 	<!--	Paths that only exist/work on .com
 							-->
-	<rule from="^http://(?:www\.)?google\.com/(\+|appsstatus|buzz|chat|chromeos|extern_js|glass|googlebooks|ig|insights|moderator|phone|safebrowsing|videotargetting|webfonts)(?=$|[?/])"
-		to="https://www.google.com/$1" />
+	<rule from="^http://(www\.)?google\.com/"
+			to="https://www.google.com/" />
+		<test url="http://google.com/" />
+		<test url="http://www.google.com/" />
+		<test url="http://www.google.com/+" />
+		<test url="http://www.google.com/appsstatus" />
+		<test url="http://www.google.com/buzz" />
+		<test url="http://www.google.com/chat" />
+		<test url="http://www.google.com/chromeos" />
+		<test url="http://www.google.com/extern_js" />
+		<test url="http://www.google.com/glass" />
+		<test url="http://www.google.com/googlebooks" />
+		<test url="http://www.google.com/ig" />
+		<test url="http://www.google.com/insights" />
+		<test url="http://www.google.com/moderator" />
+		<test url="http://www.google.com/phone" />
+		<test url="http://www.google.com/safebrowsing" />
+		<test url="http://www.google.com/videotargetting" />
+		<test url="http://www.google.com/webfonts" />
 
 	<!--	Subdomains that work on all in google.*
 							-->
@@ -331,10 +348,9 @@
 
 	<!--	Subdomains that only exist/work on .com
 							-->
-	<rule from="^http://(admin|apis|appengine|calendar|cast|cbks0|chat|checkout|chrome|clients\d?|cloud|code|corp|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|feedproxy|fiber|fonts|gg|glass||goto|health|helpouts|history|(?:hosted)?talkgadget|investor|ipv4|knoll?|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
+	<rule from="^http://(admin|apis|appengine|calendar|cast|cbks0|chat|checkout|chrome|clients\d?|cloud|code|corp|[\w-]+\.corp|developers|dl|docs\d?|\d\.docs|drive|encrypted|encrypted-tbn[123]|feedburner|feedproxy|fiber|fonts|gg|glass|goto|health|helpouts|history|(?:hosted)?talkgadget|investor|ipv4|knoll?|(?:chatenabled\.)?mail|pack|pki|play|plus(?:\.sandbox)?|plusone|productforums|profiles|safebrowsing-cache|cert-test\.sandbox|sb-ssl|script|security|services|servicessites|sites|spreadsheets\d?|support|talk|tools|wallet)\.google\.com/"
 			to="https://$1.google.com/" />
 
-		<test url="http://google.com/" />
 		<test url="http://admin.google.com/" />
 		<test url="http://apis.google.com/" />
 		<test url="http://appengine.google.com/" />
@@ -411,6 +427,9 @@
 		<test url="http://tools.google.com/" />
 		<test url="http://wallet.google.com/" />
 
+	<!-- This is needed for OCSP responder to work.
+	If OCSP checking is set to hard-fail the user-agent might have troubles accessing some HTTPS sites
+		-->
 	<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
 
 	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
