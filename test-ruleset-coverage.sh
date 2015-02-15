@@ -8,7 +8,7 @@ TMP=`mktemp`
 trap 'rm "$TMP"' EXIT
 # Git log gives us all changed files. Pipe that through ls to eliminate files
 # that have been deleted.
-if ! git log --name-only --date=local --since="2015-02-11 20:00" --pretty=format: \
+if ! git log --name-only --date=local --since="2015-02-12 6:00" --pretty=format: \
       src/chrome/content/rules/ | sort -u | \
       xargs ls 2>/dev/null | xargs python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
       https-everywhere-checker/coverage.checker.config ; then
