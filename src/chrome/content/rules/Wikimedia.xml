@@ -1,4 +1,8 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://wikimedia.ca/ => https://wikimedia.ca/: (60, 'SSL certificate problem: self signed certificate')
+Fetch error: http://www.wikimedia.ca/ => https://wikimedia.ca/: (60, 'SSL certificate problem: self signed certificate')
+Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Could not resolve host: icinga.wmflabs.org')
 	Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
 	URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
@@ -12,6 +16,15 @@
 	* Mismatched, CN: *.links.mkt41.net
 
 
+	Insecure cookies are set for these domains:
+
+		- .wikibooks.org
+		- .wikimediafoundation.org
+		- .wikipedia.org
+		- en.wikipedia.org
+		- .wikiversity.org
+
+
 	Mixed content:
 
 		- Images, on:
@@ -22,7 +35,7 @@
 	* Secured by us
 
 -->
-<ruleset name="Wikimedia">
+<ruleset name="Wikimedia" default_off='failed ruleset test'>
 
 	<target host="enwp.org" />
 	<target host="frwp.org" />
@@ -68,7 +81,8 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.wiki(books|mediafoundation|ipedia)\.org$" name="^GeoIP$" /-->
+	<!--securecookie host="^\.wiki(books|mediafoundation|pedia|versity)\.org$" name="^GeoIP$" /-->
+	<!--securecookie host="^en\.wikipedia\.org$" name="^(CentralAuthAnon|mediaWiki\.user\.sessionId|uls-previous-languages)$" /-->
 
 	<securecookie host="^(?:www\.)?mediawiki\.org$" name=".+" />
 	<securecookie host="^\.wik(?:ibooks|idata|imedia|imediafoundation|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name="^GeoIP$" />
@@ -82,31 +96,31 @@
 	<rule from="^http://(?:www\.)?mediawiki\.org/"
 		to="https://www.mediawiki.org/" />
 
-	<rule from="^https?://noboard\.chapters\.wikimedia\.org/"
+	<rule from="^http://noboard\.chapters\.wikimedia\.org/"
 		to="https://noboard-chapters.wikimedia.org/" />
 
-	<rule from="^https?://(?:dataset2|download|sitemap)\.wikimedia\.org/"
+	<rule from="^http://(?:dataset2|download|sitemap)\.wikimedia\.org/"
 		to="https://dumps.wikimedia.org/" />
 
 	<rule from="^http://links\.email\.donate\.wikimedia\.org/"
 		to="https://www.links.mkt41.net/" />
 
-	<rule from="^https?://(labs-ns[01]|virt0)\.wikimedia\.org/"
+	<rule from="^http://(?:labs-ns[01]|virt0)\.wikimedia\.org/"
 		to="https://wikitech.wikimedia.org/" />	
 
-	<rule from="^https?://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
+	<rule from="^http://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
 		to="https://arbcom-$1.wikipedia.org/" />
 
-	<rule from="^https?://download\.wikipedia\.org/"
+	<rule from="^http://download\.wikipedia\.org/"
 		to="https://dumps.wikimedia.org/" />
 
-	<rule from="^https?://wg\.en\.wikipedia\.org/"
+	<rule from="^http://wg\.en\.wikipedia\.org/"
 		to="https://wg-en.wikipedia.org/" />
 
 	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
 		to="https://$1wik$2.org/" />
 
-	<rule from="^http://(www\.)?wikimedia\.ca/"
+	<rule from="^http://(?:www\.)?wikimedia\.ca/"
 		to="https://wikimedia.ca/" />
 
 	<rule from="^http://(www\.)?wikimediafoundation\.org/"

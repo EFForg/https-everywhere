@@ -1,0 +1,63 @@
+<!--
+	For problematic rules, see People.com-problematic.xml.
+
+	For other Time Inc coverage, see Time_Inc.xml.
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- celebritybabies ²
+		- www ³
+
+	¹ Dropped
+	² WordPress
+	³ Akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)? *	(→ a248.e.akamai.net)
+
+	* Avoiding user-visible paths
+
+
+	Fully covered subdomains:
+
+		- backissues
+		- subscription
+
+
+	Mixed content:
+
+		- iframe on celebritybabes from www *
+
+		- css, on:
+
+			- www from img[\d-]+.timeinc.net *
+			- www from img-short.timeinc.net *
+
+		- Images on celebritybabies, www from img[\d-]+.timeinc.net *
+
+		- favicon on subscription, www from img2.timeinc.net *
+
+	* Secured by us
+
+-->
+<ruleset name="People.com (partial)">
+
+	<target host="people.com" />
+	<target host="*.people.com" />
+		<!--
+			Avoid user-visible paths and css:
+							-->
+		<exclusion pattern="^http://(?:www\.)?people\.com/(?!.+(?:gif|ico|jpg|png)(?:$|\?)|people/static/h/inc/babies/iframe\.html)" />
+
+
+	<rule from="^http://(?:www\.)?people\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/people.com/" />
+
+	<rule from="^http://(backissues|subscription)\.people\.com/"
+		to="https://$1.people.com/" />
+
+</ruleset>

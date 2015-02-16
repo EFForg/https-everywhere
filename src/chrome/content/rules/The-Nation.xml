@@ -1,24 +1,37 @@
 <!--
-	s3.amazonaws.com/thenation/
+Disabled by https-everywhere-checker because:
+Fetch error: http://65.98.18.218/ => https://upgnation.com/: (28, 'Connection timed out after 10001 milliseconds')
+Non-2xx HTTP code: http://thenation.com/ (200) => https://thenation.com/ (504)
+Fetch error: http://upgnation.com/ => http://upgnation.com/: Cycle detected - URL already encountered: http://www.upgnation.com/?xid_27780=d9672a6da1b004381c660e8d39bdb86a
+	CDN buckets:
+
+		- s3.amazonaws.com/thenation/
 
 
 	Problematic domains:
 
-		- thenation.com ¹
-		- nationbuilders.thenation.com ²
+		- nationbuilders.thenation.com ¹
+		- upgnation.com ²
 
-	¹ Expired
-	² Mismatched, CN: *.ning.com
+	¹ Mismatched, CN: *.ning.com
+	² Mismatched, CN: www.philosophersguild.com
 
 
 	Partially covered domains:
 
-		- (www.)thenation.com *	(^ -> www)
+		- (www.)?upgnation.com *
 
 	* At least some pages redirect to http
 
 
 	Fully covered domains:
+
+		- (www.)?thenation.com
+		- donate.thenation.com
+		- subscribe.thenation.com
+
+
+	Insecure cookies are set for these domains:
 
 		- subscribe.thenation.com
 
@@ -27,49 +40,50 @@
 
 		- css on nationbuilders.thenation.com from static.ning.com *
 
-		- Images on nationbuilders.thenation.com from api.ning.com *
+		- Images, on:
+
+			- nationbuilders.thenation.com from api.ning.com *
+			- www.thenation.com from $self *
+
+		- Bugs, on:
+
+			- www.thenation.com from www.facebook.com *
+			- www.thenation.com from platform.twitter.com *
 
 	* Secured by us
 
 -->
-<ruleset name="The Nation">
+<ruleset name="The Nation" default_off='failed ruleset test'>
 
 	<target host="65.98.18.218" />
 	<target host="thenation.com" />
 	<target host="*.thenation.com" />
+	<target host="upgnation.com" />
+	<target host="www.upgnation.com" />
 		<!--
-			Redirect to http:
+			Redirects to http:
 						-->
-		<!--exclusion pattern="^http://www\.thenation\.com/+($|\?|user($|[?/]))" /-->
+		<!--exclusion pattern="^http://www\.upgnation\.com/(cart|home)\.php\?xid_\d+[\da-f]{32}$" /-->
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://www\.thenation\.com/+(?=favicon\.ico|misc/|sites/)" /-->
-	<target host="upgnation.com" />
-	<target host="www.upgnation.com" />
+		<!--exclusion pattern="^http://www\.upgnation\.com/+(?!blank\.gif|favicon\.ico|image\.php|images/|login\.php|register\.php|skin/|var/)" /-->
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^subscribe\.thenation\.com$" name="^CookieDetector\.txt$" /-->
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^subscribe\.thenation\.com$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^(?:donate|subscribe)\.thenation\.com$" name=".*" />
+	<securecookie host="^(?:donate|subscribe)\.thenation\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?thenation\.com/(?=favicon\.ico|misc/|sites/)"
-		to="https://www.thenation.com/" />
-
-	<rule from="^http://(donate|subscribe)\.thenation\.com/"
-		to="https://$1.thenation.com/" />
+	<rule from="^http://((?:donate|subscribe|www)\.)?thenation\.com/"
+		to="https://$1thenation.com/" />
 
 	<rule from="^http://65\.98\.18\.218/"
 		to="https://upgnation.com/" />
 
-	<rule from="^http://(www\.)?upgnation\.com/(images/|(?:image|login|register)\.php|skin/|var/)"
-		to="https://$1upgnation.com/$1" />
+	<rule from="^http://(?:www\.)?upgnation\.com/(?=blank\.gif|favicon\.ico|images/|(?:image|login|register)\.php|skin/|var/)"
+		to="https://www.upgnation.com/" />
 
 </ruleset>

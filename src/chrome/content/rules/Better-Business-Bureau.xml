@@ -1,29 +1,75 @@
-<ruleset name="Better Business Bureau (partial)" platform="mixedcontent">
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'Could not resolve host: hurdman.bbb.org')
+Fetch error: http://bbbsilicon.org/ => https://bbbsilicon.org/: (51, "SSL: no alternative certificate subject name matches target host name 'bbbsilicon.org'")
+Fetch error: http://www.bbbsilicon.org/ => https://www.bbbsilicon.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.bbbsilicon.org'")
+	Nonfunctional domains:
+
+		- (www.)?labbb.org *
+
+	* Refused
+
+
+	Nonfcuntional subdomains:
+
+		- (www.)?dc *
+
+	* "domain has just been registered"
+
+
+	Problematic domains:
+
+		- (www.)?la.bbb.org *
+		- (www.)?sanjose.bbb.org *
+		- (www.)?setflorida.bbb.org *
+
+		- (www.)?bbbonline.org *
+
+	* Mismatched
+
+
+	Partially covered domains:
+
+		- (www.)?bbbonline.com		(→ www.bbb.org)
+
+
+	Fully covered domains:
+
+		- bbb.org			(→ www)
+		- hurdman.app.bbb.org
+		- (www.)?sanjose.bbb.org	(→ bbbsilicon.org)
+
+		- (www.)?[\w-]+.bbb.org:	(www → ^)
+
+			- seal-centralalabama
+
+		- (www.)?bbbsilicon.org
+
+-->
+<ruleset name="Better Business Bureau (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
 	<target host="bbb.org"/>
 	<target host="hurdman.app.bbb.org"/>
 	<target host="*.bbb.org"/>
-		<!--	expired, self-signed, shows "domain has just been registered" page
+		<!--
 			(www.)dcbbb.org redirects here		-->
 		<exclusion pattern="^http://(?:www\.)?dc\."/>
-		<exclusion pattern="http://(?:www\.)?seflorida\."/>
-	<target host="www.*.bbb.org"/>
+		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\."/>
 	<target host="bbbonline.org"/>
 	<target host="www.bbbonline.org"/>
 	<target host="bbbsilicon.org" />
 	<target host="www.bbbsilicon.org" />
-	<target host="labbb.org"/>
-	<target host="www.labbb.org"/>
+	<!--target host="labbb.org"/-->
+	<!--target host="www.labbb.org"/-->
 
 
 	<securecookie host="^.*\.bbb\.org$" name=".*" />
-	<securecookie host="^(.*\.)?bbbsilicon\.org$" name=".*" />
-	<securecookie host="^www\.labbb\.org$" name=".*"/>
+	<securecookie host="^(?:.*\.)?bbbsilicon\.org$" name=".*" />
+	<!--securecookie host="^www\.labbb\.org$" name=".*"/-->
 
 
-	<!--	cert invalid	-->
-	<rule from="^https?://(?:www\.)?la\.?bbb\.org/"
-		to="https://www.labbb.org/"/>
+	<!--rule from="^http://(?:www\.)?la\.?bbb\.org/"
+		to="https://www.labbb.org/"/-->
 
 	<rule from="^http://bbb\.org/"
 		to="https://www.bbb.org/"/>
@@ -34,15 +80,13 @@
 	<rule from="^http://hurdman\.app\.bbb\.org/"
 		to="https://hurdman.app.bbb.org/"/>
 
-	<!--	cert doesn't match 	-->
-	<rule from="^https?://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
+	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
 		to="https://www.bbb.org/us/bbb-online-business/?id=$1"/>
 
 	<rule from="^http://(www\.)?bbbsilicon\.org/"
 		to="https://$1bbbsilicon.org/" />
 
-	<!--	Cert doens't match.	-->
-	<rule from="^https?://(?:www\.)?sanjose\.bbb\.org/"
+	<rule from="^http://(?:www\.)?sanjose\.bbb\.org/"
 		to="https://bbbsilicon.org/" />
 
 </ruleset>

@@ -1,12 +1,48 @@
-<ruleset name="Mamba" platform="mixedcontent">
+<!--
+	For other Wamba coverage, see Wamba.com.xml.
 
-	<target host="mamba.ru"/>
-	<target host="*.mamba.ru"/>
-	<target host="www.corp.mamba.ru"/>
 
-	<rule from="^http://(?:www\.)?(corp\.|img\.|partner\.)?mamba\.ru/"
-		to="https://$1mamba.ru/"/>
+	Nonfunctional subdomains:
 
-	<securecookie host="^\.mamba\.ru$" name=".*"/>
+		- (www.)? *
+		- (www.)?img *
+		- m *
+
+	* Shows partner.wamba.com
+
+
+	Problematic subdomains:
+
+		- corp *
+
+	* Mismatched, CN: *.wamba.com
+
+
+	Fully covered subdomains:
+
+		- (www.)?corp	(→ corp.wamba.com)
+		- partner
+
+
+	Mixed content:
+
+		- images on partner from images.mambacdn.net
+
+-->
+<ruleset name="Mamba.ru (partial)">
+
+	<target host="*.mamba.ru" />
+
+
+	<!--securecookie host="^\.mamba\.ru$" name=".+" /-->
+
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?corp\.mamba\.ru/+"
+		to="https://corp.wamba.com/ru/" />
+
+	<rule from="^http://partner\.mamba\.ru/"
+		to="https://partner.mamba.ru/" />
 
 </ruleset>

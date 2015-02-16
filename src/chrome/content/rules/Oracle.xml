@@ -61,7 +61,7 @@
 
 	¹ Refused
 	² Redirects to http; mismatched, CN: java.sun.com
-	³ Akamai
+	³ Insecure renegotiation
 	⁴ Mismatched
 	⁵ Mismatched, CN: *.presscentre.com
 
@@ -69,7 +69,6 @@
 	Partially covered domains:
 
 		- (www.)oracle.com ¹
-		- docs.oracle.com ²
 		- (www.)oracleimg.com ¹
 
 	¹ ^ → www, some paths redirect to http
@@ -127,6 +126,7 @@
 			- crmondemand		(→ www)
 			- digitalmedia
 			- dne
+			- docs
 			- download
 			- edelivery
 			- edelivery-hqdc-test
@@ -182,6 +182,7 @@
 			- search
 			- shop
 			- solutions
+			- status-ksplice
 			- stbeehive
 			- strtc
 			- suppliers
@@ -273,16 +274,12 @@
 
 	<target host="oracle.com" />
 	<target host="*.oracle.com" />
-		<!--exclusion pattern="^http://(docs|isdportal|jdevadf|oukc|pressroom|tahiti)\.oracle\.com/" /-->
+		<!--exclusion pattern="^http://(isdportal|jdevadf|oukc|pressroom|tahiti)\.oracle\.com/" /-->
 		<!--
 			Very stingy https support
 			most paths redirect to http
 							-->
 		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|javaone(?:$|[?/]))"/>
-		<!--
-			Avoid user-visible paths:
-							-->
-		<!--exclusion pattern="^http://docs\.oracle\.com/(?!.+/css/|favicon\.ico|.+/graphics/)" /-->
 	<target host="oracleimg.com" />
 	<target host="www.oracleimg.com" />
 	<target host="*.oracleoutsourcing.com" />
@@ -308,19 +305,16 @@
 	<rule from="^http://(?:www\.)?oracle(img)?\.com/us/(?=[^/]+\.(?:css|gif|jpg|js|png)$)"
 		to="https://www.oracle$1.com/us/assets/" />
 
-	<rule from="^https?://(?:www\.)?oracle(img)?\.com/"
+	<rule from="^http://(?:www\.)?oracle(img)?\.com/"
 		to="https://www.oracle$1.com/" />
 
-	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
+	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|docs|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|status-ksplice|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
 		to="https://$1.oracle.com/" />
 
 	<!--	Redirect keeps path:
 					-->
 	<rule from="^http://crmondemand\.oracle\.com/"
 		to="https://www.oracle.com/us/products/applications/crmondemand/index.html" />
-
-	<rule from="^http://docs\.oracle\.com/(?=favicon\.ico|.+/(?:cs|graphic)s/)"
-		to="https://a248.e.akamai.net/f/1049/1606/6m/docs.oracle.com/" />
 
 	<rule from="^http://(bi|crm|fin|fs|[hs]cm|ic|pr[cj])-(\w+)\.oracleoutsourcing\.com/"
 		to="https://$1-$2.oracleoutsourcing.com/" />

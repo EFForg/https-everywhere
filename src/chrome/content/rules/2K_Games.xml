@@ -1,4 +1,7 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://2k.com/ => https://www.2k.com/: Cycle detected - URL already encountered: http://2k.com/
+Fetch error: http://2kgames.com/ => https://www.2kgames.com/: Cycle detected - URL already encountered: http://2kgames.com/
 	Other 2K Games rulesets:
 
 		- 2K_Sports.xml
@@ -7,29 +10,59 @@
 
 	Nonfunctional domains:
 
-		- forums.2kgames.com	(shows Citizen Skywatch website, CN: www.2kgames.com)
+		- store.2k.com ¹
+		- forums.2kgames.com ²
+
+	¹ Digital River
+	² Shows Citizen Skywatch website, CN: www.2kgames.com
 
 
 	Problematic domains:
 
-		- 2kgames.com	(cert only matches www)
+		- 2k.com ¹
+		- 2kgames.com ²
+
+	¹ Cert only matches www.2k.com
+	² 404
+
+
+	Fully covered domains:
+
+		- (www.)?2k.com		(^ → www)
+		- api.2k.com
+		- blog.2k.com
+
+		- (www.)?2kgames.com	(^ → www)
+		- downloads.2kgames.com
+
+
+	Mixed content:
+
+		- Images on blog.2k.com, www.2k.com from i.imgur.com *
+
+	* Secured by us
 
 -->
-<ruleset name="2K Games (partial)">
+<ruleset name="2K Games (partial)" default_off='failed ruleset test'>
 
-	<target host="store.2k.com" />
+	<target host="2k.com" />
+	<target host="*.2k.com" />
+		<exclusion pattern="^http://store\.2k\.com/+(?!Admin/|DRHM/|favicon\.io)" />
 	<target host="2kgames.com" />
 	<target host="*.2kgames.com" />
 
 
 	<securecookie host="^store\.2k\.com$" name=".+" />
-	<securecookie host="^.+\.2kgames\.com" name=".+" />
+	<securecookie host=".+\.2kgames\.com" name=".+" />
 
 
-	<rule from="^http://store\.2k\.com/"
-		to="https://store.2k.com/" />
+	<rule from="^http://(?:www\.)?2k\.com/"
+		to="https://www.2k.com/" />
 
-	<rule from="^https?://(?:www\.)?2kgames\.com/"
+	<rule from="^http://(api|blog|store)\.2k\.com/"
+		to="https://$1.2k.com/" />
+
+	<rule from="^http://(?:www\.)?2kgames\.com/"
 		to="https://www.2kgames.com/" />
 
 	<rule from="^http://downloads\.2kgames\.com/"

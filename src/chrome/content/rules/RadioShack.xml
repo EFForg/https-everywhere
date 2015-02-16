@@ -1,4 +1,10 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://franchiseradioshack.cloudapp.net/ => https://www.franchiseradioshack.com/: (6, 'Could not resolve host: franchiseradioshack.cloudapp.net')
+Fetch error: http://franchiseradioshack.com/ => https://www.franchiseradioshack.com/: (7, 'Failed to connect to www.franchiseradioshack.com port 443: Connection refused')
+Fetch error: http://www.franchiseradioshack.com/ => https://www.franchiseradioshack.com/: (7, 'Failed to connect to www.franchiseradioshack.com port 443: Connection refused')
+Fetch error: http://radioshackwireless.com/ => https://radioshackwireless.com/: (7, 'Failed to connect to radioshackwireless.com port 443: Connection timed out')
+Fetch error: http://www.radioshackwireless.com/ => https://radioshackwireless.com/: (6, 'Could not resolve host: www.radioshackwireless.com')
 	Most requests sent back to HTTP.
 
 
@@ -16,14 +22,14 @@
 		- www.radioshackcorporation.com	(self-signed; shows blank page)
 
 -->
-<ruleset name="RadioShack (partial)">
+<ruleset name="RadioShack (partial)" default_off='failed ruleset test'>
 
 	<target host="franchiseradioshack.cloudapp.net" />
 	<target host="franchiseradioshack.com" />
 	<target host="www.franchiseradioshack.com" />
 	<target host="radioshack.com" />
 	<target host="*.radioshack.com" />
-		<exclusion pattern="^http://www\.radioshack\.com/($|category/|family/|home/|shop/)" />
+		<exclusion pattern="^http://www\.radioshack\.com/(?:$|category/|family/|home/|shop/)" />
 	<target host="radioshackwireless.com" />
 	<target host="www.radioshackwireless.com" />
 
@@ -32,11 +38,11 @@
 
 
 	<!--	Cert mismatch.	-->
-	<rule from="^https?://franchiseradioshack\.cloudapp\.net/"
+	<rule from="^http://franchiseradioshack\.cloudapp\.net/"
 		to="https://www.franchiseradioshack.com/" />
 
 	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?franchiseradioshack\.com/"
+	<rule from="^http://(?:www\.)?franchiseradioshack\.com/"
 		to="https://www.franchiseradioshack.com/" />
 
 	<!--
@@ -71,17 +77,17 @@
 
 		Cert only matches www.
 					
-	<rule from="^https?://(?:www\.)?radioshack\.com/($|(?:affiliate|checkout|cms_widgets|coreg|corp|emailAProduct|graphics|helpdesk|images|include|min-cat|product|search|sitemap|storeLocator3|uc)(?:$|/|\?))"
+	<rule from="^http://(?:www\.)?radioshack\.com/($|(?:affiliate|checkout|cms_widgets|coreg|corp|emailAProduct|graphics|helpdesk|images|include|min-cat|product|search|sitemap|storeLocator3|uc)(?:$|/|\?))"
 		to="https://www.radioshack.com/$1" /-->
 
-	<rule from="^https?://(?:www\.)?radioshack\.com/"
+	<rule from="^http://(?:www\.)?radioshack\.com/"
 		to="https://www.radioshack.com/" />
 
 	<rule from="^http://blog\.radioshack\.com/"
 		to="https://blog.radioshack.com/" />
 
 	<!--	Cert doesn't match www.	-->
-	<rule from="^https?://(?:www\.)?radioshackwireless\.com/"
+	<rule from="^http://(?:www\.)?radioshackwireless\.com/"
 		to="https://radioshackwireless.com/" />
 
 </ruleset>

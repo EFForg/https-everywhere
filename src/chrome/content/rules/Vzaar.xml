@@ -3,38 +3,35 @@
 
 		- assets1
 		- assets2
+		- download
 		- framegrabs
 		- mtoza
 		- resources
 		- static	(→ s3.amazonaws.com)
-		- view *
-
-	* Server is configured ssl3 only
+		- view
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		- view *
-
-	* Secured by us
+		- view.vzaar.com
 
 -->
-<ruleset name="vzaar (partial)">
+<ruleset name="vzaar.com (partial)">
 
-	<target host="vzaar.com"/>
-	<target host="*.vzaar.com"/>
+	<target host="vzaar.com" />
+	<target host="*.vzaar.com" />
 
 
 	<securecookie host="^view\.vzaar\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?vzaar\.com/(blog/|favicon\.ico$|help/|images/|login$|stylesheets/)"
-		to="https://vzaar.com/$2"/>
-
-	<rule from="^http://(assets[12]|framegrabs|mtoza|resources|view)\.vzaar\.com/"
-		to="https://$1.vzaar.com/"/>
+	<rule from="^http://(?:www\.)?vzaar\.com/(?=blog/|favicon\.ico$|help/|images/|login$|stylesheets/)"
+		to="https://vzaar.com/" />
 
 	<rule from="^http://static\.vzaar\.com/"
-		to="https://s3.amazonaws.com/static.vzaar.com/"/>
+		to="https://s3.amazonaws.com/static.vzaar.com/" />
+
+	<rule from="^http://(assets[12]|download|framegrabs|mtoza|resources|view)\.vzaar\.com/"
+		to="https://$1.vzaar.com/" />
 
 </ruleset>

@@ -5,36 +5,38 @@
 	Nonfunctional subdomains:
 
 		- bedrift ¹
-		- papp2 *
-		- sport		(times out)
+		- papp2 ²
+		- sport ¹
 
 	¹ Dropped
-	* Revoked
+	² Revoked
 
 
 	Problematic subdomains:
 
-		- (www.) ¹
-		- atorget *
-		- bedriftfiles		(self-signed, mismatched, CN: hotelladmin.aftenposten.no)
-		- bil *
-		- godetilbud *
-		- kundeservice		(revoked)
+		- (www.)? ¹
+		- atorget ²
+		- bedriftfiles ³
+		- bil ²
+		- godetilbud ²
+		- kundeservice ⁴
 		- leserpanel ⁵
-		- ocacache *
-		- reise *
-		- rubrikkcache *
+		- ocacache ²
+		- reise ²
+		- rubrikkcache ²
 
-		- ap.mnocdn.no *
+		- ap.mnocdn.no ²
 
 	¹ Mixed css
-	* Works; mismatched, CN: www.aftenposten.no
+	² Mismatched, CN: www.aftenposten.no
+	³ Self-signed; mismatched, CN: hotelladmin.aftenposten.no
+	⁴ Revoked
 	⁵ Mismatched, CN: hotellweb1.schibsted-it.no
 
 
 	Partially covered subdomains:
 
-		- (www.)		(^ → www)
+		- (www.)?		(^ → www)
 		- kundeservice		(→ a)
 
 
@@ -54,25 +56,28 @@
 
 	Mixed content:
 
-		- css on www from $self *
+		- css on www from $self ¹
 
 		- Images, on:
 
-			- leserpanel from $self
-			- www from $self *
-			- www from www.bt.no *
-			- www from ap.mnocdn.no *
+			- leserpanel from $self ²
+			- www from $self ¹
+			- www from www.bt.no ¹
+			- www from ap.mnocdn.no ¹
 
-		- favicon on www from $self *
+		- favicon on www from $self ¹
 
-		- Bugs on www from ocacache.medianorge.no
+		- Bugs on www from ocacache.medianorge.no ³
 
-	* Secured by us
+	¹ Secured by us
+	² Not secured by us <= mismatched
+	³ Unsecurable
 
 -->
 <ruleset name="Aftenposten (partial)">
-        <target host="*.aftenposten.no" />
+
         <target host="aftenposten.no" />
+        <target host="*.aftenposten.no" />
 		<!--
 			Redirects to http:
 						-->
@@ -97,21 +102,20 @@
 	<securecookie host="^(?:a|kundesenter|kundeweb|onlinesos)\.aftenposten\.no$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?aftenposten\.no/" to="https://www.aftenposten.no/"/>
+	<rule from="^http://(?:www\.)?aftenposten\.no/"
+		to="https://www.aftenposten.no/" />
+
+	<rule from="^http://kundeservice\.aftenposten\.no/(?=$|\?.*)"
+		to="https://a.aftenposten.no/kundeservice/" />
 
 	<rule from="^http://(a|kundesenter|kundeweb|onlinesos)\.aftenposten\.no/"
 		to="https://$1.aftenposten.no/" />
 
-	<rule from="^http://kundeservice\.aftenposten\.no/(\?.*)?$"
-		to="https://a.aftenposten.no/kundeservice/$1" />
-
-	<!-- The following rules will generate SSL warnings by default because
-	the cert is only valid for www.aftenposten.no -->
-	<!--
-	<rule from="^http://lisacache\.aftenposten\.no/" to="https://lisacache.aftenposten.no/"/>
-	<rule from="^http://media\.aftenposten\.no/" to="https://media.aftenposten.no/"/>
-	<rule from="^http://oslopuls\.aftenposten\.no/" to="https://oslopuls.aftenposten.no/"/>
-	-->
+	<!--	The following rule will generate SSL warnings by default
+		because the cert is only valid for www.aftenposten.no.
+									-->
+	<!--rule from="^http://(lisacache|media|oslopuls)\.aftenposten\.no/"
+		to="https://$1.aftenposten.no/" /-->
 
 	<rule from="^http://ap\.mnocdn\.no/"
 		to="https://www.aftenposten.no/" />

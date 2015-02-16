@@ -1,38 +1,73 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://ccc.de/ => https://ccc.de/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Nonfunctional subdomains:
+
+		- dasalte ¹
+		- halfnarp.events ²
+		- streaming.media ²
+		- wahlcomputer ²
+
+	¹ Shows wuppa
+	² Refused
+
+
 	Problematic subdomains:
 
-		- ^ ¹
-		- chaosradio ²
-		- blog.chaosradio ²
-		- dasalte ³
-		- ds ⁴
-		- berlin.ftp.media ⁵
-		- static.media ⁵
+		- ds ¹
+		- dsrad ¹
+		- berlin.ftp.media ²
+		- wuppa ¹
 
-	¹ Cert only matches www
-	² Works; mismatched, CN: wiki.chaosradio.ccc.de
-	³ Revoked
-	⁴ Different data
-	⁵ Works; mismatched, CN: media.koeln.ccc.de
+	¹ Expired
+	² Works; mismatched, CN: media.koeln.ccc.de
+
+
+	Fully covered domains:
+
+		- ccc.de
+		- blog.chaosradio.ccc.de
+		- wiki.chaosradio.ccc.de
+		- www.hamburg.ccc.de
+
+		- api.media.ccc.de
+		- cdn.media.ccc.de
+		- static.media.ccc.de
+
+		- [^/:@\.]+.ccc.de: *
+
+			- chaosradio
+			- media
+			- pads
+			- www
+
+		- \w+.pads.ccc.de:
+
+			- ffhh
+
+	* Except where excluded below
+
+
+	Mixed content:
+
+		- css on cdn.media from $self *
+
+		- Images on media from static.media *
+
+	* Secured by us
 
 -->
-<ruleset name="ccc.de (CAcert)" platform="cacert">
+<ruleset name="ccc.de (CAcert)" platform="cacert" default_off='failed ruleset test'>
 
 	<target host="ccc.de" />
 	<target host="*.ccc.de" />
-		<exclusion pattern="^http://(?:(?:blog\.)?chaosradio|desalte|ds)\.ccc\.de/" />
+		<exclusion pattern="^http://(?:desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" />
 
 
 	<securecookie host="^svn\.berlin\.ccc\.de$" name=".+" />
 
 
-	<rule from="^http://ccc\.de/"
-		to="https://www.ccc.de/" />
-
-	<rule from="^http://static\.media\.ccc\.de/"
-		to="https://media.ccc.de/" />
-
-	<rule from="^http://([^/:@\.]+)\.ccc\.de/"
-		to="https://$1.ccc.de/" />
+	<rule from="^http://((?:[^/:@\.]+|(?:blog|wiki)\.chaosradio|www\.hamburg|(?:api|cdn|static)\.media|\w+\.pads)\.)?ccc\.de/"
+		to="https://$1ccc.de/" />
 
 </ruleset>

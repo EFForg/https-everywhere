@@ -1,20 +1,68 @@
 <!--
+	CDN buckets:
+
+		- personal.fidelity.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- activequote ¹
+		- personal ²
+
+	¹ Dropped
+	² 504, Akamai
+
+
+	Problematic subdomains:
+
+		- research *
+
+	* Mismatched, CN: *.wsodqa.com
+
+
 	Fully covered subdomains:
 
+		- (www.)?
 		- charitablegift
+		- fixedincome
+		- eresearch
 		- login
+		- membership
+		- moneymovement
+		- news
+		- oltx
+		- research2
+		- researchtools
+		- screener
+		- scs
+
+
+	These altnames don't exist:
+
+		- www.news.fidelity.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .fidelity.com
+		- charitablegift.fidelity.com
+		- login.fidelity.com
+
+
+	Mixed content:
+
+		- Images on www from personal *
+
+	* Unsecurable <= 504
 
 -->
 <ruleset name="Fidelity.com (partial)">
 
+	<target host="fidelity.com" />
 	<target host="*.fidelity.com" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^login\.fidelity\.com$" name="^(APCC|JSESSIONID)$" /-->
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.fidelity\.com$" name="^MC$" /-->
 	<!--securecookie host="^charitablegift\.fidelity\.com$" name="^AMURCC$" /-->
@@ -24,7 +72,7 @@
 	<securecookie host="^(?:charitablegift|login)\.fidelity\.com$" name=".+" />
 
 
-	<rule from="^http://(charitablegift|login)\.fidelity\.com/"
-		to="https://$1.fidelity.com/" />
+	<rule from="^http://((?:charitablegift|eresearch|fixedincome|login|membership|moneymovement|news|oltx|research2|researchtools|screener|scs|www)\.)?fidelity\.com/"
+		to="https://$1fidelity.com/" />
 
 </ruleset>

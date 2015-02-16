@@ -2,20 +2,41 @@
 	Nonfunctional subdomains:
 
 		- blog-us
+		- info *
+
+	* Marketo
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- analytics
+		- blog
+		- devops
+		- my
+
+
+	Mixed content:
+
+		- Images on blog from $self *
+		- favicon on blog from www *
+
+	* Secured by us
 
 -->
-<ruleset name="ProfitBricks (partial)">
+<ruleset name="ProfitBricks.com (partial)">
 
 	<target host="profitbricks.com" />
-	<target host="www.profitbricks.com" />
+	<target host="*.profitbricks.com" />
 
 
-	<securecookie host="^www\.profitbricks\.com$" name=".+" />
+	<securecookie host="^(?:www\.)?profitbricks\.com$" name=".+" />
 
 
-	<!--	Cert only matches *.profitbricks.com.
-							-->
-	<rule from="^https?://(?:www\.)?profitbricks\.com/"
-		to="https://www.profitbricks.com/" />
+	<rule from="^http://info\.profitbricks\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sj02.marketo.com/" />
+
+	<rule from="^http://((?:analytics|blog|devops|my|www)\.)?profitbricks\.com/"
+		to="https://$1profitbricks.com/" />
 
 </ruleset>

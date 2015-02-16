@@ -2,9 +2,6 @@
 	For other T'nAflix coverage, see Tnaflix.xml.
 
 
-	CN: payment.empflix.com
-
-
 	Nonfunctional subdomains:
 
 		- static *
@@ -15,26 +12,44 @@
 
 	Problematic subdomains:
 
-		- (www.)	(mismatched, CN: payment.empflix.com)
-		- www-edge	(404, CN: systemcdn.net)
+		- (www.)? ¹
+		- payment ²
+		- www-edge ³
+
+	¹ Mismatched, CN: payment.empflix.com
+	² Expired 2012
+	³ 404, CN: systemcdn.net
 
 
 	Fully covered subdomains:
 
-		- (www.)	(→ payment)
+		- (www.)?	(→ payment)
 		- payment
 		- www-edge	(→ payment)
 
--->
-<ruleset name="EmpFlix (partial)" platform="mixedcontent">
 
-	<target host="payment.empflix.com" />
+	Mixed content:
+
+		- css from www-edge *
+
+		- Images, from:
+
+			- www-edge *
+			- img.empstatic.com *
+
+	* Secured by us
+
+-->
+<ruleset name="EmpFlix.com (partial)" default_off="expired" platform="mixedcontent">
+
+	<target host="empflix.com" />
+	<target host="*.empflix.com" />
 
 
 	<securecookie host="^payment\.empflix\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:payment\.|www(?:-edge)?\.)?empflix.com/"
+	<rule from="^http://(?:payment\.|www(?:-edge)?\.)?empflix\.com/"
 		to="https://payment.empflix.com/" />
 
 </ruleset>

@@ -1,0 +1,59 @@
+<!--
+	CDN buckets:
+
+		- d1y50j8vst3j8d.cloudfront.net
+		- d3otexg1kysjv4.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- campaign *
+		- mailer *
+		- photos *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- cache *
+		- camp *
+		- static[12] *
+
+	* Cloudfront
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- cache		(→ d1y50j8vst3j8d.cloudfront.net)
+		- prelive
+		- static[12]	(→ d3otexg1kysjv4.cloudfront.net)
+
+
+	Mixed content:
+
+		- Ads on (www.)? from campaign *
+
+	* Unsecurable <= refused
+
+-->
+<ruleset name="Visitestonia.com (partial)">
+
+	<target host="visitestonia.com" />
+	<target host="*.visitestonia.com" />
+
+
+	<rule from="^http://(prelive\.|www\.)?visitestonia\.com/"
+		to="https://$1visitestonia.com/" />
+
+	<rule from="^http://cache\.visitestonia\.com/"
+		to="https://d1y50j8vst3j8d.cloudfront.net/" />
+
+	<!--rule from="^http://camp\.visitestonia\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http://static[12]\.visitestonia\.com/"
+		to="https://d3otexg1kysjv4.cloudfront.net/" />
+
+</ruleset>

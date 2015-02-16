@@ -8,7 +8,10 @@
 		- EndNote_Web.xml
 		- Mark-Monitor.xml
 		- Reuters.com.xml
+		- ScholarOne.xml
 		- Thomson.com.xml
+		- Thomson_Reuters.biz.xml
+		- Thomson_Reuters_Life_Sciences.com.xml
 		- Web_of_Knowledge.xml
 		- Westlaw.com.xml
 
@@ -23,19 +26,30 @@
 		- (www.)reuters.com		(sec_error_reused_issuer_and_serial)
 
 		- careers.thomsonreuters.com ³
-		- ip-science.thomsonreuters.com
+		- developercenter.thomsonreuters.com ⁴
+		- ip.thomsonreuters.com ⁵
+		- ip-science.thomsonreuters.com ⁵
+		- lifesciences.thomsonreuters.com ⁵
+		- science.thomsonreuters.com ⁵
 		- staging.thomsonreuters.com
 		- thehub.thomsonreuters.com
 		- (www.)thomsonreuters.com
 
 	³ Shows insidecareers
+	⁴ Dropped
+	⁵ Refused
 
 
 	Problematic subdomains:
 
+		- interest.ip ¹
 		- jobs *
+		- lresearch ³
+		- interest.science ¹
 
+	¹ Eloqua
 	* Jobs2Web
+	³ Mismatched, CN: *.genego.com
 
 
 	Partially covered subdomains:
@@ -49,6 +63,7 @@
 
 		- assets.gcs
 		- insidecareers
+		- lconnect
 		- info.legalsolutions
 		- myaccount
 		- newsandinsight
@@ -63,8 +78,21 @@
 		- signon
 		- thehub
 
+
+	Mixed content:
+
+		- Images, on:
+
+			- lconnect from $self ¹
+			- lconnect from images.info.science.thomsonreuters.biz ²
+			- interest.science from science ³
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+	³ Unsecurable <= refused
+
 -->
-<ruleset name="Thomson Reuters (partial)">
+<ruleset name="Thomson Reuters.com (partial)">
 
 	<target host="*.thomsonreuters.com" />
 		<!--
@@ -88,7 +116,10 @@
 	<securecookie host="^(?:assets\.gcs|info\.legalsolutions|myaccount|signon|thehub)\.thomsonreuters\.com$" name=".+" />
 
 
-	<rule from="^http://(assets\.gcs|insidecareers|legalsolutions|info\.legalsolutions|myaccount|newsandinsight|signon|thehub)\.thomsonreuters\.com/"
+	<!--rule from="^http://lresearch\.thomsonreuters\.com/(?=static/)"
+		to="https://???.genego.com/" /-->
+
+	<rule from="^http://(assets\.gcs|insidecareers|lconnect|legalsolutions|info\.legalsolutions|myaccount|newsandinsight|signon|thehub)\.thomsonreuters\.com/"
 		to="https://$1.thomsonreuters.com/" />
 
 </ruleset>
