@@ -47,14 +47,7 @@
 	Need covering:
 		- google.com subdomains:
 
-			- *.corp
-			- docs\d
-			- \d.docs
 			- earth		(→ www)
-			- knoll		(→ knol)
-			- lh\d
-			- spreadsheets\d
-			- tbn2			(→ encrypted-tbn2)
 			- trends		(→ www)
 -->
 <ruleset name="Google.com Subdomains">
@@ -148,6 +141,12 @@
 	<!-- More Complex Rules -->
 	<rule from="^http://(clients\d|[\w-]+\.corp|docs\d|\d\.docs|spreadsheets\d)\.google\.com/"
 			to="https://$1.google.com/" />
+
+	<rule from="^http://(?:encrypted-)?tbn(\d)\.google\.com/"
+		to="https://encrypted-tbn$1.google.com/" />
+		<test url="http://tbn2.google.com/" />
+		<test url="http://encrypted-tbn2.google.com/" />
+		<test url="http://tbn1.google.com/" />
 
 	<rule from="^http:"
 			to="https:" />
