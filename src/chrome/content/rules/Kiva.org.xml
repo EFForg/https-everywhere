@@ -65,8 +65,8 @@
 
 	<target host="cms.kiva.org.s3.amazonaws.com" />
 
-		<exclusion pattern="^http://(?:www\.)?kiva\.org/(?!|favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)" />
-
+	<rule from="^http://(www\.)?kiva\.org/(?=favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)"
+			to="https://$1.kiva.org/" />
 
 	<!--	Not secured by server:
 					-->
@@ -77,13 +77,14 @@
 
 	<!--	Protocol-relative links from fellowsblog:
 								-->
-	<rule from="^https://cms\.kiva\.org\.s3\.amazonaws\.com/"
+	<rule from="^https?://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org.s3.amazonaws.com/" />
+		<test url="https://cms.kiva.org.s3.amazonaws.com/" />
 
-	<rule from="^http://(fellowsblog\.|pages\.)?kiva\.org/"
+	<rule from="^http://(fellowsblog\.|pages\.)kiva\.org/"
 		to="https://$1kiva.org/" />
 
-	<rule from="^http://(l3-[12]|level3cdn|www|zip)\.kiva\.org/"
+	<rule from="^http://(l3-[12]|level3cdn|zip)\.kiva\.org/"
 		to="https://www.kiva.org/" />
 
 	<rule from="^http://mail\.kiva\.org/"
