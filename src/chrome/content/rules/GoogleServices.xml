@@ -399,11 +399,6 @@
 		<test url="http://picasaweb.google.com/" />
 		<test url="http://picasaweb.google.com.au/" />
 
-	<!-- This is needed for OCSP responder to work.
-	If OCSP checking is set to hard-fail the user-agent might have troubles accessing some HTTPS sites
-		-->
-	<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
-
 	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
 		to="https://www.google.$1/intl/" />
 		<test url="http://scholar.google.ca/intl/" />
@@ -440,10 +435,18 @@
 		<test url="http://www.googlesource.com/" />
 
 	<!-- Problems -->
-		<!--	tisp$ 404s:
+		<!--
+			https://www.google.com.au/tisp/	200 (OK)
+			https://www.google.com.au/tisp	404
+			https://www.google.com/tisp		404
+			http://www.google.com/tisp		301 (redirect)
 					-->
 		<rule from="^https?://(?:www\.)?google\.((?:com?\.)?\w{2,3})/tisp(?=$|\?)"
 			to="https://www.google.$1/tisp/" />
+			<test url="https://www.google.com.au/tisp/" />
+			<test url="https://www.google.com.au/tisp" />
+			<test url="https://www.google.com/tisp" />
+			<test url="http://www.google.com/tisp" />
 
 		<!--	Paths that 404 on .ccltd, but work on .com:
 									-->
