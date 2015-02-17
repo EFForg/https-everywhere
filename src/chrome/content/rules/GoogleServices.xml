@@ -183,7 +183,126 @@
 		<test url="http://www.google.com/custom" />
 		<test url="http://www.google.com.au/custom" />
 
+	<!--	Subdomains that work on all in google.*
+							-->
+	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|picasaweb|)\.google\.((?:com?\.)?\w{2,3})/"
+		to="https://$1.google.$2/" />
+		<test url="http://accounts.google.ca/" />
+		<test url="http://accounts.google.com/" />
+		<test url="http://accounts.google.com.au/" />
+		<test url="http://adwords.google.ca/" />
+		<test url="http://adwords.google.com/" />
+		<test url="http://adwords.google.com.au/" />
+		<test url="http://finance.google.ca/" />
+		<test url="http://finance.google.com/" />
+		<test url="http://finance.google.com.au/" />
+		<test url="http://groups.google.ca/" />
+		<test url="http://groups.google.com/" />
+		<test url="http://groups.google.com.au/" />
+		<test url="http://id.google.ca/" />
+		<test url="http://id.google.com/" />
+		<test url="http://id.google.com.au/" />
+		<test url="http://lh3.google.ca/" />
+		<test url="http://lh4.google.com/" />
+		<test url="http://lh5.google.com.au/" />
+		<test url="http://m.google.ca/" />
+		<test url="http://m.google.com/" />
+		<test url="http://m.google.com.au/" />
+		<test url="http://picasaweb.google.ca/" />
+		<test url="http://picasaweb.google.com/" />
+		<test url="http://picasaweb.google.com.au/" />
+
+	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
+		to="https://www.google.$1/intl/" />
+		<test url="http://scholar.google.ca/intl/" />
+		<test url="http://scholar.google.com/intl/" />
+		<test url="http://scholar.google.com.au/intl/" />
+
+	<rule from="^http://news\.google\.(?:com?\.)?\w{2,3}/(?:$|news|newshp)"
+		to="https://www.google.com/news" />
+
+	<!-- subdomain to path redirects -->
+	<rule from="^http://(earth|trends)\.google\.com/"
+		 to="https://www.google.com/$1" />
+		<test url="http://earth.google.com/" />
+		<test url="http://trends.google.com/" />
+
+	<!-- wildcards -->
+
+	<rule from="^http://([^@:\./]+)\.googleusercontent\.com/"
+		to="https://$1.googleusercontent.com/" />
+		<test url="http://webcache.googleusercontent.com/" />
+		<test url="http://foo.googleusercontent.com/" />
+		<test url="http://bar.googleusercontent.com/" />
+
+	<rule from="^http://([^/:@\.]+\.)?googlecode\.com/"
+		 to="https://$1googlecode.com/" />
+		<test url="http://foo.googlecode.com/" />
+		<test url="http://bar.googlecode.com/" />
+		<test url="http://www.googlecode.com/" />
+
+	<rule from="^http://([^@:\./]+\.)?googlesource\.com/"
+		to="https://$1googlesource.com/" />
+		<test url="http://foo.googlesource.com/" />
+		<test url="http://bar.googlesource.com/" />
+		<test url="http://www.googlesource.com/" />
+
+	<!-- Problems -->
+		<!--
+			https://www.google.com.au/tisp/	200 (OK)
+			https://www.google.com.au/tisp	404
+			https://www.google.com/tisp		404
+			http://www.google.com/tisp		301 (redirect)
+					-->
+		<rule from="^https?://(?:www\.)?google\.((?:com?\.)?\w{2,3})/tisp(?=$|\?)"
+			to="https://www.google.$1/tisp/" />
+			<test url="https://www.google.com.au/tisp" />
+			<test url="https://www.google.com/tisp" />
+			<test url="http://www.google.com/tisp" />
+
+		<!--	Paths that 404 on .ccltd, but work on .com:
+									-->
+		<rule from="^https?://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|doubleclick|foobar|help|ideas|pacman|partners|postini|powermeter|url|webdesigner)"
+			 	to="https://www.google.com/" />
+			<test url="http://www.google.ca/calendar" />
+			<test url="http://www.google.com/calendar" />
+			<test url="http://www.google.com.au/calendar" />
+			<test url="http://www.google.ca/dictionary" />
+			<test url="http://www.google.com/dictionary" />
+			<test url="http://www.google.com.au/dictionary" />
+			<test url="http://www.google.ca/doubleclick" />
+			<test url="http://www.google.com/doubleclick" />
+			<test url="http://www.google.com.au/doubleclick" />
+			<test url="http://www.google.ca/foobar" />
+			<test url="http://www.google.com/foobar" />
+			<test url="http://www.google.com.au/foobar" />
+			<test url="http://www.google.ca/help" />
+			<test url="http://www.google.com/help" />
+			<test url="http://www.google.com.au/help" />
+			<test url="http://www.google.ca/ideas" />
+			<test url="http://www.google.com/ideas" />
+			<test url="http://www.google.com.au/ideas" />
+			<test url="http://www.google.ca/pacman" />
+			<test url="http://www.google.com/pacman" />
+			<test url="http://www.google.com.au/pacman" />
+			<test url="http://www.google.ca/partners" />
+			<test url="http://www.google.com/partners" />
+			<test url="http://www.google.com.au/partners" />
+			<test url="http://www.google.ca/postini" />
+			<test url="http://www.google.com/postini" />
+			<test url="http://www.google.com.au/postini" />
+			<test url="http://www.google.ca/powermeter" />
+			<test url="http://www.google.com/powermeter" />
+			<test url="http://www.google.com.au/powermeter" />
+			<test url="http://www.google.ca/url" />
+			<test url="http://www.google.com/url" />
+			<test url="http://www.google.com.au/url" />
+			<test url="http://www.google.ca/webdesigner" />
+			<test url="http://www.google.com/webdesigner" />
+			<test url="http://www.google.com.au/webdesigner" />
+
 	<!--	Paths that work on all in google.*
+	(Keep this the final rule in the set)
 							-->
 	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/"
 		 to="https://www.google.$1/" />
@@ -369,122 +488,4 @@
 		<test url="http://www.google.com/safebrowsing" />
 		<test url="http://www.google.com/videotargetting" />
 		<test url="http://www.google.com/webfonts" />
-
-	<!--	Subdomains that work on all in google.*
-							-->
-	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|picasaweb|)\.google\.((?:com?\.)?\w{2,3})/"
-		to="https://$1.google.$2/" />
-		<test url="http://accounts.google.ca/" />
-		<test url="http://accounts.google.com/" />
-		<test url="http://accounts.google.com.au/" />
-		<test url="http://adwords.google.ca/" />
-		<test url="http://adwords.google.com/" />
-		<test url="http://adwords.google.com.au/" />
-		<test url="http://finance.google.ca/" />
-		<test url="http://finance.google.com/" />
-		<test url="http://finance.google.com.au/" />
-		<test url="http://groups.google.ca/" />
-		<test url="http://groups.google.com/" />
-		<test url="http://groups.google.com.au/" />
-		<test url="http://id.google.ca/" />
-		<test url="http://id.google.com/" />
-		<test url="http://id.google.com.au/" />
-		<test url="http://lh3.google.ca/" />
-		<test url="http://lh4.google.com/" />
-		<test url="http://lh5.google.com.au/" />
-		<test url="http://m.google.ca/" />
-		<test url="http://m.google.com/" />
-		<test url="http://m.google.com.au/" />
-		<test url="http://picasaweb.google.ca/" />
-		<test url="http://picasaweb.google.com/" />
-		<test url="http://picasaweb.google.com.au/" />
-
-	<rule from="^http://scholar\.google\.((?:com?\.)?\w{2,3})/intl/"
-		to="https://www.google.$1/intl/" />
-		<test url="http://scholar.google.ca/intl/" />
-		<test url="http://scholar.google.com/intl/" />
-		<test url="http://scholar.google.com.au/intl/" />
-
-	<rule from="^http://news\.google\.(?:com?\.)?\w{2,3}/(?:$|news|newshp)"
-		to="https://www.google.com/news" />
-
-	<!-- subdomain to path redirects -->
-	<rule from="^http://(earth|trends)\.google\.com/"
-		 to="https://www.google.com/$1" />
-		<test url="http://earth.google.com/" />
-		<test url="http://trends.google.com/" />
-
-	<!-- wildcards -->
-
-	<rule from="^http://([^@:\./]+)\.googleusercontent\.com/"
-		to="https://$1.googleusercontent.com/" />
-		<test url="http://webcache.googleusercontent.com/" />
-		<test url="http://foo.googleusercontent.com/" />
-		<test url="http://bar.googleusercontent.com/" />
-
-	<rule from="^http://([^/:@\.]+\.)?googlecode\.com/"
-		 to="https://$1googlecode.com/" />
-		<test url="http://foo.googlecode.com/" />
-		<test url="http://bar.googlecode.com/" />
-		<test url="http://www.googlecode.com/" />
-
-	<rule from="^http://([^@:\./]+\.)?googlesource\.com/"
-		to="https://$1googlesource.com/" />
-		<test url="http://foo.googlesource.com/" />
-		<test url="http://bar.googlesource.com/" />
-		<test url="http://www.googlesource.com/" />
-
-	<!-- Problems -->
-		<!--
-			https://www.google.com.au/tisp/	200 (OK)
-			https://www.google.com.au/tisp	404
-			https://www.google.com/tisp		404
-			http://www.google.com/tisp		301 (redirect)
-					-->
-		<rule from="^https?://(?:www\.)?google\.((?:com?\.)?\w{2,3})/tisp(?=$|\?)"
-			to="https://www.google.$1/tisp/" />
-			<test url="https://www.google.com.au/tisp" />
-			<test url="https://www.google.com/tisp" />
-			<test url="http://www.google.com/tisp" />
-
-		<!--	Paths that 404 on .ccltd, but work on .com:
-									-->
-		<rule from="^https?://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|doubleclick|foobar|help|ideas|pacman|partners|postini|powermeter|url|webdesigner)"
-			 	to="https://www.google.com/" />
-			<test url="http://www.google.ca/calendar" />
-			<test url="http://www.google.com/calendar" />
-			<test url="http://www.google.com.au/calendar" />
-			<test url="http://www.google.ca/dictionary" />
-			<test url="http://www.google.com/dictionary" />
-			<test url="http://www.google.com.au/dictionary" />
-			<test url="http://www.google.ca/doubleclick" />
-			<test url="http://www.google.com/doubleclick" />
-			<test url="http://www.google.com.au/doubleclick" />
-			<test url="http://www.google.ca/foobar" />
-			<test url="http://www.google.com/foobar" />
-			<test url="http://www.google.com.au/foobar" />
-			<test url="http://www.google.ca/help" />
-			<test url="http://www.google.com/help" />
-			<test url="http://www.google.com.au/help" />
-			<test url="http://www.google.ca/ideas" />
-			<test url="http://www.google.com/ideas" />
-			<test url="http://www.google.com.au/ideas" />
-			<test url="http://www.google.ca/pacman" />
-			<test url="http://www.google.com/pacman" />
-			<test url="http://www.google.com.au/pacman" />
-			<test url="http://www.google.ca/partners" />
-			<test url="http://www.google.com/partners" />
-			<test url="http://www.google.com.au/partners" />
-			<test url="http://www.google.ca/postini" />
-			<test url="http://www.google.com/postini" />
-			<test url="http://www.google.com.au/postini" />
-			<test url="http://www.google.ca/powermeter" />
-			<test url="http://www.google.com/powermeter" />
-			<test url="http://www.google.com.au/powermeter" />
-			<test url="http://www.google.ca/url" />
-			<test url="http://www.google.com/url" />
-			<test url="http://www.google.com.au/url" />
-			<test url="http://www.google.ca/webdesigner" />
-			<test url="http://www.google.com/webdesigner" />
-			<test url="http://www.google.com.au/webdesigner" />
 </ruleset>
