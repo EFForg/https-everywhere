@@ -4,7 +4,7 @@
 set -o errexit -o xtrace
 if type apt-get >/dev/null ; then
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    firefox chromium-browser zip sqlite3 python-pip
+    firefox chromium-browser zip sqlite3 python-pip libcurl4-openssl-dev
 elif type brew >/dev/null ; then
   brew install python libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
@@ -12,6 +12,9 @@ elif type brew >/dev/null ; then
   fi
 fi
 pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
+cd https-everywhere-checker
+pip install --user -r requirements.txt
+cd -
 # Get the addon SDK submodule
 git submodule init
 git submodule update

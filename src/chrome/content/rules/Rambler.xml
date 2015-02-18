@@ -43,7 +43,7 @@
 
 		- assist
 		- cnt
-		- counter	(→ scounter)
+		- counter
 		- i
 		- id
 		- images
@@ -54,6 +54,11 @@
 		- soft
 		- sync
 		- update
+
+
+	Insecure cookies are set for these domains:
+
+		- .rambler.ru
 
 -->
 <ruleset name="Rambler (partial)">
@@ -68,24 +73,15 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.rambler\.ru$" name="^(ruid|top100rb)$" /-->
 	<!--securecookie host="^id\.rambler\.ru$" name="^request\.key$" /-->
 
-	<!--	Observed cookies:
-
-			- ^\.
-				- ruid
-				- top100rb
-
-			Both set by scounter.		-->
-	<securecookie host="^(?:id)?\.rambler\.com$" name=".*" />
+	<securecookie host="^(?:id)?\.rambler\.ru$" name=".*" />
 
 
+	<!--	s?counter is another of those 1px tracking services.	-->
 
-	<!--	This is another of those 1px tracking services.	-->
-	<rule from="^http://s?counter\.rambler\.ru/"
-		to="https://scounter.rambler.ru/" />
-
-	<rule from="^http://(assist|cnt|id?|images|kassa|m\.kassa|mail|mail-pda|soft|sync|update)\.rambler\.ru/"
+	<rule from="^http://(assist|cnt|s?counter|id?|images|kassa|m\.kassa|mail|mail-pda|soft|sync|update)\.rambler\.ru/"
 		to="https://$1.rambler.ru/" />
 
 </ruleset>

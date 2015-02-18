@@ -1,47 +1,48 @@
 <!--
-	!functional subdomains:
-		- corporate		(cert: *.shareholder.com; 403 & 404)
-		- lbs			(reset)
-		- routes		(ditto)
-		- static.routes		(cert: *.tomtom.com; reset)
+	TomTom International
+
+
+	Nonfunctional subdomains:
+
+		- corporate ¹
+		- lbs ²
+		- routes ²
+		- static.routes ²
+
+	¹ Shareholder
+	² Reset
+
+
+	Partially covered subdomains:
+
+		- (www.)? *
+
+	* Front page redirects to http
+
+
+	Fully covered subdomains:
+
+		- business
+
 -->
-<ruleset name="TomTom International (partial)" platform="mixedcontent">
+<ruleset name="TomTom.com (partial)" platform="mixedcontent">
 
-	<target host="tomtom.com"/>
-	<target host="business.tomtom.com"/>
-	<target host="www.tomtom.com"/>
-		<!--	redirect to http	-->
-		<exclusion pattern="^http://(www\.)?tomtom\.com/(products|support)/"/>
+	<target host="tomtom.com" />
+	<target host="*.tomtom.com" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?tomtom\.com/(?:products|support)/" />
+		<!--
+			Pages within a directory seem to work:
+								-->
+		<exclusion pattern="^http://(?:www\.)?tomtom\.com/(?!\w+/)" />
 
-	<securecookie host="^business.tomtom.com$" name=".*"/>
-	<!--	cookies encountered:
-			- ^\.
-				- tt_locale
-			- ^business
-				- AAannnaa
-			- ^corporate
-				- PRELOADIMAGESNOW
-			- ^\.corporate
-				- TOMTOM_BRIEFCASE
-				- TOMTOM_SESSION
-			- ^\.investors
-				- TOMTOM_BRIEFCASE
-				- TOMTOM_SESSION
-			- ^aa.support.tomtom.com
-				- cp_session
-				- locale
-			- ^www
-				- JSESSIONID
-				- TT
-		Are any more of these not used on unsecurable pages?	-->
 
-	<!--	front page redirects to http
-		pages within a directory seem to work		-->
-	<rule from="^http://(www\.)?tomtom\.com/(\w+)/"
-		to="https://$1tomtom.com/$2/"/>
+	<securecookie host="^business\.tomtom\.com$" name=".+" />
 
-	<rule from="^http://business\.tomtom\.com/"
-		to="https://business.tomtom.com/"/>
+
+	<rule from="^http://(business\.|www\.)?tomtom\.com/"
+		to="https://$1tomtom.com/" />
 
 </ruleset>
-	
