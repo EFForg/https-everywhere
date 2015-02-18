@@ -1,11 +1,18 @@
 <!--
-	Nonfunctional subdomains:
+	For Blender.org
 
-		- (www.) *
-		- wiki **
+		Works:
 
-	* Dropped
-	** Refused
+			- www
+			- $
+			- developer
+			- projects
+
+		Doesn't Work:
+			- wiki**
+
+		* Dropped
+		** Refused
 
 
 	These altnames don't exist:
@@ -13,18 +20,22 @@
 		- www.projects.blender.org
 
 -->
-<ruleset name="Blender.org (partial)">
+<ruleset name="Blender.org">
 
-	<target host="*.blender.org" />
-		<!--exclusion pattern="^http://www\.blender\.org/" /-->
+	<target host="blender.org" />
+	<target host="www.blender.org" />
+	<target host="developer.blender.org" />
+	<target host="projects.blender.org" />
+	<target host="www.projects.blender.org" />
+	<target host="www.developer.blender.org" />
 
-
-	<!--	Secured by server:
-					-->
+	<!-- Secured by server: -->
 	<!--securecookie host="^\.developer\.blender\.org$" name="^phsid$" /-->
 
+	<rule from="^http://(www\.)?(developer|projects)\.blender\.org/"
+		  to="https://$2.blender.org/" />
 
-	<rule from="^http://((?:www\.)?developer|projects)\.blender\.org/"
-		to="https://$1.blender.org/" />
+	<rule from="^http://(www\.)?blender\.org/"
+	      to="https://www.blender.org/" />
 
 </ruleset>

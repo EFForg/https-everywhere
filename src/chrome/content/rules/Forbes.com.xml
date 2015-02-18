@@ -1,0 +1,84 @@
+ <!--
+	For problematic rules, see Forbes_Magazine-mixed.xml.
+
+
+	Other Forbes rulesets:
+
+		- Forbes_img.com.xml
+		- Forbes_Magazine.xml
+
+
+	CDN buckets:
+
+		- blogs-images.forbes.com.edgesuite.net
+		- images.forbes.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- images ²
+		- video
+		- www ⁴
+
+	¹ Shows another domain
+	² 503, Akamai
+	⁴ Redirects to http
+
+
+	Problematic domains:
+
+		- blogs ¹
+		- blogs-images ²
+		- newsletters ³
+
+	¹ Expired 2014
+	² Akamai
+	³ Cert only matches www.newsletters
+
+
+	Partially covered domains:
+
+		- (www.)?newsletters *	(^ → www)
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- blogs-images		(→ a248.e.akamai.net)
+		- e-subscriptions
+		- safesource
+		- secureads
+
+
+	Insecure cookies are set for these domains:
+
+		- www.newsletters.forbes.com
+
+
+	Mixed content:
+
+		- Images on blogs from images *
+
+	* Unsecurable <= 503
+
+-->
+<ruleset name="Forbes.com (partial)">
+
+	<target host="*.forbes.com" />
+
+
+	<securecookie host="^www\.newsletters\.forbes\.com$" name="^fc\w+$" />
+
+
+	<rule from="^http://blogs-images\.forbes\.com/"
+		to="https://a248.e.akamai.net/f/1015/2073/5m/blogs-images.forbes.com/" />
+
+	<rule from="^http://(?:www\.)?newsletters\.forbes\.com/(?=DRHM/|favicon\.ico|store\?Action=(?:AddItemToRequisition|DisplayPage)(?:$|[?/]))"
+		to="https://www.newsletters.forbes.com/" />
+
+	<rule from="^http://(e-subscriptions|safesource|secureads)\.forbes\.com/"
+		to="https://$1.forbes.com/" />
+
+</ruleset>
