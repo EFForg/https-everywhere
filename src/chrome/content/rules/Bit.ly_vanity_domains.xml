@@ -9,11 +9,12 @@
 	<target host="abcn.ws" />
 	<target host="www.abcn.ws" />
 	<target host="alj.am" />
-	<target host="ww.alj.am" />
+	<target host="www.alj.am" />
 	<target host="apne.ws" />
 	<target host="atfp.co" />
 	<target host="www.atfp.co" />
 	<target host="bbc.in" />
+	<target host="bitly.is" />
 	<target host="bloom.bg" />
 	<target host="brook.gs" />
 	<target host="www.brook.gs" />
@@ -46,6 +47,8 @@
 	<target host="www.glo.bo" />
 	<target host="hub.am" />
 	<target host="www.hub.am" />
+	<target host="huff.to" />
+	<target host="www.huff.to" />
 	<target host="ift.tt" />
 	<target host="www.ift.tt" />
 	<target host="ind.pn" />
@@ -54,20 +57,27 @@
 	<target host="www.iti.ms" />
 	<target host="jrnl.ie" />
 	<target host="www.jrnl.ie" />
-	<target host="jrnl.to" />
-	<target host="www.jrnl.to" />
 	<target host="lat.ms" />
+	<target host="mitsmr.com" />
+	<target host="www.mitsmr.com" />
 	<target host="on.msnbc.com" />
 	<target host="mzl.la" />
 	<target host="www.mzl.la" />
 	<target host="n.pr" />
 	<target host="nbcnews.to" />
 	<target host="www.nbcnews.to" />
+	<target host="nym.ag" />
 	<target host="nyti.ms" />
 	<target host="on.mash.to" />
+	<target host="go.nasa.gov" />
 	<target host="nydn.us" />
 	<target host="www.nydn.us" />
+	<target host="sm.ohchr.org" />
 	<target host="to.pbs.org" />
+	<target host="pewrsr.ch" />
+	<target host="www.pewrsr.ch" />
+	<target host="polho.me" />
+	<target host="www.polho.me" />
 	<target host="politi.co" />
 	<target host="www.politi.co" />
 	<target host="propub.ca" />
@@ -98,6 +108,7 @@
 	<target host="ucla.in" />
 	<target host="ubm.io" />
 	<target host="1.usa.gov" />
+	<target host="vrge.co" />
 	<target host="wcas.nu" />
 	<target host="www.wcas.nu" />
 	<target host="wmk.me" />
@@ -107,7 +118,16 @@
 		<!--
 			$ redirects to custom domain:
 							-->
-		<exclusion pattern="^http://(?:www\.)?(?:7ny\.tv|abcn\.ws|alj\.am|atfp\.co|bloom\.bg|brook\.gs|bzfd\.it|cbsn\.ws|cnb\.cx|cnnmon\.ie|fxn\.ws|glo\.bo|jrnl\.ie|on\.mash\.to|nydn\.us|politi\.co|reut\.rs|tcrn\.ch|zd\.net)/+(?:$|\?)" />
+		<exclusion pattern="^http://(?:www\.)?(?:7ny\.tv|abcn\.ws|alj\.am|atfp\.co|bloom\.bg|brook\.gs|bzfd\.it|cbsn\.ws|cnb\.cx|cnnmon\.ie|fxn\.ws|glo\.bo|huff\.to|jrnl\.ie|on\.mash\.to|mitsmr\.com|nydn\.us|nym\.ag|politi\.co|reut\.rs|tcrn\.ch|zd\.net)/+(?:$|\?)" />
+		<!--
+			More custom links :(
+
+			https://github.com/EFForg/https-everywhere/issues/835
+
+			bit.ly keys appear to be [\dA-Za-z]{6,7}.
+			Avoid matches that are legibly cased.
+									-->
+		<exclusion pattern="^http://(?:www\.)?mzl\.la/+(?!$|\?|(?:[\dA-Za-z][A-Z][\da-z][A-Z][\dA-Za-z]{2,3}|[\dA-Za-z]{2}[A-Z][\da-z][A-Z][\dA-Za-z]{1,2}|[\dA-Za-z]{3}[A-Z][\da-z][A-Z][\dA-Za-z]?|[\dA-Za-z]{4}[A-Z][\da-z][A-Z]|[\dA-Za-z][a-z][\dA-Z][a-z][\dA-Za-z]{2,3}|[\dA-Za-z]{2}[a-z][A-Z][a-z][\dA-Za-z]{1,2}|[\dA-Za-z]{3}[a-z][A-Z][a-z][\dA-Za-z]?|[\dA-Za-z]{4}[a-z][A-Z][a-z]|[\dA-Za-z][\d][a-z][A-Z][\dA-Za-z]{2,3}|[\dA-Za-z]{2}[\d][A-Z][\d][\dA-Za-z]{1,2}|[\dA-Za-z]{3}[\d][A-Z][\d][\dA-Za-z]?|[\dA-Za-z]{4}[\d][a-z][\d]|20compat|AndrewO|deployed-mdn|DevProgram|devtools|Flame|globalteachin|Lightbeam_AMA|Manana|MediaRecorderAPI|PAMremix|teamweb)(?:$|\?))" />
 
 
 	<!--	First, emulate custom redirection behavior:
@@ -147,6 +167,9 @@
 	<!--rule from="^http://(www\.)?fxn\.ws/+($|\?.*)"
 		to="https://www.foxnews.com/" /-->
 
+	<!--rule from="^http://(www\.)?huff\.to/+($|\?.*)"
+		to="https://www.huffingtonpost.com/" /-->
+
 	<rule from="^http://(?:www\.)?ift\.tt/+(?:$|\?.*)"
 		to="https://ifttt.com/" />
 
@@ -156,14 +179,68 @@
 	<!--rule from="^http://on\.mash\.to/+($|\?.*)"
 		to="https://www.mashable.com/" /-->
 
+	<!--rule from="^http://(www\.)?mitsmr\.com/+($|\?.*)"
+		to="https://sloanreview.mit.edu/" /-->
+
 	<rule from="^http://on\.msnbc\.com/+(?:$|\?.*)"
 		to="https://msnbc.com/" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+(?:$|\?.*)"
+		to="https://www.mozilla.org/" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+20compat(?:$|\?.*)"
+		to="https://developer.mozilla.org/en-US/docs/Site_Compatibility_for_Firefox_20" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+AndrewO(?:$|\?.*)"
+		to="https://twitter.com/overholt" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+deployed-mdn(?:$|\?.*)"
+		to="https://bit.ly/1krjISM" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+devtools(?:$|\?.*)"
+		to="https://bit.ly/1krjISM" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+DevProgram(?:$|\?.*)"
+		to="https://developer.mozilla.org/en-US/docs/Mozilla/Developer_Program" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+Flame(?:$|\?.*)"
+		to="https://developer.mozilla.org/en-US/Firefox_OS/Developer_phone_guide/Flame" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+globalteachin(?:$|\?.*)"
+		to="https://blog.webmaker.org/net-neutrality" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+Lightbeam_AMA(?:$|\?.*)"
+		to="https://www.reddit.com/r/IAmA/comments/1pbjtw/we_are_the_mozilla_team_who_have_been_working_on/" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+Manana(?:$|\?.*)"
+		to="https://blog.mozilla.org/apps/2014-04-09/why-localization-is-important-the-word-from-mana/" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+MediaRecorderAPI(?:$|\?.*)"
+		to="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API" />
+
+	<rule from="^http://(?:www\.)?mzl\.la/+PAMremix(?:$|\?.*)"
+		to="https://welcome.webmaker.org/for/pam/" />
+
+	<!--rule from="^http://(www\.)?mzl\.la/+TCAdapter($|\?.*)"
+		to="https://techcrunch.com/2014/09/11/mozilla-launches-experimental-tool-for-cross-browser-debugging/" /-->
+
+	<rule from="^http://(?:www\.)?mzl\.la/+teamweb(?:$|\?.*)"
+		to="https://gear.mozilla.org/collections/apparel/products/mozilla-team-web-tshirt" />
+
+	<rule from="^http://go\.nasa\.gov/+(?:$|\?.*)"
+		to="https://www.nasa.gov/" />
 
 	<rule from="^http://(?:www\.)?nbcnews\.to/+(?:$|\?.*)"
 		to="https://nbcnews.com/" />
 
 	<!--rule from="^http://(www\.)?nydn\.us/+($|\?.*)"
 		to="https://www.newyorkdailynews.com/" /-->
+
+	<!--rule from="^http://nym\.ag/+($|\?.*)"
+		to="https://nymag.com/" /-->
+
+	<rule from="^http://(?:www\.)?polho\.me/+(?:$|\?.*)"
+		to="https://bit.ly/zsHQjo" />
 
 	<!--rule from="^http://(www\.)?politi\.co/+($|\?.*)"
 		to="https://www.politico.com/" /-->
@@ -186,13 +263,16 @@
 	<rule from="^http://(?:www\.)?ti\.me/+(?:$|\?.*)"
 		to="https://time.com/" />
 
+	<rule from="^http://vrge\.co/+(?:$|\?.*)"
+		to="https://www.theverge.com/" />
+
 	<!--	Domains for which both !www and www
 		exist and both are bit.ly aliases:
 							-->
-	<rule from="^http://(?:www\.)?(?:1tw\.org|7ny\.tv|alj\.am|abcn\.ws|atfp\.co|brook\.gs|buff\.ly|bzfd\.it|cbsn\.ws|ccwc\.me|cnb\.cx|cnnmon\.ie|curbed\.cc|econ\.st|fxn\.ws|glo\.bo|hub\.am|ind\.pn|iti\.ms|ift\.tt|jrnl\.(?:ie|to)|mzl\.la|nbcnews\.to|nydn\.us|politi\.co|propub\.ca|rbl\.ms|reut\.rs|specc\.ie|stanford\.io|sun-tim\.es|tcrn\.ch|tek\.io|thebea\.st|ti\.me|wcas\.nu|wmk\.me|zd\.net)/"
+	<rule from="^http://(?:www\.)?(?:1tw\.org|7ny\.tv|alj\.am|abcn\.ws|atfp\.co|brook\.gs|buff\.ly|bzfd\.it|cbsn\.ws|ccwc\.me|cnb\.cx|cnnmon\.ie|curbed\.cc|econ\.st|fxn\.ws|glo\.bo|hub\.am|huff\.to|ind\.pn|iti\.ms|ift\.tt|jrnl\.(?:ie|to)|mzl\.la|nbcnews\.to|nydn\.us|pewrsr\.ch|polho\.me|politi\.co|propub\.ca|rbl\.ms|reut\.rs|specc\.ie|stanford\.io|sun-tim\.es|tcrn\.ch|tek\.io|thebea\.st|ti\.me|wcas\.nu|wmk\.me|zd\.net)/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://(?:4mn\.ca|a21\.tv|apne\.ws|bbc\.in|bloom\.bg|on\.cfr\.org|cs\.is|dico\.im|do\.co|dly\.do|lat\.ms|on\.mash\.to|on\.msnbc\.com|n\.pr|nyti\.ms|to\.pbs\.org|seati\.ms|sched\.co|slate\.me|theatln\.tc|ucla\.in|ubm\.io|1\.usa\.gov|usat\.ly|wapo\.st|on\.wsj\.com)/"
+	<rule from="^http://(?:4mn\.ca|a21\.tv|apne\.ws|bbc\.in|bitly\.is|bloom\.bg|on\.cfr\.org|cs\.is|dico\.im|do\.co|dly\.do|lat\.ms|on\.mash\.to|on\.msnbc\.com|n\.pr|go\.nasa\.gov|nym\.ag|nyti\.ms|sm\.ohchr\.org|to\.pbs\.org|seati\.ms|sched\.co|slate\.me|theatln\.tc|ucla\.in|ubm\.io|1\.usa\.gov|usat\.ly|vrge\.co|wapo\.st|on\.wsj\.com)/"
 		to="https://bit.ly/" />
 
 </ruleset>

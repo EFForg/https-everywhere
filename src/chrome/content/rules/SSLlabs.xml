@@ -1,13 +1,21 @@
 <!--
-	Other Qualys rulesets:
-		- Qualys.xml
+	For other Qualys coverage, see Qualys.xml.
 
 -->
 <ruleset name="SSLlabs.com">
-  <target host="ssllabs.com" />
-  <target host="www.ssllabs.com" />
 
-	<securecookie host="^www.ssllabs.com$" name=".*"/>
+	<target host="ssllabs.com" />
+	<target host="www.ssllabs.com" />
 
-  <rule from="^http://(?:www\.)?ssllabs\.com/" to="https://www.ssllabs.com/" />
+
+	<!--	Not secured by server, breaks script tests:
+								-->
+	<!--securecookie host="^www\.ssllabs\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^www.ssllabs.com$" name="^(?!JSESSIONID$).*"/>
+
+
+	<rule from="^http://(?:www\.)?ssllabs\.com/"
+		to="https://www.ssllabs.com/" />
+
 </ruleset>

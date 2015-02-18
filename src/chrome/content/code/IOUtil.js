@@ -121,7 +121,7 @@ const IOUtil = {
   },
   
   abort: function(channel, noNetwork) {
-    channel.cancel(Cr.NS_ERROR_ABORT);
+    channel.cancel(Components.results.NS_ERROR_ABORT);
   },
   
   findWindow: function(channel) {

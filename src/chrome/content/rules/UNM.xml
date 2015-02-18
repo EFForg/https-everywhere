@@ -1,9 +1,161 @@
-<ruleset name="UNM" platform="mixedcontent">
-  <target host="unm.edu" />
-  <target host="www.unm.edu" />
-  <target host="ece.unm.edu" />
-  <target host="www.ece.unm.edu" />
+<!--
+	University of New Mexico
 
-  <rule from="^http://(?:www\.)?unm\.edu/" to="https://www.unm.edu/"/>
-  <rule from="^http://(?:www\.)?ece\.unm\.edu/" to="https://www.ece.unm.edu/"/>
+	For rules causing false/broken MCB, see UNM.edu-mixedcontent.xml.
+
+	For problematic rules, see UNM.edu-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- mail.cs ¹
+		- ecc ²
+		- hsc ¹
+		- hscapp ³
+		- iservicedesk ²
+		- mitigationplan ⁴
+		- unmevents ⁵
+
+	¹ Refused
+	² Dropped
+	³ Shows hscssl
+	⁴ Shows RHEL test page
+	⁵ Reset
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- as2 ²
+		- cars ³
+		- www.cars ⁴
+		- cs ⁵
+		- directory ⁶
+		- ece ⁵
+		- www.ece ⁷
+		- shea ⁸
+		- www.soe ¹
+		- www ⁶
+
+	¹ Cert only matches *.unm.edu
+	² Expired 2010, self-signed
+	³ Shows admin interface
+	⁴ Mismatched, CN: luria.cars.unm.edu
+	⁵ Cert only matches www.foo
+	⁶ Mixed css
+	⁷ Expired 2014
+	⁸ Mismatched, CN: srs.unm.edu
+
+
+	Partially covered subdomains:
+
+		- (www.)? *	(^ → www)
+		- directory *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- abqg
+		- at
+		- cascade
+		- cio
+		- (www.)?cs	(^ → www)
+		- emanage
+		- fastinfo
+		- learningcentral.health
+		- help
+		- hscssl
+		- it
+		- loboalerts
+		- login
+		- lynda
+		- my
+		- help.people
+		- pinnacle
+		- police
+		- portalchannels
+		- search
+		- shac
+		- shea		(→ srs)
+		- (www.)?soe	(www → ^)
+		- soemep
+		- srs
+		- studentinfo
+		- unmjobs
+		- webcore
+		- webmaster
+
+
+	These altnames don't exist:
+
+		- luria.cars.unm.edu
+
+
+	Mixed content:
+
+		- iframe on soe from www.youtube.com ¹
+
+		- css, on:
+
+			- cio, www from webcore ¹
+			- directory from search ¹
+			- ne from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- at, directory, loboalerts, search, www from webcore ¹
+			- emanage from www ¹
+			- emanage from www.adobe.com ¹
+			- search from $self ¹
+			- shac, soemep from www ¹
+			- soe from $self ¹
+			- webmaster from $self ¹
+
+		- Bugs, on:
+
+			- as2 from jigsaw.w3.org ²
+			- as2 from www.w3.org ²
+
+	¹ Secured by us
+	² Unsecurable
+
+-->
+<ruleset name="UNM.edu (partial)">
+
+	<target host="unm.edu" />
+	<target host="*.unm.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:directory\.|www\.)?unm\.edu/+(?!~emanage/|common/|favicon\.ico|images_nl/)" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://hospitals\.unm\.edu/($|_includes/|CarePages/|favicon\.ico|images/|index\.shtml)" /-->
+
+
+	<rule from="^http://(?:www\.)?unm\.edu/"
+		to="https://www.unm.edu/" />
+
+	<!--	Domains for which both !www and www exist,
+		but only www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?cs\.unm\.edu/"
+		to="https://www.cs.unm.edu/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://shea\.unm\.edu/+"
+		to="https://srs.unm.edu/" />
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?soe\.unm\.edu/"
+		to="https://soe.unm.edu/" />
+
+	<rule from="^http://(abqg|cascade|cio|directory|emanage|fastinfo|learningcentral\.health|help|hscssl|it|loboalerts|login|lynda|my|netid|help\.people|pinnacle|police|portalchannels|search|shac|srs|studentinfo|unmjobs|webcore|webmaster)\.unm\.edu/"
+		to="https://$1.unm.edu/" />
 </ruleset>

@@ -1,0 +1,148 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- autoconfig *
+		- clubs *
+		- feedback *
+		- my *
+		- support *
+		- translate-blog *
+		- webmaster *
+		- wow *
+		- yatechnologies *
+		- [\w-]+ ²
+
+	* Redirects to http
+	² Per-user domains, redirect to http
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- (www.)?cal ²
+		- pda.cal ²
+		- pda.calendar ²
+		- ical ²
+		- pda.ical ²
+		- (www.)?m.metro ³
+		- (www.)?site ⁴
+		- (www.)?wc ²
+		- pda.wc ²
+		- (www.)?webcal ²
+		- pda.webcal ²
+
+	¹ Redirects to www.yandex.ru
+	² Mismatched, CN: calendar.yandex.ru
+	³ 404
+	⁴ Redirect differs, mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- auto
+		- autodiscover
+		- pass.beta
+		- disk
+		- disk-blog
+		- www.ewent
+		- (www.)?ewents
+		- (www.)?event
+		- (www.)?events
+		- (www.)?ivent
+		- (www.)?ivents
+		- m
+		- mail
+		- metrica
+		- metrika
+
+		- (www.)?metro
+		- (www.)?m.metro	(→ m.soft.yandex.ru)
+		- pda.metro
+
+		- p
+		- rabota
+		- realty
+		- (www.)?site		(→ site.yandex.ru)
+		- sobitia
+		- taxi
+		- m.taxi
+		- w
+
+
+	Insecure cookies are set for these domains:
+
+		- auto.ya.ru
+		- realty.ya.ru
+
+
+	Mixed content:
+
+		- Ads on www from kiks.yandex.ru *
+
+	* Secured by us
+
+-->
+<ruleset name="Ya.ru (partial)">
+
+	<target host="ya.ru" />
+	<target host="*.ya.ru" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(autoconfig|support|wow)\.ya\.ru/$" /-->
+		<!--exclusion pattern="^http://clubs\.ya\.ru/($|favicon\.ico|update_session\.xml)" /-->
+		<!--
+			Remove this if you do never post entries or comments on my.ya.ru
+								-->
+		<!--exclusion pattern="^http://(?:www\.)?[^.]+\.ya\.ru/" /-->
+		<!--
+			2. Simple redirections:
+						-->
+		<!--exclusion pattern="^http://(?:blogs|fotki|images|music|probki|video|wdgt)\.ya\.ru/" /-->
+		<!--
+			Miscellanious:
+					-->
+		<!--exclusion pattern="^http://(?:autoconfig|(?:pda\.|www\.)?cal|pda\.calendar|clubs|(?:pda\.)?ical|my|support|translate-blog|(?:www\.)?webcal|(?:pda\.|www\.)?wc|(?:pda\.|www\.)?webcal|wow|yatechnologies)\.ya\.ru/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(auto|realty)\.ya\.ru$" name="^uid$" /-->
+
+	<securecookie host="^(?:auto|realty)\.ya\.ru$" name=".+" />
+
+
+
+	<rule from="^http://(?:www\.)?ya\.ru/"
+		to="https://www.ya.ru/" />
+
+	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/"
+		to="https://m.metro.ya.ru/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?site\.ya\.ru/[^?]*"
+		to="https://site.yandex.ru/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/[^?]*"
+		to="https://m.soft.yandex.ru/metro/" />
+
+	<rule from="^http://(auto|autodiscover|pass\.beta|disk|disk-blog|www\.ewent|(?:www\.)?ewents|(?:www\.)?[ei]vents?|feedback|m|mail|metri[ck]a|metro|pda\.metro|p|rabota|realty|sobitia|taxi|m\.taxi|w)\.ya\.ru/"
+		to="https://$1.ya.ru/" />
+
+	<!--	Domains for which both www and !www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(metro)\.ya\.ru/"
+		to="https://$1$2.ya.ru/" />
+
+	<!--rule from="^http://(?:www\.)?([^.]+)\.ya\.ru/"
+		to="https://$1.ya.ru/" /-->
+
+</ruleset>

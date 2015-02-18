@@ -341,7 +341,7 @@ function toggle_rule(rule_id) {
 }
 
 function reload_window() {
-  var browser = httpsEverywhere.toolbarbutton.selectedBrowser();
+  var browser = httpsEverywhere.toolbarButton.selectedBrowser();
   if (browser) {
     browser.reload();
   }

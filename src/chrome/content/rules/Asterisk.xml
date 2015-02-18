@@ -1,29 +1,57 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://asterisk.org/ => https://asterisk.org/: (51, "SSL: no alternative certificate subject name matches target host name 'asterisk.org'")
 	For other Digium coverage, see Digium.xml.
 
 
 	Nonfunctional subdomains:
 
-		- forge		(403, CN: *.digium.com)
-		- www ²
+		- downloads ¹
+		- doxygen ²
+		- forge ³
+		- forums ²
+		- packages ¹
+		- www ⁴
 
-	² Redirects to http, valid cert
+	¹ Shows another domain
+	² Redirects to login.diguim.com
+	³ 403, CN: *.digium.com
+	⁴ Redirects to http, valid cert
+
+
+	Fully covered subdomains:
+
+		- ^
+		- ari
+		- bamboo
+		- issues
+		- profiles
+		- reviewboard
+		- signup
+		- wiki
+
+
+	Mixed content:
+
+		- favicon on signup from www *
+
+	* Unsecurable <= redirects to http
 
 -->
-<ruleset name="Asterisk (partial)">
+<ruleset name="Asterisk.org (partial)" default_off='failed ruleset test'>
 
 	<target host="asterisk.org" />
 	<target host="*.asterisk.org" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.asterisk\.org/($|sites/asterisk/(files|themes)/)" /-->
 
-
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^issues\.asterisk\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
 	<securecookie host="^wiki\.asterisk\.org$" name=".+" />
 
 
-	<rule from="^http://(issues\.|wiki\.)?asterisk\.org/"
+	<rule from="^http://((?:ari|bamboo|issues|profiles|reviewboard|signup|wiki)\.)?asterisk\.org/"
 		to="https://$1asterisk.org/" />
 
 </ruleset>

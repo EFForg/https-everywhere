@@ -1,18 +1,111 @@
 <!--
-	Nonfunctional:
+	French National Centre for Scientific Research
 
-		- www.insu.cnrs.fr	(ssl_error_rx_record_too_long)
+
+	Nonfunctional subdomains:
+
+		- cartedevoeux ¹
+		- (www.)?ccsd ²
+		- blog.ccsd ³
+		- heloise.ccsd ²
+		- support.ccsd ⁴
+		- edutheque ⁵
+		- www.insu.cnrs.fr ⁴
+		- www.iscc ⁶
+		- images.math ⁷
+		- phototheque ³
+		- videotheque ⁸
+		- wikiradio ³
+		- www ⁸
+		- www2 ⁸
+
+	¹ Shows CentOS test page
+	² Handshake fails
+	³ Refused
+	⁴ Plaintext reply
+	⁵ Redirects to www.artifica.fr
+	⁶ Redirects to www.dsi
+	⁷ Shows another domain
+	⁸ 403
+
+
+	Problematic subdomains:
+
+		- wayf.dsi ¹
+		- intranet ¹
+		- www.sg ²
+
+	¹ Insecure renegotiation
+	² Mismatched, CN: www.dgdr.cnrs.fr
+
+
+	Partially covered subdomains:
+
+		- www *
+
+	* $ 403s, some paths redirect to http
+
+
+	Fully covered subdomains:
+
+		- ccsdlib.ccsd
+		- ccsdlib-preprod.ccsd
+		- thumb.ccsd
+
+		- cnrsformation
+		- www.dgdr
+		- docutiles
+		- wayf.dsi
+		- emploi
+		- intranet
+		- lejournal
+		- www.sg	(→ www.dgdr)
+		- www2
+
+
+	^cnrs.fr doesn't exist.
+
+
+	These altnames don't exist:
+
+		- default.https.cnrs.fr
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- emploi from $self
+			- emploi from www
 
 -->
-<ruleset name="French National Centre for Scientific Research (partial)" default_off="self-signed">
+<ruleset name="CNRS.fr (partial)">
 
-	<target host="cnrs.fr" />
-	<target host="www.cnrs.fr" />
+	<target host="*.cnrs.fr" />
+		<!--
+			403:
+				-->
+		<!--exclusion pattern="http://www2?\.cnrs\.fr/$" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="http://www\.cnrs\.fr/ins2i/($|spip\.php)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://www\.cnrs\.fr/+(?!ins2i/(?:images|IMG|plugins|squelettes/css|styles)/)" />
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www2\.cnrs\.fr/(band/3\.htm|presse/communique/|sites/)" /-->
 
-	<!--	!www doesn't work.
-		cnrs.fr/$ throws 403.
-		cnrs.fr/ins2i/$ redirects to www.	-->
-	<rule from="^http://(?:www\.)?cnrs\.fr/ins2i/(images|IMG|plugins|styles)/"
-		to="https://www.cnrs.fr/ins2i/$1/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://www\.sg\.cnrs\.fr/[^?]*"
+		to="https://www.dgdr.cnrs.fr/" />
+
+	<rule from="^http://((?:ccsdlib|ccsdlib-preprod|thumb)\.ccsd|cnrsformation|www\.dgdr|docutiles|wayf\.dsi|emploi|intranet|lejournal|www)\.cnrs\.fr/"
+		to="https://$1.cnrs.fr/" />
 
 </ruleset>

@@ -1,15 +1,32 @@
-<!--	There's a bucket at s3.amazonaws.com/academia/
+<!--
+	Other Academia.edu rulesets:
+
+		- Academia-assets.com.xml
+
+
+	There's a bucket at s3.amazonaws.com/academia/
 
 	s3.amazonaws.com/academia.edu.(assets|images)/
 
 	!functional:
-		(assets[012].|www.)academia\.edu
+		assets[012].academia\.edu
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- independent
+
 -->
 <ruleset name="Academia.edu (partial)">
 
+	<target host="academia.edu" />
 	<target host="*.academia.edu"/>
 
 	<rule from="^http://(assets|images|photos)\.academia\.edu/"
 		to="https://s3.amazonaws.com/academia.edu.$1/"/>
+
+	<rule from="^http://(independent\.|www\.)?academia\.edu/"
+		to="https://$1academia.edu/" />
 
 </ruleset>

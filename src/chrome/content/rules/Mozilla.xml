@@ -1,4 +1,8 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://drumbeat.org/ => https://drumbeat.org/: (7, 'Failed to connect to drumbeat.org port 443: Connection refused')
+Fetch error: http://www.drumbeat.org/ => https://www.drumbeat.org/: (7, 'Failed to connect to www.drumbeat.org port 443: Connection refused')
+Fetch error: http://mozillaignite.com/ => https://mozillaignite.com/: (51, "SSL: no alternative certificate subject name matches target host name 'mozillaignite.com'")
 	For problematic rules, see Mozilla-problematic.xml.
 
 
@@ -17,6 +21,7 @@
 		- Mozilla_Labs.com.xml
 		- Mozilla_Persona.xml
 		- Mozilla_Webmaker.xml
+		- Mozillians.org.xml
 		- Open_Badges.xml
 		- Public_Suffix.org.xml
 		- TogetherJS.com.xml
@@ -115,9 +120,10 @@
 		- drumbeat.org
 		- www.drumbeat.org
 
-		- mozilla.com subdomains:
+		- mozilla.com
 
-			- (www.)
+		- [\w.-]+.mozilla.com: *
+
 			- activations
 			- addons
 			- air
@@ -148,8 +154,9 @@
 			- snippets
 			- support
 			- v
+			- www
 
-		- mozilla.net subdomains:
+		- [\w.-]+.mozilla.net: *
 
 			- static-cdn.addons
 			- static-ssl-cdn.addons
@@ -173,9 +180,9 @@
 			- videos-cdn
 			- www			(→ www.mozilla.org)
 
-		- mozilla.org subdomains:
+		- mozilla.org
 
-			- (www.)
+		- [\w.-]+.mozilla.org: *
 
 			- activations
 
@@ -217,6 +224,7 @@
 			- foundationwiki
 			- ftp
 			- gameon
+			- gear
 			- gpg
 			- hacks
 			- hg
@@ -266,6 +274,7 @@
 			- treeherder
 			- videos
 			- wiki
+			- www
 
 		- mdn.mozillademos.org
 		- (www.)mozillaignite.org
@@ -274,6 +283,8 @@
 		- support.mozillamessaging.com
 		- (www.)webfwd.org
 
+	* Except where excluded below
+
 
 	These altnames don't exist:
 
@@ -281,12 +292,14 @@
 		- analysis.telemetry.mozilla.org
 
 
-	Cookie domains:
+	Insecure cookies are set for these domains:
 
-		- mail.mozilla.com
-		- mail.corp.phx1.mozilla.com
+		- .mozilla.org
 		- addons.mozilla.org
-		- reps.mozilla.org
+		- bugzilla.mozilla.org
+		- .sendto.mozilla.org
+		- support.mozilla.org
+		- telemetry.mozilla.org
 
 
 	Mixed content:
@@ -303,7 +316,7 @@
 	* Secured by us
 
 -->
-<ruleset name="Mozilla">
+<ruleset name="Mozilla" default_off='failed ruleset test'>
 
 	<target host="drumbeat.org" />
 	<target host="www.drumbeat.org" />
@@ -342,6 +355,7 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.mozilla\.org$" name="^(optimizelyBuckets|optimizelyEndUserId|optimizelyPendingLogEvents|optimizelySegments)$" /-->
 	<!--securecookie host="^addons\.mozilla\.org$" name="^(apps/files/tabstops|multidb_pin_writes|recently-viewed-collections|search-appver|search-platform|visitor-seen_impala_first_visit)$" /-->
 	<!--securecookie host="^bugzilla\.mozilla\.org$" name="^(BUGLIST|LASTORDER)$" /-->
 	<!--securecookie host="^\.sendto\.mozilla\.org$" name="^X-CheckNode$" /-->
