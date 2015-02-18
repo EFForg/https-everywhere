@@ -2,46 +2,70 @@
 	Other Uninett rulesets:
 
 		- Discojuice.org.xml
+		- ECampus.no.xml
+		- Eduroam.no.xml
 		- Feide.xml
 		- Foodl.org.xml
 
 
 	Nonfunctional subdomains:
 
-		- apt *
-		- search *
+		- apt ¹
+		- blog.nav ²
+		- login.paas ³
+		- search ¹
 
-	* Redirects to www
+	¹ Redirects to www
+	² Tumblr
+	³ Shows loggregator.paas
 
 
-	Problematic subdomains:
+	Problematic domains:
 
-		- (www.)gn3campus	(redirects to www)
+		- www.gigacampus.no ¹
+		- (www.)?gn3campus.uninett.no ²
+
+	¹ Shows loggregator.paas.uninett.no
+	² Redirects to www
 
 
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?
 		- ansatt
 		- bildebase
 		- ca
+		- cert
 		- www.dike
 		- disco
 		- drupal
 		- eureka
-		- (www.)gn3campus	(→ ow.feide.no)
+		- (www.)?gn3campus	(→ ow.feide.no)
 		- metanav
 		- nav
 		- openwiki
+
+		- api.paas
+		- loggregator.paas
+		- uaa.paas
+
 		- rt
 		- surveytest
 		- tjenester
 		- test.tjenester
 		- www3
+		- www-ecampus
 		- www-feide
 
+
+	These altnames don't exist:
+
+		- drupal-nymedia.uninett.no
+		- eureka-nymedia.uninett.no
+		- www6.uninett.no
+
 -->
-<ruleset name="Uninett (partial)">
+<ruleset name="Uninett.no (partial)">
 
 	<target host="uninett.no" />
 	<target host="*.uninett.no" />
@@ -50,10 +74,15 @@
 	<securecookie host="^(?:\.ansatt|\.?bildebase|\.?eureka|nav|openwiki|\.rt|surveytest|\.(?:test\.)?tjenester|\.www)\.uninett\.no$" name=".+" />
 
 
-	<rule from="^http://((?:ansatt|bildebase|ca|www\.dike|disco|drupal|eureka|metanav|nav|openwiki|rt|surveytest|(?:test\.)?tjenester|www3?|www-feide)\.)?uninett\.no/"
-		to="https://$1uninett.no/" />
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://www\.gigacampus\.no/.*"
+		to="https://openwiki.uninett.no/gigacampus:start" />
 
 	<rule from="^http://(?:www\.)?gn3campus\.uninett\.no/"
 		to="https://ow.feide.no/geantcampus:start" />
+
+	<rule from="^http://((?:ansatt|bildebase|ca|cert\.|www\.dike|disco|drupal|eureka|metanav|nav|openwiki|(?:api|loggregator|uaa)\.paas|rt|surveytest|(?:test\.)?tjenester|www3?|www-ecampus|www-feide)\.)?uninett\.no/"
+		to="https://$1uninett.no/" />
 
 </ruleset>
