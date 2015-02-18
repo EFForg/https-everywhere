@@ -11,13 +11,16 @@ elif type brew >/dev/null ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
 fi
+
+# Get the addon SDK submodule and rule checker
+git submodule init
+git submodule update
+
+# Install Python packages
 pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd https-everywhere-checker
 pip install --user -r requirements.txt
 cd -
-# Get the addon SDK submodule
-git submodule init
-git submodule update
 
 # Install a hook to run tests before pushing.
 ln -sf ../../test.sh .git/hooks/pre-push
