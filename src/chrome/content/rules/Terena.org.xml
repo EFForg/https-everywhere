@@ -3,9 +3,13 @@
 
 		- godzilla *
 		- mailarchive *
+		- nipkow ²
+		- putin ³
 		- tnc200[0-4] **
 
 	* Shows eduroam.org, valid cert
+	² Prints name
+	³ Shows refeds.org
 	** Shows eduroam.org; mismatched, CN: godzilla.terena.org
 
 
@@ -38,15 +42,46 @@
 		- test-login
 		- tnc15
 		- tnc2006	(→ www)
-		- tnc201[1-4]
+		- tnc201[1-5]
 		- wiki
 		- wikis
+
+
+	These altnames don't exist:
+
+		- core.terena.org
+		- urnreg.terena.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- compendium.terena.org
+		- crypto-filesender.terena.org
+		- cryptosender.terena.org
+		- eventr.terena.org
+		- filesender.terena.org
+		- login.terena.org
+		- omega.terena.org
+		- tnc15.terena.org
+		- tnc2011.terena.org
+		- tnc2012.terena.org
+		- tnc2013.terena.org
+		- tnc2014.terena.org
+		- wiki.terena.org
+		- www.terena.org
 
 -->
 <ruleset name="Terena.org (partial)">
 
 	<target host="terena.org" />
 	<target host="*.terena.org" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://tnc(200[789]|2010)\.terena\.org/$" />
+		<!--
+			Exceptions:
+					-->
 		<exclusion pattern="^http://tnc20(?:0\d|10)\.terena\.org/(?!css/|gfx/|js/)" />
 
 			<test url="http://tnc2005.terena.org/" />
@@ -87,8 +122,9 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^compendium\.terena\.org$" name="^_terena_session$" /-->
-	<!--securecookie host="^(crypto-filesender|cryptosender|filesender|tnc15|www)\.terena\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(crypto-filesender|cryptosender|filesender|login|tnc15|tnc201[1-4]|www)\.terena\.org$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^eventr\.terena\.org$" name="^_events_session$" /-->
+	<!--securecookie host="^login\.terena\.org$" name="^language$" /-->
 	<!--securecookie host="^wiki\.terena\.org$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^(?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|login|tnc15|tnc201[1-4]|wikis?|www)\.terena\.org$" name=".+" />
