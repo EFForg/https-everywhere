@@ -4,6 +4,18 @@
     <target host="launchpadlibrarian.net" />
     <target host="*.launchpadlibrarian.net" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://feeds\.launchpad\.net/($|\w+/announcements\.atom$)" /-->
+		<!--
+			We preempt redirect from $:
+							-->
+		<exclusion pattern="^http://feeds\.launchpad\.net/(?!$)" />
+
+
+			<test url="http://feeds.launchpad.net/" />
+			<test url="http://feeds.launchpad.net/rohc/announcements.atom" />
+
     <securecookie host="^(?:.*\.)?launchpad\.net$" name=".+" />
     <securecookie host="^(?:.*\.)?launchpadlibrarian\.net$" name=".+" />
 
@@ -20,6 +32,11 @@
          does come after the final slash should be handled as normal. -->
     <rule from="^http://bazaar\.launchpad\.net/$"
         to="https://launchpad.net/" />
+
+	<!--	Redirects as so:
+					-->
+	<rule from="^http://feeds\.launchpad\.net/$"
+		to="https://help.launchpad.net/Feeds" />
 
     <rule from="^http://([\w.-]+)?\.launchpad\.net/"
         to="https://$1.launchpad.net/" />
