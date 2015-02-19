@@ -3,20 +3,13 @@
 
 		- d16jfyletng9p5.cloudfront.net
 
-			- media
-			- media[1-4]
-
 
 	Problematic subdomains:
 
-		- media ¹
-		- media[1-4] ¹
-		- media[6-9] ²
-		- media\d\d+ ²
+		- media10 ²
 		- www		(refused)
 
-	¹ cloudfront
-	² Cert only matches ^giphy.com 
+	² AmazonWS
 
 -->
 <ruleset name="Giphy.com">
@@ -28,7 +21,10 @@
 	<rule from="^http://(?:www\.)?giphy\.com/"
 		to="https://giphy.com/" />
 
-	<rule from="^http://media\d*\.giphy\.com/"
+	<rule from="^http://media10\.giphy\.com/"
 		to="https://d16jfyletng9p5.cloudfront.net/" />
+
+	<rule from="^http://(media\d*)\.giphy\.com/"
+		to="https://$1.giphy.com/" />
 
 </ruleset>
