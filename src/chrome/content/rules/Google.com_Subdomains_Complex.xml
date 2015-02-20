@@ -7,10 +7,20 @@
 	<target host="*.google.com" />
 
 	<rule from="^http://(clients\d)\.google\.com/"
-		 	to="https://$1.google.com/" />
+		 	to="https://clients1.google.com/" />
 		<test url="http://clients1.google.com/" />
 		<test url="http://clients2.google.com/" />
 		<test url="http://clients3.google.com/" />
+		<!--
+			The need for clients\d -> clients1
+
+			"http://clients2.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"
+			HTTP/1.1 200 OK
+			"https://clients2.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"
+			HTTP/1.1 404 Not Found
+			"https://clients1.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"s
+			HTTP/1.1 200 OK
+		-->
 		<!-- This is needed for OCSP responder to work.
 			If OCSP checking is set to hard-fail the user-agent might have troubles accessing some HTTPS sites
 		-->
@@ -18,6 +28,8 @@
 			<test url="http://clients1.google.com/ocsp" />
 			<test url="http://clients2.google.com/ocsp" />
 			<test url="http://clients3.google.com/ocsp" />
+
+		<exclusion pattern="^http://clients\d\.google\.com/.*client=products.*" /> <!-- need to test if this exclusion is still needed -->
 
 	<rule from="^http://(docs\d)\.google\.com/"
 		 	to="https://$1.google.com/" />
