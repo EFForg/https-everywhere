@@ -11,57 +11,61 @@
 	Nonfunctional subdomains:
 
 		- aa ¹
-		- m.agent *
-		- rfr.agent ²
-		- pic.afisha ³
-		- click.my	(400)
-		- internet	(403)
-		- love		(Shows partner.wamba.com)
-		- wap.love *
-		- mailblog *
-		- mra ²
-		- otvet ³
-		- pogoda *
+		- m.agent ²
+		- rfr.agent ³
+		- pic.afisha ⁴
+		- internet ⁵
+		- love ⁶
+		- wap.love ²
+		- mailblog ²
+		- mra ³
+		- click.my ⁷
+		- otvet ⁴
+		- pogoda ²
 		- r2 ¹
 
-		- realty		(403)
-		- img.pre.realty	(403)
-		- pro.realty		(403)
+		- realty ⁵
+		- img.pre.realty ⁵
+		- pro.realty ⁵
 
-		- team ³
-		- top			(403)
+		- team ⁴
+		- top ⁵
 		- d4.c8.b0.a2.top
 
-		- torg ³
-		- chelyabinsk.torg ³
-		- img.torg ³
-		- m.torg ³
+		- torg ⁴
+		- chelyabinsk.torg ⁴
+		- img.torg ⁴
+		- m.torg ⁴
 
-		- tv ³
-		- wap.tv ³
-		- xhtml.wap *
+		- tv ⁴
+		- wap.tv ⁴
+		- xhtml.wap ²
 
-	* Refused
-	² Plaintext reply
-	³ Redirects to http
-	⁴ Shows another domain
 	¹ Dropped
+	² Refused
+	³ Plaintext reply
+	⁴ Redirects to http
+	⁵ 403
+	⁶ Shows partner.wamba.com
+	⁷ 400
 
 
 	Problematic subdomains:
 
-		- s1.amigo *
-		- blogs **
-		- cdn.connect *
-		- m.go *
-		- imgs2 ²
-		- m.my *
-		- stat.my *
-		- \w\d.\w\d.\w\d.\w\d.top *
+		- s1.amigo ¹
+		- blogs ²
+		- cdn.connect ¹
+		- m.go ¹
+		- imgs2 ³
+		- m.my ¹
+		- stat.my ¹
+		- \w\d.\w\d.\w\d.\w\d.top ¹
+		- img.tv ¹
+		- my.tv ¹
 
-	* Mismatched, CN: *.mail.ru
-	** Shows another domain
-	² 403
+	¹ Mismatched
+	² Shows another domain
+	³ 403
 
 
 	Partially covered subdomains:
@@ -76,7 +80,7 @@
 
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?
 		- 1-lview
 		- 1l-go
 		- 1l-view
@@ -195,7 +199,8 @@
 	Mixed content:
 
 		- Images, on:
-		- Images on dobro from $self *
+
+			- dobro from $self *
 			- m.games from games *
 			- m.games from stat.my *
 			- m.games from my1.imgsmail.com *
@@ -261,11 +266,6 @@
 	<rule from="^http://touch\.afisha\.mail\.ru/"
 		to="https://afisha.mail.ru/" />
 
-	<!--	cert doesn't match img.tv
-		ditto my.tv.  my.tv appears identical to tv	-->
-	<rule from="^http://(?:(img)(?:\.tv)?|my\.(tv))\.mail\.ru/"
-		to="https://$1$2.mail.ru/" />
-
 	<!--	Redirect drops path and args:
 						-->
 	<rule from="^http://blogs\.mail\.ru/.*"
@@ -273,6 +273,11 @@
 
 	<rule from="^http://(?:cdn\.)?connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
+
+	<!--	my.tv appears identical to tv
+						-->
+	<rule from="^http://(?:(img)(?:\.tv)?|my\.(tv))\.mail\.ru/"
+		to="https://$1$2.mail.ru/" />
 
 	<!--	Redirect keeps path and args:
 						-->
