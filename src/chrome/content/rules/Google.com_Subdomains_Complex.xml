@@ -1,0 +1,48 @@
+<!--
+	Other Google rulesets:
+		- See Google.com_Subdomains.html for rules that don't match the complex rule here
+		- See GoogleServices.xml for the list
+-->
+<ruleset name="Google.com Subdomains (Complex)">
+	<target host="*.google.com" />
+
+	<rule from="^http://(clients\d)\.google\.com/"
+		 	to="https://$1.google.com/" />
+		<test url="http://clients1.google.com/" />
+		<test url="http://clients2.google.com/" />
+		<test url="http://clients3.google.com/" />
+		<!-- This is needed for OCSP responder to work.
+			If OCSP checking is set to hard-fail the user-agent might have troubles accessing some HTTPS sites
+		-->
+		<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
+			<test url="http://clients1.google.com/ocsp" />
+			<test url="http://clients2.google.com/ocsp" />
+			<test url="http://clients3.google.com/ocsp" />
+
+	<rule from="^http://(docs\d)\.google\.com/"
+		 	to="https://$1.google.com/" />
+			<test url="http://docs1.google.com/" />
+			<test url="http://docs2.google.com/" />
+			<test url="http://docs3.google.com/" />
+
+	<rule from="^http://(\d\.docs)\.google\.com/"
+		 	to="https://$1.google.com/" />
+			<test url="http://1.docs.google.com/" />
+			<test url="http://2.docs.google.com/" />
+			<test url="http://3.docs.google.com/" />
+
+	<rule from="^http://(spreadsheets\d)\.google\.com/"
+		 	to="https://$1.google.com/" />
+		<test url="http://spreadsheets1.google.com/" />
+		<test url="http://spreadsheets2.google.com/" />
+		<test url="http://spreadsheets3.google.com/" />
+
+	<rule from="^http://(?:encrypted-)?tbn(\d)\.google\.com/"
+		to="https://encrypted-tbn$1.google.com/" />
+		<test url="http://encrypted-tbn1.google.com/" />
+		<test url="http://encrypted-tbn2.google.com/" />
+		<test url="http://encrypted-tbn3.google.com/" />
+		<test url="http://tbn1.google.com/" />
+		<test url="http://tbn2.google.com/" />
+		<test url="http://tbn3.google.com/" />
+</ruleset>
