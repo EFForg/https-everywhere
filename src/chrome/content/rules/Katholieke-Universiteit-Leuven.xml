@@ -1,4 +1,7 @@
 <!--
+	Katholieke Universiteit Leuven
+
+
 	Nonfunctional subdomains:
 
 		- alumn ¹
@@ -9,28 +12,91 @@
 
 	Problematic subdomains:
 
-		- ^ *
 		- esat *
+		- kuleuven.ezproxy ²
 		- organigram
 
 	* Cert only matches www.foo
+	² Cert only matches *.kuleuven.ezproxy
 
 
 	Partially covered subdomains:
 
 		- (www.)esat *	(^ → www)
+		- organigram	(→ www)
 
 	* cosic 400s
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- aai
+		- account
+		- activatie
+		- admin
+		- agenda
+		- (www.)?alum
+		- alumni
+		- webwsp.aps
+		- (www.)?associatie
+		- wiki.associatie
+		- videolab.avnet
+		- (www.)?bib
+
+		- cygnus.cc
+		- m.cygnus.cc
+		- piwik.cc
+
+		- cwisdb
+		- (www.)?dml
+
 		- bronx.esat
 		- www.cosic.esat
 		- securehomes.esat
 
+		- owa.groupware
+		- (www.)?kuleuven.ezproxy	(^ → www)
+		- login.kuleuven.ezproxy
+		- (www.)?icts
+		- piwik.icts
+		- idp
+		- ludit
+		- netlogin
+		- nieuws
+		- password
+		- services.libis
+		- lirias
+		- status
+		- stijl
+		- owa.student
+		- toledo
+		- m.toledo
+		- wachtwoord
+		- webmail
+		- wiki
+
+
+	These altnames don't exist:
+
+		- www.agenda.kuleuven.be
+		- www.videolab.avnet.kuleuven.be
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- associatie from stijl *
+			- videolab.avnet, news, status from piwik.cc *
+			- news from www *
+
+		- Bugs on news from piwik.cc *
+
+	¹ * Secured by us
+
 -->
-<ruleset name="Katholieke Universiteit Leuven (partial)">
+<ruleset name="KU Leuven.be (partial)">
 
 	<target host="kuleuven.be" />
 	<target host="*.kuleuven.be" />
@@ -43,15 +109,24 @@
 	<securecookie host=".+\.kuleuven\.be$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?(esat\.)?kuleuven\.be/"
-		to="https://www.$1kuleuven.be/" />
-
-	<rule from="^http://(aai|activatie|admin|alumni|associatie|bib|cwisdb|(?:www\.)?dml|(?:bronx|www\.cosic|securehomes)\.esat|owa\.groupware|icts|idp|ludit|netlogin|nieuws|password|status|stijl|owa\.student|toledo|wachtwoord|webmail)\.kuleuven\.be/"
-		to="https://$1.kuleuven.be/" />
+	<!--	Domains for which both !www and www exist,
+		but only www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?(alum|esat|kuleuven\.ezproxy)\.kuleuven\.be/"
+		to="https://www.$1.kuleuven.be/" />
 
 	<!--	Redirects like so:
 					-->
 	<rule from="^http://organigram\.kuleuven\.be/$"
 		to="https://www.kuleuven.be/wieiswie/nl/unit/50000050" />
+
+	<rule from="^http://((?:aai|account|activatie|admin|agenda|alumni|webwsp\.aps|(?:wiki\.)?associatie|videolab\.avnet|(?:cygnus|m\.cygnus|piwik)\.cc|cwisdb|(?:bronx|www\.cosic|securehomes)\.esat|login\.kuleuven\.ezproxy|owa\.groupware|icts|piwik\.icts|idp|services\.libis|lirias|ludit|netlogin|nieuws|password|status|stijl|owa\.student|(?:m\.)?toledo|wachtwoord|webmail|wiki|www)\.)?kuleuven\.be/"
+		to="https://$1kuleuven.be/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(associatie|bib|dml|icts)\.kuleuven\.be/"
+		to="https://$1$2.kuleuven.be/" />
 
 </ruleset>

@@ -1,0 +1,258 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- an ¹
+		- bs ¹
+		- bs-meta ¹
+		- clck ¹
+		- contact ¹
+		- m.contact ¹
+		- contact2 ¹
+		- informer ¹
+		- interactive-answers ²
+		- m.internet ¹
+		- market ³
+		- mc ¹
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
+		- (www.)?store ¹
+		- www.video ²
+		- interactive-answers.webmaster ³
+
+	¹ Dropped
+	² Differs from http
+	³ Redirects to http
+
+
+	Problematic subdomains:
+
+		- www.browser ¹
+		- m ²
+		- mobile ²
+		- money ³
+		- opera ²
+		- www.rasp ²
+		- (www.)?site ⁴
+		- (www.)?webmaster ⁴
+
+	¹ 404
+	² Redirect differs
+	³ Blocks Tor users
+	⁴ Mismatched
+
+
+	Partially covered subdomains:
+
+		- beta *
+		- www *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- ^
+		- advertising
+		- advq
+		- afisha
+		- analytics
+		- avia
+		- auto
+		- autoconfig
+		- autodiscover
+		- awaps
+		- b
+		- ba
+
+		- blogs
+		- m.blogs
+		- pda.blogs
+
+		- (www.)?browser	(www → ^)
+		- (www.)?cat
+		- (www.)?catalog
+		- (www.)?catalogue
+		- city
+		- clock
+		- clocks
+		- direct
+		- disk
+		- beta.disk
+		- element
+		- elements
+		- export
+		- feedback
+		- feedback2
+		- (www.)?fotki
+		- m.fotki
+		- fx
+		- gorod
+		- help
+		- images
+		- (www.)?internet
+		- islands
+		- (www.)?katalog
+		- kiks
+		- legal
+		- m			(→ m.yandex.ru)
+		- mail
+		- (www.)?maps
+		- (www.)?m.maps
+		- (www.)?master
+		- mbrowser
+		- metric
+		- metrica
+		- metrika
+		- (www.)?metro
+		- money
+		- mobile		(→ mobile.yandex.ru)
+		- music
+		- opera			(→ opera.yandex.ru)
+		- partner
+		- partners
+		- pass
+		- passport
+		- passport-ckicheck
+		- pda-passport
+		- people
+		- (www.)?pogoda
+		- m.pogoda
+		- rabota
+		- m.rabota
+
+		- rasp
+		- api.rasp
+		- m.rasp
+		- suggests.rasp
+		- t.rasp
+		- www.rasp		(→ rasp.yandex.ru)
+
+		- realty
+		- (www.)?site		(→ site.yandex.ru)
+		- slovari
+		- m.slovari
+		- sprav
+		- stat
+		- ticket
+		- time
+		- translate
+		- tune
+		- m.tune
+		- (www.)?tv
+		- video
+		- vremya
+		- watch
+		- (www.)?weather
+		- (www.)?webmaster	(→ webmaster.yandex.ru)
+		- widgets
+		- wordstat
+		- xml
+		- xmlsearch
+		- yabs
+		- (www.)?yaca
+
+
+	These altnames don't exist:
+
+		- m.feedback2.yandex.by
+		- support.yandex.by
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.by
+		- auto.yandex.by
+		- city.yandex.by
+		- internet.yandex.by
+		- mail.yandex.by
+		- rabota.yandex.by
+		- realty.yandex.by
+		- translate.yandex.by
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- b, export from awaps.yandex.ru ¹
+			- m.blogs from img.yandex.net ¹
+			- m.pogoda from img.yandex.net ¹
+			- www from yastatic.net ¹
+
+		- favicon on legal from yandex.st ¹
+
+		- Bugs, on:
+
+			- advq, ba, blogs, (www.)?cat, (www.)?catalog, (www.)?catalogue, direct, (www.)?katalog, maps, rabota, wordstat, yaca from kiks.yandex.ru ¹
+			- m.blogs from clck.yandex.ru ¹
+			- m.fotki from c.waplog.net ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+
+-->
+<ruleset name="Yandex.by (partial)">
+
+	<target host="yandex.by" />
+	<target host="*.yandex.by" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(family|market|www)\.yandex\.by/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:beta|www)\.yandex\.by/+(?!(?:all|images|people|video|yandsearch)(?:$|[?/]))" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.by$" name="^Cookie_check$" /-->
+	<!--securecookie host="^internet\.yandex\.by$" name="^(csrftoken|test)$" /-->
+	<!--securecookie host="^(auto|city|rabota|realty)\.yandex\.by$" name="^uid$" /-->
+	<!--securecookie host="^realty\.yandex\.by$" name="^from$" /-->
+	<!--securecookie host="^translate\.yandex\.by$" name="^(first_visit_src|stoken)$" /-->
+
+	<securecookie host="^(?:auto|city|internet|mail|rabota|realty|translate)\.yandex\.by$" name=".+" />
+
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?browser\.yandex\.by/"
+		to="https://browser.yandex.by/" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://m(obile)?\.yandex\.by/[^?]*"
+		to="https://m$1.yandex.ru/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://opera\.yandex\.by/+"
+		to="https://opera.yandex.ru/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://www\.rasp\.yandex\.by/+"
+		to="https://rasp.yandex.ru/" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://(?:www\.)?(site|webmaster)\.yandex\.by/[^?]*"
+		to="https://$1.yandex.ru/" />
+
+	<rule from="^http://((?:advertising|advq|afisha|analytics|avia|auto|autoconfig|autodiscover|awaps|ba?|beta|blogs|(?:m|pda)\.blogs|city|clocks?|direct|disk|beta\.disk|elements?|export|feedback2?|m\.fotki|fx|gorod|help|images|islands|www\.katalog|kiks|legal|mail|mbrowser|metrica?|metrika|money|music|partners?|pass|passport|passport-ckicheck|pda-passport|people|m\.pogoda|rabota|m\.rabota|rasp|(?:api|m|suggests|t)\.rasp|realty|slovari|m\.slovari|sprav|stat|ticket|time|translate|tune|m\.tune|video|vremya|watch|widgets|wordstat|www|xml|xmlsearch|yabs)\.)?yandex\.by/"
+		to="https://$1yandex.by/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(cat|[ck]atalog|catalogue|fotki|internet|maps|m\.maps|master|metro|pogoda|tv|weather|yaca)\.yandex\.by/"
+		to="https://$1$2.yandex.by/" />
+
+</ruleset>

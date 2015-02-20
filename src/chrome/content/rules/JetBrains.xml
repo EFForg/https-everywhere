@@ -21,25 +21,26 @@
 
 		- blogs ¹
 		- confluence ¹
-		- devnet ²
 		- download ¹
-		- download-ln	(400, CN: *.hs.llnwd.net)
+		- download-ln ²
 		- forum ¹
 		- kotlin-demo ¹
 		- plugins ¹
-		- teamcity ²
+		- teamcity ³
 
 	¹ Refused
-	² Dropped
+	² 400, CN: *.hs.llnwd.net
+	³ Dropped
 
 
 	Problematic subdomains:
 
-		- ^		(cert only matches www)
-		- jetpeople *
-		- youtrack *
+		- ^ ¹
+		- jetpeople ²
+		- youtrack ²
 
-	* Works, self-signed
+	¹ Cert only matches www
+	² Self-signed
 
 
 	Partially covered subdomains:
@@ -51,8 +52,9 @@
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)?	(^ → www)
 		- account
+		- devnet
 		- intellij-support
 		- sso
 
@@ -72,7 +74,7 @@
 	* Secured by us
 
 -->
-<ruleset name="JetBrains (partial)">
+<ruleset name="JetBrains.com (partial)">
 
 	<target host="jetbrains.com" />
 	<target host="*.jetbrains.com" />
@@ -84,13 +86,13 @@
 	<rule from="^http://(?:www\.)?jetbrains\.com/"
 		to="https://www.jetbrains.com/" />
 
-	<rule from="^http://(account|intellij-support|sso)\.jetbrains\.com/"
-		to="https://$1.jetbrains.com/" />
-
 	<rule from="^http://(dotnettools|reshaper)-support\.jetbrains\.com/(?=favicon\.ico|generated/|images/|system/)"
 		to="https://$1.zendeskcom/" />
 
 	<rule from="^http://info\.jetbrains\.com/(?=css/|images/|js/|rs/)"
 		to="https://na-lon02.marketo.com/" />
+
+	<rule from="^http://(account|devnet|intellij-support|sso)\.jetbrains\.com/"
+		to="https://$1.jetbrains.com/" />
 
 </ruleset>
