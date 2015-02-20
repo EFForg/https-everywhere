@@ -54,9 +54,51 @@
 <ruleset name="Kiva.org (partial)">
 
 	<target host="kiva.org" />
-	<target host="*.kiva.org" />
-		<exclusion pattern="^http://(?:www\.)?kiva\.org/(?!ajax/|favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)" />
+	<target host="www.kiva.org" />
+	<target host="mail.kiva.org" />
+	<target host="l3-1.kiva.org" />
+	<target host="l3-2.kiva.org" />
+	<target host="level3cdn.kiva.org" />
+	<target host="zip.kiva.org" />
+	<target host="fellowsblog.kiva.org" />
+	<target host="pages.kiva.org" />
 
+	<target host="cms.kiva.org.s3.amazonaws.com" />
+
+	<exclusion pattern="^http://(www\.)?kiva\.org/$" />
+
+	<rule from="^http://(www\.)?kiva\.org/(?=favicon\.ico|images/|img/|js/|js-lib/|(?:community/teams/my-teams|help/forgot-password|login|oauth/authorize|profile|register)(?:$|\?|/)|rgit\w{40}-\d/)"
+			to="https://$1.kiva.org/" />
+		<test url="http://kiva.org/favicon.ico" />
+		<test url="http://www.kiva.org/favicon.ico" />
+		<test url="http://kiva.org/images/" />
+		<test url="http://www.kiva.org/images/" />
+		<test url="http://kiva.org/img/" />
+		<test url="http://www.kiva.org/img/" />
+		<test url="http://kiva.org/js/" />
+		<test url="http://www.kiva.org/js/" />
+		<test url="http://kiva.org/js-lib/" />
+		<test url="http://www.kiva.org/js-lib/" />
+		<test url="http://kiva.org/community/teams/my-teams" />
+		<test url="http://www.kiva.org/community/teams/my-teams" />
+		<test url="http://kiva.org/help/forgot-password" />
+		<test url="http://www.kiva.org/help/forgot-password" />
+		<test url="http://kiva.org/login" />
+		<test url="http://www.kiva.org/login" />
+		<test url="http://kiva.org/oauth/authorize" />
+		<test url="http://www.kiva.org/oauth/authorize" />
+		<test url="http://kiva.org/profile" />
+		<test url="http://www.kiva.org/profile" />
+		<test url="http://kiva.org/register" />
+		<test url="http://www.kiva.org/register" />
+		<test url="http://kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfoob-0/" />
+		<test url="http://www.kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfoob-0/" />
+		<test url="http://kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfooc-0/" />
+		<test url="http://www.kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfooc-0/" />
+		<test url="http://kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfoob-1/" />
+		<test url="http://www.kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfoob-1/" />
+		<test url="http://kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfooc-1/" />
+		<test url="http://www.kiva.org/rgitfoobarfoobarfoobarfoobarfoobarfoobarfooc-1/" />
 
 	<!--	Not secured by server:
 					-->
@@ -67,19 +109,22 @@
 
 	<!--	Protocol-relative links from fellowsblog:
 								-->
-	<rule from="^https://cms\.kiva\.org\.s3\.amazonaws\.com/"
+	<rule from="^https?://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org.s3.amazonaws.com/" />
+		<test url="https://cms.kiva.org.s3.amazonaws.com/" />
 
-	<rule from="^http://(fellowsblog\.|pages\.)?kiva\.org/"
+	<rule from="^http://(fellowsblog\.|pages\.)kiva\.org/"
 		to="https://$1kiva.org/" />
 
-	<rule from="^http://(?:l3-[12]|level3cdn|www|zip)\.kiva\.org/"
+	<rule from="^http://(l3-[12]|level3cdn|zip)\.kiva\.org/"
 		to="https://www.kiva.org/" />
 
 	<rule from="^http://mail\.kiva\.org/"
-		to="https://mail.google.com/a/kiva.org" />
+			to="https://mail.google.com/a/kiva.org" />
 
-	<rule from="^http://s3(?:-[12])?\.kiva\.org/"
-		to="https://s3.amazonaws.com/s3.kiva.org/" />
-
+	<rule from="^http://s3(-[12])?\.kiva\.org/"
+			to="https://s3.amazonaws.com/s3.kiva.org/" />
+		<test url="http://s3.kiva.org/" />
+		<test url="http://s3-1.kiva.org/" />
+		<test url="http://s3-2.kiva.org/" />
 </ruleset>
