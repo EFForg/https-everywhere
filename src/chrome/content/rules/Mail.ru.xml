@@ -1,87 +1,116 @@
 <!--
 	Other Mail.ru rulesets:
 
+		- ICQ.com.xml
 		- Imgs_Mail.ru.xml
 		- List.ru.xml
 		- Mradx.net.xml
+		- TimeZero.ru.xml
 
 
 	Nonfunctional subdomains:
 
 		- aa ¹
-		- m.agent *
-		- rfr.agent ²
-		- pic.afisha ³
-		- click.my	(400)
-		- horo ³
-		- images.lady ³
-		- internet	(403)
-		- love		(Shows partner.wamba.com)
-		- mailblog *
-		- mra ²
-		- otvet ³
-		- pogoda *
+		- m.agent ²
+		- rfr.agent ³
+		- pic.afisha ⁴
+		- internet ⁵
+		- love ⁶
+		- wap.love ²
+		- mailblog ²
+		- mra ³
+		- click.my ⁷
+		- otvet ⁴
+		- pogoda ²
 		- r2 ¹
-		- sales *
-		- team ³
-		- d4.c8.b0.a2.top
-		- torg ³
-		- img.torg ³
-		- m.torg ³
 
-	* Refused
-	² Plaintext reply
-	³ Redirects to http
-	⁴ Shows another domain
+		- realty ⁵
+		- img.pre.realty ⁵
+		- pro.realty ⁵
+
+		- team ⁴
+		- top ⁵
+		- d4.c8.b0.a2.top
+
+		- torg ⁴
+		- chelyabinsk.torg ⁴
+		- img.torg ⁴
+		- m.torg ⁴
+
+		- tv ⁴
+		- wap.tv ⁴
+		- xhtml.wap ²
+
 	¹ Dropped
+	² Refused
+	³ Plaintext reply
+	⁴ Redirects to http
+	⁵ 403
+	⁶ Shows partner.wamba.com
+	⁷ 400
 
 
 	Problematic subdomains:
 
-		- s1.amigo *
-		- blogs **
-		- cdn.connect *
-		- imgs2 ²
-		- m.my *
-		- stat.my *
-		- \w\d.\w\d.\w\d.\w\d.top *
+		- s1.amigo ¹
+		- blogs ²
+		- cdn.connect ¹
+		- m.go ¹
+		- imgs2 ³
+		- m.my ¹
+		- stat.my ¹
+		- \w\d.\w\d.\w\d.\w\d.top ¹
+		- img.tv ¹
+		- my.tv ¹
 
-	* Mismatched, CN: *.mail.ru
-	** Shows another domain
-	² 403
+	¹ Mismatched
+	² Shows another domain
+	³ 403
 
 
 	Partially covered subdomains:
 
 		- afisha *
 		- touch.afisha *	(→ afisha)
-		- deti *
 		- games *
 		- go *
-		- news *
 
 	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?
 		- 1-lview
+		- 1l-go
+		- 1l-view
 		- 1link
 		- portal.1link
+		- ad
 		- agent
 		- amigo
 		- auto
 		- touch.auto
 		- biz
 		- blogs		(→ my)
+		- bs
 		- c
+		- promo.calendar
 		- cars
 		- cloud
+		- connect
+		- corp
 		- cp-filin
+
+		- deti
+		- touch.deti
+		- touch.forum.deti
+
+		- static.dl
 		- dobro
 		- e
 		- filin
+		- avt.foto
 
 		- avt-\d+.foto:
 
@@ -89,14 +118,30 @@
 			- [12]\d
 			- 30
 
+		- forum.games
+		- m.games
 		- health
 		- help
 		- hi-tech
+		- m.hi-tech
+		- horo
+		- touch.horo
+		- jugger
+		- s1.jugger
+		- lady
+		- images.lady
+		- lotro
 		- m
 		- maps
 		- minigames
 		- money
+		- m.money
 		- my
+
+		- cdn\d+.my:
+
+			- 41
+
 		- filed\d+-\d+.my
 		- content.foto.my
 
@@ -108,13 +153,37 @@
 			- 30
 
 		- stat.my		(→ my)
+		- videoapi.my
 
+		- news
+		- pic.news
+		- retina.news
+
+		- touch.otvet
+		- pirates
+		- r3
+		- rabota
 		- riot
+		- rs
+		- sales
 		- security
+		- socdwar
+		- sport
+		- swa
+		- tanks
 		- target
+		- tel
 		- \w\d.\w\d.\w\d.\w\d.top	(→ top-fwz1.mail.ru)
 		- top-fwz1
+		- tz
+		- why
 		- wot
+
+
+	These altnames don't exist:
+
+		- mobfarm.mail.ru
+		- wartune.mail.ru
 
 
 	Insecure cookies are set for these domains:
@@ -129,43 +198,54 @@
 
 	Mixed content:
 
-		- Images on dobro from $self
+		- Images, on:
+
+			- dobro from $self *
+			- m.games from games *
+			- m.games from stat.my *
+			- m.games from my1.imgsmail.com *
+			- s1.jugger from s1.jugger.ru *
+			- rabota from hh.ru *
+			- tz from www.timezero.ru *
+
+		- favicon on m.games from games *
+
+		- Bugs, on:
+
+			- sales from rss
+			- maps, sales from www.tns-counter.ru *
+
+	* Secured by us
 
 -->
 <ruleset name="Mail.ru (partial)">
 
 	<target host="mail.ru" />
 	<target host="*.mail.ru" />
-		<exclusion pattern="^http://(?:afisha|blogs|internet)\.mail\.ru/" />
+		<exclusion pattern="^http://(?:blogs|internet)\.mail\.ru/" />
 		<!--
 			Redirect to http:
 						-->
-		<!--exclusion pattern="^http://afisha\.mail\.ru/($|bem-toolkit/blocks-desktop/common/__fonts/_fonts/|cinema/articles/\d+/$|favicon\.ico|img/|imgv2/)" /-->
+		<!--exclusion pattern="^http://afisha\.mail\.ru/($|bem-toolkit/blocks-desktop/common/__fonts/_fonts/|cinema/articles/\d+/$|favicon\.ico|img/|imgv2/|series/news/\d+/$)" /-->
 		<!--exclusion pattern="^http://touch\.afisha\.mail\.ru/($|favicon\.ico|img/mobile/touch/)" /-->
-		<!--exclusion pattern="^http://auto\.mail\.ru/article/\d+-[\w-]+$" /-->
-		<!--exclusion pattern="^http://touch\.auto\.mail\.ru/$" /-->
-		<!--exclusion pattern="^http://deti\.mail\.ru/news/[\w-]+/$" /-->
-		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$)" /-->
-		<!--exclusion pattern="^http://go\.mail\.ru/$" /-->
-		<!--exclusion pattern="^http://horo\.mail\.ru/($|bem/horo/web/web\.bundles/common/|favicon\.ico|img/horo/)" /-->
-		<!--exclusion pattern="^http://lady\.mail\.ru/($|article/\d+-[\w-]+/$|css/modules/|favicon\.ico|feedback/$|img/|pic/column/|shrink/80/ext/pic/\d+/)" /-->
-		<!--exclusion pattern="^http://images\.lady\.mail\.ru/(footer|main|square)/ext/pic/\d+/" /-->
-		<!--exclusion pattern="^http://otvet\.mail\.ru/(auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
+		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$|support/tanks/$)" /-->
+		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
+		<!--exclusion pattern="^http://otvet\.mail\.ru/($|auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
+		<!--exclusion pattern="^http://pic\.afisha\.mail\.ru/\d+/$" /-->
+		<!--exclusion pattern="^http://team\.mail\.ru/($|\?mcsf_action=main_css|favicon\.ico|wp-content/)" /-->
+		<!--exclusion pattern="^http://(torg|m\.torg|tv|wap)\.mail\.ru/($|favicon\.ico)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://afisha\.mail\.ru/+(?!bem/web/web\.bundles/common/)" />
+		<exclusion pattern="^http://afisha\.mail\.ru/+(?!bem/web/web\.bundles/common/|img/mobile/|mobile/touch/)" />
 		<exclusion pattern="^http://touch\.afisha\.mail\.ru/+(?!mobile/touch/)" />
-		<exclusion pattern="^http://deti\.mail\.ru/+(?!favicon\.ico|.+\.(?:css|jpe?g|png)(?:$|\?))" />
-		<exclusion pattern="^http://games\.mail\.ru/+(?!css/|favicon\.ico|img/|pic/|pre_big2?_crop/)" />
+		<exclusion pattern="^http://games\.mail\.ru/+(?!css/|favicon\.ico|fonts/|img/|pic/|pre_big2?_crop/|r/)" />
 		<exclusion pattern="^http://go\.mail\.ru/+(?!favicon\.ico|static/)" />
-		<exclusion pattern="^http://lady\.mail\.ru/(?![^/]+\.css)" />
-		<exclusion pattern="^http://news\.mail\.ru/(?!_css/|ext/pic/\d+/|favicon\.ico$|img/|pic/|prev\d{1,6}/)" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.mail\.ru$" name="^(mrcu|p)$" /-->
+	<!--securecookie host="^\.mail\.ru$" name="^(FTID|VID|mc2|mrcu|p|searchuid)$" /-->
 	<!--securecookie host="^1link\.mail\.ru$" name="^c_\d+_\d+$" /-->
 	<!--securecookie host="^\.agent\.mail\.ru$" name="^agent_family$" /-->
 	<!--securecookie host="^\.games\.mail\.ru$" name="^targeting$" /-->
@@ -179,17 +259,12 @@
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.mail\.ru$" name="^(?:FT|V)ID$" />
+	<securecookie host="^\.mail\.ru$" name="^(?:FTID|VID|searchuid)$" />
 	<securecookie host="^(?:1link|hi-tech)\.mail\.ru$" name=".+" />
 
 
 	<rule from="^http://touch\.afisha\.mail\.ru/"
 		to="https://afisha.mail.ru/" />
-
-	<!--	cert doesn't match img.tv
-		ditto my.tv.  my.tv appears identical to tv	-->
-	<rule from="^http://(?:(img)(?:\.tv)?|(?:my\.)?(tv))\.mail\.ru/"
-		to="https://$1$2.mail.ru/" />
 
 	<!--	Redirect drops path and args:
 						-->
@@ -198,6 +273,11 @@
 
 	<rule from="^http://(?:cdn\.)?connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
+
+	<!--	my.tv appears identical to tv
+						-->
+	<rule from="^http://(?:(img)(?:\.tv)?|my\.(tv))\.mail\.ru/"
+		to="https://$1$2.mail.ru/" />
 
 	<!--	Redirect keeps path and args:
 						-->
@@ -214,7 +294,7 @@
 	<rule from="^http://(?:(?:\w\d\.){4}top|top-fwz1)\.mail\.ru/"
 		to="https://top-fwz1.mail.ru/" />
 
-	<rule from="^http://((?:1-lview|1link|portal\.1link|ad|agent|amigo|auto|touch\.auto|biz|c|cars|cloud|corp|cp-filin|deti|dobro|e|filin|(?:avt|content)(?:-\d+)?\.foto|games|health|help|hi-tech|lady|m|maps|minigames|money|my|filed\d+-\d+\.my|news|r3?|riot|security|showbiz|status|target|wot|www)\.)?mail\.ru/"
+	<rule from="^http://((?:1-lview|1l-go|1l-view|1link|portal\.1link|ad|agent|amigo|auto|touch\.auto|bs|biz|c|promo\.calendar|cars|cloud|corp|cp-filin|static\.dl|deti|touch(?:\.forum)?\.deti|dobro|e|filin|avt(?:-\d+)?\.foto|games|(?:forum|m)\.games|go|health|help|hi-tech|m\.hi-tech|horo|touch\.horo|jugger|s1\.jugger|lady|images\.lady|lotro|m|maps|minigames|money|m\.money|my|(?:cdn\d+|filed\d+-\d+|content(?:-\d+)?\.foto|videoapi)\.my|news|(?:pic|retina)\.news|touch\.otvet|pirates|rabota|r3?|riot|sales|security|showbiz|socdwar|sport|status|swa|tanks|target|tel|tz|wot|why|www)\.)?mail\.ru/"
 		to="https://$1mail.ru/" />
 
 </ruleset>
