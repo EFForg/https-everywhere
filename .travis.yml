@@ -5,12 +5,16 @@ language: python
 python:
   - "2.7"
 addons:
-  firefox: "33.1.1"
+  firefox: "35.0"
+virtualenv:
+  system_site_packages: true
 install:
-  - sudo apt-get -qq install libxml2-dev libxslt-dev python-dev
-  - pip install -r requirements.txt
+  - sudo apt-get -qq install libxml2-dev libxslt-dev python-dev libcurl4-openssl-dev python-lxml
+  - pip install -r https-everywhere-checker/requirements.txt
 before_script:
   - sh -e /etc/init.d/xvfb start
 env:
   - DISPLAY=':99.0'
-script: ./test.sh
+script:
+  - ./test.sh
+  - ./test-ruleset-coverage.sh

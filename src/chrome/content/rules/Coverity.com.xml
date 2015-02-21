@@ -1,4 +1,9 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	NB: fixes mixed content, security relevant => backport?
+
+
 	CDN buckets:
 
 		- coverity.mktoweb.com
@@ -9,10 +14,10 @@
 	Nonfunctional subdomains:
 
 		- blog ¹
-		- scan5 ²
+		- scan6 ²
 
 	¹ Shows www
-	² Redirects to http...:8080
+	² Refused
 
 
 	Problematic subdomains:
@@ -32,12 +37,14 @@
 	Fully covered subdomains:
 
 		- (www.)?
+		- autodiscover		(→ outlook.office365.com)
 
 		- communities
 		- uat.communities
 		- apps.uat.communities
 
 		- (www.)?scan
+		- scan5
 		- trial
 
 
@@ -45,6 +52,7 @@
 
 		- apps.communities.coverity.com
 		- www.communities.coverity.com
+		- scan7.coverity.com
 
 
 	Insecure cookies are set for these domains:
@@ -64,7 +72,7 @@
 	* Secured by us
 
 -->
-<ruleset name="Coverity.com (partial)">
+<ruleset name="Coverity.com (partial)" default_off='failed ruleset test'>
 
 	<target host="coverity.com" />
 	<target host="*.coverity.com" />
@@ -79,8 +87,15 @@
 	<securecookie host="^(?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan)\.coverity\.com$" name=".+" />
 
 
-	<rule from="^http://autodiscover\.coverity\.com/"
-		to="https://autodiscover-s.outlook.com/" />
+	<!--	For /+\w.*, redirect keeps path but not args:
+								-->
+	<rule from="^http://autodiscover\.coverity\.com/+([^?]+).*"
+		to="https://outlook.office365.com/$1" />
+
+	<!--	For /+\?.*, drops args:
+						-->
+	<rule from="^http://autodiscover\.coverity\.com/.*"
+		to="https://outlook.office365.com/owa/" />
 
 	<!--	Broken by Coverity:
 					-->
@@ -90,7 +105,7 @@
 	<rule from="^http://softwareintegrity\.coverity\.com/(?=css/|images/|js/|rs/)"
 		to="https://na-sjf.marketo.com/" />
 
-	<rule from="^http://((?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|trial|www)\.)?coverity\.com/"
+	<rule from="^http://((?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|scan5|trial|www)\.)?coverity\.com/"
 		to="https://$1coverity.com/" />
 
 </ruleset>
