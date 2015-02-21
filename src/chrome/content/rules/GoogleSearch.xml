@@ -15,6 +15,15 @@
 
 	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(?=#|\?|$)"
 		to="https://www.google.$2/" />
+		<test url="http://google.ca/" />
+		<test url="http://google.com/" />
+		<test url="http://google.com.au/" />
+		<test url="http://www.google.ca/#" />
+		<test url="http://www.google.com/#" />
+		<test url="http://www.google.com.au/#" />
+		<test url="http://www.google.ca/?" />
+		<test url="http://www.google.com/?" />
+		<test url="http://www.google.com.au/?" />
 
 	<!--	A very annoying exception that we
 		seem to need for the basic case
@@ -34,38 +43,33 @@
 	<rule from="^http://(?:www\.)?google(?:\.com?)?\.[a-z]{2}/firefox"
 		to="https://www.google.com/webhp" />
 
-	<rule from="^http://(?:www\.)?google\.com/webhp"
-		to="https://www.google.com/webhp" />
+	<!-- Paths -->
+	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(about|search|setprefs|teapot|webhp)"
+		to="https://www.google.$2/$3" />
+		<test url="http://google.ca/about" />
+		<test url="http://google.com/about" />
+		<test url="http://google.com.au/about" />
+		<test url="http://www.google.ca/search" />
+		<test url="http://www.google.com/search" />
+		<test url="http://www.google.com.au/search" />
+		<test url="http://google.ca/setprefs" />
+		<test url="http://google.com/setprefs" />
+		<test url="http://google.com.au/setprefs" />
+		<test url="http://www.google.ca/teapot" />
+		<test url="http://www.google.com/teapot" />
+		<test url="http://www.google.com.au/teapot" />
+		<test url="http://www.google.ca/webhp" />
+		<test url="http://www.google.com/webhp" />
+		<test url="http://www.google.com.au/webhp" />
 
+	<!-- This doesn't exist anymore, but still rewriting to prevent old queries from being leaked -->
 	<rule from="^http://codesearch\.google\.com/"
 		to="https://www.google.com/codesearch/" />
 		<test url="http://codesearch.google.com/" />
 
-	<rule from="^http://(?:www\.)?google\.com/codesearch"
+	<rule from="^http://(www\.)?google\.com/codesearch"
 		to="https://www.google.com/codesearch" />
-
-	<!--	most google international sites look like
-		"google.fr", some look like "google.co.jp",
-		and some crazy ones like "google.com.au"	-->
-
-	<rule from="^http://(www\.)?google(\.com?)?\.([a-z]{2})/(search\?|#)"
-		to="https://$1google$2.$3/$4" />
-
-	<rule from="^http://(www\.)?google\.(com?\.)?([a-z]{2})/(?:webhp)?$"
-		to="https://$1google.$2$3/" />
-
-	<!--	If there are URL parameters, keep them.	-->
-	<rule from="^http://(www\.)?google\.(com?\.)?([a-z]{2})/(?:webhp)?\?"
-		to="https://$1google.$2$3/webhp?" />
-
-	<!-- Paths -->
-	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(about|search|setprefs|teapot)"
-		to="https://www.google.$2/$3" />
-		<test url="http://google.ca/teapot" />
-		<test url="http://google.com/teapot" />
-		<test url="http://google.com.au/teapot" />
-		<test url="http://www.google.ca/teapot" />
-		<test url="http://www.google.com/teapot" />
-		<test url="http://www.google.com.au/teapot" />
+		<test url="http://google.com/codesearch" />
+		<test url="http://www.google.com/codesearch" />
 
 </ruleset>
