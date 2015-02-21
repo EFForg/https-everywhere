@@ -28,36 +28,67 @@
 	<!--	A very annoying exception that we
 		seem to need for the basic case
 						-->
-	<exclusion pattern="^http://(?:www\.)?google\.com/search.*tbs=shop" />
+	<exclusion pattern="^http://(www\.)?google\.com/search.*tbs=shop" />
+		<test url="http://google.com/search?q=test&amp;tbs=shop" />
+		<test url="http://www.google.com/search?q=test&amp;tbs=shop" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbs=shop" />
 
 	<!--	This is necessary for image results
 		links from web search results
 						-->
-	<exclusion pattern="^http://(?:www\.)?google\.com/search.*tbm=isch.*" />
+	<exclusion pattern="^http://(www\.)?google\.com/search.*tbm=isch.*" />
+		<test url="http://google.com/search?q=test&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=test&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbm=isch&amp;something=baz" />
 
-	<!--	There are two distinct cases for these firefox searches	-->
-
-	<rule from="^http://(?:www\.)?google(?:\.com?)?\.[a-z]{2}/firefox/?$"
-		to="https://www.google.com/" />
-
-	<rule from="^http://(?:www\.)?google(?:\.com?)?\.[a-z]{2}/firefox"
-		to="https://www.google.com/webhp" />
-
+	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/firefox/?"
+		to="https://www.google.$2/" />
+		<test url="http://google.ca/firefox" />
+		<test url="http://google.com/firefox" />
+		<test url="http://google.com.au/firefox" />
+		<test url="http://www.google.ca/firefox" />
+		<test url="http://www.google.com/firefox" />
+		<test url="http://www.google.com.au/firefox" />
+		<test url="http://google.ca/firefox/" />
+		<test url="http://google.com/firefox/" />
+		<test url="http://google.com.au/firefox/" />
+		<test url="http://www.google.ca/firefox/" />
+		<test url="http://www.google.com/firefox/" />
+		<test url="http://www.google.com.au/firefox/" />
 	<!-- Paths -->
 	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(about|search|setprefs|teapot|webhp)"
 		to="https://www.google.$2/$3" />
 		<test url="http://google.ca/about" />
 		<test url="http://google.com/about" />
 		<test url="http://google.com.au/about" />
+		<test url="http://www.google.ca/about" />
+		<test url="http://www.google.com/about" />
+		<test url="http://www.google.com.au/about" />
+		<test url="http://google.ca/search" />
+		<test url="http://google.com/search" />
+		<test url="http://google.com.au/search" />
 		<test url="http://www.google.ca/search" />
 		<test url="http://www.google.com/search" />
 		<test url="http://www.google.com.au/search" />
 		<test url="http://google.ca/setprefs" />
 		<test url="http://google.com/setprefs" />
 		<test url="http://google.com.au/setprefs" />
+		<test url="http://www.google.ca/setprefs" />
+		<test url="http://www.google.com/setprefs" />
+		<test url="http://www.google.com.au/setprefs" />
+		<test url="http://www.google.ca/setprefs" />
+		<test url="http://www.google.com/setprefs" />
+		<test url="http://www.google.com.au/setprefs" />
+		<test url="http://google.ca/teapot" />
+		<test url="http://google.com/teapot" />
+		<test url="http://google.com.au/teapot" />
 		<test url="http://www.google.ca/teapot" />
 		<test url="http://www.google.com/teapot" />
 		<test url="http://www.google.com.au/teapot" />
+		<test url="http://google.ca/webhp" />
+		<test url="http://google.com/webhp" />
+		<test url="http://google.com.au/webhp" />
 		<test url="http://www.google.ca/webhp" />
 		<test url="http://www.google.com/webhp" />
 		<test url="http://www.google.com.au/webhp" />
