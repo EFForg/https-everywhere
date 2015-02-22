@@ -1,3 +1,24 @@
+/**
+ * Fetch and parse XML to be loaded as RuleSets.
+ */
+function getRuleXml(url) {
+  var xhr = new XMLHttpRequest();
+  // Use blocking XHR to ensure everything is loaded by the time
+  // we return.
+  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.send(null);
+  // Get file contents
+  if (xhr.readyState != 4) {
+    return;
+  }
+  return xhr.responseXML;
+}
+
+var all_rules = new RuleSets(navigator.userAgent, LRUCache,  localStorage);
+for (var i = 0; i < rule_list.length; i++) {
+  all_rules.addFromXml(getRuleXml(rule_list[i]));
+}
+
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
@@ -16,7 +37,6 @@ var getStoredUserRules = function() {
   }
   return oldUserRules;
 };
-var all_rules = new RuleSets();
 var wr = chrome.webRequest;
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
