@@ -72,15 +72,19 @@
 	<target host="*.googleapis.com" />
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
+	<target host="api.recaptcha.net" />
+	<target host="api-secure.recaptcha.net" />
+	<target host="gdata.youtube.com" />
 
 	<!--	Captive portal detection redirects to this URL, and many captive
 		portals break TLS, so exempt this redirect URL.
 		See GitHub bug #368
-							-->
-		<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
-	<target host="*.recaptcha.net" />
-	<target host="gdata.youtube.com" />
-		<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
+			-->
+	<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
+		<test url="htttp://www.gstatic.com/generate_204" />
+
+	<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
+		<test url="http://gdata.youtube.com/crossdomain.xml" />
 
 	<securecookie host="^ssl\.google-analytics\.com$" name=".+" />
 
@@ -105,11 +109,24 @@
 			With &strip=1, the cached page will be text-only and
 		will come exclusively from Google's HTTPS server.
 									-->
-	<rule from="^http://(?:www\.)?gstatic\.com/"
+	<rule from="^http://(www\.)?gstatic\.com/"
 		to="https://www.gstatic.com/" />
+		<test url="http://www.gstatic.com/" />
 
 	<rule from="^http://(csi|encrypted-tbn\d|g0|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
 		to="https://$1.gstatic.com/" />
+		<test url="http://csi.gstatic.com/" />
+		<test url="http://encrypted-tbn1.gstatic.com/" />
+		<test url="http://encrypted-tbn2.gstatic.com/" />
+		<test url="http://encrypted-tbn3.gstatic.com/" />
+		<test url="http://g0.gstatic.com/" />
+		<test url="http://test1-ds.metric.gstatic.com/" />
+		<test url="http://test2-ds.metric.gstatic.com/" />
+		<test url="http://test3-ds.metric.gstatic.com/" />
+		<test url="http://ssl.gstatic.com/" />
+		<test url="http://t1.gstatic.com/" />
+		<test url="http://t2.gstatic.com/" />
+		<test url="http://t3.gstatic.com/" />
 
 	<rule from="^http://api\.recaptcha\.net/"
 		to="https://www.google.com/recaptcha/api/" />
