@@ -11,6 +11,7 @@
 	<target host="id.google.*" />
 	<target host="lh\d.google.*" />
 	<target host="m.google.*" />
+	<target host="news.google.*" />
 	<target host="picasaweb.google.*" />
 	<target host="scholar.google.*" />
 
@@ -24,7 +25,14 @@
 	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
 	<securecookie host="^(?:accounts|adwords|\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|picasaweb|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
 
-	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|picasaweb|scholar)\.google\.((?:com?\.)?\w{2,3})/"
+	<!-- path that 404 on https but 301 on http -->
+	<rule from="^http://news\.?google\.((?:com?\.)?\w{2,3})/archivesearch"
+			to="https://news.google.$1/news/advanced_news_search" />
+		<test url="http://news.google.ca/archivesearch" />
+		<test url="http://news.google.com/archivesearch" />
+		<test url="http://news.google.com.au/archivesearch" />
+
+	<rule from="^http://(accounts|adwords|finance|groups|id|lh\d|m|news|picasaweb|scholar)\.google\.((?:com?\.)?\w{2,3})/"
 			to="https://$1.google.$2/" />
 		<test url="http://accounts.google.ca/" />
 		<test url="http://accounts.google.com/" />
@@ -47,6 +55,9 @@
 		<test url="http://m.google.ca/" />
 		<test url="http://m.google.com/" />
 		<test url="http://m.google.com.au/" />
+		<test url="http://news.google.ca/" />
+		<test url="http://news.google.com/" />
+		<test url="http://news.google.com.au/" />
 		<test url="http://picasaweb.google.ca/" />
 		<test url="http://picasaweb.google.com/" />
 		<test url="http://picasaweb.google.com.au/" />
