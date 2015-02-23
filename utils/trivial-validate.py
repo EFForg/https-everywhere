@@ -11,21 +11,16 @@ from lxml import etree
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
     description="Ruleset validation script.")
-parser.add_argument('--ignoredups', type=str, nargs="*",
-    default="",
-    help="Ignore entries."
-    )
 parser.add_argument('--quiet', action="store_true",
     default=False, help="Suppress debug output."
     )
-parser.add_argument('--db', type=str, nargs="*",
+parser.add_argument('--db',
     default=os.path.join(os.path.dirname(__file__),
                          "../src/defaults/rulesets.sqlite"),
     help='SQLite db with rules')
 
 args = parser.parse_args()
 
-ignoredups = [re.compile(val) for val in args.ignoredups]
 quiet = args.quiet
 
 def warn(s):
