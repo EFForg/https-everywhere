@@ -1,0 +1,69 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.)?store *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- www.browser *
+		- www.mobile *
+		- www.taras *
+
+	* 404
+
+
+	Fully covered subdomains:
+
+		- advq
+		- awaps
+		- (www.)?browser	(www → ^)
+		- clock
+		- clocks
+		- direct
+		- element
+		- elements
+		- mail
+		- (www.)?mobile		(www → ^)
+		- (www.)?pogoda
+		- (www.)?taras		(www → ^)
+		- time
+		- (www.)?tv
+		- vremya
+		- watch
+		- (www.)?weather
+		- wordstat
+
+
+	These altnames don't exist:
+
+		- disk.yandex.com.ua
+		- mail.yandex.com.ua
+
+-->
+<ruleset name="Yandex.com.ua (partial)">
+
+	<target host="*.yandex.com.ua" />
+
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?(browser|mobile|taras)\.yandex\.com\.ua/"
+		to="https://$1.yandex.com.ua/" />
+
+	<rule from="^http://(advq|awaps|browser|clocks?|direct|elements?|taras|time|vremya|watch|wordstat)\.yandex\.com\.ua/"
+		to="https://$1.yandex.com.ua/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(pogoda|tv|weather)\.yandex\.com\.ua/"
+		to="https://$1$2.yandex.com.ua/" />
+
+</ruleset>
