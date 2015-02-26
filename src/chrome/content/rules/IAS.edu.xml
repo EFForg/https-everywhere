@@ -38,21 +38,35 @@
 		- (www.)math	(^ → www)
 		- mail.math
 		- pcmi
+		- rt
+		- security
 		- sig
 		- (www.)sns	(^ → www)
 
+
+	Insecure cookies are set for these hosts:
+
+		- rt.ias.edu
+
 -->
-<ruleset name="IAS.edu (partial)">
+<ruleset name="IAS.edu (partial)" default_off="Needs ruleset tests">
 
 	<target host="ias.edu" />
 	<target host="*.ias.edu" />
 		<exclusion pattern="^http://(?:(?:www\.)?(?:h|ss)|moral)s\.ias\.edu/(?!files/|sites/)" />
 
+		<test url="http://rt.ias.edu/" />
+		<test url="http://security.ias.edu/" />
 
-	<securecookie host="^(?:\.math|\.mail\.math|\.pcmi|sig|\.sns|www)\.ias\.edu$" name=".+" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^rt\.ias\.edu$" name="^RT_SID_ias\.edu\.443$" /-->
+
+	<securecookie host="^(?:\.math|\.mail\.math|\.pcmi|rt|sig|\.sns|www)\.ias\.edu$" name=".+" />
 
 
-	<rule from="^http://((?:crossroads|mail\.math|morals|pcmi|sig|www)\.)?ias\.edu/"
+	<rule from="^http://((?:crossroads|mail\.math|morals|pcmi|rt|security|sig|www)\.)?ias\.edu/"
 		to="https://$1ias.edu/" />
 
 	<rule from="^http://(?:www\.)?(admin|hs|math|s[ns]s)\.ias\.edu/"

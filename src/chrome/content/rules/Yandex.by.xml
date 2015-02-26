@@ -1,0 +1,383 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- an ¹
+		- bs ¹
+		- bs-meta ¹
+		- clck ¹
+		- contact ¹
+		- m.contact ¹
+		- contact2 ¹
+		- informer ¹
+		- interactive-answers ²
+		- m.internet ¹
+		- market ³
+		- mc ¹
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
+		- (www.)?store ¹
+		- www.video ²
+		- interactive-answers.webmaster ³
+
+	¹ Dropped
+	² Differs from http
+	³ Redirects to http
+
+
+	Problematic subdomains:
+
+		- www.browser ¹
+		- m ²
+		- mobile ²
+		- money ³
+		- opera ²
+		- www.rasp ²
+		- (www.)?site ⁴
+		- (www.)?webmaster ⁴
+
+	¹ 404
+	² Redirect differs
+	³ Blocks Tor users
+	⁴ Mismatched
+
+
+	Partially covered subdomains:
+
+		- beta *
+		- www *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- ^
+		- advertising
+		- advq
+		- afisha
+		- analytics
+		- avia
+		- auto
+		- autoconfig
+		- autodiscover
+		- awaps
+		- b
+		- ba
+
+		- blogs
+		- m.blogs
+		- pda.blogs
+
+		- (www.)?browser	(www → ^)
+		- (www.)?cat
+		- (www.)?catalog
+		- (www.)?catalogue
+		- city
+		- clock
+		- clocks
+		- direct
+		- disk
+		- beta.disk
+		- element
+		- elements
+		- export
+		- feedback
+		- feedback2
+		- (www.)?fotki
+		- m.fotki
+		- fx
+		- gorod
+		- help
+		- images
+		- (www.)?internet
+		- islands
+		- (www.)?katalog
+		- kiks
+		- legal
+		- m			(→ m.yandex.ru)
+		- mail
+		- (www.)?maps
+		- (www.)?m.maps
+		- (www.)?master
+		- mbrowser
+		- metric
+		- metrica
+		- metrika
+		- (www.)?metro
+		- money
+		- mobile		(→ mobile.yandex.ru)
+		- music
+		- opera			(→ opera.yandex.ru)
+		- partner
+		- partners
+		- pass
+		- passport
+		- passport-ckicheck
+		- pda-passport
+		- people
+		- (www.)?pogoda
+		- m.pogoda
+		- rabota
+		- m.rabota
+
+		- rasp
+		- api.rasp
+		- m.rasp
+		- suggests.rasp
+		- t.rasp
+		- www.rasp		(→ rasp.yandex.ru)
+
+		- realty
+		- (www.)?site		(→ site.yandex.ru)
+		- slovari
+		- m.slovari
+		- sprav
+		- stat
+		- ticket
+		- time
+		- translate
+		- tune
+		- m.tune
+		- (www.)?tv
+		- video
+		- vremya
+		- watch
+		- (www.)?weather
+		- (www.)?webmaster	(→ webmaster.yandex.ru)
+		- widgets
+		- wordstat
+		- xml
+		- xmlsearch
+		- yabs
+		- (www.)?yaca
+
+
+	These altnames don't exist:
+
+		- m.feedback2.yandex.by
+		- support.yandex.by
+
+
+	Insecure cookies are set for these domains:
+
+		- .yandex.by
+		- auto.yandex.by
+		- city.yandex.by
+		- internet.yandex.by
+		- mail.yandex.by
+		- rabota.yandex.by
+		- realty.yandex.by
+		- translate.yandex.by
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- b, export from awaps.yandex.ru ¹
+			- m.blogs from img.yandex.net ¹
+			- m.pogoda from img.yandex.net ¹
+			- www from yastatic.net ¹
+
+		- favicon on legal from yandex.st ¹
+
+		- Bugs, on:
+
+			- advq, ba, blogs, (www.)?cat, (www.)?catalog, (www.)?catalogue, direct, (www.)?katalog, maps, rabota, wordstat, yaca from kiks.yandex.ru ¹
+			- m.blogs from clck.yandex.ru ¹
+			- m.fotki from c.waplog.net ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+
+-->
+<ruleset name="Yandex.by (partial)" default_off="Needs ruleset tests">
+
+	<target host="yandex.by" />
+	<target host="*.yandex.by" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(family|market|www)\.yandex\.by/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:beta|www)\.yandex\.by/+(?!(?:all|images|people|video|yandsearch)(?:$|[?/]))" />
+
+			<test url="http://yandex.by/" />
+			<test url="http://yandex.by/all" />
+			<test url="http://yandex.by/images" />
+			<test url="http://beta.yandex.by/" />
+			<test url="http://beta.yandex.by/all" />
+			<test url="http://beta.yandex.by/images" />
+			<test url="http://www.yandex.by/" />
+			<test url="http://www.yandex.by/all" />
+			<test url="http://www.yandex.by/images" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yandex\.by$" name="^Cookie_check$" /-->
+	<!--securecookie host="^internet\.yandex\.by$" name="^(csrftoken|test)$" /-->
+	<!--securecookie host="^(auto|city|rabota|realty)\.yandex\.by$" name="^uid$" /-->
+	<!--securecookie host="^realty\.yandex\.by$" name="^from$" /-->
+	<!--securecookie host="^translate\.yandex\.by$" name="^(first_visit_src|stoken)$" /-->
+
+	<securecookie host="^(?:auto|city|internet|mail|rabota|realty|translate)\.yandex\.by$" name=".+" />
+
+
+	<!--	Domains for which both !www and www exist,
+		but only !www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?browser\.yandex\.by/"
+		to="https://browser.yandex.by/" />
+
+		<test url="http://browser.yandex.by/" />
+		<test url="http://www.browser.yandex.by/" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://m(obile)?\.yandex\.by/[^?]*"
+		to="https://m$1.yandex.ru/" />
+
+		<test url="http://m.yandex.by/" />
+		<test url="http://mobile.yandex.by/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://opera\.yandex\.by/+"
+		to="https://opera.yandex.ru/" />
+
+		<test url="http://opera.yandex.by/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://www\.rasp\.yandex\.by/+"
+		to="https://rasp.yandex.ru/" />
+
+		<test url="http://www.rasp.yandex.by/" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://(?:www\.)?(site|webmaster)\.yandex\.by/[^?]*"
+		to="https://$1.yandex.ru/" />
+
+	<rule from="^http://((?:advertising|advq|afisha|analytics|avia|auto|autoconfig|autodiscover|awaps|ba?|beta|blogs|(?:m|pda)\.blogs|city|clocks?|direct|disk|beta\.disk|elements?|export|feedback2?|m\.fotki|fx|gorod|help|images|islands|www\.katalog|kiks|legal|mail|mbrowser|metrica?|metrika|money|music|partners?|pass|passport|passport-ckicheck|pda-passport|people|m\.pogoda|rabota|m\.rabota|rasp|(?:api|m|suggests|t)\.rasp|realty|slovari|m\.slovari|sprav|stat|ticket|time|translate|tune|m\.tune|video|vremya|watch|widgets|wordstat|www|xml|xmlsearch|yabs)\.)?yandex\.by/"
+		to="https://$1yandex.by/" />
+
+		<test url="http://advertising.yandex.by/" />
+		<test url="http://advq.yandex.by/" />
+		<test url="http://afisha.yandex.by/" />
+		<test url="http://analytics.yandex.by/" />
+		<test url="http://avia.yandex.by/" />
+		<test url="http://auto.yandex.by/" />
+		<test url="http://autoconfig.yandex.by/" />
+		<test url="http://autodiscover.yandex.by/" />
+		<test url="http://awaps.yandex.by/" />
+		<test url="http://b.yandex.by/" />
+		<test url="http://ba.yandex.by/" />
+		<test url="http://beta.yandex.by/" />
+		<test url="http://blogs.yandex.by/" />
+		<test url="http://m.blogs.yandex.by/" />
+		<test url="http://pda.blogs.yandex.by/" />
+		<test url="http://city.yandex.by/" />
+		<test url="http://clock.yandex.by/" />
+		<test url="http://clocks.yandex.by/" />
+		<test url="http://direct.yandex.by/" />
+		<test url="http://disk.yandex.by/" />
+		<test url="http://beta.disk.yandex.by/" />
+		<test url="http://element.yandex.by/" />
+		<test url="http://elements.yandex.by/" />
+		<test url="http://export.yandex.by/" />
+		<test url="http://feedback.yandex.by/" />
+		<test url="http://feedback2.yandex.by/" />
+		<test url="http://m.fotki.yandex.by/" />
+		<test url="http://fx.yandex.by/" />
+		<test url="http://gorod.yandex.by/" />
+		<test url="http://help.yandex.by/" />
+		<test url="http://images.yandex.by/" />
+		<test url="http://islands.yandex.by/" />
+		<test url="http://www.katalog.yandex.by/" />
+		<test url="http://kiks.yandex.by/" />
+		<test url="http://legal.yandex.by/" />
+		<test url="http://mail.yandex.by/" />
+		<test url="http://mbrowser.yandex.by/" />
+		<test url="http://metric.yandex.by/" />
+		<test url="http://metrica.yandex.by/" />
+		<test url="http://metrika.yandex.by/" />
+		<test url="http://money.yandex.by/" />
+		<test url="http://music.yandex.by/" />
+		<test url="http://partner.yandex.by/" />
+		<test url="http://partners.yandex.by/" />
+		<test url="http://pass.yandex.by/" />
+		<test url="http://passport.yandex.by/" />
+		<test url="http://passport-ckicheck.yandex.by/" />
+		<test url="http://pda-passport.yandex.by/" />
+		<test url="http://people.yandex.by/" />
+		<test url="http://m.pogoda.yandex.by/" />
+		<test url="http://rabota.yandex.by/" />
+		<test url="http://m.rabota.yandex.by/" />
+		<test url="http://rasp.yandex.by/" />
+		<test url="http://api.yandex.by/" />
+		<test url="http://m.rasp.yandex.by/" />
+		<test url="http://suggests.rasp.yandex.by/" />
+		<test url="http://t.rasp.yandex.by/" />
+		<test url="http://realty.yandex.by/" />
+		<test url="http://slovari.yandex.by/" />
+		<test url="http://m.slovari.yandex.by/" />
+		<test url="http://sprav.yandex.by/" />
+		<test url="http://stat.yandex.by/" />
+		<test url="http://ticket.yandex.by/" />
+		<test url="http://time.yandex.by/" />
+		<test url="http://translate.yandex.by/" />
+		<test url="http://tune.yandex.by/" />
+		<test url="http://m.tune.yandex.by/" />
+		<test url="http://video.yandex.by/" />
+		<test url="http://vremya.yandex.by/" />
+		<test url="http://watch.yandex.by/" />
+		<test url="http://widgets.yandex.by/" />
+		<test url="http://wordstat.yandex.by/" />
+		<test url="http://xml.yandex.by/" />
+		<test url="http://xmlsearch.yandex.by/" />
+		<test url="http://yabs.yandex.by/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(cat|[ck]atalog|catalogue|fotki|internet|maps|m\.maps|master|metro|pogoda|tv|weather|yaca)\.yandex\.by/"
+		to="https://$1$2.yandex.by/" />
+
+		<test url="http://cat.yandex.by/" />
+		<test url="http://www.cat.yandex.by/" />
+		<test url="http://catalog.yandex.by/" />
+		<test url="http://www.catalog.yandex.by/" />
+		<test url="http://catalogue.yandex.by/" />
+		<test url="http://www.catalogue.yandex.by/" />
+		<test url="http://fotki.yandex.by/" />
+		<test url="http://www.fotki.yandex.by/" />
+		<test url="http://internet.yandex.by/" />
+		<test url="http://www.internet.yandex.by/" />
+		<test url="http://katalog.yandex.by/" />
+		<test url="http://www.katalog.yandex.by/" />
+		<test url="http://maps.yandex.by/" />
+		<test url="http://www.maps.yandex.by/" />
+		<test url="http://m.maps.yandex.by/" />
+		<test url="http://www.m.maps.yandex.by/" />
+		<test url="http://master.yandex.by/" />
+		<test url="http://www.master.yandex.by/" />
+		<test url="http://metro.yandex.by/" />
+		<test url="http://www.metro.yandex.by/" />
+		<test url="http://pogoda.yandex.by/" />
+		<test url="http://www.pogoda.yandex.by/" />
+		<test url="http://tv.yandex.by/" />
+		<test url="http://www.tv.yandex.by/" />
+		<test url="http://weather.yandex.by/" />
+		<test url="http://www.weather.yandex.by/" />
+		<test url="http://yaca.yandex.by/" />
+		<test url="http://www.yaca.yandex.by/" />
+
+</ruleset>

@@ -1,4 +1,16 @@
 <!--
+	xHamster uses *.xhcdn.com and cdn13.com
+	As far as I can tell all of it either only supports http or redirects from https to something else.
+
+	Nonfunctional subdomains on xhcdn.com
+		- ept *
+		- et13 *
+		- ut0[0-9] *
+		- ut1[0-9] *
+
+	Nonfunctional subdomains on cdn13.com
+		- a8-19.clients *
+
 	CDN buckets:
 
 		- xhamster.uservoice.com
@@ -29,6 +41,7 @@
 
 		- (www.)
 		- eu-st
+		- us-st
 		- static
 
 
@@ -39,6 +52,7 @@
 			- et\d *
 			- et1\d *
 			- eu-st **
+			- us-st **
 			- p1 *
 
 		- Web/ads bug on www from adscnt2 ***
@@ -51,11 +65,20 @@
 	*** Unsecurable
 
 -->
-<ruleset name="xHamster.com (buggy)" default_off="reportedly breaks videos">
+<ruleset name="xHamster.com">
 
 	<target host="xhamster.com" />
-	<target host="*.xhamster.com" />
+		<target host="www.xhamster.com" />
+		<target host="us-st.xhamster.com" />
+		<target host="eu-st.xhamster.com" />
+		<target host="secure.xhamster.com" />
+		<target host="static.xhamster.com" />
+		<target host="suggestions.xhamster.com" />
 
+	<!-- without this videos break when using flash -->
+	<exclusion pattern="^http://static\.xhamster\.com/crossdomain\.xml" />
+		<test url="http://static.xhamster.com/crossdomain.xml" />
+		<test url="http://static.xhamster.com/crossdomain.xml?foo" />
 
 	<!--	Not secured by server:
 					-->
@@ -67,11 +90,9 @@
 						-->
 	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|prid)$" /-->
 
+	<rule from="^http://suggestions\.xhamster\.com/"
+			to="https://xhamster.uservoice.com/" />
 
-	<rule from="^http://((?:eu-st|secure|static|www)\.)?xhamster\.com/"
-		to="https://$1xhamster.com/" />
-
-	<rule from="^http://suggestions\.xhamster\.com/track\.gif"
-		to="https://xhamster.uservoice.com/track.gif" />
-
+	<rule from="^http:"
+			to="https:" />
 </ruleset>
