@@ -1,0 +1,192 @@
+<!--
+	For other Yandex coverage, see Yandex.xml.
+
+
+	Nonfunctional subdomains:
+
+		- mobile.photo *
+		- pythonbp *
+
+	* Differs from http
+
+
+	Problematic subdomains:
+
+		- (www.)? ²
+		- www.browser ¹
+		- element ²
+		- img.encyc *
+		- vec0[1-4].maps ⁴
+		- static.video ⁵
+
+	¹ 404
+	² Mismatched
+	* Mismatched, CN: yastatic.net
+	⁴ Unspecified effect[?]
+	⁵ Apparently breaks video
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(→ yandex.ru)
+		- internetometr.download.cdn
+		- sandbox.api.maps
+		- 0\d.pvec.maps		([1-4])
+
+		- ((www.)?[^.]+|[^.]+.[^.]+): *	(www → ^)
+
+			- api-yaru
+			- awaps
+
+			- avatars
+			- \d+.avatars
+			- default.avatars
+
+			- avatars-fast
+			- ba
+			- pix.blogs
+			- pix2.blogs
+			- (www.)?browser
+
+			- captcha
+			- a.captcha
+			- s.captcha
+
+			- cache-ams0[13-6].cdn
+			- cache-default04e.cdn
+			- cache-default05h.cdn
+			- cache-default06f.cdn
+			- download.cdn
+			- kp.cdn
+			- sba.cdn
+
+			- ceviri
+			- tv-front.content
+			- resizer.corba
+			- \d.cs-ellpic
+			- css
+			- direct
+			- disk
+			- downloader
+			- elements
+			- favicon
+			- img-css.friends
+			- hotels-proxy
+			- review-api-external.http
+			- img
+			- img-fotki
+			- img\d-fotki
+			- img
+			- img[1-7]-fotki
+			- imgl
+			- st.kp
+			- audio.lingvo
+			- webattach.mail
+			- mailstatic
+			- msoffice.maps
+			- vec.maps
+			- mdata
+			- money
+			- resizer-mobile.photo
+
+			- api.rasp
+			- static.rasp
+			- suburban-widget.rasp
+
+			- resize
+			- site
+			- static
+			- lego.static
+			- translate
+			- uc-static
+			- upics
+			- video
+			- wbms
+			- info.weather
+			- img-css.webchat2
+			- wfarm
+			- wi
+			- wimg
+			- xss
+
+	* Except where excluded below
+
+
+	These altnames don't exist:
+
+		- downloader.disk.yandex.net
+		- webattach-v6.mail.yandex.net
+		- mailstatic-v6.yandex.net
+		- music.yandex.net
+		- pogoda.yandex.net
+		- www.pogoda.yandex.net
+		- www.weather.yandex.net
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- wfarm from yastatic.net *
+			- pythonbp from img.yandex.net *
+
+		- favicon on wfarm from yastatic.net *
+
+		- Ads/bugs on ba from kiks.yandex.ru *
+
+	* Secured by us
+
+-->
+<ruleset name="Yandex.net (partial)" default_off="Needs ruleset tests">
+
+	<target host="yandex.net" />
+	<target host="*.yandex.net" />
+		<!--
+			Data clusters for Maps and Video:
+								-->
+		<exclusion pattern="^http://(?:jgo|vec\d+|stv\d+)\.maps\.yandex\.net/" />
+		<exclusion pattern="^http://[^.]+-tub(?:-[^.]+)?\.yandex\.net/" />
+		<!--
+			Search suggestions:
+						-->
+		<exclusion pattern="^http://suggest-[a-z]+\.yandex\.net/" />
+		<!--
+			Needed for Yandex video player to work:
+								-->
+		<exclusion pattern="^http://[^.]+\.video\.yandex\.net/" />
+		<!--
+			Miscellanious:
+					-->
+		<exclusion pattern="^http://(?:element|mobile\.photo|pythonbp)\.yandex\.net/" />
+
+
+	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
+
+	<!--	Redirect keeps path, args, but not forward slash:
+								-->
+	<rule from="^http://(?:www\.)?yandex\.net/+"
+		to="https://yandex.ru/" />
+
+	<rule from="^http://(internetometr\.download\.cdn|sandbox\.api\.maps|0\d\.pvec\.maps)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
+
+	<!--	Here we can enable 4+ level domains with a single regexp,
+		but I've never seen any domains more that 4 levels deep
+		in Yandex network, so I wouldn't enable them now -
+		it may be unconvenient and may broke some services.
+		Only 4-level domains match.
+						-->
+	<rule from="^http://([^.]+)\.([^.]+)\.yandex\.net/"
+		to="https://$1.$2.yandex.net/" />
+
+
+	<!--	Timeout
+
+		Example: https://market.yandex.ru/search.xml?text=draytek&hid=91083&srnum=233
+		List: https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001094.html
+				-->
+	<rule from="^https://cs-ellpic\.yandex\.net/"
+		to="http://cs-ellpic.yandex.net/" downgrade="1" />
+
+</ruleset>

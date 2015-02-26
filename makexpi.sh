@@ -74,18 +74,7 @@ die() {
 }
 
 if [ "$1" != "--fast" -a -z "$FAST" ] ; then
-  if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -f trivial-validate.py ] ; then
-    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -x utils/trivial-validate ] ; then
-    # This case probably never happens
-    VALIDATE=./utils/trivial-validate
-  else
-    VALIDATE=./trivial-validate
-  fi
-
-  if $VALIDATE src/chrome/content/rules >&2
+  if python2.7 ./utils/trivial-validate.py --quiet --db $RULESETS_SQLITE >&2
   then
     echo Validation of included rulesets completed. >&2
     echo >&2

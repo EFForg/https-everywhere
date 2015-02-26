@@ -1,8 +1,94 @@
-<ruleset name="Launchpad">
+<!--
+	Problematic domains:
+
+		- blog.launchpad.net *
+
+	* Self-signed
+
+
+	Partially covered subdomains:
+
+		- feeds *
+
+	* Redirects to http
+
+
+	Fully covered domains:
+
+		- launchpad.net
+
+		- [\w.-]+.launchpad.net: *
+
+			- answers
+			- bazaar
+			- blueprints
+			- code
+			- edge
+			- help
+			- login
+			- test
+			- translations
+			- wiki
+			- www
+
+	* Except where excluded below
+
+
+	These altnames don't exist:
+
+		- www.login.launchpad.net
+
+
+	Insecure cookies are set for these domains:
+
+		- blog.launchpad.net
+		- login.launchpad.net
+
+
+	Mixed content:
+
+		- Image on blog from ubuntuone.com ¹
+		- Bugs on blog, help from i.creativecommons.org ²
+
+	¹ Unsecurable <= supports <=ssl3 only
+	² Secured by us
+
+-->
+<ruleset name="Launchpad" default_off="Needs ruleset tests">
     <target host="launchpad.net" />
     <target host="*.launchpad.net" />
     <target host="launchpadlibrarian.net" />
     <target host="*.launchpadlibrarian.net" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://feeds\.launchpad\.net/($|\w+/announcements\.atom$)" /-->
+		<!--
+			We preempt redirect from $:
+							-->
+		<exclusion pattern="^http://feeds\.launchpad\.net/(?!$)" />
+
+
+			<test url="http://feeds.launchpad.net/" />
+			<test url="http://feeds.launchpad.net/rohc/announcements.atom" />
+
+		<test url="http://answers.launchpad.net/" />
+		<test url="http://bazaar.launchpad.net/" />
+		<test url="http://blueprints.launchpad.net/" />
+		<test url="http://code.launchpad.net/" />
+		<test url="http://edge.launchpad.net/" />
+		<test url="http://help.launchpad.net/" />
+		<test url="http://login.launchpad.net/" />
+		<test url="http://test.launchpad.net/" />
+		<test url="http://translations.launchpad.net/" />
+		<test url="http://wiki.launchpad.net/" />
+		<test url="http://www.launchpad.net/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blog\.launchpad\.net$" name="^((wordpress|wordpress_logged_in|wordpress_sec|wordpresspass|wordpressuser)_[\da-f]{32}|wordpress_test_cookie)$" /-->
+	<!--securecookie host="^login\.launchpad\.net$" name="^openid_referer$" /-->
 
     <securecookie host="^(?:.*\.)?launchpad\.net$" name=".+" />
     <securecookie host="^(?:.*\.)?launchpadlibrarian\.net$" name=".+" />
@@ -21,7 +107,12 @@
     <rule from="^http://bazaar\.launchpad\.net/$"
         to="https://launchpad.net/" />
 
-    <rule from="^http://([^/:@]+)?\.launchpad\.net/"
+	<!--	Redirects as so:
+					-->
+	<rule from="^http://feeds\.launchpad\.net/$"
+		to="https://help.launchpad.net/Feeds" />
+
+    <rule from="^http://([\w.-]+)?\.launchpad\.net/"
         to="https://$1.launchpad.net/" />
 
     <rule from="^http://bazaar\.launchpad\.net/(.+)"
@@ -29,6 +120,6 @@
 
     <rule from="^http://launchpadlibrarian\.net/"
         to="https://launchpadlibrarian.net/" />
-    <rule from="^http://([^/:@]+)?\.launchpadlibrarian\.net/"
+    <rule from="^http://([\w.-]+)?\.launchpadlibrarian\.net/"
         to="https://$1.launchpadlibrarian.net/" />
 </ruleset>
