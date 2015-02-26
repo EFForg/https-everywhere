@@ -1,9 +1,88 @@
-<p>This page describes how to write rulesets for <a href="https://eff.org/https-everywhere">HTTPS Everywhere</a>, the Firefox plugin that switches sites over from http to https automatically. HTTPS Everywhere comes with <a href="http://www.eff.org/https-everywhere/atlas/">thousands</a> of rulesets, but you might want to edit them, or write new ones. Rulesets are simple xml files. Here is a simplified version of <a href="https://gitweb.torproject.org/https-everywhere.git/blob/HEAD:/src/chrome/content/rules/Twitter.xml"><tt>Twitter.xml</tt></a>, from the plugin distribution:</p><pre>&lt;ruleset name="Twitter"&gt;
-  &lt;target host="www.twitter.com" /&gt;
-  &lt;target host="twitter.com" /&gt;
+<p>
+  This page describes how to write rulesets for
+   <a href="https://eff.org/https-everywhere">HTTPS Everywhere</a>,
+  the Firefox add-on that switches sites over from HTTP
+  to HTTPS automatically. HTTPS Everywhere comes with
+   <a href="http://www.eff.org/https-everywhere/atlas/">thousands</a>
+  of rulesets that tell HTTPS Everywhere which sites it should switch
+  to HTTPS and how. If there is a site that HTTPS Everywhere doesn't
+  switch to HTTPS and would like to add it, this guide will explain how.
+</p>
 
-  &lt;rule from="^http://(www\.)?twitter\.com/" to="https://twitter.com/"/&gt;
-&lt;/ruleset&gt;</pre><p>The "target" tag specifies which domains the ruleset might apply to. The target host tag does not use regular expressions. The content of a target tag should be the actual name of a web server to which the ruleset applies or partially applies, like <tt>www.eff.org</tt>, <tt>www.google.com</tt>, <tt>secure.wikimedia.org</tt>, and so on. If your rule applies to the bare domain (like "eff.org", not just "www.eff.org"), you need an additional target tag to say so. For example, the sample ruleset above is meant to apply to either <tt>www.twitter.com</tt> or <tt>twitter.com</tt>, so it has a separate target tag for each. A target may, however, contain a wildcard in one portion of the domain (like <tt>*.google.com</tt> or <tt>google.*</tt>, but <tt>*.google.*</tt> would not work). A wildcard on the left will match arbitrarily deep subdomains (for instance, <tt>*.facebook.com</tt> will match <tt>s-static.ak.facebook.com</tt>).Exception: currently this is not true for a target host that is less than three levels deep. <tt>&lt;target host="*.com"&gt;</tt> would match <tt>thing.com</tt> but not <tt>very.thing.com</tt>. We would consider changing that if anybody needs to use it. The "rule" does the actual rewriting work. The "from" and "to" clauses in each rule are <a href="http://www.regular-expressions.info/javascript.html">JavaScript regular expressions</a>. You can use them to rewrite URLs in more complicated ways. Here's a simplified (and now obsolete) example for Wikipedia:</p><pre>&lt;ruleset name="Wikipedia"&gt;
+
+<p>
+  A ruleset is an XML file describing behavior for a site or group of sites.
+   For example, here is
+   <a href="https://github.com/efforg/https-everywhere/blob/master/src/chrome/content/rules/RabbitMQ.xml"><tt>RabbitMQ.xml</tt></a>,
+  from the plugin distribution:
+</p>
+
+<pre>
+&lt;ruleset name="RabbitMQ"&gt;
+        &lt;target host="rabbitmq.com" /&gt;
+        &lt;target host="www.rabbitmq.com" /&gt;
+
+        &lt;rule from="^http:"
+                to="https:" /&gt;
+&lt;/ruleset&gt;
+</pre>
+
+<p>
+  The "target" tag specifies which web sites the ruleset applies
+  to. The "rule" tag specifies how URLs on those web sites should be
+  modified. This rule says that any URLs on <tt>rabbitmq.com</tt> and
+  <tt>www.rabbitmq.com</tt> should be modified by replacing "http:" with
+  "https:".
+</p>
+
+<p>
+  When Firefox loads a URL, HTTPS Everywhere splits out the host name
+  name (e.g. <tt>www.google.com</tt> out of
+  "http://www.google.com/webhp"), and searches its ruleset database for
+  rulesets that match that host name. Host names do not use regular
+  expressions, but they support wildcards, described below.
+</p>
+
+<p>
+  HTTPS Everywhere then checks the full URL against all the rules from
+  rulesets matching the host name. Rules <em>do</em> use regular expressions.
+  The "from" attribute is checked against the URL, and if it matches,
+  the matched portion is replaced with the contents of the "to"
+  attribute.
+</p>
+
+<p>
+  Rules are applied to URLs on any of the target hosts. They are applied
+  in order, and only the first rule that matches a URL (using the "from"
+  attribute) is used.
+</p>
+
+
+ The target host tag does not use regular expressions. The content
+of a target tag should be the actual name of a web site to which
+the ruleset applies or partially applies, like <tt>www.eff.org</tt>,
+<tt>www.google.com</tt>, <tt>secure.wikimedia.org</tt>, and so
+on. If your rule applies to the bare domain (like "eff.org",
+not just "www.eff.org"), you need an additional target tag to
+say so. For example, the sample ruleset above is meant to apply
+to either <tt>www.twitter.com</tt> or <tt>twitter.com</tt>,
+so it has a separate target tag for each. A target may,
+however, contain a wildcard in one portion of the domain (like
+<tt>*.google.com</tt> or <tt>google.*</tt>, but <tt>*.google.*</tt>
+would not work). A wildcard on the left will match arbitrarily
+deep subdomains (for instance, <tt>*.facebook.com</tt> will
+match <tt>s-static.ak.facebook.com</tt>).Exception: currently
+this is not true for a target host that is less than three
+levels deep. <tt>&lt;target host="*.com"&gt;</tt> would match
+<tt>thing.com</tt> but not <tt>very.thing.com</tt>. We would consider
+changing that if anybody needs to use it. The "rule" does the actual
+rewriting work. The "from" and "to" clauses in each rule are <a
+href="http://www.regular-expressions.info/javascript.html">JavaScript
+regular expressions</a>. You can use them to rewrite URLs in more
+complicated ways. Here's a simplified (and now obsolete) example
+for Wikipedia:</p>
+
+<pre>&lt;ruleset name="Wikipedia"&gt;
   &lt;target host="*.wikipedia.org" /&gt;
 
   &lt;rule from="^http://([^@:/][^/:@])\.wikipedia\.org/wiki/"
