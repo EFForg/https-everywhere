@@ -34,7 +34,7 @@ import sys
 def generate(regex):
     i = 0
     urls = []
-    for url in exrex.generate(from_attrib):
+    for url in exrex.generate(regex):
         i += 1
         if i > 1000:
             break
