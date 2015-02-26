@@ -1,12 +1,18 @@
 <!--
 	Other Kaspersky rulesets:
 
+		- Kaspersky.ru.xml
+		- Kaspersky-cyberstat.com.xml
+		= Kaspersky_Partners.ru.xml
 		- Kasperskycontenthub.com.xml
+		- Securelist.ru.xml
+		- Threatpost.ru.xml
 
 
 	CDN buckets:
 
 		- kaspersky.122.2o7.net
+		- a248.e.akamai.net/L/16382/90570/15h/reviews.kaspersky.com/
 
 		- 46qasb3uw5yn639ko4bz2ptr8u.wpengine.netdna-cdn.com
 
@@ -15,29 +21,44 @@
 
 	Nonfunctional subdomains:
 
-		- blog		(403, wpengine)
-		- business	(redirects to http, wpengine)
+		- (www.)? ¹
 		- forum		(dropped)
+		- reviews ³
 		- usa ⁴
-		- www		(401, valid cert)
 
+	¹ Redirects to http/410
 	⁴ Dropped
+	³ 403
 
 
 	Problematic subdomains:
 
+		- www.academy ¹
+		- www.blog ¹
+		- www.business ¹
+		- www.eugene ¹
+		- (www.)?free ²
+		- me ²
+		- media ²
 		- tr1	(mismatched, CN: *.d2.sc.omtrdc.net)
+
+	¹ Mismatched, CN: threatpost.com
+	² Mismatched, CN: www.kaspersky.com
 
 
 	Fully covered subdomains:
 
-		- academy
+		- (www.)?academy	(www → ^)
 		- anti-theft
+		- arabic
+		- (www.)?blog		(www → ^)
+		- (www.)?business	(www → ^)
 		- center
 		- companyaccount
-		- eugene
+		- (www.)?eugene		(www → ^)
 		- manage-tablet
 		- my
+		- plblog
 		- sas
 		- support
 		- tr1		(→ kaspersky-com.d2.sc.omtrdc.net)
@@ -45,25 +66,71 @@
 		- uis
 
 
+	These altnames don't exist:
+
+		- www.arabic.kaspersky.com
+		- www.plblog.kaspersky.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .kaspersky.com
+		- academy.kaspersky.com
+		- arabic.kaspersky.com
+		- blog.kaspersky.com
+		- companyaccount.kaspersky.com
+		- eugene.kaspersky.com
+		- plblog.kaspersky.com
+
+
 	Mixed content:
 
-		- Images on eugene from kasperskycontenthub.com *
+		- css on me from $self ¹
 
-	* Secured by us, doesn't trip MCB anyway
+		- Images, on:
+
+			- (www.)?free from www ²
+			- me from $self ¹
+
+		- Ads/bugs, on:
+
+			- (www.)?free from tr1 ³
+			- me from googleads.g.doubleclick.net ⁴
+
+	¹ Not secured by us <= mismatched
+	² Unsecurable <= 410
+	³ Secured by us
+	⁴ Rule disabled by default
 
 -->
 <ruleset name="Kaspersky.com (partial)">
 
 	<target host="*.kaspersky.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kaspersky\.com/$" /-->
+		<!--
+			410:
+				-->
+		<!--exclusion pattern="^http://www\.kaspersky\.com/(images/|other/custom-html/|resources/)" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^companyaccount\.kaspersky\.com$" name="^ISAWPLB{[\dA-F]{8}(-[\dA-F]){4}-79A795BAED67}$" /-->
+	<!--securecookie host="^(academy|blog|business|eugene|plblog)\.kaspersky\.com$" name="^X-Mapping-\w{8}$" /-->
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.kaspersky\.com$" name="^s_\w+$" />
-	<securecookie host="^(?:\.anti-theft|center|\.eugene|\.?my|\.?support)\.kaspersky\.com$" name=".+" />
+	<securecookie host="^(?:academy|\.anti-theft|arabic|blog|business|center|companyaccount|\.?eugene|\.?my|plblog|\.?support)\.kaspersky\.com$" name=".+" />
 
 
-	<rule from="^http://(academy|anti-theft|center|companyaccount|eugene|manage-tablet|my|sas|support|trusted|uis)\.kaspersky\.com/"
+	<rule from="^http://(?:www\.)?(academy|blog|business|eugene)\.kaspersky\.com/"
+		to="https://$1.kaspersky.com/" />
+
+	<rule from="^http://(anti-theft|arabic|business|center|companyaccount|manage-tablet|my|plblog|sas|support|trusted|uis)\.kaspersky\.com/"
 		to="https://$1.kaspersky.com/" />
 
 	<rule from="^http://tr1\.kaspersy\.com/"

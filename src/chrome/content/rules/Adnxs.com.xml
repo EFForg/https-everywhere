@@ -1,0 +1,42 @@
+<!--
+	For other AppNexus coverage, see AppNexus.xml.
+
+
+	Problematic domains:
+
+		- cdn.adnxs.com		(akamai)
+
+
+	^adnxs.com doesn't exist.
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .adnxs.com
+		- www.adnxs.com
+
+-->
+<ruleset name="Adnxs.com">
+
+	<target host="*.adnxs.com" />
+
+		<test url="http://cdn.adnxs.com/" />
+		<test url="http://secure.adnxs.com/" />
+		<test url="http://www.adnxs.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adnxs\.com$" name="^(sess|uuid2)$" /-->
+	<!--securecookie host="^www\.adnxs\.com$" name="^([A-Z]+|BIGipServeradnexus\.prod_\w+_\w+_https\.\d+)$" /-->
+
+	<securecookie host="^(?:.*\.)?adnxs\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.adnxs\.com/"
+		to="https://secure.adnxs.com/" />
+
+	<rule from="^http://(\w+)\.adnxs\.com/"
+		to="https://$1.adnxs.com/" />
+
+</ruleset>
