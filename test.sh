@@ -59,4 +59,5 @@ fi
 
 popd
 
+bash test-ruleset-coverage.sh
 echo -e "Git commit `git rev-parse HEAD`\nsha256sum  `sha256sum $XPI_NAME`"

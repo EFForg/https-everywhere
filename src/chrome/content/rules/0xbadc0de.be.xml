@@ -1,16 +1,14 @@
 <!--
 	Problematic subdomains:
 
-		- ^ ¹
-		- www ²
+		- (www.)? *
 
-	¹ Shows libssh.org; mismatched, CN: www.libssh.org
-	² http reply
+	* Shows libssh.org
 
 
 	Fully covered subdomains:
 
-		- ^
+		- (www.)?	(→ blog)
 		- blog
 		- stats
 
@@ -23,32 +21,25 @@
 			- www.cryptosmith.com ²
 			- upload.wikimedia.org ¹
 
+		- Bugs on blog from stats ¹
+
 	¹ Secured by us
-	¹ Unsecurable (http reply)
+	² Not secured by us <= mismatched
 
 -->
-<ruleset name="0xbadc0de.be (partial)">
+<ruleset name="0xbadc0de.be" default_off="Needs ruleset tests">
 
 	<target host="0xbadc0de.be" />
 	<target host="*.0xbadc0de.be" />
-		<!--
-			Doesn't redirect to blog:
+
+		<test url="http://blog.0xbadc0de.be/" />
+		<test url="http://stats.0xbadc0de.be/" />
+		<test url="http://www.0xbadc0de.be/" />
+
+
+	<!--	Redirect drops path but not args:
 							-->
-		<!--exclusion pattern="^http://www\.0xbadc0de.be/+wiki/+(?!$|\?)" /-->
-
-
-	<!--	Server secures:
-				-->
-	<securecookie host="^stats\.0xbadc0de\.be$" name=".+" />
-
-
-	<rule from="^http://0xbadc0de\.be/"
-		to="https://0xbadc0de.be/" />
-
-	<rule from="^http://www\.0xbadc0de\.be/+(?:\?.*)?$"
-		to="https://blog.0xbadc0de.be/" />
-
-	<rule from="^http://www\.0xbadc0de\.be/+wiki/*(?=$|\?.*)"
+	<rule from="^http://(?:www\.)?0xbadc0de\.be/[^?]*"
 		to="https://blog.0xbadc0de.be/" />
 
 	<rule from="^http://(blog|stats)\.0xbadc0de\.be/"

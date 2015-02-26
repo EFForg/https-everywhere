@@ -1,5 +1,42 @@
-<ruleset name="Zscaler">
-  <target host="www.zscaler.com" />
+<!--
+	Nonfunctional subdomains:
 
-  <rule from="^http://www\.zscaler\.com/" to="https://www.zscaler.com/"/>
+		- info ¹
+		- research ²
+		- www ³
+		- zulu ⁴
+
+	¹ Marketo
+	² Blogger
+	³ Redirects to http
+	⁴ Plaintext reply
+
+
+	Partially covered subdomains:
+
+		- blog *
+
+	* Avoiding broken MCB
+
+
+	Mixed content:
+
+		- on blog from $self *
+
+	* Secured by us
+-->
+<ruleset name="Zscaler (partial)" default_off="Needs ruleset tests">
+  <target host="blog.zscaler.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.zscaler\.com/+(?!favicon\.ico|modules/|sites/|themes/)" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.zscaler\.com/($|contactsales-pop\.php|contactus\.php|css/|home-images/|images/|jquery\.simplyscroll\.css|support\.php)" /-->
+
+			<test url="http://blog.zscaler.com/sites/all/themes/default_theme/logo.png" />
+
+  <rule from="^http:" to="https:"/>
 </ruleset>

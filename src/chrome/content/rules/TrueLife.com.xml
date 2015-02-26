@@ -1,0 +1,88 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ad2 ¹
+		- asian ²
+		- campus ²
+		- news ¹
+		- sport ¹
+		- travel ¹
+		- tv ¹
+		- women ²
+
+	¹ Refused
+	² Redirects to pokemon
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- login ²
+		- social ³
+		- www ³
+
+	¹ Mismatched
+	² Expired 2014
+	³ Mixed css
+
+
+	Partially covered subdomains:
+
+		- (www.)? *	(^ → www)
+		- home *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- pokemon
+
+
+	Mixed content:
+
+		- iframe on social from $self ¹
+
+		- css, on:
+
+			- social from $self ¹
+			- www from $self ¹
+
+		- Images, on:
+
+			- social from $self ¹
+			- www from $self ¹
+			- social, www from dynamic.tlcdn[1-4].com ²
+			- social, www from static.tlcdn[1-4].com ²
+
+		- Ads, on:
+
+			- pokemon from hits.truehits.in.th
+			- social, www from ad2 ²
+			- www from www.rentalcars.com ³
+
+	¹ Secured by us
+	² Unsecurable <= refused
+	³ Unsecurable <= 403
+
+-->
+<ruleset name="TrueLife.com (partial)" default_off="Needs ruleset tests">
+
+	<target host="truelife.com" />
+	<target host="home.truelife.com" />
+	<target host="pokemon.truelife.com" />
+	<target host="social.truelife.com" />
+	<target host="www.truelife.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:home\.|www\.)?truelife\.com/+(?!assets/|streaming_now/|youtube/)" />
+
+
+	<rule from="^http://(?:www\.)?truelife\.com/"
+		to="https://www.truelife.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
