@@ -3,20 +3,34 @@
 
 		- d16jfyletng9p5.cloudfront.net
 
-			- media
-			- media[1-4]
-
 
 	Problematic subdomains:
 
-		- media ¹
-		- media[1-4] ¹
-		- media[6-9] ²
-		- media\d\d+ ²
+		- media10 ²
 		- www		(refused)
 
-	¹ cloudfront
-	² Cert only matches ^giphy.com 
+	² AmazonWS
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(www → ^)
+		- api
+		- media
+		- media10	(→ d16jfyletng9p5.cloudfront.net)
+		- media\d+	(0-4)
+
+
+	Insecure cookies are set for these domains:
+
+		- .giphy.com
+
+
+	Mixed content:
+
+		- Images on ^ from media4.giphy.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Giphy.com">
@@ -24,11 +38,28 @@
 	<target host="giphy.com" />
 	<target host="*.giphy.com" />
 
+		<test url="http://api.giphy.com/" />
+		<test url="http://media.giphy.com/" />
+		<test url="http://media1.giphy.com/" />
+		<test url="http://media4.giphy.com/" />
+		<test url="http://media10.giphy.com/" />
+		<test url="http://www.giphy.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.giphy\.com$" name="^__qca$" /-->
+
+	<securecookie host="^\.giphy\.com$" name=".+" />
+
 
 	<rule from="^http://(?:www\.)?giphy\.com/"
 		to="https://giphy.com/" />
 
-	<rule from="^http://media\d*\.giphy\.com/"
+	<rule from="^http://media10\.giphy\.com/"
 		to="https://d16jfyletng9p5.cloudfront.net/" />
+
+	<rule from="^http://(api|media\d*)\.giphy\.com/"
+		to="https://$1.giphy.com/" />
 
 </ruleset>

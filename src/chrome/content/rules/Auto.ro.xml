@@ -1,0 +1,82 @@
+<!--
+	Nonfunctional subdomains:
+
+		- cdn.anunt *
+		- cdn *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- anvelope ²
+		- chestionare ²
+		- dealer ²
+		- parcuri ²
+		- service ²
+		- targuri ²
+
+	¹ Mixed css
+	² Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- auto.ro
+		- .auto.ro
+		- anvelope.auto.ro
+		- chestionare.auto.ro
+		- dealer.auto.ro
+		- parcuri.auto.ro
+		- service.auto.ro
+		- targuri.auto.ro
+		- www.auto.ro
+
+
+	Mixed content:
+
+		- css, on:
+
+			- (www.)?, chestionare, dealer, parcuri, service, targuri from www ¹
+			- anvelope, service, from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- (www.)?, anvelope, chestionare, dealer, parcuri, service, targuri from www ¹
+			- (www.)?, anvelope, chestionare from cdn.anunt ²
+			- (www.)?, dealer, parcuri, service from cdn ²
+			- anvelope from $self ³
+			- service from $self ³
+
+		- favicon on (www.)? from $self ¹
+		- Bugs on service from log.trafic.ro ²
+
+	¹ Secured by us
+	² Unsecurable <= refused
+	³ Not secured by us <= mismatched
+
+-->
+<ruleset name="Auto.ro (partial)" default_off="Needs ruleset tests">
+
+	<target host="auto.ro" />
+	<target host="www.auto.ro" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?auto\.ro/+(?!favicon\.ico|resize\.php|resources/)" />
+
+		<test url="http://www.auto.ro/favicon.ico" />
+		<test url="http://www.auto.ro/resize.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.auto\.ro$" name="^no_mobile" /-->
+	<!--securecookie host="^((anvelope|chestionare|dealer|parcuri|service|targuri|www)\.)?auto\.ro$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

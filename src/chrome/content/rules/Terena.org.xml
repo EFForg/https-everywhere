@@ -1,14 +1,18 @@
 <!--
+	For other GÉANT Association coverage, see GEANT.org.xml.
+
+
 	Nonfunctional subdomains:
 
 		- godzilla *
 		- mailarchive *
-		- papers *
+		- nipkow ²
+		- putin ³
 		- tnc200[0-4] **
-		- tnc2005 *
-		- v4 *
 
 	* Shows eduroam.org, valid cert
+	² Prints name
+	³ Shows refeds.org
 	** Shows eduroam.org; mismatched, CN: godzilla.terena.org
 
 
@@ -19,8 +23,7 @@
 
 	Partially covered subdomains:
 
-		- (www.) *
-		- tnc200[789] *
+		- tnc200[5789] *
 		- tnc2010 *
 
 	* Some pages redirect to http
@@ -28,28 +31,109 @@
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- compendium
 		- confluence
+		- crypto-filesender
+		- eventr
+		- filesender
+		- lenin
 		- login
-		- my
 		- omega
-		- tec
+		- rostov
+		- rykov
+		- test-login
+		- tnc15
 		- tnc2006	(→ www)
-		- tnc201[1-4]
+		- tnc201[1-5]
+		- wiki
 		- wikis
 
+
+	These altnames don't exist:
+
+		- core.terena.org
+		- urnreg.terena.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- compendium.terena.org
+		- crypto-filesender.terena.org
+		- cryptosender.terena.org
+		- eventr.terena.org
+		- filesender.terena.org
+		- login.terena.org
+		- omega.terena.org
+		- tnc15.terena.org
+		- tnc2011.terena.org
+		- tnc2012.terena.org
+		- tnc2013.terena.org
+		- tnc2014.terena.org
+		- wiki.terena.org
+		- www.terena.org
+
 -->
-<ruleset name="Terena.org (partial)">
+<ruleset name="Terena.org (partial)" default_off="Needs ruleset tests">
 
 	<target host="terena.org" />
 	<target host="*.terena.org" />
-		<exclusion pattern="^http://(?:www\.)?terena\.org/(?!css/|events(?:$|\?|/)|favicon\.ico|gfx/|js/)" />
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="^http://tnc(200[789]|2010)\.terena\.org/$" />
+		<!--
+			Exceptions:
+					-->
 		<exclusion pattern="^http://tnc20(?:0\d|10)\.terena\.org/(?!css/|gfx/|js/)" />
 
+			<test url="http://tnc2005.terena.org/" />
+			<test url="http://tnc2005.terena.org/core.css" />
+			<test url="http://tnc2006.terena.org/" />
+			<test url="http://tnc2007.terena.org/" />
+			<test url="http://tnc2007.terena.org/css/base.css" />
+			<test url="http://tnc2008.terena.org/" />
+			<test url="http://tnc2008.terena.org/css/min-base.css" />
+			<test url="http://tnc2009.terena.org/" />
+			<test url="http://tnc2009.terena.org/gfx/logos/terena_header.png" />
+			<test url="http://tnc2010.terena.org/" />
+			<test url="http://tnc2010.terena.org/css/min-base.css" />
 
-	<securecookie host="^(?:confluence|login|tnc201[1-4]|wikis)\.terena\.org$" name=".+" />
+		<test url="http://compendium.terena.org/" />
+		<test url="http://confluence.terena.org/" />
+		<test url="http://crypto-filesender.terena.org/" />
+		<test url="http://cryptosender.terena.org/" />
+		<test url="http://eventr.terena.org/" />
+		<test url="http://filesender.terena.org/" />
+		<test url="http://lenin.terena.org/" />
+		<test url="http://login.terena.org/" />
+		<test url="http://omega.terena.org/" />
+		<test url="http://rostov.terena.org/" />
+		<test url="http://rykov.terena.org/" />
+		<test url="http://test-login.terena.org/" />
+		<test url="http://tnc15.terena.org/" />
+		<test url="http://tnc2011.terena.org/" />
+		<test url="http://tnc2012.terena.org/" />
+		<test url="http://tnc2013.terena.org/" />
+		<test url="http://tnc2014.terena.org/" />
+		<test url="http://tnc2015.terena.org/" />
+		<test url="http://wiki.terena.org/" />
+		<test url="http://wikis.terena.org/" />
+		<test url="http://www.terena.org/" />
 
 
-	<rule from="^http://((?:confluence|login|my|omega|tec|tnc20(?:0[789]|1\d)|wikis|www)\.)?terena\.org/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^compendium\.terena\.org$" name="^_terena_session$" /-->
+	<!--securecookie host="^(crypto-filesender|cryptosender|filesender|login|tnc15|tnc201[1-4]|www)\.terena\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^eventr\.terena\.org$" name="^_events_session$" /-->
+	<!--securecookie host="^login\.terena\.org$" name="^language$" /-->
+	<!--securecookie host="^wiki\.terena\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|login|tnc15|tnc201[1-4]|wikis?|www)\.terena\.org$" name=".+" />
+
+
+	<rule from="^http://((?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|lenin|login|omega|rostov|rykov|test-login|tnc15|tnc20(?:0[5789]|1\d)|wikis?|www)\.)?terena\.org/"
 		to="https://$1terena.org/" />
 
 	<rule from="^http://tnc2006\.terena\.org/"
