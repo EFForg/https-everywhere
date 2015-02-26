@@ -42,7 +42,7 @@ with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
 
-def test_bad_regexp(tree, filename, from_attrib, to):
+def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
     """The 'from' rule contains an invalid extended regular expression."""
     patterns = from_attrib + xpath_exlusion_pattern(tree) + xpath_cookie_pattern(tree)
@@ -53,33 +53,46 @@ def test_bad_regexp(tree, filename, from_attrib, to):
             return False
     return True
 
-def test_unescaped_dots(tree, filename, from_attrib, to):
+def unescaped_dot(s):
+    escaped = False
+    bracketed = False
+    for c in s:
+        if c == "\\":
+           escaped = not escaped
+        elif not escaped and c == "[":
+           bracketed = True
+        elif not escaped and c == "]":
+           bracketed = False
+        elif not escaped and not bracketed and c == ".":
+           return True
+        elif not bracketed and c == "/":
+           break
+        else:
+           escaped = False
+    return False
+
+def test_unescaped_dots(tree, rulename, from_attrib, to):
     # Rules containing unescaped dots outside of brackets and before slash.
     # Note: this is meant to require example\.com instead of example.com,
     # but it also forbids things like .* which usually ought to be replaced
     # with something like ([^/:@\.]+)
     """The 'from' rule contains unescaped period in regular expression.  Try escaping it with a backslash."""
     for f in from_attrib:
-        escaped = False
-        bracketed = False
         s = re.sub("^\^https?://", "", f)
-        for c in s:
-            if c == "\\":
-               escaped = not escaped
-            elif not escaped and c == "[":
-               bracketed = True
-            elif not escaped and c == "]":
-               bracketed = False
-            elif not escaped and not bracketed and c == ".":
-               return False
-            elif not bracketed and c == "/":
-               break
-            else:
-               escaped = False
+        if unescaped_dot(s):
+            return False
+    return True
+
+def test_unescaped_dots_in_exclusion(tree, rulename, from_attrib, to):
+    """The 'exclusion' tag contains unescaped period in regular expression. Try escaping it with a backslash."""
+    pattern_attrib = etree.XPath("/ruleset/exclusion/@pattern")(tree)
+    for f in pattern_attrib:
+        if unescaped_dot(f):
+            return False
     return True
 
 xpath_rule = etree.XPath("/ruleset/rule")
-def test_unencrypted_to(tree, filename, from_attrib, to):
+def test_unencrypted_to(tree, rulename, from_attrib, to):
     # Rules that redirect to something other than https or http.
     # This used to test for http: but testing for lack of https: will
     # catch more kinds of mistakes.
@@ -91,19 +104,19 @@ def test_unencrypted_to(tree, filename, from_attrib, to):
         if to[:6] != "https:" and to[:5] != "http:":
             return False
         elif to[:5] == "http:" and downgrade:
-            if filename in downgrade_allowed_list:
-                warn("whitelisted downgrade rule in %s redirects to http." % filename)
+            if rulename in downgrade_allowed_list:
+                warn("whitelisted downgrade rule in %s redirects to http." % rulename)
             else:
-                fail("non-whitelisted downgrade rule in %s redirects to http." % filename)
+                fail("non-whitelisted downgrade rule in %s redirects to http." % rulename)
                 return False
         elif to[:5] == "http:":
-            fail("non-downgrade rule in %s redirects to http." % filename)
+            fail("non-downgrade rule in %s redirects to http." % rulename)
             return False
     return True
 
 printable_characters = set(map(chr, list(range(32, 127))))
 
-def test_non_ascii(tree, filename, from_attrib, to):
+def test_non_ascii(tree, rulename, from_attrib, to):
     # Rules containing non-printable characters.
     """Rule contains non-printable character in 'to' pattern."""
     for t in to:
@@ -135,6 +148,7 @@ def nomes_all(where=sys.argv[1:]):
 tests = [
   test_bad_regexp,
   test_unescaped_dots,
+  test_unescaped_dots_in_exclusion,
   test_unencrypted_to,
   test_non_ascii
 ]
@@ -157,18 +171,18 @@ for row in c.execute('''SELECT contents from rulesets'''):
     except Exception as oops:
         failure = 1
         print("failed XML validity: %s\n" % (oops))
-    if failure or not xpath_ruleset(tree):
+    if not xpath_ruleset(tree):
         continue
     rn = xpath_ruleset_name(tree)[0]
     if not rn:
         failure = 1
         fail("unnamed ruleset")
         continue
-    rf = xpath_ruleset_name(tree)[0]
+    rf = xpath_ruleset_file(tree)[0]
     from_attrib = xpath_from(tree)
     to = xpath_to(tree)
     for test in tests:
-        if not test(tree, rf, from_attrib=from_attrib, to=to):
+        if not test(tree, rn, from_attrib=from_attrib, to=to):
             failure = 1
             fail("%s failed test: %s" % (rf, test.__doc__))
 
