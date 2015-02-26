@@ -1,7 +1,6 @@
 <!--
 Disabled by https-everywhere-checker because:
 Fetch error: http://forums.aws.amazon.com/ => https://forums.aws.amazon.com/: Cycle detected - URL already encountered: https://forums.aws.amazon.com/index.jspa
-Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7, 'Failed to connect to signin.aws.amazon.com port 80: Connection refused')
 	For rules that break image zoom, see AmazonAWS-breakzoom.xml.
 
 	For other Amazon coverage, see Amazon.xml.
@@ -99,7 +98,6 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 	<target host="fls-eu.amazon.co.uk" />
 	<target host="aws.amazon.com" />
 	<target host="forums.aws.amazon.com" />
-	<target host="signin.aws.amazon.com" />
 	<target host="docs.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
 	<target host="fls-eu.amazon.com" />
@@ -152,6 +150,8 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 					-->
 	<rule from="^http://dis(\.resized)?\.images\.s3\.amazonaws\.com/"
 		to="https://s3-eu-west-1.amazonaws.com/dis$1.images/" />
+	<test url="http://dis.images.s3.amazonaws.com/" />
+	<test url="http://dis.resized.images.s3.amazonaws.com/" />
 
 	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
@@ -159,25 +159,25 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 	<rule from="^http://fls-eu\.amazon\.co\.uk/"
 		to="https://fls-eu.amazon.co.uk/" />
 
-	<rule from="^http://((?:docs|forums|signin)\.aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
+	<rule from="^http://((?:docs|forums)\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
 	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+	<rule from="^http://([\w-]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://$1.s3$2.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+	<rule from="^http://([\w-]+)\.([^@:/]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
 
 	<rule from="^http://s3-website-us-east-1\.amazonaws\.com/"
 		to="https://s3.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3-website-us-east-1\.amazonaws\.com/"
+	<rule from="^http://([\w-]+)\.s3-website-us-east-1\.amazonaws\.com/"
 		to="https://$1.s3.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
+	<rule from="^http://([\w-]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
 		to="https://s3.amazonaws.com/$1.$2/" />
 
 	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
@@ -205,9 +205,120 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 		copied the crazy pattern from the rule above.
 									-->
 		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws.com/" />
-		<exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
+		<exclusion pattern="^http://[\w-]+images[\w-]+/images/G/01/zeitgeist/mp3player" />
 
 	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
 		to="https://images-$1.ssl-images-amazon.com/" />
 
+<test url="http://cms.kiva.org.s3.amazonaws.com/" />
+<test url="http://fls-eu.amazon.co.uk/" />
+<test url="http://docs.aws.amazon.com/" />
+<test url="http://forums.aws.amazon.com/" />
+<test url="http://aws-portal.amazon.com/" />
+<test url="http://fls-eu.amazon.com/" />
+<test url="http://fls-na.amazon.com/" />
+<test url="http://payments.amazon.com/" />
+<test url="http://sis.amazon.com/" />
+<test url="http://webservices.amazon.com/" />
+<test url="http://s3.amazonaws.com/" />
+<test url="http://s3-ap-northeast-1.amazonaws.com/" />
+<test url="http://s3-ap-southeast-1.amazonaws.com/" />
+<test url="http://s3-eu-west-0.amazonaws.com/" />
+<test url="http://s3-eu-west-1.amazonaws.com/" />
+<test url="http://s3-eu-west-2.amazonaws.com/" />
+<test url="http://s3-eu-west-3.amazonaws.com/" />
+<test url="http://s3-eu-west-4.amazonaws.com/" />
+<test url="http://s3-eu-west-5.amazonaws.com/" />
+<test url="http://s3-eu-west-6.amazonaws.com/" />
+<test url="http://s3-eu-west-7.amazonaws.com/" />
+<test url="http://s3-eu-west-8.amazonaws.com/" />
+<test url="http://s3-eu-west-9.amazonaws.com/" />
+<test url="http://s3-us-west-0.amazonaws.com/" />
+<test url="http://s3-us-west-1.amazonaws.com/" />
+<test url="http://s3-us-west-2.amazonaws.com/" />
+<test url="http://s3-us-west-3.amazonaws.com/" />
+<test url="http://s3-us-west-4.amazonaws.com/" />
+<test url="http://s3-us-west-5.amazonaws.com/" />
+<test url="http://s3-us-west-6.amazonaws.com/" />
+<test url="http://s3-us-west-7.amazonaws.com/" />
+<test url="http://s3-us-west-8.amazonaws.com/" />
+<test url="http://s3-us-west-9.amazonaws.com/" />
+<test url="http://s3-external-0.amazonaws.com/" />
+<test url="http://s3-external-1.amazonaws.com/" />
+<test url="http://s3-external-2.amazonaws.com/" />
+<test url="http://s3-external-3.amazonaws.com/" />
+<test url="http://s3-external-4.amazonaws.com/" />
+<test url="http://s3-external-5.amazonaws.com/" />
+<test url="http://s3-external-6.amazonaws.com/" />
+<test url="http://s3-external-7.amazonaws.com/" />
+<test url="http://s3-external-8.amazonaws.com/" />
+<test url="http://s3-external-9.amazonaws.com/" />
+<test url="http://s3-sa-east-1.amazonaws.com/" />
+<test url="http://s3-website.amazonaws.com/" />
+<test url="http://s3-website-ap-northeast-1.amazonaws.com/" />
+<test url="http://s3-website-ap-southeast-1.amazonaws.com/" />
+<test url="http://s3-website-eu-west-0.amazonaws.com/" />
+<test url="http://s3-website-eu-west-1.amazonaws.com/" />
+<test url="http://s3-website-eu-west-2.amazonaws.com/" />
+<test url="http://s3-website-eu-west-3.amazonaws.com/" />
+<test url="http://s3-website-eu-west-4.amazonaws.com/" />
+<test url="http://s3-website-eu-west-5.amazonaws.com/" />
+<test url="http://s3-website-eu-west-6.amazonaws.com/" />
+<test url="http://s3-website-eu-west-7.amazonaws.com/" />
+<test url="http://s3-website-eu-west-8.amazonaws.com/" />
+<test url="http://s3-website-eu-west-9.amazonaws.com/" />
+<test url="http://s3-website-us-west-0.amazonaws.com/" />
+<test url="http://s3-website-us-west-1.amazonaws.com/" />
+<test url="http://s3-website-us-west-2.amazonaws.com/" />
+<test url="http://s3-website-us-west-3.amazonaws.com/" />
+<test url="http://s3-website-us-west-4.amazonaws.com/" />
+<test url="http://s3-website-us-west-5.amazonaws.com/" />
+<test url="http://s3-website-us-west-6.amazonaws.com/" />
+<test url="http://s3-website-us-west-7.amazonaws.com/" />
+<test url="http://s3-website-us-west-8.amazonaws.com/" />
+<test url="http://s3-website-us-west-9.amazonaws.com/" />
+<test url="http://s3-website-external-0.amazonaws.com/" />
+<test url="http://s3-website-external-1.amazonaws.com/" />
+<test url="http://s3-website-external-2.amazonaws.com/" />
+<test url="http://s3-website-external-3.amazonaws.com/" />
+<test url="http://s3-website-external-4.amazonaws.com/" />
+<test url="http://s3-website-external-5.amazonaws.com/" />
+<test url="http://s3-website-external-6.amazonaws.com/" />
+<test url="http://s3-website-external-7.amazonaws.com/" />
+<test url="http://s3-website-external-8.amazonaws.com/" />
+<test url="http://s3-website-external-9.amazonaws.com/" />
+<test url="http://s3-website-sa-east-1.amazonaws.com/" />
+<test url="http://s3-website-us-east-1.amazonaws.com/" />
+<test url="http://amazonwebservices.com/" />
+<test url="http://www.amazonwebservices.com/" />
+<test url="http://developer.amazonwebservices.com/" />
+<test url="http://media.amazonwebservices.com/" />
+<test url="http://g-images.amazon.com/" />
+<test url="http://ec5.images-amazon.com/" />
+<test url="http://ecx.images-amazon.com/" />
+<test url="http://g-ecx.images-amazon.com/" />
+<test url="http://ec1.images-amazon.com/" />
+<test url="http://ec2.images-amazon.com/" />
+<test url="http://ec3.images-amazon.com/" />
+<test url="http://ec4.images-amazon.com/" />
+<test url="http://ec5.images-amazon.com/" />
+<test url="http://ec6.images-amazon.com/" />
+<test url="http://ec7.images-amazon.com/" />
+<test url="http://ec8.images-amazon.com/" />
+<test url="http://ecx.images-amazon.com/" />
+<test url="http://-ec1.images-amazon.com/" />
+<test url="http://-ec2.images-amazon.com/" />
+<test url="http://-ec3.images-amazon.com/" />
+<test url="http://-ec4.images-amazon.com/" />
+<test url="http://-ec5.images-amazon.com/" />
+<test url="http://-ec6.images-amazon.com/" />
+<test url="http://-ec7.images-amazon.com/" />
+<test url="http://-ec8.images-amazon.com/" />
+<test url="http://-ecx.images-amazon.com/" />
+<test url="http://z-ak.images-amazon.com/" />
+<test url="http://images.amazon.com/" />
+<test url="http://images-jp.amazon.com/" />
+<test url="http://images-eu.ssl-images-amazon.com/" />
+<test url="http://images-fe.ssl-images-amazon.com/" />
+<test url="http://images-na.ssl-images-amazon.com/" />
 </ruleset>
