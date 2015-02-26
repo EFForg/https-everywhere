@@ -19,6 +19,12 @@
 
   <interleave>
 
+    <zeroOrMore>
+      <element name="test">
+        <attribute name="url" />
+      </element>
+    </zeroOrMore>
+
     <oneOrMore>
       <element name="target">
         <attribute name="host">
@@ -49,16 +55,17 @@
             <!-- The from attribute of a rule must start with a caret.
                  It also must contain two slashes (separating the protocol from
                  the hostname), and at least one other slash (terminating the
-                 hostname, and possible beginning a path). -->
-            <param name="pattern">\^.*//.*/.*</param>
+                 hostname, and possible beginning a path). Alternately it can be
+                 the literal string "^http:". -->
+            <param name="pattern">(\^.*//.*/.*|\^http:)</param>
           </data>
         </attribute>
         <attribute name="to">
           <data type="string">
             <!-- The to attribute of a rule must not contain spaces or
                  backslashes. It also must contain at least one slash after the
-                 hostname. -->
-            <param name="pattern">https?://[^ \\]*/[^ \\]*</param>
+                 hostname. Alternately it can be the literal string "https:"-->
+            <param name="pattern">(https?://[^ \\]*/[^ \\]*|https:)</param>
           </data>
         </attribute>
         <optional>

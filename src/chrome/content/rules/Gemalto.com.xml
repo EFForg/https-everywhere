@@ -2,6 +2,15 @@
 	For problematic rules, see Gemalto.com-problematic.xml.
 
 
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ 403
+	² Redirects to http
+
+
 	Problematic subdomains:
 
 		- support *
@@ -9,50 +18,54 @@
 	* Works; expired 2012-12-06, self-signed, CN: vgerndvud358
 
 
-	Observed cookie domains:
+	Fully covered subdomains:
 
-		- boutique ¹
-		- support ²
-		- www ¹
+		- allynisconnect1
+		- boutique
+		- webstore
 
-	¹ Secured by us <= not secured by server
-	² Secured in -problematic.xml <= not secured by server & default_off
+
+	Insecure cookies are set for these hosts:
+
+		- boutique.gemalto.com
+		- support.gemalto.com
+		- webstore.gemalto.com
 
 
 	Mixed content:
 
-		- Images, on:
-
-			- boutique from www ¹
-			- boutique and www from $self ¹
-
+		- css on support from static.jquery.com ¹
 		- favicon on support from $self ²
+		- Web bugs on webstore from fr.sitestat.com ³
 
-		- Web bugs, on:
-
-			- boutique and www from fr.sitestat.com ¹
-			- www from content.mkt51.net ¹
-
-	¹ Secured by us
+	¹ Unsecurable <= 504
 	² Secured in -problematic.xml <= bad cert
+	³ Secured by us
 
 -->
 <ruleset name="Gemalto.com (partial)">
 
-	<target host="gemalto.com" />
-	<target host="*.gemalto.com" />
+	<target host="allynisconnect1.gemalto.com" />
+	<target host="boutique.gemalto.com" />
+	<target host="webstore.gemalto.com" />
 		<!--
 			Bad cert:
 					-->
 		<!--exclusion pattern="^http://support\.gemalto\.com/" /-->
+		<!--
+			Redirects to http:
+								-->
+		<!--exclusion pattern="^http://www\.gemalto\.com/($|_catalogs/masterpage/Gemalto/assets/|_layouts/15/images/|gemalto/gemalto/s|favicon\.ico|Mobile-site/linqus-site/PublishingImages/mobile/mcommerce/trusted-service-hub/|SiteCollectionImages/P_Teaser/|Style\ Library/en-US/Themable/Core\ Styles/)" /-->
 
 
 	<!--	Server doesn't secure:
 					-->
-	<securecookie host="^(?:boutique|www)\.gemalto\.com$" name=".+" />
+	<!--securecookie host="^(boutique|webstore)\.gemalto\.com$" name="^sid$" /-->
+
+	<securecookie host="^(?:boutique|webstore)\.gemalto\.com$" name=".+" />
 
 
-	<rule from="^http://(boutique\.|www\.)?gemalto\.com/"
-		to="https://$1gemalto.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

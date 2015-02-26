@@ -4,70 +4,247 @@
 
 	Nonfunctional subdomains:
 
+		- an ¹
+		- bs ¹
+		- bs-meta ¹
+		- contact ¹
+		- contact2 ¹
+		- gazeta ¹
+		- informer ¹
+		- interactive-answers ²
+		- m.internet ¹
+		- islands ³
 		- ir *
+		- mc ¹
 
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
+
+		- shad ⁵
+		- (www.)?store ¹
+		- wdgt ⁶
+		- xmlsearch ⁵
+		- yabs ¹
+
+	¹ Dropped
+	² 404
+	³ Redirects to http
 	* Shareholder
+	⁵ Redirects to http
+	⁶ 403
 
 
 	Problematic subdomains:
 
-		- api *
+		- www.browser ¹
+		- downloader.disk ²
+		- (www.)?site ³
+		- www.video ³
 
-	* Mismatched, CN: validator.yandex.ru
+	¹ 404
+	² Mixed css
+	³ Mismatched
 
 
 	Fully covered subdomains:
 
-		- (www.)
-		- browser
+		- (www.)?
+		- advertising
+		- advq
+		- analytics
+		- api
+		- autoconfig
+		- autodiscover
+		- b
+		- ba
+		- bar
+		- (www.)?browser	(www → ^)
+		- city
+		- clck
+		- clock
+		- clocks
 		- company
+		- content
+
+		- contest
+		- algorithm.contest
+		- intern.contest
+		- official.contest
+		- shad.contest
+
+		- dev
+		- direct
+		- disc
+
+		- disk
+		- beta.disk
 		- 1.downloader.disk
+
+		- element
+		- elements
+		- expert
+		- export
+		- browser.export
 		- feedback
+		- m.feedback
 		- feedback2
+		- files
+		- gorod
+		- haber
 		- help
 		- images
+		- (www.)?internet
+		- kiks
 		- legal
+		- m.legal
 		- mail
-		- maps
+
+		- (www.)?maps
+		- beta.maps
+		- (www.)?constructor.maps
+		- router-quality.maps
+
+		- partner.market
+		- (www.)?master
+		- mbrowser
+		- metric
+		- metrica
+		- metrika
+		- myfiles
+		- partner
+		- partners
+		- pass
 		- passport
-		- tech
+		- passport-ckicheck
+		- pda-passport
+		- (www.)?pogoda
+		- prefetch-maps
+
+		- api.rasp
+		- m.rasp
+		- suggest.rasp
+		- t.rasp
+
+		- research
+		- (www.)?site	(→ site.yandex.ru)
+		- startups
+		- subs
+		- taxi
+		- m.taxi
+
+		- (www.)?tech
+		- api.tech
+		- developer.tech
+
+		- technologies
+		- ticket
+		- time
 		- translate
 		- tune
-		- video
+		- m.tune
+		- (www.)?video		(www → ^)
+		- vremya
+		- watch
+		- (www.)?weather
+		- (www.)?webmaster
+		- widgets
+		- wordstat
+		- xml
+
+
+	These altnames don't exist:
+
+		- m.feedback2.yandex.com
+		- support.yandex.com
 
 
 	Insecure cookies are set for these domains:
 
 		- .yandex.com
+		- .contest.yandex.com
 		- feedback2.yandex.com
+		- internet.yandex.com
 		- mail.yandex.com
+		- master.yandex.com
+		- www.master.yandex.com
+		- partner.market.yandex.com
 		- tech.yandex.com
 		- translate.yandex.com
 
 
 	Mixed content:
 
-		- Flash on company from static.video.yandex.net
+		- iframe on company from www.youtube.com *
+
+		- Flash on company from static.video.yandex.net *
+
+		- css on downloader.disk from lego.static.yandex.net *
+
+		- Images, on:
+
+			- advertising, b, downloader.disk, export, m.legal from img.yandex.net *
+			- b, export from awaps.yandex.ru *
+			- contest from img-fotki.yandex.ru *
+			- expert, m.feedback from yandex.st *
+
+		- favicon on feedback2 from yandex.st *
+
+		- Ads/bugs, on:
+
+			- advq, ba, direct, wordstat, www from kiks.yandex.ru *
+			- downloader.disk from clck.yandex.ru *
+
+	* Secured by us
 
 -->
 <ruleset name="Yandex.com (partial)">
 
 	<target host="yandex.com" />
 	<target host="*.yandex.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://shad\.yandex\.com/$" /-->
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.yandex\.com$" name="^yandexuid$" /-->
+	<!--securecookie host="^\.contest\.yandex\.com$" name="^CONTEST_LANG$" /-->
 	<!--securecookie host="^feedback2\.yandex\.com$" name="^feedback2-sid$" /-->
+	<!--securecookie host="^internet\.yandex\.com$" name="^(csrftoken|test)$" /-->
 	<!--securecookie host="^mail\.yandex\.com$" name="^ni$" /-->
+	<!--securecookie host="^(master|www\.master|partner)\.market\.yandex\.com$" name="^uid$" /-->
 	<!--securecookie host="^tech\.yandex\.com$" name="^session$" /-->
 	<!--securecookie host="^translate\.yandex\.com$" name="^(first_visit_src|stoken)$" /-->
 
-	<securecookie host="^(?:feedback2|mail|tech|translate)\.yandex\.com$" name=".+" />
+	<securecookie host="^(?:\.contest|feedback2|mail|partner\.market|master|www\.master|partner|tech|translate)\.yandex\.com$" name=".+" />
 
 
-	<rule from="^http://((?:browser|company|1\.downloader\.disk|feedback2?|help|images|legal|mail|maps|passport|tech|translate|tune|video|www)\.)?yandex\.com/"
+	<!--	Domains for which both !www and www
+		exist, but only !www works without caveat:
+								-->
+	<rule from="^http://(?:www\.)?(browser|video|webmaster)\.yandex\.com/"
+		to="https://$1.yandex.com/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<!--rule from="^http://gazeta\.yandex\.com/.*"
+		to="https://news.yandex.com/mynews" /-->
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://(?:www\.)?site\.yandex\.com/[^?]*"
+		to="https://site.yandex.ru/" />
+
+	<rule from="^http://((?:advertising|advq|analytics|api|autoconfig|autodiscover|ba?|bar|city|clocks?|company|clck|contest|(?:algorithm|intern|official|shad)\.contest|dev|direct|dis[ck]|(?:beta|1\.downloader)\.disk|elements?|expert|(?:browser\.)?export|feedback2?|m\.feedback|files|gorod|haber|help|images|kiks|legal|m\.legal|mail|(?:beta|router-quality)\.maps|partner\.market|metrica?|metrika|myfiles|partners?|pass|passport|passport-ckicheck|pda-passport|prefetch-maps|(?:api|m|suggest|t)\.rasp|startups|subs|taxi|m\.taxi|(?:api|developer)\.tech|technologies|ticket|time|translate|tune|m\.tune|vremya|watch|widgets|wordstat|www|xml)\.)?yandex\.com/"
 		to="https://$1yandex.com/" />
+
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(www\.)?(internet|maps|constructor\.maps|pogoda|tech|weather)\.yandex\.com/"
+		to="https://$1$2.yandex.com/" />
 
 </ruleset>
