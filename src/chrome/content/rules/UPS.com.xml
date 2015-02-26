@@ -22,31 +22,42 @@
 <ruleset name="UPS.com (partial)">
 
 	<target host="ups.com" />
-	<target host="*.ups.com" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.ups\.com/content/globalentry$" /-->
-		<!--
-			all ur pkgs r now belong to nsa
-
-			(Now redirects to login:
-						-->
-		<!--exclusion pattern="^http://www\.ups\.com/WebTracking/track($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.ups\.com/+(?!assets/|favicon\.ico|img/|styles/|stylesheets/)" />
-
+		<exclusion pattern="^http://ups.com/$" />
+	<target host="www.ups.com" />
+		<exclusion pattern="^http://www.ups.com/$" />
+	<target host="wwwapps.ups.com" />
+	<target host="www.apps.ups.com" />
+	<target host="campusship.ups.com" />
+	<target host="www.campusship.ups.com" />
 
 	<securecookie host="^www\.campusship\.ups\.com$" name=".+" />
 
-
-	<rule from="^http://(?:www\.)?ups\.com/"
-		to="https://www.ups.com/" />
+	<rule from="^http://(www\.)?ups\.com/(assets/|favicon\.ico|img/|styles/|stylesheets/)"
+		to="https://www.ups.com/$2" />
+		<test url="http://ups.com/assets/" />
+		<test url="http://ups.com/favicon.ico" />
+		<test url="http://ups.com/img/" />
+		<test url="http://ups.com/styles/" />
+		<test url="http://ups.com/stylesheets/" />
+		<test url="http://www.ups.com/assets/" />
+		<test url="http://www.ups.com/favicon.ico" />
+		<test url="http://www.ups.com/img/" />
+		<test url="http://www.ups.com/styles/" />
+		<test url="http://www.ups.com/stylesheets/" />
 
 	<rule from="^http://www(\.)?apps\.ups\.com/"
 		to="https://www$1apps.ups.com/" />
+
+		<!--
+			Now redirects to login:
+						-->
+		<exclusion pattern="^http://www(\.)?apps\.ups\.com/WebTracking/track($|\?)" />
+			<test url="http://wwwapps.ups.com/WebTracking/track" />
+			<test url="http://wwwapps.ups.com/WebTracking/track?" />
+			<test url="http://wwwapps.ups.com/WebTracking/track?foo" />
+			<test url="http://www.apps.ups.com/WebTracking/track" />
+			<test url="http://www.apps.ups.com/WebTracking/track?" />
+			<test url="http://www.apps.ups.com/WebTracking/track?foo" />
 
 	<rule from="^http://(?:www\.)?campusship\.ups\.com/"
 		to="https://www.campusship.ups.com/" />
