@@ -1,14 +1,5 @@
 <!--
-	For rules causing false/broken MCB, see Zen_Internet-falsemixed.xml.
-
-
-	Problematic domains:
-
-		- ^ ¹
-		- support ²
-
-	¹ 404, valid cert
-	² Mixed css from $self
+	Zen Internet
 
 
 	Fully covered subdomains:
@@ -21,60 +12,52 @@
 		- order
 		- portal
 		- status
+		- support
 		- webmail
-
-
-	Partially covered subdomains:
-
-		- support *
-
-	* Avoiding broken MCB
 
 
 	Mixed content:
 
-		- css on support from $self *
-
-		- Images on blog and support from $self *
-
 		- Web bugs, on:
 
-			- blog from blog *
 			- blog from apis.google.com *
 
 	* Secured by us
 
-
-	NB: We secure all active resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
 -->
-<ruleset name="Zen Internet (partial)">
+<ruleset name="Zen.co.uk">
 
 	<target host="zen.co.uk" />
 	<target host="*.zen.co.uk" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://support\.zen\.co\.uk/+(?=kb/+(?!(?:Knowledgebase/)?BotDetectCaptcha\.ashx|Globalization/|js/|Logon/|(?:Script|Web)Resource\.axd|Skins/)|template/)" />
+
+		<test url="http://blog.zen.co.uk/" />
+		<test url="http://forum.zen.co.uk/" />
+		<test url="http://livesupport.zen.co.uk/" />
+		<test url="http://myaccount.zen.co.uk/" />
+		<test url="http://order.zen.co.uk/" />
+		<test url="http://portal.zen.co.uk/" />
+		<test url="http://status.zen.co.uk/" />
+		<test url="http://support.zen.co.uk/" />
+		<test url="http://webmail.zen.co.uk/" />
+		<test url="http://www.zen.co.uk/" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.zen\.co\.uk$" name="^(NavigationUrlCookie|ZenAnonIdCookie)$" /-->
 	<!--securecookie host="^forum\.zen\.co\.uk$" name="^(CommunityServer-LastVisitUpdated-\d+|CommunityServer-UserCookie\d+)$" /-->
-	<!--securecookie host="^(myaccount|order|portal|status|www)\.zen\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^((myaccount|order|portal|status|www)\.)?zen\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^myaccount\.zen\.co\.uk$" name="^CookiesAllowed$" /-->
 	<!--securecookie host="^support\.zen\.co\.uk$" name="^(IKB_CurrentURL|IKB_InstantKBLastVisit)$" /-->
 	<!--securecookie host="^webmail\.zen\.co\.uk$" name="^PHPSESSID$" /-->
 
 	<!--securecookie host="^\.zen\.co\.uk$" name="^__utm\w$" /-->
 
-	<securecookie host="(?!support\.).*\.zen\.co\.uk$" name=".+" />
+	<securecookie host="(?:.*\.)?zen\.co\.uk$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?zen\.co\.uk/"
-		to="https://www.zen.co.uk/" />
+	<rule from="^http://(www\.)?zen\.co\.uk/"
+		to="https://$1zen.co.uk/" />
 
 	<rule from="^http://(blog|forum|livesupport|myaccount|order|portal|status|support|webmail)\.zen\.co\.uk/"
 		to="https://$1.zen.co.uk/" />
