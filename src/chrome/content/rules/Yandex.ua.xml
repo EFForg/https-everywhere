@@ -4,26 +4,53 @@
 
 	Nonfunctional subdomains:
 
-		- market ¹
-		- news ²
-		- soft ²
+		- an ¹
+		- bm ¹
+		- bs-meta ¹
+		- clck ¹
+		- contact ¹
+		- contact2 ¹
+		- dns ¹
+		- family ²
+		- informer ¹
+		- m.internet ¹
+		- market ³
+		- mc ¹
+		- news ¹
+		- m.news ¹
+		- pda.news ¹
 
-	¹ Redirects to http
-	² Refused
+		- (www.)?store ¹
+		- mobile.yandex.uamobile ¹
+		- interactive-answers.webmaster ³
+		- wdgt ⁴
+
+	¹ Dropped
+	² Redirect differs
+	³ Redirects to http
+	⁴ 403
 
 
 	Problematic subdomains:
 
-		- m.images ¹
-		- m.money ²
+		- www.browser ¹
+		- interactive-answers ²
+		- m ³
+		- www.mobile ⁴
+		- money ⁵
+		- www.taras ⁶
 
-	¹ Mismatched, CN: yandex.ru
-	² Mismatched, CN: money.yandex.ru
+	¹ 404
+	² Mismatched
+	³ Redirect differs
+	⁴ Differs from http
+	⁵ Blocks Tor users
+	⁶ 404
 
 
 	Partially covered subdomains:
 
-		- (www.) *
+		- (www.)? *
 
 	* Some pages redirect to http
 
@@ -57,45 +84,112 @@
 		- zno
 
 
+	These altnames don't exist:
+
+		- m.feedback2.yandex.ua
+		- support.yandex.ua
+
+
 	Insecure cookies are set for these domains:
 
 		- .yandex.ua
+		- auto.yandex.ua
+		- city.yandex.ua
+		- feedback2.yandex.ua
 		- mail.yandex.ua
+		- master.yandex.ua
+		- www.master.yandex.ua
 		- mobile.yandex.ua
-		- slovari.yandex.ua
+		- realty.yandex.ua
+		- m.slovari.yandex.ua
 		- stat.yandex.ua
+		- internet.yandex.ua
+		- .pogoda.yandex.ua
+		- rabota.yandex.ua
+		- m.rabota.yandex.ua
+		- slovari.yandex.ua
+		- m.slovari.yandex.ua
 		- translate.yandex.ua
 
 
 	Mixed content:
 
-		- favicon on maps from yandex.st *
+		- Images, on:
 
-	* Secured by us
+			- b, m.blogs, export, m.legal, m.pogoda from img.yandex.net ¹
+			- b, export from awaps.yandex.ru ¹
+			- m.feedback from yastatic.net ¹
+
+		- favicon on legal from yandex.st ¹
+
+		- Bugs, on:
+
+			- advq, ba, blogs, (www.)?cat, (www.)?catalog, (www.)?catalogue, direct, (www.)?katalog, maps, rabota, wordstat, (www.)?yaca from kiks.yandex.ru ¹
+			- m.blogs, pda.blogs from clck.yandex.ru ¹
+			- m.fotki from c.waplog.net ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
 
 -->
-<ruleset name="Yandex.ua (partial)">
+<ruleset name="Yandex.ua (partial)" default_off="Needs ruleset tests">
 
 	<target host="yandex.ua" />
 	<target host="*.yandex.ua" />
 		<!--
 			Redirects to http:
 						-->
-		<!--exclusion pattern="^http://www\.yandex\.ua/$" /-->
+		<!--exclusion pattern="^http://(beta|market|interactive-answers\.webmaster|www)\.yandex\.ua/$" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://yandex\.au/(?!images/)" />
+		<exclusion pattern="^http://yandex\.ua/(?!images/)" />
 		<exclusion pattern="^http://www\.yandex\.ua/(?!all$)" />
+
+			<test url="http://yandex.ua/" />
+			<test url="http://yandex.ua/images/" />
+			<test url="http://www.yandex.ua/" />
+			<test url="http://www.yandex.ua/all" />
+
+		<test url="http://avia.yandex.ua/" />
+		<test url="http://awaps.yandex.ua/" />
+		<test url="http://blogs.yandex.ua/" />
+		<test url="http://browser.yandex.ua/" />
+		<test url="http://feedback.yandex.ua/" />
+		<test url="http://m.feedback.yandex.ua/" />
+		<test url="http://fotki.yandex.ua/" />
+		<test url="http://m.fotki.yandex.ua/" />
+		<test url="http://help.yandex.ua/" />
+		<test url="http://images.yandex.ua/" />
+		<test url="http://kiks.yandex.ua/" />
+		<test url="http://legal.yandex.ua/" />
+		<test url="http://m.legal.yandex.ua/" />
+		<test url="http://m.yandex.ua/" />
+		<test url="http://mail.yandex.ua/" />
+		<test url="http://maps.yandex.ua/" />
+		<test url="http://mobile.yandex.ua/" />
+		<test url="http://pass.yandex.ua/" />
+		<test url="http://slovari.yandex.ua/" />
+		<test url="http://stat.yandex.ua/" />
+		<test url="http://translate.yandex.ua/" />
+		<test url="http://tune.yandex.ua/" />
+		<test url="http://video.yandex.ua/" />
+		<test url="http://yabs.yandex.ua/" />
+		<test url="http://zno.yandex.ua/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.yandex\.ua$" name="^(Cookie_check|Session_id|my|yandexuid|yp|ys)$" /-->
+	<!--securecookie host="^\.yandex\.ua$" name="^(Cookie_check|L|Session_id|yandexuid|ys)$" /-->
+	<!--securecookie host="^(auto|realty)\.yandex\.ua$" name="^from$" /-->
+	<!--securecookie host="^auto\.yandex\.ua$" name="^from_lifetime$" /-->
+	<!--securecookie host="^(auto|city|islands|rabota|realty|m\.rabota|slovari|m\.slovari|stat)\.yandex\.ua$" name="^uid$" /-->
+	<!--securecookie host="^feedback2\.yandex\.ua$" name="^feedback2-sid$" /-->
+	<!--securecookie host="^internet\.yandex\.ua$" name="^(csrftoken|test)$" /-->
 	<!--securecookie host="^mail\.yandex\.ua$" name="^ni$" /-->
 	<!--securecookie host="^mobile\.yandex\.ua$" name="^family$" /-->
-	<!--securecookie host="^slovari\.yandex\.ua$" name="^(slovari-state|uid)$" /-->
-	<!--securecookie host="^stat\.yandex\.ua$" name="^uid$" /-->
+	<!--securecookie host="^\.pogoda\.yandex\.ua$" name="^yw_lc$" /-->
+	<!--securecookie host="^slovari\.yandex\.ua$" name="^slovari-state$" /-->
 	<!--securecookie host="^translate\.yandex\.ua$" name="^(first_visit_src|stoken)$" /-->
 
 	<securecookie host="^(?:mail|mobile|slovari|stat|translate)\.yandex\.ua$" name=".+" />
