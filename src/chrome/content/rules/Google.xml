@@ -2,6 +2,8 @@
 	This ruleset only covers (www.)?google.tld
 	For other Google coverage, see GoogleServices.xml
 
+	*** Google Images related paths are covered in GoogleImages.xml ***
+
 	Nonfunctional google.com paths:
 
 		- analytics	*
@@ -31,6 +33,34 @@
 	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
 
 	<!-- Problems -->
+	<!--	First handle problematic tlds:
+				- www.google.bo *
+				- www.google.co *
+				- www.google.ec *
+				- www.google.in **
+				- www.google.kr *
+				- www.google.com.kz *
+				- www.google.com.lk *
+				- www.google.mx *
+				- www.google.sg *
+				- www.google.sl *
+				- www.google.ug *
+				- www.google.vn *
+
+			* mismatched, CN: google.com
+			** 404
+	-->
+	<rule from="^http://(?:www\.)?google\.co/"
+		to="https://www.google.com/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:co\.)?(in|kr|ug)/"
+		to="https://www.google.co.$1/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(kz|lk)/"
+		to="https://www.google.$1/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(bo|ec|mx|sg|sl|vn)/"
+		to="https://www.google.com.$1/" />
 		<!--
 			https://www.google.com.au/tisp/	200 (OK)
 			https://www.google.com.au/tisp	404
