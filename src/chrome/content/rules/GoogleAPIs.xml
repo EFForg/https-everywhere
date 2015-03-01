@@ -68,8 +68,19 @@
 <ruleset name="Google APIs">
 	<target host="gmodules.com" />
 	<target host="www.gmodules.com" />
-	<target host="*.google-analytics.com" />
-	<target host="*.googleapis.com" />
+		<!-- need this exclusion otherwise the test checker will use the hosts as test urls -->
+		<exclusion pattern="^http://(www\.)?gmodules\.com/$" />
+
+	<target host="www.google-analytics.com" />
+	<target host="ssl.google-analytics.com" />
+
+	<target host="ajax.googleapis.com" />
+	<target host="chart.googleapis.com" />
+	<target host="fonts.googleapis.com" />
+	<target host="www.googleapis.com" />
+	<target host="*.commondatastorage.googleapis.com" />
+	<target host="*.storage.googleapis.com" />
+
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
 	<target host="api.recaptcha.net" />
@@ -81,7 +92,7 @@
 		See GitHub bug #368
 			-->
 	<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
-		<test url="htttp://www.gstatic.com/generate_204" />
+		<test url="http://www.gstatic.com/generate_204" />
 
 	<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
 		<test url="http://gdata.youtube.com/crossdomain.xml" />
@@ -90,6 +101,8 @@
 
 	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
 		to="https://www.google.com/ig/images/" />
+		<test url="http://gmodules.com/ig/images/" />
+		<test url="http://www.gmodules.com/ig/images/" />
 
 	<rule from="^http://(ssl|www)\.google-analytics\.com/"
 		to="https://$1.google-analytics.com/" />
@@ -99,6 +112,10 @@
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
+		<test url="http://storage.googleapis.com/" />
+		<test url="http://commondatastorage.googleapis.com/" />
+		<test url="http://chromedriver.storage.googleapis.com/" />
+		<test url="http://patentimages.storage.googleapis.com/" />
 
 	<!--	There is an interesting question about whether we should
 		append &strip=1 to all cache URLs.  This causes them to load
