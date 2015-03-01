@@ -1,26 +1,67 @@
 <!--
 	Nonfunctional subdomains:
 
-		- ^ *
-		- forums *
 		- lists		(shows mail.ixsystems.com; mismatched, CN: *.ixsystems.com)
-		- pootle *
-		- pootle2 *
-		- wiki *
-		- www		(times out)
+		- pootle ²
+		- pootle2 ²
+		- translate ³
+		- wiki ²
 
-	* Refused
+	² Shows forums
+	³ Dropped
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- bugs ²
+		- www ³
+
+	¹ Shows forums
+	² Sends no certificate chain
+	³ Mismatched
+
+
+	Fully covered subdomains:
+
+		- forums
+		- trac
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugs.pcbsd.org
+		- forums.pcbsd.org
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from $self ¹
+			- www from fonts.googleapis.com ²
+
+		- Images on www from $self ¹
+
+	¹ Not secured by us <= mismatched
+	² Secured by us
 
 -->
 <ruleset name="PC-BSD (partial)">
 
+	<target host="forums.pcbsd.org" />
 	<target host="trac.pcbsd.org" />
 
 
-	<securecookie host="^trac\.pcbsd\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugs\.pcbsd\.org$" name="^_redmine_session" /-->
+	<!--securecookie host="^forums\.pcbsd\.org$" name="^bbsessionhash$" /-->
+
+	<securecookie host="^(?:forums|trac)\.pcbsd\.org$" name=".+" />
 
 
-	<rule from="^http://trac\.pcbsd\.org/"
-		to="https://trac.pcbsd.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
