@@ -1,18 +1,19 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://i.origin.mktw.net/ => https://i.origin.mktw.net/: (60, 'SSL certificate problem: certificate has expired')
 	Other News Corporation rulesets:
 
 		- News-Corporation.xml
 		- News-Corporation-mismatches.xml
 
 -->
-<ruleset name="Marketwatch.com" default_off='failed ruleset test'>
+<ruleset name="Marketwatch.com">
 
-	<target host="marketwatch.com" />
-	<target host="*.marketwatch.com" />
-	<target host="i.mktw.net" />
-	<target host="i.origin.mktw.net" />
+	<target host=                 "marketwatch.com" />
+	<target host="communitycontent.marketwatch.com" />
+	<target host=               "i.marketwatch.com" />
+	<target host=               "s.marketwatch.com" />
+	<target host=          "secure.marketwatch.com" />
+	<target host=          "static.marketwatch.com" />
+	<target host=             "www.marketwatch.com" />
 
 
 	<securecookie host="^\.marketwatch\.com$" name=".*" />
@@ -23,15 +24,13 @@ Fetch error: http://i.origin.mktw.net/ => https://i.origin.mktw.net/: (60, 'SSL 
 	<rule from="^http://(communitycontent|[is]|static)\.marketwatch\.com/"
 		to="https://a248.e.akamai.net/f/1731/67675/12h/$1.marketwatch.com/" />
 
-	<rule from="^http://i\.mktw\.net/"
-		to="https://a248.e.akamai.net/f/1731/67675/12h/i.mktw.net/" />
-
-	<!--	If they're pointing explicitly to origin, there's
-		probably a good reason for that, so stick with it.	-->
-	<rule from="^http://i\.origin\.mktw\.net/"
-		to="https://i.origin.mktw.net/" />
-
-	<rule from="^http://(?:secure\.|www\.)?marketwatch\.com/"
+	<rule from="^http://(www\.)?marketwatch\.com/"
 		to="https://secure.marketwatch.com/" />
 
+	<test url="https://secure.marketwatch.com/MW5/content/combined/combined-head-min-1.0.5778.js" />
+	<rule from="^https://secure\.marketwatch\.com/MW5/"
+		to="https://a248.e.akamai.net/f/1731/67675/12h/www.marketwatch.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

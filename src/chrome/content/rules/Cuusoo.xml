@@ -1,42 +1,22 @@
 <!--
+
 	CDN buckets:
-
-		- cuusoo.s3.amazonaws.com
-		- ditbeg8qmun1v.cloudfront.net
-
+		https://s3.amazonaws.com/cuusoo/
+		https://d3vgh2ebord16e.cloudfront.net/
 
 	Problematic domains:
 
 		- blog.lego.cuusoo.com	(wordpress)
-
-
-	Partially covered domains:
-
-		- *.cuusoo.com *
-		- (www.)cuusoo.net *
-
-	* Some pages redirect to http
+		-      lego.cuusoo.com  (empty page, but https working)
+		- (www.)cuusoo.net      (no https)
+		- www.cuusoo.co.jp      (no https)
 
 -->
 <ruleset name="Cuusoo (partial)">
+	<target host=     "cuusoo.com" />
+	<target host="lego.cuusoo.com" />
+	<target host= "www.cuusoo.com" />
 
-	<target host="*.cuusoo.com" />
-	<target host="cuusoo.net" />
-	<target host="www.cuusoo.net" />
-
-
-	<!--	Per-client subdomains:
-					-->
-	<rule from="^http://([\w-]+)\.cuusoo\.com/(app|j)s/"
-		to="https://$1.cuusoo.com/$2s/" />
-
-	<!--	Must drop trailing slashes, otherwise
-		these redirect to http:
-						-->
-	<rule from="^http://([\w-]+)\.cuusoo\.com/(login|register)/?(\?.*)?$"
-		to="https://$.cuusoo.com/$2$3" />
-
-	<rule from="^http://(www\.)?cuusoo\.net/(common/|css/|favicon\.ico|img/|inquiry/)"
-		to="https://$1cuusoo.net/$2" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

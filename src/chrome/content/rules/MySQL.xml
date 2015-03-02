@@ -12,6 +12,14 @@
 	Problematic subdomains:
 
 		- cdn	(akamai)
+        cdn
+        downloads
+        forge
+        lists
+        planet
+        wb
+        forums
+        labs
 
 
 	Nonfunctional subdomains:
@@ -24,17 +32,10 @@
 <ruleset name="MySQL">
 
 	<target host="mysql.com"/>
-	<target host="*.mysql.com"/>
-    <!-- forums works but is a cert mismatch -->
-		<exclusion pattern="^http://(?:cdn|downloads|forge|lists|planet|wb|forums|labs)\.mysql\.com/"/>
-        <test url="http://cdn.mysql.com/"/>
-        <test url="http://downloads.mysql.com/"/>
-        <test url="http://forge.mysql.com/"/>
-        <test url="http://lists.mysql.com/"/>
-        <test url="http://planet.mysql.com/"/>
-        <test url="http://wb.mysql.com/"/>
-        <test url="http://forums.mysql.com/"/>
-        <test url="http://labs.mysql.com/"/>
+	<target host="dev.mysql.com"/>
+	<target host="www-jp.mysql.com"/>
+	<target host="repo.mysql.com"/>
+	<target host="bugs.mysql.com"/>
 	<target host="mysql.de"/>
 	<target host="www.mysql.de"/>
 	<target host="mysql.fr"/>
@@ -58,16 +59,11 @@
 							-->
 	<securecookie host="^\.mysql\.\w{2,3}$" name="^MySQL_S$"/>
 
-
-
-	<rule from="^http://([^/:@\.]+\.)?mysql\.com/"
-		to="https://$1mysql.com/"/>
-        <test url="http://foo.mysql.com/"/>
-        <test url="http://bar.mysql.com/"/>
-        <test url="http://baz.mysql.com/"/>
-
 	<!--	Cert doesn't match !www		-->
-	<rule from="^http://(?:www\.)?mysql\.(\w\w)/"
+	<rule from="^http://mysql\.(\w\w)/"
 		to="https://www.mysql.$1/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
