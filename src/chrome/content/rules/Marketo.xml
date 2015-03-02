@@ -2,6 +2,7 @@
 	Other Marketo rulesets:
 
 		- Crowd-Factory.xml
+		- Marketo.net.xml
 		- Mktoresp.com.xml
 
 
@@ -17,7 +18,6 @@
 	Problematic domains:
 
 		- marketo.com *
-		- (www.)marketo.net *
 
 	* Cert only matches *.marketo.com
 
@@ -64,13 +64,6 @@
 			- summit
 			- support
 
-		- marketo.net subdomains:
-
-			- (www.)	(→ www.marketo.com)
-			- app		(→ app-a.marketo.com)
-			- munchkin
-			- ssl-munchkin
-
 
 	Insecure cookies are set for these hosts:
 
@@ -104,7 +97,7 @@
 	loaded from.
 
 -->
-<ruleset name="Marketo (partial)">
+<ruleset name="Marketo.com (partial)">
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
@@ -128,9 +121,6 @@
 			<test url="http://developers.marketo.com/" />
 			<test url="http://developers.marketo.com/assets/Uploads/dev-blog.png" />
 
-	<target host="marketo.net" />
-	<target host="*.marketo.net" />
-
 		<test url="http://app-ab01.marketo.com/" />
 		<test url="http://community.marketo.com/" />
 		<test url="http://fr.marketo.com/" />
@@ -145,10 +135,10 @@
 					-->
 	<!--securecookie host="^(fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
 
-	<securecookie host="^(?:.*\.)?marketo\.(?:com|net)$" name=".+" />
+	<securecookie host="^(?:.*\.)?marketo\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
+	<rule from="^http://(?:www\.)?marketo\.com/"
 		to="https://www.marketo.com/" />
 
 	<rule from="^http://pages2\.marketo\.com/(?=css/|images/|js/|rs/)"
@@ -157,12 +147,7 @@
 	<rule from="^http://(app(?:-\w+)?|b2c-mlm|community|developers|fr|launchpoint|micro|na-\w+|summit|support)\.marketo\.com/"
 		to="https://$1.marketo.com/" />
 
-	<!--	Server redirects as so:
-					-->
-	<rule from="^http://app\.marketo\.net/"
-		to="https://app-a.marketo.com/" />
-
-	<rule from="^http://(ssl-)?munchkin\.marketo\.(?:com|net)/"
+	<rule from="^http://(ssl-)?munchkin\.marketo\.com/"
 		to="https://$1munchkin.marketo.net/" />
 
 </ruleset>
