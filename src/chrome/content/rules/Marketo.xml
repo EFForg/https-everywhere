@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection timed out after 10000 milliseconds')
 	Other Marketo rulesets:
 
 		- Crowd-Factory.xml
@@ -10,8 +8,10 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 	Nonfunctional domains:
 
 		- blog.marketo.com *
+		- pages2.marketo.com ²
 
 	* Redirects to http
+	² 404
 
 
 	Problematic domains:
@@ -39,12 +39,15 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 			- app-\w+:
 
 				- -[a-q]
+				- -ab01
 				- -ab[ak]
 				- -lon0[23]
 				- -sj\d
 				- -sj[fghn]
 
 			- b2c-mlm
+			- community
+			- fr
 			- launchpoint
 			- micro
 			- munchkin	(→ munchkin.marketo.net)
@@ -52,10 +55,14 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 			- na-\w+:
 
 				- -[a-df-q]
+				- -ab01
 				- -ab[ak]
 				- -lon02
 				- -sj0\d
 				- -sj[fhn]
+
+			- summit
+			- support
 
 		- marketo.net subdomains:
 
@@ -65,7 +72,18 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 			- ssl-munchkin
 
 
+	Insecure cookies are set for these hosts:
+
+		- developers.marketo.com
+		- fr.marketo.com
+		- launchpoint.marketo.com
+		- summit.marketo.com
+		- www.marketo.com
+
+
 	Mixed content:
+
+		- Videos on fr from [\da-f-]+.r\d+.cf\d.rackcdn.com *
 
 		- css on developers from $self
 
@@ -73,6 +91,7 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 
 		- favicons, on:
 
+			- developers from marketo.com ¹
 			- developers from $self
 			- developers from ^ ¹
 
@@ -85,7 +104,7 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 	loaded from.
 
 -->
-<ruleset name="Marketo (partial)" default_off='failed ruleset test'>
+<ruleset name="Marketo (partial)">
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
@@ -105,9 +124,26 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 			Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://developers\.marketo\.com/+(?!assets/|favicon\.ico|foundationforms/|themes/)" />
+
+			<test url="http://developers.marketo.com/" />
+			<test url="http://developers.marketo.com/assets/Uploads/dev-blog.png" />
+
 	<target host="marketo.net" />
 	<target host="*.marketo.net" />
 
+		<test url="https://app-ab01.marketo.com/" />
+		<test url="https://community.marketo.com/" />
+		<test url="https://fr.marketo.com/" />
+		<test url="https://launchpoint.marketo.com/" />
+		<test url="https://na-ab01.marketo.com/" />
+		<test url="https://summit.marketo.com/" />
+		<test url="https://support.marketo.com/" />
+		<test url="https://www.marketo.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
 
 	<securecookie host="^(?:.*\.)?marketo\.(?:com|net)$" name=".+" />
 
@@ -115,7 +151,10 @@ Fetch error: http://marketo.net/ => https://www.marketo.com/: (28, 'Connection t
 	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
 		to="https://www.marketo.com/" />
 
-	<rule from="^http://(app(?:-\w+)?|b2c-mlm|developers|launchpoint|micro|na-\w+)\.marketo\.com/"
+	<rule from="^http://pages2\.marketo\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-abk.marketo.com/" />
+
+	<rule from="^http://(app(?:-\w+)?|b2c-mlm|community|developers|fr|launchpoint|micro|na-\w+|summit|support)\.marketo\.com/"
 		to="https://$1.marketo.com/" />
 
 	<!--	Server redirects as so:

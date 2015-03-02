@@ -12,20 +12,16 @@
 
 		- (www.)
 		- bugs
+		- fr
 		- git
 		- projects
 		- wiki
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- ^
-		- bugs *
-		- git ²
-		- www
-
-	* Secured by server
-	² Secured by us <= not secured by server
+		- .fr.centos.org
+		- git.centos.org
 
 
 	Mixed content:
@@ -42,6 +38,13 @@
 	<target host="centos.org" />
 	<target host="*.centos.org" />
 
+		<test url="http://bugs.centos.org/" />
+		<test url="http://fr.centos.org/" />
+		<test url="http://git.centos.org/" />
+		<test url="http://projects.centos.org/" />
+		<test url="http://wiki.centos.org/" />
+		<test url="http://www.centos.org/" />
+
 
 	<!--	Secured by server:
 					-->
@@ -49,12 +52,13 @@
 	<!--
 		Not secured by server:
 					-->
+	<!--securecookie host="^\.fr\.centos\.org$" name="^phpbb3_\w+_(k|sid|u)$" /-->
 	<!--securecookie host="^git\.centos\.org$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^(?:git\.|www\.)?centos\.org$" name=".+" />
+	<securecookie host="^(?:\.fr\.|git\.|www\.)?centos\.org$" name=".+" />
 
 
-	<rule from="^http://((?:bugs|git|projects|wiki|www)\.)?centos\.org/"
+	<rule from="^http://((?:bugs|fr|git|projects|wiki|www)\.)?centos\.org/"
 		to="https://$1centos.org/" />
 
 </ruleset>
