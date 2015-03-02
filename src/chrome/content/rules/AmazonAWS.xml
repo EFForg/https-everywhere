@@ -1,7 +1,8 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://forums.aws.amazon.com/ => https://forums.aws.amazon.com/: Cycle detected - URL already encountered: https://forums.aws.amazon.com/index.jspa
-Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7, 'Failed to connect to signin.aws.amazon.com port 80: Connection refused')
+	Note: This rule generates incorrect "Cycle detected" errors
+	from https-everywhere-checker, because forums.aws.amazon.com
+	will go into a redirect loop if a client does not handle
+	cookies. https://github.com/EFForg/https-everywhere/issues/1128
 	For rules that break image zoom, see AmazonAWS-breakzoom.xml.
 
 	For other Amazon coverage, see Amazon.xml.
@@ -94,12 +95,11 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 		- z-ak.images-amazon.com
 
 -->
-<ruleset name="Amazon Web Services" default_off='failed ruleset test'>
+<ruleset name="Amazon Web Services">
 
 	<target host="fls-eu.amazon.co.uk" />
 	<target host="aws.amazon.com" />
 	<target host="forums.aws.amazon.com" />
-	<target host="signin.aws.amazon.com" />
 	<target host="docs.aws.amazon.com" />
 	<target host="aws-portal.amazon.com" />
 	<target host="fls-eu.amazon.com" />
@@ -127,7 +127,7 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 			Breaks images:
 					-->
 		<exclusion pattern="^http://em\.css\.s3\.amazonaws\.com/style\.css" />
-		<exclusion pattern="^http://s3\.lbrcdn\.net\.s3-external-3\.amazonaws.com/" />
+		<exclusion pattern="^http://s3\.lbrcdn\.net\.s3-external-3\.amazonaws\.com/" />
    		<!--
 			This one looks slightly different:
  
@@ -143,6 +143,11 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 	<target host="*.images-amazon.com" />
   <!-- Zeitgeist MP3 player https://trac.torproject.org/projects/tor/ticket/7594 -->
   <exclusion pattern="^http://g-ecx\.images-amazon\.com/.*(?:[mM][pP]3|zeitgeist|digital/music)" />
+    <test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/sprites-mp3-preview-player-sm-a._V192561915_.gif" />
+    <test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212273708_.swf" />
+    <test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/mp3-preview-widget-top-rt-corner._V192561915_.gif" />
+    <test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/dmusic-chart-sprites-1.0._V192561914_.gif" />
+    <test url="http://g-ecx.images-amazon.com/images/G/02/zeitgeist/mp3player/mp3-preview-widget-top-left-corner._V192561912_.gif" />
   <!-- https://trac.torproject.org/projects/tor/ticket/7539 -->
   <exclusion pattern="^http://ecx\.images-amazon\.com/" />
 	<target host="*.ssl-images-amazon.com" />
@@ -152,6 +157,8 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 					-->
 	<rule from="^http://dis(\.resized)?\.images\.s3\.amazonaws\.com/"
 		to="https://s3-eu-west-1.amazonaws.com/dis$1.images/" />
+	<test url="http://dis.images.s3.amazonaws.com/" />
+	<test url="http://dis.resized.images.s3.amazonaws.com/" />
 
 	<rule from="^http://cms\.kiva\.org\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/cms.kiva.org/" />
@@ -159,26 +166,58 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 	<rule from="^http://fls-eu\.amazon\.co\.uk/"
 		to="https://fls-eu.amazon.co.uk/" />
 
-	<rule from="^http://((?:docs|forums|signin)\.aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
+	<rule from="^http://((?:docs|forums)\.aws|aws|aws-portal|fls-eu|fls-na|payments|sis|webservices)\.amazon\.com/"
 		to="https://$1.amazon.com/" />
 
 	<rule from="^http://s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://s3$1.amazonaws.com/" />
 
-	<rule from="^http://([^@:\.]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
-		to="https://$1.s3$2.amazonaws.com/" />
+<!--
 
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+  These rules don't work: The rewritten versions serve 403
+
+	<rule from="^http://([\w-]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
+		to="https://$1.s3$2.amazonaws.com/" />
+		<test url="http://estevaomonteiro.s3.amazonaws.com/" />
+		<test url="http://afod.s3-ap-northeast-1.amazonaws.com/" />
+		<test url="http://rangde-org-gen.s3-ap-southeast-1.amazonaws.com/" />
+		<test url="http://edynaukraina.s3-eu-west-1.amazonaws.com/" />
+		<test url="http://smalltell.s3-us-west-1.amazonaws.com/" />
+		<test url="http://tastylounge-prod.s3-external-1.amazonaws.com/" />
+		<test url="http://gestaoja.s3-sa-east-1.amazonaws.com/" />
+		<test url="http://swyokohama.s3-website-ap-northeast-1.amazonaws.com/" />
+		<test url="http://keithsbucket.s3-website-ap-southeast-1.amazonaws.com/" />
+		<test url="http://grime.s3-website-eu-west-1.amazonaws.com/" />
+		<test url="http://estevaomonteiro.s3-website-us-west-1.amazonaws.com/" />
+		<test url="http://estevaomonteiro.s3-website-sa-east-1.amazonaws.com/" />
+
+	<rule from="^http://([\w-]+)\.([^@:/]+)\.s3(?:-website)?(-ap-(?:nor|sou)theast-1|-(?:eu|us)-west-\d|-external-\d|-sa-east-1)?\.amazonaws\.com/"
 		to="https://s3$3.amazonaws.com/$1.$2/" />
+		<test url="http://www.thisisreallaw.com.s3-external-1.amazonaws.com/" />
+		<test url="http://paniko.cl.s3-sa-east-1.amazonaws.com/" />
+		<test url="http://goldendiskawards.jp.s3-website-ap-northeast-1.amazonaws.com/" />
+		<test url="http://vidvatta.com.s3-website-ap-southeast-1.amazonaws.com/" />
+		<test url="http://digitalcolourist.com.s3-website-eu-west-1.amazonaws.com/" />
+		<test url="http://www.teejayvanslyke.com.s3-website-us-west-1.amazonaws.com/" />
+		<test url="http://www.thisisreallaw.com.s3-website-external-1.amazonaws.com/" />
+		<test url="http://www.thisisreallaw.com.s3-website-sa-east-1.amazonaws.com/" />
+		<test url="http://www.ultiarchive.com.s3-website-sa-east-1.amazonaws.com/" />
+		<test url="http://www.ultiarchive.com.s3-website-us-west-1.amazonaws.com/" />
+		<test url="http://www.thisisreallaw.com.s3-website-us-east-1.amazonaws.com/" />
+		<test url="http://www.bleedingedgebiotech.com.s3-website-us-east-1.amazonaws.com/" />
+		<test url="http://robertbruce.s3-website-us-east-1.amazonaws.com/" />
+		<test url="http://stinkdigital.s3-website-us-east-1.amazonaws.com/" />
+
+	<rule from="^http://([\w-]+)\.s3-website-us-east-1\.amazonaws\.com/"
+		to="https://$1.s3.amazonaws.com/" />
+
+	<rule from="^http://([\w-]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
+		to="https://s3.amazonaws.com/$1.$2/" />
+		<test url="http://www.ultiarchive.com.s3-website-us-east-1.amazonaws.com/" />
+		-->
 
 	<rule from="^http://s3-website-us-east-1\.amazonaws\.com/"
 		to="https://s3.amazonaws.com/" />
-
-	<rule from="^http://([^@:\.]+)\.s3-website-us-east-1\.amazonaws\.com/"
-		to="https://$1.s3.amazonaws.com/" />
-
-	<rule from="^http://([^@:\.]+)\.([^@:/]+)\.s3-website-us-east-1\.amazonaws\.com/"
-		to="https://s3.amazonaws.com/$1.$2/" />
 
 	<rule from="^http://(?:www\.)?amazonwebservices\.com/"
 		to="https://aws.amazon.com/" />
@@ -192,7 +231,7 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 	<rule from="^http://(?:g-images\.|(?:ec[5x]|g-ecx)\.images-)amazon\.com/"
 		to="https://d1ge0kk1l5kms0.cloudfront.net/" />
 
-	<rule from="^http://(?:(?:(?:\w-)?ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
+	<rule from="^http://(?:(?:ec[1-8x]|z-ak)\.images-|images(?:-jp)?\.)amazon\.com/"
 		to="https://images-na.ssl-images-amazon.com/" />
 
 	  	<!--
@@ -204,10 +243,78 @@ Fetch error: http://signin.aws.amazon.com/ => https://signin.aws.amazon.com/: (7
 		the ssl-images-amazon domain, though it could have
 		copied the crazy pattern from the rule above.
 									-->
-		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws.com/" />
+		<exclusion pattern="^http://amazon-zg\.s3\.amazonaws\.com/" />
 		<exclusion pattern="^http://[^@:/]+images[^@:/]+/images/G/01/zeitgeist/mp3player" />
+			<test url="http://images-na.ssl-images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
+			<test url="http://ec2.images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
+			<test url="http://ec1.images-amazon.com/images/G/01/zeitgeist/mp3player/swf/zgMp3Player-1.0._V212274098_.swf" />
 
 	<rule from="^http://images-(eu|fe|na)\.ssl-images-amazon\.com/"
 		to="https://images-$1.ssl-images-amazon.com/" />
+
+
+<test url="http://dis.images.s3.amazonaws.com/" />
+<test url="http://dis.resized.images.s3.amazonaws.com/" />
+<test url="http://cms.kiva.org.s3.amazonaws.com/" />
+<test url="http://fls-eu.amazon.co.uk/" />
+<test url="http://docs.aws.amazon.com/" />
+<test url="http://forums.aws.amazon.com/" />
+<test url="http://aws.amazon.com/" />
+<test url="http://aws-portal.amazon.com/" />
+<test url="http://fls-eu.amazon.com/" />
+<test url="http://fls-na.amazon.com/" />
+<test url="http://payments.amazon.com/" />
+<test url="http://sis.amazon.com/" />
+<test url="http://webservices.amazon.com/" />
+<test url="http://s3.amazonaws.com/" />
+<test url="http://s3-ap-northeast-1.amazonaws.com/" />
+<test url="http://s3-ap-southeast-1.amazonaws.com/" />
+<test url="http://s3-eu-west-1.amazonaws.com/" />
+<test url="http://s3-us-west-1.amazonaws.com/" />
+<test url="http://s3-external-1.amazonaws.com/" />
+<test url="http://s3-sa-east-1.amazonaws.com/" />
+<test url="http://s3-website-ap-northeast-1.amazonaws.com/" />
+<test url="http://s3-website-ap-southeast-1.amazonaws.com/" />
+<test url="http://s3-website-eu-west-1.amazonaws.com/" />
+<test url="http://s3-website-us-west-1.amazonaws.com/" />
+<test url="http://s3-website-sa-east-1.amazonaws.com/" />
+<test url="http://s3-website-us-east-1.amazonaws.com/" />
+<test url="http://amazonwebservices.com/" />
+<test url="http://www.amazonwebservices.com/" />
+<test url="http://developer.amazonwebservices.com/" />
+<test url="http://media.amazonwebservices.com/" />
+<test url="http://g-images.amazon.com/" />
+<test url="http://ec5.images-amazon.com/" />
+<test url="http://ecx.images-amazon.com/" />
+<test url="http://g-ecx.images-amazon.com/" />
+<test url="http://ec1.images-amazon.com/" />
+<test url="http://ec2.images-amazon.com/" />
+<test url="http://ec3.images-amazon.com/" />
+<test url="http://ec4.images-amazon.com/" />
+<test url="http://ec5.images-amazon.com/" />
+<test url="http://ec6.images-amazon.com/" />
+<test url="http://ec8.images-amazon.com/" />
+<test url="http://ecx.images-amazon.com/" />
+<test url="http://z-ak.images-amazon.com/" />
+<test url="http://images.amazon.com/" />
+<test url="http://images-jp.amazon.com/" />
+<test url="http://images-eu.ssl-images-amazon.com/" />
+<test url="http://images-fe.ssl-images-amazon.com/" />
+<test url="http://images-na.ssl-images-amazon.com/" />
+<test url="http://static.via.me.s3.amazonaws.com/" />
+<test url="http://img.wired.co.uk.s3.amazonaws.com/" />
+<test url="http://s3.sandbaguk.com.s3.amazonaws.com/" />
+<test url="http://spiegeltv-ivms2-restapi.s3.amazonaws.com/" />
+<test url="http://www.mercyships.org.s3.amazonaws.com/" />
+<test url="http://www-prod-storage.cloud.caltech.edu.s3.amazonaws.com/" />
+<test url="http://badracket-website.s3.amazonaws.com/swf/soundmanager1_flash1.swf" />
+<test url="http://em.css.s3.amazonaws.com/style.css" />
+<test url="http://s3.lbrcdn.net.s3-external-3.amazonaws.com/" />
+<test url="http://charts-datawrapper.s3.amazonaws.com/" />
+<test url="http://darkskysatellite.s3.amazonaws.com/" />
+<test url="http://darkskysatellitemaps.s3.amazonaws.com/" />
+<test url="http://ecx.images-amazon.com/" />
+<test url="http://amazon-zg.s3.amazonaws.com/" />
+
 
 </ruleset>

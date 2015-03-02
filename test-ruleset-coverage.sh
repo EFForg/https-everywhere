@@ -11,6 +11,10 @@ if ! [ -d https-everywhere-checker ] ; then
   echo "./install-dev-dependencies.sh"
   exit 1
 fi
+if [ $# -gt 0 ] ; then
+  exec python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
+    https-everywhere-checker/manual.checker.config "$@"
+fi
 # Git log gives us all changed files. Pipe that through ls to eliminate files
 # that have been deleted.
 if ! python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
