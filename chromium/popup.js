@@ -78,6 +78,10 @@ function gotTab(tab) {
     listDiv.style.position = "static";
     listDiv.style.visibility = "visible";
   }
+  // Only show the "Add a rule" link if we're on an HTTPS page
+  if (/^https:/.test(tab.url)) {
+    show(e("add-rule-link"));
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
