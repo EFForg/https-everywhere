@@ -1,8 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://wikimedia.ca/ => https://wikimedia.ca/: (60, 'SSL certificate problem: self signed certificate')
-Fetch error: http://www.wikimedia.ca/ => https://wikimedia.ca/: (60, 'SSL certificate problem: self signed certificate')
-Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Could not resolve host: icinga.wmflabs.org')
 	Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
 	URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
@@ -35,7 +31,7 @@ Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Cou
 	* Secured by us
 
 -->
-<ruleset name="Wikimedia" default_off='failed ruleset test'>
+<ruleset name="Wikimedia">
 
 	<target host="enwp.org" />
 	<target host="frwp.org" />
@@ -46,7 +42,18 @@ Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Cou
 	<target host="*.wikimedia.org" />
 		<exclusion pattern="^http://(?:apt|cs|cz|parsoid-lb\.eqiad|status|torrus|ubuntu)\.wikimedia\.org" />
 		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
+			<test url="http://apt.wikimedia.org" />
+			<test url="http://cs.wikimedia.org" />
+			<test url="http://cz.wikimedia.org" />
+			<test url="http://parsoid-lb.eqiad.wikimedia.org" />
+			<test url="http://status.wikimedia.org" />
+			<test url="http://torrus.wikimedia.org" />
+			<test url="http://ubuntu.wikimedia.org" />
+
 		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
+			<test url="http://lists.wikimedia.org/pipermail" />
+			<test url="http://lists.wikimedia.org/pipermail/" />
+
 	<target host="wikimediafoundation.org" />
 	<target host="www.wikimediafoundation.org" />
 
@@ -70,13 +77,37 @@ Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Cou
 	<target host="wiktionary.org" />
 	<target host="*.wiktionary.org" />
 
-	<!-- Wikimedia chapters -->
-	<target host="wikimedia.ca" />
-	<target host="www.wikimedia.ca" />
+	<test url="http://en.wikibooks.org" />
+	<test url="http://en.wikinews.org" />
+	<test url="http://en.wikipedia.org" />
+	<test url="http://en.wikiquote.org" />
+	<test url="http://en.wikisource.org" />
+	<test url="http://en.wikiversity.org" />
+	<test url="http://en.wikivoyage.org" />
+	<test url="http://en.wiktionary.org" />
+	<test url="http://de.wikibooks.org" />
+	<test url="http://de.wikinews.org" />
+	<test url="http://de.wikipedia.org" />
+	<test url="http://de.wikiquote.org" />
+	<test url="http://de.wikisource.org" />
+	<test url="http://de.wikiversity.org" />
+	<test url="http://de.wikivoyage.org" />
+	<test url="http://de.wiktionary.org" />
+	<test url="http://ru.wikibooks.org" />
+	<test url="http://ru.wikinews.org" />
+	<test url="http://ru.wikipedia.org" />
+	<test url="http://ru.wikiquote.org" />
+	<test url="http://ru.wikisource.org" />
+	<test url="http://ru.wikiversity.org" />
+	<test url="http://ru.wikivoyage.org" />
+	<test url="http://ru.wiktionary.org" />
+
+	<test url="http://www.wikidata.org" />
+	<test url="http://www.wikimedia.org" />
+	<test url="http://www.wikimediafoundation.org" />
 
 	<!-- Wikimedia Tool Labs -->
 	<target host="tools.wmflabs.org" />
-	<target host="icinga.wmflabs.org" />
 	<target host="ganglia.wmflabs.org" />
 
 	<!--	Not secured by server:
@@ -98,35 +129,32 @@ Fetch error: http://icinga.wmflabs.org/ => https://icinga.wmflabs.org/: (6, 'Cou
 
 	<rule from="^http://noboard\.chapters\.wikimedia\.org/"
 		to="https://noboard-chapters.wikimedia.org/" />
+		<test url="http://noboard.chapters.wikimedia.org/" />
 
-	<rule from="^http://(?:dataset2|download|sitemap)\.wikimedia\.org/"
+	<rule from="^http://(?:download|sitemap)\.wikimedia\.org/"
 		to="https://dumps.wikimedia.org/" />
+		<test url="http://download.wikimedia.org/" />
+		<test url="http://sitemap.wikimedia.org/" />
 
 	<rule from="^http://links\.email\.donate\.wikimedia\.org/"
 		to="https://www.links.mkt41.net/" />
+		<test url="http://links.email.donate.wikimedia.org/" />
 
-	<rule from="^http://(?:labs-ns[01]|virt0)\.wikimedia\.org/"
+	<rule from="^http://labs-ns0\.wikimedia\.org/"
 		to="https://wikitech.wikimedia.org/" />	
+		<test url="http://labs-ns0.wikimedia.org/" />
 
 	<rule from="^http://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
 		to="https://arbcom-$1.wikipedia.org/" />
+		<test url="http://arbcom.de.wikipedia.org/" />
+		<test url="http://arbcom.en.wikipedia.org/" />
+		<test url="http://arbcom.fi.wikipedia.org/" />
+		<test url="http://arbcom.nl.wikipedia.org/" />
 
 	<rule from="^http://download\.wikipedia\.org/"
 		to="https://dumps.wikimedia.org/" />
+		<test url="http://download.wikipedia.org/" />
 
-	<rule from="^http://wg\.en\.wikipedia\.org/"
-		to="https://wg-en.wikipedia.org/" />
-
-	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
-		to="https://$1wik$2.org/" />
-
-	<rule from="^http://(?:www\.)?wikimedia\.ca/"
-		to="https://wikimedia.ca/" />
-
-	<rule from="^http://(www\.)?wikimediafoundation\.org/"
-		to="https://$1wikimediafoundation.org/" />
-
-	<rule from="^http://([^@:/]+)\.wmflabs\.org/"
-		to="https://$1.wmflabs.org/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
