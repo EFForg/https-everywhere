@@ -47,12 +47,28 @@
 	** Secured by us
 
 -->
-<ruleset name="TechRepublic.com (partial)" default_off="Needs ruleset tests">
+<ruleset name="TechRepublic.com (partial)">
 
 	<target host="techrepublic.com" />
 	<target host="secure.techrepublic.com" />
 	<target host="www.techrepublic.com" />
 
+		<exclusion pattern="^http://www\.techrepublic\.com/(?!.+\.(?:ico|jpg|png)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.techrepublic.com/1.8.20/bundles/techrepubliccore/css/main.css" />
+			<test url="http://www.techrepublic.com/about/" />
+			<test url="http://www.techrepublic.com/blog/" />
+			<test url="http://www.techrepublic.com/pictures/" />
+			<test url="http://www.techrepublic.com/resource-library/downloads/" />
+			<test url="http://www.techrepublic.com/site-map/" />
+			<test url="http://www.techrepublic.com/videos/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.techrepublic.com/bundles/techrepubliccore/images/base/header-bg.png" />
+			<test url="http://www.techrepublic.com/favicon.ico" />
 
 	<!--	Not secured by server:
 					-->
@@ -62,12 +78,10 @@
 	<securecookie host="^secure\.techrepublic\.com$" name=".+" />
 
 
-	<rule from="^http://www\.techrepublic\.com/(?=.+\.(?:ico|jpg|png)(?:$|[?/]))"
+	<rule from="^http://www\.techrepublic\.com/"
 		to="https://techrepublic-a.akamaihd.net/" />
 
-		<test url="http://www.techrepublic.com/favicon.ico" />
-
-	<rule from="^http://(secure\.)?techrepublic\.com/"
-		to="https://$1techrepublic.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
