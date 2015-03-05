@@ -1,6 +1,33 @@
 <!--
 	For other Bizo coverage, see Bizo.xml.
 
+
+	Problematic domains:
+
+		- js.bizographics.com *
+
+	* Cloudfront
+
+
+	Fully covered subdomains:
+
+		- api
+		- imp2 ¹
+		- js ²	(→ sjs)
+		- sjs
+		- www
+
+	¹ Tracking beacon
+	² Uses sjs for https
+
+
+	^bizographics.com doesn't exist.
+
+
+	Insecure cookies are set for these domains:
+
+		- .bizographics.com
+
 -->
 <ruleset name="Bizo graphics.com">
 
@@ -11,18 +38,16 @@
 	<target host="www.bizographics.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bizographics\.com$" name="^BizoID$" /-->
+
 	<securecookie host="^\.bizographics\.com$" name=".+" />
 
 
-	<!--	- js cert: cloudfront.net
-		- Uses sjs for https
-					-->
 	<rule from="^http://js\.bizographics\.com/"
 		to="https://sjs.bizographics.com/" />
 
-	<!--	- imp2: Tracking beacon
-		- ^bizographics.com doesn't exist
-					-->
 	<rule from="^http:"
 		to="https:" />
 
