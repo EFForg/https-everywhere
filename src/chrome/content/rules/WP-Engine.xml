@@ -16,14 +16,40 @@
 	Fully covered subdomains:
 
 		- (www.)
-		- cdn		(→ www)
+		- cdn		(→ ^)
 		- devbox
 		- my
 		- press		(→ wpengine.totemapp.com)
+		- signup
 		- support
+		- \w+ *
+
+	* Per-account domains
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- wpengine.com
+		- .wpengine.com
+		- signup.wpengine.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^ from fast.fonts.net *
+			- ^ from fonts.googleapis.com *
+
+		- Images, on:
+
+			- ^ from wpengine.com *
+			- ^ from cdn.wpengine.com *
+
+	* Secured by us
 
 -->
-<ruleset name="WP Engine" platform="mixedcontent">
+<ruleset name="WP Engine">
 
 	<target host="wpengine.com" />
 	<target host="*.wpengine.com" />
@@ -38,6 +64,13 @@
 		<test url="http://www.wpengine.com/" />
 		<test url="http://www.wpengine.com/blog" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^wpengine\.com$" name="^X-Mapping-[a-z]{8}$" /-->
+	<!--securecookie host="^(signup\.)?wpengine\.com$" name="^X-Mapping-[a-z]{8}$" /-->
+	<!--securecookie host="^\.wpengine\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^signup\.wpengine\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^(?:.*\.)?wpengine\.com$" name=".+" />
 
