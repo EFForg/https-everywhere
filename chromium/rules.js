@@ -116,9 +116,12 @@ RuleSets.prototype = {
     if (!(params.host in this.targets)) {
       this.targets[params.host] = [];
     }
-    ruleCache.remove(params.host);
+    this.ruleCache.remove(params.host);
     // TODO: maybe promote this rule?
     this.targets[params.host].push(new_rule_set);
+    if (new_rule_set.name in this.ruleActiveStates) {
+      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
+    }
     log(INFO, 'done adding rule');
     return true;
   },

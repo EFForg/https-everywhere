@@ -19,6 +19,7 @@
 		- sites ²
 		- spectrum	(Akamai; 503)
 		- theinstitute ⁴
+		- uce ²
 
 	¹ Refused
 	² Dropped
@@ -49,10 +50,10 @@
 		- ieeexplore
 		- mentor
 		- securesso
+		- services28
 		- standards
 		- development.standards
 		- staticieeexplore	(→ akamai)
-		- uce
 		- origin.www
 
 
@@ -68,11 +69,21 @@
 	* Secured by us
 
 -->
-<ruleset name="IEEE (partial)" platform="mixedcontent">
+<ruleset name="IEEE (partial)" platform="mixedcontent" default_off="Needs ruleset tests">
 
 	<target host="ieee.org" />
-	<target host="*.ieee.org" />
-		<exclusion pattern="^http://eleccomm\.ieee\.org/(?:aliase|cs|image)s/" />
+	<target host="eleccomm.ieee.org" />
+	<target host="ewh.ieee.org" />
+	<target host="www.ewh.ieee.org" />
+	<target host="ieeexplore.ieee.org" />
+	<target host="mentor.ieee.org" />
+	<target host="origin.www.ieee.org" />
+	<target host="securesso.ieee.org" />
+	<target host="services28.ieee.org" />
+	<target host="standards.ieee.org" />
+	<target host="development.standards.ieee.org" />
+	<target host="staticieeexplore.ieee.org" />
+	<target host="www.ieee.org" />
 
 
 	<!--	Not secured by server:
@@ -96,19 +107,24 @@
 									-->
 	<rule from="^http://(?:www\.)?ieee\.org/go/renew/?$"
 		to="https://www.ieee.org/membership-application/public/renew.html" />
+	<test url="http://ieee.org/go/renew" />
+	<test url="http://ieee.org/go/renew/" />
+	<test url="http://www.ieee.org/go/renew" />
+	<test url="http://www.ieee.org/go/renew/" />
 
 	<rule from="^http://(?:www\.)?ieee\.org/go/shop/?$"
 		to="https://www.ieee.org/membership-catalog/index.html" />
+	<test url="http://ieee.org/go/shop" />
+	<test url="http://ieee.org/go/shop/" />
+	<test url="http://www.ieee.org/go/shop" />
+	<test url="http://www.ieee.org/go/shop/" />
 
 	<!--	!www presents cert for origin.www.
 							-->
-	<rule from="^http://(?:www\.)?ieee\.org/"
+	<rule from="^http://ieee\.org/"
 		to="https://www.ieee.org/" />
 
-	<rule from="^http://(eleccomm|ieeexplore|mentor|securesso|(?:development\.)?standards|uce|origin\.www)\.ieee\.org/"
-		to="https://$1.ieee.org/" />
-
-	<rule from="^http://(?:www\.)?ewh\.ieee\.org/"
+	<rule from="^http://www\.ewh\.ieee\.org/"
 		to="https://ewh.ieee.org/" />
 
 	<!--	css seems to use self-relative paths, so this should work:
@@ -116,4 +132,6 @@
 	<rule from="^http://staticieeexplore\.ieee\.org/"
 		to="https://a248.e.akamai.net/f/248/815/10/staticieeexplore.ieee.org/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

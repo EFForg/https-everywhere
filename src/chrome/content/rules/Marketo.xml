@@ -2,74 +2,64 @@
 	Other Marketo rulesets:
 
 		- Crowd-Factory.xml
+		- Marketo.net.xml
 		- Mktoresp.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- blog.marketo.com *
-		- pages2.marketo.com ²
+		- blog ¹
+		- pages2 ²
 
-	* Redirects to http
+	¹ Redirects to http
 	² 404
 
 
 	Problematic domains:
 
 		- marketo.com *
-		- (www.)marketo.net *
 
 	* Cert only matches *.marketo.com
 
 
-	Partially covered domains:
+	Partially covered subdomains:
 
-		- developers.marketo.com *
+		- developers *
 
 	* blog/ redirects to $
 
 
-	Fully covered domains:
+	Fully covered subdomains:
 
-		- marketo.com subdomains:
+		- (www.)?	(^ → www)
+		- app
 
-			- (www.)	(^ → www)
-			- app
+		- app-\w+:
 
-			- app-\w+:
+			- -[a-q]
+			- -ab01
+			- -ab[ak]
+			- -lon0[23]
+			- -sj\d
+			- -sj[fghn]
 
-				- -[a-q]
-				- -ab01
-				- -ab[ak]
-				- -lon0[23]
-				- -sj\d
-				- -sj[fghn]
+		- b2c-mlm
+		- community
+		- fr
+		- launchpoint
+		- micro
 
-			- b2c-mlm
-			- community
-			- fr
-			- launchpoint
-			- micro
-			- munchkin	(→ munchkin.marketo.net)
+		- na-\w+:
 
-			- na-\w+:
+			- -[a-df-q]
+			- -ab01
+			- -ab[ak]
+			- -lon02
+			- -sj0\d
+			- -sj[fhn]
 
-				- -[a-df-q]
-				- -ab01
-				- -ab[ak]
-				- -lon02
-				- -sj0\d
-				- -sj[fhn]
-
-			- summit
-			- support
-
-		- marketo.net subdomains:
-
-			- (www.)	(→ www.marketo.com)
-			- app		(→ app-a.marketo.com)
-			- munchkin
-			- ssl-munchkin
+		- summit
+		- support
 
 
 	Insecure cookies are set for these hosts:
@@ -85,26 +75,21 @@
 
 		- Videos on fr from [\da-f-]+.r\d+.cf\d.rackcdn.com *
 
-		- css on developers from $self
+		- css on developers from developers.marketo.com
 
-		- Images on developers from $self
+		- Images on developers from developers.marketo.com
 
 		- favicons, on:
 
 			- developers from marketo.com ¹
-			- developers from $self
-			- developers from ^ ¹
+			- developers from developers.marketo.com
 
 		- Bug on developers from www.googletagmanager.com
 
 	¹ Secured by us
 
-
-	munchkin sets a "_mkto_trk" wildcard cookie on whichever domain it is
-	loaded from.
-
 -->
-<ruleset name="Marketo (partial)">
+<ruleset name="Marketo.com (partial)">
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
@@ -126,43 +111,60 @@
 		<exclusion pattern="^http://developers\.marketo\.com/+(?!assets/|favicon\.ico|foundationforms/|themes/)" />
 
 			<test url="http://developers.marketo.com/" />
+			<test url="http://developers.marketo.com/activity-types/ " />
 			<test url="http://developers.marketo.com/assets/Uploads/dev-blog.png" />
+			<test url="http://developers.marketo.com/blog/" />
+			<test url="http://developers.marketo.com/documentation/faq/" />
+			<test url="http://developers.marketo.com/documentation/websites/" />
+			<test url="http://developers.marketo.com/favicon.ico" />
+			<test url="http://developers.marketo.com/support/overview/" />
 
-	<target host="marketo.net" />
-	<target host="*.marketo.net" />
-
-		<test url="https://app-ab01.marketo.com/" />
-		<test url="https://community.marketo.com/" />
-		<test url="https://fr.marketo.com/" />
-		<test url="https://launchpoint.marketo.com/" />
-		<test url="https://na-ab01.marketo.com/" />
-		<test url="https://summit.marketo.com/" />
-		<test url="https://support.marketo.com/" />
-		<test url="https://www.marketo.com/" />
+		<test url="http://app-ab01.marketo.com/" />
+		<test url="http://app-aba.marketo.com/" />
+		<test url="http://app-abk.marketo.com/" />
+		<test url="http://b2c-mlm.marketo.com/" />
+		<test url="http://community.marketo.com/" />
+		<test url="http://fr.marketo.com/" />
+		<test url="http://launchpoint.marketo.com/" />
+		<test url="http://micro.marketo.com/" />
+		<test url="http://na-ab01.marketo.com/" />
+		<test url="http://summit.marketo.com/" />
+		<test url="http://support.marketo.com/" />
+		<test url="http://www.marketo.com/" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
 
-	<securecookie host="^(?:.*\.)?marketo\.(?:com|net)$" name=".+" />
+	<securecookie host="^(?:.*\.)?marketo\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?marketo\.(?:com|net)/"
+	<rule from="^http://(?:www\.)?marketo\.com/"
 		to="https://www.marketo.com/" />
+
+	<!--	Redirect drops slash and args:
+						-->
+	<rule from="^http://pages2\.marketo\.com/+(?:\?.*)?$"
+		to="https://www.marketo.com/" />
+
+		<test url="http://pages2.marketo.com/" />
+		<test url="http://pages2.marketo.com/?" />
+		<test url="http://pages2.marketo.com/?foo" />
+		<test url="http://pages2.marketo.com//" />
+		<test url="http://pages2.marketo.com//?" />
 
 	<rule from="^http://pages2\.marketo\.com/(?=css/|images/|js/|rs/)"
 		to="https://na-abk.marketo.com/" />
 
+		<test url="http://pages2.marketo.com/css/mktLPSupportCompat.css" />
+		<test url="http://pages2.marketo.com/images/forms/backRequiredGray.gif" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/Marketing-First-Footer.gif" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/demo-video-no-play-button.jpg" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/logo_marketo_new.png" />
+		<test url="http://pages2.marketo.com/rs/marketob2/images/marketo-website-footer-lp-2.gif" />
+
 	<rule from="^http://(app(?:-\w+)?|b2c-mlm|community|developers|fr|launchpoint|micro|na-\w+|summit|support)\.marketo\.com/"
 		to="https://$1.marketo.com/" />
-
-	<!--	Server redirects as so:
-					-->
-	<rule from="^http://app\.marketo\.net/"
-		to="https://app-a.marketo.com/" />
-
-	<rule from="^http://(ssl-)?munchkin\.marketo\.(?:com|net)/"
-		to="https://$1munchkin.marketo.net/" />
 
 </ruleset>
