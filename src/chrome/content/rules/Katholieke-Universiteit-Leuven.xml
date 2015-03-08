@@ -24,15 +24,15 @@
 
 	Partially covered subdomains:
 
+		- (www.)? ¹
 		- (www.)esat *	(^ → www)
-		- organigram	(→ www)
 
+	¹ wieiswie/ prompts for login
 	* cosic 400s
 
 
 	Fully covered subdomains:
 
-		- (www.)?
 		- aai
 		- account
 		- activatie
@@ -107,6 +107,16 @@
 				-->
 		<exclusion pattern="^http://(?:www\.)?esat\.kuleuven\.be/+cosic(?:$|[?/])" />
 
+		<!--	Prompts for login:
+						-->
+		<exclusion pattern="^http://(?:www\.)?kuleuven\.be/+wieiswie(?:$|[?/])" />
+
+			<test url="http://www.kuleuven.be/wieiswie/" />
+			<test url="http://www.kuleuven.be/wieiswie/en/person" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/person" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/unit/50000050" />
+			<test url="http://www.kuleuven.be/wieiswie/nl/unit/councilsearch" />
+
 
 	<securecookie host=".+\.kuleuven\.be$" name=".+" />
 
@@ -119,8 +129,8 @@
 
 	<!--	Redirects like so:
 					-->
-	<rule from="^http://organigram\.kuleuven\.be/$"
-		to="https://www.kuleuven.be/wieiswie/nl/unit/50000050" />
+	<!--rule from="^http://organigram\.kuleuven\.be/$"
+		to="https://www.kuleuven.be/wieiswie/nl/unit/50000050" /-->
 
 	<rule from="^http://((?:aai|account|activatie|admin|agenda|alumni|webwsp\.aps|(?:wiki\.)?associatie|videolab\.avnet|(?:cygnus|m\.cygnus|piwik)\.cc|cwisdb|(?:bronx|www\.cosic|securehomes)\.esat|login\.kuleuven\.ezproxy|owa\.groupware|icts|piwik\.icts|idp|services\.libis|lirias|ludit|netlogin|nieuws|password|status|stijl|owa\.student|(?:m\.)?toledo|wachtwoord|webmail|wiki|www)\.)?kuleuven\.be/"
 		to="https://$1kuleuven.be/" />
