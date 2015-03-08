@@ -17,9 +17,9 @@ git submodule init
 git submodule update
 
 # Install Python packages
-pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
+pip install --no-allow-insecure --no-allow-external -r requirements.txt
 cd https-everywhere-checker
-pip install --user -r requirements.txt
+pip install -r requirements.txt
 cd -
 
 # Install a hook to run tests before pushing.
