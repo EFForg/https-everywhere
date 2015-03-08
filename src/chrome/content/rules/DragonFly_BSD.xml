@@ -1,14 +1,20 @@
 <!--
 	Nonfunctional subdomains:
 
-		- gitweb	(shows bugs; mismatched, CN: bugs.dragonflybsd.org)
+		- lists *
+
+	* Refused
 
 
 	Problematic subdomains:
 
 		- ^	(refused)
-		- leaf ²
+		- bugs ³
+		- gitweb ³
+		- leaf ³ ²
+		- www ³
 
+	³ Server sends no certificate chain
 	² Mixed css
 
 
@@ -20,22 +26,34 @@
 	* Secured by us
 
  -->
-<ruleset name="DragonFly BSD.org (partial)" default_off="Needs ruleset tests">
+<ruleset name="DragonFly BSD.org (partial)" default_off="missing certificate chain">
 
 	<target host="dragonflybsd.org" />
 	<target host="bugs.dragonflybsd.org" />
+	<target host="gitweb.dragonflybsd.org" />
 	<target host="leaf.dragonflybsd.org" />
 	<target host="www.dragonflybsd.org" />
 		<!--
 			Avoid broken MCB:
 						-->
-		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!cgi/web-man)" />
+		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!~|cgi/web-man|manpages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://leaf.dragonflybsd.org//" />
+			<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://leaf.dragonflybsd.org/~beket/rt.py" />
+			<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
+			<test url="http://leaf.dragonflybsd.org/manpages/" />
 
 
 	<securecookie host="^bugs\.dragonflybsd\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?dragonflybsd\.org/"
+	<rule from="^http://dragonflybsd\.org/"
 		to="https://www.dragonflybsd.org/" />
 
 	<rule from="^http:"
