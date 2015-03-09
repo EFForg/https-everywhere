@@ -1,4 +1,7 @@
 <!--
+	University of Maryland
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/wrapper.umd.edu/
@@ -14,6 +17,7 @@
 		- (www.)password ²
 		- (www.)president ²
 		- (www.)sas ⁵
+		- (www.)?start ²
 		- (www.)terp ⁶
 		- (www.)terpvision ²
 		- (www.)testudo ⁵
@@ -109,7 +113,7 @@
 	* Secured by us
 
 -->
-<ruleset name="University of Maryland (partial)">
+<ruleset name="UMd.edu (partial)" default_off="Needs ruleset tests">
 
 	<target host="umd.edu" />
 	<target host="*.umd.edu" />
@@ -120,9 +124,14 @@
 		<exclusion pattern="^http://ldap\.umd\.edu/+(?!favicon\.ico|images/|Pictures/)" />
 		<exclusion pattern="^http://www\.provost\.umd\.edu/+(?!favicon\.ico|images/|includes/|masthead\.jpg|photos/|resources/)" />
 		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://(www\.)?start\.umd\.edu/gtd/images/" /-->
+		<!--
 			Redirect to http:
 						-->
 		<!--exclusion pattern="^http://www\.lib\.umd\.edu/($|favicon\.ico)" /-->
+		<!--exclusion pattern="^http://(www\.)?start\.umd\.edu/gtd/$" /-->
 		<!--
 			Exceptions:
 					-->
@@ -138,15 +147,6 @@
 	<securecookie host="^(?:www\.)?umd\.edu$" name=".+" />
 
 
-	<!--	Domains for which both !www and www
-		exist, and both are unproblematic:
-							-->
-	<rule from="^http://(www\.)((?:arch|cs|directory|eng|helpdesk|glue|inform|irpa|it|itsc|lib|oit|provost|umdrightnow|umiacs)\.)?umd\.edu/"
-		to="https://$1$2umd.edu/" />
-
-	<rule from="^http://(carma\.astro|catalog|cgi|(?:undergrad|webapps)\.cs|ldap|aeon\.lib|login|ntst|researchport|terpconnect|wiki\.umiacs)\.umd\.edu/"
-		to="https://$1.umd.edu/" />
-
 	<!--	Redirect drops args:
 					-->
 	<rule from="^http://kb\.umd\.edu/+(\d+)(?:\?.*)?"
@@ -156,5 +156,14 @@
 							-->
 	<rule from="^http://password\.umd\.edu/[^?]*"
 		to="https://www.it.umd.edu/password" />
+
+	<!--	Domains for which both !www and www
+		exist, and both are unproblematic:
+							-->
+	<rule from="^http://(www\.)((?:arch|cs|directory|eng|helpdesk|glue|inform|irpa|it|itsc|lib|oit|provost|umdrightnow|umiacs)\.)?umd\.edu/"
+		to="https://$1$2umd.edu/" />
+
+	<rule from="^http://(carma\.astro|catalog|cgi|(?:undergrad|webapps)\.cs|ldap|aeon\.lib|login|ntst|researchport|terpconnect|wiki\.umiacs)\.umd\.edu/"
+		to="https://$1.umd.edu/" />
 
 </ruleset>

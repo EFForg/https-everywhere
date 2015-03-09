@@ -1,6 +1,7 @@
 <!--
 	Other Mail.ru rulesets:
 
+		- DatacloudMail.ru.xml
 		- ICQ.com.xml
 		- Imgs_Mail.ru.xml
 		- List.ru.xml
@@ -13,20 +14,18 @@
 		- aa ¹
 		- m.agent ²
 		- rfr.agent ³
-		- pic.afisha ⁴
 		- internet ⁵
-		- love ⁶
+
+		- love ²
+		- m.love ²
 		- wap.love ²
+
 		- mailblog ²
 		- mra ³
 		- click.my ⁷
 		- otvet ⁴
 		- pogoda ²
 		- r2 ¹
-
-		- realty ⁵
-		- img.pre.realty ⁵
-		- pro.realty ⁵
 
 		- team ⁴
 		- top ⁵
@@ -37,16 +36,15 @@
 		- img.torg ⁴
 		- m.torg ⁴
 
-		- tv ⁴
-		- wap.tv ⁴
+		- wap ²
 		- xhtml.wap ²
+		- webmaster ¹
 
 	¹ Dropped
 	² Refused
 	³ Plaintext reply
 	⁴ Redirects to http
 	⁵ 403
-	⁶ Shows partner.wamba.com
 	⁷ 400
 
 
@@ -55,13 +53,14 @@
 		- s1.amigo ¹
 		- blogs ²
 		- cdn.connect ¹
+		- content.foto ¹
 		- m.go ¹
 		- imgs2 ³
 		- m.my ¹
 		- stat.my ¹
 		- \w\d.\w\d.\w\d.\w\d.top ¹
+		- img.pre.realty ¹
 		- img.tv ¹
-		- my.tv ¹
 
 	¹ Mismatched
 	² Shows another domain
@@ -70,8 +69,6 @@
 
 	Partially covered subdomains:
 
-		- afisha *
-		- touch.afisha *	(→ afisha)
 		- games *
 		- go *
 
@@ -87,6 +84,11 @@
 		- 1link
 		- portal.1link
 		- ad
+
+		- afisha
+		- pic.afisha
+		- touch.afisha
+
 		- agent
 		- amigo
 		- auto
@@ -118,6 +120,7 @@
 			- [12]\d
 			- 30
 
+		- content.foto	(→ content.foto.my)
 		- forum.games
 		- m.games
 		- health
@@ -156,13 +159,21 @@
 		- videoapi.my
 
 		- news
+		- m.news
 		- pic.news
 		- retina.news
+		- touch.news
 
 		- touch.otvet
 		- pirates
 		- r3
 		- rabota
+
+		- realty
+		- img.realty
+		- img.pre.realty		(→ img.realty.mail.ru)
+		- pro.realty
+
 		- riot
 		- rs
 		- sales
@@ -175,6 +186,11 @@
 		- tel
 		- \w\d.\w\d.\w\d.\w\d.top	(→ top-fwz1.mail.ru)
 		- top-fwz1
+
+		- tv
+		- my.tv
+		- wap.tv
+
 		- tz
 		- why
 		- wot
@@ -194,12 +210,16 @@
 		- .games.mail.ru
 		- hi-tech.mail.ru
 		- .tv.mail.ru
+		- realty.mail.ru
+		- .realty.mail.ru
+		- pro.realty.mail.ru
 
 
 	Mixed content:
 
 		- Images, on:
 
+			- blogs from rs.mail.ru *
 			- dobro from $self *
 			- m.games from games *
 			- m.games from stat.my *
@@ -212,6 +232,7 @@
 
 		- Bugs, on:
 
+			- blogs from stat.my *
 			- sales from rss
 			- maps, sales from www.tns-counter.ru *
 
@@ -220,36 +241,178 @@
 -->
 <ruleset name="Mail.ru (partial)">
 
+	<!--	as-is rewrites:
+				-->
 	<target host="mail.ru" />
+	<target host="1-lview.mail.ru" />
+	<target host="1l-go.mail.ru" />
+	<target host="1l-view.mail.ru" />
+	<target host="1link.mail.ru" />
+	<target host="portal.1link.mail.ru" />
+	<target host="ad.mail.ru" />
+	<target host="afisha.mail.ru" />
+	<target host="pic.afisha.mail.ru" />
+	<target host="touch.afisha.mail.ru" />
+	<target host="agent.mail.ru" />
+	<target host="amigo.mail.ru" />
+	<target host="auto.mail.ru" />
+	<target host="touch.auto.mail.ru" />
+	<target host="bs.mail.ru" />
+	<target host="biz.mail.ru" />
+	<target host="c.mail.ru" />
+	<target host="promo.calendar.mail.ru" />
+	<target host="cars.mail.ru" />
+	<target host="cloud.mail.ru" />
+	<target host="connect.mail.ru" />
+	<target host="corp.mail.ru" />
+	<target host="cp-filin.mail.ru" />
+	<target host="static.dl.mail.ru" />
+	<target host="deti.mail.ru" />
+	<target host="touch.deti.mail.ru" />
+	<target host="touch.forum.deti.mail.ru" />
+	<target host="dobro.mail.ru" />
+	<target host="e.mail.ru" />
+	<target host="filin.mail.ru" />
+	<target host="avt.foto.mail.ru" />
+	<target host="*.foto.mail.ru" />
+	<target host="games.mail.ru" />
+	<target host="forum.games.mail.ru" />
+	<target host="m.games.mail.ru" />
+	<target host="go.mail.ru" />
+	<target host="health.mail.ru" />
+	<target host="help.mail.ru" />
+	<target host="hi-tech.mail.ru" />
+	<target host="m.hi-tech.mail.ru" />
+	<target host="horo.mail.ru" />
+	<target host="touch.horo.mail.ru" />
+	<target host="img.mail.ru" />
+	<target host="jugger.mail.ru" />
+	<target host="s1.jugger.mail.ru" />
+	<target host="lady.mail.ru" />
+	<target host="images.lady.mail.ru" />
+	<target host="lotro.mail.ru" />
+	<target host="m.mail.ru" />
+	<target host="maps.mail.ru" />
+	<target host="minigames.mail.ru" />
+	<target host="money.mail.ru" />
+	<target host="m.money.mail.ru" />
+	<target host="my.mail.ru" />
+	<target host="*.my.mail.ru" />
+	<target host="content.foto.my.mail.ru" />
+	<target host="*.foto.my.mail.ru" />
+	<target host="stat.my.mail.ru" />
+	<target host="videoapi.my.mail.ru" />
+	<target host="news.mail.ru" />
+	<target host="m.news.mail.ru" />
+	<target host="pic.news.mail.ru" />
+	<target host="retina.news.mail.ru" />
+	<target host="touch.news.mail.ru" />
+	<target host="touch.otvet.mail.ru" />
+	<target host="pirates.mail.ru" />
+	<target host="rabota.mail.ru" />
+	<target host="r.mail.ru" />
+	<target host="r3.mail.ru" />
+	<target host="realty.mail.ru" />
+	<target host="img.realty.mail.ru" />
+	<target host="pro.realty.mail.ru" />
+	<target host="riot.mail.ru" />
+	<target host="rs.mail.ru" />
+	<target host="sales.mail.ru" />
+	<target host="security.mail.ru" />
+	<target host="showbiz.mail.ru" />
+	<target host="socdwar.mail.ru" />
+	<target host="sport.mail.ru" />
+	<target host="status.mail.ru" />
+	<target host="swa.mail.ru" />
+	<target host="tanks.mail.ru" />
+	<target host="target.mail.ru" />
+	<target host="tel.mail.ru" />
+	<target host="top-fwz1.mail.ru" />
+	<target host="tv.mail.ru" />
+	<target host="my.tv.mail.ru" />
+	<target host="wap.tv.mail.ru" />
+	<target host="tz.mail.ru" />
+	<target host="wot.mail.ru" />
+	<target host="why.mail.ru" />
+	<target host="www.mail.ru" />
+
+	<!--	Special cases:
+				-->
+	<target host="blogs.mail.ru" />
+	<target host="cdn.connect.mail.ru" />
+	<target host="content.foto.mail.ru" />
+	<target host="img.tv.mail.ru" />
+	<target host="img.pre.realty.mail.ru" />
+	<target host="r2.mail.ru" />
+	<target host="*.top.mail.ru" />
+
+
 	<target host="*.mail.ru" />
-		<exclusion pattern="^http://(?:blogs|internet)\.mail\.ru/" />
+		<!--exclusion pattern="^http://(?:blogs|internet)\.mail\.ru/" /-->
 		<!--
 			Redirect to http:
 						-->
-		<!--exclusion pattern="^http://afisha\.mail\.ru/($|bem-toolkit/blocks-desktop/common/__fonts/_fonts/|cinema/articles/\d+/$|favicon\.ico|img/|imgv2/|series/news/\d+/$)" /-->
-		<!--exclusion pattern="^http://touch\.afisha\.mail\.ru/($|favicon\.ico|img/mobile/touch/)" /-->
 		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$|support/tanks/$)" /-->
 		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
 		<!--exclusion pattern="^http://otvet\.mail\.ru/($|auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
-		<!--exclusion pattern="^http://pic\.afisha\.mail\.ru/\d+/$" /-->
 		<!--exclusion pattern="^http://team\.mail\.ru/($|\?mcsf_action=main_css|favicon\.ico|wp-content/)" /-->
-		<!--exclusion pattern="^http://(torg|m\.torg|tv|wap)\.mail\.ru/($|favicon\.ico)" /-->
+		<!--exclusion pattern="^http://(torg|m\.torg|wap)\.mail\.ru/($|favicon\.ico)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://afisha\.mail\.ru/+(?!bem/web/web\.bundles/common/|img/mobile/|mobile/touch/)" />
-		<exclusion pattern="^http://touch\.afisha\.mail\.ru/+(?!mobile/touch/)" />
 		<exclusion pattern="^http://games\.mail\.ru/+(?!css/|favicon\.ico|fonts/|img/|pic/|pre_big2?_crop/|r/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://games.mail.ru/feedback/" />
+			<test url="http://games.mail.ru/gamecenter/download/" />
+			<test url="http://games.mail.ru/pc/" />
+			<test url="http://games.mail.ru/pc/video/" />
+			<test url="http://games.mail.ru/play/client/" />
+			<test url="http://games.mail.ru/play/new/" />
+			<test url="http://games.mail.ru/profile/" />
+			<test url="http://games.mail.ru/support/" />
+			<test url="http://games.mail.ru/support/tz/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://games.mail.ru/css/new_design/main.css" />
+			<test url="http://games.mail.ru/favicon.ico" />
+
 		<exclusion pattern="^http://go\.mail\.ru/+(?!favicon\.ico|static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://go.mail.ru/blog/" />
+			<test url="http://go.mail.ru/news" />
+			<test url="http://go.mail.ru/realtime" />
+			<test url="http://go.mail.ru/search" />
+
+			<!--	-ve:
+					-->
+			<test url="http://go.mail.ru/static/web/img/opera_bookmark/sd_search_img.png" />
+
+		<test url="http://avt-1.foto.mail.ru/" />
+		<test url="http://avt-10.foto.mail.ru/" />
+		<test url="http://avt-20.foto.mail.ru/" />
+		<test url="http://avt-30.foto.mail.ru/" />
+		<test url="http://cdn41.my.mail.ru/" />
+		<test url="http://content-1.foto.my.mail.ru/" />
+		<test url="http://content-10.foto.my.mail.ru/" />
+		<test url="http://content-20.foto.my.mail.ru/" />
+		<test url="http://content-30.foto.my.mail.ru/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.mail\.ru$" name="^(FTID|VID|mc2|mrcu|p|searchuid)$" /-->
+	<!--securecookie host="^\.mail\.ru$" name="^(FTID|VID|c|i|mc2|mrcu|p|searchuid)$" /-->
 	<!--securecookie host="^1link\.mail\.ru$" name="^c_\d+_\d+$" /-->
 	<!--securecookie host="^\.agent\.mail\.ru$" name="^agent_family$" /-->
 	<!--securecookie host="^\.games\.mail\.ru$" name="^targeting$" /-->
 	<!--securecookie host="^hi-tech\.mail\.ru$" name="^last_visits$" /-->
+	<!--securecookie host="^(pro\.)?realty\.mail\.ru$" name="^x_user_id$" /-->
+	<!--securecookie host="^\.realty\.mail\.ru$" name="^(realty_geo|rrbrg|saved_segment)$" /-->
+	<!--securecookie host="^pro\.realty\.mail\.ru$" name="^REALTYSESS$" /-->
 
 	<!--	Disable securecookie for this?
 		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-December/001422.html
@@ -263,38 +426,34 @@
 	<securecookie host="^(?:1link|hi-tech)\.mail\.ru$" name=".+" />
 
 
-	<rule from="^http://touch\.afisha\.mail\.ru/"
-		to="https://afisha.mail.ru/" />
-
 	<!--	Redirect drops path and args:
 						-->
 	<rule from="^http://blogs\.mail\.ru/.*"
 		to="https://my.mail.ru/" />
 
-	<rule from="^http://(?:cdn\.)?connect\.mail\.ru/"
+		<test url="http://blogs.mail.ru/foo" />
+
+	<rule from="^http://cdn\.connect\.mail\.ru/"
 		to="https://connect.mail.ru/" />
 
-	<!--	my.tv appears identical to tv
-						-->
-	<rule from="^http://(?:(img)(?:\.tv)?|my\.(tv))\.mail\.ru/"
-		to="https://$1$2.mail.ru/" />
+	<rule from="^http://content\.foto\.mail\.ru/"
+		to="https://content.foto.my.mail.ru/" />
 
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://stat\.my\.mail\.ru/"
-		to="https://my.mail.ru/" />
+	<rule from="^http://img\.tv\.mail\.ru/"
+		to="https://img.mail.ru/" />
 
-	<!--	cert doesn't match m.news	-->
-	<rule from="^http://m\.news\.mail\.ru/(_css/|favicon\.ico$|img/)"
-		to="https://news.mail.ru/$1" />
+	<rule from="^http://img\.pre\.realty\.mail\.ru/"
+		to="https://img.realty.mail.ru/" />
 
-	<rule from="^http://r[2s]\.mail\.ru/"
+	<rule from="^http://r2\.mail\.ru/"
 		to="https://rs.mail.ru/" />
 
-	<rule from="^http://(?:(?:\w\d\.){4}top|top-fwz1)\.mail\.ru/"
+	<rule from="^http://(?:\w\d\.){4}top\.mail\.ru/"
 		to="https://top-fwz1.mail.ru/" />
 
-	<rule from="^http://((?:1-lview|1l-go|1l-view|1link|portal\.1link|ad|agent|amigo|auto|touch\.auto|bs|biz|c|promo\.calendar|cars|cloud|corp|cp-filin|static\.dl|deti|touch(?:\.forum)?\.deti|dobro|e|filin|avt(?:-\d+)?\.foto|games|(?:forum|m)\.games|go|health|help|hi-tech|m\.hi-tech|horo|touch\.horo|jugger|s1\.jugger|lady|images\.lady|lotro|m|maps|minigames|money|m\.money|my|(?:cdn\d+|filed\d+-\d+|content(?:-\d+)?\.foto|videoapi)\.my|news|(?:pic|retina)\.news|touch\.otvet|pirates|rabota|r3?|riot|sales|security|showbiz|socdwar|sport|status|swa|tanks|target|tel|tz|wot|why|www)\.)?mail\.ru/"
-		to="https://$1mail.ru/" />
+		<test url="http://a1.a1.a1.a1.top.mail.ru/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,52 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+		- resources *
+		- support *
+
+	* WP Engine
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- * ¹
+
+	¹ Per-client domains
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- workable.com
+		- .workable.com
+		- www.workable.com
+
+-->
+<ruleset name="Workable.com (partial)">
+
+	<target host="workable.com" />
+	<target host="*.workable.com" />
+
+		<exclusion pattern="^http://(?:blog|resources|support)\.workable\.com/" />
+
+			<test url="http://blog.workable.com/" />
+			<test url="http://resources.workable.com/" />
+			<test url="http://support.workable.com/" />
+
+		<test url="http://infogram.workable.com/" />
+		<test url="http://www.workable.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?workable\.com$" name="^_workable_visitor$" /-->
+	<!--securecookie host="^\.workable\.com$" name="^_workable_session$" /-->
+
+	<securecookie host="^(?:\.|www\.)?workable\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

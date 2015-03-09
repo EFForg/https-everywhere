@@ -1,0 +1,52 @@
+<!--
+	For rules causing false/broken MCB, see Tcl.tk-falsemixed.xml.
+
+
+	Nonfunctional subdomains:
+
+		- tkchat	(Shows another domain)
+		- tip ¹
+		- wiki *
+
+	¹ Shows powerdns.net
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- core ²
+		- mirror1 ³
+
+	¹ Mixed css
+	² Self-signed
+	³ Mismatched
+
+
+	Mixed content:
+
+		- css on (www.)?, core from (www.)?
+		- Images (www.)? from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Tcl.tk (partial)">
+
+	<target host="tcl.tk" />
+	<target host="www.tcl.tk" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?tcl\.tk/+(?!devsite\.css|images/)" />
+
+			<test url="http://tcl.tk/about/" />
+			<test url="http://tcl.tk/community/" />
+			<test url="http://tcl.tk/devsite.css" />
+			<test url="http://tcl.tk/doc/" />
+			<test url="http://tcl.tk/images/Search.gif" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

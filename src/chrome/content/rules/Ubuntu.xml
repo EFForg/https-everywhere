@@ -1,13 +1,17 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ubuntuone.com/ => https://ubuntuone.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
-Fetch error: http://www.ubuntuone.com/ => https://www.ubuntuone.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
 	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
 
 
 	Other Ubuntu rulesets:
 
 		- Ubuntu_Forums.org.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)?ubuntuone.com *
+
+	* Plaintext reply
 
 
 	Nonfunctional subdomains:
@@ -24,6 +28,7 @@ Fetch error: http://www.ubuntuone.com/ => https://www.ubuntuone.com/: (35, 'erro
 		- old-releases ²
 		- packages ¹
 		- packages-import ¹
+		- packaging ***
 		- people ¹
 		- phablet ¹
 		- planet		(prints "Page Unavailable"; mismatched, CN: certification.canonical.com)
@@ -42,6 +47,7 @@ Fetch error: http://www.ubuntuone.com/ => https://www.ubuntuone.com/: (35, 'erro
 	¹ Dropped
 	² Refused
 	³ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com
+	*** Redirects to login.ubuntu.com
 	⁴ 404; mismatched, CN: *.canonical.com
 
 
@@ -81,8 +87,6 @@ Fetch error: http://www.ubuntuone.com/ => https://www.ubuntuone.com/: (35, 'erro
 			- unity
 			- wiki
 
-		- (www.)ubuntuone.com
-
 
 	These altnames don't exist:
 
@@ -111,27 +115,56 @@ Fetch error: http://www.ubuntuone.com/ => https://www.ubuntuone.com/: (35, 'erro
 	* Unsecurable, doesn't trip MCB
 
 -->
-<ruleset name="Ubuntu (partial)" default_off='failed ruleset test'>
+<ruleset name="Ubuntu.com (partial)">
 
-	<target host="*.ubuntu.com" />
+	<target host="apps.ubuntu.com" />
+	<target host="assets.ubuntu.com" />
+	<target host="cloud.ubuntu.com" />
+	<target host="community.ubuntu.com" />
+	<target host="design.ubuntu.com" />
+	<target host="developer.ubuntu.com" />
+	<target host="myapps.developer.ubuntu.com" />
+	<target host="entropy.ubuntu.com" />
+	<target host="fridge.ubuntu.com" />
+	<target host="help.ubuntu.com" />
+	<target host="insights.ubuntu.com" />
+	<target host="juju.ubuntu.com" />
+	<target host="lists.ubuntu.com" />
+	<target host="login.ubuntu.com" />
+	<target host="maas.ubuntu.com" />
+	<target host="one.ubuntu.com" />
+	<target host="patches.ubuntu.com" />
+	<target host="pay.ubuntu.com" />
+	<target host="jenkins.qa.ubuntu.com" />
+	<target host="shop.ubuntu.com" />
+	<target host="uds.ubuntu.com" />
+	<target host="uec-images.ubuntu.com" />
+	<target host="unity.ubuntu.com" />
+	<target host="wiki.ubuntu.com" />
 		<!--
 			Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://community\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
-	<target host="ubuntuone.com" />
-	<target host="www.ubuntuone.com" />
+
+			<test url="http://community.ubuntu.com//" />
+			<test url="http://community.ubuntu.com/community-structure/" />
+			<test url="http://community.ubuntu.com/contribute/" />
+			<test url="http://community.ubuntu.com/help-information/" />
+
+	<!--target host="ubuntuone.com" /-->
+	<!--target host="www.ubuntuone.com" /-->
 
 
 	<securecookie host="^(?:apps|login|pay|jenkins\.qa|wiki)\.ubuntu\.com$" name=".+" />
 
 
-	<rule from="^http://(apps|assets|cloud|community|design|(?:myapps\.)?developer|entropy|fridge|help|insights|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|unity|wiki)\.ubuntu\.com/"
-		to="https://$1.ubuntu.com/" />
-
 	<rule from="^http://shop\.ubuntu\.com/"
 		to="https://shop.canonical.com/" />
 
-	<rule from="^http://(www\.)?ubuntuone\.com/"
-		to="https://$1ubuntuone.com/" />
+	<rule from="^http:"
+		to="https:" />
+
+	<!--rule from="^http://(www\.)?ubuntuone\.com/"
+		to="https://$1ubuntuone.com/" /-->
 
 </ruleset>

@@ -1,13 +1,34 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)?
+		- analytics
+		- tor
+
+
+	Insecure cookies are set for these domains:
+
+		- .freedom.press
+
+-->
 <ruleset name="Freedom.Press">
 
 	<target host="freedom.press" />
+	<target host="analytics.freedom.press" />
+	<target host="tor.freedom.press" />
+	<target host="www.freedom.press" />
+
 	<target host="*.freedom.press" />
 
 
-	<securecookie host="^\.freedom\.press$" name="^__cfduid$" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.freedom\.press$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.freedom\.press$" name=".+" />
 
 
-	<rule from="^http://(tor\.|www\.)?freedom\.press/"
+	<rule from="^http://((?:analytics|tor|www)\.)?freedom\.press/"
 		to="https://$1freedom.press/" />
 
 </ruleset>
