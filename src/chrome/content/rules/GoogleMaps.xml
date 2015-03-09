@@ -1,9 +1,4 @@
 <!--
-Ignore this error if it ever happens again, it's ok. Please reenable this ruleset if it happens again.
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://maps-api-ssl.google.com/ (200) => https://maps-api-ssl.google.com/ (404)
-- - - - - -
-
 	Problematic domains:
 
 		- khms *
@@ -36,6 +31,13 @@ Non-2xx HTTP code: http://maps-api-ssl.google.com/ (200) => https://maps-api-ssl
 	<target host="khms2.google.com" />
 	<target host="khms3.google.com" />
 	<target host="maps-api-ssl.google.com" />
+    <!-- This domain doesn't host anything at the root, and will give a 404 if
+         you fetch / vis HTTPS. However, there are resources elsewhere on the
+         domain that can be rewritten. We exclude the root so
+         https-everywhere-checker doesn't generate an error based on the implicit
+         test URL for the domain. -->
+		<exclusion pattern="^http://maps-api-ssl\.google\.com/$" />
+		<test url="http://maps-api-ssl.google.com/maps/api/js?sensor=false" />
 	<target host="mw2.google.com" />
 	<target host="maps.google.com.*" />
 	<target host="maps.googleapis.com" />
