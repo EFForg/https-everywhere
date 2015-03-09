@@ -17,7 +17,10 @@
 		- gmodules.com			(503, CN: www.google.com)
 		- www.gmodules.com		(503, CN: *.googleusercontent.com)
 		- gstatic.com			(404, valid cert)
-		- api.recaptcha.net		(works; mismatched, CN: google.com)
+		These two changed URL formats as well as domains, need to find an example
+		of the old format in the wild:
+		- api.recaptcha.net	(→ www.google.com)
+		- api-secure.recaptcha.net
 
 
 	Partially covered domains:
@@ -57,8 +60,6 @@
 			- ssl
 			- t\d
 
-		- api.recaptcha.net	(→ www.google.com)
-		- api-secure.recaptcha.net
 		- gdata.youtube.com
 
 
@@ -78,11 +79,11 @@
 	<target host="ajax.googleapis.com" />
 		<!-- The implicit test URL at the root of this domain generates a 404.
 				 Add an exclusion so the fetcher is happy. -->
-		<exclusion pattern="^http://ajax\.googleapis\.com" />
+		<exclusion pattern="^http://ajax\.googleapis\.com/$" />
 	<target host="chart.googleapis.com" />
 		<!-- The implicit test URL at the root of this domain generates a 404.
 				 Add an exclusion so the fetcher is happy. -->
-		<exclusion pattern="^http://chart\.googleapis\.com" />
+		<exclusion pattern="^http://chart\.googleapis\.com/$" />
 	<target host="fonts.googleapis.com" />
 	<target host="www.googleapis.com" />
 	<target host="*.commondatastorage.googleapis.com" />
@@ -90,18 +91,6 @@
 
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
-	<target host="api.recaptcha.net" />
-		<!-- The implicit test URL at the root of this domain generates a 404.
-				 Add an exclusion so the fetcher is happy.
-				 Unfortunately the only "real" URLs on this domain require an API key
-				 so there are no good test URLs. -->
-		<exclusion pattern="^http://api.recaptcha.net" />
-	<target host="api-secure.recaptcha.net" />
-		<!-- The implicit test URL at the root of this domain generates a 404.
-				 Add an exclusion so the fetcher is happy.
-				 Unfortunately the only "real" URLs on this domain require an API key
-				 so there are no good test URLs. -->
-		<exclusion pattern="^http://api-secure.recaptcha.net" />
 	<target host="gdata.youtube.com" />
 
 	<!--	Captive portal detection redirects to this URL, and many captive
@@ -128,6 +117,7 @@
 		to="https://$1.googleapis.com/" />
 		<test url="http://ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.js" />
 		<test url="http://chart.googleapis.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:60,40&amp;chl=Hello|World" />
+		<test url="http://fonts.googleapis.com/css?family=Tangerine" />
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
@@ -163,12 +153,6 @@
 		<test url="http://t1.gstatic.com/" />
 		<test url="http://t2.gstatic.com/" />
 		<test url="http://t3.gstatic.com/" />
-
-	<rule from="^http://api\.recaptcha\.net/"
-		to="https://www.google.com/recaptcha/api/" />
-
-	<rule from="^http://api-secure\.recaptcha\.net/"
-		to="https://www.google.com/recaptcha/api/" />
 
 	<rule from="^http://gdata\.youtube\.com/"
 		to="https://gdata.youtube.com/" />
