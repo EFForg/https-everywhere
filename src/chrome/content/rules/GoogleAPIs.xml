@@ -1,3 +1,4 @@
+
 <!--
 	For other Google coverage, see GoogleServices.xml
 
@@ -75,7 +76,13 @@
 	<target host="ssl.google-analytics.com" />
 
 	<target host="ajax.googleapis.com" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy. -->
+		<exclusion pattern="^http://ajax\.googleapis\.com" />
 	<target host="chart.googleapis.com" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy. -->
+		<exclusion pattern="^http://chart\.googleapis\.com" />
 	<target host="fonts.googleapis.com" />
 	<target host="www.googleapis.com" />
 	<target host="*.commondatastorage.googleapis.com" />
@@ -84,7 +91,17 @@
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
 	<target host="api.recaptcha.net" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy.
+				 Unfortunately the only "real" URLs on this domain require an API key
+				 so there are no good test URLs. -->
+		<exclusion pattern="^http://api.recaptcha.net" />
 	<target host="api-secure.recaptcha.net" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy.
+				 Unfortunately the only "real" URLs on this domain require an API key
+				 so there are no good test URLs. -->
+		<exclusion pattern="^http://api-secure.recaptcha.net" />
 	<target host="gdata.youtube.com" />
 
 	<!--	Captive portal detection redirects to this URL, and many captive
@@ -109,6 +126,8 @@
 
 	<rule from="^http://(ajax|chart|fonts|www)\.googleapis\.com/"
 		to="https://$1.googleapis.com/" />
+		<test url="http://ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.js" />
+		<test url="http://chart.googleapis.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:60,40&amp;chl=Hello|World" />
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
@@ -149,7 +168,7 @@
 		to="https://www.google.com/recaptcha/api/" />
 
 	<rule from="^http://api-secure\.recaptcha\.net/"
-		to="https://api-secure.recaptcha.net/" />
+		to="https://www.google.com/recaptcha/api/" />
 
 	<rule from="^http://gdata\.youtube\.com/"
 		to="https://gdata.youtube.com/" />
