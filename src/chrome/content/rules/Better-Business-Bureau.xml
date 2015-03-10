@@ -73,15 +73,25 @@
 	* Secured by us
 
 -->
-<ruleset name="BBB.org (partial)" default_off="Needs ruleset tests">
+<ruleset name="BBB.org (partial)">
 
 	<target host="bbb.org"/>
 	<target host="hurdman.app.bbb.org"/>
 	<target host="*.bbb.org"/>
 		<!--
 			(www.)dcbbb.org redirects here		-->
-		<exclusion pattern="^http://(?:www\.)?dc\."/>
-		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\."/>
+		<exclusion pattern="^http://(?:www\.)?dc\.bbb\.org/"/>
+
+			<test url="http://dc.bbb.org/" />
+			<test url="http://www.dc.bbb.org/" />
+
+		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\.bbb\.org/"/>
+
+			<test url="http://la.bbb.org/" />
+			<test url="http://www.la.bbb.org/" />
+			<test url="http://seflorida.bbb.org/" />
+			<test url="http://www.seflorida.bbb.org/" />
+
 	<target host="bbbonline.org"/>
 	<target host="www.bbbonline.org"/>
 	<target host="bbbsilicon.org" />
@@ -89,8 +99,42 @@
 	<!--target host="labbb.org"/-->
 	<!--target host="www.labbb.org"/-->
 
+		<exclusion pattern="^http://(?:www\.)?bbbonline\.org/(?!cks\.asp\?id=\d)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bbbonline.org//foo" />
+			<test url="http://www.bbbonline.org//foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bbbonline.org/cks.asp?id=1" />
+			<test url="http://bbbonline.org/cks.asp?id=10" />
+			<test url="http://www.bbbonline.org/cks.asp?id=100" />
+
+		<exclusion pattern="http://(?:www\.)?bbbsilicon\.org/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bbbsilicon.org/commonreport.html" />
+			<test url="http://bbbsilicon.org/espanol/" />
+			<test url="http://bbbsilicon.org/news-events/" />
+			<test url="http://bbbsilicon.org/programs-services/" />
+			<test url="http://www.bbbsilicon.org/commonreport.html" />
+			<test url="http://www.bbbsilicon.org/espanol/" />
+			<test url="http://www.bbbsilicon.org/news-events/" />
+			<test url="http://www.bbbsilicon.org/programs-services/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bbbsilicon.org/?" />
+			<test url="http://bbbsilicon.org/?foo" />
+			<test url="http://www.bbbsilicon.org/?" />
+			<test url="http://www.bbbsilicon.org/?foo" />
+
 		<test url="http://assets.bbb.org/" />
 		<test url="http://charityreports.bbb.org/" />
+		<test url="http://sanjose.bbb.org/" />
 
 
 	<!--	Not secured by server:
@@ -126,10 +170,10 @@
 
 		<test url="http://sanjose.app.bbb.org/abs/login.html" />
 
-	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
-		to="https://www.bbb.org/us/bbb-online-business/?id=$1"/>
+	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp"
+		to="https://www.bbb.org/us/bbb-online-business/" />
 
-	<rule from="^http://(?:www\.)?bbbsilicon\.org/+(?:\?.*)?$"
+	<rule from="^http://(?:www\.)?bbbsilicon\.org/+(?:\?.*)?"
 		to="https://sanjose.bbb.org/" />
 
 
