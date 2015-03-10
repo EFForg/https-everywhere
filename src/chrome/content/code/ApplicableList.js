@@ -210,13 +210,9 @@ ApplicableList.prototype = {
 
   add_command: function(rule) {
       var command = this.document.createElement("command");
-      if (typeof rule.id !== 'number') {
-        this.log(WARN, "Rule has invalid id " + rule.id);
-        return;
-      }
-      command.setAttribute('id', rule.id+'-command');
+      command.setAttribute('id', JSON.stringify(rule.id)+'-command');
       command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
+      command.setAttribute('oncommand', 'toggle_rule("'+JSON.stringify(rule.id)+'")');
       this.commandset.appendChild(command);
   },
 
