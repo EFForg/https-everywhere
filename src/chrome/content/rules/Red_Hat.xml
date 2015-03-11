@@ -112,10 +112,66 @@
 	* Secured by us
 
 -->
-<ruleset name="Red Hat" default_off="Needs ruleset tests">
+<ruleset name="Red Hat">
 
 	<target host="redhat.com" />
-	<target host="*.redhat.com" />
+	<target host="academy.redhat.com" />
+	<target host="access.redhat.com" />
+	<target host="apac.redhat.com" />
+	<target host="www.apac.redhat.com" />
+	<target host="ar.redhat.com" />
+	<target host="archive.redhat.com" />
+	<target host="at.redhat.com" />
+	<target host="au.redhat.com" />
+	<target host="be.redhat.com" />
+	<target host="br.redhat.com" />
+	<target host="bugzilla.redhat.com" />
+	<target host="ca.redhat.com" />
+	<target host="careers.redhat.com" />
+	<target host="cn.redhat.com" />
+	<target host="community.redhat.com" />
+	<target host="de.redhat.com" />
+	<target host="developerblog.redhat.com" />
+	<target host="docs.redhat.com" />
+	<target host="engage.redhat.com" />
+	<target host="es.redhat.com" />
+	<target host="europe.redhat.com" />
+	<target host="www.europe.redhat.com" />
+	<target host="et.redhat.com" />
+	<target host="fr.redhat.com" />
+	<target host="gb.redhat.com" />
+	<target host="hardware.redhat.com" />
+	<target host="id.redhat.com" />
+	<target host="in.redhat.com" />
+	<target host="investors.redhat.com" />
+	<target host="it.redhat.com" />
+	<target host="jobs.redhat.com" />
+	<target host="jp.redhat.com" />
+	<target host="listman.redhat.com" />
+	<target host="lk.redhat.com" />
+	<target host="mx.redhat.com" />
+	<target host="openshift.redhat.com" />
+	<target host="people.redhat.com" />
+	<target host="ph.redhat.com" />
+	<target host="rhn.redhat.com" />
+	<target host="ru.redhat.com" />
+	<target host="securityblog.redhat.com" />
+	<target host="sg.redhat.com" />
+	<target host="smtrcs.redhat.com" />
+	<target host="support.redhat.com" />
+	<target host="webmail.redhat.com" />
+	<target host="www.redhat.com" />
+
+		<exclusion pattern="^http://investors\.redhat\.com/(?!common/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://investors.redhat.com/corporate-governance.cfm" />
+			<test url="http://investors.redhat.com/results.cfm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://investors.redhat.com/common/css/ndq-common.css" />
 
 
 	<!--	Not secured by server:
@@ -126,13 +182,10 @@
 	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?redhat\.com/"
+	<rule from="^http://redhat\.com/"
 		to="https://www.redhat.com/" />
 
-	<rule from="^http://(academy|access|a[rtu]|archive|be|br|bugzilla|ca|careers|cn|community|de|developerblog|docs|engage|es|fr|gb|hardware|i[dnt]|jp|listman|lk|mx|openshift|people|ph|rhn|ru|securityblog|sg|smtrcs|support|webmail)\.redhat\.com/"
-		to="https://$1.redhat.com/" />
-
-	<rule from="^http://(?:www\.)?(apac|europe)\.redhat\.com/"
+	<rule from="^http://(apac|europe)\.redhat\.com/"
 		to="https://www.$1.redhat.com/" />
 
 	<!--	Redirect drops path but not args:
@@ -140,10 +193,16 @@
 	<rule from="^http://et\.redhat\.com/[^?]*"
 		to="https://community.redhat.com/software/" />
 
-	<rule from="^http://investors\.redhat\.com/common/"
-		to="https://investor.shareholder.com/common/" />
+		<test url="http://et.redhat.com/foo" />
+		<test url="http://et.redhat.com/foo?bar" />
+
+	<rule from="^http://investors\.redhat\.com/"
+		to="https://investor.shareholder.com/" />
 
 	<rule from="^http://jobs\.redhat\.com/"
 		to="https://redhat.sc.hodesdigital.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
