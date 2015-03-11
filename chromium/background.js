@@ -8,6 +8,24 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// Load prefs about whether http nowhere is on. Structure is:
+//  { httpNowhere: true/false }
+var httpNowhereOn = false;
+chrome.storage.sync.get({httpNowhere: false}, function(item) {
+  httpNowhereOn = item.httpNowhere;
+  setIconColor();
+});
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+  if (areaName === 'sync') {
+    for (var key in changes) {
+      if (key === 'httpNowhere') {
+        httpNowhereOn = changes[key].newValue;
+        setIconColor();
+      }
+    }
+  }
+});
+
 var getStoredUserRules = function() {
   var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
   var oldUserRules = [];
@@ -28,6 +46,15 @@ var loadStoredUserRules = function() {
 };
 
 loadStoredUserRules();
+
+// Set the icon color correctly
+var setIconColor = function() {
+  var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
+  chrome.browserAction.setIcon({
+    path: newIconPath
+  });
+};
+
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -104,6 +131,9 @@ function onBeforeRequest(details) {
   // todo: check that this is enough
   var uri = new URI(details.url);
 
+  // Should the request be canceled?
+  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
+
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname();
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
@@ -125,7 +155,7 @@ function onBeforeRequest(details) {
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return null;
+    return {cancel: shouldCancel};
   }
 
   if (details.type == "main_frame") {
@@ -142,7 +172,7 @@ function onBeforeRequest(details) {
     var hostname = uri.hostname();
     domainBlacklist[hostname] = true;
     log(WARN, "Domain blacklisted " + hostname);
-    return null;
+    return {cancel: shouldCancel};
   }
 
   var newuristr = null;
@@ -154,10 +184,11 @@ function onBeforeRequest(details) {
     }
   }
 
+  var finaluri = newuristr ? new URI(newuristr) : null;
+
   if (newuristr && tmpuserinfo !== "") {
     // re-insert userpass info which was stripped temporarily
     // while rules were applied
-    var finaluri = new URI(newuristr);
     finaluri.userinfo(tmpuserinfo);
     newuristr = finaluri.toString();
   }
@@ -172,11 +203,17 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
+  if (httpNowhereOn) {
+    if (finaluri && finaluri.protocol() === "http") {
+      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
+      return {cancel: true};
+    }
+  }
+
   if (newuristr) {
-    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
     return {redirectUrl: newuristr};
   } else {
-    return null;
+    return {cancel: shouldCancel};
   }
 }
 
@@ -184,8 +221,9 @@ function onBeforeRequest(details) {
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
 var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-// We consider sub_frame to be passive even though it can contain JS or Flash.
-// This is because code running the sub_frame cannot access the main frame's
+
+// We consider sub_frame to be passive even though it can contain JS or flash.
+// This is because code running in the sub_frame cannot access the main frame's
 // content, by same-origin policy. This is true even if the sub_frame is on the
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
@@ -249,7 +287,7 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  asset_host_list.sort(function(a,b){return a[0]-b[0];});
   return asset_host_list;
 }
 
@@ -381,27 +419,6 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
-
-// Add the small HTTPS Everywhere icon in the address bar.
-// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
-// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (changeInfo.status === "loading") {
-        chrome.pageAction.show(tabId);
-    }
-});
-
-// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
-// See http://crbug.com/109557
-chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    chrome.tabs.get(addedTabId, function(tab) {
-        if(typeof(tab) === "undefined") {
-            log(DBUG, "Not a real tab. Skipping showing pageAction.");
-        } else {
-            chrome.pageAction.show(addedTabId);
-        }
-    });
-});
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
