@@ -3,6 +3,7 @@
 import glob
 import random
 rulefiles = glob.glob("src/chrome/content/rules/*.xml")
+rulefiles.sort() # determinism
 random.seed(0)
 count = 0 
 
