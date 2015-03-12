@@ -1,20 +1,4 @@
-<!--
-	Problematic domains:
 
-		- khms *
-		- khms[0-3] *
-
-	* $ 404s
-
-
-	Fully covered domains:
-
-		- google.com subdomains:
-
-			- khms
-			- khms[0-3]
-
--->
 <ruleset name="Google Maps">
 	<target host="maps.google.*" />
 		<!--
@@ -64,12 +48,17 @@
 		<test url="http://maps.google.com/" />
 		<test url="http://maps.google.com.au/" />
 
-	<!--	http://khms.../$ 404s:
+	<!--	https://kkhms1.google.com/ 404s but http://kkhms1.google.com/ does not.
 					-->
 	<rule from="^http://khms\d?\.google\.com/+\??$"
 		to="https://www.google.com/" />
 
-	<rule from="^http://(maps-api-ssl|mw2)\.google\.com/"
+	<!--  It might not be obvious but khms\d? is not duplicated here, the above rule is very specific.
+		  Covering the root only /,//,/? etc
+		  Whereas the below rule covers the rest /foo for example
+	-->
+
+	<rule from="^http://(khms\d?|maps-api-ssl|mw2)\.google\.com/"
 		to="https://$1.google.com/" />
 
 	<rule from="^http://maps\.googleapis\.com/"
