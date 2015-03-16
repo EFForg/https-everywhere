@@ -109,7 +109,11 @@ RuleSet.prototype = {
     for (i = 0; i < this.rules.length; ++i) {
       // This is just for displaying inactive rules
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
-      if (returl != urispec) return returl;
+      if (returl != urispec) {
+        // we rewrote the uri
+        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.xmlName + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
+        return returl;
+      }
     }
 
     return null;
@@ -515,8 +519,6 @@ const HTTPSRules = {
       } 
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
-        // we rewrote the uri
-        this.log(DBUG, "Rewrote "+input_uri.spec);
         if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i]);
