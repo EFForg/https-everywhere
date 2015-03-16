@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host: www.elq.to')
 	For problematic rules, see Eloqua-mismatches.xml.
 
 	For other Oracle coverage, see Oracle.xml.
@@ -19,10 +17,6 @@ Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host:
 
 		- wildcard.en25.com.edgekey.net
 
-		- amda-p9fb4.client.shareholder.com
-
-			- investor.eloqua.com
-
 
 	Nonfunctional domains:
 
@@ -30,7 +24,6 @@ Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host:
 
 			- (www.)		(no https)
 			- businesscenter *
-			- investor *
 			- topliners *
 
 		- eloquaexperience.com
@@ -57,7 +50,7 @@ Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host:
 
 	Fully covered domains:
 
-		- (www.)elq.to		(→ bit.ly)
+		- elq.to		(→ bit.ly)
 
 		- eloqua.com subdomains:
 
@@ -75,20 +68,37 @@ Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host:
 
 		- img.en25.com
 
--->
-<ruleset name="Eloqua" default_off='failed ruleset test'>
 
-	<target host="*.eloqua.com" />
-	<target host="elq.to" />
-	<target host="www.elq.to" />
+	Insecure cookies are set for these hosts:
+
+		- cloudconnectors.eloqua.com
+
+-->
+<ruleset name="Eloqua">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cloudconnectors.eloqua.com" />
+	<target host="login.eloqua.com" />
+	<target host="secure.eloqua.com" />
+	<target host="static.eloqua.com" />
+	<target host="*.t.eloqua.com" />
 	<target host="img.en25.com" />
 
+	<!--	Special cases:
+				-->
+	<target host="images.marketing.eloqua.com" />
+	<target host="now.eloqua.com" />
+	<target host="elq.to" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cloudconnectors\.eloqua\.com$" name="^ASP\.NET_SessionId$" /-->
 
 	<securecookie host="^\.eloqua\.com$" name="^EL(?:OQUA|QSTATUS)$" />
+	<securecookie host="^cloudconnectors\.eloqua\.com$" name=".+" />
 
-
-	<rule from="^http://investor\.eloqua\.com/common/"
-		to="https://investor.shareholder.com/common/" />
 
 	<rule from="^http://images\.marketing\.eloqua\.com/"
 		to="https://s33.t.eloqua.com/" />
@@ -96,13 +106,10 @@ Fetch error: http://www.elq.to/ => https://bit.ly/: (6, 'Could not resolve host:
 	<rule from="^http://now\.eloqua\.com/"
 		to="https://secure.eloqua.com/" />
 
-	<rule from="^http://(login|secure|static|\w\d+\.t)\.eloqua\.com/"
-		to="https://$1.eloqua.com/" />
-
-	<rule from="^http://(?:www\.)?elq\.to/"
+	<rule from="^http://elq\.to/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://img\.en25\.com/"
-		to="https://img.en25.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
