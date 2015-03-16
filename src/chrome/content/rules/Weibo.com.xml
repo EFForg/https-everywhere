@@ -1,0 +1,66 @@
+<!--
+	For other Sina coverage, see Sina.xml.
+
+
+	Nonfunctional domains:
+
+		- weibo.com subdomains:
+
+			- e
+			- game
+			- open		(times out)
+			- service	(refused)
+			- widget	(refused)
+
+
+	Problematic domains:
+
+		- hr.weibo.com		(mismatched, CN: *.sinaapp.com)
+
+
+	Fully covered domains:
+
+		- weibo.com subdomains:
+
+			- api
+			- upload.api
+			- hr		(→ weihr.sinaapp.com)
+			- static
+
+
+	These altnames don't exist:
+
+		- www.yahoo.tw.weibo.com
+
+
+	Mixed css on weihr.sinaapp.com from img.t.sinajs.cn
+
+-->
+<ruleset name="Weibo.com (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="api.weibo.com" />
+	<target host="upload.api.weibo.com" />
+	<target host="static.weibo.com" />
+	<target host="yahoo.tw.weibo.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="hr.weibo.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^yahoo\.tw\.weibo\.com$" name="^laravel_session$" /-->
+
+	<securecookie host="^(?:upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
+
+
+	<rule from="^http://hr\.weibo\.com/"
+		to="https://weihr.sinaapp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
