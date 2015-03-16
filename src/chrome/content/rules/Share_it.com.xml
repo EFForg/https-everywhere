@@ -1,0 +1,66 @@
+<!--
+	For other Digital River coverage, see Digital-River.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)shareit.com	(no https)
+
+
+	Fully covered domains:
+
+		- ccc.shareit.com
+		- secure.shareit.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- ccc.shareit.com
+		- secure.shareit.com
+
+
+	Mixed content:
+
+		- css on ccc from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Share it.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ccc.shareit.com" />
+	<target host="secure.shareit.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="shareit.com" />
+	<target host="www.shareit.com" />
+
+		<exclusion pattern="^http://(?:www\.)?shareit\.com/(?!signup\.html)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.shareit.com/contact.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.shareit.com/signup.html" />
+			<test url="http://www.shareit.com/signup.html?" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(ccc|secure)\.shareit\.com$" name="^BIGipServerp(-\w+){4}-\d+$" /-->
+
+	<securecookie host="^(?:ccc|secure)\.shareit\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?shareit\.com/"
+		to="https://secure.shareit.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
