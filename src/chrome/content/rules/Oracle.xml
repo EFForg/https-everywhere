@@ -52,6 +52,7 @@
 		- oracle.com subdomains:
 
 			- ^ ¹
+			- appsconnect ⁴
 			- crmondemand ²
 			- docs ³
 			- download ⁴
@@ -90,6 +91,7 @@
 			- apex
 			- apexea
 			- asktom
+			- appsconnect	(→ appsconnect.custhelp.com)
 			- bi-fusioncrm
 			- blogs
 			- blogs-stage
@@ -273,13 +275,20 @@
 <ruleset name="Oracle (partial)">
 
 	<target host="oracle.com" />
+	<target host="appsconnect.oracle.com" />
+
 	<target host="*.oracle.com" />
 		<!--exclusion pattern="^http://(isdportal|jdevadf|oukc|pressroom|tahiti)\.oracle\.com/" /-->
 		<!--
 			Very stingy https support
 			most paths redirect to http
 							-->
-		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|javaone(?:$|[?/]))"/>
+		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|(?:javaone|rightnow)(?:$|[?/]))"/>
+
+			<!--	-ve:
+					-->
+			<test url="http://www.oracle.com/rightnow/" />
+
 	<target host="oracleimg.com" />
 	<target host="www.oracleimg.com" />
 	<target host="*.oracleoutsourcing.com" />
@@ -307,6 +316,9 @@
 
 	<rule from="^http://(?:www\.)?oracle(img)?\.com/"
 		to="https://www.oracle$1.com/" />
+
+	<rule from="^http://appsconnect\.oracle\.com/"
+		to="https://appsconnect.custhelp.com/" />
 
 	<rule from="^http://(i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|docs|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|status-ksplice|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www(?:-portal)?-stage)\.oracle\.com/"
 		to="https://$1.oracle.com/" />
