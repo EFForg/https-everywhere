@@ -35,16 +35,20 @@
 -->
 <ruleset name="npm js.org (partial)">
 
-	<target host="npmjs.org" />
-	<target host="*.npmjs.org" />
+	<!--	Direct rewrites:
+				-->
 	<target host="preview.npmjs.com" />
 
+	<target host="npmjs.org" />
+	<target host="registry.npmjs.org" />
+	<target host="www.npmjs.org" />
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^www\.npmjs\.org$" name="^(s|s\.sig)$" /-->
-	<!--
-		Not secured by server:
+	<!--	Special cases:
+				-->
+	<target host="status.npmjs.org" />
+
+
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="\.npmjs\.com$" name="^SS_MID$" /-->
 	<!--securecookie host="^preview\.npmjs\.com$" name="^crumb$" /-->
@@ -54,16 +58,10 @@
 	<securecookie host="^npmjs\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?npmjs\.org/"
-		to="https://$1npmjs.org/" />
-
-	<rule from="^http://preview\.npmjs\.com/"
-		to="https://preview.npmjs.com/" />
-
-	<rule from="^http://registry\.npmjs\.org/"
-		to="https://registry.npmjs.org/" />
-
 	<rule from="^http://status\.npmjs\.org/"
 		to="https://npmjs.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
