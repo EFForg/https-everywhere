@@ -9,6 +9,7 @@
 	Fully covered subdomains:
 
 		- (www.)
+		- ask
 		- docs
 		- forge
 		- forgeapi
@@ -27,8 +28,35 @@
 -->
 <ruleset name="Puppet Labs">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="puppetlabs.com" />
-	<target host="*.puppetlabs.com" />
+	<target host="ask.puppetlabs.com" />
+	<target host="docs.puppetlabs.com" />
+	<target host="forge.puppetlabs.com" />
+	<target host="forgeapi.puppetlabs.com" />
+	<target host="forgestaging.puppetlabs.com" />
+	<target host="forgestagingapi.puppetlabs.com" />
+	<target host="projects.puppetlabs.com" />
+	<target host="tickets.puppetlabs.com" />
+	<target host="www.puppetlabs.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="info.puppetlabs.com" />
+
+		<exclusion pattern="^http://info\.puppetlabs\.com/(?!css/|images/|js/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.puppetlabs.com/download-puppet-open-source.html" />
+			<test url="http://info.puppetlabs.com/vmware-integration-notification.html" />
+			<test url="http://info.puppetlabs.com/webinars.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.puppetlabs.com/css/mktLPSupport.css" />
+			<test url="http://na-h.puppetlabs.com/rs/puppetlabs/images/logo_lg.png" />
 
 
 	<!--	Not secured by server:
@@ -38,10 +66,10 @@
 	<securecookie host="^tickets\.puppetlabs\.com$" name=".+" />
 
 
-	<rule from="^http://((?:docs|forge(?:staging)?(?:api)?|projects|tickets|www)\.)?puppetlabs\.com/"
-		to="https://$1puppetlabs.com/" />
+	<rule from="^http://info\.puppetlabs\.com/"
+		to="https://na-h.marketo.com/" />
 
-	<rule from="^http://info\.puppetlabs\.com/(?=css/|images/|rs/)"
-		to="https://na-h.puppetlabs.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
