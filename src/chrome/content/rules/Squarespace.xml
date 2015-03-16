@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://sqsp.com/ => https://sqsp.com/: (51, "SSL: no alternative certificate subject name matches target host name 'sqsp.com'")
 	CDN buckets:
 
 		- s3.amazonaws.com/s3.media.squarespace.com/
@@ -9,22 +7,59 @@ Fetch error: http://sqsp.com/ => https://sqsp.com/: (51, "SSL: no alternative ce
 		- squarespace.cachefly.net
 			- squarespace.cachefly.net
 
+
+	Problematic domains:
+
+		- ([\w-]+.)?sqsp.com: Mismatched
+
+
+	Mixed content:
+
+		- Images on (client_subdomain).squarespace.com from $self *
+
+	* Secured by us
+
+
+	Clients have unique subdomains.
+
 -->
-<ruleset name="Squarespace (partial)" default_off='failed ruleset test'>
+<ruleset name="Squarespace (partial)">
 
 	<target host="sqsp.com" />
 	<target host="*.sqsp.com" />
-	<target host="squarespace.com"/>
+	<target host="squarespace.com" />
 	<target host="*.squarespace.com" />
 
+		<!--	Direct rewrites:
+					-->
+		<test url="http://blog.squarespace.com/" />
+		<test url="http://developers.squarespace.com/" />
+		<test url="http://static.squarespace.com/" />
+		<test url="http://static1.squarespace.com/" />
+		<test url="http://www.squarespace.com/" />
 
-	<securecookie host=".*\.sq(?:sp|uarespace)\.com$" name=".+" />
+		<!--	Special cases:
+					-->
+		<test url="http://www.sqsp.com/" />
+		<test url="http://cachefly.squarespace.com/" />
+		<test url="http://s3.media.squarespace.com/" />
+
+		<!--	(Client domains):
+						-->
+		<test url="http://dozuki.sqsp.com/" />
 
 
-	<rule from="^http://(\w+\.)?sqsp\.com/"
-		to="https://$1sqsp.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(client_subdomain)\.squarespace\.com$" name="^JSESSIONID$" /-->
 
-	<rule from="^http://((?:blog|developers|static|www)\.)?squarespace\.com/"
+	<securecookie host=".*\.squarespace\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://([\w-]+\.)?sqsp\.com/"
 		to="https://$1squarespace.com/" />
 
 	<rule from="^http://cachefly\.squarespace\.com/"
@@ -33,9 +68,7 @@ Fetch error: http://sqsp.com/ => https://sqsp.com/: (51, "SSL: no alternative ce
 	<rule from="^http://s3\.media\.squarespace\.com/"
 		to="https://s3.amazonaws.com/s3.media.squarespace.com/" />
 
-	<!--	Clients have unique subdomains.
-						-->
-	<rule from="^http://(\w+)\.squarespace\.com/(?=display/|favicon\.ico|layout/|picture/|storage/|universal/)"
-		to="https://$1.squarespace.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
