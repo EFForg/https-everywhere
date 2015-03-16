@@ -1,6 +1,37 @@
-<!-- yet another 1px tracking host :-( -->
-<ruleset name="Webtrekk.net">
-	<target host="gigaset01.webtrekk.net" />
-	<rule from="^http://gigaset01\.webtrekk\.net/" to="https://gigaset01.webtrekk.net/"/>
-</ruleset>
+<!--
+	Fully covered subdomains:
 
+		- ^
+		- report8
+		- www
+		- \w+ *
+
+	* Clients have unique subdomains, which serve web bugs.
+
+-->
+<ruleset name="Webtrekk.net">
+
+	<target host="webtrekk.net" />
+	<target host="*.webtrekk.net" />
+
+		<test url="http://gigaset01.webtrekk.net/" />
+		<test url="http://www.webtrekk.net/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(client_domain)\.webtrekk\.net$" name="(wteid_\d+|wtsid_\d+)$" /-->
+	<!--securecookie host="www\.webtrekk\.net$" name="^wt_\w+_\w+$" /-->
+
+	<securecookie host=".*\.webtrekk\.net$" name=".+" />
+
+
+	<!--	Cert only matches *.webtrekk.net.
+							-->
+	<rule from="^http://webtrekk\.net/"
+		to="https://www.webtrekk.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
