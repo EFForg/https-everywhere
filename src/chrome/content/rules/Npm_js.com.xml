@@ -1,0 +1,38 @@
+<!--
+	For other Joyent coverage, see Joyent.xml.
+
+
+	Problematic domains:
+
+		- npmjs.com ¹
+		- www.npmjs.com ²
+
+	¹ 404; self-signed, CN: Isaac Z. Schlueter
+	² Squarespace
+
+
+	Fully covered domains:
+
+		- preview.npmjs.com
+
+-->
+<ruleset name="npm js.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="preview.npmjs.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.npmjs\.com$" name="^SS_MID$" /-->
+	<!--securecookie host="^preview\.npmjs\.com$" name="^crumb$" /-->
+	<!--securecookie host="^www\.npmjs\.com$" name="^(JSESSIONID|crumb)$" /-->
+
+	<securecookie host="^preview\.npmjs\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
