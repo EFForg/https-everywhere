@@ -48,23 +48,22 @@
 	⁶ 404
 
 
-	Partially covered subdomains:
-
-		- (www.)? *
-
-	* Some pages redirect to http
-
-
 	Fully covered subdomains:
 
+		- (www.)?
+		- auto
 		- avia
 		- awaps
+		- beta
 		- blogs
 		- browser
+		- city
+		- disk
 		- feedback
 		- m.feedback
 		- fotki
 		- m.fotki
+		- gorod
 		- help
 		- kiks
 		- images
@@ -80,6 +79,7 @@
 		- translate
 		- tune
 		- video
+		- webmaster
 		- yabs
 		- zno
 
@@ -92,10 +92,12 @@
 
 	Insecure cookies are set for these domains:
 
+		- yandex.ua
 		- .yandex.ua
 		- auto.yandex.ua
 		- city.yandex.ua
 		- feedback2.yandex.ua
+		- gorod.yandex.ua
 		- mail.yandex.ua
 		- master.yandex.ua
 		- www.master.yandex.ua
@@ -110,6 +112,7 @@
 		- slovari.yandex.ua
 		- m.slovari.yandex.ua
 		- translate.yandex.ua
+		- www.yandex.ua
 
 
 	Mixed content:
@@ -135,14 +138,19 @@
 <ruleset name="Yandex.ua (partial)">
 
 	<target host="yandex.ua" />
+	<target host="auto.yandex.ua" />
 	<target host="avia.yandex.ua" />
 	<target host="awaps.yandex.ua" />
+	<target host="beta.yandex.ua" />
 	<target host="blogs.yandex.ua" />
 	<target host="browser.yandex.ua" />
+	<target host="city.yandex.ua" />
+	<target host="disk.yandex.ua" />
 	<target host="feedback.yandex.ua" />
 	<target host="m.feedback.yandex.ua" />
 	<target host="fotki.yandex.ua" />
 	<target host="m.fotki.yandex.ua" />
+	<target host="gorod.yandex.ua" />
 	<target host="help.yandex.ua" />
 	<target host="images.yandex.ua" />
 	<target host="kiks.yandex.ua" />
@@ -158,32 +166,23 @@
 	<target host="translate.yandex.ua" />
 	<target host="tune.yandex.ua" />
 	<target host="video.yandex.ua" />
+	<target host="webmaster.yandex.ua" />
 	<target host="yabs.yandex.ua" />
 	<target host="zno.yandex.ua" />
 	<target host="www.yandex.ua" />
 		<!--
 			Redirects to http:
 						-->
-		<!--exclusion pattern="^http://(beta|market|interactive-answers\.webmaster|www)\.yandex\.ua/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://yandex\.ua/(?!images/)" />
-		<exclusion pattern="^http://www\.yandex\.ua/(?!all$)" />
-
-			<test url="http://yandex.ua/favicon.ico" />
-			<test url="http://www.yandex.ua/favicon.ico" />
-
-			<test url="http://yandex.ua/images/" />
-			<test url="http://www.yandex.ua/all" />
+		<!--exclusion pattern="^http://(market|interactive-answers\.webmaster)\.yandex\.ua/$" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.yandex\.ua$" name="^(Cookie_check|L|Session_id|yandexuid|ys)$" /-->
+	<securecookie host="^(\.|www\.|\.www\.)?yandex\.ua$" name="^yp$" />
+	<securecookie host="^\.yandex\.ua$" name="^(Cookie_check|L|Session_id|YX_SEARCHPREFS|fyandex|geo_sync|my|sessionid2|yabs-frequency|yandex_gid|yandex_login|yandex_mail|yandexmarket|yandexuid|ys)$" />
 	<!--securecookie host="^(auto|realty)\.yandex\.ua$" name="^from$" /-->
 	<!--securecookie host="^auto\.yandex\.ua$" name="^from_lifetime$" /-->
-	<!--securecookie host="^(auto|city|islands|rabota|realty|m\.rabota|slovari|m\.slovari|stat)\.yandex\.ua$" name="^uid$" /-->
+	<!--securecookie host="^(auto|city|gorod|islands|rabota|realty|m\.rabota|slovari|m\.slovari|stat)\.yandex\.ua$" name="^uid$" /-->
 	<!--securecookie host="^feedback2\.yandex\.ua$" name="^feedback2-sid$" /-->
 	<!--securecookie host="^internet\.yandex\.ua$" name="^(csrftoken|test)$" /-->
 	<!--securecookie host="^mail\.yandex\.ua$" name="^ni$" /-->
@@ -192,7 +191,8 @@
 	<!--securecookie host="^slovari\.yandex\.ua$" name="^slovari-state$" /-->
 	<!--securecookie host="^translate\.yandex\.ua$" name="^(first_visit_src|stoken)$" /-->
 
-	<securecookie host="^(?:mail|mobile|slovari|stat|translate)\.yandex\.ua$" name=".+" />
+	<securecookie host="^\.yandex\.ua$" name="^(?:geo_sync|yabs-frequency)$" />
+	<securecookie host="^(?:(?:auto|city|gorod|mail|mobile|slovari|stat|translate|\.?www)\.)?yandex\.ua$" name=".+" />
 
 
 	<rule from="^http:"
