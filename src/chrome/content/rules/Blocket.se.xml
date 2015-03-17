@@ -1,11 +1,31 @@
 <!--
 	^blocket.se:	Mismatched
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .blocket.se
+		- jobb.blocket.se
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from cdn.blocket.com ¹
+			- www, www2 from www.blocket.com
+			- www2 from gfx.aftonbladet-cdn.se
+			- www2 from data.klart.se.s3.amazonaws.com ¹
+			- www2 from quiz.svd.se
+
+	¹ Unsecurable <= dropped
+
 -->
-<ruleset name="Blocket.se (partial)" platform="mixedcontent">
+<ruleset name="Blocket.se (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="jobb.blocket.se" />
 	<target host="www.blocket.se" />
 	<target host="www2.blocket.se" />
 
@@ -44,6 +64,14 @@
 			<test url="http://www.blocket.se/bostad/saljes" />
 
 		<test url="http://www2.blocket.se/mobil.htm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blocket\.se$" name="^(ab_ratio|ab_redis|mxy|nojs|s|session_http|sli|sq)$" /-->
+	<!--securecookie host="^jobb\.blocket\.se$" name="^layout$" /-->
+
+	<securecookie host="^jobb\.blocket\.se$" name=".+" />
 
 
 	<rule from="^http://blocket\.se/" to="https://www.blocket.se/"/>
