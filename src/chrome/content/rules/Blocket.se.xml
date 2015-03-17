@@ -1,17 +1,52 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://blocket.se/ => https://www.blocket.se/: Cycle detected - URL already encountered: https://www.blocket.se/
-Fetch error: http://www.blocket.se/ => https://www.blocket.se/: Cycle detected - URL already encountered: https://www.blocket.se/
-Fetch error: http://eas.blocket.se/ => https://eas.blocket.se/: (6, 'Could not resolve host: eas.blocket.se')
+	^blocket.se:	Mismatched
+
 -->
-<ruleset name="Blocket.se" platform="mixedcontent" default_off='failed ruleset test'>
-	<target host="blocket.se" />
+<ruleset name="Blocket.se (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="www.blocket.se" />
 	<target host="www2.blocket.se" />
-	<target host="eas.blocket.se" />
+
+	<!--	Special cases:
+				-->
+	<target host="blocket.se" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.blocket\.se/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.blocket\.se/+(?!(?:bostad|konto|support)(?:$|[?/])|css/|img/|static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.blocket.se/gavleborg" />
+			<test url="http://www.blocket.se/nbl.htm" />
+			<test url="http://www.blocket.se/orebro" />
+			<test url="http://www.blocket.se/ostergotland" />
+			<test url="http://www.blocket.se/prhusbilar" />
+			<test url="http://www.blocket.se/sefina" />
+			<test url="http://www.blocket.se/skl.htm" />
+			<test url="http://www.blocket.se/sodermanland" />
+			<test url="http://www.blocket.se/uppsala" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.blocket.se/img/transparent.gif" />
+			<test url="http://www.blocket.se/konto" />
+			<test url="http://www.blocket.se/support" />
+
+			<!--	(Mixed images):
+						-->
+			<test url="http://www.blocket.se/bostad/saljes" />
+
+		<test url="http://www2.blocket.se/mobil.htm" />
+
+
 	<rule from="^http://blocket\.se/" to="https://www.blocket.se/"/>
-	<rule from="^http://www\.blocket\.se/" to="https://www.blocket.se/"/>
-	<rule from="^http://www2\.blocket\.se/" to="https://www2.blocket.se/"/>
-	<rule from="^http://eas\.blocket\.se/" to="https://eas.blocket.se/"/>
+	<rule from="^http:" to="https:"/>
 </ruleset>
 
