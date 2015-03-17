@@ -121,6 +121,7 @@
 					- myservices
 
 			- communities
+			- community
 			- competencycentre
 			- conference
 			- crm-fusioncrm
@@ -154,6 +155,7 @@
 			- fusionhelp
 			- fusionhelp-stage
 			- gcmprm
+			- go
 			- hcm-fusioncrm
 			- hs-ws1
 			- iacademy
@@ -178,6 +180,7 @@
 			- plmap
 			- prc-fusioncrm
 			- prj-fusioncrm
+			- profile
 			- public-yum
 			- scm-fusioncrm
 			- search
@@ -212,8 +215,6 @@
 
 	Observed cookie subdomains:
 
-		- blogs
-
 		- cloud subdomains:
 
 			- ^
@@ -237,18 +238,25 @@
 		- competencycenter
 		- crm-fusioncrm
 		- .edelivery
-		- education
 		- fin-fusioncrm
 		- fusioncrm
 		- hcm-fusioncrm
 		- ic-fusioncrm
-		- login
 		- medianetwork
 		- scm-fusioncrm
 		- shop
 		- solutions
 		- wikis
 		- www
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .oracle.com
+		- blogs.oracle.com
+		- community.oracle.com
+		- education.oracle.com
+		- login.oracle.com
 
 
 	Mixed content:
@@ -260,6 +268,7 @@
 			- medianetwork from sun.edgeboss.net
 			- medianetwork from www.oracleimg.com ¹
 			- medianetwork from www.oracleimg.com ²
+			- www from $self ¹
 
 		- Web bugs, on:
 
@@ -293,6 +302,7 @@
 	<target host="*.us1.cloud.oracle.com" />
 
 	<target host="communities.oracle.com" />
+	<target host="community.oracle.com" />
 	<target host="competencycentre.oracle.com" />
 	<target host="conference.oracle.com" />
 	<target host="digitalmedia.oracle.com" />
@@ -348,6 +358,7 @@
 	<target host="otn.oracle.com" />
 	<target host="partners.oracle.com" />
 	<target host="plmap.oracle.com" />
+	<target host="profile.oracle.com" />
 	<target host="public-yum.oracle.com" />
 	<target host="search.oracle.com" />
 	<target host="shop.oracle.com" />
@@ -388,7 +399,7 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|(?:javaone|rightnow)(?:$|[?/]))"/>
+		<exclusion pattern="^http://www\.oracle(?:img)?\.com/(?!(?:\w+/)?assets/|\w+/[^/]+\.(?:css|gif|jpg|js|png)$|(?:communities|corporate/careers|javaone|rightnow)(?:$|[?/]))"/>
 
 			<!--	+ve:
 					-->
@@ -411,6 +422,8 @@
 
 			<!--	-ve:
 					-->
+			<test url="http://www.oracle.com/communities" />
+			<test url="http://www.oracle.com/corporate/careers" />
 			<test url="http://www.oracle.com/rightnow/" />
 			<test url="http://www.oracle.com/us/assets/compass-homestyle.css" />
 			<test url="http://www.oracleimg.com/us/assets/compass-hp-sprite.png" />
@@ -421,7 +434,10 @@
 					-->
 	<!--securecookie host="^\.oracle\.com$" name="^(Order_MarketingCampaignSuccess|Order_MarketingTrigger|p_cur_URL|p_lang|p_mcc|p_org_id)$" /-->
 	<!--securecookie host="^blogs\.oracle\.com$" name="^BIGipServerblogs_prod_pool$" /-->
+	<!--securecookie host="^(community|login)\.oracle\.com$" name="^BIGipServer~Public~[\w+-]_\d+$" /-->
+	<!--securecookie host="^community\.oracle\.com$" name="^jive\.security\.context$" /-->
 	<!--securecookie host="^education\.oracle\.com$" name="^BIGipServerfapap-education_http_pool$" /-->
+	<!--securecookie host="^login\.oracle\.com$" name="^TS[\da-f]" /-->
 
 	<securecookie host="^(?:\w+|\.edelivery)\.oracle\.com$" name=".+" />
 	<!--
@@ -459,7 +475,7 @@
 	<rule from="^http://crmondemand\.oracle\.com/"
 		to="https://www.oracle.com/us/products/applications/crmondemand/index.html" />
 
-	<rule from="^http://((?:i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|competencycentre|conference|digitalmedia|dne|docs|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|public-yum|search|shop|solutions|status-ksplice|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www|www(?:-portal)?-stage)\.)?oracle\.com/"
+	<rule from="^http://((?:i?academy|acsportal|advancedsupport|amr|amr-stage|apex|apexea|asktom|blogs(?:-stage)?|campus|cloud|\w+\.(?:em1|us0|us1)\.cloud|communities|community|competencycentre|conference|digitalmedia|dne|docs|edelivery(?:-hqdc-test)?|education(?:-stage)?|emeajobs|emeapressoffice|etrm|(?:cn\.|kr\.)?forums(?:-stage)?|(?:bi-|crm-|fin-|[hs]cm-|ic-|pr[cj]-)?fusioncrm|fusionhelp(?:-stage)?|gcmprm|go|hs-ws1|ilearning(?:content)?|irecruitment|itsp|itsp-stage|linux|login(?:-stage)?|medianetwork|my?|myprofile(?:-mktas)?|oai|oss|otn|partners|plmap|profile|public-yum|search|shop|solutions|status-ksplice|stbeehive|strtc|suppliers|support(?:html)?|updates|wfs|wikis(?:-stage)?|workforce|www|www(?:-portal)?-stage)\.)?oracle\.com/"
 		to="https://$1oracle.com/" />
 
 	<rule from="^http://www\.oracleimg\.com/"
