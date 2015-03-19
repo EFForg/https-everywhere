@@ -60,4 +60,9 @@ fi
 popd
 
 bash test-ruleset-coverage.sh
+# Echo the version of sqlite3, since the determinism of the build depends on
+# having the same version.
+echo "To reproduce this build (https://wiki.debian.org/ReproducibleBuilds)," \
+     "please use this version of sqlite3:"
+sqlite3 -version
 echo -e "Git commit `git rev-parse HEAD`\nsha256sum  `sha256sum $XPI_NAME`"

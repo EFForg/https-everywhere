@@ -29,8 +29,31 @@
 -->
 <ruleset name="Mellanox (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="partners.mellanox.com" />
+	<target host="www.partners.mellanox.com" />
+	<target host="www.mellanox.com" />
+
+	<!--	Complications:
+				-->
 	<target host="mellanox.com" />
-	<target host="*.mellanox.com" />
+	<target host="calc.mellanox.com" />
+
+		<exclusion pattern="^http://calc\.mellanox\.com/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://calc.mellanox.com//" />
+			<test url="http://calc.mellanox.com//?" />
+			<test url="http://calc.mellanox.com//?f" />
+			<test url="http://calc.mellanox.com//?foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://calc.mellanox.com/?" />
+			<test url="http://calc.mellanox.com/?f" />
+			<test url="http://calc.mellanox.com/?foo" />
 
 
 	<!--	Not secured by server:
@@ -44,13 +67,13 @@
 	<!--	^ redirects to www over http,
 		so copy that behavior:
 					-->
-	<rule from="^http://(?:www\.)?mellanox\.com/"
+	<rule from="^http://mellanox\.com/"
 		to="https://www.mellanox.com/" />
 
 	<rule from="^http://calc\.mellanox\.com/(?:\?.*)?$"
 		to="https://www.mellanox.com/" />
 
-	<rule from="^http://(www\.)?partners\.mellanox\.com/"
-		to="https://$1partners.mellanox.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
