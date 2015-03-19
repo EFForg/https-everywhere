@@ -18,7 +18,11 @@ from lxml import etree
 # It's also helpful to ensure consistency for the lowercase check below.
 locale.setlocale(locale.LC_ALL, 'C')
 
-conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
+# Removing the file before we create it avoids some non-determinism.
+db_path = os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite')
+if os.path.isfile(db_path):
+    os.remove(db_path)
+conn = sqlite3.connect(db_path)
 c = conn.cursor()
 c.execute('''DROP TABLE IF EXISTS rulesets''')
 c.execute('''CREATE TABLE rulesets
