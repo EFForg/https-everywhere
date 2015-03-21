@@ -12,7 +12,6 @@
 		- family ³
 		- informer ²
 		- m.internet ²
-		- islands ⁴
 		- (www.)?league ²
 		- (www.)?lig ²
 		- (www.)?liga ²
@@ -36,6 +35,7 @@
 
 	Problematic subdomains:
 
+		- www.browser ²
 		- m.ceviri ¹
 		- expert ²
 		- feedback ¹
@@ -43,6 +43,7 @@
 		- m.haber *
 		- pda.haber *
 		- help ¹
+		- www.mobil ²
 		- (www.)?mobile ⁵
 
 	¹ Mismatched
@@ -66,7 +67,7 @@
 		- ba
 		- bar
 		- bnbym
-		- (www.)?browser
+		- (www.)?browser	(www → ^)
 		- ceviri
 		- city
 		- clck
@@ -112,6 +113,7 @@
 		- images
 		- interactive-answers
 		- (www.)?internet
+		- islands
 		- kiks
 		- legal
 		- m.legal
@@ -124,7 +126,7 @@
 		- mbrowser
 		- metrica
 		- metrika
-		- (www.)?mobil
+		- (www.)?mobil	(www → ^)
 		- (www.)?mobile	(→ mobil)
 		- myfiles
 		- news
@@ -242,6 +244,8 @@
 -->
 <ruleset name="Yandex.com.tr (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="yandex.com.tr" />
 	<target host="advertising.yandex.com.tr" />
 	<target host="advq.yandex.com.tr" />
@@ -255,7 +259,6 @@
 	<target host="bar.yandex.com.tr" />
 	<target host="bnbym.yandex.com.tr" />
 	<target host="browser.yandex.com.tr" />
-	<target host="www.browser.yandex.com.tr" />
 	<target host="ceviri.yandex.com.tr" />
 	<target host="city.yandex.com.tr" />
 	<target host="clck.yandex.com.tr" />
@@ -299,6 +302,7 @@
 	<target host="interactive-answers.yandex.com.tr" />
 	<target host="internet.yandex.com.tr" />
 	<target host="www.internet.yandex.com.tr" />
+	<target host="islands.yandex.com.tr" />
 	<target host="kiks.yandex.com.tr" />
 	<target host="legal.yandex.com.tr" />
 	<target host="m.legal.yandex.com.tr" />
@@ -313,7 +317,6 @@
 	<target host="metrica.yandex.com.tr" />
 	<target host="metrika.yandex.com.tr" />
 	<target host="mobil.yandex.com.tr" />
-	<target host="www.mobil.yandex.com.tr" />
 	<target host="myfiles.yandex.com.tr" />
 	<target host="news.yandex.com.tr" />
 	<target host="opera.yandex.com.tr" />
@@ -369,11 +372,15 @@
 	<target host="yabs.yandex.com.tr" />
 	<target host="yardim.yandex.com.tr" />
 
+	<!--	Complications:
+				-->
+	<target host="www.browser.yandex.com.tr" />
 	<target host="m.ceviri.yandex.com.tr" />
 	<target host="expert.yandex.com.tr" />
 	<target host="feedback.yandex.com.tr" />
 	<target host="gazeta.yandex.com.tr" />
 	<target host="help.yandex.com.tr" />
+	<target host="www.mobil.yandex.com.tr" />
 	<target host="mobile.yandex.com.tr" />
 	<target host="www.mobile.yandex.com.tr" />
 
@@ -396,22 +403,21 @@
 	<securecookie host="^(?:ceviri|city|contact2|gorod|haber|internet|m|mail|market|(?:www\.)?master|mobile?|oto|\.?www)\.yandex\.com\.tr$" name=".+" />
 
 
-	<!--	Redirect drops args:
-						-->
-	<rule from="^http://m\.ceviri\.yandex\.com\.tr/+(?:\?.*)?$"
-		to="https://ceviri.yandex.com.tr/m/translate/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.browser\.yandex\.com\.tr/+"
+		to="https://browser.yandex.com.tr/" />
+
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://m\.ceviri\.yandex\.com\.tr/"
+		to="https://ceviri.yandex.com.tr/" />
 
 		<test url="http://m.ceviri.yandex.com.tr/?" />
 		<test url="http://m.ceviri.yandex.com.tr//" />
 		<test url="http://m.ceviri.yandex.com.tr//?" />
 		<test url="http://m.ceviri.yandex.com.tr//?foo" />
-
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://m\.ceviri\.yandex\.com\.tr/"
-		to="https://ceviri.yandex.com.tr/" />
-
-		<test url="http://m.ceviri.yandex.com.tr/m/translate/" />
 
 	<!--	Redirect keeps path and args:
 						-->
@@ -440,6 +446,12 @@
 		to="https://yardim.yandex.com.tr/" />
 
 		<test url="http://help.yandex.com.tr//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.mobil\.yandex\.com\.tr/+"
+		to="https://mobil.yandex.com.tr/" />
 
 	<!--	Redirect keeps path and args:
 						-->
