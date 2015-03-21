@@ -46,30 +46,38 @@
 -->
 <ruleset name="Docker.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="docker.com" />
-	<target host="*.docker.com" />
+	<target host="blog.docker.com" />
+	<target host="docs.docker.com" />
+	<target host="forums.docker.com" />
+	<target host="hub.docker.com" />
+	<target host="registry.hub.docker.com" />
+	<target host="status.docker.com" />
+	<target host="www.docker.com" />
+
 	<target host="docker.io" />
-	<target host="*.docker.io" />
+	<target host="index.docker.io" />
+	<target host="www.docker.io" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.docker.io" />
+	<target host="docs.docker.io" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^hub\.docker\.com$" name="^csrftoken$" /-->
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^status\.docker\.com$" name="^(SERVERID|connect\.sid)$" /-->
 
 	<securecookie host="^(?:status|www)\.docker\.com$" name=".+" />
 
 
-	<rule from="^http://((?:forums|hub|registry\.hub|status|www)\.)?docker\.com/"
-		to="https://$1docker.com/" />
-
-	<rule from="^http://(blog|docs)\.docker\.(?:com|io)/"
+	<rule from="^http://(blog|docs)\.docker\.io/"
 		to="https://$1.docker.com/" />
 
-	<rule from="^http://(index\.|www\.)?docker\.io/"
-		to="https://$1docker.io/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
