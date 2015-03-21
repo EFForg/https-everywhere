@@ -1,17 +1,60 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://superdrug.com/ => https://superdrug.com/: Redirect for 'http://superdrug.com/' missing Location
-Fetch error: http://www.superdrug.com/ => https://www.superdrug.com/: Cycle detected - URL already encountered: https://www.superdrug.com/
+	^: Mismatched
+	www: Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.onlinedoctor.superdrug.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- onlinedoctor.superdrug.com
+
 -->
-<ruleset name="Superdrug (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Superdrug (partial)">
 
-	<target host="superdrug.com"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="onlinedoctor.superdrug.com" />
 	<target host="www.superdrug.com"/>
-	<target host="*.www.superdrug.com"/>
 
-	<securecookie host="^(?:.*\.)?superdrug\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="superdrug.com"/>
 
-	<rule from="^http://(www\.)?superdrug\.com/"
-		to="https://$1superdrug.com/"/>
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.superdrug\.com/$" />
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.superdrug\.com/(?!combined\.css|favicon\.ico|medias/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.superdrug.com/cart" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.superdrug.com/combined.css" />
+			<test url="http://www.superdrug.com/favicon.ico" />
+			<test url="http://www.superdrug.com/medias/custom-content/img/offerbar/storenextdelivery.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^onlinedoctor\.superdrug\.com$" name="^PHPSESSID$" />
+
+	<!--securecookie host="^(?:.*\.)?superdrug\.com$" name=".*"/-->
+	<securecookie host="^onlinedoctor\.superdrug\.com$" name=".*" />
+
+
+	<rule from="^http://superdrug\.com/"
+		to="https://www.superdrug.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
