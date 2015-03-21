@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://tracks.www.zazzle.com/ => https://tracks.www.zazzle.com/: (7, 'Failed to connect to tracks.www.zazzle.com port 80: Connection refused')
 		- www.zazzle.com.112.2o7.net
 
 			- track.www
@@ -17,40 +15,76 @@ Fetch error: http://tracks.www.zazzle.com/ => https://tracks.www.zazzle.com/: (7
 
 	Partially covered subdomains:
 
-		- (www.)	(some pages redirect to http)
+		- www		(some pages redirect to http)
 
 
 	Fully covered domains:
 
 		- zazzle.com subdomains:
 
-			- asset		( → www)
+			- blog
+			- forum
 			- track.www	(→ www-zazzle-com.112.2o7.net)
 			- tracks.www
 
+		- asset	www		( → www.zazzle.com)
 		- rlv.zcache.com	(→ www.zazzle.com)
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zazzle.com
+		- forum.zazzle.com
+		- www.zazzle.com
+		- .www.zazzle.com
+
+
+	Mixed content:
+
+		- Images on blog from $self
+		- Ad on www from hire.jobvite.com
+
 -->
-<ruleset name="Zazzle (partial)" default_off='failed ruleset test'>
+<ruleset name="Zazzle (partial)" default_off="Needs ruleset tests">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="zazzle.com"/>
+	<target host="blog.zazzle.com" />
+	<target host="forum.zazzle.com" />
 	<target host="www.zazzle.com"/>
-		<exclusion pattern="^http://www\.zazzle\.com/(?:$|[\w\+]+pillows|gift|[\w\+]+macbook\+sleeves|printed\+envelopes)"/>
 	<target host="tracks.www.zazzle.com"/>
-	<!--	Akamai	-->
-	<target host="*.zcache.com"/>
 
+	<!--	Special cases:
+				-->
+	<target host="track.www.zazzle.com" />
+	<!--
+		(Fastly):
+			-->
+	<target host="asset.zcache.com" />
+	<target host="rlv.zcache.com" />
 
-	<!--	Omniture cookie:
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.zazzle\.com/(?:$|[\w\+]+pillows|gift|[\w\+]+macbook\+sleeves|printed\+envelopes)"/-->
+		<!--
+			Exceptions:
 					-->
-	<securecookie host="^\.zazzle\.com$" name="^s_vi$" />
+		<exclusion pattern="^http://www\.zazzle\.com/(?!assets/|(\w+\+)?cases|c[ro]/|create|css/|custom/|keychains|(kitchen|\w+\+holiday)\+gifts|lgn/|macbook\+sleeves|m[ky]/|newcustomgifts|pd/|pillows|rlv/|svc/|zazzleblack|\w+-\d{10,20})" />
+
+			<test url="http://www.zazzle.com/holiday+gifts" />
 
 
-	<rule from="^http://zazzle\.com/"
-		to="https://www.zazzle.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zazzle\.com$" name="^(abt|bs|general_maturity|us|zm|zs)$" /-->
+	<!--securecookie host="^forum\.zazzle\\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.zazzle\.com$" name="^bs$" /-->
+	<!--securecookie host="^\.www\.zazzle\.com$" name="^s_vi$" /-->
 
-	<rule from="^http://www\.zazzle\.com/(assets/|(\w+\+)?cases|c[ro]/|create|css/|custom/|keychains|(kitchen|\w+\+holiday)\+gifts|lgn/|macbook\+sleeves|m[ky]/|newcustomgifts|pd/|pillows|rlv/|svc/|zazzleblack|\w+-\d{10,20})"
-		to="https://www.zazzle.com/$1"/>
+	<securecookie host="^forum.zazzle\.com$" name=".+" />
+	<securecookie host="^\.www\.zazzle\.com$" name="^s_vi$" />
+
 
 	<rule from="^http://asset\.zcache\.com/"
 		to="https://www.zazzle.com/"/>
@@ -61,7 +95,7 @@ Fetch error: http://tracks.www.zazzle.com/ => https://tracks.www.zazzle.com/: (7
 	<rule from="^http://track\.www\.zazzle\.com/"
 		to="https://www-zazzle-com.112.2o7.net/" />
 
-	<rule from="^http://tracks\.www\.zazzle\.com/"
-		to="https://tracks.www.zazzle.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
