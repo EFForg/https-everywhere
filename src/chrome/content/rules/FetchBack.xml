@@ -1,21 +1,70 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://fetchback.com/ => https://fetchback.com/: (60, 'SSL certificate problem: certificate has expired')
+	For other eBay coverage, see EBay.xml.
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- imp ²
+
+	¹ Expired 2014
+	² Mixed iframe
+
+
 	Fully covered domains:
 
 		- \w+.fetchback.com:
 
+			- fido
 			- pixel
 
--->
-<ruleset name="FetchBack" default_off='failed ruleset test'>
 
-	<target host="fetchback.com" />
+	Insecure cookies are set for these domains:
+
+		- .fetchback.com
+
+
+	Mixed content:
+
+		- iframe on imp from $self
+
+-->
+<ruleset name="FetchBack (partial)">
+
+	<!--target host="fetchback.com" /-->
 	<target host="*.fetchback.com" />
 
-	<securecookie host="^(?:.*\.)?fetchback\.com$" name=".+" />
+		<test url="http://fido.fetchback.com/" />
+		<test url="http://pixel.fetchback.com/serve/fb/pdc" />
+		<test url="http://pixel.fetchback.com/serve/fb/pdj" />
 
-	<rule from="^http://(\w+\.)?fetchback\.com/"
-		to="https://$1fetchback.com/" />
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://imp\.fetchback\.com/serve/optout/pt-out\.html" />
+
+			<test url="http://imp.fetchback.com/serve/optout/pt-out.html" />
+
+		<exclusion pattern="^http://www\.fetchback\.com/" />
+
+			<test url="http://www.fetchback.com/" />
+
+
+	<!--	Not secured by server, set by pixel:
+						-->
+	<!--securecookie host="^\.fetchback\.com$" name="^(act|afl|apd|bpd|clk|cmp|cre|fbid|eng|kwd|ppd|scg|sit|uat|uid)$" /-->
+
+	<!--securecookie host="^(?:.*\.)?fetchback\.com$" name=".+" /-->
+	<securecookie host="^\.fetchback\.com$" name="^(act|afl|apd|bpd|clk|cmp|cre|fbid|eng|kwd|ppd|scg|sit|uat|uid)$" />
+
+
+	<!--	Redirect drops path but not args:
+						-->
+	<!--rule from="^http://(?:www\.)?fetchback\.com/[^?]*"
+		to="http://www.ebayenterprise.com/marketing_solutions/display_retargeting/" /-->
+
+		<!--test url="http://fetchback.com/foo" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
