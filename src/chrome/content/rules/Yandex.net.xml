@@ -14,13 +14,17 @@
 
 		- (www.)? ²
 		- www.browser ¹
+		- direct **
 		- element ²
+		- elements ***
 		- img.encyc *
 		- vec0[1-4].maps ⁴
 		- static.video ⁵
 
 	¹ 404
 	² Mismatched
+	** Redirect destination doesn't exst => makes fetch checker complain
+	*** Mismatched cert for redirect destination
 	* Mismatched, CN: yastatic.net
 	⁴ Unspecified effect[?]
 	⁵ Apparently breaks video
@@ -65,10 +69,8 @@
 			- resizer.corba
 			- \d.cs-ellpic
 			- css
-			- direct
 			- disk
 			- downloader
-			- elements
 			- favicon
 			- img-css.friends
 			- hotels-proxy
@@ -179,9 +181,11 @@
 		<!--
 			Miscellanious:
 					-->
-		<exclusion pattern="^http://(?:element|mobile\.photo|pythonbp)\.yandex\.net/" />
+		<exclusion pattern="^http://(?:direct|elements?|mobile\.photo|pythonbp)\.yandex\.net/" />
 
+			<test url="http://direct.yandex.net/" />
 			<test url="http://element.yandex.net/" />
+			<test url="http://elements.yandex.net/" />
 			<test url="http://mobile.photo.yandex.net/" />
 			<test url="http://pythonbp.yandex.net/" />
 
@@ -208,10 +212,8 @@
 		<test url="http://resizer.corba.yandex.net/" />
 		<test url="http://1.cs-ellpic.yandex.net/" />
 		<test url="http://css.yandex.net/" />
-		<test url="http://direct.yandex.net/" />
 		<test url="http://disk.yandex.net/" />
 		<test url="http://downloader.yandex.net/" />
-		<test url="http://elements.yandex.net/" />
 		<test url="http://favicon.yandex.net/" />
 		<test url="http://img-css.friends.yandex.net/" />
 		<test url="http://hotels-proxy.yandex.net/" />
@@ -256,9 +258,6 @@
 		<test url="http://01.pvec.maps.yandex.net/" />
 
 
-	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
-		to="https://$1.yandex.net/" />
-
 	<!--	Redirect keeps path, args, but not forward slash:
 								-->
 	<rule from="^http://(?:www\.)?yandex\.net/+"
@@ -267,6 +266,9 @@
 			<test url="http://yandex.net//" />
 			<test url="http://yandex.net/favicon.ico" />
 			<test url="http://www.yandex.net//" />
+
+	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.net/"
+		to="https://$1.yandex.net/" />
 
 	<rule from="^http://(internetometr\.download\.cdn|sandbox\.api\.maps|0\d\.pvec\.maps)\.yandex\.net/"
 		to="https://$1.yandex.net/" />
