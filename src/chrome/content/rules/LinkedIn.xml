@@ -10,6 +10,14 @@
 		- press	(expired; 403)
 
 
+	Problematic domains:
+
+		- licdn.com subdomains:
+
+			- m[1-4]	(400; mismatched, CN: *.llnw.com)
+			- s[1-4]	(works, akamai)
+
+
 	Fully covered domains:
 
 		- static.licdn.com
@@ -28,8 +36,11 @@
 	<securecookie host="^www\.linkedin\.com$" name="^(?:bcookie|L1e|X-LI-IDC)$" />
 
 
-	<rule from="^http://((?:[ms][1-4])(?:-s)|static)?\.licdn\.com/"
-		to="https://$1$2.licdn.com/" />
+	<rule from="^http://([ms][1-4])(?:-s)?\.licdn\.com/"
+		to="https://$1-s.licdn.com/" />
+
+	<rule from="^http://static\.licdn\.com/"
+		to="https://static.licdn.com/" />
 
 	<!--	- !www times out over https
 		- !www 301s to www over http
@@ -59,6 +70,6 @@
 
 	<!--	Akamai	-->
 	<rule from="^http://static0([1-4])\.linkedin\.com/"
-		to="https://s$1.licdn.com/" />
+		to="https://s$1-s.licdn.com/" />
 
 </ruleset>

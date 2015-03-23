@@ -1,0 +1,41 @@
+<!--
+	For rules that are on by default, see 10gen.xml.
+
+
+	CDN buckets:
+
+		- media.mongodb.org.s3.amazonaws.com | dg3s276bkct46.cloudfront.net
+
+			- media
+
+
+	Nonfunctional subdomains:
+
+		- blog	(dropped - tumblr)
+		- docs	(redirects to http)
+		- try	(redirects to www)
+
+
+	Mixed content:
+
+		Images on www, from:
+
+			- media
+			- media.mongodb.org.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="mongoDB.org (partial)">
+
+	<target host="mongodb.org" />
+	<target host="*.mongodb.org" />
+
+
+	<securecookie host="^(?:jira|www)\.mongodb\.org$" name=".*" />
+
+
+	<rule from="^http://(jira\.|www\.)?mongodb\.org/"
+		to="https://$1mongodb.org/" />
+
+</ruleset>

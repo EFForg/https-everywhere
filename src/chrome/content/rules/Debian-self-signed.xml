@@ -4,15 +4,6 @@
 
 	Fully covered domains:
 
-		- debconf.org subdomains:
-
-			- debconf7
-			- db
-			- gallery
-			- penta
-			- rt
-			- svn
-
 		- mentors.debian.net
 		- paste.debian.net
 
@@ -26,29 +17,28 @@
 			- lists
 			- nagios
 			- nm
-			- wiki
 
 -->
 <ruleset name="Debian (self-signed)" default_off="self-signed">
 
-	<target host="*.debconf.org" />
 	<target host="*.debian.net" />
 		<!--exclusion pattern="^http://screenshots\.debian\.net/" /-->
-	<target host="*.debian.org" />
-		<!--exclusion pattern="^http://(anonscm|bugs|ca|cdimage|incoming|packages|people|qa|packages\.qa|search|svn|www)\.debian\.org/" /-->
+	<target host="alioth.debian.org" />
+	<target host="lists.alioth.debian.org" />
+		<!--
+			Nonfunctional:
+					-->
+		<!--exclusion pattern="^http://(anonscm|ca|cvs|incoming|packages|people|popcon|qa|packages.qa|search|svn)\.debian\.org/" /-->
 		<!--
 			Handled in Debian.xml:
 						-->
-		<!--exclusion pattern="^http://wiki\.debian\.org/" /-->
+		<!--exclusion pattern="^http://(bugs|buildd|db|ftp-master|lists|nagios|nm|wiki|www)\.debian\.org/" /-->
 
-
-	<rule from="^http://(db|debconf7|gallery|penta|rt|svn|wiki)\.debconf\.org/"
-		to="https://$1.debconf.org/" />
 
 	<rule from="^http://(mentors|paste)\.debian\.net/"
 		to="https://$1.debian.net/" />
 
-	<rule from="^http://((?:lists\.)?alioth|buildd|db|ftp-master|lists|nagios|nm)\.debian\.org/"
-		to="https://$1.debian.org/" />
+	<rule from="^http://(lists\.)?alioth\.debian\.org/"
+		to="https://$1alioth.debian.org/" />
 
 </ruleset>

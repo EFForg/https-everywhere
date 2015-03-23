@@ -1,4 +1,7 @@
 <!--
+	For problematic rules, see SB_Nation.com-problematic.xml.
+
+
 	Other Vox Media rulesets:
 
 		- The-Verge.xml
@@ -26,6 +29,14 @@
 		- product.voxmedia.com		(hosted on Tumblr)
 
 
+	Problematic domains:
+
+		- (www.)sbnation.com *
+		- * blog.sbnation.com *
+
+	* Mismatched, CN: *.a.ssl.fastly.net
+
+
 	Fully covered domains:
 
 		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
@@ -35,27 +46,14 @@
 	Data from cdn[0-3] all appear identical
 
 -->
-<ruleset name="SB Nation (partial)" platform="mixedcontent">
+<ruleset name="SB Nation (partial)">
 
-	<target host="sbnation.com" />
 	<target host="*.sbnation.com" />
 	<target host="share.sbndev.net" />
 	<target host="jobs.voxmedia.com" />
 
 
-	<!--	Observed cookies:
-			- _session_id
-		-->
-	<securecookie host="^www\.sbnation\.com$" name=".*" />
-
-
-	<!--	When fetched via https, blog
-		points links to http://....:443.
-						-->
-	<rule from="^http://(blog\.|www\.)?sbnation\.com(?::443)?/"
-		to="https://$1sbnation.com/" />
-
-	<rule from="^https?://assets\.sbnation\.com/"
+	<rule from="^http://assets\.sbnation\.com/"
 		to="https://s3.amazonaws.com/assets.sbnation.com/" />
 
 	<rule from="^http://cdn\d\.sbnation\.com/"
@@ -65,15 +63,15 @@
 		to="https://d1jcofl6pfjesh.cloudfront.net/" />
 
 	<!--	cert: *.openxenterprise.com	-->
-	<rule from="^https?://ox-d\.sbnation\.com/"
+	<rule from="^http://ox-d\.sbnation\.com/"
 		to="https://sbnation-d3.openxenterprise.com/" />
 
-	<rule from="^https?://share\.sbndev\.net/"
+	<rule from="^http://share\.sbndev\.net/"
 		to="https://s3.amazonaws.com/share.sbndev.net/" />
 
 	<!--	At least some pages 302 to http.
 							-->
-	<rule from="^https?://jobs\.voxmedia\.com/(css/|favicon\.ico|img/)"
+	<rule from="^http://jobs\.voxmedia\.com/(css/|favicon\.ico|img/)"
 		to="https://sbnation.theresumator.com/$1" />
 
 </ruleset>

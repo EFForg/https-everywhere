@@ -21,13 +21,16 @@
 
 	Problematic domains:
 
-		- cdn.theatlantic.com		(404, cert: gp1.wac.edgecastcdn.net)
 		- cdn.theatlanticcities.com	(cert: gp1.wac.edgecastcdn.net; 404)
+		- ssl.theatlantic.com		(some images 404)
+		- assets.theatlantic.com	(self-signed)
 
 
 	Fully covered domains:
 
-		- cdn.theatlantic.com	(→ ssl.theatlantic.com)
+		- cdn.theatlantic.com
+		- ssl.theatlantic.com		(→ cdn.theatlantic.com)
+		- assets.theatlantic.com	(→ cdn.theatlantic.com)
 
 -->
 <ruleset name="Atlantic Media (partial)">
@@ -54,8 +57,10 @@
 	<rule from="^http://secure\.nationaljournal\.com/"
 		to="https://secure.nationaljournal.com/" />
 
-	<rule from="^http://(?:cdn|ssl)\.theatlantic\.com/"
-		to="https://ssl.theatlantic.com/" />
+	<!-- not 100% sure about this, but it's the
+		  least broken configuration I can find -->
+	<rule from="^http://(?:assets|cdn|ssl)\.theatlantic\.com/"
+		to="https://cdn.theatlantic.com/" />
 
 	<rule from="^http://admin\.theatlantic(cities|wire)\.com/"
 		to="https://admin.theatlantic$1.com/" />

@@ -1,0 +1,79 @@
+<!--
+	CDN buckets:
+
+		- thebodyshop-uk-blog.azurewebsites.net
+
+			- beautyblog
+
+		- www.thebodyshop.co.uk.edgesuite.net
+
+			- a1026.b.akamai.net
+
+		- bodyshop.metafaq.com
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches secure)
+		- (www.)beautyblog	(some pages redirect to http; mismatched, CN: *.azurewebsites.net)
+		- www			(works, akamai)
+
+
+	These stylesheets reference images relative to self:
+
+		- css/auto-complete.css
+		- css/category.leftnav.css
+		- css/static_content.css
+
+
+	These stylesheets reference images relative to root:
+
+		- css/bodyshop_reskin.css
+		- css/common/one_column_page.css
+		- css/mediaqueries.css
+		- css/megamenu.css
+		- css/storelocate/common.css
+		- css/storelocate/dynamic_common.css
+		- css/store_locator_search.css
+		- css/style.css
+		- css/style.searchandizing.css
+		- css/style.videopage.css
+
+
+	Mixed content:
+
+		- Web bugs on secure from res.levexis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Body Shop.co.uk (partial)">
+
+	<target host="thebodyshop.co.uk" />
+	<target host="*.thebodyshop.co.uk" />
+		<!--
+			Some pages redirect back:
+								-->
+		<exclusion pattern="^http://(?:www\.)?thebodyshop\.co\.uk/+(?!404\.htm|404_\d\.jpg|(?:athome|myspace)(?:$|[?/])|checkout/|content/|css/|images/|img/|js/|loyalty/|services/|socialhub/|(?:Script|Web)Resource\.axd|ws/)" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.thebodyshop\.co\.uk$" name="^(?:TRADEDOUBLER_|__tro)\w+$" />
+	<securecookie host="^secure\.thebodyshop\.co\.uk$" name=".+" />
+
+
+	<!--	First, point user-invisible paths (except some css) to akamai:
+										-->
+	<rule from="^http://(?:www\.)?thebodyshop\.co\.uk/(?=css/(?:auto-complete|category\.leftnav|static-content)\.css|images/|img/|js/|(?:Script|Web)Resource\.axd|ws/)"
+		to="https://a248.e.akamai.net/f/1026/9034/7/www.thebodyshop.co.uk/" />
+
+	<!--	And then, everything else that doesn't redirect back, to secure:
+										-->
+	<rule from="^http://(?:secure\.|www\.)?thebodyshop\.co\.uk/"
+		to="https://secure.thebodyshop.co.uk/" />
+
+	<rule from="^http://(?:www\.)?beautyblog\.thebodyshop\.co\.uk/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://thebodyshop-uk-blog.azurewebsites.net/" />
+
+</ruleset>

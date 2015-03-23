@@ -2,64 +2,97 @@
 	For problematic rules, see Debian-self-signed.xml.
 
 
+	Other Debian rulesets:
+
+		- DebConf.org.xml
+
+
 	Nonfunctional domains:
 
-		screenshots.debian.net *
+		- screenshots.debian.net ¹
 
-		debian.org subdomains:
+		- debian.org subdomains:
 
-			- (www.) *
-			- anonscm	(redirects to alioth; mismatched, CN: alioth.debian.org)
-			- bugs *
+			- anonscm ²
 			- ca		(shows db; mismatched, CN: db.debian.org)
-			- cdimage *
+			- cvs ²
 			- incoming	(shows ftp-master; mismatched, CN: ftp-master.debian.org)
-			- packages *
+			- packages ¹
 			- people	(reset; people.debian.org/~joerg/ is displayed
 					after fetching gpg.ganneff.de over http...)
-			- qa *
-			- packages.qa *
-			- search *
-			- svn		(shows alioth; mismatched, CN: alioth.debian.org)
+			- popcon ¹
+			- qa ¹
+			- packages.qa ¹
+			- search	(shows www; mismatched, CN: debian.org)
+			- svn ²
 
-	* Refused
+	¹ Refused
+	² Shows alioth; mismatched, CN: alioth.debian.org
 
 
 	Problematic domains:
 
-		- debconf.org subdomains:
-
-			- debconf7 *
-			- db *
-			- gallery *
-			- penta *
-			- rt *
-			- svn *
-
-		- mentors.debian.net *
-		- paste.debian.net *
+		- mentors.debian.net ¹
+		- paste.debian.net ¹
 
 		- debian.org subdomains:
 
-			- alioth *
-			- lists.alioth *
-			- buildd *
-			- db *
-			- ftp-master *
-			- lists *
-			- nagios *
-			- nm *
-			- wiki *
+			- alioth ¹
+			- lists.alioth ²
+			- cdimage	(refused)
 
-	* Works, self-signed
+	¹ Works, self-signed
+	² Works, self-signed, mismatched, CN: alioth.debian.org
+
+
+	Partially covered domains:
+
+		- cdimage.debian.org	(→ www)
+
+
+	Fully covered debian.org subdomains:
+
+		- (www.)
+		- bugs
+		- buildd
+		- db
+		- ftp-master
+		- lists
+		- nagios
+		- nm
+		- wiki
+
+
+	altnames that don't exist:
+
+		- www.bugs.debian.org
+		- www.buildd.debian.org
+		- www.db.debian.org
+		- www.ftp-master.debian.org
+		- www.lists.debian.org
+		- www.nagios.debian.org
+		- www.nm.debian.org
+		- www.wiki.debian.org
+
+
+	Observed cookie domains:
+
+		- nm.debian.org
 
 -->
 <ruleset name="Debian (partial)">
 
-	<target host="wiki.debian.org" />
+	<target host="debian.org" />
+	<target host="*.debian.org" />
 
 
-	<rule from="^http://wiki\.debian\.org/"
-		to="https://wiki.debian.org/" />
+	<securecookie host="^nm\.debian\.org$" name=".+" />
+
+
+	<rule from="^http://((?:bugs|buildd|db|ftp-master|lists|nagios|nm|wiki|www)\.)?debian\.org/"
+		to="https://$1debian.org/" />
+
+	<rule from="^http://cdimage\.debian\.org/+(?=$|\?)"
+		to="https://www.debian.org/CD/" />
 
 </ruleset>

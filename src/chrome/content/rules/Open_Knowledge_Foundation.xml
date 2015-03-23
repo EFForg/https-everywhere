@@ -1,14 +1,44 @@
 <!--
-	CN: page.ly
+	For rules causing false/broken MCB, see OKFn.org-falsemixed.xml.
+
+
+	Mixed content:
+
+		- Scripts on ^ from $self *
+
+		- css, on ^ from:
+
+			- assets *
+			- cloud.github.com *
+			- code.jquery.com *
+
+		- Images, on ^ from:
+
+			- $self *
+			- assets *
+			- farm\d.staticflickr.com *
+			- cloud.github.com *
+
+		- Web bugs, on ^ from:
+
+			- netdna.bootstrapcdn.com *
+			- w.sharethis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Open Knowledge Foundation (partial)" default_off="mismatched">
 
 	<target host="okfn.org" />
+	<target host="assets.okfn.org" />
 	<target host="www.okfn.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?okfn\.org/(?!\?ver=\w+$|favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<rule from="^https?://(?:www\.)?okfn\.org/"
-		to="https://okfn.org/" />
+	<rule from="^http://(assets\.|www\.)?okfn\.org/"
+		to="https://$1okfn.org/" />
 
 </ruleset>

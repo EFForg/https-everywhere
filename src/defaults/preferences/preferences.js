@@ -9,9 +9,12 @@ pref("extensions.https_everywhere.dev_popup_shown", false);
 
 // show ruleset tests in the menu
 pref("extensions.https_everywhere.show_ruleset_tests", false);
+// run a ruleset performance test at startup
+pref("extensions.https_everywhere.performance_tests", false);
 
 // enable rulesets that trigger mixed content blocking
 pref("extensions.https_everywhere.enable_mixed_rulesets", false);
+
 
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);

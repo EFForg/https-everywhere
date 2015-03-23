@@ -11,6 +11,8 @@ function toggleRuleLine(checkbox, ruleset) {
   } else {
     delete localStorage[ruleset.name];
   }
+  // Now reload the selected tab of the current window.
+  chrome.tabs.reload();
 }
 
 function createRuleLine(ruleset) {

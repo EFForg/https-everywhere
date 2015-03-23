@@ -1,0 +1,70 @@
+<!--
+	Other Wal-Mart rulesets:
+
+		- ASDA.xml
+		- Walmart_images.com.xml
+
+
+	CDN buckets:
+
+		- p13n-assets.walmart.com.edgesuite.net
+
+			- a1697.b.akamai.net
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- p13n-assets	(works, akamai)
+
+
+	Fully covered subdomains:
+
+		- help
+		- p13n-assets	(→ akamai)
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- help ² 
+		- www ¹
+
+	¹ Not secured by us <= incomplete support
+	² Secured by us
+
+
+	Mixed content:
+
+		- Images on help from i2.walmartimages.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Walmart.com (partial)">
+
+	<target host="walmart.com" />
+	<target host="*.walmart.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?walmart\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?walmart\.com/+(?!client_side_redirect\.gsp|cservice($|[?/])|favicon\.ico|i/|logout\.do)" /-->
+
+
+	<securecookie host="^help\.walmart\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?walmart\.com/(?=client_side_redirect\.gsp|cservice(?:$|[?/])|favicon\.ico|i/|logout\.do)"
+		to="https://www.walmart.com/" />
+
+	<rule from="^http://help\.walmart\.com/"
+		to="https://help.walmart.com/" />
+
+	<rule from="^http://p13n-assets\.walmart\.com/"
+		to="https://a248.e.akamai.net/f/1697/4479/7/p13n-assets.walmart.com/" />
+
+</ruleset>

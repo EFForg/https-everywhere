@@ -11,7 +11,6 @@
 		- d2g9v1gts353nd.cloudfront.net
 
 			- a
-			- static
 			- v
 
 		- d2glp9604qyu8g.cloudfront.net
@@ -63,6 +62,7 @@
 	Problematic subdomains:
 
 		- media		(cert only matches *.media)
+		- 25.media	(akamai)
 
 
 	Fully covered subdomains:
@@ -73,7 +73,7 @@
 		- secure.assets
 		- data
 		- media		(→ 31.media)
-		- \d+.media
+		- \d+.media:
 		- platform
 		- origin.platform
 		- static	(→ d2g9v1gts353nd.cloudfront.net)
@@ -95,6 +95,22 @@
 
 	<target host="tumblr.com" />
 	<target host="*.tumblr.com" />
+		<!--
+			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
+
+				- dashboard.js breaks "like"ing
+				- jquery_backbone_lodash.js and polyfills.js individually cause the editor to spawn another page
+				- posting.js breaks opening the editor
+				- tiny_mce.js breaks editing
+
+			and lo, many bellyfeel boos were heard.
+								-->
+		<!--exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/(dashboard|polyfills|posting|vendor/(jquery_backbone_lodash|tiny_mce_3_5_10/tiny_mce))\.js" /-->
+		<!--
+			And so was one "oh, fsck it."
+							-->
+		<exclusion pattern="^http://assets\.tumblr\.com/assets/scripts/" />
+
 
 	<!--	Tracking cookies:
 					-->
@@ -126,23 +142,19 @@
 			- tips$
 			- upload/image
 					-->
-	<rule from="^http://(www\.)?tumblr\.com/(?=$|dmca|examples/share/\w|(?:forgot_password|impixu|register|teaser)(?:$|[?/])|images/|javascript/|login|logout|photo/|register|settings/|svc/log/|svc/teaser(?:$|[#?/]))"
+	<rule from="^http://(www\.)?tumblr\.com/(?=$|(?:dmca|forgot_password|impixu|login|logout|register|svc/teaser|teaser)(?:$|[#?/])|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/)"
 		to="https://$1tumblr.com/" />
 
-	<!-- 25.media gives cert for a248.e.akamai.net -->
 	<rule from="^http://(?:25\.)?media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
 
-	<rule from="^http://(a|(?:origin|secure)\.assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
+	<rule from="^http://(a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|vt?)\.tumblr\.com/"
 		to="https://$1.tumblr.com/" />
-
-	<rule from="^http://assets\.tumblr\.com/"
-		to="https://d2glp9604qyu8g.cloudfront.net/" />
 
 	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
-		to="https://d2g9v1gts353nd.cloudfront.net/" />
+		to="https://d2pi0bc9ewx28h.cloudfront.net/" />
 
 </ruleset>

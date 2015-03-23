@@ -280,6 +280,12 @@ const RuleWriter = {
 
     sstream.close();
     fstream.close();
+    return this.readFromString(data, rule_store, file);
+  },
+
+  readFromString: function(data, rule_store, file) {
+    if (typeof file === 'undefined') file = {path: 'fromString'};
+
     // XXX: With DOMParser, we probably do not need to throw away the XML
     // declaration anymore nowadays.
     data = data.replace(/<\?xml[^>]*\?>/, ""); 
@@ -414,33 +420,39 @@ const HTTPSRules = {
       this.rulesetsByName = {};
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
-      var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      this.scanRulefiles(rulefiles);
-      rulefiles = RuleWriter.enumerate(RuleWriter.getRuleDir());
-      this.scanRulefiles(rulefiles);
-      var t,i;
-      for (t in this.targets) {
-        for (i = 0 ; i < this.targets[t].length ; i++) {
-          this.log(INFO, t + " -> " + this.targets[t][i].name);
-        }
+
+      // Initialize database connection.
+      var dbFile = FileUtils.getFile("ProfD",
+        ["extensions", "https-everywhere@eff.org", "defaults", "rulesets.sqlite"]);
+      var rulesetDBConn = Services.storage.openDatabase(dbFile);
+      this.queryForRuleset = rulesetDBConn.createStatement(
+        "select contents from rulesets where id = :id");
+
+      // Preload the list of which targets are available in the DB.
+      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
+      // but is faster than loading all of the rulesets. If this becomes a
+      // bottleneck, change it to load in a background webworker, or load
+      // a smaller bloom filter instead.
+      this.targetsAvailable = {};
+      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
+      this.log(DBUG, "Adding targets...");
+      while (targetsQuery.executeStep()) {
+        var host = targetsQuery.row.host;
+        this.targetsAvailable[host] = targetsQuery.row.ruleset_id;
       }
-
-      // for any rulesets with <target host="*">
-      // every URI needs to be checked against these rulesets
-      // (though currently we don't ship any)
-      this.global_rulesets = this.targets["*"] ? this.targets["*"] : [];
-
-      this.rulesets.sort(
-        function(r1,r2) {
-            if (r1.name.toLowerCase() < r2.name.toLowerCase()) return -1;
-            else return 1;
-        }
-      );
+      this.log(DBUG, "Done adding targets.");
     } catch(e) {
-      this.log(WARN,"Rules Failed: "+e);
+      this.log(DBUG,"Rules Failed: "+e);
     }
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
+    try {
+      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
+        this.testRulesetRetrievalPerformance();
+      }
+    } catch(e) {
+      this.log(WARN, "Explosion during testing " + e);
+    }
     return;
   },
 
@@ -491,6 +503,8 @@ const HTTPSRules = {
     }
   },
 
+  httpMatch: /^http/i,
+
   rewrittenURI: function(alist, input_uri) {
     // This function oversees the task of working out if a uri should be
     // rewritten, what it should be rewritten to, and recordkeeping of which
@@ -511,7 +525,7 @@ const HTTPSRules = {
     try {
       var rs = this.potentiallyApplicableRulesets(uri.host);
     } catch(e) {
-      this.log(WARN, 'Could not check applicable rules for '+uri.spec);
+      this.log(WARN, 'Could not check applicable rules for '+uri.spec + '\n'+e);
       return null;
     }
 
@@ -595,17 +609,55 @@ const HTTPSRules = {
         intoList.push(fromList[i]);
   },
 
+  // Try to find a ruleset in the SQLite database for a given target (e.g.
+  // '*.openssl.org')
+  // NOTE: This call runs synchronously, which can lock up the browser UI. Is
+  // there any way to fix that, given that we need to run blocking in the request
+  // flow? Perhaps we can preload all targets from the DB into memory at startup
+  // so we only hit the DB when we know there is something to be had.
+  queryTarget: function(target) {
+    this.log(DBUG, "Querying DB for " + target);
+    var output = [];
+
+    this.queryForRuleset.params.id = this.targetsAvailable[target];
+
+    try {
+      while (this.queryForRuleset.executeStep())
+        output.push(this.queryForRuleset.row.contents);
+    } finally {
+      this.queryForRuleset.reset();
+    }
+    return output;
+  },
+
   potentiallyApplicableRulesets: function(host) {
     // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
-    var results = this.global_rulesets.slice(0); // copy global_rulesets
-    try {
-      if (this.targets[host])
-        results = results.concat(this.targets[host]);
-    } catch(e) {   
-      this.log(DBUG,"Couldn't check for ApplicableRulesets: " + e);
-      return [];
-    }
+    var results = [];
+
+    var attempt = function(target) {
+      // First try the in-memory rulesets
+      if (this.targets[target] &&
+          this.targets[target].length > 0) {
+        this.setInsert(results, this.targets[target]);
+      } else if (this.targetsAvailable[target]) {
+        // If not found there, check the DB and load the ruleset as appropriate
+        var rulesets = this.queryTarget(target);
+        if (rulesets.length > 0) {
+          for (var i = 0; i < rulesets.length; i++) {
+            var ruleset = rulesets[i];
+            this.log(INFO, "Found ruleset in DB for " + host + ": " + ruleset);
+            RuleWriter.readFromString(ruleset, this);
+            this.setInsert(results, this.targets[target]);
+          }
+        } else {
+          this.nonTargets[target] = 1;
+        }
+      }
+    }.bind(this);
+
+    attempt(host);
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
@@ -613,18 +665,48 @@ const HTTPSRules = {
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
-      this.setInsert(results, this.targets[t]);
+      attempt(t);
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    for (i = 1; i <= segmented.length - 2; ++i) {
+    for (i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      this.setInsert(results, this.targets[t]);
+      attempt(t);
     }
     this.log(DBUG,"Potentially applicable rules for " + host + ":");
     for (i = 0; i < results.length; ++i)
       this.log(DBUG, "  " + results[i].name);
     return results;
+  },
+
+  testRulesetRetrievalPerformance: function() {
+    // We can use this function to measure the impact of changes in the ruleset
+    // storage architecture, potentiallyApplicableRulesets() caching
+    // implementations, etc. 
+    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
+                 .createInstance(Ci.nsIXMLHttpRequest);
+    req.open("GET", "https://eff.org/files/alexa-top-10000-global.txt", false);
+    req.send();
+    var domains = req.response.split("\n");
+    var domains_l = domains.length - 1; // The last entry in this thing is bogus
+    var prefix = "";
+    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
+    var count = 0;
+    var t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    var t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
+    count = 0;
+    t1 = new Date().getTime();
+    for (var n = 0; n < domains_l; n++) {
+      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
+        count++;
+    }
+    t2 = new Date().getTime();
+    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
   shouldSecureCookie: function(applicable_list, c, known_https) {

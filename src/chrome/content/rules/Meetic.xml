@@ -4,8 +4,13 @@
 
 	CDN buckets:
 
+		- stda.ilius.net.edgesuite.net
+
+			- a1129.g.akamai.net
+
 		- meetic.fr.edgesuite.net
 
+			- a1627.g.akamai.net
 			- static.editor.meetic.com
 			- statics.meetic-affinity.com
 
@@ -16,8 +21,10 @@
 
 	Nonfunctional domains:
 
-		- (www.)meetic.com
-		- (www.)meetic.fr
+		- (www.)meetic.com *
+		- (www.)meetic.fr *
+
+	* Dropped
 
 
 	Problematic domains:
@@ -34,7 +41,14 @@
 -->
 <ruleset name="Meetic (partial)">
 
+	<target host="stda.ilius.net" />
+		<!--
+			References images relative to /:
+								-->
+			<!--exclusion pattern="^http://stda\.ilius\.net/css/(brands/match/uk/signup/2013/01/23/landing_hpv_default_yahoo_profiles|components/themes/abyss/buttons\.css|core/login/login_form|core/login/login_form_a1)\.css" /-->
+			<!--exclusion pattern="^http://stda\.ilius\.net/css/(?!components/core/forgot\.css)" /-->
 	<target host="tk.ilius.net" />
+	<target host="static.editor.meetic.com" />
 
 
 	<securecookie host="^tk\.ilius\.net$" name=".+" />
@@ -42,5 +56,11 @@
 
 	<rule from="^http://tk\.ilius\.net/"
 		to="https://tk.ilius.net/" />
+
+	<rule from="^http://stda\.ilius\.net/(?!css/(?!components/core/forgot\.css))"
+		to="https://a248.e.akamai.net/f/1129/7423/4/stda.ilius.net/" />
+
+	<rule from="^http://static\.editor\.meetic\.com/"
+		to="https://a248.e.akamai.net/f/1627/8414/3/static.editor.meetic.com/" />
 
 </ruleset>

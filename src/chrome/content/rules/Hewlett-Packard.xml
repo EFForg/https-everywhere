@@ -10,41 +10,38 @@
 
 		- hp.com subdomains:
 
-			- www.hpl *
 			- h10060.www1	(404, mismatched)
 			- h17007.www1	(handshake failure)
 			- h18004.www1	(shows h18000.www1, mismatched)
-			- h30565.www3
 
 		- hpwebos.com		(CN: palm.com)
 		- www.hpwebos.com	(redirects to http, Akamai)
 
 	* http reply
 
-
-	Problematic domains:
-
-		- welcome.hp-ww.com	(times out)
-
 -->
-<ruleset name="Hewlett-Packard Company (buggy)" default_off="https://eff.org/r.4ap5">
+<ruleset name="HP (buggy?)" default_off="testing">
 
 	<target host="compaq.com" />
 	<target host="www.compaq.com" />
 	<target host="eds.com" />
 	<target host="*.eds.com" />
+	<target host="secure.hp-ww.com" />
 	<target host="hp.com" />
 	<target host="*.hp.com" />
-		<exclusion pattern="^http://www\.hp\.com/(?!img/)" />
-		<!--
-			404s over https
-					-->
-		<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
-	<target host="*.hp-ww.com" />
-	<target host="developer.palm.com" />
-	<target host="threatlinq.tippingpoint.com" />
-	<target host="www.threatlinq.tippingpoint.com" />
 
+	<exclusion pattern="^http://m\.hp\.com"/>
+	<exclusion pattern="^http://welcome\.hp\.com"/>
+	<exclusion pattern="^http://www\.hpl\.hp\.com"/>
+	<exclusion pattern="^http://h10060\.www1\.hp\.com"/>
+	<exclusion pattern="^http://h17007\.www1\.hp\.com"/>
+	<exclusion pattern="^http://h18004\.www1\.hp\.com"/>
+	<exclusion pattern="^http://h30261\.www3\.hp\.com"/>
+	<exclusion pattern="^http://h30434\.www3\.hp\.com"/>
+
+	<!--<exclusion pattern="^http://www\.hp\.com/(?!img/)" /> 404s over https-->
+	<exclusion pattern="^http://h18000\.www1\.hp\.com/products/servers/linux/documentation\.html" />
+	<target host="developer.palm.com" />
 
 	<securecookie host="^esca(?:2\.americas|5\.asiapac|3\.europe)\.hp\.com$" name=".+" />
 	<securecookie host="^(?:(?:www\.)?register|shopping)\.hp\.com$" name=".+" />
@@ -56,46 +53,54 @@
 	<securecookie host="^developer\.palm\.com$" name=".+" />
 
 
-	<rule from="^https?://3com\.com/"
-		to="https://www.3com.com/" />
-
-	<rule from="^http://(b2bgw|login|www)\.3com\.com/"
-		to="https://$1.3com.com/" />
-
-	<rule from="^https?://(?:www\.)?compaq\.com/"
+	<rule from="^http://(?:www\.)?compaq\.com/"
 		to="https://www.compaq.com/" />
 
 	<rule from="^http://(www(?:-mo)?\.)?eds\.com/"
 		to="https://$1eds.com/" />
 
-	<rule from="^http://(?:www\.)?hp\.com/"
-		to="https://www.hp.com/" />
+	<rule from="^http://([^/:@]*)\.austin\.hp\.com/"
+		to="https://$1.austin.hp.com/" />
 
-	<rule from="^http://(esca2\.americas|esca5\.asiapac|esam2?\.austin|esca3\.europe|ftp|(?:www\.)?register|www|h(?:1000[34]|10018|10032|10048|10057|1008[456]|10148|10151|10176|1700[3-689]|17010|18000)\.www1|h20141\.www2|h41183\.www4)\.hp\.com/"
+	<rule from="^http://([^/:@]*)\.americas\.hp\.com/"
+		to="https://$1.americas.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.asiapac\.hp\.com/"
+		to="https://$1.asiapac.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.europe\.hp\.com/"
+		to="https://$1.europe.hp.com/" />
+	
+	<rule from="^http://([^/:@]*)\.www1\.hp\.com/"
+		to="https://$1.www1.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www2\.hp\.com/"
+		to="https://$1.www2.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www3\.hp\.com/"
+		to="https://$1.www3.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www4\.hp\.com/"
+		to="https://$1.www4.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www5\.hp\.com/"
+		to="https://$1.www5.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www6\.hp\.com/"
+		to="https://$1.www6.hp.com/" />
+
+	<rule from="^http://([^/:@]*)\.www7\.hp\.com/"
+		to="https://$1.www7.hp.com/" />
+
+	<rule from="^http://www8\.hp\.com/"
+		to="https://ssl.www8.hp.com/" />
+		
+	<rule from="^http://([^/:@]*)\.hp\.com/"
 		to="https://$1.hp.com/" />
 
-	<rule from="^http://(?:www\.)?shopping\.hp\.com/"
-		to="https://shopping.hp.com/" />
-
-	<rule from="^https?://welcome\.hp\.com/"
-		to="https://secure.hp-ww.com/" />
-
-	<rule from="^https?://(?:vausnzpro2\.austin|20465\.www2)\.hp\.com/"
-		to="https://vausnzpro2.austin.hp.com/" />
-
-	<rule from="^https?://(?:www\.)?esca\.hp\.com/"
-		to="https://esca2.americas.hp.com/" />
-
-	<rule from="^https?://(?:ssl\.|www\.)?www8\.hp\.com/"
-		to="https://ssl.www8.hp.com/" />
-
-	<rule from="^https?://(?:secure|welcome)\.hp-ww\.com/"
+	<rule from="^http://secure\.hp-ww\.com/"
 		to="https://secure.hp-ww.com/" />
 
 	<rule from="^http://developer\.palm\.com/"
 		to="https://developer.palm.com/" />
-
-	<rule from="^http://(www\.)?threatlinq\.tippingpoint\.com/"
-		to="https://$1threatlinq.tippingpoint.com/" />
-
 </ruleset>

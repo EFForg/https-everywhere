@@ -15,6 +15,7 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
+RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 [ -d pkg ] || mkdir pkg
 
@@ -52,7 +53,7 @@ fi
 
 if [ "$1" != "--fast" ] ; then
   if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python utils/trivial-validate.py --ignoredups google --ignoredups facebook"
+    VALIDATE="./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -f trivial-validate.py ] ; then
     VALIDATE="python trivial-validate.py --ignoredups google --ignoredups facebook"
   elif [ -x utils/trivial-validate ] ; then
@@ -73,7 +74,7 @@ if [ "$1" != "--fast" ] ; then
 
   if [ -f utils/relaxng.xml -a -x "$(which xmllint)" ] >&2
   then
-    if xmllint --noout --relaxng utils/relaxng.xml src/chrome/content/rules/*.xml
+    if find src/chrome/content/rules -name "*.xml" | xargs xmllint --noout --relaxng utils/relaxng.xml
     then
       echo Validation of rulesets with RELAX NG grammar completed. >&2
     else
@@ -97,6 +98,11 @@ if [ "$1" != "--fast" ] ; then
 fi
 # =============== END VALIDATION ================
 
+if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  echo "Generating sqlite DB"
+  ./utils/make-sqlite.py src/chrome/content/rules
+fi
+
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
@@ -114,28 +120,20 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
-# Unless we're in a hurry and there's already a ruleset library, build it from
-# the ruleset .xml files
-
-if [ "$1" = "--fast" ] ; then
-  FAST="--fast"
-fi
-python ./utils/merge-rulesets.py $FAST
-
 cd src
 
 # Build the XPI!
 rm -f "../$XPI_NAME"
 #zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
 
-python ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
 
 ret="$?"
 if [ "$ret" != 0 ]; then
     rm -f "../$XPI_NAME"
     exit "$?"
 else
-  echo >&2 "Total included rules: `find chrome/content/rules -name "*.xml" | wc -l`"
+  echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
   echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
   echo >&2 "Created $XPI_NAME"
   if [ -n "$BRANCH" ]; then
