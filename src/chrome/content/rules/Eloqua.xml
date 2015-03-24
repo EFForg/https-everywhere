@@ -1,9 +1,5 @@
 
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://images.marketing.eloqua.com/ => https://s33.t.eloqua.com/: Too many redirects while fetching 'https://s33.t.eloqua.com/'
-Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no alternative certificate subject name matches target host name 'now.eloqua.com'")
-
 	For problematic rules, see Eloqua-mismatches.xml.
 
 	For other Oracle coverage, see Oracle.xml.
@@ -25,12 +21,12 @@ Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no
 
 		- eloqua.com subdomains:
 
-			- (www.)		(no https)
+			- (www.) ¹
 			- businesscenter *
-			- topliners *
 
 		- eloquaexperience.com
 
+	¹ Refused
 	* Times out
 
 
@@ -38,15 +34,17 @@ Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no
 
 		-  eloqua.com subdomains:
 
-			- blog			(works; expired 2011-03-04, CN: localhost.localdomain)
+			- blog ¹
 			- images.marketing	(works, akamai)
 			- media			(works; mismatched, CN: *.clickability.com)
 			- now *
 			- succeed		(works; mismatched, CN: *.t.eloqua.com)
+			- topliners		(Redirects to http)
 			- web			(works; expired 2013-02-08, self-signed, CN: plesk)
 
 		- (www.)useitandsee.com *
 
+	¹ Shows another domain
 	* Mismatched, CN: secure.eloqua.com
 
 
@@ -54,9 +52,9 @@ Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no
 
 		- eloqua.com subdomains:
 
+			- blog			(→ blogs.oracle.com)
 			- login
 			- images.marketing	(→ s33.t)
-			- now			(→ secure)
 			- secure
 			- static
 
@@ -66,13 +64,18 @@ Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no
 				- s2624
 				- s33
 
+			- topliners		(→ community.oracle.com)
 
-	Insecure cookies are set for these hosts:
+
+	Insecure cookies are set for these domains and hosts:
 
 		- cloudconnectors.eloqua.com
+		- login.eloqua.com
+		- now.eloqua.com
+		- .secure.eloqua.com
 
 -->
-<ruleset name="Eloqua.com" default_off='failed ruleset test'>
+<ruleset name="Eloqua.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -84,23 +87,43 @@ Fetch error: http://now.eloqua.com/ => https://secure.eloqua.com/: (51, "SSL: no
 
 	<!--	Special cases:
 				-->
+	<target host="blog.eloqua.com" />
 	<target host="images.marketing.eloqua.com" />
-	<target host="now.eloqua.com" />
+	<!--target host="now.eloqua.com" /-->
+	<target host="topliners.eloqua.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^cloudconnectors\.eloqua\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(login|now|\.secure)\.eloqua\.com$" name="^culture$" /-->
 
 	<securecookie host="^\.eloqua\.com$" name="^EL(?:OQUA|QSTATUS)$" />
-	<securecookie host="^cloudconnectors\.eloqua\.com$" name=".+" />
+	<securecookie host="^(?:cloudconnectors|login|\.secure)\.eloqua\.com$" name=".+" />
 
+
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://blog\.eloqua\.com/"
+		to="https://blogs.oracle.com/marketingcloud//" />
+
+	<rule from="^http://images\.marketing\.eloqua\.com/$"
+		to="https://login.eloqua.com/" />
 
 	<rule from="^http://images\.marketing\.eloqua\.com/"
 		to="https://s33.t.eloqua.com/" />
 
-	<rule from="^http://now\.eloqua\.com/"
-		to="https://secure.eloqua.com/" />
+		<test url="http://images.marketing.eloqua.com/Web/Eloqua/" />
+
+	<!--rule from="^http://now\.eloqua\.com/"
+		to="https://secure.eloqua.com/" /-->
+
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://topliners\.eloqua\.com/.*"
+		to="https://community.oracle.com/community/topliners/" />
+
+		<test url="http://topliners.eloqua.com/welcomeelcome" />
 
 	<rule from="^http:"
 		to="https:" />
