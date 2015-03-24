@@ -67,33 +67,37 @@
 
 	Problematic subdomains:
 
-		- media ¹
-		- 25.media ²
-		- 34.media ²
-		- 35.media ²
-		- 37.media ²
+		- data *
+		- media *
+		- 25.media *
+		- 37.media *
 
-	¹ Cert only matches *.media
-	² Akamai
+	* Mismatched
 
 
 	Fully covered subdomains:
 
 		- a
 		- assets	(→ d2glp9604qyu8g.cloudfront.net)
-		- origin.assets
 		- secure.assets
 		- data
 		- media		(→ 31.media)
 		- *.media:
+		- mx
 		- platform
-		- origin.platform
 		- px.srvcs
 		- static	(→ d2g9v1gts353nd.cloudfront.net)
 		- secure.static
 		- tm319
 		- v
 		- vt
+
+
+	These altnames don't exist:
+
+		- origin.assets.tumblr.com
+		- assets.embed.tumblr.com
+		- origin.platform.tumblr.com
 
 
 	Insecure cookies are set for these domains:
@@ -120,25 +124,30 @@
 -->
 <ruleset name="Tumblr.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="tumblr.com" />
 	<target host="a.tumblr.com" />
 	<target host="assets.tumblr.com" />
-	<target host="origin.assets.tumblr.com" />
 	<target host="secure.assets.tumblr.com" />
-	<target host="data.tumblr.com" />
-	<target host="media.tumblr.com" />
+	<target host="embed.tumblr.com" />
 	<target host="*.media.tumblr.com" />
+	<target host="mx.tumblr.com" />
 	<target host="platform.tumblr.com" />
-	<target host="origin.platform.tumblr.com" />
 	<target host="px.srvcs.tumblr.com" />
-	<target host="static.tumblr.com" />
 	<target host="secure.static.tumblr.com" />
 	<target host="tm319.tumblr.com" />
 	<target host="v.tumblr.com" />
 	<target host="vt.tumblr.com" />
 	<target host="www.tumblr.com" />
-		<!--
-			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
+
+	<!--	Complications:
+				-->
+	<target host="data.tumblr.com" />
+	<target host="media.tumblr.com" />
+	<target host="static.tumblr.com" />
+
+		<!--	These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
 				- dashboard.js breaks "like"ing
 				- jquery_backbone_lodash.js and polyfills.js individually cause the editor to spawn another page
@@ -195,12 +204,10 @@
 	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
-	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
+	<rule from="^http://(?:(?:25|37)\.)?media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
 
 		<test url="http://25.media.tumblr.com/" />
-		<test url="http://34.media.tumblr.com/" />
-		<test url="http://35.media.tumblr.com/" />
 		<test url="http://37.media.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
