@@ -5,21 +5,38 @@
 	(www.): mismatched, CN: www-legacy.oracle.com
 
 -->
-<ruleset name="Compendium.com">
+<ruleset name="Compendium.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="app.compendium.com" />
+	<target host="imagefilter.app.compendium.com" />
+
+	<!--	Complications:
+				-->
 	<target host="compendium.com" />
-	<target host="*.compendium.com" />
+	<target host="www.compendium.com" />
+
+		<exclusion pattern="^http://(?:www\.)?compendium\.com/(?!$)" />
 
 
-	<rule from="^http://(?:www\.)?compendium\.com/$"
+	<rule from="^http://(?:www\.)?compendium\.com/"
 		to="https://www.oracle.com/us/corporate/acquisitions/compendium/index.html" />
 
 	<!--	Redirect drops path but not args:
-						-->
-	<rule from="^http://(?:www\.)?compendium\.com/[^?]+"
-		to="https://www.oracle.com/index.html" />
 
-	<rule from="^http://app\.compendium\.com/"
-		to="https://app.compendium.com/" />
+		..but there are specific redirects caught by this.
+						-->
+	<!--rule from="^http://(?:www\.)?compendium\.com/[^?]+"
+		to="https://www.oracle.com/index.html" /-->
+
+		<!-- e.g.:
+				-->
+		<test url="http://www.compendium.com/blog/" />
+		<test url="http://www.compendium.com/clients/" />
+		<test url="http://www.compendium.com/how-it-works/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
