@@ -1,4 +1,13 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://longtail.tv/ => https://www.longtailvideo.com/: (28, 'Resolving timed out after 10518 milliseconds')
+Fetch error: http://www.longtail.tv/ => https://www.longtailvideo.com/: (28, 'Resolving timed out after 10518 milliseconds')
+	Other LongTail rulesets:
+
+		- Bitsontherun.com.xml
+		- JW_Platform.com.xml
+
+
 	CDN buckets:
 
 		- cs28.wpc.edgecastcdn.net
@@ -6,9 +15,15 @@
 			- p.jwpcdn.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional domains:
 
-		- developer	(cert: secure; 301s to http)
+		- jwplayer.com ¹
+		- www.jwplayer.com ²
+		- developer.longtailvideo.com *
+
+	¹ wpengine
+	² 404, valid cert
+	* 503, valid cert
 
 
 	Problematic domains:
@@ -27,9 +42,8 @@
 			- ssl.p
 
 -->
-<ruleset name="LongTail (partial)">
+<ruleset name="LongTail (partial)" default_off='failed ruleset test'>
 
-	<target host="dashboard.bitsontherun.com" />
 	<target host="*.jwpcdn.com" />
 	<target host="*.jwpltx.com" />
 	<target host="longtail.tv" />
@@ -41,17 +55,12 @@
 		<!--
 			302 to http.
 					-->
-		<exclusion pattern="^https?://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/(?!community/)\w+/images/\w+\.png$" />
+		<exclusion pattern="^http://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/(?!community/)\w+/images/\w+\.png$" />
 
 
 	<securecookie host="^\w\.jwpltx\.com$" name=".+" />
 	<securecookie host="^.+\.longtailvideo\.com$" name=".+" />
 
-
-	<!--	At least some pages 303 to http.
-							-->
-	<rule from="^http://dashboard\.bitsontherun\.com/static/"
-		to="https://dashboard.bitsontherun.com/static/" />
 
 	<rule from="^http://(a|v)\.jwpcdn\.com/"
 		to="https://$1.jwpcdn.com/" />

@@ -1,0 +1,95 @@
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://kundeservice.tdc.dk/ => https://kundeservice.tdc.dk/: (35, 'Unknown SSL protocol error in connection to kundeservice.tdc.dk:443 ')
+Fetch error: http://privatalarm.tdc.dk/ => https://privatalarm.tdc.dk/: (6, 'Could not resolve host: privatalarm.tdc.dk')
+
+	Other TDC rulesets:
+
+		- TDC.no.xml
+		- TDC_online.se.xml
+		- TDC_Service_Online.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- aarsrapport2012	(dropped)
+		- play			(refused)
+
+
+	Problematic subdomains:
+
+		- forum		(lithium)
+
+
+	Fully covered subdomains:
+
+		- (www.) *
+		- erhverv *
+		- fly *
+		- forum		(→ tdc.i.lithium.com)
+		- kundeservice *
+		- mail
+		- om *
+		- privat *
+		- privatalarm
+		- selfcare *
+		- shop
+		- wholesale
+
+	* Server is configured for rc4 only.
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- privatalarm ²
+		- shop ²
+
+	¹ Partially secured by us <= accounting
+	  for possible use on uncovered domains
+
+	² Secured by us <= complete coverage
+
+-->
+<ruleset name="TDC.dk (partial)" default_off='failed ruleset test'>
+
+	<target host="tdc.dk" />
+	<target host="erhverv.tdc.dk" />
+	<target host="fly.tdc.dk" />
+	<target host="kundeservice.tdc.dk" />
+	<target host="mail.tdc.dk" />
+	<target host="om.tdc.dk" />
+	<target host="privat.tdc.dk" />
+	<target host="privatalarm.tdc.dk" />
+	<target host="selfcare.tdc.dk" />
+	<target host="shop.tdc.dk" />
+	<target host="wholesale.tdc.dk" />
+	<target host="www.tdc.dk" />
+	<target host="forum.tdc.dk" />
+	<target host="tdc-wholesale.com" />
+	<target host="www.tdc-wholesale.com" />
+
+	<!--	Set by shop:
+				-->
+	<securecookie host="^\.tdc\.dk$" name="^salg_dwbc$" />
+	<!--
+		Could we  secure either of these safely?
+							-->
+	<!--securecookie host="^\.tdc\.dk$" name="^(ObSSOCookie|VISITORID)$" /-->
+	<securecookie host="^(?:privatalarm|shop)\.tdc\.dk$" name=".+" />
+
+
+	<rule from="^http://forum\.tdc\.dk/"
+		to="https://tdc.i.lithium.com/" />
+
+	<!--	- //+ redirects to http://$
+		- \w+ 404s
+				-->
+	<rule from="^http://(?:www\.)?tdc-wholesale\.com/"
+		to="https://wholesale.tdc.dk/nordic/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

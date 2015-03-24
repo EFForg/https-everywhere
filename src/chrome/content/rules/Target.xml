@@ -1,11 +1,18 @@
 <!--
 	CDN buckets:
 
+
 		- /D/16382/173656/000/
+
+		- phx.corporate-ir.net
+
+			- investors
+
 		- www.target.com.edgesuite.net
 		- weeklyad.target.com.edgesuite.net
 		- m.weeklyad.target.com.edgesuite.net
 		- img1.targetimg1.com.edgesuite.net
+		- pressroom.target.com.ipressroom.com
 
 
 	Nonfunctional target.com subdomains:
@@ -23,6 +30,7 @@
 			- dailydeals *
 			- m *
 			- m-beta-secure	(mismatched)
+			- pressroom	(works; mismatched, CN: cms.iprsoftware.com)
 			- m.weeklyad *
 
 		- img1.targetimg1.com		(works, akamai)
@@ -103,6 +111,26 @@
 			- img\d-ssa-secure-perf
 			- img\d-ssa-secure-stg
 
+
+	Mixed content:
+
+		- iframe on investors from corporate *
+
+		- css, on:
+
+			- investors from corporate *
+			- investors from phx.corporate-ir.net *
+
+		- Images, on:
+
+			- investors from media.corporate-ir.net *
+			- investors from charts.edgar-online.com *
+			- pressroom from cms.ipressroom.com.s3.amazonaws.com *
+
+		- favicon in investors from www *
+
+	* Secured by us
+
 -->
 <ruleset name="Target (partial) ">
 
@@ -112,6 +140,11 @@
 	<target host="*.targetimg2.com" />
 	<target host="*.targetimg3.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.target\.com$" name="^(TealeafAkaSid|TealeafAkaUID)$" /-->
+	<!--securecookie host="^pressroom\.target\.com$" name="^ipr_i$" /-->
 
 	<securecookie host="^\.m-secure\.target\.com$" name=".+" />
 	<!--

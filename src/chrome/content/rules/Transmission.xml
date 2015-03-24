@@ -1,18 +1,40 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://www.transmissionbt.com/ => https://www.transmissionbt.com/: Too many redirects while fetching 'https://www.transmissionbt.com/'
+Fetch error: http://transmissionbt.com/ => https://www.transmissionbt.com/: Too many redirects while fetching 'https://www.transmissionbt.com/'
+
 	Nonfunctional subdomains:
 
-		- download		(404)
-		- download-origin
-		- (www.)		(redirects to http)
+		- download ¹
+		- download-origin ²
+
+	¹ Redirects to http
+	² Refused
+
+
+	Problematic subdomains:
+
+		- ^ *
+
+	* Redirects to http
 
 -->
-<ruleset name="Transmission (partial)">
+<ruleset name="Transmission (partial)" default_off='failed ruleset test'>
 
+	<target host="transmissionbt.com" />
 	<target host="*.transmissionbt.com" />
+
+		<test url="http://forum.transmissionbt.com/" />
+		<test url="http://trac.transmissionbt.com/" />
+		<test url="http://www.transmissionbt.com/" />
 
 
 	<securecookie host="^.*\.transmissionbt\.com$" name=".+" />
 
+
+	<rule from="^http://(?:www\.)?transmissionbt\.com/"
+		to="https://www.transmissionbt.com/" />
 
 	<rule from="^http://(forum|trac)\.transmissionbt\.com/"
 		to="https://$1.transmissionbt.com/" />

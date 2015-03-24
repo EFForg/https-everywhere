@@ -1,21 +1,43 @@
 <!--
+	Other BlogTalkRadio rulesets:
+
+		- BTR_CDN.com.xml
+		- BTR_static.com.xml
+		- To_BTR.com.xml
+
+
 	Nonfunctional subdomains:
 
-		- ^	(404, expired)
-		- www	(reset)
+		- my ¹
+		- sb ¹
+		- www	(Redirects to http, Akamai)
+
+	¹ Shows secure
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- secure ²
+
+	¹ Mismatched, CN: secure.blogtalkradio.com
+	² Insecure renegotiation
 
 -->
-<ruleset name="BlogTalkRadio">
+<ruleset name="BlogTalkRadio (partial)">
 
 	<target host="blogtalkradio.com" />
 	<target host="*.blogtalkradio.com" />
-		<exclusion pattern="^https?://(?:www\.)?blogtalkradio\.com/(?![cC]ontent/|img/)" />
+		<exclusion pattern="^http://(?:www\.)?blogtalkradio\.com/+(?![cC]ontent/|favicon\.ico|img/|login\.aspx)" />
 
 
 	<securecookie host="^secure\.blogtalkradio\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:secure\.|www\.)?blogtalkradio\.com/"
+	<rule from="^http://(?:www\.)?blogtalkradio\.com/(?=favicon\.ico|img/)"
+		to="https://a248.e.akamai.net/f/248/1/1/www.blogtalkradio.com/" />
+
+	<rule from="^http://(?:secure\.|www\.)?blogtalkradio\.com/"
 		to="https://secure.blogtalkradio.com/" />
 
 </ruleset>

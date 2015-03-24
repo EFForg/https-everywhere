@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://tmz.vo.llnwd.net/ => https://tmz.hs.llnwd.net/: None
 	CDN buckets:
 
 		- assets.tmz.com.s3.amazonaws.com
@@ -15,12 +17,40 @@
 				- ll-assets.tmz.com
 				- ll-media.tmz.com
 
+
+	Problematic subdomains:
+
+		- ll-media *
+
+	* 400; mismatched, CN: *.hs.llnwd.net
+
+
+	Mixed content:
+
+		- Images on www from cdn-media.fishwrapper.com *
+
+		- Ads/bugs, on www from:
+
+			- js.adsonar.com *
+			- cdnapi.kaltura.com *
+			- tmz.vo.llnwd.net *
+			- b.scorecardresearch.com *
+			- cdn.taboolasyndication.com *
+			- c4.zedo.com
+
+	* Secured by us
+
 -->
-<ruleset name="TMZ.com">
+<ruleset name="TMZ.com" default_off='failed ruleset test'>
 
 	<target host="tmz.com" />
 	<target host="*.tmz.com" />
+	<target host="tmz.vo.llnwd.net" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.tmz\.com$" name="^phpsessionid$" /-->
 
 	<securecookie host="^\.www\.tmz\.com$" name=".+" />
 
@@ -28,7 +58,10 @@
 	<rule from="^http://(?:ll-)?(assets|media)\.tmz\.com/"
 		to="https://s3.amazonaws.com/$1.tmz.com/" />
 
-	<rule from="^http://(www\.)?tmz\.com/"
+	<rule from="^http://(ssl-cdn-(?:assets|media)\.|www\.)?tmz\.com/"
 		to="https://$1tmz.com/" />
+
+	<rule from="^http://tmz\.vo\.llnwd\.net/"
+		to="https://tmz.hs.llnwd.net/" />
 
 </ruleset>

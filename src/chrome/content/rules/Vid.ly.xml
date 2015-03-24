@@ -1,9 +1,42 @@
-<ruleset name="Vid.ly (partial)" default_off="mismatch">
+<!--
+	CDN buckets:
 
-	<target host="cf.cdn.vid.ly" />
+		- d132d9vcg4o0oh.cloudfront.net
 
+			- s
+
+		- d3fenhwk93s16g.cloudfront.net
+
+			- cf.cdn
+
+
+	Nonfunctional subdomains:
+
+		- api *
+
+	* Refused
+
+-->
+<ruleset name="Vid.ly (partial)">
+
+	<target host="vid.ly" />
+	<target host="*.vid.ly" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.vid\.ly$" name="^vidly_session$" /-->
+
+	<securecookie host="\.vid\.ly$" name=".+" />
+
+
+	<rule from="^http://(?:(m\.)|www\.)?vid\.ly/"
+		to="https://$1vid.ly/" />
 
 	<rule from="^http://cf\.cdn\.vid\.ly/"
-		to="https://cf.cdn.vid.ly/" />
+		to="https://d3fenhwk93s16g.cloudfront.net/" />
+
+	<rule from="^http://s\.vid\.ly/"
+		to="https://d132d9vcg4o0oh.cloudfront.net/" />
 
 </ruleset>

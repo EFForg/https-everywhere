@@ -1,32 +1,41 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://images.sockshare.com/ => https://images.sockshare.com/: (28, 'Connection timed out after 10000 milliseconds')
+Fetch error: http://static.sockshare.com/ => https://static1.sockshare.com/: (6, 'Could not resolve host: static1.sockshare.com')
+Fetch error: http://static1.sockshare.com/ => https://static1.sockshare.com/: (6, 'Could not resolve host: static1.sockshare.com')
 	For problematic rules, see SockShare.com-problematic.xml.
 
 
 	CDN buckets:
 
 		- cdn.avanti247.com/...
-			- static.sockshare.com		(CN: *.avanti247.com; works)
+
+			- cdn
+			- static
 
 
 	Problematic subdomains:
 
-		- media-b6[567]	(works; mismatched, CN: *.firedrive.com)
+		- cdn ¹
+		- media-b6[567] ²
+		- static ¹
+
+	¹ Works; expired 2013-12-16, mismatched, CN: *.avanti247.com
+	² Works; mismatched, CN: *.firedrive.com
 
 -->
-<ruleset name="SockShare (partial)">
+<ruleset name="SockShare (partial)" default_off='failed ruleset test'>
 
 	<target host="sockshare.com" />
 	<target host="images.sockshare.com" />
 	<target host="static.sockshare.com" />
 	<target host="static1.sockshare.com" />
 	<target host="www.sockshare.com" />
+		<exclusion pattern="^http://(?:www\.)?sockshare\.com/(?!crossdomain\.xml|gopro\.php|include/captcha\.php)" />
 
 
-	<rule from="^http://(www\.)?sockshare\.com/(crossdomain\.xml|gopro\.php|include/captcha\.php)"
-		to="https://$1sockshare.com/$2" />
-
-	<rule from="^http://(images|static1)\.sockshare\.com/"
-		to="https://$1.sockshare.com/" />
+	<rule from="^http://((?:images|static1|www)\.)?sockshare\.com/"
+		to="https://$1sockshare.com/" />
 
 	<rule from="^http://static\.sockshare\.com/"
 		to="https://static1.sockshare.com/" />

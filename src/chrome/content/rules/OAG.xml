@@ -1,21 +1,47 @@
 <!--
+	For rules causing false/broken MCB, see OAG.com-falsemixed.xml.
+
 	For other UBM coverage, see UBM-mismatches.xml.
 
+
+	These altnames don't exist:
+
+		- www.tppro.oag.com
+
+
+	Mixed content:
+
+		- Script on (www.) from ajax.googleapis.com ¹
+
+		- css on (www.) from $self ¹
+
+		- Images on (www.) and tppro from $self ¹
+
+		- Bug on (www.) from angorch-cdr7.com ²
+
+	¹ Secured by us
+	² Unsecurable <= reset
+
 -->
-<ruleset name="OAG">
+<ruleset name="OAG (partial)">
 
 	<target host="oag.com"/>
 	<target host="*.oag.com"/>
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?oag\.com/+(?!favicon\.ico|misc/|modules/|sites/)" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?oag\.com$" name="^countrysaved$" /-->
+	<!--securecookie host="^\.oag\.com$" name="^PHPSESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^tppro\.oag\.com$" name="^(ASPSESSIONID\w{8}|JSESSIONID)$" /-->
 
 	<securecookie host="^tppro\.oag\.com$" name=".*"/>
 
 
-	<!--	!www doesn't work.	-->
-	<rule from="^http://(?:www\.)?oag\.com/"
-		to="https://www.oag.com/"/>
-
-	<rule from="^http://tppro\.oag\.com/"
-		to="https://tppro.oag.com/"/>
+	<rule from="^http://(tppro\.|www\.)?oag\.com/"
+		to="https://$1oag.com/"/>
 
 </ruleset>

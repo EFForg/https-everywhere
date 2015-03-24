@@ -1,0 +1,40 @@
+<!--
+	For rules causing false/broken MCB, see Open_Hub.net-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css on blog from blog *
+
+		- Images, on:
+
+			- blog from $self *
+			- blog from \d.gravatar.com *
+
+		- Bugs on (www.) and blog from i.creativecommons.org *
+
+	* Secured by us
+
+-->
+<ruleset name="Open Hub.net (partial)">
+
+	<target host="openhub.net" />
+	<target host="*.openhub.net" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.openhub\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?openhub\.net$" name="^(_ohloh_session|uid)$" /-->
+	<!--securecookie host="^code\.openhub\.net$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:code\.|www\.)?openhub\.net$" name=".+" />
+
+
+	<rule from="^http://((?:blog|code|www)\.)?openhub\.net/"
+		to="https://$1openhub.net/" />
+
+</ruleset>

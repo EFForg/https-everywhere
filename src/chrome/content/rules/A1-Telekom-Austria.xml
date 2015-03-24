@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://a1community.net/ => https://a1community.net/: (60, 'SSL certificate problem: certificate has expired')
 	a1net.i.lithium.com
 
 
@@ -6,8 +8,20 @@
 
 		- (www.)a1blog.net	(cert: www.bfi-stmk.at; shows that domain's data)
 
+
+	Problematic domains:
+
+		- (www.)?telekom.at *
+
+	* Handshake fails
+
+
+	Fully covered domains:
+
+		- (www.)?telekom.at	(→ www.a1.net)
+
 -->
-<ruleset name="A1 Telekom Austria">
+<ruleset name="A1 Telekom Austria" default_off='failed ruleset test'>
 
 	<target host="a1.net" />
 	<target host="*.a1.net" />
@@ -18,13 +32,13 @@
 	<target host="www.telekom.at" />
 
 
-	<securecookie host="^.*\.a1(community)?\.net$" name=".*" />
+	<securecookie host="^.*\.a1(?:community)?\.net$" name=".*" />
 
 
 	<!--	- !www times out over https
 		- !www 302s to http over http
 				-->
-	<rule from="^https?://(?:www\.)?a1\.net/"
+	<rule from="^http://(?:www\.)?a1\.net/"
 		to="https://www.a1.net/" />
 
 	<rule from="^http://(asmp|cdn[123]|mss|shop)\.a1\.net/"
@@ -33,8 +47,9 @@
 	<rule from="^http://(www\.)?a1community\.net/"
 		to="https://$1a1community.net/" />
 
-	<!--	!www doesn't work over https.	-->
-	<rule from="^https?://(?:www\.)?telekom\.at/"
-		to="https://www.telekom.at/" />
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?telekom\.at/.*"
+		to="https://www.a1.net/" />
 
 </ruleset>

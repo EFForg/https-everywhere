@@ -1,0 +1,110 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://tiki.org/ => https://tiki.org/: Redirect for 'http://tiki.org/' missing Location
+	CDN buckets:
+
+		- dsitvpbwt9mw4.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- demo ¹
+		- irc ²
+		- i18n ²
+		- security ³
+
+	¹ Redirects to http; mismatched, CN: *.kasserver.com
+	² Redirects to http, valid cert
+	³ http reply
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- branding
+		- dev
+		- edu
+		- doc
+		- info
+		- piwik
+		- profiles
+		- suite
+		- themes
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- branding ¹
+		- dev ¹
+		- doc ¹
+		- edu ¹
+		- info ¹
+		- i18n ²
+		- piwik ³
+		- profiles ¹
+		- security ²
+		- suite ¹
+		- themes ¹
+
+	¹ Secured by us <= not secured by server
+	² Not secured by us <= we don't touch http cookies
+	³ Secured by server
+
+
+	Mixed content:
+
+		- Image, on:
+
+			- doc and themes from:
+
+				- ^ *
+				- themes *
+
+			- edu from:
+
+				- $self *
+				- creativecommons.org *
+
+			- info from:
+
+				- $self *
+				- ^ *
+				- themes *
+
+			- profiles from themes *
+			- suite from dev *
+
+		- Web bugs on profiles from piwik *
+
+	* Secured by us
+
+-->
+<ruleset name="Tiki.org (partial)" default_off='failed ruleset test'>
+
+	<target host="tiki.org" />
+	<target host="*.tiki.org" />
+		<!--exclusion pattern="^http://(demo|irc|i18n|security)\.tiki\.org/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^pwiki\.tiki\.org$" name="^PIWIK_SESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(doc\.|themes\.)?tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|mobile_mode|rtl)$" /-->
+	<!--securecookie host="^branding\.tiki\.org$" name="^(mobile_mode|runs_before_js_detect)$" /-->
+	<!--securecookie host="^dev\.tiki\.org$" name="^(mobile_mode|rtl)$" /-->
+	<!--securecookie host="^suite\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|rtl)$" /-->
+	<!--securecookie host="^info\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|runs_before_js_detect|tab|tab_last_query)$" /-->
+	<!--securecookie host="^suite\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV)$" /-->
+	<!--securecookie host="^profiles\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|runs_before_js_detect)$" /-->
+
+	<securecookie host="^(?:\w+\.)?tiki\.org$" name=".+" />
+
+
+	<rule from="^http://((?:branding|dev|doc|edu|info|piwik|profiles|suite|themes|www)\.)?tiki\.org/"
+		to="https://$1tiki.org/" />
+
+</ruleset>

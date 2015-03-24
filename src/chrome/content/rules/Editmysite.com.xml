@@ -1,0 +1,51 @@
+<!--
+	For other Weebly coverage, see Weebly.xml.
+
+
+	CDN buckets:
+
+		- cdn1.editmysite.com.cdngc.net
+		- cdn2.editmysite.com.cdngc.net
+
+
+	Nonfunctional subdomains:
+
+		- preview *
+		- static *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Shows weebly.com
+	² Mixed css from cdn[12]
+
+
+	Mixed content:
+
+		- css on www from cdn[12] *
+
+	* Secured by us
+
+-->
+<ruleset name="editmysite.com (partial)">
+
+	<target host="editmysite.com" />
+	<target host="*.editmysite.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?editmysite\.com/+(?!(?:developer/none|favicon)\.ico)" />
+
+
+	<rule from="^http://(?:www\.)?editmysite\.com/"
+		to="https://www.editmysite.com/" />
+
+	<rule from="^http://cdn(1|2)\.editmysite\.com/"
+		to="https://cdn$1.editmysite.com/" />
+
+</ruleset>

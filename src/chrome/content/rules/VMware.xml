@@ -1,20 +1,89 @@
 <!--
-	s3.amazonaws.com/vmware-partnerpedia-production/product/NNNN/
+Disabled by https-everywhere-checker because:
+Fetch error: http://vmware.com/ => https://vmware.com/: (7, 'Failed to connect to vmware.com port 443: Connection refused')
+	info is handled in Eloqua-clients.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/vmware-partnerpedia-production/product/NNNN/
+		- kb.vmware.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- vmware.com subdomains:
+
+			- ir ¹
+			- kb ²
+			- nlblogs ³
+			- partnerlocator ⁴
+
+		- www.vmwareblogs.com ⁵
+
+	¹ Shareholder
+	² 503, akamai
+	³ Refused
+	⁴ Salesforce
+	⁵ Google
+
+
+	Problematic subdomains:
+
+		- info ¹
+		- store ²
+
+	¹ Eloqua
+	² Digital River
+
+
+	Mixed content:
+
+		- css on blogs from www.vmwareblogs.com *
+
+	* Unsecurable, seems minor
 
 -->
-<ruleset name="VMware (partial)" platform="mixedcontent">
+<ruleset name="VMware.com (partial)" default_off='failed ruleset test'>
 
 	<target host="vmware.com" />
 	<target host="*.vmware.com" />
-		<!--	communities: Akamai; "An error occurred"
-			info is handled in Eloqua-clients.xml.
-			kb times out.	-->
-		<exclusion pattern="^http://(communities|forum|info|kb)\." />
+		<exclusion pattern="^http://(?:forum|info|ir|kb|nlblogs|partnerlocator)\." />
 
+			<test url="http://forum.vmware.com/" />
+			<test url="http://info.vmware.com/" />
+			<test url="http://ir.vmware.com/" />
+			<test url="http://kb.vmware.com/" />
+			<test url="http://nlblogs.vmware.com/" />
+			<test url="http://partnerlocator.vmware.com/" />
+
+		<exclusion pattern="^http://store\.vmware\.com/(?!DRHM/Storefront/Site/|favicon\.ico)" />
+
+			<!--	-ve:
+					-->
+			<test url="http://store.vmware.com/favicon.ico" />
+
+		<test url="http://campaign.wmware.com/" />
+		<test url="http://communities.wmware.com/" />
+		<test url="http://download3.wmware.com/" />
+		<test url="http://downloads.wmware.com/" />
+		<test url="http://my.wmware.com/" />
+		<test url="http://solutionexchange.wmware.com/" />
+		<test url="http://store.wmware.com/" />
+		<test url="http://www.wmware.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.vmware\.com$" name="^(JSESSIONID|dtCookie)$" /-->
+	<!--securecookie host="^developercenter\.vmware\.com$" name="^vdc-cookie$" /-->
+	<!--securecookie host="^blogs\.vmware\.com$" name="^blogs-prod$" /-->
+	<!--securecookie host="^my\.vmware\.com$" name="^(COOKIE_SUPPORT|GUEST_LANGUAGE_ID|ObFormLoginCookie|myvmware-www)$" /-->
+	<!--securecookie host="^www\.vmware\.com$" name="^myvmware-wwwa-prod$" /-->
 
 	<!--	Observed cookie domains:
 
-			- /
+			- ^
 			- ^.
 			- ^campaign
 			- ^downloads
@@ -22,16 +91,18 @@
 			- ^solutionexchange
 			- ^www
 					-->
-	<securecookie host="^(.*\.)?vmware\.com$" name=".*" />
+	<securecookie host="^(?!store\.)(?:.*\.)?vmware\.com$" name=".+" />
 
 
 	<!--	Observed subdomains:
 
 			- campaign
+			- communities
 			- download3
 			- downloads
 			- my
 			- solutionexchange
+			- store
 			- www
 				-->
 	<rule from="^http://(\w+\.)?vmware\.com/"

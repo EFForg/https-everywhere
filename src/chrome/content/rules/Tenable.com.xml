@@ -1,27 +1,36 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://tenable.com/ => https://tenable.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	Tenable Network Security
-
-
-	Nonfunctional subdomains:
-
-		- (www.)	(dropped)
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- elearn
 		- store
 		- support
 
--->
-<ruleset name="Tenable.com (partial)">
 
+	Insecure cookies are set for these domains:
+
+		- elearn.tenable.com
+
+-->
+<ruleset name="Tenable.com" default_off='failed ruleset test'>
+
+	<target host="tenable.com" />
 	<target host="*.tenable.com" />
 
 
-	<securecookie host="^(?:store|\.support)\.tenable\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^elearn\.tenable\.com$" name="^MoodleSession$" /-->
+
+	<securecookie host="^(?:elearn|store|\.support)\.tenable\.com$" name=".+" />
 
 
-	<rule from="^http://s(tore|upport)\.tenable\.com/"
-		to="https://s$1.tenable.com/" />
+	<rule from="^http://((?:elearn|store|support|www)\.)?tenable\.com/"
+		to="https://$1tenable.com/" />
 
 </ruleset>

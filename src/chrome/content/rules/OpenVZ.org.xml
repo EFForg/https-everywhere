@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see OpenVZ.org-falsemixed.xml.
+
+
 		- openvz.livejournal.com
 
 			- blog
@@ -13,23 +16,58 @@
 	* Refused
 
 
+	Partially covered subdomains:
+
+		- forum ¹
+		- static *
+
+	¹ Avoiding broken MCB
+	* Some paths show www
+
+
 	Fully covered subdomains:
 
 		- (www.)
 		- bugzilla
-		- forum
+		- wiki
+
+
+	Mixed content:
+
+		- css on forum from $self *
+
+		- Image on wiki from static *
+
+	* Unsecurable <= shows www
 
 -->
 <ruleset name="OpenVZ.org (partial)">
 
 	<target host="openvz.org" />
 	<target host="*.openvz.org" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://forum\.openvz\.org/+(?!favicon\.ico|js/|theme/)" />
+		<!--
+			Shows www:
+					-->
+		<exclusion pattern="^http://static\.openvz\.org/+(?:$|\?|supported_by_parallels_88x31\.gif)" />
 
 
-	<securecookie host="^(?:bugzilla|\.forum|www\.)?openvz\.org$" name=".+" />
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^wiki\.openvz\.org$" name="^openvzwikidb_session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^bugzilla\.openvz\.org$" name="^DEFAULTFORMAT$" /-->
+	<!--securecookie host="^\.forum\.openvz\.org$" name="^fud_session_\d{10}$" /-->
+
+	<securecookie host="^(?:bugzilla\.|www\.)?openvz\.org$" name=".+" />
 
 
-	<rule from="^http://((?:bugzilla|forum|www)\.)?openvz\.org/"
+	<rule from="^http://((?:bugzilla|forum|static|wiki|www)\.)?openvz\.org/"
 		to="https://$1openvz.org/" />
 
 </ruleset>

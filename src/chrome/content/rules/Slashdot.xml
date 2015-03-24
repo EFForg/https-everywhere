@@ -11,13 +11,29 @@
 	Partially covered subdomains:
 
 		- (www.)	(many pages redirect to http)
+		- m ²
+
+	² Avoiding broken MCB
 
 
 	Fully covered subdomains:
 
+		- deals
 		- images
 		- tv
 		- y
+
+
+	Mixed content:
+
+		- css, on:
+
+			- m from a.fsdn.com *
+			- m from fonts.googleapis.com *
+
+		- Images from $self *
+
+	* Secured by us
 
 -->
 <ruleset name="Slashdot (partial)">
@@ -25,25 +41,64 @@
 	<target host="slashdot.org" />
 	<target host="*.slashdot.org" />
 
+			<!--	Redirects to http:
+							-->
+			<!--exclusion pattern="^http://slashdot\.org/($|archive\.pl|index2\.pl|job_board\.pl|pollBooth\.pl|shtml\.pl|videos\.pl)" /-->
+			<!--
+				Exceptions:
+						-->
+			<exclusion pattern="^http://slashdot\.org/(?!ajax\.pl|images/|login\.pl|my/|submission|submit|topic/|webcasts)" />
+			<!--
+				(m included to prevent broken MCB):
+									-->
+			<exclusion pattern="^http://(?!(?:deals|images|m|tv|y)\.).+\.slashdot\.org/(?!ajax\.pl)" />
+
+				<!--	+ve:
+						-->
+				<test url="http://slashdot.org/archive.pl" />
+				<test url="http://slashdot.org/editorial.shtml" />
+				<test url="http://slashdot.org/hof.shtml" />
+				<test url="http://slashdot.org/index2.pl" />
+				<test url="http://slashdot.org/job_board.pl" />
+				<test url="http://slashdot.org/pollBooth.pl" />
+				<test url="http://slashdot.org/shtml.pl" />
+				<test url="http://slashdot.org/videos.pl" />
+
+				<test url="http://build.slashdot.org/" />
+				<test url="http://devices.slashdot.org/" />
+				<test url="http://entertainment.slashdot.org/" />
+				<test url="http://science.slashdot.org/" />
+				<test url="http://technology.slashdot.org/" />
+				<test url="http://yro.slashdot.org/" />
+
+				<!--	-ve:
+						-->
+				<test url="http://slashdot.org/images/njs.gif" />
+				<test url="http://slashdot.org/my/login" />
+				<test url="http://slashdot.org/my/newuser" />
+				<test url="http://slashdot.org/submission" />
+				<test url="http://slashdot.org/submit" />
+				<test url="http://images.slashdot.org/images/njs.gif" />
+				<test url="http://news.slashdot.org/ajax.pl" />
+				<test url="http://news.slashdot.org/login.pl" />
+
+		<test url="http://deals.slashdot.org/" />
+		<test url="http://images.slashdot.org/" />
+		<test url="http://m.slashdot.org/" />
+		<test url="http://tv.slashdot.org/" />
+		<test url="http://www.slashdot.org/" />
+		<test url="http://y.slashdot.org/" />
+
 
 	<securecookie host="^slashdot\.org$" name="^w3tc_referrer$" />
 
-
-	<rule from="^http://(?:\w+\.)?slashdot\.org/favicon\.ico$"
-		to="https://tv.slashdot.org/wp-content/themes/TVslashdot/images/favicon.ico" />
-
-	<rule from="^http://(www\.)?slashdot\.org/(login\.pl|my/|submission|topic/|webcasts)"
-		to="https://$1slashdot.org/$2" />
 
 	<!--	Redirects to http as-is:
 						-->
 	<rule from="^http://slashdot\.org/images/"
 		to="https://images.slashdot.org/images/" />
 
-	<rule from="^http://(\w+)\.slashdot\.org/ajax\.pl"
-		to="https://$1.slashdot.org/ajax.pl" />
-
-	<rule from="^http://(images|tv|y)\.slashdot\.org/"
-		to="https://$1.slashdot.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,3 +1,25 @@
+/**
+ * Fetch and parse XML to be loaded as RuleSets.
+ */
+function getRuleXml(url) {
+  var xhr = new XMLHttpRequest();
+  // Use blocking XHR to ensure everything is loaded by the time
+  // we return.
+  xhr.open("GET", chrome.extension.getURL(url), false);
+  xhr.send(null);
+  // Get file contents
+  if (xhr.readyState != 4) {
+    return;
+  }
+  return xhr.responseXML;
+}
+
+var all_rules = new RuleSets(navigator.userAgent, LRUCache,  localStorage);
+for (var i = 0; i < rule_list.length; i++) {
+  all_rules.addFromXml(getRuleXml(rule_list[i]));
+}
+
+var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
 // devtools-panel.js).
 var switchPlannerEnabledFor = {};
@@ -7,9 +29,25 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
-var all_rules = new RuleSets();
+var getStoredUserRules = function() {
+  var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
+  var oldUserRules = [];
+  if (oldUserRuleString) {
+    oldUserRules = JSON.parse(oldUserRuleString);
+  }
+  return oldUserRules;
+};
 var wr = chrome.webRequest;
+var loadStoredUserRules = function() {
+  var rules = getStoredUserRules();
+  var i;
+  for (i = 0; i < rules.length; ++i) {
+    all_rules.addUserRule(rules[i]);
+  }
+  log('INFO', 'loaded ' + i + ' stored user rules');
+};
 
+loadStoredUserRules();
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -22,20 +60,23 @@ for (r in rs) {
 }
 */
 
-// Add the HTTPS Everywhere icon to the URL address bar.
-// TODO: Switch from pageAction to browserAction?
-function displayPageAction(tabId) {
-  if (tabId !== -1) {
-    chrome.tabs.get(tabId, function(tab) {
-      if(typeof(tab) === "undefined") {
-        log(DBUG, "Not a real tab. Skipping showing pageAction.");
-      }
-      else {
-        chrome.pageAction.show(tabId);
-      }
-    });
+
+var addNewRule = function(params, cb) {
+  if (all_rules.addUserRule(params)) {
+    // If we successfully added the user rule, save it in local 
+    // storage so it's automatically applied when the extension is 
+    // reloaded.
+    var oldUserRules = getStoredUserRules();
+    // TODO: there's a race condition here, if this code is ever executed from multiple 
+    // client windows in different event loops.
+    oldUserRules.push(params);
+    // TODO: can we exceed the max size for storage?
+    localStorage.setItem(USER_RULE_KEY, JSON.stringify(oldUserRules));
+    cb(true);
+  } else {
+    cb(false);
   }
-}
+};
 
 function AppliedRulesets() {
   this.active_tab_rules = {};
@@ -115,21 +156,13 @@ function onBeforeRequest(details) {
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return; }
 
-  if (details.requestId in redirectCounter) {
-    redirectCounter[details.requestId] += 1;
-    log(DBUG, "Got redirect id "+details.requestId+
-        ": "+redirectCounter[details.requestId]);
-
-    if (redirectCounter[details.requestId] > 9) {
-        log(NOTE, "Redirect counter hit for "+canonical_url);
-        urlBlacklist[canonical_url] = true;
-        var hostname = uri.hostname();
-        domainBlacklist[hostname] = true;
-        log(WARN, "Domain blacklisted " + hostname);
-        return;
-    }
-  } else {
-    redirectCounter[details.requestId] = 0;
+  if (redirectCounter[details.requestId] >= 8) {
+    log(NOTE, "Redirect counter hit for " + canonical_url);
+    urlBlacklist[canonical_url] = true;
+    var hostname = uri.hostname();
+    domainBlacklist[hostname] = true;
+    log(WARN, "Domain blacklisted " + hostname);
+    return null;
   }
 
   var newuristr = null;
@@ -321,103 +354,76 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
-      var cookie = {name:changeInfo.cookie.name,value:changeInfo.cookie.value,
-                    domain:changeInfo.cookie.domain,path:changeInfo.cookie.path,
+      var cookie = {name:changeInfo.cookie.name,
+                    value:changeInfo.cookie.value,
+                    path:changeInfo.cookie.path,
                     httpOnly:changeInfo.cookie.httpOnly,
                     expirationDate:changeInfo.cookie.expirationDate,
-                    storeId:changeInfo.cookie.storeId};
-      cookie.secure = true;
-      // FIXME: What is with this url noise? are we just supposed to lie?
-      if (cookie.domain[0] == ".") {
-        cookie.url = "https://www"+cookie.domain+cookie.path;
+                    storeId:changeInfo.cookie.storeId,
+                    secure: true};
+
+      // Host-only cookies don't set the domain field.
+      if (!changeInfo.cookie.hostOnly) {
+          cookie.domain = changeInfo.cookie.domain;
+      }
+
+      // The cookie API is magical -- we must recreate the URL from the domain and path.
+      if (changeInfo.cookie.domain[0] == ".") {
+          cookie.url = "https://www" + changeInfo.cookie.domain + cookie.path;
       } else {
-        cookie.url = "https://"+cookie.domain+cookie.path;
+          cookie.url = "https://" + changeInfo.cookie.domain + cookie.path;
       }
       // We get repeated events for some cookies because sites change their
       // value repeatedly and remove the "secure" flag.
       log(DBUG,
-       "Securing cookie "+cookie.name+" for "+cookie.domain+", was secure="+changeInfo.cookie.secure);
+       "Securing cookie " + cookie.name + " for " + changeInfo.cookie.domain + ", was secure=" + changeInfo.cookie.secure);
       chrome.cookies.set(cookie);
     }
   }
 }
 
-// This event is needed due to the potential race between cookie permissions
-// update and cookie transmission (because the cookie API is non-blocking).
-// Without this function, an aggressive attacker could race to steal a not-yet-secured
-// cookie if they controlled & could redirect the user to a non-SSL subdomain.
-// WARNING: This is a very hot function.
-function onBeforeSendHeaders(details) {
-  // TODO: Verify this with wireshark
-  for (var h in details.requestHeaders) {
-    if (details.requestHeaders[h].name == "Cookie") {
-      // Per RFC 6265, Chrome sends only ONE cookie header, period.
-      var uri = new URI(details.url);
-      var host = uri.hostname();
-
-      var newCookies = [];
-      var cookies = details.requestHeaders[h].value.split(";");
-
-      for (var c in cookies) {
-        // Create a fake "nsICookie2"-ish object to pass in to our rule API:
-        var fake = {domain:host, name:cookies[c].split("=")[0]};
-        // XXX I have no idea whether the knownHttp parameter should be true
-        // or false here.  We're supposedly inside a race condition or
-        // something, right?
-        var ruleset = all_rules.shouldSecureCookie(fake, false);
-        if (ruleset) {
-          activeRulesets.addRulesetToTab(details.tabId, ruleset);
-          log(INFO, "Woah, we lost the race on updating a cookie: "+details.requestHeaders[h].value);
+function onBeforeRedirect(details) {
+    // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
+    var prefix = details.redirectUrl.substring(0, 5);
+    if (prefix === "http:" || prefix === "https") {
+        if (details.requestId in redirectCounter) {
+            redirectCounter[details.requestId] += 1;
+            log(DBUG, "Got redirect id "+details.requestId+
+                ": "+redirectCounter[details.requestId]);
         } else {
-          newCookies.push(cookies[c]);
+            redirectCounter[details.requestId] = 1;
         }
-      }
-      details.requestHeaders[h].value = newCookies.join(";");
-      log(DBUG, "Got new cookie header: "+details.requestHeaders[h].value);
-
-      // We've seen the one cookie header, so let's get out of here!
-      break;
     }
-  }
-
-  return {requestHeaders:details.requestHeaders};
-}
-
-function onResponseStarted(details) {
-
-  // redirect counter workaround
-  // TODO: Remove this code if they ever give us a real counter
-  if (details.requestId in redirectCounter) {
-    delete redirectCounter[details.requestId];
-  }
 }
 
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
-// This watches cookies sent via HTTP.
-// We do *not* watch HTTPS cookies -- they're already being sent over HTTPS -- yay!
-wr.onBeforeSendHeaders.addListener(onBeforeSendHeaders, {urls: ["http://*/*"]},
-                                   ["requestHeaders", "blocking"]);
-
-wr.onResponseStarted.addListener(onResponseStarted,
-                                 {urls: ["https://*/*", "http://*/*"]});
+// Try to catch redirect loops on URLs we've redirected to HTTPS.
+wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 
 // Add the small HTTPS Everywhere icon in the address bar.
 // Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
 // pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    displayPageAction(tabId);
+    if (changeInfo.status === "loading") {
+        chrome.pageAction.show(tabId);
+    }
 });
 
 // Pre-rendered tabs / instant experiments sometimes skip onUpdated.
 // See http://crbug.com/109557
 chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    displayPageAction(addedTabId);
+    chrome.tabs.get(addedTabId, function(tab) {
+        if(typeof(tab) === "undefined") {
+            log(DBUG, "Not a real tab. Skipping showing pageAction.");
+        } else {
+            chrome.pageAction.show(addedTabId);
+        }
+    });
 });
 
-// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking,
-// so we also use onBeforeSendHeaders to prevent a small window where cookies could be stolen.
+// Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
 function disableSwitchPlannerFor(tabId) {

@@ -1,7 +1,42 @@
-<ruleset name="Courage Campaign" platform="mixedcontent">
-	<target host="couragecampaign.org" />
-	<target host="www.couragecampaign.org" />
-	<target host="secure.couragecampaign.org" />
+<!--
+	couragecampaign.clients.actionkit.com
 
-	<rule from="^http://(?:www\.|secure\.)?couragecampaign\.org/" to="https://secure.couragecampaign.org/" />
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- act ²
+		- www ³
+
+	¹ Cert only matches *.couragecampaign.org
+	² Works; mismatched, CN: *.actionkit.com
+	³ Self-signed
+
+
+	Mixed content:
+
+		- Image on main and www from s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Courage Campaign" default_off="self-signed">
+
+	<target host="couragecampaign.org" />
+	<target host="*.couragecampaign.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(main|www)\.couragecampaign\.org" name="^(exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+
+	<securecookie host="^(?:main|www)\.couragecampaign\.org" name=".+" />
+
+
+	<rule from="^http://(?:main\.|www\.)?couragecampaign\.org/"
+		to="https://www.couragecampaign.org/" />
+
+	<rule from="^http://act\.couragecampaign\.org/"
+		to="https://couragecampaign.actionkit.com/" />
+
 </ruleset>

@@ -1,0 +1,47 @@
+<!--
+	Norsk rikskringkasting AS
+
+	Other Norsk rikskringkasting rulesets:
+
+		- NRKbeta.no.xml
+
+
+	Nonfunctional subdomains:
+
+		- fil ¹
+		- radio ¹
+		- psfil.radio ²
+		- tv ¹
+		- psfil.tv ²
+
+	¹ Refused
+	² 504, Akamai
+
+
+	Fully covered subdomains:
+
+		- gfx
+
+-->
+<ruleset name="NRK.no (partial)">
+
+	<target host="nrk.no" />
+	<target host="*.nrk.no" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nrk\.no/$" /-->
+		<!--
+			Reset:
+				-->
+		<!--exclusion pattern="^http://(www\.)?nrk\.no/(drfront/|embed/nyheter/|favicon\.ico|nrkno/forsideplug/|retningslinjer/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?nrk\.no/+(?!03030(?:$|[?/])|serum/)" />
+
+
+	<rule from="^http://(gfx\.|www\.)?nrk\.no/"
+		to="https://$1nrk.no/" />
+
+</ruleset>

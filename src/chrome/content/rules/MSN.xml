@@ -64,6 +64,7 @@
 			- causes **
 			- cityofspeed **
 			- colstc		(503, akamai)
+			- entertainment		(interrupted)
 			- estc			(404, akamai)
 			- fitbie		(503, akamai)
 			- healthyliving *
@@ -72,9 +73,12 @@
 			- sankei.jp *
 			- r.sankei.jp *
 			- utm.sankei.jp *
-			- living *
-			- money
-			- onmobile
+			- latino		(404; mismatched, CN: *.secure.co1.msn.com)
+			- living		(refused)
+			- local			(refused)
+			- money			(refused)
+			- investing.money	(dropped)
+			- onmobile		(refused)
 			- sgst[cj]		(504, akamai)
 			- signout *
 			- specials
@@ -92,8 +96,9 @@
 			- vfcdn **
 			- video			(503, akamai)
 			- hub.video		(503, akamai)
-			- www			(404)
+			- www			(blank page, akamai)
 			- co3.www *
+			- wx			(404, valid cert)
 
 			- xin subdomains:
 
@@ -136,6 +141,7 @@
 			- msnbcmedia ***
 			- msnbcmedia[1-4] ***
 			- m.now				(works; mismatched, CN: home.now.msn.com)
+			- my				(works; expired, mismatched, CN: eb.my.msn.com)
 			- realestate			(CN: now.msn.com; works)
 			- c.sg				(mismatched, CN: c.msn.co.jp)
 			- static.stratosphere		(mismatched, CN: images.partner.windowsphone.com)
@@ -204,6 +210,7 @@
 			- imgs1-video
 			- c.jp		(→ c.msn.co.jp)
 			- msndata.jp
+			- moneycentral
 
 			- msnbc subdomains:
 
@@ -215,6 +222,7 @@
 			- eb.my
 			- now
 			- nowformsblu
+			- preview
 			- \d+.r
 			- rad
 			- a.rad
@@ -241,6 +249,13 @@
 
 	* → akamai
 
+
+	Mixed content:
+
+		- Images on preview from img.s-msn.com *
+
+	* Secured by us
+
 -->
 <ruleset name="MSN (partial)">
 
@@ -251,12 +266,15 @@
 	<target host="*.wonderwall.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^preview\.msn\.com$" name="^Preferences$" /-->
 	<!--	Set by c.atdmt.com:
 						-->
 	<securecookie host="^\.msn\.co(?:\.jp|m)$" name="^MUID$" />
 	<securecookie host="^\.msn\.com$" name="^s_\w+$" />
 	<!--securecookie host="^\.msn\.com$" name="(cbus|Sample)$" /-->
-	<securecookie host="^(?:\.c|now)\.msn\.com$" name=".+" />
+	<securecookie host="^(?:\.c|now|preview)\.msn\.com$" name=".+" />
 
 
 	<rule from="^http://static[12]?\.glo\.com/"
@@ -269,7 +287,7 @@
 		a unique ID, which then redirects back
 		to c.msn, with the unique ID appended.
 				-->
-	<rule from="^http://(ac3|accountservices|adsyndication|appexforms(?:blu|col|kaw|sg)|bedrock(?:blu|bluenext|col|colnext|cn|emea|emeanext|jp|kawnext|sg|sgnext)|bedrockforms(?:blu|bluenext|cn|col|colnext|emea|emeanext|kaw|kawnext|sg|sgnext)|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|msndata\.jp|eb\.my|now|nowformsblu|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|udc|catalog\.video|wonderwall)\.msn\.com/"
+	<rule from="^http://(ac3|accountservices|adsyndication|appexforms(?:blu|col|kaw|sg)|bedrock(?:blu|bluenext|col|colnext|cn|emea|emeanext|jp|kawnext|sg|sgnext)|bedrockforms(?:blu|bluenext|cn|col|colnext|emea|emeanext|kaw|kawnext|sg|sgnext)|blstc|c|\w+\.secure\.co1|contacts|entimg|g|h|(?:www\.)?hotmail|hp|imgs1-video|msndata\.jp|moneycentral|eb\.my|now|nowformsblu|preview|\d+\.r|(?:[ab]\.)?rad|stcjp|setstj|(?:\w+\.)?storage|stratosphere|udc|catalog\.video|wonderwall)\.msn\.com/"
 		to="https://$1.msn.com/" />
 
 	<rule from="^http://\w\w\.c\.msn\.com/"

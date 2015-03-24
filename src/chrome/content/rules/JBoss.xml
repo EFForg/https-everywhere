@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://jboss.com/ => https://jboss.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For other Red Hat coverage, see RedHat.xml.
 
 
@@ -9,6 +11,7 @@
 			- (www.)
 			- community
 			- design
+			- developer
 			- docs
 			- hudson
 			- issues
@@ -19,20 +22,31 @@
 			- static
 			- wiki
 
+
+	Insecure cookies are set for these domains:
+
+		- developer.jboss.org
+		- issues.jboss.org
+
 -->
-<ruleset name="JBoss">
+<ruleset name="JBoss" default_off='failed ruleset test'>
 
 	<target host="jboss.com" />
 	<target host="*.jboss.com" />
 		<!--
 			downloads 404s.
 					-->
-		<exclusion pattern="^http://downloads?\.jboss\.(com|org)/" />
+		<exclusion pattern="^http://downloads?\.jboss\.(?:com|org)/" />
 	<target host="jboss.org" />
 	<target host="*.jboss.org" />
 
 
-	<securecookie host="^(.*\.)?jboss\.(com|org)$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^issues\.jboss\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^developer\.jboss\.org$" name="(JSESSIONID|jive\.security\.context)$" /-->
+
+	<securecookie host="^(?:.*\.)?jboss\.(?:com|org)$" name=".+" />
 
 
 	<rule from="^http://([^/@:]+\.)?jboss\.(com|org)/"

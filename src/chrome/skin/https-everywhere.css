@@ -1,23 +1,30 @@
 #https-everywhere-button {
   -moz-binding: url("chrome://https-everywhere/content/toolbar_button_binding.xml#https-everywhere-binding");
-  -moz-box-orient: horizontal;
 }
 
 #https-everywhere-button > .https-everywhere-button {
   list-style-image: url("chrome://https-everywhere/skin/https-everywhere-24.png");
-  -moz-box-orient: horizontal;
 }
 
 toolbar[iconsize="small"] #https-everywhere-button > .https-everywhere-button {
   list-style-image: url("chrome://https-everywhere/skin/https-everywhere-16.png");
+}
+
+toolbar #https-everywhere-button,
+toolbar #https-everywhere-button > .https-everywhere-button {
   -moz-box-orient: horizontal;
 }
 
 /* Use CSS attribute selector for changing icon */
+#https-everywhere-button[http_nowhere="true"] > .https-everywhere-button {
+  list-style-image: url("chrome://https-everywhere/skin/https-everywhere-24-red.png");
+}
 #https-everywhere-button[status="disabled"] > .https-everywhere-button {
   list-style-image: url("chrome://https-everywhere/skin/https-everywhere-24-gray.png");
 }
-
+toolbar[iconsize="small"] #https-everywhere-button[http_nowhere="true"] > .https-everywhere-button {
+  list-style-image: url("chrome://https-everywhere/skin/https-everywhere-16-red.png");
+}
 toolbar[iconsize="small"] #https-everywhere-button[status="disabled"] > .https-everywhere-button {
   list-style-image: url("chrome://https-everywhere/skin/https-everywhere-16-gray.png");
 }
@@ -27,6 +34,12 @@ toolbar[iconsize="small"] #https-everywhere-button[status="disabled"] > .https-e
   margin: 3px -12px 0 -8px; 
   display: block;
   -moz-box-sizing: border-box;
+}
+
+/* increase negative margins in the palette and panel so the button isn't too wide. */
+#wrapper-https-everywhere-button[place="palette"] > #https-everywhere-button > #rscounter,
+#https-everywhere-button[cui-areatype="menu-panel"] > #rscounter {
+  margin: 3px -16px 0 -8px;
 }
 
 /* rulesets applied label */
@@ -46,12 +59,12 @@ toolbar[iconsize="small"] #https-everywhere-button[status="disabled"] > .https-e
 }
 
 #https-everywhere-button menuitem.active-item label {
-  color: #9AD100;
+  color: #1e6419;
   font-weight: bold;
 }
 #https-everywhere-button menuitem.moot-item label {
-  color: #9AD100;
-  opacity: 0.5;
+  color: #1e6419;
+  opacity: 0.75;
   font-weight: bold;
 }
 #https-everywhere-button menuitem.breaking-item label {

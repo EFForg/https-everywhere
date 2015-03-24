@@ -1,4 +1,10 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://astore.amazon.com/ (200) => https://astore.amazon.com/ (500)
+Fetch error: http://assoc-amazon.ca/ => https://www.assoc-amazon.ca/: (7, 'Failed to connect to assoc-amazon.ca port 80: Connection timed out')
+Fetch error: http://assoc-amazon.fr/ => https://www.assoc-amazon.fr/: (7, 'Failed to connect to assoc-amazon.fr port 80: Connection timed out')
+
 	For other Amazon coverage, see Amazon.xml.
 
 
@@ -23,63 +29,104 @@
 
 	Problematic domains:
 
-		- rcm-de.amazon.de	(expired 2013-08-23)
+		- rcm.amazon.ca ¹
+		- rcm-jp.amazon.co.jp *
+		- rcm-uk.amazon.co.uk *
+		- rcm-de.amazon.de *
+
+	¹ Expired 2013-10-08
+	* Expired 2013-08-23
 
 
 	Fully covered domains:
+
+		- rcm-ca.amazon.ca
 
 		- amazon.co.uk subdomains:
 
 			- completion
 			- payments
 
+		- widgets.amazon.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .amazon.com
+		- widgets.amazon.com
+
+
+	Mixed content:
+
+		- Images on astore.amazon.com from ecx.images-amazon.com
+
 -->
-<ruleset name="Amazon Associates">
+<ruleset name="Amazon Associates" default_off='failed ruleset test'>
+
+	<!--	Direct rewrites:
+					-->
+	<target host="rcm-ca.amazon.ca" />
+	<target host="ws.amazon.ca" />
+
+	<target host="ws.amazon.co.jp" />
 
 	<target host="affiliate-program.amazon.com" />
 	<target host="astore.amazon.com" />
 	<target host="pda-bes.amazon.com" />
 	<target host="rcm.amazon.com" />
-	<target host="rcm-images.amazon.com" />
 	<target host="sellercentral.amazon.com" />
-	<target host="ws.amazon.*" />
-	<target host="ws.amazon.co.*" />
+	<target host="widgets.amazon.com" />
+	<target host="ws.amazon.com" />
+
 	<target host="completion.amazon.co.uk" />
 	<target host="payments.amazon.co.uk" />
 	<target host="rcm-uk.amazon.co.uk" />
 	<target host="sellercentral.amazon.co.uk" />
+	<target host="ws.amazon.co.uk" />
+
 	<target host="partnernet.amazon.de" />
-	<target host="assoc-amazon.*" />
-	<target host="wms.assoc-amazon.*" />
-	<target host="www.assoc-amazon.*" />
-	<target host="assoc-amazon.co.uk" />
-	<target host="*.assoc-amazon.co.uk" />
+	<target host="ws.amazon.de" />
+
+	<target host="ws.amazon.fr" />
+
+	<target host="wms.assoc-amazon.ca" />
+	<target host="www.assoc-amazon.ca" />
+
+	<target host="wms.assoc-amazon.co.uk" />
+
+	<target host="wms.assoc-amazon.de" />
+	<target host="www.assoc-amazon.de" />
+
+	<target host="wms.assoc-amazon.fr" />
+	<target host="www.assoc-amazon.fr" />
+
+	<!--	Special cases:
+				-->
+	<target host="rcm-images.amazon.com" />
+
+	<target host="assoc-amazon.ca" />
+	<target host="assoc-amazon.de" />
+	<target host="assoc-amazon.fr" />
 
 
-	<rule from="^http://ws\.amazon\.(ca|co\.jp|com|co\.uk|de|fr)/"
-		to="https://ws.amazon.$1/" />
-
-	<rule from="^http://(affiliate-program|astore|pda-bes|rcm|sellercentral)\.amazon\.com/"
-		to="https://$1.amazon.com/" />
-
-	<rule from="^https?://rcm-images\.amazon\.com/"
-		to="https://images-na.ssl-images-amazon.com/" />
-
-	<rule from="^http://(completion|payments|rcm-uk|sellercentral)\.amazon\.co\.uk/"
-		to="https://$1.amazon.co.uk/" />
-
-	<rule from="^http://partnernet\.amazon\.de/"
-		to="https://partnernet.amazon.de/" />
-
-	<!--	.co.jp doesn't exist.
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://wms\.assoc-amazon\.(ca|com|co\.uk|de|fr)/"
-		to="https://wms.assoc-amazon.$1/" />
+	<!--securecookie host="^\.amazon\.com$" name="^(ap-fid|session-id|session-id-time|session-token|ubid-main)$" /-->
+	<!--securecookie host="^widgets\.amazon\.com$" name="^AmazonWidgetsCentral$" /-->
+
+	<securecookie host="^widgets\.amazon\.com$" name=".+" />
+
+
+	<rule from="^http://rcm-images\.amazon\.com/"
+		to="https://images-na.ssl-images-amazon.com/" />
 
 	<!--	- Cert only matches www
 		- .co.jp doesn't exist
 					-->
-	<rule from="^https?://(?:www\.)?assoc-amazon\.(ca|com|co\.uk|de|fr)/"
+	<rule from="^http://assoc-amazon\.(ca|de|fr)/"
 		to="https://www.assoc-amazon.$1/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,21 +1,42 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://metasploit.org/ => https://www.metasploit.com/: (7, 'Failed to connect to metasploit.org port 80: Connection refused')
+Fetch error: http://www.metasploit.org/ => https://www.metasploit.com/: (7, 'Failed to connect to www.metasploit.org port 80: Connection refused')
 	For other Rapid7 coverage, see Rapid7.xml.
 
 
-	Nonfunctional subdomains:
+	Problematic domains:
 
-		- www		($ redirects to dev, other paths redirect to http)
+		- metasploit.com *
+		- (www.)metasploit.org *
+
+	* Cert only matches www.metasploit.com
+
+
+	These altnames don't exist:
+
+		- www.help.metasploit.com
 
 -->
-<ruleset name="Metasploit (partial)">
+<ruleset name="Metasploit" default_off='failed ruleset test'>
 
+	<target host="metasploit.com" />
 	<target host="*.metasploit.com" />
+	<target host="metasploit.org" />
+	<target host="www.metasploit.org" />
 
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.metasploit\.com$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^dev\.metasploit\.com$" name=".+" />
 
 
-	<rule from="^http://(dev|mail)\.metasploit\.com/"
+	<rule from="^http://(?:www\.)?metasploit\.(?:com|org)/"
+		to="https://www.metasploit.com/" />
+
+	<rule from="^http://(dev|help|mail)\.metasploit\.com/"
 		to="https://$1.metasploit.com/" />
 
 </ruleset>

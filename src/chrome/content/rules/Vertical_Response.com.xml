@@ -1,0 +1,71 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- developers ²
+		- help ³
+		- marketing ⁴
+		- partner ⁵
+		- www ⁶
+
+	¹ Reset
+	² Mashery
+	³ Dropped
+	⁴ Marketo
+	⁵ Plaintext reply
+	⁶ Redirects to maintenance.vresp.com
+
+
+	Problematic subdomains:
+
+		- helpcenter *
+
+	* Force.com
+
+
+	Partially covered subdomains:
+
+		- helpcenter	(→ vr.force.com)
+		- marketing	(→ na-sjf.marketo.com)
+		- support *	(→ vr.force.com)
+
+	* .+ 404s
+
+
+	Fully covered subdomains:
+
+		- img-ak
+		- vr2
+
+
+	Mixed content:
+
+		- css on helpcenter from fonts.googleapis.com ¹
+		- Images on helpcenter from www ²
+
+	¹ Secured by us
+	² Unsecurable <= redirects to another domain
+
+-->
+<ruleset name="Vertical Response.com (partial)">
+
+	<target host="vr.force.com" />
+	<target host="*.verticalresponse.com" />
+
+
+	<rule from="^http://vr\.force\.com/"
+		to="https://vr.force.com/" />
+
+	<rule from="^http://helpcenter\.verticalresponse\.com/(?=/*$|/*\?)"
+		to="https://vr.force.com/community/Communities/Welcome" />
+
+	<rule from="^http://marketing\.verticalresponse\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-sjf.marketo.com/" />
+
+	<rule from="^http://support\.verticalresponse\.com/$"
+		to="https://vr.force.com/community/" />
+
+	<rule from="^http://(img-ak|vr2)\.verticalresponse\.com/"
+		to="https://$1.verticalresponse.com/" />
+
+</ruleset>

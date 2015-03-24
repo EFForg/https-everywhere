@@ -1,0 +1,68 @@
+<!--
+	Nonfunctional subdomains:
+
+		- esupport *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- 247 ¹
+		- forum ²
+		- www-media ³
+
+	¹ Expired, self-signed
+	² Mismatched
+	³ Sends no cert chain
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- server
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .icewarp.com
+		- 247.icewarp.com
+		- server.icewarp.com
+		- www.icewarp.com
+
+
+	Mixed content:
+
+		- css on 247 from $self ¹
+
+		- Images, on:
+
+			- 247 from $self ¹
+			- forum from $self ¹
+			- www from esupport ²
+
+	¹ Not secured by us <= mismatched
+	² Unsecurable <= refused
+
+-->
+<ruleset name="IceWarp.com (partial)">
+
+	<target host="icewarp.com" />
+	<target host="server.icewarp.com" />
+	<target host="www.icewarp.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.icewarp\.com$" name="^bb_sessionhash$" /-->
+	<!--securecookie host="^247\.icewarp\.com$" name="^SWIFT_sessionid40$" /-->
+	<!--securecookie host="^server\.icewarp\.com$" name="^PHPSESSID_BASIC$" /-->
+	<!--securecookie host="^www\.icewarp\.com$" name="^(PHPSESSID|nette-browser)$" /-->
+
+	<securecookie host="^(?:server|www)\.icewarp\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

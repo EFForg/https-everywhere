@@ -1,4 +1,10 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://brassring.com/ => https://www.kenexa.com/recruitment-technology/complex-global-enterprise: (56, 'Recv failure: Connection reset by peer')
+Fetch error: http://kenexa.com/ => https://www.kenexa.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+Fetch error: http://www.kenexa.com/ => https://www.kenexa.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+Fetch error: http://kenexaworldconference.com/ => https://www.kenexaworldconference.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+Fetch error: http://www.kenexaworldconference.com/ => https://www.kenexaworldconference.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	For problematic rules, see Kenexa-mismatches.xml.
 
 
@@ -6,8 +12,13 @@
 
 		- blog.kenexa.com	(ssl_error_rx_record_too_long)
 
+
+	Fully covered domains:
+
+		- jobs.brassring.com
+
 -->
-<ruleset name="Kenexa (partial)">
+<ruleset name="Kenexa (partial)" default_off='failed ruleset test'>
 
 	<target host="brassring.com" />
 	<target host="*.brassring.com" />
@@ -18,20 +29,20 @@
 
 
 	<securecookie host="^sjobs\.brassring\.com$" name=".*" />
-	<securecookie host="^www\.kenexa(worldconference)?\.com$" name=".*" />
+	<securecookie host="^www\.kenexa(?:worldconference)?\.com$" name=".*" />
 
 
 	<!--	- Times out over https
 		- Redirects like so over http
 					-->
-	<rule from="^https?://(?:www\.)?brassring\.com/"
+	<rule from="^http://(?:www\.)?brassring\.com/"
 		to="https://www.kenexa.com/recruitment-technology/complex-global-enterprise" />
 
-	<rule from="^http://sjobs\.brassring\.com/"
-		to="https://sjobs.brassring.com/" />
+	<rule from="^http://(s)?jobs\.brassring\.com/"
+		to="https://$1jobs.brassring.com/" />
 
 	<!--	Certs don't match !www.	-->
-	<rule from="^https?://(?:www\.)?kenexa(worldconference)?.com/"
+	<rule from="^http://(?:www\.)?kenexa(worldconference)?\.com/"
 		to="https://www.kenexa$1.com/" />
 
 </ruleset>

@@ -1,31 +1,119 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://cnt.rambler.ru/ => https://cnt.rambler.ru/: (18, 'transfer closed with 100 bytes remaining to read')
+Fetch error: http://counter.rambler.ru/ => https://counter.rambler.ru/: (18, 'transfer closed with 100 bytes remaining to read')
+Fetch error: http://i.rambler.ru/ => https://i.rambler.ru/: (60, 'SSL certificate problem: certificate has expired')
+Fetch error: http://scounter.rambler.ru/ => https://scounter.rambler.ru/: (18, 'transfer closed with 100 bytes remaining to read')
+
+	Other Rambler rulesets:
+
+		- Rambler.su.xml
+		- Rl0.ru.xml
+
+
 	Nonfunctional domains:
 
-		- top100-images.rambler.ru	(redirects to www.rambler.ru, valid cert)
-		- i.rl0.ru	(cert: *.rambler.ru; 403)
+		- finance ¹
+		- help ¹
+		- horo2014 ¹
+		- horoscopes ¹
+		- m.horoscopes ¹
+		- reklama ²
+		- m ³
+		- news ³
+		- supermarket ⁴
+		- top100-images		(redirects to www.rambler.ru, valid cert)
+		- weather ³
+		- www ⁵
+
+	¹ 403
+	² Redirects to login
+	³ Refused
+	⁴ Redirects to smart.begun.ru/login
+	⁵ Redirects to p://www.../$
+
+
+	Problematic subdomains:
+
+		- cntcerber *
+		- i *
+
+	* Expired 2014
+
+
+	Partially covered subdomains:
+
+		- kassa *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- assist
+		- cnt
+		- counter *
+		- id
+		- images
+		- m.kassa
+		- mail
+		- mail-pda
+		- scounter *
+		- soft
+		- sync
+		- update
+
+	* Another of those 1px tracking services
+
+
+	Insecure cookies are set for these domains:
+
+		- .rambler.ru
 
 -->
-<ruleset name="Rambler (partial)">
+<ruleset name="Rambler.ru (partial)" default_off='failed ruleset test'>
 
-	<target host="*.rambler.ru" />
-		<exclusion pattern="^http://www\." />
+	<target host="assist.rambler.ru" />
+	<target host="cnt.rambler.ru" />
+	<target host="counter.rambler.ru" />
+	<!--target host="i.rambler.ru" /-->
+	<target host="id.rambler.ru" />
+	<target host="images.rambler.ru" />
+	<target host="kassa.rambler.ru" />
+	<target host="m.kassa.rambler.ru" />
+	<target host="widget.kassa.rambler.ru" />
+	<target host="mail.rambler.ru" />
+	<target host="mail-pda.rambler.ru" />
+	<target host="scounter.rambler.ru" />
+	<target host="soft.rambler.ru" />
+	<target host="sync.rambler.ru" />
+	<target host="update.rambler.ru" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://kassa\.rambler\.ru/(?:cinemapartnership|concerts|partners|refund|sport|theatre|unsubscribe)?(?:$|\?)" />
+
+			<test url="http://kassa.rambler.ru/cinemapartnership" />
+			<test url="http://kassa.rambler.ru/cinemapartnership?" />
+			<test url="http://kassa.rambler.ru/concerts" />
+			<test url="http://kassa.rambler.ru/partners" />
+			<test url="http://kassa.rambler.ru/refund" />
+			<test url="http://kassa.rambler.ru/sport" />
+			<test url="http://kassa.rambler.ru/theatre" />
+			<test url="http://kassa.rambler.ru/unsubscribe" />
+			<test url="http://kassa.rambler.ru/unsubscribe?" />
 
 
-	<!--	Observed cookies:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rambler\.ru$" name="^(ruid|top100rb)$" /-->
+	<!--securecookie host="^id\.rambler\.ru$" name="^request\.key$" /-->
 
-			- ^\.
-				- ruid
-				- top100rb
-
-			Both set by scounter.		-->
-	<securecookie host="^\.rambler\.com$" name=".*" />
+	<securecookie host="^(?:id)?\.rambler\.ru$" name=".*" />
 
 
-	<!--	This is another of those 1px tracking services.	-->
-	<rule from="^http://s?counter\.rambler\.ru/"
-		to="https://scounter.rambler.ru/" />
-
-	<rule from="^http://(cnt|id?|images|kassa|mail)\.rambler\.ru/"
-		to="https://$1.rambler.ru/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,4 +1,9 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://zohoblogs.com/ => https://zohoblogs.com/: (28, 'Resolving timed out after 10518 milliseconds')
+Fetch error: http://www.zohoblogs.com/ => https://www.zohoblogs.com/: (28, 'Resolving timed out after 10517 milliseconds')
+Fetch error: http://zohocorp.com/ => https://zohocorp.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+Fetch error: http://www.zohocorp.com/ => https://www.zohocorp.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For problematic rules, see Zoho-mismatches.xml.
 
 
@@ -17,10 +22,13 @@
 	Problematic domains:
 
 		- customer-discussions.zoho.com		(works, redirects to forum.zoho-china.com)
+		- www.forums.zoho.com ²
 		- forum.zoho-china.com			(mismatched)
 
+	² Cert only matches *.zoho.com
+
 -->
-<ruleset name="Zoho (partial)">
+<ruleset name="Zoho (partial)" default_off='failed ruleset test'>
 
 	<target host="forums.webnms.com" />
 	<target host="zoho.com" />
@@ -50,6 +58,9 @@
 						-->
 	<rule from="^http://((?:accounts|assist|(?:customer-|www\.)?blogs|business|chat|(?:(?:api|help|kbase|lounge|www)\.)?creator|crm|crmkbase|discuss|(?:help\.)?discussions|docs|forums|invoice|iplocation|mail|meeting|notebook|personal|planner|projects|recruit|reports|people|search|share|sheet|show2?|support|viewer|(?:\w+\.)?wiki|export\.writer|writer2?|www)\.)?zoho\.com/"
 		to="https://$1zoho.com/" />
+
+	<rule from="^http://www\.forums\.zoho\.com/"
+		to="https://forums.zoho.com/" />
 
 	<rule from="^http://(www\.)?zoho(blogs|corp)\.com/"
 		to="https://$1zoho$2.com/" />

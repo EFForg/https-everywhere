@@ -1,0 +1,69 @@
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://img1.chbtc.com/ => https://img1.chbtc.com/: (7, 'Failed to connect to img1.chbtc.com port 80: Connection refused')
+Non-2xx HTTP code: http://s.chbtc.com/ (200) => https://s.chbtc.com/ (403)
+Non-2xx HTTP code: http://trans.chbtc.com/ (200) => https://trans.chbtc.com/ (403)
+
+	^: Dropped
+
+
+	Problematic subdomains:
+
+		- s *
+		- trans *
+
+	* $ 403s
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- img1
+		- p2p
+		- s
+		- trans
+		- vip
+
+
+	Insecure cookies are set for these domains:
+
+		 .chbtc.com
+
+-->
+<ruleset name="chbtc.com" default_off='failed ruleset test'>
+
+	<target host="chbtc.com" />
+	<target host="img1.chbtc.com" />
+	<target host="p2p.chbtc.com" />
+	<target host="s.chbtc.com" />
+	<target host="trans.chbtc.com" />
+	<target host="vip.chbtc.com" />
+	<target host="www.chbtc.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.chbtc\.com$" name="^zJSESSIONID$" /-->
+
+	<securecookie host="^\.chbtc\.com$" name=".+" />
+
+
+	<rule from="^http://chbtc\.com/"
+		to="https://www.chbtc.com/" />
+
+	<!--	Redirect keeps args but
+		not forward slash:
+					-->
+	<rule from="^http://(?:s|trans)\.chbtc\.com/+(?=$|\?)"
+		to="https://www.chbtc.com/" />
+
+		<test url="http://s.chbtc.com/?" />
+		<test url="http://s.chbtc.com//" />
+		<test url="http://trans.chbtc.com/?" />
+		<test url="http://trans.chbtc.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

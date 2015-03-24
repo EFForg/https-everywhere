@@ -1,4 +1,7 @@
 <!--
+	University of California, Berkeley
+
+
 	Nonfunctional domains:
 
 
@@ -23,6 +26,7 @@
 			- compute.cnr ²
 			- naturebeta.cnr ²
 			- staff.cnr ²
+			- db.cs			(shows www-research.cs; mismatched, CN: www-research.cs.berkeley.edu)
 			- cwh ²
 			- diller ³		(403s over http)
 			- discovercal ³
@@ -45,13 +49,12 @@
 			- mdp ²
 			- www.mip		(403)
 			- newalumnichallenge ³
-			- newscenter ⁵
 			- nst ²
 			- nutrition ²
 			- ourenvironment ²
 			- socalevents ⁵
 			- stadium ³
-			- systemstatus
+			- systemstatus		(refused)
 			- tiencenter		(valid cert; "Site Temporarily Unavailable" over http, so status unknown)
 			- urel ³		(CN: devcomm.urel)
 			- devcomm.urel		(403s over http; redirects to givetocal over https)
@@ -68,15 +71,22 @@
 	Problematic subdomains:
 
 		- are *
+		- bconnected	(works; mismatched, CN: pantheon.berkeley.edu)
+		- bmail		(interrupted)
+		- cal1card	(shows services.housing; mismatched, CN: services.housing.berkeley.edu)
 		- callcenter **
+		- cio.chance	(refused)
+		- chancellor	(works; mismatched, CN: pantheon.berkeley.edu)
 		- cosmology	(works, self-signed)
 		- cs *
 		- eecs *
 		- graduation	(prints domain name; mismatched, CN: asterix.berkeley.edu)
+		- hrweb		(works; mismatched, CN: pantheon.berkeley.edu)
 		- notary.icsi	(works; mismatched, CN: *.bro.org)
 		- law *
 		- oskicat	(some [most?] pages redirect to http, scripts/ redirects to screens/ssoauth.html)
 		- ourpromise **
+		- sa		(works; mismatched, CN: *.gotpantheon.com)
 
 	* Mismatch
 	** Shows givetocal
@@ -97,9 +107,14 @@
 
 		- (www.)are
 		- auth
+		- auth-key
 		- beartracks
 		- beartracks-new
+		- bmail		( -> mail.google.com)
+		- cal1card	( -> services.housing)
 		- callink
+		- calmail
+		- calmessages
 		- calnet.calnet
 		- cas-p[1-4].calnet
 		- net-auth.calnet
@@ -107,12 +122,18 @@
 		- nature.cnr
 		- code
 		- developer
+		- chisel.eecs
+		- hkn.eecs
 		- events
+		- givetocal
 		- as-code-prod.ist
 		- as-ezsvn-prod.ist
+		- kb
 		- (www.)law
 		- (www.)lib
 		- nature
+		- newscenter
+		- docs.ocf
 		- oskicat	(→ oskicatp)
 		- oskicatp
 		- security
@@ -136,8 +157,27 @@
 		- .blogs.lib
 		- .campuslife
 
+
+	Mixed content:
+
+		- css, on:
+
+			- bconnected from $self *
+			- chancellor from $self *
+			- chancellor from fonts.googleapis.com **
+			- hrwed from $self *
+
+		- Images, on:
+
+			- bconnected from $self *
+			- sa from $self *
+			- sa from www
+
+	* Not secured by us <= mismatched
+	** Secured by us
+
 -->
-<ruleset name="University of California, Berkeley (partial)">
+<ruleset name="Berkeley.edu (partial)">
 
 	<target host="*.berkeley.edu" />
 		<!--
@@ -154,14 +194,44 @@
 		<exclusion pattern="^http://blogs\.berkeley\.edu/(?:.+/)?(?:$|\?)" />
 
 
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^auth\.berkeley\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^auth-key\.berkeley\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^calmail\.berkeley\.edu$" name="^SQMSESSID$" /-->
+	<!--securecookie host="^\.security\.berkeley\.edu$" name="^SSESS[\da-f]{32}$" /-->
+	<!--securecookie host="^students\.berkeley\.edu$" name="^%5FCookieCheck$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^cal\.berkeley\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^calnet\.calnet\.berkeley\.edu$" name="^_calnet-myi_session_id$" /-->
+	<!--securecookie host="^givetocal\.berkeley\.edu$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^services\.housing\.berkeley\.edu$" name="^ASPSESSIONID\w{8}$" /-->
+	<!--securecookie host="^\.inews\.berkeley\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^\.ist\.berkeley\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^security\.berkeley\.edu$" name="^cas_login_checked$" /-->
+	<!--securecookie host="^students\.berkeley\.edu$" name="^ASPSESSIONID\w{8}$" /-->
+	<!--securecookie host="^wikihub\.berkeley\.edu$" name="^JSESSIONID$" /-->
+
 	<securecookie host="^(?:\w.*|\.events|(?:\.fortuna)?\.security)\.berkeley\.edu$" name=".+" />
 
 
-	<rule from="^http://(airbears|alumni|asterix|atcal|atcal-dev|auth|auth-key|beartracks(?:-new)?|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|callink|calmail|(?:[\w-]+\.)?calnet|career|ccc|ccc-dev|cnr|(nature|www)\.cnr|commencement|convio|code|auto(?:config|discover)\.(?:ee)?cs|developer|(?:auth|buffy)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-(?:code|ezsvn)-prod\.ist|ist|journalism|kb|lib|www\.lib|nature|or|oskicatp|scholarship|(?:fortuna\.)?security|seniors|(?:new)?students|sunsite|(?:urshare-prod1|wiki)\.urel|wikihub(?:-new)?)\.berkeley\.edu/"
+	<rule from="^http://(airbears|alumni|asterix|atcal|atcal-dev|auth|auth-key|beartracks(?:-new)?|blogs|blu|bspace|cal|calagenda|cal-dev|calfutures|callink|calmail|calmessages|(?:[\w-]+\.)?calnet|career|ccc|ccc-dev|cnr|(nature|www)\.cnr|commencement|convio|code|auto(?:config|discover)\.(?:ee)?cs|developer|(?:auth|buffy|chisel|hkn)\.eecs|egiving|eureka|events|fellowship|foundation(?:-dev)?|givetocal|haasawards|services\.housing|ihouseonline|inews|international|blu\.is|as-(?:code|ezsvn)-prod\.ist|ist|journalism|kb|lib|www\.lib|nature|newscenter|docs\.ocf|or|oskicatp|scholarship|(?:fortuna\.)?security|seniors|(?:new)?students|sunsite|(?:urshare-prod1|wiki)\.urel|wikihub(?:-new)?)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
 
 	<rule from="^http://(?:www\.)?(are|boinc)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://bmail\.berkeley\.edu/.*"
+		to="https://mail.google.com/a/berkeley.edu" />
+
+	<!--	Redirect drops forward slash and args, but not path:
+									-->
+	<rule from="^http://cal1card\.berkeley\.edu/+([^?])(?:\?.*)?"
+		to="https://services.housing.berkeley.edu/c1c/$1" />
 
 	<rule from="^http://callcenter\.berkeley\.edu/$"
 		to="https://givetocal.berkeley.edu/browse/?u=191" />
@@ -171,9 +241,6 @@
 
 	<rule from="^http://graduation\.berkeley\.edu/$"
 		to="https://commencement.berkeley.edu/" />
-
-	<rule from="^http://oskicatp?\.berkeley\.edu/"
-		to="https://oskicatp.berkeleye.edu/" />
 
 	<rule from="^http://ourpromise\.berkeley\.edu/$"
 		to="https://givetocal.berkeley.edu/browse/?u=174" />

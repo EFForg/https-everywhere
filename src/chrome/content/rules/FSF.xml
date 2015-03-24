@@ -1,14 +1,18 @@
 <!--
 	Other Free Software Foundation rulesets:
 
+		- GMP_Lib.org.xml
 		- GNU.org.xml
 		- GnuPG.org.xml
 
 
 	Nonfunctional domains:
 
+		- mirror.fsf.org ¹
 		- shop.fsf.org		(redirects to http):
 		- specialk.nongnu.org	(dropped)
+
+	¹ Dropped	
 
 
 	Fully covered domains:
@@ -16,6 +20,15 @@
 		- fsf.org subdomains:
 
 			- cas
+			- directory
+			- emailselfdefense
+
+
+	Mixed content:
+
+		- Image on directory from static *
+
+	* Secured by us
 
 -->
 <ruleset name="Free Software Foundation">
@@ -28,15 +41,19 @@
 		<!--exclusion pattern="^http://specialk\.nongnu\.org/" /-->
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.fsf\.org$" name="^_ZopeId$" /-->
+
 	<!--	There's a cross-domain session cookie, which is not
 		handled in case it's used on unsecurable pages.
 			In particular, shop.fsf.org is not fully
 		securable, and seems to share a login system with www.
 		-->
-	<securecookie host="^(\.crm|my|status)\.fsf\.org$" name=".*" />
+	<securecookie host="^(?:\.crm|my|status)\.fsf\.org$" name=".*" />
 
 
-	<rule from="^http://((?:cas|crm|my|static|status|u|www)\.)?fsf\.org/"
+	<rule from="^http://((?:cas|crm|directory|emailselfdefense|my|static|status|u|www)\.)?fsf\.org/"
 		to="https://$1fsf.org/" />
 
 	<!--	- Shows www's data over https

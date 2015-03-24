@@ -1,19 +1,17 @@
-<!--
-	Problematic subdomains:
-
-		- www	(cert only matches ^heml.is)
-
--->
 <ruleset name="Heml.is">
 
 	<target host="heml.is" />
 	<target host="www.heml.is" />
 
 
-	<securecookie host="^heml\.is$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?heml\.is$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:www\.)?heml\.is$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?heml\.is/"
-		to="https://heml.is/" />
+	<rule from="^http://(www\.)?heml\.is/"
+		to="https://$1heml.is/" />
 
 </ruleset>

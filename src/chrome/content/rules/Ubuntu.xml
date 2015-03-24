@@ -1,7 +1,18 @@
+
 <!--
+	For rules causing false/broken MCB, see Ubuntu.com-falsemixed.xml.
+
+
 	Other Ubuntu rulesets:
 
 		- Ubuntu_Forums.org.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)?ubuntuone.com *
+
+	* Plaintext reply
 
 
 	Nonfunctional subdomains:
@@ -9,6 +20,7 @@
 		- (www.) ¹
 		- archive ²
 		- cdimage ²
+		- font			(http reply)
 		- irclogs		(shows irclogs.canonical.com; mismatched, CN: irclogs.canonical.com)
 		- kernel ¹
 		- loco ³
@@ -17,25 +29,37 @@
 		- old-releases ²
 		- packages ¹
 		- packages-import ¹
+		- packaging ***
 		- people ¹
+		- phablet ¹
 		- planet		(prints "Page Unavailable"; mismatched, CN: certification.canonical.com)
 		- iso.qa ³
+		- reports.qa ³
 		- testcases.qa		(redirects to http, self-signed)
 		- pad ²
 		- releases ²
+		- screenshots ⁴
 		- security ²
 		- status ²
 		- summit ²
+		- upstart ¹
 		- women ¹
 
 	¹ Dropped
 	² Refused
 	³ Redirects to testcases.qa; mismatched, CN: testcases.qa.ubuntu.com
+	*** Redirects to login.ubuntu.com
+	⁴ 404; mismatched, CN: *.canonical.com
 
 
 	Problematic subdomains:
 
+		- community ¹
 		- shop	(mismatched, CN: shop.canonical.com)
+			- entropy
+			- fridge
+
+	¹ Mixed css from assets and $self
 
 
 	Fully covered domains:
@@ -46,10 +70,11 @@
 			- assets
 			- cloud
 			- community
+			- design
 			- developer
 			- myapps.developer
-			- fridge
 			- help
+			- insights
 			- lists
 			- login
 			- maas
@@ -60,35 +85,85 @@
 			- shop		(→ shop.canonical.com)
 			- uds
 			- uec-images
+			- unity
 			- wiki
 
-		- (www.)ubuntuone.com
+
+	These altnames don't exist:
+
+		- www.assets.ubuntu.com
+		- www.myapps.developer.ubuntu.com
+		- www.lists.ubuntu.com
 
 
 	Mixed content:
 
-		- Images on help from pix.toile-libre.org *
+		- css, on:
 
+			- community from $self ¹
+			- community from assets ¹
+
+		- Images, on:
+
+			- apps from screenshots ²
+			- community from $self ¹
+			- developer from $self ¹
+			- help from pix.toile-libre.org *
+			- insights from $self ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
 	* Unsecurable, doesn't trip MCB
 
 -->
-<ruleset name="Ubuntu (partial)">
+<ruleset name="Ubuntu.com (partial)" default_off='failed ruleset test'>
 
-	<target host="*.ubuntu.com" />
-	<target host="ubuntuone.com" />
-	<target host="www.ubuntuone.com" />
+	<target host="apps.ubuntu.com" />
+	<target host="assets.ubuntu.com" />
+	<target host="cloud.ubuntu.com" />
+	<target host="community.ubuntu.com" />
+	<target host="design.ubuntu.com" />
+	<target host="developer.ubuntu.com" />
+	<target host="myapps.developer.ubuntu.com" />
+	<target host="help.ubuntu.com" />
+	<target host="insights.ubuntu.com" />
+	<target host="juju.ubuntu.com" />
+	<target host="lists.ubuntu.com" />
+	<target host="login.ubuntu.com" />
+	<target host="maas.ubuntu.com" />
+	<target host="one.ubuntu.com" />
+	<target host="patches.ubuntu.com" />
+	<target host="pay.ubuntu.com" />
+	<target host="jenkins.qa.ubuntu.com" />
+	<target host="shop.ubuntu.com" />
+	<target host="uds.ubuntu.com" />
+	<target host="uec-images.ubuntu.com" />
+	<target host="unity.ubuntu.com" />
+	<target host="wiki.ubuntu.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://community\.ubuntu\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+			<test url="http://community.ubuntu.com//" />
+			<test url="http://community.ubuntu.com/community-structure/" />
+			<test url="http://community.ubuntu.com/contribute/" />
+			<test url="http://community.ubuntu.com/help-information/" />
+
+	<!--target host="ubuntuone.com" /-->
+	<!--target host="www.ubuntuone.com" /-->
 
 
 	<securecookie host="^(?:apps|login|pay|jenkins\.qa|wiki)\.ubuntu\.com$" name=".+" />
 
 
-	<rule from="^http://(apps|assets|cloud|community|(?:myapps\.)?developer|fridge|help|juju|lists|login|maas|one|patches|pay|jenkins\.qa|uds|uec-images|wiki)\.ubuntu\.com/"
-		to="https://$1.ubuntu.com/" />
-
 	<rule from="^http://shop\.ubuntu\.com/"
 		to="https://shop.canonical.com/" />
 
-	<rule from="^http://(www\.)?ubuntuone\.com/"
-		to="https://$1ubuntuone.com/" />
+	<rule from="^http:"
+		to="https:" />
+
+	<!--rule from="^http://(www\.)?ubuntuone\.com/"
+		to="https://$1ubuntuone.com/" /-->
 
 </ruleset>

@@ -1,52 +1,60 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://flic.kr/ => https://flic.kr/: Redirect for 'https://flic.kr/' missing Location
+Fetch error: http://flickr.com/ => https://flickr.com/: Redirect for 'https://flickr.com/' missing Location
 	For other Yahoo coverage, see Yahoo.xml.
 
 
-	Problematic domains:
+	These altnames don't exist:
 
-		- flickr.com subdomains:
+		- www.blog.flickr.net
+		- www.code.flickr.net
 
-			- ^
-			- api
-			- code
 
-		- blog.flickr.net *
-		- code.flickr.net *	
+	Insecure cookies are set for these domains:
 
-	* Mismatched, handled in WordPress-blogs.xml
+		- .flic.kr
+		- .flickr.com
+		- www.flickr.com
+		- blog.flickr.net
+
+	Note: current_identity (.flickr.com) is read
+	via script and so cannot be secured.
+
+		https://github.com/EFForg/https-everywhere/issues/239
 
 -->
-<ruleset name="Flickr (partial)">
+<ruleset name="Flickr" default_off='failed ruleset test'>
 
 	<target host="flic.kr" />
+	<target host="*.flic.kr" />
 	<target host="flickr.com" />
 	<target host="*.flickr.com" />
-		<exclusion pattern="^http://api\.flickr.com/(?!services/)" />
+	<target host="*.flickr.net" />
 	<target host="*.staticflickr.com" />
 
 
-	<securecookie host=".*\.flickr\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flic\.kr$" name="^BX$" /-->
+	<!--securecookie host="^\.flickr\.com$" name="^(BX|admsort|cookie_session|current_identity|density|ffs|fldetectedlang|flrb|flrbgdrp|flrbgrp|flrbp|flrbs|fltoto|just_registered|localization|memsort|modsort|photoPHS|photoPWS|vp|xb)$" /-->
+	<!--securecookie host="^www\.flickr\.com$" name="^(liqph|liqpw|ywandp)" /-->
+	<!--securecookie host="^blog\.flickr\.net$" name="^cookie_l10n$" /-->
+
+	<securecookie host="^\.flic\.kr$" name=".+" />
+	<securecookie host=".*\.flickr\.com$" name="^(?!current_identity$).+" />
 
 
-	<rule from="^http://flic\.kr/f/"
-		to="https://www.flickr.com/short_urls.gne?favorites=" />
+	<rule from="^http://flic\.kr/"
+		to="https://flic.kr/" />
 
-	<rule from="^http://flic\.kr/p/"
-		to="https://www.flickr.com/photo.gne?short=" />
+	<rule from="^http://((?:api|secure|static|www)\.)?flickr\.com/"
+		to="https://$1flickr.com/" />
 
-	<rule from="^http://flic\.kr/ps/"
-		to="https://www.flickr.com/short_urls.gne?photostream=" />
+	<rule from="^http://(c\d+|farm\d+)\.static(\.)?flickr\.com/"
+		to="https://$1.static$2flickr.com/" />
 
-	<rule from="^http://flic\.kr/s/"
-		to="https://www.flickr.com/short_urls.gne?photoset=" />
-
-	<rule from="^http://(?:api\.|www\.)?flickr\.com/"
-		to="https://www.flickr.com/" />
-
-	<rule from="^http://s(ecure|tatic)\.flickr\.com/"
-		to="https://s$1.flickr.com/" />
-
-	<rule from="^http://farm(\d+)\.static(\.)?flickr\.com/"
-		to="https://farm$1.static$2flickr.com/" />
+	<rule from="^http://(blog|code)\.flickr\.net/"
+		to="https://$1.flickr.net/" />
 
 </ruleset>

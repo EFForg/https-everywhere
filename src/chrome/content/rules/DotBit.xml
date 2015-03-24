@@ -1,20 +1,53 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://dot-bit.org/ => https://dot-bit.org/: (60, 'SSL certificate problem: certificate has expired')
+	Nonfunctional subdomains:
+
+		- dns *
+		- register *
+
+	* Refused
+
+
 	Problematic subdomains:
 
-		- ^	(expired 2012-12-09)
-		- www	(mismatched, CN: srv0.eu)
+		- explorer *
+
+	* Shows cp login
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- explorer	(→ explorer.namecoin.info)
+
+
+	Insecure cookies are set for these domains:
+
+		- dot-bit.org
+		- .dot-bit.org
 
 -->
-<ruleset name="DotBit" default_off="expired" platform="cacert">
+<ruleset name="Dot-BIT.org (partial)" default_off='failed ruleset test'>
 
 	<target host="dot-bit.org" />
 	<target host="*.dot-bit.org" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dot-bit\.org$" name="^bitcoin_dotbit_session$" /-->
+	<!--securecookie host="^\.dot-bit\.org$" name="^bitcoin_dotbit_i$" /-->
+
 	<securecookie host="^(?:.*\.)?dot-bit\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?dot-bit\.org/"
-		to="https://dot-bit.org/" />
+	<rule from="^http://(www\.)?dot-bit\.org/"
+		to="https://$1dot-bit.org/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://explorer\.dot-bit\.org/+"
+		to="https://explorer.namecoin.info/" />
 
 </ruleset>

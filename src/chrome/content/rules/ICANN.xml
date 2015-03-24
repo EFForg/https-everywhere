@@ -1,22 +1,114 @@
 <!--
-	For problematic rules, see ICANN-mismatches.xml.
+	For rules causing false/broken MCB, see ICANN.org-falsemixed.xml.
+
+
+	Problematic subdomains:
+
+		- www.atlarge ¹
+		- nomcom ²
+
+	¹ Cert only matches *.icann.org
+	² Refused
+
+
+	Partially covered subdomains:
+
+		- newgtlds ¹
+		- nomcom ²
+		- whois ¹
+
+	¹ Avoiding broken MCB
+	² \w.* doesn't redirect
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- archive
+		- (www.)?aso
+		- (www.)?atlarge	(www → ^)
+		- atlarge-lists
+		- atlas
+		- blog
+		- ccnso
+		- gnso
+		- charts
+		- community
+		- forms
+		- forum
+		- gac
+		- mm.gac
+		- gacweb
+		- gnso
+		- gtldresult
+		- me
+		- meetings
+		- mm
+		- new
+		- prague44
+		- public
+
+
+	These altnames don't exist:
+
+		- lists.aso.icann.org
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- atlarge from www.google.com *
+			- newgtlds from www.youtube.com *
+
+		- css, on:
+
+			- newgtlds from $self *
+			- whois from $self *
+
+		- Images, on:
+
+			- archive from $self *
+			- atlarge, forum, meetings from www *
+			- ccnso, gnso, meetings, prague44 from $location\d+
+			- meetings from $self *
+			- newgtlds from $self *
+			- whois from $self *
+
+		- favicons, on:
+
+			- gtldresult from www *
+			- newgtlds from $self *
+			- whois from $self *
+
+		- Bug on atlarge from badge.facebook.com *
+
+	* Secured by us
 
 -->
-<ruleset name="ICANN (partial)" platform="mixedcontent">
+<ruleset name="ICANN.org (partial)">
 
 	<target host="icann.org" />
 	<target host="*.icann.org" />
-		<exclusion pattern="^http://(aso|www\.atlarge|nomcom)\." />
+		<exclusion pattern="^http://nomcom\.icann\.org/+(?!$|\?)" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:newgtlds|whois)\.icann\.org/+(?!sites/)" />
 
 
-	<securecookie host="(.*\.)?icann\.org$" name=".*" />
+	<securecookie host="(?:.*\.)?icann\.org$" name=".+" />
 
 
-	<rule from="^http://((?:archive|ccnso|charts|community|forum|gacweb|gnso|gtldresult|meetings|mm|newgtlds|prague44|www)\.)?icann\.org/"
+	<rule from="^http://(?:www\.)?atlarge\.icann\.org/"
+		to="https://atlarge.icann.org/" />
+
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://nomcom\.icann\.org/+(?=$|\?)"
+		to="https://www.icann.org/en/groups/nomcom" />
+
+	<rule from="^http://((?:archive|(?:www\.)?aso|atlarge-lists|atlas|blog|ccnso|charts|community|forms|forum|gac|mm\.gac|gacweb|gnso|gtldresult|me|meetings|mm|new|newgtlds|prague44|public|whois|www)\.)?icann\.org/"
 		to="https://$1icann.org/" />
-
-	<!-- home redirects to http	-->
-	<rule from="^http://aso\.icann\.org/wp-content/"
-		to="https://aso.icann.org/wp-content/" />
 
 </ruleset>

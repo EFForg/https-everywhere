@@ -1,15 +1,55 @@
 <!--
 	Nonfunctional subdomains:
 
-		- img	(dropped)
+		- cafe *
+
+	* Dropped
+
+
+	Partially covered subdomains:
+
+		- (www.)? *
+		- store *
+		- web *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- img
+
+
+	Insecure cookies are set for these domains:
+
+		- store.artlebedev.ru
+
+
+	Mixed content:
+
+		- css on store, web, www from img *
+		- Images on store, web, www from img *
+
+	* Secured by us
 
 -->
-<ruleset name="Art Lebedev.ru (partial)" default_off="self-signed">
+<ruleset name="Art Lebedev.ru (partial)">
 
-	<target host="web.artlebedev.ru" />
+	<target host="artlebedev.ru" />
+	<target host="*.artlebedev.ru" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?artlebedev\.ru/+(?!everything/|favicon\.ico|svalka/)" />
+		<exclusion pattern="^http://store\.artlebedev\.ru/+(?!_i/|favicon\.ico|products/images/|themes/)" />
 
 
-	<rule from="^http://web\.artlebedev\.ru/"
-		to="https://web.artlebedev.ru/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^store\.artlebedev\.ru$" name="^sid$" /-->
+
+
+	<rule from="^http://((?:img|store|web|www)\.)?artlebedev\.ru/"
+		to="https://$1artlebedev.ru/" />
 
 </ruleset>

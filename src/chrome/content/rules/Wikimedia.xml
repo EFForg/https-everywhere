@@ -4,30 +4,68 @@
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
 	so this file is a lot simpler these days.
 
+
+	Problematic domains:
+
+		- links.email.donate.wikimedia.org *
+
+	* Mismatched, CN: *.links.mkt41.net
+
+
+	Insecure cookies are set for these domains:
+
+		- .wikibooks.org
+		- .wikimediafoundation.org
+		- .wikipedia.org
+		- en.wikipedia.org
+		- .wikiversity.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- stats.wikimedia.org from upload.wikimedia.org *
+			- stats.wikimedia.org from wikimediafoundation.org *
+
+	* Secured by us
+
 -->
 <ruleset name="Wikimedia">
 
 	<target host="enwp.org" />
 	<target host="frwp.org" />
+
 	<target host="mediawiki.org" />
 	<target host="www.mediawiki.org" />
+	<target host="wikimedia.org" />
+	<target host="*.wikimedia.org" />
+		<exclusion pattern="^http://(?:apt|cs|cz|parsoid-lb\.eqiad|status|torrus|ubuntu)\.wikimedia\.org" />
+		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
+			<test url="http://apt.wikimedia.org" />
+			<test url="http://cs.wikimedia.org" />
+			<test url="http://cz.wikimedia.org" />
+			<test url="http://parsoid-lb.eqiad.wikimedia.org" />
+			<test url="http://status.wikimedia.org" />
+			<test url="http://torrus.wikimedia.org" />
+			<test url="http://ubuntu.wikimedia.org" />
+
+		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
+			<test url="http://lists.wikimedia.org/pipermail" />
+			<test url="http://lists.wikimedia.org/pipermail/" />
+
+	<target host="wikimediafoundation.org" />
+	<target host="www.wikimediafoundation.org" />
+
+	<!-- Wikimedia projects (also some wikimedia.org subdomains) -->
 	<target host="wikibooks.org" />
 	<target host="*.wikibooks.org" />
 	<target host="wikidata.org" />
 	<target host="*.wikidata.org" />
-	<target host="wikimedia.org" />
-	<target host="*.wikimedia.org" />
-		<exclusion pattern="^http://(?:apt|bayes|bayle|brewster|bug-attachment|cs|cz|dataset2|download|dumps|ekrem|emery|ersch|etherpad|harmon|hume|(?:ipv4|ipv6and4|results)\.labs|m|project2|search|sitemap|snapshot3|stafford|statu?s|torrus|ubuntu|wiki-mail|wlm|yongle)\.wikimedia\.org" />
-		<!-- https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html -->
-		<exclusion pattern="^http://lists\.wikimedia\.org/pipermail(?:$|/)" />
-	<target host="wikimediafoundation.org" />
-	<target host="www.wikimediafoundation.org" />
 	<target host="wikinews.org" />
 	<target host="*.wikinews.org" />
 	<target host="wikipedia.org" />
 	<target host="*.wikipedia.org" />
-		<exclusion pattern="^http://(?:download|static)\.wikipedia\.org/" />
-	<target host="*.m.wikipedia.org" />
 	<target host="wikiquote.org" />
 	<target host="*.wikiquote.org" />
 	<target host="wikisource.org" />
@@ -39,7 +77,50 @@
 	<target host="wiktionary.org" />
 	<target host="*.wiktionary.org" />
 
-	<securecookie host="^.+\.wikipedia\.org$" name=".+" />
+	<test url="http://en.wikibooks.org" />
+	<test url="http://en.wikinews.org" />
+	<test url="http://en.wikipedia.org" />
+	<test url="http://en.wikiquote.org" />
+	<test url="http://en.wikisource.org" />
+	<test url="http://en.wikiversity.org" />
+	<test url="http://en.wikivoyage.org" />
+	<test url="http://en.wiktionary.org" />
+	<test url="http://de.wikibooks.org" />
+	<test url="http://de.wikinews.org" />
+	<test url="http://de.wikipedia.org" />
+	<test url="http://de.wikiquote.org" />
+	<test url="http://de.wikisource.org" />
+	<test url="http://de.wikiversity.org" />
+	<test url="http://de.wikivoyage.org" />
+	<test url="http://de.wiktionary.org" />
+	<test url="http://ru.wikibooks.org" />
+	<test url="http://ru.wikinews.org" />
+	<test url="http://ru.wikipedia.org" />
+	<test url="http://ru.wikiquote.org" />
+	<test url="http://ru.wikisource.org" />
+	<test url="http://ru.wikiversity.org" />
+	<test url="http://ru.wikivoyage.org" />
+	<test url="http://ru.wiktionary.org" />
+
+	<test url="http://www.wikidata.org" />
+	<test url="http://www.wikimedia.org" />
+	<test url="http://www.wikimediafoundation.org" />
+
+	<!-- Wikimedia Tool Labs -->
+	<target host="tools.wmflabs.org" />
+	<target host="icinga.wmflabs.org" />
+	<target host="ganglia.wmflabs.org" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wiki(books|mediafoundation|pedia|versity)\.org$" name="^GeoIP$" /-->
+	<!--securecookie host="^en\.wikipedia\.org$" name="^(CentralAuthAnon|mediaWiki\.user\.sessionId|uls-previous-languages)$" /-->
+
+	<securecookie host="^(?:www\.)?mediawiki\.org$" name=".+" />
+	<securecookie host="^\.wik(?:ibooks|idata|imedia|imediafoundation|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name="^GeoIP$" />
+	<securecookie host="^(?:[^@:/]+\.)?wik(?:ibooks|idata|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org$" name=".+" />
+	<securecookie host="^(?:species|commons|meta|incubator|wikitech)\.wikimedia\.org$" name=".+" />
+	<securecookie host="^wikimediafoundation\.org$" name=".+" />
 
 	<rule from="^http://(en|fr)wp\.org/"
 		to="https://$1.wikipedia.org/wiki/" />
@@ -47,13 +128,34 @@
 	<rule from="^http://(?:www\.)?mediawiki\.org/"
 		to="https://www.mediawiki.org/" />
 
-	<rule from="^http://([^@:/]+\.)?wik(ibooks|idata|imedia|inews|ipedia|iquote|isource|iversity|ivoyage|tionary)\.org/"
-		to="https://$1wik$2.org/" />
+	<rule from="^http://noboard\.chapters\.wikimedia\.org/"
+		to="https://noboard-chapters.wikimedia.org/" />
+		<test url="http://noboard.chapters.wikimedia.org/" />
 
-	<rule from="^http://([^@:/]+)\.planet\.wikimedia\.org/"
-		to="https://$1.planet.wikimedia.org/" />
+	<rule from="^http://(?:download|sitemap)\.wikimedia\.org/"
+		to="https://dumps.wikimedia.org/" />
+		<test url="http://download.wikimedia.org/" />
+		<test url="http://sitemap.wikimedia.org/" />
 
-	<rule from="^http://(www\.)?wikimediafoundation\.org/"
-		to="https://$1wikimediafoundation.org/" />
+	<rule from="^http://links\.email\.donate\.wikimedia\.org/"
+		to="https://www.links.mkt41.net/" />
+		<test url="http://links.email.donate.wikimedia.org/" />
 
+	<rule from="^http://labs-ns0\.wikimedia\.org/"
+		to="https://wikitech.wikimedia.org/" />	
+		<test url="http://labs-ns0.wikimedia.org/" />
+
+	<rule from="^http://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
+		to="https://arbcom-$1.wikipedia.org/" />
+		<test url="http://arbcom.de.wikipedia.org/" />
+		<test url="http://arbcom.en.wikipedia.org/" />
+		<test url="http://arbcom.fi.wikipedia.org/" />
+		<test url="http://arbcom.nl.wikipedia.org/" />
+
+	<rule from="^http://download\.wikipedia\.org/"
+		to="https://dumps.wikimedia.org/" />
+		<test url="http://download.wikipedia.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

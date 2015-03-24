@@ -1,3 +1,4 @@
+
 <!--
 	For other Yahoo coverage, see Yahoo.xml.
 
@@ -16,32 +17,40 @@
 		- ^			(reset)
 		- search
 		- www			(works, mismatched, CN: developer.yahoo.com, differs from developer)
+		- yui ⁴
+
+	⁴ 404; mismatched, CN: *.yimg.com; rewriting to yui-s doesn't always seem to work
 
 
 	Fully covered subdomains:
 
 		- ^			(→ developer.yahoo.com)
+		- csync
 		- open.login
 		- query
-		- search		(→ developer.yahoo.com)
-		- yui			(→ yui-s.yahooapis.com)
 		- yui-s
 
 -->
-<ruleset name="Yahoo APIs (partial)">
+<ruleset name="Yahoo APIs.com (partial)">
 
-	<target host="yahooapis.com" />
-	<target host="*.yahooapis.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="csync.yahooapis.com" />
 	<target host="open.login.yahooapis.com" />
+	<target host="query.yahooapis.com" />
+	<target host="yui-s.yahooapis.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="yahooapis.com" />
 
 
-	<rule from="^http://(open\.login|query)\.yahooapis\.com/"
-		to="https://$1.yahooapis.com/" />
-
-	<rule from="^http://(?:search\.)?yahooapis\.com/(?:.*)"
+	<rule from="^http://yahooapis\.com/.*"
 		to="https://developer.yahoo.com/" />
 
-	<rule from="^http://yui(?:-s)?\.yahooapis\.com/"
-		to="https://yui-s.yahooapis.com/" />
+		<test url="http://yahooapis.com//" />
+
+	<rule from="^http://(csync|open\.login|query|yui-s)\.yahooapis\.com/"
+		to="https://$1.yahooapis.com/" />
 
 </ruleset>

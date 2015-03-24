@@ -1,21 +1,9 @@
 <!--
-	Problematic subdomains:
-
-		- (www.) *
-		- shop *
-
-	* Works, cert only matches secure
-
-
-	Partially covered subdomains:
-
-		- shop		(→ www)
-
-
 	Fully covered subdomains:
 
-		- (www.)	(→ secure)
+		- (www.)
 		- secure
+		- shop
 
 -->
 <ruleset name="DD-WRT">
@@ -27,10 +15,7 @@
 	<securecookie host=".*\.dd-wrt\.com$" name=".+" />
 
 
-	<rule from="^http://(?:secure\.|www\.)?dd-wrt\.com/"
-		to="https://secure.dd-wrt.com/" />
-
-	<rule from="^http://shop\.dd-wrt\.com/(\?.*)?$"
-		to="https://secure.dd-wrt.com/shop/catalog/$1" />
+	<rule from="^http://((?:secure|shop|www)\.)?dd-wrt\.com/"
+		to="https://$1dd-wrt.com/" />
 
 </ruleset>

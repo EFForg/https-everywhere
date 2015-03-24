@@ -9,9 +9,12 @@
 
 		- counter
 		- feeds
+		- link *
 		- physics
 		- pr[bel]
 		- prola
+
+	* Refused
 
 
 	Partially covered subdomains:
@@ -23,6 +26,7 @@
 	Fully covered subdomains:
 
 		- authors
+		- journals
 		- referees
 		- tesseract-assets		
 
@@ -38,17 +42,24 @@
 		<exclusion pattern="^http://publish\.aps\.org/(?:image|stylesheet)s/" />
 
 
-	<rule from="^http://(?:www\.)?aps\.org/(commonspot|elementadmin|[\w_/-]+images|style|templates)/"
-		to="https://www.aps.org/$1" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^journals\.aps\.org$" name="^(rack\.session|tour_closed)$" /-->
 
-	<rule from="^http://(\w+)\.aps\.org/(files|images|misc|sites/[\w\.-]+themes|style(?:sheets)?)/"
-		to="https://$1.aps.org/$2" />
+	<securecookie host="^journals\.aps\.org$" name=".+" />
 
-	<rule from="^http://(author|referee|tesseract-asset)s\.aps\.org/"
+
+	<rule from="^http://(?:www\.)?aps\.org/(?=commonspot/|elementadmin/|[\w/-]+images/|style/|templates/)"
+		to="https://www.aps.org/" />
+
+	<rule from="^http://(\w+)\.aps\.org/((?:files|images|misc|sites/[\w.-]+themes|style(?:sheets)?)/)"
+		to="https://$1.aps.org/" />
+
+	<rule from="^http://(author|journal|referee|tesseract-asset)s\.aps\.org/"
 		to="https://$1s.aps.org/" />
 
-	<rule from="^http://publish\.aps\.org/(login|signup)"
-		to="https://publish.aps.org/$1" />
+	<rule from="^http://publish\.aps\.org/(?=login|signup)"
+		to="https://publish.aps.org/" />
 
 	<rule from="^http://publish\.aps\.org/favicon\.ico"
 		to="https://www.aps.org/favicon.ico/" />

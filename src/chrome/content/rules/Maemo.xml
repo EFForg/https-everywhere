@@ -7,24 +7,53 @@
 	Nonfunctional subdomains:
 
 		- static	(data are also on www)
-		- talk		(reset)
+		- talk		(refused)
+
+
+	Problematic subdomains:
+
+		- wiki *
+
+	* Blocks Tor users
+
+
+	Fully covered subdomains:
+
+		- wiki
 
 -->
-<ruleset name="Maemo (partial)">
+<ruleset name="Maemo.org (partial)">
 
 	<target host="maemo.org" />
-	<target host="*.maemo.org" />
+	<target host="garage.maemo.org" />
+	<target host="static.maemo.org" />
+	<target host="wiki.maemo.org" />
+	<target host="www.maemo.org" />
+
+		<exclusion pattern="^http://(?:www\.)?maemo\.org/(?!(?:midcom-)?static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.maemo.org/community/" />
+			<test url="http://www.maemo.org/development/" />
+			<test url="http://www.maemo.org/downloads/" />
+			<test url="http://www.maemo.org/intro/" />
+			<test url="http://www.maemo.org/news/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.maemo.org/midcom-static/midcom.helper.datamanager2/legacy.css" />
 
 
 	<!--	Cert only matches ^maemo.org.
 						-->
-	<rule from="^https?://(?:www\.)?maemo\.org/(midcom-)?static/"
-		to="https://maemo.org/$1static/" />
+	<rule from="^http://www\.maemo\.org/"
+		to="https://maemo.org/" />
 
-	<rule from="^http://garage\.maemo\.org/"
-		to="https://garage.maemo.org/" />
-
-	<rule from="^https?://static\.maemo\.org/"
+	<rule from="^http://static\.maemo\.org/"
 		to="https://maemo.org/midcom-static/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

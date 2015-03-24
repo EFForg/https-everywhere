@@ -1,14 +1,34 @@
-<ruleset name="ON24 (partial)">
+<!--
+	Fully covered subdomains:
 
-	<target host="on24.com"/>
-	<target host="*.on24.com"/>
+		- (www.)	(^ → www)
+		- event
+		- eventprd10b
+		- w
 
-	<securecookie host="^(event\.|eventprd10b\.|www\.)?on24\.com$" name=".*"/>
+
+	Insecure cookies are set for these domains:
+
+		- event
+
+-->
+<ruleset name="ON24.com (partial)">
+
+	<target host="on24.com" />
+	<target host="*.on24.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^event\.on24\.com$" name="^(BIGipServereventprd_apache|BIGipServereventprd_wl|JSESSIONID)$"/-->
+
+	<securecookie host="^(?:event\.|eventprd10b\.|www\.)?on24\.com$" name=".+" />
+
 
 	<rule from="^http://(?:www\.)?on24\.com/"
-		to="https://www.on24.com/"/>
+		to="https://www.on24.com/" />
 
 	<rule from="^http://(event|eventprd10b|w)\.on24\.com/"
-		to="https://$1.on24.com/"/>
+		to="https://$1.on24.com/" />
 
 </ruleset>

@@ -1,4 +1,9 @@
-<ruleset name="HSBC">
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://firstdirect.com/ => https://www.firstdirect.com/: Redirect for 'http://firstdirect.com/' missing Location
+Fetch error: http://www.business.hsbc.co.uk/ => https://www.business.hsbc.co.uk/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+-->
+<ruleset name="HSBC" default_off='failed ruleset test'>
   <!-- The list of country sites comes from https://www.hsbc.com/1/2 -->
 
   <target host="hsbc.*" />
@@ -18,8 +23,8 @@
   <target host="us.hsbc.com" />
   <target host="www.business.hsbc.co.uk" />
 
-  <securecookie host="^(.*\.)?hsbc\.(.*)$" name=".+" />
-  <securecookie host="^(.*\.)?firstdirect\.com$" name=".+" />
+  <securecookie host="^(?:.*\.)?hsbc\..*$" name=".+" />
+  <securecookie host="^(?:.*\.)?firstdirect\.com$" name=".+" />
 
   <!-- These sites do not work (no HTTPS service operational). -->
   <exclusion pattern="^http://www\.hangseng\.com/" />
@@ -39,12 +44,12 @@
 
   <rule from="^http://(?:www\.)?hsbc\.([^/:@]+)/"
         to="https://www.hsbc.$1/" />
-  <rule from="^https?://([^/:@]+)?\.hsbc\.co\.uk/"
+  <rule from="^http://([^/:@]+)?\.hsbc\.co\.uk/"
       to="https://$1.hsbc.co.uk/" />
 
-  <rule from="^https?://firstdirect\.com/"
+  <rule from="^http://firstdirect\.com/"
       to="https://www.firstdirect.com/" />
-  <rule from="^https?://([^/:@]+)?\.firstdirect\.com/"
+  <rule from="^http://([^/:@]+)?\.firstdirect\.com/"
       to="https://$1.firstdirect.com/" />
 
   <!-- some odd regional sites not using hsbc.tld names -->

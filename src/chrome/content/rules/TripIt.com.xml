@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- help *
+
+	* zendesk
+
+-->
+<ruleset name="TripIt.com">
+
+	<target host="tripit.com" />
+	<target host="*.tripit.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^www\.tripit\.com$" name="^(it_csrf|it_ref_id)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(careers\.|www\.)?tripit\.com$" name="^BIGipServertripit-web$" /-->
+
+	<securecookie host="^(?:careers\.|www\.)?tripit\.com$" name=".+" />
+
+
+	<rule from="^http://(careers\.|www\.)?tripit\.com/"
+		to="https://$1tripit.com/" />
+
+	<rule from="^http://help\.tripit\.com/"
+		to="https://tripit.zendesk.com/" />
+
+</ruleset>

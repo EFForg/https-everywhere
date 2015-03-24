@@ -1,16 +1,277 @@
 <!--
+	University of Maryland
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/wrapper.umd.edu/
+
+
+	Nonfunctional subdomains:
+
+		- agnr ¹
+		- alumni ¹
+		- kb ³
+		- mith ⁴
+		- (www.)nethics ⁴
+		- (www.)password ²
+		- (www.)president ²
+		- (www.)sas ⁵
+		- (www.)?start ²
+		- (www.)terp ⁶
+		- (www.)terpvision ²
+		- (www.)testudo ⁵
+		- thestamp
+		- (www.)transportation ⁷
+
+	¹ Dropped
+	³ Plaintext reply
+	⁴ Refused
+	² Redirects to www
+	⁵ 401
+	⁶ Shows default page
+	⁷ 500
+
+
+	Problematic subdomains:
+
+		- password *
+
+	* Redirects to www
+
+
 	Partially covered subdomains:
 
-		- terpconnect	(some data differ from http)
+		- (www.)helpdesk ¹
+		- kb ³			(→ www.itsc)
+		- ldap ¹
+		- www.lib ⁴
+		- (www.)provost ¹
+		- terpconnect ²
+
+	¹ Avoiding broken MCB
+	³ $ doesn't redirect
+	⁴ $ redirects to http
+	² Some data differ from http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)arch
+		- carma.astro
+		- catalog
+		- cgi
+
+		- (www.)?cs
+		- undergrad.cs
+		- webapps.cs
+
+		- (www.)?directory
+		- (www.)eng
+		- (www.)glue
+		- (www.)inform
+		- (www.)irpa
+		- (www.)it
+		- (www.)itsc
+		- lib
+		- aeon.lib
+		- login
+		- ntst
+		- oes
+		- (www.)oit
+		- password		(→ www.it)
+		- researchport
+		- (www.)umdrightnow
+		- (www.)?umiacs
+		- wiki.umiacs
+
+
+	These altnames don't exist:
+
+		- suap01cms.ad.umd.edu
+		- www.ldap.umd.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- (www.)
+		- .
+		- (www.)provost
+		- .www
+
+
+	Mixed content:
+
+		- css on helpdesk, ldap from www *
+		- css on www.provost from $self *
+
+		- Images, on:
+
+			- ldap from www *
+			- (www.)provost from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="University of Maryland (partial)">
+<ruleset name="UMd.edu (partial)">
 
-	<target host="*.umd.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="umd.edu" />
+	<target host="arch.umd.edu" />
+	<target host="www.arch.umd.edu" />
+	<target host="carma.astro.umd.edu" />
+	<target host="catalog.umd.edu" />
+	<target host="cgi.umd.edu" />
+	<target host="cs.umd.edu" />
+	<target host="undergrad.cs.umd.edu" />
+	<target host="webapps.cs.umd.edu" />
+	<target host="www.cs.umd.edu" />
+	<target host="directory.umd.edu" />
+	<target host="www.directory.umd.edu" />
+	<target host="eng.umd.edu" />
+	<target host="www.eng.umd.edu" />
+	<target host="helpdesk.umd.edu" />
+	<target host="www.helpdesk.umd.edu" />
+	<target host="glue.umd.edu" />
+	<target host="www.glue.umd.edu" />
+	<target host="inform.umd.edu" />
+	<target host="www.inform.umd.edu" />
+	<target host="irpa.umd.edu" />
+	<target host="www.irpa.umd.edu" />
+	<target host="it.umd.edu" />
+	<target host="www.it.umd.edu" />
+	<target host="itsc.umd.edu" />
+	<target host="www.itsc.umd.edu" />
+	<!--target host="ldap.umd.edu" /-->
+	<target host="lib.umd.edu" />
+	<target host="aeon.lib.umd.edu" />
+	<target host="www.lib.umd.edu" />
+	<target host="login.umd.edu" />
+	<target host="ntst.umd.edu" />
+	<target host="oes.umd.edu" />
+	<target host="oit.umd.edu" />
+	<target host="www.oit.umd.edu" />
+	<target host="provost.umd.edu" />
+	<target host="www.provost.umd.edu" />
+	<target host="researchport.umd.edu" />
+	<target host="terpconnect.umd.edu" />
+	<target host="umdrightnow.umd.edu" />
+	<target host="www.umdrightnow.umd.edu" />
+	<target host="umiacs.umd.edu" />
+	<target host="wiki.umiacs.umd.edu" />
+	<target host="www.umiacs.umd.edu" />
+
+	<!--	Special cases:
+				-->
+	<target host="kb.umd.edu" />
+	<target host="password.umd.edu" />
+
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://helpdesk\.umd\.edu/+(?!favicon\.ico|images/|web\.support/)" />
+
+			<!-- +ve:
+					-->
+			<test url="http://helpdesk.umd.edu/contact/" />
+			<test url="http://helpdesk.umd.edu/fpGlobalAlerts/" />
+			<test url="http://helpdesk.umd.edu/podcast/" />
+			<test url="http://helpdesk.umd.edu/menus/menu1/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://helpdesk.umd.edu/favicon.ico" />
+
+		<!--exclusion pattern="^http://ldap\.umd\.edu/+(?!favicon\.ico|images/|Pictures/)" /-->
+		<exclusion pattern="^http://www\.provost\.umd\.edu/+(?!favicon\.ico|images/|includes/|masthead\.jpg|photos/|resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.provost.umd.edu/about/rankin.cfm" />
+			<test url="http://www.provost.umd.edu/about/senior-staff.cfm" />
+			<test url="http://www.provost.umd.edu/calendar/" />
+			<test url="http://www.provost.umd.edu/calendar/14.html" />
+			<test url="http://www.provost.umd.edu/contact_us.cfm" />
+			<test url="http://www.provost.umd.edu/implement.cfm" />
+			<test url="http://www.provost.umd.edu/mission_statement.cfm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.provost.umd.edu/favicon.ico" />
+			<test url="http://www.provost.umd.edu/includes/screen.css" />
+			<test url="http://www.provost.umd.edu/images/mpower.jpg" />
+			<test url="http://www.provost.umd.edu/masthead.jpg" />
+
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://(www\.)?start\.umd\.edu/gtd/images/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.lib\.umd\.edu/($|favicon\.ico)" /-->
+		<!--exclusion pattern="^http://(www\.)?start\.umd\.edu/gtd/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.lib\.umd\.edu/+(?!binaries/|css/|images/)" />
+
+			<test url="http://www.lib.umd.edu/PUBSERV/spcmck.html" />
+			<test url="http://www.lib.umd.edu/tl/guides/assignment" />
+			<test url="http://www.lib.umd.edu/tl/guides/evaluating-checklist" />
+			<test url="http://www.lib.umd.edu/tl/guides/grad" />
+
+
 		<exclusion pattern="^http://terpconnect\.umd\.edu/(?!~)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://terpconnect.umd.edu//" />
 
-	<rule from="^http://(carma\.astro|(?:www\.)?eng|terpconnect)\.umd\.edu/"
-		to="https://$1.umd.edu/" />
+			<!--	-ve:
+					-->
+			<test url="http://terpconnect.umd.edu/~baforman/" />
+
+		<exclusion pattern="^http://kb\.umd\.edu/(?!\d)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://kb.umd.edu/foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://kb.umd.edu/6158" />
+			<test url="http://kb.umd.edu/6509" />
+			<test url="http://kb.umd.edu/59754" />
+			<test url="http://kb.umd.edu/178176" />
+			<test url="http://kb.umd.edu/198541" />
+			<test url="http://kb.umd.edu/229273" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.?(www\.)?umd\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(www\.)?provost\.umd\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:www\.)?umd\.edu$" name=".+" />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://kb\.umd\.edu/+(\d+)(?:\?.*)?"
+		to="https://www.itsc.umd.edu/MRcgi/MRTicketPage.pl?USER=&amp;MRP=0&amp;PROJECTID=1&amp;MR=$1" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://password\.umd\.edu/[^?]*"
+		to="https://www.it.umd.edu/password" />
+
+		<test url="http://password.umd.edu//" />
+		<test url="http://password.umd.edu/?foo" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

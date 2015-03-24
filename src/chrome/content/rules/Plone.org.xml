@@ -1,19 +1,39 @@
 <!--
 	Nonfunctional subdomains:
 
-		- planet	(403, valid cert)
+		- planet *
+
+	* 403, expired
 
 
-	Mixed image from planet on dev
+	Problematic subdomains:
+
+		- lists *
+
+	* Works; mismatched, CN: *.osuosl.org
+
+
+	Mixed content:
+
+		- Image on dev from planet ¹
+
+		- favicon on dev from ^ ²
+
+	¹ Unsecurable <= 403
+	² Secured by us
 
 -->
-<ruleset name="Plone.org">
+<ruleset name="Plone.org (partial)">
 
 	<target host="plone.org" />
 	<target host="*.plone.org" />
 
 
-	<securecookie host="^(?:dev)?\.plone\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^plone\.org$" name="^zinstance$" /-->
+
+	<securecookie host="^(?:dev\.|\.)?plone\.org$" name=".+" />
 
 
 	<rule from="^http://((?:dev|staging|svn|www)\.)?plone\.org/"

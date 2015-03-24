@@ -1,6 +1,34 @@
-<ruleset name="Jabber.at">
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://www.list.jabber.at/ => https://list.jabber.at/: (7, 'Failed to connect to www.list.jabber.at port 80: Connection refused')
+
+	Problematic subdomains:
+
+		- www.list *
+
+	* Plaintext reply
+
+-->
+<ruleset name="Jabber.at" default_off='failed ruleset test'>
   <target host="jabber.at" />
+	<target host="list.jabber.at" />
+	<target host="www.list.jabber.at" />
   <target host="www.jabber.at" />
 
-  <rule from="^http://(www\.)?jabber\.at/" to="https://jabber.at/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^list\.jabber\.at$" name="^csrftoken$" /-->
+
+	<securecookie host="^list\.jabber\.at$" name=".+" />
+
+
+  <rule from="^http://(?:www\.)?jabber\.at/" to="https://jabber.at/" />
+
+	<rule from="^http://www\.list\.jabber\.at/"
+		to="https://list.jabber.at/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

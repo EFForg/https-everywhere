@@ -20,6 +20,10 @@
 			- sgst[cj].msn.com
 			- sin.st[cjs].s-msn.com
 
+		- legstatics.s-msn.com.edgesuite.net
+
+			- cpc.db3.s-msn.com
+
 		- sgstb0[01]-s.msn.com.edgesuite.net | sgstb.sin.cb3.glbdns.microsoft.com
 
 			- a1574.g2.akamai.net
@@ -45,6 +49,7 @@
 
 	Nonfunctional subdomains:
 
+		- cpc.db3 *
 		- col.stc *
 		- hlc **
 		- hli **
@@ -52,7 +57,6 @@
 		- kaw.st[bc] **
 		- sin.st[cj]		(504, akamai)
 		- img[12].video *
-		- img.widgets.video *
 
 	* 503, akamai
 	** Times out
@@ -64,6 +68,9 @@
 
 		- *.st
 
+		- static *
+		- static-hp *
+
 		- *.stb
 
 			- col
@@ -73,13 +80,11 @@
 
 		- *.stb\d*
 
-			- col.stb00 *
 			- db2.stb0[01] **
 			- sin.stb00 *
 
 		- *.stc
 
-			- col
 			- db2
 			- db3
 			- kaw
@@ -89,6 +94,7 @@
 			- db2.stj
 
 		- img3.catalog.video *
+		- img.widgets.video *
 
 
 	* Works, akamai
@@ -97,16 +103,18 @@
 
 	Fully covered subdomains:
 
-		- cpc.db3	(→ msn.vo.msecnd.net)
 		- entcss
 		- entimg
+		- img
 		- media-social
 		- blu.st[bc]
 		- kaw.stb
 		- sin.stb *
-		- col.stb00 *
+		- col.stb0[01]
 		- sin.stb0[01] *
+		- col.stc
 		- st[cj]-now
+		- wst
 
 	* → akamai
 
@@ -116,17 +124,20 @@
 	<target host="*.s-msn.com" />
 
 
-	<rule from="^http://(entcss|entimg|media-social|blu\.st[bc]|kaw\.stb|st[cj]-now)\.s-msn\.com/"
+	<rule from="^http://(entcss|entimg|img|media-social|blu\.st[bc]|col\.stb0[01]|kaw\.stb|col\.stc|st[cj]-now|wst)\.s-msn\.com/"
 		to="https://$1.s-msn.com/" />
 
-	<rule from="^http://cpc\.db3\.s-msn\.com/"
-		to="https://msn.vo.msecnd.net/" />
+	<!--	Serves stylesheets, so we cannot
+		rewrite to akamai.
+
+		s? for protocol-relative links
+		on //preview.msn.com:
+					-->
+	<rule from="^https?://static-hp\.s-msn\.com/"
+		to="https://preview.msn.com/" />
 
 	<rule from="^http://sin\.stb\.s-msn\.com/"
 		to="https://a248.e.akamai.net/f/1574/354/10m/sin.stb.s-msn.com/" />
-
-	<rule from="^http://col\.stb00\.s-msn\.com/"
-		to="https://a248.e.akamai.net/f/1910/6648/3d/col.stb00.s-msn.com/" />
 
 	<rule from="^http://sin\.stb0(0|1)\.s-msn\.com/"
 		to="https://a248.e.akamai.net/f/1574/5119/5m/sin.stb0$1.s-msn.com/" />

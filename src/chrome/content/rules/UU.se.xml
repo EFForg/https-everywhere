@@ -1,43 +1,66 @@
-<!-- Uppsala university -->
-<!-- Not all subdomains suports ssl, here are those that does -->
-<ruleset name="UU.se" platform="mixedcontent">
-	<target host="boxer.bmc.uu.se" />
-	<target host="it.bmc.uu.se" />
-	<target host="www.uu.se" />
-	<target host="helpdesk.uu.se" />
-	<target host="dropbox.uu.se" />
-	<target host="filer.anst.uu.se" />
-	<target host="www.anst.uu.se" />
-	<target host="filer.student.uu.se" />
-	<target host="home.student.uu.se" />
-	<target host="mail.teknik.uu.se" />
-	<target host="tor.uadm.uu.se" />
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://uu.se/ => https://www.uu.se/: (6, 'Could not resolve host: uu.se')
+	Uppsala university
+
+
+	Nonfunctional subdomains:
+
+		- (www.)astro *
+		- user.it *
+		- www.uaf ²
+
+	* Dropped
+	² Handshake fails
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- filer.anst
+		- www.anst
+		- boxer.bmc
+		- it.bmc
+		- dropbox
+		- helpdesk
+		- www.it
+		- www.listserv
+		- filer.student
+		- home.student
+		- mail.teknik
+		- tor.uadm
+		- www.uppmax
+		- www.uuinnovation
+		- webmail
+		- www-hotel
+
+
+	Insecure cookies are set for these domains:
+
+		- www.it
+
+
+	Not all subdomains suports ssl, here are those that do.
+
+ -->
+<ruleset name="UU.se" platform="mixedcontent" default_off='failed ruleset test'>
+
 	<target host="uu.se" />
-	<target host="webmail.uu.se" />
-	<target host="www-hotel.uu.se" />
-	<target host="www.it.uu.se" />
-	<target host="www.listserv.uu.se" />
-	<target host="www.uaf.uu.se" />
-	<target host="www.uppmax.uu.se" />
-	<target host="www.uuinnovation.uu.se" />
-	<rule from="^http://uu\.se/" to="https://www.uu.se/"/>
-	<rule from="^http://www\.uu\.se/" to="https://www.uu.se/"/>
-	<rule from="^http://www-hotel\.uu\.se/" to="https://www-hotel.uu.se/"/>
-	<rule from="^http://webmail\.uu\.se/" to="https://webmail.uu.se/"/>
-	<rule from="^http://helpdesk\.uu\.se/" to="https://helpdesk.uu.se/"/>
-	<rule from="^http://dropbox\.uu\.se/" to="https://dropbox.uu.se/"/>
-	<rule from="^http://boxer\.bmc\.uu\.se/" to="https://boxer.bmc.uu.se/"/>
-	<rule from="^http://it\.bmc\.uu\.se/" to="https://it.bmc.uu.se/"/>
-	<rule from="^http://filer\.anst\.uu\.se/" to="https://filer.anst.uu.se/"/>
-	<rule from="^http://www\.anst\.uu\.se/" to="https://www.anst.uu.se/"/>
-	<rule from="^http://www\.it\.uu\.se/" to="https://www.it.uu.se/"/>
-	<rule from="^http://www\.listserv\.uu\.se/" to="https://www.listserv.uu.se/"/>
-	<rule from="^http://www\.uaf\.uu\.se/" to="https://www.uaf.uu.se/"/>
-	<rule from="^http://www\.uppmax\.uu\.se/" to="https://www.uppmax.uu.se/"/>
-	<rule from="^http://www\.uuinnovation\.uu\.se/" to="https://www.uuinnovation.uu.se/"/>
-	<rule from="^http://filer\.student\.uu\.se/" to="https://filer.student.uu.se/"/>
-	<rule from="^http://home\.student\.uu\.se/" to="https://home.student.uu.se/"/>
-	<rule from="^http://mail\.teknik\.uu\.se/" to="https://mail.teknik.uu.se/"/>
-	<rule from="^http://tor\.uadm\.uu\.se/" to="https://tor.uadm.uu.se/"/>
+	<target host="*.uu.se" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.it\.uu\.se$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^www\.it\.uu\.se$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?uu\.se/"
+		to="https://www.uu.se/" />
+
+	<rule from="^http://((?:filer|www)\.anst|(?:boxer|it)\.bmc|dropbox|filer|helpdesk|www\.it|www\.listserv|(?:filer|home)\.student|mail\.teknik|tor\.uadm|www\.uppmax|www\.uuinnovation|webmail|www-hotel)\.uu\.se/"
+		to="https://$1.uu.se/" />
+
 </ruleset>
 

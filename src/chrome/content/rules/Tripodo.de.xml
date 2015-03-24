@@ -1,0 +1,43 @@
+<!--
+	CDN buckets:
+
+		- d3jjs8jj56ow4v.cloudfront.net
+
+			- static.tripodo.de
+
+		- d3n4h69ermngjr.cloudfront.net
+
+			- bilder-cdn.tripodo.de
+
+
+	^: cert only matches *.tripodo.de
+
+-->
+<ruleset name="Tripodo.de (partial)">
+
+	<target host="tripodo.de" />
+	<target host="*.tripodo.de" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="http://www\.tripodo\.de/($|favicon\.ico|login/$|passwort-vergessen/$)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="http://www\.tripodo\.de/(css/new_public/|images/general/|images/new_public/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?tripodo\.de/+(?!photo/|photo_\d+_\w\.jpg)" />
+
+
+	<rule from="^http://(?:www\.)?tripodo\.de/"
+		to="https://www.tripodo.de/" />
+
+	<rule from="^http://bilder-cdn\.tripodo\.de/"
+		to="https://d3n4h69ermngjr.cloudfront.net/" />
+
+	<rule from="^http://static\.tripodo\.de/"
+		to="https://d3jjs8jj56ow4v.cloudfront.net/" />
+
+</ruleset>

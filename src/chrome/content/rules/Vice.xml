@@ -1,4 +1,8 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://assets.noisey.cn/ => https://d1ymkg0yqrfr5q.cloudfront.net/: (6, 'Could not resolve host: assets.noisey.cn')
+
 	For problematic rules, see Vice-problematic.xml.
 
 
@@ -6,52 +10,164 @@
 
 		- (www.)noisey.cn
 		- (www.)thecreatorsproject.com	(interrupted)
-		- vice.com			(cert: manage.vice.com, self-signed; 503)
-		- www.vice.com
-		- motherboard.vice.com		(reset)
+		- hbo.vice.com ⁴
+		- i-d.vice.com ⁵
+		- motherboard.vice.com ³
+		- shop.vice.com ⁶
 		- noisey.vice.com
 		- socials.uk.vice.com		(cert: socials.vice.com; reset)
 		- scs.viceland.com		(shows default plesk page; expired 2010-11-15, self-signed)
 
+	⁴ "error", destination doesn't support tls
+	⁵ Refused
+	³ Redirects to http, valid cert
+	⁶ shopify
+
 
 	CDN buckets:
 
+
 		- ec2-184-73-100-150.compute-1.amazonaws.com
+		- scs-assets.s3.amazonaws.com
 		- d19o6jcqbnxtyy.cloudfront.net
+
 		- d1qzzfctbfyh6r.cloudfront.net
+
+			- assets.vice.com
+
+		- d1wzhalc7g55g3.cloudfront.net
+
+			- assets-i-d.vice.com
+
 		- d1ymkg0yqrfr5q.cloudfront.net
 		- d7qfuicnb8zug.cloudfront.net
+
+		- df5qbu832tmne.cloudfront.net
+
+			- assets.thumb.vice.com
+
 		- dm07ef02yemve.cloudfront.net
 		- dz6snzmhpcl6f.cloudfront.net
+		- motherboard.vice.com.edgesuite.net
+		- motherboard-cdn-assets.vice.com.edgesuite.net
+
+
+	Problematic subdomains:
+
+		- assets ²
+		- motherboard-cdn-assets ³
+		- assets.thump ²
+
+	² cloudfront
+	³ Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- assets	(→ d1qzzfctbfyh6r.cloudfront.net)
+		- assets2
+		- assets-i-d	(→ d1wzhalc7g55g3.cloudfront.net)
+		- assets-news
+		- assets-sports
+		- embeds
+		- motherboard-images
+		- munchies
+		- news
+		- noisey
+		- sports
+		- sports-images
+		- staging-assets-news
+		- thump
+		- assets.thump	(→ df5qbu832tmne.cloudfront.net)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- munchies from images *
+			- noisey from assets.noisey.com *
+			- thump from assets.thump *
+			- www from assets *
+			- www from scs-assets.s3.amazonaws.com *
+
+		- Bugs, on:
+
+			- munchies and www from b.scorecardresearch.com *
+			- www from platform.tumblr.com *
+			- www from platform.twitter.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Vice (partial)">
+<ruleset name="Vice (partial)" default_off='failed ruleset test'>
 
-	<target host="*.motherboard.tv" />
-	<target host="assets.noisey.*" />
+	<target host="assets.motherboard.tv" />
+	<target host="assets2.motherboard.tv" />
+	<target host="assets.noisey.cn" />
+	<target host="assets.noisey.com" />
 	<target host="assets.thecreatorsproject.com" />
+	<target host="vice.com" />
 	<target host="*.vice.com" />
+		<!--exclusion pattern="^http://(hbo|i-d|shop)\.vice\.com/" /-->
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://motherboard\.vice\.com/" /-->
+
+		<test url="http://assets.vice.com/" />
+		<test url="http://assets2.vice.com/" />
+		<test url="http://assets-i-d.vice.com/" />
+		<test url="http://assets-news.vice.com/" />
+		<test url="http://assets-sports.vice.com/" />
+		<test url="http://embeds.vice.com/" />
+		<test url="http://motherboard-images.vice.com/" />
+		<test url="http://munchies.vice.com/" />
+		<test url="http://news.vice.com/" />
+		<test url="http://news.vice.com/shows" />
+		<test url="http://noisey.vice.com/" />
+		<test url="http://sports.vice.com/" />
+		<test url="http://sports-images.vice.com/" />
+		<test url="http://staging-assets-news.vice.com/" />
+		<test url="http://thump.vice.com/" />
+		<test url="http://assets.thump.vice.com/" />
+		<test url="http://www.vice.com/" />
+		<test url="http://www.vice.com/stuff" />
 
 
-	<rule from="^https?://assets\.motherboard\.tv/"
+	<rule from="^http://assets\.motherboard\.tv/"
 		to="https://dz6snzmhpcl6f.cloudfront.net/" />
 
-	<rule from="^https?://assets2\.motherboard\.tv/"
+	<rule from="^http://assets2\.motherboard\.tv/"
 		to="https://d7qfuicnb8zug.cloudfront.net/" />
 
-	<rule from="^https?://assets\.noisey\.cn/"
+	<rule from="^http://assets\.noisey\.cn/"
 		to="https://d1ymkg0yqrfr5q.cloudfront.net/" />
 
-	<rule from="^https?://assets\.noisey\.com/"
+	<rule from="^http://assets\.noisey\.com/"
 		to="https://d19o6jcqbnxtyy.cloudfront.net/" />
 
-	<rule from="^https?://assets\.thecreatorsproject\.com/"
+	<rule from="^http://assets\.thecreatorsproject\.com/"
 		to="https://dm07ef02yemve.cloudfront.net/" />
 
-	<rule from="^https?://assets\.vice\.com/"
+
+	<rule from="^http://assets\.vice\.com/"
 		to="https://d1qzzfctbfyh6r.cloudfront.net/" />
 
-	<rule from="^http://socials\.vice\.com/"
-		to="https://socials.vice.com/" />
+	<rule from="^http://assets-i-d\.vice\.com/"
+		to="https://d1wzhalc7g55g3.cloudfront.net/" />
+
+	<rule from="^http://((?:assets-(?:news|sports)|assets2|embeds|images|(?:motherboard|sports)-images|munchies|news|noisey|socials|sports|staging-assets-news|thump|www)\.)?vice\.com/"
+		to="https://$1vice.com/" />
+
+	<!--rule from="^http://hbo\.vice\.com/.*"
+		to="https://connect.hbo.com/vice/" /-->
+
+	<!--rule from="^http://store\.vice\.com/"
+		to="https://vice.myshopify.com/" /-->
+
+	<rule from="^http://assets\.thump\.vice\.com/"
+		to="https://df5qbu832tmne.cloudfront.net/" />
 
 </ruleset>

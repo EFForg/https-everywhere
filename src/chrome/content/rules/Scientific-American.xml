@@ -1,15 +1,30 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://sciamdigital.com/ => http://sciamdigital.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/page/welcome-scientific-american-digital-customers/
+Fetch error: http://www.sciamdigital.com/ => http://www.sciamdigital.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/page/welcome-scientific-american-digital-customers/
+Fetch error: http://scientificamerican.com/ => https://www.scientificamerican.com/: Cycle detected - URL already encountered: https://www.scientificamerican.com/
 	Nonfunctional subdomains:
 
 		- books		(revoked)
 
+
+	^: expired
+
 -->
-<ruleset name="Scientific American (partial)" platform="mixedcontent">
+<ruleset name="Scientific American (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
 	<target host="sciamdigital.com" />
 	<target host="www.sciamdigital.com" />
 	<target host="scientificamerican.com" />
 	<target host="*.scientificamerican.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.scientificamerican\.com/article/[\w-]+/$" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://www\.scientificamerican\.com/article/" />
 
 
 	<!--	Observed cookies:
@@ -18,8 +33,11 @@
 			- ^subscribe
 			- ^www
 				-->
-	<securecookie host=".*\.scientificamerican.com$" name=".*" />
+	<securecookie host="subscribe\.scientificamerican.com$" name=".*" />
 
+
+	<rule from="^http://www\.scientificamerican\.com/(.+)\.pagespeed\..*$"
+		to="https://www.scientificamerican.com/$1" />
 
 	<!--	There may be more pages that
 		don't  redirect to http.	-->
@@ -30,19 +48,19 @@
 
 		https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001248.html
 
-	<rule from="^https?://www\.scientificamerican\.com/media/cover/current\.jpg"
+	<rule from="^http://www\.scientificamerican\.com/media/cover/current\.jpg"
 		to="https://www.scientificamerican.com/media/cover/current.cfm" /-->
 
 	<!--	https://trac.torproject.org/projects/tor/ticket/8077
 		https://mail1.eff.org/pipermail/https-everywhere-rules/2013-February/001487.html
 												-->
-	<rule from="^https?://www\.scientificamerican\.com/assets/css/screen/I\.([\w\-\.]+)\.css\.pagespeed\.cf\.\w+\.css$"
+	<rule from="^http://www\.scientificamerican\.com/assets/css/screen/I\.([\w\-\.]+)\.css\.pagespeed\.cf\.\w+\.css$"
 		to="https://www.scientificamerican.com/assets/css/screen/$1.css" />
 
-	<rule from="^https?://www\.scientificamerican\.com/(.+)\.pagespeed\..*$"
-		to="https://www.scientificamerican.com/$1" />
+	<rule from="^http://(?:www\.)?scientificamerican\.com/"
+		to="https://www.scientificamerican.com/" />
 
-	<rule from="^http://(subscribe\.|www\.)?scientificamerican\.com/"
-		to="https://$1scientificamerican.com/" />
+	<rule from="^http://subscribe\.scientificamerican\.com/"
+		to="https://subscribe.scientificamerican.com/" />
 
 </ruleset>

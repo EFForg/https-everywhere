@@ -23,19 +23,35 @@
 			- c20
 			- c40
 
+
+	Insecure cookies are set for these domains:
+
+		- .statcounter.com
+
 -->
-<ruleset name="Statcounter (partial)">
+<ruleset name="Statcounter.com (partial)">
 
 	<target host="statcounter.com" />
 	<target host="*.statcounter.com" />
 		<!--exclusion pattern="^http://gs\.statcounter\.com/" /-->
 
+		<test url="http://c.statcounter.com/" />
+		<test url="http://c20.statcounter.com/" />
+		<test url="http://c40.statcounter.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.statcounter\.com$" name="^is_unique$" /-->
 
 	<securecookie host="^(?!gs\.)(?:.*\.)?statcounter\.com$" name=".+" />
 
 
-	<rule from="^https?://www(?:-beta)?\.statcounter\.com/"
+	<rule from="^http://www(?:-beta)?\.statcounter\.com/"
 		to="https://statcounter.com/" />
+
+		<test url="http://www.statcounter.com/" />
+		<test url="http://www-beta.statcounter.com/" />
 
 	<rule from="^http://(?!gs\.)([^/:@\.]+\.)?statcounter\.com/"
 		to="https://$1statcounter.com/" />

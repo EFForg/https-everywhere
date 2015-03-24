@@ -1,0 +1,98 @@
+<!--
+	University of Richmond
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- alert ¹
+		- alumni ¹
+		- as ¹
+		- assets ¹
+		- blog ²
+		- business ¹
+		- calendar ¹
+		- communications ¹
+		- directory ³
+		- downtown ¹
+		- engage ¹
+		- foghorn ⁴
+		- giving ¹
+		- hr ¹
+		- international ¹
+		- is ¹
+		- jepson ¹
+		- law ¹
+		- library ¹
+		- livinglearning ¹
+		- modlin ¹
+		- multicultural ¹
+		- news ¹
+		- police ¹
+		- president ¹
+		- provost ¹
+		- robins ¹
+		- scs ¹
+		- search ⁵
+		- spcs ¹
+		- spiderdiaries ¹
+		- studentdevelopment ¹
+
+	¹ Shows webapps; mismatched, CN: webapps.richmond.edu
+	² Shows foghorn, mismatched, CN: foghorn.richmond.edu
+	³ Redirects to http, valid cert
+	⁴ Shows RHEL test page, self-signed
+	⁵ Redirects to http; mismatched, CN: foo.ent.google.com
+
+
+	Fully covered subdomains:
+
+		- autodiscover
+		- bannerweb
+		- blackboard
+		- dsl
+		- exchangemail
+		- facultystaff
+		- webapps
+		- webpass
+
+
+	Observed cookie domains:
+
+		- autodiscover ¹
+		- bannerweb ²
+		- blackboard ²
+		- exchangemail ¹
+		- webpass ²
+
+	¹ Secured by server
+	² Secured by us
+
+
+	Mixed content:
+
+		- css on dsl from fonts.googleapis.com *
+
+		- Images on dsl from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Richmond.edu (partial)">
+
+	<target host="*.richmond.edu" />
+
+
+	<!--	Server sets Secure for these:
+						-->
+	<!--securecookie host="^(autodiscover|exchangemail)\.richmond\.edu$" name=".+" /-->
+	<!--
+		But not for some of these:
+						-->
+	<securecookie host="^(?:bannerweb|blackboard|webpass)\.richmond\.edu$" name=".+" />
+
+
+	<rule from="^http://(autodiscover|bannerweb|blackboard|dsl|exchangemail|facultystaff|webapps|webpass)\.richmond\.edu/"
+		to="https://$1.richmond.edu/" />
+
+</ruleset>

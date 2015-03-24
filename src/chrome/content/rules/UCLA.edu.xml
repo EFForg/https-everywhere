@@ -1,0 +1,222 @@
+<!--
+	University of California, Los Angeles
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- tours.admission ²
+		- tours.admissions ²
+		- map.ais ³
+		- ptplv.ais ³
+		- (www.)calendar ⁴
+		- m.dining ⁵
+		- (www.)directory ⁴
+		- giveto ⁶
+		- ha ⁵
+		- admin.happenings ²
+		- m.happenings ⁷
+		- gateway.it ²
+		- (www.)learnit ⁸
+		- catalog.library ⁴
+		- guides.library ⁹
+		- m.library ⁴
+		- lists	 ⁴
+		- newsroom ⁴
+		- m.recreation ᵃ
+		- (www.)registrar ⁴
+		- www.studentincrisis ᵇ
+
+	¹ /.+ redirects to $
+	² Data differ, valid cert
+	³ Dropped
+	⁴ Refused
+	⁵ Shows secure5.ha
+	⁶ Plaintext reply
+	⁷ Shows ^happenings
+	⁸ Shows sheltie.ats
+	⁹ LibGuides
+	ᵃ Shows www.recreation
+	ᵇ 404; mismatched, CN: *.uclanet.ucla.edu
+
+
+	Problematic subdomains:
+
+		- (www.)accessweb ¹
+		- (www.)ada ²
+		- admission ³
+		- admissions ³
+		- shb.ais ⁴
+		- maps ⁵
+		- mwf ⁵
+		- osd ²
+		- www.recreation ⁵
+		- www.ursa ⁴
+
+	¹ Expired 2012
+	² Mismatched, CN: dnn.uclanet.ucla.edu
+	³ Mismatched, CN: www.admission.ucla.edu
+	⁴ Configured for rc4 only
+	⁵ Mixed css
+
+
+	Partially covered subdomains:
+
+		- guides.library	(→ libguides.com)
+		- maps *
+		- mwf *
+		- www.recreation *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)admissions	(^ → www)
+		- shb.ais
+		- sheltie.ats
+		- auth
+		- auth-asm1.auth
+		- (www.)bruintech
+		- (www.)ccle
+		- docs.ccle
+		- (www.)dcp
+		- (www.)diversity
+		- welcome.diversity
+		- (www.)events
+		- secure5.ha
+		- (www.)happenings
+		- dev.happenings
+
+		- (www.)it
+		- studentweb.it
+		- wwwprep.it
+
+		- kb
+
+		- (www.)library
+		- www-stage.library
+		- www-test.library
+
+		- (www.)logon
+		- logon-asm1.logon
+		- logon-csb1.logon
+
+		- m
+		- hr.mycareer
+		- (www.)osd		(^ → www)
+		- secure.recreation
+		- computing.sscnet
+		- dnn.uclanet
+		- (www.)ucod
+		- www.ursa
+
+
+	These altnames don't exist:
+
+		- www.auth.ucla.edu
+
+		- drupalstage-auth.library.ucla.edu
+		- drupalstage-edit.library.ucla.edu
+		- drupaltest-auth.library.ucla.edu
+		- drupaltest-edit.library.ucla.edu
+		- www-stooge-auth.library.ucla.edu
+		- www-stooge-edit.library.ucla.edu
+		- www-stooge1-auth.library.ucla.edu
+		- www-stooge1-edit.library.ucla.edu
+		- www-stooge2-auth.library.ucla.edu
+		- www-stooge2-edit.library.ucla.edu
+		- www-stooge3-auth.library.ucla.edu
+		- www-stooge3-edit.library.ucla.edu
+		- www-webhead1-auth.library.ucla.edu
+		- www-webhead1-edit.library.ucla.edu
+		- www-webhead2-auth.library.ucla.edu
+		- www-webhead2-edit.library.ucla.edu
+		- www-webhead3-auth.library.ucla.edu
+		- www-webhead3-edit.library.ucla.edu
+		- www-auth.library.ucla.edu
+		- www-edit.library.ucla.edu
+
+		- ursa.ucla.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- (www.)ada
+		- shb.ais
+		- kb
+		- www.recreation
+		- (www.)osd
+		- dnn.uclanet
+
+
+	Mixed content:
+
+		- css, on:
+
+			- maps from m ¹
+			- www.recreation from $self ¹
+			- www.recreation from code.jquery.com ¹
+
+		- Images, on:
+
+			- (www.)admission and (www.)?admissions from www ²
+			- m from $self ¹
+			- maps from $self ¹
+			- maps from ptplv.ais ³
+			- www.recreation from $self ¹
+			- www.recreation from i.ytimg.com ¹
+
+	¹ Secured by us
+	² Unsecurable
+	³ Unsecurable <= dropped
+
+-->
+<ruleset name="UCLA.edu (partial)">
+
+	<target host="*.ucla.edu" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?ucla\.edu/$" /-->
+		<!--
+			Redirect to $:
+					-->
+		<!--exclusion pattern="^http://(www\.)?ucla\.edu/(img/)" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://maps\.ucla\.edu/+m/" />
+		<exclusion pattern="^http://mwf\.ucla\.edu/+(?!css/|img/)" />
+		<exclusion pattern="^http://www\.recreation\.ucla\.edu/+(?!\?css=|images/|scripts/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^shb\.ais\.ucla\.edu$" name="^SHB\d+Cookie$" /-->
+	<!--securecookie host="^kb\.ucla\.edu$" name="^(_shibstate_\d+_[0-9a-f]+|_uclakb_session)$" /-->
+	<!--securecookie host="^((www\.)?ada|(www\.)?osd|dnn\.uclanet)\.ucla\.edu$" name="^(\.ASPXANONYMOUS|BIGipServerdnn\.uclanet\.ucla\.edu-pool|b+|dnn_IsMobile)$" /-->
+
+	<securecookie host="^(?:shb\.ais|kb|(?:www\.)?osd|dnn\.uclanet)\.ucla\.edu$" name=".+" />
+	<securecookie host="^www\.recreation\.ucla.edu$" name="^exp_last_(?:activity|visit)$" />
+
+
+	<!--	Domains for which both !www and www exist,
+		but only www is unproblematic.
+						-->
+	<rule from="^http://(?:www\.)?(admissions?|osd)\.ucla\.edu/"
+		to="https://www.$1.ucla.edu/" />
+
+	<!--	Domains for which both !www and www exist,
+		and both are unproblematic.
+						-->
+	<rule from="^http://(www\.)?(bruintech|ccle|dcp|diversity|events|happenings|library|logon|ucod)\.ucla\.edu/"
+		to="https://$1$2.ucla.edu/" />
+
+	<rule from="^http://(shb\.ais|sheltie\.ats|(?:auth-asm1\.)?auth|docs\.ccle|welcome\.diversity|secure5\.ha|dev\.happenings|(?:studentweb|wwwprep)\.it|kb|(?:www-stage|www-test)\.library|logon-(?:asm|csb)1\.logon|m|maps|mwf|hr\.mycareer|(?:secure|www)\.recreation|computing\.sscnet|dnn\.uclanet|www\.ursa)\.ucla\.edu/"
+		to="https://$1.ucla.edu/" />
+
+	<rule from="^http://guides\.library\.ucla\.edu/(?=css\d*/|data/|include/|js\d*/)"
+		to="https://libguides.com/" />
+
+</ruleset>

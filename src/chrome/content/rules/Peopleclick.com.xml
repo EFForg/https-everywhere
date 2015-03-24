@@ -1,0 +1,53 @@
+<!--
+	For rules causing false/broken MCB, see Peopleclick.com.xml.
+
+	For other PeopleFluent coverage, see PeopleFluent.com.xml.
+
+
+	(www.): Works; expired, mismatched, CN: peopleclickauthoria.com
+
+
+	Problematic subdomains:
+
+		- careers *
+
+	* Mixed css from $self
+
+
+	These altnames don't exist:
+
+		- www.saml.peopleclick.com
+
+
+	Mixed content:
+
+		- css on careers from $self *
+
+		- Images on careers from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Peopleclick.com (partial)">
+
+	<target host="peopleclick.com" />
+	<target host="*.peopleclick.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://careers\.peopleclick\.com/+(?!content/)" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^careers\.peopleclick\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^saml\.peopleclick\.com$" name="^PF$" /-->
+
+
+	<rule from="^http://(?:www\.)?peopleclick\.com/"
+		to="https://www.peoplefluent.com/" />
+
+	<rule from="^http://(careers|saml)\.peopleclick\.com/"
+		to="https://$1.peopleclick.com/" />
+
+</ruleset>

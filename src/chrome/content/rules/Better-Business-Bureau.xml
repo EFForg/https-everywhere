@@ -1,48 +1,184 @@
-<ruleset name="Better Business Bureau (partial)" platform="mixedcontent">
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'Could not resolve host: hurdman.bbb.org')
+
+	Better Business Bureau
+
+
+	Nonfunctional domains:
+
+		- (www.)?labbb.org *
+
+	* Refused
+
+
+	Nonfcuntional subdomains:
+
+		- (www.)?dc *
+
+	* "domain has just been registered"
+
+
+	Problematic domains:
+
+		- bbb.org ¹
+		- (www.)?la.bbb.org *
+		- (www.)?sanjose.bbb.org *
+		- (www.)?setflorida.bbb.org *
+		- (www.)?us.bbb.org ¹
+
+		- (www.)?bbbonline.org *
+		- (www.)?bbbsilicon.org ³
+
+	¹ Dropped
+	* Mismatched
+	³ Shows default page
+
+
+	Partially covered domains:
+
+		- (www.)?bbbonline.com		(→ www.bbb.org)
+		- (www.)?bbbsilicon.org*	(→ www.bbb.org)
+
+	* (?!$|\?) doesn't redirect
+
+
+	Fully covered domains:
+
+		- bbb.org			(→ www)
+		- hurdman.app.bbb.org
+		- sanjose.app.bbb.org
+		- (www.)?us.bbb.org		(→ www.bbb.org)
+
+		- (www.)?[\w-]+.bbb.org:	(www → ^)
+
+			- assets
+			- charityreports
+			- (www.)?sanjose
+			- seal-centralalabama
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .bbb.org
+		- hurdman.app.bbb.org
+		- sanjose.app.bbb.org
+		- charityreports.bbb.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- charityreports from assets.bbb.org *
+			- www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="BBB.org (partial)" default_off='failed ruleset test'>
 
 	<target host="bbb.org"/>
 	<target host="hurdman.app.bbb.org"/>
 	<target host="*.bbb.org"/>
-		<!--	expired, self-signed, shows "domain has just been registered" page
+		<!--
 			(www.)dcbbb.org redirects here		-->
-		<exclusion pattern="^http://(?:www\.)?dc\."/>
-		<exclusion pattern="http://(?:www\.)?seflorida\."/>
-	<target host="www.*.bbb.org"/>
+		<exclusion pattern="^http://(?:www\.)?dc\.bbb\.org/"/>
+
+			<test url="http://dc.bbb.org/" />
+			<test url="http://www.dc.bbb.org/" />
+
+		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\.bbb\.org/"/>
+
+			<test url="http://la.bbb.org/" />
+			<test url="http://www.la.bbb.org/" />
+			<test url="http://seflorida.bbb.org/" />
+			<test url="http://www.seflorida.bbb.org/" />
+
 	<target host="bbbonline.org"/>
 	<target host="www.bbbonline.org"/>
 	<target host="bbbsilicon.org" />
 	<target host="www.bbbsilicon.org" />
-	<target host="labbb.org"/>
-	<target host="www.labbb.org"/>
+	<!--target host="labbb.org"/-->
+	<!--target host="www.labbb.org"/-->
 
+		<exclusion pattern="^http://(?:www\.)?bbbonline\.org/(?!cks\.asp\?id=\d)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bbbonline.org//foo" />
+			<test url="http://www.bbbonline.org//foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bbbonline.org/cks.asp?id=1" />
+			<test url="http://bbbonline.org/cks.asp?id=10" />
+			<test url="http://www.bbbonline.org/cks.asp?id=100" />
+
+		<exclusion pattern="http://(?:www\.)?bbbsilicon\.org/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bbbsilicon.org/commonreport.html" />
+			<test url="http://bbbsilicon.org/espanol/" />
+			<test url="http://bbbsilicon.org/news-events/" />
+			<test url="http://bbbsilicon.org/programs-services/" />
+			<test url="http://www.bbbsilicon.org/commonreport.html" />
+			<test url="http://www.bbbsilicon.org/espanol/" />
+			<test url="http://www.bbbsilicon.org/news-events/" />
+			<test url="http://www.bbbsilicon.org/programs-services/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bbbsilicon.org/?" />
+			<test url="http://bbbsilicon.org/?foo" />
+			<test url="http://www.bbbsilicon.org/?" />
+			<test url="http://www.bbbsilicon.org/?foo" />
+
+		<test url="http://assets.bbb.org/" />
+		<test url="http://charityreports.bbb.org/" />
+		<test url="http://sanjose.bbb.org/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bbb\.org$" name="^(__qca|BBBSite|PHPSESSID)$" /-->
+	<!--securecookie host="^(hurdman|sanjose)\.app\.bbb\.org$" name="^bbb$" /-->
+	<!--securecookie host="^sanjose\.app\.bbb\.org$" name="^(before|current|previous)$" /-->
+	<!--securecookie host="^charityreports\.bbb\.org$" name="^(ASP\.NET_SessionId|BBB_Cookie)$" /-->
 
 	<securecookie host="^.*\.bbb\.org$" name=".*" />
-	<securecookie host="^(.*\.)?bbbsilicon\.org$" name=".*" />
-	<securecookie host="^www\.labbb\.org$" name=".*"/>
+	<!--securecookie host="^www\.labbb\.org$" name=".*"/-->
 
 
-	<!--	cert invalid	-->
-	<rule from="^https?://(?:www\.)?la\.?bbb\.org/"
-		to="https://www.labbb.org/"/>
+	<!--rule from="^http://(?:www\.)?la\.?bbb\.org/"
+		to="https://www.labbb.org/"/-->
 
 	<rule from="^http://bbb\.org/"
 		to="https://www.bbb.org/"/>
 
+	<!--	Redirect keeps forward slash, path, and args:
+								-->
+	<rule from="^http://(?:www\.)?us\.bbb\.org/"
+		to="https://www.bbb.org/us/" />
+
+		<test url="http://us.bbb.org/" />
+		<test url="http://www.us.bbb.org/" />
+
 	<rule from="^http://(?:www\.)?([\w\-]+)\.bbb\.org/"
 		to="https://$1.bbb.org/"/>
 
-	<rule from="^http://hurdman\.app\.bbb\.org/"
-		to="https://hurdman.app.bbb.org/"/>
+	<rule from="^http://(hurdman|sanjose)\.app\.bbb\.org/"
+		to="https://$1.app.bbb.org/"/>
 
-	<!--	cert doesn't match 	-->
-	<rule from="^https?://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
-		to="https://www.bbb.org/us/bbb-online-business/?id=$1"/>
+		<test url="http://sanjose.app.bbb.org/abs/login.html" />
 
-	<rule from="^http://(www\.)?bbbsilicon\.org/"
-		to="https://$1bbbsilicon.org/" />
+	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp"
+		to="https://www.bbb.org/us/bbb-online-business/" />
 
-	<!--	Cert doens't match.	-->
-	<rule from="^https?://(?:www\.)?sanjose\.bbb\.org/"
-		to="https://bbbsilicon.org/" />
+	<rule from="^http://(?:www\.)?bbbsilicon\.org/+(?:\?.*)?"
+		to="https://sanjose.bbb.org/" />
+
 
 </ruleset>

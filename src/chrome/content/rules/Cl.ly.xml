@@ -1,0 +1,48 @@
+<!--
+	For other Linerunner coverage, see Linerunner.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/f.cl.ly/
+		- d9yac136u048z.cloudfront.net
+
+
+	List of related domains:
+
+		- cl.ly
+		- f.cl.ly
+		- my.cl.ly
+		- api.cld.me
+		- my.cld.me
+		- assets.my.cld.me
+
+-->
+<ruleset name="Cl.ly (partial)">
+
+	<target host="cl.ly" />
+	<target host="*.cl.ly" />
+	<target host="*.cld.me" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.cl\.ly$" name="^_engine_session$" /-->
+	<!--securecookie host="^my\.cld\.me$" name="^_engine_session$" /-->
+
+	<securecookie host="^my\.cl(?:\.ly|d\.me)$" name=".+" />
+
+
+	<rule from="^http://((?:api|my|www)\.)?cl\.ly/"
+		to="https://$1cl.ly/" />
+
+	<rule from="^http://f\.cl\.ly/"
+		to="https://s3.amazonaws.com/f.cl.ly/" />
+
+	<rule from="^http://(api|my)\.cld\.me/"
+		to="https://$1.cld.me/" />
+
+	<rule from="^http://assets\.my\.cld\.me/"
+		to="https://d9yac136u048z.cloudfront.net/" />
+
+</ruleset>

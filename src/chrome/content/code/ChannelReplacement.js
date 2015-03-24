@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function CtxCapturingListener(tracingChannel, captureObserver) {
   this.originalListener = tracingChannel.setNewListener(this);
   this.captureObserver = captureObserver;
@@ -13,7 +15,7 @@ CtxCapturingListener.prototype = {
   },
   onDataAvailable: function(request, ctx, inputStream, offset, count) {},
   onStopRequest: function(request, ctx, statusCode) {},
-  QueryInterface: xpcom_generateQI([Ci.nsIStreamListener])
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsIStreamListener])
 };
 
 function ChannelReplacement(chan, newURI, newMethod) {
@@ -82,7 +84,7 @@ ChannelReplacement.prototype = {
     newChan.loadGroup = chan.loadGroup;
     newChan.notificationCallbacks = chan.notificationCallbacks;
     newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
-    
+
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
     
@@ -211,7 +213,7 @@ ChannelReplacement.prototype = {
   
   _redirectCallback: ("nsIAsyncVerifyRedirectCallback" in Ci)
     ? {
-        QueryInterface: xpcom_generateQI([Ci.nsIAsyncVerifyRedirectCallback]),
+        QueryInterface: XPCOMUtils.generateQI([Ci.nsIAsyncVerifyRedirectCallback]),
         onRedirectVerifyCallback: function(result) {}
       }
     : null
@@ -332,7 +334,7 @@ function LoadGroupWrapper(channel, callback) {
   channel.loadGroup = this;
 }
 LoadGroupWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([Ci.nsILoadGroup]),
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsILoadGroup]),
   
   get activeCount() {
     return this._inner ? this._inner.activeCount : 0;
@@ -380,7 +382,7 @@ LoadGroupWrapper.prototype = {
     if (this._channel.loadGroup) this._channel.loadGroup = this._inner;
   },
   _emptyEnum: {
-    QueryInterface: xpcom_generateQI([Ci.nsISimpleEnumerator]),
+    QueryInterface: XPCOMUtils.generateQI([Ci.nsISimpleEnumerator]),
     getNext: function() { return null; },
     hasMoreElements: function() { return false; }
   }

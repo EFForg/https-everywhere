@@ -1,52 +1,134 @@
 <!--
 	CDN buckets:
 
+		- www.time.com.edgesuite.net
+
+			- content
+
+		- subscription-assets.timeinc.com.edgesuite.net
+
+			- subscription-assets
+
 		- tiads.timeinc.net.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- content *
+
+	* 404
 
 
 	Problematic subdomains:
 
 		- business *
-		- entertainment
+		- entertainment *
 		- healthland *
 		- ideas *
 		- keepingscore *
+		- life *
 		- lightbox *
 		- nation *
 		- newsfeed *
 		- science *
 		- style *
+		- subscription-assets ²
+		- swampland *
+		- techland *
+		- thepage ¹
+		- world *
+
+	¹ WordPress
+	* Mismatched
+	² Akamai
+
+
+	Partially covered subdomains:
+
+		- (www.)? ¹
+		- business *
+		- entertainment *
+		- healthland *
+		- ideas *
+		- nation *
+		- newsfeed *
+		- science *
+		- subscription-assets ²	(-> Akamai)
 		- swampland *
 		- techland *
 		- world *
 
-	* Mismatched, handled in WordPress-blogs.xml.
-
-
-	Nonfunctional subdomains:
-
-		- www		(404, akamai)
+	¹ Some pages redirect to http
+	* Rest handled in WordPress-blogs.xml.
+	² Avoiding user-visible paths
 
 
 	Fully covered subdomains:
 
+		- auth
 		- smetrics
 		- tiads		(→ akamai)
+
+
+	Insecure cookies are set for these domains:
+
+		- subscription.time.com
+
+
+	Mixed content:
+
+		- css on life from img.timeinc.net *
+
+	* Secured by us
 
 -->
 <ruleset name="TIME.com (partial)">
 
+	<target host="time.com" />
 	<target host="*.time.com" />
+		<!--
+			Started redirecting to http:
+							-->
+		<exclusion pattern="^http://time\.com/(?:$|(?:(?:\d+|author|collection|magazine|newsletter|tag|topic)/[\w-]+|business|entertainment|health|history|ideas|living|magazine|newsfeed|parents|politics|science|sports|tech|us|vault|world)/(?:$|\?))" />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://subscription-assets\.time\.com/(?!.+\.png(?:$|\?)|favicon\.ico)" />
 
 
-	<!--	Tracking cookies:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^subscription\.time\.com$" name="^(JSESSIONID|customerSessionGuid)$" /-->
+	<!--
+		Tracking cookies:
 					-->
 	<securecookie host="^\.time\.com$" name="^(?:gpv_\w\d+|sinvisit_\w|s_\w+)$" />
 	<securecookie host="^subscription\.time\.com$" name=".+" />
 
 
-	<rule from="^http://(profiles|smetrics|subscription)\.time\.com/"
-		to="https://$1.time.com/" />
+	<rule from="^http://((?:auth|profiles|smetrics|subscription|www)\.)?time\.com/"
+		to="https://$1time.com/" />
+
+	<rule from="^http://(business|entertainment|newsfeed|science|world)\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/$1" />
+
+	<rule from="^http://healthland\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/health" />
+
+	<rule from="^http://ideas\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/opinion" />
+
+	<rule from="^http://nation\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/us" />
+
+	<rule from="^http://subscription-assets\.time\.com/"
+		to="https://a248.e.akamai.net/f/248/1/1/subscription-assets.time.com/" />
+
+	<rule from="^http://swampland\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/politics" />
+
+	<rule from="^http://techland\.time\.com/+(?:$|\?.*)"
+		to="https://time.com/tech" />
 
 	<rule from="^http://tiads\.time\.com/"
 		to="https://a248.e.akamai.net/f/259/1/g/tiads.time.com/" />

@@ -13,24 +13,43 @@
 
 	Nonfunctional subdomains:
 
-		- ^			(shows ICT page)
+		- www.cacr *
+		- www.gg ¹
+		- (www.)herschel ¹
+
+		- (www.)ipac ²
+		- conference.ipac ²
+		- nedbatch.ipac ¹
 		- neocam.ipac		(rx_record_too_long)
+
 		- kiss
 		- www.ligo
+		- nexsci ²
 		- www.nustar		(CN: bragi, 403)
+		- sherpa ¹
 		- (www.)spitzer		(self-signed; shows RHEL test page)
+		- wise.ssl ⁶
+		- workshop ⁷
+
+	* Redirects to http/404
+	¹ Refused
+	² Plaintext reply
+	⁶ Shows ds9.ssl
+	⁷ Dropped
 
 
 	Problematic subdomains:
 
-		- ^
+		- ^ ¹
 		- cliara	(self-signed)
 		- dabney	(ditto)
+		- (www.)galex ³
 		- gps		(cert only matches www.gps)
 		- courses.hss	(self-signed)
-		- imss		(CN: cliara.caltech.edu)
-		- www.imss
-		- www		(CN: cliara.caltech.edu)
+		- ds9.ssl ³
+
+	¹ Shows web; mismatched, CN: web.caltech.edu
+	³ Expired, self-signed
 
 
 	Partially covered subdomains:
@@ -40,14 +59,23 @@
 
 	Fully covered subdomains:
 
+		- (www.)	(^ → www)
 		- access *
 		- www.access **
+		- odb.acs
 		- mail.alumni
 		- business-query ***
+		- www.cco
 		- imss-website-storage.cloud
 		- courses *
+		- (www.)imss
+
+		- irsa.ipac
+		- koa.ipac
+		- ned.ipac
+
 		- irsecure ****
-		- its **
+		- (www.)its **
 		- utils.its
 		- www.its *****
 		- moodle **
@@ -70,42 +98,70 @@
 	***** Supports https but doesn't use it by default. Some pages weren't
 	      designed w/ https in mind and have insecure third-party content.
 
--->
-<ruleset name="Caltech">
 
+	These altnames don't exist:
+
+		- www.web.caltech.edu
+
+
+	Mixed content:
+
+		- Images on (www.)imss from www-prod-storage.cloud.caltech.edu.s3.amazonaws.com *
+
+		- Ads on (www.)imss imss-test-storage.ads.caltech.edu.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Caltech.edu">
+
+	<target host="imss-test-storage.ads.caltech.edu.s3.amazonaws.com" />
 	<target host="www-prod-storage.cloud.caltech.edu.s3.amazonaws.com" />
+	<target host="caltech.edu" />
 	<target host="*.caltech.edu" />
-		<exclusion pattern="^https?://(?:www\.)?gps\.caltech\.edu/(?!pics/|stylesheets/|uploads/)" />
+		<exclusion pattern="^http://(?:www\.)?gps\.caltech\.edu/(?!pics/|stylesheets/|uploads/)" />
 	<!--target host="solutions.sciquest.com" /> safe? -->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.caltech\.edu$" name="^AWSELB$" /-->
 
 	<securecookie host="^.+\.caltech\.edu$" name=".+" />
 
 
+	<rule from="^http://(?:www\.)?caltech\.edu/"
+		to="https://www.caltech.edu/" />
+
 	<!--	Handily, this bucket forces redirect from s3.amazonaws.com/foo to foo.s3.amazonaws.com.
 										-->
-	<rule from="^https?://www-prod-storage.cloud.caltech.edu.s3.amazonaws.com/"
+	<rule from="^https?://imss-test-storage\.ads\.caltech\.edu\.s3\.amazonaws.com/"
+		to="https://s3-us-west-1.amazonaws.com/imss-test-storage.ads.caltech.edu/" />
+
+	<!--	Ditto.
+			-->
+	<rule from="^https?://www-prod-storage\.cloud\.caltech\.edu\.s3\.amazonaws\.com/"
 		to="https://s3-us-west-1.amazonaws.com/www-prod-storage.cloud.caltech.edu/" />
 
 	<rule from="^http://(?:www\.)?access\.caltech\.edu/"
 		to="https://access.caltech.edu/" />
 
-	<rule from="^http://(mail\.alumni|insecure|utils\.its|pcard|scriptor|techne1|x-tmt-web1\.tmt|tqfr|web|webmail|webvpn)\.caltech\.edu/"
-		to="https://$1.caltech.edu/" />
-
 	<rule from="^http://business-query\.caltech\.edu:8181/"
 		to="https://business-query.caltech.edu:8181/" />
 
-	<rule from="^https?://imss-website-storage\.cloud\.caltech\.edu/"
+	<rule from="^http://imss-website-storage\.cloud\.caltech\.edu/"
 		to="https://s3-us-west-1.amazonaws.com/imss-website-storage.cloud.caltech.edu/" />
 
 	<rule from="^http://(?:courses|moodle)\.caltech\.edu/"
 		to="https://courses.caltech.edu/" />
 
-	<rule from="^http://(?:www\.)?(gp|it)s\.caltech\.edu/"
-		to="https://www.$1s.caltech.edu/" />
+	<rule from="^http://(?:www\.)?gps\.caltech\.edu/"
+		to="https://www.gps.caltech.edu/" />
 
 	<rule from="^http://nassau\.caltech\.edu:4444/"
 		to="https://nassau.caltech.edu:4444/" />
+
+	<rule from="^http://(odb\.acs|mail\.alumni|www\.cco|(?:www\.)?imss|insecure|(?:irsa|koa|ned)\.ipac|(?:utils\.|www\.)?its|pcard|scriptor|techne1|x-tmt-web1\.tmt|tqfr|web|webmail|webvpn)\.caltech\.edu/"
+		to="https://$1.caltech.edu/" />
 
 </ruleset>

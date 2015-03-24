@@ -1,13 +1,47 @@
-<!--	!functional:
+
+<!--
+	Other Heise rulesets:
+
+		- Heise_shop.de.xml
+
+
+	!functional:
 		- rl.heise.de		(timeout)
 		- (www.)heise-medien.de
+
+
+	Problematic heise.de subdomains:
+
+		- www.shop *
+
+	* Mismatched, CN: abo.heise.de
+
+
+	Fully covered heise.de subdomains:
+
+		- abo
+		- (www.)shop	(www -> ^)
+
+
+	These altnames don't exist:
+
+		- www.abo.heise.de
+
 -->
 <ruleset name="Heise.de (partial)">
 
 	<target host="heise.de"/>
-	<target host="www.heise.de"/>
+	<target host="*.heise.de"/>
+	<target host="*.f.ix.de"/>
 
-	<rule from="^http://(?:www\.)?heise\.de/([ai]vw-bin/|favicon\.ico|icons/|ix/images/|software/screenshots/|stil/)"
+	<rule from="^http://(?:www\.)?heise\.de/([ai]vw-bin/|favicon\.ico|icons/|ix/images/|software/screenshots/|stil/|security/dienste/portscan/test/go\.shtml)"
 		to="https://www.heise.de/$1"/>
+
+	<rule from="^http://(abo|prophet)\.heise\.de/" to="https://$1.heise.de/"/>
+
+	<rule from="^http://(?:www\.)?shop\.heise\.de/"
+		to="https://shop.heise.de/" />
+
+	<rule from="^http://(1|2|3)\.f\.ix\.de/" to="https://$1.f.ix.de/"/>
 
 </ruleset>

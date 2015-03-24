@@ -1,9 +1,6 @@
-// A cache for potentiallyApplicableRulesets
-// Size chosen /completely/ arbitrarily.
-var ruleCache = new LRUCache(1000);
-
-// A cache for cookie hostnames.
-var cookieHostCache = new LRUCache(100);
+// Stubs so this runs under nodejs. They get overwritten later by util.js
+var DBUG = 1;
+function log(){};
 
 function Rule(from, to) {
   //this.from = from;
@@ -74,31 +71,36 @@ RuleSet.prototype = {
 };
 
 
-function RuleSets() {
+function RuleSets(userAgent, cache, ruleActiveStates) {
   // Load rules into structure
   var t1 = new Date().getTime();
   this.targets = {};
+  this.userAgent = userAgent;
 
-  for(var i = 0; i < rule_list.length; i++) {
-    var xhr = new XMLHttpRequest();
-    // Use blocking XHR to ensure everything is loaded by the time
-    // we return.
-    //var that = this;
-    //xhr.onreadystatechange = function() { that.loadRuleSet(xhr); }
-    xhr.open("GET", chrome.extension.getURL(rule_list[i]), false);
-    //xhr.open("GET", chrome.extension.getURL(rule_list[i]), true);
-    xhr.send(null);
-    this.loadRuleSet(xhr);
-  }
-  var t2 =  new Date().getTime();
-  log(NOTE,"Loading rulesets took " + (t2 - t1) / 1000.0 + " seconds");
+  // A cache for potentiallyApplicableRulesets
+  // Size chosen /completely/ arbitrarily.
+  this.ruleCache = new cache(1000);
+
+  // A cache for cookie hostnames.
+  this.cookieHostCache = new cache(100);
+
+  // A hash of rule name -> active status (true/false).
+  this.ruleActiveStates = ruleActiveStates;
 }
 
 RuleSets.prototype = {
+  addFromXml: function(ruleXml) {
+    var sets = ruleXml.getElementsByTagName("ruleset");
+    for (var i = 0; i < sets.length; ++i) {
+      this.parseOneRuleset(sets[i]);
+    }
+  },
 
   localPlatformRegexp: (function() {
-    if (/(OPR|Opera)[\/\s](\d+\.\d+)/.test(navigator.userAgent)) {
-      log(DBUG, 'Detected that we are running Opera');
+    var isOpera = /(?:OPR|Opera)[\/\s](\d+)(?:\.\d+)/.test(this.userAgent);
+    if (isOpera && isOpera.length === 2 && parseInt(isOpera[1]) < 23) {
+      // Opera <23 does not have mixed content blocking
+      log(DBUG, 'Detected that we are running Opera < 23');
       return new RegExp("chromium|mixedcontent");
     } else {
       log(DBUG, 'Detected that we are running Chrome/Chromium');
@@ -106,17 +108,22 @@ RuleSets.prototype = {
     }
   })(),
 
-  loadRuleSet: function(xhr) {
-    // Get file contents
-    if (xhr.readyState != 4) {
-      return;
+  addUserRule : function(params) {
+    log(INFO, 'adding new user rule for ' + JSON.stringify(params));
+    var new_rule_set = new RuleSet(params.host, null, true, "user rule");
+    var new_rule = new Rule(params.urlMatcher, params.redirectTo);
+    new_rule_set.rules.push(new_rule);
+    if (!(params.host in this.targets)) {
+      this.targets[params.host] = [];
     }
-
-    // XXX: Validation + error checking
-    var sets = xhr.responseXML.getElementsByTagName("ruleset");
-    for (var i = 0; i < sets.length; ++i) {
-      this.parseOneRuleset(sets[i]);
+    this.ruleCache.remove(params.host);
+    // TODO: maybe promote this rule?
+    this.targets[params.host].push(new_rule_set);
+    if (new_rule_set.name in this.ruleActiveStates) {
+      new_rule_set.active = (this.ruleActiveStates[new_rule_set.name] == "true");
     }
+    log(INFO, 'done adding rule');
+    return true;
   },
 
   parseOneRuleset: function(ruletag) {
@@ -143,8 +150,8 @@ RuleSets.prototype = {
                                note.trim());
 
     // Read user prefs
-    if (rule_set.name in localStorage) {
-      rule_set.active = (localStorage[rule_set.name] == "true");
+    if (rule_set.name in this.ruleActiveStates) {
+      rule_set.active = (this.ruleActiveStates[rule_set.name] == "true");
     }
 
     var rules = ruletag.getElementsByTagName("rule");
@@ -188,9 +195,9 @@ RuleSets.prototype = {
     // Return a list of rulesets that apply to this host
 
     // Have we cached this result? If so, return it!
-    var cached_item = ruleCache.get(host);
+    var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
-        log(DBUG, "Ruleset cache hit for " + host);
+        log(DBUG, "Ruleset cache hit for " + host + " items:" + cached_item.length);
         return cached_item;
     }
     log(DBUG, "Ruleset cache miss for " + host);
@@ -224,7 +231,7 @@ RuleSets.prototype = {
         log(DBUG, "  " + results[i].name);
 
     // Insert results into the ruleset cache
-    ruleCache.set(host, results);
+    this.ruleCache.set(host, results);
     return results;
   },
 
@@ -232,11 +239,6 @@ RuleSets.prototype = {
     // Check to see if the Cookie object c meets any of our cookierule citeria
     // for being marked as secure.  knownHttps is true if the context for this
     // cookie being set is known to be https.
-    //log(DBUG, "Testing cookie:");
-    //log(DBUG, "  name: " + cookie.name);
-    //log(DBUG, "  host: " + cookie.host);
-    //log(DBUG, "  domain: " + cookie.domain);
-    //log(DBUG, "  rawhost: " + cookie.rawHost);
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
@@ -255,10 +257,6 @@ RuleSets.prototype = {
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
-          //log(WARN, "no match domain " + cr.host_c.test(cookie.domain) +
-          //          " name " + cr.name_c.test(cookie.name));
-          //log(WARN, "with " + cookie.domain + " " + cookie.name);
-          //log(WARN, "and " + cr.host + " " + cr.name);
         }
       }
     }
@@ -282,7 +280,7 @@ RuleSets.prototype = {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
-    var cached_item = cookieHostCache.get(domain);
+    var cached_item = this.cookieHostCache.get(domain);
     if (cached_item !== undefined) {
         log(DBUG, "Cookie host cache hit for " + domain);
         return cached_item;
@@ -299,7 +297,7 @@ RuleSets.prototype = {
     } catch (e) {
       log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
                       + "(" + e + ")");
-      cookieHostCache.set(domain, false);
+      this.cookieHostCache.set(domain, false);
       return false;
     }
 
@@ -310,12 +308,12 @@ RuleSets.prototype = {
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
         log(INFO, "Cookie domain could be secured: " + rewrite);
-        cookieHostCache.set(domain, true);
+        this.cookieHostCache.set(domain, true);
         return true;
       }
     }
     log(INFO, "Cookie domain could NOT be secured.");
-    cookieHostCache.set(domain, false);
+    this.cookieHostCache.set(domain, false);
     return false;
   },
 
@@ -329,3 +327,8 @@ RuleSets.prototype = {
     return null;
   }
 };
+
+// Export for HTTPS Rewriter if applicable.
+if (typeof exports != 'undefined') {
+  exports.RuleSets = RuleSets;
+}

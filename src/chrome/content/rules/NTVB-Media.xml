@@ -1,18 +1,30 @@
 <!--
-	!www times out
+	Mixed content:
+
+		- Image on (www.) from www.adobe.com ¹
+
+		- Bug on (www.) from stats.ntvbmedia.com ²
+
+
+	¹ Secured by us
+	² Unsecurable <= redirects to secure.iwantmytvmagazine.com
 
 -->
-<ruleset name="NTVB Media (partial)" platform="mixedcontent">
+<ruleset name="NTVB Media (partial)">
 
-	<target host="iwantmytvmagazine.com"/>
-	<target host="*.iwantmytvmagazine.com"/>
+	<target host="iwantmytvmagazine.com" />
+	<target host="*.iwantmytvmagazine.com" />
 
-	<securecookie host="^.*\.iwantmytvmagazine\.com$" name=".*"/>
 
-	<rule from="^https?://(?:www\.)?iwantmytvmagazine\.com/"
-		to="https://www.iwantmytvmagazine.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.myhearstnewspaper\.com$" name="^session$" /-->
+	<!--securecookie host="^www\.myhearstnewspaper\.com$" name="^ASP\.NET_SessionId$" /-->
 
-	<rule from="^http://secure\.iwantmytvmagazine\.com/"
-		to="https://secure.iwantmytvmagazine.com/"/>
+	<securecookie host=".*\.iwantmytvmagazine\.com$" name=".+" />
+
+
+	<rule from="^http://(secure\.|www\.)?iwantmytvmagazine\.com/"
+		to="https://$1iwantmytvmagazine.com/" />
 
 </ruleset>

@@ -1,33 +1,122 @@
-<ruleset name="Launchpad">
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://test.launchpad.net/ => https://test.launchpad.net/: (6, 'Could not resolve host: test.launchpad.net')
+Fetch error: http://wiki.launchpad.net/ => https://wiki.launchpad.net/: (6, 'Could not resolve host: wiki.launchpad.net')
+
+	Problematic domains:
+
+		- blog.launchpad.net *
+
+	* Self-signed
+
+
+	Partially covered subdomains:
+
+		- feeds *
+
+	* Redirects to http
+
+
+	Fully covered domains:
+
+		- launchpad.net
+
+		- [\w.-]+.launchpad.net: *
+
+			- answers
+			- bazaar
+			- blueprints
+			- code
+			- edge
+			- help
+			- login
+			- translations
+			- www
+
+	* Except where excluded below
+
+
+	These altnames don't exist:
+
+		- www.login.launchpad.net
+
+
+	Insecure cookies are set for these domains:
+
+		- blog.launchpad.net
+		- login.launchpad.net
+
+
+	Mixed content:
+
+		- Image on blog from ubuntuone.com ¹
+		- Bugs on blog, help from i.creativecommons.org ²
+
+	¹ Unsecurable <= supports <=ssl3 only
+	² Secured by us
+
+-->
+<ruleset name="Launchpad" default_off='failed ruleset test'>
     <target host="launchpad.net" />
     <target host="*.launchpad.net" />
     <target host="launchpadlibrarian.net" />
     <target host="*.launchpadlibrarian.net" />
 
-    <securecookie host="^(.*\.)?launchpad\.net$" name=".+" />
-    <securecookie host="^(.*\.)?launchpadlibrarian\.net$" name=".+" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://feeds\.launchpad\.net/($|\w+/announcements\.atom$)" /-->
+		<!--
+			We preempt redirect from $:
+							-->
+		<exclusion pattern="^http://feeds\.launchpad\.net/(?!$)" />
+
+			<test url="http://feeds.launchpad.net/" />
+			<test url="http://feeds.launchpad.net/rohc/announcements.atom" />
+
+		<test url="http://answers.launchpad.net/" />
+		<test url="http://bazaar.launchpad.net/" />
+		<test url="http://blueprints.launchpad.net/" />
+		<test url="http://code.launchpad.net/" />
+		<test url="http://edge.launchpad.net/" />
+		<test url="http://help.launchpad.net/" />
+		<test url="http://login.launchpad.net/" />
+		<test url="http://translations.launchpad.net/" />
+		<test url="http://www.launchpad.net/" />
+
+		<test url="http://launchpadlibrarian.net/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blog\.launchpad\.net$" name="^((wordpress|wordpress_logged_in|wordpress_sec|wordpresspass|wordpressuser)_[\da-f]{32}|wordpress_test_cookie)$" /-->
+	<!--securecookie host="^login\.launchpad\.net$" name="^openid_referer$" /-->
+
+    <securecookie host="^(?:.*\.)?launchpad\.net$" name=".+" />
+    <securecookie host="^(?:.*\.)?launchpadlibrarian\.net$" name=".+" />
 
     <exclusion pattern="^http://blog\.launchpad\.net/" />
     <exclusion pattern="^http://news\.launchpad\.net/" />
 
-    <rule from="^https?://launchpad\.net/"
-        to="https://launchpad.net/" />
-    <rule from="^http://([^/:@]+)?\.launchpad\.net/"
-        to="https://$1.launchpad.net/" />
+		<test url="http://blog.launchpad.net/" />
+		<test url="http://news.launchpad.net/" />
 
     <!-- For the bazaar.launchpad.net domain, the URL
          http://bazaar.launchpad.net/ (where there is nothing after the final
          slash) should be directed to https://launchpad.net/ as a special case.
          URLs such as http://bazaar.launchpad.net/~example/ where content
          does come after the final slash should be handled as normal. -->
-    <rule from="^https?://bazaar\.launchpad\.net/$"
+    <rule from="^http://bazaar\.launchpad\.net/$"
         to="https://launchpad.net/" />
 
-    <rule from="^http://bazaar\.launchpad\.net/(.+)"
-        to="https://bazaar.launchpad.net/$1" />
+	<!--	Redirects as so:
+					-->
+	<rule from="^http://feeds\.launchpad\.net/$"
+		to="https://help.launchpad.net/Feeds" />
 
-    <rule from="^https?://launchpadlibrarian\.net/"
-        to="https://launchpadlibrarian.net/" />
-    <rule from="^https?://([^/:@]+)?\.launchpadlibrarian\.net/"
-        to="https://$1.launchpadlibrarian.net/" />
+		<test url="http://feeds.launchpad.net//" />
+
+    <rule from="^http:"
+        to="https:" />
+
 </ruleset>

@@ -1,19 +1,42 @@
-<!-- This rule was automatically generated based on an HSTS
-     preload rule in the Chromium browser.  See
-     https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h
-     for the list of preloads.  Sites are added to the Chromium HSTS
-     preload list on request from their administrators, so HTTPS should
-     work properly everywhere on this site.
+<!--
+	This rule was automatically generated based on an HSTS
+	preload rule in the Chromium browser.  See
+	https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h
+	for the list of preloads.  Sites are added to the Chromium HSTS
+	preload list on request from their administrators, so HTTPS should
+	work properly everywhere on this site.
 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Braintreepayments.com" platform="firefox">
-<target host="braintreepayments.com" />
-<target host="www.braintreepayments.com" />
 
-<securecookie host="^braintreepayments\.com$" name=".+" />
-<securecookie host="^www\.braintreepayments\.com$" name=".+" />
+	These altnames don't exist:
 
-<rule from="^http://braintreepayments\.com/" to="https://braintreepayments.com/" />
-<rule from="^http://www\.braintreepayments\.com/" to="https://www.braintreepayments.com/" />
+		- www.support.braintreepayments.com
+
+-->
+<ruleset name="Braintreepayments.com">
+
+	<target host="braintreepayments.com" />
+	<target host="*.braintreepayments.com" />
+	<target host="braintreepaymentsolutions.com" />
+	<target host="www.braintreepaymentsolutions.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.braintreepayments\.com$" name="^_status-page_session$" /-->
+	<!--securecookie host="^www\.braintreepayments\.com$" name="^rack\.session$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^apply\.braintreepayments\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^developers\.braintreepayments\.com$" name="^(clientLanguage|connect\.sid|serverLanguage)$" /-->
+
+	<securecookie host="^(?:(?:apply|developers|www)\.)?braintreepayments\.com$" name=".+" />
+
+
+	<rule from="^http://((?:apply|developers|status|support|www)\.)?braintreepayments\.com/"
+		to="https://$1braintreepayments.com/" />
+
+	<rule from="^http://(www\.)?braintreepaymentsolutions\.com/"
+		to="https://$1braintreepaymentsolutions.com/" />
+
 </ruleset>

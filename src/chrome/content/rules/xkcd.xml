@@ -16,10 +16,12 @@
 
 	Problematic domains:
 
+		- imgs.xkcd.com ¹
 		- (www.)store.xkcd.com		(redirects to http; mismatched, CN: *.myshopify.com)
 		- (www.)xkcd.org *
 		- m.xkcd.org *
 
+	¹ 404; mismatched, CN: *.voxcdn.com
 	* Works; mismatched, CN: *.xkcd.com
 
 
@@ -29,13 +31,13 @@
 
 			- (www.)
 			- 3d
-			- c0
+			- c
+			- c[0-8]
 			- dynamic
-			- imgs
+			- imgs		(→ sslimgs)
 			- m
 			- sslimgs
 			- (www.)store	(→ store-xkcd-com.myshopify.com)
-			- uni
 			- whatif
 			- what-if
 
@@ -44,6 +46,9 @@
 
 
 	Mixed content:
+		
+		- Javascript
+			- uni trips on ajax.googleapis.com ** (See xkcd-mixed.xml)
 
 		- Images, on:
 
@@ -51,23 +56,47 @@
 			- m from imgs *
 
 	* Secured by us, doesn't trip MCB
+	** Secured by us, *does* trip MCB
 
 -->
 <ruleset name="xkcd">
 
 	<target host="xkcd.com" />
+	<target host="3d.xkcd.com" />
+	<target host="c.xkcd.com" />
+	<target host="c0.xkcd.com" />
+	<target host="c1.xkcd.com" />
+	<target host="c2.xkcd.com" />
+	<target host="c3.xkcd.com" />
+	<target host="c4.xkcd.com" />
+	<target host="c5.xkcd.com" />
+	<target host="c6.xkcd.com" />
+	<target host="c7.xkcd.com" />
+	<target host="c8.xkcd.com" />
+	<target host="dynamic.xkcd.com" />
+	<target host="imgs.xkcd.com" />
+	<target host="m.xkcd.com" />
+	<target host="sslimgs.xkcd.com" />
+	<target host="store.xkcd.com" />
+	<target host="www.store.xkcd.com" />
+	<target host="whatif.xkcd.com" />
+	<target host="what-if.xkcd.com" />
+	<target host="www.xkcd.com" />
 	<target host="xkcd.org" />
-	<target host="*.xkcd.com" />
-	<target host="*.xkcd.org" />
+	<target host="m.xkcd.org" />
+	<target host="www.xkcd.org" />
 
 
-	<rule from="^http://(www\.|m\.)?xkcd\.(?:com|org)/"
+	<rule from="^http://(www\.|m\.)?xkcd\.org/"
 		to="https://$1xkcd.com/" />
 
-	<rule from="^http://(3d|c0|dynamic|imgs|sslimgs|uni|what-?if)\.xkcd\.com/"
-		to="https://$1.xkcd.com/" />
+	<rule from="^http://imgs\.xkcd\.com/"
+		to="https://sslimgs.xkcd.com/" />
 
 	<rule from="^http://(?:www\.)?store\.xkcd\.com/"
 		to="https://store-xkcd-com.myshopify.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

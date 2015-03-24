@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- d6hat78o59yti.cloudfront.net
+
+
+	www: cert only matches ^theappendix.net
+
+
+	Nonfunctional subdomains:
+
+		- shop *
+
+	* Shopify
+
+
+	Mixed content:
+
+		- css, from
+
+			- $self *
+			- cdn.leafletjs.com *
+
+		- Images, from:
+
+			- images *
+			- s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Appendix.net (partial)" platform="mixedcontent">
+
+	<target host="theappendix.net" />
+	<target host="*.theappendix.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^theappendix\.net$" name="^_appendix_session$" /-->
+
+	<securecookie host="^theappendix\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?theappendix\.net/"
+		to="https://theappendix.net/" />
+
+	<rule from="^http://images\.theappendix\.net/"
+		to="https://d6hat78o59yti.cloudfront.net/" />
+
+</ruleset>

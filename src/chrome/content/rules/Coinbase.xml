@@ -1,4 +1,8 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://translate.coinbase.com/ => https://translate.coinbase.com/: (6, 'Could not resolve host: translate.coinbase.com')
+
 	CDN buckets:
 
 		- coinbase-uploads.s3.amazonaws.com
@@ -6,19 +10,61 @@
 
 	Nonfunctional subdomains:
 
-		- blog
+		- blog *
+
+	* Tumblr
+
+
+	Problematic subdomains:
+
+		- status *
+
+	* StatusPage.io
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- community
+		- exchange
+		- docs.exchange
+		- status	(→ coinbase.statuspage.io)
+		- translate
+
+
+	These altnames don't exist:
+
+		- login.coinbase.com
+
+
+	Insecure cookies are set for these domains:
+
+		- exchange.coinbase.com
+		- docs.exchange.coinbase.com
 
 -->
-<ruleset name="Coinbase (partial)">
+<ruleset name="Coinbase.com (partial)" default_off='failed ruleset test'>
 
 	<target host="coinbase.com" />
-	<target host="*.coinbase.com" />
+	<target host="community.coinbase.com" />
+	<target host="exchange.coinbase.com" />
+	<target host="docs.exchange.coinbase.com" />
+	<target host="translate.coinbase.com" />
+	<target host="status.coinbase.com" />
+	<target host="www.coinbase.com" />
 
 
-	<securecookie host="^\.?coinbase\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(docs\.)?exchange\.coinbase\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:\.|(?:docs\.)?exchange\.)?coinbase\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?coinbase\.com/"
-		to="https://$1coinbase.com/" />
+	<rule from="^http://status\.coinbase\.com/"
+		to="https://coinbase.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

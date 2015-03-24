@@ -1,0 +1,57 @@
+<!--
+	oasc00454.247realmedia.com <=> sifomedia.gp.se
+
+
+	Nonfunctional subdomains:
+
+		- blogg ¹
+		- info ²
+
+	¹ Shows gp.oderland.com
+	² Redirects to www
+
+	Problematic subdomains:
+
+		- sifomedia *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- Images from $self ¹
+		- Images from csp.picsearch.com ²
+
+		- Ads/bugs, on www from:
+
+			- sifomedia ¹
+			- fusion.adtoma.com
+			- atemda.com ¹
+			- s.atemda.com
+			- ad.crwdcntrl.net ¹
+			- tags.crwdcntrl.net ¹
+			- www.e-pages.dk ²
+			- b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="GP.se (partial)">
+
+	<target host="gp.se" />
+	<target host="*.gp.se" />
+		<!--exclusion pattern="^http://blogg\.gp\.se/" /-->
+		<!--
+			Some (all?) resources are common across info and www:
+										-->
+		<exclusion pattern="^http://info\.gp\.se/(?!image_processor/|polopoly_fs/)" />
+
+
+	<rule from="^http://(?:info\.|(www\.))?gp\.se/"
+		to="https://$1gp.se/" />
+
+	<rule from="^http://sifomedia\.gp\.se/"
+		to="https://oasc16.247realmedia.com/" />
+
+</ruleset>

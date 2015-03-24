@@ -1,10 +1,7 @@
 INCLUDE('Cookie');
-// XXX: Disable STS for now.
-var STS = {
-  isSTSURI : function(uri) {
-    return false;
-  }
-};
+
+var securityService = CC['@mozilla.org/ssservice;1']
+    .getService(CI.nsISiteSecurityService);
 
 // Hack. We only need the part of the policystate that tracks content
 // policy loading.
@@ -29,12 +26,36 @@ const HTTPS = {
   httpsForced: null,
   httpsForcedExceptions: null,
   httpsRewrite: null,
-  
-  replaceChannel: function(applicable_list, channel) {
+
+  /**
+   * Given a channel and a list of potentially applicable rules,
+   * redirect or abort a request if appropriate.
+   *
+   * @param {RuleSet[]} applicable_list A list of potentially applicable rules
+   *   (i.e. those that match on a hostname basis).
+   * @param {nsIChannel} channel The channel to be manipulated.
+   * @param {boolean} httpNowhereEnabled Whether to abort non-https requests.
+   * @returns {boolean} True if the request was redirected; false if it was
+   *   untouched or aborted.
+   */
+  replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
-    if (null == blob) return false; // no rewrite
+    var isSTS = securityService.isSecureURI(
+        CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
+    if (blob === null) {
+      // Abort insecure requests if HTTP Nowhere is on
+      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS) {
+        IOUtil.abort(channel);
+      }
+      return false; // no rewrite
+    }
     var uri = blob.newuri;
     if (!uri) this.log(WARN, "OH NO BAD ARGH\nARGH");
+
+    // Abort downgrading if HTTP Nowhere is on
+    if (httpNowhereEnabled && uri.schemeIs("http")) {
+      IOUtil.abort(channel);
+    }
 
     var c2 = channel.QueryInterface(CI.nsIHttpChannel);
     this.log(DBUG, channel.URI.spec+": Redirection limit is " + c2.redirectionLimit);
@@ -134,7 +155,7 @@ const HTTPS = {
 
   handleInsecureCookie: function(c) {
     if (HTTPSRules.shouldSecureCookie(null, c, false)) {
-      this.log(INFO, "Securing cookie from event: " + c.domain + " " + c.name);
+      this.log(INFO, "Securing cookie from event: " + c.host + " " + c.name);
       var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"]
                             .getService(Components.interfaces.nsICookieManager2);
       //some braindead cookies apparently use umghzabilliontrabilions

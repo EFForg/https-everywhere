@@ -2,20 +2,57 @@
 	Nonfunctional subdomains:
 
 		- blog-us
+		- info *
+
+	* Marketo
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- analytics
+		- blog
+		- devops
+		- my
+
+
+	Mixed content:
+
+		- Images on blog from $self *
+		- favicon on blog from www *
+
+	* Secured by us
 
 -->
-<ruleset name="ProfitBricks (partial)">
+<ruleset name="ProfitBricks.com (partial)">
 
 	<target host="profitbricks.com" />
+	<target host="analytics.profitbricks.com" />
+	<target host="blog.profitbricks.com" />
+	<target host="devops.profitbricks.com" />
+	<target host="info.profitbricks.com" />
+	<target host="my.profitbricks.com" />
 	<target host="www.profitbricks.com" />
 
+		<exclusion pattern="^http://info\.profitbricks\.com/(?!css/|images/|js/|rs/)" />
 
-	<securecookie host="^www\.profitbricks\.com$" name=".+" />
+			<test url="http://info.profitbricks.com/Cloud-Computing-Demo.html" />
+			<test url="http://info.profitbricks.com/Cloud-Computing-Performance-Comparison.html" />
+			<test url="http://info.profitbricks.com/SasS-ISV-whitepaper.html" />
+			<test url="http://info.profitbricks.com/meet-the-new-cloud.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.profitbricks.com/css/mktLPSupport.css" />
 
 
-	<!--	Cert only matches *.profitbricks.com.
-							-->
-	<rule from="^https?://(?:www\.)?profitbricks\.com/"
-		to="https://www.profitbricks.com/" />
+	<securecookie host="^(?:www\.)?profitbricks\.com$" name=".+" />
+
+
+	<rule from="^http://info\.profitbricks\.com/"
+		to="https://na-sj02.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
