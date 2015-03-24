@@ -29,11 +29,11 @@
 		- twitter.github.com
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- twitter.com subdomains:
+		- status *
 
-			- platform[0-3]		(403, akamai)
+	* Mixed css
 
 
 	Fully covered domains:
@@ -50,33 +50,20 @@
 			- urls.api
 			- urls-real.api
 			- apps
-			- betastream
 			- blog
 			- business
 			- preview.cdn
-			- preview-dev.cdn
-			- preview-stage.cdn
-			- de
 			- dev
-			- en
 			- engineering
-			- es
 			- firefox
-			- fr
-			- it
-			- ja
-			- jp
 			- m
 			- media
 			- mobile
 			- music
-			- oauth
-			- p
 			- partnerstream[12]
 			- pay
 			- pic
 			- platform
-			- platform[0-3]		(→ platform)
 			- widgets.platform
 			- s
 			- search
@@ -103,6 +90,13 @@
 		- .twitter.com
 		- mobile.twitter.com
 
+
+	Mixed content:
+
+		- iframe on status from assets.tumblr.com
+		- css on status from assets.tumblr.com
+		- Image on status from 38.media.tumblr.com
+
 -->
 <ruleset name="Twitter.com">
 
@@ -118,7 +112,6 @@
 	<target host="ads.twitter.com" />
 	<target host="analytics.twitter.com" />
 	<target host="apps.twitter.com" />
-	<target host="betastream.twitter.com" />
 	<target host="blog.twitter.com" />
 	<target host="api.twitter.com" />
 	<target host="cdn.api.twitter.com" />
@@ -126,24 +119,14 @@
 	<target host="urls-real.api.twitter.com" />
 	<target host="business.twitter.com" />
 	<target host="preview.cdn.twitter.com" />
-	<target host="preview-dev.cdn.twitter.com" />
 	<target host="preview-stage.cdn.twitter.com" />
-	<target host="de.twitter.com" />
 	<target host="dev.twitter.com" />
 	<target host="engineering.twitter.com" />
-	<target host="en.twitter.com" />
-	<target host="es.twitter.com" />
 	<target host="firefox.twitter.com" />
-	<target host="fr.twitter.com" />
-	<target host="it.twitter.com" />
-	<target host="ja.twitter.com" />
-	<target host="jp.twitter.com" />
 	<target host="m.twitter.com" />
 	<target host="media.twitter.com" />
 	<target host="mobile.twitter.com" />
 	<target host="music.twitter.com" />
-	<target host="oauth.twitter.com" />
-	<target host="p.twitter.com" />
 	<target host="partnerstream1.twitter.com" />
 	<target host="partnerstream2.twitter.com" />
 	<target host="pay.twitter.com" />
@@ -154,6 +137,7 @@
 	<target host="search.twitter.com" />
 	<target host="sitestream.twitter.com" />
 	<target host="static.twitter.com" />
+	<target host="status.twitter.com" />
 	<target host="stream.twitter.com" />
 	<target host="support.twitter.com" />
 	<target host="syndication.twitter.com" />
@@ -163,12 +147,17 @@
 	<target host="userstream.twitter.com" />
 	<target host="www.twitter.com" />
 
-	<!--	Special cases:
-				-->
-	<target host="platform0.twitter.com" />
-	<target host="platform1.twitter.com" />
-	<target host="platform2.twitter.com" />
-	<target host="platform3.twitter.com" />
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://status\.twitter\.com/(?!themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://status.twitter.com/archive" />
+
+			<!--	-ve:
+					-->
+			<test url="http://status.twitter.com/themes/5/rss.gif" />
 
 
 	<!--	Not secured by server:
@@ -179,9 +168,6 @@
 
 	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
 
-
-	<rule from="^http://platform\d\.twitter\.com/"
-		to="https://platform.twitter.com/" />
 
 	<rule from="^http:"
 		to="https:" />
