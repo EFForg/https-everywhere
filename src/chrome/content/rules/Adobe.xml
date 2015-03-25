@@ -1,14 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://wwwimages.adobe.com/www.adobe.com/css/labs_import.css (200) => https://www.adobe.com/labs_import.css (404)
-Fetch error: http://community.adobe.com/ => https://community.adobe.com/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://cookbooks.adobe.com/ => https://cookbooks.adobe.com/: (51, "SSL: no alternative certificate subject name matches target host name 'cookbooks.adobe.com'")
-Fetch error: http://edexchange.adobe.com/ => https://edexchange.adobe.com/: (51, "SSL: no alternative certificate subject name matches target host name 'edexchange.adobe.com'")
-Fetch error: http://cem.events.adobe.com/ => https://cem.events.adobe.com/: (51, "SSL: no alternative certificate subject name matches target host name 'cem.events.adobe.com'")
-Fetch error: http://adobeid-na1.services.adobe.com/ => https://adobeid-na1.services.adobe.com/: (7, 'Failed to connect to adobeid-na1.services.adobe.com port 80: Connection timed out')
-Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed to connect to sstats.adobe.com port 80: Connection refused')
-
 	For problematic rules, see Adobe-mismatches.xml.
 
 
@@ -48,10 +38,12 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 
 	Nonfunctional subdomains:
 
+		- community **
 		- experiencedelivers ¹
 		- feeds *
 		- training ²
 
+	** Dropped
 	¹ Redirects to www; mismatched, CN: *.day.com
 	* 404
 	² Refused
@@ -60,6 +52,10 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	Problematic subdomains:
 
 		- airdownload ²
+		- community	(Dropped)
+		- cookbooks	(404)
+		- edex ***
+		- cem.events	(Shows discoverwem.adobe.com)
 		- forums *
 		- gaming ¹
 		- get2 ⁴
@@ -86,9 +82,11 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 
 	Partially covered subdomains:
 
+		- community ¹
 		- fpdownload ³
 		- ns		(→ www)
 
+	¹ /+[^?] 404s
 	³ crossdomain.xml excluded
 
 
@@ -100,10 +98,9 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 		- entitlement.auth
 		- sp.auth
 		- blogs
+		- cookbooks	(→ forums)
 		- bugbase
 		- communities
-		- community
-		- cookbooks
 		- creative
 
 		- *.creative:
@@ -113,9 +110,11 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 			- eu
 			- us
 
+		- discoverwem
 		- www.echosign
-		- edexchange
-		- cem.events
+		- edex
+		- edexchange	(→ edex.adobe.com)
+		- cem.events	(→ www.adobe.com)
 		- forums
 		- get
 		- get2		(→ get)
@@ -150,6 +149,7 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 
 		- .adobe.com
 		- communities.adobe.com
+		- edex.adobe.com
 		- forums.adobe.com
 		- www.adobe.com
 
@@ -165,6 +165,7 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 
 			- blogs from $self *
 			- blogs from dev.w3.org
+			- edex from ex-cms.s3.amazonaws.com *
 			- groups from $self
 			- groups from images.groups *
 			- tv from thumbnails.tv *
@@ -184,7 +185,7 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	* Secured by us
 
 -->
-<ruleset name="Adobe.com" default_off='failed ruleset test'>
+<ruleset name="Adobe.com">
 
 	<target host="adobe.com" />
 	<target host="aihdownload.adobe.com" />
@@ -194,13 +195,11 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	<target host="blogs.adobe.com" />
 	<target host="bugbase.adobe.com" />
 	<target host="communities.adobe.com" />
-	<target host="community.adobe.com" />
-	<target host="cookbooks.adobe.com" />
 	<target host="creative.adobe.com" />
 	<target host="*.creative.adobe.com" />
 	<target host="www.echosign.adobe.com" />
-	<target host="edexchange.adobe.com" />
-	<target host="cem.events.adobe.com" />
+	<target host="edex.adobe.com" />
+	<target host="discoverwem.adobe.com" />
 	<target host="forums.adobe.com" />
 	<target host="fpdownload.adobe.com" />
 	<target host="get.adobe.com" />
@@ -219,8 +218,12 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	<target host="www.adobe.com" />
 	<target host="wwwimages2.adobe.com" />
 
-	<!--	Special cases:
+	<!--	Complications:
 				-->
+	<target host="community.adobe.com" />
+	<target host="cookbooks.adobe.com" />
+	<target host="edexchange.adobe.com" />
+	<target host="cem.events.adobe.com" />
 	<target host="get2.adobe.com" />
 	<target host="images.groups.adobe.com" />
 	<target host="ns.adobe.com" />
@@ -228,6 +231,16 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	<target host="techlive.adobe.com" />
 	<target host="thumbnails.tv.adobe.com" />
 	<target host="wwwimages.adobe.com" />
+
+		<!--	/+[^?] 404s:
+					-->
+		<exclusion pattern="^http://community\.adobe\.com/+(?!$|\?)" />
+
+			<test url="http://community.adobe.com/f" />
+			<test url="http://community.adobe.com/o" />
+			<test url="http://community.adobe.com//o" />
+			<test url="http://community.adobe.com/b" />
+			<test url="http://community.adobe.com/a" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
@@ -262,10 +275,47 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 					-->
 	<!--securecookie host="^\.adobe\.com$" name="^(ITEMSINCART|TID|UID)$" /-->
 	<!--securecookie host="^communities\.adobe\.com$" name="^MDPCush-Cookie$" /-->
+	<!--securecookie host="^edex\.adobe\.com$" name="^(CFID|CFTOKEN|DEFAULTLOCALE|EDEXLOCALE)$" /-->
+	<!--securecookie host="^forums\.adobe\.com$" name="^BIGipServer[\w-]+$" /-->
 	<!--securecookie host="^www\.adobe\.com$" name="^(CFID|CFTOKEN|DYLANSESSIONID|DylanApp-BigIP)$" /-->
 
-	<securecookie host=".*\.adobe\.com$" name=".+" />
+	<securecookie host=".+\.adobe\.com$" name=".+" />
 
+
+	<!--	Redirect drops forward slash
+		but not args:
+				-->
+	<rule from="^http://community\.adobe\.com/+"
+		to="https://www.adobe.com/communities" />
+
+		<test url="http://community.adobe.com/?" />
+		<test url="http://community.adobe.com//" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cookbooks\.adobe\.com/[^?]*"
+		to="https://forums.adobe.com/" />
+
+		<test url="http://cookbooks.adobe.com/livecycle" />
+		<test url="http://cookbooks.adobe.com/post_AIR_Encrypted_SQLite_Database-16250.html" />
+
+	<!--	Redirect drops forward slash,
+		path, and args:
+				-->
+	<rule from="^http://edexchange\.adobe\.com/.*"
+		to="https://edexchange.adobe.com/" />
+
+		<test url="http://edexchange.adobe.com/pages/home" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cem\.events\.adobe\.com/[^?]*"
+		to="https://www.adobe.com/solutions/web-experience-management.html" />
+
+		<test url="http://cem.events.adobe.com/?" />
+		<test url="http://cem.events.adobe.com//" />
 
 	<rule from="^http://get2\.adobe\.com/"
 		to="https://get.adobe.com/" />
@@ -296,7 +346,7 @@ Fetch error: http://sstats.adobe.com/ => https://sstats.adobe.com/: (7, 'Failed 
 	<!--	First, rewrite css to www:
 						-->
 	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/"
-		to="https://www.adobe.com/" />
+		to="https://www.adobe.com/css/" />
 
 		<test url="http://wwwimages.adobe.com/www.adobe.com/css/labs_import.css" />
 
