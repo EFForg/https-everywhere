@@ -48,6 +48,13 @@
 	* Mismatched, CN: secure.eloqua.com
 
 
+	Partially covered hosts:
+
+		- now *
+
+	* Satisfying fetch tests
+
+
 	Fully covered domains:
 
 		- eloqua.com subdomains:
@@ -69,6 +76,7 @@
 
 	Insecure cookies are set for these domains and hosts:
 
+		- .eloqua.com
 		- cloudconnectors.eloqua.com
 		- login.eloqua.com
 		- now.eloqua.com
@@ -89,12 +97,25 @@
 				-->
 	<target host="blog.eloqua.com" />
 	<target host="images.marketing.eloqua.com" />
-	<!--target host="now.eloqua.com" /-->
+	<target host="now.eloqua.com" />
 	<target host="topliners.eloqua.com" />
+
+		<!--	Satisfy fetch tests:
+						-->
+		<exclusion pattern="^http://now\.eloqua\.com/(?!EloquaImages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://now.eloqua.com/FormsLogin.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://now.eloqua.com/EloquaImages/" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.eloqua\.com$" name="^(ELOQUA|ELQSTATUS)$" /-->
 	<!--securecookie host="^cloudconnectors\.eloqua\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^(login|now|\.secure)\.eloqua\.com$" name="^culture$" /-->
 
@@ -115,8 +136,8 @@
 
 		<test url="http://images.marketing.eloqua.com/Web/Eloqua/" />
 
-	<!--rule from="^http://now\.eloqua\.com/"
-		to="https://secure.eloqua.com/" /-->
+	<rule from="^http://now\.eloqua\.com/"
+		to="https://secure.eloqua.com/" />
 
 	<!--	Redirect drops path, args, and forward slash:
 								-->
