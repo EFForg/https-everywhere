@@ -2,6 +2,7 @@
 	Other Lenovo rulesets:
 
 		- Lenovo_Orders.com.xml
+		- Lenovo_Picks.com.xml
 
 
 	CDN buckets:
@@ -23,27 +24,37 @@
 
 		- lenovo.com subdomains:
 
-			- blog *
+			- blog ¹
 			- consumersupport **
-			- news			(handshake fails)
-			- social *
-			- support **
+			- news ³
+			- www.partnerinfo ¹
+			- www2.partnerinfo ¹
+			- partners ¹
+			- social ⁵
 
 		- training.lenovo.partner-management.com
 
-	* Redirects to www.lenovoblogs.com; expired 2011-10-05, CN: localhost.localdomain
-	** Times out
+	¹ Refused
+	** 504, Akamai
+	³ Show www.tvweeklynow.com
+	⁵ Dropped
 
 
 	Problematic domains:
 
-		- lenovo.com			(cert is only valid for www)
-		- forum.lenovo.com *
+		- lenovo.com ¹
+		- apps.lenovo.com ¹
+		- forum.lenovo.com ¹
 		- outlet.lenovo.com		($ 404s, some pages redirect to http, some paths work)
+		- ovp.lenovo.com ³
+		- shareit.lenovo.com ¹
+
 		- (www.)lenovovision.com **
 		- (www.)thinkpad.com **
 
+	¹ Mismatched
 	* Mismatched, CN: secure01.lithium.com
+	³ Missing certificate chain, see https://whatsmychaincert.com
 	** Times out
 
 
@@ -68,34 +79,96 @@
 		- (www.)lenovovision.com	(→ www.lenovo.com)
 		- (www.)thinkpad.com		(→ www.lenovo.com)
 
--->
-<ruleset name="Lenovo (partial)" platform="mixedcontent" default_off="Needs ruleset tests">
 
-	<target host="lenovo.co.uk" />
-	<target host="www.lenovo.co.uk" />
-	<target host="lenovo.com" />
-	<target host="*.lenovo.com" />
+	Insecure cookies are set for these hosts and domains:
+
+		- ovp.lenovo.com
+		- support.lenovo.com
+		- .support.lenovo.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- forums from www.msfn.org
+			- forums from lenovoblogs.com
+			- www.lenovo.com from $self
+			- www.lenovo.com from shop.lenovo.com
+
+		- favicon on www.lenovo.com from $self
+
+		- Bug on forums from lenovoblogs.112.2o7.net
+
+-->
+<ruleset name="Lenovo (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="checkout.lenovo.com" />
+	<target host="download.lenovo.com" />
+	<target host="forums.lenovo.com" />
+	<target host="outlet.lenovo.com" />
+	<target host="s.lenovo.com" />
+	<target host="support.lenovo.com" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
 
 			Redirects that 404. Destinations don't support https:
 										-->
 		<exclusion pattern="^http://www\.lenovo\.com/(?:support|training)/" />
+
+			<test url="http://www.lenovo.com/support/" />
+			<test url="http://www.lenovo.com/training/" />
+
+		<!--
+			Redirects to http:
+						-->
+		<exclusion pattern="http://shop\.lenovo\.com/\w\w/\w\w/services-warranty(?:$|\?|/)" />
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/9056
 
 			$ no longer works, some pages redirect to http:
 									-->
-		<exclusion pattern="^http://outlet\.lenovo\.com/(?!.+/images/|.+/js/|.+/seutil\.workflow:LoadCombinedResource|ISS_Static/|SEUILibrary/)" />
+		<!--exclusion pattern="^http://outlet\.lenovo\.com/outlet_us/$" /-->
 		<!--
-			Redirects to http:
-						-->
-		<exclusion pattern="http://shop\.lenovo\.com/\w\w/\w\w/services-warranty(?:$|\?|/)" />
+			Exceptions:
+					-->
+		<exclusion pattern="^http://outlet\.lenovo\.com/(?!.+/images/|.+/js/|.+/seutil\.workflow:LoadCombinedResource|ISS_Static/|SEUILibrary/)" />
+
+
+	<!--	Complications:
+				-->
+	<target host="lenovo.co.uk" />
+	<target host="www.lenovo.co.uk" />
+	<target host="thinkpad.com" />
+	<target host="lenovo.com" />
+	<target host="forum.lenovo.com" />
+	<target host="shop.lenovo.com" />
+	<target host="www.lenovo.com" />
 	<target host="lenovovision.com" />
 	<target host="www.lenovovision.com" />
-	<target host="thinkpad.com" />
 	<target host="www.thinkpad.com" />
 
+	<!--	Downgrades:
+				-->
+	<target host="blog.lenovo.com" />
+	<target host="consumersupport.lenovo.com" />
+	<target host="news.lenovo.com" />
+	<target host="ovp.lenovo.com" />
+	<target host="social.lenovo.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="\.lenovo\.com$" name="^VISITORID$" />
+	<securecookie host="forums\.lenovo\.com$" name="^(LiSESSIONID|LithiumUserInfo|LithiumUserSecure|LithiumVisitor)$" />
+	<securecookie host="^ovp\.lenovo\.com$" name="^JSESSIONID$" />
+	<securecookie host="^support\.lenovo\.com$" name="^esupport#lang$" />
+	<securecookie host="^\.support\.lenovo\.com$" name="^esupport#lang1$" />
+
+	<securecookie host="\.lenovo\.com$" name="VISITORID" />
+	<securecookie host="(?:forums|\.?support)\.lenovo\.com$" name=".+" />
 
 	<!--	Tracking cookies:
         These have been observed to break partner referral links and so are
@@ -105,54 +178,62 @@
 					-->
 
 
-	<rule from="^http://(?:www\.)?lenovo\.co\.uk/?$"
+	<rule from="^http://(?:www\.)?lenovo\.co\.uk/$"
 		to="https://www.lenovo.com/uk/en/" />
-
-	<!--	https://trac.torproject.org/projects/tor/ticket/8715
-
-		International domains fail to redirect properly:
-									-->
-	<rule from="^http://(?:www\.)?lenovo\.com(?::80)?/(?!us)(\w\w)/?(?:\?.*)?$"
-		to="https://www.lenovo.com/$1/$1/" />
 
 	<!--	404s as-is:
 				-->
 	<rule from="^http://(?:www\.)?lenovo\.com/depotstatus/?$"
 		to="https://download.lenovo.com/lenovo/content/vru/depotstatus.html" />
 
+		<test url="http://lenovo.com/depotstatus" />
+		<test url="http://lenovo.com/depotstatus/" />
+		<test url="http://www.lenovo.com/depotstatus" />
+
 	<!--	404s as-is:
 				-->
 	<rule from="^http://(?:www\.)?lenovo\.com/friendsandfamily/?$"
 		to="https://shop.lenovo.com/SEUILibrary/controller/Lenovo:EnterStdAffinity?affinity=lenovofamily&amp;ConfigContext=StdAffinityPortal" />
+
+		<test url="http://lenovo.com/friendsandfamily" />
+		<test url="http://lenovo.com/friendsandfamily/" />
+		<test url="http://www.lenovo.com/friendsandfamily/" />
 
 	<!--	https://trac.torproject.org/projects/tor/ticket/6604
 
 		thinkpad.com redirects to www.lenovo.com/link/redirect.www.lenovo.com/www.thinkpad.com/,
 		which 404s over https but redirects like so over http:
 									-->
-	<rule from="^http://(?:(?:www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(?:www\.)?thinkpad\.com/(?:.*)"
+	<rule from="^http://(?:(?:www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(?:www\.)?thinkpad\.com/.*"
 		to="https://www.lenovo.com/us/en/?cid=SEO-thinkpadcom" />
 
 	<rule from="^http://lenovo\.com/"
 		to="https://www.lenovo.com/" />
 
-	<!--	404s as-is:
+	<rule from="^http://forum\.lenovo\.com/"
+		to="https://forums.lenovo.com/" />
+
+	<!--	Loops as-is:
 				-->
 	<rule from="^http:///shop\.lenovo\.com/us/?$"
-		to="https://www.lenovo.com/products/us/desktop/essential/c-series" />
+		to="https://www.lenovo.com/us/en/?redir=y&amp;redirsrc=1" />
 
-	<rule from="^http://(checkout|download|outlet|s|shop|www)\.lenovo\.com/"
-		to="https://$1.lenovo.com/"/>
- 
-	<rule from="^http://forums?\.lenovo\.com/"
-		to="https://forums.lenovo.com/" />
+		<test url="http:///shop.lenovo.com/us" />
+		<test url="http:///shop.lenovo.com/us/" />
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
 
 		shop.lenovo points here:
 						-->
-	<rule from="^http://(?:www\.)?lenovovision\.com/(?:.*)"
+	<rule from="^http://(?:www\.)?lenovovision\.com/.*"
 		to="https://www.lenovo.com/" />
+
+		<test url="http://lenovovision.com/foo" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
 
@@ -161,10 +242,11 @@
 	<rule from="^https://www\.lenovo\.com/training/"
 		to="http://www.lenovo.com/training/" downgrade="1" />
 
+		<test url="https://www.lenovo.com/training/" />
+
 	<!--	- Social just redirects to blog
-		- Haven't seen blog nor support links, but just in case.
-										-->
-	<rule from="^https://(blog|(?:consumer)?support|news|social)\.lenovo\.com/"
+						-->
+	<rule from="^https://(blog|consumersupport|news|ovp|www\.partnerinfo|social)\.lenovo\.com/"
 		to="http://$1.lenovo.com/" downgrade="1" />
 
 </ruleset>
