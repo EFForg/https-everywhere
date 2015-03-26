@@ -1,4 +1,13 @@
 <!--
+	Nonfunctional hosts:
+
+		- blog ¹
+		- images ²
+
+	¹ Recursive redirect
+	² Refused
+
+
 	^: Mismatched
 	www: Some pages redirect to http
 
@@ -26,26 +35,34 @@
 
 		<!--	Redirects to http:
 						-->
-		<exclusion pattern="^http://www\.superdrug\.com/$" />
+		<!--exclusion pattern="^http://www\.superdrug\.com/$" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://www\.superdrug\.com/(?!combined\.css|favicon\.ico|medias/)" />
+		<exclusion pattern="^http://www\.superdrug\.com/(?!combined\.css|favicon\.ico|(?:login|register)(?:$|[?/])|medias/)" />
 
 			<!--	+ve:
 					-->
+			<test url="http://www.superdrug.com/beautycard" />
 			<test url="http://www.superdrug.com/cart" />
+			<test url="http://www.superdrug.com/competitions" />
+			<test url="http://www.superdrug.com/contact" />
+			<test url="http://www.superdrug.com/delInfo" />
+			<test url="http://www.superdrug.com/history" />
+			<test url="http://www.superdrug.com/page/careers" />
 
 			<!--	-ve:
 					-->
 			<test url="http://www.superdrug.com/combined.css" />
 			<test url="http://www.superdrug.com/favicon.ico" />
+			<test url="http://www.superdrug.com/login" />
 			<test url="http://www.superdrug.com/medias/custom-content/img/offerbar/storenextdelivery.png" />
+			<test url="http://www.superdrug.com/register" />
 
 
 	<!--	Not secured by server:
 					-->
-	<securecookie host="^onlinedoctor\.superdrug\.com$" name="^PHPSESSID$" />
+	<!--securecookie host="^onlinedoctor\.superdrug\.com$" name="^PHPSESSID$" /-->
 
 	<!--securecookie host="^(?:.*\.)?superdrug\.com$" name=".*"/-->
 	<securecookie host="^onlinedoctor\.superdrug\.com$" name=".*" />
