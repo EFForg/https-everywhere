@@ -18,22 +18,45 @@
 		- adserver.sandbox.cxad
 		- s-adserver.sandbox.cxad
 		- scdn
+		- support
 		- wiki
+
+
+	Insecure cookies are set for these hosts:
+
+		- wiki.cxense.com
 
 -->
 <ruleset name="cXense">
 
-	<target host="*.cxense.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="comcluster.cxense.com" />
+	<target host="adserver.cxad.cxense.com" />
+	<target host="s-adserver.cxad.cxense.com" />
+	<target host="adserver.cxad.sandbox.cxense.com" />
+	<target host="s-adserver.cxad.sandbox.cxense.com" />
+	<target host="scdn.cxense.com" />
+	<target host="support.cxense.com" />
+	<target host="wiki.cxense.com" />
 
+	<!--	Complications:
+				-->
+	<target host="cdn.cxense.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^wiki\.cxense\.com$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^\.cxense\.com$" name="^gck\w$" />
 	<securecookie host="^wiki\.cxense\.com$" name=".+" />
 
 
-	<rule from="^http://s?cdn\.cxense\.com/"
+	<rule from="^http://cdn\.cxense\.com/"
 		to="https://scdn.cxense.com/" />
 
-	<rule from="^http://(comcluster|(?:s-)?adserver(?:\.sandbox)?\.cxad|wiki)\.cxense\.com/"
-		to="https://$1.cxense.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
