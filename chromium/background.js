@@ -184,7 +184,7 @@ function onBeforeRequest(details) {
 
   var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return; }
+  if (rs.length === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
