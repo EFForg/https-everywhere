@@ -1,21 +1,35 @@
-<ruleset name="Compendium">
+<!--
+	For other Oracle coverage, see Oracle.xml.
 
-	<target host="compendiumblog.com" />
+
+	^compendiumblog.com: Dropped over http & https
+
+-->
+<ruleset name="Compendium Blog.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="*.compendiumblog.com" />
-	<target host="*.content.compendiumblog.com" />
+	<target host="cdn2.content.compendiumblog.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.content.compendiumblog.com" />
+	<target host="global.content.compendiumblog.com" />
+
+		<test url="http://www.compendiumblog.com/" />
 
 
-	<securecookie host="^www\.compendiumblog\.com$" name=".*" />
-
+	<rule from="^http://(?:cdn|global)\.content\.compendiumblog\.com/"
+		to="https://s3.amazonaws.com/global.content.compendiumblog.com/" />
 
 	<!--	www & unique subdomains for blogs.	-->
 	<rule from="^http://(\w+)\.compendiumblog\.com/"
 		to="https://$1.compendiumblog.com/" />
 
+		<test url="http://www.compendiumblog.com/recover" />
+
 	<rule from="^http://cdn2\.content\.compendiumblog\.com/"
 		to="https://cdn2.content.compendiumblog.com/" />
-
-	<rule from="^http://(?:cdn|global)\.content\.compendiumblog\.com/"
-		to="https://s3.amazonaws.com/global.content.compendiumblog.com/" />
 
 </ruleset>

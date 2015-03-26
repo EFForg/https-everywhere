@@ -5,8 +5,12 @@
 	Other Adobe rulesets:
 
 		- 2o7.net.xml
+		- Acrobat.com.xml
+		- Acrocomcontent.com.xml
 		- Adobe_Connect.xml
 		- Adobe-Digital-Marketing.xml
+		- Adobe_Exchange.com.xml
+		- Adobe_forms_central.com.xml
 		- Adobe_login.com.xml
 		- Adobetag.com.xml
 		- Hitbox.com.xml
@@ -34,10 +38,12 @@
 
 	Nonfunctional subdomains:
 
+		- community **
 		- experiencedelivers ¹
 		- feeds *
 		- training ²
 
+	** Dropped
 	¹ Redirects to www; mismatched, CN: *.day.com
 	* 404
 	² Refused
@@ -46,6 +52,10 @@
 	Problematic subdomains:
 
 		- airdownload ²
+		- community	(Dropped)
+		- cookbooks	(404)
+		- edex ***
+		- cem.events	(Shows discoverwem.adobe.com)
 		- forums *
 		- gaming ¹
 		- get2 ⁴
@@ -72,9 +82,11 @@
 
 	Partially covered subdomains:
 
+		- community ¹
 		- fpdownload ³
 		- ns		(→ www)
 
+	¹ /+[^?] 404s
 	³ crossdomain.xml excluded
 
 
@@ -86,10 +98,9 @@
 		- entitlement.auth
 		- sp.auth
 		- blogs
+		- cookbooks	(→ forums)
 		- bugbase
 		- communities
-		- community
-		- cookbooks
 		- creative
 
 		- *.creative:
@@ -99,9 +110,11 @@
 			- eu
 			- us
 
+		- discoverwem
 		- www.echosign
-		- edexchange
-		- cem.events
+		- edex
+		- edexchange	(→ edex.adobe.com)
+		- cem.events	(→ www.adobe.com)
 		- forums
 		- get
 		- get2		(→ get)
@@ -136,6 +149,7 @@
 
 		- .adobe.com
 		- communities.adobe.com
+		- edex.adobe.com
 		- forums.adobe.com
 		- www.adobe.com
 
@@ -151,6 +165,7 @@
 
 			- blogs from $self *
 			- blogs from dev.w3.org
+			- edex from ex-cms.s3.amazonaws.com *
 			- groups from $self
 			- groups from images.groups *
 			- tv from thumbnails.tv *
@@ -180,13 +195,11 @@
 	<target host="blogs.adobe.com" />
 	<target host="bugbase.adobe.com" />
 	<target host="communities.adobe.com" />
-	<target host="community.adobe.com" />
-	<target host="cookbooks.adobe.com" />
 	<target host="creative.adobe.com" />
 	<target host="*.creative.adobe.com" />
 	<target host="www.echosign.adobe.com" />
-	<target host="edexchange.adobe.com" />
-	<target host="cem.events.adobe.com" />
+	<target host="edex.adobe.com" />
+	<target host="discoverwem.adobe.com" />
 	<target host="forums.adobe.com" />
 	<target host="fpdownload.adobe.com" />
 	<target host="get.adobe.com" />
@@ -205,8 +218,12 @@
 	<target host="www.adobe.com" />
 	<target host="wwwimages2.adobe.com" />
 
-	<!--	Special cases:
+	<!--	Complications:
 				-->
+	<target host="community.adobe.com" />
+	<target host="cookbooks.adobe.com" />
+	<target host="edexchange.adobe.com" />
+	<target host="cem.events.adobe.com" />
 	<target host="get2.adobe.com" />
 	<target host="images.groups.adobe.com" />
 	<target host="ns.adobe.com" />
@@ -214,6 +231,16 @@
 	<target host="techlive.adobe.com" />
 	<target host="thumbnails.tv.adobe.com" />
 	<target host="wwwimages.adobe.com" />
+
+		<!--	/+[^?] 404s:
+					-->
+		<exclusion pattern="^http://community\.adobe\.com/+(?!$|\?)" />
+
+			<test url="http://community.adobe.com/f" />
+			<test url="http://community.adobe.com/o" />
+			<test url="http://community.adobe.com//o" />
+			<test url="http://community.adobe.com/b" />
+			<test url="http://community.adobe.com/a" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001605.html
 
@@ -248,10 +275,47 @@
 					-->
 	<!--securecookie host="^\.adobe\.com$" name="^(ITEMSINCART|TID|UID)$" /-->
 	<!--securecookie host="^communities\.adobe\.com$" name="^MDPCush-Cookie$" /-->
+	<!--securecookie host="^edex\.adobe\.com$" name="^(CFID|CFTOKEN|DEFAULTLOCALE|EDEXLOCALE)$" /-->
+	<!--securecookie host="^forums\.adobe\.com$" name="^BIGipServer[\w-]+$" /-->
 	<!--securecookie host="^www\.adobe\.com$" name="^(CFID|CFTOKEN|DYLANSESSIONID|DylanApp-BigIP)$" /-->
 
-	<securecookie host=".*\.adobe\.com$" name=".+" />
+	<securecookie host=".+\.adobe\.com$" name=".+" />
 
+
+	<!--	Redirect drops forward slash
+		but not args:
+				-->
+	<rule from="^http://community\.adobe\.com/+"
+		to="https://www.adobe.com/communities" />
+
+		<test url="http://community.adobe.com/?" />
+		<test url="http://community.adobe.com//" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cookbooks\.adobe\.com/[^?]*"
+		to="https://forums.adobe.com/" />
+
+		<test url="http://cookbooks.adobe.com/livecycle" />
+		<test url="http://cookbooks.adobe.com/post_AIR_Encrypted_SQLite_Database-16250.html" />
+
+	<!--	Redirect drops forward slash,
+		path, and args:
+				-->
+	<rule from="^http://edexchange\.adobe\.com/.*"
+		to="https://edex.adobe.com/" />
+
+		<test url="http://edexchange.adobe.com/pages/home" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://cem\.events\.adobe\.com/[^?]*"
+		to="https://www.adobe.com/solutions/web-experience-management.html" />
+
+		<test url="http://cem.events.adobe.com/?" />
+		<test url="http://cem.events.adobe.com//" />
 
 	<rule from="^http://get2\.adobe\.com/"
 		to="https://get.adobe.com/" />
@@ -282,7 +346,7 @@
 	<!--	First, rewrite css to www:
 						-->
 	<rule from="^http://wwwimages\.adobe\.com/www\.adobe\.com/css/"
-		to="https://www.adobe.com/" />
+		to="https://www.adobe.com/css/" />
 
 		<test url="http://wwwimages.adobe.com/www.adobe.com/css/labs_import.css" />
 

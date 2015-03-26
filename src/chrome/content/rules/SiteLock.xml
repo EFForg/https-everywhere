@@ -3,19 +3,67 @@
 
 		- blog		(some pages redirect to http:.../$, valid cert)
 
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- admin
+		- mapi
+		- secure
+		- shield
+		- wiki
+
+
+	Insecure cpploes are set for these domains:
+
+		- .sitelock.com
+
+
+	Mixed content:
+
+		- css on secure from fonts.googleapis.com *
+
+		- Bug on blog from pixel.wp.com
+
+	* Secured by us
+
 -->
-<ruleset name="SiteLock (partial)">
+<ruleset name="SiteLock.com (partial)">
 
 	<target host="sitelock.com"/>
-	<target host="*.sitelock.com"/>
+	<target host="admin.sitelock.com"/>
+	<target host="blog.sitelock.com"/>
+	<target host="mapi.sitelock.com"/>
+	<target host="secure.sitelock.com"/>
+	<target host="shield.sitelock.com"/>
+	<target host="wiki.sitelock.com"/>
+	<target host="www.sitelock.com"/>
+
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://blog\.sitelock\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
 		<exclusion pattern="^http://blog\.sitelock\.com/(?!feed/)" />
 
 
-	<securecookie host="^\.sitelock\.com$" name="^(?:btrack|___utm\w+)$" />
+			<test url="http://blog.sitelock.com/feed/" />
+			<!--
+				-ve:
+					-->
+			<test url="http://blog.sitelock.com/category/uncategorized/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sitelock\.com$" name="^(___utm\w+|btrack|redirect_count|visid_incap_\d+)$" /-->
+
+	<securecookie host="^\.sitelock\.com$" name="^(?:btrack|___utm\w+|incap_ses_\d+_\d+|nlbi_\d+|visid_incap_\d+)$" />
 	<securecookie host="^(?:admin|mapi|secure|wiki|www)\.sitelock\.com$" name=".+" />
 
 
-	<rule from="^http://((?:admin|blog|mapi|secure|shield|wiki|www)\.)?sitelock\.com/"
-		to="https://$1sitelock.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

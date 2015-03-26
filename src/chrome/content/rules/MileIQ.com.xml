@@ -1,0 +1,51 @@
+<!--
+	Problematic hosts:
+
+		- support *
+		- try *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .mileiq.com
+		- dashboard.mileiq.com
+		- try.mileiq.com
+
+-->
+<ruleset name="MileIQ.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dashboard.mileiq.com" />
+	<!--target host="support.mileiq.com" /-->
+	<!--target host="try.mileiq.com" /-->
+	<target host="www.mileiq.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mileiq.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mileiq\.com$" name="^(__cfduid|cf_clearance|ubvt)$" /-->
+	<!--securecookie host="^\.dashboard\.mileiq\.com$" name="^SessionProxyFilter_SessionId$" /-->
+	<!--securecookie host="^try\.mileiq\.com$" name="^(ubpv|ubvs)$" /-->
+
+	<securecookie host="^\.dashboard\.mileiq\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://mileiq\.com/+"
+		to="https://www.mileiq.com/" />
+
+		<test url="http://mileiq.com//resources" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

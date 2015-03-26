@@ -1,7 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://vmware.com/ => https://vmware.com/: (7, 'Failed to connect to vmware.com port 443: Connection refused')
 	info is handled in Eloqua-clients.xml.
+
+	Other VMware rulesets:
+
+		- VMware_Blogs.com.xml
 
 
 	CDN buckets:
@@ -10,45 +12,64 @@ Fetch error: http://vmware.com/ => https://vmware.com/: (7, 'Failed to connect t
 		- kb.vmware.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts:
 
-		- vmware.com subdomains:
-
-			- ir ¹
-			- kb ²
-			- nlblogs ³
-			- partnerlocator ⁴
-
-		- www.vmwareblogs.com ⁵
+		- ir ¹
+		- kb ²
+		- nlblogs ³
+		- partnerlocator ⁴
+		- vcloud ⁵
 
 	¹ Shareholder
 	² 503, akamai
 	³ Refused
 	⁴ Salesforce
-	⁵ Google
+	⁵ 504, Akamai
 
 
-	Problematic subdomains:
+	Problematic hosts:
 
-		- info ¹
-		- store ²
+		- ^ ¹
+		- info ²
+		- store ³
 
-	¹ Eloqua
-	² Digital River
+	¹ Refused
+	² Eloqua
+	³ Digital River
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .vmware.com
+		- developercenter.vmware.com
+		- blogs.vmware.com
+		- .info.vmware.com
+		- my.wmware.com
+		- store.vmware.com
+		- www.wmware.com
 
 
 	Mixed content:
 
-		- css on blogs from www.vmwareblogs.com *
+		- css on info from www.vmware.com *
+		- Images on blogs from download3.vmware.com *
+		- favicon on info from www.vmware.com *
 
-	* Unsecurable, seems minor
+		- Bugs, on:
+
+			- blogs from leads.demandbase.com *
+			- blogs from www.demandbase.com *
+			- blogs from www.facebook.com *
+
+	* Secured by us
 
 -->
-<ruleset name="VMware.com (partial)" default_off='failed ruleset test'>
+<ruleset name="VMware.com (partial)">
 
 	<target host="vmware.com" />
 	<target host="*.vmware.com" />
-		<exclusion pattern="^http://(?:forum|info|ir|kb|nlblogs|partnerlocator)\." />
+
+		<exclusion pattern="^http://(?:forum|info|ir|kb|nlblogs|partnerlocator|vcloud)\.vmware\.com/" />
 
 			<test url="http://forum.vmware.com/" />
 			<test url="http://info.vmware.com/" />
@@ -56,8 +77,16 @@ Fetch error: http://vmware.com/ => https://vmware.com/: (7, 'Failed to connect t
 			<test url="http://kb.vmware.com/" />
 			<test url="http://nlblogs.vmware.com/" />
 			<test url="http://partnerlocator.vmware.com/" />
+			<test url="http://vcloud.vmware.com/" />
 
-		<exclusion pattern="^http://store\.vmware\.com/(?!DRHM/Storefront/Site/|favicon\.ico)" />
+		<exclusion pattern="^http://store\.vmware\.com/(?!DRHM/Storefront/Site/|favicon\.ico|promo/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://store.vmware.com/store/vmware/home" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.affiliateprogram" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.howtobuy" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.newfaq" />
 
 			<!--	-ve:
 					-->
@@ -77,35 +106,30 @@ Fetch error: http://vmware.com/ => https://vmware.com/: (7, 'Failed to connect t
 					-->
 	<!--securecookie host="^\.vmware\.com$" name="^(JSESSIONID|dtCookie)$" /-->
 	<!--securecookie host="^developercenter\.vmware\.com$" name="^vdc-cookie$" /-->
-	<!--securecookie host="^blogs\.vmware\.com$" name="^blogs-prod$" /-->
+	<!--securecookie host="^blogs\.vmware\.com$" name="^blogs-prod-cookie2$" /-->
+	<!--securecookie host="^\.info\.vmware\.com$" name="^ELOQUA$" /-->
 	<!--securecookie host="^my\.vmware\.com$" name="^(COOKIE_SUPPORT|GUEST_LANGUAGE_ID|ObFormLoginCookie|myvmware-www)$" /-->
+	<!--securecookie host="^store\.wmware\.com$" name="^BIGipServer[\w-]+$" /-->
 	<!--securecookie host="^www\.vmware\.com$" name="^myvmware-wwwa-prod$" /-->
 
 	<!--	Observed cookie domains:
 
-			- ^
-			- ^.
 			- ^campaign
 			- ^downloads
-			- ^my
 			- ^solutionexchange
-			- ^www
 					-->
 	<securecookie host="^(?!store\.)(?:.*\.)?vmware\.com$" name=".+" />
 
 
-	<!--	Observed subdomains:
+	<!--	Redirect preserves path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://vmware\.com/+"
+		to="https://www.vmware.com/" />
 
-			- campaign
-			- communities
-			- download3
-			- downloads
-			- my
-			- solutionexchange
-			- store
-			- www
-				-->
-	<rule from="^http://(\w+\.)?vmware\.com/"
-		to="https://$1vmware.com/" />
+			<test url="http://vmware.com//go/partnercentral" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

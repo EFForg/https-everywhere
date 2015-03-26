@@ -1,0 +1,37 @@
+<!--
+	For other Fastly coverage, see Fastly.xml.
+
+
+	Nonfunctional domains:
+
+		- *.global.prod.fastly.net
+		- purge.fastly.net	(times out)
+
+
+	Fully covered domains:
+
+		- *.fastly.net:
+
+			- control
+			- mirrors
+			- assets1.fastly.com.a.prod	(→ fastly.a.ssl.fastly.net)
+
+			- *.a.ssl:
+
+				- fastly
+				- fastly-assets
+
+-->
+<ruleset name="Fastly.net (partial)">
+
+	<target host="*.fastly.net" />
+		<exclusion pattern="^http://(?:(?!assets1\.fastly\.com\.a\.prod\.).+\.prod|purge)\.fastly\.net/" />
+
+
+	<rule from="^http://assets1\.fastly\.com\.a\.prod\.fastly\.net/"
+		to="https://fastly.a.ssl.fastly.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,49 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ck ¹
+		- support ²
+		- www ¹
+
+	¹ 503
+	² 403
+
+
+	Problematic subdomains:
+
+		- ads-a *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered subdomains:
+
+		- ^
+		- adserver
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .juicyads.com
+		- adserver.juicyads.com
+
+-->
+<ruleset name="JuicyAds.com (partial)">
+
+	<target host="juicyads.com" />
+	<!--target host="ads-a.juicyads.com" /-->
+	<target host="adserver.juicyads.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.juicyads\.com$" name="^(incap_ses_\d+_\d+|juicy_data|juicy_data_1|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^adserver\.juicyads\.com$" name="^__utmv\w+$" /-->
+
+	<securecookie host="^(?:adserver)?\.juicyads\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
