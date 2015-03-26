@@ -1,16 +1,16 @@
 <!--
+	Other Fastly rulesets:
+
+		- FastSSL.net.xml
+		- Fastly.net.xml
+
+
 	CDN buckets:
 
 		- assets1.fastly.com.a.prod.fastly.net
 		- fastly-assets.a.ssl.fastly.net
 		- pubnub.a.ssl.fastly.net
 		- fastly.zendesk.com
-
-
-	Nonfunctional domains:
-
-		- *.global.prod.fastly.net
-		- purge.fastly.net	(times out)
 
 
 	Problematic domains:
@@ -31,51 +31,29 @@
 			- debug
 			- maintenance
 
-		- *.fastly.net:
-
-			- control
-			- mirrors
-			- assets1.fastly.com.a.prod	(→ fastly.a.ssl.fastly.net)
-
-			- *.a.ssl:
-
-				- fastly
-				- fastly-assets
-
-		- *.imgix.net
-		- *.parsecdn.com
-
 -->
-<ruleset name="Fastly">
+<ruleset name="Fastly.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="api.fastly.com" />
+	<target host="app.fastly.com" />
+	<target host="beacon.fastly.com" />
+	<target host="beta.fastly.com" />
+	<target host="blog.fastly.com" />
+	<target host="debug.fastly.com" />
+	<target host="maintenance.fastly.com" />
+	<target host="www.fastly.com" />
+
+	<!--	Complications:
+				-->
 	<target host="fastly.com" />
-	<target host="*.fastly.com" />
-	<target host="*.fastly.net" />
-		<exclusion pattern="^http://(?:(?!assets1\.fastly\.com\.a\.prod\.).+\.prod|purge)\.fastly\.net/" />
-	<target host="*.fastssl.net" />
-	<target host="*.imgix.net" />
-	<target host="*.parsecdn.com" />
 
 
-	<rule from="^http://(?:www\.)?fastly\.com/"
+	<rule from="^http://fastly\.com/"
 		to="https://www.fastly.com/" />
 
-	<rule from="^http://(ap[ip]|beacon|beta|blog|debug|maintenance)\.fastly\.com/"
-		to="https://$1.fastly.com/" />
-
-	<rule from="^http://assets1\.fastly\.com\.a\.prod\.fastly\.net/"
-		to="https://fastly.a.ssl.fastly.net/" />
-
-	<rule from="^http://([^@:/]+)\.fastly\.net/"
-		to="https://$1.fastly.net/" />
-
-	<rule from="^http://([\w-]+)\.fastssl\.net/"
-		to="https://$1.fastssl.net/" />
-
-	<rule from="^http://([\w-]+)\.imgix\.net/"
-		to="https://$1.imgix.net/" />
-
-	<rule from="^http://([\w-]+)\.parsecdn\.com/"
-		to="https://$1.parsecdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
