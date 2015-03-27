@@ -36,12 +36,20 @@ chrome.storage.sync.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   setIconColor();
 });
+
+var blockMixedContent = false;
+chrome.storage.sync.get({blockMixedContent: false}, function(item) {
+  blockMixedContent = item.blockMixedContent;
+});
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         setIconColor();
+      } else if (key === 'blockMixedContent') {
+	blockMixedContent = changes[key].newValue;
       }
     }
   }
@@ -146,6 +154,9 @@ var domainBlacklist = {};
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = {};
 
+// A record of tabs actively using https in main_frame for blocking mixed content.
+var tlsTabIds = {};
+
 function onBeforeRequest(details) {
   // get URL into canonical format
   // todo: check that this is enough
@@ -180,6 +191,10 @@ function onBeforeRequest(details) {
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
+    tlsTabIds[details.tabId] = (uri.protocol() === 'https');
+  } else if (details.tabId !== -1) {
+      // This request happened in a tab, wasn't the main_frame, so it's content.
+      shouldCancel = (uri.protocol() === 'http' && (httpNowhereOn || (blockMixedContent && tlsTabIds[details.tabId])));
   }
 
   var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
