@@ -1,3 +1,8 @@
+<style>
+body {
+  max-width: 40em;
+}
+</style>
 <p>
   This page describes how to write rulesets for
    <a href="https://eff.org/https-everywhere">HTTPS Everywhere</a>,
@@ -5,14 +10,19 @@
   to HTTPS automatically. HTTPS Everywhere comes with
    <a href="http://www.eff.org/https-everywhere/atlas/">thousands</a>
   of rulesets that tell HTTPS Everywhere which sites it should switch
-  to HTTPS and how. If there is a site that HTTPS Everywhere doesn't
-  switch to HTTPS and would like to add it, this guide will explain how.
+  to HTTPS and how. If there is a site that offers HTTPS and is not handled by
+  the extension, this guide will explain how to add that site.
 </p>
 
+<a name="rulesets" href="#rulesets">
+  <h4>Rulesets</h4>
+</a>
 
 <p>
-  A ruleset is an XML file describing behavior for a site or group of sites.
-   For example, here is
+  A <tt>ruleset</tt> is an <a
+  href="http://www.xml.com/pub/a/98/10/guide0.html?page=2">XML</a>
+  file describing behavior for a site or group of sites. A ruleset contains
+  one or more <tt>rules</tt>. For example, here is
    <a href="https://github.com/efforg/https-everywhere/blob/master/src/chrome/content/rules/RabbitMQ.xml"><tt>RabbitMQ.xml</tt></a>,
   from the plugin distribution:
 </p>
@@ -28,79 +38,264 @@
 </pre>
 
 <p>
-  The "target" tag specifies which web sites the ruleset applies
-  to. The "rule" tag specifies how URLs on those web sites should be
-  modified. This rule says that any URLs on <tt>rabbitmq.com</tt> and
+  The <tt>target</tt> tag specifies which web sites the ruleset applies
+  to. The <tt>rule</tt> tag specifies how URLs on those web sites should be
+  rewritten. This rule says that any URLs on <tt>rabbitmq.com</tt> and
   <tt>www.rabbitmq.com</tt> should be modified by replacing "http:" with
   "https:".
 </p>
 
 <p>
-  When Firefox loads a URL, HTTPS Everywhere splits out the host name
-  name (e.g. <tt>www.google.com</tt> out of
-  "http://www.google.com/webhp"), and searches its ruleset database for
-  rulesets that match that host name. Host names do not use regular
-  expressions, but they support wildcards, described below.
+  When Firefox loads a URL, HTTPS Everywhere takes the host
+  name (e.g. <tt>www.rabbitmq.com</tt>) and searches its ruleset database for
+  rulesets that match that host name.
 </p>
 
 <p>
-  HTTPS Everywhere then checks the full URL against all the rules from
-  rulesets matching the host name. Rules <em>do</em> use regular expressions.
-  The "from" attribute is checked against the URL, and if it matches,
-  the matched portion is replaced with the contents of the "to"
-  attribute.
+  HTTPS Everywhere then tries each rule in those rulesets against the full URL.
+  If the <a href="http://www.regular-expressions.info/quickstart.html"
+  >Regular Expression</a>, or regexp, in one of those rules matches, HTTPS
+  Everywhere <a href="#rules-and-regular-expressions">rewrites the URL</a>
+  according the the <tt>to</tt> attribute of the rule.
 </p>
+
+<a name="wildcard-targets" href="#wildcard-targets">
+  <h4>Wildcard Targets</h4>
+</a>
 
 <p>
-  Rules are applied to URLs on any of the target hosts. They are applied
-  in order, and only the first rule that matches a URL (using the "from"
-  attribute) is used.
+  To cover all of a domain's subdomains, you may want to specify
+  a wildcard target like <tt>*.twitter.com</tt>. Specifying
+  this type of left-side wildcard matches any host name with
+  <tt>.twitter.com</tt> as a suffix, e.g.  <tt>www.twitter.com</tt>
+  or <tt>urls.api.twitter.com</tt>. You can also specify a
+  right-side wildcard like <tt>www.google.*</tt>. Right-side
+  wildcards, unlike left-side wildcards, apply only one level
+  deep. So if you want to cover all countries you'll generally
+  need to specify <tt>www.google.*</tt>, <tt>www.google.co.*</tt>,
+  and <tt>www.google.com.*</tt> to cover domains like
+  <tt>www.google.co.uk</tt> or <tt>www.google.com.au</tt>. You should
+  use wildcard targets only when you have rules that apply to the
+  entire wildcard space. If your rules only apply to specific hosts,
+  you should list each host as a separate target.
 </p>
 
+<a name="rules-and-regular-expressions" href="#rules-and-regular-expressions">
+  <h4>Rules and Regular Expressions</h4>
+</a>
 
- The target host tag does not use regular expressions. The content
-of a target tag should be the actual name of a web site to which
-the ruleset applies or partially applies, like <tt>www.eff.org</tt>,
-<tt>www.google.com</tt>, <tt>secure.wikimedia.org</tt>, and so
-on. If your rule applies to the bare domain (like "eff.org",
-not just "www.eff.org"), you need an additional target tag to
-say so. For example, the sample ruleset above is meant to apply
-to either <tt>www.twitter.com</tt> or <tt>twitter.com</tt>,
-so it has a separate target tag for each. A target may,
-however, contain a wildcard in one portion of the domain (like
-<tt>*.google.com</tt> or <tt>google.*</tt>, but <tt>*.google.*</tt>
-would not work). A wildcard on the left will match arbitrarily
-deep subdomains (for instance, <tt>*.facebook.com</tt> will
-match <tt>s-static.ak.facebook.com</tt>).Exception: currently
-this is not true for a target host that is less than three
-levels deep. <tt>&lt;target host="*.com"&gt;</tt> would match
-<tt>thing.com</tt> but not <tt>very.thing.com</tt>. We would consider
-changing that if anybody needs to use it. The "rule" does the actual
-rewriting work. The "from" and "to" clauses in each rule are <a
-href="http://www.regular-expressions.info/javascript.html">JavaScript
-regular expressions</a>. You can use them to rewrite URLs in more
-complicated ways. Here's a simplified (and now obsolete) example
-for Wikipedia:</p>
+<p>
+  The <tt>rule</tt> tags do the actual rewriting work. The <tt>from</tt> attribute of
+  each rule is a <a href="http://www.regular-expressions.info/quickstart.html"
+  >regular expression</a> matched against a full URL. You can use rules to rewrite
+  URLs in simple or complicated ways. Here's a simplified (and now obsolete) example
+  for Wikipedia:
+</p>
 
-<pre>&lt;ruleset name="Wikipedia"&gt;
+<pre>
+&lt;ruleset name="Wikipedia"&gt;
   &lt;target host="*.wikipedia.org" /&gt;
 
-  &lt;rule from="^http://([^@:/][^/:@])\.wikipedia\.org/wiki/"
+  &lt;rule from="^http://(\w{2})\.wikipedia\.org/wiki/"
           to="https://secure.wikimedia.org/wikipedia/$1/wiki/"/&gt;
-&lt;/ruleset&gt;</pre><p>That rewrites a URL like <tt>http://fr.wikipedia.org/wiki/Chose</tt> to <tt>https://secure.wikimedia.org/wikipedia/fr/wiki/Chose</tt>. Notice, again, that the target is allowed to contain (just one) * as a wildcard meaning "any". It is possible to add exclusions. An exclusion specifies a pattern, using a regular expression, for URLs where the rule should <strong>not</strong> be applied. The EFF rule contains one exclusion, for a domain that is hosted externally and does not support HTTPS:</p><pre>&lt;ruleset name="EFF"&gt;
-  &lt;target host="eff.org" /&gt;
-  &lt;target host="*.eff.org" /&gt;
+&lt;/ruleset&gt;
+</pre>
 
-  &lt;exclusion pattern="^http://action\.eff\.org/"/&gt;
-  &lt;rule from="^http://eff\.org/" to="https://eff.org/"/&gt;
-  &lt;rule from="^http://([^/:@]*)\.eff\.org/" to="https://$1.eff.org/"/&gt;
-&lt;/ruleset&gt;</pre><p>Note that if your rules include ampersands (&amp;), they need to be appropriately XML-encoded: replace each occurence of <strong>&amp;</strong> with <strong>&amp;#x26;</strong>. Lastly, because many HTTPS websites fail to correctly set the <a href="https://secure.wikimedia.org/wikipedia/en/wiki/HTTP_cookie#Secure_and_HttpOnly">secure flag</a> on authentication cookies, there is a facility for turning this flag on. For instance:</p><pre>&lt;securecookie host="^market\.android\.com$" name=".*" /&gt;</pre><p>The "host" parameter is a regexp specifying which domains should have their cookies secured; the "name" parameter is a regexp specifying which cookies should be secured. Note that HTTPS Everywhere will only secure a cookie when it is set over HTTPS. Once you've written a ruleset, you can use and test it by placing it in the <tt>HTTPSEverywhereUserRules/</tt> subdirectory in <a href="http://kb.mozillazine.org/Profile_folder_-_Firefox">your Firefox profile directory</a>, and then restarting Firefox. While using the rule, check for messages in the Firefox Error Console to see if there are any issues with the way the site supports HTTPS. Note that it is inadvisable to edit the builtin rules in-place, since they will be overwritten by upgrades to the extension. Either keep your edits in a safe place, or use a <a href="/https-everywhere/development">git repository</a>. If you've tested your rule and are sure it would be of use to the world at large, send it to the rulesets mailing list at <tt>https-everywhere-rules AT eff.org</tt>. Please be aware that this is a public and publicly-archived mailing list. <strong>NOTE</strong>: many rules that are not yet distributed in the official version of HTTPS Everywhere are already in our git repository! Before sending us a new rule, please <a href="https://gitweb.torproject.org/https-everywhere.git/tree/HEAD:/src/chrome/content/rules">check there</a> to see if your rule has already been submitted by someone else. Note that there are currently hundreds of pending rules which are not present in the latest stable version but which are included in development builds. If a version of the rule you're interested in is found in <a href="https://gitweb.torproject.org/https-everywhere.git/tree/HEAD:/src/chrome/content/rules">the relevant part of our git repository</a>, you don't need to write a new one -- just switch to the the <a href="https://www.eff.org/files/https-everywhere-devel.xpi">development branch</a> or build your own .xpi from git.</p><h2>make-trivial-rule and trivial-validate.py</h2><p>As an alternative to writing rules by hand, there are scripts you can run from a Unix command line to automate the process of creating a simple rule for a specified domain. These scripts are not included with HTTPS Everywhere releases but are available in our development repository and are described in <a href="development">our development documentation</a>. <a name="default_off"></a></p><h2>Disabling a ruleset by default</h2><p>Sometimes rulesets are useful or interesting, but contain some bugs or issues that make them unsuitable for being enabled by default in everyone's browsers. For instance, the HTTPS website may use a Certificate Authority that is not trusted by everyone's browsers (most commonly, <a href="http://www.cacert.org/">CAcert</a> or a self-signed certificate). Or the ruleset may successfully secure parts of a site but interfere with others. In such cases, rulesets should be disabled by default. This is done by adding a <tt>default_off</tt> attribute to the ruleset element, with a value explaining why the rule is off.</p><pre>&lt;ruleset name="Amazon (buggy)" default_off="currently somewhat broken"&gt;
+<p>
+  The <tt>to</tt> attribute replaces the text matched by the <tt>from</tt>
+  attribute. It can contain placeholders like <tt>$1</tt> that are replaced with
+  the text matched inside the parentheses.
+</p>
+
+<p>
+  This rule rewrites a URL like
+  <tt>http://fr.wikipedia.org/wiki/Chose</tt> to
+  <tt>https://secure.wikimedia.org/wikipedia/fr/wiki/Chose</tt>. Notice,
+  again, that the target is allowed to contain (just one) * as a wildcard
+  meaning "any".
+</p>
+
+<p>
+  Rules are applied in the order they are listed within each ruleset.
+  Order between rulesets is unspecified. Only the first rule or exception
+  matching a given URL is applied.
+</p>
+
+<p>
+  Rules are evaluated using <a
+  href="http://www.regular-expressions.info/javascript.html">Javascript regular
+  expressions</a>, which are similar but not identical to <a
+  href="http://www.regular-expressions.info/pcre.html">Perl-style regular
+  expressions.</a>
+  Note that if your rules include ampersands (&amp;), they need
+  to be appropriately XML-encoded: replace each occurence of
+  <strong>&amp;</strong> with <strong>&amp;#x26;</strong>.
+</p>
+
+<a name="exclusions" href="#exclusions"><h4>Exclusions</h4></a>
+<p>
+  An exclusion specifies a pattern, using a
+  regular expression, for URLs where the rule should <strong>not</strong> be
+  applied. The Stack Exchange rule contains an exclusion for the OpenID login
+  path, which breaks logins if it is rewritten:
+</p>
+
+<pre>
+&lt;exclusion pattern="^http://(?:\w+\.)?stack(?:exchange|overflow)\.com/users/authenticate/" /&gt;
+</pre>
+
+<p>
+  Exclusions are always evaluated before rules in a given ruleset. Matching any
+  exclusion means that a URL won't match any rules within the same ruleset.
+  However, if other rulesets match the same target hosts, the rules in those
+  rulesets will still be tried.
+</p>
+
+<a name="style" href="#style">
+  <h4>Style Guide</h4>
+</a>
+
+<p>
+There are many different ways you can write a ruleset, or regular expression
+within the ruleset. It's easier for everyone to understand the rulesets if they
+follow similar practices. You should read and follow the
+<a href="https://github.com/EFForg/https-everywhere/blob/master/ruleset-style.md">Ruleset
+style guide</a>. Some of the guidelines in that document are intended to make <a
+href="https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md">Ruleset
+testing</a> less cumbersome.
+</p>
+
+<a name="secure-cookies" href="#secure-cookies">
+  <h4>Secure Cookies</h4>
+</a>
+
+<p>
+Many HTTPS websites fail to correctly set the <a
+href="https://secure.wikimedia.org/wikipedia/en/wiki/HTTP_cookie#Secure_and_HttpOnly">secure
+flag</a> on authentication and/or tracking cookies. HTTPS
+Everywhere provides a facility for turning this flag on. For instance:
+</p>
+
+<pre>&lt;securecookie host="^market\.android\.com$" name=".+" /&gt;</pre>
+
+<p>
+The "host" parameter is a regexp specifying which domains
+should have their cookies secured; the "name" parameter is a
+regexp specifying which cookies should be secured. For a cookie to be secured,
+it must be sent by a target host for that ruleset. It must also be sent over
+HTTPS and match the name regexp. For cookies set by Javascript in a web page,
+the Firefox extension can't tell which host set the cookie and instead uses
+the domain attribute of the cookie to check against target hosts. A cookie whose
+domain attribute starts with a "." (the default, if not specified by
+Javascript) will be matched as if it was sent from a host
+name made by stripping the leading dot.
+</p>
+
+<a name="testing" href="#testing">
+  <h4>Testing</h4>
+</a>
+
+<p>
+We use an <a href="https://github.com/hiviah/https-everywhere-checker">automated
+checker</a> to run some basic tests on all rulesets. This is described in more
+detail in our <a
+href="https://github.com/EFForg/https-everywhere/blob/master/ruleset-testing.md">Ruleset
+Testing</a> document, but in short there are two parts: Your ruleset must have
+enough test URLs to cover all the various types of URL covered by your rules.
+And each of those test URLs must load, both before rewriting and after
+rewriting. Every target host tag generates an implicit test URL unless it
+contains a wildcard. You can add additional test URLs manually using the
+<tt>&lt;test url="..."/&gt;</tt> tag. The test URLs you add this way should be
+real pages loaded from the site, or real images, CSS, and Javascript if you have rules that
+specifically affect those resources.
+</p>
+
+<p>
+You should also manually test your ruleset by
+placing it in the <tt>HTTPSEverywhereUserRules/</tt> subdirectory in
+<a href="http://kb.mozillazine.org/Profile_folder_-_Firefox">your
+Firefox profile directory</a>, and then restarting Firefox. While
+using the rule, check for messages in the Firefox Error Console
+to see if there are any issues with the way the site supports
+HTTPS.
+</p>
+
+<p>
+  If you've tested your rule and are sure it would
+  be of use to the world at large, submit it as a <a
+  href="https://help.github.com/articles/using-pull-requests/">pull
+  request</a> on our <a
+  href="https://github.com/EFForg/https-everywhere/">GitHub
+  repository</a> or send it to the rulesets mailing list at
+  <tt>https-everywhere-rules AT eff.org</tt>. Please be aware that this
+  is a public and publicly-archived mailing list.
+</p>
+
+<a name="make-trivial" href="#make-trivial">
+  <h4>make-trivial-rule</h4>
+</a>
+<p>
+As an alternative to writing rules by hand, there are scripts you
+can run from a Unix command line to automate the process of creating
+a simple rule for a specified domain. These scripts are not included
+with HTTPS Everywhere releases but are available in our development
+repository and are described in <a href="development">our development
+documentation</a>.
+
+<a name="default-off" href="#default-off">
+  <h4>Disabling a ruleset by default</h4>
+</a>
+<p>
+Sometimes rulesets are useful or interesting, but cause problems
+that make them unsuitable for being enabled by default in everyone's
+browsers. Typically when a ruleset has problems we will disable it by
+default until someone has time to fix it. You can do this by adding
+a <tt>default_off</tt> attribute to the ruleset element, with a value
+explaining why the rule is off.
+</p>
+<pre>
+&lt;ruleset name="Amazon (buggy)" default_off="breaks site"&gt;
    &lt;target host="www.amazon.*" /&gt;
-   &lt;target host="amazon.*" /&gt;</pre><p>By convention, you should add a parenthetical to the name of the ruleset — like <tt>(buggy)</tt> while it is off. If you reenable a ruleset, you should remove the parenthetical. <em>This convention is important: it exists so that the change to the default overrides existing users' settings for whether the ruleset is on or off.</em> <a name="platform"></a></p><h3>Disabling a ruleset on some platforms</h3><p>Sometimes bugs on a platform may mean that a ruleset should be off by default on that platform only. For instance, <a href="https://trac.torproject.org/projects/tor/ticket/5196">this bug</a> caused us to temporarily disable the Google Translate rules on Chromium and Chrome. This can be achieved with the "platform" attribute:</p><pre>&lt;ruleset name="Google Translate" platform="firefox"&gt;
-&lt;target host="translate.googleapis.com"/&gt;
-&lt;target host="translate.google.com"/&gt;
-&lt;rule from="^http://translate\.googleapis\.com/"
-        to="https://translate.googleapis.com/"/&gt;
-&lt;rule from="^http://translate\.google\.com/translate_a/element\.js"
-        to="https://translate.google.com/translate_a/element.js"/&gt;
-&lt;/ruleset&gt;</pre><p>Platform is a space-delimited list of platforms on which the ruleset works. Currently anticipated values are "firefox", "chromium", "mixedcontent", "cacert" and "ipsca". The "mixedcontent" value is important, and should be used for sites that render badly in Chrome because that browser <a href="https://trac.torproject.org/projects/tor/ticket/6975">blocks HTTP content from loading in HTTPS pages</a> by default. If the platform attribute is present, but does not match the current platform, the ruleset will be treated as off-by-default. <strong>Update (12/12/13)</strong>: Firefox 23+ has enabled mixed content blocking by default. As a result, many rules that were previously labeled "firefox" should now be labeled "mixedcontent." <a name="downgrade"></a></p><h3>HTTPS-&gt;HTTP downgrade rules</h3><p>By default, HTTPS Everywhere will refuse to allow rules that would downgrade a URL from HTTPS to HTTP. Occasionally, this has turned out to be necessary because when HTTPS Everywhere is active some sites write broken relative links to HTTPS resources on their own domains that are not actually available over HTTPS. If you want to have a <tt>&lt;rule&gt;</tt> like that (<a href="https://gitweb.torproject.org/pde/https-everywhere.git/blob/4.0:/src/chrome/content/rules/BBC.xml">here's an example</a>), it will need a downgrade="1" attribute to make sure you really meant it, and to facilitate auditing of the ruleset library.</p>
+   &lt;target host="amazon.*" /&gt;
+&lt;/ruleset&gt;
+</pre>
+
+<p>
+You can add more details, like a link to a bug report, in the comments for the
+file.
+</p>
+
+<a name="mixed-content" href="#mixed-content">
+  <h4>Mixed Content Blocking (MCB)</h4>
+</a>
+
+<p>
+  Some rulesets may trigger active mixed content (i.e. scripts loaded over HTTP
+  instead of HTTPS). This type of mixed content is blocked in both <a
+  href="https://trac.torproject.org/projects/tor/ticket/6975">Chrome</a> and
+  Firefox, before HTTPS Everywhere has a chance to rewrite the URLs to an HTTPS
+  version. This generally breaks the site.
+  However, the Tor Browser doesn't block mixed content, in order to allow HTTPS
+  Everywhere to try andrewrite the URLs to an HTTPS version.
+</p>
+
+<p>
+  To enable a rule only on platforms that allow mixed content (currently
+  only the Tor Browser), you can add a <tt>platform="mixedcontent"</tt>
+  attribute to the ruleset element.
+</p>
+
+<a name="downgrades" href="#downgrades">
+  <h4>HTTPS-&gt;HTTP downgrade rules</h4>
+</a>
+
+<p>
+  By default, HTTPS Everywhere will refuse to allow rules that
+  would downgrade a URL from HTTPS to HTTP. Occasionally, this is necessary
+  because the extension rewrites a page to HTTPS, and that page contains relative
+  links to resources which do not exist on the HTTPS part of the site.
+  This is very rare, especially because these resources will typically be blocked
+  by <a href="#mixed-content">Mixed Content Blocking</a>. If it necessary, you can
+  add a <tt>downgrade="1"</tt> attribute to the rule to make it easier to audit
+  the ruleset library for such rules.
+</p>
