@@ -90,6 +90,16 @@ document.addEventListener("DOMContentLoaded", function () {
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
 
+  // Set up toggle checkbox for HTTP nowhere mode
+  getOption_('httpNowhere', false, function(item) {
+    var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');
+    httpNowhereCheckbox.addEventListener('click', toggleHttpNowhere, false);
+    var httpNowhereEnabled = item.httpNowhere;
+    if (httpNowhereEnabled) {
+      httpNowhereCheckbox.setAttribute('checked', '');
+    }
+  });
+
   // auto-translate all elements with i18n attributes
   var elem = document.querySelectorAll("[i18n]");
   for (var i=0; i < elem.length; i++) {
@@ -152,4 +162,22 @@ function addManualRule() {
       show(e("new-rule-regular-text"));
     });
   });
+}
+
+function toggleHttpNowhere() {
+  getOption_('httpNowhere', false, function(item) {
+    setOption_('httpNowhere', !item.httpNowhere);
+  });
+}
+
+function getOption_(opt, defaultOpt, callback) {
+  var details = {};
+  details[opt] = defaultOpt;
+  return chrome.storage.sync.get(details, callback);
+}
+
+function setOption_(opt, value) {
+  var details = {};
+  details[opt] = value;
+  return chrome.storage.sync.set(details);
 }
