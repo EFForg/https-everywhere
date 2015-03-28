@@ -113,12 +113,16 @@ var addNewRule = function(params, cb) {
   }
 };
 
+// A record of tabs actively using https in main_frame for blocking mixed content.
+var tlsTabIds = {};
+
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
   chrome.tabs.onRemoved.addListener(function(tabId, info) {
     that.removeTab(tabId);
+    delete tlsTabIds[tabId];
   });
 }
 
@@ -153,9 +157,6 @@ var domainBlacklist = {};
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = {};
-
-// A record of tabs actively using https in main_frame for blocking mixed content.
-var tlsTabIds = {};
 
 function onBeforeRequest(details) {
   // get URL into canonical format
