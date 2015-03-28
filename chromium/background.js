@@ -162,9 +162,6 @@ function onBeforeRequest(details) {
   // todo: check that this is enough
   var uri = new URI(details.url);
 
-  // Should the request be canceled?
-  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
-
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname();
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
@@ -185,6 +182,9 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
+
+  // Should the request be canceled?
+  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
