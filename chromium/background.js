@@ -189,9 +189,9 @@ function onBeforeRequest(details) {
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
     tlsTabIds[details.tabId] = (uri.protocol() === 'https');
-  } else if (details.tabId !== -1) {
-      // This request happened in a tab, wasn't the main_frame, so it's content.
-      shouldCancel = (uri.protocol() === 'http' && (httpNowhereOn || (blockMixedContent && tlsTabIds[details.tabId])));
+  } else if (blockMixedContent && details.tabId !== -1) {
+    // This request happened in a tab and wasn't the main_frame, so it's content.
+    shouldCancel = (uri.protocol() === 'http' && (httpNowhereOn || tlsTabIds[details.tabId]));
   }
 
   if (canonical_url in urlBlacklist) {
