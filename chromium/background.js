@@ -185,9 +185,6 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
-  if (canonical_url in urlBlacklist) {
-    return {cancel: shouldCancel};
-  }
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
@@ -195,6 +192,10 @@ function onBeforeRequest(details) {
   } else if (details.tabId !== -1) {
       // This request happened in a tab, wasn't the main_frame, so it's content.
       shouldCancel = (uri.protocol() === 'http' && (httpNowhereOn || (blockMixedContent && tlsTabIds[details.tabId])));
+  }
+
+  if (canonical_url in urlBlacklist) {
+    return {cancel: shouldCancel};
   }
 
   var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
