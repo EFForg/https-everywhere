@@ -4,11 +4,14 @@
 
 	Other Reddit rulesets:
 
+		- Reddit_media.com.xml
+		- Reddit_static.com.xml
 		- Redditmade.com.xml
 
 
 	As of Aug. 2014, Reddit supports lots more SSL!
 	We can probably prune some of the old static rules here.
+
 
 	CDN buckets:
 
@@ -23,18 +26,6 @@
 		- buttons.reddit.com.edgesuite.net
 
 
-	Nonfunctional domains:
-
-		- pixel.redditmedia.com	(dropped)
-
-			Seems some sort of ad tracking, possibly can be sent to /dev/null; didn't find
-			anything broken when I blocked the domain.  Doesn't seem to be used anymore.
-
-		- www.redditmedia.com	(refused)
-
-			Seems only/mostly to be used for ads
-
-
 	Problematic subdomains:
 
 		- www.np *
@@ -42,79 +33,73 @@
 	* Mismatched
 
 
+	Observed hosts:
 
-	Fully covered domains:
+		- (www.)
+
+		- [a-z]{1,2}:
+
+			- dr
+			- fp
+			- gr
+			- i
+			- np
+			- pr
+			- rd
+			- sl
+			- sp
+			- sv
+
+		- [a-z]{2}-[a-z]{2}:
+
+			- en-us
+
+		- blog
+		- www.np	(→ np)
+		- pay
+		- redditama
+		- ssl
+		- static
+		- thumbs	(→ s3.amazonaws.com)
 
 
-		- reddit.com subdomains:
+	Insecure cookies are set for these hosts:
 
-			- (www.)
-
-			- [a-z]{1,2}:
-
-				- dr
-				- fp
-				- gr
-				- i
-				- pr
-				- rd
-				- sl
-				- sp
-				- sv
-
-			- [a-z]{2}-[a-z]{2}:
-
-				- en-us
-
-			- blog
-			- www.np	(→ np)
-			- pay
-			- redditama
-			- ssl
-			- static
-			- thumbs	(→ s3.amazonaws.com)
-
-			- redditmedia subdomains:
-
-				- thumbs
-
-				- \w+.thumbs:
-
-					- a
-					- b
-
-			- www.redditstatic.com
+		- .reddit.com
 
 -->
-<ruleset name="Reddit">
+<ruleset name="Reddit.com">
 
 	<target host="reddit.com" />
 	<target host="*.reddit.com" />
-	<target host="*.redditmedia.com" />
-	<target host="www.redditstatic.com" />
+
+		<test url="http://i.reddit.com/" />
+		<test url="http://redditama.reddit.com/" />
+		<test url="http://www.reddit.com/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.reddit\.com$" name="^(_recentclicks2|over18)$" /-->
+	<!--securecookie host="^\.reddit\.com$" name="^(__cfduid|_recentclicks2|cf_clearance|over18)$" /-->
 
 	<securecookie host=".*\.reddit\.com$" name=".+" />
-	<securecookie host="^\.redditmedia\.com$" name="^__cfduid$" />
 
-
-	<rule from="^http://((?:[a-z]{1,2}|[a-z]{2}-[a-z]{2}|blog|pay|redditama|ssl|static|www)\.)?reddit\.com/"
-		to="https://$1reddit.com/" />
 
 	<rule from="^http://(?:www\.)?np\.reddit\.com/"
 		to="https://np.reddit.com/" />
 
+		<test url="http://np.reddit.com/" />
+		<test url="http://www.np.reddit.com/" />
+
 	<rule from="^http://thumbs\.reddit\.com/"
 		to="https://s3.amazonaws.com/thumbs.reddit.com/" />
 
-	<rule from="^http://(\w+\.)?thumbs\.redditmedia\.com/"
-		to="https://$1thumbs.redditmedia.com/" />
+		<test url="http://thumbs.reddit.com/" />
 
-	<rule from="^http://www\.redditstatic\.com/"
-		to="https://www.redditstatic.com/" />
+	<!--rule from="^http://((?:[a-z]{1,2}|[a-z]{2}-[a-z]{2}|blog|pay|redditama|ssl|static|www)\.)?reddit\.com/"
+		to="https://$1reddit.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
