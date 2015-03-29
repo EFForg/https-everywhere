@@ -1,12 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://prod01-cdn00.cdn.firstlook.org/ => https://prod01-cdn00.cdn.firstlook.org/: Too many redirects while fetching 'https://prod01-cdn00.cdn.firstlook.org/'
-Fetch error: http://prod01-cdn01.cdn.firstlook.org/ => https://prod01-cdn01.cdn.firstlook.org/: Too many redirects while fetching 'https://prod01-cdn01.cdn.firstlook.org/'
-Fetch error: http://prod01-cdn02.cdn.firstlook.org/ => https://prod01-cdn02.cdn.firstlook.org/: Too many redirects while fetching 'https://prod01-cdn02.cdn.firstlook.org/'
-Fetch error: http://prod01-cdn03.cdn.firstlook.org/ => https://prod01-cdn03.cdn.firstlook.org/: Too many redirects while fetching 'https://prod01-cdn03.cdn.firstlook.org/'
-Fetch error: http://prod01-piwik.firstlook.org/ => https://prod01-piwik.firstlook.org/: (28, 'Connection timed out after 10000 milliseconds')
-
 	Other Intercept rulesets:
 
 		- Interc.pt.xml
@@ -16,30 +8,29 @@ Fetch error: http://prod01-piwik.firstlook.org/ => https://prod01-piwik.firstloo
 
 		- (www.)
 
-		- prod\d\d-cdn\d\d.cdn:
+		- *.cdn:
 
 			- prod01-cdn0[0123]
 
 		- prod01-piwik
 
 -->
-<ruleset name="First Look.org" default_off='failed ruleset test'>
+<ruleset name="First Look.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="firstlook.org" />
-	<target host="*.firstlook.org" />
+	<target host="*.cdn.firstlook.org" />
+	<target host="prod01-piwik.firstlook.org" />
+	<target host="www.firstlook.org" />
 
-		<test url="http://prod01-cdn00.cdn.firstlook.org/" />
-		<test url="http://prod01-cdn01.cdn.firstlook.org/" />
-		<test url="http://prod01-cdn02.cdn.firstlook.org/" />
-		<test url="http://prod01-cdn03.cdn.firstlook.org/" />
-		<test url="http://prod01-piwik.firstlook.org/" />
-		<test url="http://www.firstlook.org/" />
+		<test url="http://prod01-cdn02.cdn.firstlook.org/wp-uploads/sites/1/2015/03/dice-getty-article-display-b.jpg" />
 
 
 	<securecookie host="^\.firstlook\.org$" name=".+" />
 
 
-	<rule from="^http://((?:prod\d\d-cdn\d\d\.cdn|prod01-piwik|www)\.)?firstlook\.org/"
-		to="https://$1firstlook.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
