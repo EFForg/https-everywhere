@@ -1,49 +1,90 @@
 <!--
+	Other Baidu rulesets:
 
-	Nonfunctional domains:
+		- Bdimg.com.xml
 
 
-		- baidu.com subdomains:
+	Nonfunctional hosts:
 
+		- in *.baidu.com:
+
+			- apistore *
+			- baike *
+			- ce *
+			- dida *
 			- eiv *
 			- gimg *
 			- hi *
 			- tb.himg *
+			- hiphotos *
+			- home *
+			- image *
 			- img *
 			- imgsrc *
+			- index *
+			- italk *
+			- iwan
+			- lbsyun *
+			- libs *
+			- map *
 			- qingting *
+			- rj *
 			- bdimg.share *
+			- shouji *
+			- siteapp *
+			- t1[012] *
 			- tieba *
 			- static.tieba *
+			- tvg		(Shows default page)
+			- tvgame	(Shows tvg)
+			- v *
 			- wanba *
 			- wap *
+			- wenku *
+			- xueshu	(405)
+			- yunjiasu *
+			- yuqing *
+			- zhidao *
 
-		- cdn.iknow.bdimg.com *
 		- tb[12].bdstatic.com *
 
 	* Times out
 
 
-	Problematic domains:
+	Problematic hosts:
 
-		- developer.baidu.com	(mismatched, CN: openapi.baidu.com)
-		- apps.bdimg.com *
-		- apps[123].bdimg.com *
+		- hm ¹
+		- developer ²
+		- passport ¹
+		- tianyan ³
+		- zoo ²
 
-	* Times out
+	¹ Insecure renegotiation
+	² Mismatched
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered domains:
+	Fully covered hosts:
 
-		- baidu.com subdomains:
+		- developer	(→ openapi)
+		- hm
+		- openapi
+		- pan
+		- passport
+		- sp0
+		- www
+		- yun
 
-			- developer	(→ openapi)
-			- openapi
-			- pan
-			- passport
 
-		- apps.bdimg.com	(→ openapi.baidu.com)
-		- apps\d.bdimg.com	(→ openapi.baidu.com)
+	Insecure cookies are set for these domains and hosts:
+
+		- baidu.com
+		- .baidu.com
+		- openapi.baidu.com
+		- www.baidu.com
+		- .www.baidu.com
+		- .yun.baidu.com
+		- zoo.baidu.com
 
 
 	Mixed content:
@@ -52,31 +93,49 @@
 
 			- openapi from developer ¹
 			- openapi from gimg ²
+			- openapi from hiphotos
 			- openapi from apps.bdimg.com ¹
 
 	¹ Secured by us
 	² Unsecurable <= dropped
 
 -->
-<ruleset name="Baidu (partial)">
+<ruleset name="Baidu.com (partial)">
 
-	<target host="*.baidu.com" />
-	<target host="*.bdimg.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="hm.baidu.com" />
+	<target host="openapi.baidu.com" />
+	<target host="pan.baidu.com" />
+	<target host="passport.baidu.com" />
+	<target host="sp0.baidu.com" />
+	<!--target host="tianyan.baidu.com" /-->
+	<target host="www.baidu.com" />
+	<target host="yun.baidu.com" />
+
+	<!--	Complications:
+				-->
+	<target host="developer.baidu.com" />
+
+		<test url="http://hm.baidu.com/h.js" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.baidu\.com$" name="^BAIDUID$" /-->
+	<!--securecookie host="^\.baidu\.com$" name="^(BAIDUID|BIDUPSID|H_PS_PSSID)$" /-->
 	<!--securecookie host="^openapi\.baidu\.com$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^\.yun\.baidu\.com$" name="^PANWEB$" /-->
+	<!--securecookie host="^www\.baidu\.com$" name="^(BD_HOME|BDSVRTM)" /-->
+	<!--securecookie host="^\.www\.baidu\.com$" name="^__bsi$" /-->
+	<!--securecookie host="^zoo\.baidu\.com$" name="^BAEID$" /-->
 
-	<securecookie host="^openapi\.baidu\.com$" name=".+" />
+	<securecookie host="^(?:openapi|\.?www)\.baidu\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
+	<rule from="^http://developer\.baidu\.com/"
 		to="https://openapi.baidu.com/" />
 
-	<rule from="^http://(www|yun|pan|passport)\.baidu\.com/"
-		to="https://$1.baidu.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
