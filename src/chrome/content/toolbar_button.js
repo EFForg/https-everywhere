@@ -65,15 +65,21 @@ httpsEverywhere.toolbarButton = {
     // make sure the checkbox for showing counter is properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
-    counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+    if (counterItem) {
+      counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+    }
 
     // make sure UI for HTTP Nowhere mode is properly set
     var httpNowhereItem = document.getElementById('http-nowhere-item');
     var showHttpNowhere = tb.shouldShowHttpNowhere();
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
-    toolbarbutton.setAttribute('http_nowhere',
-                               showHttpNowhere ? 'true' : 'false');
+    if (httpNowhereItem) {
+      httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
+    }
+    if (toolbarbutton) {
+      toolbarbutton.setAttribute('http_nowhere',
+                                 showHttpNowhere ? 'true' : 'false');
+    }
 
     // make sure UI is set depending on whether HTTPS-E is enabled
     toggleEnabledUI();
@@ -163,6 +169,10 @@ httpsEverywhere.toolbarButton = {
    */
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
+    if (!toolbarbutton) {
+      return;
+    }
+
     var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
     var showCounter = httpsEverywhere.toolbarButton.shouldShowCounter();
     if (!enabled || !showCounter) { 
@@ -363,7 +373,9 @@ function toggleEnabledUI() {
 
   // Change icon depending on enabled state
   var toolbarbutton = document.getElementById('https-everywhere-button');
-  toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
+  if (toolbarbutton) {
+    toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
+  }
 }
 
 function open_in_tab(url) {
