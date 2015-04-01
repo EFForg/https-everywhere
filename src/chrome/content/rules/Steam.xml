@@ -31,6 +31,7 @@
 
 	Nonfunctional domains:
 
+		- ^ *
 		- cafe ¹
 		- cafesupport ²
 		- cdn ³
@@ -41,7 +42,9 @@
 		- forums ⁶
 		- media ³
 		- repo ⁷
+		- www ⁶
 
+	* 403
 	¹ Dropped
 	² 403; mismatched, CN: store.steampowered.com
 	³ 400; mismatched, CN: *.hs.llnwd.net
@@ -53,22 +56,50 @@
 
 	Problematic subdomains:
 
-		- ^ ¹
 		- cdn4 ²
 
-	¹ 403; mismatched, CN: store.steampowered.com
 	² Works, akamai
 
--->
-<ruleset name="Steam Powered.com (partial, broken)" default_off="breaks some forum embeds">
 
-	<target host="steampowered.com" />
-	<target host="*.steampowered.com" />
-		<!--
-			Redirects to $:
+	Fully covered subdomains:
+
+		- api
+		- kgs
+		- partner
+		- partnerupload0
+		- partnerupload1
+		- store
+		- cdn.store	(→ store.steampowered.com)
+		- support
+
+-->
+<ruleset name="Steam Powered.com (partial)">
+
+	<!--	Direct rewrites:
+					-->
+	<target host="api.steampowered.com" />
+	<target host="kgs.steampowered.com" />
+	<target host="partner.steampowered.com" />
+	<target host="partnerupload0.steampowered.com" />
+	<target host="partnerupload1.steampowered.com" />
+	<target host="store.steampowered.com" />
+	<target host="support.steampowered.com" />
+	<!--target host="www.steampowered.com" /-->
+
+	<!--	Special cases:
+				-->
+	<!--target host="steampowered.com" /-->
+	<!--target host="cdn.steampowered.com" /-->
+	<target host="cdn.store.steampowered.com" />
+
+		<!--	Redirects to $:
 					-->
 		<!--exclusion pattern="^http://www\.steampowered\.com/steamworks/(gettingstarted\.php|images/bg_vtile\.gif|index\.php)" /-->
-		<exclusion pattern="^http://(?:www\.)?steampowered\.com/(?:status/survey\.html|steamworks(?:$|[?/]))" />
+		<!--
+			503:
+				-->
+		<!--exclusion pattern="^http://www\.steampowered\.com/($|steamworks(?:$|[?/]))" /-->
+		<!--exclusion pattern="^http://(?:www\.)?steampowered\.com/(?:$|status/survey\.html|steamworks(?:$|[?/]))" /-->
 		<!--
 			Redirect to http:
 						-->
@@ -78,22 +109,40 @@
 					-->
 		<exclusion pattern="^http://store\.steampowered\.com/+(?!favicon\.ico|(?:join|login|psn/beginsetup|search|software)(?:$|[?/])|public/images/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://store.steampowered.com/about/" />
+			<test url="http://store.steampowered.com/app/4000/" />
+			<test url="http://store.steampowered.com/app/266410/" />
+			<test url="http://store.steampowered.com/app/311560/" />
+			<test url="http://store.steampowered.com/forum/222621" />
+			<test url="http://store.steampowered.com/freestuff/demos/" />
+			<test url="http://store.steampowered.com/genre/Indie/" />
+			<test url="http://store.steampowered.com/genre/RPG/" />
+			<test url="http://store.steampowered.com/news/" />
+			<test url="http://store.steampowered.com/updated/all/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://store.steampowered.com/login/" />
+			<test url="http://store.steampowered.com/favicon.ico" />
+			<test url="http://store.steampowered.com/search/?filter=popularnew" />
+
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.steampowered\.com$" name="^(dp_user_language|dp_user_sessionid)$" /-->
-	<!--securecookie host="^partner\.steampowered\.com$" name="(dateEnd|dateStart)$" /-->
+	<!--securecookie host="^partner\.steampowered\.com$" name="(dateEnd|dateStart|steamstatsAuth|steamworksSteamid|steamworksToken)$" /-->
 
-	<securecookie host="^(?:partner)?\.steampowered\.com$" name=".+" />
+	<securecookie host="^partner\.steampowered\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?steampowered\.com/"
-		to="https://www.steampowered.com/" />
+	<!--rule from="^http://steampowered\.com/"
+		to="https://www.steampowered.com/" /-->
 
-	<rule from="^http://(api|kgs|partner|partnerupload[01]|store|support)\.steampowered\.com/"
-		to="https://$1.steampowered.com/" />
+	<rule from="^http://cdn\.store\.steampowered\.com/"
+		to="https://store.steampowered.com/" />
 
-	<rule from="^http://cdn\.(store\.)?steampowered\.com/"
-		to="https://$1steampowered.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

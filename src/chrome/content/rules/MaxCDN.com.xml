@@ -11,32 +11,39 @@
 
 	Nonfunctional subdomains:
 
-		- blog ¹
-		- support ²
 		- tools ³
 
-	¹ wpengine
-	² Revoked
 	³ Refused
 
 
 	Problematic subdomains:
 
 		- ^ ¹
+		- blog *
 		- status ²
+		- support ⁴
 
-	¹ Revoked
+	¹ Refused
+	* wpengine
 	² StatusPage.io
+	⁴ Revoked
 
 
 	Fully covered subdomains:
 
 		- (www.)	(^ → www)
 		- cp
+		- docs
 		- rws
 		- secure
 		- secure-cdn
 		- status	(→ maxcdn.statuspage.io)
+		- support	(→ www)
+
+
+	These altnames don't exist:
+
+		- www.docs.maxcdn.com
 
 
 	Mixed content:
@@ -51,7 +58,15 @@
 <ruleset name="MaxCDN.com (partial)">
 
 	<target host="maxcdn.com" />
-	<target host="*.maxcdn.com" />
+	<target host="blog.maxcdn.com" />
+	<target host="cp.maxcdn.com" />
+	<target host="docs.maxcdn.com" />
+	<target host="rws.maxcdn.com" />
+	<target host="secure.maxcdn.com" />
+	<target host="secure-cdn.maxcdn.com" />
+	<target host="status.maxcdn.com" />
+	<target host="support.maxcdn.com" />
+	<target host="www.maxcdn.com" />
 
 
 	<!--	Secured by server:
@@ -68,19 +83,29 @@
 	<securecookie host="^secure(?:-cdn)?\.maxcdn\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?maxcdn\.com/"
+	<rule from="^http://maxcdn\.com/"
 		to="https://www.maxcdn.com/" />
 
-	<rule from="^http://blog\.maxcdn\.com/wp-content/plugins/lytebox/"
-		to="https://www.maxcdn.com/wp-content/plugins/lytebox/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/blog/" />
 
-	<rule from="^http://blog\.maxcdn\.com/wp-content/themes/Akdesigner2/"
-		to="https://www.maxcdn.com/wp-content/themes/AKD2/" />
+		<test url="http://blog.maxcdn.com//" />
 
-	<rule from="^http://(cp|rws|secure|secure-cdn)\.maxcdn\.com/"
-		to="https://$1.maxcn.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://support\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/one/" />
+
+		<test url="http://support.maxcdn.com//" />
 
 	<rule from="^http://status\.maxcdn\.com/"
 		to="https://maxcdn.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

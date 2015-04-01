@@ -151,9 +151,6 @@
 
 	Partially covered subdomains:
 
-		- (www.)? ¹
-		- beta ¹
-		- buki ¹
 		- (www.)?video *
 
 	¹ Some pages redirect to http
@@ -162,6 +159,7 @@
 
 	Fully covered subdomains:
 
+		- (www.)?
 		- (www.)?academy
 		- (www.)?adresa
 		- (www.)?atlas
@@ -236,6 +234,7 @@
 			- bar
 			- bayan
 			- beta.bayan
+			- beta
 
 			- blogs
 			- m.blogs
@@ -246,6 +245,7 @@
 			- browsers
 			- bs
 			- bs-meta
+			- buki
 			- business-maps
 			- calendar
 			- widgets.calendar
@@ -494,7 +494,7 @@
 	² Unsecurable <= dropped
 
 -->
-<ruleset name="Yandex" default_off="Needs ruleset tests">
+<ruleset name="Yandex">
 
 	<target host="yandex.ru" />
 	<target host="*.yandex.ru" />
@@ -504,11 +504,6 @@
 		<!--exclusion pattern="^http://(android-us\.apps|us\.apps|m\.auto|family|interactive-answers|op)\.yandex\.ru/$" /-->
 		<!--exclusion pattern="^http://market\.yandex\.ru/($|\?clid=|search\.xml)" /-->
 		<exclusion pattern="^http://uslugi\.yandex\.ru/($|arr\.png|index\.css)" />
-		<!--exclusion pattern="^http://(beta|www)\.yandex\.ru/($|postcards/$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://(?:beta\.|buki\.|www\.)?yandex\.ru/+(?!404\.html|(?:all|captcha|captchaimg|cycounter|images|people|promo|redir|security|showcaptcha|video|yandsearch)(?:$|[?/])|favicon\.ico)" />
 		<!--
 			Rather than enumerating domains that support SSL,
 			we enable SSL for all services and then exclude those
@@ -565,7 +560,7 @@ w
 		<!--
 			Miscellanious:
 					-->
-		<exclusion pattern="http://(?:apps|(?:android-)?us\.apps|appsearch|bm|contact2?|dns|family|gazeta|interactive-answers|m\.internet|kaspersky|labs|(?:m|www)\.market|(?:m|pda)\.money|(?:m|pda|www)\.news|notanymore|op|prestable-pogoda|api\.rasp|repo|shad|static-maps|terms|uslugi|webcal|interactive-answers\.webmaster)\.yandex\.ru/" />
+		<exclusion pattern="http://(?:apps|(?:android-)?us\.apps|appsearch|bm|contact2?|dns|family|gazeta|interactive-answers|m\.internet|islands|kaspersky|labs|(?:m|www)\.market|(?:m|pda)\.money|(?:m|pda|www)\.news|notanymore|op|prestable-pogoda|api\.rasp|repo|shad|static-maps|terms|uslugi|webcal|interactive-answers\.webmaster)\.yandex\.ru/" />
 
 
 
@@ -636,11 +631,11 @@ w
 	<rule from="^http://(www\.)?(academy|adresa|atlas|ewents|[ei]vents?|export|fotki|internet|karti|maps|(?:beta|constructor|m|n|router-quality)\.maps|master|metro|mshad|music|maps\.pda|pogoda|prefetch-maps|probki|research|site|startups|tech|tv|video|weather|yaca)\.yandex\.ru/"
 		to="https://$1$2.yandex.ru/" />
 
-	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.ru/"
-		to="https://$1.yandex.ru/" />
-
 	<rule from="^http://((?:\d\.downloader\.disk|sandbox\.api\.maps|www)\.)?yandex\.ru/"
 		to="https://$1yandex.ru/" />
+
+	<rule from="^http://(?:www\.)?([^.]+)\.yandex\.ru/"
+		to="https://$1.yandex.ru/" />
 
 	<!--	Here we can enable 4+ level domains with a single regexp,
 		but I've never seen any domains more that 4 levels deep

@@ -2,17 +2,40 @@
 	Nonfunctional subdomains:
 
 		- (www.)	(dropped)
+		- docs ²
+		- wire ¹
+
+	¹ Dropped
+	² Refused
+
+
+	bugs: Dropped
 
 -->
 <ruleset name="Kubuntu.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="wiki.kubuntu.org" />
+
+	<!--	Complications:
+				-->
+	<target host="bugs.kubuntu.org" />
 
 
 	<securecookie host="^wiki\.kubuntu\.org$" name=".+" />
 
 
-	<rule from="^http://wiki\.kubuntu\.org/"
-		to="https://wiki.kubuntu.org/" />
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://bugs\.kubuntu\.org/[^?]*"
+		to="https://launchpad.net/distros/ubuntu/+bugs/" />
+
+		<test url="http://bugs.kubuntu.org/?" />
+		<test url="http://bugs.kubuntu.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

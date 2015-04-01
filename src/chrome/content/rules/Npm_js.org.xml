@@ -1,7 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://npm.im/ => https://npm.im/: (51, "SSL: no alternative certificate subject name matches target host name 'npm.im'")
-Fetch error: http://www.npm.im/ => https://www.npm.im/: (60, 'SSL certificate problem: certificate has expired')
 	For other Joyent coverage, see Joyent.xml.
 
 
@@ -14,61 +11,42 @@ Fetch error: http://www.npm.im/ => https://www.npm.im/: (60, 'SSL certificate pr
 
 	Problematic domains:
 
-		- npmjs.com ¹
-		- www.npmjs.com ²
-
 		- npmjs.org subdomains:
 
 			- couch *
 			- scratch *
 			- status ⁵
 
-	¹ 404; self-signed, CN: Isaac Z. Schlueter
-	² Squarespace
 	* Works; mismatched, CN: registry.npmjs.org
 	⁵ StatusPage
 
 
 	Fully covered domains:
 
-		- preview.npmjs.com
 		- registry.npmjs.org
 		- status.npmjs.org	(-> npmjs.statuspage.io)
 
 -->
-<ruleset name="npm js.org (partial)" default_off='failed ruleset test'>
+<ruleset name="npm js.org (partial)">
 
-	<target host="npm.im" />
-	<target host="www.npm.im" />
+	<!--	Direct rewrites:
+				-->
 	<target host="npmjs.org" />
-	<target host="*.npmjs.org" />
-	<target host="preview.npmjs.com" />
+	<target host="registry.npmjs.org" />
+	<target host="www.npmjs.org" />
+
+	<!--	Special cases:
+				-->
+	<target host="status.npmjs.org" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^www\.npmjs\.org$" name="^(s|s\.sig)$" /-->
-	<!--
-		Not secured by server:
-					-->
-	<!--securecookie host="\.npmjs\.com$" name="^SS_MID$" /-->
-	<!--securecookie host="^preview\.npmjs\.com$" name="^crumb$" /-->
-	<!--securecookie host="^www\.npmjs\.com$" name="^(JSESSIONID|crumb)$" /-->
-
-	<securecookie host="^preview\.npmjs\.com$" name=".+" />
 	<securecookie host="^npmjs\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?npm(\.im|js\.org)/"
-		to="https://$1npm$2/" />
-
-	<rule from="^http://preview\.npmjs\.com/"
-		to="https://preview.npmjs.com/" />
-
-	<rule from="^http://registry\.npmjs\.org/"
-		to="https://registry.npmjs.org/" />
-
 	<rule from="^http://status\.npmjs\.org/"
 		to="https://npmjs.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

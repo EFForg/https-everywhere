@@ -1,9 +1,11 @@
+
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://twitter.com/ => https://twitter.com/: Redirect for 'http://twitter.com/' missing Location
 	Other Twitter rulesets:
 
+		- T.co.xml
+		- Twimg.com.xml
 		- Twitter_Community.com.xml
+		- Twitter_Inc.com.xml
 
 
 	Nonfunctional domains:
@@ -16,8 +18,6 @@ Fetch error: http://twitter.com/ => https://twitter.com/: Redirect for 'http://t
 
 	CDN buckets:
 
-		- twimg0-0.akamaihd.net
-
 		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
 
 			- platform2.twitter.com
@@ -25,156 +25,151 @@ Fetch error: http://twitter.com/ => https://twitter.com/: Redirect for 'http://t
 		- twitter-any.s3.amazonaws.com
 		- twitter-blog.s3.amazonaws.com
 
-		- d2rdfnizen5apl.cloudfront.net
-
-			- s.twimg.com
-
 		- ssl2.twitter.com.edgekey.net
 		- twitter.github.com
 
 
-	Problematic domains:
+	Problematic subdomains:
 
-		- twimg.com subdomains:
+		- status *
 
-			- a5 *
-			- s		(cloudfront)
-
-		- twitter.com subdomains:
-
-			- platform[0-3]		(403, akamai)
-
-	* akamai
+	* Mixed css
 
 
 	Fully covered domains:
 
-		- (www.)t.co		(www → ^)
-
-		- twimg.com subdomains:
-
-			- a[5-9]	(→ si0)
-			- a\d
-			- abs
-			- amp
-			- dnt
-			- ea
-			- g
-			- g2
-			- gu
-			- hca
-			- jp
-			- ma
-			- ma[0123]
-			- o
-			- p
-			- pbs
-			- r
-			- s		(→ d2rdfnizen5apl.cloudfront.net)
-			- si[0-5]
-			- syndication
-			- cdn.syndication
-			- tailfeather
-			- ton
-			- v
-			- widgets
-
 		- twitter.com subdomains:
 
 			- (www.)
-			- 201[012]
+			- 201[0-4]
 			- about
 			- ads
 			- analytics
 			- api
 			- cdn.api
 			- urls.api
+			- urls-real.api
 			- apps
 			- blog
 			- business
 			- preview.cdn
-			- preview-dev.cdn
-			- preview-stage.cdn
-			- de
 			- dev
-			- en
 			- engineering
-			- es
 			- firefox
-			- fr
-			- it
-			- ja
-			- jp
 			- m
 			- media
 			- mobile
 			- music
-			- oauth
-			- p
+			- partnerstream[12]
+			- pay
 			- pic
 			- platform
-			- platform[0-3]		(→ platform)
 			- widgets.platform
+			- s
 			- search
+			- sitestream
 			- static
+			- stream
 			- support
+			- syndication
+			- cdn.syndication
 			- transparency
 			- upload
+			- userstream
 
 
 	These altnames don't exist:
 
-		- i3.twimg.com
-		- p-dev.twimg.com
-		- vmtc.twimg.com
-
 		- cdn-dev.api.twitter.com
+		- syndication-o.twitter.com
 
 
 	Insecure cookies are set for these domains:
 
-		- .t.co
 		- twitter.com
 		- .twitter.com
 		- mobile.twitter.com
 
--->
-<ruleset name="Twitter" default_off='failed ruleset test'>
 
-	<target host="t.co" />
-	<target host="*.t.co" />
-	<target host="*.twimg.com" />
+	Mixed content:
+
+		- iframe on status from assets.tumblr.com
+		- css on status from assets.tumblr.com
+		- Image on status from 38.media.tumblr.com
+
+-->
+<ruleset name="Twitter.com">
+
+	<!--	Direct rewrites:
+					-->
 	<target host="twitter.com" />
-	<target host="*.twitter.com" />
+	<target host="2010.twitter.com" />
+	<target host="2011.twitter.com" />
+	<target host="2012.twitter.com" />
+	<target host="2013.twitter.com" />
+	<target host="2014.twitter.com" />
+	<target host="about.twitter.com" />
+	<target host="ads.twitter.com" />
+	<target host="analytics.twitter.com" />
+	<target host="apps.twitter.com" />
+	<target host="blog.twitter.com" />
+	<target host="api.twitter.com" />
+	<target host="cdn.api.twitter.com" />
+	<target host="urls.api.twitter.com" />
+	<target host="urls-real.api.twitter.com" />
+	<target host="business.twitter.com" />
+	<target host="preview.cdn.twitter.com" />
+	<target host="preview-stage.cdn.twitter.com" />
+	<target host="dev.twitter.com" />
+	<target host="engineering.twitter.com" />
+	<target host="firefox.twitter.com" />
+	<target host="m.twitter.com" />
+	<target host="media.twitter.com" />
+	<target host="mobile.twitter.com" />
+	<target host="music.twitter.com" />
+	<target host="partnerstream1.twitter.com" />
+	<target host="partnerstream2.twitter.com" />
+	<target host="pay.twitter.com" />
+	<target host="pic.twitter.com" />
+	<target host="platform.twitter.com" />
+	<target host="widgets.platform.twitter.com" />
+	<target host="s.twitter.com" />
+	<target host="search.twitter.com" />
+	<target host="sitestream.twitter.com" />
+	<target host="static.twitter.com" />
+	<target host="status.twitter.com" />
+	<target host="stream.twitter.com" />
+	<target host="support.twitter.com" />
+	<target host="syndication.twitter.com" />
+	<target host="cdn.syndication.twitter.com" />
+	<target host="transparency.twitter.com" />
+	<target host="upload.twitter.com" />
+	<target host="userstream.twitter.com" />
+	<target host="www.twitter.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://status\.twitter\.com/(?!themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://status.twitter.com/archive" />
+
+			<!--	-ve:
+					-->
+			<test url="http://status.twitter.com/themes/5/rss.gif" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.t\.co$" name="^muc$" /-->
 	<!--securecookie host="^twitter\.com$" name="^external_referer$" /-->
-	<!--securecookie host="^\.twitter\.com$" name="^(_twitter_sess|guest_id)$" /-->
+	<!--securecookie host="^\.twitter\.com$" name="^(_twitter_sess|guest_id|pid)$" /-->
 	<!--securecookie host="^mobile\.twitter\.com$" name="^(req_country|req_country_code|req_ip)$" /-->
 
-	<securecookie host="^\.t\.co$" name=".+" />
 	<securecookie host="^(?:.*\.)?twitter\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?t\.co/"
-		to="https://t.co/" />
-
-	<rule from="^http://a[5-9]\.twimg\.com/"
-		to="https://si0.twimg.com/" />
-
-	<rule from="^http://(abs|a\d|amp|dnt|ea|g[2u]?|hca|jp|ma\d?|o|p|pbs|r|si\d|(?:cdn\.)?syndication|tailfeather|ton|v|widgets)\.twimg\.com/"
-		to="https://$1.twimg.com/" />
-
-	<rule from="^http://s\.twimg\.com/"
-		to="https://d2rdfnizen5apl.cloudfront.net/" />
-
-	<rule from="^http://((?:201\d|about|ads|analytics|apps|blog|(?:cdn\.|urls\.)?api|business|preview(?:-dev|-stage)?\.cdn|de|dev|engineering|en|es|firefox|fr|it|ja|jp|m|media|mobile|music|oauth|p|pic|platform|widgets\.platform|search|static|support|transparency|upload|www)\.)?twitter\.com/"
-		to="https://$1twitter.com/" />
-
-	<rule from="^http://platform\d\.twitter\.com/"
-		to="https://platform.twitter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

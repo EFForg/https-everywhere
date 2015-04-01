@@ -1,0 +1,86 @@
+<!--
+	Other Dex Media rulesets:
+
+		- Directorystore.com.xml
+		- SuperGuarantee.com.xml
+		- SuperMedia.xml
+		- Superpages.com.xml
+
+
+	CDN buckets:
+
+		- dexmedia-wpengine.netdna-ssl.com
+
+
+	Nonfunctional subdomains:
+
+		- findme ¹
+		- jobs ²
+		- national ³
+
+	¹ 404
+	² Refused
+	³ WP Engine
+
+
+	Problematic subdomains:
+
+		- cdn *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- account
+		- cdn		(→ dexmedia-wpengine.netdna-ssl.com)
+		- my
+		- www
+		- www-int
+
+
+	Insecure cookies are set for these hosts:
+
+		- account.dexmedia.com
+		- my.dexmedia.com
+
+
+	Mixed content:
+
+		- Images on www from cdn.dexmedia.com
+		- Bug on my from superpagesadvert.122.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Dex Media.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dexmedia.com" />
+	<target host="account.dexmedia.com" />
+	<target host="my.dexmedia.com" />
+	<target host="www.dexmedia.com" />
+	<target host="www-int.dexmedia.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.dexmedia.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^account\.dexmedia\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^my\.dexmedia\.com$" name="^(CstrStatus|trafficSource)$" /-->
+
+	<securecookie host="^(?:account|my)\.dexmedia\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.dexmedia\.com/"
+		to="https://dexmedia-wpengine.netdna-ssl.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,3 +1,4 @@
+
 <!--
 	For other Yandex coverage, see Yandex.xml.
 
@@ -6,6 +7,7 @@
 
 		- autoconfig *
 		- clubs *
+		- disk-blog *
 		- feedback *
 		- my *
 		- support *
@@ -47,7 +49,6 @@
 		- autodiscover
 		- pass.beta
 		- disk
-		- disk-blog
 		- www.ewent
 		- (www.)?ewents
 		- (www.)?event
@@ -88,8 +89,43 @@
 -->
 <ruleset name="Ya.ru (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="auto.ya.ru" />
+	<target host="autodiscover.ya.ru" />
+	<target host="pass.beta.ya.ru" />
+	<target host="disk.ya.ru" />
+	<target host="www.ewent.ya.ru" />
+	<target host="ewents.ya.ru" />
+	<target host="www.ewents.ya.ru" />
+	<target host="events.ya.ru" />
+	<target host="www.events.ya.ru" />
+	<target host="ivents.ya.ru" />
+	<target host="www.ivents.ya.ru" />
+	<target host="m.ya.ru" />
+	<target host="mail.ya.ru" />
+	<target host="metrica.ya.ru" />
+	<target host="metrika.ya.ru" />
+	<target host="metro.ya.ru" />
+	<target host="pda.metro.ya.ru" />
+	<target host="www.metro.ya.ru" />
+	<target host="p.ya.ru" />
+	<target host="rabota.ya.ru" />
+	<target host="realty.ya.ru" />
+	<target host="sobitia.ya.ru" />
+	<target host="taxi.ya.ru" />
+	<target host="m.taxi.ya.ru" />
+	<target host="w.ya.ru" />
+	<target host="www.ya.ru" />
+
+	<!--	Special cases:
+				-->
 	<target host="ya.ru" />
-	<target host="*.ya.ru" />
+	<target host="m.metro.ya.ru" />
+	<target host="www.m.metro.ya.ru" />
+	<target host="site.ya.ru" />
+	<target host="www.site.ya.ru" />
+
 		<!--
 			Redirects to http:
 						-->
@@ -117,32 +153,29 @@
 
 
 
-	<rule from="^http://(?:www\.)?ya\.ru/"
+	<rule from="^http://ya\.ru/"
 		to="https://www.ya.ru/" />
-
-	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/"
-		to="https://m.metro.ya.ru/" />
-
-	<!--	Redirect drops path but not args:
-							-->
-	<rule from="^http://(?:www\.)?site\.ya\.ru/[^?]*"
-		to="https://site.yandex.ru/" />
 
 	<!--	Redirect drops path but not args:
 							-->
 	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/[^?]*"
 		to="https://m.soft.yandex.ru/metro/" />
 
-	<rule from="^http://(auto|autodiscover|pass\.beta|disk|disk-blog|www\.ewent|(?:www\.)?ewents|(?:www\.)?[ei]vents?|feedback|m|mail|metri[ck]a|metro|pda\.metro|p|rabota|realty|sobitia|taxi|m\.taxi|w)\.ya\.ru/"
-		to="https://$1.ya.ru/" />
+		<test url="http://m.metro.ya.ru/foo" />
+		<test url="http://www.m.metro.ya.ru/foo" />
 
-	<!--	Domains for which both www and !www
-		exist, and both work without caveat:
+	<!--	Redirect drops path but not args:
 							-->
-	<rule from="^http://(www\.)?(metro)\.ya\.ru/"
-		to="https://$1$2.ya.ru/" />
+	<rule from="^http://(?:www\.)?site\.ya\.ru/[^?]*"
+		to="https://site.yandex.ru/" />
+
+		<test url="http://site.ya.ru/foo" />
+		<test url="http://www.site.ya.ru/foo" />
 
 	<!--rule from="^http://(?:www\.)?([^.]+)\.ya\.ru/"
 		to="https://$1.ya.ru/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

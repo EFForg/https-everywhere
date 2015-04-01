@@ -1,6 +1,5 @@
-<!--
-	For rules causing false/broken MCB, see Tumblr.com-falsemixed.xml.
 
+<!--
 	Other Tumblr rulesets:
 
 		- Tmblr.co.xml
@@ -68,27 +67,25 @@
 
 	Problematic subdomains:
 
-		- media ¹
-		- 25.media ²
-		- 34.media ²
-		- 35.media ²
-		- 37.media ²
+		- data *
+		- media *
+		- 25.media *
+		- 37.media *
 
-	¹ Cert only matches *.media
-	² Akamai
+	* Mismatched
 
 
 	Fully covered subdomains:
 
 		- a
 		- assets	(→ d2glp9604qyu8g.cloudfront.net)
-		- origin.assets
 		- secure.assets
 		- data
 		- media		(→ 31.media)
-		- \d+.media:
+		- *.media:
+		- mx
 		- platform
-		- origin.platform
+		- px.srvcs
 		- static	(→ d2g9v1gts353nd.cloudfront.net)
 		- secure.static
 		- tm319
@@ -96,17 +93,23 @@
 		- vt
 
 
+	These altnames don't exist:
+
+		- origin.assets.tumblr.com
+		- assets.embed.tumblr.com
+		- origin.platform.tumblr.com
+
+
 	Insecure cookies are set for these domains:
 
 		- .tumblr.com
+		- .srvcs.tumblr.com
 		- www.tumblr.com
 
 
 	Mixed content:
 
-		- Scripts on www from assets *
-
-		- Images on www from assets *
+		- Bugs on www from b.scorecardresearch.com *
 
 	* Secured by us
 
@@ -115,34 +118,36 @@
 
 		http://staff.tumblr.com/post/75482980993/you-can-now-take-extra-precaution-against-hackers
 
-	We can't enforce https until it becomes the default, as otherwise
-	(presumably?) we'd cause a redirect loop back to http for anyone who
-	hadn't enabled that setting.
-
 	Unfortunately, per-user subdomains don't support https either, so users
 	are still vulnerable whenever they browse blogs while logged in. :(
 
 -->
 <ruleset name="Tumblr.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="tumblr.com" />
-	<target host="*.tumblr.com" />
-		<!--
-			These paths 302 to http:
+	<target host="a.tumblr.com" />
+	<target host="assets.tumblr.com" />
+	<target host="secure.assets.tumblr.com" />
+	<target host="embed.tumblr.com" />
+	<target host="*.media.tumblr.com" />
+	<target host="mx.tumblr.com" />
+	<target host="platform.tumblr.com" />
+	<target host="px.srvcs.tumblr.com" />
+	<target host="secure.static.tumblr.com" />
+	<target host="tm319.tumblr.com" />
+	<target host="v.tumblr.com" />
+	<target host="vt.tumblr.com" />
+	<target host="www.tumblr.com" />
 
-				- audio_file/
-				- dashboard$
-				- dashboard/iframe
-				- goto/
-				- like/
-				- reblog/
-				- share$
-				- submit_form_js/
-				- upload/image
-						-->
-		<exclusion pattern="^http://(?:www\.)?tumblr\.com/(?!$|\?|(?:about|api|apps|business|buttons|developers|dmca|docs|download|forgot_password|help|impixu|jobs|login|logo|logout|meetups|merch|policy|press|privacy-policy|register|search|security|sponsors|svc/teaser|tagged|teaser|themes|tips|transparency)(?:$|[#?/])|assets/styles/|examples/share/\w|images/|javascript/|photo/|settings/|svc/log/|svc/poll/)" />
-		<!--
-			These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
+	<!--	Complications:
+				-->
+	<target host="data.tumblr.com" />
+	<target host="media.tumblr.com" />
+	<target host="static.tumblr.com" />
+
+		<!--	These scripts now break when rewritten to s://assets, secure.assets, or cloudfront:
 
 				- dashboard.js breaks "like"ing
 				- jquery_backbone_lodash.js and polyfills.js individually cause the editor to spawn another page
@@ -160,6 +165,14 @@
 			...but secure css:
 						-->
 		<exclusion pattern="^http://assets\.tumblr\.com/+assets/scripts/(?!vendor/\w+/plugins/\w+/css/)" />
+
+			<test url="http://assets.tumblr.com/assets/scripts/" />
+			<test url="http://assets.tumblr.com/assets/scripts/dashboard.js" />
+			<test url="http://assets.tumblr.com/assets/scripts/polyfills.js" />
+			<test url="http://assets.tumblr.com/assets/scripts/posting.js" />
+			<test url="http://assets.tumblr.com/assets/scripts/vendor/jquery_backbone_lodash.js" />
+			<test url="http://assets.tumblr.com/assets/scripts/vendor/tiny_mce_3_5_10/tiny_mce.js" />
+
 		<!--
 			Breaks hover interaction:
 						-->
@@ -181,21 +194,26 @@
 		Not secured by server:
 					-->
 	<!--securecookie host="^\.tumblr\.com$" name="^(language|logged_in)$" /-->
+	<!--securecookie host="^\.srvcs\.tumblr\.com$" name="^anon_id$" /-->
 	<!--securecookie host="^www\.tumblr\.com$" name="^(capture|devicePixelRatio|documentWidth|last_toast|pfe|pfp|pfu|tmgioct)$" /-->
 
+	<securecookie host="^\.srvcs\.tumblr\.com$" name=".+" />
 	<securecookie host="^www\.tumblr\.com$" name="^d(?:evicePixelRatio|ocumentWidth)$" />
 
 
 	<rule from="^http://data\.tumblr\.com/"
 		to="https://gs1.wac.edgecastcdn.net/8019B6/data.tumblr.com/" />
 
-	<rule from="^http://(?:(?:25|34|35|37)\.)?media\.tumblr\.com/"
+	<rule from="^http://(?:(?:25|37)\.)?media\.tumblr\.com/"
 		to="https://31.media.tumblr.com/" />
+
+		<test url="http://25.media.tumblr.com/" />
+		<test url="http://37.media.tumblr.com/" />
 
 	<rule from="^http://static\.tumblr\.com/"
 		to="https://d2pi0bc9ewx28h.cloudfront.net/" />
 
-	<rule from="^http://((?:a|(?:origin\.|secure\.)?assets|\d+\.media|platform|origin\.platform|secure\.static|tm319|vt?|www)\.)?tumblr\.com/"
-		to="https://$1tumblr.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

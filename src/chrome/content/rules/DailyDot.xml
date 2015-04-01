@@ -30,19 +30,37 @@
 
 	* Secured by us
 
+
+	Insecure cookies are set for these domains:
+
+		- .dailydot.com
+
+	Mixed content per https://github.com/EFForg/https-everywhere/issues/1290
+
 -->
-<ruleset name="DailyDot.com (partial)">
+<ruleset name="DailyDot.com (partial)" platform="mixedcontent">
 
 	<target host="dailydot.com" />
-	<target host="*.dailydot.com" />
+	<target host="cdn0.dailydot.com" />
+	<target host="www.dailydot.com" />
 
 
-	<rule from="^http://(?:www\.)?dailydot\.com/"
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.dailydot\.com$" name="^__qca$" />
+
+
+	<rule from="^http://dailydot\.com/"
 		to="https://www.dailydot.com/" />
 
 	<!--	s? for protocol-relative urls...:
 						-->
 	<rule from="^https?://cdn0\.dailydot\.com/"
 		to="https://dailydot.s3.amazonaws.com/" />
+
+		<test url="https://cdn0.dailydot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

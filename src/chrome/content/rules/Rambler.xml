@@ -1,3 +1,4 @@
+
 <!--
 	Other Rambler rulesets:
 
@@ -15,21 +16,24 @@
 		- reklama ²
 		- m ³
 		- news ³
-		- top100-images.rambler.ru	(redirects to www.rambler.ru, valid cert)
+		- supermarket ⁴
+		- top100-images		(redirects to www.rambler.ru, valid cert)
 		- weather ³
 		- www ⁵
 
 	¹ 403
 	² Redirects to login
 	³ Refused
+	⁴ Redirects to smart.begun.ru/login
 	⁵ Redirects to p://www.../$
 
 
 	Problematic subdomains:
 
 		- cntcerber *
+		- i *
 
-	* Expired 2014-05
+	* Expired 2014
 
 
 	Partially covered subdomains:
@@ -43,17 +47,18 @@
 
 		- assist
 		- cnt
-		- counter
-		- i
+		- counter *
 		- id
 		- images
 		- m.kassa
 		- mail
 		- mail-pda
-		- scounter
+		- scounter *
 		- soft
 		- sync
 		- update
+
+	* Another of those 1px tracking services
 
 
 	Insecure cookies are set for these domains:
@@ -61,14 +66,37 @@
 		- .rambler.ru
 
 -->
-<ruleset name="Rambler (partial)">
+<ruleset name="Rambler.ru (partial)">
 
-	<target host="*.rambler.ru" />
+	<target host="assist.rambler.ru" />
+	<target host="cnt.rambler.ru" />
+	<target host="counter.rambler.ru" />
+	<!--target host="i.rambler.ru" /-->
+	<target host="id.rambler.ru" />
+	<target host="images.rambler.ru" />
+	<target host="kassa.rambler.ru" />
+	<target host="m.kassa.rambler.ru" />
+	<target host="widget.kassa.rambler.ru" />
+	<target host="mail.rambler.ru" />
+	<target host="mail-pda.rambler.ru" />
+	<target host="scounter.rambler.ru" />
+	<target host="soft.rambler.ru" />
+	<target host="sync.rambler.ru" />
+	<target host="update.rambler.ru" />
 		<!--
 			Redirect to http:
 						-->
 		<exclusion pattern="^http://kassa\.rambler\.ru/(?:cinemapartnership|concerts|partners|refund|sport|theatre|unsubscribe)?(?:$|\?)" />
-		<exclusion pattern="^http://www\." />
+
+			<test url="http://kassa.rambler.ru/cinemapartnership" />
+			<test url="http://kassa.rambler.ru/cinemapartnership?" />
+			<test url="http://kassa.rambler.ru/concerts" />
+			<test url="http://kassa.rambler.ru/partners" />
+			<test url="http://kassa.rambler.ru/refund" />
+			<test url="http://kassa.rambler.ru/sport" />
+			<test url="http://kassa.rambler.ru/theatre" />
+			<test url="http://kassa.rambler.ru/unsubscribe" />
+			<test url="http://kassa.rambler.ru/unsubscribe?" />
 
 
 	<!--	Not secured by server:
@@ -79,9 +107,7 @@
 	<securecookie host="^(?:id)?\.rambler\.ru$" name=".*" />
 
 
-	<!--	s?counter is another of those 1px tracking services.	-->
-
-	<rule from="^http://(assist|cnt|s?counter|id?|images|kassa|m\.kassa|mail|mail-pda|soft|sync|update)\.rambler\.ru/"
-		to="https://$1.rambler.ru/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

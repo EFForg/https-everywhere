@@ -1,5 +1,14 @@
+
 <!--
 	^: Dropped
+
+
+	Problematic subdomains:
+
+		- s *
+		- trans *
+
+	* $ 403s
 
 
 	Fully covered subdomains:
@@ -27,8 +36,6 @@
 	<target host="vip.chbtc.com" />
 	<target host="www.chbtc.com" />
 
-	<target host="*.chbtc.com" />
-
 
 	<!--	Not secured by server:
 					-->
@@ -37,10 +44,21 @@
 	<securecookie host="^\.chbtc\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?chbtc\.com/"
+	<rule from="^http://chbtc\.com/"
 		to="https://www.chbtc.com/" />
 
-	<rule from="^http://(img1|p2p|s|trans|vip)\.chbtc\.com/"
-		to="https://$1.chbtc.com/" />
+	<!--	Redirect keeps args but
+		not forward slash:
+					-->
+	<rule from="^http://(?:s|trans)\.chbtc\.com/+(?=$|\?)"
+		to="https://www.chbtc.com/" />
+
+		<test url="http://s.chbtc.com/?" />
+		<test url="http://s.chbtc.com//" />
+		<test url="http://trans.chbtc.com/?" />
+		<test url="http://trans.chbtc.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
