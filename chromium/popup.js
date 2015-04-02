@@ -100,6 +100,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Set up toggle checkbox for blocking all mixed content
+  getOption_('blockMixedContent', false, function(item) {
+    var mixedContentCheckbox = document.getElementById('mixed-content-checkbox');
+    mixedContentCheckbox.addEventListener('click', toggleMixedContent, false);
+    var blockMixedContentEnabled = item.blockMixedContent;
+    if (blockMixedContentEnabled) {
+      mixedContentCheckbox.setAttribute('checked', '');
+    }
+  });
+
   // auto-translate all elements with i18n attributes
   var elem = document.querySelectorAll("[i18n]");
   for (var i=0; i < elem.length; i++) {
@@ -167,6 +177,12 @@ function addManualRule() {
 function toggleHttpNowhere() {
   getOption_('httpNowhere', false, function(item) {
     setOption_('httpNowhere', !item.httpNowhere);
+  });
+}
+
+function toggleMixedContent() {
+  getOption_('blockMixedContent', false, function(item) {
+    setOption_('blockMixedContent', !item.blockMixedContent);
   });
 }
 

@@ -36,12 +36,20 @@ chrome.storage.sync.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   setIconColor();
 });
+
+var blockMixedContent = false;
+chrome.storage.sync.get({blockMixedContent: false}, function(item) {
+  blockMixedContent = item.blockMixedContent;
+});
+
 chrome.storage.onChanged.addListener(function(changes, areaName) {
   if (areaName === 'sync') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
         setIconColor();
+      } else if (key === 'blockMixedContent') {
+	blockMixedContent = changes[key].newValue;
       }
     }
   }
@@ -105,12 +113,16 @@ var addNewRule = function(params, cb) {
   }
 };
 
+// A record of tabs actively using https in main_frame for blocking mixed content.
+var tlsTabIds = {};
+
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
   var that = this;
   chrome.tabs.onRemoved.addListener(function(tabId, info) {
     that.removeTab(tabId);
+    delete tlsTabIds[tabId];
   });
 }
 
@@ -151,9 +163,6 @@ function onBeforeRequest(details) {
   // todo: check that this is enough
   var uri = new URI(details.url);
 
-  // Should the request be canceled?
-  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
-
   // Normalise hosts such as "www.example.com."
   var canonical_host = uri.hostname();
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
@@ -174,12 +183,20 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
-  if (canonical_url in urlBlacklist) {
-    return {cancel: shouldCancel};
-  }
+
+  // Should the request be canceled?
+  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
+    tlsTabIds[details.tabId] = (uri.protocol() === 'https');
+  } else if (blockMixedContent && details.tabId !== -1) {
+    // This request happened in a tab and wasn't the main_frame, so it's content.
+    shouldCancel = (uri.protocol() === 'http' && (httpNowhereOn || tlsTabIds[details.tabId]));
+  }
+
+  if (canonical_url in urlBlacklist) {
+    return {cancel: shouldCancel};
   }
 
   var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
