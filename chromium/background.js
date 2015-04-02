@@ -147,30 +147,33 @@ var domainBlacklist = {};
 var redirectCounter = {};
 
 function onBeforeRequest(details) {
-  // get URL into canonical format
-  // todo: check that this is enough
-  var uri = new URI(details.url);
+  var uri = document.createElement('a');
+  uri.href = details.url;
 
   // Should the request be canceled?
-  var shouldCancel = (httpNowhereOn && uri.protocol() === 'http');
+  var shouldCancel = (httpNowhereOn && uri.protocol === 'http:');
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname();
+  var canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
-    uri.hostname(canonical_host);
+    uri.hostname = canonical_host;
   }
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = uri.userinfo();
-  if (tmpuserinfo) {
-    uri.userinfo('');
+  var using_credentials_in_url = false;
+  if (uri.password || uri.username) {
+      using_credentials_in_url = true;
+      var tmp_user = uri.username;
+      var tmp_pass = uri.password;
+      uri.username = null;
+      uri.password = null;
   }
 
-  var canonical_url = uri.toString();
-  if (details.url != canonical_url && tmpuserinfo === '') {
+  var canonical_url = uri.href;
+  if (details.url != canonical_url && !using_credentials_in_url) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
@@ -182,14 +185,14 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
   if (rs.length === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist[canonical_url] = true;
-    var hostname = uri.hostname();
+    var hostname = uri.hostname;
     domainBlacklist[hostname] = true;
     log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
@@ -204,18 +207,23 @@ function onBeforeRequest(details) {
     }
   }
 
-  var finaluri = newuristr ? new URI(newuristr) : null;
+  // TODO: Clean this silliness
+  var finaluri = null;
+  if (newuristr) {
+      finaluri = document.createElement('a');
+      finaluri.href = newuristr;
+  }
 
-  if (newuristr && tmpuserinfo !== "") {
+  if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    // while rules were applied
-    finaluri.userinfo(tmpuserinfo);
-    newuristr = finaluri.toString();
+    finaluri.username = tmp_user;
+    finaluri.password = tmp_pass;
+    newuristr = finaluri.href;
   }
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol() !== "https") {
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -224,7 +232,7 @@ function onBeforeRequest(details) {
   }
 
   if (httpNowhereOn) {
-    if (finaluri && finaluri.protocol() === "http") {
+    if (finaluri && finaluri.protocol === "http:") {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};
     }
