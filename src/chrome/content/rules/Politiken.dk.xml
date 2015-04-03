@@ -24,10 +24,8 @@
 
 		- plus *
 		- shop *
-		- web ²		(→ ^)
 
 	* Some pages redirect to http
-	² [^/?]+ doesn't redirect
 
 
 	Mixed content:
@@ -44,19 +42,24 @@
 
 	<target host="multimedia.pol.dk" />
 	<target host="politiken.dk" />
-	<target host="*.politiken.dk" />
-		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/|favicon\.ico)" />
+	<target host="www.politiken.dk" />
+	<target host="plus.politiken.dk" />
+	<target host="shop.politiken.dk" />
 
+		<exclusion pattern="^http://(?:plus|shop)\.politiken\.dk/(?!Css/|[iI]mages/|Uploaded/|favicon\.ico)" />
+		<test url="http://plus.politiken.dk/" />
+		<test url="http://shop.politiken.dk/" />
+
+	<!--	Video streaming requires external resources that
+		fail as mixed content in some browsers. -->
+		<exclusion pattern="^http://(www\.)?politiken.dk/tv/" />
+		<test url="http://politiken.dk/tv/" />
+		<test url="http://www.politiken.dk/tv/" />
 
 	<rule from="^http://multimedia\.pol\.dk/"
 		to="https://multimedia.pol.dk/" />
 
-	<rule from="^http://((?:plus|shop|www)\.)?politiken\.dk/"
-		to="https://$1politiken.dk/" />
-
-	<!--	Redirect drops args:
-					-->
-	<rule from="^http://web\.politiken\.dk/+(?:$|\?.*)"
-		to="https://politiken.dk/VisArtikel.iasp?PageID=1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
