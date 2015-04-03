@@ -1,3 +1,4 @@
+"use strict";
 var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
