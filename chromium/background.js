@@ -207,18 +207,13 @@ function onBeforeRequest(details) {
     }
   }
 
-  // TODO: Clean this silliness
-  var finaluri = null;
-  if (newuristr) {
-      finaluri = document.createElement('a');
-      finaluri.href = newuristr;
-  }
-
   if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    finaluri.username = tmp_user;
-    finaluri.password = tmp_pass;
-    newuristr = finaluri.href;
+    var uri_with_credentials = document.createElement('a');
+    uri_with_credentials.href = newuristr;
+    uri_with_credentials.username = tmp_user;
+    uri_with_credentials.password = tmp_pass;
+    newuristr = uri_with_credentials.href;
   }
 
   // In Switch Planner Mode, record any non-rewriteable
@@ -232,7 +227,7 @@ function onBeforeRequest(details) {
   }
 
   if (httpNowhereOn) {
-    if (finaluri && finaluri.protocol === "http:") {
+    if (newuristr && newuristr.substring(0, 5) === "http:") {
       // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
       return {cancel: true};
     }
