@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Fetch and parse XML to be loaded as RuleSets.
  */
