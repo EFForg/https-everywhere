@@ -1,4 +1,5 @@
-var backgroundPage = null;
+"use strict";
+var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
@@ -15,7 +16,7 @@ function toggleRuleLine(checkbox, ruleset) {
   } else {
     delete localStorage[ruleset.name];
     // purge the name from the cache so that this unchecking is persistent.
-    backgroundPage.ruleCache.remove(ruleset.name);
+    backgroundPage.all_rules.ruleCache.remove(ruleset.name);
   }
   // Now reload the selected tab of the current window.
   chrome.tabs.reload();
@@ -85,7 +86,6 @@ function gotTab(tab) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
