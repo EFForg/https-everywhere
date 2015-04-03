@@ -1,4 +1,4 @@
-var backgroundPage = null;
+var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
@@ -85,7 +85,6 @@ function gotTab(tab) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
