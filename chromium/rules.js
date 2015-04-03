@@ -297,9 +297,8 @@ RuleSets.prototype = {
     var rs = this.potentiallyApplicableRulesets(domain);
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
-      var rewrite = rs[i].apply(test_uri);
-      if (rewrite) {
-        log(INFO, "Cookie domain could be secured: " + rewrite);
+      if (rs[i].apply(test_uri)) {
+        log(INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
       }
