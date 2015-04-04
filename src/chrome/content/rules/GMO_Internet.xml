@@ -9,6 +9,7 @@
 		- GMO_Cloud.com.xml
 		- GMO_Cloud.us.xml
 		- GMO_Registry.com.xml
+		- GMO_server.jp.xml
 		- Hello.tokyo.xml
 		- Heteml.jp.xml
 		- InterQ.or.jp.xml
@@ -65,10 +66,22 @@
 	* Secured by us
 
 -->
-<ruleset name="GMO Internet (partial)">
+<ruleset name="GMO.jp (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gmo.jp" />
-	<target host="*.gmo.jp" />
+	<target host="cloud.gmo.jp" />
+	<target host="cache.img.gmo.jp" />
+	<target host="mng.gmo.jp" />
+	<target host="secure.gmo.jp" />
+	<target host="support.gmo.jp" />
+	<target host="www.gmo.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="img.gmo.jp" />
+
 		<!--
 			Redirect to http:
 						-->
@@ -78,14 +91,32 @@
 					-->
 		<exclusion pattern="http://cloud\.gmo\.jp/+(?!common/|favicon\.ico|(?:\w+/)?images/|\w+/style\.css|this\.css)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://cloud.gmo.jp/blog/" />
+			<test url="http://cloud.gmo.jp/case/" />
+			<test url="http://cloud.gmo.jp/contact/" />
+			<test url="http://cloud.gmo.jp/faq/" />
+			<test url="http://cloud.gmo.jp/feature/" />
+			<test url="http://cloud.gmo.jp/news/" />
+			<test url="http://cloud.gmo.jp/order/" />
+			<test url="http://cloud.gmo.jp/price/" />
+			<test url="http://cloud.gmo.jp/spec/" />
+			<test url="http://cloud.gmo.jp/trial_contact/" />
+			<test url="http://cloud.gmo.jp/ver2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cloud.gmo.jp/favicon.ico" />
+
 
 	<securecookie host="^mng\.gmo\.jp$" name=".+" />
 
 
-	<rule from="^http://((?:cloud|mng|secure|support|www)\.)?gmo\.jp/"
-		to="https://$1gmo.jp/" />
-
-	<rule from="^http://(?:cache\.)?img\.gmo\.jp/"
+	<rule from="^http://img\.gmo\.jp/"
 		to="https://cache.img.gmo.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,32 @@
 <!--
-	Problematic subdomains:
+	Fully covered hosts:
 
-		- ^	(cert only matches www)
+		- (www.)?
+		- ovs
 
 
-	Mixed content:
+	Insecure cookies are set for these hosts:
 
-		- Images on www from www *
-
-	* Secured by us, doesn't trip MCB
+		- acunetix.com
 
 -->
 <ruleset name="Acunetix.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="acunetix.com" />
+	<target host="ovs.acunetix.com" />
 	<target host="www.acunetix.com" />
 
 
-	<rule from="^http://(?:www\.)?acunetix\.com/"
-		to="https://www.acunetix.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^acunetix\.com$" name="^(PHPSESSID|location)$" /-->
+
+	<securecookie host="^acunetix\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

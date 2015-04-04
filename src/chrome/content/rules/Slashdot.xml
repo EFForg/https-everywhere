@@ -36,10 +36,15 @@
 	* Secured by us
 
 -->
-<ruleset name="Slashdot (partial)">
+<ruleset name="Slashdot.org (partial)">
 
 	<target host="slashdot.org" />
-	<target host="*.slashdot.org" />
+	<target host="deals.slashdot.org" />
+	<target host="images.slashdot.org" />
+	<target host="m.slashdot.org" />
+	<target host="tv.slashdot.org" />
+	<target host="www.slashdot.org" />
+	<target host="y.slashdot.org" />
 
 			<!--	Redirects to http:
 							-->
@@ -47,14 +52,25 @@
 			<!--
 				Exceptions:
 						-->
-			<exclusion pattern="^http://slashdot\.org/(?!ajax\.pl|images/|login\.pl|my/|submission|submit|topic/|webcasts)" />
+			<!--exclusion pattern="^http://slashdot\.org/(?!ajax\.pl|images/|login\.pl|my/|submission|submit|topic/|webcasts)" /-->
 			<!--
-				(m included to prevent broken MCB):
-									-->
-			<exclusion pattern="^http://(?!(?:deals|images|m|tv|y)\.).+\.slashdot\.org/(?!ajax\.pl)" />
+				Breaks comment loading: *
+
+				https://github.com/EFForg/https-everywhere/issues/1252
+							-->
+			<!--exclusion pattern="^http://(.+\.)?slashdot\.org/+ajax\.pl" /-->
+			<!--
+				Avoid broken MCB:
+							-->
+			<!--exclusion pattern="^http://m\.slashdot\.org/$" /-->
+			<!--
+				In sum:
+					-->
+			<exclusion pattern="^http://(?:m\.)?slashdot\.org/(?!images/|login\.pl|my/|submission|submit|topic/|webcasts)" />
 
 				<!--	+ve:
 						-->
+				<test url="http://slashdot.org/ajax.pl" />
 				<test url="http://slashdot.org/archive.pl" />
 				<test url="http://slashdot.org/editorial.shtml" />
 				<test url="http://slashdot.org/hof.shtml" />
@@ -63,13 +79,7 @@
 				<test url="http://slashdot.org/pollBooth.pl" />
 				<test url="http://slashdot.org/shtml.pl" />
 				<test url="http://slashdot.org/videos.pl" />
-
-				<test url="http://build.slashdot.org/" />
-				<test url="http://devices.slashdot.org/" />
-				<test url="http://entertainment.slashdot.org/" />
-				<test url="http://science.slashdot.org/" />
-				<test url="http://technology.slashdot.org/" />
-				<test url="http://yro.slashdot.org/" />
+				<test url="http://m.slashdot.org/ajax.pl" />
 
 				<!--	-ve:
 						-->
@@ -79,15 +89,6 @@
 				<test url="http://slashdot.org/submission" />
 				<test url="http://slashdot.org/submit" />
 				<test url="http://images.slashdot.org/images/njs.gif" />
-				<test url="http://news.slashdot.org/ajax.pl" />
-				<test url="http://news.slashdot.org/login.pl" />
-
-		<test url="http://deals.slashdot.org/" />
-		<test url="http://images.slashdot.org/" />
-		<test url="http://m.slashdot.org/" />
-		<test url="http://tv.slashdot.org/" />
-		<test url="http://www.slashdot.org/" />
-		<test url="http://y.slashdot.org/" />
 
 
 	<securecookie host="^slashdot\.org$" name="^w3tc_referrer$" />
