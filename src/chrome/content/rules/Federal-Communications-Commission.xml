@@ -12,6 +12,7 @@
 		- ^		(shows transition; mismatched, CN: transition.fcc.gov)
 		- publicsafety	(times out)
 		- reboot *
+		- transition (404 on http://transition.fcc.gov/Daily_Releases/Daily_Digest/2015/dd2015.html)
 
 	* Times out
 
@@ -31,7 +32,6 @@
 		- fjallfoss
 		- licensing
 		- stations
-		- transition
 
 -->
 <ruleset name="Federal Communications Commission (partial)">
@@ -39,6 +39,15 @@
 	<target host="fcc.gov" />
 	<target host="*.fcc.gov" />
 
+	<test url="http://apps.fcc.gov/" />
+	<test url="http://data.fcc.gov/" />
+	<test url="http://fjallfoss.fcc.gov/" />
+	<test url="http://licensing.fcc.gov/" />
+	<test url="http://stations.fcc.gov/" />
+	<test url="http://transition.fcc.gov/" />
+	<test url="http://www.fcc.gov/" />
+	<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.txt" />
+	<test url="http://hraunfoss.fcc.gov/edocs_public/attachmatch/DOC-235879A1.pdf" />
 
 	<securecookie host="^.*\.fcc\.gov$" name=".*" />
 
@@ -51,8 +60,10 @@
 
 	<!--	Redirects like so:
 					-->
-	<rule from="^http://hraunfoss\.fcc\.gov/edocs_public/attachmatch/(?=.+)"
-		to="https://apps.fcc.gov/edocs_public/attachmatch/" />
+	<rule from="^http://hraunfoss\.fcc\.gov/edocs_public/attachmatch/(.+)"
+		to="https://apps.fcc.gov/edocs_public/attachmatch/$1" />
+
+	<!-- These rules need tests:
 
 	<rule from="^http://publicsafety\.fcc\.gov/(?:\?.*)?$"
 		to="https://www.fcc.gov/pshs/" />
@@ -63,4 +74,5 @@
 	<rule from="^http://reboot\.fcc\.gov/data(?:\?.*)?$"
 		to="https://www.fcc.gov/data" />
 
+	-->
 </ruleset>
