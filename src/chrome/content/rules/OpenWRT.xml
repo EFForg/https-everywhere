@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://openwrt.org/ => https://openwrt.org/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	For problematic rules, see OpenWRT-mismatches.xml.
 
 
@@ -25,24 +23,38 @@ Fetch error: http://openwrt.org/ => https://openwrt.org/: (28, 'Operation timed 
 		- forum
 		- lists
 
+
+	Insecure cookies are set for these hosts:
+
+		- openwrt.org
+		- forum.openwrt.org
+		- wiki.openwrt.org
+
 -->
-<ruleset name="OpenWRT (partial)" default_off='failed ruleset test'>
+<ruleset name="OpenWRT.org (partial)">
 
 	<target host="openwrt.org" />
-	<target host="*.openwrt.org" />
+	<target host="dev.openwrt.org" />
+	<target host="downloads.openwrt.org" />
+	<target host="forum.openwrt.org" />
+	<target host="lists.openwrt.org" />
+	<!--target host="wiki.openwrt.org" /-->
+	<target host="www.openwrt.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(forum\.)?openwrt\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^wiki\.openwrt\.org$" name="^bb2_screener_$$" /-->
 
 	<securecookie host="^(?:.*\.)?openwrt\.org$" name=".*" />
 
 
-	<rule from="^http://openwrt\.org/"
-		to="https://openwrt.org/" />
+	<!--rule from="^http://wiki\.openwrt\.org/lib/tpl/ameoto/images/(bg(?:-2)?|footer|openwrt-logo)\.png$"
+		to="https://openwrt.org/.styles/img/$1.png" /-->
 
-	<rule from="^http://(dev|downloads|forum|lists|www)\.openwrt\.org/"
-		to="https://$1.openwrt.org/" />
-
-	<rule from="^http://wiki\.openwrt\.org/lib/tpl/ameoto/images/(bg(?:-2)?|footer|openwrt-logo)\.png$"
-		to="https://openwrt.org/.styles/img/$1.png" />
+	<rule from="^http:"
+		to="https:" />
 
 
 </ruleset>

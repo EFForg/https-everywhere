@@ -1,4 +1,6 @@
 <!--
+	For rules causing mixed content, see Sina.com.cn-mixedcontent.xml
+
 	For problematic rules, see Sina-problematic.xml.
 
 
@@ -23,7 +25,8 @@
 		- sina.com.cn subdomains:
 
 			- ad4 *
-			- campus
+			- beacon	(Refused)
+			- campus	(Refused
 			- d1		(reset)
 			- ent		(403; mismatched, CN: *.pantherssl.com)
 			- green **
@@ -32,6 +35,7 @@
 			- t **
 			- tech *
 
+		- mail.sina.net		(Refused
 		- s2.sae.sinacdn.com
 		- www.sae.sinacdn.com
 		- i[01].sinaimg.cn	(403; mismatched, CN: support3.cdnetworks.net)
@@ -44,7 +48,7 @@
 			- hits **
 			- rs **
 			- simg *
-			- timg.sjs *
+			- timg.sjs	(404)
 			- tjs.sjs *
 			- img.t *
 			- js.t		(403; mismatched, CN: ssl.cdngc.net)
@@ -56,9 +60,16 @@
 
 	Problematic domains:
 
-		- sae.sina.com.cn *
+		- e.sae.sina.com.cn ²
+		- static.sae.sina.com.cn ²
+		- sinacloud.com ²
 
-	* Server sends no certificate chain
+	² Mismatched
+
+
+	Fully covered hosts:
+
+		- sae.sina.com.cn
 
 
 	Insecure cookies are set for these domains:
@@ -68,26 +79,29 @@
 
 	Mixed content:
 
+		- css on api.t.sina.com.cn from timg.sjs.sinajs.cn
+
+		- Images, on:
 		- Images on sae.sina.com.cn from www.sae.sinacdn.com
-
-
-	All mixed content appears to be images.
+			- api.t.sina.com.cn from timg.sjs.sinajs.cn
+			- api.t.sina.com.cn from ww4.sinaimg.cn
 
 -->
 <ruleset name="Sina (partial)">
 
 	<target host="samsungapps.sina.cn" />
 	<target host="login.sina.com.cn" />
-	<!--target host="sae.sina.com.cn" /-->
-	<target host="api.t.sina.com.cn" />
+	<target host="sae.sina.com.cn" />
+	<!--target host="api.t.sina.com.cn" /-->
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.sina\.com\.cn$" name="^U_TRS[12]$" /-->
 	<!--securecookie host="^\.sae\.sina\.com\.cn$" name="^(PHPSESSID|SAETEST|SAEVER)$" /-->
 
 	<securecookie host="^samsungapps\.sina\.cn$" name=".+" />
-	<securecookie host="^api\.t\.sina\.com\.cn$" name=".+" />
+	<!--securecookie host="^api\.t\.sina\.com\.cn$" name=".+" /-->
 
 
 	<rule from="^http:"

@@ -1,0 +1,57 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Problematic hosts in *usmint.gov:
+
+		- ^ *
+
+	* Mismatched
+
+
+	Fully covered hosts in *usmint.gov:
+
+		- (www.)?		(^ → www)
+		- (www.)?catalog
+		- preview.catalog
+
+
+	These altnames don't exist:
+
+		- www.preview.catalog.usmint.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- catalog.usmint.gov
+		- preview.catalog.usmint.gov
+		- www.catalog.usmint.gov
+		- www.usmint.gov
+
+-->
+<ruleset name="US Mint.gov">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="usmint.gov" />
+	<target host="catalog.usmint.gov" />
+	<target host="preview.catalog.usmint.gov" />
+	<target host="www.catalog.usmint.gov" />
+	<target host="www.usmint.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(preview\.|www\.)?catalog\.usmint\.gov$" name="^(dwac_[\da-f]{32}|dwanonymous_[\da-f]{32}|dwpersonalization_[\da-f]{32}|dwsid|sid)$" /-->
+	<!--securecookie host="^www\.usmint\.gov$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^(?:catalog|(?:preview|www)\.catalog|www)\.usmint\.gov$" name=".+" />
+
+
+	<rule from="^http://usmint\.gov/"
+		to="https://www.usmint.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
