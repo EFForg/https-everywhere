@@ -2,30 +2,52 @@
 	^: mismatched, CN: www2.costco.com
 
 
+	Nonfunctional hosts in *costco.com:
+
+		- video *
+
+	* Shows another domain
+
+
 	These altnames don't exist:
 
 		- www.www2.costco.com
 
--->
-<ruleset name="Costco">
 
+	Insecure cookies are set for these hosts:
+
+		- www.costco.com
+		- www2.costco.com
+
+-->
+<ruleset name="Costco (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="customerservice.costco.com" />
+	<target host="shop.costco.com" />
+	<target host="www.costco.com" />
+	<target host="www2.costco.com" />
+
+	<!--	Complications:
+				-->
 	<target host="costco.com"/>
-	<target host="*.costco.com"/>
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="www\.costco\.com$" name="^(JSESSIONID|WC_PERSISTENT)$" /-->
+	<!--securecookie host="www2\.costco\.com$" name="^(Commerce2002_TestPersistentCookie|Commerce2002_TestSessionCookie|CostcoCookieCrumb|CostcoTempBasket_v2)$" /-->
 
 	<securecookie host="^(?:.*\.)?costco\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?costco\.com/"
+	<rule from="^http://costco\.com/"
 		to="https://www.costco.com/"/>
-
-	<rule from="^http://(shop|www2)\.costco\.com/"
-		to="https://$1.costco.com/"/>
 
 	<!-- The content of content and www are actually not identical. -->
 	<!-- <rule from="^http://content\.costco\.com/"
 		to="https://www.costco.com/"/> -->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
