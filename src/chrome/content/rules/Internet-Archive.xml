@@ -7,7 +7,6 @@
 
 	Nonfunctional subdomains:
 
-		- blog	(refused)
 		- pgdp01.us ²
 
 	² Refused
@@ -19,14 +18,35 @@
 
 	* Works, cert only matches *.archive.org
 
+
+	Fully covered hosts in *archive.org:
+
+		- (www.)?
+		- blog
+		- blog.openlibrary	(→ blog.openlibrary.org)
+		- *.us
+
 -->
 <ruleset name="Internet Archive">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="archive.org" />
-	<target host="*.archive.org" />
+	<target host="blog.archive.org" />
+	<target host="*.us.archive.org" />
+	<target host="www.archive.org" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.openlibrary.archive.org" />
+
 		<exclusion pattern="^http://(?:graphite|pgdp01|s3)\.us\.archive\.org/" />
-		<!--
-			The rule does not handle web anyway:
+
+			<test url="http://graphite.us.archive.org/" />
+			<test url="http://pgdp01.us.archive.org/" />
+			<test url="http://s3.us.archive.org/" />
+
+		<!--	The rule does not handle web anyway:
 
 		<exclusion pattern="^http://web\.archive\.org/" /-->
 
@@ -34,10 +54,10 @@
 	<securecookie host="^\.archive\.org$" name=".+" />
 
 
-	<rule from="^http://(\w+\.us\.|www\.)?archive\.org/"
-		to="https://$1archive.org/" />
-
 	<rule from="^http://blog\.openlibrary\.archive\.org/"
 		to="https://blog.openlibrary.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
