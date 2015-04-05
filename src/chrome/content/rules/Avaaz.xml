@@ -4,25 +4,38 @@
 		- avaaz_images.s3.amazonaws.com
 
 
-	Problematic subdomains:
+	Fully covered hosts in *avaaz.org:
 
-		- static	(reset)
-		- www		(mismatched, CN: ssl.cdngc.net)
+		- (www.)?
+		- en
+		- secure
+		- static
+		- stats
+
+
+	Insecure cookies are set for these domains:
+
+		- .avaaz.org
 
 -->
 <ruleset name="Avaaz">
 
 	<target host="avaaz.org" />
-	<target host="*.avaaz.org" />
+	<target host="en.avaaz.org" />
+	<target host="secure.avaaz.org" />
+	<target host="static.avaaz.org" />
+	<target host="stats.avaaz.org" />
+	<target host="www.avaaz.org" />
 
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.avaaz\.org$" name="^(__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^\.avaaz\.org$" name=".+" />
 
 
-	<rule from="^http://(?:secure\.|static\.|www\.)?avaaz\.org/"
-		to="https://secure.avaaz.org/" />
-
-	<rule from="^http://(en|stats)\.avaaz\.org/"
-		to="https://$1.avaaz.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
