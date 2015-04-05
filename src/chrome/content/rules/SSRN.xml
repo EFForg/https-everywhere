@@ -1,17 +1,20 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ssrn.com/ => https://www.ssrn.com/: Cycle detected - URL already encountered: https://www.ssrn.com/en/	!functional:
 		- (www.)ssrnblog.com	(cert: *.myhostcenter.com; presents default cPanel page)
 
 
-	Observed cookie domains:
+	Problematic hosts in *ssrn.com:
 
-		- . ¹
-		- piwik ²
-		- static
+		- poseidon01 *
 
-	¹ Secured by us <= not secured by server
-	² Secured by server
+	* Expired, self-signed
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ssrn.com
+		- hq.ssrn.com
+		- papers.ssrn.com
+		- www.ssrn.com
 
 
 	Mixed content:
@@ -30,33 +33,63 @@ Fetch error: http://ssrn.com/ => https://www.ssrn.com/: Cycle detected - URL alr
 		- Web bugs, on:
 
 			- hq and papers from piwik *
-			- papers from  ²
+			- papers from adserver.itx.net ²
 
 	* Secured by us
 	² Unsecurable <= 404
 
 -->
-<ruleset name="SSRN (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="SSRN (partial)" platform="mixedcontent">
 
 	<target host="ssrn.com"/>
 	<target host="*.ssrn.com"/>
 
-  <exclusion pattern="http://poseidon[0-9]*\.ssrn\.com/" />
+		<exclusion pattern="http://poseidon[0-9]*\.ssrn\.com/" />
+
+			<test url="http://poseidon0.ssrn.com/" />
+			<test url="http://poseidon5.ssrn.com/" />
+			<test url="http://poseidon9.ssrn.com/" />
+
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://www\.ssrn\.com/en/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ssrn\.com/+(?!css/|en/includes/|images2/|plugins/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ssrn.com/abstract=1088543" />
+			<test url="http://www.ssrn.com/en/" />
+			<test url="http://www.ssrn.com/en/index.cfm/arn/" />
+			<test url="http://www.ssrn.com/en/index.cfm/top-authors/" />
+			<test url="http://www.ssrn.com/en/index.cfm/top-organizations/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ssrn.com/en/css/reset.min.css" />
+			<test url="http://www.ssrn.com/en/includes/themes/merced/images/ssrn/bg-body.gif" />
+			<test url="http://www.ssrn.com/images2/proquest-with-color_88x33px.gif" />
+			<test url="http://www.ssrn.com/plugins/LocaleTransMgr/css/ltm.css" />
+
+		<test url="http://hq.ssrn.com/" />
+		<test url="http://papers.ssrn.com/" />
+		<test url="http://piwik.ssrn.com/" />
+		<test url="http://static.ssrn.com/" />
+
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="\.ssrn\.com$" name="^(CFGLOBALS|CFID|CFTOKEN|SITEID)$" /-->
-	<securecookie host="^(?:.*\.)?ssrn\.com$" name=".*"/>
+	<!--securecookie host="\.ssrn\.com$" name="^(CFCLIENT_SSRN|CFGLOBALS|CFID|CFTOKEN|SITEID)$" /-->
+	<!--securecookie host="(hq|papers)\.ssrn\.com$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="www\.ssrn\.com$" name="^(MOBILEFORMAT|ORIGINALURLTOKEN|USERHASH|USERID)$" /-->
 
-	<!--	cert !valid for !www, "Bad Request"	-->
-	<rule from="^http://ssrn\.com/"
-		to="https://www.ssrn.com/"/>
+	<!--securecookie host="^(?:.*\.)?ssrn\.com$" name=".*"/-->
+	<securecookie host="(?:hq|papers)\.ssrn\.com$" name=".+" />
 
-	<!--	encountered:
-			- hq
-			- papers
-			- static	-->
-	<rule from="^http://(\w+)\.ssrn\.com/"
-		to="https://$1.ssrn.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
