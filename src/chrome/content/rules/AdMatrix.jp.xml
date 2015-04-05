@@ -1,21 +1,34 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://admatrix.jp/ => https://admatrix.jp/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="AdMatrix.jp" default_off='failed ruleset test'>
+	Problematic hosts in *admatrix.jp:
 
+		- www *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="AdMatrix.jp">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="admatrix.jp" />
-	<target host="*.admatrix.jp" />
+	<target host="fso-tapi.admatrix.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="www.admatrix.jp" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?admatrix\.jp$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(www\.)?admatrix\.jp$" name="^(PHPSESSID|XSRF-TOKEN)$" /-->
 
 	<securecookie host="^(?:www\.)?admatrix\.jp$" name=".+" />
 
 
-	<rule from="^http://(fso-tapi\.|www\.)?admatrix\.jp/"
-		to="https://$1admatrix.jp/" />
+	<rule from="^http://www\.admatrix\.jp/"
+		to="https://admatrix.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
