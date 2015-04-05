@@ -1,6 +1,4 @@
 <!--
-Automatically by https-everywhere-checker because:
-Fetch error: http://hubspot.com/ => https://hubspot.com/: (7, 'Failed to connect to hubspot.com port 443: Connection timed out')
 	Other HubSpot rulesets:
 
 		- HS-analytics.net.xml
@@ -30,7 +28,6 @@ Fetch error: http://hubspot.com/ => https://hubspot.com/: (7, 'Failed to connect
 
 		- hubspot.com subdomains:
 
-			- academy		(504, akamai)
 			- cta-redirect ²
 			- go *
 			- help			(cert: slotmatching8.salesforce.com; redirects to http)
@@ -48,19 +45,31 @@ Fetch error: http://hubspot.com/ => https://hubspot.com/: (7, 'Failed to connect
 
 		- hubspot.com subdomains:
 
+			- ^ ¹
+			- academy ²
 			- cdn1			(akamai 503, valid cert)
 			- dev			(works, akamai)
+			- forums ²
+			- ideas ¹
 
 		- www.inbound.com	(works, akamai)
+
+	² Mismatched
+	¹ Dropped
 
 
 	Fully covered domains:
 
 		- hubspot.com subdomains:
 
+			- (www.)?	(^ → www)
+			- app
 			- cdn1		(→ s3.amazonaws.com)
+			- cdn2
 			- forms
 			- info
+			- knowledge
+			- login
 			- no-cache
 			- sites-auth
 			- static2cdn
@@ -79,16 +88,50 @@ Fetch error: http://hubspot.com/ => https://hubspot.com/: (7, 'Failed to connect
 		- __hstc
 		- hubspotutk
 
--->
-<ruleset name="HubSpot.com" default_off='failed ruleset test'>
 
+	Mixed content:
+
+		- Images, on:
+
+			- academy, developers from cdn[12].hubspot.com
+
+-->
+<ruleset name="HubSpot.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="app.hubspot.com" />
+	<target host="blog.hubspot.com" />
+	<target host="cdn2.hubspot.com" />
+	<target host="developers.hubspot.com" />
+	<target host="forms.hubspot.com" />
+	<target host="info.hubspot.com" />
+	<target host="js.hubspot.com" />
+	<target host="knowledge.hubspot.com" />
+	<target host="login.hubspot.com" />
+	<target host="marketplace.hubspot.com" />
+	<target host="no-cache.hubspot.com" />
+	<target host="sites-auth.hubspot.com" />
+	<target host="static.hubspot.com" />
+	<target host="static2cdn.hubspot.com" />
+	<target host="track.hubspot.com" />
+	<target host="tracking.hubspot.com" />
+	<target host="www.hubspot.com" />
+
+	<!--	Complications:
+				-->
 	<target host="hubspot.com" />
-	<target host="*.hubspot.com" />
 	<target host="cdn.blog.hubspot.com" />
+	<target host="cdn1.hubspot.com" />
+	<target host="forums.hubspot.com" />
+	<target host="jobs.hubspot.com" />
 
 
 	<securecookie host="^(?:.*\.)?hubspot\.com$" name=".*" />
 
+
+	<rule from="^http://hubspot\.com/"
+		to="https://www.hubspot.com/" />
 
 	<rule from="^http://cdn\.blog\.hubspot\.com/"
 		to="https://s3.amazonaws.com/cdn.hubspot.com/" />
@@ -105,7 +148,7 @@ Fetch error: http://hubspot.com/ => https://hubspot.com/: (7, 'Failed to connect
 	<rule from="^http://jobs\.hubspot\.com/"
 		to="https://www.hubspot.com/jobs/" />
 
-	<rule from="^http://((?:app|blog|developers|forms|info|js|login|marketplace|no-cache|sites-auth|static|static2cdn|track|tracking|www)\.)?hubspot\.com/"
-		to="https://$1hubspot.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
