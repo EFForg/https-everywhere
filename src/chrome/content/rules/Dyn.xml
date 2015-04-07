@@ -3,28 +3,42 @@
 
 		- dyn.com subdomains:
 
-			- (www.)		($ redirects to http, some paths redirect erroneously)
+			- ^		($ redirects to http, some paths redirect erroneously)
 			- checkmyip
+			- hub ²
+			- research ²
 			- status
 
 		- (www.)dyncommunity.com
 		- (www.)dynect.net		(times out)
 		- (www.)dynstatus.com
 
+	² Refused
+
+
+	Problematic hosts:
+
+		- help.dyn.com *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
 -->
 <ruleset name="Dyn (partial)">
 
 	<target host="account.dyn.com" />
+	<!--target host="help.dyn.com" /-->
+	<target host="www.dyn.com" />
 	<target host="a.dyndns.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://dyn\.com/($|wp-content/)" /-->
 
 
 	<!--securecookie host="^\.account\.dyn\.com$" name=".+" /-->
 
 
-	<rule from="^http://account\.dyn\.com/"
-		to="https://account.dyn.com/" />
-
-	<rule from="^http://a\.dyndns\.com/"
-		to="https://a.dyndns.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
