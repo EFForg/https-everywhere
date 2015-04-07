@@ -1,4 +1,5 @@
-var backgroundPage = null;
+"use strict";
+var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
@@ -15,7 +16,7 @@ function toggleRuleLine(checkbox, ruleset) {
   } else {
     delete localStorage[ruleset.name];
     // purge the name from the cache so that this unchecking is persistent.
-    backgroundPage.ruleCache.remove(ruleset.name);
+    backgroundPage.all_rules.ruleCache.remove(ruleset.name);
   }
   // Now reload the selected tab of the current window.
   chrome.tabs.reload();
@@ -85,10 +86,14 @@ function gotTab(tab) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  backgroundPage = chrome.extension.getBackgroundPage();
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
+
+  // Print the extension's current version.
+  var the_manifest = chrome.runtime.getManifest();
+  var version_info = document.getElementById('current-version');
+  version_info.innerText = the_manifest.version;
 
   // Set up toggle checkbox for HTTP nowhere mode
   getOption_('httpNowhere', false, function(item) {
@@ -128,16 +133,18 @@ function addManualRule() {
   chrome.tabs.getSelected(null, function(tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
-    var newUrl = new URI(tab.url);
-    newUrl.scheme("https");
-    e("new-rule-host").value = newUrl.host();
-    var oldUrl = new URI(tab.url);
-    oldUrl.scheme("http");
-    var oldMatcher = "^" + escapeForRegex(oldUrl.scheme() + "://" + oldUrl.host() + "/");
+    var newUrl = document.createElement('a');
+    newUrl.href = tab.url;
+    newUrl.protocol = "https:";
+    e("new-rule-host").value = newUrl.host;
+    var oldUrl = document.createElement('a');
+    oldUrl.href = tab.url;
+    oldUrl.protocol = "http:";
+    var oldMatcher = "^" + escapeForRegex(oldUrl.protocol + "//" + oldUrl.host+ "/");
     e("new-rule-regex").value = oldMatcher;
-    var redirectPath = newUrl.scheme() + "://" + newUrl.host() + "/";
+    var redirectPath = newUrl.protocol + "//" + newUrl.host + "/";
     e("new-rule-redirect").value = redirectPath;
-    e("new-rule-name").value = "Manual rule for " + oldUrl.host();
+    e("new-rule-name").value = "Manual rule for " + oldUrl.host;
     e("add-new-rule-button").addEventListener("click", function() {
       var params = {
         host : e("new-rule-host").value,
