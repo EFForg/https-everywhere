@@ -1,0 +1,101 @@
+<!--
+	For other Mozilla coverage, see Mozilla.xml.
+
+
+	CDN buckets:
+
+		- 2-01-2967-0005.cdx.cedexis.net
+
+			- cdn.mozilla.net
+
+		- wac.1237.edgecastcdn.net/??1237/
+
+			- getpersonas-cdn.mozilla.net
+			- hardhat.mozilla.net
+
+
+	Problematic hosts in *.mozilla.net:
+
+		- cdn ²
+		- download.cdn ²
+		- getpersonas-cdn ²
+		- hardhat ³
+		- www ⁴
+
+	² 404; mismatched, CN: gp1.wac.edgecastcdn.net
+	³ Works; mismatched, CN: gp1.wac.edgecastcdn.net
+	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
+
+
+	Fully covered domains:
+
+		- [\w.-]+.mozilla.net: *
+
+			- static-cdn.addons
+			- static-ssl-cdn.addons
+
+			- cdn subdomains:
+
+				- activations
+				- addons
+				- air
+				- developer
+				- download		(→ ftp.mozilla.org)
+				- download-installer
+				- fhr
+				- getpersonas
+				- marketplace
+				- mozorg
+				- support
+				- versioncheck
+
+			- getpersonas-cdn	(→ getpersonas.cdn)
+			- videos-cdn
+			- www			(→ www.mozilla.org)
+
+	* Except where excluded below
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- hardhat.cdn.mozilla.net from www.mozilla.org *
+
+		- Ad on activations.cdn.mozilla.net from getpocket.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Mozilla.net (partial)">
+
+	<target host="*.mozilla.net" />
+		<exclusion pattern="^http://(?:cdn|hardhat)\.mozilla\.net/" />
+
+			<test url="http://cdn.mozilla.net/" />
+			<test url="http://hardhat.mozilla.net/" />
+
+		<test url="http://developer.cdn.mozilla.net/" />
+
+
+	<!--	Redirects as so over http.
+						-->
+	<rule from="^http://www\.mozilla\.net/"
+		to="https://www.mozilla.org/" />
+
+		<test url="http://www.mozilla.net/" />
+
+	<rule from="^http://download\.cdn\.mozilla\.net/"
+		to="https://ftp.mozilla.org/" />
+
+		<test url="http://download.cdn.mozilla.net/" />
+
+	<rule from="^http://getpersonas-cdn\.mozilla\.net/"
+		to="https://getpersonas.cdn.mozilla.net/" />
+
+		<test url="http://getpersonas-cdn.mozilla.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
