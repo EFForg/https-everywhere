@@ -1,36 +1,111 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://sailthru.com/ => https://sailthru.com/: (51, "SSL: no alternative certificate subject name matches target host name 'sailthru.com'")
 	CDN buckets:
 
 		- dyrkrau635c04.cloudfront.net
 
+
+	Nonfunctional hosts in *sailthru.com:
+
+		- ak ¹
+		- me ²
+
+	¹ 504, akamai
+	² Marketo
+
+
+	Problematic hosts in *sailthru.com:
+
+		- ^ ¹
+		- blog ²
+		- getstarted ²
+		- lift ¹
+		- media ³
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+	³ CLoudfront
+
+
+	Fully covered hosts in *sailthru.com:
+
+		- (www.)?	(^ → www)
+		- api
+		- cb
+		- my
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+		- Images, on:
+
+			- cb from ^
+			- www from $self *
+
+		- favicon on cb from ak
+
+	* Secured by us
+
 -->
-<ruleset name="Sailthru" default_off='failed ruleset test'>
+<ruleset name="Sailthru">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="api.sailthru.com" />
+	<!--target host="blog.sailthru.com" /-->
+	<target host="cb.sailthru.com" />
+	<!--target host="getstarted.sailthru.com" /-->
+	<target host="my.sailthru.com" />
+	<target host="www.sailthru.com" />
+
+	<!--	Complications:
+				-->
 	<target host="sailthru.com" />
-	<target host="*.sailthru.com" />
+	<target host="me.sailthru.com" />
+	<!--target host="media.sailthru.com" /-->
 
+		<exclusion pattern="^http://me\.sailthru\.com/+(?!$|\?|css/|images/|rs/)" />
 
-	<!--	Observed cookie domains:
-
-			- .getstarted
-			- my
+			<!--	+ve:
 					-->
+			<test url="http://me.sailthru.com/ForresterReport_Power-of-Context.html" />
+			<test url="http://me.sailthru.com/InternetRetailer_Forrester_Report.html" />
+			<test url="http://me.sailthru.com/Organic-Resource-Library_Mary_Meeker_Report.html" />
+			<test url="http://me.sailthru.com/Partner-Portal.html" />
+			<test url="http://me.sailthru.com/ResourceLibrary_ForresterReport_Advance_to_Next_Generation_Personalization.html" />
+			<test url="http://me.sailthru.com/ResourceLibrary_Holiday-Retail-Playbook.html" />
+			<test url="http://me.sailthru.com/ResourceLibrary_TEI_STUDY.html" />
+			<test url="http://me.sailthru.com/UKPersonalisationReport_DownloadNow.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://me.sailthru.com/css/mktLPSupport.css" />
+			<test url="http://me.sailthru.com/images/forms/backRequiredGray.gif" />
+			<test url="http://me.sailthru.com/rs/sailthru/images/lp-logo-blue.png" />
+
 
 	<securecookie host=".+\.sailthru\.com$" name=".+" />
 
 
-	<!--	Observed subdomains:
+	<rule from="^http://sailthru\.com/"
+		to="https://www.sailthru.com/" />
 
-			- ak
-			- blog
-			- cb
-			- getstarted
-			- my
-			- www
-					-->
-	<rule from="^http://(\w+\.)?sailthru\.com/"
-		to="https://$1sailthru.com/" />
+	<rule from="^http://me\.sailthru\.com/+(?:\?.*)?$"
+		to="https://www.sailthru.com/" />
+
+		<test url="http://me.sailthru.com/?f" />
+		<test url="http://me.sailthru.com/?o" />
+		<test url="http://me.sailthru.com/?b" />
+		<test url="http://me.sailthru.com/?a" />
+
+	<rule from="^http://me\.sailthru\.com/"
+		to="https://na-sj08.marketo.com/" />
+
+	<!--rule from="^http://media\.sailthru\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

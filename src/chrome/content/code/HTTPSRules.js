@@ -605,12 +605,10 @@ const HTTPSRules = {
   // flow? Perhaps we can preload all targets from the DB into memory at startup
   // so we only hit the DB when we know there is something to be had.
   loadRulesetById: function(ruleset_id) {
-    this.log(DBUG, "Querying DB for ruleset id " + ruleset_id);
     this.queryForRuleset.params.id = ruleset_id;
 
     try {
       if (this.queryForRuleset.executeStep()) {
-        this.log(INFO, "Found ruleset in DB for id " + ruleset_id);
         RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
       } else {
         this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);

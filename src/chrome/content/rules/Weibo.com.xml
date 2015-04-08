@@ -1,23 +1,37 @@
 <!--
+	For rules causing mixed content, see Weibo.com-mixedcontent.xml.
+
 	For other Sina coverage, see Sina.xml.
 
 
 	Nonfunctional hosts:
 
+		- (www.)? ¹
+		- app ¹
+		- book ¹
+		- caipiao ¹
 		- e ¹
-		- game
-		- open ²
+		- help ¹
+		- manhua ¹
+		- open ¹
 		- service ¹
+		- vdisk ²
+		- vgirl ¹
 		- widget ¹
+		- x ¹
 
 	¹ Refused
-	² Dropped
+	² Redirects to http
 
 
 	Problematic hosts:
 
+		- food ¹
+		- game *
+		- sg2.game *
 		- hr *
 
+	¹ Mixed css
 	* Mismatched
 
 
@@ -25,8 +39,8 @@
 
 		- api
 		- upload.api
-		- hr		(→ weihr.sinaapp.com)
 		- static
+		- yahoo.tw
 
 
 	These altnames don't exist:
@@ -34,32 +48,68 @@
 		- www.yahoo.tw.weibo.com
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .weibo.com
+		- game.weibo.com
+		- sg2.game.weibo.com
+		- yahoo.tw.weibo.com
+
+
+	Mixed content:
+
+		- css, on;
+
+			- food from weibojs.yazuo.com	(Expired, mismatched
 	Mixed css on weihr.sinaapp.com from img.t.sinajs.cn
+			- game from img.app.wcdn.cn
+			- game from img[12].app.wcdn.cn
+
+		- Images, on:
+
+			- food from wpa.qq.com
+			- food from weibojs.yazuo.com
+			- food from img.t.sinajs.cn
+			- game from ww[2-4].sinaimg.cn
+			- game from img.app.wcdn.cn
+			- game from img1.app.wcdn.cn
+			- game from image.game.weibo.com
+
+		- Bug on game from beacon.sina.com.cn
 
 -->
-<ruleset name="Weibo.com (partial)" platform="mixedcontent">
+<ruleset name="Weibo.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="api.weibo.com" />
 	<target host="upload.api.weibo.com" />
+	<!--target host="food.weibo.com" /-->
+	<!--target host="game.weibo.com" /-->
 	<target host="static.weibo.com" />
 	<target host="yahoo.tw.weibo.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://vdisk\.weibo\.com/$" /-->
+
 	<!--	Special cases:
 				-->
-	<target host="hr.weibo.com" />
+	<!--target host="hr.weibo.com" /-->
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.weibo\.com$" name="^(ALF|SSOLoginState)$" /-->
+	<!--securecookie host="^game\.weibo\.com$" name="^usrmweb3$" /-->
+	<!--securecookie host="^sg2\.game\.weibo\.com$" name="^dpha$" /-->
 	<!--securecookie host="^yahoo\.tw\.weibo\.com$" name="^laravel_session$" /-->
 
 	<securecookie host="^(?:upload\.api|yahoo\.tw)\.weibo\.com$" name=".+" />
 
 
-	<rule from="^http://hr\.weibo\.com/"
-		to="https://weihr.sinaapp.com/" />
+	<!--rule from="^http://hr\.weibo\.com/"
+		to="https://weihr.sinaapp.com/" /-->
 
 	<rule from="^http:"
 		to="https:" />
