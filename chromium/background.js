@@ -20,11 +20,12 @@ function loadExtensionFile(url, returnType) {
   return xhr.responseText;
 }
 
+
 // Rules are loaded here
 var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
-for (var i = 0; i < rule_list.length; i++) {
-  all_rules.addFromXml(loadExtensionFile(rule_list[i], 'xml'));
-}
+var rule_list = 'rules/default.rulesets';
+all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
