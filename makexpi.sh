@@ -44,7 +44,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-	XPI_NAME="$APP_NAME-$1.xpi"
+	XPI_NAME="$APP_NAME-$1"
   # In this mad recursive situation, sometimes old buggy build scripts make
   # the xpi as ./pkg :(
   if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
