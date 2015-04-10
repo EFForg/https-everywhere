@@ -4,7 +4,7 @@
 set -o errexit -o xtrace
 if type apt-get >/dev/null ; then
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    firefox chromium-browser zip sqlite3 python-pip libcurl4-openssl-dev
+    firefox chromium-browser zip sqlite3 python-pip libcurl4-openssl-dev libssl-dev
 elif type brew >/dev/null ; then
   brew install python libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
