@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- d31orrwkxpucnl.cloudfront.net	← cdn
+		- d35f2nn85hoamp.cloudfront.net	← cdn2
+
+
+	Problematic hosts in *spectator.co.uk:
+
+		- cdn ᵐ
+		- cdn2 ᵐ
+
+	ᵐ Cloudfront / mismatched
+
+
+	Mixed content:
+
+		- iframe from embed.acast.com ˢ 
+		- css on www from $self
+
+		- Images, on:
+
+			- www from blogs.spectator.co.uk ˢ
+			- health from cdn.spectator.co.uk ˢ
+			- health from $self ˢ
+			- health, www from www.spectator.co.uk
+
+		- Ads/bugs, on:
+		
+			- health, www from adserver.adtech.de ˢ
+			- www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Spectator.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="spectator.co.uk" /-->
+	<target host="blogs.spectator.co.uk" />
+	<target host="health.spectator.co.uk" />
+	<!--target host="www.spectator.co.uk" /-->
+
+	<!--	Complications:
+				-->
+	<target host="cdn.spectator.co.uk" />
+	<target host="cdn2.spectator.co.uk" />
+
+		<exclusion pattern="^http://blogs\.spectator\.co\.uk/(?!/*content/themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blogs.spectator.co.uk/2016/03/budget-news/" />
+			<test url="http://blogs.spectator.co.uk/category/coffeehouse/" />
+			<test url="http://blogs.spectator.co.uk/emails/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blogs.spectator.co.uk/content/themes/spectator-new/assets/images/facebook-share.svg" />
+
+
+	<rule from="^http://cdn\.spectator\.co\.uk/"
+		to="https://d31orrwkxpucnl.cloudfront.net/" />
+
+	<rule from="^http://cdn2\.spectator\.co\.uk/"
+		to="https://d35f2nn85hoamp.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
