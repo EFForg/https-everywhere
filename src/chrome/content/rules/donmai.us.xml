@@ -1,19 +1,17 @@
 <!-- 
-  Redirect donmai.us to danbooru.donmai.us for HTTPS coverage.
-  It's technically the same site, but https://donmai.us gives a bad cert domain error.
+  Redirect (www.)donmai.us to danbooru.donmai.us for HTTPS coverage.
+  It's technically the same site, but the former gives a bad cert domain error.
+  The cookies aren't secured either.
 -->
 
 <ruleset name="donmai.us">
   <target host="donmai.us" />
+  <target host="www.donmai.us" />
   <target host="danbooru.donmai.us" />
   <target host="safebooru.donmai.us" />
 
-  <securecookie host="^danbooru\.donmai\.us$" name=".*" />
-  <securecookie host="^\.danbooru\.donmai\.us$" name=".*" />
+  <securecookie host="^(?:danbooru|safebooru)?\.donmai\.us$" name=".+" />
   
-  <securecookie host="^safebooru\.donmai\.us$" name=".*" />
-  <securecookie host="^\.safebooru\.donmai\.us$" name=".*" />
-  
-  <rule from="^http://donmai\.us/" to="https://danbooru.donmai.us/" />
+  <rule from="^http://(?:www\.)?donmai\.us/" to="https://danbooru.donmai.us/" />
   <rule from="^http:" to="https:" />
 </ruleset>
