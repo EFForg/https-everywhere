@@ -1,0 +1,61 @@
+<!--
+	Bolton Metropolitan Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bolton.gov.uk:
+
+		- (www.)? ᵈ
+		- (www.)?democracy ᶠ
+		- www.localdirectory ᶠ
+		- www.publicart ᶠ
+		- blog.sict ᵈ
+		- esafety.sict ᵈ
+
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	These altnames do not exist:
+
+		- pa.bolton.gov.uk
+		- planningpa.bolton.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- maps.bolton.gov.uk
+
+-->
+<ruleset name="Bolton.gov.uk (partial)">
+
+	<target host="ems.bolton.gov.uk" />
+	<target host="maps.bolton.gov.uk" />
+	<target host="payments.bolton.gov.uk" />
+	<target host="www.payments.bolton.gov.uk" />
+	<target host="www.planningpa.bolton.gov.uk" />
+	<target host="selfserve.bolton.gov.uk" />
+	<target host="taxandbenefits.bolton.gov.uk" />
+	<target host="www.taxandbenefits.bolton.gov.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://selfserve.bolton.gov.uk/CitizenPortal/Form.aspx?form=LD_Feedback&amp;tmpl=ldtemplate" />
+
+		<!--	$ redirects to 404, so:
+						-->
+		<test url="http://www.taxandbenefits.bolton.gov.uk/publicaccesslive/selfservice/dashboard.htm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^maps\.bolton\.gov\.uk$" name="^(?:ASP\.NET_SessionId|atLocation|atMyCouncil|astun|astun:currentLocation)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
