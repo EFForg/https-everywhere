@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Crazy-Egg-problematic.xml.
-
-
 	CDN buckets:
 
 		- ceblog.s3.amazonaws.com
@@ -12,12 +9,38 @@
 
 		- cetrk.com
 
+		- blog.crazyegg.com *
+		- support.crazyegg.com *
+
+	* WP Engine
+
+
+	Problematic hosts:
+
+		- www.script.crazyegg.com *
+
+	* Mismatched
+
 -->
 <ruleset name="Crazy Egg (partial)">
 
 	<target host="crazyegg.com" />
-	<target host="*.crazyegg.com" />
-		<exclusion pattern="^http://(?:www\.)?crazyegg\.com/(?:$|\?)" />
+	<target host="script.crazyegg.com" />
+	<target host="www.crazyegg.com" />
+		<exclusion pattern="^http://www\.crazyegg\.com/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.crazyegg.com/?" />
+			<test url="http://www.crazyegg.com/?foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.crazyegg.com/contact" />
+			<test url="http://www.crazyegg.com/external/homepage-test-2014-12-18/images/ce_logo.png" />
+			<test url="http://www.crazyegg.com/forgot_password" />
+			<test url="http://www.crazyegg.com/login" />
+			<test url="http://www.crazyegg.com/overview" />
 
 
 	<!--	At least the homepage redirects to http.
@@ -47,7 +70,7 @@
 	<rule from="^http://(www\.)?crazyegg\.com/((?:external|help|images|signup|stylesheets)(?:$|/|\?)|(?:login|opt-out|overview|pricing|terms)(?:/?$|\?))"
 		to="https://$1crazyegg.com/$2" /-->
 
-	<rule from="^http://(www\.)?crazyegg\.com/"
-		to="https://$1crazyegg.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
