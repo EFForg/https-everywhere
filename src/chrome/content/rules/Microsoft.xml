@@ -159,6 +159,7 @@
 			- feedback.adcenter
 			- ajax
 			- fb.answers
+			- next-services.apps
 			- wscont.apps
 			- wscont[12].apps	(→ wscont.apps)
 			- advertise.bingads
@@ -184,6 +185,9 @@
 			- mobile
 			- i1.mobile		(→ m)
 			- social.msdn
+			- support
+			- dgps.support
+			- support2
 			- office15client
 			- officepreview
 			- officeredir
@@ -247,34 +251,63 @@
 
 -->
 <ruleset name="Microsoft (partial)">
-
 	<target host="microsoft.com" />
 	<target host="*.microsoft.com" />
-
-        <exclusion pattern="^http://msdn\.microsoft\.com" />
 
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
 											-->
 		<exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" />
+			<!-- urls found by searching -->
+			<test url="http://www.microsoft.com/genuine/downloads/WhyValidate.aspx?FamilyID=b446ae53-3759-40cf-80d5-cde4bbe07999&amp;displaylang=en" />
+			<test url="https://www.microsoft.com/downloads/details.aspx?familyid=7FB6F2B8-C7A6-4239-99F3-CF3AACF89B0F" />
+			<test url="http://www.microsoft.com/downloads/nl-nl/details.aspx?FamilyID=0a391abd-25c1-4fc0-919f-b21f31ab88b7" />
 		<!--
 			Health pages 404:
 
 				https://trac.torproject.org/projects/tor/ticket/9148
 											-->
-		<exclusion pattern="^http://(?:www\.)?microsoft\.com/health/(?:$|\?|.+\.aspx)" />
+		<exclusion pattern="^http://(www\.)?microsoft\.com/health/(?:$|\?|.+\.aspx)" />
+			<test url="http://microsoft.com/health/" />
+			<test url="http://www.microsoft.com/health/" />
+			<test url="http://microsoft.com/health/?" />
+			<test url="http://www.microsoft.com/health/?" />
+			<test url="http://microsoft.com/health/en-au/Pages/index.aspx" />
+			<test url="http://www.microsoft.com/health/en-au/Pages/index.aspx" />
+
 		<!--
 			Redirects via JS to http.  Very secure indeed.
 									-->
 		<exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx(?:$|\?)" />
+		<test url="http://www.microsoft.com/security/pc-security/malware-symptoms.aspx" />
+		<test url="http://www.microsoft.com/security/pc-security/updates.aspx" />
+		<test url="http://www.microsoft.com/security/pc-security/malware-removal.aspx" />
+		<test url="http://www.microsoft.com/security/pc-security/malware-symptoms.aspx?" />
+		<test url="http://www.microsoft.com/security/pc-security/updates.aspx?" />
+		<test url="http://www.microsoft.com/security/pc-security/malware-removal.aspx?" />
+
 		<!--
 			Microsoft won't serve OEM pages on https
 								-->
     		<exclusion pattern="^http://(?:www\.)?microsoft\.com/[oO][eE][mM]/" />
+			<test url="http://microsoft.com/oem/" />
+			<test url="http://microsoft.com/OEM/" />
+			<test url="http://microsoft.com/oEM/" />
+			<test url="http://www.microsoft.com/oem/" />
+			<test url="http://www.microsoft.com/OEM/" />
+			<test url="http://www.microsoft.com/oEM/" />
+
 		<!--
 			Redirects to http:
 						-->
 		<exclusion pattern="^http://www\.microsoft\.com/Surface/\w\w-\w\w(?:$|\?|/)" />
+			<test url="http://www.microsoft.com/Surface/en-au" />
+			<test url="http://www.microsoft.com/Surface/en-au/" />
+			<test url="http://www.microsoft.com/Surface/en-au?" />
+			<test url="http://www.microsoft.com/Surface/en-us" />
+			<test url="http://www.microsoft.com/Surface/en-us/" />
+			<test url="http://www.microsoft.com/Surface/en-us?" />
+
 		<exclusion pattern="^http://answers\.microsoft\.com/(?!\w\w-\w\w/\w+/forum/[\w-]+/[\w-]+/)" />
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/5754
@@ -290,21 +323,33 @@
 			Redirect to http:
 						-->
 		<exclusion pattern="^http://social\.technet\.microsoft\.com/Forums(?:$|[?/])" />
+			<test url="http://social.technet.microsoft.com/Forums" />
+			<test url="http://social.technet.microsoft.com/Forums?" />
+			<test url="http://social.technet.microsoft.com/Forums/" />
+
 		<!--exclusion pattern="^http://tag\.microsoft\.com/home\.aspx" /-->
-		<!--
-			Exceptions:
-					-->
 		<exclusion pattern="^http://tag\.microsoft\.com/+(?![Aa]pp_[Tt]hemes/|favicon\.ico|Images/|[Ll]ibraries/|[Ww]eb[Rr]esource\.axd)" />
+			<test url="http://tag.microsoft.com/" />
+			<test url="http://tag.microsoft.com//" />
+			<test url="http://tag.microsoft.com/?" />
+
 		<!--
 			Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://social\.technet\.microsoft\.com/+wiki(?!/CustomWidgets/|/themes/|/Utility/)" />
+			<test url="http://social.technet.microsoft.com/wiki/" />
+			<test url="http://social.technet.microsoft.com//wiki" />
+			<test url="http://social.technet.microsoft.com/wiki?" />
+			<test url="http://social.technet.microsoft.com//wiki" />
+			<test url="http://social.technet.microsoft.com/wiki/?" />
+			<test url="http://social.technet.microsoft.com//wiki" />
 
 		<!--
 			Needed for Windows 8+ Captive Portal Helper:
 			See https://github.com/EFForg/https-everywhere/issues/835
 						-->
 		<exclusion pattern="^http://go\.microsoft\.com/fwlink/\?LinkID=219472&amp;clcid=0x409$" />
+			<test url="http://go.microsoft.com/fwlink/?LinkID=219472&amp;clcid=0x409" />
 
 	<target host="office.com" />
 	<target host="www.office.com" />
@@ -332,55 +377,166 @@
 
 	<rule from="^http://(?:i\d?\.|js\.|search\.|spcache\.)?microsoft\.com/"
 		to="https://www.microsoft.com/" />
+		<test url="http://i2.microsoft.com/" />
+		<test url="http://i3.microsoft.com/" />
+		<test url="http://i4.microsoft.com/" />
+		<test url="http://js.microsoft.com/" />
+		<test url="http://search.microsoft.com/" />
+		<test url="http://spcache.microsoft.com/" />
 
-	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ieonline|insider|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support|tag|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate)\.microsoft\.com/"
+	<rule from="^http://(accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|c1?|choice|commerce|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|ieonline|insider|m|mobile|code\.msdn|msdn|social\.msdn|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|(dgps\.)?support|support2|tag|(?:social\.)?technet|www\.update|(?:v[45]\.)?windowsupdate)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
+		<test url="http://accountservices.microsoft.com/" />
+		<test url="http://adcenter.microsoft.com/" />
+		<test url="http://feedbackadcenter.microsoft.com/" />
+		<test url="http://advertising.microsoft.com/" />
+		<test url="http://ajax.microsoft.com/" />
+		<test url="http://answers.microsoft.com/" />
+		<test url="http://answers.microsoft.com/" />
+		<test url="http://fbanswers.microsoft.com/" />
+		<test url="http://c.microsoft.com/" />
+		<test url="http://c1.microsoft.com/" />
+		<test url="http://choice.microsoft.com/" />
+		<test url="http://commerce.microsoft.com/" />
+		<test url="http://connect.microsoft.com/" />
+		<test url="http://innovationconnect.microsoft.com/" />
+		<test url="http://servicesconnect.microsoft.com/" />
+		<test url="http://sas.css.microsoft.com/" />
+		<test url="http://events.microsoft.com/" />
+		<test url="http://social.expression.microsoft.com/" />
+		<test url="http://g.microsoft.com/" />
+		<test url="http://go.microsoft.com/" />
+		<test url="http://ieonline.microsoft.com/" />
+		<test url="http://insider.microsoft.com/" />
+		<test url="http://m.microsoft.com/" />
+		<test url="http://mobile.microsoft.com/" />
+		<test url="http://code.msdn.microsoft.com/" />
+		<test url="http://msdn.microsoft.com/" />
+		<test url="http://social.msdn.microsoft.com/" />
+		<test url="http://office.microsoft.com/" />
+		<test url="http://office15client.microsoft.com/" />
+		<test url="http://office365.microsoft.com/" />
+		<test url="http://office2015.microsoft.com/" />
+		<test url="http://officepreview.microsoft.com/" />
+		<test url="http://officeredir.microsoft.com/" />
+		<test url="http://o15.officeredir.microsoft.com/" />
+		<test url="http://origin-res.windows.microsoft.com" />
+		<test url="http://profile.microsoft.com/" />
+		<test url="http://rad.microsoft.com/" />
+		<test url="http://research.microsoft.com/" />
+		<test url="http://profileapi.services.microsoft.com/" />
+		<test url="http://signature.microsoft.com/" />
+		<test url="http://snackbox.microsoft.com/" />
+		<test url="http://social.microsoft.com/" />
+		<test url="http://services.social.microsoft.com/" />
+		<test url="http://store.microsoft.com/" />
+		<test url="http://corp.sts.microsoft.com/" />
+		<test url="http://support.microsoft.com/" />
+		<test url="http://support2.microsoft.com/" />
+		<test url="http://tag.microsoft.com/" />
+		<test url="http://technet.microsoft.com/" />
+		<test url="http://social.technet.microsoft.com/" />
+		<test url="http://www.update.microsoft.com/" />
+		<test url="http://windowsupdate.microsoft.com/" />
+		<test url="http://v4.windowsupdate.microsoft.com/" />
+		<test url="http://v5.windowsupdate.microsoft.com/" />
 
 	<rule from="^http://wscont\d?\.apps\.microsoft\.com/"
 		to="https://wscont.apps.microsoft.com/" />
+		<test url="http://wscont.apps.microsoft.com/" />
+		<test url="http://wscont1.apps.microsoft.com/" />
+		<test url="http://wscont2.apps.microsoft.com/" />
+
+	<rule from="^http://next-services\.apps\.microsoft\.com/"
+		to="https://next-services.apps.microsoft.com/" />
+		<test url="http://next-services.apps.microsoft.com/" />
 
 	<rule from="^http://i\.s-microsoft\.com/"
 		to="https://i.s-microsoft.com/" />
+		<!-- test covered in target -->
 
 	<rule from="^http://i\d\.social\.s-msft\.com/wiki/"
 		to="https://social.technet.microsoft.com/wiki/" />
+		<test url="http://i1.social.s-msft.com/wiki/" />
+		<test url="http://i2.social.s-msft.com/wiki/" />
+		<test url="http://i3.social.s-msft.com/wiki/" />
 
 	<!--	Akamai with no valid cert.
 						-->
-	<rule from="^http://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microso|s-ms)ft\.com/"
+	<rule from="^http://i\d?\.((?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.(?:microsoft|s-msft)\.com/"
 		to="https://$1.microsoft.com/" />
+		<test url="http://i1.code.msdn.microsoft.com" />
+		<test url="http://i2.code.msdn.microsoft.com" />
+		<test url="http://i1.code.msdn.s-msft.com" />
+		<test url="http://i2.code.msdn.s-msft.com" />
+		<test url="http://i1.msdn.microsoft.com" />
+		<test url="http://i2.msdn.microsoft.com" />
+		<test url="http://i1.msdn.s-msft.com" />
+		<test url="http://i2.msdn.s-msft.com" />
+		<test url="http://i1.onlinehelp.microsoft.com" />
+		<test url="http://i2.onlinehelp.microsoft.com" />
+		<test url="http://i1.onlinehelp.s-msft.com" />
+		<test url="http://i2.onlinehelp.s-msft.com" />
+		<test url="http://i1.services.social.microsoft.com" />
+		<test url="http://i2.services.social.microsoft.com" />
+		<test url="http://i1.services.social.s-msft.com" />
+		<test url="http://i2.services.social.s-msft.com" />
+		<test url="http://i1.social.microsoft.com" />
+		<test url="http://i2.social.microsoft.com" />
+		<test url="http://i1.social.s-msft.com" />
+		<test url="http://i2.social.s-msft.com" />
+		<test url="http://i1.technet.microsoft.com" />
+		<test url="http://i2.technet.microsoft.com" />
+		<test url="http://i1.technet.s-msft.com" />
+		<test url="http://i2.technet.s-msft.com" />
+		<test url="http://i1.gallery.technet.microsoft.com" />
+		<test url="http://i2.gallery.technet.microsoft.com" />
+		<test url="http://i1.gallery.technet.s-msft.com" />
+		<test url="http://i2.gallery.technet.s-msft.com" />
 
 	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
+		<test url="http://i1.services.connect.microsoft.com/" />
+		<test url="http://i2.services.connect.microsoft.com/" />
 
 	<rule from="^http://i1\.mobile\.microsoft\.com/"
 		to="https://m.microsoft.com/" />
+		<test url="http://i1.mobile.microsoft.com/" />
 
 	<rule from="^http://scache\.microsoft\.com/"
 		to="https://www.microsoft.com/" />
+		<test url="http://scache.microsoft.com/" />
 
 	<rule from="^http://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
+		<test url="http://img3.store.microsoft.com/" />
 
 	<rule from="^http://update\.microsoft\.com/"
 		to="https://www.update.microsoft.com/" />
-
-	<rule from="^http://origin-res\.windows\.microsoft\.com/"
-		to="https://origin-res.windows.microsoft.com/" />
+		<test url="http://update.microsoft.com/" />
 
 	<rule from="^http://res(1|2)\.windows\.microsoft\.com/"
 		to="https://a248.e.akamai.net/f/1737/7533/6/res$1.windows.microsoft.com/" />
+		<test url="http://res1.windows.microsoft.com/" />
+		<test url="http://res2.windows.microsoft.com/" />
 
-	<rule from="^http://(?:www\.)?office\.com/"
+	<rule from="^http://(www\.)?office\.com/"
 		to="https://www.office.com/" />
+		<test url="http://www.office.com/" />
+		<test url="http://office.com/" />
 
-	<rule from="^http://([\w-]+)\.sec\.s-msft\.com/"
-		to="https://$1.sec.s-msft.com/" />
+	<rule from="^http://download-codeplex\.sec\.s-msft\.com/"
+		to="https://download-codeplex.sec.s-msft.com/" />
+		<test url="http://download-codeplex.sec.s-msft.com/" />
 
-	<rule from="^http://widgets\.membership\.(?:s-ms|microso)ft\.com/"
+	<rule from="^http://widgets\.membership\.(?:s-msft|microsoft)\.com/"
 		to="https://widgets.membership.microsoft.com/" />
+		<test url="http://widgets.membership.s-msft.com/" />
+		<test url="http://widgets.membership.microsoft.com/" />
 
 	<rule from="^http://i\d\.social\.s-msft\.com/"
 		to="https://social.expression.microsoft.com/" />
-
+		<test url="http://i1.social.s-msft.com/" />
+		<test url="http://i2.social.s-msft.com/" />
+		<test url="http://i3.social.s-msft.com/" />
 </ruleset>
