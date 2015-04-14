@@ -90,6 +90,11 @@ document.addEventListener("DOMContentLoaded", function () {
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.getSelected(null, gotTab);
 
+  // Print the extension's current version.
+  var the_manifest = chrome.runtime.getManifest();
+  var version_info = document.getElementById('current-version');
+  version_info.innerText = the_manifest.version;
+
   // Set up toggle checkbox for HTTP nowhere mode
   getOption_('httpNowhere', false, function(item) {
     var httpNowhereCheckbox = document.getElementById('http-nowhere-checkbox');

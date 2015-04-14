@@ -44,7 +44,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-	XPI_NAME="$APP_NAME-$1.xpi"
+	XPI_NAME="$APP_NAME-$1"
   # In this mad recursive situation, sometimes old buggy build scripts make
   # the xpi as ./pkg :(
   if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
@@ -129,10 +129,18 @@ else
         if ! git diff-index --quiet HEAD; then
             XPI_NAME="$XPI_NAME-dirty"
         fi
-        XPI_NAME="$XPI_NAME.xpi"
 fi
 
+# Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
+[ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
+cp -a src/ pkg/xpi-eff/
+rm -r pkg/xpi-eff/chrome/content/rules
+[ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
+cp -a src/ pkg/xpi-amo/
+rm -r pkg/xpi-amo/chrome/content/rules
+# The AMO version of the package cannot contain the updateKey or updateURL tags
+sed -i -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
 
 # Used for figuring out which branch to pull from when viewing source for rules
 GIT_OBJECT_FILE=".git/refs/heads/master"
@@ -141,27 +149,19 @@ if [ -e "$GIT_OBJECT_FILE" ]; then
 	export GIT_COMMIT_ID=$(cat "$GIT_OBJECT_FILE")
 fi
 
-cd src
-
-
 # Build the XPI!
-rm -f "../$XPI_NAME"
-#zip -q -X -9r "../$XPI_NAME" . "-x@../.build_exclusions"
+rm -f "${XPI_NAME}.xpi"
+rm -f "${XPI_NAME}-amo.xpi"
+python2.7 utils/create_xpi.py -n "${XPI_NAME}.xpi" -x ".build_exclusions" "pkg/xpi-eff"
+python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
-python2.7 ../utils/create_xpi.py -n "../$XPI_NAME" -x "../.build_exclusions" "."
+echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
+echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
+echo >&2 "Created ${XPI_NAME}.xpi and ${XPI_NAME}-amo.xpi"
 
-ret="$?"
-if [ "$ret" != 0 ]; then
-    rm -f "../$XPI_NAME"
-    exit "$?"
-else
-  echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
-  echo >&2 "Rules disabled by default: `find chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-  echo >&2 "Created $XPI_NAME"
-  ../utils/android-push.sh "$XPI_NAME"
-  if [ -n "$BRANCH" ]; then
-    cd ../..
-    cp $SUBDIR/$XPI_NAME pkg
-    rm -rf $SUBDIR
-  fi
+bash utils/android-push.sh "$XPI_NAME.xpi"
+
+if [ -n "$BRANCH" ]; then
+  cp $SUBDIR/$XPI_NAME pkg
+  rm -rf $SUBDIR
 fi
