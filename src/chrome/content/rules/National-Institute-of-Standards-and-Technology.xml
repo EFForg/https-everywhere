@@ -7,35 +7,42 @@
 	Nonfunctional subdomains:
 
 		- ^ ¹
-		- csrc ¹
-		- expect ¹
-		- patapsco	(reset)
-		- physics	(refused)
-		- scap ²
-		- usgcb ²
-		- webbook	(dropped)
-		- www		(403, cert valid)
+		- csrc ²
+		- expect ³
+		- patapsco ⁴
+		- physics ³
+		- scap ⁵
+		- usgcb ⁵
+		- www ¹
 
-	¹ 403; mismatched, CN: www.nist.gov)
-	² Shows nvd; mismatched, CN: nvd.nist.gov
+	¹ 404
+	² 403
+	³ Refused
+	⁴ Handshake fails
+	⁵ Shows nvd; mismatched, CN: nvd.nist.gov
 
 
-	Mixed content:
+	Insecure cookies are set for these hosts:
 
-		- Images on web.nvd from nvd *
-
-	* Secured by us
+		- nvd.nist.gov
+		- web.nvd.nist.gov
 
 -->
 <ruleset name="NIST.gov (partial)">
 
-	<target host="*.nist.gov" />
+	<target host="nvd.nist.gov" />
+	<target host="web.nvd.nist.gov" />
+	<target host="tsapps.nist.gov" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(web\.)?nvd\.nist\.gov$" name="^(ASP\.NET_SessionId|CMSCurrentTheme|CMSPreferredCulture)$" /-->
 
 	<securecookie host="^.*\.nist\.gov$" name=".*" />
 
 
-	<rule from="^http://((?:web\.)?nvd|tsapps)\.nist\.gov/"
-		to="https://$1.nist.gov/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

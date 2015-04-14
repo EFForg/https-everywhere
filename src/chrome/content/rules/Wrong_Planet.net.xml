@@ -1,0 +1,53 @@
+<!--
+	Problematic hosts in *wrongplanet.net:
+
+		- dev *
+
+	* Mismatched, self-signed
+
+
+	Fully covered hosts in *wrongplanet.net:
+
+		- (www.)?
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- wrongplanet.net
+		- .wrongplanet.net
+		- www.wrongplanet.net
+
+
+	Mixed content:
+
+		- css, from:
+
+			- fonts.googleapis.com *
+			- $self *
+
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Wrong Planet.net (broken MCB, partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="wrongplanet.net" />
+	<target host="www.wrongplanet.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?wrongplanet\.net$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^wrongplanet\.net$" name="^wordpress_test_cookie$" /-->
+	<!--securecookie host="^\.wrongplanet\.net$" name="^(__cfduid|cf_clearance|phpbb3_[\da-z]+_(k|sid|u))$" /-->
+
+	<securecookie host="^(?:\.|www\.)?wrongplanet\.net$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

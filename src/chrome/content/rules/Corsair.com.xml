@@ -1,42 +1,39 @@
 <!--
 	Nonfunctional subdomains:
 
+		- ^ *
+		- cwsmgmt ²
 		- forum *
+		- gaming ³
+		- www ³
 		- www2 *
 
 	* Refused
+	² 404
+	³ 503, Akamai
 
 
-	Problematic subdomains:
+	These altnames don't exist:
 
-		- (www.)
-		- cwsmgmt *
-
-	* Shows test page; expired 2013-08-27, mismatched, CN: shop.corsair.com
-
-
-	Mixed content:
-
-		- Images. from:
-
-			- cwsmgmt *
-			- www *
-
-	* Secured by us
+		- www.shop.corsair.com
 
 -->
 <ruleset name="Corsair.com (partial)">
 
-	<target host="corsair.com" />
-	<target host="*.corsair.com" />
+	<target host="shop.corsair.com" />
+	<target host="static.corsair.com" />
+	<target host="store.corsair.com" />
 
 
-	<securecookie host="^\.corsair\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--ssecurecookie host="^\.corsair\.com$" name="^(CUSTOMER|CUSTOMER_AUTH|CUSTOMER_INFO|CUSTOMER_SEGMENT_IDS|NEWMESSAGE|frontend)$" /-->
+	<!--ssecurecookie host="^shop\.corsair\.com$" name="^fbcsrf_\d+$" /-->
+
+	<securecookie host="^shop\.corsair\.com$" name=".+" />
 
 
-	<!--	cwsmgmt & shop appear to be identical to www.
-								-->
-	<rule from="^http://(?:(?:cwsmgmt|shop|www)\.)?corsair\.com/"
-		to="https://shop.corsair.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

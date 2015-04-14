@@ -269,7 +269,9 @@ HTTPSEverywhere.prototype = {
   getExpando: function(browser, key) {
     let obj = this.expandoMap.get(browser);
     if (!obj) {
-      this.log(NOTE, "No expando for " + browser.currentURI.spec);
+      if (browser.currentURI) {
+        this.log(NOTE, "No expando for " + browser.currentURI.spec);
+      }
       return null;
     }
     return obj[key];

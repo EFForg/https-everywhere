@@ -1,0 +1,115 @@
+<!--
+	For problematic rules, see Mozilla-problematic.xml.
+
+	For other Mozilla coverage, see Mozilla.xml.
+
+
+	Nonfunctional domains:
+
+		- mozilla.com subdomains:
+
+			- www.authstage ¹
+			- identity ²
+			- *.malware-error *
+			- www-trunk.stage ¹
+
+	¹ Dropped
+	² Hosted on tumblr
+	* https://trac.torproject.org/projects/tor/ticket/14022
+
+
+	Problematic domains:
+
+		- labs.mozilla.com ¹
+        - *.phish-report.mozilla.com (mismatched)
+		- status.mozilla.com *
+
+	¹ Refused
+	* Mismatched, CN: status.io.watchmouse.com
+
+
+	Fully covered domains:
+
+		- mozilla.com
+
+		- [\w.-]+.mozilla.com: *
+
+			- activations
+			- addons
+			- air
+			- basket
+			- blog
+			- brasstacks
+			- careers
+			- crash-analysis
+			- crash-stats
+			- data
+			- fhr.data
+			- input
+			- labs		(→ mozillalabs.com)
+			- mail
+			- people
+			- mail.corp.phx1
+
+			- services subdomains:
+
+				- ^
+				- account
+				- auth
+				- location
+				- setup
+				- tiles
+				- tracking
+
+			- snippets
+			- support
+			- v
+			- www
+
+	* Except where excluded below
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- status.mozilla.com from wmpsp.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Mozilla.com (partial)">
+
+	<target host="mozilla.com" />
+	<target host="*.mozilla.com" />
+
+		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage|status)\.mozilla\.com/" />
+
+			<test url="http://www.authstage.mozilla.com/" />
+			<test url="http://www.authstage.mozilla.com//" />
+			<test url="http://fxfeeds.mozilla.com/" />
+			<test url="http://identity.mozilla.com/" />
+			<test url="http://tr.malware-error.mozilla.com/" />
+			<test url="http://www-trunk.stage.mozilla.com/" />
+			<test url="http://status.mozilla.com/" />
+
+		<exclusion pattern="^http://(?:[\w.-]+\.)?phish-report\.mozilla\.com/" />
+
+			<test url="http://phish-report.mozilla.com/" />
+			<test url="http://phish-report.mozilla.com//" />
+			<test url="http://en-us.phish-report.mozilla.com/" />
+
+
+	<securecookie host=".*\.mozilla\.com$" name=".+" />
+
+
+	<rule from="^http://labs\.mozilla\.com/+"
+		to="https://mozillalabs.com/" />
+
+		<test url="http://labs.mozilla.com/" />
+		<test url="http://labs.mozilla.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
