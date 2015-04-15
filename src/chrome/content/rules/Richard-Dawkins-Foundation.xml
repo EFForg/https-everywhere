@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://store.richarddawkins.net/ (200) => https://richarddawkins.net/store/ (403)
 	For problematic rules, see Richard_Dawkins_Foundation-problematic.xml.
 
 
@@ -123,32 +121,41 @@ Non-2xx HTTP code: http://store.richarddawkins.net/ (200) => https://richarddawk
 	² Unsecurable
 
 -->
-<ruleset name="Richard Dawkins Foundation (partial) " default_off='failed ruleset test'>
+<ruleset name="Richard Dawkins Foundation (partial) ">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="richarddawkins.net" />
-	<target host="comments.richarddawkins.net" />
 	<target host="donate.richarddawkins.net" />
-	<target host="store.richarddawkins.net" />
 	<target host="www.richarddawkins.net" />
+
+	<!--	Complications:
+				-->
+	<target host="comments.richarddawkins.net" />
+	<target host="store.richarddawkins.net" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^richarddawkins\.net$" name="^wordpress_test_cookie$" /-->
+	<!--securecookie host="^\.richarddawkins\.net$" name="^(__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^(?:www\.)?richarddawkins\.net$" name=".+" />
+	<securecookie host="^\.richarddawkins\.net$" name="^(?:__cfduid|cf_clearance)$" />
 
-
-	<rule from="^http://(donate\.|www\.)?richarddawkins\.net/"
-		to="https://$1richarddawkins.net/" />
 
 	<rule from="^http://comments\.richarddawkins\.net/"
 		to="https://rdfnet-comments.herokuapp.com/" />
 
-	<rule from="^http://store\.richarddawkins\.net//+([^?]+)\?.*"
-		to="https://richarddawkins.net/store/$1" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://store\.richarddawkins\.net/+"
+		to="https://richarddawkins.myshopify.com/" />
 
-	<rule from="^http://store\.richarddawkins\.net/"
-		to="https://richarddawkins.net/store/" />
+		<test url="http://store.richarddawkins.net//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
