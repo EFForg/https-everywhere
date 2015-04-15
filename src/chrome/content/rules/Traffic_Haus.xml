@@ -1,16 +1,32 @@
 <!--
-	Nonfunctional subdomains:
+	Fully covered hosts in *traffichaus.com:
 
 		- syndication
+
+
+	Insecure cookies are set for these hosts:
+
+		- syndication.traffichaus.com
 
 -->
 <ruleset name="Traffic Haus (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="traffichaus.com" />
-	<target host="*.traffichaus.com" />
+	<target host="stats.traffichaus.com" />
+	<target host="syndication.traffichaus.com" />
+	<target host="www.traffichaus.com" />
 
 
-	<rule from="^http://(stats\.|www\.)?traffichaus\.com/"
-		to="https://$1traffichaus.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^syndication\.traffichaus\.com$" name="^zone_\d+$" /-->
+
+	<securecookie host="^syndication\.traffichaus\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
