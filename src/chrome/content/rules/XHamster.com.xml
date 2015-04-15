@@ -1,12 +1,7 @@
 <!--
 	xHamster uses *.xhcdn.com and cdn13.com
-	As far as I can tell all of it either only supports http or redirects from https to something else.
+	As far as I can tell all of cdn13.com either only supports http or redirects from https to something else.
 
-	Nonfunctional subdomains on xhcdn.com
-		- ept *
-		- et13 *
-		- ut0[0-9] *
-		- ut1[0-9] *
 
 	Nonfunctional subdomains on cdn13.com
 		- a8-19.clients *
@@ -22,43 +17,80 @@
 
 		- et\d *
 		- et1\d *
-		- m **
-		- mobile	(shows www)
-		- p1 *
-		- partners *
-		- upload *
 
 	* Times out
-	** Shows www; mismatched, CN: xhamster.com)
 
 
 	Problematic subdomains:
 
+		- mobile ¹
 		- suggestions	(works, uservoice.com)
+
+	¹ Mismatched
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- de
+		- es
 		- eu-st
+		- fr
+		- it
+		- jp
+
+		- m
+		- de.m
+		- es.m
+		- fr.m
+		- it.m
+		- jp.m
+		- nl.m
+		- pl.m
+		- pt.m
+		- ru.m
+
+		- mobile	(→ m.xhamster.com)
+		- nl
+		- pl
+		- partners
+		- pt
+		- ru
 		- us-st
 		- static
+		- upload
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .xhamster.com
+
+		- m.xhamster.com
+		- .m.xhamster.com
+		- de.m.xhamster.com
+		- es.m.xhamster.com
+		- fr.m.xhamster.com
+		- it.m.xhamster.com
+		- jp.m.xhamster.com
+		- nl.m.xhamster.com
+		- pl.m.xhamster.com
+		- pt.m.xhamster.com
+		- ru.m.xhamster.com
+
+		- partners.xhamster.com
 
 
 	Mixed content:
 
-		- Images, on www from:
+		- Images on \w\w, www from ept.xhcdn.com *
 
-			- et\d *
-			- et1\d *
-			- eu-st **
-			- us-st **
-			- p1 *
-
+		- Ads on \w\w from tools.bongacash.com ***
+		- Ads on \w\w from medleyads.com
+		- Bug on m, \w\w.m, www from a[24].mediagra.com *
 		- Web/ads bug on www from adscnt2 ***
 		- Web bug on www from cnt1 ***
 		- Web/ads bug on www from cnt2 ***
-		- Web bug on www from syndication.traffichaus.com ***
+		- Web bug on www from syndication.traffichaus.com
 
 	* Unsecurable, doesn't trip MCB anyway
 	** Secured by us, doesn't trip MCB anyway
@@ -67,12 +99,42 @@
 -->
 <ruleset name="xHamster.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="xhamster.com" />
+	<target host="de.xhamster.com" />
+	<target host="es.xhamster.com" />
+	<target host="fr.xhamster.com" />
+	<target host="it.xhamster.com" />
+	<target host="jp.xhamster.com" />
+
+	<target host="m.xhamster.com" />
+	<target host="de.m.xhamster.com" />
+	<target host="fr.m.xhamster.com" />
+	<target host="es.m.xhamster.com" />
+	<target host="it.m.xhamster.com" />
+	<target host="jp.m.xhamster.com" />
+	<target host="nl.m.xhamster.com" />
+	<target host="pl.m.xhamster.com" />
+	<target host="pt.m.xhamster.com" />
+	<target host="ru.m.xhamster.com" />
+
+	<target host="nl.xhamster.com" />
+	<target host="partners.xhamster.com" />
+	<target host="pl.xhamster.com" />
+	<target host="pt.xhamster.com" />
+	<target host="ru.xhamster.com" />
+	<target host="upload.xhamster.com" />
+
 		<target host="www.xhamster.com" />
 		<target host="us-st.xhamster.com" />
 		<target host="eu-st.xhamster.com" />
 		<target host="secure.xhamster.com" />
 		<target host="static.xhamster.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mobile.xhamster.com" />
 		<target host="suggestions.xhamster.com" />
 
 	<!-- without this videos break when using flash -->
@@ -80,15 +142,25 @@
 		<test url="http://static.xhamster.com/crossdomain.xml" />
 		<test url="http://static.xhamster.com/crossdomain.xml?foo" />
 
+
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|prid|prs|stats|x_viewes|x_view_probe)$" /-->
+	<!--securecookie host="^m?\.xhamster\.com$" name="^lang$" /-->
+	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileUse|prid|prs|stats|x_viewes|x_view_probe)$" /-->
+	<!--securecookie host="^((de|es|fr|it|jp|nl|pl|pt|ru)\.)?m\.xhamster\.com$" name="^mobileRef$" /-->
+	<!--securecookie host="^\.m\.xhamster\.com$" name="^simple$" /-->
+	<!--securecookie host="^partners\.xhamster\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^\.xhamster\.com$" name="^(?:splash-\d+|stats|uvts)$" />
 	<!--
 		Can these be secured safely?
 						-->
-	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|prid)$" /-->
+	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|mobileUse|prid|prs|x_viewes|x_view_probe)$" /-->
+	<securecookie host="^(?:(?:\.|\w\w\.)?m|partners)\.xhamster\.com$" name=".+" />
+
+
+	<rule from="^http://mobile\.xhamster\.com/"
+		to="https://m.xhamster.com/" />
 
 	<rule from="^http://suggestions\.xhamster\.com/"
 			to="https://xhamster.uservoice.com/" />
