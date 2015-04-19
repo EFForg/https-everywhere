@@ -2,7 +2,7 @@
 Disabled by https-everywhere-checker because:
 Fetch error: http://apertureinsight.com/ => https://apertureinsight.com/: (28, 'Connection timed out after 10000 milliseconds')
 Fetch error: http://www.apertureinsight.com/ => https://www.apertureinsight.com/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://bh.pulsepoint.com/ => https://bh.pulsepoint.com/: (51, "SSL: no alternative certificate subject name matches target host name 'bh.pulsepoint.com'")
+
 	Other PulsePoint rulesets:
 
 		- Contextweb.com.xml
@@ -12,9 +12,27 @@ Fetch error: http://bh.pulsepoint.com/ => https://bh.pulsepoint.com/: (51, "SSL:
 	Nonfunctional domains:
 
 		- (www.)?nmargin.com ¹
-		- (www.)pulsepoint.com
 
 	¹ Refused
+
+
+	Problematic hosts in *pulsepoint.com:
+
+		- ^
+		- bh ²
+		- www ²
+
+	² Mismatched
+
+
+	Fully covered hosts in *pulsepoint.com:
+
+		- exchange
+
+
+	Insecure cookies are set for these hosts:
+
+		- exchange.pulsepoint.com
 
 -->
 <ruleset name="PulsePoint (partial)" default_off='failed ruleset test'>
@@ -24,11 +42,17 @@ Fetch error: http://bh.pulsepoint.com/ => https://bh.pulsepoint.com/: (51, "SSL:
 	<target host="apertureinsight.com" />
 	<target host="www.apertureinsight.com" />
 	<target host="login.stormpost.datranmedia.com" />
-	<target host="bh.pulsepoint.com" />
 
+	<target host="exchange.pulsepoint.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^exchange\.pulsepoint\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
 
 	<securecookie host="^www\.apertureinsight\.com$" name=".*" />
 	<securecookie host="^login\.stormpost\.datranmedia\.com$" name=".*" />
+	<securecookie host="^exchange\.pulsepoint\.com$" name=".+" />
 
 
 	<rule from="^http:"
