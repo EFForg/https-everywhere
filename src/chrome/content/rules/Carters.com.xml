@@ -1,0 +1,73 @@
+<!--
+	Other William Carter Company rulesets:
+
+		- Carters_OshLosh.Ca.xml
+		- OshKosh.com.xml
+
+
+	Problematic hosts in *carters.com:
+
+		- ^ ¹
+		- corporate ¹
+		- ir ²
+
+	¹ Revoked cert
+	² Mismatched
+
+
+	Fully covered hosts in *carters.com:
+
+		- (www.)?	(^ → www)
+		- supplier
+
+
+	These altnames don't exist:
+
+		- cdn.carters.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- supplier.carters.com
+		- www.carters.com
+
+
+	Mixed content:
+
+		- css on ir from phx.corporate-ir.net
+
+		- Images, on:
+
+			- ir from media.corporate-ir.net
+			- ir from www.corporate-ir.net
+
+		- favicon on ir from demandware.edgesuite.net
+
+-->
+<ruleset name="Carters.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="supplier.carters.com" />
+	<target host="www.carters.com" />
+
+	<!--	Complications:
+				-->
+	<target host="carters.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^supplier\.carters\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.carters\.com$" name="^(currentSite|dwac_[a-9a-zA-Z]{32}|dwanonymous_[\da-f]{32}|dwpersonalization_[\da-f]{32}|dwsid|sid)$" /-->
+
+	<securecookie host="^(?:supplier|www)\.carters\.com$" name=".+" />
+
+
+	<rule from="^http://carters\.com/"
+		to="https://www.carters.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

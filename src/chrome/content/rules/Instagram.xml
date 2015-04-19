@@ -2,6 +2,7 @@
 	Other Instagram rulesets:
 
 		- CDN_Instagram.com.xml
+		- Instagr.am.xml
 
 
 	CDN buckets:
@@ -62,78 +63,80 @@
 			- a1404.dspw42.akamai.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *instagram.com:
 
 		- blog.instagram.com	(tumblr)
 
 
-	Problematic domains:
+	Problematic hosts in *instagram.com:
 
-		- instagram.com subdomains:
-
-			- images1.ak	(works, akamai)
-			- help		(works; mismatched, CN: instagram.com)
-			- www		(works, cert only matches ^instagram.com)
+		- images1.ak	(works, akamai)
 
 
-	Partially covered domains:
+	Fully covered hosts in *instagram.com:
 
-		- instagr.am
-
-
-	Fully covered instagram.com subdomains:
-
+		- (www.)?
 		- images.ak *
 		- images1.ak *
 		- api
 		- badges
 		- distilleryimage[1-9] **
 		- distilleryimage1[12] **
+		- help
 		- images *
 
 	* → akamai
 	** → cloudfront
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
+		- instagram.com
 		- badges.instagram.com
+		- .help.instagram.com
 
 -->
-<ruleset name="Instagram (partial)" default_off="Needs ruleset tests">
+<ruleset name="Instagram.com (partial)">
 
-	<target host="instagr.am" />
+	<!--	Direct rewrites:
+				-->
 	<target host="instagram.com" />
-	<target host="*.instagram.com" />
+	<target host="api.instagram.com" />
+	<target host="badges.instagram.com" />
+	<target host="help.instagram.com" />
+	<target host="www.instagram.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.ak.instagram.com" />
+	<target host="images1.ak.instagram.com" />
+	<target host="distilleryimage1.instagram.com" />
+	<target host="distilleryimage2.instagram.com" />
+	<target host="distilleryimage3.instagram.com" />
+	<target host="distilleryimage4.instagram.com" />
+	<target host="distilleryimage5.instagram.com" />
+	<target host="distilleryimage6.instagram.com" />
+	<target host="distilleryimage7.instagram.com" />
+	<target host="distilleryimage8.instagram.com" />
+	<target host="distilleryimage9.instagram.com" />
+	<target host="distilleryimage10.instagram.com" />
+	<target host="distilleryimage11.instagram.com" />
+	<target host="images.instagram.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^badges\.instagram\.com$" name="^(csrftoken|mid)$" /-->
+	<!--securecookie host="^(badges\.)?instagram\.com$" name="^(csrftoken|mid)$" /-->
+	<!--securecookie host="^\.help\.instagram\.com$" name="^(datr|noscript|reg_ext_ref|reg_fb_ref|reg_fb_gate)$" /-->
 
-	<securecookie host="^badges\.instagram\.com$" name=".+" />
+	<securecookie host="^(?:badges\.|\.help\.)?instagram\.com$" name=".+" />
 
-
-	<rule from="^http://instagr\.am/static/images/"
-		to="https://s3.amazonaws.com/instagram-static/images/" />
-
-	<!--	Note that this next rule does not currently work for /static/images
-		but that case is handled by the previous rule.
-								-->
-	<rule from="^http://instagr\.am/(p|static)/"
-		to="https://instagram.com/$1/" />
-
-	<rule from="^http://(?:www\.)?instagram\.com/favicon\.ico"
-		to="https://instagram.com/favicon.ico" />
 
 	<rule from="^http://images\.ak\.instagram\.com/"
 		to="https://a248.e.akamai.net/f/1404/2456/3m/images.ak.instagram.com/" />
 
 	<rule from="^http://images1\.ak\.instagram\.com/"
 		to="https://a248.e.akamai.net/f/1402/3840/4m/images1.ak.instagram.com/" />
-
-	<rule from="^http://(api|badges)\.instagram\.com/"
-		to="https://$1.instagram.com/" />
 
 	<rule from="^http://distilleryimage1\.instagram\.com/"
 		to="https://d1ae3bdqlkjebx.cloudfront.net/" />
@@ -170,5 +173,8 @@
 
 	<rule from="^http://images\.instagram\.com/"
 		to="https://d18txuuu339yuz.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

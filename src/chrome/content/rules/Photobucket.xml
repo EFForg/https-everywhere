@@ -1,4 +1,9 @@
 <!--
+	Other Photobucket rulesets:
+
+		- Pbsrc.com.xml
+
+
 	CDN buckets:
 
 		- crtl.aimatch.com
@@ -6,11 +11,7 @@
 			- b.photobucket.com
 
 		- wpc.38F2.edgecastcdn.net
-
 		- wpc.3901.edgecastcdn.net
-
-			- i000[1-9].photobucket.com
-
 		- wac.3B2E.edgecastcdn.net
 
 			- pic.pbsrc.com
@@ -23,101 +24,92 @@
 		- cdn.photobucket.com.c.footprint.net
 
 			- img.photobucket.com
-			- i120\d.photobucket.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *photobucket.com:
 
-		- static.pbsrc.com	(404, CN: gp1.wac.edgecastcdn.net)
-
-		- photobucket.com subdomains:
-
-			- ^ *
-			- s11.beta *
-			- smg.beta *
-			- i0006 **
-			- i1205 **
-			- i1218 *
-			- i1272 *
-			- i619
-			- img *
-			- s11 *
-			- s515 *
-			- s1218 *
-			- simg *
+		- ^ *
+		- s11.beta *
+		- smg.beta *
+		- img *
+		- s11 *
+		- s515 *
+		- s1218 *
+		- simg *
+		- support ³
 
 	* Times out
 	** 404, CN: edgecastcdn.net
+	³ Zendesk
 
 
-	Problematic domains:
+	Problematic hosts in *photobucket.com:
 
-		- pbsrc.com subdomains:
-
-			- pic *
-			- pic2 *
-			- static2 *
-
-		- photobucket.com subdomains:
-
-			- b		(mismatched, CN: *.aimatch.com)
-			- beta **
-			- s619.beta **
-			- pic
+		- beta **
+		- s619.beta **
+		- ox-d		(Mismatched
+		- pic
 
 	* CN: gp1.wac.edgecastcdn.net; 404
 	** Times out
 
 
-	Partially covered domains:
+	Partially covered  hosts in *photobucket.com:
 
-		- s619.beta.photobucket.com	(some paths redirect back)
+		- s619.beta	(some paths redirect back)
 
 
-	Fully covered domains:
+	Fully covered hosts in *photobucket.com:
 
-		pbsrc.com subdomains:
+		- b
+		- beta			(→ secure-beta.photobucket.com)
+		- i\d+
+		- pic			(→ pbsrc.com)
+		- secure-beta
 
-			- (www.)
-			- opic2
-			- ostatic2
-			- pic			(→ pbsrc.com)
-			- pic2			(→ opic2.pbsrc.com)
-			- static2		(→ ostatic2.pbsrc.com)
 
-		- photobucket.com subdomains:
+	These altnames don't exist:
 
-			- b			(→ crtl.aimatch.com)
-			- beta			(→ secure-beta.photobucket.com)
-			- pic			(→ pbsrc.com)
-			- secure-beta
+		- www.b.photobucket.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .photobucket.com
 
 -->
-<ruleset name="Photobucket (partial)">
+<ruleset name="Photobucket.com (partial)">
 
-	<target host="pbsrc.com" />
-	<target host="*.pbsrc.com" />
 	<target host="*.photobucket.com" />
-		<exclusion pattern="^http://[is]\d+\.photobucket\.com/+(?!albums/w\d+/\w+/pbprofilepics/)" />
+
 		<exclusion pattern="^http://s\d+\.beta\.photobucket\.com/(?!action/|component/)" />
-		
+		<exclusion pattern="^http://s\d+\.photobucket\.com/+(?!albums/w\d+/\w+/pbprofilepics/)" />
 
-	<rule from="^http://(www\.)?pbsrc\.com/"
-		to="https://$1pbsrc.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://s176.photobucket.com/user/Lianne-photo/library/Antwerpen%202008" />
 
-	<rule from="^http://pic\.p(?:bsrc|hotobucket)\.com/"
-		to="https://pbsrc.com/" />
+		<test url="http://b.photobucket.com/" />
+		<test url="http://i1382.photobucket.com/albums/ah245/PhotobucketMKTG/WebSliders/SpringSavingsLanding.jpg~original" />
+		<test url="http://secure.photobucket.com/login" />
+		<test url="http://secure.photobucket.com/register" />
 
-	<rule from="^http://o?(pic|static)2\.pbsrc\.com/"
-		to="https://o$12.pbsrc.com/" />
 
-	<rule from="^http://b\.photobucket\.com/"
-		to="https://crtl.aimatch.com/" />
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.photobucket\.com$" name="^(External|Hint|puid)$" />
 
-	<rule from="^http://(?:s\d+\.|secure-)?beta\.photobucket\.com/"
+
+	<rule from="^http://s\d+\.beta\.photobucket\.com/"
 		to="https://secure-beta.photobucket.com/" />
 
-	<rule from="^http://(?:[is]\d+|secure)\.photobucket\.com/"
+	<rule from="^http://pic\.photobucket\.com/"
+		to="https://pbsrc.com/" />
+
+	<rule from="^http://s\d+\.photobucket\.com/"
 		to="https://secure.photobucket.com/" />
+
+	<rule from="^http://(b|i\d+|secure|secure-beta)\.photobucket\.com/"
+		to="https://$1.photobucket.com/" />
 
 </ruleset>
