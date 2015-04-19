@@ -1,8 +1,6 @@
 <!--
 	NB: If a host ceases to exist, just remove the respective test.
 
-	For problematic rules, see Mozilla-problematic.xml.
-
 	For other Mozilla coverage, see Mozilla.xml.
 
 
@@ -22,11 +20,10 @@
 
 		- labs ¹
 	        - *.phish-report ²
-		- status ³
+		- status ²
 
 	¹ Refused
 	² Mismatched
-	³ Mismatched, CN: status.io.watchmouse.com
 
 
 	Observed hosts in *mozilla.com:
@@ -60,6 +57,7 @@
 			- tracking
 
 		- snippets
+		- status	(→ status.mozilla.org)
 		- support
 		- v
 
@@ -76,7 +74,7 @@
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
 
-		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage|status)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage)\.mozilla\.com/" />
 
 			<test url="http://www.authstage.mozilla.com/" />
 			<test url="http://www.authstage.mozilla.com//" />
@@ -84,7 +82,6 @@
 			<test url="http://identity.mozilla.com/" />
 			<test url="http://tr.malware-error.mozilla.com/" />
 			<test url="http://www-trunk.stage.mozilla.com/" />
-			<test url="http://status.mozilla.com/" />
 
 		<exclusion pattern="^http://(?:[\w.-]+\.)?phish-report\.mozilla\.com/" />
 
@@ -119,6 +116,7 @@
 		<!--	Complications:
 					-->
 		<test url="http://labs.mozilla.com/" />
+		<test url="http://status.mozilla.com/" />
 
 
 	<securecookie host=".*\.mozilla\.com$" name=".+" />
@@ -130,6 +128,13 @@
 		<test url="http://labs.mozilla.com/" />
 		<test url="http://labs.mozilla.com//" />
 
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://status\.mozilla\.com/+"
+		to="https://status.mozilla.org/" />
+
+		<test url="http://status.mozilla.com//" />
 	<rule from="^http:"
 		to="https:" />
 
