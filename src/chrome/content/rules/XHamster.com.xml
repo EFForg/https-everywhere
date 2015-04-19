@@ -3,8 +3,10 @@
 	As far as I can tell all of cdn13.com either only supports http or redirects from https to something else.
 
 
-	Nonfunctional subdomains on cdn13.com
+	Nonfunctional hosts in *cdn13.com:
+
 		- a8-19.clients *
+
 
 	CDN buckets:
 
@@ -13,25 +15,26 @@
 			- suggestions
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *xhamster.com:
 
 		- et\d *
 		- et1\d *
 
-	* Times out
+	* Dropped
 
 
-	Problematic subdomains:
+	Problematic hosts in *xhamster.com:
 
 		- mobile ¹
-		- suggestions	(works, uservoice.com)
+		- suggestions ²
 
 	¹ Mismatched
+	² uservoice.com
 
 
-	Fully covered subdomains:
+	Fully covered hosts in *xhamster.com:
 
-		- (www.)
+		- (www.)?
 		- de
 		- es
 		- eu-st
@@ -82,19 +85,20 @@
 
 	Mixed content:
 
-		- Images on \w\w, www from ept.xhcdn.com *
+		- Images on \w\w, www from ept.xhcdn.com ¹
 
-		- Ads on \w\w from tools.bongacash.com ***
-		- Ads on \w\w from medleyads.com
-		- Bug on m, \w\w.m, www from a[24].mediagra.com *
-		- Web/ads bug on www from adscnt2 ***
-		- Web bug on www from cnt1 ***
-		- Web/ads bug on www from cnt2 ***
-		- Web bug on www from syndication.traffichaus.com
+		- Ads/bugs, on:
 
-	* Unsecurable, doesn't trip MCB anyway
-	** Secured by us, doesn't trip MCB anyway
-	*** Unsecurable
+			- \w\w from tools.bongacash.com ¹
+			- m, \w\w.m, www from a[24].mediagra.com ¹
+			- \w\w from medleyads.com
+			- www from syndication.traffichaus.com
+			- www from adscnt2 ¹
+			- www from cnt1 ¹
+			- www from cnt2 ¹
+
+	¹ Unsecurable
+	² Secured by us
 
 -->
 <ruleset name="xHamster.com">
@@ -104,6 +108,7 @@
 	<target host="xhamster.com" />
 	<target host="de.xhamster.com" />
 	<target host="es.xhamster.com" />
+	<target host="eu-st.xhamster.com" />
 	<target host="fr.xhamster.com" />
 	<target host="it.xhamster.com" />
 	<target host="jp.xhamster.com" />
@@ -124,23 +129,23 @@
 	<target host="pl.xhamster.com" />
 	<target host="pt.xhamster.com" />
 	<target host="ru.xhamster.com" />
+	<target host="secure.xhamster.com" />
+	<target host="static.xhamster.com" />
 	<target host="upload.xhamster.com" />
-
-		<target host="www.xhamster.com" />
-		<target host="us-st.xhamster.com" />
-		<target host="eu-st.xhamster.com" />
-		<target host="secure.xhamster.com" />
-		<target host="static.xhamster.com" />
+	<target host="us-st.xhamster.com" />
+	<target host="www.xhamster.com" />
 
 	<!--	Complications:
 				-->
 	<target host="mobile.xhamster.com" />
-		<target host="suggestions.xhamster.com" />
+	<target host="suggestions.xhamster.com" />
 
-	<!-- without this videos break when using flash -->
-	<exclusion pattern="^http://static\.xhamster\.com/crossdomain\.xml" />
-		<test url="http://static.xhamster.com/crossdomain.xml" />
-		<test url="http://static.xhamster.com/crossdomain.xml?foo" />
+		<!-- Without this videos break when using flash:
+								 -->
+		<exclusion pattern="^http://static\.xhamster\.com/crossdomain\.xml" />
+
+			<test url="http://static.xhamster.com/crossdomain.xml" />
+			<test url="http://static.xhamster.com/crossdomain.xml?foo" />
 
 
 	<!--	Not secured by server:
@@ -153,8 +158,8 @@
 
 	<securecookie host="^\.xhamster\.com$" name="^(?:splash-\d+|stats|uvts)$" />
 	<!--
-		Can these be secured safely?
-						-->
+		Could any of these be secured safely?
+							-->
 	<!--securecookie host="^\.xhamster\.com$" name="^(mdg:uid|mobileType|mobileUse|prid|prs|x_viewes|x_view_probe)$" /-->
 	<securecookie host="^(?:(?:\.|\w\w\.)?m|partners)\.xhamster\.com$" name=".+" />
 
@@ -163,8 +168,9 @@
 		to="https://m.xhamster.com/" />
 
 	<rule from="^http://suggestions\.xhamster\.com/"
-			to="https://xhamster.uservoice.com/" />
+		to="https://xhamster.uservoice.com/" />
 
 	<rule from="^http:"
-			to="https:" />
+		to="https:" />
+
 </ruleset>
