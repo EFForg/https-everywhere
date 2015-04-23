@@ -157,6 +157,6 @@ echo >&2 "Created ${XPI_NAME}.xpi and ${XPI_NAME}-amo.xpi"
 bash utils/android-push.sh "$XPI_NAME.xpi"
 
 if [ -n "$BRANCH" ]; then
-  cp $SUBDIR/$XPI_NAME pkg
+  cp $SUBDIR/$XPI_NAME.xpi pkg
   rm -rf $SUBDIR
 fi
