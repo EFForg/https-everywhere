@@ -52,6 +52,12 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 fi
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; there might be something
+  # better (vmtouch? readahead?) that tells the IO subsystem to read the files
+  # in whatever order it wants...
+  nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+
   echo "Generating sqlite DB"
   python2.7 ./utils/make-sqlite.py
 fi
