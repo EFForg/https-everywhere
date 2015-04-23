@@ -29,7 +29,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   cp -r -f -a .git $SUBDIR
   cd $SUBDIR
   git reset --hard "$1"
-  # When a file are renamed, the old copy can linger in the checkout directory.
+  # When a file is renamed, the old copy can linger in the checkout directory.
   # Ensure a clean build.
   git clean -fdx
 
