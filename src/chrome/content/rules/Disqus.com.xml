@@ -1,52 +1,32 @@
 <!--
 	Commenting system used by several large sites.
 
-
 	Nonfunctional domains:
-
-		disqus.com subdomains:
-
-			- blog		(tumblr)
-			- community     (tumblr)
-
-	Fully covered subdomains:
-
-		- go
-		- referrer
-		- juggler.services
-		- realtime.services
-
+		- blog.disqus.com
+		- community.disqus.com
+		
+	Subdomains like SITENAME.disqus.com aren't covered in this ruleset.
+	Probably some other subdomains aren't covered either.
 -->
-<ruleset name="Disqus (unreliable)" default_off="https://www.eff.org/r.5abU">
+<ruleset name="Disqus (partial)">
 
 	<target host="disqus.com" />
-	<target host="*.disqus.com" />
-		<!--
-			https://trac.torproject.org/projects/tor/ticket/5496
-
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-May/001176.html
-
-		<exclusion pattern="^http://disqus\.com/next/lounge/client\.html" />
-		<exclusion pattern="^http://\w+\.disqus\.com/\d+/build/system/embed\.js"/>
-
-			See comments at top.
-							-->
-		<exclusion pattern="^http://(?:blog|community)\.disqus\.com/" />
-
-
-	<rule from="^http://(?:www\.)?disqus\.com/"
-		to="https://disqus.com/" />
-
-	<rule from="^http://content\.disqus\.com/"
-		to="https://media.disquscdn.com/" />
-
-	<rule from="^http://(?:media|secure)(?:cdn)?\.disqus\.com/"
-		to="https://a.disquscdn.com/" />
-
-	<rule from="^http://([\w\.-]+)\.disqus\.com/"
-		to="https://$1.disqus.com/" />
-
-	<rule from="^http://([\w\.-]+)\.disquscdn\.com/"
-		to="https://$1.disquscdn.com/" />
-
+	<target host="www.disqus.com" />
+	<target host="redirect.disqus.com" />
+	<target host="refferer.disqus.com" />
+	<target host="secure.disqus.com" />
+	<target host="go.disqus.com" />
+	<target host="help.disqus.com" />
+	
+	<target host="realtime.services.disqus.com" />
+	<target host="juggler.services.disqus.com" />
+	<target host="extract.services.disqus.com" />
+	<target host="sentry.services.disqus.com" />
+	
+	<target host="a.disquscdn.com" />
+	<target host="media.disquscdn.com" />
+	
+	<securecookie host="^(\.)?disqus\.com$" name=".+" />
+	
+	<rule from="^http:" to="https:" />
 </ruleset>
