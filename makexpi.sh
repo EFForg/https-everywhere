@@ -44,7 +44,9 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   cd ..
   XPI_NAME="$APP_NAME-$1"
   cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
-  cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/
+  if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
+    echo Old version does not support AMO
+  fi
   rm -rf $SUBDIR
   exit 0
 fi
