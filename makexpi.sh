@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -o errexit
 APP_NAME=https-everywhere
 
@@ -44,12 +44,24 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   cd ..
   XPI_NAME="$APP_NAME-$1"
   cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
-  cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/
+  if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
+    echo Old version does not support AMO
+  fi
   rm -rf $SUBDIR
   exit 0
 fi
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; doing several of these
+  # at once allows the IO subsystem to seek more efficiently.  Note that
+  # bash uses the completely insane glob ordering aAbBcC...
+  for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
+    # Those cover everything but it wouldn't matter if they didn't
+    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
+  done
+
   echo "Generating sqlite DB"
   python2.7 ./utils/make-sqlite.py
 fi
