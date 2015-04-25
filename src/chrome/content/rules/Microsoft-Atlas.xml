@@ -1,5 +1,5 @@
 <!--
-	For other Microsoft coverage, see Microsoft.xml.
+	For other Facebook coverage, see Facebook.xml.
 
 
 	CDN buckets:
@@ -18,6 +18,24 @@
 		- spe		(akamai)
 
 
+	Fully covered hosts in *atdmt.com:
+
+		- c
+		- c1
+		- cdn		(→ atlasdmt.vo.msecnd.net)
+		- clk
+		- exch-eu	(→ view.atdmt.com)
+		- flex
+		- h
+		- image
+		- img		(→ a248.e.akamai.net)
+		- rad
+		- sact
+		- spe		(→ image.atdmt.com)
+		- switch
+		- view
+
+
 	Insecure cookies are set for these domains:
 
 		- .atdmt.com
@@ -29,8 +47,29 @@
 -->
 <ruleset name="Microsoft Atlas">
 
-	<target host="*.atdmt.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="c.atdmt.com" />
+	<target host="c1.atdmt.com" />
+	<target host="clk.atdmt.com" />
+	<target host="flex.atdmt.com" />
+	<target host="h.atdmt.com" />
+	<target host="image.atdmt.com" />
+	<target host="rad.atdmt.com" />
+	<target host="sact.atdmt.com" />
+	<target host="switch.atdmt.com" />
+	<target host="view.atdmt.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.atdmt.com" />
+	<target host="exch-eu.atdmt.com" />
+	<target host="img.atdmt.com" />
+	<target host="spe.atdmt.com" />
+
 		<exclusion pattern="^http://view\.atdmt\.com/action/windows_downloads_Upgrade" />
+
+			<test url="http://view.atdmt.com/action/windows_downloads_Upgrade" />
 
 
 	<!--	Not secured by server:
@@ -39,9 +78,6 @@
 
 	<securecookie host="^(?:.*\.)?atdmt\.com$" name=".+" />
 
-
-	<rule from="^http://(c1?|clk|flex|h|image|rad|switch|view)\.atdmt\.com/"
-		to="https://$1.atdmt.com/" />
 
 	<rule from="^http://cdn\.atdmt\.com/"
 		to="https://atlasdmt.vo.msecnd.net/" />
@@ -54,5 +90,8 @@
 
 	<rule from="^http://spe\.atdmt\.com/"
 		to="https://image.atdmt.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
