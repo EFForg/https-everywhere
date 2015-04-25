@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -o errexit
 APP_NAME=https-everywhere
 
@@ -23,17 +23,15 @@ ANDROID_APP_ID=org.mozilla.firefox
 
 # If the command line argument is a tag name, check that out and build it
 if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
-	BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
-	SUBDIR=checkout
-	[ -d $SUBDIR ] || mkdir $SUBDIR
-	cp -r -f -a .git $SUBDIR
-	cd $SUBDIR
-	git reset --hard "$1"
-  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
-  # it's useful on machines with slow disk seek times; there might be something
-  # better (vmtouch? readahead?) that tells the IO subsystem to read the files
-  # in whatever order it wants...
-  nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
+  BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
+  SUBDIR=checkout
+  [ -d $SUBDIR ] || mkdir $SUBDIR
+  cp -r -f -a .git $SUBDIR
+  cd $SUBDIR
+  git reset --hard "$1"
+  # When a file is renamed, the old copy can linger in the checkout directory.
+  # Ensure a clean build.
+  git clean -fdx
 
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
@@ -44,23 +42,24 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-	XPI_NAME="$APP_NAME-$1"
-  # In this mad recursive situation, sometimes old buggy build scripts make
-  # the xpi as ./pkg :(
-  if ! cp $SUBDIR/pkg/$XPI_NAME pkg/ ; then
-    echo Recovering from hair-raising recursion:
-    echo cp $SUBDIR/pkg pkg/$XPI_NAME
-    cp $SUBDIR/pkg pkg/$XPI_NAME
+  XPI_NAME="$APP_NAME-$1"
+  cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
+  if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
+    echo Old version does not support AMO
   fi
   rm -rf $SUBDIR
   exit 0
 fi
 
-# Same optimisation
-nohup cat src/chrome/content/rules/*.xml >/dev/null 2>/dev/null &
-
-
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; doing several of these
+  # at once allows the IO subsystem to seek more efficiently.
+  for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
+    # Those cover everything but it wouldn't matter if they didn't
+    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
+  done
+
   echo "Generating sqlite DB"
   python2.7 ./utils/make-sqlite.py
 fi
@@ -122,10 +121,10 @@ fi
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
 if [ "$1" ] && [ "$1" != "--fast" ] ; then
-	XPI_NAME="$XPI_NAME.xpi"
+  XPI_NAME="$XPI_NAME"
 else
   # During development, generate packages named with the short hash of HEAD.
-	XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`"
+  XPI_NAME="$XPI_NAME~`git rev-parse --short HEAD`"
         if ! git diff-index --quiet HEAD; then
             XPI_NAME="$XPI_NAME-dirty"
         fi
@@ -162,6 +161,6 @@ echo >&2 "Created ${XPI_NAME}.xpi and ${XPI_NAME}-amo.xpi"
 bash utils/android-push.sh "$XPI_NAME.xpi"
 
 if [ -n "$BRANCH" ]; then
-  cp $SUBDIR/$XPI_NAME pkg
+  cp $SUBDIR/$XPI_NAME.xpi pkg
   rm -rf $SUBDIR
 fi
