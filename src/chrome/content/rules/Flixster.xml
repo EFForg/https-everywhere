@@ -12,6 +12,7 @@
 
 		- content[89].flixster.com	(403; mismatched, CN: ssl2.cdngc.net)
 		- instart[0-3].flixster.com	(504; mismatched, CN: ssl001.insnw.net)
+		- support.ultraviolet.flixster.com	(Parature)
 
 
 	Partially covered domains:
@@ -29,34 +30,72 @@
 			- content9	(→ content7)
 			- instart[02]	(→ content6)
 			- instart[13]	(→ content7)
+			- resizing
+			- video
 
 		- static.flixstercdn.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .flixster.com
+		- support.ultraviolet.flixster.com
+		- video.flixster.com
+		- www.flixster.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- support.ultraviolet from $self
+			- support.ultraviolet from d1.parature.com
+			- www from d18i5l0cp5i5h1.cloudfront.net
+
+		- Bug from warnerbros.112.2o7.net
 
 -->
 <ruleset name="Flixster (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="flixster.com" />
-	<target host="*.flixster.com" />
-		<!--
-			Redirect to http:
-						-->
-		<exclusion pattern="^http://(?:www\.)?flixster\.com/(?!docs/|favicon\.ico|(?:login|register)(?:$|[?/])|login-gate/|register-frame/|site/)" />
+	<target host="community.flixster.com" />
+	<target host="content6.flixster.com" />
+	<target host="content7.flixster.com" />
+	<target host="resizing.flixster.com" />
+	<target host="video.flixster.com" />
+	<target host="www.flixster.com" />
+
+	<!--	Complications:
+				-->
+	<target host="content8.flixster.com" />
+	<target host="content9.flixster.com" />
+	<target host="instart0.flixster.com" />
+	<target host="instart1.flixster.com" />
+	<target host="instart2.flixster.com" />
+	<target host="instart3.flixster.com" />
+
 	<target host="static.flixstercdn.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flixster\.com$" name="^login_notice$" /-->
+	<!--securecookie host="^support\.ultraviolet\.flixster\.com$" name="^(FM_PERSIST|ParaturePortalSessionID|newMetricsView)$" /-->
+	<!--securecookie host="^video\.flixster\.com$" name="^_Web_session$" /-->
+	<!--securecookie host="^www\.flixster\.com$" name="^ServerID$" /-->
 
 	<securecookie host="^community\.flixster\.com$" name=".+" />
 
 
-	<rule from="^http://(community\.|www\.)?flixster\.com/"
-		to="https://$1flixster.com/" />
-
-	<rule from="^http://(?:instart[02]|content[68])\.flixster\.com/"
+	<rule from="^http://(?:instart[02]|content8)\.flixster\.com/"
 		to="https://content6.flixster.com/" />
 
-	<rule from="^http://(?:content[79]|instart[13])\.flixster\.com/"
+	<rule from="^http://(?:content9|instart[13])\.flixster\.com/"
 		to="https://content7.flixster.com/" />
 
-	<rule from="^http://static\.flixstercdn\.com/"
-		to="https://static.flixstercdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
