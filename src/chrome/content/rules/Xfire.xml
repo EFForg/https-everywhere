@@ -1,12 +1,54 @@
+<!--
+	For problematic rules, see Xfire.com-problematic.xml.
+
+
+	Nonfunctional hosts in *xfire.com:
+
+		- blog ¹
+		- business ²
+		- media ³
+		- support ²
+
+	¹ Shows gravity.tinyrocketserver.com
+	² Refused
+	³ 404
+
+
+	(www.)?: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- xfire.com
+		- social.xfire.com
+		- www.xfire.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
 <ruleset name="Xfire (partial)">
 
-	<target host="*.xfire.com"/>
-	<target host="xfire.com"/>
+	<!--target host="xfire.com" /-->
+	<target host="secure.xfire.com"/>
+	<target host="social.xfire.com" />
+	<!--target host="www.xfire.com" /-->
 
-	<rule from="^http://(www\.)?xfire\.com/lo(gin|st_password)"
-		to="https://$1xfire.com/lo$2"/>
 
-	<rule from="^http://secure\.xfire\.com/"
-		to="https://secure.xfire.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?xfire\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^social\.xfire\.com$" name="^_xfire_session$" /-->
+
+	<!--securecookie host="^(?:social\.|www\.)?xfire\.com$" name=".+" /-->
+	<securecookie host="^social\.xfire\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
