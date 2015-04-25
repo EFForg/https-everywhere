@@ -1,7 +1,11 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://yammer.com/ => https://yammer.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For problematic coverage, see Yammer-problematic.xml.
+
+	For other Microsoft coverage, see Microsoft.xml.
+
+	Other Yammer rulesets:
+
+		- Assets-Yammer.com.xml
 
 
 	yammer.pagely.com
@@ -14,6 +18,8 @@ Fetch error: http://yammer.com/ => https://yammer.com/: (60, 'SSL certificate pr
 
 	Problematic domains:
 
+		- ^ ¹
+		- blog		(Dropped)
 		- feedback *
 		- research *
 		- status		(works, mismatched, CN: *.wordpress.com)
@@ -21,29 +27,95 @@ Fetch error: http://yammer.com/ => https://yammer.com/: (60, 'SSL certificate pr
 		- whatsnew.staging	(mismatched, CN: yammer.pagely.com)
 
 
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
 	* Works, mismatched, CN: sites.yammer.com
 
+
+	Fully covered hosts in *yammer.com:
+
+		- (www.)?		(^ → www)
+		- about
+		- blog			(→ about.yammer.com)
+		- design
+		- developer
+		- devices
+		- eng
+		- help
+		- sites
+
+		- design.staging
+		- developer.staging
+		- eng.staging
+		- sites.staging
+		- whatsnew.staging	(→ sites.staging.yammer.com)
+
+		- whatsnew
+
+
+	Insecure cookies are set for these hosts:
+
+		- about.yammer.com
+		- devices.yammer.com
+
 -->
-<ruleset name="Yammer" default_off='failed ruleset test'>
+<ruleset name="Yammer.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="about.yammer.com" />
+	<target host="design.yammer.com" />
+	<target host="developer.yammer.com" />
+	<target host="devices.yammer.com" />
+	<target host="eng.yammer.com" />
+	<target host="help.yammer.com" />
+	<target host="sites.yammer.com" />
+
+	<target host="design.staging.yammer.com" />
+	<target host="developer.staging.yammer.com" />
+	<target host="eng.staging.yammer.com" />
+	<target host="sites.staging.yammer.com" />
+
+	<target host="whatsnew.yammer.com" />
+	<target host="www.yammer.com" />
+
+	<!--	Complications:
+				-->
 	<target host="yammer.com" />
-	<target host="*.yammer.com" />
-	<target host="c64.assets-yammer.com" />
+	<target host="blog.yammer.com" />
+	<target host="whatsnew.staging.yammer.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(about|devices)\.yammer\.com$" name="^X-Mapping-[a-z]+$" /-->
 
 	<securecookie host="^.*\.yammer\.com$" name=".*" />
 
 
-	<rule from="^http://blog\.yammer\.com/(?=images/|blog/wp-content/)"
-		to="https://secure.bluehost.com/~yammerco/" />
+	<rule from="^http://yammer\.com/"
+		to="https://www.yammer.com/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://blog\.yammer\.com/(?:\?.*)?$"
+		to="https://about.yammer.com/yammer-blog/" />
+
+		<test url="http://blog.yammer.com/?f" />
+		<test url="http://blog.yammer.com/?o" />
+		<test url="http://blog.yammer.com/?b" />
+
+	<!--	Direct keeps path and args, and
+		prefixes with forward slash:
+						-->
+	<rule from="^http://blog\.yammer\.com/"
+		to="https://about.yammer.com//" />
+
+		<test url="http://blog.yammer.com//" />
 
 	<rule from="^http://whatsnew\.staging\.yammer\.com/"
 		to="https://sites.staging.yammer.com/summer-release-2012/" />
 
-	<rule from="^http://c64\.assets-yammer\.com/"
-		to="https://c64.assets-yammer.com/" />
-
-	<rule from="^http://((?:(?:design|developer|eng|sites)(?:\.staging)?|help|whatsnew|www)\.)?yammer\.com/"
-		to="https://$1yammer.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
