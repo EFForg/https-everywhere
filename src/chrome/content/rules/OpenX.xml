@@ -1,16 +1,18 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://servedbyopenx.com/ => https://www.openx.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.openx.com'")
 	Other OpenX rulesets:
 
 		- Advertisers-OpenX.com.xml
+		- Fhserve.com.xml
 		- JumpTime.com.xml
 		- Liftdna.com.xml
+		- OpenX.net.xml
+		- OpenX.org.xml
+		- OpenX_ad_exchange.com.xml
+		- OpenX_Enterprise.com.xml
+		- Served_by_OpenX.com.xml
 
 
 	CDN buckets:
-
-		- i.fhserve.com.cdn.cloudflare.net
 
 		- i.cdn.openx.com.edgesuite.net
 
@@ -20,98 +22,36 @@ Fetch error: http://servedbyopenx.com/ => https://www.openx.org/: (51, "SSL: no 
 
 			- a1773.g.akamai.net
 
-		- i-cdn.servedbyopenx.com.edgesuite.net
 
-			- a1856.g.akamai.net
+	Nonfunctional hosts in openx.com:
 
-		- akamai.openx.org
-
-			- a1051.w7.akamai.net
-			- blog.openx.org
-			- support.openx.org
-
-
-	Nonfunctional domains:
-
-		- i.fhserve.com		(521; mismatched, CN: ssl3985.cloudflare.com)
-		- (www.)openx.com ²
-		- forum.openx.org *
-		- (www.)openx.net *
+		- (www.)? ²
+		- docs *
 
 	² wpengine
-	* Shows blog.openx.org; self-signed, CN: *.openx.com
+	* Shows blog.openx.org
 
 
-	Problematic domains:
+	Problematic hosts in *openx.com:
 
-		- fhserve.com		(shows contact form)
-
-		- openx.com subdomains:
-
-			- i.cdn *
-			- support	(shows blog.openx.org, self-signed)
-			- i.xx *
-
-		- openx.org subdomains:
-
-			- ^ **		(works, self-signed)
-			- blog *
-			- edit-blog **
-			- support	(shows blog.openx.org, akamai)
-
-		- (www.)servedbyopenx.com	(shows blog.openx.org; self-signed, CN: openx.com)
-		- i-cdn.servedbyopenx.com *
+		- i.cdn *
+		- support	(shows blog.openx.org, self-signed)
+		- i.xx *
 
 	* Works, akamai
-	** Works; self-signed, CN: *.openx.com
 
 
-	Partially covered domains:
+	Fully covered hosts in *openx.com:
 
-		- blog.openx.org *
-		- edit-blog.openx.org *
-
-	* → akamai, avoiding user-visible paths
-
-
-	Fully covered domains:
-
-		- www.fhserve.com	(^ → www)
-
-		- openx.com subdomains:
-
-			- ac
-			- ssl-i.cdn
-			- i-cdn
-			- lift
-			- pc
-			- sso
-			- d.tradex
-			- uk-ac
-			- ssl-i.xx
-
-		- openx.net subdomains:
-
-			- bid
-			- r
-			- u
-			- us-ads
-			- us-u
-
-		- openx.org subdomains:
-
-			- (www.)	(^ → www)
-			- adserver
-			- d1
-			- developer
-			- svn
-
-		- *-d.openxenterprise.com
-		- (www.)servedbyopenx.com	(→ www.openx.org)
-		- i-cdn.servedbyopenx.com	(→ i-cdn.openx.com)
-
-
-	(www.)openxenterprise.com doesn't exist.
+		- ac
+		- ssl-i.cdn
+		- i-cdn
+		- lift
+		- pc
+		- sso
+		- d.tradex
+		- uk-ac
+		- ssl-i.xx
 
 
 	Mixed content:
@@ -131,59 +71,26 @@ Fetch error: http://servedbyopenx.com/ => https://www.openx.org/: (51, "SSL: no 
 	mark this ruleset as mixedcontent.
 
 -->
-<ruleset name="OpenX (partial)" default_off='failed ruleset test'>
+<ruleset name="OpenX.com (partial)">
 
-	<target host="openx.com" />
-	<target host="*.openx.com" />
-	<target host="*.openx.net" />
-	<target host="*.openx.org" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://(?:edit-)?blog\.openx\.org/(?!wp-content/)" />
-	<target host="*.openxenterprise.com" />
-	<target host="servedbyopenx.com" />
-	<target host="*.servedbyopenx.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ac.openx.com" />
+	<target host="ssl-i.cdn.openx.com" />
+	<target host="i-cdn.openx.com" />
+	<target host="lift.openx.com" />
+	<target host="pc.openx.com" />
+	<target host="sso.openx.com" />
+	<target host="d.tradex.openx.com" />
+	<target host="uk-ac.openx.com" />
+	<target host="ssl-i.xx.openx.com" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.openx\.net$" name="^i$" /-->
 
 	<!--securecookie host="^\.openx\.com$" name="^(_mkto_trk|__utm\w)$" /-->
 	<securecookie host="^(?:ac|i-cdn|lift|sso|d\.tradex|uk-ac)?\.openx\.com$" name=".+" />
-	<securecookie host="^(?:us-ads)?\.openx\.net$" name=".+" />
-	<securecookie host="^(?:adserver|d1|developer)\.openx\.org$" name=".+" />
-	<securecookie host="^\w+-d\.openxenterprise\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?fhserve\.com/"
-		to="https://www.fhserve.com/" />
-
-	<rule from="^http://(ac|ssl-i\.cdn|lift|pc|sso|d\.tradex|uk-ac|ssl-i\.xx)\.openx\.com/"
-		to="https://$1.openx.com/" />
-
-	<rule from="^http://i-cdn\.(?:servedby)?openx\.com/"
-		to="https://i-cdn.openx.com/" />
-
-	<!--	r & u: tracking beacons
-					-->
-	<rule from="^http://(bid|[ru]|us-ads|us-u)\.openx\.net/"
-		to="https://$1.openx.net/" />
-
-	<rule from="^http://(?:www\.)?(?:openx\.org|servedbyopenx\.com)/"
-		to="https://www.openx.org/" />
-
-	<rule from="^http://(adserver|d1|developer|svn)\.openx\.org/"
-		to="https://$1.openx.org/" />
-
-	<rule from="^http://(?:edit-)?blog\.openx\.org/"
-		to="https://a248.e.akamai.net/=/1051/7326/7m/blog.openx.org/" />
-
-	<!--	- Tracking beacon
-		- Seems edentical to u.openx.net
-						-->
-	<rule from="^http://(\w+)-d\.openxenterprise\.com/"
-		to="https://$1-d.openxenterprise.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,9 +1,15 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://hope.net/ => https://hope.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For rules causing false/broken MCB, see Hope.net-falsemixed.xml.
 
 
+	Nonfunctional hosts in *hope.net:
+
+		- radio *
+
+	* Shows test page
+
+
+	^: Server sends no certificate chain, see https://whatsmychaincert.com
 	www: mismatched, CN: wiki.hope.net
 
 
@@ -14,20 +20,26 @@ Fetch error: http://hope.net/ => https://hope.net/: (60, 'SSL certificate proble
 	* Secured by us
 
 -->
-<ruleset name="hope.net (partial)" default_off='failed ruleset test'>
+<ruleset name="hope.net (partial)" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hope.net" />
-	<target host="*.hope.net" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="wiki.hope.net" />
+
+	<!--	Complications:
+				-->
+	<target host="www.hope.net" />
+
+		<!--	Avoid false/broken MCB:
 						-->
-		<!--exclusion pattern="^http://wiki\.hope\.net/+(?!w/)" /-->
+		<exclusion pattern="^http://wiki\.hope\.net/+(?!w/)" />
 
 
-	<rule from="^http://(?:www\.)?hope\.net/"
+	<rule from="^http://www\.hope\.net/"
 		to="https://hope.net/" />
 
-	<rule from="^http://wiki\.hope\.net/w/"
-		to="https://wiki.hope.net/w/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

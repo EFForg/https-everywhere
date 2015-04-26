@@ -1,0 +1,46 @@
+<!--
+	Problematic hosts in *computec-academy.de:
+
+		- ^ ¹
+		- www ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="Computec-Academy.de (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.computec-academy.de" />
+
+	<!--	Complications:
+				-->
+	<target host="computec-academy.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.computec-academy\.de/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.computec-academy\.de/+(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.computec-academy.de/demo" />
+			<test url="http://www.computec-academy.de/node/962" />
+			<test url="http://www.computec-academy.de/vortraege" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.computec-academy.de/sites/www.computec-academy.de/files/css/css_8e5d70ccf101202d6ad3eb9016507b93.css" />
+
+
+	<rule from="^http://computec-academy\.de/"
+		to="https://www.computec-academy.de/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

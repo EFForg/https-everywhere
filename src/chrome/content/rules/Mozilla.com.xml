@@ -1,79 +1,70 @@
 <!--
-	For problematic rules, see Mozilla-problematic.xml.
+	NB: If a host ceases to exist, just remove the respective test.
 
 	For other Mozilla coverage, see Mozilla.xml.
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *mozilla.com:
 
-		- mozilla.com subdomains:
-
-			- www.authstage ¹
-			- identity ²
-			- *.malware-error *
-			- www-trunk.stage ¹
+		- www.authstage ¹
+		- identity ²
+		- *.malware-error ³
+		- www-trunk.stage ¹
 
 	¹ Dropped
 	² Hosted on tumblr
-	* https://trac.torproject.org/projects/tor/ticket/14022
+	³ https://trac.torproject.org/projects/tor/ticket/14022
 
 
-	Problematic domains:
+	Problematic hosts in *mozilla.com:
 
-		- labs.mozilla.com ¹
-        - *.phish-report.mozilla.com (mismatched)
-		- status.mozilla.com *
+		- labs ¹
+	        - *.phish-report ²
+		- status ²
 
 	¹ Refused
-	* Mismatched, CN: status.io.watchmouse.com
+	² Mismatched
 
 
-	Fully covered domains:
+	Observed hosts in *mozilla.com:
 
-		- mozilla.com
+		- (www.)?
+		- activations
+		- addons
+		- air
+		- basket
+		- blog
+		- brasstacks
+		- careers
+		- crash-analysis
+		- crash-stats
+		- data
+		- fhr.data
+		- input
+		- labs		(→ mozillalabs.com)
+		- mail
+		- people
+		- mail.corp.phx1
 
-		- [\w.-]+.mozilla.com: *
+		- in *services:
 
-			- activations
-			- addons
-			- air
-			- basket
-			- blog
-			- brasstacks
-			- careers
-			- crash-analysis
-			- crash-stats
-			- data
-			- fhr.data
-			- input
-			- labs		(→ mozillalabs.com)
-			- mail
-			- people
-			- mail.corp.phx1
+			- ^
+			- account
+			- auth
+			- location
+			- setup
+			- tiles
+			- tracking
 
-			- services subdomains:
-
-				- ^
-				- account
-				- auth
-				- location
-				- setup
-				- tiles
-				- tracking
-
-			- snippets
-			- support
-			- v
-			- www
-
-	* Except where excluded below
+		- snippets
+		- status	(→ status.mozilla.org)
+		- support
+		- v
 
 
 	Mixed content:
 
-		- Images, on:
-
-			- status.mozilla.com from wmpsp.s3.amazonaws.com *
+		- Images on status.mozilla.com from wmpsp.s3.amazonaws.com *
 
 	* Secured by us
 
@@ -83,7 +74,7 @@
 	<target host="mozilla.com" />
 	<target host="*.mozilla.com" />
 
-		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage|status)\.mozilla\.com/" />
+		<exclusion pattern="^http://(?:www\.authstage|fxfeeds|identity|.+\.malware-error|www-trunk\.stage)\.mozilla\.com/" />
 
 			<test url="http://www.authstage.mozilla.com/" />
 			<test url="http://www.authstage.mozilla.com//" />
@@ -91,13 +82,41 @@
 			<test url="http://identity.mozilla.com/" />
 			<test url="http://tr.malware-error.mozilla.com/" />
 			<test url="http://www-trunk.stage.mozilla.com/" />
-			<test url="http://status.mozilla.com/" />
 
 		<exclusion pattern="^http://(?:[\w.-]+\.)?phish-report\.mozilla\.com/" />
 
 			<test url="http://phish-report.mozilla.com/" />
 			<test url="http://phish-report.mozilla.com//" />
 			<test url="http://en-us.phish-report.mozilla.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://activations.mozilla.com/" />
+		<test url="http://addons.mozilla.com/" />
+		<test url="http://air.mozilla.com/" />
+		<test url="http://basket.mozilla.com/" />
+		<test url="http://blog.mozilla.com/" />
+		<test url="http://brasstacks.mozilla.com/" />
+		<test url="http://careers.mozilla.com/" />
+		<test url="http://crash-analysis.mozilla.com/" />
+		<test url="http://crash-stats.mozilla.com/" />
+		<test url="http://data.mozilla.com/" />
+		<test url="http://fhr.data.mozilla.com/" />
+		<test url="http://input.mozilla.com/" />
+		<test url="http://mail.mozilla.com/" />
+		<test url="http://people.mozilla.com/" />
+		<test url="http://mail.corp.phx1.mozilla.com/" />
+		<test url="http://people.mozilla.com/" />
+		<test url="http://services.mozilla.com/" />
+		<test url="http://snippets.mozilla.com/" />
+		<test url="http://support.mozilla.com/" />
+		<test url="http://v.mozilla.com/" />
+		<test url="http://www.mozilla.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://labs.mozilla.com/" />
+		<test url="http://status.mozilla.com/" />
 
 
 	<securecookie host=".*\.mozilla\.com$" name=".+" />
@@ -109,6 +128,13 @@
 		<test url="http://labs.mozilla.com/" />
 		<test url="http://labs.mozilla.com//" />
 
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://status\.mozilla\.com/+"
+		to="https://status.mozilla.org/" />
+
+		<test url="http://status.mozilla.com//" />
 	<rule from="^http:"
 		to="https:" />
 
