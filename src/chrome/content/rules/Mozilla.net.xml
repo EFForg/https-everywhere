@@ -14,54 +14,48 @@
 			- hardhat.mozilla.net
 
 
-	Problematic hosts in *.mozilla.net:
+	Problematic hosts in *mozilla.net:
 
-		- cdn ²
-		- download.cdn ²
-		- getpersonas-cdn ²
-		- hardhat ³
-		- www ⁴
+		- cdn ¹
+		- download.cdn ¹
+		- getpersonas-cdn ¹
+		- hardhat ²
+		- www ³
 
-	² 404; mismatched, CN: gp1.wac.edgecastcdn.net
-	³ Works; mismatched, CN: gp1.wac.edgecastcdn.net
-	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
+	¹ 404; mismatched, CN: gp1.wac.edgecastcdn.net
+	² Works; mismatched, CN: gp1.wac.edgecastcdn.net
+	³ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
 
 
-	Fully covered domains:
+	Observed hosts in *mozilla.net:
 
-		- [\w.-]+.mozilla.net: *
+		- static-cdn.addons
+		- static-ssl-cdn.addons
 
-			- static-cdn.addons
-			- static-ssl-cdn.addons
+		- in *cdn
 
-			- cdn subdomains:
+			- activations
+			- addons
+			- air
+			- code
+			- developer
+			- download		(→ ftp.mozilla.org)
+			- download-installer
+			- fhr
+			- getpersonas
+			- marketplace
+			- mozorg
+			- support
+			- versioncheck
 
-				- activations
-				- addons
-				- air
-				- developer
-				- download		(→ ftp.mozilla.org)
-				- download-installer
-				- fhr
-				- getpersonas
-				- marketplace
-				- mozorg
-				- support
-				- versioncheck
-
-			- getpersonas-cdn	(→ getpersonas.cdn)
-			- videos-cdn
-			- www			(→ www.mozilla.org)
-
-	* Except where excluded below
+		- getpersonas-cdn	(→ getpersonas.cdn)
+		- videos-cdn
+		- www			(→ www.mozilla.org)
 
 
 	Mixed content:
 
-		- Images, on:
-
-			- hardhat.cdn.mozilla.net from www.mozilla.org *
-
+		- Images on hardhat.cdn.mozilla.net from www.mozilla.org *
 		- Ad on activations.cdn.mozilla.net from getpocket.com *
 
 	* Secured by us
@@ -70,20 +64,15 @@
 <ruleset name="Mozilla.net (partial)">
 
 	<target host="*.mozilla.net" />
+
 		<exclusion pattern="^http://(?:cdn|hardhat)\.mozilla\.net/" />
 
 			<test url="http://cdn.mozilla.net/" />
 			<test url="http://hardhat.mozilla.net/" />
 
+		<test url="http://code.cdn.mozilla.net/fonts/fira.css" />
 		<test url="http://developer.cdn.mozilla.net/" />
 
-
-	<!--	Redirects as so over http.
-						-->
-	<rule from="^http://www\.mozilla\.net/"
-		to="https://www.mozilla.org/" />
-
-		<test url="http://www.mozilla.net/" />
 
 	<rule from="^http://download\.cdn\.mozilla\.net/"
 		to="https://ftp.mozilla.org/" />
@@ -94,6 +83,13 @@
 		to="https://getpersonas.cdn.mozilla.net/" />
 
 		<test url="http://getpersonas-cdn.mozilla.net/" />
+
+	<!--	Redirects as so over http.
+						-->
+	<rule from="^http://www\.mozilla\.net/"
+		to="https://www.mozilla.org/" />
+
+		<test url="http://www.mozilla.net/" />
 
 	<rule from="^http:"
 		to="https:" />

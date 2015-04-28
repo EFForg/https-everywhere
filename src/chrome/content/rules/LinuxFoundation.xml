@@ -11,21 +11,30 @@
 		- Yocto_Project.org.xml
 
 
-	Partially covered domains:
+	Partially covered hosts in *linuxfoundation.org:
 
-		- linuxfoundation.org subdomains:
-
-			- collabprojects *
+		- collabprojects *
+		- events *
+		- eventsstg *
+		- www *
 
 	* Some pages redirect to http
 
 
 	Fully covered domains:
 
-		- linuxfoundation.org subdomains:
+		- lists.linux-foundation.org	(→ lists.linuxfoundation.org)
 
+		- in *linuxfoundation.org:
+
+			- admin
+			- automotive
 			- developerbugs
+			- identity
+			- ldn
+			- lists
 			- lsbbugs
+			- training
 
 
 	Insecure cookies are set for these domains:
@@ -35,19 +44,84 @@
 -->
 <ruleset name="Linux Foundation (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="linuxfoundation.org" />
-	<target host="*.linuxfoundation.org" />
-		<exclusion pattern="^http://(?:www\.)?linuxfoundation\.org/(?!about/join/individual(?:$|\?|/)|misc/|sites/|user(?:$|\?))" />
-		<exclusion pattern="^http://collabprojects\.linuxfoundation\.org/+(?!sites/)" />
-		<!--
-			These paths started redirecting to http:
+	<target host="admin.linuxfoundation.org" />
+	<target host="automotive.linuxfoundation.org" />
+	<target host="collabprojects.linuxfoundation.org" />
+	<target host="developerbugs.linuxfoundation.org" />
+	<target host="events.linuxfoundation.org" />
+	<target host="eventsstg.linuxfoundation.org" />
+	<target host="identity.linuxfoundation.org" />
+	<target host="ldn.linuxfoundation.org" />
+	<target host="lists.linuxfoundation.org" />
+	<target host="lsbbugs.linuxfoundation.org" />
+	<target host="training.linuxfoundation.org" />
+	<target host="www.linuxfoundation.org" />
 
-				- $
-				- events$
-				- events/[\w-]+(?!/register)
-								-->
-		<exclusion pattern="^http://events\.linuxfoundation\.org/(?:events(?:/|/[\w-]+)?)?(?!/register)(?:\?.*)?$" />
-	<target host="*.linux-foundation.org" />
+	<!--	Complications:
+				-->
+	<target host="lists.linux-foundation.org" />
+
+	<target host="go.linuxfoundation.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://collabprojects\.linuxfoundation\.org/$" /-->
+		<!--exclusion pattern="^http://events\.linuxfoundation\.org/(contact-us|events(/|[\w/-]+/*)?)?(\?.*)?$" /-->
+		<!--exclusion pattern="^http://eventstg\.linuxfoundation\.org/$" /-->
+		<!--exclusion pattern="^http://www\.linuxfoundation\.org/$" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://collabprojects\.linuxfoundation\.org/+(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://collabprojects.linuxfoundation.org/" />
+			<test url="http://collabprojects.linuxfoundation.org//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://collabprojects.linuxfoundation.org/sites/all/modules/custom/lf_assets/includes/img/di_blue.png" />
+
+		<exclusion pattern="^http://events(?:stg)?\.linuxfoundation\.org/+(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://events.linuxfoundation.org/contact-us" />
+			<test url="http://events.linuxfoundation.org/events" />
+			<test url="http://events.linuxfoundation.org/events/embedded-linux-conference-europe/attend/register" />
+			<test url="http://events.linuxfoundation.org/events/linuxcon-europe/program/cfp" />
+			<test url="http://events.linuxfoundation.org/events/mesoscon/attend/register" />
+
+			<!--	-ve:
+					-->
+			<test url="http://events.linuxfoundation.org/sites/events/files/styles/events_listing_192x192/public/ccc_eu_color.png" />
+			<test url="http://eventsstg.linuxfoundation.org/sites/all/themes/lfevents/css/homepage-pardot_new.css" />
+
+		<exclusion pattern="^http://www\.linuxfoundation\.org/(?!about/join/individual(?:$|[?/])|cas\?|misc/|sites/|user(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.linuxfoundation.org/about" />
+			<test url="http://www.linuxfoundation.org/about/faq" />
+			<test url="http://www.linuxfoundation.org/about/members" />
+			<test url="http://www.linuxfoundation.org/collaborate" />
+			<test url="http://www.linuxfoundation.org/news-media/blogs" />
+			<test url="http://www.linuxfoundation.org/og" />
+			<test url="http://www.linuxfoundation.org/privacy" />
+			<test url="http://www.linuxfoundation.org/programs" />
+			<test url="http://www.linuxfoundation.org/publications" />
+			<test url="http://www.linuxfoundation.org/search" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.linuxfoundation.org/about/join/individual" />
+			<test url="http://www.linuxfoundation.org/cas?destination=homepage" />
+			<test url="http://www.linuxfoundation.org/sites/all/modules/custom/lf_assets/includes/img/di_blue.png" />
+			<test url="http://www.linuxfoundation.org/user" />
 
 
 	<!--	Not secured by server:
@@ -57,16 +131,23 @@
 	<securecookie host="^(?!collabprojects\.|events\.).*\.linuxfoundation\.org$" name=".+" />
 
 
+	<rule from="^http://lists\.linux-foundation\.org/"
+		to="https://lists.linuxfoundation.org/" />
+
 	<rule from="^http://go\.linuxfoundation\.org/+(?:\?.*)?$"
 		to="https://www.linuxfoundation.org/" />
+
+		<test url="http://go.linuxfoundation.org/?" />
+		<test url="http://go.linuxfoundation.org/?f" />
+		<test url="http://go.linuxfoundation.org//" />
+		<test url="http://go.linuxfoundation.org//?" />
 
 	<rule from="^http://go\.linuxfoundation\.org/"
 		to="https://pi.pardot.com/" />
 
-	<rule from="^http://lists\.linux(-)?foundation\.org/"
-		to="https://lists.linux$1foundation.org/" />
+		<test url="http://go.linuxfoundation.org/e/6342/TheLinuxFoundation/ymc8q/578968329" />
 
-	<rule from="^http://((?:admin|automotive|collabprojects|developerbugs|events|identity|ldn|lsbbugs|training|www)\.)?linuxfoundation\.org/"
-		to="https://$1linuxfoundation.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

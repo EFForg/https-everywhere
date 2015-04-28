@@ -1,12 +1,22 @@
 <!--
+	For problematic rules, see AllThingsD.com-problematic.xml.
+
+
 	CDN buckets:
 
 		- i[01].wp.com/allthingsd.com/
 
 
+	Problematic hosts in *allthingsd.com:
+
+		- voices *
+
+	* Mismatched
+
+
 	Partially covered subdomains:
 
-		- (www.)	(some pages redirect to http)
+		- ^	(some pages redirect to http)
 
 
 	Fully covered subdomains:
@@ -16,15 +26,45 @@
 -->
 <ruleset name="AllThingsD (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="allthingsd.com" />
-	<target host="*.allthingsd.com" />
-		<exclusion pattern="^http://(?:www\.)?allthingsd\.com/(?!favicon\.ico|files/|theme/|wp-content/|wp-includes/)" />
+	<target host="mediamemo.allthingsd.com" />
+	<target host="profiles.allthingsd.com" />
+	<!--target host="voices.allthingsd.com" /-->
+	<target host="www.allthingsd.com" />
+
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://allthingsd\.com/\d+/[\w-]/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://allthingsd\.com/+(?!favicon\.ico|files/|theme/|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://allthingsd.com/20110103/27544/" />
+			<test url="http://allthingsd.com/20131023/whymavericksisfree/" />
+			<test url="http://allthingsd.com/comments/" />
+			<test url="http://allthingsd.com/conferences/" />
+			<test url="http://allthingsd.com/faq/" />
+			<test url="http://allthingsd.com/mobile/" />
+			<test url="http://allthingsd.com/tips/" />
+
+			<!--	-ve:
+					-->
+
+			<test url="http://allthingsd.com/favicon.ico" />
+			<test url="http://allthingsd.com/files/2013/12/space-monkey-150x150.jpg" />
+			<test url="http://allthingsd.com/wp-content/plugins/wp-pagenavi/pagenavi-css.css?ver=2.70" />
+			<test url="http://allthingsd.com/wp-content/themes/atd-2.0/img/bg-nav.png" />
 
 
 	<!--securecookie host="^(.*\.)?allthingsd\.com$" name=".+" /-->
 
 
-	<rule from="^http://((?:mediamemo|profiles|voices|www)\.)?allthingsd\.com/"
-		to="https://$1allthingsd.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
