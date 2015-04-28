@@ -27,6 +27,19 @@
 	<target host="*.fastly.net" />
 		<exclusion pattern="^http://(?:(?!assets1\.fastly\.com\.a\.prod\.).+\.prod|purge)\.fastly\.net/" />
 
+		<!--	https://github.com/EFForg/https-everywhere/issues/1597
+
+			These fonts are used for icons (presumably via chars assigned
+			to private use?). Securing said fonts causes CORS denials.
+										-->
+		<exclusion pattern="^http://boingboing\.global\.ssl\.fastly\.net/assets/[\w-]+\.(?:tt|wof)f" />
+
+			<!--	+ve:
+					-->
+			<test url="http://boingboing.global.ssl.fastly.net/assets/fontawesome-webfont-743c128c2e48ae20145724e61f9998b4.ttf?http://bbs.boingboing.net" />
+			<test url="http://boingboing.global.ssl.fastly.net/assets/fontawesome-webfont-eeaf3e983ade434b10eda37dfbd6c6d7.woff?http://bbs.boingboing.net" />
+			<test url="http://boingboing.global.ssl.fastly.net/assets/fontawesome-webfont-eeaf3e983ade434b10eda37dfbd6c6d7.woff?http://bbs.boingboing.net&amp;v=" />
+
 
 	<rule from="^http://assets1\.fastly\.com\.a\.prod\.fastly\.net/"
 		to="https://fastly.a.ssl.fastly.net/" />
