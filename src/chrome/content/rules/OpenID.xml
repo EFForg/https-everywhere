@@ -1,22 +1,39 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://openid.net/ => https://openid.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.openid.net/ => https://openid.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Problematic subdomains:
+	Problematic hosts in *openid.net:
 
-		 - www	(cert only matches ^openid.net)
+		- ^ ¹
+		- www	(cert only matches ^openid.net)
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- openid.net
 
 -->
-<ruleset name="OpenID" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="OpenID" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="openid.net" />
+
+	<!--	Complications:
+				-->
 	<target host="www.openid.net" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^openid\.net$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^openid\.net$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?openid\.net/"
+	<rule from="^http://www\.openid\.net/"
 		to="https://openid.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
