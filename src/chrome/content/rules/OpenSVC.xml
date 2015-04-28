@@ -4,11 +4,27 @@
 		- git	(shows collector's data)
 		- repo	(ditto)
 
+
+	Fully covered hosts in *opensvc.com:
+
+		- (www.)?	(^ → www)
+		- collector
+		- docs
+		- lists
+
 -->
 <ruleset name="OpenSVC (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="collector.opensvc.com" />
+	<target host="docs.opensvc.com" />
+	<target host="lists.opensvc.com" />
+	<target host="www.opensvc.com" />
+
+	<!--	Complications:
+				-->
 	<target host="opensvc.com" />
-	<target host="*.opensvc.com" />
 
 
 	<securecookie host="^\w+\.opensvc\.com$" name=".*" />
@@ -17,10 +33,10 @@
 	<!--	- !www doesn't work over https
 		- !www redirects to www over http
 					-->
-	<rule from="^http://(?:www\.)?opensvc\.com/"
+	<rule from="^http://opensvc\.com/"
 		to="https://www.opensvc.com/" />
 
-	<rule from="^http://(collector|docs|lists)\.opensvc\.com/"
-		to="https://$1.opensvc.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
