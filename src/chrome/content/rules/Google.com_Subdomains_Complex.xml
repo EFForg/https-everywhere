@@ -1,0 +1,92 @@
+
+<!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://clients1.google.com/ (200) => https://clients1.google.com/ (404)
+Non-2xx HTTP code: http://clients2.google.com/ (200) => https://clients1.google.com/ (404)
+Non-2xx HTTP code: http://clients3.google.com/ (200) => https://clients1.google.com/ (404)
+Fetch error: http://spreadsheets1.google.com/ => https://spreadsheets1.google.com/: Too many redirects while fetching 'http://spreadsheets1.google.com/'
+Fetch error: http://spreadsheets2.google.com/ => https://spreadsheets2.google.com/: Too many redirects while fetching 'http://spreadsheets2.google.com/'
+Fetch error: http://spreadsheets3.google.com/ => https://spreadsheets3.google.com/: Too many redirects while fetching 'http://spreadsheets3.google.com/'
+Non-2xx HTTP code: http://encrypted-tbn1.google.com/ (200) => https://encrypted-tbn1.google.com/ (404)
+Non-2xx HTTP code: http://encrypted-tbn2.google.com/ (200) => https://encrypted-tbn2.google.com/ (404)
+Non-2xx HTTP code: http://encrypted-tbn3.google.com/ (200) => https://encrypted-tbn3.google.com/ (404)
+Non-2xx HTTP code: http://tbn1.google.com/ (200) => https://encrypted-tbn1.google.com/ (404)
+Non-2xx HTTP code: http://tbn2.google.com/ (200) => https://encrypted-tbn2.google.com/ (404)
+Non-2xx HTTP code: http://tbn3.google.com/ (200) => https://encrypted-tbn3.google.com/ (404)
+Non-2xx HTTP code: http://bar.clients.google.com/ (200) => https://bar.clients.google.com/ (404)
+Non-2xx HTTP code: http://foobar.clients.google.com/foobar (200) => https://foobar.clients.google.com/foobar (404)
+
+-->
+
+<!--
+	Other Google rulesets:
+		- See Google.com_Subdomains.html for rules that don't match the complex rule here
+		- See GoogleServices.xml for the list
+-->
+<ruleset name="Google.com Subdomains (Complex)" default_off='failed ruleset test'>
+	<target host="*.google.com" />
+
+	<rule from="^http://(clients\d)\.google\.com/"
+		 	to="https://clients1.google.com/" />
+		<test url="http://clients1.google.com/" />
+		<test url="http://clients2.google.com/" />
+		<test url="http://clients3.google.com/" />
+		<!--
+			The need for clients\d -> clients1
+
+			"http://clients2.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"
+			HTTP/1.1 200 OK
+			"https://clients2.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"
+			HTTP/1.1 404 Not Found
+			"https://clients1.google.com/complete/search?hl=ja&client=hp&expIds=17259,24660,24729,24745&q=m&cp=1"s
+			HTTP/1.1 200 OK
+		-->
+		<!-- This is needed for OCSP responder to work.
+			If OCSP checking is set to hard-fail the user-agent might have troubles accessing some HTTPS sites
+		-->
+		<exclusion pattern="^http://clients[0-9]\.google\.com/ocsp"/>
+			<test url="http://clients1.google.com/ocsp" />
+			<test url="http://clients2.google.com/ocsp" />
+			<test url="http://clients3.google.com/ocsp" />
+
+	<rule from="^http://(docs\d)\.google\.com/"
+		 	to="https://$1.google.com/" />
+			<test url="http://docs1.google.com/" />
+			<test url="http://docs2.google.com/" />
+			<test url="http://docs3.google.com/" />
+
+	<rule from="^http://(\d\.docs)\.google\.com/"
+		 	to="https://$1.google.com/" />
+			<test url="http://1.docs.google.com/" />
+			<test url="http://2.docs.google.com/" />
+			<test url="http://3.docs.google.com/" />
+
+	<rule from="^http://(spreadsheets\d)\.google\.com/"
+		 	to="https://$1.google.com/" />
+		<test url="http://spreadsheets1.google.com/" />
+		<test url="http://spreadsheets2.google.com/" />
+		<test url="http://spreadsheets3.google.com/" />
+
+	<rule from="^http://(?:encrypted-)?tbn(\d)\.google\.com/"
+		to="https://encrypted-tbn$1.google.com/" />
+		<test url="http://encrypted-tbn1.google.com/" />
+		<test url="http://encrypted-tbn2.google.com/" />
+		<test url="http://encrypted-tbn3.google.com/" />
+		<test url="http://tbn1.google.com/" />
+		<test url="http://tbn2.google.com/" />
+		<test url="http://tbn3.google.com/" />
+
+	<rule from="^http://chart\.apis\.google\.com/chart"
+	to="https://chart.googleapis.com/chart" />
+		<test url="http://chart.apis.google.com/chart" />
+
+	<rule from="^http://([\w-]+)\.clients\.google\.com/"
+		to="https://$1.clients.google.com/" />
+		<test url="http://foo.clients.google.com/bar" />
+		<test url="http://bar.clients.google.com/" />
+		<test url="http://foobar.clients.google.com/foobar" />
+
+	<rule from="^http://codesearch\.google\.com/"
+		to="https://www.google.com/codesearch/" />
+		<test url="http://codesearch.google.com/" />
+</ruleset>

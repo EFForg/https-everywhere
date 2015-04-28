@@ -1,0 +1,425 @@
+<!--
+	This ruleset only covers (www.)?google.tld
+	For other Google coverage, see GoogleServices.xml
+
+	*** Google Images related paths are covered in GoogleImages.xml ***
+
+	Nonfunctional google.com paths:
+
+		- analytics	*
+		- imgres *
+		- u/		(404)
+
+	* Redirects to http
+-->
+<ruleset name="Google">
+	<target host="google.*" />
+	<target host="www.google.*" />
+	<exclusion pattern="^http://(www\.)?google\.com/analytics/" />
+		<test url="http://www.google.com/analytics/" />
+		<test url="http://google.com/analytics/" />
+	<exclusion pattern="^http://(www\.)?google\.com/imgres/" />
+		<test url="http://www.google.com/imgres/" />
+		<test url="http://google.com/imgres/" />
+
+	<securecookie host="^www\.google\.com$" name="^GoogleAccountsLocale_session$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.google\.com$" name="^(APISID|HSID|NID|PREF|SID)$" /-->
+	<!--
+		Can we secure any of these wildcard cookies safely?
+									-->
+	<!--securecookie host="^\.google\.com$" name="^(hl|I4SUserLocale|NID|PREF|S)$" /-->
+	<!--securecookie host="^\.google\.[\w.]{2,6}$" name="^(hl|I4SUserLocale|NID|PREF|S|S_awfe)$" /-->
+
+	<!-- Problems -->
+	<!--	First handle problematic tlds:
+				- www.google.bo *
+				- www.google.co *
+				- www.google.ec *
+				- www.google.in **
+				- www.google.kr *
+				- www.google.com.kz *
+				- www.google.com.lk *
+				- www.google.mx *
+				- www.google.sg *
+				- www.google.sl *
+				- www.google.ug *
+				- www.google.vn *
+
+			* mismatched, CN: google.com
+			** 404
+	-->
+	<rule from="^http://(?:www\.)?google\.co/"
+		to="https://www.google.com/" />
+		<test url="http://google.co/" />
+		<test url="http://www.google.co/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:co\.)?(in|kr|ug)/"
+		to="https://www.google.co.$1/" />
+		<test url="http://google.co.in/" />
+		<test url="http://www.google.co.in/" />
+		<test url="http://google.co.kr/" />
+		<test url="http://www.google.co.kr/" />
+		<test url="http://google.co.ug/" />
+		<test url="http://www.google.co.ug/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(kz|lk)/"
+		to="https://www.google.$1/" />
+		<test url="http://google.com.kz/" />
+		<test url="http://www.google.com.kz/" />
+		<test url="http://google.com.lk/" />
+		<test url="http://www.google.com.lk/" />
+
+	<rule from="^http://(?:www\.)?google\.(?:com\.)?(bo|ec|mx|sg|sl|vn)/"
+		to="https://www.google.com.$1/" />
+		<test url="http://google.com.bo/" />
+		<test url="http://www.google.com.bo/" />
+		<test url="http://google.com.ec/" />
+		<test url="http://www.google.com.ec/" />
+		<test url="http://google.com.mx/" />
+		<test url="http://www.google.com.mx/" />
+		<test url="http://google.com.sg/" />
+		<test url="http://www.google.com.sg/" />
+		<test url="http://google.com.sl/" />
+		<test url="http://www.google.com.sl/" />
+		<test url="http://google.com.vn/" />
+		<test url="http://www.google.com.vn/" />
+
+		<!--
+			https://www.google.com.au/tisp/	200 (OK)
+			https://www.google.com.au/tisp	404
+			https://www.google.com/tisp		404
+			http://www.google.com/tisp		301 (redirect)
+					-->
+		<rule from="^https?://(?:www\.)?google\.((?:com?\.)?\w{2,3})/tisp(?=$|\?)"
+			to="https://www.google.$1/tisp/" />
+			<test url="http://www.google.ca/tisp" />
+			<test url="http://www.google.com/tisp" />
+			<test url="http://www.google.com.au/tisp" />
+			<test url="https://www.google.ca/tisp" />
+			<test url="https://www.google.com/tisp" />
+			<test url="https://www.google.com.au/tisp" />
+			<test url="http://google.ca/tisp?" />
+			<test url="http://google.com/tisp?" />
+			<test url="http://google.com.au/tisp?" />
+	<!-- /problems -->
+
+	<!-- Google CSE -->
+	<rule from="^http://(?:www\.)?google\.(?:com?\.)?\w{2,3}/custom"
+		 to="https://www.google.com/cse" />
+		<test url="http://google.ca/custom" />
+		<test url="http://google.com/custom" />
+		<test url="http://google.com.au/custom" />
+		<test url="http://www.google.ca/custom" />
+		<test url="http://www.google.com/custom" />
+		<test url="http://www.google.com.au/custom" />
+		
+	<!--   Paths that 404 on .ccltd, but work on .com:   -->
+	<rule from="^https?://(?:www\.)?google\.(?:com?\.)?\w{2,3}/(?=calendar|dictionary|foobar|ideas|partners|powermeter|webdesigner)"
+		 	to="https://www.google.com/" />
+		<test url="http://www.google.ca/calendar" />
+		<test url="http://www.google.com/calendar" />
+		<test url="http://www.google.com.au/calendar" />
+		<test url="http://www.google.ca/dictionary" />
+		<test url="http://www.google.com/dictionary" />
+		<test url="http://www.google.com.au/dictionary" />
+		<test url="http://www.google.ca/foobar" />
+		<test url="http://www.google.com/foobar" />
+		<test url="http://www.google.com.au/foobar" />
+		<test url="http://www.google.ca/ideas" />
+		<test url="http://www.google.com/ideas" />
+		<test url="http://www.google.com.au/ideas" />
+		<test url="http://www.google.ca/partners" />
+		<test url="http://www.google.com/partners" />
+		<test url="http://www.google.com.au/partners" />
+		<test url="http://www.google.ca/powermeter" />
+		<test url="http://www.google.com/powermeter" />
+		<test url="http://www.google.com.au/powermeter" />
+		<test url="http://www.google.ca/webdesigner" />
+		<test url="http://www.google.com/webdesigner" />
+		<test url="http://www.google.com.au/webdesigner" />
+
+	<!-- The site's main page -->
+	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(?=#|\?|$)"
+		to="https://www.google.$2/" />
+		<test url="http://google.ca/" />
+		<test url="http://google.com/" />
+		<test url="http://google.com.au/" />
+		<test url="http://www.google.ca/#" />
+		<test url="http://www.google.com/#" />
+		<test url="http://www.google.com.au/#" />
+		<test url="http://www.google.ca/?" />
+		<test url="http://www.google.com/?" />
+		<test url="http://www.google.com.au/?" />
+
+	<!--   Paths that work on all in google.*   -->
+	<rule from="^http://(?:www\.)?google\.((?:com?\.)?\w{2,3})/(?=about|accounts|adplanner|ads|adsense|adwords|analytics|bookmarks|books|chrome|chromecast|contacts|coop|cse|css|culturalinstitute|doodles|doubleclick|earth|favicon.ico|finance|get|goodtoknow|googleblogs|grants|green|hangouts|help|hostednews|images|intl|js|landing|logos|mapmaker|mobile|newproducts|news|nexus|pacman|patents|policies|postini|prdhp|profiles|products|reader|s2|script|search|setprefs|settings|shopping|support|teapot|tools|transparencyreport|trends|urchin|webhp|webmasters)"
+		 to="https://www.google.$1/" />
+		<test url="http://www.google.ca/about" />
+		<test url="http://www.google.com/about" />
+		<test url="http://www.google.com.au/about" />
+		<test url="http://www.google.ca/accounts" />
+		<test url="http://www.google.com/accounts" />
+		<test url="http://www.google.com.au/accounts" />
+		<test url="http://www.google.ca/adplanner" />
+		<test url="http://www.google.com/adplanner" />
+		<test url="http://www.google.com.au/adplanner" />
+		<test url="http://www.google.ca/ads" />
+		<test url="http://www.google.com/ads" />
+		<test url="http://www.google.com.au/ads" />
+		<test url="http://www.google.ca/adsense" />
+		<test url="http://www.google.com/adsense" />
+		<test url="http://www.google.com.au/adsense" />
+		<test url="http://www.google.ca/adwords" />
+		<test url="http://www.google.com/adwords" />
+		<test url="http://www.google.com.au/adwords" />
+		<test url="http://www.google.ca/analytics" />
+		<test url="http://www.google.com/analytics" />
+		<test url="http://www.google.com.au/analytics" />
+		<test url="http://www.google.ca/bookmarks" />
+		<test url="http://www.google.com/bookmarks" />
+		<test url="http://www.google.com.au/bookmarks" />
+		<test url="http://www.google.ca/books" />
+		<test url="http://www.google.com/books" />
+		<test url="http://www.google.com.au/books" />
+		<test url="http://www.google.ca/chrome" />
+		<test url="http://www.google.com/chrome" />
+		<test url="http://www.google.com.au/chrome" />
+		<test url="http://www.google.ca/chromecast" />
+		<test url="http://www.google.com/chromecast" />
+		<test url="http://www.google.com.au/chromecast" />
+		<test url="http://www.google.ca/contacts" />
+		<test url="http://www.google.com/contacts" />
+		<test url="http://www.google.com.au/contacts" />
+		<test url="http://www.google.ca/coop" />
+		<test url="http://www.google.com/coop" />
+		<test url="http://www.google.com.au/coop" />
+		<test url="http://www.google.ca/cse" />
+		<test url="http://www.google.com/cse" />
+		<test url="http://www.google.com.au/cse" />
+		<test url="http://www.google.ca/css" />
+		<test url="http://www.google.com/css" />
+		<test url="http://www.google.com.au/css" />
+		<test url="http://www.google.ca/culturalinstitute" />
+		<test url="http://www.google.com/culturalinstitute" />
+		<test url="http://www.google.com.au/culturalinstitute" />
+		<test url="http://www.google.ca/doodles" />
+		<test url="http://www.google.com/doodles" />
+		<test url="http://www.google.com.au/doodles" />
+		<test url="http://www.google.ca/doubleclick/" />
+		<test url="http://www.google.com/doubleclick/" />
+		<test url="http://www.google.com.au/doubleclick/" />
+		<test url="http://www.google.ca/earth" />
+		<test url="http://www.google.com/earth" />
+		<test url="http://www.google.com.au/earth" />
+		<test url="http://www.google.ca/favicon.ico" />
+		<test url="http://www.google.com/favicon.ico" />
+		<test url="http://www.google.com.au/favicon.ico" />
+		<test url="http://www.google.ca/finance" />
+		<test url="http://www.google.com/finance" />
+		<test url="http://www.google.com.au/finance" />
+		<test url="http://www.google.ca/get" />
+		<test url="http://www.google.com/get" />
+		<test url="http://www.google.com.au/get" />
+		<test url="http://www.google.ca/goodtoknow" />
+		<test url="http://www.google.com/goodtoknow" />
+		<test url="http://www.google.com.au/goodtoknow" />
+		<test url="http://www.google.ca/googleblogs" />
+		<test url="http://www.google.com/googleblogs" />
+		<test url="http://www.google.com.au/googleblogs" />
+		<test url="http://www.google.ca/grants" />
+		<test url="http://www.google.com/grants" />
+		<test url="http://www.google.com.au/grants" />
+		<test url="http://www.google.ca/green" />
+		<test url="http://www.google.com/green" />
+		<test url="http://www.google.com.au/green" />
+		<test url="http://www.google.ca/hangouts" />
+		<test url="http://www.google.com/hangouts" />
+		<test url="http://www.google.com.au/hangouts" />
+		<test url="http://www.google.ca/help/" />
+		<test url="http://www.google.com/help/" />
+		<test url="http://www.google.com.au/help/" />
+		<test url="http://www.google.ca/hostednews" />
+		<test url="http://www.google.com/hostednews" />
+		<test url="http://www.google.com.au/hostednews" />
+		<test url="http://www.google.ca/images" />
+		<test url="http://www.google.com/images" />
+		<test url="http://www.google.com.au/images" />
+		<test url="http://www.google.ca/intl" />
+		<test url="http://www.google.com/intl" />
+		<test url="http://www.google.com.au/intl" />
+		<test url="http://www.google.ca/js" />
+		<test url="http://www.google.com/js" />
+		<test url="http://www.google.com.au/js" />
+		<test url="http://www.google.ca/landing" />
+		<test url="http://www.google.com/landing" />
+		<test url="http://www.google.com.au/landing" />
+		<test url="http://www.google.ca/logos" />
+		<test url="http://www.google.com/logos" />
+		<test url="http://www.google.com.au/logos" />
+		<test url="http://www.google.ca/mapmaker" />
+		<test url="http://www.google.com/mapmaker" />
+		<test url="http://www.google.com.au/mapmaker" />
+		<test url="http://www.google.ca/mobile/" />
+		<test url="http://www.google.com/mobile/" />
+		<test url="http://www.google.com.au/mobile/" />
+		<test url="http://www.google.ca/newproducts" />
+		<test url="http://www.google.com/newproducts" />
+		<test url="http://www.google.com.au/newproducts" />
+		<test url="http://www.google.ca/news" />
+		<test url="http://www.google.com/news" />
+		<test url="http://www.google.com.au/news" />
+		<test url="http://www.google.ca/nexus" />
+		<test url="http://www.google.com/nexus" />
+		<test url="http://www.google.com.au/nexus" />
+		<test url="http://www.google.ca/pacman/" />
+		<test url="http://www.google.com/pacman/" />
+		<test url="http://www.google.com.au/pacman/" />
+		<test url="http://www.google.ca/patents" />
+		<test url="http://www.google.com/patents" />
+		<test url="http://www.google.com.au/patents" />
+		<test url="http://www.google.ca/policies" />
+		<test url="http://www.google.com/policies" />
+		<test url="http://www.google.com.au/policies" />
+		<test url="http://www.google.ca/postini/" />
+		<test url="http://www.google.com/postini/" />
+		<test url="http://www.google.com.au/postini/" />
+		<test url="http://www.google.ca/prdhp" />
+		<test url="http://www.google.com/prdhp" />
+		<test url="http://www.google.com.au/prdhp" />
+		<test url="http://www.google.ca/profiles" />
+		<test url="http://www.google.com/profiles" />
+		<test url="http://www.google.com.au/profiles" />
+		<test url="http://www.google.ca/products" />
+		<test url="http://www.google.com/products" />
+		<test url="http://www.google.com.au/products" />
+		<test url="http://www.google.ca/reader" />
+		<test url="http://www.google.com/reader" />
+		<test url="http://www.google.com.au/reader" />
+		<test url="http://www.google.ca/s2" />
+		<test url="http://www.google.com/s2" />
+		<test url="http://www.google.com.au/s2" />
+		<test url="http://www.google.ca/script" />
+		<test url="http://www.google.com/script" />
+		<test url="http://www.google.com.au/script" />
+		<test url="http://www.google.ca/search" />
+		<test url="http://www.google.com/search" />
+		<test url="http://www.google.com.au/search" />
+		<test url="http://www.google.ca/setprefs" />
+		<test url="http://www.google.com/setprefs" />
+		<test url="http://www.google.com.au/setprefs" />
+		<test url="http://www.google.ca/settings" />
+		<test url="http://www.google.com/settings" />
+		<test url="http://www.google.com.au/settings" />
+		<test url="http://www.google.ca/shopping" />
+		<test url="http://www.google.com/shopping" />
+		<test url="http://www.google.com.au/shopping" />
+		<test url="http://www.google.ca/support" />
+		<test url="http://www.google.com/support" />
+		<test url="http://www.google.com.au/support" />
+		<test url="http://www.google.ca/teapot" />
+		<test url="http://www.google.com/teapot" />
+		<test url="http://www.google.com.au/teapot" />
+		<test url="http://www.google.ca/tools" />
+		<test url="http://www.google.com/tools" />
+		<test url="http://www.google.com.au/tools" />
+		<test url="http://www.google.ca/transparencyreport" />
+		<test url="http://www.google.com/transparencyreport" />
+		<test url="http://www.google.com.au/transparencyreport" />
+		<test url="http://www.google.ca/trends" />
+		<test url="http://www.google.com/trends" />
+		<test url="http://www.google.com.au/trends" />
+		<test url="http://www.google.ca/urchin" />
+		<test url="http://www.google.com/urchin" />
+		<test url="http://www.google.com.au/urchin" />
+		<test url="http://www.google.ca/webhp" />
+		<test url="http://www.google.com/webhp" />
+		<test url="http://www.google.com.au/webhp" />
+		<test url="http://www.google.ca/webmasters" />
+		<test url="http://www.google.com/webmasters" />
+		<test url="http://www.google.com.au/webmasters" />
+
+	<!--   Paths that only exist/work on .com   -->
+	<rule from="^http://(www\.)?google\.com/(\+|afsonline|appsstatus|buzz|chat|chart|chromeos|codesearch|extern_js|glass|googlebooks|ig|insights|jsapi|moderator|phone|recaptcha|safebrowsing|uds|videotargetting|webfonts)"
+		to="https://www.google.com/$2" />
+
+		<!--
+			/sorry/ is covered under GoogleSorry.xml
+			-->
+		<test url="http://google.com/+" />
+		<test url="http://google.com/afsonline" />
+		<test url="http://google.com/appsstatus" />
+		<test url="http://google.com/buzz" />
+		<test url="http://google.com/chat" />
+		<test url="http://google.com/chart" />
+		<test url="http://google.com/chromeos" />
+		<test url="http://google.com/codesearch" />
+		<test url="http://google.com/extern_js" />
+		<test url="http://google.com/glass" />
+		<test url="http://google.com/googlebooks" />
+		<test url="http://google.com/ig/" />
+		<test url="http://google.com/insights" />
+		<test url="http://google.com/jsapi" />
+		<test url="http://google.com/moderator" />
+		<test url="http://google.com/phone" />
+		<test url="http://google.com/recaptcha" />
+		<test url="http://google.com/safebrowsing" />
+		<test url="http://google.com/uds" />
+		<test url="http://google.com/videotargetting" />
+		<test url="http://google.com/webfonts" />
+		<test url="http://www.google.com/+" />
+		<test url="http://www.google.com/afsonline" />
+		<test url="http://www.google.com/appsstatus" />
+		<test url="http://www.google.com/buzz" />
+		<test url="http://www.google.com/chat" />
+		<test url="http://www.google.com/chart" />
+		<test url="http://www.google.com/chromeos" />
+		<test url="http://www.google.com/codesearch" />
+		<test url="http://www.google.com/extern_js" />
+		<test url="http://www.google.com/glass" />
+		<test url="http://www.google.com/googlebooks" />
+		<test url="http://www.google.com/ig/" />
+		<test url="http://www.google.com/insights" />
+		<test url="http://www.google.com/jsapi" />
+		<test url="http://www.google.com/moderator" />
+		<test url="http://www.google.com/phone" />
+		<test url="http://www.google.com/recaptcha" />
+		<test url="http://www.google.com/safebrowsing" />
+		<test url="http://www.google.com/uds" />
+		<test url="http://www.google.com/videotargetting" />
+		<test url="http://www.google.com/webfonts" />
+
+	<!--	A very annoying exception that we
+		seem to need for the basic case
+						-->
+	<exclusion pattern="^http://(www\.)?google\.com/search.*tbs=shop" />
+		<test url="http://google.com/search?q=test&amp;tbs=shop" />
+		<test url="http://www.google.com/search?q=test&amp;tbs=shop" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbs=shop" />
+
+	<!--	This is necessary for image results
+		links from web search results
+						-->
+	<exclusion pattern="^http://(www\.)?google\.com/search.*tbm=isch.*" />
+		<test url="http://google.com/search?q=test&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=test&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=foobar&amp;tbm=isch&amp;something=baz" />
+
+	<!-- 404s when using HTTPS -->
+	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/firefox/?"
+		to="https://www.google.$2/" />
+		<test url="http://google.ca/firefox" />
+		<test url="http://google.com/firefox" />
+		<test url="http://google.com.au/firefox" />
+		<test url="http://www.google.ca/firefox" />
+		<test url="http://www.google.com/firefox" />
+		<test url="http://www.google.com.au/firefox" />
+		<test url="http://google.ca/firefox/" />
+		<test url="http://google.com/firefox/" />
+		<test url="http://google.com.au/firefox/" />
+		<test url="http://www.google.ca/firefox/" />
+		<test url="http://www.google.com/firefox/" />
+		<test url="http://www.google.com.au/firefox/" />
+</ruleset>

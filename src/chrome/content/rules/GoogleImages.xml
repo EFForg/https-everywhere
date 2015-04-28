@@ -1,65 +1,33 @@
 <!--
 	For other Google coverage, see GoogleServices.xml.
-
-
-	Problematic domains:
-
-		- www.google.bo *
-		- www.google.co *
-		- www.google.ec *
-		- www.google.in *
-		- www.google.kr *
-		- www.google.com.kz **
-		- www.google.com.lk *
-		- www.google.mx **
-		- www.google.sg *
-		- www.google.sl *
-		- www.google.ug *
-		- www.google.vn *
-
-	* 404; mismatched, CN: google.com
-	** Works; mismatched, CN: google.com
-
 -->
 <ruleset name="Google Images">
-
 	<target host="google.*" />
 	<target host="www.google.*" />
-	<target host="google.co.*" />
-	<target host="www.google.co.*" />
-	<target host="google.com" />
-	<target host="images.google.com" />
-	<target host="google.com.*" />
-	<target host="www.google.com.*" />
-		<!--
-			Only handle image-related paths in this ruleset:
-										-->
-		<exclusion pattern="^http://(?:www\.)?google(?:\.com?)?\.\w{2,3}/(?!(?:advanced_image_search|imghp|.*tb(?:m=isch|s=sbi)))" />
+	<target host="images.google.*" />
 
+	<rule from="^http://images\.google\.((?:com?\.)?\w{2,3})/"
+			to="https://images.google.$1/" />
+		<test url="http://images.google.ca/" />
+		<test url="http://images.google.com/" />
+		<test url="http://images.google.com.au/" />
 
-	<rule from="^http://(?:www\.)?google\.com/"
-		to="https://www.google.com/" />
-
-	<rule from="^http://images\.google\.com/"
-		to="https://images.google.com/" />
-
-	<!--	First handle problematic domains:
-							-->
-	<rule from="^http://(?:www\.)?google\.co/"
-		to="https://www.google.com/" />
-
-	<rule from="^http://(?:www\.)?google\.(?:co\.)?(in|kr|ug)/"
-		to="https://www.google.co.$1/" />
-
-	<rule from="^http://(?:www\.)?google\.(?:com\.)?(kz|lk)/"
-		to="https://www.google.$1/" />
-
-	<rule from="^http://(?:www\.)?google\.(?:com\.)?(bo|ec|mx|sg|sl|vn)/"
-		to="https://www.google.com.$1/" />
-
-	<!--	And then the rest:
-					-->
-	<rule from="^http://(?:www\.)?google\.(com?\.)?(ae|ar|at|au|bg|bh|br|ca|ch|cl|co|cr|cu|de|eg|es|fi|fr|gh|gt|hr|id|ie|il|it|jo|jp|jm|ke|kw|lb|ly|my|na|ng|nl|no|nz|om|pa|pe|pk|pl|pt|py|qa|ro|ru|rw|sa|se|sv|th|tr|uk|uy|ve|za|zw)/"
-		to="https://www.google.$1$2/" />
-
+	<!--
+		Only handle image-related paths in this ruleset:
+	-->
+	<rule from="^http://(www\.)?google\.((?:com?\.)?\w{2,3})/(advanced_image_search|imghp|.*tb(?:m=isch|s=sbi))"
+			to="https://www.google.$2/$3" />
+		<test url="http://www.google.ca/advanced_image_search" />
+		<test url="http://www.google.com/advanced_image_search" />
+		<test url="http://www.google.com.au/advanced_image_search" />
+		<test url="http://www.google.ca/imghp" />
+		<test url="http://www.google.com/imghp" />
+		<test url="http://www.google.com.au/imghp" />
+		<test url="http://www.google.ca/search?q=test&amp;biw=1440&amp;bih=725&amp;source=lnms&amp;tbm=isch" />
+		<test url="http://www.google.com/search?q=test&amp;biw=1440&amp;bih=725&amp;source=lnms&amp;tbm=isch" />
+		<test url="http://www.google.com.au/search?q=test&amp;biw=1440&amp;bih=725&amp;source=lnms&amp;tbm=isch" />
+		<!-- tbs=sbi afaik is the "Google Sorry" page, but I can't find a Google Images related URL for it -->
+		<test url="http://www.google.ca/search?tbs=sbi" />
+		<test url="http://www.google.com/search?tbs=sbi" />
+		<test url="http://www.google.com.au/search?tbs=sbi" />
 </ruleset>

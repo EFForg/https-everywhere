@@ -1,0 +1,150 @@
+
+<!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://cbks0.google.com/ (200) => https://cbks0.google.com/ (404)
+Non-2xx HTTP code: http://gg.google.com/ (200) => https://gg.google.com/ (404)
+Fetch error: http://ipv6.google.com/ => https://ipv6.google.com/: (7, '')
+Non-2xx HTTP code: http://knoll.google.com/ (200) => https://knoll.google.com/ (404)
+Non-2xx HTTP code: http://chatenabled.mail.google.com/ (200) => https://chatenabled.mail.google.com/ (404)
+Non-2xx HTTP code: http://pack.google.com/ (200) => https://pack.google.com/ (404)
+Non-2xx HTTP code: http://sb-ssl.google.com/ (200) => https://sb-ssl.google.com/ (404)
+Non-2xx HTTP code: http://suggestqueries.google.com/ (200) => https://suggestqueries.google.com/ (404)
+
+-->
+
+<!--
+	See Google.com_Subdomains_Complex.html for rules that don't match the simple rule here
+	For other Google coverage, see GoogleServices.xml
+
+	Nonfunctional domains:
+
+		- partnerpage.google.com *
+		- picasa.google.com *
+		- www.picasa.google.com ²
+		- safebrowsing.clients.google.com	(404, mismatched)
+		- (www.)googlesyndicatedsearch.com	(404; mismatched, CN: google.com)
+		- buttons.googlesyndication.com *
+
+	* 404, valid cert
+	² 404; mismatched, CN: www.google.com
+
+	Problematic domains:
+
+		- www.goo.gl		(404; mismatched, CN: *.google.com)
+
+		- www.news.google.ca ²
+
+		- google.com subdomains:
+
+			- cbks0 ****
+			- earth *
+			- gg		($ 404s)
+			- knoll *
+			- scholar **
+			- trends *
+
+	Partially covered domains:
+
+		- google.cctld subdomains:
+
+			- scholar	(→ www)
+
+		- google.com subdomains:
+
+			- (www.)
+			- cbks0		($ 404s)
+			- gg		($ 404s)
+			- news		(→ www)
+			- scholar	(→ www)
+-->
+<ruleset name="Google.com Subdomains" default_off='failed ruleset test'>
+	<target host="admin.google.com" />
+	<target host="apis.google.com" />
+		<!-- See the complex ruleset for chart.apis -->
+	<target host="appengine.google.com" />
+	<target host="calendar.google.com" />
+	<target host="cast.google.com" />
+	<target host="cbks0.google.com" />
+	<target host="cert-test.sandbox.google.com" />
+	<target host="checkout.google.com" />
+	<target host="chrome.google.com" />
+		<!-- See the complex ruleset for clients\d -->
+		<!-- See the complex ruleset for *.clients\d -->
+	<target host="cloud.google.com" />
+	<target host="code.google.com" />
+		<!-- See the complex ruleset for codesearch -->
+		<target host="*.corp.google.com" />
+		<!-- See the wildcard section -->
+	<target host="developers.google.com" />
+	<target host="dl.google.com" />
+	<target host="docs.google.com" />
+		<!-- See the complex ruleset for docs\d -->
+		<!-- See the complex ruleset for \d\.docs -->
+	<target host="drive.google.com" />
+	<target host="encrypted.google.com" />
+		<!-- See the complex ruleset for encrypted-tbn\d -->
+	<target host="feedburner.google.com" />
+	<target host="feedproxy.google.com" />
+	<target host="fiber.google.com" />
+	<target host="gg.google.com" />
+	<target host="glass.google.com" />
+	<target host="goto.google.com" />
+	<target host="health.google.com" />
+	<target host="helpouts.google.com" />
+	<target host="history.google.com" />
+	<target host="talkgadget.google.com" />
+	<target host="hostedtalkgadget.google.com" />
+	<target host="investor.google.com" />
+	<target host="ipv4.google.com" />
+	<target host="ipv6.google.com" />
+	<!-- See GoogleMaps.xml for khms\d? -->
+	<target host="knol.google.com" />
+	<target host="knoll.google.com" />
+	<target host="mail.google.com" />
+		<target host="chatenabled.mail.google.com" />
+	<!-- See GoogleMaps.xml for maps -->
+	<!-- See GoogleMaps.xml for maps-api-ssl -->
+	<!-- See GoogleMaps.xml for mw2 -->
+	<target host="pack.google.com" />
+	<target host="pki.google.com" />
+	<target host="play.google.com" />
+	<target host="plus.google.com" />
+		<target host="plus.sandbox.google.com" />
+	<target host="plusone.google.com" />
+	<target host="productforums.google.com" />
+	<target host="profiles.google.com" />
+	<target host="safebrowsing-cache.google.com" />
+	<target host="sb-ssl.google.com" />
+	<!-- see Google.tld_Subdomains.xml for scholar -->
+	<target host="script.google.com" />
+	<target host="security.google.com" />
+	<target host="services.google.com" />
+	<target host="sites.google.com" />
+	<target host="slides.google.com" />
+	<!-- see GoogleSorry.xml for sorry -->
+	<target host="spreadsheets.google.com" />
+	<target host="suggestqueries.google.com" />
+	<target host="support.google.com" />
+	<target host="talk.google.com" />
+	<!-- See the complex ruleset for tbn\d -->
+	<target host="tools.google.com" />
+	<target host="wallet.google.com" />
+
+	<securecookie host="^(?:\.code|login\.corp|developers|docs|\d\.docs|fiber|mail|plus|\.?productforums|support)\.google\.[\w.]{2,6}$" name=".+" />
+
+	<!-- *.corp wildcard -->
+	<rule from="^http://([\w-]+)\.corp\.google\.com/"
+			to="https://$1.corp.google.com/" />
+		<test url="http://login.corp.google.com/" />
+		<test url="http://ideas.corp.google.com/" />
+		<test url="http://discovery.corp.google.com/" />
+
+	<!-- subdomain to path redirects -->
+	<rule from="^http://(earth|trends)\.google\.com/"
+		 to="https://www.google.com/$1" />
+		<test url="http://earth.google.com/" />
+		<test url="http://trends.google.com/" />
+
+	<rule from="^http:"
+			to="https:" />
+</ruleset>
