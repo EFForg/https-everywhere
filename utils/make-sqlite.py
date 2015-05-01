@@ -5,10 +5,10 @@
 import glob
 import locale
 import os
+import re
 import sqlite3
 import subprocess
 import sys
-import re
 
 from collections import Counter
 from lxml import etree
