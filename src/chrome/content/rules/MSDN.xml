@@ -28,20 +28,21 @@
 		- i1.blogs
 		- channel9
 		- create
+
 		- forums.create
 		- profile.create
 		- users.create
 		- windowsphone.create
 		- www.create
+
 		- social
 		- i1.social
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these hosts:
 
-		- blogs.msdn.com *
-
-	* Secured by us <= not secured by server
+		- blogs.msdn.com
+		- create.msdn.com
 
 
 	Mixed content:
@@ -58,19 +59,45 @@
 -->
 <ruleset name="MSDN (partial)">
 
-	<target host="*.msdn.com" />
-		<!--
-			https://trac.torproject.org/projects/tor/ticket/8778
-										-->
-		<exclusion pattern="^http://blogs\.msdn\.com/" />
-	<target host="i1.*.msdn.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="channel9.msdn.com" />
+
 	<target host="create.msdn.com" />
-	<target host="*.create.msdn.com" />
+	<target host="forums.create.msdn.com" />
+	<target host="profile.create.msdn.com" />
+	<target host="users.create.msdn.com" />
+	<target host="windowsphone.create.msdn.com" />
+	<target host="www.create.msdn.com" />
+
+	<target host="social.msdn.com" />
+
+	<!--	Complications:
+				-->
+	<target host="i1.blogs.msdn.com" />
+	<target host="public.create.msdn.com" />
+	<target host="i1.social.msdn.com" />
+
+		<!--	https://trac.torproject.org/projects/tor/ticket/8778
+										-->
+		<!--exclusion pattern="^http://blogs\.msdn\.com/" /-->
+
+		<exclusion pattern="^http://public\.create\.msdn\.com/(?!assets/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://public.create.msdn.com/Feeds/CcoFeeds.svc/CmsFeed" />
+
+			<!--	-ve:
+					-->
+			<test url="http://public.create.msdn.com/assets/" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^blogs\.msdn\.com$" name="^AuthorizationCookie$" /-->
+	<!--securecookie host="^channel9\.msdn.com$" name="^c9id$" /-->
+
 	<!--
 		Observed cookie subdomains:
 
@@ -79,17 +106,18 @@
 					-->
 	<securecookie host="^.+\.msdn\.com$" name=".+" />
 
+
 	<!--	i1: Akamai
 				-->
-	<rule from="^http://(?:i1\.)?(blogs|social)\.msdn\.com/"
-		to="https://$1.msdn.com/" />
-
-	<rule from="^http://(channel9|(?:(?:forums|profile|users|windowsphone|www)\.)?create)\.msdn\.com/"
+	<rule from="^http://i1\.(blogs|social)\.msdn\.com/"
 		to="https://$1.msdn.com/" />
 
 	<!--	Cert doesn't match public
 						-->
-	<rule from="^http://public\.create\.msdn\.com/assets/"
-		to="https://www.create.msdn.com/assets/" />
+	<rule from="^http://public\.create\.msdn\.com/"
+		to="https://www.create.msdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
