@@ -13,20 +13,44 @@
 
 	Nonfunctional subdomains:
 
+		- (www.)? ¹
 		- blog		(redirects to www)
+		- phoenix ²
+
+	¹ WP Engine
+	² Redirects to http
+
+
+	Problematic hosts in *playwire.com:
+
+		- support *
+
+	* Mismatched
 
 -->
-<ruleset name="Playwire (partial)">
+<ruleset name="Playwire.com (partial)">
 
-	<target host="playwire.com" />
-	<target host="*.playwire.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="playwire.com" /-->
+	<target host="cdn.playwire.com" />
+	<target host="support.playwire.com" />
+	<!--target host="www.playwire.com" /-->
 		<!--
 			At least some pages redirect to http.
 								-->
-		<exclusion pattern="^http://(?:www\.)?playwire\.com/(?!images/|javascripts/|stylesheets/)" />
+		<!--exclusion pattern="^http://(?:www\.)?playwire\.com/(?!images/|javascripts/|stylesheets/)" /-->
+		<!--exclusion pattern="^http://phoenix\.playwire\.com/en/(login|signup|signup/premium)$" /-->
+
+			<!--test url="http://phoenix.playwire.com/en/login" /-->
+			<!--test url="http://phoenix.playwire.com/en/signup" /-->
+			<!--test url="http://phoenix.playwire.com/en/signup/premium" /-->
 
 
-	<rule from="^http://(cdn\.|www\.)?playwire\.com/"
-		to="https://$1playwire.com/" />
+	<rule from="^http://support\.playwire\.com/"
+		to="https://www.playwiresupport.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

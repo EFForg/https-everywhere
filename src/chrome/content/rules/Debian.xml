@@ -11,55 +11,56 @@
 
 	Nonfunctional domains:
 
-		- debian.org subdomains:
+		- in *debian.org:
 
-			- arch **
+			- arch ¹
 			- backports ²
-			- ca		(shows db; mismatched, CN: db.debian.org)
-			- clang		(Shows webmail.ecranbleu.org)
-			- openstack.bm ***
-			- ftp.de ¹
-			- deb ¹
-			- incoming	(shows ftp-master; mismatched, CN: ftp-master.debian.org)
-			- manpages ¹
-			- popcon ¹
-			- search	(shows www; mismatched, CN: debian.org)
-			- security ¹
-			- security-team	(shows www; mismatched, CN: debian.org)
-			- sip-ws ****
-			- snapshot ¹
-			- ftp.us ¹
+			- ca ³
+			- clang ⁴
+			- openstack.bm ⁵
+			- ftp.de ⁶
+			- deb ⁶
+			- incoming ⁷
+			- manpages ⁶
+			- popcon ⁶
+			- search ²
+			- security ⁶
+			- security-team ²
+			- sip-ws ⁸
+			- snapshot ⁶
+			- ftp.us ⁶
 
-		- buildd.debian-ports.org	(Dropped)
+		- buildd.debian-ports.org ⁹
 
-	** Shows default page
-	¹ Refused
-	* Shows andrew.net.au
+	¹ Shows default page
 	² Shows www
-	*** Plaintext reply
-	**** Reset
+	³ Shows db; mismatched, CN: db.debian.org
+	⁴ Shows webmail.ecranbleu.org
+	⁵ Plaintext reply
+	⁶ Refused
+	⁷ Shows ftp-master; mismatched, CN: ftp-master.debian.org
+	⁸ Reset
+	⁹ Dropped
 
 
-	Problematic domains:
+	Problematic hosts in *debian.org:
 
-		- debian.org subdomains:
+		- metadata.ftp-master ¹
+		- puppet-dashboard ²
+		- security-master ²
 
-			- metadata.ftp-master *
-			- puppet-dashboard **
-			- security-master **
-
-	* Fastly
-	** Self-signed
+	¹ Fastly
+	² Self-signed
 
 
-	Partially covered domains:
+	Partially covered hosts in *debian.org:
 
-		- security.debian.org ¹ (→ www)
+		- security *	(→ www)
 
-	¹ At least some paths 404
+	* At least some paths 404
 
 
-	Fully covered debian.org subdomains:
+	Fully covered hosts in *debian.org:
 
 		- (www.)?
 		- alioth
@@ -123,6 +124,8 @@
 -->
 <ruleset name="Debian (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="debian.org" />
 	<target host="anonscm.debian.org" />
 	<target host="alioth.debian.org" />
@@ -156,7 +159,6 @@
 	<target host="release.debian.org" />
 	<target host="rt.debian.org" />
 	<target host="rtc.debian.org" />
-	<target host="security.debian.org" />
 	<!--target host="security-master.debian.org" /-->
 	<target host="security-tracker.debian.org" />
 	<!--target host="sip-ws.debian.org" /-->
@@ -169,6 +171,10 @@
 	<target host="www.debian.org" />
 
 	<!--target host="buildd.debian-ports.org" /-->
+
+	<!--	Complications:
+				-->
+	<target host="security.debian.org" />
 
 		<exclusion pattern="^http://security\.debian\.org/+(?!$|\?)" />
 
