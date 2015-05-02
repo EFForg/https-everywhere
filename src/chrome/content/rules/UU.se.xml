@@ -1,36 +1,42 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://uu.se/ => https://www.uu.se/: (6, 'Could not resolve host: uu.se')
 	Uppsala university
 
 
 	Nonfunctional subdomains:
 
-		- (www.)astro *
-		- user.it *
+		- www.astro ⁴
+		- user.it ¹
+		- www.listserv ³
+		- www.math ³
+		- static ³
 		- www.uaf ²
+		- www.uuinnovation ³
 
-	* Dropped
+	¹ Dropped
 	² Handshake fails
+	³ Mismatched
+	⁴ No local issuer cert provided
+
+
+	Other domains not covered:
+
+		- boxer.bmc ¹
+		- filer.student ¹
+
+	¹ Does not respond on port 80 (but does on 443)
 
 
 	Fully covered subdomains:
 
-		- (www.)		(^ → www)
+		- ^
+		- www
 		- filer.anst
-		- www.anst
-		- boxer.bmc
-		- it.bmc
 		- dropbox
-		- helpdesk
 		- www.it
-		- www.listserv
-		- filer.student
-		- home.student
-		- mail.teknik
-		- tor.uadm
+		- lists
+		- mail
+		- uadm
 		- www.uppmax
-		- www.uuinnovation
 		- webmail
 		- www-hotel
 
@@ -38,29 +44,25 @@ Fetch error: http://uu.se/ => https://www.uu.se/: (6, 'Could not resolve host: u
 	Insecure cookies are set for these domains:
 
 		- www.it
-
-
-	Not all subdomains suports ssl, here are those that do.
-
- -->
-<ruleset name="UU.se" platform="mixedcontent" default_off='failed ruleset test'>
+-->
+<ruleset name="UU.se">
 
 	<target host="uu.se" />
-	<target host="*.uu.se" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^www\.it\.uu\.se$" name="^PHPSESSID$" /-->
+	<target host="www.uu.se" />
+	<target host="filer.anst.uu.se" />
+	<target host="dropbox.uu.se" />
+	<target host="www.it.uu.se" />
+	<target host="lists.uu.se" />
+	<target host="mail.uu.se" />
+	<target host="uadm.uu.se" />
+	<target host="www.uppmax.uu.se" />
+	<target host="webmail.uu.se" />
+	<target host="www-hotel.uu.se" />
 
 	<securecookie host="^www\.it\.uu\.se$" name=".+" />
 
-
-	<rule from="^http://(?:www\.)?uu\.se/"
-		to="https://www.uu.se/" />
-
-	<rule from="^http://((?:filer|www)\.anst|(?:boxer|it)\.bmc|dropbox|filer|helpdesk|www\.it|www\.listserv|(?:filer|home)\.student|mail\.teknik|tor\.uadm|www\.uppmax|www\.uuinnovation|webmail|www-hotel)\.uu\.se/"
-		to="https://$1.uu.se/" />
+	<rule from="^http://"
+		to="https://" />
 
 </ruleset>
 
