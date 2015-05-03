@@ -21,30 +21,63 @@
 	* Uservoice
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- xtube.com
+		- .xtube.com
+		- feedback.xtube.com
+		- www.xtube.com
+
+
 	Mixed content:
 
-		- css from cdn1.static *
+		- css from cdn1.static ¹
+		- Images from cdn1.static ¹
+		- Ads from ss.phncdn.com ²
 
-		- Images from cdn1.static *
-
-	* Secured by us
+	¹ Secured by us
+	² Unsecurable <= dropped
 
 -->
 <ruleset name="Xtube.com" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
   <target host="xtube.com" />
   <target host="www.xtube.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn1.static.xtube.com" />
+
+		<exclusion pattern="^http://cdn1\.static\.xtube\.com/(?!img/|newcss/|newjs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cdn1.static.xtube.com/?" />
+			<test url="http://cdn1.static.xtube.com//" />
+			<test url="http://cdn1.static.xtube.com//?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cdn1.static.xtube.com/img/interface/icons/icn-rate-on.gif" />
+			<test url="http://cdn1.static.xtube.com/newcss/mainstyle.css" />
+			<test url="http://cdn1.static.xtube.com/newjs/xjs/vendor/fancyBox-2.1.5/source/jquery.fancybox.css" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(www\.)?xtube\.com$" name="^RNLBSERVERID$" /-->
-	<!--securecookie host="^\.xtube\.com$" name="^(IM_NUM|PHPSESSID|is_really_pc|split)$" /-->
+	<!--securecookie host="^\.xtube\.com$" name="^(IM_NUM|PHPSESSID|cookiesAccepted|is_really_pc|split)$" /-->
 	<!--securecookie host="^feedback\.xtube\.com$" name="^(_session_id|_rf)$" /-->
 
 	<securecookie host="^(?:www\.)?xtube\.com$" name=".+" />
 
 
-  <rule from="^http://(www\.)?xtube\.com/" to="https://$1xtube.com/" />
-
-	<rule from="^http://cdn\.static\.xtube\.com/(?=img/|newcss/|newjs/)"
+	<rule from="^http://cdn1\.static\.xtube\.com/"
 		to="https://www.xtube.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
