@@ -80,6 +80,7 @@
 			- silverlight.dlservice *
 			- download *
 			- web.esd *		(esd, origin, origin-web, and web don't exist)
+			- ignite		(Mismatched)
 			- samples.msdn		(refused)
 			- visualstudiogallery.msdn	(redirects to http, valid cert)
 			- mymfe			(reset)
@@ -104,9 +105,10 @@
 
 	Problematic domains:
 
+
 		- microsoft.com subdomains:
 
-			- ^ ***
+			- (www.)? ¹
 			- apps			(works; mismatched, CN: *.apps.microsoft.com)
 			- wscont[12].apps	(works, akamai)
 			- i[1-4].connect **
@@ -119,20 +121,20 @@
 			- img3.store		(mismatched)
 			- social.technet
 			- update *
+			- www.update		(Untrusted root)
 			- windows *
 			- res[12].windows **
 
 		- compass.surface.com **
 
+	¹ Sets HSTS, thereby breaking oem/; however, Microsoft's website links to https://www....
 	* Cert only matches www
 	** akamai
-	*** Times out
 	⁷ Mixed css from i3.technet.microsoft.com and i1.social.s-msft.com
 
 	Partially covered microsoft.com subdomains:
 
 		- answers		(some pages redirect to http)
-		- code.msdn	(pages redirect to http)
 		- tag ¹
 		- social.technet *
 
@@ -142,6 +144,7 @@
 
 	Fully covered microsoft.com subdomains:
 
+		- (www.)?
 		- account
 		- accountservices
 		- feedback.adcenter
@@ -149,8 +152,11 @@
 		- fb.answers
 		- wscont.apps
 		- wscont[12].apps	(→ wscont.apps)
+		- assets
+		- azure
 		- advertise.bingads
 		- secure.bingads
+		- blogs
 		- c
 		- c1
 		- choice
@@ -165,29 +171,45 @@
 			- services
 
 		- sas.css
+		- curah
 		- social.expression
 		- g
 		- insider
 		- js
+		- learning
 		- m
 		- widgets.membership
 		- mobile
 		- i1.mobile		(→ m)
+
+		- msdn
+		- apisandbox.msdn
+		- code.msdn
+		- lab.msdn
 		- social.msdn
+		- visualstudiogallery.msdn
+
 		- mspartner
+		- logobuilder.mspartner
+		- mspartnerlp.mspartner
+
 		- mvastorage
+		- oem
 		- office15client
 		- officepreview
 		- officeredir
 		- o15.officeredir
+		- training.partner
 		- rad
-		- scache		(→ www)
+		- readytogo
 		- profileapi.services
 		- social
 		- services.social
-		- spcache		( → www)
 		- corp.sts
 		- support
+		- sxp
+		- technet
+		- gallery.technet
 		- res[12].windows	(→ akamai)
 
 
@@ -212,12 +234,27 @@
 		- account.microsoft.com
 		- careers.microsoft.com
 		- choice.microsoft.com
+		- connect.microsoft.com
+		- curah.microsoft.com
+		- learning.microsoft.com
+
 		- msdn.microsoft.com
+		- apisandbox.msdn.microsoft.com
+		- .apisandbox.msdn.microsoft.com
 		- code.msdn.microsoft.com
+		- lab.msdn.microsoft.com
+		- visualstudiogallery.msdn.microsoft.com
+
 		- mspartner.microsoft.com
+		- logobuilder.mspartner.microsoft.com
+		- mspartnerlp.mspartner.microsoft.com
+
+		- training.partner.microsoft.com
+		- gallery.technet.microsoft.com
 		- social.technet.microsoft.com
 		- support.microsoft.com
 		- support2.microsoft.com
+		- sxp.microsoft.com
 
 
 	Mixed content:
@@ -230,19 +267,27 @@
 		- Fonts on careers from i.s-microsoft.com *
 
 		- Images, on:
+			- blogs from mscorp.blob.core.windows.net *
 			- insider from c *
 		- Images on onlinehelp from i.onlinehelp *
 			- support from $self *
 		- Images on smallbusiness.support from support
 		- Images on smallbusiness.support from www *
 			- social.technet from i1.social.s-msft.com *
+			- sxp from az648995.vo.msecnd.net
+			- sxp from blogs.msdn.com
+			- sxp from blogs.technet.com
+			- mspartnerlp.mspartner from v3lpastorage.blob.core.windows.net *
 
 		- Bugs, on:
 
-			- technet from msstonojstechnet.112.2o7.net
+			- msdn from msstonojsmsdn.112.2o7.net *
+			- technet from msstonojstechnet.112.2o7.net *
 			- social.technet from msstonojssocial.112.2o7.net *
-			- careers, pinpoint, social.technet from m.webtrends.com
-			- www from c.microsoft.com *
+			- careers, msdn, logobuilder.mspartner, pinpoint, technet, social.technet from m.webtrends.com
+			- blogs, curah, www from c.microsoft.com *
+			- sxp from blogs.msdn.com
+			- sxp from blogs.technet.com
 
 	* Secured by us
 
@@ -277,7 +322,7 @@
 								-->
 		<!--exclusion pattern="^http://(?:www\.)?microsoft\.com/[oO][eE][mM]/" /-->
 
-			<test url="http://www.microsoft.com/oem/en/pages/index.aspx" />
+			<!--test url="http://www.microsoft.com/oem/en/pages/index.aspx" /-->
 
 		<!--	Redirects to http:
 						-->
@@ -417,6 +462,9 @@
 		<test url="http://ajax.microsoft.com/" />
 		<test url="http://wscont.apps.microsoft.com/" />
 		<test url="http://fb.answers.microsoft.com/" />
+		<test url="http://assets.microsoft.com/" />
+		<test url="http://azure.microsoft.com/" />
+		<test url="http://blogs.microsoft.com/" />
 		<test url="http://c.microsoft.com/" />
 		<test url="http://c1.microsoft.com/" />
 		<test url="http://choice.microsoft.com/" />
@@ -426,6 +474,7 @@
 		<test url="http://innovation.connect.microsoft.com/" />
 		<test url="http://services.connect.microsoft.com/" />
 		<test url="http://sas.css.microsoft.com/" />
+		<test url="http://curah.microsoft.com/" />
 		<test url="http://events.microsoft.com/" />
 		<test url="http://social.expression.microsoft.com/" />
 		<test url="http://g.microsoft.com/" />
@@ -434,16 +483,24 @@
 		<test url="http://ieonline.microsoft.com/" />
 		<test url="http://insider.microsoft.com/" />
 		<test url="http://js.microsoft.com/" />
+		<test url="http://learning.microsoft.com/" />
 		<test url="http://m.microsoft.com/" />
 		<test url="http://widgets.membership.microsoft.com/" />
 		<test url="http://mobile.microsoft.com/" />
 
 		<test url="http://msdn.microsoft.com/" />
+		<test url="http://apisandbox.msdn.microsoft.com/" />
 		<test url="http://code.msdn.microsoft.com/" />
+		<test url="http://lab.msdn.microsoft.com/" />
 		<test url="http://social.msdn.microsoft.com/" />
+		<test url="http://visualstudiogallery.msdn.microsoft.com/" />
 
 		<test url="http://mspartner.microsoft.com/" />
+		<test url="http://logobuilder.mspartner.microsoft.com/" />
+		<test url="http://mspartnerlp.mspartner.microsoft.com/" />
+
 		<test url="http://mvastorage.microsoft.com/" />
+		<test url="http://oem.microsoft.com/" />
 		<test url="http://office.microsoft.com/" />
 		<test url="http://office15client.microsoft.com/" />
 		<test url="http://office365.microsoft.com/" />
@@ -451,9 +508,11 @@
 		<test url="http://officepreview.microsoft.com/" />
 		<test url="http://officeredir.microsoft.com/" />
 		<test url="http://o15.officeredir.microsoft.com/" />
+		<test url="http://training.partner.microsoft.com/" />
 		<test url="http://pinpoint.microsoft.com/" />
 		<test url="http://profile.microsoft.com/" />
 		<test url="http://rad.microsoft.com/" />
+		<test url="http://readytogo.microsoft.com/" />
 		<test url="http://research.microsoft.com/" />
 		<test url="http://profileapi.services.microsoft.com/" />
 		<test url="http://signature.microsoft.com/" />
@@ -464,13 +523,16 @@
 		<test url="http://corp.sts.microsoft.com/" />
 		<test url="http://support.microsoft.com/" />
 		<test url="http://support2.microsoft.com/" />
+		<test url="http://sxp.microsoft.com/" />
 		<test url="http://tag.microsoft.com/" />
+		<test url="http://gallery.technet.microsoft.com/" />
 		<test url="http://social.technet.microsoft.com/" />
-		<test url="http://www.update.microsoft.com/" />
 		<test url="http://origin-res.windows.microsoft.com/" />
 		<test url="http://windowsupdate.microsoft.com/" />
 		<test url="http://v4.windowsupdate.microsoft.com/" />
 		<test url="http://v5.windowsupdate.microsoft.com/" />
+		<test url="http://www.microsoft.com/" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -478,27 +540,39 @@
 	<!--securecookie host="^account\.microsoft\.com$" name="^oref$" /-->
 	<!--securecookie host="^(careers|support)\.microsoft\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^choice\.microsoft\.com$" name="^PPLState$" /-->
+	<!--securecookie host="^connect\.microsoft\.com$" name="^BlueStripe\.PVN$" /-->
+	<!--securecookie host="^curah\.microsoft\.com$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^learning\.microsoft\.com$" name="^(ASP\.NET_SessionId|CampaignHistory|MSCSProfile|loc)$" /-->
 	<!--securecookie host="^msdn\.microsoft\.com$" name="^(__RequestVerificationToken|TocHashCookie)$" /-->
-	<!--securecookie host="^code\.msdn\.microsoft\.com$" name="^ssostate$" /-->
+	<!--securecookie host="^apisandbox\.msdn\.microsoft\.com$" name="^(ai_session|ai_user)$" /-->
+	<!--securecookie host="^\.apisandbox\.msdn\.microsoft\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^(code|visualstudiogallery)\.msdn\.microsoft\.com$" name="^ssostate$" /-->
+	<!--securecookie host="^lab\.msdn\.microsoft\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^mspartner\.microsoft\.com$" name="^(ai_session|ai_user)$" /-->
+	<!--securecookie host="^logobuilder\.mspartner\.microsoft\.com$" name="^(__RequestVerificationToken|UiLanguageCode)$" /-->
+	<!--securecookie host="^mspartnerlp\.mspartner\.microsoft\.com$" name="^(__RequestVerificationToken|ASP\.NET_SessionId|pathState)$" /-->
+	<!--securecookie host="^training\.partner\.microsoft\.com$" name="^(ASP\.NET_SessionId|BlueStripe\.PVN|SUMTOTALAUTH)$" /-->
 	<!--securecookie host="^support\.microsoft\.com$" name="^(\.ASPXANONYMOUS|SMC_SAGE|smcexpsessionticket|smcexpticket)$" /-->
 	<!--securecookie host="^support2\.microsoft\.com$" name="^(\.ASPXANONYMOUS|GsfxSessionCookie|GsfxStatsLog)$" /-->
 	<!--securecookie host="^smallbusiness\.support\.microsoft.com$" name="^(breadcrumb|culture|exitinfo)$" /-->
+	<!--securecookie host="^sxp\.microsoft\.com$" name="^m0$" /-->
 	<!--securecookie host="^\.technet\.microsoft\.com$" name="^AuthorizationCookie$" /-->
+	<!--securecookie host="^gallery\.technet\.microsoft\.com$" name="^ssostate$" /-->
 	<!--securecookie host="^social\.technet\.microsoft\.com$" name="^(\.ASPXANONYMOUS|__RequestVerificationToken_\w+|CSExtendedAnalytics(Session)?$" /-->
-	<!--securecookie host="^www\.microsoft\.com$" name="^defCulture$" /-->
+	<!--securecookie host="^www\.microsoft\.com$" name="^(defCulture|mslocale)$" /-->
 
 	<!--	A, MC1, MS0: Cookies set by c.microsoft.com
 		s_.+: Other tracking cookies
 						-->
 	<securecookie host="^\.microsoft\.com$" name="^(?:A|GsfxStatsLog|MC1|MS0|OnlineTrackingV2\.0|R|RioTracking\..+|s_.+)$" />
-	<securecookie host="^(?:account|feedback\.adcenter|advertising|advertise\.bingads|choice|commerce|ieonline|m|mspartner|\.?office|office(?:15client|2010|preview|redir)|corp\.sts|\.?support|support2|\.?www)\.microsoft\.com$" name=".+" />
+	<securecookie host="^(?:account|feedback\.adcenter|advertising|advertise\.bingads|choice|commerce|connect|curah|ieonline|learning|m|msdn|(?:\.?apisandbox|lab|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|\.?office|office(?:15client|2010|preview|redir)|training\.partner|corp\.sts|\.?support|support2|sxp|gallery\.technet|\.?www)\.microsoft\.com$" name=".+" />
 	<securecookie host="^social\.technet\.microsoft\.com$" name="^CSExtendedAnalytics(?:Session)?$" />
 
 
-	<rule from="^http://(?:search\.|spcache\.)?microsoft\.com/"
+	<rule from="^http://s(?:cache|earch|pcache)\.microsoft\.com/"
 		to="https://www.microsoft.com/" />
 
+		<test url="http://scache.microsoft.com/" />
 		<test url="http://search.microsoft.com/" />
 		<test url="http://spcache.microsoft.com/" />
 
@@ -539,20 +613,10 @@
 
 		<test url="http://i1.mobile.microsoft.com/" />
 
-	<rule from="^http://scache\.microsoft\.com/"
-		to="https://www.microsoft.com/" />
-
-		<test url="http://scache.microsoft.com/" />
-
 	<rule from="^http://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
 
 		<test url="http://img3.store.microsoft.com/" />
-
-	<rule from="^http://update\.microsoft\.com/"
-		to="https://www.update.microsoft.com/" />
-
-		<test url="http://update.microsoft.com/" />
 
 	<rule from="^http://res(1|2)\.windows\.microsoft\.com/"
 		to="https://a248.e.akamai.net/f/1737/7533/6/res$1.windows.microsoft.com/" />
@@ -561,7 +625,7 @@
 		<test url="http://res2.windows.microsoft.com/" />
 		<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_social.svg" />
 
-	<rule from="^http://(account|accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|wscont\.apps|c1?|careers|choice|commerce|compass-ssl|(?:innovation\.|services\.)?connect|sas\.css|events|social\.expression|go?|i|ieonline|insider|js|m|widgets\.membership|mobile|code\.msdn|msdn|social\.msdn|mspartner|mvastorage|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|pinpoint|profile|rad|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support2?|tag|(?:social\.)?technet|www\.update|origin-res\.windows|(?:v[45]\.)?windowsupdate|www)\.microsoft\.com/"
-		to="https://$1.microsoft.com/" />
+	<rule from="^http://((?:account|accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|(?:innovation\.|services\.)?connect|sas\.css|curah|events|social\.expression|go?|i|ieonline|insider|js|learning|m|widgets\.membership|mobile|code\.msdn|msdn|(?:apisandbox|lab|social|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|oem|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|(?:v[45]\.)?windowsupdate|www)\.)?microsoft\.com/"
+		to="https://$1microsoft.com/" />
 
 </ruleset>
