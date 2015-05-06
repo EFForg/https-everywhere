@@ -1,29 +1,92 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
-		- blog		(times out)
-		- support	(redirects to http; mismatched, CN: *.zendesk.com)
+		- ^ ¹
+		- blog ²
+		- web ²
+
+	¹ 404
+	² Mismatched
 
 
-	Cert only matches *.brightidea.com
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- auth
+		- images
+		- na2
+		- support
+
+
+	Insecure cookies are set for these domains:
+
+		- .brightidea.com
+		- web.brightidea.com
+
+
+	Mixed content:
+
+		- iframe on blog from www.brightidea.com ¹
+
+		- css, on:
+
+			- blog from www.brightidea.com ¹
+			- www from fonts.googleapis.com ¹
+
+		- Flash on www from vimeo.com
+
+		- Images, on:
+
+			- blog from $self ²
+			- blog from www.brightidea.com ¹
+			- web from cdn2.hubspot.net ¹
+
+		- favicon on blog from www.brightidea.com ¹
+
+		- Ads/bugs, on www from:
+
+			- blog, www from www.googleadservices.com
+			- blog, www from pixel.quantserve.com ¹
+			- blog, www from ad.retargeter.com ¹
+			- blog from b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
 
 -->
-<ruleset name="Brightidea (partial)">
+<ruleset name="Brightidea.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="auth.brightidea.com" />
+	<!--target host="blog.brightidea.com" /-->
+	<target host="images.brightidea.com" />
+	<target host="na2.brightidea.com" />
+	<target host="support.brightidea.com" />
+	<!--target host="web.brightidea.com" /-->
+	<target host="www.brightidea.com" />
+
+	<!--	Complications:
+				-->
 	<target host="brightidea.com" />
-	<target host="*.brightidea.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.brightidea\.com$" name="^(__cfduid|__qca|cf_clearance)$" /-->
+	<!--securecookie host="^web\.brightidea\.com$" name="^hsPagesViewedThisSession$" /-->
+
+	<securecookie host="^\.brightidea\.com$" name="^__qca$" />
 	<securecookie host="^www\.brightidea\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?brightidea\.com/"
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://brightidea\.com/"
 		to="https://www.brightidea.com/" />
 
-	<rule from="^http://(images|na2)\.brightidea\.com/"
-		to="https://$1.brightidea.com/" />
-
-	<rule from="^http://support\.brightidea\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

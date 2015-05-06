@@ -1,0 +1,65 @@
+<!--
+	For rules causing broken MCB, see Moodle.com-falsemixed.xml.
+
+
+	^: Mixed css
+
+
+	Fully covered subdomains:
+
+		- future
+		- git.in
+		- partners
+		- www
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .moodle.com
+		- future.moodle.com
+		- git.in.moodle.com
+
+
+	Mixed content:
+
+		- css from $self *
+		- Images from $self *
+		- favicon from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Moodle.com (partial)">
+
+	<target host="moodle.com" />
+	<target host="git.in.moodle.com" />
+	<target host="future.moodle.com" />
+	<target host="partners.moodle.com" />
+	<target host="www.moodle.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://moodle\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://moodle.com/contact/" />
+			<test url="http://moodle.com/hq" />
+			<test url="http://moodle.com/news/" />
+			<test url="http://moodle.com/partners" />
+			<test url="http://moodle.com/sitemap/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.moodle\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^future\.moodle\.com$" name="^MoodleSession" /-->
+	<!--securecookie host="^git\.in\.moodle\.com$" name="^request_method$" /-->
+
+	<securecookie host="^(?:future|git\.in)\.moodle\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,13 +1,19 @@
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ricardo.ch/ => https://www.ricardo.ch/: Cycle detected - URL already encountered: https://www.ricardo.ch/
-Fetch error: http://www.ricardo.ch/ => https://www.ricardo.ch/: Cycle detected - URL already encountered: https://www.ricardo.ch/
--->
-<ruleset name="Ricardo.ch" default_off='failed ruleset test'>
+<ruleset name="Ricardo.ch">
         <target host="ricardo.ch" />
+        <target host="fr.ricardo.ch" />
         <target host="www.ricardo.ch" />
+        <target host="www.fr.ricardo.ch" />
+
+        <test url="http://www.ricardo.ch/kaufen/" />
+        <test url="http://ricardo.ch/ueber-uns/de-ch/onlinehilfe.aspx" />
+        <test url="http://www.ricardo.ch/ueber-uns/de-ch/onlinehilfe.aspx" />
+
         <securecookie host="^(?:.*\.)?ricardo\.ch$" name=".*" />
 
-        <rule from="^http://(?:www\.)?ricardo\.ch/" to="https://www.ricardo.ch/"/>
-</ruleset>
+        <exclusion pattern="^http://(www\.)?ricardo\.ch/$" />
+        <exclusion pattern="^http://(www\.)?fr.ricardo\.ch/$" />
+        <exclusion pattern="^http://(www\.)?ricardo\.ch/ueber-uns/de-ch/onlinehilfe\.aspx$" />
 
+        <rule from="^http:"
+                to="https:" />
+</ruleset>

@@ -17,18 +17,15 @@
 
 		- mpx *
 		- web *
+		- pdk **
 
 	* Works, akamai
+	** https://github.com/EFForg/https-everywhere/issues/1431
 
 
-	Partially covered subdomains:
+	Partially securable subdomains:
 
 		- help		(some paths 403)
-
-
-	Fully covered subdomains:
-
-		- pdk
 
 
 	NB: crossdomain.xml on player forbids https (FUU!)
@@ -38,15 +35,20 @@
 
 -->
 <ruleset name="thePlatform (partial)">
-
-	<target host="*.theplatform.com" />
-		<exclusion pattern="^http://help\.theplatform\.com/(?!login(?:$|\?|/))" />
+	<target host="feed.theplatform.com" />
+	<target host="mps.theplatform.com" />
+	<target host="player.theplatform.com" />
+	<target host="release.theplatform.com" />
+		
+	<!-- 
+	Commented out for the moment since I can't find some appropriate rule tests. 
+	<target host="help.theplatform.com" />
+		<exclusion pattern="^http://help\.theplatform\.com/(?!login(?:$|\?|/))" /> 
+	-->
 
 
 	<securecookie host="^(?:mps|release)\.theplatform\.com$" name=".+" />
 
 
-	<rule from="^http://(feed|help|mps|pdk|player|release)\.theplatform\.com/"
-		to="https://$1.theplatform.com/" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

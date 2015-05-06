@@ -57,18 +57,10 @@ will break the build. This means that even fixes of existing rules may require
 additional work to bring them up to snuff.
 
 To run the tests locally, you'll need the https-everywhere-checker, which is now
-a submodule of https-everywhere. Run these commands to set it up:
+a submodule of https-everywhere. To set it up, run:
 
-    git submodule init
-    git submodule update
-    cd https-everywhere-checker
-    pip install --user -r requirements.txt
-    cd -
-    ./test-ruleset-coverage.sh
-
-Note you may also need to apt-get install libcurl4-openssl-dev so that one of
-the requirements in https-everywhere-checker can be satisfied.
+    ./install-dev-dependencies.sh
 
 To test a specific ruleset:
 
-     python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py https-everywhere-checker/checker.config.sample rules/Example.xml
+     ./fetch-test.sh rules/Example.xml

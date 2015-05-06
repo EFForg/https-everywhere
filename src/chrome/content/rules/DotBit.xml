@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dot-bit.org/ => https://dot-bit.org/: (60, 'SSL certificate problem: certificate has expired')
 	Nonfunctional subdomains:
 
 		- dns *
@@ -11,8 +9,10 @@ Fetch error: http://dot-bit.org/ => https://dot-bit.org/: (60, 'SSL certificate 
 
 	Problematic subdomains:
 
+		- (www.)? ¹
 		- explorer *
 
+	¹ Expired
 	* Shows cp login
 
 
@@ -28,10 +28,16 @@ Fetch error: http://dot-bit.org/ => https://dot-bit.org/: (60, 'SSL certificate 
 		- .dot-bit.org
 
 -->
-<ruleset name="Dot-BIT.org (partial)" default_off='failed ruleset test'>
+<ruleset name="Dot-BIT.org (partial)" default_off="expired">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="dot-bit.org" />
-	<target host="*.dot-bit.org" />
+	<target host="www.dot-bit.org" />
+
+	<!--	Complications:
+				-->
+	<target host="explorer.dot-bit.org" />
 
 
 	<!--	Not secured by server:
@@ -42,12 +48,14 @@ Fetch error: http://dot-bit.org/ => https://dot-bit.org/: (60, 'SSL certificate 
 	<securecookie host="^(?:.*\.)?dot-bit\.org$" name=".+" />
 
 
-	<rule from="^http://(www\.)?dot-bit\.org/"
-		to="https://$1dot-bit.org/" />
-
 	<!--	Redirect keeps path and args:
 						-->
 	<rule from="^http://explorer\.dot-bit\.org/+"
 		to="https://explorer.namecoin.info/" />
+
+		<test url="http://explorer.dot-bit.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

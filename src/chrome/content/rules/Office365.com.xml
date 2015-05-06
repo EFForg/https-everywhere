@@ -1,0 +1,63 @@
+<!--
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Partially covered hosts in *office365.com:
+
+		- community *
+
+	* At least some pages redirect to http
+
+
+	Fully covered hosts in *office365.com:
+
+		- (www.)?
+		- outlook
+
+
+	Insecure cookies are set for these hosts:
+
+		- office365.com
+		- www.office365.com
+
+-->
+<ruleset name="Office365.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="office365.com" />
+	<target host="community.office365.com" />
+	<target host="outlook.office365.com" />
+	<target host="www.office365.com" />
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://community\.office365\.com/+(?![Tt]hemes/|cfs-filesystemfile\.ashx/|favicon\.ico|resized-image\.ashx/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://community.office365.com/en-us/b/default.aspx" />
+			<test url="http://community.office365.com/en-us/default.aspx" />
+			<test url="http://community.office365.com/en-us/w/exchange/1043.aspx" />
+			<test url="http://community.office365.com/en-us/w/exchange/default.aspx" />
+			<test url="http://community.office365.com/f/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://community.office365.com/cfs-filesystemfile.ashx/__key/communityserver-components-imagefileviewer/communityserver-components-avatars-00-00-61-20-58/4TTMZNETNSCZ.png_2D00_32x32.png" />
+			<test url="http://community.office365.com/favicon.ico" />
+			<test url="http://community.office365.com/resized-image.ashx/__size/550x0/__key/communityserver-components-userfiles/00-00-00-56-86-attached+files/about.png" />
+			<test url="http://community.office365.com/themes/generic/css/layout.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?office365\.com$" name="^m0$" /-->
+
+	<securecookie host="^(?:www\.)?office365\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

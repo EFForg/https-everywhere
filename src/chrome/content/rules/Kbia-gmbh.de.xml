@@ -1,0 +1,40 @@
+<!--
+	Problematic hosts:
+
+		- (www.)? ¹
+		- cloud ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts:
+
+		- cloud
+
+
+	Insecure cookies are set for these hosts:
+
+		- cloud.kbia-gmbh.de
+
+-->
+<ruleset name="kbia-gmbh.de (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="kbia-gmbh.de" /-->
+	<target host="cloud.kbia-gmbh.de" />
+	<!--target host="www.kbia-gmbh.de" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cloud\.kbia-gmbh\.de$" name="^oc[0-9a-z]+$" /-->
+
+	<securecookie host="^cloud\.kbia-gmbh\.de$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

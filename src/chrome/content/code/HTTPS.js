@@ -74,6 +74,9 @@ const HTTPS = {
       var domain = null;
       try { domain = channel.URI.host; } catch (e) {}
       if (domain) https_blacklist_domains[domain] = true;
+      if (httpNowhereEnabled && channel.URI.schemeIs("http")) {
+        IOUtil.abort(channel);
+      }
       return false;
     }
 

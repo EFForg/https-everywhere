@@ -1,0 +1,58 @@
+<!--
+	For other Lucid Software coverage, see Go_Lucid.co.xml.
+
+
+	Nonfunctional hosts in *lucidpress.com:
+
+		- support *
+
+	* Zendesk
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.lucidpress.com
+
+-->
+<ruleset name="Lucidpress.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="lucidpress.com" />
+	<target host="www.lucidpress.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.lucidpress.com" />
+
+		<exclusion pattern="^http://support\.lucidpress\.com/+(?!favicon\.ico|generated/|images/|system/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.lucidpress.com/entries/28962708-Print-templates" />
+			<test url="http://support.lucidpress.com/entries/30904117-Insert-PDF" />
+			<test url="http://support.lucidpress.com/entries/39560553-Mail-Merge" />
+			<test url="http://support.lucidpress.com/entries/40196923-Offline-Version" />
+			<test url="http://support.lucidpress.com/forums" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.lucidpress.com/favicon.ico" />
+			<test url="http://support.lucidpress.com/generated/stylesheets/branding/3526/352613/1426187775.css" />
+			<test url="http://support.lucidpress.com/images/logo-delimiter.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.lucidpress\.com$" name="^(_kmRegister|lucidchart_analytics_visit_id|lucidchart_analytics_visitor_id|site_event_user_id)$" /-->
+
+	<securecookie host="^www\.lucidpress\.com$" name="^.+" />
+
+
+	<rule from="^http://support\.lucidpress\.com/"
+		to="https://lucidpress.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

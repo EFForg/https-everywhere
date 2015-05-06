@@ -1,0 +1,48 @@
+<!--
+	Problematic hosts:
+
+		- www *
+
+	* Mismatched
+
+
+	Fully covered hosts:
+
+		- (www.)?	(www → ^)
+		- cdn
+
+
+	Insecure cookies are set for these domains:
+
+		- .xww.ro
+
+-->
+<ruleset name="xww.ro">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="xww.ro" />
+	<target host="cdn.xww.ro" />
+
+	<!--	Complications:
+				-->
+	<target host="www.xww.ro" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.xww\.ro$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.xww\.ro$" name=".+" />
+
+
+	<!--	Redirect keeps forward
+		slash, path, and args:
+				-->
+	<rule from="^http://www\.xww\.ro/"
+		to="https://xww.ro/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

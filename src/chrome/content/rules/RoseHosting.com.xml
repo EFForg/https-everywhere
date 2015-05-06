@@ -14,17 +14,35 @@
 
 	^: cert only matches secure
 
+
+	Insecure cookies are set for these hosts:
+
+		- secure.rosehosting.com
+
 -->
 <ruleset name="RoseHosting.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.rosehosting.com" />
+	<target host="www.rosehosting.com" />
+
+	<!--	Complications:
+				-->
 	<target host="rosehosting.com" />
-	<target host="*.rosehosting.com" />
 
 
-	<rule from="^http://(?:www\.)?rosehosting\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.rosehosting\.com$" name="^SESSID[\da-f]{4}$" /-->
+
+	<securecookie host="^secure\.rosehosting\.com$" name=".+" />
+
+
+	<rule from="^http://rosehosting\.com/"
 		to="https://www.rosehosting.com/" />
 
-	<rule from="^http://secure\.rosehosting\.com/"
-		to="https://secure.rosehosting.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,6 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://fortinet.com/ => https://fortinet.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	For problematic rules, see Fortinet.com-problematic.xml.
+
+
 	Nonfunctional subdomains:
 
 		- cookbook ¹
@@ -14,23 +15,54 @@ Fetch error: http://fortinet.com/ => https://fortinet.com/: (60, 'SSL certificat
 	² Plaintext reply
 
 
+	Problematic hosts:
+
+		- (www.)? *
+		- blog *
+		- video *
+		- partners *
+
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
 	Fully covered subdomains:
 
-		- (www.)?
-		- blog
 		- forum
-		- partners
 		- support
-		- video
+
+
+	Insecure cookies are set for these hosts:
+
+		- fortinet.com
+		- forum.fortinet.com
+		- partners.fortinet.com
+		- www.fortinet.com
 
 -->
-<ruleset name="Fortinet.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Fortinet.com (partial)">
 
-	<target host="fortinet.com" />
-	<target host="*.fortinet.com" />
+	<!--target host="fortinet.com" /-->
+	<!--target host="blog.fortinet.com" /-->
+	<target host="forum.fortinet.com" />
+	<!--target host="partners.fortinet.com" /-->
+	<target host="support.fortinet.com" />
+	<!--target host="video.fortinet.com" /-->
+	<!--target host="www.fortinet.com" /-->
 
 
-	<rule from="^http://((?:blog|forum|partners|support|video|www)\.)?fortinet\.com/"
-		to="https://$1fortinet.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?fortinet\.com$" name="^Fortinet" /-->
+	<!--securecookie host="^(partners\.|www\.)?fortinet\.com$" name="^cookiesession1" /-->
+	<!--securecookie host="^forum\.fortinet\.com$" name="^(ASPPG\.ASPPGSession|ASPPGbackURL|ASPPGpreURL|ASPPGvisitedThreads)$" /-->
+	<!--securecookie host="^www\.fortinet\.com$" name="^[a-z]{7}" /-->
+
+	<!--securecookie host="^(?:partner\.|www\.)?fortinet\.com$" name=".+" /-->
+	<securecookie host="^forum\.fortinet\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

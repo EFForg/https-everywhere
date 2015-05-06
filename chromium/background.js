@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Fetch and parse XML to be loaded as RuleSets.
  */
@@ -29,6 +30,24 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// Load prefs about whether http nowhere is on. Structure is:
+//  { httpNowhere: true/false }
+var httpNowhereOn = false;
+chrome.storage.sync.get({httpNowhere: false}, function(item) {
+  httpNowhereOn = item.httpNowhere;
+  setIconColor();
+});
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+  if (areaName === 'sync') {
+    for (var key in changes) {
+      if (key === 'httpNowhere') {
+        httpNowhereOn = changes[key].newValue;
+        setIconColor();
+      }
+    }
+  }
+});
+
 var getStoredUserRules = function() {
   var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
   var oldUserRules = [];
@@ -48,6 +67,15 @@ var loadStoredUserRules = function() {
 };
 
 loadStoredUserRules();
+
+// Set the icon color correctly
+var setIconColor = function() {
+  var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
+  chrome.browserAction.setIcon({
+    path: newIconPath
+  });
+};
+
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -120,49 +148,55 @@ var domainBlacklist = {};
 var redirectCounter = {};
 
 function onBeforeRequest(details) {
-  // get URL into canonical format
-  // todo: check that this is enough
-  var uri = new URI(details.url);
+  var uri = document.createElement('a');
+  uri.href = details.url;
+
+  // Should the request be canceled?
+  var shouldCancel = (httpNowhereOn && uri.protocol === 'http:');
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname();
+  var canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
-    uri.hostname(canonical_host);
+    uri.hostname = canonical_host;
   }
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = uri.userinfo();
-  if (tmpuserinfo) {
-    uri.userinfo('');
+  var using_credentials_in_url = false;
+  if (uri.password || uri.username) {
+      using_credentials_in_url = true;
+      var tmp_user = uri.username;
+      var tmp_pass = uri.password;
+      uri.username = null;
+      uri.password = null;
   }
 
-  var canonical_url = uri.toString();
-  if (details.url != canonical_url && tmpuserinfo === '') {
+  var canonical_url = uri.href;
+  if (details.url != canonical_url && !using_credentials_in_url) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return null;
+    return {cancel: shouldCancel};
   }
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return; }
+  if (rs.length === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist[canonical_url] = true;
-    var hostname = uri.hostname();
+    var hostname = uri.hostname;
     domainBlacklist[hostname] = true;
     log(WARN, "Domain blacklisted " + hostname);
-    return null;
+    return {cancel: shouldCancel};
   }
 
   var newuristr = null;
@@ -174,17 +208,18 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && tmpuserinfo !== "") {
+  if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    // while rules were applied
-    var finaluri = new URI(newuristr);
-    finaluri.userinfo(tmpuserinfo);
-    newuristr = finaluri.toString();
+    var uri_with_credentials = document.createElement('a');
+    uri_with_credentials.href = newuristr;
+    uri_with_credentials.username = tmp_user;
+    uri_with_credentials.password = tmp_pass;
+    newuristr = uri_with_credentials.href;
   }
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol() !== "https") {
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -192,11 +227,17 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
+  if (httpNowhereOn) {
+    if (newuristr && newuristr.substring(0, 5) === "http:") {
+      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
+      return {cancel: true};
+    }
+  }
+
   if (newuristr) {
-    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
     return {redirectUrl: newuristr};
   } else {
-    return null;
+    return {cancel: shouldCancel};
   }
 }
 
@@ -204,8 +245,9 @@ function onBeforeRequest(details) {
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
 var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-// We consider sub_frame to be passive even though it can contain JS or Flash.
-// This is because code running the sub_frame cannot access the main frame's
+
+// We consider sub_frame to be passive even though it can contain JS or flash.
+// This is because code running in the sub_frame cannot access the main frame's
 // content, by same-origin policy. This is true even if the sub_frame is on the
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
@@ -269,7 +311,7 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  asset_host_list.sort(function(a,b){return a[0]-b[0];});
   return asset_host_list;
 }
 
@@ -401,27 +443,6 @@ wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
-
-// Add the small HTTPS Everywhere icon in the address bar.
-// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
-// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (changeInfo.status === "loading") {
-        chrome.pageAction.show(tabId);
-    }
-});
-
-// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
-// See http://crbug.com/109557
-chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    chrome.tabs.get(addedTabId, function(tab) {
-        if(typeof(tab) === "undefined") {
-            log(DBUG, "Not a real tab. Skipping showing pageAction.");
-        } else {
-            chrome.pageAction.show(addedTabId);
-        }
-    });
-});
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
