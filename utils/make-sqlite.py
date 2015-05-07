@@ -5,6 +5,7 @@
 import glob
 import locale
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -51,7 +52,8 @@ filenames = sorted(glob.glob('src/chrome/content/rules/*'))
 counted_lowercase_names = Counter([name.lower() for name in filenames])
 most_common_entry = counted_lowercase_names.most_common(1)[0]
 if most_common_entry[1] > 1:
-    print("%s failed case-insensitivity testing." % (most_common_entry[0]))
+    dupe_filename = re.compile(re.escape(most_common_entry[0]), re.IGNORECASE)
+    print("%s failed case-insensitivity testing." % filter(dupe_filename.match, filenames))
     print("Rules exist with identical case-insensitive names, which breaks some filesystems.")
     sys.exit(1)
 
