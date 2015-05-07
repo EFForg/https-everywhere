@@ -139,7 +139,8 @@ rm -r pkg/xpi-eff/chrome/content/rules
 cp -a src/ pkg/xpi-amo/
 rm -r pkg/xpi-amo/chrome/content/rules
 # The AMO version of the package cannot contain the updateKey or updateURL tags
-sed -i -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
+sed -i.bak -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
+rm pkg/xpi-amo/install.rdf.bak
 
 # Used for figuring out which branch to pull from when viewing source for rules
 GIT_OBJECT_FILE=".git/refs/heads/master"
