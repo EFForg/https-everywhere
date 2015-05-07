@@ -1,0 +1,53 @@
+<!--
+	Problematic subdomains:
+
+		- ^ ¹
+		- answers ²
+		- reviews ²
+
+	¹ Cert only matches www
+	² Mismatched, CN: *.ugc.bazaarvoice.com
+
+
+	Some pages redirect to http.
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+		- Ads from northerntool.ugc.bazaarvoice.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Northern Tool.com (partial)">
+
+	<target host="northerntool.ugc.bazaarvoice.com" />
+	<target host="northerntool.com" />
+	<target host="*.northerntool.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?northerntool\.com/+($|\?|catalog/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?northerntool\.com/+(?!css/|favicon\.ico|images/|(shop|stores)($|[?/])|wcsstore/)" /-->
+
+
+	<!--	Server doesn't secure:
+					-->
+	<securecookie host="^m\.northerntool\.com$" name=".+" />
+
+
+	<rule from="^http://(?:northerntool\.ugc\.bazaarvoice|(?:answer|review)s\.northerntool)\.com/"
+		to="https://northerntool.ugc.bazaarvoice.com/" />
+
+	<rule from="^http://(?:www\.)?northerntool\.com/(?=css/|favicon\.ico|images/|s(?:hop|tores)(?:$|[?/])|wcsstore/)"
+		to="https://www.northerntool.com/" />
+
+	<rule from="^http://m\.northerntool\.com/"
+		to="https://m.northerntool.com/" />
+
+</ruleset>

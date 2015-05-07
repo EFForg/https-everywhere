@@ -1,18 +1,26 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains:
 
-		- (www.)	(504)
+		- myapm
+		- www
 
 -->
-<ruleset name="APM.com (partial)">
+<ruleset name="APM.com">
 
-	<target host="myapm.apm.com" />
-
-
-	<securecookie host="^myapm\.apm\.com$" name=".+" />
+	<target host="apm.com" />
+	<target host="*.apm.com" />
 
 
-	<rule from="^http://myapm\.apm\.com/"
-		to="https://myapm.apm.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(myapm|www)\.apm\.com$" name="^(exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+	<!--securecookie host="^myapm\.apm\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.apm\.com$" name="^exp_stashid$" /-->
+
+	<securecookie host="^(?:myapm|www)\.apm\.com$" name=".+" />
+
+
+	<rule from="^http://(myapm\.|www\.)?apm\.com/"
+		to="https://$1apm.com/" />
 
 </ruleset>

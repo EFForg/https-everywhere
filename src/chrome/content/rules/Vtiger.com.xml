@@ -1,0 +1,45 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- blogs
+		- discussions
+		- forums
+		- wiki
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- . ¹
+		- .forums ¹
+		- wiki ²
+		- www ¹
+
+	¹ Secured by us <= not secured by server
+	² Secured by server
+
+-->
+<ruleset name="Vtiger.com">
+
+	<target host="vtiger.com" />
+	<target host="*.vtiger.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?vtiger\.com$" name="^[0-9a-f]{32}$" /-->
+	<!--securecookie host="^\.vtiger\.com$" name="^_vtwti$" /-->
+	<!--securecookie host="^\.forums\.vtiger\.com$" name="^(phpbb3_qvulf_k|phpbb3_qvulf_sid|phpbb3_qvulf_u)$" /-->
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^wiki\.vtiger\.com$" name="^wiki_live_session$" /-->
+
+	<securecookie host="^(?:\.|forums\.|www\.)?vtiger\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blogs|discussions|forums|wiki|www)\.)?vtiger\.com/"
+		to="https://$1vtiger.com/" />
+
+</ruleset>

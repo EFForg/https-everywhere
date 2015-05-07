@@ -31,8 +31,25 @@
 
 	Problematic subdomains:
 
+		- ^ ¹
 		- a		(akamai)
 		- feedback	(works, mismatched, CN: userecho.com)
+
+	¹ Refused
+
+
+	Fully covered hosts in *adroll.com:
+
+		- (www.)?	(^ → www)
+		- a		(→ s)
+		- d
+		- s
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .adroll.com
+		- feedback.adroll.com
 
 
 	s.adroll.com sets __ar_v4 and _te_ wildcard cookies
@@ -41,17 +58,49 @@
 -->
 <ruleset name="AdRoll (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="d.adroll.com" />
+	<target host="s.adroll.com" />
+	<target host="www.adroll.com" />
+
+	<!--	Complications:
+				-->
 	<target host="adroll.com" />
-	<target host="*.adroll.com" />
+	<target host="a.adroll.com" />
+	<target host="feedback.adroll.com" />
+
+		<exclusion pattern="^http://feedback\.adroll\.com/(?!s/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://feedback.adroll.com/topic/683270-visbility-of-segments-across-advertiser-profiles/" />
+			<test url="http://feedback.adroll.com/users/360899-egg-to-apples/topic/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://feedback.adroll.com/s/assets2.0/css/font-awesome.min.css" />
+			<test url="http://feedback.adroll.com/s/assets2.0/css/plugins/lightbox/img/close.png" />
 
 
-	<rule from="^http://(d\.|www\.)?adroll\.com/"
-		to="https://$1adroll.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adroll\.com$" name="^__adroll$" /-->
+	<!--securecookie host="^feedback\.adroll\.com$" name="^uesessionid$" /-->
 
-	<rule from="^http://[as]\.adroll\.com/"
+	<securecookie host="^\.adroll\.com$" name="^__adroll$" />
+
+
+	<rule from="^http://adroll\.com/"
+		to="https://www.adroll.com/" />
+
+	<rule from="^http://a\.adroll\.com/"
 		to="https://s.adroll.com/" />
 
-	<rule from="^http://feedback\.adroll\.com/s/"
-		to="https://userecho.com/s/" />
+	<rule from="^http://feedback\.adroll\.com/"
+		to="https://userecho.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

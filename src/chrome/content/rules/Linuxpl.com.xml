@@ -1,0 +1,45 @@
+<!--
+	Nonfunctional subdomains:
+
+		- forum *
+
+	* Prints status, valid cert
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Configured for rc4 only
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.) from ^ *
+			- blog from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Linuxpl.com (partial)">
+
+	<target host="linuxpl.com" />
+	<target host="*.linuxpl.com" />
+		<!--exclusion pattern="^http://forum\.linuxpl\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?linuxpl\.com$" name="^linuxpl_urad$" /-->
+	<!--securecookie host="^support\.linuxpl\.com$" name="^(SWIFT_client|SWIFT_sessionid\d+)$" /-->
+	<!--securecookie host="^webftp\.linuxpl\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:(?:support|webftp|www)\.)?linuxpl\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|support|webftp|www)\.)?linuxpl\.com/"
+		to="https://$1linuxpl.com/" />
+
+</ruleset>

@@ -6,34 +6,32 @@
 		- d39zheejy3ckol.cloudfront.net
 
 
-	Partially covered subdomains:
-
-		- (www.)
-
-
 	Fully covered subdomains:
 
+		- (www.)
 		- account
+		- alpha
+		- files
+		- join
 
 -->
 <ruleset name="App.net">
 
 	<target host="app.net" />
 	<target host="*.app.net" />
-		<exclusion pattern="^http://(?:www\.)?app\.net/(?!$|\?|favicon\.ico|w/|wakea/widget/)" />
 
 
-	<!--	Are these safe to secure?
-						-->
-	<!--securecookie host="^app\.net$" name="^csrftoken$" /-->
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^\.app\.net$" name="^mt_sessionid$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(alpha\.|www\.)?app\.net$" name="^csrftoken$" /-->
 	<!--securecookie host="^\.app\.net$" name="^mt_uic$" /-->
-	<securecookie host="^(?:account|alpha|\.?join)\.app\.net$" name=".+" />
 
+	<securecookie host="^(?:(?:account|alpha|\.?join|www)\.)?app\.net$" name=".+" />
 
-	<!--	Redirects to http first:
-						-->
-	<rule from="^http://(?:www\.)?app\.net/(?:\?.*)?$"
-		to="https://join.app.net/" />
 
 	<rule from="^http://((?:account|alpha|files|join|www)\.)?app\.net/"
 		to="https://$1app.net/" />

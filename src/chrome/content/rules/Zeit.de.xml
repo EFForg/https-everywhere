@@ -1,0 +1,76 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- automarkt ¹
+		- community ¹
+		- css ¹
+		- marktplatz ²
+		- ranking ³
+		- services ⁴
+		- studiengaenge ²
+		- zeitreisen ⁵
+
+	¹ Dropped
+	² Redirects tp http
+	³ Plaintext reply
+	⁴ Refused
+	⁵ Shows admin page; mismatched, CN: *.your-server.de
+
+
+	Problematic subdomains:
+
+		- images ¹
+		- jobs ²
+
+	¹ Dropped
+	² Works; mismatched, CN: *.academics.de
+
+
+	Fully covered subdomains:
+
+		- images	(-> ssl)
+		- inserieren
+		- premium
+		- shop
+		- ssl
+
+
+	Mixed content:
+
+		- css on jobs from css ¹
+
+		- Images on jobs from images ²
+		- Images on shop from $self ²
+
+	¹ Unsecurable <= dropped
+	² Secured by us
+
+-->
+<ruleset name="Zeit.de (partial)">
+
+	<target host="*.zeit.de" />
+		<!--exclusion pattern="^http://(automarkt|community|css|jobs|marktplatz|ranking|services|studiengaenge|www|zeitreisen)\.zeit\.de/" /-->
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(inserieren|jobs)\.zeit\.de$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.zeit\.de$" name="^device-view$" /-->
+	<!--securecookie host="^jobs\.zeit\.de$" name="^WANT_SSL$" /-->
+	<!--securecookie host="^\.premium\.zeit\.de$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^shop\.zeit\.de$" name="^(cart_id|session_id|_zeit_cookie_store_session)$" /-->
+
+	<securecookie host="^(?:\.premium|shop)\.zeit\.de$" name=".+" />
+
+
+	<rule from="^http://(inserieren|premium|shop|ssl)\.zeit\.de/"
+		to="https://$1.zeit.de/" />
+
+	<rule from="^http://images\.zeit\.de/"
+		to="https://ssl.zeit.de/images.zeit.de/" />
+
+</ruleset>

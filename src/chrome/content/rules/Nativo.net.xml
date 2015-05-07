@@ -11,16 +11,21 @@
 
 	Fully covered subdomains:
 
+		- admin
 		- beta
 
 -->
-<ruleset name="Nativo.net">
+<ruleset name="Nativo.net (partial)">
 
 	<target host="nativo.net" />
 	<target host="*.nativo.net" />
 
 
-	<securecookie host="^beta\.nativo\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^admin\.nativo\.net$" name="^(__RequestVerificationToken_Lw__|session)$" /-->
+
+	<securecookie host="^(?:admin|beta)\.nativo\.net$" name=".+" />
 
 
 	<!--	^ redirects to www over http,
@@ -34,7 +39,7 @@
 	<rule from="^http://beta\.nativo\.net/(?:\?.*)?$"
 		to="https://beta.nativo.net/Account/Login" />
 
-	<rule from="^http://beta\.nativo\.net/"
-		to="https://beta.nativo.net/" />
+	<rule from="^http://(admin|beta)\.nativo\.net/"
+		to="https://$1.nativo.net/" />
 
 </ruleset>

@@ -14,6 +14,10 @@
 			- a335.b.akamai.net
 
 
+	^: 503
+	www: Redirects to http
+
+
 	Problematic subdomains:
 
 		- cdn *
@@ -23,17 +27,16 @@
 	* Works, akamai
 
 
-	Fully covered subdomains:
+	Fully covered hosts in *sharethis.com:
 
-		- (www.)
-		- cdn	(→ ^)
+		- cf-wp-prod
 		- forums
 		- help
 		- l
-		- s	(→ sd)
+		- s		(→ sd)
 		- seg
 		- support
-		- w	(→ ws)
+		- w		(→ ws)
 		- wd
 		- wd-edge
 		- ws
@@ -41,34 +44,50 @@
 
 	Mixed content:
 
-		- css on support from cdn *
+		- Fonts on support from www.sharethis.com ¹
+		- Images on support from www.sharethis.com ¹
+		- Bugs on support from hello.myfonts.net ²
 
-		- Web bugs, on:
-
-			- www from s **
-			- www from ws **
-
-	* Secured by us, alters snippet text size
-	** Secured by us
-
-
-	The change caused by css MCB is minimal,
-	and we don't care about web bugs, so don't
-	mark this ruleset as mixedcontent.
+	¹ Unsecurable <= redirects to http
+	² Secured by us
 
 -->
-<ruleset name="ShareThis">
+<ruleset name="ShareThis (partial)">
 
-	<target host="sharethis.com" />
-	<target host="*.sharethis.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cf-wp-prod.sharethis.com" />
+	<target host="forums.sharethis.com" />
+	<target host="help.sharethis.com" />
+	<target host="l.sharethis.com" />
+	<target host="sd.sharethis.com" />
+	<target host="seg.sharethis.com" />
+	<target host="support.sharethis.com" />
+	<target host="wd.sharethis.com" />
+	<target host="wd-edge.sharethis.com" />
+	<target host="ws.sharethis.com" />
 
+	<!--	Complications:
+				-->
+	<target host="s.sharethis.com" />
+	<target host="w.sharethis.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sharethis\.com/$" /-->
+
+		<test url="http://cf-wp-prod.sharethis.com/wp-content/plugins/yet-another-related-posts-plugin/style/widget.css.gzip" />
+		<test url="http://seg.sharethis.com/socialOptimizationPixel.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sharethis\.com$" name="^__seg$$" /-->
 
 	<!--securecookie host="^\.sharethis\.com$" name="^(__stid|__uset)$" /-->
-	<securecookie host="^(?:.*\.)?sharethis\.com$" name=".+" />
+	<!--securecookie host="^(?:.*\.)?sharethis\.com$" name=".+" /-->
+	<securecookie host=".+\.sharethis\.com$" name=".+" />
 
-
-	<rule from="^http://cdn\.sharethis\.com/"
-		to="https://sharethis.com/" />
 
 	<rule from="^http://s\.sharethis\.com/"
 		to="https://sd.sharethis.com/" />
@@ -76,7 +95,7 @@
 	<rule from="^http://w\.sharethis\.com/"
 		to="https://ws.sharethis.com/" />
 
-	<rule from="^http://([\w-]+\.)?sharethis\.com/"
-		to="https://$1sharethis.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

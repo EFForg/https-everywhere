@@ -2,51 +2,54 @@
 	For other Yahoo coverage, see Yahoo.xml.
 
 
-	Problematic domains:
+	Fully covered hosts in *flickr.com:
 
-		- flickr.com subdomains:
+		- (www.)?
+		- api
+		- secure
+		- static
 
-			- ^
-			- api
-			- code
+		- *.static:
 
-		- blog.flickr.net *
-		- code.flickr.net *	
+			- c\d+
+			- farm\d+
 
-	* Mismatched, handled in WordPress-blogs.xml
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .flickr.com
+		- www.flickr.com
+
+	Note: current_identity (.flickr.com) is read
+	via script and so cannot be secured.
+
+		https://github.com/EFForg/https-everywhere/issues/239
 
 -->
-<ruleset name="Flickr (partial)">
+<ruleset name="Flickr.com">
 
-	<target host="flic.kr" />
+	<!--	Direct rewrites:
+				-->
 	<target host="flickr.com" />
-	<target host="*.flickr.com" />
-		<exclusion pattern="^http://api\.flickr.com/(?!services/)" />
-	<target host="*.staticflickr.com" />
+	<target host="api.flickr.com" />
+	<target host="secure.flickr.com" />
+	<target host="static.flickr.com" />
+	<target host="*.static.flickr.com" />
+	<target host="www.flickr.com" />
+
+		<test url="http://farm2.static.flickr.com/1425/cameras/72157624846412485_model_large_194e38d197.jpg" />
+		<test url="http://farm8.static.flickr.com/7303/buddyicons/42041051@N04_r.jpg" />
+		<test url="http://farm8.static.flickr.com/7565/cameras/72157646085815427_model_large_7a8c07d8b0.jpg" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.flickr\.com$" name="^(BX|admsort|cookie_session|current_identity|density|ffs|fldetectedlang|flrb|flrbcr|flrbgdrp|flrbgmrp|flrbgrp|flrbp|flrbs|fltoto|just_registered|localization|memsort|modsort|photoPHS|photoPWS|vp|xb)$" /-->
+	<!--securecookie host="^www\.flickr\.com$" name="^(liqph|liqpw|ywandp)" /-->
+
+	<securecookie host=".*\.flickr\.com$" name="^(?!current_identity$).+" />
 
 
-	<securecookie host=".*\.flickr\.com$" name=".+" />
-
-
-	<rule from="^http://flic\.kr/f/"
-		to="https://www.flickr.com/short_urls.gne?favorites=" />
-
-	<rule from="^http://flic\.kr/p/"
-		to="https://www.flickr.com/photo.gne?short=" />
-
-	<rule from="^http://flic\.kr/ps/"
-		to="https://www.flickr.com/short_urls.gne?photostream=" />
-
-	<rule from="^http://flic\.kr/s/"
-		to="https://www.flickr.com/short_urls.gne?photoset=" />
-
-	<rule from="^http://(?:api\.|www\.)?flickr\.com/"
-		to="https://www.flickr.com/" />
-
-	<rule from="^http://s(ecure|tatic)\.flickr\.com/"
-		to="https://s$1.flickr.com/" />
-
-	<rule from="^http://farm(\d+)\.static(\.)?flickr\.com/"
-		to="https://farm$1.static$2flickr.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

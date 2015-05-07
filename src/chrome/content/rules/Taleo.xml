@@ -1,46 +1,32 @@
 <!--
+	For other Oracle coverage, see Oracle.xml.
+
+
 	!functional:
-		- www.taleo.net			(cert: acquia-sites.com; redirect to http://...com; same cert is valid for .com)
+		- knowledgeexchange.taleo.com	(Dropped)
 		- www.taleobusinessedition.com	(timeout)
 
+
+	(www.)?taleo.com: Redirects to http
+
 -->
-<ruleset name="Taleo (partial)" platform="mixedcontent">
+<ruleset name="Taleo.com (partial)">
 
 	<target host="taleo.com"/>
-	<target host="*.taleo.com"/>
-	<target host="taleo.net"/>
-	<target host="*.taleo.net"/>
-	<target host="*.tbe.taleo.net"/>
+	<target host="www.taleo.com"/>
 
 
-	<!--	encountered cookies:
-			- .com:
-				- ^www
-			- .net:
-				- ^tbe
-				- ^staticiad.tbe	-->
-	<securecookie host="^www\.taleo\.com$" name=".*"/>
-	<securecookie host="^(?:.+\.)?tbe\.taleo\.net$" name=".+" />
+	<!--securecookie host="^www\.taleo\.com$" name=".*"/-->
 
 
-	<!--	cert is not valid for www nor net	-->
-	<rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
-		to="https://www.taleo.com/"/>
-
-	<!--	domain for clients
-
-		Observed subdomains:
-
-			- ch
-			- staticiad
-			- staticord
-					-->
-	<rule from="^http://(\w+\.)?tbe\.taleo\.net/"
-		to="https://$1tbe.taleo.net/"/>
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?taleo\.com/$"
+		to="https://www.oracle.com/us/products/applications/taleo/overview/index.html" />
 
 	<!--	times out over https.  This redirection
 		is what the server does, aside from https.	-->
-	<rule from="^http://(?:www\.)?taleobusinessedition\.com/"
-		to="https://www.taleo.com/solutions/taleo-business-edition"/>
+	<!--rule from="^http://(?:www\.)?taleobusinessedition\.com/"
+		to="https://www.taleo.com/solutions/taleo-business-edition"/-->
 
 </ruleset>

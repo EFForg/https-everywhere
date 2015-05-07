@@ -11,15 +11,22 @@
 
 	Nonfunctional subdomains:
 
-		- videothek	(dropped)
+		- videothek *
+
+	* Dropped
 
 
 	Problematic subdomains:
 
-		- ^			(works, cert only matches www)
-		- mobilefun		(mismatched, CN: o2-liv.mondiamedia.com)
-		- smartphonevergleich	(works; mismatched, CN: *.o2.vccp.de)
-		- tarifcheck		(works; mismatched, CN: *.interone.de)
+		- ^ ¹
+		- mobilefun ²
+		- smartphonevergleich ³
+		- tarifcheck ⁴
+
+	¹ Works, cert only matches www
+	² Mismatched, CN: o2-liv.mondiamedia.com
+	³ Works; mismatched, CN: *.o2.vccp.de
+	⁴ Works; mismatched, CN: *.interone.de
 
 
 	Fully covered subdomains:
@@ -29,26 +36,48 @@
 		- cct2
 		- dsl
 		- email
+		- login
 		- mobilefun	(→ o2-liv.mondiamedia.com)
 		- track
 
 
-	Mixed images on mobilefun from dynimages.handy.de
+	Mixed content:
+
+		- css on hilfe from $self ¹
+
+		- Images, on:
+
+			- hilfe from $self ²
+			- hilfe from $static ²
+			- mobilefun from dynimages.handy.de
+
+		- Bug on hilfe from static ²
+
+	¹ Secured by us, fetched over both https and http => no effect
+	² Secured by us
+
 
 -->
 <ruleset name="o2 online.de (partial)">
 
-	<target host="o2online.de"/>
-	<target host="*.o2online.de"/>
+	<target host="o2online.de" />
+	<target host="*.o2online.de" />
 
 
-	<securecookie host="^(.*\.)?o2online\.de$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.o2online\.de$" name="^(VISITORID|al_tg||o2-Cust|touchPoints)$" /-->
+	<!--securecookie host="^dsl\.o2online\.de$" name="^(randomNumber|refresh_tg)$" /-->
+	<!--securecookie host="hilfe\.o2online\.de$" name="^(LiSESSIONID|LithiumVisitor)$" /-->
+	<!--securecookie host="\.www\.o2online\.de$" name="^mbox$" /-->
+
+	<securecookie host="^(?:.*\.)?o2online\.de$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?o2online\.de/"
 		to="https://www.o2online.de/" />
 
-	<rule from="^http://(cct2?|dsl|email|hilfe|portal|track)\.o2online\.de/"
+	<rule from="^http://(cct2?|dsl|email|hilfe|login|portal|track)\.o2online\.de/"
 		to="https://$1.o2online.de/" />
 
 	<rule from="^http://mobilefun\.o2online\.de/"

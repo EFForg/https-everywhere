@@ -1,5 +1,5 @@
 <!--
-	For rules causing false/broken MCB, see Richard_Dawkins.net-falsemixed.xml.
+	Richard Dawkins Foundation
 
 	For problematic rules, see Richard_Dawkins_Foundation-problematic.xml.
 
@@ -35,8 +35,6 @@
 
 		- richarddawkins.myshopify.com
 
-			- store.richarddawkins.net
-
 		- c177661.r61.cf0.rackcdn.com
 		- c114922.r22.cf0.rackcdn.com
 		- c914452.r52.cf0.rackcdn.com
@@ -58,14 +56,11 @@
 
 	Problematic domains:
 
-		- (www.)rdfs.com ¹
-
 		- richarddawkins.net subdomains:
 
-			- ^		(dropped)
 			- comments ¹
 			- de ¹
-			- donate ²
+			- es ¹
 			- givingaid ¹
 			- old ¹
 
@@ -75,16 +70,16 @@
 	² Works; mismatched, CN: *.heroku.com
 
 
+	These altnames don't exist:
+
+		- www.donate.richarddawkins.net
+
+
 	Mixed content:
-
-		- Scripts on www.richarddawkins.net from comments ¹
-
-		- json on www.richarddawkins.net from comments ¹
 
 		- css, on:
 
 			- old.richarddawkins.net from www.google.com ¹
-			- www.richarddawkins.net from fonts.googleapis.com (via ddeedjkumnzhr.cloudfront.net) ¹
 
 		- Images, on:
 
@@ -109,14 +104,7 @@
 				- c0589922.cdn.cloudfiles.rackspacecloud.com ¹
 				- c0939582.cdn.cloudfiles.rackspacecloud.com ¹
 				- c1129422.cdn.cloudfiles.rackspacecloud.com ¹
-				- rdfrs.com ¹
 				- cdn.shopify.com ¹
-
-			- www.richarddawkins.net, from:
-
-				- comments ¹
-				- d2ttfyrfmig6p1.cloudfront.net ¹
-				- c0589922.cdn.cloudfiles.rackspacecloud.com ¹
 
 			- (www.)richarddawkinsfoundation.org, from:
 
@@ -135,16 +123,41 @@
 	² Unsecurable
 
 -->
-<ruleset name="Richard Dawkins Foundation (partial) ">
+<ruleset name="Richard Dawkins.net (partial) ">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="richarddawkins.net" />
+	<target host="donate.richarddawkins.net" />
+	<target host="www.richarddawkins.net" />
+
+	<!--	Complications:
+				-->
 	<target host="comments.richarddawkins.net" />
 	<target host="store.richarddawkins.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^richarddawkins\.net$" name="^wordpress_test_cookie$" /-->
+	<!--securecookie host="^\.richarddawkins\.net$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^(?:www\.)?richarddawkins\.net$" name=".+" />
+	<securecookie host="^\.richarddawkins\.net$" name="^(?:__cfduid|cf_clearance)$" />
 
 
 	<rule from="^http://comments\.richarddawkins\.net/"
 		to="https://rdfnet-comments.herokuapp.com/" />
 
-	<rule from="^http://store\.richarddawkins\.net/"
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://store\.richarddawkins\.net/+"
 		to="https://richarddawkins.myshopify.com/" />
+
+		<test url="http://store.richarddawkins.net//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

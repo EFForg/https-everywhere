@@ -1,28 +1,57 @@
 <!--
+	Other Pingdom rulesets:
+
+		- Pingdom.net.xml
+
+
 	Fully covered domains:
 
-		- rum-collector.pingdom.net
+		- pingdom.com subdomains:
+
+			- my
+			- share
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- dnscheck ¹
+		- fpt
+		- royal ²
+		- stats ³
+		- tools ¹
+
+	¹ 521
+	² Redirects to http
+	³ Refused
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- .pingdom.com
+		- support.pingdom.com
 
 -->
-<ruleset name="Pingdom (partial)">
+<ruleset name="Pingdom.com (partial)">
 
 	<target host="pingdom.com" />
-	<target host="*.pingdom.com" />
-		<!--
-			404:
-				-->
-		<exclusion pattern="^http://stats\." />
-		<exclusion pattern="^http://www\.pingdom\.com/(?!_css/|_img/|signup)" />
-	<target host="*.pingdom.net" />
+	<target host="my.pingdom.com" />
+	<target host="pp.pingdom.com" />
+	<target host="share.pingdom.com" />
+	<target host="support.pingdom.com" />
+	<target host="www.pingdom.com" />
+		<!--exclusion pattern="^http://(dnscheck|fpt|royal|stats|tools)\." /-->
 
 
-	<securecookie host="^\.pingdom\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pingdom\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^support\.pingdom\.com$" name="^(SWIFT_client|SWIFT_sessionid40)$" /-->
+
+	<securecookie host="^(?:support)?\.pingdom\.com$" name=".+" />
 
 
-	<rule from="^http://((?:my|pp|www)\.)?pingdom\.com/"
-		to="https://$1pingdom.com/"/>
-
-	<rule from="^http://rum-(collector|static)\.pingdom\.net/"
-		to="https://rum-$1.pingdom.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

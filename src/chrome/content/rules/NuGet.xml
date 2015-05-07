@@ -1,5 +1,32 @@
-<ruleset name="NuGet">
-  <target host="nuget.org" />
-  <target host="www.nuget.org" />
-  <rule from="^http://(www\.)?nuget\.org/" to="https://$1nuget.org/"/>
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Github
+
+
+	Mixed content:
+
+		- Bug on docs from i.creativecommons.org *
+
+	* Secured by us
+
+-->
+<ruleset name="NuGet (partial)">
+
+	<target host="nuget.org" />
+	<target host="*.nuget.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.docs\.nuget\.org$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\.docs\.nuget\.org$" name=".+" />
+
+
+	<rule from="^http://(docs\.|www\.)?nuget\.org/"
+		to="https://$1nuget.org/" />
+
 </ruleset>

@@ -15,6 +15,11 @@
 
 		- kino.gmx.de		(redirects to www.govento.de; mismatched, CN: ct-cds.con-tech.de)
 		- newsroom.gmx.net	(refused)
+		- finanzvergleich (refused)
+		- gutscheine (diffrent host)
+		- media (refused)
+		- postmaster (timeout)
+		- video (redirect)
 
 
 	Fully covered domains:
@@ -29,6 +34,7 @@
 			- (www.)	(^ → www)
 			- help
 			- images
+			- organizer
 			- service
 			- storage-file-eu
 
@@ -45,16 +51,21 @@
 			- images
 			- img
 			- js
+			- kontakt
+			- lotto
 			- mailings
+			- mailxchange
+			- registrierung
+			- millionenklick
+			- passwort
 			- registrierung
 			- sec-i0
 			- service
 			- suche
+			- vorteile
 
 		- (www.)gmx.ru		(→ www.gmx.com)
 		- (www.)gmx.se		(→ www.gmx.com)
-		- logout.gmx.uimserv.net
-
 
 	Observed cookie domains:
 
@@ -70,8 +81,7 @@
 			- .www
 
 -->
-<ruleset name="GMX" platform="mixedcontent">
-
+<ruleset name="GMX">
 	<target host="gmx.*" />
 	<target host="www.gmx.*" />
 	<target host="gmx.co.uk"/>
@@ -79,23 +89,75 @@
 	<target host="*.gmx.com" />
 	<target host="mobile.gmx.de" />
 	<target host="*.gmx.net" />
-	<target host="logout.gmx.uimserv.net" />
 
+	<test url="http://gmx.com/" />
+	<test url="http://help.gmx.com/" />
+	<test url="http://images.gmx.com/" />
+	<test url="http://organizer.gmx.com/" />
+	<test url="http://postmaster.gmx.com/" />
+	<test url="http://storage-file-eu.gmx.com/" />
+	<test url="http://search.gmx.com/" />
+	<test url="http://service.gmx.com/" />
+	<test url="http://www.gmx.com/" />
+	<test url="http://gmx.net/" />
+	<test url="http://dl.gmx.net/" />
+	<test url="http://finanzvergleich.gmx.net/" />
+	<test url="http://gutscheine.gmx.net/" />
+	<test url="http://hilfe.gmx.net/" />
+	<test url="http://images.gmx.net/" />
+	<test url="http://img.gmx.net/" />
+	<test url="http://js.gmx.net/" />
+	<test url="http://kontakt.gmx.net/" />
+	<test url="http://lotto.gmx.net/" />
+	<test url="http://mailings.gmx.net/" />
+	<test url="http://mailxchange.gmx.net/" />
+	<test url="http://millionenklick.gmx.net/" />
+	<test url="http://media.gmx.net/" />
+	<test url="http://newsroom.gmx.net/" />
+	<test url="http://passwort.gmx.net" />
+	<test url="http://postmaster.gmx.net/" />
+	<test url="http://registrierung.gmx.net/" />
+	<test url="http://sec-i0.gmx.net/" />
+	<test url="http://service.gmx.net/" />
+	<test url="http://suche.gmx.net/" />
+	<test url="http://video.gmx.net/" />
+	<test url="http://vorteile.gmx.net/" />
+	<test url="http://www.gmx.net/" />
+	<test url="http://gmx.ca/" />
+	<test url="http://www.gmx.ca/" />
+	<test url="http://gmx.se/" />
+	<test url="http://www.gmx.se/" />
+	<test url="http://gmx.ru/" />
+	<test url="http://www.gmx.ru/" />
+	<test url="http://gmx.at/" />
+	<test url="http://www.gmx.at/" />
+	<test url="http://gmx.ch/" />
+	<test url="http://www.gmx.ch/" />
+	<test url="http://gmx.co.uk/" />
+	<test url="http://www.gmx.co.uk/" />
+	<test url="http://gmx.fr/" />
+	<test url="http://www.gmx.fr/" />
+	<test url="http://gmx.de/" />
+	<test url="http://www.gmx.de/" />
+
+	<exclusion pattern="http://postmaster\.gmx\.com/" />
+	<exclusion pattern="http://finanzvergleich\.gmx\.net/" />
+	<exclusion pattern="http://gutscheine\.gmx\.net/" />
+	<exclusion pattern="http://media\.gmx\.net/" />
+	<exclusion pattern="http://newsroom\.gmx\.net/" />
+	<exclusion pattern="http://postmaster\.gmx\.net/" />
+	<exclusion pattern="http://video\.gmx\.net/" />
 
 	<!--securecookie host="^\.gmx\.de$" name="^(NG_USERID|ns_sample)$" /-->
 	<securecookie host="^mobile\.gmx\.de$" name=".+" />
 	<!--securecookie host="^\.gmx\.net$" name="^(emos_webde_sid|emos_webde_vid|ns_sample|ps-cid|psid|SSID|SSLB_P|SSRT|SSSC)$" /-->
 	<securecookie host="^(?:service|\.suche|\.?www)?\.gmx\.net$" name=".+" />
 
-
-	<rule from="^http://(dl|hilfe|images|img|js|mailings|registrierung|sec-i0|suche)\.gmx\.net/"
-		to="https://$1.gmx.net/" />
-
 	<!--	In countries like se, it, ca, and ru, www.gmx.cctld redirects
 		to www.gmx.com; we may as well secure that a bit but it should
 		work regardless of whether we got all of these countries.
 	-->
-	<rule from="^http://(?:www\.)?gmx\.(?:ca|it|se|ru)/"
+	<rule from="^http://(www\.)?gmx\.(ca|it|se|ru)/"
 		to="https://www.gmx.com/"/>
 
 	<!--	In these domains GMX supports SSL right at the homepage
@@ -103,34 +165,14 @@
 		https://gmx.com appears to work but hopefully
 		redirecting away won't break anything.
 	-->
-	<rule from="^http://(?:www\.)?gmx\.(at|ch|com|co\.uk|fr|net)/"
+	<rule from="^http://gmx\.(at|ch|co\.uk|fr)/"
 		to="https://www.gmx.$1/" />
 
 	<!--	gmx.de lives at gmx.net
 					-->
-	<rule from="^http://(?:www\.)?gmx\.de/"
+	<rule from="^http://(www\.)?gmx\.de/"
 		to="https://www.gmx.net/" />
-
-	<!--	A lot of the back-end work is reportedly done by service.gmx.*
-										-->
-	<rule from="^http://service\.gmx\.(com|net)/"
-		to="https://service.gmx.$1/" />
-
-	<rule from="^http://(help|images)\.gmx\.com/"
-		to="https://$1.gmx.com/" />
 	
-	 <!--	Gmx file storage service (WebDAV)
-							-->
-	<rule from="^http://storage-file-eu\.gmx\.com/"
-		to="https://storage-file-eu.gmx.com/" />
-
-	<rule from="^http://mobile\.gmx\.de/"
-		to="https://mobile.gmx.de/" />
-		
-	<!--	Logout redicts to uimserv.net
-							-->
-		
-	<rule from="^http://logout\.gmx\.uimserv\.net/"
-		to="https://logout.gmx.uimserv.net/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

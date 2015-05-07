@@ -1,0 +1,40 @@
+<!--
+	For rules causing false/broken MCB, see Film_Linc.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css on www from www *
+
+		- Images on www from ^ *
+
+		- Ads/bugs on www from fw.adsafeprotected.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Film Linc.com (partial)">
+
+	<target host="filmlinc.com" />
+	<target host="secure.filmlinc.com" />
+	<target host="*.secure.filmlinc.com" />
+	<target host="www.filmlinc.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.filmlinc\.com/(?!\?css=|assets/|favicon\.ico|page/-/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?filmlinc\.com$" name="^X-Mapping-\+$" /-->
+	<!--securecookie host="^\.filmlinc\.com$" name="^(exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+	<securecookie host="^\.secure\.filmlinc\.com$" name="^X-CheckNode$" />
+
+	<securecookie host="^(?:\.secure\.)?filmlinc\.com$" name=".+" />
+
+
+	<rule from="^http://(secure\.|www\.)?filmlinc\.com/"
+		to="https://$1filmlinc.com/" />
+
+</ruleset>

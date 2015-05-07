@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 
 # autogenerate sample versions of rules from Chromium browser's HSTS
 # preload list (in the from-preloads/ directory)

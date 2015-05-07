@@ -1,0 +1,55 @@
+<!--
+	For other Vox Media coverage, see Vox.com.xml.
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- (www.)chicago *
+		- (www.)la *
+		- (www.)sf *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- www.hamptons *
+
+	* Mismatched, CN: ny.curbed.com
+
+
+	Mixed content:
+
+		- css on hamptons, (www.)ny from cdn.cstatic.net *
+
+		- Images, on:
+
+			- hamptons from hamptons *
+			- hamptons, (www.)ny from ^
+			- (www.)ny from ny *
+			- hamptons and (www.)ny from cdn.cstatic.net *
+
+		- favicon on hamptons from hamptons *
+
+		- Bugs on (www.)ny from f.curbed.cc *
+
+	* Secured by us
+
+-->
+<ruleset name="Curbed.com (partial)">
+
+	<target host="*.curbed.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?(?:hamptons|ny)\.curbed\.com/+(?!favicon\.ico|uploads/)" />
+
+
+	<rule from="^http://(?:www\.)?hamptons\.curbed\.com/"
+		to="https://hamptons.curbed.com/" />
+
+	<rule from="^http://(www\.)?ny\.curbed\.com/"
+		to="https://$1ny.curbed.com/" />
+
+</ruleset>

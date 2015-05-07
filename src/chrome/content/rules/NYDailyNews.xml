@@ -1,5 +1,14 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://nydailynews.com/ => http://nydailynews.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	For rules causing false/broken MCB, see NYDailyNews.com-falsemixed.xml.
+
+
 	CDN buckets:
+
+		- casmp.adperfect.com
+
+			- classifieds
 
 		- dailynews.vo.llnwd.net
 
@@ -19,27 +28,70 @@
 	Problematic subdomains:
 
 		- assets *
+		- classifieds ²
 		- static[123] *
 
 	* 400; mismatched, CN: *.hs.llnwd.net
+	² Works; mismatched, CN: *.adperfect.com
 
+
+	Fully covered subdomains:
+
+		- homedelivery
+		- webport
+		- webport...:8443
+		- webport1...:8443
+
+
+	Mixed content:
+
+		- css, on:
+
+			- classifieds from *.cloudfront.net *
+			- www from assets *
+
+		- Images, on:
+
+			- classifieds from *.cloudfront.net *
 
 	Mixed image on www from multimedia
 
+			- www from static[123] *
+
+
+		Web bugs, on www from:
+
+			- assets *
+			- www.facebook.com *
+			- cdn.gigya.com *
+			- pixel.quantserve.com *
+			- b.scorecardresearch.com *
+			- i.simpli.fi *
+
+	* Secured by us
+
 -->
-<ruleset name="NYDailyNews" platform="mixedcontent">
+<ruleset name="NYDailyNews (partial)" default_off='failed ruleset test'>
 
 	<target host="nydailynews.com" />
 	<target host="*.nydailynews.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://classifieds\.nydailynews\.com/+(?!resource/)"/>
+		<exclusion pattern="^http://www\.nydailynews\.com/+(?!cmlink/|nydn/|polopoly_fs/)" />
 
 
 	<securecookie host="^[^@:/]*\.nydailynews\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(?:assets|static\d|www)\.)?nydailynews\.com/"
+	<rule from="^http://(?:assets|static\d|www)\.nydailynews\.com/"
 		to="https://www.nydailynews.com/" />
 
-	<rule from="^http://classifiedads\.nydailynews\.com/"
-		to="https://classifiedads.nydailynews.com/" />
+	<rule from="^http://(classifiedads|homedelivery|webport1?)\.nydailynews\.com(:8443)?/"
+		to="https://$1.nydailynews.com$2/" />
+
+	<rule from="^http://classifieds\.nydailynews\.com/resource/"
+		to="https://casmp.adperfect.com/resource/" />
 
 </ruleset>

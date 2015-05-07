@@ -1,0 +1,39 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://chatme.im/ => https://chatme.im/: (60, 'SSL certificate problem: self signed certificate')
+	Problematic subdomains:
+
+		- support ¹
+		- videochat ¹
+		- beta.webchat ²
+
+	¹ Shows default Parallels page
+	² Cert only matches *.chatme.im
+
+
+	Mixed content:
+
+		- Images on ^ from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="ChatMe.im (partial)" default_off='failed ruleset test'>
+
+	<target host="chatme.im" />
+	<target host="*.chatme.im" />
+		<!--exclusion pattern="^http://(videochat|beta\.webchat)\.chatme\.im/" /-->
+
+
+	<securecookie host="^\.?chatme\.im$" name=".+" />
+
+
+	<rule from="^http://((?:cdn|webchat|www)\.)?chatme\.im/"
+		to="https://$1chatme.im/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://support\.chatme\.im/.*"
+		to="https://chatme.im/wp-signup.php?new=support" />
+
+</ruleset>

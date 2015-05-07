@@ -1,0 +1,63 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://westlaw.com/ => https://westlaw.com/: (51, "SSL: no alternative certificate subject name matches target host name 'westlaw.com'")
+	For other Thomson Reuters coverage, see Thomson-Reuters.xml.
+
+
+	Problematic subdomains:
+ 
+		- store *
+
+	* Mismatched, CN: *.thomsonreuters.com
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- lawschool
+		- 1.next
+		- m.next
+		- onepass
+		- store
+		- images.store
+		- text
+		- web2
+		- west
+
+
+	Insecure cookies are set for these domains:
+
+		- ^
+		- lawschool
+		- .next
+		- 1.next
+		- m.next
+		- text
+		- web2
+		- west
+		- www
+
+-->
+<ruleset name="Westlaw.com (partial)" default_off='failed ruleset test'>
+
+	<target host="westlaw.com" />
+	<target host="*.westlaw.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?westlaw\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^lawschool\.westlaw\.com$" name="^(ASP\.NET_SessionId|BIGipServerLAWSCHOOL-80)$" /-->
+	<!--securecookie host="^\.next\.westlaw\.com$" name="^(ig|mob_pm|site|web_pm)$" /-->
+	<!--securecookie host="^[1m]\.next\.westlaw.com$" name="^BIGipServerprod_apache_a$" /-->
+	<!--securecookie host="^text.westlaw.com$" name="^(BIGipServerCHAMELEON-80|bhCookieSaveSess|CSSignon|FDSERVER|pinfo|tinfo)$" /-->
+	<!--securecookie host="^(text|web2)\.westlaw\.com$" name="^(CSSess|bhCookiePerm|bhCookieSess|userMachineInfo)$" /-->
+	<!--securecookie host="^(text|west)\.westlaw\.com$" name="^TS[\da-f]{8}$" /-->
+
+	<securecookie host="^(?:(?:lawschool|[1m]\.next|store|text|web2|west|www)\.)?westlaw\.com$" name=".*" />
+
+
+	<rule from="^http://((?:lawschool|[1m]\.next|onepass|(?:images\.)?store|text|web2|west|www)\.)?westlaw\.com/"
+		to="https://$1westlaw.com/" />
+
+</ruleset>

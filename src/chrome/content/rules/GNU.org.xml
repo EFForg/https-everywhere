@@ -4,16 +4,35 @@
 
 	Nonfunctional subdomains:
 
+		- alpha ¹
 		- ftpmirror
-		- gcc			(shows sourceware.org; mismatched, CN: www.sourceware.org)
-		- download.savannah	(refused)
-		- git.savannah
+		- gnuzilla ²
+		- download.savannah ³
+		- cvs.savannah ⁴
+		- git.savannah ⁴
+		- git.sv ⁴
+
+	¹ Shows ftp
+	² Shows chapters.gnu.org
+	³ Shows audio-video
+	⁴ Reset
 
 
 	Problematic domains:
 
-		- (www.)classpath.org	(shows gnu.org; mismatched, CN: www.gnu.org)
-		- mail.gnu.org		(dropped)
+		- (www.)classpath.org ¹
+
+		- chapters.gnu.org *
+		- es.gnu.org *
+		- www.es.gnu.org **
+		- it.gnu.org *
+		- mail.gnu.org ²
+		- mx.gnu.org *
+
+	¹ Shows gnu.org; mismatched, CN: www.gnu.org
+	* Server sends no certificate chain
+	** Mismatched
+	² Dropped
 
 
 	Fully covered domains:
@@ -23,27 +42,57 @@
 		- gnu.org subdomains:
 
 			- (www.)
+			- audio-video
+			- elpa
+			- debbugs
+			- gcc
+			- ftp
 			- lists
 			- mail		(→ lists)
 			- savannah
 
+
+	These altnames don't exist:
+
+		- www.audio-video.gnu.org
+		- www.debbugs.gnu.org
+		- www.elpa.gnu.org
+		- www.gcc.gnu.org
+
 -->
 <ruleset name="GNU.org (partial)">
 
-	<target host="gnu.org" />
-	<target host="*.gnu.org" />
+	<target host=            "gnu.org" />
+	<target host="audio-video.gnu.org" />
+	<target host=    "debbugs.gnu.org" />
+	<target host=       "elpa.gnu.org" />
+	<target host=        "ftp.gnu.org" />
+	<target host=        "gcc.gnu.org" />
+	<target host=      "lists.gnu.org" />
+	<target host=       "mail.gnu.org" />
+	<target host=   "savannah.gnu.org" />
+	<target host=        "www.gnu.org" />
+	<target host=      "classpath.org" />
+	<target host=  "www.classpath.org" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^Bugzilla_login_request_cookie$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^gcc\.gnu\.org$" name="^DEFAULTFORMAT$" /-->
+
+	<securecookie host="^gcc\.gnu\.org$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?classpath\.org/$"
 		to="https://www.gnu.org/software/classpath/" />
 
-        <rule from="^http://(www\.)?gnu\.org/"
-		to="https://$1gnu.org/" />
-
-        <rule from="^http://(lists|savannah)\.gnu\.org/"
-		to="https://$1.gnu.org/" />
-
 	<rule from="^http://mail\.gnu\.org/"
 		to="https://lists.gnu.org/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

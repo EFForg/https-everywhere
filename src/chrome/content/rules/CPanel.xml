@@ -1,29 +1,108 @@
 <!--
-	Nonfunctional:
+	CDN buckets:
 
-		- docs		(http reply)
+		- appcat.flyasite.com
+
+			- applications
+
+
+	Nonfunctional subdomains:
+
+		- features ¹
+		- httpupdate ²
+		- layer1 ²
+
+	¹ Plaintext reply
+	² Refused
+
+
+	Problematic subdomains:
+
+		- applications *
+		- go ²
+
+	* Mismatched, CN: *.flyasite.com; mixed css
+	² Insecure renegotiation
+
+
+	Partially covered subdomains:
+
+		- applications *	(→ appcat.flyasite.com )
+
+	* Avoiding user-visible paths
 
 
 	Fully covered subdomains:
 
 		- (www.)
+		- blog
+		- docs
+		- documentation
 		- forums
+		- go
 		- manage2
 		- mt
+		- partnernoc
+		- podcast
+		- releases
+		- tickets
+		- verify
+		- videos
+
+
+	Insecure cookies are set for these domains:
+
+		- forums
 		- tickets
 
+
+	Mixed content:
+
+		- iframe on blog from www.youtube.com *
+
+		- css on applications from assets[01].flyasite.com *
+
+		- Images, on:
+
+			- applications from $self *
+			- applications from assets[012].flyasite.com *
+			- blog from $self *
+			- videos from $self *
+
+		- favicon, on:
+
+			- ^ from $self *
+			- applications from assets0.flyasite.com *
+			- blog from $self *
+			- podcast from ^ *
+			- podcast from $self *
+			- videos from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="cPanel (partial)" platform="mixedcontent">
+<ruleset name="cPanel.net (partial)">
 
 	<target host="cpanel.net" />
 	<target host="*.cpanel.net" />
-		<exclusion pattern="^http://docs\." />
+		<!--
+			Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://applications\.cpanel\.net/+(?!assets/|favicon\.ico|themes/)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forums\.cpanel\.net$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^tickets\.cpanel\.net$" name="^TKTSCUSTSESSID$" /-->
 
 	<securecookie host="^(?:.*\.)?cpanel\.net$" name=".+" />
 
 
-	<rule from="^http://((forums|manage2|mt|tickets|www)\.)?cpanel\.net/"
+	<rule from="^http://applications\.cpanel\.net/"
+		to="https://appcat.flyasite.com/" />
+
+	<rule from="^http://((?:blog|docs|documentation|forums|go|manage2|mt|partnernoc|podcast|releases|tickets|verify|videos|www)\.)?cpanel\.net/"
 		to="https://$1cpanel.net/" />
 
 </ruleset>

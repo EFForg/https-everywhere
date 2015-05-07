@@ -1,20 +1,59 @@
 <!--
 	Nonfunctional subdomains:
 
-		- git	(refused)
-		- wiki	(dropped)
+		- git ²
+		- nl ³
+		- wiki *
+
+	² Refused
+	³ Shows bugs
+	* 503
+
+
+	Problematic subdomains:
+
+		- (www.)? *
+		- bugs *
+		- forum ²
+
+	* Server sends no certificate chain
+	² Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- bugs
+		- mail
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugs.alpinelinux.org
+
+
+	Mixed content:
+
+		- css on forum from $self
+		- Images on forum from $self
 
 -->
-<ruleset name="Alpine Linux.org (partial)">
+<ruleset name="Alpine Linux.org (partial)" default_off='missing certificate chain'>
 
 	<target host="alpinelinux.org" />
-	<target host="*.alpinelinux.org" />
+	<target host="bugs.alpinelinux.org" />
+	<target host="mail.alpinelinux.org" />
+	<target host="www.alpinelinux.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugs\.alpinelinux\.org$" name="^_redmine_session" /-->
 
 	<securecookie host="^bugs\.alpinelinux\.org$" name=".+" />
 
 
-	<rule from="^http://(bugs\.|www\.)?alpinelinux\.org/"
-		to="https://$1alpinelinux.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

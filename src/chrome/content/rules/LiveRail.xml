@@ -15,13 +15,15 @@
 
 	Nonfunctional subdomains:
 
-		- (www.) *
+		- (www.) ¹
+		- lp ²
 		- platform
-		- platform4
 		- static *
 		- support	(times out)
 		- wp *
 
+	¹ 404
+	² Marketo
 	* 403, CN: test.liverail.com, self-signed
 
 
@@ -35,18 +37,64 @@
 
 	Partially covered subdomains:
 
-		- lp		(→ na-n.marketo.com; $ redirects to app-n.marketo.com, CN: *.marketo.com)
+		- lp		(→ na-n.marketo.com)
+
+
+	Fully covered hosts in *liverail.com:
+
+		- ad4
+		- cdn-static-secure
+		- platform4
+		- t4
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .liverail.com
+		- platform4.liverail.com
 
 -->
-<ruleset name="LiveRail (partial) ">
+<ruleset name="LiveRail.com (partial) ">
 
-	<target host="*.liverail.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ad4.liverail.com" />
+	<target host="cdn-static-secure.liverail.com" />
+	<target host="platform4.liverail.com" />
+	<target host="t4.liverail.com" />
+
+	<!--	Complications:
+				-->
+	<target host="lp.liverail.com" />
+
+		<exclusion pattern="^http://lp\.liverail\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://lp.liverail.com/VPX.html" />
+			<test url="http://lp.liverail.com/VPX.html?" />
+			<test url="http://lp.liverail.com/VPX.html?f" />
+			<test url="http://lp.liverail.com//VPX.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://lp.liverail.com/css/mktLPSupport.css" />
+			<test url="http://lp.liverail.com/images/forms/backRequiredGray.gif" />
+			<test url="http://lp.liverail.com/rs/liverail/images/footer-content-bg.jpg" />
 
 
-	<rule from="^http://(ad|t)4\.liverail\.com/"
-		to="https://$14.liverail.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.liverail\.com$" name="^(lr_bknd|lr_uds|lr_uid)$" /-->
+	<!--securecookie host="^platform4\.liverail\.com$" name="^PHPSESSID$" /-->
 
-	<rule from="^https?://lp\.liverail\.com/(css|images|rs)/"
-		to="https://na-n.marketo.com/$1/" />
+	<securecookie host="^(?:platform4)?\.liverail\.com$" name=".+" />
+
+
+	<rule from="^http://lp\.liverail\.com/"
+		to="https://na-n.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

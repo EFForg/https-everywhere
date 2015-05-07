@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://wix.com/ => https://wix.com/: Cycle detected - URL already encountered: https://www.wix.com/
 	CDN buckets:
 
 		- www.wix.com.edgesuite.net
@@ -41,35 +43,41 @@
 	Fully covered domains:
 
 		- publicorigin.wix.com
-		- static.wix.com	(→ akamai)
-		- static.wixstatic.com	(→ akamai)
+		- fallback.wix.com
+		- sslstatic.wix.com
+		- static.wix.com	(→ sslstatic & akamai)
+		- static.wixstatic.com	(→ sslstatic.wix.com & akamai)
 
 -->
-<ruleset name="Wix (partial)" platform="mixedcontent">
+<ruleset name="Wix (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
 	<target host="static.parastorage.com" />
-		<exclusion pattern="^https?://static\.parastorage\.com/media/" />
+		<exclusion pattern="^http://static\.parastorage\.com/media/" />
 	<target host="wix.com" />
 	<target host="*.wix.com" />
-	<target host="dns.lc.wix.com" />
-	<target host="www.dns.lc.wix.com" />
 	<target host="static.wixstatic.com" />
 
 
 	<securecookie host="^\.wix\.com$" name=".+" />
 
 
-	<rule from="^http://(frog\.|(?:www\.)?dns\.lc\.|publicorigin\.|www\.)?wix\.com/"
+	<rule from="^http://((?:fallback|frog|(?:www\.)?dns\.lc|publicorigin|sslstatic|www)\.)?wix\.com/"
 		to="https://$1wix.com/" />
 
 	<rule from="^http://archive\.wix\.com/sites/"
 		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix.com/sites/" />
 
-	<rule from="^https?://users\.(?:parastorage|wix)\.com/"
+	<rule from="^http://users\.(?:parastorage|wix)\.com/"
 		to="https://users.wix.com/" />
 
-	<rule from="^https?://tracking\.wix\.com/"
+	<rule from="^http://tracking\.wix\.com/"
 		to="https://wix.go2cloud.org/" />
+
+	<!--	At least some stylesheets reference resources relative
+		to root, so rewrite css to sslstatic:
+							-->
+	<rule from="^http://static\.wix(?:static)?\.com/"
+		to="https://sslstatic.wix.com/" />
 
 	<rule from="^http://static\.wix(static)?\.com/"
 		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix$1.com/" />

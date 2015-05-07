@@ -1,24 +1,65 @@
 <!--
+	CDN buckets:
+
+		- my.safaribooksonline.com.global.prod.fastly.net
+		- techbus.safaribooksonline.com.global.prod.fastly.net
+
+		- safaribooksonline.force.com
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- support *
+
+	* Force.com
+
+
 	Problematic subdomains:
 
-		- my	(akamai)
+		- my ¹
+		- ssl ²
+		- techbus ¹
+
+	¹ Fastly
+	² Insecure renegotiation
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blog
+		- ssl
+
+
+	Insecure cookies are set for these domains:
+
+		- my
+		- .my
+		- ssl
+		- .ssl
+		- techbus
+		- .techbus
+		- www
+		- .www
 
 -->
 <ruleset name="Safari Books Online">
-  <target host="my.safaribooksonline.com" />
-		<!--
-			Paths relative to / cause images to be fetched from akamai.net/$
-											-->
-		<exclusion pattern="^http://my\.safaribooksonline\.com/static/.+\.css" />
-  <target host="www.safaribooksonline.com" />
+  <target host="safaribooksonline.com" />
+  <target host="*.safaribooksonline.com" />
 
-	<!--	Avoid user-visible paths:
-						-->
-	<rule from="^http://my\.safaribooksonline\.com/(favicon\.ico|images/|static/)"
-		to="https://a248.e.akamai.net/f/1543/1/b/my.safaribooksonline.com/$1" />
 
-    <rule from="^http://my\.safaribooksonline\.com/login$"
-        to="https://ssl.safaribooksonline.com/securelogin"/>
-    <rule from="^http://www\.safaribooksonline\.com/Corporate/Index/logIn\.php$"
-        to="https://ssl.safaribooksonline.com/securelogin"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
+	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
+	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+
+	<securecookie host="(?:ssl|www)\.safaribooksonline\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|ssl|www)\.)?safaribooksonline\.com/"
+		to="https://$1safaribooksonline.com/" />
+
 </ruleset>

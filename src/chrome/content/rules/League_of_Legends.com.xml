@@ -1,0 +1,118 @@
+<!--
+	For problematic rules, see League_of_Legends.com-problematic.xml.
+
+
+	CDN buckets:
+
+		- riot-web-static.s3.amazonaws.com
+
+		- d1qt4plxtxvxul.cloudfront.net
+
+			- gameinfo.euw
+
+		- d1xd5rklg0g0g1.cloudfront.net
+
+			- gameinfo.na
+
+		- dx0wf1fepagqw.cloudfront.net
+
+			- cdn
+
+		- competitive-akamai.edgesuite.net
+
+			- competitive.na
+
+		- edge.live.getpantheon.com
+
+			- prized.na
+
+
+	Nonfunctional subdomains:
+
+		- euw ¹
+		- na ¹
+		- community.na ²
+		- competitive.na ³
+
+	¹ Redirects to http, valid cert
+	² Refused
+	³ 503, akamai
+
+
+	Problematic subdomains:
+
+		- cdn ¹
+		- gameinfo.euw ¹
+		- gameinfo.na ¹
+		- prized.na ²
+
+	¹ cloudfront
+	² Works; mismatched, CN: *.gotpantheon.com
+
+
+	Partially covered subdomains:
+
+		- forums.na *
+		- signup *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cdn *
+		- pbesignup.euw
+		- pbesignup.na
+		- support
+
+	* → dx0wf1fepagqw.cloudfront.net
+
+
+	Mixed content:
+
+		- css on gameinfo.na and prized.na from cdn *
+
+		- Images, on:
+
+			- pbesignup.euw, pbesignup.na, and prized.na from cdn *
+
+			- signup, from:
+
+				- $self *
+				- riot-web-static.s3.amazonaws.com *
+				- d2a0be06vdldp1.cloudfront.net *
+
+			- support from riot-web-static.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="League of Legends.com (partial)">
+
+	<target host="leagueoflegends.com" />
+	<target host="*.leagueoflegends.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://forums\.na\.leagueoflegends\.com/board/($|\?)" /-->
+		<!--exclusion pattern="^http://signup\.leagueoflegends\.com/+((en/home/index|en/signup/redownload|en/signup/redownload)($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://forums\.na\.leagueoflegends\.com/board/riot-assets/" />
+		<exclusion pattern="^http://signup\.leagueoflegends\.com/+(?!en/signup(?:$|\?|/captcha/)|favicon\.ico|theme/)" />
+
+
+	<!--	Server sets Secure for:
+					-->
+	<!--securecookie host="^support\.leagueoflegends\.com$" name=".+" /-->
+
+
+	<rule from="^http://((?:pbesignup\.(?:euw|na)|forums\.na|signup|support|www)\.)?leagueoflegends\.com/"
+		to="https://$1leagueoflegends.com/" />
+
+	<rule from="^http://cdn\.leagueoflegends\.com/"
+		to="https://dx0wf1fepagqw.cloudfront.net/" />
+
+</ruleset>

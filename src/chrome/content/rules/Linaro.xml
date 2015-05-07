@@ -1,36 +1,62 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.)	(redirects to http; CN: ask.linaro.org)
-		- connect	(shows ask; CN: ask.linaro.org)
-		- android.git *
 		- review.android.git *
-		- planet	(dropped)
 
-	* http reply
-	** Dropped
+	* Shows android.git
+
+
+	Problematic subdomains:
+
+		- connect *
+
+	* Shows ircligs; mismatched; CN: irclogs.linaro.org
 
 
 	Fully covered subdomains:
 
+		- (www.)
 		- android-build
 		- cards
+		- connect	(-> www)
 		- git
+		- android.git
+		- irclogs
 		- lists
 		- patches
+		- planet
 		- releases
 		- status
+
+
+	These altnames don't exist:
+
+		- www.irclogs.linaro.org
+		- www.releases.linaro.org
+
+
+	Mixed content:
+
+		- Images on www from www *
+
+	* Secured by us
 
 -->
 <ruleset name="Linaro (partial)" default_off="webmaster request">
 
+	<target host="linaro.org" />
 	<target host="*.linaro.org" />
 
 
 	<securecookie host="^(?:android-built|ask|cards|patches|releases|status|support|wiki)\.linaro\.org$" name=".+" />
 
 
-	<rule from="^http://(android-build|ask|cards|git|lists|patches|releases|status|support|wiki)\.linaro\.org/"
-		to="https://$1.linaro.org/" />
+	<rule from="^http://((?:android-build|ask|cards|git|android\.git|lists|patches|planet|releases|status|support|wiki|www)\.)?linaro\.org/"
+		to="https://$1linaro.org/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://connect\.linaro\.org/+"
+		to="https://www.linaro.org/connect" />
 
 </ruleset>

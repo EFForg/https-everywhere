@@ -1,0 +1,59 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ocla ¹
+		- pds ²
+
+	¹ Shows yosemite; mismatched, CN: yosemite.ucc.ie
+	² Shows yosemite, valid cert
+
+
+	Problematic subdomains:
+
+		- events *
+		- www *
+
+	* Mismatched, CN: lugh.ucc.ie
+
+
+	Fully covered subdomains:
+
+		- booleweb
+		- careersfdr *
+		- cora
+		- library
+		- lugh
+		- pacadmin *
+		- pensionsonline *
+		- yosemite
+
+	* Server is configured for rc4 only
+
+
+	^ucc.ie doesn't exist.
+
+
+	Mixed content:
+
+		- Images on booleweb from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="UCC.ie (partial)">
+
+	<target host="*.ucc.ie" />
+
+
+	<securecookie host="^(?:booleweb|careersfdr|cora|library|lugh|pacadmin|pensionsonline)\.ucc\.ie$" name=".+" />
+
+
+	<rule from="^http://(booleweb|careersfdr|cora|library|lugh|pacadmin|pensionsonline|yosemite)\.ucc\.ie/"
+		to="https://$1.ucc.ie/" />
+
+	<!--	Server drops args but not paths
+						-->
+	<rule from="^http://events\.ucc\.ie/([^?]*)(?:\?.*)?"
+		to="https://lugh.ucc.ie/eventslist/t4.do?pid=p1$1" />
+
+</ruleset>

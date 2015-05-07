@@ -1,0 +1,45 @@
+<!--
+	^: cert only matches www
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.openfoundry.org
+
+
+	Mixed content:
+
+		- Image from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="OpenFoundry.org">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.openfoundry.org" />
+
+	<!--	Complications:
+				-->
+	<target host="openfoundry.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.openfoundry\.org$" name="^([\da-f]{32}|jfcookie\[lang\]|oflang|ossfauth)$" /-->
+
+	<securecookie host="^www\.openfoundry\.org$" name=".+" />
+
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://openfoundry\.org/.*"
+		to="https://www.openfoundry.org/" />
+
+		<test url="http://openfoundry.org//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

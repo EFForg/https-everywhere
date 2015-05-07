@@ -1,0 +1,59 @@
+<!--
+	For rules causing false/broken MCB, see Twenga.com-falsemixed.xml.
+
+
+	Other Twenga rulesets:
+
+		- C4tw.net.xml
+
+
+	(www.): redirects to http (including login), valid cert
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Mixed css from $self
+
+
+	Fully covered subdomains:
+
+		- dynstatic
+
+		- i\d+:
+
+			- i00
+			- i10
+			- i21
+
+		- r
+
+
+	Mixed content:
+
+		- css on blog from $self *
+
+		- Images on blog from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Twenga.com (partial)">
+
+	<target host="*.twenga.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.twenga\.com/+(?!wp-content/|wp-includes/)" />
+
+
+	<!--	Tracking cookies set by r, not secured by server:
+									-->
+	<securecookie host="^\.twenga\.com$" name="^(?:TW_VISITOR_ID|WSID|twr)" />
+
+
+	<rule from="^http://(blog|dynstatic|i\d+|r)\.twenga\.com/"
+		to="https://$1.twenga.com/" />
+
+</ruleset>

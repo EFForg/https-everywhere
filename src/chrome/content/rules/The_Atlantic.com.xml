@@ -1,0 +1,93 @@
+<!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://theatlantic.com/ (200) => https://theatlantic.com/ (404)
+	For rules causing false/broken MCB, see The_Atlantic.com-falsemixed.xml.
+
+	For other Atlantic Media coverage, see Atlantic-Media.xml.
+
+
+	Nonfunctional domains:
+
+		- advertising.theatlantic.com *
+
+	* Shows profiles; mismatched, CN: profiles.theatlantic.com
+
+
+	Problematic domains:
+
+		- theatlantic.com ¹
+		- profiles.theatlantic.com ²
+		- ssl.theatlantic.com		(some images 404)
+		- assets.theatlantic.com	(self-signed)
+
+	¹ 404, valid cert
+	² Self-signed
+
+
+	Fully covered domains:
+
+		- cdn.theatlantic.com
+		- ssl.theatlantic.com		(→ cdn.theatlantic.com)
+		- assets.theatlantic.com	(→ cdn.theatlantic.com)
+
+
+	Mixed content:
+
+		- Scripts, on:
+
+			- www from cdn ¹
+			- www from admin.brightcove.com ¹
+			- theatlantic.disqus.com
+
+		- css on www from cdn ¹
+
+		- Ads/web bugs, on www from:
+
+			- atlanticmedia.122.2o7.net ¹
+			- api.bizographics.com ¹
+			- ct.buzzfeed.com ²
+			- siterecruit.comscore.com ¹
+			- ad.doubleclick.net ³
+			- pubads.g.doubleclick.net ³
+			- loadus.exelator.com ¹
+			- apis.google.com ¹
+			- widgets.outbrain.com ¹
+			- catrg.peer39.net ⁴
+			- www.reddit.com ¹
+			- b.scorecardresearch.com ¹
+			- cdn.taboolasyndication.com ¹
+			- a.visualrevenue.com ⁵
+
+		- Images on www from cdn ¹
+
+	¹ Secured by us
+	² Unsecurable
+	³ Rule disabled by default
+	⁴ Rule disabled by default <= mismatched cert
+	⁵ Unsecurable <= 503, akamai
+
+-->
+<ruleset name="The Atlantic.com (partial)" default_off='failed ruleset test'>
+
+	<target host="theatlantic.com" />
+	<target host="*.theatlantic.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?theatlantic\.com/+video(?:$|[?/])" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.theatlantic\.com$" name="^(SC_LINKS|atl_tests|s_cc|s_sq)$" /-->
+
+
+	<rule from="^http://(www\.)?theatlantic\.com/"
+		to="https://$1theatlantic.com/" />
+
+	<!-- not 100% sure about this, but it's the
+		  least broken configuration I can find -->
+	<rule from="^http://(?:assets|cdn|ssl)\.theatlantic\.com/"
+		to="https://cdn.theatlantic.com/" />
+
+</ruleset>

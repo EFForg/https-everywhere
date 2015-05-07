@@ -1,13 +1,29 @@
 <!--
+	^: cert only matches www
+
+
 	Some pages redirect to http.
 
 -->
 <ruleset name="IET (partial)">
 
-	<target host="digital-library.theiet.org" />
+	<target host="theiet.org" />
+	<target host="*.theiet.org" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://digital-library\.theiet\.org/(content/journals/el|content/subscriptions;jsessionid=|docserver/fulltext/\w+\.jpg)" /-->
+		<!--exclusion pattern="^http://www\.theiet\.org/($|help/index\.cfm|index\.cfm)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.theiet\.org/(?!help/passwordResetRequest\.cfm|meganav/|my($|[?/])|staticfiles/)" /-->
 
 
-	<rule from="^http://digital-library\.theiet\.org/(cart|css/|images/)"
+	<rule from="^http://(?:www\.)?theiet\.org/(?=help/passwordResetRequest\.cfm|meganav/|my(?:$|[?/])|staticfiles/)"
+		to="https://www.theiet.org/" />
+
+	<rule from="^http://digital-library\.theiet\.org/(cart|css/|favicon\.ico|files/|images/)"
 		to="https://digital-library.theiet.org/$1" />
 
 </ruleset>

@@ -1,23 +1,54 @@
-<ruleset name="lighttpd.net" platform="cacert">
+<!--
+	Problematic hosts:
+
+		- (www.)? *
+		- blog *
+		- download *
+		- redmine *
+		- wiki *
+		- xcache *
+
+	* Missing certificate chain, see https://whatsmychaincert.com
+
+
+	Observed hosts:
+
+		- (www.)?
+		- blog
+		- download
+		- redmine
+		- wiki
+		- xcache
+
+
+	Insecure cookies are set for these hosts:
+
+		- redmine.lighttpd.net
+		- xcache.lighttpd.net
+
+-->
+<ruleset name="lighttpd.net" platform="cacert" default_off="missing certificate chain">
 
 	<target host="lighttpd.net" />
 	<target host="*.lighttpd.net" />
 
+		<test url="http://blog.lighttpd.net/" />
+		<test url="http://download.lighttpd.net/" />
+		<test url="http://redmine.lighttpd.net/" />
+		<test url="http://wiki.lighttpd.net/" />
+		<test url="http://www.lighttpd.net/" />
+		<test url="http://xcache.lighttpd.net/" />
 
-	<securecookie host="^.*\.lighttpd\.net$" name=".*" />
+
+	<!--	Not secured by server:
+					-->
+	<!--ssecurecookie host="^redmine\.lighttpd\.net$" name="^_redmine_session$" /-->
+	<!--ssecurecookie host="^xcache\.lighttpd\.net$" name="^(trac_form_token|trac_session)$" /-->
+
+	<securecookie host=".*\.lighttpd\.net$" name=".*" />
 
 
-	<!--	Observed domains:
-
-			- blog
-			- download
-			- redmine
-			- wiki
-			- www
-			- xcache
-				-->
-	<rule from="^http://(\w+\.)?lighttpd\.net/"
-		to="https://$1lighttpd.net/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
-

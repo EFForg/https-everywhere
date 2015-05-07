@@ -1,42 +1,94 @@
 <!--
-	For domains with mixed content, see Focus.de-mixedcontent.xml.
+	For domains causing false/broken MCB, see Focus.de-mixedcontent.xml.
+
+
+	CDN buckets:
+
+		- prog.focus.de.edgesuite.net
+
+			- p[45]
+
+		- focus-online.webshopapp.com
+
+			- pdf
 
 
 	Nonfunctional subdomains:
 
-		- festgeld
-		- images.fragen
-		- tagesgeld
-		- unternehmen
-		- wetter
+		- festgeld ¹
+		- images.fragen ¹
+		- gutscheine ¹
+		- medipreis ²
+		- onlinespiele ¹
+		- stellenangebote ¹
+		- tagesgeld ¹
+		- unternehmen ¹
+
+	¹ Refused
+	² Redirects to www.medipreis.de
 
 
 	Problematic subdomains:
 
-		- ^		(cert only matches *.focus.de)
-		- bausparen	(works, mismatched, CN: rechner.fmh.de)
-		- p4		(akamai)
-		- strompreise	(works, mismatched, CN: partner.vxcp.de)
+		- bausparen ¹
+		- p4 ²
+		- p5 ²
+		- pdf ³
+		- strompreise ⁴
+		- wetter ⁵
+
+	¹ Mismatched, CN: rechner.fmh.de
+	² Akamai
+	³ Mismatched, CN: *.webshopapp.com
+	⁴ Mismatched, CN: partner.vxcp.de
+	⁵ Mismatched, CN: *.wetter.com
+
+
+	Mixed content:
+
+		- css on m from $self *
+
+		- Ad on wetter from partnervermittlung.elitepartner.de *
+
+	* Secured by us
 
 -->
-<ruleset name="Focus.de" platform="mixedcontent">
+<ruleset name="Focus.de (partial)">
 
 	<target host="focus.de" />
 	<target host="*.focus.de" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://m\.focus\.de/+(?!favicon\.ico|resources/)" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.focus\.de/+($|\?|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.focus\.de/+(?!resources/)" />
+	<target host="*.tfag.de" />
 
 
-	<securecookie host="^(?:www)?\.focus\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pdf\.focus\.de$" name="^session_id$" /-->
+
+	<!--securecookie host="^(?:www)?\.focus\.de$" name=".+" /-->
 
 
-	<rule from="^https?://(?:www\.)?focus\.de/"
-		to="https://www.focus.de/" />
-
-	<rule from="^http://m\.focus\.de/"
-		to="https://m.focus.de/" />
+	<rule from="^http://((?:m|static|www)\.)?focus\.de/"
+		to="https://$1focus.de/" />
 
 	<rule from="^http://p[04]\.focus\.de/"
 		to="https://p0.focus.de/" />
 
 	<rule from="^http://p5\.focus\.de/"
-		to="https://p5.focus.de/" />
+		to="https://a248.e.akamai.net/f/248/4737/10/p5.focus.de/" />
+
+	<rule from="^http://i\.tfag\.de/" 
+		to="https://i.tfag.de/"/>
+		
 </ruleset>

@@ -20,18 +20,49 @@
 
 	Nonfunctional domains:
 
-		- news.com.au
-		- resources[0-3]?.news.com.au	(503)
-		- subscription.news.com.au	(500)
-		- www.news.com.au		(503)
+		- resources[0-3]?.news.com.au ¹
+		- search.news.com.au ²
+		- subscription.news.com.au	(500, akamai)
+		- www.news.com.au ¹
+
+	¹ 503, akamai
+	² Dropped
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- connect ²
+
+	¹ Works, akamai
+	² Works; mismatched, CN: *.pureprofile.com
+
+
+	These altnames don't exist:
+
+		- www.media.foxsports.news.com.au
+		- www.media.foxsports.news.com.au
 
 -->
 <ruleset name="News Limited (partial)">
 
-	<target host="sops.news.com.au" />
+	<target host="*.news.com.au" />
 
 
-	<rule from="^http://sops\.news\.com\.au/"
-		to="https://sops.news.com.au/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^myaccount\.news\.com\.au$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^myaccount\.news\.com\.au$" name=".+" />
+
+
+	<rule from="^http://media\.news\.com\.au/"
+		to="https://a248.e.akamai.net/f/248/5306/10/media.news.com.au/" />
+
+	<rule from="^http://(controlpanel\.blogs|myaccount|preferences|sops|sslcam|tags|traktr)\.news\.com\.au/"
+		to="https://$1.news.com.au/" />
+
+	<rule from="^http://connect\.news\.com\.au/"
+		to="https://newsportal.pureprofile.com/" />
 
 </ruleset>

@@ -1,0 +1,37 @@
+<!--
+	For rules causing false/broken MCB, see Tripwire.com-falsemixed.xml.
+
+
+	^: cert only matches www
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Tripwire.com (partial)">
+
+	<target host="tripwire.com" />
+	<target host="www.tripwire.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?tripwire\.com/+state-of-security(?!/wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.tripwire\.com$" name="^(CFID|CFTOKEN|JSESSIONID|MOBILEFORMAT|ORIGINALURLTOKEN|Set_Me)$" /-->
+
+	<securecookie host="^www\.tripwire\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?tripwire\.com/"
+		to="https://www.tripwire.com/" />
+
+</ruleset>

@@ -1,6 +1,8 @@
 <!--
 	Zylon Internet Services
 
+	For rules causing false/broken MCB, see Zylon.net-falsemixed.xml
+
 
 	Mixed content:
 
@@ -11,13 +13,30 @@
 	* Secured by us
 
 -->
-<ruleset name="Zylon.net (false MCB)" platform="mixedcontent">
+<ruleset name="Zylon.net (partial)">
 
 	<target host="zylon.net" />
 	<target host="www.zylon.net" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?zylon\.net/+(?!default\.css|favicon\.ico|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.zylon.net/index.php" />
+			<test url="http://www.zylon.net/sitemap.php" />
+			<test url="http://www.zylon.net/over_zis/adres.php" />
+			<test url="http://www.zylon.net/support/support.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.zylon.net/default.css" />
+			<test url="http://www.zylon.net/favicon.ico" />
+			<test url="http://www.zylon.net/images/linetop.gif" />
 
 
-	<rule from="^http://(www\.)?zylon\.net/"
-		to="https://$1zylon.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

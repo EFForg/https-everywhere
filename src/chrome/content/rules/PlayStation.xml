@@ -2,6 +2,10 @@
 	For other Sony coverage, see Sony.xml.
 
 
+		- a248.e.akamai.net/=/4111/272091/1d/sceastorage.download.akamai.com/263133/
+
+			- cdn.us.playstation.com
+
 		- playstation.custhelp.com
 		- playstationna.i.lithium.com
 
@@ -19,12 +23,17 @@
 	Problematic domains:
 
 		- uk.playstation.com		(works; mismatched, CN: secure.eu.playstation.com)
+		- us.playstation.com ²
+		- cdn.us.playstation.com ³
 		- www.us.playstation.com	(mismatched)
+
+	² Works, akamai
+	³ 403, valid cert
 
 
 	Partially covered domains:
 
-		- (www.)us.playstation.com	(www → ^, many paths redirect to http)
+		- (www.)us.playstation.com	(→ support.us)
 
 
 	Fully covered domains:
@@ -37,11 +46,13 @@
 				- software
 				- webtrends
 
-			- store
+			- (www.)store
 
 			- us subdomains:
 
 				- blog
+				- cdn		(→ secure.cdn)
+				- secure.cdn
 				- community
 				- service1
 				- support
@@ -98,24 +109,26 @@
 				support/?$ does too, but then redirects to a secure url.
 													-->
 		<!--exclusion pattern="^http://us\.playstation\.com/($|\?|(adaptor|community|games|grid|games-and-media|myprofile|news|ps[3n]|wtb)($|[?/])|csimg/|omniture/|support/?[^?])" /-->
-		<exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" />
+		<!--exclusion pattern="^http://us\.playstation\.com/(?!pscomauth/|psnevent/|uwps/)" /-->
 	<target host="*.playstation.net" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)support\.playstation\.com$" name="^(JSESSIONID|TS[0-9a-f]{8})$" /-->
 
 	<securecookie host=".*\.playstation\.com$" name=".+" />
 	<securecookie host="^en-support\.psm\.playstation\.net$" name=".+" />
 
 
-	<rule from="^http://((?:secure|software|webtrends)\.eu|store|(?:blog|community|service1|support)\.us)\.playstation\.com/"
+	<rule from="^http://((?:secure|software|webtrends)\.eu|(?:www\.)?store|(?:blog|community|service1|support)\.us)\.playstation\.com/"
 		to="https://$1.playstation.com/" />
 
-	<!--	Redirects to http first:
-					-->
 	<rule from="^http://(?:www\.)?us\.playstation\.com/support/?(\?.*)?$"
 		to="https://support.us.playstation.com/$1" />
 
-	<rule from="^http://(?:www\.)?us\.playstation\.com/"
-		to="https://us.playstation.com/" />
+	<rule from="^http://(?:secure\.)?cdn\.playstation\.com/"
+		to="https://secure.cdn.playstation.com/" />
 
 	<rule from="^http://(static-resource\.np\.community|en-support\.psm)\.playstation\.net/"
 		to="https://$1.playstation.net/" />

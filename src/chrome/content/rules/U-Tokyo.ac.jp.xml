@@ -1,0 +1,89 @@
+<!--
+	The University of Tokyo
+
+	For problematic rules, see U-Tokyo.ac.jp-problematic.xml.
+
+
+	Nonfunctional subdomains:
+
+		- www.alumni ¹
+		- www.cc ²
+		- www.ecc ³
+		- gensen.dl.itc ²
+		- park.itc ⁴
+		- utroam.nc ²
+		- utf ²
+		- www ²
+
+	¹ Blank page
+	² Refused
+	³ 401
+	⁴ Shows park-ssl.itc
+
+
+	Problematic subdomains:
+
+		- user.ecc ¹
+		- www.itc ²
+
+	¹ Expired 2012, self-signed
+	² Expired 2014
+
+
+	Fully covered subdomains:
+
+		- davm.ecc
+		- davw.ecc
+		- itc-lms.ecc
+		- lecture.ecc
+		- ms.ecc
+		- ras.ecc
+		- secure.ecc
+
+		- mbc.dl.itc
+		- opac.dl.itc
+		- gateway.itc
+		- kiku.itc
+		- park-ssl.itc
+
+		- www.nc
+		- payment.utf
+
+
+	^u-tokyo.ac.jp doesn't exist.
+
+
+	These altnames don't exist:
+
+		- alumni.u-tokyo.ac.jp
+		- ecc.u-tokyo.ac.jp
+
+
+	Insecure cookies are set for these domains:
+
+		- opac.dl.itc
+		- davm.ecc
+		- davw.ecc
+		- itc-lms.ecc
+		- lecture.ecc
+
+-->
+<ruleset name="U-Tokyo.ac.jp (partial)">
+
+	<target host="*.u-tokyo.ac.jp" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dav[mw]\.ecc\.u-tokyo\.ac\.jp$" name="^(JSESSIONID|ServerID)$" /-->
+	<!--securecookie host="^itc-lms\.ecc\.u-tokyo\.ac\.jp$" name="^(B100Serverpoolcookie|gtn\.site\.preference)" /-->
+	<!--securecookie host="^lecture\.ecc\.u-tokyo\.ac\.jp$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^opac\.dl\.itc\.u-tokyo\.ac\.jp$" name="^sto-id-\d+$" /-->
+
+	<securecookie host="^(?:dav[mw]|itc-lms|lecture)\.ecc\.u-tokyo\.ac\.jp$" name=".+" />
+
+
+	<rule from="^http://((?:dav[mw]|itc-lms|lecture|ms|ras|secure)\.ecc|(?:mbc\.dl|opac\.dl|gateway|kiku|park-ssl)\.itc|www\.nc|payment\.utf)\.u-tokyo\.ac\.jp/"
+		to="https://$1.u-tokyo.ac.jp/" />
+
+</ruleset>

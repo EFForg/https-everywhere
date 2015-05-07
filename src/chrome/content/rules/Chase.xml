@@ -1,9 +1,40 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- apply
+		- banking
+		- cards
+		- chaseonline
+		- creditcards
+		- deposits
+		- investments
+		- jpmorgan
+		- locator
+		- mfasa
+		- mobilebanking
+		- payments
+		- privateclient
+		- resources
+		- servicing
+		- stmts
+		- ultimaterewards
+
+-->
 <ruleset name="Chase">
   <target host="chase.com" />
   <target host="*.chase.com" />
 
-  <rule from="^http://chase\.com/"
-          to="https://www.chase.com/" />
-  <rule from="^http://(locator|www)\.chase\.com/"
-          to="https://$1.chase.com/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.chase\.com$" name="^v1st$" /-->
+	<!--securecookie host="^\.mfasa\.chase\.com$" name="^authdccookie$" /-->
+	<!--securecookie host="^privateclient\.chase\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:\.mfasa|privateclient)?\.chase\.com$" name=".+" />
+
+
+  <rule from="^http://((?:apply|banking|cards|chaseonline|creditcards|deposits|investments|jpmorgan|locator|mfasa|mobilebanking|payments|privateclient|resources|servicing|stmts|ultimaterewards|www)\.)?chase\.com/"
+          to="https://$1chase.com/" />
 </ruleset>

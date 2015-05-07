@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- media.kingston.com.edgesuite.net
+
+			- a1949.r.akamai.net
+
+		- www.kingston.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Dropped
+	² 504, akamai
+
+
+	Problematic subdomains:
+
+		- media *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- media		(→ akamai)
+		- legacy
+		- shop
+
+
+	Observed cookie domains:
+
+		- legacy ¹
+		- shop ²
+
+	¹ Secured by us <= not secured by server
+	² Secured by server
+
+-->
+<ruleset name="Kingston.com (partial)">
+
+	<target host="*.kingston.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^legacy\.kingston\.com$" name=".+" />
+	<!--
+		Secured by server:
+					-->
+	<!--securecookie host="^shop\.kingston\.com$" name=".+" /-->
+
+
+	<rule from="^http://media\.kingston\.com/"
+		to="https://a248.e.akamai.net/f/1949/2751/8/media.kingston.com/" />
+
+	<rule from="^http://(legacy|shop)\.kingston\.com/"
+		to="https://$1.kingston.com/" />
+
+</ruleset>

@@ -1,0 +1,58 @@
+<!--
+	Other Telerik rulesets:
+
+		- Telerik-web-assets.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- docs ¹
+		- partners ²
+
+	¹ Dropped
+	² Shows licenseapi; mismatched, CN: licenseapi.telerik.com
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- blogs *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- identity
+		- licenseapi
+		- platform
+		- tfis
+
+-->
+<ruleset name="Telerik.com (partial)">
+
+	<target host="telerik.com" />
+	<target host="*.telerik.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(blogs|www)\.telerik\.com/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blogs\.telerik\.com/+(?!Telerik\.Web\.UI\.WebResource\.axd|images/|prettyPhoto/css/)" />
+		<exclusion pattern="^http://www\.telerik\.com/+(?!Telerik\.Web\.UI\.WebResource\.axd|favicon\.ico|login(?:$|[?/])|sfimages/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^platform\.telerik\.com$" name="^state$" /-->
+	<!--securecookie host="^tfis\.telerik\.com$" name="^AuthSession$" /-->
+
+	<securecookie host="^(?:platform|tfis)\.telerik\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blogs|identity|licenseapi|platform|tfis|www)\.)?telerik\.com/"
+		to="https://$1telerik.com/" />
+
+</ruleset>

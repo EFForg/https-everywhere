@@ -1,0 +1,34 @@
+<!--
+	Fully covered subdomains:
+
+		- (www.)
+		- identity
+		- securityadvisories
+		- support
+
+
+	These altnames don't exist:
+
+		- www.identity.paloaltonetworks.com
+		- www.login.paloaltonetworks.com
+		- www.support.paloaltonetworks.com
+
+-->
+<ruleset name="Palo Alto Networks.com">
+
+	<target host="paloaltonetworks.com" />
+	<target host="*.paloaltonetworks.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.paloaltonetworks\.com$" name="^pan-lang-cookie$" /-->
+	<!--securecookie host="^securityadvisories\.paloaltonetworks\.com$" name="^AspxAutoDetectCookieSupport$" /-->
+
+	<securecookie host="^(?:securityadvisories)?\.paloaltonetworks\.com$" name=".+" />
+
+
+	<rule from="^http://((?:identity|securityadvisories|support|www)\.)?paloaltonetworks\.com/"
+		to="https://$1paloaltonetworks.com/" />
+
+</ruleset>

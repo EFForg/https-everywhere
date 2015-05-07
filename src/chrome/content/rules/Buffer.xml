@@ -5,24 +5,60 @@
 			- static.bufferapp.com
 
 
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
-		- blog		(redirects to http, CN: *.wpengine.com)
+		- jobs *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- blog
+		- cibot
+		- growth
+		- happiness
+		- open
+		- overflow
+		- static
+		- widgets
+
+
+	Insecure cookies are set for these domains:
+
+		- (www.)
+		- cibot
+		- happiness
+		- jobs
+		- widgets
+
+
+	Mixed content:
+
+		- css on jobs from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Buffer">
+<ruleset name="Buffer (partial)">
 
 	<target host="bufferapp.com" />
 	<target host="*.bufferapp.com" />
 
 
-	<securecookie host="^(?:www\.)?bufferapp\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(jobs\.|widgets\.|www\.)?bufferapp\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^bufferapp\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^cibot\.bufferapp\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^happiness\.bufferapp\.com$" name="^connect\.sid$" /-->
+
+	<securecookie host="^(?:(?:cibot|happiness|widgets|www)\.)?bufferapp\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?bufferapp\.com/"
+	<rule from="^http://((?:api|blog|cibot|growth|happiness|open|overflow|static|widgets|www)\.)?bufferapp\.com/"
 		to="https://$1bufferapp.com/" />
-
-	<rule from="^https?://static\.bufferapp\.com/"
-		to="https://d389zggrogs7qo.cloudfront.net/" />
 
 </ruleset>

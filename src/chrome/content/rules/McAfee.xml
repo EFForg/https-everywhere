@@ -17,12 +17,16 @@
 
 			Bug: https://trac.torproject.org/projects/tor/ticket/5686
 				-->
-		<exclusion pattern="^https?://(?:www\.)?mcafee\.com/error-pages/404\.aspx" />
+		<exclusion pattern="^http://(?:www\.)?mcafee\.com/error-pages/404\.aspx" />
 		<!--
 			At least the homepage redirects to http.
 								-->
 		<exclusion pattern="^http://service\.mcafee\.com/(?!css/|images/|js/|locale/|(?:Script|Web)Resource\.axd)" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^kc\.mcafee\.com$" name="^(JSESSIONID|OAMAuthnCookie_kc\.mcafee\.com:443|ROUTEID)$" /-->
 
 	<!--	If we fetch a cookie over http,
 		we don't secure it, so there's
@@ -38,13 +42,13 @@
 
 		Bug: https://trac.torproject.org/projects/tor/ticket/5686
 			-->
-	<rule from="^https?://(?:www\.)?mcafee\.com/$"
+	<rule from="^http://(?:www\.)?mcafee\.com/$"
 		to="https://www.mcafee.com/us/" />
 
 	<rule from="^http://(?:www\.)?mcafee\.com/"
 		to="https://www.mcafee.com/" />
 
-	<rule from="^http://(beta|blogs|community|home|(?:secure)?images|service|shop|us)\.mcafee\.com/"
+	<rule from="^http://(beta|blogs|community|home|(?:secure)?images|kc|service|shop|us)\.mcafee\.com/"
 		to="https://$1.mcafee.com/" />
 
 </ruleset>

@@ -1,0 +1,114 @@
+<!--
+	Carleton University
+
+
+	CDN buckets:
+
+		- cucustom.s3.amazonaws.com
+		- cuglobal.s3.amazonaws.com
+		- curesources.s3.amazonaws.com
+		- cuweb.s3.amazonaws.com
+
+
+	Nonfunctional subdomains:
+
+		- cuag ¹
+		- search
+		- slc ²
+		- sssc ²
+
+	¹ Refused
+	² 403
+
+
+	Problematic subdomains:
+
+		- ccsl *
+		- library *
+
+	* Cert only matches www.foo
+
+
+	Partially covered subdomains:
+
+		- alumni *
+		- events *
+		- graduate *
+		- newsroom *
+		- researchworks *
+		- sprott *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- admissions
+		- apply
+		- (www.)ccsl	(^ → www)
+		- forms
+		- giving
+		- goravens
+		- gsapplications
+		- (www.)library	(^ → www)
+		- science
+		- (www.)scs
+		- students
+		- www1
+		- www2
+
+
+	Mixed content:
+
+		- css, on:
+
+			- alumni, graduate, newsroom, researchworks, sprott from cucustom.s3.amazonaws.com *
+			- events from $self *
+			- events from fonts.googleapis.com *
+
+		- Images, on:
+
+			- admissions from $self *
+			- alumni from $self *
+			- events from $self *
+			- graduate from $self *
+			- newsroom from $self *
+			- newsroom from cucustom.s3.amazonaws.com *
+			- researchworks from $self *
+			- science from $self *
+			- sprott from $self *
+
+		- favicon on events from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Carleton.ca (partial)">
+
+	<target host="carleton.ca" />
+	<target host="*.carleton.ca" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:alumni|graduate|newsroom|sprott)\.carleton\.ca/(?!wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://events\.carleton\.ca/(?!cu_global/|wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://researchworks\.carleton\.ca/(?!cu/wp-content/|cu/wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^events\.carleton\.ca$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^gsapplications\.carleton\.ca$" name="^CU_FGPA_SESSID$" /-->
+	<!--securecookie host="^\.science\.carleton\.ca$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^(?:events|gsapplications)\.carleton\.ca$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(ccsl|library)\.carleton\.ca/"
+		to="https://$1.carleton.ca/" />
+
+	<rule from="^http://((?:admissions|alumni|apply|events|forms|giving|goravens|graduate|gsapplications|newsroom|researchworks|science|(?:www\.)?scs|sprott|students|www[12]?)\.)?carleton\.ca/"
+		to="https://$1carleton.ca/" />
+
+</ruleset>

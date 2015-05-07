@@ -1,0 +1,59 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+
+	Fully covered subdomains:
+
+		- oracle
+
+		- *.tbe: ¹
+
+			- ch
+			- chj
+			- staticchj
+
+	¹ Domain for clients
+
+
+	!functional:
+		- www.taleo.net			(cert: acquia-sites.com; redirect to http://...com; same cert is valid for .com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- oracle.taleo.net
+
+-->
+<ruleset name="Taleo.net (partial)">
+
+	<!--target host="taleo.net"/-->
+	<target host="oracle.taleo.net"/>
+	<target host="tbe.taleo.net"/>
+	<target host="*.tbe.taleo.net"/>
+	<target host="toc.taleo.net"/>
+	<!--target host="www.taleo.net" /-->
+
+		<test url="http://chj.tbe.taleo.net/chj06/ats/careers/searchResults.jsp" />
+		<test url="http://oracle.taleo.net/careersection/2/jobsearch.ftl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^oracle\.taleo\.net$" name="^locale$" /-->
+
+	<!--	encountered cookies:
+
+			- .net:
+				- ^tbe
+				- ^staticiad.tbe	-->
+	<securecookie host="^(?:oracle|(?:.+\.)?tbe)\.taleo\.net$" name=".+" />
+
+
+	<!--	cert is not valid for net	-->
+	<!--rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
+		to="https://www.taleo.com/"/-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

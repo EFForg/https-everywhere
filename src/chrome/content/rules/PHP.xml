@@ -1,39 +1,78 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.)	(no https)
-		- gtk		(shows viewvc interface, valid cert
-		- windows *
+		- doc ¹
+		- gcov ²
+		- gtk ³
+		- lxr ¹
+		- news ¹
+		- people ²
+		- talks ³
+		- windows ¹
 
-	* Refused
+	¹ Refused
+	² Dropped
+	³ Shows viewvc interface, valid cert
 
 
 	Problematic subdomains:
 
-		- pecl	(works, expired 2013-01-08)
-		- snaps	($ works, some pages 404; expired 2013-06-05)
+		- pecl *
+
+	* Expired 2013-01-08
 
 
 	Fully covered subdomains:
 
+		- (www.)?
 		- bugs
 		- downloads
+		- edot
 		- git
+		- master
+		- museum
 		- pear
+		- qa
+		- shared
+		- snaps
 		- static
+		- svn
 		- wiki
 
--->
-<ruleset name="PHP (partial)">
 
+	Insecure cookies are set for these domains:
+
+		- php.net
+		- .php.net
+		- bugs.php.net
+		- edit.php.net
+		- master.php.net
+		- pear.php.net
+		- wiki.php.net
+		- www.php.net
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="PHP.net (partial)">
+
+	<target host="php.net" />
 	<target host="*.php.net" />
 
 
-	<!--securecookie host="^\.php\.net$" name="^COUNTRY$" /-->
-	<securecookie host="^(?:bugs|wiki)\.php\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugs\.php\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:\w*\.)?php\.net$" name=".+" />
 
 
-	<rule from="^http://(bugs|downloads|git|pear|static|wiki)\.php\.net/"
-		to="https://$1.php.net/" />
+	<rule from="^http://((?:bugs|downloads|edit|git|master|museum|pear|qa|shared|snaps|static|svn|wiki|www)\.)?php\.net/"
+		to="https://$1php.net/" />
 
 </ruleset>

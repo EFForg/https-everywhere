@@ -6,7 +6,9 @@
 
 		- cern.ch subdomains:
 
-			- cernvm	(redirects to login.cern.ch, self-signed)
+			- cdsware ¹
+			- cernvm *
+			- inveniobuilder ²
 			- library	(shows invenio-demo; mismatched, CN: invenio-demo.cern.ch)
 			- line-mode	(dropped)
 			- lxroot02	(shows root, self-signed)
@@ -19,25 +21,34 @@
 				- home *
 				- library *
 				- photoclub *
+				- press *
 
 		- cerncourier.org	(redirects to http; mismatched, CN: *.iop.org)
 		- (www.)cernland.net	(prints "cernland.net does not exist"; mismatched, CN: *.infomaniak.ch)
 
+	¹ Shows invenio-demo
 	* Redirects to login.cern.ch, valid cert
+	² Dropped
 
 
 	Problematic cern.ch subdomains:
 
+		- invenio-demo ¹
 		- info		(404; mismatched, CN: *.web.cern.ch)
 		- sft.its	(works, self-signed)
 		- photoclub	(works; mismatched, CN: CERN.CH)
 		- root		($ 403s, drupal/ works; self-signed)
 		- listboxservices.web	(mismatched, CN: *.cern.ch)
 
+	¹ Expired, self-signed
+
 
 	Partially covered subdomains:
 
+		- linux.web *
 		- listboxservices.web	(→ simba3.web)
+
+	* Avoiding broken MCB
 
 
 	Fully covered subdomains:
@@ -75,7 +86,6 @@
 			- job
 			- oraweb
 			- outreach
-			- press
 			- project-voisins
 			- public
 			- service-portal
@@ -109,22 +119,33 @@
 	² Not secured by us <= we don't touch http cookies
 	³ Secured by us when set via https
 
+
+	Mixed content:
+
+		- css on linux.web.cern.ch from $self *
+
+	* Secured by us
+
 -->
 <ruleset name="CERN (partial)">
 
 	<target host="cern.ch" />
 	<target host="*.cern.ch" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://linux\.web\.cern\.ch/(?!.+(?:css|jpg|png)$|linux/layout/)" />
 
 
 	<securecookie host=".*\.cern\.ch$" name=".+" />
 
 
-	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|oraweb|outreach|press|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
+	<rule from="^http://((?:association|bulletin|cds|cdsmedia|cdsweb|edms|ert|espace|indico|login|mtf|savannah|(?:(?:ab-dep-op-elogbook|atlas|committees|education|egee-uig|environmental-impact|framework|hie-isolde|hr-dept|hr-info|hr-recruit|indico|isolde(?:-project-rilis)?|job|linux|oraweb|outreach|project-voisins|public|service-portal|simba3|user|webservices)\.)?web|www)\.)?cern\.ch/"
 		to="https://$1cern.ch/" />
 
 	<!--	Redirects like so:
 					-->
-	<rule from="^https?://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
+	<rule from="^http://listboxservices\.web\.cern\.ch/listboxservices/simba2/"
 		to="https://simba3.web.cern.ch/simba3/simba2/" />
 
 	<!--	Protocol-relative redirect from user.web:

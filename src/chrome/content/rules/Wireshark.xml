@@ -1,18 +1,45 @@
 <!--
+	Nonfunctional subdomains:
+
+		- sharkfest *
+		- wiki ²
+
+	* Shows www
+	² Refused
+
+
 	Fully covered subdomains:
 
 		- (www.)
 		- anonsvn
+		- ask
 		- blog
+		- bugs
+
+
+	Insecure cookies are set for these domains:
+
+		- .wireshark.org
 
 -->
-<ruleset name="Wireshark">
+<ruleset name="Wireshark.org (partial)">
 
 	<target host="wireshark.org" />
-	<target host="*.wireshark.org" />
+	<target host="anonsvn.wireshark.org" />
+	<target host="ask.wireshark.org" />
+	<target host="blog.wireshark.org" />
+	<target host="bugs.wireshark.org" />
+	<target host="www.wireshark.org" />
 
 
-	<rule from="^http://((?:anonsvn|blog|www)\.)?wireshark\.org/"
-		to="https://$1wireshark.org/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.wireshark\.org$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.wireshark\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

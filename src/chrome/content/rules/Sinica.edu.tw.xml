@@ -1,0 +1,75 @@
+<!--
+	Academia Sinica Computing Center
+
+
+	Nonfunctional subdomains:
+
+		- career ¹
+		- (www.)citi ²
+		- (www.)imb ¹
+		- www2.imb ¹
+
+	¹ Refused
+	² Interrupted
+
+
+	Problematic subdomains:
+
+		- www.ascc ¹
+		- fmail0.cc ²
+		- npas.programs ³
+
+	¹ Mismatched
+	² Works; mismatched, CN: Barracuda/emailAddress=sales@barracuda.com; self-signed
+	³ Works, mismatched
+
+
+	Partially covered subdomains:
+
+		- aao *
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- app
+		- aslib
+		- (www.)ascc	(www -> ^)
+		- db3n2u
+		- db3x
+		- edir...:8443
+		- gate
+		- irb
+		- itsdesk
+		- sso
+		- www
+
+
+	^sinica.edu.tw doesn't exist.
+
+
+	Mixed content:
+
+		- Images on npas.programs from www.imb *
+
+	* Unsecurable <= refused
+
+-->
+<ruleset name="Sinica.edu.tw (partial)">
+
+	<target host="*.sinica.edu.tw" />
+		<!--exclusion pattern="^http://(career|fmail0\.cc|(www\.)?citi|imb|www2?\.imb|npas\.programs)\.sinica\.edu\.tw/" /-->
+		<exclusion pattern="^http://aao\.sinica\.edu\.tw/+(?!CSS/|download/|images/|public/login\.php)" />
+
+
+	<rule from="^http://(aao|app|aslib|db3n2u|db3x|gate|irb|itsdesk|sso|www)\.sinica\.edu\.tw/"
+		to="https://$1.sinica.edu.tw/" />
+
+	<rule from="^http://(?:www\.)?ascc\.sinica\.edu/"
+		to="https://ascc.sinica.edu/" />
+
+	<rule from="^http://edir\.sinica\.edu\.tw:8443/"
+		to="https://edir.sinica.edu.tw:8443/" />
+
+</ruleset>

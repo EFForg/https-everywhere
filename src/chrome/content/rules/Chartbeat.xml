@@ -1,6 +1,10 @@
 <!--
 	blog.chartbeat.com is handled in WordPress-blogs.xml.
 
+	Other Chartbeat rulesets:
+
+		- Chartbeat.net.xml
+
 
 	CDN buckets:
 
@@ -17,69 +21,102 @@
 
 			- blog
 
-	a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/
-
-	Rewriting static.chartbeat.com to a248.e.akamai.net/chartbeat.download.akamai.com/102508/static/
-	redirects to http14432.storage.akadns.net/.14432,14333^-1.0./102508/static/
-
-	Ditto when for rewriting static paths to .../static2/.
-
 
 	Nonfunctional domains:
 
-		- blog.chartbeat.com		(redirects to http, wpengine)
+		- blog.chartbeat.com ¹
 		- static.blog.chartbeat.com	(redirects to http, akamai)
+		- lp.chartbeat.com ³
+		- pages.chartbeat.com ⁴
+		- support.chartbeat.com ⁵
+
+	¹ WP Engine
+	³ Marketo
+	⁴ Refused
+	⁵ Desk.com
 
 
 	Problematic domains:
 
-		- support.chartbeat.com		(zendesk)
+		- status.chartbeat.com *
+
+	* Mismatched
 
 
-	Partially covered domains:
+	Fully covered hosts in *chartbeat.com:
 
-		- support.chartbeat.com		(→ assets.zendesk.com)
-
-
-	Fully covered domains:
-
-		- chartbeat.com subdomains:
-
-			- (www.)
-			- static
-			- static2
-
-		- ping.chartbeat.net
-		- *.chartbeat.net	(per-client subdomains)
+		- (www.)
+		- ads
+		- static
+		- static2
+		- status	(→ chartbeat.statuspage.io)
+		- post.update
+		- s.update
 
 
-	*.charbeat.net sets _chartbeat2 cookie on whichever domain it is loaded from.
+	Insecure cookies are set for these hosts:
+
+		- chartbeat.com
 
 -->
-<ruleset name="Chartbeat (partial)">
+<ruleset name="Chartbeat.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="chartbeat.com" />
-	<target host="*.chartbeat.com" />
-	<target host="*.chartbeat.net" />
+	<target host="ads.chartbeat.com" />
+	<target host="static.chartbeat.com" />
+	<target host="static2.chartbeat.com" />
+	<target host="post.update.chartbeat.com" />
+	<target host="s.update.chartbeat.com" />
+	<target host="www.chartbeat.com" />
 
+	<!--	Complications:
+				-->
+	<target host="lp.chartbeat.com" />
+	<target host="status.chartbeat.com" />
 
-	<rule from="^http://(static2?\.|www\.)?chartbeat\.com/"
-		to="https://$1chartbeat.com/" />
+		<exclusion pattern="^http://lp\.chartbeat\.com/+(?!$|\?|css/|images/|rs/)" />
 
-	<!--	Courtesy of https://s3.amazonaws.com/plug.onswipe.com/on.js	-->
-	<!--rule from="^http://static\.chartbeat\.com/"
-		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/" /-->
-
-	<!--rule from="^http://static2\.chartbeat\.com/"
-		to="https://a248.e.akamai.net/chartbeat.download.akamai.com/102508/static2/" /-->
-
-	<!--	- Cert: *.zendesk.com
-		- Pages redirect to http.
+			<!--	+ve:
 					-->
-	<rule from="^http://support\.chartbeat\.com/(assets|generated|images|system)/"
-		to="https://assets.zendesk.com/$1/" />
+			<test url="http://lp.chartbeat.com/audience-development-whitepaper.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-for-ad-sales-contact-us.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-for-editorial-contact-us.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-video-contact-us.html" />
+			<test url="http://lp.chartbeat.com/contact-us.html" />
+			<test url="http://lp.chartbeat.com/guide-to-traffic-sources-audience-behavior.html" />
+			<test url="http://lp.chartbeat.com/quarterly-0101.html" />
+			<test url="http://lp.chartbeat.com/quarterly-0201.html" />
 
-	<rule from="^http://([\w-]+)\.chartbeat\.net/"
-		to="https://$1.chartbeat.net/" />
+			<!--	-ve:
+					-->
+			<test url="http://lp.chartbeat.com/rs/chartbeatinc/images/gated-chartbeat-logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^chartbeat\.com$" name="^django_language$" /-->
+
+	<securecookie host="^chartbeat\.com$" name=".+" />
+
+
+	<rule from="^http://lp\.chartbeat\.com/+(?:\?.*)?$"
+		to="https://chartbeat.com/404" />
+
+		<test url="http://lp.chartbeat.com/?f" />
+		<test url="http://lp.chartbeat.com/?o" />
+		<test url="http://lp.chartbeat.com/?b" />
+		<test url="http://lp.chartbeat.com/?a" />
+		<test url="http://lp.chartbeat.com/?r" />
+
+	<rule from="^http://lp\.chartbeat\.com/"
+		to="https://na-p.marketo.com/" />
+
+	<rule from="^http://status\.chartbeat\.com/"
+		to="https://chartbeat.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

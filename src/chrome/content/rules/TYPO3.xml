@@ -1,6 +1,78 @@
-<ruleset name="TYPO3">
-  <target host="typo3.org"/>
-  <target host="www.typo3.org"/>
+<!--
+	For rules causing false/broken MCB, see TYPO3.org-falsemixed.xml.
 
-  <rule from="^http://(www\.)?typo3\.org/" to="https://typo3.org/"/>
+	Other TYPO3 rulesets:
+
+		- T3Blog.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- association ¹
+		- buzz ²
+		- demo ³
+		- docs ⁴
+		- forum ⁴
+		- git ³
+		- lists ⁴
+		- shop ¹
+		- wiki ⁴
+
+	¹ Revoked
+	² Redirects to http, valid cert
+	³ Dropped
+	⁴ Refused
+
+
+	Problematic subdomains:
+
+		- certification ¹
+		- flow ²
+		- neos ²
+
+	¹ Redirects to http, valid cert
+	² Mixed css from $self
+
+
+	Mixed content:
+
+		- css, on:
+
+			- flow from $self *
+			- neos from $self *
+
+		- Images, on:
+
+			- ^ from www.t3blog.com ⁴
+			- flow from $self *
+			- neos from $self *
+
+		- favicon on flow from $self *
+
+	⁴ Rule disabled by default <= self-signed
+
+-->
+<ruleset name="TYPO3 (partial)">
+  <target host="typo3.org"/>
+  <target host="*.typo3.org"/>
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:flow|neos)\.typo3\.org/+(?!_Resources/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forge\.typo3\.org$" name="^_redmine_session$" /-->
+
+	<securecookie host="^forge\.typo3\.org$" name=".+" />
+
+
+  <rule from="^http://((?:flow|forge|get|neos|www)\.)?typo3\.org/"
+        to="https://$1typo3.org/"/>
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://certification\.typo3\.org/.*"
+		to="https://typo3.org/certification/about-the-certification/" />
 </ruleset>

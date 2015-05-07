@@ -1,0 +1,92 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/files.cloudera.com.s3.amazonaws.com
+
+		- elqcdn.eloqua.com
+
+			- images.go
+
+
+	Nonfunctional subdomains:
+
+		- vision *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- blog ¹
+		- files ²
+		- go ³
+		- images.go ⁴
+
+	¹ Mixed css
+	² AmazonAWS
+	³ Works; mismatched, CN: secure.eloqua.com
+	⁴ Works, Akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- ccp
+		- community
+		- files		(→ s3.amazonaws.com)
+		- images.go	(→ secure.eloqua.com)
+		- university
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from $self *
+			- go from files *
+			- go from www *
+
+		- Images, on:
+
+			- community from $self *
+			- community from www *
+			- go from files *
+			- www from ^ *
+
+		- favicon on go from files
+
+	* Secured by us
+
+-->
+<ruleset name="Cloudera.com">
+
+	<target host="cloudera.com" />
+	<target host="*.cloudera.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.cloudera\.org/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(ccp\.|www\.)?cloudera\.com$" name="^BIGipServercq-http$" /-->
+	<!--securecookie host="^\.cloudera\.com$" name="^VISITORID$" /-->
+	<!--securecookie host="^community\.cloudera\.com$" name="^LithiumVisitor$" /-->
+	<!--securecookie host="^\.go\.cloudera\.com$" name="^ELOQUA$" /-->
+	<!--securecookie host="^university\.cloudera\.com$" name="^SE$" /-->
+	<!--securecookie host="^www\.cloudera\.com$" name="^(JSESSIONID|renderid)$" /-->
+
+	<securecookie host="^(?:\.|ccp\.|university\.|www\.)?cloudera\.com$" name=".+" />
+
+
+	<rule from="^http://((?:blog|ccp|community|university|www)\.)?cloudera\.com/"
+		to="https://$1cloudera.com/" />
+
+	<rule from="^http://files\.cloudera\.com/"
+		to="https://s3.amazonaws.com/files.cloudera.com/" />
+
+	<rule from="^http://images\.go\.cloudera\.com/"
+		to="https://secure.eloqua.com/" />
+
+</ruleset>

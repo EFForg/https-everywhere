@@ -1,25 +1,42 @@
 <!--
-	For mixed content rules, see 3_News-mixedcontent.xml.
-
-
 	For other MediaWorks coverage, see MediaWorks.xml.
 
 
-	Nonfunctional domains:
+	Problematic domains:
 
-		- cdn.3news.co.nz
+		- ^ *
+
+	* Shows default IIS7 page, valid cert
 
 
-	!www 404s
+	Mixed content:
+
+		- Images, from:
+
+			- cdn *
+			- cdn.mediaworks.co.nz
+
+	* Secured by us
 
 -->
-<ruleset name="3 News (partial)">
+<ruleset name="3 News">
 
 	<target host="3news.co.nz" />
-	<target host="www.3news.co.nz" />
+	<target host="*.3news.co.nz" />
 
 
-	<rule from="^https?://(?:www\.)?3news\.co\.nz/Portals/"
-		to="https://www.3news.co.nz/Portals/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?3news\.co\.nz$" name="^BIGipServersitecore_production$" /-->
+	<!--securecookie host="^www\.3news\.co\.nz$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?:www\.)?3news\.co\.nz$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?3news\.co\.nz/"
+		to="https://www.3news.co.nz/" />
+
+	<rule from="^http://cdn\.3news\.co\.nz/"
+		to="https://cdn.mediaworks.co.nz/" />
 
 </ruleset>

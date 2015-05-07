@@ -1,17 +1,43 @@
 <!--
-	Some pages redirect to http.
+	Mixed content:
+
+		- Images on www.internetsociety from $self *
+
+		- Bug on ws.edu from www.google.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Internet Society (partial)" platform="mixedcontent">
+<ruleset name="Internet Society (partial)">
 
 	<target host="internetsociety.org"/>
-	<target host="www.internetsociety.org"/>
-	<target host="portal.isoc.org"/>
+	<target host="*.internetsociety.org"/>
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.internetsociety\.org/+(blog|get-involved|news|who-we-are/mission)($|[?/])" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.internetsociety\.org/+(?!$|\?|favicon\.ico|(?:form/donation|who-we-are/contact-us)(?:$|[?/])|modules/|sites/)" />
+	<target host="isoc.org"/>
+	<target host="*.isoc.org"/>
 
-	<rule from="^http://(www\.)?internetsociety\.org/($|\?|favicon\.ico|form/donation(?:$|\?|/)|misc/|modules/|sites/)"
-		to="https://$1internetsociety.org/$2"/>
 
-	<rule from="^http://portal\.isoc\.org/"
-		to="https://portal.isoc.org/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^connect\.internetsociety\.org$" name="^(ASP\.NET_SessionId|HLTC|SSORedirectCount)$" /-->
+	<securecookie host="^ws\.edu\.isoc\.org$" name="^PHPSESSID$" />
+	<!--securecookie host="^portal\.isoc\.org$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^connect\.internetsociety\.org$" name=".+" />
+	<securecookie host="^(?:ws\.edu|portal)\.isoc\.org$" name=".+" />
+
+
+	<rule from="^http://(connect\.|www\.)?internetsociety\.org/"
+		to="https://$1internetsociety.org/"/>
+
+	<rule from="^http://((?:ws\.edu|portal|www)\.)isoc\.org/"
+		to="https://$1isoc.org/"/>
 
 </ruleset>

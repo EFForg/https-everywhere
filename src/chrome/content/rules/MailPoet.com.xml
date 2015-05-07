@@ -1,0 +1,38 @@
+<!--
+	^: cert only matches *.mailpoet.com
+
+
+	Mixed content:
+
+
+		- Images, on:
+
+			- support from $self ¹
+			- support and www from www ¹
+			- www from 2014.miami.wordcamp.org ²
+			- www from 2014.paris.wordcamp.org ²
+
+	¹ Secured by us
+	² Unsecurable <= redirects to http
+
+-->
+<ruleset name="MailPoet.com">
+
+	<target host="mailpoet.com" />
+	<target host="*.mailpoet.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^support\.mailpoet\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^support\.mailpoet\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?mailpoet\.com/"
+		to="https://www.mailpoet.com/" />
+
+	<rule from="^http://support\.mailpoet\.com/"
+		to="https://support.mailpoet.com/" />
+
+</ruleset>

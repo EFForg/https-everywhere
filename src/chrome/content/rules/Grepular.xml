@@ -1,7 +1,24 @@
-<ruleset name="Grepular">
-  <target host="www.grepular.com" />
-  <target host="secure.grepular.com" />
-  <target host="grepular.com" />
+<!--
+	Problematic subdomains:
 
-  <rule from="^http://(?:www\.|secure\.)?grepular\.com/" to="https://grepular.com/"/>
+		- secure *
+
+	* Mismatched, CN: www.grepular.com
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- secure	(→ ^)
+
+-->
+<ruleset name="Grepular">
+
+	<target host="grepular.com" />
+	<target host="*.grepular.com" />
+
+
+	<rule from="^http://(?:secure\.|(www\.))?grepular\.com/"
+		to="https://$1grepular.com/" />
+
 </ruleset>

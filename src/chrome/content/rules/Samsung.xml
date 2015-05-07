@@ -1,4 +1,7 @@
 <!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://samsung.cn/ (200) => https://samsung.com.cn/ (404)
+Non-2xx HTTP code: http://samsung.com.cn/ (200) => https://samsung.com.cn/ (404)
 	For rules causing false/broken MCB, see Samsung-falsemixed.xml.
 
 
@@ -8,6 +11,7 @@
 		- ChatON.xml
 		- Samsung_Apps.xml
 		- Samsung_Direct.xml
+		- Samsung_Knox.com.xml
 		- Samsung_LFD.xml
 		- Samsung_mySingle.xml
 		- Samsung_Techwin.xml
@@ -80,18 +84,27 @@
 		- (www.)samsung.com.cn
 
 
+	Insecure cookies are set for these domains:
+
+		- .samsung.com
+		- apps.samsung.com
+
+
 	Mixed content:
 
 		- css on link.samsung.com from pub.content.samsung.com *
 
+		- Images on apps.samsung.com from img.samsungapps.com ²
+
 	* Secured by us
+	² Unsecurable <= 400
 
 
 	NB: We secure all resources, and thus
 	-falsemixed should be merged for Ffx 24.
 
 -->
-<ruleset name="Samsung (partial)">
+<ruleset name="Samsung (partial)" default_off='failed ruleset test'>
 
 	<target host="samsung.cn" />
 	<target host="*.samsung.cn" />
@@ -100,9 +113,17 @@
 		<!--exclusion pattern="^http://opensource\.samsung\.com/+($|\?|community/(ajax/|community/|community\.do|guest/|proj/)|iframeMain\.do|reception/receptionSub\.do|reception\.do)" /-->
 		<exclusion pattern="^http://opensource\.samsung\.com/(?!community/(?:css/|images/|img2?/|img_model/|js2?/|org\.ditchnet\.taglib/|repository/|scmShowFileRevision(?:$|\?)|stylesheet/|usageStatistics\.do|wikiTreeMessage(?:$|\?))|css/|img/|js/)" />
 		<exclusion pattern="^http://shop\.us\.samsung\.com/store\?[aA]ction=[dD]isplay[dD][rR][cC]art[sS]ummary" />
+		<!-- Support page FAQ and other features are broken. Also, their i18n is a lie.
+		     Github issue: https://github.com/EFForg/https-everywhere/issues/309 -->
+		<exclusion pattern="^http://www\.samsung\.com/us/(?:support/|function/)" />
 	<target host="samsung.com.cn" />
 	<target host="www.samsung.com.cn" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.samsung\.com$" name="^(_common_country|_common_lang|COUNTRY_CODE|EXPAND_SCHEDULED|REMEMBERED_DEVICE_CODE_CAN)$" /-->
+	<!--securecookie host="^apps\.samsung\.com$" name="^WMONID$" /-->
 
 	<securecookie host="^\.samsung\.cn$" name=".+" />
 	<securecookie host="^(?!shop\.us\.).*\.samsung\.com$" name=".+" />

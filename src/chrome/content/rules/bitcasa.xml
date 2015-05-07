@@ -1,6 +1,53 @@
-<ruleset name="BitCasa">
+<!--
+	Nonfunctional subdomains:
+
+		- forums *
+
+	* Shows sh11; mismatched, CN: sh11.lw.ipslink.com
+
+
+	Problematic subdomains:
+
+		- blog *
+		- developer.blog *
+		- l ²
+
+	* Wordpress
+	² Mismatched
+
+
+	Fully covered domains:
+
+		- bitcasa.com
+
+		- *.bitcasa.com:
+
+			- developer
+			- m
+			- my
+			- portal
+			- support
+			- www
+
+-->
+<ruleset name="BitCasa (partial)">
 	<target host="bitcasa.com" />
 	<target host="*.bitcasa.com" />
+		<exclusion pattern="^http://(?:blog|developer\.blog|forums|l)\.bitcasa\.com/" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^support\.bitcasa\.com$" name="^(_help_center_session|_zendesk_session|_zendesk_shared_session)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?bitcasa\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^\.bitcasa\.com$" name="^(comm_session_id|csrf|sessionid)$" /-->
+	<!--securecookie host="^developer\.bitcasa\.com$" name="^_system_session$" /-->
+
+	<securecookie host="^(?:developer\.|www\.)?bitcasa\.com$" name=".+" />
+
 
 	<rule from="^http://bitcasa\.com/" to="https://bitcasa.com/"/>
 	<rule from="^http://([^/:@]*)\.bitcasa\.com/" to="https://$1.bitcasa.com/"/>

@@ -1,0 +1,111 @@
+<!--
+	For other NetDNA coverage, see NetDNA.xml.
+
+
+	CDN buckets:
+
+		- maxcdn.wpengine.netdna-cdn.com
+
+			- maxcdn-wpengine.netdna-ssl.com doesn't exist
+
+
+	Nonfunctional subdomains:
+
+		- tools ³
+
+	³ Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- blog *
+		- status ²
+		- support ⁴
+
+	¹ Refused
+	* wpengine
+	² StatusPage.io
+	⁴ Revoked
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- cp
+		- docs
+		- rws
+		- secure
+		- secure-cdn
+		- status	(→ maxcdn.statuspage.io)
+		- support	(→ www)
+
+
+	These altnames don't exist:
+
+		- www.docs.maxcdn.com
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="MaxCDN.com (partial)">
+
+	<target host="maxcdn.com" />
+	<target host="blog.maxcdn.com" />
+	<target host="cp.maxcdn.com" />
+	<target host="docs.maxcdn.com" />
+	<target host="rws.maxcdn.com" />
+	<target host="secure.maxcdn.com" />
+	<target host="secure-cdn.maxcdn.com" />
+	<target host="status.maxcdn.com" />
+	<target host="support.maxcdn.com" />
+	<target host="www.maxcdn.com" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^(cp|rws)\.maxcdn\.com$" name="^PHPSESSID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^secure(-cdn)?\.maxcdn\.com$" name="^PHPSESSID$" /-->
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\.(?:[\w-]\.)?maxcdn\.com$" name="^optimizely\w+$" />
+	<securecookie host="^secure(?:-cdn)?\.maxcdn\.com$" name=".+" />
+
+
+	<rule from="^http://maxcdn\.com/"
+		to="https://www.maxcdn.com/" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/blog/" />
+
+		<test url="http://blog.maxcdn.com//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://support\.maxcdn\.com/+"
+		to="https://www.maxcdn.com/one/" />
+
+		<test url="http://support.maxcdn.com//" />
+
+	<rule from="^http://status\.maxcdn\.com/"
+		to="https://maxcdn.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

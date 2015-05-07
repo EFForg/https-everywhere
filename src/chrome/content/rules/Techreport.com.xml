@@ -1,8 +1,41 @@
-<ruleset name="The Tech Report">
-  <target host="techreport.com" />
-  <target host="www.techreport.com" />
+<!--
+	Problematic subdomains:
 
-  <rule from="^http://(www\.)?techreport\.com/" to="https://techreport.com/" />
+		- jobs *
+
+	* Works; mismatched, CN: *.jobthread.com
+
+
+	Mixed content:
+
+		- Images on jobs from www *
+
+		- Ads/bugs, on:
+
+			- jobs from d1.openx.org *
+			- www from www.facebook.com *
+			- www from pixel.quantserve.com *
+			- www from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Tech Report (partial)">
+
+	<target host="techreport.com" />
+	<target host="www.techreport.com" />
+		<!--exclusion pattern="^http://jobs\.techreport\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^techreport\.com$" name="^(PHPSESSID|trheadline_lastseen2)$" /-->
+	<!--securecookie host="^\.techreport\.com$" name="^tr_view$" /-->
+
+	<securecookie host="^\.?techreport\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?techreport\.com/"
+		to="https://techreport.com/" />
   
-  <securecookie host="^(?:\.)?techreport.com$" name=".*" />
 </ruleset>

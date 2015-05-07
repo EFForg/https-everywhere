@@ -1,17 +1,73 @@
-<ruleset name="Demandbase" platform="mixedcontent">
+<!--
+	CDN buckets:
 
+		- demandbase-static-images.s3.amazonaws.com
+
+
+	Nonfunctional hosts:
+
+		- support *
+
+	* Zendesk
+
+
+	Problematic hosts:
+
+		- ^ *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- auth.demandbase.com
+		- www.demandbase.com
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+		- Bug on demandbase from leads.demandbase.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Demandbase.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="api.demandbase.com" />
+	<target host="auth.demandbase.com" />
+	<target host="dashboard.demandbase.com" />
+	<target host="demandbase.demandbase.com" />
+	<target host="leads.demandbase.com" />
+	<target host="performance.demandbase.com" />
+	<target host="www.demandbase.com" />
+
+	<!--	Complications:
+				-->
 	<target host="demandbase.com" />
-	<target host="*.demandbase.com" />
+	<!--target host="support.demandbase.com" /-->
 
 
-	<securecookie host="^(.*\.)?demandbase\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^auth\.demandbase\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^www\.demandbase\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:.*\.)?demandbase\.com$" name=".*" />
 
 
-	<!--	Cert only matches www.	-->
-	<rule from="^https?://(?:www\.)?demandbase\.com/"
+	<!--	Redirect keeps forward
+		slash, path, and args:
+					-->
+	<rule from="^http://demandbase\.com/"
 		to="https://www.demandbase.com/" />
 
-	<rule from="^http://(api|demandbase|leads)\.demandbase\.com/"
-		to="https://$1.demandbase.com/" />
+	<!--rule from="^http://support.demandbase.com/.*"
+		to="https://demandbase.zendesk.com/hc" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,46 @@
+<!--
+	Problematic subdomains:
+
+		- (www.)? *
+
+	* Shows libssh.org
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(→ blog)
+		- blog
+		- stats
+
+
+	Mixed content:
+
+		- Images, on blog from:
+
+			- $self ¹
+			- www.cryptosmith.com ²
+			- upload.wikimedia.org ¹
+
+		- Bugs on blog from stats ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
+<ruleset name="0xbadc0de.be">
+
+	<target host=      "0xbadc0de.be" />
+	<target host= "blog.0xbadc0de.be" />
+	<target host="stats.0xbadc0de.be" />
+	<target host=  "www.0xbadc0de.be" />
+
+	<test url=    "http://0xbadc0de.be/?p=67" />
+	<test url="http://www.0xbadc0de.be/?p=67" />
+
+	<rule from="^http://(www\.)?0xbadc0de\.be/"
+		to="https://blog.0xbadc0de.be/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

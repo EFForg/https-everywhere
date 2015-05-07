@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- patientslikeme_mkting.s3.amazonaws.com
+
+		- patientslikeme.newshq.businesswire.com
+
+			- news
+
+
+	Problematic subdomains:
+
+		- blog ¹
+		- news ²
+
+	¹ Self-signed
+	² Mismatched, CN: *.newshq.businesswire.com
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- support
+
+
+	Mixed content:
+
+		- iframe on blog from www.podbean.com *
+		- css on blog from $self *
+
+		- Images, on blog from:
+
+			- patientslikeme_mkting.s3.amazonaws.com *
+			- companionsforheroes.org
+			- healveterans.com
+			- www.seeingms.com.au
+
+		- Ad on blog from www.lungcanceralliance.org
+
+	* Secured by us
+
+-->
+<ruleset name="PatientsLikeMe.com (partial)">
+
+	<target host="patientslikeme.com" />
+	<target host="*.patientslikeme.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="http://news\.patientslikeme\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="http://news\.patientslikeme\.com/(?!sites/)" /-->
+
+
+	<rule from="^http://news\.patientslikeme\.com/(?=sites/)"
+		to="https://patientslikeme.newshq.businesswire.com/" />
+
+	<rule from="^http://(support\.|www\.)?patientslikeme\.com/"
+		to="https://$1patientslikeme.com/" />
+
+</ruleset>

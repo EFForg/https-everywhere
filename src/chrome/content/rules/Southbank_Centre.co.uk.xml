@@ -1,0 +1,76 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://southbankcentre.co.uk/ => https://southbankcentre.co.uk/: (51, "SSL: no alternative certificate subject name matches target host name 'southbankcentre.co.uk'")
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- ticketing ²
+
+	¹ Some pages redirect to http
+	² At least $ redirects to www
+
+
+	Fully covered subdomains:
+
+		- shop
+		- shopcms
+
+
+	Observed cookie domains:
+
+		- .shop *
+		- .shopcms *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Images on shop, shopcms, and www from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Southbank Centre.co.uk (partial)" default_off='failed ruleset test'>
+
+	<target host="southbankcentre.co.uk" />
+	<target host="*.southbankcentre.co.uk" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://ticketing\.southbankcentre\.co\.uk/+($|\?|(support-us|support-us/all-ways-to-support-us)($|\?))" /-->
+		<!--exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(royal-festival-hall/access|supporters-circles|support-us|support-us/all-ways-to-support-us|visitor-info|visitor-info/faqs|visitor-info/how-to-book/access-list)/*($|\?)" /-->
+		<!--
+			Exceptions
+					-->
+		<exclusion pattern="^http://ticketing\.southbankcentre\.co\.uk/+(?!favicon\.ico|sites/|(?:support-us/trusts-foundations|visitor-info/directions-and-opening-times)/*(?:$|\?))" />
+		<!--exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(?!$|\?|(about-us|shop-eat-drink|support-us/membership|venues/royal-festival-hall|visitor-info/access|visitor-info/directions-and-opening-times|whatson)($|[?/])|favicon\.ico|sites/)" /-->
+		<!--
+			Handled specially:
+						-->
+		<!--exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(?!(buy-membership|find)/*($|\?))" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(?!$|\?|(?:about-us|shop-eat-drink|support-us/membership|venues/royal-festival-hall|visitor-info/access|visitor-info/directions-and-opening-times|whatson)(?:$|[?/])|(?:buy-membership|find)/*(?:$|\?)|favicon\.ico|sites/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.shop(?:cms)?\.southbankcentre\.co\.uk$" name=".+" />
+
+
+	<!--	Redirects to http first, preserves args:
+								-->
+	<rule from="^http://www\.southbankcentre\.co\.uk/+buy-membership/*(?=$|\?)"
+		to="https://www.southbankcentre.co.uk/support-us/membership" />
+
+	<!--	Redirects to http first, drops args:
+							-->
+	<rule from="^http://www\.southbankcentre\.co\.uk/+find/*(?:$|\?.*)"
+		to="https://www.southbankcentre.co.uk/whatson" />
+
+	<rule from="^http://((?:shop|shopcms|ticketing|www)\.)?southbankcentre\.co\.uk/"
+		to="https://$1southbankcentre.co.uk/" />
+
+</ruleset>

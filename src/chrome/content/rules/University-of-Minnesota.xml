@@ -1,8 +1,15 @@
 <!--
+	University of Minnesota
+
+
 	Nonfunctional subdomains:
 
+		- mirror.cs ¹
+		- mailman.cs ¹
 		- www.cs		(dropped)
 		- glaros.dtc
+
+	¹ Dropped
 
 
 	Problematic subdomains:
@@ -17,6 +24,7 @@
 		- www.dtc
 		- mathinstitutes.ima
 		- www1
+		- onestop
 
 
 	Observed cookie domains:
@@ -31,18 +39,32 @@
 	* Secured by us
 
 -->
-<ruleset name="University of Minnesota (partial)">
+<ruleset name="UMN.edu (partial)">
 
-	<target host="*.umn.edu" />
+	<!--	Direct rewrites:
+				-->
+	<target host="shadow.cs.umn.edu" />
+	<target host="www.dtc.umn.edu" />
+	<target host="hhh.umn.edu" />
+	<target host="www.hhh.umn.edu" />
+	<target host="mathinstitutes.ima.umn.edu" />
+	<target host="onestop.umn.edu" />
+	<target host="www1.umn.edu" />
+
+	<!--	Special cases:
+				-->
+	<target host="dtc.umn.edu" />
+
+		<!--exclusion pattern="^http://mirror\.cs\.umn\.edu/" /-->
 
 
 	<securecookie host="^www\.dtc\.umn\.edu$" name=".+" />
 
 
-	<rule from="^http://(shadow\.cs|hhh|www\.hhh|mathinstitutes\.ima|www1)\.umn\.edu/"
-		to="https://$1.umn.edu/" />
-
-	<rule from="^http://(?:www\.)?dtc\.umn\.edu/"
+	<rule from="^http://dtc\.umn\.edu/"
 		to="https://www.dtc.umn.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

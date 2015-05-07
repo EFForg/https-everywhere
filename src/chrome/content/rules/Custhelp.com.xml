@@ -1,0 +1,53 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+	For clients, see RightNow-clients.xml.
+
+
+	(www.)?: Mismatched
+
+
+	Mixed content:
+
+		- Image on ora-fusion-apps.custhelp.com from webstandards.us.oracle.com
+
+-->
+<ruleset name="Custhelp.com">
+
+	<target host="custhelp.com" />
+	<target host="*.custhelp.com" />
+
+		<test url="http://appsconnect.custhelp.com/" />
+		<test url="http://ora-fusion-apps.custhelp.com/" />
+		<test url="http://www.custhelp.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^appsconnect\.custhelp\.com$" name="^HiveSession$" /-->
+	<!--securecookie host="^ora-fusion-apps\.custhelp\.com$" name="^ps_cookie$" /-->
+
+	<!--	Securing this appears to break login:
+
+			https://trac.torproject.org/projects/tor/ticket/11402
+										-->
+	<!--securecookie host="^\.[\w-]+\.custhelp\.com$" name="^ps_cookie$" /-->
+
+	<securecookie host="^.*\.custhelp\.com$" name="^(?!ps_cookie$).*" />
+
+
+	<!--	Redirect drops path amd forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?custhelp\.com/[^?]*"
+		to="https://www.rightnow.com/" />
+
+		<test url="http://custhelp.com/foo" />
+		<test url="http://www.custhelp.com/foo" />
+
+	<!--	Unique subdomain for each client.
+							-->
+	<rule from="^http://([\w\-]+)\.custhelp\.com/"
+		to="https://$1.custhelp.com/" />
+
+</ruleset>

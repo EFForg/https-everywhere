@@ -1,7 +1,14 @@
 <!--
+	For problematic rules, see Bloomberg.com-problematic.xml.
+
+
 	Other Bloomberg rulesets:
 
+		- Bloomberg.net.xml
+		- Bloomberg_Sports.com.xml
 		- BusinessWeek.com.xml
+		- Bwbx.io.xml
+		- Gotraffic.net.xml
 
 
 	CDN buckets:
@@ -10,38 +17,90 @@
 		- cdn.video.http.2.bloomberg.com.edgesuite.net
 		- www.bloomberg.com.edgesuite.net
 		- static.btrd.net.edgesuite.net
-		- cdn.gotraffic.net.edgesuite.net
 
 
 	Problematic domains:
 
+		- bloomberg.com ¹
+		- jobs.bloomberg.com *
+		- www.bloomberg.com ²
+		- origin-www.bloomberg.com ³
 		- cdn.videos.bloomberg.com	(akamai pointing to cloudfront)
+
+	¹ Mismatched, CN: origin-www.bloomberg.com
+	* Jobs2Web
+	² Mixed css
+	³ Mixed css, unsafe regenotiation
 
 
 	Nonfunctional domains:
 
 		- bloomberg.com subdomains:
 
-			- ^ *
-			- origin-www *
+			- about *
+			- quote *
 			- washpost	(refused)
-			- www **
 
 		- static.btrd.net		(shows bx.businessweek.com, akamai)
 
-		- cdn.gotraffic.net **
-		- origin-cdn.gotraffic.net *
-
 	* Dropped
-	** 504, akamai
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- origin-www *
+
+	* Avoiding valid MCB
+
+
+	Fully covered subdomains:
+
+		- careers
+		- service
+
+
+	Insecure cookies are set for these domains:
+
+		- careers
+		- jobs
+		- origin-www
+		- service
+		- www
+
+
+	Mixed content:
+
+		- css on origin and origin-www from cdn.gotraffic.net *
+
+	* Unsecurable <= 504
 
 -->
-<ruleset name="Bloomberg (partial)" default_off="mismatched">
+<ruleset name="Bloomberg.com (partial)">
 
-	<target host="cdn.videos.bloomberg.com" />
+	<target host="bloomberg.com" />
+	<target host="*.bloomberg.com" />
+		<!--
+			Avoid MCB:
+						-->
+		<exclusion pattern="^http://(?:origin-www\.|www\.)?bloomberg\.com/+(?!favicon\.ico|images?/|styles/)" />
 
 
-	<rule from="^http://cdn\.videos\.bloomberg\.com/"
-		to="https://cdn.videos.bloomberg.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^careers\.bloomberg\.com$" name="^(l|SRV)$" /-->
+	<!--securecookie host="^jobs\.bloomberg\.com$" name="^(JSESSIONID|PERSIST)$" /-->
+	<!--securecookie host="^service\.bloomberg\.com$" name="^(SRV|locale|session)$" /-->
+	<!--securecookie host="^(origin-www|www)\.bloomberg\.com$" name="^(_blp3_session|BCMAP|request_method)$" /-->
+	<!--securecookie host="^origin-www\.bloomberg\.com$" name="^BCOM$" /-->
+
+	<securecookie host="^(?:careers|service)\.bloomberg\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?bloomberg\.com/"
+		to="https://www.bloomberg.com/" />
+
+	<rule from="^http://(careers|origin-www|service)\.bloomberg\.com/"
+		to="https://$1.bloomberg.com/" />
 
 </ruleset>

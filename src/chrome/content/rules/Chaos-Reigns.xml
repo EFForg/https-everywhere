@@ -1,14 +1,24 @@
-<ruleset name="Chaos Reigns" default_off="mismatch, self-signed">
+<!--
+	Problematic subdomains:
 
-	<target host="chaosreigns.com"/>
-	<target host="*.chaosreigns.com"/>
+		- ^ ¹
+		- panic ¹
+		- www ²
 
-	<securecookie host="^(.*\.)?chaosreigns\.com$" name=".*"/>
+	¹ "You have failed to specify a hostname"; mismatched, CN: panic.chaosreigns.com
+	² Works; expired, self-signed
 
-	<rule from="^http://chaosreigns\.com/"
-		to="https://www.chaosreigns.com/"/>
+-->
+<ruleset name="Chaos Reigns" default_off="expired, self-signed">
 
-	<rule from="^http://(panic|www)\.chaosreigns\.com/"
-		to="https://$1.chaosreigns.com/"/>
+	<target host="chaosreigns.com" />
+	<target host="*.chaosreigns.com" />
+
+
+	<securecookie host="^(?:.*\.)?chaosreigns\.com$" name=".+" />
+
+
+	<rule from="^http://(?:panic\.|www\.)?chaosreigns\.com/"
+		to="https://www.chaosreigns.com/" />
 
 </ruleset>

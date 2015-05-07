@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- news.images.itv.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- dev-www ¹
+		- stage-www ²
+		- test-www ¹
+
+	¹ Redirects to http, self-signed
+	² Redirects to http, valid cert
+
+
+	^itv.com: cert only matches www
+
+
+	^www.itvstatic.com doesn't exist.
+
+-->
+<ruleset name="ITV.com (partial)">
+
+	<target host="itv.com" />
+	<target host="*.itv.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.itv\.com/($|\?)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.itv\.com/(dotcomassets/|favicon\.ico|games/|news/assets/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.itv\.com/(?!assets/|itvplayer($|[?/])|mediaplayer/)" /-->
+		<!--
+			Handled specially:
+						-->
+		<!--exclusion pattern="^http://www\.itv\.com/(?!thestore($|[?/]))" /-->
+	<target host="www.itvstatic.com" />
+
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?itv\.com/thestore(?:$|[?/].*)"
+		to="https://www.jmldirect.com/" />
+
+	<rule from="^http://(?:www\.)?itv\.com/(?=assets/|itvplayer(?:$|[?/])|mediaplayer/)"
+		to="https://www.itv.com/" />
+
+	<rule from="^http://(beta|i01-www)\.itv\.com/"
+		to="https://$1.itv.com/" />
+
+	<rule from="^http://news\.images\.itv\.com/"
+		to="https://a248.e.akamai.net/f/248/3293/10/news.images.itv.com/" />
+
+	<rule from="^http://www\.itvstatic\.com/"
+		to="https://www.itvstatic.com/" />
+
+</ruleset>

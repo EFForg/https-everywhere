@@ -1,4 +1,12 @@
 <!--
+	For problematic rules, see Intercom.io-problematic.xml.
+
+
+	Other Intercom rulesets:
+
+		- Intercom_CDN.com.xml
+
+
 	This rule was automatically generated based on an HSTS
 	preload rule in the Chromium browser.  See
 	https://src.chromium.org/viewvc/chrome/trunk/src/net/http/transport_security_state_static.h
@@ -6,20 +14,51 @@
 	preload list on request from their administrators, so HTTPS should
 	work properly everywhere on this site.
 
-	Because Chromium and derived browsers automatically force HTTPS for
-	every access to this site, this rule applies only to Firefox.
+
+	CDN buckets:
+
+		- intercom-seminar.herokuapp.com
+
+			- webinars
+
+
+	Problematic subdomains:
+
+		- docs *
+		- webinars ²
+
+	* Works; mismatched, CN: *.helpjuice.com
+	² herokuapp
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- widget
+
+
+	Insecure cookies are set for these domains:
+
+		- webinars
 
 -->
-<ruleset name="Intercom.io" platform="firefox">
+<ruleset name="Intercom.io">
 
 	<target host="intercom.io" />
-	<target host="*.intercom.io" />
+	<target host="api.intercom.io" />
+	<target host="widget.intercom.io" />
+	<target host="www.intercom.io" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^webinars\.intercom\.io$" name="^request_method$" /-->
 
 	<securecookie host="^(?:api\.|www\.)?intercom\.io$" name=".+" />
 
 
-	<rule from="^http://((?:api|www)\.)?intercom\.io/"
-		to="https://$1intercom.io/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

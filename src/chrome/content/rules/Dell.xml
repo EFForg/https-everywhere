@@ -1,4 +1,5 @@
 <!--
+	Disabled per https://github.com/EFForg/https-everywhere/issues/1559
 	CDN buckets:
 
 		- ccdn-global.dell.com.edgesuite.net
@@ -28,6 +29,7 @@
 		- www1-cdn.la *
 		- accessories.us	(mismatched, CN: accessories.dell.com)
 		- www-cdn *
+		- linux ²
 
 	* Works, akamai
 
@@ -47,7 +49,6 @@
 				- zh ¹
 
 		- partnerdirect ²
-		- linux ²
 
 	¹ cfs-file.ashx & resized-image.ashx 404, at least some pages redirect to http
 	² At least some pages redirect to http
@@ -81,6 +82,7 @@
 		- mobility
 		- premier
 		- signin
+		- support.software
 		- sso
 		- support
 		- supportapj
@@ -93,12 +95,18 @@
 
 		- css on www from www-cdn *
 
+		- Images, on:
 		- Images on accessories from i *
+			- dellideas.secure.force.com from www.ideastorm.com *
+
+		- favicon on dellideas.secure.force.com from i.dell.com *
+
+		- Bug on dellideas.secure.force.com from cdn.gigya.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Dell (partial)">
+<ruleset name="Dell (partial)" default_off="Breaks linux.dell.com">
 
 	<target host="dell.com" />
 	<target host="*.dell.com" />
@@ -107,8 +115,7 @@
 		<!--
 			False/broken MCB:
 						-->
-		<exclusion pattern="^http://(www\.)?dell\.com/+(?!content/|favicon\.ico)" />
-		<exclusion pattern="^http://linux\.dell\.com/(?:wiki|$)" />
+		<exclusion pattern="^http://(?:www\.)?dell\.com/+(?!content/|favicon\.ico)" />
 	<target host="ideastorm.com" />
 	<target host="www.ideastorm.com" />
 
@@ -117,10 +124,10 @@
 	<securecookie host="^(?:accessories|ecomm|support\.euro|mobility|premier|signin|support(?:apj)?)\.dell\.com$" name=".+" />
 
 
-	<rule from="^http://(www(?:-cdn)?\.)?dell\.com/"
+	<rule from="^http://(?:www(?:-cdn)?\.)?dell\.com/"
 		to="https://www.dell.com/" />
 
-	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|linux|mobility|partnerdirect|premier|signin|sso|support(?:apj)?|pbar\.us|www1-cdn)\.dell\.com/"
+	<rule from="^http://(accessories|a?fcs|(?:chatpro|dellchat|cs)\.ap|b2bservices|(?:ec2|si|snp)\.cdn|\w\w\.community|ecomm2?|support\.euro|img|mobility|partnerdirect|premier|signin|support\.software|sso|support(?:apj)?|pbar\.us|www1-cdn)\.dell\.com/"
 		to="https://$1.dell.com/" />
 
 	<rule from="^http://accessories-cdn\.dell\.com/"

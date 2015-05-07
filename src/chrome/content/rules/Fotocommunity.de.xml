@@ -1,0 +1,53 @@
+<!--
+	Problematic subdomains:
+
+		- images *
+
+	* Dropped
+
+
+	Some pages redirect to http.
+
+
+	Mixed content:
+
+		- iframe on www from fotocommunity-fanshop.spreadshirt.de *
+
+		- css on www from $self *
+
+		- Images on www from origin.images *
+
+	* Secured by us
+
+-->
+<ruleset name="fotocommunity.de (partial)">
+
+	<target host="fotocommunity.de" />
+	<target host="*.fotocommunity.de" />
+		<!--
+			Mixed css from $self:
+						-->
+		<!--exclusion pattern="^http://(www\.)?fotocommunity\.de/+(info/Datenschutz|forum/|serverstatus/)($|\?)" /-->
+		<!--
+			Mixed iframe from fotocommunity-fanshop.spreadshirt.de:
+										-->
+		<!--exclusion pattern="^http://(www\.)?fotocommunity\.de/+fanshop($|[?/])" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?fotocommunity\.de/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(www\.)?fotocommunity\.de/+(?!(blog|serverstatus)/wp-(content|includes)/|blog/\?sccss=|(calendar|fotos-kaufen|fotowissen|html-sitemaps|login|mediathek|models|registrieren|sitemap)($|[?/])|css/|css-2/|css-static/|favicon\.ico|fcAssets/|gfx/|(Hilfe|pc/pc/channel/\d+/\w+/\w+/display/\d+)($|\?)|market-[\w-]+\.php|model-sedcard/|static/|wikiAssets/)" /-->
+
+
+	<rule from="^http://(www\.)?fotocommunity\.de/(?=(?:blog|serverstatus)/wp-(?:content|includes)/|blog/\?sccss=|(?:calendar|fotos-kaufen|fotowissen|html-sitemaps|login|mediathek|models|registrieren|sitemap)(?:$|[?/])|css/|css-2/|css-static/|favicon\.ico|fcAssets/|gfx/|(?:Hilfe|pc/pc/channel/\d+/\w+/\w+/display/\d+)(?:$|\?)|market-[\w-]+\.php|model-sedcard/|static/|wikiAssets/)"
+		to="https://$1fotocommunity.de/" />
+
+	<!--	This is what the server does, so follow suit:
+								-->
+	<rule from="^http://(?:origin\.)?images\.fotocommunity\.de/"
+		to="https://origin.images.fotocommunity.de/" />
+
+</ruleset>

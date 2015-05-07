@@ -1,4 +1,9 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://www.gotoassist.com/ => https://www.gotoassist.com/: Cycle detected - URL already encountered: https://www.gotoassist.com/remote_support/
+	Commit msg: https://trac.torproject.org/projects/tor/ticket/12800
+
+
 	CDN buckets:
 
 		- c558080.r80.cf2.rackcdn.com
@@ -21,6 +26,9 @@
 		- hdx.citrix.com	(http reply)
 		- cdn.ws.citrix.com	(akamai)
 		- gotowebinar.com	(cert only matches www)
+		- attendee.gotowebinar.com ⁴
+
+	⁴ Insecure renegotiation
 
 
 	Partially covered domains:
@@ -36,8 +44,13 @@
 			- support
 			- cdn.ws	(→ c558080.ssl.cf2.rackcdn.com)
 
+
+	Insecure cookies are set for these domains:
+
+		- attendee.gotowebinar.com
+
 -->
-<ruleset name="Citrix (partial)">
+<ruleset name="Citrix (partial)" default_off='failed ruleset test'>
 
 	<target host="citrix.com" />
 	<target host="*.citrix.com" />
@@ -51,9 +64,14 @@
 	<target host="*.gotowebinar.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^attendee\.gotowebinar\.com$" name="^(ADRUM_\d\d_\d_\d|JSESSIONID)$" /-->
+
 	<securecookie host="^(?:.*\.)?citrix\.com$" name=".+" />
 	<securecookie host="^www[1-4]gotomeeting\.com$" name=".+" />
 	<securecookie host=".*\.gototraining\.com$" name=".+" />
+	<securecookie host="^attendee\.gotowebinar\.com$" name=".+" />
 
 
 	<rule from="^http://(?:www\.)?citrix\.com/"
@@ -84,7 +102,7 @@
 		to="https://www3.gotomeeting.com/$1/" />
 
 	<rule from="^http://www([1-4])\.gotomeeting\.com/"
-		to="https://www$1.gomeeting.com/" />
+		to="https://www$1.gotomeeting.com/" />
 
 	<rule from="^http://student\.gototraining\.com/"
 		to="https://student.gototraining.com/" />

@@ -1,5 +1,5 @@
 <!--
-	Linkoping university
+	Linköping university
 
 	Lots of subdomains lack ssl.
 
@@ -9,24 +9,86 @@
 		- fe.itn *
 		- kts.itn *
 		- ncva.itn *
-		- www.lysator	(refused)
+		- staffwww.itn ²
 		- m *
 		- mobil		(redirects to www, valid cert)
 		- sah *
 
 	* Shows www, valid cert
+	² Plaintext reply
+
+
+	Problematic subdomains:
+
+		- planet.lysator *
+
+	* Shows another domain
+
+
+	Partially covered subdomains:
+
+		- planet.lysator *	(→ www.lysator)
+		- www.lysator *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- www.hu
+		- www.ibl
+		- www.ida
+		- www.imh
+		- www.isak
+		- www.isv
+		- (www.)?lith
+
+		- bugzilla.lysator
+		- datorhandbok.lysator
+		- jskom.lysator
+
+		- (www.)?student
+		- www.tema
+
+
+	Mixed content:
+
+		- css on www.lysator from $self ¹
+
+		- Images, on:
+
+			- www.lysator from $self ¹
+			- www.lysator from micro.dentarg.net
+			- www.lysator from dory.nu
+			- www.lysator from familjen-persson.se
+			- www.lysator from feeds.feedburner.com ¹
+			- www.lysator from www.jonlindholm.se
+
+	¹ Secured by us
 
 -->
-<ruleset name="LIU.se">
+<ruleset name="LIU.se (partial)">
 
 	<target host="liu.se" />
 	<target host="*.liu.se" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://planet\.lysator\.liu\.se/+(?!images/|planet\.css)" />
+		<exclusion pattern="^http://www\.lysator\.liu\.se/+planet/+(?!images/|planet\.css)" />
 
 
 	<rule from="^http://(?:www\.)?(lith\.|student\.)?liu\.se/"
 		to="https://www.$1liu.se/" />
 
-	<rule from="^http://www\.(hu|ibl|ida|imh|isak|isv|tema)\.liu\.se/"
+	<rule from="^http://planet\.lysator\.liu\.se/+"
+		to="https://www.lysator.liu.se/planet/" />
+
+	<rule from="^http://www\.(hu|ibl|ida|imh|isak|isv|lysator|tema)\.liu\.se/"
 		to="https://www.$1.liu.se/" />
+
+	<rule from="^http://(bugzilla|datorhandbok|jskom)\.lysator\.liu\.se/"
+		to="https://$1.lysator.liu.se/" />
 
 </ruleset>

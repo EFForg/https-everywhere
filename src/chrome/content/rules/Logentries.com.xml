@@ -4,16 +4,18 @@
      for the list of preloads.  Sites are added to the Chromium HSTS
      preload list on request from their administrators, so HTTPS should
      work properly everywhere on this site.
- 
-     Because Chromium and derived browsers automatically force HTTPS for
-     every access to this site, this rule applies only to Firefox. -->
-<ruleset name="Logentries.com" platform="firefox">
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- blog
+
+-->
+<ruleset name="Logentries.com">
   <target host="logentries.com" />
-  <target host="www.logentries.com" />
+  <target host="*.logentries.com" />
 
-  <securecookie host="^logentries\.com$" name=".+" />
-  <securecookie host="^www\.logentries\.com$" name=".+" />
+  <securecookie host="^(?:www\.)?logentries\.com$" name=".+" />
 
-  <rule from="^http://logentries\.com/" to="https://logentries.com/" />
-  <rule from="^http://www\.logentries\.com/" to="https://www.logentries.com/" />
+  <rule from="^http://(blog\.|www\.)?logentries\.com/" to="https://$1logentries.com/" />
 </ruleset>

@@ -1,4 +1,14 @@
 <!--
+	Problematic subdomains:
+
+		- ^ ¹
+		- api ¹
+		- www ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mismatched
+
+
 	Mixed content:
 
 		- Images, from:
@@ -12,13 +22,22 @@
 	² Unsecurable
 
 -->
-<ruleset name="Bitcoin Charts" platform="cacert">
+<ruleset name="Bitcoin Charts.com" platform="cacert" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bitcoincharts.com" />
-	<target host="*.bitcoincharts.com" />
+	<target host="api.bitcoincharts.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.bitcoincharts.com" />
 
 
-	<rule from="^http://(api\.|www\.)?bitcoincharts\.com/"
-		to="https://$1bitcoincharts.com/" />
+	<rule from="^http://www\.bitcoincharts\.com/"
+		to="https://bitcoincharts.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

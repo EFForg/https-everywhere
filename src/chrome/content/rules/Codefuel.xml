@@ -1,0 +1,43 @@
+<!--
+	CDN buckets:
+
+		- codefuel.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- toolbar ²
+		- www ³
+
+	¹ Refused
+	² Dropped
+	³ 503, akamai
+
+
+	Mixed content:
+
+		- Image on sso from storage.stgbssint.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Codefuel.com (partial)">
+
+	<target host="*.codefuel.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.codefuel.com$" name="^(PHPSESSID|PERSISTENT_REFERRER_URL|REFERRER_URL|REFID)$" /-->
+	<!--securecookie host="^accounts\.codefuel.com$" name="^(\.ASPXANONYMOUS|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^sso\.codefuel.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\.codefuel.com$" name="^(?:PERSISTENT_REFERRER_URL|REFERRER_URL|REFID)$" />
+	<securecookie host="^(?:accounts|sso)\.codefuel.com$" name=".+" />
+
+
+	<rule from="^http://(accounts|sso)\.codefuel\.com/"
+		to="https://$1.codefuel.com/" />
+
+</ruleset>

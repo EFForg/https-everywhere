@@ -1,0 +1,56 @@
+<!--
+	Problematic subdomains:
+
+		- webmail *
+
+	* Works; mismatched, CN: *.westnet.com.au
+
+
+	Partially covered subdomains:
+
+		- hostedwebmail *
+
+	* (?!$) doesn't redirect
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- hostedmail
+		- iihelp
+		- mail
+		- toolbox
+		- toolbox3
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+		- favicon on www from $self *
+
+		- Bug on www from www.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="iiNet.net.au (partial)">
+
+	<target host="iinet.net.au" />
+	<target host="*.iinet.net.au" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hostedmail\.iinet\.net\.au$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^mail\.iinet\.net\.au$" name="^atmail6$" />
+
+
+	<rule from="^http://((?:hostedmail|iihelp|mail|toolbox3?|www)\.)?iinet\.net\.au/"
+		to="https://$1iinet.net.au/" />
+
+	<rule from="^http://hostedwebmail\.iinet\.net\.au/$"
+		to="https://hostedmail.iinet.net.au/" />
+
+</ruleset>

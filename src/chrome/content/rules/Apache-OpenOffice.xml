@@ -3,17 +3,45 @@
 
 		- Apache.xml
 
--->
-<ruleset name="Apache OpenOffice (mismatches)" default_off="cert mismatch">
 
-	<!--	Cert: *.apache.org	-->
+	Nonfunctional subdomains:
+
+		- extensions.services ¹
+		- templates.services ¹
+		- survey ²
+
+	¹ Refused
+	² http reply
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- download
+		- forum
+		- forums
+		- wiki
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="OpenOffice.org (partial)">
 
 	<target host="openoffice.org" />
+	<target host="download.openoffice.org" />
+	<target host="forum.openoffice.org" />
+	<target host="forums.openoffice.org" />
+	<target host="wiki.openoffice.org" />
 	<target host="www.openoffice.org" />
+		<!--exclusion pattern="^http://(extensions\.services|templates\.services|survey)\.openoffice\.org/" /-->
 
 
-	<!--	!www redirects to www.	-->
-	<rule from="^https?://(?:www\.)?openoffice\.org/"
-		to="https://www.openoffice.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

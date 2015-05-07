@@ -1,0 +1,322 @@
+<!--
+	San Diego State University
+
+
+	CDN buckets:
+
+		- sdsu.ezaxess.com
+
+			- m
+
+
+	Nonfunctional subdomains:
+
+		- advancement ¹
+		- affiliated ²
+		- anr ¹
+		- anthropology ³
+		- attila ⁴
+		- azteclink ²
+		- bfa ²
+		- cal ³
+		- www.dps ²
+		- eal ³
+		- engineering ⁴
+		- eon ²
+		- fa ³
+		- www.foundation ⁴
+		- geography ¹
+		- gammagamma ³
+		- helpdesk ²
+		- hobbit ⁵
+		- hr ²
+		- hpwren ¹
+		- infodome ¹
+		- infoguides ⁶
+		- www.ivcampus ¹
+		- jason ⁴
+		- lasso ³
+		- latinamericanstudies ³
+		- lauer ³
+		- library ¹
+		- m.library ¹
+		- libst ³
+		- mintaka ¹
+		- pacific ¹
+		- www.physics ⁷
+		- police ²
+		- sdsucard ²
+		- www.sci ⁸
+		- sustainability ³
+		- tns ²
+		- www.tto ¹
+		- university-stats ⁹
+		- volta ⁴
+		- wifire ¹
+		- (www.)writingcenter ³
+
+	¹ Dropped
+	² 403
+	³ Shows www-rohan
+	⁴ Refused
+	⁵ Data differ between http & https
+	⁶ Redirects to http
+	⁷ Shows www.sci
+	⁸ Prints text
+	⁹ Shows esit
+
+
+	Problematic subdomains:
+
+		- arweb ¹
+		- (www.)as ²
+		- aztecgrad ³
+		- campaign ⁴
+		- chhs ¹
+		- coe ⁵
+		- commonexperience ³
+		- crs ³
+		- csp ³
+		- ctl ⁶
+		- dus ³
+		- dusstudyabroad ³
+		- eap ³
+		- www.engineering ³
+		- ens ¹
+		- honorscouncil ³
+		- www.isc ⁷
+		- liberalstudiesengland ³
+		- m ⁸
+		- newcenter ¹
+		- oip ³
+		- onsf ³
+		- psfa ⁹
+		- www.sa ⁷
+		- sage ³
+		- servicelearning ³
+		- slhs ¹
+		- socialwork ¹
+		- starter ⁷
+		- status ³
+		- sustainablemap ³
+		- tcf ³
+		- undeclared ³
+		- universe ³
+
+	¹ Mixed active content
+	² Mismatched, CN: sharedcert.tierra.net
+	³ Mismatched, CN: newscenter.sdsu.edu
+	⁴ iModules
+	⁵ Refused
+	⁶ Shows www
+	⁷ Mismatched, CN: studentaffairs.sdsu.edu
+	⁸ Herokuapp, mixed css
+	⁹ Configured for <=ssl3 only
+
+
+	Partially covered subdomains:
+
+		- arweb ¹
+		- chhs ¹
+		- ctl ²		(→ go)
+		- ens ¹
+		- newscenter ³
+		- nursing ⁴
+		- phonebook ⁵
+		- slhs ¹
+		- socialwork ¹
+		- www-rohan ⁶
+
+	¹ Avoiding broken MCB
+	² [^?/]+ 404s
+	³ Avoiding valid MCB
+	⁴ $ redirects to http
+	⁵ $ redirects to ealert/
+	⁶ ~academic/, ~cbabroad/$, ~shanghai/ redirect to http
+
+
+	Fully covered subdomains:
+
+		- ali
+		- audhandbook
+		- azteclinkweb
+		- blackboard
+		- campaign		(→ securelb.imodules.com)
+		- www.ces
+		- circuit
+		- cmsweb.cms
+		- coe			(→ go)
+		- esit
+		- filex.foundation
+		- help.foundation
+		- selfservice.foundation
+		- giveonline
+		- go
+		- hhs
+		- infoed
+		- infoguides		(→ library
+		- www.isc		(→ studentaffairs)
+		- jobsfoundation
+		- libpac
+		- m.libpac
+		- piprofile...4443
+		- www.sa		(→ studentaffairs)
+		- scua2
+		- starter		(→ studentaffairs)
+		- studentaffairs
+		- sunspot
+
+
+	These altnames don't exist:
+
+		- uct.sdsu.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- ali
+		- aztecgrad
+		- azteclinkweb
+		- blackboard
+		- www.ces
+		- circuit
+		- .cms
+		- commonexperience
+		- csp
+		- dus
+		- eap
+		- www.engineering
+		- filex.foundation
+		- selfservice.foundation
+		- go
+		- honorscouncil
+		- infoed
+		- libpac
+		- .libpac
+		- m.libpac
+		- newscenter
+		- oip
+		- onsf
+		- sage
+		- servicelearning
+		- status
+		- sunspot
+		- sustainablemap
+		- undeclared
+		- universe
+		- www-rohan
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- csp from www.surveygizmo.com ¹
+			- newscenter, universe from www.kpbs.org ²
+			- tcf, universe from www.youtube.com ¹
+
+		- css, on:
+
+			- arweb, chhs, ens, slhs, socialwork from $self ¹
+			- (www.)as from as ³
+			- m from files.ezaxess.com ⁴
+
+		- Bug on newscenter from www.facebook.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= 404
+	³ Not secured by us <= mismatched
+	⁴ Not secured by us <= breaks images
+
+-->
+<ruleset name="SDSU.edu (partial)">
+
+	<target host="*.sdsu.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:arweb|newscenter)\.sdsu\.edu/(?!.+\.(?:css|gif|jpg|ico|pdf|png)|giving(?:$|[?/]))" />
+		<exclusion pattern="^http://(?:chhs|ens|slhs)\.sdsu\.edu/+(?!wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://socialwork\.sdsu\.edu/+(?!(?:[\w-]+/+)?wp-(?:content|includes)/)" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://nursing\.sdsu\.edu/$" /-->
+		<!--exclusion pattern="^http://www-rohan\.sdsu\.edu/~(?:academic/|cbabroad/(?!(?:\w+/)?images/)|shanghai/)" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://www-rohan\.sdsu\.edu/~(?!cbabroad/+(?:\w+/)?images/)" />
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://nursing\.sdsu\.edu/+(?!wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://phonebook\.sdsu\.edu/+(?!ealert(?:$|[?/]))" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--ecurecookie host="^(\.|\.libpac)\.sdsu\.edu$" name="^SESSION_LANGUAGE$" /-->
+	<!--ecurecookie host="^azteclinkweb\.sdsu\.edu$" name="^WWV_CUSTOM-F_\d{16}_\d{3}$" /-->
+	<!--ecurecookie host="^blackboard\.sdsu\.edu$" name="^(NSC_\d+_\w+_(\d{1,3}\.){4}\w+|session_id)$" /-->
+	<!--ecurecookie host="^(circuit|libpac|m\.libpac)\.sdsu\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--ecurecookie host="^\.cms\.sdsu\.edu$" name="^\w{12}-\d+$" /-->
+	<!--ecurecookie host="^filex\.foundation\.sdsu\.edu$" name="^[\da-f]{12}$" /-->
+	<!--ecurecookie host="^(ali|aztecgrad|www\.ces|commonexperience|csp|dus|eap|www\.engineering|selfservice\.foundation|giveonline|go|honorscouncil|newscenter|oip|onsf|sage|servicelearning|status|sustainablemap|undeclared|universe)\.sdsu\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--ecurecookie host="^selfservice\.foundation\.sdsu\.edu$" name="^AspxAutoDetectCookieSupport$" /-->
+	<!--ecurecookie host="^infoed\.sdsu\.edu$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--ecurecookie host="^sunspot\.sdsu\.edu$" name="^JSESSIONID$" /-->
+	<!--ecurecookie host="^www-rohan\.sdsu\.edu$" name="^SQMSESSID$" /-->
+
+	<securecookie host="^(?:ali|azteclinkweb|blackboard|www\.ces|circuit|(?:filex|selfservice)\.foundation|giveonline|go|infoed|\.?libpac|m\.libpac|sunspot|www-rohan)\.sdsu\.edu$" name=".+" />
+
+
+	<rule from="^http://campaign\.sdsu\.edu/+(?=$|\?)"
+		to="https://securelb.imodules.com/s/997/campaign13/start.aspx" />
+
+	<rule from="^http://campaign\.sdsu\.edu/"
+		to="https://securelb.imodules.com/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://ctl\.sdsu\.edu/+(?:$|\?.*)"
+		to="https://go.sdsu.edu/dus/ctl/" />
+
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://coe\.sdsu\.edu/+(?=$|\?)"
+		to="https://go.sdsu.edu/education/Default.aspx" />
+
+	<rule from="^http://coe\.sdsu\.edu/"
+		to="https://go.sdsu.edu/education/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://hobbit\.sdsu\.edu/.*"
+		to="https://library.sdsu.edu/guides/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://www\.isc\.sdsu\.edu/+"
+		to="https://studentaffairs.sdsu.edu/ISC/" />
+
+	<!--	Redirect keeps args:
+					-->
+	<!--rule from="^http://infoguides\.sdsu\.edu/+(?=$|\?)"
+		to="https://library.sdsu.edu/guides/" /-->
+
+	<!--	Redirect drops path and args:
+						-->
+	<!--rule from="^http://infoguides\.sdsu\.edu/.*"
+		to="https://library.sdsu.edu/page-not-found" /-->
+
+	<rule from="^http://piprofile\.sdsu\.edu:4443/"
+		to="https://piprofile.sdsu.edu:4443/" />
+
+	<rule from="^http://(?:www\.sa|starter)\.sdsu\.edu/"
+		to="https://studentaffairs.sdsu.edu/" />
+
+	<rule from="^http://(ali|arweb|audhandbook|azteclinkweb|blackboard|www\.ces|chhs|circuit|cmsweb\.cms|ens|esit|(?:filex|help|selfservice)\.foundation|giveonline|go|hhs|infoed|jobsfoundation|libpac|m\.libpac|newscenter|phonebook|scua2|slhs|socialwork|studentaffairs|sunspot|www-rohan)\.sdsu\.edu/"
+		to="https://$1.sdsu.edu/" />
+
+</ruleset>

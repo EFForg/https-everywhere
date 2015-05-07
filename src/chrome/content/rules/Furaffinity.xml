@@ -1,14 +1,30 @@
-<ruleset name="Furaffinity">
-  <target host="furaffinity.net" />
-  <target host="www.furaffinity.net" />
-  <target host="sfw.furaffinity.net" />
-  <target host="ox.furaffinity.net" />
-  <target host="d.facdn.net" />
+<!--
+	Nonfunctional subdomains:
 
-  <securecookie host="^(www|sfw|ox|)\.furaffinity\.net$" name=".+" />
+		- help *
 
-  <rule from="^http://(www\.)?furaffinity\.net/" to="https://www.furaffinity.net/" />
-  <rule from="^http://sfw\.furaffinity\.net/" to="https://sfw.furaffinity.net/" />
-  <rule from="^http://ox\.furaffinity\.net/" to="https://ox.furaffinity.net/" />
-  <rule from="^http://d\.facdn\.net/" to="https://d.facdn.net/" />
+	* Rediects to www.web-site-scripts.com; mismatched, CN: *.host4kb.com
+
+-->
+<ruleset name="Furaffinity (partial)">
+
+	<target host="*.facdn.net" />
+	<target host="furaffinity.net" />
+	<target host="*.furaffinity.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.furaffinity.net$" name="^b$" /-->
+	<!--securecookie host="^forums\.furaffinity.net$" name="^bb_sessionhash$" /-->
+
+	<securecookie host="^(?:forums|ox|sfw|www)?\.furaffinity\.net$" name=".+" />
+
+
+	<rule from="^http://(d|t)\.facdn\.net/"
+		to="https://$1.facdn.net/" />
+
+	<rule from="^http://((?:forums|ox|sfw|www)\.)?furaffinity\.net/"
+		to="https://$1furaffinity.net/" />
+
 </ruleset>

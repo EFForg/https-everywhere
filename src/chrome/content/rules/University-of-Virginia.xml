@@ -1,15 +1,94 @@
 <!--
 	Nonfunctional subdomains:
 
+		- (www.) ¹
+		- calendar ²
+		- (www.)cpe ³
 		- curry		(.* redirects to http.../$, valid cert)
+		- (www.)homedir ³
+		- cti.itc ⁵
+		- its ⁶
+		- www.people ⁷
+		- (www.)seas ⁸
+
+	¹ "You have reached the SSL server"
+	² Redirects to netbadge
+	³ 404
+	⁵ Dropped
+	⁶ Shows www.its
+	⁷ Redirects to admin.people
+	⁸ 403
+
+
+	Problematic subdomains:
+
+		- itc *
+
+	* Cert only matches *.itc
+
+
+	Partially covered subdomains:
+
+		- its *
+
+	* home.php 404s when rewritten to www.its, other pages untested
+
+
+	Fully covered subdomains:
+
+		- sisuva.admin
+		- www.cs
+		- mail.eservices
+		- gwis
+		- (www.)itc	(^ → www)
+		- collab.itc
+		- eventcal.itc
+		- www.its
+		- lists
+		- www.mail
+		- netbadge
+		- news
+		- admin.people
+		- rabi.phys
+		- standard.pki
+		- uvaemergency
+
+
+	Insecure cookies are set for these domains:
+
+		- .admin
+		- sisuva.admin
+		- collab.itc
+
+
+	Mixed content:
+
+		- css on uvaemergency from fast.fonts.net *
+
+	* Secured by us
 
 -->
-<ruleset name="University of Virginia" default_off="expired">
+<ruleset name="University of Virginia (partial)">
 
-	<target host="cti.itc.virginia.edu" />
+	<target host="*.virginia.edu" />
 
 
-	<rule from="^http://cti\.itc\.virginia\.edu/"
-		to="https://cti.itc.virginia.edu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.admin\.virginia\.edu$" name="^sisuva-PORTAL-PSJSESSIONID$" /-->
+	<!--securecookie host="^sisuva\.admin\.virginia\.edu$" name="^BIGipServer~SIS~SIS(-\d+){3}$" /-->
+	<!--securecookie host="^collab\.itc\.virginia\.edu$" name="^BIGipServercollab-pool$" /-->
+
+	<securecookie host="^(?:sisuva\.admin|collab\.itc)\.virginia\.edu$" name=".+" />
+
+
+	<rule from="^http://(sisuva\.admin|www\.cs|mail\.eservices|gwis|(?:collab|eventcal)\.itc|www\.its|lists|www\.mail|netbadge|news|admin\.people|rabi\.phys|standard\.pki|uvaemergency)\.virginia\.edu/"
+		to="https://$1.virginia.edu/" />
+
+	<rule from="^http://(?:www\.)?itc\.virginia\.edu/"
+		to="https://www.itc.virginia.edu/" />
+
+	<rule from="^http://its\.virginia\.edu/(?=css/|images/)"
+		to="https://www.its.virginia.edu/" />
 
 </ruleset>

@@ -1,12 +1,46 @@
-<ruleset name="TopCoder" platform="mixedcontent">
+<!--
+	Nonfunctional hosts in *topcoder.com:
+
+		- help *
+
+	* WP Engine
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps.topcoder.com
+		- community.topcoder.com
+		- software.topcoder.com
+		- studio.topcoder.com
+		- www.topcoder.com
+
+-->
+<ruleset name="TopCoder.com (partial)">
 
 	<target host="topcoder.com"/>
 	<target host="*.topcoder.com"/>
 
-	<securecookie host="^(.*\.)?topcoder\.com$" name=".*"/>
+		<exclusion pattern="^http://help\.topcoder\.com/" />
+
+			<test url="http://help.topcoder.com/" />
+
+		<test url="http://apps.topcoder.com/" />
+		<test url="http://community.topcoder.com/" />
+		<test url="http://software.topcoder.com/" />
+		<test url="http://studio.topcoder.com/" />
+		<test url="http://www.topcoder.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(app|community|software|studio|www)\.topcoder\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.topcoder\.com$" name="^PHPSESSID$"/-->
+
+	<securecookie host="^(?:.*\.)?topcoder\.com$" name=".*"/>
+
 
 	<!--	each client has a unique subdomain.	-->
-	<rule from="^http://([\w\-]+\.)?topcoder\.com/"
-		to="https://$1topcoder.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

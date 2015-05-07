@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function CtxCapturingListener(tracingChannel, captureObserver) {
   this.originalListener = tracingChannel.setNewListener(this);
   this.captureObserver = captureObserver;
@@ -13,7 +15,7 @@ CtxCapturingListener.prototype = {
   },
   onDataAvailable: function(request, ctx, inputStream, offset, count) {},
   onStopRequest: function(request, ctx, statusCode) {},
-  QueryInterface: xpcom_generateQI([Ci.nsIStreamListener])
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsIStreamListener])
 };
 
 function ChannelReplacement(chan, newURI, newMethod) {
@@ -81,18 +83,7 @@ ChannelReplacement.prototype = {
     
     newChan.loadGroup = chan.loadGroup;
     newChan.notificationCallbacks = chan.notificationCallbacks;
-
-// The following line has been commented out, because it appears to interfere with the Flash plugin.
-// For example, on https://www.youtube.com, if the LOAD_REPLACE flag is included in newChan's
-// loadFlag, the Flash plugin reports an error and video streaming does not take place.
-// By removing this flag, we allow Flash to see the "originalURI" attirubte of newChan,
-// which contains the HTTP (non-HTTPS) URL that Flash requested before HTTPS-Everywhere
-// redirected the channel.
-// XXX: May have unintended side effects. Needs more investigation.
-//
-//    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
-    
-    newChan.loadFlags = loadFlags;
+    newChan.loadFlags = loadFlags | newChan.LOAD_REPLACE;
 
     if (!(newChan instanceof Ci.nsIHttpChannel))
       return this;
@@ -222,7 +213,7 @@ ChannelReplacement.prototype = {
   
   _redirectCallback: ("nsIAsyncVerifyRedirectCallback" in Ci)
     ? {
-        QueryInterface: xpcom_generateQI([Ci.nsIAsyncVerifyRedirectCallback]),
+        QueryInterface: XPCOMUtils.generateQI([Ci.nsIAsyncVerifyRedirectCallback]),
         onRedirectVerifyCallback: function(result) {}
       }
     : null
@@ -343,7 +334,7 @@ function LoadGroupWrapper(channel, callback) {
   channel.loadGroup = this;
 }
 LoadGroupWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([Ci.nsILoadGroup]),
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsILoadGroup]),
   
   get activeCount() {
     return this._inner ? this._inner.activeCount : 0;
@@ -391,7 +382,7 @@ LoadGroupWrapper.prototype = {
     if (this._channel.loadGroup) this._channel.loadGroup = this._inner;
   },
   _emptyEnum: {
-    QueryInterface: xpcom_generateQI([Ci.nsISimpleEnumerator]),
+    QueryInterface: XPCOMUtils.generateQI([Ci.nsISimpleEnumerator]),
     getNext: function() { return null; },
     hasMoreElements: function() { return false; }
   }

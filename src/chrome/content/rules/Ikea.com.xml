@@ -4,6 +4,34 @@
 		- metrics
 
 
+	Nonfunctional hosts in *ikea.com:
+
+		- ^ ¹
+		- ar ²
+		- m.ar ²
+		- ca ²
+		- ca-m ²
+		- eu ²
+		- eu-m ²
+		- itseelm-ax0033 ³
+		- m ²
+		- www ²
+
+	¹ Dropped
+	² Redirects to http
+	³ Refused
+
+
+	Problematic hosts in *ikea.com:
+
+		- franchisor ¹
+		- metrics ¹
+		- supplierportal ²
+
+	¹ Mismatched
+	² Self-signed
+
+
 	Partially covered subdomains:
 
 		- (www.)	(→ secure)
@@ -11,31 +39,90 @@
 
 	Fully covered subdomains:
 
+		- fed.apps
+		- secure.ar
+		- securem.ar
+		- secure.ca
+		- ca-securem
+		- www.cip
+		- www.des
+		- secure.eu
+		- eu-securem
+		- secure.iows
+		- manhattan
 		- metrics	(→ ikea-com.122.2o7.net)
+		- psathome
 		- secure
+		- securem
+		- securema
 		- smetrics
+
+
+	Insecure cookies are set for these domains:
+
+		- .ikea.com
+		- .franchisor.ikea.com
 
 -->
 <ruleset name="Ikea.com (partial)">
 
-	<target host="ikea.com" />
-	<target host="*.ikea.com" />
-		<!--
-			Pages redirect back:
-						-->
-		<exclusion pattern="^http://(?:www\.)?ikea\.com/+(?!favicon\.ico|img_dot_com/|ms/(?:css|img|js)/|webapp/)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="fed.apps.ikea.com" />
+	<target host="secure.ar.ikea.com" />
+	<target host="securem.ar.ikea.com" />
+	<target host="secure.ca.ikea.com" />
+	<target host="ca-securem.ikea.com" />
+	<target host="www.cip.ikea.com" />
+	<target host="www.des.ikea.com" />
+	<target host="secure.eu.ikea.com" />
+	<target host="eu-securem.ikea.com" />
+	<target host="secure.iows.ikea.com" />
+	<target host="manhattan.ikea.com" />
+	<target host="psathome.ikea.com" />
+	<target host="secure.ikea.com" />
+	<target host="securem.ikea.com" />
+	<target host="securema.ikea.com" />
+	<target host="smetrics.ikea.com" />
 
+	<!--	Complications:
+				-->
+	<target host="ikea.com" />
+	<target host="metrics.ikea.com" />
+	<target host="www.ikea.com" />
+
+		<exclusion pattern="^http://(?:www\.)?ikea\.com/(?!favicon\.ico|img_dot_com/|ms/(?:css|img|js)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ikea.com/cn/" />
+			<test url="http://www.ikea.com/de/de/" />
+			<test url="http://www.ikea.com/fi/fi/" />
+			<test url="http://www.ikea.com/ru/ru" />
+			<test url="http://www.ikea.com/us/en/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ikea.com/favicon.ico" />
+			<test url="http://www.ikea.com/img_dot_com/arrows/red_arrow_7x7.gif" />
+			<test url="http://www.ikea.com/ms/img/misc/s1x1.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ikea\.com$" name="^(preferedui|s_vi)$" /-->
+	<!--securecookie host="^\.franchisor\.ikea\.com$" name="^ARRAffinity$" /-->
 
 	<securecookie host="^\.ikea\.com$" name="^s_\w+$" />
 
 
-	<rule from="^http://(?:secure\.|www\.)?ikea\.com/"
+	<rule from="^http://(?:www\.)?ikea\.com/"
 		to="https://secure.ikea.com/" />
 
 	<rule from="^http://metrics\.ikea\.com/"
 		to="https://ikea-com.122.2o7.net/" />
 
-	<rule from="^http://smetrics\.ikea\.com/"
-		to="https://smetrics.ikea.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

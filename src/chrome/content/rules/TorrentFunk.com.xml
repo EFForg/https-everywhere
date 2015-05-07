@@ -1,0 +1,31 @@
+<!--
+	For rules causing false/broken MCB, see TorrentFunk.com-falsemixed.xml.
+
+
+	Mixed content:
+
+		- css from $self *
+
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="TorrentFunk.com (partial)">
+
+	<!--	https://t... redirects to http://w... over
+		http, so we can avoid a duplicate target
+		warning by blanket rewriting !www here.
+							-->
+	<target host="torrentfunk.com" />
+	<target host="www.torrentfunk.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.torrentfunk\.com/+(?!favicon\.ico|images/)" />
+
+
+	<rule from="^http://(www\.)?torrentfunk\.com/"
+		to="https://$1torrentfunk.com/" />
+
+</ruleset>

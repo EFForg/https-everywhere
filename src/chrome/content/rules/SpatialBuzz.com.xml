@@ -1,21 +1,37 @@
 <!--
-	Nonfunctional subdomains:
+	For problematic rules, see SpatialBuzz.com-problematic.xml.
 
-		- ftp *
-		- logs *
 
-	* Revoked
+	Problematic subdomains:
+
+		- ftp ¹
+		- git ¹
+		- logs ¹
+		- monitor ¹
+		- sbfs ²
+		- www ¹
+
+	¹ Expired 2014-07-25, ^ redirects to www
+	² Works, self-signed
 
 
 	Fully covered subdomains:
 
-		- (www.)
+		- ^
 		- admin
 		- api
 		- cdn
 		 cdn2
+		- demo
 		- fs
 		- maps
+		- splunk
+		- vpn
+
+
+	These altnames don't exist:
+
+		- cdn3.spatialbuzz.com
 
 -->
 <ruleset name="SpatialBuzz.com (partial)">
@@ -24,10 +40,14 @@
 	<target host="*.spatialbuzz.com" />
 
 
-	<securecookie host="^(?:fs|www)\.spatialbuzz\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.spatialbuzz\.com$" name="^[0-9a-f]{32}$" /-->
+
+	<securecookie host="^fs\.spatialbuzz\.com$" name=".+" />
 
 
-	<rule from="^http://((?:admin|api|cdn2?|fs|maps|www)\.)?spatialbuzz\.com/"
+	<rule from="^http://((?:admin|api|cdn2?|demo|fs|maps|splunk|vpn)\.)?spatialbuzz\.com/"
 		to="https://$1spatialbuzz.com/" />
 
 </ruleset>

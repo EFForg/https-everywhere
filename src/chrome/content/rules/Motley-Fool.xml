@@ -1,16 +1,55 @@
+<!--
+	For rules causing false/broken MCB, see Fool.com-falsemixed.xml.
+
+
+	Problematic domains:
+
+		- wiki.fool.com *
+
+	* Mixed css from www.fool.com
+
+
+	Partially covered domains:
+
+		- wiki.fool.com *
+
+	* Avoiding mixed css from www.fool.com
+
+
+	Mixed content:
+
+		- css on wiki.fool.com from www.fool.com *
+
+		- Images, on:
+
+			- wiki.fool.com from www.fool.com *
+			- wiki.fool.com from g.foolcdn.com *
+
+	* Secured by us
+
+-->
 <ruleset name="The Motley Fool (partial)">
 
 	<target host="fool.com"/>
 	<!-- /g.:	Akamai	-->
 	<target host="*.fool.com"/>
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://wiki\.fool\.com/+(?!wiki/(?:extension|skin)s/)" />
 	<target host="fool.com.au"/>
 	<target host="*.fool.com.au"/>
 	<target host="fool.co.uk"/>
 	<target host="*.fool.co.uk"/>
 	<target host="*.foolcdn.com"/>
-	<target host="marketfoolery.com"/>
-	<target host="www.marketfoolery.com"/>
 	
+
+	<!--	Incapsula cookies:
+					-->
+	<securecookie host="\.foolcdn\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+	<securecookie host="^s\.foolcdn\.com$" name=".+" />
+
+
 	<rule from="^http://fool\.com/"
 		to="https://www.fool.com/"/>
 
@@ -31,8 +70,5 @@
 
 	<rule from="^http://wiki\.fool\.com/"
 		to="https://wiki.fool.com/"/>
-
-	<rule from="^http://(?:www\.)?marketfoolery\.com/"
-		to="https://wiki.fool.com/MarketFoolery"/>
 
 </ruleset>

@@ -1,0 +1,64 @@
+
+<!--
+	^: Dropped
+
+
+	Problematic subdomains:
+
+		- s *
+		- trans *
+
+	* $ 403s
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- img1
+		- p2p
+		- s
+		- trans
+		- vip
+
+
+	Insecure cookies are set for these domains:
+
+		 .chbtc.com
+
+-->
+<ruleset name="chbtc.com">
+
+	<target host="chbtc.com" />
+	<target host="img1.chbtc.com" />
+	<target host="p2p.chbtc.com" />
+	<target host="s.chbtc.com" />
+	<target host="trans.chbtc.com" />
+	<target host="vip.chbtc.com" />
+	<target host="www.chbtc.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.chbtc\.com$" name="^zJSESSIONID$" /-->
+
+	<securecookie host="^\.chbtc\.com$" name=".+" />
+
+
+	<rule from="^http://chbtc\.com/"
+		to="https://www.chbtc.com/" />
+
+	<!--	Redirect keeps args but
+		not forward slash:
+					-->
+	<rule from="^http://(?:s|trans)\.chbtc\.com/+(?=$|\?)"
+		to="https://www.chbtc.com/" />
+
+		<test url="http://s.chbtc.com/?" />
+		<test url="http://s.chbtc.com//" />
+		<test url="http://trans.chbtc.com/?" />
+		<test url="http://trans.chbtc.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,9 +1,50 @@
-<ruleset name="Linode">
-  <target host="linode.com" />
-  <target host="*.linode.com" />
+<!--
+	Problematic hosts in *linode.com:
 
-  <securecookie host="^.*linode\.com$" name=".*"/>
+		- status *
 
-  <rule from="^http://linode\.com/" to="https://www.linode.com/"/>
-  <rule from="^http://(library|stats|manager|www)\.linode\.com/" to="https://$1.linode.com/"/>
+	* StatusPage.io
+
+
+	Fully covered hosts in *linode.com:
+
+		- (www.)?
+		- blog
+		- forum
+		- library
+		- manager
+		- stats
+		- status	(→ linode.statuspage.io)
+
+-->
+<ruleset name="Linode.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="linode.com" />
+	<target host="blog.linode.com" />
+	<target host="forum.linode.com" />
+	<target host="library.linode.com" />
+	<target host="manager.linode.com" />
+	<target host="stats.linode.com" />
+	<target host="www.linode.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.linode.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forum\.linode\.com$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+
+	<securecookie host="^(?:.*\.)?linode\.com$" name=".+" />
+
+
+	<rule from="^http://status\.linode\.com/"
+		to="https://linode.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

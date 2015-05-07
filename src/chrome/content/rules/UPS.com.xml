@@ -1,32 +1,74 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://ups.com/assets/ (200) => https://www.ups.com/assets/ (404)
+Non-2xx HTTP code: http://ups.com/img/ (200) => https://www.ups.com/img/ (404)
+Non-2xx HTTP code: http://ups.com/styles/ (200) => https://www.ups.com/styles/ (404)
+Non-2xx HTTP code: http://ups.com/stylesheets/ (200) => https://www.ups.com/stylesheets/ (404)
+Non-2xx HTTP code: http://www.ups.com/assets/ (200) => https://www.ups.com/assets/ (404)
+Non-2xx HTTP code: http://www.ups.com/img/ (200) => https://www.ups.com/img/ (404)
+Non-2xx HTTP code: http://www.ups.com/styles/ (200) => https://www.ups.com/styles/ (404)
+Non-2xx HTTP code: http://www.ups.com/stylesheets/ (200) => https://www.ups.com/stylesheets/ (404)
+
 	Problematic subdomains:
 
 		- ^		(cert only matches www)
 		- campusship	(404, cert only matches www.campusship)
 
 
+	Partially covered subdomains
+
+		- (www.) *		(^ → www)
+
+	* Some (most?) pages started redirecting to http
+
+
 	Fully covered subdomains:
 
-		- (www.)		(^ → www)
 		- www.apps
 		- (www.)campusship	(^ → www)
 		- wwwapps
 
 -->
-<ruleset name="UPS.com (broken)" default_off="redirect loops">
+<ruleset name="UPS.com (partial)" default_off='failed ruleset test'>
 
 	<target host="ups.com" />
-	<target host="*.ups.com" />
-
+		<exclusion pattern="^http://ups.com/$" />
+	<target host="www.ups.com" />
+		<exclusion pattern="^http://www.ups.com/$" />
+	<target host="wwwapps.ups.com" />
+	<target host="www.apps.ups.com" />
+	<target host="campusship.ups.com" />
+	<target host="www.campusship.ups.com" />
 
 	<securecookie host="^www\.campusship\.ups\.com$" name=".+" />
 
-
-	<rule from="^http://(?:www\.)?ups\.com/"
-		to="https://www.ups.com/" />
+	<rule from="^http://(www\.)?ups\.com/(assets/|favicon\.ico|img/|styles/|stylesheets/)"
+		to="https://www.ups.com/$2" />
+		<test url="http://ups.com/assets/" />
+		<test url="http://ups.com/favicon.ico" />
+		<test url="http://ups.com/img/" />
+		<test url="http://ups.com/styles/" />
+		<test url="http://ups.com/stylesheets/" />
+		<test url="http://www.ups.com/assets/" />
+		<test url="http://www.ups.com/favicon.ico" />
+		<test url="http://www.ups.com/img/" />
+		<test url="http://www.ups.com/styles/" />
+		<test url="http://www.ups.com/stylesheets/" />
 
 	<rule from="^http://www(\.)?apps\.ups\.com/"
 		to="https://www$1apps.ups.com/" />
+
+		<!--
+			Now redirects to login:
+						-->
+		<exclusion pattern="^http://www(\.)?apps\.ups\.com/WebTracking/track($|\?)" />
+			<test url="http://wwwapps.ups.com/WebTracking/track" />
+			<test url="http://wwwapps.ups.com/WebTracking/track?" />
+			<test url="http://wwwapps.ups.com/WebTracking/track?foo" />
+			<test url="http://www.apps.ups.com/WebTracking/track" />
+			<test url="http://www.apps.ups.com/WebTracking/track?" />
+			<test url="http://www.apps.ups.com/WebTracking/track?foo" />
 
 	<rule from="^http://(?:www\.)?campusship\.ups\.com/"
 		to="https://www.campusship.ups.com/" />

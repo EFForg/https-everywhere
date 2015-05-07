@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://www.shands.org/ => https://www.shands.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.shands.org'")
 	For problematic rules, see University-of-Florida-expired.xml.
 
 
@@ -40,10 +42,10 @@
 		- (www.)ufadvising	(reset)
 		- (www.)umatter		(ssl_error_rx_record_too_long)
 		- (www.)urel		(times out)
-		- www			(times out)
+		- www			(refused)
 
 -->
-<ruleset name="University of Florida (partial)">
+<ruleset name="University of Florida (partial)" default_off='failed ruleset test'>
 
 	<target host="www.shands.org" />
 	<target host="*.ufl.edu" />
@@ -57,25 +59,25 @@
 		- //crc cert: COMMPOOL.CRC.UFL.EDU
 		- //crc only shows "Under Construction"
 					-->
-	<rule from="^https?://(?:www\.)?(cise|crc|fa|isis|uff)\.ufl\.edu/"
+	<rule from="^http://(?:www\.)?(cise|crc|fa|isis|uff)\.ufl\.edu/"
 		to="https://www.$1.ufl.edu/" />
 
 	<!--	Fails to redirect over https.	-->
-	<rule from="^https?://lists\.ufl\.edu/archives/net-managers-l\.html"
+	<rule from="^http://lists\.ufl\.edu/archives/net-managers-l\.html"
 		to="https://lists.ufl.edu/cgi-bin/wa?A0=NET-MANAGERS-L" />
 
 	<rule from="^http://((?:labs|lss)\.at|catalog|counceling|evaluations|service\.gatorlink|gradschool|security\.health|(?:alerts|asc|etd|static)\.helpdesk|infosec|test\.isis|alerts\.it|lists|login|my|net-services|nms(?:-console)?\.ns|open-systems|(?:images|style)\.webadmin|webmail)\.ufl\.edu/"
 		to="https://$1.ufl.edu/" />
 
 	<!--	Cert only matches *.sites.medinfo	-->
-	<rule from="^https?://forwardtogether\.(?:health|sites\.medinfo).ufl.edu/"
+	<rule from="^http://forwardtogether\.(?:health|sites\.medinfo)\.ufl\.edu/"
 		to="https://forwardtogether.sites.medinfo.ufl.edu/" />
 
 	<!--	- Cert only matches www
 		- At least the homepage redirects to http
 		- Seems that all paths in .+/$ are safe, as they redirect to .+/.*.aspx when unsupported
 					-->
-	<rule from="^https?://(?:www\.)?ufalumni\.ufl\.edu/($|App_Themes/|images/|login\.aspx|membersonly/register|resources/|styles/|WebResource\.axd|[\w\-\./]+/$)"
+	<rule from="^http://(?:www\.)?ufalumni\.ufl\.edu/($|App_Themes/|images/|login\.aspx|membersonly/register|resources/|styles/|WebResource\.axd|[\w\-\./]+/$)"
 		to="https://www.ufalumni.ufl.edu/$1" />
 
 	<rule from="^http://www\.shands\.org/"

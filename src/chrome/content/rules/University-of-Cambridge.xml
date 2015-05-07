@@ -1,48 +1,140 @@
 <!--
+	University of Cambridge
+
 	For problematic rules, see Cam.ac.uk-problematic.xml.
+
+
+	Other University of Cambridge rulesets:
+
+		- Light_Blue_Touchpaper.org.xml
 
 
 	Nonfunctional subdomains:
 
-		- news.admin	(shows www.admin; mismatched, CN: www.admin.cam.ac.uk)
-		- my.alumni *
-		- www.lib
-		- www.mrc-lmb	(https breaks styling; expired, self-signed)
-		- www.sports
-		- www.ucs	(redirects to shib.raven, valid cert)
-		- www
-		- www.zoo	(dropped)
+		- www.environment.admin ²
+		- news.admin ³
+		- my.alumni ⁴
+		- www.mbone.cl ⁵
+		- ucsnews.csx ᵃ
+		- www.fitzmuseum ⁴
+		- ceid.educ ⁶
 
-	* Dropped
+		- www.eng ⁷
+		- www2.eng ⁴
+		- www-g.eng ⁴
+		- www-h.eng ⁴
+		- www-sigproc.eng ⁴
+		- www-womeninengineering.eng ⁸
+
+		- www.graduate ¹
+		- www.internationalstudents ¹
+		- mcr.jesus *
+		- www-jcsu.jesus *
+		- www.lib ⁹
+		- search.lib ⁴
+		- admin.map ᵃ
+		- preview.map ᵃ
+		- www.misd ¹
+		- www.inference.phy ⁴
+		- www.europe.polis ⁸
+		- www.psychometrics ⁸
+		- www.sport ᵃ
+		- www.sports ᵃ
+		- www.vhi.st-edmunds ⁸
+		- www.st-edmunds	(Shows default page)
+		- talks ᵃ
+		- www.ucs ⁸
+		- news.uis ᵃ
+		- www.zoo ⁴
+
+	² Reset
+	³ Shows www.admin; mismatched, CN: www.admin.cam.ac.uk
+	⁴ Dropped
+	⁵ Shows CentOS test page, valid cert
+	⁶ Redirects to www-new; mismatched, CN: skinnerweb.educ.cam.ac.uk
+	⁷ Shows CentOS test page, CN: drupal1-vm
+	⁸ Redirects to shib.raven, valid cert
+	* Shows zeus.jesus
+	⁹ 403, valid cert
+	ᵃ Refused
 
 
 	Problematic subdomains:
 
-		- alumni *
-		- damtp		(cert only matches www.damtp)
-		- www.jobs **
-		- www.philanthropy **
-		- www.study	(works; mismatched, CN: www.admin.cam.ac.uk)
+		- ^ *
+		- www.epe.admin ¹
+		- alumni ²
+		- damtp ²
 
-	* Cert only matches www.foo
-	** Works; mismatched, CN: www.admin.cam.ac.uk
+		- jesus ⁴
+		- zeus.jesus ⁴
+		- www.jesus ⁵
+
+		- www.jobs ¹
+		- www.mrc-lmb ³
+		- www.philanthropy ¹
+		- www.study ¹
+
+	* Reset
+	¹ Works; mismatched, CN: www.admin.cam.ac.uk
+	² Cert only matches www.foo
+	⁴ Mismatched
+	⁵ Mixed css
+	³ https breaks styling; expired, self-signed
 
 
 	Partially covered subdomains:
 
 		- www.damtp	(^ → www, some pages 404)
+		- (www.)?jesus ²	(^ → www)
+
+	² Avoiding broken MCB
 
 
 	Fully covered subdomains:
 
+		- (www.)?		(^ → www)
+
+		- hrsystems.admin
+		- iceintranet.admin
+		- sales.admin
 		- webservices.admin
 		- www.admin
+
 		- (www.)alumni		(^ → www)
+		- www.campaign
+		- sysdata.cl
 		- www.cl
+
+		- jotter.educ
+		- thinkingtogether.educ
+		- www.educ
+		- www-new.educ
+
+		- www.ice
+		- old-webmail.hermes
+		- webmail.hermes
+
+		- conference.jesus
+		- jcsu.jesus
+		- jrf.jesus
+		- mail.jesus
+
+		- lists
+		- map
 		- www2.mrc-lmb
 		- raven
 		- shib.raven
+		- search
+		- api.search
+		- print-server.st-edmunds...:9192
+		- wiki
 		- www.wolfson
+
+
+	These altnames don't exist:
+
+		- www.ftp.cl.cam.ac.uk
 
 
 	Observed cookie domains:
@@ -51,20 +143,71 @@
 		- shib.raven
 		- www.study
 
+
+	Mixed content:
+
+		- css, on:
+
+			- www3.eng from www.eng ¹
+			- jcsu.jesus from fonts.googleapis.com ³
+			- www.jesus from $self
+			- www.study from www ²
+
+		- Images, on:
+
+			- www.admin from www ²
+			- www.educ from $self ³
+			- www3.eng from www.eng ¹
+
+			- conference.jesus from $self
+			- jcsu.jesus from $self
+			- zeus.jesus from www.w3.org
+
+			- www.study from $self ⁴
+
+		- favicon on wiki from www ³
+		- favicon on www3.eng from www.eng ¹
+
+	¹ Unsecurable <= test page
+	² Unsecurable <= redirect to http
+	³ Secured by us
+	⁴ Not secured by us <= mismatched
+
 -->
-<ruleset name="University of Cambridge (partial)">
+<ruleset name="Cam.ac.uk (partial)">
 
+	<target host="cam.ac.uk" />
 	<target host="*.cam.ac.uk" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?cam\.ac\.uk/(profiles/cam/themes/cam/assets/images/|site/accessibility/|sites/www\.cam\.ac\.uk/files/)" /-->
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?jesus\.cam\.ac\.uk/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<securecookie host="^www\.a(?:dmin|lumni)\.cam\.ac\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^sysdata\.cl\.cam\.ac\.uk$" name="^Ucam-WebAuth-Session$" /-->
+	<!--securecookie host="^www\.educ\.cam\.ac\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^hrsystems\.admin\.cam\.ac\.uk$" name="^(JSESSIONID|X-Mapping-\w+)$" /-->
+	<!--securecookie host="^(www\.epe\.admin|webservices\.admin|www\.admin|www\.jobs|www\.study)\.cam\.ac\.uk$" name="^X-Mapping-\w+$" /-->
+	<!--securecookie host="^www\.ice\.cam\.ac\.uk$" name="^[0-9a-f]{32}$" /-->
+	<!--securecookie host="^jrf\.jesus\.cam\.ac\.uk$" name="^resfell_string_mem$" /-->
+
+	<securecookie host="^(?:(?:hrsystems|webservices)\.admin|www\.a(?:dmin|lumni)|www\.educ|sysdata\.cl|www\.ice|jrf\.jesus)\.cam\.ac\.uk$" name=".+" />
 
 
-	<rule from="^http://(webservices\.admin|www2\.mrc-lmb|(?:shib\.)?raven|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk/"
-		to="https://$1.cam.ac.uk/" />
+	<rule from="^http://((?:hrsystems|iceintranet|sales|webservices|www)\.admin|www\.campaign|sysdata\.cl|(?:jotter|thinkingtogether|www|www-new)\.educ|www\.ice|(?:old-)?webmail\.hermes|(?:conference|jcsu|jrf)\.jesus|lists|map|www2\.mrc-lmb|(?:shib\.)?raven|search|api\.search|print-server\.st-edmunds|wiki|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk(:9192)?/"
+		to="https://$1.cam.ac.uk$2/" />
 
-	<rule from="^http://(?:www\.)?alumni\.cam\.ac\.uk/"
-		to="https://www.alumni.cam.ac.uk/" />
+	<!--	Domains for which both !www and www
+		exist, and both work without caveat:
+							-->
+	<rule from="^http://(?:www\.)?((?:alumni|jesus)\.)?cam\.ac\.uk/"
+		to="https://www.$1cam.ac.uk/" />
 
 	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
 		to="https://www.damtp.cam.ac.uk/global/" />

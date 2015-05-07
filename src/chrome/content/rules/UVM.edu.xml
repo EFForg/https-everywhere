@@ -1,0 +1,45 @@
+<!--
+	University of Vermont
+
+
+	Nonfunctional subdomains:
+
+		- catalogue ¹
+		- cdi ¹
+		- sfx ¹
+
+	¹ Refused
+
+
+	^: cert only matches *.uvm.edu
+
+
+	Fully covered subdomains:
+
+		- alumni
+		- learn
+		- library
+		- myuvm
+
+-->
+<ruleset name="UVM.edu (partial)">
+
+	<target host="uvm.edu" />
+	<target host="*.uvm.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.uvm\.edu$" name="^fos\.web\.server$" /-->
+	<!--securecookie host="^myuvm\.uvm\.edu$" name="^(JSESSIONID|UserAgentId)$" /-->
+
+	<securecookie host="^myuvm\.uvm\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?uvm\.edu/"
+		to="https://www.uvm.edu/" />
+
+	<rule from="^http://(alumni|learn|library|myuvm)\.uvm\.edu/"
+		to="https://$1.uvm.edu/" />
+
+</ruleset>

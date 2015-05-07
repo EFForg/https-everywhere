@@ -1,0 +1,57 @@
+<!--
+	(www.)?: Some pages redirect to http
+
+
+	Insecure cookies are set for these domains:
+
+		- .forum.bitcoin.pl
+
+-->
+<ruleset name="Bitcoin.pl (partial)">
+
+	<target host="bitcoin.pl" />
+	<target host="forum.bitcoin.pl" />
+	<target host="www.forum.bitcoin.pl" />
+	<target host="www.bitcoin.pl" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://bitcoin\.pl/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://bitcoin\.pl/(?!cache/|components/|images/|login(?:$|[?/])|media/|modules/|templates/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bitcoin.pl/kontakt" />
+			<test url="http://bitcoin.pl/kontakt/" />
+			<test url="http://bitcoin.pl/kurs" />
+			<test url="http://bitcoin.pl/kurs/" />
+			<test url="http://bitcoin.pl/linki" />
+			<test url="http://bitcoin.pl/o-bitcoinie" />
+			<test url="http://bitcoin.pl/placowki" />
+			<test url="http://bitcoin.pl/poradniki" />
+			<test url="http://bitcoin.pl/wydarzenia" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bitcoin.pl/components/com_jcomments/tpl/default/style.css" />
+			<test url="http://bitcoin.pl/images/headers/logo-bitcoin-v1.png" />
+			<test url="http://bitcoin.pl/login" />
+			<test url="http://bitcoin.pl/media/modals/css/bootstrap.min.css" />
+			<test url="http://bitcoin.pl/modules/mod_facebook_slide_likebox/tmpl/css/style1.css" />
+			<test url="http://bitcoin.pl/templates/jm-hot-news/images/search.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forum\.bitcoin\.pl$" name="^phpbbf_\d+_(k|sid|u)$" /-->
+
+	<securecookie host="^\.forum\.bitcoin\.pl$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

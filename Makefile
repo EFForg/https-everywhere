@@ -10,5 +10,7 @@ pkg:
 	mkdir pkg
 clean:
 	rm -f pkg/*.xpi
+	rm -f src/chrome/content/rules/default.rulesets
+	rm -f src/defaults/rulesets.sqlite
 
 .PHONY: clean prerelease

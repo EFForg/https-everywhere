@@ -1,7 +1,4 @@
 <!--
-	For rules causing false/broken MCB, see Canonical-falsemixed.xml.
-
-
 	Other Canonical rulesets:
 
 		- Launchpad.xml
@@ -9,56 +6,61 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)	(dropped)
+		- (www.) *
+		- bazaar ²
+		- doc.bazaar ³
+		- wiki.bazaar ²
+		- design ²
+		- partners *
+		- people *
+		- zinc *
 
-
-	Partially covered subdomains:
-
-		- design *
-
-	* Avoiding false/broken MCB, rest covered in Canonical-falsemixed.xml
+	* Dropped
+	² Redirects to http
+	³ Shows bazaar
 
 
 	Fully covered subdomains:
 
 		- blog.bazaar
 		- certification
+		- forms
 		- irclogs
+		- landscape
 		- shop
 		- support
 
 
-	Mixed content:
+	These altnames don't exist:
 
-		- Scripts on design from design *
-		- css on design from design *
-		- Images on design from design *
-		- favicon on design from www.ubuntu.com **
-
-	* Secured by us
-	** Unsecurable, doesn't trip MCB
-
-
-	design is in a separate falsemixed ruleset
-	due to scripts and css from design.
-
-	NB: We secure all resources, and thus
-	falsemixed should be merged for Ffx 24.
+		- www.certification.canonical.com
+		- www.forms.canonical.com
+		- www.shop.canonical.com
 
 -->
-<ruleset name="Canonical (partial)">
+<ruleset name="Canonical.com (partial)">
 
-	<target host="*.canonical.com" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="blog.bazaar.canonical.com" />
+	<target host="certification.canonical.com" />
+	<target host="forms.canonical.com" />
+	<target host="irclogs.canonical.com" />
+	<target host="landscape.canonical.com" />
+	<target host="shop.canonical.com" />
+	<target host="support.canonical.com" />
+
+		<!--	Redirects to http:
 						-->
-		<exclusion pattern="^http://design\.ubuntu\.com/(?!favicon\.ico|wp-content/)" />
+		<!--exclusion pattern="^http://design\.ubuntu\.com/(?!$|favicon\.ico)" /-->
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^shop\.canonical\.com$" name="^cookie_test$" /-->
 
 	<securecookie host="^(?:certification|irclogs|shop)\.canonical\.com$" name=".+" />
 
 
-	<rule from="^http://(blog\.bazaar|certification|design|irclogs|landscape|shop|support)\.canonical\.com/"
-		to="https://$1.canonical.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

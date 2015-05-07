@@ -1,0 +1,55 @@
+<!--
+	Nonfunctional subdomains:
+
+		- stats *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- annonsera *
+		- info *
+
+	* Avoiding broken MCB
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- faq
+		- support
+
+
+	Mixed content:
+
+		- iframe on info from player.vimeo.com ¹
+
+		- css, on annonsera, info from:
+
+			- ^ ²
+			- fonts.googleapis.com ²
+
+		- Images on annonsera, info from www.bloggse.se ²
+		- favicon on annonsera, info from publishme.se
+		- Bugs on annonsera, info from stats ³
+
+	¹ Rule disabled by default
+	² Secured by us
+	³ Unsecurable <= refused
+
+-->
+<ruleset name="Blogg.se (partial)">
+
+	<target host="blogg.se" />
+	<target host="*.blogg.se" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:annonsera|info)\.blogg\.se/+(?!favicon\.ico|static/)" />
+
+
+	<rule from="^http://((?:annonsera|faq|info|support|www)\.)?blogg\.se/"
+		to="https://$1blogg.se/" />
+
+</ruleset>

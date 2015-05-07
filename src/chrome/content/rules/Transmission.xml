@@ -1,20 +1,41 @@
+
 <!--
 	Nonfunctional subdomains:
 
-		- download		(404)
-		- download-origin
-		- (www.)		(redirects to http)
+		- (www.)? ¹
+		- download ¹
+		- download-origin ²
+
+	¹ Redirects to http
+	² Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- forum.transmissionbt.com
+		- trac.transmissionbt.com
 
 -->
-<ruleset name="Transmission (partial)">
+<ruleset name="Transmission BT.com (partial)">
 
-	<target host="*.transmissionbt.com" />
+	<!--target host="transmissionbt.com" /-->
+	<target host="forum.transmissionbt.com" />
+	<target host="trac.transmissionbt.com" />
+	<!--target host="www.transmissionbt.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?transmissionbt\.com/($|images/)" /-->
 
 
-	<securecookie host="^.*\.transmissionbt\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^trac\.transmissionbt\.com$" name="^(trac_form_token|trac_session)$" /-->
+
+	<securecookie host="^trac\.transmissionbt\.com$" name=".+" />
 
 
-	<rule from="^http://(forum|trac)\.transmissionbt\.com/"
-		to="https://$1.transmissionbt.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
