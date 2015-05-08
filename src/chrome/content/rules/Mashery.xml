@@ -9,28 +9,89 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)	(times out)
-		- blog		(ditto)
+		- blog		(Dropped)
+
+
+	^mashery.com: Refused
+
+
+	Partially covered hosts in *mashery.com:
+
+		- dev *
+		- developer *
+		- support *
+
+	* Some pages redirect to http
+
+
+	Fully covered hosts in *mashery.com:
+
+		- (www.)?		(^ → www)
+		- demo1
+		- content.developer	(→ s3.amazonaws.com)
+		- secure
+		- visit
+
+
+	Insecure cookies are set for these hosts:
+
+		- visit.mashery.com
 
 -->
-<ruleset name="Mashery (partial)">
+<ruleset name="Mashery.com (partial)">
 
-	<target host="*.mashery.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="demo1.mashery.com" />
+	<target host="dev.mashery.com" />
+	<target host="developer.mashery.com" />
+	<target host="secure.mashery.com" />
+	<target host="support.mashery.com" />
+	<target host="visit.mashery.com" />
+	<target host="www.mashery.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mashery.com" />
 	<target host="content.developer.mashery.com" />
 
+		<!--	At least the home page 301s to http.
 
-	<securecookie host="^secure\.mashery\.com$" name=".*" />
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:dev|developer|support)\.mashery\.com/(?!files/|public/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://dev.mashery.com/apis" />
+			<test url="http://developer.mashery.com/apis" />
+			<test url="http://support.mashery.com/GettingStarted" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dev.mashery.com/public/Mashery/styles/Iodocs/prettify.css" />
+			<test url="http://developer.mashery.com/files/developernetwork-theme1.79.css" />
+			<test url="http://developer.mashery.com/public/Mashery/styles/print-default.css" />
+			<test url="http://support.mashery.com/public/Mashery/images/masherysupport/local.gif" />
 
 
-	<!--	At least the home page 301s to http.
-				-->
-	<rule from="^http://developer\.mashery\.com/files/"
-		to="https://developer.mashery.com/files/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^visit\.mashery\.com$" name="^BIGipServer[\w-]+$" /-->
 
-	<rule from="^https?://content\.developer\.mashery\.com/"
+	<securecookie host="^(?:secure|visit)\.mashery\.com$" name=".*" />
+
+
+	<!--	Redirect keeps forward
+		slash, path, and args:
+					-->
+	<rule from="^http://mashery\.com/"
+		to="https://www.mashery.com/" />
+
+	<rule from="^http://content\.developer\.mashery\.com/"
 		to="https://s3.amazonaws.com/content.developer.mashery.com/" />
 
-	<rule from="^http://secure\.mashery\.com/"
-		to="https://secure.mashery.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

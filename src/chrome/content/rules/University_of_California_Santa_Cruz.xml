@@ -1,4 +1,7 @@
 <!--
+	University of California, Santa Cruz
+
+
 	CDN buckets:
 
 		- edge.live.getpantheon.com
@@ -14,6 +17,7 @@
 		- admissions *
 		- advising *
 		- bas-04	(prints default page; mismatched, CN: bas-01.ucsc.edu)
+		- cruzpay	(403)
 		- events *
 		- financialaid *
 		- its *
@@ -22,14 +26,16 @@
 		- news *
 		- opers1 *
 		- police *
+		- pps		(403)
+		- purchasing *
 		- reg *
 		- registrar *
 		- risk *
 		- sbs *
 		- seymourcenter		(shows keys.pbsci; mismatched, CN: keys.pbsci.ucsc.edu)
+		- shr *
 		- (www.)ssrc *
 		- ssrc.soe *
-		- static *
 		- studentservices *
 		- tobaccofree *
 
@@ -47,6 +53,7 @@
 		- physicalsecurity	(works, self-signed)
 		- soe			(refused)
 		- ugr			(mismatched, CN: *.soe.ucsc.edu)
+		- www2			(Data differ between http and https)
 
 
 	Fully covered subdomains:
@@ -55,30 +62,50 @@
 		- cruzid
 		- cancer2.cse
 		- genome-cancer.cse
+		- ecommons
 		- email		(→ mail.google.com)
+		- financial
 		- (www.)genome
 		- genome-cancer
 		- itrequest		(→ ucsc.service-now.com)
 		- its-proposals-dev
 		- my
+
 		- (www.)soe	(^ → www)
 		- cbse.soe
+		- classes.soe
+		- courses.soe
 		- cs.soe
+		- gsrce.soe
+		- intranet.soe
+		- support.soe
+		- users.soe
+
+		- static
 		- ugr.ue
 		- ugr		(→ ugr.eu)
 		- www1
 
+
+	Insecure cookies are set for these domains:
+
+		- ecommons
+
 -->
-<ruleset name="University of California, Santa Cruz (partial)">
+<ruleset name="UCSC.edu (partial)">
 
 	<target host="*.ucsc.edu" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ecommons\.ucsc\.edu$" name="^ROUTEID$" /-->
+
 	<!--securecookie host="^\.ucsc\.edu$" name="^(?:ais-prod-dmz-4-1610-PORTAL-PSJSESSIONID|SESS\w{32})$" /-->
-	<securecookie host="^(?:cruzid|(?:cancer2|genome-cancer)\.cse|www1)\.ucsc\.edu$" name=".+" />
+	<securecookie host="^(?:cruzid|(?:cancer2|genome-cancer)\.cse|ecommons|www1)\.ucsc\.edu$" name=".+" />
 
 
-	<rule from="^http://(clery-dev|cruzid|(?:cancer2|genome-cancer)\.cse|(?:www\.)?genome|genome-cancer|its-proposals-dev|my|(?:cbse|cs)\.soe|ugr\.ue|www1)\.ucsc\.edu/"
+	<rule from="^http://(clery-dev|cruzid|(?:cancer2|genome-cancer)\.cse|ecommons|financial|(?:www\.)?genome|genome-cancer|its-proposals-dev|my|(?:cbse|classes|courses|cs|gsrce|intranet|support|users)\.soe|static|ugr\.ue|www1)\.ucsc\.edu/"
 		to="https://$1.ucsc.edu/" />
 
 	<!--	Server drops path:

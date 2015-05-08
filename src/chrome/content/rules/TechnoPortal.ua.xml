@@ -1,0 +1,55 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://technoportal.ua/ => https://technoportal.ua/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Problematic subdomains:
+
+		- catalogue *
+		- i *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- technoportal.ua
+		- .technoportal.ua
+
+
+	Mixed content:
+
+		- css on ^ from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- ^ from $self ¹
+			- ^ from i ¹
+
+		- Ads/bugs on ^ from www.googleadservices.com ²
+
+	¹ Secured by us
+	² Rule disabled by default
+
+-->
+<ruleset name="TechnoPortal.ua (partial)" default_off='failed ruleset test'>
+
+	<target host="technoportal.ua" />
+	<target host="*.technoportal.ua" />
+		<!--
+			Differs from (www.)?
+						-->
+		<exclusion pattern="^http://i\.technoportal\.ua/+(?:$|\?)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^technoportal\.ua$" name="^FIRST_ENTER|(event|page|referer)$" /-->
+	<!--securecookie host="^\.technoportal\.ua$" name="^(PHPSESSID|TPFE_event|TPFE_page|TPFE_referer|cookiesAgree|test_set_cookie1|test_set_cookie2)$" /-->
+
+	<securecookie host="^technoportal\.ua$" name=".+" />
+	<securecookie host="^\.technoportal\.ua$" name="^(TPFE_(?:event|page|referer)|cookiesAgree)$" />
+
+
+	<rule from="^http://(?:i\.|(www\.))?technoportal\.ua/"
+		to="https://$1technoportal.ua/" />
+
+</ruleset>

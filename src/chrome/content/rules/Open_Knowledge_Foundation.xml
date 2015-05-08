@@ -1,44 +1,46 @@
 <!--
-	For rules causing false/broken MCB, see OKFn.org-falsemixed.xml.
+	Open Knowledge Foundation
 
 
-	Mixed content:
+	Nonfunctional subdomains:
 
-		- Scripts on ^ from $self *
+		- blog *
 
-		- css, on ^ from:
+	* WP Engine
 
-			- assets *
-			- cloud.github.com *
-			- code.jquery.com *
 
-		- Images, on ^ from:
+	www: Dropped
 
-			- $self *
-			- assets *
-			- farm\d.staticflickr.com *
-			- cloud.github.com *
 
-		- Web bugs, on ^ from:
+	Insecure cookies are set for these domains and hosts:
 
-			- netdna.bootstrapcdn.com *
-			- w.sharethis.com *
-
-	* Secured by us
+		- okfn.org
+		- .okfn.org
 
 -->
-<ruleset name="Open Knowledge Foundation (partial)" default_off="mismatched">
+<ruleset name="OKFn.org (partial)">
 
 	<target host="okfn.org" />
 	<target host="assets.okfn.org" />
+	<target host="pad.okfn.org" />
 	<target host="www.okfn.org" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?okfn\.org/(?!\?ver=\w+$|favicon\.ico|wp-content/|wp-includes/)" />
 
 
-	<rule from="^http://(assets\.|www\.)?okfn\.org/"
-		to="https://$1okfn.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^okfn\.org$" name="django_language$" /-->
+	<!--securecookie host="^\.okfn\.org$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.?okfn\.org$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://www\.okfn\.org/"
+		to="https://okfn.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

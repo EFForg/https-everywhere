@@ -1,0 +1,98 @@
+<!--
+	For other Vox Media coverage, see Vox.com.xml.
+
+
+	CDN buckets:
+
+		- d8wuu9msfgurd.cloudfront.net
+
+			- ea-cdn.voxmedia.com
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- pixelpunch ²
+
+	* Tumblr
+	² 500
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- ea-cdn ²
+		- jobs ¹
+		- status ³
+
+	¹ Refused
+	² Cloudfront
+	³ StatusPage
+
+
+	Fully covered hosts:
+
+		- (www.)?	(^ → www)
+		- ea-cdn	(→ d8wuu9msfgurd.cloudfront.net)
+		- fonts
+		- cdn.hymnal
+		- jobs		(→ www.voxmedia.com)
+		- product
+		- providence
+		- status	(→ voxmedia.statuspage.io)
+
+
+	Mixed content:
+
+		- css, on www from:
+
+			- ea-cdn *
+			- assets.sbnation.com *
+
+		- Images, on:
+
+			- www from ea-cdn.voxmedia.com *
+			- www from cdn\d.vox-cdn.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Vox Media.com (false MCB)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fonts.voxmedia.com" />
+	<target host="cdn.hymnal.voxmedia.com" />
+	<target host="product.voxmedia.com" />
+	<target host="providence.voxmedia.com" />
+	<target host="www.voxmedia.com" />
+
+	<!--	Complications:
+				-->
+	<target host="voxmedia.com" />
+	<target host="ea-cdn.voxmedia.com" />
+	<target host="jobs.voxmedia.com" />
+	<target host="status.voxmedia.com" />
+
+
+	<rule from="^http://voxmedia\.com/"
+		to="https://www.voxmedia.com/" />
+
+	<rule from="^http://ea-cdn\.voxmedia\.com/"
+		to="https://d8wuu9msfgurd.cloudfront.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://jobs\.voxmedia\.com/[^?]*"
+		to="https://www.voxmedia.com/careers" />
+
+		<test url="http://jobs.voxmedia.com//" />
+		<test url="http://jobs.voxmedia.com///" />
+
+	<rule from="^http://status\.voxmedia\.com/"
+		to="https://voxmedia.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

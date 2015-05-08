@@ -1,14 +1,37 @@
 <!--
+	George Washington University
+
+
 	Nonfunctional subdomains:
 
 		- (www.)campusadvisories	(302s to www.gwu.edu/staticfile/GW/Global/403.html)
 		- docs.law
 		- www.law
 
+
+	Partially covered subdomains:
+
+		- www.seas *
+
+	* Avoiding broken MCB
+
+
+	Mixed content:
+
+		- css on www.seas from $self *
+		- Images on www.seas from $self *
+		- favicon on www.seas from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="George Washington University (partial)">
+<ruleset name="GWU.edu (partial)">
 
 	<target host="*.gwu.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.seas\.gwu\.edu/+(?!~|favicon\.ico|sites/)" />
 
 
 	<securecookie host="^.*\.gwu\.edu$" name=".*" />
@@ -16,7 +39,7 @@
 
 	<!--	!www doesn't exist.
 					-->
-	<rule from="^http://(gwtoday|www)\.gwu\.edu/"
+	<rule from="^http://(gwtoday|www\.seas|www)\.gwu\.edu/"
 		to="https://$1.gwu.edu/" />
 
 </ruleset>

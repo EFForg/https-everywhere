@@ -1,4 +1,7 @@
 <!--
+	Pennsylvania State University
+
+
 	d39tyngrchxzcn.cloudfront.net
 		- Equivalent to www.worldcampus.psu.edu
 
@@ -50,16 +53,13 @@
 	³ Cert only matches www.e-education
 
 -->
-<ruleset name="Pennsylvania State University (partial)">
+<ruleset name="PSU.edu (partial)">
 
 	<target host="*.psu.edu" />
 		<exclusion pattern="^http://blogs\.psu\.edu/(?!mt4/)" />
 		<exclusion pattern="^http://www\.cse\.psu\.edu/~" />
-	<target host="www.*.psu.edu" />
-	<target host="citeseerx.ist.psu.edu" />
-	<target host="*.libraries.psu.edu" />
-	<target host="elionfacadv.oas.psu.edu" />
-	<target host="appnew.outreach.psu.edu" />
+	<!--	At least some paths redirect to http.	-->
+		<exclusion pattern="^http://citeseerx\.ist\.psu\.edu/(?!mcsutils/newAccount|myciteseer/login)" />
 
 
 	<!--	Not secured by server:
@@ -69,26 +69,19 @@
 	<securecookie host="^(?:cms|\.e-education|elion(?:facadv\.oas)?|secureapps\.libraries|appnew\.outreach|webaccess)\.psu\.edu$" name=".*" />
 
 
-	<rule from="^http://(alumni|blogs|cms|www\.cse|elion|(?:cat|ill)\.libraries|elionfacadv\.oas|(?:(?:appnew|www)\.)?outreach|portal|webaccess|webmail)\.psu\.edu/"
-		to="https://$1.psu.edu/" />
-
-	<!--	At least some paths redirect to http.	-->
-	<rule from="^http://citeseerx\.ist\.psu\.edu/m(csutils/newAccount|yciteseer/login)"
-		to="https://citeseerx.ist.psu.edu/m$1" />
-
-	<rule from="^http://(?:www\.)?e-education\.psu\.edu/"
-		to="https://www.e-education.psu.edu/" />
-
 	<!--	- Certs don't match !www.
 		- //libraries redirects to www.libraries
 					-->
-	<rule from="^https?://(?:www\.)?(libraries|worldcampus)\.psu\.edu/"
+	<rule from="^http://(?:www\.)?(e-education|libraries|worldcampus)\.psu\.edu/"
 		to="https://www.$1.psu.edu/" />
 
 	<!--	- Cert only matches secureapps
 		- apps redirects to secureapps
 					-->
-	<rule from="^https://(?:secure)?apps\.libraries\.psu\.edu/"
+	<rule from="^http://(?:secure)?apps\.libraries\.psu\.edu/"
 		to="https://secureapps.libraries.psu/" />
+
+	<rule from="^http://(alumni|blogs|cms|www\.cse|elion|citeseerx\.ist|(?:cat|ill)\.libraries|elionfacadv\.oas|(?:(?:appnew|www)\.)?outreach|portal|webaccess|webmail)\.psu\.edu/"
+		to="https://$1.psu.edu/" />
 
 </ruleset>

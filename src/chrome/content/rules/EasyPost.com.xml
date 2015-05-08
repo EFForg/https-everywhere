@@ -1,30 +1,38 @@
 <!--
+	CDN buckets:
+
+		- easypost-static.s3.amazonaws.com
+
+
 	Problematic subdomains:
 
 		- status *
 
-	* Works; mismatched, CN: *.statuspage.io
+	* StatusPage
 
 
-	Mixed content:
+	Fully covered hosts in *easypost.com:
 
-		- Images on status from static.tumblr.com *
-
-	* Secured by us
+		- (www.)?
+		- status	(→ easypost.statuspage.io)
 
 -->
-<ruleset name="EasyPost.com (partial)">
+<ruleset name="EasyPost.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="easypost.com" />
 	<target host="www.easypost.com" />
 
+	<!--	Complications:
+				-->
+	<target host="status.easypost.com" />
 
-	<!--	Secrured by server:
-					-->
-	<!--securecookie host="^www\.easypost\.com$" name="^_easy_post_session" /-->
 
+	<rule from="^http://status\.easypost\.com/"
+		to="https://easypost.statuspage.io/" />
 
-	<rule from="^http://(www\.)?easypost\.com/"
-		to="https://$1easypost.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

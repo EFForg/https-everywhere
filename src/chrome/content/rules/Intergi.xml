@@ -16,6 +16,7 @@
 
 		- (www.)gamezone.com *
 		- next.gamezone.com
+		- www.ads.intergi.com	(Shows  www.intergi.com)
 		- (www.)intergi.com	(redirects to http, mismatched, CN: app.intergi.com)
 
 	* Handshake fails
@@ -24,23 +25,36 @@
 	Problematic domains:
 
 		- download.gamezone.com *
-		- cdn.intergi.com *
+		- cdn.intergi.com ²
 
 	* Mismatched, CN: edgecastcdn.net
+	² Dropped
+
+
+	Insecure cookies are set for these domains:
+
+		- .intergi.com
 
 -->
-<ruleset name="Intergi (partial)">
+<ruleset name="Intergi.com (partial)">
 
-	<target host="*.intergi.com" />
-
-
-	<!--	Set by ads:
+	<!--	Direct rewrites:
 				-->
+	<target host="ads.intergi.com" />
+	<target host="app.intergi.com" />
+
+
+	<!--	Not secured by server:
+
+		(CfP: Set by ads)
+				-->
+	<!--securecookie host="^\.intergi\.com$" name="^CfP$" /-->
+
 	<securecookie host="^\.intergi\.com$" name="^CfP$" />
 	<securecookie host="^app\.intergi\.com$" name=".+" />
 
 
-	<rule from="^http://a(ds|pp)\.intergi\.com/"
-		to="https://a$1.intergi.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

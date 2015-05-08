@@ -5,6 +5,7 @@
 import glob
 import locale
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -16,9 +17,13 @@ from lxml import etree
 # This is important for deterministic builds.
 # https://trac.torproject.org/projects/tor/ticket/11630#comment:20
 # It's also helpful to ensure consistency for the lowercase check below.
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+locale.setlocale(locale.LC_ALL, 'C')
 
-conn = sqlite3.connect(os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite'))
+# Removing the file before we create it avoids some non-determinism.
+db_path = os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite')
+if os.path.isfile(db_path):
+    os.remove(db_path)
+conn = sqlite3.connect(db_path)
 c = conn.cursor()
 c.execute('''DROP TABLE IF EXISTS rulesets''')
 c.execute('''CREATE TABLE rulesets
@@ -47,7 +52,8 @@ filenames = sorted(glob.glob('src/chrome/content/rules/*'))
 counted_lowercase_names = Counter([name.lower() for name in filenames])
 most_common_entry = counted_lowercase_names.most_common(1)[0]
 if most_common_entry[1] > 1:
-    print("%s failed case-insensitivity testing." % (most_common_entry[0]))
+    dupe_filename = re.compile(re.escape(most_common_entry[0]), re.IGNORECASE)
+    print("%s failed case-insensitivity testing." % filter(dupe_filename.match, filenames))
     print("Rules exist with identical case-insensitive names, which breaks some filesystems.")
     sys.exit(1)
 

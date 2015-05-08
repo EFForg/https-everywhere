@@ -1,4 +1,11 @@
 <!--
+	Problematic domains:
+
+		- support.getadblock.com *
+
+	* Tender
+
+
 	For getadblock.com
 		Works:
 
@@ -12,6 +19,12 @@
 		Doesn't work:
 
 			- www
+
+
+	Insecure cookies are set for these domains:
+
+		- support.getadblock.com
+
 -->
 <ruleset name="AdBlock">
   <target host="getadblock.com" />
@@ -19,8 +32,18 @@
   <target host="chromeadblock.com" />
   <target host="*.chromeadblock.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^support\.getadblock\.com$" name="^(_tender_session|anon_token)$" /-->
+
+
   <rule from="^http://(www\.)?getadblock\.com/"
           to="https://$1getadblock.com/" />
+
+	<rule from="^http://support\.getadblock\.com/(?=favicon\.ico|help/theme\.css|pkg/|stylesheets/)"
+		to="https://help.tenderapp.com/" />
+
   <rule from="^http://(?:www\.)?chromeadblock\.com/"
           to="https://chromeadblock.com/" />
 </ruleset>

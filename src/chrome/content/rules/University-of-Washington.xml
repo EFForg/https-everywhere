@@ -6,8 +6,17 @@
 
 		- (www.)uwb.edu			(reset)
 		- psc.apl.washington.edu
+		- bio.cs.washington.edu 	("Unimplemented")
 		- oneswarm.cs.washington.edu
 		- uwmedicine.washington.edu	(reset)
+
+
+	Problematic domains:
+
+		- cs.washington.edu *
+		- lib.washington.edu *
+
+	* Cert only matches *.foo
 
 
 	Partially covered subdomains:
@@ -17,8 +26,15 @@
 
 	Fully covered subdomains:
 
+		- (www.)cs	(^ → www)
 		- homes.cs
+		- idl.cs
+		- norfolk.cs
+		- sampa.cs
 		- sharemenot.cs
+		- www.cs
+
+		- dub
 
 -->
 <ruleset name="University of Washington (partial)">
@@ -49,14 +65,16 @@
 		to="https://$1uw.edu/" />
 
 	<!--	^tacoma: Cert only valid for www.tacoma.uw.edu.	-->
-	<rule from="^https?://tacoma\.uw\.edu/"
+	<rule from="^http://tacoma\.uw\.edu/"
 		to="https://www.tacoma.uw.edu/" />
 
-	<rule from="^http://((?:courses|(?:homes|sharemenot)\.cs|depts|faculty|cloud\.ihme|digital\.lib|myuw|staff|www(?:\.lib)?)\.)?washington\.edu/"
+	<rule from="^http://((?:courses|(?:homes|idl|norfolk|sampa|sharemenot)\.cs|depts|dub|faculty|cloud\.ihme|digital\.lib|myuw|staff|www)\.)?washington\.edu/"
 		to="https://$1washington.edu/" />
 
-	<!--	^lib: Cert is only valid for *.lib	-->
-	<rule from="^https?://lib\.washington\.edu/"
-		to="https://www.lib.washington.edu/" />
+	<!--	Domains for which both !www and www exist,
+		but only www works without caveat:
+							-->
+	<rule from="^http://(?:www\.)?(cs|lib)\.washington\.edu/"
+		to="https://www.$1.washington.edu/" />
 
 </ruleset>

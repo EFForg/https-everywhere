@@ -1,11 +1,30 @@
-<ruleset name="Nasjonal Sikkerhetsmyndighet (NSM)">
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+		- blogg *
+
+	* Plaintext reply
+
+
+	Fully covered domains:
+
+		- nsm.stat.no
+
+		- [^/:@]+.nsm.stat.no: *
+
+			- www
+
+	* Except where excluded below
+
+-->
+<ruleset name="Nasjonal Sikkerhetsmyndighet (NSM) (partial)">
     <target host="nsm.stat.no" />
     <target host="*.nsm.stat.no" />
+		<exclusion pattern="^http://blogg?\.nsm\.stat\.no/" />
 
-    <securecookie host="^(.*\.)?nsm\.stat\.no$" name=".+" />
+    <securecookie host="^(?:.*\.)?nsm\.stat\.no$" name=".+" />
 
-    <rule from="^https?://nsm\.stat\.no/"
-        to="https://www.nsm.stat.no/" />
-    <rule from="^http://([^/:@]+)?\.nsm\.stat\.no/"
-        to="https://$1.nsm.stat.no/" />
+    <rule from="^http://([^/:@]+\.)?nsm\.stat\.no/"
+        to="https://$1nsm.stat.no/" />
 </ruleset>

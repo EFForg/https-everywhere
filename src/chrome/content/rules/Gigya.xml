@@ -1,4 +1,9 @@
 <!--
+	Other Gigya rulesets:
+
+		- Fw.to.xml
+
+
 	CDN buckets:
 
 		- cdns.gigya.com.edgekey.net
@@ -7,30 +12,143 @@
 
 	Nonfunctional subdomains:
 
-		- blog
+		- demo ¹
 		- developers	(at least some pages & files redirect to http, CN: *.mindtouch.us)
 		- info		(/ redirects to app-f.marketo.com, other paths 404; CN: *.marketo.com)
+
+	¹ Shows blog
+
+
+	Problematic hosts:
+
+		- ^ ¹
+		- blog ²
+
+	¹ Expired
+	² Mixed css
 
 
 	Problematic subdomains:
 
 		- cdn	(akamai)
 
+
+	Fully covered hosts:
+
+		- (www.)?	(^ → www)
+		- staging.blog
+		- cdn		(→ cdns.gigya.com)
+		- cdns
+		- console
+		- counters
+		- origin
+		- platform
+		- staging.www
+		- uploads.www
+
+
+	Insecure cookies are set for these hosts:
+
+		- staging.blog.gigya.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from $self *
+			- blog, staging.blog from fonts.googleapis.com *
+
+		- Images, on:
+
+			- blog from $self *
+			- blog, staging.blog from info.gigya.com *
+			- blog, staging.blog from uploads.www.gigya.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Gigya (partial)" platform="mixedcontent">
+<ruleset name="Gigya.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.gigya.com" />
+	<target host="staging.blog.gigya.com" />
+	<target host="cdns.gigya.com" />
+	<target host="console.gigya.com" />
+	<target host="counters.gigya.com" />
+	<target host="origin.gigya.com" />
+	<target host="platform.gigya.com" />
+	<target host="www.gigya.com" />
+	<target host="staging.www.gigya.com" />
+	<target host="uploads.www.gigya.com" />
+
+	<!--	Complications:
+				-->
 	<target host="gigya.com" />
-	<target host="*.gigya.com" />
-		<exclusion pattern="^http://(?:www\.)?gigya\.com/(?:careers/|company/?|contact-us/|media-coverage/|press-room/|privacy-board/|social-media-resources/)$" />
+	<target host="cdn.gigya.com" />
+	<target host="info.gigya.com" />
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://blog\.gigya\.com/+(?!wp-content/)" />
+
+			<test url="http://blog.gigya.com/customer-spotlight-hbr/" />
+			<test url="http://blog.gigya.com/sxswi-2015-recap-highlights-from-the-gigya-grill/" />
+			<test url="http://blog.gigya.com/the-4-levels-of-customer-understanding/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.gigya.com/wp-content/plugins/gigya-socialize-for-wordpress/features/share/gigya_share.css" />
+
+		<exclusion pattern="^http://info\.gigya\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.gigya.com/GigyaVideoOverviewForm.html" />
+			<test url="http://info.gigya.com/Identity.html" />
+			<test url="http://info.gigya.com/LIIdentity.html" />
+			<test url="http://info.gigya.com/Marketers-eCourse.html" />
+			<test url="http://info.gigya.com/guide-to-social-infrastructure.html" />
+			<test url="http://info.gigya.com/stop-using-the-wrong-data-guide.html" />
+			<test url="http://info.gigya.com/sxsw" />
+			<test url="http://blog.gigya.com/the-landscape-of-social-login-sharing-consumers-want-choice/" />
+			<test url="http://info.gigya.com/winning-with-gamification.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.gigya.com/rs/gigya/images/PeopleUsingDevices.jpg" />
 
 
-	<rule from="^http://((?:counters|origin|www)\.)?gigya\.com/"
-		to="https://$1gigya.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^staging\.blog\.gigya\.com$" name="^PHPSESSID$" /-->
 
-	<rule from="^https://(www\.)?gigya\.com/(careers/|company/?|contact-us/|media-coverage/|press-room/|privacy-board/|social-media-resources/)$"
-		to="http://$1gigya.com/$2" downgrade="1" />
+	<securecookie host="^staging\.blog\.gigya\.com$" name=".+" />
 
-	<rule from="^http://cdns?\.gigya\.com/"
+
+	<rule from="^http://gigya\.com/"
+		to="https://www.gigya.com/" />
+
+	<rule from="^http://cdn\.gigya\.com/"
 		to="https://cdns.gigya.com/" />
+
+	<!--	Redirect drops forward
+		slash and args:
+					-->
+	<rule from="^http://info\.gigya\.com/+(?:\?.*)?$"
+		to="https://www.gigya.com/" />
+
+			<test url="http://info.gigya.com/?f" />
+			<test url="http://info.gigya.com/?o" />
+			<test url="http://info.gigya.com/?b" />
+			<test url="http://info.gigya.com/?a" />
+			<test url="http://info.gigya.com/?r" />
+
+	<rule from="^http://info\.gigya\.com/"
+		to="https://na-sjf.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

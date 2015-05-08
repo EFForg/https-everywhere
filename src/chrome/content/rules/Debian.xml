@@ -1,67 +1,104 @@
+
 <!--
-	For problematic rules, see Debian-self-signed.xml.
+	For problematic rules, see Debian.org-problematic.xml.
 
 
 	Other Debian rulesets:
 
 		- DebConf.org.xml
+		- Debian.net.xml
 
 
 	Nonfunctional domains:
 
-		- buildd-clang.debian.net ¹
-		- codesearch.debian.net ¹
-		- debile.debian.net ¹
-		- meetings-archive.debian.net ¹
+		- in *debian.org:
 
-		- debian.org subdomains:
+			- arch ¹
+			- backports ²
+			- ca ³
+			- clang ⁴
+			- openstack.bm ⁵
+			- ftp.de ⁶
+			- deb ⁶
+			- incoming ⁷
+			- manpages ⁶
+			- popcon ⁶
+			- security ⁶
+			- security-team ²
+			- sip-ws ⁸
+			- snapshot ⁶
+			- ftp.us ⁶
 
-			- ca		(shows db; mismatched, CN: db.debian.org)
-			- ftp.de ¹
-			- incoming	(shows ftp-master; mismatched, CN: ftp-master.debian.org)
-			- manpages ¹
-			- people	(reset; people.debian.org/~joerg/ is displayed
-					after fetching gpg.ganneff.de over http...)
-			- popcon ¹
-			- search	(shows www; mismatched, CN: debian.org)
-			- snapshot ¹
+		- buildd.debian-ports.org ⁹
 
-	¹ Refused
-
-
-	Problematic domains:
-
-		- mentors.debian.net ¹
-		- debian.org subdomains:
-
-			- security ²
-
-	¹ Works, self-signed
-	² Refused
-
-
-	Partially covered domains:
-
-		- cdimage.debian.org	(→ www)
-		- security.debian.org ¹ (→ www)
-
-	¹ At least some paths 404
+	¹ Shows default page
+	² Shows www
+	³ Shows db; mismatched, CN: db.debian.org
+	⁴ Shows webmail.ecranbleu.org
+	⁵ Plaintext reply
+	⁶ Refused
+	⁷ Shows ftp-master; mismatched, CN: ftp-master.debian.org
+	⁸ Reset
+	⁹ Dropped
 
 
-	Fully covered debian.org subdomains:
+	Problematic hosts in *debian.org:
 
-		- (www.)
+		- metadata.ftp-master ¹
+		- puppet-dashboard ²
+		- security-master ²
+
+	¹ Fastly
+	² Self-signed
+
+
+	Partially covered hosts in *debian.org:
+
+		- security *	(→ www)
+
+	* At least some paths 404
+
+
+	Fully covered hosts in *debian.org:
+
+		- (www.)?
+		- alioth
+		- *.alioth
+		- anonscm
+		- bits
 		- bugs
+		- bugs-master
 		- buildd
+		- bzr
+		- contributors
+		- cvs
+		- darcs
 		- db
+		- dsa
 		- ftp-master
+		- git
+		- hg
+		- lintian
 		- lists
+		- munin
 		- nagios
 		- nm
 		- packages
+		- people
+		- piuparts
+		- qa
+		- packages.qa
+		- release
+		- rt
+		- rtc
+		- search
+		- security-tracker
+		- sso
+		- svn
 		- tracker
+		- udd
+		- vote
 		- wiki
-                - ...
 
 
 	altnames that don't exist:
@@ -74,6 +111,8 @@
 		- www.nagios.debian.org
 		- www.nm.debian.org
 		- www.packages.debian.org
+		- scm.debian.org
+		- www.security-tracker.debian.org
 		- www.udd.debian.org
 		- www.wiki.debian.org
 
@@ -85,20 +124,81 @@
 -->
 <ruleset name="Debian (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="debian.org" />
-	<target host="*.debian.org" />
-	<target host="*.debian.net" />
+	<target host="anonscm.debian.org" />
+	<target host="alioth.debian.org" />
+	<target host="*.alioth.debian.org" />
+	<!--target host="arch.debian.org" /-->
+	<target host="bits.debian.org" />
+	<target host="bugs.debian.org" />
+	<target host="bugs-master.debian.org" />
+	<target host="buildd.debian.org" />
+	<target host="bzr.debian.org" />
+	<target host="contributors.debian.org" />
+	<target host="cvs.debian.org" />
+	<target host="darcs.debian.org" />
+	<target host="db.debian.org" />
+	<target host="dsa.debian.org" />
+	<target host="ftp-master.debian.org" />
+	<target host="git.debian.org" />
+	<target host="hg.debian.org" />
+	<target host="lintian.debian.org" />
+	<target host="lists.debian.org" />
+	<target host="munin.debian.org" />
+	<target host="nagios.debian.org" />
+	<target host="nm.debian.org" />
+	<!--target host="openstack.bm.debian.org" /-->
+	<target host="packages.debian.org" />
+	<target host="people.debian.org" />
+	<target host="piuparts.debian.org" />
+	<!--target host="puppet-dashboard.debian.org" /-->
+	<target host="qa.debian.org" />
+	<target host="packages.qa.debian.org" />
+	<target host="release.debian.org" />
+	<target host="rt.debian.org" />
+	<target host="rtc.debian.org" />
+	<target host="search.debian.org" />
+	<!--target host="security-master.debian.org" /-->
+	<target host="security-tracker.debian.org" />
+	<!--target host="sip-ws.debian.org" /-->
+	<target host="sso.debian.org" />
+	<target host="svn.debian.org" />
+	<target host="tracker.debian.org" />
+	<target host="udd.debian.org" />
+	<target host="vote.debian.org" />
+	<target host="wiki.debian.org" />
+	<target host="www.debian.org" />
+
+	<!--target host="buildd.debian-ports.org" /-->
+
+	<!--	Complications:
+				-->
+	<target host="security.debian.org" />
+
+		<exclusion pattern="^http://security\.debian\.org/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://security.debian.org/debian-security/" />
+			<test url="http://security.debian.org/dists/" />
+			<test url="http://security.debian.org/dists/stable/updates/" />
+			<test url="http://security.debian.org/dists/stable/updates/Release" />
+			<test url="http://security.debian.org/pool/updates/main/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://security.debian.org/?" />
 
 
 	<securecookie host="^nm\.debian\.org$" name=".+" />
 
 
-	<rule from="^http://((?:anonscm|(?:[^/:@]+\.)?alioth|arch|bugs(?:-master)?|buildd|bzr|contributors|cvs|darcs|db|dsa|ftp-master|git|hg|lintian|lists|munin|nagios|nm|openstack\.bm|packages|piuparts|puppet-dashboard|(?:packages\.)?qa|release|rt|rtc|security-(?:tracker|master)|sip-ws|sso|svn|tracker|udd|vote|wiki|www)\.)?debian\.org/"
-		to="https://$1debian.org/" />
-
-	<rule from="^http://security\.debian\.org/+(?=$|\?)"
+	<rule from="^http://security\.debian\.org/+"
 		to="https://www.debian.org/security/" />
 
-	<rule from="^http://(france|paste|screenshots)\.debian\.net/"
-		to="https://$1.debian.net/" />
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,0 +1,41 @@
+<!--
+	(www.)?datadirect.com: Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- blogs.datadirect.com
+
+-->
+<ruleset name="DataDirect.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.datadirect.com" />
+
+	<!--	Complications:
+				-->
+	<target host="datadirect.com" />
+	<target host="www.datadirect.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blogs\.datadirect\.com$" name="^(PHPSESSID|wfvt_\d{10})$" /-->
+
+	<securecookie host="^blogs\.datadirect\.com$" name=".+" />
+
+
+	<!--	Redirect drops path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?datadirect\.com/[^?]*"
+		to="https://www.progress.com/products/datadirect" />
+
+		<test url="http://datadirect.com/?" />
+		<test url="http://datadirect.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

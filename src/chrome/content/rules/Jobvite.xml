@@ -10,10 +10,38 @@
 	³ Marketo
 
 
+	Partially covered subdomains:
+
+		- hire *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- careers
+		- demo
+		- hire-stg
+		- recruiting
+		- search
+		- source
+		- source-stg
+		- www
+		- www-stg
+
+
 	These altnames don't exist:
 
 		- jvi-exc01.corp.jobvite.com
 		- www.owa.jobvite-inc.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- hire
+		- hire-stg
+		- source
 
 -->
 <ruleset name="Jobvite (partial)">
@@ -24,10 +52,23 @@
 			Redirect to http:
 						-->
 		<!--exclusion pattern="^http://www\.jobvite\.com/($|\?sccss=1&amp;ver=3\.9\.2|contact-us/|support/)" /-->
+		<!--exclusion pattern="^http://hire\.jobvite\.com/CompanyJobs/Careers\.aspx" /-->
 		<!--
 			Exceptions:
 					-->
+		<!--exclusion pattern="^http://hire\.jobvite\.com/(?!CompanyJobs/careers_1\.css|JV\.CareerSiteModalDialog\.css|images2/powered-by-jobvite\.gif)" /-->
+
 		<exclusion pattern="^http://www\.jobvite\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hire.jobvite.com/CompanyJobs/Careers.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hire.jobvite.com/CompanyJobs/careers_1.css" />
+			<test url="http://hire.jobvite.com/JV.CareerSiteModalDialog.css" />
+			<test url="http://hire.jobvite.com/images2/powered-by-jobvite.gif" />
 
 
 	<!--	Not secured by server:
@@ -35,6 +76,7 @@
 	<!--securecookie host="^\.jobvite\.com$" name="^server$" /-->
 	<!--securecookie host="^hire\.jobvite\.com$" name="^(ASP\.NET_SessionId|AWSELB|guestidc)$" /-->
 	<!--securecookie host="^hire-stg.jobvite.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^source\.jobvite\.com$" name="^(AWSELB|JSESSIONID)$" /-->
 
 	<securecookie host="^(?:.+\.)?jobvite\.com$" name=".*" />
 

@@ -1,90 +1,33 @@
 <!--
-	For rules causing mixed content, see Forbes_Magazine-mixed.xml.
+Disabled by https-everywhere-checker because:
+Fetch error: http://forbesmagazine.com/ => https://www.forbesmagazine.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+-->
+ <!--
+	For other Forbes coverage, see Forbes.com.xml.
 
 
-	CDN buckets:
-
-		- blogs-images.forbes.com.edgesuite.net
-
-			- a1015.g1.akamai.net
-
-		- images.forbes.com.edgesuite.net
-		- i.forbesimg.com.edgesuite.net
-
-		- b-i.forbesimg.com.edgesuite.net
-
-			- a1621.g1.akamai.net
+	^: cert only matches www
 
 
-	Nonfunctional domains:
+	Fully covered subdomains:
 
-		- ^ ¹
-		- images.forbes.com		(Akamai; 503)
-		- video.forbes.com
-		- www.forbes.com ⁴
-		- i.forbesimg.com		(Akamai; 503)
-
-	¹ Shows another domain
-	⁴ Redirects to http
-
-
-	Problematic domains:
-
-		- blogs.forbes.com		(mixed css from i.forbesimg.com)
-		- blogs-images.forbes.com	(works, akamai)
-		- newsletters.forbes.com	(works, cert only matches www.newsletters)
-		- b-i.forbesimg.com	(works, akamai)
-
-
-	Partially covered domains:
-
-		- (www.)newsletters.forbes.com	(some pages redirect to http)
-
-
-	Fully covered domains:
-
-		- blogs-images.forbes.com
-		- e-subscriptions.forbes.com
-		- b-i.forbesimg.com
-
-
-	Mixed content:
-
-		- css on blogs.forbes.com from i.forbesimg.com
-		- images on blogs.forbes.com from images.forbes.com
+		- (www.)?	(^ → www)
+		- subs
 
 -->
-<ruleset name="Forbes Magazine">
+<ruleset name="Forbes Magazine.com" default_off='failed ruleset test'>
 
-	<target host="*.forbes.com" />
-	<target host="b-i.forbesimg.com" />
 	<target host="forbesmagazine.com" />
 	<target host="*.forbesmagazine.com" />
-	<target host="*.www.forbesmagazine.com" />
 
 
-	<securecookie host="^www\.newsletters\.forbes\.com$" name="^fc\w+$" />
-	<securecookie host="^.+\.forbesmagazine\.com$" name=".+" />
+	<securecookie host=".+\.forbesmagazine\.com$" name=".+" />
 
-
-	<rule from="^http://blogs-images\.forbes\.com/"
-		to="https://a248.e.akamai.net/f/1015/2073/5m/blogs-images.forbes.com/" />
-
-	<rule from="^http://(e-subscriptions|secureads)\.forbes\.com/"
-		to="https://$1.forbes.com/" />
-
-	<rule from="^http://(?:www\.)?newsletters\.forbes\.com/(DRHM/|favicon\.ico|store\?Action=(?:AddItemToRequisition|DisplayPage)(?:$|[?/]))"
-		to="https://www.newsletters.forbes.com/$1" />
-
-	<rule from="^http://b-i\.forbesimg\.com/"
-		to="https://a248.e.akamai.net/f/1621/3914/8d/b-i.forbesimg.com/" />
-
-	<!--	Cert only matches www.
-					-->
-	<rule from="^https?://(?:www\.)?forbesmagazine\.com/"
-		to="https://www.forbesmagazine.com/" />
 
 	<rule from="^http://subs\.forbesmagazine\.com/"
 		to="https://subs.forbesmagazine.com/" />
+
+	<rule from="^http://(?:www\.)?forbesmagazine\.com/"
+		to="https://www.forbesmagazine.com/" />
 
 </ruleset>

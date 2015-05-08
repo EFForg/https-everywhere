@@ -1,19 +1,21 @@
+
 <!--
 	Nonfunctional subdomains:
 
 		- anoncvs ¹
 		- distfiles ²
+		- forums-web1 ³
 		- mirrorstats ¹
-		- sources ¹
 		- viewcvstest ¹
 
 	¹ Times out
 	² Support varies between mirrors resolved to
+	³ Shows bugs
 
 
 	Fully covered subdomains:
 
-		- (www.)
+		- (www.)?
 		- ads
 		- archives
 		- blogs
@@ -27,8 +29,9 @@
 		- foundation
 		- forums
 		- forums-lb
-		- forums-web[12]
+		- forums-web2
 		- games
+		- get
 		- infra-status
 		- overlays
 		- git.overlays
@@ -39,20 +42,19 @@
 		- qa-reports
 		- security
 		- sidebar
+		- sources
 		- store
 		- wiki
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these hosts:
 
-		- blogs
-		- bugs
-		- .forums
-		- overlays
-		- wiki
+		- bugs.gentoo.org
 
 
 	Mixed content:
+
+		- Images on planet from various domains
 
 		- Ads/bugs, on archive from:
 
@@ -62,11 +64,50 @@
 	* Secured by us
 
 -->
-<ruleset name="Gentoo (partial) ">
+<ruleset name="Gentoo.org (partial)">
 
 	<target host="gentoo.org" />
 	<target host="*.gentoo.org" />
-		<exclusion pattern="^http://(?:anoncvs|distfiles|mirrorstats|sources|viewcvstest)\." />
+		<exclusion pattern="^http://(?:anoncvs|distfiles|forums-web1|mirrorstats|viewcvstest)\.gentoo\.org/" />
+
+			<test url="http://anoncvs.gentoo.org/" />
+			<test url="http://distfiles.gentoo.org/" />
+			<test url="http://forums-web1.gentoo.org/" />
+			<test url="http://mirrorstats.gentoo.org/" />
+			<test url="http://viewcvstest.gentoo.org/" />
+
+		<test url="http://ads.gentoo.org/" />
+		<test url="http://archives.gentoo.org/" />
+		<test url="http://blogs.gentoo.org/" />
+		<test url="http://bouncer.gentoo.org/" />
+		<test url="http://bugs.gentoo.org/" />
+		<test url="http://council.gentoo.org/" />
+		<test url="http://council-webapp.gentoo.org/" />
+		<test url="http://dev.gentoo.org/" />
+		<test url="http://devmanual.gentoo.org/" />
+		<test url="http://foundation.gentoo.org/" />
+		<test url="http://forums.gentoo.org/" />
+		<test url="http://forums-lb.gentoo.org/" />
+		<test url="http://forums-web2.gentoo.org/" />
+		<test url="http://games.gentoo.org/" />
+		<test url="http://get.gentoo.org/" />
+		<test url="http://infra-status.gentoo.org/" />
+		<!--
+			Overlays are currently down:
+							-->
+		<!--test url="http://overlays.gentoo.org/" /-->
+		<!--test url="http://git.overlays.gentoo.org/" /-->
+		<!--test url="http://svn.gentoo.org/" /-->
+		<test url="http://packages.gentoo.org/" />
+		<test url="http://piwik.gentoo.org/" />
+		<test url="http://planet.gentoo.org/" />
+		<test url="http://qa-reports.gentoo.org/" />
+		<test url="http://security.gentoo.org/" />
+		<test url="http://sidebar.gentoo.org/" />
+		<test url="http://sources.gentoo.org/" />
+		<test url="http://store.gentoo.org/" />
+		<test url="http://wiki.gentoo.org/" />
+		<test url="http://www.gentoo.org/" />
 
 
 	<!--	Not secured by server:
@@ -76,7 +117,7 @@
 	<securecookie host=".*\.gentoo\.org$" name=".+" />
 
 
-	<rule from="^http://([\w.-]+\.)?gentoo\.org/"
-		to="https://$1gentoo.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

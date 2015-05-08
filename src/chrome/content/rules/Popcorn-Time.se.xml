@@ -1,0 +1,66 @@
+<!--
+	Fully covered hosts in *popcorn-time.se:
+
+		- (www.)?
+		- forum
+
+
+	Insecure cookies are set for these domains:
+
+		- .popcorn-time.se
+		- .forum.popcorn-time.se
+
+
+	Mixed content:
+
+		- css on blog from $self *
+
+		- Images, on:
+
+			- blog from $self *
+			- blog from ^ *
+
+		- Bug on ^ from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Popcorn-Time.se (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="popcorn-time.se" />
+	<target host="blog.popcorn-time.se" />
+	<target host="forum.popcorn-time.se" />
+	<target host="www.popcorn-time.se" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.popcorn-time\.se/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.popcorn-time.se/2015/03/" />
+			<test url="http://blog.popcorn-time.se/category/uncategorized/" />
+			<test url="http://blog.popcorn-time.se/ios/" />
+			<test url="http://blog.popcorn-time.se/page/2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.popcorn-time.se/favicon.ico" />
+			<test url="http://blog.popcorn-time.se/wp-content/themes/big-city/style.css" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.popcorn-time\.se$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^\.forum\.popcorn-time\.se$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+
+	<securecookie host="^\.popcorn-time\.se$" name="^__cfduid$" />
+	<securecookie host="^\.forum\.popcorn-time\.se$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

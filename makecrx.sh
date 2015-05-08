@@ -18,6 +18,7 @@
 # "dummy-chromium.pem" private key for you to sign your own local releases,
 # but these .crx files won't detect and upgrade to official HTTPS Everywhere
 # releases signed by EFF :/.  We should find a more elegant arrangement.
+RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 if [ -n "$1" ]; then
   if [ "$1" = today ] ; then
@@ -52,18 +53,7 @@ die() {
 }
 
 if [ "$1" != "--fast" ] ; then
-  if [ -f utils/trivial-validate.py ]; then
-    VALIDATE="python2.7 ./utils/trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -f trivial-validate.py ] ; then
-    VALIDATE="python2.7 trivial-validate.py --ignoredups google --ignoredups facebook"
-  elif [ -x utils/trivial-validate ] ; then
-    # This case probably never happens
-    VALIDATE=./utils/trivial-validate
-  else
-    VALIDATE=./trivial-validate
-  fi
-
-  if $VALIDATE src/chrome/content/rules >&2
+  if python2.7 ./utils/trivial-validate.py --quiet --db $RULESETS_SQLITE >&2
   then
     echo Validation of included rulesets completed. >&2
     echo >&2

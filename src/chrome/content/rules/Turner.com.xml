@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://turner.com/ => https://turner.com/: (7, 'Failed to connect to turner.com port 443: Connection timed out')
 	CDN buckets:
 
 		- s.cdn.turner.com.edgekey.net
@@ -25,24 +27,29 @@
 		- z.cdn		(503, akamai)
 
 
+	Partially covered subdomains:
+
+		- i *
+		- i1 *
+		- s *
+		- z *
+
+	* CNN video streaming-related exclusions
+
+
 	Fully covered subdomains:
 
 		- (www.)
 
-		- cdn subdomains:
-
-			- i *
-			- i1 *
-			- s
-			- z *
-
-	* (→ s.cdn)
-
 -->
-<ruleset name="Turner.com (partial)">
+<ruleset name="Turner.com (partial)" default_off='failed ruleset test'>
 
 	<target host="turner.com" />
 	<target host="*.turner.com" />
+		<!--
+			Attempt at fixing CNN video streaming:
+								-->
+		<exclusion pattern="^http://(?:i\d?|s|z)\.cdn\.turner\.com/.*(?:crossdomain\.xml|\.swf)(?:$|\?)" />
 
 
 	<rule from="^http://(www\.)?turner\.com/"

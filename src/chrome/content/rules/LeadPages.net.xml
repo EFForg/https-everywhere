@@ -1,0 +1,40 @@
+<!--
+	^: cert only matches *.leadpages.net
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- blog
+		- lp
+		- marketplace
+		- my
+		- podcast
+		- support
+
+
+	Insecure cookies are set for these domains:
+
+		- my
+
+-->
+<ruleset name="LeadPages.net">
+
+	<target host="leadpages.net" />
+	<target host="*.leadpages.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.leadpages\.net$" name="^(PV\.Split\.\d+\.\d+|-[\da-f]+|lb\d+)$" /-->
+
+	<securecookie host="^my\.leadpages\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?leadpages\.net/"
+		to="https://www.leadpages.net/" />
+
+	<rule from="^http://(blog|lp|marketplace|my|podcast|support)\.leadpages\.net/"
+		to="https://$1.leadpages.net/" />
+
+</ruleset>

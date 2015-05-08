@@ -8,17 +8,24 @@
 
 	Fully covered subdomains:
 
-		- ^
+		- (www.)?	(→ geti2p.net)
 		- docs
 		- forum
 		- trac
-		- www
 
 -->
-<ruleset name="I2P (partial)">
+<ruleset name="I2P2.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="docs.i2p2.de" />
+	<target host="forum.i2p2.de" />
+	<target host="trac.i2p2.de" />
+
+	<!--	Complications:
+				-->
 	<target host="i2p2.de" />
-	<target host="*.i2p2.de" />
+	<target host="www.i2p2.de" />
 
 
 	<!--	Not secured by server:
@@ -28,7 +35,15 @@
 	<securecookie host="^trac\.i2p2\.de$" name=".+" />
 
 
-	<rule from="^http://((?:docs|forum|trac|www)\.)?i2p2\.de/"
-		to="https://$1i2p2.de/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?i2p2\.de/+"
+		to="https://geti2p.net/" />
+
+		<test url="http://i2p2.de//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

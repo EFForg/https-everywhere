@@ -10,31 +10,46 @@
 
 	Nonfunctional subdomains:
 
-		- articles	(403; CN: ssl2?.cdngc.net)
-		- jobs		(CN: *.jobamatic.com)
+		- articles ¹
+		- jobs ²
 
-
-	Problematic subdomains:
-
-		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+	¹ 403; CN: ssl2?.cdngc.net
+	² CN: *.jobamatic.com
 
 
 	Partially covered subdomains:
 
-		- au.businessinsider.com	(some pages redirect to http)
+		- au *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- insider
+		- static
+		- static\d
+		- static-ssl
+
+		- static\d.uk:
+
+			- [0-6]
 
 -->
-<ruleset name="BuisnessInsider (partial)">
+<ruleset name="BusinessInsider.com (partial)">
 
 	<target host="businessinsider.com" />
 	<target host="*.businessinsider.com" />
 		<!--
 			Many pages redirect to http.
 							-->
-	        <exclusion pattern="^http://(?:www\.)?businessinsider\.com/(?!account|assets/|login|register)" />
+		<!--exclusion pattern="^http://uk\.businessinsider\.com/[\w-]+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+	        <exclusion pattern="^http://(?:www\.)?businessinsider\.com/(?!account|assets/|favicon\.ico|login|register)" />
 		<exclusion pattern="^http://au\.businessinsider\.com/(?!image/)" />
 		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
-		<exclusion pattern="^http://static\d?\.businessinsider\.com/image/" />
 
 
 	<!--	Tracking cookie set by oascentral:
@@ -43,24 +58,12 @@
 	<securecookie host="^oascentral\.businessinsider\.com$" name=".+" />
 
 
-        <rule from="^http://(au\.|www\.)?businessinsider\.com/"
-		to="https://$1businessinsider.com/" />
-
         <!--    See Simply-Hired-clients.xml for problematic jobs rules.
 									-->
         <rule from="^http://jobs\.businessinsider\.com/c/"
                 to="https://businessinsider.jobamatic.com/c/" />
 
-	<rule from="^http://oascentral\.businessinsider\.com/"
-		to="https://oascentral.businessinsider.com/" />
-
-	<!--	- static[1-9]? are identical
-		- static0 doesn't exist
-		- Cert: gp1.wac.edgecastcdn.net
-		- 404
-		- image/ redirects back to static
-						-->
-	<rule from="^http://static\d?\.businessinsider\.com/"
-		to="https://www.businessinsider.com/" />
+        <rule from="^http://((?:au|insider|oascentral|static\d?|static-ssl|static\d\.uk|www)\.)?businessinsider\.com/"
+		to="https://$1businessinsider.com/" />
 
 </ruleset>

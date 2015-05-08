@@ -1,18 +1,39 @@
 <!--
-	Nonfunctional subdomains:
+	For rules causing false/broken MCB, see DownThemAll.net-falsemixed.xml.
 
-		- (www.)
+
+	Problematic subdomains:
+
+		- www *
+
+	* Mixed css, Tor users blocked by CloudFlare settings
+
+
+	Mixed content:
+
+		- Flash on www from $self
+		- css on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="DownThemAll (partial)">
+<ruleset name="DownThemAll.net (partial)">
 
-	<target host="*.downthemall.net"/>
+	<target host="downthemall.net"/>
+	<target host="about.downthemall.net"/>
+	<target host="bugs.downthemall.net"/>
+	<target host="code.downthemall.net"/>
+	<target host="www.downthemall.net"/>
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.downthemall\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
 
 	<securecookie host="^bugs\.downthemall\.net$" name=".*"/>
 
 
-	<rule from="^http://(about|bugs|code)\.downthemall\.net/"
-		to="https://$1.downthemall.net/"/>
+	<rule from="^http://((?:about|bugs|code|www)\.)?downthemall\.net/"
+		to="https://$1downthemall.net/"/>
 
 </ruleset>

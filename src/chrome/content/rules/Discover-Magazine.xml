@@ -8,26 +8,46 @@
 
 	Nonfunctional subdomains
 
-		- (www.)
+		- (www.)?
 		- subscribe
 
+
+	Fully covered subdomains:
+
+		- blogs
+		- cdn.media	(→ d2lcm6dnbncm78.cloudfront.net)
+		- secure
+		- subscribe	(→ secure)
+
+
+	Mixed content:
+
+		- css on blogs from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- blogs from $self ¹
+			- www.researchblogging.com ²
+
+	¹ Secured by us
+	² Not secured by us <= expired & self-signed
+
 -->
-<ruleset name="Discover Magazine (partial)">
+<ruleset name="Discover Magazine.com (partial)">
 
 	<target host="*.discovermagazine.com" />
-	<target host="cdn.media.discovermagazine.com" />
 
 
 	<securecookie host="^(?:blogs|secure)\.discovermagazine\.com$" name=".+" />
 
 
-	<rule from="^http://(blogs|secure)\.discovermagazine\.com/"
-		to="https://$1.discovermagazine.com/" />
-
-	<rule from="^https?://cdn\.media\.discovermagazine\.com/"
+	<rule from="^http://cdn\.media\.discovermagazine\.com/"
 		to="https://d2lcm6dnbncm78.cloudfront.net/" />
 
-	<rule from="^https?://subscribe\.discovermagazine\.com/(?:digital/|\?.*)?"
+	<rule from="^http://subscribe\.discovermagazine\.com/(?:digital/|\?.*)?"
 		to="https://secure.discovermagazine.com/pubs/AG/DSD/DSDDCR_Zinio_Subscription-FreeGift-update2.jsp?cds_page_id=122337&amp;cds_mag_code=DSD&amp;cds_response_key=IF28R1" />
+
+	<rule from="^http://(blogs|secure)\.discovermagazine\.com/"
+		to="https://$1.discovermagazine.com/" />
 
 </ruleset>

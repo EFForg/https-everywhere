@@ -8,25 +8,44 @@
 		- cdn2.editmysite.com.cdngc.net
 
 
-	Nonfunctional domains:
+	Nonfunctional subdomains:
 
-		- editmysite.com subdomains:
-
-			- (www.) *
-			- cdn[12]	(403; mismatched, CN: ssl2.cdngc.net)
-			- preview *
-			- static *
+		- preview *
+		- static *
 
 	* Times out
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- www ²
+
+	¹ Shows weebly.com
+	² Mixed css from cdn[12]
+
+
+	Mixed content:
+
+		- css on www from cdn[12] *
+
+	* Secured by us
 
 -->
 <ruleset name="editmysite.com (partial)">
 
-	<target host="cdn1.editmysite.com" />
-	<target host="cdn2.editmysite.com" />
+	<target host="editmysite.com" />
+	<target host="*.editmysite.com" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?editmysite\.com/+(?!(?:developer/none|favicon)\.ico)" />
 
 
-	<rule from="^https?://cdn\d\.editmysite\.com/(editor/(?:font|image|librarie)s/|images/(?:404background\.jpg|404_textbox\.png))"
-		to="https://www.weebly.com/$1" />
+	<rule from="^http://(?:www\.)?editmysite\.com/"
+		to="https://www.editmysite.com/" />
+
+	<rule from="^http://cdn(1|2)\.editmysite\.com/"
+		to="https://cdn$1.editmysite.com/" />
 
 </ruleset>

@@ -109,7 +109,11 @@ RuleSet.prototype = {
     for (i = 0; i < this.rules.length; ++i) {
       // This is just for displaying inactive rules
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
-      if (returl != urispec) return returl;
+      if (returl != urispec) {
+        // we rewrote the uri
+        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.xmlName + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
+        return returl;
+      }
     }
 
     return null;
@@ -493,7 +497,7 @@ const HTTPSRules = {
                               // Why does JS have no tuples, again?
     var blob = {}; blob.newuri = null;
     if (!alist) this.log(DBUG, "No applicable list rewriting " + input_uri.spec);
-    this.log(NOTE, "Processing " + input_uri.spec);
+    this.log(DBUG, "Processing " + input_uri.spec);
 
     var uri = this.sanitiseURI(input_uri);
 
@@ -515,8 +519,6 @@ const HTTPSRules = {
       } 
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
-        // we rewrote the uri
-        this.log(DBUG, "Rewrote "+input_uri.spec);
         if (alist) {
           if (uri.spec in https_everywhere_blacklist) 
             alist.breaking_rule(rs[i]);
@@ -603,12 +605,10 @@ const HTTPSRules = {
   // flow? Perhaps we can preload all targets from the DB into memory at startup
   // so we only hit the DB when we know there is something to be had.
   loadRulesetById: function(ruleset_id) {
-    this.log(DBUG, "Querying DB for ruleset id " + ruleset_id);
     this.queryForRuleset.params.id = ruleset_id;
 
     try {
       if (this.queryForRuleset.executeStep()) {
-        this.log(INFO, "Found ruleset in DB for id " + ruleset_id);
         RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
       } else {
         this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);
@@ -635,13 +635,20 @@ const HTTPSRules = {
         }
       }
     } else {
-      this.log(INFO, "For target " + target + ", found no ids in DB");
+      this.log(DBUG, "For target " + target + ", found no ids in DB");
     }
     return output;
   },
 
+  /**
+   * Return a list of rulesets that declare targets matching a given hostname.
+   * The returned rulesets include those that are disabled for various reasons.
+   * This function is only defined for fully-qualified hostnames. Wildcards and
+   * cookie-style domain attributes with a leading dot are not permitted.
+   * @param host {string}
+   * @return {Array.<RuleSet>}
+   */
   potentiallyApplicableRulesets: function(host) {
-    // Return a list of rulesets that declare targets matching this host
     var i, tmp, t;
     var results = [];
 
@@ -655,6 +662,10 @@ const HTTPSRules = {
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
+      if (tmp.length === 0) {
+        this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+        return null;
+      }
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
@@ -702,23 +713,48 @@ const HTTPSRules = {
     this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
   },
 
-  shouldSecureCookie: function(applicable_list, c, known_https) {
-    // Check to see if the Cookie object c meets any of our cookierule citeria
-    // for being marked as secure.
-    // @applicable_list : an ApplicableList or record keeping
-    // @c : an nsICookie2
-    // @known_https : true if we know the page setting the cookie is https
+  /**
+   * If a cookie's domain attribute has a leading dot to indicate it should be
+   * sent for all subdomains (".example.com"), return the actual host part (the
+   * part after the dot).
+   *
+   * @param cookieDomain {string} A cookie domain to strip a leading dot from.
+   * @return {string} a fully qualified hostname.
+   */
+  hostFromCookieDomain: function(cookieDomain) {
+    if (cookieDomain.length > 0 && cookieDomain[0] == ".") {
+      return cookieDomain.slice(1);
+    } else {
+      return cookieDomain;
+    }
+  },
 
-    this.log(DBUG,"  rawhost: " + c.rawHost + "\n  name: " + c.name + "\n  host" + c.host);
+  /**
+   * Check to see if the Cookie object c meets any of our cookierule citeria
+   * for being marked as secure.
+   *
+   * @param applicable_list {ApplicableList} an ApplicableList for record keeping
+   * @param c {nsICookie2} The cookie we might secure.
+   * @param known_https {boolean} True if the cookie appeared in an HTTPS request and
+   *   so we know it is okay to mark it secure (assuming a cookierule matches it.
+   *   TODO(jsha): Double-check that the code calling this actually does that.
+   * @return {boolean} True if the cookie in question should have the 'secure'
+   *   flag set to true.
+   */
+  shouldSecureCookie: function(applicable_list, c, known_https) {
+    this.log(DBUG,"  rawhost: " + c.rawHost + " name: " + c.name + " host" + c.host);
     var i,j;
-    var rs = this.potentiallyApplicableRulesets(c.host);
+    // potentiallyApplicableRulesets is defined on hostnames not cookie-style
+    // "domain" attributes, so we strip a leading dot before calling.
+    var rs = this.potentiallyApplicableRulesets(this.hostFromCookieDomain(c.host));
     for (i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
       if (ruleset.active) {
         ruleset.ensureCompiled();
         // Never secure a cookie if this page might be HTTP
-        if (!known_https && !this.safeToSecureCookie(c.rawHost))
+        if (!(known_https || this.safeToSecureCookie(c.rawHost))) {
           continue;
+        }
         for (j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(c.host) && cr.name_c.test(c.name)) {
@@ -727,29 +763,38 @@ const HTTPSRules = {
             return true;
           }
         }
-        if (ruleset.cookierules.length > 0)
-          if (applicable_list) applicable_list.moot_rule(ruleset);
+        if (ruleset.cookierules.length > 0 && applicable_list) {
+          applicable_list.moot_rule(ruleset);
+        }
       } else if (ruleset.cookierules.length > 0) {
-        if (applicable_list) applicable_list.inactive_rule(ruleset);
+        if (applicable_list) {
+          applicable_list.inactive_rule(ruleset);
+        }
         this.log(INFO,"Inactive cookie rule " + ruleset.name);
       }
     }
     return false;
   },
 
+  /**
+   * Check if the domain might be being served over HTTP.  If so, it isn't
+   * safe to secure a cookie!  We can't always know this for sure because
+   * observing cookie-changed doesn't give us enough context to know the
+   * full origin URI. In particular, if cookies are set from Javascript (as
+   * opposed to HTTP/HTTPS responses), we don't know what page context that
+   * Javascript ran in.
+
+   * First, if there are any redirect loops on this domain, don't secure
+   * cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
+   * would want to secure the cookie anyway, because the URLs that loop are
+   * not authenticated or not important.  Also by the time the loop has been
+   * observed and the domain blacklisted, a cookie might already have been
+   * flagged as secure.
+   *
+   * @param domain {string} The cookie's 'domain' attribute.
+   * @return {boolean} True if it's safe to secure a cookie on that domain.
+   */
   safeToSecureCookie: function(domain) {
-    // Check if the domain might be being served over HTTP.  If so, it isn't
-    // safe to secure a cookie!  We can't always know this for sure because
-    // observing cookie-changed doesn't give us enough context to know the
-    // full origin URI.
-
-    // First, if there are any redirect loops on this domain, don't secure
-    // cookies.  XXX This is not a very satisfactory heuristic.  Sometimes we
-    // would want to secure the cookie anyway, because the URLs that loop are
-    // not authenticated or not important.  Also by the time the loop has been
-    // observed and the domain blacklisted, a cookie might already have been
-    // flagged as secure.
-
     if (domain in https_blacklist_domains) {
       this.log(INFO, "cookies for " + domain + "blacklisted");
       return false;
@@ -757,7 +802,6 @@ const HTTPSRules = {
 
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
-
     try {
       var nonce_path = "/" + Math.random().toString();
       nonce_path = nonce_path + nonce_path;
@@ -768,17 +812,19 @@ const HTTPSRules = {
       return false;
     }
 
-    this.log(INFO, "Testing securecookie applicability with " + test_uri);
-    var rs = this.potentiallyApplicableRulesets(domain);
+    this.log(DBUG, "Testing securecookie applicability with " + test_uri);
+    // potentiallyApplicableRulesets is defined on hostnames not cookie-style
+    // "domain" attributes, so we strip a leading dot before calling.
+    var rs = this.potentiallyApplicableRulesets(this.hostFromCookieDomain(domain));
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
       var rewrite = rs[i].apply(test_uri);
       if (rewrite) {
-        this.log(INFO, "Yes: " + rewrite);
+        this.log(DBUG, "Safe to secure cookie for " + test_uri + ": " + rewrite);
         return true;
       }
     }
-    this.log(INFO, "(NO)");
+    this.log(DBUG, "Unsafe to secure cookie for " + test_uri);
     return false;
   }
 };

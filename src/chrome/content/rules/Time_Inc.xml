@@ -1,8 +1,12 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://timeinc.net/ => https://timeinc.net/: (7, 'Failed to connect to timeinc.net port 443: Connection timed out')
 	Other Time Inc rulesets:
 
 		- Customersvc.com.xml
 		- Entertainment_Weekly.xml
+		- Fortune.com.xml
+		- People.com.xml
 
 
 	CDN buckets:
@@ -54,7 +58,7 @@
 	Nonfunctional domains:
 
 		- timeinc.com		(refused)
-		- www.timeinc.com	(503, akamai)
+		- www.timeinc.com	(Redirects to http, akamai)
 
 
 	Problematic domains:
@@ -62,6 +66,7 @@
 		- img2.timeinc.net *
 		- img2-[123].timeinc.net *
 		- img2-short.timeinc.net *
+		- img5.timeinc.net *
 
 	* Works, akamai
 
@@ -70,21 +75,34 @@
 
 		- timeinc.brightcove.com.edgesuite.net	(→ akamai)
 
+		- invest.timeinc.com
 		- subscription.timeinc.com
+		- subscription-assets.timeinc.com
 
 		- timeinc.net subdomains:
 
+			- cgi
 			- fonts		(→ akamai)
 			- i2
 			- img		(→ akamai)
 			- img2		(→ i2)
 			- img2-[123]	(→ i2)
+			- img5		(→ akamai)
+
+
+	These altnames don't exist:
+
+		- www.invest.timeinc.com
 
 -->
-<ruleset name="Time Inc (partial)">
+<ruleset name="Time Inc (partial)" default_off='failed ruleset test'>
 
 	<target host="timeinc.brightcove.com.edgesuite.net" />
 	<target host="*.timeinc.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.timeinc\.com/($|favicon\.ico|wp-content/)" /-->
 	<target host="timeinc.net" />
 	<target host="*.timeinc.net" />
 
@@ -95,17 +113,17 @@
 	<rule from="^http://timeinc\.brightcove\.com\.edgesuite\.net/"
 		to="https://a248.e.akamai.net/f/1213/768/4m/timeinc.brightcove.com.edgesuite.net/" />
 
-	<rule from="^http://subscription(-assets)?\.timeinc\.com/"
-		to="https://subscription$1.timeinc.com/" />
+	<rule from="^http://(invest|subscription(?:-assets)?)\.timeinc\.com/"
+		to="https://$1.timeinc.com/" />
 
-	<rule from="^http://(i2\.|www\.)?timeinc\.net/"
+	<rule from="^http://((?:cgi|i2|www)\.)?timeinc\.net/"
 		to="https://$1timeinc.net/" />
 
 	<rule from="^http://fonts\.timeinc\.net/"
 		to="https://a248.e.akamai.net/f/1726/2257/9m/fonts.timeinc.net/" />
 
-	<rule from="^http://img\.timeinc\.net/"
-		to="https://a248.e.akamai.net/f/850/5111/2m/img.timeinc.net/" />
+	<rule from="^http://img(5)?\.timeinc\.net/"
+		to="https://a248.e.akamai.net/f/850/5111/2m/img$1.timeinc.net/" />
 
 	<rule from="^http://img2\.timeinc\.net/"
 		to="https://a248.e.akamai.net/f/626/1155/10m/img2.timeinc.net/" />

@@ -12,7 +12,6 @@
 			- bioengineering ***
 			- (www.)cam ****
 			- cgs
-			- cs			(shows chbe, CN: engineering.illinois.edu)
 			- lists.cs		(refused)
 			- disability		(prints "The service is unavailable.", expired, self-signed, CN: ED-webdev1.ad.uiuc.edu)
 			- engagement ****
@@ -73,7 +72,6 @@
 		- illinois.edu subdomains:
 
 			- (www.) *
-			- cs		(→ chbe.illinois.edu)
 			- npre		(→ chbe.illinois.edu)
 
 		- (www.)uiuc.edu *
@@ -91,6 +89,8 @@
 			- www1.business
 			- chbe
 			- www.chbe		(→ chbe.illinois.edu)
+			- (www.)?cs
+			- my.cs
 
 			- engineering subdomains:
 
@@ -162,37 +162,43 @@
 	<securecookie host="^www-s\.mechse\.uiuc\.edu$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?(?:illinois|uiuc)\.edu/(about/about\.html|academics/academics\.html|assets2?/|athletics/athletics\.html|favicon\.ico|\.psg/)"
+	<rule from="^http://(?:www\.)?(?:illinois|uiuc)\.edu/(about/about\.html|academics/academics\.html|assets2?/|athletics/athletics\.html|favicon\.ico|\.psg/)"
 		to="https://illinois.edu/$1" />
 
-	<rule from="^http://(secure\.admin|autodiscover|www1\.business|wiki\.engr|exchws|(?:internal|security)\.ncsa|webmail)\.illinois\.edu/"
+	<rule from="^http://(secure\.admin|autodiscover|www1\.business|my\.cs|wiki\.engr|exchws|(?:internal|security)\.ncsa|webmail)\.illinois\.edu/"
 		to="https://$1.illinois.edu/" />
 
-	<rule from="^https?://(?:www\.)?(business|chbe)\.illinois\.edu/"
+	<!--	Domains for which both !www and www exist,
+		and both work unproblematically:
+						-->
+	<rule from="^http://(www\.)?cs\.illinois\.edu/"
+		to="https://$1cs.illinois.edu/" />
+
+	<rule from="^http://(?:www\.)?(business|chbe)\.illinois\.edu/"
 		to="https://$1.illinois.edu/" />
 
-	<rule from="^https?://(?:cs|npre)\.illinois\.edu/sites/"
+	<rule from="^http://npre\.illinois\.edu/sites/"
 		to="https://chbe.illinois.edu/sites/" />
 
-	<rule from="^https?://(?:((?:blogs|iefx|it)\.)|www\.)?engineering\.illinois\.edu/"
+	<rule from="^http://(?:((?:blogs|iefx|it)\.)|www\.)?engineering\.illinois\.edu/"
 		to="https://$1engineering.illinois.edu/" />
 
-	<rule from="^https?://(?:www(?:-s)?\.)?housing\.illinois\.edu/"
+	<rule from="^http://(?:www(?:-s)?\.)?housing\.illinois\.edu/"
 		to="https://www-s.housing.illinois.edu/" />
 
-	<rule from="^https?://(?:www\.)?mrp\.illinois\.edu/"
+	<rule from="^http://(?:www\.)?mrp\.illinois\.edu/"
 		to="https://www.mrp.illinois.edu/" />
 
 	<rule from="^http://parallel\.illinois\.edu/sites/"
 		to="https://parallel.illinois.edu/sites/" />
 
-	<rule from="^https://(www\.)?union\.(?:uiuc|illinois)\.edu/"
+	<rule from="^http://(www\.)?union\.(?:uiuc|illinois)\.edu/"
 		to="https://$1union.illinois.edu/" />
 
 	<rule from="^http://(www\.)?illinoislawreview\.org/"
 		to="https://$1illinoislawreview.org/" />
 
-	<rule from="^https?://(?:www(?:-s)?\.)?ks\.uiuc\.edu/"
+	<rule from="^http://(?:www(?:-s)?\.)?ks\.uiuc\.edu/"
 		to="https://www-s.ks.uiuc.edu/" />
 
 	<!--	www 302s to mechse.illinois.edu.

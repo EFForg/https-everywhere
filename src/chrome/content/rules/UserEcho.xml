@@ -1,15 +1,47 @@
-<ruleset name="UserEcho (partial)">
+<!--
+	Fully covered hosts in *userecho.com:
 
+		- (www.)?
+		- blog
+		- feedback
+
+
+	Insecure cookies are set for these hosts:
+
+		- userecho.com
+		- blog.userecho.com
+		- feedback.userecho.com
+		- www.userecho.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="UserEcho.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="userecho.com"/>
-	<target host="*.userecho.com"/>
+	<target host="blog.userecho.com" />
+	<target host="feedback.userecho.com"/>
+	<target host="www.userecho.com"/>
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(blog\.|feedback\.|www\.)?userecho\.com$" name="^uesessionid$" /-->
   <!-- 
        do not secure cookies for arbitrary subdomains!
        https://trac.torproject.org/projects/tor/ticket/7698
     -->
-	<securecookie host="^(www\.)?userecho\.com$" name=".*"/>
+	<securecookie host="^(?:blog\.|feedback\.|www\.)?userecho\.com$" name=".*"/>
 
-	<rule from="^http://(?:www\.)?userecho\.com/"
-		to="https://userecho.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

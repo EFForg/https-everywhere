@@ -1,32 +1,48 @@
 <!--
-	Ads/web bugs.
-
-	For other MediaHub coverage, see MediaHub.xml.
+	For other OpenX coverage, see OpenX.xml.
 
 
-	Fully covered subdomains:
+	CDN buckets:
 
-		- (www.)
-		- secure
+		- i.fhserve.com.cdn.cloudflare.net
 
 
-	Observed cookie domains:
+	Nonfunctional hosts in *fhserve.com:
 
-		- ^
-		- secure
-		- www
+		- i *
+
+	* 521
+
+
+	Problematic hosts in *fhserve.com:
+
+		- ^ ¹
+		- www ²
+
+	¹ Shows contact form
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts in *fhserve.com:
+
+		- (www.)?	(^ → www)
 
 -->
-<ruleset name="fhserve.com (partial)">
+<ruleset name="fhserve.com" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.fhserve.com" />
+
+	<!--	Complications:
+				-->
 	<target host="fhserve.com" />
-	<target host="*.fhserve.com" />
 
 
-	<securecookie host="^(?:.+\.)?fhserve\.com$" name=".+" />
+	<rule from="^http://fhserve\.com/"
+		to="https://www.fhserve.com/" />
 
-
-	<rule from="^http://(secure\.|www\.)?fhserve\.com/"
-		to="https://$1fhserve.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

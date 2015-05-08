@@ -4,24 +4,55 @@
 		- blog	(ssl_error_rx_record_too_long)
 		- cdn	(times out)
 
--->
-<ruleset name="Stable Host (partial)">
 
+	Fully covered hosts in *stablehost.com:
+
+		- (www.)?
+		- billing
+		- cdn		(→ www.stablehost.com)
+		- forums
+
+
+	Insecure cookies are set for these domains:
+
+		- .stablehost.com
+		- billing.stablehost.com
+
+
+	Mixed content:
+
+		- css on forums, www from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Stable Host.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="stablehost.com" />
+	<target host="billing.stablehost.com" />
+	<target host="forums.stablehost.com" />
 	<target host="www.stablehost.com" />
 
+	<!--	Complications:
+				-->
+	<target host="cdn.stablehost.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.stablehost\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^billing\.stablehost\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^\.stablehost\.com$" name="^(?:__cfduid|cf_clearance)$" />
 	<securecookie host="^billing\.stablehost\.com$" name=".*" />
 
 
-	<!--	Some pages redirect to http.	-->
-	<rule from="^http://(www\.)?stablehost\.com/(css/|images/|login\.php)"
-		to="https://$1stablehost.com/$2" />
-
-	<rule from="^http://billing\.stablehost\.com/"
-		to="https://billing.stablehost.com/" />
-
-	<rule from="^https?://cdn\.stablehost\.com/"
+	<rule from="^http://cdn\.stablehost\.com/"
 		to="https://www.stablehost.com/images/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

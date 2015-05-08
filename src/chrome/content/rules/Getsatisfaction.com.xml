@@ -31,7 +31,6 @@
 	Problematic getsatisfaction.com subdomains:
 
 		- blog *
-		- info		(marketo)
 		- product *
 
 	* Mismatched, CN: page.ly
@@ -42,8 +41,30 @@
 		- (www.)ccpact.com
 		- status.getsatisfaction.com
 
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- assets\d
+		- education
+		- info
+
+
+	These altnames don't exist:
+
+		- www.education.getsatisfaction.com
+		- www.info.getsatisfaction.com
+
+
+	Mixed content:
+
+		- css on info from cloud.webtype.com *
+		- Images on info from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="Getsatisfaction.com" platform="mixedcontent">
+<ruleset name="Getsatisfaction.com (partial)">
 
 	<target host="getsatisfaction.com" />
 	<target host="*.getsatisfaction.com" />
@@ -52,10 +73,7 @@
 	<securecookie host="^\.getsatisfaction\.com$" name=".+" />
 
 
-	<rule from="^http://(assets\d\.|www\.)?getsatisfaction\.com/"
+	<rule from="^http://((?:assets\d|education|info|www)\.)?getsatisfaction\.com/"
 		to="https://$1getsatisfaction.com/" />
-
-	<rule from="^http://info\.getsatisfaction\.com/(cs|j|r)s/"
-		to="https://na-sjh.marketo.com/$1s/" />
 
 </ruleset>

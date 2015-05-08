@@ -82,7 +82,7 @@ HTTPS Everywhere consists of a large number of rules for switching sites from HT
 
 If you want to create new rules to submit to us, we expect them to be in the src/chrome/content/rules directory. That directory also contains a useful script, make-trivial-rule, to create a simple rule for a specified domain. There is also a script called trivial-validate.py, to check all the pending rules for several common errors and oversights. For example, if you wanted to make a rule for the example.com domain, you could run
 
-    sh ./make-trivial-rule example.com
+    bash ./make-trivial-rule example.com
 
 inside the rules directory. This would create Example.com.xml, which you could then take a look at and edit based on your knowledge of any specific URLs at example.com that do or don't work in HTTPS. You should then run
 
@@ -94,7 +94,7 @@ to make sure that your rule is free of common mistakes.
 
 If you would like to help translate HTTPS Everywhere into your language,
 you can do that through the Tor Project's Transifex page:
-https://www.transifex.com/p/torproject/resources/.
+https://www.transifex.com/projects/p/torproject/.
 
 ### Bug trackers and mailing lists
 
@@ -113,9 +113,11 @@ Please help write more unittests and integration tests!
 
 There are also ruleset tests, which aim to find broken rulesets by actually
 loading URLs in a browser and watching for Mixed Content Blocking to fire.
-You can run ruleset tests by opening [about:config](about:config) and changing
-`extensions.https_everywhere.show_ruleset_tests` to true. Now when you open
-the HTTPS Everywhere context menu there will be a "Run HTTPS Everywhere Ruleset Tests"
-menu item.
+The easiest way to run ruleset tests is to load a standalone Firefox instance
+with the tests enabled:
 
-When you run the tests, be prepared to let your computer run them for a really long time.
+    bash test.sh --justrun
+
+Then click the HTTPS Everywhere icon on the toolbar, and click "Run HTTPS
+Everywhere Ruleset Tests." When you run the tests, be prepared to let your
+computer run them for a really long time.

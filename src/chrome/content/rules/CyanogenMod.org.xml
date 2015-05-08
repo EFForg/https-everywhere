@@ -9,14 +9,20 @@
 
 	Nonfunctional subdomains:
 
+		- beta.download ¹
 		- review	(refused)
+
+	¹ 404
 
 
 	Problematic subdomains:
 
+		- mirror.slc ¹
 		- wiki *
 		- www *
+		- forum (see https://github.com/EFForg/https-everywhere/issues/1510)
 
+	¹ Mismatched, CN: ssl2786.cloudflare.com
 	* Mixed css from $self
 
 
@@ -25,9 +31,14 @@
 		- ^
 		- account
 		- download
-		- forum
 		- jira
 		- stats
+
+
+	Insecure cookies are set for these domains:
+
+		- .
+		- jira
 
 
 	Mixed content:
@@ -46,13 +57,10 @@
 <ruleset name="CyanogenMod.org (partial)">
 
 	<target host="cyanogenmod.org" />
-	<target host="*.cyanogenmod.org" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://wiki\.cyanogenmod\.org/+(?!extensions/|favicon\.ico|images/|load\.php|skins/)" />
-		<exclusion pattern="^http://www\.cyanogenmod\.org/+(?!wp-content/|wp-includes/)" />
-
+	<target host="account.cyanogenmod.org" />
+	<target host="download.cyanogenmod.org" />
+	<target host="jira.cyanogenmod.org" />
+	<target host="stats.cyanogenmod.org" />
 
 	<!--	Secured by server:
 					-->
@@ -62,10 +70,10 @@
 					-->
 	<!--securecookie host="^jira\.cyanogenmod\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
 
+	<securecookie host="^\.cyanogenmod\.org$" name="^__cfduid$" />
 	<securecookie host="^jira\.cyanogenmod\.org$" name=".+" />
 
-
-	<rule from="^http://((?:account|download|forum|jira|stats|wiki|www)\.)?cyanogenmod\.org/"
+	<rule from="^http://((?:account|download|jira|stats)\.)?cyanogenmod\.org/"
 		to="https://$1cyanogenmod.org/" />
 
 </ruleset>

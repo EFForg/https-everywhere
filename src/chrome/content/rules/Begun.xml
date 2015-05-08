@@ -1,14 +1,47 @@
-<ruleset name="Begun">
+<!--
+	Fully covered subdomains:
+
+		- (www.)?
+		- autocontext
+		- my
+		- my2
+		- smart
+
+		- 
+	Insecure cookies are set for these domains and hosts:
+
+		- .begun.ru
+		- www.begun.ru
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+		- fonts on my2 from themes.googleusercontent.com
+
+	* Secured by us
+
+-->
+<ruleset name="Begun.ru">
 
 	<target host="begun.ru" />
-	<target host="*.begun.ru" />
+	<target host="autocontext.begun.ru" />
+	<target host="my.begun.ru" />
+	<target host="my2.begun.ru" />
+	<target host="smart.begun.ru" />
+	<target host="www.begun.ru" />
 
 
-	<!--	Cert only matches *.begun.ru.	-->
-	<rule from="^https?://(?:www\.)?begun\.ru/"
-		to="https://www.begun.ru/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.begun\.ru$" name="^(PHPSESSID|SESSION)$" /-->
+	<!--securecookie host="^www\.begun\.ru$" name="^(BITRIX_SM_GUEST_ID|BITRIX_SM_LAST_VISIT)$" /-->
 
-	<rule from="^http://(autocontext|my2)\.begun\.ru/"
-		to="https://$1.begun.ru/" />
+	<securecookie host="^(?:www)?\.begun\.ru$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

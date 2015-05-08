@@ -1,21 +1,38 @@
-<!-- Would like to add hal.dmu.ac.uk which is used on the main site, but it uses a self signed cert -->
-<ruleset name="DMU">
-  <target host="dmu.ac.uk" />
-  <target host="www.dmu.ac.uk" />
-  <target host="www.library.dmu.ac.uk" />
-  <target host="chooseyourhallroom.dmu.ac.uk" />
-  <target host="idpedir.dmu.ac.uk" />
-  <target host="password.dmu.ac.uk" />
-  <target host="vle.dmu.ac.uk" />
-  <target host="webmail.dmu.ac.uk" />
+<!--
+	Fully covered subdomains:
+
+		- (www.)?
+		- chooseyourhallroom
+		- idpedir
+		- www.library
+		- password
+		- vle
+		- webmail
+
+
+	Insecure cookies are set for these domains:
+
+		- www.dmu.ac.uk
+
+
+	Would like to add hal.dmu.ac.uk, which is used on
+	the main site, but it uses a self signed cert.
+
+-->
+<ruleset name="DMU.ac.uk (partial)">
+
+	<target host="dmu.ac.uk" />
+	<target host="*.dmu.ac.uk" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^www\.dmu\.ac\.uk$" name="^ASP\.NET_SessionId$" /-->
 
-  <securecookie host="^(.+\.)?dmu\.ac\.uk$" name=".*"/>
+	<securecookie host="^(?:(?:chooseyourhallroom|idpedir|www\.library|password|vle|webmail|www)\.)?dmu\.ac\.uk$" name=".+" />
 
-  <rule from="^http://dmu\.ac\.uk/" to="https://dmu.ac.uk/"/>
-  <rule from="^http://(www|www\.library|chooseyourhallroom|idpedir|password|vle|webmail)\.dmu\.ac\.uk/" to="https://$1.dmu.ac.uk/"/>
+
+	<rule from="^http://((?:chooseyourhallroom|idpedir|www\.library|password|vle|webmail|www)\.)?dmu\.ac\.uk/"
+		to="https://$1dmu.ac.uk/" />
+
 </ruleset>

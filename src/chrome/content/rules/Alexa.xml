@@ -21,7 +21,10 @@
 <ruleset name="Alexa (partial)">
 
 	<target host="alexa.com" />
-	<target host="*.alexa.com" />
+	<target host="pcache.alexa.com" />
+	<target host="support.alexa.com" />
+	<target host="xslt.alexa.com" />
+	<target host="www.alexa.com" />
 		<!--
 			Rewriting css to AmaonAWS breaks images.
 			(images/ points to s3.amazonaws.com/images/)
@@ -29,9 +32,28 @@
 		<exclusion pattern="^http://pcache.alexa.com/css/" /-->
 	<target host="pixel.alexametrics.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.alexa\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.alexa\.com/(?!favicon\.ico|css/|images/|secure/|\w+/wp-content/)" />
 
-	<rule from="^http://(www\.)?alexa\.com/(favicon\.ico|css/|images/|secure/|\w+/wp-content/)"
-		to="https://$1alexa.com/$2" />
+			<!--	+ve:
+					-->
+			<test url="http://www.alexa.com/about" />
+			<test url="http://www.alexa.com/siteinfo" />
+			<test url="http://www.alexa.com/support" />
+			<test url="http://www.alexa.com/toolbar" />
+			<test url="http://www.alexa.com/tools" />
+			<test url="http://www.alexa.com/topsites" />
+
+			<!--	-ve+:
+					-->
+			<test url="http://www.alexa.com/favicon.ico" />
+			<test url="http://www.alexa.com/secure/login?resource=%2F" />
+
 
 	<rule from="^http://pcache\.alexa\.com/"
 		to="https://d1uki75gjpelap.cloudfront.net/" />
@@ -41,5 +63,8 @@
 
 	<rule from="^http://pixel\.alexametrics\.com/"
 		to="https://d5nxst8fruw4z.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

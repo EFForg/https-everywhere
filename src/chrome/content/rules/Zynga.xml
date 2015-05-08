@@ -1,6 +1,8 @@
 <!--
 	Other Zynga rulesets:
 
+		- ZgnCDN.com.xml
+		- Zynga.tm.xml
 		- Zynga_Player_Support.com.xml
 
 
@@ -12,16 +14,30 @@
 
 	Nonfunctional zynga.com subdomains:
 
-		- forums
+		- forums	(Refused)
+		- investor	(Dropped)
 		- productblog	(times out; 302s to zyngablog.typepad.com/zynga/ over http)
-		- support	(cert: slotmatching7.salesforce.com; 301s to http)
+
+
+	Problematic subdomains:
+
+		- blog *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- Image on blog from $self
 
 -->
-<ruleset name="Zynga (partial)">
+<ruleset name="Zynga.com (partial)">
 
-	<target host="userimages.static.zgncdn.com" />
 	<target host="zynga.com" />
-	<target host="*.zynga.com" />
+	<!--target host="blog.zynga.com" /-->
+	<target host="company.zynga.com" />
+	<target host="support.zynga.com" />
+	<target host="www.zynga.com" />
 
 
 	<!--	Cross-domain cookies appear to be used only on (www.).
@@ -29,15 +45,7 @@
 	<securecookie host="^\.zynga\.com$" name=".*" />
 
 
-	<rule from="^http://userimages\.static\.zgncdn\.com/"
-		to="https://userimages.static.zgncdn.com/" />
-
-	<rule from="^http://(www\.)?zynga\.com/"
-		to="https://$1zynga.com/" />
-
-	<!--	At least some pages 302 to http.
-						-->
-	<rule from="^http://company\.zynga\.com/(img|nfs|sites)/"
-		to="https://company.zynga.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

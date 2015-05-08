@@ -1,4 +1,8 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://mzstatic.com/ => https://www.apple.com/: Redirect for 'http://mzstatic.com/' missing Location
+Fetch error: http://itunes.com/ => https://itunes.com/: Redirect for 'http://itunes.com/' missing Location
+Fetch error: http://www.itunes.com/ => https://www.itunes.com/: Redirect for 'http://www.itunes.com/' missing Location
 	For rules causing false/broken MCB, see Apple-falsemixed.xml.
 
 	For problematic rules, see Apple-mismatches.xml.
@@ -243,6 +247,7 @@
 		- hrweb.cdn-apple.com
 		- store.storeimages.cdn-apple.com	(→ storeimages.apple.com.edgekey.net)
 		- ax.phobos.apple.com.edgesuite.net	(→ s.mzstatic.com)
+		- (www.)icloud.com			(^ → www)
 		- (www.)iwork.com			(^ → www)
 		- (www.)me.com
 
@@ -314,7 +319,7 @@
 	-falsemixed should be merged for Ffx 24.
 
 -->
-<ruleset name="Apple.com (partial)">
+<ruleset name="Apple.com (partial)" default_off='failed ruleset test'>
 
 	<target host="a772.g.akamai.net" />
 	<target host="apple.com" />
@@ -323,6 +328,8 @@
 		<exclusion pattern="^http://store\.apple\.com/(?!Catalog/|[\w/]+/css/|rs/)" />
 	<target host="*.cdn-apple.com" />
 	<target host="ax.phobos.apple.com.edgesuite.net" />
+	<target host="icloud.com" />
+	<target host="www.icloud.com" />
 	<target host="iwork.com" />
 	<target host="www.iwork.com" />
 	<target host="me.com" />
@@ -379,7 +386,7 @@
 	<rule from="^http://(hrweb|reserve)\.cdn-apple\.com/"
 		to="https://$1.cdn-apple.com/" />
 
-	<rule from="^(http://(www\.)?|https://www\.)opensource\.apple\.com/"
+	<rule from="^http://(?:www\.)?opensource\.apple\.com/"
 		to="https://opensource.apple.com/" />
 
 	<rule from="^http://ax\.phobos\.apple\.com\.edgesuite\.net/"
@@ -387,6 +394,11 @@
 
 	<rule from="^http://km\.support\.apple\.com/"
 		to="https://km.support.apple.com.edgekey.net/" />
+
+    <rule from="^http://icloud\.com/"
+        to="https://www.icloud.com/" />
+    <rule from="^http://([^/:@]+)\.icloud\.com/"
+        to="https://$1.icloud.com/" />
 
 	<rule from="^http://(?:www\.)?iwork\.com/"
 		to="https://www.iwork.com/" />
@@ -408,7 +420,7 @@
 	<rule from="^http://r\.mzstatic\.com/"
 		to="https://s.mzstatic.com/" />
 
-	<rule from="^https?://trailers\.apple\.com/"
+	<rule from="^https://trailers\.apple\.com/"
 		to="http://trailers.apple.com/" downgrade="1" />
 
 	<rule from="^http://(www\.)?itunes\.com/"

@@ -1,4 +1,8 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://sso.skrill.com/ => https://sso.skrill.com/: (7, 'Failed to connect to sso.skrill.com port 80: Connection refused')
+
 	Other Skrill rulesets:
 
 		- Moneybookers.xml
@@ -6,27 +10,27 @@
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- account
 		- sso
+		- help
 
 -->
-<ruleset name="Skrill.com">
+<ruleset name="Skrill.com" default_off='failed ruleset test'>
 
 	<target host="skrill.com" />
+	<target host="account.skrill.com" />
+	<target host="help.skrill.com" />
+	<target host="sso.skrill.com" />
+	<target host="www.skrill.com" />
+
 	<target host="*.skrill.com" />
 
 
 	<securecookie host=".*\.skrill\.com$" name=".+" />
 
 
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?skrill\.com/"
-		to="https://www.skrill.com/" />
-
-	<rule from="^http://(account|sso)\.skrill\.com/"
-		to="https://$1.skrill.com/" />
+	<rule from="^http://((?:account|help|sso|www)\.)?skrill\.com/"
+		to="https://$1skrill.com/" />
 
 </ruleset>

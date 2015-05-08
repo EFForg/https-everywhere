@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const IO = {
   readFile: function(file, charset) {
     var res;
@@ -57,7 +59,7 @@ function nsISupportsWrapper(wrapped) {
   this.wrappedJSObject = wrapped;
 }
 nsISupportsWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([])
+  QueryInterface: XPCOMUtils.generateQI([])
 };
 
 const IOUtil = {
@@ -121,7 +123,7 @@ const IOUtil = {
   },
   
   abort: function(channel, noNetwork) {
-    channel.cancel(Cr.NS_ERROR_ABORT);
+    channel.cancel(Components.results.NS_ERROR_ABORT);
   },
   
   findWindow: function(channel) {

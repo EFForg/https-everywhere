@@ -149,8 +149,17 @@ function compareRules(a, b, col) {
 
 function https_prefs_init(doc) {
   var st = document.getElementById('sites_tree');
+  // Note: It takes several seconds to load all the rulesets, during which time
+  // Firefox is unresponsive. There are too many rulesets to reasonably browse
+  // in this view anyhow. Should start with an empty window and only show
+  // rulesets that match a search term the user types in.
   https_everywhere.https_rules.loadAllRulesets();
   rulesets = Array.slice(https_everywhere.https_rules.rulesets);
+  // Sort the rulesets by name to avoid revealing which subset of rulesets has
+  // been visited, per https://trac.torproject.org/projects/tor/ticket/11655.
+  rulesets.sort(function(a, b) {
+    return a.name < b.name ? -1 : 1;
+  });
 
   // GLOBAL VARIABLE!
   treeView = {

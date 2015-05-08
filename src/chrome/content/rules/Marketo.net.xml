@@ -1,0 +1,53 @@
+
+<!--
+	For other Marketo coverage, see Marketo.xml.
+
+
+	Problematic subdomains:
+
+		- (www.)? *
+
+	* Cert only matches *.marketo.com
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(→ www.marketo.com)
+		- app		(→ app-a.marketo.com)
+		- munchkin
+		- ssl-munchkin
+
+
+	munchkin sets a "_mkto_trk" wildcard cookie on whichever domain it is
+	loaded from.
+
+-->
+<ruleset name="Marketo.net">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="munchkin.marketo.net" />
+	<target host="ssl-munchkin.marketo.net" />
+
+	<!--	Complications:
+				-->
+	<target host="marketo.net" />
+	<target host="app.marketo.net" />
+	<target host="www.marketo.net" />
+
+
+	<securecookie host=".*\.marketo\.net$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?marketo\.net/"
+		to="https://www.marketo.com/" />
+
+	<!--	Server redirects as so:
+					-->
+	<rule from="^http://app\.marketo\.net/"
+		to="https://app-a.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

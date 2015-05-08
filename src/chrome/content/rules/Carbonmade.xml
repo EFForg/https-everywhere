@@ -1,4 +1,9 @@
 <!--
+	Other Carbonmade rulesets:
+
+		- CmCDN.net.xml
+
+
 	CDN buckets:
 
 		- d1gyuuidj3lauh.cloudfront.net
@@ -9,46 +14,42 @@
 
 			- media.cmcdn.net
 
+		- cmmedia.a.ssl.fastly.net
+		- cmsites.a.ssl.fastly.net
 
-	Partially covered domains:
 
-		- (www.)carbonmade.com
+	Fully covered hosts in *carbonmade.com:
 
-			- These paths redirect to http:
+		- (www.)?
+		- descience06
+		- descience07
 
-				- $
-				- about$
-				- portfolios$
-				- terms$
 
-			- These don't
+	Insecure cookies are set for these hosts:
 
-				- blog$
-				- examples$
-				- img/
-				- rescues/
-				- passwordresets/
-				- privacy$
-				- signin/
-				- signup/
-				- why$
+		- carbonmade.com
+		- descience06.carbonmade.com
+		- descience07.carbonmade.com
 
 -->
-<ruleset name="Carbonmade (partial)">
+<ruleset name="Carbonmade.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="carbonmade.com" />
+	<target host="descience06.carbonmade.com" />
+	<target host="descience07.carbonmade.com" />
 	<target host="www.carbonmade.com" />
-		<exclusion pattern="^http://(?:www\.)?carbonmade\.com/(?:$|\?|about|portfolio|terms)" />
-	<target host="*.cmcdn.net" />
 
 
-	<rule from="^http://(www\.)?carbonmade\.com/"
-		to="https://$1carbonmade.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(descience0[67]\.)?carbonmade\.com$" name="^_cid$" /-->
 
-	<rule from="^https?://media\.cmcdn\.net/"
-		to="https://d2tbi97h020xxe.cloudfront.net/" />
+	<securecookie host="^(?:descience0\d\.)?carbonmade\.com$" name=".+" />
 
-	<rule from="^https?://s\.cmcdn\.net/"
-		to="https://d1gyuuidj3lauh.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

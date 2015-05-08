@@ -1,4 +1,6 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://skype.com/ => https://www.skype.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	For other Microsoft coverage, see Microsoft.xml.
 
 
@@ -22,60 +24,63 @@
 
 	Problematic domains:
 
+		- ^ ¹
 		- blogs.skype.com	(wordpress)
 		- metrics.skype.com	(mismatched, CN: *.d2.sc.omtrdc.net)
-		- www.skypeassets.com	(works, akamai)
+
+	¹ Refused
 
 
-	Partially covered domains:
+	Fully covered hosts in *skype.com:
 
-		- www.skypeassets.com	(→ secure.skypeassets.com)
+		- (www.)?	(^ → www)
+		- beta
+		- go
+		- login
+		- metrics	(→ skype.d2.sc.omtrdc.net)
+		- secure
+		- smetrics
+		- support
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains:
 
-		- skype.com subdomains:
-
-			- ^		(→ www.skype.com)
-			- beta
-			- blogs
-			- login
-			- metrics	(→ skype.d2.sc.omtrdc.net)
-			- secure
-			- smetrics
-			- support
-			- www
-
-		- skypeassets.com subdomains:
-
-			- apps
-			- beta
-			- secure
+		- .skype.com
 
 -->
-<ruleset name="Skype (partial)" platform="mixedcontent">
+<ruleset name="Skype (partial)" platform="mixedcontent" default_off='failed ruleset test'>
 
+	<!--	Direct rewrites:
+				-->
+	<target host="beta.skype.com" />
+	<!--target host="blogs.skype.com" /-->
+	<target host="go.skype.com" />
+	<target host="login.skype.com" />
+	<target host="secure.skype.com" />
+	<target host="smetrics.skype.com" />
+	<target host="support.skype.com" />
+	<target host="www.skype.com" />
+
+	<!--	Complications:
+				-->
 	<target host="skype.com" />
-	<target host="*.skype.com" />
-	<target host="*.skypeassets.com" />
+	<target host="metrics.skype.com" />
 
 
-	<securecookie host="^.*\.skype\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.skype\.com$" name="^(SC|frmrgtpe|s_vi)$" /-->
+
+	<securecookie host=".*\.skype\.com$" name=".+" />
 
 
-	<rule from="^https?://(?:www\.)?skype\.com/"
+	<rule from="^http://skype\.com/"
 		to="https://www.skype.com/" />
 
-	<rule from="^http://(beta|login|secure|smetrics|support)\.skype\.com/"
-		to="https://$1.skype.com/" />
-
-	<rule from="^https?://metrics\.skype\.com/"
+	<rule from="^http://metrics\.skype\.com/"
 		to="https://skype.d2.sc.omtrdc.net/" />
 
-	<rule from="^https?://www\.skypeassets\.com/"
-		to="https://secure.skypeassets.com/" />
-
-	<rule from="^http://(apps|beta|secure)\.skypeassets\.com/"
-		to="https://$1.skypeassets.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

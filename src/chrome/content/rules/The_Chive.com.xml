@@ -1,0 +1,52 @@
+<!--
+	Problematic subdomains:
+
+		- my *
+
+	* Insecure renegotiation
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- my
+		- thebrigade
+
+
+	Insecure cookies are set for these domains:
+
+		- my
+
+
+	Mixed content:
+
+		- bug on ^ and thebrigade from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Chive.com">
+
+	<target host="thechive.com" />
+	<target host="*.thechive.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://dating\.thechive\.com/($|login/reset$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://dating\.thechive\.com/+(?!assets/|favicon\.ico|login/*(?:$|\?))" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.thechive\.com$" name="^session_native$" /-->
+
+	<securecookie host="^my\.thechive\.com$" name=".+" />
+
+
+	<rule from="^http://((?:dating|my|thebrigade|www)\.)?thechive\.com/"
+		to="https://$1thechive.com/" />
+
+</ruleset>

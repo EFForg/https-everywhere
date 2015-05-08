@@ -1,4 +1,7 @@
 <!--
+	For other Amazon coverage, see Amazon.xml.
+
+
 	CDN buckets:
 
 		- cdn.comixology.com.cdngc.net
@@ -21,21 +24,25 @@
 
 	Problematic subdomains:
 
-		- ^		(times out)
+		- ^ *
 
-
-	Partially covered subdomains:
-
-		- (www.)	(^ → www, some pages redirect to http)
+	* Refused
 
 
 	Fully covered subdomains:
 
+		- (www.)?	(^ → www)
 		- pulllist
 		- retailers
 		- store-images
 		- submit
 		- www-images
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .comixology.com
+		- www.comixology.com
 
 
 	Mixed images on pulllist from cdn
@@ -45,20 +52,44 @@
 -->
 <ruleset name="comiXology.com (partial)">
 
+	<target host="pulllist.comixology.com" />
+	<target host="retailers.comixology.com" />
+	<target host="store-images.comixology.com" />
+	<target host="submit.comixology.com" />
+	<target host="www.comixology.com" />
+	<target host="www-images.comixology.com" />
+
+	<!--	Complications:
+				-->
 	<target host="comixology.com" />
-	<target host="*.comixology.com" />
+	<target host="support.comixology.com" />
+
+		<exclusion pattern="^http://support\.comixology\.com/(?!favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.comixology.com/customer/portal/emails/new" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.comixology.com/favicon.ico" />
 
 
-	<securecookie host="^(?:pulllist|retailers|store-images|submit)\.comixology\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.comixology\.com$" name="^CMXSESSIONID$" /-->
+	<!--securecookie host="^www\.comixology\.com$" name="^newUserBanner$" /-->
+
+	<securecookie host="^(?:pulllist|retailers|store-images|submit|www)\.comixology\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?comixology\.com/(assets/|login(?:$|\?))"
-		to="https://www.comixology.com/$1" />
+	<rule from="^http://comixology\.com/"
+		to="https://www.comixology.com/" />
 
-	<rule from="^http://(pulllist|retailers|(?:store|www)-images|submit)\.comixology\.com/"
-		to="https://$1.comixology.com/" />
+	<rule from="^http://support\.comixology\.com/"
+		to="https://d3jyn100am7dxp.cloudfront.net/" />
 
-	<rule from="^http://support\.comixology\.com/favicon\.ico"
-		to="https://d3jyn100am7dxp.cloudfront.net/favicon.ico" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

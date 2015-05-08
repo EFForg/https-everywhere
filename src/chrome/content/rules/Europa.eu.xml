@@ -6,16 +6,15 @@
 
 		- ^ ¹
 		- curia ¹
-		- ec ³
 		- eacea.ec ²
 		- trade.ec ⁴
 		- eur-lex ⁵
+		- m.europarl ⁶
 		- www.europarl ⁶
 		- (www.)ombudsman ⁶
 
 	¹ 403, valid cert
 	² Redirect to http, valid cert
-	³ 403
 	⁴ 403; mismatched, CN: europa.eu
 	⁵ Shows ^; mismatched, CN: europa.eu
 	⁶ Dropped
@@ -24,12 +23,15 @@
 	Partially covered subdomains:
 
 		- cordis *
+		- ec ²
 
 	* Some pages redirect to http
+	² $ 403s
 
 
 	Fully covered subdomains:
 
+		- www.eba
 		- (www.)enisa
 		- www.europol
 
@@ -46,12 +48,20 @@
 	* Secured by us
 
 -->
-<ruleset name="Europa.eu">
+<ruleset name="Europa.eu (partial)">
 
 	<target host="www.ecb.eu" />
 	<target host="*.europa.eu" />
 		<!--exclusion pattern="^http://cordis\.europa\.eu/+($|\?|css/|erawatch/css/|erawatch/icons/|favicon\.ico|guidance/icons/|live-edit/css/)" /-->
 		<exclusion pattern="^http://cordis\.europa\.eu/+(?!icons/|js/|wel/template-)" />
+		<!--
+			403:
+				-->
+		<!--exclusion pattern="^http://ec\.europa\.eu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ec\.europa\.eu/+(?!commission(?:$|[?/]))" />
 		<exclusion pattern="^https://oami\.europa\.eu/knowledge/" />
 
 
@@ -70,7 +80,7 @@
 	<rule from="^http://(?:www\.)?(consilium|easa|enisa)\.europa\.eu/"
 		to="https://www.$1.europa.eu/" />
 
-	<rule from="^http://(cordis|joinup\.ec|(?:www\.)?enisa|www\.europol|oami)\.europa\.eu/"
+	<rule from="^http://(cordis|www\.eba|ec|joinup\.ec|(?:www\.)?enisa|www\.europol|oami)\.europa\.eu/"
 		to="https://$1.europa.eu/" />
 
 </ruleset>

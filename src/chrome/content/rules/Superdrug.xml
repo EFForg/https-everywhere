@@ -1,12 +1,77 @@
-<ruleset name="Superdrug (partial)" platform="mixedcontent">
+<!--
+	Nonfunctional hosts:
 
-	<target host="superdrug.com"/>
+		- blog ¹
+		- images ²
+
+	¹ Recursive redirect
+	² Refused
+
+
+	^: Mismatched
+	www: Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.onlinedoctor.superdrug.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- onlinedoctor.superdrug.com
+
+-->
+<ruleset name="Superdrug.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="onlinedoctor.superdrug.com" />
 	<target host="www.superdrug.com"/>
-	<target host="*.www.superdrug.com"/>
 
-	<securecookie host="^(.*\.)?superdrug\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="superdrug.com"/>
 
-	<rule from="^http://(www\.)?superdrug\.com/"
-		to="https://$1superdrug.com/"/>
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.superdrug\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.superdrug\.com/(?!combined\.css|favicon\.ico|(?:login|register)(?:$|[?/])|medias/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.superdrug.com/beautycard" />
+			<test url="http://www.superdrug.com/cart" />
+			<test url="http://www.superdrug.com/competitions" />
+			<test url="http://www.superdrug.com/contact" />
+			<test url="http://www.superdrug.com/delInfo" />
+			<test url="http://www.superdrug.com/history" />
+			<test url="http://www.superdrug.com/page/careers" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.superdrug.com/combined.css" />
+			<test url="http://www.superdrug.com/favicon.ico" />
+			<test url="http://www.superdrug.com/login" />
+			<test url="http://www.superdrug.com/medias/custom-content/img/offerbar/storenextdelivery.png" />
+			<test url="http://www.superdrug.com/register" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^onlinedoctor\.superdrug\.com$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="^(?:.*\.)?superdrug\.com$" name=".*"/-->
+	<securecookie host="^onlinedoctor\.superdrug\.com$" name=".*" />
+
+
+	<rule from="^http://superdrug\.com/"
+		to="https://www.superdrug.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

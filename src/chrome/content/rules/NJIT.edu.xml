@@ -1,0 +1,121 @@
+<!--
+	New Jersey Institute of Technology
+
+
+	Nonfunctional subdomains:
+
+		- biomedical ¹
+		- ece ¹
+		- help ²
+		- library ¹
+		- nce ¹
+		- ovsa ³
+
+	¹ Plaintext reply
+	² 403
+	³ Shows tree
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- cp4 ²
+		- mail.g ³
+		- moodle ⁴
+		- my ⁵
+		- r25livepr1 ⁴
+		- www ⁴
+
+	¹ Dropped
+	² Unsafe renegotiation
+	³ Google
+	⁴ Mixed css
+	⁵ Refused
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹	(^ → www)
+		- cp4 ²
+		- r25livepr1 ¹
+
+	¹ Avoiding broken MCB
+	² Some pages redirect to http
+
+
+
+	Fully covered subdomains:
+
+		- courseschedules
+		- directory
+		- mail.g	(→ mail.google.com
+		- ist
+		- my		(→ www)
+		- njit-connect
+		- webmail
+
+
+	Insecure cookies are set for these domains:
+
+		- cp4
+		- directory
+		- njit-connect
+
+
+	Mixed content:
+
+		- css, on:
+
+			- moodle from njit2.mrooms.net
+			- r25livepr1 and www from www *
+			- r25livepr1 from ajax.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="NJIT.edu (partial)">
+
+	<target host="njit.edu" />
+	<target host="*.njit.edu" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?njit\.edu/+(?!.+\.(?:css|jpg|gif|ico|png)(?:$|\?)|calendar(?:$|\?)|cp/login\.php|uws/feeds/thumb\.php|uws/ldapimage\.php)" />
+		<exclusion pattern="^http://r25livepr1\.njit\.edu/+(?!.+\.jpg(?:$|\?))" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://cp4\.njit\.edu/cp/home/check/post($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://cp4\.njit\.edu/+(?!favicon\.ico|misc/|cp/content/|cps/images/|custom/|site/)" />
+		
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cp4\.njit\.edu$" name="^UserAgentId$" /-->
+	<!--securecookie host="^(directory|njit-connect)\.njit\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^njit-connect\.njit\.edu$" name="^(NSC_QH-\d+|ShoppingCartCookieID)$" /-->
+
+	<securecookie host="^(?:directory|njit-connect)\.njit\.edu$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?njit\.edu/"
+		to="https://www.njit.edu/" />
+
+	<rule from="^http://(courseschedules|cp4|directory|ist|njit-connect|r25livepr1|webmail)\.njit\.edu/"
+		to="https://$1.njit.edu/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://mail\.g\.njit\.edu/.*"
+		to="https://mail.google.com/a/njit.edu" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://my\.njit\.edu/[^?]*"
+		to="https://www.njit.edu/cp/login.php" />
+
+</ruleset>

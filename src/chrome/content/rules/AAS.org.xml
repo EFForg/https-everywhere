@@ -1,0 +1,74 @@
+<!--
+	Nonfunctional subdomains:
+
+		- aer ¹
+		- csma ¹
+		- dda ¹
+		- dps ¹
+		- had ¹
+		- head ¹
+		- lad ¹
+		- solarnews ²
+		- spd ³
+
+	¹ Shows ^
+	² Plaintext reply
+	³ Refused
+
+
+	Problematic subdomains:
+
+		- aj ¹
+		- apj ¹
+		- photos ²
+		- www ³
+
+	¹ Shows ^
+	² Mismatched, CN: *.smugmug.com
+	³ Mismatched, CN: jobregister.aas.org
+
+
+	Fully covered subdomains:
+
+		- ^
+		- aj		(→ iopscience.iop.org)
+		- apj		(→ iopscience.iop.org)
+		- jobregister
+		- members
+
+
+	Note that some paths appear to differ between ^ and www.
+
+
+	Insecure cookies are set for these domains:
+
+		- members
+
+-->
+<ruleset name="AAS.org (partial)">
+
+	<target host="aas.org" />
+	<target host="*.aas.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^members\.aas\.org$" name="^(ASP\.NET_SessionId|AnonymousCartId)$" /-->
+
+	<securecookie host="^members\.aas\.org$" name=".+" />
+
+
+	<rule from="^http://(jobregister\.|members\.)?aas\.org/"
+		to="https://$1aas.org/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://apj\.aas\.org/+"
+		to="https://iopscience.iop.org/0004-637X" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://aj\.aas\.org/+"
+		to="https://iopscience.iop.org/1538-3881" />
+
+</ruleset>

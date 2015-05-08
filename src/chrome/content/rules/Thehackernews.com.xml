@@ -1,23 +1,32 @@
 <!--
-	www: 404
+	Other Hacker News rulesets:
+
+		- THN.li.xml
 
 
-	Mixed content:
+	Nonfunctional subdomains:
 
-		- Images on ^ and magazine from \d.bp.blogspot.com *
+		- (www.)? *
+		- magazine *
 
-		- favicon on ^ from $self *
-
-	* Secured by us
+	* Redirects to http
 
 -->
-<ruleset name="Thehackernews.com">
-<target host="thehackernews.com"/>
-<target host="*.thehackernews.com"/>
+<ruleset name="The Hacker News.com (partial)" default_off="redirect loop">
+
+	<target host="thehackernews.com" />
+	<target host="*.thehackernews.com" />
+		<!--
+			Redirect to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?thehackernews\.com/(?:$|\d{4}/\d\d/[\w-]+\.html|favicon\.ico)" />
+		<exclusion pattern="^http://magazine\.thehackernews\.com/(?:$|favicon\.ico|images/|issue-\d+\.html|stylesheets/)" />
 
 
-	<securecookie host="^\.thehackernews\.com$" name=".+" />
+	<securecookie host="^\.thehackernews\.com$" name="^__cfduid$" />
 
 
-<rule from="^http://(?:(magazine\.)|www\.)?thehackernews\.com/" to="https://$1thehackernews.com/"/>
+	<rule from="^http://(magazine\.|www\.)?thehackernews\.com/"
+		to="https://$1thehackernews.com/" />
+
 </ruleset>

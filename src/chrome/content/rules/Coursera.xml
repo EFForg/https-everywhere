@@ -1,8 +1,10 @@
-<!--	Buckets:
-		coursera.s3.amazonaws.com
+<!--
+	CDN buckets:
+
+		- coursera.s3.amazonaws.com
 		- coursera-course-photos.s3.amazonaws.com
 		- coursera-university-assets.s3.amazonaws.com
-		spark-public.s3.amazonaws.com
+		- spark-public.s3.amazonaws.com
 		- d1rlkby5e91r2j.cloudfront.net
 		- d2wvvaown1ul17.cloudfront.net
 		- d396qusza40orc.cloudfront.net
@@ -10,23 +12,40 @@
 		- duqnjvq4jwr55.cloudfront.net
 
 
+	^: doesn't work
+
+
 	Fully covered subdomains:
 
+		- (www.)?	(^ → www)
 		- accounts
+		- class
 		- eventing
+		- tech
+
+
+	Mixed content:
+
+		- Video on class from *.cloudfront.net *
+
+		- css on tech from fonts.googleapis.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Coursera">
+<ruleset name="Coursera.org">
 
 	<target host="coursera.org"/>
 	<target host="*.coursera.org"/>
 
-	<securecookie host="^(.*\.)?coursera\.org$" name=".*"/>
 
-	<!--	!www !work	-->
-	<rule from="^https?://coursera\.org/"
-		to="https://www.coursera.org/"/>
+	<securecookie host="^(?:.*\.)?coursera\.org$" name=".+" />
 
-	<rule from="^http://(accounts|class|eventing|www)\.coursera\.org/"
-		to="https://$1.coursera.org/"/>
+
+	<rule from="^http://(?:www\.)?coursera\.org/"
+		to="https://www.coursera.org/" />
+
+	<rule from="^http://(accounts|class|eventing|tech)\.coursera\.org/"
+		to="https://$1.coursera.org/" />
 
 </ruleset>

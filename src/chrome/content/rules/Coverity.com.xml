@@ -1,4 +1,9 @@
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	NB: fixes mixed content, security relevant => backport?
+
+
 	CDN buckets:
 
 		- coverity.mktoweb.com
@@ -8,17 +13,16 @@
 
 	Nonfunctional subdomains:
 
-		- (www.) ¹
-		- scan5 ²
+		- blog ¹
+		- scan6 ²
 
-	¹ Refused
-	² Redirects to http...:8080
+	¹ Shows www
+	² Refused
 
 
 	Problematic subdomains:
 
 		- autodiscover ¹
-		- blog ¹
 		- softwareintegrity ²
 
 	¹ Refused
@@ -27,16 +31,20 @@
 
 	Partially covered subdomains:
 
-		- blpg			(→ communities)
 		- softwareintegrity	(→ na-sjf.marketo.com)
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- autodiscover		(→ outlook.office365.com)
+
 		- communities
 		- uat.communities
 		- apps.uat.communities
-		- (www.)scan
+
+		- (www.)?scan
+		- scan5
 		- trial
 
 
@@ -44,25 +52,29 @@
 
 		- apps.communities.coverity.com
 		- www.communities.coverity.com
+		- scan7.coverity.com
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		- communities ¹
-		- uat.communities ¹
-		- apps.uat.communities ¹
-		- scan ¹
-		- www.scan ¹
-		- scan5 ²
-		- trial ³
+		- communities.coverity.com
+		- uat.communities.coverity.com
+		- apps.uat.communities.coverity.com
 
-	¹ Secured by us <= not secured by server
-	³ Not secured by us <= tls unsupported
-	³ Secured by server
+		- scan.coverity.com
+		- www.scan.coverity.com
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Coverity.com (partial)">
+<ruleset name="Coverity.com (partial)" default_off='failed ruleset test'>
 
+	<target host="coverity.com" />
 	<target host="*.coverity.com" />
 
 
@@ -73,22 +85,27 @@
 	<!--securecookie host="^scan\.coverity\.com$" name="^(_session_id|request_method)$" /-->
 
 	<securecookie host="^(?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan)\.coverity\.com$" name=".+" />
-	<!--
-		Secured by server:
+
+
+	<!--	For /+\w.*, redirect keeps path but not args:
+								-->
+	<rule from="^http://autodiscover\.coverity\.com/+([^?]+).*"
+		to="https://outlook.office365.com/$1" />
+
+	<!--	For /+\?.*, drops args:
+						-->
+	<rule from="^http://autodiscover\.coverity\.com/.*"
+		to="https://outlook.office365.com/owa/" />
+
+	<!--	Broken by Coverity:
 					-->
-	<!--securecookie host="^trial\.coverity\.com$" name="^_session_id$" /-->
-
-
-	<rule from="^http://autodiscover\.coverity\.com/"
-		to="https://autodiscover-s.outlook.com/" />
-
-	<rule from="^http://blog\.coverity\.com/[^?]*(?=$|\?)"
-		to="https://communities.coverity.com/blogs/software-integrity-blog/" />
-
-	<rule from="^http://((?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|trial)\.coverity\.com/"
-		to="https://$1.coverity.com/" />
+	<!--rule from="^http://blog\.coverity\.com/[^?]*(?=$|\?)"
+		to="https://communities.coverity.com/blogs/software-integrity-blog/" /-->
 
 	<rule from="^http://softwareintegrity\.coverity\.com/(?=css/|images/|js/|rs/)"
 		to="https://na-sjf.marketo.com/" />
+
+	<rule from="^http://((?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|scan5|trial|www)\.)?coverity\.com/"
+		to="https://$1coverity.com/" />
 
 </ruleset>

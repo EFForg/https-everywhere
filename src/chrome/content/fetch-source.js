@@ -27,7 +27,7 @@ httpsEverywhere.fetchSource = {
   CI: Components.interfaces,
 
   // Constants for generating URL from which source will be fetched 
-  BASE_SITE: 'https://gitweb.torproject.org/https-everywhere.git/blob_plain/',
+  BASE_SITE: 'https://gitweb.torproject.org/https-everywhere.git/plain/',
   DIRECTORY: '/src/chrome/content/rules/',
   HEAD_STRING: 'HEAD',
 
@@ -58,7 +58,7 @@ httpsEverywhere.fetchSource = {
    */
   getURL: function(filename, GITCommitID) {
     var fs = httpsEverywhere.fetchSource;
-    return fs.BASE_SITE + GITCommitID + ":" + fs.DIRECTORY + filename;
+    return fs.BASE_SITE + fs.DIRECTORY + filename + "?h=" + GITCommitID;
   },
 
   /**
@@ -150,12 +150,12 @@ httpsEverywhere.fetchSource = {
 
 // TODO: Test resizing on mulitple platforms
 // adjust window resizing
-window.onresize = function() {
+window.addEventListener("resize", function() {
   var textBox = document.getElementById("source-text");
   // TODO: Move to constants
   textBox.width = window.innerWidth - 100;
   textBox.height = window.innerHeight - 150;
-};
+}, false);
 
 // hook event for init
 window.addEventListener("load", httpsEverywhere.fetchSource.init, false);

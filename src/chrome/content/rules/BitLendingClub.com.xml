@@ -1,0 +1,53 @@
+<!--
+	Nonfunctional hosts in *bitlendingclub.com:
+
+		- forum ¹
+		- support ²
+
+	¹ Redirects to ^bitlendingclub.com
+	² Zendesk
+
+
+	Fully covered hosts in *bitlendingclub.com:
+
+		- (www.)?
+		- blog
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- bitlendingclub.com
+		- .bitlendingclub.com
+		- www.bitlendingclub.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- ^ from blc.avatars.bucket.s3-us-west-2.amazonaws.com
+			- blog from $self
+
+-->
+<ruleset name="BitLendingClub.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bitlendingclub.com" />
+	<target host="blog.bitlendingclub.com" />
+	<target host="www.bitlendingclub.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(blog\.|www\.)?bitlendingclub\.com$" name="^___utmv\w+$" /-->
+	<!--securecookie host="^bitlendingclub\.com$" name="(__ab_[\da-f]{32}|PHPSESSID)$" /-->
+	<!--securecookie host="^\.bitlendingclub\.com$" name="^(incap_ses_\d+_\d+|visid_incap_\d+)$" /-->
+
+	<securecookie host="^(?:\.|blog\.|www\.)?bitlendingclub\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

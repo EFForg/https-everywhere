@@ -1,0 +1,88 @@
+<!--
+	Nonfunctional subdomains:
+
+		- androidapi ¹
+		- blog ²
+		- iosapi ¹
+		- macapi ¹
+
+	¹ Dropped
+	² Refused
+
+
+	Problematic subdomains:
+
+		- planet ¹
+		- support ²
+
+	¹ Mismatched, mixed css
+	² Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- components
+		- developer
+		- forums
+		- scan		(→ xamarinmobilizer.azurewebsites.net
+		- store
+		- support	(→ ^)
+
+
+	Insecure cookies are set for these domains:
+
+		- ^
+		- components
+		- .planet
+		- .scan
+		- store
+
+
+	Mixed content:
+
+		- iframe on planet from www.youtube.com ¹
+
+		- css, on:
+
+			- planet from ^ ¹
+			- planet from blog ²
+			- planet from fonts.googleapis.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Xamarin.com (partial)">
+
+	<target host="xamarin.com" />
+	<target host="*.xamarin.com" />
+		<!--
+			Avoid broken MCB:
+						-->
+		<!--exclusion pattern="^http://planet\.xamarin\.com/+(?!favicon\.ico|images/|wp-content/|wp-includes/)" /-->
+
+
+	<!--securecookie host="^xamarin\.com$" name="__RequestVerificationToken_Lw__" /-->
+	<!--securecookie host="^(components\.)?xamarin\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.(planet|scan)\.xamarin\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^store\.xamarin\.com$" name="^(__RequestVerificationToken|Nop\.CustomerSessionGUIDCookie)$" /-->
+
+	<securecookie host="^(?:components\.|store\.)?xamarin\.com$" name=".+" />
+
+
+	<rule from="^http://((?:components|developer|forums|store|www)\.)?xamarin\.com/"
+		to="https://$1xamarin.com/" />
+
+	<rule from="^http://planet\.xamarin\.com/(?=favicon\.ico|images/|wp-content/|wp-includes/)"
+		to="https://planetxamarin.azurewebsites.net/" />
+
+	<rule from="^http://scan\.xamarin\.com/"
+		to="https://xamarinmobilizer.azurewebsites.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://support\.xamarin\.com/[^?]*"
+		to="https://xamarin.com/support" />
+
+</ruleset>

@@ -25,20 +25,21 @@
 
 	Nonfunctional domains:
 
-		- (www.)voxmedia.com		(ssl_error_rx_record_too_long)
-		- product.voxmedia.com		(hosted on Tumblr)
+		- blog.sbnation.com *
+
+	* Refused
 
 
 	Problematic domains:
 
-		- (www.)sbnation.com *
-		- * blog.sbnation.com *
+		- sbnation.com ¹
 
-	* Mismatched, CN: *.a.ssl.fastly.net
+	¹ Refused
 
 
 	Fully covered domains:
 
+		- (www.)sbnation.com	(^ → www)
 		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
 		- fonts.sbnation.com	(→ d1jcofl6pfjesh.cloudfront.net)
 
@@ -48,10 +49,19 @@
 -->
 <ruleset name="SB Nation (partial)">
 
+	<target host="sbnation.com" />
 	<target host="*.sbnation.com" />
 	<target host="share.sbndev.net" />
-	<target host="jobs.voxmedia.com" />
 
+
+	<!--	Observed cookies:
+			- _session_id
+		-->
+	<securecookie host="^www\.sbnation\.com$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?sbnation\.com/"
+		to="https://www.sbnation.com/" />
 
 	<rule from="^http://assets\.sbnation\.com/"
 		to="https://s3.amazonaws.com/assets.sbnation.com/" />
@@ -68,10 +78,5 @@
 
 	<rule from="^http://share\.sbndev\.net/"
 		to="https://s3.amazonaws.com/share.sbndev.net/" />
-
-	<!--	At least some pages 302 to http.
-							-->
-	<rule from="^http://jobs\.voxmedia\.com/(css/|favicon\.ico|img/)"
-		to="https://sbnation.theresumator.com/$1" />
 
 </ruleset>

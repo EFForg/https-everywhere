@@ -1,55 +1,26 @@
 <ruleset name="Cloudfront">
 
 	<target host="*.cloudfront.net" />
-	<target host="www.cloudfront.net" />
-
 
 	<rule from="^http://([^/:@\.]+)\.cloudfront\.net/" 
 		to="https://$1.cloudfront.net/" />
 
+	<!-- from src/chrome/content/rules/Guild-Wars-2.xml  -->
+	<test url="http://d15glo5zfrmw71.cloudfront.net/" />
+	<test url="http://d1ej19d7kwigfi.cloudfront.net/" />
+	<test url="http://d1h9a8s8eodvjz.cloudfront.net/" />
 
-	<!--	Fixes video on prosieben.de/tv/switch-reloaded/video/clip/1928955-volle-kanne-der-riesen-rammler-1.3349717/
-											-->
-	<exclusion pattern="^http://d14orf5kgffdwb\.cloudfront\.net/dynamic/date\.php" />
-	<!--
-		https://trac.torproject.org/projects/tor/ticket/6848
-									-->
-	<exclusion pattern="^http://d1b14unh5d6w7g\.cloudfront\.net" />
-
-	<!--	https://trac.torproject.org/projects/tor/ticket/7020
-									-->
-  	<exclusion pattern="^http://d1i6vahw24eb07\.cloudfront\.net" />
-	<!--
-		C-SPAN videos: https://trac.torproject.org/projects/tor/ticket/7567
-									-->
-	<exclusion pattern="^http://d1k4es7bw1lvxt\.cloudfront\.net" />
-	<!--
-		this unbreaks turntable.fm and probably many other things
-									-->
-	<exclusion pattern="^http://d1bw0qpdrmjlhz\.cloudfront\.net" />
-	<!--
-		This breaks padlet.com wall:
-
-			https://trac.torproject.org/projects/tor/ticket/9146
-									-->
-	<exclusion pattern="^http://d2s8n7nv9yizdf\.cloudfront\.net/assets/extras-\w{32}\.js" />
 	<!--
 		and this is a generalised precaution from turntable.fm
+		(rewriting this file seems to break cross origin in flash)
 									-->
-	<exclusion pattern="^http://(?:[^/:@\.]+)\.cloudfront\.net/crossdomain\.xml" />
-  <!-- 
-      Spotify https://trac.torproject.org/projects/tor/ticket/7888 
-                  -->
-  <exclusion pattern="^http://dsu0uct5x2puz\.cloudfront\.net" />
-  <!-- Droplr: https://trac.torproject.org/projects/tor/ticket/8572 -->
-  <exclusion pattern="^http://d1zjcuqflbd5k\.cloudfront\.net" />
-  <!-- TuneIn: https://trac.torproject.org/projects/tor/ticket/8704 -->
-  <exclusion pattern="^http://d3bwsr3zpy54hy\.cloudfront\.net" />
-  <!-- Amazon mp3: https://trac.torproject.org/projects/tor/ticket/9367 
-                   https://trac.torproject.org/projects/tor/ticket/9851 -->
-  <exclusion pattern="^http://d2q1srilgjznst\.cloudfront\.net" />
-  <exclusion pattern="^http://d28julafmv4ekl\.cloudfront\.net" />
+	<exclusion pattern="^http://(\w+)\.cloudfront\.net/crossdomain\.xml" />
+		<test url="http://d1h9a8s8eodvjz.cloudfront.net/crossdomain.xml" />
+		<test url="http://d1ej19d7kwigfi.cloudfront.net/crossdomain.xml" />
 
-  <!-- Panelsyndicate: https://github.com/EFForg/https-everywhere/issues/650 -->
-  <exclusion pattern="^http://d2h7a0a3c1074f\.cloudfront\.net" />
+  <!-- See https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html
+    Policies contain the protocol, so a signature for http will not work for https
+  -->
+  <exclusion pattern="&amp;Signature=" />
+  	<test url="http://d1h9a8s8eodvjz.cloudfront.net/test.txt?a=b&amp;Signature=1234" />
 </ruleset>

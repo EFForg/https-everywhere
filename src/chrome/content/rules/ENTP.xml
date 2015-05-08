@@ -1,14 +1,26 @@
-<!--	See ENTP-mismatches.xml also
+<!--
+	For problematic coverage, see ENTP-mismatches.xml.
 
-	d1ros97qkrwjf5.cloudfront.net
-	s3.amazonaws.com/entp-lh-avatar-production/
+
+	CDN buckets:
+
+		- s3.amazonaws.com/entp-lh-avatar-production/
+		- d1ros97qkrwjf5.cloudfront.net
+
+
+	Insecure cookies are set for these domains:
+
+		- help.tenderapp.com
+
 -->
 <ruleset name="ENTP (partial)">
 
 	<target host="lighthouseapp.com" />
 	<target host="*.lighthouseapp.com" />
-		<!--	handled in mismatches ruleset	-->
-		<exclusion pattern="^http://help\.lighthouseapp\."/>
+		<!--
+			Handled in mismatches ruleset:
+							-->
+		<exclusion pattern="^http://help\.lighthouseapp\." />
 	<target host="tenderapp.com" />
 	<target host="asset-0.tenderapp.com" />
 	<target host="asset-1.tenderapp.com" />
@@ -16,20 +28,23 @@
 	<target host="help.tenderapp.com" />
 	<target host="setup.tenderapp.com" />
 	<target host="www.tenderapp.com" />
-		<exclusion pattern="^http://(www\.)?tenderapp\.com/$" />
 
 
-	<securecookie host="^(.*\.)?tenderapp\.com$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^help\.tenderapp\.com$" name="^(_tender_session|anon_token)$" /-->
+
+	<securecookie host="^(?:.*\.)?tenderapp\.com$" name=".+" />
 
 
 	<rule from="^http://(my\.|www\.)?lighthouseapp\.com/"
 		to="https://$1lighthouseapp.com/"/>
 
 	<!--	clients have unique subdomains.  Pages redirect to http.	-->
-	<rule from="^http://([\w\-]+)\.lighthouseapp\.com/(images/|login|pkg/|stylesheets/|users/new)"
-		to="https://$1.lighthouseapp.com/$2"/>
+	<rule from="^http://([\w-]+)\.lighthouseapp\.com/(?=images/|login|pkg/|stylesheets/|users/new)"
+		to="https://$1.lighthouseapp.com/"/>
 
-	<rule from="^http://([\w\-]+\.)?tenderapp\.com/"
+	<rule from="^http://([\w-]+\.)?tenderapp\.com/"
 		to="https://$1tenderapp.com/" />
 
 </ruleset>

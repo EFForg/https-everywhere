@@ -1,16 +1,51 @@
 <!--
+	New York University
+
 	For problematic rules, see New-York-University-mismatches.xml.
 
 
 	Nonfunctional subdomains:
 
+		- albert ¹
 		- (www.)gsas
 		- stern		(times out)
+
+	¹ Refused
+
+
+	Problematic subdomains:
+
+		- admissions ¹
+		- bookstores ¹
+		- www.cims ²
+		- www.cs ²
+		- www.g4li ²
+		- www.home ²
+		- www.math ²
+		- www.mrl ²
+		- www.steinhardt ²
+
+	¹ Mismatched
+	² Cert only matches ^foo
+
+
+	Partially covered subdomains:
+
+		- engineering *
+
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
-		- home
+		- (www.)?
+		- admissions		(→ www)
+		- (www.)?bookstores	(^ → www)
+		- (www.)cims		(www → ^)
+		- (www.)?cs		(www → ^)
+		- vlg.cs
+		- (www.)?g4li		(www → ^)
+		- (www.)?home		(www → ^)
 		- its.law
 
 		- library
@@ -18,15 +53,38 @@
 		- getit.library
 		- login.library
 
+		- login
+		- (www.)?math		(www → ^)
+		- (www.)?mrl		(www → ^)
 		- nursing
 		- frms.nursing
 		- orientation.nursing
 		- admin.portal
 		- shibboleth
+		- sis
 		- start
-		- steinhardt
+		- (www.)?steinhardt	(www → ^)
+		- testhome.home.syr
 		- web.home.syr
 		- wikis
+
+
+	These domains don't work over http:
+
+		- jive.home.nyu.edu
+		- testhome.nyu.edu
+
+
+	Insecure cookies are set for these domains:
+
+		- .nyu.edu
+		- its.law.nyu.edu
+		- .library.nyu.edu
+		- getit.nyu.edu
+		- admin.portal.nyu.edu
+		- steinhardt.nyu.edu
+		- web.home.syr.nyu.edu
+		- www.nyu.edu
 
 
 	Mixed content:
@@ -39,12 +97,18 @@
 	* Secured by us
 
 -->
-<ruleset name="New York University (partial)" platform="mixedcontent">
+<ruleset name="NYU.edu (partial)" platform="mixedcontent">
 
 	<target host="nyu.edu" />
 	<target host="*.nyu.edu" />
-	<target host="www.*.nyu.edu" />
-	<target host="vlg.cs.nyu.edu" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://engineering\.nyu\.edu/($|\?|crissp/$|events/\d{4}/\d\d/\d\d/[\w-]+$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://engineering\.nyu\.edu/+(?!crissp/(?:module|site|theme)s/|favicon\.ico|files/|sites/)" />
 
 
 	<!--	Not secured by server:
@@ -55,6 +119,7 @@
 	<!--securecookie host="^admin\.portal\.nyu\.edu$" name="^BIGipServerPeopleSoft-Portal[\d.]+-PT\d+-Prod-Pool$" /-->
 	<!--securecookie host="^steinhardt\.nyu\.edu$" name="^symfony$" /-->
 	<!--securecookie host="^web\.home\.syr\.nyu\.edu$" name="^BIGipServer~ES-PROD-MEDIUM~WWW-HTTP$" /-->
+	<!--securecookie host="^www\.nyu\.edu$" name="^BIGipServerWWW-HTTP$" /-->
 
 	<!--	Cross-domain cookies observed:
 
@@ -66,24 +131,21 @@
 	<securecookie host="^\w+[\w.]+\.nyu\.edu$" name=".*" />
 
 
-	<!--	- !www doesn't work over https
-		- Redirects to www over http
-		- Cert doesn't match //bookstores.
-					-->
-	<rule from="^http://(?:www\.)?(bookstores\.)?nyu\.edu/"
-		to="https://www.$1nyu.edu/" />
+	<rule from="^http://(www\.)?nyu\.edu/"
+		to="https://$1nyu.edu/" />
 
-	<!--	- Cert: www.nyu.edu
-		- Redirects like so
+	<rule from="^http://(?:www\.)?bookstores\.nyu\.edu/"
+		to="https://www.bookstores.nyu.edu/" />
+
+	<!--	Redirects like so
 				-->
 	<rule from="^http://admissions\.nyu\.edu/"
 		to="https://www.nyu.edu/admissions/undergraduate-admissions.html" />
 
-	<!--	Cert doesn't match www.	-->
 	<rule from="^http://(?:www\.)?(cims|cs|g4li|home|math|mrl|steinhardt)\.nyu\.edu/"
 		to="https://$1.nyu.edu/" />
 
-	<rule from="^http://(vlg\.cs|its\.law|(?:(?:arch|getit|login)\.)?library|login|(?:frms\.|orientation\.)?nursing|admin\.portal|shibboleth|start|steinhardt|web\.home\.syr|wikis)\.nyu\.edu/"
+	<rule from="^http://(vlg\.cs|engineering|its\.law|(?:(?:arch|getit|login)\.)?library|login|(?:frms\.|orientation\.)?nursing|admin\.portal|shibboleth|sis|start|steinhardt|(?:testhome|web)\.home\.syr|wikis)\.nyu\.edu/"
 		to="https://$1.nyu.edu/" />
 
 </ruleset>
