@@ -1,0 +1,32 @@
+<!--
+	readthedocs.org and readthedocs.com work correctly.
+	
+	Working subdomains on readthedocs.org / readthedocs.com:
+		- www
+		- media
+
+	All other *.readthecods.(com|org) and *.rtfd.org
+	use the '*.readthedocs.org' certificate.
+-->
+
+<ruleset name="Read the Docs">
+	<target host="readthedocs.org" />
+	<target host="*.readthedocs.org" />
+
+	<target host="readthedocs.com" />
+	<target host="*.readthedocs.com" />
+	
+	<target host="rtfd.org" />
+	<target host="*.rtfd.org" />
+	
+	<test url="http://rmlint.readthedocs.org" />
+	<test url="http://rmlint.readthedocs.com" />
+	<test url="http://rmlint.rtfd.org" />
+
+	<securecookie host="^readthedocs\.org$" name=".+" />
+	<securecookie host="^readthedocs\.com$" name=".+" />
+	
+	<rule from="^https?://(.+)\.readthedocs\.com" to="https://$1.readthedocs.org" />
+	<rule from="^https?://(.+\.)?rtfd\.org" to="https://$1readthedocs.org" />
+	<rule from="^http://" to="https://" />
+</ruleset>
