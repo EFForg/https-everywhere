@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -o errexit
 APP_NAME=https-everywhere
 
@@ -44,12 +44,22 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   cd ..
   XPI_NAME="$APP_NAME-$1"
   cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
-  cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/
+  if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
+    echo Old version does not support AMO
+  fi
   rm -rf $SUBDIR
   exit 0
 fi
 
 if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+  # This is an optimization to get the OS reading the rulesets into RAM ASAP;
+  # it's useful on machines with slow disk seek times; doing several of these
+  # at once allows the IO subsystem to seek more efficiently.
+  for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
+    # Those cover everything but it wouldn't matter if they didn't
+    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
+  done
+
   echo "Generating sqlite DB"
   python2.7 ./utils/make-sqlite.py
 fi
@@ -129,7 +139,8 @@ rm -r pkg/xpi-eff/chrome/content/rules
 cp -a src/ pkg/xpi-amo/
 rm -r pkg/xpi-amo/chrome/content/rules
 # The AMO version of the package cannot contain the updateKey or updateURL tags
-sed -i -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
+sed -i.bak -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
+rm pkg/xpi-amo/install.rdf.bak
 
 # Used for figuring out which branch to pull from when viewing source for rules
 GIT_OBJECT_FILE=".git/refs/heads/master"
