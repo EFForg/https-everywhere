@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://amnesty.no/ => https://amnesty.no/: Cycle detected - URL already encountered: https://www.amnesty.no/
 	For other Amnesty International coverage, see Amnesty-Internationa.xml.
 
 
@@ -8,17 +6,60 @@ Fetch error: http://amnesty.no/ => https://amnesty.no/: Cycle detected - URL alr
 
 		- blogg		(redirects to www, valid cert)
 
+
+	Fully covered hosts in *amnesty.no:
+
+		- minside
+
+
+	Insecure cookie are set for these hosts:
+
+		- minside.amnesty.no
+
+
+	Mixed content:
+
+		- Image on minside from www.amnesty.no *
+
+	* Secured by us
+
 -->
-<ruleset name="Amnesty International Norway (partial)" default_off='failed ruleset test'>
+<ruleset name="Amnesty International Norway (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="amnesty.no" />
-	<target host="*.amnesty.no" />
+	<target host="minside.amnesty.no" />
+	<target host="www.amnesty.no" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.amnesty\.no/$" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://www\.amnesty\.no/+(?!sites/)" />
+
+			<!--	Direct rewrites:
+						-->
+			<test url="http://www.amnesty.no/LHBTI" />
+			<test url="http://www.amnesty.no/PussyRiot" />
+			<test url="http://www.amnesty.no/kontakt" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.amnesty.no/sites/all/themes/amnesty_desktop/images/bli_meldem_340x114.png" />
 
 
-	<securecookie host="^(?:w*\.)?amnesty\.no$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^minside\.amnesty\.no$" name="^ASP\.NET_SessionId$" /-->
+
+	<!--securecookie host="^(?:w*\.)?amnesty\.no$" name=".+" /-->
+	<securecookie host="^minside\.amnesty\.no$" name=".+" />
 
 
-	<rule from="^http://(www\.)?amnesty\.no/"
-		to="https://$1amnesty.no/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
