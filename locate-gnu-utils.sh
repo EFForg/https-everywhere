@@ -9,18 +9,21 @@ GREADLINK=$(which greadlink 2>/dev/null)
 if [ -x "$GREADLINK" ]; then
   READLINK="$GREADLINK"
 fi
+unset GREADLINK
 
 MKTEMP=$(which mktemp 2>/dev/null)
 GMKTEMP=$(which gmktemp 2>/dev/null)
 if [ -x "$GMKTEMP" ]; then
   MKTEMP="$GMKTEMP"
 fi
+unset GMKTEMP
 
 SHA256SUM=$(which sha256sum 2>/dev/null)
 GSHA256SUM=$(which gsha256sum 2>/dev/null)
 if [ -x "$GSHA256SUM" ]; then
   SHA256SUM="$GSHA256SUM"
 fi
+unset GSHA256SUM
 
 check_for_gnu_version() {
   gnu_available=$("$1" --version 2>&1 | grep GNU)
