@@ -3,8 +3,10 @@
 # Test that all rulesets modified after a certain date have sufficient test
 # coverage, according to the ruleset checker.
 #
+
 cd $(dirname $0)
-TMP=`mktemp`
+source locate-gnu-utils.sh
+TMP=`"$MKTEMP"`
 trap 'rm "$TMP"' EXIT
 if ! [ -d https-everywhere-checker ] ; then
   echo "Submodule https-everywhere-checker is missing. Run"
