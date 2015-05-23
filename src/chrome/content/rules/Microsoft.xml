@@ -119,9 +119,13 @@
 			- mymfe			(reset)
 			- news			(Redirects to http)
 			- officeimages
+			- onlinehelp		(Refused)
+			- i[1-3]?.onlinehelp *
+			- outlook ***
 			- privacy		(times out)
 			- academic.research ***
 			- sharepoint		(redirects to login.live.com, cert valid)
+			- i1.gallery.technet	(Mismatched)
 			- vepexp		(refused)
 			- edir.windowsm		(404)
 			- visio **
@@ -148,15 +152,18 @@
 			- i\d **
 			- ie	(mismatched, CN: *.azurewebsites.net)
 			- i1.mobile **
+			- i[1-4].code.msdn	(Mismatched)
+			- i[23]?.msdn **
 			- scache **
 			- search **
 			- spcache		(504, akamai)
 			- img3.store		(mismatched)
+			- i[23]?.technet **
 			- social.technet
 			- update *
 			- www.update		(Untrusted root)
 			- windows *
-			- res[12].windows **
+			- res[1-4].windows **
 
 		- compass.surface.com **
 
@@ -218,6 +225,9 @@
 		- msdn
 		- apisandbox.msdn
 		- code.msdn
+		- i[1-4].code.msdn		(→ i1.code.s-msft.com)
+		- events.msdn
+		- i[23]?.msdn			(→ msdn.microsoft.com)
 		- lab.msdn
 		- social.msdn
 		- visualstudiogallery.msdn
@@ -241,8 +251,12 @@
 		- corp.sts
 		- support
 		- sxp
+
 		- technet
 		- gallery.technet
+		- i[1-4].gallery.technet	(→ i1.gallery.technet.s-msft.com)
+		- i[23]?.technet		(→ technet.microsoft.com)
+
 		- res[12].windows	(→ akamai)
 
 
@@ -524,6 +538,7 @@
 		<test url="http://msdn.microsoft.com/" />
 		<test url="http://apisandbox.msdn.microsoft.com/" />
 		<test url="http://code.msdn.microsoft.com/" />
+		<test url="http://events.msdn.microsoft.com/" />
 		<test url="http://lab.msdn.microsoft.com/" />
 		<test url="http://social.msdn.microsoft.com/" />
 		<test url="http://visualstudiogallery.msdn.microsoft.com/" />
@@ -621,7 +636,7 @@
 
 	<!--	Akamai with no valid cert.
 						-->
-	<rule from="^http://i\d?\.(answers|(?:code\.)?msdn|onlinehelp|(?:services\.)?social|(?:gallery\.)?technet)\.microsoft\.com/"
+	<rule from="^http://i\d?\.(answers|msdn|(?:services\.)?social|technet)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
 
 		<test url="http://i.answers.microsoft.com/static/css/core.css" />
@@ -629,12 +644,7 @@
 		<test url="http://i3.answers.microsoft.com/static/css/search.css" />
 		<test url="http://i.msdn.microsoft.com/" />
 		<test url="http://i.msdn.microsoft.com//" />
-		<test url="http://i.code.msdn.microsoft.com/" />
-		<test url="http://i.code.msdn.microsoft.com//" />
-		<test url="http://i.onlinehelp.microsoft.com/" />
-		<test url="http://i.onlinehelp.microsoft.com//" />
 		<test url="http://i.services.social.microsoft.com/" />
-		<test url="http://i.gallery.technet.microsoft.com/" />
 
 	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
@@ -645,6 +655,14 @@
 		to="https://m.microsoft.com/" />
 
 		<test url="http://i1.mobile.microsoft.com/" />
+
+	<rule from="^http://i[1-4]\.(code\.msdn|gallery\.technet)\.microsoft\.com/"
+		to="https://i1.$1.s-msft.com/" />
+
+		<test url="http://i1.code.msdn.microsoft.com/" />
+		<test url="http://i1.code.msdn.microsoft.com//" />
+		<test url="http://i1.code.msdn.microsoft.com/content/common/trans.gif" />
+		<test url="http://i1.gallery.technet.microsoft.com/" />
 
 	<rule from="^http://img3\.store\.microsoft\.com/"
 		to="https://msstore.vo.msecnd.net/" />
@@ -658,7 +676,7 @@
 		<test url="http://res2.windows.microsoft.com/" />
 		<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_social.svg" />
 
-	<rule from="^http://((?:account|accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|(?:innovation\.|services\.)?connect|sas\.css|curah|events|social\.expression|go?|i|ieonline|insider|js|learning|m|widgets\.membership|mobile|code\.msdn|msdn|(?:apisandbox|lab|social|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|oem|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|(?:v[45]\.)?windowsupdate|www)\.)?microsoft\.com/"
+	<rule from="^http://((?:account|accountservices|(?:feedback\.)?adcenter|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|(?:innovation\.|services\.)?connect|sas\.css|curah|events|social\.expression|go?|i|ieonline|insider|js|learning|m|widgets\.membership|mobile|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|oem|office(?:15client|365|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|research|profileapi\.services|signature|snackbox|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|(?:v[45]\.)?windowsupdate|www)\.)?microsoft\.com/"
 		to="https://$1microsoft.com/" />
 
 </ruleset>

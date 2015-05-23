@@ -1,23 +1,37 @@
 <!--
 	For other Organized Crime and Corruption Reporting Project coverage, see Reporting_Project.net.xml.
 
+
+	Fully covered hosts in *occrp.org:
+
+		- (www.)?occrp.org
+		- (www.)?vis.occrp.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- occrp.org
+		- www.occrp.org
+
 -->
-<ruleset name="OCCRP.org (partial)">
+<ruleset name="OCCRP.org">
 
-	<target host="occrp.org" />
-	<target host="*.occrp.org" />
-		<!--
-			404:
+	<!--	Direct rewrites:
 				-->
-		<!--exclusion pattern="^http://(www\.)?occrp\.org/+\w" /-->
+	<target host="occrp.org" />
+	<target host="vis.occrp.org" />
+	<target host="www.vis.occrp.org" />
+	<target host="www.occrp.org" />
 
 
-	<!--	Redirect drops args:
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?occrp\.org/+(?:$|\?.*)"
-		to="https://reportingproject.net/occrp/" />
+	<!--securecookie host="^(www\.)?occrp\.org$" name="^([\da-f]{32}|[\da-f]{32}\[lang\]|lang)$" /-->
 
-	<rule from="^http://(www\.)?vis\.occrp\.org/"
-		to="https://$1vis.occrp.org/" />
+	<securecookie host="^(?:www\.)?occrp\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
