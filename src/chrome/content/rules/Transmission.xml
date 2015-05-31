@@ -1,6 +1,8 @@
+
 <!--
 	Nonfunctional subdomains:
 
+		- (www.)? ¹
 		- download ¹
 		- download-origin ²
 
@@ -8,30 +10,32 @@
 	² Refused
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these hosts:
 
-		- ^ *
-
-	* Redirects to http
+		- forum.transmissionbt.com
+		- trac.transmissionbt.com
 
 -->
-<ruleset name="Transmission (partial)">
+<ruleset name="Transmission BT.com (partial)">
 
-	<target host="transmissionbt.com" />
-	<target host="*.transmissionbt.com" />
+	<!--target host="transmissionbt.com" /-->
+	<target host="forum.transmissionbt.com" />
+	<target host="trac.transmissionbt.com" />
+	<!--target host="www.transmissionbt.com" /-->
 
-		<test url="http://forum.transmissionbt.com/" />
-		<test url="http://trac.transmissionbt.com/" />
-		<test url="http://www.transmissionbt.com/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?transmissionbt\.com/($|images/)" /-->
 
 
-	<securecookie host="^.*\.transmissionbt\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^trac\.transmissionbt\.com$" name="^(trac_form_token|trac_session)$" /-->
+
+	<securecookie host="^trac\.transmissionbt\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?transmissionbt\.com/"
-		to="https://www.transmissionbt.com/" />
-
-	<rule from="^http://(forum|trac)\.transmissionbt\.com/"
-		to="https://$1.transmissionbt.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,6 +1,18 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://adium.im/ => https://adium.im/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Problematic hosts in *adium.im:
+
+		- (www.)? *
+		- forum *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts in *adium.im:
+
+		- (www.)?
+		- forum
+		- trac
+
 	Mixed content:
 
 		- Images on ^ from $self *
@@ -8,10 +20,14 @@ Fetch error: http://adium.im/ => https://adium.im/: (60, 'SSL certificate proble
 	* Secured by us
 
 -->
-<ruleset name="Adium.im" default_off='failed ruleset test'>
+<ruleset name="Adium.im" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="adium.im" />
-	<target host="*.adium.im" />
+	<target host="forum.adium.im" />
+	<target host="trac.adium.im" />
+	<target host="www.adium.im" />
 
 
 	<!--	Not secured by server:
@@ -21,7 +37,7 @@ Fetch error: http://adium.im/ => https://adium.im/: (60, 'SSL certificate proble
 	<securecookie host="^trac\.adium\.im$" name=".+" />
 
 
-	<rule from="^http://((?:forum|trac|www)\.)?adium\.im/"
-		to="https://$1adium.im/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

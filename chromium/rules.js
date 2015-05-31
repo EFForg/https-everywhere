@@ -45,7 +45,7 @@ RuleSet.prototype = {
         return null;
       }
     }
-    // If a rulset has a match_rule and it fails, go no further
+    // If a ruleset has a match_rule and it fails, go no further
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
       log(VERB, "ruleset_match_c excluded " + urispec);
       return null;
@@ -290,24 +290,15 @@ RuleSets.prototype = {
     // If we passed that test, make up a random URL on the domain, and see if
     // we would HTTPSify that.
 
-    try {
-      var nonce_path = "/" + Math.random().toString();
-      nonce_path = nonce_path + nonce_path;
-      var test_uri = "http://" + domain + nonce_path;
-    } catch (e) {
-      log(WARN, "explosion in safeToSecureCookie for " + domain + "\n"
-                      + "(" + e + ")");
-      this.cookieHostCache.set(domain, false);
-      return false;
-    }
+    var nonce_path = "/" + Math.random().toString();
+    var test_uri = "http://" + domain + nonce_path + nonce_path;
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
     for (var i = 0; i < rs.length; ++i) {
       if (!rs[i].active) continue;
-      var rewrite = rs[i].apply(test_uri);
-      if (rewrite) {
-        log(INFO, "Cookie domain could be secured: " + rewrite);
+      if (rs[i].apply(test_uri)) {
+        log(INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
       }

@@ -27,22 +27,22 @@
 		- et		(refused)
 		- ftp *
 		- investors *
-		- spacewalk	(shows www)
+		- spacewalk ³
 		- sources *
 
 	* Times out
+	³ Redirects to www
 
 
 	Problematic subdomains:
 
-		- apac		(cert only matches www.apac)
-		- europe	(cert only matches www.europe)
-		- jobs		(mismatched, CN: *.sc.hodesdigital.com)
+		- www.cz *
+		- jobs *
 		- magazine *
 		- rhelblog *
 		- servicesblog *
 
-	* Mismatched, CN: *.wordpress.com
+	* Mismatched
 
 
 	Partially covered subdomains:
@@ -52,10 +52,10 @@
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- academy
 		- access
-		- (www.)apac	(^ → www)
+		- (www.)apac
 		- ar
 		- archive
 		- at
@@ -67,13 +67,14 @@
 		- careers
 		- cn
 		- community
+		- (www.)?cz	(www → ^)
 		- de
 		- developerblog
 		- docs
 		- engage
 		- es
 		- et		(→ community)
-		- (www.)europe	(^ → www)
+		- (www.)europe
 		- fr
 		- gb
 		- hardware
@@ -86,6 +87,7 @@
 		- lk
 		- mx
 		- openshift
+		- partner
 		- people
 		- ph
 		- rhn
@@ -97,10 +99,13 @@
 		- webmail
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- .bugzilla
-		- .www
+		- .redhat.com
+		- .bugzilla.redhat.com
+		- .smtrcs.redhat.com
+		- www.redhat.com
+		- .www.redhat.com
 
 
 	Mixed content:
@@ -112,8 +117,10 @@
 	* Secured by us
 
 -->
-<ruleset name="Red Hat">
+<ruleset name="Red Hat.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="redhat.com" />
 	<target host="academy.redhat.com" />
 	<target host="access.redhat.com" />
@@ -130,6 +137,7 @@
 	<target host="careers.redhat.com" />
 	<target host="cn.redhat.com" />
 	<target host="community.redhat.com" />
+	<target host="cz.redhat.com" />
 	<target host="de.redhat.com" />
 	<target host="developerblog.redhat.com" />
 	<target host="docs.redhat.com" />
@@ -137,20 +145,18 @@
 	<target host="es.redhat.com" />
 	<target host="europe.redhat.com" />
 	<target host="www.europe.redhat.com" />
-	<target host="et.redhat.com" />
 	<target host="fr.redhat.com" />
 	<target host="gb.redhat.com" />
 	<target host="hardware.redhat.com" />
 	<target host="id.redhat.com" />
 	<target host="in.redhat.com" />
-	<target host="investors.redhat.com" />
 	<target host="it.redhat.com" />
-	<target host="jobs.redhat.com" />
 	<target host="jp.redhat.com" />
 	<target host="listman.redhat.com" />
 	<target host="lk.redhat.com" />
 	<target host="mx.redhat.com" />
 	<target host="openshift.redhat.com" />
+	<target host="partner.redhat.com" />
 	<target host="people.redhat.com" />
 	<target host="ph.redhat.com" />
 	<target host="rhn.redhat.com" />
@@ -161,6 +167,13 @@
 	<target host="support.redhat.com" />
 	<target host="webmail.redhat.com" />
 	<target host="www.redhat.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.cz.redhat.com" />
+	<target host="et.redhat.com" />
+	<target host="jobs.redhat.com" />
+	<target host="investors.redhat.com" />
 
 		<exclusion pattern="^http://investors\.redhat\.com/(?!common/)" />
 
@@ -176,17 +189,17 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.redhat\.com$" name="^(JSESSIONIDSSO|become_user|rh_become|rh_shared_auth|rh_user|rh_user_detail)$" /-->
 	<!--securecookie host="^\.bugzilla\.redhat\.com$" name="^(BROWSE_PRODUCT|Bugzilla_login_request_cookie|DEFAULTFORMAT)$" /-->
+	<!--securecookie host="^\.smtrcs\.redhat\.com$" name="^s_vi$" /-->
+	<!--securecookie host="^www\.redhat\.com$" name="^(AWSELB|JSESSIONID|WL_DCID|java-wapps-t1-sticky-sessions)$" /-->
 	<!--securecookie host="^\.www\.redhat\.com$" name="^DCID$" /-->
 
 	<securecookie host="^(?:.*\.)?redhat\.com$" name=".+" />
 
 
-	<rule from="^http://redhat\.com/"
-		to="https://www.redhat.com/" />
-
-	<rule from="^http://(apac|europe)\.redhat\.com/"
-		to="https://www.$1.redhat.com/" />
+	<rule from="^http://www\.cz\.redhat\.com/"
+		to="https://cz.redhat.com/" />
 
 	<!--	Redirect drops path but not args:
 							-->

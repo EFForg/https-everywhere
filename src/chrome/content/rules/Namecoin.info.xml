@@ -1,17 +1,19 @@
 <!--
-	For problematic rules, see Namecoin.info-problematic.xml.
-
-		- bit *
-
-	* Shows cp interface; Mismatched, CN: dot-bit.bit
-
-
-	(www.): expired 2012-12-09
+	NB: Remove Namecoin.info-problematic.xml
 
 
 	Fully covered subdomains:
 
+		- (www.)?
+		- bit
 		- explorer
+		- forum
+		- wiki
+
+
+	Insecure cookies are set for these hosts:
+
+		- wiki.namecoin.info
 
 
 	Mixed content:
@@ -21,13 +23,24 @@
 	* Unsecurable
 
 -->
-<ruleset name="Namecoin.info (partial)">
+<ruleset name="Namecoin.info">
 
-	<target host="*.namecoin.info" />
-		<!--exclusion pattern="^http://(bit|www)\.namecoin\.info/" /-->
+	<target host="namecoin.info" />
+	<target host="bit.namecoin.info" />
+	<target host="explorer.namecoin.info" />
+	<target host="forum.namecoin.info" />
+	<target host="wiki.namecoin.info" />
+	<target host="www.namecoin.info" />
 
 
-	<rule from="^http://(explorer|forum|wiki)\.namecoin\.info/"
-		to="https://$1.namecoin.info/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^wiki\.namecoin\.info$" name="^bb2_screener$" /-->
+
+	<securecookie host="^wiki\.namecoin\.info$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

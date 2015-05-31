@@ -1,6 +1,11 @@
+
 <!--
 Disabled by https-everywhere-checker because:
-Fetch error: http://aggregateknowledge.com/ => https://aggregateknowledge.com/: (51, "SSL: no alternative certificate subject name matches target host name 'aggregateknowledge.com'")
+Fetch error: http://data.aggregateknowledge.com/ => https://data.aggregateknowledge.com/: (6, 'Could not resolve host: www.404.html')
+
+	For other Neustar coverage, see NeuStar.xml.
+
+
 	CDN buckets:
 
 		- d37f3s04rhujtb.cloudfront.net
@@ -19,39 +24,43 @@ Fetch error: http://aggregateknowledge.com/ => https://aggregateknowledge.com/: 
 
 	Problematic aggregateknowledge.com subdomains:
 
-		- content	(cloudfront)
+		- ^ *
 		- creative *
-		- ticket	(mismatched, CN: marketplace.atlassian.com)
 		- www-stage *
 
-	* Seems the same as www, mismatched, CN: www
+	* Mismatched
+
+
+	images: Drop
 
 -->
-<ruleset name="Aggregate Knowledge" default_off='failed ruleset test'>
+<ruleset name="Aggregate Knowledge.com" default_off='failed ruleset test'>
 
+	<target host="content.aggregateknowledge.com" />
+	<target host="dashboard.aggregateknowledge.com" />
+	<target host="data.aggregateknowledge.com" />
+	<target host="ui.aggregateknowledge.com" />
+	<target host="www.aggregateknowledge.com" />
+
+	<!--	Complications:
+				-->
 	<target host="aggregateknowledge.com" />
-	<target host="*.aggregateknowledge.com" />
-	<target host="*.agkn.com" />
+	<target host="creative.aggregateknowledge.com" />
+	<target host="www-stage.aggregateknowledge.com" />
 
 
-	<!--	name="^(u|uuid)$"
+	<!--	Redirect keeps path and args,
+		but not forward slash:
 					-->
-	<securecookie host="^\.agkn\.com$" name=".+" />
+	<rule from="^http://aggregateknowledge\.com/+"
+		to="https://www.aggregateknowledge.com/" />
 
-
-	<rule from="^http://((?:dashboard|data|images|ui|www)\.)?aggregateknowledge\.com/"
-		to="https://$1aggregateknowledge.com/" />
-
-	<rule from="^http://content\.aggregateknowledge\.com/"
-		to="https://d37f3s04rhujtb.cloudfront.net/" />
+		<test url="http://aggregateknowledge.com//" />
 
 	<rule from="^http://(?:creative|www-stage)\.aggregateknowledge\.com/"
 		to="https://www.aggregateknowledge.com/" />
 
-	<rule from="^http://ticket\.aggregateknowledge\.com/"
-		to="https://marketplace.atlassian.com/" />
-
-	<rule from="^http://d\.agkn\.com/"
-		to="https://d.agkn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

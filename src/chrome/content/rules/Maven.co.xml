@@ -1,0 +1,52 @@
+<!--
+	(www.)?: Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- app
+		- help
+
+
+	Insecure cookies are set for these domains:
+
+		- .maven.co
+
+-->
+<ruleset name="Maven.co (partial)">
+
+	<target host="maven.co" />
+	<target host="app.maven.co" />
+	<target host="help.maven.co" />
+	<target host="www.maven.co" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?maven\.co/($|blog$|login$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?maven\.co/(?!signup(?:$|[?/])|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.maven.co/blog" />
+			<test url="http://www.maven.co/case-studies" />
+			<test url="http://www.maven.co/login" />
+			<test url="http://www.maven.co/smarter" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.maven.co/signup" />
+			<test url="http://www.maven.co/wp-content/plugins/gc-message-bar/style-gc-message-bar.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.maven\.co$" name="^SESS[\da-f]{32}$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

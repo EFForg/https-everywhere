@@ -1,13 +1,11 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dice.com/ => http://dice.com/: Cycle detected - URL already encountered: https://www.dice.com/
 	For rules causing false/broken MCB, see Dice-problematic.xml.
 
 
 	Other Dice Holdings rulesets:
 
 		- EFinancialCareers.xml
-		- Geeknet_Media.xml
+		- EFinancialCareers.cn.xml
 		- Slashdot_Media.xml
 
 
@@ -20,28 +18,31 @@ Fetch error: http://dice.com/ => http://dice.com/: Cycle detected - URL already 
 
 	Nonfunctional subdomains:
 
-		- media
-		- news		(times out)
-		- seeker
+		- marketing ¹
+		- media ²
+		- news ²
+		- resources ¹
+		- seeker ²
 		- techtalk ³
 
-	³ Mismatched, CN: www.dice.com
+	¹ Dropped
+	² Refused
+	³ Redirects to http
 
 
 	Problematic subdomains:
 
-		- ^ ¹
-		- www ²
+		- ^ *
+		- get *
 
-	¹ Mismatched, CN: secure.dice.com
-	² Mixed css from $self
+	¹ Mismatched
 
 
 	Partially covered subdomains:
 
 		- (www.) *	(^ → www)
 
-	* Avoiding false/broken MCB
+	* Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -58,26 +59,84 @@ Fetch error: http://dice.com/ => http://dice.com/: Cycle detected - URL already 
 		- www.secure.dice.com
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .dice.com
+		- get.dice.com
+		- www.dice.com
+
+
 	Mixed content:
 
-		- Mixed css on www from $self *
+		- iframes on www from www.youtube.com *
+		- css on www from assets.dice.com *
+		- Images on www from assets.dice.com *
+
+		- Bugs, on:
+
+			- www from diceinc.112.2o7.net *
+			- www from fls.doubleclick.net
+			- www from pixel.quantserve.com *
+			- employer, www from ad.retargeter.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Dice (partial)" default_off='failed ruleset test'>
+<ruleset name="Dice.com (partial)">
 
+	<target host="assets.dice.com" />
+	<target host="employer.dice.com" />
+	<target host="images.dice.com" />
+	<target host="secure.dice.com" />
+	<target host="www.dice.com" />
+
+	<!--	Complications:
+				-->
 	<target host="dice.com" />
-	<target host="*.dice.com" />
+	<target host="cdn.dice.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.dice\.com/$" /-->
+		<!--
+			Mixed css:
+					-->
+		<!--exclusion pattern="http://www\.dice\.com/job/advancedSearch\.html" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.dice\.com/(?!assets/|content/|(?:dashboard|jobs)(?:$|[?/])favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.dice.com/common/content/marketing/salesAndMarketing.jsp" />
+			<test url="http://www.dice.com/common/content/postJobs/index2.jsp" />
+			<test url="http://www.dice.com/common/seeker/docs/dice_jobs.jsp" />
+			<test url="http://www.dice.com/company/NETSO" />
+			<test url="http://www.dice.com/job/advancedSearch.html" />
+			<test url="http://www.dice.com/social" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.dice.com/dashboard" />
+			<test url="http://www.dice.com/favicon.ico" />
+			<test url="http://www.dice.com/jobs" />
 
 
-	<rule from="^http://(?:www\.)?dice\.com/(?=assets/|content/)"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dice\.com$" name="^ubvt$" /-->
+	<!--securecookie host="^get\.dice\.com$" name="^(ubpv|ubvs)$" /-->
+	<!--securecookie host="^www\.dice\.com$" name="^(JSESSIONID|DQS)$" /-->
+
+
+	<rule from="^http://dice\.com/"
 		to="https://www.dice.com/" />
-
-	<rule from="^http://(assets|employer|images|secure)\.dice\.com/"
-		to="https://$1.dice.com/" />
 
 	<rule from="^http://cdn\.dice\.com/"
 		to="https://d1i4601q19kpjz.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,83 @@
+<!--
+	Joliet Junior College
+
+
+	Problematic hosts:
+
+		- jjc.edu *
+
+	* Mismatched
+
+
+	www: Some pages redirect to http
+
+
+	Fully covered hosts:
+
+		- employment
+		- eresources
+
+
+	Insecure cookies are set for these 
+
+		- employment.jjc.edu
+		- eresources.jjc.edu
+
+-->
+<ruleset name="JJC.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="employment.jjc.edu" />
+	<target host="eresources.jjc.edu" />
+	<target host="www.jjc.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="jjc.edu" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.jjc\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.jjc\.edu/(?!_catalogs/|_layouts/|[\w-]+/PublishingImages/|[Pp]ublishing[Ii]mages/|about/|admissions/pages/apply-now\.aspx|Style%20Library/|publishingimages/)" />
+
+			<test url="http://www.jjc.edu/academic-calendar/" />
+			<test url="http://www.jjc.edu/accounts-payments/Pages/payment-methods.aspx" />
+			<test url="http://www.jjc.edu/bookstore/" />
+			<test url="http://www.jjc.edu/campuses/" />
+			<test url="http://www.jjc.edu/getting-started/Pages/current-students.aspx" />
+			<test url="http://www.jjc.edu/graduation/" />
+			<test url="http://www.jjc.edu/registration/Pages/register-summer.aspx" />
+			<test url="http://www.jjc.edu/site-info/pages/contact.aspx" />
+			<test url="http://www.jjc.edu/technology-support/Pages/email.aspx" />
+			<test url="http://www.jjc.edu/technology-support/Pages/password-help.aspx" />
+
+			<test url="http://www.jjc.edu/_catalogs/masterpage/JJC/Images/jjc-shield-footer-background.jpg" />
+			<test url="http://www.jjc.edu/_layouts/15/images/spcommon.png" />
+			<test url="http://www.jjc.edu/Style%20Library/en-US/Core%20Styles/page-layouts-21.css" />
+			<test url="http://www.jjc.edu/about/PublishingImages/about.jpg" />
+			<test url="http://www.jjc.edu/admissions/pages/apply-now.aspx" />
+			<test url="http://www.jjc.edu/publishingimages/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^employment\.jjc\.edu$" name="^_applicant_portal_session_1$" /-->
+	<!--securecookie host="^eresources\.jjc\.edu$" name="^BIGipServer[\w.]+$" /-->
+
+	<securecookie host="^(?:employment|eresources)\.jjc\.edu$" name=".+" />
+
+
+	<!--	Redirect keeps path, but
+		not path nor args:
+				-->
+	<rule from="^http://jjc\.edu/"
+		to="https://www.jjc.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

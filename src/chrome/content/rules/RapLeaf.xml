@@ -3,26 +3,48 @@ Disabled by https-everywhere-checker because:
 Fetch error: http://rapleaf.com/ => https://rapleaf.com/: (60, 'SSL certificate problem: certificate has expired')
 	Fully covered domains:
 
+		- in *rapleaf.com:
+
+			- (www.)?
+			- blog
+			- dashboard
+
 		- rlcdn.com subdomains:
 
+			- d
 			- ei
 			- idsync
+			- rc
+
+
+	Insecure cookies are set for these domains:
+
+		- .rlcdn.com
 
 -->
 <ruleset name="Rapleaf" default_off='failed ruleset test'>
 
+	<!--	Direct rewrites:
+				-->
 	<target host="rapleaf.com" />
-	<target host="*.rapleaf.com" />
-	<target host="*.rlcdn.com" />
+	<target host="blog.rapleaf.com" />
+	<target host="dashboard.rapleaf.com" />
+	<target host="www.rapleaf.com" />
 
+	<target host="d.rlcdn.com" />
+	<target host="ei.rlcdn.com" />
+	<target host="idsync.rlcdn.com" />
+	<target host="rc.rlcdn.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rlcdn\.com$" name="^(ck\d|dids\d+|rlas\d|rtn\d)$" /-->
 
 	<securecookie host="^\.rlcdn\.com$" name=".+" />
 
 
-	<rule from="^http://(blog\.|dashboard\.|www\.)?rapleaf\.com/"
-		to="https://$1rapleaf.com/" />
-
-	<rule from="^http://(d|ei|idsync|rc)\.rlcdn\.com/"
-		to="https://$1.rlcdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

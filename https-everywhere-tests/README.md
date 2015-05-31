@@ -38,7 +38,6 @@ implement them as automated tests:
 - Visit an HTTPS site that contains passive mixed content that is not rewritten
   to HTTPS. https://jacob.hoffman-andrews.com/passive-mixed-content.html is a
   good example. Verify the passive mixed content (e.g., image) does not load.
-  NOTE: Currently fails. https://github.com/EFForg/https-everywhere/issues/857
 - Click icon menu, click 'About HTTPS Everywhere.' Verify dialog opens.
 - Click icon menu, click 'SSL Observatory Preferences.' Verify dialog opens.
 - Click icon menu, click 'Disable HTTPS Everywhere.' Verify icon turns grey.

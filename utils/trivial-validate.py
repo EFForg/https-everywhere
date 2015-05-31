@@ -31,7 +31,7 @@ def fail(s):
     sys.stdout.write("failure: %s\n" % s)
 
 # Precompile xpath expressions that get run repeatedly.
-xpath_exlusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
+xpath_exclusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_pattern = etree.XPath("/ruleset/securecookie/@host")
 
 # Load lists of ruleset names whitelisted for downgrade & duplicate rules
@@ -45,7 +45,7 @@ with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
     """The 'from' rule contains an invalid extended regular expression."""
-    patterns = from_attrib + xpath_exlusion_pattern(tree) + xpath_cookie_pattern(tree)
+    patterns = from_attrib + xpath_exclusion_pattern(tree) + xpath_cookie_pattern(tree)
     for pat in patterns:
         try:
             re.compile(pat)

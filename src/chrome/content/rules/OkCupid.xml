@@ -1,28 +1,65 @@
 <!--
+	Disabled per https://github.com/EFForg/https-everywhere/pull/1310
+
 	Other OkCupid rulesets:
 
-		- OkCupid.xml
+		- OkCDN.xml
 		- OkCimg.com.xml
 
 
-	!functional:
-		blog.okcupid.com	(okcupid.com/blog redirects to here)
+	Problematic hosts:
+
+		- blog *
+
+	* Mixed css
 
 
-	Fully covered domains:
+	Fully covered hosts:
 
-		- (www.)?okcupid.com
+		- (www.)?
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these domains:
 
 		- .okcupid.com
 
--->
-<ruleset name="OkCupid.com (partial)">
 
+	Mixed content:
+
+		- css on blog from $self ¹
+
+		- Images, on:
+
+			- blog from dataclysm.org ²
+			- blog from cdn.okccdn.com ¹
+			- blog fomr $self ¹
+
+		- Bug on blog from b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= 502
+
+-->
+<ruleset name="OkCupid.com (partial)" default_off="Redirects to HTTP">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="okcupid.com"/>
+	<target host="blog.okcupid.com"/>
 	<target host="www.okcupid.com"/>
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://blog\.okcupid\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.okcupid.com/index.php/race-attraction-2009-2014/" />
+			<test url="http://blog.okcupid.com/index.php/we-experiment-on-human-beings/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.okcupid.com/wp-content/themes/oktrends/style.css" />
 
 
 	<!--	Not secured by server:
