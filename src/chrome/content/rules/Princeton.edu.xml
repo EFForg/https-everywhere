@@ -18,35 +18,38 @@ Fetch error: http://princeton.edu/ => https://www.princeton.edu/: Redirect for '
 
 	^ In what way?
 
+  tigernet logout page references http://www.alumniconnections.com for stylesheets. tigernet, itself, has locally referenced stylesheets.
 
 	Fully covered subdomains:
-
+    - alumni
+    - alumnicas
 		- blogs
 		- citp
 		- fed
 		- lists
-
+		- paw
 
 	These altnames don't exist:
 
 		- www.citp.princeton.edu
 
 -->
-<ruleset name="Princeton.edu (partial)" default_off='failed ruleset test'>
 
-	<target host="princeton.edu" />
-	<target host="*.princeton.edu" />
-		<exclusion pattern="http://(?:www\.)?princeton\.edu/+~" />
+<ruleset name="Princeton.edu (partial)">
+  <securecookie host="^(?:alumnicas|blogs|fed|tigernet)\.princeton\.edu$" name=".+" />
+  
+  <target host="princeton.edu" />
+  <target host="www.princeton.edu" />
+  <target host="alumni.princeton.edu" />
+  <target host="alumnicas.princeton.edu" />
+  <target host="blogs.princeton.edu" />
+  <target host="citp.princeton.edu" />
+  <target host="fed.princeton.edu" />
+  <target host="lists.princeton.edu" />
+  <target host="paw.princeton.edu" />
+  <target host="tigernet.princeton.edu" />
 
-
-	<securecookie host="^(?:blogs|fed)\.princeton\.edu$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?princeton\.edu/"
-		to="https://www.princeton.edu/"/>
-
-	<rule from="^http://(blogs|citp|fed|lists)\.princeton\.edu/"
-		to="https://$1.princeton.edu/" />
-
+  <rule from="^http:" to="https:" />
 </ruleset>
+
 
