@@ -1,0 +1,25 @@
+<!--
+    Not covered:
+        - support.altmetric.com (bad cert)
+        
+    The page /blog/ would fail with mixed content in the relevant
+    browsers and so is excluded. However, /blog/ is linked relatively,
+    so simply using exclusion patterns is not sufficient.
+-->
+<ruleset name="Altmetric.com">
+	<target host="altmetric.com" />
+	<target host="www.altmetric.com" />
+	<target host="alt.altmetric.com" />
+
+	<test url="http://altmetric.com/blog/" />
+	<test url="https://altmetric.com/blog/" />
+	<test url="http://www.altmetric.com/blog/" />
+	<test url="https://www.altmetric.com/blog/" />
+
+	<exclusion pattern="^http://(www\.)?altmetric.com/blog/"/>
+	<rule from="^https://(www\.)?altmetric\.com/blog/" to="http://$1altmetric.com/blog/" downgrade="1" />
+
+	<rule from="^http:"
+		to="https:"/>
+
+</ruleset>
