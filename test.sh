@@ -67,5 +67,5 @@ bash test-ruleset-coverage.sh
 echo "To reproduce this build (https://wiki.debian.org/ReproducibleBuilds)," \
      "please use this version of sqlite3:"
 sqlite3 -version
-shasum=$("$SHA256SUM" "$XPI_NAME")
-echo -e "Git commit `git rev-parse HEAD`\nsha256sum  $shasum"
+shasum=$(openssl sha -sha256 "$XPI_NAME")
+echo -e "Git commit `git rev-parse HEAD`\n$shasum"

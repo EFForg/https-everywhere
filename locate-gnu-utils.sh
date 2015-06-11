@@ -18,13 +18,6 @@ if [ -x "$GMKTEMP" ]; then
 fi
 unset GMKTEMP
 
-SHA256SUM=$(which sha256sum 2>/dev/null || true)
-GSHA256SUM=$(which gsha256sum 2>/dev/null || true)
-if [ -x "$GSHA256SUM" ]; then
-  SHA256SUM="$GSHA256SUM"
-fi
-unset GSHA256SUM
-
 check_for_gnu_version() {
   gnu_available=$("$1" --version 2>&1 | grep GNU)
   if [ ! "$gnu_available" ]; then
@@ -38,4 +31,3 @@ check_for_gnu_version() {
 
 check_for_gnu_version "$MKTEMP" "mktemp"
 check_for_gnu_version "$READLINK" "readlink"
-check_for_gnu_version "$SHA256SUM" "sha256sum"
