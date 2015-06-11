@@ -6,12 +6,13 @@ source locate-gnu-utils.sh
 # We have to change to the right directory because this is sometimes invoked
 # through a symlink in .git/hooks/pre-push.
 cd $(dirname $("$READLINK" -f $0))
+source utils/mktemp.sh
 
 # dummy Jetpack addon that contains tests
 TEST_ADDON_PATH=./https-everywhere-tests/
 
 # We'll create a Firefox profile here and install HTTPS Everywhere into it.
-PROFILE_DIRECTORY="$("$MKTEMP" -d)"
+PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/extensions/https-everywhere@eff.org
 

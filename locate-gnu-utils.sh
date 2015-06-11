@@ -11,13 +11,6 @@ if [ -x "$GREADLINK" ]; then
 fi
 unset GREADLINK
 
-MKTEMP=$(which mktemp 2>/dev/null || true)
-GMKTEMP=$(which gmktemp 2>/dev/null || true)
-if [ -x "$GMKTEMP" ]; then
-  MKTEMP="$GMKTEMP"
-fi
-unset GMKTEMP
-
 check_for_gnu_version() {
   gnu_available=$("$1" --version 2>&1 | grep GNU)
   if [ ! "$gnu_available" ]; then
@@ -29,5 +22,4 @@ check_for_gnu_version() {
   fi
 }
 
-check_for_gnu_version "$MKTEMP" "mktemp"
 check_for_gnu_version "$READLINK" "readlink"

@@ -5,8 +5,10 @@
 #
 
 cd $(dirname $0)
-source locate-gnu-utils.sh
-TMP=`"$MKTEMP"`
+
+source utils/mktemp.sh
+
+TMP="$(mktemp)"
 trap 'rm "$TMP"' EXIT
 if ! [ -d https-everywhere-checker ] ; then
   echo "Submodule https-everywhere-checker is missing. Run"
