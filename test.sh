@@ -1,11 +1,12 @@
 #!/bin/bash -ex
 # Run tests for HTTPS Everywhere
 
-source locate-gnu-utils.sh
+# Get into the project-root. This script may be executed as `test.sh`
+# or as .git/hooks/pre-push, so we need to find the directory containing
+# test.sh before we can proceed. If $0 is not a symlink, `readlink` will
+# print nothing; if it is a symlink it will print the link target.
+cd $(dirname $0)/$(dirname $(readlink $0))
 
-# We have to change to the right directory because this is sometimes invoked
-# through a symlink in .git/hooks/pre-push.
-cd $(dirname $("$READLINK" -f $0))
 source utils/mktemp.sh
 
 # dummy Jetpack addon that contains tests
