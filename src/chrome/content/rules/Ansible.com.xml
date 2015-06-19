@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ansible.com/ => https://ansible.com/: (28, 'Connection timed out after 10000 milliseconds')
-
 	For problematic rules, see Ansible.com-problematic.xml.
 
 
@@ -20,10 +16,12 @@ Fetch error: http://ansible.com/ => https://ansible.com/: (28, 'Connection timed
 
 	Nonfunctional subdomains:
 
-		- docs *
-		- releases *
+		- ^ ¹
+		- docs ²
+		- releases ²
 
-	* 503, valid cert
+	¹ times out
+	² 503, valid cert
 
 
 	www: works, akamai
@@ -45,10 +43,9 @@ Fetch error: http://ansible.com/ => https://ansible.com/: (28, 'Connection timed
 	² Secured by us
 
 -->
-<ruleset name="Ansible.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Ansible.com (partial)">
 
-	<target host="ansible.com" />
-	<target host="*.ansible.com" />
+	<target host="galaxy.ansible.com" />
 
 
 	<securecookie host="^\.ansible\.com$" name="^__cfduid$" />
@@ -58,7 +55,7 @@ Fetch error: http://ansible.com/ => https://ansible.com/: (28, 'Connection timed
 	<securecookie host="^galaxy\.ansible\.com$" name=".+" />
 
 
-	<rule from="^http://(galaxy\.)?ansible\.com/"
-		to="https://$1ansible.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
