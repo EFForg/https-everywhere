@@ -2,6 +2,10 @@ function e(id) {
   return document.getElementById(id);
 }
 
+/**
+ * Send message to main extension for HTML to display
+ * @param type: enable/disable
+ */
 function sendMessage(type) {
   chrome.runtime.sendMessage({
       type: type,
@@ -9,7 +13,9 @@ function sendMessage(type) {
   });
 }
 
-// Turn on the Switch Planner recording mode, and hide the long description.
+/**
+ * Turn on the Switch Planner recording mode, and hide the long description.
+ */
 function enableSwitchPlanner() {
   sendMessage("enable");
   e("SwitchPlannerDescription").style.display = "none";
@@ -20,15 +26,19 @@ function enableSwitchPlanner() {
   chrome.devtools.inspectedWindow.reload();
 }
 
-// Disable the switch planner and reload, so any state is forgotten and
-// the long description is restored.
+/**
+ * Disable the switch planner and reload, so any state is forgotten and
+ * the long description is restored.
+ */
 function disableSwitchPlanner() {
   sendMessage("disable");
   document.location.reload();
 }
 
-// Fetch summary HTML of the planner results from the background page for
-// display in the devtools panel.
+/**
+ * Fetch summary HTML of the planner results from the background page for
+ * display in the devtools panel.
+ */
 function display() {
   chrome.runtime.sendMessage({
       type: "getSmallHtml",
