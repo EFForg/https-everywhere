@@ -6,6 +6,6 @@
 # up, there's some indication of where it originated.
 
 MKTEMP=`which mktemp`
-function mktemp() {
+mktemp() {
     $MKTEMP $@ 2>/dev/null || $MKTEMP -t everywhere $@
 }

@@ -6,7 +6,7 @@
 
 cd $(dirname $0)
 
-source utils/mktemp.sh
+. utils/mktemp.sh
 
 TMP="$(mktemp)"
 trap 'rm "$TMP"' EXIT
