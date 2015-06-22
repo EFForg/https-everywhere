@@ -1,0 +1,85 @@
+<!--
+	For problematic rules, see Apple-mismatches.xml.
+
+	For other Apple coverage, see Apple.xml.
+
+
+	CDN buckets:
+
+		- a([1-5]).mzstatic.com.edgesuite.net/...
+
+			- a$1.da1.akamai.net/...
+
+
+	Nonfunctional domains:
+
+		- dzc-metrics.mzstatic.com **
+
+	** Data differ between http & https
+
+
+	Problematic hosts in *mzstatic.com:
+
+		- (www.)	(refused)
+		- a\d *
+		- r *
+		- r[1-8] *
+		- store *
+
+	* Akamai
+	³ Mismatched, CN: lists.apple.com
+
+
+	Fully covered hosts in *mzstatic.com:
+
+		- (www.)	(→ ssl.apple.com)
+		- a[1-5]	(→ s[1-5])
+		- accertify
+		- itc
+		- metrics
+		- r		(→ s)
+		- s
+		- s[1-5]
+
+-->
+<ruleset name="mzstatic.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="accertify.mzstatic.com" />
+	<target host="itc.mzstatic.com" />
+	<target host="metrics.mzstatic.com" />
+	<target host="s.mzstatic.com" />
+	<target host="s1.mzstatic.com" />
+	<target host="s2.mzstatic.com" />
+	<target host="s3.mzstatic.com" />
+	<target host="s4.mzstatic.com" />
+	<target host="s5.mzstatic.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mzstatic.com" />
+	<target host="a1.mzstatic.com" />
+	<target host="a2.mzstatic.com" />
+	<target host="a3.mzstatic.com" />
+	<target host="a4.mzstatic.com" />
+	<target host="a5.mzstatic.com" />
+	<target host="r.mzstatic.com" />
+	<target host="www.mzstatic.com" />
+
+
+	<!--	Redirects over http to www.apple.com
+							-->
+	<rule from="^http://(?:www\.)?mzstatic\.com/"
+		to="https://www.apple.com/" />
+
+	<rule from="^http://a(\d)\.mzstatic\.com/"
+		to="https://s$1.mzstatic.com/" />
+
+	<rule from="^http://r\.mzstatic\.com/"
+		to="https://s.mzstatic.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
