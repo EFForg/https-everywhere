@@ -1,7 +1,17 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.gotoassist.com/ => https://www.gotoassist.com/: Cycle detected - URL already encountered: https://www.gotoassist.com/remote_support/
 	Commit msg: https://trac.torproject.org/projects/tor/ticket/12800
+
+
+	Other Citrix rulesets:
+
+		- Citrix_Online.com.xml
+		- Citrix_Online_CDN.com.xml
+		- GoToAssist.com.xml
+		- GoToMeeting.com.xml
+		- GoToTraining.com.xml
+		- GoToWebinar.com.xml
+		- ShareFile.com.xml
+		- ShareFile_support.com.xml
 
 
 	CDN buckets:
@@ -13,9 +23,7 @@ Fetch error: http://www.gotoassist.com/ => https://www.gotoassist.com/: Cycle de
 
 	Nonfunctional domains:
 
-		- search.citrix.com		(at least some pages redirect to http)
-		- www.citrixonline.com		(redirects to http, valid cert)
-		- images.gotowebinar.com
+		- open.citrix.com		Refused
 		- (www.)joingotomeeting.com
 		- (www.)jointraining.com
 		- (www.)joinwebinar.com
@@ -23,94 +31,109 @@ Fetch error: http://www.gotoassist.com/ => https://www.gotoassist.com/: Cycle de
 
 	Problematic domains:
 
-		- hdx.citrix.com	(http reply)
 		- cdn.ws.citrix.com	(akamai)
-		- gotowebinar.com	(cert only matches www)
-		- attendee.gotowebinar.com ⁴
-
-	⁴ Insecure renegotiation
 
 
-	Partially covered domains:
+	Partially covered hosts in *citrix.com:
 
-		- hdx.citrix.com
+		- discussions *
+		- training *
 
-
-	Fully covered domains:
-
-		- citrix.com subdomains:
-
-			- blogs
-			- support
-			- cdn.ws	(→ c558080.ssl.cf2.rackcdn.com)
+	* Avoiding broken MCB
 
 
-	Insecure cookies are set for these domains:
+	Fully covered hosts in *citrix.com:
 
-		- attendee.gotowebinar.com
+		- (www.)?
+		- blogs
+		- citrixready
+		- community
+		- go
+		- search
+		- staging-cq
+		- support
+		- tarpon
+		- cdn.ws	(→ c558080.ssl.cf2.rackcdn.com)
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .citrix.com
+		- discussions.citrix.com
+		- training.citrix.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- discussions from *.rackcdn.com
+			- training from $self
+
+		- Images, on:
+
+			- discussions from $self
+			- training from www.citrix.com
 
 -->
-<ruleset name="Citrix (partial)" default_off='failed ruleset test'>
+<ruleset name="Citrix.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="citrix.com" />
-	<target host="*.citrix.com" />
-		<exclusion pattern="^http://search\.citrix\.com/(?!favicon\.ico)" />
-	<target host="*.citrixonline.com" />
-	<target host="www.gotoassist.com" />
-	<target host="gotomeeting.com" />
-	<target host="*.gotomeeting.com" />
-	<target host="*.gototraining.com" />
-	<target host="gotowebinar.com" />
-	<target host="*.gotowebinar.com" />
+	<target host="blogs.citrix.com" />
+	<target host="citrixready.citrix.com" />
+	<target host="community.citrix.com" />
+	<target host="discussions.citrix.com" />
+	<target host="eu.citrix.com" />
+	<target host="go.citrix.com" />
+	<target host="search.citrix.com" />
+	<target host="support.citrix.com" />
+	<target host="staging-cq.citrix.com" />
+	<target host="tarpon.citrix.com" />
+	<target host="training.citrix.com" />
+	<target host="www.citrix.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.ws.citrix.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://discussions\.citrix\.com/+(?!public/)" />
+		<exclusion pattern="^http://training\.citrix\.com/+(?!favicon\.ico|theme/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://discussions.citrix.com/forum/363-storefront/" />
+			<test url="http://discussions.citrix.com/topic/365473-gssexception/" />
+
+			<test url="http://training.citrix.com/cms/education/networking/" />
+			<test url="http://training.citrix.com/cms/index.php/certification/" />
+			<test url="http://training.citrix.com/mod/ctxcatalog/training.php?lang=ja" />
+
+			<!--	-ve:
+					-->
+
+			<test url="http://discussions.citrix.com/public/style_images/master/attachicon.gif" />
+
+			<test url="http://training.citrix.com/favicon.ico" />
+			<test url="http://training.citrix.com/theme/ctxmain/pix/search_gradient.png" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^attendee\.gotowebinar\.com$" name="^(ADRUM_\d\d_\d_\d|JSESSIONID)$" /-->
+	<!--securecookie host="^\.citrix\.com$" name="^(_wsad_MyCitrixHash|MyCitrixShadow|id_validate)$" /-->
+	<!--securecookie host="^discussions\.citrix\.com$" name="^session_id$" /-->
+	<!--securecookie host="^training\.citrix\.com$" name="^(MoodleSession|NSC_\w+_\w+)$" /-->
 
 	<securecookie host="^(?:.*\.)?citrix\.com$" name=".+" />
-	<securecookie host="^www[1-4]gotomeeting\.com$" name=".+" />
-	<securecookie host=".*\.gototraining\.com$" name=".+" />
-	<securecookie host="^attendee\.gotowebinar\.com$" name=".+" />
 
-
-	<rule from="^http://(?:www\.)?citrix\.com/"
-		to="https://www.citrix.com/" />
-
-	<rule from="^http://(blogs|eu|search|support)\.citrix\.com/"
-		to="https://$1.citrix.com/" />
-
-	<rule from="^http://hdx\.citrix\.com/$"
-		to="https://www.citrix.com/products/xendesktop/features/high-def-experience.html" />
 
 	<rule from="^http://cdn\.ws\.citrix\.com/"
 		to="https://c558080.ssl.cf2.rackcdn.com/" />
 
-	<rule from="^http://(news|support)\.citrixonline\.com/"
-		to="https://$1.citrixonline.com/" />
-
-	<!--	Some pages redirect to http://goto...
-	
-		This'll probably catch more working paths than
-		just handling the paths that we know work over
-		https from both !www & www.
-						-->
-	<rule from="^http://www\.gotoassist\.com/"
-		to="https://www.gotoassist.com/" />
-
-	<rule from="^http://(?:www\.)?gotomeeting\.com/(default|images)/"
-		to="https://www3.gotomeeting.com/$1/" />
-
-	<rule from="^http://www([1-4])\.gotomeeting\.com/"
-		to="https://www$1.gotomeeting.com/" />
-
-	<rule from="^http://student\.gototraining\.com/"
-		to="https://student.gototraining.com/" />
-
-	<rule from="^http://(?:www\.)?gotowebinar\.com/"
-		to="https://www.gotowebinar.com/" />
-
-	<rule from="^http://attendee\.gotowebinar\.com/"
-		to="https://attendee.gotowebinar.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
