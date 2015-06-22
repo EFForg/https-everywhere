@@ -1,11 +1,37 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://openinfosecfoundation.org/ => https://openinfosecfoundation.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="Open InfoSec Foundation.org" default_off='failed ruleset test'>
+	For problematic coverage, see Open_InfoSec_Foundation.org-problematic.xml.
 
-	<target host="openinfosecfoundation.org" />
-	<target host="*.openinfosecfoundation.org" />
+
+	Problematic hosts in *openinfosecfoundation.org:
+
+		- (www.)? *
+		- lists *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts in *openinfosecfoundation.org:
+
+		- doxygen
+		- redmine
+
+
+	Insecure cookies are set for these hosts:
+
+		- openinfosecfoundation.org
+		- redmine.openinfosecfoundation.org
+		- www.openinfosecfoundation.org
+
+-->
+<ruleset name="Open InfoSec Foundation.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="openinfosecfoundation.org" /-->
+	<target host="doxygen.openinfosecfoundation.org" />
+	<!--target host="lists.openinfosecfoundation.org" /-->
+	<target host="redmine.openinfosecfoundation.org" />
+	<!--target host="www.openinfosecfoundation.org" /-->
 
 
 	<!--	Not secured by server:
@@ -13,10 +39,11 @@ Fetch error: http://openinfosecfoundation.org/ => https://openinfosecfoundation.
 	<!--securecookie host="^(www\.)?openinfosecfoundation\.org$" name="^[0-9a-f]{32}$" /-->
 	<!--securecookie host="^redmine\.openinfosecfoundation\.org$" name="^_redmine_session$" /-->
 
-	<securecookie host="^(?:redmine\.|www\.)?openinfosecfoundation\.org$" name=".+" />
+	<!--securecookie host="^(?:redmine\.|www\.)?openinfosecfoundation\.org$" name=".+" /-->
+	<securecookie host="^redmine\.openinfosecfoundation\.org$" name=".+" />
 
 
-	<rule from="^http://((?:lists|redmine|www)\.)?openinfosecfoundation\.org/"
-		to="https://$1openinfosecfoundation.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

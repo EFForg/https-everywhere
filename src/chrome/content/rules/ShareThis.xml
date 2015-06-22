@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://sharethis.com/ (200) => https://sharethis.com/ (503)
 	CDN buckets:
 
 		- cdn.sharethis.com.edgesuite.net
@@ -16,6 +14,10 @@ Non-2xx HTTP code: http://sharethis.com/ (200) => https://sharethis.com/ (503)
 			- a335.b.akamai.net
 
 
+	^: 503
+	www: Redirects to http
+
+
 	Problematic subdomains:
 
 		- cdn *
@@ -25,48 +27,57 @@ Non-2xx HTTP code: http://sharethis.com/ (200) => https://sharethis.com/ (503)
 	* Works, akamai
 
 
-	Fully covered domains:
+	Fully covered hosts in *sharethis.com:
 
-		- sharethis.com
-
-		- [\w-]+.sharethis.com:
-
-			- cdn	(→ ^)
-			- forums
-			- help
-			- l
-			- s	(→ sd)
-			- seg
-			- support
-			- w	(→ ws)
-			- wd
-			- wd-edge
-			- ws
-			- www
+		- cf-wp-prod
+		- forums
+		- help
+		- l
+		- s		(→ sd)
+		- seg
+		- support
+		- w		(→ ws)
+		- wd
+		- wd-edge
+		- ws
 
 
 	Mixed content:
 
-		- css on support from cdn ¹
+		- Fonts on support from www.sharethis.com ¹
+		- Images on support from www.sharethis.com ¹
+		- Bugs on support from hello.myfonts.net ²
 
-		- Web bugs, on:
-
-			- www from s ²
-			- www from ws ²
-
-	¹ Secured by us, alters snippet text size
+	¹ Unsecurable <= redirects to http
 	² Secured by us
 
-
-	The change caused by css MCB is minimal,
-	and we don't care about web bugs, so don't
-	mark this ruleset as mixedcontent.
-
 -->
-<ruleset name="ShareThis" default_off='failed ruleset test'>
+<ruleset name="ShareThis (partial)">
 
-	<target host="sharethis.com" />
-	<target host="*.sharethis.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cf-wp-prod.sharethis.com" />
+	<target host="forums.sharethis.com" />
+	<target host="help.sharethis.com" />
+	<target host="l.sharethis.com" />
+	<target host="sd.sharethis.com" />
+	<target host="seg.sharethis.com" />
+	<target host="support.sharethis.com" />
+	<target host="wd.sharethis.com" />
+	<target host="wd-edge.sharethis.com" />
+	<target host="ws.sharethis.com" />
+
+	<!--	Complications:
+				-->
+	<target host="s.sharethis.com" />
+	<target host="w.sharethis.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sharethis\.com/$" /-->
+
+		<test url="http://cf-wp-prod.sharethis.com/wp-content/plugins/yet-another-related-posts-plugin/style/widget.css.gzip" />
+		<test url="http://seg.sharethis.com/socialOptimizationPixel.php" />
 
 
 	<!--	Not secured by server:
@@ -74,11 +85,9 @@ Non-2xx HTTP code: http://sharethis.com/ (200) => https://sharethis.com/ (503)
 	<!--securecookie host="^\.sharethis\.com$" name="^__seg$$" /-->
 
 	<!--securecookie host="^\.sharethis\.com$" name="^(__stid|__uset)$" /-->
-	<securecookie host="^(?:.*\.)?sharethis\.com$" name=".+" />
+	<!--securecookie host="^(?:.*\.)?sharethis\.com$" name=".+" /-->
+	<securecookie host=".+\.sharethis\.com$" name=".+" />
 
-
-	<rule from="^http://cdn\.sharethis\.com/"
-		to="https://sharethis.com/" />
 
 	<rule from="^http://s\.sharethis\.com/"
 		to="https://sd.sharethis.com/" />
@@ -86,9 +95,7 @@ Non-2xx HTTP code: http://sharethis.com/ (200) => https://sharethis.com/ (503)
 	<rule from="^http://w\.sharethis\.com/"
 		to="https://ws.sharethis.com/" />
 
-	<rule from="^http://([\w-]+\.)?sharethis\.com/"
-		to="https://$1sharethis.com/" />
-
-		<test url="http://seg.sharethis.com/socialOptimizationPixel.php" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
