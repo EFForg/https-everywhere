@@ -1,7 +1,4 @@
 <!--
-	For rules causing false/broken MCB, see Reason.com-falsemixed.xml.
-
-
 	CDN buckets:
 
 		- d1ai9qtk9p41kl.cloudfront.net
@@ -9,41 +6,40 @@
 			- cloudfront-assets
 
 
+	Fully covered hosts in *reason.com:
+
+		- (www.)?
+		- cloudfront-assets	(→ d1ai9qtk9p41kl.cloudfront.net)
+
+
 	Mixed content:
 
-		- css from cloudfront-assets *
+		- Images on (www.)? from cloudfront-assets.reason.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Reason.com (partial)">
+<ruleset name="Reason.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="reason.com" />
-	<target host="cloudfront-assets.reason.com" />
 	<target host="www.reason.com" />
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?reason\.com/+(?:$|\?)" />
 
-			<!--	+ve:
-					-->
-			<test url="http://reason.com/" />
-			<test url="http://reason.com/?" />
-			<test url="http://www.reason.com//" />
+	<!--	Complications:
+				-->
+	<target host="cloudfront-assets.reason.com" />
 
-			<!--	-ve:
-					-->
-			<test url="http://reason.com/blog" />
-			<test url="http://reason.com/subscribe" />
-			<test url="http://www.reason.com/widgets" />
+		<test url="http://reason.com/blog" />
+		<test url="http://reason.com/subscribe" />
+		<test url="http://www.reason.com/widgets" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.reason\.com$" name="^(__qca|ng_session)$" /-->
 
-	<!--securecookie host="^\.reason\.com$" name=".+" /-->
+	<securecookie host="^\.reason\.com$" name=".+" />
 
 
 	<rule from="^http://cloudfront-assets\.reason\.com/"

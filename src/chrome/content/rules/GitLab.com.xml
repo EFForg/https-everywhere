@@ -13,6 +13,12 @@
 	* Tor users blocked by CloudFlare settings
 
 
+	Insecure cookies are set for these hosts and domains:
+
+		- gitlab.com
+		- .gitlab.com
+
+
 	These altnames don't exist:
 
 		- www.about.gitlab.com
@@ -20,18 +26,17 @@
 -->
 <ruleset name="GitLab.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gitlab.com" />
 	<target host="about.gitlab.com" />
 	<target host="www.gitlab.com" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^gitlab\.com$" name="^_gitlab_session$" /-->
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^gitlab\.com$" name="^request_method$" /-->
+	<!--securecookie host="^\.gitlab\.com$" name="^^(__cfduid|cf_clearance)$$" /-->
 
 	<securecookie host="^gitlab\.com$" name=".+" />
 	<securecookie host="^\.gitlab\.com$" name="^__cfduid$" />
