@@ -1,6 +1,8 @@
 "use strict";
 /**
  * Fetch and parse XML to be loaded as RuleSets.
+ *
+ * @param url: a relative URL to local XML
  */
 function getRuleXml(url) {
   var xhr = new XMLHttpRequest();
@@ -15,7 +17,8 @@ function getRuleXml(url) {
   return xhr.responseXML;
 }
 
-var all_rules = new RuleSets(navigator.userAgent, LRUCache,  localStorage);
+// Rules are loaded here
+var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
 for (var i = 0; i < rule_list.length; i++) {
   all_rules.addFromXml(getRuleXml(rule_list[i]));
 }
@@ -48,6 +51,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
   }
 });
 
+/**
+* Load stored user rules
+ **/
 var getStoredUserRules = function() {
   var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
   var oldUserRules = [];
@@ -57,6 +63,10 @@ var getStoredUserRules = function() {
   return oldUserRules;
 };
 var wr = chrome.webRequest;
+
+/**
+ * Load all stored user rules
+ */
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
@@ -68,7 +78,10 @@ var loadStoredUserRules = function() {
 
 loadStoredUserRules();
 
-// Set the icon color correctly
+/**
+ * Set the icon color correctly
+ * Depending on http-nowhere it should be red/default
+ */
 var setIconColor = function() {
   var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
   chrome.browserAction.setIcon({
@@ -88,7 +101,11 @@ for (r in rs) {
 }
 */
 
-
+/**
+ * Adds a new user rule
+ * @param params: params defining the rule
+ * @param cb: Callback to call after success/fail
+ * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
     // If we successfully added the user rule, save it in local 
@@ -106,6 +123,9 @@ var addNewRule = function(params, cb) {
   }
 };
 
+/**
+ * Adds a listener for removed tabs
+ * */
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
@@ -147,6 +167,11 @@ var domainBlacklist = {};
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = {};
 
+/**
+ * Called before a HTTP(s) request. Does the heavy lifting
+ * Cancels the request/redirects it to HTTPS. URL modification happens in here.
+ * @param details of the handler, see Chrome doc
+ * */
 function onBeforeRequest(details) {
   var uri = document.createElement('a');
   uri.href = details.url;
@@ -254,8 +279,17 @@ var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
 // UI treatment of insecure subframes.
 var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
-// Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
-// use in determining which resources need to be ported to HTTPS.
+/**
+ * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
+ * use in determining which resources need to be ported to HTTPS.
+ * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
+ *
+ * @param type: type of the resource (see activeTypes and passiveTypes arrays)
+ * @param tab_id: The id of the tab
+ * @param resource_host: The host of the original url
+ * @param resource_url: the original url
+ * @param rewritten_url: The url rewritten to
+ * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
   if (rewritten_url == null)
@@ -284,8 +318,11 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
   switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
 }
 
-// Return the number of properties in an object. For associative maps, this is
-// their size.
+/**
+ * Return the number of properties in an object. For associative maps, this is
+ * their size.
+ * @param obj: object to calc the size for
+ * */
 function objSize(obj) {
   if (typeof obj == 'undefined') return 0;
   var size = 0, key;
@@ -295,8 +332,10 @@ function objSize(obj) {
   return size;
 }
 
-// Make an array of asset hosts by score so we can sort them,
-// presenting the most important ones first.
+/**
+ * Make an array of asset hosts by score so we can sort them,
+ * presenting the most important ones first.
+ * */
 function sortSwitchPlanner(tab_id, rewritten) {
   var asset_host_list = [];
   if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
@@ -315,7 +354,9 @@ function sortSwitchPlanner(tab_id, rewritten) {
   return asset_host_list;
 }
 
-// Format the switch planner output for presentation to a user.
+/**
+* Format the switch planner output for presentation to a user.
+* */
 function switchPlannerSmallHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   if (asset_host_list.length == 0) {
@@ -342,6 +383,9 @@ function switchPlannerSmallHtmlSection(tab_id, rewritten) {
   return output;
 }
 
+/**
+ * Create switch planner sections
+ * */
 function switchPlannerRenderSections(tab_id, f) {
   return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
          "these domains and add them to HTTPS Everywhere):<br/>" +
@@ -351,10 +395,17 @@ function switchPlannerRenderSections(tab_id, f) {
          f(tab_id, "rw");
 }
 
+/**
+ * Generate the small switch planner html content
+ * */
 function switchPlannerSmallHtml(tab_id) {
   return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
 }
 
+/**
+ * Generate a HTML link from urls in map
+ * map: the map containing the urls
+ * */
 function linksFromKeys(map) {
   if (typeof map == 'undefined') return "";
   var output = "";
@@ -366,10 +417,16 @@ function linksFromKeys(map) {
   return output;
 }
 
+/**
+ * Generate the detailed html fot the switch planner
+ * */
 function switchPlannerDetailsHtml(tab_id) {
   return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
 }
 
+/**
+ * Generate the detailed html fot the switch planner, by section
+ * */
 function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   var output = "";
@@ -393,6 +450,10 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
   return output;
 }
 
+/**
+ * monitor cookie changes. Automatically convert them to secure cookies
+ * @param changeInfo Cookie changed info, see Chrome doc
+ * */
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
@@ -424,6 +485,10 @@ function onCookieChanged(changeInfo) {
   }
 }
 
+/**
+ * handling redirects, breaking loops
+ * @param details details for the redirect (see chrome doc)
+ * */
 function onBeforeRedirect(details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
     var prefix = details.redirectUrl.substring(0, 5);
@@ -438,6 +503,7 @@ function onBeforeRedirect(details) {
     }
 }
 
+// Registers the handler for requests
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
@@ -447,12 +513,20 @@ wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
+/**
+ * disable switch Planner
+ * @param tabId the Tab to disable for
+ */
 function disableSwitchPlannerFor(tabId) {
   delete switchPlannerEnabledFor[tabId];
   // Clear stored URL info.
   delete switchPlannerInfo[tabId];
 }
 
+/**
+ * Enable switch planner for specific tab
+ * @param tabId the tab to enable it for
+ */
 function enableSwitchPlannerFor(tabId) {
   switchPlannerEnabledFor[tabId] = true;
 }

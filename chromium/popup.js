@@ -8,6 +8,11 @@ function e(id) {
   return document.getElementById(id);
 }
 
+/**
+ * Handles rule (de)activation in the popup
+ * @param checkbox checkbox being clicked
+ * @param ruleset the ruleset tied tot he checkbox
+ */
 function toggleRuleLine(checkbox, ruleset) {
   ruleset.active = checkbox.checked;
 
@@ -22,6 +27,11 @@ function toggleRuleLine(checkbox, ruleset) {
   chrome.tabs.reload();
 }
 
+/**
+ * Creates a rule line (including checkbox and icon) for the popup
+ * @param ruleset the ruleset to build the line for
+ * @returns {*}
+ */
 function createRuleLine(ruleset) {
 
   // parent block for line
@@ -67,6 +77,10 @@ function createRuleLine(ruleset) {
   return line;
 }
 
+/**
+ * Create the list of rules for a specific tab
+ * @param tab
+ */
 function gotTab(tab) {
   var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
 
@@ -85,6 +99,9 @@ function gotTab(tab) {
   }
 }
 
+/**
+ * Fill in content into the popup on load
+ */
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
@@ -129,6 +146,9 @@ function show(elem) {
   elem.style.display = "block";
 }
 
+/**
+ * Handles the manual addition of rules
+ */
 function addManualRule() {
   chrome.tabs.getSelected(null, function(tab) {
     hide(e("add-rule-link"));
