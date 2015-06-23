@@ -9,7 +9,9 @@
   <target host="*.startssl.eu" />
   <target host="startssl.us" />
   <target host="*.startssl.us" />
-  <!-- host startcom.org responds neither on 80 nor on 443 -->
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
+  <target host="startcom.org" />
   <target host="*.startcom.org" />
 
   <!-- since these resources are required for establishing HTTPS connections,
@@ -49,6 +51,11 @@
   <test url="http://www.startssl.org/" />
   <test url="http://www.startssl.eu/" />
   <test url="http://www.startssl.us/" />
+  
+  <test url="http://startcom.org/" />
 
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
+  <rule from="^http://startcom\.org/" to="https://www.startcom.org/" />
   <rule from="^http:" to="https:" />
 </ruleset>
