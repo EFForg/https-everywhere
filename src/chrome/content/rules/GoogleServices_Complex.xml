@@ -1,0 +1,78 @@
+<!--
+	For other Google coverage, see GoogleServices.xml
+
+	Problematic domains:
+
+		- www.goo.gl		(404; mismatched, CN: *.google.com)
+		- *-opensocial.googleusercontent.com ***
+
+	*** Breaks followers widget - https://trac.torproject.org/projects/tor/ticket/7294
+-->
+<ruleset name="Google Services">
+	<target host="*.ggpht.com" />
+	<target host="goo.gl" />
+	<target host="www.goo.gl" />
+		<exclusion pattern="^http://cbks0\.google\.com/(?:$|\?)" />
+			<test url="http://cbks0.google.com/" />
+			<test url="http://cbks0.google.com/?" />
+			<test url="http://cbks0.google.com/?foo" />
+		<exclusion pattern="^http://gg\.google\.com/(?!csi(?:$|\?))" />
+			<test url="http://gg.google.com/" />
+			<test url="http://gg.google.com/foo" />
+			<test url="http://gg.google.com/foo?" />
+			<test url="http://gg.google.com/foo?bar" />
+	<target host="googlecode.com" />
+	<target host="*.googlecode.com" />
+	<target host="googlesource.com" />
+	<target host="*.googlesource.com" />
+	<target host="*.googlesyndication.com" />
+	<target host="*.googleusercontent.com" />
+		<target host="*.corp.googleusercontent.com" />
+		<!--
+			Necessary for the Followers widget:
+
+				 https://trac.torproject.org/projects/tor/ticket/7294
+											-->
+		<exclusion pattern="^http://[\w-]+-opensocial\.googleusercontent\.com" />
+			<test url="http://code-opensocial.googleusercontent.com" />
+			<test url="http://8r8k4nsuv0p2aq5kcgq8de6noledo628-a-sites-opensocial.googleusercontent.com/gadgets/ifr?url=http://www.labpixies.com/campaigns/countdown/countdown.xml&amp;container=enterprise&amp;view=default&amp;lang=en&amp;country=ALL&amp;sanitize=0&amp;v=137237db1856077c&amp;libs=core:dynamic-height:setprefs:views&amp;mid=31&amp;parent=https://sites.google.com/site/roblessteph/" />
+			<test url="http://qa599q7p16rn40sms779eg17hpfu7oee-a-sites-opensocial.googleusercontent.com/gadgets/ifr?url=http://mit.edu/manus/www/gg/alicebot.xml&amp;container=enterprise&amp;view=default&amp;lang=en&amp;country=ALL&amp;sanitize=0&amp;v=5a00324a46fff2ec&amp;libs=core&amp;mid=3&amp;parent=http://www.eczm.com/" />
+
+	<securecookie host="^mail-attachment\.googleusercontent\.com$" name=".+" />
+
+	<!--    - lh 3-6 exist
+		- All appear identical
+		- Identical to lh\d.googleusercontent.com
+					-->
+	<rule from="^http://lh(\d)\.ggpht\.com/"
+		to="https://lh$1.ggpht.com/" />
+		<test url="http://lh3.ggpht.com/" />
+		<test url="http://lh4.ggpht.com/" />
+		<test url="http://lh5.ggpht.com/" />
+		<test url="http://lh6.ggpht.com/" />
+
+	<rule from="^http://(www\.)?goo\.gl/"
+		to="https://goo.gl/" />
+		<test url="http://www.goo.gl/" />
+		<test url="http://goo.gl/" />
+
+	<!-- wildcards -->
+
+	<rule from="^http://([\w-]+)\.googleusercontent\.com/"
+		to="https://$1.googleusercontent.com/" />
+		<test url="http://webcache.googleusercontent.com/" />
+		<test url="http://foo.googleusercontent.com/" />
+		<test url="http://bar.googleusercontent.com/" />
+
+	<rule from="^http://([\w-]+\.)?googlecode\.com/"
+		 to="https://$1googlecode.com/" />
+		<test url="http://foo.googlecode.com/" />
+		<test url="http://bar.googlecode.com/" />
+		<test url="http://www.googlecode.com/" />
+
+	<rule from="^http://([\w-]+\.)?googlesource\.com/"
+		to="https://$1googlesource.com/" />
+		<test url="http://foo.googlesource.com/" />
+		<test url="http://bar.googlesource.com/" />
+		<test url="http://www.googlesource.com/" />
+</ruleset>
