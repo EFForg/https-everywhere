@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://parametersecurity.com/ (200) => https://parametersecurity.com/ (526)
-
 	Other Parameter Security rulesets:
 
 		- ShowMeCon.com.xml
@@ -10,15 +6,18 @@ Non-2xx HTTP code: http://parametersecurity.com/ (200) => https://parametersecur
 
 	Problematic subdomains:
 
-		- showmecon *
+		- ^ ¹
+		- showmecon ²
 
-	* Mismatched, CN: www.showmecon.com
+	¹ CloudFlare error (Invalid SSL certificate)
+	² Mismatched, CN: www.showmecon.com
 
 -->
-<ruleset name="Parameter Security.com" default_off='failed ruleset test'>
+<ruleset name="Parameter Security.com">
 
 	<target host="parametersecurity.com" />
-	<target host="*.parametersecurity.com" />
+	<target host="showmecon.parametersecurity.com" />
+	<target host="www.parametersecurity.com" />
 
 
 	<!--	Not secured by server:
@@ -28,10 +27,13 @@ Non-2xx HTTP code: http://parametersecurity.com/ (200) => https://parametersecur
 	<securecookie host="^(?:www)?\.parametersecurity\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?parametersecurity\.com/"
-		to="https://$1parametersecurity.com/" />
+	<rule from="^http://parametersecurity\.com/"
+		to="https://www.parametersecurity.com/" />
 
 	<rule from="^http://showmecon\.parametersecurity\.com/"
 		to="https://showmecon.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
