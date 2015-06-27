@@ -6,15 +6,18 @@
 
 	Problematic subdomains:
 
-		- showmecon *
+		- ^ ¹
+		- showmecon ²
 
-	* Mismatched, CN: www.showmecon.com
+	¹ CloudFlare error (Invalid SSL certificate)
+	² Mismatched, CN: www.showmecon.com
 
 -->
 <ruleset name="Parameter Security.com">
 
 	<target host="parametersecurity.com" />
-	<target host="*.parametersecurity.com" />
+	<target host="showmecon.parametersecurity.com" />
+	<target host="www.parametersecurity.com" />
 
 
 	<!--	Not secured by server:
@@ -24,10 +27,13 @@
 	<securecookie host="^(?:www)?\.parametersecurity\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?parametersecurity\.com/"
-		to="https://$1parametersecurity.com/" />
+	<rule from="^http://parametersecurity\.com/"
+		to="https://www.parametersecurity.com/" />
 
 	<rule from="^http://showmecon\.parametersecurity\.com/"
 		to="https://showmecon.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
