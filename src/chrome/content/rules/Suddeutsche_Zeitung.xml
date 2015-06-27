@@ -106,12 +106,6 @@
 	<target host="polpix.sueddeutsche.com" />
 	<target host="*.sueddeutsche.de" />
 
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://www\.sueddeutsche\.de/+(?!favicon\.ico)" />
-
-
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.sueddeutsche\.de$" name="^creid$" /-->
@@ -132,17 +126,20 @@
 	<rule from="^http://polpix\.sueddeutsche\.com/"
 		to="https://www.sueddeutsche.de/" />
 
-	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|global|id|jetzt|maerkte|(motor|stellen)markt|service|sz-shop|weiterbildung|www)\.sueddeutsche\.de/"
+	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|global|id|jetzt|maerkte|(motor|stellen)markt|service|sz-shop|weiterbildung)\.sueddeutsche\.de/"
 		to="https://$1.sueddeutsche.de/" />
 
 	<rule from="^http://immobilienmarkt\.sueddeutsche\.de/(cms/data/|cms/fileadmin/|cms/uploads/|css/|favicon\.ico|gfx/)"
 		to="https://immobilienmarkt.sueddeutsche.de/$1" />
 
 	<rule from="^http://maps\.sueddeutsche\.de/(css/|fonts/)"
-		to="https://maps.sueddeutsche.de/$1" /> <!-- can be secured completely but creates false MCB -->
+		to="https://maps.sueddeutsche.de/$1" /> <!--subdomain can be secured completely but creates false MCB -->
 
-	<rule from="^http://szshop\.sueddeutsche\.de/(css/|favicon\.ico)"
-		to="https://szshop.sueddeutsche.de/$1" />
+	<rule from="^http://szshop\.sueddeutsche\.de/(favicon\.ico|out/sz/src/)"
+		to="https://szshop.sueddeutsche.de/$1" /> <!--subdomain can be secured completely but creates false MCB -->
+
+	<rule from="^http://www\.sueddeutsche\.de/favicon\.ico"
+		to="https://www.sueddeutsche.de/$1" />
 
 	<test url="http://anzeigen.sueddeutsche.de/" />
 	<test url="http://anzeigen-buchen.sueddeutsche.de/" />
@@ -165,7 +162,9 @@
 	<test url="http://maps.sueddeutsche.de/" />
 	<test url="http://service.sueddeutsche.de/" />
 	<test url="http://sz-shop.sueddeutsche.de/" />
-	<test url="http://szshop.sueddeutsche.de/" />
+	<test url="http://szshop.sueddeutsche.de/favicon.ico" />
+	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/libs/jscrollpane.css" />
+	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/styles.css" />
 	<test url="http://weiterbildung.sueddeutsche.de/" />
-	<test url="http://www.sueddeutsche.de/" />
+	<test url="http://www.sueddeutsche.de/favicon.ico" />
 </ruleset>
