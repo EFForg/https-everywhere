@@ -2,17 +2,34 @@
 var DBUG = 1;
 function log(){};
 
+/**
+ * A single rule
+ * @param from
+ * @param to
+ * @constructor
+ */
 function Rule(from, to) {
   //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
 
+/**
+ * Regex-Compile a pattern
+ * @param pattern The pattern to compile
+ * @constructor
+ */
 function Exclusion(pattern) {
   //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
+/**
+ * Generates a CookieRule
+ * @param host The host regex to compile
+ * @param cookiename The cookie name Regex to compile
+ * @constructor
+ */
 function CookieRule(host, cookiename) {
   this.host = host;
   this.host_c = new RegExp(host);
@@ -20,6 +37,14 @@ function CookieRule(host, cookiename) {
   this.name_c = new RegExp(cookiename);
 }
 
+/**
+ *A collection of rules
+ * @param set_name The name of this set
+ * @param match_rule Quick test match rule
+ * @param default_state activity state
+ * @param note Note will be displayed in popup
+ * @constructor
+ */
 function RuleSet(set_name, match_rule, default_state, note) {
   this.name = set_name;
   if (match_rule)
@@ -36,6 +61,11 @@ function RuleSet(set_name, match_rule, default_state, note) {
 }
 
 RuleSet.prototype = {
+  /**
+   * Check if a URI can be rewritten and rewrite it
+   * @param urispec The uri to rewrite
+   * @returns {*} null or the rewritten uri
+   */
   apply: function(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
@@ -70,7 +100,13 @@ RuleSet.prototype = {
 
 };
 
-
+/**
+ * Initialize Rule Sets
+ * @param userAgent The browser's user agent
+ * @param cache a cache object (lru)
+ * @param ruleActiveStates default state for rules
+ * @constructor
+ */
 function RuleSets(userAgent, cache, ruleActiveStates) {
   // Load rules into structure
   var t1 = new Date().getTime();
@@ -88,7 +124,11 @@ function RuleSets(userAgent, cache, ruleActiveStates) {
   this.ruleActiveStates = ruleActiveStates;
 }
 
+
 RuleSets.prototype = {
+  /**
+   * Iterate through data XML and load rulesets
+   */
   addFromXml: function(ruleXml) {
     var sets = ruleXml.getElementsByTagName("ruleset");
     for (var i = 0; i < sets.length; ++i) {
@@ -96,6 +136,9 @@ RuleSets.prototype = {
     }
   },
 
+  /**
+   * Return the RegExp for the local platform
+   */
   localPlatformRegexp: (function() {
     var isOpera = /(?:OPR|Opera)[\/\s](\d+)(?:\.\d+)/.test(this.userAgent);
     if (isOpera && isOpera.length === 2 && parseInt(isOpera[1]) < 23) {
@@ -108,6 +151,11 @@ RuleSets.prototype = {
     }
   })(),
 
+  /**
+   * Load a user rule
+   * @param params
+   * @returns {boolean}
+   */
   addUserRule : function(params) {
     log(INFO, 'adding new user rule for ' + JSON.stringify(params));
     var new_rule_set = new RuleSet(params.host, null, true, "user rule");
@@ -126,6 +174,10 @@ RuleSets.prototype = {
     return true;
   },
 
+  /**
+   * Does the loading of a ruleset.
+   * @param ruletag The whole <ruleset> tag to parse
+   */
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
@@ -182,18 +234,25 @@ RuleSets.prototype = {
     }
   },
 
+  /**
+   * Insert any elements from fromList into intoList, if they are not
+   * already there.  fromList may be null.
+   * @param intoList
+   * @param fromList
+   */
   setInsert: function(intoList, fromList) {
-    // Insert any elements from fromList into intoList, if they are not
-    // already there.  fromList may be null.
     if (!fromList) return;
     for (var i = 0; i < fromList.length; i++)
       if (intoList.indexOf(fromList[i]) == -1)
         intoList.push(fromList[i]);
   },
-  
-  potentiallyApplicableRulesets: function(host) {
-    // Return a list of rulesets that apply to this host
 
+  /**
+   * Return a list of rulesets that apply to this host
+   * @param host The host to check
+   * @returns {*} (empty) list
+   */
+  potentiallyApplicableRulesets: function(host) {
     // Have we cached this result? If so, return it!
     var cached_item = this.ruleCache.get(host);
     if (cached_item !== undefined) {
@@ -235,10 +294,14 @@ RuleSets.prototype = {
     return results;
   },
 
+  /**
+   * Check to see if the Cookie object c meets any of our cookierule citeria for being marked as secure.
+   * knownHttps is true if the context for this cookie being set is known to be https.
+   * @param cookie The cookie to test
+   * @param knownHttps Is the context for setting this cookie is https ?
+   * @returns {*} ruleset or null
+   */
   shouldSecureCookie: function(cookie, knownHttps) {
-    // Check to see if the Cookie object c meets any of our cookierule citeria
-    // for being marked as secure.  knownHttps is true if the context for this
-    // cookie being set is known to be https.
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
     while (hostname.charAt(0) == ".")
@@ -263,6 +326,11 @@ RuleSets.prototype = {
     return null;
   },
 
+  /**
+   * Check if it is secure to secure the cookie (=patch the secure flag in).
+   * @param domain The domain of the cookie
+   * @returns {*} true or false
+   */
   safeToSecureCookie: function(domain) {
     // Check if the domain might be being served over HTTP.  If so, it isn't
     // safe to secure a cookie!  We can't always know this for sure because
@@ -308,6 +376,12 @@ RuleSets.prototype = {
     return false;
   },
 
+  /**
+   * Rewrite an URI
+   * @param urispec The uri to rewrite
+   * @param host The host of this uri
+   * @returns {*} the new uri or null
+   */
   rewriteURI: function(urispec, host) {
     var newuri = null;
     var rs = this.potentiallyApplicableRulesets(host);
