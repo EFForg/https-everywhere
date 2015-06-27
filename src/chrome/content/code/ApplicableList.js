@@ -204,6 +204,21 @@ ApplicableList.prototype = {
     
   },
 
+  count_applied: function() {
+    var counter = 0;
+    for (var x in this.active) {
+      if (!(x in this.breaking)) {
+        ++counter;
+      }
+    }
+    for (var x in this.moot) {
+      if (!(x in this.active)) {
+        ++counter;
+      }
+    }
+    return counter;
+  },
+
   prepend_child: function(node) {
     this.menupopup.insertBefore(node, this.menupopup.firstChild);
   },

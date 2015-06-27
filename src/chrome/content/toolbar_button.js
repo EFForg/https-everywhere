@@ -191,19 +191,8 @@ httpsEverywhere.toolbarButton = {
     }
     // Make sure the list is up to date
     alist.populate_list();
-
-    var counter = 0;
-    for (var x in alist.active) {
-      if (!(x in alist.breaking)) {
-        ++counter;
-      }
-    }
-    for (var x in alist.moot) {
-      if (!(x in alist.active)) {
-        ++counter;
-      }
-    }
-
+    var counter = alist.count_applied();
+    
     toolbarbutton.setAttribute('rulesetsApplied', counter);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
   },
