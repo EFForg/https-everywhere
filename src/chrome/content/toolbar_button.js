@@ -37,9 +37,10 @@ if (!httpsEverywhere) { var httpsEverywhere = {}; }
 httpsEverywhere.toolbarButton = {
 
   /**
-   * Name of preference for determining whether to show ruleset counter.
+   * Names of preferences for determining whether to show ruleset counters.
    */
   COUNTER_PREF: "extensions.https_everywhere.show_counter",
+  COUNTER_TOTAL_PREF: "extensions.https_everywhere.show_counter_total",
 
   /**
    * Name of preference for whether HTTP Nowhere is on.
@@ -62,11 +63,17 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure the checkbox for showing counter is properly set
+    // make sure the checkbox for showing counters are properly set
     var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
     if (counterItem) {
-      counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
+      counterItem.setAttribute('checked', showCounter);
+    }
+    var showCounterTotal = tb.shouldShowCounterTotal();
+    var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
+    if (counterTotalItem) {
+      counterTotalItem.setAttribute('checked', showCounterTotal);
+      counterTotalItem.setAttribute('disabled', !showCounter);
     }
 
     // make sure UI for HTTP Nowhere mode is properly set
@@ -191,10 +198,14 @@ httpsEverywhere.toolbarButton = {
     }
     // Make sure the list is up to date
     alist.populate_list();
-    var counter = alist.count_applied();
+    var rulesetsApplied = alist.count_applied();
+    var rulesetsTotal = alist.count_all();
     
-    toolbarbutton.setAttribute('rulesetsApplied', counter);
-    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+    var includeTotals = httpsEverywhere.toolbarButton.shouldShowCounterTotal();
+    var counterLabel = includeTotals ? rulesetsApplied + '/' + rulesetsTotal : rulesetsApplied;
+      
+    toolbarbutton.setAttribute('rulesetsApplied', counterLabel);
+    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counterLabel);
   },
 
   /**
@@ -214,6 +225,21 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
+   * Gets whether to show the total ruleset count of applicable rulesets.
+   *
+   * @return {boolean}
+   */
+  shouldShowCounterTotal: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var prefExists = sp.getPrefType(tb.COUNTER_TOTAL_PREF);
+
+    // This time around, the default behavior is to not show the counter
+    return prefExists && sp.getBoolPref(tb.COUNTER_TOTAL_PREF);
+  },
+
+  /**
    * Gets whether to show HTTP Nowhere UI.
    *
    * @return {boolean}
@@ -225,19 +251,30 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
-   * Toggles the user's preference for displaying the rulesets applied counter
+   * Toggles the user's preference for displaying the rulesets applied counters
    * and updates the UI.
    */
   toggleShowCounter: function() {
     var tb = httpsEverywhere.toolbarButton;
     var sp = Services.prefs;
 
-    var showCounter = tb.shouldShowCounter();
-    sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
+    var showCounter = !tb.shouldShowCounter();
+    sp.setBoolPref(tb.COUNTER_PREF, showCounter);
+    
+    var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
+    counterTotalItem.setAttribute('disabled', !showCounter);
 
     tb.updateRulesetsApplied();
   },
+  toggleShowCounterTotal: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
 
+    var showCounterTotal = !tb.shouldShowCounterTotal();
+    sp.setBoolPref(tb.COUNTER_TOTAL_PREF, showCounterTotal);
+    tb.updateRulesetsApplied();
+  },
+  
   /**
    * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
    */
@@ -248,8 +285,7 @@ httpsEverywhere.toolbarButton = {
 
     // Change icon color to red if HTTP nowhere is enabled
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    toolbarbutton.setAttribute('http_nowhere',
-                               showHttpNowhere ? 'true' : 'false');
+    toolbarbutton.setAttribute('http_nowhere', showHttpNowhere);
     reload_window();
   }
 };
