@@ -1,8 +1,4 @@
 <!--
-	Note: This rule generates incorrect "Cycle detected" errors
-	from https-everywhere-checker, because forums.aws.amazon.com
-	will go into a redirect loop if a client does not handle
-	cookies. https://github.com/EFForg/https-everywhere/issues/1128
 	For rules that break image zoom, see AmazonAWS-breakzoom.xml.
 
 	For other Amazon coverage, see Amazon.xml.
@@ -121,6 +117,16 @@
 			Breaks soundsjustlike.com audio:
 							-->
 		<exclusion pattern="^http://badracket-website\.s3\.amazonaws\.com/swf/soundmanager\d_flash\d\.swf" />
+		<!--
+			Breaks premiumbeat.com preview player
+							-->
+		<exclusion pattern="^http://s3\.amazonaws\.com/pb_(sfx_)?previews/" />
+
+		<!-- Implicit test URL for this host gets 404 when rewritten, but resources
+				 other than / work. -->
+		<exclusion pattern="^http://ec\.images-amazon\.com/$" />
+		<test url="http://ec.images-amazon.com/" />
+
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/7857
 
@@ -320,6 +326,7 @@
 <test url="http://darkskysatellitemaps.s3.amazonaws.com/" />
 <test url="http://ecx.images-amazon.com/" />
 <test url="http://amazon-zg.s3.amazonaws.com/" />
-
+<test url="http://s3.amazonaws.com/pb_previews/" />
+<test url="http://s3.amazonaws.com/pb_sfx_previews/" />
 
 </ruleset>

@@ -1,4 +1,10 @@
-<ruleset name="StartCom">
+
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://auth.startssl.com/ => https://auth.startssl.com/: (35, 'error:14094410:SSL routines:SSL3_READ_BYTES:sslv3 alert handshake failure')
+
+-->
+<ruleset name="StartCom" default_off='failed ruleset test'>
   <target host="startssl.com" />
   <target host="*.startssl.com" />
   <target host="startssl.net" />
@@ -9,7 +15,9 @@
   <target host="*.startssl.eu" />
   <target host="startssl.us" />
   <target host="*.startssl.us" />
-  <!-- host startcom.org responds neither on 80 nor on 443 -->
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
+  <target host="startcom.org" />
   <target host="*.startcom.org" />
 
   <!-- since these resources are required for establishing HTTPS connections,
@@ -49,6 +57,11 @@
   <test url="http://www.startssl.org/" />
   <test url="http://www.startssl.eu/" />
   <test url="http://www.startssl.us/" />
+  
+  <test url="http://startcom.org/" />
 
+  <!-- host startcom.org responds neither on 80 nor on 443,
+    but should be protected from MitM and redirected to https://www.startcom.org -->
+  <rule from="^http://startcom\.org/" to="https://www.startcom.org/" />
   <rule from="^http:" to="https:" />
 </ruleset>
