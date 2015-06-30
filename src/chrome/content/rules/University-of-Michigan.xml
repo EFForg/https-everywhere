@@ -1,12 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://friend.umich.edu/ => https://friend.umich.edu/: (6, 'Could not resolve host: friend.umich.edu')
-Fetch error: http://law.umich.edu/ => https://law.umich.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'law.umich.edu'")
-Fetch error: http://lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'lsa.umich.edu'")
-Fetch error: http://servicerequest.umich.edu/ => https://servicerequest.umich.edu/: (6, 'Could not resolve host: servicerequest.umich.edu')
-Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no alternative certificate subject name matches target host name 'lsa.umich.edu'")
-
 	University of Michigan
 
 
@@ -52,9 +44,11 @@ Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no 
 		- cse			(cert only matches www.cse)
 		- www.ctools		(cert only matches ^ctools)
 		- photon.eecs ³
+		- law ¹
 		- lsa			(cert only matches *.lsa)
 		- www.weblogin		(cert only matches ^weblogin)
 
+	¹ Mismatched
 	³ Expired, self-signed
 
 
@@ -75,7 +69,7 @@ Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no 
 		- friend.weblogin.umich.edu
 
 -->
-<ruleset name="UMich.edu (partial)" default_off='failed ruleset test'>
+<ruleset name="UMich.edu (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -90,14 +84,12 @@ Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no 
 	<target host="eram.umich.edu" />
 	<target host="eresearch.umich.edu" />
 	<target host="erpm.umich.edu" />
-	<target host="friend.umich.edu" />
 	<target host="password.it.umich.edu" />
 	<target host="accounts.itcs.umich.edu" />
-	<target host="law.umich.edu" />
+	<!--target host="law.umich.edu" /-->
 	<target host="www.law.umich.edu" />
-	<target host="lsa.umich.edu" />
+	<target host="www.lsa.umich.edu" />
 	<target host="webapps.lsa.umich.edu" />
-	<target host="servicerequest.umich.edu" />
 	<target host="weblogin.umich.edu" />
 	<target host="wolverineaccess.umich.edu" />
 	<target host="www.umich.edu" />
@@ -106,7 +98,7 @@ Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no 
 				-->
 	<target host="cse.umich.edu" />
 	<target host="www.ctools.umich.edu" />
-	<target host="www.lsa.umich.edu" />
+	<target host="lsa.umich.edu" />
 	<target host="www.weblogin.umich.edu" />
 	<target host="friend.weblogin.umich.edu" />
 	<target host="accounts.www.umich.edu" />
@@ -122,10 +114,10 @@ Fetch error: http://www.lsa.umich.edu/ => https://lsa.umich.edu/: (51, "SSL: no 
 	<securecookie host="^.+\.umich\.edu$" name=".+" />
 
 
-	<rule from="^http://cse\.umich\.edu/"
-		to="https://www.cse.umich.edu/" />
+	<rule from="^http://(cse|lsa)\.umich\.edu/"
+		to="https://www.$1.umich.edu/" />
 
-	<rule from="^http://www\.(ctools|lsa|weblogin)\.umich\.edu/"
+	<rule from="^http://www\.(ctools|weblogin)\.umich\.edu/"
 		to="https://$1.umich.edu/" />
 
 	<rule from="^http:"
