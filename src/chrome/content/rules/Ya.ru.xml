@@ -1,17 +1,3 @@
-
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.ewent.ya.ru/ => https://www.ewent.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'www.ewent.ya.ru'")
-Fetch error: http://ewents.ya.ru/ => https://ewents.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'ewents.ya.ru'")
-Fetch error: http://www.ewents.ya.ru/ => https://www.ewents.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'www.ewents.ya.ru'")
-Fetch error: http://events.ya.ru/ => https://events.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'events.ya.ru'")
-Fetch error: http://www.events.ya.ru/ => https://www.events.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'www.events.ya.ru'")
-Fetch error: http://ivents.ya.ru/ => https://ivents.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'ivents.ya.ru'")
-Fetch error: http://www.ivents.ya.ru/ => https://www.ivents.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'www.ivents.ya.ru'")
-Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alternative certificate subject name matches target host name 'sobitia.ya.ru'")
-
--->
-
 <!--
 	For other Yandex coverage, see Yandex.xml.
 
@@ -40,10 +26,15 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 		- (www.)?cal ²
 		- pda.cal ²
 		- pda.calendar ²
+		- (www.)?events		(Mismatched)
+		- www.ewent		(Mismatched)
+		- (www.)?ewents		(Mismatched)
 		- ical ²
 		- pda.ical ²
+		- (www.)?ivents		(Mismatched)
 		- (www.)?m.metro ³
 		- (www.)?site ⁴
+		- sobitia	Mismatched
 		- (www.)?wc ²
 		- pda.wc ²
 		- (www.)?webcal ²
@@ -62,12 +53,12 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 		- autodiscover
 		- pass.beta
 		- disk
-		- www.ewent
-		- (www.)?ewents
+		- www.ewent		(→ events.yandex.ru)
+		- (www.)?ewents		(→ events.yandex.ru)
 		- (www.)?event
-		- (www.)?events
+		- (www.)?events		(→ events.yandex.ru)
 		- (www.)?ivent
-		- (www.)?ivents
+		- (www.)?ivents		(→ events.yandex.ru)
 		- m
 		- mail
 		- metrica
@@ -81,7 +72,7 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 		- rabota
 		- realty
 		- (www.)?site		(→ site.yandex.ru)
-		- sobitia
+		- sobitia		(→ events.yandex.ru)
 		- taxi
 		- m.taxi
 		- w
@@ -100,7 +91,7 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 	* Secured by us
 
 -->
-<ruleset name="Ya.ru (partial)" default_off='failed ruleset test'>
+<ruleset name="Ya.ru (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -108,13 +99,6 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 	<target host="autodiscover.ya.ru" />
 	<target host="pass.beta.ya.ru" />
 	<target host="disk.ya.ru" />
-	<target host="www.ewent.ya.ru" />
-	<target host="ewents.ya.ru" />
-	<target host="www.ewents.ya.ru" />
-	<target host="events.ya.ru" />
-	<target host="www.events.ya.ru" />
-	<target host="ivents.ya.ru" />
-	<target host="www.ivents.ya.ru" />
 	<target host="m.ya.ru" />
 	<target host="mail.ya.ru" />
 	<target host="metrica.ya.ru" />
@@ -125,7 +109,6 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 	<target host="p.ya.ru" />
 	<target host="rabota.ya.ru" />
 	<target host="realty.ya.ru" />
-	<target host="sobitia.ya.ru" />
 	<target host="taxi.ya.ru" />
 	<target host="m.taxi.ya.ru" />
 	<target host="w.ya.ru" />
@@ -134,13 +117,20 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 	<!--	Special cases:
 				-->
 	<target host="ya.ru" />
+	<target host="events.ya.ru" />
+	<target host="www.events.ya.ru" />
+	<target host="www.ewent.ya.ru" />
+	<target host="ewents.ya.ru" />
+	<target host="www.ewents.ya.ru" />
+	<target host="ivents.ya.ru" />
+	<target host="www.ivents.ya.ru" />
 	<target host="m.metro.ya.ru" />
 	<target host="www.m.metro.ya.ru" />
 	<target host="site.ya.ru" />
 	<target host="www.site.ya.ru" />
+	<target host="sobitia.ya.ru" />
 
-		<!--
-			Redirects to http:
+		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://(autoconfig|support|wow)\.ya\.ru/$" /-->
 		<!--exclusion pattern="^http://clubs\.ya\.ru/($|favicon\.ico|update_session\.xml)" /-->
@@ -169,6 +159,17 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 	<rule from="^http://ya\.ru/"
 		to="https://www.ya.ru/" />
 
+	<!--	Redirect keeps path and args,
+		but not foward slash:
+					-->
+	<rule from="^http://(?:www\.ewent|(?:www\.)?(?:e[vw]|iv)ents)\.ya\.ru/+"
+		to="https://events.yandex.ru/" />
+
+		<test url="http://www.ewent.ya.ru//" />
+		<test url="http://events.ya.ru//" />
+		<test url="http://ewents.ya.ru//" />
+		<test url="http://ivents.ya.ru//" />
+
 	<!--	Redirect drops path but not args:
 							-->
 	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/[^?]*"
@@ -176,6 +177,14 @@ Fetch error: http://sobitia.ya.ru/ => https://sobitia.ya.ru/: (51, "SSL: no alte
 
 		<test url="http://m.metro.ya.ru/foo" />
 		<test url="http://www.m.metro.ya.ru/foo" />
+
+	<!--	Redirect keeps path and	args,
+		but not forward slash:
+					-->
+	<rule from="^http://sobitia\.ya\.ru/+"
+		to="https://events.yandex.ru/" />
+
+		<test url="http://sobitia.ya.ru//" />
 
 	<!--	Redirect drops path but not args:
 							-->
