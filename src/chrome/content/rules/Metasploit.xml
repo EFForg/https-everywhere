@@ -1,42 +1,54 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://metasploit.org/ => https://www.metasploit.com/: (7, 'Failed to connect to metasploit.org port 80: Connection refused')
-Fetch error: http://www.metasploit.org/ => https://www.metasploit.com/: (7, 'Failed to connect to www.metasploit.org port 80: Connection refused')
 	For other Rapid7 coverage, see Rapid7.xml.
 
 
-	Problematic domains:
+	NB: Tor users cannot view* this website due to CloudFlare settings.
 
-		- metasploit.com *
-		- (www.)metasploit.org *
+	See:
 
-	* Cert only matches www.metasploit.com
+		- https://blog.torproject.org/blog/call-arms-helping-internet-services-accept-anonymous-users
+		- https://support.cloudflare.com/hc/en-us/articles/203306930-Does-CloudFlare-block-Tor-
+		- https://support.cloudflare.com/hc/en-us/articles/200170206-How-do-I-turn-I-m-Under-Attack-mode-on-
+
+	* without enabling javascript, for security and privacy implications see e.g.:
+
+		- https://www.mozilla.org/security/known-vulnerabilities/firefox.html
+		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
+		- https://panopticlick.eff.org
 
 
 	These altnames don't exist:
 
 		- www.help.metasploit.com
 
--->
-<ruleset name="Metasploit" default_off='failed ruleset test'>
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .metasploit.com
+		- www.metasploit.com
+
+-->
+<ruleset name="Metasploit.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="metasploit.com" />
-	<target host="*.metasploit.com" />
-	<target host="metasploit.org" />
-	<target host="www.metasploit.org" />
+	<target host="dev.metasploit.com" />
+	<target host="help.metasploit.com" />
+	<target host="mail.metasploit.com" />
+	<target host="www.metasploit.com" />
 
 
 	<!--	Secured by server:
 					-->
+	<!--securecookie host="^\.metasploit\.com$" name="^(__cfduid|cf_clearance)$" /-->
 	<!--securecookie host="^www\.metasploit\.com$" name="^JSESSIONID$" /-->
 
+	<securecookie host="^\.metasploit\.com$" name="^(?:__cfduid|cf_clearance)$" />
 	<securecookie host="^dev\.metasploit\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?metasploit\.(?:com|org)/"
-		to="https://www.metasploit.com/" />
-
-	<rule from="^http://(dev|help|mail)\.metasploit\.com/"
-		to="https://$1.metasploit.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
