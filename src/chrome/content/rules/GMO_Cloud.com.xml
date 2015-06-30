@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://blog.gmocloud.com/ => https://blog.gmocloud.com/: (51, "SSL: no alternative certificate subject name matches target host name 'blog.gmocloud.com'")
-Fetch error: http://home.gmocloud.com/ => https://home.gmocloud.com/: (28, 'Connection timed out after 10000 milliseconds')
-
 	For other GMO coverage, see GMO_Internet.xml.
 
 
@@ -16,17 +11,18 @@ Fetch error: http://home.gmocloud.com/ => https://home.gmocloud.com/: (28, 'Conn
 
 	Problematic subdomains:
 
+		- blog ¹
 		- w *
 
+	¹ Mismatched
 	* Works; expired, self-signed
 
 
 	Fully covered subdomains:
 
 		- (www.)
-		- blog
+		- blog		(→ www.gmocloud.com)
 		- contact
-		- home
 		- ir
 		- order
 		- partner
@@ -39,16 +35,23 @@ Fetch error: http://home.gmocloud.com/ => https://home.gmocloud.com/: (28, 'Conn
 		- vpsportal
 
 
+	home: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- contact.gmocloud.com
+		- order.gmocloud.com
+		- www.gmocloud.com
+
+
 	Mixed content:
 
-		- css, on:
-
-			- blog from $self ¹
-			- us from fonts.googleapis.com ²
+		- css on us from fonts.googleapis.com ²
 
 		- Images, on:
 
-			- home, ir, private, private-c, vps, w, from cache.img.gmo.jp
+			- ir, private, private-c, vps, w, from cache.img.gmo.jp
 			- ir from www.stockweather.co.jp ³
 
 		- Bugs, on private, private-c, shared, support, vps, from www.google.com ²
@@ -58,12 +61,12 @@ Fetch error: http://home.gmocloud.com/ => https://home.gmocloud.com/: (28, 'Conn
 	³ Unsecurable <= 404
 
 -->
-<ruleset name="GMO Cloud.com (partial)" default_off='failed ruleset test'>
+<ruleset name="GMO Cloud.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gmocloud.com" />
-	<target host="blog.gmocloud.com" />
 	<target host="contact.gmocloud.com" />
-	<target host="home.gmocloud.com" />
 	<target host="ir.gmocloud.com" />
 	<target host="order.gmocloud.com" />
 	<target host="partner.gmocloud.com" />
@@ -76,16 +79,29 @@ Fetch error: http://home.gmocloud.com/ => https://home.gmocloud.com/: (28, 'Conn
 	<target host="vpsportal.gmocloud.com" />
 	<target host="www.gmocloud.com" />
 
+	<!--	Complications:
+				-->
+	<target host="blog.gmocloud.com" />
+
 		<!--exclusion pattern="^http://(th|w)\.gmocloud\.com/" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^contact\.gmocloud\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(contact|www)\.gmocloud\.com$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^order\.gmocloud\.com$" name="^(ASP\.NET_SessionId|gmocloudneworder)$" /-->
 
-	<securecookie host="^(?:contact|order)\.gmocloud\.com$" name=".+" />
+	<securecookie host="^(?:contact|order|www)\.gmocloud\.com$" name=".+" />
 
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://blog\.gmocloud\.com/[^?]*"
+		to="https://www.gmocloud.com/" />
+
+		<test url="http://blog.gmocloud.com/?" />
+		<test url="http://blog.gmocloud.com//" />
 
 	<rule from="^http:"
 		to="https:" />
