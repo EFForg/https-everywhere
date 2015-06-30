@@ -1,9 +1,12 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://shop.eset.co.uk/ => https://shop.eset.co.uk/: (28, 'Connection timed out after 10000 milliseconds')
 	Other ESET rulesets:
 
+		- ESET.at.xml
+		- ESET.co.uk.xml
+		- ESET.de.xml
 		- ESET_NOD32.xml
+		- ESET_static.com.xml
+		- Sicontact.at.xml
 
 
 	CDN buckets:
@@ -13,13 +16,10 @@ Fetch error: http://shop.eset.co.uk/ => https://shop.eset.co.uk/: (28, 'Connecti
 
 	Nonfunctional domains:
 
-		- (www.)eset.co.uk *
-
-		- eset.com subdomains:
+		- in *eset.com:
 
 			- cart
 			- download *
-			- shop *
 
 		- (www.)virusradar.com *
 		- (www.)welivesecurity.com *
@@ -27,76 +27,65 @@ Fetch error: http://shop.eset.co.uk/ => https://shop.eset.co.uk/: (28, 'Connecti
 	* Times out
 
 
-	Problematic domains:
+	Problematic hosts in *eset.com:
 
-		- (www.)eset.at *
-		- (www.)eset.de		(redirects to http, valid cert)
-		- sicontact.at *
+		- blog *
+		- kb *
 
-	* Cert only matches www.sicontact.at
-
-
-	Partially covered domains:
-
-		- blog.eset.com *
-		- kb.eset.com *
-
-	* At least some pages redirect to http
+	* Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered domains:
+	Fully covered hosts in *eset.com:
 
-		- shop.eset.co.uk
-		- (www.)eset.at			(→ www.sicontact.at)
+		- (www.)?
+		- forum
+		- go
+		- my
+		- shop
 
-		- eset.com subdomains:
 
-			- (www.)
-			- forum
-			- go
-			- my
+	These altnames don't exist:
 
-		- static\d.esetstatic.com
-		- www.esetstatic.com
-		- (www.)sicontact.at		(^ → www)
+		- www.kb.eset.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- forum.eset.com
+		- shop.eset.com
+		- .shop.eset.com
 
 -->
-<ruleset name="ESET (partial)" default_off='failed ruleset test'>
+<ruleset name="ESET.com (partial)">
 
-	<target host="eset.*" />
-	<target host="www.eset.*" />
-	<target host="shop.eset.co.uk" />
+	<!--	Direct rewrites:
+				-->
 	<target host="eset.com" />
-	<target host="*.eset.com" />
-		<exclusion pattern="^http://blog\.eset\.com/(?!wp-content/)" />
-		<exclusion pattern="^http://kb\.eset\.com/(?!esetkb/a(?:pp|sset)s/)" />
-	<target host="*.esetstatic.com" />
-	<target host="sicontact.at" />
-	<target host="*.sicontact.at" />
+	<!--target host="blog.eset.com" /-->
+	<target host="forum.eset.com" />
+	<target host="go.eset.com" />
+	<!--target host="kb.eset.com" /-->
+	<target host="my.eset.com" />
+	<target host="shop.eset.com" />
+	<target host="www.eset.com" />
+
+		<!--exclusion pattern="^http://kb\.eset\.com/(?!esetkb/a(?:pp|sset)s/)" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://kb.eset.com/esetkb/assets/2015012901/split/images/logo-bottom.png" /-->
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^forum\.eset\.com$" name="^session_id$" /-->
+	<!--securecookie host="^shop\.eset\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.shop\.eset\.com$" name="^(NLShopperId|NlVisitorId)$" /-->
 
-	<securecookie host="^shop\.eset\.co\.uk$" name=".+" />
-	<securecookie host="^(?:forum|go|my)\.eset\.com$" name=".+" />
-	<securecookie host="^\.www\.sicontact\.at$" name=".+" />
+	<securecookie host="^(?:forum|go|my|\.?shop)\.eset\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?(?:ese|sicontac)t\.at/"
-		to="https://www.sicontact.at/" />
-
-	<rule from="^http://shop\.eset\.co\.uk/"
-		to="https://shop.eset.co.uk/" />
-
-	<rule from="^http://((?:blog|forum|go|kb|my|www)\.)?eset\.com/"
-		to="https://$1eset.com/" />
-
-	<rule from="^http://(static\d|www)\.esetstatic\.com/"
-		to="https://$1.esetstatic.com/" />
-
-	<rule from="^http://(?:www\.)?eset\.de/(\?.*)?$"
-		to="https://www.eset.com/de$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
