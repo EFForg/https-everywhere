@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://thumbs.redditmedia.com/ => https://thumbs.redditmedia.com/: (51, "SSL: no alternative certificate subject name matches target host name 'thumbs.redditmedia.com'")
-
 	For other Reddit coverage, see Reddit.xml.
 
 
@@ -15,7 +11,7 @@ Fetch error: http://thumbs.redditmedia.com/ => https://thumbs.redditmedia.com/: 
 
 		- (www.)?
 		- pixel
-		- thumbs
+		- thumbs	(→ s3.amazonaws.com)
 
 		- *.thumbs:
 
@@ -29,14 +25,18 @@ Fetch error: http://thumbs.redditmedia.com/ => https://thumbs.redditmedia.com/: 
 		- .redditmedia.com
 
 -->
-<ruleset name="Reddit media.com" default_off='failed ruleset test'>
+<ruleset name="Reddit media.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="redditmedia.com" />
 	<target host="pixel.redditmedia.com" />
-	<target host="thumbs.redditmedia.com" />
 	<target host="*.thumbs.redditmedia.com" />
 	<target host="www.redditmedia.com" />
 
+	<!--	Complications:
+				-->
+	<target host="thumbs.redditmedia.com" />
 
 	<!--	Not secured by server:
 					-->
@@ -44,6 +44,9 @@ Fetch error: http://thumbs.redditmedia.com/ => https://thumbs.redditmedia.com/: 
 
 	<securecookie host="^\.redditmedia\.com$" name=".+" />
 
+
+	<rule from="^http://thumbs\.redditmedia\.com/"
+		to="https://s3.amazonaws.com/thumbs.redditmedia.com/" />
 
 	<rule from="^http:"
 		to="https:" />
