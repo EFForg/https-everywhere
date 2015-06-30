@@ -151,38 +151,56 @@ httpsEverywhere.toolbarButton = {
    
   /**
    * Update the toolbar button image and menuitem checkboxes to current settings.
+   * This is used when the UI is initialized.
    */
   updateMenuItems: function() {
-    HTTPSEverywhere.log(DBUG, 'Updating toolbar button image and menu item checkboxes.');
+    HTTPSEverywhere.log(INFO, 'Updating toolbar button image and menu item checkboxes.');
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure the checkbox for showing counters are properly set
-    var showCounter = tb.shouldShowCounter();
     var counterItem = document.getElementById('https-everywhere-counter-item');
-    if (counterItem) {
-      HTTPSEverywhere.log(INFO, 'Setting ruleset counter checkbox to '+showCounter);
-      counterItem.setAttribute('checked', showCounter);
+    
+    var uiFound = false;
+    
+    if (counterItem) { // If we can find the counterItem like this, we can find everything in the UI.
+      uiFound = true;
+      var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
+      var httpNowhereItem = document.getElementById('http-nowhere-item');
+      var toolbarbutton = document.getElementById('https-everywhere-button');
+    } else {
+      // If the toolbar button is hidden away in the Firefox hamburger menu,
+      // we won't find it by the above, and need to look somewhere else
+      let palette = document.getElementById("navigator-toolbox").palette;
+      counterItem = palette.querySelector("#https-everywhere-counter-item");
+      if (counterItem) {
+          HTTPSEverywhere.log(DBUG, 'The toolbar button was trying to hide');
+          uiFound = true;
+          counterItem.setAttribute('checked', showCounter);
+          var counterTotalItem = palette.querySelector('#https-everywhere-counter-total-item');
+          var httpNowhereItem = palette.querySelector('#http-nowhere-item');
+          var toolbarbutton = palette.querySelector('#https-everywhere-button');
+      }
     }
-    var showCounterTotal = tb.shouldShowCounterTotal();
-    var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
-    if (counterTotalItem) {
-      HTTPSEverywhere.log(INFO, 'Setting total ruleset counter checkbox to '+showCounterTotal);
+    
+    if (uiFound) {
+      // make sure the checkbox for showing counters are properly set
+      var showCounter = tb.shouldShowCounter();
+      HTTPSEverywhere.log(DBUG, 'Setting ruleset counter checkbox to '+showCounter);
+      counterItem.setAttribute('checked', showCounter);
+      
+      var showCounterTotal = tb.shouldShowCounterTotal();
+      HTTPSEverywhere.log(DBUG, 'Setting total ruleset counter checkbox to '+showCounterTotal);
       counterTotalItem.setAttribute('checked', showCounterTotal);
       // No reason to be able to change the setting for showing the total
       // count of applicable rulesets if we do not even show the active ones.
       counterTotalItem.setAttribute('disabled', !showCounter);
-    }
-
-    // make sure UI for HTTP Nowhere mode is properly set
-    var httpNowhereItem = document.getElementById('http-nowhere-item');
-    var showHttpNowhere = tb.shouldShowHttpNowhere();
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (httpNowhereItem) {
-      HTTPSEverywhere.log(INFO, 'Setting HTTP Nowhere checkbox to '+showHttpNowhere);
+      
+      // make sure UI for HTTP Nowhere mode is properly set
+      var showHttpNowhere = tb.shouldShowHttpNowhere();
+      HTTPSEverywhere.log(DBUG, 'Setting HTTP Nowhere checkbox to '+showHttpNowhere);
       httpNowhereItem.setAttribute('checked', showHttpNowhere);
-    }
-    if (toolbarbutton) {
       toolbarbutton.setAttribute('http_nowhere', showHttpNowhere);
+    } else {
+      HTTPSEverywhere.log(WARN, 'UI not found.');
     }
   },
   
