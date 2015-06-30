@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.yunbi.com/ => https://www.yunbi.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.yunbi.com'")
-Fetch error: http://yun.yunbi.com/ => https://yun.yunbi.com/: (51, "SSL: no alternative certificate subject name matches target host name 'yun.yunbi.com'")
-
 	Nonfunctional subdomains:
 
 		- bbs *
@@ -12,18 +7,57 @@ Fetch error: http://yun.yunbi.com/ => https://yun.yunbi.com/: (51, "SSL: no alte
 	* Dropped
 
 
+	Problematic hosts in *yunbi.com:
+
+		- www *
+		- yun *
+
+	* Mismatched
+
+
 	Fully covered subdomains:
 
-		- (www.)?
-		- yun
+		- (www.)?	(www → ^)
+		- yun		(→ yunbi.com)
+
+
+	slanger: Dropped over http & https
+
+
+	These altnames don't exist:
+
+		- d.yunbi.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- yunbi.com
 
 -->
-<ruleset name="Yunbi.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Yunbi.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="yunbi.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.yunbi.com" />
 	<target host="yun.yunbi.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^yunbi\.com$" name="^(_peatio_session|XSRF-TOKEN)$" /-->
+
+	<securecookie host="^yunbi\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://(?:www|yun)\.yunbi\.com/"
+		to="https://yunbi.com/" />
 
 	<rule from="^http:"
 		to="https:" />
