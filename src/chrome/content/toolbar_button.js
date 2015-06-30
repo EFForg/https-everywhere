@@ -210,7 +210,13 @@ httpsEverywhere.toolbarButton = {
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
     if (!toolbarbutton) {
-      return;
+      // This becomes relevant for instance when the toolbar button is
+      // hidden away in the Firefox hamburger menu.
+      let palette = document.getElementById("navigator-toolbox").palette;
+      var toolbarbutton = palette.querySelector('#https-everywhere-button');
+      if (!toolbarbutton) {
+        return;
+      }
     }
 
     var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
