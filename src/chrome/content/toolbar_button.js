@@ -437,6 +437,11 @@ function toggleEnabledUI() {
 
   // Change icon depending on enabled state
   var toolbarbutton = document.getElementById('https-everywhere-button');
+  if (!toolbarbutton) {
+	// If we did not find the button, look for it in the hamburger menu.
+    let palette = document.getElementById("navigator-toolbox").palette;
+    var toolbarbutton = palette.querySelector('#https-everywhere-button');
+  }
   if (toolbarbutton) {
     toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
   }
