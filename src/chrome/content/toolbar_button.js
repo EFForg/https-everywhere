@@ -169,15 +169,18 @@ httpsEverywhere.toolbarButton = {
     } else {
       // If the toolbar button is hidden away in the Firefox hamburger menu,
       // we won't find it by the above, and need to look somewhere else
-      let palette = document.getElementById("navigator-toolbox").palette;
-      counterItem = palette.querySelector("#https-everywhere-counter-item");
-      if (counterItem) {
-          HTTPSEverywhere.log(DBUG, 'The toolbar button was trying to hide');
-          uiFound = true;
-          counterItem.setAttribute('checked', showCounter);
-          var counterTotalItem = palette.querySelector('#https-everywhere-counter-total-item');
-          var httpNowhereItem = palette.querySelector('#http-nowhere-item');
-          var toolbarbutton = palette.querySelector('#https-everywhere-button');
+      var toolbox = document.getElementById("navigator-toolbox");
+      if (toolbox) {
+        let palette = toolbox.palette;
+        counterItem = palette.querySelector("#https-everywhere-counter-item");
+        if (counterItem) {
+            HTTPSEverywhere.log(DBUG, 'The toolbar button was trying to hide');
+            uiFound = true;
+            counterItem.setAttribute('checked', showCounter);
+            var counterTotalItem = palette.querySelector('#https-everywhere-counter-total-item');
+            var httpNowhereItem = palette.querySelector('#http-nowhere-item');
+            var toolbarbutton = palette.querySelector('#https-everywhere-button');
+        }
       }
     }
     
@@ -212,10 +215,13 @@ httpsEverywhere.toolbarButton = {
     if (!toolbarbutton) {
       // This becomes relevant for instance when the toolbar button is
       // hidden away in the Firefox hamburger menu.
-      let palette = document.getElementById("navigator-toolbox").palette;
-      var toolbarbutton = palette.querySelector('#https-everywhere-button');
-      if (!toolbarbutton) {
-        return;
+      var toolbox = document.getElementById("navigator-toolbox");
+      if (toolbox) {
+        palette = toolbox.palette;
+        var toolbarbutton = palette.querySelector('#https-everywhere-button');
+        if (!toolbarbutton) {
+          return;
+        }
       }
     }
 
@@ -439,8 +445,11 @@ function toggleEnabledUI() {
   var toolbarbutton = document.getElementById('https-everywhere-button');
   if (!toolbarbutton) {
 	// If we did not find the button, look for it in the hamburger menu.
-    let palette = document.getElementById("navigator-toolbox").palette;
-    var toolbarbutton = palette.querySelector('#https-everywhere-button');
+    var toolbox = document.getElementById("navigator-toolbox");
+    if (toolbox) {
+      var palette = toolbox.palette;
+      var toolbarbutton = palette.querySelector('#https-everywhere-button');
+    }
   }
   if (toolbarbutton) {
     toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
