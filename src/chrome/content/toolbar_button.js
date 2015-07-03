@@ -246,9 +246,14 @@ httpsEverywhere.toolbarButton = {
     var rulesetsApplied = alist.count_applied();
     var rulesetsTotal = alist.count_all();
     
+    if (!rulesetsTotal) {
+      toolbarbutton.setAttribute('rulesetsApplied', 0);
+      return;
+    }
+
     var includeTotals = httpsEverywhere.toolbarButton.shouldShowCounterTotal();
     var counterLabel = includeTotals ? rulesetsApplied + '/' + rulesetsTotal : rulesetsApplied;
-      
+    
     toolbarbutton.setAttribute('rulesetsApplied', counterLabel);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counterLabel);
   },
