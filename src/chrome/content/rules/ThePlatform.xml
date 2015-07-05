@@ -8,26 +8,21 @@
 		- web.theplatform.com.edgesuite.net
 
 
-	Nonfunctional subdomains:
-
-		- (www.)	(shows default Media Temple page, CN: plesk)
-
-
 	Problematic subdomains:
 
+		- ^ ¹
 		- feed ***
 		- mpx *
 		- pdk **
 		- player ***
+		- support ⁴
 		- web *
 
+	¹ Plaintext reply
 	* Works, akamai
 	** https://github.com/EFForg/https-everywhere/issues/1431
 	*** https://github.com/EFForg/https-everywhere/issues/1816
-
-	Partially securable subdomains:
-
-		- help		(some paths 403)
+	⁴ Mismatched
 
 
 	NB: crossdomain.xml on player forbids https (FUU!)
@@ -35,20 +30,52 @@
 
 	OTOH, we could rewrite crossdomain.xml from player to release....
 
+
+	Fully covered hosts in *theplatform.com:
+
+		- (www.)?		(^ → www)
+		- console
+		- help
+		- mps
+		- release
+		- support		(→ delivery.support.theplatform.com)
+		- delivery.support
+		- uploads.www
+
+
+	Insecurecookies are set for these hosts:
+
+		- console.theplatform.com
+		- mps.theplatform.com
+
 -->
 <ruleset name="thePlatform (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="console.theplatform.com" />
+	<target host="help.theplatform.com" />
 	<target host="mps.theplatform.com" />
 	<target host="release.theplatform.com" />
+	<target host="delivery.support.theplatform.com" />
+	<target host="www.theplatform.com" />
+	<target host="uploads.www.theplatform.com" />
+
+	<!--	Complications:
+				-->
+	<target host="theplatform.com" />
+	<target host="support.theplatform.com" />
 		
-	<!-- 
-	Commented out for the moment since I can't find some appropriate rule tests. 
-	<target host="help.theplatform.com" />
-		<exclusion pattern="^http://help\.theplatform\.com/(?!login(?:$|\?|/))" /> 
-	-->
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(console|mps)\.theplatform\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:console|mps|release)\.theplatform\.com$" name=".+" />
 
 
-	<securecookie host="^(?:mps|release)\.theplatform\.com$" name=".+" />
-
+	<rule from="^http://support\.theplatform\.com/"
+		to="https://delivery.support.theplatform.com/" />
 
 	<rule from="^http:" to="https:" />
 </ruleset>
