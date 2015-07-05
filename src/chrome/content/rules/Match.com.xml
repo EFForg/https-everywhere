@@ -12,6 +12,8 @@
 	Nonfunctional subdomains:
 
 		- cp *
+		- nl		Dropped
+		- www		Refused
 
 	* 504, akamai
 
@@ -21,36 +23,42 @@
 
 	Fully covered subdomains:
 
-		- images
+		- images	(→ a248.e.akamai.net)
 		- secure2.intl
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .match.com
+		- secure2.intl.match.com
 
 -->
 <ruleset name="Match.com (partial)">
 
-	<target host="match.com" />
-	<target host="*.match.com" />
-		<!--exclusion pattern="^http://cp\.match\.com/" /-->
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.match\.com/cpx/en-us/match/indexpage/($|\?)" /-->
+	<!--	Direct rewrites:
+				-->
+	<!--target host="match.com" /-->
+	<target host="secure2.intl.match.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.match.com" />
+
+		<!--exclusion pattern="^http://(?:cp|nl|www)\.match\.com/" /-->
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.match\.com$" name="^(dMatch|ppLoginReferer)$" /-->
-	<!--securecookie host="^(secure2\.intl|www)\.match\.com$" name="^(LinkedAccountsLandingUrl|Match|MatchSession|SECU)$" /-->
+	<!--securecookie host="^secure2\.intl\.match\.com$" name="^(LinkedAccountsLandingUrl|Match|MatchSession|SECU)$" /-->
 
 	<securecookie host="^secure2\.intl\.match\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?match\.com/(?=favicon\.ico)"
-		to="https://www.match.com/" />
-
 	<rule from="^http://images\.match\.com/"
 		to="https://a248.e.akamai.net/f/419/396/4/images.match.com/" />
 
-	<rule from="^http://secure2\.intl\.match\.com/"
-		to="https://secure2.intl.match.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
