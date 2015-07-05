@@ -1,9 +1,4 @@
 <!--
-	For rules causing false/broken MCB, see Outbrain.com-falsemixed.xml.
-
-	For problematic rules, see Outbrain-mismatches.xml.
-
-
 	CDN buckets:
 
 		- www.outbrain.com.edgesuite.net
@@ -21,30 +16,42 @@
 	Problematic subdomains:
 
 		- ^ ¹
-		- blog ²
-		- selfserve ³
 		- wp ⁴
-		- www ⁵
 
 	¹ Cert only matches *.outbrain.com
-	² Redirects to www, which has mixed css
-	³ Works; mismatched, CN: *.unbounce.com
 	⁴ Works, akamai
-	⁵ Mixed css from $self
 
 
 	Fully covered subdomains:
 
+		- blog
+		- content
 		- editorial
 		- images
+		- lp
 		- my
 		- paid
+		- selfserve
+		- storage
 		- traffic
 		- u
+		- u2
 		- widgets *
 		- wp		(→ www)
 
 	* Bugs served on 3rd-party websites
+
+
+	These altnames don't exist:
+
+		- www.lp.outbrain.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .outbrain.com
+		- lp.outbrain.com
+		- my.outbrain.com
 
 
 	Mixed content:
@@ -53,44 +60,76 @@
 
 			- selfserve from unbouncepages-com.s3.amazonaws.com *
 			- selfserve from dl.dropbox.com *
-			- www from www *
 
-		- Images, on:
-
-			- selfserve from dl.dropbox.com *
-			- www from wp *
-			- www from www *
-
-		- Bugs on www from widgets *
+		- Images on selfserve from dl.dropbox.com *
+		- favicon on lp from www.outbrain.com *
 
 	* Secured by us
 
 -->
 <ruleset name="Outbrain (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.outbrain.com" />
+	<target host="content.outbrain.com" />
+	<target host="editorial.outbrain.com" />
+	<target host="images.outbrain.com" />
+	<target host="lp.outbrain.com" />
+	<target host="my.outbrain.com" />
+	<target host="paid.outbrain.com" />
+	<target host="selfserve.outbrain.com" />
+	<target host="storage.outbrain.com" />
+	<target host="traffic.outbrain.com" />
+	<target host="u.outbrain.com" />
+	<target host="u2.outbrain.com" />
+	<target host="widgets.outbrain.com" />
+	<target host="www.outbrain.com" />
+
+	<!--	Complications:
+				-->
 	<target host="outbrain.com" />
-	<target host="*.outbrain.com" />
+	<target host="wp.outbrain.com" />
+
 		<!--exclusion pattern="^http://(help|selfserve)\.outbrain\.com/" /-->
-		<!--
-			Avoid false/broken MCB:
+
+		<!--	Redirects to http:
 						-->
-		<!--exclusion pattern="^http://blog\.outbrain\.com/" /-->
-		<exclusion pattern="^http://(?:www\.)?outbrain\.com/+(?!wp-content/|wp-includes/)" />
+		<!--exclusion pattern="^http://www\.outbrain\.com/($|blog$)" /-->
+
+		<exclusion pattern="^http://www\.outbrain\.com/+(?!assets/|favicon\.ico|images/|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.outbrain.com/about/company" />
+			<test url="http://www.outbrain.com/blog" />
+			<test url="http://www.outbrain.com/contact" />
+			<test url="http://www.outbrain.com/de/contact" />
+			<test url="http://www.outbrain.com/engage" />
+			<test url="http://www.outbrain.com/es/amplify" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.outbrain.com/favicon.ico" />
+			<test url="http://www.outbrain.com/images/logo.png" />
+			<test url="http://www.outbrain.com/wp-content/themes/outbrain_2014/images/global/logo.png" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.outbrain\.com$" name="^obuid$" /-->
+	<!--securecookie host="^\.outbrain\.com$" name="^(?:obuid|ubvt)$" /-->
 	<!--securecookie host="^editorial\.outbrain\.com$" name="^obroute$" /-->
+	<!--securecookie host="^lp\.outbrain\.com$" name="^(ubpv|ubvs)$" /-->
 	<!--securecookie host="^my\.outbrain\.com$" name="^(JSESSIONID|obroute2)$" /-->
 
+	<securecookie host="^\.outbrain\.com$" name="^ubvt$" />
 	<securecookie host="^\w+\.outbrain\.com$" name=".+" />
 
 
-	<rule from="^http://(?:wp\.|www\.)?outbrain\.com/"
+	<rule from="^http://(?:wp\.)?outbrain\.com/"
 		to="https://www.outbrain.com/" />
 
-	<rule from="^http://(editorial|u|widgets|images|my|paid|traffic)\.outbrain\.com/"
-		to="https://$1.outbrain.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
