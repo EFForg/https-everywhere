@@ -1,17 +1,47 @@
 <!--
-	Disabled due to https://github.com/EFForg/https-everywhere/issues/1509
--->
+	Redirect appears to have been disabled
 
-<ruleset name="MXToolBox" default_off="redirect loop">
+	https://github.com/EFForg/https-everywhere/issues/1509
+
+
+	Problematic hosts in *mxtoolbox.com:
+
+		- community *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- mxtoolbox.com
+		- .community.mxtoolbox.com
+		- www.mxtoolbox.com
+
+
+	Mixed content:
+
+		- Images on community from ^mxtoolbox.com *
+
+	* Secured by us
+
+-->
+<ruleset name="MXToolBox (partial)">
 
 	<target host="mxtoolbox.com" />
+	<!--target host="community.mxtoolbox.com" /-->
 	<target host="www.mxtoolbox.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^mxtoolbox\.com$" name="^ismobile$" /-->
+	<!--securecookie host="^\.community\.mxtoolbox\.com$" name="^phpbb3_tru2e_(?:k|sid|u)$" /-->
+	<!--securecookie host="^(?:www\.)?mxtoolbox\.com$" name="^ASP\.NET_SessionId$" /-->
 
 	<securecookie host="^(?:www\.)?mxtoolbox\.com$" name=".*" />
 
 
-	<rule from="^http://(www\.)?mxtoolbox\.com/"
-		to="https://$1mxtoolbox.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
