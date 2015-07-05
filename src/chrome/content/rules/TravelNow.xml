@@ -1,28 +1,57 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://travelnow.com/ => https://www.travelnow.com/: Cycle detected - URL already encountered: https://www.travelnow.com/templates/336616
 	Some pages started redirecting to http, including:
 
 		- templates/331656?showOptions=false
 		- templates/331656/hotels/list
 		- templates/331656/hotels/200950/overview
 
+
+	Insecure cookies are set for these domains:
+
+		- .travelnow.com
+		- .www.travelnow.com
+
 -->
-<ruleset name="TravelNow (partial)" default_off='failed ruleset test'>
+<ruleset name="TravelNow (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="travelnow.com" />
-	<target host="*.travelnow.com" />
-		<exclusion pattern="^http://(?:www\.)?travelnow\.com/templates/331656(?:/?$|\?|/hotels/)" />
+	<target host="dg.travelnow.com" />
+	<target host="images.travelnow.com" />
+	<target host="www.travelnow.com" />
 
+		<!--exclusion pattern="^http://(www\.)?travelnow\.com/templates/331656(?:/?$|\?|/hotels/)" /-->
+
+		<exclusion pattern="^http://(?:www\.)?travelnow\.com/(?!.+\.(?:JPG|css|gif|ico|png)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://travelnow.com/selfService/searchByIdAndEmail" />
+			<test url="http://www.travelnow.com/selfService/searchByIdAndEmail" />
+			<test url="http://travelnow.com/templates/336616" />
+			<test url="http://www.travelnow.com/templates/336616" />
+			<test url="http://travelnow.com/templates/471605" />
+			<test url="http://www.travelnow.com/templates/471605" />
+			<test url="http://travelnow.com/templates/84505/hotels/list" />
+			<test url="http://www.travelnow.com/templates/84505/hotels/list" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.travelnow.com/favicon.ico" />
+			<test url="http://travelnow.com/templates/336616/static/57/default/images/core/tp-rating.png" />
+			<test url="http://www.travelnow.com/templates/336616/static/57/default/images/core/tp-rating.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.travelnow\.com$" name="^(?:ServerPool|TACds|TASession|TAUnique)$" />
+	<securecookie host="^\.www\.travelnow\.com$" name="^TASSK$" />
 
 	<!--securecookie host="^(.*\.)?travelnow\.com$" name=".*" /-->
 
 
-	<!--	Cert only matches *.travelnow.com	-->
-	<rule from="^http://(?:www\.)?travelnow\.com/"
-		to="https://www.travelnow.com/" />
-
-	<rule from="^http://(dg|images)\.travelnow\.com/"
-		to="https://$1.travelnow.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
