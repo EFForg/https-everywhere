@@ -1,21 +1,27 @@
-<!--
-	Problematic domains:
+<ruleset name="Service-Now.com">
 
-		- servicenow.com	(works, cert only matches *.servicenow.com)
-		- www.servicenow.com	(works, akamai)
-		- service-now.com	(cert only matches *.service-now.com)
-		- www.service-now.com	(works, valid cert, but redirects to https://www.servicenow.com)
-
--->
-<ruleset name="ServiceNow (partial)">
-
+	<target host="service-now.com" />
 	<target host="*.service-now.com" />
 
+		<test url="http://appcentral1.service-now.com/app_showcase.do" />
+		<test url="http://signon.service-now.com/ssoregister.do" />
+		<test url="http://www.service-now.com/" />
 
-	<securecookie host="^.+\.service-now\.com$" name=".+" />
+		<!--	Clients:
+				-->
+		<test url="http://hi.service-now.com/" />
+		<test url="http://liberty.service-now.com/" />
+		<test url="http://theplatform.service-now.com/" />
 
 
-	<rule from="^http://(?!www\.)([\w-]+)\.service-now\.com/"
-		to="https://$1.service-now.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="client\.service-now\.com$" name="^BIGipServer\w+$" /-->
+
+	<securecookie host=".+\.service-now\.com$" name=".+" />
+
+
+	<rule from="^http://([\w-]+\.)?service-now\.com/"
+		to="https://$1service-now.com/" />
 
 </ruleset>
