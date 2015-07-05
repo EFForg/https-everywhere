@@ -1,19 +1,63 @@
 <!--
+	Nonfunctional hosts in *juniper.net:
+
+		- rss *
+
+	* Reset
+
+
+	^juniper.net: Dropped
+
+
 	These altnames don't exist:
 
 		- www.kb.juniper.net
+		- www.prsearch.juniper.net
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .juniper.net
+		- kb.juniper.net
+		- forums.juniper.net
+		- www.juniper.net
+
+
+	Mixed content:
+
+		- Images on forums, kb from www.juniper.net *
+		- Bug on kb, www from statse.webtrendslive.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Juniper Networks" platform="mixedcontent">
+<ruleset name="Juniper Networks">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="forums.juniper.net" />
+	<target host="kb.juniper.net" />
+	<target host="prsearch.juniper.net" />
+	<target host="www.juniper.net" />
+
+	<!--	Complications:
+				-->
 	<target host="juniper.net" />
-	<target host="*.juniper.net" />
 
 
-	<rule from="^http://(?:www\.)?juniper\.net/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.juniper\.net$" name="^(?:JNPRCUST|ObSSOCookie)$" /-->
+	<!--securecookie host="^forums\.juniper\.net$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^(?:kb|www)\.juniper\.net$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:forums|kb|www)?\.juniper\.net$" name=".+" />
+
+
+	<rule from="^http://juniper\.net/"
 		to="https://www.juniper.net/" />
 
-	<rule from="^http://kb\.juniper\.net/"
-		to="https://kb.juniper.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
