@@ -1,38 +1,49 @@
 <!--
 	c249773.r73.cf1.rackcdn.com
 	c249773.ssl.cf1.rackcdn.com
+
+
+	Nonfunctional hosts in *shrinktheweb.com:
+
+		- support *
+
+	* Refused
+
+
+	images: Included on 3rd-party websites
+
+
+	Insecure cookies are set for these domains:
+
+		- .shrinktheweb.com
+
 -->
-<ruleset name="ShrinkTheWeb">
+<ruleset name="ShrinkTheWeb (partial)">
 
-	<target host="shrinktheweb.com" />
-	<target host="*.shrinktheweb.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.images.shrinktheweb.com" />
-
-
-	<!--	Observed cookies:
-
-			- \.
-			- \.images
+	<!--	Direct rewrites:
 				-->
-	<securecookie host="^.*\.shrinktheweb\.com$" name=".*" />
+	<target host="shrinktheweb.com" />
+	<target host="images.shrinktheweb.com" />
+	<target host="www.shrinktheweb.com" />
+
+	<!--	Complications:
+				-->
+	<target host="learn.shrinktheweb.com" />
 
 
-	<!--	Cert doesn't match !www.	-->
-	<rule from="^http://(?:www\.)?shrinktheweb\.com/"
-		to="https://www.shrinktheweb.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.shrinktheweb\.com$" name="^SESS[\da-f]{32}$" /-->
 
-	<!--	Redirects to http, identical to blogs/$		-->
-	<rule from="^http://www\.shrinktheweb\.com/blog$"
-		to="https://www.shrinktheweb.com/blogs/" />
+	<securecookie host=".*\.shrinktheweb\.com$" name=".*" />
 
-	<!--	Included on third-party websites.	-->
-	<rule from="^http://images\.shrinktheweb\.com/"
-		to="https://images.shrinktheweb.com/" />
 
 	<!--	Cert not valid for learn.
 		Server redirects as so, sans-https.	-->
 	<rule from="^http://learn\.shrinktheweb\.com/"
 		to="https://www.shrinktheweb.com/learn/index.html" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
