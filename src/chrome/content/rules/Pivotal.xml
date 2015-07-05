@@ -6,16 +6,86 @@
 		- RabbitMQ.xml
 		- Spring.io.xml
 
--->
-<ruleset name="Pivotal.io">
 
+	CDN buckets:
+
+		- pivotalcontent.wpengine.com
+
+
+	Nonfunctional hosts in *pivotal.io:
+
+		- support.run *
+
+	* Redirects to http
+
+
+	Problematic hosts in *pivotal.io:
+
+		- docs *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- Image on docs from www.pivotal.io *
+
+	* Secured by us
+
+-->
+<ruleset name="Pivotal.io (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="pivotal.io" />
+	<target host="blog.pivotal.io" />
+	<target host="network.pivotal.io" />
+	<target host="run.pivotal.io" />
+
 	<target host="console.run.pivotal.io" />
 	<target host="login.run.pivotal.io" />
+	<target host="status.run.pivotal.io" />
+
+	<target host="support.pivotal.io" />
+	<target host="www.pivotal.io" />
+
+	<!--	Complications:
+				-->
+	<target host="docs.pivotal.io" />
+	<target host="docs.run.pivotal.io" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.pivotal\.io/[\w-]+$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blog\.pivotal\.io/+(?!feed$|external/|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.pivotal.io/author/salvi" />
+			<test url="http://blog.pivotal.io/labs/labs/idea-board" />
+			<test url="http://blog.pivotal.io/tag/devops" />
+			<test url="http://blog.pivotal.io/tag/openstack" />
+			<test url="http://blog.pivotal.io/tag/tachyon" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.pivotal.io/external/icon-close.png" />
+			<test url="http://blog.pivotal.io/feed" />
+			<test url="http://blog.pivotal.io/wp-content/themes/pivotal2015/style.css" />
+			<test url="http://blog.pivotal.io/wp-includes/js/mediaelement/mediaelementplayer.min.css" />
 
 
 	<securecookie host="^(?:console|login)\.run\.pivotal\.io$" name=".+" />
 
+
+	<rule from="^http://docs\.pivotal\.io/"
+		to="https://cf-p1-docs-prod.cfapps.io/" />
+
+	<rule from="^http://docs\.run\.pivotal\.io/"
+		to="https://docs-runpivotal-production.cfapps.io/" />
 
 	<rule from="^http:"
 		to="https:" />
