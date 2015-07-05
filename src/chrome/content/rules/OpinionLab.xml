@@ -1,17 +1,38 @@
-<!--
-	See OpinionLab-expired.xml for problematic rules.
-
--->
 <ruleset name="OpinionLab (partial)">
 
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.opinionlab.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="opinionlab.com" />
+	<target host="cdn.opinionlab.com" />
+	<target host="oo.opinionlab.com" />
+	<target host="secure.opinionlab.com" />
+	<target host="www.opinionlab.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.opinionlab\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.opinionlab\.com/+(?!images/|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.opinionlab.com/category/careers/ "/>
+			<test url="http://www.opinionlab.com/company/where-to-find-us/" />
+			<test url="http://www.opinionlab.com/news/press-releases/" />
+			<test url="http://www.opinionlab.com/solutions/product-feedback/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.opinionlab.com/wp-content/themes/opinionLab/images/white-fade.png" />
+			<test url="http://www.opinionlab.com/images/footer_nav_bg.gif" />
 
 
-	<securecookie host="^.*\.opinionlab\.com$" name=".*" />
+	<!--securecookie host=".*\.opinionlab\.com$" name=".*" /-->
 
 
-	<rule from="^http://(oo|secure)\.opinionlab\.com/"
-		to="https://$1.opinionlab.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
