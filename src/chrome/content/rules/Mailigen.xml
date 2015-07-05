@@ -12,28 +12,53 @@
 
 	Nonfunctional subdomains:
 
-		- (www.)
-		- affiliate
+		- affiliate ¹
 		- blog
 		- list
 
+	¹ Shows default page
+
+
 	Problematic subdomains:
 
-		- static *
 		- static-blog *
 
 	* Works; mismatched, CN: *.r.worldssl.net
 
+
+	Insecure cookies are set for these domains:
+
+		- .mailigen.com
+
+
+	Mixed content:
+
+		- Images on www from ^mailigen.com *
+
+	* Secured by us
+
 -->
 <ruleset name="Mailigen (partial)">
 
-	<target host="*.mailigen.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="mailigen.com" />
+	<target host="admin.mailigen.com" />
+	<target host="api.mailigen.com" />
+	<target host="login.mailigen.com" />
+	<target host="static.mailigen.com" />
+	<target host="static-admin.mailigen.com" />
+	<target host="www.mailigen.com" />
 
 
-	<securecookie host="^.+\.mailigen\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mailigen\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host=".+\.mailigen\.com$" name=".+" />
 
 
-	<rule from="^http://(adm|log|static-adm)in\.mailigen\.com/"
-		to="https://$1in.mailigen.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
