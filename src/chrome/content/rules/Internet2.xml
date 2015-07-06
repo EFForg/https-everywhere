@@ -44,10 +44,30 @@
 	* Secured by us
 
 -->
-<ruleset name="Internet2 (partial)">
+<ruleset name="Internet2.edu (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="lists.internet2.edu" />
+	<target host="mail.internet2.edu" />
+	<target host="meetings.internet2.edu" />
+	<target host="service1.internet2.edu" />
+	<target host="spaces.internet2.edu" />
+	<target host="www.internet2.edu" />
+
+	<!--	Complications:
+				-->
 	<target host="internet2.edu" />
-	<target host="*.internet2.edu" />
+	<target host="middleware.internet2.edu" />
+
+		<exclusion pattern="^http://middleware\.internet2\.edu/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://middleware.internet2.edu/dir/schema/" />
+			<test url="http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-201203.html" />
+			<test url="http://middleware.internet2.edu/hepki-tag/pki-lite/pki-lite-policy-practices.htm" />
+			<test url="http://middleware.internet2.edu/urn-mace/urn-mace.html" />
 
 
 	<!--	Not secured by server:
@@ -57,13 +77,17 @@
 	<securecookie host="^(?:\.lists|service1|spaces|wiki|www)\.internet2\.edu$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?internet2\.edu/"
+	<rule from="^http://internet2\.edu/"
 		to="https://www.internet2.edu/" />
-
-	<rule from="^http://(lists|mail|meetings|service1|spaces|wiki)\.internet2\.edu/"
-		to="https://$1.internet2.edu/" />
 
 	<rule from="^http://middleware\.internet2\.edu/(?:\?.*)?$"
 		to="https://www.internet2.edu/middleware/index.cfm" />
+
+		<test url="http://middleware.internet2.edu/" />
+		<test url="http://middleware.internet2.edu/?" />
+		<test url="http://middleware.internet2.edu/?f" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

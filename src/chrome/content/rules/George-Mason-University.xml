@@ -9,7 +9,10 @@
 
 	Nonfunctional subdomains:
 
+		- ofpslive ¹
 		- wireless	(shows www, mismatched)
+
+	¹ 403
 
 
 	Problematic subdomains:
@@ -24,6 +27,9 @@
 	Partially covered domains:
 
 		- mason		($ prints "/opt/shtdocs works!")
+		- ulife ²
+
+	² Some pages redirect to http
 
 
 	Fully covered subdomains:
@@ -39,7 +45,6 @@
 		- peoplefinder
 		- policy
 		- si
-		- ulife
 		- welcomeweek
 
 
@@ -58,12 +63,9 @@
 
 			- today from $self
 			- today from l.yimg.com
-			- ulife from $self
-			- ulife from img.youtube.com
-			- ulife from i.vimeocdn.com
 			- welcomeweek from $self
 
-		- favicon on ulife, ulassessment from gmu.edu
+		- favicon on ulassessment from gmu.edu
 
 		- Ads/bugs, on:
 
@@ -71,7 +73,7 @@
 			- si from www.facebook.com
 
 -->
-<ruleset name="GMU.edu (partial)" platform="mixedcontent">
+<ruleset name="GMU.edu (partial)">
 
 	<target host="gmu.edu"/>
 	<target host="chnm.gmu.edu"/>
@@ -93,7 +95,12 @@
 
 		<exclusion pattern="^http://mason\.gmu\.edu/(?!~)" />
 
+			<!--	+ve:
+					-->
 			<test url="http://mason.gmu.edu//" />
+
+			<!--	-ve:
+					-->
 			<test url="http://mason.gmu.edu/~iacs/" />
 
 		<!--	Avoid broken MCB:
@@ -110,6 +117,24 @@
 					-->
 			<test url="http://today.gmu.edu/images/header.gif" />
 			<test url="http://today.gmu.edu/css/today_mason.css" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://ulife\.gmu\.edu/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ulife\.gmu\.edu/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ulife.gmu.edu/blog/" />
+			<test url="http://ulife.gmu.edu/calendar/" />
+			<test url="http://ulife.gmu.edu/home/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ulife.gmu.edu/wp-content/themes/kuma-cub/images/ul_title.png" />
 
 
 	<!--	Not secured by server:

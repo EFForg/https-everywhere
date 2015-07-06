@@ -11,6 +11,8 @@ elif type brew >/dev/null ; then
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
+elif type dnf >/dev/null ; then
+  sudo dnf install libxml2-devel python-devel libxslt-devel
 fi
 
 # Get the addon SDK submodule and rule checker

@@ -1,52 +1,55 @@
 <!--
 Disabled by https-everywhere-checker because:
 Fetch error: http://princeton.edu/ => https://www.princeton.edu/: Redirect for 'http://princeton.edu/' missing Location
-	Nonfunctional subdomains:
+  Nonfunctional subdomains:
 
-		- arks *
-		- crcw *
-		- digilab **
-		- findingaids **
-		- pudl **
+    - arks *
+    - crcw *
+    - digilab **
+    - findingaids **
+    - pudl **
 
-	* Refused
-	** Dropped
+  * Refused
+  ** Dropped
 
   UNIX homedirs are also broken, eg:
 
   http://www.princeton.edu/~achaney/tmve/wiki100k/docs/Conjunctive_normal_form.html
 
-	^ In what way?
+  ^ In what way? (not broken anymore?)
 
+  tigernet logout page references http://www.alumniconnections.com for stylesheets, but page still works. tigernet, itself, has locally referenced stylesheets.
 
-	Fully covered subdomains:
+  Fully covered subdomains:
+    - alumni
+    - alumnicas
+    - blogs
+    - citp
+    - fed
+    - lists
+    - paw
 
-		- blogs
-		- citp
-		- fed
-		- lists
+  These altnames don't exist:
 
-
-	These altnames don't exist:
-
-		- www.citp.princeton.edu
+    - www.citp.princeton.edu
 
 -->
-<ruleset name="Princeton.edu (partial)" default_off='failed ruleset test'>
 
-	<target host="princeton.edu" />
-	<target host="*.princeton.edu" />
-		<exclusion pattern="http://(?:www\.)?princeton\.edu/+~" />
+<ruleset name="Princeton.edu (partial)">
+  <securecookie host="^(?:alumnicas|blogs|fed|tigernet)\.princeton\.edu$" name=".+" />
+  
+  <target host="princeton.edu" />
+  <target host="www.princeton.edu" />
+  <target host="alumni.princeton.edu" />
+  <target host="alumnicas.princeton.edu" />
+  <target host="blogs.princeton.edu" />
+  <target host="citp.princeton.edu" />
+  <target host="fed.princeton.edu" />
+  <target host="lists.princeton.edu" />
+  <target host="paw.princeton.edu" />
+  <target host="tigernet.princeton.edu" />
 
-
-	<securecookie host="^(?:blogs|fed)\.princeton\.edu$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?princeton\.edu/"
-		to="https://www.princeton.edu/"/>
-
-	<rule from="^http://(blogs|citp|fed|lists)\.princeton\.edu/"
-		to="https://$1.princeton.edu/" />
-
+  <rule from="^http:" to="https:" />
 </ruleset>
+
 

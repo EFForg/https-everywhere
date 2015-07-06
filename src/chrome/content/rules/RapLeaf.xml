@@ -1,50 +1,34 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://rapleaf.com/ => https://rapleaf.com/: (60, 'SSL certificate problem: certificate has expired')
-	Fully covered domains:
-
-		- in *rapleaf.com:
-
-			- (www.)?
-			- blog
-			- dashboard
-
-		- rlcdn.com subdomains:
-
-			- d
-			- ei
-			- idsync
-			- rc
+	For other TowerData coverage, see TowerData.com.xml.
 
 
-	Insecure cookies are set for these domains:
+	Problematic hosts in *rapleaf.com:
 
-		- .rlcdn.com
+		- ^ ¹
+		- dashboard ¹
+		- www ²
+	¹ Dropped
+	² Akamai
+
+
+	Fully covered hosts in *rapleaf.com:
+
+		- dashboard	(→ dashboard.towerdata.com)
 
 -->
-<ruleset name="Rapleaf" default_off='failed ruleset test'>
+<ruleset name="Rapleaf.com (partial)">
 
-	<!--	Direct rewrites:
+	<!--	Complications:
 				-->
-	<target host="rapleaf.com" />
-	<target host="blog.rapleaf.com" />
 	<target host="dashboard.rapleaf.com" />
-	<target host="www.rapleaf.com" />
-
-	<target host="d.rlcdn.com" />
-	<target host="ei.rlcdn.com" />
-	<target host="idsync.rlcdn.com" />
-	<target host="rc.rlcdn.com" />
 
 
-	<!--	Not secured by server:
+	<!--	Redirect drops path, args,
+		and forward slash:
 					-->
-	<!--securecookie host="^\.rlcdn\.com$" name="^(ck\d|dids\d+|rlas\d|rtn\d)$" /-->
+	<rule from="^http://dashboard\.rapleaf\.com/.*"
+		to="https://dashboard.towerdata.com/" />
 
-	<securecookie host="^\.rlcdn\.com$" name=".+" />
-
-
-	<rule from="^http:"
-		to="https:" />
+		<test url="http://dashboard.rapleaf.com//" />
 
 </ruleset>

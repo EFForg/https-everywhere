@@ -1,9 +1,13 @@
 #!/bin/bash -ex
 # Run tests for HTTPS Everywhere
 
-# We have to change to the right directory because this is sometimes invoked
-# through a symlink in .git/hooks/pre-push.
-cd $(dirname $(readlink -f $0))
+# Get into the project-root. This script may be executed as `test.sh`
+# or as .git/hooks/pre-push, so we need to find the directory containing
+# test.sh before we can proceed. If $0 is not a symlink, `readlink` will
+# print nothing; if it is a symlink it will print the link target.
+cd $(dirname $0)/$(dirname $(readlink $0))
+
+source utils/mktemp.sh
 
 # dummy Jetpack addon that contains tests
 TEST_ADDON_PATH=./https-everywhere-tests/
@@ -65,4 +69,5 @@ bash test-ruleset-coverage.sh
 echo "To reproduce this build (https://wiki.debian.org/ReproducibleBuilds)," \
      "please use this version of sqlite3:"
 sqlite3 -version
-echo -e "Git commit `git rev-parse HEAD`\nsha256sum  `sha256sum $XPI_NAME`"
+shasum=$(openssl sha -sha256 "$XPI_NAME")
+echo -e "Git commit `git rev-parse HEAD`\n$shasum"

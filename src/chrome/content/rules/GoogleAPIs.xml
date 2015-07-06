@@ -1,5 +1,6 @@
+
 <!--
-	For other Google coverage, see GoogleServices.xml.
+	For other Google coverage, see GoogleServices.xml
 
 
 	Nonfunctional domains:
@@ -16,7 +17,10 @@
 		- gmodules.com			(503, CN: www.google.com)
 		- www.gmodules.com		(503, CN: *.googleusercontent.com)
 		- gstatic.com			(404, valid cert)
-		- api.recaptcha.net		(works; mismatched, CN: google.com)
+		These two changed URL formats as well as domains, need to find an example
+		of the old format in the wild:
+		- api.recaptcha.net	(→ www.google.com)
+		- api-secure.recaptcha.net
 
 
 	Partially covered domains:
@@ -56,8 +60,6 @@
 			- ssl
 			- t\d
 
-		- api.recaptcha.net	(→ www.google.com)
-		- api-secure.recaptcha.net
 		- gdata.youtube.com
 
 
@@ -66,55 +68,63 @@
 
 -->
 <ruleset name="Google APIs">
-
 	<target host="gmodules.com" />
 	<target host="www.gmodules.com" />
-	<target host="google.com" />
-	<target host="apis.google.com" />
-	<target host="*.apis.google.com" />
-	<target host="*.clients.google.com" />
-	<target host="www.google.com" />
-	<target host="*.google-analytics.com" />
-	<target host="*.googleapis.com" />
+		<!-- need this exclusion otherwise the test checker will use the hosts as test urls -->
+		<exclusion pattern="^http://(www\.)?gmodules\.com/$" />
+
+	<target host="www.google-analytics.com" />
+	<target host="ssl.google-analytics.com" />
+
+	<target host="ajax.googleapis.com" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy. -->
+		<exclusion pattern="^http://ajax\.googleapis\.com/$" />
+	<target host="chart.googleapis.com" />
+		<!-- The implicit test URL at the root of this domain generates a 404.
+				 Add an exclusion so the fetcher is happy. -->
+		<exclusion pattern="^http://chart\.googleapis\.com/$" />
+	<target host="fonts.googleapis.com" />
+	<target host="www.googleapis.com" />
+	<target host="*.commondatastorage.googleapis.com" />
+	<target host="*.storage.googleapis.com" />
+
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
+	<target host="gdata.youtube.com" />
+
 	<!--	Captive portal detection redirects to this URL, and many captive
 		portals break TLS, so exempt this redirect URL.
 		See GitHub bug #368
-							-->
-		<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
-	<target host="*.recaptcha.net" />
-	<target host="gdata.youtube.com" />
-		<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
+			-->
+	<exclusion pattern="^http://www\.gstatic\.com/generate_204" />
+		<test url="http://www.gstatic.com/generate_204" />
 
+	<exclusion pattern="^http://gdata\.youtube\.com/crossdomain\.xml" />
+		<test url="http://gdata.youtube.com/crossdomain.xml" />
 
 	<securecookie host="^ssl\.google-analytics\.com$" name=".+" />
 
-
 	<rule from="^http://(?:www\.)?gmodules\.com/ig/images/"
 		to="https://www.google.com/ig/images/" />
-
-	<!--	jsapi was causing problems on some sites that embed google maps:
-		https://trac.torproject.org/projects/tor/ticket/2335
-		Apparently now fixed; thanks, Google!
-							-->
-	<rule from="^http://(?:www\.)?google\.com/(afsonline/|chart|jsapi|recaptcha/|uds)"
-		to="https://www.google.com/$1" />
-
-	<rule from="^http://(api|[\w-]+\.client)s\.google\.com/"
-		to="https://$1s.google.com/" />
-
-	<rule from="^http://chart\.apis\.google\.com/chart"
-		to="https://chart.googleapis.com/chart" />
+		<test url="http://gmodules.com/ig/images/" />
+		<test url="http://www.gmodules.com/ig/images/" />
 
 	<rule from="^http://(ssl|www)\.google-analytics\.com/"
 		to="https://$1.google-analytics.com/" />
 
 	<rule from="^http://(ajax|chart|fonts|www)\.googleapis\.com/"
 		to="https://$1.googleapis.com/" />
+		<test url="http://ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.js" />
+		<test url="http://chart.googleapis.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:60,40&amp;chl=Hello|World" />
+		<test url="http://fonts.googleapis.com/css?family=Tangerine" />
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
+		<test url="http://storage.googleapis.com/" />
+		<test url="http://commondatastorage.googleapis.com/" />
+		<test url="http://chromedriver.storage.googleapis.com/" />
+		<test url="http://patentimages.storage.googleapis.com/" />
 
 	<!--	There is an interesting question about whether we should
 		append &strip=1 to all cache URLs.  This causes them to load
@@ -125,19 +135,25 @@
 			With &strip=1, the cached page will be text-only and
 		will come exclusively from Google's HTTPS server.
 									-->
-	<rule from="^http://(?:www\.)?gstatic\.com/"
+	<rule from="^http://(www\.)?gstatic\.com/"
 		to="https://www.gstatic.com/" />
+		<test url="http://www.gstatic.com/" />
 
 	<rule from="^http://(csi|encrypted-tbn\d|g0|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
 		to="https://$1.gstatic.com/" />
-
-	<rule from="^http://api\.recaptcha\.net/"
-		to="https://www.google.com/recaptcha/api/" />
-
-	<rule from="^http://api-secure\.recaptcha\.net/"
-		to="https://api-secure.recaptcha.net/" />
+		<test url="http://csi.gstatic.com/" />
+		<test url="http://encrypted-tbn1.gstatic.com/" />
+		<test url="http://encrypted-tbn2.gstatic.com/" />
+		<test url="http://encrypted-tbn3.gstatic.com/" />
+		<test url="http://g0.gstatic.com/" />
+		<test url="http://test1-ds.metric.gstatic.com/" />
+		<test url="http://test2-ds.metric.gstatic.com/" />
+		<test url="http://test3-ds.metric.gstatic.com/" />
+		<test url="http://ssl.gstatic.com/" />
+		<test url="http://t1.gstatic.com/" />
+		<test url="http://t2.gstatic.com/" />
+		<test url="http://t3.gstatic.com/" />
 
 	<rule from="^http://gdata\.youtube\.com/"
 		to="https://gdata.youtube.com/" />
-
 </ruleset>
