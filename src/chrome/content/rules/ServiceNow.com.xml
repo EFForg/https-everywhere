@@ -1,0 +1,96 @@
+<!--
+	Other ServiceNow rulesets:
+
+		- Service-now.com.xml
+
+
+	Problematic hosts in *servicenow.com:
+
+		- knowledge *
+
+	* Mismatched
+
+
+	Fully covered hosts in *servicenow.com:
+
+		- (www.)?
+		- community
+		- developer
+		- express
+		- knowledge		(→ community.servicenow.com)
+		- (www.)?partners
+		- share
+		- store
+		- wiki
+
+
+	These altnames don't exist:
+
+		- apps.community.servicenow.com
+		- apps.uat.community.servicenow.com
+		- uat.community.servicenow.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .servicenow.com
+		- community.servicenow.com
+		- developer.servicenow.com
+		- express.servicenow.com
+		- partners.servicenow.com
+		- www.partners.servicenow.com
+		- share.servicenow.com
+		- store.servicenow.com
+
+
+	Mixed content:
+
+		- Image on wiki from wiki.service-now.com *
+
+	* Secured by us
+
+-->
+<ruleset name="ServiceNow.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="servicenow.com" />
+	<target host="community.servicenow.com" />
+	<target host="developer.servicenow.com" />
+	<target host="express.servicenow.com" />
+	<target host="partners.servicenow.com" />
+	<target host="www.partners.servicenow.com" />
+	<target host="share.servicenow.com" />
+	<target host="store.servicenow.com" />
+	<target host="wiki.servicenow.com" />
+	<target host="www.servicenow.com" />
+
+	<!--	Complications:
+				-->
+	<target host="knowledge.servicenow.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.servicenow\.com$" name="^wikidb_session$" /-->
+	<!--securecookie host="^community\.servicenow\.com$" name="^(?:BIGipServer[\w.-]+|JSESSIONID|jive.security.context)$" /-->
+	<!--securecookie host="^developer\.servicenow\.com$" name="^(?:BIGipServer\w+|JSESSIONID|glide_user|glide_user_route|glide_user_session)$" /-->
+	<!--securecookie host="^express\.servicenow\.com$" name="^(?:PHPSESSID|wpfront-notification-bar-landingpage)$" /-->
+	<!--securecookie host="^(?:www\.)?partners\.servicenow\.com$" name="^(?:BIGipServer\w+|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^share\.servicenow\.com$" name="^(?:BIGipServer\w+|JSESSIONID|glide_user_route)$" /-->
+	<!--securecookie host="^store\.servicenow\.com$" name="^(?:BIGipServer\w+|JSESSIONID|glide_user|glide_user_route|glide_user_session)$" /-->
+
+	<securecookie host="^\.servicenow\.com$" name="^wikidb_session$" />
+	<securecookie host="^(?:community|developer|express|(?:www\.)?partners|share|store)\.servicenow\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://knowledge\.servicenow\.com/"
+		to="https://community.servicenow.com/community/knowledge-user-conference/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

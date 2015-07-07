@@ -1,14 +1,26 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.adap.tv/ => https://www.adap.tv/: (51, "SSL: no alternative certificate subject name matches target host name 'www.adap.tv'")
-
 	For other AOL coverage, see AOL.xml.
+
+
+	Nonfunctioanl hosts in *adap.tv:
+
+		- adaptv *
+
+	* 404
+
+
+	Problematic hosts in *adap.tv:
+
+		- redir ¹
+		- www ²
+
+	¹ Akamai
+	² Mismatched
 
 
 	Fully covered hosts in *adap.tv:
 
-		- (www.)?
+		- (www.)?	(www → ^)
 		- ads
 		- my
 		- redir		(→ ads)
@@ -16,25 +28,30 @@ Fetch error: http://www.adap.tv/ => https://www.adap.tv/: (51, "SSL: no alternat
 		- sync
 
 -->
-<ruleset name="Adap.TV" default_off='failed ruleset test'>
+<ruleset name="Adap.TV (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="adap.tv" />
 	<target host="ads.adap.tv" />
 	<target host="my.adap.tv" />
 	<target host="segments.adap.tv" />
 	<target host="sync.adap.tv" />
-	<target host="www.adap.tv" />
 
 	<!--	Complications:
 				-->
 	<target host="redir.adap.tv" />
+	<target host="www.adap.tv" />
 
 
 	<securecookie host="^\.adap\.tv$" name=".*" />
 
-	<!--	Akamai	-->
+
 	<rule from="^http://redir\.adap\.tv/"
 		to="https://ads.adap.tv/" />
+
+	<rule from="^http://www\.adap\.tv/"
+		to="https://adap.tv/" />
 
 	<rule from="^http:"
 		to="https:" />

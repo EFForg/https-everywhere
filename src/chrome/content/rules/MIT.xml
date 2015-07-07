@@ -101,6 +101,7 @@
 		- calendar ²
 		- counter ¹
 		- csail ³
+		- people.csail	($ 403s)
 		- cluedumps ⁴
 		- eecscal	(404)
 		- executive	(Mismatched, CN: cms.executive.mit.edu)
@@ -115,6 +116,7 @@
 		- relate ¹
 		- techblogs ⁷
 		- techtime ⁸
+		- webmail	(Server sends no certificate chain, see https://whatsmychaincert.com)
 
 	* Redirects to https://web
 	¹ Self-signed
@@ -135,7 +137,6 @@
 		- athena10
 		- blossoms
 		- ca
-		- calendars
 		- chemefacsrch
 
 		- (www.)?csail	(^ → www)
@@ -163,7 +164,6 @@
 		- libraries
 		- lids
 		- linc
-		- linerva
 		- llwebprod2.ll
 		- www.ll
 		- (www.)?media		(^ → www)
@@ -191,7 +191,6 @@
 		- teachingexcellence
 		- techtv
 		- tll
-		- webmail
 		- webpub
 		- whereis
 		- wikis
@@ -201,6 +200,9 @@
 
 		- md.media.mit.edu
 		- rlecal.mit.edu
+
+
+	linerva: Dropped over http & https
 
 
 	Insecure cookies are set for these domains:
@@ -256,6 +258,7 @@
 	<target host="athena10.mit.edu" />
 	<target host="blossoms.mit.edu" />
 	<target host="ca.mit.edu" />
+	<target host="calendars.mit.edu" />
 	<target host="chemefacsrch.mit.edu" />
 
 	<target host="calendar.csail.mit.edu" />
@@ -326,7 +329,7 @@
 	<target host="techtv.mit.edu" />
 	<target host="tll.mit.edu" />
 	<target host="wayf.mit.edu" />
-	<target host="webmail.mit.edu" />
+	<!--target host="webmail.mit.edu" /-->
 	<target host="webpub.mit.edu" />
 	<target host="whereis.mit.edu" />
 	<target host="wikis.mit.edu" />
@@ -334,11 +337,34 @@
 	<!--	Complications:
 				-->
 	<target host="csail.mit.edu" />
+	<target host="people.csail.mit.edu" />
 	<target host="eecscal.mit.edu" />
 	<target host="cdn.executive.mit.edu" />
 	<target host="ideabank.mit.edu" />
 	<target host="www.mitpress.mit.edu" />
 	<target host="media.mit.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://calendars\.mit\.edu/+(?:$|\?)" />
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://calendars\.mit\.edu/+(?!Ewf/|Pages/SignUp/Page\.aspx)" /-->
+
+			<!--	+ve:
+
+				(test quota: 4)
+						-->
+			<test url="http://calendars.mit.edu/?" />
+			<test url="http://calendars.mit.edu//" />
+			<test url="http://calendars.mit.edu//?" />
+			<test url="http://calendars.mit.edu///" />
+
+			<!--	-ve:
+					-->
+			<test url="http://calendars.mit.edu/Ewf/VersionedStaticFiles/Backgrounds-v2/Darker.svg" />
+			<test url="http://calendars.mit.edu/Pages/SignUp/Page.aspx" />
 
 
 	<!--	Not secured by server:
@@ -348,11 +374,28 @@
 	<!--securecookie host="^techtv\.mit\.edu$" name="^_TechTV_session$" /-->
 	<!--securecookie host="^webmail\.mit\.edu$" name="^BIGipServerwebmail$" /-->
 
-	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|wayf|webmail|webpub|wikis).mit\.edu$" name=".+" />
+	<securecookie host="^(?:alum|alumsso|athena10|ca|debathena|giving|gsc|idp|kb|lids|mitpress|scripts|stellar|techtv|wayf|webpub|wikis).mit\.edu$" name=".+" />
 
 
 	<rule from="^http://csail\.mit\.edu/"
 		to="https://www.csail.mit.edu/" />
+
+	<!--	Redirect keeps args but
+		not forward slash:
+				-->
+	<rule from="^http://people\.csail\.mit\.edu/+(?:\?.*)?$"
+		to="https://www.csail.mit.edu/peoplesearch" />
+
+		<!--	(test quota: 5)
+					-->
+		<test url="http://people.csail.mit.edu/?stupid" />
+		<test url="http://people.csail.mit.edu/?test" />
+		<test url="http://people.csail.mit.edu/?requirement" />
+		<test url="http://people.csail.mit.edu/?for" />
+		<test url="http://people.csail.mit.edu//?stupid" />
+		<test url="http://people.csail.mit.edu//?people" />
+		<test url="http://people.csail.mit.edu//?grudgingly" />
+		<test url="http://people.csail.mit.edu//?filled" />
 
 	<!--	Redirect drops path and args:
 						-->

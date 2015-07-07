@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://store.norton.com/ => https://store.norton.com/: Too many redirects while fetching 'https://store.norton.com/'
-Fetch error: http://static-safeweb.norton.com/ => https://static-safeweb.norton.com/: (51, "SSL: no alternative certificate subject name matches target host name 'static-safeweb.norton.com'")
-
 	For other Symantec coverage, see Symantec.xml.
 
 
@@ -23,11 +18,18 @@ Fetch error: http://static-safeweb.norton.com/ => https://static-safeweb.norton.
 		- arabic *
 		- asia *
 		- lu *
+		- static-safeweb ²
 
 	* Mismatched
+	² Akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .norton.com
 
 -->
-<ruleset name="Norton (partial)" default_off='failed ruleset test'>
+<ruleset name="Norton (partial)">
 
 	<target host="mynortonaccount.com" />
 	<target host="www.mynortonaccount.com" />
@@ -50,12 +52,13 @@ Fetch error: http://static-safeweb.norton.com/ => https://static-safeweb.norton.
 	<target host="onlinefamily.norton.com" />
 	<target host="safeweb.norton.com" />
 	<target host="sealinfo.websecurity.norton.com" />
+	<target host="trustsealinfo.websecurity.norton.com" />
 	<target host="static-wap.norton.com" />
 	<target host="static-wap-stg.norton.com" />
-	<target host="store.norton.com" />
+	<!--target host="store.norton.com" /-->
 	<target host="support.norton.com" />
 	<target host="support-stg.norton.com" />
-	<target host="static-safeweb.norton.com" />
+	<!--target host="static-safeweb.norton.com" /-->
 	<target host="search.norton.com" />
 	
 	<target host="au.norton.com" />
@@ -106,8 +109,16 @@ Fetch error: http://static-safeweb.norton.com/ => https://static-safeweb.norton.
 	
 	<target host="stage.nortoncdn.com" />
 	<target host="static.nortoncdn.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://store\.norton\.com/$" /-->
 	
-	
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.norton\.com$" name="^v1st$" />
+
 	<securecookie host="^(?:.*\.)?norton\.com$" name=".+" />
 
 

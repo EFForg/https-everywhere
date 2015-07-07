@@ -1,21 +1,37 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://yify-torrents.im/ => https://yify-torrents.im/: (51, "SSL: no alternative certificate subject name matches target host name 'yify-torrents.im'")
+	Problematic domains:
+
+		- (www.)?yify-torrents.im *
+		- static.yify-torrents.im *
+
+	* Mismatched
 
 -->
-<ruleset name="YIFY Torrents" default_off='failed ruleset test'>
+<ruleset name="YIFY Torrents">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="yify-torrents.com" />
-	<target host="*.yify-torrents.com" />
+	<target host="static.yify-torrents.com" />
+	<target host="www.yify-torrents.com" />
+
+	<!--	Complications:
+				-->
 	<target host="yify-torrents.im" />
-	<target host="*.yify-torrents.im" />
+	<target host="static.yify-torrents.im" />
+	<target host="www.yify-torrents.im" />
 
 
-	<securecookie host="^\.yify-torrents\.(?:com|im)$" name=".+" />
+	<securecookie host="^\.yify-torrents\.com$" name=".+" />
 
 
-	<rule from="^http://(static\.|www\.)?yify-torrents\.(com|im)/"
-		to="https://$1yify-torrents.$2/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://(?:static\.|www\.)?yify-torrents\.im/"
+		to="https://axs.yts.to/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

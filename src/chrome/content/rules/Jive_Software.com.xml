@@ -1,10 +1,73 @@
-<ruleset name="Jive Software.com (partial)">
+<!--
+	Problematic hosts in *jivesoftware.com:
 
+		- feeds ¹
+		- trust ²
+
+	¹ FeedBurner
+	² 401
+
+
+	Fully covered hosts in *jivesoftware.com:
+
+		- (www.)?
+		- cloud
+		- community
+		- developer
+		- docs
+		- feeds
+		- jiveworld
+		- trust		(→ www.jivesoftware.com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- community.jivesoftware.com
+		- docs.jivesoftware.com
+
+-->
+<ruleset name="Jive Software.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="jivesoftware.com" />
 	<target host="cloud.jivesoftware.com" />
+	<target host="community.jivesoftware.com" />
+	<target host="developer.jivesoftware.com" />
+	<target host="docs.jivesoftware.com" />
+	<target host="jiveworld.jivesoftware.com" />
+	<target host="www.jivesoftware.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.jivesoftware.com" />
+	<target host="trust.jivesoftware.com" />
 
 
-	<securecookie host="^cloud\.jivesoftware\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^community\.jivesoftware\.com$" name="^(BIGipServer[\w.-]+|jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^docs\.jivesoftware\.com$" name="^(JSESSIONID|cookiesEnabled)$" /-->
 
+	<securecookie host="^(?:cloud|community|docs)\.jivesoftware\.com$" name=".+" />
+
+
+	<rule from="^http://feeds\.jivesoftware\.com/$"
+		to="https://feedburner.google.com/fb/a/home" />
+
+	<rule from="^http://feeds\.jivesoftware\.com/"
+		to="https://feeds.feedburner.com/" />
+
+		<test url="http://feeds.jivesoftware.com/~r/JiveWorld/~3/8X--XII9XW8/engaging-the-organization-adoption-strategies-tips" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://trust\.jivesoftware\.com/[^?]*"
+		to="https://www.jivesoftware.com/trust-security/" />
+
+		<test url="http://trust.jivesoftware.com//" />
+		<test url="http://trust.jivesoftware.com///" />
 
 	<rule from="^http:"
 		to="https:" />

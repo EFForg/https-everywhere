@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://kartfighter.com/ (200) => https://www.kartfighter.com/ (503)
-
 	For other Red Bull coverage, see Red_Bull.xml.
 
 
@@ -13,34 +9,53 @@ Non-2xx HTTP code: http://kartfighter.com/ (200) => https://www.kartfighter.com/
 
 	Problematic subdomains:
 
-		- ^ *
-		- app *
+		- ^ ¹
+		- app ¹
+		- www ²
 
-	* Refused
+	¹ Mismatched
+	² 503
 
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
-		- app		(→ www)
 		- files
 		- redbullracingadmin
 		- worldtour
 
+
+	Insecure cookies are set for these hosts:
+
+		- kartfighter.com
+		- app.kartfighter.com
+
 -->
-<ruleset name="Kart Fighter.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Kart Fighter.com (partial)">
 
-	<target host="kartfighter.com" />
-	<target host="*.kartfighter.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="kartfighter.com" /-->
+	<!--target host="app.kartfighter.com" /-->
+	<target host="files.kartfighter.com" />
+	<target host="redbullracingadmin.kartfighter.com" />
+	<target host="worldtour.kartfighter.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="www.kartfighter.com" /-->
 
 
-	<securecookie host="^(?:files|redbullracingadmin|worldtour|www)\.kartfighter\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(app\.)?kartfighter\.com$" name="^(NSC_SC-[\w-]+|PHPSESSID)$" /-->
+
+	<securecookie host="^(?:files|redbullracingadmin|worldtour)\.kartfighter\.com$" name=".+" />
 
 
-	<rule from="^http://(?:app\.|www\.)?kartfighter\.com/"
-		to="https://www.kartfighter.com/" />
+	<!--rule from="^http://www\.kartfighter\.com/"
+		to="https://kartfighter.com/" /-->
 
-	<rule from="^http://(files|redbullracingadmin|worldtour)\.kartfighter\.com/"
-		to="https://$1.kartfighter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
