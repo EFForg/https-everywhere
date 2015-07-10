@@ -8,6 +8,7 @@
 	Nonfunctional subdomains:
 
 		- marvelkids	(redirects to http, valid cert)
+		- shop			(redirects to http)
 
 
 	Partially covered subdomains:
@@ -39,17 +40,49 @@
 <ruleset name="Marvel.com (partial)">
 
 	<target host="marvel.com" />
-	<target host="*.marvel.com" />
-		<exclusion pattern="^http://comicstore\.marvel\.com/(?!assets/)" />
-		<exclusion pattern="^http://secure\.marvel\.com/(?:\?.*)?$" />
-		<exclusion pattern="^http://subscriptions\.marvel\.com/(?!css/|i/|images/|(?:login|store/shippingr)\.asp|script/)" />
+	<target host="www.marvel.com" />
+	<target host="comicstore.marvel.com" />
+	<target host="subscriptions.marvel.com" />
+	<target host="developer.marvel.com" />
 
-
-	<!--securecookie host="^\.marvel\.com$" name="^CMXSESSIONID$" /-->
-	<securecookie host="^marvel\.com$" name=".+" />
-
-
+	<!-- previous rule for reference
+	<target host="secure.marvel.com" />
+	<securecookie host="^\.marvel\.com$" name="^CMXSESSIONID$" />
+	<exclusion pattern="^http://comicstore\.marvel\.com/(?!assets/)" />
+	<exclusion pattern="^http://secure\.marvel\.com/(?:\?.*)?$" />
+	<exclusion pattern="^http://subscriptions\.marvel\.com/(?!css/|i/|images/|(?:login|store/shippingr)\.asp|script/)" />
 	<rule from="^http://((?:comicstore|secure|subscriptions|www)\.)?marvel\.com/"
 		to="https://$1marvel.com/" />
+	-->
+
+	<exclusion pattern="^http://subscriptions\.marvel\.com/$" />
+	<exclusion pattern="^http://subscriptions\.marvel\.com/(.*\.asp|store|fonts)" />
+
+		<test url="http://subscriptions.marvel.com/" />
+		<test url="http://subscriptions.marvel.com/Default.asp" />
+		<test url="http://subscriptions.marvel.com/search.asp" />
+		<test url="http://subscriptions.marvel.com/store/" />
+		<test url="http://subscriptions.marvel.com/fonts/" />
+
+	<!-- MCB issue -->
+	<exclusion pattern="^http://marvel\.com/universe/" />
+
+		<test url="http://marvel.com/universe/" />
+
+	<!-- https would redirects to http and timeout, so exclude it -->
+	<exclusion pattern="^http://marvel\.com/universe3zx/index\.php" />
+
+		<test url="http://marvel.com/universe3zx/index.php" />
+
+	<securecookie host="^marvel\.com$" name=".+" />
+
+	<!-- follow server's behaviour -->
+	<rule from="^http://www\.marvel\.com/"
+		to="https://marvel.com/" />
+
+		<test url="http://marvel.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
