@@ -23,7 +23,7 @@ ANDROID_APP_ID=org.mozilla.firefox
 [ -d pkg ] || mkdir pkg
 
 # If the command line argument is a tag name, check that out and build it
-if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
+if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
   SUBDIR=checkout
   [ -d $SUBDIR ] || mkdir $SUBDIR
@@ -53,7 +53,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
 fi
 
 # Only generate the sqlite database if any rulesets have changed. Tried
-# implementing this with make, but make is very slow with 11k+ input files.
+# implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
   find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
     grep -q .
@@ -86,7 +86,7 @@ fi
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
-if [ "$1" ] && [ "$1" != "--fast" ] ; then
+if [ "$1" ]; then
   XPI_NAME="$XPI_NAME"
 else
   # During development, generate packages named with the short hash of HEAD.
