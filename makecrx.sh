@@ -18,6 +18,9 @@
 # "dummy-chromium.pem" private key for you to sign your own local releases,
 # but these .crx files won't detect and upgrade to official HTTPS Everywhere
 # releases signed by EFF :/.  We should find a more elegant arrangement.
+
+cd $(dirname $0)
+RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 if [ -n "$1" ]; then
@@ -37,15 +40,17 @@ VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json'
 
 echo "Building chrome version" $VERSION
 
-# Build the SQLite DB even though we don't yet use it in the Chrome extension,
-# because trivial-validate.py depends on it.
-if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+# Only generate the sqlite database if any rulesets have changed. Tried
+# implementing this with make, but make is very slow with 15k+ input files.
+needs_update() {
+  find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
+    grep -q .
+}
+if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
+  # Build the SQLite DB even though we don't yet use it in the Chrome extension,
+  # because trivial-validate.py depends on it.
   echo "Generating sqlite DB"
   python2.7 ./utils/make-sqlite.py
-fi
-
-# Unless we're in a hurry, validate the ruleset library & locales
-if [ "$1" != "--fast" ] ; then
   bash utils/validate.sh
 fi
 
