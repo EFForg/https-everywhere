@@ -18,11 +18,14 @@ APP_NAME=https-everywhere
 cd "`dirname $0`"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 ANDROID_APP_ID=org.mozilla.firefox
+if [ "$1" == "--fast" ]; then
+  FAST=true
+fi
 
 [ -d pkg ] || mkdir pkg
 
 # If the command line argument is a tag name, check that out and build it
-if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
+if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ -z "$FAST" ] ; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
   SUBDIR=checkout
   [ -d $SUBDIR ] || mkdir $SUBDIR
@@ -51,7 +54,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] && [ "$1" != "--fast" ] ; then
   exit 0
 fi
 
-if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
+if [ -z "$FAST" -o ! -f "$RULESETS_SQLITE" ] ; then
   # This is an optimization to get the OS reading the rulesets into RAM ASAP;
   # it's useful on machines with slow disk seek times; doing several of these
   # at once allows the IO subsystem to seek more efficiently.
@@ -72,7 +75,7 @@ die() {
   exit 1
 }
 
-if [ "$1" != "--fast" -a -z "$FAST" ] ; then
+if [ -z "$FAST" ] ; then
   if python2.7 ./utils/trivial-validate.py --quiet --db $RULESETS_SQLITE >&2
   then
     echo Validation of included rulesets completed. >&2
@@ -120,7 +123,7 @@ fi
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
-if [ "$1" ] && [ "$1" != "--fast" ] ; then
+if [ "$1" -a -z "$FAST" ] ; then
   XPI_NAME="$XPI_NAME"
 else
   # During development, generate packages named with the short hash of HEAD.

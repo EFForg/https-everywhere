@@ -1,6 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ccc.de/ => https://ccc.de/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	For rules subject to CAcert, see CCC.de-cacert.xml.
+
+
 	Nonfunctional subdomains:
 
 		- dasalte ¹
@@ -23,51 +24,51 @@ Fetch error: http://ccc.de/ => https://ccc.de/: (60, 'SSL certificate problem: u
 	² Works; mismatched, CN: media.koeln.ccc.de
 
 
-	Fully covered domains:
+	Fully covered hosts in *ccc.de:
 
-		- ccc.de
-		- blog.chaosradio.ccc.de
-		- wiki.chaosradio.ccc.de
-		- www.hamburg.ccc.de
+		- media
 
-		- api.media.ccc.de
-		- cdn.media.ccc.de
-		- static.media.ccc.de
-
-		- [^/:@\.]+.ccc.de: *
-
-			- chaosradio
-			- media
-			- pads
-			- www
-
-		- \w+.pads.ccc.de:
-
-			- ffhh
-
-	* Except where excluded below
-
-
-	Mixed content:
-
-		- css on cdn.media from $self *
-
-		- Images on media from static.media *
-
-	* Secured by us
+		- api.media
+		- cdn.media
+		- static.media
 
 -->
-<ruleset name="ccc.de (CAcert)" platform="cacert" default_off='failed ruleset test'>
+<ruleset name="ccc.de (partial)">
 
-	<target host="ccc.de" />
-	<target host="*.ccc.de" />
-		<exclusion pattern="^http://(?:desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" />
+	<!--target host="ccc.de" /-->
+	<target host="media.ccc.de" />
+
+	<target host="api.media.ccc.de" />
+	<target host="cdn.media.ccc.de" />
+	<target host="static.media.ccc.de" />
+
+	<!--target host="*.ccc.de" /-->
+
+		<!--exclusion pattern="^http://(?:desalte|ds|dsrad|wahlcomputer|wuppa)\.ccc\.de/" /-->
+
+			<!--test url="http://desalte.ccc.de/" /-->
+			<!--test url="http://ds.ccc.de/" /-->
+			<!--test url="http://dsrad.ccc.de/" /-->
+			<!--test url="http://wahlcomputer.ccc.de/" /-->
+			<!--test url="http://wuppa.ccc.de/" /-->
+
+		<!--test url="http://blog.chaosradio.ccc.de/" /-->
+		<!--test url="http://wiki.chaosradio.ccc.de/" /-->
+		<!--test url="http://www.hamburg.ccc.de/" /-->
+		<!--test url="http://media.ccc.de/" /-->
+		<!--test url="http://api.media.ccc.de/" /-->
+		<!--test url="http://cdn.media.ccc.de/" /-->
+		<!--test url="http://static.media.ccc.de/" /-->
+		<!--test url="http://ffhh.pads.ccc.de/" /-->
 
 
-	<securecookie host="^svn\.berlin\.ccc\.de$" name=".+" />
+	<!--securecookie host="^svn\.berlin\.ccc\.de$" name=".+" /-->
 
 
-	<rule from="^http://((?:[^/:@\.]+|(?:blog|wiki)\.chaosradio|www\.hamburg|(?:api|cdn|static)\.media|\w+\.pads)\.)?ccc\.de/"
-		to="https://$1ccc.de/" />
+	<!--rule from="^http://((?:[\w.-]+|(?:blog|wiki)\.chaosradio|www\.hamburg|(?:api|cdn|static)\.media|\w+\.pads)\.)?ccc\.de/"
+		to="https://$1ccc.de/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
