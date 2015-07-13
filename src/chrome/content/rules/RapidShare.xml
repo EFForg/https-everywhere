@@ -1,20 +1,35 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://rapidshare.com/ => https://rapidshare.com/: (51, "SSL: no alternative certificate subject name matches target host name 'rapidshare.com'")
-
 	Nonfunctional subdomains:
 
 		- images
 
+
+	Problematic hosts in *rapidshare.com:
+
+		- ^ ¹ ²
+		- images3 ²
+		- www ²
+
+	¹ Mismatched
+	² Expired
+
 -->
-<ruleset name="RapidShare (partial)" default_off='failed ruleset test'>
+<ruleset name="RapidShare.com (partial)" default_off="expired">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="images3.rapidshare.com" />
+	<target host="www.rapidshare.com" />
+
+	<!--	Complications:
+				-->
 	<target host="rapidshare.com" />
-	<target host="*.rapidshare.com" />
 
 
-	<rule from="^http://(api\.|images3\.|www\.)?rapidshare\.com/"
-		to="https://$1rapidshare.com/" />
+	<rule from="^http://rapidshare\.com/"
+		to="https://www.rapidshare.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

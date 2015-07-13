@@ -1,11 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dealnews.com/ => https://dealnews.com/: Too many redirects while fetching 'https://dealnews.com/'
-Fetch error: http://content.dealnews.com/ => https://dealnews.a.ssl.fastly.net/: Too many redirects while fetching 'https://dealnews.a.ssl.fastly.net/'
-Fetch error: http://dealnews.com/ => https://dealnews.com/: Too many redirects while fetching 'https://dealnews.com/'
-Fetch error: http://content.dealnews.com/ => https://dealnews.a.ssl.fastly.net/: Too many redirects while fetching 'https://dealnews.a.ssl.fastly.net/'
-
     Other dealnews.com rulesets:
 
         - Dlnws.com.xml
@@ -16,19 +9,41 @@ Fetch error: http://content.dealnews.com/ => https://dealnews.a.ssl.fastly.net/:
     and should use their domain and cert for SSL traffic
 
 -->
-<ruleset name="dealnews.com (partial)" default_off='failed ruleset test'>
+<ruleset name="dealnews.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
     <target host="dealnews.com" />
+	<target host="www.dealnews.com" />
+
+	<!--	Complications:
+				-->
     <target host="images.dealnews.com" />
     <target host="static.dealnews.com" />
     <target host="content.dealnews.com" />
 
-    <test url="http://dealnews.com/" />
-    <test url="http://images.dealnews.com/" />
-    <test url="http://static.dealnews.com/" />
-    <test url="http://content.dealnews.com/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://dealnews\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://dealnews\.com/+(?!mydealnews(?:$|[?/]))" />
 
-    <rule from="^http://dealnews\.com/"
-        to="https://dealnews.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://dealnews.com/c159/Electronics/TVs/" />
+			<test url="http://dealnews.com/categories/" />
+			<test url="http://dealnews.com/editors-choice/" />
+			<test url="http://dealnews.com/pages/about.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dealnews.com/mydealnews/" />
+
+
+    <rule from="^http://content\.dealnews\.com/"
+        to="https://dealnews.a.ssl.fastly.net/" />
 
     <rule from="^http://images\.dealnews\.com/"
         to="https://dealnews.a.ssl.fastly.net/images/" />
@@ -36,8 +51,7 @@ Fetch error: http://content.dealnews.com/ => https://dealnews.a.ssl.fastly.net/:
     <rule from="^http://static\.dealnews\.com/"
         to="https://dealnews.a.ssl.fastly.net/static/" />
 
-    <rule from="^http://content\.dealnews\.com/"
-        to="https://dealnews.a.ssl.fastly.net/" />
-
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

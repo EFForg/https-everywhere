@@ -1,54 +1,40 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://jabber.ru/ => https://www.jabber.ru/: (60, 'SSL certificate problem: certificate has expired')
-
 	Nonfunctional subdomains:
 
 		- chatlogs	(times out)
+		- jc ²
 		- js
 		- lists *
 		- stats		(times out)
 		- yo ³
 
 	* Prints tree
+	² Refused
 	³ Prints "It works!"; mismatched, CN: www.jabber.ru
+
+
+	www.jabber.ru: 	Expired
 
 
 	Mixed content:
 
 		- css on www from fonts.googleapis.com *
 
-		- Images on www from habrastorage.org *
-
 	* Secured by us
 
 -->
-<ruleset name="Jabber.ru (partial)" default_off='failed ruleset test'>
+<ruleset name="Jabber.ru (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="jabber.ru" />
-	<target host="*.jabber.ru" />
+	<!--target host="www.jabber.ru" /-->
 
 
-	<!--	Cookie set by reg page and
-		not what is normally on www.	-->
-	<securecookie host="^www\.jabber\.ru$" name="^PHPSESSID$" />
+	<!--securecookie host="^www\.jabber\.ru$" name="^PHPSESSID$" /-->
 
 
-	<!--	!www times out.	-->
-	<rule from="^http://jabber\.ru/"
-		to="https://www.jabber.ru/" />
-
-	<rule from="^http://www\.jabber\.ru/"
-		to="https://www.jabber.ru/" />
-
-	<!--	Cert doesn't match reg,
-		most data appear to be on www.	-->
-	<rule from="^http://reg\.jabber\.ru/"
-		to="https://reg.jabber.ru/" />
-
-	<!--	Not on www.	-->
-	<rule from="^https://www\.jabber\.ru/xreg/captcha/"
-		to="http://reg.jabber.ru/xreg/captcha/" downgrade="1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

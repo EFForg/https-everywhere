@@ -1,19 +1,43 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://prochoice.org/ => https://www.prochoice.org/: Too many redirects while fetching 'https://www.prochoice.org/'
-Fetch error: http://www.prochoice.org/ => https://www.prochoice.org/: Too many redirects while fetching 'https://www.prochoice.org/'
+	National Abortion Federation
 
-	!www: cert only matches www
+
+	Insecure cookies are set for these domains:
+
+		- .prochoice.org
 
 -->
-<ruleset name="National Abortion Federation" default_off='failed ruleset test'>
+<ruleset name="Pro Choice.org (partial)">
 
 	<target host="prochoice.org" />
 	<target host="www.prochoice.org" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://prochoice\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://prochoice\.org/+(?!wp-content/)" />
 
-	<rule from="^http://(?:www\.)?prochoice\.org/"
-		to="https://www.prochoice.org/" />
+			<!--	+ve:
+					-->
+			<test url="http://prochoice.org/about-naf/" />
+			<test url="http://prochoice.org/education-and-advocacy/violence/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://prochoice.org/wp-content/themes/naf/style.css" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.prochoice\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.prochoice\.org$" name="^__cfduid$" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

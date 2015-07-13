@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://gcaptain.com/ => https://gcaptain.com/: Too many redirects while fetching 'https://gcaptain.com/'
-
 	CDN buckets:
 
 		- d2m8pnbf2v4ae2.cloudfront.net
@@ -28,17 +24,40 @@ Fetch error: http://gcaptain.com/ => https://gcaptain.com/: Too many redirects w
 	* cloudfront
 
 -->
-<ruleset name="gCaptain.com (partial)" default_off='failed ruleset test'>
+<ruleset name="gCaptain.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gcaptain.com" />
-	<target host="*.gcaptain.com" />
+	<target host="www.gcaptain.com" />
+
+	<!--	Complications:
+				-->
+	<target host="c.gcaptain.com" />
+	<target host="cf.gcaptain.com" />
+	<target host="cfs1.gcaptain.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?gcaptain\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?gcaptain\.com/+(?!images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gcaptain.com/about/" />
+			<test url="http://gcaptain.com/category/interesting/" />
+			<test url="http://gcaptain.com/contact/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gcaptain.com/images/footer-logo.png" />
 
 
 	<securecookie host="^gcaptain\.com$" name=".+" />
 
-
-	<rule from="^http://(www\.)?gcaptain\.com/"
-		to="https://$1gcaptain.com/" />
 
 	<rule from="^http://c\.gcaptain\.com/"
 		to="https://d32gw8q6pt8twd.cloudfront.net/" />
@@ -48,5 +67,8 @@ Fetch error: http://gcaptain.com/ => https://gcaptain.com/: Too many redirects w
 
 	<rule from="^http://cfs1\.gcaptain\.com/"
 		to="https://d2m8pnbf2v4ae2.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,29 +1,40 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nabers.com/ => https://nabers.com/: Too many redirects while fetching 'https://nabers.com/'
+	Insecure cookies are set for these domains:
 
-	Mixed content:
-
-		- css from fonts.googleapis.com *
-
-		- Images from $self *
-
-	* Secured by us
+		- .nabers.com
 
 -->
-<ruleset name="Nabers.com" default_off='failed ruleset test'>
+<ruleset name="Nabers.com (partial)">
 
 	<target host="nabers.com" />
-	<target host="*.nabers.com" />
-	<target host="unlimited401k.com" />
-	<target host="*.unlimited401k.com" />
+	<target host="www.nabers.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nabers\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.nabers\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.nabers.com/category/protect-your-future/" />
+			<test url="http://www.nabers.com/tag/videos/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.nabers.com/wp-content/plugins/genesis-slider/style.css" />
 
 
-	<securecookie host="^\.(?:nabers|unlimited401k)\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nabers\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.nabers\.com$" name="^__cfduid$" />
 
 
-	<rule from="^http://(www\.)?(nabers|unlimited401k)\.com/"
-		to="https://$1$2.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

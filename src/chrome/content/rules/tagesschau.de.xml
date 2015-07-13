@@ -1,6 +1,10 @@
 <!--
-	^: refused
+	Non-functional subdomains:
+		- atlas		(connection refused)
+		- mail		(¹, CN: www.mailer-service.de, mailer-service.de)
+		- karten	(¹, CN: *.akamaihd.net)
 
+	¹ Hostname mismatch
 
 	Insecure cookies are set for these domains:
 
@@ -24,8 +28,11 @@
 
 -->
 <ruleset name="tagesschau.de (partial)">
-	<target host="tagesschau.de"/>
-	<target host="*.tagesschau.de"/>
+	<target host=       "tagesschau.de"/>
+	<target host=   "www.tagesschau.de"/>
+	<target host=  "meta.tagesschau.de"/>
+	<target host=  "wahl.tagesschau.de"/>
+	<target host="wetter.tagesschau.de"/>
 
 
 	<!--	Not secured by server:
@@ -34,16 +41,15 @@
 
 	<securecookie host="^www\.tagesschau\.de$" name=".+" />
 
+	<exclusion pattern="^http://wetter\.tagesschau\.de/unwetter" />
 
-	<!--
-	not working:
-	altas.tagesschau.de
-	forum.tagesschau.de
-	mail.tagesschau.de
-	-->
+		<test url="http://wetter.tagesschau.de/unwetter" />
 
-	<rule from="^http://(?:www\.)?tagesschau\.de/"
+	<rule from="^http://tagesschau\.de/"
 		to="https://www.tagesschau.de/"/>
-	<rule from="^http://(meta|wahl|wetter)\.tagesschau\.de/"
-		to="https://$1.tagesschau.de/"/>
+
+		<test url="http://www.tagesschau.de/" />
+
+	<rule from="^http:" 
+    		to="https:" />
 </ruleset>
