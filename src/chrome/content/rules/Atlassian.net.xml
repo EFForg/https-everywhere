@@ -9,24 +9,26 @@
 	preload list on request from their administrators, so HTTPS should
 	work properly everywhere on this site.
 
-
-	Fully covered subdomains:
-
-		- bro-tracker
-		- ecosystem
-		- mariadb
-		- solidphp
-
 -->
 <ruleset name="Atlassian.net">
 
-	<target host="*.atlassian.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="atlassian.net" />
+
+		<!--	Clients:
+				-->
+		<test url="http://bro-tracker.atlassian.net/" />
+		<test url="http://ecosystem.atlassian.net/" />
+		<test url="http://mariadb.atlassian.net/" />
+		<test url="http://ramcloud.atlassian.net/" />
+		<test url="http://solidphp.atlassian.net/" />
 
 
 	<securecookie host="^(?:bro-tracker|ecosystem)\.atlassian\.net$" name=".+" />
 
 
-	<rule from="^http://(bro-tracker|ecosystem|mariadb|solidphp)\.atlassian\.net/"
-		to="https://$1.atlassian.net/" />
+	<rule from="^http://([\w-]+\.)?atlassian\.net/"
+		to="https://$1atlassian.net/" />
 
 </ruleset>

@@ -1,18 +1,69 @@
 <!--
 	Nonfunctional subdomains:
 
-		- page	(refused)
+		- login ¹
+		- myhome ²
+		- rule ²
+		- shili ²
+
+	¹ Redirects to http
+	² Dropped
+
+
+	Mixed content:
+
+		- css, on:
+
+			- cxt, go from astyle.alicdn.com ¹
+			- info from static.c.aliimg.com ²
+
+		- Images, on :
+
+			- 3g, go, gys, s from img.china.alibaba.com ³
+			- 3g, go, gys, s from cbu01.alicdn.com ¹
+			- go, gys, industry, page from i0[0-5].c.aliimg.com ³
+			- s from style.c.aliimg.com ²
+
+	¹ Secured by us
+	² Unsecurable <= dropped
+	³ ( Not secured by us | rule disabled by default ) <= mismatched
 
 -->
 <ruleset name="1688.com (partial)">
 
-	<target host="*.1688.com" />
+	<target host="1688.com" />
+	<target host="114.1688.com" />
+	<target host="apps.1688.com" />
+	<target host="cart.1688.com" />
+	<target host="dmtracking.1688.com" />
+	<target host="gys.1688.com" />
+	<target host="home.1688.com" />
+	<target host="industry.1688.com" />
+	<target host="marketing.1688.com" />
+	<target host="member.1688.com" />
+	<target host="page.1688.com" />
+	<target host="pass.1688.com" />
+	<target host="purchase.1688.com" />
+	<target host="rights.1688.com" />
+	<target host="trade.1688.com" />
+	<target host="view.1688.com" />
+	<target host="wholesale.1688.com" />
+	<target host="work.1688.com" />
+	<target host="www.1688.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://login\.1688\.com/member/signin\.htm" /-->
 
 
-	<securecookie host="^\.1688\.com$" name="^ali_beacon_id$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.1688\.com$" name="^(?:__cn_logon__|__cn_logon_id|_csrf_token|_tmp_ck_0|JSESSIONID|cn_tmp|cn_user|ad_prefer|ali_ab|ali_beacon_id|h_keys|unb)$" /-->
+
+	<securecookie host="^\.1688\.com$" name="^(?:ad_prefer|ali_ab|ali_beacon_id)$" />
 
 
-	<rule from="^http://dmtracking\.1688\.com/"
-		to="https://dmtracking.1688.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

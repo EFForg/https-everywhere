@@ -1,63 +1,46 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://superdesk.pro/ => https://$superdesk.pro/: (6, 'Could not resolve host: $superdesk.pro')
-	Nonfunctional domains:
-
-		- forum.sourcefabric.org *
-
-	* Redirects to www
+	For other Sourcefabric coverage, see Sourcefabric.org.xml.
 
 
-	Problematic domains:
-
-		- (www.)sourcefabric.com *
-
-	* Mismatched, CN: *.sourcefabric.org
-
-
-	Mixed content:
-
-		- Image on www from i.creativecommons.org *
-
-	* Secured by us
+	(www.)?sourcefabric.com: Mismatched
 
 -->
-<ruleset name="Sourcefabric.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Sourcefabric.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="account.sourcefabric.com" />
+
+	<!--	Complications:
+				-->
 	<target host="sourcefabric.com" />
-	<target host="*.sourcefabric.com" />
-	<target host="sourcefabric.org" />
-	<target host="*.sourcefabric.org" />
-		<!--exclusion pattern="^http://forum\.sourcefabric\.org/" /-->
-		<!--
-			Redirect to http:
-						-->
-		<exclusion pattern="^http://stash\.sourcefabric\.org/+login(?:$|\?)" />
-	<target host="superdesk.pro" />
-	<target host="*.superdesk.pro" />
-
+	<target host="www.sourcefabric.com" />
 
 
 	<securecookie host="^account\.sourcefabric\.com$" name=".+" />
-	<securecookie host="^(?:dev|login|wiki|www)\.sourcefabric\.org$" name=".+" />
-	<securecookie host="^\.superdesk\.pro$" name=".+" />
 
 
-	<!--	Redirect drops path but not args.
-							-->
-	<rule from="^http://(?:www\.)?sourcefabric\.com/+\??$"
+	<!--	Redirect drops path...:
+					-->
+	<rule from="^http://(?:www\.)?sourcefabric\.com/[^?]*\??$"
 		to="https://www.sourcefabric.org/" />
 
-	<rule from="^http://(?:www\.)?sourcefabric\.com/[^?]*\?(?=.)"
-		to="https://www.sourcefabric.org/?" />
+		<test url="http://sourcefabric.com/en/airtimeproAirtime" />
+		<test url="http://www.sourcefabric.com/en/airtimeproAirtime" />
+		<test url="http://sourcefabric.com/en/newscooppro/" />
+		<test url="http://www.sourcefabric.com/en/newscooppro/" />
 
-	<rule from="^http://account\.sourcefabric\.com/"
-		to="https://account.sourcefabric.com/" />
+	<!--	...but not args:
+				-->
+	<rule from="^http://(?:www\.)?sourcefabric\.com/[^?]*"
+		to="https://www.sourcefabric.org/" />
 
-	<rule from="^http://((?:dev|login|stash|wiki|www)\.)?sourcefabric\.org/"
-		to="https://$1sourcefabric.org/" />
+		<test url="http://sourcefabric.com/en/airtimeproAirtime?foo" />
+		<test url="http://www.sourcefabric.com/en/airtimeproAirtime?foo" />
+		<test url="http://sourcefabric.com/en/newscooppro/?foo" />
+		<test url="http://www.sourcefabric.com/en/newscooppro/?foo" />
 
-	<rule from="^http://(www\.)?superdesk\.pro/"
-		to="https://$superdesk.pro/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

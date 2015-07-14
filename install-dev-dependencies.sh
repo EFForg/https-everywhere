@@ -3,14 +3,23 @@
 # HTTPS Everywhere
 set -o errexit -o xtrace
 if type apt-get >/dev/null ; then
+  BROWSERS="firefox chromium-browser"
+  if [[ "$(lsb_release -is)" == "Debian" ]]; then
+    # Iceweasel is the rebranded Firefox that Debian ships, and Chromium
+    # takes the name of 'chromium' instead of 'chromium-browser' in
+    # Debian 7 (wheezy) and later.
+    BROWSERS="iceweasel chromium"
+  fi
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    firefox chromium-browser zip sqlite3 python-pip libcurl4-openssl-dev
+    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
+elif type dnf >/dev/null ; then
+  sudo dnf install libxml2-devel python-devel libxslt-devel
 fi
 
 # Get the addon SDK submodule and rule checker

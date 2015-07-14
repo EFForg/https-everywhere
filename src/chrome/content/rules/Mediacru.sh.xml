@@ -6,17 +6,32 @@
 	preload list on request from their administrators, so HTTPS should
 	work properly everywhere on this site.
 
--->
-<ruleset name="Mediacru.sh">
 
+	Problematic hosts in *mediacru.sh:
+
+		- (www.)? ¹ ²
+		- blog ¹ ²
+
+	¹ Mismatched
+	² Self-signed
+
+
+	cdn: Dropped over http & https
+
+-->
+<ruleset name="Mediacru.sh" default_off="mismatched, self-signed">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="mediacru.sh" />
-	<target host="*.mediacru.sh" />
+	<target host="blog.mediacru.sh" />
+	<target host="www.mediacru.sh" />
 
 
 	<securecookie host="^mediacru\.sh$" name=".+" />
 
 
-	<rule from="^http://((?:blog|cdn|www)\.)?mediacru\.sh/"
-		to="https://$1mediacru.sh/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,40 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://svn.redmine.org/ => https://svn.redmine.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	(www.): shows svn
+	Problematic hosts in *redmine.org:
+
+		- svn *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	These altnames don't exist:
 
 		- www.svn.redmine.org
 
+
+	Insecure cookies are set for these hosts:
+
+		- redmine.org
+		- www.redmine.org
+
 -->
-<ruleset name="Redmine.org (partial)" default_off='failed ruleset test'>
+<ruleset name="Redmine.org (partial)">
 
-	<target host="svn.redmine.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="redmine.org" />
+	<!--target host="svn.redmine.org" /-->
+	<target host="www.redmine.org" />
 
 
-	<securecookie host="^svn\.redmine\.org$" name=".+" />
+	<!--	Not secured by server_
+					-->
+	<!--securecookie host="^(www\.)?redmine\.org$" name="^_redmine_session$" /-->
+
+	<!--securecookie host="^(?:svn\.|www\.)?redmine\.org$" name=".+" /-->
+	<securecookie host="^(?:www\.)?redmine\.org$" name=".+" />
 
 
-	<rule from="^http://svn\.redmine\.org/"
-		to="https://svn.redmine.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
