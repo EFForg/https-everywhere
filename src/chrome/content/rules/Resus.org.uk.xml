@@ -1,14 +1,33 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://resus.org.uk/ => https://resus.org.uk/: Too many redirects while fetching 'https://resus.org.uk/'
+	^resus.org.uk: Loops
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.resus.org.uk
 
 -->
-<ruleset name="Resus.org.uk" default_off='failed ruleset test'>
+<ruleset name="Resus.org.uk">
 
-	<target host="resus.org.uk" />
+	<!--	Direct rewrites:
+				-->
+	<target host="lms.resus.org.uk" />
 	<target host="www.resus.org.uk" />
 
+	<!--	Complications:
+				-->
+	<target host="resus.org.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.resus\.org\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^www\.resus\.org\.uk$" name=".+" />
+
+
+	<rule from="^http://resus\.org\.uk/"
+		to="https://www.resus.org.uk/" />
 
 	<rule from="^http:"
 		to="https:" />
