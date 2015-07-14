@@ -2,35 +2,48 @@
 	For other Digia coverage, see Digia.xml.
 
 
-	Nontunctional subdomains:
+	Nonfunctional subdomains:
 
-		- lists *
+		- ^ ¹
+		- lists ²
+		- planet ¹
 
-	* Dropped
+	¹ IPv6 connection refused; IPv4 1024-bit, MD5, self-signed, CN: server
+	² Dropped
+
+
+	Problematic subdomains:
+
+		- bugreports *
+
+	* Expired
+
 
 -->
-<ruleset name="Qt" platform="mixedcontent">
+<ruleset name="Qt">
 
 	<target host="qt-project.org" />
-	<target host="*.qt-project.org" />
+	<target host="bugreports.qt-project.org" />
+	<target host="codereview.qt-project.org" />
+	<target host="download.qt-project.org" />
+	<target host="planet.qt-project.org" />
+	<target host="releases.qt-project.org" />
+	<target host="www.qt-project.org" />
 
 
 	<securecookie host="^(?:.*\.)?qt-project\.org$" name=".*" />
 
 
-	<rule from="^http://releases\.qt-project\.org/"
-		to="https://qtproject.cachefly.net/" />
+	<rule from="^http://qt-project\.org/"
+		to="https://www.qt-project.org/" />
 
-	<!--
-		Observed subdomains:
+	<rule from="^http://bugreports\.qt-project\.org/"
+		to="https://bugreports.qt.io/" />
 
-			- bugreports
-			- codereview
-			- planet
-			- www
-				-->
-  <exclusion pattern="lists\.qt-project\.org" />
-	<rule from="^http://(\w+\.)?qt-project\.org/"
-		to="https://$1qt-project.org/" />
+	<rule from="^http://planet\.qt-project\.org/"
+		to="https://planet.qt.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

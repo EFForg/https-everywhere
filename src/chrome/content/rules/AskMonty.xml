@@ -1,24 +1,50 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://askmonty.org/ => https://askmonty.org/: (60, 'SSL certificate problem: certificate has expired')
-	For other Monty Program coverage, see Monty_Program.xml.
+	For other MariaDB Corporation coverage, see MariaDB.com.xml.
 
 
 	Nonfunctional subdomains:
 
 		- ircstats	(redirects to askmonty.org/wiki/)
 
+
+	Problematic hosts in *askmonty.org:
+
+		- (www.)? *
+		- downloads *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
 -->
-<ruleset name="AskMonty (partial)" default_off='failed ruleset test'>
+<ruleset name="AskMonty.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="kb.askmonty.org" />
+
+	<!--	Complications:
+				-->
 	<target host="askmonty.org" />
-	<target host="*.askmonty.org" />
+	<target host="downloads.askmonty.org" />
+	<target host="www.askmonty.org" />
 
 
-	<securecookie host="^(?:kb\.)?askmonty\.org$" name=".+" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?askmonty\.org/+"
+		to="https://mariadb.com/about/" />
 
+		<test url="http://askmonty.org//" />
 
-	<rule from="^http://(downloads\.|kb\.|www\.)?askmonty\.org/"
-		to="https://$1askmonty.org/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://downloads\.askmonty\.org/+"
+		to="https://downloads.mariadb.com/" />
+
+		<test url="http://downloads.askmonty.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

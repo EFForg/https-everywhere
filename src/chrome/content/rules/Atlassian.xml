@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://atlassian.wpengine.netdna-cdn.com/ => https://blogs.atlassian.com/: (60, 'SSL certificate problem: certificate has expired')
 	Other Atlassian rulesets:
 
 		- Atlassian.net.xml
@@ -36,7 +34,7 @@ Fetch error: http://atlassian.wpengine.netdna-cdn.com/ => https://blogs.atlassia
 		- atlassian.com
 		- status.atlassian.com		(→ atlassian.statuspage.io)
 
-		- [\w.-]+.atlassian.com: *
+		- *.atlassian.com: *
 
 			- ace
 			- answers
@@ -61,10 +59,11 @@ Fetch error: http://atlassian.wpengine.netdna-cdn.com/ => https://blogs.atlassia
 	* Except where excluded below
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .atlassian.com
 		- answers.atlassian.com
+		- marketplace.atlassian.com
 
 
 	Mixed content:
@@ -74,40 +73,66 @@ Fetch error: http://atlassian.wpengine.netdna-cdn.com/ => https://blogs.atlassia
 	* Secured by us
 
 -->
-<ruleset name="Atlassian.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Atlassian.com (partial)" default_off="Needs ruleset tests">
 
 	<target host="atlassian.com" />
 	<target host="*.atlassian.com" />
-		<exclusion pattern="http://click\.mailer\.atlassian\.com/" />
-		<!--
-			Added by Atlassian:
+
+	<!--target host="atlassian.wpengine.netdna-cdn.com" /-->
+
+		<exclusion pattern="http://(?:click\.mailer|status\.marketplace)\.atlassian\.com/" />
+
+			<test url="http://click.mailer.atlassian.com/" />
+			<test url="http://status.marketplace.atlassian.com/" />
+
+		<!--	Added by Atlassian:
 						-->
 		<exclusion pattern="^http://(?:.+\.(?:ams|dyn\.syd|inf|internal|sf)|go)\.atlassian\.com/" />
-	<target host="atlassian.wpengine.netdna-cdn.com" />
+
+			<test url="http://go.atlassian.com/" />
+
+		<!--exclusion pattern="^http://wac\.29c4\.edgecastcdn\.net/(?!8029C4/wac-small//wac/)" /-->
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://ace.atlassian.com/" />
+		<test url="http://answers.atlassian.com/" />
+		<test url="http://bro-tracker.atlassian.net/" />
+		<test url="http://developer.atlassian.com/" />
+		<test url="http://ecosystem.atlassian.net/" />
+		<test url="http://jira.atlassian.com/" />
+		<test url="http://mariadb.atlassian.net/" />
+		<test url="http://marketplace.atlassian.com/" />
+		<test url="http://ramcloud.atlassian.net/" />
+		<test url="http://solidphp.atlassian.net/" />
+		<test url="http://support.atlassian.com/" />
+		<test url="http://www.atlassian.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://status.atlassian.com/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.atlassian\.com$" name="^__atl_path$" /-->
-	<!--securecookie host="^answers\.atlassian\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.atlassian\.com$" name="^_(?:_atl_path|OAVARS\[[\da-f]{8}\])$" /-->
+	<!--securecookie host="^(?:answers|marketplace)\.atlassian\.com$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^(?:ace|answers|aug|confluence|developer|id|jira|marketplace|my|openid|support)\.atlassian\.com$" name=".+" />
+	<securecookie host="^(?:ace|answers|aug|bro-tracker|confluence|developer|ecosystem|id|jira|marketplace|my|openid|support)\.atlassian\.com$" name=".+" />
 
 
 	<rule from="^http://status\.atlassian\.com/"
 		to="https://atlassian.statuspage.io/" />
 
-	<rule from="^http://([\w.-]+\.)?atlassian\.com/"
-		to="https://$1atlassian.com/" />
+	<!--	Actually redirects as so.	-->
+	<!--rule from="^http://wac\.29c4\.edgecastcdn\.net/8029C4/wac-small//wac/"
+		to="https://summit.atlassian.com/" /-->
 
 	<!--	Cert: *.userzoom.com
 		/$ 403s, rest 404s.	-->
-	<rule from="^http://atlassian\.wpengine\.netdna-cdn\.com/"
-		to="https://blogs.atlassian.com/" />
+	<!--rule from="^http://atlassian\.wpengine\.netdna-cdn\.com/"
+		to="https://blogs.atlassian.com/" /-->
 
-	<!--	Cert: gp1.wac.edgecastcdn.net
-		Actually redirects as so.	-->
-	<rule from="^http://wac\.29c4\.edgecastcdn\.net/8029C4/wac-small//wac/"
-		to="https://summit.atlassian.com/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

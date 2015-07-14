@@ -1,11 +1,44 @@
-<ruleset name="Serienjunkies.de (mixed content)" default_off="mixed content">
-<target host="www.serienjunkies.de"/>
+<!--
+	^serienjunkies.de: 503
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.serienjunkies.de
+
+
+	Mixed content:
+
+		- Images, from:
+
+			- [a-z]-cdn.serienjunkies.de ¹
+			- sjme.de ²
+
+		- Bugs from www.facebook.com ¹
+
+	¹ Secured by us
+	² Not secured by us <= mismatched
+
+-->
+<ruleset name="Serienjunkies.de (mixed content)" platform="mixedcontent">
 <target host="serienjunkies.de"/>
 <target host="*.serienjunkies.de"/>
 
-<rule from="^http://(?:www\.)?serienjunkies\.de/" to="https://www.serienjunkies.de/"/>
+		<test url="http://g-cdn.serienjunkies.de/0.gif" />
+		<test url="http://www.serienjunkies.de/" />
 
-<rule from="^http://([a-z])-cdn\.serienjunkies\.de/" to="https://$1.serienjunkies.de/"/> 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.serienjunkies\.de$" name="^(?:PHPSESSID|SJW)$" /-->
+
+	<securecookie host="^www\.serienjunkies\.de$" name=".+" />
+
+
+<rule from="^http://serienjunkies\.de/" to="https://www.serienjunkies.de/"/>
+
+<rule from="^http://([a-z]-cdn|www)\.serienjunkies\.de/" to="https://$1.serienjunkies.de/"/> 
+
 
 </ruleset>
  

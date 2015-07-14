@@ -59,18 +59,8 @@ Important directories you might want to know about
 Hacking on the Source Code
 --------------------------
 
-The current stable release series is 4.0. The current development release series
-is 5.0. Each release series is represented by a branch with the major and minor
-version numbers, e.g. 4.0 or 5.0. This branch is updated during the lifecycle of
-the release series. Specific releases are represented as tags with the full
-version number, e.g. 4.0.0 or 5.0development.0.
-
-If you are making a bug fix to the current stable release, you should
-work off of the stable branch, 4.0. If you are adding features or improving
-functionality, work off of master. The maintainers will merge master into the
-development series branch periodically. We will also occasionally merge ruleset
-fixes from master into the stable branch if the ruleset is important (i.e. a
-popular or high-security site), or if the version in stable is clearly broken.
+The current stable release series is 5.0. The maintainers release new versions
+off the current master branch about every two weeks.
 
 To submit changes, either use pull requests on GitHub or email patches to
 https-everywhere-rulesets@lists.eff.org (rulesets) or

@@ -2,18 +2,6 @@
 	For other Rackspace coverage, see Rackspace.xml.
 
 
-	Nonfunctional subdomains:
-
-		- documentation ¹
-		- www ²
-
-	¹ Redirects to ^; mismatched, CN: *.mailgun.net
-	² Shows ^
-
-
-	^ differs from www
-
-
 	Problematic subdomains:
 
 		- blog ¹
@@ -25,15 +13,31 @@
 
 	Fully covered subdomains:
 
-		- ^
+		- (www.)?
+		- documentation
 		- help
 		- status	(→ mailgun.statuspage.io)
+
+
+	Mixed content:
+
+		- css on documentation, www from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Mailgun.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mailgun.com" />
-	<target host="*.mailgun.com" />
+	<target host="documentation.mailgun.com" />
+	<target host="help.mailgun.com" />
+	<target host="www.mailgun.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.mailgun.com" />
 
 
 	<!--	Not secured by server:
@@ -43,10 +47,10 @@
 	<securecookie host="^mailgun\.com$" name=".+" />
 
 
-	<rule from="^http://(help\.)?mailgun\.com/"
-		to="https://$1mailgun.com/" />
-
 	<rule from="^http://status\.mailgun\.com/"
 		to="https://mailgun.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

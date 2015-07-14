@@ -1,28 +1,13 @@
-<!--
-	Problematic domains:
 
-		- khms *
-		- khms[0-3] *
-
-	* $ 404s
-
-
-	Fully covered domains:
-
-		- google.com subdomains:
-
-			- khms
-			- khms[0-3]
-
--->
 <ruleset name="Google Maps">
-
 	<target host="maps.google.*" />
 		<!--
 			https://trac.torproject.org/projects/tor/ticket/8627
 										-->
 		<exclusion pattern="^http://maps\.google\.com/local_url" />
+			<test url="http://maps.google.com/local_url" />
 		<exclusion pattern="^http://maps\.google\.gr/transitathens" />
+			<test url="http://maps.google.gr/transitathens" />
 	<target host="maps.google.co.*" />
 	<target host="khms.google.com" />
 	<target host="khms0.google.com" />
@@ -30,14 +15,24 @@
 	<target host="khms2.google.com" />
 	<target host="khms3.google.com" />
 	<target host="maps-api-ssl.google.com" />
+    <!-- This domain doesn't host anything at the root, and will give a 404 if
+         you fetch / vis HTTPS. However, there are resources elsewhere on the
+         domain that can be rewritten. We exclude the root so
+         https-everywhere-checker doesn't generate an error based on the implicit
+         test URL for the domain. -->
+		<exclusion pattern="^http://maps-api-ssl\.google\.com/$" />
+		<test url="http://maps-api-ssl.google.com/maps/api/js?sensor=false" />
 	<target host="mw2.google.com" />
 	<target host="maps.google.com.*" />
 	<target host="maps.googleapis.com" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001317.html
-														-->
-		<!--exclusion pattern="^http://maps\.googleapis\.com/map(files/lib/map_1_20\.swf|sapi/publicapi\?file=flashapi)" /-->
-		<exclusion pattern="^http://maps\.googleapis\.com/map(?:files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)" />
+			These now 404
+		<exclusion pattern="^http://maps\.googleapis\.com/mapfiles/lib/map_\d+_\d+\.swf" />
+			<test url="http://maps.googleapis.com/mapfiles/lib/map_1_20.swf" />
+		<exclusion pattern="^http://maps\.googleapis\.com/mapsapi/publicapi\?file=flashapi" />
+			<test url="http://maps.googleapis.com/mapsapi/publicapi?file=flashapi" />
+		-->
 	<target host="maps.gstatic.com" />
 
 
@@ -47,21 +42,34 @@
 	<securecookie host="^maps-api-ssl\.google\.com$" name=".+" />
 
 
-	<rule from="^http://maps\.google\.([^/]+)/"
+	<rule from="^http://maps\.google\.((?:com?\.)?\w{2,3})/"
 		to="https://maps.google.$1/" />
+		<test url="http://maps.google.ca/" />
+		<test url="http://maps.google.com/" />
+		<test url="http://maps.google.com.au/" />
 
-	<!--	http://khms.../$ 404s:
+	<!--	https://khms1.google.com/ 404s but http://khms1.google.com/ does not.
 					-->
 	<rule from="^http://khms\d?\.google\.com/+\??$"
 		to="https://www.google.com/" />
 
+	<!--  It might not be obvious but khms\d? is not duplicated here, the above rule is very specific.
+		  Covering the root only /,//,/? etc
+		  Whereas the below rule covers the rest /foo for example
+	-->
+
 	<rule from="^http://(khms\d?|maps-api-ssl|mw2)\.google\.com/"
 		to="https://$1.google.com/" />
+		<test url="http://khms0.google.com/kh/v=157&amp;src=app&amp;x=5&amp;y=0&amp;z=3" />
+		<test url="http://khms1.google.com/kh/v=157&amp;src=app&amp;x=5&amp;y=0&amp;z=3" />
+		<!-- test url 404s but I couldn't find any that still worked -->
 
-	<rule from="^http://maps\.g(oogleapis|static)\.com/"
-		to="https://maps.g$1.com/" />
+	<rule from="^http://maps\.googleapis\.com/"
+		to="https://maps.googleapis.com/" />
 
-	<rule from="^https://maps\.googleapis\.com/map(?=files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)"
-		to="http://maps.googleapis.com/map" downgrade="1" />
-
+	<rule from="^http://maps\.gstatic\.com/"
+		to="https://maps.gstatic.com/" />
+	<!-- covered in exclusion rule, there should be no need to downgrade -->
+	<!--rule from="^https://maps\.googleapis\.com/map(?=files/lib/map_\d+_\d+\.swf|sapi/publicapi\?file=flashapi)"
+		to="http://maps.googleapis.com/map" downgrade="1" /-->
 </ruleset>
