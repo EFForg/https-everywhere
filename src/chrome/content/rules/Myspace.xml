@@ -1,58 +1,41 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://secure.adviva.net/ => https://secure.adviva.net/: 'NoneType' object has no attribute 'xpath'
-	Nonfunctional domains:
+	Other Myspace rulesets:
 
-		- developer.myspace.com
-		- cms.myspacecdn.com		(valid cert; 504)
+		- Imeem.com.xml
+		- Myspace_CDN.com.xml
 
 
-	Problematic domains:
+	Fully covered hosts in *myspace.com:
 
-		- 1[1-4].ec-images.myspacecdn.com	(CN: gp1.wac.edgecastcdn.net; works)
+		- (www.)?
+		- b\d+ *
+
+	* Bugs
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains:
 
-		- secure.adviva.net
-		- (www.)imeem.com
-		- (www.)myspace.com
-		- b\d+.myspace.com
-		- new.myspace.com
-		- a[1-4].ec-images.myspacecdn.com
-		- a[1-4]-images.myspacecdn.com
-		- x.myspacecdn.com
+		- .myspace.com
 
 -->
-<ruleset name="Myspace (mixed content)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Myspace.com">
 
-	<target host="secure.adviva.net" />
-	<target host="imeem.com" />
-	<target host="www.imeem.com" />
 	<target host="myspace.com" />
 	<target host="*.myspace.com" />
-	<target host="*.myspacecdn.com" />
-	<target host="*.ec-images.myspacecdn.com" />
 
+		<test url="http://b12.myspace.com/" />
+		<test url="http://b12.myspace.com/b12/" />
+		<test url="http://www.myspace.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.myspace\.com$" name="^(?:ads|beacons_enabled|persistent_id|player|visit_id)$" /-->
 
 	<securecookie host="^\.myspace\.com$" name=".*" />
 
 
-	<rule from="^http://secure\.adviva\.net/"
-		to="https://secure.adviva.net/" />
-
-	<!--	Redirects like so.
-					-->
-	<rule from="^http://(?:www\.)?imeem\.com/"
-		to="https://www.myspace.com/music/" />
-
-	<rule from="^http://((?:b\d+|new|www)\.)?myspace\.com/"
+	<rule from="^http://(b\d+\.|www\.)?myspace\.com/"
 		to="https://$1myspace.com/" />
-
-	<rule from="^http://(a\d-images|x)\.myspacecdn\.com/"
-		to="https://$1.myspacecdn.com/" />
-
-	<rule from="^http://a(\d)\.ec-images\.myspacecdn\.com/"
-		to="https://a$1-images.myspacecdn.com/" />
 
 </ruleset>

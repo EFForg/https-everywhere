@@ -8,10 +8,14 @@
 			- *-ssl doesn't exist
 
 
-	Problematic subdomains:
+	www.sitescout.com: Refused
 
-		- ^:	404
-		- www: Refused
+
+	Problematic hosts in *sitescout.com:
+
+		- www-cdn *
+
+	* 503
 
 
 	Mixed content:
@@ -21,11 +25,19 @@
 	* Unsecurable <= refused
 
 -->
-<ruleset name="SiteScout (partial)">
+<ruleset name="SiteScout.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="sitescout.com" />
+	<target host="clickserv.sitescout.com" />
 	<target host="guru.sitescout.com" />
 	<target host="pixel.sitescout.com" />
 	<target host="rtb.sitescout.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www-cdn.sitescout.com" />
 
 
 	<!--	Tracking cookies:
@@ -33,6 +45,9 @@
 	<securecookie host="^\.sitescout\.com$" name="^(?:km_\w+|_ssum|ssi|__utm\w)$" />
 	<securecookie host="^rtb\.sitescout\.com$" name=".+" />
 
+
+	<rule from="^http://www-cdn\.sitescout\.com/"
+		to="https://cdnsitescout1-a.akamaihd.net/" />
 
 	<rule from="^http:"
 		to="https:" />
