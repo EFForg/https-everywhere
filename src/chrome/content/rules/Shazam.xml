@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For problematic rules, see Shazam-problematic.xml.
 
 
@@ -30,12 +28,14 @@ Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificat
 	Nonfunctional domains:
 
 		- admin.blog.aws-ew1a.shazamcloud.com *
+		- (www.)myshazam.com ***
 		- swpcontent1.blog.aws-ue1a.shazamcloud.com *
 		- www.shazamers.com **
 		- www.swpcontent.com **
 
 	* Dropped
 	** Refused
+	*** Revoked
 
 
 	Problematic domains:
@@ -43,20 +43,6 @@ Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificat
 		- www.myshazam.com	(cert only matches ^myshazam.com)
 		- shazam.com		(refused)
 		- news.shazam.com	(works; mismatched, CN: *.mynewsdesk.com)
-
-
-	Fully covered domains:
-
-		- myshazam.com
-		- www.myshazam.com	(→ www.shazam.com)
-
-		- shazam.com subdomains:
-
-			- (www.)	(^ → www)
-			- cdn
-			- support
-
-		- orbit.shazamid.com
 
 
 	Observed cookie domains:
@@ -71,12 +57,12 @@ Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificat
 		- Images on www.shazam.com from www.swpcontent.com
 
 -->
-<ruleset name="Shazam (partial)" default_off='failed ruleset test'>
+<ruleset name="Shazam (partial)">
 
-	<target host="myshazam.com" />
-	<target host="www.myshazam.com" />
 	<target host="shazam.com" />
-	<target host="*.shazam.com" />
+	<target host="www.shazam.com" />
+	<target host="cdn.shazam.com" />
+	<target host="support.shazam.com" />
 	<target host="orbit.shazamid.com" />
 
 
@@ -84,22 +70,9 @@ Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificat
 	<securecookie host="^(?:support|www)\.shazam\.com$" name=".+" />
 
 
-	<rule from="^http://myshazam\.com/"
-		to="https://myshazam.com/" />
-
-	<!--	Redirects like so.
-					-->
-	<rule from="^http://www\.myshazam\.com/"
+	<rule from="^http://shazam\.com/"
 		to="https://www.shazam.com/" />
-
-
-	<rule from="^http://(?:www\.)?shazam\.com/"
-		to="https://www.shazam.com/" />
-
-	<rule from="^http://(cdn|support)\.shazam\.com/"
-		to="https://$1.shazam.com/" />
-
-	<rule from="^http://orbit\.shazamid\.com/"
-		to="https://orbit.shazamid.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
