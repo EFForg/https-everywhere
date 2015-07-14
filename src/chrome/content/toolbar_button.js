@@ -262,6 +262,13 @@ httpsEverywhere.toolbarButton = {
     toolbarbutton.setAttribute('http_nowhere',
                                showHttpNowhere ? 'true' : 'false');
     reload_window();
+  },
+
+  /**
+   * Resets all rules to their default state.
+   */
+  resetToDefaults: function() {
+    HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
   }
 };
 

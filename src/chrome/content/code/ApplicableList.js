@@ -98,20 +98,21 @@ ApplicableList.prototype = {
     var text = strings.getString("https-everywhere.menu.globalDisable");
     if(!https_everywhere.prefs.getBoolPref("globalEnabled"))
       text = strings.getString("https-everywhere.menu.globalEnable");
-        
+
     enableLabel.setAttribute('label', text);
-    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');    
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
     this.prepend_child(enableLabel);
-    
+
     // add the label at the top
     var any_rules = false;
     for(var x in this.all) {
       any_rules = true;  // how did JavaScript get this ugly?
       break;
     }
+    // This label just describes the fact that the items underneath it enable
+    // and disable rules.
     var label = document.createElement('menuitem');
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
-    label.setAttribute('command', 'https-everywhere-menuitem-preferences');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');
