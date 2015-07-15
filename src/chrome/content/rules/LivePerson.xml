@@ -1,7 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://liveperson.hosted.jivesoftware.com/ => https://community.liveperson.net/: (51, "SSL: no alternative certificate subject name matches target host name 'liveperson.hosted.jivesoftware.com'")
-Fetch error: http://liveperson.net/ => http://liveperson.net/: (28, 'Connection timed out after 10001 milliseconds')
+	Other LivePerson rulesets:
+
+		- LivePerson.net.xml
+
+
 	Problematic domains:
 
 		- liveperson.com	(cert only matches *.liveperson.com)
@@ -22,18 +24,6 @@ Fetch error: http://liveperson.net/ => http://liveperson.net/: (28, 'Connection 
 			- solutions
 			- sr2
 
-		- liveperson.net subdomains:
-
-			- adminlogon
-			- base
-			- dev
-			- server.iad
-			- lptag
-			- sales
-			- sr[24]
-			- sso
-			- tags
-
 
 	Observed cookie domains:
 
@@ -46,54 +36,39 @@ Fetch error: http://liveperson.net/ => http://liveperson.net/: (28, 'Connection 
 			- connect
 			- customercenter
 
-		- liveperson.net:
-
-			- .
-			- base
-			- server.iad
-			- sales
-			- sr2
-
-
-	server.iad and sales set lpFPCtest and HumanClickSiteContainerID_\d{8}
-	cookies on whichever domain either is loaded from.
-
-	server.iad also sets the following cookies cookies
-	on whichever domain it is loaded from:
-
-		- \d{8}-SKEY
-		- \d{8}-VID
-
 -->
-<ruleset name="LivePerson (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="LivePerson (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hc2.humanclick.com" />
+
+	<target host="apps.liveperson.com" />
+	<target host="base.liveperson.com" />
+	<target host="community.liveperson.com" />
+	<target host="customercenter.liveperson.com" />
+	<target host="solutions.liveperson.com" />
+	<target host="sr2.liveperson.com" />
+	<target host="www.liveperson.com" />
+
+	<!--	Complications:
+				-->
 	<target host="liveperson.hosted.jivesoftware.com" />
+
 	<target host="liveperson.com" />
-	<target host="*.liveperson.com" />
-	<target host="liveperson.net" />
-	<target host="*.liveperson.net" />
 
 
 	<securecookie host="^hc2\.humanclick\.com$" name=".+" />
-	<securecookie host=".*\.liveperson\.(?:com|net)$" name=".+" />
+	<securecookie host=".*\.liveperson\.com$" name=".+" />
 
-
-	<rule from="^http://hc2\.humanclick\.com/"
-		to="https://hc2.humanclick.com/" />
-
-	<rule from="^http://(?:www\.)?liveperson\.com/"
-		to="https://www.liveperson.com/" />
-
-	<rule from="^http://(apps|base|community|customercenter|solutions|sr2)\.liveperson\.com/"
-		to="https://$1.liveperson.com/" />
-
-	<!--	sr2 example: https://www.oracle.com/partners/index.html
-									-->
-	<rule from="^http://(adminlogon|base|dev|lptag|sales|server\.iad|sr[24]|sso|tags)\.liveperson\.net/"
-		to="https://$1.liveperson.net/" />
 
 	<rule from="^http://liveperson\.hosted\.jivesoftware\.com/"
 		to="https://community.liveperson.net/" />
+
+	<rule from="^http://liveperson\.com/"
+		to="https://www.liveperson.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
