@@ -44,59 +44,10 @@ if [ "$1" != "--fast" -o ! -f "$RULESETS_SQLITE" ] ; then
   python2.7 ./utils/make-sqlite.py
 fi
 
-# =============== BEGIN VALIDATION ================
 # Unless we're in a hurry, validate the ruleset library & locales
-
-die() {
-  echo >&2 "ERROR:" "$@"
-  exit 1
-}
-
 if [ "$1" != "--fast" ] ; then
-  if python2.7 ./utils/trivial-validate.py --quiet --db $RULESETS_SQLITE >&2
-  then
-    echo Validation of included rulesets completed. >&2
-    echo >&2
-  else
-    die "Validation of rulesets failed."
-  fi
-
-  # Check for xmllint.
-  type xmllint >/dev/null || die "xmllint not available"
-
-  GRAMMAR="utils/relaxng.xml"
-  if [ -f "$GRAMMAR" ]
-  then
-    # xmllint spams stderr with "<FILENAME> validates, even with the --noout
-    # flag. We can't grep -v for that line, because the pipeline will mask error
-    # status from xmllint. Instead we run it once going to /dev/null, and if
-    # there's an error run it again, showing only error output.
-    validate_grammar() {
-      find src/chrome/content/rules -name "*.xml" | \
-       xargs xmllint --noout --relaxng utils/relaxng.xml
-    }
-    if validate_grammar 2>/dev/null
-    then
-      echo Validation of rulesets against $GRAMMAR succeeded. >&2
-    else
-      validate_grammar 2>&1 | grep -v validates
-      die "Validation of rulesets against $GRAMMAR failed."
-    fi
-  else
-    echo Validation of rulesets against $GRAMMAR SKIPPED. >&2
-  fi
-
-  if [ -x ./utils/compare-locales.sh ] >&2
-  then
-    if ./utils/compare-locales.sh >&2
-    then
-      echo Validation of included locales completed. >&2
-    else
-      die "Validation of locales failed."
-    fi
-  fi
+  bash utils/validate.sh
 fi
-# =============== END VALIDATION ================
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
