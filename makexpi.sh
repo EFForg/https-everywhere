@@ -139,8 +139,7 @@ fi
 cp -a src/ pkg/xpi-eff/
 rm -r pkg/xpi-eff/chrome/content/rules
 [ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
-cp -a src/ pkg/xpi-amo/
-rm -r pkg/xpi-amo/chrome/content/rules
+cp -a pkg/xpi-eff/ pkg/xpi-amo/
 # The AMO version of the package cannot contain the updateKey or updateURL tags
 sed -i.bak -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
 rm pkg/xpi-amo/install.rdf.bak
