@@ -113,6 +113,9 @@ ApplicableList.prototype = {
     // and disable rules.
     var label = document.createElement('menuitem');
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
+    label.setAttribute('disabled', 'true');
+    label.setAttribute('class', 'menuitem-non-iconic');
+    label.setAttribute('style', 'color:#000000;');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');

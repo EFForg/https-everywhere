@@ -1,6 +1,10 @@
 <!--
 	For rules subject to CAcert, see CCC.de-cacert.xml.
 
+	Other CCC rulesets:
+
+		- CCCv.de.xml
+
 
 	Nonfunctional subdomains:
 
@@ -26,21 +30,35 @@
 
 	Fully covered hosts in *ccc.de:
 
+		- events
+		- rad1o.badge.events
+		- tickets.events
 		- media
 
 		- api.media
 		- cdn.media
 		- static.media
+		- streaming.media
+
+
+	Insecure cookies are set for these hosts:
+
+		- hannover.ccc.de
+		- tickets.events.ccc.de
 
 -->
 <ruleset name="ccc.de (partial)">
 
 	<!--target host="ccc.de" /-->
+	<target host="events.ccc.de" />
+	<target host="rad1o.badge.events.ccc.de" />
+	<target host="tickets.events.ccc.de" />
 	<target host="media.ccc.de" />
 
 	<target host="api.media.ccc.de" />
 	<target host="cdn.media.ccc.de" />
 	<target host="static.media.ccc.de" />
+	<target host="streaming.media.ccc.de" />
 
 	<!--target host="*.ccc.de" /-->
 
@@ -55,6 +73,7 @@
 		<!--test url="http://blog.chaosradio.ccc.de/" /-->
 		<!--test url="http://wiki.chaosradio.ccc.de/" /-->
 		<!--test url="http://www.hamburg.ccc.de/" /-->
+		<!--test url="http://web.jabber.ccc.de/" /-->
 		<!--test url="http://media.ccc.de/" /-->
 		<!--test url="http://api.media.ccc.de/" /-->
 		<!--test url="http://cdn.media.ccc.de/" /-->
@@ -62,11 +81,14 @@
 		<!--test url="http://ffhh.pads.ccc.de/" /-->
 
 
-	<!--securecookie host="^svn\.berlin\.ccc\.de$" name=".+" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^tickets\.events\.ccc\.de$" name="^csrftoken$" /-->
+	<!--securecookie host="^hannover\.ccc\.de$" name="^(?:_gitlab_session|request_method)$" /-->
 
+	<!--securecookie host="^(?:svn\.berlin|tickets\.events|hannover)\.ccc\.de$" name=".+" /-->
+	<securecookie host="^tickets\.events\.ccc\.de$" name=".+" />
 
-	<!--rule from="^http://((?:[\w.-]+|(?:blog|wiki)\.chaosradio|www\.hamburg|(?:api|cdn|static)\.media|\w+\.pads)\.)?ccc\.de/"
-		to="https://$1ccc.de/" /-->
 
 	<rule from="^http:"
 		to="https:" />
