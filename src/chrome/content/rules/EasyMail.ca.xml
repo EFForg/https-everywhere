@@ -2,44 +2,35 @@
 	For other easyDNS coverage, see EasyDNS.xml.
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- messages
-		- webmail
-
-
-	Observed cookie domains:
-
-		- . ¹
-		- messages ²
-
-	¹ Secured by us
-	² Secured by server
-
-
-	Mixed content:
-
-		- css on ^ from fonts.googleapis.com *
-
-		- Images on ^ from $self *
-
-	* Secured by us
+	(www.)?easymail.ca: Refused
 
 -->
 <ruleset name="easyMail.ca">
 
-	<target host="*.easymail.ca" />
+	<!--	Direct rewrites:
+				-->
+	<target host="messages.easymail.ca" />
+	<target host="webmail.easymail.ca" />
+
+	<!--	Complications:
+				-->
+	<target host="easymail.ca" />
+	<target host="www.easymail.ca" />
 
 
-	<securecookie host="^\.easymail\.ca$" name=".+" />
-	<!--
-		Server sets Secure for:
-					-->
-	<!--securecookie host="^messages\.easymail\.ca$" name=".+" /-->
+	<rule from="^http://(?:www\.)?easymail\.ca/$"
+		to="https://www.easydns.com/easymail-2/" />
 
+	<!--	For (?!$), redirect prepends
+		forward slash:
+						-->
+	<rule from="^http://(?:www\.)?easymail\.ca/"
+		to="https://www.easydns.com/easymail-2//" />
 
-	<rule from="^http://((?:messages|webmail|www)\.)?easymail\.ca/"
-		to="https://$1easymail.ca/" />
+		<test url="http://easymail.ca/?" />
+		<test url="http://www.easymail.ca/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
