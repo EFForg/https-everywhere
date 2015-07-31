@@ -1,11 +1,22 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://connect.me/ => https://connect.me/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.connect.me/ => https://connect.me/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	^connect.me: Expired, missing certificate chain
+	www.connect.me: Refused
+
 -->
-<ruleset name="Connect.me" default_off='failed ruleset test'>
+<ruleset name="Connect.me">
+
+	<!--	Complications:
+				-->
   <target host="connect.me"/>
   <target host="www.connect.me"/>
 
-  <rule from="^http://(?:www\.)?connect\.me/" to="https://connect.me/"/>
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?connect\.me/+"
+		to="https://www.respectnetwork.com/connect-me-2/" />
+
+		<test url="http://connect.me//" />
+
 </ruleset>
