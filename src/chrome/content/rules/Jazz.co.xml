@@ -1,0 +1,68 @@
+<!--
+	Problematic hosts in *jazz.co:
+
+		- success *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- jazz.co
+		- .jazz.co
+
+
+	These altnames don't exist:
+
+		- www.success.jazz.co
+
+
+	Mixed content:
+
+		- Image on ^ from static1.squarespace.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Jazz.co (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="jazz.co" />
+	<target host="careers.jazz.co" />
+	<!--target host="success.jazz.co" /-->
+	<target host="www.jazz.co" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://careers\.jazz\.co/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://careers\.jazz\.co/+(?!css/)" />
+
+			<!-- +ve:
+					-->
+
+			<test url="http://careers.jazz.co/apply/lDD1Ph/Director-Customer-Success" />
+			<test url="http://careers.jazz.co/apply/QSc08Z/Account-Executive" />
+
+			<!--	-ve:
+					-->
+
+			<test url="http://careers.jazz.co/css/v2/css/apply.css" />
+			<test url="http://careers.jazz.co/img/v1.1/logos/jazz-logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jazz\.co$" name="^(?:JSESSIONID|crumb)$" /-->
+	<!--securecookie host="^\.jazz\.co$" name="SS_MID$" /-->
+
+	<securecookie host="^\.?jazz\.co$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
