@@ -1,0 +1,41 @@
+<ruleset name="dict.cc">
+  
+  <target host="dict.cc" />
+  <target host="www.dict.cc" />
+  <target host="en-de.dict.cc" />
+  <target host="de-en.dict.cc" />
+  
+  <target host="dees.dict.cc" />
+  <target host="es-de.dict.cc" />
+  <target host="de-es.dict.cc" />
+  
+  <!-- all other language pair subdomains probably also working, needs testing -->
+  
+  <!-- non-working subdomains (as of 2015-05-14)
+  contribute
+  *.contribute
+  forum
+  *.forum
+  my
+  *.my
+  users
+  *.users
+  -->
+
+  <!-- mixed content on https://(www|{language-pair}).dict.cc/dict/options.php (frameset) -->
+
+  <test url="http://www.dict.cc/dict/options.php" />
+  <test url="http://en-de.dict.cc/dict/options.php" />
+  <test url="http://de-en.dict.cc/dict/options.php" />
+  <test url="http://dees.dict.cc/dict/options.php" />
+  
+  <exclusion pattern="^http://(www|[a-z]{2}-?[a-z]{2})\.dict\.cc/dict/options\.php$" />
+  
+  <!-- Downgrade rule is required, because website creates broken link by itself, when fetched via HTTPS -->
+  
+  <rule from="^https://(www|[a-z]{2}-?[a-z]{2})\.dict\.cc/dict/options\.php$"
+          to="http://$1.dict.cc/dict/options.php" downgrade="1"/>
+  
+  <rule from="^http:"
+          to="https:"/>
+</ruleset>
