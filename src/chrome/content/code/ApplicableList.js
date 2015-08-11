@@ -213,10 +213,10 @@ ApplicableList.prototype = {
   },
 
   add_command: function(rule) {
-      var command = this.document.createElement("command");
+      var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
       command.setAttribute('id', JSON.stringify(rule.id)+'-command');
+      command.setAttribute('data-id', JSON.stringify(rule.id));
       command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', 'toggle_rule("'+JSON.stringify(rule.id)+'")');
       this.commandset.appendChild(command);
   },
 
