@@ -1,43 +1,63 @@
-<!--	!functional:
-	-	status.livechatinc.com		(cert: *.imagin.pl; shows RoundCube webmail)
+<!--
+	Other LiveChat rulesets:
+
+		- LiveChat_Inc.net.xml
 
 
-	Fully covered domains:
+	Fully covered hosts in *livechatinc.com:
 
-		- livechatinc.com subdomains:
-
-			- app
-			- cdn
-			- support	(→ livechat.zendesk.com)
-
-		- chat.livechatinc.net
+		- app
+		- cdn
+		- chat1a
+		- developers
+		- partners
+		- status	(→ livechat.statuspage.io)
+		- support
 
 -->
-<ruleset name="LiveChat (partial)">
+<ruleset name="LiveChat Inc.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="livechatinc.com"/>
-	<target host="*.livechatinc.com"/>
-		<exclusion pattern="^http://status\."/>
-	<target host="chat.livechatinc.net" />
-	<target host="livechat.zendesk.com"/>
-	<target host="www.livechat.zendesk.com"/>
+	<target host="app.livechatinc.com" />
+	<target host="cdn.livechatinc.com" />
+	<target host="chat1a.livechatinc.com" />
+	<target host="developers.livechatinc.com" />
+	<target host="partners.livechatinc.com" />
+	<target host="support.livechatinc.com" />
+	<target host="www.livechatinc.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="status.livechatinc.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.livechatinc\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.livechatinc\.com/(?!signup/|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.livechatinc.com/blog/" />
+			<test url="http://www.livechatinc.com/pricing/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.livechatinc.com/signup/" />
+			<test url="http://www.livechatinc.com/wp-content/themes/livechat2.0/media/img/home/business-companies.png" />
 
 
-	<securecookie host="^(?:.*\.)?livechatinc\.com$" name=".*"/>
-	<securecookie host="^(?:www\.)?livechat\.zendesk\.com$" name=".*"/>
+	<securecookie host=".+\.livechatinc\.com$" name=".*"/>
 
 
-	<rule from="^http://(www\.)?livechatinc\.com/(signup|wp-content)/"
-		to="https://$1livechatinc.com/$2/"/>
+	<rule from="^http://status\.livechatinc\.com/"
+		to="https://livechat.statuspage.io/" />
 
-	<rule from="^http://(app|cdn)\.livechatinc\.com/"
-		to="https://$1.livechatinc.com/"/>
-
-	<!--	doesn't redirect!  Kudos	-->
-	<rule from="^http://support\.livechatinc\.com/"
-		to="https://livechat.zendesk.com/"/>
-
-	<rule from="^http://chat\.livechatinc\.net/"
-		to="https://chat.livechatinc.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

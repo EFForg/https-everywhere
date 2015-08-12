@@ -1,7 +1,10 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For problematic rules, see Shazam-problematic.xml.
+
+	Other Shazam rulesets:
+
+		- My_Shazam.com.xml
+		- ShazamID.com.xml
 
 
 	CDN buckets:
@@ -30,76 +33,61 @@ Fetch error: http://myshazam.com/ => https://myshazam.com/: (60, 'SSL certificat
 	Nonfunctional domains:
 
 		- admin.blog.aws-ew1a.shazamcloud.com *
+		- (www.)myshazam.com ***
 		- swpcontent1.blog.aws-ue1a.shazamcloud.com *
 		- www.shazamers.com **
 		- www.swpcontent.com **
 
 	* Dropped
 	** Refused
+	*** Revoked
 
 
 	Problematic domains:
 
-		- www.myshazam.com	(cert only matches ^myshazam.com)
 		- shazam.com		(refused)
 		- news.shazam.com	(works; mismatched, CN: *.mynewsdesk.com)
 
 
-	Fully covered domains:
-
-		- myshazam.com
-		- www.myshazam.com	(→ www.shazam.com)
-
-		- shazam.com subdomains:
-
-			- (www.)	(^ → www)
-			- cdn
-			- support
-
-		- orbit.shazamid.com
-
-
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .shazam.com
-		- support.shazam.com
 		- www.shazam.com
 
 
 	Mixed content:
 
-		- Images on www.shazam.com from www.swpcontent.com
+		- Images on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Shazam (partial)" default_off='failed ruleset test'>
+<ruleset name="Shazam.com (partial)">
 
-	<target host="myshazam.com" />
-	<target host="www.myshazam.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.shazam.com" />
+	<target host="images.shazam.com" />
+	<target host="support.shazam.com" />
+	<target host="www.shazam.com" />
+
+	<!--	Complications:
+				-->
 	<target host="shazam.com" />
-	<target host="*.shazam.com" />
-	<target host="orbit.shazamid.com" />
 
 
-	<securecookie host="^myshazam\.com$" name=".+" />
-	<securecookie host="^(?:support|www)\.shazam\.com$" name=".+" />
-
-
-	<rule from="^http://myshazam\.com/"
-		to="https://myshazam.com/" />
-
-	<!--	Redirects like so.
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://www\.myshazam\.com/"
+	<!--securecookie host="^\.shazam\.com$" name="^(?:_mynewsdesk_session|origin_site|picked_site)$" /-->
+	<!--securecookie host="^www\.shazam\.com$" name="^(?:fat|inid|lruic|profile-data|registration|social-session|tempea|uid|wid)$" /-->
+
+	<securecookie host=".+\.shazam\.com$" name=".+" />
+
+
+	<rule from="^http://shazam\.com/"
 		to="https://www.shazam.com/" />
 
-
-	<rule from="^http://(?:www\.)?shazam\.com/"
-		to="https://www.shazam.com/" />
-
-	<rule from="^http://(cdn|support)\.shazam\.com/"
-		to="https://$1.shazam.com/" />
-
-	<rule from="^http://orbit\.shazamid\.com/"
-		to="https://orbit.shazamid.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

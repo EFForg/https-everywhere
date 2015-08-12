@@ -2,24 +2,43 @@
 	Other HeadHunter rulesets:
 
 		- Career.ru.xml
+		- HH_CDN.ru.xml
 		- HHid.ru.xml
 
 -->
 <ruleset name="HH.ru (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hh.ru" />
-		<!--
-			Redirects to http:
+	<target host="i.hh.ru" />
+	<target host="www.hh.ru" />
+
+		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://(?:www\.)?hh\.ru/($|article/\d+$|auth/employer$)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://(?:www\.)?hh\.ru/+(?!favicon\.ico|icms/)" />
-	<target host="*.hh.ru" />
+		<exclusion pattern="^http://(?:www\.)?hh\.ru/+(?!favicon\.ico|file/|icms/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hh.ru//" />
+			<test url="http://hh.ru/applicant/resumes/new" />
+			<test url="http://hh.ru/auth/employer" />
+			<test url="http://hh.ru/employer/15478" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hh.ru/favicon.ico" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://volgograd\.hh\.ru/file/\d+\.png" /-->
 
 
-	<rule from="^http://(i\.|www\.)?hh\.ru/"
-		to="https://$1hh.ru/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

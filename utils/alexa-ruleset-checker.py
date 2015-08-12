@@ -35,7 +35,7 @@ tmpRulesFileName = "/tmp/rulesDiff-" + format(random.randrange(1,65535)) # Feel 
 alexaTop1MURL = "http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
 # alexaTop1MURL = "http://127.0.0.1/top-1m.csv.zip"
 
-# Temporary file name, to aboid conflicts
+# Temporary file name, to avoid conflicts
 tmpAlexaFileName = "/tmp/alexa-top1M-" + format(random.randrange(1,65535)) + ".csv"
 
 # Logfile. Records the same output as the script

@@ -10,6 +10,8 @@
 
 		- local.ch *
 		- s.staticlocal.ch *	(works)
+		- blog.local.ch (mismatch)
+		- help.local.ch (mismatch)
 
 	* Cert only matches *.local.ch
 
@@ -17,42 +19,37 @@
 	Fully covered local.ch subdomains:
 
 		- (www.)	(^ → www)
-		- auto
-		- blog
-		- developer
-		- guide
-		- id
+		- i
 		- immo
 		- info
 		- map
-		- market
-		- my
-		- news
+		- mba
 		- tel
+		- update
 		- yellow
 
 
-	Mixed on multiple subdomains from local.wemfbox.ch
-
-	Mixed image from s.staticlocal.ch on yellow
-
+	Mixed content on update.local.ch (mitigated)
 -->
-<ruleset name="Local.ch" platform="mixedcontent">
-
+<ruleset name="Local.ch">
 	<target host="local.ch" />
-	<target host="*.local.ch" />
+	<target host="www.local.ch" />
+	<target host="i.local.ch" />
+	<target host="immo.local.ch" />
+	<target host="info.local.ch" />
+	<target host="map.local.ch" />
+	<target host="mba.local.ch" />
+	<target host="tel.local.ch" />
+	<target host="update.local.ch" />
+	<target host="yellow.local.ch" />
 
+	<test url="http://static.blog.local.ch/" />
 
 	<securecookie host="^\.local\.ch$" name="^l(?:ang|cl_session_1_production)$" />
-
-
-	<rule from="^http://(?:www\.)?local\.ch/"
-		to="https://www.local.ch/" />
-
-	<rule from="^http://(auto|blog|developer|guide|id|immo|info|map|market|my|news|tel|yellow)\.local\.ch/"
-		to="https://$1.local.ch/" />
 
 	<rule from="^http://static\.blog\.local\.ch/"
 		to="https://s3-eu-west-1.amazonaws.com/static.blog.local.ch/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

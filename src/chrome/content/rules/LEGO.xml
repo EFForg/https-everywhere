@@ -1,5 +1,9 @@
 <!--
+	CDN buckets:
+
 	lego.112.2o7.net/b/ss/legoglobal/
+		- lego.reviews.bazaarvoice.com
+		- cache.lego.com.edgesuite.net
 
 
 	Nonfunctional subdomains:
@@ -8,7 +12,6 @@
 		- service **
 		- services **
 		- cs.us *
-		- www
 
 	* 404, mismatched
 	** At least some pages redirect to http
@@ -16,8 +19,10 @@
 
 	Problematic subdomains:
 
-		- (www.)
+		- cache		Akamai
 		- en-us.kb	(mismatched, CN: *.parature.com)
+		- reviews	Akamai
+		- www		404
 
 
 	Partially covered subdomains:
@@ -25,31 +30,102 @@
 		- club *
 		- education *
 		- shop *
+		- www ²
 
 	* Some (most?) pages redirect to http
-	
+	² bionicle/ 404s
+
+
+	Insecure cookies are set for these domains:
+
+		- .lego.com
 
 -->
-<ruleset name="LEGO (partial)">
+<ruleset name="LEGO.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="lego.com" />
-	<target host="*.lego.com" />
-		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
-		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
-		<exclusion pattern="^http://shop.lego.com/(?!VIP/modal/vipLearnMoreModal\.jsp)" />
-	<target host="services.*.lego.com" />
+	<target host="aboutus.lego.com" />
+	<target host="account.lego.com" />
+	<target host="services.account.lego.com" />
+	<target host="account2.lego.com" />
+	<target host="assets.lego.com" />
+	<target host="club.lego.com" />
+	<target host="services.community.lego.com" />
+	<target host="education.lego.com" />
+	<target host="shop.education.lego.com" />
+	<target host="moderation.lego.com" />
+	<target host="rebrick.lego.com" />
+	<target host="shop.lego.com" />
+	<target host="wwwsecure.lego.com" />
 
+	<!--	Complications:
+				-->
+	<target host="cache.lego.com" />
+	<target host="www.lego.com" />
+
+
+
+		<exclusion pattern="^http://club\.lego\.com/(?!en-us/join/magazinesubscription)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://club.lego.com/de-de/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://club.lego.com/en-us/join/magazinesubscription" />
+
+		<exclusion pattern="^http://education\.lego\.com/(?!\w\w-\w\w/[\w-]+/|Design/|WebResource\.axd)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://education.lego.com/downloads/" />
+			<test url="http://education.lego.com/ja-jp" />
+			<test url="http://education.lego.com/ko-kr" />
+			<test url="http://education.lego.com/zh-cn" />
+
+			<!--	-ve:
+					-->
+			<test url="http://education.lego.com/ko-kr/products/" />
+
+		<exclusion pattern="^http://shop.lego.com/(?!VIP/modal/vipLearnMoreModal\.jsp)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.lego.com/VIP" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.lego.com/VIP/modal/vipLearnMoreModal.jsp" />
+
+		<!--	404:
+				-->
+		<exclusion pattern="^http://www\.lego\.com/\w\w-\w\w/bionicle(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.lego.com/en-us/bionicle" />
+			<test url="http://www.lego.com/en-us/bionicle/" />
+			<test url="http://www.lego.com/en-us/bionicle/?domainredir=" />
+			<test url="http://www.lego.com/en-us/bionicle/?domainredir=www.bionicle.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lego\.com$" name="^XLB$" /-->
 
 	<securecookie host="^(?:aboutus|account2?|services\.account|assets|rebrick)\.lego\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.|wwwsecure\.)?lego\.com/"
-		to="https://wwwsecure.lego.com/" />
-
-	<rule from="^http://(aboutus|account2?|services\.(?:account|community)|assets|club|education|moderation|rebrick|shop)\.lego\.com/"
-		to="https://$1.lego.com/" />
-
 	<rule from="^http://cache\.lego\.com/"
 		to="https://a248.e.akamai.net/cache.lego.com/" />
+
+	<rule from="^http://www\.lego\.com/"
+		to="https://wwwsecure.lego.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

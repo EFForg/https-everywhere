@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cloudinary.com/ => https://cloudinary.com/: Cycle detected - URL already encountered: https://cloudinary.com/
 	CDN buckets:
 
 		- cloudinary-a.akamaihd.net
@@ -21,45 +19,84 @@ Fetch error: http://cloudinary.com/ => https://cloudinary.com/: Cycle detected -
 
 	Problematic subdomains:
 
-		- res *
 		- a[1-5].res *
 		- support	(pages redirect to http; mismatched, CN: *.zendesk.com)
 
 	* Works, akamai
 
 
-	Partially covered subdomains:
-
-		- support	(→ assets.zendesk.com)
-
-
 	Fully covered subdomains:
 
-		- (www.)
 		- demo-res	(→ d1c4ogak0lt2ja.cloudfront.net)
 		- res
 		- a[1-5].res	(→ akamai)
+		- res-[1-5]
+		- www
 
 -->
-<ruleset name="Cloudinary.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Cloudinary.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="cloudinary.com" />
-	<target host="*.cloudinary.com" />
+	<target host="res.cloudinary.com" />
+	<target host="res-1.cloudinary.com" />
+	<target host="res-2.cloudinary.com" />
+	<target host="res-3.cloudinary.com" />
+	<target host="res-4.cloudinary.com" />
+	<target host="res-5.cloudinary.com" />
+	<target host="www.cloudinary.com" />
+
+	<!--	Complications:
+				-->
+	<target host="demo-res.cloudinary.com" />
+	<target host="a1.res.cloudinary.com" />
+	<target host="a2.res.cloudinary.com" />
+	<target host="a3.res.cloudinary.com" />
+	<target host="a4.res.cloudinary.com" />
+	<target host="a5.res.cloudinary.com" />
+	<!--target host="support.cloudinary.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://cloudinary\.com/($|favicon\.ico|signup)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://cloudinary\.com/+(?!(?:console|users/login|users/recover_password|users/register)(?:$|[?/])|fonts/|stylesheets/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cloudinary.com/blog/delivering_all_your_websites_images_through_a_cdn" />
+			<test url="http://cloudinary.com/contact" />
+			<test url="http://cloudinary.com/cookbook" />
+			<test url="http://cloudinary.com/documentation/api_and_access_identifiers" />
+			<test url="http://cloudinary.com/favicon.ico" />
+			<test url="http://cloudinary.com/features" />
+			<test url="http://cloudinary.com/jobs" />
+			<test url="http://cloudinary.com/pricing" />
+			<test url="http://cloudinary.com/signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cloudinary.com/console" />
+			<test url="http://cloudinary.com/stylesheets/g/cloudinary_public.css" />
+			<test url="http://cloudinary.com/users/login" />
 
 
-	<securecookie host="^cloudinary\.com$" name=".+" />
+	<!--securecookie host="^cloudinary\.com$" name=".+" /-->
 
 
 	<rule from="^http://demo-res\.cloudinary\.com/"
 		to="https://d1c4ogak0lt2ja.cloudfront.net/" />
 
-	<rule from="^http://(a\d)\.res\.cloudinary\.com/"
-		to="https://a248.e.akamai.net/f/1165/1/5m/$1.res.cloudinary.com/" />
+	<rule from="^http://a(\d)\.res\.cloudinary\.com/"
+		to="https://a248.e.akamai.net/f/1165/1/5m/a$1.res.cloudinary.com/" />
 
-	<rule from="^http://support\.cloudinary\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<!--rule from="^http://support\.cloudinary\.com/(generated|system)/"
+		to="https://assets.zendesk.com/$1/" /-->
 
-	<rule from="^http://(res\.|www\.)?cloudinary\.com/"
-		to="https://$1cloudinary.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

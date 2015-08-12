@@ -1,62 +1,63 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://vodafone.co.nz/ => https://www.vodafone.co.nz/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-Fetch error: http://www.vodafone.co.nz/ => https://www.vodafone.co.nz/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-		- vodafonegroup.122.2o7.net
-		- vodafone.ivwbox.de
+	Other Vodafone rulesets:
 
-		- vodafonede.i.lithium.com
-
-			- forum.vodafone.de
-
-		- vodafone01.secure.lithium.com
+		- Firsts.com.xml
+		- Vodafone.co.uk.xml
+		- Vodafone.co.nz.xml
+		- Vodafone.de.xml
+		- Vodafone.ie.xml
 
 
-	Problematic domains:
+	- vodafonegroup.122.2o7.net
+	- vodafone.ivwbox.de
+	- vodafone01.secure.lithium.com
 
-		- www.dsl.vodafone.de		(refused)
-		- www.dslshop.vodafone.de	(cert only matches ^dslshop)
+
+	Nonfunctional hosts in *vodafone.com:
+
+		- cms-vp *
+
+	* Plaintext reply
 
 
-	Fully covered domains:
+	(www.)?vodafone.com: Shows firsts.com
 
-		- vodafone.de subdomains:
 
-			- (www.)dsl	(www → ^)
-			- (www.)dslshop	(www → ^)
-			- forum
-			- hilfe
-			- media
-			- vfd2dyn
-			- was
+	Insecure cookies are set for these hosts:
+
+		- developer.vodafone.com
 
 -->
-<ruleset name="Vodafone" platform="mixedcontent" default_off='failed ruleset test'>
-  <target host="vodafone.ie" />
-  <target host="www.vodafone.ie" />
-  <target host="vodafone.co.uk" />
-  <target host="www.vodafone.co.uk" />
-  <target host="online.vodafone.co.uk" />
-  <target host="shop.vodafone.co.uk" />
-  <target host="vodafone.de" />
-  <target host="*.vodafone.de" />
-  <target host="shop.vodafone.de" />
-  <target host="vodafone.co.nz" />
-  <target host="www.vodafone.co.nz" />
+<ruleset name="Vodafone.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="developer.vodafone.com" />
+
+	<!--	Complications:
+				-->
+	<target host="vodafone.com" />
+	<target host="www.vodafone.com" />
 
 
-	<securecookie host="^\.vodafone\.de$" name="^(?:DYN_USER_(?:CONFIRM|ID)|oshop|s_vi)$" />
-	<securecookie host="^(?:dsl|dslshop|forum|hilfe|shop|www)\.vodafone\.de$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^developer\.vodafone\.com$" name="^csrftoken$" /-->
+
+	<securecookie host="^developer\.vodafone\.com$" name=".+" />
 
 
-  <rule from="^http://(?:www\.)?vodafone\.(co\.nz|co\.uk|de|ie)/" to="https://www.vodafone.$1/"/>
-  <rule from="^http://online\.vodafone\.co\.uk/" to="https://online.vodafone.co.uk/"/>
-  <rule from="^http://shop\.vodafone\.(co\.uk|de)/" to="https://shop.vodafone.$1/"/>
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://(?:www\.)?vodafone\.com/+(?=$|\?)"
+		to="https://www.vodafone.com/content/index.html" />
 
-	<rule from="^http://(?:www\.)?dsl(shop)?\.vodafone\.de/"
-		to="https://dsl$1.vodafone.de/" />
+		<test url="http://vodafone.com/?" />
+		<test url="http://www.vodafone.com/?" />
+		<test url="http://vodafone.com//" />
+		<test url="http://www.vodafone.com//" />
 
-	<rule from="^http://(forum|hilfe|media|vfd2dyn|was)\.vodafone\.de/"
-		to="https://$1.vodafone.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

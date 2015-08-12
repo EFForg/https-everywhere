@@ -1,15 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dailyutahchronicle.com/ => https://dailyutahchronicle.com/: (60, 'SSL certificate problem: self signed certificate')
-Fetch error: http://www.dailyutahchronicle.com/ => https://www.dailyutahchronicle.com/: (60, 'SSL certificate problem: self signed certificate')
-Fetch error: http://uofulaw.org/ => https://uofulaw.org/: (6, 'Could not resolve host: uofulaw.org')
-Fetch error: http://www.uofulaw.org/ => https://www.uofulaw.org/: (6, 'Could not resolve host: www.uofulaw.org')
-Fetch error: http://muss.alumni.utah.edu/ => https://muss.alumni.utah.edu/: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://csbs.utah.edu/ => https://csbs.utah.edu/: (7, 'Failed to connect to csbs.utah.edu port 443: Connection refused')
-Fetch error: http://support.csbs.utah.edu/ => http://support.csbs.utah.edu/: Redirect for 'https://support.csbs.utah.edu/' missing Location
-Fetch error: http://www.csbs.utah.edu/ => https://www.csbs.utah.edu/: (7, 'Failed to connect to www.csbs.utah.edu port 443: Connection refused')
-Fetch error: http://law.utah.edu/ => https://uofulaw.org/: (6, 'Could not resolve host: uofulaw.org')
-Fetch error: http://www.law.utah.edu/ => https://uofulaw.org/: (6, 'Could not resolve host: uofulaw.org')	!functional:
+	University of Utah
+
+
+	Nonfunctional hosts in *utah.edu:
+
 		- (www.)
 		- (www.)admissions
 		- (www.)bannerserve
@@ -18,6 +12,7 @@ Fetch error: http://www.law.utah.edu/ => https://uofulaw.org/: (6, 'Could not re
 		- (www.)campusrec
 		- (www.)careers
 		- (www.)commuterservices
+		- (www.)?csbs		(Refused)
 		- (www.)diversity
 		- (www.)employment
 		- (www.)events	(ssl_error_rx_record_too_long)
@@ -38,6 +33,18 @@ Fetch error: http://www.law.utah.edu/ => https://uofulaw.org/: (6, 'Could not re
 		- (www.)unews
 
 
+	Problematic domains:
+
+		- (www.)?dailyutahchronicle.com ¹
+
+		- in *utah.edu:
+
+			- muss.alumni ²
+
+	¹ Self-signed
+	² Expired
+
+
 	Fully covered subdomains:
 
 		- embed.cs
@@ -47,50 +54,41 @@ Fetch error: http://www.law.utah.edu/ => https://uofulaw.org/: (6, 'Could not re
 		- www.flux
 
 -->
-<ruleset name="University of Utah (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Utah.edu (partial)">
 
-	<target host="dailyutahchronicle.com"/>
-	<target host="www.dailyutahchronicle.com"/>
-	<target host="uofulaw.org"/>
-	<target host="www.uofulaw.org"/>
+	<!--	Direct rewrites:
+				-->
 	<target host="fbs.admin.utah.edu"/>
-	<target host="alumni.utah.edu"/>
-	<target host="muss.alumni.utah.edu"/>
+	<!--target host="muss.alumni.utah.edu"/-->
 	<target host="www.alumni.utah.edu"/>
-	<target host="cs.utah.edu"/>
-	<target host="www.cs.utah.edu"/>
+	<target host="www-misc.chpc.utah.edu"/>
 	<target host="embed.cs.utah.edu" />
-	<target host="csbs.utah.edu"/>
+	<target host="www.cs.utah.edu"/>
 	<target host="support.csbs.utah.edu"/>
-	<target host="www.csbs.utah.edu"/>
-	<target host="*.flux.utah.edu" />
+
+	<target host="ftp.flux.utah.edu" />
+	<target host="web.flux.utah.edu" />
+	<target host="www.flux.utah.edu" />
+
 	<target host="go.utah.edu"/>
 	<target host="gradschool.utah.edu"/>
 	<target host="www.gradschool.utah.edu"/>
-	<target host="law.utah.edu"/>
-	<target host="www.law.utah.edu"/>
 	<target host="www.umail.utah.edu"/>
 	<target host="unid.utah.edu"/>
 
+	<!--	Complications:
+				-->
+	<target host="alumni.utah.edu"/>
+	<target host="cs.utah.edu"/>
 
-	<securecookie host="^(?:.*\.)?dailyutahchronicle\.com$" name=".*"/>
+
 	<securecookie host="^(?:.*\.)?utah\.edu$" name=".*"/>
 
 
-	<rule from="^http://(www\.)?dailyutahchronicle\.com/"
-		to="https://$1dailyutahchronicle.com/"/>
-
-	<rule from="^http://(www\.)?uofulaw\.org/"
-		to="https://$1uofulaw.org/"/>
-
-	<rule from="^http://(fbs\.admin|muss\.alumni|www-misc\.chpc|embed\.cs|(www\.)?csbs|(?:ftp|web|www)\.flux|go|(www\.)?gradschool|www\.umail|unid)\.utah\.edu/"
-		to="https://$1.utah.edu/"/>
-
-	<rule from="^http://(?:www\.)?(cs|alumni)\.utah\.edu/"
+	<rule from="^http://(cs|alumni)\.utah\.edu/"
 		to="https://www.$1.utah.edu/"/>
 
-	<!--	presents uofulaw.org cert	-->
-	<rule from="^http://(?:www\.)?law\.utah\.edu/"
-		to="https://uofulaw.org/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
