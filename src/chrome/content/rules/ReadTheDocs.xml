@@ -1,0 +1,42 @@
+<!--
+	readthedocs.org and readthedocs.com work correctly.
+	
+	Working subdomains on readthedocs.org / readthedocs.com:
+		- www
+		- media
+
+	All other *.readthedocs.(com|org) and *.rtfd.org
+	use the '*.readthedocs.org' certificate.
+-->
+
+<ruleset name="Read the Docs">
+	<target host="readthedocs.org" />
+	<target host="*.readthedocs.org" />
+
+	<target host="readthedocs.com" />
+	<target host="*.readthedocs.com" />
+	
+	<target host="rtfd.org" />
+	<target host="*.rtfd.org" />
+	
+	<exclusion pattern="^https://www\.readthedocs\.com/" />
+	<exclusion pattern="^https://media\.readthedocs\.com/" />
+	
+	<test url="http://www.readthedocs.com/" />
+	<test url="http://media.readthedocs.com/" />
+	<test url="https://www.readthedocs.com/" />
+	<test url="https://media.readthedocs.com/" />
+	
+	<test url="http://testing.readthedocs.org/" />
+	<test url="http://testing.readthedocs.com/" />
+	<test url="https://testing.readthedocs.com/" />
+	<test url="http://testing.rtfd.org/" />
+
+	<securecookie host="^readthedocs\.org$" name=".+" />
+	<securecookie host="^readthedocs\.com$" name=".+" />
+	
+	<rule from="^http://(www|media)\.readthedocs\.com/" to="https://$1.readthedocs.com/" />
+	<rule from="^https?://(.+)\.readthedocs\.com/" to="https://$1.readthedocs.org/" />
+	<rule from="^https?://(.+\.)?rtfd\.org/" to="https://$1readthedocs.org/" />
+	<rule from="^http:" to="https:" />
+</ruleset>

@@ -1,7 +1,4 @@
 <!--
-	NB: If a host ceases to exist, just remove the respective test.
-
-
 	Other Twitter rulesets:
 
 		- Digits.com.xml
@@ -10,13 +7,6 @@
 		- Twitter_Community.com.xml
 		- Twitter_Inc.com.xml
 		- Vine.co.xml
-
-
-	Nonfunctional domains:
-
-		- status.twitter.jp *
-
-	* Tumblr
 
 
 	CDN buckets:
@@ -29,11 +19,20 @@
 		- twitter.github.com
 
 
+	Nonfunctional domains:
+
+		- status.twitter.com ¹
+		- status.twitter.jp *
+
+	¹ 404
+	* Tumblr
+
+
 	Problematic subdomains:
 
-		- status *
+		- app.tweet *
 
-	* Mixed css
+	* Mismatched
 
 
 	Observed hosts:
@@ -51,7 +50,6 @@
 		- blog
 		- business
 		- cards-dev
-		- preview.cdn
 		- dev
 		- engineering
 		- firefox
@@ -90,13 +88,6 @@
 		- .twitter.com
 		- mobile.twitter.com
 
-
-	Mixed content:
-
-		- iframe on status from assets.tumblr.com
-		- css on status from assets.tumblr.com
-		- Image on status from 38.media.tumblr.com
-
 -->
 <ruleset name="Twitter.com">
 
@@ -120,8 +111,6 @@
 		<test url="http://urls.api.twitter.com/" />
 		<test url="http://urls-real.api.twitter.com/" />
 		<test url="http://business.twitter.com/" />
-		<test url="http://preview.cdn.twitter.com/" />
-		<test url="http://preview-stage.cdn.twitter.com/" />
 		<test url="http://dev.twitter.com/" />
 		<test url="http://engineering.twitter.com/" />
 		<test url="http://firefox.twitter.com/" />
@@ -149,17 +138,11 @@
 		<test url="http://userstream.twitter.com/" />
 		<test url="http://www.twitter.com/" />
 
-		<!--	Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://status\.twitter\.com/(?!themes/)" />
+		<exclusion pattern="^http://(?:status|app\.tweet|images\.tweet)\.twitter\.com/" />
 
-			<!--	+ve:
-					-->
-			<test url="http://status.twitter.com/archive" />
-
-			<!--	-ve:
-					-->
-			<test url="http://status.twitter.com/themes/5/rss.gif" />
+			<test url="http://status.twitter.com/" />
+			<test url="http://app.tweet.twitter.com/" />
+			<test url="http://images.tweet.twitter.com/" />
 
 
 	<!--	Not secured by server:

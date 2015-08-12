@@ -1,7 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://sedo.fr/ (200) => https://sedo.com/fr/home/bienvenue (404)
-Non-2xx HTTP code: http://www.sedo.fr/ (200) => https://sedo.com/fr/home/bienvenue (404)
 	For problematic rules, see Sedo-problematic.xml.
 
 
@@ -12,88 +9,44 @@ Non-2xx HTTP code: http://www.sedo.fr/ (200) => https://sedo.com/fr/home/bienven
 		- Sedo_Holding.com.xml
 
 
-	CDN buckets:
+	Problematic hosts in *sedo.com:
 
-		- sedo.cachefly.net
+		- mail *
 
-			- img.sedoparking.com
-
-
-	Problematic domains:
-
-		- mail.sedo.com *
-
-		- sedo.de subdomains:
-
-			- cvs **
-			- dba **
-			- mail *
-			- techoffice **
-			- typo3 **
-
-		- (www.)sedo.fr		(works; mismatched, CN: www.sedo.de)
-
-	* Works; mismatched, CN: *.sedoholding.com
-	** Works, expired 2012-03-24
+	* Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains:
 
-		- (www.)sedo.co.uk
-		- (www.)sedo.com
-		- mail.sedo.com		(→ mail.sedoholding.com)
-
-		- sedo.de subdomains:
-
-			- (www.)
-			- backoffice
-			- mail		(→ mail.sedoholding.com)
-
-		- (www.)sedo.fr		(→ sedo.com)
-		- img.sedoparking.com	(→ sedo.cachefly.net)
-
-
-	Mixed content:
-
-		- Web bugs/ads, on:
-
-			- sedo.co.uk from www.tqlkg.com *
-			- sedo.com from banniere.reussissonsensemble.fr *
-			- sedo.de from ad2.adfarm1.adition.com *
-			- sedo.de from imagesrv.adition.com *
-
-	* Secured by us, and noone cares
+		- .sedo.com
 
 -->
-<ruleset name="Sedo.com" default_off='failed ruleset test'>
+<ruleset name="Sedo.com">
 
-	<target host="sedo.co.uk" />
-	<target host="*.sedo.co.uk" />
+	<!--	Direct rewrites:
+				-->
 	<target host="sedo.com" />
-	<target host="*.sedo.com" />
-	<target host="sedo.de" />
-	<target host="*.sedo.de" />
-	<target host="sedo.fr" />
-	<target host="www.sedo.fr" />
-	<target host="img.sedoparking.com" />
+	<target host="api.sedo.com" />
+	<target host="cdn.sedo.com" />
+	<target host="sc.sedo.com" />
+	<target host="www.sedo.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mail.sedo.com" />
 
 
-	<securecookie host="^\.?sedo\.(?:co\.uk|com|de)$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sedo\.com$" name="^(?:cookielanguage|session)$" /-->
+
+	<securecookie host="^\.?sedo\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?sedo\.(co\.uk|com|de)/"
-		to="https://$1sedo.$2/" />
-
-	<rule from="^http://mail\.sedo\.(?:com|de)/"
+	<rule from="^http://mail\.sedo\.com/"
 		to="https://mail.sedoholding.com/" />
 
-	<rule from="^http://backoffice\.sedo\.de/"
-		to="https://backoffice.sedo.de/" />
-
-	<rule from="^http://(?:www\.)?sedo\.fr/"
-		to="https://sedo.com/fr/home/bienvenue" />
-
-	<rule from="^http://img\.sedoparking\.com/"
-		to="https://sedo.cachefly.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

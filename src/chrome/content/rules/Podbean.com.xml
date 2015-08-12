@@ -1,19 +1,40 @@
-<ruleset name="Podbean.com (partial)">
+<!--
+	Insecure cookies are set for these domains and hosts:
+
+		- podbean.com
+		- .podbean.com
+		- www.podbean.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com *
+
+		- Images, on:
+
+			- (www.)? from d8g345wuhgd7e.cloudfront.net *
+			- (www.)? from imglogo.podbean.com *
+			- (www.)? from www.podbean.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Podbean.com">
 
 	<target host="podbean.com" />
-	<target host="*.podbean.com" />
-		<!--
-			At least media57 504s
-
-			Only hosts images & audio files
-							-->
-		<exclusion pattern="^http://media\d+\." />
+	<target host="imglogo.podbean.com" />
+	<target host="www.podbean.com" />
 
 
-	<securecookie host="^(?:.*\.)?podbean\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?podbean\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.podbean\.com$" name="^(?:__cfduid|__utm\w+|PHPSESSID|cf_clearance)$" /-->
+
+	<securecookie host="^(?:\.|www\.)?podbean\.com$" name=".+" />
 
 
-	<rule from="^http://(\w+\.)?podbean\.com/"
-		to="https://$1podbean.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

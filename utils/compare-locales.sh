@@ -1,5 +1,5 @@
 #!/bin/sh
-
+cd $(dirname $0)
 set -eu;
 
 # Check whether all included rules include every entity defined in the
@@ -7,7 +7,7 @@ set -eu;
 
 status=0;
 
-cd src/chrome/locale;
+cd ../src/chrome/locale;
 
 grep '^<!ENTITY' en/* | cut -d' ' -f2 | sort -u > ../en_entities;
 

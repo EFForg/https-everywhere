@@ -2,27 +2,32 @@
 	For other Atlassian coverage, see Atlassian.xml.
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these hosts:
 
-		- help *
-
-	* Uservoice
+		- hipchat.com
+		- help.hipchat.com
+		- www.hipchat.com
 
 -->
-<ruleset name="HipChat.com (partial)">
+<ruleset name="HipChat.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hipchat.com" />
+	<target host="help.hipchat.com" />
+	<target host="status.hipchat.com" />
 	<target host="www.hipchat.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(www\.)?hipchat\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^help\.hipchat\.com$" name="^(?:_rf|_session_id)$" /-->
 
-	<securecookie host="^(?:www\.)?hipchat\.com$" name=".+" />
+	<securecookie host="^(?:help\.|www\.)?hipchat\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?hipchat\.com/"
-		to="https://$1hipchat.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

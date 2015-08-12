@@ -1,9 +1,34 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://hostit.hu/ => https://hostit.hu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	www.hostit.hu: Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .hostit.hu
+
 -->
-<ruleset name="23Vnet" default_off='failed ruleset test'>
+<ruleset name="23Vnet">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="hostit.hu" />
 
-	<rule from="^http://hostit\.hu/" to="https://hostit.hu/" />
+	<!--	Complications:
+				-->
+	<target host="www.hostit.hu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.hostit\.hu$" name="^(?:PHPSESSID|uip)$" /-->
+
+	<securecookie host="^\.hostit\.hu$" name=".+" />
+
+
+	<rule from="^http://www\.hostit\.hu/"
+		to="https://hostit.hu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

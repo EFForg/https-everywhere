@@ -1,74 +1,59 @@
 <!--
-	For rules causing false/broken MCB, see Youm7.com-falsemixed.xml.
+	Nonfunctional hosts in *youm7.com:
 
-
-	Problematic subdomains:
-
-		- cairopost	(shows default cpanel page)
-
-
-	Partially covered subdomains:
-
-		- (www.) *
-		- cairopost *	(→ thecairopost)
+		- cairopost *
 		- thecairopost *
-		- www1 *
+		- youm7app ²
 
-	* Avoiding false MCB
+	* 522
+	² Dropped
 
 
 	Fully covered subdomains:
 
+		- (www.)?
 		- img
-		- www2
+		- img1
+		- www[12]
+
+
+	Insecure cookies are set for these domains:
+
+		- .youm7.com
 
 
 	Mixed content:
 
-		- css, on:
-
-			- (www.) from img *
-			- thecairopost from thecairopost *
-			- thecairopost from fonts.googleapis.com *
-			- www1 from img *
-
-		- Images, on:
-
-			- (www.) from img *
-			- (www.) from (www.) *
-			- thecairopost from cairopost
-			- thecairopost from thecairopost
-			- www1 from img *
-
-		- Ads/web bugs, on:
-
-			- www1 from ^ *
-			- www1 from platform.twitter.com *
-			- www2 from www2 *
+		- css on www from fonts.googleapis.com *
+		- Images on www from img.youm7.com *
+		- favicon on www from img.youm7.com *
+		- Bug on www from platform.twitter.com *
 
 	* Secured by us
 
 -->
 <ruleset name="Youm7.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="youm7.com" />
+	<target host="img.youm7.com" />
 	<target host="img1.youm7.com" />
-	<target host="cairopost.youm7.com" />
-	<target host="thecairopost.youm7.com" />
 	<target host="www.youm7.com" />
 	<target host="www1.youm7.com" />
 	<target host="www2.youm7.com" />
-		<!--
-			Avoiding false/broken MCB:
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.youm7\.com$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<!--	(avoiding cf_clearance <= mixed content):
 							-->
-		<exclusion pattern="^http://(?:www1?\.)?youm7\.com/+(?!cdn-cgi/|favicon\.ico|images/|layoutnew\.css|newsbar_files/)" />
-		<!--exclusion pattern="^http://(the)?cairopost\.youm7\.com/+(?!favicon\.ico|wp-content/|wp-includes/)" /-->
+	<securecookie host="^\.youm7\.com$" name="^__cfduid$" />
 
 
-	<rule from="^http://(img\.|www\d?\.)?youm7\.com/"
-		to="https://$1youm7.com/" />
-
-	<rule from="^http://(?:the)?cairopost\.youm7\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
-		to="https://thecairopost.youm7.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
