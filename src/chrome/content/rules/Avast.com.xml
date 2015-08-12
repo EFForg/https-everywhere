@@ -1,4 +1,9 @@
 <!--
+	Other Avast rulesets:
+
+		- IAvs.net.xml
+
+
 	CDN buckets:
 
 		- avast.com.edgesuite.net
@@ -22,28 +27,17 @@
 	³ Redirects to http, valid cert
 
 
-	Problematic domains:
+	Fully covered hosts in *avast.com:
 
-		- sf0.iavs.net *
-
-	* Works, akamai
-
-
-	Fully covered domains:
-
-		- avast.com subdomains:
-
-			- an	(→ avast-co-jp-ldc.d3.sc.omtrdc.net)
-			- ans
-			- blog
-			- forum
-			- id
-			- my
-			- static
-			- static2
-			- support
-
-		- sf0.iavs.net	(→ akamai)
+		- an	(→ avast-co-jp-ldc.d3.sc.omtrdc.net)
+		- ans
+		- blog
+		- forum
+		- id
+		- my
+		- static
+		- static2
+		- support
 
 
 	Mixed content:
@@ -58,31 +52,42 @@
 	² Rule disabled by default
 
 -->
-<ruleset name="Avast (partial)">
+<ruleset name="Avast.com (partial)">
 
 	<!--	Avast has started reditecting HTTPS to HTTP on its main site :(
 
 			https://trac.torproject.org/projects/tor/ticket/3779
 
 	<target host="avast.com" /-->
-	<target host="*.avast.com" />
-	<target host="sf0.iavs.net" />
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ans.avast.com" />
+	<target host="blog.avast.com" />
+	<target host="forum.avast.com" />
+	<target host="id.avast.com" />
+	<target host="my.avast.com" />
+	<target host="static.avast.com" />
+	<target host="static2.avast.com" />
+	<target host="support.avast.com" />
+	<!--target host="www.avast.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="an.avast.com" />
 
 
 	<securecookie host="^\.avast\.com$" name="^s_vi$" />
 	<securecookie host="^(?:blog|my)\.avast\.com$" name=".+" />
 
 
-	<!--rule from="^http://(?:www\.)?avast\.com/"
+	<!--rule from="^http://avast\.com/"
 		to="https://www.avast.com/" /-->
 
 	<rule from="^http://an\.avast\.com/"
 		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
 
-	<rule from="^http://(ans|blog|forum|id|my|static2?|support)\.avast\.com/"
-		to="https://$1.avast.com/" />
-
-	<rule from="^http://sf0\.iavs\.net/"
-		to="https://a248.e.akamai.net/f/1639/9783/9m/sf0.iavs.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

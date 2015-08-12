@@ -1,10 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nedstat.com/ => https://dax-files.comescore.com/: (7, 'Failed to connect to dax-files.comescore.com port 443: Connection refused')
-Fetch error: http://www.nedstat.com/ => https://dax-files.comescore.com/: (7, 'Failed to connect to dax-files.comescore.com port 443: Connection refused')
 	Other comScore rulesets:
 
-		- ComScore_Data_Mine.xml
+		- ComScore_Data_Mine.com.xml
 		- Sitestat.xml
 
 
@@ -24,7 +21,6 @@ Fetch error: http://www.nedstat.com/ => https://dax-files.comescore.com/: (7, 'F
 
 		- comscore.com subdomains:
 
-			- ^ *
 			- ir *
 			- webmail	(mismatched, CN: im.scorecardresearch.com)
 
@@ -42,7 +38,7 @@ Fetch error: http://www.nedstat.com/ => https://dax-files.comescore.com/: (7, 'F
 
 		- comscore.com subdomains:
 
-			- (www.)	(^ → www)
+			- (www.)
 			- autodiscover
 			- dax-files
 			- mail
@@ -60,10 +56,23 @@ Fetch error: http://www.nedstat.com/ => https://dax-files.comescore.com/: (7, 'F
 		- my
 
 -->
-<ruleset name="comScore.com (partial)" default_off='failed ruleset test'>
+<ruleset name="comScore.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="comscore.com"/>
-	<target host="*.comscore.com"/>
+	<target host="autodiscover.comscore.com"/>
+	<target host="dax.comscore.com"/>
+	<target host="dax-files.comscore.com"/>
+	<target host="mail.comscore.com"/>
+	<target host="my.comscore.com"/>
+	<target host="siterecruit.comscore.com"/>
+	<target host="www.comscore.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="webmail.comscore.com"/>
+
 	<target host="nedstat.com" />
 	<target host="www.nedstat.com" />
 
@@ -71,19 +80,13 @@ Fetch error: http://www.nedstat.com/ => https://dax-files.comescore.com/: (7, 'F
 	<securecookie host="^(?:mail|my)\.comscore\.com$" name=".*"/>
 
 
-	<rule from="^http://(?:www\.)?comscore\.com/"
-		to="https://www.comscore.com/" />
-
-	<rule from="^http://(autodiscover|dax|dax-files|my|siterecruit)\.comscore\.com/"
-		to="https://$1.comscore.com/"/>
-
-	<rule from="^http://ir\.shareholder\.com/common/"
-		to="https://investor.shareholder.com/common/" />
-
-	<rule from="^http://(?:web)?mail\.comscore\.com/"
+	<rule from="^http://webmail\.comscore\.com/"
 		to="https://mail.comscore.com/" />
 
 	<rule from="^http://(?:www\.)?nedstat\.com/"
-		to="https://dax-files.comescore.com/" />
+		to="https://dax-files.comscore.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

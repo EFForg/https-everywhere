@@ -4,22 +4,35 @@
 		- (www.)magnetic.com	(works, mismatched, CN: new-domdex.info)
 
 
-	Fully covered subdomains:
+	*.t.domdex.com: Per-client domains serving web bugs
 
-		- (www.)
-		- *.t		(per-client domains serving web bugs)
+
+	Insecure cookies are set for these domains:
+
+		- .domdex.com
 
 -->
 <ruleset name="domdex.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="domdex.com" />
-	<target host="*.domdex.com" />
+	<target host="f.domdex.com" />
+	<target host="magnetic.domdex.com" />
+	<target host="*.t.domdex.com" />
+	<target host="www.domdex.com" />
 
+		<test url="http://magnetic.t.domdex.com/1/pix.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.domdex\.com$" name="^(?:PAD|cc)$" /-->
 
 	<securecookie host="^\.domdex\.com$" name=".+" />
 
 
-	<rule from="^http://((?:f|magnetic|[\w-]+\.t|www)\.)?domdex\.com/"
-		to="https://$1domdex.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,30 +1,41 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://wwdomains.com/ => https://wildwestdomains.com/: (6, 'Could not resolve host: wwdomains.com')
-Fetch error: http://www.wwdomains.com/ => https://wildwestdomains.com/: (6, 'Could not resolve host: www.wwdomains.com')
+	Insecure cookies are set for these domains and hosts:
+
+		- .wildwestdomains.com
+		- www.wildwestdomains.com
+
 -->
-<ruleset name="Wild West Domains" default_off='failed ruleset test'>
+<ruleset name="Wild West Domains.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="wildwestdomains.com" />
-	<target host="*.wildwestdomains.com" />
-	<target host="wwdomains.com" />
-	<target host="www.wwdomains.com" />
+	<target host="cart.wildwestdomains.com" />
+	<target host="img.wildwestdomains.com" />
+	<target host="who.wildwestdomains.com" />
+	<target host="www.wildwestdomains.com" />
+
+	<!--	Complications:
+				-->
+	<target host="email.wildwestdomains.com" />
+	<target host="webmail.wildwestdomains.com" />
 
 
-	<securecookie host="^.*\.wildwestdomains\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.wildwestdomains\.com$" name="^(?:language\d+|market)$" /-->
+	<!--securecookie host="www\.wildwestdomains\.com$" name="^ASP\.NET_SessionId" /-->
 
+	<securecookie host=".*\.wildwestdomains\.com$" name=".*" />
 
-	<rule from="^http://((?:cart|img|who|www)\.)?wildwestdomains\.com/"
-		to="https://$1wildwestdomains.com/" />
 
 	<!--	- Cert for both: email.secureserver.net
 		- Redirect like so
 						-->
-	<rule from="^http://(e|web)mail\.wildwestdomains\.com/"
+	<rule from="^http://(?:e|web)mail\.wildwestdomains\.com/"
 		to="https://login.secureserver.net/index.php?app=wbe&amp;domain=$1mail.wildwestdomains.com" />
 
-	<!--	Redirects like so.	-->
-	<rule from="^http://(?:www\.)?wwdomains\.com/"
-		to="https://wildwestdomains.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

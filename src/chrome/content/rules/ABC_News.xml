@@ -9,19 +9,78 @@
 
 	* 503, akamai
 
+
+	Mixed content:
+
+		- css on abcnews.go.com from a.abcnews.com
+
+		- Images, on:
+
+			- abcnews.go.com from a.abcnews.com
+			- abcnews.go.com from a.abcnews.com
+
+		- Ads/bugs, on:
+
+			- abcnews.go.com from www.googleadservices.com
+			- abcnews.go.com from pixel.quantserve.com
+
 -->
 <ruleset name="ABC News (partial)">
 
-	<target host="a.abcnews.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="abcnews.go.com" />
+
+	<!--	Complications:
+				-->
+	<target host="a.abcnews.com" />
 	<target host="a.abcnews.go.com" />
-		<!--
-			Avoid false/broken MCB:
+
+		<!--	Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://abcnews\.go\.com/+(?!assets/|favicon\.ico|images/)" />
+		<exclusion pattern="^http://abcnews\.go\.com/+(?!assets/|favicon\.ico|gma$|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://abcnews.go.com/entertainment" />
+			<test url="http://abcnews.go.com/health" />
+			<test url="http://abcnews.go.com/sports" />
+			<test url="http://abcnews.go.com/topics/" />
+			<test url="http://abcnews.go.com/us" />
+
+			<!--	-ve:
+					-->
+			<test url="http://abcnews.go.com/assets/images/v3/pixel_eee.gif" />
+			<test url="http://abcnews.go.com/favicon.ico" />
+			<test url="http://abcnews.go.com/gma" />
+			<test url="http://abcnews.go.com/images/Entertainment/gty_blake_and_miranda_mm_150720_16x9t_240.jpg" />
+
+		<!--	https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122768270
+
+			Avoid video breakage:
+						-->
+		<exclusion pattern="^http://a\.abcnews(?:\.go)?\.com/.+(?!(?:gif|jpg|png)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://a.abcnews.com/assets/beta/_sass/css/icons.css" />
+			<test url="http://a.abcnews.com/assets/beta/css/page-types/header_.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/indexv2.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/indexv3.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/nav_hp.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/nav_sub.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/videolightbox.css" />
+			<test url="http://a.abcnews.com/assets/scss/css/videoplayer.css" />
+
+			<!--	-ve:
+					-->
+			<test url="http://a.abcnews.com/assets/images/spacer.gif" />
 
 
-	<rule from="^http://a(?:\.abcnews|(?:\.a)?bcnews\.go)\.com/"
+	<rule from="^http://a\.abcnews(?:\.go)?\.com/"
 		to="https://abcnews.go.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

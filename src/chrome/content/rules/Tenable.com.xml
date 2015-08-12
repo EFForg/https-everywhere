@@ -1,36 +1,82 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://tenable.com/ => https://tenable.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	Tenable Network Security
+
+	For rules causing false/broken MCB, see Tenable.com-falsemixed.xml.
+
+	For problematic rules, see Tenable.com-problematic.xml.
+
+
+	Problematic hosts in *tenable.com:
+
+		- (www.)? ¹
+		- elearn ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mixed css
 
 
 	Fully covered subdomains:
 
-		- (www.)?
-		- elearn
+		- discussions
+		- static
 		- store
 		- support
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these hosts and domains:
 
+		- discussions.tenable.com
 		- elearn.tenable.com
+		- store.tenable.com
+		- .support.tenable.com
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Rule disabled by default <= missing certificate chain
 
 -->
-<ruleset name="Tenable.com" default_off='failed ruleset test'>
+<ruleset name="Tenable.com (partial)">
 
-	<target host="tenable.com" />
-	<target host="*.tenable.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="tenable.com" /-->
+	<target host="discussions.tenable.com" />
+	<target host="elearn.tenable.com" />
+	<target host="static.tenable.com" />
+	<target host="store.tenable.com" />
+	<target host="support.tenable.com" />
+	<!--target host="www.tenable.com" /-->
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://elearn\.tenable\.com/+(?!theme/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://elearn.tenable.com/course/category.php?id=3" />
+			<test url="http://elearn.tenable.com/login/forgot_password.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://elearn.tenable.com/theme/tenablethirteenmoodle/css/main.css" />
+			<test url="http://elearn.tenable.com/theme/tenablethirteenmoodle/img/logo.png" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^discussions\.tenable\.com$" name="^(BIGipServer[\w-]+|JSESSIONID|jive\.security\.context)$" /-->
 	<!--securecookie host="^elearn\.tenable\.com$" name="^MoodleSession$" /-->
+	<!--securecookie host="^store\.tenable\.com$" name="^zenid$" /-->
+	<!--securecookie host="^\.support\.tenable\.com$" name="^CerberusPublicGUI$" /-->
 
-	<securecookie host="^(?:elearn|store|\.support)\.tenable\.com$" name=".+" />
+	<!--securecookie host="^(?:discussions|elearn|store|\.support)\.tenable\.com$" name=".+" /-->
+	<securecookie host="^(?:discussions|store|\.support)\.tenable\.com$" name=".+" />
 
 
-	<rule from="^http://((?:elearn|store|support|www)\.)?tenable\.com/"
-		to="https://$1tenable.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
