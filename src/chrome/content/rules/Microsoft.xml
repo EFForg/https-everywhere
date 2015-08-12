@@ -190,9 +190,11 @@
 		- snackbox		(→ learning.microsoft.com)
 		- tag ¹
 		- social.technet *
+		- res[12].windows ³	(→ akamai)
 
 	¹ Some pages redirect to http
 	* Avoiding false/broken MCB
+	³ Attempting to avoid breaking Silverlight: https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
 
 
 	Fully covered microsoft.com subdomains:
@@ -264,8 +266,6 @@
 		- gallery.technet
 		- i[1-4].gallery.technet	(→ i1.gallery.technet.s-msft.com)
 		- i[23]?.technet		(→ technet.microsoft.com)
-
-		- res[12].windows	(→ akamai)
 
 
 	m, mobile: Dropped over http & https
@@ -355,6 +355,10 @@
 	<target host="microsoft.com" />
 	<target host="*.microsoft.com" />
 
+		<!-- Produces a 502 Gateway Timeout on HTTPS.
+				 Reported by tweet: https://twitter.com/MarcGLib/status/620931025653342208 -->
+		<exclusion pattern="^http://www\.microsoft\.com/en-us/software-recovery" />
+			<test url="http://www.microsoft.com/en-us/software-recovery" />
 		<!--exclusion pattern="^http://msdn\.microsoft\.com/" /-->
 
 		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
@@ -541,6 +545,24 @@
 				quota for this, since \? is treated as ?
 									-->
 			<test url="http://go.microsoft.com/fwlink/?LinkID=219472&amp;clcid=0x409" />
+
+		<!--	https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
+
+			Attempt to avoid breaking Silverlight:
+								-->
+		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+(?:gif|png|svg)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://res1.windows.microsoft.com//" />
+			<test url="http://res2.windows.microsoft.com/resbox/en/windows/2013-responsive/f5745732-f501-4d2b-a945-c7d6b2ad8b67_5.css" />
+			<test url="http://res1.windows.microsoft.com/resbox/en/windows/main/15d2470f-0fcf-45e9-bf5b-c943236a61cf_496.css" />
+			<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/css/windows8_site_ltr.css" />
+			<test url="http://res1.windows.microsoft.com/siteresources/siteresource.ashx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_site.svg" />
 
 		<test url="http://account.microsoft.com/" />
 		<test url="http://accountservices.microsoft.com/" />

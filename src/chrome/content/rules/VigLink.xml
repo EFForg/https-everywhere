@@ -1,36 +1,85 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://viglink.com/ => https://viglink.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-
 	CDN buckets:
 
 		- dp2drdtly304p.cloudfront.net/api/
+
 			- apicdn.viglink.com
 			- cdn.viglink.com
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *viglink.com:
 
-		- blog	(ssl_error_rx_record_too_long)
+		- blog *
+
+	* Dropped
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- viglink.com
+		- .viglink.com
+		- publishers.viglink.com
 
 -->
-<ruleset name="VigLink" default_off='failed ruleset test'>
+<ruleset name="VigLink.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="viglink.com" />
-	<target host="*.viglink.com" />
+	<target host="api.viglink.com" />
+	<target host="apicdn.viglink.com" />
+	<target host="cdn.viglink.com" />
+	<target host="publishers.viglink.com" />
+	<target host="www.viglink.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.viglink.com" />
+	<target host="support.viglink.com" />
+
+	        <exclusion pattern="^http://support\.viglink\.com/+(?!assets/|favicon\.ico|images/|registration(?:$|[?/])|system/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.viglink.com/anonymous_requests/new" />
+			<test url="http://support.viglink.com/entries/20313952-Cookies-Credit-for-Purchases" />
+			<test url="http://support.viglink.com/entries/20646001-API-Documentation" />
+			<test url="http://support.viglink.com/entries/22000456-What-is-VigLink-Anywhere-" />
+			<test url="http://support.viglink.com/entries/22114610-My-Amazon-links-aren-t-affiliating-How-can-I-get-access-to-Amazon-" />
+			<test url="http://support.viglink.com/entries/22235658-VigLink-Developer-Guide-" />
+			<test url="http://support.viglink.com/home" />
+			<test url="http://support.viglink.com/requests" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.viglink.com/favicon.ico" />
+			<test url="http://support.viglink.com/images/logo-delimiter.png" />
+			<test url="http://support.viglink.com/registration" />
+			<test url="http://support.viglink.com/system/logos/2050/0682/254x50_for_support.png" />
 
 
-	<!--securecookie host="^\.viglink\.com$" name="^vglnk\.Agent\.p$" /-->
-	<securecookie host="^.*\.viglink\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^viglink\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.viglink\.com$" name="^(?:_viglink_session|vglnk\.Agent\.p)$" /-->
+	<!--securecookie host="^publishers\.viglink\.com$" name="^(?:AWSELB|WEBROUTEID)$" /-->
+
+	<securecookie host=".*\.viglink\.com$" name=".*" />
 
 
-	<rule from="^http://(api\.|www\.)?viglink\.com/"
-		to="https://$1viglink.com/" />
+	<!--	Redirect keeps path, args,
+		but not forward slash:
+					-->
+        <rule from="^http://blog\.viglink\.com/+"
+                to="https://www.viglink.com/blog" />
 
-	<rule from="^http://(?:api)?cdn\.viglink\.com/"
-		to="https://dp2drdtly304p.cloudfront.net/" />
+		<test url="http://blog.viglink.com//" />
 
-        <rule from="^http://support\.viglink\.com/(assets|generated|images|registration|system)/"
-                to="https://viglink.zendesk.com/$1/" />
+        <rule from="^http://support\.viglink\.com/"
+                to="https://viglink.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 
 </ruleset>

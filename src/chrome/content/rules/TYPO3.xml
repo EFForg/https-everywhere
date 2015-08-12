@@ -8,71 +8,114 @@
 
 	Nonfunctional subdomains:
 
-		- association ¹
-		- buzz ²
-		- demo ³
-		- docs ⁴
-		- forum ⁴
-		- git ³
-		- lists ⁴
-		- shop ¹
-		- wiki ⁴
+		- demo ¹
+		- lists ²
 
-	¹ Revoked
-	² Redirects to http, valid cert
-	³ Dropped
-	⁴ Refused
+	¹ Dropped
+	² Refused
 
 
 	Problematic subdomains:
 
-		- certification ¹
-		- flow ²
+		- docs ¹
+		- flow ¹
 		- neos ²
 
-	¹ Redirects to http, valid cert
-	² Mixed css from $self
+	¹ Mixed css from $self
+	² Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .typo3.org
+		- buzz.typo3.org
+		- forge.typo3.org
+		- .forum.typo3.org
 
 
 	Mixed content:
 
-		- css, on:
+		- css on flow from $self *
+		- Images flow from $self *
+		- favicon on buzz, flow from $self *
+		- Bug on ^, buzz, forum, wiki from wiki.typo3.org *
 
-			- flow from $self *
-			- neos from $self *
-
-		- Images, on:
-
-			- ^ from www.t3blog.com ⁴
-			- flow from $self *
-			- neos from $self *
-
-		- favicon on flow from $self *
-
-	⁴ Rule disabled by default <= self-signed
+	⁴ Secured by us
 
 -->
 <ruleset name="TYPO3 (partial)">
-  <target host="typo3.org"/>
-  <target host="*.typo3.org"/>
-		<!--
-			Avoid false/broken MCB:
+
+	<!--	Direct rewrites:
+				-->
+	<target host="typo3.org"/>
+	<target host="association.typo3.org" />
+	<target host="buzz.typo3.org" />
+	<target host="certification.typo3.org" />
+	<target host="docs.typo3.org" />
+	<target host="flow.typo3.org" />
+	<target host="forge.typo3.org" />
+	<target host="forum.typo3.org" />
+	<target host="get.typo3.org" />
+	<target host="git.typo3.org" />
+	<target host="piwik.typo3.org" />
+	<target host="review.typo3.org" />
+	<target host="shop.typo3.org" />
+	<target host="wiki.typo3.org" />
+	<target host="www.typo3.org" />
+
+	<!--	Complications:
+				-->
+	<target host="neos.typo3.org" />
+
+		<!--	Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://(?:flow|neos)\.typo3\.org/+(?!_Resources/)" />
+		<exclusion pattern="^http://docs\.typo3\.org/+(?!css/|favicon\.ico|fonts/|i/|t3extras/)" />
+		<exclusion pattern="^http://flow\.typo3\.org/+(?!_Resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://docs.typo3.org/getthedocs/" />
+			<test url="http://docs.typo3.org/typo3cms/" />
+			<test url="http://docs.typo3.org/typo3cms/CoreApiReference/" />
+			<test url="http://docs.typo3.org/typo3cms/Index.html" />
+			<test url="http://docs.typo3.org/typo3cms/InstallationGuide/" />
+			<test url="http://docs.typo3.org/typo3cms/SecurityGuide/" />
+			<test url="http://docs.typo3.org/typo3cms/TyposcriptSyntaxReference/" />
+
+			<test url="http://flow.typo3.org/community" />
+			<test url="http://flow.typo3.org/home" />
+			<test url="http://flow.typo3.org/support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://docs.typo3.org/css/t3_to_be_integrated.css" />
+			<test url="http://docs.typo3.org/favicon.ico" />
+			<test url="http://docs.typo3.org/fonts/share-regular-webfont.woff" />
+			<test url="http://docs.typo3.org/i/arrow-r-888888-17x17.png" />
+			<test url="http://docs.typo3.org/t3extras/css/print.css" />
+
+			<test url="http://flow.typo3.org/_Resources/Static/Packages/TYPO3.FlowTypo3Org/Stylesheets/print.css" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.typo3\.org$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^buzz\.typo3\.org$" name="^fe_typo_user$" /-->
 	<!--securecookie host="^forge\.typo3\.org$" name="^_redmine_session$" /-->
+	<!--securecookie host="^\.forum\.typo3\.org$" name="^fud_session_\d+$" /-->
 
-	<securecookie host="^forge\.typo3\.org$" name=".+" />
+	<securecookie host="^\.typo3\.org$" name="^fe_typo_user$" />
+	<securecookie host="^(?:buzz|forge|\.forum)\.typo3\.org$" name=".+" />
 
 
-  <rule from="^http://((?:flow|forge|get|neos|www)\.)?typo3\.org/"
-        to="https://$1typo3.org/"/>
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://neos\.typo3\.org/+"
+		to="https://www.neos.io/" />
 
-	<!--	Redirect drops path and args:
-						-->
-	<rule from="^http://certification\.typo3\.org/.*"
-		to="https://typo3.org/certification/about-the-certification/" />
+		<test url="http://neos.typo3.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

@@ -9,13 +9,6 @@
 		- Vine.co.xml
 
 
-	Nonfunctional domains:
-
-		- status.twitter.jp *
-
-	* Tumblr
-
-
 	CDN buckets:
 
 		- a1095.g.akamai.net/=/1095/134446/1d/platform.twitter.com/ | platform2.twitter.com.edgesuite.net
@@ -26,11 +19,20 @@
 		- twitter.github.com
 
 
+	Nonfunctional domains:
+
+		- status.twitter.com ¹
+		- status.twitter.jp *
+
+	¹ 404
+	* Tumblr
+
+
 	Problematic subdomains:
 
-		- status *
+		- app.tweet *
 
-	* Mixed css
+	* Mismatched
 
 
 	Observed hosts:
@@ -86,13 +88,6 @@
 		- .twitter.com
 		- mobile.twitter.com
 
-
-	Mixed content:
-
-		- iframe on status from assets.tumblr.com
-		- css on status from assets.tumblr.com
-		- Image on status from 38.media.tumblr.com
-
 -->
 <ruleset name="Twitter.com">
 
@@ -143,22 +138,11 @@
 		<test url="http://userstream.twitter.com/" />
 		<test url="http://www.twitter.com/" />
 
-		<!--	Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://status\.twitter\.com/(?!themes/)" />
-		<exclusion pattern="^http://app\.tweet\.twitter\.com/" />
-		<exclusion pattern="^http://images\.tweet\.twitter\.com/" />
+		<exclusion pattern="^http://(?:status|app\.tweet|images\.tweet)\.twitter\.com/" />
 
+			<test url="http://status.twitter.com/" />
 			<test url="http://app.tweet.twitter.com/" />
 			<test url="http://images.tweet.twitter.com/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://status.twitter.com/archive" />
-
-			<!--	-ve:
-					-->
-			<test url="http://status.twitter.com/themes/5/rss.gif" />
 
 
 	<!--	Not secured by server:
