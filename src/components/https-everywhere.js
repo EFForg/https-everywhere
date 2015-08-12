@@ -361,7 +361,7 @@ HTTPSEverywhere.prototype = {
         .getInterface(Ci.nsIDOMWindow);
       // this is the gBrowser object of the firefox window this tab is in
       var gBrowser = aDOMWindow.gBrowser;
-      if (gBrowser) {
+      if (gBrowser && gBrowser._getTabForContentWindow) {
         var aTab = gBrowser._getTabForContentWindow(contentWindow.top);
         // this is the clickable tab xul element, the one found in the tab strip
         // of the firefox window, aTab.linkedBrowser is same as browser var above

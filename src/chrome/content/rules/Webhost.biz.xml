@@ -1,0 +1,50 @@
+<!--
+	For other Ecommerce coverage, see Ecommerce.xml.
+
+
+	Problematic hosts in *webhost.biz:
+
+		- (www.)? ¹
+		- manage ²
+
+	¹ Mismatched
+	² Expired
+
+
+	Insecure cookies are set for these hosts:
+
+		- manage.webhost.biz
+
+-->
+<ruleset name="webhost.biz">
+
+	<!--	Complications:
+				-->
+	<target host="webhost.biz" />
+	<target host="manage.webhost.biz" />
+	<target host="www.webhost.biz" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^manage\.webhost\.biz$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^manage\.webhost\.biz$" name=".*" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?webhost\.biz/+"
+		to="https://www.ixwebhosting.com/" />
+
+		<test url="http://www.webhost.biz//" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://manage\.webhost\.biz/.*"
+		to="https://www.ixwebhosting.com/" />
+
+		<test url="http://manage.webhost.biz//" />
+
+</ruleset>

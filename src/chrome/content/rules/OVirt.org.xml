@@ -2,22 +2,31 @@
 	For other Red Hat coverage, see Red_Hat.xml.
 
 
-	Mixed content:
-
-		- css from fonts.googleapis.com *
-
-	* Secured by us
+	^: Refused
+	www: Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	Insecure cookies are set for these hosts:
 
 		- www.ovirt.org
 
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+
+	* Secured by us
+
 -->
 <ruleset name="oVirt.org" default_off="missing certificate chain">
 
-	<target host="ovirt.org" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.ovirt.org" />
+
+	<!--	Complications:
+				-->
+	<target host="ovirt.org" />
 
 
 	<!--	Not secured by server:
@@ -27,7 +36,10 @@
 	<securecookie host="^www\.ovirt\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?ovirt\.org/"
+	<rule from="^http://ovirt\.org/"
 		to="https://www.ovirt.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

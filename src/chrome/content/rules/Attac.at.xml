@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional hosts in *attac.at:
+
+		- community *
+
+	* Plaintext reply
+
+
+	Insecure cookies are set for these hosts:
+
+		- attac.at
+		- www.attac.at
+
+-->
+<ruleset name="Attac.at (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="attac.at" />
+	<target host="www.attac.at" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.attac\.at/($|index\.php$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.attac\.at/+(?!fileadmin/|index\.php\?eID=fontsizer|piwik/|typo3conf/|typo3temp/)" />
+
+			<test url="http://www.attac.at/engagieren.html" />
+			<test url="http://www.attac.at/index.php" />
+			<test url="http://www.attac.at/impressum.html" />
+			<test url="http://www.attac.at/nc/news.html" />
+			<test url="http://www.attac.at/kontakt.html" />
+			<test url="http://www.attac.at/nc/presse/kontakt-aussendungen.html" />
+			<test url="http://www.attac.at/shop/neuerscheinungen.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.attac.at/index.php?eID=fontsizer" />
+			<test url="http://www.attac.at/fileadmin/template_dateien/stylesheets/print.css" />
+			<test url="http://www.attac.at/piwik/piwik.php" />
+			<test url="http://www.attac.at/typo3conf/ext/wt_gallery/files/css/wtgallery_main.css" />
+			<test url="http://www.attac.at/typo3temp/_processed_/csm_TTIP-bonovo-2014-02-27-v3-02_20_05d284fc84.jpg" />
+			<test url="http://www.attac.at/typo3temp/stylesheet_179e3619b8.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?attac\.at$" name="^fe_typo_user$" /-->
+
+	<securecookie host="^attac\.at$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
