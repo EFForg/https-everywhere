@@ -1,19 +1,63 @@
 <!--
-	Some pages redirect to http.
+	Nonfunctional hosts in *teslamotors.com:
+
+		- ir *
+
+	* Dropped
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *teslamotors.com:
 
-		- ir	(times out)
+		- ^ ¹
+		- shop ²
+
+	¹ Mismatched
+	² Shopify
 
 -->
-<ruleset name="Tesla Motors (partial)">
+<ruleset name="Tesla Motors.com (partial)">
 
-	<target host="teslamotors.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="my.teslamotors.com" />
 	<target host="www.teslamotors.com" />
 
+	<!--	Complications:
+				-->
+	<target host="teslamotors.com" />
 
-	<rule from="^http://(www\.)?teslamotors\.com/((?:mytesla|order|user)(?:$|\?|/)|sites/|tesla_theme/)"
-		to="https://$1teslamotors.com/$2" />
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.teslamotors\.com/findus$" />
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.teslamotors\.com/(?!(?:mytesla|order|user)(?:$|[?/])|sites/|tesla_theme/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.teslamotors.com/blog" />
+			<test url="http://www.teslamotors.com/careers" />
+			<test url="http://www.teslamotors.com/contact" />
+			<test url="http://www.teslamotors.com/findus" />
+			<test url="http://www.teslamotors.com/models" />
+			<test url="http://www.teslamotors.com/powerwall" />
+			<test url="http://www.teslamotors.com/support" />
+			<test url="http://www.teslamotors.com/support/roadside-assistance-tech-support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.teslamotors.com/mytesla" />
+			<test url="http://www.teslamotors.com/order" />
+			<test url="http://www.teslamotors.com/user" />
+			<test url="http://www.teslamotors.com/sites/all/themes/custom/tesla_theme/assets/img/logo.svg" />
+			<test url="http://www.teslamotors.com/tesla_theme/assets/img/support/model-s-red@2x-png8.png" />
+
+
+	<rule from="^http://teslamotors\.com/"
+		to="https://www.teslamotors.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

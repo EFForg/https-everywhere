@@ -1,0 +1,83 @@
+<!--
+	For other Vodafone Group coverage, see Vodafone.xml.
+
+
+		- vodafonede.i.lithium.com
+
+			- forum.vodafone.de
+
+		- vodafone01.secure.lithium.com
+
+
+	Problematic hosts in *vodafone.de:
+
+		- www.dsl ¹
+		- www.dslshop ²
+		- m ¹
+
+	¹ Refused
+	² Cert only matches ^dslshop
+
+
+	Fully covered hosts in *vodafone.de:
+
+		- (www.)?dsl		(www → ^)
+		- (www.)?dslshop	(www → ^)
+		- forum
+		- hilfe
+		- media
+		- vfd2dyn
+		- was
+
+-->
+<ruleset name="Vodafone.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="vodafone.de" />
+	<target host="dsl.vodafone.de" />
+	<target host="dslshop.vodafone.de" />
+	<target host="forum.vodafone.de" />
+	<target host="hilfe.vodafone.de" />
+	<target host="media.vodafone.de" />
+	<target host="vfd2dyn.vodafone.de" />
+	<target host="shop.vodafone.de" />
+	<target host="www.vodafone.de" />
+
+	<!--	Complications:
+				-->
+	<target host="www.dsl.vodafone.de" />
+	<target host="www.dslshop.vodafone.de" />
+	<target host="m.vodafone.de" />
+
+		<!--	/+(?!$|\?) 404s:
+					-->
+		<exclusion pattern="^http://m\.vodafone\.de/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://m.vodafone.de/index.htm" />
+			<test url="http://m.vodafone.de//index.htm" />
+			<test url="http://m.vodafone.de/index.php" />
+			<test url="http://m.vodafone.de/index.php?foo" />
+			<test url="http://m.vodafone.de//index.php" />
+
+
+	<securecookie host="^\.vodafone\.de$" name="^(?:DYN_USER_(?:CONFIRM|ID)|oshop|s_vi)$" />
+	<securecookie host="^(?:dsl|dslshop|forum|hilfe|shop|www)\.vodafone\.de$" name=".+" />
+
+
+	<rule from="^http://www\.dsl(shop)?\.vodafone\.de/"
+		to="https://dsl$1.vodafone.de/" />
+
+	<!--	Redirect keeps args but not forward slash:
+							-->
+	<rule from="^http://m\.vodafone\.de/+"
+		to="https://www.vodafone.de/mobil/privat/index.html" />
+
+		<test url="http://m.vodafone.de/?f" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

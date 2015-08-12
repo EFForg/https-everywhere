@@ -1,6 +1,18 @@
 <!--
 	University of California, Berkeley
 	http://www.berkeley.edu/
+
+
+	Nonfunctional hosts in *berkeley.edu:
+
+		- beartracks-new ¹
+		- puppet.ocf ²
+		- urshare-prod1.urel ²
+		- wikihub-new ¹
+
+	¹ Refused
+	² Dropped
+
 -->
 <ruleset name="Berkeley.edu (partial)">
 	<target host="airbears.berkeley.edu" />
@@ -59,7 +71,6 @@
 	<!-- Open Computing Facility -->
 	<target host="ocf.berkeley.edu" />
 	<target host="accounts.ocf.berkeley.edu" />
-	<target host="accounts-dev.ocf.berkeley.edu" />
 	<target host="docs.ocf.berkeley.edu" />
 	<target host="mirrors.ocf.berkeley.edu" />
 	<target host="pma.ocf.berkeley.edu" />
@@ -70,7 +81,6 @@
 	<target host="www.ocf.berkeley.edu" />
 
 	<!-- Security -->
-	<target host="fortuna.security.berkeley.edu" />
 	<target host="security.berkeley.edu" />
 
 	<!-- IST -->
@@ -130,6 +140,11 @@
 	<rule from="^http://cal1card\.berkeley\.edu/([^?]*)(?:\?.*)?"
 		to="https://services.housing.berkeley.edu/c1c/$1" />
 
+		<test url="http://cal1card.berkeley.edu/?foo" />
+		<test url="http://cal1card.berkeley.edu/?bar" />
+		<test url="http://cal1card.berkeley.edu//?foo" />
+		<test url="http://cal1card.berkeley.edu//?bar" />
+
 	<rule from="^http://callcenter\.berkeley\.edu/$"
 		to="https://give.berkeley.edu/browse/index.cfm?u=191" />
 
@@ -144,14 +159,14 @@
 	<test url="http://cs.berkeley.edu/" />
 	<test url="http://eecs.berkeley.edu/" />
 
-	<rule from="^http(?:s)?://(?:www\.)?(cs|eecs|ocf)\.berkeley\.edu/"
+	<rule from="^http://(?:www\.)?(cs|eecs|ocf)\.berkeley\.edu/"
 		to="https://www.$1.berkeley.edu/" />
 
 	<!-- These domains must *not* redirect to the www. version -->
 	<test url="http://are.berkeley.edu/" />
 	<test url="http://www.are.berkeley.edu/" />
 
-	<rule from="^http(?:s)?://(?:www\.)?(are)\.berkeley\.edu/"
+	<rule from="^http://(?:www\.)?(are)\.berkeley\.edu/"
 		to="https://$1.berkeley.edu/" />
 
 	<!-- Default rule -->

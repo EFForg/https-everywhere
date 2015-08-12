@@ -1,8 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://lc2.lcstatic.net/ => https://lesterchan-lesterchan.netdna-ssl.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://lesterchan.net/ => https://lesterchan.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.lesterchan.net/ => https://www.lesterchan.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	CDN buckets:
 
 		- wpc.b3f6.edgecastcdn.net/??B3F6/
@@ -17,37 +13,38 @@ Fetch error: http://www.lesterchan.net/ => https://www.lesterchan.net/: (60, 'SS
 		- lc2.lcstatic.net	(404; mismatched, CN: edgecastcdn.net)
 
 
-	Fully covered domains:
+	Insecure cookies are set for these hosts:
 
-		- lc2.lcstatic.net	(→ lesterchan-lesterchan.netdna-ssl.com)
-		- (www.)lesterchan.net
-
-
-	Mixed content:
-
-		- Images, on lesterchan.net from:
-
-			- feeds2.feedburner.com *
-			- farm3.staticflickr.com **
-
-	* Unsecurable, doesn't trip MCB
-	** Secured by us
+		- lesterchan.net
 
 -->
-<ruleset name="Lester Chan.net" default_off='failed ruleset test'>
+<ruleset name="Lester Chan.net">
 
-	<target host="lc2.lcstatic.net" />
+	<!--	Direct rewrites:
+				-->
 	<target host="lesterchan.net" />
 	<target host="www.lesterchan.net" />
 
+	<target host="lesterchan-lesterchan.netdna-ssl.com" />
+
+	<!--	Complications:
+				-->
+	<target host="lc2.lcstatic.net" />
+
+	<target host="lesterchan.lesterchan.netdna-cdn.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^lesterchan\.net$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^lesterchan\.net$" name=".+" />
 
 
-	<rule from="^http://lc2\.lcstatic\.net/"
+	<rule from="^http://l(?:c2\.lcstatic\.net|esterchan\.lesterchan\.netdna-cdn\.com)/"
 		to="https://lesterchan-lesterchan.netdna-ssl.com/" />
 
-	<rule from="^http://(www\.)?lesterchan\.net/"
-		to="https://$1lesterchan.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -7,50 +7,70 @@
 		- i[01].wp.com/eromang.zataz.com/
 
 
-	Nonfunctional subdomains:
-
-		- eromang *
-
-	* Refused
-
-
 	Partially covered subdomains:
 
-		- (www.) *
-		- new
+		- eromang *
 
 	* Avoiding false/broken MCB, rest handled in Zataz.com-falsemixed.xml
 
 
 	Mixed content:
 
+		- flash on eromang from $self *
+
 		- css, on:
 
 			- eromang from eromang *
-			- www from www *
 
 		- Images, on:
 
 			- archives from $self *
 			- archives from www *
 			- eromang from eromang *
-			- www from www *
+			- new, www from www *
+
+		- Bugs, on:
+
+			- eromang from platform.twitter.com *
+			- new, www from pub9.media-clic.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Zataz (partial)">
+<ruleset name="Zataz.com (partial)">
 
 	<target host="zataz.com" />
-	<target host="*.zataz.com" />
-		<!--exclusion pattern="^http://eromang\.zataz\.com/" /-->
-		<!--
-			Avoid false/broken MCB:
+	<target host="archives.zataz.com" />
+	<target host="eromang.zataz.com" />
+	<target host="new.zataz.com" />
+	<target host="www.zataz.com" />
+
+		<!--	Avoid false/broken MCB:
 						-->
-		<exclusion pattern="^http://(?:new\.|www\.)?zataz\.com/(?!css/|favicon\.ico|favicon-\d+x\d+\.png|images/|wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://eromang\.zataz\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://eromang.zataz.com/category/event-management/" />
+			<test url="http://eromang.zataz.com/uploads/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://eromang.zataz.com/wp-content/plugins/wp-table-reloaded/css/plugin.css" />
 
 
-	<rule from="^http://((?:archives|new|www)\.)?zataz\.com/"
-		to="https://$1zataz.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zataz\.com$" name="^(?:__cfuid|cf_clearance)$" /-->
+	<!--securecookie host="^archives\.zataz\.com$" name="^ZATAZSID$" /-->
+
+	<!--	Avoiding cf_clearance <= mixed content:
+							-->
+	<securecookie host="\.zataz\.com$" name="^__cfduid$" />
+	<securecookie host="archives\.zataz\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

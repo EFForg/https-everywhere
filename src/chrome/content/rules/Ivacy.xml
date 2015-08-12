@@ -1,21 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ivacy.com/ => https://ivacy.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *ivacy.com:
 
-		- blog		(shows www)
+		- blog *
+
+	* Shows www.ivacy.com
 
 -->
-<ruleset name="Ivacy (partial)" default_off='failed ruleset test'>
+<ruleset name="Ivacy.com (partial)">
 
 	<target host="ivacy.com" />
-	<target host="*.ivacy.com" />
+	<target host="billing.ivacy.com" />
+	<target host="www.ivacy.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?ivacy\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?ivacy\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ivacy.com/blog/" />
+			<test url="http://www.ivacy.com/contact-us/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ivacy.com/wp-content/themes/ivacy_bootstrap/template/images/ivacy-logo-new.png" />
 
 
-	<securecookie host="^\.ivacy\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^billing\.ivacy\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^billing\.ivacy\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?ivacy\.com/"
-		to="https://$1ivacy.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

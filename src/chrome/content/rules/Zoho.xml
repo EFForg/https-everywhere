@@ -14,18 +14,31 @@
 	Nonfunctional domains:
 
 		- (www.)swissql.com	(cert: *.manageengine.com; $ redirects to http; .+ redirects to that domain and 404s)
+		- crmkbase.zoho.com ²
+
+	² Redirects to http
 
 
 	Problematic domains:
 
 		- customer-discussions.zoho.com		(works, redirects to forum.zoho-china.com)
+		- www.blogs.zoho.com ²
+		- kbase.creator.zoho.com		(Mismatched)
+		- www.creator.zoho.com			(Dropped)
 		- www.forums.zoho.com ²
 		- forum.zoho-china.com			(mismatched)
 
 	² Cert only matches *.zoho.com
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zoho.com
+		- accounts.zoho.com
+		- creator.zoho.com
+
 -->
-<ruleset name="Zoho (partial)">
+<ruleset name="Zoho.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -33,20 +46,14 @@
 	<target host="accounts.zoho.com" />
 	<target host="assist.zoho.com" />
 	<target host="blogs.zoho.com" />
-	<target host="customer-blogs.zoho.com" />
-	<target host="www.blogs.zoho.com" />
 	<target host="business.zoho.com" />
 	<target host="chat.zoho.com" />
 
 	<target host="creator.zoho.com" />
 	<target host="api.creator.zoho.com" />
 	<target host="help.creator.zoho.com" />
-	<target host="kbase.creator.zoho.com" />
-	<target host="lounge.creator.zoho.com" />
-	<target host="www.creator.zoho.com" />
 
 	<target host="crm.zoho.com" />
-	<target host="crmkbase.zoho.com" />
 	<target host="discuss.zoho.com" />
 	<target host="discussions.zoho.com" />
 	<target host="help.discussions.zoho.com" />
@@ -58,34 +65,41 @@
 	<target host="meeting.zoho.com" />
 	<target host="notebook.zoho.com" />
 	<target host="personal.zoho.com" />
-	<target host="planner.zoho.com" />
 	<target host="projects.zoho.com" />
 	<target host="recruit.zoho.com" />
 	<target host="reports.zoho.com" />
 	<target host="people.zoho.com" />
 	<target host="search.zoho.com" />
-	<target host="share.zoho.com" />
 	<target host="sheet.zoho.com" />
 	<target host="show.zoho.com" />
-	<target host="show2.zoho.com" />
 	<target host="support.zoho.com" />
-	<target host="viewer.zoho.com" />
 	<target host="*.wiki.zoho.com" />
-	<target host="export.writer.zoho.com" />
 	<target host="writer.zoho.com" />
-	<target host="writer2.zoho.com" />
 	<target host="www.zoho.com" />
 
 	<!--	Complications:
 				-->
+	<target host="www.blogs.zoho.com" />
+	<!--target host="kbase.creator.zoho.com" /-->
+	<target host="www.creator.zoho.com" />
 	<target host="www.forums.zoho.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://crmkbase\.zoho\.com/($|wp-content/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zoho\.com$" name="^ztk$" /-->
+	<!--securecookie host="^accounts\.zoho\.com$" name="^(JSESSIONID|[\da-f]{10})$" /-->
+	<!--securecookie host="creator\.zoho\.com$" name="^[\da-f]{10}$" /-->
 
 	<securecookie host="^.*\.zoho\.com$" name=".+" />
 
 
-	<rule from="^http://www\.forums\.zoho\.com/"
-		to="https://forums.zoho.com/" />
+	<rule from="^http://www\.(blogs|creator|forums)\.zoho\.com/"
+		to="https://$1.zoho.com/" />
 
 	<!--	Observed wiki subdomains:
 

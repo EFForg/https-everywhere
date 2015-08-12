@@ -1,25 +1,49 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *asmallorange.com:
 
-		- blog		(rx_record_too_long)
-		- forums	(ditto)
-		- jobs		(cert: *.theresumator.com; pages 301s to http)
-			- as do they on asmallorange.theresumator.com
+		- forums ¹
+		- jobs ²
+
+	¹ Missing
+	² Shows ^asmallorange.com
 
 -->
-<ruleset name="A Small Orange (partial)">
+<ruleset name="A Small Orange.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="asmallorange.com" />
-	<target host="*.asmallorange.com" />
+	<target host="blog.asmallorange.com" />
+	<target host="customers.asmallorange.com" />
+	<target host="status.asmallorange.com" />
+	<target host="www.asmallorange.com" />
+
+	<!--	Complications:
+				-->
+	<target host="forums.asmallorange.com" />
+	<target host="jobs.asmallorange.com" />
 
 
 	<securecookie host="^customers\.asmallorange\.com$" name=".+" />
 
 
-	<rule from="^http://(customers\.|www\.)?asmallorange\.com/"
-		to="https://$1asmallorange.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://forums\.asmallorange\.com/+"
+		to="https://status.asmallorange.com/" />
 
-	<rule from="^http://jobs\.asmallorange\.com/css/"
-		to="https://asmallorange.theresumator.com/css/" />
+		<test url="http://forums.asmallorange.com//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://jobs\.asmallorange\.com/+"
+		to="https://asmallorange.com/jobs/" />
+
+		<test url="http://jobs.asmallorange.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

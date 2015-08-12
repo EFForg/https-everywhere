@@ -20,7 +20,7 @@ from lxml import etree
 locale.setlocale(locale.LC_ALL, 'C')
 
 # Removing the file before we create it avoids some non-determinism.
-db_path = os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite')
+db_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.unvalidated.sqlite')
 if os.path.isfile(db_path):
     os.remove(db_path)
 conn = sqlite3.connect(db_path)

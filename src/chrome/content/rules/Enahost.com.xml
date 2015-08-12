@@ -1,0 +1,65 @@
+<!--
+	Partially covered hosts in *enahost.com:
+
+		- my *
+
+	* Some pages redirect to http
+
+
+	Fully covered hosts in *enahost.com:
+
+		- (www.)?
+		- piwik
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.enahost.com
+
+-->
+<ruleset name="Enahost.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="enahost.com" />
+	<target host="my.enahost.com" />
+	<target host="piwik.enahost.com" />
+	<target host="www.enahost.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://my\.enahost\.com/index\.php$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://my\.enahost\.com/+(?!favicon\.ico|(?:clientarea|pwreset|register)\.php|templates/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://my.enahost.com/index.php" />
+			<test url="http://my.enahost.com/index.php?" />
+			<test url="http://my.enahost.com/index.php?f" />
+			<test url="http://my.enahost.com/index.php?o" />
+			<test url="http://my.enahost.com//index.php?o" />
+			<test url="http://my.enahost.com/index.php?b" />
+
+			<!--	-ve:
+					-->
+			<test url="http://my.enahost.com/clientarea.php" />
+			<test url="http://my.enahost.com/favicon.ico" />
+			<test url="http://my.enahost.com/pwreset.php" />
+			<test url="http://my.enahost.com/register.php" />
+			<test url="http://my.enahost.com/templates/defaultLN/css/reset.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.enahost\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^www\.enahost\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,21 +1,36 @@
 <!--
 	For other Google coverage, see GoogleServices.xml.
 
+	https://appspot.com/ returns 404
 -->
 <ruleset name="Google App Engine">
 
-	<target host="appspot.com" />
 	<target host="*.appspot.com" />
 		<!--
-			Redirects to http for some reason.
+			Redirect to http for some reason.
 								-->
 		<exclusion pattern="^http://photomunchers\.appspot\.com/" />
+		<test url="http://photomunchers.appspot.com/" />
+		<!--
+			Starbucks captive portals use this name internally,
+			but don't have a local key / cert for it (which is a
+			good thing). If we rewrite to HTTPS, we break access
+			to the captive portal, making it impossible to get
+			access to the Internet.
+			https://github.com/EFForg/https-everywhere/issues/1958#issuecomment-113695158
+		-->
+		<exclusion pattern="^http://sbux-portal\.appspot\.com/" />
+		<test url="http://sbux-portal.appspot.com/" />
+		<exclusion pattern="^http://www\.appspot\.com/" />
+		<test url="http://www.appspot.com/" />
+
+	<test url="http://hstspreload.appspot.com/" />
 
 
 	<securecookie host="^.+\.appspot\.com$" name=".+" />
 
 
-	<rule from="^http://([^@:\./]+\.)?appspot\.com/"
-		 to="https://$1appspot.com/" />
+	<rule from="^http:"
+		 to="https:" />
 
 </ruleset>

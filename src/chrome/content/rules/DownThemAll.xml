@@ -9,6 +9,12 @@
 	* Mixed css, Tor users blocked by CloudFlare settings
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .downthemall.net
+		- about.downthemall.net
+
+
 	Mixed content:
 
 		- Flash on www from $self
@@ -24,16 +30,34 @@
 	<target host="bugs.downthemall.net"/>
 	<target host="code.downthemall.net"/>
 	<target host="www.downthemall.net"/>
-		<!--
-			Avoid broken MCB:
+
+		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://www\.downthemall\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://www.downthemall.net/category/news/" />
+			<test url="http://www.downthemall.net/development/" />
+			<test url="http://www.downthemall.net/howto/faq/" />
+			<test url="http://www.downthemall.net/main/contacts/" />
 
+			<!--	-ve:
+					-->
+			<test url="http://www.downthemall.net/favicon.ico" />
+			<test url="http://www.downthemall.net/wp-content/themes/dtanet/img/home-title.png" />
+
+
+	<!--	Not secured by server
+					-->
+	<!--securecookie host="^\.downthemall\.net$" name="^(?:__cfduid|cf_clearance)$"/-->
+	<!--securecookie host="^bugs\.downthemall\.net$" name="^(?:trac_form_token|trac_session)$"/-->
+
+	<securecookie host="^\.downthemall\.net$" name="^__cfduid$" />
 	<securecookie host="^bugs\.downthemall\.net$" name=".*"/>
 
 
-	<rule from="^http://((?:about|bugs|code|www)\.)?downthemall\.net/"
-		to="https://$1downthemall.net/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

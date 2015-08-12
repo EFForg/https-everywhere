@@ -1,24 +1,37 @@
-<ruleset name="Dealer.com (mismatches)" default_off="mismatches">
+<!--
+	For other Dealer.com coverage, see Dealer.com.xml.
 
-	<!--	*.dealer.com			-->
-	<target host="dealer.com"/>
-	<target host="gatorchrysler.net"/>
-	<!--	self-signed ("ssl.certificate")
-		* for cross domain  cookie	-->
-	<target host="*.dealer.com"/>
-	<target host="*.www.dealer.com"/>
+
+	^gatorchrysler.net: <= ssl3 only
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.gatorchrysler.net
+
+-->
+<ruleset name="Gator Chrysler.net" default_off="mismatched, self-signed">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="www.gatorchrysler.net"/>
 
-	<!--	encountered: .dealer.com, www.dealer.com, .www.dealer.com	-->
-	<securecookie host="^(?:.*\.)?dealer\.com$" name=".*"/>
+	<!--	Complications:
+				-->
+	<target host="gatorchrysler.net"/>
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.gatorchrysler\.net$" name="^(?:__ssoid|JSESSIONID|ddcpoolid)$" /-->
+
 	<securecookie host="^www\.gatorchrysler\.net$" name=".*"/>
 
-	<!--	!www redirects to www		-->
-	<rule from="^http://(?:www\.)?dealer\.com/"
-		to="https://www.dealer.com/"/>
 
-	<!--	ditto	-->
-	<rule from="^http://(?:www\.)?gatorchrysler\.net/"
+	<rule from="^http://gatorchrysler\.net/"
 		to="https://www.gatorchrysler.net/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
