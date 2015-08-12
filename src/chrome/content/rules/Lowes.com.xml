@@ -1,58 +1,113 @@
 <!--
 	Nonfunctional subdomains:
 
-		- ppmobileapps	(dropped)
+		- ppmobileapps *
+
+	* Dropped
 
 
 	Problematic subdomains:
 
-		- ^	(mismatched, CN: *.know-where.com)
+		- ^ *
+		- metrics *
+
+	* Metrics
 
 
-	Partially covered subdomains:
-
-		- (www.)	(some paths redirect to http)
-
-
-	Fully covered subdomains:
-
-		- dpmbapps
-		- dpmbappsqa
-		- images
-		- lwscomdtq8
-		- lwssvcs
-		- m
-		- mobileapps
-		- mobileimages
-		- pplwssvcs
-		- ppm
-		- ppmobileimages
-		- sadclwscom
-		- www[17]
-
-
-	Mixed images on m from www
+	deploy.lowes.com: Dropped over http & https
 
 -->
 <ruleset name="Lowes.com (partial)">
 
-	<target host="ak1.abmr.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="dpmbapps.lowes.com" />
+	<target host="dpmbappsqa.lowes.com" />
+	<target host="images.lowes.com" />
+	<target host="lwscomdtq8.lowes.com" />
+	<target host="lwssvcs.lowes.com" />
+	<target host="m.lowes.com" />
+	<target host="mobileapps.lowes.com" />
+	<target host="mobileimages.lowes.com" />
+	<target host="pplwssvcs.lowes.com" />
+	<target host="ppm.lowes.com" />
+	<target host="ppmobileimages.lowes.com" />
+	<target host="sadclwscom.lowes.com" />
+	<target host="www.lowes.com" />
+	<target host="www1.lowes.com" />
+	<target host="www7.lowes.com" />
+
+	<!--	Complications:
+				-->
 	<target host="lowes.com" />
-	<target host="*.lowes.com" />
+	<target host="metrics.lowes.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://m\.lowes\.com/(?:$|etc/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://m\.lowes\.com/+(?!favicon\.ico)" />
 
-	<securecookie host="^(?:lwssvcs|m|pplwssvcs|ppm|www7)\.lowes\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://m.lowes.com/etc/clientlibs/foundation/main.min.css" />
+			<test url="http://m.lowes.com/etc/designs/lowes-mobile-first.css" />
 
+			<!--	-ve:
+					-->
+			<test url="http://m.lowes.com/favicon.ico" />
 
-	<!--	This makes some images redirect to https:
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://www\.lowes\.com/SearchCatalog\?" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.lowes\.com/(?!css/|favicon\.ico|(?:espot/.+/)?images/|etc/|img_savings/|javascript/|pdf/|UserAccountLanding(?:$|[?/])|wcstore/|webapp/)" /-->
+
+		<!--	Minus /javascript/ & webapp/(?!wcs/stores/servlet/UserRegistrationForm)
+			for https://github.com/EFForg/https-everywhere/issues/2274#issuecomment-122752763
 								-->
-	<rule from="^http://ak1\.abmr\.net/is/www\.lowes\.com\?"
-		to="https://ak1s.abmr.net/is/www.lowes.com?" />
+		<exclusion pattern="^http://www\.lowes\.com/(?!css/|favicon\.ico|(?:espot/.+/)?images/|etc/|img_savings/|pdf/|UserAccountLanding(?:$|[?/])|wcstore/|webapp/wcs/stores/servlet/UserRegistrationForm)" />
 
-	<rule from="^http://(?:www\.)?lowes\.com/(css/|favicon\.ico|(?:espot/.+/)?images/|javascript/|pdf/|UserAccountLanding(?:$|\?|/)|wcstore/|webapp/)"
-		to="https://www.lowes.com/$1" />
+			<!--	+ve:
+					-->
+			<test url="http://www.lowes.com/Levolor" />
+			<test url="http://www.lowes.com/OrderItemDisplay" />
+			<test url="http://www.lowes.com/Search=" />
+			<test url="http://www.lowes.com/SearchCatalog?rpp=" />
+			<test url="http://www.lowes.com/TopCategoriesDisplay" />
+			<test url="http://www.lowes.com/UserSubscriptionView" />
+			<test url="http://www.lowes.com/creative-ideas" />
+			<test url="http://www.lowes.com/en_us/l/savings-t.html" />
+			<test url="http://www.lowes.com/en_us/mylowes.html" />
+			<test url="http://www.lowes.com/pella" />
+			<test url="http://www.lowes.com/selectsiteoption" />
+			<test url="http://www.lowes.com/webapp/wcs/stores/servlet/ContactUsLandingPageView" />
 
-	<rule from="^http://(dpmbapps(?:qa)?|images|lwscomdtq8|(?:pp)?(?:lwssvcs|m|mobileimages)|mobileapps|sadclwscom|www[17])\.lowes\.com/"
-		to="https://$1.lowes.com/" />
+			<!--	-ve:
+					-->
+			<test url="http://www.lowes.com/UserAccountLanding" />
+			<test url="http://www.lowes.com/etc/clientlibs/foundation/main.min.css" />
+			<test url="http://www.lowes.com/favicon.ico" />
+			<test url="http://www.lowes.com/images/logo.png" />
+			<test url="http://www.lowes.com/img_savings/weekly_ad.jpg" />
+			<test url="http://www.lowes.com/wcsstore/B2BDirectStorefrontAssetStore/images/stars_review_50.gif" />
+			<test url="http://www.lowes.com/webapp/wcs/stores/servlet/UserRegistrationForm?langId=" />
+
+
+	<securecookie host="^(?:lwssvcs|pplwssvcs|ppm|www7)\.lowes\.com$" name=".+" />
+
+
+	<rule from="^http://metrics\.lowes\.com/"
+		to="https://lowes.d2.sc.omtrdc.net/" />
+
+	<rule from="^http://lowes\.com/"
+		to="https://www.lowes.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
