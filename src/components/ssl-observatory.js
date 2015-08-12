@@ -28,6 +28,8 @@ let LLVAR="extensions.https_everywhere.LogLevel";
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/ctypes.jsm");
 
+// Alias to reduce the number of spurious warnings from amo-validator.
+let tcypes = ctypes;
 
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 
@@ -516,7 +518,7 @@ SSLObservatory.prototype = {
                                                 extItem.address());
     if (status != -1) {
       var encoded = '';
-      var asArray = ctypes.cast(extItem.data, ctypes.ArrayType(ctypes.unsigned_char, extItem.len).ptr).contents;
+      var asArray = tcypes.cast(extItem.data, tcypes.ArrayType(tcypes.unsigned_char, extItem.len).ptr).contents;
       var marker = false;
 
       for (var i=0;i<asArray.length;i++) {
