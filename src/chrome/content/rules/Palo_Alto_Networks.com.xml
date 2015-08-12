@@ -1,36 +1,55 @@
 <!--
-	Fully covered subdomains:
+	Nonfunctional hosts in *paloaltonetworks.com:
 
-		- (www.)
-		- identity
-		- securityadvisories
-		- support
+		- researchcenter *
+
+	* Dropped
 
 
 	These altnames don't exist:
 
 		- www.identity.paloaltonetworks.com
+		- www.live.paloaltonetworks.com
 		- www.login.paloaltonetworks.com
 		- www.support.paloaltonetworks.com
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .paloaltonetworks.com
+		- live.paloaltonetworks.com
+		- securityadvisories.paloaltonetworks.com
+		- urlfiltering.paloaltonetworks.com
+		- portal3.wildfire.paloaltonetworks.com
+
 -->
-<ruleset name="Palo Alto Networks.com">
+<ruleset name="Palo Alto Networks.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="paloaltonetworks.com" />
+	<target host="applipedia.paloaltonetworks.com" />
 	<target host="identity.paloaltonetworks.com" />
+	<target host="live.paloaltonetworks.com" />
+	<target host="login.paloaltonetworks.com" />
 	<target host="securityadvisories.paloaltonetworks.com" />
 	<target host="support.paloaltonetworks.com" />
+	<target host="threatvault.paloaltonetworks.com" />
+	<target host="urlfiltering.paloaltonetworks.com" />
+	<target host="wildfire.paloaltonetworks.com" />
+	<target host="portal3.wildfire.paloaltonetworks.com" />
 	<target host="www.paloaltonetworks.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.paloaltonetworks\.com$" name="^pan-lang-cookie$" /-->
+	<!--securecookie host="^live\.paloaltonetworks\.com$" name="^(?:BIGipServer[\w-]+|JSESSIONID|jive\.security\.context)$" /-->
 	<!--securecookie host="^securityadvisories\.paloaltonetworks\.com$" name="^AspxAutoDetectCookieSupport$" /-->
+	<securecookie host="^urlfiltering\.paloaltonetworks\.com$" name="^ASP\.NET_SessionId$" />
+	<securecookie host="^portal3\.wildfire\.paloaltonetworks\.com$" name="^PHPSESSID$" />
 
-	<securecookie host="^(?:securityadvisories)?\.paloaltonetworks\.com$" name=".+" />
+	<securecookie host="^(?:live|securityadvisories|urlfiltering|portal3\.wildfire)?\.paloaltonetworks\.com$" name=".+" />
 
 
 	<rule from="^http:"

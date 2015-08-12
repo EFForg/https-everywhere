@@ -17,11 +17,13 @@
 		- news ³
 		- nova ⁴
 		- reklama		Shows another domain
+		- search *
 		- supermarket ⁴
 		- top100 *
 		- top100-images		(redirects to www.rambler.ru, valid cert)
 		- tv ¹
 		- weather ³
+		- weekend		(Redirects to http)
 		- www ⁵
 
 	¹ 403
@@ -34,8 +36,10 @@
 
 	Problematic subdomains:
 
+		- booking ¹
 		- i *
 
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
 	* Expired 2014
 
 
@@ -101,13 +105,19 @@
 
 		- .rambler.ru
 		- id.rambler.ru
+		- travel.rambler.ru
 
 
 	Mixed content:
 
+		- Images, on:
+
+			- booking from b2b.clickvoyage.ru
+			- travel from $self *
+
 		- Bugs, on:
 
-			- assist, soft from counter.rambler.ru
+			- assist, soft, travel from counter.rambler.ru
 			- soft from www.tns-counter.ru
 
 		- favicon on assist, soft from i.rl0.ru
@@ -139,9 +149,11 @@
 		<!--exclusion pattern="^http://www\.rambler\.ru/($|all\.shtml)" /-->
 
 		<test url="http://assist.rambler.ru/" />
+		<!--test url="http://booking.rambler.ru/" /-->
 		<!--test url="http://cnt.rambler.ru/" /-->
 		<!--test url="http://cntcerber.rambler.ru/" /-->
 		<!--test url="http://counter.rambler.ru/" /-->
+		<test url="http://counter.rambler.ru/top100.cnt" />
 		<!--test url="http://i.rambler.ru/" /-->
 		<test url="http://id.rambler.ru/" />
 		<test url="http://images.rambler.ru/" />
@@ -155,6 +167,7 @@
 		<test url="http://soft.rambler.ru/" />
 		<test url="http://sync.rambler.ru/" />
 		<test url="http://topline.rambler.ru/" />
+		<test url="http://travel.rambler.ru/" />
 		<test url="http://update.rambler.ru/" />
 
 		<!--	[\w-]+-rambler:
@@ -188,13 +201,15 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.rambler\.ru$" name="^(lvr?|realty_session|ruid|top100rb|top100vr)$" /-->
+	<!--securecookie host="^\.rambler\.ru$" name="^(PHPSESSID|lvr?|realty_session|ruid|top100rb|top100vr)$" /-->
 	<!--securecookie host="^id\.rambler\.ru$" name="^(dv|request\.key)$" /-->
+	<!--securecookie host="^travel\.rambler\.ru$" name="^csrftoken$" /-->
 
-	<securecookie host="^(?:id)?\.rambler\.ru$" name=".*" />
+	<securecookie host="^\.rambler\.ru$" name="^(lvr?|realty_session|ruid|top100rb|top100vr)$" />
+	<securecookie host="^(?:id|travel)\.rambler\.ru$" name=".*" />
 
 
-	<rule from="^http://((?:assist|cnt|cntcerber|counter|id|images|kassa|m\.kassa|widget\.kassa|mail|mail-pda|realty|[\w-]+-realty|scounter|soft|sync|topline|update)\.)?rambler\.ru/"
+	<rule from="^http://((?:assist|cnt|cntcerber|counter|id|images|kassa|m\.kassa|widget\.kassa|mail|mail-pda|realty|[\w-]+-realty|scounter|soft|sync|topline|travel|update)\.)?rambler\.ru/"
 		to="https://$1rambler.ru/" />
 
 	<!--rule from="^http:"
