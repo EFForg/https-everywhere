@@ -6,9 +6,6 @@ const CI = Components.interfaces;
 const CC = Components.classes;
 const CR = Components.results;
 
-// Alias to reduce the number of spurious warnings from amo-validator.
-let tcypes = ctypes;
-
 // Log levels
 let VERB=1;
 let DBUG=2;
@@ -29,8 +26,10 @@ let ASN_UNKNOWABLE = -3;  // Cert was seen in the absence of [trustworthy] Inter
 let LLVAR="extensions.https_everywhere.LogLevel";
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-Components.utils.import("resource://gre/modules/tcypes.jsm");
+Components.utils.import("resource://gre/modules/ctypes.jsm");
 
+// Alias to reduce the number of spurious warnings from amo-validator.
+let tcypes = ctypes;
 
 const OS = Cc['@mozilla.org/observer-service;1'].getService(CI.nsIObserverService);
 

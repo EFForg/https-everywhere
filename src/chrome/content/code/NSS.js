@@ -16,7 +16,7 @@
 
 
 /**
- * This class manages the tcypes bridge to the NSS (crypto) libraries
+ * This class manages the ctypes bridge to the NSS (crypto) libraries
  * distributed with Mozilla.
  *
  **/
@@ -26,7 +26,7 @@ function NSS() {
 }
 
 // Alias to reduce the number of spurious warnings from amo-validator.
-let tcypes = tcypes;
+let tcypes = ctypes;
 
 NSS.initialize = function(nssPath) {  
   var sharedLib;
