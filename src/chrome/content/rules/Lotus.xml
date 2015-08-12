@@ -1,23 +1,35 @@
 <!--
 	For other IBM coverage, see IBM.xml.
 
+
+	Insecure cookies are set for these hosts:
+
+		- greenhouse.lotus.com
+
 -->
-<ruleset name="Lotus (partial)">
+<ruleset name="Lotus.com (partial)">
+	<target host="greenhouse.lotus.com" />
 	<target host="www-10.lotus.com" />
 	
-	<test url="http://www-10.lotus.com/ldd/eiforum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/ssforum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/stforum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/nd6forum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/nd8forum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/nd85forum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/mcforum.nsf" />
-	<test url="http://www-10.lotus.com/ldd/protectorforum.nsf" />
+		<!-- Some sites redirect to http using an inline JS snippet -->
+		<exclusion pattern="^http://www-10\.lotus\.com/ldd/(ei|ss|st|nd6|nd8|nd85|mc|protector)forum\.nsf" />
 
-	<securecookie host="^www-10\.lotus\.com$" name=".+" />
-	
-	<!-- Some sites redirect to http using an inline JS snippet -->
-	<exclusion pattern="^http://www-10\.lotus\.com/ldd/(ei|ss|st|nd6|nd8|nd85|mc|protector)forum\.nsf" />
+			<test url="http://www-10.lotus.com/ldd/eiforum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/mcforum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/nd6forum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/nd85forum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/nd8forum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/protectorforum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/ssforum.nsf" />
+			<test url="http://www-10.lotus.com/ldd/stforum.nsf" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^greenhouse\.lotus\.com$" name="^(?:BIGipServer[\w~]+|JSESSIONID)$" /-->
+
+	<securecookie host="^(?:greenhouse|www-10)\.lotus\.com$" name=".+" />
+
 
 	<rule from="^http:"
 		to="https:" />

@@ -1,14 +1,51 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://greenqloud.com/ => https://greenqloud.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Other GreenQloud rulesets:
+
+		- QStack.com.xml
+
+
+	Problematic hosts in *greenqloud.com:
+
+		- status *
+		- support *
+
+	Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- auth.greenqloud.com
+
 -->
-<ruleset name="GreenQloud.com" default_off='failed ruleset test'>
+<ruleset name="GreenQloud.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="greenqloud.com" />
-	<target host="*.greenqloud.com" />
+	<target host="auth.greenqloud.com" />
+	<target host="my.greenqloud.com" />
+	<target host="www.greenqloud.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.greenqloud.com" />
+	<target host="support.greenqloud.com" />
 
 
-	<rule from="^http://(my\.|www\.)?greenqloud\.com/"
-		to="https://$1greenqloud.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^auth\.greenqloud\.com$" name="^(?:PHPSESSID|sessionid)$" /-->
+
+	<securecookie host="^auth\.greenqloud\.com$" name=".+" />
+
+
+	<rule from="^http://status\.greenqloud\.com/"
+		to="https://greenqloud.statuspage.io/" />
+
+	<rule from="^http://support\.greenqloud\.com/"
+		to="https://greenqloud.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,43 @@
+<!--
+	For rules causing false/broken MCB, see BitcoinStats.com-falsemixed.xml.
+
+
+	(www.)?bitcoinstats.com: Mixed css
+
+
+	Insecure cookies are set for these domains:
+
+		- .bitcoinstats.com
+
+
+	Mixed content:
+
+		- css from static.bitcoinstats.com *
+		- css from netdna.bootstrapcdn.com *
+
+	* Secured by us
+
+-->
+<ruleset name="BitcoinStats.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="bitcoinstats.com" /-->
+	<target host="static.bitcoinstats.com" />
+	<!--target host="www.bitcoinstats.com" /-->
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.bitcoinstats\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<!--	Avoiding cf_clearance <= mixed content
+							-->
+	<!--securecookie host="^\.bitcoinstats\.com$" name=".+" /-->
+	<securecookie host="^\.bitcoinstats\.com$" name="^__cfduid$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

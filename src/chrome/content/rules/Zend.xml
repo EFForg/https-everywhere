@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed out after 14004 milliseconds with 3809 out of 16071 bytes received')
 	Other Zend rulesets:
 
 		- Apigility.org.xml
@@ -16,9 +14,9 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 	Nonfunctional subdomains:
 
 		- blog *
-		- forums	(dropped)
+		- forums *
 
-	* Dropped
+	* 403
 
 
 	Problematic subdomains:
@@ -70,11 +68,20 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 	* Secured by us
 
 -->
-<ruleset name="Zend (partial)" default_off='failed ruleset test'>
+<ruleset name="Zend.com (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="pages.zend.com" />
+	<target host="shop.zend.com" />
+	<target host="www.zend.com" />
+
+	<!--	Complications:
+				-->
 	<target host="zend.com" />
-	<target host="*.zend.com" />
-		<!--exclusion pattern="^http://(blog|framework)\.zend\.com/" /-->
+	<target host="static.zend.com" />
+
+		<test url="http://static.zend.com/shop/" />
 
 
 	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
@@ -85,11 +92,8 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
 
 
-	<rule from="^http://(?:www\.)?zend\.com/"
+	<rule from="^http://zend\.com/"
 		to="https://www.zend.com/" />
-
-	<rule from="^http://(pages|shop)\.zend\.com/"
-		to="https://$1.zend.com/" />
 
 	<!--	NB: Must catch this before the next rule.	-->
 	<rule from="^http://static\.zend\.com/shop/"
@@ -98,4 +102,6 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 	<rule from="^http://static\.zend\.com/"
 		to="https://static-zend.pantherssl.com/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

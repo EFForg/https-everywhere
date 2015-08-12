@@ -1,19 +1,35 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *peerj.com:
 
-		- blog	(hosted on Tumblr)
+		- blog *
+
+	* Mismatched
 
 -->
-<ruleset name="PeerJ (partial)">
+<ruleset name="PeerJ.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="peerj.com" />
 	<target host="www.peerj.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.peerj.com" />
 
 
 	<securecookie host="^(?:www\.)?peerj\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?peerj\.com/"
-		to="https://$1peerj.com/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.peerj\.com/+"
+		to="https://peerj.com/blog/" />
+
+		<test url="http://blog.peerj.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
