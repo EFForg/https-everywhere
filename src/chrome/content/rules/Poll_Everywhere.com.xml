@@ -1,0 +1,50 @@
+<!--
+	Problematic hosts in *polleverywhere.com:
+
+		- blog *
+
+	* Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.polleverywhere.com
+
+
+	Mixed content:
+
+		- Ads on www from t.co *
+
+	* Secured by us
+
+-->
+<ruleset name="Poll Everywhere.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="polleverywhere.com" />
+	<target host="viz.polleverywhere.com" />
+	<target host="www.polleverywhere.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.polleverywhere.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.polleverywhere\.com$" name="^(?:polleverywhere_session_id|plan_filter_group|split)$" /-->
+
+	<securecookie host="^www\.polleverywhere\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://blog\.polleverywhere\.com/"
+		to="https://polleverywhere.com/blog/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

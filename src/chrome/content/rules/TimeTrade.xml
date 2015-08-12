@@ -1,4 +1,11 @@
 <!--
+	Nonfunctional hosts in *timetrade.com:
+
+		- blog *
+
+	* Plaintext reply
+
+
 	Partially covered subdomains:
 
 		- (www.)	(some paths redirect to http)
@@ -10,20 +17,38 @@
 		- schedule
 
 -->
-<ruleset name="TimeTrade.com">
+<ruleset name="TimeTrade.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="timetrade.com" />
-	<target host="*.timetrade.com" />
-		<!--
-			These paths redirect to http:
+	<target host="cdn.timetrade.com" />
+	<target host="schedule.timetrade.com" />
+	<target host="www.timetrade.com" />
+
+		<!--	These paths redirect to http:
 
 				- $
 				- sites/
 						-->
-		<exclusion pattern="^http://(?:www\.)?timetrade\.com/(?!app/|book/|files/|td(?:$|\?|/))" />
+		<exclusion pattern="^http://www\.timetrade\.com/(?!app/|book/|files/|td(?:$|\?|/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.timetrade.com/about-us" />
+			<test url="http://www.timetrade.com/contact-timetrade" />
+			<test url="http://www.timetrade.com/get-started" />
+			<test url="http://www.timetrade.com/news-events/events-view" />
+			<test url="http://www.timetrade.com/products" />
+			<test url="http://www.timetrade.com/sites/all/themes/timetrade/TT_Logo-gray-medium.png" />
+			<test url="http://www.timetrade.com/solutions" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.timetrade.com/files/content_slide/banking-by-appointment.jpg" />
 
 
-	<rule from="^http://((?:cdn|schedule|www)\.)?timetrade\.com/"
-		to="https://$1timetrade.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

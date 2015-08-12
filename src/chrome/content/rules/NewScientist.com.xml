@@ -1,20 +1,64 @@
+<!--
+	Other NewScientist rulesets:
+
+		- NewScientist_Subscriptions.com.xml
+
+
+	Nonfunctional hosts in *newscientist.com:
+
+		- dating ¹
+		- mediacentre ²
+		- subscription ³
+
+	¹ Dropped
+	² Refused
+	³ 503
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .newscientist.com
+		- jobs.newscientist.com
+		- recruiters.newscientist.com
+		- subscribe.newscientist.com
+		- www.newscientist.com
+
+
+	Mixed content:
+
+		- Image on subscribe from www.newscientist.com ¹
+		- Ad on hobs from ad.doubleclick.net ²
+
+	¹ Secured by us
+	² Ruleset disabled by default <= breaks streaming
+
+-->
 <ruleset name="NewScientist.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="newscientist.com" />
-	<target host="*.newscientist.com" />
+	<target host="jobs.newscientist.com" />
+	<target host="jobsadmin.newscientist.com" />
+	<target host="recruiters.newscientist.com" />
+	<target host="subscribe.newscientist.com" />
+	<target host="www.newscientist.com" />
 
 
-	<!--	Tracking cookies:
+	<!--	Not secured by server:
 					-->
-	<securecookie host="^\.newscientist\.com$" name="^(?:__qca|s_\w+)$" />
-	<securecookie host="^subscribe\.newscientist\.com$" name=".*" />
+	<!--securecookie host="^\.newscientist\.com$" name="^(?:__qca|incap_ses_\d+_\d+|s_\w+|newscientist-ip-noauth-cookie|nlbi_\d+|visid_incap_\d+)$" /-->
+	<!--securecookie host="^jobs\.newscientist\.com$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
+	<!--securecookie host="^recruiters\.newscientist\.com$" name="^BrowserSession$" /-->
+	<!--securecookie host="^subscribe\.newscientist\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.newscientist\.com$" name="^___utm[abv]\w+$" /-->
+
+	<securecookie host="^\.newscientist\.com$" name="^(?:__qca|incap_ses_\d+_\d+|s_\w+|nlbi_\d+|visid_incap_\d+)$" />
+	<securecookie host="^(?:jobs|recruiters|subscribe|www)\.newscientist\.com$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?newscientist\.com/(css/|img/|script/|user(?:$|[?/]))"
-		to="https://www.newscientist.com/$1" />
-
-	<rule from="^http://subscribe\.newscientist\.com/"
-		to="https://subscribe.newscientist.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 
 </ruleset>

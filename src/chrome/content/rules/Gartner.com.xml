@@ -38,16 +38,56 @@
 -->
 <ruleset name="Gartner.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.gartner.com" />
+	<target host="imagesrv.gartner.com" />
+	<target host="my.gartner.com" />
+	<target host="www.gartner.com" />
+
+	<!--	Complications:
+				-->
 	<target host="gartner.com" />
-	<target host="*.gartner.com" />
-		<!--
-			Avoid broken MCB:
+	<target host="na1.www.gartner.com" />
+	<target host="na2.www.gartner.com" />
+	<target host="na3.www.gartner.com" />
+
+		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://blogs\.gartner\.com/+(?!favicon\.ico|gbn-feed(?:$|[?/])|wp-content/|wp-includes/)" />
-		<!--
-			Started redirecting to http.
+
+			<test url="http://blogs.gartner.com/blog/category/big-data/" />
+			<test url="http://blogs.gartner.com/blog/category/it-cost-optimization/" />
+			<test url="http://blogs.gartner.com/blog/category/mobile/" />
+			<test url="http://blogs.gartner.com/blog/category/trends-predictions/" />
+			<test url="http://blogs.gartner.com/digital-marketing/" />
+			<test url="http://blogs.gartner.com/gartner-public-web-participation-guidelines/" />
+			<test url="http://blogs.gartner.com/mark_driver" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blogs.gartner.com/favicon.ico" />
+			<test url="http://blogs.gartner.com/gbn-feed" />
+			<test url="http://blogs.gartner.com/wp-content/themes/gbn_home_2015/images/gartner-logo.gif" />
+
+		<!--	Started redirecting to http.
 							-->
 		<exclusion pattern="^http://www\.gartner\.com/(?!SignIn\.jsp).+\.jsp(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.gartner.com/technology/about.jsp" />
+			<test url="http://www.gartner.com/technology/contact/contact_gartner.jsp" />
+			<test url="http://www.gartner.com/technology/home.jsp" />
+			<test url="http://www.gartner.com/technology/research.jsp" />
+			<test url="http://www.gartner.com/technology/site-index.jsp" />
+			<test url="http://www.gartner.com/technology/topics/cloud-computing.jsp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.gartner.com/imagesrv/images/gartner136.gif" />
+			<test url="http://www.gartner.com/login/loginInitAction.do" />
+			<test url="http://www.gartner.com/user/registration/prospect" />
 
 
 	<!--	Not secured by server:
@@ -57,16 +97,12 @@
 	<!--securecookie host="^www\.gartner\.com$" name="^(_op_aixPageId|LoginWLSessionID|TS[\d0-9]{8})$" /-->
 
 	<securecookie host="^my\.gartner\.com$" name=".+" />
-	<!--
-		Commented for the reason above.
-
-	<securecookie host="^www\.gartner\.com$" name=".+" /-->
 
 
-	<rule from="^http://(?:(?:na\d\.)?www\.)?gartner\.com/"
+	<rule from="^http://(?:na\d\.www\.)?gartner\.com/"
 		to="https://www.gartner.com/" />
 
-	<rule from="^http://(blogs|imagesrv|my)\.gartner\.com/"
-		to="https://$1.gartner.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
