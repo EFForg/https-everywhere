@@ -1,15 +1,32 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cable6.net/ => https://cable6.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.cable6.net/ => https://www.cable6.net/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- piwik.cable6.net
+
+
+	Mixed content:
+
+		- Bug from piwik.cable6.net
+
 -->
-<ruleset name="cable6.net" default_off='failed ruleset test'>
+<ruleset name="cable6.net" default_off="missing certificate chain">
 
 	<target host="cable6.net" />
+	<target host="piwik.cable6.net" />
 	<target host="www.cable6.net" />
 
 
-	<rule from="^http://(www\.)?cable6\.net/"
-		to="https://$1cable6.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^piwik\.cable6\.net$" name="^_pk_uid$" /-->
+
+	<securecookie host="^piwik\.cable6\.net$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

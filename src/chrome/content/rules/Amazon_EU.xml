@@ -6,8 +6,25 @@
 	for some others, like .se or .be.  In other cases there is an http-only site
 	that redirects to one of these 7 countries.
 
+
+	amazon.*:
+
+		Does work:
+
+			- Everything except...
+
+		Doesn't work:
+
+			- gp/product/\w{10}
+			- gp/search\?
+			- lm/
+			- /mn/search/
+			- s/
+			- s\?ie=
+			- s\?rh=	(i.e. search pages and files)
+				
 -->
-<ruleset name="Amazon EU (needs testing)" default_off="testing">
+<ruleset name="Amazon EU" default_off="testing">
 
 	<!--	Direct rewrites:
 				-->
@@ -25,6 +42,12 @@
 	<target host="www.amazon.fr" />
 	<target host="amazon.it" />
 	<target host="www.amazon.it" />
+
+		<!--	Product pages redirect to http
+										-->
+		<!--exclusion pattern="^http://www\.amazon\.[\w.]+/(?:gp/product/\w{10}\?|gp/search\?|lm/|mn/search(?:$|\?)|s[?/])" /-->
+
+		<exclusion pattern="^http://www\.amazon\.[\w.]+/+(?!$|\?|s(?:$|[?/]))" />
 
 
 	<!--	Verified as working for UK, other sites matched appear to function identically.

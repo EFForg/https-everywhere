@@ -1,11 +1,20 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://order.kagi.com/ (200) => https://order.kagi.com/ (404)
-Non-2xx HTTP code: http://store.kagi.com/ (200) => https://store.kagi.com/ (404)
-Fetch error: http://suppliersignup.kagi.com/ => https://suppliersignup.kagi.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Non-2xx HTTP code: http://support.kagi.com/ (200) => https://support.kagi.com/ (404)
+	Problematic hosts in *kagi.com:
+
+		- support *
+
+	* Revoked
+
+
+	Insecure cookies are set for these hosts:
+
+		- kagi.com
+		- .kagi.com
+		- shop.kagi.com
+		- www.kagi.com
+
 -->
-<ruleset name="Kagi" default_off='failed ruleset test'>
+<ruleset name="Kagi.com (partial)">
 	<!--
 		Problematic subdomains:
 
@@ -20,14 +29,21 @@ Non-2xx HTTP code: http://support.kagi.com/ (200) => https://support.kagi.com/ (
 	<target host="shopkeeper.kagi.com" />
 	<target host="store.kagi.com" />
 	<target host="suppliersignup.kagi.com" />
-	<target host="support.kagi.com" />
+	<!--target host="support.kagi.com" /-->
 	<target host="www.kagi.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?kagi\.com$" name="^(?:PHPSESSID|ci_session)$" /-->
+	<!--securecookie host="^\.kagi\.com$" name="^order_host$" /-->
+	<!--securecookie host="^shop.kagi\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^(?:order|pq|secure|shop|shopkeeper|store|suppliersignup|support|www)\.kagi\.com$"
 			name=".+" />
 
-	<rule from="^http://kagi\.com/"
-		to="https://kagi.com/" />
-	<rule from="^http://(order|pq|secure|shop|shopkeeper|store|suppliersignup|support|www)\.kagi\.com/"
-		to="https://$1.kagi.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>
