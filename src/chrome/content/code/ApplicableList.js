@@ -228,6 +228,7 @@ ApplicableList.prototype = {
     var item = this.document.createElement('menuitem');
     item.setAttribute('command', rule.id+'-command');
     item.setAttribute('class', type+'-item menuitem-iconic');
+    item.setAttribute('type', 'checkbox');
     item.setAttribute('label', rule.name);
 
     // we can get confused if rulesets have their state changed after the
