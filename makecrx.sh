@@ -24,21 +24,20 @@ RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 
 if [ -n "$1" ]; then
-  if [ "$1" = today ] ; then
-    python chromium/setversion.py
-  else
-    BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
-    SUBDIR=checkout
-    [ -d $SUBDIR ] || mkdir $SUBDIR
-    cp -r -f -a .git $SUBDIR
-    cd $SUBDIR
-    git reset --hard "$1"
-  fi
+  BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
+  SUBDIR=checkout
+  [ -d $SUBDIR ] || mkdir $SUBDIR
+  cp -r -f -a .git $SUBDIR
+  cd $SUBDIR
+  git reset --hard "$1"
 fi
 
 VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
 echo "Building chrome version" $VERSION
+
+[ -d pkg ] || mkdir -p pkg
+[ -e pkg/crx ] && rm -rf pkg/crx
 
 # Only generate the sqlite database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
@@ -50,14 +49,11 @@ if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
   # Build the SQLite DB even though we don't yet use it in the Chrome extension,
   # because trivial-validate.py depends on it.
   echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py
-  bash utils/validate.sh
+  python2.7 ./utils/make-sqlite.py && bash utils/validate.sh
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
-[ -d pkg ] || mkdir -p pkg
-[ -e pkg/crx ] && rm -rf pkg/crx
 mkdir -p pkg/crx/rules
 cd pkg/crx
 cp -a ../../chromium/* .
