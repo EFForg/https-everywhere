@@ -34,23 +34,11 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   # Ensure a clean build.
   git clean -fdx
 
+  git submodule init
+  git submodule update
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
   ./makexpi.sh $1 --no-recurse || exit 1
-
-  # Check that all the string present in the English entities file are present in
-  # each other locale we use. A missing entity causes a nasty error at startup.
-  # Note that we only make this check when doing tagged builds, since otherwise
-  # the check would fail anytime someone adds a new string in the entities file,
-  # before it is included in Transifex. Once the new string is in the master
-  # branch, Transifex will automatically fill it in with the default English
-  # value in all the other locales.
-  if bash utils/compare-locales.sh pkg/$XPI_NAME.xpi >&2
-  then
-    echo Validation of included locales completed. >&2
-  else
-    die "Validation of locales failed."
-  fi
 
   # The fact that the above works even when the thing you are building predates
   # support for --no-recurse in this script is (1) non-intuitive; (2) crazy; and (3)
