@@ -115,7 +115,7 @@ fi
 [ -d pkg ] || mkdir pkg
 [ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 cp -a src/ pkg/xpi-eff/
-cp -a translations/ pkg/xpi-eff/chrome/locale/
+cp -a translations/* pkg/xpi-eff/chrome/locale/
 rm -r pkg/xpi-eff/chrome/content/rules
 [ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
 cp -a pkg/xpi-eff/ pkg/xpi-amo/
