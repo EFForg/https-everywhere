@@ -107,8 +107,14 @@ cp -a translations/* pkg/xpi-eff/chrome/locale/
 rm -r pkg/xpi-eff/chrome/content/rules
 [ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
 cp -a pkg/xpi-eff/ pkg/xpi-amo/
-# The AMO version of the package cannot contain the updateKey or updateURL tags
-sed -i.bak -e '/updateKey/d' -e '/updateURL/d' pkg/xpi-amo/install.rdf
+# The AMO version of the package cannot contain the updateKey or updateURL tags.
+# Also, it has a different id than the eff-hosted version, because Firefox now
+# requires us to upload the eff-hosted version to an unlisted extension on AMO
+# in order to receive a signature indicating that it is not malware.
+# https://github.com/efforg/https-everywhere/issues/2051
+sed -i.bak -e '/updateKey/d' -e '/updateURL/d' \
+ -e 's,<em:id>https-everywhere-eff@eff.org</em:id>,<em:id>https-everywhere@eff.org</em:id>,' \
+ pkg/xpi-amo/install.rdf
 rm pkg/xpi-amo/install.rdf.bak
 
 # Used for figuring out which branch to pull from when viewing source for rules
@@ -121,16 +127,16 @@ fi
 # Build the XPI!
 rm -f "${XPI_NAME}.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
-python2.7 utils/create_xpi.py -n "${XPI_NAME}.xpi" -x ".build_exclusions" "pkg/xpi-eff"
+python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
 echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-echo >&2 "Created ${XPI_NAME}.xpi and ${XPI_NAME}-amo.xpi"
+echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
 
-bash utils/android-push.sh "$XPI_NAME.xpi"
+bash utils/android-push.sh "$XPI_NAME-eff.xpi"
 
 if [ -n "$BRANCH" ]; then
-  cp $SUBDIR/$XPI_NAME.xpi pkg
+  cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo pkg
   rm -rf $SUBDIR
 fi
