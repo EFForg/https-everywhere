@@ -38,7 +38,7 @@ c.execute('''CREATE TABLE git_commit
              (git_commit TEXT)''')
 
 git_commit = subprocess.check_output("git rev-parse HEAD", shell=True).rstrip("\n")
-c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
+c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', ("a63032fa2ce102c1a58b6b96d605c52dcb864f7b",))
 
 parser = etree.XMLParser(remove_blank_text=True)
 
