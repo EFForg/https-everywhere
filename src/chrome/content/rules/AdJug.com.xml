@@ -19,45 +19,54 @@
 		- vast	(works, akamai)
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- (www.)	(^ → www)
-
-		- hosting subdomains:
-
-			- ^
-			- de
-			- uk
-
-		- hosting.de
-		- www.de
-		- image
-		- tracking
-		- hosting.uk
-		- www.uk
-		- www.us
-		- vast		(→ akamai)
-
-		- view subdomains:
-
-			- de
-			- uk
-			- us
+		- .adjug.com
 
 -->
 <ruleset name="AdJug.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="hosting.de.adjug.com" />
+	<target host="view.de.adjug.com" />
+	<target host="www.de.adjug.com" />
+
+	<target host="hosting.adjug.com" />
+	<target host="de.hosting.adjug.com" />
+	<target host="uk.hosting.adjug.com" />
+
+	<target host="image.adjug.com" />
+	<target host="tracking.adjug.com" />
+
+	<target host="hosting.uk.adjug.com" />
+	<target host="view.uk.adjug.com" />
+	<target host="www.uk.adjug.com" />
+
+	<target host="view.us.adjug.com" />
+	<target host="www.us.adjug.com" />
+	<target host="www.adjug.com" />
+
+	<!--	Complications:
+				-->
 	<target host="adjug.com" />
-	<target host="*.adjug.com" />
+	<target host="vast.adjug.com" />
 
 
-	<rule from="^http://(?:www\.)?adjug\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adjug\.com$" name="^AJUserGUID$" /-->
+
+	<securecookie host="^\.adjug\.com$" name="^AJUserGUID$" />
+
+
+	<rule from="^http://adjug\.com/"
 		to="https://www.adjug.com/" />
-
-	<rule from="^http://((?:hosting|www)\.(?:de|uk)|hosting|(?:de|uk)\.hosting|image|tracking|www\.us|view\.(?:de|uk|us))\.adjug\.com/"
-		to="https://$1.adjug.com/" />
 
 	<rule from="^http://vast\.adjug\.com/"
 		to="https://a248.e.akamai.net/f/1051/7225/4f/vast.adjug.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
