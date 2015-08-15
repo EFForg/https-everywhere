@@ -1,52 +1,51 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://wattpad.com/ => https://www.wattpad.com/: Cycle detected - URL already encountered: https://www.wattpad.com/
-	wattpad.zendesk.com <=> support.zendesk.com
+	Nonfunctional hosts in *wattpad.com:
+
+		- business *
+
+	* Refused
 
 
-	Nonfunctional subdomains
+	Problematic hosts in *wattpad.com:
 
-		- blog ¹
-		- support ²
+		- blog *
 
-	¹ Refused
-	² zendesk, redirects back
+	* Wordpress
 
 
-	^: refused
+	Insecure cookies are set for these domains and hosts:
 
-
-	Some pages redirect to http.
+		- .wattpad.com
+		- shop.wattpad.com
+		- www.wattpad.com
 
 
 	Mixed content:
 
-		- favicon on shop and www from a *
-
-	* Secured by us
+		- favicon on shop from a.wattpad.net
 
 -->
-<ruleset name="Wattpad.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Wattpad.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="wattpad.com" />
-	<target host="*.wattpad.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="http://www\.wattpad\.com/(about|press|stories|user_password|writers)($|\?)" /-->
-		<!--
-			Exceptions
+	<target host="a.wattpad.com" />
+	<target host="shop.wattpad.com" />
+	<target host="support.wattpad.com" />
+	<target host="www.wattpad.com" />
+
+
+	<!--	Not secured by server:
 					-->
-		<!--exclusion pattern="http://www\.wattpad\.com/(?!$|\?|(?:dialog/send_download_link|user_login)(?:$|[?/]))" /-->
+	<!--securecookie host="^\.wattpad\.com$" name="^(?:PHPSESSID|lang|locale|wp_id)$" /-->
+	<!--securecookie host="^shop\.wattpad\.com$" name="^htscallerid$" /-->
+	<!--securecookie host="^www\.wattpad\.com$" name="^(?:laravel_session|session_payload)$" /-->
+
+	<securecookie host="^(?:shop|www)?\.wattpad\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?wattpad\.com/(?=$|\?|user_login(?:$|[?/]))"
-		to="https://www.wattpad.com/" />
-
-	<rule from="^http://(a|shop)\.wattpad\.com/"
-		to="https://$1.wattpad.com/" />
-
-	<!--rule from="^http://support\.wattpad\.com/"
-		to="https://wattpad.zendesk.com/" /-->
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
