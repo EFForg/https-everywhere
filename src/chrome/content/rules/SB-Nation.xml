@@ -1,10 +1,5 @@
 <!--
-	For problematic rules, see SB_Nation.com-problematic.xml.
-
-
-	Other Vox Media rulesets:
-
-		- The-Verge.xml
+	For other Vox Media coverage, see Vox.com.xml.
 
 
 	CDN buckets:
@@ -23,35 +18,46 @@
 	- sbnation.theresumator.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *sbnation.com:
 
-		- blog.sbnation.com *
+		- blog *
 
 	* Refused
 
 
-	Problematic domains:
+	Problematic hosts in sbnation.com:
 
-		- sbnation.com ¹
+		- ^ ¹
+		- assets ²
+		- cdn[0-3] ³
+		- fonts ³
+		- ox-d ⁴
 
 	¹ Refused
-
-
-	Fully covered domains:
-
-		- (www.)sbnation.com	(^ → www)
-		- cdn[0-3].sbnation.com	(→ ddrgqsxlcy7wq.cloudfront.net)
-		- fonts.sbnation.com	(→ d1jcofl6pfjesh.cloudfront.net)
+	² AmazonAWS
+	³ Cloudfront
+	⁴ Mismatched, CN: *.openxenterprise.com
 
 
 	Data from cdn[0-3] all appear identical
 
 -->
-<ruleset name="SB Nation (partial)">
+<ruleset name="SB Nation.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.sbnation.com" />
+
+	<!--	Complications:
+				-->
 	<target host="sbnation.com" />
-	<target host="*.sbnation.com" />
-	<target host="share.sbndev.net" />
+	<target host="assets.sbnation.com" />
+	<target host="cdn0.sbnation.com" />
+	<target host="cdn1.sbnation.com" />
+	<target host="cdn2.sbnation.com" />
+	<target host="cdn3.sbnation.com" />
+	<target host="fonts.sbnation.com" />
+	<target host="ox-d.sbnation.com" />
 
 
 	<!--	Observed cookies:
@@ -60,7 +66,7 @@
 	<securecookie host="^www\.sbnation\.com$" name=".*" />
 
 
-	<rule from="^http://(?:www\.)?sbnation\.com/"
+	<rule from="^http://sbnation\.com/"
 		to="https://www.sbnation.com/" />
 
 	<rule from="^http://assets\.sbnation\.com/"
@@ -72,11 +78,10 @@
 	<rule from="^http://fonts\.sbnation\.com/"
 		to="https://d1jcofl6pfjesh.cloudfront.net/" />
 
-	<!--	cert: *.openxenterprise.com	-->
 	<rule from="^http://ox-d\.sbnation\.com/"
 		to="https://sbnation-d3.openxenterprise.com/" />
 
-	<rule from="^http://share\.sbndev\.net/"
-		to="https://s3.amazonaws.com/share.sbndev.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
