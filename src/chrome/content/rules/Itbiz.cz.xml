@@ -1,22 +1,47 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://itbiz.cz/ => https://www.itbiz.cz/: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://www.itbiz.cz/ => https://www.itbiz.cz/: (60, 'SSL certificate problem: certificate has expired')
-	Problematic subdomains:
+	^itbiz.cz: 404
 
-		- ^	(404, valid cert)
+
+	Insecure cookies are set for these hosts:
+
+		- www.itbiz.cz
+
+
+	Mixed content;
+
+		- Images, from:
+
+			- linkbox.argonit.cz ¹
+			- go.cz.bbelements.com ²
+
+		- Ads from $self
+
+	¹ Ruleset diabled by default <= mismatched
+	² Secured by us
 
 -->
-<ruleset name="itbiz.cz" default_off='failed ruleset test'>
+<ruleset name="itbiz.cz" default_off="expired">
 
-	<target host="itbiz.cz" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.itbiz.cz" />
 
+	<!--	Complications:
+				-->
+	<target host="itbiz.cz" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.itbiz\.cz$" name="^JSESSIONID$" /-->
 
 	<securecookie host="^www\.itbiz\.cz$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?itbiz\.cz/"
+	<rule from="^http://itbiz\.cz/"
 		to="https://www.itbiz.cz/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
