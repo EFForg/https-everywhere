@@ -37,6 +37,21 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
   ./makexpi.sh $1 --no-recurse || exit 1
+
+  # Check that all the string present in the English entities file are present in
+  # each other locale we use. A missing entity causes a nasty error at startup.
+  # Note that we only make this check when doing tagged builds, since otherwise
+  # the check would fail anytime someone adds a new string in the entities file,
+  # before it is included in Transifex. Once the new string is in the master
+  # branch, Transifex will automatically fill it in with the default English
+  # value in all the other locales.
+  if bash utils/compare-locales.sh pkg/$XPI_NAME.xpi >&2
+  then
+    echo Validation of included locales completed. >&2
+  else
+    die "Validation of locales failed."
+  fi
+
   # The fact that the above works even when the thing you are building predates
   # support for --no-recurse in this script is (1) non-intuitive; (2) crazy; and (3)
   # involves two pristine checkouts of $1 within each other
@@ -100,6 +115,7 @@ fi
 [ -d pkg ] || mkdir pkg
 [ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
 cp -a src/ pkg/xpi-eff/
+cp -a translations/* pkg/xpi-eff/chrome/locale/
 rm -r pkg/xpi-eff/chrome/content/rules
 [ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
 cp -a pkg/xpi-eff/ pkg/xpi-amo/
