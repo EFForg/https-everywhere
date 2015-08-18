@@ -1,15 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://home.compete.com.edgesuite.net/ => https://home.compete.com/: (6, 'Could not resolve host: home.compete.com')
-	Nonfunctional domains:
-
-		- blog.compete.com
-
-
 	CDN buckets:
 
 		- wildcard.compete.com.edgekey.net
-		- home.compete.com.edgesuite.net
 		- media.compete.com.edgesuite.net
 
 
@@ -18,27 +10,7 @@ Fetch error: http://home.compete.com.edgesuite.net/ => https://home.compete.com/
 		- media.compete.com	(akamai)
 
 
-	Partially covered domains:
-
-		- home.compete.com *
-		- (www.)compete.com *
-
-	* At least some pages redirect to http.
-
-
-	Fully covered domains:
-
-		- *.c-col.com
-
-		- compete.com subdomains:
-
-			- app
-			- c
-			- grapher
-			- media
-			- securemedia
-
-		- home.compete.com.edgesuite.net
+	*.c-col.com: Bugs
 
 
 	*.col.com sets these tracking cookies:
@@ -47,12 +19,23 @@ Fetch error: http://home.compete.com.edgesuite.net/ => https://home.compete.com/
 		- srp
 
 -->
-<ruleset name="Compete (partial)" default_off='failed ruleset test'>
+<ruleset name="Compete (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="*.c-col.com" />
+
 	<target host="compete.com" />
-	<target host="*.compete.com" />
-	<target host="home.compete.com.edgesuite.net" />
+	<target host="app.compete.com" />
+	<target host="blog.compete.com" />
+	<target host="c.compete.com" />
+	<target host="grapher.compete.com" />
+	<target host="securemedia.compete.com" />
+	<target host="www.compete.com" />
+
+	<!--	Complications:
+				-->
+	<target host="media.compete.com" />
 
 
 	<!--	Not secured by server:
@@ -60,27 +43,13 @@ Fetch error: http://home.compete.com.edgesuite.net/ => https://home.compete.com/
 	<!--securecookie host="^\.c-col\.com$" name="^i00$" /-->
 	<!--securecookie host="ssl-[\w-]+-[\da-f]+\.c-col\.com$" name="^srp$" /-->
 
-	<securecookie host="^.*\.c-col\.com$" name=".*" />
+	<securecookie host=".*\.c-col\.com$" name=".*" />
 
 
-	<!--	Tracking on 3rd-party websites.
-							-->
-	<rule from="^http://([\w\-]+)\.c-ol\.com/"
-		to="https://$1.col.com/" />
-
-	<rule from="^http://(www\.)?compete\.com/(plans(?:$|/|\?)|site_media/)"
-		to="https://$1compete.com/$2" />
-
-	<rule from="^http://(app|c|grapher)\.compete\.com/"
-		to="https://$1.compete.com/" />
-
-	<rule from="^http://home\.compete\.com/site_media/"
-		to="https://securemedia.compete.com/site_media/" />
-
-	<rule from="^http://(?:secure)?media\.compete\.com/"
+	<rule from="^http://media\.compete\.com/"
 		to="https://securemedia.compete.com/" />
 
-	<rule from="^http://home\.compete\.com\.edgesuite\.net/"
-		to="https://home.compete.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
