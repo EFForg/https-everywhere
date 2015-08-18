@@ -34,8 +34,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   # Ensure a clean build.
   git clean -fdx
 
-  git submodule init
-  git submodule update
+  git submodule update --recursive -f
   # Use the version of the build script that was current when that
   # tag/release/branch was made.
   ./makexpi.sh $1 --no-recurse || exit 1
@@ -47,7 +46,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   # Now escape from the horrible mess we've made
   cd ..
   XPI_NAME="$APP_NAME-$1"
-  cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
+  cp $SUBDIR/pkg/$XPI_NAME-eff.xpi pkg/
   if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
     echo Old version does not support AMO
   fi
