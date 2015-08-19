@@ -125,6 +125,7 @@ fi
 
 # Build the XPI!
 rm -f "${XPI_NAME}.xpi"
+rm -f "${XPI_NAME}-eff.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
