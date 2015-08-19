@@ -30,6 +30,18 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// History of all redirections so far
+// Used for error reporting
+var redirectHistory = {};
+
+// A array with collected errors
+var collectedErrors = [];
+
+// Set to true to record errors
+var recordErrorsSetting = false;
+
+var errorReportServer = "http://127.0.0.1:5000";
+
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false;
@@ -149,6 +161,8 @@ var redirectCounter = {};
 
 function onBeforeRequest(details) {
   var uri = document.createElement('a');
+  var rsName = null;
+  var rsNote = null;
   uri.href = details.url;
 
   // Should the request be canceled?
@@ -205,6 +219,8 @@ function onBeforeRequest(details) {
     activeRulesets.addRulesetToTab(details.tabId, rs[i]);
     if (rs[i].active && !newuristr) {
       newuristr = rs[i].apply(canonical_url);
+      rsName = rs[i].name;
+      rsNote = rs[i].note;
     }
   }
 
@@ -235,6 +251,10 @@ function onBeforeRequest(details) {
   }
 
   if (newuristr) {
+    redirectHistory[details.requestId] = {"original": details.url,
+                                            "new": newuristr,
+                                            "rsName": rsName,
+                                            "rsNote": rsNote};
     return {redirectUrl: newuristr};
   } else {
     return {cancel: shouldCancel};
@@ -438,11 +458,34 @@ function onBeforeRedirect(details) {
     }
 }
 
+function onCompleted(details){
+  if (details.statusCode >= 400){
+    if (details.requestId in redirectHistory){
+      console.log(redirectHistory[details.requestId].original + " --> " + redirectHistory[details.requestId].new);
+      if (recordErrorsSetting === true) {
+        collectedErrors.push({
+          "original": redirectHistory[details.requestId].original,
+          "new": redirectHistory[details.requestId].new,
+          "rsName": redirectHistory[details.requestId].rsName,
+          "rsNote": redirectHistory[details.requestId].rsNote,
+          "statusCode": details.statusCode,
+          "codePart": "onComplete"
+        });
+      }
+    }
+  }
+  try {
+    delete(redirectHistory[details.requestId])
+  }
+  catch(e){}
+}
+
 wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
+chrome.webRequest.onCompleted.addListener(onCompleted,{urls: ["https://*/*", "http://*/*"]});
 
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
@@ -479,3 +522,18 @@ chrome.runtime.onConnect.addListener(function (port) {
     });
   }
 });
+
+function UploadErrorReports(){
+
+  var http = new XMLHttpRequest();
+  var url = errorReportServer + "/https_everywhere_error_reports";
+
+  var loadedManifest = chrome.runtime.getManifest();
+
+  var params = "error_reports=" + encodeURIComponent(JSON.stringify(collectedErrors)) +
+                "&browser=" + "Chrome" +
+                "&version=" + loadedManifest.version;
+  http.open("POST", url);
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.send(params);
+}

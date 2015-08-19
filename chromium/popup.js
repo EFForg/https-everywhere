@@ -85,6 +85,27 @@ function gotTab(tab) {
   }
 }
 
+function displayErrors(){
+  var bugList = document.getElementById('ErrorList');
+
+  var bl = "<ul>"
+  for (var i = 0; i < backgroundPage.collectedErrors.length; i++){
+    var err = backgroundPage.collectedErrors[i];
+    bl += "<li>" + err.original + " -> " + err.new + "</li>";
+  }
+  bl += "</ul>"
+  bugList.innerHTML = bl;
+
+  var failedConnectionsSection = document.getElementById('FailedConnections');
+  if (backgroundPage.collectedErrors.length > 0){
+    show(failedConnectionsSection);
+  }
+  else{
+    hide(failedConnectionsSection);
+  }
+
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
@@ -114,6 +135,18 @@ document.addEventListener("DOMContentLoaded", function () {
   // other translations
   e("whatIsThis").setAttribute("title", chrome.i18n.getMessage("chrome_what_is_this_title"));
   e("add-rule-link").addEventListener("click", addManualRule);
+
+  displayErrors();
+
+  var recordErrorsCheckbox = document.getElementById('RecordErrorsCheckbox');
+  recordErrorsCheckbox.checked = backgroundPage.recordErrorsSetting;
+  recordErrorsCheckbox.addEventListener('click', toggleRecordErrors, false);
+
+  var deleteErrorsBTN = document.getElementById('DeleteErrors');
+  deleteErrorsBTN.addEventListener('click', deleteRecordedErrors, false);
+
+  var sendErrorsBTN = document.getElementById('SendErrors');
+  sendErrorsBTN.addEventListener('click', sendRecordedErrors, false);
 });
 
 
@@ -175,6 +208,23 @@ function toggleHttpNowhere() {
   getOption_('httpNowhere', false, function(item) {
     setOption_('httpNowhere', !item.httpNowhere);
   });
+}
+
+// This setting is intentionally not stored. I defaults to false.
+// That way a activated recording of errors can not be forgotten between sessions
+function toggleRecordErrors() {
+  var recordErrorsCheckbox = document.getElementById('RecordErrorsCheckbox');
+  backgroundPage.recordErrorsSetting = recordErrorsCheckbox.checked;
+}
+
+function deleteRecordedErrors(){
+  backgroundPage.collectedErrors = [];
+  displayErrors();
+}
+
+function sendRecordedErrors(){
+  backgroundPage.UploadErrorReports();
+  deleteRecordedErrors();
 }
 
 function getOption_(opt, defaultOpt, callback) {
