@@ -421,11 +421,6 @@ const HTTPSRules = {
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
-    var gitCommitQuery = rulesetDBConn.createStatement("select git_commit from git_commit");
-    if (gitCommitQuery.executeStep()) {
-      this.GITCommitID = gitCommitQuery.row.git_commit;
-    }
-
     try {
       if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
         this.testRulesetRetrievalPerformance();
