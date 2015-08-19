@@ -94,8 +94,6 @@ const HTTPS = {
       // This should not happen. We should only get exceptions if
       // the channel was already open.
       this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
-
-      // Don't return: Fallback to NoScript ChannelReplacement.js
     }
     this.log(WARN,"Aborting redirection " + channel.name + ", should be HTTPS!");
     IOUtil.abort(channel);
