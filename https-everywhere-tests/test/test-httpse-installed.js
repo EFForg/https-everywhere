@@ -23,11 +23,11 @@ exports["test httpse potentiallyApplicableRulesets"] = function(assert) {
 
 exports["test sample ruleset"] = function(assert, done) {
   tabs.open({
-    url: "http://www.reddit.com/robots.txt",
+    url: "http://libssh.org/robots.txt",
     onOpen: function(tab) {
       tab.on('load', function(tab) {
-        assert.equal(tab.url, "https://www.reddit.com/robots.txt",
-          "Test that Reddit URLs are rewritten to HTTPS.");
+        assert.equal(tab.url, "https://libssh.org/robots.txt",
+          "Test that LibSSH URLs are rewritten to HTTPS.");
         tab.close();
         done();
       });
