@@ -1,3 +1,5 @@
+#!/usr/bin/env python2.7
+#
 # Run Chromium tests for HTTPS Everywhere
 #
 # This script may be executed as `python script.py [directory of CRX]`
@@ -25,23 +27,8 @@ class bcolors:
 	BOLD = '\033[1m'
 	UNDERLINE = '\033[4m'
 
-extension = None
-
-for file in os.listdir(sys.argv[1]):
-	if file.endswith(".crx"):
-		extension = file
-
-if(extension == None):
-	try:
-		raise Exception()
-	except:
-		traceback.print_exc(file=sys.stdout)
-		exit(3)
-
-print '' #New line
-
 chromeOps = webdriver.ChromeOptions()
-chromeOps.add_extension(sys.argv[1] + '/' + extension)
+chromeOps.add_extension(sys.argv[1])
 
 driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)  # Optional argument, if not specified will search path.
 driver.get('http://libssh.org/robots.txt')

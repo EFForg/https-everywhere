@@ -31,6 +31,9 @@ pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd https-everywhere-checker
 pip install --user -r requirements.txt
 cd -
+cd test/chrome
+pip install --user -r requirements.txt
+cd -
 
 # Install a hook to run tests before pushing.
 ln -sf ../../test.sh .git/hooks/pre-push
