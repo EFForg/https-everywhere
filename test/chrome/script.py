@@ -30,7 +30,8 @@ class bcolors:
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
 
-driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)  # Optional argument, if not specified will search path.
+# First argument is optional, if not specified will search path.
+driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)
 driver.get('http://libssh.org/robots.txt')
 
 #Page Loaded
