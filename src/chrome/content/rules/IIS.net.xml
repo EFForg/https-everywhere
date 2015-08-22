@@ -1,15 +1,42 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://iis.net/ => https://www.iis.net/: Cycle detected - URL already encountered: https://www.iis.net/
-Fetch error: http://www.iis.net/ => https://www.iis.net/: Cycle detected - URL already encountered: https://www.iis.net/
-Fetch error: http://learn.iis.net/ => https://learn.iis.net/: Cycle detected - URL already encountered: https://www.iis.net/learn
+	For other Microsoft coverage, see Microsoft.xml.
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- login.iis.net
+		- .login.iis.net
+
+
+	Mixed content:
+
+		- Bug on www from msstonojstemp.112.2o7.net *
+
+	* Secured by us
+
 -->
-<ruleset name="IIS.net" default_off='failed ruleset test'>
+<ruleset name="IIS.net">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="iis.net" />
-	<target host="www.iis.net" />
+	<target host="i1.iis.net" />
+	<target host="i2.iis.net" />
+	<target host="i3.iis.net" />
 	<target host="learn.iis.net" />
-	<rule from="^http://www\.iis\.net/" to="https://www.iis.net/"/>
-	<rule from="^http://learn\.iis\.net/" to="https://learn.iis.net/"/>
-	<rule from="^http://iis\.net/" to="https://www.iis.net/"/>
+	<target host="login.iis.net" />
+	<target host="www.iis.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^login\.iis\.net$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.login\.iis\.net$" name="^forums\.ReturnUrl$" /-->
+
+	<securecookie host="^\.?login\.iis\.net$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
 

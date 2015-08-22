@@ -1,0 +1,165 @@
+<!--
+	Tartu Ülikooli
+
+
+	Nonfunctional hosts in *ut.ee:
+
+		- (www.)?ajakiri	Redirects to www.anatoomikum.ut.ee
+		- elurikkus		Shows iris.ut.ee
+		- ip		Shows siim.ut.ee
+		- (www.)?kunstimuuseum	Redirects to www.anatoomikum.ut.ee
+		- math		Shows default page
+		- www.math	Redirects to www.anatoomikum.ut.ee
+		- (www.)?loodusmuuseum	Shows default page
+		- (www.)?muuseum	Redirects to www.anatoomikum.ut.ee
+		- natarc	Shows blank page
+		- (www.)?natmuseum	Redirects to www.anatoomikum.ut.ee
+		- ois		Shows another domain
+		- securewww	Shows another domain
+		- social	Shows tall.ut.ee
+		- www.tuit	Redirects to www.anatoomikum.ut.ee
+		- virtualtour	Shows siim.ut.ee
+
+
+	Problematic hosts in *ut.ee:
+
+		- arvutiabi	Redirects to jaan.ut.ee
+		- comserv.cs	Server sends no certificate chain, see https://whatsmychaincert.com
+		- parool	Server sends no certificate chain, see https://whatsmychaincert.com
+		- www.sisu	Mismatched
+
+
+	Fully covered hosts in *ut.ee:
+
+		- (www.)?
+		- (www.)?acttea
+		- (www.)?anatoomikum
+		- auth
+		- (www.)?botaanikaaed
+
+		- (www.)?cs
+		- courses.cs
+		- intra.cs
+
+		- tall.it.da
+		- dok
+		- iris
+		- www.is
+		- jaan
+		- m
+		- mailhost
+		- moodle
+		- mysql
+		- owa
+		- passwd
+		- plutof.ut.ee
+		- siseveeb
+		- (www.)?sisu	(www → ^)
+		- (www.)?tahetorn
+		- tall
+		- (www.)?ttl
+		- unite
+		- (www.)?vilistlane
+		- wiki
+
+
+	These altnames don't exist:
+
+		- is.ut.ee
+		- www.moodle.ut.ee
+		- www.mysql.ut.ee
+		- www.siseveeb.ut.ee
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- auth.ut.ee
+		- comserv.cs.ut.ee
+		- courses.cs.ut.ee
+		- .intra.cs.ut.ee
+		- owa.ut.ee
+
+
+	Mixed content:
+
+		- css on www.anatoomikum, www.botaanikaaed, www.cs, www.tahetorn, www from fonts.googleapis.com *
+		- Images on www.anatoomikum, www.botaanikaaed.ut.ee, www from www.ut.ee *
+
+	* Secured by us
+
+-->
+<ruleset name="UT.ee (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ut.ee" />
+	<target host="acttea.ut.ee" />
+	<target host="www.acttea.ut.ee" />
+	<target host="anatoomikum.ut.ee" />
+	<target host="www.anatoomikum.ut.ee" />
+	<target host="auth.ut.ee" />
+	<target host="botaanikaaed.ut.ee" />
+	<target host="www.botaanikaaed.ut.ee" />
+
+	<target host="cs.ut.ee" />
+	<!--target host="comserv.cs.ut.ee" /-->
+	<target host="courses.cs.ut.ee" />
+	<target host="intra.cs.ut.ee" />
+	<target host="www.cs.ut.ee" />
+
+	<target host="dok.ut.ee" />
+	<target host="iris.ut.ee" />
+	<target host="www.is.ut.ee" />
+	<target host="tall.it.da.ut.ee" />
+	<target host="jaan.ut.ee" />
+	<target host="m.ut.ee" />
+	<target host="mailhost.ut.ee" />
+	<target host="moodle.ut.ee" />
+	<target host="mysql.ut.ee" />
+	<target host="owa.ut.ee" />
+	<!--target host="parool.ut.ee" /-->
+	<target host="passwd.ut.ee" />
+	<target host="plutof.ut.ee" />
+	<target host="siim.ut.ee" />
+	<target host="siseveeb.ut.ee" />
+	<target host="sisu.ut.ee" />
+	<target host="tahetorn.ut.ee" />
+	<target host="www.tahetorn.ut.ee" />
+	<target host="tall.ut.ee" />
+	<target host="ttl.ut.ee" />
+	<target host="www.ttl.ut.ee" />
+	<target host="unite.ut.ee" />
+	<target host="vilistlane.ut.ee" />
+	<target host="www.vilistlane.ut.ee" />
+	<target host="wiki.ut.ee" />
+	<target host="www.ut.ee" />
+
+	<!--	Complications:
+				-->
+	<target host="arvutiabi.ut.ee" />
+	<target host="www.sisu.ut.ee" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^auth\.cs\.ut\.ee$" name="^utmultiauth_source_ut-multi$" /-->
+	<!--securecookie host="^comserv\.cs\.ut\.ee$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^courses\.cs\.ut\.ee$" name="^COURSESSID$" /-->
+	<!--securecookie host="^\.intra\.cs\.ut\.ee$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^owa\.ut\.ee$" name="^ClientId$$" /-->
+
+	<securecookie host="^(?:auth|courses|owa)\.cs\.ut\.ee$" name=".+" />
+
+
+	<rule from="^http://arvutiabi\.ut\.ee/.*"
+		to="https://wiki.ut.ee/display/AA/Arvutiabi" />
+
+		<test url="http://arvutiabi.ut.ee//" />
+
+	<rule from="^http://www\.sisu\.ut\.ee/"
+		to="https://sisu.ut.ee/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

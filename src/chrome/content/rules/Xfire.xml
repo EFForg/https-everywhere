@@ -1,17 +1,11 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://secure.xfire.com/ => https://secure.xfire.com/: (7, 'Failed to connect to secure.xfire.com port 443: Connection refused')
-Fetch error: http://social.xfire.com/ => https://social.xfire.com/: (7, 'Failed to connect to social.xfire.com port 443: Connection refused')
-
-	For problematic rules, see Xfire.com-problematic.xml.
-
-
 	Nonfunctional hosts in *xfire.com:
 
 		- blog ¹
 		- business ²
 		- media ³
+		- secure ²
+		- social ²
 		- support ²
 
 	¹ Shows gravity.tinyrocketserver.com
@@ -25,32 +19,30 @@ Fetch error: http://social.xfire.com/ => https://social.xfire.com/: (7, 'Failed 
 	Insecure cookies are set for these hosts:
 
 		- xfire.com
-		- social.xfire.com
 		- www.xfire.com
 
 
 	Mixed content:
 
-		- css on (www.)? from fonts.googleapis.com *
+		- css on ^ from fonts.googleapis.com *
+		- Fonts on ^ from fonts.gstatic.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Xfire.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Xfire.com (partial)" default_off="missing certificate chain">
 
-	<!--target host="xfire.com" /-->
-	<target host="secure.xfire.com"/>
-	<target host="social.xfire.com" />
-	<!--target host="www.xfire.com" /-->
+	<!--	Direct rewrites:
+				-->
+	<target host="xfire.com" />
+	<target host="www.xfire.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?xfire\.com$" name="^PHPSESSID$" /-->
-	<!--securecookie host="^social\.xfire\.com$" name="^_xfire_session$" /-->
+	<!--securecookie host="^(www\.)?xfire\.com$" name="^(AWSELB|PHPSESSID)$" /-->
 
-	<!--securecookie host="^(?:social\.|www\.)?xfire\.com$" name=".+" /-->
-	<securecookie host="^social\.xfire\.com$" name=".+" />
+	<securecookie host="^(?:www\.)?xfire\.com$" name=".+" />
 
 
 	<rule from="^http:"

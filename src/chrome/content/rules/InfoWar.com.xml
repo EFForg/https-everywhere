@@ -1,38 +1,45 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://infowar.com/ => https://www.infowar.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-
 	Problematic subdomains:
 
-		- ^	(prints "currently down for maintenance", valid cert)
+	^infowar.com: Mismatched
+	www.infowar.com: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.infowar.com
 
 
 	Mixed content:
 
+		- css on www from fonts.googleapis.com *
 		- Images on www from www *
-
-		- Ads/web bugs, on www from:
-
-			- d.adsbyisocket.com *
-			- ws.amazon.com *
-			- www.facebook.com *
-			- pagead2.googlesyndication.com *
-			- infowar.jobamatic.com *
 
 	* Secured by us
 
 -->
-<ruleset name="InfoWar.com" default_off='failed ruleset test'>
+<ruleset name="InfoWar.com" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.infowar.com" />
+
+	<!--	Complications:
+				-->
 	<target host="infowar.com" />
-	<target host="*.infowar.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.infowar\.com$" name="^tlf_1$" /-->
 
 	<securecookie host="^(?:www)?\.infowar\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?infowar\.com/"
+	<rule from="^http://infowar\.com/"
 		to="https://www.infowar.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

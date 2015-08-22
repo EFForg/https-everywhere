@@ -1,6 +1,101 @@
-<ruleset name="Lastminute.com">
-  <target host="www.lastminute.com" />
-  <target host="lastminute.com" />
+<!--
+	Other Lastminute rulesets:
 
-  <rule from="^http://(?:www\.)?lastminute\.com/" to="https://www.lastminute.com/"/>
+		- LmnCDN.com.xml
+
+
+	Nonfunctional hosts in *lastminute.com:
+
+		- blog ¹
+		- experiences ²
+
+	¹ 404
+	² Redirects to http
+
+
+	Problematic hosts in *lastminute.com:
+
+		- ^ *
+		- www.carhire *
+		- es *
+		- it *
+		- m *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .lastminute.com
+		- car-hire.lastminute.com
+		- .www.es.lastminute.com
+		- .www.fr.lastminute.com
+		- holidays.lastminute.com
+		- .www.it.lastminute.com
+		- .www.lastminute.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www.es, www.fr, www.it, from $self *
+			- www.es, www.fr, www.it, from www.lastminute.com *
+			- www.es, www.fr, www.it, m from s.lmncdn.com *
+			- www.fr from back-lastminute.orchestra-platform.com
+
+		- Bug on www from smdd.adviva.net
+
+	* Secured by us
+
+-->
+<ruleset name="Lastminute.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="car-hire.lastminute.com" />
+	<target host="www.es.lastminute.com" />
+	<target host="www.fr.lastminute.com" />
+	<target host="holidays.lastminute.com" />
+	<target host="www.it.lastminute.com" />
+	<target host="restaurants.lastminute.com" />
+	<target host="spa.lastminute.com" />
+  <target host="www.lastminute.com" />
+	<!--	Complications:
+				-->
+  <target host="lastminute.com" />
+	<target host="www.carhire.lastminute.com" />
+	<target host="es.lastminute.com" />
+	<target host="fr.lastminute.com" />
+	<target host="it.lastminute.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://experiences\.lastminute\.com/(?:$|search$)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lastminute\.com$" name="^(?:TLTSID|TLTUID|tyrg1st)$" /-->
+	<!--securecookie host="^car-hire\.lastminute\.com$" name="^PLAY_(?:ERRORS|FLASH|LANG|SESSION)$" /-->
+	<!--securecookie host="^\.www\.(?:es|fr|it)\.lastminute\.com$" name="^THROTTL3$" /-->
+	<!--securecookie host="^holidays\.lastminute\.com$" name="^(?:ASP\.NET_SessionId|b1P)$" /-->
+	<!--securecookie host="^m\.lastminute\.com$" name="^(?:SESSION_ID|configId)$" /-->
+	<!--securecookie host="^\.www\.lastminute\.com$" name="^(?:THROTTL3|partnerId)$" /-->
+
+	<securecookie host="^(?:car-hire|\.www\.(?:es|fr|it)|holidays|\.www)?\.lastminute\.com$" name=".+" />
+
+
+	<rule from="^http://(es\.|fr\.|it\.)?lastminute\.com/"
+		to="https://www.$1lastminute.com/" />
+
+	<!--	Redirect drops forward slash:
+						-->
+	<rule from="^http://www\.carhire\.lastminute\.com/+"
+		to="https://car-hire.lastminute.com/" />
+
+		<test url="http://www.carhire.lastminute.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

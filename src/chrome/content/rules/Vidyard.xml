@@ -1,26 +1,47 @@
 <!--
-	blog is handled in Posterous-clients.xml.
+	^vidyard.com: Refused
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)	(mismatched, CN: *.heroku.com)
-		- blog		(works, mismatched, CN: *.posterous.com)
+		- www.vidyard.com
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+		- Images on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Vidyard (partial)">
+<ruleset name="Vidyard.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="assets.vidyard.com" />
+	<target host="blog.vidyard.com" />
+	<target host="embed.vidyard.com" />
+	<target host="play.vidyard.com" />
+	<target host="secure.vidyard.com" />
+	<target host="www.vidyard.com" />
+
+	<!--	Complications:
+				-->
 	<target host="vidyard.com" />
-	<target host="*.vidyard.com" />
 
 
-	<securecookie host="^seure\.vidyard\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.vidyard\.com$" name="^X-Mapping-\w+$" /-->
+
+	<securecookie host="^(?:secure|www)\.vidyard\.com$" name=".+" />
 
 
-	<rule from="^http://(?:secure\.|www\.)?vidyard\.com/"
-		to="https://secure.vidyard.com/" />
+	<rule from="^http://vidyard\.com/"
+		to="https://www.vidyard.com/" />
 
-	<rule from="^http://(embed|play)\.vidyard\.com/"
-		to="https://$1.vidyard.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

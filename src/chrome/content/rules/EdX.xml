@@ -1,20 +1,28 @@
 <!--
-	Cert only matches *.edx.org
+	Insecure cookies are set for these domains and hosts:
+
+		- edx.org
+		- .edx.org
+		- courses.edx.org
 
 -->
-<ruleset name="edX">
+<ruleset name="edX.org">
 
 	<target host="edx.org" />
-	<target host="*.edx.org" />
+	<target host="courses.edx.org" />
+	<target host="www.edx.org" />
 
 
-	<securecookie host="^(?:courses|www)\.edx\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^edx\.org$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.edx\.org$" name="^prod-edx-sessionid$" /-->
+	<!--securecookie host="^courses\.edx\.org$" name="^(?:AWSELB|csrftoken)$" /-->
+
+	<securecookie host="^(?:\.|courses\.|www\.)?edx\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?edx\.org/"
-		to="https://www.edx.org/" />
-
-	<rule from="^http://courses\.edx\.org/"
-		to="https://courses.edx.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,21 +1,37 @@
 <!--
 	Nonfunctional subdomains:
 
-		- media
-			- 301s back when rewritten to www
-			- Holds css but not js => mixedcontent
+		- media ¹ ²
+		- support ³
+
+	¹ Refused
+	² Redirects back when rewritten to www
+	³ Desk.com
+
+
+	Mixed content:
+
+		- Images from media.defenceindustrydaily.com ¹
+		- Bug from pixel.quantserve.com ²
+
+	¹ Unsecurable <= refused
+	² Secured by us
 
 -->
-<ruleset name="Defense Industry Daily (partial)" platform="mixedcontent">
+<ruleset name="Defense Industry Daily.com (partial)">
 
 	<target host="defenseindustrydaily.com" />
 	<target host="www.defenseindustrydaily.com" />
 
 
-	<securecookie host="^(?:www\.)?defenseindustrydaily\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.defenseindustrydaily\.com$" name="^__qca$" /-->
+
+	<securecookie host="^(?:\.|www\.)?defenseindustrydaily\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?defenseindustrydaily\.com/"
-		to="https://$1defenseindustrydaily.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,10 +1,7 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://tenderapp.com/ => https://tenderapp.com/: (56, 'SSL read: error:00000000:lib(0):func(0):reason(0), errno 104')
-Fetch error: http://www.tenderapp.com/ => https://www.tenderapp.com/: (56, 'SSL read: error:00000000:lib(0):func(0):reason(0), errno 104')
+	Other ENTP rulesets:
 
-	For problematic coverage, see ENTP-mismatches.xml.
+		- Lighthouse_app.com.xml
 
 
 	CDN buckets:
@@ -13,43 +10,36 @@ Fetch error: http://www.tenderapp.com/ => https://www.tenderapp.com/: (56, 'SSL 
 		- d1ros97qkrwjf5.cloudfront.net
 
 
+	(www.)?tenderapp.com: Reset
+
+
 	Insecure cookies are set for these domains:
 
 		- help.tenderapp.com
 
 -->
-<ruleset name="ENTP (partial)" default_off='failed ruleset test'>
+<ruleset name="Tender app.com (partial)">
 
-	<target host="lighthouseapp.com" />
-	<target host="*.lighthouseapp.com" />
-		<!--
-			Handled in mismatches ruleset:
-							-->
-		<exclusion pattern="^http://help\.lighthouseapp\." />
-	<target host="tenderapp.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="tenderapp.com" /-->
 	<target host="asset-0.tenderapp.com" />
 	<target host="asset-1.tenderapp.com" />
 	<target host="asset-2.tenderapp.com" />
 	<target host="help.tenderapp.com" />
 	<target host="setup.tenderapp.com" />
-	<target host="www.tenderapp.com" />
+	<!--target host="www.tenderapp.com" /-->
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^help\.tenderapp\.com$" name="^(_tender_session|anon_token)$" /-->
 
-	<securecookie host="^(?:.*\.)?tenderapp\.com$" name=".+" />
+	<!--securecookie host="^(?:.*\.)?tenderapp\.com$" name=".+" /-->
+	<securecookie host=".+\.tenderapp\.com$" name=".+" />
 
 
-	<rule from="^http://(my\.|www\.)?lighthouseapp\.com/"
-		to="https://$1lighthouseapp.com/"/>
-
-	<!--	clients have unique subdomains.  Pages redirect to http.	-->
-	<rule from="^http://([\w-]+)\.lighthouseapp\.com/(?=images/|login|pkg/|stylesheets/|users/new)"
-		to="https://$1.lighthouseapp.com/"/>
-
-	<rule from="^http://([\w-]+\.)?tenderapp\.com/"
-		to="https://$1tenderapp.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

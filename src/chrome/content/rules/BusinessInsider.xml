@@ -17,53 +17,106 @@
 	² CN: *.jobamatic.com
 
 
-	Partially covered subdomains:
+	Problematic hosts in *businessinsider.com:
 
 		- au *
 
-	* Some pages redirect to http
+	* Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- insider
-		- static
-		- static\d
-		- static-ssl
-
-		- static\d.uk:
-
-			- [0-6]
+		- .businessinsider.com
+		- intelligence.businessinsider.com
 
 -->
 <ruleset name="BusinessInsider.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="businessinsider.com" />
-	<target host="*.businessinsider.com" />
-		<!--
-			Many pages redirect to http.
+	<target host="insider.businessinsider.com" />
+	<target host="intelligence.businessinsider.com" />
+	<target host="oascentral.businessinsider.com" />
+	<target host="static.businessinsider.com" />
+	<target host="static-bii.businessinsider.com" />
+	<target host="static-ssl.businessinsider.com" />
+	<target host="static1.businessinsider.com" />
+	<target host="static2.businessinsider.com" />
+	<target host="static3.businessinsider.com" />
+	<target host="static4.businessinsider.com" />
+	<target host="static5.businessinsider.com" />
+	<target host="static6.businessinsider.com" />
+	<target host="static7.businessinsider.com" />
+	<target host="static8.businessinsider.com" />
+
+	<target host="static1.uk.businessinsider.com" />
+	<target host="static2.uk.businessinsider.com" />
+	<target host="static3.uk.businessinsider.com" />
+	<target host="static4.uk.businessinsider.com" />
+	<target host="static5.uk.businessinsider.com" />
+	<target host="static6.uk.businessinsider.com" />
+
+	<target host="www.businessinsider.com" />
+
+	<!--	Complications:
+				-->
+	<target host="jobs.businessinsider.com" />
+
+		<!--	Many pages redirect to http.
 							-->
 		<!--exclusion pattern="^http://uk\.businessinsider\.com/[\w-]+($|\?)" /-->
+	        <!--exclusion pattern="^http://www\.businessinsider\.com/$" /-->
 		<!--
 			Exceptions:
 					-->
-	        <exclusion pattern="^http://(?:www\.)?businessinsider\.com/(?!account|assets/|favicon\.ico|login|register)" />
-		<exclusion pattern="^http://au\.businessinsider\.com/(?!image/)" />
-		<!--exclusion pattern="^http://jobs\.businessinsider\.com/($|a/)" /-->
+	        <exclusion pattern="^http://www\.businessinsider\.com/(?!account|assets/|favicon\.ico|login|register)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://www.businessinsider.com/about" />
+			<test url="http://www.businessinsider.com/careers" />
+			<test url="http://www.businessinsider.com/contributor" />
+			<test url="http://www.businessinsider.com/events" />
+			<test url="http://www.businessinsider.com/forgot" />
+			<test url="http://www.businessinsider.com/trending" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.businessinsider.com/account" />
+			<test url="http://www.businessinsider.com/favicon.ico" />
+			<test url="http://www.businessinsider.com/login" />
+			<test url="http://www.businessinsider.com/register" />
+
+		<exclusion pattern="^http://jobs\.businessinsider\.com/(?!c/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://jobs.businessinsider.com/a/all-jobs/list/q-first+citizens+bank" />
+			<test url="http://jobs.businessinsider.com/a/all-jobs/list/q-intuit" />
+
+			<!--	-ve:
+					-->
+			<test url="http://jobs.businessinsider.com/c/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.businessinsider\.com$" name="^s$" /-->
+	<!--securecookie host="^intelligence\.businessinsider\.com$" name="^PHPSESSID$" /-->
 
 	<!--	Tracking cookie set by oascentral:
 							-->
 	<securecookie host="^\.businessinsider\.com$" name="^OAX$" />
-	<securecookie host="^oascentral\.businessinsider\.com$" name=".+" />
+	<securecookie host="^(?:intelligence|oascentral)\.businessinsider\.com$" name=".+" />
 
 
         <!--    See Simply-Hired-clients.xml for problematic jobs rules.
 									-->
-        <rule from="^http://jobs\.businessinsider\.com/c/"
-                to="https://businessinsider.jobamatic.com/c/" />
+        <rule from="^http://jobs\.businessinsider\.com/"
+                to="https://businessinsider.jobamatic.com/" />
 
-        <rule from="^http://((?:au|insider|oascentral|static\d?|static-ssl|static\d\.uk|www)\.)?businessinsider\.com/"
-		to="https://$1businessinsider.com/" />
+        <rule from="^http:"
+		to="https:" />
 
 </ruleset>

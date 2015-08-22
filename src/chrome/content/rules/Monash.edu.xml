@@ -1,0 +1,68 @@
+<!--
+	Other Monash University rulesets:
+
+		- Study.Monash.xml
+
+
+	These altnames don't exist:
+
+		- www.blogs.monash.edu
+		- www.my.monash.edu
+		- www.secure.monash.edu
+
+
+	Insecure cookies are set for these hosts:
+
+		- community.monash.edu
+
+
+	Mixed content:
+
+		- Images on (www.)? from www.monash.edu.au
+
+-->
+<ruleset name="Monash.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="monash.edu" />
+	<target host="blogs.monash.edu" />
+	<target host="community.monash.edu" />
+	<target host="login.monash.edu" />
+	<target host="my.monash.edu" />
+	<target host="secure.monash.edu" />
+	<target host="www.monash.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.monash\.edu/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.monash.edu/?f" />
+			<test url="http://www.monash.edu/?o" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.monash.edu/__data/assets/image/0016/13813/monash-logo.png" />
+			<test url="http://www.monash.edu/_globaldesigns/css/printing.css" />
+			<test url="http://www.monash.edu/favicon.ico" />
+			<test url="http://www.monash.edu/giving/" />
+			<test url="http://www.monash.edu/library/" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://monash.edu/students/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^community\.monash\.edu$" name="^BIGipServer[\w~]+$" /-->
+
+	<securecookie host="^community\.monash\.edu$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

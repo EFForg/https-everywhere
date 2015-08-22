@@ -2,35 +2,69 @@
 	CDN buckets:
 
 		- boingboing.cachefly.net
-
-			- media.boingboing.net
-
+		- boingboing.global.ssl.fastly.net
 		- scdn-discourse.r.worldssl.net/user_avatar/bbs.boingboing.net/
 
 
 	Nonfunctional subdomains:
 
-		- (www.)
 		- bbs *
-		- submit
+		- dev *
+		- www.shop *
+		- submit *
+		- wow ²
 
 	* Refused
+	² Redirects to http
+
+
+	Problematic hosts in *boingboing.net:
+
+		- origin ¹
+		- www ²
+
+	¹ Untrusted root
+	² Refused
+
+
+	Mixed content:
+
+		- css on ^ from fonts.googleapis.com ¹
+		- Images on ^ from $self ¹
+
+		- Bugs, on:
+
+			- ^ from pubads.g.doubleclick.net ²
+			- ^ from b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Ruleset disabled by default
 
 -->
-<ruleset name="Boing Boing Shop">
+<ruleset name="Boing Boing.net (partial)">
 
-	<target host="*.boingboing.net" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.shop.boingboing.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="boingboing.net" />
+	<target host="media.boingboing.net" />
+	<target host="shop.boingboing.net" />
+
+	<!--	Complications:
+				-->
+	<target host="www.boingboing.net" />
+
+		<test url="http://boingboing.net/about" />
+		<test url="http://www.boingboing.net/contact" />
+		<test url="http://boingboing.net/s/" />
 
 
-	<securecookie host="^\.shop\.boingboing\.net$" name=".*" />
+	<securecookie host="^(?:\.shop\.)?boingboing\.net$" name=".*" />
 
 
-	<rule from="^http://media\.boingboing\.net/"
-		to="https://boingboing.cachefly.net/" />
+	<rule from="^http://www\.boingboing\.net/"
+		to="https://boingboing.net/" />
 
-	<rule from="^http://shop\.boingboing\.net/"
-		to="https://shop.boingboing.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://cert.webtrust.org/ (200) => https://cert.webtrust.org/ (403)
-Non-2xx HTTP code: http://entrust.webtrust.org/ (200) => https://entrust.webtrust.org/ (403)
-
 	Nonfunctional subdomains:
 
 		- (www.) *
@@ -11,12 +6,30 @@ Non-2xx HTTP code: http://entrust.webtrust.org/ (200) => https://entrust.webtrus
 	* Reset
 
 -->
-<ruleset name="WebTrust.org (partial)" default_off='failed ruleset test'>
+<ruleset name="WebTrust.org (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="cert.webtrust.org" />
 	<target host="entrust.webtrust.org" />
+
+		<!--	403:
+				-->
+		<exclusion pattern="^http://(?:cert|entrust)\.webtrust\.org/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cert.webtrust.org/?" />
+			<test url="http://cert.webtrust.org//" />
+
+			<test url="http://entrust.webtrust.org/?" />
+			<test url="http://entrust.webtrust.org//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cert.webtrust.org/ViewSeal?id=1565" />
+
+			<test url="http://entrust.webtrust.org/SealFile?seal=328" />
 
 
 	<rule from="^http:"

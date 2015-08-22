@@ -2,8 +2,12 @@
 	Other Gawker rulesets:
 
 		- Deadspin.com.xml
+		- Gawker-labs.com.xml
 		- Gawkerassets.com.xml
 		- Gizmodo.com.xml
+		- Kinja.xml
+		- Kinja-img.com.xml
+		- Kinja-static.com.xml
 		- Io9.com.xml
 		- Jalopnik.com.xml
 		- Jezebel.com.xml
@@ -26,7 +30,7 @@
 
 	Nonfunctional domains:
 
-		- advertising.gawker.com	(http reply)
+		- advertising.gawker.com	(Shows default page)
 		- feeds.gawker.com		(interrupted)
 
 
@@ -35,30 +39,55 @@
 		- (www.)gawker.com *
 		- api.gawker.com *
 		- cache.gawker.com *
-		- feeds.gawker.com	(interrupted)
 		- help.gawker.com	(desk.com)
 		- login.gawker.com *
 
 	* Works; mismatched, CN: *.a.ssl.fastly.net
 
+
+	Mixed content:
+
+		- Ads/bugs, on:
+
+			- ^ from pubads.g.doubleclick.net ¹
+			- ^ from sb.scorecardresearch.com ²
+
+	¹ Ruleset disabled by default
+	² Secured by us
+
 -->
 <ruleset name="Gawker" default_off="mismatched">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gawker.com" />
-	<target host="*.gawker.com" />
+	<target host="api.gawker.com" />
+	<target host="cache.gawker.com" />
+	<target host="login.gawker.com" />
+	<target host="www.gawker.com" />
+
+	<!--	Complications:
+				-->
+	<target host="help.gawker.com" />
 	<target host="cache.gawkerassets.com" />
 
+		<exclusion pattern="^http://help\.gawker\.com/(?!images/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?gawker\.com$" name="^geocc$" /-->
 
 	<securecookie host="^(?:.*\.)?gawker\.com$" name=".+" />
 
 
-	<rule from="^http://(?:((?:api|cache|login)\.)|www\.)?gawker\.com/"
-		to="https://$1gawker.com/" />
-
-	<rule from="^http://help\.gawker\.com/images/"
-		to="https://d3jyn100am7dxp.cloudfront.net/images/" />
+	<rule from="^http://help\.gawker\.com/"
+		to="https://d3jyn100am7dxp.cloudfront.net/" />
 
 	<rule from="^http://cache\.gawkerassets\.com/"
 		to="https://cache.gawkerassets.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

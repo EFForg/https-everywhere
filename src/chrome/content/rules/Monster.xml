@@ -4,6 +4,10 @@
 
 	Other Monster rulesets:
 
+		- Admissions.com.xml
+		- Art_Schools.com.xml
+		- Cooking_Schools.com.xml
+		- Fastweb.com.xml
 		- MyResumeAgent.com.xml
 		- Newjobs.com.xml
 
@@ -11,28 +15,20 @@
 	CDN buckets:
 
 		- jdn.monster.com.edgesuite.net
-
-			- a479.g.akamai.net
-
 		- www.monster.com.edgesuite.net
-
 		- nswildcard.newjobs.com.edgesuite.net
-
-			- media.monster.com
-			- media.newjobs.com
 
 
 	Nonfunctional domains:
 
 		- (www.)about-monster.com	(shows facebook; mismatched, CN: facebook.ketchum.com)
 
-		- education.org subdomains:
+		- in *education.org:
 
-			- (www.) *
+			- (www.)? ²
 			- ai *
-			- degrees *
 
-		- monster.com subdomains:
+		- in *monster.com:
 
 			- ^ *
 			- advertising *
@@ -53,18 +49,20 @@
 		- (www.)programadvisor.com *
 		- edu.programadvisor.com *
 
+	² Plaintext reply
 	* Dropped
 
 
-	Problematic subdomains:
+	Problematic hosts in *monster.com:
 
 		- jdn *
-		- media		(works, akamai)
+		- media	²
 
 	* Works, akamai
+	² 400, llnwd.net
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *monster.com:
 
 		- hiring.* ¹	(per-client subdomains)
 		- hiring ¹
@@ -72,22 +70,57 @@
 	¹ Some pages redirect to http
 
 
-	Fully covered subdomains:
-
-		- cookie
-		- login
-		- media		(→ akamai)
-		- oas
+	cookie.monster.com and track.newjobs.com appear to by synonymous.
 
 
-	cookie.monster.com and track.newjobs.com appear to by synonyms.
+	Insecure cookies are set for these domains and hosts:
+
+		- .monster.com
+		- hiring.monster.com
 
 -->
-<ruleset name="Monster (partial)">
+<ruleset name="Monster.com (partial)">
 
-	<target host="*.monster.com" />
-		<exclusion pattern="^http://hiring\.(?:[\w-]+\.)?monster\.com/(?!favicon\.ico|images/|(?:Script|Web)Resource\.axd|[sS]ervices/|SharedUI/)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="hiring.*.monster.com" />
+	<target host="cookie.monster.com" />
+	<target host="hiring.monster.com" />
+	<target host="login.monster.com" />
+	<target host="oas.monster.com" />
 
+	<!--	Complications:
+				-->
+	<target host="jdn.monster.com" />
+	<target host="media.monster.com" />
+
+		<exclusion pattern="^http://hiring\.(?:[\w-]+\.)?monster\.com/(?!$|\?|favicon\.ico|images/|(?:Script|Web)Resource\.axd|login\.aspx|[sS]ervices/|SharedUI/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hiring.monster.com/contactus.aspx" />
+			<test url="http://hiring.monster.com/contactusform.aspx" />
+			<test url="http://hiring.monster.com/hr/hr-best-practices.aspx" />
+			<test url="http://hiring.monster.com/hr/hr-best-practices/recruiting-hiring-advice.aspx" />
+			<test url="http://hiring.monster.com/hr/hr-best-practices/workforce-management/employee-benefits-management/OFCCP.aspx" />
+			<test url="http://hiring.monster.com/jcm/resumesearch/enhancedresumesearch.aspx" />
+			<test url="http://hiring.monster.com/order/promo.aspx" />
+			<test url="http://hiring.monster.com/products/resumeproductszip.aspx" />
+			<test url="http://hiring.monster.com/recruitment/all-products.aspx" />
+			<test url="http://hiring.monster.com/recruitment/featured-products.aspx" />
+			<test url="http://hiring.monster.com/recruitment/resume-search-database.aspx" />
+			<test url="http://hiring.monster.com/recruitment/standard-postings.aspx" />
+			<test url="http://hiring.monster.com/sitemap.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hiring.monster.com/login.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.monster\.com$" name="^(?:Monster|Monster_p|OAX|PROMOCODES)$" /-->
+	<!--securecookie host="^hiring\.monster\.com$" name="^(?:__RequestVerificationToken|\.ASPXANONYMOUS|DOMAINALIAS|ShoppingCart|TC_Bottom|TC_Head|TC_Top|atmResolver)$" /-->
 
 	<!--	Tracking cookies:
 
@@ -99,13 +132,13 @@
 	<securecookie host="^(?:cookie|login|oas)\.monster\.com$" name=".+" />
 
 
-	<rule from="^http://(hiring(?:\.[\w-]+)?|cookie|login|oas)\.monster\.com/"
-		to="https://$1.monster.com/" />
-
 	<rule from="^http://jdn\.monster\.com/"
 		to="https://a248.e.akamai.net/f/479/5386/8/jdn.monster.com/" />
 
 	<rule from="^http://media\.monster\.com/"
-		to="https://a248.e.akamai.net/f/1015/8220/1m/media.monster.com/" />
+		to="https://securemedia.newjobs.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,23 +1,53 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ads2.zeusclicks.com/ => https://ads2.zeusclicks.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-
 	Nonfunctional subdomains:
 
-		- (www.)	(shows kip; expired 2013-07-14; self-signed, CN: kip.simplecom.net)
 		- cdn		(refused)
 
--->
-<ruleset name="ZeusClicks.com (partial)" default_off='failed ruleset test'>
 
+	Problematic hosts in *zeusclicks.com:
+
+		- (www.)? ¹ ²
+		- ads2 ³
+
+	¹ Mismatched
+	² Mixed css
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.ads2.zeusclicks.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- zeusclicks.com
+		- ads2.zeusclicks.com
+		- www.zeusclicks.com
+
+
+	Mixed content:
+
+		- css on (www.)? from ^zeusclicks.com
+		- Images on (www.)? from ^zeusclicks.com
+
+-->
+<ruleset name="ZeusClicks.com (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="ads2.zeusclicks.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ads2\.zeusclicks\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(www\.)?zeusclicks\.com$" name="^csrf_c_zeus$" /-->
 
 	<securecookie host="^ads2\.zeusclicks\.com$" name=".+" />
 
 
-	<rule from="^http://ads2\.zeusclicks\.com/"
-		to="https://ads2.zeusclicks.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,29 +1,84 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://datapipe.co.uk/ => http://datapipe.co.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.datapipe.co.uk/ => https://www.datapipe.co.uk/: (60, 'SSL certificate problem: certificate has expired')	See Datapipe.com-mismatches.xml also
+	Other Datapipe rulesets:
+
+		- Datapipe.co.uk.xml
+		- My_Datapipe.com.xml
+		- My_Datapipe.net.xml
+
+
+	Nonfunctional domains:
+
+		- (www.)?datapipe.net *
+
+	* Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- datapipe.com
+		- cloud.datapipe.com
+		- docs.cloud.datapipe.com
+		- sso.datapipe.com
+		- www.datapipe.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.datapipe.com from fast.fonts.net ¹
+			- www.datapipe.com from fonts.googleapis.com ¹
+
+		- Ads/bugs, on:
+
+			- (www.)?datapipe.com from go.datapipe.com ¹
+			- (www.)?datapipe.com from web-cntr-07.com ²
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
 -->
-<ruleset name="Datapipe.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Datapipe.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="datapipe.com" />
+	<target host="cloud.datapipe.com" />
+	<target host="docs.cloud.datapipe.com" />
 	<target host="secure.datapipe.com" />
+	<target host="sso.datapipe.com" />
 	<target host="www.datapipe.com" />
-	<target host="datapipe.co.uk" />
-	<target host="www.datapipe.co.uk" />
-	<target host="datapipe.net" />
-	<target host="www.datapipe.net" />
-	<target host="mydatapipe.com" />
-	<target host="www.mydatapipe.com" />
-	<target host="mydatapipe.net" />
-	<target host="www.mydatapipe.net" />
 
-	<rule from="^http://(www\.)?(my)?datapipe\.(com|net)/"
-		to="https://www.$2datapipe.com/" />
+	<!--	Complications:
+				-->
+	<target host="go.datapipe.com" />
 
-	<rule from="^http://www\.datapipe\.co\.uk/"
-		to="https://www.datapipe.co.uk/" />
+		<exclusion pattern="^http://go\.datapipe\.com/(?!l/)" />
 
-	<rule from="^http://secure\.datapipe\.com/"
-		to="https://secure.datapipe.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://go.datapipe.com/quote_request" />
+
+			<!--	-ve:
+					-->
+			<test url="http://go.datapipe.com/l/47762/2014-08-06/2p7c" />
+
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?datapipe\.com$" name="^(?:exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+	<!--securecookie host="^cloud\.datapipe\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^docs\.cloud\.datapipe\.com$" name="^_cloud-docs_session$" /-->
+	<!--securecookie host="^sso\.datapipe\.com$" name="^SimpleSAMLSessionID$" /-->
+
+	<securecookie host="^(?:.+\.)?datapipe\.com$" name=".+" />
+
+
+	<rule from="^http://go\.datapipe\.com/"
+		to="https://pi.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

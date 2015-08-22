@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://login.terena.org/ => https://login.terena.org/: (28, 'Connection timed out after 10001 milliseconds')
-Non-2xx HTTP code: http://rostov.terena.org/ (200) => https://rostov.terena.org/ (403)
-Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: no alternative certificate subject name matches target host name 'wikis.terena.org'")
-
 	For other GÉANT Association coverage, see GEANT.org.xml.
 
 
@@ -24,7 +18,12 @@ Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: n
 
 	Problematic subdomains:
 
+		- rostov ¹
 		- tnc2006	(403)
+		- wikis ²
+
+	¹ 403
+	² Mismatched
 
 
 	Partially covered subdomains:
@@ -46,14 +45,13 @@ Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: n
 		- lenin
 		- login
 		- omega
-		- rostov
 		- rykov
 		- test-login
 		- tnc15
 		- tnc2006	(→ www)
 		- tnc201[1-5]
 		- wiki
-		- wikis
+		- wikis		(→ wiki.terena.org)
 
 
 	These altnames don't exist:
@@ -80,29 +78,33 @@ Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: n
 		- www.terena.org
 
 -->
-<ruleset name="Terena.org (partial)" default_off='failed ruleset test'>
+<ruleset name="Terena.org (partial)">
 
 	<target host="terena.org" />
 	<target host="*.terena.org" />
 		<!--
 			Redirects to http:
 						-->
-		<exclusion pattern="^http://tnc(200[789]|2010)\.terena\.org/$" />
+		<!--exclusion pattern="^http://tnc(200[5789]|2010)\.terena\.org/$" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://tnc20(?:0\d|10)\.terena\.org/(?!css/|gfx/|js/)" />
+		<exclusion pattern="^http://tnc20(?:0[57-9]|10)\.terena\.org/(?!css/|gfx/|js/)" />
 
+			<!--	+ve:
+					-->
 			<test url="http://tnc2005.terena.org/" />
-			<test url="http://tnc2005.terena.org/core.css" />
-			<test url="http://tnc2006.terena.org/" />
 			<test url="http://tnc2007.terena.org/" />
-			<test url="http://tnc2007.terena.org/css/base.css" />
 			<test url="http://tnc2008.terena.org/" />
-			<test url="http://tnc2008.terena.org/css/min-base.css" />
 			<test url="http://tnc2009.terena.org/" />
-			<test url="http://tnc2009.terena.org/gfx/logos/terena_header.png" />
 			<test url="http://tnc2010.terena.org/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://tnc2005.terena.org/core.css" />
+			<test url="http://tnc2007.terena.org/css/base.css" />
+			<test url="http://tnc2008.terena.org/css/min-base.css" />
+			<test url="http://tnc2009.terena.org/gfx/logos/terena_header.png" />
 			<test url="http://tnc2010.terena.org/css/min-base.css" />
 
 		<test url="http://compendium.terena.org/" />
@@ -114,10 +116,10 @@ Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: n
 		<test url="http://lenin.terena.org/" />
 		<test url="http://login.terena.org/" />
 		<test url="http://omega.terena.org/" />
-		<test url="http://rostov.terena.org/" />
 		<test url="http://rykov.terena.org/" />
 		<test url="http://test-login.terena.org/" />
 		<test url="http://tnc15.terena.org/" />
+		<test url="http://tnc2006.terena.org/" />
 		<test url="http://tnc2011.terena.org/" />
 		<test url="http://tnc2012.terena.org/" />
 		<test url="http://tnc2013.terena.org/" />
@@ -139,10 +141,13 @@ Fetch error: http://wikis.terena.org/ => https://wikis.terena.org/: (51, "SSL: n
 	<securecookie host="^(?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|login|tnc15|tnc201[1-4]|wikis?|www)\.terena\.org$" name=".+" />
 
 
-	<rule from="^http://((?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|lenin|login|omega|rostov|rykov|test-login|tnc15|tnc20(?:0[5789]|1\d)|wikis?|www)\.)?terena\.org/"
-		to="https://$1terena.org/" />
-
 	<rule from="^http://tnc2006\.terena\.org/"
 		to="https://www.terena.org/events/tnc2006/" />
+
+	<rule from="^http://wikis\.terena\.org/"
+		to="https://wiki.terena.org/" />
+
+	<rule from="^http://((?:compendium|confluence|crypto-filesender|cryptosender|eventr|filesender|lenin|login|omega|rykov|test-login|tnc15|tnc20(?:0[5789]|1\d)|wikis?|www)\.)?terena\.org/"
+		to="https://$1terena.org/" />
 
 </ruleset>

@@ -1,27 +1,34 @@
-<ruleset name="i.materialise (partial)">
+<!--
+	CDN buckets:
+
+		- materialiseimatproduction.s3.amazonaws.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- i.materialise.com
+
+
+	Mixed content:
+
+		- Images in i from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="i.materialise.com">
 
 	<target host="i.materialise.com" />
-		<!--
-			These paths 302 to http:
-
-				- $
-				- 3dprintlab$
-				- 3dprintlab/instance/
-				- creationcorner$
-				- creationcorner/tinkercad$
-
-		<exclusion pattern="^http://i\.materialise\.com/(?:$|(?:3dprintlab|creationcorner)(?:$|[\?/))" /-->
 
 
-	<!--	These paths work:
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^i\.materialise\.com$" name="^(?:ASP\.NET_SessionId|RSiteID|3dpartycheck|cartid)$" /-->
 
-			- blog$
-			- blog/
-			- img/
-			- Storage/
-			- Styles/
-				-->
-	<rule from="^http://i\.materialise\.com/(blog(?:$|[\?/])|img/|Storage/|Styles/)"
-		to="https://i.materialise.com/$1" />
+	<securecookie host="^i\.materialise\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

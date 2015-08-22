@@ -33,21 +33,26 @@
 		- ssl
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- my
-		- .my
-		- ssl
-		- .ssl
-		- techbus
-		- .techbus
-		- www
-		- .www
+		- my.safaribooksonline.com
+		- .my.safaribooksonline.com
+		- ssl.safaribooksonline.com
+		- .ssl.safaribooksonline.com
+		- techbus.safaribooksonline.com
+		- .techbus.safaribooksonline.com
+		- www.safaribooksonline.com
+		- .www.safaribooksonline.com
 
 -->
-<ruleset name="Safari Books Online">
+<ruleset name="Safari Books Online.com">
+
+	<!--	Direct rewrites:
+				-->
   <target host="safaribooksonline.com" />
-  <target host="*.safaribooksonline.com" />
+	<target host="blog.safaribooksonline.com" />
+	<target host="ssl.safaribooksonline.com" />
+	<target host="www.safaribooksonline.com" />
 
 
 	<!--	Not secured by server:
@@ -55,11 +60,12 @@
 	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
 	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
 	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+	<!--securecookie host="\.www\.safaribooksonline\.com$" name="^(?:corp_sessionid|csrfsafari)$" /-->
 
-	<securecookie host="(?:ssl|www)\.safaribooksonline\.com$" name=".+" />
+	<securecookie host="(?:ssl|\.?www)\.safaribooksonline\.com$" name=".+" />
 
 
-	<rule from="^http://((?:blog|ssl|www)\.)?safaribooksonline\.com/"
-		to="https://$1safaribooksonline.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

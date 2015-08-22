@@ -1,57 +1,214 @@
 <!--
-	Nonfunctional subdomains:
+	Other Constant Contact rulesets:
 
-		- visitor.r20 *
-		- visitor *
+		- CtCtCDN.com.xml
 
-	* Times out
+
+	Nonfunctional hosts in *constantcontact.com:
+
+		- investor ¹
+		- jobs ²
+		- support2 ³
+
+	¹ Dropped
+	² Refused
+	³ Redirects to http
 
 
 	Problematic subdomains:
 
-		- blogs		(mismatched)
 		- ih		(akamai)
+		- news ²
+
+	² Mismatched
 
 
 	Partially covered subdomains:
 
-		- (www.)	(some pages redirect to http)
 		- blogs *
-		- developer	(→ www)
+		- news *	(→ constantcontact.newshq.businesswire.com)
+		- techblog *
+		- www		(some pages redirect to http)
 
 	* Some pages redirect to http
 
 
 	Fully covered subdomains:
 
+		- ^
+		- about
+		- community
+		- developer
 		- img.f2	(→ imgssl)
 		- ih		(→ origin.ih)
 		- origin.ih
 		- img		(→ imgssl)
 		- imgssl
+		- login
+		- login-p2
+		- marketplace
+		- visitor.r20
 		- survey
+		- visitor
+
+
+	login-sca1: Reset over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- .constantcontact.com
+		- about.constantcontact.com
+		- community.constantcontact.com
+		- developer.constantcontact.com
+		- login.constantcontact.com
+		- login-p2.constantcontact.com
+		- techblog.constantcontact.com
+		- visitor.constantcontact.com
+		- visitor.r20.constantcontact.com
+
+
+	Mixed content:
+
+		- Images on about from static.ctctcdn.com
 
 -->
-<ruleset name="Constant Contact (partial)">
+<ruleset name="Constant Contact.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="constantcontact.com" />
-	<target host="*.constantcontact.com" />
+	<target host="about.constantcontact.com" />
+	<target host="blogs.constantcontact.com" />
+	<target host="community.constantcontact.com" />
+	<target host="developer.constantcontact.com" />
+	<target host="origin.ih.constantcontact.com" />
+	<target host="imgssl.constantcontact.com" />
+	<target host="login.constantcontact.com" />
+	<target host="login-p2.constantcontact.com" />
+	<target host="marketplace.constantcontact.com" />
+	<target host="techblog.constantcontact.com" />
+	<target host="visitor.r20.constantcontact.com" />
+	<target host="survey.constantcontact.com" />
+	<target host="visitor.constantcontact.com" />
+	<target host="www.constantcontact.com" />
+
+	<!--	Complications:
+				-->
+	<target host="img.f2.constantcontact.com" />
+	<target host="ih.constantcontact.com" />
+	<target host="news.constantcontact.com" />
+
 		<exclusion pattern="^http://blogs\.constantcontact\.com/(?!wp-admin(?:$|[?/])|wp-content/|wp-includes/|wp-login\.php)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://blogs.constantcontact.com/all-constant-contact-social-media/" />
+			<test url="http://blogs.constantcontact.com/category/email-marketing/" />
+			<test url="http://blogs.constantcontact.com/email-marketing-101/" />
+			<test url="http://blogs.constantcontact.com/events/" />
+			<test url="http://blogs.constantcontact.com/interpret-email-reports/" />
+			<test url="http://blogs.constantcontact.com/library/" />
 
-	<securecookie host="^(?:community|origin\.ih|survey)\.constantcontact\.com$" name=".+" />
+			<!--	-ve:
+					-->
+			<test url="http://blogs.constantcontact.com/wp-admin" />
+			<test url="http://blogs.constantcontact.com/wp-content/themes/roots/assets/img/logo_ctct.png" />
+			<test url="http://blogs.constantcontact.com/wp-login.php" />
+
+		<exclusion pattern="^http://www\.constantcontact\.com/(?!favicon\.ico|features/signup\.jsp|login(?:$|\?)|(?:global-(?:login|nav)|login|signup|styles)\.jsp|_styles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.constantcontact.com/campaigns" />
+			<test url="http://www.constantcontact.com/email-marketing" />
+			<test url="http://www.constantcontact.com/help/product-tutorials" />
+			<test url="http://www.constantcontact.com/index.jsp" />
+			<test url="http://www.constantcontact.com/partners "/>
+			<test url="http://www.constantcontact.com/partners/chamber" />
+			<test url="http://www.constantcontact.com/partners/solution-providers" />
+			<test url="http://www.constantcontact.com/pricing" />
+			<test url="http://www.constantcontact.com/resource-center" />
+			<test url="http://www.constantcontact.com/services" />
+			<test url="http://www.constantcontact.com/support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.constantcontact.com/favicon.ico" />
+			<test url="http://www.constantcontact.com/features/signup.jsp" />
+			<test url="http://www.constantcontact.com/global-login.jsp" />
+			<test url="http://www.constantcontact.com/global-nav.jsp" />
+			<test url="http://www.constantcontact.com/login" />
+			<test url="http://www.constantcontact.com/login.jsp" />
+			<test url="http://www.constantcontact.com/signup.jsp" />
+			<test url="http://www.constantcontact.com/styles.jsp" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://news\.constantcontact\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://news\.constantcontact\.com/+(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://news.constantcontact.com/media-contacts" />
+			<test url="http://news.constantcontact.com/news" />
+
+			<!--	-ve:
+					-->
+			<test url="http://news.constantcontact.com/sites/constantcontact.newshq.businesswire.com/themes/constantcontact_newshq_businesswire_com_theme/client_files/images/ctct-plus.png" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://techblog\.constantcontact\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://techblog\.constantcontact\.com/+(?!wp-content/|wp-login\.php)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://techblog.constantcontact.com/api/overview-of-email-marketing/" />
+			<test url="http://techblog.constantcontact.com/category/api/" />
+			<test url="http://techblog.constantcontact.com/devops/space-the-final-frontier-a-story-of-mysql-compression/" />
+			<test url="http://techblog.constantcontact.com/tech-talk/microservices-at-constant-contact/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://techblog.constantcontact.com/wp-content/themes/magazine/images/logo_ctct_techblog.png" />
+			<test url="http://techblog.constantcontact.com/wp-login.php" />
+
+		<test url="http://visitor.constantcontact.com/d.jsp" />
+		<test url="http://visitor.constantcontact.com/manage/optin" />
+		<test url="http://visitor.r20.constantcontact.com/d.jsp" />
+		<test url="http://visitor.r20.constantcontact.com/manage/optin" />
 
 
-	<rule from="^http://((?:blogs|community|origin\.ih|survey)\.)?constantcontact\.com/"
-		to="https://$1constantcontact.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.constantcontact\.com$" name="^cclp_(content|partner|referral)$" /-->
+	<!--securecookie host="^about\.constantcontact\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^community\.constantcontact\.com$" name="^(LiSESSIONID|LithiumUserInfo|LithiumUserSecure|LithiumVisitor)$" /-->
+	<!--securecookie host="^(developer|login(-p2)?|visitor(\.r20)?)\.constantcontact\.com$" name="^BIGipServer\w+$" /-->
+	<!--securecookie host="^developer\.constantcontact\.com$" name="^(JSESSIONID|dmid)$" /-->
+	<!--securecookie host="^techblog\.constantcontact\.com$" name="^X-Mapping-fjhppofk$" /-->
 
-	<rule from="^http://(?:developer|www)\.constantcontact\.com/(favicon\.ico|features/signup\.jsp|(?:global-(?:login|nav)|login|styles)\.jsp|_styles/)"
-		to="https://www.constantcontact.com/$1" />
+	<securecookie host="^\.constantcontact\.com$" name="^cclp_(?:content|partner|referral)$" />
+	<securecookie host="^(?:about|community|developer|origin\.ih|login|login-p2|visitor\.r20|survey|visitor)\.constantcontact\.com$" name=".+" />
+
+
+	<rule from="^http://img\.f2\.constantcontact\.com/"
+		to="https://imgssl.constantcontact.com/" />
 
 	<rule from="^http://ih\.constantcontact\.com/"
 		to="https://origin.ih.constantcontact.com/" />
 
-	<rule from="^http://img(?:\.f2|ssl)?\.constantcontact\.com/"
-		to="https://imgssl.constantcontact.com/" />
+	<rule from="^http://news\.constantcontact\.com/"
+		to="https://constantcontact.newshq.businesswire.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

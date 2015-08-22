@@ -1,49 +1,85 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://i.pgcdn.com/ => https://images.pricegrabber.com/: (28, 'Connection timed out after 10001 milliseconds')
-
 	Clients are handled in PriceGrabber-clients.xml.
 
 
-	Problematic domains:
+	Other PriceGrabber rulesets:
 
-		- i.pgcdn.com *
+		- PG_CDN.com.xml
+
+
+	CDN buckets:
+
+		- d2iz0h6pqiasve.cloudfront.net
+
+		- d2xu6t5g41jmzy.cloudfront.net
+
+			- ah.pricegrabber.com
+
+
+	Problematic domains:
 
 		- *.pgpartner.com	(works; mismatched, CN: www.pricegrabber.com)
 
 		- pricegrabber.com subdomains:
 
 			- ^	(cert only matches www)
-			- ah *
+			- ah ³
 			- ai *
+			- partners ²
 
+	² Mismatched
+	³ Cloudfront
 	* Akamai
 
+
+	images.pricegrabber.com: Dropped over http & https
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .pricegrabber.com
+		- www.pricegrabber.com
+
+
+	Mixed content:
+
+		- Images on www from cfsi.pgcdn.com
+		- Ads on www from $self
+
 -->
-<ruleset name="PriceGrabber" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="PriceGrabber.com">
 
-	<target host="i.pgcdn.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="partner.pricegrabber.com" />
+	<target host="www.pricegrabber.com" />
+
+	<!--	Complications:
+				-->
 	<target host="pricegrabber.com" />
-	<target host="*.pricegrabber.com" />
+	<target host="ah.pricegrabber.com" />
+	<target host="ai.pricegrabber.com" />
+	<target host="partners.pricegrabber.com" />
 
 
-	<!--	Observed cookie domains:
-
-			- .
-			- images
-			- www
+	<!--	Not secured by server:
 					-->
+	<!--securecookie host="\.pricegrabber\.com$" name="^(dw_expire|dw_s_epoch_time|dw_s_id|dw_s_not_log|traffic|ut_cookie|ut_timestamp)$" /-->
+	<!--securecookie host="www\.pricegrabber\.com$" name="^(Apache|PGLB|PHPSESSID)$" /-->
+
 	<securecookie host=".*\.pricegrabber\.com$" name=".+" />
 
 
-	<rule from="^http://i\.pgcdn\.com/"
-		to="https://images.pricegrabber.com/" />
+	<rule from="^http://ah\.pricegrabber\.com/"
+		to="https://d2xu6t5g41jmzy.cloudfront.net/" />
 
-	<rule from="^http://(?:a[hi]\.|www\.)?pricegrabber\.com/"
+	<rule from="^http://(?:ai\.)?pricegrabber\.com/"
 		to="https://www.pricegrabber.com/"/>
 
-	<rule from="^http://(images|partner)\.pricegrabber\.com/"
-		to="https://$1.pricegrabber.com/" />
+	<rule from="^http://partners\.pricegrabber\.com/"
+		to="https://partner.pricegrabber.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -26,9 +26,6 @@ implement them as automated tests:
   ruleset is disabled.
 - Click HTTP Everywhere icon, click ruleset again.
 - Reopen HTTPS Everywhere icon menu, verify ruleset shows up in green.
-- Click HTTPS Everywhere icon menu, click 'Enable / disable rules'. This will
-  freeze up the browser for a few seconds. Verify it eventually opens up a
-  dialog box listing all rules.
 - Right-click on a rule, click 'View XML source.' Verify it opens up a dialog
   box and shows the rule source.
 - Click HTTPS Everywhere icon menu, click 'Block all HTTP requests'. Verify icon

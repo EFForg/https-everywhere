@@ -1,8 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://virtualnewscenter.wpengine.netdna-cdn.com/ => https://virtualnewscenter.com/: Too many redirects while fetching 'https://virtualnewscenter.com/'
-Fetch error: http://virtualnewscenter.com/ => https://virtualnewscenter.com/: Too many redirects while fetching 'https://virtualnewscenter.com/'
-
 	CDN buckets:
 
 		- virtualnewscenter.wpengine.netdna-cdn.com
@@ -10,20 +6,35 @@ Fetch error: http://virtualnewscenter.com/ => https://virtualnewscenter.com/: To
 			- ssl does not exist
 
 -->
-<ruleset name="Virtual News Center" default_off='failed ruleset test'>
+<ruleset name="Virtual News Center.com" default_off="redirects to http">
 
-	<target host="virtualnewscenter.wpengine.netdna-cdn.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="virtualnewscenter.com" />
-	<target host="*.virtualnewscenter.com" />
+	<target host="www.virtualnewscenter.com" />
+
+	<!--	Complications:
+				-->
+	<target host="virtualnewscenter.wpengine.netdna-cdn.com" />
 
 
-	<securecookie host="^\.virtualnewscenter.com$" name=".+" />
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?virtualnewscenter\.com/+(?:$|wp-content/|wp-login\.php)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://virtualnewscenter.com/wp-content/uploads/target_128.png" />
+			<test url="http://virtualnewscenter.com/wp-login.php" />
 
 
-	<rule from="^http://(www\.)?virtualnewscenter\.com/"
-		to="https://$1virtualnewscenter.com/" />
+	<!--securecookie host="^\.virtualnewscenter.com$" name=".+" /-->
+
 
 	<rule from="^http://virtualnewscenter\.wpengine\.netdna-cdn\.com/"
 		to="https://virtualnewscenter.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

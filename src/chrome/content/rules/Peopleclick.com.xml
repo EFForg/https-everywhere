@@ -1,14 +1,7 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://peopleclick.com/ => https://www.peoplefluent.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.peoplefluent.com'")
-
-	For rules causing false/broken MCB, see Peopleclick.com.xml.
+	For rules causing false/broken MCB, see Peopleclick.com-falsemixed.xml.
 
 	For other PeopleFluent coverage, see PeopleFluent.com.xml.
-
-
-	(www.): Works; expired, mismatched, CN: peopleclickauthoria.com
 
 
 	Problematic subdomains:
@@ -32,14 +25,25 @@ Fetch error: http://peopleclick.com/ => https://www.peoplefluent.com/: (51, "SSL
 	* Secured by us
 
 -->
-<ruleset name="Peopleclick.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Peopleclick.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="peopleclick.com" />
-	<target host="*.peopleclick.com" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="careers.peopleclick.com" />
+	<target host="saml.peopleclick.com" />
+	<target host="www.peopleclick.com" />
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://careers\.peopleclick\.com/+(?!content/)" />
+
+			<test url="http://careers.peopleclick.com/careerscp/client_dowcorning/external/search.do" />
+			<test url="http://careers.peopleclick.com/careerscp/client_nxp/external/search.do" />
+
+			<!--	-ve:
+					-->
+			<test url="http://careers.peopleclick.com/content/live/default/images/nav_gradient.gif" />
 
 
 	<!--	Secured by server:
@@ -48,10 +52,7 @@ Fetch error: http://peopleclick.com/ => https://www.peoplefluent.com/: (51, "SSL
 	<!--securecookie host="^saml\.peopleclick\.com$" name="^PF$" /-->
 
 
-	<rule from="^http://(?:www\.)?peopleclick\.com/"
-		to="https://www.peoplefluent.com/" />
-
-	<rule from="^http://(careers|saml)\.peopleclick\.com/"
-		to="https://$1.peopleclick.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

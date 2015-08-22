@@ -1,21 +1,24 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://veracode.com/ => https://veracode.com/: (51, "SSL: no alternative certificate subject name matches target host name 'veracode.com'")
-	Mixed content:
+	^veracode.com: Mismatched
 
-		- css on blog from cloud.typography.com *
 
-		- Images on blog from $self *
+	Insecure cookies are set for these hosts:
 
-		- Images on info and www from www *
-
-	* Secured by us
+		- info.veracode.com
 
 -->
-<ruleset name="Veracode.com" default_off='failed ruleset test'>
+<ruleset name="Veracode.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="analysiscenter.veracode.com" />
+	<target host="blog.veracode.com" />
+	<target host="info.veracode.com" />
+	<target host="www.veracode.com" />
+
+	<!--	Complications:
+				-->
 	<target host="veracode.com" />
-	<target host="*.veracode.com" />
 
 
 	<!--	Not secured by server:
@@ -25,7 +28,10 @@ Fetch error: http://veracode.com/ => https://veracode.com/: (51, "SSL: no altern
 	<securecookie host="^(?:analysiscenter|info)\.veracode\.com$" name=".+" />
 
 
-	<rule from="^http://((?:analysiscenter|blog|info|www)\.)?veracode\.com/"
-		to="https://$1veracode.com/" />
+	<rule from="^http://veracode\.com/"
+		to="https://www.veracode.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -2,9 +2,12 @@
 	Nonfunctional subdomains:
 
 		- www.edlug *
+		- www.lib *
+		- www.maths **
 		- unixhelp ²
 
 	* Refused
+	** Shows info.maths.ed.ac.uk
 	² Shows www.ug.ucs.ed.ac.uk
 
 
@@ -17,16 +20,39 @@
 	² Some branches via HTTPS require authentication, but are public via HTTP
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for thses domains and hosts:
 
-		- www.ease
-		- wiki.inf
+		- .ease.ed.ac.uk
+		- info.maths.ed.ac.uk
+		- .projects.ed.ac.uk
+
+
+	Mixed content:
+
+		- Images on www.myed from www.ed.ac.uk *
+
+	* Unsecurable <= redirects to www.ease.ed.ac.uk
 
 -->
 <ruleset name="Ed.ac.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="www.ease.ed.ac.uk" />
 	<target host="wiki.inf.ed.ac.uk" />
+	<target host="info.maths.ed.ac.uk" />
+	<target host="webstats.maths.ed.ac.uk" />
+	<target host="www.myed.ed.ac.uk" />
+	<target host="www.projects.ed.ac.uk" />
+	<target host="www.wiki.ed.ac.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^info\.maths\.ed\.ac\.uk$" name="^SN[\da-f]+$" /-->
+	<!--securecookie host="^\.projects\.ed\.ac\.uk$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^info\.maths\.ed\.ac\.uk$" name=".+" />
 
 
 	<rule from="^http:"

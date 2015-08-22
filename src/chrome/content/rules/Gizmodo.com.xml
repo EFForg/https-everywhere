@@ -5,32 +5,44 @@
 	CN: *.a.ssl.fastly.net
 
 
+	Insecure cookies are set for these hosts:
+
+		- gizmodo.com
+		- www.gizmodo.com
+
+
 	Mixed content:
 
-		- css from c.kinja-static.com
+		- css from gawker-labs.com ¹
+		- Images from i.kinja-img.com
 
-		- Images, from:
+		- Ads/bugs, from:
 
-			- img.gawkerassets.com ²
-			- i.kinja-img.com ¹
-			- c.kinja-static.com ¹
+			- pubads.g.doubleclick.net ²
+			- b.scorecardresearch.com ¹
 
-		- favicon from c.kinja-static.com ¹
-
-	¹ Secured in Kinja-problematic.xml (off by default)
-	² Secured by us
+	¹ Secured by us
+	² Ruleset disabled by default
 
 -->
 <ruleset name="Gizmodo.com" default_off="mismatched">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gizmodo.com" />
-	<target host="*.gizmodo.com" />
+	<target host="cache.gizmodo.com" />
+	<target host="us.gizmodo.com" />
+	<target host="www.gizmodo.com" />
 
 
-	<securecookie host="^\.?gizmodo\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?gizmodo\.com$" name="^geocc$" /-->
+
+	<securecookie host="^(?:\.|www\.)?gizmodo\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(cache\.|us\.)|www\.)?gizmodo\.com/"
-		to="https://$1gizmodo.com//" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

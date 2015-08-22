@@ -16,86 +16,68 @@
 			- omniture.nvidia.com
 
 		- blogs.nvidia.com.edgesuite.net
-
-			- a11.g1.akamai.net
-
 		- http.developer.nvidia.com.edgesuite.net
-
-			- a1890.g.akamai.net
-
 		- developer.download.nvidia.com.edgesuite.net
-
-			- a862.d.akamai.net
-
 		- international.download.nvidia.com.edgesuite.net
-
-			- a551.d.akamai.net
-
 		- us.download.nvidia.com.edgesuite.net
-
-			- a1437.d.akamai.net
-
 		- shield.nvidia.com.edgesuite.net
-
-			- a1017.g2.akamai.net
-
 		- www.nvidia.com.edgesuite.net
-
-			- a1650.g.akamai.net
 
 
 	Nonfunctional subdomains:
 
-		- careers ¹
+		- blogs ¹
 		- news.developer ²
 		- download.gfe ²
 		- download-dce-2.gfe ²
 		- investor ²
 		- origin-forums ²
 
-	¹ 504, akamai
+	¹ 503
 	² Dropped
 
 
 	Problematic subdomains:
 
 		- ^ ¹
+		- careers	403
 		- cdn ²
 		- http.developer ²
 		- developer.download ²
 		- us.download ²
 		- forums ³
 		- images ²
+		- nvidianews **
 		- omniture ⁴
 		- shield ²
-		- www ²
 
 	¹ Refused
 	² Works, akamai
 	³ Mismatched, CN: forums.geforce.com
+	** Mismatched
 	⁴ Expired 2014-07-04
 
 
 	Partially covered subdomains:
 
-		- (www.) ¹
-		- blogs ²
 		- shield ¹
 
 	¹ → akamai, avoiding user-visible paths
-	² At least some pages redirect to http
 
 
 	Fully covered subdomains:
 
+		- (www.)?
 		- account
+		- careers	(→ www.nvidia.com)
 		- developer
 		- http.developer *
 		- developer.download *
-		- international.download
+		- international.download *
 		- us.download *
 		- forums	(→ forums.geforce.com)
 		- download-cdn.gfe
+		- gridforums
 		- images *
 		- nbound
 		- nvdeveloper
@@ -112,32 +94,26 @@
 		- account-stage.nvidia.com
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- . ¹
-		- .developer ²
-		- devtalk ³
-		- .devtalk ²
-		- nbound ³
-		- .nbound ²
-		- nvdeveloper ³
-		- nvidianews ³
-		- store ⁴
-
-	¹ Some secured by us <= incomplete support
-	² Secured by server
-	³ Some secured by server, others by us
-	⁴ One secured by server, others untouched by us <= incomplete support
+		- .nvidia.com
+		- developer.nvidia.com
+		- devtalk.nvidia.com
+		- gridforums.nvidia.com
+		- nbound.nvidia.com
+		- nvdeveloper.nvidia.com
+		- nvidianews.nvidia.com
 
 
 	Mixed content:
 
-		- Images on nvidianews from blogs *
-		- Images on nvidianews from www *
-		- Images on nvidianews from l.ytimg.com *
-		- Images on www from images *
+		- Images, on:
 
-		- Web bugs, on:
+			- nvidianews from cms.ipressroom.com.s3.amazonaws.com
+			- nvidianews, www from www.nvidia.com *
+			- www from international.download.nvidia.com *
+
+		- Bugs, on:
 
 			- nvidianews from:
 
@@ -146,86 +122,119 @@
 				- platform.twitter.com *
 
 			- store from omniture *
-
-			- www from $self
-			- www from www.google.com *
+			- www from \w+.fls.doubleclick.net
+			- www from media.fastclick.net *
 
 	* Secured by us
 
 -->
 <ruleset name="nVidia (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="account.nvidia.com" />
+	<target host="developer.nvidia.com" />
+	<target host="devtalk.nvidia.com" />
+	<target host="download-cdn.gfe.nvidia.com" />
+	<target host="images.nvidia.com" />
+	<target host="nbound.nvidia.com" />
+	<target host="nvdeveloper.nvidia.com" />
+	<!--target host="nvidianews.nvidia.com" /-->
+	<target host="es.pforce.nvidia.com" />
+	<target host="research.nvidia.com" />
+	<target host="store.nvidia.com" />
+	<target host="www.nvidia.com" />
+
+	<!--	Complications:
+				-->
 	<target host="nvidia.com" />
-	<target host="*.nvidia.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://blogs\.nvidia\.com/+($|\?|favicon\.ico)" /-->
-		<!--
-			Exceptions:
+	<target host="careers.nvidia.com" />
+	<target host="http.developer.nvidia.com" />
+
+	<target host="developer.download.nvidia.com" />
+	<target host="international.download.nvidia.com" />
+	<target host="us.download.nvidia.com" />
+
+	<target host="forums.nvidia.com" />
+	<target host="nsomniture.nvidia.com" />
+	<target host="omniture.nvidia.com" />
+	<target host="shield.nvidia.com" />
+
+		<!--	Avoid user-visible paths:
+							-->
+		<exclusion pattern="^http://shield\.nvidia\.com/(?!.+\.(?:jp|pn|sv)g(?:$|\?))" />
+
+			<!--	+ve:
 					-->
-		<exclusion pattern="^http://blogs\.nvidia\.com/+(?!wp-content/|wp-includes/)" />
-		<!--
-			Avoid user-visible paths:
+			<test url="http://shield.nvidia.com/android-tv" />
+			<test url="http://shield.nvidia.com/blog" />
+			<test url="http://shield.nvidia.com/newsletter" />
+			<test url="http://shield.nvidia.com/store" />
+			<test url="http://shield.nvidia.com/store/portable" />
+			<test url="http://shield.nvidia.com/tablet" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shield.nvidia.com/profiles/made2game/themes/m2g_bootstrap_subtheme/images/home/carousel-android-tv-1280.jpg" />
+			<test url="http://shield.nvidia.com/profiles/made2game/themes/m2g_bootstrap_subtheme/images/logo-white.svg" />
+			<test url="http://shield.nvidia.com/profiles/made2game/themes/m2g_bootstrap_subtheme/images/refresh.png" />
+
+		<!--	Some pages redirect to http.
 							-->
-		<!--exclusion pattern="^http://(?:www\.)?nvidia\.com/(?!content/|docs/.+\.(jpg|png)$|Download/NvidiaDownload\.css|favicon\.ico|props/)" /-->
-		<exclusion pattern="^http://(?:www\.)?nvidia\.com/+content/.+\.php" />
-		<!--exclusion pattern="^http://shield\.nvidia\.com/(?!favicon\.ico|images/|javascripts/|stylesheets/)" /-->
-		<!--
-			Some stylesheets link images relative to /
-									-->
-		<exclusion pattern="^http://(?:www\.)?nvidia\.com/content/(?!.+/global-nav-home|.+/masthead-oldtemplate|.+/nvidia_nav_us|.+/reset-min|.+/share-2013).+\.css" />
-		<!--exclusion pattern="^http://shield\.nvidia\.com/stylesheets/(?!normalize\.min\.css)" /-->
-		<!--
-			Some pages redirect to http.
-							-->
-		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/|store\?Action=(?:DisplayEditProfilePage|DisplayHelpPage)(?:$|&amp;))" />
+		<exclusion pattern="^http://store\.nvidia\.com/(?!DRHM/|store\?Action=(?:DisplayEditProfilePage|DisplayHelpPage)(?:$|&amp;)|sstore\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://store.nvidia.com/store?Action=DisplayReturnAndCancellationsPage&amp;Locale=it_IT&amp;SiteID=nvidia" />
+			<test url="http://store.nvidia.com/store/defaults/ru_RU/DisplayDRTermsAndConditionsPage" />
+			<test url="http://store.nvidia.com/store/nvidia/it_IT/contact" />
+			<test url="http://store.nvidia.com/store/nvidiamr/en_GB/Content/pbPage.mental-ray" />
+			<test url="http://store.nvidia.com/store/nvidia/en_US/list/ThemeID.326200/categoryID.57244200" />
+			<test url="http://store.nvidia.com/store?Action=DisplayHomePage&amp;Locale=en_US&amp;SiteID=nvidia" />
+			<test url="http://store.nvidia.com/store/nvidia/en_US/custom/pbPage.ShieldTabletPage" />
+
+			<!--	-ve:
+					-->
+			<test url="http://store.nvidia.com/DRHM/Storefront/Site/nvidia/pb/multimedia/dojo/css/fonts.css" />
+			<test url="http://store.nvidia.com/DRHM/servlet/SecureControllerServlet?Action=DisplayHomePage&amp;SiteID=nvidia&amp;locale=en_US" />
+			<test url="http://store.nvidia.com/sstore?Action=DisplayHomePage&amp;SiteID=nvidia&amp;locale=en_US" />
 
 
-	<!--	Incapsula cookies:
+	<!--	Not secured by server:
 					-->
-	<securecookie host="^\.nvidia\.com$" name="^(?:incap_ses_\d+_\d+|visid_incap_\d+)$" />
-	<!--securecookie host="^(devtalk|nbound)\.nvidia\.com$" name="^___utm\w+$" /-->
-	<!--
-		Not secured by server:
-					-->
-	<!--securecookie host="^\.nvidia\.com$" name="^idm-\d+$" /-->
+	<!--securecookie host="^\.nvidia\.com$" name="^(?:incap_ses_\d+_\d+|idm-\d+|s_\w+|visid_incap_\d+)$" /-->
 	<!--securecookie host="^developer\.nvidia\.com$" name="^NSC_\w{32}$" /-->
+	<!--securecookie host="^(devtalk|gridforums|nbound)\.nvidia\.com$" name="^___utm\w+$" /-->
 	<!--securecookie host="^nvdeveloper\.nvidia\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
 	<!--securecookie host="^nvidianews\.nvidia\.com$" name="^ASP\.NET_SessionId$" /-->
 
-	<securecookie host="^\.?(?:developer|devtalk|nbound|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
-	<!--
-		Omniture tracking cookies:
-						-->
-	<securecookie host="^\.(?:store\.)?nvidia\.com$" name="^s_\w+$" />
+	<securecookie host="^\.nvidia\.com$" name="^(?:incap_ses_\d+_\d+|s_\w+|visid_incap_\d+)$" />
+	<securecookie host="^\.?(?:developer|devtalk|gridforums|nbound|nvdeveloper|nvidianews)\.nvidia\.com$" name=".+" />
+	<securecookie host="^\.store\.nvidia\.com$" name="^s_\w+$" />
 
 
-	<rule from="^http://(?:www\.)?nvidia\.com/(?=content/|docs/.+\.(?:jp|pn)g$|Download/NvidiaDownload\.css|favicon\.ico|props/)"
-		to="https://a248.e.akamai.net/f/1650/3297/9h/www.nvidia.com/" />
+	<rule from="^http://nvidia\.com/"
+		to="https://www.nvidia.com/" />
 
-	<rule from="^http://(account|blogs|developer|devtalk|international\.download|download-cdn\.gfe|nbound|nvdeveloper|nvidianews|es\.pforce|research|store)\.nvidia\.com/"
-		to="https://$1.nvidia.com/" />
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://careers\.nvidia\.com/.*"
+		to="https://www.nvidia.com/object/careers.html" />
 
-	<rule from="^http://http\.developer\.nvidia\.com/"
-		to="https://a248.e.akamai.net/f/1890/806/6/http.developer.nvidia.com/" />
+		<test url="http://careers.nvidia.com/?" />
+		<test url="http://careers.nvidia.com//" />
 
-	<rule from="^http://developer\.download\.nvidia\.com/"
-		to="https://a248.e.akamai.net/f/862/5658/3/developer.download.nvidia.com/" />
-
-	<rule from="^http://us\.download\.nvidia\.com/"
-		to="https://a248.e.akamai.net/f/1437/8432/10/us.download.nvidia.com/" />
+	<rule from="^http://(http\.developer|(?:developer|international|us)\.download|shield)\.nvidia\.com/"
+		to="https://a248.e.akamai.net/f/248/10/10/$1.nvidia.com/" />
 
 	<rule from="^http://forums\.nvidia\.com/"
 		to="https://forums.geforce.com/" />
 
-	<rule from="^http://images\.nvidia\.com/"
-		to="https://a248.e.akamai.net/f/248/2862/10/images.nvidia.com/" />
-
 	<rule from="^http://(?:ns)?omniture\.nvidia\.com/"
 		to="https://nvidia-com.122.2o7.net/" />
 
-	<rule from="^http://shield\.nvidia\.com/(?=favicon\.ico|images/|javascripts/|stylesheets/normalize\.min\.css)"
-		to="https://a248.e.akamai.net/f/1017/6644/6h/shield.nvidia.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

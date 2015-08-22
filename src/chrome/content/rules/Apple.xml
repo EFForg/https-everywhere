@@ -9,6 +9,7 @@
 		- Apple_CDN_buckets.xml
 		- Apple_China.xml
 		- Apple-MapKit.com.xml
+		- Appsto.re.xml
 		- CDN-Apple.com.xml
 		- ICloud.com.xml
 		- ITunes.com.xml
@@ -89,13 +90,14 @@
 
 		- concierge *
 		- store *
+		- www *
 
 	* At least some pages redirect to http
 
 
 	Fully covered hosts in *apple.com:
 
-		- (www.)
+		- ^
 		- albert
 		- appldnld		(→ akamai)
 		- appleid
@@ -481,7 +483,7 @@
 
 		<!--	Avoid broken MCB:
 					-->
-		<exclusion pattern="^http://trailers\.apple\.com/(?!(?:app/*|.+(?:css|gif|jpg|png|svg))(?:$|\?))" />
+		<exclusion pattern="^http://trailers\.apple\.com/(?!(?:app/*|.+\.(?:css|gif|jpg|png|svg))(?:$|\?))" />
 
 			<!--	+ve:
 					-->
@@ -504,7 +506,7 @@
 
 		<!--	(don't downgrade stuff that doesn't trigger broken MCB:
 										-->
-		<exclusion pattern="^https://trailers\.apple\.com/(?:app/*|appletv/index\.xml|.+(?:css|gif|jpg|png|svg))(?:$|\?)" />
+		<exclusion pattern="^https://trailers\.apple\.com/(?:app/*|.+\.(?:css|gif|jpg|png|svg|xml))(?:$|\?)" />
 
 			<!--	+ve:
 					-->
@@ -525,6 +527,17 @@
 			<test url="https://trailers.apple.com/ca/" />
 			<test url="https://trailers.apple.com/trailers/wb/thehobbit/" />
 
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="http://www\.apple\.com/shop(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.apple.com/shop/buy-ipad/ipad-air-2" />
+			<test url="http://www.apple.com/shop/delivery-message" />
+			<test url="http://www.apple.com/shop/help" />
+			<test url="http://www.apple.com/shop/payment_plan" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -543,7 +556,7 @@
 	<!--
 		No known problems, just being cautious:
 							-->
-	<securecookie host="^(?!\.?(?:concierg|stor)e\.apple\.com).+\.apple\.com$" name=".+" />
+	<securecookie host="^(?!\.?(?:concierge|store|www)\.apple\.com).+\.apple\.com$" name=".+" />
 
 
 	<rule from="^http://appldnld\.apple\.com/"

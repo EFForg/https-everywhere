@@ -4,7 +4,7 @@
  *
  * @param url: a relative URL to local XML
  */
-function getRuleXml(url) {
+function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
@@ -14,14 +14,18 @@ function getRuleXml(url) {
   if (xhr.readyState != 4) {
     return;
   }
-  return xhr.responseXML;
+  if (returnType === 'xml') {
+    return xhr.responseXML;
+  }
+  return xhr.responseText;
 }
+
 
 // Rules are loaded here
 var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
-for (var i = 0; i < rule_list.length; i++) {
-  all_rules.addFromXml(getRuleXml(rule_list[i]));
-}
+var rule_list = 'rules/default.rulesets';
+all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -504,7 +508,14 @@ function onBeforeRedirect(details) {
 }
 
 // Registers the handler for requests
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
+// We listen to all HTTP hosts, because RequestFilter can't handle tons of url restrictions.
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
+
+// TODO: Listen only to the tiny subset of HTTPS hosts that we rewrite/downgrade.
+var httpsUrlsWeListenTo = ["https://*/*"];
+// See: https://developer.chrome.com/extensions/match_patterns
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: httpsUrlsWeListenTo}, ["blocking"]);
+
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});

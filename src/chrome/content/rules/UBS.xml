@@ -1,21 +1,20 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://connect.ubs.com/ => https://connect.ubs.com/: (7, 'Failed to connect to connect.ubs.com port 443: Connection refused')
-Fetch error: http://ebanking-us.ubs.com/ => https://ebanking-us.ubs.com/: (51, "SSL: no alternative certificate subject name matches target host name 'ebanking-us.ubs.com'")
-Fetch error: http://onesource.ubs.com/ => https://onesource.ubs.com/: (28, 'Resolving timed out after 10519 milliseconds')
-Fetch error: http://www1.ubs.com/ => https://www1.ubs.com/: (7, 'Failed to connect to www1.ubs.com port 443: Connection refused')
-Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to connect to www2.ubs.com port 443: Connection refused')
-
 	Nonfunctional ubs.com subdomains:
 
+		- connect ³
 		- financialservicesinc		(times out)
 		- (www.)ibb			(reset)
+		- www1 ³
+		- www2 ³
+	³ Refused
 
 
 	Problematic ubs.com subdomains:
 
 		- ^
+		- ebanking-us *
+
+	* Mismatched
 
 
 	Partially covered ubs.com subdomains:
@@ -31,7 +30,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 			- apps
 			- apps[12]
 			- assetgateway
-			- connect
 			- connect-ch
 			- connect-ch[12]
 			- clientlogin.ibb
@@ -49,12 +47,10 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 				- ebanking-it
 				- ebanking-it[12]?
 
-			- ebanking-us
 			- grs
 			- jobs
 			- m
 			- neo
-			- onesource
 			- onlineservices
 			- privatebank-us
 			- quotes-global
@@ -66,7 +62,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 			- sbms[12]
 			- secure
 			- www
-			- www[12]
 
 		- www.ubs-static.com		(^ doesn't exist)
 
@@ -78,10 +73,25 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 		- www.ubs.com
 
 -->
-<ruleset name="UBS (partial)" default_off='failed ruleset test'>
+<ruleset name="UBS.com (partial)">
 	<target host="ubs.com" />
 	<target host="*.ubs.com" />
 	<target host="*.ibb.ubs.com" />
+
+		<exclusion pattern="^http://ebanking-us\.ubs\.com/" />
+
+			<test url="http://ebanking-us.ubs.com/" />
+
+		<exclusion pattern="^http://keyinvest\.ibb\.ubs\.com/(?!images/|styles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://keyinvest.ibb.ubs.com/k2/DE/de/tiles/overview.ki?1=overview" />
+			<test url="http://keyinvest.ibb.ubs.com/k2/ES/en/tiles/overview.ki?1=overview" />
+
+			<!--	-ve:
+					-->
+			<test url="http://keyinvest.ibb.ubs.com/images/domicile/ubs_logo_investment_research.gif" />
 
 	<test url="http://ubs.com/" />
 	<test url="http://www.ubs.com/" />
@@ -90,7 +100,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 	<test url="http://apps1.ubs.com/" />
 	<test url="http://apps2.ubs.com/" />
 	<test url="http://assetgateway.ubs.com/" />
-	<test url="http://connect.ubs.com/" />
 	<test url="http://connect-ch.ubs.com/" />
 	<test url="http://connect-ch1.ubs.com/" />
 	<test url="http://connect-ch2.ubs.com/" />
@@ -105,7 +114,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 	<test url="http://ebanking-it.ubs.com/" />
 	<test url="http://ebanking-it1.ubs.com/" />
 	<test url="http://ebanking-it2.ubs.com/" />
-	<test url="http://ebanking-us.ubs.com/" />
 	<test url="http://grs.ubs.com/" />
 	<test url="http://clientlogin.ibb.ubs.com/" />
 	<test url="http://clientportal.ibb.ubs.com/" />
@@ -113,7 +121,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 	<test url="http://jobs.ubs.com/" />
 	<test url="http://m.ubs.com/" />
 	<test url="http://neo.ubs.com/" />
-	<test url="http://onesource.ubs.com/" />
 	<test url="http://onlineservices.ubs.com/" />
 	<test url="http://privatebank-us.ubs.com/" />
 	<test url="http://quotes-global.ubs.com/" />
@@ -126,11 +133,7 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 	<test url="http://sbms2.ubs.com/" />
 	<test url="http://secure.ubs.com/" />
 	<test url="http://www.ubs.com/" />
-	<test url="http://www1.ubs.com/" />
-	<test url="http://www2.ubs.com/" />
-	<test url="http://keyinvest.ibb.ubs.com/" />
 	
-	<exclusion pattern="^http://keyinvest\.ibb\.ubs\.com/(?!images/|styles/)" />
 
 	<!--	Not secured by server:
 					-->
@@ -143,6 +146,6 @@ Fetch error: http://www2.ubs.com/ => https://www2.ubs.com/: (7, 'Failed to conne
 	<rule from="^http://ubs\.com/"
 		to="https://www.ubs.com/" />
 
-	<rule from="^http://(apps[12]?|assetgateway|connect(?:-ch[12]?)?|ebanking-\w+|grs|(?:client(?:login|portal)|keyinvest)\.ibb|jobs|m|neo|onesource|onlineservices|privatebank-us|quotes-global2?|quotes-public1?|realty|sbms[12]?|secure|www[12]?)\.ubs\.com/"
+	<rule from="^http://(apps[12]?|assetgateway|connect-ch[12]?|ebanking-\w+|grs|(?:client(?:login|portal)|keyinvest)\.ibb|jobs|m|neo|onlineservices|privatebank-us|quotes-global2?|quotes-public1?|realty|sbms[12]?|secure|www)\.ubs\.com/"
 		to="https://$1.ubs.com/" />
 </ruleset>

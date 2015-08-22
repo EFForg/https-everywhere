@@ -1,11 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://rubiconproject.com/ => https://rubiconproject.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
-Fetch error: http://www.rubiconproject.com/ => https://www.rubiconproject.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
-Fetch error: http://rubiconproject.net/ => https://rubiconproject.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
-Fetch error: http://www.rubiconproject.net/ => https://www.rubiconproject.com/: (35, 'error:140770FC:SSL routines:SSL23_GET_SERVER_HELLO:unknown protocol')
-
 	Other Rubicon Project rulesets:
 
 		- Fimserve.com.xml
@@ -14,13 +7,12 @@ Fetch error: http://www.rubiconproject.net/ => https://www.rubiconproject.com/: 
 	rubiconproject.net.akadns.net
 
 
-	Problematic domains:
+	Nonfunctional domains:
 
-		- tap-cdn.rubiconproject.com *
-		- tap2-cdn.rubiconproject.com *
-		- (www.)rubiconproject.net	(broken copy of .com, mismatched, CN: *.rubiconproject.com)
+		- (www.)?rubiconproject.com *
+		- (www.)?rubiconproject.net *
 
-	* Akamai
+	* Plaintext reply
 
 
 	Insecure cookies are set for these domains:
@@ -28,9 +20,8 @@ Fetch error: http://www.rubiconproject.net/ => https://www.rubiconproject.com/: 
 		- .rubiconproject.com
 
 -->
-<ruleset name="Rubicon Project.com" default_off='failed ruleset test'>
+<ruleset name="Rubicon Project.com">
 
-	<target host="rubiconproject.com" />
 	<target host="ads.rubiconproject.com" />
 	<target host="anvil.rubiconproject.com" />
 	<target host="arsenal.rubiconproject.com" />
@@ -47,27 +38,17 @@ Fetch error: http://www.rubiconproject.net/ => https://www.rubiconproject.com/: 
 	<target host="tap-cdn.rubiconproject.com" />
 	<target host="tap2-cdn.rubiconproject.com" />
 	<target host="vantage.rubiconproject.com" />
-	<target host="www.rubiconproject.com" />
-	<target host="rubiconproject.net" />
-	<target host="www.rubiconproject.net" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.rubiconproject\.com$" name="^c$" /-->
+	<!--securecookie host="^(pixel)?\.rubiconproject\.com$" name="^c$" /-->
 
-	<securecookie host="^(?:\.pixel|\.?tap)?\.rubiconproject\.com$" name=".+" />
+	<securecookie host="^(?:\.?pixel|\.?tap)?\.rubiconproject\.com$" name=".+" />
 
 
 	<rule from="^http://tap2?-cdn\.rubiconproject\.com/"
 		to="https://tap.rubiconproject.com/" />
-
-	<!--	Broken, but otherwise identical to .com.
-			I doubt that Rubicon would mind
-		us fixing things like so.
-						-->
-	<rule from="^http://(www\.)?rubiconproject\.net/"
-		to="https://$1rubiconproject.com/" />
 
 	<rule from="^http:"
 		to="https:" />

@@ -2,17 +2,21 @@
 	For rules that are on by default, see Fedora.xml.
 
 -->
-<ruleset name="Fedora Project (problematic)" default_off="self-signed">
+<ruleset name="Fedora Project.org (problematic)" default_off="mismatched, self-signed">
 
+	<target host="directory.fedoraproject.org" />
 	<target host="koji.fedoraproject.org" />
-		<!--
-			404:
-				-->
-		<exclusion pattern="^http://koji\.fedoraproject\.org/packages/" />
 	<target host="pkgs.fedoraproject.org" />
 
+		<!--	404:
+				-->
+		<exclusion pattern="^http://koji\.fedoraproject\.org/packages/" />
 
-	<rule from="^http://(koji|pkgs)\.fedoraproject\.org/"
-		to="https://$1.fedoraproject.org/" />
+
+	<securecookie host="^directory\.fedoraproject\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

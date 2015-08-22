@@ -132,7 +132,11 @@ RuleSets.prototype = {
   addFromXml: function(ruleXml) {
     var sets = ruleXml.getElementsByTagName("ruleset");
     for (var i = 0; i < sets.length; ++i) {
-      this.parseOneRuleset(sets[i]);
+      try {
+        this.parseOneRuleset(sets[i]);
+      } catch (e) {
+        log(WARN, 'Error processing ruleset:' + e);
+      }
     }
   },
 

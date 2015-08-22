@@ -1,25 +1,31 @@
 <!--
 	Nonfunctional:
 
+		- (www.)phoronix.net ¹
+		- (www.)phoronix-media.com ¹
 		- (www.)phoromatic.com ¹
-		- (www.)phoronix.com	(ssl_error_rx_record_too_long)
+		- (www.)phoronix-test-suite.com ¹
+		- (www.)phoronix.com/forums (mixed content)
 
-	¹ Shows blank page; self-signed, CN: phx1.phoronix.com
-
+	¹ ssl_error_rx_record_too_long
 -->
-<ruleset name="Phoronix Media (partial)" platform="mixedcontent">
 
+<ruleset name="Phoronix Media">
+  	<target host="phoronix.com" />
+  	<target host="www.phoronix.com" />
 	<target host="openbenchmarking.org" />
 	<target host="www.openbenchmarking.org" />
 
+	<exclusion pattern="^http://(www\.)?phoronix\.com/forums/" />
+		<test url="http://phoronix.com/forums/" />
+		<test url="https://phoronix.com/forums/" />
+		<test url="http://www.phoronix.com/forums/" />
+		<test url="https://www.phoronix.com/forums/" />
+  	<rule from="^https://(www\.)?phoronix\.com/forums/" to="http://$1phoronix.com/forums/" downgrade="1" />
 
-	<securecookie host="^openbenchmarking\.org$" name=".*" />
-	<securecookie host="^phoromatic\.com$" name=".*" />
+	<!-- breaks forum
+	<securecookie host="^.*\.phoronix\.com$" name=".*" />-->
+	<securecookie host="^.*\.openbenchmarking\.org$" name=".*" />
 
-
-	<!--	Michael has noticed our shenanigans and disabled https for pages (unless you pay up).
-		https://trac.torproject.org/projects/tor/ticket/5728	-->
-	<rule from="^http://(www\.)?openbenchmarking\.org/(ads/|(?:create/comment/|result/)?css/|embed\.php|favicon\.ico|s/css/)"
-		to="https://$1openbenchmarking.org/$2" />
-
+  	<rule from="^http:" to="https:" />
 </ruleset>

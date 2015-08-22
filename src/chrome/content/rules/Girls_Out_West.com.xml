@@ -1,0 +1,86 @@
+<!--
+	Other Girls Out West rulesets:
+
+		- Girls_Out_West_Free_Stuff.com.xml
+
+
+	Problematic hosts in *girlsoutwest.com:
+
+		- forum ¹
+		- forums ²
+
+	¹ Mixed css
+	² Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .girlsoutwest.com
+		- forum.girlsoutwest.com
+		- join.girlsoutwest.com
+		- list.girlsoutwest.com
+		- nats.girlsoutwest.com
+
+
+	Mixed content:
+
+		- css on forum from $self
+		- Images on forum from $self
+		- Ad on tour from www.rabbitporno.com
+
+-->
+<ruleset name="Girls Out West.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="girlsoutwest.com" />
+	<target host="forums.girlsoutwest.com" />
+	<target host="galleries.girlsoutwest.com" />
+	<target host="join.girlsoutwest.com" />
+	<target host="list.girlsoutwest.com" />
+	<target host="members.girlsoutwest.com" />
+	<target host="nats.girlsoutwest.com" />
+	<target host="tour.girlsoutwest.com" />
+	<target host="www.girlsoutwest.com" />
+
+	<!--	Complications:
+				-->
+	<target host="forum.girlsoutwest.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://forums?\.girlsoutwest\.com/+(?!clientscript/|cron\.php|favicon\.ico|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://forum.girlsoutwest.com/activity.php" />
+			<test url="http://forum.girlsoutwest.com/calendar.php" />
+			<test url="http://forum.girlsoutwest.com/forumdisplay.php" />
+			<test url="http://forums.girlsoutwest.com/forumdisplay.php?do=markread&amp;markreadhash=guest" />
+			<test url="http://forums.girlsoutwest.com/register.php" />
+			<test url="http://forums.girlsoutwest.com/showgroups.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://forum.girlsoutwest.com/clientscript/vbulletin_css/style00042l/forumhome-rollup.css" />
+			<test url="http://forum.girlsoutwest.com/cron.php?rand=1" />
+			<test url="http://forums.girlsoutwest.com/favicon.ico" />
+			<test url="http://forums.girlsoutwest.com/images/metro/violet_red/misc/navbit-home.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.girlsoutwest\.com$" name="^(?:nats|nats_cookie|nats_sess|nats_unique|pcah)$" /-->
+	<!--securecookie host="^forum\.girlsoutwest\.com$" name="^bb_sessionhash$" /-->
+	<!--securecookie host="^(?:join|list|nats)\.girlsoutwest\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:join|list|nats)?\.girlsoutwest\.com$" name=".+" />
+
+
+	<rule from="^http://forums\.girlsoutwest\.com/"
+		to="https://forum.girlsoutwest.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

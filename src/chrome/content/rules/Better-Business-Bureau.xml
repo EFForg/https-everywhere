@@ -1,9 +1,10 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'Could not resolve host: hurdman.bbb.org')
-
 	Better Business Bureau
+
+	Other Better Business Bureau rulesets:
+
+		- BBB_Online.org.xml
+		- BBB_Silicon.org.xml
 
 
 	Nonfunctional domains:
@@ -28,20 +29,9 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 		- (www.)?setflorida.bbb.org *
 		- (www.)?us.bbb.org ¹
 
-		- (www.)?bbbonline.org *
-		- (www.)?bbbsilicon.org ³
-
 	¹ Dropped
 	* Mismatched
 	³ Shows default page
-
-
-	Partially covered domains:
-
-		- (www.)?bbbonline.com		(→ www.bbb.org)
-		- (www.)?bbbsilicon.org*	(→ www.bbb.org)
-
-	* (?!$|\?) doesn't redirect
 
 
 	Fully covered domains:
@@ -58,15 +48,16 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 			- (www.)?sanjose
 			- seal-centralalabama
 			- seal-goldengate
+			- seal-newyork
 
 
 	Insecure cookies are set for these domains and hosts:
 
 		- .bbb.org
-		- hurdman.app.bbb.org
-		- sanjose.app.bbb.org
+		- (area).app.bbb.org
 		- charityreports.bbb.org
 		- .goldengate.bbb.org
+		- seal-(area).bbb.org
 
 
 	Mixed content:
@@ -79,10 +70,10 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 	* Secured by us
 
 -->
-<ruleset name="BBB.org (partial)" default_off='failed ruleset test'>
+<ruleset name="BBB.org (partial)">
 
 	<target host="bbb.org"/>
-	<target host="hurdman.app.bbb.org"/>
+	<target host="*.app.bbb.org"/>
 	<target host="*.bbb.org"/>
 		<!--
 			(www.)dcbbb.org redirects here		-->
@@ -98,49 +89,13 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 			<test url="http://seflorida.bbb.org/" />
 			<test url="http://www.seflorida.bbb.org/" />
 
-	<target host="bbbonline.org"/>
-	<target host="www.bbbonline.org"/>
-	<target host="bbbsilicon.org" />
-	<target host="www.bbbsilicon.org" />
 	<!--target host="labbb.org"/-->
 	<!--target host="www.labbb.org"/-->
-
-		<exclusion pattern="^http://(?:www\.)?bbbonline\.org/(?!cks\.asp\?id=\d)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://bbbonline.org//foo" />
-			<test url="http://www.bbbonline.org//foo" />
-
-			<!--	-ve:
-					-->
-			<test url="http://bbbonline.org/cks.asp?id=1" />
-			<test url="http://bbbonline.org/cks.asp?id=10" />
-			<test url="http://www.bbbonline.org/cks.asp?id=100" />
-
-		<exclusion pattern="http://(?:www\.)?bbbsilicon\.org/+(?!$|\?)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://bbbsilicon.org/commonreport.html" />
-			<test url="http://bbbsilicon.org/espanol/" />
-			<test url="http://bbbsilicon.org/news-events/" />
-			<test url="http://bbbsilicon.org/programs-services/" />
-			<test url="http://www.bbbsilicon.org/commonreport.html" />
-			<test url="http://www.bbbsilicon.org/espanol/" />
-			<test url="http://www.bbbsilicon.org/news-events/" />
-			<test url="http://www.bbbsilicon.org/programs-services/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://bbbsilicon.org/?" />
-			<test url="http://bbbsilicon.org/?foo" />
-			<test url="http://www.bbbsilicon.org/?" />
-			<test url="http://www.bbbsilicon.org/?foo" />
 
 		<test url="http://assets.bbb.org/" />
 		<test url="http://charityreports.bbb.org/" />
 		<test url="http://sanjose.bbb.org/" />
+		<test url="http://seal-newyork.bbb.org/seals/black-seal-200-42-whitetxt-dashlane-1.png" />
 
 
 	<!--	Not secured by server:
@@ -150,6 +105,7 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 	<!--securecookie host="^(hurdman|sanjose)\.app\.bbb\.org$" name="^bbb$" /-->
 	<!--securecookie host="^sanjose\.app\.bbb\.org$" name="^(before|current|previous)$" /-->
 	<!--securecookie host="^charityreports\.bbb\.org$" name="^(ASP\.NET_SessionId|BBB_Cookie)$" /-->
+	<!--securecookie host="seal-area\.bbb\.org$" name="^BBB_Cookie$" /-->
 
 	<securecookie host="^.*\.bbb\.org$" name=".*" />
 	<!--securecookie host="^www\.labbb\.org$" name=".*"/-->
@@ -175,13 +131,7 @@ Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'C
 	<rule from="^http://(hurdman|sanjose)\.app\.bbb\.org/"
 		to="https://$1.app.bbb.org/"/>
 
+		<test url="http://hurdman.app.bbb.org/abs/login.html" />
 		<test url="http://sanjose.app.bbb.org/abs/login.html" />
-
-	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp"
-		to="https://www.bbb.org/us/bbb-online-business/" />
-
-	<rule from="^http://(?:www\.)?bbbsilicon\.org/+(?:\?.*)?"
-		to="https://sanjose.bbb.org/" />
-
 
 </ruleset>

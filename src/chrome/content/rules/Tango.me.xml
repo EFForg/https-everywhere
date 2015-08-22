@@ -1,38 +1,65 @@
 <!--
-	For rules causing false/broken MCB, see Tango.me-falsemixed.xml.
-
-
-	Problematic subdomains:
+	Nonfunctional hosts in *tango.me:
 
 		- support *
 
 	* zendesk
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- .tango.me
+		- www.tango.me
+
+
 	Mixed content:
 
-		- Images from $self and ^ *
-
-		- css from $self *
+		- Images from media.tango.me *
+		- Images from $self *
 
 	* Secured by us
 
 -->
 <ruleset name="Tango.me (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="tango.me" />
-	<target host="support.tango.me" />
+	<target host="media.tango.me" />
 	<target host="www.tango.me" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://(www\.)?tango\.me/+(?!css/|favicon\.ico|images/|wp-content/|wp-includes/)" /-->
+
+	<!--	Complications:
+				-->
+	<target host="support.tango.me" />
+
+		<exclusion pattern="^http://support\.tango\.me/(?!favicon\.ico|images/|system/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.tango.me/access/unauthenticated" />
+			<test url="http://support.tango.me/anonymous_requests/new" />
+			<test url="http://support.tango.me/forums" />
+			<test url="http://support.tango.me/home" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.tango.me/favicon.ico" />
+			<test url="http://support.tango.me/images/logo-delimiter.png" />
 
 
-	<rule from="^http://(www\.)?tango\.me/(?=css/|favicon\.ico|images/|wp-content/|wp-includes/)"
-		to="https://$1tango.me/" />
+	<!--	Incapsula cookies:
+					-->
+	<!--securecookie host="^\.tango\.me$" name="(?:incap_ses_\d+|nlbi|visid_incap)_\d+$" /-->
+	<!--securecookie host="^www\.tango\.me$" name="^___utm[abm]\w+$" /-->
 
-	<rule from="^http://support\.tango\.me/(?=favicon\.ico|generated/|images/|system/)"
+	<securecookie host="^\.tango\.me$" name="(?:incap_ses_\d+|nlbi|visid_incap)_\d+$" />
+	<securecookie host="^www\.tango\.me$" name=".+" />
+
+
+	<rule from="^http://support\.tango\.me/"
 		to="https://tangome.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

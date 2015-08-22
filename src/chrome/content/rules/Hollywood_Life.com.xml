@@ -1,7 +1,6 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.hollywoodlife.com/ => https://www.hollywoodlife.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.hollywoodlife.com'")
+	www.hollywoodlife.com: Mismatched
+
 
 	Mixed content:
 
@@ -10,22 +9,45 @@ Fetch error: http://www.hollywoodlife.com/ => https://www.hollywoodlife.com/: (5
 		- Images, from:
 
 			- www-hollywoodlife-com.vimg.net *
+			- pmchollywoodlife.files.wordpress.com *
 			- i\d.wp.com *
+
+		- Bug from b.scorecardresearch.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Hollywood Life.com" default_off='failed ruleset test'>
+<ruleset name="Hollywood Life.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hollywoodlife.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.hollywoodlife.com" />
 	<target host="www-hollywoodlife-com.vimg.net" />
 
+		<exclusion pattern="^http://www-hollywoodlife-com\.vimg\.net/(?!theme/)" />
 
-	<rule from="^http://(www\.)?hollywoodlife\.com/"
-		to="https://$1hollywoodlife.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://www-hollywoodlife-com.vimg.net/index.php" />
+			<test url="http://www-hollywoodlife-com.vimg.net/wp-content/uploads/2012/05/bollywoodlife120530162847.jpg" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www-hollywoodlife-com.vimg.net/theme/" />
+
+
+	<rule from="^http://www\.hollywoodlife\.com/"
+		to="https://hollywoodlife.com/" />
 
 	<rule from="^http://www-hollywoodlife-com\.vimg\.net/theme/"
 		to="https://a248.e.akamai.net/f/248/1/1/www-hollywoodlife-com.vimg.net/theme/" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

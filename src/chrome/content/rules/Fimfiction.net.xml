@@ -1,16 +1,34 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://fimfiction-static.net/ => https://www.fimfiction-static.net/: (28, 'Resolving timed out after 10519 milliseconds')
-Fetch error: http://www.fimfiction-static.net/ => https://www.fimfiction-static.net/: (28, 'Resolving timed out after 10518 milliseconds')
+	Fully covered hosts in *fimfiction.net:
+
+		- (www.)?
+		- cdn-img
+		- static
+
+
+	Insecure cookies are set for these domains:
+
+		- .fimfiction.net
 
 -->
-<ruleset name="Fimfiction.net" default_off='failed ruleset test'>
-  <target host="fimfiction.net" />
-  <target host="www.fimfiction.net" />
-  <rule from="^http://(?:www\.)?fimfiction\.net/" to="https://www.fimfiction.net/"/>
+<ruleset name="Fimfiction.net">
 
-  <target host="fimfiction-static.net" />
-  <target host="www.fimfiction-static.net" />
-  <rule from="^http://(?:www\.)?fimfiction-static\.net/" to="https://www.fimfiction-static.net/"/>
+	<!--	Direct rewrites:
+				-->
+  <target host="fimfiction.net" />
+	<target host="cdn-img.fimfiction.net" />
+	<target host="static.fimfiction.net" />
+  <target host="www.fimfiction.net" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.fimfiction\.net$" name="^(__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.fimfiction\.net$" name=".+" />
+
+
+  <rule from="^http:"
+		to="https:" />
+
 </ruleset>

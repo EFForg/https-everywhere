@@ -4,22 +4,69 @@
 		- d3n8a8pro7vhmx.cloudfront.net
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *nationbuilder.com:
 
-		- www		(times out)
+		- status *
+
+	* Dropped
+
+
+	www.nationbuilder.com: Dropped
 
 -->
-<ruleset name="NationBuilder (partial)">
+<ruleset name="NationBuilder.com (partial)">
 
 	<target host="nationbuilder.com" />
 	<target host="*.nationbuilder.com" />
-		<exclusion pattern="^http://(?:www\.)?nationbuilder\.com/(?!assets/|themes/)" />
+
+		<exclusion pattern="^http://status\.nationbuilder\.com/" />
+
+			<test url="http://status.nationbuilder.com/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://nationbuilder\.com/(?:$|nation_login$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://nationbuilder\.com/+(?!assets/|(?:create|login)(?:$|\?)|themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://nationbuilder.com/about" />
+			<test url="http://nationbuilder.com/apps" />
+			<test url="http://nationbuilder.com/community" />
+			<test url="http://nationbuilder.com/events" />
+			<test url="http://nationbuilder.com/nation_login" />
+			<test url="http://nationbuilder.com/pricing" />
+			<test url="http://nationbuilder.com/resources" />
+			<test url="http://nationbuilder.com/suggest" />
+			<test url="http://nationbuilder.com/support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://nationbuilder.com/create" />
+			<test url="http://nationbuilder.com/login" />
+
+		<test url="http://www.nationbuilder.com/" />
+
+		<test url="http://3dna.nationbuilder.com/session_pair_phase_2" />
+		<test url="http://segreens.nationbuilder.com/session_pair_phase_2" />
 
 
-	<rule from="^http://(?:www\.)?nationbuilder\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nationbuilder\.com$" name="^(?:__cfduid|__qca|cf_clearance)$" /-->
+	<!--securecookie host="^3dna\.nationbuilder\.com$" name="^_nbuild_session$" /-->
+
+	<securecookie host="^\.nationbuilder\.com$" name="^(?:__cfduid|__qca|cf_clearance)$" />
+	<securecookie host="^3dna\.nationbuilder\.com$" name=".+" />
+
+
+	<rule from="^http://www\.nationbuilder\.com/"
 		to="https://nationbuilder.com/" />
 
-	<rule from="^http://([\w-]+)\.nationbuilder\.com/"
-		to="https://$1.nationbuilder.com/" />
+	<rule from="^http://([\w-]+\.)?nationbuilder\.com/"
+		to="https://$1nationbuilder.com/" />
 
 </ruleset>

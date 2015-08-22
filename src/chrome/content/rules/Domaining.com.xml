@@ -1,23 +1,35 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://domaining.com/ => https://domaining.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.domaining.com/ => https://www.domaining.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Mixed content:
+	These altnames don't exist:
 
-		- Images from $self *
+		- www.partner.domaining.com
 
-		- favicon from $self *
 
-	* Secured by us
+	Insecure cookies are set for these hosts:
+
+		- domaining.com
+		- partner.domaining.com
+		- www.domaining.com
 
 -->
-<ruleset name="Domaining.com" default_off='failed ruleset test'>
+<ruleset name="Domaining.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="domaining.com" />
+	<target host="partner.domaining.com" />
 	<target host="www.domaining.com" />
 
 
-	<rule from="^http://(www\.)?domaining\.com/"
-		to="https://$1domaining.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^domaining\.com$" name="^hclick-\d+$" /-->
+	<!--securecookie host="^partner\.domaining\.com$" name="^(?:Chk|Conversion|click-\d+/)$" /-->
+	<!--securecookie host="^www\.domaining\.com$" name="(?:LargeAds|hclick-\d+)$" /-->
+
+	<securecookie host="^(?:partner\.|www\.)?domaining\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -52,17 +52,35 @@
 -->
 <ruleset name="Webs (partial)">
 
-	<target host="images.freewebs.com" />
-	<target host="images.webs.com"/>
-	<target host="static.websimages.com" />
-	<target host="secure.websimages.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="origin.images.webs.com" />
 
-	<rule from="^http://((?:es\.)?premium\.)?members\.webs\.com/"
-		to="https://$1members.webs.com/"/>
+	<target host="members.webs.com" />
+	<target host="premium.members.webs.com" />
+	<target host="es.premium.members.webs.com" />
 
-	<rule from="^http://(images\.(?:free)?web|static\.websimage)s\.com/"
+	<target host="secure.websimages.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.freewebs.com" />
+
+	<target host="images.webs.com"/>
+
+	<target host="static.websimages.com" />
+
+
+	<rule from="^http://images\.(?:free)?webs\.com/"
 		to="https://a248.e.akamai.net/f/1129/8333/3m/$1s.com/" />
+
+	<!--	Protocol-relative links on members.webs.com:
+								-->
+	<rule from="^https?://static\.websimages\.com/"
+		to="https://a248.e.akamai.net/f/1129/8333/3m/$1s.com/" />
+
+		<test url="https://static.websimages.com/v27bc832/active-static/target/external/css/index.css" />
+
 	<rule from="^http:"
 	        to="https:" />
 	

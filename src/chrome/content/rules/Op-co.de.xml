@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://op-co.de/ => https://op-co.de/: (60, 'SSL certificate problem: self signed certificate in certificate chain')
 	Problematic subdomains:
 
 		- www	(cert only matches ^op-co.de)
@@ -12,13 +10,22 @@ Fetch error: http://op-co.de/ => https://op-co.de/: (60, 'SSL certificate proble
 		- gallery
 
 -->
-<ruleset name="op-co.de" platform="cacert" default_off='failed ruleset test'>
+<ruleset name="op-co.de" platform="cacert">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="op-co.de" />
-	<target host="*.op-co.de" />
+	<target host="gallery.op-co.de" />
+
+	<!--	Complications:
+				-->
+	<target host="www.op-co.de" />
 
 
-	<rule from="^http://(?:(gallery\.)|www\.)?op-co\.de/"
-		to="https://$1op-co.de/" />
+	<rule from="^http://www\.op-co\.de/"
+		to="https://op-co.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

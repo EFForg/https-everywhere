@@ -1,6 +1,12 @@
 <!--
 	Ruhr-Universitaet Bochum
 
+	For rules causing false/broken MCB, see Ruhr-Uni-Bochum.de-falsemixed.xml.
+
+	Other Ruhr-Universitaet Bochum rulesets:
+
+		- RUB.de.xml
+
 
 	^ruhr-uni-bochum.de: mismatched
 
@@ -14,12 +20,6 @@
 	² Mismatched
 
 
-	Fully covered subdomains:
-
-		- (www.)	(^ -> www)
-		- www.rz
-
-
 	Partially covered subdomains:
 
 		- www.cits *
@@ -31,36 +31,58 @@
 
 		- css, on:
 
-			- www.cits from www.rz ¹ 
+			- www.cits, www.lps, from www.rz ¹
 			- www5.rz from www.rz.ruhr-uni-bochum.de ¹
 
 		- Images, on:
 
-			- www.cits from www.rz ¹ 
+			- www.cits, www.lps from www.rz ¹
 			- www.rz from aktuell.rub.de
 			- www5.rz from www.rz ¹
 			- www5.rz from www ¹
-			- www from aktuell.rub.de ² 
+			- www from aktuell.rub.de ²
 			- www from aktuell.ruhr-uni-bochum.de ²
 
 	¹ Secured by us
-	² Not secured by us <= mismatched 
+	² Not secured by us <= mismatched
 
 -->
 <ruleset name="Ruhr-Uni-Bochum.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.cits.ruhr-uni-bochum.de" />
+	<target host="lists.ruhr-uni-bochum.de" />
+	<!--target host="www.lps.ruhr-uni-bochum.de" /-->
+	<target host="lists1.mail.ruhr-uni-bochum.de" />
+	<target host="helpdesk.rz.ruhr-uni-bochum.de" />
+	<target host="www.rz.ruhr-uni-bochum.de" />
+	<target host="www.ruhr-uni-bochum.de" />
+
+	<!--	Complications:
+				-->
 	<target host="ruhr-uni-bochum.de" />
-	<target host="*.ruhr-uni-bochum.de" />
-		<!--
-			Avoid false/broken MCB:
+
+		<!-- 	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://www\.cits\.ruhr-uni-bochum\.de/+(?!imperia/md/(?:content|images)/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://www.cits.ruhr-uni-bochum.de/conferences/index.html" />
+			<test url="http://www.cits.ruhr-uni-bochum.de/lehre/index.html" />
+			<test url="http://www.cits.ruhr-uni-bochum.de/mystery/mysterytwister.html" />
+			<test url="http://www.cits.ruhr-uni-bochum.de/partner/index.html" />
 
-	<rule from="^http://(?:www\.)?ruhr-uni-bochum\.de/"
+			<!--	-ve:
+					-->
+			<test url="http://www.cits.ruhr-uni-bochum.de/imperia/md/images/logos/logocits.png" />
+
+
+	<rule from="^http://ruhr-uni-bochum\.de/"
 		to="https://www.ruhr-uni-bochum.de/" />
 
-	<rule from="^http://(www\.cits|(?:helpdesk|www)\.rz)\.ruhr-uni-bochum\.de/"
-		to="https://$1.ruhr-uni-bochum.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

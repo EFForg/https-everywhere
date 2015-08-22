@@ -13,35 +13,53 @@
 
 	Nonfunctional subdomains:
 
+		- blog ¹
 		- docs		(404; mismatched, CN: *.github.com)
 		- status	(times out)
+
+	¹ WP Engine
 
 
 	Problematic subdomains:
 
-		- blog		(wpengine)
+		- support ²
+
+	² Mismatched
 
 
 	Partially covered subdomains:
 
-		- blog		(→ i0.wp.com)
-		- support	(some pages redirect to http)
+		- blog		(→ blog.pivotal.io)
 
 -->
-<ruleset name="Cloud Foundry (partial)">
+<ruleset name="Cloud Foundry.com (partial)">
 
 	<target host="cloudfoundry.com" />
-	<target host="*.cloudfoundry.com" />
-		<exclusion pattern="^http://support\.cloudfoundry\.com/(?!generated/|system/)" />
+	<target host="core.cloudfoundry.com" />
+	<target host="www.cloudfoundry.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.cloudfoundry.com" />
+
+		<exclusion pattern="^http://blog\.cloudfoundry\.com/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.cloudfoundry.com/author/nbadiey" />
+			<test url="http://blog.cloudfoundry.com/page/2/" />
 
 
 	<securecookie host="^core\.cloudfoundry\.com$" name=".+" />
 
 
-	<rule from="^http://blog\.cloudfoundry\.com/wp-content/(.+\.(?:jp|pn))g$"
-		to="https://i0.wp.com/blog.cloudfoundry.com/wp-content/$1g" />
+	<rule from="^http://blog\.cloudfoundry\.com/"
+		to="https://blog.pivotal.io/cloud-foundry-pivotal" />
 
-	<rule from="^http://((?:core|support|www)\.)?cloudfoundry\.com/"
-		to="https://$1cloudfoundry.com/" />
+	<!--rule from="^http://support\.cloudfoundry\.com/$"
+		to="https://support.run.pivotal.io/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

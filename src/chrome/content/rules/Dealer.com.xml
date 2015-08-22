@@ -1,21 +1,56 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cdn.dealer.com/ => https://pictures.dealer.com/: None	See Dealer.com-mismatches.xml for problematic rules
+	Other Dealer.com rulesets:
+
+		Dealer.com-mismatches.xml
+
 
 	!functional:
+		- www.dealer.com *
 		- (www.)gatorweeklyads.com	(plesk default page)
--->
-<ruleset name="Dealer.com (partial)" default_off='failed ruleset test'>
 
+	* Shows default page
+
+
+	Problematic hosts in *dealer.com:
+
+		- careers ¹ ²
+
+	¹ Expired
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps.dealer.com
+		- cdn.dealer.com
+
+-->
+<ruleset name="Dealer.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dealer.com"/>
+	<target host="apps.dealer.com"/>
+	<target host="cc1.dealer.com" />
+	<target host="cc2.dealer.com" />
+	<target host="cc3.dealer.com" />
 	<target host="cdn.dealer.com"/>
 	<target host="hits.dealer.com"/>
+	<target host="login.dealer.com"/>
+	<target host="gatorchryslercllc.mycars.dealer.com" />
 	<target host="pictures.dealer.com"/>
 	<target host="static.dealer.com"/>
 
-	<rule from="^http://cdn\.dealer\.com/"
-		to="https://pictures.dealer.com/"/>
 
-	<rule from="^http://(hits|pictures|static)\.dealer\.com/"
-		to="https://$1.dealer.com/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^apps\.dealer\.com$" name="^(?:DDCROUTEID|JSESSIONID)$" /-->
+	<!--securecookie host="^cdn\.dealer\.com$" name="^ddcpoolid$" /-->
+
+	<securecookie host="^(?:apps|cdn)\.dealer\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,19 +1,22 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mikemasin.com/ => https://mikemasin.com/: (7, 'Failed to connect to mikemasin.com port 443: Connection refused')
+	(www.)?mikemasin.com: Refused
 
 -->
-<ruleset name="Mike Masin" default_off='failed ruleset test'>
+<ruleset name="Mike Masin.com">
 
+	<!--	Complications:
+				-->
 	<target host="mikemasin.com" />
-	<target host="*.mikemasin.com" />
+	<target host="www.mikemasin.com" />
 
 
-	<securecookie host="^\.mikemasin\.com$" name=".+" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?mikemasin\.com/[^?]*"
+		to="https://medium.com/@mikemasin" />
 
-
-	<rule from="^http://(www\.)?mikemasin\.com/"
-		to="https://$1mikemasin.com/" />
+		<test url="http://mikemasin.com/?" />
+		<test url="http://mikemasin.com//" />
 
 </ruleset>

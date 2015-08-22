@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Marvel.com-falsemixed.xml.
+
+
 	Other Marvel rulesets:
 
 		- Annihil.us.xml
@@ -8,48 +11,116 @@
 	Nonfunctional subdomains:
 
 		- marvelkids	(redirects to http, valid cert)
+		- marvelstaging ²
+
+	² Dropped
+
+
+	Problematic hosts in *marvel.com:
+
+		- more *
+
+	* Akamai
 
 
 	Partially covered subdomains:
 
-		- comicstore *
+		- (www.)? ¹
 		- secure *
 		- subscriptions *
 
+	Avoiding broken MCB
 	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- (www.)
 
 
 	Mixed content:
 
-		- Images, on ^ from:
+		- css, on:
 
-			- i.annihil.us *
-			- x.annihil.us *
+			- ^ from i.annihil.us *
+			- developer from fast.fonts.com *
 
-		- Ads on ^ from \d+.fls.doubleclick.net *
+		- Images, on:
+
+			- ^, developer from i.annihil.us *
+			- ^ from x.annihil.us *
+
+		- Ads/bugs, on:
+
+			- ^ from data.aggregateknowledge.com *
+			- ^ from \d+.fls.doubleclick.net *
 
 	* Secured by us
 
 -->
 <ruleset name="Marvel.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="marvel.com" />
-	<target host="*.marvel.com" />
-		<exclusion pattern="^http://comicstore\.marvel\.com/(?!assets/)" />
+	<target host="developer.marvel.com" />
+	<target host="comicstore.marvel.com" />
+	<target host="secure.marvel.com" />
+	<target host="subscriptions.marvel.com" />
+	<target host="www.marvel.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?marvel\.com(?::81/|/+universe(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marvel.com/universe/Deadpool_%28Wade_Wilson%29" />
+			<test url="http://www.marvel.com/universe/Deadpool_%28Wade_Wilson%29" />
+			<test url="http://marvel.com/universe/Main_page" />
+			<test url="http://www.marvel.com/universe/Main_page" />
+			<test url="http://marvel.com:81/universe" />
+			<test url="http://www.marvel.com:81/universe" />
+
+		<!-- https redirects to http and timeout -->
+		<exclusion pattern="^http://marvel\.com/universe3zx/index\.php" />
+
+			<test url="http://marvel.com/universe3zx/index.php" />
+
 		<exclusion pattern="^http://secure\.marvel\.com/(?:\?.*)?$" />
-		<exclusion pattern="^http://subscriptions\.marvel\.com/(?!css/|i/|images/|(?:login|store/shippingr)\.asp|script/)" />
+
+			<test url="http://secure.marvel.com/?f" />
+			<test url="http://secure.marvel.com/?o" />
+			<test url="http://secure.marvel.com//?o" />
+			<test url="http://secure.marvel.com/?b" />
+
+			<!--	-ve:
+					-->
+			<test url="http://secure.marvel.com/user/login" />
+
+		<exclusion pattern="^http://subscriptions\.marvel\.com/(?!$|css/|i/|images/|(?:login|store/shippingr)\.asp|script/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://subscriptions.marvel.com/Default.asp" />
+			<test url="http://subscriptions.marvel.com/faq.asp" />
+			<test url="http://subscriptions.marvel.com/newsletter.asp" />
+			<test url="http://subscriptions.marvel.com/store/checkout.asp" />
+			<test url="http://subscriptions.marvel.com/store/ipd.asp" />
+			<test url="http://subscriptions.marvel.com/store/search.asp" />
+			<test url="http://subscriptions.marvel.com/store/search-combos.asp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://subscriptions.marvel.com/css/dropdown.css" />
+			<test url="http://subscriptions.marvel.com/i/nav-logo.gif" />
+			<test url="http://subscriptions.marvel.com/login.asp" />
+			<test url="http://subscriptions.marvel.com/shippingr.asp" />
 
 
-	<!--securecookie host="^\.marvel\.com$" name="^CMXSESSIONID$" /-->
-	<securecookie host="^marvel\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.marvel\.com$" name="^(?:PHPSESSID|autologin\[(?:ip|login|md5hash|timeout)\]|universe3(?:_session|Token|UserID|UserName))$" /-->
+
+	<!--securecookie host="^marvel\.com$" name=".+" /-->
 
 
-	<rule from="^http://((?:comicstore|secure|subscriptions|www)\.)?marvel\.com/"
-		to="https://$1marvel.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

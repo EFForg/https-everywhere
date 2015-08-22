@@ -337,6 +337,13 @@ httpsEverywhere.toolbarButton = {
     var toolbarbutton = document.getElementById('https-everywhere-button');
     toolbarbutton.setAttribute('http_nowhere', showHttpNowhere);
     reload_window();
+  },
+
+  /**
+   * Resets all rules to their default state.
+   */
+  resetToDefaults: function() {
+    HTTPSEverywhere.https_rules.resetRulesetsToDefaults()
   }
 };
 

@@ -1,11 +1,19 @@
 <!--
-
 	Other Alibaba rulesets:
 
 		- AliCDN.com.xml
 		- AliExpress.com.xml
+		- Aliimg.com.xml
+		- Alimama.com.xml
 		- Alipay.com.xml
+		- Alitrip.com.xml
+		- Aliunicorn.com.xml
 		- Aliyun.com.xml
+		- ETAO.com.xml
+		- Kanbox.com.xml
+		- Tb.cn.xml
+		- Tmall.HK.xml
+		- YunOS.com.xml
 
 
 	CDN buckets:
@@ -13,10 +21,6 @@
 		- img.alibaba.com.edgesuite.net
 
 			- style.alibaba.com
-
-		- i0[123].i.aliimg.com.edgesuite.net
-
-		- style.aliunicorn.com.edgesuite.net
 
 
 	Nonfunctional domains:
@@ -37,17 +41,20 @@
 			- customs ¹
 			- dmtracking ²
 			- yihay.en ³
+			- escrow ³
 			- expo ¹
 			- us.favorite ¹
 			- download.im ¹
 			- img ⁴
 			- importer ¹
 			- inspection ¹
-			- legal ¹
+			- jubao ³
+			- service ³
 			- us.my ³
-			- news ¹
+			- news ³
 			- notification ³
 			- us.enmatch.p4p ¹
+			- resources ³
 			- sa ¹
 			- security ³
 			- seller ¹
@@ -55,14 +62,6 @@
 			- hz.sourcing ¹
 			- style ⁴
 			- trademanager ¹
-
-		- aliimg.com subdomains:
-
-			- static.c ³
-			- stat.gmonitor ¹
-			- i0[0123].i ⁴
-
-		- style.aliunicorn.com ⁴
 
 		- x.limgs.cn ¹
 
@@ -72,13 +71,29 @@
 	⁴ 504, akamai
 
 
+	Problematic hosts in *alibaba.com:
+
+		- img.china *
+
+	* Mismatched
+
+
 	Fully covered subdomains:
 
 		- 102
+		- dmtracking2
 		- job
+		- legal
 		- login
+		- passport
+		- qd
 		- style		(→ stylessl)
 		- stylessl
+
+
+	Insecure cookies are set for these domains:
+
+		- .alibaba.com
 
 -->
 <ruleset name="Alibaba.com (partial)">
@@ -86,8 +101,12 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="102.alibaba.com" />
+	<target host="dmtracking2.alibaba.com" />
 	<target host="job.alibaba.com" />
+	<target host="legal.alibaba.com" />
 	<target host="login.alibaba.com" />
+	<target host="passport.alibaba.com" />
+	<target host="qd.alibaba.com" />
 	<target host="stylessl.alibaba.com" />
 
 	<!--	Complications:
@@ -95,7 +114,12 @@
 	<target host="style.alibaba.com" />
 
 
-	<securecookie host="^(?:102|job)\.alibaba\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.alibaba\.com$" name="^(?:ali_beacon_id|legal_user_tmp0)$" /-->
+
+	<securecookie host="^\.alibaba\.com$" name="^ali_beacon_id$" />
+	<securecookie host="^(?:102|escrow|job)\.alibaba\.com$" name=".+" />
 
 
 	<rule from="^http://style\.alibaba\.com/"

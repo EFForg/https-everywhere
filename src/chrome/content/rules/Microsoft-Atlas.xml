@@ -1,10 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://h.atdmt.com/ => https://h.atdmt.com/: (51, "SSL: no alternative certificate subject name matches target host name 'h.atdmt.com'")
-Fetch error: http://image.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no alternative certificate subject name matches target host name 'image.atdmt.com'")
-Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no alternative certificate subject name matches target host name 'image.atdmt.com'")
-
 	For other Facebook coverage, see Facebook.xml.
 
 
@@ -20,8 +14,13 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 	Problematic subdomains:
 
 		- cdn		(mismatched, CN: *.sharepointonline.com)
+		- h ¹
+		- img ²
 		- exch-eu	(mismatched, CN: view.atdmt.com)
 		- spe		(akamai)
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	Fully covered hosts in *atdmt.com:
@@ -32,12 +31,12 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 		- clk
 		- exch-eu	(→ view.atdmt.com)
 		- flex
-		- h
-		- image
+		- h		(→ h.bing.com)
+		- image		(→ a248.e.akamai.net)
 		- img		(→ a248.e.akamai.net)
 		- rad
 		- sact
-		- spe		(→ image.atdmt.com)
+		- spe		(→ a248.e.akamai.net)
 		- switch
 		- view
 
@@ -51,7 +50,7 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 	whichever domain it is loaded from.
 
 -->
-<ruleset name="Atdmt.com" default_off='failed ruleset test'>
+<ruleset name="Atdmt.com">
 
 	<!--	Direct rewrites:
 				-->
@@ -59,8 +58,6 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 	<target host="c1.atdmt.com" />
 	<target host="clk.atdmt.com" />
 	<target host="flex.atdmt.com" />
-	<target host="h.atdmt.com" />
-	<target host="image.atdmt.com" />
 	<target host="rad.atdmt.com" />
 	<target host="sact.atdmt.com" />
 	<target host="switch.atdmt.com" />
@@ -70,6 +67,8 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 				-->
 	<target host="cdn.atdmt.com" />
 	<target host="exch-eu.atdmt.com" />
+	<target host="h.atdmt.com" />
+	<target host="image.atdmt.com" />
 	<target host="img.atdmt.com" />
 	<target host="spe.atdmt.com" />
 
@@ -91,11 +90,11 @@ Fetch error: http://spe.atdmt.com/ => https://image.atdmt.com/: (51, "SSL: no al
 	<rule from="^http://exch-eu\.atdmt\.com/"
 		to="https://view.atdmt.com/" />
 
-	<rule from="^http://img\.atdmt\.com/"
-		to="https://a248.e.akamai.net/img.atdmt.com/" />
+	<rule from="^http://h\.atdmt\.com/"
+		to="https://h.bing.com/" />
 
-	<rule from="^http://spe\.atdmt\.com/"
-		to="https://image.atdmt.com/" />
+	<rule from="^http://(?:image|img|spe)\.atdmt\.com/"
+		to="https://a248.e.akamai.net/img.atdmt.com/" />
 
 	<rule from="^http:"
 		to="https:" />
