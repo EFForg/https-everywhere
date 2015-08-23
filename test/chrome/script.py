@@ -16,6 +16,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import WebDriverException
 
 class bcolors:
 	HEADER = '\033[95m'
@@ -31,7 +32,18 @@ chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
 
 # First argument is optional, if not specified will search path.
-driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)
+
+try:
+	driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)
+except WebDriverException as e:
+	error = e.__str__()
+
+	if "executable needs to be in PATH" in e.__str__():
+		print "ChromeDriver isn't installed. Check test/chrome/README.md for instructions on how to install ChromeDriver"
+		sys.exit(0)
+	else:
+		raise e
+
 driver.get('http://libssh.org/robots.txt')
 
 #Page Loaded
@@ -43,4 +55,4 @@ elif(driver.current_url.startswith('http')):
 
 print '' #New line
 
-driver.quit()
+driver.quit
