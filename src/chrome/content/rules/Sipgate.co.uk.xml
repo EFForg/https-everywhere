@@ -1,0 +1,81 @@
+<!--
+	For other Sipgate GmbH coverage, see Sipgate.xml.
+
+
+	Nonfunctional hostsin *sipgate.co.uk:
+
+		- www.live *
+
+	* Refused
+
+
+	Problematic hosts in *sipgate.co.uk:
+
+		- ^ *
+		- live *
+
+	* Mismatched
+
+
+	These altnames don't exist:
+
+		- www.secure.live.sipgate.de
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .live.sipgate.co.uk
+		- secure.live.sipgate.co.uk
+		- www.sipgate.co.uk
+
+-->
+<ruleset name="Sipgate.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="live.sipgate.co.uk" /-->
+	<target host="secure.live.sipgate.co.uk" />
+	<target host="secure.sipgate.co.uk" />
+
+<!--	Complications:
+			-->
+  <target host="sipgate.co.uk" />
+	<target host="www.sipgate.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.live\.sipgate\.co\.uk/$" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:secure\.live|www)\.sipgate\.co\.uk$" name="^SERVERID$" /-->
+	<!--securecookie host="^\.live\.sipgate\.co\.uk$" name="^siptrack$" /-->
+
+	<securecookie host="^\.live\.sipgate\.co\.uk$" name="^siptrack$" />
+	<securecookie host="^(?:secure\.live|www)\.sipgate\.co\.uk$" name=".+" />
+
+
+	<!--	user/$ redirects to www.live.../$ over https,
+		https://www.../basic/ over http
+
+		Redirect drops forward slash and args
+						-->
+	<rule from="^http://(?:www\.)?sipgate\.co\.uk/+user/*(?:\?.*)?$"
+		to="https://www.sipgate.co.uk/basic/" />
+
+		<test url="http://sipgate.co.uk//user/" />
+		<test url="http://sipgate.co.uk/user" />
+		<test url="http://sipgate.co.uk/user/" />
+		<test url="http://sipgate.co.uk/user?" />
+		<test url="http://www.sipgate.co.uk//user/" />
+		<test url="http://www.sipgate.co.uk/user" />
+		<test url="http://www.sipgate.co.uk/user/" />
+
+	<rule from="^http://sipgate\.co\.uk/"
+		to="https://www.sipgate.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
