@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mercurynews.com/ => https://secure.www.mercurynews.com/: (60, 'SSL certificate problem: certificate has expired')
 	CDN buckets:
 
 		- common.medianewsgroup.com.edgesuite.net
@@ -10,7 +8,9 @@ Fetch error: http://mercurynews.com/ => https://secure.www.mercurynews.com/: (60
 
 	Nonfunctional subdomains:
 
-		- extras	(dropped)
+		- extras *
+
+	* 404
 
 
 	Problematic subdomains:
@@ -18,15 +18,38 @@ Fetch error: http://mercurynews.com/ => https://secure.www.mercurynews.com/: (60
 		- ^	(dropped)
 		- www	(redirects to http, akamai)
 
--->
-<ruleset name="Mercury News.com (partial)" default_off='failed ruleset test'>
 
+	Mixed content:
+
+		- css, on:
+
+			- secure.www from fonts.googleapis.com *
+			- secure.www from extras.mnginteractive.com *
+
+		- Images on secure.www from extras.mnginteractive.com *
+		- Bugs on secure.www from mngimercurynews.112.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Mercury News.com (partial)" default_off="expired" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.www.mercurynews.com" />
+
+	<!--	Complications:
+				-->
 	<target host="mercurynews.com" />
-	<target host="*.mercurynews.com" />
+	<target host="www.mercurynews.com" />
+
 		<exclusion pattern="^http://(?:www\.)?mercurynews\.com/(?:\w+/ci_\d+(?:$|[?/]))" />
 
 
-	<rule from="^http://(?:(?:secure\.)?www\.)?mercurynews\.com/"
+	<rule from="^http://(?:www\.)?mercurynews\.com/"
 		to="https://secure.www.mercurynews.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
