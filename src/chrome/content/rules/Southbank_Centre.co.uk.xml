@@ -1,6 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://southbankcentre.co.uk/ => https://southbankcentre.co.uk/: (51, "SSL: no alternative certificate subject name matches target host name 'southbankcentre.co.uk'")
+	^southbankcentre.co.uk: Mismatched
+
+
 	Partially covered subdomains:
 
 		- (www.) ¹
@@ -10,18 +11,10 @@ Fetch error: http://southbankcentre.co.uk/ => https://southbankcentre.co.uk/: (5
 	² At least $ redirects to www
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- shop
-		- shopcms
-
-
-	Observed cookie domains:
-
-		- .shop *
-		- .shopcms *
-
-	* Secured by us <= not secured by server
+		- .shop.southbankcentre.co.uk
+		- .shopcms.southbankcentre.co.uk
 
 
 	Mixed content:
@@ -31,19 +24,63 @@ Fetch error: http://southbankcentre.co.uk/ => https://southbankcentre.co.uk/: (5
 	* Secured by us
 
 -->
-<ruleset name="Southbank Centre.co.uk (partial)" default_off='failed ruleset test'>
+<ruleset name="Southbank Centre.co.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="shop.southbankcentre.co.uk" />
+	<target host="shopcms.southbankcentre.co.uk" />
+	<target host="ticketing.southbankcentre.co.uk" />
+	<target host="www.southbankcentre.co.uk" />
+
+	<!--	Complications:
+				-->
 	<target host="southbankcentre.co.uk" />
-	<target host="*.southbankcentre.co.uk" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://shop\.southbankcentre\.co\.uk/+$" /-->
 		<!--
-			Redirect to http:
+			Exceptions:
+					-->
+		<exclusion pattern="^http://shop\.southbankcentre\.co\.uk/+(?!favicon\.ico|images/|includes/|user/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.southbankcentre.co.uk/ham.html" />
+			<test url="http://shop.southbankcentre.co.uk/jewellery.html" />
+			<test url="http://shop.southbankcentre.co.uk/rudesouthbank.html" />
+			<test url="http://shop.southbankcentre.co.uk/sitemap.html" />
+			<test url="http://shop.southbankcentre.co.uk/southbankcentreshops.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.southbankcentre.co.uk/favicon.ico" />
+			<test url="http://shop.southbankcentre.co.uk/images/spacer.gif" />
+
+		<!--	Redirect to http:
 						-->
 		<!--exclusion pattern="^http://ticketing\.southbankcentre\.co\.uk/+($|\?|(support-us|support-us/all-ways-to-support-us)($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ticketing\.southbankcentre\.co\.uk/+(?!favicon\.ico|sites/|(?:support-us/trusts-foundations|visitor-info/directions-and-opening-times)/*(?:$|\?))" />
+
+			<test url="http://ticketing.southbankcentre.co.uk//" />
+			<test url="http://ticketing.southbankcentre.co.uk/?" />
+			<test url="http://ticketing.southbankcentre.co.uk/?f" />
+			<test url="http://ticketing.southbankcentre.co.uk/?o" />
+			<test url="http://ticketing.southbankcentre.co.uk/support-us" />
+			<test url="http://ticketing.southbankcentre.co.uk/support-us/all-ways-to-support-us" />
+			<test url="http://ticketing.southbankcentre.co.uk/support-us/all-ways-to-support-us?" />
+			<test url="http://ticketing.southbankcentre.co.uk/support-us?" />
+
+		<!-- 	Redirects to http:
+						-->
 		<!--exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(royal-festival-hall/access|supporters-circles|support-us|support-us/all-ways-to-support-us|visitor-info|visitor-info/faqs|visitor-info/how-to-book/access-list)/*($|\?)" /-->
 		<!--
 			Exceptions
 					-->
-		<exclusion pattern="^http://ticketing\.southbankcentre\.co\.uk/+(?!favicon\.ico|sites/|(?:support-us/trusts-foundations|visitor-info/directions-and-opening-times)/*(?:$|\?))" />
 		<!--exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(?!$|\?|(about-us|shop-eat-drink|support-us/membership|venues/royal-festival-hall|visitor-info/access|visitor-info/directions-and-opening-times|whatson)($|[?/])|favicon\.ico|sites/)" /-->
 		<!--
 			Handled specially:
@@ -54,23 +91,70 @@ Fetch error: http://southbankcentre.co.uk/ => https://southbankcentre.co.uk/: (5
 				-->
 		<exclusion pattern="^http://www\.southbankcentre\.co\.uk/+(?!$|\?|(?:about-us|shop-eat-drink|support-us/membership|venues/royal-festival-hall|visitor-info/access|visitor-info/directions-and-opening-times|whatson)(?:$|[?/])|(?:buy-membership|find)/*(?:$|\?)|favicon\.ico|sites/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://www.southbankcentre.co.uk/royal-festival-hall/access" />
+			<test url="http://www.southbankcentre.co.uk/royal-festival-hall/access/" />
+			<test url="http://www.southbankcentre.co.uk/royal-festival-hall/access?" />
+			<test url="http://www.southbankcentre.co.uk/support-us" />
+			<test url="http://www.southbankcentre.co.uk/support-us/" />
+			<test url="http://www.southbankcentre.co.uk/support-us/all-ways-to-support-us" />
+			<test url="http://www.southbankcentre.co.uk/support-us/all-ways-to-support-us/" />
+			<test url="http://www.southbankcentre.co.uk/support-us/all-ways-to-support-us?" />
+			<test url="http://www.southbankcentre.co.uk/support-us?" />
+			<test url="http://www.southbankcentre.co.uk/supporters-circles" />
+			<test url="http://www.southbankcentre.co.uk/supporters-circles/" />
+			<test url="http://www.southbankcentre.co.uk/supporters-circles?" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/faqs" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/faqs/" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/faqs?" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/how-to-book/access-list" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/how-to-book/access-list/" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info/how-to-book/access-list?" />
+			<test url="http://www.southbankcentre.co.uk/visitor-info?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.southbankcentre.co.uk/about-us" />
+			<test url="http://www.southbankcentre.co.uk/favicon.ico" />
+			<test url="http://www.southbankcentre.co.uk/support-us/membership" />
+
 
 	<!--	Not secured by server:
 					-->
 	<securecookie host="^\.shop(?:cms)?\.southbankcentre\.co\.uk$" name=".+" />
 
 
+	<rule from="^http://southbankcentre\.co\.uk/"
+		to="https://www.southbankcentre.co.uk/" />
+
 	<!--	Redirects to http first, preserves args:
 								-->
 	<rule from="^http://www\.southbankcentre\.co\.uk/+buy-membership/*(?=$|\?)"
 		to="https://www.southbankcentre.co.uk/support-us/membership" />
+
+		<test url="http://www.southbankcentre.co.uk/buy-membership" />
+		<test url="http://www.southbankcentre.co.uk/buy-membership/" />
+		<test url="http://www.southbankcentre.co.uk/buy-membership?" />
+		<test url="http://www.southbankcentre.co.uk/buy-membership?f" />
+		<test url="http://www.southbankcentre.co.uk/buy-membership?o" />
+		<test url="http://www.southbankcentre.co.uk/buy-membership?b" />
 
 	<!--	Redirects to http first, drops args:
 							-->
 	<rule from="^http://www\.southbankcentre\.co\.uk/+find/*(?:$|\?.*)"
 		to="https://www.southbankcentre.co.uk/whatson" />
 
-	<rule from="^http://((?:shop|shopcms|ticketing|www)\.)?southbankcentre\.co\.uk/"
-		to="https://$1southbankcentre.co.uk/" />
+		<test url="http://www.southbankcentre.co.uk/find" />
+		<test url="http://www.southbankcentre.co.uk/find/" />
+		<test url="http://www.southbankcentre.co.uk/find?" />
+		<test url="http://www.southbankcentre.co.uk/find?f" />
+		<test url="http://www.southbankcentre.co.uk/find?o" />
+		<test url="http://www.southbankcentre.co.uk/find?b" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
