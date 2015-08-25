@@ -4,20 +4,39 @@
 
 	Nonfunctional subdomains:
 
-		- forums *
-		- hints *
+		- (www.)? ¹
+		- forums ²
 		- images	(404, CN: *.https.internapcdn.net)
+		- static ²
 
-	* Times out
+	¹ Refused
+	² Times out
+
+
+	Mixed content:
+
+		- css, on:
+
+			- hints from $self
+			- hints from static.macworld.com
+
+		- Images, on:
+
+			- hints from $self
+			- hints from images.pcworld.com
+
+		- favicon on hints from $self
+		- Bugs on hints from pcworldcommunication.122.2o7.net
 
 -->
-<ruleset name="MacWorld.com (broken)" default_off="doesn't support SSL">
+<ruleset name="MacWorld.com (partial)" default_off="mismatched" platform="mixedcontent">
 
-	<target host="macworld.com" />
-	<target host="www.macworld.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="hints.macworld.com" />
 
 
-	<rule from="^http://(www\.)?macworld\.com/"
-		to="https://$1macworld.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
