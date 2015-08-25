@@ -5,96 +5,130 @@
 	CDN buckets:
 
 		- i0.1und1.de.edgesuite.net
-
-			- a1254.g.akamai.net
-
 		- 1und1.ivwbox.de
 
 
 	Nonfunctional subdomains:
 
-		- blog *
-		- erfolgscenter *
-		- jobs *
-		- mirror ²
-		- press *
-		- service-center *
+		- mirror ¹
+		- newsroom ²
+		- presse ²
+		- tv ³
 
-	* Refused
-	² Dropped
+	¹ Dropped
+	² Refused
+	³ 404
 
 
 	Problematic subdomains:
 
-		- ^	(works, cert only matches www)
-		- i0	(works, akamai)
-		- tv	(works; mismatched, CN: portal.gmx.net)
+		- ^ ¹
+		- erfolgscenter ¹
+		- i0 ²
+		- service-center ³
+		- unternehmen ¹
+
+	¹ Mismatched
+	² Akamai
+	³ Refused
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)	(^ → www)
-		- apps
-		- dsl
-		- forum
-		- hilfe-center
-		- home
-		- homepage
-		- hosting
-		- i0		(→ akamai)
-		- ias
-		- img
-		- kunden
-		- login
-		- mein
-		- mobile
-		- pixel
-		- redirect
-		- sec-i0
-		- tt
-
-
-	Observed cookie domains:
-
-		- .
-		- apps
-		- dsl
-		- home
-		- homepage
-		- hosting
-		- ias
-		- jobs
-		- kunden
-		- mobile
-		- presse
-		- redirect
-		- service-center
-		- www
+		- .1und1.de
+		- de-mail.1und1.de
+		- dsl.1und1.de
+		- hilfe-center.1und1.de
+		- hosting.1und1.de
+		- jobs.1und1.de
+		- mobile.1und1.de
+		- redirect.1und1.de
+		- www.1und1.de
 
 
 	Mixed content:
 
-		- Web bug on hilfe-center from status-1und1.de
+		- Images on jobs from img.youtube.com ¹
+		- Images on unternehmen from blog-network.1and1.com
+
+	¹ Secured by us
 
 -->
 <ruleset name="1und1.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="apps.1und1.de" />
+	<target host="blog.1und1.de" />
+	<target host="community.1und1.de" />
+	<target host="de-mail.1und1.de" />
+	<target host="dsl.1und1.de" />
+	<target host="forum.1und1.de" />
+	<target host="hilfe-center.1und1.de" />
+	<target host="m.hilfe-center.1und1.de" />
+	<target host="home.1und1.de" />
+	<target host="homepage.1und1.de" />
+	<target host="hosting.1und1.de" />
+	<target host="ias.1und1.de" />
+	<target host="img.1und1.de" />
+	<target host="jobs.1und1.de" />
+	<target host="kunden.1und1.de" />
+	<target host="login.1und1.de" />
+	<target host="mein.1und1.de" />
+	<target host="mobile.1und1.de" />
+	<target host="pixel.1und1.de" />
+	<target host="redirect.1und1.de" />
+	<target host="sec-i0.1und1.de" />
+	<target host="tt.1und1.de" />
+	<!--target host="unternehmen.1und1.de" /-->
+	<target host="webmailer.1und1.de" />
+	<target host="www.1und1.de" />
+
+	<!--	Complications:
+				-->
 	<target host="1und1.de" />
-	<target host="*.1und1.de" />
-		<!--exclusion pattern="^http://(blog|erfolgscenter|jobs|press|service-center|tv)\." /-->
+	<target host="erfolgscenter.1und1.de" />
+	<target host="i0.1und1.de" />
+	<target host="service-center.1und1.de" />
 
 
-	<!--securecookie host="^\.1und1\.de$" name="^(chocolateChip|NG_USERID|uimid)$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.1und1\.de$" name="^(?:ac-euepostclick-de|chocolateChip|uimid)$" /-->
+	<!--securecookie host="^de-mail\.1und1\.de$" name="^(?:De-Mail-1und1|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^dsl\.1und1\.de$" name="^(?:__PFIX_SSL_|DPX|UT|vc)$" /-->
+	<!--securecookie host="^hilfe-center\.1und1\.de$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^hosting\.1und1\.de$" name="^(?:DPX|UT|variant|variant\.configname)$" /-->
+	<!--securecookie host="^jobs\.1und1\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^mobile\.1und1\.de$" name="^(?:GUD|UT|variant|variant\.configname)$" /-->
+	<!--securecookie host="^redirect\.1und1\.de$" name="^(?:__rd|PHPSESSID)$" /-->
+	<!--securecookie host="^www\.1und1\.de$" name="^(?:__PFIX_SSL_|__PFIX_TST_|DPX|variant|variant\.configname)$" /-->
+
 	<securecookie host=".*\.1und1\.de$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?1und1\.de/"
+	<rule from="^http://1und1\.de/"
 		to="https://www.1und1.de/" />
 
-	<rule from="^http://(apps|dsl|forum|hilfe-center|home|homepage|hosting|ias|img|kunden|login|mein|mobile|pixel|redirect|sec-i0|tt|webmailer)\.1und1\.de/"
-		to="https://$1.1und1.de/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://erfolgscenter\.1und1\.de/"
+		to="https://blog.1und1.de/" />
 
 	<rule from="^http://i0\.1und1\.de/"
 		to="https://a248.e.akamai.net/f/1254/284/7h/i0.1und1.de/" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://service-center\.1und1\.de/[^?]*"
+		to="https://hilfe-center.1und1.de/" />
+
+		<test url="http://service-center.1und1.de//" />
+		<test url="http://service-center.1und1.de/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
