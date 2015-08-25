@@ -1,35 +1,54 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://socialreader.com/ => https://socialreader.com/: (60, 'SSL certificate problem: certificate has expired')
-
 	CDN buckets:
 
 		- d2pe20ur0h0p8p.cloudfront.net
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *socialreader.com:
 
-		- help	(refused)
+		- (www.)? ¹
+		- event ²
+		- help ¹
+		- id ¹
 
-
-	Fully covered subdomains:
-
-		- (www.)
-		- event...:9443
-		- id
+	¹ Expired
+	² Mismatched
 
 -->
-<ruleset name="Social Reader.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Social Reader.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<!--target host="event.socialreader.com" /-->
+	<!--target host="help.socialreader.com" /-->
+
+	<!--	Complications:
+				-->
 	<target host="socialreader.com" />
-	<target host="*.socialreader.com" />
+	<target host="id.socialreader.com" />
+	<target host="www.socialreader.com" />
 
 
 	<securecookie host="^(?:id)?\.socialreader\.com$" name=".+" />
 
 
-	<rule from="^http://((?:event|id|www)\.)?socialreader\.com(:9443)?/"
-		to="https://$1socialreader.com$2/" />
+	<!--	Redirect drops path, args,
+		amd forward slash:
+					-->
+	<rule from="^http://(?:www\.)?socialreader\.com/.*"
+		to="https://trove.com/" />
+
+		<test url="http://socialreader.com//" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://id\.socialreader\.com/+"
+		to="https://id.trove.com/" />
+
+		<test url="http://id.socialreader.com//" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
 
 </ruleset>
