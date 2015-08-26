@@ -1,6 +1,6 @@
 #!/bin/bash
 set -o errexit
-APP_NAME=https-everywhere
+APP_NAME=https-everywhere-eff
 
 # builds a .xpi from the git repository, placing the .xpi in the root
 # of the repository.
@@ -46,7 +46,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   # Now escape from the horrible mess we've made
   cd ..
   XPI_NAME="$APP_NAME-$1"
-  cp $SUBDIR/pkg/$XPI_NAME-eff.xpi pkg/
+  cp $SUBDIR/pkg/$XPI_NAME.xpi pkg/
   if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
     echo Old version does not support AMO
   fi
@@ -122,18 +122,17 @@ fi
 
 # Build the XPI!
 rm -f "${XPI_NAME}.xpi"
-rm -f "${XPI_NAME}-eff.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
-python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
+python2.7 utils/create_xpi.py -n "${XPI_NAME}.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
 echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
+echo >&2 "Created ${XPI_NAME}.xpi and ${XPI_NAME}-amo.xpi"
 
-bash utils/android-push.sh "$XPI_NAME-eff.xpi"
+bash utils/android-push.sh "$XPI_NAME.xpi"
 
 if [ -n "$BRANCH" ]; then
-  cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
+  cp $SUBDIR/${XPI_NAME}.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
   rm -rf $SUBDIR
 fi
