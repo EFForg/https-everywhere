@@ -11,7 +11,8 @@ if type apt-get >/dev/null ; then
     BROWSERS="iceweasel chromium"
   fi
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev
+    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev \
+    chromium-chromedriver
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed
@@ -29,6 +30,9 @@ git submodule update
 # Install Python packages
 pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd https-everywhere-checker
+pip install --user -r requirements.txt
+cd -
+cd test/chrome
 pip install --user -r requirements.txt
 cd -
 
