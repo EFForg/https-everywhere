@@ -18,7 +18,7 @@ Run the latest code and rulesets in a standalone Firefox profile:
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash run-chromium.sh
+    bash test-chromium.sh --justrun
 
 Build the Firefox extension as a .xpi package:
 
