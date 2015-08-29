@@ -34,7 +34,7 @@ chromeOps.add_extension(sys.argv[1])
 # First argument is optional, if not specified will search path.
 
 try:
-	driver = webdriver.Chrome('/usr/bin/chromedriver', chrome_options = chromeOps)
+	driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver', chrome_options = chromeOps)
 except WebDriverException as e:
 	error = e.__str__()
 
@@ -42,17 +42,20 @@ except WebDriverException as e:
 		print "ChromeDriver isn't installed. Check test/chrome/README.md for instructions on how to install ChromeDriver"
 		sys.exit(0)
 	else:
+		driver.quit()
 		raise e
+		sys.exit(2)
 
 driver.get('http://libssh.org/robots.txt')
 
 #Page Loaded
 
-if driver.current_url.startswith('https'):
+if driver.current_url.startswith('httaps'):
 	print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
-elif(driver.current_url.startswith('http')):
+elif(driver.current_url.startswith('https')):
 	print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
+	sys.exit(1)
 
 print '' #New line
 
-driver.quit
+driver.quit()

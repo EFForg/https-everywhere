@@ -11,7 +11,8 @@ if type apt-get >/dev/null ; then
     BROWSERS="iceweasel chromium"
   fi
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev
+    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev \
+    chromium-chromedriver
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed
