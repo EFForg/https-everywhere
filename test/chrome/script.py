@@ -18,6 +18,14 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
+if system.platform.startswith("linux"):
+	chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
+elif system.platform.startswith("darwin"):
+	chromedriver_path = "chromedriver"
+else:
+	print "Unsupported Operating System"
+	sys.exit(3)
+
 class bcolors:
 	HEADER = '\033[95m'
 	OKBLUE = '\033[94m'
@@ -34,7 +42,7 @@ chromeOps.add_extension(sys.argv[1])
 # First argument is optional, if not specified will search path.
 
 try:
-	driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver', chrome_options = chromeOps)
+	driver = webdriver.Chrome(chromedriver_path, chrome_options = chromeOps)
 except WebDriverException as e:
 	error = e.__str__()
 
@@ -50,9 +58,9 @@ driver.get('http://libssh.org/robots.txt')
 
 #Page Loaded
 
-if driver.current_url.startswith('httaps'):
+if driver.current_url.startswith('https'):
 	print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
-elif(driver.current_url.startswith('https')):
+elif(driver.current_url.startswith('http')):
 	print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
 	sys.exit(1)
 
