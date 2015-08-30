@@ -18,9 +18,9 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
-if system.platform.startswith("linux"):
+if sys.platform.startswith("linux"):
 	chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
-elif system.platform.startswith("darwin"):
+elif sys.platform.startswith("darwin"):
 	chromedriver_path = "chromedriver"
 else:
 	print "Unsupported Operating System"
