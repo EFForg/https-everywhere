@@ -7,17 +7,73 @@
 			- static.memrise.com
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *memrise.com:
 
-		- (www.)	(no https)
+		- feedback ¹
+		- static ²
+
+	¹ Uservoice
+	² Cloudfront
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .memrise.com
+		- feedback.memrise.com
+		- www.memrise.com
 
 -->
-<ruleset name="Memrise (partial)">
+<ruleset name="Memrise.com (partial)">
 
-	<target host="*.memrise.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="memrise.com" />
+	<target host="www.memrise.com" />
+
+	<!--	Complications:
+				-->
+	<target host="media.memrise.com" />
+	<target host="static.memrise.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.memrise\.com/(?:blog|courses|forums|password/reset)(?:$|[?/])" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.memrise\.com/+(?!$|\?|(?:join|login)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.memrise.com/about/" />
+			<test url="http://www.memrise.com/blog/" />
+			<test url="http://www.memrise.com/contact/" />
+			<test url="http://www.memrise.com/courses/" />
+			<test url="http://www.memrise.com/courses/english/the-natural-world/" />
+			<test url="http://www.memrise.com/forums/" />
+			<test url="http://www.memrise.com/password/reset/" />
+			<test url="http://www.memrise.com/science/" />
+			<test url="http://www.memrise.com/teachers/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.memrise.com/join/" />
+			<test url="http://www.memrise.com/login/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.memrise\.com$" name="^(?:__cfuid|cf_clearance)$" /-->
+	<!--securecookie host="^feedback\.memrise\.com$" name="^(?:_rf|_session_id)$" /-->
+	<!--securecookie host="^www\.memrise\.com$" name="^csrftoken$" /-->
+
+	<securecookie host="^\.memrise\.com$" name="^__cfduid$" />
 
 
 	<rule from="^http://(?:media|static)\.memrise\.com/"
 		to="https://d107cgb5lgj7br.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

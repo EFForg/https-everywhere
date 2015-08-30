@@ -1,38 +1,71 @@
 <!--
 	Nonfunctional subdomains:
 
-		- (www.) *
 		- ftp *
-		- people	(http reply)
+		- people *
 
-	* Shows vishnu
-
-
-	Fully covered subdomains:
-
-		- bugzilla
-		- git
-		- lists
-		- svn
-		- vishnu
+	* Shows bugzilla.netfilter.org
 
 
-	Observed cookie domains:
+	Problematic hosts in *netfilter.org:
 
-		- bugzilla
-		- svn
-		- vishnu
+		- patchwork *
+		- svn *
+		- vishnu *
+
+	* Shows bugzilla.netfilter.org
+
+
+	Insecure cookies are set for these hosts:
+
+		- bugzilla.netfilter.org
 
 -->
 <ruleset name="Netfilter.org (partial)" platform="cacert">
 
-	<target host="*.netfilter.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="netfilter.org" />
+	<target host="bugzilla.netfilter.org" />
+	<target host="git.netfilter.org" />
+	<target host="lists.netfilter.org" />
+	<target host="www.netfilter.org" />
 
+	<!--	Complications:
+				-->
+	<target host="patchwork.netfilter.org" />
+	<target host="svn.netfilter.org" />
+	<target host="vishnu.netfilter.org" />
+
+		<!--	p://patches.../\w.* 404s:
+						-->
+		<exclusion pattern="^http://patchwork\.netfilter\.org/+(?!$|\?)" />
+
+			<test url="http://patchwork.netfilter.org/index.htm" />
+			<test url="http://patchwork.netfilter.org//index.htm" />
+			<test url="http://patchwork.netfilter.org/index.php" />
+			<test url="http://patchwork.netfilter.org//index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bugzilla\.netfilter\.org$" name="^(?:Bugzilla_login_request_cookie|DEFAULTFORMAT)$" /-->
 
 	<securecookie host=".+\.netfilter\.org$" name=".+" />
 
 
-	<rule from="^http://(bugzilla|git|lists|svn)\.netfilter\.org/"
-		to="https://$1.netfilter.org/" />
+	<!--	Redirect drops forward slash and args
+					-->
+	<rule from="^http://patchwork\.netfilter\.org/.*"
+		to="https://patchwork.ozlabs.org/project/netfilter-devel/list/" />
+
+		<test url="http://patchwork.netfilter.org/?" />
+		<test url="http://patchwork.netfilter.org//" />
+
+	<rule from="^http://(?:svn|vishnu)\.netfilter\.org/"
+		to="https://bugzilla.netfilter.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -5,6 +5,7 @@
 	Fully covered subdomains:
 
 		- (www.)?
+		- api
 		- css
 		- pass
 		- [\w-]+ *
@@ -12,9 +13,18 @@
 	* Per-user domains
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
+		- moikrug.ru
 		- .moikrug.ru
+		- api.moikrug.ru
+
+
+	Mixed content:
+
+		- css on api from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Moikrug.ru (partial)">
@@ -22,12 +32,20 @@
 	<target host="moikrug.ru" />
 	<target host="*.moikrug.ru" />
 
+		<test url="http://api.moikrug.ru/" />
+		<test url="http://www.moikrug.ru/" />
+
+		<!--	Mixed css from fonts.googleapis.com:
+								-->
+		<test url="http://api.moikrug.ru/v1/my/" />
+
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^(?:api\.)?moikrug\.ru$" name="^(_moikrug_session|check_cookies)$" /-->
 	<!--securecookie host="^\.moikrug\.ru$" name="^(Cookie_check|L|Session_id|mkrs|my|rems|sessionid2|yandex_gid|yandex_login|yandexuid)$" /-->
 
-	<securecookie host="^\.moikrug\.ru$" name=".+" />
+	<securecookie host="^(?:\.|api\.)?moikrug\.ru$" name=".+" />
 
 
 	<rule from="^http://([\w-]+\.)?moikrug\.ru/"

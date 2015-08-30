@@ -1,28 +1,29 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://datacoup.com/ => https://datacoup.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.datacoup.com/ => https://datacoup.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	DataCoup, Inc.
+	Datacoup, Inc.
 
 
 	Nonfunctional subdomains:
 
-		- blog	(dropped)
+		- blog *
+
+	* Tumblr
 
 -->
-<ruleset name="DataCoup.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Datacoup.com (partial)">
 
 	<target host="datacoup.com" />
 	<target host="www.datacoup.com" />
 
 
-	<securecookie host="^datacoup\.com$" name=".+" />
-
-
-	<!--	www redirects to ^ over http,
-		so copy that behavior:
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?datacoup\.com/"
-		to="https://datacoup.com/" />
+	<!--securecookie host="^datacoup\.com$" name="AWSELB$" /-->
+	<!--securecookie host="^www\.datacoup\.com$" name="^(?:_session_id|AWSELB)$" /-->
+
+	<securecookie host="^(?:www\.)?datacoup\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

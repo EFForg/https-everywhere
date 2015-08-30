@@ -1,10 +1,43 @@
-<ruleset name="Defence Housing Australia">
+<!--
+	Defence Housing Australia
+
+
+	Problematic hosts in *dha.gov.au:
+
+		- www.invest *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- invest.dha.gov.au
+
+-->
+<ruleset name="DHA.gov.au">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="dha.gov.au" />
-	<target host="*.dha.gov.au" />
+	<target host="invest.dha.gov.au" />
+	<target host="www.dha.gov.au" />
 
-	<rule from="^http://(?:www\.)?dha\.gov\.au/"
-		to="https://www.dha.gov.au/" />
+	<!--	Complications:
+				-->
+	<target host="www.invest.dha.gov.au" />
 
-	<rule from="^http://(?:www\.)?invest\.dha\.gov\.au/"
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^invest\.dha\.gov\.au$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^invest\.dha\.gov\.au$" name=".+" />
+
+
+	<rule from="^http://www\.invest\.dha\.gov\.au/"
 		to="https://invest.dha.gov.au/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

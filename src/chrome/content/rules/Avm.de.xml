@@ -1,18 +1,49 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://piwik.avm.de/ => https://piwik.avm.de/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.avm.de/ => https://www.avm.de/: Cycle detected - URL already encountered: https://www.avm.de/
-Fetch error: http://avm.de/ => https://www.avm.de/: Cycle detected - URL already encountered: https://www.avm.de/
+	For problematic rules, see AVM.de-problematic.xml.
+
+
+	webgw.avm.de doesn't support TLS
+
+
+	Problematic hosts in *avm.de:
+
+		- piwik *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
 -->
-<ruleset name="Avm.de" platform="mixedcontent"  default_off='failed ruleset test'>
+<ruleset name="AVM.de (partial)">
 
-<target host="piwik.avm.de"/>
-<target host="www.avm.de"/>
 <target host="avm.de"/>
+	<target host="en.avm.de"/>
+	<!--target host="piwik.avm.de"/-->
+<target host="www.avm.de"/>
 
-<!-- webgw.avm.de doesn't support TLS -->
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://en\.avm\.de/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://en\.avm\.de/+(?!favicon\.ico|fileadmin/|typo3conf/|typo3temp/)" />
 
-<rule from="^http://piwik\.avm\.de/" to="https://piwik.avm.de/"/>
-<rule from="^http://(?:www\.)?avm\.de/" to="https://www.avm.de/"/>
+			<!--	+ve:
+					-->
+			<test url="http://en.avm.de/contact/" />
+			<test url="http://en.avm.de/guide/" />
+			<test url="http://en.avm.de/news/" />
+			<test url="http://en.avm.de/products/" />
+			<test url="http://en.avm.de/service/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://en.avm.de/favicon.ico" />
+			<test url="http://en.avm.de/fileadmin/user_upload/Global/Verschiedenes/icon_news_43x34.png" />
+			<test url="http://en.avm.de/typo3conf/ext/avm/Resources/Public/Images/logo.png" />
+			<test url="http://en.avm.de/typo3temp/compressor/merged-608c235dc169b392ffdc9ad6bd972759.css?1437379980" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

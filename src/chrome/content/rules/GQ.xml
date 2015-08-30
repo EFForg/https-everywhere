@@ -2,33 +2,46 @@
 	For other Condé Nast coverage, see Conde-Nast.xml.
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *gq.com:
 
-		- promotions.gq.com	(revoked)
+		- promotions *
+
+	* Revoked
 
 
-	Problematic domains:
+	Problematic hosts in *gq.com:
 
-		- gq.com
-		- www.gq.com	(works, at least some pages redirect to http, akamai)
+		- ^ ¹
+		- media ²
+
+	¹ Refused
+	² Fastly
+
+
+	Mixed content:
+
+		- Images on www.qq.com from media.gq.com *
+
+	* Not secured by us <= mismatched
 
 -->
-<ruleset name="GQ (partial)">
+<ruleset name="GQ.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.gq.com" />
+	<target host="subscribe.gq.com" />
+	<target host="www.gq.com" />
+
+	<!--	Complications:
+				-->
 	<target host="gq.com" />
-	<target host="*.gq.com" />
-		<exclusion pattern="^http://(?:www\.)?gq\.com/(?!css/|images/)" />
-	<target host="gq-magazine.co.uk" />
-	<target host="www.gq-magazine.co.uk" />
 
 
-	<rule from="^http://(?:secure\.|www\.)?gq\.com/"
-		to="https://secure.gq.com/" />
+	<rule from="^http://gq\.com/"
+		to="https://www.gq.com/" />
 
-	<rule from="^http://subscribe\.gq\.com/"
-		to="https://subscribe.gq.com/" />
-
-	<rule from="^http://(?:www\.)?gq-magazine\.co\.uk/_/"
-		to="https://d3u12z27ui3vom.cloudfront.net/GQ/343431a42aff/" />
+	<rule from="^http:"
+		to="https:"  />
 
 </ruleset>

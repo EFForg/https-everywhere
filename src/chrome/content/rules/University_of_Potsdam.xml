@@ -1,4 +1,6 @@
 <!--
+	University of Potsdam
+
 	For problematic rules, see Uni-Potsdam.de-problematic.xml.
 
 
@@ -32,47 +34,66 @@
 		- rzblx10	(works; expired 2012-02-09, self-signed)
 
 	* Cert only matches www
-	** Self-signed
+	** Expired
 
 
 	Partially covered subdomains:
 
 		- www.jura	(some pages redirect to http)
 
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- (www.)hpi	(^ → www)
-		- jura		(→ www)
-		- (www.)pep
-		- puls
-		- webmail
-
 -->
-<ruleset name="University of Potsdam (partial)">
+<ruleset name="Uni-Potsdam.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.hpi.uni-potsdam.de" />
+	<target host="www.jura.uni-potsdam.de" />
+	<target host="pep.uni-potsdam.de" />
+	<target host="www.pep.uni-potsdam.de" />
+	<target host="puls.uni-potsdam.de" />
+	<target host="webmail.uni-potsdam.de" />
+	<target host="www.uni-potsdam.de" />
+
+	<!--	Complications:
+				-->
 	<target host="uni-potsdam.de" />
-	<target host="*.uni-potsdam.de" />
+	<target host="hpi.uni-potsdam.de" />
+	<target host="jura.uni-potsdam.de" />
+
 		<!--exclusion pattern="^http://(ares\.)?epic\.hpi\.uni-potsdam\.de/" /-->
-		<exclusion pattern="^http://www\.jura\.uni-potsdam\.de/(?!favicon\.ico|_layout/|_medien/)" />
 
-
-	<!--	Secured by server:
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.jura\.uni-potsdam\.de/$" /-->
+		<!--
+			Exceptions:
 					-->
-	<!--securecookie host="^epic\.hpi\.uni-potsdam\.de$" name="^SFOSWIKISID$" /-->
+		<exclusion pattern="^http://www\.jura\.uni-potsdam\.de/+(?!favicon\.ico|_layout/|_medien/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.jura.uni-potsdam.de/fakultaet/" />
+			<test url="http://www.jura.uni-potsdam.de/impressum/" />
+			<test url="http://www.jura.uni-potsdam.de/initiativen/" />
+			<test url="http://www.jura.uni-potsdam.de/international/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.jura.uni-potsdam.de/_layout/logo_jur.gif" />
+			<test url="http://www.jura.uni-potsdam.de/_medien/bilder/fakultaet/wegweiser.min.jpeg" />
+			<test url="http://www.jura.uni-potsdam.de/favicon.ico" />
 
 
 	<securecookie host="^(?:www\.hpi|(?:www\.)?pep|puls|\.webmail)\.uni-potsdam\.de$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?(hpi\.)?uni-potsdam\.de/"
+	<rule from="^http://(hpi\.)?uni-potsdam\.de/"
 		to="https://www.$1uni-potsdam.de/" />
 
 	<rule from="^http://jura\.uni-potsdam\.de/"
 		to="https://www.uni-potsdam.de/" />
 
-	<rule from="^http://(www\.jura|(?:www\.)?pep|puls|webmail)\.uni-potsdam\.de/"
-		to="https://$1.uni-potsdam.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

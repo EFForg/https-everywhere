@@ -1,14 +1,3 @@
-<!--
-	Phillips Academy Andover
-
-
-	Problematic hosts in *andover.edu:
-
-		- mail *
-
-	* Expired
-
--->
 <ruleset name="Phillips Academy">
 
 	<target host="www.andover.edu" />
@@ -17,13 +6,37 @@
 	<target host="colwizlive.andover.edu" />
 	<target host="sso.andover.edu" />
 	<target host="studentreports.andover.edu" />
-	<!--target host="mail.andover.edu" /-->
 	<target host="mypassword.andover.edu" />
 	<target host="student.andover.edu" />
 	<target host="patechmasters.com" />
 	<target host="*.patechmasters.com" />
 	
+	
+	<!-- andover.edu does not respond, but should be redirected to https://www.andover.edu to prevent MitM. -->
+	<target host="andover.edu" />
+	
+	<!-- mail.andover.edu returns an error, but should be included to protect mail.andover.edu/owa -->
+	<!-- commented out until 'no-test' attribute is available
+	<target host="mail.andover.edu" />
+		-->
+	
+	<test url="http://andover.edu/" />
+	 
 	<securecookie host=".+" name=".+" />
+	
+	<!-- redirects andover.edu to https://www.andover.edu -->
+	<rule from="^http://andover\.edu/"
+		to="https://www.andover.edu/" />
+	
+	
+	<!-- redirects http://mail.andover.edu/ (with or without "/") to https://mail.andover.edu/owa -->
+	<!-- commented out until 'no-test' attribute is available
+	<rule from="^http://mail\.andover\.edu/*$"
+		to="https://mail.andover.edu/owa" />
+		
+	<test url="http://mail.andover.edu" />
+	<test url="http://mail.andover.edu/" />
+		-->
 
 	<rule from="^http:"
 		to="https:" />

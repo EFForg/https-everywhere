@@ -81,9 +81,27 @@
 -->
 <ruleset name="CNRS.fr (partial)">
 
-	<target host="*.cnrs.fr" />
-		<!--
-			403:
+	<!--	Direct rewrites:
+				-->
+	<target host="ccsdlib.ccsd.cnrs.fr" />
+	<target host="ccsdlib-preprod.ccsd.cnrs.fr" />
+	<target host="thumb.ccsd.cnrs.fr" />
+	<target host="piwik-hal.ccsd.cnrs.fr" />
+
+	<target host="cnrsformation.cnrs.fr" />
+	<target host="www.dgdr.cnrs.fr" />
+	<target host="docutiles.cnrs.fr" />
+	<target host="wayf.dsi.cnrs.fr" />
+	<target host="emploi.cnrs.fr" />
+	<target host="intranet.cnrs.fr" />
+	<target host="lejournal.cnrs.fr" />
+	<target host="www.cnrs.fr" />
+
+	<!--	Complications:
+				-->
+	<target host="www.sg.cnrs.fr" />
+
+		<!--	403:
 				-->
 		<!--exclusion pattern="http://www2?\.cnrs\.fr/$" /-->
 		<!--
@@ -94,8 +112,25 @@
 			Exceptions:
 					-->
 		<exclusion pattern="http://www\.cnrs\.fr/+(?!ins2i/(?:images|IMG|plugins|squelettes/css|styles)/)" />
-		<!--
-			404:
+
+			<!--	+ve:
+					-->
+			<test url="http://www.cnrs.fr/aquitaine/" />
+			<test url="http://www.cnrs.fr/climate" />
+			<test url="http://www.cnrs.fr/dgds/" />
+			<test url="http://www.cnrs.fr/editions" />
+			<test url="http://www.cnrs.fr/in2p3" />
+			<test url="http://www.cnrs.fr/ins2i/spip.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.cnrs.fr/ins2i/images/logo-cnrs.gif" />
+			<test url="http://www.cnrs.fr/ins2i/plugins/auto/Lecteur_multimedia/player.css" />
+			<test url="http://www.cnrs.fr/ins2i/squelettes/css/enluminurestypo.css" />
+			<test url="http://www.cnrs.fr/ins2i/styles/print.css" />
+			<test url="http://www.cnrs.fr/ins2i/IMG/png/idris-web.png" />
+
+		<!--	404:
 				-->
 		<!--exclusion pattern="^http://www2\.cnrs\.fr/(band/3\.htm|presse/communique/|sites/)" /-->
 
@@ -105,7 +140,10 @@
 	<rule from="^http://www\.sg\.cnrs\.fr/[^?]*"
 		to="https://www.dgdr.cnrs.fr/" />
 
-	<rule from="^http://((?:ccsdlib|ccsdlib-preprod|thumb)\.ccsd|cnrsformation|www\.dgdr|docutiles|wayf\.dsi|emploi|intranet|lejournal|www)\.cnrs\.fr/"
-		to="https://$1.cnrs.fr/" />
+		<test url="http://www.sg.cnrs.fr/?" />
+		<test url="http://www.sg.cnrs.fr//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

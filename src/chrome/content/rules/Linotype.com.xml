@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://linotype.com/ => https://www.linotype.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	For other Monotype Imaging coverage, see Monotype-Imaging.xml.
 
 
@@ -10,25 +8,46 @@ Fetch error: http://linotype.com/ => https://www.linotype.com/: (28, 'Operation 
 
 	* Refused
 
-
-	^: cert only matches www
-
 -->
-<ruleset name="Linotype.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Linotype.com (partial)">
 
 	<target host="linotype.com" />
 	<target host="www.linotype.com" />
 		<!--
 			Redirect to http:
 						-->
-		<!--exclusion pattern="http://www\.linotype\.com/$" /-->
+		<!--exclusion pattern="^http://www\.linotype\.com/$" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="http://www\.linotype\.com/+(?!(?:account|account)(?:$|[?/])|css/|favicon\.ico|gif/|images/|min/|redir/sampler\.php)" />
+		<exclusion pattern="^http://www\.linotype\.com/+(?!(?:account|cart)(?:$|[?/])|css/|favicon\.ico|gif/|images/|min/|redir/sampler\.php)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.linotype.com/10/company.html" />
+			<test url="http://www.linotype.com/2044/sitemap.html" />
+			<test url="http://www.linotype.com/2088/fontservices.html" />
+			<test url="http://www.linotype.com/40/press.html" />
+			<test url="http://www.linotype.com/5/productcatalog.html" />
+			<test url="http://www.linotype.com/53/contact.html" />
+			<test url="http://www.linotype.com/6633/blog.html" />
+			<test url="http://www.linotype.com/7/fontmagazine.html" />
+			<test url="http://www.linotype.com/7709/affiliateprogram.html" />
+			<test url="http://www.linotype.com/favorites/" />
+			<test url="http://www.linotype.com/newsletter/" />
+			<test url="http://www.linotype.com/search" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.linotype.com/account/login" />
+			<test url="http://www.linotype.com/cart/" />
+			<test url="http://www.linotype.com/css/images/header/header-logo.png" />
+			<test url="http://www.linotype.com/favicon.ico" />
+			<test url="http://www.linotype.com/min/v43/?f=/css/blog.css" />
+			<test url="http://www.linotype.com/redir/sampler.php" />
 
 
-	<rule from="^http://(?:www\.)?linotype\.com/"
-		to="https://www.linotype.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

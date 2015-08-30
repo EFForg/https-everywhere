@@ -1,0 +1,174 @@
+<!--
+	Other Guardian rulesets:
+
+		- Gu.com.xml
+		- Guardian.xml
+		- Guardian_Escapes.com.xml
+		- Guardian_Offers.co.uk.xml
+		- Guardian_Subscriptions.co.uk.xml
+		- Guim.co.uk.xml
+
+
+	CDN buckets:
+
+		- soulmates-614848966.eu-west-1.elb.amazonaws.com
+		- guardian-registration.s3.amazonaws.com
+		- n0tice-static.s3.amazonaws.com
+		- s3.amazonaws.com/soulmates/
+		- witness-static.s3.amazonaws.com
+
+		- cdn.theguardian.com.c.footprint.net
+
+			- cdn.theguardian.tv
+
+		- audio.theguardian.tv.c.footprint.net
+
+		- theguardian.com.d1.sc.omtrdc.net
+
+			- hits.theguardian.com
+
+		- partners.simplifydigital.co.uk
+
+			- www.guardiandigitalcomparison.co.uk
+
+
+	Nonfunctional domains:
+
+		- discussion.guardianapis.com ¹
+		- www.guardiandigitalcomparison.co.uk ¹
+
+		- theguardian.com subdomains:
+
+			- ^ ¹
+			- discussion ²
+			- feeds ⁴
+			- jobs ¹
+			- observer ⁵
+			- syndication ¹
+			- www ⁶
+
+		- audio.theguardian.tv ¹
+		- cdn.theguardian.tv ¹
+
+	¹ Dropped
+	² Interrupted
+	³ 404; mismatched, CN: *.a.ssl.fastly.net
+	⁴ Refused
+	⁵ Redirects to www; mismatched, CN: *.a.ssl.fastly.net
+	⁶ Redirects to http, valid cert
+
+
+	Problematic hosts in *theguardian.com:
+
+		- hits ¹
+		- next ¹
+		- register ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.id.guardian.co.uk
+		- www.profile.theguardian.com
+		- www.securedrop.theguardian.com
+		- www.soulmates.theguardian.com
+		- www.witness.theguardian.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .theguardian.com
+		- bookshop.theguardian.com
+		- .bookshop.theguardian.com
+		- www.bookshop.theguardian.com
+		- soulmates.theguardian.com
+
+
+	Mixed content:
+
+		- Bugs, on:
+
+			- profile, witness from hits.guardian.co.uk *
+			- www from hits.theguardian.com
+			- www from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="The Guardian.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bookshop.theguardian.com" />
+	<target host="www.bookshop.theguardian.com" />
+	<target host="hits-secure.theguardian.com" />
+	<target host="id.theguardian.com" />
+	<target host="membership.theguardian.com" />
+	<target host="oas.theguardian.com" />
+	<target host="profile.theguardian.com" />
+	<!--target host="register.theguardian.com" /-->
+	<target host="securedrop.theguardian.com" />
+	<target host="soulmates.theguardian.com" />
+	<target host="subscribe.theguardian.com" />
+	<target host="witness.theguardian.com" />
+	<target host="www.theguardian.com" />
+
+	<!--	Complications:
+				-->
+	<target host="hits.theguardian.com" />
+	<target host="syndication.theguardian.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.theguardian\.com/(?:$|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+
+		<exclusion pattern="^http://www\.theguardian\.com/+(?!!info(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.theguardian.com/fashion" />
+			<test url="http://www.theguardian.com/favicon.ico" />
+			<test url="http://www.theguardian.com/help/contact-us" />
+			<test url="http://www.theguardian.com/uk-news" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.theguardian.com/info" />
+			<test url="http://www.theguardian.com/info/developer-blog/2015/aug/12/open-sourcing-grid-image-service" />
+
+		<test url="http://hits.theguardian.com/b/ss/guardiangu-frontend,guardiangu-network/1/H.25.3/?c3=theguardian.com&amp;c4=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.theguardian\.com$" name="^(?:GU_INT|GU_mtv_id|s_vi)$" /-->
+	<!--securecookie host="^(?:www\.)?bookshop\.theguardian\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.bookshop\.theguardian\.com$" name="^frontend$" /-->
+	<!--securecookie host="^soulmates\.theguardian\.com$" name="^(?:csrftoken|flags)$" /-->
+
+	<!--	Tracking cookies set by hits & oas.theguardian.com:
+								-->
+	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH]|s_vi)$" />
+	<securecookie host="^(?:(?:\.|www\.)?bookshop|\.?id|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
+
+
+	<rule from="^http://hits\.theguardian\.com/"
+		to="https://guardian.d1.sc.omtrdc.net/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://syndication\.theguardian\.com/[^?]*"
+		to="https://www.theguardian.com/info/syndication-and-terms-of-use" />
+
+		<test url="http://syndication.theguardian.com//" />
+		<test url="http://syndication.theguardian.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

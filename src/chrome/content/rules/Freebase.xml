@@ -1,35 +1,37 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://freebase.com/ => https://www.freebase.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://freebaselibs.com/ => https://static.freebase.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Other Freebase rulesets:
+
+		- Freebaselibs.com.xml
+
+
 	Nonfunctional subdomains:
 
 		- lists	(times out)
 		- wiki
 
--->
-<ruleset name="Freebase (partial)" default_off='failed ruleset test'>
 
-	<target host="freebase.com" />
+	^freebase.com: Handshake fails
+
+-->
+<ruleset name="Freebase.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="api.freebase.com" />
 	<target host="res.freebase.com" />
 	<target host="static.freebase.com" />
 	<target host="www.freebase.com" />
-	<target host="freebaselibs.com" />
+
+	<!--	Complications:
+				-->
+	<target host="freebase.com" />
 
 
-	<securecookie host="^.*\.freebase\.com$" name=".*" />
+	<securecookie host=".*\.freebase\.com$" name=".*" />
 
 
-	<!--	Cert only matches *.freebase.com.	-->
 	<rule from="^http://freebase\.com/"
 		to="https://www.freebase.com/" />
-
-	<!--	- www doesn't exist
-		- Cert only matches *.freebase.com
-							-->
-	<rule from="^http://freebaselibs\.com/"
-		to="https://static.freebase.com/" />
 
 	<rule from="^http:"
 		to="https:" />

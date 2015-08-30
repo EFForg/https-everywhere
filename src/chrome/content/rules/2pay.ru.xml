@@ -1,18 +1,25 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://2pay.ru/ => https://2pay.ru/: (51, "SSL: no alternative certificate subject name matches target host name '2pay.ru'")
-
 	For other Xsolla coverage, see Xsolla.xml.
 
--->
-<ruleset name="2pay.ru" default_off='failed ruleset test'>
 
-	<!--	Direct rewrites:
+	(www.)?2pay.ru: Mismatched
+
+-->
+<ruleset name="2pay.ru">
+
+	<!--	Complications:
 				-->
 	<target host="2pay.ru" />
+	<target host="www.2pay.ru" />
 
 
-	<rule from="^http:"
-		to="https:" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?2pay\.ru/[^?]*"
+		to="https://www.xsolla.com/" />
+
+		<test url="http://2pay.ru//" />
+		<test url="http://www.2pay.ru//" />
 
 </ruleset>

@@ -1,0 +1,81 @@
+<!--
+	Other AllPosters rulesets:
+
+		- AllPosters_images.com.xml
+
+
+	Nonfunctional hosts in *allposters.com:
+
+		- blog ¹
+		- corporate ²
+
+	¹ Shows blog.art.com
+	² Refused
+
+
+	Problematic hosts in *allposters.com:
+
+		- ^ ¹
+		- imagecache ²
+		- imagecache2 ²
+
+	¹ Dropped
+	² Akamai
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .allposters.com
+		- affiliates.allposters.com
+		- .atrack.allposters.com
+
+
+	Mixed content:
+
+		- Images, from:
+
+			- cache1.allpostersimages.com *
+			- cache1.artprintimages.com
+
+		- Ads from cache1.allpostersimages.com *
+
+	* Secured by us
+
+-->
+<ruleset name="AllPosters.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="affiliates.allposters.com" />
+	<target host="atrack.allposters.com" />
+	<target host="imagesource.allposters.com" />
+	<target host="secureimg.allposters.com" />
+	<target host="secureimg2.allposters.com" />
+	<target host="www.allposters.com" />
+
+	<!--	Complications:
+				-->
+	<target host="allposters.com" />
+	<target host="imagecache.allposters.com" />
+	<target host="imagecache2.allposters.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.allposters\.com$" name="^(?:AKAI|ap)$" /-->
+	<!--securecookie host="^affiliates\.allposters\.com$" name="^(?:ASP\.NET_SessionId|NSC_[\w.]+)$" /-->
+	<!--securecookie host="^\.atrack\.allposters\.com$" name="^E8L9$" /-->
+
+	<securecookie host="^(?:\.|affiliates\.|\.atrack\.)?allposters\.com$" name=".+" />
+
+
+	<rule from="^http://allposters\.com/"
+		to="https://www.allposters.com/" />
+
+	<rule from="^http://imagecache(2)?\.allposters\.com/"
+		to="https://secureimg$1.allposters.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,6 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mikrotik.com/ => https://www.mikrotik.com/: Cycle detected - URL already encountered: https://www.mikrotik.com/
+	CDN buckets:
+
+		- d355q2xs8kb5oj.cloudfront.net
+
+
 	Nonfunctional domains:
 
 		- mikrotik.com subdomains:
@@ -16,28 +19,65 @@ Fetch error: http://mikrotik.com/ => https://www.mikrotik.com/: Cycle detected -
 
 	Problematic subdomains:
 
-		- ^		(cert only matches www)
-		- training	(dropped)
+		- download2 ¹
+		- training ²
 
-
-	Mixed content:
-
-		- Images on www from i.mt.lv
+	¹ Cloudfront
+	² Dropped
 
 -->
-<ruleset name="MikroTik.com (partial)" default_off='failed ruleset test'>
+<ruleset name="MikroTik.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mikrotik.com" />
-	<target host="*.mikrotik.com" />
+	<target host="www.mikrotik.com" />
+
+	<!--	Complications:
+				-->
+	<target host="download2.mikrotik.com" />
+	<!--target host="training.mikrotik.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.mikrotik\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.mikrotik\.com/+(?!client(?:$|[?/])|css/|favicon\.ico|img/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.mikrotik.com/buy" />
+			<test url="http://www.mikrotik.com/consultants" />
+			<test url="http://www.mikrotik.com/documentation" />
+			<test url="http://www.mikrotik.com/download" />
+			<test url="http://www.mikrotik.com/mfm" />
+			<test url="http://www.mikrotik.com/support.html" />
+			<test url="http://www.mikrotik.com/training/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.mikrotik.com/client/" />
+			<test url="http://www.mikrotik.com/css/front.css" />
+			<test url="http://www.mikrotik.com/favicon.ico" />
+			<test url="http://www.mikrotik.com/img/header/gogo.png" />
 
 
-	<securecookie host="^www\.mikrotik\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.mikrotik\.com$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="^www\.mikrotik\.com$" name=".+" /-->
 
 
-	<rule from="^http://(?:www\.)?mikrotik\.com/"
-		to="https://www.mikrotik.com/" />
+	<rule from="^http://download2\.mikrotik\.com/"
+		to="https://d355q2xs8kb5oj.cloudfront.net/" />
 
-	<rule from="^http://training\.mikrotik\.com/.*"
-		to="https://www.mikrotik.com/training/" />
+	<!--rule from="^http://training\.mikrotik\.com/.*"
+		to="https://www.mikrotik.com/training/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,4 +1,7 @@
 <!--
+	For rules subject to CAcert, see OzLabs.org-cacert.xml.
+
+
 	Nonfunctional subdomains:
 
 		- jk *
@@ -9,20 +12,54 @@
 	* Shows www
 
 
-	Fully covered subdomains:
+	Problematic hosts in *ozlabs.org:
 
-		- git
-		- patchwork
+		- rusty *
+
+	* CAcert
+
+
+	Insecure cookies are set for these hosts:
+
+		- patchwork.ozlabs.org
+
+
+	Mixed content:
+
+		- Images on nemo, rusty from ozlabs.org *
+
+	* Secured by us
 
 -->
-<ruleset name="OzLabs (CAcert)" platform="cacert">
+<ruleset name="OzLabs.org (partial)">
 
 	<target host="ozlabs.org" />
 	<target host="*.ozlabs.org" />
-		<exclusion pattern="^http://(?:jk|librtas|powerpc-utils|yaboot)\." />
+
+		<exclusion pattern="^http://(?:jk|librtas|powerpc-utils|rusty|yaboot)\.ozlabs\.org/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://jk.ozlabs.org/" />
+			<test url="http://librtas.ozlabs.org/" />
+			<test url="http://powerpc-utils.ozlabs.org/" />
+			<test url="http://rusty.ozlabs.org/" />
+			<test url="http://yaboot.ozlabs.org/" />
+
+		<test url="http://git.ozlabs.org/" />
+		<test url="http://nemo.ozlabs.org/" />
+		<test url="http://patchwork.ozlabs.org/" />
+		<test url="http://www.ozlabs.org/" />
 
 
-	<rule from="^http://([\w\.-]+\.)?ozlabs\.org/"
-		to="https://$1ozlabs.org/" />
+		<!--	Not secured by server:
+						-->
+		<!--securecookie host="^patchwork\.ozlabs\.org$" name="^csrftoken$" /-->
+
+		<securecookie host="^patchwork\.ozlabs\.org$" name="" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

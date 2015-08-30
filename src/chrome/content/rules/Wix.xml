@@ -1,85 +1,115 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://wix.com/ => https://wix.com/: Cycle detected - URL already encountered: https://www.wix.com/
+	Other Wix rulesets:
+
+		- Parastorage.com.xml
+		- Wix_static.com.xml
+
 	CDN buckets:
 
+		- d2eyqiy4n03ve6.cloudfront.net
 		- www.wix.com.edgesuite.net
-
-			- static.parastorage.com
-			- static.wix.com
-			- static.wixstatic.com
 
 		- wix.go2cloud.org
 			- tracking.wix.com
 
-		- ghs.google.com
 
-			- archive.google.com
+	Nonfunctional hosts in *wix.com:
 
-
-	Nonfunctional wix.com subdomains:
-
-		- archive *
+		- arena ¹
 		- beat		(interrupted)
+		- investors ³
 		- jobs		(cert: dns.lc.wix.com; 403)
 
-	* archive
+	¹ Refused
+	³ Dropped
 
 
-	Problematic domains:
+	Problematic hosts in *wix.com:
 
-		- static.parastorage.com *
-		- static.wix.com *
-		- static.wixstatic.com *
+		- tracking *
 
-	* Works, akamai
+	* Mismatched
 
 
-	Partially covered domains:
+	Fully covered hosts in *wix.com:
 
-		- archive.wix.com	(→ akamai)
+		- dev
+		- fallback
+		- frog
+		- publicorigin
+		- sslstatic
+		- static
 
 
-	Fully covered domains:
+	These altnames don't exist:
 
-		- publicorigin.wix.com
-		- fallback.wix.com
-		- sslstatic.wix.com
-		- static.wix.com	(→ sslstatic & akamai)
-		- static.wixstatic.com	(→ sslstatic.wix.com & akamai)
+		- www.frog.wix.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .wix.com
 
 -->
-<ruleset name="Wix (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Wix.com (partial)">
 
-	<target host="static.parastorage.com" />
-		<exclusion pattern="^http://static\.parastorage\.com/media/" />
+	<!--	Direct rewrites:
+				-->
 	<target host="wix.com" />
-	<target host="*.wix.com" />
-	<target host="static.wixstatic.com" />
+	<target host="archive.wix.com" />
+	<target host="dev.wix.com" />
+	<target host="fallback.wix.com" />
+	<target host="frog.wix.com" />
+	<target host="dns.lc.wix.com" />
+	<target host="www.dns.lc.wix.com" />
+	<target host="publicorigin.wix.com" />
+	<target host="sslstatic.wix.com" />
+	<target host="static.wix.com" />
+	<target host="users.wix.com" />
+	<target host="www.wix.com" />
+
+	<!--	Complications:
+				-->
+	<target host="tracking.wix.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.wix\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.wix\.com/+(?!favicon\.ico|(?:my-account|signin|support)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.wix.com/about/affiliates" />
+			<test url="http://www.wix.com/about/contact-us" />
+			<test url="http://www.wix.com/blog/" />
+			<test url="http://www.wix.com/domain/names" />
+			<test url="http://www.wix.com/ecommerce/website" />
+			<test url="http://www.wix.com/sample/website" />
+			<test url="http://www.wix.com/website/templates" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.wix.com/favicon.ico" />
+			<test url="http://www.wix.com/my-account" />
+			<test url="http://www.wix.com/signin" />
+			<test url="http://www.wix.com/support/" />
+			<test url="http://www.wix.com/support/html5/" />
 
 
-	<securecookie host="^\.wix\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wix\.com$" name="(?:_wix_browser_sess|XSRF-TOKEN|incap_ses_\d+_\d+|userType|visid_incap_\d+)$" /-->
 
+	<securecookie host="^\.wix\.com$" name="(?:incap_ses_\d+|visid_incap)_\d+$" />
 
-	<rule from="^http://((?:fallback|frog|(?:www\.)?dns\.lc|publicorigin|sslstatic|www)\.)?wix\.com/"
-		to="https://$1wix.com/" />
-
-	<rule from="^http://archive\.wix\.com/sites/"
-		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix.com/sites/" />
-
-	<rule from="^http://users\.(?:parastorage|wix)\.com/"
-		to="https://users.wix.com/" />
 
 	<rule from="^http://tracking\.wix\.com/"
 		to="https://wix.go2cloud.org/" />
 
-	<!--	At least some stylesheets reference resources relative
-		to root, so rewrite css to sslstatic:
-							-->
-	<rule from="^http://static\.wix(?:static)?\.com/"
-		to="https://sslstatic.wix.com/" />
-
-	<rule from="^http://static\.wix(static)?\.com/"
-		to="https://a248.e.akamai.net/f/1778/1/5m/static.wix$1.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

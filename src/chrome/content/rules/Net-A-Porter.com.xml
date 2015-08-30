@@ -4,9 +4,13 @@
 		- netaporterll3.sslcs.cdngc.net
 
 
-	Problematic subdomains:
+	Problematic hosts in *net-a-porter.com:
 
-		- ^	(cert only matches www)
+		- ^ ¹
+		- weathertop ²
+
+	¹ Dropped
+	² Expired
 
 
 	Fully covered subdomains:
@@ -14,50 +18,44 @@
 		- (www.)	(^ → www)
 		- cache
 		- fashionfix
-		- weathertop
 		- www-lt
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- .
-		- .fashionfix
-		- weathertop
-		- www
-		- .www
-		- www-lt
-		- .www-lt
-
-
-	Mixed content:
-
-		- Images:
-
-			- On fashionfix from fashionfix *
-			- On www from cache *
-
-		- Web bugs:
-
-			- On www from www **
-			- On www-lt from www **
-
-	* Secured by us, doesn't trip MCB anyway
-	** Secured by us, but who cares
+		- www.net-a-porter.com
+		- .www.net-a-porter.com
+		- .www-lt.net-a-porter.com
 
 -->
-<ruleset name="Net-A-Porter.com">
+<ruleset name="Net-A-Porter.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="girdle-assets.net-a-porter.com" />
+	<target host="cache.net-a-porter.com" />
+	<target host="fashionfix.net-a-porter.com" />
+	<!--target host="weathertop.net-a-porter.com" /-->
+	<target host="www.net-a-porter.com" />
+	<target host="www-lt.net-a-porter.com" />
+
+	<!--	Complications:
+				-->
 	<target host="net-a-porter.com" />
-	<target host="*.net-a-porter.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="www\.net-a-porter\.com$" name="^ADRUM_\d+_\d+_\d+" /-->
+	<!--securecookie host="\.www(?:-lt)?\.net-a-porter\.com$" name="^(?:channel|country_iso|deviceType|lang_iso|lang_time)$" /-->
 
 	<securecookie host=".*\.net-a-porter\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?net-a-porter\.com/"
+	<rule from="^http://net-a-porter\.com/"
 		to="https://www.net-a-porter.com/" />
 
-	<rule from="^http://(cache|fashionfix|weathertop|www-lt)\.net-a-porter\.com/"
-		to="https://$1.net-a-porter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

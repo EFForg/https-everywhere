@@ -1,14 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://pirateleaks.cz/ => https://pirateleaks.cz/: (28, 'Connection timed out after 10001 milliseconds')
+	For other Pirate Party coverage, see PirateParty.xml.
+
+
+	(www.)?, web: Dropped
+
 -->
-<ruleset name="PirateLeaks" default_off='failed ruleset test'>
+<ruleset name="PirateLeaks.cz (partial)">
 
-	<target host="pirateleaks.cz" />
-	<target host="*.pirateleaks.cz" />
+	<!--	Complications:
+				-->
+	<target host="web.pirateleaks.cz" />
+
+		<!--	(?!/*($|\?)) 404s:
+						-->
+		<exclusion pattern="^http://web\.pirateleaks\.cz/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://web.pirateleaks.cz/?" />
+			<test url="http://web.pirateleaks.cz//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://web.pirateleaks.cz/index.php" />
+			<test url="http://web.pirateleaks.cz/index.php?f" />
+			<test url="http://web.pirateleaks.cz/index.php?o" />
+			<test url="http://web.pirateleaks.cz/index.php?b" />
+			<test url="http://web.pirateleaks.cz/index.php?a" />
+			<test url="http://web.pirateleaks.cz/index.php?r" />
 
 
-	<rule from="^http://(?:web\.|(www\.))?pirateleaks\.cz/"
-		to="https://$1pirateleaks.cz/" />
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://web\.pirateleaks\.cz/.*"
+		to="https://pirati.cz/" />
 
 </ruleset>

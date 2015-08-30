@@ -1,6 +1,11 @@
 <!--
 	For problematic rules, see Shazam-problematic.xml.
 
+	Other Shazam rulesets:
+
+		- My_Shazam.com.xml
+		- ShazamID.com.xml
+
 
 	CDN buckets:
 
@@ -40,38 +45,48 @@
 
 	Problematic domains:
 
-		- www.myshazam.com	(cert only matches ^myshazam.com)
 		- shazam.com		(refused)
 		- news.shazam.com	(works; mismatched, CN: *.mynewsdesk.com)
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .shazam.com
-		- support.shazam.com
 		- www.shazam.com
 
 
 	Mixed content:
 
-		- Images on www.shazam.com from www.swpcontent.com
+		- Images on www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Shazam (partial)">
+<ruleset name="Shazam.com (partial)">
 
-	<target host="shazam.com" />
-	<target host="www.shazam.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="cdn.shazam.com" />
+	<target host="images.shazam.com" />
 	<target host="support.shazam.com" />
-	<target host="orbit.shazamid.com" />
+	<target host="www.shazam.com" />
+
+	<!--	Complications:
+				-->
+	<target host="shazam.com" />
 
 
-	<securecookie host="^myshazam\.com$" name=".+" />
-	<securecookie host="^(?:support|www)\.shazam\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shazam\.com$" name="^(?:_mynewsdesk_session|origin_site|picked_site)$" /-->
+	<!--securecookie host="^www\.shazam\.com$" name="^(?:fat|inid|lruic|profile-data|registration|social-session|tempea|uid|wid)$" /-->
+
+	<securecookie host=".+\.shazam\.com$" name=".+" />
 
 
 	<rule from="^http://shazam\.com/"
 		to="https://www.shazam.com/" />
+
 	<rule from="^http:"
 		to="https:" />
 

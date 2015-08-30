@@ -1,37 +1,39 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *owncloud.org:
 
-		- demo ¹
-		- doc ²
-		- docs ²
-		- stats ¹
+		- docs *
 
-	¹ Refused
-	² Shows blank page; mismatched, CN: www.owncloud.org
-
-
-	Mixed content:
-
-		- Images on forum from www.gravatar.com ¹
-
-		- Bug on www from stats ²
-
-	¹ Secured by us
-	² Unsecurable <= refused
+	* Revoked
 
 -->
-<ruleset name="ownCloud.org (partial)">
+<ruleset name="ownCloud.org">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="owncloud.org" />
+	<target host="demo.owncloud.org" />
+	<target host="doc.owncloud.org" />
 	<target host="download.owncloud.org" />
 	<target host="forum.owncloud.org" />
+	<target host="mailman.owncloud.org" />
+	<target host="stats.owncloud.org" />
 	<target host="www.owncloud.org" />
 
+	<!--	Complications:
+				-->
+	<target host="docs.owncloud.org" />
 
-	<securecookie host="^(?:\.forum\.)?owncloud\.org$" name=".+" />
 
+	<securecookie host="^\.owncloud\.org$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://docs\.owncloud\.org/+"
+		to="https://owncloud.org/" />
+
+		<test url="http://docs.owncloud.org//" />
 
 	<rule from="^http:"
 		to="https:" />

@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://tmz.vo.llnwd.net/ => https://tmz.hs.llnwd.net/: None
 	CDN buckets:
 
 		- assets.tmz.com.s3.amazonaws.com
@@ -25,27 +23,47 @@ Fetch error: http://tmz.vo.llnwd.net/ => https://tmz.hs.llnwd.net/: None
 	* 400; mismatched, CN: *.hs.llnwd.net
 
 
+	Insecure cookies are set for these domains:
+
+		- .www.tmz.com
+
+
 	Mixed content:
 
 		- Images on www from cdn-media.fishwrapper.com *
+		- Fonts on www from tmz.vo.llnwd.net *
 
 		- Ads/bugs, on www from:
 
+			- wbrostmz.112.2o7.net *
 			- js.adsonar.com *
-			- cdnapi.kaltura.com *
+			- cdnapi.kaltura.com ²
 			- tmz.vo.llnwd.net *
 			- b.scorecardresearch.com *
 			- cdn.taboolasyndication.com *
 			- c4.zedo.com
 
 	* Secured by us
+	² Ruleset disabled by default
 
 -->
-<ruleset name="TMZ.com" default_off='failed ruleset test'>
+<ruleset name="TMZ.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="tmz.com" />
-	<target host="*.tmz.com" />
+	<target host="ssl-cdn-assets.tmz.com" />
+	<target host="ssl-cdn-media.tmz.com" />
+	<target host="www.tmz.com" />
+
+	<!--	Complications:
+				-->
 	<target host="tmz.vo.llnwd.net" />
+
+	<target host="assets.tmz.com" />
+	<target host="ll-assets.tmz.com" />
+	<target host="ll-media.tmz.com" />
+	<target host="media.tmz.com" />
 
 
 	<!--	Not secured by server:
@@ -55,13 +73,13 @@ Fetch error: http://tmz.vo.llnwd.net/ => https://tmz.hs.llnwd.net/: None
 	<securecookie host="^\.www\.tmz\.com$" name=".+" />
 
 
+	<rule from="^http://tmz\.vo\.llnwd\.net/"
+		to="https://tmz.hs.llnwd.net/" />
+
 	<rule from="^http://(?:ll-)?(assets|media)\.tmz\.com/"
 		to="https://s3.amazonaws.com/$1.tmz.com/" />
 
-	<rule from="^http://(ssl-cdn-(?:assets|media)\.|www\.)?tmz\.com/"
-		to="https://$1tmz.com/" />
-
-	<rule from="^http://tmz\.vo\.llnwd\.net/"
-		to="https://tmz.hs.llnwd.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

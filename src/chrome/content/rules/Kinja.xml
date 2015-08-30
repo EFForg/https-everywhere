@@ -8,8 +8,6 @@
 
 		- a.prod.fastly.net
 
-			- *.kinja.com :
-
 			- api
 			- front
 			- gawker
@@ -17,35 +15,56 @@
 			- neetzanz
 			- www
 
-			- i.kinja-img.com
 
+	Problematic hosts in kinja.com:
 
-	Problematic domains:
-
-		- kinja.com subdomains:
-
-		- (www.) *
 		- front *
 		- gawker *
 		- legal
 		- neetzanz *
-
-		- i.kinja-img.com *
-		- c.kinja-static.com *
-		- m.kinja-static.com *
+		- www *
 
 	* Works, mismatched, CN: *.a.ssl.fastly.net
 
 
+	Insecure cookies are set for these hosts:
+
+		- kinja.com
+
+
 	api sets KinjaToken wildcard cookie on whichever domain it is loaded from.
 
--->
-<ruleset name="Kinja (partial)">
 
+	Mixed content:
+
+		- Bug on ^ from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Kinja.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kinja.com" />
 	<target host="api.kinja.com" />
 
+	<!--	Complications:
+				-->
+	<target host="www.kinja.com" />
 
-	<rule from="^http://api\.kinja\.com/"
-		to="https://api.kinja.com/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^kinja\.com$" name="^geocc$" /-->
+
+	<securecookie host="^kinja\.com$" name=".+" />
+
+
+	<rule from="^http://www\.kinja\.com/"
+		to="https://kinja.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

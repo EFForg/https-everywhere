@@ -1,26 +1,34 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic subdomains:
 
-		- (www.) *
-		- goldbach *
+		- (www.) ¹
+		- axdget-sync ²
+		- goldbach ²
+		- mtm ³
 
-	* Refused
-
+	¹ Mismatched, CN: nugg.ad
+	² Appears to work; unsure what content ought to be
+	³ Redirects to http
 
 	Fully covered subdomains:
 
 		- [\w-]+-s	(per-client web bugs)
+		- ci
+		- poldk
 
 -->
 <ruleset name="nugg.ad (partial)">
 
 	<target host="*.nuggad.net" />
 
-
 	<securecookie host="^\.nuggad\.net$" name="^d$" />
 
+	<test url="http://ci.nuggad.net/ci" />
+	<test url="http://poldk.nuggad.net/rc" />
+	<test url="http://yahoo-s.nuggad.net/" />
+	<test url="http://ip-s.nuggad.net/" />
 
-	<rule from="^http://([\w-]+-s|mtm)\.nuggad\.net/"
+	<rule from="^http://([\w-]+-s|ci|poldk)\.nuggad\.net/"
 		to="https://$1.nuggad.net/" />
 
 </ruleset>

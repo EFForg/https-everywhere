@@ -27,38 +27,46 @@
 	Paths rewritten from imagecdn(-\d)? to cdn give blank pages or 504.
 
 
-	Partially covered subdomains:
+	Mixed content:
 
-		- (www.) *
+		- Images, on:
 
-	* Some pages redirect to http
+			- sfgate from imagecdn-3.findnsave.com
+			- www from imagecdn-[0-3].findnsave.com
+
 
 -->
-<ruleset name="Find n Save (partial)">
+<ruleset name="Find n Save.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="findnsave.com" />
-	<target host="*.findnsave.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?findnsave\.com/+(national_sitemap|privacy|trademark)($|[?/])" /-->
-		<!--exclusion pattern="^http://(www\.)?findnsave\.com/+(?!$|\?|static/)" /-->
+	<target host="sfgate.findnsave.com" />
+	<target host="www.findnsave.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.findnsave.com" />
+	<target host="content.findnsave.com" />
+
+		<test url="http://www.findnsave.com/privacy/" />
+		<test url="http://www.findnsave.com/trademark/" />
 
 
-	<!--securecookie host="^www\.findnsave\.com$" name="^csrftoken$" /-->
-	<!--
-		Tracking cookies:
+	<!--	Not secured by server:
 					-->
-	<securecookie host="^\.www\.findnsave\.com$" name=".+" />
+	<!--securecookie host="^(?:sfgate|www)\.findnsave\.com$" name="^csrftoken$" /-->
 
+	<securecookie host="^(?:sfgate|\.?www)\.findnsave\.com$" name=".+" />
 
-	<rule from="^http://(www\.)?findnsave\.com/(?=$|\?|static/)"
-		to="https://$1findnsave.com/" />
 
 	<rule from="^http://cdn\.findnsave\.com/"
 		to="https://d3ne1tggqg4fzy.cloudfront.net/" />
 
 	<rule from="^http://content\.findnsave\.com/"
 		to="https://d10yv8m6mggaen.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

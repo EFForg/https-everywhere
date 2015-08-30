@@ -11,27 +11,26 @@
 
 		- images	(503, akamai)
 
+	Earlier, images could be fixed by instead redirecting to ^,
+	but this in turn creates a redirect to a different page.	
+
 
 	Partially covered subdomains:
 
 		- (www.) *
-		- images *	(→ ^)
 
 	* Some paths redirect to http://.../$
 
-
-	Fully covered subdomains:
-
-		- images	(→ ^)
-
 -->
-<ruleset name="MedicineNet.com (partial)">
+<ruleset name="MedicineNet.com (broken)" default_off="Bad redirects">
 
 	<target host="medicinenet.com" />
 	<target host="*.medicinenet.com" />
 		<exclusion pattern="^http://images\.medicinenet\.com/css/" />
 		<exclusion pattern="^http://(?:www\.)?medicinenet\.com/(?!images/)" />
 
+	<test url="http://images.medicinenet.com/images/image_collection/skin/addisons-disease.jpg" />
+	<test url="http://www.medicinenet.com" />
 
 	<rule from="^http://(?:images\.|(www\.))?medicinenet\.com/"
 		to="https://$1medicinenet.com/" />

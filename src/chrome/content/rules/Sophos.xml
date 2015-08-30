@@ -1,35 +1,46 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://astaro.com/ => https://astaro.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://gpp.partners.sophos.com/ => https://gpp.partners.sophos.com/: (28, 'Connection timed out after 10000 milliseconds')
+	Other Sophos rulesets:
+
+		- Astaro.com.xml
+
+
+	gpp.partners.sophos.com: Dropped over http & https
+
+
+	These altnames don't exist:
+
+		- search.sophos.com
+
+
+	Insecure cookies are set for these domains :
+
+		- .sophos.com
+
 -->
-<ruleset name="Sophos (partial)" default_off='failed ruleset test'>
+<ruleset name="Sophos.com">
 
-	<target host="astaro.com" />
-	<target host="*.astaro.com" />
-	<target host="gpp.partners.sophos.com"/>
-	<target host="*.sophos.com"/>
-
-
-	<!--	Observed cookie domains:
-
-			- ^\.
-			- ^www
+	<!--	Direct rewrites:
 				-->
-	<securecookie host="^.*\.astaro\.com$" name=".*" />
-	<securecookie host="^solo\.sophos\.com$" name=".*"/>
+	<target host="sophos.com" />
+	<target host="blogs.sophos.com" />
+	<target host="forms.sophos.com" />
+	<target host="myutm.sophos.com" />
+	<target host="nakedsecurity.sophos.com" />
+	<target host="partnerportal.sophos.com" />
+	<target host="secure.sophos.com" />
+	<target host="secure2.sophos.com" />
+	<target host="shop.sophos.com" />
+	<target host="www.sophos.com" />
 
 
-	<rule from="^http://(www\.)?astaro\.com/"
-		to="https://$1astaro.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sophos\.com$" name="^(?:__qca|__utm\w+|__SophosNextDeviceEnabled|\.ASPXAUTH|ASP\.NET_SessionId|ppAuth|website#lang)$" /-->
 
-	<rule from="^http://feature\.astaro\.com/"
-		to="https://astaro.uservoice.com/" />
+	<securecookie host=".*\.sophos\.com$" name=".+" />
 
-	<rule from="^http://support\.astaro\.com/"
-		to="https://support.astaro.com/" />
 
-	<rule from="^http://(nakedsecurity|gpp\.partners|secure|solo)\.sophos\.com/"
-		to="https://$1.sophos.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

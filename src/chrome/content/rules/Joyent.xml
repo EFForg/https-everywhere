@@ -1,67 +1,69 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://no.de/ => https://no.de/: (7, 'Failed to connect to no.de port 443: Connection timed out')
-Fetch error: http://www.no.de/ => https://no.de/: (28, 'Connection timed out after 10001 milliseconds')
 	Other Joyent rulesets:
 
+		- Joyent_Cloud.com.xml
 		- Nodejs.org.xml
 		- Npm.im.xml
 		- Npm_js.com.xml
 		- Npm_js.org.xml
+		- SmartOS.org.xml
 
 
-	Problematic domains:
+	Nonfunctional hosts in *joyent.com:
 
-		- joyent.com ¹
+		- lpage *
 
-	¹ Dropped
-
-
-	Nonfunctional domains:
-
-		- lpage.joyent.com ¹
-
-	¹ Marketo
+	* Marketo
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these hosts:
 
 		- my.joyent.com
 		- sso.joyent.com
 		- wiki.joyent.com
+		- www.joyent.com
 
 -->
-<ruleset name="Joyent (partial)" default_off='failed ruleset test'>
+<ruleset name="Joyent.com (partial)">
 
 	<target host="joyent.com"/>
 	<target host="*.joyent.com"/>
-		<exclusion pattern="^http://lpage\.joyent\.com/(?!css/|images/|js/|rs/)" />
-	<target host="*.joyentcloud.com"/>
-	<target host="no.de"/>
-	<target host="www.no.de"/>
+
+		<!--exclusion pattern="^http://lpage\.joyent\.com/(?!css/|images/|rs/)" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://lpage.joyent.com/TheDeck.html" /-->
+
+		<exclusion pattern="^http://lpage\.joyent\.com/" />
+
+			<test url="http://lpage.joyent.com/" />
+
+		<test url="http://apidocs.joyent.com/" />
+		<test url="http://docs.joyent.com/" />
+		<test url="http://help.joyent.com/" />
+		<test url="http://my.joyent.com/" />
+		<test url="http://pkgsrc.joyent.com/" />
+		<test url="http://sso.joyent.com/login" />
+		<test url="http://www.joyent.com/" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^my\.joyent\.com$" name="^(X-Mapping-\w+|connect\.sid)$" /-->
 	<!--securecookie host="^sso\.joyent\.com$" name="^connect\.sess$" /-->
 	<!--securecookie host="^wiki\.joyent\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www\.joyent\.com$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^(?:.*\.)?(?:joyent\.com|no\.de)$" name=".*"/>
-    <exclusion pattern="^http://pkgsrc[\w\-]*\.joyent\.com/"/>
+	<securecookie host="^(?:.*\.)?joyent\.com$" name=".+" />
 
-	<rule from="^http://joyent\.com/"
-		to="https://www.joyent.com/"/>
 
-	<rule from="^http://lpage\.joyent\.com/(?=css/|images/|js/|rs/)"
-		to="https://na-sjf.marketo.com/" />
+	<!--	This needs tests.
+				-->
+	<!--rule from="^http://lpage\.joyent\.com/"
+		to="https://na-sjf.marketo.com/" /-->
 
-	<rule from="^http://(\w+)\.joyent\.com/"
-		to="https://$1.joyent.com/"/>
-
-	<rule from="^http://([\w\-]*api|my)\.joyentcloud\.com/"
-		to="https://$1.joyentcloud.com/"/>
-
-	<rule from="^http://(?:www\.)?no\.de/"
-		to="https://no.de/"/>
+	<rule from="^http://([\w-]+\.)?joyent\.com/"
+		to="https://$1joyent.com/"/>
 
 </ruleset>
