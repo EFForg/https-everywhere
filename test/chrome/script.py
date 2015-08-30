@@ -10,12 +10,8 @@
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
 
-import time, sys, glob, os, traceback
+import sys
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
 if sys.platform.startswith("linux"):
@@ -42,17 +38,19 @@ chromeOps.add_extension(sys.argv[1])
 # First argument is optional, if not specified will search path.
 
 try:
-	driver = webdriver.Chrome(chromedriver_path, chrome_options = chromeOps)
+	driver = webdriver.Chrome(chromedriver_path, chrome_options=chromeOps)
 except WebDriverException as e:
 	error = e.__str__()
 
 	if "executable needs to be in PATH" in e.__str__():
-		print "ChromeDriver isn't installed. Check test/chrome/README.md for instructions on how to install ChromeDriver"
+		print "ChromeDriver isn't installed. Check test/chrome/README.md\
+		 for instructions on how to install ChromeDriver"
 		sys.exit(0)
 	else:
 		driver.quit()
 		raise e
-		sys.exit(2)
+
+print '' #New line
 
 driver.get('http://libssh.org/robots.txt')
 
@@ -60,7 +58,7 @@ driver.get('http://libssh.org/robots.txt')
 
 if driver.current_url.startswith('https'):
 	print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
-elif(driver.current_url.startswith('http')):
+elif driver.current_url.startswith('http'):
 	print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
 	sys.exit(1)
 
