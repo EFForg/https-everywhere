@@ -1,0 +1,49 @@
+<!--
+	For other WebSupport coverage, see Websupport_sk_cz_at_hu.xml.
+
+
+	Problematic hosts:
+
+		- mail.websupport.at *
+		- webmail.websupport.at *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- websupport.at
+		- www.websupport.at
+
+
+	Mixed content:
+
+		- css on blog.websupport.at from fonts.googleapis.com *
+		- Images on blog.websupport.at from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="WebSupport.at (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="websupport.at" />
+	<target host="blog.websupport.at" />
+	<!--target host="mail.websupport.at" /-->
+	<!--target host="webmail.websupport.at" /-->
+	<target host="www.websupport.at" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?websupport\.at$" name="^(?:[\da-f]{32}|PHPSESSID)$" /-->
+	<!--securecookie host="^admin\.websupport\.at$" name="^(?:PHPSESSID|YII_CSRF_TOKEN|lang)$" /-->
+
+	<securecookie host=".+\.websupport\.at$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

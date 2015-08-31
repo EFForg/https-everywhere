@@ -1,14 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://gameinformer.com/ => https://gameinformer.com/: Redirect for 'http://gameinformer.com/' missing Location
 	CDN buckets:
 
 		- media1.gameinformer.edgesuite.net
 
-		- optimizedresources.gamestop.com.edgesuite.net
-
-			- a1910.b.akamai.net
-			- media-2
+		- optimizedresources.gamestop.com.edgesuite.net ← media-2.gameinformer.com
 
 
 	Nonfunctional subdomains:
@@ -21,28 +16,50 @@ Fetch error: http://gameinformer.com/ => https://gameinformer.com/: Redirect for
 		- media-2	(works, akamai)
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)
-		- media-2	(→ akamai)
+		- .gameinformer.com
+		- www.gameinformer.com
 
 
-	Mixed images on www from media1
+	Mixed content:
+
+		- Images on www from media1.gameinformer.com ¹
+
+		- Bugs, on:
+
+			- www from www.facebook.com ²
+			- www from b.scorecardresearch.com ²
+
+
+	¹ Unsecurable <= 504
+	² Secured by us
 
 -->
-<ruleset name="GameInformer (partial)" default_off='failed ruleset test'>
+<ruleset name="GameInformer.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gameinformer.com" />
-	<target host="*.gameinformer.com" />
+	<target host="www.gameinformer.com" />
 
+	<!--	Complications:
+				-->
+	<target host="media-2.gameinformer.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.gameinformer\.com$" name="^(?:AuthorizationCookie|CommunityServer-UserCookie\d+|SCC|SMC|SRC|SSPIDER)$" /-->
+	<!--securecookie host="^www\.gameinformer\.com$" name="^(?:CommunityServer-LastVisitUpdated-\d+|akamai-cookie)$" /-->
 
 	<securecookie host="^(?:www)?\.gameinformer\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?gameinformer\.com/"
-		to="https://$1gameinformer.com/" />
-
 	<rule from="^http://media-2\.gameinformer\.com/"
-		to="https://a248.e.akamai.net/f/1910/8732/10h/media-2.gameinformer.com/" />
+		to="https://a248.e.akamai.net/f/248/10/10/media-2.gameinformer.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -27,8 +27,23 @@
 
 	<securecookie host="^\.www\.fastmail\.(?:com|fm)$" name=".+" />
 
+	<!--
+		The server sends an incorrect (non-EV) certificate when www. isn't used
+	-->
+	<rule from="^http://(www\.)?fastmail\.(com|fm)/"
+		to="https://www.fastmail.com/" />
 
-	<rule from="^http://((?:beta|qa|www)\.)?fastmail\.(com|fm)/"
-		to="https://$1fastmail.com/" />
+	<test url="http://fastmail.com/" />
+	<test url="http://www.fastmail.com/" />
+	<test url="http://fastmail.fm/" />
+	<test url="http://www.fastmail.fm/" />
+
+	<rule from="^http://(beta|qa)\.fastmail\.(com|fm)/"
+		to="https://$1.fastmail.com/" />
+
+	<test url="http://beta.fastmail.com/" />
+	<test url="http://qa.fastmail.com/" />
+	<test url="http://beta.fastmail.fm/" />
+	<test url="http://qa.fastmail.fm/" />
 
 </ruleset>

@@ -1,33 +1,64 @@
 <!--
-	!functional:
+	See Buscape-mismatches.xml for problematic rules.
+
+
+	Nonfunctional hosts:
+
 		- busca.buscape.com.br
-		- image.buscape.com		(Akamai; "Service unavailable"; not on www)
+		- compare.buscape.com.br *
+		- microsoft.buscape.com.br *
 		- preco2.buscape.com.br
 		- templates.bunscape.com(.br)
 		- www2.buscape.com.br
 
-	See Buscape-mismatches.xml for problematic rules.
+	* Dropped
+
+
+	Problematic hosts:
+
+		- buscape.com ¹
+		- image.buscape.com ²
+		- www.buscape.com ³
+
+		- buscape.com.br ¹
+		- imagem.buscape.com.br
+		- thumbs.buscape.com.br ²
+		- developer.buscape.com.br ³
+
+	¹ Dropped
+	² Akamai
+	³ Mismatched
+
 -->
-<ruleset name="Buscapé (partial)" default_off="mismatch">
+<ruleset name="Buscapé (partial)">
 
-	<target host="buscape.com"/>
-	<target host="www.buscape.com"/>
-	<target host="buscape.com.br"/>
-	<target host="parceiro.buscape.com.br"/>
-	<target host="s.bunscape.com.br"/>
-	<target host="www.buscape.com.br"/>
+	<!--	Direct rewrites:
+				-->
+	<!--target host="developer.buscape.com.br"/-->
 
-	<!--	encountered cookies:
-			- .buscape.com
-			- .buscape.com.br
-		Are these used on unsecurable domains?	-->
+	<!--	Complications:
+				-->
+	<!--target host="buscape.com"/-->
+	<target host="image.buscape.com"/>
+	<!--target host="www.buscape.com"/-->
 
-	<!--	!www:	timeout
-		s:	Akamai	-->
-	<rule from="^http://(?:s\.)?buscape\.com(\.br)?/"
-		to="https://www.buscape.com$1/"/>
+	<!--target host="buscape.com.br"/-->
+	<target host="imagem.buscape.com.br"/>
+	<target host="thumbs.buscape.com.br"/>
 
-	<rule from="^http://(parceiro|www)\.buscape\.com\.br/"
-		to="https://$1.buscape.com.br/"/>
+		<!--	Redirects to http:
+					-->
+		<!--exclusion pattern="^http://(?:s|www)\.buscape\.com\.br/css/" /-->
+		<!--exclusion pattern="^http://(?:parceiro|www)\.buscape\.com\.br/$" /-->
+
+
+	<!--rule from="^http://(?:(?:www\.)?buscape\.com|buscape\.com\.br)/"
+		to="https://www.buscape.com.br/" /-->
+
+	<rule from="^http://(image\.buscape\.com|(?:imagem|thumbs)\.buscape\.com\.br)/"
+		to="https://a248.e.akamai.net/f/248/10/10/$1/" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
 
 </ruleset>

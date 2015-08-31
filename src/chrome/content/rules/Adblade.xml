@@ -1,43 +1,65 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://reachmode.com/ => http://reachmode.com/: (7, 'Failed to connect to reachmode.com port 80: Connection refused')
-	Nonfunctional:
+	Nonfunctional hosts in *adblade.com;
 
-        - https://(www.)adblade.com
-		- (pwik.|www.)adiant.com
+		- blog *
 
-			- Cert: savegeorge.com.
-			- Display savegeorge.com data (i.e., a blank page).
+	* Dropped
+
+
+	Insecure cookies are set for these domains:
+
+		- .adblade.com
+
+
+	Mixed content:
+
+		- Bug on (www.)? from piwik.adiant.com *
+
+	* Unsecurable <= shows another domain
 
 -->
-<ruleset name="Adblade (partial)" default_off='failed ruleset test'>
+<ruleset name="Adblade.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="adblade.com" />
-	<target host="*.adblade.com" />
-	<target host="reachmode.com" />
-	<target host="*.reachmode.com" />
+	<target host="pixel.adblade.com" />
+	<target host="web.adblade.com" />
+	<target host="www.adblade.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?adblade\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?adblade\.com/+(?!css/|favicon\.ico|images/|img/|registration/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://adblade.com/adblade-adspecs" />
+			<test url="http://adblade.com/doc/about" />
+			<test url="http://adblade.com/doc/contact" />
+			<test url="http://www.adblade.com/adblade-adspecs" />
+			<test url="http://www.adblade.com/doc/about" />
+			<test url="http://www.adblade.com/doc/contact" />
+
+			<!--	-ve:
+					-->
+			<test url="http://adblade.com/css/adblade.css" />
+			<test url="http://adblade.com/favicon.ico" />
+			<test url="http://adblade.com/images/design/adblade/logo.png" />
+			<test url="http://adblade.com/registration/" />
 
 
-	<securecookie host="^web\.reachmode\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adblade\.com$" name="^__sgs$" /-->
+
+	<securecookie host="^\.adblade\.com$" name="^__sgs$" />
 
 
-	<!--	Registration pages are polluted by unsecurable
-		beacons from piwik.adiant.com.  Tut tut.	-->
-	<rule from="^http://(www\.)?adblade\.com/(css|images|img|registration)/"
-		to="https://$1adblade.com/$2/" />
-
-	<rule from="^http://(pixel|web)\.adblade\.com/"
-		to="https://$1.adblade.com/" />
-
-	<!--	Redirects as so, sans-https.	-->
-    <!-- No longer works.
-	<rule from="^http://(?:www\.)?reachmode\.com/"
-		to="https://www.adblade.com/" />
-        -->
-
-	<!--	This domain is used for advertising
-		on third-party websites.	-->
-	<rule from="^http://web\.reachmode\.com/"
-		to="https://web.reachmode.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

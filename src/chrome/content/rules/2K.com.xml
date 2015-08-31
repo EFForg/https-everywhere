@@ -1,0 +1,67 @@
+<!--
+	Other 2K Games rulesets:
+
+		- 2K_Games.xml
+		- 2K_Sports.xml
+		- BioShock_Infinite.xml
+
+
+	Nonfunctional hosts in *2k.com:
+
+		- forums ¹
+		- store ²
+		- support ³
+
+	¹ 404
+	² Digital River
+	³ Zendesk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .2k.com
+		- www.2k.com
+
+-->
+<ruleset name="2K.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="2k.com" />
+	<target host="api.2k.com" />
+	<target host="blog.2k.com" />
+	<target host="store.2k.com" />
+	<target host="www.2k.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://store\.2k\.com/store\?Action=home" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://store\.2k\.com/+(?!Admin/|DRHM/|favicon\.io)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://store.2k.com/sale" />
+			<test url="http://store.2k.com/store" />
+			<test url="http://store.2k.com/store?Action=home" />
+
+			<!--	-ve:
+					-->
+			<test url="http://store.2k.com/favicon.ico" />
+
+
+	<!--	Not secure by server:
+					-->
+	<!--securecookie host="^\.2k\.com$" name="^(?:PHPSESSID|blog-2k_(?:last_activity|last_visit|tracker))$" /-->
+	<!--securecookie host="^www\.2k\.com$" name="^2K$" /-->
+
+	<securecookie host="^\.2k\.com$" name="^(?:PHPSESSID|blog-2k_(?:last_activity|last_visit|tracker))$" />
+	<securecookie host="^www\.2k\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
