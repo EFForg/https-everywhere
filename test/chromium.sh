@@ -24,7 +24,7 @@ if [ "$1" == "--justrun" ]; then
 		--user-data-dir="$PROFILE_DIRECTORY" \
 		--load-extension=pkg/crx/
 else
-	source makecrx.sh
+	./makecrx.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
 	python2.7 test/chromium/script.py $CRX_NAME
