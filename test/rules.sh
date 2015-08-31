@@ -4,7 +4,7 @@
 # coverage, according to the ruleset checker.
 #
 
-cd $(dirname $0)
+cd $(dirname $0)/$(dirname $(readlink $0))../
 
 source utils/mktemp.sh
 

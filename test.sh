@@ -8,5 +8,6 @@
 
 cd $(dirname $0)/$(dirname $(readlink $0))
 
+./test/rules.sh
 ./test/firefox.sh $@
 ./test/chromium.sh $@
