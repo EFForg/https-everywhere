@@ -15,7 +15,7 @@ if type apt-get >/dev/null ; then
     chromium-chromedriver
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
-  brew install libxml2 gnu-sed
+  brew install libxml2 gnu-sed chromedriver
   if ! echo $PATH | grep -ql /usr/local/bin ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
