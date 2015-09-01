@@ -10,7 +10,7 @@
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
 
-import sys
+import sys, os
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
@@ -26,20 +26,27 @@ class bcolors:
 
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
+chromeOps.add_argument("--disable-setuid-sandbox")
+
+chromdriver_path = "chromedriver"
+
+if 'TRAVIS' in os.environ:
+	chromeOps.add_argument('--no-sandbox')
+	chromdriver_path = os.path.abspath("test/chromium/chromedriver")
 
 # First argument is optional, if not specified will search path.
 
 try:
-	driver = webdriver.Chrome('chromedriver', chrome_options=chromeOps)
+	driver = webdriver.Chrome(chromdriver_path, chrome_options=chromeOps)
 except WebDriverException as e:
 	error = e.__str__()
 
 	if "executable needs to be in PATH" in e.__str__():
 		print "ChromeDriver isn't installed. Check test/chrome/README.md\
-		 for instructions on how to install ChromeDriver"
+for instructions on how to install ChromeDriver"
+
 		sys.exit(2)
 	else:
-		driver.quit()
 		raise e
 
 print '' #New line
