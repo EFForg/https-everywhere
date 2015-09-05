@@ -40,39 +40,37 @@ if 'TRAVIS' in os.environ:
     chromeOps.add_argument('--no-sandbox')
     chromedriver_path = os.path.abspath("test/chromium/chromedriver")
 
-# First argument is optional, if not specified will search path.
 
 try:
+    # First argument is optional, if not specified will search path.
     driver = webdriver.Chrome(chromedriver_path, chrome_options=chromeOps)
 except WebDriverException as e:
     error = e.__str__()
 
     if "executable needs to be in PATH" in e.__str__():
-        print "ChromeDriver isn't installed. Check test/chrome/README.md\
-for instructions on how to install ChromeDriver"
+        print "ChromeDriver isn't installed. Check test/chrome/README.md " \
+              "for instructions on how to install ChromeDriver"
 
         sys.exit(2)
     else:
         raise e
 
-print '' #New line
+print ''
 
 driver.get('http://libssh.org/robots.txt')
 
-#Page Loaded
-
-failed = False
+test_failed = False
 if driver.current_url.startswith('https'):
     print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
 elif driver.current_url.startswith('http'):
     print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
-    failed = True
+    test_failed = True
     sys.exit(1)
 
-print '' #New line
+print ''
 
 driver.quit()
 
 
-if failed:
+if test_failed:
     sys.exit(1)
