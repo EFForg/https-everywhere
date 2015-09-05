@@ -15,14 +15,14 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
 class bcolors:
-	HEADER = '\033[95m'
-	OKBLUE = '\033[94m'
-	OKGREEN = '\033[92m'
-	WARNING = '\033[93m'
-	FAIL = '\033[91m'
-	ENDC = '\033[0m'
-	BOLD = '\033[1m'
-	UNDERLINE = '\033[4m'
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
@@ -31,23 +31,23 @@ chromeOps.add_argument("--disable-setuid-sandbox")
 chromdriver_path = "chromedriver"
 
 if 'TRAVIS' in os.environ:
-	chromeOps.add_argument('--no-sandbox')
-	chromdriver_path = os.path.abspath("test/chromium/chromedriver")
+    chromeOps.add_argument('--no-sandbox')
+    chromdriver_path = os.path.abspath("test/chromium/chromedriver")
 
 # First argument is optional, if not specified will search path.
 
 try:
-	driver = webdriver.Chrome(chromdriver_path, chrome_options=chromeOps)
+    driver = webdriver.Chrome(chromdriver_path, chrome_options=chromeOps)
 except WebDriverException as e:
-	error = e.__str__()
+    error = e.__str__()
 
-	if "executable needs to be in PATH" in e.__str__():
-		print "ChromeDriver isn't installed. Check test/chrome/README.md\
+    if "executable needs to be in PATH" in e.__str__():
+        print "ChromeDriver isn't installed. Check test/chrome/README.md\
 for instructions on how to install ChromeDriver"
 
-		sys.exit(2)
-	else:
-		raise e
+        sys.exit(2)
+    else:
+        raise e
 
 print '' #New line
 
@@ -56,10 +56,10 @@ driver.get('http://libssh.org/robots.txt')
 #Page Loaded
 
 if driver.current_url.startswith('https'):
-	print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
+    print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
 elif driver.current_url.startswith('http'):
-	print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
-	sys.exit(1)
+    print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
+    sys.exit(1)
 
 print '' #New line
 
