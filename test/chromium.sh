@@ -1,15 +1,16 @@
-#!/bin/bash
+#!/bin/bash -ex
 # Run Chromium tests for HTTPS Everywhere
-#
-# Get into the project-root. This script may be executed as `chromium.sh`
-# or as ./test/chromium.sh, so we need to find the directory
-# containing firefox.sh before we can proceed. If $0 is not a symlink,
-# `readlink` will print nothing; if it is a symlink it will print the
-# link target.
 
-set -o errexit -o xtrace
+# Get to the repo root directory, even when we're symlinked as a hook.
+if [ -n "$GIT_DIR" ]
+then
+    # $GIT_DIR is set, so we're running as a hook.
+    cd $GIT_DIR
+else
+    # Git command exists? Cool, let's CD to the right place.
+    git rev-parse && cd "$(git rev-parse --show-toplevel)"
+fi
 
-cd $(dirname $0)/$(dirname $(readlink $0))../
 
 # If you just want to run Chromium with the latest code:
 if [ "$1" == "--justrun" ]; then

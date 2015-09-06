@@ -1,10 +1,18 @@
-#!/bin/bash
+#!/bin/bash -ex
 #
 # Test that all rulesets modified after a certain date have sufficient test
 # coverage, according to the ruleset checker.
 #
 
-cd $(dirname $0)/$(dirname $(readlink $0))../
+# Get to the repo root directory, even when we're symlinked as a hook.
+if [ -n "$GIT_DIR" ]
+then
+    # $GIT_DIR is set, so we're running as a hook.
+    cd $GIT_DIR
+else
+    # Git command exists? Cool, let's CD to the right place.
+    git rev-parse && cd "$(git rev-parse --show-toplevel)"
+fi
 
 source utils/mktemp.sh
 

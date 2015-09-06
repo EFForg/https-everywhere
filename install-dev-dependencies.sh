@@ -32,7 +32,7 @@ pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
 cd https-everywhere-checker
 pip install --user -r requirements.txt
 cd -
-cd test/chrome
+cd test/chromium
 pip install --user -r requirements.txt
 cd -
 
