@@ -1,20 +1,82 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.rikenresearch.riken.jp/ => https://www.rikenresearch.riken.jp/: (7, 'Failed to connect to www.rikenresearch.riken.jp port 443: Connection refused')
 	Nonfunctional subdomains:
 
-		- www	(refused)
+		- (www.)? ¹
+		- 100th ¹
+
+		- brainatlas.brain ¹
+		- bsi-ni.brain ¹
+		- celloc3d.brain ¹
+		- www.dei.brain ¹
+		- www.brain ²
+
+		- aleaves.cdb ¹
+		- ecomics ¹
+		- ftp ²
+		- metadb ¹
+		- www.nishina ³
+		- www.yokohama ¹
+
+	¹ Dropped
+	² Refused
+	³ Shows default page
+
+
+	Problematic hosts in *riken.jp:
+
+		- indico2 *
+
+	* Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- bsi-ni.brain.riken.jp
+		- nijc.brain.riken.jp
+		- choutatsu.riken.jp
 
 -->
-<ruleset name="RIKEN.jp (partial)" default_off='failed ruleset test'>
+<ruleset name="RIKEN.jp (partial)">
 
-	<target host="www.rikenresearch.riken.jp" />
+	<!--	Direct rewrites:
+				-->
+	<target host="hpci-tech.aics.riken.jp" />
+	<target host="www.aics.riken.jp" />
+	<target host="bioconductor.riken.jp" />
+	<target host="bsi-ni.brain.riken.jp" />
+	<target host="nijc.brain.riken.jp" />
+	<target host="choutatsu.riken.jp" />
+	<!--target host="indico2.riken.jp" /-->
+	<target host="ribf.riken.jp" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.aics\.riken\.jp/library/topics/hpci-portal\.html$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.aics\.riken\.jp/+(?!aicssite/wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.aics.riken.jp/jp/outreach/library/" />
+			<test url="http://www.aics.riken.jp/library/topics/hpci-portal.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.aics.riken.jp/aicssite/wp-content/themes/aics_ja/images/share/aicslogo.gif" />
 
 
-	<securecookie host="^www\.rikenresearch\.riken\.jp$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bsi-ni\.brain\.riken\.jp$" name="^(?:PHPSESSID|ml_lang|ml_langname)$" /-->
+	<!--securecookie host="^nijc\.brain\.riken\.jp$" name="^(?:PHPSESSID|autologin_pass|autologin_uname|ml_lang|ml_langname)$" /-->
+	<!--securecookie host="^choutatsu\.riken\.jp$" name="^PHPSESSID$" /-->
+
+	<securecookie host=".+\.riken\.jp$" name=".+" />
 
 
-	<rule from="^http://www\.rikenresearch\.riken\.jp/"
-		to="https://www.rikenresearch.riken.jp/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

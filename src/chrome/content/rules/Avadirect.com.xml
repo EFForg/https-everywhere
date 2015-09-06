@@ -1,9 +1,49 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.avadirect.com/ => https://www.avadirect.com/: Cycle detected - URL already encountered: https://www.avadirect.com/
+	Insecure cookies are set for these hosts:
+
+		- www.avadirect.com
+
 -->
-<ruleset name="Avadirect" default_off='failed ruleset test'>
+<ruleset name="AVADirect.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="avadirect.com"/>
   <target host="www.avadirect.com"/>
-  <rule from="^http://(?:www\.)?avadirect\.com/" to="https://www.avadirect.com/"/>
+
+	<target host="avadirect-freedomusainc1.netdna-ssl.com" />
+	<target host="static-freedomusainc1.netdna-ssl.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.avadirect\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.avadirect\.com/+(?!(?:[Aa]ccount|[Ff]orum|[Ll]ogin)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.avadirect.com/About-Us" />
+			<test url="http://www.avadirect.com/Cart" />
+			<test url="http://www.avadirect.com/Press-Release" />
+			<test url="http://www.avadirect.com/Reviews" />
+			<test url="http://www.avadirect.com/Showroom" />
+			<test url="http://www.avadirect.com/blog" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.avadirect.com/Account" />
+			<test url="http://www.avadirect.com/Login" />
+			<test url="http://www.avadirect.com/forum" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.avadirect\.com$" name="^(?:\.ASPPG|ASPPG\.ASPPGSession)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
 

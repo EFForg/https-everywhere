@@ -1,41 +1,101 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://my.covad.com/ => https://my.covad.com/: (35, 'Unknown SSL protocol error in connection to my.covad.com:443 ')
-Fetch error: http://support.covad.com/ => https://support.covad.com/: (28, 'Operation timed out after 15001 milliseconds with 0 bytes received')
-Fetch error: http://megapath.com/ => https://www.megapath.com/: Redirect for 'https://www.megapath.com/' missing Location
-Fetch error: http://vp1-voiceportal.megapath.com/ => https://vp1-voiceportal.megapath.com/Login/: Cycle detected - URL already encountered: https://vp1-voiceportal.megapath.com/Login/
-Fetch error: http://www.megapath.com/ => https://www.megapath.com/: Redirect for 'https://www.megapath.com/' missing Location	See MegaPath-expired.xml also
--->
-<ruleset name="MegaPath (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+	Other MegaPath rulesets:
 
-	<target host="dashboard.covad.com"/>
-	<target host="my.covad.com"/>
-	<target host="support.covad.com"/>
-		<exclusion pattern="^http://support\.covad\.com/export/"/>
-	<target host="megapath.com"/>
+		- Speakeasy.net.xml
+
+
+	^megapath.com: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- extranet.megapath.com
+		- my.megapath.com
+
+-->
+<ruleset name="MegaPath.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="extranet.megapath.com"/>
+	<target host="my.megapath.com"/>
+	<target host="voice.megapath.com"/>
 	<target host="vp1-voiceportal.megapath.com"/>
 	<target host="www.megapath.com"/>
-	<target host="connect.megapathwholesale.com"/>
-	<target host="speakeasy.net"/>
-	<target host="*.speakeasy.net"/>
 
-	<rule from="^http://(dashboard|my|support)\.covad\.com/"
-		to="https://$1.covad.com/"/>
+	<!--	Complications:
+				-->
+	<target host="megapath.com"/>
 
-	<rule from="^http://(?:www\.)?megapath\.com/"
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://voice\.megapath\.com/(?:$|Error/invalidWebClient\.jsp)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://voice\.megapath\.com/(?!Login/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://voice.megapath.com/Error/invalidWebClient.jsp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://voice.megapath.com/Login/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://vp1-voiceportal\.megapath\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://vp1-voiceportal\.megapath\.com/(?!Login/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://vp1-voiceportal.megapath.com/Error/invalidWebClient.jsp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://vp1-voiceportal.megapath.com/Login/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.megapath\.com/(?:$|support/login/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.megapath\.com/+(?!favicon\.ico|megapath/(?:asset|include|cs)s/|shadowbox/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.megapath.com/about/" />
+			<test url="http://www.megapath.com/data/" />
+			<test url="http://www.megapath.com/partners/" />
+			<test url="http://www.megapath.com/sitemap/" />
+			<test url="http://www.megapath.com/support/login/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.megapath.com/megapath/assets/Image/home/T1_gph.png" />
+			<test url="http://www.megapath.com/megapath/css/reset.css" />
+			<test url="http://www.megapath.com/megapath/favicon.ico" />
+			<test url="http://www.megapath.com/megapath/includes/themes/2015/images/MP_logo.png" />
+			<test url="http://www.megapath.com/shadowbox/shadowbox.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^events\.megapath\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^my\.megapath\.com$" name="^(?:COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+
+	<securecookie host="^(?:events|my)\.megapath\.com$" name=".+" />
+
+
+	<rule from="^http://megapath\.com/"
 		to="https://www.megapath.com/"/>
 
-	<rule from="^http://vp1-voiceportal\.megapath\.com/"
-		to="https://vp1-voiceportal.megapath.com/Login/"/>
-
-	<rule from="^http://connect\.megapathwholesale\.com/"
-		to="https://connect.megapathwholesale.com/"/>
-
-	<rule from="^http://(?:www\.)?speakeasy\.net/"
-		to="https://speakeasy.net/"/>
-
-	<securecookie host="^my\.covad\.com$" name=".*"/>
-	<securecookie host="^(?:vp1-voiceportal|www)\.megapath\.com$" name=".*"/>
-	<securecookie host="^(?:www)?\.?speakeasy\.net$" name=".*"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

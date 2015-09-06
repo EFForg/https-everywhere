@@ -6,51 +6,27 @@
 
 		- i.walmartimages.com.edgesuite.net
 
-			- a1253.g.akamai.net
-
-
-	Fully covered subdomains:
-
-		- i *
-		- i2 *
-		- i5
-		- i-secure
-		- secure
-
-	* → akamai & secure
-
-
-	These stylesheets reference any resources relative to $self:
-
-		- css/print_item.css
-		- css/richmedia.css
-		- css/wmRollup_Base.jsp
-		- css/wmRollup_Item.jsp
-		- js/flyout/magiczoom.css
-
-	These stylesheets reference some resources relative to root:
-
-		- css/wmCommon.css
-
 -->
 <ruleset name="Walmart images.com">
 
-	<target host="*.walmartimages.com" />
-		<!--exclusion pattern="^http://i2?\.walmartimages\.com/+css/wmCommon\.css($|\?)" /-->
+	<!--	Direct rewrites:
+				-->
+	<target host="i-secure.walmartimages.com" />
+	<target host="i5.walmartimages.com" />
+	<target host="i6.walmartimages.com" />
+	<target host="i7.walmartimages.com" />
+	<target host="secure.walmartimages.com" />
+
+	<!--	Complications:
+				-->
+	<target host="i.walmartimages.com" />
+	<target host="i2.walmartimages.com" />
 
 
-	<!--	First, point all paths, but stylesheets which reference
-		resources relative to root, to akamai:
-							-->
-	<rule from="^http://i(2)?\.walmartimages\.com/(?!/*css/wmCommon\.css(?:$|\?))"
-		to="https://a248.e.akamai.net/f/1253/7491/1/i$1.walmartimages.com/" />
-
-	<!--	And then the exception(s) to secure:
-							-->
-	<rule from="^http://(?:i2?|secure)\.walmartimages\.com/"
+	<rule from="^http://i2?\.walmartimages\.com/"
 		to="https://secure.walmartimages.com/" />
 
-	<rule from="^http://(i5|i-secure)\.walmartimages\.com/"
-		to="https://$1.walmartimages.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

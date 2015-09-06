@@ -1,26 +1,48 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://gamefly.co.uk/ (200) => https://www.gamefly.co.uk/ (503)
-Non-2xx HTTP code: http://www.gamefly.co.uk/ (200) => https://www.gamefly.co.uk/ (503)
+	Other GameFly rulesets:
+
+		- GameFly_CDN.com.xml
+
+
+	Problematic hosts:
+
+		- gamefly.co.uk ¹
+		- www.gamefly.co.uk ²
+
+		- gamefly.com ³
+		- api.gamefly.com ²
+		- digital.gamefly.com ²
+		- m.gamefly.com ²
+		- www.gamefly.com ²
+
+	¹ Dropped
+	² Blocks Tor users
+	³ Refused
+
 -->
-<ruleset name="GameFly" default_off='failed ruleset test'>
+<ruleset name="GameFly" default_off="needs clearnet testing">
 
-	<target host="gamefly.com" />
-	<target host="www.gamefly.com" />
-	<target host="gamefly.co.uk" />
+	<!--	Direct rewrites:
+				-->
 	<target host="www.gamefly.co.uk" />
-	<target host="*.gameflycdn.com" />
+
+	<target host="digital.gamefly.com" />
+	<target host="m.gamefly.com" />
+	<target host="www.gamefly.com" />
+
+	<!--	Complications:
+				-->
+	<target host="gamefly.co.uk" />
+	<target host="gamefly.com" />
 
 
-	<securecookie host="^www\.gamefly\.co(?:m|\.uk)$" name=".+" />
+	<securecookie host="^www\.gamefly\.co(?:\.uk|m)$" name=".+" />
 
 
-	<!--	Certs only match www.
-					-->
-	<rule from="^http://(?:www\.)?gamefly\.co(m|\.uk)/"
+	<rule from="^http://gamefly\.co(\.uk|m)/"
 		to="https://www.gamefly.co$1/" />
 
-	<rule from="^http://gamefly(1|2)?\.gameflycdn\.com/"
-		to="https://gamefly$1.gameflycdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
