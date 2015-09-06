@@ -25,17 +25,21 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
+chromeOps = webdriver.ChromeOptions()
+chromeOps.add_extension(sys.argv[1])
+
 if sys.platform.startswith("linux"):
     chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
 elif 'TRAVIS' in os.environ:
     # For TravisCI, we manually copy chromedriver to the local path.
     chromedriver_path = os.path.abspath("test/chromium/chromedriver")
+
+    # Travis has setuid restrictions. I think this becomes unnecessary in M42+
+    chromeOps.add_argument('--no-suid-sandbox')
 else:
-    chromedriver_path = "chromedriver"  # Let's just hope it's in the user's path.
+    # Let's hope it's in the user's path.
+    chromedriver_path = "chromedriver"
 
-
-chromeOps = webdriver.ChromeOptions()
-chromeOps.add_extension(sys.argv[1])
 
 try:
     # First argument is optional, if not specified will search path.
