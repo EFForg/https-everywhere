@@ -65,7 +65,6 @@ if driver.current_url.startswith('https'):
 elif driver.current_url.startswith('http'):
     print bcolors.FAIL + "Chromium: HTTP to HTTPS redirection failed" + bcolors.ENDC
     test_failed = True
-    sys.exit(1)
 
 print ''
 
