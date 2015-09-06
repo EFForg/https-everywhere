@@ -1,19 +1,83 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://sipgate.at/ => https://secure.sipgate.at/: (6, 'Could not resolve host: sipgate.at')
--->
-<ruleset name="Sipgate" platform="mixedcontent" default_off='failed ruleset test'>
-  <target host="sipgate.at" />
-  <target host="*.sipgate.at" />
-  <target host="sipgate.co.uk" />
-  <target host="*.sipgate.co.uk" />
-  <target host="sipgate.de" />
-  <target host="*.sipgate.de" />
-  <target host="simquadrat.de" />
-  <target host="www.simquadrat.de" />
+	Other Sipgate GmbH rulesets:
 
-  <rule from="^http://(?:(?:www|secure)\.)?sipgate\.(at|co\.uk)/" to="https://secure.sipgate.$1/"/>
-  <rule from="^http://(?:secure\.)?live\.sipgate\.(de|at|co\.uk)/" to="https://secure.live.sipgate.$1/"/>
-  <rule from="^http://(?:www\.)?go\.sipgate\.de/" to="https://go.sipgate.de/"/>
-  <rule from="^http://(?:www\.)?simquadrat\.de/" to="https://simquadrat.de/"/>
+		- Sipgate.co.uk.xml
+		- Sipgate.io.xml
+		- Simquadrat.de.xml
+
+
+	Nonfunctional hosts in sipgate.de:
+
+		- teamsupport *
+
+	* Zendesk
+
+
+	Problematic hosts in sipgate.de:
+
+		- live ¹
+		- status ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.secure.live.sipgate.de
+		- www.secure.sipgate.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- secure.live.sipgate.de
+
+-->
+<ruleset name="Sipgate.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="sipgate.de" />
+	<!--target host="live.sipgate.de" /-->
+	<target host="secure.live.sipgate.de" />
+	<target host="secure.sipgate.de" />
+	<!--target host="status.sipgate.de" /-->
+	<target host="www.sipgate.de" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sipgate\.de/(?:$|sim$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sipgate\.de/+(?!(?:basic|design|trunking)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.sipgate.de/academy" />
+			<test url="http://www.sipgate.de/faq/" />
+			<test url="http://www.sipgate.de/sim" />
+			<test url="http://www.sipgate.de/team" />
+			<test url="http://www.sipgate.de/team/apps" />
+			<test url="http://www.sipgate.de/team/produkte" />
+			<test url="http://www.sipgate.de/team/voip" />
+			<test url="http://www.sipgate.de/unternehmen" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sipgate.de/basic/" />
+			<test url="http://www.sipgate.de/design/" />
+			<test url="http://www.sipgate.de/trunking/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.live\.sipgate\.de$" name="^SERVERID$" /-->
+
+	<securecookie host="^secure\.live\.sipgate\.de$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

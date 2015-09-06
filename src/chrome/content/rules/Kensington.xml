@@ -1,24 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://kensington.com/ => https://kensington.com/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://www.eshop.kensington.com/ => https://www.eshop.kensington.com/: Cycle detected - URL already encountered: https://www.kensington.com/us/us/home
+	^kensington.com: Dropped
+
+
 	CDN buckets:
 
 		- az31609.vo.msecnd.net
 		- accoblobstorageus.blob.core.windows.net/assets/images/kensingtonGlobal/
 
 -->
-<ruleset name="Kensington" default_off='failed ruleset test'>
+<ruleset name="Kensington.com (partial)">
 
-	<target host="kensington.com" />
-	<target host="*.kensington.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="eshop.kensington.com" />
 	<target host="www.eshop.kensington.com" />
+	<!--target host="www.kensington.com" /-->
+
+	<target host="az31609.vo.msecnd.net" />
+
+	<!--	Complications:
+				-->
+	<!--target host="kensington.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kensington\.com/en/\w\w/home$" /-->
 
 
-	<securecookie host="^.+\.kensington\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(?:www\.)?eshop\.kensington\.com$" name="^(?:ASPSESSIONID[A-Z]{8}|UserGUIDShop)$" /-->
+
+	<securecookie host="(?:www\.)?eshop\.kensington\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?(eshop\.)?kensington\.com/"
-		to="https://$1$2kensington.com/" />
+	<!--rule from="^http://kensington\.com/"
+		to="https://www.kensington.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

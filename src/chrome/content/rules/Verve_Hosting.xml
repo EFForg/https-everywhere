@@ -1,6 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://vervehosting.com/ => https://vervehosting.com/: (60, 'SSL certificate problem: certificate has expired')
+	For problematic rules, see Verve_Hosting.com-problematic.xml.
+
+
 	Nonfunctional subdomains:
 
 		- nagios	(refused)
@@ -9,29 +10,44 @@ Fetch error: http://vervehosting.com/ => https://vervehosting.com/: (60, 'SSL ce
 
 	Problematic subdomains:
 
-		- www	(cert only matches ^vervehosting.com)
+		- ^ ¹
+		- hudson ²
+		- www ¹ ³
+
+	¹ Expired
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+	³ Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)	(www → ^)
-		- cms
-		- hudson
+		- cms.vervehosting.com
 
 -->
-<ruleset name="Verve Hosting (partial)" default_off='failed ruleset test'>
+<ruleset name="Verve Hosting.com (partial)">
 
-	<target host="vervehosting.com" />
-	<target host="*.vervehosting.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="vervehosting.com" /-->
+	<target host="cms.vervehosting.com" />
+	<!--target host="hudson.vervehosting.com" /-->
 
+	<!--	Complications:
+				-->
+	<!--target host="www.vervehosting.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cms\.vervehosting\.com$" name="^WHMCS[a-zA-Z]+$" /-->
 
 	<securecookie host="^cms\.vervehosting\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?vervehosting\.com/"
-		to="https://vervehosting.com/" />
+	<!--rule from="^http://www\.vervehosting\.com/"
+		to="https://vervehosting.com/" /-->
 
-	<rule from="^http://(cms|hudson)\.vervehosting\.com/"
-		to="https://$1.vervehosting.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

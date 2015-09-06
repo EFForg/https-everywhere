@@ -1,19 +1,42 @@
 <!--
-	Problematic subdomains:
+	^123count.com: Mismatched
 
-		- ^	(mismatched, CN: www.web-stat.com)
+
+	Insecure cookies are set for these domains:
+
+		- .123count.com
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+		- Images from [\da-f-]+.r\d+.cf\d.rackcdn.com *
+
+	* Secured by us
 
 -->
 <ruleset name="123Count.com">
 
-	<target host="123count.com" />
-	<target host="*.123count.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="www.123count.com" />
 
+	<!--	Complications:
+				-->
+	<target host="123count.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.123count\.com$" name="^(?:accept_cookies|wixmap_1)$" /-->
 
 	<securecookie host="^\.123count\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?123count\.com/"
+	<rule from="^http://123count\.com/"
 		to="https://www.123count.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,49 @@
+<!--
+	For other WebSupport coverage, see Websupport_sk_cz_at_hu.xml.
+
+
+	Problematic hosts in *webonic.hu:
+
+		- support *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- admin.webonic.hu
+		- www.webonic.hu
+
+
+	Mixed content:
+
+		- Images on blog.webonic.hu from $self *
+		- Ad on blog.webonic.hu from www.googleadservices.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Webonic.hu">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="webonic.hu" />
+	<target host="admin.webonic.hu" />
+	<target host="blog.webonic.hu" />
+  <target host="mail.webonic.hu" />
+	<!--target host="support.webonic.hu" /-->
+  <target host="www.webonic.hu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^admin\.webonic\.hu$" name="^(?:PHPSESSID|YII_CSRF_TOKEN|lang)$" />
+	<!--securecookie host="^www\.webonic\.hu$" name="^(?:[\da-f]{32}|PHPSESSID)$" /-->
+
+	<securecookie host=".+\.webonic\.hu$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

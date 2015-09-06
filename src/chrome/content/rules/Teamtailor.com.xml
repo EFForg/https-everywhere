@@ -1,0 +1,58 @@
+<!--
+	Problematic hosts in *teamtailor.com:
+
+		- blog *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .teamtailor.com
+		- career.teamtailor.com
+		- paradox-interactive.teamtailor.com
+		- www.teamtailor.com
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+		- Images on career, paradox-interactive, www from res.cloudinary.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Teamtailor.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="teamtailor.com" />
+	<!--target host="blog.teamtailor.com" /-->
+	<target host="career.teamtailor.com" />
+	<target host="paradox-interactive.teamtailor.com" />
+	<target host="www.teamtailor.com" />
+
+		<!--	Redirect destination mismatched:
+							-->
+		<exclusion pattern="^http://paradox-interactive\.teamtailor\.com/$" />
+
+			<!--	-ve:
+					-->
+			<test url="http://paradox-interactive.teamtailor.com/connect/login" />
+
+		<test url="http://career.teamtailor.com/connect" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.teamtailor\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(?:career|paradox-interactive|www)\.teamtailor\.com$" name="^_tt_session$" /-->
+
+	<securecookie host="^\.teamtailor\.com$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host=".+\.teamtailor\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
