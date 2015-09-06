@@ -3,10 +3,16 @@
 
 # Get into the project-root. This script may be executed as `test.sh`
 # or as .git/hooks/pre-push, so we need to find the directory containing
-# test.sh before we can proceed. If $0 is not a symlink, `readlink` will
-# print nothing; if it is a symlink it will print the link target.
+# test.sh before we can proceed.
 
-cd $(dirname $0)/$(dirname $(readlink $0))
+if [ -n "$GIT_DIR" ]
+then
+    # $GIT_DIR is set, so we're running as a hook.
+    cd $GIT_DIR
+else
+    # Git command exists? Cool, let's CD to the right place.
+    git rev-parse && cd "$(git rev-parse --show-toplevel)"
+fi
 
 ./test/rules.sh
 ./test/firefox.sh $@
