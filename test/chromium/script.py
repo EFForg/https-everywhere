@@ -57,9 +57,9 @@ driver.get('http://libssh.org/robots.txt')
 
 test_failed = False
 if driver.current_url.startswith('https'):
-    print bcolors.OKGREEN + "HTTP to HTTPS redirection successful" + bcolors.ENDC
+    print bcolors.OKGREEN + "Chromium: HTTP to HTTPS redirection successful" + bcolors.ENDC
 elif driver.current_url.startswith('http'):
-    print bcolors.FAIL + "HTTP to HTTPS redirection failed" + bcolors.ENDC
+    print bcolors.FAIL + "Chromium: HTTP to HTTPS redirection failed" + bcolors.ENDC
     test_failed = True
     sys.exit(1)
 
