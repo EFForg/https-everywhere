@@ -8,12 +8,7 @@
 		- m ²
 
 	¹ 503, valid cert
-	² Redirects to ^
-
-
-	Fully covered subdomains:
-
-		- auth
+	² Invalid CN in cert
 
 
 	Mixed content:
@@ -40,15 +35,11 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://habrahabr\.ru/(?!auth(?:$|[?/])|common\.css|favicon\.ico|habr\.gif|images/|main\.css)" />
+		<exclusion pattern="^http://habrahabr\.ru/(?!auth/|favicon\.ico|images/)" />
 
-		<test url="http://habrahabr.ru/common.css" />
+		<test url="http://habrahabr.ru/auth/" />
 		<test url="http://habrahabr.ru/favicon.ico" />
-		<test url="http://habrahabr.ru/habr.gif" />
 		<test url="http://habrahabr.ru/images/" />
-		<test url="http://habrahabr.ru/main.css" />
-		<test url="http://habrahabr.ru/auth/login/" />
-
 
 	<!--	Not secured by server:
 					-->
@@ -59,12 +50,12 @@
 
 	<!--	404s on www:
 				-->
-	<rule from="^http://www\.habrahabr\.ru/(?=auth(?:$|[?/])|favicon\.ico|images/|styles/)"
+	<rule from="^http://www\.habrahabr\.ru/(?=auth/|favicon\.ico|images/)"
 		to="https://habrahabr.ru/" />
 
+	<test url="http://www.habrahabr.ru/auth/" />
 	<test url="http://www.habrahabr.ru/favicon.ico" />
 	<test url="http://www.habrahabr.ru/images/" />
-	<test url="http://www.habrahabr.ru/styles/1440165287/forms.css" />
 
 	<rule from="^http://((?:auth|www)\.)?habrahabr\.ru/"
 		to="https://$1habrahabr.ru/" />
