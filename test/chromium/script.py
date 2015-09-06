@@ -27,19 +27,15 @@ class bcolors:
 
 if sys.platform.startswith("linux"):
     chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
+elif 'TRAVIS' in os.environ:
+    # For TravisCI, we manually copy chromedriver to the local path.
+    chromedriver_path = os.path.abspath("test/chromium/chromedriver")
 else:
     chromedriver_path = "chromedriver"  # Let's just hope it's in the user's path.
 
 
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
-chromeOps.add_argument("--disable-setuid-sandbox")
-
-
-if 'TRAVIS' in os.environ:
-    chromeOps.add_argument('--no-sandbox')
-    chromedriver_path = os.path.abspath("test/chromium/chromedriver")
-
 
 try:
     # First argument is optional, if not specified will search path.
