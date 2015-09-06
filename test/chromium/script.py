@@ -34,8 +34,9 @@ elif 'TRAVIS' in os.environ:
     # For TravisCI, we manually copy chromedriver to the local path.
     chromedriver_path = os.path.abspath("test/chromium/chromedriver")
 
-    # Travis has setuid restrictions. I think this becomes unnecessary in M42+
+    # Travis has setuid restrictions. I think this becomes unnecessary in M42+?
     chromeOps.add_argument('--no-suid-sandbox')
+    chromeOps.add_argument('--no-sandbox')
 else:
     # Let's hope it's in the user's path.
     chromedriver_path = "chromedriver"
