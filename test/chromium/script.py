@@ -10,7 +10,7 @@
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
 
-import sys, os
+import sys, os, platform
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
@@ -35,7 +35,12 @@ if 'TRAVIS' in os.environ.keys():
     # Travis has setuid restrictions. I think this becomes unnecessary in M42+?
     chromeOps.add_argument('--disable-setuid-sandbox')
 elif sys.platform.startswith("linux"):
-    chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
+    if 'Ubuntu' in platform.linux_distribution():
+        chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
+    elif 'debian' in platform.linux_distribution():
+        #Debian is lowercase when platform.linux_distribution() is used.
+        #This is not a mistake.
+        chromedriver_path = "/usr/lib/chromium/chromedriver"
 else:
     # Let's hope it's in the user's path.
     chromedriver_path = "chromedriver"
