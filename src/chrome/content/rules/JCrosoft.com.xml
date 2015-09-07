@@ -1,20 +1,38 @@
 <!--
-	Problematic subdomains:
+	Problematic hosts in *jcrosoft.com:
 
-		- (www.)	(mismatched, CN: ssl2.ovh.net)
-		- git		(self-signed, CN: Jean-Christophe PLAGNIOL-VILLARD)
+		- ^ ¹ ²
+		- git ¹ ²
+		- www ¹
+
+	¹ Expired
+	² Mismatched, CN: ssl2.ovh.net
 
 -->
-<ruleset name="JCrosoft.com" default_off="mismatched, self-signed">
+<ruleset name="JCrosoft.com" default_off="expired, mismatched">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="git.jcrosoft.com" />
+	<target host="www.jcrosoft.com" />
+
+	<!--	Complications:
+				-->
 	<target host="jcrosoft.com" />
-	<target host="*.jcrosoft.com" />
 
 
-	<securecookie host="^jcrosoft\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jcrosoft\.com$" name="^90plan$" /-->
+	<!--securecookie host="^www\.jcrosoft\.com$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^(?:www\.)?jcrosoft\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(git\.)|www\.)?jcrosoft\.com/"
-		to="https://$1jcrosoft.com/" />
+	<rule from="^http://jcrosoft\.com/"
+		to="https://www.jcrosoft.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,20 +1,41 @@
 <!--
-	Some pages redirect to http, including login and registration.
+	Insecure cookies are set for these domains and hosts:
+
+		- w3counter.com
+		- .w3counter.com
+		- www.w3counter.com
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
 <ruleset name="W3Counter.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="w3counter.com" />
-	<target host="*.w3counter.com" />
-		<exclusion pattern="^http://(?:www\.)?w3counter\.com/(?!css/|favicon\.ico|images/|js/|tracker\.(?:js|php))" />
+	<target host="pulse.w3counter.com" />
+	<target host="www.w3counter.com" />
+
+		<test url="http://www.w3counter.com/signup" />
+		<test url="http://www.w3counter.com/stats" />
+		<test url="http://www.w3counter.com/tracker.php?id=1" />
 
 
-	<!--	Tracking cookie set by tracker.php
-							-->
-	<securecookie host="^\.w3counter\.com$" name="^_\d+_visitFlag$" />
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^(?:www\.)?w3counter\.com$" name="^AWSELB$" />
+	<securecookie host="^\.w3counter\.com$" name="^(?:__cfduid|__qca|_\d+_visitFlag|cf_clearance)$" />
+	<securecookie host="^www\.w3counter\.com$" name="^symfony$" />
+
+	<securecookie host="^(?:\.|www\.)?w3counter\.com$" name=".+" />
 
 
-	<rule from="^http://(pulse\.|www\.)?w3counter\.com/"
-		to="https://$1w3counter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

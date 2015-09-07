@@ -1,58 +1,57 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mobifyagogo.wpengine.netdna-cdn.com/ => https://www.mobify.com/: (6, 'Could not resolve host: mobifyagogo.wpengine.netdna-cdn.com')
-	Problematic domains:
+	Other Mobify rulesets:
 
-		- (www.)mobify.net	(mismatched, CN: *.mobify.com)
+		- Mobify.me.xml
+		- Mobify.net.xml
 
 
-	Fully covered domains:
+	Nonfunctional hosts in *mobify.com:
 
-		- (www.)mobify.net	(→ mobify.com)
+		- docs ¹
+		- insights ²
+
+	¹ Refused
+	² Shows default page
+
+
+	Problematic hosts in *mobify.com:
+
+		- adaptivejs *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- cloud.mobify.com
+
+
+	Mixed content:
+
+		- css on adaptivejs.mobify.com from laughable-jam.surge.sh
 
 -->
-<ruleset name="Mobify" default_off='failed ruleset test'>
+<ruleset name="Mobify.com (partial)">
 
-	<target host="mobify.com" />
-	<target host="*.mobify.com" />
-		<!--	Cert: *.desk.com.
-			mobify.desk.com redirects back to support.	-->
-		<exclusion pattern="^http://support\." />
-	<target host="mobify.me" />
-	<target host="*.mobify.me" />
-	<target host="mobifyagogo.wpengine.netdna-cdn.com" />
-
-
-	<!--	Observed cookie domains:
-
-			- ^.
-			- cloud
-			- ^portal
-					-->
-	<securecookie host="^.*\.mobify\.com$" name=".*" />
-
-
-	<!--	Observed domains:
-
-			- cdn
-			- cloud
-			- community
-			- portal
-			- www
+	<!--	Direct rewrites:
 				-->
-	<rule from="^http://(\w+\.)?mobify\.com/"
-		to="https://$1mobify.com/" />
+	<target host="mobify.com" />
+	<target host="cdn.mobify.com" />
+	<target host="cloud.mobify.com" />
+	<target host="community.mobify.com" />
+	<target host="portal.mobify.com" />
+	<target host="support.mobify.com" />
+	<target host="www.mobify.com" />
 
-	<!--	Cert doesn't match *.me, data are identical.	-->
-	<rule from="^http://(?:(community\.)|www\.)?mobify\.me/"
-		to="https://$1mobify.com/" />
 
-	<rule from="^http://(?:www\.)?mobify\.net/"
-		to="https://mobify.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cloud\.mobify\.com$" name="^csrftoken$" /-->
 
-	<!--	Cert: *.netdna-ssl.com; 404.	-->
-	<rule from="^http://mobifyagogo\.wpengine\.netdna-cdn\.com/"
-		to="https://www.mobify.com/" />
-	
+	<securecookie host=".*\.mobify\.com$" name=".*" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

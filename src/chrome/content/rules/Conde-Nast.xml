@@ -5,12 +5,16 @@
 	Other Condé Nast rulesets:
 
 		- Ars-Technica.xml
+		- Conde_Nast.co.uk.xml
+		- Conde_Nast_Digital.com.xml
 		- Conde_Nast_Traveler.xml
+		- Conde_Nast_store.com.xml
+		- Condenet.com.xml
 		- Details.xml
 		- Golf_Digest.xml
 		- GQ.xml
-		- Redd.it.xml
-		- Reddit.xml
+		- GQ-magazine.co.uk.xml
+		- Style.com.xml
 		- The-New-Yorker.xml
 		- Vanity-Fair.xml
 		- Wired.xml
@@ -21,27 +25,10 @@
 
 	CDN buckets:
 
-		- s3.amazonaws.com/img.condenast.co.uk/	| dvcpqzrjfwvhx.cloudfront.net	
-			- aws permanently redirects.
-
-		- dg9g3lm9lsog5.cloudfront.net
-
-			- cnda.condenast.co.uk
-
-		- dvcpqzrjfwvhx.cloudfront.net
-
-			- cdni.condenast.co.uk
-
 		- fonts.condenast.com.edgekey.net
 		- thumbnailer.thestudio.condenast.com.edgesuite.net
 		- www.condenast.com.edgekey.net
 		- www.webmonkey.com.edgesuite.net
-
-
-	Problematic subdomains:
-
-		- cdni.condenast.co.uk		(mismatched, 403 when rewritten to dvcpqzrjfwvhx.cloudfront.net)
-		- cnda.condenast.co.uk		(mismatched, CN: *.cloudfront.net)
 
 
 	Nonfunctional:
@@ -53,40 +40,25 @@
 		- arst.ch				(cert: api.arstechnica.net; shows that domain's data)
 		- images1.designcentersearch.com	(times out; data aren't on www)
 		- (www.)shopad.net			(cert: designcentersearch.com; shows that domain's data)
-		- style.com:
-			- /
-			- www				(Akamai; 503)
-				- origin, origin-www, secure, www2 don't exist
 		- www.webmonkey.com			(Akamai; 503)
 
 -->
-<ruleset name="Condé Nast (partial)">
+<ruleset name="Conde Nast.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="fonts.condenast.com" />
+	<target host="www.condenast.com" />
+
+	<!--	Complications:
+				-->
 	<target host="condenast.com" />
-	<target host="*.condenast.com" />
-	<target host="*.condenast.co.uk" />
-	<target host="subscribe.condenastdigital.com" />
-	<target host="condenaststore.com" />
-	<target host="www.condenaststore.com" />
-	<target host="subscribe.condenet.com" />
 
 
-	<rule from="^http://(?:www\.)?condenast\.com/"
+	<rule from="^http://condenast\.com/"
 		to="https://www.condenast.com/" />
 
-	<rule from="^http://fonts\.condenast\.com/"
-		to="https://fonts.condenast.com/" />
-
-	<rule from="^http://cdni\.condenast\.co\.uk/"
-		to="https://s3-eu-west-1.amazonaws.com/img.condenast.co.uk/" />
-
-	<rule from="^http://cnda\.condenast\.co\.uk/"
-		to="https://dg9g3lm9lsog5.cloudfront.net/" />
-
-	<rule from="^http://(?:www\.)?condenaststore\.com/"
-		to="https://www.condenaststore.com/" />
-
-	<rule from="^http://subscribe\.conden(astdigital|et)\.com/"
-		to="https://subscribe.conden$1.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

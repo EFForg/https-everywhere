@@ -1,24 +1,19 @@
 <!--
+	Commit note: Uses  includeSubDomains => preempting redirect is a greater distinguisher
+
+
 	For other Fedora Project coverage, see Fedora.xml.
 
-
-	Nonfunctional subdomains:
-
-		- svn		(redirects to ^ and 404s, valid cert)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(www → ^)
-		- git
-		- lists
-
 -->
-<ruleset name="Fedora Hosted.org (partial)">
+<ruleset name="Fedora Hosted.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="fedorahosted.org" />
-	<target host="*.fedorahosted.org" />
-		<!--exclusion pattern="^http://svn\." /-->
+	<target host="git.fedorahosted.org" />
+	<target host="lists.fedorahosted.org" />
+	<target host="svn.fedorahosted.org" />
+	<target host="www.fedorahosted.org" />
 
 
 	<!--	Not secured by server:
@@ -28,10 +23,7 @@
 	<securecookie host="^(?:www\.)?fedorahosted\.org$" name=".+" />
 
 
-	<!--	www redirects to ^ over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:(git\.|lists\.)|www\.)?fedorahosted\.org/"
-		to="https://$1fedorahosted.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

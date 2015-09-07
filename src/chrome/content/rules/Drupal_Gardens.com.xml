@@ -1,22 +1,25 @@
 <!--
-	Some (most?) pages redirect to http.
+	Insecure cookies are set for these domains and hosts:
+
+		- www.drupalgardens.com
+		- .www.drupalgardens.com
 
 -->
-<ruleset name="Drupal Gardens.com (partial)">
+<ruleset name="Drupal Gardens.com">
 
 	<target host="drupalgardens.com" />
 	<target host="www.drupalgardens.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://www\.drupalgardens\.com/+(documentation|forums|tickets/new|videos)?($|\?)" /-->
-		<!--
-			Exceptions:
+
+
+	<!--	Not secured by server:
 					-->
-		<!--exclusion pattern="^http://www\.drupalgardens\.com/+(?!(contact-our-team|create-site|pricing)($|\?)|favicon\.ico|misc/|sites/)" /-->
+	<!--securecookie host="^www\.drupalgardens\.com$" name="^browser_version$" /-->
+	<!--securecookie host="^\.www\.drupalgardens\.com$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\.?www\.drupalgardens\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?drupalgardens\.com/(?=(?:contact-our-team|create-site|pricing)(?:$|[?/])|favicon\.ico|misc/|sites/)"
-		to="https://$1drupalgardens.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

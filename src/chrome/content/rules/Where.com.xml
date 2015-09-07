@@ -1,36 +1,39 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://where.com/ => https://where.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	Ads.
 
 	For other PayPal coverage. see PayPal.xml.
 
 
-	Fully covered subdomains:
-
-		- ad
-		- ads
-		- paypal.adtag
-		- upstream
-		- (www.)
+	(www.)?where.com: Dropped over http & https
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains:
 
-		- ad
-		- upstream
+		- .where.com
 
 -->
-<ruleset name="Where.com" default_off='failed ruleset test'>
+<ruleset name="Where.com">
 
-	<target host="where.com" />
-	<target host="*.where.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ad.where.com" />
+	<target host="ads.where.com" />
+	<target host="ads2.where.com" />
+	<target host="paypal.adtag.where.com" />
+	<target host="upstream.where.com" />
+
+		<test url="http://ads2.where.com/mds/imp?addeviceid=" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.where\.com$" name="^m_p_tc$" /-->
+
+	<securecookie host="^\.where\.com$" name="^m_p_tc$" />
 	<securecookie host="^ad\.where\.com$" name=".+" />
 
 
-	<rule from="^http://((?:ads?|paypal\.adtag|upstream|www)\.)?where\.com/"
-		to="https://$1where.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

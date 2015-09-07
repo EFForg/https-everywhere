@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-
 	Wikipedia and other Wikimedia Foundation wikis previously had no real HTTPS support, and
 	URLs had to be rewritten to https://secure.wikimedia.org/$wikitype/$language/ . This is no
 	longer the case, see https://blog.wikimedia.org/2011/10/03/native-https-support-enabled-for-all-wikimedia-foundation-wikis/ ,
@@ -14,23 +12,17 @@ Disabled by https-everywhere-checker because:
 	* Mismatched, CN: *.links.mkt41.net
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .wikibooks.org
+		- wikidata.org
+		- .wikidata.org
+		- www.wikidata.org
 		- .wikimediafoundation.org
 		- .wikipedia.org
 		- en.wikipedia.org
 		- .wikiversity.org
 
-
-	Mixed content:
-
-		- Images, on:
-
-			- stats.wikimedia.org from upload.wikimedia.org *
-			- stats.wikimedia.org from wikimediafoundation.org *
-
-	* Secured by us
 
 -->
 <ruleset name="Wikimedia">
@@ -110,11 +102,17 @@ Disabled by https-everywhere-checker because:
 	<!-- Wikimedia Tool Labs -->
 	<target host="tools.wmflabs.org" />
 	<target host="accounts.wmflabs.org" />
+	<target host="quarry.wmflabs.org" />
 	<target host="reportcard.wmflabs.org" />
+
+	<!-- Deprectated hosts -->
+	<target host="toolserver.org" />
+	<target host="www.toolserver.org" />
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.wiki(books|mediafoundation|pedia|versity)\.org$" name="^GeoIP$" /-->
+	<!--securecookie host="^\.wiki(books|data|mediafoundation|pedia|versity)\.org$" name="^GeoIP$" /-->
+	<!--securecookie host="^(?:www\.)?wikidata\.org$" name="^WMF-Last-Access$" /-->
 	<!--securecookie host="^en\.wikipedia\.org$" name="^(CentralAuthAnon|mediaWiki\.user\.sessionId|uls-previous-languages)$" /-->
 
 	<securecookie host="^(?:www\.)?mediawiki\.org$" name=".+" />
@@ -145,13 +143,6 @@ Disabled by https-everywhere-checker because:
 	<rule from="^http://labs-ns0\.wikimedia\.org/"
 		to="https://wikitech.wikimedia.org/" />	
 		<test url="http://labs-ns0.wikimedia.org/" />
-
-	<rule from="^http://arbcom\.(de|en|fi|nl)\.wikipedia\.org/"
-		to="https://arbcom-$1.wikipedia.org/" />
-		<test url="http://arbcom.de.wikipedia.org/" />
-		<test url="http://arbcom.en.wikipedia.org/" />
-		<test url="http://arbcom.fi.wikipedia.org/" />
-		<test url="http://arbcom.nl.wikipedia.org/" />
 
 	<rule from="^http://download\.wikipedia\.org/"
 		to="https://dumps.wikimedia.org/" />

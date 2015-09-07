@@ -1,0 +1,70 @@
+<!--
+	Problematic hosts in *movableink.com:
+
+		- info *
+
+	* Pardot
+
+
+	Insecure cookies are set for these hosts:
+
+		- movableink.com
+		- info.movableink.com
+
+
+	Mixed content:
+
+		- Image on blog from nycventurefellows.org
+
+-->
+<ruleset name="Movable Ink.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="movableink.com" />
+	<target host="app.movableink.com" />
+	<target host="blog.movableink.com" />
+	<target host="www.movableink.com" />
+
+	<!--	Complications:
+				-->
+	<target host="info.movableink.com" />
+
+		<exclusion pattern="^http://info\.movableink\.com/+(?!$|\?|css/)" />
+
+
+			<test url="http://info.movableink.com/10-Instagram-Marketing-Strategies-Ebook" />
+			<test url="http://info.movableink.com/Download-Responsive-Email-Hacks-Guide" />
+			<test url="http://info.movableink.com/Responsive-Design" />
+			<test url="http://info.movableink.com/agileEMAIL-Overview" />
+			<test url="http://info.movableink.com/request-demo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.movableink.com/?" />
+			<test url="http://info.movableink.com//" />
+			<test url="http://info.movableink.com/css/form.css" />
+			<test url="http://info.movableink.com/css/form.css?foo" />
+			<test url="http://info.movableink.com/css/form.css?bar" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^movableink\.com$" name="^_portada_session$" /-->
+	<!--securecookie host="^info\.movableink\.com$" name="^visitor_id\w+$" /-->
+
+	<securecookie host="^movableink\.com$" name=".+" />
+
+
+	<rule from="^http://info\.movableink\.com/(?=/*css/)"
+		to="https://go.pardot.com/" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://info\.movableink\.com/.*"
+		to="https://movableink.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -11,6 +11,7 @@
 	Nonfunctional domains:
 
 		- http14432.storage.akadns.net		(CN: contentstorage.akamai.com)
+		- imagesmtv-a.akamaihd.net		("An error occurred while processing your request.")
 		- cp44823.edgefcs.net			(reset)
 
 
@@ -23,55 +24,87 @@
 -->
 <ruleset name="Akamai">
 
-	<target host="*.abmr.net" />
-	<target host="*.e.akamai.net" />
+	<target host="ak1.abmr.net" />
+	<target host="ak1s.abmr.net" />
+	<target host="a248.e.akamai.net" />
 	<target host="*.akamaihd.net" />
+		<!--	Kill problematic implicit test	-->
+		<exclusion pattern="^http://ak1\.abmr\.net/$" />
+
 		<!--
 			Causes many streams to 403 and region restriction to trip inappropriately.
 
-			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-October/001324.html
+			https://lists.eff.org/pipermail/https-everywhere-rules/2012-October/001322.html
 			https://trac.torproject.org/projects/tor/ticket/6557
 			https://trac.torproject.org/projects/tor/ticket/6871
 			https://trac.torproject.org/projects/tor/ticket/7080
 		 	https://trac.torproject.org/projects/tor/ticket/7198
 			https://trac.torproject.org/projects/tor/ticket/7577
 										-->
-		<exclusion pattern="^http://[\w-]+-(?:f|i|s|lh|vh)\.akamaihd\.net/" />
-                <!--
+		<exclusion pattern="^http://[\w_-]+-(?:f|i|s|lh|vh)\.akamaihd\.net/" />
+		<!--	Random URLs from VirusTotal	-->
+		<test url="http://svtarchive4a-f.akamaihd.net/crossdomain.xml" />
+		<test url="http://elpaishls-i.akamaihd.net/" />
+		<test url="http://a611avodslnsus-s.akamaihd.net/" />
+		<test url="http://radio_wlyk-lh.akamaihd.net/" />
+		<test url="http://yahoo7p-vh.akamaihd.net/" />
+
+		<!--
+			Breaks Titanfall
+
+			https://github.com/EFForg/https-everywhere/issues/390
+										-->
+		<exclusion pattern="^http://eaassets-a\.akamaihd\.net/" />
+
+		<!--
+			Breaks images on http://www.mtv.com/news/
+
+			https://github.com/EFForg/https-everywhere/pull/2651
+										-->
+		<exclusion pattern="^http://imagesmtv-a\.akamaihd\.net/" />
+		<test url="http://imagesmtv-a.akamaihd.net/uri/mgid:uma:image:mtv.com:10737537?quality=0.8&amp;format=jpg&amp;width=110&amp;height=110" />
+
+		<!--
+			Steamcommunity.com Some Functionality is Broken due to CSP
+
+			https://github.com/EFForg/https-everywhere/issues/909
+										-->
+		<exclusion pattern="^http://steamcommunity-a\.akamaihd\.net/" />
+		<test url="http://steamcommunity-a.akamaihd.net/" />
+
+		<!--
 			Apparently causes some Zynga games to fail to load.
 
 			https://trac.torproject.org/projects/tor/ticket/7090
 										-->
 		<exclusion pattern="^http://zynga\d-a.akamaihd\.net/" />
 
-                <!--
-			Breaks Titanfall, Github issue #390
-										-->
-		<exclusion pattern="^http://eaassets-a\.akamaihd\.net/" />
-		
-				<!--
-					Steamcommunity.com Some Functionality is Broken due to CSP
-					GitHub Issue #909
-										-->
-		<exclusion pattern="^http://steamcommunity-a\.akamaihd\.net/" />
-		<test url="http://steamcommunity-a.akamaihd.net/" />
-
-	<!--securecooie host="^\.abmr\.net$" name="^01AI$" /-->
+	<!--securecookie host="^\.abmr\.net$" name="^01AI$" /-->
 	<securecookie host=".*\.abmr\.net$" name=".+" />
 
 
 	<rule from="^http://ak1s\.abmr\.net/"
 		to="https://ak1s.abmr.net/" />
+	<!--	Just use an URL from the ak1.abmr.net rule below	-->
+	<test url="http://ak1s.abmr.net/is/pixel.mathtag.com?U=/sync/js&amp;V=3-Z%2fH%2fr0WN0ZYjakDDxKo0khM8NMHcJc8atNMBjTJyWU5qDSjB7759WA%3d%3d&amp;I=E33624F6D7AF512&amp;D=mathtag.com&amp;01AD=1&amp;sync=auto&amp;mt_lim=5" />
 
 	<rule from="^http://a248\.e\.akamai\.net/"
 		to="https://a248.e.akamai.net/" />
+	<!--	Random URL via Google	-->
+	<test url="http://a248.e.akamai.net/f/248/3214/1d/www.zones.com/images/pdf/datasheet_symantec_managed_pki_for_ssl.pdf" />
 
 	<rule from="^http://([^@:/\.]+)\.akamaihd\.net/"
 		to="https://$1.akamaihd.net/" />
+	<!--	Facebook favicon, random dog picture	-->
+	<test url="http://fbstatic-a.akamaihd.net/rsrc.php/yl/r/H3nktOa7ZMg.ico" />
+	<test url="http://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-15/11377989_454064614773572_1348139679_n.jpg" />
 
 	<!--	This secures some web bugs:
 						-->
 	<rule from="^http://ak1\.abmr\.net/is/(www.imiclk|pixel\.mathtag)\.com(?=$|\?)"
 		to="https://ak1s.abmr.net/is/$1.com" />
+	<!--	URLs from VirusTotal logs	-->
+	<test url="http://ak1.abmr.net/is/www.imiclk.com?U=/cgi/r.cgi&amp;V=3-tN8HyxniOqgs9sXSs1oQAeDmaU+wHxXRMcQxYf408a0m1hiIZDE2DY1Gni9Uk4d2&amp;I=67CD51D18E7F617&amp;D=www.imiclk.com&amp;01AD=1&amp;did=email&amp;m=3&amp;mid=CuCACD9s&amp;sp=1" />
+	<test url="http://ak1.abmr.net/is/pixel.mathtag.com?U=/sync/js&amp;V=3-Z%2fH%2fr0WN0ZYjakDDxKo0khM8NMHcJc8atNMBjTJyWU5qDSjB7759WA%3d%3d&amp;I=E33624F6D7AF512&amp;D=mathtag.com&amp;01AD=1&amp;sync=auto&amp;mt_lim=5" />
 
 </ruleset>

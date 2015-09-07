@@ -1,46 +1,65 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://webmail.websupport.at/ => https://webmail.websupport.at/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://mail.websupport.at/ => https://mail.websupport.at/: (60, 'SSL certificate problem: unable to get local issuer certificate')
   Websupport
   web hosting company
+
+	Other WebSupport rulesets:
+
+		- WebSupport.at.xml
+		- WebSupport.cz.xml
+		- Webonic.hu.xml
+
+
+	Problematic hosts in *websupport.sk:
+
+		- support *
+
+	* Expired
+
+
+	Insecure cookies are set for these hosts:
+
+		- admin.websupport.sk
+		- mail103.websupport.sk
+		- www.websupport.sk
+
+
+	Mixed content:
+
+		- css on www.websupport.sk from fonts.googleapis.com *
+		- Images on www.websupport.sk from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="Websupport_sk_cz_at_hu" default_off='failed ruleset test'>
-  <target host="websupport.sk" />
-  <target host="www.websupport.sk" />
+<ruleset name="WebSupport.sk (partial)">
 
-  <target host="websupport.cz" />
-  <target host="www.websupport.cz" />
+	<!--	Direct rewrites:
+				-->
+	<target host="websupport.sk" />
+	<target host="admin.websupport.sk" />
+	<target host="blog.websupport.sk" />
+	<target host="mail.websupport.sk" />
+	<target host="mail-latest.websupport.sk" />
+	<target host="mail082.websupport.sk" />
+	<target host="mail103.websupport.sk" />
+	<target host="smail.websupport.sk" />
+	<!--target host="support.websupport.sk" /-->
+	<target host="webmail.websupport.sk" />
+	<target host="www.websupport.sk" />
 
-  <target host="websupport.at" />
-  <target host="www.websupport.at" />
+		<test url="http://www.websupport.sk/blog/" />
 
-  <target host="webonic.hu" />
-  <target host="www.webonic.hu" />
 
-  <target host="webmail.websupport.sk" />
-  <target host="mail.websupport.sk" />
-  <target host="smail.websupport.sk" />
-  <target host="mail082.websupport.sk" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^admin\.websupport\.sk$" name="^(?:PHPSESSID|YII_CSRF_TOKEN|lang)$" /-->
+	<!--securecookie host="^mail103\.websupport\.sk$" name="^roundcube_sessid$" /-->
+	<!--securecookie host="^www\.websupport\.sk$" name="^(?:[\da-f]{32}|PHPSESSID|visitor_la_sid)$" /-->
 
-  <target host="webmail.websupport.at" />
-  <target host="mail.websupport.at" />
+	<securecookie host=".+\.websupport\.sk$" name=".+" />
 
-  <target host="mail.webonic.hu" />
 
-  <rule from="^http://(?:www\.)?websupport\.sk/" to="https://www.websupport.sk/" />
-  <rule from="^http://(?:www\.)?websupport\.cz/" to="https://www.websupport.cz/" />
-  <rule from="^http://(?:www\.)?websupport\.at/" to="https://www.websupport.at/" />
-  <rule from="^http://(?:www\.)?webonic\.hu/" to="https://www.webonic.hu/" />
-
-  <rule from="^http://webmail\.websupport\.sk/" to="https://webmail.websupport.sk/" />
-  <rule from="^http://mail\.websupport\.sk/" to="https://mail.websupport.sk/" />
-  <rule from="^http://smail\.websupport\.sk/" to="https://smail.websupport.sk/" />
-  <rule from="^http://mail082\.websupport\.sk/" to="https://mail082.websupport.sk/" />
-
-  <rule from="^http://webmail\.websupport\.at/" to="https://webmail.websupport.at/" />
-  <rule from="^http://mail\.websupport\.at/" to="https://mail.websupport.at/" />
-
-  <rule from="^http://mail\.webonic\.hu/" to="https://mail.webonic.hu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

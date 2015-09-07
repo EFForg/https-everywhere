@@ -19,10 +19,12 @@
 
 		- blog ¹
 		- careers ²
+		- learn *
 		- mobile ³
 
 	¹ Mismatched, CN: corporate.walmart.com
 	² 404
+	* 500
 	³ 403
 
 
@@ -57,63 +59,40 @@
 	* Avoiding broken MCB
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- accionistas
-		- affil
-		- beacon.affil
-		- affiliates
-		- beacon
-		- beacon.classrooms
-		- beacon.beta
-		- corporate
-		- cdn.corporate
-		- cms.corporate
-		- es.corporate
-		- corporativo
-		- foundation
-		- es.foundation
-		- fundacion
-		- news
-		- es.news
-		- noticias
-		- partner
-		- p13n-assets		(→ akamai)
-		- savingscatcher
-		- beacon.savingscatcher
-		- beacon.stage
-		- stock
-		- es.stock
+		- .walmart.com
+		- accionistas.walmart.com
+		- beacon.affil.walmart.com
+		- affiliates.walmart.com
+		- beacon.walmart.com
+		- beacon.beta.walmart.com
+		- blog.walmart.com
+		- beacon.classrooms.walmart.com
+		- corporate.walmart.com
+		- cms.corporate.walmart.com
+		- es.corporate.walmart.com
+		- corporativo.walmart.com
+		- foundation.walmart.com
+		- es.foundation.walmart.com
+		- fundacion.walmart.com
+		- help.walmart.com
+		- news.walmart.com
+		- es.news.walmart.com
+		- noticias.walmart.com
+		- beacon.savingscatcher.walmart.com
+		- beacon.stage.walmart.com
+		- stock.walmart.com
+		- es.stock.walmart.com
+		- suppliercenter.walmart.com
+		- weeklyad.walmart.com
+		- wm13.walmart.com
+		- www.walmart.com
 
 
-	Insecure cookies are set for these domains:
+	These altnames don't exist:
 
-		- .
-		- accionistas
-		- beacon.affil
-		- affiliates
-		- beacon
-		- beacon.beta
-		- blog
-		- beacon.classrooms
-		- corporate
-		- cms.corporate
-		- es.corporate
-		- corporativo
-		- foundation
-		- es.foundation
-		- fundacion
-		- help
-		- news
-		- es.news
-		- noticias
-		- beacon.savingscatcher
-		- beacon.stage
-		- stock
-		- es.stock
-		- weeklyad
-		- wm13
-		- www
+		- cartservice.walmart.com
 
 
 	Mixed content:
@@ -121,25 +100,115 @@
 		- css on help and wm13 from i2.walmartimages.com *
 
 		- Images on help from i2.walmartimages.com *
+		- Images on savingscatcher from learn.walmart.com ²
 
 	* Secured by us
+	² Unsecurable <= 500
 
 -->
 <ruleset name="Walmart.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="beacon.walmart.com" />
+	<target host="accionistas.walmart.com" />
+	<target host="affil.walmart.com" />
+	<target host="c.affil.walmart.com" />
+	<target host="beacon.affil.walmart.com" />
+	<target host="affiliates.walmart.com" />
+	<target host="beacon.beta.walmart.com" />
+	<target host="beacon.classrooms.walmart.com" />
+	<target host="corporate.walmart.com" />
+
+	<target host="cdn.corporate.walmart.com" />
+	<target host="cms.corporate.walmart.com" />
+	<target host="es.corporate.walmart.com" />
+
+	<target host="corporativo.walmart.com" />
+	<target host="foundation.walmart.com" />
+	<target host="es.foundation.walmart.com" />
+	<target host="fundacion.walmart.com" />
+	<target host="help.walmart.com" />
+	<target host="news.walmart.com" />
+	<target host="es.news.walmart.com" />
+	<target host="noticias.walmart.com" />
+	<target host="partner.walmart.com" />
+	<target host="savingscatcher.walmart.com" />
+	<target host="beacon.savingscatcher.walmart.com" />
+	<target host="beacon.stage.walmart.com" />
+	<target host="stock.walmart.com" />
+	<target host="es.stock.walmart.com" />
+	<target host="suppliercenter.walmart.com" />
+	<target host="www.walmart.com" />
+
+	<!--	Complications:
+				-->
 	<target host="walmart.com" />
-	<target host="*.walmart.com" />
-		<!--
-			Redirect to http:
+	<!-- <target host="localad.walmart.com" /> -->
+	<target host="p13n-assets.walmart.com" />
+
+		<!-- 	Redirect to http:
 						-->
-		<!--exclusion pattern="^http://(www\.)?walmart\.com/+($|\?)" /-->
+		<!--exclusion pattern="^http://www\.walmart\.com/+($|\?)" /-->
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://(www\.)?walmart\.com/+(?!client_side_redirect\.gsp|cservice($|[?/])|favicon\.ico|i/|logout\.do)" /-->
+		<exclusion pattern="^http://www\.walmart\.com/+(?!client_side_redirect\.gsp|(?:account|cservice)(?:$|[?/])|favicon\.ico|i/|logout\.do)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.walmart.com/Value-of-the-Day" />
+			<test url="http://www.walmart.com/cart" />
+			<test url="http://www.walmart.com/instantcredit" />
+			<test url="http://www.walmart.com/store" />
+			<test url="http://www.walmart.com/store" />
+			<test url="http://www.walmart.com/store/finder" />
+			<test url="http://www.walmart.com/store/weekly-ads" />
+			<test url="http://www.walmart.com/weddingstationery" />
+			<test url="http://www.walmart.com/wishlist" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.walmart.com/account/trackorder" />
+			<test url="http://www.walmart.com/cservice/li_trackorder.gsp" />
+			<test url="http://www.walmart.com/favicon.ico" />
+			<test url="http://www.walmart.com/logout.do" />
+
 		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://help\.walmart\.com/+(?!euf/(?:assets|rightnow)/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://help.walmart.com/app/account/profile" />
+			<test url="http://help.walmart.com/app/answers/detail/a_id/1" />
+			<test url="http://help.walmart.com/app/answers/list" />
+			<test url="http://help.walmart.com/app/ask" />
+
+			<!--	-ve:
+					-->
+			<test url="http://help.walmart.com/euf/assets/images/BTN_search_75x30.png" />
+			<test url="http://help.walmart.com/favicon.ico" />
+
+		<!--
+		<exclusion pattern="^http://localad\.walmart\.com/+(?!$|\?)" />
+		-->
+
+			<!--	+ve:
+					-->
+		<!--
+			<test url="http://localad.walmart.com/f" />
+			<test url="http://localad.walmart.com/o" />
+			<test url="http://localad.walmart.com//o" />
+			<test url="http://localad.walmart.com/b" />
+			<test url="http://localad.walmart.com/a" />
+		-->
+
+			<!--	-ve:
+					-->
+			<!-- <test url="http://localad.walmart.com//" /> -->
+
+		<test url="http://beacon.walmart.com/tap.gif?tap=" />
 
 
 	<!--	Not secured by server:
@@ -148,24 +217,27 @@
 	<!--securecookie host="^affiliates\.walmart\.com$" name="^(CUSTOM_SESSION|LONG_LIVED_SESSION)$" /-->
 	<!--securecookie host="^beacon(\.(beta|classrooms|affil|savingscatcher|stage))?\.walmart\.com$" name="^(_tap-aiq|_tap_path|b\d+msc|bsc|btc)$" /-->
 	<!--securecookie host="^help\.walmart\.com$" name="^cp_session$" /-->
+	<!--securecookie host="^savingscatcher\.walmart\.com$" name="^(?:akaau_P1|iron|returnTo)$" /-->
+	<!--securecookie host="^suppliercenter\.walmart\.com$" name="^crumb$" /-->
 	<!--securecookie host="^weeklyad\.walmart\.com$" name="^(SC_Persistent|SC_Session)$" /-->
 	<!--securecookie host="^wm13\.walmart\.com$" name="^(EkAnalytics|EktGUID|ecm)$" /-->
+	<!--securecookie host="^www\.walmart\.com$" name="^akaau_P0$" /-->
 
-	<securecookie host="^(?:accionistas|beacon\.affil|affiliates|beacon\.(?:beta|classrooms)|corporate|(?:cms|es)\.corporate|corporativo|foundation|es\.foundation|fundacion|news|es\.news|noticias|beacon\.s(?:avingscatcher|tage)|stock|es\.stock)\.walmart\.com$" name=".+" />
+	<securecookie host="^(?:accionistas|beacon\.affil|affiliates|beacon\.(?:beta|classrooms)|corporate|(?:cms|es)\.corporate|corporativo|foundation|es\.foundation|fundacion|news|es\.news|noticias|savingscatcher|beacon\.s(?:avingscatcher|tage)|stock|es\.stock|suppliercenter)\.walmart\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?walmart\.com/(?=client_side_redirect\.gsp|cservice(?:$|[?/])|favicon\.ico|i/|logout\.do)"
+	<rule from="^http://walmart\.com/"
 		to="https://www.walmart.com/" />
-
-	<rule from="^http://(accionistas|affil|beacon\.affil|affiliates|beacon|beacon\.(?:beta|classrooms)|(?:(?:cdn|cms|es)\.)?corporate|corporativo|foundation|es\.foundation|fundacion|help|news|es\.news|noticias|partner|(?:beacon\.)?savingscatcher|beacon\.stage|stock|es\.stock)\.walmart\.com/"
-		to="https://$1.walmart.com/" />
 
 	<!--	Redirect keeps args:
 					-->
-	<rule from="^http://localad\.walmart\.com/+(?=$|\?)"
-		to="https://weeklyad.walmart.com/walmart/" />
+	<!-- <rule from="^http://localad\.walmart\.com/+"
+		to="https://weeklyad.walmart.com/walmart/" /> -->
 
 	<rule from="^http://p13n-assets\.walmart\.com/"
 		to="https://a248.e.akamai.net/f/1697/4479/7/p13n-assets.walmart.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

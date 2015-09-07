@@ -1,14 +1,45 @@
 <!--
-	Cert only matches ^final4ever.com
+	Insecure cookies are set for these domains and hosts:
+
+		- final4ever.com
+		- .final4ever.com
+
+
+	Mixed content:
+
+		- css from js.final4ever.com *
+
+		- Images, on:
+
+			- (www.)? from res.cloudinary.com *
+			- (www.)? from cdn.final4ever.com *
+			- (www.)? from img02.final4ever.com *
+			- (www.)? from rss.final4ever.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Final4Ever" default_off="mismatched, self-signed">
+<ruleset name="Final4Ever.com (false MCB)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="final4ever.com" />
-	<target host="*.final4ever.com" />
+	<target host="cdn.final4ever.com" />
+	<target host="img02.final4ever.com" />
+	<target host="js.final4ever.com" />
+	<target host="rss.final4ever.com" />
+	<target host="www.final4ever.com" />
 
 
-	<rule from="^http://(?:cdn\.|(js\.|rss\.)|www\.)?final4ever\.com/"
-		to="https://$1final4ever.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^final4ever\.com$" name="^bbsessionhash$" /-->
+	<!--securecookie host="^\.final4ever\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.?final4ever\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

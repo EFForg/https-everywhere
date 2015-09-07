@@ -1,6 +1,6 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://portalsp.acs.ncsu.edu/ => https://portalsp.acs.ncsu.edu/: (28, 'Connection timed out after 10000 milliseconds')
+	North Carolina State University
+
 	For problematic rules, see North_Carolina_State_University-problematic.xml.
 
 
@@ -9,13 +9,12 @@ Fetch error: http://portalsp.acs.ncsu.edu/ => https://portalsp.acs.ncsu.edu/: (2
 		- www7.acs
 		- ced ¹
 		- dic.fi ²
-		- giving ¹
 		- info ¹
-		- news ³
 		- v3prod.news		(cert: ssl; shows ssl's data)
 		- oied ⁵
 		- oncampus
 		- policies ¹
+		- search ³
 		- web		(ssl_error_rx_record_too_long)
 
 	¹ Shows default page
@@ -26,45 +25,17 @@ Fetch error: http://portalsp.acs.ncsu.edu/ => https://portalsp.acs.ncsu.edu/: (2
 
 	Problematic subdomains:
 
-		- www.cs	(mismatched, CN: www.csc.ncsu.edu)
-		- www.csc	(self-signed)
-		- fi ³
-		- miso.fi ⁴
-		- golinks ⁵
-		- miso ⁶
-
-	³ Redirects to http before www
-	⁴ Mixed css from www
-	⁵ Works; mismatched, CN: go.ncsu.edu
-	⁶ Works; mismatched, CN: *.fi.ncsu.edu
-
-
-	Partially covered subdomains:
-
+		- www.cs ¹ ²
+		- csc ¹ ²
+		- www.csc ²
 		- miso.fi *
+		- gmail ⁴
+		- miso *
 
-	* Avoiding mixed css from www
-
-
-	Fully covered subdomains:
-
-		- ^
-		- mypack.acs
-		- portalsp.acs
-		- www.acs
-		- cdn
-
-		- fi subdomains:
-
-			- eval
-			- ptmt
-			- stem
-			- surveys
-
-		- go
-		- (www\.)?mypack
-		- shib
-		- webauth
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+	* Revoked certificate
+	⁴ Google
 
 
 	These altnames don't exist:
@@ -72,71 +43,154 @@ Fetch error: http://portalsp.acs.ncsu.edu/ => https://portalsp.acs.ncsu.edu/: (2
 		- acs.ncsu.edu
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- www.freedm.ncsu.edu
+		- golinks.ncsu.edu
+		- jobs.ncsu.edu
+		- .oit.ncsu.edu
+		- .policies.ncsu.edu
+
+
 	Mixed content:
+
+		- iframe on accessibility, assist, (www.)?centennial, news.engr, giving from www.ncsu.edu ¹
 
 		- css, on:
 
-			- eval.fi from fonts.googleapis.com ¹
-			- miso.fi from www ²
+			- accessibility, miso.fi, giving from www.ncsu.edu ¹
+			- news.engr from www.engr.ncsu.edu ¹
+			- assist, (www.)?centennial, eval.fi, www.freedm from fonts.googleapis.com ¹
+			- giving from $self ¹
+			- help from $self
+			- help from oit.ncsu.edu ¹
 
-		- Images on miso.fi from miso ¹
+		- Images, on:
 
-		- favicon on oit from $self ¹
+			- news.engr from www.engr.ncsu.edu ¹
+			- help from $self
+			- giving from $self
+			- miso.fi from miso.ncsu.edu
+			- oied from $self
+			- oit from drupal.ncsu.edu
+			- oit, policies from www.ncsu.edu ¹
+			- policies from $self ¹
+
+		- favicons, on:
+
+			- giving from ncsu.edu ¹
+
+		- Ads/bugs, on:
+
+			- help from twitter-badges.s3.amazonaws.com
 
 	¹ Secured by us
 	² Unsecurable
 
 -->
-<ruleset name="North Carolina State University (partial)" default_off='failed ruleset test'>
+<ruleset name="NCSU.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
 
 	<target host="libraryh3lp.com" />
-		<!--
-			Breaks widgets embedded on 3rd-party websites:
+
+		<!--	Breaks widgets embedded on 3rd-party websites:
 
 				https://trac.torproject.org/projects/tor/ticket/9325
 										-->
 		<exclusion pattern="^http://libraryh3lp\.com/(?:chat/|follow/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://libraryh3lp.com/chat/" />
+			<test url="http://libraryh3lp.com/follow/" />
+
 	<target host="ncsu.edu" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://miso\.(fi\.)?ncsu\.edu/+(?!wp-content/|wp-includes/)" /-->
-	<target host="www.*.ncsu.edu" />
+	<!--target host="accessibility.ncsu.edu" /-->
+
+	<target host="ep91prd.acs.ncsu.edu" />
+	<target host="mypack.acs.ncsu.edu" />
+	<target host="portal.acs.ncsu.edu" />
 	<target host="portalsp.acs.ncsu.edu" />
-	<target host="*.lib.ncsu.edu" />
+	<target host="www.acs.ncsu.edu" />
+
+	<!--target host="assist.ncsu.edu" /-->
+	<target host="ccfn.ncsu.edu" />
+	<target host="cdn.ncsu.edu" />
+	<!--target host="centennial.ncsu.edu" /-->
+	<!--target host="www.centennial.ncsu.edu" /-->
+	<target host="research.csc.ncsu.edu" />
+	<!--target host="www.csc.ncsu.edu" /-->
+	<!--target host="news.engr.ncsu.edu" /-->
+	<target host="www.engr.ncsu.edu" />
+	<target host="fi.ncsu.edu" />
+
+	<target host="eval.fi.ncsu.edu" />
+	<!--target host="miso.fi.ncsu.edu" /-->
+	<target host="ptmt.fi.ncsu.edu" />
+	<target host="stem.fi.ncsu.edu" />
+	<target host="surveys.fi.ncsu.edu" />
+	<target host="www.fi.ncsu.edu" />
+
+	<target host="www.freedm.ncsu.edu" />
+	<!--target host="giving.ncsu.edu" /-->
+	<target host="go.ncsu.edu" />
+	<target host="www.go.ncsu.edu" />
+	<target host="golinks.ncsu.edu" />
+	<!--target host="help.ncsu.edu" /-->
+	<target host="jobs.ncsu.edu" />
+	<target host="lib.ncsu.edu" />
+
+	<target host="my.lib.ncsu.edu" />
+	<target host="myaccount.lib.ncsu.edu" />
+	<target host="staff.lib.ncsu.edu" />
+	<target host="www.lib.ncsu.edu" />
+
+	<!--target host="miso.ncsu.edu" /-->
+	<target host="mypack.ncsu.edu" />
+	<target host="www.mypack.ncsu.edu" />
+	<target host="news.ncsu.edu" />
+	<target host="oied.ncsu.edu" />
+	<target host="oit.ncsu.edu" />
+	<target host="policies.ncsu.edu" />
+	<target host="shib.ncsu.edu" />
+	<target host="ssl.ncsu.edu" />
+	<target host="sysnews.ncsu.edu" />
+	<target host="webauth.ncsu.edu" />
+	<target host="www.ncsu.edu" />
+
+	<!--	Complications:
+				-->
+	<!--target host="www.cs.ncsu.edu" /-->
+	<!--target host="csc.ncsu.edu" /-->
+	<target host="gmail.ncsu.edu" />
 
 
 	<securecookie host="^libraryh3lp\.com$" name=".*" />
-	<!--
-		Secured by server:
-					-->
-	<!--securecookie host="^shib\.ncsu\.edu$" name="^JSESSIONID$" /-->
-	<!--
-		Not secured by server:
+
+	<!--	Not secured by server:
 						-->
-	<!--securecookie host="\.ncsu\.edu$" name="^(PAC|WRAP16|WRAP_REFERER)$" /-->
+	<!--securecookie host="\.ncsu\.edu$" name="^(_dsncsu_redirection_state|_dsncsu_saml_sp|PAC|WRAP16|WRAP_REFERER)$" /-->
 	<!--securecookie host="^surveys\.fi\.ncsu\.edu$" name="^dvc$" /-->
+	<!--securecookie host="^www\.freedm\.ncsu\.edu$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^(go|golinks)\.ncsu\.edu$" name="^PHPSESSID$" /-->
-	<!--securecookie host="^\.oit\.ncsu\.edu$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^jobs\.ncsu\.edu$" name="^(?:_applicant_portal_session_1|COOKIE-SHIBBOLETH)$" /-->
+	<!--securecookie host="^\.(?:oit|policies)\.ncsu\.edu$" name="^SESS[0-9a-f]{32}$" /-->
 
 	<securecookie host="^(?:.*\.)?ncsu\.edu$" name=".*" />
 
 
-	<rule from="^http://libraryh3lp\.com/"
-		to="https://libraryh3lp.com/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://gmail\.ncsu\.edu/[^?]*"
+		to="https://mail.google.com/a/ncsu.edu" />
 
-	<rule from="^http://(?:www\.)?ncsu\.edu/directory/"
-		to="https://www.ncsu.edu/directory/" />
+		<test url="http://gmail.ncsu.edu//" />
+		<test url="http://gmail.ncsu.edu/?" />
 
-	<rule from="^http://((?:(?:mypack|portalsp|www)\.acs|cdn|(?:eval|ptmt|stem|surveys)\.fi|go|jobs|(?:(?:my|staff|www)\.)?lib|(?:www\.)?mypack|oit|shib|ssl|webauth)\.)?ncsu\.edu/"
-		to="https://$1ncsu.edu/" />
-
-	<!--	!www redirects to http before www:
-							-->
-	<rule from="^http://(?:www\.)?fi\.ncsu\.edu/(?=wp-content/|wp-includes/)"
-		to="https://www.fi.ncsu.edu/" />
-
-	<rule from="^http://miso\.(?:fi\.)?ncsu\.edu/(?=favicon\.ico|wp-content/|wp-includes/)"
-		to="https://miso.fi.ncsu.edu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,4 +1,6 @@
 <!--
+	Telegraph Media Group
+
 	For problematic rules, see Telegraph-Media-Group-mismatches.xml.
 
 
@@ -32,10 +34,12 @@
 
 	Nonfunctional domains:
 
-		- is.i2.datinglab.net
+		- ^ ¹
+		- blogs *
 		- courses	(http reply)
 		- dating **
 		- fashion	(503, akamai)
+		- i ***
 		- my *
 		- puzzles **
 		- secure *
@@ -47,6 +51,7 @@
 		- tickets	(tixdaq.com)
 		- www ***
 
+	¹ 503, Akamai
 	* 504, akamai
 	** Dropped
 	*** Redirects to http, akamai
@@ -54,71 +59,116 @@
 
 	Problematic subdomains:
 
+		- fantasygames ¹
 		- fashionshop	(works; mismatched, CN: shop.look.co.uk)
-		- i		(redirects to http, akamai)
-		- s		(works, akamai)
+		- m ³
+		- s ³
+		- blogs.uat ³
+
+	¹ Expired
+	³ Akamai
 
 
-	Partially covered subdomains:
+	These altnames don't exist:
 
-		- blogs
-		- fantasycricket
-		- fantasyfootball
-		- fantasygames
-		- blogs.uat
+		- www.reporting.shop.telegraph.co.uk
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- announcements
-		- auth
-		- i.fantasycricket
-		- i.fantasyfootball
-		- i.fantasygames
-		- i.fantasyracing
-		- fantasyracing
-		- fbapp
-		- i			(→ secure.i)
-		- secure.i
-		- jobs
-		- recruiters.jobs
-		- s			(→ akamai)
-		- secure.s
-		- shop
-		- fbapp.uat
-		- secure.i.uat1
-		- webtrends
+		- .telegraph.co.uk
+		- announcements.telegraph.co.uk
+		- fantasyracing.telegraph.co.uk
+		- reporting.shop.telegraph.co.uk
+		- webtrends.telegraph.co.uk
+
+
+	Mixed content:
+
+		- Image on fantasygames from i.fantasyfootball.telegraph.co.uk *
+
+	* Secured by us
 
 -->
-<ruleset name="Telegraph Media Group (partial)">
+<ruleset name="Telegraph.co.uk (partial)">
 
-	<target host="telegraph.co.uk" />
-	<target host="*.telegraph.co.uk" />
-		<!--
-			Pages redirect to http:
+	<!--	Direct rewrites:
+				-->
+	<target host="announcements.telegraph.co.uk" />
+	<target host="auth.telegraph.co.uk" />
+	<target host="fbapp.telegraph.co.uk" />
+	<target host="fbapp.uat.telegraph.co.uk" />
+	<target host="fantasycricket.telegraph.co.uk" />
+	<target host="i.fantasycricket.telegraph.co.uk" />
+	<target host="fantasyfootball.telegraph.co.uk" />
+	<target host="i.fantasyfootball.telegraph.co.uk" />
+	<!--target host="fantasygames.telegraph.co.uk" /-->
+	<target host="fantasyracing.telegraph.co.uk" />
+	<target host="i.fantasyracing.telegraph.co.uk" />
+	<target host="secure.i.telegraph.co.uk" />
+	<target host="jobs.telegraph.co.uk" />
+	<target host="recruiters.jobs.telegraph.co.uk" />
+	<target host="secure.s.telegraph.co.uk" />
+	<target host="shop.telegraph.co.uk" />
+	<target host="reporting.shop.telegraph.co.uk" />
+	<target host="secure.i.uat1.telegraph.co.uk" />
+	<target host="webtrends.telegraph.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="s.telegraph.co.uk" />
+
+		<!--	Redirects to http:
 						-->
-		<exclusion pattern="^http://blogs(?:\.uat)?\.telegraph\.co\.uk/(?!\w+/files/|wp-content/)" />
-		<exclusion pattern="^http://fantasycricket\.telegraph\.co\.uk/(?!(?:\w+/)?(?:images|scripts|select-team|xcss)(?:$|[?/])|favicon\.ico)" />
-		<exclusion pattern="^http://fantasy(?:football|games)\.telegraph\.co\.uk/(?!(?:\w+/)?(?:images|scripts|xcss)/|favicon\.ico)" />
+		<!--exclusion pattern="^http://shop\.telegraph\.co\.uk/telegraph-index\.cfm" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://shop\.telegraph\.co\.uk/+(?!$|_imagesDM/|_images[TX]/|DNTEMP/Photos/|account_login\.cfm|feefo/xmltoxsl/|telegraph\.css)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://shop.telegraph.co.uk/buy/miscellaneous/aluminium-wallet/80/no/100121" />
+			<test url="http://shop.telegraph.co.uk/shop/sw-jumpers/cashmere-mix/80/8488" />
+			<test url="http://shop.telegraph.co.uk/telegraph-contactus.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-delivery.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-faq.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-gifts.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-index.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-mobility.cfm" />
+			<test url="http://shop.telegraph.co.uk/telegraph-reviews.cfm" />
+			<test url="http://shop.telegraph.co.uk/viewcart.cfm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.telegraph.co.uk/_imagesDM/feefo-grey.png" />
+			<test url="http://shop.telegraph.co.uk/_imagesT/telegraph_logo.png" />
+			<test url="http://shop.telegraph.co.uk/_imagesX/plus.png" />
+			<test url="http://shop.telegraph.co.uk/account_login.cfm" />
+			<test url="http://shop.telegraph.co.uk/feefo/xmltoxsl/plus.gif" />
+			<test url="http://shop.telegraph.co.uk/telegraph.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.telegraph\.co\.uk$" name="^__TGC$" /-->
+	<!--securecookie host="^announcements\.telegraph\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^fantasyracing\.telegraph\.co\.uk$" name="^_FGTeam$" /-->
+	<!--securecookie host="^reporting\.shop\.telegraph\.co\.uk$" name="^(?:NetOutcome|redeye)$" /-->
+	<!--securecookie host="^webtrends\.telegraph\.co\.uk$" name="^ACOOKIE$" /-->
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.(?:\w+\.)?telegraph\.co\.uk$" name="^(?:tmg_web_trends|__utm\w)$" />
-	<securecookie host="^(?:announcements|jobs|recruiters\.jobs|shop|webtrends)\.telegraph\.co\.uk$" name=".+" />
+	<securecookie host="^(?:announcements|fantasyracing|jobs|recruiters\.jobs|reporting\.shop|webtrends)\.telegraph\.co\.uk$" name=".+" />
 
-
-	<rule from="^http://(announcements|auth|(?:blogs|fbapp)(?:\.uat)?|(?:i\.)?fantasy(?:cricket|football|games|racing)|secure\.i\.uat1|jobs|recruiters\.jobs|secure\.s|shop|webtrends)\.telegraph\.co\.uk/"
-		to="https://$1.telegraph.co.uk/" />
-
-	<!--	We could point to akamai if it didn't redirect to http...
-								-->
-	<rule from="^http://(?:secure\.)?i\.telegraph\.co\.uk/"
-		to="https://secure.i.telegraph.co.uk/" />
 
 	<!--	Image paths are relative to stylesheets:
 							-->
 	<rule from="^http://s\.telegraph\.co\.uk/"
 		to="https://a248.e.akamai.net/f/1362/5848/6m/s.telegraph.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

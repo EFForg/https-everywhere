@@ -1,19 +1,37 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dbforums.com/ => https://dbforums.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For other iNET Interactive coverage, see INet-Interactive.xml.
 
+
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.dbforums.com
+
+
+	Mixed content:
+
+		- css from $self *
+		- Images from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="dBforums" default_off='failed ruleset test'>
+<ruleset name="dBforums.com" default_off="missing certificate chain" platform="mixedcontent">
 
 	<target host="dbforums.com" />
-	<target host="*.dbforums.com" />
+	<target host="www.dbforums.com" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.dbforums\.com$" name="^(?:page_count|suppress_news_overlay)$" /-->
 
 	<securecookie host="^(?:www)?\.dbforums\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?dbforums\.com/"
-		to="https://$1dbforums.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

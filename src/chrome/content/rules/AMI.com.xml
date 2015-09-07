@@ -1,15 +1,26 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ami.com/ => https://ami.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.ami.com/ => https://www.ami.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="AMI.com" default_off='failed ruleset test'>
+	Insecure cookies are set for these hosts:
 
+		- ami.com
+		- www.ami.com
+
+-->
+<ruleset name="AMI.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="ami.com" />
 	<target host="www.ami.com" />
 
 
-	<rule from="^http://(www\.)?ami\.com/"
-		to="https://$1ami.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?ami\.com$" name="^CFAUTHORIZATION_AMIWebPage$" /-->
+
+	<securecookie host="^(?:www\.)?ami\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

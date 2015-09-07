@@ -1,18 +1,35 @@
 <!--
 	(www.)?: redirects to http
 
-	v: expired 2014
+
+	Mixed content:
+
+		- iframe on v from www.youtube.com *
+		- Images on v from $self *
+		- favicon on v from $self *
+		- Bug on v from ([\da-f].){4}top.mail.ru *
+
+	* Secured by us
 
 -->
-<ruleset name="Ok.ru (partial)" default_off="expired, missing certificate chain, untrusted root">
+<ruleset name="Ok.ru (partial)" platform="mixedcontent">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="v.ok.ru" />
 
 		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?ok\.ru/($|dk\?st\.cmd=redirectAuthCode&amp;nc=\d+|favicon\.ico|favicon\.ico\?v2)" /-->
+					-->
+		<!--test url="http://ok\.ru/$" /-->
+
+		<test url="http://v.ok.ru/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^v\.ok\.ru$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^v\.ok\.ru$" name=".+" />
 
 
 	<rule from="^http:"

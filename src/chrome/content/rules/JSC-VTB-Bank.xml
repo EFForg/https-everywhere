@@ -1,22 +1,50 @@
-<ruleset name="JSC VTB Bank (partial)" default_off="expired, mismatch">
+<!--
+	Other VTB Group rulesets:
 
+		- VTB.com.xml
+		- VTB_Russia.ru.xml
+
+
+	Problematic hosts in *vtb.ru:
+
+		- m *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- m.vtb.ru
+		- .m.vtb.ru
+
+
+	Mixed content:
+
+		- Bugs on m, www from ([\da-f]{2}\.){4}top.mail.ru *
+
+	* Secured by us
+
+-->
+<ruleset name="VTB.ru (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="vtb.ru"/>
-	<!--	* for cross-domain cookie	-->
-	<target host="*.vtb.ru"/>
-	<!--	cert: www.vtb.ru	-->
-	<target host="vtbrussia.ru"/>
-	<!--	* for cross-domain cookie	-->
-	<target host="*.vtbrussia.ru"/>
+	<!--target host="m.vtb.ru"/-->
+	<target host="www.vtb.ru"/>
 
-	<securecookie host="^\.vtb(?:russia)?\.ru$" name=".*"/>
 
-	<!--	cert doesn't match .com
-		pages are different from .ru	-->
-	<rule from="^http://www\.vtb\.com/(bitrix/(components|images|js|templates)|upload)/"
-		to="https://www.vtb.ru/$1/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.vtb\.ru$" name="^(?:_LAT|_LNG|CITY_IP|GLOBAL_CITY_NAME|PHPSESSID)$"/-->
+	<!--securecookie host="^m\.vtb\.ru$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.m\.vtb\.ru$" name="^CITY_IP$" /-->
+	<!--securecookie host="^www\.vtb\.ru$" name="^PHPSESSID$" /-->
 
-	<!--	cert doesn't match !www		-->
-	<rule from="^http://(?:www\.)?vtb\.ru/"
-		to="https://www.vtb.ru/"/>
+	<securecookie host=".*\.vtb\.ru$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,18 +1,21 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://bioinfo.pl/ => https://bioinfobank.com/: (60, 'SSL certificate problem: self signed certificate')
-
 	Other BioInfoBank rulesets:
 
 		- BioInfoBank.com.xml
+		- PicoStocks.com.xml
 
 
-	Problematic domains:
+	Problematic hosts in *bioinfo.pl:
 
-		- (www.)bioinfo.pl *
+		- ^ ¹ ² ³
+		- mail ¹
+		- thc ¹ ⁴
+		- www ¹
 
-	* 401, valid cert
+	¹ Self-signed
+	² Cert only matches *.bioinfo.pl
+	³ www redirects to ^
+	⁴ Expired
 
 
 	These altnames dont exist:
@@ -20,21 +23,17 @@ Fetch error: http://bioinfo.pl/ => https://bioinfobank.com/: (60, 'SSL certifica
 		- lib.bioinfo.pl
 
 -->
-<ruleset name="BioInfo.pl" default_off='failed ruleset test'>
+<ruleset name="BioInfo.pl" default_off="expired, mismatched, self-signed">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bioinfo.pl" />
-	<target host="*.bioinfo.pl" />
+	<target host="mail.bioinfo.pl" />
+	<target host="thc.bioinfo.pl" />
+	<target host="www.bioinfo.pl" />
 
 
-	<!--	Secured by server:
-					-->
-	<!--securecookie host="^mail\.bioinfo\.pl$" name="^roundcube_sessid$" /-->
-
-
-	<rule from="^http://(?:www\.)?bioinfo\.pl/"
-		to="https://bioinfobank.com/" />
-
-	<rule from="^http://(mail|thc)\.bioinfo\.pl/"
-		to="https://$1.bioinfo.pl/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

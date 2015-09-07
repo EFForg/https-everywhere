@@ -5,18 +5,37 @@
 		- MongoDB.org.xml
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *10gen.com:
 
-		- blog
+		- blog *
+
+	* Redirect from ($|\?) differs from http
 
 -->
-<ruleset name="10gen">
+<ruleset name="10gen.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="10gen.com" />
-	<target host="*.10gen.com" />
+	<target host="mms.10gen.com" />
+	<target host="www.10gen.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.10gen.com" />
 
 
-	<rule from="^http://(mms\.|www\.)?10gen\.com/"
-		to="https://$110gen.com/" />
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://blog\.10gen\.com/+(?:$|\?.*)"
+		to="https://www.mongodb.com/blog/" />
+
+		<test url="http://blog.10gen.com/?f" />
+		<test url="http://blog.10gen.com/?o" />
+		<test url="http://blog.10gen.com//?o" />
+		<test url="http://blog.10gen.com/?b" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

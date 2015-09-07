@@ -68,10 +68,11 @@
 
 	Problematic subdomains:
 
-		- download-software ¹
 		- embedded.edc ³
 		- inside ¹
+		- newsroom	(Mixed css)
 		- search ²
+		- xdk		(Refused)
 
 	* Works, akamai
 	³ Some paths 404; mismatched, CN: chi1.intel.com
@@ -94,20 +95,24 @@
 		- embedded.communities
 		- prd1idz.cps
 		- downloadcenter
-		- downloads-software	(→ akamai)
+		- downloads-software
 		- jira.hppd
+		- appcenter.html5tools-software
 		- inside		(→ secure-inside)
 		- origin-software
+		- registrationcenter
 		- secure-inside
 		- secure-software
 		- sfederation
+		- signin
 		- software
 		- thehub
+		- xdk		(→ software.intel.com)
+		- download.xdk
 
 
 	Observed cookie domains:
 
-		- .
 		- communities
 		- embedded.communities
 		- prd1idz.cps
@@ -115,11 +120,9 @@
 		- edc
 		- engage
 		- freepress
-		- newsroom
 		- origin-software
 		- scoop
 		- secure-software
-		- sfederation
 		- software
 		- thehub
 		- www
@@ -135,6 +138,19 @@
 		- downloadcenter01-prd.intel.com
 		- downloadcenter02-prd.intel.com
 		- intelsearch.intel.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .intel.com
+		- click.intel.com
+		- .click.intel.com
+		- newsroom.intel.com
+		- registrationcenter.intel.com
+		- secure-inside.intel.com
+		- sfederation.intel.com
+		- signin.intel.com
+		- .signin.intel.com
 
 
 	Mixed content:
@@ -167,47 +183,152 @@
 	² Unsecurable
 
 -->
-<ruleset name="Intel (partial)">
+<ruleset name="Intel.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.intel.com" />
+	<target host="chi1.intel.com" />
+	<target host="click.intel.com" />
+	<target host="communities.intel.com" />
+	<target host="embedded.communities.intel.com" />
+	<target host="prd1idz.cps.intel.com" />
+	<target host="download-software.intel.com" />
+	<target host="downloadcenter.intel.com" />
+	<target host="edc.intel.com" />
+	<target host="educate.intel.com" />
+	<target host="engage.intel.com" />
+	<target host="freepress.intel.com" />
+	<target host="jira.hppd.intel.com" />
+	<target host="appcenter.html5tools-software.intel.com" />
+	<target host="newsroom.intel.com" />
+	<target host="our.intel.com" />
+	<target host="registrationcenter.intel.com" />
+	<target host="scoop.intel.com" />
+	<target host="secure-inside.intel.com" />
+	<target host="software.intel.com" />
+	<target host="origin-software.intel.com" />
+	<target host="secure-software.intel.com" />
+	<target host="sfederation.intel.com" />
+	<target host="ssl.intel.com" />
+	<target host="signin.intel.com" />
+	<target host="staging-blogs.intel.com" />
+	<target host="staging-our.intel.com" />
+	<target host="staging-scoop.intel.com" />
+	<target host="thehub.intel.com" />
+	<target host="www-ssl.intel.com" />
+	<target host="download.xdk.intel.com" />
+
+	<!--	Complications:
+				-->
 	<target host="intel.com" />
-	<target host="*.intel.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://newsroom\.intel\.com/+(?!favicon\.ico|(?:\d\.\d\.\d/)?(?:images/|plugins/|themes?/)|people/\w+/avatar/)" />
-		<!--
-			https://lists.eff.org/pipermail/https-everywhere-rules/2013-November/001732.html
+	<target host="embedded.edc.intel.com" />
+	<target host="inside.intel.com" />
+	<target host="www.intel.com" />
+	<target host="xdk.intel.com" />
+
+		<!--	https://lists.eff.org/pipermail/https-everywhere-rules/2013-November/001732.html
 													-->
 		<!--exclusion pattern="^http://www\.intel\.com/newsroom/assets/bio/" /-->
+		<!--
+			Without these, there would be mixed content on newsroom:
+										-->
+		<exclusion pattern="^http://(?:www\.)?intel\.com/(?!content/|etc/|favicon\.ico|newsroom/assets/(?!bio/)|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.intel.com/apac/" />
+			<test url="http://www.intel.com/espanol/" />
+			<test url="http://www.intel.com/facebook" />
+			<test url="http://www.intel.com/p/en_US/support" />
+			<test url="http://www.intel.com/p/en_US/support/detect" />
+			<test url="http://www.intel.com/video/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.intel.com/etc/designs/intel/us/en/images/share-icons.png" />
+			<test url="http://www.intel.com/favicon.ico" />
+			<test url="http://www.intel.com/newsroom/assets/images/nr-view-more-sub-small-mrq.png" />
+			<test url="http://www.intel.com/newsroom/assets/tab/prTab.css" />
+			<test url="http://www.intel.com/sites/sitewide/HAT/50recode/pix/main-logo.png" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://newsroom\.intel\.com/+(?!favicon\.ico|(?:\d\.\d\.\d/)?(?:images/|plugins/|styles/|themes?/)|people/\w+/avatar/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://newsroom.intel.com/archive.jspa" />
+			<test url="http://newsroom.intel.com/communications" />
+			<test url="http://newsroom.intel.com/community/intel_newsroom" />
+			<test url="http://newsroom.intel.com/community/intel_newsroom/bios" />
+			<test url="http://newsroom.intel.com/community/intel_newsroom/contact_pr" />
+			<test url="http://newsroom.intel.com/community/intel_newsroom/create-account.jspa" />
+			<test url="http://newsroom.intel.com/community/intel_newsroom/login.jspa" />
+			<test url="http://newsroom.intel.com/create-account.jspa" />
+			<test url="http://newsroom.intel.com/docs/DOC-6309" />
+			<test url="http://newsroom.intel.com/people" />
+
+			<!--	-ve:
+					-->
+			<test url="http://newsroom.intel.com/5.0.2/images/steelhead/j-ui-sprite.png" />
+			<test url="http://newsroom.intel.com/5.0.2/styles/jive-icons.css" />
+			<test url="http://newsroom.intel.com/favicon.ico" />
+			<test url="http://newsroom.intel.com/images/jive-image-loading.gif" />
+			<test url="http://newsroom.intel.com/people/guest/avatar/40.png" />
+			<test url="http://newsroom.intel.com/plugins/event-type-plugin/resources/styles/event.css" />
+			<test url="http://newsroom.intel.com/theme/white/styles/theme.css" />
+			<test url="http://newsroom.intel.com/themes/intel-ipr/images/bg-gradient.png" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.intel\.com$" name="^BaseCulture$" /-->
+	<!--securecookie host="click\.intel\.com$" name="^BIGipServer\w+$" /-->
+	<!--securecookie host="\.click\.intel\.com$" name="^(?:CUSTOMER_SEGMENT_IDS|frontend)$" /-->
+	<!--securecookie host="newsroom\.intel\.com$" name="^(?:BIGipServer[\w-]+|JSESSIONID|jive\.server\.info)$" /-->
+	<!--securecookie host="registrationcenter\.intel\.com$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="secure-inside\.intel\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="sfederation\.intel\.com$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="signin\.intel\.com$" name="^(?:BIGipServer[\w-]+|TS[\da-f]{8})$" /-->
+	<!--securecookie host="\.signin\.intel\.com$" name="^TS[\da-f]{8}$" /-->
 
 	<securecookie host=".+\.intel\.com$" name=".+" />
 
 
-
-	<!--	Without this, there would be mixed content on newsroom:
-									-->
-	<rule from="^http://(?:www\.)?intel\.com/(?=content/|etc/|favicon\.ico|newsroom/assets/(?!bio/)|sites/)"
+	<rule from="^http://(?:www\.)?intel\.com/"
 		to="https://www-ssl.intel.com/" />
-
-	<rule from="^http://(blogs|chi1|(?:embedded\.)?communities|prd1idz\.cps|downloadcenter|educate|engage|freepress|jira\.hppd|newsroom|our|scoop|software|(?:origin|secure)-software|sfederation|ssl|sfederation|staging-(?:blogs|our|scoop)|thehub|www-ssl)\.intel\.com/"
-		to="https://$1.intel.com/" />
-
-	<!--	Protocol-relative redirects from akamai.net/.../software.:
-									-->
-	<rule from="^https?://download-software\.intel\.com/"
-		to="https://a248.e.akamai.net/f/978/142/6m/download-software.intel.com/" />
 
 	<!--	Redirects like so:
 					-->
 	<rule from="^http://embedded\.edc\.intel\.com/+(?:$|\?.*)"
 		to="https://embedded.communities.intel.com/" />
 
-	<rule from="^http://(?:secure-)?inside\.intel\.com/"
+		<test url="http://embedded.edc.intel.com/?f" />
+		<test url="http://embedded.edc.intel.com/?o" />
+		<test url="http://embedded.edc.intel.com//?o" />
+		<test url="http://embedded.edc.intel.com/?b" />
+
+	<rule from="^http://inside\.intel\.com/"
 		to="https://secure-inside.intel.com/" />
+
+	<rule from="^http://xdk\.intel\.com/$"
+		to="https://software.intel.com/en-us/intel-xdk" />
+
+	<!--	It's impossible to fill the test quota for this
+		rule since for the coverage checker, \? = ?
+								-->
+	<rule from="^http://xdk\.intel\.com/\?$"
+		to="https://software.intel.com/en-us/intel-xdk/" />
+
+		<test url="http://xdk.intel.com/?" />
+
+	<rule from="^http://xdk\.intel\.com/"
+		to="https://software.intel.com/en-us/intel-xdk/" />
+
+		<test url="http://xdk.intel.com/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

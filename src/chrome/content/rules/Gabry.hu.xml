@@ -1,12 +1,36 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.gabry.hu/ => https://www.gabry.hu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://gabry.hu/ => https://gabry.hu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- gabry.hu
+		- www.gabry.hu
+
+
+	Mixed content:
+
+		- Bugs from statelit.hu *
+
+	* Unsecurable <= 404
+
 -->
-<ruleset name="Gabry.hu" platform="mixedcontent" default_off='failed ruleset test'>
-	<target host="www.gabry.hu" />
+<ruleset name="Gabry.hu" default_off="expired, missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="gabry.hu" />
+	<target host="www.gabry.hu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?gabry\.hu$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^(?:www\.)?gabry\.hu$" name=".+" />
-	<rule from="^http://(www\.)?gabry\.hu/" to="https://$1gabry.hu/" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

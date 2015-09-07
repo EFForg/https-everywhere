@@ -1,25 +1,30 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://book.invasion.com/ => https://book.invasion.com/: Cycle detected - URL already encountered: https://book.invasion.com/
-	For rules causing false/broken MCB, see Invasion.com.xml.
+	Insecure cookies are set for these domains and hosts:
+
+		- .invasion.com
+		- book.invasion.com
 
 -->
-<ruleset name="Invasion.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Invasion.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="invasion.com" />
 	<target host="book.invasion.com" />
-	<target host="*.book.invasion.com" />
 	<target host="www.invasion.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://(?:www\.)?invasion\.com/(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+	<target host="invasion-turnonsocial.netdna-ssl.com" />
 
 
-	<securecookie host="^\.?book\.invasion\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.invasion\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^book\.invasion\.com$" name="^(?:PHPSESSID|w3tc_referrer)$" /-->
+
+	<securecookie host="^(?:book)?\.invasion\.com$" name=".+" />
 
 
-	<rule from="^http://(book\.|www\.)?invasion\.com/"
-		to="https://$1invasion.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

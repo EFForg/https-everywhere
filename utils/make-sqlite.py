@@ -20,7 +20,7 @@ from lxml import etree
 locale.setlocale(locale.LC_ALL, 'C')
 
 # Removing the file before we create it avoids some non-determinism.
-db_path = os.path.join(os.path.dirname(__file__), '../src/defaults/rulesets.sqlite')
+db_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.unvalidated.sqlite')
 if os.path.isfile(db_path):
     os.remove(db_path)
 conn = sqlite3.connect(db_path)
@@ -33,12 +33,6 @@ c.execute('''DROP TABLE IF EXISTS targets''')
 c.execute('''CREATE TABLE targets
              (host TEXT,
               ruleset_id INTEGER)''')
-c.execute('''DROP TABLE IF EXISTS git_commit''')
-c.execute('''CREATE TABLE git_commit
-             (git_commit TEXT)''')
-
-git_commit = subprocess.check_output("git rev-parse HEAD", shell=True).rstrip("\n")
-c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
 
 parser = etree.XMLParser(remove_blank_text=True)
 

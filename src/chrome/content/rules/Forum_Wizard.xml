@@ -1,16 +1,42 @@
 <!--
-	CN: final4ever.com
+	Problematic hosts in *forumwizard.net:
+
+		- w *
+
+	* Self-signed
+
+
+	Mixed content:
+
+		- Images on (www.)? from cdn.forumwizard.net *
+
+	* Secured by us
 
 -->
-<ruleset name="Forum Wizard" default_off="mismatched, self-signed">
+<ruleset name="Forum Wizard.net">
 
-	<target host="*.forumwizard.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="forumwizard.net" />
+	<target host="cdn.forumwizard.net" />
+	<target host="www.forumwizard.net" />
+
+	<!--	Complications:
+				-->
+	<target host="w.forumwizard.net" />
 
 
-	<!--securecookie host="^\.forumwizard\.net$" name=".+" /-->
+	<!--	Direct rewrites:
+				-->
+	<!--securecookie host="^\.forumwizard\.net$" name="^(?:__cfduid|bbsessionhash|cf_clearance)$" /-->
+
+	<securecookie host="^\.forumwizard\.net$" name=".+" />
 
 
-	<rule from="^http://(cdn|w|is\.www)\.forumwizard\.net/"
-		to="https://$1.forumwizard.net/" />
+	<rule from="^http://w\.forumwizard\.net/"
+		to="https://www.forumwizard.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

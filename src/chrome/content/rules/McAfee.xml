@@ -4,51 +4,81 @@
 
 	Av vendor. promos.mcafee.com lacks https
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .mcafee.com
+		- kc.mcafee.com
+
 -->
-<ruleset name="McAfee (buggy)" default_off="Rediects to http, buggy">
+<ruleset name="McAfee.com (partial)">
 
-	<target host="mcafee.com" />
-	<target host="*.mcafee.com" />
-		<!--
-			This redirects to http.  As in the
-			case below, after we give up (good),
-			we don't try again when it redirects
-			to something that we can secure (bad).
-
-			Bug: https://trac.torproject.org/projects/tor/ticket/5686
+	<!--	Direct rewrites:
 				-->
-		<exclusion pattern="^http://(?:www\.)?mcafee\.com/error-pages/404\.aspx" />
-		<!--
-			At least the homepage redirects to http.
+	<target host="mcafee.com" />
+	<target host="beta.mcafee.com" />
+	<target host="blogs.mcafee.com" />
+	<target host="community.mcafee.com" />
+	<target host="home.mcafee.com" />
+	<target host="images.mcafee.com" />
+	<target host="secureimages.mcafee.com" />
+	<target host="kc.mcafee.com" />
+	<target host="service.mcafee.com" />
+	<target host="shop.mcafee.com" />
+	<target host="us.mcafee.com" />
+	<target host="www.mcafee.com" />
+
+		<!--	At least the homepage redirects to http.
 								-->
-		<exclusion pattern="^http://service\.mcafee\.com/(?!css/|images/|js/|locale/|(?:Script|Web)Resource\.axd)" />
+		<exclusion pattern="^http://service\.mcafee\.com/(?!CSS/|css/|images/|locale/|(?:Script|Web)Resource\.axd)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://service.mcafee.com/Default.aspx" />
+			<test url="http://service.mcafee.com//Default.aspx" />
+			<test url="http://service.mcafee.com/FAQDocument.aspx" />
+			<test url="http://service.mcafee.com/MobileSupportHome.aspx" />
+			<test url="http://service.mcafee.com/faq/country.html" />
+			<test url="http://service.mcafee.com/faqdocument.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://service.mcafee.com/css/screen.css" />
+			<test url="http://service.mcafee.com/images/logo-header.png" />
+
+		<!--	Redirects to http
+					-->
+		<!--exclusion pattern="^http://www\.mcafee\.com/(?:$|error-pages/404\.aspx|us/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.mcafee\.com/+(?!favicon\.ico|img/|static/|\w\w/img/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.mcafee.com/us/business-home.aspx" />
+			<test url="http://www.mcafee.com/us/partners.aspx" />
+			<test url="http://www.mcafee.com/us/products/data-center-security/index.aspx" />
+			<test url="http://www.mcafee.com/us/products/email-and-web-security/index.aspx" />
+			<test url="http://www.mcafee.com/us/products/network-security-platform.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.mcafee.com/favicon.ico" />
+			<test url="http://www.mcafee.com/img/logo-intel-security.png" />
+			<test url="http://www.mcafee.com/static/css/screen_small.css" />
+			<test url="http://www.mcafee.com/us/img/logo-mcafee-shield.png" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.mcafee\.com$" name="^(?:AffID|Currency|HPrst|HRntm|Locale|SessionInfo|SiteID|lUsrCtxPersist|lUsrCtxSession||langid|session_data)$" /-->
 	<!--securecookie host="^kc\.mcafee\.com$" name="^(JSESSIONID|OAMAuthnCookie_kc\.mcafee\.com:443|ROUTEID)$" /-->
 
-	<!--	If we fetch a cookie over http,
-		we don't secure it, so there's
-		no need to play acrobatics in
-		order to avoid doing so.
-			-->
-	<securecookie host="^(?:.*\.)?mcafee\.com$" name=".+" />
+	<securecookie host=".+\.mcafee\.com$" name=".+" />
 
 
-	<!--	/$ redirects to http.  We give
-		up, let it redirect to us/, and
-		don't rewrite to https once there.
-
-		Bug: https://trac.torproject.org/projects/tor/ticket/5686
-			-->
-	<rule from="^http://(?:www\.)?mcafee\.com/$"
-		to="https://www.mcafee.com/us/" />
-
-	<rule from="^http://(?:www\.)?mcafee\.com/"
-		to="https://www.mcafee.com/" />
-
-	<rule from="^http://(beta|blogs|community|home|(?:secure)?images|kc|service|shop|us)\.mcafee\.com/"
-		to="https://$1.mcafee.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

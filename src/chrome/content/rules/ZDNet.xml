@@ -28,7 +28,7 @@
 			- bwp			(refused)
 			- cdn-origin *
 			- cdn-static		(redirects to cdn-origin, Akamai)
-			- downloads *
+			- downloads **
 			- i **			(not on www nor origin)
 			- origin *
 			- www			(redirects to http, valid cert)
@@ -46,11 +46,39 @@
 	** 504, akamai
 	*** Shows fileupload.intl.cbs.com; mismatched, CN: *.intl.cbs.com)
 
+
+	Insecure cookies are set for these domains:
+
+		- .zdnet.com
+
 -->
 <ruleset name="ZDNet (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.zdnet.com" />
+
+	<!--	Complications:
+				-->
 	<target host="zdnet.com.au" />
-	<target host="*.zdnet.com.au" />
+	<target host="om.zdnet.com.au" />
+	<target host="www.zdnet.com.au" />
+
+		<exclusion pattern="^http://(?:www\.)?zdnet\.com\.au/(?!secure-au\.imrworldwide\.com/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://zdnet.com.au/blogs/nerdcam/" />
+
+			<!--	-ve
+					-->
+			<test url="http://zdnet.com.au/secure-au.imrworldwide.com/" />
+			<test url="http://www.zdnet.com.au/secure-au.imrworldwide.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zdnet\.com$" name="^fly_session$" /-->
 
 
 	<rule from="^http://(?:www\.)?zdnet\.com\.au/secure-au\.imrworldwide\.com/"
@@ -58,5 +86,8 @@
 
 	<rule from="^http://om\.zdnet\.com\.au/"
 		to="https://zdau-zdnetbeta.122.2o7.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
