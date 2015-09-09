@@ -124,6 +124,8 @@
 		- www.cdc.gov				(Akamai; "temporarily unavailable")
 		- factfinder2.census.gov
 		- (www.)civicfed.gov			(cert: secure115.inmotionhosting.com; shows that domain's data)
+		- downloads.cms.gov			(unable to connect)
+		- innovation.cms.gov			(times out)
 		- (www.)compliance.gov			(cert: Plesk; shows default Plesk page)
 		- (www.)copyright.gov			(cert: wwws.loc.gov; shows that domain's data)
 		- (www.)cybercrime.gov			(ssl_error_rx_record_too_long)
@@ -138,6 +140,8 @@
 		- www.gpo.gov				(times out)
 		- archive.hhs.gov			(timeout)
 		- aspe.hhs.gov				(refused)
+		- cob.cms.hhs.gov			(cert mismatch)
+		- data.cms.hhs.gov			(cert mismatch; cert is for data.cms.gov)
 		- www.hhs.gov				(Akamai, shows 404 page)
 		- appropriations.house.gov		(400)
 		- clerk.house.gov			(timeout)
@@ -189,12 +193,29 @@
 	<target host="census.gov" />
 	<target host="www.census.gov" />
 	<target host="cms.gov" />
+	<target host="assets.cms.gov" />
+	<target host="data.cms.gov" />
+	<target host="dnav.cms.gov" />
+	<target host="ehrincentives.cms.gov" />
+	<target host="eidm.cms.gov" />
+	<target host="marketplace.cms.gov" />
+	<target host="openpaymentsdata.cms.gov" />
+	<target host="portal.cms.gov" />
+	<target host="qhpcahps.cms.gov" />
 	<target host="questions.cms.gov" />
 	<target host="www.cms.gov" />
+	<target host="www1d.cms.gov" />
 	<target host="safeharbor.export.gov" />
 	<target host="genome.gov" />
 	<target host="www.genome.gov" />
 	<target host="cms.hhs.gov" />
+	<target host="applications.cms.hhs.gov" />
+	<target host="cob.cms.hhs.gov" />
+	<target host="www.cob.cms.hhs.gov" />
+	<target host="data.cms.hhs.gov" />
+	<target host="nppes.cms.hhs.gov" />
+	<target host="pecos.cms.hhs.gov" />
+	<target host="webinar.cms.hhs.gov" />
 	<target host="www.cms.hhs.gov" />
 	<target host="intelligence.house.gov" />
 	<target host="wwws.loc.gov" />
@@ -215,7 +236,9 @@
 
 	<securecookie host="^research\.archives\.gov$"
 			name=".*" />
-	<securecookie host="^(questions|www)\.cms\.gov$"
+	<securecookie host="^(assets|data|dnav|ehrincentives|eidm|marketplace|openpaymentsdata|portal|qhpcahps|questions|www|www1d)\.cms\.gov$"
+			name=".*" />
+	<securecookie host="^(applications|(www\.cob)|nppes|pecos|webinar)\.cms\.hhs\.gov$"
 			name=".*" />
 	<securecookie host="^safeharbor\.export\.gov$"
 			name=".*" />
@@ -236,8 +259,11 @@
 	<rule from="^http://(?:www\.)?(census|genome|medicare|mymedicare)\.gov/"
 		to="https://www.$1.gov/"/>
 
-	<rule from="^http://(?:www\.)?cms(?:\.hhs)?\.gov/"
-		to="https://www.cms.gov/"/>
+	<rule from="^http://(www\.)?cob\.cms\.hhs\.gov/"
+		to="https://www.cob.cms.hhs.gov/" />
+
+	<rule from="^http://((data|www)\.)?cms(?:\.hhs)?\.gov/"
+		to="https://$1cms.gov/"/>
 
 	<rule from="^http:"
 		to="https:" />
