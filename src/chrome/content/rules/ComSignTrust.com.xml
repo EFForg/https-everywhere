@@ -1,24 +1,32 @@
 <!--
-	^: blank
+	Insecure cookies are set for these domains and hosts:
+
+		- .comsigntrust.com
+		- blog.comsigntrust.com
+		- www.comsigntrust.com
 
 -->
 <ruleset name="ComSignTrust.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="comsigntrust.com" />
-	<target host="*.comsigntrust.com" />
+	<target host="blog.comsigntrust.com" />
+	<target host="www.comsigntrust.com" />
+
+		<test url="http://www.comsigntrust.com/support/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(blog|www)\.comsigntrust\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.comsigntrust\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^blog\.comsigntrust\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.comsigntrust\.com$" name="^(?:___utm[abv]\w+|PHPSESSID)$" /-->
 
 	<securecookie host="^(?:blog|www)?\.comsigntrust\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?comsigntrust\.com/"
-		to="https://www.comsigntrust.com/" />
-
-	<rule from="^http://blog\.comsigntrust\.com/"
-		to="https://blog.comsigntrust.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
