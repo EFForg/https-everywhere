@@ -15,7 +15,7 @@ fi
 source utils/mktemp.sh
 
 # dummy Jetpack addon that contains tests
-TEST_ADDON_PATH=./https-everywhere-tests/
+TEST_ADDON_PATH=./test/firefox/
 
 # We'll create a Firefox profile here and install HTTPS Everywhere into it.
 PROFILE_DIRECTORY="$(mktemp -d)"
@@ -30,7 +30,7 @@ XPI_NAME="`ls -tr pkg/*-eff.xpi | tail -1`"
 # Set up a skeleton profile and then install into it.
 # The skeleton contains a few files required to trick Firefox into thinking
 # that the extension was fully installed rather than just unpacked.
-rsync -a https-everywhere-tests/test_profile_skeleton/ $PROFILE_DIRECTORY
+rsync -a test/firefox/test_profile_skeleton/ $PROFILE_DIRECTORY
 unzip -qd $HTTPSE_INSTALL_DIRECTORY $XPI_NAME
 
 die() {
