@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://developer.here.net/ => https://developer.here.net/: (6, 'Could not resolve host: developer.here.net')
 	For other Nokia coverage, see Nokia.xml.
 
 
@@ -13,10 +11,8 @@ Fetch error: http://developer.here.net/ => https://developer.here.net/: (6, 'Cou
 
 		- here.com subdomains:
 
-			- ^ ¹
 			- static ²
 			- stg.static ²
-			- stg ¹
 
 		- static.here.sc ¹
 
@@ -24,58 +20,68 @@ Fetch error: http://developer.here.net/ => https://developer.here.net/: (6, 'Cou
 	² Redirects to here.com
 
 
-	Fully covered domains:
+	These altnames don't exist:
 
-		- here.com subdomains:
-
-			- developer
-			- qa.developer
-			- m
-			- stg.m
-
-		- developer.here.net
+		- dev.developer.here.com
+		- edit.dev.developer.here.com
+		- qa.developer.here.com
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- here.com subdomains:
-
-			- ^
-			- developer
-			- m
-			- stg.m
-			- static
-			- stg.static
-			- stg
-
-		- developer.here.net
-
-
-	Mixed content:
-
-		- Images on m from [234].maps.nlp.nokia.com *
-
-	* Doesn't trip MCB
+		- here.com
+		- .here.com
+		- developer.here.com
+		- npmrds.ext.here.com
+		- help.here.com
+		- m.here.com
+		- stg.m.here.com
+		- static.here.com
+		- stg.static.here.com
+		- stg.here.com
+		- www.here.com
 
 -->
-<ruleset name="Here.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Here.com (partial)">
 
-	<target host="*.here.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://here\.com/($|navteq-redirect)" /-->
-	<target host="developer.here.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="here.com" />
+	<target host="st.backstage.here.com" />
+	<target host="cms.here.com" />
+	<target host="lts.cms.here.com" />
+	<target host="company.here.com" />
+	<target host="developer.here.com" />
+
+	<target host="dt.developer.here.com" />
+	<target host="dv.developer.here.com" />
+	<target host="st.developer.here.com" />
+
+	<target host="npmrds.ext.here.com" />
+	<target host="tnm.ext.here.com" />
+	<target host="help.here.com" />
+	<target host="legal.here.com" />
+	<target host="m.here.com" />
+	<target host="stg.m.here.com" />
+	<target host="pages.here.com" />
+	<target host="reporting.here.com" />
+	<target host="stg.here.com" />
+	<target host="www.here.com" />
 
 
-	<securecookie host="^(?:developer|m|stg\.m)\.here\.com$" name=".+" />
-	<securecookie host="^developer\.here\.net$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:m|stg\.m|static|stg\.static|stg)\.)?here\.com$" name="^MOO_SESSION-\d+$" /-->
+	<!--securecookie host="^\.here\.com$" name="^(?:here_access|here_auth)$" /-->
+	<!--securecookie host="^developer\.here\.com$" name="^XSRF-TOKEN$" /-->
+	<!--securecookie host="^help\.here\.com$" name="^tx_herehelp_ldt$" /-->
+	<!--securecookie host="^npmrds\.ext\.here\.com$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^www\.here\.com$" name="^userSplitId$" /-->
+
+	<securecookie host="^(?:.*\.)?here\.com$" name=".+" />
 
 
-	<rule from="^http://((?:qa\.)?developer|m|stg\.m)\.here\.com/"
-		to="https://$1.here.com/" />
-
-	<rule from="^http://developer\.here\.net/"
-		to="https://developer.here.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
