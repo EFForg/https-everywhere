@@ -17,7 +17,7 @@ if [ "$1" == "--justrun" ]; then
 	shift
 	./makecrx.sh
 	echo "running Chromium"
-	./utils/mktemp.sh
+	source utils/mktemp.sh
 
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
