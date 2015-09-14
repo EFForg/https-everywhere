@@ -31,7 +31,7 @@ git submodule update
 
 # Install Python packages
 pip install --user --no-allow-insecure --no-allow-external -r requirements.txt
-cd https-everywhere-checker
+cd test/rules
 pip install --user -r requirements.txt
 cd -
 cd test/chromium
