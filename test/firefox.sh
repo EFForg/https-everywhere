@@ -61,7 +61,11 @@ pushd $TEST_ADDON_PATH
 if [ "$1" == "--justrun" ]; then
   echo "running firefox"
   shift
-  firefox -no-remote -profile "$PROFILE_DIRECTORY" "$@"
+  if [ $(uname) == Darwin ]; then
+    open /Applications/Firefox.app --wait-apps --new --args -no-remote -profile "$PROFILE_DIRECTORY" "$@"
+  else
+    firefox -no-remote -profile "$PROFILE_DIRECTORY" "$@"
+  fi
 else
   echo "running tests"
   cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
