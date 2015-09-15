@@ -41,6 +41,9 @@ elif sys.platform.startswith("linux"):
         #Debian is lowercase when platform.linux_distribution() is used.
         #This is not a mistake.
         chromedriver_path = "/usr/lib/chromium/chromedriver"
+    else:
+        # Let's hope it's in the user's path.
+        chromedriver_path = "chromedriver"
 else:
     # Let's hope it's in the user's path.
     chromedriver_path = "chromedriver"
