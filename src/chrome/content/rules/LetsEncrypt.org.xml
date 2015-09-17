@@ -1,0 +1,22 @@
+<!--
+    Notes:
+        Currently helloworld.letsencrypt.org shows an error as the LE root is not included
+        and the cross-signature is not in place too. However this will be changed later.
+-->
+<ruleset name="Let's Encrypt">
+    <target host="letsencrypt.org" />
+    <target host="www.letsencrypt.org" />
+    <target host="helloworld.letsencrypt.org" />
+    <target host="community.letsencrypt.org" />
+
+    <!--
+        testing URl which does not redirect to HTTPS by default, see
+        https://community.letsencrypt.org/t/cps-available-only-via-http/1020
+    -->
+    <test url="http://letsencrypt.org/repository/" />
+
+    <securecookie host="^(www.|community.)?letsencrypt\.org/$" name=".+" />
+
+    <rule from="^http:"
+            to="https:" />
+</ruleset>
