@@ -38,38 +38,42 @@
 	* 404; mismatched, CN: *.netdna-ssl.com
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- blog
-		- cdn		(→ pi)
-		- form-cdn	(→ pi)
-		- go
-		- help
-		- pi
-		- storage	(→ s3.amazonaws.com)
-		- www-cdn	(→ www)
-		- www-cdn[1-3]	(→ www)
-
-
 	pi sets a visitor_id\d{4} tracking cookie on whichever domain it is
 	loaded from.
 
 -->
-<ruleset name="Pardot">
+<ruleset name="Pardot.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="pardot.com" />
-	<target host="*.pardot.com" />
+	<target host="blog.pardot.com" />
+	<target host="go.pardot.com" />
+	<target host="help.pardot.com" />
+	<target host="pi.pardot.com" />
+	<target host="www.pardot.com" />
 
+	<!--	Complications:
+				-->
+	<target host="cdn.pardot.com" />
+	<target host="form-cdn.pardot.com" />
+	<target host="storage.pardot.com" />
+	<target host="www-cdn.pardot.com" />
+	<target host="www-cdn1.pardot.com" />
+	<target host="www-cdn2.pardot.com" />
+	<target host="www-cdn3.pardot.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pardot\.com$" name="^(?:visitor_id\d+|__utm\w)$" /-->
+	<!--securecookie host="^go\.pardot\.com$" name="^pardot$" /-->
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.pardot\.com$" name="^(?:visitor_id\d+|__utm\w)$" />
 	<securecookie host="^(?:go|pi|www)\.pardot\.com$" name=".+" />
 
-
-	<rule from="^http://((?:blog|go|help|pi|www)\.)?pardot\.com/"
-		to="https://$1pardot.com/" />
 
 	<rule from="^http://(?:form-)?cdn\.pardot\.com/"
 		to="https://pi.pardot.com/" />
@@ -79,5 +83,8 @@
 
 	<rule from="^http://www-cdn\d?\.pardot\.com/"
 		to="https://www.pardot.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

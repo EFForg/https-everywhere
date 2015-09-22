@@ -12,10 +12,14 @@
 
 		- in *.baidu.com:
 
+			- adm *
 			- apistore *
 			- baike *
+			- xuxuhong.baijia *
 			- ce *
+			- developer *
 			- dida *
+			- duokoo *
 			- e *
 			- eiv *
 			- gimg *
@@ -30,21 +34,28 @@
 			- index *
 			- italk *
 			- iwan
+			- jingyan *
 			- lbsyun *
 			- bbs.lbsyun *
 			- libs *
 			- licai *
 			- map *
+			- mo *
 			- mp3 *
 			- music *
 			- news *
+			- op *
+			- ours *
 			- pos *
 			- qianbao *
 			- qingting *
+			- r *
 			- rj *
+			- share *
 			- bdimg.share *
 			- shouji *
 			- siteapp *
+			- m.siteapp *
 			- t1[012] *
 			- talent *
 			- tieba *
@@ -59,9 +70,11 @@
 			- video *
 			- wanba *
 			- wangmeng *
-			- wap *
+			- wapmap *
+			- wapp *
 			- wenku *
 			- wubi *
+			- xteam *
 			- xueshu	(405)
 			- yunjiasu *
 			- yuqing *
@@ -76,8 +89,8 @@
 	Problematic hosts:
 
 		- ^ *
+		- bs ³
 		- hm ¹
-		- developer ²
 		- financestatic ²
 		- ir ²
 		- pan **
@@ -100,32 +113,18 @@
 	* Some pages redirect to http
 
 
-	Fully covered hosts:
-
-		- (www.)?	(^ → www)
-		- 1
-		- developer	(→ openapi)
-		- cpro
-		- hm
-		- financestatic	(→ 8.baidu.com)
-		- open2
-		- openapi
-		- passport
-		- qianbao
-		- sp0
-		- wallet
-
-
 	Insecure cookies are set for these domains and hosts:
 
 		- baidu.com
 		- .baidu.com
 		- 8.baidu.com
+		- .m.baidu.com
 		- open2.baidu.com
 		- openapi.baidu.com
 		- www.baidu.com
 		- .www.baidu.com
 		- .yun.baidu.com
+		- zhanzhang.baidu.com
 		- zoo.baidu.com
 
 
@@ -137,8 +136,12 @@
 			- openapi from gimg ²
 			- openapi from hiphotos
 			- openapi from apps.bdimg.com ¹
+			- m, m1, wap from m.baidu.com
+			- zhanzhang from bs.baidu.com *
+			- zhanzhang from op.baidu.com ²
 
 	¹ Secured by us
+	* Not secured by us <= missing certificate chain
 	² Unsecurable <= dropped
 
 -->
@@ -149,18 +152,26 @@
 	<target host="1.baidu.com" />
 	<target host="8.baidu.com" />
 	<target host="baifubao.baidu.com" />
+	<!--target host="bs.baidu.com" /-->
 	<target host="cpro.baidu.com" />
 	<target host="hm.baidu.com" />
+	<target host="m.baidu.com" />
+	<target host="m1.baidu.com" />
 	<target host="open2.baidu.com" />
 	<target host="openapi.baidu.com" />
 	<!--target host="pan.baidu.com" /-->
 	<target host="passport.baidu.com" />
+	<target host="pcs.baidu.com" />
+	<target host="c.pcs.baidu.com" />
+	<target host="d.pcs.baidu.com" />
 	<target host="qianbao.baidu.com" />
 	<target host="sp0.baidu.com" />
 	<!--target host="tianyan.baidu.com" /-->
 	<target host="wallet.baidu.com" />
+	<target host="wap.baidu.com" />
 	<target host="www.baidu.com" />
 	<!--target host="yun.baidu.com" /-->
+	<target host="zhanzhang.baidu.com" />
 
 	<!--	Complications:
 				-->
@@ -199,6 +210,20 @@
 			<test url="http://8.baidu.com/content/resource/qcode_v2.png" />
 			<test url="http://8.baidu.com/gf_index/detail?prdCode=000827" />
 
+		<!--	$ is no longer identical.
+							-->
+		<exclusion pattern="^http://developer\.baidu\.com/+(?!static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://developer.baidu.com/dev" />
+			<test url="http://developer.baidu.com/forum" />
+			<test url="http://developer.baidu.com/platform/catalog/navigation-c/node/n301" />
+
+			<!--	-ve:
+					-->
+			<test url="http://developer.baidu.com/static/assets/v3/push.png" />
+
 		<test url="http://hm.baidu.com/h.js" />
 
 
@@ -206,14 +231,16 @@
 					-->
 	<!--securecookie host="^\.baidu\.com$" name="^(BAIDUID|BIDUPSID|H_PS_PSSID)$" /-->
 	<!--securecookie host="^8\.baidu\.com$" name="^superdsid$" /-->
+	<securecookie host="^\.m\.baidu\.com$" name="^__bsi$" />
 	<!--securecookie host="^open2\.baidu\.com$" name="^PRISON_COOKIE$" /-->
 	<!--securecookie host="^openapi\.baidu\.com$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^\.yun\.baidu\.com$" name="^PANWEB$" /-->
 	<!--securecookie host="^www\.baidu\.com$" name="^(BD_HOME|BDSVRTM)" /-->
 	<!--securecookie host="^\.www\.baidu\.com$" name="^__bsi$" /-->
+	<securecookie host="^zhanzhang\.baidu\.com$" name="^SITEMAPSESSID$" />
 	<!--securecookie host="^zoo\.baidu\.com$" name="^BAEID$" /-->
 
-	<securecookie host="^(?:open2\.|openapi|\.?www)\.baidu\.com$" name=".+" />
+	<securecookie host="^(?:open2\.|openapi|\.?www|zhanzhang)\.baidu\.com$" name=".+" />
 
 
 	<rule from="^http://baidu\.com/"

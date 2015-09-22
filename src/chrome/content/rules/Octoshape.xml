@@ -1,25 +1,28 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ond.octoshape.com => https://ond.octoshape.com: (51, "SSL: no alternative certificate subject name matches target host name 'ond.octoshape.com'")
-Fetch error: http://streams.cdn.octoshape.net => https://streams.cdn.octoshape.net: (51, "SSL: no alternative certificate subject name matches target host name 'streams.cdn.octoshape.net'")
+	Problematic domains:
 
+		- ond.octoshape.com ¹
+		- statsrvs.octoshape.com ¹
+
+		- octoshape.net ²
+		- www.octoshape.net ²
+		- streams.cdn.octoshape.net ²
+
+	¹: Weak DH parameters
+	²: Bad CN in cert
+
+	Note: It would appear that the content on (www.)octoshape.net
+	      is identical to that on (www.)octoshape.com, so that one
+	      could probably redirect the .net version to the .com
+              version.
 -->
-<ruleset name="Octoshape"  default_off='failed ruleset test'>
+<ruleset name="Octoshape">
 
-<target host="octoshape.com"/>
-<target host="*.octoshape.com"/>
-<target host="*.octoshape.net"/>
-
-<exclusion pattern="^http://(statsrvs|www)\.octoshape.net"/>
+	<target host="octoshape.com" />
+	<target host="www.octoshape.com" />
+	<target host="support.octoshape.com" />
 
 	<rule from="^http:"
 		to="https:" />
-
-	<test url="http://statsrvs.octoshape.net/" />
-	<test url="http://www.octoshape.net" />
-	<test url="http://www.octoshape.com" />
-	<test url="http://ond.octoshape.com" />
-	<test url="http://streams.cdn.octoshape.net" />
 
 </ruleset>

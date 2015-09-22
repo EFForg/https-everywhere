@@ -49,11 +49,4 @@ else
   die "Validation of rulesets against $GRAMMAR failed."
 fi
 
-if bash compare-locales.sh >&2
-then
-  echo Validation of included locales completed. >&2
-else
-  die "Validation of locales failed."
-fi
-
 cp "$INPUT" ../src/defaults/rulesets.sqlite

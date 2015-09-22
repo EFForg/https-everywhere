@@ -1,9 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://autobytel.com/ => https://autobytel.com/: (35, 'Unknown SSL protocol error in connection to autobytel.com:443 ')
-Fetch error: http://hybrid.autobytel.com/ => https://hybrid.autobytel.com/: (35, 'Unknown SSL protocol error in connection to hybrid.autobytel.com:443 ')
-
 	For rules causing broken MCB, see Autobytel.com-falsemixed.xml.
 
 
@@ -18,21 +13,15 @@ Fetch error: http://hybrid.autobytel.com/ => https://hybrid.autobytel.com/: (35,
 
 	Problematic hosts in *autobytel.com:
 
-		- new ¹
-		- test-www ²
+		- ^ ¹
+		- hybrid ¹
+		- new ²
+		- test-www ³
 		- www ²
 
-	¹ Mixed css
-	² Mismatched
-
-
-	Fully covered hosts in *autobytel.com:
-
-		- ^
-		- hybrid
-		- images
-		- img
-		- static
+	¹ Handshake fails
+	² Mixed css
+	³ Mismatched
 
 
 	These altnames don't exist:
@@ -43,7 +32,6 @@ Fetch error: http://hybrid.autobytel.com/ => https://hybrid.autobytel.com/: (35,
 
 	Insecure cookies are set for these hosts:
 
-		- hybrid.autobytel.com
 		- new.autobytel.com
 		- www.autobytel.com
 
@@ -62,6 +50,7 @@ Fetch error: http://hybrid.autobytel.com/ => https://hybrid.autobytel.com/: (35,
 			- new from images.autobytel.com ¹
 			- www from img.autobytel.com ¹
 			- new from new.autobytel.com ¹
+			- www from img.youtube.com
 
 		- Bugs, on:
 
@@ -72,26 +61,39 @@ Fetch error: http://hybrid.autobytel.com/ => https://hybrid.autobytel.com/: (35,
 	² Unsecurable
 
 -->
-<ruleset name="Autobytel.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Autobytel.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
-	<target host="autobytel.com" />
-	<target host="hybrid.autobytel.com" />
 	<target host="images.autobytel.com" />
 	<target host="img.autobytel.com" />
 	<!--target host="new.autobytel.com" /-->
 	<target host="static.autobytel.com" />
+	<!--target host="www.autobytel.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="autobytel.com" /-->
+	<!--target host="hybrid.autobytel.com" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^hybrid\.autobytel\.com$" name="^cweb$" /-->
 	<!--securecookie host="^new\.autobytel\.com$" name="^(\.ASPXANONYMOUS|ASP\.NET_SessionId|atpweb|device_detect)$" /-->
 	<!--securecookie host="^www\.autobytel\.com$" name="^(af_id|m_detect|s_dom)$" /-->
 
-	<securecookie host="^hybrid\.autobytel\.com$" name=".+" />
 
+	<!--rule from="^http://autobytel\.com/"
+		to="https://www.autobytel.com/" /-->
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<!--rule from="^http://hybrid\.autobytel\.com/[^?]*"
+		to="https://www.autobytel.com/green-cars/" /-->
+
+		<!--test url="http://hybrid.autobytel.com//" /-->
+		<!--test url="http://hybrid.autobytel.com/?" /-->
 
 	<rule from="^http:"
 		to="https:" />

@@ -3,7 +3,10 @@
 language: python
 python:
   - "2.7"
-cache: pip
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/virtualenv/python2.7_with_system_site_packages
 addons:
   apt:
     packages:
@@ -11,15 +14,22 @@ addons:
       - python-dev
       - libcurl4-openssl-dev
       - python-lxml
+      - python-software-properties
+      - chromium-browser
   firefox: "37.0"
 virtualenv:
   system_site_packages: true
 install:
-  - pip install -r https-everywhere-checker/requirements.txt
-before_script:
-  - sh -e /etc/init.d/xvfb start
+  - pip install -r test/rules/requirements.txt
+  - pip install -r test/chromium/requirements.txt
 env:
   - DISPLAY=':99.0'
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - wget https://chromedriver.storage.googleapis.com/2.12/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - mv chromedriver test/chromium/chromedriver
 script:
   - ./test.sh
 sudo: false
@@ -33,4 +43,3 @@ notifications:
         - "irc.oftc.net#https-everywhere"
       on_success: change
       on_failure: change
-

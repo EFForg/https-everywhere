@@ -1,4 +1,7 @@
 <!--
+	For rules causing false/broken MCB, see Statcounter.com-falsemixed.xml.
+
+
 	Nonfunctional subdomains:
 
 		- gs	(redirects to http)
@@ -6,10 +9,12 @@
 
 	Problematic subdomains;
 
+		- blog ¹
 		- www *
 		- www-beta *
 
-	* 403; mismatched, CN: ssl2.cdngc.net
+	¹ Mixed css
+	* 403
 
 
 	Fully covered subdomains:
@@ -33,9 +38,14 @@
 
 	<target host="statcounter.com" />
 	<target host="*.statcounter.com" />
-		<!--exclusion pattern="^http://gs\.statcounter\.com/" /-->
+
+		<exclusion pattern="^http://(?:blog|gs)\.statcounter\.com/" />
+
+			<test url="http://blog.statcounter.com/" />
+			<test url="http://gs.statcounter.com/" />
 
 		<test url="http://c.statcounter.com/" />
+		<test url="http://c17.statcounter.com/counter.php?sc_project=" />
 		<test url="http://c20.statcounter.com/" />
 		<test url="http://c40.statcounter.com/" />
 
@@ -53,8 +63,8 @@
 		<test url="http://www.statcounter.com/" />
 		<test url="http://www-beta.statcounter.com/" />
 
-	<rule from="^http://(?!gs\.)([^/:@\.]+\.)?statcounter\.com/"
-		to="https://$1statcounter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
 

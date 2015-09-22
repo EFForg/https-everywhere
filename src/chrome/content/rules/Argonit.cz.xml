@@ -9,24 +9,31 @@
 	* Works; mismatched, CN: www.abclinuxu.cz
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)	(www → ^)
-		- linkbox
-		- massmail
-		- wiki
+		- argonit.cz
+		- www.argonit.cz
 
 -->
 <ruleset name="Argonit.cz" default_off="mismatched">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="argonit.cz" />
-	<target host="*.argonit.cz" />
+	<target host="linkbox.argonit.cz" />
+	<target host="massmail.argonit.cz" />
+	<target host="wiki.argonit.cz" />
+	<target host="www.argonit.cz" />
 
 
-	<securecookie host=".+\.argonit\.cz$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(?:www\.)?argonit\.cz$" name="^JSESSIONID$" /-->
+
+	<securecookie host="(?:.+\.)?argonit\.cz$" name=".+" />
 
 
-	<rule from="^http://(?:((?:linkbox|massmail|wiki)\.)|www\.)?argonit\.cz/"
-		to="https://$1argonit.cz/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

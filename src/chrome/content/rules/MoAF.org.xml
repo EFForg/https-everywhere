@@ -1,19 +1,43 @@
 <!--
 	Museum of American Finance
 
+	For problematic rules, see MoAF.org-problematic.xml.
 
-	Expired 2012
 
+	(www.)?: Expired 2012
 	^: cert only matches www
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- shop.moaf.org
+		- .shop.moaf.org
+		- www.moaf.org
+
 -->
-<ruleset name="MoAF.org" default_off="expired">
+<ruleset name="MoAF.org (partial)">
 
-	<target host="moaf.org" />
-	<target host="www.moaf.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="shop.moaf.org" />
+	<!--target host="www.moaf.org" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="moaf.org" /-->
 
 
-	<rule from="^http://(?:www\.)?moaf\.org/"
-		to="https://www.moaf.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^shop\.moaf\.org$" name="(?:CFGLOBALS|CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^\.shop\.moaf\.org$" name="CPSESSIONID$" /-->
+	<!--securecookie host="^www\.moaf\.org$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="^(?:\.?shop|www)\.moaf\.org$" name=".+" /-->
+	<securecookie host="^\.?shop\.moaf\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
