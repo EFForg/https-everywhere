@@ -1,19 +1,13 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://cir.ca/ => https://cir.ca/: (51, "SSL: no alternative certificate subject name matches target host name 'cir.ca'")
+	For other Circa News coverage, see Circa_News.com.xml.
+
 
 	CDN buckets:
 
 		- s3-us-west-2.amazonaws.com/titleimages.cir.ca/
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- backupblog
-		- blog
-		- help
+	(www.)?cir.ca: Mismatched
 
 
 	Mixed content:
@@ -32,21 +26,32 @@ Fetch error: http://cir.ca/ => https://cir.ca/: (51, "SSL: no alternative certif
 	* Secured by us
 
 -->
-<ruleset name="Cir.ca" default_off='failed ruleset test'>
+<ruleset name="Cir.ca">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="backupblog.cir.ca" />
+	<target host="blog.cir.ca" />
+	<target host="help.cir.ca" />
+
+	<!--	Complications:
+				-->
 	<target host="cir.ca" />
-	<target host="*.cir.ca" />
+	<target host="www.cir.ca" />
 
 
-	<!--	Not secured by server:
+	<securecookie host="^\.cir\.ca$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
 					-->
-	<!--securecookie host="^cir\.ca$" name="^gacid$" /-->
-	<!--securecookie host="^(www\.)?cir\.ca$" name="^auth_token$" /-->
+	<rule from="^http://(?:www\.)?cir\.ca/+"
+		to="https://circanews.com/" />
 
-	<securecookie host="^(?:\.|www\.)?cir\.ca$" name=".+" />
+		<test url="http://cir.ca//" />
 
-
-	<rule from="^http://((?:backupblog|blog|help|www)\.)?cir\.ca/"
-		to="https://$1cir.ca/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

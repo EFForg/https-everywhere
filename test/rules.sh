@@ -18,17 +18,17 @@ source utils/mktemp.sh
 
 TMP="$(mktemp)"
 trap 'rm "$TMP"' EXIT
-if ! [ -d https-everywhere-checker ] ; then
+if ! [ -d test/rules ] ; then
   echo "Submodule https-everywhere-checker is missing. Run"
   echo "./install-dev-dependencies.sh"
   exit 1
 fi
 if [ $# -gt 0 ] ; then
-  exec python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
-    https-everywhere-checker/coverage.checker.config "$@"
+  exec python2.7 test/rules/src/https_everywhere_checker/check_rules.py \
+    test/rules/coverage.checker.config "$@"
 fi
-if ! python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py \
-      https-everywhere-checker/coverage.checker.config; then
+if ! python2.7 test/rules/src/https_everywhere_checker/check_rules.py \
+      test/rules/coverage.checker.config; then
   echo "Ruleset test coverage was insufficient."
   echo ""
   echo "Under the new ruleset testing rules (February 2015), any modified ruleset"
