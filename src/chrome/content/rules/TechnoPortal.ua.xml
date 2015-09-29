@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://technoportal.ua/ => https://technoportal.ua/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	Problematic subdomains:
 
 		- catalogue *
@@ -30,14 +28,30 @@ Fetch error: http://technoportal.ua/ => https://technoportal.ua/: (60, 'SSL cert
 	² Rule disabled by default
 
 -->
-<ruleset name="TechnoPortal.ua (partial)" default_off='failed ruleset test'>
+<ruleset name="TechnoPortal.ua (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="technoportal.ua" />
-	<target host="*.technoportal.ua" />
-		<!--
-			Differs from (www.)?
+	<target host="www.technoportal.ua" />
+
+	<!--	Complications:
+				-->
+	<target host="i.technoportal.ua" />
+
+		<!--	Differs from (www.)?
 						-->
 		<exclusion pattern="^http://i\.technoportal\.ua/+(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://i.technoportal.ua//" />
+			<test url="http://i.technoportal.ua//?" />
+			<test url="http://i.technoportal.ua/?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://i.technoportal.ua/i/logo426.png?r=" />
 
 
 	<!--	Not secured by server:
@@ -49,7 +63,10 @@ Fetch error: http://technoportal.ua/ => https://technoportal.ua/: (60, 'SSL cert
 	<securecookie host="^\.technoportal\.ua$" name="^(TPFE_(?:event|page|referer)|cookiesAgree)$" />
 
 
-	<rule from="^http://(?:i\.|(www\.))?technoportal\.ua/"
-		to="https://$1technoportal.ua/" />
+	<rule from="^http://i\.technoportal\.ua/"
+		to="https://technoportal.ua/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

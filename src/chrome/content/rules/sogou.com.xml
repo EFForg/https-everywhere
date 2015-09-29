@@ -1,7 +1,61 @@
+<!--
+	Nonfunctional hosts in *sogou.com:
+
+		- app ¹
+		- go ¹
+		- ie ¹
+		- mail ²
+		- map ¹
+		- pic ¹
+		- wan ¹
+
+	¹ Shows default page
+	² Shows mail.sohu.com
+
+
+	Problematic hosts in *sogou.com:
+
+		- passport ¹ ²
+
+	¹ Expired
+	² Missing certificate chain
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .sogou.com
+		- www.sogou.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- 123 from p\d.123.sogoucdn.com ¹
+			- 123 from upd\d.sogoucdn.com ²
+
+	¹ Unsecurable <= refused
+	² Not secured by us <= mismatched
+
+-->
 <ruleset name="sogou.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="sogou.com"/>
-	<target host="www.sogou.com"/>
 	<target host="123.sogou.com"/>
+	<target host="account.sogou.com" />
+	<target host="img.store.sogou.com" />
+	<target host="www.sogou.com"/>
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sogou\.com$" name="^(?:IPLOC|SUID)$" /-->
+	<!--securecookie host="^www\.sogou\.com$" name="^ABTEST$" /-->
+
+	<securecookie host="^www\.sogou\.com$" name="" />
+
 
 	<rule from="^http:"
 		to="https:"/>

@@ -38,6 +38,8 @@ plus a plain rewrite from "^http:" to "^https:".
 
 Prefer dashes over underscores in filenames. Dashes are easier to type.
 
+Use tabs and double quotes (`"`, not `'`).
+
 When matching an arbitrary DNS label (a single component of a hostname), prefer
 `([\w-]+)` for a single label (i.e www), or `([\w.-]+)` for multiple labels
 (i.e. www.beta). Avoid more visually complicated options like `([^/:@\.]+\.)?`.
@@ -98,3 +100,4 @@ test URLs:
           to="https:" />
 
 </ruleset>
+
