@@ -1,20 +1,49 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://community.artemis-ia.eu/ => https://community.artemis-ia.eu/: (51, "SSL: no alternative certificate subject name matches target host name 'community.artemis-ia.eu'")
-	Nonfunctional subdomains:
+	Problematic hosts in *artemis-ia.eu:
 
-		- (www.)	(http reply)
+		- community *
+		- www *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- artemis-ia.eu
 
 -->
-<ruleset name="Artemis-IA.eu (partial)" default_off='failed ruleset test'>
+<ruleset name="Artemis-IA.eu">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="artemis-ia.eu" />
+
+	<!--	Complications:
+				-->
 	<target host="community.artemis-ia.eu" />
+	<target host="www.artemis-ia.eu" />
 
 
-	<securecookie host="^community\.artemis-ia\.eu$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^artemis-ia\.eu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^artemis-ia\.eu$" name=".+" />
 
 
-	<rule from="^http://community\.artemis-ia\.eu/"
-		to="https://community.artemis-ia.eu/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://community\.artemis-ia\.eu/[^?]*"
+		to="https://artemis-ia.eu/community" />
+
+		<test url="http://community.artemis-ia.eu/?foo" />
+		<test url="http://community.artemis-ia.eu/index" />
+
+	<rule from="^http://www\.artemis-ia\.eu/"
+		to="https://artemis-ia.eu/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

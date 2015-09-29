@@ -1,22 +1,46 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://lacie.com/ => http://lacie.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.lacie.com/ => http://www.lacie.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Problematic subdomains:
-
-		- ^	(cert only matches www)
+	For other Seagate coverage, see Seagate.com.xml.
 
 
-	Some pages redirect to http.
+	^lacie.com: Mismatched
+
+
+	These altnames don't exist:
+
+		- origin-www.lacie.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .lacie.com
+		- www.lacie.com
 
 -->
-<ruleset name="La Cie.com (partial)" default_off='failed ruleset test'>
+<ruleset name="La Cie.com">
 
-	<target host="lacie.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="is.lacie.com" />
+	<target host="myportal.lacie.com" />
 	<target host="www.lacie.com" />
 
+	<!--	Complications:
+				-->
+	<target host="lacie.com" />
 
-	<rule from="^http://(?:www\.)?lacie\.com/(?=favicon\.ico|img/|imgstore/|js/|stylesheets/)"
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lacie\.com$" name="^CFTOKEN$" /-->
+	<!--securecookie host="^www\.lacie\.com$" name="^(?:CFID|CFTOKEN|ROUTEID|wwwlacie_prod)$" /-->
+
+	<securecookie host="^(?:www)?\.lacie\.com$" name=".+" />
+
+
+	<rule from="^http://lacie\.com/"
 		to="https://www.lacie.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
