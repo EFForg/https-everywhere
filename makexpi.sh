@@ -101,7 +101,8 @@ fi
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
 rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
-cp -a translations/* pkg/xpi-eff/chrome/locale/
+#don't fail this entire $0 script on non-zero exit code for cp below when no files inside translations/ folder!
+cp -a --no-target-directory -- translations/ pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
 # Also, it has a different id than the eff-hosted version, because Firefox now
