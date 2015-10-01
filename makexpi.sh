@@ -100,12 +100,9 @@ fi
 
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
-[ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
-cp -a src/ pkg/xpi-eff/
+rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
-rm -r pkg/xpi-eff/chrome/content/rules
-[ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
-cp -a pkg/xpi-eff/ pkg/xpi-amo/
+rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
 # Also, it has a different id than the eff-hosted version, because Firefox now
 # requires us to upload the eff-hosted version to an unlisted extension on AMO

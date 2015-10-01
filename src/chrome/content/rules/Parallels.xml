@@ -8,7 +8,6 @@
 
 		- chat
 		- download *
-		- forum
 		- kb
 		- forum.sp ³
 		- kb.sp ³
@@ -17,30 +16,15 @@
 	³ Refused
 
 
-	Problematic domains:
+	Problematic hosts in *parallels.com:
 
-		- parallels.com *
-		- i3.parallels.com ¹
-		- spblog.parallels.com **
-		- (www.)psoft.com ²
+		- blogs ¹
+		- i3 ²
+		- spblog ³
 
-	* Mismatched, CN: sp.parallels.com
-	¹ EdgeCast
-	** Squarespace
-	² Shows license; expired, mismatched, CN: license.psoft.com
-
-
-	Partially covered subdomains:
-
-		- sp *
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- www.sp
+	¹ Refused
+	² EdgeCast
+	³ Squarespace
 
 
 	Insecure cookies are set for these domains:
@@ -49,20 +33,21 @@
 		- spblog.parallels.com
 
 -->
-<ruleset name="Parallels (partial)">
+<ruleset name="Parallels.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="parallels.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://sp\.parallels\.com/($|hcap/subscribe/$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://sp\.parallels\.com/+(?!favicon\.ico|fileadmin/|typo3conf/|typo3temp/)" />
-	<target host="*.parallels.com" />
-	<target host="psoft.net" />
-	<target host="*.psoft.net" />
+	<target host="forum.parallels.com" />
+	<target host="sp.parallels.com" />
+	<target host="www.sp.parallels.com" />
+	<target host="store.parallels.com" />
+	<target host="www.parallels.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.parallels.com" />
+	<target host="i3.parallels.com" />
 
 
 	<!--	Not secured by server:
@@ -74,25 +59,15 @@
 					-->
 	<securecookie host="^\.parallels\.com$" name="^s_\w+$" />
 	<securecookie host="^store\.parallels\.com$" name=".+" />
-	<securecookie host="^\w+\.psoft\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?parallels\.com/"
-		to="https://www.parallels.com/" />
-
-	<rule from="^http://blogs\.parallels\.com/"
-		to="https://parallelsblog.squarespace.com/" />
+	<!--rule from="^http://blogs\.parallels\.com/"
+		to="https://parallelsblog.squarespace.com/" /-->
 
 	<rule from="^http://i3\.parallels\.com/"
 		to="https://www.parallels.com/" />
 
-	<rule from="^http://(sp|www\.sp|store)\.parallels\.com/"
-		to="https://$1.parallels.com/" />
-
-	<rule from="^http://(?:www\.)?psoft\.com/"
-		to="https://www.parallels.com/psoft" />
-
-	<rule from="^http://my\.psoft\.com/"
-		to="https://my.psoft.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

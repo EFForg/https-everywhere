@@ -1,63 +1,62 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ced.sascdn.com/ => https://im2.smartserver.com/: (6, 'Could not resolve host: im2.smartserver.com')
-	For other Axel Springer coverage, see Axel-Springer.xml.
+	Other Smart AdServer rulesets:
+
+		- SAS_CDN.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *smartadserver.com:
 
-		- smartadserver.com		(refused)
-		- www\d?.smartadserver.com	("Le fichier spécifié est introuvable.")
-						this directs to various ads
+		- ^ *
+		- blog *
+		- gallery *
+		- jobs *
 
-
-	Partially covered subdomains:
-
-		- (www.)
+	* Refused
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- ced.sascdn.com	(→ im2.smartadserver.com)
-		- static.sascdn.com
-
-		- smartadserver.com subdomains:
-
-			- akamai	(→ im2)
-			- diff
-			- im2
-			- manage
-			- managebeta
-			- ww690
-			- www4
+		- .smartadserver.com
+		- manage.smartadserver.com
+		- managebeta.smartadserver.com
+		- www[37].smartadserver.com
 
 -->
-<ruleset name="Smart AdServer (partial)" default_off='failed ruleset test'>
+<ruleset name="Smart AdServer.com (partial)">
 
-	<target host="ced.sascdn.com" />
-	<target host="static.sascdn.com" />
-	<target host="smartadserver.com" />
-	<target host="*.smartadserver.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="diff.smartadserver.com" />
+	<target host="manage.smartadserver.com" />
+	<target host="managebeta.smartadserver.com" />
+	<target host="ww251.smartadserver.com" />
+	<target host="ww690.smartadserver.com" />
+	<target host="www.smartadserver.com" />
+	<target host="www3.smartadserver.com" />
+	<target host="www4.smartadserver.com" />
+	<target host="www7.smartadserver.com" />
+	<target host="www84.smartadserver.com" />
 
+		<test url="http://ww84.smartadserver.com/imp?imgid=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.smartadserver\.com$" name="^(?:pbw|sasd2?|TestIfCookieP?)$" /-->
+	<!--securecookie host="^manage(?:beta)?\.smartadserver\.com$" name="^(?:ASPSESSIONID[A-Z]{8}|BIGipServer\w)$" /-->
+	<!--securecookie host="^www[37]\.smartadserver\.com$" name="^x-smrt-d$" /-->
 
 	<!--	Wildcard cookies set by web bugs:
 							-->
-	<securecookie host="^\.smartadserver\.com$" name="^(?:pdomid|pbw|pid|sasd2?|TestIfCookieP?|vs)" />
-	<securecookie host="^(?:diff|im2|manage|www)\.smartadserver\.com$" name=".+" />
+	<securecookie host="^\.smartadserver\.com$" name="^(?:pdomid|pbw|pid|sasd2?|TestIfCookieP?|vs)$" />
+	<securecookie host="^(?:diff|manage|managebeta|www\d?)\.smartadserver\.com$" name=".+" />
 
-
-	<!--	every https URL redirects to shim.gif	-->
-	<rule from="^http://(?:www\.)?smartadserver\.com/(images/)?shim\.gif$"
-		to="https://www.smartadserver.com/$1shim.gif"/>
 
 	<!--	cert: Akamai.  Appears to be the same as above.	-->
-	<rule from="^http://(?:ced\.sascdn|akamai\.smartadserver)\.com/"
-		to="https://im2.smartserver.com/"/>
+	<!--rule from="^http://akamai\.smartadserver\.com/"
+		to="https://im2.smartserver.com/"/-->
 
-	<rule from="^http://static\.sascdn\.com/"
-		to="https://static.sascdn.com/" />
-
-	<rule from="^http://(diff|im2|manage(?:beta)?|ww251|ww690|www4?)\.smartadserver\.com/"
-		to="https://$1.smartadserver.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

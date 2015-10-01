@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://naplesnews.com/ => https://www.naplesnews.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.naplesnews.com'")
 	CDN buckets:
 
 		- media.naplesnews.com.edgesuite.net
@@ -14,47 +12,47 @@ Fetch error: http://naplesnews.com/ => https://www.naplesnews.com/: (51, "SSL: n
 		- 4ebe66006af765aa8730-6d1a3af6588f9762b97dc42cf7c97a58.r12.cf1.rackcdn.com
 
 
+
+	Nonfunctional hosts in *naplesnews.com:
+
+		- ^ ¹
+		- media ²
+		- www ³
+
+	¹ Refused
+	² 503
+	³ "500"
+
+
 	Problematic subdomains:
 
-		- ^ *
 		- homes *
 		- m *
-		- media **
 		- web **
 
 	* Works; mismatched, CN: push.scrippsing.com
 	** Works, akamai
 
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- login
-		- media *
-		- web *
-
-	* → akamai
-
 -->
-<ruleset name="Naples News.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Naples News.com (partial)">
 
-	<target host="naplesnews.com" />
-	<target host="*.naplesnews.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="login.naplesnews.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mediaassets.naplesnews.com" />
+	<target host="web.naplesnews.com" />
 
 
 	<securecookie host="^(?:login)?\.naplesnews\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?naplesnews\.com/"
-		to="https://www.naplesnews.com/" />
+	<rule from="^http://(mediaassets|web)\.naplesnews\.com/"
+		to="https://a248.e.akamai.net/f/248/10/10/$1.naplesnews.com/" />
 
-	<rule from="^http://login\.naplesnews\.com/"
-		to="https://login.naplesnews.com/" />
-
-	<rule from="^http://media\.naplesnews\.com/"
-		to="https://a248.e.akamai.net/f/1092/7939/6m/media.naplesnews.com/" />
-
-	<rule from="^http://web\.naplesnews\.com/"
-		to="https://a248.e.akamai.net/f/1075/5672/8m/web.naplesnews.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

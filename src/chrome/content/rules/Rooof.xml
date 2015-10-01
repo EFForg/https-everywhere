@@ -1,26 +1,43 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://rooof.com/ => https://rooof.com/: (51, "SSL: no alternative certificate subject name matches target host name 'rooof.com'")
+	For problematic rules, see Rooof.com-problematic.xml.
+
 
 	CDN buckets:
 
 		- s3.amazonaws.com/cdn.rooof.com/ | d2fiu2vy3tuc3o.cloudfront.net
 
+
+	Problematic hosts in *rooof.com:
+
+		- (www.)? ¹
+		- cdn ²
+		- manage ³
+
+	¹ Mismatched
+	² Cloudfront
+	³ Blocks Tor users
+
 -->
-<ruleset name="Rooof" default_off='failed ruleset test'>
+<ruleset name="Rooof.com (partial)">
 
-	<target host="rooof.com" />
-	<target host="*.rooof.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="rooof.com" /-->
+	<target host="manage.rooof.com" />
+	<!--target host="www.rooof.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="cdn.rooof.com" />
 
 
-	<securecookie host="^.+\.roof\.com$" name=".+" />
+	<!--securecookie host="^(?:www)?\.roof\.com$" name=".+" /-->
 
 
-	<rule from="^http://(adam\.|www\.)?rooof\.com/"
-		to="https://$1rooof.com/" />
-
-	<rule from="^http://cdn\.roof\.com/"
+	<rule from="^http://cdn\.rooof\.com/"
 		to="https://d2fiu2vy3tuc3o.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

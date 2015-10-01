@@ -41,6 +41,12 @@
 
 			- www14.software
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ibm.com
+		- media.ibm.com
+
 -->
 <ruleset name="IBM" default_off="Support section redirect loops">
 
@@ -48,13 +54,22 @@
 	<target host="1.www.s81c.com" />
 	<target host="ibm.com" />
 	<target host="*.ibm.com" />
-		<exclusion pattern="^http://www-958\.ibm\.com/(?!software/data/cognos/manyeyes/(?:image|stylesheet)s/)" />
-		<exclusion pattern="^http://www\.research\.ibm\.com/(?!$|\?|irl(?:$|\?|/))" />
 	<target host="publib.boulder.ibm.com" />
 	<target host="pic.dhe.ibm.com" />
 	<target host="www.redbooks.ibm.com" />
 	<target host="redirect.www.ibm.com" />
 
+		<exclusion pattern="^http://www-958\.ibm\.com/(?!software/data/cognos/manyeyes/(?:image|stylesheet)s/)" />
+		<exclusion pattern="^http://www\.research\.ibm\.com/(?!$|\?|irl(?:$|\?|/))" />
+
+		<test url="http://media.ibm.com/mluniversal-1x1.gif" />
+		<test url="http://media.ibm.com/ping?spacedesc=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ibm\.com$" name="^PrefID$" /-->
+	<!--securecookie host="^media\.ibm\.com$" name="^XGIR$" /-->
 
 	<securecookie host="^(?:.*\.)?ibm\.com$" name=".*" />
 
@@ -72,10 +87,10 @@
 			- cert: redirect.www.ibm.com
 			- Redirects to www
 					-->
-	<rule from="^http://(?:www\.)?ibm\.com/"
+	<rule from="^http://ibm\.com/"
 		to="https://www.ibm.com/" />
 
-	<rule from="^http://(publib\.boulder|pic\.dhe|www\.re(?:dbooks|search)|www14\.software|redirect\.www|www-(?:0[136]|304|947|95[08]))\.ibm\.com/"
+	<rule from="^http://(publib\.boulder|pic\.dhe|media|www\.re(?:dbooks|search)|www14\.software|www|redirect\.www|www-(?:0[136]|304|947|95[08]))\.ibm\.com/"
 		to="https://$1.ibm.com/" />
 
 	<rule from="^http://stats\.www\.ibm\.com/rc/images/uc\.GIF"

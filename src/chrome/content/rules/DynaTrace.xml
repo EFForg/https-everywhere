@@ -1,22 +1,61 @@
 <!--
 	See Compuware.xml for other Compuware coverage.
 
+
+	Nonfunctional hosts in *dynatrace.com:
+
+		- apmblog *
+
+	* Dropped
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .dynatrace.com
+		- eservices.dynatrace.com
+		- info.dynatrace.com
+		- login.dynatrace.com
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="dynaTrace (partial)">
+<ruleset name="dynaTrace.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="dynatrace.com" />
-	<target host="*.dynatrace.com" />
+	<target host="ajax.dynatrace.com" />
+	<target host="community.dynatrace.com" />
+	<target host="eservices.dynatrace.com" />
+	<target host="info.dynatrace.com" />
+	<target host="login.dynatrace.com" />
+	<target host="support.dynatrace.com" />
+	<target host="www.dynatrace.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.dynatrace.com" />
 
 
-	<securecookie host="^support\.dynatrace\.com$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dynatrace\.com$" name="^(?:AMAuthCookie|amlbcookie|dtCookie)$" /-->
+	<!--securecookie host="^eservices\.dynatrace\.com$" name="^ice\.push\.browser$" /-->
+	<!--securecookie host="^info\.dynatrace\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^login\.dynatrace\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host=".+\.dynatrace\.com$" name=".+" />
 
 
-	<!--	At least some pages redirect to http.
-		cdn times out.	-->
-	<rule from="^http://(?:(ajax\.)|cdn\.|(www\.))?dynatrace\.com/(App_Themes/|en/partner_login\.html|favicon\.ico|images/|Login/|WebResource\.axd)"
-		to="https://$1$2dynatrace.com/$3" />
+	<rule from="^http://cdn\.dynatrace\.com/"
+		to="https://www.dynatrace.com/" />
 
-	<rule from="^http://support\.dynatrace\.com/"
-		to="https://support.dynatrace.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
