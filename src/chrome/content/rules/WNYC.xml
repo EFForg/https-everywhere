@@ -1,28 +1,41 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://media40.wnyc.net/ => https://media.wnyc.org/: (28, 'Connection timed out after 10000 milliseconds')
-	Problematic domains:
-
-		- media40.wnyc.net	(mismatch)
-
-
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *wnyc.org:
 
 		- audio
 		- project	(refused)
 
+
+	Insecure cookies are set for these domains:
+
+		- .wnyc.org
+
+
+	Mixed content:
+
+		- Image on www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="WNYC" default_off='failed ruleset test'>
+<ruleset name="WNYC.org">
 
-	<target host="media40.wnyc.net" />
+	<!--	Direct rewrites:
+				-->
 	<target host="wnyc.org" />
-	<target host="*.wnyc.org" />
+	<target host="culture.wnyc.org" />
+	<target host="media.wnyc.org" />
+	<target host="media2.wnyc.org" />
+	<target host="www.wnyc.org" />
 
 
-	<rule from="^http://(culture\.|media\.|www\.)?wnyc\.org/"
-		to="https://$1wnyc.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wnyc\.org$" name="^__qca$" /-->
 
-	<rule from="^http://media40\.wnyc\.net/"
-		to="https://media.wnyc.org/" />
+	<securecookie host="^\.wnyc\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
