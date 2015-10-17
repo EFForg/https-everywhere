@@ -10,7 +10,6 @@
 		- digital.library
 		- m.library **
 		- madcat.library
-		- search.library	(redirects to wayf login)
 		- studyrooms.library **
 		- uwdc.library **
 		- xerxes.library
@@ -47,6 +46,7 @@
 
 		- learnuw
 		- ecs.library
+		- www.library           (requires redirect to www.library.wisc.edu)
 		- login
 		- my
 		- mywebspace
@@ -69,10 +69,13 @@
 			404:
 				-->
 		<exclusion pattern="^http://pages\.cs\.wisc\.edu/+~" />
-		<exclusion pattern="^http://(?:www\.)?library\.wisc\.edu/(?!css/|images/)" />
 
 
-	<rule from="^http://((?:condor-wiki|htcondor-wiki|pages|research)\.cs|learnuw|(?:ecs\.|www\.)?library|login|my|mywebspace|wayf|wiscmail)\.wisc\.edu/"
-		to="https://$1.wisc.edu/" />
+	<rule from="^http://((?:condor-wiki|htcondor-wiki|pages|research)\.cs|learnuw|(ecs|search)\.library|login|my|mywebspace|wayf|wiscmail)\.wisc\.edu/"
+	      to="https://$1.wisc.edu/" />
+
+	<!-- Requires redirect to www.* to use SSL -->
+	<rule from="^http://(?:www\.)?(library)\.wisc\.edu/"
+	      to="https://www.$1.wisc.edu/" />
 
 </ruleset>
