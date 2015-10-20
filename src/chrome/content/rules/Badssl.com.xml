@@ -1,14 +1,27 @@
-<ruleset name="badssl.com">
+<!--
+    Not secured subdomains:
+        - http            -> is intended to serve http traffic (for mixed
+                             content checks e.g.), redirects to http
+        - mixed-script    -> mixed content check*
+        - mixed           -> mixed content check*
+        - preloaded-hsts  -> hsts check*
+        - hsts            -> hsts check*
+        - upgrade         -> upgrade-insecure-requests check*
 
-	<!--	Direct rewrites:
-				-->
-	<target host="badssl.com" />
-	<target host="*.badssl.com" />
+    * would influence/fake test if it is not excluded
+-->
+<ruleset name="Badssl.com">
+    <target host="badssl.com" />
+    <target host="*.badssl.com" />
 
-		<test url="http://www.badssl.com/" />
+    <!-- https://regex101.com/r/uB7fI1/1 -->
+    <exclusion pattern="(http|mixed-script|mixed|preloaded-hsts|hsts).badssl.com" >
 
+    <test url="http://badssl.com/" />
+    <test url="http://www.badssl.com/" />
+    <test url="http://sha256.badssl.com/" />
 
-	<rule from="^http:"
-		to="https:" />
+    <rule from="^http:"
+            to="https:" />
 
 </ruleset>
