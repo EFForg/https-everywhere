@@ -1,29 +1,12 @@
 <!--
     Not secured subdomains:
-        - http            -> is intended to serve http traffic (for mixed
-                             content checks e.g.), redirects to http
-        - mixed-script    -> mixed content check*
-        - mixed           -> mixed content check*
-        - preloaded-hsts  -> hsts check*
-        - hsts            -> hsts check*
-        - upgrade         -> upgrade-insecure-requests check*
-
-    * would influence/fake test if it is not excluded
+        - All subdomains are not secured, because this can influence tests and cause unexpected results.
 -->
 <ruleset name="Badssl.com">
     <target host="badssl.com" />
-    <target host="*.badssl.com" />
-
-    <!-- https://regex101.com/r/uB7fI1/1 -->
-    <exclusion pattern="(http|mixed-script|mixed|preloaded-hsts|hsts).badssl.com" />
-
-    <test url="http://badssl.com/" />
-    <test url="http://www.badssl.com/" />
-    <test url="http://sha256.badssl.com/" />
-    <test url="http://long-extended-subdomain-name-containing-many-letters-and-dashes.badssl.com/" />
-    <test url="http://longextendedsubdomainnamewithoutdashesinordertotestwordwrapping.badssl.com/" />
+    <!-- see https://github.com/lgarron/badssl.com/issues/80 -->
+    <target host="httpseverywhere.badssl.com" />
 
     <rule from="^http:"
             to="https:" />
-
 </ruleset>
