@@ -1,16 +1,36 @@
+<!--
+	www.winswitch.org: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- winswitch.org
+
+-->
 <ruleset name="Window Switch">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="winswitch.org" />
+
+	<!--	Complications:
+				-->
 	<target host="www.winswitch.org" />
 
+		<test url="http://winswitch.org/trac/" />
 
-	<securecookie host="^winswitch\.org$" name=".+" />
 
-
-	<!--	www redirects to ^ over http,
-		so copy that behavior:
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?winswitch\.org/"
+	<!--securecookie host="^winswitch\.org$" name="^trac_(?:form_token|session)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://www\.winswitch\.org/"
 		to="https://winswitch.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
