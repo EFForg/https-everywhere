@@ -1,79 +1,50 @@
 <!--
-	Nonfunctional subdomains:
+    Nonfunctional subdomains:
+        - origin.thumbnails -> wrong domain
+        - support           -> wrong domain
+        - blog              -> redirects to HTTP
+        - labs              -> times out
 
-		- thumbnails		(times out)
-		- origin.thumbnails
+    Fully covered subdomains:
 
-
-	Problematic subdomains:
-
-		- directory *
-		- img **
-		- origin *
-		- source **
-
-	* Directory
-	** Times out
-
-
-	Partially covered subdomains:
-
-		- (www.)		(→ secure)
-		- blog *
-		- directory		(→ secure)
-		- marketplace *
-		- reversewhois *
-		- source		(→ secure)
-		- whois			(→ secure)
-
-	* At least some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- api
-		- blog
-		- freeapi
-		- img		(→ secure, also on origin.img)
-		- secure
-		- support
-
-
-	Targets solely for wildcard cookies:
-
-		- *.support.domaintools.com
-
+        - $
+        - api
+        - directory
+        - domainreport
+        - freeapi
+        - img
+        - marketplace
+        - research
+        - reverseip
+        - reversens
+        - reversewhois
+        - secure
+        - source
+        - support
+        - whois 
+        - www
 -->
-<ruleset name="DomainTools (partial)" platform="mixedcontent">
+<ruleset name="DomainTools">
+    <target host="http://domaintools.com" />
+    <target host="http://api.domaintools.com" />
+    <target host="http://directory.domaintools.com" />
+    <target host="http://domainreport.domaintools.com" />
+    <target host="http://freeapi.domaintools.com" />
+    <target host="http://img.domaintools.com" />
+    <target host="http://marketplace.domaintools.com" />
+    <target host="http://origin.img.domaintools.com" />
+    <target host="http://research.domaintools.com" />
+    <target host="http://reverseip.domaintools.com" />
+    <target host="http://reversens.domaintools.com" />
+    <target host="http://reversewhois.domaintools.com" />
+    <target host="http://secure.domaintools.com" />
+    <target host="http://source.domaintools.com" />
+    <target host="http://support.domaintools.com" />
+    <target host="http://thumbnails.domaintools.com" />
+    <target host="http://whois.domaintools.com" />
 
-	<target host="domaintools.com" />
-	<target host="*.domaintools.com" />
-		<exclusion pattern="^http://(?:origin\.img|marketplace|reversewhois|source)\.domaintools\.com/(?!composite/|images/|ui-elements/|wp-content/|wp-includes/)" />
-	<target host="origin.img.domaintools.com" />
-	<target host="*.support.domaintools.com" />
-
-	<test url="http://domaintools.com/" />
-	<test url="http://www.domaintools.com/" />
-	<test url="http://img.domaintools.com/" />
-	<test url="http://origin.img.domaintools.com/" />
-	<test url="http://whois.domaintools.com/" />
-	<test url="http://api.domaintools.com/" />
-	<test url="http://freeapi.domaintools.com/" />
-	<test url="http://secure.domaintools.com/" />
-	<test url="http://support.domaintools.com/" />
-	<test url="http://blog.domaintools.com/" />
-	<test url="http://marketplace.domaintools.com/" />
-	<test url="http://reversewhois.domaintools.com/" />
-
-	<securecookie host="^\.support\.domaintools\.com$" name=".+" />
-
-	<rule from="^http://(?:directory\.|source\.)?domaintools\.com/(email\.pgif(?:$|\?)|favicon\.png$|composite/|images/)"
-		to="https://secure.domaintools.com/$1" />
-
-	<rule from="^http://(api|blog|freeapi|origin\.img|marketplace|reversewhois|secure|support|whois\.|www\.)\.domaintools\.com/"
-		to="https://$1.domaintools.com/" />
-
-	<rule from="^http://img\.domaintools\.com/"
-		to="https://secure.domaintools.com/images/" />
-
+    <securecookie host="^(api\.|directory\.|domainreport\.|freeapi\.|img\.|marketplace\.|research\.|reverseip\.|reversens\.|reversewhois\.|secure\.|source\.|support\.|whois\.|www\.)domaintools\.com$" name=".+" />
+    
+    <rule from="^http:"
+            to="https:" />
 </ruleset>
