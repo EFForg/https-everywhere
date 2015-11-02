@@ -2,11 +2,17 @@
 	University of Oxford
 
 
-	!functional:
-		- www			(timeout)
+	Nonfunctional hosts in *ox.ac.uk:
+
+		- fido.bfriars		(Blank page)
 		- www.bfriars		(Redirects to http/404s)
-		- genizah.bodleian	(timeout)
+		- www.bodley *
 		- lmb.bioch *
+
+		- digital.bodleian *
+		- genizah.bodleian *
+		- treasures.bodleian *
+
 		- www.campaign
 
 		- blogs.conted ²
@@ -29,8 +35,10 @@
 		- www.oii *
 
 		- mirror ²
+		- ora *
 		- www.oxfordmartin	(timeout)
 		- blog.practicalethics ²
+		- www.sport		(Shows default page)
 		- talks			(Redirects to webauth
 		- www.tall ²
 
@@ -38,16 +46,16 @@
 	² Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *ox.ac.uk:
 
 		- mail.bfriars ¹
-		- (www.)biop
+		- (www.)?biop *
 
 	¹ Blank page
 	* Dropped
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *ox.ac.uk:
 
 		- (www.)biop	(→ www2.mrc-lmb.cam.ac.uk)
 		- solo.bodleian *
@@ -56,45 +64,13 @@
 	* $ 403s
 
 
-	Fully covered subdomains:
-
-		- www.admin
-		- mail.bfriars		(→ www.bfriars)
-		- www.bodleian
-		- www.campaign
-
-		- cascade.conted
-		- cll.conted
-		- www.conted
-
-		- www.cs
-
-		- .it
-		- blogs.it
-		- courses.it
-		- help.it
-		- portfolio.it
-		- register.it
-		- www.it
-
-		- owa.nexus
-		- sharepoint.nexus
-		- blogs.oucs
-		- www.oucs
-		- podcasts
-		- media.podcasts
-		- idp.shibboleth
-		- skillstoolkit
-		- webauth
-		- (www.)?weblearn
-
-
 	Mixed content:
 
 		- Fonts on www.bodleian from $self *
 
 		- Images, on:
 
+			- www.alumni, www.alumniweb from www.alumni.ox.ac.uk *
 			- www.bodleian from $self *
 			- blogs.it from $self *
 
@@ -103,9 +79,58 @@
 -->
 <ruleset name="Ox.ac.uk (partial)">
 
-	<target host="*.ox.ac.uk"/>
-		<!--
-			Redirects to http:
+	<!--	Direct rewrites:
+				-->
+	<target host="ox.ac.uk" />
+	<target host="www.admin.ox.ac.uk" />
+	<target host="www.alumni.ox.ac.uk" />
+	<target host="www.alumniweb.ox.ac.uk" />
+	<target host="www.alumniweekend.ox.ac.uk" />
+	<target host="www.bfriars.ox.ac.uk" />
+
+	<target host="solo.bodleian.ox.ac.uk" />
+	<target host="solo-prd.bodleian.ox.ac.uk" />
+	<target host="www.bodleian.ox.ac.uk" />
+
+	<target host="www.clarendon.ox.ac.uk" />
+	<target host="www.compaign.ox.ac.uk" />
+
+	<target host="cascade.conted.ox.ac.uk" />
+	<target host="cll.conted.ox.ac.uk" />
+	<target host="www.conted.ox.ac.uk" />
+
+	<target host="www.cs.ox.ac.uk" />
+
+	<target host="blogs.it.ox.ac.uk" />
+	<target host="courses.it.ox.ac.uk" />
+	<target host="help.it.ox.ac.uk" />
+	<target host="podcasts.it.ox.ac.uk" />
+	<target host="media.podcasts.it.ox.ac.uk" />
+	<target host="portfolio.it.ox.ac.uk" />
+	<target host="register.it.ox.ac.uk" />
+	<target host="www.it.ox.ac.uk" />
+
+	<target host="owa.nexus.ox.ac.uk" />
+	<target host="sharepoint.nexus.ox.ac.uk" />
+	<target host="blogs.oucs.ox.ac.uk" />
+	<target host="www.oucs.ox.ac.uk" />
+	<target host="oxfordtoday.ox.ac.uk" />
+	<target host="www.oxfordtoday.ox.ac.uk" />
+
+	<target host="idp.shibboleth.ox.ac.uk" />
+	<target host="skillstoolkit.ox.ac.uk" />
+	<target host="webauth.ox.ac.uk" />
+	<target host="weblearn.ox.ac.uk" />
+	<target host="www.weblearn.ox.ac.uk" />
+	<target host="www.ox.ac.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="biop.ox.ac.uk" />
+	<target host="www.biop.ox.ac.uk" />
+	<target host="mail.bfriars.ox.ac.uk" />
+
+		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/$" /-->
 		<!--
@@ -116,8 +141,28 @@
 			Exceptions:
 					-->
 		<exclusion pattern="^http://www\.bfriars\.ox\.ac\.uk/+(?!horde/)" />
-		<!--
-			403:
+
+			<!--	+ve:
+					-->
+			<test url="http://www.bfriars.ox.ac.uk/hall/las-casas/" />
+			<test url="http://www.bfriars.ox.ac.uk/studium/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.bfriars.ox.ac.uk/horde/" />
+
+		<exclusion pattern="^http://(?:www\.)?biop\.ox\.ac\.uk/(?!coot)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://biop.ox.ac.uk/www/mol_of_life/Asim.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://biop.ox.ac.uk/coot" />
+			<test url="http://www.biop.ox.ac.uk/coot" />
+
+		<!--	403:
 				-->
 		<!--exclusion pattern="^http://solo(-prd)?\.bodleian\.ox\.ac\.uk/$" /-->
 		<!--
@@ -125,8 +170,62 @@
 					-->
 		<exclusion pattern="^http://solo(?:-prd)?\.bodleian\.ox\.ac\.uk/+(?!cgi-bin/|pds\?|shib/)" />
 
-	<rule from="^http://(www\.admin|www\.bfriars|(?:solo|solo-prd|www)\.bodleian|www\.campaign|(?:cascade|cll|www)\.conted|www\.cs|(?:blogs|courses|help|podcasts|media\.podcasts|portfolio|register|www)\.it|(?:owa|sharepoint)\.nexus|(?:blogs|www)\.oucs|idp\.shibboleth|skillstoolkit|webauth)\.ox\.ac\.uk/"
-		to="https://$1.ox.ac.uk/"/>
+			<!--	+ve:
+					-->
+			<test url="http://solo.bodleian.ox.ac.uk/primo_library/libweb/action/myAccountMenu.do?vid=" />
+			<test url="http://solo.bodleian.ox.ac.uk/primo_library/libweb/action/search.do?vid=maps" />
+			<test url="http://solo.bodleian.ox.ac.uk/primo_library/libweb/static_htmls/cookies.html" />
+			<test url="http://solo.bodleian.ox.ac.uk/primo_library/libweb/action/search.do?mode=Basic&amp;vid=&amp;tab=all" />
+			<test url="http://solo.bodleian.ox.ac.uk/primo_library/libweb/action/search.do?mode=Basic&amp;vid=&amp;tab=remote" />
+
+			<!--	-ve:
+					-->
+			<test url="http://solo.bodleian.ox.ac.uk/cgi-bin/login.cgi" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.oxfordtoday\.ox\.ac\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.oxfordtoday\.ox\.ac\.uk/+(?!favicon\.ico|sites/)" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.oxfordtoday.ox.ac.uk/culture/poetry-creative-writing/world-after-snowden-alan-rusbridger-21st-century-surveillance-state" />
+			<test url="http://www.oxfordtoday.ox.ac.uk/letters" />
+			<test url="http://www.oxfordtoday.ox.ac.uk/opinion" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.oxfordtoday.ox.ac.uk/favicon.ico" />
+			<test url="http://www.oxfordtoday.ox.ac.uk/sites/default/themes/custom/childship/images/logo.png" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ox\.ac\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ox\.ac\.uk/+(?!favicon\.ico|sites/)" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ox.ac.uk/event/colliding-worlds-how-cutting-edge-science-redefining-contemporary-art" />
+			<test url="http://www.ox.ac.uk/events-list" />
+			<test url="http://www.ox.ac.uk/news/arts-blog" />
+			<test url="http://www.ox.ac.uk/students" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ox.ac.uk/favicon.ico" />
+			<test url="http://www.ox.ac.uk/sites/default/themes/custom/oxweb/images/oxweb-logo-square.svg" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://www.alumni.ox.ac.uk/alumni_home" />
+		<test url="http://www.alumniweb.ox.ac.uk/secure/page.aspx?pid=1330" />
+
 
 	<rule from="^http://(?:www\.)?biop\.ox\.ac\.uk/coot"
 		to="https://www2.mrc-lmb.cam.ac.uk/Personal/pemsley/coot" />
@@ -136,10 +235,9 @@
 	<rule from="^http://mail\.bfriars\.ox\.ac\.uk/[^?]*"
 		to="https://www.bfriars.ox.ac.uk/horde/" />
 
-	<!--	Domains for which both !www and www
-		exist, and both work without caveat:
-							-->
-	<rule from="^http://(www\.)?weblearn\.ox\.ac\.uk/"
-		to="https://$1weblearn.ox.ac.uk/" />
+		<test url="http://mail.bfriars.ox.ac.uk/home" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
