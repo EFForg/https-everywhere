@@ -235,7 +235,9 @@ const IOUtil = {
     return parts.join("?");
   },
   
-  _splitName: function(nv) nv.split("=")[0],
+  _splitName: function(nv) {
+    return nv.split("=")[0];
+  },
   _qsRx: /[&=]/,
   _anonRx: /(?:auth|s\w+(?:id|key)$)/,
   anonymizeQS: function(qs, cookie) {
