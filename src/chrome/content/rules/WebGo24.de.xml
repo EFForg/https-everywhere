@@ -2,12 +2,9 @@
 	Nonfunctional subdomains:
 
 		- faq *
+		- support (only /live is securable)
 
 	* Shows another domain
-
-
-	^: cert only matches *.webgo24.de
-
 
 	Mixed content:
 
@@ -15,7 +12,7 @@
 
 			- ^ ¹
 			- $self ¹
-			- www.denic.de ²
+			- www.denic.de ¹
 			- badges.mariadb.org ²
 
 	¹ Secured by us
@@ -25,20 +22,17 @@
 <ruleset name="WebGo24.de">
 
 	<target host="webgo24.de" />
-	<target host="*.webgo24.de" />
+	<target host="www.webgo24.de" />
+	<target host="login.webgo24.de" />
+	<target host="hilfe.webgo24.de" />
+	<target host="partner.webgo24.de" />
 
-
-	<securecookie host="^www\.webgo24\.de$" name=".+" />
+	<securecookie host="^(www\.|support\.|login\.|hilfe\.|partner\.)?webgo24\.de$" name=".+" />
 	<!--
 		Server sets Secure for:
 					-->
 	<!--securecookie host="^login\.webgo24\.de$" name=".+" /-->
-
-
-	<rule from="^http://(?:www\.)?webgo24\.de/"
-		to="https://www.webgo24.de/" />
-
-	<rule from="^http://login\.webgo24\.de/"
-		to="https://login.webgo24.de/" />
-
+	
+    <rule from="^http:"
+            to="https:" />
 </ruleset>

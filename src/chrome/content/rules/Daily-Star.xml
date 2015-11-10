@@ -1,21 +1,72 @@
-<!--	!functional:
-		- (www.)northernandshell.co.uk
--->
-<ruleset name="Daily Star (partial)" platform="mixedcontent">
+<!--
+	For problematic rules, see Daily_Star-problematic.xml.
 
-	<target host="dailystar.co.uk"/>
-	<target host="www.dailystar.co.uk"/>
+
+	CDN buckets:
+
+		- images.dailystar.co.uk.s3.amazonaws.com	(forced endpoint...)
+		- images.dailystar-uk.co.uk.s3.amazonaws.com	(403)
+		- d1gdw8d643djmp.cloudfront.net <-	cdn.images.dailystar-uk.co.uk
+		- d1mlsq9roc275d.cloudfront.net	<-	images.dailystar.co.uk
+		- d3rn4gsse7yibk.cloudfront.net <-	www.dailystar.co.uk
+
+
+	!functional:
+
+		- games.dailystar.co.uk *
+
+	* Dropped
+
+
+	Problematic domains:
+
+		in *dailystar.co.uk:
+
+			- ^ ¹
+			- images ²
+			- cdn.images ³
+			- www ³
+
+		- images.dailystar-uk.co.uk ²
+		- cdn.images.dailystar-uk.co.uk ³
+
+	¹ Dropped
+	² AmazonAWS
+	³ Cloudfront
+
+-->
+<ruleset name="Daily Star (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="www.dailystar.co.uk"/-->
+
+	<!--	Complications:
+				-->
+	<!--target host="dailystar.co.uk"/-->
+	<target host="images.dailystar.co.uk" />
+	<target host="cdn.images.dailystar.co.uk" />
+
 	<target host="images.dailystar-uk.co.uk"/>
 	<target host="cdn.images.dailystar-uk.co.uk"/>
 
-	<securecookie host="^www\.dailystar\.co\.uk$" name=".*"/>
+		<test url="http://cdn.images.dailystar.co.uk/img/static/placeholder.gif" />
+		<test url="http://cdn.images.dailystar-uk.co.uk/img/static/placeholder.gif" />
 
-	<!--	!www doesn't work over https
-		redirects to www over http	-->
-	<rule from="^http://(?:www\.)?dailystar\.co\.uk/"
-		to="https://www.dailystar.co.uk/"/>
+
+	<!--securecookie host="." name="." /-->
+
+
+	<!--rule from="^http://dailystar\.co\.uk/"
+		to="https://www.dailystar.co.uk/"/-->
+
+	<rule from="^http://(?:cdn\.)?images\.dailystar\.co\.uk/"
+		to="https://d1mlsq9roc275d.cloudfront.net/" />
 
 	<rule from="^http://(?:cdn\.)?images\.dailystar-uk\.co\.uk/"
-		to="https://s3.amazonaws.com/images.dailystar-uk.co.uk/"/>
+		to="https://d1gdw8d643djmp.cloudfront.net/" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
 
 </ruleset>

@@ -14,47 +14,42 @@
 	* Refused
 
 
-	Nonfcuntional subdomains:
+	Problematic hosts in *bbb.org:
 
-		- (www.)?dc *
+		- www.dc *
+		- www.la *
+		- www.sanjose *
+		- www.setflorida *
+		- www.us *
 
-	* "domain has just been registered"
-
-
-	Problematic domains:
-
-		- bbb.org ¹
-		- (www.)?la.bbb.org *
-		- (www.)?sanjose.bbb.org *
-		- (www.)?setflorida.bbb.org *
-		- (www.)?us.bbb.org ¹
-
-	¹ Dropped
 	* Mismatched
-	³ Shows default page
 
 
 	Fully covered domains:
 
-		- bbb.org			(→ www)
 		- hurdman.app.bbb.org
 		- sanjose.app.bbb.org
-		- (www.)?us.bbb.org		(→ www.bbb.org)
 
 		- (www.)?[\w-]+.bbb.org:	(www → ^)
 
 			- assets
 			- charityreports
+			- (www.)?dc
+			- (www.)?la
 			- (www.)?sanjose
+			- (www.)?seflorida
 			- seal-centralalabama
 			- seal-goldengate
 			- seal-newyork
+			- us
+			- www
 
 
 	Insecure cookies are set for these domains and hosts:
 
 		- .bbb.org
 		- (area).app.bbb.org
+		- assets.bbb.org
 		- charityreports.bbb.org
 		- .goldengate.bbb.org
 		- seal-(area).bbb.org
@@ -70,68 +65,58 @@
 	* Secured by us
 
 -->
-<ruleset name="BBB.org (partial)">
+<ruleset name="BBB.org">
 
-	<target host="bbb.org"/>
-	<target host="*.app.bbb.org"/>
-	<target host="*.bbb.org"/>
-		<!--
-			(www.)dcbbb.org redirects here		-->
-		<exclusion pattern="^http://(?:www\.)?dc\.bbb\.org/"/>
-
-			<test url="http://dc.bbb.org/" />
-			<test url="http://www.dc.bbb.org/" />
-
-		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\.bbb\.org/"/>
-
-			<test url="http://la.bbb.org/" />
-			<test url="http://www.la.bbb.org/" />
-			<test url="http://seflorida.bbb.org/" />
-			<test url="http://www.seflorida.bbb.org/" />
+	<target host="bbb.org" />
+	<target host="*.bbb.org" />
 
 	<!--target host="labbb.org"/-->
 	<!--target host="www.labbb.org"/-->
 
+		<!--	Direct rewrites:
+					-->
+		<test url="http://hurdman.app.bbb.org/abs/login.html" />
+		<test url="http://sanjose.app.bbb.org/abs/login.html" />
 		<test url="http://assets.bbb.org/" />
+		<test url="http://assets.bbb.org/images/seals/aC-seal-horizontal.png" />
 		<test url="http://charityreports.bbb.org/" />
+		<test url="http://charityreports.bbb.org/public/seal.aspx?ID=34521032010" />
+		<test url="http://dc.bbb.org/" />
+		<test url="http://la.bbb.org/" />
 		<test url="http://sanjose.bbb.org/" />
 		<test url="http://seal-newyork.bbb.org/seals/black-seal-200-42-whitetxt-dashlane-1.png" />
+		<test url="http://seflorida.bbb.org/" />
+		<test url="http://us.bbb.org/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://www.dc.bbb.org/" />
+		<test url="http://www.la.bbb.org/" />
+		<test url="http://www.sanjose.bbb.org/" />
+		<test url="http://www.seflorida.bbb.org/" />
+		<test url="http://www.us.bbb.org/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.bbb\.org$" name="^(__qca|BBBSite|PHPSESSID)$" /-->
+	<!--securecookie host="^\.bbb\.org$" name="^(__qca|BBBLocationName|BBBSite|PHPSESSID)$" /-->
 	<!--securecookie host="^\.(goldengate\.)?bbb\.org$" name="^logolink$" /-->
 	<!--securecookie host="^(hurdman|sanjose)\.app\.bbb\.org$" name="^bbb$" /-->
+	<!--securecookie host="^assets\.bbb\.org$" name="^NSC_.*" /-->
 	<!--securecookie host="^sanjose\.app\.bbb\.org$" name="^(before|current|previous)$" /-->
 	<!--securecookie host="^charityreports\.bbb\.org$" name="^(ASP\.NET_SessionId|BBB_Cookie)$" /-->
 	<!--securecookie host="seal-area\.bbb\.org$" name="^BBB_Cookie$" /-->
 
-	<securecookie host="^.*\.bbb\.org$" name=".*" />
-	<!--securecookie host="^www\.labbb\.org$" name=".*"/-->
+	<securecookie host="." name="." />
 
 
 	<!--rule from="^http://(?:www\.)?la\.?bbb\.org/"
 		to="https://www.labbb.org/"/-->
 
-	<rule from="^http://bbb\.org/"
-		to="https://www.bbb.org/"/>
-
-	<!--	Redirect keeps forward slash, path, and args:
-								-->
-	<rule from="^http://(?:www\.)?us\.bbb\.org/"
-		to="https://www.bbb.org/us/" />
-
-		<test url="http://us.bbb.org/" />
-		<test url="http://www.us.bbb.org/" />
-
-	<rule from="^http://(?:www\.)?([\w\-]+)\.bbb\.org/"
+	<rule from="^http://www\.([\w-]+)\.bbb\.org/"
 		to="https://$1.bbb.org/"/>
 
-	<rule from="^http://(hurdman|sanjose)\.app\.bbb\.org/"
-		to="https://$1.app.bbb.org/"/>
-
-		<test url="http://hurdman.app.bbb.org/abs/login.html" />
-		<test url="http://sanjose.app.bbb.org/abs/login.html" />
+	<rule from="^http://((?:[\w-]+|(?:hurdman|sanjose)\.app)\.)?bbb\.org/"
+		to="https://$1bbb.org/"/>
 
 </ruleset>
