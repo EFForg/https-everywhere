@@ -48,10 +48,10 @@
 	³ Rule disabled by default
 
 -->
-<ruleset name="DailyKos.com (partial)">
+<ruleset name="DailyKos.com">
 
-	<target host="dailykos.com" />
 	<target host="*.dailykos.com" />
+	<target host="dailykos.com" />
 		<!--
 			Lulz. Many account-related pages 307 to http.
 
@@ -109,7 +109,7 @@
 
 							-->
 		<!--exclusion pattern="^http://(?:www\.)?dailykos\.com/(?:$|\?|blog|contactus|diaries|groups?|jobs|masthead|new(?:s|thread|user)|part/user/popup/login|people|privacy|special|story|user)(?:$|\?|/)" /-->
-		<exclusion pattern="^http://(?:www\.)?dailykos\.com/+(?!(?:accounts|assets|c|donate|helpdesk_redirect|i|images|login|signup|subscribe|users)(?:$|[?/])|favicon\.ico)" />
+    <!-- <exclusion pattern="^http://(?:www\.)?dailykos\.com/+(?!(?:accounts|assets|c|donate|helpdesk_redirect|i|images|login|signup|subscribe|users)(?:$|[?/])|favicon\.ico)" /> -->
 		<!--
 			404s.
 				-->
@@ -117,14 +117,21 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://images[12]?\.dailykos\.com/+(?!i/|images/)" />
+		<exclusion pattern="^http://images[12]?\.dailykos\.com" />
+		<exclusion pattern="^http://assets\.dailykos\.com" />
 
 
-	<rule from="^http://(www\.)?dailykos\.com/"
-		to="https://$1dailykos.com/" />
+	<rule from="^http://dailykos\.com/"
+		to="https://dailykos.com/" />
+
+	<rule from="^http://www\.dailykos\.com/"
+		to="https://www.dailykos.com/" />
 
 	<rule from="^http://assets\.dailykos\.com/"
 		to="https://www.dailykos.com/assets/" />
+
+	<rule from="^http://(.*)\.dailykos\.com/"
+		to="https://$1.dailykos.com/" />
 
 	<!--	At least some pages 404:
 					-->
@@ -133,11 +140,4 @@
 
 	<rule from="^http://helpdesk\.dailykos\.com/(?=help/|pkg/|stylesheets/)"
 		to="https://dailykos.tenderapp.com/" />
-
-	<rule from="^http://images[12]?\.dailykos\.com/(?=images/)"
-		to="https://s3.amazonaws.com/dk-production/" />
-
-	<rule from="^http://images[12]?\.dailykos\.com/"
-		to="https://www.dailykos.com/" />
-
 </ruleset>
