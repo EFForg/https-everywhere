@@ -3,33 +3,119 @@
 
 		- www.foreignpolicy.com.edgesuite.net
 
-			- a1165.g1.akamai.net
-			- blog
 			- ideas
 			- killerapps
-			- www
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *foreignpolicy.com:
 
-		- ^		(refused)
-		- blog *
-		- ideas		(some pages work, others 403; akamai)
-		- jobs **
-		- killerapps *
-		- thecable **
-		- turtlebay **
-		- www *
+		- fpgroup *
 
-	* Works, akamai
-	** Works; mismatched, CN: acquia-sites.com
+	* Refused
+
+
+	Problematic hosts in *foreignpolicy.com:
+
+		- blog ¹
+		- ideas ²
+		- jobs  ¹
+		- killerapps ²
+		- thecable ¹
+		- turtlebay ¹
+
+	¹ Refused
+	² Wordpress
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- ^ from www.slate.com *
+			- ^ from s\d.wp.com *
+
+		- Bugs, on:
+
+			- ^ from wpni.112.207.net *
+			- ^ from b.scorecardresearch.com *
+
+	* Secured by us
 
 -->
-<ruleset name="ForeignPolicy.com (partial)" default_off="mismatched">
+<ruleset name="ForeignPolicy.com (partial)">
 
-	<target host="*.foreignpolicy.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="foreignpolicy.com" />
+	<target host="www.foreignpolicy.com" />
 
-	<rule from="^http://(jobs|thecable|turtlebay)\.foreignpolicy\.com/"
-		to="https://$1.foreignpolicy.com/" />
+	<!--	Complications:
+				-->
+	<target host="blog.foreignpolicy.com" />
+	<target host="ideas.foreignpolicy.com" />
+	<target host="jobs.foreignpolicy.com" />
+	<target host="thecable.foreignpolicy.com" />
+	<target host="turtlebay.foreignpolicy.com" />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://blog\.foreignpolicy\.com/+(?:\?.*)?$"
+		to="https://foreignpolicy.com/channel/passport/" />
+
+		<test url="http://blog.foreignpolicy.com//" />
+		<test url="http://blog.foreignpolicy.com/?" />
+
+	<!--	Redirect keeps args but not forward slash:
+							-->
+	<rule from="^http://ideas\.foreignpolicy\.com/+(?=$|\?)"
+		to="https://foreignpolicy.com/" />
+
+		<test url="http://ideas.foreignpolicy.com//" />
+		<test url="http://ideas.foreignpolicy.com/?" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://thecable\.foreignpolicy\.com/+(?:\?.*)?$"
+		to="https://foreignpolicy.com/channel/the-cable/" />
+
+		<test url="http://thecable.foreignpolicy.com//" />
+		<test url="http://thecable.foreignpolicy.com/?" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://theturtlebay\.foreignpolicy\.com/+(?:\?.*)?$"
+		to="https://foreignpolicy.com/category/turtle-bay/" />
+
+		<test url="http://theturtlebay.foreignpolicy.com//" />
+		<test url="http://theturtlebay.foreignpolicy.com/?" />
+
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://(?:blog|thecable|theturtlebay)\.foreignpolicy\.com/"
+		to="https://foreignpolicy.com/" />
+
+		<test url="http://blog.foreignpolicy.com/index" />
+		<test url="http://thecable.foreignpolicy.com/index" />
+		<test url="http://theturtlebay.foreignpolicy.com/index" />
+
+	<!--	Redirect keeps path, args, and forward slash:
+								-->
+	<rule from="^http://ideas\.foreignpolicy\.com/"
+		to="https://foreignpolicy.com/" />
+
+		<test url="http://ideas.foreignpolicy.com//index" />
+		<test url="http://ideas.foreignpolicy.com//index?utm=" />
+
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://jobs\.foreignpolicy\.com/.*"
+		to="https://foreignpolicy.com/employment-opportunities/" />
+
+		<test url="http://jobs.foreignpolicy.com//" />
+		<test url="http://jobs.foreignpolicy.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

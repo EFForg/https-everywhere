@@ -2,15 +2,30 @@
 		(www.)silkroad.com	(timeout)
 		pages.silkroad.com	(cert: *.marketo.com; 404)
 -->
-<ruleset name="SilkRoad (partial)">
+<ruleset name="SilkRoad.com (partial)">
 
 	<target host="*.silkroad.com"/>
+
 		<exclusion pattern="^http://(?:pages|www)\."/>
 
-	<securecookie host="^.*\.silkroad\.com$" name=".*"/>
+			<test url="http://pages.silkroad.com/" />
+			<test url="http://www.silkroad.com/" />
+
+		<!--	Accounts:
+					-->
+		<test url="http://dandb-openhire.silkroad.com/epostings/index.cfm?fuseaction=app.jobsearch&amp;byRegion=US_NC&amp;byLocation_US" />
+		<test url="http://dandbcareers.silkroad.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^($account)\.silkroad\.com$" name="^(?:BIGipServer.*|CFID|CFTOKEN)$" /-->
+
+	<securecookie host="." name="." />
+
 
 	<!--	unique subdoman for each client	-->
-	<rule from="^http://([\w\-]+)\.silkroad\.com/"
+	<rule from="^http://([\w-]+)\.silkroad\.com/"
 		to="https://$1.silkroad.com/"/>
 
 </ruleset>
