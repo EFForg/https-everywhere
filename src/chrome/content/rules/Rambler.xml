@@ -5,17 +5,19 @@
 		- Rl0.ru.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *rambler.ru:
 
+		- audio		Shows another domain
 		- err *
-		- finance ¹
+		- finance ***
 		- help ¹
 		- horo2014 ¹
-		- horoscopes ¹
+		- horoscopes	Redirects to http
 		- m.horoscopes ¹
-		- reklama ²
+		- reklama	Shows another domain
 		- m ³
-		- news ³
+		- admin.news	Shows another domain
+		- m.news	Shows another domain
 		- nova ⁴
 		- reklama		Shows another domain
 		- search *
@@ -24,10 +26,11 @@
 		- top100-images		(redirects to www.rambler.ru, valid cert)
 		- tv ¹
 		- video **
-		- weather ³
+		- weather ¹
 		- weekend		(Redirects to http)
 		- www ⁵
 
+	*** Redirects to login
 	¹ 403
 	² Redirects to login
 	³ Refused
@@ -37,7 +40,7 @@
 	⁵ Redirects to p://www.../$
 
 
-	Problematic subdomains:
+	Problematic hosts in *rambler.ru:
 
 		- booking ¹
 		- i *
@@ -46,14 +49,14 @@
 	* Expired 2014
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *rambler.ru:
 
 		- kassa *
 
 	* Some pages redirect to http
 
 
-	Fully covered subdomains:
+	Fully covered hosts in *rambler.ru:
 
 		- ^
 		- assist
@@ -65,7 +68,10 @@
 		- m.kassa
 		- mail
 		- mail-pda
+		- news
+		- api.news
 		- nn-realty
+		- pgc
 		- realty
 		- scounter *
 		- soft
@@ -108,6 +114,8 @@
 
 		- .rambler.ru
 		- id.rambler.ru
+		- news.rambler.ru
+		- .news.rambler.ru
 		- travel.rambler.ru
 
 
@@ -116,14 +124,20 @@
 		- Images, on:
 
 			- booking from b2b.clickvoyage.ru
+			- news from img01.rl0.ru *
+			- api.news from err.rambler.ru
+			- api.news from i.rl0.ru
 			- travel from $self *
 
 		- Bugs, on:
 
-			- assist, soft, travel from counter.rambler.ru
-			- soft from www.tns-counter.ru
+			- assist, news, api.news, soft, travel from counter.rambler.ru *
+			- news from  b.scorecardresearch.com *
+			- soft from www.tns-counter.ru *
 
 		- favicon on assist, soft from i.rl0.ru
+
+	* Secured by us
 
 -->
 <ruleset name="Rambler.ru (partial)">
@@ -149,7 +163,7 @@
 
 		<!--	Redirects to http://www.../$
 							-->
-		<!--exclusion pattern="^http://www\.rambler\.ru/($|all\.shtml)" /-->
+		<!--exclusion pattern="^http://www\.rambler\.ru/(?:$|all\.shtml|pixels/\w+\.gif)" /-->
 
 		<test url="http://assist.rambler.ru/" />
 		<!--test url="http://booking.rambler.ru/" /-->
@@ -166,6 +180,9 @@
 		<test url="http://widget.kassa.rambler.ru/" />
 		<test url="http://mail.rambler.ru/" />
 		<test url="http://mail-pda.rambler.ru/" />
+		<test url="http://news.rambler.ru/" />
+		<test url="http://api.news.rambler.ru/" />
+		<test url="http://pgc.rambler.ru/" />
 		<test url="http://realty.rambler.ru/" />
 		<!--test url="http://scounter.rambler.ru/" /-->
 		<test url="http://soft.rambler.ru/" />
@@ -207,13 +224,15 @@
 					-->
 	<!--securecookie host="^\.rambler\.ru$" name="^(PHPSESSID|lvr?|realty_session|ruid|top100rb|top100vr)$" /-->
 	<!--securecookie host="^id\.rambler\.ru$" name="^(dv|request\.key)$" /-->
+	<!--securecookie host="^news\.rambler\.ru$" name="^[dl]v$" /-->
+	<!--securecookie host="^\.news\.rambler\.ru$" name="^^(?:clti|sentry)$" /-->
 	<!--securecookie host="^travel\.rambler\.ru$" name="^csrftoken$" /-->
 
-	<securecookie host="^\.rambler\.ru$" name="^(lvr?|realty_session|ruid|top100rb|top100vr)$" />
-	<securecookie host="^(?:id|travel)\.rambler\.ru$" name=".*" />
+	<securecookie host="^\.rambler\.ru$" name="^(?:lvr?|realty_session|ruid|top100rb|top100vr)$" />
+	<securecookie host="^(?:id|\.?news|travel)\.rambler\.ru$" name="." />
 
 
-	<rule from="^http://((?:assist|cnt|cntcerber|counter|id|images|kassa|m\.kassa|widget\.kassa|mail|mail-pda|realty|[\w-]+-realty|scounter|soft|sync|topline|travel|update)\.)?rambler\.ru/"
+	<rule from="^http://((?:assist|cnt|cntcerber|counter|id|images|kassa|m\.kassa|widget\.kassa|mail|mail-pda|news|api\.news|pgc|realty|[\w-]+-realty|scounter|soft|sync|topline|travel|update)\.)?rambler\.ru/"
 		to="https://$1rambler.ru/" />
 
 	<!--rule from="^http:"
