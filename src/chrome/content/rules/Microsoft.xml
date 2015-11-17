@@ -365,21 +365,6 @@
 											-->
 		<!--exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" /-->
 
-		<!--	Health pages 404:
-
-				https://trac.torproject.org/projects/tor/ticket/9148
-											-->
-		<!--exclusion pattern="^http://(?:www\.)?microsoft\.com/health/(?:$|\?|.+\.aspx)" /-->
-
-			<test url="http://www.microsoft.com/en-us/health/default.aspx" />
-			<test url="http://www.microsoft.com/health" />
-
-		<!--	Redirects via JS to http.  Very secure indeed.
-									-->
-		<!--exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx(?:$|\?)" /-->
-
-			<test url="http://www.microsoft.com/security/default.aspx" />
-
 		<!--	Microsoft won't serve OEM pages on https
 								-->
 		<!--exclusion pattern="^http://(?:www\.)?microsoft\.com/[oO][eE][mM]/" /-->
@@ -445,7 +430,7 @@
 			<test url="http://search.microsoft.com/default.aspx" />
 			<test url="http://search.microsoft.com/search/results.aspx" />
 
-		<!--exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|[?/])))" /-->
+		<!--exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^.]+\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|[?/])))" /-->
 
 			<!--	+ve:
 					-->
@@ -550,7 +535,7 @@
 
 			Attempt to avoid breaking Silverlight:
 								-->
-		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+(?:gif|png|svg)(?:$|\?))" />
+		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+\.(?:gif|png|svg)(?:$|\?))" />
 
 			<!--	+ve:
 					-->
@@ -632,6 +617,12 @@
 		<test url="http://origin-res.windows.microsoft.com/" />
 		<test url="http://www.microsoft.com/" />
 
+		<!--	Formerly problematic:
+						-->
+		<test url="http://www.microsoft.com/en-us/health/default.aspx" />
+		<test url="http://www.microsoft.com/health" />
+		<test url="http://www.microsoft.com/security/default.aspx" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -702,7 +693,7 @@
 
 		<test url="http://i1.microsoft.com/" />
 
-	<!--	Akamai with no valid cert.
+	<!--	Akamai without valid cert.
 						-->
 	<rule from="^http://i\d?\.(answers|msdn|(?:services\.)?social|technet)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
@@ -714,7 +705,7 @@
 		<test url="http://i.msdn.microsoft.com//" />
 		<test url="http://i.services.social.microsoft.com/" />
 
-	<rule from="^http://(?:i\d|services)\.connect\.microsoft\.com/"
+	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
 
 		<test url="http://i1.connect.microsoft.com/" />
@@ -757,7 +748,7 @@
 		<test url="http://res2.windows.microsoft.com/" />
 		<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_social.svg" />
 
-	<rule from="^http://((?:account|accountservices|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|connect|sas\.css|curah|social\.expression|go?|i|ieonline|js|learning|mbs|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|msevents|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|office(?:15client|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|profileapi\.services|signature|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|www)\.)?microsoft\.com/"
+	<rule from="^http://((?:account|accountservices|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|connect|services\.connect|sas\.css|curah|social\.expression|go?|i|ieonline|js|learning|mbs|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|msevents|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|office(?:15client|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|profileapi\.services|signature|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|www)\.)?microsoft\.com/"
 		to="https://$1microsoft.com/" />
 
 </ruleset>

@@ -8,7 +8,6 @@
 
 		- avast.com.edgesuite.net
 
-			- a1639.g1.akamai.net
 			- sf0.iavs.net
 
 		- avast.co.jp.ldc.d3.sc.omtrdc.net
@@ -16,73 +15,56 @@
 			- an.avast.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *avast.com:
 
-		- ^ ¹
-		- press ²
-		- www ³
+		- foundation ¹
+		- \w\w.support ¹
+		- ts ²
 
-	¹ Redirects to http, mismatched
-	² 403, valid cert
-	³ Redirects to http, valid cert
-
-
-	Fully covered hosts in *avast.com:
-
-		- an	(→ avast-co-jp-ldc.d3.sc.omtrdc.net)
-		- ans
-		- blog
-		- forum
-		- id
-		- my
-		- static
-		- static2
-		- support
+	¹ Redirects to http
+	² 403
 
 
-	Mixed content:
+	Insecure cookies are set for these domains and hosts:
 
-		- css, on:
-
-			- blog from fonts.googleapis.com *
-
-		- Bug on blog from survey.g.doubleclick.net ²
-
-	* Secured by us
-	² Rule disabled by default
+		- .avast.com
+		- id.avast.com
+		- press.avast.com
+		- www.avast.com
 
 -->
 <ruleset name="Avast.com (partial)">
 
-	<!--	Avast has started reditecting HTTPS to HTTP on its main site :(
-
-			https://trac.torproject.org/projects/tor/ticket/3779
-
-	<target host="avast.com" /-->
-
 	<!--	Direct rewrites:
 				-->
+	<target host="avast.com" />
 	<target host="ans.avast.com" />
 	<target host="blog.avast.com" />
 	<target host="forum.avast.com" />
+	<target host="help.avast.com" />
 	<target host="id.avast.com" />
 	<target host="my.avast.com" />
+	<target host="press.avast.com" />
 	<target host="static.avast.com" />
 	<target host="static2.avast.com" />
 	<target host="support.avast.com" />
-	<!--target host="www.avast.com" /-->
+	<target host="www.avast.com" />
 
 	<!--	Complications:
 				-->
 	<target host="an.avast.com" />
 
 
-	<securecookie host="^\.avast\.com$" name="^s_vi$" />
-	<securecookie host="^(?:blog|my)\.avast\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.avast\.com$" name="^(?:avastComGiCountry|s_vi)$" /-->
+	<!--securecookie host="^id\.avast\.com$" name="^PLAY_SESSION$" /-->
+	<!--securecookie host="^press\.avast\.com$" name="^x-avast-(?:pro|vbd)$" /-->
+	<!--securecookie host="^www\.avast\.com$" name="^avastComLocale$" /-->
 
+	<securecookie host="^\." name="^s_vi$" />
+	<securecookie host="^\w" name="." />
 
-	<!--rule from="^http://avast\.com/"
-		to="https://www.avast.com/" /-->
 
 	<rule from="^http://an\.avast\.com/"
 		to="https://avast-co-jp-ldc.d3.sc.omtrdc.net/" />
