@@ -1,8 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	NB: fixes mixed content, security relevant => backport?
-
 
 	CDN buckets:
 
@@ -13,46 +9,26 @@ Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificat
 
 	Nonfunctional subdomains:
 
-		- blog ¹
-		- scan6 ²
+		- autodiscover 			(Refused)
+		- apps.communities 		(timeout)
+		- www.communities 		(could not resolve host, despite covered by SSL cert)
+		- apps.uat.communities 		(404)
+		- apps.communities 		(unreachable)
+		- www.scan 			(hostname mismatch, CN: *.coverity.com, coverity.com)
+		- blog 				(403)
+		- webstaging			(403)
+		- softwareintegrity 		¹
+		- go 				¹
 
-	¹ Shows www
-	² Refused
-
-
-	Problematic subdomains:
-
-		- autodiscover ¹
-		- softwareintegrity ²
-
-	¹ Refused
-	² Redirects to app-sjf.marketo.com
-
-
-	Partially covered subdomains:
-
-		- softwareintegrity	(→ na-sjf.marketo.com)
+	¹ Some page has error 500. Redirects to app-sjf.marketo.com/index.php, secured by us.
 
 
 	Fully covered subdomains:
 
 		- (www.)?
-		- autodiscover		(→ outlook.office365.com)
-
+		- scan
 		- communities
-		- uat.communities
-		- apps.uat.communities
-
-		- (www.)?scan
-		- scan5
-		- trial
-
-
-	These altnames don't exist:
-
-		- apps.communities.coverity.com
-		- www.communities.coverity.com
-		- scan7.coverity.com
+		- scan[2-9]
 
 
 	Insecure cookies are set for these domains:
@@ -60,7 +36,6 @@ Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificat
 		- communities.coverity.com
 		- uat.communities.coverity.com
 		- apps.uat.communities.coverity.com
-
 		- scan.coverity.com
 		- www.scan.coverity.com
 
@@ -72,7 +47,7 @@ Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificat
 	* Secured by us
 
 -->
-<ruleset name="Coverity.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Coverity.com (partial)">
 
 	<target host="coverity.com" />
 	<target host="*.coverity.com" />
@@ -86,26 +61,16 @@ Fetch error: http://coverity.com/ => https://coverity.com/: (60, 'SSL certificat
 
 	<securecookie host="^(?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan)\.coverity\.com$" name=".+" />
 
+	<exclusion pattern="^http://(autodiscover|blog|.*\.communities|go|softwareintegrity)\.coverity\.com/"/>
 
-	<!--	For /+\w.*, redirect keeps path but not args:
-								-->
-	<rule from="^http://autodiscover\.coverity\.com/+([^?]+).*"
-		to="https://outlook.office365.com/$1" />
+		<test url="http://autodiscover.coverity.com/" />
+		<test url="http://apps.communities.coverity.com/" />
+		<test url="http://apps.uat.communities.coverity.com/" />
+		<test url="http://blog.coverity.com/" />
+		<test url="http://go.coverity.com/" />
+		<test url="http://softwareintegrity.coverity.com/" />
 
-	<!--	For /+\?.*, drops args:
-						-->
-	<rule from="^http://autodiscover\.coverity\.com/.*"
-		to="https://outlook.office365.com/owa/" />
-
-	<!--	Broken by Coverity:
-					-->
-	<!--rule from="^http://blog\.coverity\.com/[^?]*(?=$|\?)"
-		to="https://communities.coverity.com/blogs/software-integrity-blog/" /-->
-
-	<rule from="^http://softwareintegrity\.coverity\.com/(?=css/|images/|js/|rs/)"
-		to="https://na-sjf.marketo.com/" />
-
-	<rule from="^http://((?:(?:(?:apps\.)?uat\.)?communities|(?:www\.)?scan|scan5|trial|www)\.)?coverity\.com/"
-		to="https://$1coverity.com/" />
+	<rule from="^http:" 
+		to="https:" />
 
 </ruleset>
