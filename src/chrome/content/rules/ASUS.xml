@@ -13,6 +13,7 @@
 
 	Nonfunctional hosts in *asus.com:
 
+		- advantage ²
 		- csr ¹
 		- eee ²
 		- event ³
@@ -45,6 +46,7 @@
 		- account.asus.com
 		- mymail.asus.com
 		- pcdiy.asus.com
+		- .rog.asus.com
 		- serviceshop.asus.com
 		- shop.asus.com
 		- vip.asus.com
@@ -54,11 +56,10 @@
 
 		- css, on:
 
-			- pcdiy from $self *
 			- rog from $self *
 			- rog, www from fonts.googleapis.com *
 
-		- Images rog from $self *
+		- Images on pcdiy, rog from $self *
 
 	* Secured by us
 
@@ -84,6 +85,20 @@
 	<target host="autodiscover.asus.com" />
 	<target host="dlcdnet.asus.com" />
 
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://rog\.asus\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rog.asus.com/about-rog/" />
+			<test url="http://rog.asus.com/downloads/" />
+			<test url="http://rog.asus.com/forum/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rog.asus.com/wp-content/images/rog_logo.png" />
+
 		<!--	404:
 				-->
 		<exclusion pattern="^http://www\.asus\.com/zenbook(?:$|[?/])" />
@@ -101,6 +116,7 @@
 	<!--securecookie host="^(?:account|vip)\.asus\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^mymail\.asus\.com$" name="^(?:cadata|sessionid)$" /-->
 	<!--securecookie host="^pcdiy\.asus\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.rog\.asus\.com$" name="^bb_sessionhash$" /-->
 	<!--securecookie host="^serviceshop\.asus\.com$" name="^(?:ASP\.NET_SessionId|ISAWPLB\{[\dA-F]{8}-(?:[\dA-F]-){3}[\dA-F]{8}\})$" /-->
 	<!--securecookie host="^shop\.asus\.com$" name="^BIGipServer" /-->
 
