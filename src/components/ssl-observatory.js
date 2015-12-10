@@ -194,7 +194,7 @@ SSLObservatory.prototype = {
   notifyCertProblem: function(socketInfo, status, targetSite) {
     this.log(NOTE, "cert warning for " + targetSite);
     if (targetSite == "observatory.eff.org") {
-      this.log(WARN, "Surpressing observatory warning");
+      this.log(WARN, "Suppressing observatory warning");
       return true;
     }
     return false;
