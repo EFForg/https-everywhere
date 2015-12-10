@@ -28,7 +28,7 @@ ApplicableList.prototype = {
 
   empty: function() {
     // Empty everything, used when toggles occur in order to ensure that if
-    // the reload fails, the resulting list is not eroneous
+    // the reload fails, the resulting list is not erroneous
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};

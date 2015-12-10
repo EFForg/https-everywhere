@@ -14,7 +14,7 @@ const IO = {
     res = sis.read(sis.available());
     is.close();
     
-    if (charset !== null) { // use "null" if you want uncoverted data...
+    if (charset !== null) { // use "null" if you want unconverted data...
       const unicodeConverter = Cc["@mozilla.org/intl/scriptableunicodeconverter"]
         .createInstance(Ci.nsIScriptableUnicodeConverter);
       try {

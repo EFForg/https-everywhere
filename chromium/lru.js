@@ -31,7 +31,7 @@ function LRUCache (limit) {
  */
 LRUCache.prototype.put = function(key, value) {
   var entry = {key:key, value:value};
-  // Note: No protection agains replacing, and thus orphan entries. By design.
+  // Note: No protection against replacing, and thus orphan entries. By design.
   this._keymap[key] = entry;
   if (this.tail) {
     // link previous tail to the new tail (entry)
@@ -123,7 +123,7 @@ LRUCache.prototype.get = function(key, returnEntry) {
 
 /**
  * Check if <key> is in the cache without registering recent use. Feasible if
- * you do not want to chage the state of the cache, but only "peek" at it.
+ * you do not want to change the state of the cache, but only "peek" at it.
  * Returns the entry associated with <key> if found, or undefined if not found.
  */
 LRUCache.prototype.find = function(key) {
@@ -178,7 +178,7 @@ LRUCache.prototype.remove = function(key) {
 
 /** Removes all entries */
 LRUCache.prototype.removeAll = function() {
-  // This should be safe, as we never expose strong refrences to the outside
+  // This should be safe, as we never expose strong references to the outside
   this.head = this.tail = undefined;
   this.size = 0;
   this._keymap = {};
@@ -200,7 +200,7 @@ if (typeof Object.keys === 'function') {
 
 /**
  * Call `fun` for each entry. Starting with the newest entry if `desc` is a true
- * value, otherwise starts with the oldest (head) enrty and moves towards the
+ * value, otherwise starts with the oldest (head) entry and moves towards the
  * tail.
  *
  * `fun` is called with 3 arguments in the context `context`:
