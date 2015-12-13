@@ -2,9 +2,8 @@
 	For other Joyent coverage, see Joyent.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *nodejs.org:
 
-		- blog ¹
 		- build *
 		- logs *
 
@@ -12,13 +11,13 @@
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *nodejs.org:
 
+		- blog *
 		- jobs ¹
-		- www ²
 
+	* Redirects to http
 	¹ Mismatched, CN: *.simply-partner.com
-	² Cert only matches ^nodejs.org
 
 
 	Mixed content:
@@ -33,14 +32,27 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="nodejs.org" />
+	<target host="www.nodejs.org" />
 
 	<!--	Complications:
 				-->
-	<target host="www.nodejs.org" />
+	<target host="blog.nodejs.org" />
 
 
-	<rule from="^http://www\.nodejs\.org/"
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.nodejs\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://blog\.nodejs\.org/[^?]*"
 		to="https://nodejs.org/" />
+
+		<test url="http://blog.nodejs.org/home.php" />
 
 	<rule from="^http:"
 		to="https:" />
