@@ -1,6 +1,8 @@
 <!--
 	National Institutes of Health
 
+	For rules causing false/broken MCB, see NIH.gov-falsemixed.xml.
+
 	For other US government coverage, see US-government.xml.
 
 
@@ -16,14 +18,14 @@
 		- search2.google.cit	Redirects to http
 		- training.cit ⁵
 
+		- public.csr ⁵
 		- employees *
 		- exporter *
 		- federalreporter *
+		- www.fic ⁵
 		- intramural ⁵
 		- itservicedesk ⁵
 		- livertox *
-		- ncats *
-		- www.ncats
 		- ftp.ncbi *
 		- deainfo.nci *
 		- wikiutils.nci ⁵
@@ -36,6 +38,8 @@
 		- ehp.niehs ⁵
 		- kids.niehs ⁵
 		- ntpsearch.niehs ⁵
+		- publications.nigms	Shows another domain
+		- staffdirectory.nigms	Handshake fails
 		- nihlibrary ⁵
 		- nihroadmap	Shows another domain
 
@@ -99,11 +103,14 @@
 	Problematic hosts in *nih.gov:
 
 		- ^ ¹
+		- internet.csr ²
 		- directorsblog ¹
 		- edi ¹
 		- health ¹
+		- www.ncats ¹
 		- ncbiinsights.ncbi ¹
 		- pubmedcommonsblog.ncbi ¹
+		- nia		400
 		- niehs ¹
 		- nlm ¹
 
@@ -111,9 +118,9 @@
 		- communityhealthmaps.nlm ¹
 		- infocus.nlm ¹
 		- www.lhncbc.nlm ¹
+		- www.sis,nlm ¹
 		- skr3.nlm ²
 
-		- www.sis ¹
 		- training ³
 
 	¹ Mismatched
@@ -133,14 +140,16 @@
 
 		- css, on:
 
+			- internet.csr from $self *
 			- edi, lhncbc.nlm, skr3.nlm from fonts.googleapis.com *
 			- skr3.nlm from www.lhncbc.nlm.nih.gov *
 			- www.nidcd from search.usa.gov *
 
 		- Images, on:
 
+			- internet.csr, www.nidcd, ntp.niehs, www.niehs, loop.nigms, accessguidid.nlm, nexus.od, videocast, www from $self *
 			- directorsblog from www.nih.gov *
-			- www.nidcd, ntp.niehs, www.niehs, accessguidid.nlm, nexus.od, www from $self *
+			- loop.nigms from publications.nigms.nih.gov
 			- infocus.nlm from $self
 			- blast.ncbi.nlm from www.ncbi.nlm.nih.gov *
 			- skr.nlm from ii-public2.nlm.nih.gov *
@@ -150,7 +159,7 @@
 
 		- favicons, on:
 
-			- grants, www.jobs, hr.od from www.nih.gov *
+			- era, grants, www.jobs, hr.od from www.nih.gov *
 			- trainingcenter from $self *
 
 		- Bugs,
@@ -171,6 +180,8 @@
 	<target host="aidsinfo.nih.gov" />
 	<target host="calendar.nih.gov" />
 	<target host="commonfund.nih.gov" />
+	<!--target host="internet.csr.nih.gov" /-->
+	<target host="era.nih.gov" />
 	<target host="commons.era.nih.gov" />
 	<target host="public.era.nih.gov" />
 	<target host="grants.nih.gov" />
@@ -185,6 +196,7 @@
 	<target host="www.lrp.nih.gov" />
 	<target host="temp.my.nih.gov" />
 	<target host="myitsm.nih.gov" />
+	<target host="ncats.nih.gov" />
 	<target host="nccam.nih.gov" />
 	<target host="www.nccam.nih.gov" />
 	<target host="nccih.nih.gov" />
@@ -192,7 +204,9 @@
 	<target host="wiki.nci.nih.gov" />
 	<target host="ned.nih.gov" />
 	<target host="gsspubssl.nci.nih.gov" />
+	<target host="nationaleyegene.nei.nih.gov" />
 	<target host="newsinhealth.nih.gov" />
+	<target host="www.nia.nih.gov" />
 	<target host="www.nidcd.nih.gov" />
 	<target host="ddktoday.niddk.nih.gov" />
 	<target host="livertox.niddk.nih.gov" />
@@ -201,6 +215,9 @@
 	<target host="webtrends-sdc.niehs.nih.gov" />
 	<target host="www.niehs.nih.gov" />
 
+	<target host="nigms.nih.gov" />
+	<target host="loop.nigms.nih.gov" />
+	<target host="www.nigms.nih.gov" />
 	<target host="nihrecord.nih.gov" />
 	<target host="www.nimh.nih.gov" />
 
@@ -261,11 +278,14 @@
 	<target host="www.training.nih.gov" />
 	<target host="trainingcenter.nih.gov" />
 	<target host="www.trainingcenter.nih.gov" />
+	<target host="videocast.nih.gov" />
 	<target host="www.nih.gov" />
 
 	<!--	Complications:
 				-->
 	<target host="nih.gov" />
+	<target host="www.ncats.nih.gov" />
+	<target host="nia.nih.gov" />
 	<target host="niehs.nih.gov" />
 	<target host="nlm.nih.gov" />
 	<target host="www.lhncbc.nlm.nih.gov" />
@@ -295,11 +315,11 @@
 	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:niehs|nlm|training)\.)?nih\.gov/"
+	<rule from="^http://((?:nia|niehs|nlm|training)\.)?nih\.gov/"
 		to="https://www.$1nih.gov/" />
 
-	<rule from="^http://www\.(lhncbc|sis)\.nlm\.nih\.gov/"
-		to="https://$1.nlm.nih.gov/" />
+	<rule from="^http://www\.(ncats|lhncbc\.nlm|sis\.nlm)\.nih\.gov/"
+		to="https://$1.nih.gov/" />
 
 	<rule from="^http:"
 		to="https:" />
