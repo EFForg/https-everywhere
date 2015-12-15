@@ -105,7 +105,7 @@ function gotTab(tab) {
 document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
-  chrome.tabs.getSelected(null, gotTab);
+  chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
@@ -150,7 +150,7 @@ function show(elem) {
  * Handles the manual addition of rules
  */
 function addManualRule() {
-  chrome.tabs.getSelected(null, function(tab) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tab) {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
     var newUrl = document.createElement('a');
