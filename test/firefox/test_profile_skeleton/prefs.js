@@ -17,3 +17,5 @@ user_pref("browser.safebrowsing.malware.enabled", false);
 // Debugger, but the Browser Toolbox is just about as good).
 user_pref("devtools.chrome.enabled", true);
 user_pref("devtools.debugger.remote-enabled", true);
+// Disable signature requirement so we can run testing addons
+user_pref("xpinstall.signatures.required", false);
