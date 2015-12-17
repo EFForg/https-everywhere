@@ -25,6 +25,7 @@
 		- Hotmail.co.jp.xml
 		- Hotmail.co.uk.xml
 		- Hotmail.com.xml
+		- How-Old.net.xml
 		- Live.xml
 		- Live.net.xml
 		- Live_filestore.com.xml
@@ -39,6 +40,7 @@
 		- MSDN.xml
 		- Msecnd.net.xml
 		- MSN.xml
+		- MyMoustache.net.xml
 		- Newsvine.com.xml
 		- Office.com.xml
 		- Office.net.xml
@@ -61,6 +63,7 @@
 		- System_Center_Advisor.com.xml
 		- Technet.com.xml
 		- Technical_Community.com.xml
+		- TwinsOrNot.Net.xml
 		- VSIP_Program.com.xml
 		- Virtualearth.net.xml
 		- Visual_Studio.com.xml
@@ -151,6 +154,7 @@
 
 		- microsoft.com subdomains:
 
+			- ^			(mismatched, CN: *.microsoft.com)
 			- (www.)? ¹
 			- adcenter		(expired)
 			- feedback.adcenter	(Dropped)
@@ -247,6 +251,7 @@
 		- mspartnerlp.mspartner
 
 		- mvastorage
+		- news
 		- office15client
 		- office365			(→ www.microsoft.com)
 		- officepreview
@@ -308,6 +313,8 @@
 		- logobuilder.mspartner.microsoft.com
 		- mspartnerlp.mspartner.microsoft.com
 
+		- news.microsoft.com
+		- .news.microsoft.com
 		- training.partner.microsoft.com
 		- gallery.technet.microsoft.com
 		- social.technet.microsoft.com
@@ -319,18 +326,21 @@
 	Mixed content:
 
 		- css, on:
-		- css on onlinehelp from i3.onlinehelp *
+
+			- onlinehelp from i3.onlinehelp *
 			- social.technet from i3.technet *
 			- social.technet from i1.social.s-msft.com *
 
 		- Fonts on careers from i.s-microsoft.com *
 
 		- Images, on:
+
 			- blogs from mscorp.blob.core.windows.net *
-		- Images on onlinehelp from i.onlinehelp *
+			- news from mscorpnews.blob.core.windows.net
+			- onlinehelp from i.onlinehelp *
 			- support from $self *
-		- Images on smallbusiness.support from support
-		- Images on smallbusiness.support from www *
+			- smallbusiness.support from support
+			- smallbusiness.support from www *
 			- social.technet from i1.social.s-msft.com *
 			- sxp from az648995.vo.msecnd.net
 			- sxp from blogs.msdn.com
@@ -343,7 +353,7 @@
 			- technet from msstonojstechnet.112.2o7.net *
 			- social.technet from msstonojssocial.112.2o7.net *
 			- careers, msdn, logobuilder.mspartner, pinpoint, technet, social.technet from m.webtrends.com
-			- blogs, curah, www from c.microsoft.com *
+			- blogs, curah, news, www from c.microsoft.com *
 			- sxp from blogs.msdn.com
 			- sxp from blogs.technet.com
 
@@ -364,21 +374,6 @@
 		<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001189.html
 											-->
 		<!--exclusion pattern="^http://www\.microsoft\.com/.*[fF]amily[iI][dD]" /-->
-
-		<!--	Health pages 404:
-
-				https://trac.torproject.org/projects/tor/ticket/9148
-											-->
-		<!--exclusion pattern="^http://(?:www\.)?microsoft\.com/health/(?:$|\?|.+\.aspx)" /-->
-
-			<test url="http://www.microsoft.com/en-us/health/default.aspx" />
-			<test url="http://www.microsoft.com/health" />
-
-		<!--	Redirects via JS to http.  Very secure indeed.
-									-->
-		<!--exclusion pattern="^http://www\.microsoft\.com/security/.+\.aspx(?:$|\?)" /-->
-
-			<test url="http://www.microsoft.com/security/default.aspx" />
 
 		<!--	Microsoft won't serve OEM pages on https
 								-->
@@ -445,7 +440,7 @@
 			<test url="http://search.microsoft.com/default.aspx" />
 			<test url="http://search.microsoft.com/search/results.aspx" />
 
-		<!--exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^.]\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|[?/])))" /-->
+		<!--exclusion pattern="^http://technet\.microsoft\.com/(?!en-us/(?:library/[^.]+\.rss(?:$|\?)|security/(?:advisory|bulletin)(?:$|[?/])))" /-->
 
 			<!--	+ve:
 					-->
@@ -550,7 +545,7 @@
 
 			Attempt to avoid breaking Silverlight:
 								-->
-		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+(?:gif|png|svg)(?:$|\?))" />
+		<exclusion pattern="^http://res[12]\.windows\.microsoft\.com/(?!.+\.(?:gif|png|svg)(?:$|\?))" />
 
 			<!--	+ve:
 					-->
@@ -604,6 +599,7 @@
 		<test url="http://mspartnerlp.mspartner.microsoft.com/" />
 
 		<test url="http://mvastorage.microsoft.com/" />
+		<test url="http://news.microsoft.com/" />
 		<!--test url="http://oem.microsoft.com/" /-->
 		<test url="http://office.microsoft.com/" />
 		<test url="http://office15client.microsoft.com/" />
@@ -632,6 +628,12 @@
 		<test url="http://origin-res.windows.microsoft.com/" />
 		<test url="http://www.microsoft.com/" />
 
+		<!--	Formerly problematic:
+						-->
+		<test url="http://www.microsoft.com/en-us/health/default.aspx" />
+		<test url="http://www.microsoft.com/health" />
+		<test url="http://www.microsoft.com/security/default.aspx" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -649,6 +651,8 @@
 	<!--securecookie host="^mspartner\.microsoft\.com$" name="^(ai_session|ai_user)$" /-->
 	<!--securecookie host="^logobuilder\.mspartner\.microsoft\.com$" name="^(__RequestVerificationToken|UiLanguageCode)$" /-->
 	<!--securecookie host="^mspartnerlp\.mspartner\.microsoft\.com$" name="^(__RequestVerificationToken|ASP\.NET_SessionId|pathState)$" /-->
+	<!--securecookie host="^news\.microsoft\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.news\.microsoft\.com$" name="^ARRAffinity$" /-->
 	<!--securecookie host="^training\.partner\.microsoft\.com$" name="^(ASP\.NET_SessionId|BlueStripe\.PVN|SUMTOTALAUTH)$" /-->
 	<!--securecookie host="^support\.microsoft\.com$" name="^(\.ASPXANONYMOUS|SMC_SAGE|smcexpsessionticket|smcexpticket)$" /-->
 	<!--securecookie host="^support2\.microsoft\.com$" name="^(\.ASPXANONYMOUS|GsfxSessionCookie|GsfxStatsLog)$" /-->
@@ -664,7 +668,7 @@
 		s_.+: Other tracking cookies
 						-->
 	<securecookie host="^\.microsoft\.com$" name="^(?:A|GsfxStatsLog|MC1|MS0|OnlineTrackingV2\.0|R|RioTracking\..+|s_.+)$" />
-	<securecookie host="^(?:account|advertising|advertise\.bingads|choice|commerce|connect|curah|ieonline|m|mbs|msdn|(?:\.?apisandbox|lab|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|\.?office|office(?:15client|2010|preview|redir)|training\.partner|corp\.sts|\.?support|support2|sxp|gallery\.technet|\.?www)\.microsoft\.com$" name=".+" />
+	<securecookie host="^(?:account|advertising|advertise\.bingads|choice|commerce|connect|curah|ieonline|m|mbs|msdn|(?:\.?apisandbox|lab|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|\.?news|\.?office|office(?:15client|2010|preview|redir)|training\.partner|corp\.sts|\.?support|support2|sxp|gallery\.technet|\.?www)\.microsoft\.com$" name=".+" />
 	<securecookie host="^social\.technet\.microsoft\.com$" name="^CSExtendedAnalytics(?:Session)?$" />
 
 
@@ -702,7 +706,7 @@
 
 		<test url="http://i1.microsoft.com/" />
 
-	<!--	Akamai with no valid cert.
+	<!--	Akamai without valid cert.
 						-->
 	<rule from="^http://i\d?\.(answers|msdn|(?:services\.)?social|technet)\.microsoft\.com/"
 		to="https://$1.microsoft.com/" />
@@ -714,7 +718,7 @@
 		<test url="http://i.msdn.microsoft.com//" />
 		<test url="http://i.services.social.microsoft.com/" />
 
-	<rule from="^http://(?:i\d|services)\.connect\.microsoft\.com/"
+	<rule from="^http://i\d\.connect\.microsoft\.com/"
 		to="https://services.connect.microsoft.com/" />
 
 		<test url="http://i1.connect.microsoft.com/" />
@@ -757,7 +761,7 @@
 		<test url="http://res2.windows.microsoft.com/" />
 		<test url="http://res2.windows.microsoft.com/resources/4.2/wol/shared/images/merged/gl_social.svg" />
 
-	<rule from="^http://((?:account|accountservices|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|connect|sas\.css|curah|social\.expression|go?|i|ieonline|js|learning|mbs|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|msevents|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|office(?:15client|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|profileapi\.services|signature|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|www)\.)?microsoft\.com/"
+	<rule from="^http://((?:account|accountservices|advertising|ajax|(?:fb\.)?answers|wscont\.apps|assets|azure|blogs|c1?|careers|choice|commerce|compass-ssl|connect|services\.connect|sas\.css|curah|social\.expression|go?|i|ieonline|js|learning|mbs|code\.msdn|msdn|(?:apisandbox|events|lab|social|visualstudiogallery)\.msdn|msevents|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|mvastorage|news|office(?:15client|2010|preview|redir)?|o15\.officeredir|training\.partner|pinpoint|profile|rad|readytogo|profileapi\.services|signature|(?:services\.)?social|store|corp\.sts|support2?|sxp|tag|(?:gallery\.|social\.)?technet|origin-res\.windows|www)\.)?microsoft\.com/"
 		to="https://$1microsoft.com/" />
 
 </ruleset>

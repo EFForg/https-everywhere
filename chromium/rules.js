@@ -300,7 +300,7 @@ RuleSets.prototype = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria for being marked as secure.
+   * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
    * @param knownHttps Is the context for setting this cookie is https ?

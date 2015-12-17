@@ -1,0 +1,69 @@
+<!--
+	Nonfunctional hosts in *chef.io:
+
+		- eggs ¹
+		- ei ¹
+		- lists ¹
+		- pages ²
+		- status ¹
+
+	¹ Refused
+	² Marketo
+
+
+	Problematic hosts in *chef.io:
+
+		- friends *
+		
+	* Mismatched
+
+-->
+<ruleset name="Chef.io (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="chef.io" />
+	<target host="compliance.chef.io" />
+	<target host="discourse.chef.io" />
+	<target host="docs.chef.io" />
+	<target host="downloads.chef.io" />
+	<target host="feedback.chef.io" />
+	<target host="happylaptop.chef.io" />
+	<target host="id.chef.io" />
+	<target host="kungfu.chef.io" />
+	<target host="learn.chef.io" />
+	<target host="manage.chef.io" />
+	<target host="omnitruck.chef.io" />
+	<target host="supermarket.chef.io" />
+	<target host="tickets.chef.io" />
+	<target host="www.chef.io" />
+
+	<!--	Complications:
+				-->
+	<target host="pages.chef.io" />
+
+		<exclusion pattern="^http://pages\.chef\.io/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pages.chef.io/contact-us.html" />
+			<test url="http://pages.chef.io/getting-started-office-hours.html" />
+			<test url="http://pages.chef.io/open-training.html" />
+			<test url="http://pages.chef.io/product-and-features" />
+
+			<!--	-ve:
+					-->
+			<test url="http://pages.chef.io/css/mktLPSupport.css" />
+			<test url="http://pages.chef.io/images/forms/backRequiredGray.gif" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://pages\.chef\.io/"
+		to="https://na-sj05.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

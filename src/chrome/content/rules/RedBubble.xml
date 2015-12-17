@@ -3,46 +3,74 @@
 
 		- wac.0b02.edgecastcdn.net
 
-			- blog.redbubble.com
+
+	Nonfunctional hosts in *redbubble.com:
+
+		- blog *
+
+	* WP Engine
 
 
-	Nonfunctional domains:
+	Problematic hosts in *redbubble.com:
 
-		- blog.redbubble.com		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
-		- support.redbubble.com		(redirects to http; mismatched, CN: *.tenderapp.com)
+		- feedback ¹
+		- support ²
 
-
-	Problematic domains:
-
-		- feedback.redbubble.com	(mismatched, CN: *.uservoice.com)
-
-
-	Partially covered domains:
-
-		- (www.)redbubble.com	(most pages redirect to http)
-
-
-	Fully covered domains:
-
-		- support.redbubble.com		(→ redbubble.tenderapp.com)
-		- assets[01].redbubble.net
-		- ih[0-3].redbubble.net
+	¹ Mismatched, CN: *.uservoice.com
+	² Mismatched
 
 -->
 <ruleset name="RedBubble (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="redbubble.com" />
-	<target host="*.redbubble.com" />
-	<target host="*.redbubble.net" />
+	<target host="help.redbubble.com" />
+	<target host="www.redbubble.com" />
+
+	<target host="assets0.redbubble.net" />
+	<target host="assets1.redbubble.net" />
+	<target host="ih0.redbubble.net" />
+	<target host="ih1.redbubble.net" />
+	<target host="ih2.redbubble.net" />
+	<target host="ih3.redbubble.net" />
+
+	<!--	Complications:
+				-->
+	<target host="support.redbubble.com" />
+
+		<exclusion pattern="^http://www\.redbubble\.com/+(?!(?:auth/login|signup)(?:$|[?/])|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.redbubble.com/about" />
+			<test url="http://www.redbubble.com/affiliates" />
+			<test url="http://www.redbubble.com/jobs" />
+			<test url="http://www.redbubble.com/orders" />
+			<test url="http://www.redbubble.com/pages/play-nice" />
+			<test url="http://www.redbubble.com/products/index" />
+			<test url="http://www.redbubble.com/shop/stickers?ref=" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.redbubble.com/favicon.ico" />
+			<test url="http://www.redbubble.com/auth/login" />
+
+		<test url="http://assets0.redbubble.net/website-content/homepage-banner/20151125152715/151119_holiday_himher_hp.jpg" />
+		<test url="http://assets1.redbubble.net/assets/icons/email-arrow_2x-6af449c230003a7da2fc5fa9af964165.png" />
+		<test url="http://ih0.redbubble.net/image.97554104.0925/fp,550x550,black,off_white,box20,s,ffffff.u5.jpg" />
+		<test url="http://ih1.redbubble.net/image.125508601.3776/flat,138x,075,f.u3.jpg" />
 
 
-	<rule from="^http://(www\.)?redbubble\.com/(?:(auth/login|signup)(?:\?|/$)|favicon\.ico)"
-		to="https://$1redbubble.com/$2" />
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://support\.redbubble\.com/.*"
+		to="https://help.redbubble.com/" />
 
-	<rule from="^http://support\.redbubble\.com/"
-		to="https://redbubble.tenderapp.com/" />
+		<test url="http://support.redbubble.com/home.php" />
 
-	<rule from="^http://(assets\d|ih\d)\.redbubble\.net/"
-		to="https://$1.redbubble.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

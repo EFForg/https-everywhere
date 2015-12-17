@@ -20,15 +20,12 @@
 
 		- msfcnasa.r3h.net/.../
 			- www.msfc.nasa.gov.edgesuite.net/.../
-				- a974.dscg.akamai.net/.../
 
 		- spaceflight.nasa.gov.speedera.net
 			- spaceflight.nasa.gov.edgesuite.net/.../
-				- a1295.dscg.akamai.net/.../
 
 		- www.nasa.gov.speedera.net
 			- www.nasa.gov.edgesuite.net/.../
-				- a1718.dscg.akamai.net/.../
 
 
 	Nonfunctional domains:
@@ -53,6 +50,7 @@
 				- eclipse *
 				- fermi		(redirects to http, expired 2011-12-31)
 				- jdem
+				- mms *
 				- nssdc *
 				- sdo *
 				- sunearthday *
@@ -88,7 +86,7 @@
 
 			- www.jps
 			- eol.jsc
-			- (www.)?jwst
+			- (www.)?jwst **
 			- kepler		(shows astrobiology, CN: astrobiology)
 			- science.ksc **
 			- www-pao.ksc *
@@ -96,15 +94,16 @@
 			- sohowww.nascom *
 			- stereo-ssc.nascom *
 			- pds *
-			- spaceflight		(504, akamai)
+			- spaceflight **
 			- (www.)?spaceplace **
+			- spotthestation *
 			- www.sti		(Shows stiprod.larc)
 			- sunearthday		(some paths 404, others work-ToDo: sort which ones; akamai)
 			- venustransit *
 			- visibleearth *
 
 	* Times out
-	** No https
+	** Refused
 
 
 	Problematic subdomains:
@@ -191,13 +190,8 @@
 		- people
 		- solarsystem
 		- (www.)?spacecomm
-		- www
 
 	* Server is configured for rc4 only
-
-
-	^nasa.gov doesn't exist.
-
 
 	Insecure cookies are set for these domains:
 
@@ -206,13 +200,17 @@
 
 	Mixed content:
 
-		- css from rosetta.jpl from $self ¹
-		- css on stiprod.larc from www.sti ²
+		- css, on:
+
+			- rosetta.jpl from $self ¹
+			- stiprod.larc from www.sti ²
+			- oig from fonts.googleapis.com ¹
 
 		- Images, on:
+
 			- rosetta.jpl from $self ¹
 			- scienceandtechnology.jpl from www-robotics.jpl ¹
-		- Images on stiprod.larc from www.sti ²
+			- stiprod.larc from www.sti ²
 			- open from $self ¹
 			- www from $self ¹
 
@@ -226,6 +224,7 @@
 
 	<!--	Direct rewrites:
 				-->
+	<target host="nasa.gov" />
 	<target host="airbornescience.nasa.gov" />
 	<target host="cloud1.arc.nasa.gov" />
 	<target host="astrobiology.nasa.gov" />
@@ -272,6 +271,7 @@
 	<target host="telework.jpl.nasa.gov" />
 	<target host="www-robotics.jpl.nasa.gov" />
 
+	<target host="oig.nasa.gov" />
 	<target host="open.nasa.gov" />
 	<target host="people.nasa.gov" />
 	<target host="solarsystem.nasa.gov" />
@@ -312,9 +312,9 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^scienceandtechnology\.jpl\.nasa\.gov$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^scienceandtechnology\.jpl\.nasa\.gov$" name="^CF(?:ID|TOKEN)$" /-->
 
-	<securecookie host=".*\.nasa\.gov$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http://www\.data\.nasa\.gov/"
