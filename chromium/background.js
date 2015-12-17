@@ -1,7 +1,10 @@
+"use strict";
 /**
  * Fetch and parse XML to be loaded as RuleSets.
+ *
+ * @param url: a relative URL to local XML
  */
-function getRuleXml(url) {
+function loadExtensionFile(url, returnType) {
   var xhr = new XMLHttpRequest();
   // Use blocking XHR to ensure everything is loaded by the time
   // we return.
@@ -11,13 +14,18 @@ function getRuleXml(url) {
   if (xhr.readyState != 4) {
     return;
   }
-  return xhr.responseXML;
+  if (returnType === 'xml') {
+    return xhr.responseXML;
+  }
+  return xhr.responseText;
 }
 
-var all_rules = new RuleSets(navigator.userAgent, LRUCache,  localStorage);
-for (var i = 0; i < rule_list.length; i++) {
-  all_rules.addFromXml(getRuleXml(rule_list[i]));
-}
+
+// Rules are loaded here
+var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
+var rule_list = 'rules/default.rulesets';
+all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+
 
 var USER_RULE_KEY = 'userRules';
 // Records which tabId's are active in the HTTPS Switch Planner (see
@@ -29,6 +37,27 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// Load prefs about whether http nowhere is on. Structure is:
+//  { httpNowhere: true/false }
+var httpNowhereOn = false;
+chrome.storage.sync.get({httpNowhere: false}, function(item) {
+  httpNowhereOn = item.httpNowhere;
+  setIconColor();
+});
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+  if (areaName === 'sync') {
+    for (var key in changes) {
+      if (key === 'httpNowhere') {
+        httpNowhereOn = changes[key].newValue;
+        setIconColor();
+      }
+    }
+  }
+});
+
+/**
+* Load stored user rules
+ **/
 var getStoredUserRules = function() {
   var oldUserRuleString = localStorage.getItem(USER_RULE_KEY);
   var oldUserRules = [];
@@ -38,6 +67,10 @@ var getStoredUserRules = function() {
   return oldUserRules;
 };
 var wr = chrome.webRequest;
+
+/**
+ * Load all stored user rules
+ */
 var loadStoredUserRules = function() {
   var rules = getStoredUserRules();
   var i;
@@ -48,6 +81,18 @@ var loadStoredUserRules = function() {
 };
 
 loadStoredUserRules();
+
+/**
+ * Set the icon color correctly
+ * Depending on http-nowhere it should be red/default
+ */
+var setIconColor = function() {
+  var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
+  chrome.browserAction.setIcon({
+    path: newIconPath
+  });
+};
+
 /*
 for (var v in localStorage) {
   log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
@@ -60,7 +105,11 @@ for (r in rs) {
 }
 */
 
-
+/**
+ * Adds a new user rule
+ * @param params: params defining the rule
+ * @param cb: Callback to call after success/fail
+ * */
 var addNewRule = function(params, cb) {
   if (all_rules.addUserRule(params)) {
     // If we successfully added the user rule, save it in local 
@@ -78,6 +127,9 @@ var addNewRule = function(params, cb) {
   }
 };
 
+/**
+ * Adds a listener for removed tabs
+ * */
 function AppliedRulesets() {
   this.active_tab_rules = {};
 
@@ -119,50 +171,61 @@ var domainBlacklist = {};
 // TODO: Remove this code if they ever give us a real counter
 var redirectCounter = {};
 
+/**
+ * Called before a HTTP(s) request. Does the heavy lifting
+ * Cancels the request/redirects it to HTTPS. URL modification happens in here.
+ * @param details of the handler, see Chrome doc
+ * */
 function onBeforeRequest(details) {
-  // get URL into canonical format
-  // todo: check that this is enough
-  var uri = new URI(details.url);
+  var uri = document.createElement('a');
+  uri.href = details.url;
+
+  // Should the request be canceled?
+  var shouldCancel = (httpNowhereOn && uri.protocol === 'http:');
 
   // Normalise hosts such as "www.example.com."
-  var canonical_host = uri.hostname();
+  var canonical_host = uri.hostname;
   if (canonical_host.charAt(canonical_host.length - 1) == ".") {
     while (canonical_host.charAt(canonical_host.length - 1) == ".")
       canonical_host = canonical_host.slice(0,-1);
-    uri.hostname(canonical_host);
+    uri.hostname = canonical_host;
   }
 
   // If there is a username / password, put them aside during the ruleset
   // analysis process
-  var tmpuserinfo = uri.userinfo();
-  if (tmpuserinfo) {
-    uri.userinfo('');
+  var using_credentials_in_url = false;
+  if (uri.password || uri.username) {
+      using_credentials_in_url = true;
+      var tmp_user = uri.username;
+      var tmp_pass = uri.password;
+      uri.username = null;
+      uri.password = null;
   }
 
-  var canonical_url = uri.toString();
-  if (details.url != canonical_url && tmpuserinfo === '') {
+  var canonical_url = uri.href;
+  if (details.url != canonical_url && !using_credentials_in_url) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
   if (canonical_url in urlBlacklist) {
-    return null;
+    return {cancel: shouldCancel};
   }
 
   if (details.type == "main_frame") {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname());
+  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return; }
+  if (rs.length === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
     urlBlacklist[canonical_url] = true;
-    var hostname = uri.hostname();
+    var hostname = uri.hostname;
     domainBlacklist[hostname] = true;
     log(WARN, "Domain blacklisted " + hostname);
-    return null;
+    return {cancel: shouldCancel};
   }
 
   var newuristr = null;
@@ -174,17 +237,18 @@ function onBeforeRequest(details) {
     }
   }
 
-  if (newuristr && tmpuserinfo !== "") {
+  if (newuristr && using_credentials_in_url) {
     // re-insert userpass info which was stripped temporarily
-    // while rules were applied
-    var finaluri = new URI(newuristr);
-    finaluri.userinfo(tmpuserinfo);
-    newuristr = finaluri.toString();
+    var uri_with_credentials = document.createElement('a');
+    uri_with_credentials.href = newuristr;
+    uri_with_credentials.username = tmp_user;
+    uri_with_credentials.password = tmp_pass;
+    newuristr = uri_with_credentials.href;
   }
 
   // In Switch Planner Mode, record any non-rewriteable
   // HTTP URIs by parent hostname, along with the resource type.
-  if (switchPlannerEnabledFor[details.tabId] && uri.protocol() !== "https") {
+  if (switchPlannerEnabledFor[details.tabId] && uri.protocol !== "https:") {
     writeToSwitchPlanner(details.type,
                          details.tabId,
                          canonical_host,
@@ -192,11 +256,17 @@ function onBeforeRequest(details) {
                          newuristr);
   }
 
+  if (httpNowhereOn) {
+    if (newuristr && newuristr.substring(0, 5) === "http:") {
+      // Abort early if we're about to redirect to HTTP in HTTP Nowhere mode
+      return {cancel: true};
+    }
+  }
+
   if (newuristr) {
-    log(DBUG, "Redirecting from "+details.url+" to "+newuristr);
     return {redirectUrl: newuristr};
   } else {
-    return null;
+    return {cancel: shouldCancel};
   }
 }
 
@@ -204,16 +274,26 @@ function onBeforeRequest(details) {
 // Map of which values for the `type' enum denote active vs passive content.
 // https://developer.chrome.com/extensions/webRequest.html#event-onBeforeRequest
 var activeTypes = { stylesheet: 1, script: 1, object: 1, other: 1};
-// We consider sub_frame to be passive even though it can contain JS or Flash.
-// This is because code running the sub_frame cannot access the main frame's
+
+// We consider sub_frame to be passive even though it can contain JS or flash.
+// This is because code running in the sub_frame cannot access the main frame's
 // content, by same-origin policy. This is true even if the sub_frame is on the
 // same domain but different protocol - i.e. HTTP while the parent is HTTPS -
 // because same-origin policy includes the protocol. This also mimics Chrome's
 // UI treatment of insecure subframes.
 var passiveTypes = { main_frame: 1, sub_frame: 1, image: 1, xmlhttprequest: 1};
 
-// Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
-// use in determining which resources need to be ported to HTTPS.
+/**
+ * Record a non-HTTPS URL loaded by a given hostname in the Switch Planner, for
+ * use in determining which resources need to be ported to HTTPS.
+ * (Reminder: Switch planner is the pro-tool enabled by switching into debug-mode)
+ *
+ * @param type: type of the resource (see activeTypes and passiveTypes arrays)
+ * @param tab_id: The id of the tab
+ * @param resource_host: The host of the original url
+ * @param resource_url: the original url
+ * @param rewritten_url: The url rewritten to
+ * */
 function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritten_url) {
   var rw = "rw";
   if (rewritten_url == null)
@@ -242,8 +322,11 @@ function writeToSwitchPlanner(type, tab_id, resource_host, resource_url, rewritt
   switchPlannerInfo[tab_id][rw][resource_host][active_content][resource_url] = 1;
 }
 
-// Return the number of properties in an object. For associative maps, this is
-// their size.
+/**
+ * Return the number of properties in an object. For associative maps, this is
+ * their size.
+ * @param obj: object to calc the size for
+ * */
 function objSize(obj) {
   if (typeof obj == 'undefined') return 0;
   var size = 0, key;
@@ -253,8 +336,10 @@ function objSize(obj) {
   return size;
 }
 
-// Make an array of asset hosts by score so we can sort them,
-// presenting the most important ones first.
+/**
+ * Make an array of asset hosts by score so we can sort them,
+ * presenting the most important ones first.
+ * */
 function sortSwitchPlanner(tab_id, rewritten) {
   var asset_host_list = [];
   if (typeof switchPlannerInfo[tab_id] === 'undefined' ||
@@ -269,11 +354,13 @@ function sortSwitchPlanner(tab_id, rewritten) {
     var score = activeCount * 100 + passiveCount;
     asset_host_list.push([score, activeCount, passiveCount, asset_host]);
   }
-  asset_host_list.sort(function(a,b){return a[0]-b[0]});
+  asset_host_list.sort(function(a,b){return a[0]-b[0];});
   return asset_host_list;
 }
 
-// Format the switch planner output for presentation to a user.
+/**
+* Format the switch planner output for presentation to a user.
+* */
 function switchPlannerSmallHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   if (asset_host_list.length == 0) {
@@ -300,6 +387,9 @@ function switchPlannerSmallHtmlSection(tab_id, rewritten) {
   return output;
 }
 
+/**
+ * Create switch planner sections
+ * */
 function switchPlannerRenderSections(tab_id, f) {
   return "Unrewritten HTTP resources loaded from this tab (enable HTTPS on " +
          "these domains and add them to HTTPS Everywhere):<br/>" +
@@ -309,10 +399,17 @@ function switchPlannerRenderSections(tab_id, f) {
          f(tab_id, "rw");
 }
 
+/**
+ * Generate the small switch planner html content
+ * */
 function switchPlannerSmallHtml(tab_id) {
   return switchPlannerRenderSections(tab_id, switchPlannerSmallHtmlSection);
 }
 
+/**
+ * Generate a HTML link from urls in map
+ * map: the map containing the urls
+ * */
 function linksFromKeys(map) {
   if (typeof map == 'undefined') return "";
   var output = "";
@@ -324,10 +421,16 @@ function linksFromKeys(map) {
   return output;
 }
 
+/**
+ * Generate the detailed html fot the switch planner
+ * */
 function switchPlannerDetailsHtml(tab_id) {
   return switchPlannerRenderSections(tab_id, switchPlannerDetailsHtmlSection);
 }
 
+/**
+ * Generate the detailed html fot the switch planner, by section
+ * */
 function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
   var asset_host_list = sortSwitchPlanner(tab_id, rewritten);
   var output = "";
@@ -351,6 +454,10 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
   return output;
 }
 
+/**
+ * monitor cookie changes. Automatically convert them to secure cookies
+ * @param changeInfo Cookie changed info, see Chrome doc
+ * */
 function onCookieChanged(changeInfo) {
   if (!changeInfo.removed && !changeInfo.cookie.secure) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
@@ -382,6 +489,10 @@ function onCookieChanged(changeInfo) {
   }
 }
 
+/**
+ * handling redirects, breaking loops
+ * @param details details for the redirect (see chrome doc)
+ * */
 function onBeforeRedirect(details) {
     // Catch redirect loops (ignoring about:blank, etc. caused by other extensions)
     var prefix = details.redirectUrl.substring(0, 5);
@@ -396,42 +507,37 @@ function onBeforeRedirect(details) {
     }
 }
 
-wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["https://*/*", "http://*/*"]}, ["blocking"]);
+// Registers the handler for requests
+// We listen to all HTTP hosts, because RequestFilter can't handle tons of url restrictions.
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: ["http://*/*"]}, ["blocking"]);
+
+// TODO: Listen only to the tiny subset of HTTPS hosts that we rewrite/downgrade.
+var httpsUrlsWeListenTo = ["https://*/*"];
+// See: https://developer.chrome.com/extensions/match_patterns
+wr.onBeforeRequest.addListener(onBeforeRequest, {urls: httpsUrlsWeListenTo}, ["blocking"]);
+
 
 // Try to catch redirect loops on URLs we've redirected to HTTPS.
 wr.onBeforeRedirect.addListener(onBeforeRedirect, {urls: ["https://*/*"]});
 
 
-// Add the small HTTPS Everywhere icon in the address bar.
-// Note: We can't use any other hook (onCreated, onActivated, etc.) because Chrome resets the
-// pageActions on URL change. We should strongly consider switching from pageAction to browserAction.
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    if (changeInfo.status === "loading") {
-        chrome.pageAction.show(tabId);
-    }
-});
-
-// Pre-rendered tabs / instant experiments sometimes skip onUpdated.
-// See http://crbug.com/109557
-chrome.tabs.onReplaced.addListener(function(addedTabId, removedTabId) {
-    chrome.tabs.get(addedTabId, function(tab) {
-        if(typeof(tab) === "undefined") {
-            log(DBUG, "Not a real tab. Skipping showing pageAction.");
-        } else {
-            chrome.pageAction.show(addedTabId);
-        }
-    });
-});
-
 // Listen for cookies set/updated and secure them if applicable. This function is async/nonblocking.
 chrome.cookies.onChanged.addListener(onCookieChanged);
 
+/**
+ * disable switch Planner
+ * @param tabId the Tab to disable for
+ */
 function disableSwitchPlannerFor(tabId) {
   delete switchPlannerEnabledFor[tabId];
   // Clear stored URL info.
   delete switchPlannerInfo[tabId];
 }
 
+/**
+ * Enable switch planner for specific tab
+ * @param tabId the tab to enable it for
+ */
 function enableSwitchPlannerFor(tabId) {
   switchPlannerEnabledFor[tabId] = true;
 }

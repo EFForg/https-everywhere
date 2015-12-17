@@ -4,20 +4,31 @@
 
 	Problematic subdomains:
 
-		- ^	(mismatched, CN: www.buyfacefx.com)
-		- www	(mismatched, CN: *.sas.com)
+		- (www.)? *
+
+	* Dropped
 
 -->
 <ruleset name="aimatch.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="content.aimatch.com" />
+	<target host="crtl.aimatch.com" />
+
+	<!--	Complications:
+				-->
 	<target host="aimatch.com" />
-	<target host="*.aimatch.com" />
+	<target host="www.aimatch.com" />
 
 
-	<rule from="^http://(?:www\.)?aimatch\.com/[^?]*(\?.*)?"
-		to="https://www.sas.com/software/customer-intelligence/intelligent-advertising.html$1" />
+	<rule from="^http://(?:www\.)?aimatch\.com/[^?]*"
+		to="https://www.sas.com/software/customer-intelligence/intelligent-advertising.html" />
 
-	<rule from="^http://crtl\.aimatch\.com/"
-		to="https://crtl.aimatch.com/" />
+		<test url="http://aimatch.com/?" />
+		<test url="http://www.aimatch.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

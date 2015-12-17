@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed out after 14004 milliseconds with 3809 out of 16071 bytes received')
 	Other Zend rulesets:
 
 		- Apigility.org.xml
@@ -10,86 +8,72 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 
 		- shop-zend.pantherssl.com
 		- static-zend.pantherssl.com
-		- static-zend.pantherssl.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *zend.com:
 
 		- blog *
-		- forums	(dropped)
+		- forums *
 
-	* Dropped
-
-
-	Problematic subdomains:
-
-		- ^	(works, cert only matches www)
-		- framework ²
-
-	² Works; mismatched, CN: apigility.org
+	* 403
 
 
-	Observed cookie domains:
+	Problematic hosts in *zend.com:
 
-		- .
-		- forums
-		- .forums
+		- ^ *
 		- framework *
-		- .framework
-		- shop *
-		- .shop
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zend.com
+		- pages.zend.com
+		- shop.zend.com *
+		- .shop.zend.com
+		- www.zend.com
 
 	* Tracking cookies only
-
-
-	Fully covered subdomains:
-
-		- static	(→ (shop|static)-zend.pantherssl.com)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- pages
-		- shop
 
 
 	These altnames don't exist:
 
 		- www.pages.zend.com
 
-
-	Mixed content:
-
-		- Images, on:
-
-			- pages from $self *
-			- shop from $self *
-			- shop from static *
-
-	* Secured by us
-
 -->
-<ruleset name="Zend (partial)" default_off='failed ruleset test'>
+<ruleset name="Zend.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="pages.zend.com" />
+	<target host="shop.zend.com" />
+	<target host="support.zend.com" />
+	<target host="www.zend.com" />
+
+	<!--	Complications:
+				-->
 	<target host="zend.com" />
-	<target host="*.zend.com" />
-		<!--exclusion pattern="^http://(blog|framework)\.zend\.com/" /-->
+	<target host="static.zend.com" />
 
+		<test url="http://static.zend.com/shop/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
+	<!--securecookie host="^pages\.zend\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" /-->
+	<!--securecookie host="^\.shop\.zend\.com$" name="^frontend$" /-->
+	<!--securecookie host="^www\.zend\.com$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
-	<!--
-		Is this safe to secure here?
-						-->
-	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
-	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
+	<securecookie host="^\.shop\.zend\.com$" name="." />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?zend\.com/"
+	<rule from="^http://zend\.com/"
 		to="https://www.zend.com/" />
-
-	<rule from="^http://(pages|shop)\.zend\.com/"
-		to="https://$1.zend.com/" />
 
 	<!--	NB: Must catch this before the next rule.	-->
 	<rule from="^http://static\.zend\.com/shop/"
@@ -98,4 +82,6 @@ Fetch error: http://zend.com/ => https://www.zend.com/: (28, 'Operation timed ou
 	<rule from="^http://static\.zend\.com/"
 		to="https://static-zend.pantherssl.com/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

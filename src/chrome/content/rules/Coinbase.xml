@@ -4,33 +4,62 @@
 		- coinbase-uploads.s3.amazonaws.com
 
 
-	Nonfunctional subdomains:
+	Fully covered subdomains:
 
-		- blog *
+		- (www.)?
+		- blog
+		- community
+		- developers
+		- exchange
+		- docs.exchange
+		- status
+		- support
+		- translate
 
-	* Tumblr
+
+	These altnames don't exist:
+
+		- login.coinbase.com
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these domains:
 
-		- status *
+		- .coinbase.com
+		- exchange.coinbase.com
+		- docs.exchange.coinbase.com
 
-	* StatusPage.io
+
+	Mixed content:
+
+		- favicon on blog from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Coinbase (partial)">
+<ruleset name="Coinbase.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="coinbase.com" />
-	<target host="*.coinbase.com" />
+	<target host="blog.coinbase.com" />
+	<target host="community.coinbase.com" />
+	<target host="developers.coinbase.com" />
+	<target host="exchange.coinbase.com" />
+	<target host="docs.exchange.coinbase.com" />
+	<target host="status.coinbase.com" />
+	<target host="support.coinbase.com" />
+	<target host="www.coinbase.com" />
 
 
-	<securecookie host="^\.?coinbase\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.coinbase\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(docs\.)?exchange\.coinbase\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:\.|(?:docs\.)?exchange\.)?coinbase\.com$" name=".+" />
 
 
-	<rule from="^http://(translate\.|www\.)?coinbase\.com/"
-		to="https://$1coinbase.com/" />
-
-	<rule from="^http://status\.coinbase\.com/"
-		to="https://coinbase.statuspage.io/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

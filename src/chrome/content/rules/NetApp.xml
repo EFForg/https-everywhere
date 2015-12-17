@@ -1,4 +1,7 @@
 <!--
+	fast, fast-new, login: Gone
+
+
 	For problematic rules, see NetApp-mismatches.xml.
 
 
@@ -14,48 +17,105 @@
 
 	Problematic subdomains:
 
-		- (www.) *
-		- blogs		(no https)
+		- ^ ¹
+		- library ³
 		- media *
 
+	¹ Mismatched
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 	* Works, akamai
 
+
+	Fully covered hosts in *netapp.com:
+
+		- (www.)?		(^ → www)
+		- blogs
+		- communities
+		- community
+		- fieldportal
+		- forums
+		- mysupport
+		- private-communities
+		- signin
+		- support
+		- tech
+
+
+	services-new: Dropped over http & https
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .netapp.com
+		- community.netapp.com
+		- fieldportal.netapp.com
+		- forums.netapp.com
+		- library.netapp.com
+		- mysupport.netapp.com
+		- private-communities.netapp.com
+		- signin.netapp.com
+
+
+	Mixed content:
 
 	Mixed images on communities from www
 
 	Mixed images on solutionconnection from media
 
+		- favicon on www from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="NetApp (partial)">
+<ruleset name="NetApp.com (partial)">
 
-	<target host="*.netapp.com" />
+	<target host="learningcenter.netapp.com" />
+	<target host="learningcentre.netapp.com" />
+	<target host="now.netapp.com" />
+	<target host="services.netapp.com" />
+	<target host="solutionconnection.netapp.com" />
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.netapp.com" />
+	<target host="communities.netapp.com" />
+	<target host="community.netapp.com" />
+	<target host="fieldportal.netapp.com" />
+	<target host="forums.netapp.com" />
+	<!--target host="library.netapp.com" /-->
+	<target host="mysupport.netapp.com" />
+	<target host="private-communities.netapp.com" />
+	<target host="signin.netapp.com" />
+	<target host="support.netapp.com" />
+	<target host="tech.netapp.com" />
+	<target host="www.netapp.com" />
+
+	<!--	Complications:
+				-->
+	<target host="netapp.com" />
 
 
-	<!--	Observed cookie subdomains:
-
-			- communities
-			- fast
-			- fast-new
-			- fieldportal
-			- forums
-			- login
-			- services-new
-			- solutionconnection
-			- support
-			- tech
+	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.netapp\.com$" name="^(ObSSOCookie|VISITORID)$" /-->
+	<!--securecookie host="^community\.netapp\.com$" name="^(LithiumUserInfo|LithiumUserSecure|LithiumVisitor)$" /-->
+	<!--securecookie host="^fieldportal\.netapp\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(forums|private-communities)\.netapp\.com$" name="^BIGipServer[\w.-]+$" /-->
+	<!--securecookie host="^forums\.netapp\.com$" name="^(jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^library\.netapp\.com$" name="^LTMD-COOKIE-LIBRARY-P80$" /-->
+	<!--securecookie host="^mysupport\.netapp\.com$" name="^(JSESSIONID_ESERVICE|LTMI-COOKIE-ESERVICE-P)$" /-->
+	<!--securecookie host="^(private-communities|signin)\.netapp\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^private-communities\.netapp\.com$" name="jive\.server\.info$" /-->
+	<!--securecookie host="^signin\.netapp\.com$" name="^(LTMD-COOKIE-SIGNIN-P443|ObFormLoginCookie)$" /-->
+
+	<securecookie host="^\.netapp\.com$" name="^VISITORID$" />
 	<securecookie host="^\w+\.netapp\.com$" name=".+" />
 
 
-	<!--	Server drops trailing slash:
-						-->
-	<rule from="^http://blogs\.netapp\.com/(\w+)/(\?.*)?$"
-		to="https://communities.netapp.com/community/netapp-blogs/$1$2" />
+	<rule from="^http://netapp\.com/"
+		to="https://www.netapp.com/" />
 
-	<rule from="^http://blogs\.netapp\.com/"
-		to="https://communities.netapp.com/community/netapp-blogs/" />
-
-	<rule from="^http://(communities|fast|fast-new|fieldportal|forums|learningcent(?:er|re)|login|now|services(?:-new)?|solutionconnection|support|tech)\.netapp\.com/"
-		to="https://$1.netapp.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

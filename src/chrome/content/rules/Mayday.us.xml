@@ -13,17 +13,37 @@
                 - https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
                 - https://panopticlick.eff.org
 
+
+	Fully covered hosts in *mayday.us:
+
+		- (www.)?
+		- auth
+		- my
+
+
+	Insecure cookies are set for these domains:
+
+		- .mayday.us
+
 -->
 <ruleset name="Mayday.us">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mayday.us" />
-	<target host="*.mayday.us" />
+	<target host="auth.mayday.us" />
+	<target host="my.mayday.us" />
+	<target host="www.mayday.us" />
 
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.mayday\.us$" name="^(__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^\.mayday\.us$" name=".+" />
 
 
-	<rule from="^http://((?:auth|my|www)\.)?mayday\.us/"
-		to="https://$1mayday.us/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

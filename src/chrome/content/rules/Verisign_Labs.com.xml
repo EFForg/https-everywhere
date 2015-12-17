@@ -2,7 +2,7 @@
 	For other Verisign coverage, see Verisign.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *verisignlabs.com:
 
 		- dane ¹
 		- dnssec-debugger ¹
@@ -23,7 +23,7 @@
 
 		- (www.)
 
-		- [\w-]+.dane:
+		- *.dane:
 
 			- bad-hash
 			- bad-params
@@ -36,11 +36,20 @@
 -->
 <ruleset name="Verisign Labs.com (partial)">
 
-	<target host="verisignlabs.com"/>
-	<target host="*.verisignlabs.com"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="verisignlabs.com" />
+	<target host="*.dane.verisignlabs.com" />
+	<target host="lists.verisignlabs.com" />
+	<target host="pip.verisignlabs.com" />
+	<target host="svn.verisignlabs.com" />
+	<target host="tools.verisignlabs.com" />
+	<target host="www.verisignlabs.com" />
+
+		<test url="http://good.dane.verisignlabs.com/" />
 
 
-	<rule from="^http://((?:[\w-]+\.dane|lists|pip|svn|tools|www)\.)?verisignlabs\.com/"
-		to="https://$1verisignlabs.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

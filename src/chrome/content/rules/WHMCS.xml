@@ -1,24 +1,61 @@
 <!--
 	Nonfunctional subdomains:
 
-		- blog *
-		- docs *
-		- forum *
+		- blog ¹
+		- changelog ²
+		- docs ¹
+		- download ²
+		- go ²
 
-	* Shows www, valid cert
+	¹ Redirects ot http
+	² Shows www.whmcs.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .whmcs.com
+
+
+	Mixed content:
+
+		- css on (www.)?, vsix from fonts.googleapis.com *
+		- Ad on forum from www.whmcs.com *
+
+	* Secured by us
 
 -->
-<ruleset name="WHMCS (partial)">
+<ruleset name="WHMCS.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="whmcs.com" />
-	<target host="*.whmcs.com" />
-		<exclusion pattern="^http://(?:blog|docs|forum)\." />
+	<target host="cdn.whmcs.com" />
+	<target host="forum.whmcs.com" />
+	<target host="vsix.whmcs.com" />
+	<target host="www.whmcs.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://docs\.whmcs\.com/(?:$|Main_Page$)" /-->
+		<!--exclusion pattern="^http://blog\.whmcs\.com/(?:$|images/)" /-->
+
+		<!--exclusion pattern="^http://(?:blog|docs|changelog|downloads|go)\.whmcs\.com/" /-->
+
+			<!--test url="http://blog.whmcs.com/" /-->
+			<!--test url="http://changelog.whmcs.com/" /-->
+			<!--test url="http://docs.whmcs.com/" /-->
+			<!--test url="http://download.whmcs.com/" /-->
+			<!--test url="http://go.whmcs.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.whmcs\.com$" name="^(?:__cfduid|bb_sessionhash|cf_clearance)$" /-->
 
 	<securecookie host="^(?:.*\.)?whmcs\.com$" name=".+" />
 
 
-	<rule from="^http://(\w+\.)?whmcs\.com/"
-		to="https://$1whmcs.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

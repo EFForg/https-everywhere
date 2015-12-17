@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ubounce.wpengine.netdna-cdn/ => http://ubounce.wpengine.netdna-cdn/: (6, 'Could not resolve host: ubounce.wpengine.netdna-cdn')
 	CDN buckets:
 
 		- s3.amazonaws.com/assets.unbounce.com/
@@ -9,47 +7,50 @@ Fetch error: http://ubounce.wpengine.netdna-cdn/ => http://ubounce.wpengine.netd
 		- unbounce.wpengine.netdna-cdn.com
 
 
-	Problematic subdomains:
-
-		- (www.)	(wpengine)
-		- assets	(amazonaws)
-
-
-	Partially covered domains:
-
-		- (www.)unbounce.com	(→ ubounce.wpengine.com)
-
-
-	Fully covered domains:
-
-		- ubounce.wpengine.netdna-cdn.com	(→ ubounce.wpengine.com)
-
-		- unbounce.com subdomains:
-
-			- app
-			- assets		(→ s3.amazonaws.com)
-			- go
+	(www.)?unbounce.com: WP Engine
 
 -->
-<ruleset name="Unbounce (partial)" default_off='failed ruleset test'>
+<ruleset name="Unbounce.com (partial)">
 
-	<target host="ubounce.wpengine.netdna-cdn" />
+	<!--	Direct rewrites:
+				-->
+	<target host="app.unbounce.com" />
+	<target host="assets.unbounce.com" />
+	<target host="go.unbounce.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ubounce.wpengine.netdna-cdn.com" />
+
 	<target host="unbounce.com" />
-	<target host="*.unbounce.com" />
-		<exclusion pattern="^http://(?:www\.)?ubounce\.com/(?!\?mcsf_action=main_css|photos/|wp-content/)" />
+	<target host="www.unbounce.com" />
+
+		<!--	Avoid user-visible paths:
+						-->
+		<exclusion pattern="^http://(?:www\.)?unbounce\.com/(?!\?mcsf_action=main_css|photos/|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://unbounce.com/blog/" />
+			<test url="http://unbounce.com/features/" />
+			<test url="http://www.unbounce.com/partner/" />
+			<test url="http://www.unbounce.com/pricing/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://unbounce.com/wp-content/plugins/contact-form-7/includes/css/styles.css" />
+			<test url="http://unbounce.com/wp-content/themes/unbounce2015/assets/img/fixed-logo.png" />
+			<test url="http://unbounce.com/photos/empowerbg-366x250.jpg" />
 
 
 	<!--securecookie host="^\.unbounce\.com$" name="^_lp-webapp_session$" /-->
 	<securecookie host="^go\.unbounce\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?ubounce(?:\.wpengine\.netdna-cdn)?\.com/"
+	<rule from="^http://(?:www\.)?unbounce(?:\.wpengine\.netdna-cdn)?\.com/"
 		to="https://unbounce.wpengine.com/" />
 
-	<rule from="^http://(app|go)\.unbounce\.com/"
-		to="https://$1.unbounce.com/" />
-
-	<rule from="^http://assets\.unbounce\.com/"
-		to="https://s3.amazonaws.com/assets.unbounce.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

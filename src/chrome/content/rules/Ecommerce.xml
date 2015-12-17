@@ -1,61 +1,40 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ixwebhosting.com/ => https://ixwebhosting.com/: Cycle detected - URL already encountered: https://www.ixwebhosting.com/
-Fetch error: http://webhost.biz/ => https://webhost.biz/: (51, "SSL: no alternative certificate subject name matches target host name 'webhost.biz'")
 	Other Ecommerce rulesets:
 
 		- Hesecure.com.xml
+		- IX_Web_Hosting.com.xml
+		- Opentransfer.com.xml
+		- Webhost.biz.xml
 
 
-	Nonfunctional domains:
+	Insecure cookies are set for these hosts:
 
-		- status.ixwebhosting.com
+		- www.ecommerce.com
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Ecommerce (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Ecommerce.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ecommerce.com" />
 	<target host="www.ecommerce.com" />
-	<target host="ixwebhosting.com" />
-	<target host="*.ixwebhosting.com" />
-	<target host="opentransfer.com" />
-	<target host="*.opentransfer.com" />
-	<!--	* for cross-domain cookies.	-->
-	<target host="*.webmail.opentransfer.com" />
-	<target host="webhost.biz" />
-	<target host="*.webhost.biz" />
 
 
-	<securecookie host="^(?:.*\.)?ixwebhosting\.com$" name=".*" />
-	<securecookie host="^\.webmail\.opentransfer\.com$" name=".*" />
-	<securecookie host="^manage\.webhost\.biz$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.ecommerce\.com$" name="^(_ecommerce_session|request_method)$" /-->
+
+	<securecookie host="^www\.ecommerce\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?ecommerce\.com/"
-		to="https://$1ecommerce.com/" />
-
-	<rule from="^http://((?:assets|manage|www)\.)?ixwebhosting\.com/"
-		to="https://$1ixwebhosting.com/" />
-
-	<!--	- blog doesn't work over https
-		- $ redirects like so
-			-->
-	<rule from="^http://blog\.ixwebhosting\.com/"
-		to="https://www.ixwebhosting.com/blog/" />
-
-	<!--	- Cert: *.opentransfer.com
-		- Redirects like so
-				-->
-	<rule from="^http://email\.ixwebhosting\.com/"
-		to="https://webmail.opentransfer.com/horde/imp/" />
-
-	<rule from="^http://(?:www\.)?opentransfer\.com/"
-		to="https://ecommerce.com/" />
-
-	<rule from="^http://webmail\.opentransfer\.com/"
-		to="https://webmail.opentransfer.com/" />
-
-	<rule from="^http://(manage\.|www\.)?webhost\.biz/"
-		to="https://$1webhost.biz/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

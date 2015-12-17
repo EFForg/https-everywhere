@@ -2,20 +2,43 @@
 	For other American Express coverage, see AmericanExpress.xml.
 
 
+	Partially covered hosts in *aexp-static.com:
+
+		- qwww *
+
+	* $ 404s
+
+
 	Fully covered subdomains:
 
 		- icm
-		- qwww
 		- web
 		- www
 
 -->
-<ruleset name="AeXp-static.com">
+<ruleset name="AeXp-static.com (partial)">
 
-	<target host="*.aexp-static.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="icm.aexp-static.com" />
+	<target host="qwww.aexp-static.com" />
+	<target host="web.aexp-static.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.aexp-static.com" />
+
+		<!--	404:
+				-->
+		<exclusion pattern="^http://qwww\.aexp-static\.com/$" />
 
 
-	<rule from="^http://(icm|web|q?www)\.aexp-static\.com/"
-		to="https://$1.aexp-static.com/" />
+	<!--	$ 404s:
+			-->
+	<rule from="^http://www\.aexp-static\.com/$"
+		to="https://www.americanexpress.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

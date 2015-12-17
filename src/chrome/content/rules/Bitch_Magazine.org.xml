@@ -1,17 +1,43 @@
 <!--
 	Nonfunctional subdomains:
 
-		- images	(502, valid cert)
+		- images *
+
+	* 522
 
 
-	Mixed images on www from images
+	Insecure cookies are set for these domains:
+
+		- .bitchmagazine.org
+
+
+	Mixed content:
+
+		- iframe on www from 8tracks.com ¹
+
+		- Images, on www from:
+
+			- bitchmagazine.org ¹
+			- images.bitchmagazine.org ²
+
+	¹ Secured by us
+	² Unsecurable <= 522
 
 -->
 <ruleset name="Bitch Magazine.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bitchmagazine.org" />
-	<target host="*.bitchmagazine.org" />
 
+	<!--	Complications:
+				-->
+	<target host="www.bitchmagazine.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bitchmagazine\.org$" name="^(__cfduid|SESS[\da-f]{32}|cf_clearance)$" /-->
 
 	<securecookie host="^\.bitchmagazine\.org$" name=".+" />
 
@@ -19,7 +45,10 @@
 	<!--	www redirects to ^ over http,
 		so copy that behavior:
 					-->
-	<rule from="^http://(?:www\.)?bitchmagazine\.org/"
+	<rule from="^http://www\.bitchmagazine\.org/"
 		to="https://bitchmagazine.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

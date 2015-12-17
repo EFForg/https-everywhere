@@ -4,22 +4,29 @@
 
 	CDN buckets:
 
+		- d3jpjf0yeaswad.cloudfront.net
+
+			- cdn.hymnal.voxmedia.com
+
 		- d8wuu9msfgurd.cloudfront.net
 
 			- ea-cdn.voxmedia.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *voxmedia.com:
 
 		- blog *
+		- pixelpunch ²
 
 	* Tumblr
+	² 500
 
 
-	Problematic subdomains:
+	Problematic hosts in *voxmedia.com:
 
 		- ^ ¹
 		- ea-cdn ²
+		- cdn.hymnal ²
 		- jobs ¹
 		- status ³
 
@@ -35,30 +42,67 @@
 			- ea-cdn *
 			- assets.sbnation.com *
 
+		- Images, on:
+
+			- www from ea-cdn.voxmedia.com *
+			- www from cdn\d.vox-cdn.com *
+
 	* Secured by us
 
 -->
 <ruleset name="Vox Media.com (false MCB)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="fonts.voxmedia.com" />
+	<target host="marketing.voxmedia.com" />
+	<target host="product.voxmedia.com" />
+	<target host="providence.voxmedia.com" />
+	<target host="www.voxmedia.com" />
+
+	<!--	Complications:
+				-->
 	<target host="voxmedia.com" />
-	<target host="*.voxmedia.com" />
+	<target host="ea-cdn.voxmedia.com" />
+	<target host="cdn.hymnal.voxmedia.com" />
+	<target host="jobs.voxmedia.com" />
+	<target host="status.voxmedia.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.voxmedia\.com/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.voxmedia.com/?" />
+			<test url="http://www.voxmedia.com/?foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.voxmedia.com/brands/vox/" />
 
 
-	<rule from="^http://(?:www\.)?voxmedia\.com/"
+	<rule from="^http://voxmedia\.com/"
 		to="https://www.voxmedia.com/" />
 
 	<rule from="^http://ea-cdn\.voxmedia\.com/"
 		to="https://d8wuu9msfgurd.cloudfront.net/" />
+
+	<rule from="^http://cdn\.hymnal\.voxmedia\.com/"
+		to="https://d3jpjf0yeaswad.cloudfront.net/" />
 
 	<!--	Redirect drops path but not args:
 							-->
 	<rule from="^http://jobs\.voxmedia\.com/[^?]*"
 		to="https://www.voxmedia.com/careers" />
 
-	<rule from="^http://product\.voxmedia\.com/"
-		to="https://product.voxmedia.com/" />
+		<test url="http://jobs.voxmedia.com//" />
+		<test url="http://jobs.voxmedia.com///" />
 
 	<rule from="^http://status\.voxmedia\.com/"
 		to="https://voxmedia.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

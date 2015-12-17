@@ -1,0 +1,54 @@
+<!--
+	For other Neustar coverage, see NeuStar.xml.
+
+
+	Problematic hosts:
+
+		- (www.)? *
+
+	* Mismatched
+
+
+	Fully covered hosts:
+
+		- (www.)?	(→ www.neustar.biz)
+		- www2
+
+
+	Insecure cookies are set for these hosts:
+
+		- www2.webmetrics.com
+
+-->
+<ruleset name="webmetrics.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www2.webmetrics.com" />
+
+	<!--	Complications:
+				-->
+	<target host="webmetrics.com" />
+	<target host="www.webmetrics.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www2\.webmetrics\.com$" name="^neustar_cookie$" /-->
+
+	<securecookie host="^www2\.webmetrics\.com$" name=".+" />
+
+
+	<!--	Redirect drops forward slash and
+		and path, but not args:
+					-->
+	<rule from="^http://(?:www\.)?webmetrics\.com/[^?]*"
+		to="https://www.neustar.biz/services/web-performance" />
+
+		<test url="http://www.webmetrics.com/products/eco_mgmnt.html" />
+		<test url="http://www.webmetrics.com//products/eco_mgmnt.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

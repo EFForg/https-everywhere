@@ -4,29 +4,48 @@
 		- THN.li.xml
 
 
-	Nonfunctional subdomains:
+	www.thehackernews.com: 404
 
-		- (www.)? *
-		- magazine *
 
-	* Redirects to http
+	Insecure cookies are set for these domains;
+
+		- .thehackernews.com
+
+
+	Mixed content:
+
+		- css on ^ from fonts.googleapis.com *
+		- Images on ^, magazine from \d.bp.blogspot.com *
+		- favicon on ^ from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="The Hacker News.com (partial)" default_off="redirect loop">
+<ruleset name="The Hacker News.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="thehackernews.com" />
-	<target host="*.thehackernews.com" />
-		<!--
-			Redirect to http:
-						-->
-		<exclusion pattern="^http://(?:www\.)?thehackernews\.com/(?:$|\d{4}/\d\d/[\w-]+\.html|favicon\.ico)" />
-		<exclusion pattern="^http://magazine\.thehackernews\.com/(?:$|favicon\.ico|images/|issue-\d+\.html|stylesheets/)" />
+	<target host="magazine.thehackernews.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.thehackernews.com" />
 
 
-	<securecookie host="^\.thehackernews\.com$" name="^__cfduid$" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.thehackernews\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.thehackernews\.com$" name=".+" />
 
 
-	<rule from="^http://(magazine\.|www\.)?thehackernews\.com/"
-		to="https://$1thehackernews.com/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://www\.thehackernews\.com/"
+		to="https://thehackernews.com/" />
 
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

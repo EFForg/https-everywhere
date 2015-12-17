@@ -1,0 +1,68 @@
+<!--
+	For other Amnesty International coverage, see Amnesty-International.xml.
+
+
+	Nonfunctional hosts in *amnesty.fr:
+
+		- www.boutique ¹
+		- extranet ²
+
+	¹ Redirects to boutique-solidaire.com
+	² Refused
+
+
+	Problematic hosts in *amnesty.fr:
+
+		- stories *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- stories.amnesty.fr
+
+
+	Mixed content:
+
+		- css on stories from fast.fonts.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Amnesty.fr (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="amnesty.fr" />
+	<target host="www.amnesty.fr" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.amnesty\.fr/($|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.amnesty\.fr/+(?!misc/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.amnesty.fr/Accessibilite" />
+			<test url="http://www.amnesty.fr/Contact/AI-France" />
+			<test url="http://www.amnesty.fr/user/password" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.amnesty.fr/misc/menu-leaf.png" />
+			<test url="http://www.amnesty.fr/sites/default/files/amnesty_logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^stories\.amnesty\.fr$" name="^(OVHCDN|xxlplanBAK|xxlplanD)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

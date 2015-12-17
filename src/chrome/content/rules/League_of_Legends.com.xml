@@ -31,10 +31,11 @@
 
 		- euw ¹
 		- na ¹
+		- forums.(na|euw) ¹
 		- community.na ²
 		- competitive.na ³
 
-	¹ Redirects to http, valid cert
+	¹ 500
 	² Refused
 	³ 503, akamai
 
@@ -45,14 +46,16 @@
 		- gameinfo.euw ¹
 		- gameinfo.na ¹
 		- prized.na ²
+		- metrics ³
+		- status ³
 
 	¹ cloudfront
 	² Works; mismatched, CN: *.gotpantheon.com
+	³ mismatch
 
 
 	Partially covered subdomains:
 
-		- forums.na *
 		- signup *
 
 	* Some pages redirect to http
@@ -65,6 +68,8 @@
 		- pbesignup.euw
 		- pbesignup.na
 		- support
+		- account
+		- ddragon
 
 	* → dx0wf1fepagqw.cloudfront.net
 
@@ -91,28 +96,24 @@
 <ruleset name="League of Legends.com (partial)">
 
 	<target host="leagueoflegends.com" />
-	<target host="*.leagueoflegends.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://forums\.na\.leagueoflegends\.com/board/($|\?)" /-->
-		<!--exclusion pattern="^http://signup\.leagueoflegends\.com/+((en/home/index|en/signup/redownload|en/signup/redownload)($|\?))" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://forums\.na\.leagueoflegends\.com/board/riot-assets/" />
-		<exclusion pattern="^http://signup\.leagueoflegends\.com/+(?!en/signup(?:$|\?|/captcha/)|favicon\.ico|theme/)" />
+	<target host="signup.leagueoflegends.com" />
+	<target host="support.leagueoflegends.com" />
+	<target host="www.leagueoflegends.com" />
+	<target host="pbesignup.na.leagueoflegends.com" />
+	<target host="pbesignup.euw.leagueoflegends.com" />
+	<target host="account.leagueoflegends.com" />
+	<target host="ddragon.leagueoflegends.com" />
+	<target host="cdn.leagueoflegends.com" />
 
 
 	<!--	Server sets Secure for:
 					-->
 	<!--securecookie host="^support\.leagueoflegends\.com$" name=".+" /-->
 
-
-	<rule from="^http://((?:pbesignup\.(?:euw|na)|forums\.na|signup|support|www)\.)?leagueoflegends\.com/"
-		to="https://$1leagueoflegends.com/" />
-
 	<rule from="^http://cdn\.leagueoflegends\.com/"
 		to="https://dx0wf1fepagqw.cloudfront.net/" />
+	
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

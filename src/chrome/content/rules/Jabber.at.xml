@@ -1,6 +1,30 @@
-<ruleset name="Jabber.at">
+<!--
+	Problematic subdomains:
+
+		- www.list *
+
+	* Plaintext reply (cf. refused over http)
+
+-->
+<ruleset name="Jabber.at" >
   <target host="jabber.at" />
+	<target host="list.jabber.at" />
+	<!--target host="www.list.jabber.at" /-->
   <target host="www.jabber.at" />
 
-  <rule from="^http://(?:www\.)?jabber\.at/" to="https://jabber.at/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^list\.jabber\.at$" name="^csrftoken$" /-->
+
+	<securecookie host="^list\.jabber\.at$" name=".+" />
+
+
+  <rule from="^http://www\.jabber\.at/" to="https://jabber.at/" />
+
+	<!--rule from="^http://www\.list\.jabber\.at/"
+		to="https://list.jabber.at/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

@@ -1,17 +1,89 @@
 <!--
-	^appcelerator.com times out
+	CDN buckets:
+
+		- www.appcelerator.com.s3.amazonaws.com
+
+
+	Problematic hosts in *appcelerator.com:
+
+		- www.marketplace ¹
+		- training ²
+
+	¹ Mismatched
+	² Mixed css
+
+
+	Fully covered hosts in *appcelerator.com:
+
+		- (www.)?
+		- community
+		- developer
+		- docs
+		- marketplace
+		- my
+		- platform
+		- static
+		- thinkmobile
+		- university
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .appcelerator.com
+		- community.appcelerator.com
+		- developer.appcelerator.com
+		- marketplace.appcelerator.com
+		- www.appcelerator.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- training from static.appcelerator.com *
+			- training, www from fonts.googleapis.com *
+
+		- Fonts on training from static.appcelerator.com *
+
+		- Images, on:
+
+			- training from www.appcelerator.com.s3.amazonaws.com
+			- training from static.appcelerator.com *
+
+		- Bug on training from pixel.quantserve.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Appcelerator">
+<ruleset name="Appcelerator.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="appcelerator.com" />
+	<target host="community.appcelerator.com" />
+	<target host="developer.appcelerator.com" />
+	<target host="docs.appcelerator.com" />
+	<target host="marketplace.appcelerator.com" />
+	<target host="my.appcelerator.com" />
+	<target host="platform.appcelerator.com" />
+	<target host="static.appcelerator.com" />
+	<target host="thinkmobile.appcelerator.com" />
+	<target host="university.appcelerator.com" />
 	<target host="www.appcelerator.com" />
 
 
-	<securecookie host="^www\.appcelerator\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.appcelerator\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^community\.appcelerator\.com$" name="^express\.sid$" /-->
+	<!--securecookie host="^developer\.appcelerator\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^marketplace\.appcelerator\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^www\.appcelerator\.com$" name="^(?:appc_visor|appc_visor_sig)$" /-->
+
+	<securecookie host="^(?:community|developer|marketplace|www)?\.appcelerator\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?appcelerator\.com/"
-		to="https://www.appcelerator.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

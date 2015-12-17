@@ -1,37 +1,43 @@
 <!--
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- assets1
-		- assets2
-		- download
-		- framegrabs
-		- mtoza
-		- resources
-		- static	(→ s3.amazonaws.com)
-		- view
-
-
-	Insecure cookies are set for these domains:
-
+		- vzaar.com
 		- view.vzaar.com
 
 -->
 <ruleset name="vzaar.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="vzaar.com" />
-	<target host="*.vzaar.com" />
+	<target host="assets1.vzaar.com" />
+	<target host="assets2.vzaar.com" />
+	<target host="download.vzaar.com" />
+	<target host="framegrabs.vzaar.com" />
+	<target host="mtoza.vzaar.com" />
+	<target host="player.vzaar.com" />
+	<target host="resources.vzaar.com" />
+	<target host="video.vzaar.com" />
+	<target host="view.vzaar.com" />
+	<target host="www.vzaar.com" />
 
+	<!--	Complications:
+				-->
+	<target host="static.vzaar.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^vzaar\.com$" name="^(?:_vzaar-app_session-R4|visits)$" /-->
+	<!--securecookie host="^view\.vzaar\.com$" name="^_video-distributor-2_session$" /-->
 
 	<securecookie host="^view\.vzaar\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?vzaar\.com/(?=blog/|favicon\.ico$|help/|images/|login$|stylesheets/)"
-		to="https://vzaar.com/" />
-
 	<rule from="^http://static\.vzaar\.com/"
 		to="https://s3.amazonaws.com/static.vzaar.com/" />
 
-	<rule from="^http://(assets[12]|download|framegrabs|mtoza|resources|view)\.vzaar\.com/"
-		to="https://$1.vzaar.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

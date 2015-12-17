@@ -1,48 +1,32 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://taleo.com/ => https://www.taleo.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.taleo.com'")
-Fetch error: http://taleo.net/ => https://www.taleo.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.taleo.com'")
+	For other Oracle coverage, see Oracle.xml.
+
+
 	!functional:
-		- www.taleo.net			(cert: acquia-sites.com; redirect to http://...com; same cert is valid for .com)
+		- knowledgeexchange.taleo.com	(Dropped)
 		- www.taleobusinessedition.com	(timeout)
 
+
+	(www.)?taleo.com: Redirects to http
+
 -->
-<ruleset name="Taleo (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Taleo.com (partial)">
 
 	<target host="taleo.com"/>
-	<target host="*.taleo.com"/>
-	<target host="taleo.net"/>
-	<target host="*.taleo.net"/>
+	<target host="www.taleo.com"/>
 
 
-	<!--	encountered cookies:
-			- .com:
-				- ^www
-			- .net:
-				- ^tbe
-				- ^staticiad.tbe	-->
-	<securecookie host="^www\.taleo\.com$" name=".*"/>
-	<securecookie host="^(?:.+\.)?tbe\.taleo\.net$" name=".+" />
+	<!--securecookie host="^www\.taleo\.com$" name=".*"/-->
 
 
-	<!--	cert is not valid for www nor net	-->
-	<rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
-		to="https://www.taleo.com/"/>
-
-	<!--	.tbe : domain for clients
-
-		Observed subdomains:
-
-			- ch
-			- staticiad
-			- staticord
-					-->
-	<rule from="^http://(tbe|\w+\.tbe|toc)\.taleo\.net/"
-		to="https://$1.taleo.net/"/>
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?taleo\.com/$"
+		to="https://www.oracle.com/us/products/applications/taleo/overview/index.html" />
 
 	<!--	times out over https.  This redirection
 		is what the server does, aside from https.	-->
-	<rule from="^http://(?:www\.)?taleobusinessedition\.com/"
-		to="https://www.taleo.com/solutions/taleo-business-edition"/>
+	<!--rule from="^http://(?:www\.)?taleobusinessedition\.com/"
+		to="https://www.taleo.com/solutions/taleo-business-edition"/-->
 
 </ruleset>

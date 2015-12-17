@@ -7,29 +7,60 @@
 
 	Nonfunctional subdomains:
 
-		- blog		(hosted on Tumblr)
-		- help
-		- support	(cert: *.zendesk.com; 302s to http)
+		- docs ¹
+		- help ²
+
+	¹ 500
+	¹ 404
+
+
+	Problematic hosts:
+
+		- status *
+
+	* Mismatched
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- blog
+		- support
+		- status	(→ transifex.statuspage.io)
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from $self *
+			- www from img.youtube.com *
+			- www from i.imgur.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Transifex (partial)">
+<ruleset name="Transifex.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="transifex.com" />
-	<target host="*.transifex.com" />
+	<target host="blog.transifex.com" />
+	<target host="support.transifex.com" />
+	<target host="www.transifex.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.transifex.com" />
 
 
 	<securecookie host="^www\.transifex\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?transifex\.com/"
-		to="https://$1transifex.com/" />
+	<rule from="^http://status\.transifex\.com/"
+		to="https://transifex.statuspage.io/" />
 
-	<!--	generated is used directly on some Zendesk accounts, so
-		presumably pointing to generated.zendesk is preferred.
-
-		transifex.zendesk.com 302s back.
-								-->
-	<rule from="^http://support\.transifex\.com/generated/"
-		to="https://generated.zendesk.com/generated/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

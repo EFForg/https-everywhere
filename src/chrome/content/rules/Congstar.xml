@@ -1,17 +1,56 @@
+<!--
+	Other congstar rulesets:
+
+		- Congstar-media.de.xml
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- congstar.de
+		- .congstar.de
+		- freundewerben.congstar.de
+		- www.congstar.de
+		- .www.congstar.de
+
+
+	Mixed content:
+
+		- Bugs, on:
+
+			- freundewerben from congstar01.webtrekk.net *
+			- prepaid from cache.addthiscdn.com *
+
+	* Secured by us
+
+-->
 <ruleset name="congstar">
 
 	<target host="congstar.de" />
-	<target host="*.congstar.de" />
+	<target host="freundewerben.congstar.de" />
+	<target host="gewinnspiel.congstar.de" />
+	<target host="mgm.congstar.de" />
+	<target host="prepaid.congstar.de" />
+	<target host="www.congstar.de" />
 
 
-	<securecookie host="^.*\.congstar\.de$" name=".*" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(?:www\.)?congstar\.de$" name="BIGipServer\w+$" /-->
+	<!--securecookie host="\.congstar\.de$" name="^XTCsid$" /-->
+	<!--securecookie host="^freundewerben\.congstar\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="\.www\.congstar\.de$" name="(?:cookies_allowed|mobile_redirect)$" /-->
+
+	<!--	A cookie appears to be read from a script for login
+		=> restricted cookie coverage.
+
+		(https://github.com/EFForg/https-everywhere/issues/1961)
+									-->
+	<securecookie host="(?:www\.)?congstar\.de$" name="BIGipServer\w+$" />
+	<!--securecookie host=".*\.congstar\.de$" name=".*" /-->
+	<securecookie host="^freundewerben\.congstar\.de$" name=".+" />
 
 
-	<!--	Cert only matches *.congstar.de.	-->
-	<rule from="^http://(?:www\.)?congstar\.de/"
-		to="https://www.congstar.de/" />
-
-	<rule from="^http://(gewinnspiel|mgm)\.congstar\.de/"
-		to="https://$1.congstar.de/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

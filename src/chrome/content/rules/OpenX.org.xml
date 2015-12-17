@@ -1,0 +1,60 @@
+<!--
+	For other OpenX coverage, see OpenX.xml.
+
+
+	CDN buckets:
+
+		- akamai.openx.org
+
+			- a1051.w7.akamai.net
+			- blog.openx.org
+			- support.openx.org
+
+
+	Nonfunctional hosts in *openx.org:
+
+		- forum *
+
+	* Shows blog.openx.org; self-signed, CN: *.openx.com
+
+
+	Problematic hosts in *openx.org:
+
+		- ^ **		(works, self-signed)
+		- adserver *
+		- blog *
+		- edit-blog **
+		- support	(shows blog.openx.org, akamai)
+		- www		(Redirect destination mismatched)
+
+	* Works, akamai
+	** Works; self-signed, CN: *.openx.com
+
+
+	Fully covered hosts in *openx.org:
+
+		- adserver
+
+-->
+<ruleset name="OpenX.org (partial)" default_off="mismatched">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="adserver.openx.org" />
+	<!--target host="www.openx.org" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="openx.org" /-->
+
+
+	<securecookie host="^adserver\.openx\.org$" name=".+" />
+
+
+	<!--rule from="^http://openx\.org/"
+		to="https://www.openx.org/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

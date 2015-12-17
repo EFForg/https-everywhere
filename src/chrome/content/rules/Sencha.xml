@@ -9,37 +9,73 @@
 		- i2.wp.com/www.sencha.com/
 
 
-	Nonfunctional domains:
-
-		- docs.sencha.com	(shows www, valid cert)
-
-
 	Problematic domains:
 
-		- sencha.com		(times out)
+		- sencha.com ¹
 		- cdn.sencha.com *
 		- cdn.sencha.io *
 
+	¹ Refused
 	* Cachefly
+
+
+	Insecure cookies are set for these domains:
+
+		- .sencha.com
+		- .manage.sencha.com
 
 -->
 <ruleset name="Sencha (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="docs.sencha.com" />
+	<target host="img1.sencha.com" />
+	<target host="manage.sencha.com" />
+	<target host="www.sencha.com" />
+
+	<!--	Complications:
+				-->
 	<target host="sencha.com" />
-	<target host="*.sencha.com" />
+	<target host="cdn.sencha.com" />
+
 	<target host="cdn.sencha.io" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sencha\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sencha\.com/+(?!forum/|wp-content/)" />
 
-	<securecookie host="^\.?www\.sencha\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.sencha.com/company/" />
+			<test url="http://www.sencha.com/products/extjs/" />
+			<test url="http://www.sencha.com/products/touch/download/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sencha.com/forum/" />
+			<test url="http://www.sencha.com/wp-content/themes/sencha/images/logo.svg" />
 
 
-	<rule from="^http://(?:www\.)?sencha\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sencha\.com$" name="^bb_sessionhash$" /-->
+	<!--securecookie host="^\.manage\.sencha\.com$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\.manage\.sencha\.com$" name=".+" />
+
+
+	<rule from="^http://sencha\.com/"
 		to="https://www.sencha.com/" />
-
-	<rule from="^http://img1\.sencha\.com/"
-		to="https:///img1.sencha.com/" />
 
 	<rule from="^http://cdn\.sencha\.(?:com|io)/"
 		to="https://extjs.cachefly.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

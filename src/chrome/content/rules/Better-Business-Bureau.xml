@@ -1,8 +1,12 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://hurdman.app.bbb.org/ => https://hurdman.app.bbb.org/: (6, 'Could not resolve host: hurdman.bbb.org')
-Fetch error: http://bbbsilicon.org/ => https://bbbsilicon.org/: (51, "SSL: no alternative certificate subject name matches target host name 'bbbsilicon.org'")
-Fetch error: http://www.bbbsilicon.org/ => https://www.bbbsilicon.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.bbbsilicon.org'")
+	Better Business Bureau
+
+	Other Better Business Bureau rulesets:
+
+		- BBB_Online.org.xml
+		- BBB_Silicon.org.xml
+
+
 	Nonfunctional domains:
 
 		- (www.)?labbb.org *
@@ -10,83 +14,120 @@ Fetch error: http://www.bbbsilicon.org/ => https://www.bbbsilicon.org/: (51, "SS
 	* Refused
 
 
-	Nonfcuntional subdomains:
+	Problematic hosts in *bbb.org:
 
-		- (www.)?dc *
-
-	* "domain has just been registered"
-
-
-	Problematic domains:
-
-		- (www.)?la.bbb.org *
-		- (www.)?sanjose.bbb.org *
-		- (www.)?setflorida.bbb.org *
-
-		- (www.)?bbbonline.org *
+		- www.dc *
+		- www.la *
+		- www.sanjose *
+		- www.setflorida *
+		- www.us *
 
 	* Mismatched
 
 
-	Partially covered domains:
-
-		- (www.)?bbbonline.com		(→ www.bbb.org)
-
-
 	Fully covered domains:
 
-		- bbb.org			(→ www)
 		- hurdman.app.bbb.org
-		- (www.)?sanjose.bbb.org	(→ bbbsilicon.org)
+		- sanjose.app.bbb.org
 
 		- (www.)?[\w-]+.bbb.org:	(www → ^)
 
+			- assets
+			- charityreports
+			- (www.)?dc
+			- (www.)?la
+			- (www.)?sanjose
+			- (www.)?seflorida
 			- seal-centralalabama
+			- seal-goldengate
+			- seal-newyork
+			- us
+			- www
 
-		- (www.)?bbbsilicon.org
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .bbb.org
+		- (area).app.bbb.org
+		- assets.bbb.org
+		- charityreports.bbb.org
+		- .goldengate.bbb.org
+		- seal-(area).bbb.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- charityreports from assets.bbb.org *
+			- www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Better Business Bureau (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="BBB.org">
 
-	<target host="bbb.org"/>
-	<target host="hurdman.app.bbb.org"/>
-	<target host="*.bbb.org"/>
-		<!--
-			(www.)dcbbb.org redirects here		-->
-		<exclusion pattern="^http://(?:www\.)?dc\."/>
-		<exclusion pattern="http://(?:www\.)?(?:la|seflorida)\."/>
-	<target host="bbbonline.org"/>
-	<target host="www.bbbonline.org"/>
-	<target host="bbbsilicon.org" />
-	<target host="www.bbbsilicon.org" />
+	<target host="bbb.org" />
+	<target host="*.bbb.org" />
+
 	<!--target host="labbb.org"/-->
 	<!--target host="www.labbb.org"/-->
 
+		<!--	Redirects to (200) unavailable.html
+								-->
+		<exclusion pattern="^http://www\.bbb\.org/\w+/business-reviews/\w+/\w" />
 
-	<securecookie host="^.*\.bbb\.org$" name=".*" />
-	<securecookie host="^(?:.*\.)?bbbsilicon\.org$" name=".*" />
-	<!--securecookie host="^www\.labbb\.org$" name=".*"/-->
+			<!--	+ve:
+					-->
+			<test url="http://www.bbb.org/kitchener/business-reviews/movers/kingsway-van-lines-in-markham-on-1297240" />
+			<test url="http://www.bbb.org/kitchener/business-reviews/movers/megacity-storage-in-north-york-on-1136682" />
+			<test url="http://www.bbb.org/kitchener/business-reviews/movers/metropolitan-movers-durham-in-oshawa-on-1332540" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://hurdman.app.bbb.org/abs/login.html" />
+		<test url="http://sanjose.app.bbb.org/abs/login.html" />
+		<test url="http://assets.bbb.org/" />
+		<test url="http://assets.bbb.org/images/seals/aC-seal-horizontal.png" />
+		<test url="http://charityreports.bbb.org/" />
+		<test url="http://charityreports.bbb.org/public/seal.aspx?ID=34521032010" />
+		<test url="http://dc.bbb.org/" />
+		<test url="http://la.bbb.org/" />
+		<test url="http://mwco.bbb.org/" />
+		<test url="http://sanjose.bbb.org/" />
+		<test url="http://seal-newyork.bbb.org/seals/black-seal-200-42-whitetxt-dashlane-1.png" />
+		<test url="http://seflorida.bbb.org/" />
+		<test url="http://us.bbb.org/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://www.dc.bbb.org/" />
+		<test url="http://www.la.bbb.org/" />
+		<test url="http://www.sanjose.bbb.org/" />
+		<test url="http://www.seflorida.bbb.org/" />
+		<test url="http://www.us.bbb.org/" />
 
 
-	<!--rule from="^http://(?:www\.)?la\.?bbb\.org/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bbb\.org$" name="^(__qca|BBBLocationName|BBBSite|PHPSESSID)$" /-->
+	<!--securecookie host="^\.(goldengate\.)?bbb\.org$" name="^logolink$" /-->
+	<!--securecookie host="^(hurdman|sanjose)\.app\.bbb\.org$" name="^bbb$" /-->
+	<!--securecookie host="^assets\.bbb\.org$" name="^NSC_.*" /-->
+	<!--securecookie host="^sanjose\.app\.bbb\.org$" name="^(before|current|previous)$" /-->
+	<!--securecookie host="^charityreports\.bbb\.org$" name="^(ASP\.NET_SessionId|BBB_Cookie)$" /-->
+	<!--securecookie host="seal-area\.bbb\.org$" name="^BBB_Cookie$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--rule from="^http://(?:www\.)?labbb\.org/"
 		to="https://www.labbb.org/"/-->
 
-	<rule from="^http://bbb\.org/"
-		to="https://www.bbb.org/"/>
-
-	<rule from="^http://(?:www\.)?([\w\-]+)\.bbb\.org/"
+	<rule from="^http://www\.([\w-]+)\.bbb\.org/"
 		to="https://$1.bbb.org/"/>
 
-	<rule from="^http://hurdman\.app\.bbb\.org/"
-		to="https://hurdman.app.bbb.org/"/>
-
-	<rule from="^http://(?:www\.)?bbbonline\.org/cks\.asp\?id=(\d+)"
-		to="https://www.bbb.org/us/bbb-online-business/?id=$1"/>
-
-	<rule from="^http://(www\.)?bbbsilicon\.org/"
-		to="https://$1bbbsilicon.org/" />
-
-	<rule from="^http://(?:www\.)?sanjose\.bbb\.org/"
-		to="https://bbbsilicon.org/" />
+	<rule from="^http://((?:[\w-]+|(?:hurdman|sanjose)\.app)\.)?bbb\.org/"
+		to="https://$1bbb.org/"/>
 
 </ruleset>

@@ -1,27 +1,49 @@
 <!--
 	Nonfunctional subdomains:
 
-		blog *
-		support *
+		- \w+ *
 
-	* Shows formconcierge.com; expired, mismatched, CN: formconcierge.com
+	* Redirects to http, per-client domains
+
+
+	These altnames don't exist:
+
+		- www.support.formstack.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- $user.formstack.com
+		- www.formstack.com
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+		- Images on blog from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Formstack (partial)">
+<ruleset name="Formstack.com (partial)">
 
 	<target host="formstack.com" />
-	<target host="*.formstack.com" />
+	<target host="bi.formstack.com" />
+	<target host="blog.formstack.com" />
+	<target host="static.formstack.com" />
+	<target host="support.formstack.com" />
+	<target host="www.formstack.com" />
 
 
-	<rule from="^http://(www\.)?formstack\.com/"
-		to="https://$1formstack.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bi\.formstack\.com$" name="^(?:FormSpringForm(?:Session|View)\d+|rgisanonymous|rguserid|rguuid)$" /-->
+	<!--securecookie host="^www\.formstack\.com$" name="^(rgisanonymous|rguserid|rguuid)$" /-->
 
-	<rule from="^http://blog\.formstack\.com/favicon\.ico$"
-		to="https://www.formstack.com/favicon.ico" />
+	<securecookie host="^(?:bi|www)\.formstack\.com$" name=".+" />
 
-	<!--	content_shadow_bg.jpg has different hue.
-							-->
-	<rule from="^http://(?:blog\.formstack\.com/wp-content/themes/fontstack-theme|support\.formstack\.com/assets)/images/bg\.jpg$"
-		to="https://www.formstack.com/assets/images/bg.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

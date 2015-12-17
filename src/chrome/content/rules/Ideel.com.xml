@@ -1,0 +1,61 @@
+<!--
+	Problematic hosts in *ideel.com:
+
+		- blog *
+
+	* Mismatched
+
+
+	Fully covered hosts in *ideel.com:
+
+		- 0-static
+		- 0images-production
+		- support
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.ideel.com
+
+-->
+<ruleset name="Ideel.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ideel.com" />
+	<target host="0-static.ideel.com" />
+	<target host="0images-production.ideeli.com" />
+	<target host="support.ideel.com" />
+	<target host="www.ideel.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ideel\.com/($|register/lostpassword$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ideel\.com/+(?!favicon\.ico|login(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ideel.com/active_rbac/tellafriend" />
+			<test url="http://www.ideel.com/events/latest/all" />
+			<test url="http://www.ideel.com/mobile" />
+			<test url="http://www.ideel.com/pages/international" />
+			<test url="http://www.ideel.com/register/lostpassword" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ideel.com/favicon.ico" />
+			<test url="http://www.ideel.com/login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.ideel\.com$" name="^(live_session_id|now)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

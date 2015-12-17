@@ -1,0 +1,92 @@
+<!--
+	Charter Communications, Inc.
+
+	Other Charter Communications rulesets:
+
+		- Charter.net.xml
+		- Charter-Business.com.xml
+		- Charter_our_Community.com.xml
+		- CharterBusiness.com.xml
+		- Spectrum.com.xml
+		- SpectrumBusiness.net.xml
+		- Spectrum_Business_Insights.com.xml
+
+
+	Problematic hosts in *charter.com:
+
+		- myaccount *
+
+	* Mismatched
+
+
+	Fully covered hosts in *charter.com:
+
+		- (www.)?
+		- connect
+		- media
+		- (www.)?myaccount	(^ → www)
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- charter.com
+		- .charter.com
+		- connect.charter.com
+		- media.charter.com
+		- www.myaccount.charter.com
+		- www.charter.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ir from www.charter.com *
+			- ir from phx.corporate-ir.net
+
+		- Images, on:
+
+			- ir from www.charter.com *
+			- ir from media.corporate-ir.net
+
+		- favicon on ir from www.charter.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Charter.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="charter.com" />
+	<target host="connect.charter.com" />
+	<target host="media.charter.com" />
+	<target host="www.myaccount.charter.com" />
+	<target host="www.charter.com" />
+
+	<!--	Complications:
+				-->
+	<target host="myaccount.charter.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?charter\.com$" name="^BIGipServer[\w.-]+$" /-->
+	<!--securecookie host="^\.charter\.com$" name="^(CSList|PrefID|TE_Opt)$" /-->
+	<!--securecookie host="^(connect|www\.myaccount)\.charter\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^connect\.charter\.com$" name="^X-Mapping-[a-z]$" /-->
+	<!--securecookie host="^media\.charter\.com$" name="^(CTList|XGIR)$" /-->
+	<!--securecookie host="^www\.myaccount\.charter\.com$" name="^ChtrDotCom$" /-->
+	<!--securecookie host="^www\.charter\.com$" name="^(DYN_USER_CONFIRM|DYN_USER_ID|JSESSIONID|MINIFY|userPrefLanguage)$" /-->
+
+	<securecookie host="^(?:(?:media|www\.myaccount|www)\.)?charter\.com$" name=".+" />
+	<securecookie host="^\.charter\.com$" name="^(?:CSList|PrefID|TE_Opt)$" />
+
+
+	<rule from="^http://myaccount\.charter\.com/"
+		to="https://www.myaccount.charter.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

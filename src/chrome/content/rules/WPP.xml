@@ -1,21 +1,44 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://wpp.com/ => https://secure.wpp.com/: (6, 'Could not resolve host: secure.wpp.com')
-	Problematic subdomains:
+	^wpp.com: Mismatched
 
-		- (www.)	(mismatched, CN; secure.wpp.com)
+
+	Insecure cookies are set for these hosts:
+
+		- inside.wpp.com
+		- www.wpp.com
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com *
+
+	* Secured by us
 
 -->
-<ruleset name="WPP" default_off='failed ruleset test'>
+<ruleset name="WPP.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="inside.wpp.com" />
+	<target host="www.wpp.com" />
+
+	<!--	Complications:
+				-->
 	<target host="wpp.com" />
-	<target host="*.wpp.com" />
 
 
-	<securecookie host="^secure\.wpp\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^inside\.wpp\.com$" name="^website_inside#lang$" /-->
+	<!--securecookie host="^www\.wpp\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?:inside|www)\.wpp\.com$" name=".+" />
 
 
-	<rule from="^http://(?:secure\.|www\.)?wpp\.com/"
-		to="https://secure.wpp.com/" />
+	<rule from="^http://wpp\.com/"
+		to="https://www.wpp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

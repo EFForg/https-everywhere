@@ -12,8 +12,11 @@
 
 	Problematic subdomains:
 
+		- spanish ¹
 		- russian *
+		- portuguese ¹
 
+	¹ Mixed css
 	* Mismatched, CN: www.101domain.ru
 
 
@@ -28,21 +31,50 @@
 
 	Mixed content:
 
-		- css on portuguese from $self *
-
-		- Images on portuguese from $self *
+		- css on portuguese, spanish  from $self *
+		- Images on portuguese, spanish from $self *
+		- favicon on portuguese, spanish from $self *
 
 	* Secured by us
 
 -->
 <ruleset name="101domain.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="101domain.com" />
-	<target host="*.101domain.com" />
-		<!--
-			Avoid broken MCB:
+	<target host="blog.101domain.com" />
+	<target host="cdn.101domain.com" />
+	<target host="my.101domain.com" />
+	<target host="portuguese.101domain.com" />
+	<target host="spanish.101domain.com" />
+	<target host="www.101domain.com" />
+
+	<!--	Complications:
+				-->
+	<target host="russian.101domain.com" />
+
+		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://(?:portuguese|spanish)\.101domain\.com/+(?!css/|favicon\.ico|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://portuguese.101domain.com/servico_dominio_trustee.htm" />
+			<test url="http://portuguese.101domain.com/servidor_busca_whois.htm" />
+
+			<test url="http://spanish.101domain.com/alternativa_de_dominios.htm" />
+			<test url="http://spanish.101domain.com/hosting_gratis_de_dominios.htm" />
+
+			<!--	-ve:
+					-->
+			<test url="http://portuguese.101domain.com/css/pt_BR/101domain.css" />
+			<test url="http://portuguese.101domain.com/favicon.ico" />
+			<test url="http://portuguese.101domain.com/images/pt_BR/template/arrow_header.gif" />
+
+			<test url="http://spanish.101domain.com/css/es_MX/101domain.css.m" />
+			<test url="http://spanish.101domain.com/favicon.ico" />
+			<test url="http://spanish.101domain.com/images/es_MX/template/arrow_header.gif" />
 
 
 	<!--	Redirect drops path but not args:
@@ -50,7 +82,10 @@
 	<rule from="^http://russian\.101domain\.com/[^?]*"
 		to="https://www.101domain.ru/" />
 
-	<rule from="^http://((?:blog|cdn|my|portuguese|spanish|www)\.)?101domain\.com/"
-		to="https://$1101domain.com/" />
+		<test url="http://russian.101domain.com/?f" />
+		<test url="http://russian.101domain.com/?o" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

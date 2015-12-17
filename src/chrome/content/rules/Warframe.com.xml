@@ -1,0 +1,66 @@
+<!--
+	Problematic subdomains:
+
+		- store ¹
+		- support ²
+
+	¹ Shopify
+	² Zendesk
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- forums
+		- store		(→ digital-extremes.myshopify.com)
+		- support	(→ digitalextremes.zendesk.com)
+
+
+	Insecure cookies are set for these domains:
+
+		- .warframe.com
+
+
+	Mixed content:
+
+		- css on store from fonts.googleapis.com *
+		- Images on forums from i.imgur.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Warframe.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="warframe.com" />
+	<target host="forums.warframe.com" />
+	<target host="www.warframe.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="store.warframe.com" />
+	<target host="support.warframe.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.warframe\.com$" name="^(wf_forumsmodpids|wf_forumssession_id)$" /-->
+
+	<securecookie host="^\.warframe\.com$" name=".+" />
+
+
+	<rule from="^http://store\.warframe\.com/"
+		to="https://digital-extremes.myshopify.com/" />
+
+	<!--	Redirect drops path and args:
+						-->
+	<rule from="^http://support\.warframe\.com/.*"
+		to="https://digitalextremes.zendesk.com/hc" />
+
+		<test url="http://support.warframe.com/hc" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

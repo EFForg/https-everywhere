@@ -1,0 +1,46 @@
+<!--
+	Some pages redirect to http.
+
+
+	Insecure cookies are set for these hosts:
+
+		- globalhumanrights.org
+		- www.globalhumanrights.org
+
+-->
+<ruleset name="Global Human Rights.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="globalhumanrights.org" />
+	<target host="www.globalhumanrights.org" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?globalhumanrights\.org/($|act-now/donate-now$)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?globalhumanrights\.org/+(?!act-now/donate-now/|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://globalhumanrights.org/es/" />
+			<test url="http://globalhumanrights.org/fr/" />
+			<test url="http://globalhumanrights.org/grants/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://globalhumanrights.org/act-now/donate-now/" />
+			<test url="http://globalhumanrights.org/wp-content/themes/fghr/img/pattern.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?globalhumanrights\.org$" name="^_icl_current_language$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

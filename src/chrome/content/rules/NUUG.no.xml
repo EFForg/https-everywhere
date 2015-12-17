@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nuug.no/ => https://nuug.no/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For rules causing false/broken MCB, see NUUG.no-falsemixed.xml.
 
 	For problematic rules, see NUUG.no-problematic.xml.
@@ -52,17 +50,34 @@ Fetch error: http://nuug.no/ => https://nuug.no/: (60, 'SSL certificate problem:
 	² Unsecurable
 
 -->
-<ruleset name="NUUG.no (partial)" platform="cacert" default_off='failed ruleset test'>
+<ruleset name="NUUG.no (partial)" platform="cacert">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="nuug.no" />
-	<target host="*.nuug.no" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="approve.nuug.no" />
+	<target host="lists.nuug.no" />
+	<target host="memberdb.nuug.no" />
+	<target host="nerdhaven.nuug.no" />
+	<target host="rt.nuug.no" />
+	<target host="www.nuug.no" />
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://memberdb\.nuug\.no/+(?!favicon\.ico|global\.css)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://memberdb.nuug.no/?page=edit-member" />
+			<test url="http://memberdb.nuug.no/?page=index" />
+			<test url="http://memberdb.nuug.no/?page=signup" />
 
-	<rule from="^http://((?:approve|lists|memberdb|nerdhaven|rt|www)\.)?nuug\.no/"
-		to="https://$1nuug.no/" />
+			<!--	-ve:
+					-->
+			<test url="http://memberdb.nuug.no//global.css" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,4 +1,11 @@
 <!--
+	Insecure cookies are set for these domains and hosts:
+
+		- .icefilms.info
+		- .forum.icefilms.info
+		- www.icefilms.info
+
+
 	Mixed content:
 
 		- Images, on :
@@ -15,26 +22,27 @@
 	* Secured by us
 
 -->
-<ruleset name="IceFilms.info (partial)">
+<ruleset name="IceFilms.info">
 
 	<target host="icefilms.info" />
-	<target host="*.icefilms.info" />
-		<!--
-			Redirect to http:
-						-->
-		<exclusion pattern="^http://www\.icefilms\.info/membersonly/" />
+	<target host="forum.icefilms.info" />
+	<target host="img.icefilms.info" />
+	<target host="www.icefilms.info" />
+
+		<test url="http://www.icefilms.info/membersonly/" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.forums\.icefilms\.info$" name="^phpbb3_61hr1_(k|sid|u)$" /-->
+	<!--securecookie host="^\.icefilms\.info$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^\.forum\.icefilms\.info$" name="^phpbb3_61hr1_(k|sid|u)$" /-->
 	<!--securecookie host="^www\.icefilms\.info$" name="^[0-9a-f]{32}$" /-->
 
-	<securecookie host="^\.icefilms\.info$" name="(?:__cfduid|__utm\w+)$" />
-	<securecookie host="^\.forum\.icefilms\.info$" name=".+" />
+	<securecookie host="^\.icefilms\.info$" name="(?:__cfduid|__utm\w+|cf_clearance)$" />
+	<securecookie host="^(?:\.forum\.|www\.)?icefilms\.info$" name=".+" />
 
 
-	<rule from="^http://((?:forum|img|www)\.)?icefilms\.info/"
-		to="https://$1icefilms.info/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

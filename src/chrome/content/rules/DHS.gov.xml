@@ -1,0 +1,100 @@
+
+<!--
+	Department of Homeland Security
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctioanl subdomains:
+
+		- ^ ¹
+		- llis ¹
+		- www.oig ²
+		- preview ¹
+		- (www.)?vapid ³
+
+	¹ Redirects to http
+	² 503
+	³ 504, Akamai
+
+
+	Fully covered subdomains:
+
+		- carwash
+		- esta.cbp
+		- goes-app.cbp
+		- cisomb
+		- www.llis
+		- mobilecoe
+		- preview-studyinthestates
+		- sharedservices
+		- studyinthestates
+		- universalenroll
+		- wcmaas
+
+
+	Insecure cookies are set for these hosts:
+
+		- esta.cbp.dhs.gov
+		- goes-app.cbp.dhs.gov
+		- www.llis.dhs.gov
+		- universalenroll.dhs.gov
+
+-->
+<ruleset name="DHS.gov (partial)">
+
+	<target host="carwash.dhs.gov" />
+	<target host="esta.cbp.dhs.gov" />
+	<target host="goes-app.cbp.dhs.gov" />
+	<target host="cisomb.dhs.gov" />
+	<target host="www.llis.dhs.gov" />
+	<target host="mobilecoe.dhs.gov" />
+	<target host="preview-studyinthestates.dhs.gov" />
+	<target host="sharedservices.dhs.gov" />
+	<target host="studyinthestates.dhs.gov" />
+	<target host="universalenroll.dhs.gov" />
+	<target host="wcmaas.dhs.gov" />
+	<target host="www.dhs.gov" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://dhs\.gov/($|sites/)" /-->
+		<!--exclusion pattern="^http://www\.dhs\.gov/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.dhs\.gov/+(?!misc/|profiles/dhs_gov/(?:modul|them)es/|sites/|xlibrary/videos/\w+_thumb\.jpg)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.dhs.gov/about-dhs" />
+			<test url="http://www.dhs.gov/contact-us" />
+			<test url="http://www.dhs.gov/frequently-requested-pages" />
+			<test url="http://www.dhs.gov/get-involved" />
+			<test url="http://www.dhs.gov/how-do-i/by-type" />
+			<test url="http://www.dhs.gov/news" />
+			<test url="http://www.dhs.gov/sitemap" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.dhs.gov/misc/feed.png" />
+			<test url="http://www.dhs.gov/profiles/dhs_gov/modules/features/dhs_ntas_alert/img/cambio-back.jpg" />
+			<test url="http://www.dhs.gov/profiles/dhs_gov/themes/dhs_gov_theme/logo.png" />
+			<test url="http://www.dhs.gov/sites/default/files/styles/dhs_homepage_rotator/public/15_0303_homepage.jpg" />
+			<test url="http://www.dhs.gov/xlibrary/videos/15_0303_s1_budget_thumb.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^esta\.cbp\.dhs\.gov$" name="^PERSIST_ID$" /-->
+	<!--securecookie host="^goes-app\.cbp\.dhs\.gov$" name="^(PD-H-SESSION-ID|PERSIST_ID)$" /-->
+	<!--securecookie host="^www\.llis\.dhs\.gov$" name="^FEMA_CSI_NPD_LLIS_WEB_HTTP_CK1$" /-->
+	<!--securecookie host="^universalenroll\.dhs\.gov$" name="^TS[\da-f]{8}(_\d\d)?$" /-->
+
+	<securecookie host="^(?:esta\.cbp|goes-app\.cbp|www\.llis|universalenroll)\.dhs\.gov$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

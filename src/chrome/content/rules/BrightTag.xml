@@ -4,6 +4,7 @@
 
 	Other BrightTag rulesets:
 
+		- BTstatic.com.xml
 		- SiteTagger.co.uk.xml
 
 
@@ -27,28 +28,49 @@
 
 		- thebrighttag.com subdomains:
 
+			- api
+			- control
+			- s *
 			- a.s	(→ s)
 			- b.s	(→ s)
+			- s-eu
+			- t
+			- u
+
+	* Included on 3rd-party websites
+
+
+	Insecure coookies are set for these domains:
+
+		- .s.thebrighttag.com
 
 -->
 <ruleset name="BrightTag (partial)">
 
-	<target host="*.btstatic.com" />
-	<target host="*.thebrighttag.com" />
+	<target host="api.thebrighttag.com" />
+	<target host="control.thebrighttag.com" />
+	<target host="s.thebrighttag.com" />
+	<target host="s-eu.thebrighttag.com" />
+	<target host="t.thebrighttag.com" />
+	<target host="u.thebrighttag.com" />
 
+	<!--	Complications:
+				-->
+	<target host="a.s.thebrighttag.com" />
+	<target host="b.s.thebrighttag.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.s\.thebrighttag\.com$" name="^bt3$" /-->
 
 	<securecookie host="^(?:\.?control|\.s)\.thebrighttag\.com$" name=".+" />
 
 
-	<rule from="^http://(s|s-eu|t)\.btstatic\.com/"
-		to="https://$1.btstatic.com/" />
-
-	<!--	s: included on 3rd-party websites.
-						-->
-	<rule from="^http://(api|control|s|s-eu|t|u)\.thebrighttag\.com/"
-		to="https://$1.thebrighttag.com/" />
-
 	<rule from="^http://[ab]\.s\.thebrighttag\.com/"
 		to="https://s.thebrighttag.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

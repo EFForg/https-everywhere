@@ -1,53 +1,53 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://ja-sig.org/ => https://www.jasig.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.jasig.org'")
-Fetch error: http://www.ja-sig.org/ => https://www.jasig.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.jasig.org'")
-Fetch error: http://jasig.org/ => https://www.jasig.org/: (51, "SSL: no alternative certificate subject name matches target host name 'www.jasig.org'")
 	Problematic domains:
 
-		- ja-sig.org *
-		- (www.)ja-sig.org	(cert only matches *.jasig.org)
+		- (www.)?ja-sig.org *
+		- (www.)?jasig.org *
 
-		- jasig.org subdomains:
-
-			- ^ *
-			. www.issues **
-			- www.wiki **
-
-	* \w+ redirects to www.../$"
-	** \w+ redirects to www.../$",	cert only matches *.jasig.org
+	* Mismatched
 
 
 	Fully covered domains:
 
-		- (www.)ja-sig.org	(→ www.ja-sig.org)
+		- (www.)?ja-sig.org	(→ www.apereo.org)
 
-		- jasig.org subdomains:
+		- in *jasig.org:
 
-			- (www.)	(^ → www)
+			- (www.)?	(^ → www.apereo.org)
 			- issues
-			- www.issues	(^ → www.jasig)
 			- wiki
-			- www.wiki	(^ → www.jasig)
 
 -->
-<ruleset name="Jasig.org" default_off='failed ruleset test'>
+<ruleset name="Jasig.org">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="issues.jasig.org" />
+	<target host="wiki.jasig.org" />
+
+	<!--	Complications:
+				-->
 	<target host="ja-sig.org" />
 	<target host="www.ja-sig.org" />
+
 	<target host="jasig.org" />
-	<target host="*.jasig.org" />
+	<target host="www.jasig.org" />
 
 
-	<securecookie host="^(?:issues|wiki|www)?\.jasig\.org$" name=".+" />
+
+	<securecookie host="^(?:issues|wiki)?\.jasig\.org$" name=".+" />
 
 
-	<!--	www.issues & www.wiki show www over http.
-							-->
-	<rule from="^http://(?:www(?:\.issues|\.wiki)?\.)?ja-?sig\.org/"
-		to="https://www.jasig.org/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?ja-?sig\.org/[^?]*"
+		to="https://www.apereo.org/" />
 
-	<rule from="^http://(issues|wiki)\.jasig\.org/"
-		to="https://$1.jasig.org/" />
+		<test url="http://www.jasig.org//" />
+		<test url="http://www.ja-sig.org//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

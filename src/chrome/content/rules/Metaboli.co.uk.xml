@@ -1,11 +1,45 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://metaboli.co.uk/ => https://www.metaboli.co.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.metaboli.co.uk/ => https://www.metaboli.co.uk/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="Metaboli.co.uk" default_off='failed ruleset test'>
-  <target host="metaboli.co.uk" />
-  <target host="www.metaboli.co.uk" />
+	Insecure cookies are set for these domains and hosts:
 
-  <rule from="^http://(?:www\.)?metaboli\.co\.uk/" to="https://www.metaboli.co.uk/" />
+		- www.metaboli.co.uk
+		- .www.metaboli.co.uk
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+
+		- Images, from:
+
+			- d10svsm0gnverk.cloudfront.net *
+			- img.metaboli.fr *
+
+	* Secured by us
+
+-->
+<ruleset name="Metaboli.co.uk" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.metaboli.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="metaboli.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.metaboli\.co\.uk$" name="^(?:PHPSESSID|splashscreen)$" /-->
+	<!--securecookie host="^\.www\.metaboli\.co\.uk$" name="^phpbb3_\w_(?:k|sid|u)$" /-->
+
+	<securecookie host="^\.?www\.metaboli\.co\.uk$" name="" />
+
+
+	<rule from="^http://metaboli\.co\.uk/"
+		to="https://www.metaboli.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

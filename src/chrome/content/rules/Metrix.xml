@@ -1,18 +1,27 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://metrix.net/ => https://secure.metrix.net/: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://secure.metrix.net/ => https://secure.metrix.net/: (60, 'SSL certificate problem: certificate has expired')
-Fetch error: http://www.metrix.net/ => https://secure.metrix.net/: (60, 'SSL certificate problem: certificate has expired')
--->
-<ruleset name="Metrix" default_off='failed ruleset test'>
+	Insecure cookies are set for these domains and hosts:
 
+		- .metrix.net
+		- www.metrix.net
+
+-->
+<ruleset name="Metrix.net" default_off="mismatched">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="metrix.net"/>
-	<target host="secure.metrix.net"/>
 	<target host="www.metrix.net"/>
 
-	<rule from="^http://(?:secure\.|www\.)?metrix\.net/"
-		to="https://secure.metrix.net/"/>
 
-	<securecookie host="^\.secure\.metrix\.net$" name=".*"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.metrix\.net$" name="^SS_MID$" /-->
+	<!--securecookie host="^www\.metrix\.net$" name="^(?:JSESSINID|crumb)$" /-->
+
+	<securecookie host="^(?:www)?\.metrix\.net$" name=".*"/>
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

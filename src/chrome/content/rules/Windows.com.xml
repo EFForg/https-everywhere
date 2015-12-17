@@ -5,38 +5,46 @@
 	(www.): redirect destination doesn't support tls
 
 
-	Partially covered subdomains:
-
-		- blogs *
-
-	* At least some pages redirect to http
-
-
 	Fully covered subdomains:
 
+		- blogs
 		- dev
 		- developer
 		- insider
+
+
+	Insecure cookies are set for these hosts:
+
+		- dev.windows.com
 
 
 	Mixed content:
 
 		- Images on dev, developer from assets.windowsphone.com *
 
-		- favicon on blogs from $self *
-
 		- Bug on dev, developer from c.microsoft.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Windows.com (partial)">
+<ruleset name="Windows.com">
 
-	<target host="*.windows.com" />
-		<exclusion pattern="^http://blogs\.windows\.com/(?!cfs-file\.ashx|cfs-filesystemfile\.ashx|favicon\.ico|login\.aspx|themes/|user/createuser\.aspx)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="blogs.windows.com" />
+	<target host="dev.windows.com" />
+	<target host="developer.windows.com" />
+	<target host="insider.windows.com" />
 
 
-	<rule from="^http://(blogs|dev|developer|insider)\.windows\.com/"
-		to="https://$1.windows.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dev\.windows\.com$" name="^ssostate$" /-->
+
+	<securecookie host="^dev\.windows\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

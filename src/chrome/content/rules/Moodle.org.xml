@@ -1,50 +1,42 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts in *moodle.org:
 
-		- demo	("Unknown Virtual Host")
-		- docs *
 		- git *
 
-	* Refused
+	* Mismatched
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- planet	(works; expired 2013-09-05)
-		- www		(mismatched, CN: moodle.org)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(www → ^)
-		- download
-		- tracker
-
-
-	Mixed content:
-
-		- Images, on planet from:
-
-			- \d.bp.blogspot.com *
-			- feeds.wordpress.com *
-			- \w+.files.wordpress.com *
-			- i\d.wp.com *
-
-		- Web bugs on planet from stats.wordpress.com *
-
-	* Secured by us
+		- .moodle.org
+		- download.moodle.org
+		- lang.moodle.org
+		- tracker.moodle.org
 
 -->
 <ruleset name="Moodle.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="moodle.org" />
-	<target host="*.moodle.org" />
+	<target host="docs.moodle.org" />
+	<target host="download.moodle.org" />
+	<target host="lang.moodle.org" />
+	<target host="planet.moodle.org" />
+	<target host="tracker.moodle.org" />
+	<target host="www.moodle.org" />
 
 
-	<securecookie host="^(?:download\.|tracker\.|\.)?moodle\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.moodle\.org$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(download|lang)\.moodle\.org$" name="^MoodleSession" /-->
+	<!--securecookie host="^tracker\.moodle\.org$" name="^(JSESSIONID|atlassian\.xsrf\.token)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:(download\.|tracker\.)|www\.)?moodle\.org/"
-		to="https://$1moodle.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

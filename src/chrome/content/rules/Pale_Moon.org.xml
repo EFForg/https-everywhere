@@ -16,25 +16,56 @@
 
 	Nonfunctional subdomains:
 
-		- (www.) ¹
+		- relmirror ¹
 		- start ²
 
-	¹ 503
-	² Prints "There is no website configured at this address"
+	¹ 403
+	² Shows www
 
 
 	Some pages redirect to http.
 
+
+	Fully covered subdomains:
+
+		- (www.)
+		- addons
+		- forum
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .palemoon.org
+		- addons.palemoon.org
+		- .forum.palemoon.org
+
+
+	Mixed content:
+
+		- Images on addons from palemoon.org *
+
+	* Secured by us
+
 -->
 <ruleset name="Pale Moon.org (partial)">
 
-	<target host="*.palemoon.org" />
+	<target host="palemoon.org" />
+	<target host="addons.palemoon.org" />
+	<target host="forum.palemoon.org" />
+	<target host="www.palemoon.org" />
 
 
-	<securecookie host="^\.palemoon\.org$" name="^__cfduid$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.palemoon\.org$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^addons\.palemoon\.org$" name="^CMSSESSID[\da-f]{8}$" /-->
+	<!--securecookie host="^\.forum\.palemoon\.org$" name="^phpbb3_\w+_(k|sid|u)$" /-->
+
+	<securecookie host="^\.palemoon\.org$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^(?:addons|\.forum)\.palemoon\.org$" name=".+" />
 
 
-	<rule from="^http://forum\.palemoon\.org/(?=download/|favicon\.ico|images/|style\.php|styles/|ucp\.php\?mode=(?:login|register))"
-		to="https://forum.palemoon.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

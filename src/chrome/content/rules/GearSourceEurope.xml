@@ -3,17 +3,52 @@
 
 		- cdn	(redirects to www)
 
+
+	Insecure cookies are set for these domains:
+
+		- .gearsourceeurope.com
+
 -->
-<ruleset name="GearSourceEurope (partial)">
+<ruleset name="GearSourceEurope.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gearsourceeurope.com" />
-	<target host="*.gearsourceeurope.com" />
+	<target host="www.gearsourceeurope.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.gearsourceeurope\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+
+		<exclusion pattern="^http://www\.gearsourceeurope\.com/+(?!general/(?:dsplogin|registration)(?:$|[?/]))" />
 
 
-	<securecookie host="^(?:www)?\.gearsourceeurope\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.gearsourceeurope.com/catalog/latest" />
+			<test url="http://www.gearsourceeurope.com/catalog/listing/79217" />
+			<test url="http://www.gearsourceeurope.com/email" />
+			<test url="http://www.gearsourceeurope.com/general/feedback" />
+			<test url="http://www.gearsourceeurope.com/needzone" />
+			<test url="http://www.gearsourceeurope.com/page/faqs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.gearsourceeurope.com/general/registration" />
+			<test url="http://www.gearsourceeurope.com/general/dsplogin" />
 
 
-	<rule from="^http://(www\.)?gearsourceeurope\.com/"
-		to="https://$1gearsourceeurope.com/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.gearsourceeurope\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.gearsourceeurope\.com$" name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

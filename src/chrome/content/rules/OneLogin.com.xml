@@ -6,69 +6,55 @@
 
 	Problematic subdomains:
 
-		- ^		(dropped)
+		- staging.www *
 		- support	(zendesk)
+
+	* Mismatched
 
 
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- app
-		- assets[0-3]
+		- assets
+		- mindtouch
 		- support	(→ onelogin.zendesk.com)
-		- staging.www
 
 
-	Mixed content:
+	Insecure cookies are set for these hosts:
 
-		- Scripts:
-
-			- On app from ajax.googleapis.com *
-			- On www from www *
-			- On www from fast.wistia.com *
-			- On www from ajax.googleapis.com *
-
-		- css:
-
-			- On www from www **
-			- On www from fast.wistia.net *
-
-		- Images:
-
-			- On app from www ***
-			- On www from www ***
-
-		- Web bugs:
-
-			- On app from munchkin.marketo.net *
-			- On www from t6.trackalyzer.com *
-
-	* Secured by us
-	** Secured by us. These apply to social widgets, and are not at all vital
-	*** Secured by us, doesn't trip MCB anyway
-
-
-	NB: We secure all resources, and thus
-	platform should be removed with Ffx 24.
+		- www.onelogin.com
 
 -->
-<ruleset name="OneLogin.com" platform="mixedcontent">
+<ruleset name="OneLogin.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="onelogin.com" />
-	<target host="*.onelogin.com" />
+	<target host="app.onelogin.com" />
+	<target host="assets.onelogin.com" />
+	<target host="mindtouch.onelogin.com" />
+	<target host="www.onelogin.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.onelogin.com" />
 
 
-	<!--securecookie host="^\.onelogin\.com$" name="^(__atuvc|_ga|mp_\w{32}_mixpanel|_mkto_trk|onelogin_referrer|session_onelogin\.com|__utm\w)$" /-->
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.onelogin\.com$" name="^(AWSELB|PHPSESSID|onelogin_check_cookie|stat_auth_cookie)$" /-->
+
+	<!--securecookie host="^\.onelogin\.com$" name="^(__atuvc|_ga|mp_\w{32}_mixpanel|_mkto_trk|onelogin_referrer|__utm\w)$" /-->
 	<securecookie host="^(?:www)?\.onelogin\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(staging\.)?www\.)?onelogin\.com/"
-		to="https://$1www.onelogin.com/" />
+	<rule from="^http://support\.onelogin\.com/.*"
+		to="https://onelogin.zendesk.com/hc" />
 
-	<rule from="^http://a(pp|ssets)\.onelogin\.com/"
-		to="https://a$1.onelogin.com/" />
+		<test url="http://support.onelogin.com//" />
 
-	<rule from="^http://support\.onelogin\.com/"
-		to="https://onelogin.zendesk.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

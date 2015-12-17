@@ -1,39 +1,93 @@
+
 <!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://www.aftonbladet.se/ => https://www.aftonbladet.se/: Too many redirects while fetching 'https://www.aftonbladet.se/'
+Fetch error: http://aftonbladet.se/ => https://www.aftonbladet.se/: Too many redirects while fetching 'https://www.aftonbladet.se/'
+
+	Other Aftonbladet rulesets:
+
+		- Aftonbladet-CDN.se.xml
+
+
 	Problematic domains:
 
 		- aftonbladet.se		(cert only matches www)
-		- gfx.aftonbladet-cdn.se *
-		- gfx2.aftonbladet-cdn.se *
+		- hemma.aftonbladet.se ¹
+		- metrics.aftonbladet.se ¹
 
-	* Times out
+	¹ Mismatched
+
+
+	Partially covered domains:
+
+		- bloggar.aftonbladet.se *
+
+	* Some paths redirect to http
 
 
 	Fully covered domains:
 
 		- aftonbladet.se subdomains:
 
+			- (www.)?	(^ → www)
 			- ads
+			- metrics	(→ smetrics.aftonbladet.se)
+			- smetrics
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these hosts:
 
 		- ads.aftonbladet.se
 
 -->
-<ruleset name="Aftonbladet">
+<ruleset name="Aftonbladet.se (partial)" default_off='failed ruleset test'>
 
+	<!--	Direct rewrites:
+				-->
+	<target host="bloggar.aftonbladet.se" />
+	<target host="ads.aftonbladet.se" />
+	<target host="login.aftonbladet.se" />
+	<target host="smetrics.aftonbladet.se" />
+	<target host="www.aftonbladet.se" />
+
+	<!--	Special cases:
+				-->
 	<target host="aftonbladet.se" />
-	<target host="*.aftonbladet.se" />
-	<target host="*.aftonbladet-cdn.se" />
+	<target host="metrics.aftonbladet.se" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://bloggar\.aftonbladet\.se/($|\w+/files/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://bloggar\.aftonbladet\.se/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bloggar.aftonbladet.se/aosbloggen" />
+			<test url="http://bloggar.aftonbladet.se/granskning" />
+			<test url="http://bloggar.aftonbladet.se/letsdance" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bloggar.aftonbladet.se/wp-content/themes/ab_startpage/css/style.css" />
 
 
-	<securecookie host="^(?:ads|\.smetrics)?\.aftonbladet\.se$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ads\.aftonbladet\.se$" name="^(eas_geo|eas_uid)$" /-->
+
+	<securecookie host="^(?:ads|\.smetrics)\.aftonbladet\.se$" name=".+" />
 
 
-	<rule from="^http://(?:(?:www\.)?aftonbladet|gfx2?\.aftonbladet-cdn)\.se/"
+	<rule from="^http://aftonbladet\.se/"
 		to="https://www.aftonbladet.se/" />
 
-	<rule from="^http://(ads|login|smetrics)\.aftonbladet\.se/"
-		to="https://$1.aftonbladet.se/" />
+	<rule from="^http://metrics\.aftonbladet\.se/"
+		to="https://smetrics.aftonbladet.se/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

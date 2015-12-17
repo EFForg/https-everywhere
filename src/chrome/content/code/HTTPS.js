@@ -1,5 +1,8 @@
 INCLUDE('Cookie');
 
+var securityService = CC['@mozilla.org/ssservice;1']
+    .getService(CI.nsISiteSecurityService);
+
 // Hack. We only need the part of the policystate that tracks content
 // policy loading.
 const PolicyState = {
@@ -37,9 +40,11 @@ const HTTPS = {
    */
   replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
     var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
+    var isSTS = securityService.isSecureURI(
+        CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     if (blob === null) {
       // Abort insecure requests if HTTP Nowhere is on
-      if (httpNowhereEnabled && channel.URI.schemeIs("http")) {
+      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS) {
         IOUtil.abort(channel);
       }
       return false; // no rewrite
@@ -69,6 +74,9 @@ const HTTPS = {
       var domain = null;
       try { domain = channel.URI.host; } catch (e) {}
       if (domain) https_blacklist_domains[domain] = true;
+      if (httpNowhereEnabled && channel.URI.schemeIs("http")) {
+        IOUtil.abort(channel);
+      }
       return false;
     }
 
@@ -86,8 +94,6 @@ const HTTPS = {
       // This should not happen. We should only get exceptions if
       // the channel was already open.
       this.log(WARN, "Exception on nsIHttpChannel.redirectTo: "+e);
-
-      // Don't return: Fallback to NoScript ChannelReplacement.js
     }
     this.log(WARN,"Aborting redirection " + channel.name + ", should be HTTPS!");
     IOUtil.abort(channel);

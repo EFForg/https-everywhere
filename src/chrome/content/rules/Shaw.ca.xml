@@ -1,0 +1,88 @@
+<!--
+	Partially covered subdomains:
+
+		- business *
+
+	* $ redirects to http
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- media.business
+		- community
+		- media
+		- myaccount
+		- newsroom
+		- register
+		- signon
+		- vod
+		- (www.)?webmail
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .shaw.ca
+		- community.shaw.ca
+		- myaccount.shaw.ca
+		- newsroom.shaw.ca
+		- www.shaw.ca
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- newsroom from media *
+			- www from $self *
+
+		- Bugs on newsroom, www from shawtelevision.112.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Shaw.ca (partial)">
+
+	<target host="shaw.ca" />
+	<target host="business.shaw.ca" />
+	<target host="media.business.shaw.ca" />
+	<target host="community.shaw.ca" />
+	<target host="media.shaw.ca" />
+	<target host="myaccount.shaw.ca" />
+	<target host="newsroom.shaw.ca" />
+	<target host="register.shaw.ca" />
+	<target host="signon.shaw.ca" />
+	<target host="vod.shaw.ca" />
+	<target host="webmail.shaw.ca" />
+	<target host="www.webmail.shaw.ca" />
+	<target host="www.shaw.ca" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://business\.shaw\.ca/($|My-account/$|Support$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://business\.shaw\.ca/+(?!SharedAssets/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://business.shaw.ca/Support" />
+			<test url="http://business.shaw.ca/My-account/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shaw\.ca$" name="^(localePreference|location|service|shaw_cart|shawJSID)$" /-->
+	<!--securecookie host="^community\.shaw\.ca$" name="^(BIGipServer\w+-\d+-pool|JSESSIONID|jive\.server\.info)+" /-->
+	<!--securecookie host="^myaccount\.shaw\.ca$" name="^(__ControllerTempDataToken|isChromeFrame)$" /-->
+	<!--securecookie host="^newsroom\.shaw\.ca$" name="^(ASP.NET_SessionId|EkAnalytics|EktGUID|ecm)" /-->
+	<!--securecookie host="^www\.shaw\.ca$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:community|myaccount|newsroom|www)\.shaw\.ca$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,24 +1,43 @@
 <!--
-	Problematic subdomains:
+	Nonfunctional hosts in *malcovery.com:
 
-		- blog *
+		- info *
 
-	* Works, akamai
+	* 404
 
 
-	Mixed content:
+	^malcovery.com: Refused
 
-		- Ads from malcovery.marketspaceagency.com
+
+	Insecure cookies are set for these hosts:
+
+		- blog.malcovery.com
+		- www.malcovery.com
 
 -->
 <ruleset name="Malcovery.com (partial)">
 
-	<target host="malcovery.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.malcovery.com" />
 	<target host="www.malcovery.com" />
-		<!--exclusion pattern="^http://blog\.malcovery\.com/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="malcovery.com" />
 
 
-	<rule from="^http://(www\.)?malcovery\.com/"
-		to="https://$1malcovery.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:blog|www)\.malcovery\.com$" name="^hsPagesViewedThisSession$" /-->
+
+	<securecookie host="^(?:blog|www)\.malcovery\.com$" name=".+" />
+
+
+	<rule from="^http://malcovery\.com/"
+		to="https://www.malcovery.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

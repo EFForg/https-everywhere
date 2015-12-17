@@ -1,4 +1,44 @@
-<ruleset name="bit.ly vanity domains">
+<!--
+  Caution: These domains are mostly owned by a non-bitly company, and
+  it appears that the company sometimes reclaims them. This results in
+  a very bad problem: We continue to rerwite URLs on foo.co to bit.ly,
+  but bit.ly no longer recognizes the name, and so redirects to some
+  other page. Most recently this happened with sched.co:
+  https://github.com/EFForg/https-everywhere/issues/1339
+
+  Before re-enabling this rule, we need to add special logic to the
+  https-everywhere-checker to do nslookups on hosts in this rule and
+  verify they still resolve to bit.ly's IP space. Examples:
+
+  (sched.co is no longer pointing at bit.ly)
+  $ nslookup sched.co
+  Server:         127.0.1.1
+  Address:        127.0.1.1#53
+
+  Non-authoritative answer:
+  Name:   sched.co
+  Address: 45.56.77.32
+
+  (huff.to still points at bit.ly)
+  $ nslookup huff.to
+  Server:         127.0.1.1
+  Address:        127.0.1.1#53
+
+  Non-authoritative answer:
+  Name:   huff.to
+  Address: 69.58.188.49
+
+  $ nslookup bit.ly
+  Server:         127.0.1.1
+  Address:        127.0.1.1#53
+
+  Non-authoritative answer:
+  Name:   bit.ly
+  Address: 69.58.188.39
+  Name:   bit.ly
+  Address: 69.58.188.40
+  -->
+<ruleset name="bit.ly vanity domains" default_off="Breaks many redirectors">
 
 	<target host="1tw.org" />
 	<target host="www.1tw.org" />
@@ -272,7 +312,7 @@
 	<rule from="^http://(?:www\.)?(?:1tw\.org|7ny\.tv|alj\.am|abcn\.ws|atfp\.co|brook\.gs|buff\.ly|bzfd\.it|cbsn\.ws|ccwc\.me|cnb\.cx|cnnmon\.ie|curbed\.cc|econ\.st|fxn\.ws|glo\.bo|hub\.am|huff\.to|ind\.pn|iti\.ms|ift\.tt|jrnl\.(?:ie|to)|mzl\.la|nbcnews\.to|nydn\.us|pewrsr\.ch|polho\.me|politi\.co|propub\.ca|rbl\.ms|reut\.rs|specc\.ie|stanford\.io|sun-tim\.es|tcrn\.ch|tek\.io|thebea\.st|ti\.me|wcas\.nu|wmk\.me|zd\.net)/"
 		to="https://bit.ly/" />
 
-	<rule from="^http://(?:4mn\.ca|a21\.tv|apne\.ws|bbc\.in|bitly\.is|bloom\.bg|on\.cfr\.org|cs\.is|dico\.im|do\.co|dly\.do|lat\.ms|on\.mash\.to|on\.msnbc\.com|n\.pr|go\.nasa\.gov|nym\.ag|nyti\.ms|sm\.ohchr\.org|to\.pbs\.org|seati\.ms|sched\.co|slate\.me|theatln\.tc|ucla\.in|ubm\.io|1\.usa\.gov|usat\.ly|vrge\.co|wapo\.st|on\.wsj\.com)/"
+	<rule from="^http://(?:4mn\.ca|a21\.tv|apne\.ws|bbc\.in|bitly\.is|bloom\.bg|on\.cfr\.org|cs\.is|dico\.im|do\.co|dly\.do|lat\.ms|on\.mash\.to|on\.msnbc\.com|n\.pr|go\.nasa\.gov|nym\.ag|nyti\.ms|sm\.ohchr\.org|to\.pbs\.org|seati\.msslate\.me|theatln\.tc|ucla\.in|ubm\.io|1\.usa\.gov|usat\.ly|vrge\.co|wapo\.st|on\.wsj\.com)/"
 		to="https://bit.ly/" />
 
 </ruleset>

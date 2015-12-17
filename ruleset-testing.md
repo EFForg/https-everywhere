@@ -12,14 +12,14 @@ each target host e.g. example.com, there is an implicit test URL of
 http://example.com/. Exception: target hosts that contain a wildcard ("*") do
 not create an implicit test URL.
 
-Additional test URLs can be added with the new <test> tag in the XML, e.g.
-<test url="http://example.com/complex-page">.
+Additional test URLs can be added with the new &lt;test&gt; tag in the XML, e.g.
+&lt;test url="http://example.com/complex-page"&gt;.
 
-Test URLs will be matched against the regexes in each <rule> and <exclusion>. A
-test URL can only match against one <rule> and one <exclusion>. Once all the
+Test URLs will be matched against the regexes in each &lt;rule&gt; and &lt;exclusion&gt;. A
+test URL can only match against one &lt;rule&gt; and one &lt;exclusion&gt;. Once all the
 test URLs have been matched up, we count the number of test URLs matching each
-<rule> and each <exclusion>, and make sure the count meets the minimum number.
-The minimum number of test URLs for each <rule> or <exclusion> is one plus the
+&lt;rule&gt; and each &lt;exclusion&gt;, and make sure the count meets the minimum number.
+The minimum number of test URLs for each &lt;rule&gt; or &lt;exclusion&gt; is one plus the
 number of '*', '+', '?', or '|' characters in the regex. Since each of these
 characters increases the complexity of the regex (usually increasing the variety
 of URLs it can match), we require correspondingly more test URLs to ensure good
@@ -46,7 +46,7 @@ This ruleset has one implicit test URL from a target host
 ("http://example.com/"). The other target host has a wildcard, so creates no
 implicit test URL. There's a single rule. That rule contains a '+' and a '?', so
 it requires a total of three matching test URLs. We add the necessary test URLs
-using explicit <test> tags.
+using explicit &lt;test&gt; tags.
 
 # Testing and Continuous Build
 
@@ -57,18 +57,10 @@ will break the build. This means that even fixes of existing rules may require
 additional work to bring them up to snuff.
 
 To run the tests locally, you'll need the https-everywhere-checker, which is now
-a submodule of https-everywhere. Run these commands to set it up:
+a submodule of https-everywhere. To set it up, run:
 
-    git submodule init
-    git submodule update
-    cd https-everywhere-checker
-    pip install --user -r requirements.txt
-    cd -
-    ./test-ruleset-coverage.sh
-
-Note you may also need to apt-get install libcurl4-openssl-dev so that one of
-the requirements in https-everywhere-checker can be satisfied.
+    ./install-dev-dependencies.sh
 
 To test a specific ruleset:
 
-     python2.7 https-everywhere-checker/src/https_everywhere_checker/check_rules.py https-everywhere-checker/checker.config.sample rules/Example.xml
+     ./fetch-test.sh rules/Example.xml

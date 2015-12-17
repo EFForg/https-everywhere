@@ -1,17 +1,9 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://socialrank.com/ => https://socialrank.com/: (7, 'Failed to connect to socialrank.com port 443: Connection refused')
 	Nonfunctional subdomains:
 
 		- blog *
 
 	* Show socialrank.co
-
-
-	Fully covered subdomains:
-
-		- (www.)?
-		- i
 
 
 	These altnames don't exist:
@@ -22,18 +14,24 @@ Fetch error: http://socialrank.com/ => https://socialrank.com/: (7, 'Failed to c
 	(www.)?....co is a simple redirect to .com
 
 -->
-<ruleset name="SocialRank.com (partial)" default_off='failed ruleset test'>
+<ruleset name="SocialRank.com (partial)">
 
 	<target host="socialrank.co" />
 	<target host="www.socialrank.co" />
 	<target host="socialrank.com" />
-	<target host="*.socialrank.com" />
+	<target host="i.socialrank.com" />
+	<target host="www.socialrank.com" />
 
 
-	<rule from="^http://(www\.)?socialrank\.co/"
-		to="https://$1socialrank.co/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?socialrank\.com$" name="^(?:_csrf|referrer)$" /-->
+	<!--securecookie host="^\.socialrank\.com$" name="socialrank\.sid$" /-->
 
-	<rule from="^http://(i\.|www\.)?socialrank\.com/"
-		to="https://$1socialrank.com/" />
+	<securecookie host="^(?:\.|www\.)?socialrank\.com$" name="" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

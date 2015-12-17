@@ -1,19 +1,68 @@
 <!--
 	Nonfunctional subdomains:
 
-		- blog		(times out)
-		- (www.)	(ditto)
+		- blog		(Redirects to http)
+
+
+	(www.)?: Some (most)? pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.support.zabbix.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- zabbix.com
+		- www.zabbix.com
+
+
+	Mixed content:
+
+		- Images on www from www *
+
+	* Unsecurable <= redirects to http
 
 -->
-<ruleset name="Zabbix (partial)">
+<ruleset name="Zabbix.com (partial)">
 
+	<target host="zabbix.com"/>
 	<target host="support.zabbix.com"/>
+	<target host="www.zabbix.com"/>
 
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.zabbix\.com/($|css/|favicon\.ico|img/)" /-->
+
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?zabbix\.com/(?!forum(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://zabbix.com/favicon.ico" />
+			<test url="http://zabbix.com/img/zabbix1.png" />
+			<test url="http://www.zabbix.com/partner_program.php" />
+			<test url="http://www.zabbix.com/support.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://zabbix.com/forum" />
+			<test url="http://www.zabbix.com/forum/images/buttons/collapse_thead.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?zabbix\.com$" name="^bbsessionhash$" /-->
+
+	<securecookie host="^(?:www\.)?zabbix\.com$" name="^bbsessionhash$" />
 	<securecookie host="^support\.zabbix\.com$" name=".*"/>
 
 
-	<rule from="^http://support\.zabbix\.com/"
-		to="https://support.zabbix.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

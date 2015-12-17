@@ -1,0 +1,41 @@
+<!--
+	Problematic hosts:
+
+		- (www.)? *
+		- ads-by *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- ads-by
+
+
+	Insecure cookies are set for these hosts:
+
+		- yieldselect.com
+		- www.yieldselect.com
+
+-->
+<ruleset name="YieldSelect.com" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="yieldselect.com" />
+	<target host="ads-by.yieldselect.com" />
+	<target host="www.yieldselect.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?yieldselect\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:www\.)?yieldselect\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

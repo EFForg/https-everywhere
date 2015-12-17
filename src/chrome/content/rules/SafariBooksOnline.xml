@@ -9,14 +9,14 @@
 			- support
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *safaribooksonline.com:
 
 		- support *
 
 	* Force.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *safaribooksonline.com:
 
 		- my ¹
 		- ssl ²
@@ -26,28 +26,26 @@
 	² Insecure renegotiation
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)
-		- blog
-		- ssl
-
-
-	Insecure cookies are set for these domains:
-
-		- my
-		- .my
-		- ssl
-		- .ssl
-		- techbus
-		- .techbus
-		- www
-		- .www
+		- my.safaribooksonline.com
+		- .my.safaribooksonline.com
+		- ssl.safaribooksonline.com
+		- .ssl.safaribooksonline.com
+		- techbus.safaribooksonline.com
+		- .techbus.safaribooksonline.com
+		- www.safaribooksonline.com
+		- .www.safaribooksonline.com
 
 -->
-<ruleset name="Safari Books Online">
-  <target host="safaribooksonline.com" />
-  <target host="*.safaribooksonline.com" />
+<ruleset name="Safari Books Online.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="safaribooksonline.com" />
+	<target host="blog.safaribooksonline.com" />
+	<target host="ssl.safaribooksonline.com" />
+	<target host="www.safaribooksonline.com" />
 
 
 	<!--	Not secured by server:
@@ -55,11 +53,12 @@
 	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
 	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
 	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+	<!--securecookie host="\.www\.safaribooksonline\.com$" name="^(?:corp_sessionid|csrfsafari)$" /-->
 
-	<securecookie host="(?:ssl|www)\.safaribooksonline\.com$" name=".+" />
+	<securecookie host="(?:ssl|\.?www)\.safaribooksonline\.com$" name=".+" />
 
 
-	<rule from="^http://((?:blog|ssl|www)\.)?safaribooksonline\.com/"
-		to="https://$1safaribooksonline.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

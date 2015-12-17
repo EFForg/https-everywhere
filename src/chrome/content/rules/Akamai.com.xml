@@ -9,19 +9,59 @@
 			- 1.kc.blz.io
 
 
-	Mixed content:
+	Nonfunctional hosts in *akamai.com
 
-		- Image on blogs from 1.kc.blz.io *
+		- apps-community-uat ¹
+		- it ²
+		- spanish ²
+		- www ²
 
-	* Unsecurable <= 403
+	¹ 503
+	² Redirects to http
+
+
+	Fully covered hosts in *akamai.com:
+
+		- ^
+		- blogs
+		- apps-community
+		- community
+		- community-uat
+		- developer
+		- http2
+
+
+	Insecure cookies are set for these hosts:
+
+		- community.akamai.com
+		- community-uat.akamai.com
+		- it.akamai.com
+		- www.akamai.com
 
 -->
 <ruleset name="Akamai.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="akamai.com" />
+	<target host="apps-community.akamai.com" />
 	<target host="blogs.akamai.com" />
+	<target host="community.akamai.com" />
+	<target host="community-uat.akamai.com" />
+	<target host="control.akamai.com" />
+	<target host="developer.akamai.com" />
+	<target host="http2.akamai.com" />
 
 
-	<rule from="^http://blogs\.akamai\.com/"
-		to="https://blogs.akamai.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^community(-uat)?\.akamai\.com$" name="^(BIGipServer[\w-]+|jive\.login\.ts|jive\.security\.context)$" /-->
+	<!--securecookie host="^(it|www)\.akamai\.com$" name="^cm_sessionid$" /-->
+
+	<securecookie host="^community(?:-uat)?\.akamai\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

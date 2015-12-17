@@ -1,49 +1,131 @@
 <!--
+	For problematic rules, see Baidu.com-problematic.xml.
 
-	Nonfunctional domains:
+
+	Other Baidu rulesets:
+
+		- Baifubao.com.xml
+		- Bdimg.com.xml
 
 
-		- baidu.com subdomains:
+	Nonfunctional hosts:
 
+		- in *.baidu.com:
+
+			- adm *
+			- apistore *
+			- baike *
+			- xuxuhong.baijia *
+			- ce *
+			- developer *
+			- dida *
+			- duokoo *
+			- e *
 			- eiv *
 			- gimg *
+			- help ²
 			- hi *
 			- tb.himg *
+			- hiphotos *
+			- home *
+			- image *
 			- img *
 			- imgsrc *
+			- index *
+			- italk *
+			- iwan
+			- jingyan *
+			- lbsyun *
+			- bbs.lbsyun *
+			- libs *
+			- licai *
+			- map *
+			- mo *
+			- mp3 *
+			- music *
+			- news *
+			- op *
+			- ours *
+			- pos *
+			- qianbao *
 			- qingting *
+			- r *
+			- rj *
+			- share *
 			- bdimg.share *
+			- shouji *
+			- siteapp *
+			- m.siteapp *
+			- t1[012] *
+			- talent *
 			- tieba *
 			- static.tieba *
+			- top *
+			- tousu ²
+			- trends *
+			- tvg		(Shows default page)
+			- tvgame	(Shows tvg)
+			- utility *
+			- v *
+			- video *
 			- wanba *
-			- wap *
+			- wangmeng *
+			- wapmap *
+			- wapp *
+			- wenku *
+			- wubi *
+			- xteam *
+			- xueshu	(405)
+			- yunjiasu *
+			- yuqing *
+			- zhidao *
 
-		- cdn.iknow.bdimg.com *
 		- tb[12].bdstatic.com *
 
 	* Times out
+	² Handshake fails
 
 
-	Problematic domains:
+	Problematic hosts:
 
-		- developer.baidu.com	(mismatched, CN: openapi.baidu.com)
-		- apps.bdimg.com *
-		- apps[123].bdimg.com *
+		- ^ *
+		- bs ³
+		- hm ¹
+		- financestatic ²
+		- ir ²
+		- pan **
+		- passport ¹
+		- tianyan ³
+		- yum **
+		- zoo ²
 
-	* Times out
+	* Dropped
+	¹ Insecure renegotiation
+	² Mismatched
+	** Apparently breaks logged-in downloads: https://github.com/EFForg/https-everywhere/issues/1441
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered domains:
+	Partially covered hosts:
 
-		- baidu.com subdomains:
+		- 8 *
 
-			- developer	(→ openapi)
-			- openapi
-			- pan
-			- passport
+	* Some pages redirect to http
 
-		- apps.bdimg.com	(→ openapi.baidu.com)
-		- apps\d.bdimg.com	(→ openapi.baidu.com)
+
+	Insecure cookies are set for these domains and hosts:
+
+		- baidu.com
+		- .baidu.com
+		- 8.baidu.com
+		- .m.baidu.com
+		- open2.baidu.com
+		- openapi.baidu.com
+		- www.baidu.com
+		- .www.baidu.com
+		- .yun.baidu.com
+		- zhanzhang.baidu.com
+		- zoo.baidu.com
 
 
 	Mixed content:
@@ -52,31 +134,125 @@
 
 			- openapi from developer ¹
 			- openapi from gimg ²
+			- openapi from hiphotos
 			- openapi from apps.bdimg.com ¹
+			- m, m1, wap from m.baidu.com
+			- zhanzhang from bs.baidu.com *
+			- zhanzhang from op.baidu.com ²
 
 	¹ Secured by us
+	* Not secured by us <= missing certificate chain
 	² Unsecurable <= dropped
 
 -->
-<ruleset name="Baidu (partial)">
+<ruleset name="Baidu.com (partial)">
 
-	<target host="*.baidu.com" />
-	<target host="*.bdimg.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="1.baidu.com" />
+	<target host="8.baidu.com" />
+	<target host="baifubao.baidu.com" />
+	<!--target host="bs.baidu.com" /-->
+	<target host="cpro.baidu.com" />
+	<target host="hm.baidu.com" />
+	<target host="m.baidu.com" />
+	<target host="m1.baidu.com" />
+	<target host="open2.baidu.com" />
+	<target host="openapi.baidu.com" />
+	<!--target host="pan.baidu.com" /-->
+	<target host="passport.baidu.com" />
+	<target host="pcs.baidu.com" />
+	<target host="c.pcs.baidu.com" />
+	<target host="d.pcs.baidu.com" />
+	<target host="qianbao.baidu.com" />
+	<target host="sp0.baidu.com" />
+	<!--target host="tianyan.baidu.com" /-->
+	<target host="wallet.baidu.com" />
+	<target host="wap.baidu.com" />
+	<target host="www.baidu.com" />
+	<!--target host="yun.baidu.com" /-->
+	<target host="zhanzhang.baidu.com" />
+
+	<!--	Complications:
+				-->
+	<target host="baidu.com" />
+	<target host="developer.baidu.com" />
+	<target host="financestatic.baidu.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://8\.baidu\.com/($|product/detail/\d+$|rich/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://8\.baidu\.com/+(?!(?:ask|[bg]f_index|finance91)(?:$|[?/])|content/|gf_index/detail\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://8.baidu.com/gf_index/detail" />
+			<test url="http://8.baidu.com/incomeList/0/list/0" />
+			<test url="http://8.baidu.com/insurance/0" />
+			<test url="http://8.baidu.com/investment/0" />
+			<test url="http://8.baidu.com/pk/" />
+			<test url="http://8.baidu.com/pk/AGAkfp" />
+			<test url="http://8.baidu.com/product/detail/4" />
+			<test url="http://8.baidu.com/product/detail/30" />
+			<test url="http://8.baidu.com/product/detail/200" />
+			<test url="http://8.baidu.com/rich/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://8.baidu.com/ask/0" />
+			<test url="http://8.baidu.com/finance91/0" />
+			<test url="http://8.baidu.com/bf_index/bank" />
+			<test url="http://8.baidu.com/bf_index/detail" />
+			<test url="http://8.baidu.com/content/resource/app/index.html" />
+			<test url="http://8.baidu.com/content/resource/qcode_v2.png" />
+			<test url="http://8.baidu.com/gf_index/detail?prdCode=000827" />
+
+		<!--	$ is no longer identical.
+							-->
+		<exclusion pattern="^http://developer\.baidu\.com/+(?!static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://developer.baidu.com/dev" />
+			<test url="http://developer.baidu.com/forum" />
+			<test url="http://developer.baidu.com/platform/catalog/navigation-c/node/n301" />
+
+			<!--	-ve:
+					-->
+			<test url="http://developer.baidu.com/static/assets/v3/push.png" />
+
+		<test url="http://hm.baidu.com/h.js" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.baidu\.com$" name="^BAIDUID$" /-->
+	<!--securecookie host="^\.baidu\.com$" name="^(BAIDUID|BIDUPSID|H_PS_PSSID)$" /-->
+	<!--securecookie host="^8\.baidu\.com$" name="^superdsid$" /-->
+	<securecookie host="^\.m\.baidu\.com$" name="^__bsi$" />
+	<!--securecookie host="^open2\.baidu\.com$" name="^PRISON_COOKIE$" /-->
 	<!--securecookie host="^openapi\.baidu\.com$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^\.yun\.baidu\.com$" name="^PANWEB$" /-->
+	<!--securecookie host="^www\.baidu\.com$" name="^(BD_HOME|BDSVRTM)" /-->
+	<!--securecookie host="^\.www\.baidu\.com$" name="^__bsi$" /-->
+	<securecookie host="^zhanzhang\.baidu\.com$" name="^SITEMAPSESSID$" />
+	<!--securecookie host="^zoo\.baidu\.com$" name="^BAEID$" /-->
 
-	<securecookie host="^openapi\.baidu\.com$" name=".+" />
+	<securecookie host="^(?:open2\.|openapi|\.?www|zhanzhang)\.baidu\.com$" name=".+" />
 
 
-	<rule from="^http://(?:(?:developer|openapi)\.baidu|apps\d?\.bdimg)\.com/"
+	<rule from="^http://baidu\.com/"
+		to="https://www.baidu.com/" />
+
+	<rule from="^http://developer\.baidu\.com/"
 		to="https://openapi.baidu.com/" />
 
-	<rule from="^http://(www|yun|pan|passport)\.baidu\.com/"
-		to="https://$1.baidu.com/" />
+	<rule from="^http://financestatic\.baidu\.com/"
+		to="https://8.baidu.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

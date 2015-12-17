@@ -1,10 +1,7 @@
 <!--
-	For rules causing false/broken MCB, see Peopleclick.com.xml.
+	For rules causing false/broken MCB, see Peopleclick.com-falsemixed.xml.
 
 	For other PeopleFluent coverage, see PeopleFluent.com.xml.
-
-
-	(www.): Works; expired, mismatched, CN: peopleclickauthoria.com
 
 
 	Problematic subdomains:
@@ -30,12 +27,23 @@
 -->
 <ruleset name="Peopleclick.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="peopleclick.com" />
-	<target host="*.peopleclick.com" />
-		<!--
-			Avoid false/broken MCB:
+	<target host="careers.peopleclick.com" />
+	<target host="saml.peopleclick.com" />
+	<target host="www.peopleclick.com" />
+
+		<!--	Avoid false/broken MCB:
 						-->
 		<exclusion pattern="^http://careers\.peopleclick\.com/+(?!content/)" />
+
+			<test url="http://careers.peopleclick.com/careerscp/client_dowcorning/external/search.do" />
+			<test url="http://careers.peopleclick.com/careerscp/client_nxp/external/search.do" />
+
+			<!--	-ve:
+					-->
+			<test url="http://careers.peopleclick.com/content/live/default/images/nav_gradient.gif" />
 
 
 	<!--	Secured by server:
@@ -44,10 +52,7 @@
 	<!--securecookie host="^saml\.peopleclick\.com$" name="^PF$" /-->
 
 
-	<rule from="^http://(?:www\.)?peopleclick\.com/"
-		to="https://www.peoplefluent.com/" />
-
-	<rule from="^http://(careers|saml)\.peopleclick\.com/"
-		to="https://$1.peopleclick.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

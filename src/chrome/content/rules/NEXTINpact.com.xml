@@ -2,45 +2,51 @@
 	For other EDI7 Media coverage, see EDI7.lu.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *nextinpact.com:
 
-		- static	(refused)
+		- ^ *
+		- cdn ³
+		- forum ¹
+		- www ²
+
+	* 526
+	¹ Dropped
+	² Redirects to http
+	³ CloudFlare error: Invalid SSL cert
 
 
-	Problematic subdomains:
+	Fully covered hosts in *nextinpact.com:
 
-		- ^	(dropped)
+		- compte
 
 
-	Mixed content:
+	Insecure cookies are set for these domains and hosts:
 
-		- Images, on www from:
-
-			- static *
-			- nebula.prixdunet.com *
-
-		- css on www from fonts.googleapis.com **
-
-		- Ads/web bugs, on www from:
-
-			- www2.edi7.lu **
-			- ads.horyzon-media.com **
-			- logv10.xiti.com
-
-	* Unsecurable, doesn't trip MCB
-	** Secured by us
+		- .nextinpact.com
+		- compte.nextinpact.com
 
 -->
-<ruleset name="NEXTINpact (partial)">
+<ruleset name="Next INpact.com (partial)">
 
-	<target host="nextinpact.com" />
-	<target host="*.nextinpact.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="compte.nextinpact.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nextinpact\.com/($|Content/|[Ii]mages/|favicon\.ico|news/\d+-[\w-]+\.htm)" /-->
 
 
-	<securecookie host="^(?:www)?\.nextinpact\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.nextinpact\.com$" name="^(__cfduid|ARRAffinity|cf_clearance)$" /-->
+	<!--securecookie host="^compte\.nextinpact\.com$" name="^__RequestVerificationToken$" /-->
+
+	<!--securecookie host="^\.nextinpact\.com$" name="^__cfduid$" /-->
+	<securecookie host="^compte\.nextinpact\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?nextinpact\.com/"
-		to="https://www.nextinpact.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

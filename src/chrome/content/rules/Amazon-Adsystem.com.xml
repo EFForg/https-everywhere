@@ -9,16 +9,16 @@
 			- c
 
 
-	Fully covered subdomains:
+	Problematic hosts in *amazon-adsystem.com:
 
-		- aax-eu
-		- aax-us-east
-		- c		(→ d1ykf07e75w7ss.cloudfront.net)
-		- ir-na
-		- ps-us
-		- rcm-na
-		- wms-na
-		- ws-na
+		- ps-us *
+
+	* Cloudfront
+
+
+	Insecure cookies are set for these domains:
+
+		- .amazon-adsystem.com
 
 
 	ps-us.amazon-adsystem.com sets aps-trtmnt cookie
@@ -27,16 +27,42 @@
 -->
 <ruleset name="Amazon-Adsystem.com (partial)">
 
-	<target host="*.amazon-adsystem.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="aax.amazon-adsystem.com" />
+	<target host="aax-eu.amazon-adsystem.com" />
+	<target host="aax-us-east.amazon-adsystem.com" />
+	<target host="c.amazon-adsystem.com" />
+	<target host="fls-na.amazon-adsystem.com" />
+	<target host="ir-de.amazon-adsystem.com" />
+	<target host="ir-na.amazon-adsystem.com" />
+	<target host="rcm-na.amazon-adsystem.com" />
+	<target host="s.amazon-adsystem.com" />
+	<target host="wms-eu.amazon-adsystem.com" />
+	<target host="wms-na.amazon-adsystem.com" />
+	<target host="ws-ea.amazon-adsystem.com" />
+	<target host="ws-na.amazon-adsystem.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ps-us.amazon-adsystem.com" />
+
+		<test url="http://ir-de.amazon-adsystem.com/e/ir?t=&amp;l=&amp;o=" />
+		<test url="http://wms-eu.amazon-adsystem.com/panda/20070822/DE/img/a-logo-amazon.png" />
+		<test url="http://ws-eu.amazon-adsystem.com/widgets/q?ServiceVersion=&amp;OneJS=&amp;Operation=GetAdHtml&amp;MarketPlace=&amp;source=&amp;ref=&amp;ad_type=&amp;tracking_id=&amp;marketplace=amazon&amp;region=&amp;placement=&amp;asins&amp;linkId=&amp;show_border=&amp;link_opens_in_new_window=" />
 
 
-	<securecookie host="^\.amazon-adsystem\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amazon-adsystem\.com$" name="^ad-id$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(aax|aax-eu|aax-us-east|fls-na|ir-na|ps-us|rcm-na|s|wm?s-na)\.amazon-adsystem\.com/"
-		to="https://$1.amazon-adsystem.com/" />
+	<rule from="^http://ps-us\.amazon-adsystem\.com/"
+		to="https://dnd1av4y9k5gc.cloudfront.net/" />
 
-	<rule from="^http://c\.amazon-adsystem\.com/"
-		to="https://d1ykf07e75w7ss.cloudfront.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -13,18 +13,31 @@
 		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
 		- https://panopticlick.eff.org
 
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .freenode.net
+		- webchat.freenode.net
+
 -->
 <ruleset name="freenode.net">
 
 	<target host="freenode.net" />
-	<target host="*.freenode.net" />
+	<target host="blog.freenode.net" />
+	<target host="webchat.freenode.net" />
+	<target host="www.freenode.net" />
 
 
-	<securecookie host="\.freenode\.net$" name="^__cfduid$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.freenode\.net$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="webchat\.freenode\.net$" name="^PAH$" /-->
+
+	<securecookie host="\.freenode\.net$" name="^(?:__cfduid|cf_clearance)$" />
 	<securecookie host="^.+\.freenode\.net$" name=".+" />
 
 
-	<rule from="^http://(\S+\.)?freenode\.net/"
-		to="https://$1freenode.net/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

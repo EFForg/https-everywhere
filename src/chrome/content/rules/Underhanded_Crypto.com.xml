@@ -6,7 +6,9 @@
 	* Refused
 
 
-	Server is configured for rc4 only.
+	Insecure cookies are set for these domains:
+
+		- .underhandedcrypto.com
 
 -->
 <ruleset name="Underhanded Crypto.com (partial)">
@@ -15,7 +17,14 @@
 	<target host="www.underhandedcrypto.com" />
 
 
-	<rule from="^http://(www\.)?underhandedcrypto\.com/"
-		to="https://$1underhandedcrypto.com/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.underhandedcrypto\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.underhandedcrypto\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

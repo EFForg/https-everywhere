@@ -6,6 +6,7 @@
 
 		- autoconfig *
 		- clubs *
+		- disk-blog *
 		- feedback *
 		- my *
 		- support *
@@ -25,10 +26,15 @@
 		- (www.)?cal ²
 		- pda.cal ²
 		- pda.calendar ²
+		- (www.)?events		(Mismatched)
+		- www.ewent		(Mismatched)
+		- (www.)?ewents		(Mismatched)
 		- ical ²
 		- pda.ical ²
+		- (www.)?ivents		(Mismatched)
 		- (www.)?m.metro ³
 		- (www.)?site ⁴
+		- sobitia	Mismatched
 		- (www.)?wc ²
 		- pda.wc ²
 		- (www.)?webcal ²
@@ -47,13 +53,12 @@
 		- autodiscover
 		- pass.beta
 		- disk
-		- disk-blog
-		- www.ewent
-		- (www.)?ewents
+		- www.ewent		(→ events.yandex.ru)
+		- (www.)?ewents		(→ events.yandex.ru)
 		- (www.)?event
-		- (www.)?events
+		- (www.)?events		(→ events.yandex.ru)
 		- (www.)?ivent
-		- (www.)?ivents
+		- (www.)?ivents		(→ events.yandex.ru)
 		- m
 		- mail
 		- metrica
@@ -67,7 +72,7 @@
 		- rabota
 		- realty
 		- (www.)?site		(→ site.yandex.ru)
-		- sobitia
+		- sobitia		(→ events.yandex.ru)
 		- taxi
 		- m.taxi
 		- w
@@ -88,10 +93,44 @@
 -->
 <ruleset name="Ya.ru (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="auto.ya.ru" />
+	<target host="autodiscover.ya.ru" />
+	<target host="pass.beta.ya.ru" />
+	<target host="disk.ya.ru" />
+	<target host="m.ya.ru" />
+	<target host="mail.ya.ru" />
+	<target host="metrica.ya.ru" />
+	<target host="metrika.ya.ru" />
+	<target host="metro.ya.ru" />
+	<target host="pda.metro.ya.ru" />
+	<target host="www.metro.ya.ru" />
+	<target host="p.ya.ru" />
+	<target host="rabota.ya.ru" />
+	<target host="realty.ya.ru" />
+	<target host="taxi.ya.ru" />
+	<target host="m.taxi.ya.ru" />
+	<target host="w.ya.ru" />
+	<target host="www.ya.ru" />
+
+	<!--	Special cases:
+				-->
 	<target host="ya.ru" />
-	<target host="*.ya.ru" />
-		<!--
-			Redirects to http:
+	<target host="events.ya.ru" />
+	<target host="www.events.ya.ru" />
+	<target host="www.ewent.ya.ru" />
+	<target host="ewents.ya.ru" />
+	<target host="www.ewents.ya.ru" />
+	<target host="ivents.ya.ru" />
+	<target host="www.ivents.ya.ru" />
+	<target host="m.metro.ya.ru" />
+	<target host="www.m.metro.ya.ru" />
+	<target host="site.ya.ru" />
+	<target host="www.site.ya.ru" />
+	<target host="sobitia.ya.ru" />
+
+		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://(autoconfig|support|wow)\.ya\.ru/$" /-->
 		<!--exclusion pattern="^http://clubs\.ya\.ru/($|favicon\.ico|update_session\.xml)" /-->
@@ -117,32 +156,48 @@
 
 
 
-	<rule from="^http://(?:www\.)?ya\.ru/"
+	<rule from="^http://ya\.ru/"
 		to="https://www.ya.ru/" />
 
-	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/"
-		to="https://m.metro.ya.ru/" />
+	<!--	Redirect keeps path and args,
+		but not foward slash:
+					-->
+	<rule from="^http://(?:www\.ewent|(?:www\.)?(?:e[vw]|iv)ents)\.ya\.ru/+"
+		to="https://events.yandex.ru/" />
 
-	<!--	Redirect drops path but not args:
-							-->
-	<rule from="^http://(?:www\.)?site\.ya\.ru/[^?]*"
-		to="https://site.yandex.ru/" />
+		<test url="http://www.ewent.ya.ru//" />
+		<test url="http://events.ya.ru//" />
+		<test url="http://ewents.ya.ru//" />
+		<test url="http://ivents.ya.ru//" />
 
 	<!--	Redirect drops path but not args:
 							-->
 	<rule from="^http://(?:www\.)?m\.metro\.ya\.ru/[^?]*"
 		to="https://m.soft.yandex.ru/metro/" />
 
-	<rule from="^http://(auto|autodiscover|pass\.beta|disk|disk-blog|www\.ewent|(?:www\.)?ewents|(?:www\.)?[ei]vents?|feedback|m|mail|metri[ck]a|metro|pda\.metro|p|rabota|realty|sobitia|taxi|m\.taxi|w)\.ya\.ru/"
-		to="https://$1.ya.ru/" />
+		<test url="http://m.metro.ya.ru/foo" />
+		<test url="http://www.m.metro.ya.ru/foo" />
 
-	<!--	Domains for which both www and !www
-		exist, and both work without caveat:
+	<!--	Redirect keeps path and	args,
+		but not forward slash:
+					-->
+	<rule from="^http://sobitia\.ya\.ru/+"
+		to="https://events.yandex.ru/" />
+
+		<test url="http://sobitia.ya.ru//" />
+
+	<!--	Redirect drops path but not args:
 							-->
-	<rule from="^http://(www\.)?(metro)\.ya\.ru/"
-		to="https://$1$2.ya.ru/" />
+	<rule from="^http://(?:www\.)?site\.ya\.ru/[^?]*"
+		to="https://site.yandex.ru/" />
+
+		<test url="http://site.ya.ru/foo" />
+		<test url="http://www.site.ya.ru/foo" />
 
 	<!--rule from="^http://(?:www\.)?([^.]+)\.ya\.ru/"
 		to="https://$1.ya.ru/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

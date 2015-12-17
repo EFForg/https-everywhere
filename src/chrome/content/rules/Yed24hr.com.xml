@@ -1,16 +1,12 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://mov24hr.com/ => https://www.yed24hr.com/: (35, 'error:0D0C5006:asn1 encoding routines:ASN1_item_verify:EVP lib')
-Fetch error: http://www.mov24hr.com/ => https://www.yed24hr.com/: (35, 'error:0D0C5006:asn1 encoding routines:ASN1_item_verify:EVP lib')
-Fetch error: http://movzeed.com/ => https://www.yed24hr.com/: Redirect for 'http://movzeed.com/' missing Location
-Fetch error: http://www.movzeed.com/ => https://www.yed24hr.com/: Redirect for 'http://www.movzeed.com/' missing Location
-Fetch error: http://yed24hr.com/ => https://yed24hr.com/: (35, 'error:0D0C5006:asn1 encoding routines:ASN1_item_verify:EVP lib')
 	Problematic domains:
 
 		- (www.)movzeed.com *
 		- (www.)mov24hr.com *
+		- (www.)?yed24hr.com ²
 
 	* Refused
+	² *.lxlabs.com
 
 
 	Mixed content:
@@ -65,14 +61,19 @@ Fetch error: http://yed24hr.com/ => https://yed24hr.com/: (35, 'error:0D0C5006:a
 	** Unsecurable
 
 -->
-<ruleset name="yed24hr.com" default_off='failed ruleset test'>
+<ruleset name="yed24hr.com" default_off="mismatched, self-signed">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="yed24hr.com" />
+	<target host="www.yed24hr.com" />
+
+	<!--	Complications:
+				-->
 	<target host="mov24hr.com" />
 	<target host="www.mov24hr.com" />
 	<target host="movzeed.com" />
 	<target host="www.movzeed.com" />
-	<target host="yed24hr.com" />
-	<target host="*.yed24hr.com" />
 
 
 	<securecookie host="^(?:w*\.)?yed24hr\.com$" name=".+" />
@@ -81,7 +82,7 @@ Fetch error: http://yed24hr.com/ => https://yed24hr.com/: (35, 'error:0D0C5006:a
 	<rule from="^http://(?:www\.)?mov(?:24hr|zeed)\.com/"
 		to="https://www.yed24hr.com/" />
 
-	<rule from="^http://(www\.)?yed24hr\.com/"
-		to="https://$1yed24hr.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

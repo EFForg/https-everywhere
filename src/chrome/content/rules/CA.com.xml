@@ -1,0 +1,111 @@
+<!--
+	Nonfunctional hosts in *ca.com:
+
+		- investor ¹
+		- transform ²
+
+	¹ Dropped
+	² Marketo
+
+
+	Partially covered hosts in *ca.com:
+
+		- rewrite *
+		- trials *
+		- www *
+
+	* Some pages redirect to http
+
+
+	Fully covered hosts in *ca.com:
+
+		- blogs
+		- communities
+		- support
+
+
+	These altnames don't exist:
+
+		- www.blogs.ca.com
+		- www.communities.ca.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- support.ca.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- blogs from $self *
+			- support from www.ca.com *
+
+	* Secured by us
+
+-->
+<ruleset name="CA.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ca.com" />
+	<target host="blogs.ca.com" />
+	<target host="communities.ca.com" />
+	<target host="rewrite.ca.com" />
+	<target host="support.ca.com" />
+	<target host="trials.ca.com" />
+	<target host="www.ca.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(trials|www)\.ca\.com/us/default\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://rewrite\.ca\.com/+(?!~/media/|[\w/-]+/~/media/|assets/|favicon\.ico)" />
+		<exclusion pattern="^http://trials\.ca\.com/+(?!favicon\.ico|us/~/media/)" />
+		<exclusion pattern="^http://www\.ca\.com/+(?!assets-digital-commerce/|favicon\.ico|styles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rewrite.ca.com/us/about.aspx" />
+			<test url="http://rewrite.ca.com/us/expertise/security.aspx" />
+			<test url="http://rewrite.ca.com/us/search.aspx" />
+			<test url="http://rewrite.ca.com/us/sitemap.aspx" />
+			<test url="http://rewrite.ca.com/us/topic/create.aspx" />
+			<test url="http://rewrite.ca.com/us/type/slideshow.aspx" />
+			<test url="http://trials.ca.com/de/default.aspx" />
+			<test url="http://trials.ca.com/us/default.aspx" />
+			<test url="http://trials.ca.com/us/default.aspx?intcmp=" />
+			<test url="http://www.ca.com/us/about-us.aspx" />
+			<test url="http://www.ca.com/us/about-us.aspx?intcmp=" />
+			<test url="http://www.ca.com/us/it-management-events.aspx" />
+			<test url="http://www.ca.com/us/it-management-events.aspx?intcmp=" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rewrite.ca.com/~/media/rewrite/images/system/ca-header.png" />
+			<test url="http://rewrite.ca.com/assets/img/ca-mobile-header.png" />
+			<test url="http://rewrite.ca.com/favicon.ico" />
+			<test url="http://rewrite.ca.com/us/~/media/rewrite/images/headshots/JustinVaughanBrown.jpg" />
+			<test url="http://rewrite.ca.com/us/articles/digital-transformation/~/media/%20rewrite/images/inline-images/April15/Digital-Dialogues-3-Kevin-Benedict-inline-400.jpg" />
+			<test url="http://trials.ca.com/favicon.ico" />
+			<test url="http://trials.ca.com/us/~/media/trials/images/icons/google-plus.png" />
+			<test url="http://www.ca.com/assets-digital-commerce/style/min/style.css" />
+			<test url="http://www.ca.com/favicon.ico" />
+			<test url="http://www.ca.com/styles/img/social.png" />
+			<test url="http://www.ca.com/styles/vendor/ladda-themeless.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^support\.ca\.com$" name="^(saplb_\*|JROUTE|JSESSIONID|PortalAlias)$" /-->
+
+	<securecookie host="^support\.ca\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

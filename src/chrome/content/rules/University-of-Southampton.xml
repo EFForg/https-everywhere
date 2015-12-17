@@ -1,12 +1,10 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://soton.ac.uk/ => https://www.soton.ac.uk/: (7, 'Failed to connect to soton.ac.uk port 80: Connection timed out')
 	Fully covered domains:
 
 		- secure.ecs.soton.ac.uk
 
 -->
-<ruleset name="University of Southampton (partial)" default_off='failed ruleset test'>
+<ruleset name="University of Southampton (partial)">
 
 	<target host="noc.ac.uk" />
 	<!--
@@ -25,11 +23,8 @@ Fetch error: http://soton.ac.uk/ => https://www.soton.ac.uk/: (7, 'Failed to con
 
 	<!--	Cert is not valid for www.
 						-->
-	<rule from="^http://www\.noc\.ac\.uk/"
+	<rule from="^http://(www\.)?noc\.ac\.uk/"
 		to="https://noc.ac.uk/" />
-
-	<rule from="^http://noc\.ac\.uk/(f|sites)/"
-		to="https://noc.ac.uk/$1/" />
 
 	<rule from="^http://(?:www\.)?soton\.ac\.uk/"
 		to="https://www.soton.ac.uk/" />
@@ -37,8 +32,14 @@ Fetch error: http://soton.ac.uk/ => https://www.soton.ac.uk/: (7, 'Failed to con
 	<rule from="^http://secure\.ecs\.soton\.ac\.uk/"
 		to="https://secure.ecs.soton.ac.uk/" />
 
+	<test url="http://secure.ecs.soton.ac.uk/" />
+	<test url="http://secure.ecs.soton.ac.uk/mail/" />
+	<test url="http://secure.ecs.soton.ac.uk/login/" />
+
 	<rule from="^http://(www\.)?jobs\.soton\.ac\.uk/"
 		to="https://$1jobs.soton.ac.uk/" />
+
+	<test url="http://www.jobs.soton.ac.uk/display.aspx?Id=1253&amp;pid=0" />
 
 	<!--	Cert is not valid for !www.
 						-->

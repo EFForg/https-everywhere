@@ -1,0 +1,113 @@
+<!--
+	For other Ecommerce coverage, see Ecommerce.xml.
+
+
+	Nonfunctional hosts in *ixwebhosting.com:
+
+		- status *
+
+	* Redirects to http
+
+
+	Problematic hosts in *ixwebhosting.com:
+
+		- email *
+
+	* Mismatched
+
+
+	Fully covered hosts in *ixwebhosting.com:
+
+		- ^
+		- assets
+		- blog		(→ ww.ixwebhosting.com)
+		- email		(→ webmail.opentransfer.com)
+		- manage
+		- my
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ixwebhosting.com
+		- manage.ixwebhosting.com
+		- my.ixwebhosting.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from fonts.googleapis.com ¹
+			- www from assets.ixwebhosting.com ¹
+			- www from $self ¹
+
+		- Images, on:
+
+			- www from assets.ixwebhosting.com ¹
+			- www from $self ¹
+			- www from farm2.staticflickr.com ¹
+
+		- favicon www from $self ²
+
+	¹ Secured by us
+	² Unsecurable <= redirects to http
+
+-->
+<ruleset name="IX Web Hosting.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ixwebhosting.com" />
+	<target host="assets.ixwebhosting.com" />
+	<target host="blog.ixwebhosting.com" />
+	<target host="manage.ixwebhosting.com" />
+	<target host="my.ixwebhosting.com" />
+	<target host="www.ixwebhosting.com" />
+
+	<!--	Complications:
+				-->
+	<target host="email.ixwebhosting.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://status.ixwebhosting.com/$" /-->
+		<!--exclusion pattern="^http://www\.ixwebhosting\.com/($|favicon\.ico|index($|\?))" /-->
+
+		<!--	Mixed css:
+					-->
+		<!--exclusion pattern="^http://www\.ixwebhosting\.com/(blog|support)/$" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://www\.ixwebhosting\.com/(?!(?:blog|support)/wp-content/|templates/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ixwebhosting.com/blog/" />
+			<test url="http://www.ixwebhosting.com/hosting-plans" />
+			<test url="http://www.ixwebhosting.com/support/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ixwebhosting.com/blog/wp-content/themes/newixblog/style.css" />
+			<test url="http://www.ixwebhosting.com/support/wp-content/themes/ix-support-center-dev02/style.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ixwebhosting\.com$" name="^uainfo$" /-->
+	<!--securecookie host="^manage\.ixwebhosting\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^my\.ixwebhosting\.com$" name="^_session_id$" /-->
+
+	<!--securecookie host="^(?:.*\.)?ixwebhosting\.com$" name=".*" /-->
+	<securecookie host="^\.ixwebhosting\.com$" name="^uainfo$" />
+	<securecookie host="^m(?:anage|y)\.ixwebhosting\.com$" name=".+" />
+
+
+	<rule from="^http://email\.ixwebhosting\.com/"
+		to="https://webmail.opentransfer.com/horde/imp/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

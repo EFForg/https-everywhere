@@ -1,0 +1,51 @@
+<!--
+	Nonfuctional subdomains:
+
+		- spin *
+
+	* Redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- craft-staging.atomicobject.com
+		- www.atomicobject.com
+
+-->
+<ruleset name="Atomic Object.com (partial)">
+
+	<target host="atomicobject.com" />
+	<target host="craft-staging.atomicobject.com" />
+	<target host="spin.atomicobject.com" />
+	<target host="www.atomicobject.com" />
+
+		<!--	Redirects to http:
+
+						-->
+		<!--test url="http://spin\.atomicobject\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://spin\.atomicobject\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://spin.atomicobject.com/author/erickson/" />
+			<test url="http://spin.atomicobject.com/page/2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://spin.atomicobject.com/wp-content/themes/atomic-spin-wordpress-theme/images/careers.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(craft-staging|www)\.atomicobject\.com$" name="^CraftSessionId$" /-->
+
+	<securecookie host="^(?:craft-staging|www)\.atomicobject\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

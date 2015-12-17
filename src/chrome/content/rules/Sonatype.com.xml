@@ -1,0 +1,60 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- go *
+
+	* Mismatched
+
+
+	These altnames don't exist:
+
+		- www.support.sonatype.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- docs.sonatype.com
+
+-->
+<ruleset name="Sonatype.com (partial)">
+
+	<target host="sonatype.com" />
+	<target host="books.sonatype.com" />
+	<target host="docs.sonatype.com" />
+	<target host="download.sonatype.com" />
+	<target host="links.sonatype.com" />
+	<target host="support.sonatype.com" />
+	<target host="www.sonatype.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sonatype\.com/($|system/images/|support$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sonatype\.com/(?!assets/|downloads/products/|favicon\.ico)" />
+
+			<test url="http://www.sonatype.com/about/investors" />
+			<test url="http://www.sonatype.com/contact/general-inquiry" />
+			<test url="http://www.sonatype.com/nexus" />
+			<test url="http://www.sonatype.com/support" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^docs\.sonatype\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^docs\.sonatype\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

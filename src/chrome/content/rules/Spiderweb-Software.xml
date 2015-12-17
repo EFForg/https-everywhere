@@ -1,19 +1,40 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://spiderwebsoftware.com/ => https://spiderwebsoftware.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.spiderwebsoftware.com/ => https://www.spiderwebsoftware.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://spidweb.com/ => https://spiderwebsoftware.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.spidweb.com/ => https://www.spiderwebsoftware.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Problematic domains:
+
+		- (www.)?spiderwebsoftware.com ¹
+		- (www.)?spidweb.com ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mismatched
+
+
+	Mixed content:
+
+		- css from $self *
+		- favicon from $self *
+		- Bug from chiclet.ymlp.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Spiderweb Software" default_off='failed ruleset test'>
+<ruleset name="Spiderweb Software" default_off="missing certificate chain" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="spiderwebsoftware.com" />
 	<target host="www.spiderwebsoftware.com" />
+
+	<!--	Complications:
+				-->
 	<target host="spidweb.com" />
 	<target host="www.spidweb.com" />
 
 	<securecookie host="^(?:www\.)?spiderwebsoftware\.com$"
 			name=".+" />
 
-	<rule from="^http://(www\.)?(spidweb|spiderwebsoftware)\.com/"
-		to="https://$1spiderwebsoftware.com/" />
+	<rule from="^http://(?:www\.)?spidweb\.com/"
+		to="https://www.spiderwebsoftware.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

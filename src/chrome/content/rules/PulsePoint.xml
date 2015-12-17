@@ -2,60 +2,60 @@
 Disabled by https-everywhere-checker because:
 Fetch error: http://apertureinsight.com/ => https://apertureinsight.com/: (28, 'Connection timed out after 10000 milliseconds')
 Fetch error: http://www.apertureinsight.com/ => https://www.apertureinsight.com/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://contextweb.com/ => https://www.contextweb.com/: (7, 'Failed to connect to contextweb.com port 80: Network is unreachable')
-Fetch error: http://bh.pulsepoint.com/ => https://bh.pulsepoint.com/: (51, "SSL: no alternative certificate subject name matches target host name 'bh.pulsepoint.com'")
+
 	Other PulsePoint rulesets:
 
+		- Contextweb.com.xml
 		- Displaymarketplace.com.xml
 
 
 	Nonfunctional domains:
 
 		- (www.)?nmargin.com ¹
-		- (www.)pulsepoint.com
 
 	¹ Refused
+
+
+	Problematic hosts in *pulsepoint.com:
+
+		- ^
+		- bh ²
+		- www ²
+
+	² Mismatched
+
+
+	Fully covered hosts in *pulsepoint.com:
+
+		- exchange
+
+
+	Insecure cookies are set for these hosts:
+
+		- exchange.pulsepoint.com
 
 -->
 <ruleset name="PulsePoint (partial)" default_off='failed ruleset test'>
 
+	<!--	Direct rewrites:
+				-->
 	<target host="apertureinsight.com" />
 	<target host="www.apertureinsight.com" />
-	<target host="contextweb.com" />
-	<target host="*.contextweb.com" />
 	<target host="login.stormpost.datranmedia.com" />
-	<target host="bh.pulsepoint.com" />
 
+	<target host="exchange.pulsepoint.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^exchange\.pulsepoint\.com$" name="^(ASP\.NET_SessionId|AspxAutoDetectCookieSupport)$" /-->
 
 	<securecookie host="^www\.apertureinsight\.com$" name=".*" />
-	<!--
-		name="^(pb_rtb_ev|V)$"
-					-->
-	<securecookie host="^\.contextweb\.com$" name=".+" />
 	<securecookie host="^login\.stormpost\.datranmedia\.com$" name=".*" />
+	<securecookie host="^exchange\.pulsepoint\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?apertureinsight\.com/"
-		to="https://$1apertureinsight.com/" />
-
-	<!--	Cert is only valid for *.contextweb.com.	-->
-	<rule from="^http://(?:www\.)?contextweb\.com/"
-		to="https://www.contextweb.com/" />
-
-	<!--	- Cert: *.hubspot.com
-		- Redirects like so.
-				-->
-	<rule from="^http://blog\.contextweb\.com/sellingdesk$"
-		to="https://getsatisfaction.com/contextweb" />
-
-	<!--	bh & tag: included on 3rd-party websites.	-->
-	<rule from="^http://(bh|exchange|tag)\.contextweb\.com/"
-		to="https://$1.contextweb.com/" />
-
-	<rule from="^http://login\.stormpost\.datranmedia\.com/"
-		to="https://login.stormpost.datranmedia.com/" />
-
-	<rule from="^http://bh\.pulsepoint\.com/"
-		to="https://bh.pulsepoint.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

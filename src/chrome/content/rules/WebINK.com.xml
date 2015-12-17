@@ -7,17 +7,22 @@
 		- dlrhyanfg4sdu.cloudfront.net
 
 
+	Problematic hosts:
+
+		- fontfuse *
+
+	* Mismatched
+
+
 	Fully covered subdomains:
 
 		- (www.)
-		- app
 		- fnt
 
 
 	Observed cookie domains:
 
 		- ^ *
-		- app *
 		- www *
 
 	* Secured by us
@@ -32,14 +37,28 @@
 -->
 <ruleset name="WebINK.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="webink.com" />
-	<target host="*.webink.com" />
+	<target host="fnt.webink.com" />
+	<target host="www.webink.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="fontfuse.webink.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://app\.webink\.com/$" /-->
 
 
-	<securecookie host="^(?:app\.|www\.)?webink\.com$" name=".+" />
+	<securecookie host="^(?:www\.)?webink\.com$" name=".+" />
 
 
-	<rule from="^http://((?:app|fnt|www)\.)?webink\.com/"
-		to="https://$1webink.com/" />
+	<!--rule from="^http://fontfuse\.webink\.com/"
+		to="https://???.cloudront.net/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

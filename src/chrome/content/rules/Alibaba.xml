@@ -3,8 +3,18 @@
 
 		- AliCDN.com.xml
 		- AliExpress.com.xml
+		- Aliimg.com.xml
+		- Alimama.com.xml
 		- Alipay.com.xml
+		- Alitrip.com.xml
+		- Aliunicorn.com.xml
 		- Aliyun.com.xml
+		- ETAO.com.xml
+		- Kanbox.com.xml
+		- Mmstat.com.xml
+		- Tb.cn.xml
+		- Tmall.HK.xml
+		- YunOS.com.xml
 
 
 	CDN buckets:
@@ -12,10 +22,6 @@
 		- img.alibaba.com.edgesuite.net
 
 			- style.alibaba.com
-
-		- i0[123].i.aliimg.com.edgesuite.net
-
-		- style.aliunicorn.com.edgesuite.net
 
 
 	Nonfunctional domains:
@@ -25,7 +31,7 @@
 
 		- alibaba.com subdomains:
 
-			- (www.) ¹
+			- (www.) ³
 			- activities ¹
 			- buyer ¹
 			- campus ³
@@ -36,31 +42,25 @@
 			- customs ¹
 			- dmtracking ²
 			- yihay.en ³
+			- escrow ³
 			- expo ¹
 			- us.favorite ¹
 			- download.im ¹
-			- img ⁴
 			- importer ¹
 			- inspection ¹
-			- legal ¹
+			- jubao ³
+			- service ³
 			- us.my ³
-			- news ¹
+			- news ³
 			- notification ³
 			- us.enmatch.p4p ¹
+			- resources ³
 			- sa ¹
 			- seller ¹
 			- sourcing ¹
 			- hz.sourcing ¹
 			- style ⁴
 			- trademanager ¹
-
-		- aliimg.com subdomains:
-
-			- static.c ³
-			- stat.gmonitor ¹
-			- i0[0123].i ⁴
-
-		- style.aliunicorn.com ⁴
 
 		- x.limgs.cn ¹
 
@@ -70,27 +70,60 @@
 	⁴ 504, akamai
 
 
-	Fully covered subdomains:
+	Problematic hosts in *alibaba.com:
 
-		- 102
-		- job
-		- login
-		- style		(→ stylessl)
-		- stylessl
+		- img.china *
+		- img ²
+
+	* Mismatched
+	² Akamai
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .alibaba.com
+		- security.alibaba.com
+
+
+	Mixed content:
+
+		- Images on security from gtms0\d.alicdn.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Alibaba (partial)">
+<ruleset name="Alibaba.com (partial)">
 
-	<target host="*.alibaba.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="102.alibaba.com" />
+	<target host="dmtracking2.alibaba.com" />
+	<target host="job.alibaba.com" />
+	<target host="legal.alibaba.com" />
+	<target host="login.alibaba.com" />
+	<target host="passport.alibaba.com" />
+	<target host="qd.alibaba.com" />
+	<target host="security.alibaba.com" />
+	<target host="stylessl.alibaba.com" />
+
+	<!--	Complications:
+				-->
+	<target host="style.alibaba.com" />
 
 
-	<securecookie host="^(?:102|escrow|job)\.alibaba\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.alibaba\.com$" name="^(?:ali_beacon_id|legal_user_tmp0)$" /-->
+	<!--securecookie host="^security\.alibaba\.com$" name="^(?:JSESSIONID|asrcId0)$" /-->
+
+	<securecookie host="^\.alibaba\.com$" name="^ali_beacon_id$" />
+	<securecookie host="^(?:102|escrow|job|security)\.alibaba\.com$" name=".+" />
 
 
-	<rule from="^http://(102|escrow|job|login)\.alibaba\.com/"
-		to="https://$1.alibaba.com/" />
-
-	<rule from="^http://style(?:ssl)?\.alibaba\.com/"
+	<rule from="^http://style\.alibaba\.com/"
 		to="https://stylessl.alibaba.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

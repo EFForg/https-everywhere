@@ -14,38 +14,47 @@
 	* Shopify
 
 
+	Insecure cookies are set for these domains and hosts:
+
+		- theappendix.net
+		- .theappendix.net
+
+
 	Mixed content:
 
-		- css, from
-
-			- $self *
-			- cdn.leafletjs.com *
-
-		- Images, from:
-
-			- images *
-			- s3.amazonaws.com *
+		- Images from images.theappendix.net *
 
 	* Secured by us
 
 -->
-<ruleset name="The Appendix.net (partial)" platform="mixedcontent">
+<ruleset name="The Appendix.net (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="theappendix.net" />
-	<target host="*.theappendix.net" />
+
+	<!--	Complications:
+				-->
+	<target host="images.theappendix.net" />
+	<target host="www.theappendix.net" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^theappendix\.net$" name="^_appendix_session$" /-->
+	<!--securecookie host="^\.theappendix\.net$" name="^__qca$" /-->
 
 	<securecookie host="^theappendix\.net$" name=".+" />
+	<securecookie host="^\.theappendix\.net$" name="^__qca$" />
 
-
-	<rule from="^http://(?:www\.)?theappendix\.net/"
-		to="https://theappendix.net/" />
 
 	<rule from="^http://images\.theappendix\.net/"
 		to="https://d6hat78o59yti.cloudfront.net/" />
+
+	<rule from="^http://www\.theappendix\.net/"
+		to="https://theappendix.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

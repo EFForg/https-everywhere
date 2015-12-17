@@ -26,6 +26,11 @@
 	www: cert only matches ^isohunt.to.
 
 
+	Insecure cookies are set for these domains:
+
+		- .isohunt.to
+
+
 	Mixed content:
 
 		- Web bug from i *
@@ -35,15 +40,27 @@
 -->
 <ruleset name="isoHunt.to (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="isohunt.to" />
-	<target host="*.isohunt.to" />
 
+	<!--	Complications:
+				-->
+	<target host="www.isohunt.to" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.isohunt\.to$" name="^(__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^isohunt\.to$" name=".+" />
 	<securecookie host="^\.isohunt\.to$" name="^__cfduid$" />
 
 
-	<rule from="^http://(?:www\.)?isohunt\.to/"
+	<rule from="^http://www\.isohunt\.to/"
 		to="https://isohunt.to/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

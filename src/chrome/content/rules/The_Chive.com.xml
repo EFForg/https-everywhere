@@ -13,24 +13,37 @@
 		- thebrigade
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
-		- my
+		- .thechive.com
+		- dating.thechive.com
+		- my.thechive.com
 
 
 	Mixed content:
 
-		- bug on ^ and thebrigade from www.facebook.com *
+		- css on ^ from fonts.googleapis.com *
+		- Images on my from s\d.wp.com *
+
+		- Bugs, on:
+
+			- ^ from b.scorecardresearch.com *
+			- thebrigade from www.facebook.com *
 
 	* Secured by us
 
 -->
-<ruleset name="The Chive.com">
+<ruleset name="The Chive.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="thechive.com" />
-	<target host="*.thechive.com" />
-		<!--
-			Redirect to http:
+	<target host="dating.thechive.com" />
+	<target host="my.thechive.com" />
+	<target host="thebrigade.thechive.com" />
+	<target host="www.thechive.com" />
+
+		<!--	Redirect to http:
 						-->
 		<!--exclusion pattern="^http://dating\.thechive\.com/($|login/reset$)" /-->
 		<!--
@@ -38,15 +51,34 @@
 					-->
 		<exclusion pattern="^http://dating\.thechive\.com/+(?!assets/|favicon\.ico|login/*(?:$|\?))" />
 
+			<!--	+ve:
+					-->
+			<test url="http://dating.thechive.com/about" />
+			<test url="http://dating.thechive.com/affiliates" />
+			<test url="http://dating.thechive.com/faq" />
+			<test url="http://dating.thechive.com/jobs" />
+			<test url="http://dating.thechive.com/login/reset" />
+			<test url="http://dating.thechive.com/privacy-policy" />
+			<test url="http://dating.thechive.com/terms-of-use" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dating.thechive.com/assets/partners/chive/header/thechive-header-logo.png" />
+			<test url="http://dating.thechive.com/favicon.ico" />
+			<test url="http://dating.thechive.com/login" />
+
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.thechive\.com$" name="^__qca$" /-->
+	<!--securecookie host="^dating\.thechive\.com$" name="^visitor$" /-->
 	<!--securecookie host="^my\.thechive\.com$" name="^session_native$" /-->
 
-	<securecookie host="^my\.thechive\.com$" name=".+" />
+	<securecookie host="^\.thechive\.com$" name="^__qca$" />
+	<securecookie host="^(?:dating|my)\.thechive\.com$" name=".+" />
 
 
-	<rule from="^http://((?:dating|my|thebrigade|www)\.)?thechive\.com/"
-		to="https://$1thechive.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

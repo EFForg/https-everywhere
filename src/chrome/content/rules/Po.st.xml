@@ -2,37 +2,54 @@
 	For other RadiumOne coverage, see RadiumOne.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *po.st:
 
-		- support	(zendesk)
+		- support *
 
-
-	Problematic subdomains:
-
-		- i	(dropped)
+	* Zendesk
 
 
-	Fully covered subdomains:
+	Problematic hosts in po.st:
 
-		- (www.)
-		- i	(→ s)
-		- p
-		- s
+		- i *
+
+	* Dropped
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .po.st
+		- www.po.st
 
 -->
 <ruleset name="Po.st (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="po.st" />
-	<target host="*.po.st" />
+	<target host="blog.po.st" />
+	<target host="p.po.st" />
+	<target host="s.po.st" />
+	<target host="www.po.st" />
+
+	<!--	Complications:
+				-->
+	<target host="i.po.st" />
 
 
-	<securecookie host="^(?:www)?\.po\.st$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--ssecurecookie host="^\.po\.st$" name="^post_uuid$" /-->
+	<!--ssecurecookie host="^www\.po\.st$" name="^(PHPSESSID|stat_auth_cookie)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(p\.|www\.)?po\.st/"
-		to="https://$1po.st/" />
-
-	<rule from="^http://[is]\.po\.st/"
+	<rule from="^http://i\.po\.st/"
 		to="https://s.po.st/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 
 </ruleset>

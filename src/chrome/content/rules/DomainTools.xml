@@ -1,69 +1,124 @@
 <!--
-	Nonfunctional subdomains:
-
-		- thumbnails		(times out)
-		- origin.thumbnails
+	For rules causing false/broken MCB, see DomainTools.com-falsemixed.xml.
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *domaintools.com:
 
-		- directory *
-		- img **
-		- origin *
-		- source **
-		- whois	**
-		- www **
+		- labs *
 
-	* Directory
-	** Times out
+	* Refused
 
 
-	Partially covered subdomains:
+	Problematic hosts in *domaintools.com:
 
-		- (www.)		(→ secure)
-		- blog *
-		- directory		(→ secure)
-		- marketplace *
-		- reversewhois *
-		- source		(→ secure)
-		- whois			(→ secure)
+		- origin.img ¹
+		- support ¹ ²
+		- origin.thumbnails ¹
+		- whitelabel ³
 
-	* At least some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- api
-		- freeapi
-		- img		(→ secure, also on origin.img)
-		- secure
-		- support
+	¹ Mismatched
+	² Mixed css
+	³ Refused
 
 
-	Targets solely for wildcard cookies:
+	Insecure cookies are set for these domains and hosts:
 
-		- *.support.domaintools.com
+		- domaintools.com
+		- .domaintools.com
+		- support.domaintools.com
+		- www.domaintools.com
+
+	
+	Mixed content:
+
+		- css on support from domaintools.kayako.com *
+		- Images on support from domaintools.kayako.com *
+
+	* Secured by us
 
 -->
-<ruleset name="DomainTools (partial)" platform="mixedcontent">
+<ruleset name="DomainTools.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="domaintools.com" />
-	<target host="*.domaintools.com" />
-		<exclusion pattern="^http://(?:origin\.img|marketplace|reversewhois|source)\.domaintools\.com/(?!composite/|images/|ui-elements/|wp-content/|wp-includes/)" />
+	<target host="account.domaintools.com" />
+	<target host="api.domaintools.com" />
+	<target host="blog.domaintools.com" />
+	<target host="brandmonitor.domaintools.com" />
+	<target host="directory.domaintools.com" />
+	<target host="domainreport.domaintools.com" />
+	<target host="freeapi.domaintools.com" />
+	<target host="img.domaintools.com" />
+	<target host="marketplace.domaintools.com" />
+	<target host="origin.domaintools.com" />
+	<target host="research.domaintools.com" />
+	<target host="reverseip.domaintools.com" />
+	<target host="reversens.domaintools.com" />
+	<target host="reversewhois.domaintools.com" />
+	<target host="secure.domaintools.com" />
+	<target host="source.domaintools.com" />
+	<target host="thumbnails.domaintools.com" />
+	<target host="whois.domaintools.com" />
+	<target host="www.domaintools.com" />
+	<target host="yahoo.domaintools.com" />
+
+	<!--	Complications:
+				-->
 	<target host="origin.img.domaintools.com" />
-	<target host="*.support.domaintools.com" />
+	<!--target host="support.domaintools.com" /-->
+	<target host="origin.thumbnails.domaintools.com" />
+	<target host="whitelabel.domaintools.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.domaintools\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://blog\.domaintools\.com/+(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.domaintools.com/2015/10/" />
+			<test url="http://blog.domaintools.com/2015/10/hacktoberfest-2015/" />
+			<test url="http://blog.domaintools.com/page/2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.domaintools.com/wp-content/themes/wp-clear321/images/twitter.png" />
 
 
-	<securecookie host="^\.support\.domaintools\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?domaintools\.com$" name="^exp_(?:csrf_token|last_activity|last_visit|token)$" /-->
+	<!--securecookie host="^\.domaintools\.com$" name="^(?:csrftoken|dtsession)$" /-->
+	<!--securecookie host="^support\.domaintools\.com$" name="^SWIFT_(?:client|sessionid40)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:directory\.|source\.|whois\.|www\.)?domaintools\.com/(email\.pgif(?:$|\?)|favicon\.png$|composite/|images/)"
-		to="https://secure.domaintools.com/$1" />
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://origin\.img\.domaintools\.com/.*"
+		to="https://research.domaintools.com/" />
 
-	<rule from="^http://(api|blog|freeapi|origin\.img|marketplace|reversewhois|secure|support)\.domaintools\.com/"
-		to="https://$1.domaintools.com/" />
+		<test url="http://origin.img.domaintools.com/home" />
 
-	<rule from="^http://img\.domaintools\.com/"
-		to="https://secure.domaintools.com/images/" />
+	<!--rule from="^http://support\.domaintools\.com/"
+		to="https://domaintools.kayako.com/" /-->
+
+	<rule from="^http://origin\.thumbnails\.domaintools\.com/"
+		to="https://thumbnails.domaintools.com/" />
+
+	<!--	Redirect drops path, args, and forward slash:
+								-->
+	<rule from="^http://whitelabel\.domaintools\.com/.*"
+		to="https://www.domaintools.com/" />
+
+		<test url="http://whitelabel.domaintools.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

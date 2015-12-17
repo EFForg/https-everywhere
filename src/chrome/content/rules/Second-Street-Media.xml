@@ -1,4 +1,11 @@
 <!--
+	Other Second Street rulesets:
+
+		- EBlastEngine.com.xml
+		- Second_Street_app.com.xml
+		- Upickem.net.xml
+
+
 	Nonfunctional:
 
 		- (www.)mycapture.com
@@ -7,45 +14,50 @@
 		- files.mycapture.com
 		- photographers.mycapture.com
 		- photos.mycapture.com		(refused)
-		- (www.)secondstreet.com	(ssl_error_rx_record_too_long)
+
+		- (www.)secondstreet.com	(Shows another domain)
+		- devssm.secondstreet.com	(Shows webb100.secondstreet.com)
+		- solutions.secondstreet.com	(Marketo)
+		- summit.secondstreet.com	("404")
+
 		- files.secondstreetmedia.com	(refused)
-		- share.upickem.com		(ssl_error_rx_record_too_long)
-
-
-	c.eblastengine.com sets BIGipServerUPICKEM-WEB
-	cookie on whichever domain it is loaded from.
 
 -->
-<ruleset name="Second Street Media">
+<ruleset name="Second Street.com (partial)">
 
-	<target host="*.eblastengine.com" />
-	<target host="*.upickem.net" />
+	<!--	Complications:
+				-->
+	<target host="solutions.secondstreet.com" />
+
+		<!--exclusion pattern="^http://solutions\.secondstreet\.com/+(?!$|\?|css/|images/|rs/)" /-->
+		<exclusion pattern="^http://solutions\.secondstreet\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://solutions.secondstreet.com/Planit365SignUpPage.html" />
+			<test url="http://solutions.secondstreet.com/ecommerce-promotions-for-the-holidays.html" />
+			<test url="http://solutions.secondstreet.com/how-to-sell-halloween-contest-registration.html" />
+			<test url="http://solutions.secondstreet.com/print-can-drive-revenue-with-ballots.html" />
+			<!--test url="http://solutions.secondstreet.com/request-demo.html" /-->
+			<!--test url="http://solutions.secondstreet.com/roi-calculator-download.html" /-->
+			<!--test url="http://solutions.secondstreet.com/voters-choice-playbook.html" /-->
+
+			<!--	-ve:
+					-->
+			<test url="http://solutions.secondstreet.com/css/mktLPSupport.css" />
+			<test url="http://solutions.secondstreet.com/rs/secondstreetmedia/images/FacebookBTN.png" />
 
 
-	<!--	Observed cookie domains:
+	<!--rule from="^http://solutions\.secondstreet\.com/+(?:\?.*)?$"
+		to="https://www.secondstreet.com/" /-->
 
-			eblastengine.com:
+		<!--test url="http://solutions.secondstreet.com/?f" /-->
+		<!--test url="http://solutions.secondstreet.com/?o" /-->
+		<!--test url="http://solutions.secondstreet.com//?o" /-->
+		<!--test url="http://solutions.secondstreet.com/?b" /-->
+		<!--test url="http://solutions.secondstreet.com/?a" /-->
 
-				- affiliates
-				- c
-
-			upickem.net:
-
-				- $
-				- affiliates
-				- eblastengine
-				- ssm
-				- www
-						-->
-	<securecookie host="^.*\.eblastengine\.com$" name=".*" />
-	<securecookie host="^.*\.upickem\.net$" name=".*" />
-
-
-	<!--	c: Included on 3rd-party websites.	-->
-	<rule from="^http://(affiliates|c)\.eblastengine\.com/"
-		to="https://$1.eblastengine.com/" />
-
-	<rule from="^http://((?:affiliates|eblastengine|ssm|www)\.)?upickem\.net/"
-		to="https://$1upickem.net/" />
+	<rule from="^http://solutions\.secondstreet\.com/"
+		to="https://na-abd.marketo.com/" />
 
 </ruleset>

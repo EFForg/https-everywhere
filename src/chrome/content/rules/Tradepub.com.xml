@@ -23,6 +23,11 @@
 		- (www.)	(^ → www, avoiding false/broken MCB)
 
 
+	Insecure cookies are set for these domains:
+
+		- .tradepub.com
+
+
 	Mixed content:
 
 		- Scripts on www from www ¹
@@ -51,25 +56,46 @@
 <ruleset name="tradepub.com (partial)">
 
 	<target host="tradepub.com" />
-	<target host="*.tradepub.com" />
+	<target host="cts.tradepub.com" />
+	<target host="img.tradepub.com" />
+	<target host="nl-marketing.tradepub.com" />
+	<target host="www.tradepub.com" />
 		<!--
 			False/broken MCB:
 						-->
-		<!--exclusion pattern="^http://(www\.)?tradepub\.com/+(?!body_styles\.css|c/|data/|favicon\.ico)" /-->
+		<exclusion pattern="^http://(?:www\.)?tradepub\.com/+(?!body_styles\.css|c/|data/|favicon\.ico)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://tradepub.com/?do=login" />
+			<test url="http://tradepub.com/?p=faq" />
+			<test url="http://tradepub.com/?p=rss" />
+			<test url="http://tradepub.com/?pt=main&amp;page=home.about" />
+			<test url="http://tradepub.com/?pt=main&amp;page=home.topten" />
+
+			<!--	-ve:
+					-->
+			<test url="http://tradepub.com/body_styles.css" />
+			<test url="http://tradepub.com/data/font-awesome.min.css" />
+			<test url="http://tradepub.com/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tradepub\.com$" name="^Apache$" /-->
 
 	<!--	Could we secure any of these safely?
 							-->
 	<!--securecookie host="^\.tradepub\.com$" name="^(Apache|_t|tpid)$" /-->
 
 
-	<rule from="^http://(?:www\.)?tradepub\.com/(?=body_styles\.css|c/|data/|favicon\.ico)"
+	<rule from="^http://tradepub\.com/"
 		to="https://www.tradepub.com/" />
-
-	<rule from="^http://(cts|nl-marketing)\.tradepub\.com/"
-		to="https://$1.tradepub.com/" />
 
 	<rule from="^http://img\.tradepub\.com/"
 		to="https://netline.cachefly.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

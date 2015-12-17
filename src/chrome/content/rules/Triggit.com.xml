@@ -1,23 +1,43 @@
 <!--
-	Nonfunctional subdomains:
+	Problematic hosts:
 
-		- (www.) *
-		- blog *
+		- (www.)? *
 
-	* Refused
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- triggit.com
+		- .triggit.com
+
+
+	Mixed content:
+
+		- Images on ^ from $self
+		- Images on ^ from i.imgur.com
 
 -->
 <ruleset name="Triggit.com (partial)">
 
-	<target host="*.triggit.com" />
+	<!--target host="triggit.com" /-->
+	<target host="a.triggit.com" />
+	<target host="portal.triggit.com" />
+	<!--target host="www.triggit.com" /-->
 
 
-	<!--	Not secured by server, set by a:
-						-->
-	<securecookie host="^\.triggit\.com$" name="^trg[pu]$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^triggit\.com$" name="^PHPSESSID$" /-->
+	<!--
+		(Set by a):
+				-->
+	<!--securecookie host="^\.triggit\.com$" name="^trg[psu]$" /-->
+
+	<securecookie host="^\.triggit\.com$" name="^trg[psu]$" />
 
 
-	<rule from="^http://(a|portal)\.triggit\.com/"
-		to="https://$1.triggit.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

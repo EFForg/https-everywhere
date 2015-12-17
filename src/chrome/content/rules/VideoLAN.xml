@@ -1,7 +1,6 @@
 <!--
 	Nonfunctional subdomains:
 
-		- albiero *
 		- download **
 		- ganesh **
 		- nightlies *
@@ -21,40 +20,49 @@
 
 	Problematic subdomains:
 
-		- addons	(mismatched, CN: *.opendesktop.org)
+		- addons *
+
+	* Mismatched
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- forum
-		- get
-		- git
-		- images
-		- images1
-		- mailman
-		- munin
-		- trac
-		- wiki
-		- www1
-
-
-	Wildcard cookies:
+	Insecure cookies are set for these domains and hosts:
 
 		- .forum.videolan.org
-
-
-	Mixed content:
-
-		- Images on (www.) from images *
-
-	* Secured by us
+		- wiki.videolan.org
 
 -->
-<ruleset name="VideoLAN (partial)">
+<ruleset name="VideoLAN.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="videolan.org" />
-	<target host="*.videolan.org" />
+	<target host="albiero.videolan.org" />
+	<target host="forum.videolan.org" />
+	<target host="get.videolan.org" />
+	<target host="git.videolan.org" />
+	<target host="images.videolan.org" />
+	<target host="images1.videolan.org" />
+	<target host="mailman.videolan.org" />
+	<target host="munin.videolan.org" />
+	<target host="trac.videolan.org" />
+	<target host="wiki.videolan.org" />
+	<target host="www.videolan.org" />
+	<target host="www1.videolan.org" />
+
+	<!--	Complications:
+				-->
+	<target host="ganesh.videolan.org" />
+	<target host="rsync.videolan.org" />
+	<target host="stats.videolan.org" />
+
+		<exclusion pattern="^http://(?:ganesh|rsync|stats)\.videolan\.org/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ganesh.videolan.org//" />
+			<test url="http://rsync.videolan.org//" />
+			<test url="http://stats.videolan.org/?" />
+			<test url="http://stats.videolan.org//" />
 
 
 	<!--	Not secured by server:
@@ -62,16 +70,16 @@
 	<!--securecookie host="\.forum\.videolan\.org$" name="^phpbb3_\w+_(k|sid|u)$" /-->
 	<!--securecookie host="^wiki\.videolan\.org$" name="^VideoLANwikidb_session$" /-->
 
-	<securecookie host="(?:.*\.)?videolan\.org$" name=".+" />
+	<securecookie host="." name="." />
 
-
-	<rule from="^http://((?:forum|get|git|images1?|mailman|munin|trac|wiki|www1?)\.)?videolan\.org/"
-		to="https://$1videolan.org/" />
 
 	<!--	- Show www's data over https
 		- Redirect like so over http
 						-->
 	<rule from="^http://(?:ganesh|rsync|stats)\.videolan\.org/$"
 		to="https://www.videolan.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

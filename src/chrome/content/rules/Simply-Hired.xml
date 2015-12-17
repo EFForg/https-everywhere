@@ -1,28 +1,142 @@
-<!--	!functional:
-		- blog
+<!--
+	Other SimplyHired rulesets:
+
+		- Job_a_matic.com.xml
+		- Simply-Partner.com.xml
+
+
+	Nonfunctional hosts in *simplyhired.com:
+
+		- support *
+
+	* Zendesk
+
+
+	Problematic hosts in *simplyhired.com:
+
+		- blog ¹
+		- employers ² ³
+
+	¹ Handshake fails
+	² Mixed css
+	³ Pardot
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .simplyhired.com
+		- ads.simplyhired.com
+		- employers.simplyhired.com
+		- www.simplyhired.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- employers from bit.ly *
+			- employers from fonts.googleapis.com *
+			- employers from $self *
+
+		- Images, on:
+
+			- employers from bit.ly *
+			- employers from $self *
+			- www from $self *
+
+		- favicon on employers from $self *
+
+		- Bugs, on:
+
+			- www from pixel.quantserve.com *
+			- www from b.scorecardresearch.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Simply Hired">
+<ruleset name="Simply Hired.com">
 
-	<target host="jobamatic.com"/>
-	<target host="*.jobamatic.com"/>
+	<!--	Direct rewrites:
+				-->
 	<target host="simplyhired.com"/>
-	<target host="*.simplyhired.com"/>
+	<target host="ads.simplyhired.com" />
+	<target host="api.simplyhired.com" />
+	<target host="www.simplyhired.com" />
 
-	<securecookie host="^www\.jobamatic\.com$" name=".*"/>
-	<securecookie host="^\.simplyhired\.com$" name="^__utm\w$" />
-	<!--
-		Would it be safe to secure these?
-							-->
-	<!--securecookie host="\.www\.simplyhired\.com$" name="^(sh_sess|sh_uid)$" /-->
+	<!--	Complications:
+				-->
+	<target host="blog.simplyhired.com" />
+	<target host="employers.simplyhired.com" />
+	<target host="support.simplyhired.com" />
 
-	<!--	clients have unique subdomains		-->
-	<rule from="^http://([\w\-]+\.)?jobamatic\.com/"
-		to="https://$1jobamatic.com/"/>
+		<exclusion pattern="^http://employers\.simplyhired\.com/+(?!l/)" />
 
-	<rule from="^http://(www\.)?simplyhired\.com/(a|c|event-logging|static)/"
-		to="https://$1simplyhired.com/$2/" />
+			<!--	+ve:
+					-->
+			<test url="http://employers.simplyhired.com/customers" />
+			<test url="http://employers.simplyhired.com/simplypost" />
 
-	<rule from="^http://support\.simplyhired\.com/(assets|generated|images|system)/"
-                to="https://simplyhired.zendesk.com/$1/"/>
+			<!--	-ve:
+					-->
+			<test url="http://employers.simplyhired.com/l/25542/2013-07-15/32p/25542/266/sh_logo.png" />
+
+		<exclusion pattern="^http://support\.simplyhired\.com/+(?!assets/|images/|system/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.simplyhired.com/anonymous_requests/new" />
+			<test url="http://support.simplyhired.com/forums" />
+			<test url="http://support.simplyhired.com/home" />
+			<test url="http://support.simplyhired.com/requests" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.simplyhired.com/images/logo-delimiter.png" />
+			<test url="http://support.simplyhired.com/system/logos/2057/8797/sh-help-logo.png" />
+
+		<!--	Mixed images from $self:
+						-->
+		<test url="http://www.simplyhired.com/blog" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.simplyhired\.com$" name="^(?:__qca|__utm\w|sh_sess|shua)$" /-->
+	<!--securecookie host="^ads\.simplyhired\.com$" name="^(?:adweb_sessionid|sh_sess|sh_uid)$" /-->
+	<!--securecookie host="^employers\.simplyhired\.com$" name="^(?:pardot|visitor_id\d+)$" /-->
+	<!--securecookie host="^www\.simplyhired\.com$" name="^(?:csrftoken|shup)$" /-->
+
+	<securecookie host="^\.simplyhired\.com$" name="^(?:__qca|__utm\w)$" />
+	<securecookie host="^(?:ads|www)\.simplyhired\.com$" name=".+" />
+
+
+	<!--	Redirect drops args
+		and forward slash:
+					-->
+	<rule from="^http://blog\.simplyhired\.com/+(?:$|\?.*)$"
+		to="https://www.simplyhired.com/blog" />
+
+		<test url="http://blog.simplyhired.com/?f" />
+		<test url="http://blog.simplyhired.com/?o" />
+		<test url="http://blog.simplyhired.com//?o" />
+		<test url="http://blog.simplyhired.com/?b" />
+
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://blog\.simplyhired\.com/.*"
+		to="https://www.simplyhired.com/blog/expired" />
+
+		<test url="http://blog.simplyhired.com/index.htm" />
+		<test url="http://blog.simplyhired.com/index.php" />
+
+	<rule from="^http://employers\.simplyhired\.com/"
+		to="https://pi.pardot.com/" />
+
+	<rule from="^http://support\.simplyhired\.com/"
+		to="https://simplyhired.zendesk.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

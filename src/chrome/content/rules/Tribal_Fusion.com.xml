@@ -1,30 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://tribalfusion.com/ => https://www.tribalfusion.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Poblematic subdomains:
-
-		- ^	(mismatched, CN: *.tribalfusion.com)
+	For other Exponential coverage, see Exponential.com.xml.
 
 
-	Fully covered subdomains:
+	^tribalfusion.com: Server sends no certificate chain, see https://whatsmychaincert.com
 
-		- (www.)	(^ → www)
-		- a
+
+	Insecure cookies are set for these domains:
+
+		- .tribalfusion.com
 
 -->
-<ruleset name="Tribal Fusion.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Tribal Fusion.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="a.tribalfusion.com" />
+	<target host="www.tribalfusion.com" />
+
+	<!--	Complications:
+				-->
 	<target host="tribalfusion.com" />
-	<target host="*.tribalfusion.com" />
 
+		<test url="http://a.tribalfusion.com/i.match?p=&amp;u=&amp;google_error=3" />
+		<test url="http://a.tribalfusion.com/z/i.cid?c=&amp;d=&amp;page=landingPage" />
+		<test url="http://a.tribalfusion.com/z/i.match?p=&amp;u=&amp;google_error=3" />
+		<test url="http://www.tribalfusion.com/adapp/login/expo9" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tribalfusion\.com$" name="^(?:RealLoginName|SAccess|Tkt1|copyFlightId|tfre)$" /-->
 
 	<securecookie host="^(?:www)?\.tribalfusion\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?tribalfusion\.com/"
+	<rule from="^http://tribalfusion\.com/"
 		to="https://www.tribalfusion.com/" />
 
-	<rule from="^http://a\.tribalfusion\.com/"
-		to="https://a.tribalfusion.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

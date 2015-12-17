@@ -1,0 +1,84 @@
+<!--
+	Nonfunctional hosts in *car.com:
+
+		- ^ ¹
+		- www ²
+
+	¹ Dropped
+	² 504
+
+
+	Partially covered hosts in *car.com:
+
+		- dealers *
+
+	* Avoiding broken MCB
+
+
+	Fully covered hosts in *car.com:
+
+		- finance
+		- img
+		- loans
+		- static
+		- test-www
+
+
+	Insecure cookies are set for these hosts:
+
+		- dealers.car.com
+		- finance.car.com
+		- loans.car.com
+
+
+	Mixed content:
+
+		- css, on dealers from $self *
+
+		- Images, on:
+
+			- dealers from $self *
+			- dealers from images.autobytel.com *
+
+		- Ads/bugs on dealers from idcs.interclick.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Car.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dealers.car.com" />
+	<target host="finance.car.com" />
+	<target host="img.car.com" />
+	<target host="loans.car.com" />
+	<target host="static.car.com" />
+	<target host="test-www.car.com" />
+
+		<exclusion pattern="^http://dealers\.car\.com/+(?![Cc]ontent/|favicon.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://dealers.car.com/bmw" />
+			<test url="http://dealers.car.com/ppc/hyundai" />
+			<test url="http://dealers.car.com/privacy" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dealers.car.com/Content/Images/CarCom/2_r1_c1_s1.jpg" />
+			<test url="http://dealers.car.com/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(dealers|loans)\.car\.com$" name="^(\.ASPXANONYMOUS|ASP\.NET_SessionId|atpweb|device_detect)$" /-->
+	<!--securecookie host="^finance\.car\.com$" name="^(CFCLIENT_FINANCE|CFGLOBALS|CFID|CFTOKEN|LOCAL_SOURCE_ID|MENU|SESSIONID|SRC|finweb)$" /-->
+
+	<securecookie host="^(?:finance|loans)\.car\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

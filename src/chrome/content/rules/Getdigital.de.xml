@@ -1,56 +1,49 @@
 <!--
-	For rules causing false/broken MCB, see GetDigital.de-falsemixed.xml.
-
-
 	Other getDigital rulesets:
 
+		- Get-Digital.es.xml
+		- Get-Digital.it.xml
+		- Get-Digital.nl.xml
+		- GetDigital.co.uk.xml
 		- GetDigital.eu.xml
+		- GetDigital.fr.xml
+		- GetDigital-Blog.de.xml
 
 
-	Problematic domains:
+	Insecure cookies are set for these domains:
 
-		- getdigital.de *
-		- (www.)getdigital-blog.de *
-
-	* Mismatched, CN: webserver.ispgateway.de
+		- .getdigital.de
+		- .binary.getdigital.de
+		- .hex.getdigital.de
+		- .leet.getdigital.de
+		- .www.getdigital.de
 
 
 	Mixed content:
-
-		- css on www from $self *
 
 		- Images on www from www.getdigital-blog.de *
 
 	* Secured by us
 
 -->
-<ruleset name="Getdigital.de (partial)">
+<ruleset name="getDigital.de">
 
 	<target host="getdigital.de"/>
-	<target host="*.getdigital.de"/>
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://(www\.)?getdigital\.de/blog($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://(www\.)?getdigital\.de/blog/(?=wp-content/|wp-includes/)" /-->
-	<target host="getdigital-blog.de" />
-	<target host="www.getdigital-blog.de" />
+	<target host="binary.getdigital.de" />
+	<target host="hex.getdigital.de" />
+	<target host="leet.getdigital.de" />
+	<target host="www.getdigital.de"/>
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.getdigital\.de$" name="^gdsession3$" /-->
+	<!--securecookie host="^\.(?:hex|leet|www)\.getdigital\.de$" name="^gdsession2?$" /-->
 
-	<securecookie host="^\.getdigital\.de$" name=".+" />
+	<securecookie host="^\.(?:hex\.|leet\.|www\.)?getdigital\.de$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?getdigital\.de/(?!/*blog(?!/+wp-content/|/+wp-includes/))"
-		to="https://www.getdigital.de/" />
-
-	<rule from="^http://(?:www\.)?getdigital-blog\.de/(?=wp-content/|wp-includes/)"
-		to="https://www.getdigital.de/blog/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

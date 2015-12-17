@@ -25,8 +25,8 @@
 	Fully covered subdomains:
 
 		- (www.)
-		- chat.online
 		- creditcards
+		- chat.online
 
 
 	Observed cookie domains:
@@ -44,23 +44,43 @@
 -->
 <ruleset name="Citi.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="citi.com" />
-	<target host="*.citi.com" />
+	<target host="creditcards.citi.com" />
+	<target host="chat.online.citi.com" />
+	<target host="www.citi.com" />
+
+	<!--	Complications:
+				-->
+	<target host="thankyoucard.citi.com" />
+
+		<exclusion pattern="^http://thankyoucard\.citi\.com/(?!$|\?)" />
+
+			<test url="http://thankyoucard.citi.com//" />
+			<test url="http://thankyoucard.citi.com//?f" />
+			<test url="http://thankyoucard.citi.com//?fo" />
+			<test url="http://thankyoucard.citi.com//?foo" />
 
 
 	<securecookie host="^\.citi\.com$" name="^(?:mbox|ss_pers|ss_sess)$" />
 	<securecookie host="^(?:(?:chat\.online|creditcards|www)\.)?citi\.com$" name=".+" />
 
 
-	<rule from="^http://((?:creditcards|chat\.online|www)\.)?citi\.com/"
-		to="https://$1citi.com/" />
-
 	<!--	Redirects as so, sans trailing slash:
 							-->
-	<!--rule from="^http://(?:www\.)?oncampus\.citi\.com/(\?.*)?$"
-		to="https://icg.citi.com//icg/sa/recruiting/index.jsp$1" /-->
+	<!--rule from="^http://(?:www\.)?oncampus\.citi\.com/(?=$|\?)$"
+		to="https://icg.citi.com//icg/sa/recruiting/index.jsp" /-->
 
-	<rule from="^http://thankyoucard\.citi\.com/(\?.*)?$"
-		to="https://online.citibank.com/US/JRS/portal/template.do?ID=ThankYouCards$1" />
+	<rule from="^http://thankyoucard\.citi\.com/"
+		to="https://online.citibank.com/US/JRS/portal/template.do?ID=ThankYouCards" />
+
+		<test url="http://thankyoucard.citi.com/f" />
+		<test url="http://thankyoucard.citi.com/o" />
+		<test url="http://thankyoucard.citi.com//o" />
+		<test url="http://thankyoucard.citi.com/b" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

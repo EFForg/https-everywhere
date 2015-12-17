@@ -1,22 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://pogoplug.com/ => https://pogoplug.com/: None
 	Nonfunctional subdomains:
 
 		- blog		(refused)
 		- support	(zendesk)
 
 -->
-<ruleset name="Pogoplug.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Pogoplug.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="pogoplug.com" />
-	<target host="*.pogoplug.com" />
+	<target host="www.pogoplug.com" />
+
+	<!--	Complications:
+				-->
+	<target host="support.pogoplug.com" />
+
+		<exclusion pattern="^http://support\.pogoplug\.com/(?!favicon\.ico|images/|static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.pogoplug.com/access/unauthenticated" />
+			<test url="http://support.pogoplug.com/entries/21414333-How-do-I-uninstall-and-reinstall-Pogoplug-Backup-on-a-Mac-" />
+			<test url="http://support.pogoplug.com/home" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.pogoplug.com/favicon.ico" />
 
 
-	<rule from="^http://(www\.)?pogoplug\.com/"
-		to="https://$1pogoplug.com/" />
-
-	<rule from="^http://support\.pogoplug\.com/(?=favicon\.ico|generated/|images/|static/)"
+	<rule from="^http://support\.pogoplug\.com/"
 		to="https://pogoplug.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -28,7 +28,7 @@ ApplicableList.prototype = {
 
   empty: function() {
     // Empty everything, used when toggles occur in order to ensure that if
-    // the reload fails, the resulting list is not eroneous
+    // the reload fails, the resulting list is not erroneous
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};
@@ -98,20 +98,24 @@ ApplicableList.prototype = {
     var text = strings.getString("https-everywhere.menu.globalDisable");
     if(!https_everywhere.prefs.getBoolPref("globalEnabled"))
       text = strings.getString("https-everywhere.menu.globalEnable");
-        
+
     enableLabel.setAttribute('label', text);
-    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');    
+    enableLabel.setAttribute('command', 'https-everywhere-menuitem-globalEnableToggle');
     this.prepend_child(enableLabel);
-    
+
     // add the label at the top
     var any_rules = false;
     for(var x in this.all) {
       any_rules = true;  // how did JavaScript get this ugly?
       break;
     }
+    // This label just describes the fact that the items underneath it enable
+    // and disable rules.
     var label = document.createElement('menuitem');
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
-    label.setAttribute('command', 'https-everywhere-menuitem-preferences');
+    label.setAttribute('disabled', 'true');
+    label.setAttribute('class', 'menuitem-non-iconic');
+    label.setAttribute('style', 'font-weight: bold; color: -moz-MenuBarText;');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');
@@ -209,14 +213,10 @@ ApplicableList.prototype = {
   },
 
   add_command: function(rule) {
-      var command = this.document.createElement("command");
-      if (typeof rule.id !== 'number') {
-        this.log(WARN, "Rule has invalid id " + rule.id);
-        return;
-      }
-      command.setAttribute('id', rule.id+'-command');
+      var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
+      command.setAttribute('id', JSON.stringify(rule.id)+'-command');
+      command.setAttribute('data-id', JSON.stringify(rule.id));
       command.setAttribute('label', rule.name);
-      command.setAttribute('oncommand', 'toggle_rule("'+rule.id+'")');
       this.commandset.appendChild(command);
   },
 
@@ -228,6 +228,7 @@ ApplicableList.prototype = {
     var item = this.document.createElement('menuitem');
     item.setAttribute('command', rule.id+'-command');
     item.setAttribute('class', type+'-item menuitem-iconic');
+    item.setAttribute('type', 'checkbox');
     item.setAttribute('label', rule.name);
 
     // we can get confused if rulesets have their state changed after the

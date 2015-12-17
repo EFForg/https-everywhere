@@ -13,17 +13,46 @@
 		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
 		- https://panopticlick.eff.org
 
+
+	Nonfunctional hosts in *recordedfuture.com:
+
+		- go *
+		- status *
+
+	* Refused
+
+
+	Fully covered hosts in *recordedfuture.com:
+
+		- (www.)?
+		- support
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- .recordedfuture.com
+		- support.recordedfuture.com
+
 -->
-<ruleset name="Recorded Future.com">
+<ruleset name="Recorded Future.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="recordedfuture.com" />
-	<target host="*.recordedfuture.com" />
+	<target host="support.recordedfuture.com" />
+	<target host="www.recordedfuture.com" />
 
 
-	<securecookie host="^\.recordedfuture\.com$" name="^__cfduid$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.recordedfuture\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^support\.recordedfuture\.com$" name="^(_rf|_session_id)$" /-->
+
+	<securecookie host="^\.recordedfuture\.com$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^support\.recordedfuture\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?recordedfuture\.com/"
-		to="https://$1recordedfuture.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

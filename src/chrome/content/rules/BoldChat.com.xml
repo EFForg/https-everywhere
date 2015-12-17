@@ -1,23 +1,29 @@
 <!--
-	For other LogMeIn coverage, see LogMeIn.xml.
+	For other LogMeIn coverage, see LogMeIn_Inc.com.xml.
 
 
 	Nonfunctional subdomains:
 
 		- help	(shows www)
+		- test ²
+
+	² Refused
 
 
 	Problematic subdomains:
 
 		- autodiscover	(refused)
+		- blog ² ³
 		- solutions	(works; mismatched, CN: *.pages04.net)
+
+	² Expired
+	³ Missing certificate chain
 
 
 	Fully covered subdomains:
 
 		- (www.) *
 		- autodiscover	(→ autodiscover.mex07a.emailsrvr.com)
-		- blog
 		- cbi
 		- hometab
 		- images *
@@ -25,49 +31,54 @@
 		- my
 		- report
 		- reports
-		- test *
-		- vms
-		- vmss
-		- web
-
-	* Server is configured for rc4 only
-
-
-	Observed cookie domains:
-
-		- ^
-		- .
-		- livechat
-		- my
-		- report
-		- reports
 		- setup
-		- solutions
-		- test
 		- vms
 		- vmss
 		- web
-		- www
+
+
+	Insecure cookies are set for these domains:
+
+		- .boldchat.com
 
 -->
 <ruleset name="BoldChat.com (partial)">
 
 	<target host="boldchat.com" />
-	<target host="*.boldchat.com" />
+	<!--target host="blog.boldchat.com" /-->
+	<target host="cbi.boldchat.com" />
+	<target host="hometab.boldchat.com" />
+	<target host="images.boldchat.com" />
+	<target host="livechat.boldchat.com" />
+	<target host="my.boldchat.com" />
+	<target host="report.boldchat.com" />
+	<target host="reports.boldchat.com" />
+	<target host="setup.boldchat.com" />
+	<target host="vms.boldchat.com" />
+	<target host="vmss.boldchat.com" />
+	<target host="web.boldchat.com" />
+	<target host="www.boldchat.com" />
 
+	<!--	Complications:
+				-->
+	<target host="autodiscover.boldchat.com" />
+
+
+	<!--	Not secured by server;
+					-->
+	<!--securecookie host="^\.boldchat\.com$" name="^(bc-visit-id|bc-visitor-id|lb)$" /-->
 
 	<securecookie host="^(?:.*\.)?boldchat\.com$" name=".+" />
 
-
-	<rule from="^http://(www\.)?boldchat\.com/"
-		to="https://$1boldchat.com/" />
-
-	<rule from="^http://(blog|cbi|hometab|images|livechat|my|reports?|setup|test|vmss?|web)\.boldchat\.com/"
-		to="https://$1.boldchat.com/" />
 
 	<!--	Server drops path:
 					-->
 	<rule from="^http://autodiscover\.boldchat\.com/.*"
 		to="https://autodiscover.mex07a.emailsrvr.com/autodiscover/autodiscover.xml" />
+
+		<test url="http://autodiscover.boldchat.com//" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

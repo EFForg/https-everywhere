@@ -1,0 +1,50 @@
+<!--
+	Problematic hosts:
+
+		- webmail *
+
+	* Mismatched
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- ssl
+		- webmail	(→ ssl)
+
+
+	Insecure cookies are set for these 
+
+		- ssl
+
+-->
+<ruleset name="tiggersWelt.net">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="tiggerswelt.net" />
+	<target host="ssl.tiggerswelt.net" />
+	<target host="www.tiggerswelt.net" />
+
+	<!--	Complications:
+				-->
+	<target host="webmail.tiggerswelt.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ssl\.tiggerswelt\.net$" name="^(DW[\da-f]{32}|DokuWiki)$" /-->
+
+	<securecookie host="^ssl\.tiggerswelt\.net$" name=".+" />
+
+
+	<!--	Redirect keeps forward
+		slash, path, and args:
+				-->
+	<rule from="^http://webmail\.tiggerswelt\.net/"
+		to="https://ssl.tiggerswelt.net/webmail/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

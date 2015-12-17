@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const IO = {
   readFile: function(file, charset) {
     var res;
@@ -12,7 +14,7 @@ const IO = {
     res = sis.read(sis.available());
     is.close();
     
-    if (charset !== null) { // use "null" if you want uncoverted data...
+    if (charset !== null) { // use "null" if you want unconverted data...
       const unicodeConverter = Cc["@mozilla.org/intl/scriptableunicodeconverter"]
         .createInstance(Ci.nsIScriptableUnicodeConverter);
       try {
@@ -57,7 +59,7 @@ function nsISupportsWrapper(wrapped) {
   this.wrappedJSObject = wrapped;
 }
 nsISupportsWrapper.prototype = {
-  QueryInterface: xpcom_generateQI([])
+  QueryInterface: XPCOMUtils.generateQI([])
 };
 
 const IOUtil = {
@@ -233,7 +235,9 @@ const IOUtil = {
     return parts.join("?");
   },
   
-  _splitName: function(nv) nv.split("=")[0],
+  _splitName: function(nv) {
+    return nv.split("=")[0];
+  },
   _qsRx: /[&=]/,
   _anonRx: /(?:auth|s\w+(?:id|key)$)/,
   anonymizeQS: function(qs, cookie) {

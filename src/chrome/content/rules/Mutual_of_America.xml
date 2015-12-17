@@ -1,22 +1,29 @@
 <!--
-	Problematic subdomains:
+	Insecure cookies are set for these hosts:
 
-		- ^	(cert only matches www)
+		- m.mutualofamerica.com
 
 -->
-<ruleset name="Mutual of America">
+<ruleset name="Mutual of America.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mutualofamerica.com" />
-	<target host="*.mutualofamerica.com" />
+	<target host="common.mutualofamerica.com" />
+	<target host="hotlineplus.mutualofamerica.com" />
+	<target host="m.mutualofamerica.com" />
+	<target host="myaccount.mutualofamerica.com" />
+	<target host="www.mutualofamerica.com" />
 
 
-	<securecookie host="^.+\.mutualofamerica\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^m\.mutualofamerica\.com$" name="^(?:X-Mapping-[a-z]+|-un-device-|-un-ss-|-un-ws-)$" /-->
+
+	<securecookie host=".+\.mutualofamerica\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?mutualofamerica\.com/"
-		to="https://www.mutualofamerica.com/" />
-
-	<rule from="^http://(bocam|common|hotlineplus|myaccount)\.mutualofamerica\.com/"
-		to="https://$1.mutualofamerica.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

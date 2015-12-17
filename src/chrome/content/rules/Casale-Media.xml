@@ -2,10 +2,18 @@
 	(www.): refused
 
 
+	Problematic hosts in *casalemedia.com:
+
+		- ip *
+
+	* Akamai
+
+
 	Fully covered subdomains:
 
 		- as-sec
 		- dsum-sec
+		- ip		(→ as-sec)
 		- js-sec
 		- r
 		- r-sec
@@ -18,17 +26,40 @@
 		- r-ssl.casalemedia.com
 		- san.casalemedia.com
 
+
+	Insecure cookies are set for these domains:
+
+		- .casalemedia.com
+
 -->
-<ruleset name="Casale Media (partial)">
+<ruleset name="Casale Media.com (partial)">
 
-	<target host="*.casalemedia.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="as-sec.casalemedia.com" />
+	<target host="dsum-sec.casalemedia.com" />
+	<target host="js-sec.casalemedia.com" />
+	<target host="r.casalemedia.com" />
+	<target host="r-sec.casalemedia.com" />
+	<target host="ssum-sec.casalemedia.com" />
+	<target host="system.casalemedia.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ip.casalemedia.com" />
 
 
+	<!--	Not secured by server:
+					-->
 	<!--securecookie host="^\.casalemedia\.com$" name="^(CMID|CMPS)" /-->
+
 	<securecookie host=".*\.casalemedia\.com$" name=".+" />
 
 
-	<rule from="^http://(as-sec|dsum-sec|js-sec|r|r-sec|ssum-sec|system)\.casalemedia\.com/"
-		to="https://$1.casalemedia.com/" />
+	<rule from="^http://ip\.casalemedia\.com/"
+		to="https://as-sec.casalemedia.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 function Cookie(s, host) {
   this.parse(s, host);
 }
@@ -143,6 +145,6 @@ Cookie.prototype = {
   get isDomain() { return this.domain && this.domain[0] == '.'; },
   policy: 0,
   status: 0,
-  QueryInterface: xpcom_generateQI([Ci.nsICookie, Ci.nsICookie2])
+  QueryInterface: XPCOMUtils.generateQI([Ci.nsICookie, Ci.nsICookie2])
   
 };

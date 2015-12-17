@@ -18,7 +18,7 @@ Run the latest code and rulesets in a standalone Firefox profile:
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash run-chromium.sh
+    bash test-chromium.sh --justrun
 
 Build the Firefox extension as a .xpi package:
 
@@ -59,18 +59,8 @@ Important directories you might want to know about
 Hacking on the Source Code
 --------------------------
 
-The current stable release series is 4.0. The current development release series
-is 5.0. Each release series is represented by a branch with the major and minor
-version numbers, e.g. 4.0 or 5.0. This branch is updated during the lifecycle of
-the release series. Specific releases are represented as tags with the full
-version number, e.g. 4.0.0 or 5.0development.0.
-
-If you are making a bug fix to the current stable release, you should
-work off of the stable branch, 4.0. If you are adding features or improving
-functionality, work off of master. The maintainers will merge master into the
-development series branch periodically. We will also occasionally merge ruleset
-fixes from master into the stable branch if the ruleset is important (i.e. a
-popular or high-security site), or if the version in stable is clearly broken.
+The current stable release series is 5.0. The maintainers release new versions
+off the current master branch about every two weeks.
 
 To submit changes, either use pull requests on GitHub or email patches to
 https-everywhere-rulesets@lists.eff.org (rulesets) or
@@ -98,7 +88,7 @@ https://www.transifex.com/projects/p/torproject/.
 
 ### Bug trackers and mailing lists
 
-We currently have two bug trackers. The one on Github (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
+We currently have two bug trackers. The one on GitHub (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
 
 We have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the rulesets and their contents, including patches and git pull requests.
 

@@ -1,0 +1,67 @@
+<!--
+	For other Greenpeace coverage, see Greenpeace.org.xml.
+
+
+	Problematic hosts in *greenpeace.de:
+
+		- ^ ¹
+		- www.kids ¹
+		- gruppen ² ³
+
+	¹ Mismatched
+	² Expired
+	³ Untrusted root
+
+
+	Mixed content:
+
+		- Bug on www from greenpeace01.webtrekk.net *
+
+	* Secured by us
+
+-->
+<ruleset name="Greenpeace.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.greenpeace.de" />
+	<target host="kids.greenpeace.de" />
+
+	<!--	Complications:
+				-->
+	<target host="greenpeace.de" />
+	<target host="gruppen.greenpeace.de" />
+	<target host="www.kids.greenpeace.de" />
+
+		<!--	/*(?!$|\?) 404s:
+					-->
+		<exclusion pattern="^http://gruppen\.greenpeace\.de/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gruppen.greenpeace.de/bochum/" />
+			<test url="http://gruppen.greenpeace.de/buende/58.html" />
+			<test url="http://gruppen.greenpeace.de/saar/" />
+			<test url="http://gruppen.greenpeace.de/wuppertal/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gruppen.greenpeace.de//" />
+			<test url="http://gruppen.greenpeace.de//?foo" />
+			<test url="http://gruppen.greenpeace.de/?foo" />
+
+
+	<rule from="^http://greenpeace\.de/"
+		to="https://www.greenpeace.de/" />
+
+	<!--	Redirect keeps args but not forward slash:
+							-->
+	<rule from="^http://gruppen\.greenpeace\.de/+"
+		to="https://www.greenpeace.de/gruppen/uebersicht" />
+
+	<rule from="^http://www\.kids\.greenpeace\.de/"
+		to="https://kids.greenpeace.de/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

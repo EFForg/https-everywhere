@@ -1,32 +1,55 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *dragonflybsd.org:
 
-		- gitweb	(shows bugs; mismatched, CN: bugs.dragonflybsd.org)
+		- lists *
+
+	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *dragonflybsd.org:
 
 		- ^	(refused)
-		- leaf	(mismatched, CN: bugs.dragonflybsd.org)
+		- bugs ³
+		- gitweb ³
+		- leaf ³ ²
 
--->
-<ruleset name="DragonFly BSD (partial)">
+	³ Server sometimes sends no certificate chain
+	² Mixed css
 
+
+	Mixed content:
+
+		- css on leaf from www *
+
+	* Secured by us
+
+ -->
+<ruleset name="DragonFly BSD.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bugs.dragonflybsd.org" />
+	<target host="gitweb.dragonflybsd.org" />
+	<target host="leaf.dragonflybsd.org" />
+	<target host="www.dragonflybsd.org" />
+
+	<!--	Complications:
+				-->
 	<target host="dragonflybsd.org" />
-	<target host="*.dragonflybsd.org" />
-		<!--
-			Not all of leaf is identical to bugs:
-								-->
-		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!cgi/web-man)" />
+
+		<test url="http://leaf.dragonflybsd.org//" />
+		<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
+		<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+		<test url="http://leaf.dragonflybsd.org/manpages/" />
 
 
-	<securecookie host="^bugs\.dragonflybsd\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?dragonflybsd\.org/"
+	<rule from="^http://dragonflybsd\.org/"
 		to="https://www.dragonflybsd.org/" />
 
-	<rule from="^http://(?:bugs|leaf)\.dragonflybsd\.org/"
-		to="https://bugs.dragonflybsd.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

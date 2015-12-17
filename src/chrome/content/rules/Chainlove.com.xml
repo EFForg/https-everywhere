@@ -1,21 +1,28 @@
 <!--
-Automatically by https-everywhere-checker because:
-Fetch error: http://chainlove.com/ => https://chainlove.com/: (51, "SSL: no alternative certificate subject name matches target host name 'chainlove.com'")
 	Problematic subdomains:
 
-		- images	(mismatched)
+		- ^ *
+		- images *
+
+	* Akamai
 
 -->
-<ruleset name="Chainlove.com" default_off='failed ruleset test'>
+<ruleset name="Chainlove.com">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.chainlove.com" />
+
+	<!--	Complications:
+				-->
 	<target host="chainlove.com" />
-	<target host="*.chainlove.com" />
+	<target host="images.chainlove.com" />
 
 
-	<rule from="^http://(www\.)?chainlove\.com/"
-		to="https://$1chainlove.com/" />
-
-	<rule from="^http://images\.chainlove\.com/"
+	<rule from="^http://(?:images\.)?chainlove\.com/"
 		to="https://www.chainlove.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

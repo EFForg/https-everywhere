@@ -9,17 +9,44 @@
 		- usage
 		- wiki
 
+
+	Insecure cookies are set for these hosts:
+
+		- issues.jenkins-ci.org
+		- wiki.jenkins-ci.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- wiki from jenkins-ci.org *
+			- wiki from upload.wikimedia.org *
+
+	* Secured by us
+
 -->
 <ruleset name="Jenkins-CI.org">
 
 	<target host="jenkins-ci.org" />
-	<target host="*.jenkins-ci.org" />
+	<target host="ci.jenkins-ci.org" />
+	<target host="issues.jenkins-ci.org" />
+	<target host="svn.jenkins-ci.org" />
+	<target host="updates.jenkins-ci.org" />
+	<target host="usage.jenkins-ci.org" />
+	<target host="wiki.jenkins-ci.org" />
+	<target host="www.jenkins-ci.org" />
 
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(issues|wiki)\.jenkins-ci\.org$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^wiki\.jenkins-ci\.org$" name="^atlassian\.xsrf\.token$" /-->
 
 	<securecookie host="^(?:ci|issues|svn|update|usage|wiki)?\.jenkins-ci\.org$" name=".+" />
 
 
-	<rule from="^http://((?:ci|issues|svn|updates|usage|wiki|www)\.)?jenkins-ci\.org/"
-		to="https://$1jenkins-ci.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

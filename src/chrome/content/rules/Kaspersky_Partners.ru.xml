@@ -2,18 +2,35 @@
 	For other Kaspersky coverage, see Kaspersky.com.xml.
 
 
+	Insecure cookies are set for these hosts:
+
+		- kasperskypartners.ru
+		- www.kasperskypartners.ru
+
+
 	Mixed content:
 
-		- Image from kaspersky.relayware.com
+		- Image from kaspersky.relayware.com *
+
+	* Unsecurable <= 404
 
 -->
 <ruleset name="Kaspersky Partners.ru">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="kasperskypartners.ru" />
 	<target host="www.kasperskypartners.ru" />
 
 
-	<rule from="^http://(www\.)?kasperskypartners\.ru/"
-		to="https://$1kasperskypartners.ru/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?kasperskypartners\.ru$" name="^(?:CFID|CFTOKEN|JSESSIONID|USER)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

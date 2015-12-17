@@ -1,0 +1,81 @@
+<!--
+	For rules causing false/broken MCB, see Kaazing.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *kaazing.com:
+
+		- cms-dev *
+
+	* Refused
+
+
+	Problematic hosts in *kaazing.com:
+
+		- blog ¹
+		- developer ²
+
+	¹ Mismatched
+	² Mixed css
+
+
+	Fully covered hosts in *kaazing.com:
+
+		- (www.)?
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- (www.)? from player.vimeo.com ¹
+			- developer from www.youtube.com ²
+
+		- css, on:
+
+			- (www.)? from fonts.googleapis.com ²
+			- developer from developer.kaazing.com ²
+
+		- Images, on:
+
+			- (www.)? from cms-dev.kaazing.com ³
+			- (www.)? from www.kaazing.com ²
+			- developer from developer.kaazing.com ²
+
+		- favicons, on:
+
+			- (www.)? from cms-dev.kaazing.com ²
+			- developer from developer.kaazing.com ²
+
+		- Bugs on (www.)? from pixel.wp.com
+
+	¹ Rule disabled by default
+	² Secured by us
+	³ Unsecurable <= refused
+
+-->
+<ruleset name="Kaazing.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kaazing.com" />
+	<target host="developer.kaazing.com" />
+	<target host="www.kaazing.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://developer\.kaazing\.com/+(?!wordpress/wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://developer.kaazing.com/forums/" />
+			<test url="http://developer.kaazing.com/how-tos/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://developer.kaazing.com/wordpress/wp-content/plugins/contribution-form/style.css" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

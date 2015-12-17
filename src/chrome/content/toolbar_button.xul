@@ -43,6 +43,10 @@
       <menupopup id="https-everywhere-context" onpopupshowing="show_applicable_list(this)">
         <!-- entries will be written here by ApplicableList.populate_menu() -->
         <menuseparator class="hide-on-disable"/>
+        <menuitem label="&https-everywhere.prefs.reset_defaults;"
+          command="https-everywhere-menuitem-resetToDefaults" class="hide-on-disable"/>
+        <menuitem label="&https-everywhere.menu.viewAllRules;"
+          command="https-everywhere-menuitem-viewAllRules" class="hide-on-disable" />
         <menuitem type="checkbox" id="http-nowhere-item" label="&https-everywhere.menu.blockHttpRequests;" 
           oncommand="httpsEverywhere.toolbarButton.toggleHttpNowhere()" class="hide-on-disable"/>
         <menuseparator class="hide-on-disable"/>
@@ -55,19 +59,23 @@
     </toolbarbutton>
   </toolbarpalette>
   <commandset>
+    <command id="https-everywhere-menuitem-rule-toggle-template"
+      oncommand="toggle_rule(event.target.attributes['data-id'].value)" />
+    <command id="https-everywhere-menuitem-resetToDefaults"
+      oncommand="httpsEverywhere.toolbarButton.resetToDefaults()" />
     <command id="https-everywhere-menuitem-globalEnableToggle"
       oncommand="toggleEnabledState();" />
-    <command id="https-everywhere-menuitem-preferences"
-      oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/preferences.xul', 'chrome,centerscreen,resizable=yes');" />
+    <command id="https-everywhere-menuitem-viewAllRules"
+      oncommand="open_in_tab('https://www.eff.org/https-everywhere/atlas/');" />
     <command id="https-everywhere-menuitem-about"
       oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/about.xul');" />
     <command id="https-everywhere-menuitem-observatory"
       oncommand="HTTPSEverywhere.chrome_opener('chrome://https-everywhere/content/observatory-preferences.xul', 'chrome,centerscreen,resizable=yes');" />
-    <command id="https-everywhere-menuitem-donate-eff" 
+    <command id="https-everywhere-menuitem-donate-eff"
       oncommand="open_in_tab('https://www.eff.org/donate');" />
-    <command id="https-everywhere-menuitem-donate-tor" 
+    <command id="https-everywhere-menuitem-donate-tor"
       oncommand="open_in_tab('https://www.torproject.org/donate');" />
-    <command id="https-everywhere-menuitem-ruleset-tests" 
+    <command id="https-everywhere-menuitem-ruleset-tests"
       oncommand="openStatus();" />
   </commandset>
 </overlay>

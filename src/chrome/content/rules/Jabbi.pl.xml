@@ -1,0 +1,46 @@
+<!--
+	Problematic hosts:
+
+		- (www.)? *
+		- client ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Expired
+
+
+	Fully covered hosts:
+
+		- (www.)?
+		- client
+		- host1
+
+
+	Insecure cookies are set for these hosts:
+
+		- jabbi.pl
+		- client.jabbi.pl
+		- www.jabbi.pl
+
+-->
+<ruleset name="Jabbi.pl" default_off="expired, missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="jabbi.pl" />
+	<target host="client.jabbi.pl" />
+	<target host="host1.jabbi.pl" />
+	<target host="www.jabbi.pl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--ssecurecookie host="^(www\.)?jabbi\.pl$" name="^_icl_current_language$" /-->
+	<!--ssecurecookie host="^client\.jabbi\.pl$" name="^jappix_mode$" /-->
+
+	<securecookie host="^(?:client\.|www\.)?jabbi\.pl$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

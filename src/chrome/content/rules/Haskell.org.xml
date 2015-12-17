@@ -1,20 +1,5 @@
 <!--
-	NB: Tor users cannot view* this website due to CloudFlare settings.
-
-	See:
-
-		- https://blog.torproject.org/blog/call-arms-helping-internet-services-accept-anonymous-users
-		- https://support.cloudflare.com/hc/en-us/articles/203306930-Does-CloudFlare-block-Tor-
-		- https://support.cloudflare.com/hc/en-us/articles/200170206-How-do-I-turn-I-m-Under-Attack-mode-on-
-
-	* without enabling javascript, for security and privacy implications see e.g.:
-
-		- https://www.mozilla.org/security/known-vulnerabilities/firefox.html
-		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
-		- https://panopticlick.eff.org
-
-
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *haskell.org:
 
 		- code *
 		- community *
@@ -24,35 +9,58 @@
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *haskell.org:
 
-		- status ¹
-		- www ²
+		- darcs ¹
 
-	¹ StatusPage.io
-	² Tor blocked by CloudFlare settings
+	¹ Expired 2014-10-15
 
 
 	Mixed content:
 
-		- Images, on www from:
+		- Images, on:
 
-			- ^ *
-			- i.imgur.com *
+			- wiki from ^haskell.org *
+			- wiki from i.imgur.com *
 
 	* Secured by us
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .haskell.org
+		- www.haskell.org
 
 -->
 <ruleset name="Haskell.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="haskell.org" />
-	<target host="*.haskell.org" />
+	<target host="blog.haskell.org" />
+	<target host="downloads.haskell.org" />
+	<target host="ghc.haskell.org" />
+	<target host="git.haskell.org" />
+	<target host="hackage.haskell.org" />
+	<target host="mail.haskell.org" />
+	<target host="monitor.haskell.org" />
+	<target host="phabricator.haskell.org" />
+	<target host="planet.haskell.org" />
+	<target host="status.haskell.org" />
+	<target host="wiki.haskell.org" />
+	<target host="www.haskell.org" />
 
 
-	<securecookie host="^\.haskell\.org$" name="^__cfduid$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.haskell\.org$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^www\.haskell\.org$" name="^_SESSION$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:blog|darcs|downloads|ghc|hackage|monitor|phabricator|planet|www)\.)?haskell\.org/"
-		to="https://$1haskell.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

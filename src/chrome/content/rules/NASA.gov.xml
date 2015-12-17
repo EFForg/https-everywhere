@@ -12,10 +12,6 @@
 
 		- d1p01lglytwktu.cloudfront.net
 
-			- marsrovers.jpl.nasa.gov
-
-		- d2cj35nmzi9erd.cloudfront.net
-
 			- mars.jpl.nasa.gov
 
 		- d3r05mwudimf00.cloudfront.net
@@ -24,15 +20,12 @@
 
 		- msfcnasa.r3h.net/.../
 			- www.msfc.nasa.gov.edgesuite.net/.../
-				- a974.dscg.akamai.net/.../
 
 		- spaceflight.nasa.gov.speedera.net
 			- spaceflight.nasa.gov.edgesuite.net/.../
-				- a1295.dscg.akamai.net/.../
 
 		- www.nasa.gov.speedera.net
 			- www.nasa.gov.edgesuite.net/.../
-				- a1718.dscg.akamai.net/.../
 
 
 	Nonfunctional domains:
@@ -50,12 +43,14 @@
 			- climate
 			- earthobservatory *
 			- data.giss *
+			- www.grc		(403_
 
 			- gsfc subdomains:
 
 				- eclipse *
 				- fermi		(redirects to http, expired 2011-12-31)
 				- jdem
+				- mms *
 				- nssdc *
 				- sdo *
 				- sunearthday *
@@ -74,8 +69,11 @@
 				- directory		(redirects to http, valid cert)
 				- genesismission **
 				- hydro *
+				- careerlaunch **
+				- jplnet *
 				- maps *
 				- neo *
+				- pds-imaging **
 				- photojournal **
 				- planetquest
 				- saturn **
@@ -88,7 +86,7 @@
 
 			- www.jps
 			- eol.jsc
-			- (www.)?jwst
+			- (www.)?jwst **
 			- kepler		(shows astrobiology, CN: astrobiology)
 			- science.ksc **
 			- www-pao.ksc *
@@ -96,32 +94,37 @@
 			- sohowww.nascom *
 			- stereo-ssc.nascom *
 			- pds *
-			- spaceflight		(504, akamai)
+			- spaceflight **
 			- (www.)?spaceplace **
+			- spotthestation *
 			- www.sti		(Shows stiprod.larc)
 			- sunearthday		(some paths 404, others work-ToDo: sort which ones; akamai)
 			- venustransit *
 			- visibleearth *
 
 	* Times out
-	** No https
+	** Refused
 
 
 	Problematic subdomains:
 
 		- astrobiology2.arc ¹
-		- www.grc ²
+		- www.data ²
 		- heasarc ³
+
 		- mars.jpl ⁴
 		- marsrovers.jpl ⁴
 		- marsstaticcdn.jpl ⁴
+		- nightsky.jpl		(Expired)
 		- rosetta.jpl ³
+		- sse.jpl		(Mismatched)
+
 		- stiprod.larc ⁵
 		- mars ⁴
 		- ntrs ⁵
 
 	¹ Mismatched, CN: astrobiology.nasa.gov
-	² $ differs between http and https
+	² 404
 	³ Cert only matches heasarc.gsfc
 	⁴ Cloudfront
 	⁵ Self-signed
@@ -129,10 +132,8 @@
 
 	Partially covered subdomains:
 
-		- www.grc ¹
 		- rosetta.jpl ²
 
-	¹ Accounting for possibly differing redirects
 	² Avoiding broken MCB
 
 
@@ -141,6 +142,8 @@
 		- airbornescience
 		- cloud1.arc
 		- astrobiology
+		- code
+		- (www.)?data		(www → ^)
 		- ws1.ems.eosdis	(tracking beacon)
 		- esdpubs
 		- (www.)?espo
@@ -166,35 +169,29 @@
 			- exep
 			- icis
 			- jpldataeval
-			- jplnet
 			- jplspaceship
 			- mars			(→ d2cj35nmzi9erd.cloudfront.net)
-			- marsrovers		(→ d1p01lglytwktu.cloudfront.net)
 			- marsstaticcdn		(→ d3r05mwudimf00.cloudfront.net)
 			- metrics		(→ jpl-nasa-gov.122.2o7.net)
-			- nightsky
+			- naif
 			- pds
 			- ras
 			- science
 			- scienceandtechnology
 			- solarsystem
-			- sse
+			- sse			(→ solarsystem.nasa.gov)
 			- studentprograms
 			- telework
 			- www-robotics
 
 
 		- mars		(→ d2cj35nmzi9erd.cloudfront.net)
+		- open
 		- people
 		- solarsystem
 		- (www.)?spacecomm
-		- www
 
 	* Server is configured for rc4 only
-
-
-	^nasa.gov doesn't exist.
-
 
 	Insecure cookies are set for these domains:
 
@@ -203,12 +200,19 @@
 
 	Mixed content:
 
-		- css from rosetta.jpl from $self ¹
-		- css on stiprod.larc from www.sti ²
+		- css, on:
+
+			- rosetta.jpl from $self ¹
+			- stiprod.larc from www.sti ²
+			- oig from fonts.googleapis.com ¹
 
 		- Images, on:
+
+			- rosetta.jpl from $self ¹
 			- scienceandtechnology.jpl from www-robotics.jpl ¹
-		- Images on stiprod.larc from www.sti ²
+			- stiprod.larc from www.sti ²
+			- open from $self ¹
+			- www from $self ¹
 
 		- Bug on scienceandtechnology.jpl from static.addtoany.com ¹
 
@@ -218,25 +222,103 @@
 -->
 <ruleset name="NASA.gov (partial)">
 
-	<target host="*.nasa.gov" />
-		<!--
-			Avoid broken MCB:
+	<!--	Direct rewrites:
+				-->
+	<target host="nasa.gov" />
+	<target host="airbornescience.nasa.gov" />
+	<target host="cloud1.arc.nasa.gov" />
+	<target host="astrobiology.nasa.gov" />
+	<target host="blogs.nasa.gov" />
+	<target host="code.nasa.gov" />
+	<target host="data.nasa.gov" />
+	<target host="ws1.ems.eosdis.nasa.gov" />
+	<target host="esdpubs.nasa.gov" />
+
+	<target host="espo.nasa.gov" />
+	<target host="www.espo.nasa.gov" />
+	<target host="spacecomm.nasa.gov" />
+	<target host="www.spacecomm.nasa.gov" />
+	<target host="espoarchive.nasa.gov" />
+	<target host="eyes.nasa.gov" />
+
+	<target host="rt.grc.nasa.gov" />
+	<target host="wordpress.grc.nasa.gov" />
+	<target host="wp-dev.grc.nasa.gov" />
+
+	<target host="heasarc.gsfc.nasa.gov" />
+
+	<target host="corts.hq.nasa.gov" />
+	<target host="www.hq.nasa.gov" />
+
+	<target host="acquisition.jpl.nasa.gov" />
+	<target host="beacon.jpl.nasa.gov" />
+	<target host="careerlaunch.jpl.nasa.gov" />
+	<target host="dir.jpl.nasa.gov" />
+	<target host="enose.jpl.nasa.gov" />
+	<target host="exep.jpl.nasa.gov" />
+	<target host="icis.jpl.nasa.gov" />
+	<target host="jpldataeval.jpl.nasa.gov" />
+	<target host="jplspaceship.jpl.nasa.gov" />
+	<target host="naif.jpl.nasa.gov" />
+	<!--target host="nightsky.jpl.nasa.gov" /-->
+	<target host="pds.jpl.nasa.gov" />
+	<target host="ras.jpl.nasa.gov" />
+	<target host="rosetta.jpl.nasa.gov" />
+	<target host="science.jpl.nasa.gov" />
+	<target host="scienceandtechnology.jpl.nasa.gov" />
+	<target host="solarsystem.jpl.nasa.gov" />
+	<target host="studentprograms.jpl.nasa.gov" />
+	<target host="telework.jpl.nasa.gov" />
+	<target host="www-robotics.jpl.nasa.gov" />
+
+	<target host="oig.nasa.gov" />
+	<target host="open.nasa.gov" />
+	<target host="people.nasa.gov" />
+	<target host="solarsystem.nasa.gov" />
+	<target host="www.nasa.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="www.data.nasa.gov" />
+	<target host="heasarc.nasa.gov" />
+	<target host="mars.nasa.gov" />
+
+	<target host="mars.jpl.nasa.gov" />
+	<target host="marsstaticcdn.jpl.nasa.gov" />
+	<target host="metrics.jpl.nasa.gov" />
+	<target host="sse.jpl.nasa.gov" />
+
+		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://rosetta\.jpl\.nasa\.gov/+(?!favicon\.ico|modules/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rosetta.jpl.nasa.gov/feedback" />
+			<test url="http://rosetta.jpl.nasa.gov/gallery/multimedia/videos/fred-jansen-how-land-comet-ted" />
+			<test url="http://rosetta.jpl.nasa.gov/nasas-role" />
+			<test url="http://rosetta.jpl.nasa.gov/science" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rosetta.jpl.nasa.gov/favicon.ico" />
+			<test url="http://rosetta.jpl.nasa.gov/modules/system/system.base.css" />
+			<test url="http://rosetta.jpl.nasa.gov/sites/default/files/styles/multimedia_flow/public/gallery_image/ESA_ROSETTA_NAVCAM_20140803_full.jpg" />
+
+		<!--	Mixed images:
+					-->
+		<test url="http://www.nasa.gov/centers/glenn/home/index.html" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^scienceandtechnology\.jpl\.nasa\.gov$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^scienceandtechnology\.jpl\.nasa\.gov$" name="^CF(?:ID|TOKEN)$" /-->
 
-	<securecookie host=".*\.nasa\.gov$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://www\.grc\.nasa\.gov/+(?=$|\?)"
-		to="https://www.nasa.gov/centers/glenn/" />
-
-	<rule from="^http://www\.grc\.nasa\.gov/(?=Doc/|WWW/)"
-		to="https://www.grc.nasa.gov/" />
+	<rule from="^http://www\.data\.nasa\.gov/"
+		to="https://data.nasa.gov/" />
 
 	<rule from="^http://heasarc\.nasa\.gov/"
 		to="https://heasarc.gsfc.nasa.gov/" />
@@ -244,16 +326,16 @@
 	<rule from="^http://mars\.(?:jpl\.)?nasa\.gov/"
 		to="https://d2cj35nmzi9erd.cloudfront.net/" />
 
-	<rule from="^http://marsrovers\.jpl\.nasa\.gov/"
-		to="https://d1p01lglytwktu.cloudfront.net/" />
-
 	<rule from="^http://marsstaticcdn\.jpl\.nasa\.gov/"
 		to="https://d3r05mwudimf00.cloudfront.net/" />
 
 	<rule from="^http://metrics\.jpl\.nasa\.gov/"
 		to="https://jpl-nasa-gov.122.2o7.net/" />
 
-	<rule from="^http://(airbornescience|cloud1\.arc|astrobiology|ws1\.ems\.eosdis|esdpubs|(?:www\.)?(?:espo|spacecomm)|espoarchive|eyes|(?:rt|wordpress|wp-dev)\.grc|heasarc\.gsfc|(?:corts|www)\.hq|(?:acquisition|beacon|careerlaunch|dir|enose|exep|icis|jpldataeval|jplnet|jplspaceship|nightsky|pds|rosetta|science(?:andtechnology)?|solarsystem|sse|studentprograms|telework|www-robotics)\.jpl|people|ras|solarsystem|www)\.nasa\.gov/"
-		to="https://$1.nasa.gov/" />
+	<rule from="^http://sse\.jpl\.nasa\.gov/"
+		to="https://solarsystem.nasa.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

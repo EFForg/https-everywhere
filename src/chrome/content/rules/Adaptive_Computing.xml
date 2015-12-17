@@ -1,13 +1,31 @@
-<ruleset name="Adaptive Computing">
+<ruleset name="Adaptive Computing (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="adaptivecomputing.com" />
 	<target host="www.adaptivecomputing.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.adaptivecomputing\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.adaptivecomputing\.com/+(?!wp-content/|wp-login\.php)" />
 
-	<securecookie host="^www\.adaptivecomputing\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.adaptivecomputing.com/blog" />
+			<test url="http://www.adaptivecomputing.com/products/" />
+			<test url="http://www.adaptivecomputing.com/support-login" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.adaptivecomputing.com/wp-content/themes/AdaptiveComputing/img/nav-gif.gif" />
+			<test url="http://www.adaptivecomputing.com/wp-login.php" />
 
 
-	<rule from="^http://(www\.)?adaptivecomputing\.com/"
-		to="https://$1adaptivecomputing.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -8,18 +8,26 @@
 
 	Nonfunctional domains:
 
-
 		- pub.idqqimg.com
 
 		- qq.com subdomains:
 
 			- ^ *
-			- imgcache		(504, akamai)
-			- kf *
+			- adver *
+			- im *
+			- jq *
+
+			- ptlogin2.mail *
+			- service.mail		(502)
 			- stockweb.mail		(503)
+
+			- mat1		404
+			- service *
+			- shang *
 			- follow.v.t *
 			- wpa *
-			- www **
+			- www		404
+			- zc		(Handshake fails)
 
 		- i.gtimg.cn		(504, akamai)
 		- img1.gtimg.com *
@@ -32,47 +40,81 @@
 	Problematic domains:
 
 		- api.pay.qplus.com	(expired 2012-08-27)
+		- qq.com ²
+		- img1.qq.com ²
+		- service.qq.com ³
+
+	² Mismatched
+	³ Mixed css
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains:
 
-		- exmail
-		- cnc.exmail
+		- .qq.com
+		- .ptlogin2.qq.com
+		- .ui.ptlogin2.qq.com
+		- .r.qq.com
 
-		- mail subdomains:
 
-			- ^
-			- en
-			- ptlogin2
-			- res
-			- rl
-			- wp
-			- ws
+	Mixed content:
 
-		- weixin subdomains:
+		- css on service from imgcache.qq.com *
+		- Images on kf, service from imgcache.qq.com *
 
-			- api
-			- login
-			- mp
-			- open
-			- web
-			- webpush
-
-		- wx
-		- res.wx
+	* Secured by us
 
 -->
-<ruleset name="QQ (partial)">
+<ruleset name="QQ.com (partial)">
 
-	<target host="*.qq.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="aq.qq.com" />
+	<target host="exmail.qq.com" />
+	<target host="cnc.exmail.qq.com" />
+	<target host="imgcache.qq.com" />
+	<target host="kf.qq.com" />
 
+	<target host="mail.qq.com" />
+	<target host="en.mail.qq.com" />
+	<target host="res.mail.qq.com" />
+	<target host="rl.mail.qq.com" />
+	<target host="wp.mail.qq.com" />
+	<target host="ws.mail.qq.com" />
+
+	<target host="ssl.ptlogin2.qq.com" />
+	<target host="xui.ptlogin2.qq.com" />
+
+	<target host="r.qq.com" />
+	<!--target host="service.qq.com" /-->
+	<target host="file.service.qq.com" />
+	<target host="support.qq.com" />
+
+	<target host="api.weixin.qq.com" />
+	<target host="login.weixin.qq.com" />
+	<target host="mp.weixin.qq.com" />
+	<target host="open.weixin.qq.com" />
+	<target host="support.weixin.qq.com" />
+	<target host="web.weixin.qq.com" />
+	<target host="webpush.weixin.qq.com" />
+
+	<target host="weixin110.qq.com" />
+	<target host="wx.qq.com" />
+	<target host="res.wx.qq.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.qq\.com$" name="^(pt_clientip|pt_serverip)$" /-->
+	<!--securecookie host="^\.ptlogin2\.qq\.com$" name="^(pt_local_token|pt_login_sig|uikey)$" /-->
+	<!--securecookie host="^\.r\.qq\.com$" name="^(?:edition|ssl_edition)$" /-->
+	<!--securecookie host="^\.ui\.ptlogin2\.qq\.com$" name="^(pt_user_id|ptui_identifier)$" /-->
 
 	<!--	Could we secure any of these safely?
 							-->
 	<!--securecookie host="^\.qq\.com$" name="^(mm_lang|webwxuvid)$" /-->
 
 
-	<rule from="^http://((?:cnc\.)?exmail|mail|(?:en|res|rl|ptlogin2|wp|ws)\.mail|(?:api|login|mp|open|web|webpush)\.weixin|wx|res\.wx)\.qq\.com/"
-		to="https://$1.qq.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

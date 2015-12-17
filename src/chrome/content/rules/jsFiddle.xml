@@ -1,20 +1,34 @@
 <!--
-	For jsfiddle.net
+	www.jsfiddle.net: Mismatched
 
-		Works:
 
-			- $
+	Insecure cookies are set for these hosts:
 
-		Problematic:
-			- www (cert mismatch)
+		- jsfiddle.net
+
 -->
-<ruleset name="jsFiddle">
-  <target host="jsfiddle.net" />
-  <target host="www.jsfiddle.net" />
+<ruleset name="jsFiddle.net">
 
-  <rule from="^http://(?:www\.)?jsfiddle\.net/"
-          to="https://jsfiddle.net/" />
+	<!--	Direct rewrites:
+				-->
+	<target host="jsfiddle.net" />
 
-  <test url="http://jsfiddle.net/" />
-  <test url="http://www.jsfiddle.net/" />
+	<!--	Complications:
+				-->
+	<target host="www.jsfiddle.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jsfiddle\.net$" name="^(?:csrftoken|sessionid)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://www\.jsfiddle\.net/"
+		to="https://jsfiddle.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

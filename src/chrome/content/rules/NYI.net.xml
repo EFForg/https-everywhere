@@ -1,0 +1,54 @@
+<!--
+	For rules causing broken MCB, see NYI.net-falsemixed.xml.
+
+
+	Problematic hosts in *nyi.net:
+
+		- webmail *
+
+	* Mixed css
+
+
+	Fully covered hosts in *nyi.net:
+
+		- (www.)?
+		- my
+		- quotes
+
+
+	Mixed content:
+
+		- css on webmail from www.nyi.net *
+		- Images on webmail, www from www.nyi.net *
+
+	* Secured by us
+
+-->
+<ruleset name="NYI.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="nyi.net" />
+	<target host="my.nyi.net" />
+	<target host="quotes.nyi.net" />
+	<target host="webmail.nyi.net" />
+	<target host="www.nyi.net" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://webmail\.nyi\.net/+(?!webmailimages/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://webmail.nyi.net/?" />
+			<test url="http://webmail.nyi.net//" />
+
+			<!--	-ve:
+					-->
+			<test url="http://webmail.nyi.net/webmailimages/sm_logo_tp.png" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

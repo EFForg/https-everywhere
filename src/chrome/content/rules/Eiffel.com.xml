@@ -1,0 +1,86 @@
+<!--
+	Problematic hosts in *eiffel.com:
+
+		- activate ¹
+		- groups ²
+		- support ¹
+
+	¹ Shows www2
+	² "Invalid Server Name"
+
+
+	Fully covered hosts in *eiffel.com:
+
+		- (www.)?
+		- activate	(→ www2.eiffel.com)
+		- docs
+		- groups	(→ groups.yahoo.com)
+		- room
+		- support	(→ www2.eiffel.com)
+
+
+	These altnames don't exist:
+
+		- www.www2.eiffel.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .docs.eiffel.com
+		- .room.eiffel.com
+
+-->
+<ruleset name="Eiffel.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="eiffel.com" />
+	<target host="docs.eiffel.com" />
+	<target host="room.eiffel.com" />
+	<target host="www.eiffel.com" />
+	<target host="www2.eiffel.com" />
+
+	<!--	Complications:
+				-->
+	<target host="activate.eiffel.com" />
+	<target host="groups.eiffel.com" />
+	<target host="support.eiffel.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.(docs|room)\.eiffel\.com$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\.(?:docs|room)\.eiffel\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, but not
+		args nor forward slash:
+					-->
+	<rule from="^http://activate\.eiffel\.com/+([^?]*)(?:\?.*)?"
+		to="https://www2.eiffel.com/activate/$1" />
+
+		<test url="http://activate.eiffel.com/?f" />
+		<test url="http://activate.eiffel.com/?o" />
+		<test url="http://activate.eiffel.com//?o" />
+		<test url="http://activate.eiffel.com/?b" />
+		<test url="http://activate.eiffel.com/?a" />
+		<test url="http://activate.eiffel.com/?r" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://groups\.eiffel\.com/+"
+		to="https://groups.yahoo.com/group/eiffel_software/" />
+
+		<test url="http://groups.eiffel.com//" />
+
+	<rule from="^http://support\.eiffel\.com/.*"
+		to="https://www2.eiffel.com/support" />
+
+		<test url="http://support.eiffel.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

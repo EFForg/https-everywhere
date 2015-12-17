@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see F-Secure.com-breakchat.xml.
-
-
 	CDN buckets:
 
 		- fs-freedome-production.s3.amazonaws.com
@@ -20,32 +17,25 @@
 	Problematic subdomains:
 
 		- backup	(mismatched, CN: backup.ob.f-secure.com)
-		- campaigns	(works, akamai)
-		- freedome	(mismatched, CN: *.herokuapp.com)
-		- home ⁴
+		- privacy	(wordpress)
 		- safeandsavvy	(wordpress)
 		- sp		(works, mismatched, CN: europe.f-secure.com)
 
 	⁴ Works; mismatched, CN: www.younited.com
 
 
-	Partially covered subdomains:
-
-		- (www.)	(avoiding breaking chat)
-		- campaigns	(→ www, [^?/]+ 404s)
-		- freedome	(→ fs-freedome-production-site.herokuapp.com, $ redirects back)
-
-
 	Fully covered subdomains:
 
-		- (www.)	(^ → www)
+		- (www.)
 		- backup
 		- browsingprotection
+		- campaigns
 		- cgi
 		- community
 		- download
-		- estore	(→ my)
 		- europe
+		- freedome
+		- home
 		- kic
 		- login
 		- msp
@@ -61,10 +51,31 @@
 		- download.sp
 		- sp		(→ www)
 		- store
+		- trial
 		- webmail *
 		- webmailmy *
+		- www-stats-so
+		- www2
 
 	* Server is configured for rc4 only
+
+
+	estore: Dropped over http & https
+
+
+	These altnames don't exist:
+
+		- ma.f-secure.com
+		- www.my.f-secure.com
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- .f-secure.com
+		- community.f-secure.com
+		- kic.f-secure.com
+		- my.f-secure.com
+		- .my.f-secure.com
 
 
 	Mixed content:
@@ -82,49 +93,77 @@
 
 				- www ¹
 				- www.haloscan.com ²
+				- creative.metalyzer.com ¹
 				- statse.webtrendslive.com ¹
 
 	¹ Secured by us
 	² Unsecurable
 
 -->
-<ruleset name="F-Secure (partial)">
+<ruleset name="F-Secure.com (partial)">
 
-	<!--	Avoiding duplicate
-		target warning...
-					-->
-	<!--target host="f-secure.com" /-->
-	<target host="*.f-secure.com" />
-		<!--
-			Avoid breaking chat:
+	<!--	Direct rewrites:
+				-->
+	<target host="f-secure.com" />
+	<target host="analysis.f-secure.com" />
+	<target host="backup.f-secure.com" />
+	<target host="browsingprotection.f-secure.com" />
+	<target host="campaigns.f-secure.com" />
+	<target host="cgi.f-secure.com" />
+	<target host="community.f-secure.com" />
+	<target host="download.f-secure.com" />
+	<target host="europe.f-secure.com" />
+	<target host="freedome.f-secure.com" />
+	<target host="home.f-secure.com" />
+	<target host="kic.f-secure.com" />
+	<target host="login.f-secure.com" />
+	<target host="msp.f-secure.com" />
+	<target host="my.f-secure.com" />
+	<target host="mysafe.f-secure.com" />
+	<target host="newsletter.f-secure.com" />
+	<target host="backup.ob.f-secure.com" />
+	<target host="partnerportal.f-secure.com" />
+	<target host="safelinks.f-secure.com" />
+	<target host="safeprofile.f-secure.com" />
+	<target host="search.f-secure.com" />
+	<target host="shop.f-secure.com" />
+	<target host="download.sp.f-secure.com" />
+	<target host="store.f-secure.com" />
+	<target host="trial.f-secure.com" />
+	<target host="webmail.f-secure.com" />
+	<target host="webmailmy.f-secure.com" />
+	<target host="www.f-secure.com" />
+	<target host="www2.f-secure.com" />
+	<target host="www-stats-so.f-secure.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="estore.f-secure.com" /-->
+	<target host="sp.f-secure.com" />
+
+		<!--	Avoid breaking chat:
 						-->
-		<exclusion pattern="^http://www\.f-secure\.com/+(?!.+\.(?:css|gif|ico|jpg|js|png)$)" />
-		<!--
-			[^?/]+ 404s
-					-->
-		<exclusion pattern="^http://campaign\.f-secure\.com/+(?!\?).+" />
+		<!--exclusion pattern="^http://www\.f-secure\.com/+(?!.+\.(?:css|gif|ico|jpg|js|png)$)" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.f-secure\.com$" name="^country$" /-->
+	<!--securecookie host="^\.f-secure\.com$" name="^(__qca|country|mbox|s_vi)$" /-->
+	<!--securecookie host="^community\.f-secure\.com$" name="^Lithium(UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^kic\.f-secure\.com$" name="^(csrftoken|sessionid)$" /-->
+	<!--securecookie host="^my\.f-secure\.com$" name="^(COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^\.my\.f-secure\.com$" name="^MALB$" /-->
 
 	<securecookie host="^(?:.*\.)?f-secure\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?f-secure\.com/"
-		to="https://$1f-secure.com/" />
-
-	<rule from="^http://(analysis|backup(?:\.ob)?|cgi|community|browsingprotection|download(?:\.sp)?|europe|kic|login|msp|my|mysafe|newsletter|partnerportal|safelinks|safeprofile|search|shop|store|webmail|webmailmy)\.f-secure\.com/"
-		to="https://$1.f-secure.com/" />
-
-	<rule from="^http://(?:campaign|sp)\.f-secure\.com/"
+	<rule from="^http://sp\.f-secure\.com/"
 		to="https://www.f-secure.com/" />
 
-	<rule from="^http://estore\.f-secure\.com/"
-		to="https://my.f-secure.com/" />
+	<!--rule from="^http://estore\.f-secure\.com/"
+		to="https://my.f-secure.com/" /-->
 
-	<rule from="^http://freedome\.f-secure\.com/(?=img/|js/)"
-		to="https://fs-freedome-production-site.herokuapp.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

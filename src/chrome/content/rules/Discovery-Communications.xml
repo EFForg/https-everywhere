@@ -1,4 +1,6 @@
 <!--
+	Discovery Communications
+
 	Other Discovery Communications rulesets:
 
 		- DDM_CDN.com.xml
@@ -7,18 +9,11 @@
 	CDN buckets:
 
 		- amsarkadium-a.akamaihd.net/assets/dsc-discovery-main/
-
 		- discovery.custhelp.com
 		- dsc.discovery.com.edgesuite.net
 		- games.dsc.discovery.com.edgesuite.net
-
 		- netstorage.discovery.com.edgesuite.net
-
-			- a681.g.akamai.net
-
 		- news.discovery.com.edgesuite.net
-
-			- a1840.g.akamai.net
 
 		- dsc-static.edgesuite.net
 
@@ -29,37 +24,31 @@
 			- static.ddmcdn.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *discovery.com:
 
-		- discovery.com subdomains:
-
-			- blogs
-			- dsc		(prints "This Discovery web site is down
+		- blogs
+		- dsc		(prints "This Discovery web site is down
 					for scheduled maintenance", akamai)
-			- games.dsc ³
+		- games.dsc ³
 
 	³ Rrefused
 
 
-	Problematic domains:
+	Problematic host in *discovery.com:
 
-		- discovery.com ¹
-		- netstorage.discovery.com *
-		- news.discovery.com *
-		- store.discovery.com *
-		- www.discovery.com *
+		- netstorage *
+		- news *
+		- store *
 
-	¹ Works; mismatched, CN: api.media.dp.discovery.com
 	* Works, akamai
 
 
-	Fully covered domains:
+	Fully covered hosts in *discovery.com:
 
-		- discovery.com subdomains:
-
-			- netstorage	(→ akamai)
-			- store		(→ securestore)
-			- securestore
+		- (www.)?
+		- netstorage	(→ akamai)
+		- store		(→ securestore.discovery.com)
+		- securestore
 
 
 	Mixed content:
@@ -91,15 +80,27 @@
 	¹ Rule not enabled by default <= mismatched
 
 -->
-<ruleset name="Discovery Communications (partial)">
+<ruleset name="Discovery.com (partial)">
 
-	<target host="*.discovery.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="discovery.com" />
+	<target host="securestore.discovery.com" />
+	<target host="www.discovery.com" />
+
+	<!--	Complications:
+				-->
+	<target host="netstorage.discovery.com" />
+	<target host="store.discovery.com" />
 
 
 	<rule from="^http://netstorage\.discovery\.com/"
 		to="https://a248.e.akamai.net/f/681/7401/5m/netstorage.discovery.com/" />
 
-	<rule from="^http://(?:secure)?store\.discovery\.com/"
+	<rule from="^http://store\.discovery\.com/"
 		to="https://securestore.discovery.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
