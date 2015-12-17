@@ -1,0 +1,33 @@
+<!--
+	For other Rackspace coverage, see Rackspace.xml.
+
+
+	Problematic domains:
+
+		- mosso.com				(redirects to www.rackspace.com/cloud/; mismatched, CN: *.rackspacecloud.com)
+		- cdn.cloudfiles.mosso.com		(401, akamai)
+
+-->
+<ruleset name="Mosso.com (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="cdn.cloudfiles.mosso.com" />
+
+		<exclusion pattern="^http://cdn\.cloudfiles\.mosso\.com/(?!\w+/)" />
+
+			<!--	ve:
+					-->
+			<test url="http://cdn.cloudfiles.mosso.com/home" />
+			<test url="http://cdn.cloudfiles.mosso.com/index.php" />
+
+			<!--	ve:
+					-->
+			<test url="http://cdn.cloudfiles.mosso.com/c0703792/2Furious_Tony_500.jpg" />
+			<test url="http://cdn.cloudfiles.mosso.com/c1910342/media_center/images/static/total_access/Wat.jpg" />
+
+
+	<rule from="^http://cdn\.cloudfiles\.mosso\.com/(\w+)/"
+		to="https://$1.ssl.cf0.rackcdn.com/" />
+
+</ruleset>

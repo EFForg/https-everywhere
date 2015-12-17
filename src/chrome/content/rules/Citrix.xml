@@ -1,6 +1,5 @@
 <!--
-	Commit msg: https://trac.torproject.org/projects/tor/ticket/12800
-
+	For rules causing false/broken MCB, see Citrix.com-falsemixed.xml.
 
 	Other Citrix rulesets:
 
@@ -10,50 +9,41 @@
 		- GoToMeeting.com.xml
 		- GoToTraining.com.xml
 		- GoToWebinar.com.xml
+		- Netviewer.com.xml
+		- Podio.com.xml
+		- ShareConnect.com.xml
 		- ShareFile.com.xml
 		- ShareFile_support.com.xml
 
 
 	CDN buckets:
 
-		- c558080.r80.cf2.rackcdn.com
-
-			- cdn.ws.citrix.com
+		- blogsprod.s3.amazonaws.com
+		- c558080.r80.cf2.rackcdn.com	← cdn.ws.citrix.com
 
 
 	Nonfunctional domains:
 
-		- open.citrix.com		Refused
-		- (www.)joingotomeeting.com
-		- (www.)jointraining.com
-		- (www.)joinwebinar.com
+		- open.citrix.com ¹
+		- (www.)?joingotomeeting.com ²
+		- (www.)?jointraining.com ²
+		- (www.)?joinwebinar.com ²
+
+	¹ Shows another domain
+	² Refused
 
 
-	Problematic domains:
+	Problematic hosts in *citrix.com:
 
-		- cdn.ws.citrix.com	(akamai)
+		- blogs ¹
+		- help ²
+		- cdn.ws ³
+		- training ⁴
 
-
-	Partially covered hosts in *citrix.com:
-
-		- discussions *
-		- training *
-
-	* Avoiding broken MCB
-
-
-	Fully covered hosts in *citrix.com:
-
-		- (www.)?
-		- blogs
-		- citrixready
-		- community
-		- go
-		- search
-		- staging-cq
-		- support
-		- tarpon
-		- cdn.ws	(→ c558080.ssl.cf2.rackcdn.com)
+	¹ Redirects to webapps.citrite.net
+	² Mismatched
+	³ Akamai
+	⁴ Mixed css
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -65,15 +55,14 @@
 
 	Mixed content:
 
-		- css, on:
-
-			- discussions from *.rackcdn.com
-			- training from $self
+		- css on training from $self *
 
 		- Images, on:
 
-			- discussions from $self
-			- training from www.citrix.com
+			- training from $self *
+			- training from www.citrix.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Citrix.com (partial)">
@@ -81,12 +70,14 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="citrix.com" />
-	<target host="blogs.citrix.com" />
 	<target host="citrixready.citrix.com" />
 	<target host="community.citrix.com" />
 	<target host="discussions.citrix.com" />
 	<target host="eu.citrix.com" />
 	<target host="go.citrix.com" />
+	<target host="no.citrix.com" />
+	<target host="search.no.citrix.com" />
+	<target host="utilityservices.no.citrix.com" />
 	<target host="search.citrix.com" />
 	<target host="support.citrix.com" />
 	<target host="staging-cq.citrix.com" />
@@ -96,39 +87,45 @@
 
 	<!--	Complications:
 				-->
+	<target host="blogs.citrix.com" />
 	<target host="cdn.ws.citrix.com" />
 
 		<!--	Avoid broken MCB:
 						-->
-		<exclusion pattern="^http://discussions\.citrix\.com/+(?!public/)" />
 		<exclusion pattern="^http://training\.citrix\.com/+(?!favicon\.ico|theme/)" />
 
 			<!--	+ve:
 					-->
-			<test url="http://discussions.citrix.com/forum/363-storefront/" />
-			<test url="http://discussions.citrix.com/topic/365473-gssexception/" />
-
 			<test url="http://training.citrix.com/cms/education/networking/" />
 			<test url="http://training.citrix.com/cms/index.php/certification/" />
 			<test url="http://training.citrix.com/mod/ctxcatalog/training.php?lang=ja" />
 
 			<!--	-ve:
 					-->
-
-			<test url="http://discussions.citrix.com/public/style_images/master/attachicon.gif" />
-
 			<test url="http://training.citrix.com/favicon.ico" />
 			<test url="http://training.citrix.com/theme/ctxmain/pix/search_gradient.png" />
+
+		<test url="http://discussions.citrix.com/forum/363-storefront/" />
+		<test url="http://discussions.citrix.com/topic/365473-gssexception/" />
+		<test url="http://discussions.citrix.com/public/style_images/master/attachicon.gif" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.citrix\.com$" name="^(_wsad_MyCitrixHash|MyCitrixShadow|id_validate)$" /-->
+	<!--securecookie host="^\.citrix\.com$" name="^(_wsad_|MyCitrixHash|MyCitrixShadow|id_validate)$" /-->
 	<!--securecookie host="^discussions\.citrix\.com$" name="^session_id$" /-->
-	<!--securecookie host="^training\.citrix\.com$" name="^(MoodleSession|NSC_\w+_\w+)$" /-->
+	<!--securecookie host="^training\.citrix\.com$" name="^(MoodleSession$|NSC_)" /-->
 
-	<securecookie host="^(?:.*\.)?citrix\.com$" name=".+" />
+	<securecookie host="." name="." />
 
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blogs\.citrix\.com/+"
+		to="https://www.citrix.com/blogs/" />
+
+		<test url="http://blogs.citrix.com//index.htm" />
 
 	<rule from="^http://cdn\.ws\.citrix\.com/"
 		to="https://c558080.ssl.cf2.rackcdn.com/" />

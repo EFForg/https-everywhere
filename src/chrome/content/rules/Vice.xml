@@ -1,5 +1,4 @@
 <!--
-
 	For problematic rules, see Vice-problematic.xml.
 
 
@@ -11,8 +10,10 @@
 
 	Nonfunctional domains:
 
-		- (www.)noisey.cn
-		- scs.viceland.com		(shows default plesk page; expired 2010-11-15, self-signed)
+		- (www.)?noisey.cn
+		- scs.viceland.com *
+
+	* Shows default plesk page
 
 
 	CDN buckets:
@@ -35,56 +36,19 @@
 		- motherboard-cdn-assets.vice.com.edgesuite.net
 
 
-	Nonfunctional hosts in *vice.com:
+	Problematic hosts in *vice.com:
 
-		- motherboard *
-
-	* Redirects to http
-
-
-	Problematic subdomains:
-
-		- assets ²
-		- link *
-		- shop **
-		- socials ⁴
+		- assets ¹
+		- link ¹
+		- shop ³ ⁴
+		- assets.thump ¹
 		- socials.uk ⁵
-		- assets.thump ²
 
-	² cloudfront
-	* Mismatched
-	** Shoify
-	⁴ Expired
+	¹ cloudfront
+	¹ Mismatched
+	³ Expired
+	⁴ Self-signed
 	⁵ Revoked
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- assets	(→ d1qzzfctbfyh6r.cloudfront.net)
-		- assets2
-		- assets-news
-		- assets-sports
-		- embeds
-		- hbo
-		- i-d
-		- i-d-images
-		- images
-		- link		(→ vice.com, cb.sailthru.com)
-		- manage
-		- motherboard-cdn-assets
-		- motherboard-images
-		- munchies
-		- news
-		- news-images
-		- noisey
-		- sports
-		- sports-images
-		- staging-assets-news
-		- thecreatorsproject
-		- thecreatorsproject-images
-		- thump
-		- assets.thump	(→ df5qbu832tmne.cloudfront.net)
 
 
 	Insecure cookies are set for these hosts:
@@ -96,7 +60,7 @@
 
 		- Images, on:
 
-			- link from media.sailthru.com
+			- link from media.sailthru.com *
 			- munchies from images *
 			- noisey from assets.noisey.com *
 			- thump from assets.thump *
@@ -105,7 +69,8 @@
 
 		- Bugs, on:
 
-			- munchies, noisey, thecreatorsproject, www from b.scorecardresearch.com *
+			- motherboard from s1.2mdn.net *
+			- motherboard, munchies, noisey, thecreatorsproject, www from b.scorecardresearch.com *
 			- www from platform.tumblr.com *
 			- www from platform.twitter.com *
 
@@ -118,27 +83,30 @@
 				-->
 	<target host="vice.com" />
 	<target host="assets2.vice.com" />
+	<target host="assets-broadly.vice.com" />
 	<target host="assets-news.vice.com" />
 	<target host="assets-sports.vice.com" />
+	<target host="broadly.vice.com" />
 	<target host="embeds.vice.com" />
 	<target host="hbo.vice.com" />
 	<target host="i-d.vice.com" />
 	<target host="i-d-images.vice.com" />
 	<target host="images.vice.com" />
 	<target host="manage.vice.com" />
+	<target host="motherboard.vice.com" />
 	<target host="motherboard-cdn-assets.vice.com" />
 	<target host="motherboard-images.vice.com" />
 	<target host="munchies.vice.com" />
 	<target host="news.vice.com" />
 	<target host="news-images.vice.com" />
 	<target host="noisey.vice.com" />
-	<!--target host="socials.vice.com" /-->
 	<target host="sports.vice.com" />
 	<target host="sports-images.vice.com" />
 	<target host="staging-assets-news.vice.com" />
 	<target host="thecreatorsproject.vice.com" />
 	<target host="thecreatorsproject-images.vice.com" />
 	<target host="thump.vice.com" />
+	<target host="vice-sundry-assets-cdn.vice.com" />
 	<target host="www.vice.com" />
 
 	<!--	Complications:
@@ -147,11 +115,7 @@
 	<target host="link.vice.com" />
 	<target host="assets.thump.vice.com" />
 
-		<!--exclusion pattern="^http://(shop|social)\.vice\.com/" /-->
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://motherboard\.vice\.com/" /-->
+		<!--exclusion pattern="^http://(?:shop|social)\.vice\.com/" /-->
 
 		<test url="http://news.vice.com/shows" />
 		<test url="http://www.vice.com/stuff" />
@@ -161,7 +125,8 @@
 					-->
 	<!--securecookie host="^manage\.vice\.com$" name="^(_lang|PHPSESSID)$" /-->
 
-	<securecookie host="^manage\.vice\.com$" name=".+" />
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://assets\.vice\.com/"

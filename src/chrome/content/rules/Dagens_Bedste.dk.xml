@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Dagens_Bedste.dk-problematic.xml.
-
-
 	Other Dagens Bedste rulesets:
 
 		- Dagensgetaway.dk.xml
@@ -17,8 +14,10 @@
 	Nonfunctional domains:
 
 		- (www.)?dagensbedste.dk *
+		- business.dagensbedste.dk ²
 
 	* Handshake fails
+	² 401
 
 
 	CN: www.lokaldealen.se
@@ -26,15 +25,39 @@
 -->
 <ruleset name="Dagens Bedste.de (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn-dbapp.netdna-ssl.com" />
+	<target host="cdn-retailers-dbapp.netdna-ssl.com" />
 	<target host="lokaldealen-dbapp.netdna-ssl.com" />
 	<target host="dagensbedste-dbapp.netdna-ssl.com" />
+	<target host="dagensgetaway-dbapp.netdna-ssl.com" />
+
+	<!--	Complications:
+				-->
 	<target host="*.dbapp.netdna-cdn.com" />
 
+		<test url="http://dagensbedste.dbapp.netdna-cdn.com/images/dagensbedste/logo.png" />
+		<test url="http://dagensbedste-dbapp.netdna-ssl.com/images/dagensbedste/logo.png" />
+		<test url="http://dagensbedste.dbapp.netdna-cdn.com/public/images/icons/email.png" />
+		<test url="http://dagensbedste-dbapp.netdna-ssl.com/public/images/icons/email.png" />
+		<test url="http://dagensgetaway.dbapp.netdna-cdn.com/images/dagensgetaway/background-time-small-offer.png" />
+		<test url="http://dagensgetaway-dbapp.netdna-ssl.com/images/dagensgetaway/background-time-small-offer.png" />
+		<test url="http://cdn-retailers.dbapp.netdna-cdn.com/houseofhansenlogof7171-retailer.jpg" />
+		<test url="http://cdn-retailers-dbapp.netdna-ssl.com/houseofhansenlogof7171-retailer.jpg" />
 
-	<securecookie host="^(?:dagensbedste|lokaldealen)-dbapp\.netdna-ssl\.com$" name=".+" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dagens(?:bedste|getaway)-dbapp\.netdna-ssl\.com$" name="^X-Mapping-fjhppofk$" /-->
+
+	<securecookie host="^(?:dagensbedste|dagensgetaway|lokaldealen)-dbapp\.netdna-ssl\.com$" name=".+" />
 
 
 	<rule from="^http://([\w-]+)\.dbapp\.netdna-cdn\.com/"
 		to="https://$1-dbapp.netdna-ssl.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

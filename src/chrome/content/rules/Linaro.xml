@@ -6,57 +6,46 @@
 	* Shows android.git
 
 
-	Problematic subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- connect *
-
-	* Shows ircligs; mismatched; CN: irclogs.linaro.org
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- android-build
-		- cards
-		- connect	(-> www)
-		- git
-		- android.git
-		- irclogs
-		- lists
-		- patches
-		- planet
-		- releases
-		- status
-
-
-	These altnames don't exist:
-
-		- www.irclogs.linaro.org
-		- www.releases.linaro.org
-
-
-	Mixed content:
-
-		- Images on www from www *
-
-	* Secured by us
+		- .linaro.org
+		- connect.linaro.org
+		- www.linaro.org
 
 -->
-<ruleset name="Linaro (partial)" default_off="webmaster request">
+<ruleset name="Linaro.org (partial)" default_off="webmaster request">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="linaro.org" />
-	<target host="*.linaro.org" />
+	<target host="android-build.linaro.org" />
+	<target host="android-git.linaro.org" />
+	<target host="ask.linaro.org" />
+	<target host="cards.linaro.org" />
+	<target host="connect.linaro.org" />
+	<target host="git.linaro.org" />
+	<target host="android.git.linaro.org" />
+	<target host="irclogs.linaro.org" />
+	<target host="lists.linaro.org" />
+	<target host="patches.linaro.org" />
+	<target host="planet.linaro.org" />
+	<target host="releases.linaro.org" />
+	<target host="status.linaro.org" />
+	<target host="support.linaro.org" />
+	<target host="wiki.linaro.org" />
+	<target host="www.linaro.org" />
 
 
-	<securecookie host="^(?:android-built|ask|cards|patches|releases|status|support|wiki)\.linaro\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.linaro\.org$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(?:connect|www)\.linaro\.org$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.linaro\.org$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host=".+\.linaro\.org$" name=".+" />
 
 
-	<rule from="^http://((?:android-build|ask|cards|git|android\.git|lists|patches|planet|releases|status|support|wiki|www)\.)?linaro\.org/"
-		to="https://$1linaro.org/" />
-
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://connect\.linaro\.org/+"
-		to="https://www.linaro.org/connect" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

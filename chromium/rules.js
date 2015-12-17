@@ -185,9 +185,10 @@ RuleSets.prototype = {
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
-    if (ruletag.attributes.default_off) {
+    var default_off = ruletag.getAttribute("default_off");
+    if (default_off) {
       default_state = false;
-      note += ruletag.attributes.default_off.value + "\n";
+      note += default_off + "\n";
     }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
@@ -299,7 +300,7 @@ RuleSets.prototype = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria for being marked as secure.
+   * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
    * @param knownHttps Is the context for setting this cookie is https ?

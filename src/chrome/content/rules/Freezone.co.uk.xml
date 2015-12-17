@@ -1,0 +1,44 @@
+<!--
+	Problematic hosts in *freezone.co.uk:
+
+		- ^ ¹
+		- freemail ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .freezone.co.uk
+
+-->
+<ruleset name="Freezone.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="freemail.freezone.co.uk" /-->
+	<target host="my.freezone.co.uk" />
+	<target host="order.freezone.co.uk" />
+	<target host="support.freezone.co.uk" />
+	<target host="www.freezone.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="freezone.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.freezone\.co\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://freezone\.co\.uk/"
+		to="https://www.freezone.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

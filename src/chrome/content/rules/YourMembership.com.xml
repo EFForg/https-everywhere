@@ -1,7 +1,7 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://yourmembership.com/ => https://yourmembership.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.yourmembership.com/ => https://www.yourmembership.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
 	Mixed content:
 
 		- css, from:
@@ -12,17 +12,19 @@ Fetch error: http://www.yourmembership.com/ => https://www.yourmembership.com/: 
 	* Secured by us
 
 -->
-<ruleset name="YourMembership.com" default_off='failed ruleset test'>
+<ruleset name="YourMembership.com" default_off="missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="yourmembership.com" />
 	<target host="www.yourmembership.com" />
-		<!--
-			Avoid broken MCB:
+
+		<!--	Mixed social button:
 						-->
-		<exclusion pattern="^http://www\.yourmembership\.com/+resource-library/+blog/" />
+		<test url="http://www.yourmembership.com/resource-library/blog/" />
 
 
-	<rule from="^http://(www\.)?yourmembership\.com/"
-		to="https://$1yourmembership.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

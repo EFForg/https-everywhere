@@ -1,18 +1,36 @@
 <!--
-	Nonfunctional subdomains:
+	^indeed.com: Refused
+	www.indeed.com: Redirects to http
 
-		- (www.)	(redirects to http)
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .indeed.com
+		- ads.indeed.com
+		- employers.indeed.com
+		- secure.indeed.com
 
 -->
-<ruleset name="Indeed (partial)">
+<ruleset name="Indeed.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="ads.indeed.com" />
+	<target host="employers.indeed.com" />
 	<target host="secure.indeed.com" />
 
 
-	<securecookie host="^secure\.indeed\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.indeed\.com$" name="^(?:CSRF|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^employers\.indeed\.com$" name="^(?:BIGipServer\w+|CO|LOCALE)$" /-->
+	<!--securecookie host="^ads\.indeed\.com$" name="^INDEED(?:_CSRF_TOKEN|ADS_CC|ADS_LANG)$" /-->
+	<!--securecookie host="^secure\.indeed\.com$" name="^TS[\da-f]{8}$" /-->
+
+	<securecookie host="^(?:ads|employers|secure)\.indeed\.com$" name=".+" />
 
 
-	<rule from="^http://secure\.indeed\.com/"
-		to="https://secure.indeed.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

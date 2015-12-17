@@ -4,30 +4,39 @@
 
 	(www.)weborama.fr doesn't work
 -->
-<ruleset name="Weborama (partial)">
+<ruleset name="Weborama.fr (partial)">
 
-	<target host="*.weborama.fr"/>
+	<!--	Direct rewrites:
+				-->
+	<target host="cstatic.weborama.fr"/>
 	<target host="*.solution.weborama.fr"/>
-	<!--	for cross-domain cookies	-->
-	<target host="*.sfr.solution.weborama.fr"/>
-	<target host="*.webo.solution.weborama.fr"/>
+	<target host="ssl.weborama.fr"/>
+
+	<!--	Complications:
+				-->
+	<target host="astatic.weborama.fr"/>
+	<target host="elstatic.weborama.fr"/>
+	<target host="perf.weborama.fr"/>
+	<target host="static.weborama.fr"/>
+
+		<test url="http://cstatic.weborama.fr/iframe/customers/premium.html" />
+		<test url="http://cstatic.weborama.fr/iframe/customers/premium.html?idEditeur=" />
+
 
 	<securecookie host="^\.\w+\.solution\.weborama\.fr$" name=".*"/>
+
 
 	<!--	mismatch (EdgeCast)	-->
 	<rule from="^http://(?:a|el)static\.weborama\.fr/"
 		to="https://gs1.wpc.edgecastcdn.net/001F34/"/>
 
-	<rule from="^http://cstatic\.weborama\.fr/"
-		to="https://cstatic.weborama.fr/"/>
-
 	<rule from="^http://perf\.weborama\.fr/"
 		to="https://webo.solution.weborama.fr/"/>
 
-	<rule from="^http://(\w+)\.solution\.weborama\.fr/"
-		to="https://$1.solution.weborama.fr/"/>
-
-	<rule from="^http://s(?:sl|tatic)\.weborama\.fr/"
+	<rule from="^http://static\.weborama\.fr/"
 		to="https://ssl.weborama.fr/"/>
+
+	<rule from="^http://(cstatic|\w+\.solution|ssl)\.weborama\.fr/"
+		to="https://$1.weborama.fr/"/>
 
 </ruleset>

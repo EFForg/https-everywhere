@@ -1,0 +1,23 @@
+<!--
+	Non-functional subdomains:
+		- www				(hostname mismatch, CN: magicalbutter.com, magicalbutter.com.au)
+		- shop.magicalbutter.com.au	(hostname mismatch, CN: *.myshopify.com, myshopify.com)
+		- store.magicalbutter.com.au	(403)
+-->
+<ruleset name="MagicalButter (partial)">
+	<target host=      "magicalbutter.com" />
+	<target host=  "www.magicalbutter.com" />
+	<target host="store.magicalbutter.com" />
+	<target host=      "magicalbutter.com.au" />
+	<target host=  "www.magicalbutter.com.au" />
+
+	<!-- no secure cookie for .au -->
+  	<securecookie host="^(store\.)?magicalbutter\.com$" name=".+" />
+
+  	<!-- hostname mismatch -->
+	<rule from="^http://www\.magicalbutter\.com(\.au)?/"
+		to="https://magicalbutter.com$1/" />
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

@@ -1,19 +1,38 @@
 <!--
-Automatically by https-everywhere-checker because:
-Fetch error: http://specialforces.com/ => https://specialforces.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	^specialforces.com: Shows default page
+
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- www.specialforces.com
+		- .www.specialforces.com
+
+
 	Mixed content:
 
 		- css from fonts.googleapis.com *
 
-		- Ad from ad.where.com *
+		- Ads,bugs, from:
+
+			- www.dtc-330d.com
+			- $self
+			- www.w3.org
+			- ad.where.com *
 
 	* Secured by us
 
 -->
-<ruleset name="SpecialForces" default_off='failed ruleset test'>
+<ruleset name="SpecialForces.com" default_off="expired, missing certificate chain">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.specialforces.com" />
+
+	<!--	Complications:
+				-->
 	<target host="specialforces.com" />
-	<target host="*.specialforces.com" />
 
 
 	<!--	Not secured by server:
@@ -24,7 +43,10 @@ Fetch error: http://specialforces.com/ => https://specialforces.com/: (60, 'SSL 
 	<securecookie host="^(?:.+\.)?specialforces\.com$" name=".+" />
 
 
-	<rule from="^http://(www\.)?specialforces\.com/"
-		to="https://$1specialforces.com/" />
+	<rule from="^http://specialforces\.com/"
+		to="https://www.specialforces.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

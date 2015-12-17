@@ -7,38 +7,80 @@
 		- Sta.sh.xml
 
 
-	ToDo: Find edgecast URL for /(fc|th)\d+.
-
-
 	Mixed content:
 
-		- Images on *.....com from e.deviantart.net *
+		- Images, on:
 
-	* Secured by us
+			- shop. ... .com from www.da-files.com ¹
+			- *. ... .com from e.deviantart.net ²
+
+	¹ Unsecurable <= 404
+	² Secured by us
+
+
+	Note: A site operator previously asked for this rule to be
+	disabled with the rationale of the site's https deployment
+	not having been ready at that point.
+
+	We're waiting for:
+
+		- test (elements)
+		- More feedback from ( https-e user ∪ da user ) testers
+		- Statements from DA webmasters affirming that the site is ready
 
 -->
-<ruleset name="DeviantArt (pending)" default_off="site operator says not ready yet">
+<ruleset name="DeviantArt (pending)" default_off="waiting for webmasters to indicate site is ready">
 
 	<target host="deviantart.com" />
 	<target host="*.deviantart.com" />
 	<target host="deviantart.net" />
 	<target host="*.deviantart.net" />
 
+		<!--	Per https://github.com/EFForg/https-everywhere/pull/2861
+									-->
+		<exclusion pattern="^http://chat\.deviantart\.(?:com|net)/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://chat.deviantart.com/" />
+			<test url="http://chat.deviantart.net/" />
+
+		<!--	Mismatched, =/=> .com
+						-->
+		<exclusion pattern="^http://l\.deviantart\.net/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://l.deviantart.net/" />
+
+		<!--	Direct rewrites (1st rule):
+						-->
+		<test url="http://27d.deviantart.com/" />
+		<test url="http://chat.deviantart.com/" />
+		<test url="http://l.deviantart.com/" />
+		<test url="http://shop.deviantart.com/" />
+		<test url="http://www.deviantart.com/" />
+
+		<!--	Complications (2nd rule):
+						-->
+		<test url="http://27d.deviantart.net/" />
+		<test url="http://www.deviantart.net/" />
+
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.deviantart\.com$" name="^userinfo$" /-->
+	<!--securecookie host="^\.deviantart\.com$" name="^(?:__qca|userinfo)$" /-->
 
-	<securecookie host="^\.deviantart\.com$" name=".*" />
+	<securecookie host="." name="." />
 
 
 	<!--	Redirects from com to net, but does so successfully by itself.
 										-->
-	<rule from="^http://([aei]|fc\d\d|img\d\d|s[ht]|th\d\d)\.deviantart\.(com|net)/"
+	<rule from="^http://([aei]|fc\d\d|img\d\d|orig\d\d|pre\d\d|s[ht]|th?\d\d)\.deviantart\.(com|net)/"
 		to="https://$1.deviantart.$2/" />
 
-	<!--	This handles everything that isn't in the first rule.
-		Namely, usernames, backend, fc, th, and (www.).
+	<!--	This handles everything that isn't in the first rule and
+		isn't excluded.
 			These domains present a cert that is only
 		valid for .com.
 			Note that .net isn't used on DA, but.net does
@@ -47,7 +89,9 @@
 			Mustn't rewrite from https here, as doing so
 		would conflict with the first rule.
 								-->
-	<rule from="^http://([^/:@\.]+\.)?deviantart\.(?:com|net)/"
+	<rule from="^http://([^/:@.]+\.)?deviantart\.(?:com|net)/"
 		to="https://$1deviantart.com/" />
+
+
 
 </ruleset>

@@ -1,0 +1,73 @@
+<!--
+	For rules causing false/broken MCB, see Trend_Micro-problematic.xml.
+
+	For other Trend Micro coverage, see Trend_Micro.xml.
+
+
+	CDN buckets:
+
+		- global-web.trendmicro.com.edgesuite.net
+
+			- countermeasures.trendmicro.eu
+
+
+	Problematic hosts in *trendmicro.eu:
+
+		- countermeasures ¹
+		- eeur ²
+		
+	¹ Mixed css
+	² Akamai
+
+
+	Insecure cookies are set for these hosts:
+
+		- partnerlocator.trendmicro.eu
+
+
+	Mixed content:
+
+		- css on countermeasures from $self *
+		- Images on countermeasures from $self *
+		- favicon on eeur from $self
+
+	* Secured by us
+
+-->
+<ruleset name="Trend Micro.eu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="trendmicro.eu" />
+	<target host="countermeasures.trendmicro.eu" />
+	<target host="partnerlocator.trendmicro.eu" />
+	<target host="www.trendmicro.eu" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/+(?!favicon\.ico|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://countermeasures.trendmicro.eu/about/" />
+			<test url="http://countermeasures.trendmicro.eu/category/data-leakage/" />
+			<test url="http://countermeasures.trendmicro.eu/disclaimer-2/" />
+			<test url="http://countermeasures.trendmicro.eu/page/2/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://countermeasures.trendmicro.eu/favicon.ico" />
+			<test url="http://countermeasures.trendmicro.eu/wp-content/plugins/yet-another-related-posts-plugin/style/widget.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^partnerlocator\.trendmicro\.eu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -100,12 +100,9 @@ fi
 
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
-[ -e pkg/xpi-eff ] && rm -rf pkg/xpi-eff
-cp -a src/ pkg/xpi-eff/
+rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
-rm -r pkg/xpi-eff/chrome/content/rules
-[ -e pkg/xpi-amo ] && rm -rf pkg/xpi-amo
-cp -a pkg/xpi-eff/ pkg/xpi-amo/
+rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
 # Also, it has a different id than the eff-hosted version, because Firefox now
 # requires us to upload the eff-hosted version to an unlisted extension on AMO
@@ -125,6 +122,7 @@ fi
 
 # Build the XPI!
 rm -f "${XPI_NAME}.xpi"
+rm -f "${XPI_NAME}-eff.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
@@ -136,6 +134,6 @@ echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
 bash utils/android-push.sh "$XPI_NAME-eff.xpi"
 
 if [ -n "$BRANCH" ]; then
-  cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo pkg
+  cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
   rm -rf $SUBDIR
 fi

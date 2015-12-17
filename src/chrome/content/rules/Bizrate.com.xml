@@ -11,45 +11,63 @@
 
 	Nonfunctional domains:
 
+		- rd.bizrate.com ¹
 		- www.bizrate.com *
 
+	¹ Shows another domain
 	* Redirects to http
 
 
 	Problematic domains:
 
 		- about.bizrate.com		(works; mismatched, CN: *.blazonco.com)
+		- d[1-4]-pub.bizrate.com ²
+
+		- file12.bizrate-images.com ²
 		- image10.bizrate-images.com	(reset)
 		- img10.bizrate-images.com	(works, CN: gp1.wac.edgecastcdn.net)
 
-
-	Fully covered domains:
-
-		- about.bizrate.com		(→ aboutbizrate.blazonco.com)
-		- image10.bizrate-images.com	(→ images.bizrate.com)
-		- img10.bizrate-images.com	(→ images.bizrate.com)
+	² Akamai
 
 -->
 <ruleset name="Bizrate.com (partial)">
 
-	<!--target host="bizrate.com" /-->
-	<target host="*.bizrate.com" />
-	<target host="*.bizrate-images.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="bizrate.com" />
+	<target host="images.bizrate.com" />
+	<target host="medals.bizrate.com" />
+	<!--target host="www.bizrate.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="about.bizrate.com" />
+	<target host="file.bizrate.com" />
+
+	<target host="file12.bizrate-images.com" />
+	<target host="image10.bizrate-images.com" />
+	<target host="image12.bizrate-images.com" />
+	<target host="image13.bizrate-images.com" />
+	<target host="img.bizrate-images.com" />
+	<target host="img01.bizrate-images.com" />
+	<target host="img13.bizrate-images.com" />
+
+		<!--exclusion pattern="^http://www\.bizrate\.com/(?!favicon\.ico|static/)" /-->
 
 
 	<!--securecookie host="^\.bizrate\.com$" name=".*" /-->
 
 
-	<!--rule from="^http://(?:www\.)?bizrate\.com/(favicon\.ico|static/)"
-		to="https://bizrate.com/$1" /-->
-
 	<rule from="^http://about\.bizrate\.com/"
 		to="https://aboutbizrate.blazonco.com/" />
 
-	<rule from="^http://(image|medal)s\.bizrate\.com/"
-		to="https://$1s.bizrate.com/" />
-
-	<rule from="^http://im(?:age10|g)\.bizrate-images\.com/"
+	<rule from="^http://file\.bizrate\.com/"
 		to="https://images.bizrate.com/" />
+
+	<rule from="^http://\w+\.bizrate-images\.com/"
+		to="https://images.bizrate.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

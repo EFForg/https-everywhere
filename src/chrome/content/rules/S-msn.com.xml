@@ -16,7 +16,6 @@
 
 		- sgsts.msn.com.edgesuite.net | sgst.sin.cb3.glbdns.microsoft.com
 
-			- a38.g2.akamai.net
 			- sgst[cj].msn.com
 			- sin.st[cjs].s-msn.com
 
@@ -26,20 +25,14 @@
 
 		- sgstb0[01]-s.msn.com.edgesuite.net | sgstb.sin.cb3.glbdns.microsoft.com
 
-			- a1574.g2.akamai.net
 			- sin.stb0[01].s-msn.com
 
 		- img1.video.s-msn.com.edgesuite.net
-
 		- img2.video.s-msn.com.edgesuite.net
-
-			- a1189.g2.akamai.net
-
 		- img.widgets.video.s-msn.com.edgesuite.net
 
 		- colstb.co1.cb3.glbdns.microsoft.com
 
-			- a1910.g2.akamai.net
 			- col.stb00.s-msn.com
 
 		- msnvidprod.vo.msecnd.net
@@ -47,7 +40,7 @@
 			- img1.video.s-msn.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *s-msn.com
 
 		- cpc.db3 *
 		- col.stc *
@@ -62,14 +55,15 @@
 	** Times out
 
 
-	Problematic subdomains:
+	Problematic hosts in *s-msn.com:
 
 		- cpc.db3		(mismatched, CN: images.partner.windowsphone.com)
 
 		- *.st
 
 		- static *
-		- static-hp *
+		- static-hp		504, Akamai
+		- static-finance-neu *
 
 		- *.stb
 
@@ -96,55 +90,55 @@
 		- img3.catalog.video *
 		- img.widgets.video *
 
-
 	* Works, akamai
 	** CN: *.sharepointonline.com; works
-
-
-	Fully covered subdomains:
-
-		- entcss
-		- entimg
-		- img
-		- media-social
-		- blu.st[bc]
-		- kaw.stb
-		- sin.stb *
-		- col.stb0[01]
-		- sin.stb0[01] *
-		- col.stc
-		- st[cj]-now
-		- wst
-
-	* → akamai
 
 -->
 <ruleset name="s-msn.com (partial)">
 
-	<target host="*.s-msn.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="entcss.s-msn.com" />
+	<target host="entimg.s-msn.com" />
+	<target host="img.s-msn.com" />
+	<target host="media-social.s-msn.com" />
+	<target host="static-hp-eus.s-msn.com" />
+	<target host="blu.stb.s-msn.com" />
+	<target host="blu.stc.s-msn.com" />
+	<target host="col.stb00.s-msn.com" />
+	<target host="col.stb01.s-msn.com" />
+	<target host="kaw.stb.s-msn.com" />
+	<target host="col.stc.s-msn.com" />
+	<target host="stc-now.s-msn.com" />
+	<target host="stj-now.s-msn.com" />
+	<target host="wst.s-msn.com" />
 
+	<!--	Complications:
+				-->
+	<target host="static-hp.s-msn.com" />
+	<target host="sin.stb.s-msn.com" />
+	<target host="sin.stb00.s-msn.com" />
+	<target host="sin.stb01.s-msn.com" />
 
-	<rule from="^http://(entcss|entimg|img|media-social|blu\.st[bc]|col\.stb0[01]|kaw\.stb|col\.stc|st[cj]-now|wst)\.s-msn\.com/"
-		to="https://$1.s-msn.com/" />
 
 	<!--	Serves stylesheets, so we cannot
 		rewrite to akamai.
-
-		s? for protocol-relative links
-		on //preview.msn.com:
 					-->
-	<rule from="^https?://static-hp\.s-msn\.com/"
+	<rule from="^http://static-hp\.s-msn\.com/"
 		to="https://preview.msn.com/" />
 
 	<rule from="^http://sin\.stb\.s-msn\.com/"
 		to="https://a248.e.akamai.net/f/1574/354/10m/sin.stb.s-msn.com/" />
 
-	<rule from="^http://sin\.stb0(0|1)\.s-msn\.com/"
+	<rule from="^http://sin\.stb0[01]\.s-msn\.com/"
 		to="https://a248.e.akamai.net/f/1574/5119/5m/sin.stb0$1.s-msn.com/" />
 
 	<!--	Moved to akamai and broke:
 
 	<rule from="^http://(\w+)\.st(b|c|j)?\d*\.s-msn\.com/"
 		to="https://$1.st$2.s-msn.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

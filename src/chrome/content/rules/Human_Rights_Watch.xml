@@ -2,43 +2,61 @@
 	Human Rights Watch
 
 
-	!www: expired 2014-04-25, self-signed, CN: web1.hrw.org
+	Problematic hosts in *hrw.org:
+
+		- beta ¹ ²
+		- human ³
+		- multimedia ¹ ²
+
+	¹ Expired
+	² Missing certificate chain
+	³ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .beta.hrw.org
+		- .multimedia.hrw.org
+		- donate.hrw.org
 
 
 	Mixed content:
 
-		- Images on www from $self *
-		- Images on www from multimedia *
+		- css on human from fonts.googleapis.com ¹
+		- Images on human from $self ²
 
-		- Bugs on ff from use.typekit.com *
-
-	* Secured by us
+	¹ Secured by us
+	² Not secured by us <= mismatched
 
 -->
-<ruleset name="HRW.org">
+<ruleset name="HRW.org (partial)">
 
 	<!--	Direct rewrites:
 				-->
-	<target host="beta.hrw.org" />
+	<target host="hrw.org" />
+	<target host="donate.hrw.org" />
+	<target host="features.hrw.org" />
 	<target host="ff.hrw.org" />
-	<target host="multimedia.hrw.org" />
+	<!--target host="human.hrw.org" /-->
 	<target host="secure.hrw.org" />
 	<target host="www.hrw.org" />
 
 	<!--	Complications:
 				-->
-	<target host="hrw.org" />
+	<target host="beta.hrw.org" />
+	<target host="multimedia.hrw.org" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.beta\.hrw\.org$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^\.(?:beta|multimedia)\.hrw\.org$" name="^SESS[0-9a-f]{32}$" /-->
+	<!--securecookie host="^donate\.hrw\.org$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^.*\.hrw\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://hrw\.org/"
-		to="https://www.hrw.org/" />
+	<rule from="^http://(?:beta|multimedia)\.hrw\.org/"
+		to="https://features.hrw.org/" />
 
 	<rule from="^http:"
 		to="https:" />

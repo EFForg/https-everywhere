@@ -2,21 +2,43 @@
 	For problematic rules, see NewsWhip-mismatches.xml.
 
 
-	Nonfunctional subdomains:
+	Problematic hosts in *newswhip.com:
 
-		- blog	(cert:  *.reg365.net)
+		- (www.)? *
+		- blog *
+
+	* Cloudfront
+
+
+	These altnames don't exist:
+
+		- www.help.spike.newswhip.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- help.spike.newswhip.com
 
 -->
-<ruleset name="NewsWhip (partial)">
+<ruleset name="NewsWhip.com (partial)">
 
-	<target host="newswhip.com" />
-	<target host="www.newswhip.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="newswhip.com" /-->
+	<!--target host="blog.newswhip.com" /-->
+	<target host="spike.newswhip.com" />
+	<target host="help.spike.newswhip.com" />
+	<!--target host="www.newswhip.com" /-->
 
 
-	<!--	Many pages redirect to http.  There may
-		be more than are listed here that don't.
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(www\.)?newswhip\.com/(css/|StartNewsWhipDaily)"
-		to="https://$1newswhip.com/$2" />
+	<!--securecookie host="^help\.spike\.newswhip\.com$" name="^sessionid$" /-->
+
+	<securecookie host="^help\.spike\.newswhip\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

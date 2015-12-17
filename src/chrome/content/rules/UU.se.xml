@@ -5,23 +5,31 @@
 	Nonfunctional subdomains:
 
 		- www.astro ⁴
+		- xray.bmc *
 		- www.botan ³⁵
 		- www.hammerby ³⁵
+		- it ³
 		- user.it ¹
+		- kalendarium ³
 		- www.kalendarium ³
 		- www.linnaeus ³⁵
 		- www.listserv ³
+		- math ³
+		- webmail.math ⁶
 		- www.math ³
+		- www2.math ³⁶
 		- www.physics ³
 		- static ³
 		- www.uaf ²
 		- www.uuinnovation ³
 
 	¹ Dropped
+	* Plaintext reply
 	² Handshake fails
 	³ Mismatched
 	⁴ No local issuer cert provided
 	⁵ Redirects to other domain
+	⁶ Expired
 
 	Other domains not covered:
 
@@ -50,11 +58,13 @@
 	Insecure cookies are set for these domains:
 
 		- www.it
+
 -->
 <ruleset name="UU.se">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="uu.se" />
-	<target host="www.uu.se" />
 	<target host="filer.anst.uu.se" />
 	<target host="dropbox.uu.se" />
 	<target host="www.it.uu.se" />
@@ -64,9 +74,19 @@
 	<target host="uadm.uu.se" />
 	<target host="www.uppmax.uu.se" />
 	<target host="webmail.uu.se" />
+	<target host="www.uu.se" />
 	<target host="www-hotel.uu.se" />
 
+	<!--	Complications:
+				-->
+	<target host="it.uu.se" />
+
+
 	<securecookie host="^www\.it\.uu\.se$" name=".+" />
+
+
+	<rule from="^http://it\.uu\.se/"
+		to="https://www.it.uu.se/" />
 
 	<rule from="^http:"
 		to="https:" />

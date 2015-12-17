@@ -18,7 +18,7 @@ Run the latest code and rulesets in a standalone Firefox profile:
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash run-chromium.sh
+    bash test-chromium.sh --justrun
 
 Build the Firefox extension as a .xpi package:
 
@@ -88,7 +88,7 @@ https://www.transifex.com/projects/p/torproject/.
 
 ### Bug trackers and mailing lists
 
-We currently have two bug trackers. The one on Github (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
+We currently have two bug trackers. The one on GitHub (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
 
 We have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the rulesets and their contents, including patches and git pull requests.
 
