@@ -1,0 +1,62 @@
+<!--
+	For rules causing false/broken MCB, see IEEE_USA.org-falsemixed.xml.
+
+
+	Problematic hosts in *ieeeusa.org:
+
+		- ^ ¹
+		- entportal.aws ²
+		- entportal ²
+		- insight ¹ ²
+		- shop ¹ ²
+		- www ³
+
+	¹ Mismatched
+	² Mixed css
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- entportal.aws.ieeeusa.org
+		- entportal.ieeeusa.org
+		- insight.ieeeusa.org
+		- shop.ieeeusa.org
+		- www.ieeeusa.org
+
+
+	Mixed content:
+
+		- css on shop from $self
+		- Images on shop from $self
+
+-->
+<ruleset name="IEEE USA.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="entportal.aws.ieeeusa.org" /-->
+	<!--target host="entportal.ieeeusa.org" /-->
+	<target host="salaryservice.ieeeusa.org" />
+	<!--target host="www.ieeeusa.org" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="ieeeusa.org" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:entportal\.aws|entportal|insight|shop)\.ieeeusa\.org$" name="^(?:COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^www\.ieeeusa\.org$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<!--securecookie host="." name="." /-->
+
+
+	<!--rule from="^http://ieeeusa\.org/"
+		to="https://www.ieeeusa.org/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

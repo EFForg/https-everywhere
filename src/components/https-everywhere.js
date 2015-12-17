@@ -601,7 +601,7 @@ HTTPSEverywhere.prototype = {
   },
 
   maybeCleanupObservatoryPrefs: function(ssl_observatory) {
-    // Recover from a past UI processing bug that would leave the Obsevatory
+    // Recover from a past UI processing bug that would leave the Observatory
     // accidentally disabled for some users
     // https://trac.torproject.org/projects/tor/ticket/10728
     var clean = ssl_observatory.myGetBoolPref("clean_config");
@@ -852,7 +852,7 @@ function https_everywhereLog(level, str) {
   if (level >= threshold) {
     var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
     var prefix = "HTTPS Everywhere " + levelName + ": ";
-    // dump() prints to browser stdout. That's sometimes undesireable,
+    // dump() prints to browser stdout. That's sometimes undesirable,
     // so only do it when a pref is set (running from test.sh enables
     // this pref).
     if (prefs.getBoolPref("log_to_stdout")) {

@@ -9,9 +9,10 @@
 
 	Problematic subdomains:
 
-		- ^	(mismatched, CN: www.adobe.com)
-		- www	(akamai)
-		- .+	(akamai)
+		- ^		(mismatched, CN: www.adobe.com)
+		- www		(akamai)
+		- s7mbrstream	(breaks embedded video, cf https://github.com/EFForg/https-everywhere/issues/2430)
+		- .+		(akamai)
 
 
 	Fully covered subdomains:
@@ -25,7 +26,9 @@
 <ruleset name="Scene7">
 
 	<target host="scene7.com" />
-	<target host="*.scene7.com" />
+	<target host="www.scene7.com" />
+	<target host="www1.scene7.com" />
+	<target host="s7sps3.scene7.com" />
 
 
 	<securecookie host="^www1\.scene7\.com$" name=".+" />
@@ -34,10 +37,11 @@
 	<rule from="^http://(?:www\.)?scene7\.com/[^\?]*(\?.*)?"
 		to="https://www.adobe.com/products/scene7.html$1" />
 
-	<rule from="^http://www1\.scene7\.com/"
-		to="https://www1.scene7.com/" />
+	<!--<rule from="^http://([\w-]+)\.scene7\.com/"
+		to="https://a248.e.akamai.net/f/248/9086/10h/$1.scene7.com/" />-->
 
-	<rule from="^http://([\w-]+)\.scene7\.com/"
-		to="https://a248.e.akamai.net/f/248/9086/10h/$1.scene7.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

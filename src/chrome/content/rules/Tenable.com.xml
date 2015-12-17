@@ -3,24 +3,12 @@
 
 	For rules causing false/broken MCB, see Tenable.com-falsemixed.xml.
 
-	For problematic rules, see Tenable.com-problematic.xml.
-
 
 	Problematic hosts in *tenable.com:
 
-		- (www.)? ¹
-		- elearn ²
+		- elearn *
 
-	¹ Server sends no certificate chain, see https://whatsmychaincert.com
-	² Mixed css
-
-
-	Fully covered subdomains:
-
-		- discussions
-		- static
-		- store
-		- support
+	* Mixed css
 
 
 	Insecure cookies are set for these hosts and domains:
@@ -33,22 +21,25 @@
 
 	Mixed content:
 
-		- Images on www from $self *
+		- Images, on:
 
-	* Rule disabled by default <= missing certificate chain
+			- www from $self *
+			- www from cdn.vidyard.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Tenable.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
-	<!--target host="tenable.com" /-->
+	<target host="tenable.com" />
 	<target host="discussions.tenable.com" />
 	<target host="elearn.tenable.com" />
 	<target host="static.tenable.com" />
 	<target host="store.tenable.com" />
 	<target host="support.tenable.com" />
-	<!--target host="www.tenable.com" /-->
+	<target host="www.tenable.com" />
 
 		<!--	Avoid broken MCB:
 						-->
@@ -72,8 +63,8 @@
 	<!--securecookie host="^store\.tenable\.com$" name="^zenid$" /-->
 	<!--securecookie host="^\.support\.tenable\.com$" name="^CerberusPublicGUI$" /-->
 
-	<!--securecookie host="^(?:discussions|elearn|store|\.support)\.tenable\.com$" name=".+" /-->
-	<securecookie host="^(?:discussions|store|\.support)\.tenable\.com$" name=".+" />
+	<!--securecookie host="^\w" name="." /-->
+	<securecookie host="^(?!elearn)\w" name="." />
 
 
 	<rule from="^http:"

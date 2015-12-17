@@ -2,24 +2,28 @@
 	For other Kaspersky coverage, see Kaspersky.com.xml.
 
 
-	(www.)?: Redirects to kasperskypartners.ru
+	(www.)?kaspersky.ru: Redirects to kasperskypartners.ru
 
 
-	Problematic subdomains:
+	Problematic hosts in *kaspersky.ru:
 
 		- www.blog *
 
 	* Mismatched, CN: threatpost.com
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- (www.)?blog	(www → ^)
-		- support
+		- academy.kaspersky.ru
+		- .newvirus.kaspersky.ru
+		- support.kaspersky.ru
+		- .support.kaspersky.ru
+		- .virusdesk.kaspersky.ru
 
 
 	Mixed content:
 
+		- css on newvirus, virusdesk from fonts.googleapis.com *
 		- Bug on support from kaspersky.122.2o7.net *
 
 	* Secured by us
@@ -29,15 +33,26 @@
 
 	<!--	Direct rewrites:
 				-->
+	<target host="academy.kaspersky.ru" />
 	<target host="blog.kaspersky.ru" />
+	<target host="business.kaspersky.ru" />
 	<target host="support.kaspersky.ru" />
+	<target host="virusdesk.kaspersky.ru" />
 
 	<!--	Complications:
 				-->
 	<target host="www.blog.kaspersky.ru" />
 
 
-	<securecookie host="^\.kaspersky\.ru$" name="^s_vi$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^academy\.kaspersky\.ru$" name="^X-Mapping-fjhppofk$" /-->
+	<!--securecookie host="^support\.kaspersky\.ru$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.(?:newvirus|support|virusdesk)\.kaspersky\.ru$" name="^ClientRouteNewSupportRu$" /-->
+
+	<securecookie host="^\." name="^s_vi$" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.(?:newvirus|support|virusdesk)\.kaspersky\.ru$" name="." />
 
 
 	<rule from="^http://www\.blog\.kaspersky\.ru/"
