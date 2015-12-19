@@ -1,7 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://longtail.tv/ => https://www.longtailvideo.com/: (28, 'Resolving timed out after 10518 milliseconds')
-Fetch error: http://www.longtail.tv/ => https://www.longtailvideo.com/: (28, 'Resolving timed out after 10518 milliseconds')
 	Other LongTail rulesets:
 
 		- Bitsontherun.com.xml
@@ -16,14 +13,9 @@ Fetch error: http://www.longtail.tv/ => https://www.longtailvideo.com/: (28, 'Re
 
 
 	Nonfunctional domains:
-
-		- jwplayer.com ¹
-		- www.jwplayer.com ²
 		- developer.longtailvideo.com *
 
-	¹ wpengine
-	² 404, valid cert
-	* 503, valid cert
+		* 503, valid cert
 
 
 	Problematic domains:
@@ -42,52 +34,34 @@ Fetch error: http://www.longtail.tv/ => https://www.longtailvideo.com/: (28, 'Re
 			- ssl.p
 
 -->
-<ruleset name="LongTail (partial)" default_off='failed ruleset test'>
+<ruleset name="LongTail (partial)" >
 
-	<target host="*.jwpcdn.com" />
-	<target host="*.jwpltx.com" />
-	<target host="longtail.tv" />
-	<target host="www.longtail.tv" />
-	<target host="longtailvideo.com" />
-	<target host="*.longtailvideo.com" />
+	<target host="a.jwpcdn.com" />
+	<target host="v.jwpcdn.com" />
+	<target host="p.jwpcdn.com" />
+	<target host="ssl.p.jwpcdn.com" />
+	<target host="i.jwpltx.com" />
+	<target host="s.jwpltx.com" />
+	<target host="content.longtailvideo.com" />
+	<target host="dashboard.longtailvideo.com" />
+	<target host="l.longtailvideo.com" />
+	<target host="lp.longtailvideo.com" />
+	<target host="player.longtailvideo.com" />
+	<target host="plugins.longtailvideo.com" />
+	<target host="secure.longtailvideo.com" />
+	<target host="securelp.longtailvideo.com" />
 	<target host="ltvimg.com" />
-	<target host="*.ltvimg.com" />
-		<!--
-			302 to http.
-					-->
-		<exclusion pattern="^http://(?:s[01]-)?www\.l(?:ongtailvideo|tvimg)\.com/sites/all/themes/(?!community/)\w+/images/\w+\.png$" />
-
+	<target host="s0-www.ltvimg.com" />
+	<target host="s1-www.ltvimg.com" />
+	<target host="jwplayer.com" />
+	<target host="account.jwplayer.com" />
+	<target host="www.jwplayer.com" />
 
 	<securecookie host="^\w\.jwpltx\.com$" name=".+" />
 	<securecookie host="^.+\.longtailvideo\.com$" name=".+" />
 
-
-	<rule from="^http://(a|v)\.jwpcdn\.com/"
-		to="https://$1.jwpcdn.com/" />
-
-	<rule from="^http://(?:cdn\.|ssl\.)?p\.jwpcdn\.com/"
+	<rule from="^http://p\.jwpcdn\.com/"
 		to="https://ssl.p.jwpcdn.com/" />
-
-	<rule from="^http://(i|s)\.jwpltx\.com/"
-		to="https://$1.jwpltx.com/" />
-
-	<!--	- Cert valid for www, but $ 404s
-		- 301s like so
-						-->
-	<rule from="^http://(?:www\.)?longtail\.tv/"
-		to="https://www.longtailvideo.com/" />
-
-	<!--	- !www cert only matches secure
-		- Some (most?) pages redirect to http
-		- As do these paths:
-
-			- addons/images/
-						-->
-	<rule from="^http://(?:www\.)?longtailvideo\.com/(bits-on-the-run/sign-up|content/|jw/|sites/)"
-		to="https://www.longtailvideo.com/$1" />
-
-	<rule from="^http://(content|dashboard|l|lp|player|plugins|secure|securelp)\.longtailvideo\.com/"
-		to="https://$1.longtailvideo.com/" />
 
 	<!--	- !www CN: edgecastcdn.net
 		- www CN: *.longtailvideo.com
@@ -96,12 +70,30 @@ Fetch error: http://www.longtail.tv/ => https://www.longtailvideo.com/: (28, 'Re
 	<rule from="^http://(?:www\.)?ltvimg\.com/"
 		to="https://s0-www.ltvimg.com/" />
 
-	<!--	Redirects like so:
-					-->
-	<rule from="^http://s(?:0|1)-www\.ltvimg\.com/(\?.*)?$"
-		to="https://www.longtailvideo.com/$1" />
+	<rule from="^http:"
+		to="https:" />
 
-	<rule from="^http://s(0|1)-www\.ltvimg\.com/"
-		to="https://s$1-www.ltvimg.com/" />
+	<test url="http://i.jwpltx.com/" />
+	<test url="http://s.jwpltx.com/" />
+
+	<test url="http://a.jwpcdn.com/" />
+	<test url="http://v.jwpcdn.com/" />
+
+	<test url="http://content.longtailvideo.com/" />
+	<test url="http://dashboard.longtailvideo.com/" />
+	<test url="http://l.longtailvideo.com/" />
+	<test url="http://lp.longtailvideo.com/" />
+	<test url="http://player.longtailvideo.com/" />
+	<test url="http://plugins.longtailvideo.com/" />
+	<test url="http://secure.longtailvideo.com/" />
+	<test url="http://securelp.longtailvideo.com/" />
+
+	<test url="http://s0-www.ltvimg.com/" />
+	<test url="http://s1-www.ltvimg.com/" />
+
+	<test url="http://jwplayer.com/" />
+	<test url="http://account.jwplayer.com/" />
+	<test url="http://www.jwplayer.com/" />
+
 
 </ruleset>
