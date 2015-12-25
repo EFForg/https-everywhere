@@ -1,34 +1,38 @@
 <!--
+	Other Virgin rulesets:
+
+		- VirginAustralia.xml
+		- Virgin-mismatches.xml
+		- VirginMobile.xml
+
 	Nonfunctional subdomains:
 
-		- anywhere	(refused)
-
-
-	Problematic subdomains:
-
-		- ^			(cert only matches www)
+		- anywhere		(refused)
+		- shop			(refused)
 		- static-content	(refused)
 
+	Future nonfunctional subdomains:
+
+		- identity *
+		- national *
+
+	* This server uses only RC4 suites, which are insecure. From early 2016, modern browsers won't connect to it.
 
 	Partially covered subdomains:
 
-		- (www.) *
-		- onlinemovies *
-		- shop *
-
-	* $ redirects to http
-
+		- ^		(302 redirects to http://www.virginmedia.com)
+		- allyours	(301 redirects to http://shop.virginmedia.com)
+		- onlinemovies	(302 redirects to http://onlinemovies.virginmedia.com)
+		- store		(302 redirects to http://store.virginmedia.com)
 
 	Fully covered subdomains:
 
-		- allyours
+		- (www.)
+		- assets 
 		- da
-		- help
-		- identity
-		- mail
-		- national
+		- help		(requires assets rule to prevent mixed-content)
+		- mail		(301 redirects to https://mail2.virginmedia.com)
 		- my
-		- static-content	(→ www)
 
 -->
 <ruleset name="Virgin Media.com (partial)">
@@ -39,17 +43,15 @@
 		<exclusion pattern="^http://onlinemovies\.virginmedia\.com/(?!App_Themes/|[cC]ommon/|COMMON/|favicon\.ico|js/|rfc\d+\.gif|WebResource\.axd)" />
 		<exclusion pattern="^http://store\.virginmedia\.com/(?!assets/|content/|etc/|images/|includes/)" />
 
-
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.virginmedia\.com$" name="^(?:gpv_p\w|s_\w+)$" />
 	<securecookie host="^(?:da|help|identity|my|national)\.virginmedia\.com$" name=".+" />
 
+	<rule from="^http://virginmedia\.com/"
+		to="https://virginmedia.com/" />
 
-	<rule from="^http://(?:static-content\.|www\.)?virginmedia\.com/"
-		to="https://www.virginmedia.com/" />
-
-	<rule from="^http://(allyours|da|help|identity|mail|my|national|onlinemovies|store)\.virginmedia\.com/"
+	<rule from="^http://(allyours|assets|da|help|identity|mail|my|national|onlinemovies|store|www)\.virginmedia\.com/"
 		to="https://$1.virginmedia.com/" />
 
 </ruleset>
