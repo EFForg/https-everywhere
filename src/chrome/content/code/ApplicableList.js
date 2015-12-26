@@ -28,7 +28,7 @@ ApplicableList.prototype = {
 
   empty: function() {
     // Empty everything, used when toggles occur in order to ensure that if
-    // the reload fails, the resulting list is not eroneous
+    // the reload fails, the resulting list is not erroneous
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};
@@ -115,7 +115,7 @@ ApplicableList.prototype = {
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
     label.setAttribute('disabled', 'true');
     label.setAttribute('class', 'menuitem-non-iconic');
-    label.setAttribute('style', 'color:#000000;');
+    label.setAttribute('style', 'font-weight: bold; color: -moz-MenuBarText;');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');

@@ -14,7 +14,7 @@ of hostnames.
 
 Instead, prefer listing explicit target hosts and a single rewrite from "^http:" to
 "^https:". This saves you time as a ruleset author because each explicit target
-host automatically creates a an implicit test URL, reducing the need to add your
+host automatically creates an implicit test URL, reducing the need to add your
 own test URLs. These also make it easier for someone reading the ruleset to figure out
 which subdomains are covered.
 
