@@ -105,27 +105,6 @@
 
 	<target host="polpix.sueddeutsche.com" />
 	<target host="*.sueddeutsche.de" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://immobilienmarkt\.sueddeutsche\.de/$" /-->
-		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/$" /-->
-		<!--
-			404:
-				-->
-		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/(images/|uploads/)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://immobilienmarkt\.sueddeutsche\.de/+(?!cms/fileadmin/|cms/uploads/|css/|favicon\.ico|gfx/)" />
-		<!--exclusion pattern="^http://reiseangebote\.sueddeutsche\.de/(?!sz\.css)" /-->
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://maps\.sueddeutsche\.de/+(?!css/|fonts/)" />
-		<exclusion pattern="^http://szshop\.sueddeutsche\.de/+(?!favicon\.ico|out/sz/src/)" />
-		<exclusion pattern="^http://www\.sueddeutsche\.de/+(?!favicon\.ico)" />
-
 
 	<!--	Not secured by server:
 					-->
@@ -144,11 +123,49 @@
 
 	<securecookie host="^(?:anzeigen-buchen|epaper|id|service|stellenmarkt|sz-shop|weiterbildung)\.sueddeutsche\.de$" name=".+" />
 
-
 	<rule from="^http://polpix\.sueddeutsche\.com/"
 		to="https://www.sueddeutsche.de/" />
 
-	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|id|maerkte|(?:immobilien|motor|stellen)markt|maps|service|sz-shop|szshop|weiterbildung|www)\.sueddeutsche\.de/"
+	<rule from="^http://(anzeigen(?:-buchen)?|epaper|geoservice|global|id|jetzt|maerkte|(motor|stellen)markt|service|sz-shop|weiterbildung)\.sueddeutsche\.de/"
 		to="https://$1.sueddeutsche.de/" />
 
+	<rule from="^http://immobilienmarkt\.sueddeutsche\.de/(cms/data/|cms/fileadmin/|cms/uploads/|css/|favicon\.ico|gfx/)"
+		to="https://immobilienmarkt.sueddeutsche.de/$1" />
+
+	<rule from="^http://maps\.sueddeutsche\.de/css/"
+		to="https://maps.sueddeutsche.de/css" /> <!--subdomain can be secured completely but creates false MCB -->
+
+	<rule from="^http://szshop\.sueddeutsche\.de/(favicon\.ico|out/sz/src/)"
+		to="https://szshop.sueddeutsche.de/$1" /> <!--subdomain can be secured completely but creates false MCB -->
+
+	<rule from="^http://www\.sueddeutsche\.de/favicon\.ico"
+		to="https://www.sueddeutsche.de/favicon.ico" />
+
+	<test url="http://anzeigen.sueddeutsche.de/" />
+	<test url="http://anzeigen-buchen.sueddeutsche.de/" />
+	<test url="http://epaper.sueddeutsche.de/" />
+	<test url="http://geoservice.sueddeutsche.de/" />
+	<test url="http://global.sueddeutsche.de/assets/img/header/sprite_header.png" />
+	<test url="http://id.sueddeutsche.de/" />
+	<test url="http://jetzt.sueddeutsche.de/" />
+
+	<test url="http://immobilienmarkt.sueddeutsche.de/cms/data/images/Teaser-Bild_Maier-Immobilien.jpg" />
+	<test url="http://immobilienmarkt.sueddeutsche.de/cms/fileadmin/Dateien_OIM/interhyp/Interhyp_Logo_solo.jpg" />
+	<test url="http://immobilienmarkt.sueddeutsche.de/cms/uploads/pics/Fotolia_17056764_XS_03.jpg" />
+	<test url="http://immobilienmarkt.sueddeutsche.de/css/_global.css" />
+	<test url="http://immobilienmarkt.sueddeutsche.de/favicon.ico" />
+	<test url="http://immobilienmarkt.sueddeutsche.de/gfx/white_arrow_dirRight.png" />
+	<test url="http://maps.sueddeutsche.de/css/fonts/SZSans.woff" />
+	<test url="http://maps.sueddeutsche.de/css/fonts.css" />
+	<test url="http://motormarkt.sueddeutsche.de/" />
+	<test url="http://stellenmarkt.sueddeutsche.de/" />
+
+	<test url="http://maerkte.sueddeutsche.de/" />
+	<test url="http://service.sueddeutsche.de/" />
+	<test url="http://sz-shop.sueddeutsche.de/" />
+	<test url="http://szshop.sueddeutsche.de/favicon.ico" />
+	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/libs/jscrollpane.css" />
+	<test url="http://szshop.sueddeutsche.de/out/sz/src/css/styles.css" />
+	<test url="http://weiterbildung.sueddeutsche.de/" />
+	<test url="http://www.sueddeutsche.de/favicon.ico" />
 </ruleset>
