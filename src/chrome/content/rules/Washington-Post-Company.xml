@@ -45,7 +45,6 @@
 
 	Nonfunctional hosts in *washingtonpost.com:
 
-		- apps			(404)
 		- feeds			Refused
 		- games			Dropped
 		- knowmore		(404)
@@ -63,14 +62,12 @@
 
 	Problematic domains:
 
-		- (www.)wapo.st				(times out)
+		- (www.)?wapo.st	Handshake fails
 
 		- in *washingtonpost.com:
 
-			- ^			Refused
 			- findnsave		(mismatched, CN: *.findnsave.com)
 			- help			(works; mismatched, CN: *.parature.com)
-			- media			(503, Akamai)
 			- metrics		(mismatched, CN: *.112.2o7.net)
 			- wp-eng-static		(cloudfront)
 
@@ -115,13 +112,19 @@
 
 	<!--	Direct rewrites:
 				-->
+	<target host="washingtonpost.com" />
 	<target host="account.washingtonpost.com" />
 	<target host="advertising.washingtonpost.com" />
+	<target host="apps.washingtonpost.com" />
 	<target host="commerce.washingtonpost.com" />
 	<target host="css.washingtonpost.com" />
+	<target host="developer.washingtonpost.com" />
 	<target host="id.washingtonpost.com" />
+	<target host="images.washingtonpost.com" />
 	<target host="img.washingtonpost.com" />
 	<target host="js.washingtonpost.com" />
+	<target host="m.washingtonpost.com" />
+	<target host="media.washingtonpost.com" />
 	<target host="nie.washingtonpost.com" />
 	<target host="postpoints.washingtonpost.com" />
 	<target host="pwapi.washingtonpost.com" />
@@ -136,8 +139,6 @@
 
 	<!--	Complications:
 				-->
-	<target host="washingtonpost.com" />
-	<target host="media.washingtonpost.com" />
 	<target host="metrics.washingtonpost.com" />
 	<target host="wp-eng-static.washingtonpost.com" />
 
@@ -153,18 +154,12 @@
 	<!--securecookie host="^subscription\.washingtonpost\.com$" name="^(?:JSESSIONID|sto-id-\d+)$" /-->
 	<!--securecookie host="^www\.washingtonpost\.com$" name="^(JROUTE|JSESSIONID|backplane-channel|photoJSONAdConfig|wpni_poe)$" /-->
 
-	<!--securecookie host=".*\.washingtonpost\.com$" name=".+" /-->
-	<securecookie host="^(?:account|id|ssl1|subscribe|subscription|www)\.washingtonpost\.com$" name=".+" />
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://washingtonpost\.com/"
-		to="https://www.washingtonpost.com/" />
-
-	<rule from="^http://media\.washingtonpost\.com/"
-		to="https://ssl.washingtonpost.com/" />
 
 	<rule from="^http://metrics\.washingtonpost\.com/"
-		to="https://washingtonpost-com.112.2o7.net/" />
+		to="https://washingtonpost.112.2o7.net/" />
 
 	<rule from="^http://wp-eng-static\.washingtonpost\.com/"
 		to="https://d2t2kgdkdgawhh.cloudfront.net/" />
