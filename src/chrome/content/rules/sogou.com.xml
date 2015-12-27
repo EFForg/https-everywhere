@@ -2,12 +2,31 @@
 	Nonfunctional hosts in *sogou.com:
 
 		- app ¹
+		- baike		Dropped
+		- cp ¹
 		- go ¹
+		- gouwu ¹
+		- fuwu ¹
+		- haha ¹
+		- help ¹
+		- hr ¹
 		- ie ¹
+		- job ¹
+		- kan ¹
 		- mail ²
+		- mai ¹
 		- map ¹
+		- mp3 ¹
+		- music ¹
+		- news ¹
 		- pic ¹
+		- v ¹
 		- wan ¹
+		- weixin ¹
+		- wenwen ¹
+		- open.wenwen
+		- xiaoshuo ¹
+		- zhihu ¹
 
 	¹ Shows default page
 	² Shows mail.sohu.com
@@ -16,9 +35,11 @@
 	Problematic hosts in *sogou.com:
 
 		- passport ¹ ²
+		- logo.www ³
 
 	¹ Expired
 	² Missing certificate chain
+	³ Mismatched
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -33,9 +54,12 @@
 
 			- 123 from p\d.123.sogoucdn.com ¹
 			- 123 from upd\d.sogoucdn.com ²
+			- top from www.sogou.com ³
+			- top from logo.www.sogou.com ³
 
 	¹ Unsecurable <= refused
 	² Not secured by us <= mismatched
+	³ Secured by us
 
 -->
 <ruleset name="sogou.com (partial)">
@@ -46,7 +70,12 @@
 	<target host="123.sogou.com"/>
 	<target host="account.sogou.com" />
 	<target host="img.store.sogou.com" />
+	<target host="top.sogou.com"/>
 	<target host="www.sogou.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="logo.www.sogou.com" />
 
 
 	<!--	Not secured by server:
@@ -54,9 +83,13 @@
 	<!--securecookie host="^\.sogou\.com$" name="^(?:IPLOC|SUID)$" /-->
 	<!--securecookie host="^www\.sogou\.com$" name="^ABTEST$" /-->
 
-	<securecookie host="^www\.sogou\.com$" name="" />
+	<securecookie host="^\w" name="." />
 
+
+	<rule from="^http://logo\.www\.sogou\.com/"
+		to="https://www.sogou.com/" />
 
 	<rule from="^http:"
 		to="https:"/>
+
 </ruleset>
