@@ -49,7 +49,7 @@ except WebDriverException as e:
     error = e.__str__()
 
     if "executable needs to be in PATH" in e.__str__():
-        print "ChromeDriver isn't installed. Check test/chrome/README.md " \
+        print "ChromeDriver isn't installed. Check test/chromium/README.md " \
               "for instructions on how to install ChromeDriver"
 
         sys.exit(2)
