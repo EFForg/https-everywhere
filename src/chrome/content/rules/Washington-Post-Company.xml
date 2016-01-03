@@ -135,12 +135,28 @@
 	<target host="syndication.washingtonpost.com" />
 	<target host="voices.washingtonpost.com" />
 	<target host="wordpressmultisite.washingtonpost.com" />
-	<target host="www.washingtonpost.com" />
 
 	<!--	Complications:
 				-->
 	<target host="metrics.washingtonpost.com" />
 	<target host="wp-eng-static.washingtonpost.com" />
+	<target host="www.washingtonpost.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.washingtonpost\.com/(?:sf/national/+[^/]|wp-srv/graphics/templates/mobile/css/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.washingtonpost.com/sf/national/2015/12/27/aianxiety/" />
+			<test url="http://www.washingtonpost.com/sf/national/?foo" />
+			<test url="http://www.washingtonpost.com/sf/national/wp-content/themes/enterprise-theme-nav/images/wp_logo_white.png" />
+			<test url="http://www.washingtonpost.com/wp-srv/graphics/templates/mobile/css/font-awesome-v4.2-min.css" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.washingtonpost.com/sf/national" />
+			<test url="http://www.washingtonpost.com/sf/national/" />
 
 
 	<!--	Not secured by server:
@@ -163,6 +179,13 @@
 
 	<rule from="^http://wp-eng-static\.washingtonpost\.com/"
 		to="https://d2t2kgdkdgawhh.cloudfront.net/" />
+
+	<!--	Redirects to http first:
+					-->
+	<rule from="^http://www\.washingtonpost\.com/sf/national/$"
+		to="https://www.washingtonpost.com/national/" />
+
+		<test url="http://www.washingtonpost.com/sf/national/" />
 
 	<rule from="^http:"
 		to="https:" />
