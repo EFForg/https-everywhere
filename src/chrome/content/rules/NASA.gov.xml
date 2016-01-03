@@ -1,4 +1,6 @@
 <!--
+	For rules causing false/broken MCB, see NASA.gov-falsemixed.
+
 	For other US government coverage, see US-government.xml.
 
 
@@ -83,6 +85,7 @@
 				- trs-new *
 				- voyager
 				- www *
+				- www.istp *
 
 			- www.jps
 			- eol.jsc
@@ -91,6 +94,7 @@
 			- science.ksc **
 			- www-pao.ksc *
 			- www.msfc		(301s to http, akamai)
+			- nasapeople *
 			- sohowww.nascom *
 			- stereo-ssc.nascom *
 			- pds *
@@ -114,7 +118,7 @@
 		- heasarc ³
 
 		- insight.jpl ¹
-		- mars.jpl ⁴
+		- mars.jpl		Mixed css
 		- marsrovers.jpl ⁴
 		- marsstaticcdn.jpl ⁴
 		- nightsky.jpl		(Expired)
@@ -122,7 +126,7 @@
 		- sse.jpl		(Mismatched)
 
 		- stiprod.larc ⁵
-		- mars ⁴
+		- mars ¹
 		- ntrs ⁵
 
 	¹ Mismatched
@@ -134,6 +138,7 @@
 
 	Partially covered subdomains:
 
+		- mars.jpl ²
 		- rosetta.jpl ²
 
 	² Avoiding broken MCB
@@ -172,7 +177,6 @@
 			- icis
 			- jpldataeval
 			- jplspaceship
-			- mars			(→ d2cj35nmzi9erd.cloudfront.net)
 			- marsstaticcdn		(→ d3r05mwudimf00.cloudfront.net)
 			- metrics		(→ jpl-nasa-gov.122.2o7.net)
 			- naif
@@ -186,8 +190,6 @@
 			- telework
 			- www-robotics
 
-
-		- mars		(→ d2cj35nmzi9erd.cloudfront.net)
 		- open
 		- people
 		- solarsystem
@@ -204,12 +206,14 @@
 
 		- css, on:
 
+			- mars.jpl from mars.nasa.gov ¹
 			- rosetta.jpl from $self ¹
 			- stiprod.larc from www.sti ²
 			- oig from fonts.googleapis.com ¹
 
 		- Images, on:
 
+			- mars.jpl from mars.nasa.gov ¹
 			- rosetta.jpl from $self ¹
 			- scienceandtechnology.jpl from www-robotics.jpl ¹
 			- stiprod.larc from www.sti ²
@@ -262,6 +266,7 @@
 	<target host="jpldataeval.jpl.nasa.gov" />
 	<target host="jplspaceship.jpl.nasa.gov" />
 	<target host="naif.jpl.nasa.gov" />
+	<target host="mars.jpl.nasa.gov" />
 	<!--target host="nightsky.jpl.nasa.gov" /-->
 	<target host="pds.jpl.nasa.gov" />
 	<target host="ras.jpl.nasa.gov" />
@@ -273,6 +278,7 @@
 	<target host="telework.jpl.nasa.gov" />
 	<target host="www-robotics.jpl.nasa.gov" />
 
+	<target host="searchpub.nssc.nasa.gov" />
 	<target host="oig.nasa.gov" />
 	<target host="open.nasa.gov" />
 	<target host="people.nasa.gov" />
@@ -283,12 +289,30 @@
 				-->
 	<target host="www.data.nasa.gov" />
 	<target host="heasarc.nasa.gov" />
-	<target host="mars.nasa.gov" />
 
-	<target host="mars.jpl.nasa.gov" />
 	<target host="marsstaticcdn.jpl.nasa.gov" />
 	<target host="metrics.jpl.nasa.gov" />
 	<target host="sse.jpl.nasa.gov" />
+
+	<target host="mars.nasa.gov" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://mars(?:\.jpl)?\.nasa\.gov/+(?!favicon\.ico|images/|layout/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://mars.nasa.gov/allaboutmars/" />
+			<test url="http://mars.jpl.nasa.gov/maps/" />
+			<test url="http://mars.jpl.nasa.gov/msl_frontpage_15.swf" />
+			<test url="http://mars.jpl.nasa.gov/news/whatsnew/" />
+			<test url="http://mars.jpl.nasa.gov/programmissions/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://mars.nasa.gov/favicon.ico" />
+			<test url="http://mars.jpl.nasa.gov/images/general/promote/mars-map/nasa-explore-mars-map-favblock.jpg" />
+			<test url="http://mars.jpl.nasa.gov/layout/mep/images/spacer.gif" />
 
 		<!--	Avoid broken MCB:
 						-->
@@ -325,9 +349,6 @@
 	<rule from="^http://heasarc\.nasa\.gov/"
 		to="https://heasarc.gsfc.nasa.gov/" />
 
-	<rule from="^http://mars\.(?:jpl\.)?nasa\.gov/"
-		to="https://d2cj35nmzi9erd.cloudfront.net/" />
-
 	<rule from="^http://marsstaticcdn\.jpl\.nasa\.gov/"
 		to="https://d3r05mwudimf00.cloudfront.net/" />
 
@@ -336,6 +357,9 @@
 
 	<rule from="^http://sse\.jpl\.nasa\.gov/"
 		to="https://solarsystem.nasa.gov/" />
+
+	<rule from="^http://mars\.nasa\.gov/"
+		to="https://mars.jpl.nasa.gov/" />
 
 	<rule from="^http:"
 		to="https:" />
