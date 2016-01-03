@@ -19,6 +19,7 @@ cd "`dirname $0`"
 RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
 RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
 ANDROID_APP_ID=org.mozilla.firefox
+VERSION=`echo $1 | cut -d "-" -f 2`
 
 [ -d pkg ] || mkdir pkg
 
@@ -45,7 +46,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-  XPI_NAME="$APP_NAME-$1"
+  XPI_NAME="$APP_NAME-$VERSION"
   cp $SUBDIR/pkg/$XPI_NAME-eff.xpi pkg/
   if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
     echo Old version does not support AMO
