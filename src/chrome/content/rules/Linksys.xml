@@ -16,12 +16,12 @@
 			- 403; mismatched, CN: support3.cdnetworks.net
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *linksys.com:
 
 		- m		(shows another domain; mismatched, CN: www.linksysbycisco.com)
 
 
-	Problematic subdomains:
+	Problematic hosts in *linksys.com:
 
 		- cache-www ¹
 		- downloads	(works, akamai)
@@ -29,14 +29,10 @@
 	¹ AmazonAWS
 
 
-	Partially covered subdomains:
-
-		- www *
-
-	* Some pages redirect to http
+	* www.linksys.com: Some pages redirect to http
 
 
-	Fully covered subdomains:
+	Fully covered hosts in *linksys.com:
 
 		- cache-www	(→ s3.amazonaws.com)
 		- community
@@ -50,6 +46,7 @@
 
 	Insecure cookies are set for these hosts:
 
+		- community.linksys.com
 		- store.linksys.com
 
 
@@ -96,10 +93,13 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.linksys\.com$" name="^_gat?$" /-->
 	<!--securecookie host="store\.linksys\.com$" name="^_hybris\.tenantID_$" /-->
+	<!--securecookie host="^community\.linksys\.com$" name="^LithiumUser(?:Info|Secure)$" /-->
 
-	<!--securecookie host=".*\.linksys\.com$" name=".+" /-->
-	<securecookie host=".+\.linksys\.com$" name=".+" />
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!www\.linksys\.com$)\w" name="." />
 
 
 	<rule from="^http://cache-www\.linksys\.com/"
