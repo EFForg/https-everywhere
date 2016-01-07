@@ -30,17 +30,17 @@ target host with a left-side wildcard, and at least ten test URLs for each
 target host with a right-side wildcard. But this is not yet implemented.
 
 # Example:
-      <ruleset name="example.com">
-        <target host="example.com" />
-        <target host="*.example.com" />
+    <ruleset name="example.com">
+      <target host="example.com" />
+      <target host="*.example.com" />
 
-        <test url="http://www.example.com/" />
-        <test url="http://beta.example.com/" />
+      <test url="http://www.example.com/" />
+      <test url="http://beta.example.com/" />
 
-        <rule from="^http://([\w-]+\.)?dezeen\.com/"
-            to="https://$1dezeen.com/" />
+      <rule from="^http://([\w-]+\.)?dezeen\.com/"
+          to="https://$1dezeen.com/" />
 
-      </ruleset>
+    </ruleset>
 
 This ruleset has one implicit test URL from a target host
 ("http://example.com/"). The other target host has a wildcard, so creates no
@@ -63,4 +63,4 @@ a submodule of https-everywhere. To set it up, run:
 
 To test a specific ruleset:
 
-     ./fetch-test.sh rules/Example.xml
+    ./fetch-test.sh rules/Example.xml
