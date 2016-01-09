@@ -30,6 +30,7 @@
 		- deainfo.nci *
 		- wikiutils.nci ⁵
 		- neuroscienceblueprint ⁵
+		- catalog.nhlbi
 		- (www.)?niaid
 		- data.nidb ⁵
 		- www.niddk ⁵
@@ -110,6 +111,7 @@
 		- www.ncats ¹
 		- ncbiinsights.ncbi ¹
 		- pubmedcommonsblog.ncbi ¹
+		- www.nhlbi ²
 		- nia		400
 		- niehs ¹
 		- nlm ¹
@@ -128,6 +130,13 @@
 	³ Handshake fails
 
 
+	Partially covered hosts in *nih.gov:
+
+		- catalog.nhlbi ʰ
+
+	ʰ Some pages redirect to htt
+
+
 	These altnames don't exist:
 
 		- www.calendar.nih.gov
@@ -136,18 +145,23 @@
 		- www.oamp.od.nih.gov
 
 
+	Insecure cookies are set forthese hosts:
+
+		- answers.nei.nih.gov
+
+
 	Mixed content:
 
 		- css, on:
 
-			- internet.csr from $self *
+			- internet.csr, www.nhlbi from $self *
 			- edi, lhncbc.nlm, skr3.nlm, outreach.ors from fonts.googleapis.com *
 			- skr3.nlm from www.lhncbc.nlm.nih.gov *
 			- www.nidcd from search.usa.gov *
 
 		- Images, on:
 
-			- internet.csr, www.nidcd, ntp.niehs, www.niehs, loop.nigms, accessguidid.nlm, nexus.od, videocast, www from $self *
+			- internet.csr, www.nhlbi, www.nidcd, ntp.niehs, www.niehs, loop.nigms, accessguidid.nlm, nexus.od, videocast, www from $self *
 			- directorsblog from www.nih.gov *
 			- loop.nigms from publications.nigms.nih.gov
 			- infocus.nlm from $self
@@ -166,6 +180,7 @@
 
 			- aidsinfo from b.scorecardresearch.com *
 			- directorsblog from cdn.printfriendly.com *
+			- www.nhlbi from nhlbi.122.2o7.net *
 			- www.niehs from webtrends-sdc.niehs.nih.gov *
 			- apps.nlm, apps2.nlm, wwwcf2.nlm from wtsdc.nlm.nih.gov *
 			- researchfestival from s7.addthis.com *
@@ -204,8 +219,15 @@
 	<target host="wiki.nci.nih.gov" />
 	<target host="ned.nih.gov" />
 	<target host="gsspubssl.nci.nih.gov" />
+	<target host="nei.nih.gov" />
+
+	<target host="answers.nei.nih.gov" />
 	<target host="nationaleyegene.nei.nih.gov" />
+	<target host="www.nei.nih.gov" />
+
 	<target host="newsinhealth.nih.gov" />
+	<target host="catalog.nhlbi.nih.gov" />
+	<!--target host="www.nhlbi.nih.gov" /-->
 	<target host="www.nia.nih.gov" />
 	<target host="www.nidcd.nih.gov" />
 	<target host="ddktoday.niddk.nih.gov" />
@@ -293,6 +315,36 @@
 	<target host="www.sis.nlm.nih.gov" />
 	<target host="training.nih.gov" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://catalog\.nhlbi\.nih\.gov/catalog/home$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://catalog\.nhlbi\.nih\.gov/+(?!catalog/a4j/s/|favicon\.ico|pubstatic/|static_includes/|webstatic/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://catalog.nhlbi.nih.gov/catalog/facet/Diseases-and-Conditions/term/Anemia" />
+			<test url="http://catalog.nhlbi.nih.gov/catalog/facet/Diseases-and-Conditions/term/Blood-Diseases" />
+			<test url="http://catalog.nhlbi.nih.gov/catalog/facet/Diseases-and-Conditions/term/COPD" />
+			<test url="http://catalog.nhlbi.nih.gov/catalog/facet/Diseases-and-Conditions/term/Heart-Attack" />
+			<test url="http://catalog.nhlbi.nih.gov/catalog/facet/Diseases-and-Conditions/term/Peripheral-Artery-Disease" />
+			<test url="http://catalog.nhlbi.nih.gov/catalog/home" />
+
+			<!--	-ve:
+					-->
+			<test url="http://catalog.nhlbi.nih.gov/catalog/a4j/s/3_3_2.SR1org/richfaces/renderkit/html/css/extended_classes.xcss/DATB/eAELXT5DOhSIAQ!sA18_.jsf" />
+			<test url="http://catalog.nhlbi.nih.gov/favicon.ico" />
+			<test url="http://catalog.nhlbi.nih.gov/pubstatic/12-3651/12-3651.gif" />
+			<test url="http://catalog.nhlbi.nih.gov/static_includes/images/chat.gif" />
+			<test url="http://catalog.nhlbi.nih.gov/webstatic/css/print.css" />
+			<test url="http://catalog.nhlbi.nih.gov/webstatic/images/print-btn.gif" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www.nhlbi.nih.gov/health/health-topics/topics/hb" /-->
+
 
 	<!--	Not secured by server:
 					-->
@@ -303,6 +355,7 @@
 	<!--securecookie host="^imagebank\.nih\.gov$" name="^(?:CFID|CFTOKEN)$" /-->
 	<!--securecookie host="^(?:itrusteauth|ocio|smartcard)\.nih\.gov$" name="^asig_persistence$" /-->
 	<!--securecookie host="^wiki\.nci\.nih\.gov$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^answers\.nei\.nih\.gov$" name="^TS[\da-f]+$" /-->
 	<!--securecookie host="^webtrends-sdc\.niehs\.nih\.gov$" name="^ACOOKIE$" /-->
 	<!--securecookie host="^\.nlm\.nih\.gov$" name="^WebEnv$" /-->
 	<!--securecookie host="^(?:apps\.nlm|projectreporter)\.nih\.gov$" name="^(?:CFID|CFTOKEN|JSESSIONID)$" /-->
@@ -313,7 +366,8 @@
 	<!--securecookie host="^\.projectreporter\.nih\.gov$" name="^(?:REPORTERPORTFOLIO|RUPSID)$" /-->
 	<!--securecookie host="^www\.training\.nih\.gov$" name="^(?:PHPSESSID|symp_cookie_check)$" /-->
 
-	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^s_vi" />
+	<securecookie host="^(?!catalog\.nhlbi\.)\w" name="." />
 
 
 	<rule from="^http://((?:nia|niehs|nlm|training)\.)?nih\.gov/"
