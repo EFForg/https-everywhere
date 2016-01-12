@@ -64,7 +64,7 @@ if [ "$1" == "--justrun" ]; then
   if [ $(uname) == Darwin ]; then
     open /Applications/Firefox.app --wait-apps --new --args -no-remote -profile "$PROFILE_DIRECTORY" "$@"
   else
-    firefox -no-remote -profile "$PROFILE_DIRECTORY" "$@"
+    ${FIREFOX:-firefox} -no-remote -profile "$PROFILE_DIRECTORY" "$@"
   fi
 else
   echo "running tests"
