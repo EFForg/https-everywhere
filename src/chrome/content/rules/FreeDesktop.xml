@@ -37,9 +37,9 @@
 		- libopenraw ¹
 		- nice ¹
 		- nouveau ¹
-		- people ³
 		- pm-utils ¹
 		- sitewranglers ¹
+		- standards ¹
 		- swfdec ¹
 		- telepathy ¹
 		- testrepo ¹
@@ -48,7 +48,6 @@
 
 	¹ Shows patchwork.freedesktop.org
 	² Mismatched, CN: bugs.freedesktop.org
-	³ $ 404s, ~.../ works; mismatched, CN: secure.freedesktop.org
 
 
 	Partially covered subdomains:
@@ -95,42 +94,75 @@
 		<!--
 			404:
 				-->
-		<exclusion pattern="^http://(?:www\.)?freedesktop\.org/(?:software|standards)(?:$|[?/])" />
-		<!--
-			$ is not identical:
-						-->
-		<exclusion pattern="^http://people\.freedesktop\.org/(?!~)" />
+		<exclusion pattern="^http://(www\.)?freedesktop\.org/software(/)?" />
+
+			<test url="http://freedesktop.org/software/" />
+			<test url="http://freedesktop.org/software" />
+			<test url="http://www.freedesktop.org/software/" />
 		<!--
 			dist isn't present on secure:
 							-->
-		<exclusion pattern="^http://xcb\.freedesktop\.org/+(?!dist(?:$|[?/]))" />
+		<exclusion pattern="^http://xcb\.freedesktop\.org/dist(/)?" />
 
+			<test url="http://xcb.freedesktop.org/dist/" />
+			<test url="http://xcb.freedesktop.org/dist" />
+		<!--
+			path not found:
+							-->
+		<exclusion pattern="^http://telepathy\.freedesktop\.org/doc(/)?" />
+
+			<test url="http://telepathy.freedesktop.org/doc/" />
+			<test url="http://telepathy.freedesktop.org/doc" />
 
 	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
 
 
-	<rule from="^http://freedesktop\.org/wiki(?=$|\?)"
-		to="https://wiki.freedesktop.org/www" />
-
-	<rule from="^http://freedesktop\.org/(?:wiki/)?"
+	<!--rule from="^http://freedesktop\.org/wiki(?=$|\?)"
 		to="https://wiki.freedesktop.org/www/" />
 
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/wiki(?=$|\?)"
-		to="https://wiki.freedesktop.org/$1" />
+			<test url="http://freedesktop.org/wiki/" /-->
 
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/(?:wiki/)?"
+	<rule from="^http://freedesktop\.org/(wiki/)?"
+		to="https://wiki.freedesktop.org/www/" />
+
+			<test url="http://freedesktop.org/wiki/" />
+
+	<!--rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/wiki(?=$|\?)"
+		to="https://wiki.freedesktop.org/$1" /-->
+
+	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg|xcb)\.freedesktop\.org/(wiki/)?"
 		to="https://wiki.freedesktop.org/$1/" />
 
-	<rule from="^http://bug(?:s|zilla)\.freedesktop\.org/"
+			<test url="http://apoc.freedesktop.org/" />
+			<test url="http://dri.freedesktop.org/" />
+			<test url="http://gypsy.freedesktop.org/" />
+			<test url="http://ldtp.freedesktop.org/" />
+			<test url="http://libbsd.freedesktop.org/" />
+			<test url="http://libdlo.freedesktop.org/" />
+			<test url="http://liboil.freedesktop.org/" />
+			<test url="http://libopenraw.freedesktop.org/" />
+			<test url="http://nice.freedesktop.org/" />
+			<test url="http://nouveau.freedesktop.org/" />
+			<test url="http://pm-utils.freedesktop.org/" />
+			<test url="http://sitewranglers.freedesktop.org/" />
+			<test url="http://swfdec.freedesktop.org/" />
+			<test url="http://telepathy.freedesktop.org/" />
+			<test url="http://testrepo.freedesktop.org/" />
+			<test url="http://www.freedesktop.org/" />
+			<test url="http://xorg.freedesktop.org/" />
+			<test url="http://xcb.freedesktop.org/" />
+
+	<rule from="^http://bug(s|zilla)\.freedesktop\.org/"
 		to="https://bugs.freedesktop.org/" />
 
-	<rule from="^http://(?:peopl|secur)e\.freedesktop\.org/"
-		to="https://secure.freedesktop.org/" />
+			<test url="http://bugs.freedesktop.org/" />
+			<test url="http://bugzilla.freedesktop.org/" />
 
-	<rule from="^http://wiki\.freedesktop\.org/"
-		to="https://wiki.freedesktop.org/" />
+	<rule from="^http://(people|secure|wiki)\.freedesktop\.org/"
+		to="https://$1.freedesktop.org/" />
 
-	<rule from="^http://xcb\.freedesktop\.org/"
-		to="https://wiki.freedesktop.org/xcb/" />
+			<test url="http://people.freedesktop.org/" />
+			<test url="http://secure.freedesktop.org/" />
+			<test url="http://wiki.freedesktop.org/" />
 
 </ruleset>
