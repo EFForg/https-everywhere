@@ -56,7 +56,7 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 
 mkdir -p pkg/crx/rules
 cd pkg/crx
-cp -a ../../chromium/* .
+rsync -aL ../../chromium/ ./
 # Turn the Firefox translations into the appropriate Chrome format:
 rm -rf _locales/
 mkdir _locales/

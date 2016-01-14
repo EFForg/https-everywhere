@@ -101,7 +101,7 @@ fi
 
 # Prepare packages suitable for uploading to EFF and AMO, respectively.
 [ -d pkg ] || mkdir pkg
-rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
+rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
