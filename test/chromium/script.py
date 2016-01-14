@@ -30,8 +30,6 @@ chromeOps.add_extension(sys.argv[1])
 
 chromedriver_path = "chromedriver"
 if 'TRAVIS' in os.environ.keys():
-    # For TravisCI, we manually copy chromedriver to the local path.
-    chromedriver_path = os.path.abspath("test/chromium/chromedriver")
     # Travis has setuid restrictions. I think this becomes unnecessary in M42+?
     chromeOps.add_argument('--disable-setuid-sandbox')
 elif sys.platform.startswith("linux"):
