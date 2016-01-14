@@ -17,20 +17,22 @@ addons:
       - python-lxml
       - python-software-properties
       - chromium-browser
-  firefox: "40.0"
 virtualenv:
   system_site_packages: true
 install:
   - pip install -r test/rules/requirements.txt
   - pip install -r test/chromium/requirements.txt
 env:
-  - DISPLAY=':99.0'
+  - FIREFOX_VERSION=firefox-latest
+  - FIREFOX_VERSION=firefox-esr-latest
 before_script:
-  - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - wget https://chromedriver.storage.googleapis.com/2.20/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - mv chromedriver test/chromium/chromedriver
+  - wget -O /tmp/firefox.tar.bz2 'https://download.mozilla.org/?os=linux64&lang=en-US&product='$FIREFOX_VERSION
+  - tar xpjf /tmp/firefox.tar.bz2
+  - export DISPLAY=:99.0 FIREFOX=$PWD/firefox/firefox
 script:
   - ./test.sh
 sudo: required
