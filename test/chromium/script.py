@@ -28,10 +28,6 @@ class bcolors:
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
 
-if 'TRAVIS' in os.environ.keys():
-    # Travis has setuid restrictions. I think this becomes unnecessary in M42+?
-    chromeOps.add_argument('--disable-setuid-sandbox')
-
 # Find the path to chromedriver
 chromedriver_path = "chromedriver"
 if sys.platform.startswith("linux"):
