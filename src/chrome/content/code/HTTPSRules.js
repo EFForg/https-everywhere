@@ -19,20 +19,13 @@ function CookieRule(host, cookiename) {
   //this.name_c = new RegExp(cookiename);
 }
 
-function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
-  if(xmlName == "WordPress.xml" || xmlName == "Github.xml") {
-    this.log(NOTE, "RuleSet( name="+name+", xmlName="+xmlName+", match_rule="+match_rule+", default_off="+default_off+", platform="+platform+" )");
-  }
-
+function RuleSet(id, name, default_off, platform) {
   this.id=id;
   this.on_by_default = true;
   this.compiled = false;
   this.name = name;
-  this.xmlName = xmlName;
   this.notes = "";
 
-  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
-  else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
@@ -93,12 +86,7 @@ RuleSet.prototype = {
     var i;
     var returl = null;
     this.ensureCompiled();
-    // If a rulset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      this.log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
-    }
-    // Even so, if we're covered by an exclusion, go home
+    // If we're covered by an exclusion, go home
     for (i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         this.log(DBUG,"excluded uri " + urispec);
@@ -111,7 +99,7 @@ RuleSet.prototype = {
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
       if (returl != urispec) {
         // we rewrote the uri
-        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.xmlName + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
+        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.name + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
         return returl;
       }
     }
@@ -139,13 +127,10 @@ RuleSet.prototype = {
     var urispec = uri.spec;
 
     this.ensureCompiled();
- 
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
-      return false;
- 
+
     for (var i = 0; i < this.exclusions.length; ++i) 
       if (this.exclusions[i].pattern_c.test(urispec)) return false;
- 
+
     for (var i = 0; i < this.rules.length; ++i) 
       if (this.rules[i].from_c.test(urispec)) return true;
     return false;
@@ -309,10 +294,9 @@ const RuleWriter = {
 
     this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name"));
 
-    var match_rl = xmlruleset.getAttribute("match_rule");
     var dflt_off = xmlruleset.getAttribute("default_off");
     var platform = xmlruleset.getAttribute("platform");
-    var rs = new RuleSet(ruleset_id, xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
+    var rs = new RuleSet(ruleset_id, xmlruleset.getAttribute("name"), dflt_off, platform);
 
     // see if this ruleset has the same name as an existing ruleset;
     // if so, this ruleset is ignored; DON'T add or return it.
