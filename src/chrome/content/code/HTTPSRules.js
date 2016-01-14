@@ -109,32 +109,6 @@ RuleSet.prototype = {
   log: function(level, msg) {
     https_everywhereLog(level, msg);
   },
- 
-  wouldMatch: function(hypothetical_uri, alist) {
-    // return true if this ruleset would match the uri, assuming it were http
-    // used for judging moot / inactive rulesets
-    // alist is optional
- 
-    // if the ruleset is already somewhere in this applicable list, we don't
-    // care about hypothetical wouldMatch questions
-    if (alist && (this.name in alist.all)) return false;
- 
-    this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
-             "?  serial " + (alist && alist.serial));
-     
-    var uri = hypothetical_uri.clone();
-    if (uri.scheme == "https") uri.scheme = "http";
-    var urispec = uri.spec;
-
-    this.ensureCompiled();
-
-    for (var i = 0; i < this.exclusions.length; ++i) 
-      if (this.exclusions[i].pattern_c.test(urispec)) return false;
-
-    for (var i = 0; i < this.rules.length; ++i) 
-      if (this.rules[i].from_c.test(urispec)) return true;
-    return false;
-  },
 
   transformURI: function(uri) {
     // If no rule applies, return null; if a rule would have applied but was
@@ -482,31 +456,26 @@ const HTTPSRules = {
     }
 
     // ponder each potentially applicable ruleset, working out if it applies
-    // and recording it as active/inactive/moot/breaking in the applicable list
+    // and recording it as active/inactive/breaking in the applicable list
     for (i = 0; i < rs.length; ++i) {
       if (!rs[i].active) {
-        if (alist && rs[i].wouldMatch(uri, alist))
-          alist.inactive_rule(rs[i]);
-        continue;
-      } 
+        alist.inactive_rule(rs[i]);
+      }
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
         if (alist) {
-          if (uri.spec in https_everywhere_blacklist) 
+          if (uri.spec in https_everywhere_blacklist) {
             alist.breaking_rule(rs[i]);
-          else 
+          } else  {
             alist.active_rule(rs[i]);
-  }
-        if (userpass_present) blob.newuri.userPass = input_uri.userPass;
+          }
+        }
+        if (userpass_present) {
+          blob.newuri.userPass = input_uri.userPass;
+        }
         blob.applied_ruleset = rs[i];
         return blob;
       }
-      if (uri.scheme == "https" && alist) {
-        // we didn't rewrite but the rule applies to this domain and the
-        // requests are going over https
-        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
-        continue;
-      } 
     }
     return null;
   },
@@ -692,9 +661,6 @@ const HTTPSRules = {
             this.log(INFO,"Active cookie rule " + ruleset.name);
             return true;
           }
-        }
-        if (ruleset.cookierules.length > 0 && applicable_list) {
-          applicable_list.moot_rule(ruleset);
         }
       } else if (ruleset.cookierules.length > 0) {
         if (applicable_list) {

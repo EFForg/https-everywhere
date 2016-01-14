@@ -17,8 +17,7 @@ function ApplicableList(logger, uri) {
   this.active = {};
   this.breaking = {}; // rulesets with redirection loops
   this.inactive = {};
-  this.moot={};  // rulesets that might be applicable but uris are already https
-  this.all={};  // active + breaking + inactive + moot
+  this.all={};  // active + breaking + inactive
   serial_number += 1;
   this.serial = serial_number;
   this.log(DBUG,"Alist serial #" + this.serial + " for " + this.home);
@@ -32,7 +31,6 @@ ApplicableList.prototype = {
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};
-    this.moot={};  
     this.all={};  
   },
 
@@ -55,12 +53,6 @@ ApplicableList.prototype = {
     this.log(INFO,"inactive rule " + ruleset.name +" in "+ this.home +" -> " +
              this.uri.spec+ " serial " + this.serial);
     this.inactive[ruleset.name] = ruleset;
-    this.all[ruleset.name] = ruleset;
-  },
-
-  moot_rule: function(ruleset) {
-    this.log(INFO,"moot rule " + ruleset.name +" in "+ this.home + " serial " + this.serial);
-    this.moot[ruleset.name] = ruleset;
     this.all[ruleset.name] = ruleset;
   },
 
@@ -182,8 +174,6 @@ ApplicableList.prototype = {
       this.add_command(this.breaking[x]); 
     for(var x in this.active) 
       this.add_command(this.active[x]); 
-    for(var x in this.moot)
-      this.add_command(this.moot[x]);
     for(var x in this.inactive) 
       this.add_command(this.inactive[x]);
 
@@ -191,10 +181,6 @@ ApplicableList.prototype = {
        // add all the menu items
        for (var x in this.inactive)
           this.add_menuitem(this.inactive[x], 'inactive');
-       // rules that are active for some uris are not really moot
-       for (var x in this.moot) 
-          if (!(x in this.active))   
-              this.add_menuitem(this.moot[x], 'moot');
        // break once break everywhere
        for (var x in this.active) 
           if (!(x in this.breaking))
@@ -220,9 +206,8 @@ ApplicableList.prototype = {
       this.commandset.appendChild(command);
   },
 
-  // add a menu item for a rule -- type is "active", "inactive", "moot",
+  // add a menu item for a rule -- type is "active", "inactive"
   // or "breaking"
-
   add_menuitem: function(rule, type) {
     // create the menuitem
     var item = this.document.createElement('menuitem');
@@ -233,37 +218,20 @@ ApplicableList.prototype = {
 
     // we can get confused if rulesets have their state changed after the
     // ApplicableList was constructed
-    if (!rule.active && (type == 'active' || type == 'moot'))
+    if (!rule.active && (type == 'active'))
       type = 'inactive';
     if (rule.active && type == 'inactive')
-      type = 'moot';
-    
+      type = 'active';
+
     // set the icon
     var image_src;
     if (type == 'active') image_src = 'tick.png';
     else if (type == 'inactive') image_src = 'cross.png';
-    else if (type == 'moot') image_src = 'tick-moot.png';
     else if (type == 'breaking') image_src = 'loop.png';
     item.setAttribute('image', 'chrome://https-everywhere/skin/'+image_src);
 
     // all done
     this.prepend_child(item);
-  },
-
-  show_applicable: function() {
-    this.log(WARN, "Applicable list number " + this.serial);
-    for (var x in this.active) 
-      this.log(WARN,"Active: " + this.active[x].name);
-
-    for (var x in this.breaking) 
-      this.log(WARN,"Breaking: " + this.breaking[x].name);
-  
-    for (x in this.inactive) 
-      this.log(WARN,"Inactive: " + this.inactive[x].name);
-
-    for (x in this.moot) 
-      this.log(WARN,"Moot: " + this.moot[x].name);
-    
   }
 };
 
