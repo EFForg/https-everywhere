@@ -40,17 +40,12 @@ function CookieRule(host, cookiename) {
 /**
  *A collection of rules
  * @param set_name The name of this set
- * @param match_rule Quick test match rule
  * @param default_state activity state
  * @param note Note will be displayed in popup
  * @constructor
  */
-function RuleSet(set_name, match_rule, default_state, note) {
+function RuleSet(set_name, default_state, note) {
   this.name = set_name;
-  if (match_rule)
-    this.ruleset_match_c = new RegExp(match_rule);
-  else
-    this.ruleset_match_c = null;
   this.rules = [];
   this.exclusions = [];
   this.targets = [];
@@ -75,11 +70,6 @@ RuleSet.prototype = {
         return null;
       }
     }
-    // If a ruleset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
-    }
 
     // Okay, now find the first rule that triggers
     for(var i = 0; i < this.rules.length; ++i) {
@@ -88,12 +78,6 @@ RuleSet.prototype = {
       if (returl != urispec) {
         return returl;
       }
-    }
-    if (this.ruleset_match_c) {
-      // This is not an error, because we do not insist the matchrule
-      // precisely describes to target space of URLs ot redirected
-      log(DBUG,"Ruleset "+this.name
-              +" had an applicable match-rule but no matching rules");
     }
     return null;
   }
@@ -162,7 +146,7 @@ RuleSets.prototype = {
    */
   addUserRule : function(params) {
     log(INFO, 'adding new user rule for ' + JSON.stringify(params));
-    var new_rule_set = new RuleSet(params.host, null, true, "user rule");
+    var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!(params.host in this.targets)) {
@@ -202,7 +186,6 @@ RuleSets.prototype = {
     }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                               ruletag.getAttribute("match_rule"),
                                default_state,
                                note.trim());
 
