@@ -48,7 +48,6 @@ function RuleSet(set_name, default_state, note) {
   this.name = set_name;
   this.rules = [];
   this.exclusions = [];
-  this.targets = [];
   this.cookierules = [];
   this.active = default_state;
   this.default_state = default_state;
