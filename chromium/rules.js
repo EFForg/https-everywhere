@@ -48,7 +48,7 @@ function RuleSet(set_name, default_state, note) {
   this.name = set_name;
   this.rules = [];
   this.exclusions = [];
-  this.cookierules = [];
+  this.cookierules = null;
   this.active = default_state;
   this.default_state = default_state;
   this.note = note;
@@ -206,9 +206,12 @@ RuleSets.prototype = {
     }
 
     var cookierules = ruletag.getElementsByTagName("securecookie");
-    for(var j = 0; j < cookierules.length; j++) {
-      rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
-                                           cookierules[j].getAttribute("name")));
+    if (cookierules.length > 0) {
+      rule_set.cookierules = [];
+      for(var j = 0; j < cookierules.length; j++) {
+        rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
+                                             cookierules[j].getAttribute("name")));
+      }
     }
 
     var targets = ruletag.getElementsByTagName("target");
@@ -301,7 +304,7 @@ RuleSets.prototype = {
     var rs = this.potentiallyApplicableRulesets(hostname);
     for (var i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active) {
+      if (ruleset.cookierules !== null && ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
