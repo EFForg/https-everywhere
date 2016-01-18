@@ -1,11 +1,33 @@
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://medicalert.org/ => https://www.medicalert.org/: Cycle detected - URL already encountered: https://www.medicalert.org/
-Fetch error: http://www.medicalert.org/ => https://www.medicalert.org/: Cycle detected - URL already encountered: https://www.medicalert.org/
--->
-<ruleset name="MedicAlert" default_off='failed ruleset test'>
+<ruleset name="MedicAlert.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="medicalert.org" />
 	<target host="www.medicalert.org" />
 
-	<rule from="^http://(?:www\.)?medicalert\.org/" to="https://www.medicalert.org/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.medicalert\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.medicalert\.org/+(?!misc/|sites/|user(?:$|[?/]))" />
+
+			<test url="http://www.medicalert.org/NewYear_Safety_Checklist_2014" />
+			<test url="http://www.medicalert.org/blog" />
+			<test url="http://www.medicalert.org/cart" />
+			<test url="http://www.medicalert.org/donate/now" />
+			<test url="http://www.medicalert.org/faq" />
+			<test url="http://www.medicalert.org/renew" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.medicalert.org/misc/menu-expanded.png" />
+			<test url="http://www.medicalert.org/sites/default/files/maf-white-logo_0.png" />
+			<test url="http://www.medicalert.org/user" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

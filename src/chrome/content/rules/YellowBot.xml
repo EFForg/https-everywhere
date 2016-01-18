@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://yellowbot.com/ => https://yellowbot.com/: Cycle detected - URL already encountered: https://www.yellowbot.com/
 	Other YellowBot rulesets:
 
 		- YP_bot.net.xml
@@ -15,12 +13,14 @@ Fetch error: http://yellowbot.com/ => https://yellowbot.com/: Cycle detected - U
 
 	Nonfunctional subdomains:
 
+		- (www.)^ °
 		- blog ¹
 		- m ²
 		- media ¹
 
 	¹ Dropped
 	² Redirects to http; mismatched, CN: www.yellowbot.com
+	° Redirects to http
 
 
 	Observed cookie domains:
@@ -33,30 +33,17 @@ Fetch error: http://yellowbot.com/ => https://yellowbot.com/: Cycle detected - U
 
 
 -->
-<ruleset name="YellowBot.com (partial)" default_off='failed ruleset test'>
+<ruleset name="YellowBot.com (partial)">
 
-	<target host="yellowbot.com" />
-	<target host="*.yellowbot.com" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?yellowbot\.com/+($|\?)" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://(www\.)?yellowbot\.com/+(?!(account|signin)($|[?/])|css/|favicon\.ico)" /-->
+	<target host="login.yellowbot.com" />
 
-
-	<!--	Could we secure any of these safely?
-							-->
-	<!--securecookie host="^\.yellowbot\.com$" name="^(brand|c|clang|lang)$" /-->
 	<!--
 		Not secured by server:
 					-->
 	<securecookie host="^login\.yellowbot\.com$" name=".+" />
 
 
-	<rule from="^http://(login\.|www\.)?yellowbot\.com/"
-		to="https://$1yellowbot.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,31 +1,41 @@
 <!--
-	For rules causing false/broken MCB, see TorrentFunk.com-falsemixed.xml.
+	Problematic hosts in *torrentfunk.com:
+
+		- cdn *
+
+	* Mismatched
 
 
 	Mixed content:
 
-		- css from $self *
-
-		- Images from $self *
+		- Images from cdn.torrentfunk.com *
 
 	* Secured by us
 
 -->
-<ruleset name="TorrentFunk.com (partial)">
+<ruleset name="TorrentFunk.com">
 
-	<!--	https://t... redirects to http://w... over
-		http, so we can avoid a duplicate target
-		warning by blanket rewriting !www here.
-							-->
+	<!--	Direct rewrites:
+				-->
 	<target host="torrentfunk.com" />
 	<target host="www.torrentfunk.com" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://www\.torrentfunk\.com/+(?!favicon\.ico|images/)" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.torrentfunk.com" />
 
 
-	<rule from="^http://(www\.)?torrentfunk\.com/"
-		to="https://$1torrentfunk.com/" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.torrentfunk\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.torrentfunk\.com$" name="" />
+
+
+	<rule from="^http://cdn\.torrentfunk\.com/"
+		to="https://tfunk-16e3.kxcdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

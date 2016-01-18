@@ -1,0 +1,113 @@
+<!--
+	Nonfunctional hosts in *aarp.org:
+
+		- ^ ¹
+		- advertise ²
+		- blog ³
+		- games ¹
+		- giftplanning ⁴
+		- healthlawanswers ¹
+		- housingsolutionscenter ⁵
+		- local ²
+		- cdn.local ⁵
+		- member ⁶
+		- newsstand ¹
+		- possibilities ²
+		- travel ²
+		- video ²
+		- www ²
+		- www-s ¹
+
+	¹ Dropped
+	² Refused
+	³ WP Engine
+	⁴ Shows another domain
+	⁵ 404
+	⁶ Redirects to http
+
+
+	Problematic hosts in *aarp.org:
+
+		- aarpcares ¹ ²
+		- action ²
+		- endseniorhunger ³
+		- lifereimagined ⁴
+
+	¹ Mismatched
+	² Blocks Tor users
+	³ Expired
+	⁴ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .aarp.org
+		- appsec.aarp.org
+		- lifereimagined.aarp.org
+		- secure.aarp.org
+		- services.share.aarp.org
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- community from cdn.aarp.net ¹
+			- endseniorhunger from $self ²
+
+	¹ Unsecurable <= 400
+	² Not secured by us <= expired
+
+-->
+<ruleset name="AARP.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="aarpcares.aarp.org" /-->
+	<target host="action.aarp.org" />
+	<target host="appsec.aarp.org" />
+	<target host="assets.aarp.org" />
+	<target host="autos.aarp.org" />
+	<target host="community.aarp.org" />
+	<target host="discounts.aarp.org" />
+	<!--target host="endseniorhunger.aarp.org" /-->
+	<!--target host="lifereimagined.aarp.org" /-->
+	<target host="login.aarp.org" />
+	<target host="secure.aarp.org" />
+	<target host="services.share.aarp.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://discounts\.aarp\.org/$" /-->
+		<!--exclusion pattern="^http://member\.aarp\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://discounts\.aarp\.org/+(?!static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://discounts.aarp.org/app" />
+			<test url="http://discounts.aarp.org/sony3" />
+
+			<!--	-ve:
+					-->
+			<test url="http://discounts.aarp.org/static/css/GillSans/gillsans.svg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.aarp\.org$" name="^u$" /-->
+	<!--securecookie host="^appsec\.aarp\.org$" name="^cookiesession1$" /-->
+	<!--securecookie host="^community\.aarp\.org$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^lifereimagined\.aarp\.org$" name="^(?:PHPSESSID|ab_version)$" /-->
+	<!--securecookie host="^(?:secure|services\.share)\.aarp\.org$" name="^AWSELB$" /-->
+
+	<securecookie host="^\.aarp\.org$" name="^u$" />
+	<securecookie host="^(?:appsec|community|secure|services\.share)\.aarp\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

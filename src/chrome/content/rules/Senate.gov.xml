@@ -1,21 +1,54 @@
 <!--
 	For other US government coverage, see US-government.xml.
 
+
+	Insecure cookies are set for these hosts:
+
+		- efd.senate.gov
+		- efdsearch.senate.gov
+
 -->
 <ruleset name="Senate.gov">
 
 	<target host="senate.gov" />
 	<target host="*.senate.gov" />
-	<target host="www.*.senate.gov" />
-	     <!-- The rules subdomain is all 403 via TLS -->
-	     <!-- As is the Senate Intelligence Committee -->
-	     <exclusion pattern="^http://(?:www.)?rules\.senate\.gov/" />
-	     <exclusion pattern="^http://(?:www.)?intelligence\.senate\.gov/" />
 
-	<securecookie host="^www\.\w+\.senate\.gov$" name=".*" />
+		<!-- The rules subdomain is all 403 via TLS -->
+		<!-- As is the Senate Intelligence Committee -->
+		<exclusion pattern="^http://(?:www.)?(?:intelligence|rules)\.senate\.gov/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://intelligence.senate.gov/" />
+			<test url="http://www.intelligence.senate.gov/" />
+			<test url="http://rules.senate.gov/" />
+			<test url="http://www.rules.senate.gov/" />
+
+		<test url="http://efd.senate.gov/" />
+		<test url="http://efdsearch.senate.gov/" />
+		<test url="http://outreach.senate.gov/" />
+		<test url="http://sdc1.senate.gov/" />
+		<test url="http://sopr.senate.gov/" />
+		<test url="http://www.senate.gov/" />
+
+		<!--	Senators:
+					-->
+		<test url="http://franken.senate.gov/" />
+		<test url="http://www.franken.senate.gov/" />
+		<test url="http://sanders.senate.gov/" />
+		<test url="http://www.sanders.senate.gov/" />
+		<test url="http://warren.senate.gov/" />
+		<test url="http://www.warren.senate.gov/" />
 
 
-	<rule from="^http://((?:sopr|www)\.)?senate\.gov/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^efd(?:search)?\.senate\.gov$" name="^NSC_" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://((?:efd|efdsearch|outreach|sdc1|sopr|www)\.)?senate\.gov/"
 		to="https://$1senate.gov/" />
 
 	<!--	- Unique subdomains for each Senator
@@ -24,7 +57,7 @@
 
 		NB: All other subdomains must be covered above or excluded.
 				-->
-	<rule from="^http://(?:www\.)?(?!senate\.g)(\w+)\.senate\.gov/"
+	<rule from="^http://(?:www\.)?(\w+)\.senate\.gov/"
 		to="https://www.$1.senate.gov/" />
 
 </ruleset>

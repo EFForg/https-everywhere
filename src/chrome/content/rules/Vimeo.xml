@@ -1,4 +1,9 @@
 <!--
+	Other Vimeo rulesets:
+
+		- Vimeo_Pro.com.xml
+
+
 	CDN buckets:
 
 		- av.vimeo.com.edgesuite.net
@@ -19,7 +24,6 @@
 	Partially covered subdomains:
 
 		- developer	(some pages redirect to http)
-		- pdl		(→ akamai)
 
 
 	Fully covered subdomains:
@@ -27,13 +31,18 @@
 		- (www.)
 		- secure
 
+	
+	Insecure cookies are set for these hosts:
+
+		- vimeo.com
+		- www.vimeo.com
+
 
 Default off per https://trac.torproject.org/projects/tor/ticket/7569 -->
 <ruleset name="Vimeo (default off)" default_off="breaks some video embedding">
 
 	<target host="vimeo.com" />
 	<target host="*.vimeo.com" />
-		<exclusion pattern="^http://av\.vimeo\.com/crossdomain\.xml" />
 		<!--exclusion pattern="^http://developer\.vimeo\.com/($|\?|(apps|guidelines|help|player)($|[?/]))" /-->
 		<exclusion pattern="^http://developer\.vimeo\.com/(?!apis(?:$|[?/])|favicon\.ico)" />
 	<target host="*.vimeocdn.com" />
@@ -44,11 +53,10 @@ Default off per https://trac.torproject.org/projects/tor/ticket/7569 -->
 			-->
 		<exclusion pattern="^http://a\.vimeocdn\.com/p/flash/moogaloop/" />
 
-		<!--	We cannot secure streams because crossdomain.xml
-			restricts to port 80 :(
-						-->
-		<exclusion pattern="^http://pdl\.vimeocdn\.com/(?!crossdomain\.xml)" />
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?vimeo\.com$" name="^clip_test_v2$" /-->
 
 	<!--	Tracking cookies:
 					-->
@@ -58,18 +66,12 @@ Default off per https://trac.torproject.org/projects/tor/ticket/7569 -->
 	<rule from="^http://((?:developer|player|secure|www)\.)?vimeo\.com/"
 		to="https://$1vimeo.com/" />
 
-	<rule from="^http://av\.vimeo\.com/"
-		to="https://a248.e.akamai.net/f/808/9207/8m/av.vimeo.com/" />
-
 	<!--	a & b: Akamai	-->
 	<rule from="^http://(?:secure-)?([ab])\.vimeocdn\.com/"
 		to="https://secure-$1.vimeocdn.com/" />
 
 	<rule from="^http://i\.vimeocdn\.com/"
 		to="https://i.vimeocdn.com/" />
-
-	<rule from="^http://pdl\.vimeocdn\.com/"
-		to="https://a248.e.akamai.net/f/1189/4415/8d/pdl.vimeocdn.com/" />
 
 </ruleset>
 

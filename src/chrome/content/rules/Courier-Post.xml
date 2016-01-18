@@ -1,6 +1,6 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://courierpostonline.com/ => https://www.courierpostonline.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.courierpostonline.com'")
+	Courier-Post
+
 	For other Gannett Company coverage, see Gannett-Company.xml.
 
 
@@ -14,45 +14,82 @@ Fetch error: http://courierpostonline.com/ => https://www.courierpostonline.com/
 		- topics	(404, akamai)
 
 
-	Problematic domains:
+	Problematic hosts in courierpostonline.com:
 
-		courierpostonline.gannettdigital.com          (no https)
+		- ^ ¹
+		- cmsimg ²
+		- deals ³
+		- localsearch ³
+		- offers ³
 
-		- courierpostonline.com subdomains:
-
-			- ^		(no https)
-			- cmsimg	(503, akamai)
-			- deals *
-			- localsearch *
-
-	* Works; mismatched, CN: *.planetdiscover.com
+	¹ Refused
+	² 503, akamai
+	³ Mismatched
 
 
-	Mixed images from:
+	Mixed content:
 
-		- bcdownload.gannett.edgesuite.net
-		- bc_gvpc.edgesuite.net
-		- www.gannett-cdn.com
-		- gon.gannettonline.com
-		- webmedia.newseum.org
+		- css, on:
+
+			- localsearch from $self *
+			- www from www.gannett-cdn.com
+
+		- Images, on:
+
+			- localsearch from $self *
+			- www from www.gannett-cdn.com
+
+	* Secured by us
 
 -->
-<ruleset name="Courier-Post (partial)" default_off='failed ruleset test'>
+<ruleset name="Courier Post Online.com (partial)">
 
-	<target host="courierpostonline.com" />
-	<target host="*.courierpostonline.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="account.courierpostonline.com" />
+	<target host="accountsolution.courierpostonline.com" />
+	<target host="myaccount.courierpostonline.com" />
+	<target host="staticassets.courierpostonline.com" />
+	<target host="subscribe.courierpostonline.com" />
+	<!--target host="www.courierpostonline.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="courierpostonline.com" /-->
+	<!--target host="cmsimg.courierpostonline.com" /-->
+	<target host="localsearch.courierpostonline.com" />
+
+		<exclusion pattern="http://localsearch\.courierpostonline\.com/+(?!images/|sf_frameworks/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://localsearch.courierpostonline.com/localevents/0" />
+			<test url="http://localsearch.courierpostonline.com/localevents/add_event/" />
+			<test url="http://localsearch.courierpostonline.com/sp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://localsearch.courierpostonline.com/images/logo_planetdiscover.gif" />
+			<test url="http://localsearch.courierpostonline.com/sf_frameworks/gdev/css/screen.jsp?skin=" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://offers\.courierpostonline\.com/specialoffer\?gps-source=" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="https://offers\.courierpostonline\.com/KeyGrip\.ashx" /-->
+
+		<test url="http://staticassets.courierpostonline.com/global/assets/uscp/property/courierpostonline/logo/logo_sm_white.png" />
 
 
-	<securecookie host="^(?:www)?\.courierpostonline\.com$" name=".+" />
+	<!--rule from="^http://(?:cmsimg\.)?courierpostonline\.com/"
+		to="https://www.courierpostonline.com/" /-->
 
+	<rule from="^http://localsearch\.courierpostonline\.com/"
+		to="https://chill.planetdiscover.com/" />
 
-	<rule from="^http://(?:cmsimg\.|www\.)?courierpostonline\.com/"
-		to="https://www.courierpostonline.com/" />
-
-	<rule from="^http://myaccount\.courierpostonline\.com/"
-		to="https://myaccount.courierpostonline.com/" />
-
-	<rule from="^http://localsearch\.courierpostonline\.com/sf_frameworks/"
-		to="https://chill.planetdiscover.com/sf_frameworks/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

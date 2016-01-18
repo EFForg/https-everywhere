@@ -1,18 +1,66 @@
+<!--
+	Other Soup rulesets:
+
+		- Soup_CDN.com.xml
+
+
+	Insecure cookies are set for these domains:
+
+		- .soup.io
+
+
+	Mixed content:
+
+		- css from fonts.googleapis.com *
+		- Image from static.soup.io *
+		- Bug from pixel.quantserve.com *
+
+	* Secured by us
+
+-->
 <ruleset name="Soup.io (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="soup.io" />
-	<target host="*.soup.io" />
-		<!--
-			Redirect to http:
+	<target host="static.soup.io" />
+	<target host="www.soup.io" />
+
+		<!--	Redirect to http:
 						-->
-		<!--exclusion pattern="^http://www\.soup\.io/+($|\?)" /-->
+		<!--exclusion pattern="^http://www\.soup\.io/+(?:$|\?|signup$)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://www\.soup\.io/+(?!favicon\.ico|images/)" />
+		<exclusion pattern="^http://www\.soup\.io/+(?!favicon\.ico|images/|login(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.soup.io/about" />
+			<test url="http://www.soup.io/everyone" />
+			<test url="http://www.soup.io/frames/analytics" />
+			<test url="http://www.soup.io/privacy" />
+			<test url="http://www.soup.io/remote/toggle/frame?" />
+			<test url="http://www.soup.io/signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.soup.io/favicon.ico" />
+			<test url="http://www.soup.io/images/soup_small.png" />
+			<!--
+				(Mixed content):
+						-->
+			<test url="http://www.soup.io/login" />
 
 
-	<rule from="^http://(static\.|www\.)?soup\.io/"
-		to="https://$1soup.io/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.soup\.io$" name="^(?:__qca|__utm\w+|soup_pool)$" /-->
+
+	<securecookie host="^\.soup\.io$" name="^(?:__qca|__utm\w+)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

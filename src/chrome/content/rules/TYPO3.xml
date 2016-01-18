@@ -6,7 +6,7 @@
 		- T3Blog.com.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *typo3.org:
 
 		- demo ¹
 		- lists ²
@@ -15,9 +15,8 @@
 	² Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *typo3.org:
 
-		- docs ¹
 		- flow ¹
 		- neos ²
 
@@ -38,12 +37,12 @@
 		- css on flow from $self *
 		- Images flow from $self *
 		- favicon on buzz, flow from $self *
-		- Bug on ^, buzz, forum, wiki from wiki.typo3.org *
+		- Bug on ^, buzz, forum, wiki from piwik.typo3.org *
 
 	⁴ Secured by us
 
 -->
-<ruleset name="TYPO3 (partial)">
+<ruleset name="TYPO3.org (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -51,6 +50,7 @@
 	<target host="association.typo3.org" />
 	<target host="buzz.typo3.org" />
 	<target host="certification.typo3.org" />
+	<target host="composer.typo3.org" />
 	<target host="docs.typo3.org" />
 	<target host="flow.typo3.org" />
 	<target host="forge.typo3.org" />
@@ -67,34 +67,27 @@
 				-->
 	<target host="neos.typo3.org" />
 
-		<!--	Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://docs\.typo3\.org/+(?!css/|favicon\.ico|fonts/|i/|t3extras/)" />
 		<exclusion pattern="^http://flow\.typo3\.org/+(?!_Resources/)" />
 
 			<!--	+ve:
 					-->
-			<test url="http://docs.typo3.org/getthedocs/" />
-			<test url="http://docs.typo3.org/typo3cms/" />
-			<test url="http://docs.typo3.org/typo3cms/CoreApiReference/" />
-			<test url="http://docs.typo3.org/typo3cms/Index.html" />
-			<test url="http://docs.typo3.org/typo3cms/InstallationGuide/" />
-			<test url="http://docs.typo3.org/typo3cms/SecurityGuide/" />
-			<test url="http://docs.typo3.org/typo3cms/TyposcriptSyntaxReference/" />
-
 			<test url="http://flow.typo3.org/community" />
 			<test url="http://flow.typo3.org/home" />
 			<test url="http://flow.typo3.org/support" />
 
 			<!--	-ve:
 					-->
-			<test url="http://docs.typo3.org/css/t3_to_be_integrated.css" />
-			<test url="http://docs.typo3.org/favicon.ico" />
-			<test url="http://docs.typo3.org/fonts/share-regular-webfont.woff" />
-			<test url="http://docs.typo3.org/i/arrow-r-888888-17x17.png" />
-			<test url="http://docs.typo3.org/t3extras/css/print.css" />
-
 			<test url="http://flow.typo3.org/_Resources/Static/Packages/TYPO3.FlowTypo3Org/Stylesheets/print.css" />
+
+		<!--	Formerly triggered broken MCB:
+							-->
+		<test url="http://docs.typo3.org/getthedocs/" />
+		<test url="http://docs.typo3.org/typo3cms/" />
+		<test url="http://docs.typo3.org/typo3cms/CoreApiReference/" />
+		<test url="http://docs.typo3.org/typo3cms/Index.html" />
+		<test url="http://docs.typo3.org/typo3cms/InstallationGuide/" />
+		<test url="http://docs.typo3.org/typo3cms/SecurityGuide/" />
+		<test url="http://docs.typo3.org/typo3cms/TyposcriptSyntaxReference/" />
 
 
 	<!--	Not secured by server:
@@ -104,8 +97,8 @@
 	<!--securecookie host="^forge\.typo3\.org$" name="^_redmine_session$" /-->
 	<!--securecookie host="^\.forum\.typo3\.org$" name="^fud_session_\d+$" /-->
 
-	<securecookie host="^\.typo3\.org$" name="^fe_typo_user$" />
-	<securecookie host="^(?:buzz|forge|\.forum)\.typo3\.org$" name=".+" />
+	<securecookie host="^\." name="^fe_typo_user$" />
+	<securecookie host="^(?!flow\.)." name="." />
 
 
 	<!--	Redirect keeps path and args,

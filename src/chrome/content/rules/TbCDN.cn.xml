@@ -13,29 +13,37 @@
 
 	Problematic subdomains:
 
-		- a
+		- a ¹
 		- g ²
+		- img3 ¹
 
-	¹ Mismatched, CN: s.tbcdn.cn
+	¹ Mismatched, CN: *.alicdn.com
 	² akamai
-
-
-	Fully covered subdomains:
-
-		- a	(→ s)
-		- g	(→ g.alicdn.com)
-		- s
 
 -->
 <ruleset name="TbCDN.cn">
 
-	<target host="*.tbcdn.cn" />
+	<!--	Direct rewrites:
+				-->
+	<target host="s.tbcdn.cn" />
+
+	<!--	Complications:
+				-->
+	<target host="a.tbcdn.cn" />
+	<target host="g.tbcdn.cn" />
+	<target host="img3.tbcdn.cn" />
 
 
-	<rule from="^http://[as]\.tbcdn\.cn/"
+	<rule from="^http://a\.tbcdn\.cn/"
 		to="https://s.tbcdn.cn/" />
 
 	<rule from="^http://g\.tbcdn\.cn/"
 		to="https://g.alicdn.com/" />
+
+	<rule from="^http://img3\.tbcdn\.cn/"
+		to="https://img.alicdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

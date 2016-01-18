@@ -1,7 +1,15 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://resources2.spiceworks.com/ => https://resources2.spiceworks.com/: (6, 'Could not resolve host: xadmin.spiceworks.com')
+	Note: resources2.../$ redirects to a host that doesn't exist.
+	Excluding /$ would be a problem in two ways:
+
+		- It would make us stand out more
+		- The fetch checker would fail the required tests
+
+
+	Other Spiceworks rulesets:
+
+		- Spiceworks_static.com.xml
+
 
 	Problematic hosts in *spiceworks.com:
 
@@ -12,40 +20,32 @@ Fetch error: http://resources2.spiceworks.com/ => https://resources2.spiceworks.
 	² Refused
 
 
-	Fully covered hosts in *spiceworks.com:
-
-		- (www.)?	(^ → www)
-		- banners
-		- community
-		- developers	(→ spiceworks.github.io)
-		- gekko
-		- resources2
-		- static
-		- wwwstatic
-		- xact
-
-
 	Insecure cookies are set for these domains and hosts:
 
 		- .spiceworks.com
+		- accounts.spiceworks.com
+		- on.spiceworks.com
 		- swagshop.spiceworks.com
 
 
 	Mixed content:
 
-		- Font on www from $self *
 		- Bug on community from stat.onestat.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Spiceworks.com" default_off='failed ruleset test'>
+<ruleset name="Spiceworks.com">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="accounts.spiceworks.com" />
 	<target host="banners.spiceworks.com" />
 	<target host="community.spiceworks.com" />
+	<target host="download.spiceworks.com" />
 	<target host="gekko.spiceworks.com" />
+	<target host="on.spiceworks.com" />
+	<target host="px.spiceworks.com" />
 	<target host="resources2.spiceworks.com" />
 	<target host="static.spiceworks.com" />
 	<target host="swagshop.spiceworks.com" />
@@ -61,8 +61,8 @@ Fetch error: http://resources2.spiceworks.com/ => https://resources2.spiceworks.
 		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://swagshop\.spiceworks\.com/$" /-->
-
-		<!--	Exceptions:
+		<!--
+			Exceptions:
 					-->
 		<exclusion pattern="^http://swagshop\.spiceworks\.com/+(?![Ss]hared/)" />
 
@@ -80,13 +80,16 @@ Fetch error: http://resources2.spiceworks.com/ => https://resources2.spiceworks.
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.spiceworks\.com$" name="^(SessionId|SessionKey|ref|source|spiceworks_community|target|_swndat|_swnid)$" /-->
+	<!--securecookie host="^accounts\.spiceworks\.com$" name="^(?:_identity_service_session|request_method)$" /-->
+	<!--securecookie host="^on\.spiceworks\.com$" name="^_tron_session$" /-->
 	<!--securecookie host="^swagshop\.spiceworks\.com$" name="^ASP\.NET_SessionId$" /-->
 
 	<!--	Set by community:
 					-->
 	<securecookie host="^\.spiceworks\.com$" name="^(?:ref|spiceworks_community|_swndat|_swnid)$" />
 
-	<securecookie host="^\w.*\.spiceworks\.com$" name=".*" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!swagshop\.)\w" name="." />
 
 
 	<rule from="^http://spiceworks\.com/"

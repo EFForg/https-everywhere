@@ -1,24 +1,55 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://enocloud.com/ => https://www.enocloud.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.enocloud.com'")
+	For other Red Hat coverage, see Red_Hat.xml.
+
+
+	Nonfunctional hosts:
+
+		- openstackreactions.enovance.com ¹
+		- techs.enovance.com ²
+
+	¹ Dropped
+	² Redurects to http
+
+
+	Problematic hosts:
+
+		- (www.)?enocloud.com *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- css on  from fonts.googleapis.com ¹
+
+		- Images, on:
+
+			- www.enocloud.com, www.enovance.com from www.enovance.com ¹
+			- www.enocloud.com, www.enovance.com from theme.co ²
+
+	¹ Secured by us
+	² Unsecurable <= redirects to http
+
 -->
-<ruleset name="eNovance" default_off='failed ruleset test'>
+<ruleset name="eNovance">
+
+	<!--	Direct rewrites:
+				-->
     <target host="enovance.com" />
-    <target host="*.enovance.com" />
+	<target host="www.enovance.com" />
+
+	<!--	Complications:
+				-->
     <target host="enocloud.com" />
-    <target host="*.enocloud.com" />
+	<target host="www.enocloud.com" />
 
-    <securecookie host="^(?:.*\.)?enovance\.com$" name=".+" />
-    <securecookie host="^(?:.*\.)?enocloud\.com$" name=".+" />
 
-    <exclusion pattern="^http://openstackreactions\.enovance\.com" />
+	<securecookie host="^(?:.*\.)?eno(?:cloud|vance)\.com$" name=".+" />
 
-    <rule from="^http://enovance\.com/"
-        to="https://www.enovance.com/" />
-    <rule from="^http://([^/:@]+)?\.enovance\.com/"
-        to="https://$1.enovance.com/" />
-    <rule from="^http://enocloud\.com/"
-        to="https://www.enocloud.com/" />
-    <rule from="^http://([^/:@]+)?\.enocloud\.com/"
-        to="https://$1.enocloud.com/" />
+
+	<rule from="^http://(?:www\.)?enocloud\.com/"
+		to="https://www.enovance.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

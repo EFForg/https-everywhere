@@ -6,6 +6,7 @@
 
 	Other Sina rulesets:
 
+		- Sina.cn.xml
 		- Sina_App.xml
 		- Sina_Weibo.xml
 		- Sinaimg.cn.xml
@@ -24,83 +25,167 @@
 
 		- sina.com.cn subdomains:
 
-			- ad4 *
-			- beacon	(Refused)
-			- campus	(Refused
-			- d1		(reset)
-			- ent		(403; mismatched, CN: *.pantherssl.com)
-			- green **
-			- help **
-			- mail **
-			- t **
-			- tech *
+			- ^ ¹
+			- ad4 ²
+			- ads ³
+			- astro ³
+			- auto ³
+			- m.auto ³
+			- baby ¹
+			- bbs ³
+			- beacon ³
+			- blog ¹
+			- book ³
+			- campus ³
+			- city ³
+			- collection ³
+			- corp ³
+			- csl ³
+			- d1 ³
+			- edu ³
+			- eladies ³
+			- emarketing ¹
+			- ent ⁴
+			- esf ³
+			- fashion ³
+			- finance ³
+			- fo ³
+			- golf ³
+			- green ¹
+			- health ³
+			- help ¹
+			- history ³
+			- hlg ³
+			- home ³
+			- house	⁴
+			- src.house ²
+			- iask ³
+			- jiaju ³
+			- lottery ⁴
+			- m ⁴
+			- s.img.mix ⁵
+			- mobile ³
+			- news ⁴
+			- mil.news ³
+			- sky.news ³
+			- photo ³
+			- sh ³
+			- sx ³
+			- show ²
+			- i.sso ⁴
+			- sports ⁴
+			- t ¹
+			- tech ⁴
+			- travel ³
+			- uc ³
+			- video ¹
+			- www ³
+			- zhongyi ³
+			- zhuanlan ¹
 
-		- mail.sina.net		(Refused
+		- mail.sina.net ³
+
 		- s2.sae.sinacdn.com
 		- www.sae.sinacdn.com
-		- i[01].sinaimg.cn	(403; mismatched, CN: support3.cdnetworks.net)
-		- ww1.sinaimg.cn ***
-		- ww2.sinaimg.cn	(403; mismatched, CN: support2.cdnetworks.net)
-		- www.sinaimg.cn	(reset)
 
 		- sinajs.cn subdomains:
 
-			- hits **
-			- rs **
-			- simg *
-			- timg.sjs	(404)
-			- tjs.sjs *
-			- img.t *
-			- js.t		(403; mismatched, CN: ssl.cdngc.net)
+			- hits ¹
+			- rs ¹
+			- simg ⁴
+			- timg.sjs ⁵
+			- tjs.sjs ⁴
+			- img.t ⁴
+			- js.t ⁴
 
-	* 403; mismatched, CN: ssl2.cdngc.net
-	** Times out
-	*** Reset
+	¹ Times out
+	² 503
+	³ Refused
+	⁴ 403
+	⁵ 404
 
 
 	Problematic domains:
 
+		- app.sina.com.cn ¹
+		- dealer.auto.sina.com.cn ¹ ²
+		- s3.licaishi.sina.com.cn ²
 		- e.sae.sina.com.cn ²
 		- static.sae.sina.com.cn ²
+		- match.sports.sina.com.cn ¹ ²
+		- weather.sina.com.cn ¹
+
 		- sinacloud.com ²
 
+	¹ Mixed css
 	² Mismatched
 
 
-	Fully covered hosts:
+	Insecure cookies are set for these domains and hosts:
 
-		- sae.sina.com.cn
-
-
-	Insecure cookies are set for these domains:
-
+		- .sina.com.cn
+		- 2008mail.sina.com.cn
+		- help.sina.com.cn
+		- mail.sina.com.cn
 		- .sae.sina.com.cn
+		- weather.sina.com.cn
 
 
 	Mixed content:
 
-		- css on api.t.sina.com.cn from timg.sjs.sinajs.cn
+		- css, on:
+
+			- app.sina.com.cn from i.apps.sina.cn
+			- dealer.auto.sina.com.cn from auto.sina.com.cn
+			- dealer.auto.sina.com.cn from $self
+			- api.t.sina.com.cn from timg.sjs.sinajs.cn
+			- weather.sina.com.cn from news.sina.com.cn
+			- match.sports.sina.com.cn from $self
 
 		- Images, on:
-		- Images on sae.sina.com.cn from www.sae.sinacdn.com
+
+			- app.sina.com.cn from p\d+.qhimg.com
+			- app.sina.com.cn from i.apps.sina.cn
+			- help.sina.com.cn, weather.sina.com.cn from www.sinaimg.cn
+			- licaishi.sina.com.cn from s3.licaishi.sina.com.cn
+			- sae.sina.com.cn from www.sae.sinacdn.com
 			- api.t.sina.com.cn from timg.sjs.sinajs.cn
 			- api.t.sina.com.cn from ww4.sinaimg.cn
+			- weather.sina.com.cn from sjs.sinajs.cn
+			- weather.sina.com.cn from s.img.mix.sina.com.cn
+			- weather.sina.com.cn from i[0-3].sinaimg.cn
+
+		- Bug on weather.sina.com.cn from beacon.sina.com.cn
 
 -->
-<ruleset name="Sina (partial)">
+<ruleset name="Sina.com.cn (partial)">
 
-	<target host="samsungapps.sina.cn" />
+	<!--	Direct rewrites:
+				-->
+	<target host="2008mail.sina.com.cn" />
+	<!--target host="app.sina.com.cn" /-->
+	<target host="help.sina.com.cn" />
+	<target host="licaishi.sina.com.cn" />
 	<target host="login.sina.com.cn" />
+	<target host="mail.sina.com.cn" />
+	<target host="mail2008.sina.com.cn" />
+	<target host="members.sina.com.cn" />
+	<target host="qipai.sina.com.cn" />
 	<target host="sae.sina.com.cn" />
 	<!--target host="api.t.sina.com.cn" /-->
+	<target host="vip.sina.com.cn" />
+	<!--target host="weather.sina.com.cn" /-->
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.sina\.com\.cn$" name="^U_TRS[12]$" /-->
+	<!--securecookie host="^2008mail\.sina\.com\.cn$" name="^dpvar$" /-->
+	<!--securecookie host="^(?:help|weather)\.sina\.com\.cn$" name="^usrm\w+$" /-->
+	<!--securecookie host="^(?:help|mail|qipai|vip)\.sina\.com\.cn$" name="^dpha$" /-->
 	<!--securecookie host="^\.sae\.sina\.com\.cn$" name="^(PHPSESSID|SAETEST|SAEVER)$" /-->
 
-	<securecookie host="^samsungapps\.sina\.cn$" name=".+" />
+	<securecookie host="^(?:2008mail|help|mail|qipai|vip)\.sina\.com\.cn$" name=".+" />
 	<!--securecookie host="^api\.t\.sina\.com\.cn$" name=".+" /-->
 
 

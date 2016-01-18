@@ -85,7 +85,6 @@ const LOG_JS = 128;
 const LOG_LEAKS = 1024;
 const LOG_SNIFF = 2048;
 const LOG_CLEARCLICK = 4096;
-const LOG_ABE = 8192;
 
 const HTML_NS = "http://www.w3.org/1999/xhtml";
 
@@ -105,15 +104,6 @@ const EARLY_VERSION_CHECK = !("nsISessionStore" in CI && typeof(/ /) === "object
 // This is probably obsolete since the switch to the channel.redirectTo API
 const OBSERVER_TOPIC_URI_REWRITE = "https-everywhere-uri-rewrite";
 
-// XXX: Better plan for this?
-// We need it to exist to make our updates of ChannelReplacement.js easier.
-var ABE = {
-  consoleDump: false,
-  log: function(str) {
-    https_everywhereLog(WARN, str);
-  }
-};
-
 function xpcom_checkInterfaces(iid,iids,ex) {
   for (var j = iids.length; j-- >0;) {
     if (iid.equals(iids[j])) return true;
@@ -121,7 +111,7 @@ function xpcom_checkInterfaces(iid,iids,ex) {
   throw ex;
 }
 
-INCLUDE('ChannelReplacement', 'IOUtil', 'HTTPSRules', 'HTTPS', 'Thread', 'ApplicableList');
+INCLUDE('IOUtil', 'HTTPSRules', 'HTTPS', 'ApplicableList');
 
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -534,7 +524,6 @@ HTTPSEverywhere.prototype = {
       var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
       catman.deleteCategoryEntry("net-channel-event-sinks", SERVICE_CTRID, true);
-      Thread.hostRunning = false;
     } else if (topic == "profile-after-change") {
       this.log(DBUG, "Got profile-after-change");
 
@@ -544,11 +533,8 @@ HTTPSEverywhere.prototype = {
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
 
-        this.log(INFO,"ChannelReplacement.supported = "+ChannelReplacement.supported);
-
         HTTPSRules.init();
 
-        Thread.hostRunning = true;
         var catman = Components.classes["@mozilla.org/categorymanager;1"]
            .getService(Components.interfaces.nsICategoryManager);
         // hook on redirections (non persistent, otherwise crashes on 1.8.x)
@@ -615,7 +601,7 @@ HTTPSEverywhere.prototype = {
   },
 
   maybeCleanupObservatoryPrefs: function(ssl_observatory) {
-    // Recover from a past UI processing bug that would leave the Obsevatory
+    // Recover from a past UI processing bug that would leave the Observatory
     // accidentally disabled for some users
     // https://trac.torproject.org/projects/tor/ticket/10728
     var clean = ssl_observatory.myGetBoolPref("clean_config");
@@ -800,13 +786,6 @@ HTTPSEverywhere.prototype = {
         OS.addObserver(this, "http-on-examine-merged-response", false);
         OS.addObserver(this, "http-on-examine-response", false);
 
-        this.log(INFO,
-                 "ChannelReplacement.supported = "+ChannelReplacement.supported);
-
-        if (!Thread.hostRunning) {
-          Thread.hostRunning = true;
-        }
-
         var catman = CC["@mozilla.org/categorymanager;1"]
                        .getService(CI.nsICategoryManager);
         // hook on redirections (non persistent, otherwise crashes on 1.8.x)
@@ -873,7 +852,7 @@ function https_everywhereLog(level, str) {
   if (level >= threshold) {
     var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
     var prefix = "HTTPS Everywhere " + levelName + ": ";
-    // dump() prints to browser stdout. That's sometimes undesireable,
+    // dump() prints to browser stdout. That's sometimes undesirable,
     // so only do it when a pref is set (running from test.sh enables
     // this pref).
     if (prefs.getBoolPref("log_to_stdout")) {

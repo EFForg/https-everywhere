@@ -1,0 +1,50 @@
+<!--
+	Insecure cookies are set for these hosts:
+
+		- snel.com
+		- staff.snel.com
+		- www.snel.com
+
+
+	Mixed content:
+
+		- css on (www.)? from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Snel.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="snel.com" />
+	<target host="api.snel.com" />
+	<target host="control.snel.com" />
+	<target host="staff.snel.com" />
+	<target host="www.snel.com" />
+
+	<!--	Complications:
+				-->
+	<target host="session.snel.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?snel\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^staff\.snel\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:.+\.)?snel\.com$" name=".+" />
+
+
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://session\.snel\.com/.*"
+		to="https://control.snel.com/" />
+
+		<test url="http://session.snel.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

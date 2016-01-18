@@ -19,20 +19,13 @@ function CookieRule(host, cookiename) {
   //this.name_c = new RegExp(cookiename);
 }
 
-function RuleSet(id, name, xmlName, match_rule, default_off, platform) {
-  if(xmlName == "WordPress.xml" || xmlName == "Github.xml") {
-    this.log(NOTE, "RuleSet( name="+name+", xmlName="+xmlName+", match_rule="+match_rule+", default_off="+default_off+", platform="+platform+" )");
-  }
-
+function RuleSet(id, name, default_off, platform) {
   this.id=id;
   this.on_by_default = true;
   this.compiled = false;
   this.name = name;
-  this.xmlName = xmlName;
   this.notes = "";
 
-  if (match_rule)   this.ruleset_match_c = new RegExp(match_rule);
-  else              this.ruleset_match_c = null;
   if (default_off) {
     // Perhaps problematically, this currently ignores the actual content of
     // the default_off XML attribute.  Ideally we'd like this attribute to be
@@ -93,12 +86,7 @@ RuleSet.prototype = {
     var i;
     var returl = null;
     this.ensureCompiled();
-    // If a rulset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      this.log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
-    }
-    // Even so, if we're covered by an exclusion, go home
+    // If we're covered by an exclusion, go home
     for (i = 0; i < this.exclusions.length; ++i) {
       if (this.exclusions[i].pattern_c.test(urispec)) {
         this.log(DBUG,"excluded uri " + urispec);
@@ -111,7 +99,7 @@ RuleSet.prototype = {
       returl = urispec.replace(this.rules[i].from_c, this.rules[i].to);
       if (returl != urispec) {
         // we rewrote the uri
-        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.xmlName + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
+        this.log(DBUG, "Rewrote " + urispec + " -> " + returl + " using " + this.name + ": " + this.rules[i].from_c + " -> " + this.rules[i].to);
         return returl;
       }
     }
@@ -120,35 +108,6 @@ RuleSet.prototype = {
   },
   log: function(level, msg) {
     https_everywhereLog(level, msg);
-  },
- 
-  wouldMatch: function(hypothetical_uri, alist) {
-    // return true if this ruleset would match the uri, assuming it were http
-    // used for judging moot / inactive rulesets
-    // alist is optional
- 
-    // if the ruleset is already somewhere in this applicable list, we don't
-    // care about hypothetical wouldMatch questions
-    if (alist && (this.name in alist.all)) return false;
- 
-    this.log(DBUG,"Would " +this.name + " match " +hypothetical_uri.spec +
-             "?  serial " + (alist && alist.serial));
-     
-    var uri = hypothetical_uri.clone();
-    if (uri.scheme == "https") uri.scheme = "http";
-    var urispec = uri.spec;
-
-    this.ensureCompiled();
- 
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
-      return false;
- 
-    for (var i = 0; i < this.exclusions.length; ++i) 
-      if (this.exclusions[i].pattern_c.test(urispec)) return false;
- 
-    for (var i = 0; i < this.rules.length; ++i) 
-      if (this.rules[i].from_c.test(urispec)) return true;
-    return false;
   },
 
   transformURI: function(uri) {
@@ -309,10 +268,9 @@ const RuleWriter = {
 
     this.log(DBUG, "Parsing " + xmlruleset.getAttribute("name"));
 
-    var match_rl = xmlruleset.getAttribute("match_rule");
     var dflt_off = xmlruleset.getAttribute("default_off");
     var platform = xmlruleset.getAttribute("platform");
-    var rs = new RuleSet(ruleset_id, xmlruleset.getAttribute("name"), xmlruleset.getAttribute("f"), match_rl, dflt_off, platform);
+    var rs = new RuleSet(ruleset_id, xmlruleset.getAttribute("name"), dflt_off, platform);
 
     // see if this ruleset has the same name as an existing ruleset;
     // if so, this ruleset is ignored; DON'T add or return it.
@@ -421,13 +379,6 @@ const HTTPSRules = {
     var t2 =  new Date().getTime();
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
-    try {
-      if (HTTPSEverywhere.instance.prefs.getBoolPref("performance_tests")) {
-        this.testRulesetRetrievalPerformance();
-      }
-    } catch(e) {
-      this.log(WARN, "Exception during testing " + e);
-    }
     return;
   },
 
@@ -505,31 +456,26 @@ const HTTPSRules = {
     }
 
     // ponder each potentially applicable ruleset, working out if it applies
-    // and recording it as active/inactive/moot/breaking in the applicable list
+    // and recording it as active/inactive/breaking in the applicable list
     for (i = 0; i < rs.length; ++i) {
       if (!rs[i].active) {
-        if (alist && rs[i].wouldMatch(uri, alist))
-          alist.inactive_rule(rs[i]);
-        continue;
-      } 
+        alist.inactive_rule(rs[i]);
+      }
       blob.newuri = rs[i].transformURI(uri);
       if (blob.newuri) {
         if (alist) {
-          if (uri.spec in https_everywhere_blacklist) 
+          if (uri.spec in https_everywhere_blacklist) {
             alist.breaking_rule(rs[i]);
-          else 
+          } else  {
             alist.active_rule(rs[i]);
-  }
-        if (userpass_present) blob.newuri.userPass = input_uri.userPass;
+          }
+        }
+        if (userpass_present) {
+          blob.newuri.userPass = input_uri.userPass;
+        }
         blob.applied_ruleset = rs[i];
         return blob;
       }
-      if (uri.scheme == "https" && alist) {
-        // we didn't rewrite but the rule applies to this domain and the
-        // requests are going over https
-        if (rs[i].wouldMatch(uri, alist)) alist.moot_rule(rs[i]);
-        continue;
-      } 
     }
     return null;
   },
@@ -567,7 +513,7 @@ const HTTPSRules = {
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
@@ -580,18 +526,6 @@ const HTTPSRules = {
     for (var i = 0; i < fromList.length; i++)
       if (intoList.indexOf(fromList[i]) == -1)
         intoList.push(fromList[i]);
-  },
-
-  loadAllRulesets: function() {
-    for (var host in this.targets) {
-      var ruleset_ids = this.targets[host];
-      for (var i = 0; i < ruleset_ids.length; i++) {
-        var id = ruleset_ids[i];
-        if (!this.rulesetsByID[id]) {
-          this.loadRulesetById(id);
-        }
-      }
-    }
   },
 
   // Load a ruleset by numeric id, e.g. 234
@@ -678,36 +612,6 @@ const HTTPSRules = {
     return results;
   },
 
-  testRulesetRetrievalPerformance: function() {
-    // We can use this function to measure the impact of changes in the ruleset
-    // storage architecture, potentiallyApplicableRulesets() caching
-    // implementations, etc. 
-    var req = Cc["@mozilla.org/xmlextras/xmlhttprequest;1"]
-                 .createInstance(Ci.nsIXMLHttpRequest);
-    req.open("GET", "https://www.eff.org/files/alexa-top-10000-global.txt", false);
-    req.send();
-    var domains = req.response.split("\n");
-    var domains_l = domains.length - 1; // The last entry in this thing is bogus
-    var prefix = "";
-    this.log(WARN, "Calling potentiallyApplicableRulesets() with " + domains_l + " domains");
-    var count = 0;
-    var t1 = new Date().getTime();
-    for (var n = 0; n < domains_l; n++) {
-      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
-        count++;
-    }
-    var t2 = new Date().getTime();
-    this.log(NOTE, count + " hits: average call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
-    count = 0;
-    t1 = new Date().getTime();
-    for (var n = 0; n < domains_l; n++) {
-      if (this.potentiallyApplicableRulesets(prefix + domains[n]).length != 0)
-        count++;
-    }
-    t2 = new Date().getTime();
-    this.log(NOTE, count + " hits: average subsequent call to potentiallyApplicableRulesets took " + (t2 - t1) / domains_l + " milliseconds");
-  },
-
   /**
    * If a cookie's domain attribute has a leading dot to indicate it should be
    * sent for all subdomains (".example.com"), return the actual host part (the
@@ -725,7 +629,7 @@ const HTTPSRules = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria
+   * Check to see if the Cookie object c meets any of our cookierule criteria
    * for being marked as secure.
    *
    * @param applicable_list {ApplicableList} an ApplicableList for record keeping
@@ -757,9 +661,6 @@ const HTTPSRules = {
             this.log(INFO,"Active cookie rule " + ruleset.name);
             return true;
           }
-        }
-        if (ruleset.cookierules.length > 0 && applicable_list) {
-          applicable_list.moot_rule(ruleset);
         }
       } else if (ruleset.cookierules.length > 0) {
         if (applicable_list) {

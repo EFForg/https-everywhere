@@ -5,37 +5,65 @@
 	Other Zoho rulesets:
 
 		- ManageEngine.xml
+		- ManageEngine.jp.xml
 		- Site24x7.xml
 		- WebNMS.com.xml
 		- Zoho.jp.xml
 		- Zoho_static.com.xml
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *zoho.com:
 
-		- (www.)swissql.com	(cert: *.manageengine.com; $ redirects to http; .+ redirects to that domain and 404s)
-		- crmkbase.zoho.com ²
+		- crmkbase.zoho.com ʰ
 
-	² Redirects to http
+	ʰ Redirects to http
 
 
-	Problematic domains:
+	Problematic hosts in *zoho.com:
 
-		- customer-discussions.zoho.com		(works, redirects to forum.zoho-china.com)
-		- www.blogs.zoho.com ²
-		- kbase.creator.zoho.com		(Mismatched)
-		- www.creator.zoho.com			(Dropped)
-		- www.forums.zoho.com ²
-		- forum.zoho-china.com			(mismatched)
+		- www.blogs ᵐ
+		- kbase.creator ᵐ
+		- www.creator ᵈ
+		- customer-discussions	(works, redirects to forum.zoho-china.com)
+		- www.forums ᵐ
+		- signup-dr ˣ
 
-	² Cert only matches *.zoho.com
+	ᵐ Mismatched
+	ᵈ Dropped
+	ˣ Mixed css/iframe
+
+
+	Wildcards covered:
+
+		- *.wiki.zoho.com:
+
+			- arvindnatarajan
+			- vbmacros
+			- zohocrm
+			- zohocrmapi
+			- zohodiscussions
+
+
+	These altnames don't exist:
+
+		- customer-blogs.zoho.com
 
 
 	Insecure cookies are set for these domains and hosts:
 
 		- .zoho.com
 		- accounts.zoho.com
+		- contacts.zoho.com
 		- creator.zoho.com
+
+
+	Mixed content:
+
+		- iframe on signup-dr from $self *
+		- css on signup-dr from www.zoho.com *
+		- Image on signup-dr from www.zoho.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Zoho.com (partial)">
@@ -45,9 +73,11 @@
 	<target host="zoho.com" />
 	<target host="accounts.zoho.com" />
 	<target host="assist.zoho.com" />
+	<target host="blog.zoho.com" />
 	<target host="blogs.zoho.com" />
 	<target host="business.zoho.com" />
 	<target host="chat.zoho.com" />
+	<target host="contacts.zoho.com" />
 
 	<target host="creator.zoho.com" />
 	<target host="api.creator.zoho.com" />
@@ -59,6 +89,7 @@
 	<target host="help.discussions.zoho.com" />
 	<target host="docs.zoho.com" />
 	<target host="forums.zoho.com" />
+	<target host="help.zoho.com" />
 	<target host="invoice.zoho.com" />
 	<target host="iplocation.zoho.com" />
 	<target host="mail.zoho.com" />
@@ -72,7 +103,9 @@
 	<target host="search.zoho.com" />
 	<target host="sheet.zoho.com" />
 	<target host="show.zoho.com" />
+	<!--target host="signup-dr.zoho.com" /-->
 	<target host="support.zoho.com" />
+	<target host="wiki.zoho.com" />
 	<target host="*.wiki.zoho.com" />
 	<target host="writer.zoho.com" />
 	<target host="www.zoho.com" />
@@ -88,27 +121,24 @@
 						-->
 		<!--exclusion pattern="^http://crmkbase\.zoho\.com/($|wp-content/)" /-->
 
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://contacts.zoho.com/file?ot=8&amp;ID=47070489&amp;t=serviceorg" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.zoho\.com$" name="^ztk$" /-->
-	<!--securecookie host="^accounts\.zoho\.com$" name="^(JSESSIONID|[\da-f]{10})$" /-->
-	<!--securecookie host="creator\.zoho\.com$" name="^[\da-f]{10}$" /-->
+	<!--securecookie host="^(?:accounts|help|sheet|show|wiki)\.zoho\.com$" name="^(JSESSIONID|[\da-f]{10})$" /-->
+	<!--securecookie host="^contacts\.zoho\.com$" name="^[\da-f]{10}$" /-->
+	<!--securecookie host="^creator\.zoho\.com$" name="^[\da-f]{10}$" /-->
 
-	<securecookie host="^.*\.zoho\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http://www\.(blogs|creator|forums)\.zoho\.com/"
 		to="https://$1.zoho.com/" />
 
-	<!--	Observed wiki subdomains:
-
-			- arvindnatarajan
-			- vbmacros
-			- zohocrm
-			- zohocrmapi
-			- zohodiscussions
-						-->
 	<rule from="^http:"
 		to="https:" />
 

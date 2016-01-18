@@ -1,36 +1,45 @@
 <!--
+	For problematic rules, see Valtiolle.fi-problematic.xml.
+
+
 	Problematic hosts in *valtiolle.fi:
 
-		- ^ ¹
 		- haku ²
 		- heli ¹
-		- www ²
 
 	¹ Mismatched
 	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- valtiolle.fi
+		- www.valtiolle.fi
 	
 -->
-<ruleset name="Valtiolle.fi" default_off="missing certificate chain">
+<ruleset name="Valtiolle.fi (partial)">
 
 	<!--	Direct rewrites:
 				-->
-	<target host="haku.valtiolle.fi"/>
+	<target host="valtiolle.fi"/>
+	<!--target host="haku.valtiolle.fi"/-->
 	<target host="www.valtiolle.fi"/>
 
 	<!--	Complications:
 				-->
-	<target host="valtiolle.fi"/>
-	<target host="heli.valtiolle.fi"/>
+	<!--target host="heli.valtiolle.fi"/-->
 
 
-	<securecookie host="^(?:haku|www)\.valtiolle\.fi$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^valtiolle\.fi$" name="^BIGipServer[\w.~]+$" /-->
+	<!--securecookie host="^www\.valtiolle\.fi$" name="^(?:ASP\.NET_SessionId|BIGipServer[\w.~]+)$" /-->
+
+	<securecookie host="^(?:www\.)?valtiolle\.fi$" name=".+" />
 
 
-	<rule from="^http://valtiolle\.fi/"
-		to="https://www.valtiolle.fi/"/>
-
-	<rule from="^http://heli\.valtiolle\.fi/"
-		to="https://haku.valtiolle.fi/"/>
+	<!--rule from="^http://heli\.valtiolle\.fi/"
+		to="https://haku.valtiolle.fi/"/-->
 
 	<rule from="^http:"
 		to="https:" />

@@ -2,21 +2,7 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	(www.): redirect destination doesn't support tls
-
-
-	Partially covered subdomains:
-
-		- blogs *
-
-	* At least some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- dev
-		- developer
-		- insider
+	(www.)?windows.com: Redirect destination doesn't support tls
 
 
 	Insecure cookies are set for these hosts:
@@ -27,15 +13,12 @@
 	Mixed content:
 
 		- Images on dev, developer from assets.windowsphone.com *
-
-		- favicon on blogs from $self *
-
 		- Bug on dev, developer from c.microsoft.com *
 
 	* Secured by us
 
 -->
-<ruleset name="Windows.com (partial)">
+<ruleset name="Windows.com">
 
 	<!--	Direct rewrites:
 				-->
@@ -44,27 +27,12 @@
 	<target host="developer.windows.com" />
 	<target host="insider.windows.com" />
 
-		<exclusion pattern="^http://blogs\.windows\.com/(?!cfs-file\.ashx|cfs-filesystemfile\.ashx|favicon\.ico|login\.aspx|themes/|user/createuser\.aspx)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://blogs.windows.com/buildingapps/" />
-			<test url="http://blogs.windows.com/business/" />
-			<test url="http://blogs.windows.com/ie/" />
-			<test url="http://blogs.windows.com/itpro/" />
-			<test url="http://blogs.windows.com/japan/" />
-			<test url="http://blogs.windows.com/latam/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://blogs.windows.com/favicon.ico" />
-
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^dev\.windows\.com$" name="^ssostate$" /-->
 
-	<securecookie host="^dev\.windows\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"

@@ -1,0 +1,46 @@
+<!--
+	Problematic hosts in *acuityscheduling.com:
+
+		- help ¹
+		- status ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² StatusPage.io
+
+
+	Insecure cookies are set for these hosts:
+
+		- developers.acuityscheduling.com
+		- help.acuityscheduling.com
+
+-->
+<ruleset name="Acuity Scheduling.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="acuityscheduling.com" />
+	<target host="developers.acuityscheduling.com" />
+	<!--target host="help.acuityscheduling.com" /-->
+	<target host="secure.acuityscheduling.com" />
+	<target host="www.acuityscheduling.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.acuityscheduling.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^developers\.acuityscheduling\.com$" name="^(?:XSRF-TOKEN|connect\.sid)$" /-->
+	<!--securecookie host="^help\.acuityscheduling\.com$" name="^(?:_session_id|current_user_language)$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://status\.acuityscheduling\.com/"
+		to="https://acuityscheduling.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

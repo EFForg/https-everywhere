@@ -1,32 +1,47 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://flirble.org/ => https://flirble.org/: (6, 'Could not resolve host: flirble.org')
-	For problematic rules, see The-Flirble-Organisation-self-signed.xml.
+	Problematic hosts in *flirble.org:
 
+		- domreg *
+
+	* Mismatched, CN: *.shopco.com
+
+
+	^flirble.org doesn't exist.
+
+
+	Insecure cookies are set for these hosts:
+
+		- wiki.flirble.org
+		- www.flirble.org
 
 -->
-<ruleset name="The Flirble Organisation (partial)" default_off='failed ruleset test'>
+<ruleset name="The Flirble Organisation">
 
-	<target host="flirble.org" />
-	<target host="*.flirble.org" />
-	<target host="*.blog.flirble.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.flirble.org" />
+	<target host="c0-blog.flirble.org" />
+	<target host="c1-blog.flirble.org" />
+	<target host="wiki.flirble.org" />
+	<target host="www.flirble.org" />
+
+	<!--	Complications:
+				-->
+	<target host="domreg.flirble.org" />
 
 
-	<securecookie host="^.*\.flirble\.org$" name=".*" />
-
-
-	<!--	- !www doesn't work over https
-		- !www redirects to www over http
+	<!--	Not secured by server:
 					-->
-	<rule from="^http://(?:www\.)?flirble\.org/"
-		to="https://flirble.org/" />
+	<!--securecookie host="wiki\.flirble\.org$" name="^TWIKISID$" /-->
+	<!--securecookie host="www\.flirble\.org$" name="^SQMSESSID$" /-->
 
-	<!--	Cert only matches (*.)flirble.org	-->
-	<rule from="^http://(?:c\d\.)?blog\.flirble\.org/"
-		to="https://blog.flirble.org/" />
+	<securecookie host=".*\.flirble\.org$" name=".*" />
 
-	<!--	Cert: *.shopco.com	-->
+
 	<rule from="^http://domreg\.flirble\.org/"
 		to="https://domreg-flirble-org.shopco.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

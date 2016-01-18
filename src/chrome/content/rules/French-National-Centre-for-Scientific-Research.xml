@@ -5,21 +5,32 @@
 	Nonfunctional subdomains:
 
 		- cartedevoeux ¹
+		- www.cil ⁷
 		- (www.)?ccsd ²
 		- blog.ccsd ³
 		- heloise.ccsd ²
 		- support.ccsd ⁴
+		- devlog		Dropped
+		- www.dr6 ⁸
+		- crls.dsi ⁷
+		- dossiers.dsi ⁷
+		- ecoinfo ⁷
 		- edutheque ⁵
-		- www.insu.cnrs.fr ⁴
+		- www.insu.cnrs.fr *
 		- www.iscc ⁶
+		- calcul.math ¹
 		- images.math ⁷
+		- obtenir ⁶
 		- phototheque ³
+		- qualite-en-recherche *
+		- rbdd *
+		- www.urec		400
 		- videotheque ⁸
 		- wikiradio ³
 		- www ⁸
 		- www2 ⁸
 
-	¹ Shows CentOS test page
+	¹ Shows default page
 	² Handshake fails
 	³ Refused
 	⁴ Plaintext reply
@@ -27,15 +38,19 @@
 	⁶ Redirects to www.dsi
 	⁷ Shows another domain
 	⁸ 403
+	* Redirects to http
 
 
 	Problematic subdomains:
 
 		- wayf.dsi ¹
+		- lpmmc.grenoble *
 		- intranet ¹
+		- igc.services *
 		- www.sg ²
 
 	¹ Insecure renegotiation
+	* Untrusted root
 	² Mismatched, CN: www.dgdr.cnrs.fr
 
 
@@ -71,18 +86,27 @@
 		- default.https.cnrs.fr
 
 
+	Insecure cookies are set for these hosts:
+
+		- nouba.dsi.cnrs.fr
+		- support.dsi.cnrs.fr
+
+
 	Mixed content:
 
 		- Images, on:
 
 			- emploi from $self
 			- emploi from www
+			- lpmmc.grenoble from $self
 
 -->
 <ruleset name="CNRS.fr (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="cas.cnrs.fr" />
+
 	<target host="ccsdlib.ccsd.cnrs.fr" />
 	<target host="ccsdlib-preprod.ccsd.cnrs.fr" />
 	<target host="thumb.ccsd.cnrs.fr" />
@@ -91,10 +115,31 @@
 	<target host="cnrsformation.cnrs.fr" />
 	<target host="www.dgdr.cnrs.fr" />
 	<target host="docutiles.cnrs.fr" />
+
+	<target host="aresu.dsi.cnrs.fr" />
+	<target host="infocentre.dsi.cnrs.fr" />
+	<target host="intranet.dsi.cnrs.fr" />
+	<target host="janus.dsi.cnrs.fr" />
+	<target host="labintel.dsi.cnrs.fr" />
+	<target host="nouba.dsi.cnrs.fr" />
+	<target host="sesame.dsi.cnrs.fr" />
+	<target host="support.dsi.cnrs.fr" />
+	<target host="vhphttp.dsi.cnrs.fr" />
 	<target host="wayf.dsi.cnrs.fr" />
+	<target host="web-ast.dsi.cnrs.fr" />
+	<target host="www.dsi.cnrs.fr" />
+
 	<target host="emploi.cnrs.fr" />
+	<!--target host="lpmmc.grenoble.cnrs.fr" /-->
 	<target host="intranet.cnrs.fr" />
+	<target host="janus.cnrs.fr" />
+	<target host="labintel.cnrs.fr" />
 	<target host="lejournal.cnrs.fr" />
+	<!--target host="igc.services.cnrs.fr" /-->
+	<target host="sesame.cnrs.fr" />
+	<target host="www.simbad.cnrs.fr" />
+	<target host="tempo.cnrs.fr" />
+	<target host="www.utinam.cnrs.fr" />
 	<target host="www.cnrs.fr" />
 
 	<!--	Complications:
@@ -133,6 +178,14 @@
 		<!--	404:
 				-->
 		<!--exclusion pattern="^http://www2\.cnrs\.fr/(band/3\.htm|presse/communique/|sites/)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nouba\.dsi\.cnrs\.fr$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^support\.dsi\.cnrs\.fr$" name="^WEBXI_ID$" /-->
+
+	<securecookie host="^(?:nouba|support)\.dsi\.cnrs\.fr$" name=".+" />
 
 
 	<!--	Redirect drops path but not args:

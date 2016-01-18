@@ -5,14 +5,14 @@
 	thestar.com.122.2o7.net
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *thestar.com:
 
 		- www3 *
 
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *thestar.com:
 
 		- ^ ¹
 		- n ²
@@ -21,46 +21,43 @@
 	² Mismatched, CN: *.122.2o7.net
 
 
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- emarketing
-		- n		(→ thestar-com.122.2o7.net)
-		- s
-		- secure
-
-
 	Mixed content:
 
 		- Images on www from $self *
 
-		- Web bugs, on:
-		- Web bugs on www from n *
+		- Bugs, on:
+
 			- www from www.facebook.com *
+			- www from n.thestar.com *
 
 	* Secured by us
 
 -->
 <ruleset name="The Star.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="thestar.com" />
-	<target host="*.thestar.com" />
+	<target host="emarketing.thestar.com" />
+	<target host="s.thestar.com" />
+	<target host="secure.thestar.com" />
+	<target host="www.thestar.com" />
+
+	<!--	Complications:
+				-->
+	<target host="n.thestar.com" />
 
 
 	<securecookie host="^\.thestar\.com$" name="^s_\w+$" />
-	<!--
-		Secured by server:
-					-->
-	<!--securecookie host="^secure\.thestar\.com$" name="^JSESSIONID$" /-->
 
 
-	<rule from="^http://(?:www\.)?thestar\.com/"
+	<rule from="^http://thestar\.com/"
 		to="https://www.thestar.com/" />
-
-	<rule from="^http://(emarketing|s|secure)\.thestar\.com/"
-		to="https://$1.thestar.com/" />
 
 	<rule from="^http://n\.thestar\.com/"
 		to="https://thestar-com.122.2o7.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

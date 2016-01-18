@@ -1,12 +1,44 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://doctorswithoutborders.org/ => https://doctorswithoutborders.org/: Cycle detected - URL already encountered: https://www.doctorswithoutborders.org/home
-Fetch error: http://www.doctorswithoutborders.org/ => https://www.doctorswithoutborders.org/: Cycle detected - URL already encountered: https://www.doctorswithoutborders.org/home
+	Problematic hosts in *doctorswithoutborders.org:
+
+		- cdn *
+
+	* Fastly
+
+
+	Insecure cookies are set for these hosts:
+
+		- donate.doctorswithoutborders.org
+
 -->
-<ruleset name="DoctorsWithoutBorders.org" default_off='failed ruleset test'>
+<ruleset name="DoctorsWithoutBorders.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="doctorswithoutborders.org" />
-	<target host="www.doctorswithoutborders.org" />
-	<rule from="^http://www\.doctorswithoutborders\.org/" to="https://www.doctorswithoutborders.org/"/>
-	<rule from="^http://doctorswithoutborders\.org/" to="https://doctorswithoutborders.org/"/>
+	<target host="donate.doctorswithoutborders.org" />
+	<!--target host="www.doctorswithoutborders.org" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.doctorswithoutborders\.org/(?:article/[\w-]+$|home$)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.doctorswithoutborders.org/article/greece-home-we-had-war-least-we-had-dignity" /-->
+			<!--test url="http://www.doctorswithoutborders.org/home" /-->
+
+		<test url="http://donate.doctorswithoutborders.org/onetime.cfm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^donate\.doctorswithoutborders\.org$" name="^(?:CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^donate\.doctorswithoutborders\.org$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
 

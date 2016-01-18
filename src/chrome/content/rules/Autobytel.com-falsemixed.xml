@@ -7,10 +7,28 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="new.autobytel.com" />
+	<target host="www.autobytel.com" />
+
+	<!--	Complications:
+				-->
+	<target host="autobytel.com" />
+	<target host="hybrid.autobytel.com" />
 
 
-	<securecookie host="^new\.autobytel\.com$" name=".+" />
+	<securecookie host="^(?:new|www)\.autobytel\.com$" name=".+" />
 
+
+	<rule from="^http://autobytel\.com/"
+		to="https://www.autobytel.com/" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://hybrid\.autobytel\.com/[^?]*"
+		to="https://www.autobytel.com/green-cars/" />
+
+		<test url="http://hybrid.autobytel.com//" />
+		<test url="http://hybrid.autobytel.com/?" />
 
 	<rule from="^http:"
 		to="https:" />

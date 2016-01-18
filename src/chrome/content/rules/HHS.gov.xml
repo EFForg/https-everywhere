@@ -1,0 +1,95 @@
+<!--
+	Department of Health and Human Services
+
+	For other US government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *hhs.gov:
+
+		- ^ ¹
+		- eclkc.ohs.acf ²
+		- archive ¹
+		- aspe ²
+		- www.learning ²
+		- millionhearts ³
+		- minorityhealth ²
+		- oig ⁴
+		- www ⁴
+
+	¹ Shows another domain
+	² Dropped
+	³ 404
+	⁴ Redirects to http
+
+
+	Problematic hosts in *hhs.gov:
+
+		- betobaccofree ¹
+		- freshempire.betobaccofree ¹
+		- thinkculturalhealth ²
+
+	¹ Akamai
+	² 404
+
+
+	Insecure cookies are set for these hosts:
+
+		- tracker.cloud.hhs.gov
+		- comment-app.hhs.gov
+		- www.thinkculturalhealth.hhs.gov
+		- vaers.hhs.gov
+
+
+	Mixed content:
+
+		- css on freshempire.betobaccofree from fonts.googleapis.com *
+		- favicon on betobaccofree from $self
+		- bug on comment-app from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="HHS.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="acf.hhs.gov" />
+	<target host="www.acf.hhs.gov" />
+	<target host="ams.hhs.gov" />
+	<target host="freshempire.betobaccofree.hhs.gov" />
+	<target host="tracker.cloud.hhs.gov" />
+	<target host="cms.hhs.gov" />
+	<target host="www.cms.hhs.gov" />
+	<target host="comment-app.hhs.gov" />
+	<target host="iam.hhs.gov" />
+	<target host="lms.learning.hhs.gov" />
+	<target host="mentoring.hhs.gov" />
+	<target host="exclusions.oig.hhs.gov" />
+	<target host="forms.oig.hhs.gov" />
+	<target host="search.hhs.gov" />
+	<target host="www.thinkculturalhealth.hhs.gov" />
+	<target host="vaers.hhs.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="thinkculturalhealth.hhs.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^tracker\.cloud\.hhs\.gov$" name="^(?:JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^comment-app\.hhs\.gov$" name="^comment_view_\d+$" /-->
+	<!--securecookie host="^exclusions\.oig\.hhs\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.thinkculturalhealth\.hhs\.gov$" name="^(?:ASPSESSIONID[A-Z]{8}|BIGipServer)" /-->
+	<!--securecookie host="^vaers\.hhs\.gov$" name="^_ZopeId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://thinkculturalhealth\.hhs\.gov/"
+		to="https://www.thinkculturalhealth.hhs.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

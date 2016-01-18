@@ -1,30 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://univention.de/ => https://univention.de/: (51, "SSL: no alternative certificate subject name matches target host name 'univention.de'")
 	Problematic subdomains:
 
 		- piwik		(cert only matches www.piwik)
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www.)
-		- (www.)piwik	(^ → www)
+		- univention.de
 
 -->
-<ruleset name="Univention.de" default_off='failed ruleset test'>
+<ruleset name="Univention.de">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="univention.de" />
-	<target host="*.univention.de" />
+	<target host="www.piwik.univention.de" />
+	<target host="www.univention.de" />
 
+	<!--	Complications:
+				-->
+	<target host="piwik.univention.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^univention\.de$" name="^(?:PHPSESSID|em_transient_id)$" /-->
 
 	<securecookie host="^www\.univention\.de$" name=".+" />
 
 
-	<rule from="^http://(www\.)?univention\.de/"
-		to="https://$1univention.de/" />
-
-	<rule from="^http://(?:www\.)?piwik\.univention\.de/"
+	<rule from="^http://piwik\.univention\.de/"
 		to="https://www.piwik.univention.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

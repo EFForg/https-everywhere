@@ -194,7 +194,7 @@ SSLObservatory.prototype = {
   notifyCertProblem: function(socketInfo, status, targetSite) {
     this.log(NOTE, "cert warning for " + targetSite);
     if (targetSite == "observatory.eff.org") {
-      this.log(WARN, "Surpressing observatory warning");
+      this.log(WARN, "Suppressing observatory warning");
       return true;
     }
     return false;
@@ -841,7 +841,7 @@ SSLObservatory.prototype = {
      * custom_proxy_type == "direct" is indicative of the user having selected "submit certs even if
      * Tor is not available", rather than true custom Tor proxy settings.  So in that case, there's
      * not much point probing to see if the direct proxy is actually a Tor connection, and
-     * localhost:9050 is a better bet.  People whose networks send all traffc through Tor can just
+     * localhost:9050 is a better bet.  People whose networks send all traffic through Tor can just
      * tell the Observatory to submit certs without Tor.
      */
     } else if (this.myGetBoolPref("use_custom_proxy") && !(testingForTor && custom_proxy_type == "direct")) {
@@ -924,7 +924,7 @@ SSLObservatory.prototype = {
     if (level >= threshold) {
       var levelName = ["", "VERB", "DBUG", "INFO", "NOTE", "WARN"][level];
       var prefix = "SSL Observatory " + levelName + ": ";
-      // dump() prints to browser stdout. That's sometimes undesireable,
+      // dump() prints to browser stdout. That's sometimes undesirable,
       // so only do it when a pref is set (running from test.sh enables
       // this pref).
       if (this.prefs.getBoolPref("extensions.https_everywhere.log_to_stdout")) {

@@ -8,17 +8,17 @@ Get the packages you need and install a git hook to run tests before push:
 
     bash install-dev-dependencies.sh
 
-Run the tests for the Firefox version:
+Run all the tests:
 
     bash test.sh
 
 Run the latest code and rulesets in a standalone Firefox profile:
 
-    bash test.sh --justrun
+    bash test/firefox.sh --justrun
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash run-chromium.sh
+    bash test/chromium.sh --justrun
 
 Build the Firefox extension as a .xpi package:
 
@@ -56,6 +56,8 @@ Important directories you might want to know about
 
     src/chrome/content/rules  The rulesets live here
 
+    test/                     The tests live here
+
 Hacking on the Source Code
 --------------------------
 
@@ -88,14 +90,14 @@ https://www.transifex.com/projects/p/torproject/.
 
 ### Bug trackers and mailing lists
 
-We currently have two bug trackers. The one on Github (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
+We currently have two bug trackers. The one on GitHub (https://github.com/EFForg/https-everywhere/issues) is recommended because it gets checked more frequently and has a friendlier user interface. The one on trac.torproject.org (https://trac.torproject.org/projects/tor/report/19) has a large backlog of bugs at this point, but it has the advantage of allowing you to post bugs anonymously using the "cypherpunks" / "writecode" account. (Note that you won't see replies unless you put an email address in the CC field.)
 
 We have two publicly-archived mailing lists: the https-everywhere list (https://lists.eff.org/mailman/listinfo/https-everywhere) is for discussing the project as a whole, and the https-everywhere-rulesets list (https://lists.eff.org/mailman/listinfo/https-everywhere-rules) is for discussing the rulesets and their contents, including patches and git pull requests.
 
 Tests
 -------------
 
-There are some very basic unittests under https-everywhere-tests/. These are run with
+There are some very basic unittests under test/. These are run with
 
     bash test.sh
 
@@ -106,7 +108,7 @@ loading URLs in a browser and watching for Mixed Content Blocking to fire.
 The easiest way to run ruleset tests is to load a standalone Firefox instance
 with the tests enabled:
 
-    bash test.sh --justrun
+    bash test/firefox.sh --justrun
 
 Then click the HTTPS Everywhere icon on the toolbar, and click "Run HTTPS
 Everywhere Ruleset Tests." When you run the tests, be prepared to let your

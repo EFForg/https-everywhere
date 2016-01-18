@@ -1,20 +1,33 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://kungfunation.com/ => https://kungfunation.com/: (51, "SSL: no alternative certificate subject name matches target host name 'kungfunation.com'")
-Fetch error: http://kungfustore.com/ => https://kungfustore.com/: (28, 'Connection timed out after 10000 milliseconds')
 	Bucket at s3.amazonaws.com/static.kungfustore.com/
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.kungfunation.com
+
+
+	Mixed content:
+
+		- Image from static.squarespace.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Kung Fu Store (partial)" default_off='failed ruleset test'>
+<ruleset name="Kung Fu Nation.com" default_off="mismatched">
 
 	<target host="kungfunation.com"/>
-	<target host="*.kungfunation.com"/>
-	<target host="kungfustore.com"/>
-	<target host="*.kungfustore.com"/>
+	<target host="www.kungfunation.com"/>
 
-	<rule from="^http://kungfu(nation|store)\.com/"
-		to="https://kungfu$1.com/"/>
 
-	<rule from="^http://(\w\W)\.kungfu(nation|store)\.com/(cart$|favicon\.ico$|login$|(image|stylesheet|theme)s/|(session|user)/\w+|store/)"
-		to="https://$1.kungfu$2.com/$3"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.kungfunation\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^www\.kungfunation\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

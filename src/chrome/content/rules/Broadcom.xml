@@ -4,7 +4,7 @@
 		- Broadcom_Foundation.org.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *broadcom.com:
 
 		- blog ¹
 		- community ²
@@ -16,25 +16,10 @@
 	³ Redirects to http
 
 
-	Problematic subdomains:
-
-		- jobs *
-
-	* Server sends no certificate, see https://whatsmychaincert.com
-
-
 	Insecure cookies are set for these hosts:
 
 		- jobs.broadcom.com
-
-
-	Mixed content:
-
-		- Images on jobs, www from www ¹
-		- favicon on jobs from $self ²
-
-	¹ Secured by us
-	² Not secured by us <= missing certificate chain
+		- www.broadcom.com
 
 -->
 <ruleset name="Broadcom.com (partial)">
@@ -42,15 +27,16 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="broadcom.com" />
-	<!--target host="jobs.broadcom.com" /-->
+	<target host="jobs.broadcom.com" />
 	<target host="www.broadcom.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^jobs\.broadcom\.com$" name="^(JSESSIONID|PERSIST)$" /-->
+	<!--securecookie host="^www\.broadcom\.com$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^blog\.broadcom\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"

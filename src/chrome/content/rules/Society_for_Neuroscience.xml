@@ -1,17 +1,87 @@
 <!--
-	Cert only matches www.
+	Society for Neuroscience
+
+
+	Problematic hosts in *sfn.org:
+
+		- ^ ¹
+		- community ²
+
+	¹ Prints default page
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- ebiz.sfn.org
+		- neuronline.sfn.org
+		- www.sfn.org
+
+
+	Mixed content:
+
+		- Image on community from neuronline.sfn.org *
+		- favicon on community from www.sfn.org *
+
+	* Secured by us
 
 -->
-<ruleset name="Society for Neuroscience" default_off="expired">
+<ruleset name="SFN.org (partial)">
 
-	<target host="sfn.org" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="community.sfn.org" /-->
+	<target host="ebiz.sfn.org" />
+	<target host="neuronline.sfn.org" />
 	<target host="www.sfn.org" />
 
+	<!--	Complications:
+				-->
+	<target host="sfn.org" />
 
-	<securecookie host="^www\.sfn\.org$" name=".+" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:neuronline|www)\.sfn\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:neuronline|www)\.sfn\.org/+(?!SfN_favicon\.ico|WebResource\.axd|css/|fonts/|images/|~/media/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://neuronline.sfn.org/Articles/FAQs" />
+			<test url="http://neuronline.sfn.org/Browse" />
+			<test url="http://neuronline.sfn.org/Topics/Scientific-Research" />
+
+			<test url="http://www.sfn.org/About/Mission-and-Strategic-Plan" />
+			<test url="http://www.sfn.org/Advertise/Advertise" />
+			<test url="http://www.sfn.org/Press-Room/Press-Room" />
+			<test url="http://www.sfn.org/member-center/member-directory" />
+
+			<!--	-ve:
+					-->
+			<test url="http://neuronline.sfn.org/css/omp/omp-print.css" />
+			<test url="http://neuronline.sfn.org/images/omp/ui/logo-neuronline2x.png" />
+
+			<test url="http://www.sfn.org/SfN_favicon.ico" />
+			<test url="http://www.sfn.org/WebResource.axd?d=" />
+			<test url="http://www.sfn.org/images/sfn/temp/brainfacts.jpg" />
+			<test url="http://www.sfn.org/~/media/SfN/Images/Logos/logo.ashx" />
 
 
-	<rule from="^http://(?:www\.)?sfn\.org/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ebiz\.sfn\.org$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^(?:neuronline\.|www\.)?sfn\.org$" name="^(?:ASP\.NET_SessionId|SC_ANALYTICS_SESSION_COOKIE)$" /-->
+
+	<securecookie host="^ebiz\.sfn\.org$" name=".+" />
+	<securecookie host="^(?:neuronline\.|www\.)?sfn\.org$" name="^SC_ANALYTICS_SESSION_COOKIE$" />
+
+
+	<rule from="^http://sfn\.org/"
 		to="https://www.sfn.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

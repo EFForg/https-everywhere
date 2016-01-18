@@ -4,59 +4,44 @@
 
 	CDN buckets:
 
-		- www.hollywoodreporter.com.edgesuite.net
+		- cs422.wac.thetacdn.net
 
-			- a1682.g.akamai.net
-			- thr[1-4].pgmcdn.net
-
-		- hollywoodreporter.mobify.com
-
-			- m
+			- cdn[1-6].thr.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *hollywoodreporter.com:
 
-		- origin-www	(404, self-signed)
+		- origin-www *
+
+	* 404
 
 
 	Problematic domains:
 
-		- hollywoodreporter.com subdomains:
+		- in *hollywoodreporter.com:
 
-			- ^		(redirects to www, mismatched, CN: *.hollywoodreporter.com)
 			- edit		(works, expired 2013-06-20)
-			- m		(shows mobify.com; mismatched, CN: *.mobify.com)
-			- www *
+			- m		(expired, mismatched)
 
 		- thr[1-4].pgmcdn.net *
 
-	*  Wworks, akamai
+	* Works, akamai
 
 -->
 <ruleset name="Hollywood Reporter (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="hollywoodreporter.com" />
-	<target host="*.hollywoodreporter.com" />
-		<!--
-			Avoid user-visible paths:
-							-->
-		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/(?!favicon\.ico|sites/)" />
-		<!--
-			css_c602cf5d0b126628beb7012985fd4591 links to images relative /
-											-->
-		<exclusion pattern="^http://(?:www\.)?hollywoodreporter\.com/sites/default/files/css/(?!css_02b3ba95a2adca47bf1e40d170fcaa56\.css)" />
+	<target host="subscribe.hollywoodreporter.com" />
+	<target host="www.hollywoodreporter.com" />
 
 
-	<securecookie host=".+\.hollywoodreporter\.com$" name=".+" />
+	<securecookie host="\." name="^_gat?$" />
+	<securecookie host=".\.hollywoodreporter\.com$" name="." />
 
 
-	<rule from="^http://(?:www\.)?hollywoodreporter\.com/"
-		to="https://a248.e.akamai.net/f/1682/7219/8m/www.hollywoodreporter.com/" />
-
-	<rule from="^http://m\.hollywoodreporter\.com/mobify/"
-		to="https://hollywoodreporter.mobify.com/mobify/" />
-
-	<rule from="^http://s(ecure|ubscribe)\.hollywoodreporter\.com/"
-		to="https://s$1.hollywoodreporter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

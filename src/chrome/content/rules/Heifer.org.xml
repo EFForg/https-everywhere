@@ -3,33 +3,40 @@
 
 		- 9dc3f407a257cfd3f7ea-d14ef12e680aa00597bdffb57368cf92.r6.cf2.rackcdn.com
 
-
-	^: mismatched
-
-
-	Partially covered subdomains:
-
-		- (www.)	(^ → www, some pages redirect to http)
-
-
-	Fully covered subdomains:
-
-		- honorcards
-		- payments
-		- pbridge
-		- secure1
-		- shop
-
 -->
 <ruleset name="Heifer.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="heifer.org" />
-	<target host="*.heifer.org" />
-		<!--
-			Redirect to http:
+	<target host="honorcards.heifer.org" />
+	<target host="payments.heifer.org" />
+	<target host="pbridge.heifer.org" />
+	<target host="secure1.heifer.org" />
+	<target host="shop.heifer.org" />
+	<target host="www.heifer.org" />
+
+		<!--	Redirect to http:
 						-->
 		<!--exclusion pattern="^http://(www\.)?heifer\.org/+($|\?|beyond-hunger/index\.html)" /-->
-		<!--exclusion pattern="^http://(www\.)?heifer\.org/+(?!favicon\.ico|gift-catalog/donor-info\.html|resources/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?heifer\.org/+(?!favicon\.ico|gift-catalog/donor-info\.html|resources/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.heifer.org/beyond-hunger/index.html" />
+			<test url="http://www.heifer.org/index" />
+			<test url="http://www.heifer.org/index.asp" />
+			<test url="http://www.heifer.org/index.aspx" />
+			<test url="http://www.heifer.org/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.heifer.org/favicon.ico" />
+			<test url="http://www.heifer.org/gift-catalog/donor-info.html" />
+			<test url="http://www.heifer.org/resources/images/logo.png" />
 
 
 	<!--	Tracking cookies:
@@ -38,10 +45,7 @@
 	<securecookie host="^(?:honorcards|shop)\.heifer\.org$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?heifer\.org/(?=favicon\.ico|gift-catalog/donor-info\.html|resources/)"
-		to="https://www.heifer.org/" />
-
-	<rule from="^http://(honorcards|payments|pbridge|secure1|shop)\.heifer\.org/"
-		to="https://$1.heifer.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

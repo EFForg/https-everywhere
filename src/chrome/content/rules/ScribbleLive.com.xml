@@ -1,0 +1,101 @@
+<!--
+	For rules causing false/broken MCB, see ScribbleLive.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/images.scribblelive.com/
+		- dv4dx4g3w8ea8.cloudfront.net
+
+
+	Problematic hosts in *scribblelive.com:
+
+		- help ¹
+		- www ²
+		- www2 ¹
+	
+	² Mixed css
+	¹ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- client.scribblelive.com
+		- www.scribblelive.com
+		- www2.scribblelive.com
+
+
+	Mixed content:
+
+		- css on www from $self *
+
+		- IMages, on:
+
+			- www from cdn.scribblelive.com *
+			- www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="ScribbleLive.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="scribblelive.com" />
+	<target host="cdn.scribblelive.com" />
+	<target host="client.scribblelive.com" />
+	<target host="images.scribblelive.com" />
+	<target host="market.scribblelive.com" />
+	<!--target host="www.scribblelive.com" /-->
+
+	<!--	Complications:
+				-->
+	<target host="help.scribblelive.com" />
+	<target host="www2.scribblelive.com" />
+
+		<!--	Mixed css at rewrite destination:
+							-->
+		<exclusion pattern="^http://www2\.scribblelive\.com/+(?:\?.*)?$" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www2.scribblelive.com//?" />
+			<test url="http://www2.scribblelive.com///" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^client\.scribblelive\.com$" name="^LoggedIn$" /-->
+	<!--securecookie host="^www\.scribblelive\.com$" name="^wfvt_\d+$" /-->
+	<!--securecookie host="^www2\.scribblelive\.com$" name="^(?:pardot|visitor_id\d+)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://help\.scribblelive\.com/+([^?]*)(?:\?.*)?"
+		to="https://scribblelive.zendesk.com/hc$1" />
+
+		<test url="http://help.scribblelive.com//" />
+		<test url="http://help.scribblelive.com/?" />
+		<test url="http://help.scribblelive.com/hc" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<!--rule from="^http://www2\.scribblelive\.com/+(?:\?.*)?$"
+		to="https://www.scribblelive.com/" /-->
+
+		<test url="http://www2.scribblelive.com//" />
+		<test url="http://www2.scribblelive.com/?" />
+
+	<rule from="^http://www2\.scribblelive\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://www2.scribblelive.com/css/form.css?ver=20121030" />
+		<test url="http://www2.scribblelive.com/l/27242/2015-06-22/2gzglf" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

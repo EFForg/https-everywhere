@@ -1,6 +1,7 @@
 <!--
 	Other Dyn rulesets:
 
+		- Dyn_Status.com.xml
 		- Dynect.net
 
 
@@ -8,40 +9,51 @@
 
 		- dyn.com subdomains:
 
-			- ^		($ redirects to http, some paths redirect erroneously)
-			- checkmyip
 			- hub ²
 			- research ²
-			- status
 
 		- (www.)dyncommunity.com
-		- (www.)dynect.net		(times out)
-		- (www.)dynstatus.com
 
 	² Refused
 
 
-	Problematic hosts:
+	Problematic hosts in *dyn.com;
 
-		- help.dyn.com *
+		- status *
 
-	* Server sends no certificate chain, see https://whatsmychaincert.com
+	* Refused
+
+
+	Mixed content:
+
+		- Images on dyn.com from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Dyn (partial)">
+<ruleset name="Dyn.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="dyn.com" />
 	<target host="account.dyn.com" />
-	<!--target host="help.dyn.com" /-->
+	<target host="help.dyn.com" />
 	<target host="www.dyn.com" />
 	<target host="a.dyndns.com" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://dyn\.com/($|wp-content/)" /-->
+	<!--	Complications:
+				-->
+	<target host="status.dyn.com" />
 
 
 	<!--securecookie host="^\.account\.dyn\.com$" name=".+" /-->
 
+
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://status\.dyn\.com/"
+		to="https://www.dynstatus.com/" />
 
 	<rule from="^http:"
 		to="https:" />
