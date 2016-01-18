@@ -17,7 +17,11 @@ else
   git rev-parse && cd "$(git rev-parse --show-toplevel)"
 fi
 
-RULESETS_CHANGED=$(git diff --name-only HEAD | grep $RULESETFOLDER | grep '.xml')
+# Fetch the current GitHub version of HTTPS-E to compare to its master
+git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
+git fetch upstream-for-travis master 
+RULESETS_CHANGED=$(git diff --name-only upstream-for-travis/master | grep $RULESETFOLDER | grep '.xml')
+git remote remove upstream-for-travis
 
 # Only run test if something has changed.
 if [ "$RULESETS_CHANGED" ]; then
