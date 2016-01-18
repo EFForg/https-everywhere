@@ -1,3 +1,8 @@
+<!--
+	For other Booking.com rulesets, see :
+
+		Villas.com.xml
+-->
 <ruleset name="Booking.com">
 
 	<target host="booking.com" />
@@ -5,17 +10,19 @@
 	<target host="*.bstatic.com" />
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.booking\.com$" name="^bkng$" /-->
-
-	<securecookie host="^\.booking\.com$" name=".+" />
+	<securecookie host="^(\.[\w\-]+)?\.booking\.com$" name=".+" />
 
 
-	<rule from="^http://((?:admin|bookingbutton|distribution-xml|join|mobile|secure|www|xml)\.)?booking\.com/"
+	<rule from="^http://([\w\-]+\.)?booking\.com/"
 		to="https://$1booking.com/" />
 
-	<rule from="^http://(\w)\.bstatic\.com/"
+	<test url="http://www.booking.com/" />
+	<test url="http://secure.booking.com/" />
+
+	<rule from="^http://([\w\-]+)\.bstatic\.com/"
 		to="https://$1.bstatic.com/" />
+
+	<test url="http://r-ec.bstatic.com/" />
+	<test url="http://s-ec.bstatic.com/" />
 
 </ruleset>
