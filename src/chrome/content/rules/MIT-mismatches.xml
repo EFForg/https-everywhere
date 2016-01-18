@@ -2,10 +2,11 @@
 	For rules that are on by default, see MIT.xml.
 
 -->
-<ruleset name="Massachusetts Institute of Technology (problematic)" default_off="expired, mismatched, self-signed">
+<ruleset name="Massachusetts Institute of Technology (problematic)" default_off="expired, mismatched, missing certificate chain, self-signed">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="www.advancedligo.mit.edu" />
 	<target host="calendar.mit.edu" />
 	<target host="counter.mit.edu" />
 	<target host="cluedumps.mit.edu" />
@@ -24,6 +25,7 @@
 
 	<!--	Complications:
 				-->
+	<target host="advancedligo.mit.edu" />
 	<target host="techtime.mit.edu" />
 
 		<!--	- 403 over https
@@ -52,8 +54,11 @@
 			<test url="http://techtime.mit.edu/?b" />
 
 
-	<securecookie host="^(?:3down|cluedumps|webmail)\.mit\.edu$" name=".+" />
+	<securecookie host="^\w" name="." />
 
+
+	<rule from="^http://advancedligo\.mit\.edu/"
+		to="https://www.advancedligo.mit.edu/" />
 
 	<rule from="^http://techtime\.mit\.edu/(?:$|\?.*)"
 		to="https://calendar.mit.edu/techtime/index.shtml" />
