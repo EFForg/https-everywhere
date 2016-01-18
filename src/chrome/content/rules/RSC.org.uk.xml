@@ -1,0 +1,70 @@
+<!--
+	Problematic hosts in *rsc.org.uk:
+
+		- autodiscover ʳ
+
+	ʳ Refused
+
+
+	These altnames don't exist:
+
+		- rsc.org.uk
+		- autodi.rsc.org.uk
+		- owa.rsc.org.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.rsc.org.uk
+
+-->
+<ruleset name="RSC.org.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn2.rsc.org.uk" />
+	<target host="mail.rsc.org.uk" />
+	<target host="www.rsc.org.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="autodiscover.rsc.org.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.rsc\.org\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash:
+						-->
+	<rule from="^http://autodiscover\.rsc\.org\.uk/+$"
+		to="https://outlook.office365.com/owa/?realm=rsc.org.uk&amp;vd=autodiscover" />
+
+		<test url="http://autodiscover.rsc.org.uk//" />
+
+	<!--	Redirect prepends path:
+					-->
+	<rule from="^http://autodiscover\.rsc\.org\.uk/+([^?]+)$"
+		to="https://outlook.office365.com/$1?realm=rsc.org.uk&amp;vd=autodiscover" />
+
+		<test url="http://autodiscover.rsc.org.uk/index.php" />
+		<test url="http://autodiscover.rsc.org.uk/index.asp" />
+		<test url="http://autodiscover.rsc.org.uk/index.aspx" />
+
+	<!--	Redirect prepends path and args:
+						-->
+	<rule from="^http://autodiscover\.rsc\.org\.uk/+(.+)"
+		to="https://outlook.office365.com/$1&amp;realm=rsc.org.uk&amp;vd=autodiscover" />
+
+		<test url="http://autodiscover.rsc.org.uk/index.php?fill" />
+		<test url="http://autodiscover.rsc.org.uk/index.asp?test" />
+		<test url="http://autodiscover.rsc.org.uk/index.aspx?quota" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
