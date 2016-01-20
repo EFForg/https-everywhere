@@ -23,8 +23,7 @@ function loadExtensionFile(url, returnType) {
 
 // Rules are loaded here
 var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
-var rule_list = 'rules/default.rulesets';
-all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
 
 var USER_RULE_KEY = 'userRules';

@@ -1,6 +1,6 @@
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 1;
-function log(){};
+function log(){}
 
 /**
  * A single rule
@@ -9,7 +9,6 @@ function log(){};
  * @constructor
  */
 function Rule(from, to) {
-  //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
@@ -20,7 +19,6 @@ function Rule(from, to) {
  * @constructor
  */
 function Exclusion(pattern) {
-  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
