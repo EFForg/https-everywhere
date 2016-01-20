@@ -37,6 +37,11 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// Is HTTPSe enabled, or has it been manually disabled by the user?
+var isExtensionEnabled = true;
+// The setBadgeText API has an abandoned bug: https://crbug.com/170413
+chrome.browserAction.setBadgeText({ text: "" });
+
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false;
@@ -177,6 +182,9 @@ var redirectCounter = {};
  * @param details of the handler, see Chrome doc
  * */
 function onBeforeRequest(details) {
+  // If HTTPSe has been disabled by the user, return immediately.
+  if (!isExtensionEnabled) { return; }
+
   var uri = document.createElement('a');
   uri.href = details.url;
 
@@ -459,7 +467,7 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
 function onCookieChanged(changeInfo) {
-  if (!changeInfo.removed && !changeInfo.cookie.secure) {
+  if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
     if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
       var cookie = {name:changeInfo.cookie.name,
                     value:changeInfo.cookie.value,
