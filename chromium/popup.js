@@ -77,12 +77,34 @@ function createRuleLine(ruleset) {
   return line;
 }
 
+// Change the UX to reflect extension enabled/disabled
+function updateEnabledDisabledButtonState() {
+  document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
+}
+
+// Toggle extension enabled/disabled status
+function toggleEnabledDisabled() {
+  if (backgroundPage.isExtensionEnabled) {
+    // User wants to disable us
+    backgroundPage.isExtensionEnabled = false;
+    chrome.browserAction.setBadgeText({ text: "OFF" });
+  } else {
+    // User wants to enable us
+    backgroundPage.isExtensionEnabled = true;
+    chrome.browserAction.setBadgeText({ text: "" });
+  }
+   updateEnabledDisabledButtonState();
+  // The extension state changed, to reload this tab.
+  chrome.tabs.reload();
+}
+
 /**
  * Create the list of rules for a specific tab
- * @param tab
+ * @param tabArray
  */
-function gotTab(tab) {
-  var rulesets = backgroundPage.activeRulesets.getRulesets(tab.id);
+function gotTab(tabArray) {
+  var activeTab = tabArray[0];
+  var rulesets = backgroundPage.activeRulesets.getRulesets(activeTab.id);
 
   for (var r in rulesets) {
     var listDiv = stableRules;
@@ -94,7 +116,7 @@ function gotTab(tab) {
     listDiv.style.visibility = "visible";
   }
   // Only show the "Add a rule" link if we're on an HTTPS page
-  if (/^https:/.test(tab.url)) {
+  if (/^https:/.test(activeTab.url)) {
     show(e("add-rule-link"));
   }
 }
@@ -106,6 +128,10 @@ document.addEventListener("DOMContentLoaded", function () {
   stableRules = document.getElementById("StableRules");
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
+
+  // Set up the enabled/disabled switch
+  updateEnabledDisabledButtonState();
+  document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
 
   // Print the extension's current version.
   var the_manifest = chrome.runtime.getManifest();
