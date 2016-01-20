@@ -91,7 +91,6 @@ RuleSet.prototype = {
  */
 function RuleSets(userAgent, cache, ruleActiveStates) {
   // Load rules into structure
-  var t1 = new Date().getTime();
   this.targets = {};
   this.userAgent = userAgent;
 
@@ -221,19 +220,6 @@ RuleSets.prototype = {
   },
 
   /**
-   * Insert any elements from fromList into intoList, if they are not
-   * already there.  fromList may be null.
-   * @param intoList
-   * @param fromList
-   */
-  setInsert: function(intoList, fromList) {
-    if (!fromList) return;
-    for (var i = 0; i < fromList.length; i++)
-      if (intoList.indexOf(fromList[i]) == -1)
-        intoList.push(fromList[i]);
-  },
-
-  /**
    * Return a list of rulesets that apply to this host
    * @param host The host to check
    * @returns {*} (empty) list
@@ -248,10 +234,9 @@ RuleSets.prototype = {
     log(DBUG, "Ruleset cache miss for " + host);
 
     var tmp;
-    var results = [];
+    var resultSet = new Set();
     if (this.targets[host]) {
-      // Copy the host targets so we don't modify them.
-      results = this.targets[host].slice();
+      this.targets[host].forEach(function(s) {resultSet.add(s)});
     }
 
     // Replace each portion of the domain with a * in turn
@@ -259,25 +244,31 @@ RuleSets.prototype = {
     for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
-      this.setInsert(results, this.targets[segmented.join(".")]);
+      if (this.targets[segmented.join(".")]) {
+        this.targets[segmented.join(".")].forEach(function(s) {resultSet.add(s)});
+      }
       segmented[i] = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (var i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
-      this.setInsert(results, this.targets[t]);
+      if (this.targets[t]) {
+        this.targets[t].forEach(function (s){resultSet.add(s)})
+      }
     }
+
     log(DBUG,"Applicable rules for " + host + ":");
-    if (results.length == 0)
+    if (resultSet.size === 0) {
       log(DBUG, "  None");
-    else
-      for (var i = 0; i < results.length; ++i)
-        log(DBUG, "  " + results[i].name);
+    } else {
+      for (let ruleset of resultSet)
+        log(DBUG, "  " + ruleset.name);
+    }
 
     // Insert results into the ruleset cache
-    this.ruleCache.set(host, results);
-    return results;
+    this.ruleCache.set(host, resultSet);
+    return resultSet;
   },
 
   /**
@@ -297,9 +288,8 @@ RuleSets.prototype = {
         return null;
     }
 
-    var rs = this.potentiallyApplicableRulesets(hostname);
-    for (var i = 0; i < rs.length; ++i) {
-      var ruleset = rs[i];
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    for (let ruleset of potentiallyApplicable) {
       if (ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
@@ -348,10 +338,10 @@ RuleSets.prototype = {
     var test_uri = "http://" + domain + nonce_path + nonce_path;
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
-    var rs = this.potentiallyApplicableRulesets(domain);
-    for (var i = 0; i < rs.length; ++i) {
-      if (!rs[i].active) continue;
-      if (rs[i].apply(test_uri)) {
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
+    for (let ruleset of potentiallyApplicable) {
+      if (!ruleset.active) continue;
+      if (ruleset.apply(test_uri)) {
         log(INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
@@ -369,10 +359,9 @@ RuleSets.prototype = {
    * @returns {*} the new uri or null
    */
   rewriteURI: function(urispec, host) {
-    var newuri = null;
-    var rs = this.potentiallyApplicableRulesets(host);
-    for(var i = 0; i < rs.length; ++i) {
-      if (rs[i].active && (newuri = rs[i].apply(urispec)))
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
+    for (let ruleset of potentiallyApplicable) {
+      if (ruleset.active && (newuri = ruleset.apply(urispec)))
         return newuri;
     }
     return null;
