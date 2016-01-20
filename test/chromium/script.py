@@ -9,10 +9,12 @@
 # in order for the script to run successfully. A desktop version
 # of linux is required for the script to run correctly as well.
 # Otherwise, use pyvirtualdisplay.
+#
 
 import sys, os, platform
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 class bcolors:
     HEADER = '\033[95m'
@@ -23,7 +25,6 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
 
 chromeOps = webdriver.ChromeOptions()
 chromeOps.add_extension(sys.argv[1])
@@ -39,8 +40,13 @@ if sys.platform.startswith("linux"):
         chromedriver_path = "/usr/lib/chromium/chromedriver"
 
 try:
+    # Logging via:
+    # https://stackoverflow.com/questions/20907180/getting-console-log-output-from-chrome-with-selenium-python-api-bindings
+    d = DesiredCapabilities.CHROME
+    d['loggingPrefs'] = { 'browser':'ALL' }
+
     # First argument is optional, if not specified will search path.
-    driver = webdriver.Chrome(chromedriver_path, chrome_options=chromeOps)
+    driver = webdriver.Chrome(chromedriver_path, chrome_options=chromeOps, desired_capabilities=d)
 except WebDriverException as e:
     error = e.__str__()
 
@@ -64,6 +70,10 @@ elif driver.current_url.startswith('http'):
     test_failed = True
 
 print ''
+
+print 'Logs were:'
+for entry in driver.get_log('browser'):
+    print entry
 
 driver.quit()
 
