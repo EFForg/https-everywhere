@@ -81,6 +81,10 @@ for fi in filenames:
     # pointing into the ruleset table.
     etree.strip_tags(tree, 'target')
 
+    # Store the filename in the `f' attribute so "view source XML" for rules in
+    # FF version can find it.
+    xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
+
     c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),))
     ruleset_id = c.lastrowid
     for target in targets:
