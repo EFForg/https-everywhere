@@ -160,6 +160,7 @@ seen_file = False
 
 xpath_ruleset = etree.XPath("/ruleset")
 xpath_ruleset_name = etree.XPath("/ruleset/@name")
+xpath_ruleset_file = etree.XPath("/ruleset/@f")
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
@@ -179,12 +180,13 @@ for row in c.execute('''SELECT contents from rulesets'''):
         failure = 1
         fail("unnamed ruleset")
         continue
+    rf = xpath_ruleset_file(tree)[0]
     from_attrib = xpath_from(tree)
     to = xpath_to(tree)
     for test in tests:
         if not test(tree, rn, from_attrib=from_attrib, to=to):
             failure = 1
-            fail("%s failed test: %s" % (rn, test.__doc__))
+            fail("%s failed test: %s" % (rf, test.__doc__))
 
 for (host, count) in c.execute('''
   select host, count(host) as c from targets group by host;'''):

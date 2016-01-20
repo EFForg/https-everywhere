@@ -72,10 +72,13 @@ except:
   # Chromium
   library.write('<rulesetlibrary>')
 
+# Include the filename.xml as the "f" attribute
 print("Removing whitespaces and comments...")
 
 for rfile in sorted(xml_ruleset_files):
   ruleset = open(rfile).read()
+  fn = os.path.basename(rfile)
+  ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)
   library.write(clean_up(ruleset))
 library.write("</rulesetlibrary>\n")
 library.close()

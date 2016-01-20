@@ -198,6 +198,11 @@ httpsEverywhere.toolbarButton = {
         ++counter;
       }
     }
+    for (var x in alist.moot) {
+      if (!(x in alist.active)) {
+        ++counter;
+      }
+    }
 
     toolbarbutton.setAttribute('rulesetsApplied', counter);
     HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);

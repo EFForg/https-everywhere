@@ -18,6 +18,8 @@ def simple(f):
     return all([
     # ruleset must not be default_off
     "default_off" not in tree.xpath("/ruleset")[0].attrib,
+    # ruleset must not contain a match_rule
+    "match_rule" not in tree.xpath("/ruleset")[0].attrib,
     # XXX: maybe also check for platform="mixedcontent" here
     # ruleset must not apply any securecookie patterns
     not tree.xpath("/ruleset/securecookie"),

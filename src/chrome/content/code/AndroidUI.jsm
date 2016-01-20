@@ -106,6 +106,11 @@ var popupInfo = {
         this.ruleItems.push({ label: rule, selected: true });
         this.ruleStatus.push(true);
         this.rules.push(this.alist.active[rule]);
+      } else if (this.alist.moot.hasOwnProperty(rule)) {
+        // moot rules are checked and toggleable too
+        this.ruleItems.push({ label: rule, selected: true });
+        this.ruleStatus.push(true);
+        this.rules.push(this.alist.moot[rule]);
       } else if (this.alist.inactive.hasOwnProperty(rule)) {
         // inactive rules are unchecked and toggleable
         this.ruleItems.push({ label: rule });
