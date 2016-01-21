@@ -31,7 +31,12 @@ function Exclusion(pattern) {
  */
 function CookieRule(host, cookiename) {
   this.host_c = new RegExp(host);
-  this.name_c = new RegExp(cookiename);
+
+  this.name_c = null;  // A null name_c matches all cookie names.
+  if (cookiename !== ".*" && cookiename !== ".+") {
+    // About 50% of cookie rules a more complex regex rule.
+    this.name_c = new RegExp(cookiename);
+  }
 }
 
 /**
@@ -300,7 +305,7 @@ RuleSets.prototype = {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
+          if (cr.host_c.test(cookie.domain) && (cr.name_c === null || cr.name_c.test(cookie.name))) {
             return ruleset;
           }
         }
