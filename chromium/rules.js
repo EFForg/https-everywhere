@@ -284,18 +284,17 @@ RuleSets.prototype = {
 
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
-   * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
-   * @param knownHttps Is the context for setting this cookie is https ?
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: function(cookie, knownHttps) {
+  shouldSecureCookie: function(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".")
+    while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
+    }
 
-    if (!knownHttps && !this.safeToSecureCookie(hostname)) {
+    if (!this.safeToSecureCookie(hostname)) {
         return null;
     }
 
