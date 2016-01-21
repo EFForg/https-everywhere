@@ -3,6 +3,11 @@
 var DBUG = 1;
 function log(){}
 
+// To reduce memory usage for the numerous rules/cookies with trivial rules
+const trivial_rule_to = "https:";
+const trivial_rule_from_c = new RegExp("^http:");
+const trivial_cookie_name_c = new RegExp(".*");
+
 /**
  * A single rule
  * @param from
@@ -10,8 +15,15 @@ function log(){}
  * @constructor
  */
 function Rule(from, to) {
-  this.to = to;
-  this.from_c = new RegExp(from);
+  if (from === "^http:" && to === "https:") {
+    // This is a trivial rule, rewriting http->https with no complex RegExp.
+    this.to = trivial_rule_to;
+    this.from_c = trivial_rule_from_c;
+  } else {
+    // This is a non-trivial rule.
+    this.to = to;
+    this.from_c = new RegExp(from);
+  }
 }
 
 /**
@@ -32,9 +44,10 @@ function Exclusion(pattern) {
 function CookieRule(host, cookiename) {
   this.host_c = new RegExp(host);
 
-  this.name_c = null;  // A null name_c matches all cookie names.
-  if (cookiename !== ".*" && cookiename !== ".+") {
-    // About 50% of cookie rules a more complex regex rule.
+  if (cookiename === ".*" || cookiename === ".+") {
+    // About 50% of cookie rules trivially match any name.
+    this.name_c = trivial_cookie_name_c;
+  } else {
     this.name_c = new RegExp(cookiename);
   }
 }
@@ -304,7 +317,7 @@ RuleSets.prototype = {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
-          if (cr.host_c.test(cookie.domain) && (cr.name_c === null || cr.name_c.test(cookie.name))) {
+          if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
             return ruleset;
           }
         }
