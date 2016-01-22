@@ -1,3 +1,4 @@
+"use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 1;
 function log(){};
@@ -87,16 +88,14 @@ RuleSet.prototype = {
 
 /**
  * Initialize Rule Sets
- * @param userAgent The browser's user agent
  * @param cache a cache object (lru)
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets(userAgent, cache, ruleActiveStates) {
+function RuleSets(cache, ruleActiveStates) {
   // Load rules into structure
   var t1 = new Date().getTime();
   this.targets = {};
-  this.userAgent = userAgent;
 
   // A cache for potentiallyApplicableRulesets
   // Size chosen /completely/ arbitrarily.
@@ -107,6 +106,9 @@ function RuleSets(userAgent, cache, ruleActiveStates) {
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
+
+  // A regex to match platform-specific features
+  this.localPlatformRegexp = new RegExp("chromium");
 }
 
 
@@ -124,21 +126,6 @@ RuleSets.prototype = {
       }
     }
   },
-
-  /**
-   * Return the RegExp for the local platform
-   */
-  localPlatformRegexp: (function() {
-    var isOpera = /(?:OPR|Opera)[\/\s](\d+)(?:\.\d+)/.test(this.userAgent);
-    if (isOpera && isOpera.length === 2 && parseInt(isOpera[1]) < 23) {
-      // Opera <23 does not have mixed content blocking
-      log(DBUG, 'Detected that we are running Opera < 23');
-      return new RegExp("chromium|mixedcontent");
-    } else {
-      log(DBUG, 'Detected that we are running Chrome/Chromium');
-      return new RegExp("chromium");
-    }
-  })(),
 
   /**
    * Load a user rule
@@ -177,7 +164,7 @@ RuleSets.prototype = {
     }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
-    // off-by-default
+    // off-by-default. In practice, this excludes "mixedcontent" & "cacert" rules.
     var platform = ruletag.getAttribute("platform");
     if (platform) {
       if (platform.search(this.localPlatformRegexp) == -1) {
@@ -274,6 +261,7 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
+    var t;
     for (var i = 2; i <= segmented.length - 2; ++i) {
       t = "*." + segmented.slice(i,segmented.length).join(".");
       this.setInsert(results, this.targets[t]);
