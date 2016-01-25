@@ -93,8 +93,8 @@ function toggleEnabledDisabled() {
     backgroundPage.isExtensionEnabled = true;
     chrome.browserAction.setBadgeText({ text: "" });
   }
-   updateEnabledDisabledButtonState();
-  // The extension state changed, to reload this tab.
+  updateEnabledDisabledButtonState();
+  // The extension state changed, so reload this tab.
   chrome.tabs.reload();
 }
 
