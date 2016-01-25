@@ -1,37 +1,38 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *manjaro.org:
 
-	(www.): redirects to wiki
+		- (www.)? ¹
 		- repo ²
 
+	¹ Redirects to wiki.manjaro.org
 	² Refused
 
 
 	Mixed content:
 
-		- Image on de and forum from forum *
+		- Image on de from forum.manjaro.org *
 
 	* Secured by us
 
 -->
 <ruleset name="Manjaro.org (partial)">
 
-	<target host="*.manjaro.org" />
-		<!--exclusion pattern="^http://www\.manjaro\.org/" /-->
+	<!--	Direct rewrites:
+				-->
+	<target host="de.manjaro.org" />
+	<target host="forum.manjaro.org" />
+	<target host="lists.manjaro.org" />
+	<target host="wiki.manjaro.org" />
 
 
-	<!--	Secured by server:
+	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^wiki\.manjaro\.org$" name="^manjarowiki_session$" /-->
-	<!--
-		Not secured by server:
-					-->
-	<!--securecookie host="^forum\.manjaro\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:de|forum)\.manjaro\.org$" name="^PHPSESSID$" /-->
 
 	<securecookie host="^(?:de|forum)\.manjaro\.org$" name=".+" />
 
 
-	<rule from="^http://(de|forum|lists|wiki)\.manjaro\.org/"
-		to="https://$1.manjaro.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

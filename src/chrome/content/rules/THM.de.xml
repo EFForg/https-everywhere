@@ -1,0 +1,116 @@
+<!--
+	Other Mittelhessen University of Applied Sciences rulesets:
+
+		- TH-Mittelhessen.de.xml
+
+
+	Nonfunctional hosts in *thm.de:
+
+		- fsmni ¹
+		- icampus ²
+		- kobis ²
+		- dualesstudium.m ³
+		- www.m ³
+		- www.me ⁴
+		- www.mnd ⁵
+
+		- dev.mni ²
+		- hackaday.mni ²
+		- jenkins-ci.mni ²
+		- statistics.mni ²
+
+	¹ Shows websites.thm.de
+	² Refused
+	³ Dropped
+	⁴ Shows www.thm.de
+	⁵ Plaintext reply
+
+
+	These altnames don't exist:
+
+		- online-dienste.thm.de
+		- studien-sb-service.thm.de
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- alumni.thm.de
+		- brueckenkurse.thm.de
+		- www.iem.thm.de
+		- www.its.thm.de
+		- www.mni.thm.de
+		- moodle.thm.de
+		- moodle-ext.thm.de
+		- pharus.thm.de
+		- .websites.thm.de
+		- www.w.thm.de
+		- www.thm.de
+
+
+	Mixed content:
+
+		- favicon on homepages-fb from www.thm.de ¹
+
+		- Bugs, on:
+
+			- moodle from cacti.its.thm.de ¹
+			- pharus from statistics.mni.thm.de ²
+			- www.w from $self ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="THM.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="thm.de" />
+	<target host="alumni.thm.de" />
+	<target host="arsnova.thm.de" />
+	<target host="www.asta.thm.de" />
+	<target host="brueckenkurse.thm.de" />
+	<target host="cas.thm.de" />
+	<target host="homepages.thm.de" />
+	<target host="homepages-fb.thm.de" />
+	<target host="git.thm.de" />
+	<target host="www.iem.thm.de" />
+	<target host="intra.thm.de" />
+	<target host="intranet.thm.de" />
+
+	<target host="cacti.its.thm.de" />
+	<target host="scripts.its.thm.de" />
+	<target host="www.its.thm.de" />
+
+	<target host="jenkins.mni.thm.de" />
+	<target host="www.mni.thm.de" />
+	<target host="moodle.thm.de" />
+	<target host="moodle-ext.thm.de" />
+	<target host="pharus.thm.de" />
+	<target host="projects.thm.de" />
+	<target host="scm.thm.de" />
+	<target host="websites.thm.de" />
+	<target host="wiki.thm.de" />
+	<target host="www.w.thm.de" />
+	<target host="webmail.thm.de" />
+	<target host="www.thm.de" />
+
+		<test url="http://websites.thm.de/fachschaft/me/phpBB3/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:alumni|www\.iem)\.thm\.de$" name="^fe_typo_user$" /-->
+	<!--securecookie host="^(?:brueckenkurse|www\.its|www)\.thm\.de$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^www\.(?:mni|w)\.thm\.de$" name="^(?:[\da-f]{32}|giessenstyle[\d.]+_tpl)$" /-->
+	<!--securecookie host="^moodle(?:-ext)?\.thm\.de$" name="^MoodleSession$" /-->
+	<!--securecookie host="^pharus\.thm\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.websites\.thm\.de$" name="^phpbb3_\w+_(?:k|sid|u)$" /-->
+
+	<securecookie host="^(?:\w.*|\.websites)\.thm\.de$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,47 +1,44 @@
-
 <!--
-	^: Dropped
-
-
 	Problematic subdomains:
 
+		- ^ ¹
 		- s *
 		- trans *
 
+	¹ Shows bw.com
 	* $ 403s
 
 
-	Fully covered subdomains:
-
-		- (www.)?	(^ → www)
-		- img1
-		- p2p
-		- s
-		- trans
-		- vip
-
-
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		 .chbtc.com
+		 s.chbtc.com
+		 trans.chbtc.com
+		 www.chbtc.com
 
 -->
 <ruleset name="chbtc.com">
 
-	<target host="chbtc.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="img1.chbtc.com" />
 	<target host="p2p.chbtc.com" />
-	<target host="s.chbtc.com" />
-	<target host="trans.chbtc.com" />
 	<target host="vip.chbtc.com" />
 	<target host="www.chbtc.com" />
+
+	<!--	Complications:
+				-->
+	<target host="chbtc.com" />
+	<target host="s.chbtc.com" />
+	<target host="trans.chbtc.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.chbtc\.com$" name="^zJSESSIONID$" /-->
+	<!--securecookie host="^(?:s|trans|www)\.chbtc\.com$" name="^__jsluid$" /-->
 
-	<securecookie host="^\.chbtc\.com$" name=".+" />
+	<securecookie host=".*\.chbtc\.com$" name=".+" />
 
 
 	<rule from="^http://chbtc\.com/"

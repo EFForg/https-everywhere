@@ -4,28 +4,46 @@
 		- metadata.springfiles.com (cert: springfiles.com; 404)
 
 
+	(www.)?springfiles.nl: Refused
+
+
+	Insecure cookies are set for these domains:
+
+		- .springfiles.com
+
+
 	Mixed content:
 
 		- Images on ^ from ^ *
-
 		- Web bug on ^ from www.facebook.com *
 
 	* Secured by us
 
 -->
-<ruleset name="SpringFiles (partial)" platform="cacert" default_off="expired">
+<ruleset name="SpringFiles (partial)" default_off="expired, self-signed">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="springfiles.com" />
-	<target host="*.springfiles.com" />
-	<target host="springfiles.nl" />
-	<target host="*.springfiles.nl" />
+	<target host="www.springfiles.com" />
 
+	<!--	Complications:
+				-->
+	<target host="springfiles.nl" />
+	<target host="www.springfiles.nl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.springfiles\.com$" name="^SESS[\da-f]{32}$" /-->
 
 	<securecookie host="^\.springfiles\.com$" name=".*" />
 
 
-	<!--	Cert doesn't match www nor nl	-->
-	<rule from="^http://(?:www\.)?springfiles\.(?:com|nl)/"
+	<rule from="^http://(?:www\.)?springfiles\.nl/"
 		to="https://springfiles.com/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

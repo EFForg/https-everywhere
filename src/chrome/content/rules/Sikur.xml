@@ -1,0 +1,30 @@
+<!--
+	Non-functional subdomain:
+		- sikur.com		(connection refused)
+		- granitephone.com	(connection refused)
+		- signup.sikur.com	(timeout)
+-->
+
+<ruleset name="Sikur (partial)">
+
+	<target host="sikur.com" />
+	<target host="www.sikur.com" />
+	<target host="granitephone.com" />
+	<target host="www.granitephone.com" />
+	<target host="communication.sikur.com.br" />
+
+  	<securecookie host="^(www|communication)\.sikur\.com(\.br)?$" name=".+" />
+
+        <!-- timeout -->
+	<exclusion pattern="^http://signup\.sikur\.com/"/>
+
+		<test url="http://signup.sikur.com/" />
+
+	<!-- connection refused -->
+	<rule from="^http://(sikur|granitephone)\.com/"
+		to="https://www.$1.com/" />
+
+	<rule from="^http:" 
+		to="https:" />
+
+</ruleset>

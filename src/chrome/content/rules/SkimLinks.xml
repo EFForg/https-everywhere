@@ -1,5 +1,4 @@
 <!--
-	Disabled per https://trac.torproject.org/projects/tor/ticket/15705
 	For problematic rules, see SkimLinks-problematic.xml.
 
 
@@ -20,8 +19,10 @@
 		- api-products ¹
 		- arthur	(times out)
 		- info		(Marketo)
+		- support ⁴
 
 	¹ Refused
+	⁴ Zendesk
 
 
 	Observed working subdomains:
@@ -44,12 +45,12 @@
 		- .skimlinks.com
 
 -->
-<ruleset name="SkimLinks (partial)" default_off="Breaks search">
+<ruleset name="SkimLinks (partial)">
 
 	<target host="skimlinks.com" />
 	<target host="*.skimlinks.com" />
-		<exclusion pattern="^http://api-products?\.skimlinks\.com/" />
-		<exclusion pattern="^http://(?:arthur|redirect)\.skimlinks.com/" />
+
+		<exclusion pattern="^http://(?:api-products?|arthur|redirect)\.skimlinks.com/" />
 
 			<test url="http://api-product.skimlinks.com/" />
 			<test url="http://api-products.skimlinks.com/" />
@@ -72,24 +73,6 @@
 					-->
 			<test url="http://info.skimlinks.com/css/mktLPSupport.css" />
 			<test url="http://info.skimlinks.com/rs/skimbitltd/images/bg.jpg" />
-
-		<exclusion pattern="^http://support\.skimlinks\.com/(?!(?:assets|external|generated|images|registration|system)/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://support.skimlinks.com/" />
-			<test url="http://support.skimlinks.com/forums" />
-			<test url="http://support.skimlinks.com/entries/100064786-Publisher-Hub" />
-			<test url="http://support.skimlinks.com/entries/20402322-Cookies-referrals-" />
-			<test url="http://support.skimlinks.com/entries/21115256-SkimWords" />
-			<test url="http://support.skimlinks.com/entries/21133248-Kaelah-Bee" />
-			<test url="http://support.skimlinks.com/entries/22300391-Banners" />
-
-			<!--	-ve:
-					-->
-			<test url="http://support.skimlinks.com/images/logo-delimiter.png" />
-			<test url="http://support.skimlinks.com/registration/" />
-			<test url="http://support.skimlinks.com/system/logos/2007/5808/logo.png" />
 
 		<test url="http://hub.skimlinks.com/" />
 		<test url="http://signup.skimlinks.com/" />
@@ -115,9 +98,6 @@
 
 	<rule from="^http://info\.skimlinks\.com/"
 		to="https://na-lon03.marketo.com/" />
-
-	<rule from="^http://support\.skimlinks\.com/"
-		to="https://skimlinks.zendesk.com/" />
 
 	<rule from="^http://([\w-]+\.)?skimlinks\.com/"
 		to="https://$1skimlinks.com/" />

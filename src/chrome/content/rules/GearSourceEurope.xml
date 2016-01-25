@@ -1,23 +1,54 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://gearsourceeurope.com/ => https://gearsourceeurope.com/: Too many redirects while fetching 'https://gearsourceeurope.com/'
+	Nonfunctional hosts in *gearsourceeurope.com:
 
-	Nonfunctional subdomains:
+		- cdn *
 
-		- cdn	(redirects to www)
+	* Redirects to www.gearsourceeurope.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .gearsourceeurope.com
 
 -->
-<ruleset name="GearSourceEurope (partial)" default_off='failed ruleset test'>
+<ruleset name="GearSourceEurope.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gearsourceeurope.com" />
-	<target host="*.gearsourceeurope.com" />
+	<target host="www.gearsourceeurope.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.gearsourceeurope\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.gearsourceeurope\.com/+(?!general/(?:dsplogin|registration)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.gearsourceeurope.com/catalog/latest" />
+			<test url="http://www.gearsourceeurope.com/catalog/listing/79217" />
+			<test url="http://www.gearsourceeurope.com/email" />
+			<test url="http://www.gearsourceeurope.com/general/feedback" />
+			<test url="http://www.gearsourceeurope.com/needzone" />
+			<test url="http://www.gearsourceeurope.com/page/faqs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.gearsourceeurope.com/general/registration" />
+			<test url="http://www.gearsourceeurope.com/general/dsplogin" />
 
 
-	<securecookie host="^(?:www)?\.gearsourceeurope\.com$" name=".+" />
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.gearsourceeurope\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
 
 
-	<rule from="^http://(www\.)?gearsourceeurope\.com/"
-		to="https://$1gearsourceeurope.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

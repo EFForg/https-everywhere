@@ -5,105 +5,48 @@
 		- DigiKam.org.xml
 		- KMyMoney.org.xml
 		- Krita.org.xml
+		- Planet_KDE.org.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *kde.org:
 
 		- api ¹
-		- l10n **
-		- planet *
-		- quickgit **
-		- websvn *
+		- commits ²
 
-	¹ "not supported for api.kde.org"
-	* Dropped
-	** Refused
+	¹ 503
+	² Shows another domain
 
 
-	Problematic subdomains:
+	Problematic hosts in *kde.org:
 
 		- developer ¹
-		- files		(some data differ)
-		- lists ³
-		- reviewboard ⁴
+		- files ²
 
-	¹ Refused
-	³ Mismatched, CN: marc.info
-	⁴ Shows git.reviewboard
+	¹ retired subdomain, only retained for legacy compatibility. see https://lists.eff.org/pipermail/https-everywhere/2016-January/002647.html 
+ 	² Some data differ
 
 
-	Partially covered subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- files
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- accessibility
-		- akademy
-		- akademy200[6-9]
-		- akademy201[023]
-		- amarok
-		- blogs
-		- bugs
-		- build
-		- cdn
-		- community
-		- conf
-		- conference200[4-9]
-		- conference2010
-		- developer		(→ techbase)
-		- docs
-		- dolphin
-		- dot
-		- edu
-		- ev
-		- events
-		- forum
-		- identity
-		- jointhegame
-		- kopete
-		- mail
-		- manifesto
-		- nepomuk
-		- news
-		- phonon
-		- pim
-		- projects
-		- rekonq
-		- relate
-		- reviewboard		(→ git.reviewboard)
-		- git.reviewboard
-		- season
-		- solid
-		- sprints
-		- sysadmin
-		- techbase
-		- userbase
-		- utils
-		- wiki
+		- .kde.org
+		- .akademy2010.kde.org
+		- jointhegame.kde.org
+		- quickgit.kde.org
+		- sysadmin.kde.org
 
 
 	Mixed content:
 
 		- css on phonon from fonts.googleapis.com *
-		- Font on jointhegame from themes.googleusercontent.com *
 
 	* Secured by us
-
-
-	Insecure cookies are set by these domains and hosts:
-
-		- .akademy2010.kde.org
-		- jointhegame.kde.org
-		- sysadmin.kde.org
 
 -->
 <ruleset name="KDE.org (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="kde.org" />
 	<target host="accessibility.kde.org" />
 	<target host="akademy.kde.org" />
 	<target host="akademy2006.kde.org" />
@@ -134,18 +77,23 @@
 	<target host="ev.kde.org" />
 	<target host="events.kde.org" />
 	<target host="forum.kde.org" />
+	<target host="freebsd.kde.org" />
 	<target host="identity.kde.org" />
 	<target host="jointhegame.kde.org" />
 	<target host="kopete.kde.org" />
+	<target host="lists.kde.org" />
 	<target host="mail.kde.org" />
 	<target host="manifesto.kde.org" />
 	<target host="nepomuk.kde.org" />
 	<target host="news.kde.org" />
 	<target host="phonon.kde.org" />
 	<target host="pim.kde.org" />
+	<target host="planet.kde.org" />
 	<target host="projects.kde.org" />
+	<target host="quickgit.kde.org" />
 	<target host="rekonq.kde.org" />
 	<target host="relate.kde.org" />
+	<target host="reviewboard.kde.org" />
 	<target host="git.reviewboard.kde.org" />
 	<target host="season.kde.org" />
 	<target host="solid.kde.org" />
@@ -154,24 +102,17 @@
 	<target host="techbase.kde.org" />
 	<target host="userbase.kde.org" />
 	<target host="utils.kde.org" />
+	<target host="websvn.kde.org" />
 	<target host="wiki.kde.org" />
 	<target host="www.kde.org" />
 
-	<!--	Special cases:
-				-->
-	<target host="developer.kde.org" />
-	<target host="reviewboard.kde.org" />
-
-		<!--exclusion pattern="^http://(api|downloads|l10n|lists|planet|websvn)\." /-->
-		<!--
-			Pages differ, various files 404:
+		<!--	Pages differ, various files 404:
 									-->
 		<exclusion pattern="^http://files\.kde\.org/(?:$|.+/$|.+\.(?:btih|magnet|md5|meta4|metalink|mirrorlist|sha1|sha256|torrent)$)" />
 		<!--exclusion pattern="^http://files\.kde\.org/+(?!.+\.(?:7z|bz2|de?b|diff|exe|dgml|dmg|dsc|gpg|gz|install|iso|jpg|kml|list|manifest|meta|mp4|msc|odp|ogg|opml|otp|pdf|pl|png|sbm|scenario|sla|svg|tar|tif|tmp|txt|webm|xcf|xml|zip)$|PKGBUILD|SHA256SUMS)$" /-->
 
 			<!--	+ve:
 					-->
-
 			<test url="http://files.kde.org/akademy/2014/videos/README.mirrorlist" />
 			<test url="http://files.kde.org/amarok/podcast_directory/" />
 			<test url="http://files.kde.org/amarok/podcast_directory/public_podcast_directories.opml.mirrorlist" />
@@ -196,21 +137,13 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.kde\.org" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
 	<!--securecookie host="^jointhegame\.kde\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^quickgit\.kde\.org" name="^GitPHPLocale$" /-->
 
-	<securecookie host="^\.kde\.org$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
-	<securecookie host="^.+\.kde\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<!--	Redirect keeps path and args:
-						-->
-	<rule from="^http://developer\.kde\.org/+"
-		to="https://techbase.kde.org/" />
-
-		<test url="http://developer.kde.org//" />
-
-	<rule from="^http://reviewboard\.kde\.org/"
-		to="https://git.reviewboard.kde.org/" />
 
 	<rule from="^http:"
 		to="https:" />

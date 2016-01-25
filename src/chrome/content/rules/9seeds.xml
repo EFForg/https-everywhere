@@ -1,12 +1,58 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://9seeds.com/ (200) => https://d3j03r5zbavjdk.cloudfront.net/ (403)
--->
-<ruleset name="9seeds (partial)" default_off='failed ruleset test'>
+	CDN buckets:
 
+		- d3j03r5zbavjdk.cloudfront.net
+
+
+	^9seeds.com: WP Engine
+	www.9seeds.com: /$ Redirects to https://9.../$
+
+
+	Insecure cookies are set for these domains:
+
+		- .9seeds.com
+
+-->
+<ruleset name="9seeds.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.9seeds.com"/>
+
+	<!--	Complications:
+				-->
 	<target host="9seeds.com"/>
 
-	<rule from="^http://(?:www\.)?9seeds\.com/"
-		to="https://d3j03r5zbavjdk.cloudfront.net/"/>
+		<exclusion pattern="^http://(?:www\.)?9seeds\.com/+(?!favicon\.ico|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://9seeds.com/about-us/" />
+			<test url="http://9seeds.com/checkout/" />
+			<test url="http://9seeds.com/news/" />
+			<test url="http://9seeds.com/plugins/" />
+			<test url="http://www.9seeds.com/services/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://9seeds.com/favicon.ico" />
+			<test url="http://9seeds.com/wp-content/themes/9seeds2013/images/newsletter-bg.jpg" />
+			<test url="http://www.9seeds.com/favicon.ico" />
+			<test url="http://www.9seeds.com/wp-content/themes/9seeds2013/images/newsletter-bg.jpg" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.9seeds\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.9seeds\.com$" name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http://9seeds\.com/"
+		to="https://www.9seeds.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
 
 </ruleset>

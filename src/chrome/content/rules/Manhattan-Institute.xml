@@ -1,15 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://manhattan-institute.org/ => https://manhattan-institute.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.manhattan-institute.org/ => https://www.manhattan-institute.org/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="Manhattan Institute" platform="mixedcontent" default_off='failed ruleset test'>
+	www3: Shows default page
 
-	<target host="manhattan-institute.org" />
+
+	^manhattan-institute.org: Mismatched
+
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Mixed content:
+
+		- Images, from:
+
+			- www.city-journal.org ¹
+			- www.manhattan-institute.org
+			- www3.manhattan-institute.org ¹
+
+	² Unsecurable <= 404
+
+-->
+<ruleset name="Manhattan-Institute.org" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="www.manhattan-institute.org" />
 
+	<!--	Complications:
+				-->
+	<target host="manhattan-institute.org" />
 
-	<rule from="^http://(www\.)?manhattan-institute\.org/"
-		to="https://$1manhattan-institute.org/" />
+
+	<rule from="^http://manhattan-institute\.org/"
+		to="https://www.manhattan-institute.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,53 +1,71 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://fwd.channel5.com/ => https://fwd.channel5.com/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://fwdcdn.channel5.com/ => https://fwd.channel5.com/: (6, 'Could not resolve host: fwdcdn.channel5.com')
-Fetch error: http://sso.channel5.com/ => https://sso.channel5.com/: (6, 'Could not resolve host: sso.channel5.com')
-Fetch error: http://sso.five.tv/ => https://sso.channel5.com/: (28, 'Connection timed out after 10001 milliseconds')
+	Other Channel 5 Broadcasting rulesets:
+
+		- FiveTV.xml
+
+
+	Nonfunctional hosts in *channel5.com:
+
+		- about ¹
+		- milkshake ²
+		- fwd ³
+
+	¹ 400
+	² Refused
+	³ Dropped
+
+
+	Problematic hosts in *channel5.com:
+
+		- (www.)? ¹
+		- competitions ² ³
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mismatched
+	³ Mixed css
+
+
+	Mixed content:
+
+		- css on competitions from wwwcdn.channel5.com ¹
+
+		- Images, on:
+
+			- competitions from wwwcdn.channel5.com ¹
+			- competitions from d2gnblp1jps891.cloudfront.net ¹
+			- faqs from www.channel5.com ²
+			- faqs from wwwcdn.channel5.com ¹
+
+		- Bugs, on:
+
+			- competitions from s7.addthis.com ¹
+			- faqs from b.scorecardresearch.com ¹
+
+	¹ Secured by us
+	² Not secured by us <= missing certificate chain
+
 -->
-<ruleset name="Channel 5" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Channel 5.com (partial)">
 
-	<target host="channel5.com"/>
-	<target host="fwd.channel5.com"/>
-	<target host="fwdcdn.channel5.com"/>
-	<target host="sso.channel5.com"/>
-	<target host="www.channel5.com"/>
+	<!--	Direct rewrites:
+				-->
+	<!--target host="channel5.com"/-->
+	<!--target host="competitions.channel5.com"/-->
+	<target host="faqs.channel5.com"/>
+	<target host="help.channel5.com"/>
+	<!--target host="www.channel5.com"/-->
 	<target host="wwwcdn.channel5.com"/>
-	<target host="oas.five.tv"/>
-	<target host="sso.five.tv"/>
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?channel5\.com/" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?channel5\.com/+(?!assets/|images/|stylesheets/)" /-->
 
 
-	<!--	observed cookies:
-			- ^fwd.c...
-				- _five-hero_session
-			- ^www.c...
-				- _five-tv_session
-			- ^wwwcdn.c...
-				- _five-tv_session
-			- ^\.f...
-				- NXCLICK2
-				- OAX
-			- ^oas.f...
-				- NSC_nnnnnn_qppm_iuuq	-->
-	<securecookie host="^fwd\.channel5\.com$" name=".*"/>
-
-
-	<rule from="^http://oas\.five\.tv/"
-		to="https://oasc07.247realmedia.com/"/>
-
-	<rule from="^http://(www\.)?channel5\.com/(assets|images|stylesheets)/"
-		to="https://$1channel5.com/$2/"/>
-
-	<!--	fwdcdn cert: *.hs.llnwd.net	-->
-	<rule from="^http://fwd(?:cdn)?\.channel5\.com/"
-		to="https://fwd.channel5.com/"/>
-
-	<!--	cert doesn't match sso.five.tv	-->
-	<rule from="^http://sso\.(?:channel5\.com|five\.tv)/"
-		to="https://sso.channel5.com/"/>
-
-	<!--	cert: *.hs.llnwd.net		-->
-	<rule from="^http://wwwcdn\.channel5\.com/"
-		to="https://wwwcdn.channel5.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,24 +1,36 @@
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://46.255.160.240/ => http://46.255.160.240/: Redirect for 'http://46.255.160.240/' missing Location
-Fetch error: http://kat-de-paris.fr/ => https://kat-de-paris.fr/: Cycle detected - URL already encountered: https://kat-de-paris.fr/fr/
--->
-<ruleset name="Kat de Paris" default_off='failed ruleset test'>
+<ruleset name="Kat-de-Paris.fr (partial)">
 
-	<target host="46.255.160.240" />
+	<!--	Direct rewrites:
+				-->
 	<target host="kat-de-paris.fr" />
-	<target host="*.kat-de-paris.fr" />
+	<target host="www.kat-de-paris.fr" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://kat-de-paris\.fr/en/(?:$|authentication\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://kat-de-paris\.fr/+(?!\d+-home_default/|favicon\.ico|modules/|themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://kat-de-paris.fr/blog" />
+			<test url="http://kat-de-paris.fr/en/" />
+			<test url="http://kat-de-paris.fr/en/authentication" />
+			<test url="http://kat-de-paris.fr/en/contact-us" />
+			<test url="http://kat-de-paris.fr/en/my-account" />
+			<test url="http://kat-de-paris.fr/en/password-recovery" />
+
+			<!--	-ve:
+					-->
+			<test url="http://kat-de-paris.fr/2332-home_default/parure-lit-enfant-reversible-taupe-pois-rayures-noires.jpg" />
+			<test url="http://kat-de-paris.fr/favicon.ico" />
+			<test url="http://kat-de-paris.fr/img/logo.jpg" />
+			<test url="http://kat-de-paris.fr/modules/homeslider/images/sample-1.jpg" />
 
 
-	<securecookie host="^\.kat-de-paris\.fr$" name=".+" />
-
-
-	<rule from="^http://(www\.)?kat-de-paris\.fr/"
-		to="https://$1kat-de-paris.fr/" />
-
-	<!--	Protocol-relative links from kat-de-paris.fr:
-								-->
-	<rule from="^https://46\.255\.160\.240/"
-		to="https://www.kat-de-paris.fr/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

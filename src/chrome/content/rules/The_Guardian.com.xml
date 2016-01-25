@@ -72,6 +72,7 @@
 
 		- www.id.guardian.co.uk
 		- www.profile.theguardian.com
+		- www.register.theguardian.com
 		- www.securedrop.theguardian.com
 		- www.soulmates.theguardian.com
 		- www.witness.theguardian.com
@@ -88,7 +89,11 @@
 
 	Mixed content:
 
-		- Bugs on profile, witness from hits.guardian.co.uk *
+		- Bugs, on:
+
+			- profile, witness from hits.guardian.co.uk *
+			- www from hits.theguardian.com
+			- www from b.scorecardresearch.com *
 
 	* Secured by us
 
@@ -99,6 +104,7 @@
 				-->
 	<target host="bookshop.theguardian.com" />
 	<target host="www.bookshop.theguardian.com" />
+	<target host="embed.theguardian.com" />
 	<target host="hits-secure.theguardian.com" />
 	<target host="id.theguardian.com" />
 	<target host="membership.theguardian.com" />
@@ -109,16 +115,41 @@
 	<target host="soulmates.theguardian.com" />
 	<target host="subscribe.theguardian.com" />
 	<target host="witness.theguardian.com" />
+	<target host="www.theguardian.com" />
 
 	<!--	Complications:
 				-->
 	<target host="hits.theguardian.com" />
 	<target host="syndication.theguardian.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.theguardian\.com/(?:$|favicon\.ico)" /-->
+		<!--
+			Exceptions:
+					-->
+
+		<exclusion pattern="^http://www\.theguardian\.com/+(?!info(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.theguardian.com/fashion" />
+			<test url="http://www.theguardian.com/favicon.ico" />
+			<test url="http://www.theguardian.com/help/contact-us" />
+			<test url="http://www.theguardian.com/sustainable-business/2015/sep/30/1984-does-a-cashless-economy-make-for-a-surveillance-state" />
+			<test url="http://www.theguardian.com/uk-news" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.theguardian.com/info" />
+			<test url="http://www.theguardian.com/info/developer-blog/2015/aug/12/open-sourcing-grid-image-service" />
+
+		<test url="http://hits.theguardian.com/b/ss/guardiangu-frontend,guardiangu-network/1/H.25.3/?c3=theguardian.com&amp;c4=" />
+
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.theguardian\.com$" name="^s_vi$" /-->
+	<!--securecookie host="^\.theguardian\.com$" name="^(?:GU_INT|GU_mtv_id|s_vi)$" /-->
 	<!--securecookie host="^(?:www\.)?bookshop\.theguardian\.com$" name="^AWSELB$" /-->
 	<!--securecookie host="^\.bookshop\.theguardian\.com$" name="^frontend$" /-->
 	<!--securecookie host="^soulmates\.theguardian\.com$" name="^(?:csrftoken|flags)$" /-->

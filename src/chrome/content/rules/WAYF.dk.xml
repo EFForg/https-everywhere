@@ -1,0 +1,52 @@
+<!--
+	Nonfunctional hosts in *wayf.dk:
+
+		- blog ¹
+		- www ²
+	
+	¹ Shows www.wayf.dk
+	² Redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- janus.wayf.dk
+
+-->
+<ruleset name="WAYF.dk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="consentmgt.wayf.dk" />
+	<target host="janus.wayf.dk" />
+	<target host="nemlogin.wayf.dk" />
+	<target host="wayf.wayf.dk" />
+	<target host="wayfsp.wayf.dk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.wayf\.dk/(?:$|images/|modules/|plugins/|templates/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.wayf.dk/images/stories/logo_link.png" /-->
+			<!--test url="http://www.wayf.dk/modules/mod_jflanguageselection/tmpl/mod_jflanguageselection.css" /-->
+			<!--test url="http://www.wayf.dk/plugins/system/jat3/base-themes/default/css/css3.css" /-->
+			<!--test url="http://www.wayf.dk/templates/ja_t3_blank/local/themes/testsider.dk/images/wayf-logo-2-h75px.png" /-->
+
+		<test url="http://janus.wayf.dk/module.php/multiauth/selectsource.php?AuthState=&amp;source=mailtoken" />
+		<test url="http://nemlogin.wayf.dk/saml2/idp/SSOService.php?SAMLRequest=&amp;SigAlg=&amp;Signature=" />
+		<test url="http://wayf.wayf.dk/saml2/idp/SSOService.php?SAMLRequest=&amp;SigAlg=&amp;Signature=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^janus\.wayf\.dk$" name="^multiauth_source_janus-multiauth$" /-->
+
+	<securecookie host="^janus\.wayf\.dk$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

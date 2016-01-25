@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://thejournal.ie/ => https://www.thejournal.ie/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	CDN buckets:
 
 		- cdn.thejournal.ie.s3.amazonaws.com
@@ -19,50 +17,65 @@ Fetch error: http://thejournal.ie/ => https://www.thejournal.ie/: (60, 'SSL cert
 		 thejournal.ie subdomains:
 
 			- ^		(times out)
+			- c[0-3]	(526)
 			- cdn		(amazonws)
+			- f[0-3]	(526)
 			- jobs		(works; mismatched, CN: *.adverts.ie)
 			- s[0-3]	(cloudfront)
 
-
-	Fully covered domains:
-
-		- s[0-3].jrnl.ie	(→ d1icb8fuiosdrj.cloudfront.net)
-		- static.jrnl.ie	(→ static.thejournal.ie)
-
-		- thejournal.ie subdomains:
-
-			- (www.)	(^ → www)
-			- businessetc
-			- cdn		(→ s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/)
-			- s[0-3]	(→ d1icb8fuiosdrj.cloudfront.net)
-			- static
-			- thedailyedge
-			- thescore
-
 -->
-<ruleset name="TheJournal.ie" default_off='failed ruleset test'>
+<ruleset name="TheJournal.ie">
 
-	<target host="*.jrnl.ie" />
+	<!--	Direct rewrites:
+				-->
+	<target host="b0.jrnl.ie" />
+	<target host="businessetc.thejournal.ie" />
+	<target host="thedailyedge.thejournal.ie" />
+	<target host="img0.thejournal.ie" />
+	<target host="static.thejournal.ie" />
+	<target host="thescore.thejournal.ie" />
+	<target host="www.thejournal.ie" />
+
+	<!--	Complications:
+				-->
+	<target host="s0.jrnl.ie" />
+	<target host="s1.jrnl.ie" />
+	<target host="s2.jrnl.ie" />
+	<target host="s3.jrnl.ie" />
+	<target host="static.jrnl.ie" />
+
 	<target host="thejournal.ie" />
-	<target host="*.thejournal.ie" />
+	<target host="c0.thejournal.ie" />
+	<target host="c1.thejournal.ie" />
+	<target host="c2.thejournal.ie" />
+	<target host="c3.thejournal.ie" />
+	<target host="cdn.thejournal.ie" />
+	<target host="f0.thejournal.ie" />
+	<target host="f1.thejournal.ie" />
+	<target host="f2.thejournal.ie" />
+	<target host="f3.thejournal.ie" />
+	<target host="s0.thejournal.ie" />
+	<target host="s1.thejournal.ie" />
+	<target host="s2.thejournal.ie" />
+	<target host="s3.thejournal.ie" />
 
 
 	<securecookie host="^\.thejournal\.ie$" name=".+" />
 
 
-	<rule from="^http://s\d\.(?:jrn|thejourna)l\.ie/"
+	<rule from="^http://[cfs]\d\.(?:jrn|thejourna)l\.ie/"
 		to="https://d1icb8fuiosdrj.cloudfront.net/" />
 
 	<rule from="^http://static\.jrnl\.ie/"
 		to="https://static.thejournal.ie/" />
 
-	<rule from="^http://(?:www\.)?thejournal\.ie/"
+	<rule from="^http://thejournal\.ie/"
 		to="https://www.thejournal.ie/" />
-
-	<rule from="^http://(businessetc|thedailyedge|static|thescore)\.thejournal\.ie/"
-		to="https://$1.thejournal.ie/" />
 
 	<rule from="^http://cdn\.thejournal\.ie/"
 		to="https://s3-eu-west-1.amazonaws.com/cdn.thejournal.ie/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

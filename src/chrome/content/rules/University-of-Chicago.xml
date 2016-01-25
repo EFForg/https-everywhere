@@ -1,32 +1,83 @@
 <!--
+	University of Chicago
+
 	For problematic rules, see University-of-Chicago-self-signed.xml.
 
 
 	Nonfunctional subdomains:
 
 		- bay *
+		- hours.lib ²
 
 	* Refused
+	² Shows www.lib.uchicago.edu
+
+
+	Problematic hosts in *uchicago.edu:
+
+		- ^ ¹
+		- ci ²
+		- proxy ²
+
+	¹ Refused
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- blueprint.uchicago.edu
+		- identity.uchicago.edu
+		- identitymanagement.uchicago.edu
+		- safety-security.uchicago.edu
 
 -->
-<ruleset name="University of Chicago (partial)">
+<ruleset name="UChicago.edu (partial)">
 
-	<target host="uchicago.edu" />
-	<target host="*.uchicago.edu" />
-	<target host="*.ci.uchicago.edu" />
-
-
-	<securecookie host="^.*\.uchicago\.edu$" name=".*" />
-
-
-	<!--	- //uchicago doesn't work over https
-		- //uchicago redirects to www over http
-		- Cert doesn't match //ci
+	<!--	Direct rewrites:
 				-->
-	<rule from="^http://(?:www\.)?(ci\.)?uchicago\.edu/"
+	<target host="answers.uchicago.edu" />
+	<target host="blueprint.uchicago.edu" />
+
+	<target host="beagle.ci.uchicago.edu" />
+	<target host="pads.ci.uchicago.edu" />
+	<target host="pokey.ci.uchicago.edu" />
+	<target host="www.ci.uchicago.edu" />
+
+	<target host="identity.uchicago.edu" />
+	<target host="identitymanagement.uchicago.edu" />
+	<target host="ipo.uchicago.edu" />
+	<target host="itservices.uchicago.edu" />
+	<target host="leadership.uchicago.edu" />
+	<target host="www.lib.uchicago.edu" />
+	<target host="math.uchicago.edu" />
+	<target host="www.math.uchicago.edu" />
+	<target host="login.proxy.uchicago.edu" />
+	<target host="www.proxy.uchicago.edu" />
+	<target host="safety-security.uchicago.edu" />
+	<target host="shibboleth2.uchicago.edu" />
+	<target host="studentactivities.uchicago.edu" />
+	<target host="www.uchicago.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="uchicago.edu" />
+	<target host="ci.uchicago.edu" />
+	<target host="proxy.uchicago.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="blueprint\.uchicago\.edu$" name="^XSRF-TOKEN$" /-->
+	<!--securecookie host="identity(?:management)?\.uchicago\.edu$" name="^BIGipServer\w+_443_pool$" /-->
+	<!--securecookie host="^safety-security\.uchicago\.edu$" name="^(X-Mapping-fjhppofk|uchi__last_activity|uchi__last_visit|uchi__tracker)$" /-->
+
+	<securecookie host=".*\.uchicago\.edu$" name=".*" />
+
+
+	<rule from="^http://(ci\.|proxy\.)?uchicago\.edu/"
 		to="https://www.$1uchicago.edu/" />
 
-	<rule from="^http://((?:beagle|pads|pokey)\.ci|identity)\.uchicago\.edu/"
-		to="https://$1.uchicago.edu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

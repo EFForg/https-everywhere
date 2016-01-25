@@ -1,13 +1,34 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://roadworks.org/ => https://roadworks.org/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://www.roadworks.org/ => https://roadworks.org/: (28, 'Connection timed out after 10001 milliseconds')
+	www.roadworks.org: 500
+
+
+	Insecure cookies are set for these hosts:
+
+		- portal.roadworks.org
+
 -->
-<ruleset name="roadworks.org" default_off='failed ruleset test'>
+<ruleset name="roadworks.org">
+
+	<!--	Direct rewrites:
+				-->
   <target host="roadworks.org" />
-  <target host="www.roadworks.org" />
   <target host="portal.roadworks.org" />
 
-  <rule from="^http://(?:www\.)?roadworks\.org/" to="https://roadworks.org/"/>
-  <rule from="^http://portal\.roadworks\.org/" to="https://portal.roadworks.org/"/>
+	<!--	Complications:
+				-->
+  <target host="www.roadworks.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^portal\.roadworks\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^portal\.roadworks\.org$" name=".+" />
+
+
+	<rule from="^http://www\.roadworks\.org/"
+		to="https://roadworks.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

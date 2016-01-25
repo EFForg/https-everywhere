@@ -1,20 +1,31 @@
+<ruleset name="Adaptive Computing (partial)">
 
-<!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://adaptivecomputing.com/ => https://adaptivecomputing.com/: Too many redirects while fetching 'https://adaptivecomputing.com/'
-Fetch error: http://www.adaptivecomputing.com/ => https://www.adaptivecomputing.com/: Too many redirects while fetching 'https://www.adaptivecomputing.com/'
-
--->
-<ruleset name="Adaptive Computing" default_off='failed ruleset test'>
-
+	<!--	Direct rewrites:
+				-->
 	<target host="adaptivecomputing.com" />
 	<target host="www.adaptivecomputing.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.adaptivecomputing\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.adaptivecomputing\.com/+(?!wp-content/|wp-login\.php)" />
 
-	<securecookie host="^www\.adaptivecomputing\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://www.adaptivecomputing.com/blog" />
+			<test url="http://www.adaptivecomputing.com/products/" />
+			<test url="http://www.adaptivecomputing.com/support-login" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.adaptivecomputing.com/wp-content/themes/AdaptiveComputing/img/nav-gif.gif" />
+			<test url="http://www.adaptivecomputing.com/wp-login.php" />
 
 
-	<rule from="^http://(www\.)?adaptivecomputing\.com/"
-		to="https://$1adaptivecomputing.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

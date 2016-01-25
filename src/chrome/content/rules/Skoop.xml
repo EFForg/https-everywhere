@@ -2,16 +2,33 @@
 	(www.)?: Refused
 
 -->
-<ruleset name="The Skoop" default_off="connection_refused">
+<ruleset name="The Skoop.ca">
 
 	<target host="theskoop.ca" />
 	<target host="www.theskoop.ca" />
 
 
-	<securecookie host="^(?:www\.)?theskoop\.ca$" name=".+" />
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://(?:www\.)?theskoop\.ca/+(?:\?.*)?$"
+		to="https://www.facebook.com/theskoopinc" />
 
+		<test url="http://theskoop.ca//" />
+		<test url="http://theskoop.ca/?" />
+		<test url="http://www.theskoop.ca//" />
+		<test url="http://www.theskoop.ca/?" />
 
-	<rule from="^http://(www\.)?theskoop\.ca/"
-		to="https://$1theskoop.ca/" />
+	<!--	Redirect keeps path, but not
+		args nor forward slash:
+					-->
+	<rule from="^http://(?:www\.)?theskoop\.ca/+([^?]+).*"
+		to="https://www.facebook.com/theskoopinc/$1" />
+
+		<test url="http://theskoop.ca/f?o" />
+		<test url="http://theskoop.ca/o?b" />
+		<test url="http://theskoop.ca/a?r" />
+		<test url="http://www.theskoop.ca/f?o" />
+		<test url="http://www.theskoop.ca/o?b" />
+		<test url="http://www.theskoop.ca/a?r" />
 
 </ruleset>

@@ -1,19 +1,31 @@
 <!--
-Automatically by https-everywhere-checker because:
-Fetch error: http://vtecdirect.com/ => https://vtecdirect.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="VTEC Direct" default_off='failed ruleset test'>
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
 
+
+	Mixed content:
+
+		- css on www from vtecdirect.com *
+
+		- Images, from:
+
+			- vtecdirect.com *
+			- www.vtecdirect.com *
+
+	* Secured by us
+
+-->
+<ruleset name="VTEC Direct.com" default_off="expired, missing certificate chain" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="vtecdirect.com" />
-	<!--	* for cross-domain cookie.	-->
-	<target host="*.vtecdirect.com" />
+	<target host="www.vtecdirect.com" />
 
 
 	<securecookie host="^\.vtecdirect\.com$" name=".*" />
 
 
-	<!--	Cert only matches //vtecdirect.com	-->
-	<rule from="^http://(?:www\.)?vtecdirect\.com/"
-		to="https://vtecdirect.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

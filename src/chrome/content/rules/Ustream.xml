@@ -1,24 +1,86 @@
 <!--	See Ustream-mismatches.xml for problematic rules.
+
+
+	CDN buckets:
+
+		- ustvstaticcdn2-a.akamaihd.net
+
+
+	Problematic hosts in *ustream.tv:
+
+		- cdn1 ¹
+		- static-cdn[12] ¹
+		- support ²
+
+	¹ Akamai
+	² Mismatched
+
 -->
-<ruleset name="Ustream (buggy)" default_off="breaks video">
+<ruleset name="Ustream.tv (buggy)" default_off="breaks video">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ustream.tv"/>
-	<target host="*.ustream.tv"/>
+	<target host="community.ustream.tv"/>
+	<target host="secure-static-cdn1.ustream.tv"/>
+	<target host="secure-static-cdn2.ustream.tv"/>
+	<target host="static.ustream.tv"/>
+	<target host="www.ustream.tv"/>
 
-	<rule from="^http://(?:www\.)?ustream\.tv/(blog|embed|en_US)/"
-		to="https://www.ustream.tv/$1/"/>
+	<!--	Complications:
+				-->
+	<target host="static-cdn1.ustream.tv"/>
+	<target host="static-cdn2.ustream.tv"/>
+	<target host="support.ustream.tv"/>
 
-	<!-- getsatisfaction.com/ustream.* redirects
-		back to community.ustream.tv			-->
-	<rule from="^http://community\.ustream\.tv/favicon\.ico"
-		to="https://getsatisfaction.com/favicon.ico"/>
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.ustream\.tv/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.ustream\.tv/(?!blog/|embed/|en_US/|platform/)" /-->
+		<!--
+			Triggers false MCB:
+						-->
+		<!--exclusion pattern="^http://www\.ustream\.tv/blog/(?!wp-content/)" /-->
+		<!--
+			In sum:
+				-->
+		<exclusion pattern="^http://www\.ustream\.tv/(?!blog/wp-content/|embed/|en_US/|platform/)" />
 
-	<rule from="^http://static\.ustream\.tv/"
-		to="https://static.ustream.tv/"/>
+			<!--	+ve:
+					-->
 
-	<!--	Akamai
-		also on static but this is what server does	-->
-	<rule from="^http://static-cdn([12])\.ustream\.tv/"
+			<test url="http://www.ustream.tv/explore/all" />
+			<test url="http://www.ustream.tv/our-company" />
+			<test url="http://www.ustream.tv/press" />
+			<!--
+				(false MCB):
+						-->
+			<test url="http://www.ustream.tv/blog/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ustream.tv/platform/plans" />
+
+
+	<!--	Redirect keeps path and
+		args, but not forward slash:
+						-->
+	<rule from="^http://support\.ustream\.tv/+(?=$|\?)"
+		to="https://ustream.zendesk.com/home" />
+
+	<!--	(Ditto:)
+			-->
+	<rule from="^http://support\.ustream\.tv/+"
+		to="https://ustream.zendesk.com/" />
+
+	<!--	also on static but this is what server does	-->
+	<rule from="^http://static-cdn(1|2)\.ustream\.tv/"
 		to="https://secure-static-cdn$1.ustream.tv/"/>
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

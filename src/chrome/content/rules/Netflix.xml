@@ -1,7 +1,8 @@
 <!--
-	For problematic rules, see Netflix.com-problematic.xml.
 	Disabled per multiple user reports of intermittent breakage, one of which is at
 	https://github.com/EFForg/https-everywhere/issues/2232.
+
+	For problematic rules, see Netflix.com-problematic.xml.
 
 
 	CDN buckets:
@@ -14,7 +15,7 @@
 		- netflix.hs.llnwd.net/e1/us/
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *netflix.com:
 
 		- blog ¹
 		- developer ²
@@ -28,33 +29,21 @@
 	³ Shareholder
 
 
-	Problematic subdomains:
+	Problematic hosts in *netflix.com:
 
 		- jsapi *
 
 	* Works, akamai
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- account
-		- contactus
-		- help
-		- jobs
-		- ncds
-		- secure
-		- signup
-		- www[123]
-
-
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .netflix.com
 		- .cl.netflix.com
 		- contactus.netflix.com
 		- help.netflix.com
 		- .help.netflix.com
+		- openconnect.netflix.com
 
 
 	Mixed content:
@@ -72,14 +61,15 @@
 	<target host="help.netflix.com" />
 	<target host="jobs.netflix.com" />
 	<target host="ncds.netflix.com" />
+	<target host="openconnect.netflix.com" />
 	<target host="secure.netflix.com" />
 	<target host="signup.netflix.com" />
 	<target host="www.netflix.com" />
 	<target host="www1.netflix.com" />
 	<target host="www2.netflix.com" />
 	<target host="www3.netflix.com" />
-		<!--
-			Redirect to http:
+
+		<!--	Redirect to http:
 						-->
 		<!--exclusion pattern="^http://ca\.netflix\.com/($|\?)" /-->
 		<!--exclusion pattern="^http://(blog|ca|developer|ir|techblog|ukirelandblog)\.netflix\.com/" /-->
@@ -91,8 +81,9 @@
 	<!--securecookie host="^\.cl\.netflix\.com$" name="^cL$" /-->
 	<!--securecookie host="^\.(contactus|help)\.netflix\.com$" name="^hcVisitorId$" /-->
 	<!--securecookie host="^help\.netflix\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^openconnect\.netflix\.com$" name="^X-Mapping-\w+$" /-->
 
-	<securecookie host="^(?:contactus|signup)\.netflix\.com$" name=".*" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"

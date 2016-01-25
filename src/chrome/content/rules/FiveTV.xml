@@ -1,11 +1,52 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://five.tv/ => https://www.five.tv/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="FiveTV" platform="mixedcontent" default_off='failed ruleset test'>
-  <target host="*.five.tv" />
-  <target host="five.tv" />
+	For other Channel 5 Broadcasting coverage, see Channel-5.xml.
 
-  <rule from="^http://(?:www\.)?five\.tv/" to="https://www.five.tv/"/>
-  <rule from="^http://(about|demand|fwd|sso)\.five\.tv/" to="https://$1.five.tv/"/>
+
+	Nonfunctional hosts in *five.tv:
+
+		- fwd *
+
+	* Refused
+
+
+	Problematic hosts in *five.tv:
+
+		- (www.)? ¹ ²
+		- about ¹
+		- demand ¹ ²
+		- oas ¹
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Mixed content:
+
+		- Images on about from wwwcdn.channel5.com *
+		- Bug on about from uk.sitestat.com *
+
+	* Secured by us
+
+-->
+<ruleset name="FiveTV (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="five.tv" /-->
+	<!--target host="about.five.tv" /-->
+	<!--target host="competitions.channel5.com" /-->
+	<!--target host="demand.five.tv" /-->
+	<!--target host="www.five.tv" /-->
+
+	<!--	Complications:
+				-->
+	<target host="oas.five.tv" />
+
+
+	<rule from="^http://oas\.five\.tv/"
+		to="https://oasc07.247realmedia.com/"/>
+
+	<!--rule from="^http:"
+		to="https:" /-->
+
 </ruleset>

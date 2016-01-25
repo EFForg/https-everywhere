@@ -1,14 +1,10 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://digitalnewsagency.com/ => https://www.digitalnewsagency.com/: (60, 'SSL certificate problem: certificate has expired')
-
 	CDN buckets:
 
 		- dna-bucket-dna.cf.rawcdn.com <=> df7r7v78mcbtc.cloudfront.net
 
 
-	^: cert only matches www
+	^digitalnewsagency.com: Cert only matches www
 
 
 	Mixed content:
@@ -18,10 +14,15 @@ Fetch error: http://digitalnewsagency.com/ => https://www.digitalnewsagency.com/
 	* Secured by us
 
 -->
-<ruleset name="Digital News Agency.com" default_off='failed ruleset test'>
+<ruleset name="Digital News Agency.com" default_off="expired">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="www.digitalnewsagency.com" />
+
+	<!--	Complications:
+				-->
 	<target host="digitalnewsagency.com" />
-	<target host="*.digitalnewsagency.com" />
 	<target host="dna-bucket-dna.cf.rawcdn.com" />
 
 
@@ -32,10 +33,13 @@ Fetch error: http://digitalnewsagency.com/ => https://www.digitalnewsagency.com/
 	<securecookie host="^\.digitalnewsagency\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?digitalnewsagency\.com/"
+	<rule from="^http://digitalnewsagency\.com/"
 		to="https://www.digitalnewsagency.com/" />
 
 	<rule from="^http://dna-bucket-dna\.cf\.rawcdn\.com/"
 		to="https://df7r7v78mcbtc.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

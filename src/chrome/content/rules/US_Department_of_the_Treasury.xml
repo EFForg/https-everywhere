@@ -1,29 +1,38 @@
 <!--
+	U.S. Department of the Treasury
+
 	For other U.S. government coverage, see US-government.xml.
 
 
-	Nonfunctional domains:
+	Problematic hosts in *treas.gov:
 
-		- treasury.gov		(times out)
-		- www.treasury.gov	(redirects to http, akamai)
+		- ^		(times out)
+		- fms *
+		- ots *
+		- www		(works, akamai)
 
-
-	Problematic domains:
-
-		- treas.gov		(times out)
-		- ots.treas.gov		(cert only matches www.ots)
-		- www.treas.gov		(works, akamai)
+	* Mismatched
 
 -->
-<ruleset name="U.S. Department of the Treasury (partial)">
+<ruleset name="Treas.gov (partial)">
 
-	<target host="*.treas.gov" />
+	<target host="www.fms.treas.gov" />
+	<target host="www.ots.treas.gov" />
+	<target host="arc.publicdebt.treas.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="fms.treas.gov" />
+	<target host="ots.treas.gov" />
 
 
 	<securecookie host="^www\.ots\.treas\.gov$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?ots\.treas\.gov/"
+	<rule from="^http://ots\.treas\.gov/"
 		to="https://www.ots.treas.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

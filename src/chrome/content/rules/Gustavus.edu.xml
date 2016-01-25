@@ -18,20 +18,31 @@
 	* Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these hosts:
 
-		- (www\.)?
-		- blog
-		- \w+.blog
+		- gustavus.edu
 
 -->
 <ruleset name="Gustavus.edu (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="gustavus.edu" />
-	<target host="*.gustavus.edu" />
+	<target host="blog.gustavus.edu" />
+	<target host="*.blog.gustavus.edu" />
+	<target host="www.gustavus.edu" />
+
+		<test url="http://webservices.blog.gustavus.edu/" />
 
 
-	<rule from="^http://((?:blog|\w+\.blog|www)\.)?gustavus\.edu/"
-		to="https://$1gustavus.edu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^gustavus\.edu$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^gustavus\.edu$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

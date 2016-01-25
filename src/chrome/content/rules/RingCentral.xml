@@ -1,29 +1,72 @@
 <!--
-	Problematic subdomains:
+	Nonfunctional hosts in *ringcentral.com:
 
-		- marketo	(redirects to app-c.marketo.com, mismatched, CN: *.marketo.com)
+		- marketo
+		- success *
+
+	* Redirects to http
 
 
-	Partially covered subdomains:
+	^ringcentral.com: Dropped
 
-		- marketo	(→ na-c.marketo.com)
-		- (www.)	(some [most?] pages redirect to http)
+
+	Insecure cookies are set for these hosts:
+
+		- service.ringcentral.com
+		- www.ringcentral.com
+
+
+	Mixed content:
+
+		- Bugs on www from ringcentral.112.2o7.net *
+
+	* Secured by us
 
 -->
-<ruleset name="RingCentral">
+<ruleset name="RingCentral.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="service.ringcentral.com" />
+	<target host="www.ringcentral.com" />
+
+	<!--	Complications:
+				-->
 	<target host="ringcentral.com" />
-	<target host="*.ringcentral.com" />
-		<exclusion pattern="^http://(?:www\.)?ringcentral\.com/(?!css/|demo/[\w-]+\.jpg$|images/|ringme/)" />
+	<target host="marketo.ringcentral.com" />
+
+		<exclusion pattern="^http://marketo\.ringcentral\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marketo.ringcentral.com/contact-center-wp.html" />
+			<test url="http://marketo.ringcentral.com/healthcare_informatics.html" />
+			<test url="http://marketo.ringcentral.com/multi_site_businesses" />
+			<test url="http://marketo.ringcentral.com/rc_connect_platform.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://marketo.ringcentral.com/css/mktLPSupport.css" />
+			<test url="http://marketo.ringcentral.com/rs/ringcentral/images/separator-dotdot-hor.png" />
+
+		<test url="http://www.ringcentral.com/whyringcentral/contactus.html" />
 
 
-	<securecookie host="^service\.ringcentral\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^service\.ringcentral\.com$" name="^(?:RCBRAND|RCRoutingInfo)$" /-->
+	<!--securecookie host="^www\.ringcentral\.com$" name="^rcakamai$" /-->
+
+	<securecookie host="^(?:service|www)\.ringcentral\.com$" name=".+" />
 
 
-	<rule from="^http://(service\.|www\.)?ringcentral\.com/"
-		to="https://$1ringcentral.com/" />
+	<rule from="^http://ringcentral\.com/"
+		to="https://www.ringcentral.com/" />
 
-	<rule from="^http://marketo\.ringcentral\.com/(cs|image|r)s/"
-		to="https://na-c.marketo.com/$1s/" />
+	<rule from="^http://marketo\.ringcentral\.com/"
+		to="https://na-c.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

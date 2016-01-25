@@ -6,14 +6,6 @@
 	* Redirects to http, per-client domains
 
 
-	Fully covered subdomains:
-
-		- (www.)?
-		- blog
-		- static
-		- support
-
-
 	These altnames don't exist:
 
 		- www.support.formstack.com
@@ -21,6 +13,7 @@
 
 	Insecure cookies are set for these hosts:
 
+		- $user.formstack.com
 		- www.formstack.com
 
 
@@ -35,6 +28,7 @@
 <ruleset name="Formstack.com (partial)">
 
 	<target host="formstack.com" />
+	<target host="bi.formstack.com" />
 	<target host="blog.formstack.com" />
 	<target host="static.formstack.com" />
 	<target host="support.formstack.com" />
@@ -43,9 +37,10 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^bi\.formstack\.com$" name="^(?:FormSpringForm(?:Session|View)\d+|rgisanonymous|rguserid|rguuid)$" /-->
 	<!--securecookie host="^www\.formstack\.com$" name="^(rgisanonymous|rguserid|rguuid)$" /-->
 
-	<securecookie host="^www\.formstack\.com$" name=".+" />
+	<securecookie host="^(?:bi|www)\.formstack\.com$" name=".+" />
 
 
 	<rule from="^http:"

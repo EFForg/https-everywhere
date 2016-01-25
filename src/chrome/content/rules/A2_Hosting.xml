@@ -4,6 +4,21 @@
 		- community	(no https)
 
 
+	Problematic hosts in *a2hosting.com:
+
+		- piwik *
+
+	* Untrusted root
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .a2hosting.com
+		- my.a2hosting.com
+		- partners.a2hosting.com
+		- www.a2hosting.com
+
+
 	Mixed content:
 
 		- Image on partners from www *
@@ -11,16 +26,29 @@
 	* Secured by us
 
 -->
-<ruleset name="A2 Hosting (partial)">
+<ruleset name="A2 Hosting.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="a2hosting.com" />
-	<target host="*.a2hosting.com" />
+	<target host="my.a2hosting.com" />
+	<target host="partners.a2hosting.com" />
+	<!--target host="piwik.a2hosting.com" /-->
+	<target host="www.a2hosting.com" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.a2hosting\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="my\.a2hosting\.com$" name="^WHMCS\w+$" /-->
+	<!--securecookie host="partners\.a2hosting\.com$" name="^_s$" /-->
+	<!--securecookie host="www\.a2hosting\.com$" name="^(?:PHPSESSID|exp_csrf_token|exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+
+	<securecookie host="\.a2hosting\.com$" name="^(?:__cfduid|cf_clearance)$" />
 	<securecookie host=".+\.a2hosting\.com$" name=".+" />
 
 
-	<rule from="^http://((?:my|partners|www)\.)?a2hosting\.com/"
-		to="https://$1a2hosting.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

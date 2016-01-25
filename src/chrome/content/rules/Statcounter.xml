@@ -1,23 +1,30 @@
 <!--
-	Nonfunctional subdomains:
-
-		- gs	(redirects to http)
+	For rules causing false/broken MCB, see Statcounter.com-falsemixed.xml.
 
 
-	Problematic subdomains;
+	Nonfunctional hosts in *statcounter.com:
 
-		- www *
-		- www-beta *
+		- gs ʰ
 
-	* 403; mismatched, CN: ssl2.cdngc.net
+	ʰ Redirects to http
+
+
+	Problematic hosts in *statcounter.com:
+
+		- blog ˣ
+		- www ³
+		- www-beta ³
+
+	³ 403
+	ˣ Mixed css
 
 
 	Fully covered subdomains:
 
-		- (www.)	(www → ^)
-		- www-beta	(→ ^)
+		- (www.)?	(www → ^)
+		- www-beta	(→ ^statcounter.com)
 
-		- *		(web bugs)
+		- *		(bugs)
 
 			- c
 			- c20
@@ -33,9 +40,14 @@
 
 	<target host="statcounter.com" />
 	<target host="*.statcounter.com" />
-		<!--exclusion pattern="^http://gs\.statcounter\.com/" /-->
+
+		<exclusion pattern="^http://(?:blog|gs)\.statcounter\.com/" />
+
+			<test url="http://blog.statcounter.com/" />
+			<test url="http://gs.statcounter.com/" />
 
 		<test url="http://c.statcounter.com/" />
+		<test url="http://c17.statcounter.com/counter.php?sc_project=" />
 		<test url="http://c20.statcounter.com/" />
 		<test url="http://c40.statcounter.com/" />
 
@@ -44,7 +56,7 @@
 					-->
 	<!--securecookie host="^\.statcounter\.com$" name="^(__cfduid|cf_clearance|is_unique|is_visitor_unique)$" /-->
 
-	<securecookie host="^(?!gs\.)(?:.*\.)?statcounter\.com$" name=".+" />
+	<securecookie host="^(?!gs\.)." name="." />
 
 
 	<rule from="^http://www(?:-beta)?\.statcounter\.com/"
@@ -53,8 +65,8 @@
 		<test url="http://www.statcounter.com/" />
 		<test url="http://www-beta.statcounter.com/" />
 
-	<rule from="^http://(?!gs\.)([^/:@\.]+\.)?statcounter\.com/"
-		to="https://$1statcounter.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
 

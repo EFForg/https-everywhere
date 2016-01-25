@@ -1,0 +1,43 @@
+<!--
+	Problematic hosts in *webpay.cl:
+
+		- certificacion ᵉ
+		- transbank ⁴
+
+	ᵉ Expired
+	⁴ Configured for RC4 only
+
+
+	^webpay.cl: Dropped over http & https
+
+
+	These altnames don't exist:
+
+		- webpay3g.transbank.cl
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.webpay.cl
+
+-->
+<ruleset name="Webpay.cl (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="certificacion.webpay.cl" /-->
+	<!--target host="transbank.webpay.cl" /-->
+	<target host="www.webpay.cl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.webpay\.cl$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

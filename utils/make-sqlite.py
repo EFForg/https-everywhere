@@ -33,12 +33,6 @@ c.execute('''DROP TABLE IF EXISTS targets''')
 c.execute('''CREATE TABLE targets
              (host TEXT,
               ruleset_id INTEGER)''')
-c.execute('''DROP TABLE IF EXISTS git_commit''')
-c.execute('''CREATE TABLE git_commit
-             (git_commit TEXT)''')
-
-git_commit = subprocess.check_output("git rev-parse HEAD", shell=True).rstrip("\n")
-c.execute('''INSERT INTO git_commit (git_commit) VALUES(?)''', (git_commit,))
 
 parser = etree.XMLParser(remove_blank_text=True)
 

@@ -1,12 +1,76 @@
+<!--
+	^office.co.uk: Dropped
+
+-->
 <ruleset name="Office.co.uk (partial)">
 
-	<target host="office.co.uk" />
+	<!--	Direct rewrites:
+				-->
+	<target host="t.eml.office.co.uk" />
+	<target host="m.office.co.uk" />
+	<target host="media.office.co.uk" />
 	<target host="www.office.co.uk" />
 
-
-	<!--	!www times out.
+	<!--	Complications:
 				-->
-	<rule from="^http://(?:www\.)?office\.co\.uk/(img|images|javascript|scripts|styles)/"
-		to="https://www.office.co.uk/$1/" />
+	<target host="office.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://m\.office\.co\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://m\.office\.co\.uk/+(?!assets/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://m.office.co.uk/sale" />
+			<test url="http://m.office.co.uk/view/search?search=" />
+			<test url="http://m.office.co.uk/womens" />
+
+			<!--	-ve:
+					-->
+			<test url="http://m.office.co.uk/assets/images/christmasSkin/cards.png" />
+			<test url="http://m.office.co.uk/favicon.ico" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.office\.co\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.office\.co\.uk/+(?!assets/|favicon\.ico|img/|images/|javascript/|scripts/|office/styles/|styles/|view/secured/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.office.co.uk/accessories" />
+			<test url="http://www.office.co.uk/blog/" />
+			<test url="http://www.office.co.uk/brand" />
+			<test url="http://www.office.co.uk/kids" />
+			<test url="http://www.office.co.uk/mens" />
+			<test url="http://www.office.co.uk/sale" />
+			<test url="http://www.office.co.uk/trainers" />
+			<test url="http://www.office.co.uk/view/content/contactus-info-page" />
+			<test url="http://www.office.co.uk/view/cookies" />
+			<test url="http://www.office.co.uk/womens" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.office.co.uk/assets/images/christmasSkin/icn.png" />
+			<test url="http://www.office.co.uk/favicon.ico" />
+			<test url="http://www.office.co.uk/office/styles/images/DE-large-flag.gif" />
+			<test url="http://www.office.co.uk/view/secured/content/login" />
+			<test url="http://www.office.co.uk/view/secured/content/myaccount" />
+
+		<test url="http://t.eml.office.co.uk/webApp/ofcOfficeSimpleRegistrationWebApp?b=1&amp;s=" />
+		<test url="http://media.office.co.uk/office/styles/iphone/images/breadcrumb-seperated.png" />
+
+
+	<rule from="^http://office\.co\.uk/"
+		to="https://www.office.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

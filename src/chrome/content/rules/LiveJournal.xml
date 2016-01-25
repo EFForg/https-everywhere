@@ -39,8 +39,8 @@
 
 -->
 <ruleset name="LiveJournal (partial)">
-
-	<target host="livejournal.com" />
+	<!-- not applicable for now
+	<target host="livejournal.com" /-->
 	<target host="*.livejournal.com" />
 
 
@@ -50,25 +50,35 @@
 			-->
 	<rule from="^http://(www\.)?livejournal\.com/(?=(?:changepassword|create|login)\.html|manage/|shop/)"
 		to="https://$1livejournal.com/" />
+		
+		<test url="http://www.livejournal.com/login.html" />
+		<test url="http://www.livejournal.com/manage/" />
+		<test url="http://www.livejournal.com/shop/" />
 
 	<rule from="^http://status\.livejournal\.com/img/"
 		to="https://s3.amazonaws.com/status-livejournal/img/" />
-
+		
+		<test url="http://status.livejournal.com/img/" />
+	
 	<!--	Also on stat.livejournal.com, but as these are
 		on a CDN too, be kind and point there instead.
 								-->
 	<rule from="^http://(?:l-)stat\.livejournal\.com/img/error-pages/(?=bg-error-page\.jpg|bullet-round-grey\.gif|frank\.png|logo-lj\.png|rule-grey\.gif)"
 		to="https://s3.amazonaws.com/status-livejournal/img/" />
 
+		<test url="http://l-stat.livejournal.com/img/error-pages/bg-error-page.jpg" />
+		<test url="http://l-stat.livejournal.com/img/error-pages/bullet-round-grey.gif" />
+		<test url="http://l-stat.livejournal.com/img/error-pages/frank.png" />
+
 	<rule from="^http://(?:l-)?stat\.livejournal\.com/"
 		to="https://stat.livejournal.com/" />
 
 	<!--	User journal entries work, but user pages redirect to www.
-
 		This broke, but appears to work again.
+		Breaks commenting
 							-->
-	<rule from="^http://([\w-]+)\.livejournal\.com/(?=\d+\.html)"
-		to="https://$1.livejournal.com/" />
+	<!--rule from="^http://([\w-]+)\.livejournal\.com/(?=\d+\.html)"
+		to="https://$1.livejournal.com/" /-->
 
 	<!--rule from="^https://www\.livejournal\.com/stc/img/error-pages/"
 		to="https://www.livejournal.com/img/error-pages/" /-->

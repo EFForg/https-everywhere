@@ -1,24 +1,54 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://cloudfront.ingenico.com/ (200) => https://dnweschm4a37.cloudfront.net/ (502)
+	Ingenico Group
+
+
 	CDN buckets:
 
 		- dnweschm4a37.cloudfront.net
 
-			- cloudfront.ingenico.com
-
 
 	Nonfunctional subdomains:
 
-		- (www.)	(no https)
+		- (www.)? ¹
+		- isctouch ²
+		- iself-service ²
+
+	¹ Dropped
+	² Redirects to www.zeeagency.com
+
+
+	Problematic hosts in *ingenico.com:
+
+		- cloudfront
+
+
+	Insecure cookies are set for these hosts:
+
+		- library.ingenico.com
 
 -->
-<ruleset name="Ingenico Group (partial)" default_off='failed ruleset test'>
+<ruleset name="Ingenico.com (partial)">
 
-	<target host="cloudfront.ingenico.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="library.ingenico.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="cloudfront.ingenico.com" /-->
 
 
-	<rule from="^http://cloudfront\.ingenico\.com/"
-		to="https://dnweschm4a37.cloudfront.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^library\.ingenico\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^library\.ingenico\.com$" name=".+" />
+
+
+	<!--rule from="^http://cloudfront\.ingenico\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

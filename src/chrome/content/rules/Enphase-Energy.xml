@@ -1,35 +1,68 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.enphase.com/ => https://www.enphase.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.enphase.com'")
+	Other Enphase Energy rulesets:
 
-	Nonfunctional:
+		- Enphase_Energy.com.xml
 
-		- investor	(cert: *.shareholder.com; 403)
+
+	Nonfunctional hosts in *enphase.com:
+
+		- info ¹
+		- investor ²
+
+	¹ Marketo
+	² Dropped
+
+
+	www.enphase.com: Mismatched
 
 -->
-<ruleset name="Enphase Energy (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="Enphase.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="enphase.com"/>
+	<target host="www2.enphase.com"/>
+
+	<!--	Complications:
+				-->
+	<target host="info.enphase.com"/>
 	<target host="www.enphase.com"/>
-	<target host="enphaseenergy.com"/>
-	<target host="*.enphaseenergy.com"/>
+
+		<exclusion pattern="^http://info\.enphase\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.enphase.com/2015-02-AU-Event-California-Dreamin_Registration.html/" />
+			<test url="http://info.enphase.com/2015-0707-NA-Newsletter-Partner_Intersolar-2015-Learn-More.html" />
+			<test url="http://info.enphase.com/AC-Rocks_2014.html" />
+			<test url="http://info.enphase.com/Enphase-Training-Anywhere-2015.html" />
+			<test url="http://info.enphase.com/FolsomLabs.html" />
+			<test url="http://info.enphase.com/NL_Collateral.html" />
+			<test url="http://info.enphase.com/newsletter-signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.enphase.com//" />
+			<test url="http://info.enphase.com/?" />
+			<test url="http://info.enphase.com/?f" />
+			<test url="http://info.enphase.com/?o" />
+			<test url="http://info.enphase.com/?b" />
+			<test url="http://info.enphase.com/css/mktLPSupportCompat.css" />
+			<test url="http://info.enphase.com/rs/129-YCL-825/images/ENPH_rev2_Logo_white.png" />
 
 
-	<securecookie host="^enlighten\.enphaseenergy\.com$" name=".*"/>
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://info\.enphase\.com/+(?:\?.*)?$"
+		to="https://enphase.com/"/>
 
+	<rule from="^http://info\.enphase\.com/"
+		to="https://na-abb.marketo.com/" />
 
-	<!--	enphaseenergy.com:
-			- Presents cert for enphase.com
-			- Redirects to enphase.com.	-->
-	<rule from="^http://(www\.)?enphase(?:energy)?\.com/"
-		to="https://$1enphase.com/"/>
+	<rule from="^http://www\.enphase\.com/"
+		to="https://enphase.com/"/>
 
-	<!--	Pages redirect to http.		-->
-	<rule from="^http://community\.enphaseenergy\.com/favicon\.png"
-		to="https://getsatisfaction.com/favicon.png"/>
-
-	<rule from="^http://(assets1|enlighten)\.enphaseenergy\.com/"
-		to="https://$1.enphaseenergy.com/"/>
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

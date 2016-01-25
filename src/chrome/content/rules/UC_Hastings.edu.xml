@@ -1,33 +1,17 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://uchastings.edu/ => https://uchastings.edu/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For rules causing false/broken MCB, see UC_Hastings.edu-falsemixed.xml.
+	For problematic rules, see UC_Hastings.edu-problematic.xml.
 
 
 	Problematic subdomains:
 
-		- journals ¹
-		- library ¹
-		- librarysource ²
+		- (www.)? ¹
+		- events ²
+		- journals ¹ ²
+		- library ¹ ²
 
-	¹ Mixed css from (www.)
-	² Mixed css from $self
-
-
-	Partially covered subdomains:
-
-		- library *
-		- librarysource *
-
-	* Avoiding false/broken MCB
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- cio2
-		- events
-		- webadvisor
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Mixed css
 
 
 	These altnames don't exist:
@@ -35,38 +19,48 @@ Fetch error: http://uchastings.edu/ => https://uchastings.edu/: (60, 'SSL certif
 		- www.events.uchastings.edu
 
 
+	Insecure cookies are set for these hosts:
+
+		- events.uchastings.edu
+
+
 	Mixed content:
 
 		- css, on:
 
-			- journals from (www.) *
-			- journals from fonts.googleapis.com *
-			- library from ^ *
-			- librarysource from $self *
+			- events, journals from fonts.googleapis.com ¹
+			- events from hws.uchastings.edu ¹
+			- journals, library from (www.)?uchastings.edu ²
 
-		- Images, on:
+		- Images, on (www.)?, hws, journals, library from (www.)?uchastings.edu ²
+		- favicon on journals, library from (www.)?uchastings.edu ²
 
-			- (www.) from $self *
-			- journals and library from www *
-
-		- favicon on journals from www *
-
-	* Secured by us
+	¹ Secured by us
+	² Rule disabled by default <= missing certificate chain
 
 -->
-<ruleset name="UC Hastings.edu (partial)" default_off='failed ruleset test'>
+<ruleset name="UC Hastings.edu (partial)">
 
-	<target host="uchastings.edu" />
-	<target host="*.uchastings.edu" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://journals\.uchastings\.edu/" /-->
-		<exclusion pattern="^http://library\.uchastings\.edu/+(?!images/|_site_support/)" />
-		<exclusion pattern="^http://librarysource\.uchastings\.edu/+(?!sp/assets/)" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="uchastings.edu" /-->
+	<target host="cio2.uchastings.edu" />
+	<!--target host="events.uchastings.edu" /-->
+	<target host="hws.uchastings.edu" />
+	<!--target host="journals.uchastings.edu" /-->
+	<!--target host="library.uchastings.edu" /-->
+	<target host="webadvisor.uchastings.edu" />
+	<!--target host="www.uchastings.edu" /-->
 
 
-	<rule from="^http://((?:cio2|events|library|librarysource|webadvisor|www)\.)?uchastings\.edu/"
-		to="https://$1uchastings.edu/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^events\.uchastings\.edu$" name="^ASP\.NET_SessionId$" /-->
+
+	<!--securecookie host="^events\.uchastings\.edu$" name=".+" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

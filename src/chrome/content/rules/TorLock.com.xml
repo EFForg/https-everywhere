@@ -1,18 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://torlock.com/ (200) => https://www.torlock.com/ (521)
+	CDN buckets:
+
+		- tlock-16e3.kxcdn.com
+
+
+	Problematic hosts in *torlock.com:
+
+		- cdn *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .torlock.com
+
+
 	Mixed content:
 
-		- Web bug from www.facebook.com *
+		- Images from cdn.torlock.com *
+		- Bug from sstatic1.histats.com ²
 
 	* Secured by us
+	² Unsecurable <= refused
 
 -->
-<ruleset name="TorLock.com" default_off='failed ruleset test'>
+<ruleset name="TorLock.com">
 
 	<target host="torlock.com" />
-	<target host="*.torlock.com" />
+	<target host="www.torlock.com" />
 
+	<!--	Complications:
+				-->
+	<target host="cdn.torlock.com" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.torlock\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
 
 	<securecookie host="^(?:w*\.)?torlock\.com$" name=".+" />
 
@@ -20,7 +45,10 @@ Non-2xx HTTP code: http://torlock.com/ (200) => https://www.torlock.com/ (521)
 	<!--	!www redirects to www over http,
 		so copy that behavior:
 					-->
-	<rule from="^http://(?:www\.)?torlock\.com/"
-		to="https://www.torlock.com/" />
+	<rule from="^http://cdn\.torlock\.com/"
+		to="https://tlock-16e3.kxcdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

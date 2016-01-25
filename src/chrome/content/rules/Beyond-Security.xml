@@ -1,26 +1,53 @@
-<ruleset name="Beyond Security">
+<!--
+	Other Beyond Security rulesets:
+
+		- ScanMyServer.com.xml
+
+
+	Insecure cookies are set for these hosts:
+
+		- cloud2.beyondsecurity.com
+		- cloud3.beyondsecurity.com
+		- sp-us.beyondsecurity.com
+
+-->
+<ruleset name="Beyond Security.com">
 
 	<target host="beyondsecurity.com" />
 	<target host="*.beyondsecurity.com" />
-		<!--
-			Pages started redirecting to http.
+
+		<!--	Pages started redirecting to http.
 								-->
-		<exclusion pattern="^http://(?:www\.)?beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" />
+		<exclusion pattern="^http://www\.beyondsecurity\.com/(?:.+\.html)?(?:$|\?)" />
 
-
-	<!--	Observed cookies:
-
-			- sp-us
+			<!--	+ve:
 					-->
-	<securecookie host="^.*\.beyondsecurity\.com$" name=".*" />
+			<test url="http://www.beyondsecurity.com/2logins.html" />
+			<test url="http://www.beyondsecurity.com/network_scanner.html" />
+			<test url="http://www.beyondsecurity.com/network_security.html" />
+			<test url="http://www.beyondsecurity.com/pen_testing.html" />
 
-	<!--	Observed subdomains:
-
-			- secure
-			- sp-us
-			- www
+			<!--	-ve:
 					-->
-	<rule from="^http://(\w+\.)?beyondsecurity\.com/"
+			<test url="http://www.beyondsecurity.com/assets/css/default/default.css" />
+			<test url="http://www.beyondsecurity.com/assets/img/beyond-security-logo.png" />
+
+		<test url="http://cloud2.beyondsecurity.com/" />
+		<test url="http://cloud3.beyondsecurity.com/" />
+		<test url="http://seal.beyondsecurity.com/verification-images/scanmyserver.com/vulnerability-scanner-8.gif" />
+		<test url="http://secure.beyondsecurity.com/verification-images/forum-tc.msi.com/vulnerability-scanner-2.gif" />
+		<test url="http://sp-us.beyondsecurity.com/my_account" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:cloud[23]|sp-us)\.beyondsecurity\.com$" name="^CGISESSID$" /-->
+
+	<!--securecookie host="." name="." /-->
+	<securecookie host="^(?:cloud[23]|sp-us)\.beyondsecurity\.com$" name="." />
+
+
+	<rule from="^http://([\w-]+\.)?beyondsecurity\.com/"
 		to="https://$1beyondsecurity.com/" />
 
 </ruleset>

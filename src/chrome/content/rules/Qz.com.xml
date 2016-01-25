@@ -3,26 +3,23 @@
 
 		- wac.35fb.edgecastcdn.net/??35FB/
 
-			- app
-			- img
 
-
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *qz.com:
 
 		- app *
-		- img *
 
-	* EdgeCast
+	* 404
 
 
 	Mixed content:
 
 		- css, on ^ from:
 
-			- app ¹
+			- app.qz.com ¹
 			- fonts.googleapis.com ²
 
-		- favicon, on ^ from \d.gravatar.com ²
+		- favicon, on ^ from app.qz.com ²
+		- Bug on ^ from b.scorecardresearch.com ²
 
 	¹ Unsecurable <= 404
 	² Secured by us
@@ -30,16 +27,20 @@
 -->
 <ruleset name="Qz.com (partial)" default_off="mismatched" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="qz.com" />
-	<target host="*.qz.com" />
+	<target host="www.qz.com" />
+
+	<!--	Complications:
+				-->
+	<target host="img.qz.com" />
 
 
-	<rule from="^http://(?:www\.)?qz\.com/"
-		to="https://qz.com/" />
+	<rule from="^http://img\.qz\.com/"
+		to="https://qzprod.files.wordpress.com/" />
 
-	<!--	Protocol-relative links:
-						-->
-	<rule from="^https://img\.qz\.com/"
-		to="http://img.qz.com/" downgrade="1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

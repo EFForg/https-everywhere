@@ -2,54 +2,120 @@
 	Other Economist Group rulesets:
 
 		- Roll_Call.com.xml
+		- Static-Economist.com.xml
+		- Which_MBA.com.xml
 
 
-	CDN buckets:
+	Problematic hosts in *economist.com:
 
-		- media.economist.com.cdngc.net
+		- ^ ¹
+		- stats ²
 
-			- cdn.static-economist.com
-
-
-	Problematic domains:
-
-		- economist.com ¹
-		- cdn.static-economist.com ²
-
-	¹ Reset
-	² Works; mismatched, CN: ssl2.cdngc.net
+	¹ Handshake fails
+	² Mismatched
 
 
-	Fully covered domains:
+	These altnames don't exist:
 
-		- cdn.static-economist.com	(→ media.economist.com)
+		- www.gmat.economist.com
+		- www.app.gmat.economist.com
+		- subscriptions.economist.com
+		- www.success.economist.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .economist.com
+		- .gmat.economist.com
+		- app.gmat.economist.com
+		- jobs.economist.com
+		- subscriptions.economist.com
+		- .subscriptions.economist.com
+		- www.economist.com
+
+
+	Mixed content:
+
+		- Bugs on execed from ads.whichmba.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Economist (partial)">
+<ruleset name="Economist.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="execed.economist.com" />
+	<target host="gmat.economist.com" />
+	<target host="app.gmat.economist.com" />
+	<target host="jobs.economist.com" />
+	<target host="www.jobs.economist.com" />
+	<target host="libertymutual.economist.com" />
+	<target host="media.economist.com" />
+	<target host="store.economist.com" />
+	<target host="www.store.economist.com" />
+	<target host="subscription.economist.com" />
+	<target host="subscriptions.economist.com" />
+	<target host="success.economist.com" />
+	<target host="www.economist.com" />
+
+	<!--	Complications:
+				-->
 	<target host="economist.com" />
-	<target host="*.economist.com" />
-	<target host="cdn.static-economist.com" />
+	<target host="stats.economist.com" />
 
-
-	<!--	Incapsula cookies:
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.economist\.com/$" /-->
+		<!--
+			Exceptions:
 					-->
-	<securecookie host="^\.economist\.com$" name="^___utm\w+$" />
+		<exclusion pattern="^http://www\.economist\.com/+(?!(?:debate|user)(?:$|[?/])|favicon\.ico|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.economist.com/blogs" />
+			<test url="http://www.economist.com/contact-info" />
+			<test url="http://www.economist.com/economics-a-to-z" />
+			<test url="http://www.economist.com/events-conferences" />
+			<test url="http://www.economist.com/multimedia" />
+			<test url="http://www.economist.com/topics" />
+			<test url="http://www.economist.com/whichmba" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.economist.com/debate" />
+			<test url="http://www.economist.com/favicon.ico" />
+			<test url="http://www.economist.com/sites/all/themes/econfinal/styles/ec-static.css" />
+			<test url="http://www.economist.com/user/login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.economist\.com$" name="^__qca$" /-->
+	<!--securecookie host="^\.gmat\.economist\.com$" name="^(?:geoipcountry|is_authenticated)$" /-->
+	<!--securecookie host="^app\.gmat\.economist\.com$" name="^csrftoken$" /-->
+	<!--securecookie host="^jobs\.economist\.com$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
+	<!--securecookie host="^subscriptions\.economist\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.subscriptions\.economist\.com$" name="^_tokamecom_$" /-->
+	<!--
+		(Incapsula cookies:)
+					-->
+	<!--securecookie host="^\.economist\.com$" name="^___utm\w+$" /-->
+	<!--securecookie host="^www\.economist\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+
+	<securecookie host="^\.economist\.com$" name="^__(?:qca|_utm\w+)$" />
+	<securecookie host="^(?:(?:app)?\.gmat|jobs|\.?subscriptions)\.economist\.com$" name=".+" />
 	<securecookie host="^www\.economist\.com$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
 
 
-	<!--	Some pages 302 to http.
-					-->
-	<rule from="^http://(?:www\.)?economist\.com/(?=debate(?:$|[?/])|favicon\.ico|sites/|user)"
+	<rule from="^http://economist\.com/"
 		to="https://www.economist.com/" />
 
 	<rule from="^http://stats\.economist\.com/"
-		to="https://economistcomprod.122.2o7.net/" />
+		to="https://economist.122.2o7.net/" />
 
-	<rule from="^http://(libertymutual|media|(?:www\.)?store)\.economist\.com/"
-		to="https://$1.economist.com/" />
-
-	<rule from="^http://cdn\.static-economist\.com/"
-		to="https://media.economist.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

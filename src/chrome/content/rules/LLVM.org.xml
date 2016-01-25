@@ -1,19 +1,58 @@
 <!--
+	Nonfunctional hosts in *llvm.org:
+
+		- blog ¹
+		- clang ²
+		- clang-analyzer ²
+		- dragonegg ²
+		- klee ²
+		- libclc ²
+		- libcxx ²
+		- lists ¹
+		- lld ²
+		- lldb ²
+		- openmp ²
+		- polly ¹
+		- reviews ¹
+		- vmkit ²
+
+	¹ Refused
+	² Shows ^llvm.org
+
+
 	www: cert only matches ^llvm.org
 
 -->
 <ruleset name="LLVM.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="llvm.org" />
+
+	<!--	Complications:
+				-->
 	<target host="www.llvm.org" />
-		<!--
-			Different from http:
+
+		<!--	Different from http:
 						-->
 		<!--exclusion pattern="^http://(www\.)?llvm\.org/($|docs/)" /-->
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://(?:www\.)?llvm\.org/+(?!svn/)" />
+		<exclusion pattern="^http://(?:www\.)?llvm\.org/+(?!bugs/|svn/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://llvm.org/ProjectsWithLLVM/" />
+			<test url="http://llvm.org/docs/" />
+			<test url="http://llvm.org/docs/GettingStarted.html" />
+			<test url="http://llvm.org/pubs/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://llvm.org/bugs/show_bug.cgi?id=19847" />
+			<test url="http://llvm.org/bugs/show_bug.cgi?id=21689" />
+			<test url="http://llvm.org/cvs/" />
 
 
 	<rule from="^http://(?:www\.)?llvm\.org/"

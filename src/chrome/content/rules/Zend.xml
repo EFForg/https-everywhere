@@ -8,10 +8,9 @@
 
 		- shop-zend.pantherssl.com
 		- static-zend.pantherssl.com
-		- static-zend.pantherssl.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *zend.com:
 
 		- blog *
 		- forums *
@@ -19,61 +18,37 @@
 	* 403
 
 
-	Problematic subdomains:
+	Problematic hosts in *zend.com:
 
-		- ^	(works, cert only matches www)
-		- framework ²
-
-	² Works; mismatched, CN: apigility.org
-
-
-	Observed cookie domains:
-
-		- .
-		- forums
-		- .forums
+		- ^ *
 		- framework *
-		- .framework
-		- shop *
-		- .shop
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .zend.com
+		- pages.zend.com
+		- shop.zend.com *
+		- .shop.zend.com
+		- www.zend.com
 
 	* Tracking cookies only
-
-
-	Fully covered subdomains:
-
-		- static	(→ (shop|static)-zend.pantherssl.com)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- pages
-		- shop
 
 
 	These altnames don't exist:
 
 		- www.pages.zend.com
 
-
-	Mixed content:
-
-		- Images, on:
-
-			- pages from $self *
-			- shop from $self *
-			- shop from static *
-
-	* Secured by us
-
 -->
-<ruleset name="Zend.com (partial)" platform="mixedcontent">
+<ruleset name="Zend.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="pages.zend.com" />
 	<target host="shop.zend.com" />
+	<target host="support.zend.com" />
 	<target host="www.zend.com" />
 
 	<!--	Complications:
@@ -84,12 +59,17 @@
 		<test url="http://static.zend.com/shop/" />
 
 
-	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
-	<!--
-		Is this safe to secure here?
-						-->
+	<!--	Not secured by server:
+					-->
 	<!--securecookie host="^\.zend\.com$" name="^iep$" /-->
-	<securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" />
+	<!--securecookie host="^pages\.zend\.com$" name="^BIGipServer.*" /-->
+	<!--securecookie host="^shop\.zend\.com$" name="^(?:\d{8}-SKEY|\d{8}-VID|HumanClickSiteContainerID_\d{8}|lpFPCtest|VIEWED_PRODUCTS)$" /-->
+	<!--securecookie host="^\.shop\.zend\.com$" name="^frontend$" /-->
+	<!--securecookie host="^www\.zend\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.zend\.com$" name="^__utm\w$" />
+	<securecookie host="^\.shop\.zend\.com$" name="." />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://zend\.com/"

@@ -40,21 +40,15 @@ function CookieRule(host, cookiename) {
 /**
  *A collection of rules
  * @param set_name The name of this set
- * @param match_rule Quick test match rule
  * @param default_state activity state
  * @param note Note will be displayed in popup
  * @constructor
  */
-function RuleSet(set_name, match_rule, default_state, note) {
+function RuleSet(set_name, default_state, note) {
   this.name = set_name;
-  if (match_rule)
-    this.ruleset_match_c = new RegExp(match_rule);
-  else
-    this.ruleset_match_c = null;
   this.rules = [];
-  this.exclusions = [];
-  this.targets = [];
-  this.cookierules = [];
+  this.exclusions = null;
+  this.cookierules = null;
   this.active = default_state;
   this.default_state = default_state;
   this.note = note;
@@ -69,16 +63,13 @@ RuleSet.prototype = {
   apply: function(urispec) {
     var returl = null;
     // If we're covered by an exclusion, go home
-    for(var i = 0; i < this.exclusions.length; ++i) {
-      if (this.exclusions[i].pattern_c.test(urispec)) {
-        log(DBUG,"excluded uri " + urispec);
-        return null;
+    if (this.exclusions !== null) {
+      for (var i = 0; i < this.exclusions.length; ++i) {
+        if (this.exclusions[i].pattern_c.test(urispec)) {
+          log(DBUG, "excluded uri " + urispec);
+          return null;
+        }
       }
-    }
-    // If a ruleset has a match_rule and it fails, go no further
-    if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) {
-      log(VERB, "ruleset_match_c excluded " + urispec);
-      return null;
     }
 
     // Okay, now find the first rule that triggers
@@ -88,12 +79,6 @@ RuleSet.prototype = {
       if (returl != urispec) {
         return returl;
       }
-    }
-    if (this.ruleset_match_c) {
-      // This is not an error, because we do not insist the matchrule
-      // precisely describes to target space of URLs ot redirected
-      log(DBUG,"Ruleset "+this.name
-              +" had an applicable match-rule but no matching rules");
     }
     return null;
   }
@@ -162,7 +147,7 @@ RuleSets.prototype = {
    */
   addUserRule : function(params) {
     log(INFO, 'adding new user rule for ' + JSON.stringify(params));
-    var new_rule_set = new RuleSet(params.host, null, true, "user rule");
+    var new_rule_set = new RuleSet(params.host, true, "user rule");
     var new_rule = new Rule(params.urlMatcher, params.redirectTo);
     new_rule_set.rules.push(new_rule);
     if (!(params.host in this.targets)) {
@@ -185,9 +170,10 @@ RuleSets.prototype = {
   parseOneRuleset: function(ruletag) {
     var default_state = true;
     var note = "";
-    if (ruletag.attributes.default_off) {
+    var default_off = ruletag.getAttribute("default_off");
+    if (default_off) {
       default_state = false;
-      note += ruletag.attributes.default_off.value + "\n";
+      note += default_off + "\n";
     }
 
     // If a ruleset declares a platform, and we don't match it, treat it as
@@ -201,7 +187,6 @@ RuleSets.prototype = {
     }
 
     var rule_set = new RuleSet(ruletag.getAttribute("name"),
-                               ruletag.getAttribute("match_rule"),
                                default_state,
                                note.trim());
 
@@ -217,15 +202,22 @@ RuleSets.prototype = {
     }
 
     var exclusions = ruletag.getElementsByTagName("exclusion");
-    for(var j = 0; j < exclusions.length; j++) {
-      rule_set.exclusions.push(
+    if (exclusions.length > 0) {
+      rule_set.exclusions = [];
+      for (var j = 0; j < exclusions.length; j++) {
+        rule_set.exclusions.push(
             new Exclusion(exclusions[j].getAttribute("pattern")));
+      }
     }
 
     var cookierules = ruletag.getElementsByTagName("securecookie");
-    for(var j = 0; j < cookierules.length; j++) {
-      rule_set.cookierules.push(new CookieRule(cookierules[j].getAttribute("host"),
-                                           cookierules[j].getAttribute("name")));
+    if (cookierules.length > 0) {
+      rule_set.cookierules = [];
+      for(var j = 0; j < cookierules.length; j++) {
+        rule_set.cookierules.push(
+            new CookieRule(cookierules[j].getAttribute("host"),
+                cookierules[j].getAttribute("name")));
+      }
     }
 
     var targets = ruletag.getElementsByTagName("target");
@@ -299,7 +291,7 @@ RuleSets.prototype = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria for being marked as secure.
+   * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
    * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
    * @param knownHttps Is the context for setting this cookie is https ?
@@ -318,7 +310,7 @@ RuleSets.prototype = {
     var rs = this.potentiallyApplicableRulesets(hostname);
     for (var i = 0; i < rs.length; ++i) {
       var ruleset = rs[i];
-      if (ruleset.active) {
+      if (ruleset.cookierules !== null && ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
           if (cr.host_c.test(cookie.domain) && cr.name_c.test(cookie.name)) {
