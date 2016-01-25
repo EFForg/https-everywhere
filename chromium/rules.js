@@ -271,7 +271,10 @@ RuleSets.prototype = {
     this.ruleCache.set(host, results);
 
     // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
-    if (this.ruleCache.size > 1000) { this.ruleCache.delete(this.ruleCache.keys().next().value) }
+    if (this.ruleCache.size > 1000) {
+      // Map.prototype.keys() returns keys in insertion order, so this is a FIFO.
+      this.ruleCache.delete(this.ruleCache.keys().next().value);
+    }
 
     return results;
   },
@@ -344,7 +347,10 @@ RuleSets.prototype = {
     var test_uri = "http://" + domain + nonce_path + nonce_path;
 
     // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
-    if (this.cookieHostCache.size > 250) { this.cookieHostCache.delete(this.cookieHostCache.keys().next().value) }
+    if (this.cookieHostCache.size > 250) {
+      // Map.prototype.keys() returns keys in insertion order, so this is a FIFO.
+      this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
+    }
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
