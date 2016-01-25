@@ -183,7 +183,9 @@ var redirectCounter = {};
  * */
 function onBeforeRequest(details) {
   // If HTTPSe has been disabled by the user, return immediately.
-  if (!isExtensionEnabled) { return; }
+  if (!isExtensionEnabled) {
+    return;
+  }
 
   var uri = document.createElement('a');
   uri.href = details.url;
