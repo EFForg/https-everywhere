@@ -1,7 +1,7 @@
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
 var DBUG = 1;
-function log(){};
+function log(){}
 
 /**
  * A single rule
@@ -10,7 +10,6 @@ function log(){};
  * @constructor
  */
 function Rule(from, to) {
-  //this.from = from;
   this.to = to;
   this.from_c = new RegExp(from);
 }
@@ -21,7 +20,6 @@ function Rule(from, to) {
  * @constructor
  */
 function Exclusion(pattern) {
-  //this.pattern = pattern;
   this.pattern_c = new RegExp(pattern);
 }
 
@@ -88,21 +86,18 @@ RuleSet.prototype = {
 
 /**
  * Initialize Rule Sets
- * @param cache a cache object (lru)
  * @param ruleActiveStates default state for rules
  * @constructor
  */
-function RuleSets(cache, ruleActiveStates) {
+function RuleSets(ruleActiveStates) {
   // Load rules into structure
-  var t1 = new Date().getTime();
   this.targets = {};
 
   // A cache for potentiallyApplicableRulesets
-  // Size chosen /completely/ arbitrarily.
-  this.ruleCache = new cache(1000);
+  this.ruleCache = new Map();
 
   // A cache for cookie hostnames.
-  this.cookieHostCache = new cache(100);
+  this.cookieHostCache = new Map();
 
   // A hash of rule name -> active status (true/false).
   this.ruleActiveStates = ruleActiveStates;
@@ -140,7 +135,7 @@ RuleSets.prototype = {
     if (!(params.host in this.targets)) {
       this.targets[params.host] = [];
     }
-    this.ruleCache.remove(params.host);
+    this.ruleCache.delete(params.host);
     // TODO: maybe promote this rule?
     this.targets[params.host].push(new_rule_set);
     if (new_rule_set.name in this.ruleActiveStates) {
@@ -274,6 +269,13 @@ RuleSets.prototype = {
 
     // Insert results into the ruleset cache
     this.ruleCache.set(host, results);
+
+    // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
+    if (this.ruleCache.size > 1000) {
+      // Map.prototype.keys() returns keys in insertion order, so this is a FIFO.
+      this.ruleCache.delete(this.ruleCache.keys().next().value);
+    }
+
     return results;
   },
 
@@ -343,6 +345,12 @@ RuleSets.prototype = {
 
     var nonce_path = "/" + Math.random().toString();
     var test_uri = "http://" + domain + nonce_path + nonce_path;
+
+    // Cap the size of the cookie cache (limit chosen somewhat arbitrarily)
+    if (this.cookieHostCache.size > 250) {
+      // Map.prototype.keys() returns keys in insertion order, so this is a FIFO.
+      this.cookieHostCache.delete(this.cookieHostCache.keys().next().value);
+    }
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var rs = this.potentiallyApplicableRulesets(domain);
