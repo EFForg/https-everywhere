@@ -261,9 +261,8 @@ RuleSets.prototype = {
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
-    var t;
     for (var i = 2; i <= segmented.length - 2; ++i) {
-      t = "*." + segmented.slice(i,segmented.length).join(".");
+      var t = "*." + segmented.slice(i,segmented.length).join(".");
       this.setInsert(results, this.targets[t]);
     }
     log(DBUG,"Applicable rules for " + host + ":");
