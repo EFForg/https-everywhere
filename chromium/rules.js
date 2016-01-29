@@ -329,7 +329,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domain in domainBlacklist) {
+    if (domainBlacklist.has(domain)) {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }

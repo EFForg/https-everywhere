@@ -168,8 +168,8 @@ AppliedRulesets.prototype = {
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = {};
-var domainBlacklist = {};
+var urlBlacklist = new Set();
+var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -216,7 +216,7 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
-  if (canonical_url in urlBlacklist) {
+  if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
 
@@ -230,9 +230,9 @@ function onBeforeRequest(details) {
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
-    urlBlacklist[canonical_url] = true;
+    urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    domainBlacklist[hostname] = true;
+    domainBlacklist.add(hostname);
     log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
