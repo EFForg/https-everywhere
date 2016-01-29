@@ -224,9 +224,9 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return {cancel: shouldCancel}; }
+  if (potentiallyApplicable.size === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
@@ -239,10 +239,10 @@ function onBeforeRequest(details) {
 
   var newuristr = null;
 
-  for(var i = 0; i < rs.length; ++i) {
-    activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr) {
-      newuristr = rs[i].apply(canonical_url);
+  for (let ruleset of potentiallyApplicable) {
+    activeRulesets.addRulesetToTab(details.tabId, ruleset);
+    if (ruleset.active && !newuristr) {
+      newuristr = ruleset.apply(canonical_url);
     }
   }
 
