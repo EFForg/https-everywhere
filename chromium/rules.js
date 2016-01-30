@@ -3,6 +3,11 @@
 var DBUG = 1;
 function log(){}
 
+// To reduce memory usage for the numerous rules/cookies with trivial rules
+const trivial_rule_to = "https:";
+const trivial_rule_from_c = new RegExp("^http:");
+const trivial_cookie_name_c = new RegExp(".*");
+
 /**
  * A single rule
  * @param from
@@ -10,8 +15,15 @@ function log(){}
  * @constructor
  */
 function Rule(from, to) {
-  this.to = to;
-  this.from_c = new RegExp(from);
+  if (from === "^http:" && to === "https:") {
+    // This is a trivial rule, rewriting http->https with no complex RegExp.
+    this.to = trivial_rule_to;
+    this.from_c = trivial_rule_from_c;
+  } else {
+    // This is a non-trivial rule.
+    this.to = to;
+    this.from_c = new RegExp(from);
+  }
 }
 
 /**
@@ -30,10 +42,14 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  this.host = host;
   this.host_c = new RegExp(host);
-  this.name = cookiename;
-  this.name_c = new RegExp(cookiename);
+
+  if (cookiename === ".*" || cookiename === ".+") {
+    // About 50% of cookie rules trivially match any name.
+    this.name_c = trivial_cookie_name_c;
+  } else {
+    this.name_c = new RegExp(cookiename);
+  }
 }
 
 /**
@@ -275,18 +291,17 @@ RuleSets.prototype = {
 
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
-   * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
-   * @param knownHttps Is the context for setting this cookie is https ?
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: function(cookie, knownHttps) {
+  shouldSecureCookie: function(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".")
+    while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
+    }
 
-    if (!knownHttps && !this.safeToSecureCookie(hostname)) {
+    if (!this.safeToSecureCookie(hostname)) {
         return null;
     }
 
