@@ -229,8 +229,8 @@ RuleSets.prototype = {
     var tmp;
     var results = [];
     if (this.targets[host]) {
-      // Copy the host targets so we don't modify them. // TODO: Check if this comment makes sense.
-      results = results.concat(this.targets[host].slice());
+      // Copy the host targets so we don't modify them.
+      results = results.concat(this.targets[host]);
     }
 
     // Replace each portion of the domain with a * in turn
@@ -348,7 +348,9 @@ RuleSets.prototype = {
     log(INFO, "Testing securecookie applicability with " + test_uri);
     var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
     for (let ruleset of potentiallyApplicable) {
-      if (!ruleset.active) continue;
+      if (!ruleset.active) {
+        continue;
+      }
       if (ruleset.apply(test_uri)) {
         log(INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
@@ -370,8 +372,9 @@ RuleSets.prototype = {
     var newuri = null;
     var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
     for (let ruleset of potentiallyApplicable) {
-      if (ruleset.active && (newuri = ruleset.apply(urispec)))
+      if (ruleset.active && (newuri = ruleset.apply(urispec))) {
         return newuri;
+      }
     }
     return null;
   }
