@@ -3,6 +3,11 @@
 var DBUG = 1;
 function log(){}
 
+// To reduce memory usage for the numerous rules/cookies with trivial rules
+const trivial_rule_to = "https:";
+const trivial_rule_from_c = new RegExp("^http:");
+const trivial_cookie_name_c = new RegExp(".*");
+
 /**
  * A single rule
  * @param from
@@ -10,8 +15,15 @@ function log(){}
  * @constructor
  */
 function Rule(from, to) {
-  this.to = to;
-  this.from_c = new RegExp(from);
+  if (from === "^http:" && to === "https:") {
+    // This is a trivial rule, rewriting http->https with no complex RegExp.
+    this.to = trivial_rule_to;
+    this.from_c = trivial_rule_from_c;
+  } else {
+    // This is a non-trivial rule.
+    this.to = to;
+    this.from_c = new RegExp(from);
+  }
 }
 
 /**
@@ -30,10 +42,14 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  this.host = host;
   this.host_c = new RegExp(host);
-  this.name = cookiename;
-  this.name_c = new RegExp(cookiename);
+
+  if (cookiename === ".*" || cookiename === ".+") {
+    // About 50% of cookie rules trivially match any name.
+    this.name_c = trivial_cookie_name_c;
+  } else {
+    this.name_c = new RegExp(cookiename);
+  }
 }
 
 /**
@@ -213,19 +229,6 @@ RuleSets.prototype = {
   },
 
   /**
-   * Insert any elements from fromList into intoList, if they are not
-   * already there.  fromList may be null.
-   * @param intoList
-   * @param fromList
-   */
-  setInsert: function(intoList, fromList) {
-    if (!fromList) return;
-    for (var i = 0; i < fromList.length; i++)
-      if (intoList.indexOf(fromList[i]) == -1)
-        intoList.push(fromList[i]);
-  },
-
-  /**
    * Return a list of rulesets that apply to this host
    * @param host The host to check
    * @returns {*} (empty) list
@@ -243,7 +246,7 @@ RuleSets.prototype = {
     var results = [];
     if (this.targets[host]) {
       // Copy the host targets so we don't modify them.
-      results = this.targets[host].slice();
+      results = results.concat(this.targets[host]);
     }
 
     // Replace each portion of the domain with a * in turn
@@ -251,24 +254,31 @@ RuleSets.prototype = {
     for (var i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
       segmented[i] = "*";
-      this.setInsert(results, this.targets[segmented.join(".")]);
+      results = results.concat(this.targets[segmented.join(".")]);
       segmented[i] = tmp;
     }
     // now eat away from the left, with *, so that for x.y.z.google.com we
     // check *.z.google.com and *.google.com (we did *.y.z.google.com above)
     for (var i = 2; i <= segmented.length - 2; ++i) {
       var t = "*." + segmented.slice(i,segmented.length).join(".");
-      this.setInsert(results, this.targets[t]);
+      results = results.concat(this.targets[t]);
     }
+
+    // Clean the results list, which may contain duplicates or undefined entries
+    var resultSet = new Set(results);
+    resultSet.delete(undefined);
+
     log(DBUG,"Applicable rules for " + host + ":");
-    if (results.length == 0)
+    if (resultSet.size == 0) {
       log(DBUG, "  None");
-    else
-      for (var i = 0; i < results.length; ++i)
-        log(DBUG, "  " + results[i].name);
+    } else {
+      for (let target of resultSet.values()) {
+        log(DBUG, "  " + target.name);
+      }
+    }
 
     // Insert results into the ruleset cache
-    this.ruleCache.set(host, results);
+    this.ruleCache.set(host, resultSet);
 
     // Cap the size of the cache. (Limit chosen somewhat arbitrarily)
     if (this.ruleCache.size > 1000) {
@@ -276,29 +286,27 @@ RuleSets.prototype = {
       this.ruleCache.delete(this.ruleCache.keys().next().value);
     }
 
-    return results;
+    return resultSet;
   },
 
   /**
    * Check to see if the Cookie object c meets any of our cookierule criteria for being marked as secure.
-   * knownHttps is true if the context for this cookie being set is known to be https.
    * @param cookie The cookie to test
-   * @param knownHttps Is the context for setting this cookie is https ?
    * @returns {*} ruleset or null
    */
-  shouldSecureCookie: function(cookie, knownHttps) {
+  shouldSecureCookie: function(cookie) {
     var hostname = cookie.domain;
     // cookie domain scopes can start with .
-    while (hostname.charAt(0) == ".")
+    while (hostname.charAt(0) == ".") {
       hostname = hostname.slice(1);
+    }
 
-    if (!knownHttps && !this.safeToSecureCookie(hostname)) {
+    if (!this.safeToSecureCookie(hostname)) {
         return null;
     }
 
-    var rs = this.potentiallyApplicableRulesets(hostname);
-    for (var i = 0; i < rs.length; ++i) {
-      var ruleset = rs[i];
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(hostname);
+    for (let ruleset of potentiallyApplicable) {
       if (ruleset.cookierules !== null && ruleset.active) {
         for (var j = 0; j < ruleset.cookierules.length; j++) {
           var cr = ruleset.cookierules[j];
@@ -329,7 +337,7 @@ RuleSets.prototype = {
     // observed and the domain blacklisted, a cookie might already have been
     // flagged as secure.
 
-    if (domain in domainBlacklist) {
+    if (domainBlacklist.has(domain)) {
       log(INFO, "cookies for " + domain + "blacklisted");
       return false;
     }
@@ -353,10 +361,12 @@ RuleSets.prototype = {
     }
 
     log(INFO, "Testing securecookie applicability with " + test_uri);
-    var rs = this.potentiallyApplicableRulesets(domain);
-    for (var i = 0; i < rs.length; ++i) {
-      if (!rs[i].active) continue;
-      if (rs[i].apply(test_uri)) {
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(domain);
+    for (let ruleset of potentiallyApplicable) {
+      if (!ruleset.active) {
+        continue;
+      }
+      if (ruleset.apply(test_uri)) {
         log(INFO, "Cookie domain could be secured.");
         this.cookieHostCache.set(domain, true);
         return true;
@@ -375,10 +385,11 @@ RuleSets.prototype = {
    */
   rewriteURI: function(urispec, host) {
     var newuri = null;
-    var rs = this.potentiallyApplicableRulesets(host);
-    for(var i = 0; i < rs.length; ++i) {
-      if (rs[i].active && (newuri = rs[i].apply(urispec)))
+    var potentiallyApplicable = this.potentiallyApplicableRulesets(host);
+    for (let ruleset of potentiallyApplicable) {
+      if (ruleset.active && (newuri = ruleset.apply(urispec))) {
         return newuri;
+      }
     }
     return null;
   }
