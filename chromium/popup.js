@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // other translations
-  e("whatIsThis").setAttribute("title", chrome.i18n.getMessage("chrome_what_is_this_title"));
+  e("aboutTitle").setAttribute("title", chrome.i18n.getMessage("about_title"));
   e("add-rule-link").addEventListener("click", addManualRule);
 });
 
