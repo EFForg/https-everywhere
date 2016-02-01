@@ -57,6 +57,11 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 mkdir -p pkg/crx/rules
 cd pkg/crx
 cp -a ../../chromium/* .
+# Turn the Firefox translations into the appropriate Chrome format:
+rm -rf _locales/
+mkdir _locales/
+python2.7 ../../utils/chromium-translations.py ../../translations/ _locales/
+python2.7 ../../utils/chromium-translations.py ../../src/chrome/locale/ _locales/
 do_not_ship="*.py *.xml icon.jpg"
 rm -f $do_not_ship
 cd ../..
