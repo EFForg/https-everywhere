@@ -77,9 +77,15 @@ function createRuleLine(ruleset) {
   return line;
 }
 
-// Change the UX to reflect extension enabled/disabled
-function updateEnabledDisabledButtonState() {
+// Change the UI to reflect extension enabled/disabled
+function updateEnabledDisabledUI() {
   document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
+  // Hide or show the rules sections
+  if (backgroundPage.isExtensionEnabled) {
+    document.body.className = ""
+  } else {
+    document.body.className = "disabled"
+  }
 }
 
 // Toggle extension enabled/disabled status
@@ -93,7 +99,7 @@ function toggleEnabledDisabled() {
     backgroundPage.isExtensionEnabled = true;
     chrome.browserAction.setBadgeText({ text: "" });
   }
-  updateEnabledDisabledButtonState();
+  updateEnabledDisabledUI();
   // The extension state changed, so reload this tab.
   chrome.tabs.reload();
 }
@@ -129,8 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
   unstableRules = document.getElementById("UnstableRules");
   chrome.tabs.query({ active: true, currentWindow: true }, gotTab);
 
-  // Set up the enabled/disabled switch
-  updateEnabledDisabledButtonState();
+  // Set up the enabled/disabled switch & hide/show rules
+  updateEnabledDisabledUI();
   document.getElementById('onoffswitch').addEventListener('click', toggleEnabledDisabled);
 
   // Print the extension's current version.
