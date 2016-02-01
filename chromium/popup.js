@@ -81,10 +81,11 @@ function createRuleLine(ruleset) {
 function updateEnabledDisabledUI() {
   document.getElementById('onoffswitch').checked = backgroundPage.isExtensionEnabled;
   // Hide or show the rules sections
-  Array.prototype.forEach.call(
-      document.getElementsByClassName('rules'),
-      function(elt) { elt.hidden = !backgroundPage.isExtensionEnabled; }
-  )
+  if (backgroundPage.isExtensionEnabled) {
+    document.body.className = ""
+  } else {
+    document.body.className = "disabled"
+  }
 }
 
 // Toggle extension enabled/disabled status
