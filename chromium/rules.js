@@ -7,6 +7,7 @@ function log(){}
 const trivial_rule_to = "https:";
 const trivial_rule_from_c = new RegExp("^http:");
 const trivial_cookie_name_c = new RegExp(".*");
+const trivial_cookie_host_c = new RegExp(".*");
 
 /**
  * A single rule
@@ -42,7 +43,12 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  this.host_c = new RegExp(host);
+  if (host === ".*" || host === ".+" || host === ".") {
+    // Some cookie rules trivially match any host.
+    this.host_c = trivial_cookie_host_c;
+  } else {
+    this.host_c = new RegExp(host);
+  }
 
   if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
     // About 50% of cookie rules trivially match any name.
