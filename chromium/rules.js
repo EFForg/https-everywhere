@@ -42,7 +42,11 @@ function Exclusion(pattern) {
  * @constructor
  */
 function CookieRule(host, cookiename) {
-  this.host_c = new RegExp(host);
+  if (host === ".*" || host === ".+" || host === ".") {
+    this.host_c = trivial_cookie_name_c;
+  } else {
+    this.host_c = new RegExp(host);
+  }
 
   if (cookiename === ".*" || cookiename === ".+" || cookiename === ".") {
     // About 50% of cookie rules trivially match any name.
