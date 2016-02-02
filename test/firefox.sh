@@ -68,7 +68,7 @@ if [ "$1" == "--justrun" ]; then
   fi
 else
   echo "running tests"
-  cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+  xvfb-run cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
 fi
 
 popd
