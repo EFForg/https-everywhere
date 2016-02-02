@@ -34,5 +34,5 @@ else
 	./makecrx.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
-	python2.7 test/chromium/script.py $CRX_NAME
+	xvfb-run python2.7 test/chromium/script.py $CRX_NAME
 fi
