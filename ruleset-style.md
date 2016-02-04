@@ -21,8 +21,14 @@ which subdomains are covered.
 If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from "^http:" to "^https:". Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
-sure what subdomains might exist, check the 'subdomain' tab on Wolfram Alpha:
-https://www.wolframalpha.com/input/?i=_YOUR_DOMAIN_GOES_HERE_.
+sure what subdomains might exist, you can iterively use google queries and enumerate
+the list of results like such:
+
+1. site:*.eff.org
+2. site:*.eff.org -site:www.eff.org
+3. site:*.eff.org -site:www.eff.org -site:https://ssd.eff.org
+
+... and so on.
 
 If there are a handful of tricky subdomains, but most subdomains can handle the
 plain rewrite from "^http:" to "^https:", specify the rules for the tricky
