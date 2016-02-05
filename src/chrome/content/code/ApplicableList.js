@@ -213,9 +213,15 @@ ApplicableList.prototype = {
   },
 
   add_command: function(rule) {
+      // basic validation for data to be added to xul
+      var ruleId = String(rule.id);
+      if (!ruleId.match(/^[a-zA-Z_0-9]+$/)) {
+        return;
+      }
+
       var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
-      command.setAttribute('id', JSON.stringify(rule.id)+'-command');
-      command.setAttribute('data-id', JSON.stringify(rule.id));
+      command.setAttribute('id', ruleId+'-command');
+      command.setAttribute('data-id', ruleId);
       command.setAttribute('label', rule.name);
       this.commandset.appendChild(command);
   },
