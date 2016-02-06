@@ -59,6 +59,9 @@ chrome.storage.onChanged.addListener(function(changes, areaName) {
 chrome.tabs.onActivated.addListener(function() {
   updateState();
 });
+chrome.windows.onFocusChanged.addListener(function() {
+  updateState();
+});
 chrome.webNavigation.onCompleted.addListener(function() {
   updateState();
 });
@@ -98,7 +101,7 @@ loadStoredUserRules();
  * disabled: extension is disabled from the popup menu.
  */
 var updateState = function() {
-  chrome.tabs.query({active: true}, function(tabs) {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     if (!tabs || tabs.length === 0) {
       return;
     }
