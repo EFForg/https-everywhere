@@ -2,9 +2,11 @@
 	Nonfunctional subdomains:
 
 		- blog *
+		- partnerblog +
+		- uk.justeat-blogs.co.uk +
 
 	* Shows default page; mismatched, CN: server55007.uk2net.com
-
+	+ Connection Refused
 -->
 <ruleset name="justeatuk (partial)">
 
@@ -12,6 +14,17 @@
 	<target host="www.just-eat.co.uk" />
 	<target host="partner.just-eat.co.uk" />
 	<target host="connect.just-eat.co.uk" />
+	<target host="help.just-eat.co.uk" />
+	<target host="restaurants.just-eat.co.uk" />
+
+	<!--
+		XXX Chrome specific rule to workaround issues
+		https://github.com/EFForg/https-everywhere/issues/793
+		https://code.google.com/p/chromium/issues/detail?id=122548
+	-->
+	<exclusion pattern="^http://www\.just-eat\.co\.uk/(blog|apps)/" />
+	<test url="http://www.just-eat.co.uk/blog" />
+	<test url="http://www.just-eat.co.uk/apps" />
 
 	<securecookie host="just-eat\.co\.uk$" name=".+" />
 
