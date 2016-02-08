@@ -1,39 +1,41 @@
 <!--
 	Problematic domains:
 
-		- (www.)?spiderwebsoftware.com ¹
-		- (www.)?spidweb.com ²
+		- www.spiderwebsoftware.com ᵐ
+		- (www.)?spidweb.com ᵐ
 
-	¹ Server sends no certificate chain, see https://whatsmychaincert.com
-	² Mismatched
+	ᵐ Mismatched
 
 
 	Mixed content:
 
-		- css from $self *
-		- favicon from $self *
-		- Bug from chiclet.ymlp.com *
+		- css from www.spiderwebsoftware.com ˢ
+		- favicon from www.spiderwebsoftware.com ˢ
+		- Bug from chiclet.ymlp.com ˢ
 
-	* Secured by us
+	ˢ Secured by us
 
 -->
-<ruleset name="Spiderweb Software" default_off="missing certificate chain" platform="mixedcontent">
+<ruleset name="Spiderweb Software" platform="mixedcontent">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="spiderwebsoftware.com" />
-	<target host="www.spiderwebsoftware.com" />
 
 	<!--	Complications:
 				-->
+	<target host="www.spiderwebsoftware.com" />
+
 	<target host="spidweb.com" />
 	<target host="www.spidweb.com" />
 
-	<securecookie host="^(?:www\.)?spiderwebsoftware\.com$"
-			name=".+" />
 
-	<rule from="^http://(?:www\.)?spidweb\.com/"
-		to="https://www.spiderwebsoftware.com/" />
+	<securecookie host="^\w"
+			name="." />
+
+
+	<rule from="^http://(?:(?:www\.)?spidweb|spiderwebsoftware)\.com/"
+		to="https://spiderwebsoftware.com/" />
 
 	<rule from="^http:"
 		to="https:" />
