@@ -39,7 +39,53 @@ const HTTPS = {
    *   untouched or aborted.
    */
   replaceChannel: function(applicable_list, channel, httpNowhereEnabled) {
-    var blob = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone());
+    var that = this;
+    // If the callback gets called immediately (not async), it will be called
+    // before the return from the function sets this variable, so we default it
+    // to true.
+    var callbackedImmediate = true;
+    callbackedImmediate = HTTPSRules.rewrittenURI(applicable_list, channel.URI.clone(), function(blob) {
+      if (callbackedImmediate) {
+        that.replaceChannelCallback(applicable_list, channel, httpNowhereEnabled, blob);
+      } else {
+        // If we can't redirect right away because we're waiting on some disk
+        // I/O to read the rules, we will have told the channel to redirect to
+        // itself and suspend, to insure it doesn't actually open while it's
+        // waiting for us to decide what to do. See
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=1170197.
+        // Now that we're in the callback, we know the rules are loaded. So we
+        // tell the channel to go ahead and continue with the redirect-to-self.
+        // That will trigger on-modify-request again, and we'll wind up here
+        // again, except with the rules already loaded. We don't try a
+        // redirectTo here because it would fail with NS_ERROR_IN_PROGRESS.
+        try {
+          channel.resume();
+        } catch (e) {
+          that.log(WARN, 'Failed to resume ' + channel.URI.spec + ': ' + e);
+          return;
+        }
+        that.log(DBUG, 'Succeeded resuming ' + channel.URI.spec + ' ');
+      }
+    });
+    if (!callbackedImmediate) {
+      try {
+        channel.redirectTo(channel.URI);
+      } catch (e) {
+        this.log(WARN, 'Failed to redirect to self ' + channel.URI.spec + ': ' + e);
+        return;
+      }
+      try {
+        channel.suspend();
+      } catch (e) {
+        this.log(WARN, 'Failed to suspend ' + channel.URI.spec + ': ' + e);
+        return;
+      }
+      this.log(DBUG, 'Succeeded suspending ' + channel.URI.spec);
+    }
+  },
+
+  replaceChannelCallback: function(applicable_list, channel, httpNowhereEnabled, blob, callbackedImmediate) {
+    var that = this;
     var isSTS = securityService.isSecureURI(
         CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     if (blob === null) {
