@@ -1,20 +1,42 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://dixcart.com/ => https://www.dixcart.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.dixcart.com/ => https://www.dixcart.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	!www: 404
+	Nonfunctional hosts in *dixcart.com:
+
+		- development ʳ
+		- stats ʳ
+
+	ʳ Refused
+
+
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- ^ from $self ˢ
+			- ^ from development.dixcart.com ʳ
+
+		- Bug on ^ from stats.dixcart.com ʳ
+
+	ʳ Unsecurable <= refused
+	ˢ Secured by us
 
 -->
-<ruleset name="Dixcart" default_off='failed ruleset test'>
+<ruleset name="Dixcart (partial)" default_off="missing certificate chain">
 
 	<target host="dixcart.com" />
 	<target host="www.dixcart.com" />
 
 
-	<securecookie host="^(?:www\.)?dixcart\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?dixcart\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?dixcart\.com/"
-		to="https://www.dixcart.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
