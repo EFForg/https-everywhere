@@ -57,13 +57,19 @@
 -->
 <ruleset name="Peterborough.gov.uk (partial)">
 
-	<!--target host="peterborough.gov.uk" />	Needs clearnet testing	-->
+	<!--	Direct rewrites:
+				-->
+	<target host="peterborough.gov.uk" />
 	<target host="admissions.peterborough.gov.uk" />
 	<target host="apps.peterborough.gov.uk" />
 	<target host="ecaf.peterborough.gov.uk" />
 	<target host="planpa.peterborough.gov.uk" />
 	<target host="selfservice.peterborough.gov.uk" />
-	<!--target host="www.peterborough.gov.uk" /-->
+	<target host="www.peterborough.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.peterborough.gov.uk" />
 
 
 	<!--	Not secured by server:
@@ -75,6 +81,18 @@
 	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
 	<securecookie host="^\w" name="." />
 
+
+	<!--	Redirect drops forward slash and args;
+							-->
+	<rule from="^http://consult\.peterborough\.gov\.uk/+(?:\?.*)?$"
+		to="https://peterborough.objective.gov.uk/portal" />
+
+		<test url="http://consult.peterborough.gov.uk/?" />
+
+	<rule from="^http://consult\.peterborough\.gov\.uk/"
+		to="https://peterborough.objective.gov.uk/" />
+
+		<test url="http://consult.peterborough.gov.uk/portal/pscss" />
 
 	<rule from="^http:"
 		to="https:" />
