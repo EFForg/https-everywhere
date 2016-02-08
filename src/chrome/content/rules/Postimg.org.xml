@@ -1,12 +1,4 @@
 <!--
-	Nonfunctional domains:
-
-		- (www.)postimage.org *
-		- (www.)postimg.org *
-
-	* Refused
-
-
 	Fully covered domains:
 
 		- s\d+.postimg.org:
@@ -16,12 +8,21 @@
 			- 2[12378]
 
 -->
-<ruleset name="postimg.org (partial)" default_off="mismatched">
+<ruleset name="postimg.org">
 
+	<target host="postimg.org" />
 	<target host="*.postimg.org" />
 
+		<test url="http://s1.postimg.org/foeuqajj3/Chici_Bodvarr.jpg" />
+		<test url="http://s2.postimg.org/42scm6g7d/tombola_nowadays.png" />
+		<test url="http://www.postimg.org/" />
 
-	<rule from="^http://s(\d+)\.postimg\.org/"
-		to="https://s$1.postimg.org/" />
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http://(s\d+\.|www\.)?postimg\.org/"
+		to="https://$1postimg.org/" />
 
 </ruleset>
