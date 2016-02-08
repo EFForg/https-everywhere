@@ -4,13 +4,14 @@
 
 import glob
 import locale
+import json
 import os
 import re
 import sqlite3
 import subprocess
 import sys
 
-from collections import Counter
+import collections
 from lxml import etree
 
 # Explicitly set locale so sorting order for filenames is consistent.
@@ -19,6 +20,7 @@ from lxml import etree
 # It's also helpful to ensure consistency for the lowercase check below.
 locale.setlocale(locale.LC_ALL, 'C')
 
+json_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.json')
 # Removing the file before we create it avoids some non-determinism.
 db_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.unvalidated.sqlite')
 if os.path.isfile(db_path):
@@ -34,6 +36,11 @@ c.execute('''CREATE TABLE targets
              (host TEXT,
               ruleset_id INTEGER)''')
 
+json_output = {
+    "rules_list": [],
+    "targets": collections.defaultdict(list)
+}
+
 parser = etree.XMLParser(remove_blank_text=True)
 
 # Precompile xpath expressions that get run repeatedly.
@@ -43,7 +50,7 @@ xpath_ruleset = etree.XPath("/ruleset")
 # Sort filenames so output is deterministic.
 filenames = sorted(glob.glob('src/chrome/content/rules/*'))
 
-counted_lowercase_names = Counter([name.lower() for name in filenames])
+counted_lowercase_names = collections.Counter([name.lower() for name in filenames])
 most_common_entry = counted_lowercase_names.most_common(1)[0]
 if most_common_entry[1] > 1:
     dupe_filename = re.compile(re.escape(most_common_entry[0]), re.IGNORECASE)
@@ -80,6 +87,7 @@ for fi in filenames:
     # targets are looked up in the target table, which has a foreign key
     # pointing into the ruleset table.
     etree.strip_tags(tree, 'target')
+    etree.strip_tags(tree, 'test')
 
     # Store the filename in the `f' attribute so "view source XML" for rules in
     # FF version can find it.
@@ -89,7 +97,14 @@ for fi in filenames:
     ruleset_id = c.lastrowid
     for target in targets:
         c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id))
+        # id is the current length of the rules list - i.e. the offset at which
+        # this rule will be added in the list.
+        json_output["targets"][target].append(len(json_output["rules_list"]))
+    json_output["rules_list"].append(etree.tostring(tree))
 
 conn.commit()
 conn.execute("VACUUM")
 conn.close()
+
+with open(json_path, 'w') as f:
+    f.write(json.dumps(json_output))
