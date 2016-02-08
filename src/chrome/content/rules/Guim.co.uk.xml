@@ -38,9 +38,13 @@
 
 	Problematic hosts in *guim.co.uk:
 
+		- assets ʲ
 		- id *
 
 	* Dropped
+	ʲ xMLHttpRequests appear to break loading of comment
+	  sections for insecure www.theguardian.com/.* pages
+	  ( https://github.com/EFForg/https-everywhere/issues/3862 )
 
 
 	These altnames don't exist:
@@ -67,6 +71,24 @@
 	<!--	Complications:
 				-->
 	<target host="id.guim.co.uk" />
+
+		<!--	Attempt at fixing comments.
+
+			This ought to be removed when we can
+			cover all of www.theguardian.com/.*
+							-->
+		<exclusion pattern="http://assets\..+/(?:commercial|enhanced-vendor|main)\.js$" />
+
+			<!--	+ve:
+					-->
+			<test url="http://assets.guim.co.uk/javascripts/9d8bb4359708d6d8364e06b9c1255e27/enhanced-vendor.js" />
+			<test url="http://assets.guim.co.uk/javascripts/bootstraps/74f0f8fe4f6f5e0ffa1c8b95a48edfd8/commercial.js" />
+			<test url="http://assets.guim.co.uk/javascripts/bootstraps/enhanced/218fff50340fa9e25891746060de0ce2/main.js" />
+			<test url="http://assets.guim.co.uk//javascripts/bootstraps/enhanced/218fff50340fa9e25891746060de0ce2/main.js" />
+
+			<!--	-ve:
+					-->
+			<test url="http://assets.guim.co.uk/images/logo/951ac05886372ebb77554a9dd4ae420f/guardian-logo-320.png" />
 
 
 	<rule from="^http://id\.guim\.co\.uk/"
