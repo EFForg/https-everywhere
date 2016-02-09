@@ -56,4 +56,4 @@ else
   die "Validation of rulesets against $GRAMMAR failed."
 fi
 
-cp "$INPUT" ../src/defaults/rulesets.sqlite
+cp "../pkg/rulesets.json" ../src/chrome/content/rulesets.json

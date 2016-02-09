@@ -324,7 +324,7 @@ const RuleWriter = {
     // Add this ruleset id into HTTPSRules.targets if it's not already there.
     // This should only happen for custom user rules. Built-in rules get
     // their ids preloaded into the targets map, and have their <target>
-    // tags stripped when the sqlite database is built.
+    // tags stripped when the JSON database is built.
     var targets = xmlruleset.getElementsByTagName("target");
     for (var i = 0; i < targets.length; i++) {
       var host = targets[i].getAttribute("host");
@@ -392,29 +392,7 @@ const HTTPSRules = {
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
       this.scanRulefiles(rulefiles);
 
-      // Initialize database connection.
-      var dbFile = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite"));
-      var rulesetDBConn = Services.storage.openDatabase(dbFile);
-      this.queryForRuleset = rulesetDBConn.createStatement(
-        "select contents from rulesets where id = :id");
-
-      // Preload the mapping of hostname target -> ruleset ID from DB.
-      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
-      // but is faster than loading all of the rulesets. If this becomes a
-      // bottleneck, change it to load in a background webworker, or load
-      // a smaller bloom filter instead.
-      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
-      this.log(DBUG, "Loading targets...");
-      while (targetsQuery.executeStep()) {
-        var host = targetsQuery.row.host;
-        var id = targetsQuery.row.ruleset_id;
-        if (!this.targets[host]) {
-          this.targets[host] = [id];
-        } else {
-          this.targets[host].push(id);
-        }
-      }
-      this.log(DBUG, "Loading adding targets.");
+      this.loadTargets();
     } catch(e) {
       this.log(DBUG,"Rules Failed: "+e);
     }
@@ -422,6 +400,18 @@ const HTTPSRules = {
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
     return;
+  },
+
+  /**
+   * Read and parse the ruleset JSON.
+   * Note: This only parses the outer JSON wrapper. Each ruleset is itself an
+   * XML string, which will be parsed on an as-needed basis.
+   */
+  loadTargets: function() {
+    var file = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.json"));
+    var rules = JSON.parse(RuleWriter.read(file));
+    this.targets = rules.targets;
+    this.rulesetStrings = rules.rulesetStrings;
   },
 
   checkMixedContentHandling: function() {
@@ -576,22 +566,8 @@ const HTTPSRules = {
   },
 
   // Load a ruleset by numeric id, e.g. 234
-  // NOTE: This call runs synchronously, which can lock up the browser UI. Is
-  // there any way to fix that, given that we need to run blocking in the request
-  // flow? Perhaps we can preload all targets from the DB into memory at startup
-  // so we only hit the DB when we know there is something to be had.
   loadRulesetById: function(ruleset_id) {
-    this.queryForRuleset.params.id = ruleset_id;
-
-    try {
-      if (this.queryForRuleset.executeStep()) {
-        RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
-      } else {
-        this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);
-      }
-    } finally {
-      this.queryForRuleset.reset();
-    }
+    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id);
   },
 
   // Get all rulesets matching a given target, lazy-loading from DB as necessary.
