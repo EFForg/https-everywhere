@@ -1,6 +1,9 @@
 #!/usr/bin/env python2.7
 #
-# Builds an sqlite DB containing all the rulesets, indexed by target.
+# Builds an sqlite DB and a JSON DB containing all the rulesets, indexed by target.
+# The sqlite DB is used by trivial-validate.py. The JSON DB is used by the
+# Firefox addon.
+#
 
 import glob
 import locale
@@ -37,7 +40,7 @@ c.execute('''CREATE TABLE targets
               ruleset_id INTEGER)''')
 
 json_output = {
-    "rules_list": [],
+    "rulesetStrings": [],
     "targets": collections.defaultdict(list)
 }
 
@@ -99,8 +102,8 @@ for fi in filenames:
         c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id))
         # id is the current length of the rules list - i.e. the offset at which
         # this rule will be added in the list.
-        json_output["targets"][target].append(len(json_output["rules_list"]))
-    json_output["rules_list"].append(etree.tostring(tree))
+        json_output["targets"][target].append(len(json_output["rulesetStrings"]))
+    json_output["rulesetStrings"].append(etree.tostring(tree))
 
 conn.commit()
 conn.execute("VACUUM")

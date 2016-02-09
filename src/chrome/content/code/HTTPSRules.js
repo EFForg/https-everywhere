@@ -402,11 +402,16 @@ const HTTPSRules = {
     return;
   },
 
+  /**
+   * Read and parse the ruleset JSON.
+   * Note: This only parses the outer JSON wrapper. Each ruleset is itself an
+   * XML string, which will be parsed on an as-needed basis.
+   */
   loadTargets: function() {
     var file = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.json"));
     var rules = JSON.parse(RuleWriter.read(file));
     this.targets = rules.targets;
-    this.rules_list = rules.rules_list;
+    this.rulesetStrings = rules.rulesetStrings;
   },
 
   checkMixedContentHandling: function() {
@@ -562,7 +567,7 @@ const HTTPSRules = {
 
   // Load a ruleset by numeric id, e.g. 234
   loadRulesetById: function(ruleset_id) {
-    RuleWriter.readFromString(this.rules_list[ruleset_id], this, ruleset_id);
+    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id);
   },
 
   // Get all rulesets matching a given target, lazy-loading from DB as necessary.
