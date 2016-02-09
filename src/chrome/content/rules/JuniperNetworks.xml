@@ -4,12 +4,20 @@
 
 	Nonfunctional hosts in *juniper.net:
 
-		- rss *
+		- newsroom ¹
+		- rss ²
 
-	* Reset
+	¹ 500
+	² Reset
 
 
-	^juniper.net: Dropped
+	Problematic hosts in *juniper.net:
+
+		- ^ ¹
+		- advisory ²
+
+	¹ Dropped
+	² Mismatched
 
 
 	These altnames don't exist:
@@ -34,7 +42,7 @@
 	* Secured by us
 
 -->
-<ruleset name="Juniper.net">
+<ruleset name="Juniper.net (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -46,6 +54,7 @@
 	<!--	Complications:
 				-->
 	<target host="juniper.net" />
+	<target host="advisory.juniper.net" />
 
 
 	<!--	Not secured by server:
@@ -54,11 +63,18 @@
 	<!--securecookie host="^forums\.juniper\.net$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
 	<!--securecookie host="^(?:kb|www)\.juniper\.net$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^(?:forums|kb|www)?\.juniper\.net$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http://juniper\.net/"
 		to="https://www.juniper.net/" />
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://advisory\.juniper\.net/.*"
+		to="https://kb.juniper.net/InfoCenter/index?page=content&amp;channel=SECURITY_ADVISORIES" />
+
+		<test url="http://advisory.juniper.net/index.htm" />
 
 	<rule from="^http:"
 		to="https:" />

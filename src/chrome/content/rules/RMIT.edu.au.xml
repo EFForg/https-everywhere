@@ -1,0 +1,88 @@
+<!--
+	Royal Melbourne Institute of Technology
+
+
+	Nonfunctional hosts in *:
+
+		- mams ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *rmit.edu.au:
+
+		- ^ ᵈ
+		- sspr ᶜ
+
+	ᶜ Missing certificate chain
+	ᵈ Dropped
+
+
+	These altnames don't exist:
+
+		- www.alumnimagazine.rmit.edu.au
+
+
+	Insecure cookies are set for these hosts:
+
+		- alumni.rmit.edu.au
+		- www.alumni.rmit.edu.au
+		- alumnimagazine.rmit.edu.au
+		- my.rmit.edu.au
+		- sso-cas.rmit.edu.au
+		- sspr.rmit.edu.au
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.)?alumni from $self ˢ
+			- alumni from www.alumni.rmit.edu.au ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="RMIT.edu.au (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="alumni.rmit.edu.au" />
+	<target host="www.alumni.rmit.edu.au" />
+	<target host="alumnimagazine.rmit.edu.au" />
+	<target host="bookit.rmit.edu.au" />
+	<target host="login.ezproxy.lib.rmit.edu.au" />
+	<target host="my.rmit.edu.au" />
+	<target host="sso-cas.rmit.edu.au" />
+	<!--target host="sspr.rmit.edu.au" /-->
+	<target host="www.rmit.edu.au" />
+
+	<!--	Complications:
+				-->
+	<target host="rmit.edu.au" />
+
+		<!--	404:
+				-->
+		<!--test url="http://www1.rmit.edu.au/library" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?alumni\.rmit\.edu\.au$" name="^(?:BIGipServer$|ASP\.NET_SessionId$|CSRF_TOKEN)$" /-->
+	<!--securecookie host="^alumnimagazine\.rmit\.edu\.au$" name="^user$" /-->
+	<!--securecookie host="^bookit\.rmit\.edu\.au$" name="^(?:ASP\.NET_SessionId|bookit)$" /-->
+	<!--securecookie host="^my\.rmit\.edu\.au$" name="^(?:AWSELB|JSESSIONID)$" /-->
+	<!--securecookie host="^sso-cas\.rmit\.edu\.au$" name="^cas-prd-web_cookie$" /-->
+	<!--securecookie host="^sspr\.rmit\.edu\.au$" name="^sspr-pr_cookie$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://rmit\.edu\.au/"
+		to="https://www.rmit.edu.au/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

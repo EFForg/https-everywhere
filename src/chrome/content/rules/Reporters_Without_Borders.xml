@@ -1,67 +1,61 @@
 <!--
+	Reporters Without Borders
+
 	For rules causing false/broken MCB, see RSF.org-falsemixed.xml.
 
+	Other Reporters Without Borders rulesets:
 
-	Problematic domains:
-
-		- 12mars.rsf.org ¹
-		- agir.rsf.org ²
-
-	¹ Mixed css from $self
-	² Mismatched, CN: slotmatching14.salesforce.com
+		- Reporter-ohne-Grenzen.de.xml
 
 
-	Observed cookie domains:
+	Nonfunctional hosts in *rsf.org:
 
-		- 12mars.org *
+		- agir *
 
-	* Secured in RSF.org-falsemixed.xml <= mixed css
+	* Redirets to http
 
 
-	Observed cookie domains:
+	Problematic hosts in *rsf.org:
 
-		- 12mars.org *
+		- boutique *
 
-	* Secured in RSF.org-falsemixed.xml <= mixed css
+	* Shopify
 
 
 	Mixed content:
 
-		- css, on 12mars from:
-
-			- $self ¹
-			- fonts.googleapis.com ¹
+		- css on heroes from $self *
 
 		- Images, on:
 
-			- From agir.rsf.org
+			- 12mars from $self *
+			- en, fr from ^rsf.org *
+			- fr from 12mars.rsf.org *
+			- heroes from $self *
 
-			- 12mars, from:
-
-				- $self ¹
-				- s.gravatar.com ¹
-				- pbs.twimg.com ¹
-
-		- Web bugs on 12mars from stats.wordpress.com ¹
-
-	¹ Secured by us
+	* Secured by us
 
 -->
-<ruleset name="Reporters Without Borders">
+<ruleset name="RSF.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="rsf.org" />
-	<target host="*.rsf.org" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<exclusion pattern="^http://12mars\.rsf\.org/+(?!favicon\.ico|(?:[\w-]+/)?wp-(?:content|includes)/)" />
+	<target host="12mars.rsf.org" />
+	<target host="donate.rsf.org" />
+	<target host="en.rsf.org" />
+	<target host="fr.rsf.org" />
+	<!--target host="heroes.rsf.org" /-->
+	<target host="index.rsf.org" />
+	<target host="surveillance.rsf.org" />
+	<target host="www.rsf.org" />
 
-	<target host="reporter-ohne-grenzen.de" />
-	<target host="www.reporter-ohne-grenzen.de" />
 
-	<rule from="^http://((?:donate|en|fr|12mars|surveillance|www)\.)?rsf\.org/"
-		to="https://$1rsf.org/" />
+	<securecookie host="^\." name="^__utm" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://(?:www\.)?reporter-ohne-grenzen\.de/" to="https://www.reporter-ohne-grenzen.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

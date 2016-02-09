@@ -2,21 +2,58 @@
 	For other Moat coverage, see Moat.xml.
 
 
-	Fully covered hosts:
+	CDN buckets:
 
-		- js
-		- s
+		- s.moatads.com.edgesuite.net
+
+
+	(www.)?moatads.com: Refused
+
+
+	Problematic hosts in *moatads.com:
+
+		- js ᴬ
+		- s ᴬ
+
+	ᴬ Akamai/mismatched
 
 -->
-<ruleset name="Moat ads.com" default_off="503">
+<ruleset name="Moat ads.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
-	<target host="js.moatads.com" />
-	<target host="s.moatads.com" />
+	<target host="moatads.com" />
+	<target host="*.moatads.com" />
+
+		<exclusion pattern="^http://(?!(?:dbg\d+|v\d+|www)\.moatads\.com/)" />
+
+			<test url="http://js.moatads.com/" />
+			<test url="http://js.moatads.com//" />
+			<test url="http://js.moatads.com/swf/p6.v3.swf" />
+			<test url="http://s.moatads.com/" />
+			<test url="http://s.moatads.com/swf/MessageSenderV3.swf" />
+
+		<test url="http://v1.moatads.com/" />
+		<test url="http://v2.moatads.com/" />
+		<test url="http://v3.moatads.com/" />
+		<test url="http://v4.moatads.com/" />
 
 
-	<rule from="^http:"
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirects like so: 
+					-->
+	<rule from="^http://(?:www\.)?moatads\.com/"
+		to="https://www.moat.com/" />
+
+		<exclusion pattern="^http://(?:www\.)?moatads\.com/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.moatads.com/Default.aspx" />
+			<test url="http://www.moatads.com/index.htm" />
+			<test url="http://www.moatads.com/index.php" />
+
+	<rule from="^http:" 
 		to="https:" />
-
+					
 </ruleset>

@@ -1,0 +1,44 @@
+<!--
+	Problematic hosts in *cr.yp.to:
+
+		- bench ᵐ
+		- export ᵐ
+
+	ᵐ Mismatched
+
+
+	www.cr.yp.to doesn't exist.
+
+-->
+<ruleset name="cr.yp.to (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cr.yp.to" />
+	<target host="blog.cr.yp.to" />
+	<target host="nacl.cr.yp.to" />
+
+	<!--	Complications:
+				-->
+	<target host="export.cr.yp.to" />
+
+		<!--	(?!$) 404s:
+					-->
+		<exclusion pattern="^http://export\.cr\.yp\.to/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://export.cr.yp.to/index.html" />
+			<test url="http://export.cr.yp.to/index.php" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://export\.cr\.yp\.to/"
+		to="https://cr.yp.to/export.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

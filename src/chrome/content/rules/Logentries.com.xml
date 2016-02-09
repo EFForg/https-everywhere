@@ -1,0 +1,56 @@
+<!--
+	Problematic hosts in *logentries.com:
+
+		- info ¹
+		- labs ²
+
+	¹ Hubspot/mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- www.forum.logentries.com
+		- www.labs.logentries.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- logentries.com
+		- info.logentries.com
+		- labs.logentries.com
+		- www.logentries.com
+
+
+	Mixed content:
+
+		- css on info from fonts.googleapis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Logentries.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="logentries.com" />
+	<target host="community.logentries.com" />
+	<target host="blog.logentries.com" />
+	<target host="forum.logentries.com" />
+	<!--target host="labs.logentries.com" /-->
+	<target host="www.logentries.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?logentries\.com$" name="^SERVERID$" /-->
+	<!--securecookie host="^info\.logentries\.com$" name="^hsPagesViewedThissession$" /-->
+	<!--securecookie host="^labs\.logentries\.com$" name="^crSession$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

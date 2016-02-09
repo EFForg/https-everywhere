@@ -9,6 +9,7 @@
 	Nonfunctional hosts in *leeds.ac.uk:
 
 		- www.bmb *
+		- virtual.business	(Redirects to http)
 		- campus		(500)
 		- careerweb **
 		- changemypassword *
@@ -53,6 +54,7 @@
 		- environment *
 		- epocs **
 		- www.geog		Mixed css
+		- helpdesk		Dropped
 		- hr			Mixed css
 		- itinductions *	Mixed css
 		- www.leedsportal *
@@ -60,10 +62,16 @@
 		- mypassword *		(Expired)
 		- www.portal		(works; mismatched, CN: leedsportal.leeds.ac.uk)
 		- pvac **
+		- staging		(Missing certificate chain)
 		- www.stringeditions	(mismatched, CN: webhost02h.leeds.ac.uk)
 
 	* Mismatched
 	** Mismatched, CN: webhost02c.leeds.ac.uk
+
+
+	These altnames don't exist:
+
+		- dev.xforms.leeds.ac.uk
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -77,6 +85,9 @@
 		- lubswww.leeds.ac.uk
 		- passwordreset.leeds.ac.uk
 		- portal.leeds.ac.uk
+		- staging.leeds.ac.uk
+		- .staging.leeds.ac.uk
+		- uolr3.leeds.ac.uk
 		- www.leeds.ac.uk
 		- xforms.leeds.ac.uk
 		- .xforms.leeds.ac.uk
@@ -125,6 +136,7 @@
 	<target host="blog.leeds.ac.uk" />
 	<target host="autodiscover.bmb.leeds.ac.uk" />
 	<target host="business.leeds.ac.uk" />
+	<target host="staging.business.leeds.ac.uk" />
 	<target host="changemypassword.leeds.ac.uk" />
 	<target host="chase.leeds.ac.uk" />
 	<target host="www.chase.leeds.ac.uk" />
@@ -171,6 +183,7 @@
 	<target host="autodiscover.lubs.leeds.ac.uk" />
 	<target host="lubsws01.leeds.ac.uk" />
 	<target host="lubswww.leeds.ac.uk" />
+	<target host="staging.lubswww.leeds.ac.uk" />
 	<target host="lutube.leeds.ac.uk" />
 	<target host="outlook.leeds.ac.uk" />
 	<target host="passport01.leeds.ac.uk" />
@@ -192,10 +205,13 @@
 	<target host="doc.see.leeds.ac.uk" />
 	<target host="homepages.see.leeds.ac.uk" />
 
+	<target host="ses.leeds.ac.uk" />
+	<!--target host="staging.leeds.ac.uk" /-->
 	<target host="stars.leeds.ac.uk" />
 	<target host="stringeditions.leeds.ac.uk" />
 	<target host="studentservices.leeds.ac.uk" />
 	<target host="symplecticservices.leeds.ac.uk" />
+	<target host="uolr3.leeds.ac.uk" />
 	<target host="vlebb.leeds.ac.uk" />
 	<target host="wpad.leeds.ac.uk" />
 	<target host="www.wpad.leeds.ac.uk" />
@@ -211,6 +227,7 @@
 	<target host="www.ee.leeds.ac.uk" />
 	<target host="environment.leeds.ac.uk" />
 	<target host="epocs.leeds.ac.uk" />
+	<target host="helpdesk.leeds.ac.uk" />
 	<target host="www.leedsportal.leeds.ac.uk" />
 	<!--target host="music.leeds.ac.uk" /-->
 	<target host="www.portal.leeds.ac.uk" />
@@ -289,6 +306,26 @@
 			<test url="http://www.see.leeds.ac.uk/afar/new-afar/about-region/about-afar-region.html" />
 			<test url="http://www.see.leeds.ac.uk/home/" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://ses\.leeds\.ac\.uk/(?:$|events/event/\d+/\w+$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://ses\.leeds\.ac\.uk/+(?!images/|site/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ses.leeds.ac.uk/events/event/157/ses_induction" />
+			<test url="http://ses.leeds.ac.uk/info/21070/quality_assurance" />
+			<test url="http://ses.leeds.ac.uk/info/21900/student_opportunity" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ses.leeds.ac.uk/images/partridge_square.jpg" />
+			<test url="http://ses.leeds.ac.uk/site/custom_scripts/profile.php?id=9" />
+			<test url="http://ses.leeds.ac.uk/site/img/search.png" />
+
 		<test url="http://lubswww.leeds.ac.uk/restricted/login/" />
 
 
@@ -299,9 +336,12 @@
 	<!--securecookie host="^lubswww\.leeds\.ac\.uk$" name="^(?:PHPSESSID|fe_typo_user)$" /-->
 	<!--securecookie host="^passwordreset\.leeds\.ac\.uk$" name="^(?:ASP\.NET_SessionId|LanguageName|SessionCookie)$" /-->
 	<!--securecookie host="^(?:leeds)?portal\.leeds\.ac\.uk$" name="^(?:UserAgentId|cookies)$" /-->
+	<!--securecookie host="^staging\.leeds\.ac\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.staging\.leeds\.ac\.uk$" name="^NSC_.*" /-->
+	<!--securecookie host="^uolr3\.leeds\.ac\.uk$" name="^sap-(?:appcontext|contextid)$" /-->
 	<!--securecookie host="^\.xforms\.leeds\.ac\.uk$" name="^TestCookie$" /-->
 
-	<securecookie host=".+\.leeds\.ac\.uk$" name=".+" />
+	<securecookie host=".+\.leeds\.ac\.uk$" name="." />
 
 
 	<rule from="^http://((?:digitalis|environment|epocs|pvac)\.)?leeds\.ac\.uk/"
@@ -328,6 +368,14 @@
 		to="https://www.engineering.leeds.ac.uk/electronic" />
 
 		<test url="http://www.ee.leeds.ac.uk//" />
+
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://helpdesk\.leeds\.ac\.uk/.*"
+		to="https://it.leeds.ac.uk/" />
+
+		<test url="http://helpdesk.leeds.ac.uk/index.php" />
 
 	<!--rule from="^http://music\.leeds\.ac\.uk/wp-content/"
 		to="https://pvac-webhost.leeds.ac.uk/wp-content/" /-->

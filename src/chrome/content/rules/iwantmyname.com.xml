@@ -1,0 +1,56 @@
+<!--
+	Problematic hosts in *iwantmyname.com:
+
+		- like ᵈ
+		- status ᵐ
+
+	ᵈ Dropped
+	ᵐ StatusPage.io / mismatched
+
+
+	These altnames don't exist:
+
+		- api.iwantmyname.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- iwantmyname.com
+
+-->
+<ruleset name="iwantmyname.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="iwantmyname.com" />
+	<target host="help.iwantmyname.com" />
+	<target host="www.iwantmyname.com" />
+
+	<!--	Complications:
+				-->
+	<target host="like.iwantmyname.com" />
+	<target host="status.iwantmyname.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^iwantmyname\.com$" name="^csrf_session$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward
+		slash, path, and args:
+					-->
+	<rule from="^http://like\.iwantmyname\.com/.*"
+		to="https://facebook.com/iwantmyname" />
+
+		<test url="http://like.iwantmyname.com/index.php" />
+
+	<rule from="^http://status\.iwantmyname\.com/"
+		to="https://iwantmyname.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

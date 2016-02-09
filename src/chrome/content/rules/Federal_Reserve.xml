@@ -1,13 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://federalreserve.gov/ => https://www.federalreserve.gov/: (60, 'SSL certificate problem: unable to get local issuer certificate')
--->
-<ruleset name="Federal Reserve" default_off='failed ruleset test'>
-    <target host="federalreserve.gov" />
-    <target host="*.federalreserve.gov" />
+	For other U.S. government coverage, see US-government.xml.
 
-    <rule from="^http://federalreserve\.gov/"
-        to="https://www.federalreserve.gov/"/>
-    <rule from="^http://([^/:@]+)?\.federalreserve\.gov/"
-        to="https://$1.federalreserve.gov/" />
+
+	^federalreserve.gov: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- oig.federalreserve.gov
+		- y10online.federalreserve.gov
+		- www.federalreserve.gov
+
+-->
+<ruleset name="Federal Reserve.gov">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="*.federalreserve.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="federalreserve.gov" />
+
+		<test url="http://oig.federalreserve.gov/" />
+		<test url="http://www.federalreserve.gov/" />
+		<test url="http://y10online.federalreserve.gov/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:oig|www|y10online)\.federalreserve\.gov$" name="^BIGipServer" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://federalreserve\.gov/"
+		to="https://www.federalreserve.gov/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

@@ -1,0 +1,66 @@
+<!--
+	Havering Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	NB: Revisit this after the 23rd!
+
+
+	Nonfunctional hosts in *havering.gov.uk:
+
+		- democracy *
+		- ld **
+		- maps ᵈ
+		- planning ᵈ
+
+	* Redirects to 302 PageNotFound.aspx
+	** Redirect loop
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these hosts:
+
+		- bse.havering.gov.uk
+		- intranet.havering.gov.uk
+		- maps.havering.gov.uk
+
+
+	Mixed content:
+
+		- Image on msp from www.havering.gov.uk ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Havering.gov.uk (partial)">
+
+	<target host="havering.gov.uk" /><!--	Check this	-->
+	<target host="bse.havering.gov.uk" />
+	<target host="intranet.havering.gov.uk" />
+	<target host="maps.havering.gov.uk" />
+	<target host="myplace.havering.gov.uk" />
+	<target host="nl.havering.gov.uk" />
+	<target host="provider.havering.gov.uk" />
+	<target host="online.havering.gov.uk" /><!--	Check this	-->
+	<target host="www.havering.gov.uk" /><!--	Check this	-->
+
+		<!--	Set cookie without Secure:
+							-->
+		<test url="http://bse.havering.gov.uk/blackshieldss/" />
+		<test url="http://msp.havering.gov.uk/Planning/lg/Documents.page?Param=lg.Planning&amp;KeyNo=P0737.14&amp;org.apache.shale.dialog.DIALOG_NAME=gfplanningsearch&amp;viewdocs=true" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bse.havering.gov.uk$" name="^ASP.NET_SessionId$" /-->
+	<!--securecookie host="^intranet.havering.gov.uk$" name="^(?:ASP.NET_SessionId|TextOnlyX|clientvars|mode)$" /-->
+	<!--securecookie host="^maps.havering.gov.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

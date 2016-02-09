@@ -139,13 +139,13 @@ RuleSet.prototype = {
     var urispec = uri.spec;
 
     this.ensureCompiled();
- 
+
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
- 
+
     for (var i = 0; i < this.exclusions.length; ++i) 
       if (this.exclusions[i].pattern_c.test(urispec)) return false;
- 
+
     for (var i = 0; i < this.rules.length; ++i) 
       if (this.rules[i].from_c.test(urispec)) return true;
     return false;
@@ -560,7 +560,7 @@ const HTTPSRules = {
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
@@ -676,7 +676,7 @@ const HTTPSRules = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria
+   * Check to see if the Cookie object c meets any of our cookierule criteria
    * for being marked as secure.
    *
    * @param applicable_list {ApplicableList} an ApplicableList for record keeping

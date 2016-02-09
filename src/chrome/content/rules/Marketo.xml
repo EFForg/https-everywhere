@@ -6,32 +6,19 @@
 		- Mktoresp.com.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *marketo.com:
 
 		- blog ¹
+		- developers ¹
 		- pages2 ²
 
 	¹ Redirects to http
 	² 404
 
 
-	Problematic domains:
+	Fully covered hosts in *marketo.com:
 
-		- marketo.com *
-
-	* Cert only matches *.marketo.com
-
-
-	Partially covered subdomains:
-
-		- developers *
-
-	* blog/ redirects to $
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(^ → www)
+		- (www.)?
 		- app
 
 		- app-\w+:
@@ -40,6 +27,7 @@
 			- -ab01
 			- -ab[ak]
 			- -lon0[23]
+			- -nation
 			- -sj\d
 			- -sj[fghlnp]
 
@@ -58,6 +46,8 @@
 			- -sj0\d
 			- -sj[fhlnp]
 
+		- (www.)?nation
+		- app-www.nation
 		- summit
 		- support
 
@@ -65,9 +55,13 @@
 	Insecure cookies are set for these hosts:
 
 		- app-\w+.marketo.com
+		- blog.marketo.com
 		- developers.marketo.com
 		- fr.marketo.com
 		- launchpoint.marketo.com
+		- nation.marketo.com
+		- app-www.nation.marketo.com
+		- www.nation.marketo.com
 		- summit.marketo.com
 		- www.marketo.com
 
@@ -75,60 +69,37 @@
 	Mixed content:
 
 		- Videos on fr from [\da-f-]+.r\d+.cf\d.rackcdn.com *
+		- Images on www from $self *
 
-		- css on developers from developers.marketo.com
-
-		- Images on developers from developers.marketo.com
-
-		- favicons, on:
-
-			- developers from marketo.com ¹
-			- developers from developers.marketo.com
-
-		- Bug on developers from www.googletagmanager.com
-
-	¹ Secured by us
+	* Secured by us
 
 -->
 <ruleset name="Marketo.com (partial)">
 
 	<target host="marketo.com" />
 	<target host="*.marketo.com" />
-		<!--
-			Redirects to http:
+
+		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://blog\.marketo\.com/($|\?source=|favicon\.ico|wp-content/)" /-->
-		<!--
-			Redirects to ...:443 or .../$
-							-->
-		<!--exclusion pattern="^http://developers\.marketo\.com/blog(?:$|[?/])" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://developers\.marketo\.com/(?!$|assets/|favicon\.ico|foundationforms/|support/|themes/)" /-->
-		<!--
-			Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://developers\.marketo\.com/+(?!assets/|favicon\.ico|foundationforms/|themes/)" />
 
-			<test url="http://developers.marketo.com/" />
-			<test url="http://developers.marketo.com/activity-types/ " />
-			<test url="http://developers.marketo.com/assets/Uploads/dev-blog.png" />
-			<test url="http://developers.marketo.com/blog/" />
-			<test url="http://developers.marketo.com/documentation/faq/" />
-			<test url="http://developers.marketo.com/documentation/websites/" />
-			<test url="http://developers.marketo.com/favicon.ico" />
-			<test url="http://developers.marketo.com/support/overview/" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://developers\.marketo\.com/(?:$|assets/|favicon\.ico|foundationforms/|themes/)" /-->
 
 		<test url="http://app-ab01.marketo.com/" />
 		<test url="http://app-aba.marketo.com/" />
 		<test url="http://app-abk.marketo.com/" />
+		<test url="http://app-nation.marketo.com/" />
 		<test url="http://b2c-mlm.marketo.com/" />
 		<test url="http://community.marketo.com/" />
 		<test url="http://fr.marketo.com/" />
 		<test url="http://launchpoint.marketo.com/" />
 		<test url="http://micro.marketo.com/" />
 		<test url="http://na-ab01.marketo.com/" />
+		<test url="http://nation.marketo.com/" />
+		<test url="http://app-www.nation.marketo.com/" />
+		<test url="http://www.nation.marketo.com/" />
 		<test url="http://summit.marketo.com/" />
 		<test url="http://support.marketo.com/" />
 		<test url="http://www.marketo.com/" />
@@ -136,8 +107,9 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^app-\w+\.marketo\.com$" name="^BIGipServer[\w-]+$" /-->
-	<!--securecookie host="^(fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
+	<!--securecookie host="^app-(?!nation\.)\w+\.marketo\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^(?:app-|app-www\.|www\.)?nation\.marketo\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^(blog|developers|fr|launchpoint|summit|support|www)\.marketo\.com$" name="^bIPs$" /-->
 
 	<!--	https://github.com/EFForg/https-everywhere/issues/1179
 
@@ -145,11 +117,8 @@
 						-->
 	<!--securecookie host="^\.marketo\.com$" name="^rememberUserId$" /-->
 
-	<securecookie host="^(?:.*\.)?marketo\.com$" name="^(?!rememberUserId$).+" />
+	<securecookie host="." name="^(?!rememberUserId$).+" />
 
-
-	<rule from="^http://marketo\.com/"
-		to="https://www.marketo.com/" />
 
 	<!--	Redirect drops slash and args:
 						-->
@@ -172,7 +141,7 @@
 		<test url="http://pages2.marketo.com/rs/marketob2/images/logo_marketo_new.png" />
 		<test url="http://pages2.marketo.com/rs/marketob2/images/marketo-website-footer-lp-2.gif" />
 
-	<rule from="^http://(app|app-\w+|b2c-mlm|community|developers|fr|launchpoint|micro|na-\w+|summit|support|www)\.marketo\.com/"
-		to="https://$1.marketo.com/" />
+	<rule from="^http://((?:app|app-\w+|b2c-mlm|community|fr|launchpoint|micro|na-\w+|nation|(?:app-)?www\.nation|summit|support|www)\.)?marketo\.com/"
+		to="https://$1marketo.com/" />
 
 </ruleset>

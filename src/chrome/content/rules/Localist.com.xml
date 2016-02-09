@@ -1,0 +1,51 @@
+<!--
+	CDN buckets:
+
+		- d3o66cj8sacbos.cloudfront.net
+
+
+	Problematic hosts in *localist.com:
+
+		- images-cf ¹
+		- images-www ¹
+		- info ²
+
+	¹ Cloudfront/mismatched
+	² Hubspot/mismatched
+
+
+	Mixed content:
+
+		- css on (www.)?, blog, info, support from fonts.googleapis.com *
+		- Images on blog from $self *
+		- favicon on blog, support from www.localist.com *
+
+-->
+<ruleset name="Localist.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="localist.com" />
+	<target host="blog.localist.com" />
+	<target host="support.localist.com" />
+	<target host="www.localist.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="images-cf.localist.com" /-->
+	<target host="images-www.localist.com" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://images-cf\.localist\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+	<rule from="^http://images-www\.localist\.com/"
+		to="https://d3o66cj8sacbos.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

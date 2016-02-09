@@ -1,29 +1,32 @@
 <!--
-	Problematic subdomains:
-
-		- support *
-
-	* Works; mismatched, CN: *.sirportly.com
+	For other aTech Media coverage, see ATech_Media.xml.
 
 
-	Some pages redirect to http.
+	Insecure cookies are set for these hosts:
+
+		- support.codebasehq.com
+		- www.codebasehq.com
 
 -->
-<ruleset name="Codebase HQ.com (partial)">
+<ruleset name="Codebase HQ.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="codebasehq.com" />
+	<target host="blog.codebasehq.com" />
+	<target host="support.codebasehq.com" />
 	<target host="www.codebasehq.com" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.codebasehq\.com/+($|\?|partners($|\?))" /-->
-		<!--
-			Exceptions:
+
+
+	<!--	Not secured by server:
 					-->
-		<!--exclusion pattern="^http://www\.codebasehq\.com/+(?!favicon\.ico|images/|login($|[?/])|stylesheets/)" /-->
+	<!--securecookie host="^support\.codebasehq\.com$" name="^(?:_sirportly_session|request_method)$" /-->
+	<!--securecookie host="^www\.codebasehq\.com$" name="^_codebase-website_session$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?codebasehq\.com/(?=favicon\.ico|images/|login(?:$|[?/])|stylesheets/)"
-		to="https://$1codebasehq.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

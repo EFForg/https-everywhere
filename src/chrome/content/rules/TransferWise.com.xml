@@ -1,4 +1,18 @@
-<ruleset name="TransferWise.com">
+<!--
+	Problematic hosts in *transferwise.com:
+
+		- swift-bic ᴴ ᵐ
+
+	ᴴ Herokuapp
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- transferwise.com
+
+-->
+<ruleset name="TransferWise.com (partial)">
 
 	<target host="transferwise.com" />
 	<target host="www.transferwise.com" />
@@ -6,12 +20,13 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?transferwise\.com$" name="^(exp|tw-ref)" /-->
+	<!--securecookie host="^transferwise\.com$" name="^(?:exp|gid|localeData)$" /-->
 
-	<securecookie host="^(?:www\.)?transferwise\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^_gat?$" />
 
 
-	<rule from="^http://(www\.)?transferwise\.com/"
-		to="https://$1transferwise.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

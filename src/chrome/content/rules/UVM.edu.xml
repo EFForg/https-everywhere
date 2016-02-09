@@ -2,7 +2,7 @@
 	University of Vermont
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *uvm.edu:
 
 		- catalogue ¹
 		- cdi ¹
@@ -11,35 +11,45 @@
 	¹ Refused
 
 
-	^: cert only matches *.uvm.edu
+	Problematic hosts in *uvm.edu:
+
+		- researchguide *
+		- scholarworks *
+
+	* Mismatched
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- alumni
-		- learn
-		- library
-		- myuvm
+		- Images on library, scholarworks from $self
 
 -->
 <ruleset name="UVM.edu (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="uvm.edu" />
-	<target host="*.uvm.edu" />
+	<target host="alumni.uvm.edu" />
+	<target host="cas.uvm.edu" />
+	<target host="login.ezproxy.uvm.edu" />
+	<target host="learn.uvm.edu" />
+	<target host="library.uvm.edu" />
+	<target host="myuvm.uvm.edu" />
+	<target host="primo.uvm.edu" />
+	<target host="webauth.uvm.edu" />
+	<target host="www.uvm.edu" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.uvm\.edu$" name="^fos\.web\.server$" /-->
-	<!--securecookie host="^myuvm\.uvm\.edu$" name="^(JSESSIONID|UserAgentId)$" /-->
+	<!--securecookie host="^myuvm\.uvm\.edu$" name="^(JSESSIONID|LP_TARGET_URL)$" /-->
 
-	<securecookie host="^myuvm\.uvm\.edu$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?uvm\.edu/"
-		to="https://www.uvm.edu/" />
-
-	<rule from="^http://(alumni|learn|library|myuvm)\.uvm\.edu/"
-		to="https://$1.uvm.edu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
