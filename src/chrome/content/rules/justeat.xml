@@ -1,15 +1,26 @@
 <!--
-	Nonfunctional subdomains:
+	Mismatched:
+		- graduates.just-eat.com
+		- blog.just-eat.co.uk
+		- blog.just-eat.dk
+		- mail.just-eat.dk
 
-		- blog *
-		- partnerblog +
-		- uk.justeat-blogs.co.uk +
-
-	* Shows default page; mismatched, CN: server55007.uk2net.com
-	+ Connection Refused
+	Refused:
+		- partnerblog.just-eat.co.uk
+		- partnerblog.just-eat.dk
+		- uk.justeat-blogs.co.uk
+		- *.justeat-partner.dk
 -->
-<ruleset name="justeatuk (partial)">
+<ruleset name="Just Eat">
 
+	<!-- Global -->
+	<target host="just-eat.com" />
+	<target host="www.just-eat.com" />
+	<target host="tech.just-eat.com" />
+
+	<rule from="^http://just-eat\.com" to="https://www.just-eat.com" /><!-- Times out, redirect to www -->
+
+	<!-- UK -->
 	<target host="just-eat.co.uk" />
 	<target host="www.just-eat.co.uk" />
 	<target host="partner.just-eat.co.uk" />
@@ -17,16 +28,25 @@
 	<target host="help.just-eat.co.uk" />
 	<target host="restaurants.just-eat.co.uk" />
 
+	<!-- DK -->
+	<target host="just-eat.dk" />
+	<target host="www.just-eat.dk" />
+	<target host="partner.just-eat.dk" />
+
+	<!-- Applies to most/all regions -->
+
 	<!--
 		XXX Chrome specific rule to workaround issues
 		https://github.com/EFForg/https-everywhere/issues/793
 		https://code.google.com/p/chromium/issues/detail?id=122548
 	-->
-	<exclusion pattern="^http://www\.just-eat\.co\.uk/(blog|apps)/" />
+	<exclusion pattern="^http://www\.just-eat\.(co\.uk|dk)/(blog|apps)" />
 	<test url="http://www.just-eat.co.uk/blog" />
+	<test url="http://www.just-eat.dk/blog" />
 	<test url="http://www.just-eat.co.uk/apps" />
+	<test url="http://www.just-eat.dk/apps" />
 
-	<securecookie host="just-eat\.co\.uk$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
 	<rule from="^http:" to="https:" />
 
