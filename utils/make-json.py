@@ -47,7 +47,8 @@ if most_common_entry[1] > 1:
     sys.exit(1)
 
 for fi in filenames:
-    if fi.endswith('/00README') or fi.endswith('/make-trivial-rule') or fi.endswith('/default.rulesets'):
+    basename = fi.split(os.path.sep)[-1]
+    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
         continue
 
     if " " in fi:
