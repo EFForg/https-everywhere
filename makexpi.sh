@@ -17,7 +17,7 @@ APP_NAME=https-everywhere
 
 cd "`dirname $0`"
 RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
-RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+RULESETS_JSON="$PWD/src/defaults/rulesets.json"
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -55,7 +55,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   exit 0
 fi
 
-# Only generate the sqlite database if any rulesets have changed. Tried
+# Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
   find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
@@ -69,7 +69,7 @@ if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
     # Those cover everything but it wouldn't matter if they didn't
     nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
   done
-  echo "Generating sqlite DB"
+  echo "Generating ruleset DB"
   python2.7 ./utils/make-sqlite.py
 fi
 
@@ -81,11 +81,7 @@ die() {
   exit 1
 }
 
-# If the unvalidated rulesets have changed, validate and copy to the validated
-# rulesets file.
-if [ "$RULESETS_UNVALIDATED" -nt "$RULESETS_SQLITE" ] ; then
-  bash utils/validate.sh
-fi
+bash utils/validate.sh
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
@@ -128,7 +124,7 @@ rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
-echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
+echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
 

@@ -569,7 +569,7 @@ HTTPSEverywhere.prototype = {
                 break;
         }
     } else if (topic == "browser:purge-session-history") {
-      // The list of rulesets that have been loaded from the sqlite DB
+      // The list of rulesets that have been loaded from the JSON DB
       // constitutes a parallel history store, so we have to clear it.
       this.log(DBUG, "History cleared, reloading HTTPSRules to avoid information leak.");
       HTTPSRules.init();
