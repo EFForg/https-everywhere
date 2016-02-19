@@ -73,7 +73,11 @@ ApplicableList.prototype = {
   populate_list: function() {
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
+    var uri = this.uri;
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) {
+      return true;
+    }
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, uri);
     this.log(DBUG, "populating using alist #" + this.serial);
   },
 
