@@ -186,11 +186,11 @@ function addManualRule() {
     hide(e("add-rule-link"));
     show(e("add-new-rule-div"));
     var newUrl = document.createElement('a');
-    newUrl.href = tab.url;
+    newUrl.href = tab[0].url;
     newUrl.protocol = "https:";
     e("new-rule-host").value = newUrl.host;
     var oldUrl = document.createElement('a');
-    oldUrl.href = tab.url;
+    oldUrl.href = tab[0].url;
     oldUrl.protocol = "http:";
     var oldMatcher = "^" + escapeForRegex(oldUrl.protocol + "//" + oldUrl.host+ "/");
     e("new-rule-regex").value = oldMatcher;
