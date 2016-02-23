@@ -313,7 +313,12 @@ SSLObservatory.prototype = {
     function toHexString(charCode) {
       return ("0" + charCode.toString(16)).slice(-2);
     }
-    return [toHexString(h.charCodeAt(i)) for (i in h)].join("").toUpperCase();
+
+    var hexArr = [];
+    for (i in h){
+      hexArr.push(toHexString(h.charCodeAt(i)));
+    }
+    return hexArr.join("").toUpperCase();
   },
 
   ourFingerprint: function(cert) {
