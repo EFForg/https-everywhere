@@ -31,7 +31,7 @@ chromeOps.add_extension(sys.argv[1])
 # Find the path to chromedriver
 chromedriver_path = "chromedriver"
 if sys.platform.startswith("linux"):
-    if 'LinuxMint' in platform.linux_distribution():
+    if 'Ubuntu' in platform.linux_distribution():
         chromedriver_path = "/usr/lib/chromium-browser/chromedriver"
     elif 'debian' in platform.linux_distribution():
         #Debian is lowercase when platform.linux_distribution() is used.
