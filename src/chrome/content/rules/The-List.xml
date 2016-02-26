@@ -1,17 +1,31 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-		- files		(cert valid; 400)
+		- .list.co.uk
+		- shop.list.co.uk
 
 -->
-<ruleset name="The List (partial)">
+<ruleset name="The List">
 
 	<target host="list.co.uk" />
+	<target host="edinburghfestival.list.co.uk" />
+	<target host="files.list.co.uk" />
+	<target host="film.list.co.uk" />
+	<target host="food.list.co.uk" />
+	<target host="shop.list.co.uk" />
 	<target host="www.list.co.uk" />
 
 
-	<!--	!www throws 400 over https.	-->
-	<rule from="^http://(?:www\.)?list\.co\.uk/"
-		to="https://www.list.co.uk/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.list\.co\.uk$" name="^(?:COOKIE_NOTICE|JSESSIONID)$" /-->
+	<!--securecookie host="^shop\.list\.co\.uk$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:COOKIE_NOTICE|JSESSIONID)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
