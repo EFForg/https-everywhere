@@ -1,168 +1,100 @@
 <!--
-	Nonfunctional domains:
-
-		- (www.)cairographics.org ¹
-		- lists.cairographics.org ²
-
-		- freedesktop.org subdomains:
-
-			- cgit ³
-			- download ¹
-			- gstreamer ¹
-			- lists ²
-			- patchwork ¹
-			- planet ¹
-			- poppler ¹
-			- portland ¹
-			- specifications ²
-			- standards ²
-			- wayland ¹
-
-	¹ Shows patchwork.freedesktop.org
-	² http reply
-	³ Refused
+	For rules causing false/broken MCB, see freedesktop.org-falsemixed.xml.
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *freedesktop.org:
 
-		- (www.) ¹
-		- apoc ¹
-		- bugzilla ²
-		- dri ¹
-		- gypsy ¹
-		- ldtp ¹
-		- libbsd ¹
-		- libdlo ¹
-		- liboil ¹
-		- libopenraw ¹
-		- nice ¹
-		- nouveau ¹
-		- pm-utils ¹
+		- planet *
+
+	* Shows www.freedesktop.org
+
+
+	Problematic hosts in *freedesktop.org:
+
+		- download ¹
+		- gstreamer ˣ
 		- sitewranglers ¹
-		- standards ¹
-		- swfdec ¹
-		- telepathy ¹
-		- testrepo ¹
-		- xcb ¹
 		- xorg ¹
 
-	¹ Shows patchwork.freedesktop.org
-	² Mismatched, CN: bugs.freedesktop.org
+	¹ Shows www.freedesktop.org
+	ˣ Mixed css
 
 
-	Partially covered subdomains:
+	Mixed content:
 
-		- people ¹	(→ secure, $ 404s)
-		- xcb		(→ secure, dist/ 404s)
-		- (www.)	(→ ^, software/ 404s)
+		- css on gstreamer from $self ˢ
+		- Images on gstreamer from $self ˢ
 
-	¹ $ 404s
-	² dist/ 404s
-	³ software/ 404s
-
-
-	Fully covered subdomains:
-
-		- apoc *
-		- dri *
-		- bugs
-		- bugzilla	(→ bugs)
-		- gypsy *
-		- ldtp *
-		- libbsd *
-		- libdlo *
-		- liboil *
-		- libopenraw *
-		- nice *
-		- nouveau *
-		- pm-utils *
-		- secure
-		- sitewranglers *
-		- swfdec *
-		- telepathy *
-		- testrepo *
-		- wiki
-		- xorg *
-
-	* → wiki.freedesktop.org
+	ˢ Secured by us
 
 -->
 <ruleset name="freedesktop.org (partial)">
 
-	<target host="freedesktop.org" />
-	<target host="*.freedesktop.org" />
-		<!--
-			404:
+	<!--	Direct rewrites:
 				-->
-		<exclusion pattern="^http://(www\.)?freedesktop\.org/software(/)?" />
+	<target host="freedesktop.org" />
+	<target host="apoc.freedesktop.org" />
+	<target host="bugs.freedesktop.org" />
+	<target host="bugzilla.freedesktop.org" />
+	<target host="cgit.freedesktop.org" />
+	<target host="dri.freedesktop.org" />
+	<target host="dbus.freedesktop.org" />
+	<target host="fontconfig.freedesktop.org" />
+	<!--target host="gstreamer.freedesktop.org" /-->
+	<target host="gypsy.freedesktop.org" />
+	<target host="ldtp.freedesktop.org" />
+	<target host="libbsd.freedesktop.org" />
+	<target host="libdlo.freedesktop.org" />
+	<target host="liboil.freedesktop.org" />
+	<target host="libopenraw.freedesktop.org" />
+	<target host="lists.freedesktop.org" />
+	<target host="nice.freedesktop.org" />
+	<target host="nouveau.freedesktop.org" />
+	<target host="patchwork.freedesktop.org" />
+	<target host="people.freedesktop.org" />
+	<target host="piglit.freedesktop.org" />
+	<target host="pm-utils.freedesktop.org" />
+	<target host="poppler.freedesktop.org" />
+	<target host="portland.freedesktop.org" />
+	<target host="secure.freedesktop.org" />
+	<target host="specifications.freedesktop.org" />
+	<target host="standards.freedesktop.org" />
+	<target host="swfdec.freedesktop.org" />
+	<target host="telepathy.freedesktop.org" />
+	<target host="xcb.freedesktop.org" />
+	<target host="wayland.freedesktop.org" />
+	<target host="wiki.freedesktop.org" />
+	<target host="www.freedesktop.org" />
 
-			<test url="http://freedesktop.org/software/" />
-			<test url="http://freedesktop.org/software" />
-			<test url="http://www.freedesktop.org/software/" />
-		<!--
-			dist isn't present on secure:
-							-->
-		<exclusion pattern="^http://xcb\.freedesktop\.org/dist(/)?" />
+	<!--	Complications:
+				-->
+	<target host="download.freedesktop.org" />
+	<target host="sitewranglers.freedesktop.org" />
+	<target host="xorg.freedesktop.org" />
 
-			<test url="http://xcb.freedesktop.org/dist/" />
-			<test url="http://xcb.freedesktop.org/dist" />
-		<!--
-			path not found:
-							-->
-		<exclusion pattern="^http://telepathy\.freedesktop\.org/doc(/)?" />
-
-			<test url="http://telepathy.freedesktop.org/doc/" />
-			<test url="http://telepathy.freedesktop.org/doc" />
-
-	<securecookie host="^bugs\.freedesktop\.org$" name=".+" />
+		<test url="http://people.freedesktop.org/~airlied/" />
+		<test url="http://xcb.freedesktop.org/dist" />
 
 
-	<!--rule from="^http://freedesktop\.org/wiki(?=$|\?)"
-		to="https://wiki.freedesktop.org/www/" />
+	<securecookie host="^bug" name="." />
 
-			<test url="http://freedesktop.org/wiki/" /-->
 
-	<rule from="^http://freedesktop\.org/(wiki/)?"
-		to="https://wiki.freedesktop.org/www/" />
+	<!--	Redirects as so:
+				-->
+	<rule from="^http://(?:download|sitewranglers)\.freedesktop\.org/"
+		to="https://fontconfig.freedesktop.org/" />
 
-			<test url="http://freedesktop.org/wiki/" />
+	<rule from="^http://xorg\.freedesktop\.org/wiki(?=$|\?)"
+		to="https://wiki.freedesktop.org/xorg" />
 
-	<!--rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg)\.freedesktop\.org/wiki(?=$|\?)"
-		to="https://wiki.freedesktop.org/$1" /-->
+		<test url="http://xorg.freedesktop.org/wiki" />
 
-	<rule from="^http://(apoc|dri|gypsy|ldtp|libbsd|libdlo|liboil|libopenraw|nice|nouveau|pm-utils|sitewranglers|swfdec|telepathy|testrepo|www|xorg|xcb)\.freedesktop\.org/(wiki/)?"
-		to="https://wiki.freedesktop.org/$1/" />
+	<rule from="^http://xorg\.freedesktop\.org/(?:wiki/)?"
+		to="https://wiki.freedesktop.org/xorg/" />
 
-			<test url="http://apoc.freedesktop.org/" />
-			<test url="http://dri.freedesktop.org/" />
-			<test url="http://gypsy.freedesktop.org/" />
-			<test url="http://ldtp.freedesktop.org/" />
-			<test url="http://libbsd.freedesktop.org/" />
-			<test url="http://libdlo.freedesktop.org/" />
-			<test url="http://liboil.freedesktop.org/" />
-			<test url="http://libopenraw.freedesktop.org/" />
-			<test url="http://nice.freedesktop.org/" />
-			<test url="http://nouveau.freedesktop.org/" />
-			<test url="http://pm-utils.freedesktop.org/" />
-			<test url="http://sitewranglers.freedesktop.org/" />
-			<test url="http://swfdec.freedesktop.org/" />
-			<test url="http://telepathy.freedesktop.org/" />
-			<test url="http://testrepo.freedesktop.org/" />
-			<test url="http://www.freedesktop.org/" />
-			<test url="http://xorg.freedesktop.org/" />
-			<test url="http://xcb.freedesktop.org/" />
+		<test url="http://xorg.freedesktop.org/wiki/" />
 
-	<rule from="^http://bug(s|zilla)\.freedesktop\.org/"
-		to="https://bugs.freedesktop.org/" />
-
-			<test url="http://bugs.freedesktop.org/" />
-			<test url="http://bugzilla.freedesktop.org/" />
-
-	<rule from="^http://(people|secure|wiki)\.freedesktop\.org/"
-		to="https://$1.freedesktop.org/" />
-
-			<test url="http://people.freedesktop.org/" />
-			<test url="http://secure.freedesktop.org/" />
-			<test url="http://wiki.freedesktop.org/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
