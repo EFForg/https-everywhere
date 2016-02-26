@@ -64,6 +64,7 @@
 		- www.oxfordsparks	Plaintext reply
 		- www.oxstar		(Redirects to webauth
 		- media.philosophy	Maintenance page
+		- www-astro.physics ᶠ
 		- blog.politics ²
 		- www.politics *
 		- blog.practicalethics ²
@@ -76,6 +77,7 @@
 		- www.tall ²
 
 	* Dropped
+	ᶠ Handshake fails
 	² Refused
 
 
@@ -105,8 +107,10 @@
 		- (www.)?biop	(→ www2.mrc-lmb.cam.ac.uk)
 		- solo.bodleian *
 		- solo-prd.bodleian *
+		- www-astro.physics **
 
 	* $ 403s
+	** /*\w does not redirect
 
 
 	These altnames don't exist:
@@ -120,6 +124,7 @@
 
 		- www.cti.ox.ac.uk
 		- .nexus.ox.ac.uk
+		- .www2.physics.ox.ac.uk
 		- www.tropicalmedicine.ox.ac.uk
 
 
@@ -128,7 +133,7 @@
 		- css, on:
 
 			- www.history from $self *
-			- www.ndm from fonts.googleapis.com *
+			- www.ndm, www3.physics from fonts.googleapis.com *
 
 		- Fonts on www.bodleian from $self *
 
@@ -209,6 +214,12 @@
 	<target host="www.oucs.ox.ac.uk" />
 	<target host="oxfordtoday.ox.ac.uk" />
 	<target host="www.oxfordtoday.ox.ac.uk" />
+
+	<target host="www.physics.ox.ac.uk" />
+	<target host="www-thphys.physics.ox.ac.uk" />
+	<target host="www2.physics.ox.ac.uk" />
+	<target host="www3.physics.ox.ac.uk" />
+
 	<target host="idp.shibboleth.ox.ac.uk" />
 	<target host="skillstoolkit.ox.ac.uk" />
 	<!--target host="www.tropicalmedicine.ox.ac.uk" /-->
@@ -223,6 +234,7 @@
 	<target host="www.biop.ox.ac.uk" />
 	<target host="mail.bfriars.ox.ac.uk" />
 	<!--target host="medieval.history.ox.ac.uk" /-->
+	<target host="www-astro.physics.ox.ac.uk" />
 
 		<!--	Redirects to http:
 						-->
@@ -318,6 +330,7 @@
 		<!--	Mixed css:
 					-->
 		<!--test url="http://www.history.ox.ac.uk/research/centre/medieval-history.html" /-->
+		<!--test url="http://www3.physics.ox.ac.uk/confs/RUM2015/programme.asp" /-->
 
 		<!--	Mixed images:
 					-->
@@ -329,6 +342,9 @@
 					-->
 	<!--securecookie host="^www\.(?:cti|tropicalmedicine)\.ox\.ac\.uk$" name="^NewtSession" /-->
 	<!--securecookie host="^\.nexus\.ox\.ac\.uk$" name="^OXCOOKIE" /-->
+	<!--securecookie host="^\.www2\.physics\.ox\.ac\.uk$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\.www2\.physics\." name="." />
 
 
 	<rule from="^http://(?:www\.)?biop\.ox\.ac\.uk/coot"
@@ -347,6 +363,27 @@
 		to="https://www.history.ox.ac.uk/research/centre/medieval-history.html" /-->
 
 		<!--test url="http://medieval.history.ox.ac.uk//home.php"/-->
+
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://www-astro\.physics\.ox\.ac\.uk/[^?]*"
+		to="https://www2.physics.ox.ac.uk/research/astrophysics" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://www-astro\.physics.ox.ac.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www-astro.physics.ox.ac.uk/default.aspx" />
+			<test url="http://www-astro.physics.ox.ac.uk/index.htm" />
+			<test url="http://www-astro.physics.ox.ac.uk/index.html" />
+			<test url="http://www-astro.physics.ox.ac.uk/index.jsp" />
+			<test url="http://www-astro.physics.ox.ac.uk/index.php" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www-astro.physics.ox.ac.uk/?" />
 
 	<rule from="^http:"
 		to="https:" />
