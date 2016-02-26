@@ -1,9 +1,67 @@
-<ruleset name="Marktplaats (buggy)" platform="mixedcontent" default_off="Mixed content block breaks advert editing and certain images">
-  <target host="*.marktplaats.nl" />
-  <target host="*.marktplaats.com" />
-  <target host="*.marktplaats.net" />
-		<exclusion pattern="^http://www\.marktplaats\.(?:com|net|nl)/kijkinuwwijk\.html" />
+<!--
+January 31st, 2016 rule rewrite:
 
-  <rule from="^http://([^/:@]*)\.marktplaats\.(nl|com|net)/" to="https://$1.marktplaats.$2/"/>
-  <rule from="^https://www\.marktplaats\.nl/kijkinuwwijk\.html" to="http://www.marktplaats.nl/kijkinuwwijk.html" downgrade="1" />
+- Frontpage at https://www.marktplaats.nl/ downgrades to http, hence the exclusion rule
+- help.marktplaats.nl doesn't support https
+- www.dekrachtvanmarktplaats.nl doesn't support https
+- Removed platform="mixedcontent"
+
+-->
+
+<ruleset name="Marktplaats">
+	
+	<target host="marktplaats.nl" />
+	<target host="www.marktplaats.nl" /> <!-- Base URL downgrades to http -->
+	<target host="api.marktplaats.nl" />
+	<target host="m.marktplaats.nl" />
+	<target host="admarkt.marktplaats.nl" />
+	<target host="klussen.marktplaats.nl" /> <!-- Base URL downgrades to http -->
+	<target host="diensten-vakmensen.marktplaats.nl" />
+	<target host="aanbieding.marktplaats.nl" />
+	<target host="mktg.marktplaats.nl" />
+	<target host="nieuweauto.marktplaats.nl" />
+
+	<target host="marktplaatszakelijk.nl" /> <!-- Requires SNI -->	
+	<target host="www.marktplaatszakelijk.nl" />
+
+	<target host="marktplaatsperskamer.nl" />
+	<target host="www.marktplaatsperskamer.nl" /> <!-- Wrong cert, redirect to non-www domain -->
+	
+	<target host="i.marktplaats.com" />
+	<target host="s.marktplaats.com" />
+	<target host="aanbieding.marktplaats.com" />
+	
+	<target host="p.marktplaats.net" />
+
+	<securecookie host="^(?:.*\.)?marktplaats.nl$" name=".*"/>
+	<securecookie host="^(?:.*\.)?marktplaatszakelijk.nl$" name=".*"/>
+
+	<test url="http://klussen.marktplaats.nl/diensten-en-vakmensen/klussen/0" />
+	<test url="http://diensten-vakmensen.marktplaats.nl/" />
+	<test url="http://aanbieding.marktplaats.nl/" />
+	<test url="http://admarkt.marktplaats.nl/" />
+	<test url="http://www.marktplaats.nl/c/auto-s/c91.html" />
+	<test url="http://s.marktplaats.com/aurora/res/images/logos/marktplaats-logo.png" />
+	<test url="http://p.marktplaats.net/aurora/res/js/gp/mid.js" />
+  
+	<exclusion pattern="^http://www.marktplaats\.nl " />
+	<exclusion pattern="^http://klussen.marktplaats\.nl " />
+	<exclusion pattern="^http://www.marktplaats\.nl/kijkinuwwijk\.html" />
+
+	<rule from="^http://marktplaats\.nl/." to="http://www.marktplaats.nl/"/>	
+	<rule from="^http://(www|klussen|nieuweauto).marktplaats\.nl/(.)" to="https://$1.marktplaats.nl/$2"/>
+	<rule from="^http://(api|m|admarkt|diensten-vakmensen|aanbieding|mktg).marktplaats\.nl/" to="https://$1.marktplaats.nl/"/>
+	<rule from="^http://(i|s|aanbieding).marktplaats\.com/" to="https://$1.marktplaats.com/"/>
+	<rule from="^http://p.marktplaats\.net/" to="https://p.marktplaats.net/"/>
+	<rule from="^https://www\.marktplaats\.nl/a/([^?]*)\.html.*" to="https://www.marktplaats.nl/a/$1.html"/> <!-- Rewrites to cleaner advert URLs -->
+	<rule from="^https://www\.marktplaats\.nl/kijkinuwwijk\.html" to="http://www.marktplaats.nl/kijkinuwwijk.html" downgrade="1" />
+	<rule from="^https://www\.marktplaats\.nl/cookiewall/?target=http%3A%2F%2Fwww.marktplaats.nl%2F" to="https://www.marktplaats.nl/cookiewall/?target=https%3A%2F%2Fwww.marktplaats.nl%2F"/> <!-- Fix broken redirect -->
+
+	
+	<rule from="^http://marktplaatsperskamer\.nl/" to="https://marktplaatsperskamer.nl/"/>
+	<rule from="^http://www\.marktplaatsperskamer\.nl/" to="https://marktplaatsperskamer.nl/"/>
+
+	<rule from="^http://marktplaatszakelijk\.nl/" to="https://www.marktplaatszakelijk.nl/"/>
+	<rule from="^http://www\.marktplaatszakelijk\.nl/" to="https://www.marktplaatszakelijk.nl/"/>
+
 </ruleset>
