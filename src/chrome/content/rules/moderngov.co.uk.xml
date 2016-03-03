@@ -33,6 +33,14 @@
 	ˣ Mixed css
 
 
+	Partially covered hosts in *moderngov.co.uk:
+
+		- rutlandcounty ʰ
+
+	ʰ Some pages redirect to http
+
+
+
 	Insecure cookies are set for these hosts:
 
 		- (account_vhost).moderngov.co.uk
@@ -46,7 +54,7 @@
 			- worcestershire from e-services.worcestershire.gov.uk
 
 		- Images, on:
-		
+
 			- wolverhampton from www.wolverhampton.gov.uk ˢ
 			- worcestershire from e-services.worcestershire.gov.uk
 			- www from $self ˢ
@@ -69,18 +77,40 @@
 	<target host="gwh.moderngov.co.uk" />
 	<target host="lincolnshire.moderngov.co.uk" />
 	<target host="powys.moderngov.co.uk" />
+	<target host="rutlandcounty.moderngov.co.uk" />
 	<target host="sheffield.moderngov.co.uk" />
 	<target host="sutton.moderngov.co.uk" />
 	<target host="walthamforest.moderngov.co.uk" />
 	<!--target host="wolverhampton.moderngov.co.uk" /-->
 	<!--target host="worcestershire.moderngov.co.uk" /-->
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://rutlandcounty\.moderngov\.co\.uk/(?:ieListDocuments|mgMeetingAttendance|uuCoverPage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://rutlandcounty\.moderngov\.co\.uk/+(?![Ss]ite[Ss]pecific/|documents/|jquery-ui/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rutlandcounty.moderngov.co.uk/ieListDocuments.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgMeetingAttendance.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgUserInfo.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/uuCoverPage.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rutlandcounty.moderngov.co.uk/SiteSpecific/1.gif" />
+			<test url="http://rutlandcounty.moderngov.co.uk/SiteSpecific/gm_sidebar_rh.css" />
+			<test url="http://rutlandcounty.moderngov.co.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(account_vhost)\.moderngov\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
 
-	<securecookie host="^\w" name="." />
+	<securecookie host="^(?!rutlandcounty\.)\w" name="." />
 
 
 	<rule from="^http:"
