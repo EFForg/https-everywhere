@@ -21,14 +21,15 @@ which subdomains are covered.
 If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from "^http:" to "^https:". Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
-sure what subdomains might exist, you can iteratively use google queries and enumerate
+sure what subdomains might exist, you can iteratively use Google queries and enumerate
 the list of results like such:
 
 1. site:*.eff.org
 2. site:*.eff.org -site:www.eff.org
 3. site:*.eff.org -site:www.eff.org -site:ssd.eff.org
 
-... and so on.
+... and so on. A script for doing exactly this is [currently available on Google
+Code Archive](https://code.google.com/archive/p/gxfr/).
 
 If there are a handful of tricky subdomains, but most subdomains can handle the
 plain rewrite from "^http:" to "^https:", specify the rules for the tricky
