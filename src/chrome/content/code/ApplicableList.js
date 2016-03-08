@@ -28,7 +28,7 @@ ApplicableList.prototype = {
 
   empty: function() {
     // Empty everything, used when toggles occur in order to ensure that if
-    // the reload fails, the resulting list is not eroneous
+    // the reload fails, the resulting list is not erroneous
     this.active = {};
     this.breaking = {}; 
     this.inactive = {};
@@ -73,7 +73,11 @@ ApplicableList.prototype = {
   populate_list: function() {
     // The base URI of the dom tends to be loaded from some /other/
     // ApplicableList, so pretend we're loading it from here.
-    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, this.uri);
+    var uri = this.uri;
+    if (!(uri.schemeIs("http") || uri.schemeIs("https"))) {
+      return true;
+    }
+    HTTPSEverywhere.instance.https_rules.rewrittenURI(this, uri);
     this.log(DBUG, "populating using alist #" + this.serial);
   },
 
@@ -115,7 +119,7 @@ ApplicableList.prototype = {
     label.setAttribute('label', strings.getString('https-everywhere.menu.enableDisable'));
     label.setAttribute('disabled', 'true');
     label.setAttribute('class', 'menuitem-non-iconic');
-    label.setAttribute('style', 'color:#000000;');
+    label.setAttribute('style', 'font-weight: bold; color: -moz-MenuBarText;');
     var label2 = false;
     if (!any_rules) {
       label2 = document.createElement('menuitem');
@@ -213,9 +217,15 @@ ApplicableList.prototype = {
   },
 
   add_command: function(rule) {
+      // basic validation for data to be added to xul
+      var ruleId = String(rule.id);
+      if (!ruleId.match(/^[a-zA-Z_0-9]+$/)) {
+        return;
+      }
+
       var command = this.document.getElementById("https-everywhere-menuitem-rule-toggle-template").cloneNode();
-      command.setAttribute('id', JSON.stringify(rule.id)+'-command');
-      command.setAttribute('data-id', JSON.stringify(rule.id));
+      command.setAttribute('id', ruleId+'-command');
+      command.setAttribute('data-id', ruleId);
       command.setAttribute('label', rule.name);
       this.commandset.appendChild(command);
   },

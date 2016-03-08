@@ -1,0 +1,100 @@
+<!--
+	Peterborough City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	NB: Tor users cannot view* this website due to CloudFlare settings.
+
+	See:
+
+		- https://blog.torproject.org/blog/call-arms-helping-internet-services-accept-anonymous-users
+		- https://support.cloudflare.com/hc/en-us/articles/203306930-Does-CloudFlare-block-Tor-
+		- https://support.cloudflare.com/hc/en-us/articles/200170206-How-do-I-turn-I-m-Under-Attack-mode-on-
+
+	* without enabling javascript, for security and privacy implications see e.g.:
+
+		- https://www.mozilla.org/security/known-vulnerabilities/firefox.html
+		- https://trac.torproject.org/projects/tor/query?status=!closed&keywords=~tbb-fingerprinting
+		- https://panopticlick.eff.org
+
+
+	Nonfunctional hosts in *peterborough.gov.uk:
+
+		- booking ᵈ
+		- data ⁴
+		- fis *
+		- hawkeye ʳ
+		- her ᵃ
+		- jobs ᵈ
+		- netloan ᵈ
+		- travelchoicemap ʳ
+
+	ᵃ Shows apps.peterborough.gov.uk
+	* Redirects to search3.openobjects.com
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *peterborough.gov.uk:
+
+		- (www.)? *
+		- ask ᵐ
+		- consult ᵐ
+		- www2 ᵐ
+
+	* Tor users blocked by CloudFlare settings
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- .peterborough.gov.uk
+		- ask.peterborough.gov.uk
+		- consult.peterborough.gov.uk
+
+-->
+<ruleset name="Peterborough.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="peterborough.gov.uk" />
+	<target host="admissions.peterborough.gov.uk" />
+	<target host="apps.peterborough.gov.uk" />
+	<target host="ecaf.peterborough.gov.uk" />
+	<target host="planpa.peterborough.gov.uk" />
+	<target host="selfservice.peterborough.gov.uk" />
+	<target host="www.peterborough.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.peterborough.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.peterborough\.gov\.uk$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^ask\.peterborough\.gov\.uk$" name="^identitytoken$" /-->
+	<!--securecookie host="^consult\.peterborough\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args;
+							-->
+	<rule from="^http://consult\.peterborough\.gov\.uk/+(?:\?.*)?$"
+		to="https://peterborough.objective.gov.uk/portal" />
+
+		<test url="http://consult.peterborough.gov.uk/?" />
+
+	<rule from="^http://consult\.peterborough\.gov\.uk/"
+		to="https://peterborough.objective.gov.uk/" />
+
+		<test url="http://consult.peterborough.gov.uk/portal/pscss" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

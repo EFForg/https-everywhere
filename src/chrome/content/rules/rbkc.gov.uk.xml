@@ -1,0 +1,64 @@
+<!--
+	The Royal Borough of Kensington and Chelsea Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *rbkc.gov.uk:
+
+		- (www.)?lms ³
+
+	³ 403
+
+
+	Problematic hosts in *rbkc.gov.uk:
+
+		- ^ ᵐ
+		- consultation ᵐ
+		- eforms ᵐ
+		- (www.)?filmapp ᵛ
+		- www.planningconsult
+
+	ᵐ Mismatched
+	ᵛ Revoked
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.eforms.rbkc.gov.uk
+
+-->
+<ruleset name="RBKC.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.consultation.rbkc.gov.uk" />
+	<target host="www.eforms.rbkc.gov.uk" />
+	<target host="planningconsult.rbkc.gov.uk" />
+	<target host="www.rbkc.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="rbkc.gov.uk" />
+	<target host="consultation.rbkc.gov.uk" />
+	<target host="eforms.rbkc.gov.uk" />
+	<target host="www.planningconsult.rbkc.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.eforms\.rbkc\.gov\.uk$" name="^(?:AWSELB|firmstep2session|firmstep2server)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(consultation\.|eforms\.)?rbkc\.gov\.uk/"
+		to="https://www.$1rbkc.gov.uk/" />
+
+	<rule from="^http://www\.planningconsult\.rbkc\.gov\.uk/"
+		to="https://planningconsult.rbkc.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

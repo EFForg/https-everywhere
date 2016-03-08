@@ -1,0 +1,197 @@
+<!--
+	For problematic rules, see Ohio-State-University-self-signed.xml.
+
+	For other Ohio State University coverage, see Ohio-State-University.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/pa-hrsuite-production/
+
+
+	Nonfunctional hosts in *ohio-state.edu:
+
+		- www.atronomy ʳ
+		- www.busfin ᵃ
+		- www.ccic ᵈ
+		- cfaes ᵃ
+
+		- cfaesmonthly.cfaes ᵃ
+		- communications.cfaes ᵃ
+		- equityandinclusion.cfaes ᵃ
+		- fabe-dev.cfaes ᵃ
+		- hr.cfaes ᵃ
+		- itservices.cfaes ᵃ
+		- studentblogs.cfaes ᵃ
+
+		- cse ᵃ
+		- www.cse ᵇ
+		- www2.ece ᵈ
+		- www.ia ᵃ
+		- www.ps ᵈ
+		- www.rms ᵃ
+		- www.rpia ᵃ
+		- www.treasurer ᶠ
+
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *ohio-state.edu:
+
+		proxy.lib ᵐ
+		newman.uts ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *ohio-state.edu:
+
+		- panopto.con ʰ
+		- www ⁵
+
+	⁵ [/\w] 503s
+	ʰ Some pages redirect to http
+
+
+	^ohio-state.edu doesn't exist.
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ohio-state.edu
+		- portal.erp.ohio-state.edu
+		- www.gradsch.ohio-state.edu
+		- library.ohio-state.edu
+		- .intranet.mecheng.ohio-state.edu
+		- my.newark.ohio-state.edu
+
+
+	Mixed content:
+
+		- css on www.gradsch from www.osu.edu * ˢ
+
+		- Images, on:
+		
+			- nucleus.con from silverlight.dlservice.microsoft.com
+			- nucleus.con from go2.microsoft.com
+			- studentweb.con from nursing.osu.edu ˢ
+			- intraweb.marion from osumarion.osu.edu ˢ
+
+	* Just fonts
+	ˢ Secured by us
+
+-->
+<ruleset name="Ohio-State.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fod-web-01.busfin.ohio-state.edu" />
+	<target host="sslvpn.busfin.ohio-state.edu" />
+	<target host="research.chemistry.ohio-state.edu" />
+	<target host="streamwww.classroom.ohio-state.edu" />
+
+	<target host="nucleus.con.ohio-state.edu" />
+	<target host="panopto.con.ohio-state.edu" />
+	<target host="studentweb.con.ohio-state.edu" />
+
+	<target host="opensource.cse.ohio-state.edu" />
+	<target host="pcvlab.ceegs.ohio-state.edu" />
+	<target host="portal.erp.ohio-state.edu" />
+	<target host="esue.ohio-state.edu" />
+	<target host="www.esue.ohio-state.edu" />
+	<target host="www.gradsch.ohio-state.edu" />
+	<target host="mediasite.it.ohio-state.edu" />
+	<target host="upem.it.ohio-state.edu" />
+	<target host="login.proxy.lib.ohio-state.edu" />
+	<target host="library.ohio-state.edu" />
+	<target host="intranet.mecheng.ohio-state.edu" />
+	<target host="www.medctr.ohio-state.edu" />
+	<target host="intraweb.marion.ohio-state.edu" />
+	<target host="my.newark.ohio-state.edu" />
+	<target host="rdgate01.newark.ohio-state.edu" />
+	<target host="recycling.org.ohio-state.edu" />
+	<target host="www.physics.ohio-state.edu" />
+	<target host="cayuse.rf.ohio-state.edu" />
+	<target host="webauth.service.ohio-state.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="proxy.lib.ohio-state.edu" />
+	<target host="newman.uts.ohio-state.edu" />
+	<target host="www.ohio-state.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://panopto\.con\.ohio-state\.edu/Panopto/Pages/Default\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://panopto\.con\.ohio-state\.edu/+(?!Panopto/Cache/|Panopto/Pages/Viewer\.aspx)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://panopto.con.ohio-state.edu//Panopto/Pages/Default.aspx" />
+			<test url="http://panopto.con.ohio-state.edu/Panopto/Pages/Default.aspx" />
+			<test url="http://panopto.con.ohio-state.edu/Panopto/Pages/Sessions/List.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://panopto.con.ohio-state.edu/Panopto/Cache/4.7.0.18259/Styles/Ocupop/images/icon_search_clear.gif" />
+			<test url="http://panopto.con.ohio-state.edu/Panopto/Pages/Viewer.aspx" />
+
+		<!--	[/\w] 503s:
+					-->
+		<exclusion pattern="^http://www\.ohio-state\.edu/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ohio-state.edu//" />
+			<test url="http://www.ohio-state.edu/Default.aspx" />
+			<test url="http://www.ohio-state.edu/home.htm" />
+			<test url="http://www.ohio-state.edu/home.php" />
+
+		<!--	Mixed image:
+					-->
+		<!--test url="http://intraweb.marion.ohio-state.edu/InfoRequest/formpage.php" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ohio-state\.edu$" name="^(?:__utm|III_EXPT_FILE$|III_SESSION_ID$|SESSION_LANGUAGE$)" /-->
+	<!--securecookie host="^portal\.erp\.ohio-state\.edu$" name="^_shibstate_\d+_\d+$" /-->
+	<!--securecookie host="^www\.gradsch\.ohio-state\.edu$" name="^SN[\da-f]+$" /-->
+	<!--securecookie host="^library\.ohio-state\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^\.intranet\.mecheng\.ohio-state\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^my\.newark\.ohio-state\.edu$" name="^ISAWPLB\{[\dA-F]{8}(?:-[\dA-F]{4}){3}-[\dA-F]{12}\}$" /-->
+
+	<securecookie host="^\." name="^__utm" />
+	<securecookie host="^(?!panopto\.)\w" name="." />
+	<securecookie host="^\.intranet\." name="." />
+
+
+	<rule from="^http://proxy\.lib\.ohio-state\.edu/"
+		to="https://login.proxy.lib.ohio-state.edu/" />
+
+	<rule from="^http://my\.newark\.ohio-state\.edu:444/"
+		to="https://my.newark.ohio-state.edu:444/" />
+
+		<test url="http://my.newark.ohio-state.edu:444/" />
+
+	<rule from="^http://newman\.uts\.ohio-state\.edu/"
+		to="https://upem.it.ohio-state.edu/" />
+
+		<test url="http://newman.uts.ohio-state.edu/ods/secure/SIS_Setup_Reporting_Job_Aids.html" />
+
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://www\.ohio-state\.edu/"
+		to="https://www.osu.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

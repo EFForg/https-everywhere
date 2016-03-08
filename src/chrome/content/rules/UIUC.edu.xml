@@ -1,0 +1,92 @@
+<!--
+	For other University of Illinois at Urban-Champaign coverage, see University-of-Illinois-at-Urbana-Champaign.xml.
+
+
+	Nonfunctional hosts in *uiuc.edu:
+
+		- lists.cs
+		- (www.)?isl ¹
+		- syzygy.isl ¹
+		- www.library ²
+		- (www.)?ms-tech ³
+		- www.ospra ⁴
+
+	¹ Times out
+	² Refused
+	³ Shows another domain
+	⁴ Handshake fails
+
+
+	Problematic hosts in *uiuc.edu:
+
+		- (www.)?dps ¹
+		- www.ks ¹
+		- www.mechse ²
+		- www-s.mechse ³
+		- (www.)?union ¹
+		- www ¹
+
+	¹ Mismatched
+	² 404
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Mixed content:
+
+		- Images on www.igb from www.igb.illinois.edu *
+
+	* Secured by us
+
+-->
+<ruleset name="UIUC.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.atmos.uiuc.edu" />
+	<target host="efas.cen.uiuc.edu" />
+	<target host="passwords.cites.uiuc.edu" />
+	<target host="wiki.cites.uiuc.edu" />
+	<target host="www.igb.uiuc.edu" />
+	<target host="www-s.ks.uiuc.edu" />
+	<!--target host="www-s.mechse.uiuc.edu" /-->
+	<target host="mail.scs.uiuc.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="dps.uiuc.edu" />
+	<target host="www.dps.uiuc.edu" />
+	<target host="www.ks.uiuc.edu" />
+	<target host="www.mechse.uiuc.edu" />
+	<target host="union.uiuc.edu" />
+	<target host="www.union.uiuc.edu" />
+	<target host="www.uiuc.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.www\.igb\.illinois\.edu$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(www\.)?(dps|union)\.uiuc\.edu/"
+		to="https://$1$2.illinois.edu/" />
+
+	<rule from="^http://www\.ks\.uiuc\.edu/"
+		to="https://www-s.ks.uiuc.edu/" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.mechse\.uiuc\.edu/+"
+		to="https://mechanical.illinois.edu/" />
+
+		<test url="http://www.mechse.uiuc.edu//home.php" />
+
+	<rule from="^http://www\.uiuc\.edu/"
+		to="https://illinois.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

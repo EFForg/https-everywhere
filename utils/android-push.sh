@@ -12,7 +12,7 @@ fi
 # Push to Android Firefox if device is connected
 # XXX on some systems, adb may require sudo...
 if type adb > /dev/null 2>/dev/null && adb devices >/dev/null 2>/dev/null ; then
-  ADB_FOUND=`adb devices | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
+  ADB_FOUND=`adb devices | grep -v 'offline$' | tail -2 | head -1 | cut -f 1 | sed 's/ *$//g'`
   if [ "$ADB_FOUND" != "List of devices attached" ]; then
     echo Pushing "$XPI_NAME" to /sdcard/"$XPI_NAME"
     adb push "../$XPI_NAME" /sdcard/"$XPI_NAME"

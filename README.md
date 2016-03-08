@@ -8,17 +8,17 @@ Get the packages you need and install a git hook to run tests before push:
 
     bash install-dev-dependencies.sh
 
-Run the tests for the Firefox version:
+Run all the tests:
 
     bash test.sh
 
 Run the latest code and rulesets in a standalone Firefox profile:
 
-    bash test.sh --justrun
+    bash test/firefox.sh --justrun
 
 Run the latest code and rulesets in a standalone Chromium profile:
 
-    bash test-chromium.sh --justrun
+    bash test/chromium.sh --justrun
 
 Build the Firefox extension as a .xpi package:
 
@@ -55,6 +55,8 @@ Important directories you might want to know about
     src/chrome/content/code   |
 
     src/chrome/content/rules  The rulesets live here
+
+    test/                     The tests live here
 
 Hacking on the Source Code
 --------------------------
@@ -95,7 +97,7 @@ We have two publicly-archived mailing lists: the https-everywhere list (https://
 Tests
 -------------
 
-There are some very basic unittests under https-everywhere-tests/. These are run with
+There are some very basic unittests under test/. These are run with
 
     bash test.sh
 
@@ -106,7 +108,7 @@ loading URLs in a browser and watching for Mixed Content Blocking to fire.
 The easiest way to run ruleset tests is to load a standalone Firefox instance
 with the tests enabled:
 
-    bash test.sh --justrun
+    bash test/firefox.sh --justrun
 
 Then click the HTTPS Everywhere icon on the toolbar, and click "Run HTTPS
 Everywhere Ruleset Tests." When you run the tests, be prepared to let your
