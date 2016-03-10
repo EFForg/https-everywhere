@@ -1,20 +1,15 @@
 <!--
-Disabled by https-everywhere-checker because:
-Non-2xx HTTP code: http://www.shareit.com/signup.html (200) => https://secure.shareit.com/signup.html (404)
-Non-2xx HTTP code: http://www.shareit.com/signup.html? (200) => https://secure.shareit.com/signup.html? (404)
-
 	For other Digital River coverage, see Digital-River.xml.
 
 
-	Nonfunctional domains:
-
-		- (www.)shareit.com	(no https)
+	(www.)?shareit.com: Refused
 
 
-	Fully covered hosts in *shareit.com:
+	Partially covered hosts in *shareit.com:
 
-		- ccc
-		- secure
+		- (www.)? *
+
+	* Not all paths redirect
 
 
 	Insecure cookies are set for these hosts:
@@ -30,39 +25,49 @@ Non-2xx HTTP code: http://www.shareit.com/signup.html? (200) => https://secure.s
 	* Secured by us
 
 -->
-<ruleset name="Share it.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Share it.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="ccc.shareit.com" />
 	<target host="secure.shareit.com" />
 
-	<!--	Special cases:
+	<!--	Complications:
 				-->
 	<target host="shareit.com" />
 	<target host="www.shareit.com" />
-
-		<exclusion pattern="^http://(?:www\.)?shareit\.com/(?!signup\.html)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.shareit.com/contact.html" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.shareit.com/signup.html" />
-			<test url="http://www.shareit.com/signup.html?" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(ccc|secure)\.shareit\.com$" name="^BIGipServerp(-\w+){4}-\d+$" /-->
 
-	<securecookie host="^(?:ccc|secure)\.shareit\.com$" name=".+" />
+	<securecookie host="^(?!www\.)\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?shareit\.com/"
-		to="https://secure.shareit.com/" />
+	<!--	Redirect keeps args but
+		not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?shareit\.com/+"
+		to="https://www.mycommerce.com/" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?shareit\.com/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shareit.com/default.aspx" />
+			<test url="http://www.shareit.com/default.aspx" />
+			<test url="http://www.shareit.com/index.htm" />
+			<test url="http://www.shareit.com/index.html" />
+			<test url="http://www.shareit.com/index.jsp" />
+			<test url="http://www.shareit.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shareit.com/?" />
+			<test url="http://www.shareit.com/?" />
 
 	<rule from="^http:"
 		to="https:" />
