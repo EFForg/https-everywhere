@@ -1,0 +1,73 @@
+<!--
+	The National Association of Citizens Advice Bureaux
+
+	For rules causing false/broken MCB, see citizensadvice.org.uk-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- cab-labs-dashboard.s3-website-eu-west-1.amazonaws.com
+
+
+	Problematic hosts in *citizensadvice.org.uk:
+
+		- ^ ᵈ
+		- alphablog ˣ
+
+	ᵈ Dropped
+	ˣ Mixed content
+
+
+	These altnames do not exist:
+
+		- www.energycompare.citizensadvice.org.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- alphablog.citizensadvice.org.uk
+		- blogs.citizensadvice.org.uk
+		- energycompare.citizensadvice.org.uk
+		- www.citizensadvice.org.uk
+
+
+	Mixed content:
+
+		- css on alphablog from $self ˢ
+
+		- Images, on:
+
+			- alphablog from blog.cab-alpha.org.uk
+			- alphablog from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Citizens Advice.org.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="alphablog.citizensadvice.org.uk" /-->
+	<target host="blogs.citizensadvice.org.uk" />
+	<target host="citizensadvice.citizensadvice.org.uk" />
+	<target host="energycompare.citizensadvice.org.uk" />
+	<target host="www.citizensadvice.org.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="citizensadvice.org.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blogs\.citizensadvice\.org\.uk$" name="^wfvt_-\d+$" /-->
+	<!--securecookie host="^(?:alphablog|www)\.citizensadvice\.org\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^energycompare\.citizensadvice\.org\.uk$" name="^aff(?:CookieID|Expiration|iliateID)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
