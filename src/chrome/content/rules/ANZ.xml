@@ -7,52 +7,119 @@
 		- australianewzealandb.tt.omtrdc.net
 
 
+	Nonfunctional hosts in *anz.com:
+
+		- www.betterinternetbanking ᶠ
+		- betterways ʳ
+		- www.borrowingpower ᵃ
+		- (www.)?businessbanking ᶠ
+		- www.businessloans ᶠ
+		- www.businessready ᵃ
+		- www.buyready ᵃ
+		- exclusives ᶠ
+		- expertise ᵃ
+		- www.fastpay ᵃ
+		- www.findanz ᵃ
+		- www.gomoney ᵃ
+		- www.live ʰ
+		- marketrates ᶠ
+		- movingtoaustralia ᶠ
+		- www.sibos ʳ
+		- www.transactivetrade ᵈ
+		- www.women ᶠ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *anz.com:
+
+		- businessadvice ᵐ
+		- info ᵐ
+		- (www.)?locate ᵐ
+		- www.nz ᵐ
+		- social ᵐ
+		- tw ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- anz.com
+		- bluenotes.anz.com
+		- www.bluenotes.anz.com
+		- www.businessadvice.anz.com
+		- www.anz.com
+
+
 	Mixed content:
 
-		- Web bugs on www:
+		- Images, on:
+		
+			- (www.)? from www.anz.com ˢ
+			- www.shareholder from $self ˢ
+			
+		- Bug on www from info.anz.com ˢ
 
-			- from www.adadvisor.net via adadvisor.net *
-			- from ak1.abmr.net via pixel.mathtag.com *
-			- from tag.admeld.com **
-			- from pixel.mathtag.com via ak1.abmr.net *
-			- from pixel.mathtag.com via p.acxiom-online.com *
-
-			- via fls.doubleclick.net, from:
-
-				- p.acxiom-online.com *
-				- su.addthis.com *
-				- tracking.adjug.com *
-				- dis.criteo.com *
-				- y.one.impact-ad.jp *
-				- pixel.mathtag.com *
-				- e.nexac.com  *
-				- u.optorb.com *
-				- idsync.rlcdn.com *
-				- cs.specificclick.net *
-				- ad.yieldmanager.com *
-				- sync.zenoviaexchange.com **
-
-	* Secured by us
-	** Unsecurable
-
-
-	We don't care whether web bugs work, thus
-	don't mark this rulesets as mixedcontent.
+	ˢ Secured by us
 
 -->
-<ruleset name="ANZ">
+<ruleset name="ANZ (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="anz.com" />
-	<target host="*.anz.com" />
+	<target host="bluenotes.anz.com" />
+	<target host="www.bluenotes.anz.com" />
+	<target host="www.businessadvice.anz.com" />
+	<target host="collect.anz.com" />
+	<target host="infos.anz.com" />
+	<target host="mobilelending.anz.com" />
+	<target host="sg.anz.com" />
+	<target host="www.shareholder.anz.com" />
+	<target host="www.social.anz.com" />
+	<target host="twcardsonline.anz.com" />
+	<target host="twib.anz.com" />
+	<target host="www.wealth.anz.com" />
+	<target host="www.anz.com" />
+	<target host="yourworld.anz.com" />
+	<target host="www.yourworld.anz.com" />
+
+	<!--	Complications:
+				-->
+	<target host="businessadvice.anz.com" />
+	<target host="info.anz.com" />
+	<target host="www.nz.anz.com" />
+	<target host="social.anz.com" />
+
+		<!--	Mixed bug:
+					-->
+		<!--test url="http://www.anz.com/singapore/en/Personal/" /-->
 
 
-	<securecookie host=".*\.anz\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?bluenotes\.anz\.com$" name="^TS[\da-f]{8}$$" /-->
+	<!--securecookie host="^www\.businessadvice\.anz\.com$" name="^__RequestVerificationToken" /-->
+	<!--securecookie host="^(?:www\.)?anz\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?anz\.com/"
-		to="https://www.anz.com/" />
+	<rule from="^http://(businessadvice|social)\.anz\.com/"
+		to="https://www.$1.anz.com/" />
 
-	<rule from="^http://infos\.anz\.com/"
+	<rule from="^http://info\.anz\.com/"
 		to="https://infos.anz.com/" />
+
+	<rule from="^http://www\.nz\.anz\.com/"
+		to="https://www.anz.co.nz/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

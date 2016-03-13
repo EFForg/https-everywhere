@@ -9,7 +9,6 @@
 	Nonfunctional domains:
 
 		- \w+.cvs.sf.net		(reset)
-		- p.sf.net			(reset)
 		- \w+.cvs.sourceforge.net	(reset)
 		- heanet.dl.sourceforge.net
 		- netcologne.dl.sourceforge.net
@@ -32,10 +31,15 @@
 
 	Partially covered hosts in *sf.net & *sourceforge.net:
 
-		- (www.)? ʰ
 		- *.svn ʰ
 
 	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- p.sf.net
+		- sourceforge.net
 
 
 	Mixed content:
@@ -83,30 +87,17 @@
 
 	<target host="downloads.sourceforge.net" />
 
-		<exclusion pattern="http://(?:www\.)?s(?:f|ourceforge)\.net/+(?!accounts?/?|(?:blog|p/forge/icon|sflogo\.php)(?:$|[?/])|images/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://sourceforge.net/about" />
-			<test url="http://sourceforge.net/create/" />
-			<test url="http://sourceforge.net/directory/" />
-			<test url="http://sourceforge.net/directory/home-education" />
-			<test url="http://sourceforge.net/donate/index.php?group_id=" />
-			<test url="http://sourceforge.net/jobs?source=footer" />
-			<test url="http://sourceforge.net/projects/maxima/" />
-			<test url="http://sourceforge.net/support" />
-			<test url="http://sourceforge.net/top" />
-
-			<!--	-ve:
-					-->
-			<test url="http://sf.net/blog/" />
-			<test url="http://sf.net/blog/author/admin/" />
-			<test url="http://sf.net/blog/category/sitestatus/" />
-			<test url="http://sf.net/blog/new-admin-mode-is-live/" />
-
-			<test url="http://sourceforge.net/blog/" />
-			<test url="http://sourceforge.net/blog/category/sitestatus/" />
-			<test url="http://sourceforge.net/p/forge/icon" />
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://sourceforge.net/about" />
+		<test url="http://sourceforge.net/create/" />
+		<test url="http://sourceforge.net/directory/" />
+		<test url="http://sourceforge.net/directory/home-education" />
+		<test url="http://sourceforge.net/donate/index.php?group_id=" />
+		<test url="http://sourceforge.net/jobs?source=footer" />
+		<test url="http://sourceforge.net/projects/maxima/" />
+		<test url="http://sourceforge.net/support" />
+		<test url="http://sourceforge.net/top" />
 
 		<!--	Redirects to http:
 						-->
@@ -124,8 +115,15 @@
 			<test url="http://fceultra.svn.sourceforge.net/viewvc/" />
 
 
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^p\.sf\.net$" name="^_session_id$" /-->
+	<!--securecookie host="^sourceforge\.net$" name="^_session_id$" /-->
+
 	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^p\.sf\.net$" name="." />
 	<securecookie host="^downloads\.sourceforge\.net$" name="." />
+	<securecookie host="^(?:downloads\.)?sourceforge\.net$" name="." />
 
 
 	<rule from="^http://([\w-]+)\.svn\.sf\.net/"

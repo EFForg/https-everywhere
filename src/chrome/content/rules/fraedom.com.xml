@@ -1,0 +1,74 @@
+<!--
+	Other Fraedom rulesets:
+
+		- fraedom-cdn.com.xml
+		- spendvision.com.xml
+
+
+	Problematic hosts in *fraedom.com:
+
+		- www2 ᵐ
+
+	ᵐ Pardot / mismatched
+
+
+	Partially covered hosts in *fraedom.com:
+
+		- www2 
+
+
+	Insecure cookies are set for these hosts:
+
+		- fraedom.com
+		- www.fraedom.com
+
+-->
+<ruleset name="Fraedom.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fraedom.com" />
+	<target host="control.fraedom.com" />
+	<target host="www.fraedom.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www2.fraedom.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?fraedom\.com$" name="^NVOYX$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://www2\.fraedom\.com/+(?:\?.*)?$"
+		to="https://www.fraedom.com/" />
+
+	<rule from="^http://www2\.fraedom\.com/"
+		to="https://pi.pardot.com/" />
+
+		<exclusion pattern="^http://www2\.fraedom\.com/+(?!$|\?|l/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www2.fraedom.com/default.aspx" />
+			<test url="http://www2.fraedom.com/index.cgi" />
+			<test url="http://www2.fraedom.com/index.htm" />
+			<test url="http://www2.fraedom.com/index.html" />
+			<test url="http://www2.fraedom.com/index.jsp" />
+			<test url="http://www2.fraedom.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www2.fraedom.com/?" />
+			<test url="http://www2.fraedom.com/l/97782/2015-09-17/5r76f" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

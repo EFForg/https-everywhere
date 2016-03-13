@@ -4,6 +4,7 @@
 		- 6PM.com.xml
 		- AbeBooks.xml
 		- AbeBooks.co.uk.xml
+		- amazon.com.mx.xml
 		- Amazon.jobs.xml
 		- Amazon-Associates.xml
 		- AmazonAWS.xml
@@ -82,7 +83,7 @@
 		- askville.amazon.com	(pages redirect to SendToHttp.do)
 
 -->
-<ruleset name="Amazon (broken)" default_off="breaks Look Inside the Book">
+<ruleset name="Amazon (needs feedback)" default_off="needs testing and feedback">
 
 	<target host="amazon.ca" />
 	<target host="www.amazon.ca" />
@@ -94,20 +95,31 @@
 	<target host="developer.amazon.com" />
 	<target host="local.amazon.com" />
 	<target host="www.amazon.com" />
-		<!--
-			These pages don't work on .com:
+
+		<!--	These pages don't work on .com:
 							-->
-		<exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" />
+		<!--exclusion pattern="^http://www\.amazon\.com/(?:$|\?|exec/obidos/|gp/(?:(?:goldbox|kindle/pc|pdp/profile|richpub/syltguides/byauthor)(?:$|\?)|product/)|l/|(?:[\w\-]+/)?(?:b|dp|Help)/)" /-->
 		<!--
 			- ajaxv2: Breaks adding to basket for products with options
 			- dynamic-update: Breaks image zoom
 								-->
-		<exclusion pattern="^http://(?:www\.)?amazon\.com/gp/twister/(?:ajaxv2|dynamic-update/)" />
-		<!--
-			Search redirects to http, for all sites.
-									-->
-		<exclusion pattern="^http://www\.amazon\.[\w\.]+/(?:gp/search\?|mn/search(?:$|\?)|s(?:/|\?rh=))" />
+		<!--exclusion pattern="^http://(?:www\.)?amazon\.com/gp/twister/(?:ajaxv2|dynamic-update/)" /-->
 
+		<exclusion pattern="^http://www\.amazon\.[^/]+/+(?!|$|\?|(?:.+/)?(?:b|business|gp/(?:browse\.html|search)|mn/search|s)(?:$|[?/]))" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.amazon.com/International-Shipping-Direct/b/?node=230659011" />
+			<test url="http://www.amazon.com/b?node=14047587011" />
+			<test url="http://www.amazon.com/business/" />
+			<test url="http://www.amazon.com/gift-cards/b/?node=2238192011" />
+			<test url="http://www.amazon.com/gp/browse.html?node=14048078011" />
+			<test url="http://www.amazon.com/s/?rh=i%3Agift-cards" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amazon\.com$" name="^(?:session-token|ubid-main)$" /-->
 
 	<!--	Verified as working for UK, ca appears to function identically.
 

@@ -1,6 +1,20 @@
-<ruleset name="Cloudfront">
+<ruleset name="Cloudfront.net">
 
 	<target host="*.cloudfront.net" />
+
+		<!--	Attempt to work around "hang" after login for mapmyrun.com
+
+			https://github.com/EFForg/https-everywhere/issues/4159
+
+			report does not give any examples, so try all scripts.
+										-->
+		<exclusion pattern="^http://d2i3r43q6ffvz8\.cloudfront\.net/.+\.js" />
+
+			<!--	+ve:
+					-->
+			<test url="http://d2i3r43q6ffvz8.cloudfront.net/prod/public/js/jquery/jquery-1.8.3.ddb54eca80f2.js?bust=3" />
+			<test url="http://d2i3r43q6ffvz8.cloudfront.net/prod/public/js/min/core.11b1b69c86c5.js?bust=3" />
+
 
 	<rule from="^http://([^/:@\.]+)\.cloudfront\.net/" 
 		to="https://$1.cloudfront.net/" />
@@ -35,4 +49,5 @@
   -->
   <exclusion pattern="&amp;Signature=" />
   	<test url="http://d1h9a8s8eodvjz.cloudfront.net/test.txt?a=b&amp;Signature=1234" />
+
 </ruleset>

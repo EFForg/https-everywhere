@@ -390,9 +390,10 @@ const HTTPSRules = {
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
-      this.scanRulefiles(rulefiles);
 
       this.loadTargets();
+      this.scanRulefiles(rulefiles);
+
     } catch(e) {
       this.log(DBUG,"Rules Failed: "+e);
     }
