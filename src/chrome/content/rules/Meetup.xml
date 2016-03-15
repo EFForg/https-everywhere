@@ -1,32 +1,33 @@
 <!--
-	Other Meetup rulesets:
-
-		- Meetup_static.com.xml
-
-
 	Nonfunctional domains:
 
 		- making.meetup.com ¹
-		- www.meetup.com	(prints "our server wasn't
-					able to process your request")
-		- meetupblog.meetup.com	(hosted on Tumblr)
+		- hep.meetup.com (http redirect)
+		- ^meetup.com	(prints "our server wasn't
+				able to process your request")
+		- files.meetup.com	(prints "It's server
+					maintenance time!")
+		- blog.meetup.com	(mismatch)
 
 	¹ Refused
-
 -->
-<ruleset name="Meetup (partial)">
-
-	<target host="meetup.com" />
-	<target host="*.meetup.com" />
-
+<ruleset name="Meetup">
+	<target host="www.meetup.com" />
+	<target host="secure.meetup.com" />
+	<target host="photos1.meetupstatic.com" />
+	<target host="photos2.meetupstatic.com" />
+	<target host="photos3.meetupstatic.com" />
+	<target host="photos4.meetupstatic.com" />
+	<target host="static1.meetupstatic.com" />
+	<target host="static2.meetupstatic.com" />
+	<target host="static3.meetupstatic.com" />
+	<target host="static4.meetupstatic.com" />
+	<target host="secure.meetupstatic.com" />
 
 	<securecookie host="^\.meetup\.com$" name="^MEETUP_(?:AFFIL|TRACK)$" />
 
-
-	<rule from="^http://(www\.)?meetup\.com/(?=favicon\.ico)"
-		to="https://$1meetup.com/" />
-
-	<rule from="^http://(?:secure|static[12])\.meetup\.com/"
-		to="https://secure.meetup.com/" />
-
+	<rule from="^http://meetup\.com/"
+		to="https://www.meetup.com/" />
+	<rule from="^http://(photos|static)\d\.meetup\.com/"
+		to="https://secure.meetupstatic.com/" />
 </ruleset>
