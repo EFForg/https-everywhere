@@ -20,8 +20,7 @@
 # releases signed by EFF :/.  We should find a more elegant arrangement.
 
 cd $(dirname $0)
-RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
-RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+RULESETS_JSON="$PWD/pkg/rulesets.json"
 
 if [ -n "$1" ]; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
@@ -42,14 +41,12 @@ echo "Building chrome version" $VERSION
 # Only generate the sqlite database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
+  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
     grep -q .
 }
-if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
-  # Build the SQLite DB even though we don't yet use it in the Chrome extension,
-  # because trivial-validate.py depends on it.
-  echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py && bash utils/validate.sh
+if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
+  echo "Generating ruleset DB"
+  python2.7 ./utils/make-json.py && bash utils/validate.sh
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
