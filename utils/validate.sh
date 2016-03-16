@@ -19,9 +19,7 @@ die() {
   exit 1
 }
 
-INPUT="../pkg/rulesets.unvalidated.sqlite"
-
-if python2.7 trivial-validate.py --quiet --db "$INPUT" >&2
+if python2.7 trivial-validate.py --quiet >&2
 then
   echo Validation of included rulesets completed. >&2
   echo >&2

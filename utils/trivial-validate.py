@@ -1,9 +1,9 @@
 #!/usr/bin/env python2.7
 
+import glob
 import argparse
 import os
 import re
-import sqlite3
 import sys
 
 from lxml import etree
@@ -14,10 +14,6 @@ parser = argparse.ArgumentParser(
 parser.add_argument('--quiet', action="store_true",
     default=False, help="Suppress debug output."
     )
-parser.add_argument('--db',
-    default=os.path.join(os.path.dirname(__file__),
-                         "../src/defaults/rulesets.sqlite"),
-    help='SQLite db with rules')
 
 args = parser.parse_args()
 
@@ -31,6 +27,8 @@ def fail(s):
     sys.stdout.write("failure: %s\n" % s)
 
 # Precompile xpath expressions that get run repeatedly.
+xpath_ruleset = etree.XPath("/ruleset")
+xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_exclusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_host_pattern = etree.XPath("/ruleset/securecookie/@host")
 xpath_cookie_name_pattern = etree.XPath("/ruleset/securecookie/@name")
@@ -42,6 +40,32 @@ with open(thispath + '/downgrade-whitelist.txt') as downgrade_fh:
 with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
+filenames = glob.glob('src/chrome/content/rules/*')
+
+def generate_hosts_count():
+    # Generate a count of the number of times a host appears
+    hosts = {}
+    xml_parser = etree.XMLParser(remove_blank_text=True)
+
+    for filename in filenames:
+        if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
+            continue
+        try:
+            tree = etree.parse(filename, xml_parser)
+        except Exception as oops:
+            print("%s failed XML validity: %s\n" % (filename, oops))
+            sys.exit(1)
+
+        targets = xpath_host(tree)
+        for target in targets:
+            if target in hosts:
+                hosts[target]['count'] += 1
+            else:
+                hosts[target] = {
+                    'count': 1
+                }
+
+    return hosts
 
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
@@ -158,44 +182,42 @@ tests = [
 failure = 0
 seen_file = False
 
-xpath_ruleset = etree.XPath("/ruleset")
 xpath_ruleset_name = etree.XPath("/ruleset/@name")
 xpath_ruleset_file = etree.XPath("/ruleset/@f")
-xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
-conn = sqlite3.connect(args.db)
-c = conn.cursor()
-for row in c.execute('''SELECT contents from rulesets'''):
-    try:
-        tree = etree.fromstring(row[0])
-    except Exception as oops:
-        failure = 1
-        print("failed XML validity: %s\n" % (oops))
-    if not xpath_ruleset(tree):
+for filename in filenames:
+    if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
         continue
-    rn = xpath_ruleset_name(tree)[0]
-    if not rn:
-        failure = 1
-        fail("unnamed ruleset")
-        continue
-    rf = xpath_ruleset_file(tree)[0]
-    from_attrib = xpath_from(tree)
-    to = xpath_to(tree)
-    for test in tests:
-        if not test(tree, rn, from_attrib=from_attrib, to=to):
-            failure = 1
-            fail("%s failed test: %s" % (rf, test.__doc__))
 
-for (host, count) in c.execute('''
-  select host, count(host) as c from targets group by host;'''):
-    if count > 1:
-        if host in duplicate_allowed_list:
-            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, count))
-        else:
+    with open(filename, 'r') as fp:
+        try:
+            tree = etree.fromstring(fp.read())
+        except Exception as oops:
             failure = 1
-            fail("Hostname %s shows up in %d different rulesets." % (host, count))
+            print("failed XML validity: %s\n" % (oops))
+        if not xpath_ruleset(tree):
+            continue
+        rn = xpath_ruleset_name(tree)[0]
+        if not rn:
+            failure = 1
+            fail("unnamed ruleset")
+            continue
+        from_attrib = xpath_from(tree)
+        to = xpath_to(tree)
+        for test in tests:
+            if not test(tree, rn, from_attrib=from_attrib, to=to):
+                failure = 1
+                fail("%s failed test: %s" % (filename, test.__doc__))
+
+hosts = generate_hosts_count()
+for host in hosts:
+    if hosts[host]['count'] > 1:
+        if host in duplicate_allowed_list:
+            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, hosts[host]['count']))
+        else:
+            fail("Hostname %s shows up in %d different rulesets." % (host, hosts[host]['count']))
     if not is_valid_target_host(host):
         failure = 1
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
