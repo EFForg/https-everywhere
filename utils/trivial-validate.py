@@ -43,7 +43,8 @@ with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
 filenames = glob.glob('src/chrome/content/rules/*')
 
 def generate_hosts_count():
-    # Generate a count of the number of times a host appears
+    # Generate a count of the number of times a host appears, and on which
+    # platforms
     hosts = {}
     xml_parser = etree.XMLParser(remove_blank_text=True)
 
@@ -56,14 +57,25 @@ def generate_hosts_count():
             print("%s failed XML validity: %s\n" % (filename, oops))
             sys.exit(1)
 
+        try:
+            platform = xpath_ruleset(tree)[0].attrib["platform"]
+        except KeyError:
+            platform = ''
+
         targets = xpath_host(tree)
         for target in targets:
             if target in hosts:
                 hosts[target]['count'] += 1
+                if platform in hosts[target]['platforms']:
+                    hosts[target]['platforms'][platform] += 1
+                else:
+                    hosts[target]['platforms'][platform] = 1
             else:
                 hosts[target] = {
-                    'count': 1
+                    'count': 1,
+                    'platforms': {}
                 }
+                hosts[target]['platforms'][platform] = 1
 
     return hosts
 
@@ -217,7 +229,10 @@ for host in hosts:
         if host in duplicate_allowed_list:
             warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, hosts[host]['count']))
         else:
-            fail("Hostname %s shows up in %d different rulesets." % (host, hosts[host]['count']))
+            for platform in hosts[host]['platforms']:
+                if hosts[host]['platforms'][platform] > 1:
+                    failure = 1
+                    fail("Hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, hosts[host]['platforms'][platform]))
     if not is_valid_target_host(host):
         failure = 1
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
