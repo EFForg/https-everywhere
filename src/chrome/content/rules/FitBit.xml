@@ -1,34 +1,27 @@
 <!--
-	CDN buckets:
-
-		- s3.amazonaws.com/fitbit.production/ | d6y8zfzc2qfsl.cloudfront.net
-		- fitbit.assistly.com
-		- fitbit.theresumator.com
-
-
-	Nonfunctional subdomains:
-
-		- blog		(redirects to innovaeframelessfittings.com, mismatched)
-		- help		(redirects to http, mismatched, CN: *.assistly.com)
-		- jobs		(redirects to http, mismatched, CN: *.theresumator.com)
-
+	Forwards to HTTP (March 2016):
+		- staticcs.fitbit.com
 -->
-<ruleset name="FitBit" platform="mixedcontent">
+<ruleset name="FitBit">
 
 	<target host="fitbit.com" />
-	<target host="*.fitbit.com" />
+	<target host="www.fitbit.com" />
+	<target host="blog.fitbit.com" />
+	<target host="help.fitbit.com" />
+	<target host="jobs.fitbit.com" />
+	<target host="cache.fitbit.com" /><!-- Invalid cert -->
+	<target host="community.fitbit.com" />
+	<target host="api.fitbit.com" />
+	<target host="client.fitbit.com" />
+	<target host="dev.fitbit.com" />
+	<target host="m.fitbit.com" />
+	<target host="wiki.fitbit.com" />
+	<target host="jira.fitbit.com" />
+	<target host="fitforgood.fitbit.com" />
 
+	<securecookie host=".+" name=".+" />
 
-	<securecookie host="^(?:.+\.)?fitbit\.com$" name=".+" />
-
-
-	<rule from="^http://((?:api|client|dev|m|qa3store(?:-static\d)?|static\d|store-\w\w|wiki|www)\.)?fitbit\.com/"
-		to="https://$1fitbit.com/" />
-
-	<rule from="^http://cache\.fitbit\.com/"
-		to="https://d6y8zfzc2qfsl.cloudfront.net/" />
-
-	<rule from="^http://jobs\.fitbit\.com/(css|img)/"
-		to="https://fitbit.theresumator.com/$1/" />
+	<rule from="^https?://cache\.fitbit\.com/" to="https://d6y8zfzc2qfsl.cloudfront.net/" /><!-- Invalid cert, forward -->
+	<rule from="^http:" to="https:" />
 
 </ruleset>
