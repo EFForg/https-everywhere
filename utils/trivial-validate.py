@@ -163,9 +163,8 @@ xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
-c = Counter()
+host_counter = Counter()
 for filename in filenames:
-
     xml_parser = etree.XMLParser(remove_blank_text=True)
 
     if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
@@ -191,17 +190,18 @@ for filename in filenames:
             failure = 1
             fail("%s failed test: %s" % (filename, test.__doc__))
 
-    try:
-        platform = xpath_ruleset_platform(tree)[0]
-    except IndexError:
+    platform_list = xpath_ruleset_platform(tree)
+    if len(platform_list) == 0:
         platform = ''
+    else:
+        platform = platform_list[0]
 
     targets = xpath_host(tree)
     for target in targets:
-        c.update([(target, platform)])
+        host_counter.update([(target, platform)])
 
 
-for (host, platform), count in c.most_common():
+for (host, platform), count in host_counter.most_common():
     if count > 1:
         if host in duplicate_allowed_list:
             warn("Whitelisted hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, count))
