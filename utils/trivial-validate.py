@@ -7,6 +7,7 @@ import re
 import sys
 
 from lxml import etree
+from collections import Counter
 
 parser = argparse.ArgumentParser(
     formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -27,8 +28,6 @@ def fail(s):
     sys.stdout.write("failure: %s\n" % s)
 
 # Precompile xpath expressions that get run repeatedly.
-xpath_ruleset = etree.XPath("/ruleset")
-xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_exclusion_pattern = etree.XPath("/ruleset/exclusion/@pattern")
 xpath_cookie_host_pattern = etree.XPath("/ruleset/securecookie/@host")
 xpath_cookie_name_pattern = etree.XPath("/ruleset/securecookie/@name")
@@ -41,43 +40,6 @@ with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
 filenames = glob.glob('src/chrome/content/rules/*')
-
-def generate_hosts_count():
-    # Generate a count of the number of times a host appears, and on which
-    # platforms
-    hosts = {}
-    xml_parser = etree.XMLParser(remove_blank_text=True)
-
-    for filename in filenames:
-        if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
-            continue
-        try:
-            tree = etree.parse(filename, xml_parser)
-        except Exception as oops:
-            print("%s failed XML validity: %s\n" % (filename, oops))
-            sys.exit(1)
-
-        try:
-            platform = xpath_ruleset(tree)[0].attrib["platform"]
-        except KeyError:
-            platform = ''
-
-        targets = xpath_host(tree)
-        for target in targets:
-            if target in hosts:
-                hosts[target]['count'] += 1
-                if platform in hosts[target]['platforms']:
-                    hosts[target]['platforms'][platform] += 1
-                else:
-                    hosts[target]['platforms'][platform] = 1
-            else:
-                hosts[target] = {
-                    'count': 1,
-                    'platforms': {}
-                }
-                hosts[target]['platforms'][platform] = 1
-
-    return hosts
 
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
@@ -194,45 +156,58 @@ tests = [
 failure = 0
 seen_file = False
 
+xpath_ruleset = etree.XPath("/ruleset")
 xpath_ruleset_name = etree.XPath("/ruleset/@name")
-xpath_ruleset_file = etree.XPath("/ruleset/@f")
+xpath_ruleset_platform = etree.XPath("/ruleset/@platform")
+xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
 
+c = Counter()
 for filename in filenames:
+
+    xml_parser = etree.XMLParser(remove_blank_text=True)
+
     if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
         continue
 
-    with open(filename, 'r') as fp:
-        try:
-            tree = etree.fromstring(fp.read())
-        except Exception as oops:
-            failure = 1
-            print("failed XML validity: %s\n" % (oops))
-        if not xpath_ruleset(tree):
-            continue
-        rn = xpath_ruleset_name(tree)[0]
-        if not rn:
-            failure = 1
-            fail("unnamed ruleset")
-            continue
-        from_attrib = xpath_from(tree)
-        to = xpath_to(tree)
-        for test in tests:
-            if not test(tree, rn, from_attrib=from_attrib, to=to):
-                failure = 1
-                fail("%s failed test: %s" % (filename, test.__doc__))
+    try:
+        tree = etree.parse(filename, xml_parser)
+    except Exception as oops:
+        print("%s failed XML validity: %s\n" % (filename, oops))
+        sys.exit(1)
 
-hosts = generate_hosts_count()
-for host in hosts:
-    if hosts[host]['count'] > 1:
+    if not xpath_ruleset(tree):
+        continue
+    rn = xpath_ruleset_name(tree)[0]
+    if not rn:
+        failure = 1
+        fail("unnamed ruleset")
+        continue
+    from_attrib = xpath_from(tree)
+    to = xpath_to(tree)
+    for test in tests:
+        if not test(tree, rn, from_attrib=from_attrib, to=to):
+            failure = 1
+            fail("%s failed test: %s" % (filename, test.__doc__))
+
+    try:
+        platform = xpath_ruleset_platform(tree)[0]
+    except IndexError:
+        platform = ''
+
+    targets = xpath_host(tree)
+    for target in targets:
+        c.update([(target, platform)])
+
+
+for (host, platform), count in c.most_common():
+    if count > 1:
         if host in duplicate_allowed_list:
-            warn("Whitelisted hostname %s shows up in %d different rulesets." % (host, hosts[host]['count']))
+            warn("Whitelisted hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, count))
         else:
-            for platform in hosts[host]['platforms']:
-                if hosts[host]['platforms'][platform] > 1:
-                    failure = 1
-                    fail("Hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, hosts[host]['platforms'][platform]))
+            failure = 1
+            fail("Hostname %s with platform '%s' shows up in %d different rulesets." % (host, platform, count))
     if not is_valid_target_host(host):
         failure = 1
         fail("%s failed: %s" % (host, is_valid_target_host.__doc__))
