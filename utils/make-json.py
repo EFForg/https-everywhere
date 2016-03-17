@@ -1,8 +1,7 @@
 #!/usr/bin/env python2.7
 #
-# Builds an sqlite DB and a JSON DB containing all the rulesets, indexed by target.
-# The sqlite DB is used by trivial-validate.py. The JSON DB is used by the
-# Firefox addon.
+# Builds a JSON DB containing all the rulesets, indexed by target.
+# The JSON DB is used by the Firefox addon.
 #
 
 import glob
@@ -24,20 +23,6 @@ from lxml import etree
 locale.setlocale(locale.LC_ALL, 'C')
 
 json_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.json')
-# Removing the file before we create it avoids some non-determinism.
-db_path = os.path.join(os.path.dirname(__file__), '../pkg/rulesets.unvalidated.sqlite')
-if os.path.isfile(db_path):
-    os.remove(db_path)
-conn = sqlite3.connect(db_path)
-c = conn.cursor()
-c.execute('''DROP TABLE IF EXISTS rulesets''')
-c.execute('''CREATE TABLE rulesets
-             (id INTEGER PRIMARY KEY,
-              contents TEXT)''')
-c.execute('''DROP TABLE IF EXISTS targets''')
-c.execute('''CREATE TABLE targets
-             (host TEXT,
-              ruleset_id INTEGER)''')
 
 json_output = {
     "rulesetStrings": [],
@@ -96,18 +81,11 @@ for fi in filenames:
     # FF version can find it.
     xpath_ruleset(tree)[0].attrib["f"] = os.path.basename(fi).decode(encoding="UTF-8")
 
-    c.execute('''INSERT INTO rulesets (contents) VALUES(?)''', (etree.tostring(tree),))
-    ruleset_id = c.lastrowid
     for target in targets:
-        c.execute('''INSERT INTO targets (host, ruleset_id) VALUES(?, ?)''', (target, ruleset_id))
         # id is the current length of the rules list - i.e. the offset at which
         # this rule will be added in the list.
         json_output["targets"][target].append(len(json_output["rulesetStrings"]))
     json_output["rulesetStrings"].append(etree.tostring(tree))
-
-conn.commit()
-conn.execute("VACUUM")
-conn.close()
 
 with open(json_path, 'w') as f:
     f.write(json.dumps(json_output))

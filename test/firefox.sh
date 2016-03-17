@@ -78,10 +78,5 @@ fi
 
 popd
 
-# Echo the version of sqlite3, since the determinism of the build depends on
-# having the same version.
-echo "To reproduce this build (https://wiki.debian.org/ReproducibleBuilds)," \
-     "please use this version of sqlite3:"
-sqlite3 -version
 shasum=$(openssl sha -sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"
