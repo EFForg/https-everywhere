@@ -38,7 +38,10 @@ echo "Building chrome version" $VERSION
 [ -d pkg ] || mkdir -p pkg
 [ -e pkg/crx ] && rm -rf pkg/crx
 
-# Only generate the sqlite database if any rulesets have changed. Tried
+# Clean up obsolete ruleset databases, just in case they still exist.
+rm -f "$PWD/src/chrome/content/rules/default.rulesets" "$PWD/src/defaults/rulesets.sqlite"
+
+# Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
   find src/chrome/content/rules/ -newer $RULESETS_JSON |\
