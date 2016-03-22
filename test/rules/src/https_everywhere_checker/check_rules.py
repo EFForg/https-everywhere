@@ -279,6 +279,9 @@ def cli():
 	checkCoverage = False
 	if config.has_option("rulesets", "check_coverage"):
 		checkCoverage = config.getboolean("rulesets", "check_coverage")
+	checkNonmatchGroups = False
+	if config.has_option("rulesets", "check_nonmatch_groups"):
+		checkNonmatchGroups = config.getboolean("rulesets", "check_nonmatch_groups")
 	certdir = config.get("certificates", "basedir")
 	if config.has_option("rulesets", "check_coverage"):
 		checkCoverage = config.getboolean("rulesets", "check_coverage")
@@ -322,6 +325,7 @@ def cli():
 	
 	rulesets = []
 	coverageProblemsExist = False
+	nonmatchGroupProblemsExist = False
 	for xmlFname in xmlFnames:
 		logging.debug("Parsing %s", xmlFname)
 		if skipFile(xmlFname):
@@ -341,6 +345,12 @@ def cli():
 			problems = ruleset.getCoverageProblems()
 			for problem in problems:
 				coverageProblemsExist = True
+				logging.error(problem)
+		if checkNonmatchGroups:
+			logging.debug("Checking non-match groups for '%s'." % ruleset.name)
+			problems = ruleset.getNonmatchGroupProblems()
+			for problem in problems:
+				nonmatchGroupProblemsExist = True
 				logging.error(problem)
 		trie.addRuleset(ruleset)
 		rulesets.append(ruleset)
@@ -411,8 +421,10 @@ def cli():
 	if checkCoverage:
 		if coverageProblemsExist:
 			return 1 # exit with error code
-		else:
-			return 0 # exit with success
+	if checkNonmatchGroups:
+		if nonmatchGroupProblemsExist:
+			return 1 # exit with error code
+	return 0 # exit with success
 
 if __name__ == '__main__':
 	sys.exit(cli())
