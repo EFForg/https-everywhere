@@ -122,6 +122,7 @@ class Ruleset(object):
 		self.exclusions = []
 		self.filename = filename
 		self.tests = []
+		self.determine_test_application_run = False
 		
 		for (attrName, xpath, conversion) in self._attrConvert:
 			elems = root.xpath(xpath)
@@ -161,6 +162,21 @@ class Ruleset(object):
 				continue
 			self.tests.append(Test("http://%s/" % target))
 
+	def _determineTestApplication(self):
+		"""Match each test against a rule or exclusion if possible, and hang them
+			 off that rule or exclusion.  Return any coverage problems."""
+		if not self.determine_test_application_run:
+			self.test_application_problems = []
+			for test in self.tests:
+				applies = self.whatApplies(test.url)
+				if applies:
+					applies.tests.append(test)
+				else:
+					self.test_application_problems.append("%s: No rule or exclusion applies to test URL %s" % (
+						self.filename, test.url))
+				self.determine_test_application_run = True
+		return self.test_application_problems
+
 	def getCoverageProblems(self):
 		"""Verify that each rule and each exclusion has the right number of tests
 			 that applies to it. TODO: Also check that each target has the right
@@ -170,16 +186,7 @@ class Ruleset(object):
 			 Returns an array of strings reporting any coverage problems if they exist,
 			 or empty list if coverage is sufficient.
 			 """
-		# First, match each test against a rule or exclusion if possible, and hang
-		# them off that rule or exclusion.
-		problems = []
-		for test in self.tests:
-			applies = self.whatApplies(test.url)
-			if applies:
-				applies.tests.append(test)
-			else:
-				problems.append("%s: No rule or exclusion applies to test URL %s" % (
-					self.filename, test.url))
+		problems = self._determineTestApplication()
 		# Next, make sure each rule or exclusion has sufficient tests.
 		for rule in self.rules:
 			needed_count = 1 + len(regex.findall("[+*?|]", rule.fromPattern))
@@ -204,6 +211,22 @@ class Ruleset(object):
 			if actual_count < needed_count:
 				problems.append("%s: Not enough tests (%d vs %s) for %s" % (
 								self.filename, actual_count, needed_count, exclusion))
+		return problems
+
+	def getNonmatchGroupProblems(self):
+		"""Verify that when rules are actually applied, no non-match groups (e.g.
+			 '$1', '$2' etc.) will exist in the rewritten url"""
+		self._determineTestApplication()
+		problems = []
+		for rule in self.rules:
+			test_urls = map(lambda test: test.url, rule.tests)
+			for test in rule.tests:
+				try:
+					replacement_url = rule.apply(test.url)
+				except Exception, e:
+					if ~e.message.index("invalid group reference"):
+						problems.append("%s: Rules include non-matched groups in replacement for url: %s" % (
+							self.filename, test.url))
 		return problems
 
 	def whatApplies(self, url):
