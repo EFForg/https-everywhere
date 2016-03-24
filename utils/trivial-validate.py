@@ -39,7 +39,7 @@ with open(thispath + '/downgrade-whitelist.txt') as downgrade_fh:
 with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
-filenames = glob.glob('src/chrome/content/rules/*')
+filenames = glob.glob(thispath + '/../src/chrome/content/rules/*')
 
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
