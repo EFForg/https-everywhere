@@ -16,8 +16,7 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
-RULESETS_JSON="$PWD/src/defaults/rulesets.json"
+RULESETS_JSON="$PWD/pkg/rulesets.json"
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -58,10 +57,10 @@ fi
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
+  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
     grep -q .
 }
-if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
+if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   # This is an optimization to get the OS reading the rulesets into RAM ASAP;
   # it's useful on machines with slow disk seek times; doing several of these
   # at once allows the IO subsystem to seek more efficiently.
@@ -70,7 +69,7 @@ if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
     nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
   done
   echo "Generating ruleset DB"
-  python2.7 ./utils/make-sqlite.py
+  python2.7 ./utils/make-json.py
 fi
 
 # =============== BEGIN VALIDATION ================

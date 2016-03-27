@@ -2,12 +2,6 @@
 # Validates rulesets, using both trivial-validate.py (slower, can make more
 # complicated assertions) and xmllint with our custom RELAX NG grammar that
 # specifies the format of ruleset XML (faster, more limited).
-#
-# The rulesets sqlite must already have been generated at
-# https-everywhere/pkg/rulesets.unvalidated.sqlite.
-#
-# If validation is successful, that file will be copied to
-# https-everywhere/src/defaults/rulesets.sqlite for inclusion in the XPI.
 set -o errexit -o pipefail
 cd $(dirname $0)
 
@@ -19,9 +13,7 @@ die() {
   exit 1
 }
 
-INPUT="../pkg/rulesets.unvalidated.sqlite"
-
-if python2.7 trivial-validate.py --quiet --db "$INPUT" >&2
+if python2.7 trivial-validate.py --quiet >&2
 then
   echo Validation of included rulesets completed. >&2
   echo >&2
