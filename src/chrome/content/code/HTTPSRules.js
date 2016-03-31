@@ -611,14 +611,16 @@ const HTTPSRules = {
 
     attempt(host);
 
+    // Ensure host is well-formed (RFC 1035)
+    if (host.indexOf("..") != -1 || host.length > 255) {
+      this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return null;
+    }
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
-      if (tmp.length === 0) {
-        this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
-        return null;
-      }
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;

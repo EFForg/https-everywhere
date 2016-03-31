@@ -259,6 +259,12 @@ RuleSets.prototype = {
       results = results.concat(this.targets[host]);
     }
 
+    // Ensure host is well-formed (RFC 1035)
+    if (host.indexOf("..") != -1 || host.length > 255) {
+      log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return null;
+    }
+
     // Replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (var i = 0; i < segmented.length; ++i) {
