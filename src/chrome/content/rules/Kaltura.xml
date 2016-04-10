@@ -7,6 +7,7 @@
 
 	CDN buckets:
 
+		- kms-a.akamaihd.net
 		- akamai.kaltura.com.edgesuite.net/.../
 
 
@@ -27,28 +28,15 @@
 
 		- cdnapi	(akamai)
 		- connect	(Mixed css)
-		- knowledge ³
 		- cdnknowledge ¹
 
 	¹ Akamai
-	³ Server sends no certificate chain, see https://whatsmychaincert.com
-
-
-	Fully covered subdomains:
-
-		- (www.)?
-		- cfvod
-		- cdnakmi	(-> cdnsecakmi)
-		- cdnapi	(-> cdnapisec)
-		- cdnapisec
-		- cdnsecakmi
-		- corp
-		- www-stats
 
 
 	These altnames don't exist:
 
 		- www.connect.kaltura.com
+		- www.knowledge.kaltura.com
 
 
 	Mixed content:
@@ -59,9 +47,10 @@
 
 			- connect from $self
 			- knowledge from cdnknowledge.kaltura.com
+			- knowledge from $self
 
 -->
-<ruleset name="Kaltura (partial)" default_off="Breaks abc.go.com">
+<ruleset name="Kaltura.com (partial)" default_off="Breaks abc.go.com">
 
 	<!--	Direct rewrites:
 				-->
@@ -71,7 +60,7 @@
 	<target host="cdnsecakmi.kaltura.com" />
 	<!--target host="connect.kaltura.com" /-->
 	<target host="corp.kaltura.com" />
-	<!--target host="knowledge.kaltura.com" /-->
+	<target host="knowledge.kaltura.com" />
 	<target host="www.kaltura.com" />
 	<target host="www-stats.kaltura.com" />
 
@@ -108,7 +97,7 @@
 					-->
 	<!--securecookie host="^\.kaltura\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
 
-	<securecookie host="^\.kaltura\.com$" name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
 
 
 	<rule from="^http://(?:akamai|cdnb?|cdnbakmi)\.kaltura\.com/"

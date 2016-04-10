@@ -1,0 +1,59 @@
+<!--
+	South Cambridgeshire District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *scambs.gov.uk:
+
+		- plan ᵈ
+
+	ᵈ Refused
+
+
+	Partially covered hosts in *scambs.gov.uk:
+
+		- plan
+
+-->
+<ruleset name="SCambs.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="scambs.gov.uk" />
+	<target host="egov.scambs.gov.uk" />
+	<target host="www.scambs.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="plan.scambs.gov.uk" />
+
+		<test url="http://egov.scambs.gov.uk/riaplanning/index_search.html" />
+
+
+	<securecookie host="^(?!plan\.)\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://plan\.scambs\.gov\.uk/.*"
+		to="https://www.scambs.gov.uk/services/planning-applications" />
+
+		<exclusion pattern="^http://plan\.scambs\.gov\.uk/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://plan.scambs.gov.uk/default.aspx" />
+			<test url="http://plan.scambs.gov.uk/index.htm" />
+			<test url="http://plan.scambs.gov.uk/index.html" />
+			<test url="http://plan.scambs.gov.uk/index.jsp" />
+			<test url="http://plan.scambs.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://plan.scambs.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

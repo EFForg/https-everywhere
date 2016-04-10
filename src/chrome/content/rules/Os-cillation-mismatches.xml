@@ -1,13 +1,35 @@
-<ruleset name="os-cillation.de (mismatches)" default_off="mismatch">
+<!--
+	Problematic hosts in *os-cillation.de:
 
-	<!--	cert: schweissgut.net	-->
+		- (www.)? ᶜ
+		- anfrage ᶜ
+		- mail ᵐ ˢ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- anfrage.os-cillation.de
+
+-->
+<ruleset name="os-cillation.de (partial)" default_off="missing certificate chain">
+
 	<target host="os-cillation.de"/>
+	<target host="anfrage.os-cillation.de"/>
 	<target host="www.os-cillation.de"/>
 
-	<securecookie host="^www\.os-cilliation\.de$" name=".*"/>
 
-	<!--	!www redirects to www	-->
-	<rule from="^http://(?:www\.)?os-cillation\.de/"
-		to="https://www.os-cillation.de/"/>
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^anfrage\.os-cilliation\.de$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:"/>
 
 </ruleset>

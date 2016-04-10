@@ -13,8 +13,8 @@ if type apt-get >/dev/null ; then
     CHROMEDRIVER="chromedriver"
   fi
   sudo apt-get install libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev \
-    libssl-dev $CHROMEDRIVER
+    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
+    libssl-dev git $CHROMEDRIVER
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
   brew install libxml2 gnu-sed chromedriver

@@ -3,6 +3,11 @@
 
 	For problematic rules, see WP.pl-problematic.xml.
 
+	Other Wirtualna Polska rulesets:
+
+		- businessclick.com.xml
+		- wpimg.pl.xml
+
 
 	CDN buckets:
 
@@ -10,150 +15,183 @@
 
 			- finansomat.wp.pl
 
-		- calisto.netpr.pl 
+		- calisto.netpr.pl
 
 			- dlaprasy.wp.pl
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *wp.pl:
 
-		- wp.pl subdomains:
+		- ^ *
+		- agito *
+		- biznes *
+		- dlaprasy	(shows secure.netpr.pl; mismatched, CN: secure.netpr.pl)
+		- dzieci *
+		- ebiznes *
+		- ekstraklasa *
+		- erotyka *
+		- euro *
+		- facet *
+		- fantasyliga *
+		- i.fantasyliga *
+		- film *
+		- finansomat	(shows panel.cod.org.pl; mismatched, CN: panel.cod.org.pl)
+		- fitness **
+		- i.fitness **
+		- gielda *
+		- gry **
+		- i.gry **
+		- horoskop *
+		- kalendarz *
+		- kobieta *
+		- kontakty *
+		- info.mini *
+		- mobilna *
+		- moto *
+		- muzyka *
+		- newsletter *
+		- ogloszenia *
+		- onas *
+		- outbox *
+		- poczta	(redirects to profil, valid cert)
+		- pogoda *
+		- pomoc *
+		- prawnikonline *
+		- przewodnik *
+		- reklama **
+		- i.reklama **
+		- rekrutacja *
+		- rss *
+		- rtvagd *
+		- sport *
+		- biznes.szukaj *
+		- tech *
+		- topnews *
+		- turystyka *
+		- tv *
+		- twojeip *
+		- wiadomosci *
+		- wikipedia *
+		- get-2.wpapi *
+		- www ʰ
 
-			- (www.) *
-			- biznes *
-			- dlaprasy	(shows secure.netpr.pl; mismatched, CN: secure.netpr.pl)
-			- dzieci *
-			- ebiznes *
-			- ekstraklasa *
-			- erotyka *
-			- euro *
-			- facet *
-			- fantasyliga *
-			- i.fantasyliga *
-			- film *
-			- finanse *
-			- finansomat	(shows panel.cod.org.pl; mismatched, CN: panel.cod.org.pl)
-			- fitness **
-			- i.fitness **
-			- gielda *
-			- gry **
-			- i.gry **
-			- horoskop *
-			- kalendarz *
-			- kobieta *
-			- kontakty *
-			- info.mini *
-			- mobilna *
-			- moto *
-			- muzyka *
-			- newsletter *
-			- ogloszenia *
-			- onas *
-			- outbox *
-			- poczta	(redirects to profil, valid cert)
-			- pogoda *
-			- pomoc *
-			- prawnikonline *
-			- przewodnik *
-			- reklama **
-			- i.reklama **
-			- rekrutacja *
-			- rss *
-			- rtvagd *
-			- sport *
-			- biznes.szukaj *
-			- tech *
-			- topnews *
-			- tv *
-			- twojeip *
-			- wiadomosci *
-			- wikipedia *
-			- get-2.wpapi *
-
-		- x.wpimg.pl *
-		- y.wpimg.pl *
-
+	ʰ Redirects to http
 	* Refused
 	** Dropped
 
 
-	Problematic domains:
+	Problematic hosts in *wp.pl:
 
-		- diety.wp.pl	(works; mismatched, CN: *.vitalia.pl)
-		- b.wpimg.pl	(works; mismatched, CN: a.wpimg.pl)
-		- c.wpimg.pl	(works; mismatched, CN: i.wp.pl)
-		- i.wpimg.pl *
-		- j.wpimg.pl *
+		- agrobiznes ⁴
+		- diety	(works; mismatched, CN: *.vitalia.pl)
+		- finanse ˣ
 
-	* Works; mismatched, CN: ir.i.wp.pl
+	⁴ >=1 path 404s
+	ˣ Mixed css
 
 
-	Partially covered subdomains:
+	Partially covered hosts in *wp.pl:
 
-		- agito *
 		- profil *
 
 	* Some pages redirect to http
 
 
-	Fully covered domains:
+	Fully covered hosts in *wp.pl:
 
-		- wp.pl subdomains:
+		- m.poczta
+		- adv.reklama
 
-			- i
-			- ir.i
-			- m.poczta
-			- adv.reklama
-			- si
-			- ticket.www
 
-		- wplimg.pl subdomains:
+	Insecure cookies are set for these domains and hosts:
 
-			- a
-			- b	(→ a)
-			- c	(→ i.wp.pl)
-			- i	(→ ir.i.wp.pl)
-			- j	(→ ir.i.wp.pl)
+		- .wp.pl
+		- finanse.wp.pl
+		- .finanse.wp.pl
+		- .pasazfin.wp.pl
+		- .www.wp.pl
+		- ticket.www.wp.pl
 
 
 	Mixed content:
 
-		- Images on ticket.www.wp.pl from i.wp.pl *
+		- iframe on finanse from newsletter.wp.pl ʳ
 
-	* Secured by us, doesn't trip MCB
+		- css, on
+
+			- finanse from fonts.googpleapis.com *
+
+		- Images, on:
+
+			- finanse, ticket.www from i.wp.pl *
+			- finanse from a.wpimg.pl ᵐ
+			- finanse from money.wpimg.pl ᵐ
+
+	ᵐ Not secured by us <= mismatched
+	ʳ Unsecurable <= refused
+	* Secured by us
 
 -->
 <ruleset name="WP.pl (partial)">
 
-	<target host="*.wp.pl" />
-		<!--exclusion pattern="^http://agito\.wp\.pl/(?:$|\?)" /-->
-		<exclusion pattern="^http://agito\.wp\.pl/(?!favicon\.ico|skin/)" />
-		<!--exclusion pattern="^http://profil\.wp\.pl/(?:wizytowka\.html)?(?:$|\?)" /-->
-		<exclusion pattern="^http://profile\.wp\.pl/(?!css/|favicon\.ico|login\.html|obrazek\.html)" />
-		<!--exclusion pattern="^http://www\." /-->
-	<target host="*.wpimg.pl" />
+	<target host="banki.wp.pl" />
+	<!--target host="finanse.wp.pl" /-->
+	<target host="i.wp.pl" />
+	<target host="ir.i.wp.pl" />
+	<target host="pasazfin.wp.pl" />
+	<target host="m.poczta.wp.pl" />
+	<target host="profil.wp.pl" />
+	<target host="adv.reklama.wp.pl" />
+	<target host="si.wp.pl" />
+	<target host="ticket.www.wp.pl" />
 
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://profil\.wp\.pl/(?:wizytowka\.html)?(?:$|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://profil\.wp\.pl/(?!css/|favicon\.ico|(?:login|obrazek|rejestracja)\.html)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://profil.wp.pl/loginbloog.html" />
+			<test url="http://profil.wp.pl/logout.html" />
+			<test url="http://profil.wp.pl/mlogin.html" />
+			<test url="http://profil.wp.pl/mlogin_poczta.html" />
+			<test url="http://profil.wp.pl/wizytowka.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://profil.wp.pl/css/nepal.css" />
+			<test url="http://profil.wp.pl/favicon.ico" />
+			<test url="http://profil.wp.pl/login.html" />
+			<test url="http://profil.wp.pl/obrazek.html" />
+			<test url="http://profil.wp.pl/rejestracja.html" />
+
+		<!--	404:
+				-->
+		<!--test url="http://agrobiznes.money.pl/artykul/produkty-tradycyjne-lista-z-woj,24,0,2018584.html" /-->
+		<!--
+			!404:
+				-->
+		<!--test url="http://agrobiznes.money.pl/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wp\.pl$" name="^(?:rekticket|sm\w+ticket|statid|wpdticket)$" /-->
+	<!--securecookie host="^\.(?:finanse|pasazfin|poczta)\.wp\.pl$" name="^(?:reksticket|wpsticket)$" /-->
+	<!--securecookie host="^\.poczta\.wp\.pl$" name="^s$" /-->
+	<!--securecookie host="^\.www\.wp\.pl$" name="^(?:reksticket|sm\w+dticket)$" /-->
+	<!--securecookie host="^ticket\.www\.wp\.pl$" name="^statid$" /-->
 
 	<securecookie host="^\.wp\.pl$" name="^statid$" />
-	<!--
-		Can we secure any of these safely?
-							-->
-	<!--securecookie host="^\.wp\.pl$" name="^(reksticket|rekticket|smarjfyrggredticket|smgredticket|smgrodticket|testwpd|WP-cookie-info|wpdticket)$" /-->
-	<!--securecookie host="^\.poczta\.wp\.pl$" name="^s$" /-->
-	<securecookie host="^(?:i|adv\.reklama|ticket\.www)\.wp\.pl$" name=".+" />
-	<securecookie host="^a\.wpimg\.pl$" name=".+" />
+	<securecookie host="^(?!profil\.)\w" name="." />
+	<securecookie host="^\.pasazfin\." name="." />
 
 
-	<rule from="^http://(agito|s?i|ir\.i|m\.poczta|profil|adv\.reklama|ticket\.www)\.wp\.pl/"
-		to="https://$1.wp.pl/" />
-
-	<rule from="^http://[ab]\.wpimg\.pl/"
-		to="https://a.wpimg.pl/" />
-
-	<rule from="^http://c\.wpimg\.pl/"
-		to="https://i.wp.pl/" />
-
-	<rule from="^http://[ij]\.wpimg\.pl/"
-		to="https://ir.i.wp.pl/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

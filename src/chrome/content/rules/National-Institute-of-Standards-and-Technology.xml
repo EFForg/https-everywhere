@@ -34,17 +34,21 @@
 	<target host="web.nvd.nist.gov" />
 	<target host="tsapps.nist.gov" />
 
+		<!--	https://web.nvd.nist.gov/ redirects to itself
+									-->
+		<exclusion pattern="^http://web\.nvd\.nist\.gov/$" />
+
+			<!--	-ve:
+					-->
+			<test url="http://web.nvd.nist.gov/view/vuln/search" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(web\.)?nvd\.nist\.gov$" name="^(ASP\.NET_SessionId|CMSCurrentTheme|CMSPreferredCulture)$" /-->
 
-	<securecookie host="^.*\.nist\.gov$" name=".*" />
+	<securecookie host="." name="." />
 
-	<!-- https://web.nvd.nist.gov/ redirects to itself -->
-	<exclusion pattern="^http://web\.nvd\.nist\.gov/$" />
-
-	<test url="http://web.nvd.nist.gov/view/vuln/search" />
 
 	<rule from="^http:"
 		to="https:" />

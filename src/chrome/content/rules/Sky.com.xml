@@ -2,132 +2,212 @@
 	Other Sky rulesets:
 
 		- SkyViewingHelp.com.xml
+		- Sky_Academy.com.xml
+		- Sky_Programme_Information.co.uk.xml
+		- Sky_Sports.com.xml
 
 
 	CDN buckets:
 
 		- skyidassets-a.akamaihd.net
-
-		- f.chtah.com
-
-			- f.newsletter.sky.com
-
+		- skystorage-a.akamaihd.net
+		- f.chtah.com		← f.newsletter.sky.com
 		- assets.sky.com.edgekey.net
 		- help.sky.com.edgesuite.net
-
-		- prod-diagnostics.herokuapp.com
-
-			- diagnostics.herokuapp.com
-
-		- bskyb.lithium.com
-
-			- helpforum.sky.com
-
-		- sky.com.d1.sc.omtrdc.net
-
-			- metrics.sky.com
+		- prod-diagnostics.herokuapp.com	← diagnostics.herokuapp.com
+		- bskyb.lithium.com		← helpforum.sky.com
+		- sky.com.d1.sc.omtrdc.net	← metrics.sky.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *sky.com:
 
-		- sky.com subdomains:
+		- epgservices ⁵
+		- epgstatic ⁵
+		- go ⁵
+		- help ʰ
+		- news ʰ
+		- assets.search ᵈ
+		- sky1 ⁵
+		- skyarts ⁵
+		- skyatlantic ⁵
+		- skyline	Differs from http
+		- skyliving ⁵
+		- skymovies ⁵
+		- staging-assets ⁵
+		- static ᵈ
+		- prod.entertainment.telly ⁵
+		- tickets	502
+		- tv ⁵
 
-			- epgstatic *
-			- news *
-			- assets.search **
-			- sky1 *
-			- skyarts *
-			- skyatlantic *
-			- skyliving *
-			- skymovies *
-			- static **
-			- prod.entertainment.telly *
-			- tv *
-			- www *
-
-		- media.skynews.com *
-		- www.skysports.com **
-
-	* 504, akamai
-	** Dropped
-
-
-	Problematic domains:
-
-		- diagnostics.sky.com	(mismatched, CN: *.herokuapp.com)
-		- help.sky.com		(works, akamai)
-		- metrics.sky.com	(mismatched, CN: *.d1.sc.omtrdc.net)
-		- f.newsletter.sky.com		(works; mismatched, CN: *.chtah.com)
-		- reg.newsletter.sky.com	(works; mismatched, CN: *.cheetahmail.com)
+	⁵ 504
+	ᵈ Dropped
+	ʰ Redirects to http
 
 
-	Partially covered domains:
+	Problematic hosts in *sky.com:
 
-		- go.sky.com *
-		- help.sky.com	(→ akamai)
-		- livingforsport.skysports.com *
+		- ^ ᵖ
+		- accessibility ᶜ
+		- broadband.diagnostics ᵐ
+		- metrics ᵐ
+		- ebm.newsletter ᵐ	(CN: *.cheetahmail.com)
+		- f.newsletter ᵐ	(CN: *.chtah.com)
+		- reg.newsletter ᵐ	(CN: *.cheetahmail.com)
+		- suggest.search ᵐ
+		- skymovies ᵐ
+		- www.teachers ᵐ
+		- trackmyorder ᵐ
 
-	* Some pages redirect to http
+	ᶜ Missing certificate chain
+	ᵖ Redirects to http
+	ᵐ Mismatched
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- sky.com subdomains:
+		- Images, on:
 
-			- accessibility
-			- accessories
-			- activatemychannels
-			- assets
-			- business
-			- buy
-			- contactus
-			- customerrewards
-			- diagnostics	(→ prod-diagnostics.herokuapp.com)
-			- global
-			- helpforum
-			- interest
-			- metrics	(→ sky-com.d1.sc.omtrdc.net)
-			- my
-			- myaccount
-			- myhelprequests
-			- myorders
-			- mysky
-			- newmysky
-			- rainforestrescue
-			- rewards
-			- secure.suggest.search
-			- secure
-			- skyid
-			- smetrics
-			- staging-assets
+			- corporate from proxy.video.sky.com *
+			- corporate from static.video.sky.com *
+
+		- activatemychannels from metrics.sky.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Sky.com (partial)">
 
-	<target host="*.sky.com" />
-		<exclusion pattern="^http://go\.sky\.com/(?!favicon\.ico|resources/|SVOD/|vod/content/Home/Application_Navigation/Sign_in/|vod/page/signUp\.do)" />
-		<exclusion pattern="^http://livingforsport\.skysports\.com/(?!assets/|static/|user/)" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="accessibility.sky.com" /-->
+	<target host="accessories.sky.com" />
+	<target host="activatemychannels.sky.com" />
+	<target host="assets.sky.com" />
+	<target host="business.sky.com" />
+	<target host="buy.sky.com" />
+	<target host="careers.sky.com" />
+	<target host="communaltv.sky.com" />
+	<target host="contactus.sky.com" />
+	<target host="corporate.sky.com" />
+	<target host="customerrewards.sky.com" />
+	<target host="diagnostics.sky.com" />
+	<target host="global.sky.com" />
+	<target host="web-toolkit.global.sky.com" />
+	<target host="tv.help.sky.com" />
+	<target host="helpforum.sky.com" />
+	<target host="interest.sky.com" />
+	<target host="player.sky.com" />
+	<target host="my.sky.com" />
+	<target host="myaccount.sky.com" />
+	<target host="myhelprequests.sky.com" />
+	<target host="myorders.sky.com" />
+	<target host="mysky.sky.com" />
+	<target host="newmysky.sky.com" />
+	<target host="newsletter.sky.com" />
+	<target host="payments.sky.com" />
+	<target host="content.ott.sky.com" />
+	<target host="photos.sky.com" />
+	<target host="rainforestrescue.sky.com" />
+	<target host="register.sky.com" />
+	<target host="rewards.sky.com" />
 
+	<target host="secure.api.search.sky.com" />
+	<target host="secure.suggest.search.sky.com" />
+
+	<target host="secure.sky.com" />
+	<target host="servicestatus.sky.com" />
+	<target host="shop.sky.com" />
+	<target host="skyid.sky.com" />
+	<target host="smetrics.sky.com" />
+	<target host="teachers.sky.com" />
+	<target host="proxy.video.sky.com" />
+	<target host="static.video.sky.com" />
+	<target host="www.sky.com" />
+
+	<!--	Complications:
+				-->
+	<target host="sky.com" />
+	<target host="metrics.sky.com" />
+	<target host="f.newsletter.sky.com" />
+	<target host="suggest.search.sky.com" />
+	<target host="www.teachers.sky.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sky\.com/(?:academy/home$|cycling$|helpcentre/$|ireland$|mysky/$|quickbuy/new$|shop(?:/?$|customer-shop/$|skycom/404$)|sitemap$|skyq/$|vote$)" /-->
+		<!--
+			More generally:
+					-->
+		<!--exclusion pattern="^http://www\.sky\.com/(?:academy|cycling|helpcentre|ireland|mysky|quickbuy|shop|sitemap|skyq|vote)(?:$|[?/])" /-->
+		<!--
+			...let's go with a "whitelist" for now...
+								-->
+		<exclusion pattern="^http://www\.sky\.com/+(?!$|\?|(?:findandwatch|tv|watch)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.sky.com/academy/home" />
+			<test url="http://www.sky.com/cycling" />
+			<test url="http://www.sky.com/helpcentre/" />
+			<test url="http://www.sky.com/ireland" />
+			<test url="http://www.sky.com/mysky/" />
+			<test url="http://www.sky.com/quickbuy/new" />
+			<test url="http://www.sky.com/shop" />
+			<test url="http://www.sky.com/shop/customer-shop/" />
+			<test url="http://www.sky.com/shop/store-locator/" />
+			<test url="http://www.sky.com/sitemap" />
+			<test url="http://www.sky.com/skyq/" />
+			<test url="http://www.sky.com/vote" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sky.com/findandwatch/" />
+			<test url="http://www.sky.com/tv/show/box-sets" />
+			<test url="http://www.sky.com/watch/channel/sky-1" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://corporate.sky.com/media-centre/our-blog/2015/business-can-be-both-profitable-and-responsible" /-->
+
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.sky\.com$" name="^(?:countryAKA|hant|just|polarisSplit|skyCEsidsso01|skySSO|skySplit01|uifd)$" /-->
+	<!--securecookie host="^(?:accessibility|rainforestrescue)\.sky\.com$" name="^(?:sessionid|uid)$" /-->
+	<!--securecookie host="^accessories\.sky\.com$" name="^(?:rack\.session|skyCEaccshophub01)$" /-->
+	<!--securecookie host="^business\.sky\.com$" name="^sessionid$" /-->
+	<!--securecookie host="^corporate\.sky\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^diagnostics\.sky\.com$" name="^jwt-token$" /-->
+	<!--securecookie host="^broadband\.diagnostics\.sky\.com$" name="^request_method$" /-->
+	<!--securecookie host="^myorders\.sky\.com$" name="^(?:__VCAP_ID__|JSESSIONID)$" /-->
+	<!--securecookie host="^payments\.sky\.com$" name="^TS[\da-f]+$" /-->
+	<!--securecookie host="^helpforum\.sky\.com$" name="^LithiumUser(?:Info|Secure)$" /-->
+	<!--securecookie host="^shop\.sky\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^teachers\.sky\.com$" name="^uid$" /-->
 
 	<!--	Tracking cookie:
 						-->
-	<securecookie host="^\.sky\.com$" name="^(?:mbox|s_\w+)$" />
-	<securecookie host="^(?:accessibility|business|buy|contactus|helpforum|my|myaccount|myorders|rainforestrescue)\.sky\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:_gat?|mbox|s_\w+)$" />
+	<securecookie host="^(?!www\.sky\.com$)\w" name="." />
 
 
-	<rule from="^http://(accessibility|accessories|activatemychannels|(?:staging-)?assets|business|buy|contactus|customerrewards|global|go|helpforum|interest|secure|smetrics|my|myaccount|myhelprequests|myorders|(?:new)?mysky|rainforestrescue|rewards|secure\.suggest\.search|skyid)\.sky\.com/"
-		to="https://$1.sky.com/" />
-
-	<rule from="^http://diagnostics\.sky\.com/"
-		to="https://prod-diagnostics.herokuapp.com/" />
-
-	<rule from="^http://help\.sky\.com/(favicon\.ico|images/|js/)"
-		to="https://a248.e.akamai.net/f/1982/1/g2/help.sky.com/$1" />
+	<rule from="^http://sky\.com/"
+		to="https://www.sky.com/" />
 
 	<rule from="^http://metrics\.sky\.com/"
-		to="https://sky-com.d1.sc.omtrdc.net/" />
+		to="https://smetrics.sky.com/" />
 
-	<rule from="^http://livingforsport\.skysports\.com/"
-		to="https://livingforsport.skysports.com/" />
+	<rule from="^http://f\.newsletter\.sky\.com/"
+		to="https://f.chtah.com/" />
+
+	<rule from="^http://suggest\.search\.sky\.com/"
+		to="https://secure.suggest.search.sky.com/" />
+
+	<rule from="^http://www\.teachers\.sky\.com/"
+		to="https://teachers.sky.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

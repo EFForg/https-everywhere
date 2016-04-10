@@ -1,0 +1,92 @@
+<!--
+	Sevenoaks District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *sevenoaks.gov.uk:
+
+		- documents ᵃ
+		- pa ʳ
+
+	ᵃ Shows parking.sevenoaks.gov.uk
+	ʳ Refused
+
+
+	Problematic hosts in *sevenoaks.gov.uk:
+
+		- (www.)?planningconsult ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *sevenoaks.gov.uk:
+
+		- cds ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sevenoaks.gov.uk
+
+
+	Mixed content:
+
+		- Images on www from $self ˢ
+	
+	ˢ Secured by us
+
+-->
+<ruleset name="Sevenoaks.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="sevenoaks.gov.uk" />
+	<target host="cds.sevenoaks.gov.uk" />
+	<target host="hrselfservice.sevenoaks.gov.uk" />
+	<target host="parking.sevenoaks.gov.uk" />
+	<target host="portal.sevenoaks.gov.uk" />
+	<target host="selfservice.sevenoaks.gov.uk" />
+	<target host="webpayments.sevenoaks.gov.uk" />
+	<target host="www.sevenoaks.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://cds\.sevenoaks\.gov\.uk/(?:mgPasswordReqst|uuCoverPage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://cds\.sevenoaks\.gov\.uk/+(?![Ss]iteSpecific/|documents/\w+/|ie(?:Logon|RegisterUser)\.aspx|jquery-ui/css/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cds.sevenoaks.gov.uk/ieListDocuments.aspx?MId=1930" />
+			<test url="http://cds.sevenoaks.gov.uk/ieListMeetings.aspx?CommitteeId=134" />
+			<test url="http://cds.sevenoaks.gov.uk/mgParishCouncilDetails.aspx?ID=227" />
+			<test url="http://cds.sevenoaks.gov.uk/mgParishCouncilDetailsList.aspx" />
+			<test url="http://cds.sevenoaks.gov.uk/mgPasswordReqst.aspx" />
+			<test url="http://cds.sevenoaks.gov.uk/mgUserInfo.aspx?UID=117" />
+			<test url="http://cds.sevenoaks.gov.uk/uuCoverPage.aspx?bcr=1" />
+
+			<!--	-ve:
+					-->
+			<test url="http://cds.sevenoaks.gov.uk/SiteSpecific/top-menu-border.jpg" />
+			<test url="http://cds.sevenoaks.gov.uk/ieLogon.aspx?RPID=" />
+			<test url="http://cds.sevenoaks.gov.uk/ieRegisterUser.aspx?RPID=" />
+			<test url="http://cds.sevenoaks.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sevenoaks\.gov\.uk$" name="^SQ_SYSTEM_ID$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!cds\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

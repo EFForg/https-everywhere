@@ -1,0 +1,123 @@
+<!--
+	Tameside Metropolitan Borough Council
+
+	For rules causing MCB, see tameside.gov.uk-mixedcontent.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *tameside.gov.uk:
+
+		- citizen ʳ
+		- lalpacpa ᵈ
+		- online ᵈ
+		- online:8080 ʳ
+		- plandocs ʳ
+		- public ᵈ
+		- webgis2 ᵈ
+		- www ʳ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *tameside.gov.uk:
+
+		- pimsweb ᶜ
+		- web ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˣ Mixed css
+
+
+	Partially covered hosts in *tameside.gov.uk:
+
+		- whatson ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- pimsweb.tameside.gov.uk
+		- secure.tameside.gov.uk
+
+
+	Mixed content:
+
+		- css on web from www.tameside.gov.uk ʳ
+
+		- Images, on:
+		
+			- web from public.tameside.gov.uk ᵈ
+			- web, whatson from www.tameside.gov.uk ʳ
+
+	ᵈ Unsecurable <= dropped
+	ʳ Unsecurable <= refused
+
+-->
+<ruleset name="Tameside.gov.uk (partial)">
+
+	<target host="admission.tameside.gov.uk" />
+	<target host="adultportal.tameside.gov.uk" />
+	<target host="ecitizen.tameside.gov.uk" />
+	<target host="eyf.tameside.gov.uk" />
+	<target host="isppweb.tameside.gov.uk" />
+	<target host="pimsweb.tameside.gov.uk" />
+	<target host="secure.tameside.gov.uk" />
+	<!--target host="web.tameside.gov.uk" /-->
+	<target host="whatson.tameside.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://whatson\.tameside\.gov\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://whatson\.tameside\.gov\.uk/+(?!Account/|[Cc]ommunity[Gg]roup/|Content/|EmailSubscription/|Event/(?:Recurrence|Thumbnail)/|eventscalendar/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://whatson.tameside.gov.uk/?OrganisationName=Church%20of%20Jesus%20Christ%20of%20Latter-day%20Saints" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=Day" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=List" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=Map" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=Month" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=Table" />
+			<test url="http://whatson.tameside.gov.uk/?SearchMode=Week" />
+			<test url="http://whatson.tameside.gov.uk/syndication/getrssfeed/2" />
+
+			<!--	-ve:
+					-->
+			<test url="http://whatson.tameside.gov.uk/Account/LogOn" />
+			<test url="http://whatson.tameside.gov.uk/Account/Register" />
+			<test url="http://whatson.tameside.gov.uk/CommunityGroup/Index" />
+			<test url="http://whatson.tameside.gov.uk/Content/icons/tick.png" />
+			<test url="http://whatson.tameside.gov.uk/EmailSubscription/Create" />
+			<test url="http://whatson.tameside.gov.uk/Event/Recurrence/7073" />
+			<test url="http://whatson.tameside.gov.uk/Event/Thumbnail/7316" />
+			<test url="http://whatson.tameside.gov.uk/eventscalendar/category.asp?catid=11" />
+			<test url="http://whatson.tameside.gov.uk/eventscalendar/index.asp" /><!-- Mixed images -->
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://web.tameside.gov.uk/bluebadge/bluebadge" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pimsweb\.tameside\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^secure\.tameside\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^(?!whatson\.)\w" name="." />
+
+
+	<rule from="^http://adultportal\.tameside\.gov\.uk:14500/"
+		to="https://adultportal.tameside.gov.uk:14500/" />
+
+		<test url="http://adultportal.tameside.gov.uk:14500/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

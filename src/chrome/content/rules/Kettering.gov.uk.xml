@@ -1,0 +1,60 @@
+<!--
+	Kettering Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *kettering.gov.uk:
+
+		- (www.)? ᵐ
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.secure.kettering.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .kettering.gov.uk
+		- consult.kettering.gov.uk
+
+-->
+<ruleset name="Kettering.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.kettering.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="kettering.gov.uk" />
+	<target host="www.kettering.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.kettering\.gov\.uk$" name="^(?:\w{8}|TestCookie)$" /-->
+	<!--securecookie host="^consult\.kettering\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+
+	<securecookie host="^\." name="^TestCookie$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://kettering\.gov\.uk/"
+		to="https://www.kettering.gov.uk/" />
+
+	<!--	s? for protocol-relative links from secure:
+							-->
+	<rule from="^https?://www\.kettering\.gov\.uk/"
+		to="https://www.kettering.gov.uk/" />
+
+		<test url="https://www.kettering.gov.uk/info/100002/business" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

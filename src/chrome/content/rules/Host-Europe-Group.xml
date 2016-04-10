@@ -1,15 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://hosteuropegroup.com/ => https://hosteuropegroup.com/: (7, 'Failed to connect to hosteuropegroup.com port 443: Connection refused')
-Fetch error: http://www.hosteuropegroup.com/ => https://www.hosteuropegroup.com/: (7, 'Failed to connect to www.hosteuropegroup.com port 443: Connection refused')
--->
-<ruleset name="Host Europe Group" default_off='failed ruleset test'>
+	Problematic hosts in *heg.com:
 
+		- dev *
+
+	* Mismatched
+	Mixed content:
+
+		- css from $self *
+
+		- Images, from:
+
+			- designova.net ²
+			- dev.heg.com *
+			- www.heg.com *
+
+	* Secured by us
+	² Not secured by us <= expired
+
+-->
+
+<ruleset name="Host Europe Group" platform="mixedcontent">
+	<target host="heg.org" />
+	<target host="www.heg.org" />
+	<target host="heg.com" />
+	<target host="dev.heg.com" />
+	<target host="www.heg.com" />
+	<target host="heg.co.uk" />
+	<target host="www.heg.co.uk" />
 	<target host="hosteuropegroup.com" />
 	<target host="www.hosteuropegroup.com" />
 
+	<rule from="^http://dev\.heg\.com/"
+		to="https://www.heg.com/" />
 
-	<rule from="^http://(www\.)?hosteuropegroup\.com/"
-		to="https://$1hosteuropegroup.com/" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>

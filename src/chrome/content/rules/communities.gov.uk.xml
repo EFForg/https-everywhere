@@ -1,0 +1,63 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *communities.gov.uk:
+
+		- dclgapps ᵇ
+		- enterprisezones ᵇ
+		- planningguidance ʳ
+
+	ᵇ Shows default page
+	ʳ Refused
+
+
+	Problematic hosts in *communities.gov.uk:
+
+		- core ᶜ
+		- www.local ᵐ
+		- www ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.barrierbusting.communities.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- core.communities.gov.uk
+		- mcis.erdf.communities.gov.uk
+		- logasnet.communities.gov.uk
+
+-->
+<ruleset name="Communities.gov.uk (partial)">
+
+	<target host="barrierbusting.communities.gov.uk" />
+	<!--target host="core.communities.gov.uk" /-->
+	<target host="mcis.erdf.communities.gov.uk" />
+	<target host="logasnet.communities.gov.uk" />
+	<target host="righttobuy.communities.gov.uk" />
+
+	<target host="*.righttobuy.communities.gov.uk" /><!--	STS header includes includeSubdomains	-->
+
+		<test url="http://www.righttobuy.communities.gov.uk/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^core\.communities\.gov\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^mcis.erdf\.communities\.gov\.uk$" name="^(?:ASP\.NET_SessionId|MCISAuth)$" /-->
+	<!--securecookie host="^logasnet\.communities\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

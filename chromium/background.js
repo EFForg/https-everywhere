@@ -22,9 +22,8 @@ function loadExtensionFile(url, returnType) {
 
 
 // Rules are loaded here
-var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
-var rule_list = 'rules/default.rulesets';
-all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+var all_rules = new RuleSets(localStorage);
+all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
 
 var USER_RULE_KEY = 'userRules';
@@ -36,6 +35,11 @@ var switchPlannerEnabledFor = {};
 //   switchPlannerInfo[tabId]["rw"/"nrw"][resource_host][active_content][url];
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
+
+// Is HTTPSe enabled, or has it been manually disabled by the user?
+var isExtensionEnabled = true;
+// The setBadgeText API has an abandoned bug: https://crbug.com/170413
+chrome.browserAction.setBadgeText({ text: "" });
 
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
@@ -164,8 +168,8 @@ AppliedRulesets.prototype = {
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = {};
-var domainBlacklist = {};
+var urlBlacklist = new Set();
+var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -177,6 +181,11 @@ var redirectCounter = {};
  * @param details of the handler, see Chrome doc
  * */
 function onBeforeRequest(details) {
+  // If HTTPSe has been disabled by the user, return immediately.
+  if (!isExtensionEnabled) {
+    return;
+  }
+
   var uri = document.createElement('a');
   uri.href = details.url;
 
@@ -207,7 +216,7 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
-  if (canonical_url in urlBlacklist) {
+  if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
 
@@ -215,25 +224,25 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return {cancel: shouldCancel}; }
+  if (potentiallyApplicable.size === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
-    urlBlacklist[canonical_url] = true;
+    urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    domainBlacklist[hostname] = true;
+    domainBlacklist.add(hostname);
     log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
   var newuristr = null;
 
-  for(var i = 0; i < rs.length; ++i) {
-    activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr) {
-      newuristr = rs[i].apply(canonical_url);
+  for (let ruleset of potentiallyApplicable) {
+    activeRulesets.addRulesetToTab(details.tabId, ruleset);
+    if (ruleset.active && !newuristr) {
+      newuristr = ruleset.apply(canonical_url);
     }
   }
 
@@ -459,8 +468,8 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
 function onCookieChanged(changeInfo) {
-  if (!changeInfo.removed && !changeInfo.cookie.secure) {
-    if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
+  if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
+    if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
                     value:changeInfo.cookie.value,
                     path:changeInfo.cookie.path,

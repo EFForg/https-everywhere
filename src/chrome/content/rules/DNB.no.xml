@@ -1,0 +1,72 @@
+<!--
+	DNB Bank
+
+	Other DNB Bank rulesets:
+
+		- Deltager.no.xml
+		- DnBNor.xml
+
+
+	Problematic hosts in *dnb.no:
+
+		- ^ ¹
+		- husrom ² ³
+		- www3 ²
+
+	¹ Refused
+	² Mismatched
+	³ Self-signed
+
+
+	STS header includes includeSubdomains
+
+
+	Insecure cookies are set for these hosts:
+
+		- m.dnb.no
+		- www.dnb.no
+
+
+	Mixed content:
+
+		- css on husrom from fonts.typotheque.com *
+
+	* Secured by us
+
+-->
+<ruleset name="DNB.no (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="*.dnb.no" />
+
+	<!--	Complications:
+				-->
+	<target host="dnb.no" />
+
+		<exclusion pattern="^http://(?:husrom|www3)\.dnb\.no/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://husrom.dnb.no/" />
+			<test url="http://www3.dnb.no/" />
+
+		<test url="http://m.dnb.no/" />
+		<test url="http://markets.dnb.no/" />
+		<test url="http://www.dnb.no/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:m|www)\.dnb\.no$" name="^NorSegdOpSites1SessionID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://dnb\.no/"
+		to="https://www.dnb.no/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
