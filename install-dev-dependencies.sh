@@ -38,5 +38,5 @@ cd test/chromium
 pip install --user -r requirements.txt
 cd -
 
-# Install a hook to run tests before pushing.
+# Install git hook to run tests before pushing.
 ln -sf ../../test.sh .git/hooks/pre-push
