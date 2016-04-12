@@ -1,32 +1,38 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://www.planet-work.fr/ => https://www.planet-work.com/: (28, 'Operation timed out after 15001 milliseconds with 0 bytes received')
-	Other Planet-Work rulesets:
-
-		- On-web.fr.xml
-
-
-	Problematic domains:
-
-		- planet-work.com		(mismatched, CN: www.planet-work.fr)
-		- support.planet-work.com	(works; mismatched, CN: *.on-web.fr)
-		- (www.)planet-work.fr		(expired 2013-05-22)
-
+Other Planet-Work rulesets:
+	- On-web.fr.xml
+	
 -->
-<ruleset name="Planet-Work" default_off='failed ruleset test'>
+<ruleset name="Planet-Work">
 
-	<target host="planet-work.*" />
-	<target host="*.planet-work.com" />
-	<target host="www.planet-work.fr" />
+    <target host="*.planet-work.com" />
+    <target host="www.planet-work.fr" />
+    <target host="planet-work.fr" />
+    <target host="*.pw.fr" />
 
+    <test url="http://www.planet-work.com/" />
+    <test url="http://webmail.planet-work.com/" />
+    <test url="http://clients.planet-work.com/" />
+    <test url="http://api.planet-work.com/" />
+    <test url="http://mysql.planet-work.com/" />
+    <test url="http://planet-work.com/" />
+    <test url="http://www.pw.fr/" />
+    <test url="http://pw.fr/" />
+    <test url="http://api.pw.fr/" />
+    <test url="http://clients.pw.fr/" />
 
-	<securecookie host="^webmail\.planet-work\.com$" name=".+" />
+    <securecookie host="^(webmail|mysql|clients|api|www)\.planet-work\.com$" name=".+" />
 
+    <rule from="^http://(?:www\.)?planet-work\.(?:com|fr)/"
+        to="https://www.planet-work.com/" />
 
-	<rule from="^http://(?:www\.)?planet-work\.(?:com|fr)/"
-		to="https://www.planet-work.com/" />
+    <rule from="^http://(clients|mysql|webmail|api)\.planet-work\.com/"
+        to="https://$1.planet-work.com/" />
 
-	<rule from="^http://(clients|css|webmail|www3)\.planet-work\.com/"
-		to="https://$1.planet-work.com/" />
+    <rule from="^http://pw\.fr/"
+        to="https://www.planet-work.com/" />
+
+    <rule from="^http://(api|www|clients)\.pw\.fr/"
+        to="https://$1.pw.fr/" />
 
 </ruleset>
