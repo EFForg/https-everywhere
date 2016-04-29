@@ -15,8 +15,8 @@
 		- rfr.agent ³
 		- internet ⁵
 
-		- love ²
-		- m.love ²
+		- love ⁴
+		- m.love ᵃ
 		- wap.love ²
 
 		- mailblog ²
@@ -37,6 +37,7 @@
 		- xhtml.wap ²
 		- webmaster ¹
 
+	ᵃ Shows another domain
 	¹ Dropped
 	² Refused
 	³ Plaintext reply
@@ -149,7 +150,7 @@
 			- sales from rss
 			- maps, sales from www.tns-counter.ru *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Mail.ru (partial)">
@@ -283,9 +284,15 @@
 	<target host="*.top.mail.ru" />
 	<target host="wap.mail.ru" />
 
+		<!-- Flash-based players fails load ads if detect redirects. It can issue lower video quality on videohostings like on rutube.ru -->
+		<exclusion pattern="^http://ad\.mail\.ru/crossdomain.xml" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ad.mail.ru/crossdomain.xml" />
+
 		<!--	Redirect to http:
 						-->
-		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$|support/tanks/$)" /-->
 		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
 		<!--exclusion pattern="^http://otvet\.mail\.ru/($|auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
 		<!--exclusion pattern="^http://team\.mail\.ru/($|\?mcsf_action=main_css|favicon\.ico|wp-content/)" /-->
@@ -318,7 +325,13 @@
 			<test url="http://games.mail.ru/favicon.ico" />
 			<test url="http://games.mail.ru/img/18.png" />
 
-		<exclusion pattern="^http://go\.mail\.ru/+(?!favicon\.ico|static/)" />
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://go\.mail\.ru/(?!/*(?:favicon\.ico|static/))" />
 
 			<!--	+ve:
 					-->
@@ -330,11 +343,6 @@
 			<!--	-ve:
 					-->
 			<test url="http://go.mail.ru/static/web/img/opera_bookmark/sd_search_img.png" />
-			
-		<!-- Flash-based players fails load ads if detect redirects. It can issue lower video quality on videohostings like on rutube.ru -->
-		<exclusion pattern="^http://ad\.mail\.ru/crossdomain.xml" />
-	
-		<test url="http://ad.mail.ru/crossdomain.xml" />
 
 		<test url="http://avt-1.foto.mail.ru/" />
 		<test url="http://avt-10.foto.mail.ru/" />
