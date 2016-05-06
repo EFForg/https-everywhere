@@ -1,6 +1,8 @@
 <!--
 	"You'll never own me agaaain (but you can keep our fans)"
 
+	For problematic rules, see muse.mu-problematic.xml.
+
 
 	CDN buckets:
 
@@ -9,7 +11,6 @@
 
 	Problematic hosts in *muse.mu:
 
-		- (www.)? *
 		- board *
 		- preorder *
 
@@ -18,7 +19,10 @@
 
 	Insecure cookies are set for these hosts:
 
+		- muse.mu
 		- board.muse.mu
+		- www.muse.mu
+
 
 	Mixed content:
 
@@ -30,16 +34,23 @@
 
 	<!--	Direct rewrites:
 				-->
+	<target host="muse.mu" />
+	<target host="www.muse.mu" />
+
 	<target host="muse-cdn.warnerartists.com" />
 
 	<!--	Complications:
 				-->
-	<target host="muse.mu" />
 	<!--target host="board.muse.mu" /-->
 	<!--target host="preorder.muse.mu" /-->
-	<target host="www.muse.mu" />
 
-		<exclusion pattern="^http://(?:www\.)?muse\.mu/+(?!(?:_handlers|_iiwm|_popup|_static|_widgets|ugc_1)/|(?:Script|Web)Resource\.axd(?:$|\?))" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://muse\.mu/(?:$|terms/privacy-policy.htm)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?muse\.mu/(?!/*(?:(?:_handlers|_iiwm|_popup|_static|_widgets|siteimg|ugc_1)/|(?:Script|Web)Resource\.axd(?:$|\?)|favicon\.ico))" />
 
 			<!--	+ve:
 						-->
@@ -53,6 +64,7 @@
 			<test url="http://muse.mu/news,q-awards_1701.htm?f=" />
 			<test url="http://muse.mu/news.htm" />
 			<test url="http://muse.mu/store.htm" />
+			<test url="http://muse.mu/terms/privacy-policy.htm" />
 			<test url="http://muse.mu/tour-dates,_1970.htm?" />
 			<test url="http://muse.mu/tour-dates,palacio-de-los-deportes-mxico-city-mexico_1913.htm" />
 			<test url="http://muse.mu/tour-dates.htm" />
@@ -61,19 +73,19 @@
 						-->
 			<test url="http://muse.mu/_static/local/images/logo-muse.png" />
 			<test url="http://muse.mu/_static/shared/images/pixel.gif" />
+			<test url="http://muse.mu/favicon.ico" />
 			<test url="http://muse.mu/siteimg/bgtheme/ugc-1/themes/band/band-2.jpg" />
 			<test url="http://muse.mu/ugc-1/themes/albums/albums-1.jpg" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^muse\.mu$" name="^(?:ASP\.NET_SessionId|ii_Globalisation)$" /-->
 	<!--securecookie host="^board\.muse\.mu$" name="^bbsessionhash$" /-->
+	<!--securecookie host="^www\.muse\.mu$" name="^ASP\.NET_SessionId$" /-->
 
 	<!--securecookie host="^board\.muse\.mu$" name=".+" /-->
 
-
-	<rule from="^http://(?:www\.)?muse\.mu/"
-		to="https://muse-cdn.warnerartists.com/" />
 
 	<rule from="^http:"
 		to="https:" />

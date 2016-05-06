@@ -1,0 +1,218 @@
+<!--
+	Department of Energy and Climate Change
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *decc.gov.uk:
+
+		- gdcashback ⁴
+		- ghgi ᵈ
+		- my2050 ʳ
+		- tools ⁴
+
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *decc.gov.uk:
+
+		- ^ ⁴
+		- aka-etl ᵐ
+		- backclimateaction * ⁴
+		- blog ᵐ
+		- ceo ᵐ
+		- chp ᵐ
+		- chpqa ᵐ
+		- chptools ᵐ
+		- (www.)?coal ᵐ
+		- corwm ᵐ
+		- gdorb ᵉ ᵐ ˢ
+		- mrws ᵐ
+		- og ᵐ
+		- www.og ᵏ
+		- restats ᵐ
+		- www ᵐ
+
+	* Expired, mismatched, and self-signed redirect destination
+	⁴ 404, preemptable redirect
+	ᵉ Expired
+	ᵏ Revoked
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Partially covered hosts in *decc.gov.uk:
+
+		- ^ *
+		- aka-etl *
+		- blog *
+		- ceo *
+		- chp *
+		- chpqa *
+		- chptools *
+		- (www.)?coal *
+		- corwm *
+		- mrws *
+		- og *
+		- restats *
+		- www *
+
+	* Not all paths redirect
+
+
+	These altnames do not exist:
+
+		- econsultation.decc.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- gdorb.decc.gov.uk
+
+-->
+<ruleset name="DECC.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="econsultation.decc.gov.uk" />
+	<target host="etl.decc.gov.uk" />
+	<target host="etltest.decc.gov.uk" />
+	<target host="itportal.decc.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="decc.gov.uk" />
+	<target host="aka-etl.decc.gov.uk" />
+	<target host="blog.decc.gov.uk" />
+	<target host="ceo.decc.gov.uk" />
+	<target host="chp.decc.gov.uk" />
+	<target host="chpqa.decc.gov.uk" />
+	<target host="chptools.decc.gov.uk" />
+	<target host="coal.decc.gov.uk" />
+	<target host="corwm.decc.gov.uk" />
+	<target host="mrws.decc.gov.uk" />
+	<target host="og.decc.gov.uk" />
+	<target host="restats.decc.gov.uk" />
+	<target host="www.decc.gov.uk" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:(?:aka-etl|blog|ceo|chp|chpqa|chptools|coal|www\.coal|corwm|mrws|og|restats|www)\.)?decc\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	See below respective rules for negative cases.
+
+				+ve:
+					-->
+			<test url="http://aka-etl.decc.gov.uk/etl/claim" />
+			<test url="http://blog.decc.gov.uk/2014/05/16/wetland-biomass-to-bioenergy-enters-its-final-phase/" />
+			<test url="http://blog.decc.gov.uk/2014/08/21/green-deal-statistical-release/" />
+			<test url="http://ceo.decc.gov.uk/default.aspx" />
+			<test url="http://chp.decc.gov.uk/cms/chp-finance" />
+			<test url="http://chp.decc.gov.uk/cms/environmental-4" />
+			<test url="http://chpqa.decc.gov.uk/chpqa-documents/" />
+			<test url="http://chptools.decc.gov.uk/developmentmap/" />
+			<test url="http://coal.decc.gov.uk/en/coal/cms/publications/annual_report/annual_report.aspx" />
+			<test url="http://coal.decc.gov.uk/services/licensing/modeldocuments.cfm" />
+			<test url="http://corwm.decc.gov.uk/documentstore/advancedsearch.aspx" />
+			<test url="http://decc.gov.uk/2050" />
+			<test url="http://mrws.decc.gov.uk/en/mrws/cms/home/What_is_geolog/What_is_geolog.aspx" />
+			<test url="http://og.decc.gov.uk/en/olgs/cms/data_maps/data_maps.aspx" />
+			<test url="http://restats.decc.gov.uk/cms/planning-database/" />
+			<test url="http://www.coal.decc.gov.uk/services/planning" />
+			<test url="http://www.decc.gov.uk/mead" />
+			<test url="http://www.decc.gov.uk/severntidalpower" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^gdorb\.decc\.gov\.uk$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/department-of-energy-climate-change" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://aka-etl\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/energy-technology-list" />
+
+		<test url="http://aka-etl.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://blog\.decc\.gov\.uk/.*"
+		to="https://decc.blog.gov.uk/" />
+
+		<test url="http://blog.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://ceo\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/community-energy" />
+
+		<test url="http://ceo.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://chp\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/combined-heat-and-power" />
+
+		<test url="http://chp.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://chpqa\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/combined-heat-power-quality-assurance-programme" />
+
+		<test url="http://chpqa.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://chptools\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/publications/combined-heat-and-power-chp-technology" />
+
+		<test url="http://chptools.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?coal\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/the-coal-authority" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://corwm\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/committee-on-radioactive-waste-management" />
+
+		<test url="http://corwm.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://mrws\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/policies/managing-the-use-and-disposal-of-radioactive-and-nuclear-substances-and-waste" />
+
+		<test url="http://mrws.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://og\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/department-of-energy-climate-change" />
+
+		<test url="http://og.decc.gov.uk/?" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://restats\.decc\.gov\.uk/.*"
+		to="https://www.gov.uk/government/collections/renewables-statistics" />
+
+		<test url="http://restats.decc.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

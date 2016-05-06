@@ -1,0 +1,152 @@
+<!--
+	NB: s://ihelper.../$ redirects to s:... 404
+	?=> fetch test failure
+
+
+	CDN buckets:
+
+		- static.cloud.mts.ru.s3.amazonaws.com
+		- d1j46bxa9z1wjf.cloudfront.net
+
+
+	Problematic hosts in *mts.ru:
+
+		- (www.)? ᵐ
+		- brand ᵐ
+		- nonstop ᶜ
+		- online ᶜ
+		- static ᵐ
+		- vm ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *mts.ru:
+
+		- (www.)?shop ʰ
+
+	ʰ >=1 path redirect to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .mts.ru
+		- cloud.mts.ru
+		- login.mts.ru
+		- oauth.mts.ru
+		- .shop.mts.ru
+		- www.shop.mts.ru
+
+
+	Mixed content:
+
+		- Image, on:
+		
+			- cloud from static.cloud.mts.ru.s3.amazonaws.com
+			- www from static.mts.ru
+
+-->
+<ruleset name="MTS.ru (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="autopay.mts.ru" />
+	<target host="bl.mts.ru" />
+	<target host="cloud.mts.ru" />
+	<target host="ihelper.mts.ru" />
+	<target host="login.mts.ru" />
+	<!--target host="nonstop.mts.ru" /-->
+	<target host="oauth.mts.ru" />
+	<!--target host="online.mts.ru" /-->
+	<target host="pay.mts.ru" />
+	<target host="shop.mts.ru" />
+	<target host="www.shop.mts.ru" />
+
+	<target host="*.ssl.mts.ru" />
+
+		<test url="http://20.ssl.mts.ru/" />
+		<test url="http://anketa.ssl.mts.ru/" />
+		<test url="http://bonus.ssl.mts.ru/" />
+		<test url="http://ensendsms.ssl.mts.ru/" />
+		<test url="http://lk.ssl.mts.ru/" />
+		<test url="http://migration.ssl.mts.ru/" />
+		<test url="http://partners.ssl.mts.ru/" />
+		<test url="http://rabota.ssl.mts.ru/" />
+		<test url="http://sendmms.ssl.mts.ru/" />
+		<test url="http://sendsms.ssl.mts.ru/" />
+		<test url="http://smspro.ssl.mts.ru/" />
+
+	<!--	Complications:
+				-->
+	<target host="vm.mts.ru" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?shop\.mts\.ru/personal/basket/export/mini_basket\.html" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?shop\.mts\.ru/(?!/*(?:$|\?|bitrix/(?:components|templates|tmp)/|design/css/|design/jscroll/.+\.css|favicon\.ico|images/|personal/basket/export/[^/]+\.css|upload/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.mts.ru/personal/basket/export/mini_basket.html" />
+			<test url="http://www.shop.mts.ru/avto-elektronika/" />
+			<test url="http://www.shop.mts.ru/gps-trekery/" />
+			<test url="http://www.shop.mts.ru/komplekty_sputnikovogo_tv/" />
+			<test url="http://www.shop.mts.ru/mobilnyye-telefony/" />
+			<test url="http://www.shop.mts.ru/personal/basket/export/mini_basket.html" />
+			<test url="http://www.shop.mts.ru/planshety/intel/" />
+			<test url="http://www.shop.mts.ru/planshety/wexler/" />
+			<test url="http://www.shop.mts.ru/smartfony/" />
+			<test url="http://www.shop.mts.ru/smartfony/credit/" />
+			<test url="http://www.shop.mts.ru/smartfony/huawei/" />
+			<test url="http://www.shop.mts.ru/smartfony/texet/" />
+			<test url="http://www.shop.mts.ru/smarttehnika/" />
+			<test url="http://www.shop.mts.ru/smarttehnika/redmond/" />
+			<test url="http://www.shop.mts.ru/stores/" />
+			<test url="http://www.shop.mts.ru/tarify/" />
+			<test url="http://www.shop.mts.ru/televizory/" />
+			<!--test url="http://www.shop.mts.ru/televizory/samsung/" /-->
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.mts.ru/bitrix/components/mts/index.page.sample/templates/.default/style.css" />
+			<test url="http://shop.mts.ru/bitrix/templates/main/components/bitrix/menu/ListAction/style.css" />
+			<test url="http://shop.mts.ru/bitrix/tmp/10000.png" />
+			<test url="http://shop.mts.ru/design/css/oldcss/FormOverride.css" />
+			<test url="http://shop.mts.ru/design/jscroll/jScrollHorizontalPane.css" />
+			<test url="http://www.shop.mts.ru/favicon.ico" />
+			<test url="http://www.shop.mts.ru/images/samsung-link.png" />
+			<test url="http://www.shop.mts.ru/personal/basket/export/mini_basket.css?v=6" />
+			<test url="http://www.shop.mts.ru/upload/iblock/318/resized_smartfon-galaxy-s7-32gb-g930-lte-black-onyx-1000-1.jpg" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://ihelper.mts.ru/selfcare/product-2-view.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mts\.ru$" name="^(?:AMAuthCookie|BITRIX_SM_BASKET_QUANTITY_MTS_PRIVAT|GeoCookie|MTSSSLCluster|amlbcookie|login\\.mts\\.ru\\.logout)$" /-->
+	<!--securecookie host="^cloud\.mts\.ru$" name="^sessionid$" /-->
+	<!--securecookie host="^ihelper\.mts\.ru$" name="^sessionid-services$" /-->
+	<!--securecookie host="^login\.mts\.ru$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^oauth\.mts\.ru$" name="^(?:JSESSIONID|sentPasswordToNum)$" /-->
+	<!--securecookie host="^online\.mts\.ru$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^pay\.mts\.ru$" name="^(?:CSRFToken|JSESSIONID|regionCode|regionCodeAnonymous|sessionid-services)$" /-->
+	<!--securecookie host="^\.shop\.mts\.ru$" name="^(?:BITRIX_SM_(?:BASKET_QUANTITY_PRIVATE|BASKET_REGIONS|PROMO_SUBSCRIBE|SALE_UID)|PHPSESSID|REGION_CODE)$" /-->
+	<!--securecookie host="^www.shop\.mts\.ru$" name="^VISIT$" /-->
+
+	<securecookie host="^[^.sw]" name="." />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+
+
+	<rule from="^http://vm\.mts\.ru/"
+		to="https://vm.ssl.mts.ru/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

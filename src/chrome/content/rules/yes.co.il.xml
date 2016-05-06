@@ -1,0 +1,50 @@
+<!--
+	For other Bezeq coverage, see bezeq.co.il.xml.
+
+
+	Nonfunctional hosts in *yes.co.il:
+
+		- blog ᵃ
+		- join ᵃ
+
+	ᵃ Shows another domain
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- yes.co.il
+		- .yes.co.il
+		- chat.yes.co.il
+		- img.yes.co.il
+		- secure.yes.co.il
+		- www.yes.co.il
+
+-->
+<ruleset name="Yes.co.il (partial)">
+
+	<target host="yes.co.il" />
+	<target host="chat.yes.co.il" />
+	<target host="img.yes.co.il" />
+	<target host="secure.yes.co.il" />
+	<target host="www.yes.co.il" />
+
+		<!--	$ prints 200 error page, so:
+							-->
+		<test url="http://chat.yes.co.il/ICR/Default.aspx?l=56" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:secure\.|www\.)?yes\.co\.il$" name="^(?:TS[\da-f]{8}|f5_cspm)$" /-->
+	<!--securecookie host="^\.yes\.co\.il$" name="^(?:TS[\da-f]{8}|dtCookie)$" /-->
+	<!--securecookie host="^chat\.yes\.co\.il$" name="^(?:ASP\.NET_SessionId|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^img\.yes\.co\.il$" name="^TS[\da-f]{8}$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|TS[\da-f]{8})" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

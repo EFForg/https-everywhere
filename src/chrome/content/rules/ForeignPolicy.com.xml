@@ -1,17 +1,14 @@
 <!--
+	NB: p://subscribe.../$ redirects to s://...$
+	503 ?=> fetch test failure
+
+
 	CDN buckets:
 
 		- www.foreignpolicy.com.edgesuite.net
 
 			- ideas
 			- killerapps
-
-
-	Nonfunctional hosts in *foreignpolicy.com:
-
-		- fpgroup *
-
-	* Refused
 
 
 	Problematic hosts in *foreignpolicy.com:
@@ -25,23 +22,34 @@
 		- turtlebay ¹
 
 	ᵐ Mismatched
-	¹ Refused
-	² Wordpress
+	¹ Refused, preemptable redirect
+	² Wordpress / mismatched
+
+
+	Partially covered hosts in *foreignpolicy.com:
+
+		- fpgroup ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .foreignpolicy.com
+		- id.foreignpolicy.com
+		- www.foreignpolicy.com
 
 
 	Mixed content:
 
-		- Images, on:
-
-			- ^ from www.slate.com *
-			- ^ from s\d.wp.com *
+		- Images on ^ from www.slate.com *
 
 		- Bugs, on:
 
 			- ^, 2015globalthinkers from wpni.112.2o7.net *
 			- ^ from b.scorecardresearch.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="ForeignPolicy.com (partial)">
@@ -50,6 +58,10 @@
 				-->
 	<target host="foreignpolicy.com" />
 	<target host="2015globalthinkers.foreignpolicy.com" />
+	<target host="fpgroup.foreignpolicy.com" />
+	<target host="id.foreignpolicy.com" />
+	<target host="secure.foreignpolicy.com" />
+	<target host="subscribe.foreignpolicy.com" />
 	<target host="www.foreignpolicy.com" />
 
 	<!--	Complications:
@@ -59,6 +71,40 @@
 	<target host="jobs.foreignpolicy.com" />
 	<target host="thecable.foreignpolicy.com" />
 	<target host="turtlebay.foreignpolicy.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://fpgroup\.foreignpolicy\.com/(?:$|downloads/$|subscribe/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://fpgroup\.foreignpolicy\.com/(?!/*wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://fpgroup.foreignpolicy.com/downloads/" />
+			<test url="http://fpgroup.foreignpolicy.com/subscribe/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://fpgroup.foreignpolicy.com/wp-content/themes/foreignpolicy/img/upper-shadow.png" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://secure.foreignpolicy.com/sites/all/themes/fp/projects/identity/identity-reset.css" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://subscribe.foreignpolicy.com/FRP/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.foreignpolicy\.com" name="^wapo_sess_id$" /-->
+	<!--securecookie host="^id\.foreignpolicy\.com" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|s_v)" />
+	<securecookie host="^(?!fpgroup\.)\w" name="." />
 
 
 	<!--	Redirect drops args and forward slash:

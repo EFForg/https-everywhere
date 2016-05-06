@@ -22,6 +22,7 @@ virtualenv:
 install:
   - pip install -r test/rules/requirements.txt
   - pip install -r test/chromium/requirements.txt
+  - PYCURL_SSL_LIBRARY=openssl pip install --upgrade --force-reinstall --compile pycurl
 env:
   - FIREFOX_VERSION=firefox-latest
   - FIREFOX_VERSION=firefox-esr-latest
@@ -32,5 +33,6 @@ before_script:
   - export FIREFOX=$PWD/firefox/firefox
 script:
   - ./test.sh
+  - test/travis-ruleset-fetch.sh
 sudo: required
 dist: trusty

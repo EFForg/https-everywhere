@@ -1,0 +1,88 @@
+<!--
+	St Albans City and District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *stalbans.gov.uk:
+
+		- gis ᵈ
+		- licensing ᵈ
+		- planning ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *stalbans.gov.uk:
+
+		- connect ᶜ
+		- landlord ᶜ
+		- search ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *stalbans.gov.uk:
+
+		- search ʰ
+
+	ʰ Some paths redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- stalbans.gov.uk
+		- landlord.stalbans.gov.uk
+		- membersinfo.stalbans.gov.uk
+		- popi.stalbans.gov.uk
+		- www.stalbans.gov.uk
+
+-->
+<ruleset name="St Albans.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="stalbans.gov.uk" />
+	<!--target host="connect.stalbans.gov.uk" /-->
+	<!--target host="landlord.stalbans.gov.uk" /-->
+	<target host="mailarray.stalbans.gov.uk" />
+	<target host="membersinfo.stalbans.gov.uk" />
+	<target host="popi.stalbans.gov.uk" />
+	<target host="portal.stalbans.gov.uk" />
+	<target host="www.stalbans.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="search.stalbans.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?stalbans\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^landlord\.stalbans\.gov\.uk$" name="^SSRV_AUTHENTICATION$" /-->
+	<!--securecookie host="^membersinfo\.stalbans\.gov\.uk$" name="^(?:_mglogon_|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^popi\.stalbans\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!search\.)\w" name="." />
+
+
+	<rule from="^http://search\.stalbans\.gov\.uk/"
+		to="https://search3.openobjects.com/" />
+
+		<exclusion pattern="^http://search\.stalbans\.gov\.uk/(?!.+/includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://search.stalbans.gov.uk/jobs-and-careers/" />
+			<test url="http://search.stalbans.gov.uk/kb5/stalbans/search/atoz.page" />
+			<test url="http://search.stalbans.gov.uk/sitetools/sitemap.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://search.stalbans.gov.uk/kb5/stalbans/search/includes/images/bullets.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,80 @@
+<!--
+	Derbyshire County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *derbyshire.gov.uk:
+
+		- dcas ᵈ
+		- localoffer ᵈ
+		- search ᵈ
+		- splitapps ᵈ
+		- thehub ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *derbyshire.gov.uk:
+
+		- bline ᵈ
+		- derbyshiremaps ᵈ
+
+	ᵈ Dropped, preemptable redirect
+
+
+	Insecure cookies are set for these hosts:
+
+		- jobs.derbyshire.gov.uk
+		- maps.derbyshire.gov.uk
+		- observatory.derbyshire.gov.uk
+
+-->
+<ruleset name="Derbyshire.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="derbyshire.gov.uk" />
+	<target host="jobs.derbyshire.gov.uk" />
+	<target host="maps.derbyshire.gov.uk" />
+	<target host="observatory.derbyshire.gov.uk" />
+	<target host="www.derbyshire.gov.uk" />
+	<target host="your.derbyshire.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="bline.derbyshire.gov.uk" />
+	<target host="derbyshiremaps.derbyshire.gov.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://maps.derbyshire.gov.uk/connect/analyst/?mapcfg=portal" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jobs\.derbyshire\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^maps\.derbyshire\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^observatory\.derbyshire\.gov\.uk$" name="^(?:ASP\.NET_SessionId|ias\.Locale|ias\.PreferredItemCount)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://bline\.derbyshire\.gov\.uk/.*"
+		to="https://derbyshireyouthinc.com/default.asp?rd=bline" />
+
+		<test url="http://bline.derbyshire.gov.uk/404.asp" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://derbyshiremaps\.derbyshire\.gov\.uk/.*"
+		to="https://www.derbyshire.gov.uk/council/partnerships/derbyshire_mapping_portal/" />
+
+		<test url="http://derbyshiremaps.derbyshire.gov.uk/launch_portal.asp?style=cbc" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
