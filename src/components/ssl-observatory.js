@@ -315,7 +315,7 @@ SSLObservatory.prototype = {
     }
 
     var hexArr = [];
-    for (i in h){
+    for (var i in h){
       hexArr.push(toHexString(h.charCodeAt(i)));
     }
     return hexArr.join("").toUpperCase();
