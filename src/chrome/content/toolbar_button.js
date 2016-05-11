@@ -223,9 +223,9 @@ httpsEverywhere.toolbarButton = {
 
     var prefExists = sp.getPrefType(tb.COUNTER_PREF);
 
-    // the default behavior is to show the rulesets applied counter.
-    // if no preference exists (default) or its enabled, show the counter
-    return !prefExists || sp.getBoolPref(tb.COUNTER_PREF);
+    // the default behavior is to not show the rulesets applied counter.
+    // if no preference exists (default) don't show the counter
+    return prefExists && sp.getBoolPref(tb.COUNTER_PREF);
   },
 
   /**

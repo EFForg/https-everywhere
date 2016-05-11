@@ -94,11 +94,17 @@ else
         fi
 fi
 
-# Prepare packages suitable for uploading to EFF and AMO, respectively.
+# Prepare packages suitable for uploading to EFF and AMO, respectively. + CLIQZ
 [ -d pkg ] || mkdir pkg
 rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
+
+# CLIQZ
+rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
+cp -a translations/* pkg/xpi-cliqz/chrome/locale/
+rsync -a --delete pkg/xpi-cliqz/ pkg/xpi-amo
+
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
 # Also, it has a different id than the eff-hosted version, because Firefox now
 # requires us to upload the eff-hosted version to an unlisted extension on AMO
@@ -108,6 +114,12 @@ sed -i.bak -e '/updateKey/d' -e '/updateURL/d' \
  -e 's,<em:id>https-everywhere-eff@eff.org</em:id>,<em:id>https-everywhere@eff.org</em:id>,' \
  pkg/xpi-amo/install.rdf
 rm pkg/xpi-amo/install.rdf.bak
+
+# same as above holds for CLIQZ
+sed -i.bak -e '/updateKey/d' -e '/updateURL/d' \
+ -e 's,<em:id>https-everywhere-eff@eff.org</em:id>,<em:id>https-everywhere@cliqz.com</em:id>,' \
+ pkg/xpi-cliqz/install.rdf
+rm pkg/xpi-cliqz/install.rdf.bak
 
 # Used for figuring out which branch to pull from when viewing source for rules
 GIT_OBJECT_FILE=".git/refs/heads/master"
@@ -122,6 +134,7 @@ rm -f "${XPI_NAME}-eff.xpi"
 rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
+python2.7 utils/create_xpi.py -n "${XPI_NAME}-cliqz.xpi" -x ".build_exclusions" "pkg/xpi-cliqz"
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"

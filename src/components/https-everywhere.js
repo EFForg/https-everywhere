@@ -578,6 +578,8 @@ HTTPSEverywhere.prototype = {
   },
 
   maybeShowObservatoryPopup: function() {
+    return; //Observatory disabled in CLIQZ
+
     // Show the popup at most once.  Users who enabled the Observatory before
     // a version that would have shown it to them, don't need to see it
     // again.
