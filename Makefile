@@ -9,7 +9,7 @@ prerelease: pkg
 pkg:
 	mkdir pkg
 clean:
-	rm -rf pkg/xpi-amo/ pkg/xpi-eff/
+	rm -rf pkg/xpi-amo/ pkg/xpi-eff/ pkg/xpi-cliqz/
 	rm -f pkg/*.xpi
 	rm -f src/chrome/content/rules/default.rulesets
 
