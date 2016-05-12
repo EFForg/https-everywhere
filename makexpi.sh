@@ -138,7 +138,7 @@ python2.7 utils/create_xpi.py -n "${XPI_NAME}-cliqz.xpi" -x ".build_exclusions" 
 
 echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
-echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
+echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi and ${XPI_NAME}-cliqz.xpi"
 
 bash utils/android-push.sh "$XPI_NAME-eff.xpi"
 
