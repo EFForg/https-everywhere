@@ -20,7 +20,7 @@
 # releases signed by EFF :/.  We should find a more elegant arrangement.
 
 cd $(dirname $0)
-RULESETS_JSON="$PWD/pkg/rulesets.json"
+RULESETS_JSON=pkg/rulesets.json
 
 if [ -n "$1" ]; then
   BRANCH=`git branch | head -n 1 | cut -d \  -f 2-`
@@ -39,7 +39,7 @@ echo "Building chrome version" $VERSION
 [ -e pkg/crx ] && rm -rf pkg/crx
 
 # Clean up obsolete ruleset databases, just in case they still exist.
-rm -f "$PWD/src/chrome/content/rules/default.rulesets" "$PWD/src/defaults/rulesets.sqlite"
+rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
