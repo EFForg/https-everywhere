@@ -282,9 +282,10 @@ def cli():
 	checkNonmatchGroups = False
 	if config.has_option("rulesets", "check_nonmatch_groups"):
 		checkNonmatchGroups = config.getboolean("rulesets", "check_nonmatch_groups")
+	checkTestFormatting = False
+	if config.has_option("rulesets", "check_test_formatting"):
+		checkTestFormatting = config.getboolean("rulesets", "check_test_formatting")
 	certdir = config.get("certificates", "basedir")
-	if config.has_option("rulesets", "check_coverage"):
-		checkCoverage = config.getboolean("rulesets", "check_coverage")
 	if config.has_option("rulesets", "skiplist"):
 		skiplist = config.get("rulesets", "skiplist")
 		with open(skiplist) as f:
@@ -326,6 +327,7 @@ def cli():
 	rulesets = []
 	coverageProblemsExist = False
 	nonmatchGroupProblemsExist = False
+	testFormattingProblemsExist = False
 	for xmlFname in xmlFnames:
 		logging.debug("Parsing %s", xmlFname)
 		if skipFile(xmlFname):
@@ -351,6 +353,12 @@ def cli():
 			problems = ruleset.getNonmatchGroupProblems()
 			for problem in problems:
 				nonmatchGroupProblemsExist = True
+				logging.error(problem)
+		if checkTestFormatting:
+			logging.debug("Checking test formatting for '%s'." % ruleset.name)
+			problems = ruleset.getTestFormattingProblems()
+			for problem in problems:
+				testFormattingProblemsExist = True
 				logging.error(problem)
 		trie.addRuleset(ruleset)
 		rulesets.append(ruleset)
@@ -423,6 +431,9 @@ def cli():
 			return 1 # exit with error code
 	if checkNonmatchGroups:
 		if nonmatchGroupProblemsExist:
+			return 1 # exit with error code
+	if checkTestFormatting:
+		if testFormattingProblemsExist:
 			return 1 # exit with error code
 	return 0 # exit with success
 
