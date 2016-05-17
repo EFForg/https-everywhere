@@ -36,7 +36,7 @@ python ./xpi-sign/xpisign.py \
 
 echo "CLIQZ: upload"
 source $SECURE_PATH/upload-creds.sh
-aws s3 cp pkg/$SIGNED_XPI_NAME $S3_UPLOAD_URL
+aws s3 cp pkg/$SIGNED_XPI_NAME $S3_UPLOAD_URL --acl public-read
 echo "XPI uploaded to: ${S3_UPLOAD_URL}"
 
 echo "CLIQZ: publish"
