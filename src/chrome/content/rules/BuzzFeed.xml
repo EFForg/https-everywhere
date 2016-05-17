@@ -1,9 +1,4 @@
 <!--
-	Other BuzzFeed rulesets:
-
-		- buzzfed.com.xml
-
-
 	CDN buckets:
 
 		- buzzfeed-static.s3.amazonaws.com
@@ -21,14 +16,21 @@
 			- s3-ak.buzzfeed.com
 
 
-	Nonfunctional hosts in *buzzfeed.com:
+	Nonfunctional hosts:
 
-		- ct ⁴
+		- ^buzzfeed.com "
+		- blog.buzzfeed.com "
+		- ct.buzzfeed.com ⁴
+		- get.buzzfeed.com *
+		- insights.buzzfeed.com *
 
-	⁴ 404
+		- ^buzzfed.com ⁴
+		- kik.buzzfed.com *
+		- s3-ec.buzzfed.com ⁴
 
-
-	^buzzfeed.com: Refused
+	⁴ Mismatch
+	* Timeout
+	" Refused
 
 
 	Insecure cookies are set for these domains:
@@ -36,7 +38,7 @@
 		- .buzzfeed.com
 
 -->
-<ruleset name="BuzzFeed.com (partial)">
+<ruleset name="BuzzFeed">
 
 	<!--	Direct rewrites:
 				-->
@@ -44,19 +46,29 @@
 	<target host="s3-ak.buzzfeed.com" />
 	<target host="webappstatic.buzzfeed.com" />
 	<target host="www.buzzfeed.com" />
+	<target host="s3-ak.buzzfed.com" />
+	<target host="documents.buzzfeed.com" />
+	<target host="img.buzzfeed.com" />
+	<target host="webappstatic.buzzfeed.com" />
+	<target host="abeagle.buzzfeed.com" />
 
 	<!--	Complications:
 				-->
 	<target host="buzzfeed.com" />
+	<target host="s3-ec.buzzfed.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.buzzfeed\.com$" name="^(?:bf-browser-language|bf-geo-country)$" /-->
-
 	<securecookie host="^\w" name="." />
 
 
+	<!--	Complications:
+				-->
+	<rule from="^http://s3-ec\.buzzfed\.com/"
+		to="https://s3-ak.buzzfed.com/" />
+	<rule from="^http://buzzfed\.com/"
+		to="https://www.buzzfed.com/" />
 	<rule from="^http://buzzfeed\.com/"
 		to="https://www.buzzfeed.com/" />
 
