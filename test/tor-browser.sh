@@ -29,6 +29,8 @@ PROFILE_DIRECTORY="$(mktemp -d)"
 trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
 tar -Jxvf $1 -C $PROFILE_DIRECTORY > /dev/null
 HTTPSE_INSTALL_DIRECTORY=$PROFILE_DIRECTORY/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default/extensions/https-everywhere-eff@eff.org
+echo 'pref("extensions.https_everywhere.log_to_stdout", true);' >> $PROFILE_DIRECTORY/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
+echo 'pref("extensions.https_everywhere.LogLevel", 0);' >> $PROFILE_DIRECTORY/tor-browser_en-US/Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
 # Remove the prebundled HTTPSE
 rm -rf $HTTPSE_INSTALL_DIRECTORY
 
@@ -45,7 +47,7 @@ if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
 fi
 
 echo "running tor browser"
-$PROFILE_DIRECTORY/tor-browser_en-US/Browser/start-tor-browser ${@:2}
+$PROFILE_DIRECTORY/tor-browser_en-US/Browser/start-tor-browser --verbose ${@:2}
 
 shasum=$(openssl sha -sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"
