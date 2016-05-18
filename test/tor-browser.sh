@@ -22,6 +22,8 @@ die() {
 
 # Unzip the Tor Browser archive to a temporary directory
 if [ ! -f "$1" ] && [ "`echo $1 | tail -c 8 | head -c 7`" != ".tar.xz" ]; then
+  echo "Usage: $0 [path_to_tor_archive]"
+  echo
   die "File provided is not a valid Tor Browser archive."
 fi
 
