@@ -1,0 +1,171 @@
+<!--
+	Hertfordshire County Council
+
+	For rules causing false/broken MCB, see Hertsdirect.org-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *hertsdirect.org:
+
+		- calm ᵈ
+		- childhoodnews ᵈ
+		- directory ᵃ
+		- gisinfo ᵈ
+		- parentingcourses ᵃ
+		- webmaps ᵈ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+
+
+	Problematic hosts in *hertsdirect.org:
+
+		- ^ ᵐ
+		- cmis *
+		- drivertraining ˣ
+
+	* Redirect loop for /$
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Partially covered hosts in *hertsdirect.org:
+
+		- (www.)? ʰ
+		- childcarejobs ʰ
+		- m ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- childcarejobs.hertsdirect.org
+		- drivertraining.hertsdirect.org
+		- savercards.hertsdirect.org
+
+
+	Mixed content:
+
+		- css on drivertraining from www.hertsdirect.org ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="hertsdirect.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="childcarejobs.hertsdirect.org" />
+	<target host="cmis.hertsdirect.org" />
+	<!--target host="drivertraining.hertsdirect.org" /-->
+	<target host="m.hertsdirect.org" />
+	<target host="savercards.hertsdirect.org" />
+	<target host="www.hertsdirect.org" />
+
+	<!--	Complications:
+				-->
+	<target host="hertsdirect.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://childcarejobs\.hertsdirect\.org/(?:default|helpdesk/default|younginherts/recruitment/vacancy/vacancySearch)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://childcarejobs\.hertsdirect\.org/+(?!(?:[Ll]ogin|Resources)\.aspx|css/|images/|younginherts/registration(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://childcarejobs.hertsdirect.org/default.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/helpdesk/default.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/recruitment/vacancy/vacancyDetails.aspx?vacancyID=53332" />
+			<test url="http://childcarejobs.hertsdirect.org/recruitment/vacancy/vacancyDetails.aspx?vacancyID=53364" />
+			<test url="http://childcarejobs.hertsdirect.org/younginherts/recruitment/vacancy/vacancySearch.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/younginherts/recruitment/vacancy/vacancySearch.aspx?VacancyType=childcare" />
+			<test url="http://childcarejobs.hertsdirect.org/younginherts/recruitment/vacancy/vacancySearch.aspx?VacancyType=support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://childcarejobs.hertsdirect.org/Contacts.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/Login.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/younginherts/registration/NoEmailAddress.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/younginherts/registration/termsandconditions.aspx" />
+			<test url="http://childcarejobs.hertsdirect.org/Resources.aspx" />
+
+		<!--	Redirect loop:
+						-->
+		<exclusion pattern="^http://cmis\.hertsdirect\.org/$" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://m\.hertsdirect\.org/(?:$|dist/|docs/pdf/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://m\.hertsdirect\.org/+(?!css/|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://m.hertsdirect.org/dist/css/bootstrap_branch.css" />
+			<test url="http://m.hertsdirect.org/libraryeventtickets" />
+
+			<!--	-ve:
+					-->
+			<test url="http://m.hertsdirect.org/css/responsiveslides_carousel.css" />
+			<test url="http://m.hertsdirect.org/favicon.ico" />
+			<test url="http://m.hertsdirect.org/images/interface/govmetric_orangeface28x28.gif" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.hertsdirect\.org/(?:$|drivertraining/html/|services/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?hertsdirect\.org/+(?!css/|droppedkerbs(?:$|[?/])|eservices/(?:analytics/|images/|scripts/.+\.css|styles/)|favicon\.ico|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.hertsdirect.org/accessibility/bslvideos/" />
+			<test url="http://www.hertsdirect.org/atozofservices/" />
+			<test url="http://www.hertsdirect.org/business/" />
+			<test url="http://www.hertsdirect.org/contact/" />
+			<test url="http://www.hertsdirect.org/drivertraining/html/styles/main.css" />
+			<test url="http://www.hertsdirect.org/help/" />
+			<test url="http://www.hertsdirect.org/importantnews/" />
+			<test url="http://www.hertsdirect.org/services/" />
+			<test url="http://www.hertsdirect.org/services/libraries/online/libapp/" />
+			<test url="http://www.hertsdirect.org/translations/" />
+			<test url="http://www.hertsdirect.org/your-community/" />
+			<test url="http://www.hertsdirect.org/your-council/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hertsdirect.org/css/events_calendar_style.css" />
+			<test url="http://www.hertsdirect.org/droppedkerbs" />
+			<test url="http://www.hertsdirect.org/eservices/analytics/piwik.php?idsite=1" />
+			<test url="http://www.hertsdirect.org/eservices/images/bg_nav.gif" />
+			<test url="http://www.hertsdirect.org/eservices/scripts/colorbox/example1/colorbox.css" />
+			<test url="http://www.hertsdirect.org/eservices/styles/jpecrga-default.css" />
+			<test url="http://www.hertsdirect.org/favicon.ico" />
+			<test url="http://www.hertsdirect.org/images/interface/bg_nearest_search_button.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^childcarejobs\.hertsdirect\.org$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^drivertraining\.hertsdirect\.org$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^savercards\.hertsdirect\.org$" name="^BIGipServer" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!(?:childcarejobs|m|www)\.)\w" name="." />
+
+
+	<rule from="^http://hertsdirect\.org/"
+		to="https://www.hertsdirect.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

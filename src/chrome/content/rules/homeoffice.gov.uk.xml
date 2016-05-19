@@ -1,0 +1,201 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *homeoffice.gov.uk:
+
+		- nrm ᵈ
+		- policerecruitment ᵈ
+		- jobs.sia ʳ
+		- www.sia ᵃ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *homeoffice.gov.uk:
+
+		- (www.)? ᵐ
+		- (www.)?bia ᵐ
+		- (www.)?biapreview ᵐ
+		- (www.)?crimereduction ᵈ
+		- elearning ⁵
+		- (www.)?ind ᵐ
+		- live.irtl ᵐ
+		- (www.)?oisc ᵐ
+		- preventreview ᵈ
+		- probation ᵈ
+		- (www.)?ukba ᵐ
+		- lifeintheuktest.ukba ᵐ
+
+	⁵ 502; preemptable redirect
+	ᵈ Dropped; preemptable redirect
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- amsallegations.homeoffice.gov.uk
+		- aspel.homeoffice.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.elearning.homeoffice.gov.uk
+		- www.points.homeoffice.gov.uk
+		- assessment.sia.homeoffice.gov.uk
+		- www.assessment.sia.homeoffice.gov.uk
+
+
+	Mixed content:
+
+		- Image on dlcu from lrc.businesslink.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Home Office.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.amsallegations.homeoffice.gov.uk" />
+	<target host="www.aspel.homeoffice.gov.uk" />
+	<target host="global-entry.beta.homeoffice.gov.uk" />
+	<target host="dlcu.homeoffice.gov.uk" />
+	<target host="www.elearning.homeoffice.gov.uk" />
+	<target host="informationformps.homeoffice.gov.uk" />
+	<target host="www.points.homeoffice.gov.uk" />
+	<target host="sia.homeoffice.gov.uk" />
+	<target host="assessment.sia.homeoffice.gov.uk" />
+	<target host="www.assessment.sia.homeoffice.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="homeoffice.gov.uk" />
+	<target host="apc.homeoffice.gov.uk" />
+	<target host="www.apc.homeoffice.gov.uk" />
+	<target host="bia.homeoffice.gov.uk" />
+	<target host="www.bia.homeoffice.gov.uk" />
+	<target host="biapreview.homeoffice.gov.uk" />
+	<target host="www.biapreview.homeoffice.gov.uk" />
+	<target host="crimereduction.homeoffice.gov.uk" />
+	<target host="www.crimereduction.homeoffice.gov.uk" />
+	<target host="elearning.homeoffice.gov.uk" />
+	<target host="ind.homeoffice.gov.uk" />
+	<target host="www.ind.homeoffice.gov.uk" />
+	<target host="live.irtl.homeoffice.gov.uk" />
+	<target host="oisc.homeoffice.gov.uk" />
+	<target host="www.oisc.homeoffice.gov.uk" />
+	<target host="preventreview.homeoffice.gov.uk" />
+	<target host="probation.homeoffice.gov.uk" />
+	<target host="www.probation.homeoffice.gov.uk" />
+	<target host="ukba.homeoffice.gov.uk" />
+	<target host="lifeintheuktest.ukba.homeoffice.gov.uk" />
+	<target host="www.ukba.homeoffice.gov.uk" />
+	<target host="www.homeoffice.gov.uk" />
+
+		<!--	/*\w$ does not redirect:
+						-->
+		<exclusion pattern="^http://(?:(?:(?:www\.)?(?:apc|bia|biapreview|ind|oisc|ukba)|lifeintheuktest\.ukba|www)\.)?homeoffice\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	See below respective rules for negative cases.
+
+				+ve:
+					-->
+			<test url="http://homeoffice.gov.uk/101" />
+			<test url="http://apc.homeoffice.gov.uk/default.aspx" />
+			<test url="http://www.apc.homeoffice.gov.uk/index.php" />
+			<!--
+				(SRSLY.)
+						-->
+			<test url="http://bia.homeoffice.gov.uk/asylum/claimingasylum/" />
+			<test url="http://www.bia.homeoffice.gov.uk/asylum/oldercases/" />
+			<test url="http://biapreview.homeoffice.gov.uk/sitecontent/applicationforms/flr/flrfp" />
+			<test url="http://www.biapreview.homeoffice.gov.uk/sitecontent/documents/policyandlaw/modernised/applications" />
+			<test url="http://ind.homeoffice.gov.uk/policyandlaw/guidance/nationalityinstructions/" />
+			<test url="http://www.ind.homeoffice.gov.uk/sitecontent/documents/policyandlaw/modernised/general-grounds-refusing/" />
+			<test url="http://oisc.homeoffice.gov.uk/about_oisc/publication_scheme/oisc_documents/" />
+			<test url="http://www.oisc.homeoffice.gov.uk/how_to_find_a_regulated_immigration_adviser/managing_your_relationship_with_your_adviser" />
+			<test url="http://ukba.homeoffice.gov.uk/contact/" />
+			<test url="http://lifeintheuktest.ukba.homeoffice.gov.uk/htmlsite/refund_10.html" />
+			<test url="http://www.ukba.homeoffice.gov.uk/workingintheuk/" />
+			<test url="http://www.homeoffice.gov.uk/complaints/" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://www.points.homeoffice.gov.uk/gui-sms-jsf" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.elearning\.homeoffice\.gov\.uk$" name="^(?:XSRF-TOKEN|laravel_session)$" /-->
+	<!--securecookie host="^(?:www\.)?assessment\.sia\.homeoffice\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.points\.homeoffice\.gov\.uk$" name="^PRD-PBS-WEB-COOKIE$$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/home-office" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?apc\.homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/animals-in-science-committee" />
+	
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?bia(?:preview)?\.homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/uk-visas-and-immigration" />
+
+	<!--	Redirect drops forward slash and path, but not args:
+									-->
+	<rule from="^http://(?:www\.)?crimereduction\.homeoffice\.gov\.uk/[^?]*"
+		to="https://www.gov.uk/government/policies/crime-prevention" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://elearning\.homeoffice\.gov\.uk/"
+		to="https://www.elearning.homeoffice.gov.uk/" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?(?:ind|ukba)\.homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/uk-visas-and-immigration" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://live\.irtl\.homeoffice\.gov\.uk/"
+		to="https://terrorismlegislationreviewer.independent.gov.uk/" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?oisc\.homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/office-of-the-immigration-services-commissioner" />
+
+	<!--	Redirect drops forward slash and path, but not args:
+									-->
+	<rule from="^http://preventreview\.homeoffice\.gov\.uk/[^?]*"
+		to="https://www.gov.uk/government/policies/counter-terrorism" />
+
+		<test url="http://preventreview.homeoffice.gov.uk/default.aspx" />
+
+	<!--	Redirect drops forward slash and path, but not args:
+									-->
+	<rule from="^http://(?:www\.)?probation\.homeoffice\.gov\.uk/[^?]*"
+		to="https://www.gov.uk/government/policies/crime-prevention" />
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://lifeintheuktest\.ukba\.homeoffice\.gov\.uk/.*"
+		to="https://www.gov.uk/life-in-the-uk-test" />
+
+		<test url="http://lifeintheuktest.ukba.homeoffice.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

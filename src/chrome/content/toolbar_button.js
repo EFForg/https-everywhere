@@ -146,11 +146,15 @@ httpsEverywhere.toolbarButton = {
         'https-everywhere',
         'chrome://https-everywhere/skin/https-everywhere-24.png',
         nBox.PRIORITY_WARNING_MEDIUM,
-      [],
-      function(action) {
-        // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
-        gBrowser.selectedTab = gBrowser.addTab(faqURL);
-      });
+        [
+          { accessKey: 'F',
+            callback: function(ntf, btn) {
+                // see https://developer.mozilla.org/en-US/docs/XUL/Method/appendNotification#Notification_box_events
+                gBrowser.selectedTab = gBrowser.addTab(faqURL);
+            },
+            label: 'FAQ…',
+          }
+        ]);
     }
     gBrowser.removeEventListener("DOMContentLoaded", tb.handleShowHint, true);
   },
@@ -390,6 +394,10 @@ function open_in_tab(url) {
                      .getService(Components.interfaces.nsIWindowMediator);
   var recentWindow = wm.getMostRecentWindow("navigator:browser");
   recentWindow.delayedOpenTab(url, null, null, null, null);
+}
+
+function httpse_chrome_opener(url, prefs) {
+  HTTPSEverywhere.chrome_opener(url, prefs);
 }
 
 // hook event for showing hint

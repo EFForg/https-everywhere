@@ -1,0 +1,74 @@
+<!--
+	Canon Australia
+
+	For other Canon coverage, see Canon.xml.
+
+
+	Nonfunctional hosts in *canon.com.au:
+
+		- ws ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *canon.com.au:
+
+		- my ʷ
+		- worldofeas ⁴
+
+	⁴ 404
+	ʷ Weak DHE key
+
+
+	These altnames do not exist:
+
+		- imagespectrum.canon.com.au
+		- secure.canon.com.au
+		- video.canon.com.au
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- canon.com.au
+		- .staffstore.canon.com.au
+		- .store.canon.com.au
+		- www.canon.com.au
+
+-->
+<ruleset name="Canon.com.au (partial)">
+
+	<target host="canon.com.au" />
+	<!--target host="galleryadmin.canon.com.au" />	404 vs 503 - needs tests -->
+	<!--target host="image.canon.com.au" />	404 vs 503 - needs tests -->
+	<!--target host="my.canon.com.au" /-->
+	<target host="staffstore.canon.com.au" />
+	<target host="store.canon.com.au" />
+	<target host="www.canon.com.au" />
+
+	<!--	Complications:
+				-->
+	<target host="worldofeas.canon.com.au" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?canon\.com\.au$" name="^BIGipServer" /-->
+	<!--securecookie host="^\.(?:staff)?store\.canon\.com\.au$" name="^frontend$" /-->
+	<!--securecookie host="^www\.canon\.com\.au$" name="^(?:ASP\.NET_SessionId|canonPageHistory|wwwau#lang)$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.(?:staff)?store\." name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash but not args:
+					-->
+	<rule from="^http://worldofeas\.canon\.com\.au/[^?]*"
+		to="https://www.canon.com.au/worldofeos/" />
+
+		<test url="http://worldofeas.canon.com.au/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

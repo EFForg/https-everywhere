@@ -1,0 +1,92 @@
+<!--
+	The Bank of New York Mellon
+
+	Other The Bank of New York Mellon rulesets:
+
+		- accessedge.com.xml
+		- bnymellonim.com.xml
+
+
+	Nonfunctional hosts in *bnymellon.com:
+
+		- disclaimer ᵃ
+
+		- bnymellonwealthmanagement.extlb *
+		- melloninstitutional.extlb ᵈ
+		- www.orientalonline.extlb ʳ
+
+		- livewell ᵃ
+		- maintenance *
+		- workbench *
+
+	* Differs from http
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *bnymellon.com:
+
+		- ^ ²
+		- www-accessedge.extlb ᶜ ᵐ
+		- www-bnymellonam.extlb ᵐ
+		- www-colsonservices.extlb ᵐ
+		- www-pershing.extlb3 ᵉ ᵐ
+
+	² 200 blank page; preemptable redirect
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- info.bnymellon.com
+		- jobs.bnymellon.com
+
+-->
+<ruleset name="BNY Mellon.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="im.bnymellon.com" />
+	<target host="info.bnymellon.com" />
+	<target host="jobs.bnymellon.com" />
+	<target host="repoindex.bnymellon.com" />
+	<target host="im.qa.bnymellon.com" />
+	<target host="mmi.bnymellon.com" />
+	<target host="rufusgtabinaries.bnymellon.com" />
+	<target host="talentcommunity.bnymellon.com" />
+	<target host="www.bnymellon.com" />
+
+	<!--	Complications:
+				-->
+	<target host="bnymellon.com" />
+	<!--target host="www-accessedge.extlb.bnymellon.com" /-->
+	<target host="www-colsonservices.extlb.bnymellon.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^info\.bnymellon\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^jobs\.bnymellon\.com$" name="^(?:connect\.sid|i18n|jrasession|session_id)$" /-->
+
+	<securecookie host="^\." name="^_(?:_utm|gat?$|gat_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://bnymellon\.com/"
+		to="https://www.bnymellon.com/" />
+
+	<!--	Redirect drops all:
+					-->
+	<!--rule from="^http://www-accessedge\.extlb\.bnymellon\.com/.*"
+		to="https://www1.accessedge.com/" /-->
+
+	<rule from="^http://www-colsonservices\.extlb\.bnymellon\.com/"
+		to="https://www.colsonservices.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

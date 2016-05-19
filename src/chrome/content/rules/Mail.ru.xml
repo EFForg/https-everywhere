@@ -15,8 +15,8 @@
 		- rfr.agent ³
 		- internet ⁵
 
-		- love ²
-		- m.love ²
+		- love ⁴
+		- m.love ᵃ
 		- wap.love ²
 
 		- mailblog ²
@@ -27,7 +27,6 @@
 		- r2 ¹
 
 		- team ⁴
-		- top ⁵
 		- d4.c8.b0.a2.top
 
 		- torg ⁴
@@ -38,6 +37,7 @@
 		- xhtml.wap ²
 		- webmaster ¹
 
+	ᵃ Shows another domain
 	¹ Dropped
 	² Refused
 	³ Plaintext reply
@@ -74,7 +74,7 @@
 	* Some pages redirect to http
 
 
-	Wilcards covered:
+	Wildcards covered:
 
 		- avt-\d+.foto:
 
@@ -117,6 +117,7 @@
 		- .dn.mail.ru
 		- .games.mail.ru
 		- hi-tech.mail.ru
+		- it.mail.ru
 		- .jd.mail.ru
 		- parapa.mail.ru
 		- pw.mail.ru
@@ -149,7 +150,7 @@
 			- sales from rss
 			- maps, sales from www.tns-counter.ru *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Mail.ru (partial)">
@@ -209,6 +210,8 @@
 	<target host="horo.mail.ru" />
 	<target host="touch.horo.mail.ru" />
 	<target host="img.mail.ru" />
+	<target host="it.mail.ru" />
+	<target host="www.it.mail.ru" />
 	<target host="jd.mail.ru" />
 	<target host="jugger.mail.ru" />
 	<target host="s1.jugger.mail.ru" />
@@ -236,6 +239,7 @@
 	<target host="retina.news.mail.ru" />
 	<target host="touch.news.mail.ru" />
 
+	<target host="opensource.mail.ru" />
 	<target host="touch.otvet.mail.ru" />
 	<target host="parapa.mail.ru" />
 	<target host="pirates.mail.ru" />
@@ -260,6 +264,7 @@
 	<target host="tanks.mail.ru" />
 	<target host="target.mail.ru" />
 	<target host="tel.mail.ru" />
+	<target host="top.mail.ru" />
 	<target host="top-fwz1.mail.ru" />
 	<target host="tv.mail.ru" />
 	<target host="my.tv.mail.ru" />
@@ -279,9 +284,15 @@
 	<target host="*.top.mail.ru" />
 	<target host="wap.mail.ru" />
 
+		<!-- Flash-based players fails load ads if detect redirects. It can issue lower video quality on videohostings like on rutube.ru -->
+		<exclusion pattern="^http://ad\.mail\.ru/crossdomain.xml" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ad.mail.ru/crossdomain.xml" />
+
 		<!--	Redirect to http:
 						-->
-		<!--exclusion pattern="^http://games\.mail\.ru/($|\?from=navi$|support/tanks/$)" /-->
 		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
 		<!--exclusion pattern="^http://otvet\.mail\.ru/($|auth$|favicon\.ico|favicon-(16|32|64)\.png|images/|question/\d+$|s\.css)" /-->
 		<!--exclusion pattern="^http://team\.mail\.ru/($|\?mcsf_action=main_css|favicon\.ico|wp-content/)" /-->
@@ -314,7 +325,13 @@
 			<test url="http://games.mail.ru/favicon.ico" />
 			<test url="http://games.mail.ru/img/18.png" />
 
-		<exclusion pattern="^http://go\.mail\.ru/+(?!favicon\.ico|static/)" />
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://go\.mail\.ru/($|\?module_result=)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://go\.mail\.ru/(?!/*(?:favicon\.ico|static/))" />
 
 			<!--	+ve:
 					-->
@@ -347,6 +364,7 @@
 	<!--securecookie host="^(?:cfire|parapa)\.mail\.ru$" name="^PHPSESSID$" /-->
 	<!--securecookie host="^\.(?:bb|dn|jd)\.mail\.ru$" name="^(?:___mrtc|SESS[\da-f]{32})$" /-->
 	<!--securecookie host="^\.games\.mail\.ru$" name="^(?:gmab|targeting)$" /-->
+	<!--securecookie host="^it\.mail\.ru$" name="^csrftoken$" /-->
 	<!--securecookie host="^hi-tech\.mail\.ru$" name="^last_visits$" /-->
 	<!--securecookie host="^(pro\.)?realty\.mail\.ru$" name="^x_user_id$" /-->
 	<!--securecookie host="^\.realty\.mail\.ru$" name="^(realty_geo|rrbrg|saved_segment)$" /-->
@@ -362,7 +380,7 @@
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.mail\.ru$" name="^(?:FTID|VID|searchuid)$" />
-	<securecookie host="^(?:1link|allods|\.bb|cfire|\.dn|hi-tech|\.jd|parapa|pw)\.mail\.ru$" name=".+" />
+	<securecookie host="^(?:1link|allods|\.bb|cfire|\.dn|hi-tech|it|\.jd|parapa|pw)\.mail\.ru$" name=".+" />
 
 
 	<!--	Redirect drops path and args:

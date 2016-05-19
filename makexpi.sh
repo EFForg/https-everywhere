@@ -16,9 +16,9 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_UNVALIDATED="$PWD/pkg/rulesets.unvalidated.sqlite"
-RULESETS_SQLITE="$PWD/src/defaults/rulesets.sqlite"
+RULESETS_JSON=pkg/rulesets.json
 ANDROID_APP_ID=org.mozilla.firefox
+VERSION=`echo $1 | cut -d "-" -f 2`
 
 [ -d pkg ] || mkdir pkg
 
@@ -45,7 +45,7 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
 
   # Now escape from the horrible mess we've made
   cd ..
-  XPI_NAME="$APP_NAME-$1"
+  XPI_NAME="$APP_NAME-$VERSION"
   cp $SUBDIR/pkg/$XPI_NAME-eff.xpi pkg/
   if ! cp $SUBDIR/pkg/$XPI_NAME-amo.xpi pkg/ 2> /dev/null ; then
     echo Old version does not support AMO
@@ -54,13 +54,16 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   exit 0
 fi
 
-# Only generate the sqlite database if any rulesets have changed. Tried
+# Clean up obsolete ruleset databases, just in case they still exist.
+rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
+
+# Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_UNVALIDATED |\
+  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
     grep -q .
 }
-if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
+if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   # This is an optimization to get the OS reading the rulesets into RAM ASAP;
   # it's useful on machines with slow disk seek times; doing several of these
   # at once allows the IO subsystem to seek more efficiently.
@@ -68,8 +71,8 @@ if [ ! -f "$RULESETS_UNVALIDATED" ] || needs_update ; then
     # Those cover everything but it wouldn't matter if they didn't
     nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
   done
-  echo "Generating sqlite DB"
-  python2.7 ./utils/make-sqlite.py
+  echo "Generating ruleset DB"
+  python2.7 ./utils/make-json.py
 fi
 
 # =============== BEGIN VALIDATION ================
@@ -80,11 +83,7 @@ die() {
   exit 1
 }
 
-# If the unvalidated rulesets have changed, validate and copy to the validated
-# rulesets file.
-if [ "$RULESETS_UNVALIDATED" -nt "$RULESETS_SQLITE" ] ; then
-  bash utils/validate.sh
-fi
+bash utils/validate.sh
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"
@@ -127,7 +126,7 @@ rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
-echo >&2 "Total included rules: `sqlite3 $RULESETS_SQLITE 'select count(*) from rulesets'`"
+echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
 

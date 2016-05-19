@@ -1,8 +1,31 @@
 <!--
-	https://www.foxitsoftware.com/PDF_Editor/ isn't available via https, see
-	https://github.com/EFForg/https-everywhere/issues/1878
+	Nonfunctional hosts in *foxitsoftware.com:
+
+		- blog ¹
+		- forums ¹
+		- tickets ²
+
+	¹ Shows another domain
+	² Refused
+
 -->
-<ruleset name="Foxitsoftware" default_off='does not fully support HTTPS'>
-<target host="*.foxitsoftware.com"/>
-<rule from="^http://www\.foxitsoftware\.com/" to="https://www.foxitsoftware.com/"/>
+<ruleset name="Foxitsoftware.com (partial)">
+
+	<target host="foxitsoftware.com" />
+	<target host="www.foxitsoftware.com" />
+
+		<test url="http://www.foxitsoftware.com/PDF_Editor/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.foxitsoftware\.com$" name="^FoxitWebsite(?:CC|LANG)$" /-->
+	<!--securecookie host="\.www\.foxitsoftware\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

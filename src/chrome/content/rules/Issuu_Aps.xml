@@ -1,40 +1,77 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://issuu.com/ => https://issuu.com/: Cycle detected - URL already encountered: https://issuu.com/
+	Issuu Aps
+
+	Other Issuu Aps rulesets:
+
+		- Isu.pub.xml
+
+
 	CDN buckets:
 
 		- s3.amazonaws.com/feed.issuu.com/
 		- s3.amazonaws.com/sidebar.issuu.com/
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *issuu.com:
 
 		- help *
 
-	* zendesk
+	* Zendesk / redirects to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- issuu.com
+		- .issuu.com
  
 -->
-<ruleset name="Issuu Aps (partial)" default_off='failed ruleset test'>
+<ruleset name="Issuu.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="issuu.com" />
-	<target host="*.issuu.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://issu\.com/$" /-->
-		<!--
-			Exceptions:
+	<target host="e.issuu.com" />
+	<target host="image.issuu.com" />
+	<target host="photo.issuu.com" />
+	<target host="skin.issuu.com" />
+	<target host="static.issuu.com" />
+	<target host="www.issuu.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feed.issuu.com" />
+	<target host="help.issuu.com" />
+	<target host="sidebar.issuu.com" />
+
+		<exclusion pattern="^http://help\.issuu\.com/(?!/*(?:favicon\.ico|images/|system/))" />
+
+			<!--	+ve:
 					-->
-		<exclusion pattern="^http://issu\.com/+(?!favicon\.ico|signin(?:$|[?/]))" />
+			<test url="http://help.issuu.com/hc" />
+			<test url="http://help.issuu.com/hc/communities/public/topics" />
+			<test url="http://help.issuu.com/hc/en-us" />
+			<test url="http://help.issuu.com/hc/en-us/signin" />
+
+			<!--	-ve:
+					-->
+			<test url="http://help.issuu.com/favicon.ico" />
+
+		<test url="http://issuu.com/cornellfieldcrops" />
+
+
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^issuu\.com$" name="^experiment$" /-->
+	<!--securecookie host="^\.issuu\.com$" name="^(?:i18next|iutk)$" /-->
 
 
 	<rule from="^http://(feed|sidebar)\.issuu\.com/"
 		to="https://s3.amazonaws.com/$1.issuu.com/" />
 
-	<rule from="^http://help\.issuu\.com/(?=favicon\.ico|generated/|images/|system/)"
+	<rule from="^http://help\.issuu\.com/"
 		to="https://issuu.zendesk.com/" />
 
-	<rule from="^http://((?:image|skin|static|www)\.)?issuu\.com/"
-		to="https://$1issuu.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

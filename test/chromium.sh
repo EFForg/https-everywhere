@@ -11,6 +11,10 @@ else
     git rev-parse && cd "$(git rev-parse --show-toplevel)"
 fi
 
+# Make sure we have xvfb-run and it's not already set.
+if [ -z "$XVFB_RUN" -a -n "$(which xvfb-run)" ]; then
+  XVFB_RUN=xvfb-run
+fi
 
 # If you just want to run Chromium with the latest code:
 if [ "$1" == "--justrun" ]; then
@@ -21,12 +25,18 @@ if [ "$1" == "--justrun" ]; then
 
 	PROFILE_DIRECTORY="$(mktemp -d)"
 	trap 'rm -r "$PROFILE_DIRECTORY"' EXIT
-	chromium-browser \
+	
+	# Chromium package name is 'chromium' in Debian 7 (wheezy) and later
+	BROWSER="chromium-browser"
+	if [[ "$(lsb_release -is)" == "Debian" ]]; then
+	  BROWSER="chromium"
+	fi
+	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
 		--load-extension=pkg/crx/
 else
 	./makecrx.sh
 	echo "running tests"
 	CRX_NAME="`ls -tr pkg/*.crx | tail -1`"
-	python2.7 test/chromium/script.py $CRX_NAME
+	$XVFB_RUN python2.7 test/chromium/script.py $CRX_NAME
 fi

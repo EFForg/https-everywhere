@@ -1,0 +1,82 @@
+<!--
+	Problematic hosts in *objective.co.uk:
+
+		- ^ ʳ
+		- vitalregen ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .objective.co.uk
+		- (client_vhost).objective.co.uk
+		- www.objective.co.uk
+
+-->
+<ruleset name="Objective.co.uk (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="arun.objective.co.uk" />
+	<target host="barnsley.objective.co.uk" />
+	<target host="basildon.objective.co.uk" />
+	<target host="birmingham.objective.co.uk" />
+	<target host="bracknell-forest-consult.objective.co.uk" />
+	<target host="bromley.objective.co.uk" />
+	<target host="calderdale.objective.co.uk" />
+	<target host="canterbury.objective.co.uk" />
+	<target host="cotsworld.objective.co.uk" />
+	<target host="ea.objective.co.uk" />
+	<target host="epnbc-consult.objective.co.uk" />
+	<target host="highland.objective.co.uk" />
+	<target host="highpeak.objective.co.uk" />
+	<target host="lichfielddc.objective.co.uk" />
+	<target host="maidstone.objective.co.uk" />
+	<target host="manchester.objective.co.uk" />
+	<target host="mansfield.objective.co.uk" />
+	<target host="molevalley.objective.co.uk" />
+	<target host="northumberland.objective.co.uk" />
+	<target host="peterborough.objective.co.uk" />
+	<target host="poole.objective.co.uk" />
+	<target host="plymouth.objective.co.uk" />
+	<target host="rbwm.objective.co.uk" />
+	<target host="scarborough.objective.co.uk" />
+	<target host="sesplan.objective.co.uk" />
+	<target host="sesplan-consult.objective.co.uk" />
+	<target host="sog.objective.co.uk" />
+	<target host="stockport.objective.co.uk" />
+	<target host="swale-consult.objective.co.uk" />
+	<target host="tauntondeane.objective.co.uk" />
+	<target host="tunbridgewells.objective.co.uk" />
+	<target host="wakefield.objective.co.uk" />
+	<target host="wealden.objective.co.uk" />
+	<target host="wiltshire.objective.co.uk" />
+	<target host="wyrebc-consult.objective.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.objective\.co\.uk$" name="^(?:ANONID_FS|ANONID|VISID)\d+$" /-->
+	<!--securecookie host="^(client_vhost)\.objective\.co\.uk$" name="^ServerID$" /-->
+	<!--securecookie host="^www\.objective\.co\.uk$" name="^(?:ASP\.NET_SessionId|visitorDeviceClass)$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?|ANONID_FS\d+|ANONID\d+|VISID\d+)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	$ redirects to v4 over https
+
+		Redirect drops forward slash and args:
+							-->
+	<rule from="^http://([\w-]+)\.objective\.co\.uk/+(?:\?.*)?$"
+		to="https://$1.objective.co.uk/portal" />
+
+	<rule from="^http:"
+		to="https:" />
+
+		<test url="http://wiltshire.objective.co.uk/portal/" />
+
+</ruleset>

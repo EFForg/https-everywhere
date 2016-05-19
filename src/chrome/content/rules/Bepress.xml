@@ -1,15 +1,44 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://bepress.com/ => https://bepress.com/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
+	Problematic hosts in *bepress.com:
+
+		- blog.digitalcommons *
+
+	* Mismatched
+
+
+	Mixed content:
+
+		- css on digitalcommons, law, www from fonts.googleapis.com *
+		- Images on digitalcommons from $self *
+
+	* Secured by us
+
 -->
-<ruleset name="bepress" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="bepress.com (partial)">
 
-	<target host="bepress.com"/>
-	<target host="*.bepress.com"/>
+	<target host="bepress.com" />
+	<target host="*.bepress.com" />
 
-	<securecookie host="^(?:.*\.)?bepress\.com$" name=".*"/>
+		<exclusion pattern="^http://[^/]+\.[^/]+\.bepress\.com/" />
 
-	<rule from="^http://(\w+\.)?bepress\.com/"
-		to="https://$1bepress.com/"/>
+			<!--	+ve:
+					-->
+			<test url="http://blog.digitalcommons.bepress.com/" />
+			<test url="http://blog.digitalcommons.bepress.com/index.htm" />
+			<test url="http://blog.digitalcommons.bepress.com/index.php" />
+
+		<test url="http://assets.bepress.com/" />
+		<test url="http://digitalcommons.bepress.com/" />
+		<test url="http://law.bepress.com/" />
+		<test url="http://network.bepress.com/" />
+		<test url="http://works.bepress.com/" />
+		<test url="http://www.bepress.com/" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

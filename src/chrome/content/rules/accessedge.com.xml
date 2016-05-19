@@ -1,0 +1,52 @@
+<!--
+	For other Bank of New York Mellon coverage, see bnymellon.com.xml.
+
+
+	Problematic hosts in *accessedge.com:
+
+		- www * ᶜ
+		- www1 * ᶜ
+		- www2 * ᶜ
+
+	* Redirect differs
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.accessedge.com
+		- www1.accessedge.com
+		- www2.accessedge.com
+
+-->
+<ruleset name="AccessEdge.com" default_off="missing certificate chain">
+
+	<!--	Complications:
+				-->
+	<target host="www.accessedge.com" />
+	<target host="www1.accessedge.com" />
+	<target host="www2.accessedge.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www[12]?\.accessedge\.com$" name="^(?:BIGipServer|JSESSIONID|TS[\da-f]+)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://www1?\.accessedge\.com/.*"
+		to="https://www1.accessedge.com/" />
+
+		<test url="http://www.accessedge.com/default.aspx" />
+		<test url="http://www1.accessedge.com/index.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://www2\.accessedge\.com/.*"
+		to="https://www2.accessedge.com/" />
+
+		<test url="http://www2.accessedge.com/default.aspx" />
+
+</ruleset>

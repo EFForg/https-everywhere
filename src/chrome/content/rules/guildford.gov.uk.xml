@@ -1,0 +1,135 @@
+<!--
+	Guildford Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *guildford.gov.uk:
+
+		- petitions ᵗ
+
+	ᵗ Reset
+
+
+	Problematic hosts in *guildford.gov.uk:
+
+		- www2 ᶜ ˣ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˣ Mixed css
+
+
+	Partially covered hosts in *guildford.gov.uk:
+
+		- bookings ʰ
+		- www ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames do not exist:
+
+		- guildford.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- bookings.guildford.gov.uk
+		- getinvolved.guildford.gov.uk
+		- www.guildford.gov.uk
+		- www2.guildford.gov.uk
+
+
+	Mixed content:
+
+		- css on www2 from $self *
+		- Images on www2 from $self *
+
+	See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Guildford.gov.uk (partial)">
+
+	<target host="bookings.guildford.gov.uk" />
+	<target host="cdn.guildford.gov.uk" />
+	<target host="getinvolved.guildford.gov.uk" />
+	<target host="payments.guildford.gov.uk" />
+	<target host="www.guildford.gov.uk" />
+	<!--target host="www2.guildford.gov.uk" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://bookings\.guildford\.gov\.uk/(?:$|Security/login\?|fish/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://bookings\.guildford\.gov\.uk/(?!/*(?:assets/|favicon\.ico|mysite/(?!.+\.js)|themes/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://bookings.guildford.gov.uk/Security/login?BackURL=http://bookings.guildford.gov.uk/myaccount" />
+			<test url="http://bookings.guildford.gov.uk/Security/lostpassword" />
+			<test url="http://bookings.guildford.gov.uk/fish/" />
+			<test url="http://bookings.guildford.gov.uk/fish/fish-extra-activities" />
+			<test url="http://bookings.guildford.gov.uk/fish/fish-offsite-activities/" />
+			<test url="http://bookings.guildford.gov.uk/fish/fish-offsite-activities/thorpe-park-4-august/" />
+			<test url="http://bookings.guildford.gov.uk/fish/fish-standard-week/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bookings.guildford.gov.uk/assets/Uploads/Header/bodybg.png" />
+			<test url="http://bookings.guildford.gov.uk/favicon.ico" />
+			<test url="http://bookings.guildford.gov.uk/mysite/javascript/jcarousel/jquery.jcarousel.css" />
+			<test url="http://bookings.guildford.gov.uk/themes/default/css/layout.css" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.guildford\.gov\.uk/(?:article/14239/loginmoreoptions|contact|events|home|websitesurvey)$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.guildford\.gov\.uk/(?!/*(?:favicon\.ico|login(?:$|[?/])|media/)|.+/(?:cs|image)s/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.guildford.gov.uk/article/14239/loginmoreoptions" />
+			<test url="http://www.guildford.gov.uk/bconline" />
+			<test url="http://www.guildford.gov.uk/benefits" />
+			<test url="http://www.guildford.gov.uk/contact" />
+			<test url="http://www.guildford.gov.uk/events" />
+			<test url="http://www.guildford.gov.uk/home" />
+			<test url="http://www.guildford.gov.uk/loanboxes" />
+			<test url="http://www.guildford.gov.uk/locallandcharges" />
+			<test url="http://www.guildford.gov.uk/meetings" />
+			<test url="http://www.guildford.gov.uk/websitesurvey" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.guildford.gov.uk/favicon.ico" />
+			<test url="http://www.guildford.gov.uk/guildford/css/modern.min.css" />
+			<test url="http://www.guildford.gov.uk/guildford/images/cookiepolicy.gif" />
+			<test url="http://www.guildford.gov.uk/login" />
+			<test url="http://www.guildford.gov.uk/media/20730/large-812791-act-one-adventures-logo/thumbnail/large-812791-act-one-adventures-logo.jpg" />
+
+		<test url="http://cdn.guildford.gov.uk/assets/gbc-logo.png" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www2.guildford.gov.uk/publicaccess-isecurityweb/login" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^bookings\.guildford\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^getinvolved\.guildford\.gov\.uk$" name="^ECONSLOGON$" /-->
+	<!--securecookie host="^www\.guildford\.gov\.uk$" name="^(?:ASP\.NET_SessionId|clientvars)$" /-->
+	<!--securecookie host="^www2\.guildford\.gov\.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!bookings\.|www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

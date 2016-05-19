@@ -12,7 +12,6 @@
 		- bugs ³
 		- gitweb ³
 		- leaf ³ ²
-		- www ³
 
 	³ Server sometimes sends no certificate chain
 	² Mixed css
@@ -21,12 +20,11 @@
 	Mixed content:
 
 		- css on leaf from www *
-		- Images on leaf from www *
 
 	* Secured by us
 
  -->
-<ruleset name="DragonFly BSD.org (partial)" default_off="missing certificate chain">
+<ruleset name="DragonFly BSD.org (partial)">
 
 	<!--	Direct rewrites:
 				-->
@@ -39,23 +37,13 @@
 				-->
 	<target host="dragonflybsd.org" />
 
-		<!--	Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://leaf\.dragonflybsd\.org/(?!~|cgi/web-man|manpages/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://leaf.dragonflybsd.org//" />
-			<test url="http://leaf.dragonflybsd.org/mailarchive/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://leaf.dragonflybsd.org/~beket/rt.py" />
-			<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
-			<test url="http://leaf.dragonflybsd.org/manpages/" />
+		<test url="http://leaf.dragonflybsd.org//" />
+		<test url="http://leaf.dragonflybsd.org/cgi/web-man" />
+		<test url="http://leaf.dragonflybsd.org/mailarchive/" />
+		<test url="http://leaf.dragonflybsd.org/manpages/" />
 
 
-	<securecookie host="^bugs\.dragonflybsd\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://dragonflybsd\.org/"

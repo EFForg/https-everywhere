@@ -1,0 +1,84 @@
+<!--
+	Food and Environment Research Agency
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *defra.gov.uk:
+
+		- www.cefas ⁴
+
+		- beebase.fera ³
+		- chlaramap.fera ³
+		- dogs2012.fera ³
+
+		- jncc ᵈ
+		- naei ᵈ
+		- laqm ᵇ
+		- sciencesearch ᵈ
+		- sd ᵖ
+		- uk-air ʰ
+		- wtl ʳ
+
+	³ 403
+	⁴ 404
+	ᵇ Shows default page
+	ᵈ Dropped
+	ʰ Redirects to http
+	ᵖ Plaintext reply
+	ʳ Refused
+
+
+	Problematic hosts in *defra.gov.uk:
+
+		- (www.)? ᵐ
+		- aka ᵐ
+		- aka-sd ᵐ
+		- aka-vmd ᵐ
+		- animalhealth ᵐ
+		- archive ᵐ
+		- darwin ᵐ
+		- www.fera ᵐ
+		- www.rdpenetwork ᵐ
+		- (www.)?rpa ᵐ
+		- smokecontrol ᶜ
+		- vla ᵐ
+		- ww2 ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- secure.services.defra.gov.uk
+
+-->
+<ruleset name="Defra.gov.uk (partial)">
+
+	<target host="consult.defra.gov.uk" />
+	<target host="secure.fera.defra.gov.uk" />
+	<target host="secure.services.defra.gov.uk" />
+	<!--target host="smokecontrol.defra.gov.uk" /-->
+	<target host="vmd.defra.gov.uk" />
+	<target host="www.vmd.defra.gov.uk" />
+
+		<!--	403:
+				-->
+		<exclusion pattern="^http://secure\.fera\.defra\.gov\.uk/$" />
+
+		<test url="http://secure.fera.defra.gov.uk/browse/" />
+		<test url="http://secure.fera.defra.gov.uk/phiw/riskRegister/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.services\.defra\.gov\.uk$" name="^AlteonP$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

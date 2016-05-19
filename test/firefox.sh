@@ -46,6 +46,11 @@ if [ ! -d "$HTTPSE_INSTALL_DIRECTORY" ]; then
   die "Firefox profile does not have HTTPS Everywhere installed"
 fi
 
+# Make sure we have xvfb-run and it's not already set.
+if [ -z "$XVFB_RUN" -a -n "$(which xvfb-run)" ]; then
+  XVFB_RUN=xvfb-run
+fi
+
 # Activate the Firefox Addon SDK.
 pushd addon-sdk
 source bin/activate
@@ -64,19 +69,14 @@ if [ "$1" == "--justrun" ]; then
   if [ $(uname) == Darwin ]; then
     open /Applications/Firefox.app --wait-apps --new --args -no-remote -profile "$PROFILE_DIRECTORY" "$@"
   else
-    firefox -no-remote -profile "$PROFILE_DIRECTORY" "$@"
+    ${FIREFOX:-firefox} -no-remote -profile "$PROFILE_DIRECTORY" "$@"
   fi
 else
   echo "running tests"
-  cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+  $XVFB_RUN cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
 fi
 
 popd
 
-# Echo the version of sqlite3, since the determinism of the build depends on
-# having the same version.
-echo "To reproduce this build (https://wiki.debian.org/ReproducibleBuilds)," \
-     "please use this version of sqlite3:"
-sqlite3 -version
 shasum=$(openssl sha -sha256 "$XPI_NAME")
 echo -e "Git commit `git rev-parse HEAD`\n$shasum"

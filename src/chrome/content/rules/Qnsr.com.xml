@@ -9,23 +9,28 @@
 			- e1.cdn.qnsr.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *qnsr.com:
 
-		- e1.cdn	(akamai)
+		- e1.cdn *
 
-
-	Fully covered subdomains:
-
-		- e1.cdn	(→ o1)
-		- o1
+	* Akamai/mismatched
 
 -->
 <ruleset name="Qnsr.com">
 
-	<target host="*.qnsr.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="o1.qnsr.com" />
+
+	<!--	Complications:
+				-->
+	<target host="e1.cdn.qnsr.com" />
 
 
-	<rule from="^http://(?:e1\.cdn|o1)\.qnsr\.com/"
+	<rule from="^http://e1\.cdn\.qnsr\.com/"
 		to="https://o1.qnsr.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
