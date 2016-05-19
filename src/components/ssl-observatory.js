@@ -128,7 +128,9 @@ function SSLObservatory() {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
 
-  this.testProxySettings();
+  // It is necessary to testProxySettings after the window is loaded, since the
+  // Tor Browser will not be finished establishing a circuit otherwise
+  OS.addObserver(this, "browser-delayed-startup-finished", false);
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -397,6 +399,10 @@ SSLObservatory.prototype = {
           this.submitChain(chainArray, fps, subject.URI.host+":"+subject.URI.port, subject, host_ip, false);
         }
       }
+    }
+
+    if (topic == "browser-delayed-startup-finished") {
+      this.testProxySettings();
     }
   },
 
