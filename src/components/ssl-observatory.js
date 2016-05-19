@@ -772,6 +772,12 @@ SSLObservatory.prototype = {
      */
     this.proxy_test_successful = null;
 
+    if (this.getProxySettings().tor_safe == false) {
+      this.proxy_test_successful = false;
+      this.log(INFO, "Tor check failed: Not safe to check.");
+      return;
+    }
+
     try {
       var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
                               .createInstance(Components.interfaces.nsIXMLHttpRequest);
