@@ -1,5 +1,5 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *youku.com:
 
 		- (www.)? ¹
 		- static.atm ¹
@@ -34,6 +34,7 @@
 		- travel
 		- tv ¹
 		- v ¹
+		- vip ¹
 		- yj ¹
 		- bbs.yj ¹
 		- yuanxian ¹
@@ -44,30 +45,56 @@
 	³ Plaintext reply
 
 
-	Fully covered subdomains:
+	Problematic hosts in *youku.com:
 
-		- login
-		- vip
+		- login *
+		- passport ˣ
+
+	* Protocol-relative inclusions of static.ykimg.com
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains:
+
+		- .youku.com
 
 
 	Mixed content:
 
-		- css on vip from static.youku.com *
+		- css on passport from static.youku.com ʳ
 
-		- Images, on:
+	ʳ Unsecurable <= refused
 
-			- vip from r[1-4].ykimg.com *
-			- vip from static.atm.youku.com *
-			- vip from static.youku.com *
-
-	* Unsecurable <= refused		- 
-		- 
 -->
 <ruleset name="Youku.com (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="login.youku.com" />
-	<target host="vip.youku.com" />
+	<target host="passport.youku.com" />
 
+	<!--	Complications:
+				-->
+	<target host="static.ykimg.com" />
+
+		<exclusion pattern="^http://static\.ykimg\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://static.ykimg.com/yk/lib/css/youku.17b39556b5.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie name="^\.youku\.com$" host="^ykss$" /-->
+
+
+	<!--	Protocol-relative includes on login:
+							-->
+	<rule from="^https://static\.ykimg\.com/"
+		to="http://static.ykimg.com/" downgrade="1" />
+
+		<test url="https://static.ykimg.com/yk/passport/css/login_page.ee46495e24.css" />
 
 	<rule from="^http:"
 		to="https:" />
