@@ -176,7 +176,7 @@ SSLObservatory.prototype = {
 
   findSubmissionTarget: function() {
     // Compute the URL that the Observatory will currently submit to
-    var host = this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+    var host = this.myGetCharPref("server_host");
     // Rebuild the regexp iff the host has changed
     if (host != this.submit_host) {
       this.submit_host = host;
@@ -437,9 +437,13 @@ SSLObservatory.prototype = {
     return false;
   },
 
+  // following two methods are syntactic sugar
   myGetBoolPref: function(prefstring) {
-    // syntactic sugar
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
+  myGetCharPref: function(prefstring) {
+    return this.prefs.getCharPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
   isChainWhitelisted: function(chainhash) {
@@ -828,7 +832,7 @@ SSLObservatory.prototype = {
     // present.  The testingForTor argument is true in the latter case.
     var proxy_settings = ["direct", "", 0];
     this.log(INFO,"in getProxySettings()");
-    var custom_proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
+    var custom_proxy_type = this.myGetCharPref("proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
       this.log(INFO,"CASE: use_tor_proxy");
       // extract torbutton proxy settings
