@@ -21,10 +21,10 @@ for file in $WLISTFILES; do
   # Remove those that no longer exist
   if [ ! -f $file ]; then
     sed -i "/ $file/d" $WLIST
-    echo "$file no longer exists"
+    echo >&2 "Removed $file: file no longer exists"
   # Remove those whose hashes no longer match
   elif ! grep -q $(sha256sum $file) $WLIST; then
     sed -i "/ $file/d" $WLIST
-    echo "$file no longer matches the whitelist hash"
+    echo >&2 "Removed $file: file no longer matches the whitelist hash"
   fi
 done
