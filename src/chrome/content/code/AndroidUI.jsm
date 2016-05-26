@@ -54,7 +54,7 @@ function unloadFromWindow() {
 
 function addToggleItemToMenu(enabled) {
   if (menuId) { aWindow.NativeWindow.menu.remove(menuId); }
-  var menuLabel = enabled ? "HTTPS Everywhere on" : "HTTPS Everywhere off";
+  var menuLabel = enabled ? "HTTPS Everywhere (on)" : "HTTPS Everywhere (off)";
   menuId = aWindow.NativeWindow.menu.add(menuLabel, null, function() {
     popupToggleMenu(aWindow, enabled);
   });

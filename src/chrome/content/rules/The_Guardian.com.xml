@@ -17,6 +17,7 @@
 		- n0tice-static.s3.amazonaws.com
 		- s3.amazonaws.com/soulmates/
 		- witness-static.s3.amazonaws.com
+		- d1mbyzj6lih1pj.cloudfront.net
 		- cdn.theguardian.com.c.footprint.net	← cdn.theguardian.tv
 		- audio.theguardian.tv.c.footprint.net
 		- theguardian.com.d1.sc.omtrdc.net	← hits.theguardian.com
@@ -30,12 +31,9 @@
 
 		- theguardian.com subdomains:
 
-			- discussion ²
 			- feeds ⁴
-			- jobs ¹
 			- observer ⁵
 			- syndication ¹
-			- www ⁶
 
 		- audio.theguardian.tv ¹
 		- cdn.theguardian.tv ¹
@@ -45,17 +43,15 @@
 	³ 404; mismatched, CN: *.a.ssl.fastly.net
 	⁴ Refused
 	⁵ Redirects to www; mismatched, CN: *.a.ssl.fastly.net
-	⁶ Redirects to http, valid cert
 
 
 	Problematic hosts in *theguardian.com:
 
 		- hits ¹
 		- next ¹
-		- register ²
+		- m.jobs ¹
 
 	¹ Mismatched
-	² Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	These altnames don't exist:
@@ -68,14 +64,19 @@
 		- www.witness.theguardian.com
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .theguardian.com
 		- bookshop.theguardian.com
 		- .bookshop.theguardian.com
 		- www.bookshop.theguardian.com
+		- courseproviders.theguardian.com
+		- courses.theguardian.com
+		- jobs.theguardian.com
 		- soulmates.theguardian.com
 		- www.theguardian.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
@@ -83,10 +84,8 @@
 		- Bugs, on:
 
 			- profile, witness from hits.guardian.co.uk *
-			- www from hits.theguardian.com
-			- www from b.scorecardresearch.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="The Guardian.com (partial)">
@@ -96,13 +95,19 @@
 	<target host="theguardian.com" />
 	<target host="bookshop.theguardian.com" />
 	<target host="www.bookshop.theguardian.com" />
+	<target host="courseadmin.theguardian.com" />
+	<target host="courseapi.theguardian.com" />
+	<target host="courseproviders.theguardian.com" />
+	<target host="courses.theguardian.com" />
+	<target host="discussion.theguardian.com" />
 	<target host="embed.theguardian.com" />
 	<target host="hits-secure.theguardian.com" />
 	<target host="id.theguardian.com" />
+	<target host="jobs.theguardian.com" />
 	<target host="membership.theguardian.com" />
 	<target host="oas.theguardian.com" />
 	<target host="profile.theguardian.com" />
-	<!--target host="register.theguardian.com" /-->
+	<target host="register.theguardian.com" />
 	<target host="securedrop.theguardian.com" />
 	<target host="soulmates.theguardian.com" />
 	<target host="subscribe.theguardian.com" />
@@ -121,7 +126,7 @@
 			Exceptions:
 					-->
 
-		<exclusion pattern="^http://(?:www\.)?theguardian\.com/(?!/*(?:crosswords|info|science|technology)(?:$|[?/]))" />
+		<exclusion pattern="^http://(?:www\.)?theguardian\.com/(?!/*(?:business|crosswords|football|info|science|sports|technology)(?:$|[?/]))" />
 
 			<!--	+ve:
 					-->
@@ -129,7 +134,7 @@
 			<test url="http://www.theguardian.com/favicon.ico" />
 			<test url="http://www.theguardian.com/guardian-professional" />
 			<test url="http://www.theguardian.com/help/contact-us" />
-			<!--test url="http://www.theguardian.com/profile/samuel-gibbs" /-->
+			<test url="http://www.theguardian.com/profile/samuel-gibbs" />
 			<test url="http://www.theguardian.com/sustainable-business/2015/sep/30/1984-does-a-cashless-economy-make-for-a-surveillance-state" />
 			<test url="http://www.theguardian.com/travel" />
 			<test url="http://www.theguardian.com/uk-news" />
@@ -138,11 +143,17 @@
 
 			<!--	-ve:
 					-->
+			<test url="http://www.theguardian.com/business" />
+			<test url="http://www.theguardian.com/business/2016/may/02/the-global-economic-growth-funk" />
 			<test url="http://www.theguardian.com/crosswords" />
 			<test url="http://www.theguardian.com/crosswords/crossword-blog" />
+			<test url="http://www.theguardian.com/football" />
+			<test url="http://www.theguardian.com/football/premierleague" />
 			<test url="http://www.theguardian.com/info" />
 			<test url="http://www.theguardian.com/info/developer-blog/2015/aug/12/open-sourcing-grid-image-service" />
 			<test url="http://www.theguardian.com/science/2016/feb/01/human-embryo-genetic-modify-regulator-green-light-research" />
+			<test url="http://www.theguardian.com/sport" />
+			<test url="http://www.theguardian.com/sport/golf" />
 			<test url="http://www.theguardian.com/technology" />
 			<test url="http://www.theguardian.com/technology/2015/may/21/huawei-p8-review-thin-powerful-undercuts-competition" />
 
@@ -154,13 +165,16 @@
 	<!--securecookie host="^\.theguardian\.com$" name="^(?:GU_INT|GU_mtv_id|s_vi)$" /-->
 	<!--securecookie host="^(?:www\.)?bookshop\.theguardian\.com$" name="^AWSELB$" /-->
 	<!--securecookie host="^\.bookshop\.theguardian\.com$" name="^frontend$" /-->
+	<!--securecookie host="^courseproviders\.theguardian\.com$" name="^(?:CourseSeekerSiteSession)$" /-->
+	<!--securecookie host="^courses\.theguardian\.com$" name="^(?:AnonId|CourseSeekerSiteSession)$" /-->
+	<!--securecookie host="^jobs\.theguardian\.com$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
 	<!--securecookie host="^soulmates\.theguardian\.com$" name="^(?:csrftoken|flags)$" /-->
 	<!--securecookie host="^www\.theguardian\.com$" name="^GU_geo_continent$" /-->
 
 	<!--	Tracking cookies set by hits & oas.theguardian.com:
 								-->
-	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH]|s_vi)$" />
-	<securecookie host="^(?:(?:\.|www\.)?bookshop|\.?id|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|OAX$|RMF[DH]$|s_v)" />
+	<securecookie host="^(?:(?:\.|www\.)?bookshop|courseproviders|courses|\.?id|jobs|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
 
 
 	<rule from="^http://hits\.theguardian\.com/"
