@@ -54,17 +54,19 @@ function createRuleLine(ruleset) {
   };
   label.appendChild(checkbox);
 
-  // favicon (from chrome's cache)
-  var favicon = document.createElement("img");
-  favicon.src = "chrome://favicon/";
-  for (var i=0; i < ruleset.rules.length; i++) {
-    var host = hostReg.exec(ruleset.rules[i].to);
-    if (host) {
-      favicon.src += host[0];
-      break;
+  if (!/Firefox/.test(navigator.userAgent)) {
+    // favicon (from chrome's cache)
+    var favicon = document.createElement("img");
+    favicon.src = "chrome://favicon/";
+    for (var i=0; i < ruleset.rules.length; i++) {
+      var host = hostReg.exec(ruleset.rules[i].to);
+      if (host) {
+        favicon.src += host[0];
+        break;
+      }
     }
+    label.appendChild(favicon);
   }
-  label.appendChild(favicon);
 
   // label text
   var text = document.createElement("span");
