@@ -44,7 +44,7 @@ chrome.browserAction.setBadgeText({ text: "" });
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false;
-chrome.storage.sync.get({httpNowhere: false}, function(item) {
+storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
   setIconColor();
 });
