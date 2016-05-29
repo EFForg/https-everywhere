@@ -46,7 +46,6 @@
 		- apps.lenovo.com ¹
 		- forum.lenovo.com ¹
 		- outlet.lenovo.com		($ 404s, some pages redirect to http, some paths work)
-		- ovp.lenovo.com ³
 		- shareit.lenovo.com ¹
 
 		- (www.)lenovovision.com **
@@ -125,6 +124,13 @@
 						-->
 		<exclusion pattern="http://shop\.lenovo\.com/\w\w/\w\w/services-warranty(?:$|\?|/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://shop.lenovo.com/us/en/services-warranty" />
+			<test url="http://shop.lenovo.com/us/en/services-warranty/" />
+			<test url="http://shop.lenovo.com/us/en/services-warranty/?" />
+			<test url="http://shop.lenovo.com/us/en/services-warranty/#" />
+
 			<!--	-ve:
 					-->
 			<test url="http://shop.lenovo.com/ISS_Static/WW/AG/outlet/images/lenb50.png" />
@@ -142,6 +148,13 @@
 			<!--	+ve:
 					-->
 			<test url="http://outlet.lenovo.com/outlet_us/" />
+			<test url="http://outlet.lenovo.com/outlet_us/workstations/" />
+			<test url="http://outlet.lenovo.com/outlet_us/shopping_faq/" />
+			<test url="http://outlet.lenovo.com/outlet_us/tablets/" />
+			<test url="http://outlet.lenovo.com/outlet_us/servers/" />
+			<test url="http://outlet.lenovo.com/outlet_us/desktops/" />
+			<test url="http://outlet.lenovo.com/outlet_us/deals/" />
+			<test url="http://outlet.lenovo.com/outlet_us/contact/" />
 
 			<!--	-ve:
 					-->
@@ -170,6 +183,14 @@
 					-->
 			<test url="http://support.lenovo.com/us/en?redir=y&amp;redirsrc=1" />
 			<test url="http://support.lenovo.com/ca/en/products/laptops-and-netbooks/lenovo-g-series-laptops/lenovo-g480-notebook" />
+			<test url="http://support.lenovo.com/us/en" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds031946" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds030685" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds015007" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds036028" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds105630" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds037646" />
+			<test url="http://support.lenovo.com/us/en/downloads/ds014908" />
 
 			<!--	-ve:
 					-->
@@ -198,8 +219,6 @@
 	<target host="blog.lenovo.com" />
 	<target host="consumersupport.lenovo.com" />
 	<target host="news.lenovo.com" />
-	<target host="ovp.lenovo.com" />
-	<target host="www.partnerinfo.lenovo.com" />
 	<target host="social.lenovo.com" />
 
 		<exclusion pattern="^http://(?:www\.)?lenovo\.co\.uk/(?!$)" />
@@ -208,14 +227,12 @@
 			<test url="http://www.lenovo.co.uk/?" />
 			<test url="http://www.lenovo.co.uk//" />
 
-		<exclusion pattern="^http://(?:blog|consumersupport|news|ovp|www\.partnerinfo|social)\.lenovo\.com/" />
+		<exclusion pattern="^http://(?:blog|consumersupport|news|social)\.lenovo\.com/" />
 
 			<test url="http://blog.lenovo.com/" />
-			<test url="http://consumersupport.lenovo.com" />
-			<test url="http://news.lenovo.com" />
-			<test url="http://ovp.lenovo.com" />
-			<test url="http://www.partnerinfo.lenovo.com" />
-			<test url="http://social.lenovo.com" />
+			<test url="http://consumersupport.lenovo.com/" />
+			<test url="http://news.lenovo.com/" />
+			<test url="http://social.lenovo.com/" />
 
 		<!--	Mixed image:
 					-->
@@ -232,6 +249,13 @@
 
 	<securecookie host="\.lenovo\.com$" name="VISITORID" />
 	<securecookie host="(?:forums|\.?support)\.lenovo\.com$" name=".+" />
+
+	<!-- Fix #1656 -->
+	<exclusion pattern="^http://shop\.lenovo\.com/ISS_Static/" />
+	<exclusion pattern="^http://shop\.lenovo\.com/SEUILibrary/" />
+
+	<test url="http://shop.lenovo.com/ISS_Static/WW/wci3/us/en/fonts/latoLato-Black.ttf" />
+	<test url="http://shop.lenovo.com/SEUILibrary/controller/e/web/LenovoPortal/en_US/wci.workflow:load?page=/WW/site/templates/handlebars/owv2/modal.html" />
 
 	<!--	Tracking cookies:
         These have been observed to break partner referral links and so are
@@ -278,7 +302,7 @@
 
 	<!--	Loops as-is:
 				-->
-	<rule from="^http:///shop\.lenovo\.com/us/en/?(?:\?redir=y&amp;redirsrc=1)?$"
+	<rule from="^http://shop\.lenovo\.com/us/en/?(?:\?redir=y&amp;redirsrc=1)?$"
 		to="https://www.lenovo.com/us/en/?redir=y&amp;redirsrc=1" />
 
 		<test url="http://shop.lenovo.com/us" />
@@ -300,24 +324,16 @@
 
 
 	<!--	https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
-
-		training redirects to training.lenovo.partner-management.com:
 										-->
-	<rule from="^https://www\.lenovo\.com/training/"
-		to="http://www.lenovo.com/training/" downgrade="1" />
-
-		<test url="https://www.lenovo.com/training/" />
 
 	<!--	- Social just redirects to blog
 						-->
-	<rule from="^https://(blog|consumersupport|news|ovp|www\.partnerinfo|social)\.lenovo\.com/"
+	<rule from="^https://(blog|consumersupport|news|social)\.lenovo\.com/"
 		to="http://$1.lenovo.com/" downgrade="1" />
 
-		<!--test url="https://blog.lenovo.com/" /-->
-		<!--test url="https://consumersupport.lenovo.com" /-->
-		<!--test url="https://news.lenovo.com" /-->
-		<!--test url="https://ovp.lenovo.com" /-->
-		<!--test url="https://www.partnerinfo.lenovo.com" /-->
-		<!--test url="https://social.lenovo.com" /-->
+		<test url="https://blog.lenovo.com/" />
+		<test url="https://consumersupport.lenovo.com/" />
+		<test url="https://news.lenovo.com/" />
+		<test url="https://social.lenovo.com/" />
 
 </ruleset>
