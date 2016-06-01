@@ -49,7 +49,7 @@ storage.get({httpNowhere: false}, function(item) {
   setIconColor();
 });
 chrome.storage.onChanged.addListener(function(changes, areaName) {
-  if (areaName === 'sync') {
+  if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
