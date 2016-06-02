@@ -40,11 +40,12 @@ if [ "$RULESETS_CHANGED" ]; then
 
   if [ "$TO_BE_TESTED" ]; then
     # Do the actual test, using https-everywhere-checker.
-    TESTOUTPUT=$(python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1)
-    echo >&2 "$TESTOUTPUT"
+    OUTPUT_FILE=`mktemp`
+    trap 'rm "$OUTPUT_FILE"' EXIT
+    python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
     # Unfortunately, no specific exit codes are available for connection
     # failures, so we catch those with grep.
-    if [[ "$TESTOUTPUT" =~ "ERROR" ]]; then
+    if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
       echo >&2 "Test URL test failed."
       exit 1
     fi
