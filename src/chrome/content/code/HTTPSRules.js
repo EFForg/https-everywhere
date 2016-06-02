@@ -432,7 +432,7 @@ const HTTPSRules = {
    * XML string, which will be parsed on an as-needed basis.
    */
   loadTargets: function() {
-    var loc = "chrome://https-everywhere/content/rulesets.json");
+    var loc = "chrome://https-everywhere/content/rulesets.json";
     var data = RuleWriter.readFromUrl(loc);
     var rules = JSON.parse(data);
     this.targets = rules.targets;
