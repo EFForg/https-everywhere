@@ -2,8 +2,12 @@
 
 	Problematic domains:
 
-		- colorofchange.org		(cannot connect to server)
+		- colorofchange.org *
+		- orig.colorofchange.org *
+		- secure.colorofchange.org *
 		- www.colorofchange.org		(cert name mismatch)
+
+		* Cannot connect to server
 
 	Domains with mixed content blocking (MCB) issues:
 
@@ -12,12 +16,26 @@
 -->
 <ruleset name="ColorOfChange (partial)">
 
+	<target host="colorofchange.org" />
 	<target host="act.colorofchange.org" />
 
 	<securecookie host="^act\.colorofchange\.org$"
 			name=".+" />
 
+	<exclusion pattern="^http://colorofchange\.org/" />
+
+	<test url="http://colorofchange.org/" />
+
 	<rule from="^http:"
 		to="https:" />
+
+	<!--
+		For example, the page at https://act.colorofchange.org/sign/oscars/
+		has a link to https://colorofchange.org/about/terms/ even though
+		the ^colorofchange.org domain does not support HTTPS.
+	-->
+	<rule from="^https://colorofchange\.org/"
+		to="http://colorofchange.org/"
+		downgrade="1" />
 
 </ruleset>
