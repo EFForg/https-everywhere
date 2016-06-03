@@ -1,8 +1,10 @@
 "use strict";
+
 var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
+var storage = backgroundPage.storage;
 
 function e(id) {
   return document.getElementById(id);
@@ -62,7 +64,11 @@ function createRuleLine(ruleset) {
       break;
     }
   }
-  label.appendChild(favicon);
+  var xhr = new XMLHttpRequest();
+  try {
+    xhr.open("GET", favicon.src, true);
+    label.appendChild(favicon);
+  } catch (e) {}
 
   // label text
   var text = document.createElement("span");
@@ -232,11 +238,11 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  return chrome.storage.sync.get(details, callback);
+  return storage.get(details, callback);
 }
 
 function setOption_(opt, value) {
   var details = {};
   details[opt] = value;
-  return chrome.storage.sync.set(details);
+  return storage.set(details);
 }
