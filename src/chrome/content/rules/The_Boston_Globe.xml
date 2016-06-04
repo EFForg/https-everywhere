@@ -1,5 +1,5 @@
 <!--
-	For other New York Times coverage, see NYTimes.xml.
+	For other Boston Globe Media coverage, see Boston_Globe_Media.com.xml.
 
 
 	CDN buckets:
@@ -8,34 +8,49 @@
 		- s3.amazonaws.com/static.rondavu.com/C/Boston_PROD/
 
 
-	Problematic domains:
+	Nonfunctional hosts in *bostonglobe.com:
 
-		- bostonglobe.com	(dropped)
+		- epaper *
+		- spiderbites
+
+	* 404
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- (www.)bostonglobe.com	(^ → www)
+		- Images, on:
+
+			- www from cache.boston.com
+			- www from p.o0bc.com
+
+		- Bugs, on:
+
+			- digitalaccess, www from newyorktimes.112.2o7.net *
+			- digitalaccess from b.scorecardresearch.com *
+
+	* Secured by us
 
 -->
-<ruleset name="The Boston Globe (partial)" platform="mixedcontent">
+<ruleset name="Boston Globe.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bostonglobe.com" />
-	<target host="*.bostonglobe.com" />
-		<!--
-			- Doesn't work
-			- epaper CN: www.pressdisplay.com
-							-->
-		<exclusion pattern="http://(?:epaper|spiderbites)\.bostonglobe\.com/" />
+	<target host="digitalaccess.bostonglobe.com" />
+	<target host="services.bostonglobe.com" />
+	<target host="www.bostonglobe.com" />
 
 
-	<securecookie host=".*\.bostonglobe\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.bostonglobe\.com$" name="^meclabsBostonGlobe$" /-->
+	<!--securecookie host="digitalaccess\.bostonglobe\.com$" name="^(?:PHPSESSID|bg_csrf_cookie)" /-->
+	<!--securecookie host="www\.bostonglobe\.com$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://services\.bostonglobe\.com/"
-		to="https://services.bostonglobe.com/" />
-
-	<rule from="^http://(?:www\.)?bostonglobe\.com/"
-		to="https://www.bostonglobe.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

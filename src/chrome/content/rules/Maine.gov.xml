@@ -2,18 +2,75 @@
 	For other U.S. government coverage, see US-government.xml.
 
 
-	- governor/ redirects to http
-	- local/ 404s
-	- portal/$ differs between http & https
+	Problematic hosts in *maine.gov:
+
+		- legislature ¹
+		- media ²
+
+	¹ Mismatched
+	² Expired
+
+
+	Mixed content:
+
+		- iframe on www1 from www.maine.gov *
+		- flash on media from $self
+
+		- css, on:
+
+			- media, www1 from www.maine.gov *
+			- www1 from fonts.googleapis.com *
+
+		- Images, on:
+
+			- media from $self
+			- media from www.maine.gov *
+
+	* Secured by us
 
 -->
 <ruleset name="Maine.gov (partial)">
 
 	<target host="maine.gov" />
+	<target host="data.maine.gov" />
 	<target host="www.maine.gov" />
+	<target host="www1.maine.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="legislature.maine.gov" />
+
+		<!--exclusion pattern="^http://(?:www\.)?maine\.gov/(?!(?:agriculture|informe|msl|portal/(?:government|online_services)|tools)(?:$|\?|/)|portal/(?:css|images|img)/)" /-->
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www1\.maine\.gov/governor/lepage/(?!css/|images/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www1.maine.gov/governor/lepage/" />
+			<test url="http://www1.maine.gov/governor/lepage/citizen_services/" />
+			<test url="http://www1.maine.gov/governor/lepage/index.shtml" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www1.maine.gov/governor/lepage/css/mobile.css" />
+			<test url="http://www1.maine.gov/governor/lepage/images/flickr.png" />
+
+		<test url="http://www.maine.gov/awt/css2/stylesv2.css" />
+		<test url="http://www.maine.gov/awt/images/maine_gov_logo.gif" />
+		<test url="http://www.maine.gov/governor/" />
+		<test url="http://www.maine.gov/images/rss.gif" />
+		<test url="http://www.maine.gov/local/" />
+		<test url="http://www.maine.gov/online/apps/css/mobile.css" />
+		<test url="http://www.maine.gov/portal/" />
+		<test url="http://www.maine.gov/tools/whatsnew/attach.php?id=607299&amp;an=1" />
 
 
-	<rule from="^http://(www\.)?maine\.gov/((?:agriculture|informe|msl|portal/(?:government|online_services)|tools)(?:$|\?|/)|portal/(?:css|images|img)/)"
-		to="https://$1maine.gov/$2" />
+	<rule from="^http://legislature\.maine\.gov/"
+		to="https://mainelegislature.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

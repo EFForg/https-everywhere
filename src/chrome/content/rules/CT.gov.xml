@@ -1,0 +1,108 @@
+<!--
+	State of Connecticut
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *ct.gov:
+
+		- (www.)? ᵈ
+
+		- appellateinquiry.jud ʳ
+		- civilinquiry.jud ʳ
+		- ersa.jud ʳ
+
+		- www.sde ᵈ
+		- www.veterans ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *ct.gov:
+
+		- portal ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- icm.eRegulations.ct.gov
+		- integration.eRegulations.ct.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- eregulations.ct.gov
+		- www.eregulations.ct.gov
+		- voterregistration.ct.gov
+
+
+	Mixed content:
+
+		- css, on:
+
+			- (www.)?cga from netdna.bootstrapcdn.com ˢ
+			- (www.)?cga, (www.)?jud from fonts.googleapis.com ˢ
+
+		- favicon on (www.)?jud from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="CT.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cga.ct.gov" />
+	<target host="www.cga.ct.gov" />
+	<target host="data.ct.gov" />
+	<target host="eregulations.ct.gov" />
+	<target host="www.eregulations.ct.gov" />
+	<target host="jud.ct.gov" />
+	<target host="www.jud.ct.gov" />
+	<target host="jud2.ct.gov" />
+	<target host="www.jud2.ct.gov" />
+	<target host="voterregistration.ct.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="ct.gov" />
+	<target host="portal.ct.gov" />
+	<target host="www.ct.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?eregulations\.ct\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^voterregistration\.ct\.gov$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?ct\.gov/.*"
+		to="https://www.ct.egov.com/" />
+
+		<!--	/*(?!$|\?) doesn't redirect to portal:
+								-->
+		<exclusion pattern="^http://(?:www\.)?ct\.gov/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ct.gov/home.htm" />
+			<test url="http://ct.gov/home.php" />
+			<test url="http://www.ct.gov/dcs/" />
+			<test url="http://www.ct.gov/foi/" />
+			<test url="http://www.ct.gov/occ/" />
+			<test url="http://www.ct.gov/opm/" />
+
+	<rule from="^http://portal\.ct\.gov/"
+		to="https://www.ct.egov.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

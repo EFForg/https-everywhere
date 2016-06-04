@@ -1,0 +1,91 @@
+<!--
+	Note: This website blocks Tor users.
+
+
+	Problematic hosts in *yell.com:
+
+		- (www.)? ᵀ
+		- hotels ᵐ
+
+	ᵀ Blocks Tor users
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *yell.com:
+
+		- marketing *
+
+	* Some pages redirect to http, others 404
+
+
+	Mixed content:
+
+		- Images on marketing from st.yell.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Yell.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="yell.com" />		needs clearnet testing -->
+	<target host="auth.yell.com" />
+	<target host="business.yell.com" />
+	<target host="careers.yell.com" />
+	<target host="s-omniture.yell.com" />
+	<target host="st.yell.com" />
+	<!--target host="www.yell.com" />	needs clearnet testing -->
+
+	<!--	Complications:
+				-->
+	<target host="marketing.yell.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://marketing\.yell\.com/(?:$|contact\.html)" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://marketing\.yell\.com/contact/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://marketing\.yell\.com/(?!help(?:$|[?/]))" /-->
+		<!--
+			(& preempted redirect:)
+						-->
+		<exclusion pattern="^http://marketing\.yell\.com/+(?!$|help(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marketing.yell.com/contact.html" />
+			<test url="http://marketing.yell.com/contact/" />
+			<test url="http://marketing.yell.com/legal/prominence-rules/" />
+			<test url="http://marketing.yell.com/legal/security-policy/" />
+			<test url="http://marketing.yell.com/legal/sms-spec/" />
+			<test url="http://marketing.yell.com/web-design/yell-com/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://marketing.yell.com/help/accounts-billing.html" />
+
+
+	<securecookie host="^\." name="^(?:_gat?$|s_v\w)" />
+	<securecookie host="^(?!marketing\.)\w" name="." />
+
+
+	<!--	Redirects to http first:
+					-->
+	<rule from="^http://marketing\.yell\.com/$"
+		to="https://business.yell.com/" />
+
+		<!--	There be faulty regex somewhere
+			in the coverage checker...
+							-->
+		<test url="http://marketing.yell.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

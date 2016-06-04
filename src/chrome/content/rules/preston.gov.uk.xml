@@ -1,0 +1,69 @@
+<!--
+	Preston City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *preston.gov.uk:
+
+		- (www.)? ⁴
+		- legacy *
+		- publicaccess ³
+
+	* Differs from http
+	³ 403
+	⁴ 404
+
+
+	Problematic hosts in *preston.gov.uk:
+
+		- my ⁴
+
+	⁴ 404; preemptable redirect
+
+
+	Insecure cookies are set for these domains:
+
+		- .preston.gov.uk
+
+-->
+<ruleset name="Preston.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="autodiscover.preston.gov.uk" />
+	<target host="bookings.preston.gov.uk" />
+	<target host="forms.preston.gov.uk" />
+	<target host="www.my.preston.gov.uk" />
+	<target host="mymail.preston.gov.uk" />
+	<target host="selfservice.preston.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="my.preston.gov.uk" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://bookings.preston.gov.uk/leisure/lfbook.asp?wci=Login" />
+		<test url="http://selfservice.preston.gov.uk/leisure/lfbook.asp?wci=Login" />
+
+		<!--	403:
+				-->
+		<!--test url="http://publicaccess.preston.gov.uk/portal/servlets/StaffServlet" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.preston\.gov\.uk$" name="^cadata[\dA-F]{32}$" /-->
+
+	<securecookie host="^\." name="^cadata" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://my\.preston\.gov\.uk/"
+		to="https://www.my.preston.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

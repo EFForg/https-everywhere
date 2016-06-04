@@ -1,0 +1,52 @@
+<!--
+	Health and Safety Executive
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *hse.gov.uk:
+
+		- (www.)? *
+		- webcommunities ᵃ
+
+	* Some paths redirect to http, others 404
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *hse.gov.uk:
+
+		- extranet ᶜ
+		- news ᵉ ᵐ ˢ
+		- press ᵉ ᵐ ˢ
+		- records ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- extranet.hse.gov.uk
+		- securecommunities.hse.gov.uk
+
+-->
+<ruleset name="HSE.gov.uk (partial)">
+
+	<target host="extranet.hse.gov.uk" />
+	<target host="securecommunities.hse.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^extranet\.hse\.gov\.uk$" name="^(?:ASP\.NET_SessionId|JSESSIONID)$" /-->
+	<!--securecookie host="^securecommunities\.hse\.gov\.uk$" name="^(?:CFID|CFTOKEN|JSESSIONID|SPIDERLOGON)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

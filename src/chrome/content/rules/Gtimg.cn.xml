@@ -1,0 +1,45 @@
+<!--
+	Nonfunctional hosts in *gtimg.cn:
+
+		- img ¹
+		- qzonestyle ²
+
+	¹ 404
+	² 504, akamai
+
+	Problematic hosts in *gtimg.cn:
+
+		- i *
+		
+	* 504, Akamai
+
+-->
+<ruleset name="gtimg.cn (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="imgcache.gtimg.cn" />
+	
+	<!--	Mixed content:Exclusion because of mixed content errors.
+	Detail: https://github.com/EFForg/https-everywhere/pull/4591
+				-->
+	<target host="qzonestyle.gtimg.cn" />
+	<exclusion pattern="^http://qzonestyle\.gtimg\.cn/(?![\w/-]+\.(css|js|ico|png))" />
+		<test url="http://qzonestyle.gtimg.cn/qzone_v6/proj_qzonelogin/qzonelogin.css" />
+		<test url="http://qzonestyle.gtimg.cn/aoi/img/logo/favicon.ico" />
+		<test url="http://qzonestyle.gtimg.cn/ac/qzfl/stat.js" />
+		<test url="http://qzonestyle.gtimg.cn/qzone_v6/proj_qzonelogin/img/qzone-login-logo.32.png" />
+
+	<!--	Complications:
+				-->
+	<target host="i.gtimg.cn" />
+
+	<securecookie host="^\w" name="." />
+
+	<rule from="^http://i\.gtimg\.cn/"
+		to="https://imgcache.gtimg.cn/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

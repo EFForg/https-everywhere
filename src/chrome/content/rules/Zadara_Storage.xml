@@ -1,45 +1,49 @@
 <!--
+	For rules causing false/broken MCB, see Zadara_Storage.com-falsemixed.xml.
+
+
 	CDN buckets:
 
 		- zadarastorage.s3.amazonaws.com
 		- zadarastorage-public.s3.amazonaws.com
-
+		- zadarastorage.com.s177074.gridserver.com ← www.zadarastorage.com
 		- zadara-web.herokuapp.com
 
-			- www
+
+	Nonfunctional hosts in *zadarastorage.com:
+
+		- vpsa-api *
+
+	* Dropped
 
 
-	Nonfunctional subdomains:
+	Mixed content:
 
-		- support	(zendesk)
+		- css, on:
 
+			- www from $self *
+			- www from fonts.googleapis.com *
 
-	Problematic subdomains:
+		- Images, on:
 
-		- ^		(refused)
-		- www		(works; mismatched, CN; *.herokuapp.com)
+			- www from zadarastorage.com.s177074.gridserver.com
+			- www from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Zadara Storage (partial)">
+<ruleset name="Zadara Storage.com (partial)">
 
-	<target host="zadarastorage.com" />
-	<target host="*.zadarastorage.com" />
-		<!--
-			Presumably, altering the visible domain would not be appreciated:
-												-->
-		<exclusion pattern="^http://(?:www\.)?zadarastorage\.com/(?!favicon\.ico|static/)" />
+	<!--target host="zadarastorage.com" /-->
+	<target host="manage.zadarastorage.com" />
+	<target host="support.zadarastorage.com" />
+	<!--target host="www.zadarastorage.com" /-->
 
 
-	<securecookie host="^manage\.zadarastorage\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?zadarastorage\.com/"
-		to="https://zadara-web.herokuapp.com/" />
-
-	<rule from="^http://manage\.zadarastorage\.com/"
-		to="https://manage.zadarastorage.com/" />
-
-	<rule from="^http://support\.zadarastorage\.com/(generated|system)/"
-		to="https://assets.zendesk.com/$1/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,83 @@
+<!--
+	Greater London Authority
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *london.gov.uk:
+
+		- data ʳ
+		- mqt ʳ
+		- my ᵈ
+		- questions ʳ
+		- volunteerteam ᵃ
+
+	ᵃ Shows another domain
+	ʳ Refused
+
+
+	Partially covered hosts in *london.gov.uk:
+
+		- talklondon ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.volunteerbooking.london.gov.uk
+	
+
+	Insecure cookies are set for these hosts:
+
+		- .london.gov.uk
+		- www.london.gov.uk
+
+-->
+<ruleset name="London.gov.uk">
+
+	<target host="london.gov.uk" />
+	<target host="speedvolunteer.london.gov.uk" />
+	<target host="talklondon.london.gov.uk" />
+	<target host="volunteerbooking.london.gov.uk" />
+	<target host="www.london.gov.uk" />
+	
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://talklondon\.london\.gov\.uk/(?:$|contact$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://talklondon\.london\.gov\.uk/+(?!(?:london-survey|user)(?:$|\?)|misc/|profiles/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://talklondon.london.gov.uk/blogs/" />
+			<test url="http://talklondon.london.gov.uk/contact" />
+			<test url="http://talklondon.london.gov.uk/forms/mail-mayor" />
+			<test url="http://talklondon.london.gov.uk/privacypolicy" />
+			<test url="http://talklondon.london.gov.uk/smart-london" />
+			<test url="http://talklondon.london.gov.uk/topics/safety" />
+
+			<!--	-ve:
+					-->
+			<test url="http://talklondon.london.gov.uk/misc/menu-leaf.png" />
+			<test url="http://talklondon.london.gov.uk/profiles/gla_profile/themes/custom/gla/images/mayor_of_london_160_14.gif" />
+			<test url="http://talklondon.london.gov.uk/sites/default/files/css/css_2rLQNuPNFWGrnNgvhQ00u-7MbdrV58mnoPf2z4bNQ_Y.css" />
+			<test url="http://talklondon.london.gov.uk/user/register" />
+			<test url="http://talklondon.london.gov.uk/user/login?destination=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.london\.gov\.uk$" name="^(?:_gat|(?:incap_ses_\d+|nlbi|visid_incap)_\d+)$" /-->
+	<!--securecookie host="^www\.london\.gov\.uk$" name="^___utmp[abm]" /-->
+
+	<securecookie host="^\." name="^(?:_gat|(?:incap_ses_\d+|nlbi|visid_incap)_\d+)$" />
+	<securecookie host="^(?!talklondon\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

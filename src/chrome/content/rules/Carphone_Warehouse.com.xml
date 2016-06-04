@@ -1,0 +1,107 @@
+<!--
+	Other Carphone Warehouse rulesets:
+
+		- Phone_House.com.xml
+
+
+	Nonfunctional hosts in *carphonewarehouse.com:
+
+		- images *
+
+	* 403
+
+
+	Problematic hosts in *carphonewarehouse.com:
+
+		- metrics ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .carphonewarehouse.com
+		- .business.carphonewarehouse.com
+		- selfhelp.carphonewarehouse.com
+
+
+	Mixed content:
+
+		- Images on selfhelp from media.phonehouse.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Carphone Warehouse.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="carphonewarehouse.com" />
+	<target host="business.carphonewarehouse.com" />
+	<target host="m.carphonewarehouse.com" />
+	<target host="selfhelp.carphonewarehouse.com" />
+	<target host="www.carphonewarehouse.com" />
+
+	<!--	Complications:
+				-->
+	<target host="metrics.carphonewarehouse.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?carphonewarehouse\.com/(?:basket$|mobiles/trade-in$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?carphonewarehouse\.com/(?!cpwtrade\.css|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://carphonewarehouse.com/basket" />
+			<test url="http://www.carphonewarehouse.com/help-support" />
+			<test url="http://www.carphonewarehouse.com/mobiles/trade-in" />
+			<test url="http://www.carphonewarehouse.com/support/track-a-repair" />
+
+			<!--	-ve:
+					-->
+			<test url="http://carphonewarehouse.com/cpwtrade.css" />
+			<test url="http://www.carphonewarehouse.com/favicon.ico" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://m\.carphonewarehouse\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://m\.carphonewarehouse\.com/+(?!img/|mt/a/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://m.carphonewarehouse.com/mt/www.carphonewarehouse.com" />
+			<test url="http://m.carphonewarehouse.com/mt/www.carphonewarehouse.com/mobiles/mobile-phones/SAMSUNG_GAL_TAB_A_9POINT7_4G" />
+			<test url="http://m.carphonewarehouse.com/mt/www.carphonewarehouse.com/phones/lg-nexus-5x-32gb" />
+			<test url="http://m.carphonewarehouse.com/mt/www.carphonewarehouse.com/phones/microsoft-lumia-950" />
+
+			<!--	-ve:
+					-->
+			<test url="http://m.carphonewarehouse.com/img/c/gw_1320/ttl_29d/pt/4url_un.uc.carphonewarehouse/ucontrol44027522501445156695523a8afed50c4f2cfc57466.png" />
+			<test url="http://m.carphonewarehouse.com/mt/a/carphonewarehouse.com/l1355756571000/images/spacer.gif" />
+			<test url="http://m.carphonewarehouse.com/mt/a/carphonewarehouse.com/l1392887540000/images/new_header/mini_logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.business\.carphonewarehouse\.com$" name="^cp(?:cic|cv|fv|vc)$" /-->
+	<!--securecookie host="^selfhelp\.carphonewarehouse\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^s_v" />
+	<securecookie host="^(?!m\.|www\.)\w" name="." />
+	<securecookie host="^\.business\." name="." />
+
+
+	<rule from="^http://metrics\.carphonewarehouse\.com/"
+		to="https://carphonewarehouse.sc.omtrdc.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

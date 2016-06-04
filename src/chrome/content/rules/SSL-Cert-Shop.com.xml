@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional hosts in *ssl-cert-shop.com:
+
+		- blog *
+
+	* Shows live.ssl-cert-shop.com
+
+
+	^ssl-cert-shop.com: Shows live.ssl-cert-shop.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- live.ssl-cert-shop.com
+		- www.ssl-cert-shop.com
+
+-->
+<ruleset name="SSL-Cert-Shop.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="live.ssl-cert-shop.com" />
+	<target host="www.ssl-cert-shop.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ssl-cert-shop.com" />
+
+		<!--	Sets cookies without Secure
+							-->
+		<test url="http://live.ssl-cert-shop.com/server.php?a=&amp;rqst=track&amp;output=nojcrpt&amp;ovlc=&amp;eca=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^live\.ssl-cert-shop\.com$" name="^(?:livezilla|lz_last_visit|lz_userid|lz_visits)$" /-->
+	<!--securecookie host="^www\.ssl-cert-shop\.com$" name="^\.ASPXANONYMOUS$" /-->
+
+	<securecookie host=".+\.ssl-cert-shop\.com$" name=".+" />
+
+
+	<rule from="^http://ssl-cert-shop\.com/"
+		to="https://www.ssl-cert-shop.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

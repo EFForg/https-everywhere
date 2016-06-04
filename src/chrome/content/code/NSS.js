@@ -25,9 +25,6 @@ function NSS() {
 
 }
 
-// Alias to reduce the number of spurious warnings from amo-validator.
-let tcypes = ctypes;
-
 NSS.initialize = function(nssPath) {  
   var sharedLib;
 

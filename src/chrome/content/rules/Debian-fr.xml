@@ -1,4 +1,11 @@
 <!--
+	Problematic hosts in *debian-fr.org:
+
+		- wiki ᵃ
+
+	ᵃ Shows default page
+
+
 	Insecure cookies are set for these domains:
 
 		- .debian-fr.org
@@ -9,8 +16,12 @@
 
 	<!--	Direct rewrites:
 				-->
-  <target host="debian-fr.org" />
-  <target host="www.debian-fr.org" />
+	<target host="debian-fr.org" />
+	<target host="www.debian-fr.org" />
+
+	<!--	Complications:
+				-->
+	<target host="wiki.debian-fr.org" />
 
 
 	<!--	Not secured by server:
@@ -18,10 +29,19 @@
 	<!--securecookie host="^\.debian-fr\.org$" name="^(__cfduid|cf_clearance)$" /-->
 	<!--securecookie host="^\.www\.debian-fr\.org$" name="^phpbb3_\w+_[k|sid|u)$" /-->
 
-	<securecookie host="^\.(?:www\.)?debian-fr\.org$" name=".+" />
+	<securecookie host="." name="." />
 
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://wiki\.debian-fr\.org/+"
+		to="https://www.isalo.org/wiki.debian-fr/" />
+
+		<test url="http://wiki.debian-fr.org/home.php" />
 
 	<rule from="^http:"
 		to="https:" />
+
 </ruleset>
 

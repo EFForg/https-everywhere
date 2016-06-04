@@ -1,15 +1,8 @@
 <!--
-	For domains with CAcert certificates, see Freifunk.net-cacert.xml.
-
-
 	Nonfunctional subdomains:
 
 		- blog ¹
-		- bug ¹
 		- global ¹
-		- blog.guetersloh ¹
-		- pad ¹
-		- paderborn ¹
 
 	¹ Refused
 
@@ -21,63 +14,60 @@
 		- facebook ¹
 		- impress ¹
 		- mailinglisten ¹
+		- piwik ³
 		- twitter ¹
 		- vimeo ¹
-		- wiki ³
 		- youtube ¹
 
 	¹ CAcert, expired, mismatched
 	² CAcert, expired
 	³ CAcert
-
-
-	Fully covered subdomains:
-
-		- facebook	(→ www.facebook.com)
-		- forum
-		- hamburg
-		- twitter	(→ twitter.com)
-		- vimeo		(→ vimeo.com)
-		- www
-		- youtube	(→ www.youtube.com)
-
 -->
-<ruleset name="Freifunk.net (partial)">
+<ruleset name="Freifunk.net">
 
 	<target host="freifunk.net"/>
-	<target host="*.freifunk.net"/>
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://freifunk\.net/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://freifunk\.net/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<target host="www.freifunk.net"/>
+	<target host="bug.freifunk.net"/>
+	<target host="facebook.freifunk.net"/>
+	<target host="forum.freifunk.net"/>
+	<target host="blog.guetersloh.freifunk.net"/>
+	<target host="hamburg.freifunk.net"/>
+	<target host="pad.freifunk.net"/>
+	<target host="twitter.freifunk.net"/>
+	<target host="vimeo.freifunk.net"/>
+	<target host="wiki.freifunk.net"/>
+	<target host="youtube.freifunk.net"/>
+	
+        <securecookie host="^(bug|forum|blog\.guetersloh|pad)\.freifunk\.net$" name=".+" />
+
+	<test url="http://facebook.freifunk.net/foo" />
+	<test url="http://facebook.freifunk.net/bar" />
+	<test url="http://twitter.freifunk.net/foo" />
+	<test url="http://twitter.freifunk.net/bar" />
+	<test url="http://vimeo.freifunk.net/foo" />
+	<test url="http://vimeo.freifunk.net/bar" />
+	<test url="http://youtube.freifunk.net/foo" />
+	<test url="http://youtube.freifunk.net/bar" />
 
 	<!--	Redirect drops path but not args:
 							-->
 	<rule from="^http://facebook\.freifunk\.net/[^?]*"
 		to="https://www.facebook.com/pages/Freifunk/54553170762" />
+	<test url="http://facebook.freifunk.net/?fref=nf" />
 
-	<!--	Redirect drops path but not args:
-							-->
 	<rule from="^http://twitter\.freifunk\.net/[^?]*"
 		to="https://twitter.com/freifunk" />
+	<test url="http://twitter.freifunk.net/?src=hash" />
 
-	<!--	Redirect drops path but not args:
-							-->
 	<rule from="^http://vimeo\.freifunk\.net/[^?]*"
 		to="https://vimeo.com/user20804353" />
+	<test url="http://vimeo.freifunk.net/?src=hash" />
 
-	<!--	Redirect drops path but not args:
-							-->
 	<rule from="^http://youtube\.freifunk\.net/[^?]*"
 		to="https://www.youtube.com/user/FREIFUNK2013" />
+	<test url="http://youtube.freifunk.net/?v=RoKQQ5a6E1Q" />
 
-	<rule from="^http://((?:forum|hamburg|www)\.)?freifunk\.net/"
-		to="https://$1freifunk.net/"/>
-
-	<!--securecookie host=".*freifunk\.net$" name=".*"/-->
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

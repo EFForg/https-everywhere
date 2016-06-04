@@ -13,7 +13,7 @@
 			- ea-cdn.voxmedia.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *voxmedia.com:
 
 		- blog *
 		- pixelpunch ²
@@ -22,7 +22,7 @@
 	² 500
 
 
-	Problematic subdomains:
+	Problematic hosts in *voxmedia.com:
 
 		- ^ ¹
 		- ea-cdn ²
@@ -33,18 +33,6 @@
 	¹ Refused
 	² Cloudfront
 	³ StatusPage
-
-
-	Fully covered hosts:
-
-		- (www.)?	(^ → www)
-		- ea-cdn	(→ d8wuu9msfgurd.cloudfront.net)
-		- fonts
-		- cdn.hymnal	(→ d3jpjf0yeaswad.cloudfront.net)
-		- jobs		(→ www.voxmedia.com)
-		- product
-		- providence
-		- status	(→ voxmedia.statuspage.io)
 
 
 	Mixed content:
@@ -79,6 +67,19 @@
 	<target host="cdn.hymnal.voxmedia.com" />
 	<target host="jobs.voxmedia.com" />
 	<target host="status.voxmedia.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www\.voxmedia\.com/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.voxmedia.com/?" />
+			<test url="http://www.voxmedia.com/?foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.voxmedia.com/brands/vox/" />
 
 
 	<rule from="^http://voxmedia\.com/"

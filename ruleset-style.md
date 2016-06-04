@@ -14,15 +14,21 @@ of hostnames.
 
 Instead, prefer listing explicit target hosts and a single rewrite from "^http:" to
 "^https:". This saves you time as a ruleset author because each explicit target
-host automatically creates a an implicit test URL, reducing the need to add your
+host automatically creates an implicit test URL, reducing the need to add your
 own test URLs. These also make it easier for someone reading the ruleset to figure out
 which subdomains are covered.
 
 If you know all subdomains of a given domain support HTTPS, go ahead and use a
 left-wildcard, along with a plain rewrite from "^http:" to "^https:". Make sure
 to add a bunch of test URLs for the more important subdomains. If you're not
-sure what subdomains might exist, check the 'subdomain' tab on Wolfram Alpha:
-http://www.wolframalpha.com/input/?i=_YOUR_DOMAIN_GOES_HERE_.
+sure what subdomains might exist, you can iteratively use google queries and enumerate
+the list of results like such:
+
+1. site:*.eff.org
+2. site:*.eff.org -site:www.eff.org
+3. site:*.eff.org -site:www.eff.org -site:ssd.eff.org
+
+... and so on.
 
 If there are a handful of tricky subdomains, but most subdomains can handle the
 plain rewrite from "^http:" to "^https:", specify the rules for the tricky
@@ -69,7 +75,7 @@ Here is an example ruleset pre-style guidelines:
 
 ```
 <ruleset name="WHATWG.org">
-  <target host="whatwg.org" />
+  <target host='whatwg.org' />
   <target host="*.whatwg.org" />
 
   <rule from="^http://((?:developers|html-differences|images|resources|\w+\.spec|wiki|www)\.)?whatwg\.org/"

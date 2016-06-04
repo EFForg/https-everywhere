@@ -19,7 +19,6 @@
 
 		- libsyn.com subdomains:
 
-			- hwcdn *
 			- imake *
 			- \w+ **
 
@@ -29,29 +28,20 @@
 	** Dropped - unique subdomains for podcasts
 
 
-	Problematic subdomains:
+	Problematic hosts in *libsyn.com:
 
 		- ec *
+		- hwcdn ʳ
 		- static	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
 
-	Mismatched, CN: edgecastcdn.net
+	* Mismatched, CN: edgecastcdn.net
+	ʳ Refused
 
 
-	Fully covered subdomains:
-
-		- (www.)
-		- assets
-		- fusion
-		- html5-player
-		- ssl-static
-		- static	(→ ssl-static)
-		- three
-		- traffic
-
-
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts:
 
 		- .libsyn.com
+		- html5-player.libsyn.com
 
 -->
 <ruleset name="libsyn.com (partial)">
@@ -65,19 +55,27 @@
 	<target host="ssl-static.libsyn.com" />
 	<target host="three.libsyn.com" />
 	<target host="traffic.libsyn.com" />
+	<target host="secure-ec.libsyn.com" />
+	<target host="secure-hwcdn.libsyn.com" />
 	<target host="www.libsyn.com" />
 
 	<!--	Complications:
 				-->
+	<target host="ec.libsyn.com" />
+	<target host="hwcdn.libsyn.com" />
 	<target host="static.libsyn.com" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.libsyn\.com$" name="^libsyn-paywall$" /-->
+	<!--securecookie host="^html5-player\.libsyn\.com$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^\.libsyn\.com$" name=".+" />
+	<securecookie host="." name="." />
 
+
+	<rule from="^http://(ec|hwcdn)\.libsyn\.com/"
+		to="https://secure-$1.libsyn.com/" />
 
 	<rule from="^http://static\.libsyn\.com/"
 		to="https://ssl-static.libsyn.com/" />

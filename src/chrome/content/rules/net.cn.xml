@@ -1,0 +1,97 @@
+<!--
+	For other Alibaba coverage, see Alibaba.xml.
+
+
+	Nonfunctional hosts in *net.cn:
+
+		- help.www ᵈ
+
+	ᵈ Dropped
+
+
+	www.net.cn: $ redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.net.cn ᶜ
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- www from g.alicdn.com ˢ
+			- www from cdn.hichinaimg.com ᵐ
+			- www from $self ˢ
+
+		- Images, on:
+		
+			- www from gtms0[1-4].alicdn.com ˢ
+			- www from $self ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="net.cn (partial)" platform="mixedcontent">
+
+	<!--	Complications:
+				-->
+	<target host="www.net.cn" />
+	<target host="help.www.net.cn" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://www.net.cn/hosting/" /-->
+		<test url="http://www.net.cn/mail/" />
+
+		<!--	Mixed images, sets cookies
+			without Secure:
+					-->
+		<!--test url="http://www.net.cn/m/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.net\.cn$" name="^(?:JSESSIONID|tmp0)$" /-->
+
+	<securecookie host="^w" name="." />
+
+
+	<!--	Redirect drops categoryId:
+						-->
+	<rule from="^http://help\.www\.net\.cn/(?:KnowledgeD|knowledge_d)etail\.html?\?knowledgeId=(\d+)(?:&amp;categoryId=\d+)?"
+		to="https://help.aliyun.com/knowledgeIdMapping.html?url=/help-net-cn/knowledge_detail.htm?knowledgeId=$1" />
+
+		<exclusion pattern="^http://help\.www\.net\.cn/(?!(?:KnowledgeD|knowledge_d)etail\.html?\?knowledgeId=\d+(?:&amp;categoryId=\d+)?$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://help.www.net.cn/404.html" />
+			<test url="http://help.www.net.cn/default.aspx" />
+			<test url="http://help.www.net.cn/favicon.ico" />
+			<test url="http://help.www.net.cn/index.htm" />
+			<test url="http://help.www.net.cn/index.html" />
+			<test url="http://help.www.net.cn/index.jsp" />
+			<test url="http://help.www.net.cn/index.php" />
+			<test url="http://help.www.net.cn/index.xml" />
+
+			<!--	-ve:
+					-->
+			<test url="http://help.www.net.cn/KnowledgeDetail.html?knowledgeId=5867645" />
+			<test url="http://help.www.net.cn/knowledge_detail.htm?knowledgeId=5921413" />
+
+	<!--	Redirect keeps args, but not forward slash:
+							-->
+	<rule from="^http://www\.net\.cn/+(?=$|\?)"
+		to="https://wanwang.aliyun.com/" />
+
+		<test url="http://www.net.cn/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -6,44 +6,34 @@
 
 	Problematic subdomains:
 
-		- blog ¹
-		- status ²
-
-	¹ Wordpress
-	² Works; mismatched, CN: ext6.messagingengine.com.fastmail.fm
+		- fbl	 					(mismatched, CN: *.returnpath.net, returnpath.net )
+		- status 					(mismatched, CN: *.messagingengine.com, messagingengine.com)
+		- user-customized subdomains of fastmail.fm	(connection refused, e.g. fhapgood, artwork, startupguide)
 
 -->
 <ruleset name="Fastmail (partial)">
 
 	<target host="fastmail.com" />
+	<target host="beta.fastmail.com" />
+	<target host="blog.fastmail.com" />
+	<target host="classic.fastmail.com" />
+	<target host="qa.fastmail.com" />
+	<target host="www.fastmail.com" />
+
 	<target host="fastmail.fm" />
-	<target host="*.fastmail.com" />
-	<target host="*.fastmail.fm" />
+	<target host="beta.fastmail.fm" />
+	<target host="classic.fastmail.fm" />
+	<target host="qa.fastmail.fm" />
+	<target host="www.fastmail.fm" />
 
 
 	<!--	Secured by server:
 					-->
 	<!--securecookie host="^\.(beta|qa|www)\.fastmail\.(com|fm)$" name="^_s$" /-->
 
-	<securecookie host="^\.www\.fastmail\.(?:com|fm)$" name=".+" />
+	<securecookie host="^.*\.fastmail\.com$" name=".+" />
 
-	<!--
-		The server sends an incorrect (non-EV) certificate when www. isn't used
-	-->
-	<rule from="^http://(www\.)?fastmail\.(com|fm)/"
-		to="https://www.fastmail.com/" />
-
-	<test url="http://fastmail.com/" />
-	<test url="http://www.fastmail.com/" />
-	<test url="http://fastmail.fm/" />
-	<test url="http://www.fastmail.fm/" />
-
-	<rule from="^http://(beta|qa)\.fastmail\.(com|fm)/"
-		to="https://$1.fastmail.com/" />
-
-	<test url="http://beta.fastmail.com/" />
-	<test url="http://qa.fastmail.com/" />
-	<test url="http://beta.fastmail.fm/" />
-	<test url="http://qa.fastmail.fm/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional hosts in *panopto.com:
+
+		- (www.)? ᵃ
+		- get ᴹ
+
+	ᴹ Marketo
+	ᵃ Shows support.panopto.com
+
+
+	These altnames don't exist:
+
+		- www.helpdesk.panopto.com
+		- www.hostedservices.panopto.com
+		- www.support.panopto.com
+
+
+	Mixed content:
+
+		- Images on support from $self ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Panopto.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="helpdesk.panopto.com" />
+	<target host="hostedservices.panopto.com" />
+	<target host="support.panopto.com" />
+
+	<!--	Complications:
+				-->
+	<target host="get.panopto.com" />
+
+		<exclusion pattern="^http://get\.panopto\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://get.panopto.com/?" />
+			<test url="http://get.panopto.com/gartner-2015.html" />
+			<test url="http://get.panopto.com//gartner-2015.html" />
+			<test url="http://get.panopto.com//gartner-2015.html?" />
+
+			<!--	-ve:
+					-->
+			<test url="http://get.panopto.com/css/mktLPSupportCompat.css" />
+			<test url="http://get.panopto.com/rs/panopto/images/logo.svg" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://get\.panopto\.com/"
+		to="https://na-ab15.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

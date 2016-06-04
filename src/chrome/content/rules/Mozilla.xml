@@ -25,6 +25,7 @@
 		- Mozilla_Persona.xml
 		- Mozilla_Webmaker.xml
 		- Mozillians.org.xml
+		- mzl.la (via Bitly_branded_short_domains.xml)
 		- Open_Badges.xml
 		- Public_Suffix.org.xml
 		- TaskCluster.net
@@ -59,7 +60,6 @@
 			- graphs ³
 			- krakenbenchmark ³
 			- mig ³
-			- releases ³
 			- sfx-images ³		(banners)
 			- alerts.telemetry *
 			- website-archive ³
@@ -78,7 +78,9 @@
 		- labs ¹
 		- talkback-public ⁴
 
-	¹ Refused
+	¹ https://labs.mozilla.org refuses connections.
+	  http://labs.mozilla redirects to http://mozillalabs.com, and
+	  https://mozillalabs.com uses a mismatched certificate.
 	* Mismatched, CN: status.io.watchmouse.com
 	⁴ Prompts for LDAP login; mismatched, CN: static-san.mozilla.org
 	⁵ Works; mismatched, CN: affiliates.mozilla.org
@@ -102,6 +104,7 @@
 
 		- affiliates
 		- affiliates-cdn	(→ affiliates.mozilla.org)
+		- archive
 		- air
 		- aus3
 		- aus4
@@ -165,6 +168,7 @@
 		- planet
 		- pulse
 		- quality
+		- releases
 		- reps
 		- securitywiki
 		- sendto
@@ -223,11 +227,11 @@
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-July/001649.html
 
-			\w.mozilla.org breaks newsletter:
+			\w+.e.mozilla.org breaks newsletter:
 
 				https://mail1.eff.org/pipermail/https-everywhere-rules/2013-June/001635.html
 													-->
-		<exclusion pattern="^http://(?:europe|bonsai|browserquest|trychooser\.pub\.build|(?!image)\w+\.e|graphs|krakenbenchmark|mig|releases|sfx-images|alerts\.telemetry|w(?:ebsite|ww)-archive)\.mozilla\.org/" />
+		<exclusion pattern="^http://(?:europe|bonsai|browserquest|trychooser\.pub\.build|(?!image)\w+\.e|graphs|krakenbenchmark|mig|sfx-images|alerts\.telemetry|w(?:ebsite|ww)-archive)\.mozilla\.org/" />
 
 			<test url="http://bonsai.mozilla.org/" />
 			<test url="http://browserquest.mozilla.org/" />
@@ -235,8 +239,7 @@
 			<test url="http://click.e.mozilla.org/" />
 			<test url="http://graphs.mozilla.org/" />
 			<test url="http://krakenbenchmark.mozilla.org/" />
-			<test url="http://mig.mozilla.org/" />
-			<test url="http://releases.mozilla.org/" />
+			<test url="http://mig.mozilla.org/" />			
 			<test url="http://sfx-images.mozilla.org/" />
 			<test url="http://alerts.telemetry.mozilla.org/" />
 			<test url="http://website-archive.mozilla.org/" />
@@ -247,6 +250,7 @@
 		<test url="http://advocacy.mozilla.org/" />
 		<test url="http://affiliates.mozilla.org/" />
 		<test url="http://air.mozilla.org/" />
+		<test url="http://archive.mozilla.org/" />
 		<test url="http://bonsai.mozilla.org/" />
 		<test url="http://bugzilla.mozilla.org/" />
 		<test url="http://bzr.mozilla.org/" />
@@ -260,6 +264,8 @@
 		<test url="http://lists.mozilla.org/" />
 		<test url="http://planet.mozilla.org/" />
 		<test url="http://pulse.mozilla.org/" />
+		<test url="http://releases.mozilla.org/" />
+		<test url="http://sendto.mozilla.org/page/-/ssou-logos/twitter-bird-white-on-blue.png" />
 		<test url="http://start.mozilla.org/" />
 		<test url="http://status.mozilla.org/" />
 		<test url="http://support.mozilla.org/" />
@@ -292,22 +298,7 @@
 	<rule from="^http://click\.e\.mozilla\.org/"
 		to="https://click.virt.s4.exacttarget.com/" /-->
 
-	<!-- Images in e-mail newsletters
-
-	Example:
-	http://image.e.mozilla.org/lib/fe9915707361037e75/m/1/headerLogo_112x90.jpg
-	https://a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/lib/fe9915707361037e75/m/1/headerLogo_112x90.jpg
-	-->
-	<rule from="^http://image\.e\.mozilla\.org/"
-		to="https://a248.e.akamai.net/f/1/1/1/image.e.mozilla.org/" />
-
 		<test url="http://image.e.mozilla.org/" />
-
-	<rule from="^http://labs\.mozilla\.org/+"
-		to="https://mozillalabs.com/" />
-
-		<test url="http://labs.mozilla.org/" />
-		<test url="http://labs.mozilla.org//" />
 
 	<!--	Redirects like so over http.
 						-->

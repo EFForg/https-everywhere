@@ -1,0 +1,66 @@
+<!--
+	Broadland District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *broadland.gov.uk:
+
+		- search *
+
+	* Redirects to http://search3.openobjects.com
+
+
+	Problematic hosts in *broadland.gov.uk:
+
+		- (www.)? ᵐ
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- consult.broadland.gov.uk
+		- secure.broadland.gov.uk
+
+
+	Mixed content:
+
+		- css on secure from www.broadland.gov.uk ˢ
+		- Images on secure from www.broadland.gov.uk ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Broadland.gov.uk (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.broadland.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="broadland.gov.uk" />
+	<target host="www.broadland.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://secure.broadland.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult.broadland.gov.uk$" name="^ServerID$" /-->
+	<!--securecookie host="^secure.broadland.gov.uk$" name="^(?:ASP\.NET_SessionId|MVMSession)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:www\.)?broadland\.gov\.uk/"
+		to="https://secure.broadland.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,21 +1,29 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *phpnet.org:
 
-		- (www.)	(shows another domain; self-signed, CN: phpnet-bureaux)
-		- forum		(shows p1174; self-signed, CN: p1174.phpnet.org)
+		- forum ¹
+		- wiki ²
 
-
-	Problematic subdomains:
-
-		- webmail	(works; self-signed, mixed css & images from www)
+	¹ Shows p1174; self-signed, CN: p1174.phpnet.org
+	² Refused
 
 -->
-<ruleset name="PHPNET (partial)">
+<ruleset name="PHPNET.org (partial)">
 
-	<target host="*.phpnet.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="phpnet.org" />
+	<target host="panel.phpnet.org" />
+	<target host="piwikphpnet.phpnet.org" />
+	<target host="ssl.phpnet.org" />
+	<target host="webmail.phpnet.org" />
+	<target host="www.phpnet.org" />
 
 
-	<rule from="^http://(panel|ssl)\.phpnet\.org/"
-		to="https://$1.phpnet.org/" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,12 +1,13 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://safariflow.com/ => https://www.safariflow.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.safariflow.com/ => https://www.safariflow.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Problematic subdomains:
+	For other Safari Books coverage, see SafariBooksOnline.xml.
 
-		- ^	(reset)
+
+	Problematic hosts in *safariflow.com:
+
+		- (www.)? ¹
 		- blog ²
 
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
 	² Works, worpdress
 
 
@@ -17,11 +18,10 @@ Fetch error: http://www.safariflow.com/ => https://www.safariflow.com/: (60, 'SS
 	* Unsecurable <= http reply
 
 -->
-<ruleset name="Safari Flow.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Safari Flow.com (partial)" default_off="missing certificate chain">
 
 	<target host="safariflow.com" />
 	<target host="www.safariflow.com" />
-		<!--exclusion pattern="^http://blog\.safariflow\.com" /-->
 
 
 	<!--	Not secured by server:
@@ -29,10 +29,10 @@ Fetch error: http://www.safariflow.com/ => https://www.safariflow.com/: (60, 'SS
 	<!--securecookie host="^www\.safariflow\.com$" name="^(X-Mapping-\w{8}|csrftoken)$" /-->
 	<!--securecookie host="^\.www\.safariflow\.com$" name="^sessionid$" /-->
 
-	<securecookie host="^www\.safariflow\.com$" name=".+" />
+	<securecookie host="^\.?www\.safariflow\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?safariflow\.com/"
-		to="https://www.safariflow.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,75 @@
+<!--
+	Buckinghamshire County Council
+
+	For rules causing false/broken MCB, see buckscc.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *buckscc.gov.uk:
+
+		- closures ʳ
+		- jobs ʳ
+		- maps ᶠ
+		- mybucks ᵈ
+		- publicaccess ᵈ
+
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	^buckscc.gov.uk: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps1.buckscc.gov.uk
+		- apps2.buckscc.gov.uk
+		- commercial.buckscc.gov.uk
+		- democracy.buckscc.gov.uk
+		- shop.buckscc.gov.uk
+
+
+	Mixed content:
+
+		- css on www from serverapi.arcgisonline.com ˢ
+		- Bug on www from socitm.govmetric.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Bucks CC.gov.uk (partial)">
+
+	<target host="buckscc.gov.uk" />
+	<target host="account.buckscc.gov.uk" />
+	<target host="apps1.buckscc.gov.uk" />
+	<target host="apps2.buckscc.gov.uk" />
+	<target host="commercial.buckscc.gov.uk" />
+	<target host="democracy.buckscc.gov.uk" />
+	<target host="emsonline.buckscc.gov.uk" />
+	<target host="shop.buckscc.gov.uk" />
+	<target host="udp.buckscc.gov.uk" />
+	<!--target host="www.buckscc.gov.uk" /-->
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://apps1.buckscc.gov.uk/eforms2005/libPrisoners/" /-->
+		<!--test url="http://apps2.buckscc.gov.uk/ecommerce/logon.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:apps1|democracy)\.buckscc\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^apps2\.buckscc\.gov\.uk$" name="^(?:ASP\.NET_SessionId|SessionId)$" /-->
+	<!--securecookie host="^commercial\.buckscc\.gov\.uk$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId$)" /-->
+	<!--securecookie host="^shop\.buckscc\.gov\.uk$" name="^(?:ASP\.NET_SessionId|TempDataIdCookieName)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

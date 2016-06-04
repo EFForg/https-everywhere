@@ -9,6 +9,7 @@
 		- ^ ¹
 		- csrc ²
 		- expect ³
+		- nvlpubs ⁴
 		- patapsco ⁴
 		- physics ³
 		- scap ⁵
@@ -22,10 +23,12 @@
 	⁵ Shows nvd; mismatched, CN: nvd.nist.gov
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- nvd.nist.gov
 		- web.nvd.nist.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="NIST.gov (partial)">
@@ -34,17 +37,21 @@
 	<target host="web.nvd.nist.gov" />
 	<target host="tsapps.nist.gov" />
 
+		<!--	https://web.nvd.nist.gov/ redirects to itself
+									-->
+		<exclusion pattern="^http://web\.nvd\.nist\.gov/$" />
+
+			<!--	-ve:
+					-->
+			<test url="http://web.nvd.nist.gov/view/vuln/search" />
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^(web\.)?nvd\.nist\.gov$" name="^(ASP\.NET_SessionId|CMSCurrentTheme|CMSPreferredCulture)$" /-->
 
-	<securecookie host="^.*\.nist\.gov$" name=".*" />
+	<securecookie host="." name="." />
 
-	<!-- https://web.nvd.nist.gov/ redirects to itself -->
-	<exclusion pattern="^http://web\.nvd\.nist\.gov/$" />
-
-	<test url="http://web.nvd.nist.gov/view/vuln/search" />
 
 	<rule from="^http:"
 		to="https:" />

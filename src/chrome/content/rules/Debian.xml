@@ -6,22 +6,23 @@
 
 		- DebConf.org.xml
 		- Debian.net.xml
+		- Deb.li.xml
 
 
 	Nonfunctional domains:
 
 		- in *debian.org:
 
-			- arch ¹
+			- arch		Differs from http
 			- backports ²
+			- blends ²
 			- ca ³
-			- clang ⁴
-			- openstack.bm ⁵
 			- ftp.de ⁶
 			- deb ⁶
 			- incoming ⁷
 			- manpages ⁶
 			- popcon ⁶
+			- puppet-dashboard ⁶
 			- security ⁶
 			- security-team ²
 			- sip-ws ⁸
@@ -30,11 +31,8 @@
 
 		- buildd.debian-ports.org ⁹
 
-	¹ Shows default page
 	² Shows www
 	³ Shows db; mismatched, CN: db.debian.org
-	⁴ Shows webmail.ecranbleu.org
-	⁵ Plaintext reply
 	⁶ Refused
 	⁷ Shows ftp-master; mismatched, CN: ftp-master.debian.org
 	⁸ Reset
@@ -44,11 +42,11 @@
 	Problematic hosts in *debian.org:
 
 		- metadata.ftp-master ¹
-		- puppet-dashboard ²
+		- ftp-master.metadata ¹
 		- security-master ²
 
 	¹ Fastly
-	² Self-signed
+	² Untrusted root
 
 
 	Partially covered hosts in *debian.org:
@@ -56,50 +54,6 @@
 		- security *	(→ www)
 
 	* At least some paths 404
-
-
-	Fully covered hosts in *debian.org:
-
-		- (www.)?
-		- alioth
-		- *.alioth
-		- anonscm
-		- api.ftp-master
-		- bits
-		- bugs
-		- bugs-master
-		- buildd
-		- bzr
-		- contributors
-		- cvs
-		- darcs
-		- db
-		- dsa
-		- ftp-master
-		- git
-		- gobby
-		- hg
-		- lintian
-		- lists
-		- munin
-		- nagios
-		- nm
-		- packages
-		- people
-		- piuparts
-		- qa
-		- packages.qa
-		- release
-		- rt
-		- rtc
-		- search
-		- security-tracker
-		- sso
-		- svn
-		- tracker
-		- udd
-		- vote
-		- wiki
 
 
 	altnames that don't exist:
@@ -118,7 +72,7 @@
 		- www.wiki.debian.org
 
 
-	Observed cookie domains:
+	Insecure cookies are set for these hosts:
 
 		- nm.debian.org
 
@@ -128,11 +82,13 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="debian.org" />
-	<target host="anonscm.debian.org" />
-	<target host="api.ftp-master.debian.org" />
 	<target host="alioth.debian.org" />
 	<target host="*.alioth.debian.org" />
-	<!--target host="arch.debian.org" /-->
+		<test url="http://aptitude.alioth.debian.org/" />
+		<test url="http://pkg-haskell.alioth.debian.org/" />
+		<test url="http://python-modules.alioth.debian.org/" />
+	<target host="anonscm.debian.org" />
+	<target host="appstream.debian.org" />
 	<target host="bits.debian.org" />
 	<target host="bugs.debian.org" />
 	<target host="bugs-master.debian.org" />
@@ -140,23 +96,25 @@
 	<target host="bzr.debian.org" />
 	<target host="contributors.debian.org" />
 	<target host="cvs.debian.org" />
+	<target host="d-i.debian.org" />
 	<target host="darcs.debian.org" />
 	<target host="db.debian.org" />
 	<target host="dsa.debian.org" />
 	<target host="ftp-master.debian.org" />
+	<target host="api.ftp-master.debian.org" />
 	<target host="git.debian.org" />
 	<target host="gobby.debian.org" />
 	<target host="hg.debian.org" />
+	<target host="i18n.debian.org" />
+	<target host="jenkins.debian.org" />
 	<target host="lintian.debian.org" />
 	<target host="lists.debian.org" />
 	<target host="munin.debian.org" />
 	<target host="nagios.debian.org" />
 	<target host="nm.debian.org" />
-	<!--target host="openstack.bm.debian.org" /-->
 	<target host="packages.debian.org" />
 	<target host="people.debian.org" />
 	<target host="piuparts.debian.org" />
-	<!--target host="puppet-dashboard.debian.org" /-->
 	<target host="qa.debian.org" />
 	<target host="packages.qa.debian.org" />
 	<target host="release.debian.org" />
@@ -170,6 +128,7 @@
 	<target host="svn.debian.org" />
 	<target host="tracker.debian.org" />
 	<target host="udd.debian.org" />
+	<!--target host="veyepar.debian.org" /-->
 	<target host="vote.debian.org" />
 	<target host="wiki.debian.org" />
 	<target host="www.debian.org" />
@@ -195,7 +154,11 @@
 			<test url="http://security.debian.org/?" />
 
 
-	<securecookie host="^nm\.debian\.org$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nm\.debian\.org$" name="^csrftoken$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://security\.debian\.org/+"

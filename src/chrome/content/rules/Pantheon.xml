@@ -1,35 +1,46 @@
 <!--
-		- pantheon-systems.assistly.com
-
-			- dashboard.gotpantheon.com
+	For other Pantheon coverage, see Pantheon.io.xml.
 
 
-	Nonfunctional subdomains:
-
-		- helpdesk	(assistly)
+	^gotpantheon.com: Refused
 
 
-	Problematic subdomains:
+	Mixed content:
 
-		- ^		(self-signed, mismatched, CN: redirector.zerigo.net)
+		- css on live-osuonline from $self * ˢ
+
+	* Just fonts
+	ˢ Secured by us
 
 -->
-<ruleset name="Pantheon (partial)">
+<ruleset name="got Pantheon.com (partial)">
 
-	<target host="gotpantheon.com" />
+	<!--	Direct rewrites:
+				-->
 	<target host="*.gotpantheon.com" />
 
+	<!--	Complications:
+				-->
+	<target host="gotpantheon.com" />
 
-	<securecookie host="^dashboard\.gotpantheon\.com$" name=".+" />
+		<test url="http://www.gotpantheon.com/" />
+
+		<!--	Accounts:
+					-->
+		<test url="http://live-osuonline.gotpantheon.com/" />
 
 
-	<rule from="^http://(?:www\.)?gotpantheon\.com/"
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^live-osuonline\.gotpantheon\.com$" name="^SimpleSAMLSessionID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://gotpantheon\.com/"
 		to="https://www.gotpantheon.com/" />
 
-	<rule from="^http://dashboard\.gotpantheon\.com/"
-		to="https://dashboard.gotpantheon.com/" />
-
-	<rule from="^http://helpdesk\.gotpantheon\.com/(favicon\.ico|images/)"
-		to="https://d3jyn100am7dxp.cloudfront.net/$1" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

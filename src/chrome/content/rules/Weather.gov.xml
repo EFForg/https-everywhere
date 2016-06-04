@@ -1,17 +1,83 @@
 <!--
-	For other U.S. goverment coverage, see US-government.xml.
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *weather.gov:
+
+		- airquality ᵈ
+		- cell ᵈ
+		- digital ⁵
+		- espotter ᵈ
+		- forecasts ʳ
+		- graphical ⁵
+		- marine ᵈ
+		- mobile ᵈ
+		- ndfd ʳ
+		- preview ᵈ
+		- radar ⁵
+		- www.srh ᵈ
+		- tadd ʳ
+		- w1 ⁵
+		- w2 ᵈ
+		- water ᵈ
+
+	⁵ 504
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *weather.gov:
+
+		- ^ ᵐ
+		- alerts ᶜ
+		- apps ᵉ
+		- forecast A
+		- nws ⁴ ᵉ
+		- ocwws ᵉ
+		- products ᵉ
+		- ptwc ᵐ
+		- www A
+
+	⁴ >= 1 page 404s
+	ᴬ Akamai / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.apps.weather.gov
+		- ucc.weather.gov
+		- www.ucc.weather.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps.weather.gov
+		- ocwws.weather.gov
+
 -->
-<ruleset name="Weather.gov" default_off="Akamai">
+<ruleset name="Weather.gov (partial)">
 
-	<target host="aviationweather.gov" />
-	<target host="www.aviationweather.gov" />
-	<target host="weather.gov" />
-	<target host="www.weather.gov" />
+	<!--target host="alerts.weather.gov" /-->
+	<target host="nwschat.weather.gov" />
+	<target host="ra4-gifs.weather.gov" />
+	<target host="vpn.weather.gov" />
 
-	<rule from="^http://(?:www\.)?weather\.gov/"
-		to="https://www.weather.gov/" />
+		<!--	404:
+				-->
+		<test url="http://nws.weather.gov/nthmp/" />
 
-	<rule from="^http://(?:www\.)?aviationweather\.gov/"
-		to="https://www.aviationweather.gov/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:app|ocww)s\.weather\.gov$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,70 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *treasury.gov:
+
+		- donotpay ¹
+		- search ²
+
+	¹ Dropped
+	² 403
+
+
+	^treasury.gov: Dropped
+
+
+	These altnames don't exist:
+
+		- www.sdc.fiscal.treasury.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- fiscal.treasury.gov
+		- sdc.fiscal.treasury.gov
+		- www.fiscal.treasury.gov
+		- m.treasury.gov
+		- www.treasury.gov
+
+
+	Mixed content:
+
+		- Images on m, www from farm\d.staticflickr.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Treasury.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="portal.donotpay.treasury.gov" />
+	<target host="sdc.fiscal.treasury.gov" />
+	<target host="www.fiscal.treasury.gov" />
+	<target host="m.treasury.gov" />
+	<target host="thenew10.treasury.gov" />
+	<target host="www.thenew10.treasury.gov" />
+	<target host="www.treasury.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="treasury.gov" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?fiscal\.treasury\.gov$" name="^BIGipServer" /-->
+	<!--securecookie host="^sdc\.fiscal\.treasury\.gov$" name="^(?:ACOOKIE|WEBTRENDS_ID)$" /-->
+	<!--securecookie host="^(?:m|www)\.treasury\.gov$" name="^(?:HASH_)?ROUTEID\.[\da-f]{32}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://treasury\.gov/"
+		to="https://www.treasury.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

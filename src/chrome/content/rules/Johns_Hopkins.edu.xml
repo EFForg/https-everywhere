@@ -1,0 +1,80 @@
+<!--
+	For other Johns Hopkins University coverage, see The_Johns_Hopkins_University.xml.
+
+
+	Nonfunctional hosts in *johnshopkins.edu:
+
+		- esgwebproxy ᵃ
+
+	ᵃ 200 "not configured"
+
+
+	Problematic hosts in *johnshopkins.edu:
+
+		- www.it ᵐ
+		- www ᵈ
+
+	ᵈ Dropped
+	ᵐ Mismatched
+
+
+	^johnshopkins.edu doesn't exist.
+
+
+	Insecure cookies are set for these hosts:
+
+		- login.johnshopkins.edu
+		- portalcontent.johnshopkins.edu
+
+
+	Mixed content:
+
+		- Images on it.johnshopkins.edu from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Johns Hopkins.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="activtracker.johnshopkins.edu" />
+	<target host="e210.johnshopkins.edu" />
+	<target host="ess.erp.johnshopkins.edu" />
+	<target host="it.johnshopkins.edu" />
+	<target host="login.johnshopkins.edu" />
+	<target host="my.johnshopkins.edu" />
+	<target host="portal.johnshopkins.edu" />
+	<target host="portalcontent.johnshopkins.edu" />
+	<target host="web1.johnshopkins.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.it.johnshopkins.edu" />
+	<target host="www.johnshopkins.edu" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^login\.johnshopkins\.edu$" name="SMMobileCookieTest" /-->
+	<!--securecookie host="^portalcontent\.johnshopkins\.edu$" name="^(CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!\.johnshopkins\.edu$)." name="." />
+
+
+	<rule from="^http://www\.it\.johnshopkins\.edu/"
+		to="https://it.johnshopkins.edu/" />
+
+	<!--	Redirect drops forward
+		slash path, and args:
+					-->
+	<rule from="^http://www\.johnshopkins\.edu/.*"
+		to="https://www.jhu.edu/" />
+
+		<test url="http://www.johnshopkins.edu/admissions/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

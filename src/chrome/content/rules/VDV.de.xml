@@ -1,0 +1,47 @@
+<!--
+	Problematic hosts in *vdv.de:
+
+		- ^ ¹
+		- mitglieder ² ³
+
+	¹ Handshake fails
+	² Mismatched
+	³ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- crm.vdv.de
+		- mitglieder.vdv.de
+		- www.vdv.de
+
+-->
+<ruleset name="VDV.de (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="crm.vdv.de" />
+	<target host="dms.vdv.de" />
+	<target host="www.vdv.de" />
+
+	<!--	Complications:
+				-->
+	<target host="vdv.de" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^crm\.vdv\.de$" name="^eVEWA2$" /-->
+	<!--securecookie host="^mitglieder\.vdv\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.vdv\.de$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://vdv\.de/"
+		to="https://www.vdv.de/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

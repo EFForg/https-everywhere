@@ -47,6 +47,7 @@
 			- chart
 			- *.commondatastorage
 			- fonts
+			- storage
 			- *.storage
 			- www
 
@@ -55,6 +56,7 @@
 			- (www.)	(^ → www)
 			- csi
 			- encrypted-tbn\d
+			- fonts
 			- g0
 			- *.metric
 			- ssl
@@ -85,10 +87,13 @@
 		<!-- The implicit test URL at the root of this domain generates a 404.
 				 Add an exclusion so the fetcher is happy. -->
 		<exclusion pattern="^http://chart\.googleapis\.com/$" />
+	<target host="ct.googleapis.com" />
 	<target host="fonts.googleapis.com" />
+	<target host="imasdk.googleapis.com" />
 	<target host="www.googleapis.com" />
 	<target host="*.commondatastorage.googleapis.com" />
 	<target host="*.storage.googleapis.com" />
+	<target host="storage.googleapis.com" />
 
 	<target host="gstatic.com" />
 	<target host="*.gstatic.com" />
@@ -114,11 +119,13 @@
 	<rule from="^http://(click|ssl|www)\.google-analytics\.com/"
 		to="https://$1.google-analytics.com/" />
 
-	<rule from="^http://(ajax|chart|fonts|www)\.googleapis\.com/"
+	<rule from="^http://(ajax|chart|ct|fonts|imasdk|www)\.googleapis\.com/"
 		to="https://$1.googleapis.com/" />
 		<test url="http://ajax.googleapis.com/ajax/libs/angular_material/0.8.2/angular-material.min.js" />
+		<test url="http://ct.googleapis.com/aviator/ct/v1/get-entries?start=0&amp;end=1" />
 		<test url="http://chart.googleapis.com/chart?cht=p3&amp;chs=250x100&amp;chd=t:60,40&amp;chl=Hello|World" />
 		<test url="http://fonts.googleapis.com/css?family=Tangerine" />
+		<test url="http://imasdk.googleapis.com/" />
 
 	<rule from="^http://([^@:\./]+\.)?(commondata)?storage\.googleapis\.com/"
 		to="https://$1$2storage.googleapis.com/" />
@@ -140,12 +147,13 @@
 		to="https://www.gstatic.com/" />
 		<test url="http://www.gstatic.com/" />
 
-	<rule from="^http://(csi|encrypted-tbn\d|g0|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
+	<rule from="^http://(csi|encrypted-tbn\d|fonts|g0|[\w-]+\.metric|ssl|t\d)\.gstatic\.com/"
 		to="https://$1.gstatic.com/" />
 		<test url="http://csi.gstatic.com/" />
 		<test url="http://encrypted-tbn1.gstatic.com/" />
 		<test url="http://encrypted-tbn2.gstatic.com/" />
 		<test url="http://encrypted-tbn3.gstatic.com/" />
+		<test url="http://fonts.gstatic.com/" />
 		<test url="http://g0.gstatic.com/" />
 		<test url="http://test1-ds.metric.gstatic.com/" />
 		<test url="http://test2-ds.metric.gstatic.com/" />

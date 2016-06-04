@@ -1,0 +1,129 @@
+<!--
+	Warwickshire County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *warwickshire.gov.uk:
+
+		- business ᵈ
+		- library3 ᵈ
+		- oop ᵈ
+		- timetrail ⁴
+		- ws ʳ
+
+	⁴ 404
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *warwickshire.gov.uk:
+
+		- carshare * ᶜ ᵐ
+		- countryparks ᵐ ˣ
+		- heritage ᵐ
+		- hwb ᵐ
+		- invest ᵐ
+		- laf ᵐ
+		- maps ᶜ ᵐ ᵘ
+		- printservices ᵐ
+		- publichealth ᵐ
+		- wcctest ᵐ
+		- whittlefordpark ᵐ
+		- wwp ᵐ
+
+	* Missing certificate chain at redirect destination
+	ᶜ Missing certificate chain
+	ᵐ Mismatched
+	ᵘ Untrusted root
+	ˣ Mixed iframe, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	These altnames do not exist:
+
+		- www.library.warwickshire.gov.uk
+		- www.news.warwickshire.gov.uk
+		- www.sfeconnect.warwickshire.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- democratic.warwickshire.gov.uk
+		- directory.warwickshire.gov.uk
+		- library.warwickshire.gov.uk
+		- maps.warwickshire.gov.uk
+		- planning.warwickshire.gov.uk
+
+
+	Mixed content:
+
+		- iframes, on:
+		
+			- countryparks from maps.google.com ˢ
+			- countryparks, news from www.youtube.com ˢ
+
+		- css on countryparks, news from fonts.googleapis.com ˢ
+
+		- Images, on:
+		
+			- (www.)?, apps, countryparks from www.warwickshire.gov.uk ˢ
+			- countryparks, heritage, hwb, invest, laf, news, printservices, publichealth, whittlefordpark, wwp from news.warwickshire.gov.uk ˢ
+			- invest, heritage from $self ᵐ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Warwickshire.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="warwickshire.gov.uk" />
+	<target host="admissions.warwickshire.gov.uk" />
+	<target host="apps.warwickshire.gov.uk" />
+	<target host="democratic.warwickshire.gov.uk" />
+	<target host="directory.warwickshire.gov.uk" />
+	<target host="img.warwickshire.gov.uk" />
+	<target host="info.warwickshire.gov.uk" />
+	<target host="library.warwickshire.gov.uk" />
+	<target host="news.warwickshire.gov.uk" />
+	<target host="planning.warwickshire.gov.uk" />
+	<target host="rss.warwickshire.gov.uk" />
+	<target host="sfeconnect.warwickshire.gov.uk" />
+	<target host="webutils.warwickshire.gov.uk" />
+	<target host="www.warwickshire.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<!--target host="carshare.warwickshire.gov.uk" /-->
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://admissions.warwickshire.gov.uk/Enrol/Website/" />
+		<test url="http://apps.warwickshire.gov.uk/OpenData" />
+		<test url="http://democratic.warwickshire.gov.uk/cmis5/" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://library.warwickshire.gov.uk/iguana/www.main.cls?p=&amp;v=#GuestRegistration=1" /-->
+		<!--test url="http://planning.warwickshire.gov.uk/swiftlg/apas/run/wphappcriteria.display" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:directory|planning)\.warwickshire\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^democratic\.warwickshire\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|language)$" /-->
+	<!--securecookie host="^library\.warwickshire\.gov\.uk$" name="^(?:ClientBrowser|ClientBrowserVersion|ClientEntryPoint|ClientOs|ClientUserAgent|lang)$" /-->
+	<!--securecookie host="^maps\.warwickshire\.gov\.uk$" name="^ias\.Locale$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://carshare\.warwickshire\.gov\.uk/"
+		to="https://rbwmcarshare.co.uk/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -9,7 +9,6 @@
 	Nonfunctional domains:
 
 		- \w+.cvs.sf.net		(reset)
-		- p.sf.net			(reset)
 		- \w+.cvs.sourceforge.net	(reset)
 		- heanet.dl.sourceforge.net
 		- netcologne.dl.sourceforge.net
@@ -23,12 +22,24 @@
 	** Refused
 
 
-	Fully covered domains:
+	Problematic domains:
 
-		- sourceforge.net subdomains:
+		- *.svn.sf.net ᵐ
 
-			- goparallel
-			- ibmsmarteritservices
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *sf.net & *sourceforge.net:
+
+		- *.svn ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- p.sf.net
+		- sourceforge.net
 
 
 	Mixed content:
@@ -40,56 +51,99 @@
 -->
 <ruleset name="SourceForge (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="sf.net" />
-	<target host="*.sf.net" />
-	<target host="*.svn.sf.net" />
-		<!--
-			Different.
-					-->
+	<target host="p.sf.net" />
+	<target host="www.sf.net" />
+
+	<target host="static.sourceforge.jp" />
+
 	<target host="sourceforge.net" />
-	<target host="*.sourceforge.net" />
+	<target host="apps.sourceforge.net" />
+	<target host="deals.sourceforge.net" />
+	<target host="goparallel.sourceforge.net" />
+	<target host="ibmsmarteritservices.sourceforge.net" />
+	<target host="images.sourceforge.net" />
+	<target host="lists.sourceforge.net" />
+	<target host="prdownloads.sourceforge.net" />
+	<target host="sflogo.sourceforge.net" />
+	<target host="static.sourceforge.net" />
 	<target host="*.svn.sourceforge.net" />
-		<!--
-			Redirects to http.
+	<target host="www.sourceforge.net" />
 
-		<exclusion pattern="^http://\w+\.svn\.s(?:f|ourceforge)\.net/viewvc/" /-->
-	<target host="*.sourceforge.jp" />
+	<!--	Complications:
+				-->
+	<target host="apps.sf.net" />
+	<target host="downloads.sf.net" />
+	<target host="goparallel.sf.net" />
+	<target host="ibmsmarteritservices.sf.net" />
+	<target host="images.sf.net" />
+	<target host="lists.sf.net" />
+	<target host="prdownloads.sf.net" />
+	<target host="sflogo.sf.net" />
+	<target host="static.sf.net" />
+	<target host="*.svn.sf.net" />
 
+	<target host="downloads.sourceforge.net" />
 
-	<securecookie host="^downloads\.sourceforge\.net$" name=".+" />
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://sourceforge.net/about" />
+		<test url="http://sourceforge.net/create/" />
+		<test url="http://sourceforge.net/directory/" />
+		<test url="http://sourceforge.net/directory/home-education" />
+		<test url="http://sourceforge.net/donate/index.php?group_id=" />
+		<test url="http://sourceforge.net/jobs?source=footer" />
+		<test url="http://sourceforge.net/projects/maxima/" />
+		<test url="http://sourceforge.net/support" />
+		<test url="http://sourceforge.net/top" />
 
-        <rule from="^http://static\.sourceforge\.jp/"
-                to="https://static.sourceforge.jp/" />
-
-	<rule from="^http://(www\.)?s(?:f|ourceforge)\.net/(account|image)s/"
-		to="https://$1sourceforge.net/$2s/" />
-
-	<!--	Redirects to http first.
+		<!--	Redirects to http:
 						-->
+		<!--exclusion pattern="^http://\w+\.svn\.s(?:f|ourceforge)\.net/viewvc/" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://([\w-]+)\.svn\.s(?:f|ourceforge)\.net/(?!svnroot/)" />
 
-	<rule from="^http://(www\.)?sourceforge\.net/account/?"
-		to="https://$1sourceforge.net/account/" />
+			<!--	+ve:
+					-->
+			<test url="http://fceultra.svn.sf.net/" />
+			<test url="http://fceultra.svn.sf.net/viewvc/" />
+			<test url="http://fceultra.svn.sourceforge.net/" />
+			<test url="http://fceultra.svn.sourceforge.net/viewvc/" />
 
-	<rule from="^http://(www\.)?s(?:f|ourceforge)\.net/(blog|sflogo\.php)($|[\?/])"
-		to="https://$1sourceforge.net/$2$3" />
 
-	<!--	This should be above the next rule, so as to avoid double rewrites.
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^p\.sf\.net$" name="^_session_id$" /-->
+	<!--securecookie host="^sourceforge\.net$" name="^_session_id$" /-->
+
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^p\.sf\.net$" name="." />
+	<securecookie host="^downloads\.sourceforge\.net$" name="." />
+	<securecookie host="^(?:downloads\.)?sourceforge\.net$" name="." />
+
+
+	<rule from="^http://([\w-]+)\.svn\.sf\.net/"
+		to="https://$1.svn.sourceforge.net/" />
+
+		<test url="http://fceultra.svn.sf.net/svnroot/" />
+		<test url="http://fceultra.svn.sf.net/svnroot//" />
+
+	<!--	This should be above the final two rules, so as to avoid double rewrites.
 											-->
-	<rule from="^http://downloads\.s(?:f|ourceforge)\.net/project/([^\?]+)\?r=http%3A%2F%2Fs"
+	<rule from="^http://downloads\.s(?:f|ourceforge)\.net/project/([^?]+)\?r=http%3A%2F%2Fs"
 		to="https://downloads.sourceforge.net/project/$1?r=https%3A%2F%2Fs" />
 
-	<rule from="^http://(apps|downloads|goparallel|ibmsmarteritservices|images|lists|prdownloads|sflogo|static)\.s(?:f|ourceforge)\.net/"
+		<test url="http://downloads.sourceforge.net/project/poderosa/releases/4.3.16/ContributedPlugins-4.3.16-bin-net20.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fpoderosa%2Ffiles%2Freleases%2F4.3.16%2F&amp;ts=1453143057&amp;use_mirror=liquidtelecom" />
+		<test url="http://downloads.sourceforge.net/project/poderosa/releases/4.3.16/ContributedPlugins-4.3.16-bin-net45.zip?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fpoderosa%2Ffiles%2Freleases%2F4.3.16%2F&amp;ts=1453143140&amp;use_mirror=liquidtelecom" />
+
+	<rule from="^http://(apps|downloads|goparallel|ibmsmarteritservices|images|lists|prdownloads|sflogo|static)\.sf\.net/"
 		to="https://$1.sourceforge.net/" />
 
-	<!--	jobs.sourceforge.net is equivalent to slashdot.personforce.com,
-		but cert doesn't match that domain either.
-					-->
-	<rule from="^http://jobs\.sourceforge\.net/(build|images|include)/"
-		to="https://secure.personforce.com/$1/" />
-
-	<!--	Cert only matches *.svn.sourceforge.net
-							-->
-	<rule from="^http://([\w-]+)\.svn\.s(?:f|ourceforge)\.net/svnroot/"
-		to="https://$1.svn.sourceforge.net/svnroot/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

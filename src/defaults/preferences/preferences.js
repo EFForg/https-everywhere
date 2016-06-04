@@ -23,7 +23,7 @@ pref("extensions.https_everywhere.http_nowhere.orig.ocsp.required", false);
 // SSl Observatory preferences
 pref("extensions.https_everywhere._observatory.enabled",false);
 
-// "testing" currently means send unecessary fingerprints and other test-suite
+// "testing" currently means send unnecessary fingerprints and other test-suite
 // type stuff
 pref("extensions.https_everywhere._observatory.testing",false);
 

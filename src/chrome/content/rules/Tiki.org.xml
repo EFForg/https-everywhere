@@ -4,36 +4,17 @@
 		- dsitvpbwt9mw4.cloudfront.net
 
 
-	Nonfunctional subdomains:
+	Insecure cookies are set for these hosts:
 
-		- demo ¹
-		- irc ²
-		- i18n ²
-		- security ³
-
-	¹ Redirects to http; mismatched, CN: *.kasserver.com
-	² Redirects to http, valid cert
-	³ http reply
-
-
-	Observed cookie domains:
-
-		- ^ ¹
-		- branding ¹
-		- dev ¹
-		- doc ¹
-		- edu ¹
-		- info ¹
-		- i18n ²
-		- piwik ³
-		- profiles ¹
-		- security ²
-		- suite ¹
-		- themes ¹
-
-	¹ Secured by us <= not secured by server
-	² Not secured by us <= we don't touch http cookies
-	³ Secured by server
+		- tiki.org
+		- branding.tiki.org
+		- dev.tiki.org
+		- doc.tiki.org
+		- info.tiki.org
+		- i18n.tiki.org
+		- profiles.tiki.org
+		- security.tiki.org
+		- themes.tiki.org
 
 
 	Mixed content:
@@ -42,8 +23,8 @@
 
 			- doc and themes from:
 
-				- ^ *
-				- themes *
+				- ^tiki.org *
+				- themes.tiki.org *
 
 			- edu from:
 
@@ -52,48 +33,50 @@
 
 			- info from:
 
+				- ^tiki.org *
+				- branding.tiki.org *
 				- $self *
-				- ^ *
-				- themes *
+				- themes.tiki.org *
 
-			- profiles from themes *
-			- suite from dev *
+			- profiles from themes.tiki.org *
+			- security from secunia.com *
 
-		- Web bugs on profiles from piwik *
+		- Bugs on doc, profiles, themes from piwik *
 
 	* Secured by us
 
 -->
-<ruleset name="Tiki.org (partial)">
+<ruleset name="Tiki.org">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="tiki.org" />
 	<target host="branding.tiki.org" />
+	<target host="demo.tiki.org" />
 	<target host="dev.tiki.org" />
 	<target host="doc.tiki.org" />
 	<target host="edu.tiki.org" />
 	<target host="info.tiki.org" />
+	<target host="irc.tiki.org" />
+	<target host="i18n.tiki.org" />
 	<target host="piwik.tiki.org" />
 	<target host="profiles.tiki.org" />
+	<target host="security.tiki.org" />
 	<target host="suite.tiki.org" />
 	<target host="themes.tiki.org" />
 	<target host="www.tiki.org" />
 
-		<!--exclusion pattern="^http://(demo|irc|i18n|security)\.tiki\.org/" /-->
-
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(doc\.|themes\.)?tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|mobile_mode|rtl)$" /-->
+	<!--securecookie host="^(doc\.|suite\.|themes\.)?tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|javascript_enabled_detect)$" /-->
 	<!--securecookie host="^branding\.tiki\.org$" name="^(mobile_mode|runs_before_js_detect)$" /-->
-	<!--securecookie host="^dev\.tiki\.org$" name="^(mobile_mode|rtl)$" /-->
-	<!--securecookie host="^suite\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|rtl)$" /-->
+	<!--securecookie host="^dev\.tiki\.org$" name="^javascript_enabled_detect$" /-->
 	<!--securecookie host="^info\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|runs_before_js_detect|tab|tab_last_query)$" /-->
-	<!--securecookie host="^suite\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV)$" /-->
 	<!--securecookie host="^profiles\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV|runs_before_js_detect)$" /-->
+	<!--securecookie host="^(?:i18n|security)\.tiki\.org$" name="^(PHPSESSID|PHPSESSIDCV)$" /-->
 
-	<securecookie host="^(?:\w+\.)?tiki\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"

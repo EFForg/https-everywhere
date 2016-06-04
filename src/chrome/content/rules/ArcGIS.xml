@@ -1,28 +1,34 @@
 <!--
-	Nonfunctional domains:
+	Other ArcGIS rulesets:
 
-		- forums.arcgis.com *
-		- help.arcgis.com	(prints "we have encountered an error", akamai)
-		- resources.arcgis.com *
-		- video.arcgis.com	($ redirects to http, other paths 404; self-signed, CN: 1-84-2b-2b-3-4e-20)
+		- ArcGIS_online.com.xml
+
+
+	Nonfunctional hosts in *arcgis.com:
+
+		- forums *
+		- help	(prints "we have encountered an error", akamai)
+		- resources *
+		- video	($ redirects to http, other paths 404; self-signed, CN: 1-84-2b-2b-3-4e-20)
 
 	* Prints "our servers are currently busy"; mismatched, CN: www.ersi.com
 
 -->
-<ruleset name="ArcGIS (partial)">
+<ruleset name="ArcGIS.com (partial)">
 
 	<target host="arcgis.com" />
-	<target host="*.arcgis.com" />
-	<target host="serverapi.arcgisonline.com" />
+	<target host="developers.arcgis.com" />
+	<target host="js.arcgis.com" />
+	<target host="webaccounts.arcgis.com" />
+	<target host="www.arcgis.com" />
+
+		<test url="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css" />
 
 
-	<securecookie host="^www\.arcgis\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(developers\.|webaccounts\.|www\.)?arcgis\.com/"
-		to="https://$1arcgis.com/" />
-
-	<rule from="^http://serverapi\.arcgisonline\.com/"
-		to="https://serverapi.arcgisonline.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

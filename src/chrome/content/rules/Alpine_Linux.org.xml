@@ -1,30 +1,24 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *alpinelinux.org:
 
 		- git ²
+		- mail ²
 		- nl ³
 		- wiki *
 
-	² Refused
+	² Dropped
 	³ Shows bugs
 	* 503
 
 
-	Problematic subdomains:
+	Problematic hosts in *alpinelinux.org:
 
 		- (www.)? *
-		- bugs *
-		- forum ²
+		- pkgs ²
+		- forum *
 
-	* Server sends no certificate chain
-	² Mismatched
-
-
-	Fully covered subdomains:
-
-		- (www.)?
-		- bugs
-		- mail
+	* Mixed css
+	² Missing certificate chain
 
 
 	Insecure cookies are set for these hosts:
@@ -34,15 +28,25 @@
 
 	Mixed content:
 
-		- css on forum from $self
-		- Images on forum from $self
+		- css, on:
+		
+			- (www.)? from yui.yahooapis.com
+			- forum from $self *
+			- forum from fonts.googleapis.com *
+
+		- Images on forum from $self *
+
+	* Secured by us
 
 -->
-<ruleset name="Alpine Linux.org (partial)" default_off='missing certificate chain'>
+<ruleset name="Alpine Linux.org (partial)" platform="mixedcontent">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="alpinelinux.org" />
 	<target host="bugs.alpinelinux.org" />
-	<target host="mail.alpinelinux.org" />
+	<target host="forums.alpinelinux.org" />
+	<!--target host="pkgs.alpinelinux.org" /-->
 	<target host="www.alpinelinux.org" />
 
 
@@ -50,7 +54,7 @@
 					-->
 	<!--securecookie host="^bugs\.alpinelinux\.org$" name="^_redmine_session" /-->
 
-	<securecookie host="^bugs\.alpinelinux\.org$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http:"

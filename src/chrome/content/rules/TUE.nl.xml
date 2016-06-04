@@ -2,40 +2,51 @@
 	Eindhoven University of Technology
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *tue.nl:
 
+		- cso ¹
+		- oase ᵃ
+		- (www.)?education ᵃ
+		- (www.)?onderwijs ᵃ
+		- w3 *
 		- w3.win *
 
-	* Insecure renegotiation
+	¹ 401
+	ᵃ Shows another domain
+	* Refused
 
 
-	Partially covered subdomains:
+	These altnames don't exist:
 
-		- w3.win *
-
-	* Some pages redirect to http
-
-
-	Fully covered subdomains:
-
-		- www.win
+		- www.educationguide.tue.nl
+		- www.intranet.tue.nl
+		- www.static.tue.nl
 
 -->
 <ruleset name="TUE.nl (partial)">
 
-	<target host="*.tue.nl" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://w3\.win\.tue\.nl/nl/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://w3\.win\.tue\.nl/+(?!favicon\.ico|fileadmin/|typo3temp/)" />
+	<target host="tue.nl" />
+	<target host="m.edu.tue.nl" />
+	<target host="educationguide.tue.nl" />
+	<target host="educationsso.tue.nl" />
+	<target host="intranet.tue.nl" />
+	<target host="static.intranet.tue.nl" />
+	<target host="m.ond.tue.nl" />
+	<target host="onderwijssso.tue.nl" />
+	<target host="planapp.tue.nl" />
+	<target host="static.tue.nl" />
+	<target host="studiegids.tue.nl" />
+	<target host="static.studiegids.tue.nl" />
+	<target host="www.studiegids.tue.nl" />
+	<target host="www.win.tue.nl" />
+	<target host="www.tue.nl" />
 
 
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^_gat?$" />
 
-	<rule from="^http://(w3\.win|www\.win)\.tue\.nl/"
-		to="https://$1.tue.nl/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -32,18 +32,12 @@
 	² Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered hosts in *williamhill.com:
-
-		- files
-		- scratchcards
-		- secdn
-		- whdn		(→ secdn)
-
-
 	Insecure cookies are set for these domains and hosts:
 
 		- .williamhill.com
+		- ads2.williamhill.com
 		- sports.williamhill.com
+		- www.williamhill.com
 
 
 	Mixed content:
@@ -52,13 +46,16 @@
 
 		- Images, on:
 
-			- auth, casino, games, poker, www from whdn.williamhill.com
+			- auth, casino, games, poker, www from whdn.williamhill.com *
+
+	* Secured by us
 
 -->
 <ruleset name="William Hill.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="ads2.williamhill.com" />
 	<target host="auth.williamhill.com" />
 	<target host="cachemobile.williamhill.com" />
 	<target host="files.williamhill.com" />
@@ -86,17 +83,23 @@
 			<test url="http://sports.williamhill.com/bet/en-gb/betting/y/5/Football.html" />
 			<test url="http://sports.williamhill.com/bet/en-gb/betting/y/9/Horse%2dRacing.html" />
 
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://ads2.williamhill.com/redirect.aspx?pid=&amp;lpid=&amp;bid=" />
+
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.williamhill\.com$" name="^(CSRF_COOKIE|SQ_SYSTEM_SESSION|cust_lang|cust_login|cust_prefs|exp_last_activity|exp_last_visit|exp_tracker|vegas_visit|whUserData|zname_extension)$" /-->
+	<!--securecookie host="^\.williamhill\.com$" name="^(CSRF_COOKIE|SQ_SYSTEM_SESSION|banner_click|clickinfo|cust_lang|cust_login|cust_prefs|exp_last_activity|exp_last_visit|exp_tracker|source_NR|vars_info|vegas_visit|whUserData|zname_extension)$" /-->
 	<!--securecookie host="^(sports)?\.williamhill\.com$" name="^TS[\da-f]{8}$" /-->
-	<!--securecookie host="^sports\.williamhill\.com$" name="^TS[\da-f]{8}_\d\d$" /-->
+	<!--securecookie host="^ads2\.williamhill\.com$" name="^NetRefer(?:_CookieUniTrack_C|SPS)" /-->
+	<!--securecookie host="^(?:sports|www)\.williamhill\.com$" name="^TS[\da-f]{8}_\d\d$" /-->
 
 	<!--	Tracking cookies:
 					-->
 	<securecookie host="^\.williamhill\.com$" name="^(?:banner_(?:domain)?click|clickinfo|fd_click|exp_\w+)" />
 	<!--securecookie host="^\w+\.williamhill\.com$" name=".*" /-->
+	<securecookie host="^(?:ads2|www)\.williamhill\.com$" name="." />
 
 
 	<!--	Cert only matches www.	-->

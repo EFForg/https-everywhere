@@ -1,0 +1,80 @@
+<!--
+	Elmbridge Borough Council
+
+	For rules causing false/broken MCB, see Elmbridge.gov.uk.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *elmbridge.gov.uk:
+
+		- edocs ᵈ
+		- emaps ᵃ
+		- images ᵃ
+		- petitions ᵗ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᵗ Reset
+
+
+	Problematic hosts in *elmbridge.gov.uk:
+
+		- ^ ᵐ
+		- consult ᵐ ˢ
+		- mygov ˣ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- benefits.elmbridge.gov.uk
+		- mygov.elmbridge.gov.uk
+
+
+	Mixed content:
+
+		- css on mygov from www.elmbridge.gov.uk ˢ
+
+		- Images, on:
+
+			- consult, mygov from images.elmbridge.gov.uk ᵃ
+			- mygov from www.elmbridge.gov.uk ˢ
+
+		- favicon on mygov from www.elmbridge.gov.uk ˢ
+
+	ᵃ Unsecurable <= shows another domain
+	ˢ Secured by us
+
+-->
+<ruleset name="Elmbridge.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="benefits.elmbridge.gov.uk" />
+	<!--starget host="mygov.elmbridge.gov.uk" /-->
+	<target host="www.elmbridge.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="elmbridge.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^benefits\.elmbridge\.gov\.uk$" name="^(?:\.ASPXAUTH|ASP\.NET_SessionId$)" /-->
+	<!--securecookie host="^mygov\.elmbridge\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://elmbridge\.gov\.uk/"
+		to="https://www.elmbridge.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

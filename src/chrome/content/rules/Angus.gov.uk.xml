@@ -1,0 +1,81 @@
+<!--
+	Angus Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *angus.gov.uk:
+
+		- www.fosteringandadoption *
+		
+	* 200 blank page
+
+
+	Problematic hosts in *angus.gov.uk:
+
+		- ahead ᵐ
+		- library ⁴
+
+	⁴ 404
+	ᵐ Mismatched
+
+
+	^angus.gov.uk: Dropped over http & https
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- ahead.angus.gov.uk
+		- .ahead.angus.gov.uk
+		- archive.angus.gov.uk
+		- planning.angus.gov.uk
+		- services.angus.gov.uk
+		- .services.angus.gov.uk
+		- www.angus.gov.uk
+		- .www.angus.gov.uk
+
+
+	Mixed content:
+
+		- css on ahead from fonts.googleapis.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Angus.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="archive.angus.gov.uk" />
+	<target host="planning.angus.gov.uk" />
+	<target host="services.angus.gov.uk" />
+	<target host="www.angus.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="library.angus.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:ahead|services|www)\.angus\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.(?:ahead|services|www)\.angus\.gov\.uk$" name="^TestCookie$" /-->
+	<!--securecookie host="^archive\.angus\.gov\.uk$" name="^CF(?:ID|TOKEN)$" /-->
+	<!--securecookie host="^planning\.angus\.gov\.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.(?:archive|services|www)\." name="." />
+
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://library\.angus\.gov\.uk/[^?]*"
+		to="https://angus.spydus.co.uk/" />
+
+		<test url="http://library.angus.gov.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

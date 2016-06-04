@@ -1,13 +1,100 @@
-<ruleset name="X PRIZE Foundation (partial)">
+<!--
+	X PRIZE Foundation
 
-	<target host="xprize.org" />
+
+	CDN buckets:
+
+		- s3.amazonaws.com/skipsolabs_xprize/
+
+
+	Nonfunctional hosts in *xprize.org:
+
+		- annualreport *
+
+	* Dropped
+
+
+	Many pages redirect to http
+	donate/.+ redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- oceandiscoveryportal.xprize.org
+
+-->
+<ruleset name="X PRIZE.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="oceandiscovery.xprize.org" />
+	<target host="oceandiscoveryportal.xprize.org" />
 	<target host="www.xprize.org" />
 
+	<!--	Complications:
+				-->
+	<target host="xprize.org" />
 
-	<!--	- Many pages redirect to http
-		- donate/.+ redirects to http
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://oceandiscovery\.xprize\.org/$" /-->
+		<!--
+			Exceptions:
 					-->
-	<rule from="^http://(www\.)?xprize\.org/(donate(?:/?$|\?)|files/|sites/)"
-		to="https://$1xprize.org/$2" />
+		<exclusion pattern="^http://oceandiscovery\.xprize\.org/+(?!files/|misc/|profiles/\w+/themes/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://oceandiscovery.xprize.org/about/contact" />
+			<test url="http://oceandiscovery.xprize.org/about/media-room/press-kit" />
+			<test url="http://oceandiscovery.xprize.org/about/media-room/story-ideas" />
+			<test url="http://oceandiscovery.xprize.org/news/blog/discovering-new-planet" />
+			<test url="http://oceandiscovery.xprize.org/news/do-humans-have-future-deep-sea-exploration" />
+			<test url="http://oceandiscovery.xprize.org/press-release/new-7-million-xprize-competition-seeks-usher-new-era-of-ocean" />
+
+			<!--	-ve:
+					-->
+			<test url="http://oceandiscovery.xprize.org/profiles/xprize_profile/themes/custom/imagine/logo.png" />
+			<test url="http://oceandiscovery.xprize.org/sites/default/files/prize-logos/shell_ocean_discovery_logo.png" />
+			<test url="http://oceandiscovery.xprize.org/misc/menu-expanded.png" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://oceandiscovery\.xprize\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.xprize\.org/+(?!donate(?:/?$|\?)|files/|profiles/\w+/themes/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.xprize.org/about" />
+			<test url="http://www.xprize.org/about/contact" />
+			<test url="http://www.xprize.org/benefactors" />
+			<test url="http://www.xprize.org/grand-challenges" />
+			<test url="http://www.xprize.org/news" />
+			<test url="http://www.xprize.org/privacy-policy" />
+			<test url="http://www.xprize.org/signup" />
+			<test url="http://www.xprize.org/ted-rules" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.xprize.org/donate" />
+			<test url="http://www.xprize.org/misc/menu-leaf.png" />
+			<test url="http://www.xprize.org/profiles/xprize_profile/themes/custom/imagine/logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^oceandiscoveryportal\.xprize\.org$" name="^(?:AWSELB|skipso_f(?:irst_visit|rontend))$" /-->
+
+	<securecookie host="^oceandiscoveryportal\.xprize\.org$" name="." />
+
+
+	<rule from="^http://xprize\.org/"
+		to="https://www.xprize.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

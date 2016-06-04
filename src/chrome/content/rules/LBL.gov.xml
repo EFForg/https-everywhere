@@ -4,21 +4,28 @@
 	For other U.S. government coverage, see US-government.xml.
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *lbl.gov:
+
+		- engineering ¹
+		- go ²
+		- map ³
+		- www-afrd ¹
+		- www2 ⁴
+
+	¹ WP Engine
+	² Handshake fails
+	³ 404
+	⁴ Differs from http
+
+
+	Problematic hosts in *lbl.gov:
 
 		- photos ¹
+		- supercon ¹
 		- wwwdev ²
 
-	¹ Mismatched, CN: *.webdamdb.com)
+	¹ Mismatched
 	² Self-signed
-
-
-	Fully covered subdomains:
-
-		- www
-		- newscenter
-		- search
-		- wwwdev	(→ www)
 
 
 	^lbl.gov doesn't exist.
@@ -45,19 +52,31 @@
 -->
 <ruleset name="LBL.gov (partial)">
 
-	<target host="lbl.gov" />
-	<target host="*.lbl.gov" />
+	<!--	Direct rewrites:
+				-->
+	<target host="commons.lbl.gov" />
+	<target host="identity.lbl.gov" />
+	<target host="newscenter.lbl.gov" />
+	<target host="search.lbl.gov" />
+	<target host="today.lbl.gov" />
+	<target host="www.lbl.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="wwwdev.lbl.gov" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^photos\.lbl\.gov$" name="^PHPSESSID$" /-->
 
+	<securecookie host="^\." name="^__qca$" />
+
 
 	<rule from="^http://wwwdev\.lbl\.gov/"
 		to="https://www.lbl.gov/" />
 
-	<rule from="^http://(newscenter|search|today|www)\.lbl\.gov/"
-		to="https://$1.lbl.gov/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

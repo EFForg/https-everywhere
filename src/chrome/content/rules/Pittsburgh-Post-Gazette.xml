@@ -1,22 +1,107 @@
 <!--
-	c4241337.r37.cf2.rackcdn.com
-	c4241337.ssl.cf2.rackcdn.com
+	Pittsburgh Post-Gazette
+
+	For rules causing false/broken MCB, see Post-Gazette.com-falsemixed.xml.
 
 
-	Nonfunctional subdomains:
+	CDN buckets:
 
-		- cinesport	(cert: gp1.wac.edgecastcdn.net; 404)
-		- classified	(cert: ssl.post-gazette.com; shows that domain's data)
-		- old
-		- (www.)
+		- c4241337.r37.cf2.rackcdn.com
+		- c4241337.ssl.cf2.rackcdn.com
+
+
+	Nonfunctional hosts in *post-gazette.com:
+
+		- blogs ¹
+		- cinesport ²
+		- classified ³
+		- communityvoices ¹
+		- earlyreturns ¹
+		- newsinteractive ¹
+		- old ³
+		- projects ¹
+		- sportstown ¹
+		- store ⁴
+
+	¹ Refused
+	² 404, CN: gp1.wac.edgecastcdn.net
+	³ Dropped
+	⁴ Shows another domain
+
+
+	Problematic hosts in *post-gazette.com:
+
+		- ^ *
+		- oascentral *
+		- plus.sites *
+		- weddings *
+		- widget *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- my.post-gazette.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- pge, press, www from my.post-gazette.com *
+			- powersource from $self *
+			- www from widget.post-gazette.com
+
+		- Images,
+
+			- on powersource from $self *
+			- on powersource, www from www.post-gazette.com *
+
+		- Bugs, on:
+
+			- pge from imagec17.247realmedia.com *
+			- pge from oascentral.post-gazette.com *
+			- powersource, www from b.scorecardresearch.com *
+			- www from bcp.crwdcntrl.net *
+
+	* Secured by us
 
 -->
-<ruleset name="Pittsburgh Post-Gazette (partial)">
+<ruleset name="Post-Gazette.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="my.post-gazette.com" />
+	<!--target host="pge.post-gazette.com" /-->
+	<!--target host="powersource.post-gazette.com" /-->
+	<!--target host="press.post-gazette.com" /-->
+	<target host="sportsblogs.post-gazette.com" />
 	<target host="ssl.post-gazette.com" />
+	<!--target host="www.post-gazette.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="post-gazette.com" /-->
+	<target host="oascentral.post-gazette.com" />
+
+		<test url="http://oascentral.post-gazette.com/RealMedia/ads/adstream_nx.ads/pge.post-gazette.com/@BottomRight" />
 
 
-	<rule from="^http://ssl\.post-gazette\.com/"
-		to="https://ssl.post-gazette.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.post-gazette\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://post-gazette\.com/"
+		to="https://www.post-gazette.com/" /-->
+
+	<rule from="^http://oascentral\.post-gazette\.com/"
+		to="https://oasc17.247realmedia.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

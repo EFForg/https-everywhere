@@ -1,25 +1,54 @@
 <!--
-	Problematic subdomains:
+	Other BalaBit rulesets:
 
-		- blog	(works; mismatched, CN: ssl2944.cloudflare.com)
+		- balabit.hu.xml
 
 
-	Fully covered subdomains:
+	These altnames don't exist:
 
-		- (www.)
-		- support
+		- www.pages.balabit.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- pages.balabit.com
+		- support.balabit.com
+
+
+	Mixed content:
+
+		- Bug on www from link-page.info ᶜ
+
+	ᶜ Ruleset disabled by default <= missing certificate chain
 
 -->
-<ruleset name="BalaBit.com (partial)">
+<ruleset name="BalaBit.com">
 
 	<target host="balabit.com" />
-	<target host="*.balabit.com" />
+	<target host="blogs.balabit.com" />
+	<target host="*.blogs.balabit.com" />
+	<target host="career.balabit.com" />
+	<target host="my.balabit.com" />
+	<target host="pages.balabit.com" />
+	<target host="support.balabit.com" />
+	<target host="www.balabit.com" />
+
+		<test url="http://unsupervised.blogs.balabit.com/" />
+
+		<!--	Mixed bug:
+					-->
+		<!--test url="http://www.balabit.com/hu/" /-->
 
 
-	<securecookie host="^support\.balabit\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pages\.balabit\.com$" name="^RSMKTO1$" /-->
+	<!--securecookie host="^support\.balabit\.com$" name="^SWIFT_(?:client|sessionid40)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(support\.|www\.)?balabit\.com/"
-		to="https://$1balabit.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

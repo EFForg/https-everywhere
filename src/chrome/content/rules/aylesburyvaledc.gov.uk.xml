@@ -1,0 +1,67 @@
+<!--
+	Aylesbury Vale District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *aylesburyvaledc.gov.uk:
+
+		- democracy ⁴
+		- propertysearch *
+		- wam ᵃ
+
+	* 400
+	⁴ 404
+	ᵃ Shows publicaccess.aylesburyvaledc.gov.uk
+
+
+	Problematic hosts in *aylesburyvaledc.gov.uk:
+
+		- account ⁵
+
+	⁵ $ 500s
+
+
+	These altnames do not exist:
+
+		- aylesburyvaledc.gov.uk
+
+	
+	Insecure cookies are set for these hosts:
+
+		- llportal.aylesburyvaledc.gov.uk
+
+-->
+<ruleset name="Aylesbury Vale DC.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="eforms.aylesburyvaledc.gov.uk" />
+	<target host="epayments.aylesburyvaledc.gov.uk" />
+	<target host="llportal.aylesburyvaledc.gov.uk" />
+	<target host="publicaccess.aylesburyvaledc.gov.uk" />
+	<target host="www.aylesburyvaledc.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="account.aylesburyvaledc.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^llportal\.aylesburyvaledc\.gov\.uk$" name="^SSRV_AUTHENTICATION$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://account\.aylesburyvaledc\.gov\.uk/+(?=$|\?)"
+		to="https://account.aylesburyvaledc.gov.uk/business/" />
+
+		<test url="http://account.aylesburyvaledc.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

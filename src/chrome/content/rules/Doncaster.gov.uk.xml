@@ -1,0 +1,101 @@
+<!--
+	Doncaster Metropolitan Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *doncaster.gov.uk:
+
+		- library ᵖ
+		- local ᵈ
+		- planning ᵈ
+		- highwoods.portal ²
+
+	² 200 "not recognised"
+	ᵈ Dropped
+	ᵖ Plaintext reply
+
+
+	Problematic hosts in *doncaster.gov.uk:
+
+		- thornegreentop.portal ᵉ ᵐ
+		- eportal.schools ᵉ ᵐ
+
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.ems.doncaster.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- pcbooking.doncaster.gov.uk
+		- www.doncaster.gov.uk
+
+-->
+<ruleset name="Doncaster.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="doncaster.gov.uk" />
+	<target host="apps.doncaster.gov.uk" />
+	<target host="ems.doncaster.gov.uk" />
+	<target host="pcbooking.doncaster.gov.uk" />
+	<target host="www.doncaster.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="eportal.schools.doncaster.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.doncaster\.gov\.uk/(?:$|Eforms$|doitonline/report-abandoned-vehicles$|report-it$|services/work-jobs-training$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?doncaster\.gov\.uk/+(?!Eforms/|(?:Profile|Users)(?:$|[?/])|Themes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.doncaster.gov.uk/Eforms" />
+			<test url="http://www.doncaster.gov.uk/cancerbuddies" />
+			<test url="http://www.doncaster.gov.uk/counciltax" />
+			<test url="http://www.doncaster.gov.uk/doitonline/report-abandoned-vehicles" />
+			<test url="http://www.doncaster.gov.uk/doncasterarchives" />
+			<test url="http://www.doncaster.gov.uk/report-it" />
+			<test url="http://www.doncaster.gov.uk/services/work-jobs-training" />
+
+			<!--	-ve:
+					-->
+			<test url="http://doncaster.gov.uk/Eforms/BusGenEform/Boot/803" />
+			<test url="http://www.doncaster.gov.uk/Profile" />
+			<test url="http://www.doncaster.gov.uk/Themes/DMBC.Theme/Content/images/template/air-quality.png" />
+			<test url="http://www.doncaster.gov.uk/Themes/DMBC.Theme/Content/stylesheets/css/DMBC-overrides.css" />
+			<test url="http://www.doncaster.gov.uk/Themes/DMBC.Theme/Styles/alerts_menu.css" />
+			<test url="http://www.doncaster.gov.uk/Users/Account/Register?ReturnUrl=" />
+			<test url="http://www.doncaster.gov.uk/Users/Account/RequestLostPassword" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pcbooking\.doncaster\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.doncaster\.gov\.uk$" name="^__RequestVerificationToken$" /-->
+
+	<securecookie host="^\." name="_gat?$" />
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<!--	Redirect forward slash, path, and args:
+							-->
+	<rule from="^http://eportal\.schools\.doncaster\.gov\.uk/.*"
+		to="https://www.engagedoncaster.co.uk/" />
+
+		<test url="http://eportal.schools.doncaster.gov.uk/Default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

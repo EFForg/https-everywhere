@@ -1,10 +1,63 @@
-<ruleset name="Surfline">
+<!--
+	Nonfunctional hosts in *surfline.com:
 
-	<target host="surfline.com" />
+		- cdn02 ¹
+		- media1 ¹
+		- photos ¹
+		- premium ¹
+		- support ²
+
+	¹ Refused
+	² Zendesk
+
+
+	Problematic hosts in *surfline.com:
+
+		- ^ ¹
+		- premium ²
+
+	¹ Refused
+	² AmazonAWS/mismatched
+
+	Mismatch:
+		- *.cdn-surfline.com
+
+
+	Mixed content:
+
+		- css, from:
+
+			- ajax.googleapis.com
+			- e.cdn-surfline.com
+			- i.cdn-surfline.com
+
+		- Images, from:
+
+			- e.cdn-surfline.com
+			- i.cdn-surfline.com
+			- cdn02.surfline.com
+			- media1.surfline.com
+			- premium.surfline.com
+
+-->
+<ruleset name="Surfline.com" platform="mixedcontent" default_off="redirect to http">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="www.surfline.com" />
 
+	<!--	Complications:
+				-->
+	<target host="surfline.com" />
 
-	<rule from="^http://(?:www\.)?surfline\.com/"
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://surfline\.com/"
 		to="https://www.surfline.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

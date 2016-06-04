@@ -1,0 +1,141 @@
+<!--
+	Dudley Metropolitan Borough Council
+
+	For rules causing MCB, see Dudley.gov.uk-mixedcontent.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *dudley.gov.uk:
+
+		- businessfirst ᵗ
+		- childrenscentres ʳ
+		- cmis ²
+		- planningdocuments ʳ
+		- safeguardingchildren *
+		- www.walkzone ᵃ
+		- www4 ᵗ
+
+	* Redirects to wp01.dudley.gov.uk
+	² 200 blank page
+	ᵃ Shows another domain
+	ʳ Refused
+	ᵗ Reset for >= 1 path
+
+
+	Problematic hosts in *dudley.gov.uk:
+
+		- ^ ³
+		- blackcountrycorestrategy ᵐ
+		- businesscrime ᵐ
+		- councillors ᵐ
+		- dcp ᵐ
+		- discover ᵐ
+		- drsc ᵐ
+		- gismo ᶜ
+		- glassquarter ᵐ
+		- moodle ˣ
+		- online ˣ
+		- recycling ᵐ
+		- safeguarding ᵐ
+		- www2 ˣ
+
+	³ 403
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- discover.dudley.gov.uk
+		- fis.dudley.gov.uk
+		- gismo.dudley.gov.uk
+		- glassquarter.dudley.gov.uk
+		- libcat.dudley.gov.uk
+		- moodle.dudley.gov.uk
+		- www2.dudley.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- moodle from $self 
+			- online from gismo.dudley.gov.uk
+			- www2 from www.dudley.gov.uk
+
+		- Images, on:
+		
+			- online, www2 from www.dudley.gov.uk
+			- moodle, www2 from $self
+
+-->
+<ruleset name="Dudley.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="fis.dudley.gov.uk" />
+	<target host="forms.dudley.gov.uk" />
+	<!--target host="gismo.dudley.gov.uk" /-->
+	<target host="libcat.dudley.gov.uk" />
+	<!--target host="moodle.dudley.gov.uk" /-->
+	<!--target host="online.dudley.gov.uk" /-->
+	<target host="payments.dudley.gov.uk" />
+	<target host="wp01.dudley.gov.uk" />
+	<target host="www.dudley.gov.uk" />
+	<!--target host="www2.dudley.gov.uk" /-->
+	<target host="www3.dudley.gov.uk" />
+	<target host="www5.dudley.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="dudley.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.dudley\.gov\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?dudley\.gov\.uk/+(?![Ee]asy[Ss]ite(?:[Ww]eb)?/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.dudley.gov.uk/dpa" />
+			<test url="http://www.dudley.gov.uk/health/" />
+			<test url="http://www.dudley.gov.uk/payments" />
+
+			<!--	-ve:
+					-->
+			<test url="http://dudley.gov.uk/EasysiteWeb/getresource.axd?AssetID=257913&amp;type=full&amp;servicetype=Inline" />
+			<test url="http://www.dudley.gov.uk/easysiteweb/easysite/styledata/uid_12_dmbc_default/css/common_custom.css" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://online.dudley.gov.uk/tellmeaboutmy/" /-->
+		<!--test url="http://www2.dudley.gov.uk/parking/" /-->
+
+		<!--	Reset:
+				-->
+		<!--test url="http://businessfirst.dudley.gov.uk/business-support/" /-->
+		<!--test url="http://www4.dudley.gov.uk/rbmdsearch/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:discover|glassquarter|libcat)\.dudley\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^fis\.dudley\.gov\.uk$" name="^PE(?:Language|Test)Cookie$" /-->
+	<!--securecookie host="^(?:gismo|www2)\.dudley\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^moodle\.dudley\.gov\.uk$" name="^MoodleSession$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http://dudley\.gov\.uk/"
+		to="https://www.dudley.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

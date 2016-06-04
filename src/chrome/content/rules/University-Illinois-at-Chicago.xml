@@ -1,10 +1,12 @@
 <!--
+	For rules causing false/broken MCB, see UIC.edu-falsemixed.xml.
+
 	Other University of Illinois at Chicago rulesets:
 
 		- UIC_Bookstore.org.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *uic.edu:
 
 		- catalog ¹
 		- www.cmhsrp ²
@@ -16,25 +18,36 @@
 
 	Problematic hosts in *uic.edu:
 
-		- sms.accc *
-		- accessweb *
-		- sexualmisconduct *
-		- sustainability *
+		- sms.accc ¹
+		- accessweb ¹
+		- grad ²
+		- hospital ³
+		- hr ³
+		- sexualmisconduct ¹
+		- sustainability ¹
 
-	* Untrusted root
+	¹ Untrusted root
+	² Mixed css
+	³ Mismatched
 
 
 	Insecure cookies are set for these hosts:
 
+		- dentistry.uic.edu
 		- exchange.uic.edu
+		- secure.hospital.uic.edu
+		- www.hr.uic.edu
+		- m.uic.edu
 
 
 	Mixed content:
 
+		- css on grad from $self *
+
 		- Images, on:
 
 			- accessweb from accessweb.publish.uic.edu *
-			- disabilityresources from $self *
+			- disabilityresources, grad from $self *
 			- emergency from publish.uic.edu *
 			- emergency from emergency.publish.uic.edu *
 			- scs from scs.pubish.uic.edu *
@@ -56,25 +69,35 @@
 	<!--target host="accessweb.uic.edu" /-->
 	<target host="accountportal.uic.edu" />
 	<target host="admissions.uic.edu" />
+	<target host="advancement.uic.edu" />
 	<target host="aes.uic.edu" />
 	<target host="ui2web2.apps.uillinois.edu" />
 	<target host="blackboard.uic.edu" />
 	<target host="exedweb.cc.uic.edu" />
+	<target host="dentistry.uic.edu" />
+	<target host="www.dentistry.uic.edu" />
 	<target host="disabilityresources.uic.edu" />
 	<target host="economicimpact.uic.edu" />
 	<target host="emergency.uic.edu" />
 	<target host="exchange.uic.edu" />
 	<target host="fmweb.fm.uic.edu" />
+	<!--target host="grad.uic.edu" /-->
 	<target host="helpdesk.uic.edu" />
+	<target host="employee.hospital.uic.edu" />
+	<target host="secure.hospital.uic.edu" />
 	<target host="www.housing.uic.edu" />
+	<target host="www.hr.uic.edu" />
 	<target host="liaison.uic.edu" />
 	<target host="login.uic.edu" />
 	<target host="media.uic.edu" />
+	<target host="m.uic.edu" />
 	<target host="my.uic.edu" />
 	<target host="ness.uic.edu" />
 	<target host="news.uic.edu" />
 	<target host="oae.uic.edu" />
+	<target host="www.ois.uic.edu" />
 	<target host="password.uic.edu" />
+	<target host="paymybill.uic.edu" />
 	<target host="police.uic.edu" />
 	<target host="publish.uic.edu" />
 
@@ -83,6 +106,7 @@
 	<target host="scs.publish.uic.edu" />
 	<target host="sustainability.publish.uic.edu" />
 
+	<target host="registrar.uic.edu" />
 	<target host="scs.uic.edu" />
 	<!--target host="sexualmisconduct.uic.edu" /-->
 	<target host="sldvs.uic.edu" />
@@ -93,6 +117,11 @@
 	<target host="webmail.uic.edu" />
 	<target host="www.uic.edu" />
 	<target host="www2.uic.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="hospital.uic.edu" />
+	<target host="hr.uic.edu" />
 
 		<exclusion pattern="^http://media\.uic\.edu/ensemble/(?!app/flash/)" />
 
@@ -123,10 +152,18 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^(?:dentistry|secure\.hospital|www\.hr)\.uic\.edu$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^exchange\.uic\.edu$" name="^(?:BIGipServer[\w~.]+|cadata|sessionid)$" /-->
+	<!--securecookie host="^m\.uic\.edu$" name="^(?:_gfouuid|[\da-f]{32}|X-Mapping-jfhppofk|kgoui_Fbanner_Ndismissed)$" /-->
 
-	<securecookie host="^exchange\.uic\.edu$" name=".+" />
+	<securecookie host="^(?!media\.uic\.edu$)\w" name="." />
 
+
+	<rule from="^http://hospital\.uic\.edu/"
+		to="https://hospital.uillinois.edu/" />
+
+	<rule from="^http://hr\.uic\.edu/"
+		to="https://www.hr.uic.edu/" />
 
 	<rule from="^http:"
 		to="https:" />

@@ -1,13 +1,31 @@
-<ruleset name="CJS-CDKeys.com">
+<!--
+	Rule to secure static content. See CJS-CDKeys.com-mixed.xml for
+	a more general ruleset, including a rule that cause breakage in
+	mixed content blocking browsers.
+-->
+<ruleset name="CJS-CDKeys.com (partial)">
 
 	<target host="cjs-cdkeys.com" />
-	<target host="*.cjs-cdkeys.com" />
+	<target host="www.cjs-cdkeys.com" />
 
+	<!-- Exclude everything but stuff that is static enough. -->
+	<exclusion pattern="^(?![\w:/.-]+\.(css|gif|ico|jpg|js|png)$)" />
+		<!-- Matching exclusion -->
+		<test url="http://cjs-cdkeys.com/" />
+		<test url="http://www.cjs-cdkeys.com/" />
+		<test url="http://www.cjs-cdkeys.com/account.php" />
+		<test url="http://www.cjs-cdkeys.com/cart.php" />
+		<test url="http://www.cjs-cdkeys.com/wishlist.php" />
+		<test url="http://www.cjs-cdkeys.com/orderstatus.php" />
 
-	<securecookie host="^\.cjs-cdkeys\.com$" name=".+" />
+		<!-- Not matching exclusion -->
+		<test url="http://cjs-cdkeys.com/templates/Infinity/Styles/red.css" />
+		<test url="http://www.cjs-cdkeys.com/templates/Infinity/images/red/Search.gif" />
+		<test url="http://cjs-cdkeys.com/favicon.ico" />
+		<test url="http://cjs-cdkeys.com/product_images/uploaded_images/just-cause-3-cd-key.jpg" />
+		<test url="http://www.cjs-cdkeys.com/slider/themes/1/js-image-slider.js" />
+		<test url="http://www.cjs-cdkeys.com/trustpilot.png" />
 
-
-	<rule from="^http://(www\.)?cjs-cdkeys\.com/"
-		to="https://$1cjs-cdkeys.com/" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>

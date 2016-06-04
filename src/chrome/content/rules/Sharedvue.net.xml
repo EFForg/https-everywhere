@@ -1,21 +1,27 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://sharedvue.net/ => https://sharedvue.net/: (7, 'Failed to connect to sharedvue.net port 443: Connection refused')
+	(www.)?sharedvue.net: Dropped over http & https
+
+
+	Insecure cookies are set for these hosts:
+
+		- intel.sharedvue.net
 
 -->
-<ruleset name="sharedvue.net" default_off='failed ruleset test'>
+<ruleset name="sharedvue.net">
 
-	<target host="sharedvue.net" />
-	<target host="*.sharedvue.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="intel.sharedvue.net" />
 
 
-	<!--	Secured by server:
+	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(intel\.|www\.)?sharedvue\.net$" name=".+" /-->
+	<!--securecookie host="^intel\.sharedvue\.net$" name="^AWSELB$" /-->
+
+	<securecookie host="^intel\.sharedvue\.net$" name=".+" />
 
 
-	<rule from="^http://(intel\.|www\.)?sharedvue\.net/"
-		to="https://$1sharedvue.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

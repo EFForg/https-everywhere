@@ -20,7 +20,6 @@ var path = require("path"),
     readdirp = require('readdirp'),
     es = require('event-stream'),
 
-    lrucache = require("../chromium/lru"),
     rules = require("../chromium/rules"),
 
     URI = require("URIjs");
@@ -72,20 +71,14 @@ URI.find_uri_expression = /\b((?:http:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-
 function processFile(filename) {
   var contents = fs.readFileSync(filename, 'utf8');
   var rewrittenFile = URI.withinString(contents, function(url) {
+    console.log("Found ", url);
     var uri = new URI(url);
     if (uri.protocol() != 'http') return url;
 
     uri.normalize();
     var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
     if (rewritten) {
-      // If the rewrite was just a protocol change, output protocol-relative
-      // URIs.
-      var rewrittenUri = new URI(rewritten).protocol('http');
-      if (rewrittenUri.toString() === uri.toString()) {
-        return rewrittenUri.protocol('').toString();
-      } else {
-        return rewritten;
-      }
+      return rewritten;
     } else {
       return url;
     }
@@ -103,7 +96,7 @@ function loadRuleSets() {
   console.log("Loading rules...");
   var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
   var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
-  ruleSets = new rules.RuleSets("fake user agent", lrucache.LRUCache, {});
+  ruleSets = new rules.RuleSets({});
   ruleSets.addFromXml(xml);
 }
 

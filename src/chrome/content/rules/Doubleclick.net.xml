@@ -5,53 +5,49 @@
 	If we are going to include ads and tracking info, let's at least do it by https.
 
 
-	Problematic domains:
+	Problematic hosts in doubleclick.net:
 
-		- doubleclick.net subdomains:
-
-			- *.es *
-			- *.nl *
-			- *.no *
+		- *.es *
+		- *.nl *
+		- *.no *
 
 	* Mismatched
 
 
-	Fully covered domains:
+	Fully covered hosts in *doubleclick.net:
 
-		- *.doubleclick.net:
+		- ad
+		- ad-ace
+		- ad-apac
+		- ad-emea
+		- *.au
+		- *.de
+		- *.es		(→ *)
+		- fls
 
-			- ad
-			- ad-ace
-			- ad-apac
-			- ad-emea
-			- *.au
-			- *.de
-			- *.es		(→ *)
-			- fls
+		- *.fls:
 
-			- *.fls:
+			- \d+
 
-				- \d+
+		- *.fr
 
-			- *.fr
+		- *.g:
 
-			- *.g:
+			- cm
+			- feedads
+			- googleads
+			- securepubads
+			- stats
+			- survey
 
-				- cm
-				- feedads
-				- googleads
-				- securepubads
-				- stats
-				- survey
+		- *.jp
+		- *.mo
+		- *.nl		(→ *)
+		- *.no		(→ *)
+		- s[01]
+		- *.uk
 
-			- *.jp
-			- *.mo
-			- *.nl		(→ *)
-			- *.no		(→ *)
-			- s[01]
-			- *.uk
-
-			- static
+		- static
 
 
 	Insecure cookies are set for these domains:
@@ -59,24 +55,30 @@
 		- .doubleclick.net
 	
 
-	NB: If there's still any breakage *give details*.
+	This ruleset needs someone brave enough to figure out what exclusions
+	are needed in order not to break flash video streaming.
 
 -->
-<ruleset name="Doubleclick.net (testing)" default_off="Breaks video content, probably best to block doubleclick instead">
+<ruleset name="Doubleclick.net (needs exclusions)" default_off="Breaks video content, probably best to block doubleclick instead">
 
 	<target host="doubleclick.net" />
 	<target host="*.doubleclick.net" />
+
+		<test url="http://pubads.g.doubleclick.net/activity;xsp=;ord=1;num=1?gtmcb=" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://ad.doubleclick.net/jump/ns.liliputing/general;ppos=;kw=;tile=;sz=;ord=?" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.doubleclick\.net$" name="^(CheckForPermission|id|test_cookie)$" /-->
 
-	<!--	name="^id$" /-->
-	<securecookie host="^\.doubleclick\.net$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://([^/:@\.]+)\.(?:es|nl|no)\.doubleclick\.net/"
+	<rule from="^http://([^/:@.]+)\.(?:es|nl|no)\.doubleclick\.net/"
 		to="https://$1.doubleclick.net/" />
 
 	<rule from="^http:"

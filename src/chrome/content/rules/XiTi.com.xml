@@ -3,11 +3,11 @@
 
 		- www.atinternet.com				(timeout)
 		- (www.)xiti.com				(!www times out)
-		- log(c22|c180|c210|i6|i125).xiti.com		(tracking cookies)
 
 
-	Problematic subdomains:
+	Problematic hists in *xiti.com:
 
+		- log(c22|c180|c210|i6|i125)	(tracking cookies)
 		- logc2 *
 		- logc142	(refused)
 		- logc20[56] *
@@ -15,20 +15,21 @@
 		- logc400 *
 		- logi9 *
 		- logi10 *
+		- logi118 *
 		- logi242 *
 
 	* Refused
 
 
-	Fully covered subdomains:
+	Fully covered hists in *xiti.com:
 
 		- logc2		(→ logs2)
 		- logc20[56]	(→ s1204)
 		- logc279	(→ logs)
 		- logc400	(→ logs)
 		- logc\d+	(→ logs.xiti.com)
-		- logi9		(→ logs)
 		- logi10	(→ logs13)
+		- logi\d+	(→ logs)
 		- logs2
 		- logs13
 		- logs1136
@@ -53,11 +54,11 @@
 					-->
 	<!--securecookie host="^\.xiti\.com$" name="^(idrxvr|tmst)$" /-->
 
-	<securecookie host="^\.xiti\.com$" name="^(?:idrxvr|tmst)$" />
-	<securecookie host="^(?:secured|v)75\.xiti\.com$" name=".*" />
+	<securecookie host="^\." name="^(?:idrxvr|tmst)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<!--	Seems to work, and if it doesn't, noone cares:
+	<!--	Seems to work, and if it doesn't, no one cares:
 								-->
 	<rule from="^http://logc142\.xiti\.com/"
 		to="https://logs1142.xiti.com/" />
@@ -86,13 +87,14 @@
 		<test url="http://logc242.xiti.com/hit.xiti?s=" />
 		<test url="http://logi242.xiti.com/hit.xiti?s=" />
 
-	<rule from="^http://log(?:c\d+|i9)\.xiti\.com/"
+	<rule from="^http://log[ci]\d+\.xiti\.com/"
 		to="https://logs.xiti.com/" />
 
 		<test url="http://logc247.xiti.com/hit.xiti?s=" />
 		<test url="http://logc279.xiti.com/hit.xiti?s=" />
 		<test url="http://logc400.xiti.com/hit.xiti?s=" />
 		<test url="http://logi9.xiti.com/hit.xiti?s=" />
+		<test url="http://logi118.xiti.com/hit.xiti?s=&amp;s2=&amp;p=&amp;di=&amp;an=&amp;ac=&amp;Rdt=" />
 
 	<rule from="^http://(logs\d*|secured75|v75)\.xiti\.com/"
 		to="https://$1.xiti.com/" />

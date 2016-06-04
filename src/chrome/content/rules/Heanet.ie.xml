@@ -1,0 +1,67 @@
+<!--
+	For rules causing false/broken MCB, see Heanet.ie-falsemixed.xml.
+
+
+	Nonfunctional hosts in *heanet.ie:
+
+		- gomez ᵃ
+		- kokapetl ᵃ
+		- lg ³
+		- mendoza ᵃ
+		- piwik
+		- tao ᵃ
+
+	³ 403
+	ᵃ Shows another domain
+
+
+	^heanet.de: Mismatched
+
+
+	Mixed content:
+
+		- css on www from ajax.googleapis.com ˢ
+
+		- Images, on:
+
+			- ticketing from www.heanet.ie ˢ
+			- www from heanet.ie ˢ
+			- www from $self ˢ
+
+		- Bug on www from piwik.heanet.ie ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Heanet.ie (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="clientportal.heanet.ie" />
+	<target host="ds.heanet.ie" />
+	<target host="ftp.heanet.ie" />
+	<target host="listserv.heanet.ie" />
+	<target host="piwik.heanet.ie" />
+	<target host="ticketing.heanet.ie" />
+	<!--target host="www.heanet.ie" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="heanet.ie" /-->
+
+		<!--	200 default page over http, 403 over
+			https => would fail fetch test
+							-->
+		<exclusion pattern="^http://ds\.heanet\.ie/$" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://heanet\.ie/"
+		to="https://www.heanet.ie/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
