@@ -102,7 +102,7 @@ rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 
 # CLIQZ
 rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
-cp -a translations/* pkg/xpi-cliqz/chrome/locale/
+# cp -a translations/* pkg/xpi-cliqz/chrome/locale/
 rsync -a --delete pkg/xpi-cliqz/ pkg/xpi-amo
 
 # The AMO version of the package cannot contain the updateKey or updateURL tags.
