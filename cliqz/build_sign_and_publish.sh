@@ -23,8 +23,8 @@ echo "CLIQZ: build"
 XPI_NAME=`ls pkg/*-cliqz.xpi | head -1 | xargs basename`
 VERSION=`echo $XPI_NAME | grep -E -o '[0-9]+\.[0-9]+\.[0-9]+'`
 SIGNED_XPI_NAME=$ADDON_ID-$VERSION-$CHANNEL-signed.xpi
-S3_UPLOAD_URL=s3://cdncliqz/update/browser_beta/https-everywhere/$SIGNED_XPI_NAME
-DOWNLOAD_URL=https://s3.amazonaws.com/cdncliqz/update/browser_beta/https-everywhere/$SIGNED_XPI_NAME
+S3_UPLOAD_URL=s3://cdncliqz/update/$CHANNEL/https-everywhere/$SIGNED_XPI_NAME
+DOWNLOAD_URL=https://s3.amazonaws.com/cdncliqz/update/$CHANNEL/https-everywhere/$SIGNED_XPI_NAME
 
 echo "CLIQZ: sign"
 python ./xpi-sign/xpisign.py \
