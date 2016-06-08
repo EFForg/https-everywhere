@@ -1,6 +1,10 @@
 "use strict";
 // Stubs so this runs under nodejs. They get overwritten later by util.js
-var DBUG = 1;
+var VERB=1;
+var DBUG=2;
+var INFO=3;
+var NOTE=4;
+var WARN=5;
 function log(){}
 
 // To reduce memory usage for the numerous rules/cookies with trivial rules
@@ -253,6 +257,12 @@ RuleSets.prototype = {
     if (this.targets[host]) {
       // Copy the host targets so we don't modify them.
       results = results.concat(this.targets[host]);
+    }
+
+    // Ensure host is well-formed (RFC 1035)
+    if (host.indexOf("..") != -1 || host.length > 255) {
+      log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return null;
     }
 
     // Replace each portion of the domain with a * in turn

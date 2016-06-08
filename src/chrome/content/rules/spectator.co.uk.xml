@@ -1,0 +1,82 @@
+<!--
+	For rules causing MCB, see spectator.co.uk-mixedcontent.xml.
+
+	CDN buckets:
+
+		- d31orrwkxpucnl.cloudfront.net	← cdn
+		- d35f2nn85hoamp.cloudfront.net	← cdn2
+
+
+	Problematic hosts in *spectator.co.uk:
+
+		- blogs ˣ
+		- cdn ᵐ
+		- cdn2 ᵐ
+		- www * ˣ
+
+	* Protocol relative inclusions of cdn2?
+	ᵐ Cloudfront / mismatched
+	ˣ Mixed css
+
+
+	Mixed content:
+
+		- iframes, on:
+
+			- blogs from newsletters.spectator.co.uk
+			- www from embed.acast.com ˢ
+
+		- css on blogs, www from $self ˢ
+
+		- Images, on:
+
+			- blogs, health from www.spectator.co.uk ˢ
+			- health from cdn.spectator.co.uk ˢ
+			- health, www from $self ˢ
+			- www from blogs.spectator.co.uk ˢ
+
+		- Ads/bugs, on:
+
+			- blogs, health, www from adserver.adtech.de ˢ
+			- blogs, www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Spectator.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="spectator.co.uk" /-->
+	<!--target host="blogs.spectator.co.uk" /-->
+	<target host="health.spectator.co.uk" />
+	<!--target host="www.spectator.co.uk" /-->
+
+	<!--	Complications:
+				-->
+	<target host="cdn.spectator.co.uk" />
+	<target host="cdn2.spectator.co.uk" />
+
+
+	<!--	s? for protocol-relative
+		inclusions on www:
+					-->
+	<rule from="^https?://cdn\.spectator\.co\.uk/"
+		to="https://d31orrwkxpucnl.cloudfront.net/" />
+
+		<test url="http://cdn.spectator.co.uk/content/uploads/2016/04/LIKE-The-Haystack-late-April-1844-William-Henry-Fox-Talbot-%E2%88%8F-National-Media-Museum-SSPL-395x261.jpg" />
+		<test url="https://cdn.spectator.co.uk/content/uploads/2016/04/TRA0880_v012-114x76.1025.jpg" />
+
+	<!--	s? for protocol-relative
+		inclusions on www:
+					-->
+	<rule from="^https?://cdn2\.spectator\.co\.uk/"
+		to="https://d35f2nn85hoamp.cloudfront.net/" />
+
+		<test url="http://cdn2.spectator.co.uk/files/2016/05/OP-114x76.jpg" />
+		<test url="https://cdn2.spectator.co.uk/files/2016/05/wat-114x76.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

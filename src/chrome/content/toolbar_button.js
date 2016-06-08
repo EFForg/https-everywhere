@@ -396,6 +396,10 @@ function open_in_tab(url) {
   recentWindow.delayedOpenTab(url, null, null, null, null);
 }
 
+function httpse_chrome_opener(url, prefs) {
+  HTTPSEverywhere.chrome_opener(url, prefs);
+}
+
 // hook event for showing hint
 HTTPSEverywhere.log(DBUG, 'Adding listener for toolbarButton init.');
 window.addEventListener("load", httpsEverywhere.toolbarButton.init, false);

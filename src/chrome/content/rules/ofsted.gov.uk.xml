@@ -1,0 +1,106 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *ofsted.gov.uk:
+
+		- questionnaire ᶠ
+
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *ofsted.gov.uk:
+
+		- (www.)? ᵐ
+		- dashboard ᵉ ᵐ
+		- dataview ᵈ
+
+	ᵈ Dropped, preemptable redirect
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *ofsted.gov.uk:
+
+		- (www.)?
+
+
+	Insecure cookies are set for these domains:
+
+		- .contact.ofsted.gov.uk
+		- .employerview.ofsted.gov.uk
+		- .learnerview.ofsted.gov.uk
+		- .mobile.learnerview.ofsted.gov.uk
+		- .parentview.ofsted.gov.uk
+		- .reports.ofsted.gov.uk
+
+-->
+<ruleset name="Ofsted.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="contact.ofsted.gov.uk" />
+	<target host="employerview.ofsted.gov.uk" />
+	<target host="learnerview.ofsted.gov.uk" />
+	<target host="mobile.learnerview.ofsted.gov.uk" />
+	<target host="www.mobile.learnerview.ofsted.gov.uk" />
+	<target host="online.ofsted.gov.uk" />
+	<target host="parentview.ofsted.gov.uk" />
+	<target host="reports.ofsted.gov.uk" />
+	<target host="surveys.ofsted.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="ofsted.gov.uk" />
+	<target host="dataview.ofsted.gov.uk" />
+	<target host="www.ofsted.gov.uk" />
+
+		<test url="http://ofstedonline.ofsted.gov.uk/outreach/Ofsted_Serious_Notification.ofml" />
+		<test url="http://online.ofsted.gov.uk/onlineofsted/Default.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.(?:contact|employerview|learnerview|mobile\.learnerview|parentview|reports)\.ofsted\.gov\.uk$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.(?:contact|employerview|learnerview|mobile\.learnerview|parentview|reports)\." name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://(?:www\.)?ofsted\.gov\.uk/.*"
+		to="https://www.gov.uk/government/organisations/ofsted" />
+
+		<!--	/*\w does not redirect:
+						-->
+		<exclusion pattern="^http://(?:www\.)?ofsted\.gov\.uk/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ofsted.gov.uk/default.aspx" />
+			<test url="http://www.ofsted.gov.uk/home.htm" />
+			<test url="http://www.ofsted.gov.uk/home.php" />
+			<test url="http://www.ofsted.gov.uk/index.htm" />
+			<test url="http://www.ofsted.gov.uk/index.jsp" />
+			<test url="http://www.ofsted.gov.uk/index.php" />
+
+	<!--	Redirect keeps args:
+					-->
+	<rule from="^http://dataview\.ofsted\.gov\.uk/(?=$|\?)"
+		to="https://public.tableau.com/views/Dataview/Viewregionalperformanceovertime" />
+
+		<test url="http://dataview.ofsted.gov.uk/?" />
+
+	<!--	Redirect appends forward slash:
+						-->
+	<rule from="^http://dataview\.ofsted\.gov\.uk/"
+		to="https://public.tableau.com/views/Dataview/Viewregionalperformanceovertime/" />
+
+		<test url="http://dataview.ofsted.gov.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

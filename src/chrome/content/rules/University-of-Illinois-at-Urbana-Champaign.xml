@@ -33,6 +33,7 @@
 		- fae20.cita	Refused
 		- whs.crhc	404
 		- fsl.cs		Refused
+		- safecode.cs		Redirects to shibboleth.illinois.edu
 		- synrg.csl		Redirects to shibboleth.illinois.edu
 		- disability		(prints "The service is unavailable.", expired, self-signed, CN: ED-webdev1.ad.uiuc.edu)
 		- ease			Redirects to shibboleth.illinois.edu
@@ -110,6 +111,12 @@
 	* Mismatched
 
 
+	Insecure cookies are set for these hosts:
+
+		- asplos14.cs.illinois.edu
+		- pact14.cs.illinois.edu
+
+
 	Mixed content:
 
 		- css, on:
@@ -174,9 +181,12 @@
 	<target host="courses.illinois.edu" />
 	<target host="cs.illinois.edu" />
 
+	<target host="asplos14.cs.illinois.edu" />
 	<target host="graphics.cs.illinois.edu" />
 	<target host="lists.cs.illinois.edu" />
 	<target host="my.cs.illinois.edu" />
+	<target host="orchid.cs.illinois.edu" />
+	<target host="pact14.cs.illinois.edu" />
 
 	<target host="csl.illinois.edu" />
 	<target host="datacenter.illinois.edu" />
@@ -217,6 +227,7 @@
 	<target host="www.humanresources.illinois.edu" />
 
 	<target host="papercut.ics.illinois.edu" />
+	<target host="ieee.illinois.edu" />
 	<target host="www.igb.illinois.edu" />
 	<target host="illiniunion.illinois.edu" />
 	<target host="www.illiniunion.illinois.edu" />
@@ -227,6 +238,7 @@
 	<target host="law.illinois.edu" />
 	<target host="bookstore.law.illinois.edu" />
 	<target host="www.law.illinois.edu" />
+	<target host="legacy.illinois.edu" />
 
 	<target host="cas.lis.illinois.edu" />
 	<target host="courses.lis.illinois.edu" />
@@ -275,6 +287,7 @@
 	<target host="mail.scs.illinois.edu" />
 	<target host="www-s.scs.illinois.edu" />
 
+	<target host="seclab.illinois.edu" />
 	<target host="security.illinois.edu" />
 	<target host="shibboleth.illinois.edu" />
 	<target host="sponsoredprograms.illinois.edu" />
@@ -314,7 +327,11 @@
 		<!--
 			404:
 				-->
-		<exclusion pattern="^http://illinois.edu/shortUrl/forward" />
+		<!--exclusion pattern="^http://illinois.edu/(?:arts(?:/?$|/index\.html)|shortUrl/forward)" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://illinois.edu/(?:arts(?:$|[?/])|shortUrl/forward)" />
 		<!--
 			Exceptions:
 					-->
@@ -324,6 +341,9 @@
 					-->
 			<test url="http://illinois.edu/?" />
 			<test url="http://illinois.edu/?foo" />
+			<test url="http://illinois.edu/arts" />
+			<test url="http://illinois.edu/arts/" />
+			<test url="http://illinois.edu/arts/index.html" />
 			<test url="http://illinois.edu/shortUrl/forward" />
 
 			<!--	-ve:
@@ -334,7 +354,6 @@
 			<test url="http://illinois.edu/assets/css/main.css" />
 			<test url="http://illinois.edu/assets/img/branding/wordmark_vertical_alt.png" />
 			<test url="http://illinois.edu/athletics/index.html" />
-			<test url="http://illinois.edu/arts/index.html" />
 			<test url="http://illinois.edu/blog/view/6231" />
 			<test url="http://illinois.edu/calendar" />
 			<test url="http://illinois.edu/calendar/list/3266" />
@@ -414,6 +433,8 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.(?:chbe|cs|www\.igb|npre|parallel)\.illinois\.edu$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="aslpos14\.cs\.illinois\.edu$" name="^(?:CRPTestCookie|asplos2014_r)$" /-->
+	<!--securecookie host="pact14\.cs\.illinois\.edu$" name="^(?:CRPTestCookie|cspact2014_db)$" /-->
 
 	<securecookie host=".\.illinois\.edu$" name="." />
 

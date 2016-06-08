@@ -1,0 +1,77 @@
+<!--
+	Cambridge City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *cambridge.gov.uk:
+
+		- bins ʰ
+		- democracy ʳ
+		- envhealth ᵃ
+		- licences ᵃ
+
+	ᵃ Shows another domain
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *cambridge.gov.uk:
+
+		- lnr ᵐ
+		- mayor ᵃ
+
+	ᵃ Shows another domain, preemptable redirect
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.landlord.cambridge.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- erevenues.cambridge.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Cambridge.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cambridge.gov.uk" />
+	<target host="erevenues.cambridge.gov.uk" />
+	<target host="idox.cambridge.gov.uk" />
+	<target host="landlord.cambridge.gov.uk" />
+	<target host="www.cambridge.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://erevenues.cambridge.gov.uk/eRevenues/RevenuesScreens/SelfServeAssessment/Error_Logout.aspx" /-->
+
+	<!--	Complications:
+				-->
+	<target host="mayor.cambridge.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^erevenues\.cambridge\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://mayor\.cambridge\.gov\.uk/+"
+		to="https://cambridgemayor.wordpress.com/" />
+
+		<test url="http://mayor.cambridge.gov.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

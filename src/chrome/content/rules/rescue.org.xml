@@ -1,0 +1,127 @@
+<!--
+	International Rescue Committee
+
+	For rules causing false/broken MCB, see rescue.org-falsemixed.xml.
+
+
+	Problematic hosts in *rescue.org:
+
+		- feature ˣ
+
+	ˣ Mixed css
+
+
+	Partially covered hosts in *rescue.org:
+
+		- (www.)? ʰ
+		- diy ʰ
+		- gifts ʰ
+		- m ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- rescue.org
+		- diy.rescue.org
+		- engage.rescue.org
+		- feature.rescue.org
+		- m.rescue.org
+		- serviceinfo.rescue.org
+		- www.rescue.org
+
+
+	Mixed content:
+
+		- css on feature from $self 
+		- Images on feature from $self 
+		- favicon on feature from $self 
+
+-->
+<ruleset name="Rescue.org (partial)">
+
+	<target host="rescue.org" />
+	<target host="diy.rescue.org" />
+	<target host="engage.rescue.org" />
+	<!--target host="feature.rescue.org" /-->
+	<target host="gifts.rescue.org" />
+	<target host="m.rescue.org" />
+	<target host="serviceinfo.rescue.org" />
+	<target host="www.rescue.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://diy\.rescue\.org/(?:$|concert_for_refugees$|diy-faq$)" /-->
+		<!--exclusion pattern="^http://m\.rescue\.org/mobile/locations$" /-->
+		<!--exclusion pattern="^http://www\.rescue\.org/(?:$|careers$|events$|media$|respecting-your-privacy$|take-action$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:diy\.|m\.|www\.)?rescue\.org/+(?!(?:donate|user)(?:$|[?/])|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://diy.rescue.org/concert_for_refugees" />
+			<test url="http://diy.rescue.org/diy-faq" />
+
+			<test url="http://m.rescue.org/mobile/locations" />
+
+			<test url="http://www.rescue.org/careers" />
+			<test url="http://www.rescue.org/events" />
+			<test url="http://www.rescue.org/media" />
+			<test url="http://www.rescue.org/respecting-your-privacy" />
+			<test url="http://www.rescue.org/take-action" />
+
+			<!--	-ve:
+					-->
+			<test url="http://diy.rescue.org/sites/all/themes/diytheme/images/sidebar/arrow_postit_gray.gif" />
+
+			<test url="http://m.rescue.org/sites/all/themes/rescue_mobile/images/nav_bg.png" />
+			<test url="http://m.rescue.org/donate/" />
+			<test url="http://m.rescue.org/user" />
+
+			<test url="http://rescue.org/donate" />
+			<test url="http://www.rescue.org/sites/all/themes/denali/images/home-right-title-btm-border.gif" />
+			<test url="http://www.rescue.org/user" />
+			<test url="http://www.rescue.org/user/register" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://gifts\.rescue\.org/(?:$|cart$|shop/[\w-]+$|sitemap$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://gifts\.rescue\.org/+(?!files/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://gifts.rescue.org/cart" />
+			<test url="http://gifts.rescue.org/shop/all-charity-holiday-gifts" />
+			<test url="http://gifts.rescue.org/shop/best-sellers" />
+			<test url="http://gifts.rescue.org/sitemap" />
+
+			<!--	-ve:
+					-->
+			<test url="http://gifts.rescue.org/files/css/css_139c84498e14b034e1de1f84c0189686.css" />
+			<test url="http://gifts.rescue.org/misc/menu-expanded.png" />
+			<test url="http://gifts.rescue.org/sites/all/themes/denali/images/bg-solid.png" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://feature.rescue.org/carreport/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:diy|engage|feature|m|www)\.)?rescue\.org$" name="^BIGipServer" /-->
+	<!--securecookie host="^serviceinfo\.rescue\.org$" name="^django_language$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!(?:diy|gifts|m|www)\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

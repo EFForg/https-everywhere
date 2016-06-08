@@ -1,0 +1,60 @@
+<!--
+	Circle Housing
+
+
+	Problematic hosts in *circle.org.uk:
+
+		- m ᵉ
+		- newsroom ᵐ
+		- uat ᵉ
+
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- circle.org.uk
+		- newsroom.circle.org.uk
+		- www.circle.org.uk
+
+-->
+<ruleset name="Circle.org.uk (partial)">
+
+	<target host="circle.org.uk" />
+	<target host="www.circle.org.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?circle\.org\.uk/(?:Pay_it|Pay_it/Request_or_view_rent_information|circle33/your-home/safety-advice/Adult_Safety|get-involved/customer-views-team)?$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?circle\.org\.uk/(?!/*(?:~/media|css|img)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://circle.org.uk/Pay_it" />
+			<test url="http://circle.org.uk/Pay_it/Request_or_view_rent_information" />
+			<test url="http://www.circle.org.uk/circle33/your-home/safety-advice/Adult_Safety" />
+			<test url="http://www.circle.org.uk/get-involved/customer-views-team" />
+
+			<!--	-ve:
+					-->
+			<test url="http://circle.org.uk/~/media/D61EB006CC0C4EDBA93BAEE959A3E5AB.png" />
+			<test url="http://www.circle.org.uk/css/print.css" />
+			<test url="http://www.circle.org.uk/img/icon-search.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?circle\.org\.uk$" name="^sc_expview$" /-->
+	<!--securecookie host="^newsroom\.circle\.org\.uk$" name="^PPSESSION$" /-->
+
+	<!--securecookie host="^\w" name="." /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

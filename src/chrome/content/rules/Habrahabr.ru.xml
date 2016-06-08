@@ -1,90 +1,40 @@
 <!--
 	For other TM coverage, see TMtm.ru.xml.
 
-	For rules not causing false/broken MCB, see Habrahabr.ru-falsemixed.xml.
 
-
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *habrahabr.ru:
 
 		- api ¹
-		- m ²
 
 	¹ 503, valid cert
-	² Redirects to http
-
-
-	Problematic hosts in *habrahabr.ru:
-
-		- special *
-
-	* Apparently breaks icons (really?/how? Custom glyphs?)
 
 
 	Mixed content:
 
-		- css on ^ and special from fonts.googleapis.com *
-
 		- Images, on:
 
-			- special from $self *
+			- ^ from www.viva64.com ʳ
 			- special from habrastorage.org *
 
 	* Secured by us
+	ʳ Unsecurable <= refused
 
 -->
 <ruleset name="Habrahabr.ru (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="habrahabr.ru" />
 	<target host="auth.habrahabr.ru" />
-	<!--target host="special.habrahabr.ru" /-->
+	<target host="m.habrahabr.ru" />
+	<target host="special.habrahabr.ru" />
 	<target host="www.habrahabr.ru" />
-
-		<!--	Redirect to http:
-						-->
-		<!--exclusion pattern="^http://habrahabr\.ru/$" /-->
-		<!--
-			Exceptions:
-					-->
-		<!--exclusion pattern="^http://habrahabr\.ru/(?!auth/|favicon\.ico|i/|images/|styles/)" /-->
-		<!--
-			Breaks icons:
-					-->
-		<!--exclusion pattern="^http://habrahabr\.ru/styles/" /-->
-		<!--
-			In sum:
-				-->
-		<exclusion pattern="^http://habrahabr\.ru/(?!auth/|favicon\.ico|i/|images/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://habrahabr.ru/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://habrahabr.ru/auth/" />
-			<test url="http://habrahabr.ru/favicon.ico" />
-			<test url="http://habrahabr.ru/i/avatars/stub-user-small.gif" />
-			<test url="http://habrahabr.ru/images/" />
 
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^special\.habrahabr\.ru$" name="^captcha$" /-->
 
-	<!--securecookie host="^special\.habrahabr\.ru$" name=".+" /-->
+	<securecookie host="^\w" name="." />
 
-
-	<!--	404/504s on www:
-				-->
-	<rule from="^http://www\.habrahabr\.ru/(?=auth/|favicon\.ico|i/|images/)"
-		to="https://habrahabr.ru/" />
-
-		<test url="http://www.habrahabr.ru/auth/" />
-		<test url="http://www.habrahabr.ru/favicon.ico" />
-		<test url="http://www.habrahabr.ru/i/avatars/stub-user-small.gif" />
-		<test url="http://www.habrahabr.ru/images/" />
 
 	<rule from="^http:"
 		to="https:" />

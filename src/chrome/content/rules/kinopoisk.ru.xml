@@ -1,0 +1,65 @@
+<!--
+	Nonfunctional hosts in *kinopoisk.ru:
+
+		- plus ʰ
+
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- forum.kinopoisk.ru
+
+
+	Mixed content:
+
+		- favicons on forum from st.kinopoisk.ru ˢ
+		- Bug on forum from www.tns-counter.ru ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Kinopoisk.ru (partial)">
+
+	<target host="kinopoisk.ru" />
+	<target host="forum.kinopoisk.ru" />
+	<target host="pass.kinopoisk.ru" />
+	<target host="st.kinopoisk.ru" />
+	<target host="www.kinopoisk.ru" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kinopoisk\.ru/(?:$|docs/rss/$|feedback/$|iphone/$|tracks/buy/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?kinopoisk\.ru/(?!/*(?:favicon\.ico|images/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.kinopoisk.ru/docs/rss/" />
+			<test url="http://www.kinopoisk.ru/events/915/" />
+			<test url="http://www.kinopoisk.ru/feedback/" />
+			<test url="http://www.kinopoisk.ru/film/645044/" />
+			<test url="http://www.kinopoisk.ru/iphone/" />
+			<test url="http://www.kinopoisk.ru/tracks/buy/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://kinopoisk.ru/favicon.ico" />
+			<test url="http://www.kinopoisk.ru/images/sm_film/775517.jpg" />
+
+		<test url="http://st.kinopoisk.ru/images/spacer.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^forum\.kinopoisk\.ru$" name="^bb(?:forum_view|lastactivity|lastvisit|sessionhash)$" /-->
+
+	<securecookie host="^[^.kw]" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

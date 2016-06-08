@@ -1,0 +1,67 @@
+#Directory with XML files describing HTTPS Everywhere rulesets
+[rulesets]
+rulesdir = /path/to/https-everywhere/src/chrome/content/rules
+check_coverage = true
+
+#Certificate trust anchors for checking chains in HTTPS connections
+[certificates]
+basedir = platform_certs
+
+#HTTP(S) fetching options
+# Timeouts are in seconds.
+# redirect_depth - max number of redirects followed, otherwise it's a cycle
+# threads - number of threads to use for fetching HTTP(S) data
+# user_agent is optional, by default PyCURL's UA is used
+# curl_verbose - optional boolean parameter to turn on PyCURL debug output
+# ssl_version - SSL/TLS version to use, options are:
+#   - when not set, use the default version of linked SSL/TLS library
+#   - TLSv1 - TLSv1 (may be 1.0 or 1.1, e.g. current gnutls defaults to latter)
+#   - SSLv3 - use SSL 3, this is also workaround for the SNI HTTP 400 described
+#     in README
+#   - SSLv2 - use SSL 2 (generally not recommended except for testing special
+#     cases)
+# fetch_in_subprocess - spawn subprocess to fetch HTTP(S) URLs. Intended as
+#   workaround for threading race conditions when underlying SSL library is
+#   gnutls or openssl. Default is true as process-level separation seems to
+#   serve as workaround for all kinds of bugs.
+# static_capath - use to disable setting CA cert path based on what rule
+#   'platform' attribute says and use a fixed CA path instead. Should point to
+#   a directory with CA certificates/intermediate certificates.
+# url_list - file containing http URLs to be tested, one per line. These URLs
+#   will be tested instead of guessing URLs based on "target" element in rulesets.
+[http]
+connect_timeout = 10
+read_timeout = 15
+redirect_depth = 10
+threads = 10
+#user_agent = Mozilla/5.0 (X11; Linux x86_64; rv:14.0) Gecko/20100101 Firefox/14.0.1
+#curl_verbose = true
+#ssl_version = TLSv1
+fetch_in_subprocess = true
+#static_ca_path = platform_certs/firefox_transvalid
+#url_list = urls
+
+#Logging
+# logfile - filename or use - for stderr
+# loglevel - minimal log messages severity - one of debug, info, warn, error, fatal
+[log]
+logfile = -
+loglevel = debug
+
+#Metric and threshold for marking two HTML pages "different"
+# metric - what metric to use, either "markup" or "bsdiff"
+# threshold - float value in range [0, 1]; distance >= threshold will be reported
+[thresholds]
+metric = markup
+max_distance = 0.1
+
+#Debugging features
+# dump_graphviz_trie - dump ruleset trie in graphviz dot format, iff set to true.
+#	Default is false.
+# graphviz_file - graphviz output file, use - for stdout
+# exit_after_dump - do not continue with actual fetch/compare, only dump the
+#   trie and exit
+[debug]
+#dump_graphviz_trie = false
+graphviz_file = HTEC_trie.dot
+exit_after_dump = true

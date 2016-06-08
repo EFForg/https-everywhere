@@ -17,17 +17,46 @@
 		- https://panopticlick.eff.org
 
 
+	Problematic hosts in *shorlist.com:
+
+		- ^ ᶜ
+		- \d.darkroom ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
 	Insecure cookies are set for these domains:
 
 		- .shortlist.com
 
--->
-<ruleset name="ShortList.com" default_off="needs clearnet testing">
 
-	<target host="shortlist.com" />
+	Mixed content:
+
+		- Images on www from \d.darkroom.shortlist.com ˢ
+		- Bug on www from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="ShortList.com">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="admin.shortlist.com" />
 	<target host="cdn.shortlist.com" />
+	<target host="darkroom.shortlist.com" />
 	<target host="www.shortlist.com" />
+
+	<!--	Complications:
+				-->
+	<target host="shortlist.com" />
+	<target host="1.darkroom.shortlist.com" />
+	<target host="2.darkroom.shortlist.com" />
+	<target host="3.darkroom.shortlist.com" />
+	<target host="4.darkroom.shortlist.com" />
+	<target host="5.darkroom.shortlist.com" />
+	<target host="6.darkroom.shortlist.com" />
 
 
 	<!--	CloudFlare cookies:
@@ -36,6 +65,12 @@
 
 	<securecookie host="." name="." />
 
+
+	<rule from="^http://shortlist\.com/"
+		to="https://www.shortlist.com/" />
+
+	<rule from="^http://\d\.darkroom\.shortlist\.com/"
+		to="https://darkroom.shortlist.com/" />
 
 	<rule from="^http:"
 		to="https:" />

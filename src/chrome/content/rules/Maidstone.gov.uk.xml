@@ -31,9 +31,15 @@
 -->
 <ruleset name="Maidstone.gov.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="ecitizen.maidstone.gov.uk" />
 	<target host="self.maidstone.gov.uk" />
 	<target host="services.maidstone.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.maidstone.gov.uk" />
 
 		<!--	Set cookies without Secure:
 							-->
@@ -43,11 +49,23 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^consult\.maidstone\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
-	<!--securecookie host="^services\.maidstone\.gov\.uk$" name="^ASP\\.NET_SessionId$" /-->
+	<!--securecookie host="^services\.maidstone\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
 
 	<securecookie host="^\." name="^_gat?$" />
 	<securecookie host="^\w" name="." />
 
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://consult\.maidstone\.gov\.uk/+(?:\?.*)?$"
+		to="https://maidstone.objective.co.uk/portal" />
+
+		<test url="http://consult.maidstone.gov.uk/?" />
+
+	<rule from="^http://consult\.maidstone\.gov\.uk/"
+		to="https://maidstone.objective.co.uk/" />
+
+		<test url="http://consult.maidstone.gov.uk/portal/ditsfeb16" />
 
 	<rule from="^http:"
 		to="https:" />
