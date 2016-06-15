@@ -1,0 +1,58 @@
+<!--
+	Problematic hosts in *dialogic.com:
+
+		- ^ ⁵
+		- blog ᵐ
+
+	⁵ 500
+	ᵐ HubSpot / mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- www.dialogic.com
+		- .www.dialogic.com
+
+
+	Mixed content:
+
+		- Image on www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="dialogic.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.dialogic.com" />
+
+	<!--	Complications:
+				-->
+	<target host="dialogic.com" />
+
+		<!--	Mixed images & sets cookie without secure:
+									-->
+		<!--test url="http://www.dialogic.com/den/default.aspx" /-->
+
+		<!--	Mixed image:
+					-->
+		<!--test url="http://www.dialogic.com/en/profile/login-help.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.dialogic\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.www\.dialogic\.com$" name="^AuthorizationCookie$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://dialogic\.com/"
+		to="https://www.dialogic.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

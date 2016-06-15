@@ -1,0 +1,209 @@
+<!--
+	NB: p://www.providerfinder.../$ redirects
+	to s: 404 ?=> test failure
+
+	NB: p://pd.secure.../$ redirects to s:,
+	which resets connection ?=> test failure
+
+	Other Anthem rulesets:
+
+		- empireblue.com.xml
+
+
+	Nonfunctional hosts in *anthem.com:
+
+		- connects ʳ
+		- consultants ᶠ
+		- employernews ⁴
+		- group ʰ
+		- health ʰ
+		- healthandwellness ¹
+		- sgplans ʳ
+		- ca.sgplans ʳ
+		- smallbusiness ʰ
+		- timewallspent ᵈ
+		- timewallspent-ca ᵇ
+		- wellnesscalendar ᶠ
+		- why ʰ
+
+	¹ 401
+	⁴ 404
+	ᵇ Shows default page
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Redirect
+
+
+	Problematic hosts in *anthem.com:
+
+		- mss.cammp ᵈ
+		- myplan ᵐ
+		- www.news ᵐ
+		- www.resourceadvisor ⁴
+		- transformationcentral ᵉ ᵐ
+
+	⁴ 404, preemptable redirect
+	ᵈ Dropped, preemptable redirect
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	These altnames do not exist:
+
+		- ghealthcare.providerfinder.anthem.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .anthem.com
+		- ant.anthem.com
+		- anthemwtsdc.anthem.com
+		- brokerportal.anthem.com
+		- es.ca.anthem.com
+		- clientnews.anthem.com
+		- consultantnews.anthem.com
+		- poc.corp.anthem.com
+		- employer1.anthem.com
+		- enrollment-info.anthem.com
+		- eoc.anthem.com
+		- es.anthem.com
+		- ghealthcare.anthem.com
+		- le.anthem.com
+		- m.anthem.com
+		- mediproviders.anthem.com
+		- mss.anthem.com
+		- news.anthem.com
+		- secured.ols.anthem.com
+		- payment.anthem.com
+		- payment-ca.anthem.com
+		- pd2.anthem.com
+		- plan-summaries.anthem.com
+		- www.plan-summaries.anthem.com
+		- poc.anthem.com
+		- central.provider.anthem.com
+		- www.providerfinder.anthem.com
+		- sbc.anthem.com
+		- seca.anthem.com
+		- pd.secure.anthem.com
+		- shop.anthem.com
+		- brokerportal.va.anthem.com
+		- www.anthem.com
+		- www21.anthem.com
+		- www22.anthem.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on entrollment-info from fonts.googleapis.com ˢ
+		- Bug on employer1, provider2 anthemwtsdc.anthem.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Anthem.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="anthem.com" />
+	<target host="ant.anthem.com" />
+	<target host="anthemwtsdc.anthem.com" />
+	<target host="brokerportal.anthem.com" />
+	<target host="es.ca.anthem.com" />
+	<target host="clientnews.anthem.com" />
+	<target host="consultantnews.anthem.com" />
+	<target host="poc.corp.anthem.com" />
+	<target host="employer1.anthem.com" />
+	<target host="enrollment-info.anthem.com" />
+	<target host="eoc.anthem.com" />
+	<target host="es.anthem.com" />
+	<target host="ghealthcare.anthem.com" />
+	<target host="www.hipaatesting.anthem.com" />
+	<target host="le.anthem.com" />
+	<target host="m.anthem.com" />
+	<target host="mediproviders.anthem.com" />
+	<target host="brokerportal.mo.anthem.com" />
+	<target host="mss.anthem.com" />
+	<target host="news.anthem.com" />
+	<target host="secured.ols.anthem.com" />
+	<target host="payment.anthem.com" />
+	<target host="payment-ca.anthem.com" />
+	<target host="pd2.anthem.com" />
+	<target host="plan-summaries.anthem.com" />
+	<target host="www.plan-summaries.anthem.com" />
+	<target host="poc.anthem.com" />
+	<target host="central.provider.anthem.com" />
+	<target host="provider2.anthem.com" />
+	<target host="www.providerfinder.anthem.com" />
+	<target host="sbc.anthem.com" />
+	<target host="www.sbc.anthem.com" />
+	<target host="seca.anthem.com" />
+	<target host="pd.secure.anthem.com" />
+	<target host="pd2.secure.anthem.com" />
+	<target host="shop.anthem.com" />
+	<target host="brokerportal.va.anthem.com" />
+	<target host="wcs.anthem.com" />
+	<target host="www.wcs.anthem.com" />
+	<target host="www.anthem.com" />
+	<target host="www13.anthem.com" />
+	<target host="www21.anthem.com" />
+	<target host="www22.anthem.com" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://www22.anthem.com/lgbt/" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://anthemwtsdc.anthem.com/[\da-f_]+/njs.gif?dcsuri=/nojavascript&amp;WT.js=&amp;WT.tv=&amp;dcssip=" /-->
+		<!--test url="http://brokerportal.anthem.com/ehb/web/bkr/acc/login.htm" /-->
+		<!--test url="http://seca.anthem.com/regemp/StartGDMReg.jsp" /-->
+		<!--test url="http://pd.secure.anthem.com/ebs/act/login.htm" /-->
+
+	<!--	Complications:
+				-->
+	<target host="mss.cammp.anthem.com" />
+	<target host="www.news.anthem.com" />
+	<target host="www.resourceadvisor.anthem.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.anthem\.com$" name="^TLTSID$" /-->
+	<!--securecookie host="^anthemwtsdc\.anthem\.com$" name="^(?:ant|WEBTRENDS_ID)$" /-->
+	<!--securecookie host="^(?:brokerportal|es\.ca|poc\.corp|es|ghealthcare|le|mediproviders|mss|secured\.ols|pd2|poc|central\.provider|www\.providerfinder|seca|shop|brokerportal\.va|www2[12])\.anthem\.com$" name="^ant$" /-->
+	<!--securecookie host="^(?:client|consultant)?news\.anthem\.com$" name="^(?:PHPSESSID|bi_wp_bcp_return|exp_last_activity|exp_last_visit|exp_tracker)$" /-->
+	<!--securecookie host="^enrollment-info\.anthem\.com$" name="^(?:t_session|visitorid)$" /-->
+	<!--securecookie host="^(?:eoc|(?:www\.)?plan-summaries|sbc)\.anthem\.com$" name="^(?:JSESSIONID|ant|ice\.push\.browser)$" /-->
+	<!--securecookie host="^m\.anthem\.com$" name="^(?:JSESSIONID|ant)$" /-->
+	<!--securecookie host="^payment(?:-ca)?\.anthem\.com$" name="^(?:JSESSIONID|ant)$" /-->
+	<!--securecookie host="^www\.anthem\.com$" name="^ebizs$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://mss\.cammp\.anthem\.com/.*"
+		to="https://mss.anthem.com/cammp" />
+
+		<test url="http://mss.cammp.anthem.com/About.aspx" />
+
+	<rule from="^http://www\.news\.anthem\.com/"
+		to="https://news.anthem.com/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://www\.resourceadvisor\.anthem\.com/.*"
+		to="https://www.powerflexweb.com/1631/loginanthemresourceadvisor.html" />
+
+		<test url="http://www.resourceadvisor.anthem.com/index.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

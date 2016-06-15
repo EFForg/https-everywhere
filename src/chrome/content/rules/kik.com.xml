@@ -1,0 +1,70 @@
+<!--
+	For rules causing false/broken MCB, see kik.com-falsemixed.xml.
+
+
+	Problematic hosts in *kik.com:
+
+		- ^ ʳ
+		- blog ˣ
+		- code ᵐ
+		- help ᵐ
+		- reddit ᵐ
+		- testdrive ᵐ
+		- videos ᵐ
+
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- blog.kik.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on blog from $self ˢ
+		- Images on blog from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Kik.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="blog.kik.com" /-->
+	<target host="bots.kik.com" />
+	<target host="dev.kik.com" />
+	<target host="home.kik.com" />
+	<target host="www.kik.com" />
+
+	<!--	Complications:
+				-->
+	<target host="kik.com" />
+	<target host="help.kik.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blog\.kik\.com$" name="^wfvt_\d+$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://kik\.com/"
+		to="https://www.kik.com/" />
+
+	<rule from="^http://help\.kik\.com/"
+		to="https://kikinteractive.zendesk.com/" />
+
+		<test url="http://help.kik.com/entries/104602766" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -16,7 +16,7 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_JSON="$PWD/pkg/rulesets.json"
+RULESETS_JSON=pkg/rulesets.json
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -53,6 +53,9 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   rm -rf $SUBDIR
   exit 0
 fi
+
+# Clean up obsolete ruleset databases, just in case they still exist.
+rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
