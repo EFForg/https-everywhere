@@ -12,15 +12,6 @@
 		- ^		(mismatched, CN: www.adobe.com)
 		- www		(akamai)
 		- s7mbrstream	(breaks embedded video, cf https://github.com/EFForg/https-everywhere/issues/2430)
-		- .+		(akamai)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(→ www.adobe.com)
-		- www1
-		- .+		(→ akamai, per-client subdomains)
-
 
 -->
 <ruleset name="Scene7">
@@ -30,12 +21,20 @@
 	<target host="www1.scene7.com" />
 	<target host="s7sps3.scene7.com" />
 
+	<!--	(account vhosts:)
+				-->
+	<target host="okl.scene7.com" />
+	<target host="okl2.scene7.com" />
+
+		<test url="http://okl.scene7.com/is/image/OKL/Product_SFM25142_Image_1?$small$" />
+		<test url="http://okl2.scene7.com/is/image/OKL/Product_SFM25130_Image_1?$small$" />
+
 
 	<securecookie host="^www1\.scene7\.com$" name=".+" />
 
 
-	<rule from="^http://(?:www\.)?scene7\.com/[^\?]*(\?.*)?"
-		to="https://www.adobe.com/products/scene7.html$1" />
+	<rule from="^http://(?:www\.)?scene7\.com/[^?]*"
+		to="https://www.adobe.com/products/scene7.html" />
 
 	<rule from="^http:"
 		to="https:" />
