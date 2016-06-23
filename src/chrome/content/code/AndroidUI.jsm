@@ -138,7 +138,7 @@ var urlbarOptions = {
 
   title: "HTTPS Everywhere",
 
-  icon: "chrome://https-everywhere/skin/https-everywhere-128.png",
+  icon: "chrome://https-everywhere/skin/icon-active-128.png",
 
   clickCallback: function() {
     popupInfo.fill();
