@@ -37,9 +37,10 @@ if (!httpsEverywhere) { var httpsEverywhere = {}; }
 httpsEverywhere.toolbarButton = {
 
   /**
-   * Name of preference for determining whether to show ruleset counter.
+   * Names of preferences for determining whether to show ruleset counters.
    */
   COUNTER_PREF: "extensions.https_everywhere.show_counter",
+  COUNTER_TOTAL_PREF: "extensions.https_everywhere.show_counter_total",
 
   /**
    * Name of preference for whether HTTP Nowhere is on.
@@ -62,24 +63,8 @@ httpsEverywhere.toolbarButton = {
 
     var tb = httpsEverywhere.toolbarButton;
 
-    // make sure the checkbox for showing counter is properly set
-    var showCounter = tb.shouldShowCounter();
-    var counterItem = document.getElementById('https-everywhere-counter-item');
-    if (counterItem) {
-      counterItem.setAttribute('checked', showCounter ? 'true' : 'false');
-    }
-
-    // make sure UI for HTTP Nowhere mode is properly set
-    var httpNowhereItem = document.getElementById('http-nowhere-item');
-    var showHttpNowhere = tb.shouldShowHttpNowhere();
-    var toolbarbutton = document.getElementById('https-everywhere-button');
-    if (httpNowhereItem) {
-      httpNowhereItem.setAttribute('checked', showHttpNowhere ? 'true' : 'false');
-    }
-    if (toolbarbutton) {
-      toolbarbutton.setAttribute('http_nowhere',
-                                 showHttpNowhere ? 'true' : 'false');
-    }
+    // make sure the checkbox for showing counters are properly set
+    tb.updateMenuItems();
 
     // make sure UI is set depending on whether HTTPS-E is enabled
     toggleEnabledUI();
@@ -167,14 +152,81 @@ httpsEverywhere.toolbarButton = {
       return window.BrowserApp.selectedBrowser;
     }
   },
+   
+  /**
+   * Update the toolbar button image and menuitem checkboxes to current settings.
+   * This is used when the UI is initialized.
+   */
+  updateMenuItems: function() {
+    HTTPSEverywhere.log(INFO, 'Updating toolbar button image and menu item checkboxes.');
+    var tb = httpsEverywhere.toolbarButton;
 
+    var counterItem = document.getElementById('https-everywhere-counter-item');
+    
+    var uiFound = false;
+    
+    if (counterItem) { // If we can find the counterItem like this, we can find everything in the UI.
+      uiFound = true;
+      var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
+      var httpNowhereItem = document.getElementById('http-nowhere-item');
+      var toolbarbutton = document.getElementById('https-everywhere-button');
+    } else {
+      // If the toolbar button is hidden away in the Firefox hamburger menu,
+      // we won't find it by the above, and need to look somewhere else
+      var toolbox = document.getElementById("navigator-toolbox");
+      if (toolbox) {
+        let palette = toolbox.palette;
+        counterItem = palette.querySelector("#https-everywhere-counter-item");
+        if (counterItem) {
+            HTTPSEverywhere.log(DBUG, 'The toolbar button was trying to hide');
+            uiFound = true;
+            counterItem.setAttribute('checked', showCounter);
+            var counterTotalItem = palette.querySelector('#https-everywhere-counter-total-item');
+            var httpNowhereItem = palette.querySelector('#http-nowhere-item');
+            var toolbarbutton = palette.querySelector('#https-everywhere-button');
+        }
+      }
+    }
+    
+    if (uiFound) {
+      // make sure the checkbox for showing counters are properly set
+      var showCounter = tb.shouldShowCounter();
+      HTTPSEverywhere.log(DBUG, 'Setting ruleset counter checkbox to '+showCounter);
+      counterItem.setAttribute('checked', showCounter);
+      
+      var showCounterTotal = tb.shouldShowCounterTotal();
+      HTTPSEverywhere.log(DBUG, 'Setting total ruleset counter checkbox to '+showCounterTotal);
+      counterTotalItem.setAttribute('checked', showCounterTotal);
+      // No reason to be able to change the setting for showing the total
+      // count of applicable rulesets if we do not even show the active ones.
+      counterTotalItem.setAttribute('disabled', !showCounter);
+      
+      // make sure UI for HTTP Nowhere mode is properly set
+      var showHttpNowhere = tb.shouldShowHttpNowhere();
+      HTTPSEverywhere.log(DBUG, 'Setting HTTP Nowhere checkbox to '+showHttpNowhere);
+      httpNowhereItem.setAttribute('checked', showHttpNowhere);
+      toolbarbutton.setAttribute('http_nowhere', showHttpNowhere);
+    } else {
+      HTTPSEverywhere.log(WARN, 'UI not found.');
+    }
+  },
+  
   /**
    * Update the rulesets applied counter for the current tab.
    */
   updateRulesetsApplied: function() {
     var toolbarbutton = document.getElementById('https-everywhere-button');
     if (!toolbarbutton) {
-      return;
+      // This becomes relevant for instance when the toolbar button is
+      // hidden away in the Firefox hamburger menu.
+      var toolbox = document.getElementById("navigator-toolbox");
+      if (toolbox) {
+        palette = toolbox.palette;
+        var toolbarbutton = palette.querySelector('#https-everywhere-button');
+        if (!toolbarbutton) {
+          return;
+        }
+      }
     }
 
     var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
@@ -195,12 +247,12 @@ httpsEverywhere.toolbarButton = {
     }
     // Make sure the list is up to date
     alist.populate_list();
-
-    var counter = 0;
-    for (var x in alist.active) {
-      if (!(x in alist.breaking)) {
-        ++counter;
-      }
+    var rulesetsApplied = alist.count_applied();
+    var rulesetsTotal = alist.count_all();
+    
+    if (!rulesetsTotal) {
+      toolbarbutton.setAttribute('rulesetsApplied', 0);
+      return;
     }
     for (var x in alist.moot) {
       if (!(x in alist.active)) {
@@ -208,8 +260,11 @@ httpsEverywhere.toolbarButton = {
       }
     }
 
-    toolbarbutton.setAttribute('rulesetsApplied', counter);
-    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counter);
+    var includeTotals = httpsEverywhere.toolbarButton.shouldShowCounterTotal();
+    var counterLabel = includeTotals ? rulesetsApplied + '/' + rulesetsTotal : rulesetsApplied;
+    
+    toolbarbutton.setAttribute('rulesetsApplied', counterLabel);
+    HTTPSEverywhere.log(INFO, 'Setting icon counter to: ' + counterLabel);
   },
 
   /**
@@ -229,6 +284,21 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
+   * Gets whether to show the total ruleset count of applicable rulesets.
+   *
+   * @return {boolean}
+   */
+  shouldShowCounterTotal: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
+
+    var prefExists = sp.getPrefType(tb.COUNTER_TOTAL_PREF);
+
+    // This time around, the default behavior is to not show the counter
+    return prefExists && sp.getBoolPref(tb.COUNTER_TOTAL_PREF);
+  },
+
+  /**
    * Gets whether to show HTTP Nowhere UI.
    *
    * @return {boolean}
@@ -240,19 +310,30 @@ httpsEverywhere.toolbarButton = {
   },
 
   /**
-   * Toggles the user's preference for displaying the rulesets applied counter
+   * Toggles the user's preference for displaying the rulesets applied counters
    * and updates the UI.
    */
   toggleShowCounter: function() {
     var tb = httpsEverywhere.toolbarButton;
     var sp = Services.prefs;
 
-    var showCounter = tb.shouldShowCounter();
-    sp.setBoolPref(tb.COUNTER_PREF, !showCounter);
+    var showCounter = !tb.shouldShowCounter();
+    sp.setBoolPref(tb.COUNTER_PREF, showCounter);
+    
+    var counterTotalItem = document.getElementById('https-everywhere-counter-total-item');
+    counterTotalItem.setAttribute('disabled', !showCounter);
 
     tb.updateRulesetsApplied();
   },
+  toggleShowCounterTotal: function() {
+    var tb = httpsEverywhere.toolbarButton;
+    var sp = Services.prefs;
 
+    var showCounterTotal = !tb.shouldShowCounterTotal();
+    sp.setBoolPref(tb.COUNTER_TOTAL_PREF, showCounterTotal);
+    tb.updateRulesetsApplied();
+  },
+  
   /**
    * Toggles whether HTTP Nowhere mode is active, updates the toolbar icon.
    */
@@ -263,8 +344,7 @@ httpsEverywhere.toolbarButton = {
 
     // Change icon color to red if HTTP nowhere is enabled
     var toolbarbutton = document.getElementById('https-everywhere-button');
-    toolbarbutton.setAttribute('http_nowhere',
-                               showHttpNowhere ? 'true' : 'false');
+    toolbarbutton.setAttribute('http_nowhere', showHttpNowhere);
     reload_window();
   },
 
@@ -384,6 +464,14 @@ function toggleEnabledUI() {
 
   // Change icon depending on enabled state
   var toolbarbutton = document.getElementById('https-everywhere-button');
+  if (!toolbarbutton) {
+	// If we did not find the button, look for it in the hamburger menu.
+    var toolbox = document.getElementById("navigator-toolbox");
+    if (toolbox) {
+      var palette = toolbox.palette;
+      var toolbarbutton = palette.querySelector('#https-everywhere-button');
+    }
+  }
   if (toolbarbutton) {
     toolbarbutton.setAttribute('status', enabled ? 'enabled' : 'disabled');
   }
