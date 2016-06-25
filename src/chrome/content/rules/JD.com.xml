@@ -96,8 +96,8 @@
 
 	* Secured by us
 
-	Redirect to http:
-		- item
+	Redirect to www.jd.com :
+		- item.jd.com/$
 
 	Too many redirects:
 		- ^
@@ -121,7 +121,7 @@
 	
 	<target host="*.jd.com" />
 
-<!--
+<!--	Too many redirects:
 	<rule from="^http://(www\.)?jd\.com/"
 		to="https://www.jd.com/" />
 		<test url="http://jd.com/" />
@@ -154,6 +154,21 @@
 		<exclusion pattern="^http://ccc.jd.com/$" />
 		<test url="http://ccc.jd.com/" />
 		<test url="http://ccc.jd.com/cookie_check" />
+
+	<rule from="^http://item\.jd\.com/(.+)\.html"
+		to="https://item.jd.com/$1.html" />
+		<test url="http://item.jd.com/849719.html" />
+		<test url="http://item.jd.com/1856588.html" />
+
+	<rule from="^http://list\.jd\.com/(\d+)-(\d+)-(\d+)\.html"
+		to="https://list.jd.com/list.html?cat=$1,$2,$3" />
+		<test url="http://list.jd.com/652-654-831.html" />
+		<test url="http://list.jd.com/670-671-672.html" />
+
+	<rule from="^http://list\.jd\.com/list\.html\?cat="
+		to="https://list.jd.com/list.html" />
+		<test url="http://list.jd.com/list.html?cat=652,654,831" />
+		<test url="http://list.jd.com/list.html?cat=670,671,672" />
 
 	<rule from="^http://passport\.jd\.com/(relay|new|paipai|uc)/"
 		to="https://passport.jd.com/$1/" />
