@@ -1,0 +1,39 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .amazon.es
+		- .www.amazon.es
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+				
+-->
+<ruleset name="Amazon.es (we need feedback)" default_off="testing">
+
+	<target host="amazon.es" />
+	<target host="fls-eu.amazon.es" />
+	<target host="www.amazon.es" />
+
+		<test url="http://www.amazon.es/Unravel-Uncorked-Novella-Book-English-ebook/dp/B01GHDDWWQ" />
+		<test url="http://www.amazon.es/b?node=2133385031" />
+		<test url="http://www.amazon.es/forum/kindle" />
+		<test url="http://www.amazon.es/gp/BIT" />
+		<test url="http://www.amazon.es/s?me=A31FF9O798PJRO" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amazon\.es$" name="^(?:session-id|session-id-time|x-wl-uid)$" /-->
+	<!--securecookie host="^\.www\.amazon\.es$" name="^(?:UserPref|at-acbes|lc-acbes|sess-at-aches|session-id|session-id-time|session-token|ubid-acbes|x-acbes|x-wl-uid)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,49 @@
+<!--
+	Nonfunctional hosts in *dvdpaytech.com:
+
+		- cdn-\d.static.secure ʳ
+
+	ʳ Refused
+
+
+	(www.)?dvdpaytech.com: Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .dvdpaytech.com
+		- secure.dvdpaytech.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css from cdn-\d.static.join.dvdcdn.com ʳ
+		- Images from cdn-\d.static.join.dvdcdn.com ʳ
+		- favicon from cdn-\d.static.secure.dvdpaytech.com ʳ
+
+	ʳ Unsecurable <= refused
+
+-->
+<ruleset name="DVDpaytech.com (partial)" platform="mixedcontent">
+
+	<target host="secure.dvdpaytech.com" />
+
+		<!--	Mixed css, sets cookies without Secure:
+								-->
+		<!--test url="http://secure.dvdpaytech.com/signup/signup.php?nats=MjMyMzA6MzU6ODg&amp;step=2" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dvdpaytech\.com$" name="^nats_sess$" /-->
+	<!--securecookie host="^secure\.dvdpaytech\.com$" name="^(?:LBSERVERID|PHPSESSID)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

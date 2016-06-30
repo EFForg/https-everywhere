@@ -11,6 +11,8 @@ pkg:
 clean:
 	rm -rf pkg/xpi-amo/ pkg/xpi-eff/ pkg/xpi-cliqz/
 	rm -f pkg/*.xpi
+	rm -f pkg/rulesets.unvalidated.sqlite
 	rm -f src/chrome/content/rules/default.rulesets
+	rm -f src/defaults/rulesets.sqlite
 
 .PHONY: clean prerelease

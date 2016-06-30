@@ -1,36 +1,60 @@
 <!--
 	CDN buckets:
 
-		- as.chango.com.edgesuite.net
-			- ads.chango.ca
+		- wildcard.chango.com.edgekey.net
+		- as.chango.com.edgesuite.net	← ads.chango.ca
 
-		- wildcard.chango.com.edgekey.net/...
-			- e846.g.akamaiedge.net/...
+
+	^chango.com: 503
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .chango.com
+		- dashboard.chango.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Chango">
 
-	<target host="ads.chango.ca" />
-	<target host="chango.com" />
-	<target host="*.chango.com" />
+	<!--	Direct rewrotes:
+				-->
+	<target host="as.chango.com" />
+	<target host="cc.chango.com" />
+	<target host="dashboard.chango.com" />
+	<target host="www.chango.com" />
+	<target host="z.chango.com" />
 
+	<!--	Complications:
+				-->
+	<target host="ads.chango.ca" />
+
+	<target host="chango.com" />
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://cc.chango.com/c/1/o?pid=&amp;order_id=&amp;seg_diapers=&amp;seg_soap=&amp;seg_wag=&amp;p=&amp;r=&amp;dip=" /-->
+		<!--test url="http://cc.chango.com/collector/relator?id=&amp;partner=&amp;token=&amp;uid=&amp;google_error=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.chango\.com$" name="^_v?t$" /-->
 
 	<!--	_t & _vt are set by cc:
 					-->
-	<securecookie host="^\.chango\.com$" name="^(?:_i_cw|_i_lj|_t|_v?t)$" />
-	<securecookie host="^dashboard\.chango\.com$" name=".*" />
+	<securecookie host="^\." name="^_(?:i_cw|i_lj|v?t)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://ads\.chango\.ca/"
 		to="https://as.chango.com/" />
 
-	<!--	!www cert: web01-new.internal.chango.com.internal.chango.com, self-signed
-							-->
-	<rule from="^http://(?:www\.)?chango\.com/"
+	<rule from="^http://chango\.com/"
 		to="https://www.chango.com/" />
 
-
-	<rule from="^http://(as|cc|dashboard|z)\.chango\.com/"
-		to="https://$1.chango.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

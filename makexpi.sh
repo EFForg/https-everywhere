@@ -16,7 +16,7 @@ APP_NAME=https-everywhere
 #  ./makexpi.sh 0.2.3.development.2
 
 cd "`dirname $0`"
-RULESETS_JSON="$PWD/pkg/rulesets.json"
+RULESETS_JSON=pkg/rulesets.json
 ANDROID_APP_ID=org.mozilla.firefox
 VERSION=`echo $1 | cut -d "-" -f 2`
 
@@ -53,6 +53,9 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
   rm -rf $SUBDIR
   exit 0
 fi
+
+# Clean up obsolete ruleset databases, just in case they still exist.
+rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
 
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
@@ -96,12 +99,12 @@ fi
 
 # Prepare packages suitable for uploading to EFF and AMO, respectively. + CLIQZ
 [ -d pkg ] || mkdir pkg
-rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
+rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-eff
 cp -a translations/* pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 
 # CLIQZ
-rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
+rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
 # cp -a translations/* pkg/xpi-cliqz/chrome/locale/
 rsync -a --delete pkg/xpi-cliqz/ pkg/xpi-amo
 
@@ -140,7 +143,7 @@ echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | w
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi and ${XPI_NAME}-cliqz.xpi"
 
-bash utils/android-push.sh "$XPI_NAME-eff.xpi"
+# bash utils/android-push.sh "$XPI_NAME-eff.xpi"
 
 if [ -n "$BRANCH" ]; then
   cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
