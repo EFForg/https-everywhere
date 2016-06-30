@@ -104,7 +104,7 @@ cp -a translations/* pkg/xpi-eff/chrome/locale/
 rsync -a --delete pkg/xpi-eff/ pkg/xpi-amo
 
 # CLIQZ
-rsync -a --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
+rsync -aL --delete --delete-excluded --exclude /chrome/content/rules src/ pkg/xpi-cliqz
 # cp -a translations/* pkg/xpi-cliqz/chrome/locale/
 rsync -a --delete pkg/xpi-cliqz/ pkg/xpi-amo
 
@@ -143,7 +143,7 @@ echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | w
 echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi and ${XPI_NAME}-cliqz.xpi"
 
-bash utils/android-push.sh "$XPI_NAME-eff.xpi"
+# bash utils/android-push.sh "$XPI_NAME-eff.xpi"
 
 if [ -n "$BRANCH" ]; then
   cp $SUBDIR/${XPI_NAME}-eff.xpi $SUBDIR/${XPI_NAME}-amo.xpi pkg
