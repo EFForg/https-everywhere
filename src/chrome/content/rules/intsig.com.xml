@@ -1,0 +1,57 @@
+<!--
+	Other IntSig rulesets:
+
+		- intsig.net.xml
+
+
+	Problematic hosts in *intsig.com:
+
+		- cdn1 ᵐ
+
+	ᵐ Cloudfront / mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .intsig.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from static.intsig.net ˢ
+		- Images on www from static.intsig.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="IntSig.com (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="intsig.com" />
+	<target host="www.intsig.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="cdn1.intsig.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.intsig\.com$" name="^(?:_ccl|_isstat|_isstatuser)$" /-->
+
+	<securecookie host="^\." name="^_isstat" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://cdn1\.intsig\.com/"
+		to="https://???.cloudfront.net/" /-->
+
+		<!--test url="http://cdn1.intsig.com/download/CamX_Backup_Tool_v2.5.1.4.zip" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

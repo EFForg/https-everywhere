@@ -1,8 +1,10 @@
 "use strict";
+
 var backgroundPage = chrome.extension.getBackgroundPage();
 var stableRules = null;
 var unstableRules = null;
 var hostReg = /.*\/\/[^$/]*\//;
+var storage = backgroundPage.storage;
 
 function e(id) {
   return document.getElementById(id);
@@ -62,7 +64,11 @@ function createRuleLine(ruleset) {
       break;
     }
   }
-  label.appendChild(favicon);
+  var xhr = new XMLHttpRequest();
+  try {
+    xhr.open("GET", favicon.src, true);
+    label.appendChild(favicon);
+  } catch (e) {}
 
   // label text
   var text = document.createElement("span");
@@ -86,6 +92,7 @@ function updateEnabledDisabledUI() {
   } else {
     document.body.className = "disabled"
   }
+  backgroundPage.updateState();
 }
 
 // Toggle extension enabled/disabled status
@@ -93,15 +100,14 @@ function toggleEnabledDisabled() {
   if (backgroundPage.isExtensionEnabled) {
     // User wants to disable us
     backgroundPage.isExtensionEnabled = false;
-    chrome.browserAction.setBadgeText({ text: "OFF" });
   } else {
     // User wants to enable us
     backgroundPage.isExtensionEnabled = true;
-    chrome.browserAction.setBadgeText({ text: "" });
   }
   updateEnabledDisabledUI();
   // The extension state changed, so reload this tab.
   chrome.tabs.reload();
+  window.close();
 }
 
 /**
@@ -232,11 +238,11 @@ function toggleHttpNowhere() {
 function getOption_(opt, defaultOpt, callback) {
   var details = {};
   details[opt] = defaultOpt;
-  return chrome.storage.sync.get(details, callback);
+  return storage.get(details, callback);
 }
 
 function setOption_(opt, value) {
   var details = {};
   details[opt] = value;
-  return chrome.storage.sync.set(details);
+  return storage.set(details);
 }

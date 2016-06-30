@@ -1,0 +1,52 @@
+<!--
+	Problematic hosts in *tlasecure.com:
+
+		- ^ ᵐ
+		- static ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- tlasecure.com
+		- images.tlasecure.com
+		- static.tlasecure.com
+		- www.tlasecure.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="TLA Secure.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="images.tlasecure.com" />
+	<target host="www.tlasecure.com" />
+
+		<test url="http://images.tlasecure.com/skins/graphics/bkg-top.gif" />
+
+	<!--	Complications:
+				-->
+	<target host="tlasecure.com" />
+	<target host="static.tlasecure.com" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:images|static|www)\.)?tlasecure\.com$" name="^(?:CFID|CFTOKEN|FUSE|IMAGE|USE|VER)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://tlasecure\.com/"
+		to="https://www.tlasecure.com/" />
+
+	<rule from="^http://static\.tlasecure\.com/"
+		to="https://images.tlasecure.com/" />
+
+		<test url="http://static.tlasecure.com/Skins/graphics/buttons/linkToThis.png" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -17,6 +17,7 @@
 		- n0tice-static.s3.amazonaws.com
 		- s3.amazonaws.com/soulmates/
 		- witness-static.s3.amazonaws.com
+		- d1mbyzj6lih1pj.cloudfront.net
 		- cdn.theguardian.com.c.footprint.net	← cdn.theguardian.tv
 		- audio.theguardian.tv.c.footprint.net
 		- theguardian.com.d1.sc.omtrdc.net	← hits.theguardian.com
@@ -30,12 +31,9 @@
 
 		- theguardian.com subdomains:
 
-			- discussion ²
 			- feeds ⁴
-			- jobs ¹
 			- observer ⁵
 			- syndication ¹
-			- www ⁶
 
 		- audio.theguardian.tv ¹
 		- cdn.theguardian.tv ¹
@@ -45,17 +43,15 @@
 	³ 404; mismatched, CN: *.a.ssl.fastly.net
 	⁴ Refused
 	⁵ Redirects to www; mismatched, CN: *.a.ssl.fastly.net
-	⁶ Redirects to http, valid cert
 
 
 	Problematic hosts in *theguardian.com:
 
 		- hits ¹
 		- next ¹
-		- register ²
+		- m.jobs ¹
 
 	¹ Mismatched
-	² Server sends no certificate chain, see https://whatsmychaincert.com
 
 
 	These altnames don't exist:
@@ -68,25 +64,26 @@
 		- www.witness.theguardian.com
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .theguardian.com
 		- bookshop.theguardian.com
 		- .bookshop.theguardian.com
 		- www.bookshop.theguardian.com
+		- courseproviders.theguardian.com
+		- courses.theguardian.com
+		- jobs.theguardian.com
 		- soulmates.theguardian.com
 		- www.theguardian.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Bugs, on:
+		- Bugs on profile, witness from hits.guardian.co.uk *
 
-			- profile, witness from hits.guardian.co.uk *
-			- www from hits.theguardian.com
-			- www from b.scorecardresearch.com *
-
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="The Guardian.com (partial)">
@@ -96,13 +93,19 @@
 	<target host="theguardian.com" />
 	<target host="bookshop.theguardian.com" />
 	<target host="www.bookshop.theguardian.com" />
+	<target host="courseadmin.theguardian.com" />
+	<target host="courseapi.theguardian.com" />
+	<target host="courseproviders.theguardian.com" />
+	<target host="courses.theguardian.com" />
+	<target host="discussion.theguardian.com" />
 	<target host="embed.theguardian.com" />
 	<target host="hits-secure.theguardian.com" />
 	<target host="id.theguardian.com" />
+	<target host="jobs.theguardian.com" />
 	<target host="membership.theguardian.com" />
 	<target host="oas.theguardian.com" />
 	<target host="profile.theguardian.com" />
-	<!--target host="register.theguardian.com" /-->
+	<target host="register.theguardian.com" />
 	<target host="securedrop.theguardian.com" />
 	<target host="soulmates.theguardian.com" />
 	<target host="subscribe.theguardian.com" />
@@ -118,34 +121,99 @@
 						-->
 		<!--exclusion pattern="^http://www\.theguardian\.com/(?:$|favicon\.ico)" /-->
 		<!--
+			X-Frame-Options: SAMEORIGIN:
+							-->
+		<!--exclusion pattern="^http://www\.theguardian\.com/email/form/footer/\d" /-->
+		<!--
 			Exceptions:
 					-->
 
-		<exclusion pattern="^http://(?:www\.)?theguardian\.com/(?!/*(?:crosswords|info|science|technology)(?:$|[?/]))" />
+		<exclusion pattern="^http://(?:www\.)?theguardian\.com/(?!/*(?:(?:uk/)?(?:artanddesign|books|business|cities|culture|crosswords|film|football|info|membership|music|science|society|sports|stage|technology|tv-and-radio|uk-news|world)|uk/(?:immigration|justin-welby|military|monarchy|prince-harry|prince-philip|queen|queens-birthday-honours-list))(?:$|[?/]))" />
 
 			<!--	+ve:
 					-->
+			<test url="http://www.theguardian.com/australia-news" />
+			<test url="http://www.theguardian.com/commentisfree/2016/jun/10/working-class-britain-brexity-betrayed-labour-vote-leave" />
+			<test url="http://www.theguardian.com/education" />
+			<test url="http://www.theguardian.com/email/form/footer/37" />
+			<test url="http://www.theguardian.com/environment" />
+			<test url="http://www.theguardian.com/environment/2016/jun/11/great-barrier-reef-ellen-degeneres-bewildered-at-backlash-to-her-request" />
 			<test url="http://www.theguardian.com/fashion" />
 			<test url="http://www.theguardian.com/favicon.ico" />
+			<test url="http://www.theguardian.com/global-development" />
+			<test url="http://www.theguardian.com/global/commentisfree/2016/jun/06/smart-people-stupid-things-simple-answer" />
+			<test url="http://www.theguardian.com/global/video/2016/jun/10/malaysia-airlines-flight-mh370-debris-australia-kangaroo-island-video" />
 			<test url="http://www.theguardian.com/guardian-professional" />
 			<test url="http://www.theguardian.com/help/contact-us" />
-			<!--test url="http://www.theguardian.com/profile/samuel-gibbs" /-->
+			<test url="http://www.theguardian.com/international" />
+			<test url="http://www.theguardian.com/media/newspapers" />
+			<test url="http://www.theguardian.com/money/2016/jun/10/prices-property-pensions-30-eu-referendum-questions-answered" />
+			<test url="http://www.theguardian.com/money/gallery/2016/jun/08/homes-for-car-enthusiasts-in-pictures" />
+			<test url="http://www.theguardian.com/politics" />
+			<test url="http://www.theguardian.com/profile/samuel-gibbs" />
 			<test url="http://www.theguardian.com/sustainable-business/2015/sep/30/1984-does-a-cashless-economy-make-for-a-surveillance-state" />
+			<test url="http://www.theguardian.com/theguardian/g2" />
+			<test url="http://www.theguardian.com/tone/news" />
 			<test url="http://www.theguardian.com/travel" />
-			<test url="http://www.theguardian.com/uk-news" />
-			<!--test url="http://www.theguardian.com/uk/culture" /-->
-			<!--test url="http://www.theguardian.com/world" /-->
+			<test url="http://www.theguardian.com/uk/commentisfree" />
+			<test url="http://www.theguardian.com/uk/environment" />
+			<test url="http://www.theguardian.com/uk/lifestyle" />
+			<test url="http://www.theguardian.com/uk/queen" />
+			<test url="http://www.theguardian.com/us-news" />
 
 			<!--	-ve:
 					-->
+			<test url="http://www.theguardian.com/artanddesign" />
+			<test url="http://www.theguardian.com/artanddesign/gallery/2016/may/23/unseen-london-paris-new-york-in-pictures" />
+			<test url="http://www.theguardian.com/books" />
+			<test url="http://www.theguardian.com/books/2016/mar/28/100-best-nonfiction-books-of-all-time-no-9-dispatches-michael-herr-vietnam-war-apocalypse-now" />
+			<test url="http://www.theguardian.com/business" />
+			<test url="http://www.theguardian.com/business/2016/may/02/the-global-economic-growth-funk" />
+			<test url="http://www.theguardian.com/cities" />
+			<test url="http://www.theguardian.com/cities/2016/jun/10/glasgow-effect-die-young-high-risk-premature-death" />
 			<test url="http://www.theguardian.com/crosswords" />
 			<test url="http://www.theguardian.com/crosswords/crossword-blog" />
+			<test url="http://www.theguardian.com/culture" />
+			<test url="http://www.theguardian.com/film" />
+			<test url="http://www.theguardian.com/film/2016/may/19/cannes-market-film-posters-2016" />
+			<test url="http://www.theguardian.com/football" />
+			<test url="http://www.theguardian.com/football/premierleague" />
 			<test url="http://www.theguardian.com/info" />
 			<test url="http://www.theguardian.com/info/developer-blog/2015/aug/12/open-sourcing-grid-image-service" />
+			<test url="http://www.theguardian.com/membership" />
+			<test url="http://www.theguardian.com/membership/2016/may/17/st-georges-mushrooms-wild-garlic-puree-rainbow-chard-and-gnocchi-recipe" />
+			<test url="http://www.theguardian.com/music" />
+			<test url="http://www.theguardian.com/music/video/2016/feb/08/lady-gaga-nails-the-star-spangled-banner-at-super-bowl-50-video" />
 			<test url="http://www.theguardian.com/science/2016/feb/01/human-embryo-genetic-modify-regulator-green-light-research" />
+			<test url="http://www.theguardian.com/society" />
+			<test url="http://www.theguardian.com/society/2016/feb/11/the-nhs-saved-our-lives" />
+			<test url="http://www.theguardian.com/sport" />
+			<test url="http://www.theguardian.com/sport/golf" />
+			<test url="http://www.theguardian.com/stage" />
+			<test url="http://www.theguardian.com/stage/2016/may/24/maxine-peake-blanche-dubois-streetcar-named-desire-manchester-royal-exchange" />
 			<test url="http://www.theguardian.com/technology" />
 			<test url="http://www.theguardian.com/technology/2015/may/21/huawei-p8-review-thin-powerful-undercuts-competition" />
+			<test url="http://www.theguardian.com/tv-and-radio" />
+			<test url="http://www.theguardian.com/tv-and-radio/2016/may/10/diane-morgan-comedy-genius-on-playing-philomena-cunk" />
+			<test url="http://www.theguardian.com/uk-news" />
+			<test url="http://www.theguardian.com/uk-news/2016/jun/07/northern-ireland-lisburn-antrim-lightning-strike-injures-man-two-children" />
+			<test url="http://www.theguardian.com/uk/business" />
+			<test url="http://www.theguardian.com/uk/culture" />
+			<test url="http://www.theguardian.com/uk/film" />
+			<test url="http://www.theguardian.com/uk/immigration" />
+			<test url="http://www.theguardian.com/uk/justin-welby" />
+			<test url="http://www.theguardian.com/uk/monarchy" />
+			<test url="http://www.theguardian.com/uk/prince-harry" />
+			<test url="http://www.theguardian.com/uk/queen" />
+			<test url="http://www.theguardian.com/uk/queens-birthday-honours-list" />
+			<test url="http://www.theguardian.com/uk/sport" />
+			<test url="http://www.theguardian.com/uk/technology" />
+			<test url="http://www.theguardian.com/uk/weather" />
+			<test url="http://www.theguardian.com/world" />
+			<test url="http://www.theguardian.com/world/americas" />
 
+		<!--	Sets cookie without Secure:
+							-->
 		<!--test url="http://hits.theguardian.com/b/ss/guardiangu-frontend,guardiangu-network/1/H.25.3/?c3=theguardian.com&amp;c4=" /-->
 
 
@@ -154,13 +222,16 @@
 	<!--securecookie host="^\.theguardian\.com$" name="^(?:GU_INT|GU_mtv_id|s_vi)$" /-->
 	<!--securecookie host="^(?:www\.)?bookshop\.theguardian\.com$" name="^AWSELB$" /-->
 	<!--securecookie host="^\.bookshop\.theguardian\.com$" name="^frontend$" /-->
+	<!--securecookie host="^courseproviders\.theguardian\.com$" name="^(?:CourseSeekerSiteSession)$" /-->
+	<!--securecookie host="^courses\.theguardian\.com$" name="^(?:AnonId|CourseSeekerSiteSession)$" /-->
+	<!--securecookie host="^jobs\.theguardian\.com$" name="^(?:AnonymousUserId|BrowserSession|FixedFacetDefaults)$" /-->
 	<!--securecookie host="^soulmates\.theguardian\.com$" name="^(?:csrftoken|flags)$" /-->
 	<!--securecookie host="^www\.theguardian\.com$" name="^GU_geo_continent$" /-->
 
 	<!--	Tracking cookies set by hits & oas.theguardian.com:
 								-->
-	<securecookie host="^\.theguardian\.com$" name="^(?:OAX|RMF[DH]|s_vi)$" />
-	<securecookie host="^(?:(?:\.|www\.)?bookshop|\.?id|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|OAX$|RMF[DH]$|s_v)" />
+	<securecookie host="^(?:(?:\.|www\.)?bookshop|courseproviders|courses|\.?id|jobs|oas|\.?soulmates|\.witness)\.theguardian\.com$" name=".+" />
 
 
 	<rule from="^http://hits\.theguardian\.com/"

@@ -20,7 +20,8 @@ fi
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
 git fetch upstream-for-travis master 
-RULESETS_CHANGED=$(git diff --name-only upstream-for-travis/master | grep $RULESETFOLDER | grep '.xml')
+COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
+RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
 git remote remove upstream-for-travis
 
 # Only run test if something has changed.
@@ -40,11 +41,12 @@ if [ "$RULESETS_CHANGED" ]; then
 
   if [ "$TO_BE_TESTED" ]; then
     # Do the actual test, using https-everywhere-checker.
-    TESTOUTPUT=$(python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1)
-    echo >&2 "$TESTOUTPUT"
+    OUTPUT_FILE=`mktemp`
+    trap 'rm "$OUTPUT_FILE"' EXIT
+    python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
     # Unfortunately, no specific exit codes are available for connection
     # failures, so we catch those with grep.
-    if [[ "$TESTOUTPUT" =~ "ERROR" ]]; then
+    if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
       echo >&2 "Test URL test failed."
       exit 1
     fi
