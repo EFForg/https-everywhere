@@ -109,10 +109,45 @@
 -->
 <ruleset name="Energy.gov (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="afdc.energy.gov" />
 	<target host="www.afdc.energy.gov" />
+	<target host="buildingdata.energy.gov" />
+	<target host="buildingenergyscore.energy.gov" />
+	<target host="cleancities.energy.gov" />
+	<target host="eere.energy.gov" />
+
+	<target host="techportal.eere.energy.gov" />
+	<target host="www.eere.energy.gov" />
+	<target host="www1.eere.energy.gov" />
+	<target host="www4.eere.energy.gov" />
+	<target host="www5.eere.energy.gov" />
+
+	<target host="sp.eota.energy.gov" />
+	<target host="etrans.energy.gov" />
+	<target host="federalfleets.energy.gov" />
+	<target host="fossil.energy.gov" />
+	<target host="heatingoil.fossil.energy.gov" />
+	<target host="refinedproduct.fossil.energy.gov" />
+	<target host="gnda.energy.gov" />
+	<target host="hydrogen.energy.gov" />
+	<target host="www.hydrogen.energy.gov" />
+	<target host="nnsa.energy.gov" />
+	<target host="www.nnsa.energy.gov" />
+	<target host="sp2.eota.energy.gov" />
+	<target host="olc.energy.gov" />
+	<target host="rpsc.energy.gov" />
+	<target host="mailinglist.science.energy.gov" />
+	<target host="pamspublic.science.energy.gov" />
 	<target host="www1.energy.gov" />
 	<target host="www3.energy.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="basc.energy.gov" />
+	<target host="www.fossil.energy.gov" />
+	<target host="minorityinternships.energy.gov" />
 
 		<!--	Redirects to http:
 						-->
@@ -120,8 +155,7 @@
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://(?:www\.)?afdc\.energy\.gov/(?!/*(?:(?:\w+/)?(?:asset|image|pdf)s/|(?:prep|publications|widgets)(?:$|[?/])))" /-->
-		<exclusion pattern="^http://(?:www\.)?afdc\.energy\.gov/(?!(?:\w+/)?(?:asset|image)s/)" />
+		<exclusion pattern="^http://(?:www\.)?afdc\.energy\.gov/(?!/*(?:(?:\w+/)?(?:asset|image|pdf)s/|(?:prep|publications|widgets)(?:$|[?/])))" />
 
 			<!--	+ve:
 					-->
@@ -152,7 +186,18 @@
 		<!--
 			Exceptions:
 					-->
-		<!--exclusion pattern="^http://(?:www\.)?eere\.energy\.gov/(?!/*i(?:mag|nclud)es/)" /-->
+		<exclusion pattern="^http://(?:www\.)?eere\.energy\.gov/(?!/*i(?:mag|nclud)es/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.eere.energy.gov/financing/" />
+			<test url="http://www.eere.energy.gov/islandsplaybook/" />
+			<test url="http://www.eere.energy.gov/site_administration/privacy.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://eere.energy.gov/images/spacer.gif" />
+			<test url="http://www.eere.energy.gov/includes/reset.css" />
 
 		<!--	Mixed images:
 					-->
@@ -162,6 +207,12 @@
 		<!--	$ prints "NOTICE", so:
 							-->
 		<test url="http://www1.eere.energy.gov/guidance/default.aspx?pid=2&amp;spid=1" />
+		<test url="http://www4.eere.energy.gov/seeaction/resources" />
+		<test url="http://www5.eere.energy.gov/office_eere/current_budget.php" />
+
+		<!--	$ redirects to ^energy.gov, so:
+							-->
+		<test url="http://fossil.energy.gov/facilities/netl" />
 
 
 	<!--	Not secured by server:
@@ -175,6 +226,27 @@
 	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^(?!www\.afdc\.)\w" name="." />
 
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://basc\.energy\.gov/+"
+		to="https://basc.pnnl.gov/" />
+
+		<test url="http://basc.energy.gov/content/help" />
+
+	<rule from="^http://www\.fossil\.energy\.gov/"
+		to="https://fossil.energy.gov/" />
+
+	<!--	Redirect keeps path but not forward slash
+		nor args, and appends forward slash:
+							-->
+	<rule from="^http://minorityinternships\.energy\.gov/+([^?]*).*"
+		to="https://www.doemeispp.org/$1/" />
+
+		<test url="http://minorityinternships.energy.gov/blog" />
+		<test url="http://minorityinternships.energy.gov/faq" />
+		<test url="http://minorityinternships.energy.gov/home" />
 
 	<rule from="^http:"
 		to="https:" />
