@@ -1,0 +1,43 @@
+<!--
+	Erewash Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *erewash.gov.uk:
+
+		- (www.)? ᵃ
+		- active ᵃ
+		- moderngov ³
+
+	³ 403
+	ᵃ Shows server.bolsover.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- myservice.erewash.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Erewash.gov.uk (partial)">
+
+	<target host="myservice.erewash.gov.uk" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://myservice.erewash.gov.uk/Planning/lg/GFPlanningWelcome.page" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^myservice\.erewash\.gov\.uk$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

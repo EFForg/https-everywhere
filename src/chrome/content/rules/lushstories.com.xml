@@ -1,0 +1,64 @@
+<!--
+	Note: Watch for store validity.
+
+
+	Nonfunctional hosts in *lushstories.com:
+
+		- m ᵗ
+
+	ᵗ Reset
+
+
+	Problematic hosts in *lushstories.com:
+
+		- store ᵐ ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- store.lushstories.com
+		- .store.lushstories.com
+		- www.lushstories.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on store from $self
+
+		- images, on:
+
+			- store from cnvassets.s3.amazonaws.com ˢ
+			- store from d1uc3ft0n4nkav.cloudfront.net ˢ
+			- store from d235bdyk0zpoq6.cloudfront.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Lush Stories.com (partial)">
+
+	<target host="lushstories.com" />
+	<target host="avatars.lushstories.com" />
+	<target host="www.lushstories.com" />
+
+		<test url="http://avatars.lushstories.com/5341/4ea7bb6d9637310de08d7f04.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^store\.lushstories\.com$" name="^z$" /-->
+	<!--securecookie host="^\.store\.lushstories\.com$" name="^card_id$" /-->
+	<!--securecookie host="^www\.lushstories\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

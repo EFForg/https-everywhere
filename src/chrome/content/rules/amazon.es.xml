@@ -10,16 +10,21 @@
 	ᶜ See https://owasp.org/index.php/SecureFlag
 				
 -->
-<ruleset name="Amazon.es (we need feedback)" default_off="testing">
+<ruleset name="Amazon.es">
 
 	<target host="amazon.es" />
 	<target host="fls-eu.amazon.es" />
 	<target host="www.amazon.es" />
 
+		<!--	Amazon has a history of breaking us soon after
+			adding rulesets, so these are here to detect that.
+									-->
 		<test url="http://www.amazon.es/Unravel-Uncorked-Novella-Book-English-ebook/dp/B01GHDDWWQ" />
 		<test url="http://www.amazon.es/b?node=2133385031" />
 		<test url="http://www.amazon.es/forum/kindle" />
 		<test url="http://www.amazon.es/gp/BIT" />
+		<test url="http://www.amazon.es/gp/product/B01DDB4VFW" />
+		<test url="http://www.amazon.es/review/top-reviewers" />
 		<test url="http://www.amazon.es/s?me=A31FF9O798PJRO" />
 
 
@@ -29,8 +34,7 @@
 	<!--securecookie host="^\.www\.amazon\.es$" name="^(?:UserPref|at-acbes|lc-acbes|sess-at-aches|session-id|session-id-time|session-token|ubid-acbes|x-acbes|x-wl-uid)$" /-->
 
 	<securecookie host="." name="^aps-trtmnt$" />
-	<securecookie host="^\.www\." name="." />
-	<securecookie host="^\w" name="." />
+	<securecookie host="^(?!\.amazon\.es$)." name="." />
 
 
 	<rule from="^http:"

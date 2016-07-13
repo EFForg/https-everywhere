@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional hosts in *zongheng.com:
+
+		- author ᵃ
+		- home ᵃ
+		- news ᵃ
+		- pay ᵃ
+		- static ᵃ
+
+	ᵃ Shows www.zongheng.com
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- zongheng.com
+		- .zongheng.com
+		- passport.zongheng.com
+		- .passport.zongheng.com
+		- www.zongheng.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on (www.)?, passport from static.zongheng.com ᵃ
+
+		- Images, on:
+
+			- (www.)?, passport from passport.zongheng.com ˢ
+			- (www.)?, passport from static.zongheng.com ᵃ
+
+	ᵃ Unsecurable <= shows another domain
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Zongheng.com (partial)" platform="mixedcontent">
+
+	<target host="zongheng.com" />
+	<target host="passport.zongheng.com" />
+	<target host="www.zongheng.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:passport\.|www\.)?zongheng\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.zongheng\.com$" name="^PassportCaptchaId$" /-->
+	<!--securecookie host="^\.passport\.zongheng\.com$" name="^server_time$" /-->
+
+	<securecookie host="^\." name="^PassportCaptchaId$" />
+	<securecookie host="^\.passport\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
