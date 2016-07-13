@@ -2,6 +2,13 @@
 	For other Amazon coverage, see Amazon.xml.
 
 
+	Problematic hosts in *amazon.de:
+
+		- kdp ʳ
+
+	ʳ Refused, preemptable redirect
+
+
 	Insecure cookies are set for these domains: ᶜ
 
 		- .amazon.de
@@ -9,16 +16,36 @@
 	ᶜ See https://owasp.org/index.php/SecureFlag
 				
 -->
-<ruleset name="Amazon.de (we need feedback)" default_off="testing">
+<ruleset name="Amazon.de" default_off="testing">
 
 	<target host="amazon.de" />
 	<target host="fls-eu.amazon.de" />
 	<target host="www.amazon.de" />
 
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?amazon\.de/+(?:.+/)?e(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.amazon.de/-/e/B001JXTXIW" />
+			<test url="http://www.amazon.de/-/e/B008SXA2QS" />
+			<test url="http://www.amazon.de/-/e/B00BTE9M0U" />
+			<test url="http://www.amazon.de/-/e/B00C67JR4A" />
+			<test url="http://www.amazon.de/-/e/B00DVJ5ADO" />
+			<test url="http://www.amazon.de/-/e/B00OX8PSP2" />
+			<test url="http://www.amazon.de/Britta-Schipperges/e/B00A9HMJ6W" />
+			<test url="http://www.amazon.de/Christian-Hemelmayr/e/B0091QAW84" />
+
+		<!--	Amazon has a history of breaking us soon after
+			adding rulesets, so these are here to detect that.
+									-->
 		<test url="http://www.amazon.de/Nutrex-BioAstin-Hawaiian-Astaxanthin-Caps/dp/B006X1DCVO" />
 		<test url="http://www.amazon.de/b?node=5076059031" />
 		<test url="http://www.amazon.de/forum/amazon" />
 		<test url="http://www.amazon.de/gp/BIT" />
+		<test url="http://www.amazon.de/gp/product/1503934713" />
+		<test url="http://www.amazon.de/reviews/top-reviewers" />
 		<test url="http://www.amazon.de/s?me=AXT8O13JT7YO2" />
 
 
@@ -27,7 +54,7 @@
 	<!--securecookie host="^\.amazon\.de$" name="^(?:session-id|session-id-time|ubid-acbe|x-wl-uid)$" /-->
 
 	<securecookie host="." name="^aps-trtmnt$" />
-	<securecookie host="^\w" name="." />
+	<securecookie host="^[^.w]" name="." />
 
 
 	<rule from="^http:"
