@@ -19,9 +19,12 @@
 -->
 <ruleset name="Amazon.co.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="amazon.co.uk" />
 	<target host="aan.amazon.co.uk" />
 	<target host="local.amazon.co.uk" />
+	<target host="tickets.amazon.co.uk" />
 	<target host="www.amazon.co.uk" />
 	<target host="www1.amazon.co.uk" />
 
@@ -59,6 +62,10 @@
 		<test url="http://www.amazon.co.uk/gp/registry/wishlist/ref=" />
 		<test url="http://www.amazon.co.uk/s/?&amp;search-alias=lighting" />
 
+	<!--	Complications:
+				-->
+	<target host="m.amazon.co.uk" />
+
 
 	<!--	Not secured by server:
 					-->
@@ -68,6 +75,14 @@
 	<securecookie host="." name="^aps-trtmnt$" />
 	<securecookie host="^[^.w]" name="." />
 
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://m\.amazon\.co\.uk/[^?]*"
+		to="https://www.amazon.co.uk/gp/aw" />
+
+		<test url="http://m.amazon.co.uk/index.htm" />
 
 	<rule from="^http:"
 		to="https:" />
