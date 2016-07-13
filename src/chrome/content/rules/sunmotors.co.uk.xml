@@ -1,0 +1,64 @@
+<!--
+	For other News Corporation coverage, see News-Corporation.xml.
+
+
+	Nonfunctional hosts in *sunmotors.co.uk:
+
+		- cdn-[34] ⁴
+		- cdn.wp ⁴
+
+	⁴ 504
+
+
+	These altnames do not exist:
+
+		- images.sunmotors.co.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.sunmotors.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="sunmotors.co.uk">
+
+	<target host="sunmotors.co.uk" />
+	<target host="www.sunmotors.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sunmotors\.co\.uk/(?:$|about-us/$|car-valuations/$|contact/$|news/$|privacy-policy/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?sunmotors\.co\.uk/(?!/*(?:account(?:$|[?/])|motors-cdn/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.sunmotors.co.uk/about-us/" />
+			<test url="http://www.sunmotors.co.uk/car-valuations/" />
+			<test url="http://www.sunmotors.co.uk/contact/" />
+			<test url="http://www.sunmotors.co.uk/news/" />
+			<test url="http://www.sunmotors.co.uk/privacy-policy/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sunmotors.co.uk/account" />
+			<test url="http://www.sunmotors.co.uk/account/sellyourcar/" />
+			<test url="http://www.sunmotors.co.uk/account/signin" />
+			<test url="http://www.sunmotors.co.uk/motors-cdn/images/icon_search.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sunmotors\.co\.uk$" name="^(?:motbreadcrumbsv2|motses)$" /-->
+
+	<securecookie host="^\." name="_ga(?:t?$|t_)" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
