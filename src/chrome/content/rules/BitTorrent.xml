@@ -22,20 +22,13 @@
 
 	Nonfunctional subdomains:
 
-		- ^	(403, valid cert)
-		- blog ¹
-		- engineering ¹
-		- bundles ²
-		- labs ²
-		- www	(400, CN: *.hs.llnwd.net)
-
-	¹ Redirects to http, wpengine
-	² Refused
-
-
-	Partially covered subdomains:
-
-		- live	(some pages redirect to http)
+		- blog (CN: *.wpengine.com)
+		- engineering (CN: *.wpengine.com)
+		- project-maelstrom (CN: *.herokuapp.com)
+		- help (CN: *.desk.com)
+		- bundle-help (CN: *.desk.com)
+		- bleep-help (CN: *.desk.com)
+		- download.ap.bittorrent.com (CN: *.utorrent.com)
 
 
 	Fully covered subdomains:
@@ -43,7 +36,10 @@
 		- forum
 		- live
 		- remote
-		- torque
+		- ^
+		- www
+		- bundles
+		- store
 
 
 	Observed cookie domains:
@@ -54,20 +50,30 @@
 	Mixed content:
 
 		- css on forum from fonts.googleapis.com *
+		- css on www from fonts.googleapis.com *
 
 	* Secured by us
 
 -->
 <ruleset name="BitTorrent (partial)">
 
-	<target host="*.bittorrent.com" />
-		<exclusion pattern="^http://live\.bittorrent\.com/(?!create|css/|img/|js/|login|styles/)" />
+	<target host="bittorrent.com" />
+	<target host="forum.bittorrent.com" />
+	<target host="live.bittorrent.com" />
+	<target host="remote.bittorrent.com" />
+	<target host="www.bittorrent.com" />
+	<target host="bundles.bittorrent.com" />
+	<target host="store.bittorrent.com" />
+	<target host="download.ap.bittorrent.com" />
 
 
 	<securecookie host="^forum\.bittorrent\.com$" name=".+" />
 
+	
+	<rule from="^http://download\.ap\.bittorrent\.com/"
+		to="https://download-new.utorrent.com/" />
 
-	<rule from="^http://(forum|live|remote|torque)\.bittorrent\.com/"
-		to="https://$1.bittorrent.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
