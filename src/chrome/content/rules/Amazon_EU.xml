@@ -2,88 +2,73 @@
 	For other Amazon coverage, see Amazon.xml.
 
 
-	Amazon appears to operate in 7 countries, and does not hold the domains
-	for some others, like .se or .be.  In other cases there is an http-only site
-	that redirects to one of these 7 countries.
+	Problematic hosts in *amazon.de:
+
+		- kdp ʳ
+
+	ʳ Refused, preemptable redirect
 
 
-	amazon.*:
+	Insecure cookies are set for these domains: ᶜ
 
-		Does work:
+		- .amazon.de
 
-			- Everything except...
-
-		Doesn't work:
-
-			- gp/product/\w{10}
-			- gp/search\?
-			- lm/
-			- /mn/search/
-			- s/
-			- s\?ie=
-			- s\?rh=	(i.e. search pages and files)
+	ᶜ See https://owasp.org/index.php/SecureFlag
 				
 -->
-<ruleset name="Amazon EU (we need feedback)" default_off="needs testing and feedback">
+<ruleset name="Amazon.de">
 
 	<!--	Direct rewrites:
 				-->
-	<target host="amazon.co.uk" />
-	<target host="aan.amazon.co.uk" />
-	<target host="local.amazon.co.uk" />
-	<target host="www.amazon.co.uk" />
-	<target host="www1.amazon.co.uk" />
-
 	<target host="amazon.de" />
+	<target host="fls-eu.amazon.de" />
 	<target host="www.amazon.de" />
-	<target host="amazon.es" />
-	<target host="www.amazon.es" />
-	<target host="amazon.fr" />
-	<target host="www.amazon.fr" />
-	<target host="amazon.it" />
-	<target host="www.amazon.it" />
 
-		<!--	Product pages redirect to http
-										-->
-		<!--exclusion pattern="^http://www\.amazon\.[\w.]+/(?:gp/product/\w{10}\?|gp/search\?|lm/|mn/search(?:$|\?)|s[?/])" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.amazon\.[\w.]+/(?!/*(?:$|\?|(?:[\w-]+/)?(?:ap|b/|dp|gp/(?:BIT/InternetBasedAds|cart|css|help|prime|primecentral|registry/wishlist)|s)(?:$|[?/])))" />
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://(?:www\.)?amazon\.de/+(?:.+/)?e(?:$|[?/])" />
 
 			<!--	+ve:
 					-->
+			<test url="http://www.amazon.de/-/e/B001JXTXIW" />
+			<test url="http://www.amazon.de/-/e/B008SXA2QS" />
+			<test url="http://www.amazon.de/-/e/B00BTE9M0U" />
+			<test url="http://www.amazon.de/-/e/B00C67JR4A" />
+			<test url="http://www.amazon.de/-/e/B00DVJ5ADO" />
+			<test url="http://www.amazon.de/-/e/B00OX8PSP2" />
+			<test url="http://www.amazon.de/Britta-Schipperges/e/B00A9HMJ6W" />
+			<test url="http://www.amazon.de/Christian-Hemelmayr/e/B0091QAW84" />
 
-			<!--	-ve:
+		<!--	Amazon has a history of breaking us soon after
+			adding rulesets, so these are here to detect that.
+									-->
+		<test url="http://www.amazon.de/Nutrex-BioAstin-Hawaiian-Astaxanthin-Caps/dp/B006X1DCVO" />
+		<test url="http://www.amazon.de/b?node=5076059031" />
+		<test url="http://www.amazon.de/forum/amazon" />
+		<test url="http://www.amazon.de/gp/BIT" />
+		<test url="http://www.amazon.de/gp/product/1503934713" />
+		<test url="http://www.amazon.de/reviews/top-reviewers" />
+		<test url="http://www.amazon.de/s?me=AXT8O13JT7YO2" />
+
+	<!--	Complications:
+				-->
+	<target host="kdp.amazon.de" />
+
+
+	<!--	Not secured by server:
 					-->
-			<test url="http://www.amazon.co.uk//?" />
-			<test url="http://www.amazon.co.uk/ap/forgotpassword?openid.pape.max_auth_age=&amp;openid.return_to=&amp;prevRID=&amp;openid.identity=&amp;openid.assoc_handle=&amp;openid.mode=&amp;openid.ns.pape=&amp;openid.claimed_id=&amp;pageId=&amp;openid.ns=" />
-			<test url="http://www.amazon.co.uk/ap/signin?_encoding=&amp;accountStatusPolicy=&amp;openid.assoc_handle=&amp;openid.claimed_id=&amp;openid.identity=&amp;openid.mode=&amp;openid.ns=&amp;openid.ns.pape=&amp;openid.pape.max_auth_age=0&amp;openid.return_to=&amp;pageId=&amp;showRmrMe=" />
-			<test url="http://www.amazon.co.uk/dp/B007HNP1I4" />
-			<test url="http://www.amazon.co.uk/gp/BIT/InternetBasedAds" />
-			<test url="http://www.amazon.co.uk/gp/cart/view.html/ref=" />
-			<test url="http://www.amazon.co.uk/gp/css/homepage.html/ref=" />
-			<test url="http://www.amazon.co.uk/gp/css/order-history/ref=" />
-			<test url="http://www.amazon.co.uk/gp/help/customer/display.html/ref=" />
-			<test url="http://www.amazon.co.uk/gp/prime" />
-			<test url="http://www.amazon.co.uk/gp/primecentral/ref=" />
-			<test url="http://www.amazon.co.uk/gp/registry/wishlist/ref=" />
-			<test url="http://www.amazon.co.uk/s/?&amp;search-alias=lighting" />
+	<!--securecookie host="^\.amazon\.de$" name="^(?:session-id|session-id-time|ubid-acbe|x-wl-uid)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^[^.w]" name="." />
 
 
-	<!--	Verified as working for UK, other sites matched appear to function identically.
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://kdp\.amazon\.de/.*"
+		to="https://kdp.amazon.com/self-publishing/signin?language=de_DE" />
 
-		Unfortunately, navigating to an unsecured page wipes one's shopping basket :(
-			This is problem with our handling of secure cookies, wherein we treat
-		secure and non-secure cookies with the same ID as one cookie, instead of two.
-			If our handling were correct, this securecookie rule would have only
-		one problem, namely that basket information would be missing on search pages.
-
-		Update: Amazon has intentionally broken tls support, for the most part.
-												-->
-	<!--securecookie host="^(www)?\.amazon\.(co\.uk|de|es|fr|it)$" name="." /-->
-	<securecookie host="^local\.amazon\.co\.uk$" name="." />
-
+		<test url="http://kdp.amazon.de/index.htm" />
 
 	<rule from="^http:"
 		to="https:" />

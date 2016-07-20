@@ -1,19 +1,43 @@
 <!--
-	Problematic subdomains:
+	www.affiliatetracking.com: Mismatched
 
-		- www	(cert only matches ^affiliatetracking.com)
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .affiliatetracking.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug from roia.biz ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="AffiliateTracking.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="affiliatetracking.com" />
-	<target host="*.affiliatetracking.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.affiliatetracking.com" />
 
 
-	<securecookie host="^\.affiliatetracking\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.affiliatetracking\.com$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?affiliatetracking\.com/"
+	<rule from="^http://www\.affiliatetracking\.com/"
 		to="https://affiliatetracking.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

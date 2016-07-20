@@ -18,12 +18,12 @@
 	ᵐ Mismatched
 
 
-	Problematic hosts in *enfield.gov.uk:
+	These altnames do not exist:
 
 		- jobs.enfield.gov.uk
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- enfield.gov.uk
 		- .enfield.gov.uk
@@ -38,19 +38,23 @@
 		- www.enfield.gov.uk
 		- .www.enfield.gov.uk
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
 		- Images on (www.)? from www.enfield.gov.uk ˢ
 
-	ˢ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Enfield.gov.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="enfield.gov.uk" />
 	<target host="auth.enfield.gov.uk" />
-	<target host="jobs.enfield.gov.uk" />
+	<target host="www.jobs.enfield.gov.uk" />
 	<target host="new.enfield.gov.uk" />
 	<target host="newcg.enfield.gov.uk" />
 	<target host="parentportal.enfield.gov.uk" />
@@ -60,6 +64,10 @@
 		<!--	Mixed images:
 					-->
 		<!--test url="http://www.enfield.gov.uk/site/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="consult.enfield.gov.uk" />
 
 
 	<!--	Not secured by server:
@@ -77,6 +85,9 @@
 	<securecookie host="^(?!\.enfield\.gov\.uk$)." name="." />
 	<securecookie host="^\." name="^TestCookie$" />
 
+
+	<rule from="^http://consult\.enfield\.gov\.uk/"
+		to="https://enfield-consult.objective.co.uk/" />
 
 	<rule from="^http:"
 		to="https:" />

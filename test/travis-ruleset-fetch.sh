@@ -20,7 +20,8 @@ fi
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
 git fetch upstream-for-travis master 
-RULESETS_CHANGED=$(git diff --name-only upstream-for-travis/master | grep $RULESETFOLDER | grep '.xml')
+COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
+RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
 git remote remove upstream-for-travis
 
 # Only run test if something has changed.
