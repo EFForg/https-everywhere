@@ -57,6 +57,10 @@ sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
 mkdir -p pkg/crx/rules
 cd pkg/crx
 rsync -aL ../../chromium/ ./
+mkdir icons
+cp ../../common/icons/icon-*-128.png icons/
+cp ../../common/icons/icon-*-38.png icons/
+cp ../../common/icons/icon-*-48.png icons/
 # Turn the Firefox translations into the appropriate Chrome format:
 rm -rf _locales/
 mkdir _locales/
