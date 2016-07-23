@@ -4,22 +4,12 @@
 		- Gemius.com.xml
 
 
-	Problematic subdomains:
-
-		- ^	(cert only matches *.gemius.pl)
-
-
-	Fully covered subdomains:
-
-		- (www.)?	(^ → www)
-		- *.hit ¹
-
-	¹ Web bugs
-
-
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .hit.gemius.pl
+		- www.gemius.pl
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Gemius.pl">
@@ -35,12 +25,10 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.hit\.gemius\.pl$" name="^Gtest$" /-->
+	<!--securecookie host="^www\.gemius\.pl$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^(?:\.hit|www)\.gemius\.pl$" name=".+" />
+	<securecookie host="^(?!\.gemius\.pl$)." name="." />
 
-
-	<rule from="^http://gemius\.pl/"
-		to="https://www.gemius.pl/" />
 
 	<rule from="^http:"
 		to="https:" />

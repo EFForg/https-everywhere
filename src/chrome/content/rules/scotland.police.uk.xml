@@ -1,0 +1,74 @@
+<!--
+	For rules causing MCB, see scotland.police.uk-mixedcontent.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *scotland.police.uk:
+
+		- moodle ʳ
+
+	ʳ Refused
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- www from serverapi.arcgisonline.com ˢ
+			- www from live.policestatic.co.uk ʰ
+
+		- Images on www from $self ʰ
+
+	ʰ Unsecurable <= redirects to http
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Scotland.Police.uk (partial)">
+
+	<target host="www.askthe.scotland.police.uk" />
+	<target host="www.scotland.police.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.scotland\.police\.uk/(?:$|assets/(?:images|pdf)/|contact-us/(?:contact-us-form|countering-terrorism|hate-crime-and-third-party-reporting/)$)" /-->
+		<!--
+			Mixed css:
+					-->
+		<!--exclusion pattern="^http://www\.scotland\.police\.uk/(?!/*(?:contact-us/$|your-community/))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.scotland\.police\.uk/(?!/*(?:domestic-abuse|hate-crime|secureforms)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.scotland.police.uk/assets/images/small/signing" />
+			<!--
+				(srsly:)
+						-->
+			<test url="http://www.scotland.police.uk/contact-us/contact-us-form" />
+			<test url="http://www.scotland.police.uk/contact-us/countering-terrorism" />
+			<test url="http://www.scotland.police.uk/contact-us/hate-crime-and-third-party-reporting/" />
+			<test url="http://www.scotland.police.uk/keep-safe/advice-for-victims-of-crime/domestic-abuse/reporting-domestic-abuse/" />
+			<!--
+				(mixed css:)
+						-->
+			<test url="http://www.scotland.police.uk/contact-us/" />
+			<test url="http://www.scotland.police.uk/your-community/" />
+			<test url="http://www.scotland.police.uk/your-community/fife/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.scotland.police.uk/domestic-abuse/" />
+			<test url="http://www.scotland.police.uk/hate-crime/" />
+			<test url="http://www.scotland.police.uk/secureforms/" />
+
+
+	<securecookie host="^(?!www\.s)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

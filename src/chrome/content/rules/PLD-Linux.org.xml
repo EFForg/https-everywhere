@@ -34,44 +34,31 @@
 
 	* Works; expired 2002-04-09, CN: localhost
 
-
-	Fully covered subdomains:
-
-		- (www.)	(^ → www)
-		- cvs
-		- docs		(→ www)
-		- git
-		- svn
-
-
-	Mixed content:
-
-		- Images on git from www *
-
-	* Secured by us
-
 -->
 <ruleset name="PLD-Linux.org (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="pld-linux.org" />
-	<target host="*.pld-linux.org" />
+	<target host="cvs.pld-linux.org" />
+	<target host="git.pld-linux.org" />
+	<target host="svn.pld-linux.org" />
+	<target host="www.pld-linux.org" />
+
+	<!--	Complications:
+				-->
+	<target host="docs.pld-linux.org" />
 
 
-	<securecookie host="^www\.pld-linux\.org$" name=".+" />
+	<securecookie host="^\w" name="." />
 
-
-	<!--	^ redirects to www over http,
-		so copy that behavior:
-					-->
-	<rule from="^http://(?:www\.)?pld-linux\.org/"
-		to="https://www.pld-linux.org/" />
-
-	<rule from="^http://(cvs|git|svn)\.pld-linux\.org/"
-		to="https://$1.pld-linux.org/" />
 
 	<!--	Server doesn't drop path:
 						-->
 	<rule from="^http://docs\.pld-linux\.org/"
 		to="https://www.pld-linux.org/Docs/man" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
