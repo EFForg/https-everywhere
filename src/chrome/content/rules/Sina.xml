@@ -1,11 +1,7 @@
 <!--
 	For rules causing mixed content, see Sina.com.cn-mixedcontent.xml
-
 	For problematic rules, see Sina-problematic.xml.
-
-
 	Other Sina rulesets:
-
 		- Sina.cn.xml
 		- sina.com.xml
 		- Sina_App.xml
@@ -14,12 +10,8 @@
 		- sinajs.cn.xml
 		- Weibo.com.xml
 		- weibopay.com.xml
-
-
 	Nonfunctional domains:
-
 		- sina.com.cn subdomains:
-
 			- ^ ¹
 			- ad4 ²
 			- ads ³
@@ -66,6 +58,7 @@
 			- sky.news ³
 			- pfp ³
 			- photo ³
+			- qipai ¹
 			- sh ³
 			- sx ³
 			- show ²
@@ -80,21 +73,15 @@
 			- www ³
 			- zhongyi ³
 			- zhuanlan ¹
-
 		- mail.sina.net ³
-
 		- s2.sae.sinacdn.com
 		- www.sae.sinacdn.com
-
 	¹ Times out
 	² 503
 	³ Refused
 	⁴ 403
 	⁵ 404
-
-
 	Problematic domains:
-
 		- app.sina.com.cn ¹
 		- dealer.auto.sina.com.cn ¹ ²
 		- vip.stock.finance.sina.com.cn ²
@@ -103,38 +90,26 @@
 		- static.sae.sina.com.cn ²
 		- match.sports.sina.com.cn ¹ ²
 		- weather.sina.com.cn ¹
-
 		- sinacloud.com ²
-
 	¹ Mixed css
 	² Mismatched
-
-
 	Insecure cookies are set for these domains and hosts: ᶜ
-
 		- .sina.com.cn
 		- 2008mail.sina.com.cn
 		- help.sina.com.cn
 		- mail.sina.com.cn
 		- .sae.sina.com.cn
 		- weather.sina.com.cn
-
 	ᶜ See https://owasp.org/index.php/SecureFlag
-
-
 	Mixed content:
-
 		- css, on:
-
 			- app.sina.com.cn from i.apps.sina.cn
 			- dealer.auto.sina.com.cn from auto.sina.com.cn
 			- dealer.auto.sina.com.cn from $self
 			- api.t.sina.com.cn from timg.sjs.sinajs.cn
 			- weather.sina.com.cn from news.sina.com.cn
 			- match.sports.sina.com.cn from $self
-
 		- Images, on:
-
 			- app.sina.com.cn from p\d+.qhimg.com
 			- app.sina.com.cn from i.apps.sina.cn
 			- help.sina.com.cn, weather.sina.com.cn from www.sinaimg.cn ˢ
@@ -145,16 +120,22 @@
 			- weather.sina.com.cn from sjs.sinajs.cn
 			- weather.sina.com.cn from s.img.mix.sina.com.cn
 			- weather.sina.com.cn from i[0-3].sinaimg.cn ˢ
-
 		- Bug on weather.sina.com.cn from beacon.sina.com.cn
-
 -->
 <ruleset name="Sina.com.cn (partial)">
 
 	<!--	Direct rewrites:
 				-->
 	<target host="2008mail.sina.com.cn" />
-	<!--target host="app.sina.com.cn" /-->
+	<target host="app.sina.com.cn" />
+		<exclusion pattern="^http://app\.sina\.com\.cn/(?!favorite\.ico|script/)" />
+		<test url="http://app.sina.com.cn/" />
+		<test url="http://app.sina.com.cn/app_index.php" />
+		<test url="http://app.sina.com.cn/favorite.ico" />
+		<test url="http://app.sina.com.cn/script/feedback.js" />
+		<test url="http://app.sina.com.cn/script/jquery.simplemodal.1.4.1.min.js" />
+		<test url="http://app.sina.com.cn/script/web_common.js" />
+
 	<target host="help.sina.com.cn" />
 	<target host="licaishi.sina.com.cn" />
 	<target host="login.sina.com.cn" />
@@ -164,7 +145,6 @@
 	<target host="pay.sina.com.cn" />
 	<target host="help.pay.sina.com.cn" />
 	<target host="merchant.pay.sina.com.cn" />
-	<target host="qipai.sina.com.cn" />
 	<target host="sae.sina.com.cn" />
 	<target host="sax.sina.com.cn" />
 	<!--target host="api.t.sina.com.cn" /-->
@@ -172,19 +152,9 @@
 	<!--target host="weather.sina.com.cn" /-->
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.sina\.com\.cn$" name="^U_TRS[12]$" /-->
-	<!--securecookie host="^2008mail\.sina\.com\.cn$" name="^dpvar$" /-->
-	<!--securecookie host="^(?:help|weather)\.sina\.com\.cn$" name="^usrm\w+$" /-->
-	<!--securecookie host="^(?:help|mail|qipai|vip)\.sina\.com\.cn$" name="^dpha$" /-->
-	<!--securecookie host="^\.sae\.sina\.com\.cn$" name="^(PHPSESSID|SAETEST|SAEVER)$" /-->
-
 	<securecookie host="^(?:2008mail|help|mail|qipai|vip)\.sina\.com\.cn$" name=".+" />
-	<!--securecookie host="^api\.t\.sina\.com\.cn$" name=".+" /-->
 
 
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
