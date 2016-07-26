@@ -92,6 +92,8 @@ def test_unescaped_dots_in_exclusion(tree, rulename, from_attrib, to):
     return True
 
 xpath_rule = etree.XPath("/ruleset/rule")
+xpath_ruleset_platform = etree.XPath("/ruleset/@platform")
+xpath_ruleset_default_off = etree.XPath("/ruleset/@default_off")
 def test_unencrypted_to(tree, rulename, from_attrib, to):
     # Rules that redirect to something other than https or http.
     # This used to test for http: but testing for lack of https: will
@@ -99,6 +101,8 @@ def test_unencrypted_to(tree, rulename, from_attrib, to):
     # Now warn if the rule author indicates they intended it, with the
     # downgrade attribute.  Error if this attribute is not present.
     """Rule redirects to something other than https."""
+    if len(xpath_ruleset_platform(tree)) != 0 or len(xpath_ruleset_default_off(tree)) != 0:
+        return True
     for rule in xpath_rule(tree):
         to, downgrade = rule.get("to"), rule.get("downgrade")
         if to[:6] != "https:" and to[:5] != "http:":
@@ -158,7 +162,6 @@ seen_file = False
 
 xpath_ruleset = etree.XPath("/ruleset")
 xpath_ruleset_name = etree.XPath("/ruleset/@name")
-xpath_ruleset_platform = etree.XPath("/ruleset/@platform")
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_from = etree.XPath("/ruleset/rule/@from")
 xpath_to = etree.XPath("/ruleset/rule/@to")
