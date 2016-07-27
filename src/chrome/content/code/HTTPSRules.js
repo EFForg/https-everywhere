@@ -269,6 +269,7 @@ const RuleWriter = {
 
     return data.value;
   },
+
   readFromFile: function(file) {
     if (!file.exists())
       return null;
