@@ -32,7 +32,7 @@ target host with a right-side wildcard. But this is not yet implemented.
 # Example:
 	<ruleset name="example.com">
 		<target host="example.com" />
-		 <target host="*.example.com" />
+		<target host="*.example.com" />
 
 		<test url="http://www.example.com/" />
 		<test url="http://beta.example.com/" />
