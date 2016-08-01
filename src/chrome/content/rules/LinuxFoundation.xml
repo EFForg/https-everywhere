@@ -19,17 +19,9 @@
 
 	Partially covered hosts in *linuxfoundation.org:
 
-		- collabprojects ʰ
 		- events ʰ
-		- eventsstg ʰ
-		- www ʰ
 
 	ʰ Some pages redirect to http
-
-
-	Insecure cookies are set for these domains:
-
-		- developerbugs.linuxfoundation.org
 
 -->
 <ruleset name="Linux Foundation.org (partial)">
@@ -44,7 +36,6 @@
 	<target host="collabprojects.linuxfoundation.org" />
 	<target host="developerbugs.linuxfoundation.org" />
 	<target host="events.linuxfoundation.org" />
-	<target host="eventsstg.linuxfoundation.org" />
 	<target host="identity.linuxfoundation.org" />
 	<target host="ldn.linuxfoundation.org" />
 	<target host="lists.linuxfoundation.org" />
@@ -56,69 +47,34 @@
 				-->
 	<target host="go.linuxfoundation.org" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://collabprojects\.linuxfoundation\.org/$" /-->
-		<!--exclusion pattern="^http://events\.linuxfoundation\.org/(contact-us|events(/|[\w/-]+/*)?)?(\?.*)?$" /-->
-		<!--exclusion pattern="^http://eventstg\.linuxfoundation\.org/$" /-->
-		<!--exclusion pattern="^http://www\.linuxfoundation\.org/$" /-->
-
 		<!--	Exceptions:
 					-->
-		<exclusion pattern="^http://collabprojects\.linuxfoundation\.org/+(?!sites/)" />
+		<exclusion pattern="^http://events\.linuxfoundation\.org/((events/|\?).*)?$" />
 
 			<!--	+ve:
 					-->
-			<test url="http://collabprojects.linuxfoundation.org/" />
-			<test url="http://collabprojects.linuxfoundation.org//" />
-
-			<!--	-ve:
-					-->
-			<test url="http://collabprojects.linuxfoundation.org/sites/all/modules/custom/lf_assets/includes/img/di_blue.png" />
-
-		<exclusion pattern="^http://events(?:stg)?\.linuxfoundation\.org/+(?!sites/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://events.linuxfoundation.org/contact-us" />
-			<test url="http://events.linuxfoundation.org/events" />
 			<test url="http://events.linuxfoundation.org/events/embedded-linux-conference-europe/attend/register" />
 			<test url="http://events.linuxfoundation.org/events/linuxcon-europe/program/cfp" />
-			<test url="http://events.linuxfoundation.org/events/mesoscon/attend/register" />
+			<test url="http://events.linuxfoundation.org/events/mesoscon/attend/register?utm_source=lf" />
+			<test url="http://events.linuxfoundation.org/?" />
+			<test url="http://events.linuxfoundation.org/?utm_source=lf" />
 
 			<!--	-ve:
 					-->
+			<test url="http://events.linuxfoundation.org/sponsor" />
 			<test url="http://events.linuxfoundation.org/sites/events/files/styles/events_listing_192x192/public/ccc_eu_color.png" />
-			<test url="http://eventsstg.linuxfoundation.org/sites/all/themes/lfevents/css/homepage-pardot_new.css" />
 
-		<exclusion pattern="^http://www\.linuxfoundation\.org/(?!about/join/individual(?:$|[?/])|cas\?|misc/|sites/|user(?:$|\?))" />
+		<!-- Exclude Pardot paths other than /, /e/*, /l/*, and /?* -->
+		<!-- As of Sept 2016, most Pardot vanity URLs do NOT work on go.pardot.com,
+		     only on the vanity domain (go.linuxfoundation.org) which does not
+		     support SSL. Embedded forms (/l/*) and non-vanity tracker URLs (/e/*)
+		     are the only paths confirmed to work on https://go.pardot.com. -->
+		<!-- http://help.pardot.com/customer/portal/articles/2126757-using-vanity-urls -->
+		<exclusion pattern="^http://go\.linuxfoundation\.org/(?![el]/)[^?]" />
 
 			<!--	+ve:
 					-->
-			<test url="http://www.linuxfoundation.org/about" />
-			<test url="http://www.linuxfoundation.org/about/faq" />
-			<test url="http://www.linuxfoundation.org/about/members" />
-			<test url="http://www.linuxfoundation.org/collaborate" />
-			<test url="http://www.linuxfoundation.org/news-media/blogs" />
-			<test url="http://www.linuxfoundation.org/og" />
-			<test url="http://www.linuxfoundation.org/privacy" />
-			<test url="http://www.linuxfoundation.org/programs" />
-			<test url="http://www.linuxfoundation.org/publications" />
-			<test url="http://www.linuxfoundation.org/search" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.linuxfoundation.org/about/join/individual" />
-			<test url="http://www.linuxfoundation.org/cas?destination=homepage" />
-			<test url="http://www.linuxfoundation.org/sites/all/modules/custom/lf_assets/includes/img/di_blue.png" />
-			<test url="http://www.linuxfoundation.org/user" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^developerbugs\.linuxfoundation\.org$" name="^(BUGLIST|LASTORDER)$" /-->
-
-	<securecookie host="^(?!collabprojects\.|events\.)." name="." />
+			<test url="http://go.linuxfoundation.org/sysadminday2016" />
 
 
 	<rule from="^http://go\.linuxfoundation\.org/+(?:\?.*)?$"
@@ -129,10 +85,11 @@
 		<test url="http://go.linuxfoundation.org//" />
 		<test url="http://go.linuxfoundation.org//?" />
 
-	<rule from="^http://go\.linuxfoundation\.org/"
-		to="https://pi.pardot.com/" />
+	<rule from="^http://go\.linuxfoundation\.org/([el])/"
+		to="https://pi.pardot.com/$1/" />
 
 		<test url="http://go.linuxfoundation.org/e/6342/TheLinuxFoundation/ymc8q/578968329" />
+		<test url="http://go.linuxfoundation.org/l/6342/2016-03-23/33c3kc" />
 
 	<rule from="^http:"
 		to="https:" />
