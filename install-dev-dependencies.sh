@@ -22,7 +22,8 @@ elif type brew >/dev/null ; then
     echo '/usr/local/bin not found in $PATH, please add it.'
   fi
 elif type dnf >/dev/null ; then
-  sudo dnf install libxml2-devel python-devel libxslt-devel
+  sudo dnf install firefox gcc git libcurl-devel libxml2-devel libxslt-devel \
+    python-devel redhat-rpm-config xorg-x11-server-Xvfb
 fi
 
 # Get the addon SDK submodule and rule checker
