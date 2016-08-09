@@ -45,7 +45,7 @@ elif type dnf >/dev/null ; then
     $SUDO_SHIM chmod 755 /usr/bin/chromedriver
   fi
   if [ ! -f /var/lib/dbus/machine-id ]; then
-    dbus-uuidgen > /var/lib/dbus/machine-id
+    $SUDO_SHIM sh -c 'dbus-uuidgen > /var/lib/dbus/machine-id'
   fi
   export PYCURL_SSL_LIBRARY=nss
 fi
