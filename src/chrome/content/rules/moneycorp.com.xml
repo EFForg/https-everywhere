@@ -1,0 +1,44 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- identity.moneycorp.com
+		- online.moneycorp.com
+		- secure.moneycorp.com
+		- www.moneycorp.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="moneycorp.com">
+
+	<target host="cdn.moneycorp.com" />
+	<target host="cdn2.moneycorp.com" />
+	<target host="identity.moneycorp.com" />
+	<target host="online.moneycorp.com" />
+	<target host="secure.moneycorp.com" />
+	<target host="www.moneycorp.com" />
+
+		<test url="http://cdn.moneycorp.com/assets/affiliates/Moneycorp/css/core/framework.css?v=00" />
+		<test url="http://cdn2.moneycorp.com/fp/clear.png?org_id=&amp;session_id=&amp;m=" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://identity.moneycorp.com/core/login?signin=" /-->
+		<!--test url="http://secure.moneycorp.com/?signin=&amp;client=&amp;partnerName=&amp;partnerDescription=&amp;chk=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^identity\.moneycorp\.com$" name="^ids_chk\.[\da-f]{32}$" /-->
+	<!--securecookie host="^online\.moneycorp\.com$" name="^(?:ADRUM_BT[1a]|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^secure\.moneycorp\.com$" name="^(?:__RequestVerificationToken|Locale|QuerystringSession)$" /-->
+	<!--securecookie host="^www\.moneycorp\.com$" name="^(?:ASP\.NET_SessionId|TS[\da-f]{8})$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

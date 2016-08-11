@@ -1,0 +1,111 @@
+<!--
+	CDN buckets:
+
+		- img-sporx.mncdn.com	← mdcdn
+
+
+	Nonfunctional hosts in *sporx.com:
+
+		- mz ᵈ
+		- oyunparki ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *sporx.com:
+
+		- anadoluefessk ᵐ ˣ
+		- euro2016 ᵐ ˣ
+		- m ˣ
+		- mdcdn ᵐ
+		- my ᵐ ˣ
+		- nba ᵐ ˣ
+		- t4f ᵐ
+		- turkcell ᵐ ˣ
+		- www ˣ
+
+	ᵐ Mismatched
+	ˣ Mixed iframes or css
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- anadoluefessk.sporx.com
+		- euro2016.sporx.com
+		- m.sporx.com
+		- my.sporx.com
+		- nba.sporx.com
+		- t4f.sporx.com
+		- turkcell.sporx.com
+		- www.sporx.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframes, on:
+		
+			- euro2016 from www.sporx.com ˢ
+			- nba from tr.global.nba.com
+			- www from nba.sporx.com
+			- www from ligradyo.com.tr ᶠ
+			- www from $self ˢ
+
+		- css, on:
+
+			- anadoluefessk from www.sporx.com ˢ
+			- m from $self ˢ
+			- my, turkcell from $self
+
+		- Images, on:
+
+			- anadoluefessk, euro2016, turkcell, www from mdcdn.sporx.com ˢ
+			- m from sporxtv-p.mncdn.com ˢ
+			- m, www from $self ˢ
+			- euro2016, turkcell from $self
+			- euro2016, m, my, nba turkcell, from www.sporx.com ˢ
+			- t4f from img-super11.mncdn.com ˢ
+
+		- favicon on m from $self ˢ
+
+		- Ads / bugs, on:
+		
+			- euro2016 from widgets-script.broadagesports.com ˢ
+			- euro2016, nba, turkcell, www from b.scorecardresearch.com ˢ
+			- turkcell, www from gdetr.hit.gemius.pl ˢ
+
+	ᶠ Unsecurable <= handshake fails
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Sporx.com (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="sporx.com" />
+	<target host="m.sporx.com" />
+	<target host="www.sporx.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mdcdn.sporx.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:anadoluefessk|euro2016|m|my|nba|t4f|turkcell|www)\.sporx\.com$" name="^(?:BIGipServer|PHPSESSID$)" /-->
+
+	<securecookie host="^\." name="_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://mdcdn\.sporx\.com/"
+		to="https://img-sporx.mncdn.com/" />
+
+		<test url="http://mdcdn.sporx.com/img/55/2016/2016-06-20t200812z_1175802251_lr1ec6k1jxdi9_rtrmadp_3_soccer-euro-rus-wal.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
