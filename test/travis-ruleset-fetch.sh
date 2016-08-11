@@ -29,43 +29,53 @@ git remote remove upstream-for-travis
 
 if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
-  echo >&2 "Running main test suite."
-  ./test/firefox.sh
-  ./test/chromium.sh
+  if [ "$TEST" == "firefox" ]; then
+    echo >&2 "Running firefox test suite."
+    ./test/firefox.sh
+  fi
+  if [ "$TEST" == "chromium" ]; then
+    echo >&2 "Running chromium test suite."
+    ./test/chromium.sh
+  fi
 fi
 # Only run test if something has changed.
 if [ "$RULESETS_CHANGED" ]; then
   echo >&2 "Ruleset database has changed."
 
-  echo >&2 "Performing comprehensive coverage test."
-  ./test/rules.sh
-
-  echo >&2 "Testing test URLs in all changed rulesets."
-
-  # Make a list of all changed rulesets, but exclude those
-  # that do not exist.
-  for RULESET in $RULESETS_CHANGED; do
-    # First check if the given ruleset actually exists
-    if [ ! -f $RULESET ]; then
-      echo >&2 "Skipped $RULESET; file not found."
-      continue
-    fi
-    TO_BE_TESTED="$TO_BE_TESTED $RULESET"
-  done
-
-  if [ "$TO_BE_TESTED" ]; then
-    # Do the actual test, using https-everywhere-checker.
-    OUTPUT_FILE=`mktemp`
-    trap 'rm "$OUTPUT_FILE"' EXIT
-    python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
-    # Unfortunately, no specific exit codes are available for connection
-    # failures, so we catch those with grep.
-    if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
-      echo >&2 "Test URL test failed."
-      exit 1
-    fi
+  if [ "$TEST" == "rules" ]; then
+    echo >&2 "Performing comprehensive coverage test."
+    ./test/rules.sh
   fi
-  echo >&2 "Test URL test succeeded."
+
+
+  if [ "$TEST" == "fetch" ]; then
+    echo >&2 "Testing test URLs in all changed rulesets."
+
+    # Make a list of all changed rulesets, but exclude those
+    # that do not exist.
+    for RULESET in $RULESETS_CHANGED; do
+      # First check if the given ruleset actually exists
+      if [ ! -f $RULESET ]; then
+        echo >&2 "Skipped $RULESET; file not found."
+        continue
+      fi
+      TO_BE_TESTED="$TO_BE_TESTED $RULESET"
+    done
+
+    if [ "$TO_BE_TESTED" ]; then
+      # Do the actual test, using https-everywhere-checker.
+      OUTPUT_FILE=`mktemp`
+      trap 'rm "$OUTPUT_FILE"' EXIT
+      python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
+      # Unfortunately, no specific exit codes are available for connection
+      # failures, so we catch those with grep.
+      if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
+        echo >&2 "Test URL test failed."
+        exit 1
+      fi
+    fi
+    echo >&2 "Test URL test succeeded."
+  fi
 fi
 
 exit 0
