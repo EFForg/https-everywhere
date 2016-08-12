@@ -1,9 +1,12 @@
 #!/bin/bash
-# Run https-everywhere-checker for each changed ruleset
+# Wrapper for travis tests
+
+function docker_build {
+  docker build -t httpse .
+}
 
 # Folder paths, relative to parent
 RULESETFOLDER="src/chrome/content/rules"
-RULETESTFOLDER="test/rules"
 
 # Go to git repo root; taken from ../test.sh. Note that
 # $GIT_DIR is .git in this case.
@@ -19,23 +22,28 @@ fi
 
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
+trap 'git remote remove upstream-for-travis' EXIT
 git fetch upstream-for-travis master 
 COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
 RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
 if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then
   ONLY_RULESETS_CHANGED=false
 fi
-git remote remove upstream-for-travis
+
+# At this point, if anything fails, the test should fail
+set -e
 
 if ! $ONLY_RULESETS_CHANGED; then
   echo >&2 "Core code changes have been made."
   if [ "$TEST" == "firefox" ]; then
     echo >&2 "Running firefox test suite."
-    ./test/firefox.sh
+    docker_build
+    docker run --rm -ti -v $(pwd):/opt -e FIREFOX=/$FIREFOX/firefox/firefox httpse bash -c "test/firefox.sh"
   fi
   if [ "$TEST" == "chromium" ]; then
     echo >&2 "Running chromium test suite."
-    ./test/chromium.sh
+    docker_build
+    docker run --rm -ti -v $(pwd):/opt --privileged httpse bash -c "test/chromium.sh"
   fi
 fi
 # Only run test if something has changed.
@@ -44,37 +52,15 @@ if [ "$RULESETS_CHANGED" ]; then
 
   if [ "$TEST" == "rules" ]; then
     echo >&2 "Performing comprehensive coverage test."
-    ./test/rules.sh
+    docker_build
+    docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   fi
 
 
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
-
-    # Make a list of all changed rulesets, but exclude those
-    # that do not exist.
-    for RULESET in $RULESETS_CHANGED; do
-      # First check if the given ruleset actually exists
-      if [ ! -f $RULESET ]; then
-        echo >&2 "Skipped $RULESET; file not found."
-        continue
-      fi
-      TO_BE_TESTED="$TO_BE_TESTED $RULESET"
-    done
-
-    if [ "$TO_BE_TESTED" ]; then
-      # Do the actual test, using https-everywhere-checker.
-      OUTPUT_FILE=`mktemp`
-      trap 'rm "$OUTPUT_FILE"' EXIT
-      python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
-      # Unfortunately, no specific exit codes are available for connection
-      # failures, so we catch those with grep.
-      if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
-        echo >&2 "Test URL test failed."
-        exit 1
-      fi
-    fi
-    echo >&2 "Test URL test succeeded."
+    docker_build
+    docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
   fi
 fi
 
