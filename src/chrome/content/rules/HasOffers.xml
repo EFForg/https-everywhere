@@ -1,23 +1,77 @@
 <!--
-	Problematic domains:
+	For other Tune coverage, see tune.com.xml.
 
-		- media.hasoffers.com	(404; mismatched, CN: gp1.wac.edgecastcdn.net)
 
+	CDN buckets:
+
+		- ho-websites.s3.amazonaws.com
+
+
+	Nonfunctional hosts in *hasoffers.com:
+
+		- developers ᵈ
+		- media ⁴
+		- status ᵈ
+		- www ʰ
+
+	⁴ 404; mismatched, CN: gp1.wac.edgecastcdn.net
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *hasoffers.com:
+
+		- support ᵐ
+
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- www.media.go2app.org
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .signup.hasoffers.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="HasOffers (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="media.go2app.org" />
+
+	<!--target host="hasoffers.com" /-->
 	<target host="signup.hasoffers.com" />
 
+		<test url="http://media.go2app.org/assets/images/search-icon.png" />
 
-	<securecookie host="^signup\.hasoffers\.com$" name=".+" />
+	<!--	Complications:
+				-->
+	<target host="support.hasoffers.com" />
 
 
-	<rule from="^http://media\.go2app\.org/"
-		to="https://media.go2app.org/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.signup\.hasoffers\.com$" name="^PHPSESSID$" /-->
 
-	<rule from="^http://signup\.hasoffers\.com/"
-		to="https://signup.hasoffers.com/" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\.signup\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://support\.hasoffers\.com/+"
+		to="https://help.tune.com/" />
+
+		<test url="http://support.hasoffers.com/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

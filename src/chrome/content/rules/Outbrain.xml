@@ -10,7 +10,7 @@
 
 		- help *
 
-	* Desk.com
+	* Desk.com / redirects to http
 
 
 	Problematic subdomains:
@@ -19,30 +19,12 @@
 		- wp ⁴
 
 	¹ Cert only matches *.outbrain.com
-	⁴ Works, akamai
+	⁴ Akamai / mismatched
 
 
-	Fully covered subdomains:
+	Partially covered hosts in *outbrain.com:
 
-		- blog
-		- content
-		- editorial
-		- images
-		- log
-		- lp
-		- my
-		- paid
-		- selfserve
-		- storage
-		- traffic
-		- u
-		- u2
-		- widgets *
-		- vrp
-		- vrt
-		- wp		(→ www)
-
-	* Bugs served on 3rd-party websites
+		- www
 
 
 	These altnames don't exist:
@@ -50,11 +32,13 @@
 		- www.lp.outbrain.com
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .outbrain.com
 		- lp.outbrain.com
 		- my.outbrain.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
@@ -67,13 +51,14 @@
 		- Images on selfserve from dl.dropbox.com *
 		- favicon on lp from www.outbrain.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Outbrain.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="amplifypixel.outbrain.com" />
 	<target host="blog.outbrain.com" />
 	<target host="content.outbrain.com" />
 	<target host="editorial.outbrain.com" />
@@ -103,7 +88,7 @@
 						-->
 		<!--exclusion pattern="^http://www\.outbrain\.com/($|blog$)" /-->
 
-		<exclusion pattern="^http://www\.outbrain\.com/+(?!assets/|favicon\.ico|images/|wp-content/|wp-includes/)" />
+		<exclusion pattern="^http://www\.outbrain\.com/(?!/*(?:assets/|favicon\.ico|images/|wp-content/|wp-includes/))" />
 
 			<!--	+ve:
 					-->
@@ -128,8 +113,8 @@
 	<!--securecookie host="^lp\.outbrain\.com$" name="^(ubpv|ubvs)$" /-->
 	<!--securecookie host="^my\.outbrain\.com$" name="^(JSESSIONID|obroute2)$" /-->
 
-	<securecookie host="^\.outbrain\.com$" name="^ubvt$" />
-	<securecookie host="^\w+\.outbrain\.com$" name=".+" />
+	<securecookie host="^\." name="^ubvt$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://(?:wp\.)?outbrain\.com/"

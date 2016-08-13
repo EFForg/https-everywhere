@@ -20,12 +20,27 @@ fi
 # Fetch the current GitHub version of HTTPS-E to compare to its master
 git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.git
 git fetch upstream-for-travis master 
-RULESETS_CHANGED=$(git diff --name-only upstream-for-travis/master | grep $RULESETFOLDER | grep '.xml')
+COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
+RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
+if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then
+  ONLY_RULESETS_CHANGED=false
+fi
 git remote remove upstream-for-travis
 
+if ! $ONLY_RULESETS_CHANGED; then
+  echo >&2 "Core code changes have been made."
+  echo >&2 "Running main test suite."
+  ./test/firefox.sh
+  ./test/chromium.sh
+fi
 # Only run test if something has changed.
 if [ "$RULESETS_CHANGED" ]; then
-  echo >&2 "Ruleset database has changed. Testing test URLs in all changed rulesets."
+  echo >&2 "Ruleset database has changed."
+
+  echo >&2 "Performing comprehensive coverage test."
+  ./test/rules.sh
+
+  echo >&2 "Testing test URLs in all changed rulesets."
 
   # Make a list of all changed rulesets, but exclude those
   # that do not exist.
@@ -40,11 +55,12 @@ if [ "$RULESETS_CHANGED" ]; then
 
   if [ "$TO_BE_TESTED" ]; then
     # Do the actual test, using https-everywhere-checker.
-    TESTOUTPUT=$(python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1)
-    echo >&2 "$TESTOUTPUT"
+    OUTPUT_FILE=`mktemp`
+    trap 'rm "$OUTPUT_FILE"' EXIT
+    python $RULETESTFOLDER/src/https_everywhere_checker/check_rules.py $RULETESTFOLDER/http.checker.config $TO_BE_TESTED 2>&1 | tee $OUTPUT_FILE
     # Unfortunately, no specific exit codes are available for connection
     # failures, so we catch those with grep.
-    if [[ "$TESTOUTPUT" =~ "ERROR" ]]; then
+    if [[ `cat $OUTPUT_FILE | grep ERROR | wc -l` -ge 1 ]]; then
       echo >&2 "Test URL test failed."
       exit 1
     fi

@@ -1,0 +1,87 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see nitroshare.com-resources.xml.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- nitroflare.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="NitroFlare.com (partial)">
+
+	<target host="nitroflare.com" />
+	<target host="www.nitroflare.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?nitroflare\.com/(?:$|affiliate$|contact$|privacyPolicy$|resetPass$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?nitroflare\.com/(?!/*(?:css/|favicon\.ico|img/|(?:login|payment|register|view)(?:$|[?/])|plugins/))" /-->
+		<!--
+			Do not increase non-Tor distinguishability:
+									-->
+		<exclusion pattern="^http://(?:www\.)?nitroflare\.com/(?!/*(?:login|payment|register|view)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://nitroflare.com/affiliate" />
+			<test url="http://nitroflare.com/ajax/randHash.php" />
+			<test url="http://nitroflare.com/ajax/setCookie.php" />
+			<test url="http://www.nitroflare.com/contact" />
+			<test url="http://www.nitroflare.com/privacyPolicy" />
+			<test url="http://www.nitroflare.com/resetPass" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://nitroflare.com/css/TimeCircles.css" />
+			<test url="http://nitroflare.com/favicon.ico" />
+			<test url="http://nitroflare.com/img/icons/acc_blue_on_white_en.png" />
+			-->
+			<test url="http://nitroflare.com/login" />
+			<test url="http://nitroflare.com/payment" />
+			<!--
+			<test url="http://www.nitroflare.com/plugins/fileupload/css/jquery.fileupload-ui-noscript.css" />
+			<test url="http://www.nitroflare.com/plugins/fileupload/index.php?time=" />
+			-->
+			<test url="http://www.nitroflare.com/register" />
+			<test url="http://www.nitroflare.com/view/0453FE5333F502B/1451143702.pdf" />
+
+		<!--	Avoid potential XHR or flash policy problems:
+									-->
+		<!--exclusion pattern="^http:/.+\.(?:js|swf)(?:$|\?)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://nitroflare.com/img/swf/HighSpeedMeter.swf" />
+			<test url="http://nitroflare.com/img/swf/LowSpeedMeter.swf" />
+			<test url="http://nitroflare.com/js/downloadFree.js" />
+			<test url="http://nitroflare.com/js/general.js" />
+			<test url="http://nitroflare.com/js/jquery.placeholder.js" />
+			<test url="http://nitroflare.com/js/jquery.superbox-min.js" />
+			<test url="http://www.nitroflare.com/js/jquery.tooltipster.min.js" />
+			<test url="http://www.nitroflare.com/js/payment.js" />
+			<test url="http://www.nitroflare.com/js/view.js" />
+			<test url="http://www.nitroflare.com/plugins/fileupload/assets/canvas-to-blob.min.js" />
+			<test url="http://www.nitroflare.com/plugins/fileupload/assets/tmpl.min.js" />
+			-->
+			<test url="http://www.nitroflare.com/plugins/fileupload/js/jquery.fileupload-audio.js" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nitroflare\.com$" name="^(?:lastFile|randHash)$" /-->
+
+	<securecookie host="^\." name="^_(?:_cfduid$|gat?$|gat_)" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

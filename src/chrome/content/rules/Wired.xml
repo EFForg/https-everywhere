@@ -1,77 +1,73 @@
 <!--
+	For rules not causing false/broken MCB, see Wired.xml.
+
 	For other Condé Nast coverage, see Conde-Nast.xml.
 
 
 	CDN buckets:
 
-		- s3.amazonaws.com/img.wired.co.uk/	| d2f0ban6dhfdsw.cloudfront.net
-			- AWS permanently redirects.
-
 		- howto.wired.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *wired.com:
 
-		- feeds.wired.com ¹
-		- howto.wired.com	(Akamai; 503)
-		- innovationinsights.wired.com ³
+		- feeds ¹
+		- innovationinsights ³
 
 	¹ Refused
 	³ 404; mismatched, CN: www.cntraveler.com
 
 
-	Problematic subdomains:
+	Problematic hosts in *wired.com:
 
-		- ^ ¹
-		- secure ²
+		- howto ˣ
+		- stats
+		- video
 
-	¹ Akamai
-	² Expired 2014-04-16
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .wired.com
+		- subscriptions.wired.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- css on www from $self ¹
+		- css on howto from www.wired.com ˢ
 
-		- Images, on www from:
+		- Images, on:
 
-			- $self ¹
-			- innovationinsights ²
+			- howto from $self ˢ
+			- howto from www.wired.com ˢ
 
-		- Ads/web bugs, on www from:
+		- Bug on howto from condenast.112.2o7.net ˢ
 
-			- $self ¹
-			- condenast.112.2o7.net ¹
-			- pagead2.googlesyndication.com ¹
-			- assets.pinterest.com ¹
-			- b.scorecardresearch.com ¹
-
-	¹ Secured by us
-	² Unsecurable
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Wired (false MCB, partial)" platform="mixedcontent">
+<ruleset name="Wired.com (partial)">
 
-	<target host="wired.com" />
-	<target host="*.wired.com" />
-	<target host="cdni.wired.co.uk" />
-		<!--exclusion pattern="^http://innovationinsights\.wired\.com/" /-->
-	<target host="wrd.cm" />
-
-
-	<securecookie host="^subscriptions\.wired\.com$" name=".+" />
+	<!--target host="wired.com" /-->
+	<!--target host="howto.wired.com" /-->
+	<target host="subscribe.wired.com" />
+	<target host="subscriptions.wired.com" />
+	<!--target host="www.wired.com" /-->
 
 
-	<rule from="^http://(?:www\.)?wired\.com/"
-		to="https://www.wired.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.wired\.com$" name="^(?:cgi-session-id|server-id)$" /-->
+	<!--securecookie host="^subscriptions\.wired\.com$" name="^JSESSIONID$" /-->
 
-	<rule from="^http://s(ecure|ubscribe|ubcriptions)\.wired\.com/"
-		to="https://s$1.wired.com/" />
+	<securecookie host="^\." name="^(?:__utm|s_v)" />
+	<securecookie host="^s" name="." />
 
-	<rule from="^http://cdni\.wired\.co\.uk/"
-		to="https://d2f0ban6dhfdsw.cloudfront.net/" />
 
-	<rule from="^http://wrd\.cm/"
-		to="https://bit.ly/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
