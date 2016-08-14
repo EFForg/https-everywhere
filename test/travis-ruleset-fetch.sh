@@ -22,11 +22,25 @@ git remote add upstream-for-travis https://github.com/EFForg/https-everywhere.gi
 git fetch upstream-for-travis master 
 COMMON_BASE_COMMIT=$(git merge-base upstream-for-travis/master HEAD)
 RULESETS_CHANGED=$(git diff --name-only $COMMON_BASE_COMMIT | grep $RULESETFOLDER | grep '.xml')
+if [ "$(git diff --name-only $COMMON_BASE_COMMIT)" != "$RULESETS_CHANGED" ]; then
+  ONLY_RULESETS_CHANGED=false
+fi
 git remote remove upstream-for-travis
 
+if ! $ONLY_RULESETS_CHANGED; then
+  echo >&2 "Core code changes have been made."
+  echo >&2 "Running main test suite."
+  ./test/firefox.sh
+  ./test/chromium.sh
+fi
 # Only run test if something has changed.
 if [ "$RULESETS_CHANGED" ]; then
-  echo >&2 "Ruleset database has changed. Testing test URLs in all changed rulesets."
+  echo >&2 "Ruleset database has changed."
+
+  echo >&2 "Performing comprehensive coverage test."
+  ./test/rules.sh
+
+  echo >&2 "Testing test URLs in all changed rulesets."
 
   # Make a list of all changed rulesets, but exclude those
   # that do not exist.

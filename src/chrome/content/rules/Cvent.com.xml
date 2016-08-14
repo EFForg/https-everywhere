@@ -2,21 +2,12 @@
 	Nonfunctional subdomains:
 
 		- investors *
+		- blog *
+		- hospitality *
+		- survey *
 
-	* Dropped
+	* Mismatch
 
-
-	Fully covered subdomains:
-
-		- (www.)
-		- app
-		- custom
-		- shworldwide
-
-
-	Mixed content:
-
-		- Web bug on shworldwide from pixel.quantserve.com *
 
 	* Secured by us
 
@@ -24,13 +15,24 @@
 <ruleset name="Cvent.com (partial)">
 
 	<target host="cvent.com" />
-	<target host="*.cvent.com" />
+	<target host="www.cvent.com" />
+	<target host="app.cvent.com" />
+	<target host="custom.cvent.com" />
+	<target host="shworldwide.cvent.com" />
+	<target host="ssc.cvent.com" />
+	<target host="guest.cvent.com" />
+	
+	<!-- Fix #4520 -->
+	<exclusion pattern="^http://www\.cvent\.com/events/.*/(?!registration-)" />
 
+	<test url="http://www.cvent.com/events/csh-summit-2016/event-summary-b05896613e504f549b12ef1d73909e59.aspx?ct=48832732-1e0d-43b1-8af7-01e4e9cd58aa" />
+	<test url="http://www.cvent.com/events/csh-summit-2016/fees-b05896613e504f549b12ef1d73909e59.aspx?ct=48832732-1e0d-43b1-8af7-01e4e9cd58aa" />
+	<test url="http://www.cvent.com/events/csh-summit-2016/faqs-b05896613e504f549b12ef1d73909e59.aspx?ct=48832732-1e0d-43b1-8af7-01e4e9cd58aa" />
 
 	<securecookie host="^(?:shworldwide)?\.cvent\.com$" name=".+" />
 
 
-	<rule from="^http://((?:app|custom|shworldwide|www)\.)?cvent\.com/"
-		to="https://$1cvent.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
