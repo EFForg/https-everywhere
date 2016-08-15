@@ -5,8 +5,7 @@
 
 RULETESTFOLDER="test/rules"
 
-# Make a list of all changed rulesets, but exclude those
-# that do not exist.
+# Exclude those rulesets that do not exist.
 for RULESET in $RULESETS_CHANGED; do
   # First check if the given ruleset actually exists
   if [ ! -f $RULESET ]; then
