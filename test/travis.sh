@@ -43,6 +43,7 @@ if ! $ONLY_RULESETS_CHANGED; then
   if [ "$TEST" == "chromium" ]; then
     echo >&2 "Running chromium test suite."
     docker_build
+    # --privileged is required here because chromium requires kernel lxc access
     docker run --rm -ti -v $(pwd):/opt --privileged httpse bash -c "test/chromium.sh"
   fi
 fi
@@ -60,6 +61,7 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "fetch" ]; then
     echo >&2 "Testing test URLs in all changed rulesets."
     docker_build
+    # --privileged is required here for miredo to create a network tunnel
     docker run --rm -ti -v $(pwd):/opt -e RULESETS_CHANGED="$RULESETS_CHANGED" --privileged httpse bash -c "service miredo start && test/fetch.sh"
   fi
 fi
