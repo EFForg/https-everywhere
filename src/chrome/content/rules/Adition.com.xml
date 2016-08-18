@@ -1,32 +1,37 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- ^
-		- en
-		- www
+		- adition.com
+		- .adition.com
+		- www.adition.com
+		- .www.adition.com
 
-
-	Fully covered subdomains:
-
-		- adfarm1
-
-		- *.adfarm1:
-
-			- ad[123]
-
-		- imagesrv
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="adition.com (partial)">
+<ruleset name="adition.com">
 
+	<target host="adition.com" />
 	<target host="*.adition.com" />
-		<exclusion pattern="^http://(?:en|www)\.adition\.com/" />
+
+		<test url="http://adfarm1.adition.com/js?wp_id=" />
+		<test url="http://ad1.adfarm1.adition.com/js?wp_id=" />
+		<test url="http://ad2.adfarm1.adition.com/js?wp_id=" />
+		<test url="http://ad3.adfarm1.adition.com/js?wp_id=" />
+		<test url="http://en.adition.com/" />
+		<test url="http://imagesrv.adition.com/js/adition.js" />
+		<test url="http://www.adition.com/" />
 	
 
-	<securecookie host="^(?:ad1)?\.adfarm1\.adition\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?adition\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.(?:www\.)?adition\.com$" name="^qtrans_cookie_test$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://([\w+\.-]+)\.adition\.com/"
-		 to="https://$1.adition.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
