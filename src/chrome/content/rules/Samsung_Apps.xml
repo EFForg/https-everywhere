@@ -1,22 +1,7 @@
 <!--
-	For other Samsung coverage, see Samsung.xml.
-
-
-	Nonfunctional subdomains:
-
-		- img *
-
-	* 400; mismatched: *.hs.llnwd.net
-
-
-	Problematic subdomains:
-
-		- ^		(cert only matches *.samsungapps.com)
-
+	For other Samsung coverage, see Samsung.com.xml.
 
 	Fully covered subdomains:
-
-		- (www.)	(^ → www)
 
 		- *-odc:
 
@@ -42,33 +27,31 @@
 			- us-odc
 
 		- mkt-odc
+	
+	502:
 		- tv
 
 
-	Insecure cookies are set for these domains:
-
-		- .samsungapps.com
+	These domains will redirect to new samsung appstore auto by apps.samsung.com/mercury/main/getMain.as :
+		- ^samsungapps.com
+		- img.samsungapps.com
 		- www.samsungapps.com
 
 -->
-<ruleset name="Samsung Apps.com (partial)">
+<ruleset name="Samsung_Apps">
 
 	<target host="samsungapps.com" />
+	<target host="img.samsungapps.com" />
+	<target host="www.samsungapps.com" />
+
+	<rule from="^http://(img\.|www\.)?samsungapps\.com/"
+		to="https://apps.samsung.com/mercury/main/getMain.as" />
+
 	<target host="*.samsungapps.com" />
 
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^\.samsungapps\.com$" name="^COUNTRY_CODE$" /-->
-	<!--securecookie host="^www\.samsungapps\.com$" name="^(EXPAND_SCHEDULED|JSESSIONID|WMONID)$" /-->
-
-	<securecookie host="^(?:.*\.)?samsungapps\.com$" name=".+" />
-
-
-	<rule from="^http://(?:www\.)?samsungapps\.com/"
-		to="https://www.samsungapps.com/" />
-
-	<rule from="^http://(\w\w-odc|mkt-odc|tv)\.samsungapps\.com/"
+	<rule from="^http://(\w\w-odc|mkt-odc)\.samsungapps\.com/"
 		to="https://$1.samsungapps.com/" />
+		<test url="http://us-odc.samsungapps.com/" />
+		<test url="http://mkt-odc.samsungapps.com/" />
 
 </ruleset>
