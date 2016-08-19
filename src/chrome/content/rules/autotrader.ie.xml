@@ -1,0 +1,58 @@
+<!--
+	Problematic hosts in *autotrader.ie:
+
+		- oas ᵐ
+		- m ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- autotrader.ie
+		- .autotrader.ie
+		- www.autotrader.ie
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from www.carzone.ie ᵐ
+		- Images on www from www.carzone.ie ᵐ
+
+		- Bugs, on:
+		
+			- m from metrics.carzone.ie ᵐ
+			- www from metrics.autotrader.ie ˢ
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Auto Trader.ie (partial)">
+
+	<!--	Complications:
+				-->
+	<target host="oas.autotrader.ie" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://oas.autotrader.ie/RealMedia/ads/adstream_nx.ads/m.carzone.ie/home/@Bottom?site=mobile&amp;device=mobi" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^autotrader\.ie$" name="^_ATD_(?:DIGEST|SESSION)_$" /-->
+	<!--securecookie host="^\.autotrader\.ie$" name="^(?:NXCLICK2|OAX)$" /-->
+	<!--securecookie host="^www\.autotrader\.ie$" name="^(?:_ATD_DIGEST_|_ATD_SESSION_|CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|NXCLICK|OAX)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://oas\.autotrader\.ie/"
+		to="https://oas.autotrader.co.uk/" />
+
+</ruleset>
