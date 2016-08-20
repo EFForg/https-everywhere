@@ -1,21 +1,22 @@
 <!--
 	For other Gawker coverage, see Gawker.xml.
-
-
-	CN: *.a.ssl.fastly.net
-
 -->
-<ruleset name="Lifehacker.com" default_off="mismatched">
-
+<ruleset name="Lifehacker.com">
 	<target host="lifehacker.com" />
-	<target host="cache.lifehacker.com" />
-	<target host="www.lifehacker.com" />
+	<target host="*.lifehacker.com" />
 
+	<!-- mismatched certificate -->
+	<exclusion pattern="^http://cache\.lifehacker\.com/" />
 
-	<securecookie host="^\.?lifehacker\.com$" name=".+" />
+	<securecookie host=".+" name=".+" />
 
+	<rule from="^http:" to="https:" />
 
-	<rule from="^http:"
-		to="https:" />
+	<test url="http://cache.lifehacker.com/" />
 
+	<test url="http://www.lifehacker.com/" />
+	<!-- Some subdomains are subject blogs hosted on lifehacker.com. -->
+	<test url="http://skillet.lifehacker.com/" />
+	<!-- Other subdomains are personal blogs that redirect offsite. -->
+	<test url="http://alanhenry.lifehacker.com/" />
 </ruleset>
