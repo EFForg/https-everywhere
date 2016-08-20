@@ -1,8 +1,5 @@
 <!--
 	For other Samsung coverage, see Samsung.com.xml.
-
-	Check error: Too many redirects
-		^(www.)?
 	
 	Fully covered subdomains:
 
@@ -37,13 +34,17 @@
 
 	These domains will redirect to new samsung appstore auto by apps.samsung.com/mercury/main/getMain.as :
 		- ^samsungapps.com
-		- img.samsungapps.com
 		- www.samsungapps.com
 
 -->
 <ruleset name="Samsung_Apps">
 
-	<target host="img.samsungapps.com" />
+	<target host="*.samsungapps.com" />
+	<rule from="^http://(\w\w-odc|mkt-odc)\.samsungapps\.com/"
+		to="https://$1.samsungapps.com/" />
+		<test url="http://us-odc.samsungapps.com/" />
+		<test url="http://mkt-odc.samsungapps.com/" />
+
 	<rule from="^http://img\.samsungapps\.com/(.+)\.(apk|gif|pdf|swf|xls|xml)"
 		to="https://img.samsungapps.com/$1.$2" />
 		<test url="http://img.samsungapps.com/content/51pxbaybin/2015/1211/aso_GalaxyApps_phone_oldkey_release.apk" />
@@ -57,16 +58,9 @@
 		
 	<exclusion pattern="^http://img\.samsungapps\.com/$" />
 		<test url="http://img.samsungapps.com/" />
-	
-	<target host="seller.samsungapps.com" />
+
 	<rule from="^http://seller\.samsungapps\.com/"
 		to="https://seller.samsungapps.com/" />
 		<test url="http://seller.samsungapps.com/en_US/css/layer.css" />
-
-	<target host="*.samsungapps.com" />
-	<rule from="^http://(\w\w-odc|mkt-odc)\.samsungapps\.com/"
-		to="https://$1.samsungapps.com/" />
-		<test url="http://us-odc.samsungapps.com/" />
-		<test url="http://mkt-odc.samsungapps.com/" />
 
 </ruleset>
