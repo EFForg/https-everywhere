@@ -33,7 +33,8 @@ if [ "$1" == "--justrun" ]; then
 	fi
 	$BROWSER \
 		--user-data-dir="$PROFILE_DIRECTORY" \
-		--load-extension=pkg/crx/
+		--load-extension=pkg/crx/ \
+		"$@"
 else
 	./makecrx.sh
 	echo "running tests"

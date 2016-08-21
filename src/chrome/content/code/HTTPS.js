@@ -43,8 +43,8 @@ const HTTPS = {
     var isSTS = securityService.isSecureURI(
         CI.nsISiteSecurityService.HEADER_HSTS, channel.URI, 0);
     if (blob === null) {
-      // Abort insecure requests if HTTP Nowhere is on
-      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS) {
+      // Abort insecure non-onion requests if HTTP Nowhere is on
+      if (httpNowhereEnabled && channel.URI.schemeIs("http") && !isSTS && !/\.onion$/.test(channel.URI.host)) {
         IOUtil.abort(channel);
       }
       return false; // no rewrite

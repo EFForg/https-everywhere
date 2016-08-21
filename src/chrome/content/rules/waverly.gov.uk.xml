@@ -1,0 +1,70 @@
+<!--
+	Waverley Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *waverly.gov.uk:
+
+		- pcnchallenge:2188 ᵖ
+		- planning ᵈ
+		- waverweb ᵈ
+
+	ᵈ Dropped
+	ᵖ Plaintext reply
+
+
+	Problematic hosts in *waverly.gov.uk:
+
+		- consult ᵐ ˢ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	These altnames do not exist:
+
+		- waverly.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- modgov.waverly.gov.uk
+		- www.waverly.gov.uk
+		- .www.waverly.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on www from f1.eu.readspeaker.com ᵐ
+
+	ᵐ Not secured by us <= mismatched
+
+-->
+<ruleset name="Waverly.gov.uk (partial)">
+
+	<target host="modgov.waverly.gov.uk" />
+	<target host="pay.waverly.gov.uk" />
+	<target host="www.waverly.gov.uk" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://pay.waverley.gov.uk/payonline/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^modgov\.waverly\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.waverly\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^\.www\.waverly\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

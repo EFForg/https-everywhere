@@ -1,0 +1,44 @@
+<!--
+	Problematic hosts in *nickelled.com:
+
+		- ^ ʳ
+		- blog ᵉ
+
+	ᵉ Expired
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- app.nickelled.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Nickelled.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="app.nickelled.com" />
+	<target host="www.nickelled.com" />
+
+	<!--	Complications:
+				-->
+	<target host="nickelled.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^app\.nickelled\.com$" name="^connect\.sid$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://nickelled\.com/"
+		to="https://www.nickelled.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

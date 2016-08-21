@@ -1,0 +1,102 @@
+<!--
+	Nonfunctional hosts in *cumbria.gov.uk:
+
+		- councilportal ³
+		- maps ³
+
+	³ 403
+
+
+	Problematic hosts in *cumbria.gov.uk:
+
+		- ^ ³
+		- localoffer ᵐ
+
+	³ 403, preemptable redirect
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- hims.cumbria.gov.uk
+		- www.cumbria.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com ˢ
+		- Image on recruitment from www.cumbria.gov.uk ˢ
+		- Bug on www from socitm.govmetric.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Cumbria.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="emsonline.cumbria.gov.uk" />
+	<target host="hims.cumbria.gov.uk" />
+	<target host="recruitment.cumbria.gov.uk" />
+	<target host="www.cumbria.gov.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://hims.cumbria.gov.uk/wip3_no_login/map.aspx?cg=prow" />
+		<test url="http://recruitment.cumbria.gov.uk/trentl_webrecruitment/wrd/run/ETREC107GF.open?WVID=3697840jJb" />
+
+	<!--	Complications:
+				-->
+	<target host="cumbria.gov.uk" />
+	<target host="localoffer.cumbria.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hims\.cumbria\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.cumbria\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^(?!localoffer\.)\w" name="." />
+
+
+	<rule from="^http://cumbria\.gov\.uk/"
+		to="https://www.cumbria.gov.uk/" />
+
+	<rule from="^http://localoffer\.cumbria\.gov\.uk/"
+		to="https://search3.openobjects.com/" />
+
+		<!--exclusion pattern="^http://localoffer\.cumbria\.gov\.uk/(?!.+/(?:(?:cs|image)s/|(?:contact|register|sign_in)\.page))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://localoffer\.cumbria\.gov\.uk/(?!.+/(?:contact|register|sign_in)\.page)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/a_to_z.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/family.page?familychannel=0" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/feedback.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/home.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/news.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/shortlist.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/site.page?id=BaunEnO3qgI" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/site.page?id=It3J0IebSU8" />
+
+			<!--	-ve:
+					-->
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/contact.page" />
+			<!--
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/images/customer/new_window_icon.gif" />
+			-->
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/register.page" />
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/sign_in.page" />
+			<!--
+			<test url="http://localoffer.cumbria.gov.uk/kb5/cumbria/fsd/stylesheets/css/customer-print.css" />
+			-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

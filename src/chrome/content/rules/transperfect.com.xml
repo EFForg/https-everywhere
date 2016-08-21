@@ -1,0 +1,58 @@
+<!--
+	For problematic rules, see transperfect.com-problematic.xml.
+
+	Other TransPerfect rulesets:
+
+		- trialinteractive.com.xml
+
+
+	Nonfunctional hosts in *transperfect.com:
+
+		- cdn ˡ
+		- legal ˡ
+		- www.legal ³
+		- lifesciences ʳ
+		- tri ʳ
+
+	³ 403
+	ˡ Loops
+	ʳ Refused
+
+
+	Problematic hosts in *transperfect.com:
+
+		- (www.)? ᶜ
+		- es ᵉ ᵐ
+		- pharma ᶜ ᵐ
+		- web ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- securetls.transperfect.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="TransPerfect.com (partial)">
+
+	<!--target host="transperfect.com" /-->
+	<target host="securetls.transperfect.com" />
+	<!--target host="www.transperfect.com" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^securetls\.transperfect\.com$" name="^(?:CSRFHolder|RelativityId)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

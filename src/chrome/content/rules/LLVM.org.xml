@@ -13,14 +13,17 @@
 		- lldb ²
 		- openmp ²
 		- polly ¹
-		- reviews ¹
 		- vmkit ²
 
 	¹ Refused
 	² Shows ^llvm.org
 
 
-	www: cert only matches ^llvm.org
+	www.llvm.org: cert only matches ^llvm.org
+
+
+	STS header includes includeSubdomains
+	for reviews
 
 -->
 <ruleset name="LLVM.org (partial)">
@@ -28,6 +31,19 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="llvm.org" />
+	<target host="reviews.llvm.org" />
+	<target host="*.reviews.llvm.org" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}reviews\.llvm\.org/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.reviews.llvm.org/" />
+			<test url="http://exists.not.reviews.llvm.org/" />
+
+		<test url="http://www.reviews.llvm.org/" />
 
 	<!--	Complications:
 				-->
@@ -39,7 +55,7 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://(?:www\.)?llvm\.org/+(?!bugs/|svn/)" />
+		<exclusion pattern="^http://(?:www\.)?llvm\.org/(?!/*(?:bugs|svn)/)" />
 
 			<!--	+ve:
 					-->
@@ -52,10 +68,13 @@
 					-->
 			<test url="http://llvm.org/bugs/show_bug.cgi?id=19847" />
 			<test url="http://llvm.org/bugs/show_bug.cgi?id=21689" />
-			<test url="http://llvm.org/cvs/" />
+			<test url="http://www.llvm.org/svn/" />
 
 
-	<rule from="^http://(?:www\.)?llvm\.org/"
+	<rule from="^http://www\.llvm\.org/"
 		to="https://llvm.org/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -3,134 +3,205 @@
 
 	For rules causing false/broken MCB, see University_of_Mainz-falsemixed.xml.
 
-	For problematic rules, see University_of_Mainz-problematic.xml.
 
+	Nonfunctional hosts in *uni-mainz.de:
 
-	Nonfunctional subdomains:
-
+		- www.70jahreA *
 		- www.asta *
-		- www.medienzentrum ***
-		- ftpthep.physik **
-		- wwwthep.physik **
-		- www.rewi ***
+		- www.botgarten *
+		- www.career *
+		- www.campus-tv *
+		- www.kinderuni *
+		- www.musik *
+		- www.thep.physik *
+		- wwwthep.physik ʳ
+		- www.rewi *
+		- www.sammlungen *
+		- www.stiftung-jgsp *
+		- www.studgen *
 
-		- ub subdomains:
+		- in *ub:
 
-			- appserv	(shows another domain, expired 2007-05-27)
-			- pica41	(reset)
-			- www *
+			- appserv ᵃ
+			- pica41 ᵗ
 
-		- wiwi ***
+		- www.puc.verwaltung *
+		- wiwi *
+		- status.zdv *
+		- www.zww *
 
 	* Shows wwwvh.zdv, valid cert
-	** Refused
-	*** Shows wwwvh.zdv; mismatched, CN: wwwvh.zdv.uni-mainz.de
+	ᵃ Shows another domain
+	ʳ Refused
+	ᵗ Reset
 
 
-	Problematic subdomains:
+	Problematic hosts in *uni-mainz.de:
 
-		- www.e-learning	(works; mismatched, CN: wwwvh.zdv.uni-mainz.de)
+		- ^ ⁴
+		- www.e-learning ᵐ
+		- zdv ⁴
 
-
-	Partially covered subdomains:
-
-		- www.sfz *
-		- www.sport *
-
-		- ub subdomains:
-
-			- lokalsystem **
-			- lokalsystem-test **
-			- pica71 **
-			- pica81 **
-
-		- www *
-		- www.zdv *
-
-	* Avoiding false/broken MCB, rest handled in University_of_Mainz-falsemixed.xml
-	** $ differs
+	ᵗ 404, preemptable redirect
+	ᵐ Mismatched
 
 
-	Fully covered subdomains:
+	Partially covered hosts in *uni-mainz.de:
 
-		- www.pruefungsamt.jura
-		- ilias
-		- www.staff
-		- www.students
+		- in *ub:
 
-		- ub subdomains:
+			- lokalsystem *
+			- lokalsystem-test *
+			- pica71 *
+			- pica81 *
 
-			- opac
-			- opac-test
-			- pica7
-			- pica8
+		- www.zdv ˣ
 
-		- pa.wiwi
-		- webstats.zdv
-		- wwwvh.zdv
+	* $ differs
+	ˣ Avoiding false/broken MCB, rest handled in University_of_Mainz-falsemixed.xml
+
+
+	These altnames do not exist:
+
+		- staff.uni-mainz.de
+		- students.uni-mainz.de
+
+
+	Insecure cookies are set for these hosts:
+
+		- ilias.uni-mainz.de
+		- www.international.uni-mainz.de
+		- www.international-office.uni-mainz.de
+		- moodule.uni-mainz.de
+		- opac.ub.uni-mainz.de
+		- opac-test.ub.uni-mainz.de
+		- pica7.ub.uni-mainz.de
+		- pica8.ub.uni-mainz.de
 
 
 	Mixed content:
 
-		- Scripts, on:
-
-			- www.e-learning from www.zdv *
-			- www.sfv from www.zdv *
-			- www.sport from www.zdv *
-			- www from www.zdv *
-			- www.zdv from www.zdv *
-
 		- css, on:
 
-			- www.e-learning from www.zdv *
-			- www.sport from www.zdv *
-			- www from www.zdv *
-			- www.zdv from www.zdv *
-			- wwwvh.zdv from www.zdv **
+			- www.zdv from $self ˢ
+			- wwwvh.zdv from www.zdv *
 
 		- Images, on:
 
-			- www.e-learning from www.zdv *
-			- lokalsystem.ub from appserv.ub ***
-			- www.sfv from www.zdv *
-			- www.sport from www.zdv *
-			- www from www.zdv *
-			- www.zdv from www.zdv *
+			- www.e-learning, www.ub from www.blogs.uni-mainz.de
+			- www.e-learning from www.uni-mainz.de ˢ
+			- lokalsystem.ub from appserv.ub ᵘ
+			- www.medienzentrum from www.glk.uni-mainz.de
+			- www.zdv from $self ˢ
 
-		- Web bug on www.zdv from webstats.zdv *
+		- Bugs on univis from webstats.zdv.uni-mainz.de ˢ
 
-	* Secured by us
-	** Secured by us, negligible effect
-	*** Unsecurable, doesn't trip MCB
-
-
-	www and www.zdv are in a separate falsemixed
-	ruleset due to css and scripts from www.zdv.
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+	* Negligible effect
+	ᵘ Unsecurable, doesn't trip MCB
 
 -->
-<ruleset name="University of Mainz (partial)">
+<ruleset name="Uni-Mainz.de (partial)">
 
-	<target host="*.uni-mainz.de" />
-		<!--
-			Avoid false/broken MCB:
-						-->
-		<!--exclusion pattern="^http://www\.(sfv|sport)\.uni-mainz\.de/(?!Bilder_allgemein/|Bilder_zentral/|favicon\.ico)" /-->
-		<!--exclusion pattern="^http://www\.uni-mainz\.de/(?!Bilder_allgemein/|Bilder_zentral/|favicon\.ico|Illustrationen/)" /-->
-		<!--exclusion pattern="^http://www\.zdv\.uni-mainz\.de/(?!\w+\.css|\w+\.js|Bilder_allgemein/|Bilder_zentral/|config/|favicon\.ico|Illustrationen/|pix/)" /-->
-		<exclusion pattern="^http://www(?:\.sfv|\.sport|\.zdv)?\.uni-mainz\.de/(?!\w+\.css|\w+\.js|Bilder_(?:allgemein|zentral)/|config/|favicon\.ico|Illustrationen/|pix/)" />
-		<!--
-			$ differs:
+	<!--	Direct rewrites:
+				-->
+	<target host="www.blogs.uni-mainz.de" />	
+	<target host="www.campusradio.uni-mainz.de" />
+	<target host="www.cs.uni-mainz.de" />
+	<target host="www.elearning.uni-mainz.de" />
+	<target host="ilias.uni-mainz.de" />
+	<target host="www.international.uni-mainz.de" />
+	<target host="www.international-office.uni-mainz.de" />
+	<target host="jogustine.uni-mainz.de" />	
+	<target host="login.uni-mainz.de" />		
+	<target host="www.medienzentrum.uni-mainz.de" />	
+	<target host="moodle.uni-mainz.de" />	
+	<target host="moodle-test.uni-mainz.de" />	
+	<target host="www.pruefungsamt.jura.uni-mainz.de" />
+	<target host="reader.uni-mainz.de" />	
+	<target host="www.sfz.uni-mainz.de" />	
+	<target host="sport.uni-mainz.de" />	
+	<target host="www.sport.uni-mainz.de" />
+	<target host="www.staff.uni-mainz.de" />
+	<target host="www.students.uni-mainz.de" />
+	<target host="www.studium.uni-mainz.de" />	
+
+	<target host="katalogportalmainz.ub.uni-mainz.de" />	
+	<target host="lokalsystem.ub.uni-mainz.de" />
+	<target host="lokalsystem-test.ub.uni-mainz.de" />
+	<target host="opac.ub.uni-mainz.de" />
+	<target host="opac-test.ub.uni-mainz.de" />
+	<target host="pica7.ub.uni-mainz.de" />
+	<target host="pica71.ub.uni-mainz.de" />
+	<target host="pica8.ub.uni-mainz.de" />
+	<target host="pica81.ub.uni-mainz.de" />
+	<target host="www.ub.uni-mainz.de" />	
+
+	<target host="univis.uni-mainz.de" />	
+	<target host="pa.wiwi.uni-mainz.de" />
+	<target host="www.uni-mainz.de" />
+
+	<target host="webstats.zdv.uni-mainz.de" />
+	<target host="www.zdv.uni-mainz.de" />
+	<target host="wwwvh.zdv.uni-mainz.de" />
+
+		<!--	$ differs:
 					-->
 		<exclusion pattern="^http://(?:lokalsystem(?:-test)?|pica[78]1)\.ub\.uni-mainz\.de/(?!cgi-bin/|OPC-IMAGES(?:-NEW)?/)" />
 
+			<!--	+ve:
+					-->
+			<test url="http://lokalsystem.ub.uni-mainz.de/index.htm" />
+			<test url="http://lokalsystem-test.ub.uni-mainz.de/index.htm" />
 
-	<securecookie host="^(?:ilias|opac(?:-test)?\.ub|pica[78]\.ub)\.uni-mainz\.de$" name=".+" />
+			<!--	-ve:
+					-->
+			<test url="http://lokalsystem.ub.uni-mainz.de/OPC-IMAGES-NEW/img_psi/2.0/gui/white.gif" />
+			<test url="http://lokalsystem-test.ub.uni-mainz.de/OPC-IMAGES-NEW/img_psi/2.0/gui/white.gif" />
+			<test url="http://pica71.ub.uni-mainz.de/OPC-IMAGES-NEW/img_psi/2.0/gui/white.gif" />
+			<test url="http://pica81.ub.uni-mainz.de/OPC-IMAGES-NEW/img_psi/2.0/gui/white.gif" />
+			<test url="http://pica71.ub.uni-mainz.de/OPC-IMAGES/hermes/search//bullet.gif" />
+			<test url="http://pica81.ub.uni-mainz.de/OPC-IMAGES/hermes/search//bullet.gif" />
+			<test url="http://lokalsystem.ub.uni-mainz.de/OPC-IMAGES/hermes/search//bullet.gif" />
+			<test url="http://lokalsystem-test.ub.uni-mainz.de/OPC-IMAGES/hermes/search//bullet.gif" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://www\.zdv\.uni-mainz\.de/umleitungen/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.zdv.uni-mainz.de/umleitungen/staff.html" />
+			<test url="http://www.zdv.uni-mainz.de/umleitungen/studierende.html" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://login.uni-mainz.de/adfs/ls?version=1.0&amp;action=signin&amp;realm=&amp;appRealm=&amp;returnUrl=&amp;client-request-id=" />
+
+	<!--	Complications:
+				-->
+	<target host="uni-mainz.de" />
+	<target host="www.e-learning.uni-mainz.de" />
+	<target host="zdv.uni-mainz.de" />
 
 
-	<rule from="^http://(ilias|www\.(?:pruefungsamt\.jura|sfv|staff|students)|(?:(?:lokalsystem|opac)(?:-test)?|pica[78]1?)\.ub|pa\.wiwi|www|(?:webstats|www|wwwvh)\.zdv)\.uni-mainz\.de/"
-		to="https://$1.uni-mainz.de/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ilias\.uni-mainz\.de$" name="^(?:iClientId|iltest|PHPSESSID)$" /-->
+	<!--securecookie host="^www\.international(?:-office)?\.uni-mainz\.de$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^moodle\.uni-mainz\.de$" name="^MoodleSession$" /-->
+	<!--securecookie host="^(?:opac|opac-test|pica[78])\.ub\.uni-mainz\.de$" name="^(?:DB|PSC_1)$" /-->
+
+	<securecookie host="^(?:ilias|opac(?:-test)?\.ub|pica[78]\.ub)\.uni-mainz\.de$" name="." />
+
+
+	<rule from="^http://(zdv\.)?uni-mainz\.de/"
+		to="https://www.$uni-mainz.de/" />
+
+	<rule from="^http://www\.e-learning\.uni-mainz\.de/"
+		to="https://www.elearning.uni-mainz.de/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

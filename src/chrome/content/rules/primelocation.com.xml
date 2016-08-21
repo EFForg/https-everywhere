@@ -1,0 +1,77 @@
+<!--
+	^primelocation.com: Redirect differs
+
+
+	Problematic hosts in *primelocation.com:
+
+		- ^ *
+		- inspiration ᵐ
+
+	* Redirect differs
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .primelocation.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="PrimeLocation.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.primelocation.com" />
+
+	<!--	Complications:
+				-->
+	<target host="primelocation.com" />
+	<target host="inspiration.primelocation.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.primelocation\.com/(?:$|android/$|apps/$|contact/$|help/$|privacy/$|sitemap/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?primelocation\.com/(?!/*(?:myaccount|register|signin)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.primelocation.com/android/" />
+			<test url="http://www.primelocation.com/apps/" />
+			<test url="http://www.primelocation.com/contact/" />
+			<test url="http://www.primelocation.com/help/" />
+			<test url="http://www.primelocation.com/privacy/" />
+			<test url="http://www.primelocation.com/sitemap/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://primelocation.com/myaccount/" />
+			<test url="http://www.primelocation.com/register/" />
+			<test url="http://www.primelocation.com/signin/forgot/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.primelocation\.com$" name="^primelocationp?sid$" />
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+
+
+	<rule from="^http://primelocation\.com/"
+		to="https://www.primelocation.com/" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://inspiration\.primelocation\.com/+"
+		to="https://clippings.com/" />
+
+		<test url="http://inspiration.primelocation.com/sale" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

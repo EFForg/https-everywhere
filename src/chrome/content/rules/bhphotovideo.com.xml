@@ -1,0 +1,52 @@
+<!--
+	NB: payment.../$ redirects to https 405
+	?=> fetch check failure
+
+
+	Problematic hosts in *bhphotovideo.com:
+
+		- akamai ᴬ
+
+	ᴬ Akamai / mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .bhphotovideo.com
+		- affiliates.bhphotovideo.com
+		- secure.bhphotovideo.com
+		- www.bhphotovideo.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="BH Photo Video.com (partial)">
+
+	<target host="bhphotovideo.com" />
+	<target host="affiliates.bhphotovideo.com" />
+	<target host="payment.bhphotovideo.com" />
+	<target host="secure.bhphotovideo.com" />
+	<target host="static.bhphotovideo.com" />
+	<target host="www.bhphotovideo.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://affiliates.bhphotovideo.com/showban.asp?id=1&amp;img=bh_new-b.gif" /-->
+
+		<test url="http://static.bhphotovideo.com/images/images150x150/1086718.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bhphotovideo\.com$" name="^(?:JSESSIONID|SSID_C|SSLB|SSNC|SSOE|SSRT_C|SSSC_C|TS[\da-f]{8}|cartId|ci|cookieId|dlc|dpi|dtlacfr|lpi|mapp|oldCheckout|sessionKey|simTags|uui|waterfall)$" /-->
+	<!--securecookie host="^affiliates\.bhphotovideo\.com$" name="^(?:ASPSESSIONID[A-Z]{8}|bhphotoimage)$" /-->
+	<!--securecookie host="^(?:secure|www)\.bhphotovideo\.com$" name="^(?:D_[HIPSU]ID|TS[\da-f]{8})$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
