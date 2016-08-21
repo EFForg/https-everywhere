@@ -8,9 +8,7 @@
 	Problematic subdomains:
 
 		- ^	(akamai)
-		- usa ¹
-
-	¹ Blocks Tor
+		- investor
 
 
 	Insecure cookies are set for these domains:
@@ -22,27 +20,24 @@
 <ruleset name="Visa (partial)">
 
 	<target host="visa.com" />
-	<target host="*.visa.com" />
-
+	<target host="www.visa.com" />
+	<target host="corporate.visa.com" />
+	<target host="usa.visa.com" />
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.visa\.com$" name="^visaCookie$" /-->
 	<!--securecookie host="^usa\.visa\.com$" name="^visaAnonCookie$" /-->
 
+	<!-- start page works, other pages don't:
+	     http://www.visa.com/atmlocator
+	     http://www.visa.com/globalgateway
+	-->
+	<exclusion pattern="^http://(www\.)?visa\.com/.+" />
+	<test url="http://www.visa.com/atmlocator" />
+	<test url="http://www.visa.com/globalgateway" />
+	<test url="http://visa.com/globalgateway" />
 
-	<rule from="^http://(?:www\.)?visa\.com/"
-		to="https://www.visa.com/" />
-
-	<rule from="^http://corporate\.visa\.com/_(cs|image)s/"
-		to="https://corporate.visa.com/_$1s/" />
-
-	<rule from="^http://usa\.visa\.com/(css|ext|img|merchants)/"
-		to="https://usa.visa.com/$1/" />
-
-	<!--	Doesn't redirect to http automatically (404s).
-		Linked to from merchants/.	-->
-	<rule from="^https://usa\.visa\.com/(?=about_visa/|download/|personal/|sitewide/)"
-		to="http://usa.visa.com/" downgrade="1" />
-
+	<rule from="^http:"
+		to="https:" />
 </ruleset>
