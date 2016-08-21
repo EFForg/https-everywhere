@@ -1,33 +1,42 @@
 <!--
-	^: Cert only matches www
-	www: Self-signed
+	Other CRU Acquisition Group rulesets:
+
+		- WiebeTech.com.xml
 
 
-	Insecure cookies are set for these hosts:
+	Problematic hosts in *cru-inc.com:
 
+		- blog ᵐ
+		- info ᵐ
+
+	ᵐ HubSpot / mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .cru-inc.com
 		- www.cru-inc.com
 
--->
-<ruleset name="CRU-Inc.com" default_off="self-signed">
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-	<!--	Direct rewrites:
-				-->
+-->
+<ruleset name="CRU-Inc.com (partial)">
+
+	<target host="cru-inc.com" />
 	<target host="www.cru-inc.com" />
 
-	<!--	Complications:
-				-->
-	<target host="cru-inc.com" />
+		<!--	Mixed images:
+					-->
+		<!--test url="http://www.cru-inc.com/cru-wiebetech/" /-->
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.cru-inc\.com$" name="^CRUCART$" /-->
 	<!--securecookie host="^www\.cru-inc\.com$" name="^PHPSESSID$" /-->
 
-	<securecookie host="^www\.cru-inc\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://cru-inc\.com/"
-		to="https://www.cru-inc.com/" />
 
 	<rule from="^http:"
 		to="https:" />

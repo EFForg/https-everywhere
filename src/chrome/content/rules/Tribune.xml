@@ -5,14 +5,19 @@
 	Other Tribune rulesets:
 
 		- Chicago_Tribune.xml
+		- courant.com.xml
 		- Los_Angeles_Times.xml
 
 
 	CDN buckets:
 
+		- s3.amazonaws.com/MG2_Tribune/
+
 		-  trb.edgesuite.net 
 
 			- www.trbimg.com
+
+		- tribcmsprod.blob.core.windows.net
 
 
 	Nonfunctional domains:
@@ -20,6 +25,7 @@
 		- connect2maryland.baltimoresun.com	(times out)
 		- data.baltimoresun.com			(ssl_error_rx_record_too_long)
 		- www.chicagotribune.com		(Akamai; 301s to http)
+
 		- www.sun-sentinel.com			(Akamai; 301s to http)
 		- media.trb.com				(Akamai; 503)
 		- mv2.trb.com				(refused)
@@ -29,31 +35,22 @@
 
 	* Times out
 
-
-	Fully covered domains:
-
-		- *.signon.trb.com:
-
-			- latimes
-
 -->
 <ruleset name="Tribune (partial)">
 
-	<target host="courant.com" />
-	<target host="*.courant.com" />
 	<target host="*.signon.trb.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}signon\.trb\.com/" />
 
-	<rule from="^http://advertise\.courant\.com/"
-		to="https://advertise.courant.com/" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.signon.trb.com/" />
+			<test url="http://exists.not.signon.trb.com/" />
 
-	<rule from="^http://(?:www\.)?courant\.com/includes/uploads/2010/08/3A2C26D5_courant_logo_981x160b\.jpg$"
-		to="https://advertise.courant.com/portal/page/portal/Hartford%20Courant/Content%20Items/P2P/3A2C26D5_courant_logo_981x160b.jpg" />
+		<test url="http://latimes.signon.trb.com/" />
 
-	<rule from="^http://(?:www\.)?courant\.com/media/graphic/2009-06/47547079\.png$"
-		to="https://advertise.courant.com/portal/page/portal/Hartford%20Courant/Content%20Items/P2P/47547079.png" />
 
-	<rule from="^http://([\w-]+)\.signon\.trb\.com/"
-		to="https://$1.signon.trb.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

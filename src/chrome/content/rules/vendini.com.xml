@@ -1,0 +1,85 @@
+<!--
+	Nonfunctional hosts in *vendini.com:
+
+		- ^ *
+		- landing ᵃ
+		- siteline ᵈ
+		- siteline2 ᵈ
+		- tracker ᵈ
+
+	* No supported ciphers
+	ᵃ Marketo / shows another domain
+	ᵈ Dropped
+
+
+	Problematic hosts in *vendini.com:
+
+		- bristolrhythm.lm ᶜ
+		- essence.lm ᶜ
+		- newportfestivals.lm ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- apps.vendini.com
+		- queue.vendini.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Vendini.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="apps.vendini.com" />
+
+	<!--target host="bristolrhythm.lm.vendini.com" /-->
+	<!--target host="essence.lm.vendini.com" /-->
+	<!--target host="newportfestivals.lm.vendini.com" /-->
+
+	<target host="queue.vendini.com" />
+	<target host="support.vendini.com" />
+	<target host="www.vendini.com" />
+
+		<!--	$ redirects to ^vendini.com, so:
+							-->
+		<test url="http://www.vendini.com/ticket-software.html" />
+
+	<!--	Complications:
+				-->
+	<target host="landing.vendini.com" />
+
+		<exclusion pattern="^http://landing\.vendini\.com/(?!/*(?:cs|image|r)s/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://landing.vendini.com/Definitive-Buyers-Guide-for-Ticketing-Software.html" />
+			<test url="http://landing.vendini.com/demo-request-comedy-01.html" />
+			<test url="http://landing.vendini.com/demo-request-fest-01.html" />
+			<test url="http://landing.vendini.com/demo-request-ga-02.html" />
+			<test url="http://landing.vendini.com/demo-request-pa-01.html" />
+			<test url="http://landing.vendini.com/webinar-multigenerational-audiences.html" />
+			<test url="http://landing.vendini.com/webinar-price-optimization.html" />
+			<test url="http://landing.vendini.com/webinar-rental-business.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^apps\.vendini\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^queue\.vendini\.com$" name="^Queue-it" /-->
+
+	<securecookie host="^(?!landing\.)\w" name="." />
+
+
+	<rule from="^http://landing\.vendini\.com/"
+		to="https://na-ab05.marketo.com/" />
+
+		<test url="http://landing.vendini.com/css/mktLPSupportCompat.css" />
+		<test url="http://landing.vendini.com/rs/vendini/images/nav_bg.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

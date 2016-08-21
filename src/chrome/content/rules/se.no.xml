@@ -1,0 +1,48 @@
+<!--
+	Insecure cookies are set for these domains: ᶜ
+
+		- .www.se.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from blink.dagbladet.no
+			- www from konto.dagbladet.no ˢ
+			- www from $self ˢ
+
+		- Images, on:
+
+			- www from gfx.dagbladet.no ˢ
+			- www from $self ˢ
+
+		- Ads / bugs, on www from dagbladet.tns-cs.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="SE.no" platform="mixedcontent">
+
+	<target host="se.no" />
+	<target host="www.se.no" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.se.no/tv/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.www\.se\.no$" name="^tvsettings$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|optimizely)" />
+	<securecookie host="^(?!\.se\.no$)." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

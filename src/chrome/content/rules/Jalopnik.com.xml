@@ -2,19 +2,66 @@
 	For other Gawker coverage, see Gawker.xml.
 
 
-	CN: *.a.ssl.fastly.net
+	Problematic hosts in *jalopnik.com:
+
+		- cache *
+
+	* Mismatched, CN: *.a.ssl.fastly.net
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- jalopnik.com
+		- (column_name).jalopnik.com
+		- www.jalopnik.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Ads / bugs on ^, (column_name) from sb.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Jalopnik.com" default_off="mismatched">
+<ruleset name="Jalopnik.com">
 
 	<target host="jalopnik.com" />
 	<target host="*.jalopnik.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}jalopnik\.com/" />
 
-	<securecookie host="^\.?jalopnik\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.jalopnik.com/" />
+			<test url="http://exist.not.jalopnik.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://blackflag.jalopnik.com/" />
+		<test url="http://foxtrotalpha.jalopnik.com/" />
+		<test url="http://lanesplitter.jalopnik.com/" />
+		<test url="http://oppositelock.jalopnik.com/" />
+		<test url="http://thegarage.jalopnik.com/" />
+		<test url="http://www.jalopnik.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://cache.jalopnik.com/" />
 
 
-	<rule from="^http://(?:(cache\.)|www\.)?jalopnik\.com/"
-		to="https://$1jalopnik.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?jalopnik\.com$" name="^geocc$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://cache\.jalopnik\.com/"
+		to="https://cache.gawkerassets.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

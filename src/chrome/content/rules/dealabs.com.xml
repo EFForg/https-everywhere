@@ -1,0 +1,40 @@
+<!--
+	Nonfunctional hosts in *dealabs.com:
+
+		- url ᶠ
+
+	ᶠ Handshake fails
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.dealabs.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Dealabs.com (partial)">
+
+	<target host="dealabs.com" />
+	<target host="static.dealabs.com" />
+	<target host="www.dealabs.com" />
+
+		<test url="http://static.dealabs.com/css/responsive.css" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.dealabs.com/forum.html" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.dealabs\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

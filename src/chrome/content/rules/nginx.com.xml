@@ -1,0 +1,40 @@
+<!--
+	CDN buckets:
+
+		- nginx-com-uploads.s3.amazonaws.com
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- university.nginx.com
+		- www.nginx.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="nginx.com">
+
+	<target host="nginx.com" />
+	<target host="amplify.nginx.com" />
+	<target host="receiver.amplify.nginx.com" />
+	<target host="assets.wp.nginx.com" />
+	<target host="demo.nginx.com" />
+	<target host="university.nginx.com" />
+	<target host="www.nginx.com" />
+
+		<test url="http://assets.wp.nginx.com/wp-content/themes/nginx-theme/assets/img/yt-nginx@2x.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^university\.nginx\.com$" name="^SE$" /-->
+	<!--securecookie host="^www\.nginx\.com$" name="^geoip$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

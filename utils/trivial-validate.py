@@ -167,7 +167,8 @@ host_counter = Counter()
 for filename in filenames:
     xml_parser = etree.XMLParser(remove_blank_text=True)
 
-    if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
+    basename = filename.split(os.path.sep)[-1]
+    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
         continue
 
     try:

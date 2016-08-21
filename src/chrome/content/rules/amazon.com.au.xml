@@ -1,0 +1,39 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .amazon.com.au
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Amazon.com.au">
+
+	<target host="amazon.com.au" />
+	<target host="read.amazon.com.au" />
+	<target host="www.amazon.com.au" />
+
+		<!--	Amazon has a history of breaking us soon after
+			adding rulesets, so these are here to detect that.
+									-->
+		<test url="http://www.amazon.com.au/Harrisons-Principles-Internal-Medicine-Vol-1-ebook/dp/B00TJHL6S0" />
+		<test url="http://www.amazon.com.au/ebooks-kindle/b?ie=UTF8&amp;node=2496751051" />
+		<test url="http://www.amazon.com.au/forum/kindle" />
+		<test url="http://www.amazon.com.au/gp/product/B00Q92RXJO" />
+		<test url="http://www.amazon.com.au/s?ie=UTF8&amp;text=Peter+E.+Dawson&amp;search-alias=digital-text&amp;field-author=Peter+E.+Dawson&amp;sort=relevancerank" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.amazon\.com\.au$" name="^(?:lc-acbau|session-id|session-id-time|session-token|ubid-acbau|x-wl-uid)$" /-->
+
+	<securecookie host="." name="^aps-trtmnt$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

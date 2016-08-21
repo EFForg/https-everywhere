@@ -30,17 +30,17 @@ target host with a left-side wildcard, and at least ten test URLs for each
 target host with a right-side wildcard. But this is not yet implemented.
 
 # Example:
-    <ruleset name="example.com">
-      <target host="example.com" />
-      <target host="*.example.com" />
+	<ruleset name="example.com">
+		<target host="example.com" />
+		<target host="*.example.com" />
 
-      <test url="http://www.example.com/" />
-      <test url="http://beta.example.com/" />
+		<test url="http://www.example.com/" />
+		<test url="http://beta.example.com/" />
 
-      <rule from="^http://([\w-]+\.)?dezeen\.com/"
-          to="https://$1dezeen.com/" />
+		<rule from="^http://([\w-]+\.)?example\.com/"
+			to="https://$1example.com/" />
 
-    </ruleset>
+	</ruleset>
 
 This ruleset has one implicit test URL from a target host
 ("http://example.com/"). The other target host has a wildcard, so creates no
@@ -50,7 +50,7 @@ using explicit &lt;test&gt; tags.
 
 # Testing and Continuous Build
 
-Testing for rulest coverage is now part of the Travis CI continuous build.
+Testing for ruleset coverage is now part of the Travis CI continuous build.
 Currently we only test rulesets that have been modified since February 2 2015.
 Submitting changes to any ruleset that does not meet the coverage requirements
 will break the build. This means that even fixes of existing rules may require

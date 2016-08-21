@@ -1,0 +1,42 @@
+<!--
+	Nonfunctional hosts in *nav.no:
+
+		- bob ⁴
+		- www.sykmelding ⁴
+
+	⁴ 404
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- sykmelding.nav.no
+		- tjenester.nav.no
+		- www.nav.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Nav.no (partial)">
+
+	<target host="nav.no" />
+	<target host="appres.nav.no" />
+	<target host="sykmelding.nav.no" />
+	<target host="tjenester.nav.no" />
+	<target host="www.nav.no" />
+
+		<test url="http://appres.nav.no/_public/appressurser/built-appres-v2/img/navno/gfx/mainmenu/sok_liten_graa.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^sykmelding\.nav\.no$" name="^(?:\.ASPXAUTH|ASP\.NetSessionId)$" /-->
+	<!--securecookie host="^(?:tjenester|www)\.nav\.no$" name="^BIGipServer" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
