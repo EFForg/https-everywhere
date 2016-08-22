@@ -54,6 +54,7 @@ if [ "$RULESETS_CHANGED" ]; then
   if [ "$TEST" == "rules" ]; then
     echo >&2 "Performing comprehensive coverage test."
     docker_build
+    docker run --rm -ti -v $(pwd):/opt httpse python utils/trivial-validate.py
     docker run --rm -ti -v $(pwd):/opt httpse bash -c "test/rules.sh"
   fi
 
