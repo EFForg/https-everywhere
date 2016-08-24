@@ -15,16 +15,20 @@ fi
 # Run from ruleset folder to simplify sha256sum output
 cd src/chrome/content/rules
 WLIST=../../../../utils/ruleset-coverage-whitelist.txt
-WLISTFILES=$(cut -f3 -d " " $WLIST)
+DELIM="  "
 
-for file in $WLISTFILES; do
+while IFS=$DELIM read listed_hash file; do
+  display_hash=$(echo $listed_hash | cut -c-7)
   # Remove those that no longer exist
   if [ ! -f $file ]; then
-    sed -i "/ $file/d" $WLIST
-    echo >&2 "Removed $file: file no longer exists"
-  # Remove those whose hashes no longer match
-  elif ! grep -q $(sha256sum $file) $WLIST; then
-    sed -i "/ $file/d" $WLIST
-    echo >&2 "Removed $file: file no longer matches the whitelist hash"
+    sed -i "/$listed_hash$DELIM$file/d" $WLIST
+    echo >&2 "Removed $file ($display_hash): file no longer exists"
+  else
+    actual_hash=$(sha256sum $file | cut -c-64)
+    # Remove those whose hashes do not match
+    if [ "$listed_hash" != "$actual_hash" ]; then
+      sed -i "/$listed_hash$DELIM$file/d" $WLIST
+      echo >&2 "Removed $file ($display_hash): listed hash does not match actual hash"
+    fi
   fi
-done
+done < "$WLIST"

@@ -1,0 +1,41 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- norsk-tipping.no
+		- www.norsk-tipping.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	STS header includes includesubdomains
+	for ^, www
+
+-->
+<ruleset name="Norsk-Tipping.no">
+
+	<target host="norsk-tipping.no" />
+	<target host="*.norsk-tipping.no" />
+
+		<!--	STS header applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}norsk-tipping\.no/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.norsk-tipping.no/" />
+			<test url="http://exists.not.norsk-tipping.no/" />
+
+		<test url="http://www.norsk-tipping.no/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?norsk-tipping\.no$" name="^(?:NorskTipping|TS[\da-f]{8})$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

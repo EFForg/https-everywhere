@@ -2,19 +2,70 @@
 	For other Gawker coverage, see Gawker.xml.
 
 
-	CN: *.a.ssl.fastly.net
+	Problematic hosts in kotaku.com:
+
+		- cache *
+
+	* Works, mismatched, CN: *.a.ssl.fastly.net
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- kotaku.com
+		- (column_name).kotaku.com
+		- www.kotaku.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on ^, (column_name) from b.scorecardresearch.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Kotaku.com" default_off="mismatched">
+<ruleset name="Kotaku.com">
 
 	<target host="kotaku.com" />
 	<target host="*.kotaku.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}kotaku\.com/" />
 
-	<securecookie host="^\.?kotaku\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.kotaku.com/" />
+			<test url="http://exists.not.kotaku.com/" />
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://cosplay.kotaku.com/" />
+		<test url="http://numbers.kotaku.com/" />
+		<test url="http://pocketmonster.kotaku.com/" />
+		<test url="http://screenburn.kotaku.com/" />
+		<test url="http://selects.kotaku.com/" />
+		<test url="http://steamed.kotaku.com/" />
+		<test url="http://tay.kotaku.com/" />
+		<test url="http://thebests.kotaku.com/" />
+		<test url="http://watchlist.kotaku.com/" />
+		<test url="http://www.kotaku.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://cache.kotaku.com/" />
 
 
-	<rule from="^http://(?:(cache\.)|www\.)?kotaku\.com/"
-		to="https://$1kotaku.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(column_name)\.|www\.)?kotaku\.com$" name="^geocc$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://cache\.kotaku\.com/"
+		to="https://cache.gawkerassets.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

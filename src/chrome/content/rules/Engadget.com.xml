@@ -1,6 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://profiles.engadget.com/ => https://profiles.engadget.com/: (6, 'Could not resolve host: profiles.engadget.com')
 	For other AOL coverage, see AOL.xml.
 
 
@@ -14,31 +12,43 @@ Fetch error: http://profiles.engadget.com/ => https://profiles.engadget.com/: (6
 			- www.engadget.com
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *engadget.com:
 
-		- ^ ¹
-		- alt ²
-		- hd ²
-		- mobile ²
-		- www ²
+		- alt ¹
+		- de ¹
+		- hd ¹
+		- m ¹
+		- mobile ¹
 
 	¹ Refused
-	² Redirects to http, valid cert
 
 
-	Mixed content:
-
-		- css on profiles from fonts.googleapis.com *
-
-	* Secured by us
+	^engadget.com: Refused
 
 -->
-<ruleset name="Engadget.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Engadget.com (partial)">
 
-	<target host="profiles.engadget.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="www.engadget.com" />
+
+	<!--	Complications:
+				-->
+	<target host="engadget.com" />
 
 
-	<rule from="^http://profiles\.engadget\.com/"
-		to="https://profiles.engadget.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.engadget\.com$" name="^gdgt_edition$" /-->
+
+	<securecookie host="^\." name="^gdgt_edition$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://engadget\.com/"
+		to="https://www.engadget.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

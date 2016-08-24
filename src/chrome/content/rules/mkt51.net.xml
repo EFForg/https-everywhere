@@ -1,0 +1,48 @@
+<!--
+	For other Silverpop coverage, see Silverpop.xml.
+
+
+	CDN buckets:
+
+		- dlr5p9uhe3oaq.cloudfront.net	← contentz
+		- d24q9byeq1ve1q.cloudfront.net	← content
+
+
+	^mkt51.net: Refused, differs from www.mkt51.net
+
+
+	Problematic hosts in *mkt51.net:
+
+		- content ᵐ
+		- contentz ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+
+-->
+<ruleset name="mkt51.net">
+
+	<target host="content.mkt51.net" />
+	<target host="contentz.mkt51.net" />
+	<target host="www.mkt51.net" />
+
+		<!--	$ 502s, so:
+					-->
+		<test url="http://contentz.mkt51.net/lp/static/notfound.html" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://content\.mkt51\.net/"
+		to="https://d24q9byeq1ve1q.cloudfront.net/" />
+
+	<rule from="^http://contentz\.mkt51\.net/"
+		to="https://dlr5p9uhe3oaq.cloudfront.net/" />
+
+		<test url="http://contentz.mkt51.net/lp/static/js/iMAWebCookie.js?h=www.pages05.net" />
+
+	<rule from="^http://www\.mkt51\.net/"
+		to="https://www.silverpop.com/" />
+
+</ruleset>
