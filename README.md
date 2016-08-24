@@ -113,3 +113,8 @@ with the tests enabled:
 Then click the HTTPS Everywhere icon on the toolbar, and click "Run HTTPS
 Everywhere Ruleset Tests." When you run the tests, be prepared to let your
 computer run them for a really long time.
+
+After sending a PR
+-------------
+
+Please do not squash commits in the PR after you sent it. Let us track the change between them easily and prevent us from auditing it from the first.
