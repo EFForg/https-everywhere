@@ -35,6 +35,7 @@
 			- nmetrics	(mismatched, CN: *.112.2o7.net)
 			- shop.us	(some paths redirect to http)
 			- smm	(mismatched)
+			- stg-account	(MCB at https://stg-account.samsung.com/membership/service/getServieInfoList.do and break the auto recirect for https://stg-account.samsung.com/membership/signUp.do and so on.)
 
 	Partially covered samsung.com subdomains:
 		- apps	(redirects to main page of sumsung by country)
@@ -56,7 +57,6 @@
 			- nmetrics	(→ samsung-com.112.2o7.net)
 			- smetrics
 			- secureus
-			- stg-account
 			- support-cn
 			- us
 
@@ -84,12 +84,46 @@
 
 <ruleset name="Samsung.com (partial)">
 
+	<target host="account.samsung.com" />
+		<test url="http://account.samsung.com/membership/service/getServieInfoList.do/" />
+	<target host="cdn.samsung.com" />
+		<test url="http://cdn.samsung.com/common/next/css/apps/mobile/barshade.css" />
+	<target host="help.content.samsung.com" />
+		<test url="http://help.content.samsung.com/csweb/main/main.do" />
+	<target host="findmymobile.samsung.com" />
+		<test url="http://findmymobile.samsung.com/img/favicon02.ico/" />
+	<target host="images.samsung.com" />
+		<test url="http://images.samsung.com/" />
+	<target host="link.samsung.com" />
+		<test url="http://link.samsung.com/" />
+	<target host="secureus.samsung.com" />
+		<test url="http://secureus.samsung.com/us/mobile/galaxy-tab/SM-T810NZWEXAR" />
+	<target host="smetrics.samsung.com" />
+		<test url="http://smetrics.samsung.com/" />
+	<target host="support-cn.samsung.com" />
+		<test url="http://support-cn.samsung.com/cn/common/css/local_global_common.css" />
+	<target host="us.samsung.com" />
+		<test url="http://us.samsung.com/us/index.jsp" />
+	<target host="shop.us.samsung.com" />
+		<test url="http://shop.us.samsung.com/store?Action=DisplayDrcartSummary" />
+	
+	<rule from="^http://(account|cdn|help\.content|findmymobile|images|link|secureus|smetrics|support-cn|us|shop\.us)\.samsung\.com/"
+		to="https://$1.samsung.com/" />
+
+
+	<target host="nmetrics.samsung.com" />
+	<rule from="^http://nmetrics\.samsung\.com/"
+		to="https://samsung-com.112.2o7.net/" />
+		<test url="http://nmetrics.samsung.com/b/ss/sssamsung4in" />
+
+
 	<target host="opensource.samsung.com" />
 
 	<rule from="^http://opensource\.samsung\.com/" to="https://opensource.samsung.com/" />
 
 	<exclusion pattern="^http://opensource\.samsung\.com/(ajax|community\.do|images|org\.ditchnet\.taglib|popup|scmShowFileRevision|stylesheet|usageStatistics|wikiTreeMessage)?$" />
 	<exclusion pattern="^http://opensource\.samsung\.com/reception(\.do)?/(?!receptionSub)?$" />
+
 		<!--	To https	-->
 		<test url="http://opensource.samsung.com/community/" />
 		<test url="http://opensource.samsung.com/css/" />
@@ -102,6 +136,7 @@
 		<test url="http://opensource.samsung.com/js2" />
 		<test url="http://opensource.samsung.com/reception/receptionSub" />
 		<test url="http://opensource.samsung.com/reception/receptionSub.do" />
+
 		<!--	To http	-->
 		<test url="http://opensource.samsung.com/" />
 		<test url="http://opensource.samsung.com/ajax" />
@@ -118,47 +153,20 @@
 
 
 	<target host="www.samsung.com" />
-	<rule from="^http://www\.samsung\.com/"
-		to="https://www.samsung.com/" />
-		<test url="http://www.samsung.com/cn/common/css/home.css" />
+
 	<!-- Support page FAQ and other features are broken. Also, their i18n is a lie.
 		Github issue: https://github.com/EFForg/https-everywhere/issues/309 -->
-	<exclusion pattern="^http://www\.samsung\.com/us/(?:support/|function/)" />
-		<test url="http://www.samsung.com/us/function/" />
-		<test url="http://www.samsung.com/us/support/" />
+	<!--	MCB : https://www.samsung.com/cn|tw|us|.*/apps/mobile/	-->	
 
-
-	<target host="nmetrics.samsung.com" />
-	<rule from="^http://nmetrics\.samsung\.com/"
-		to="https://samsung-com.112.2o7.net/" />
-		<test url="http://nmetrics.samsung.com/b/ss/sssamsung4in" />
-
-
-	<target host="account.samsung.com" />
-	<target host="cdn.samsung.com" />
-	<target host="help.content.samsung.com" />
-	<target host="findmymobile.samsung.com" />
-	<target host="images.samsung.com" />
-	<target host="link.samsung.com" />
-	<target host="secureus.samsung.com" />
-	<target host="smetrics.samsung.com" />
-	<target host="support-cn.samsung.com" />
-	<target host="us.samsung.com" />
-	<target host="shop.us.samsung.com" />
+	<rule from="^http://www\.samsung\.com/(.+)\.(css|gif|ico|js|png|svg|woff)"
+		to="https://www.samsung.com/$1.$2" />
+		<test url="http://www.samsung.com/cn/common/css/home.css" />
+		<test url="http://www.samsung.com/common/next/css/navigation.css" />
+		<test url="http://www.samsung.com/common/img/bg-navigation.gif" />
+		<test url="http://www.samsung.com/common/next/img/favicon.ico" />
+		<test url="http://www.samsung.com/common/js/dist/smg.new.common.min.js" />
+		<test url="http://www.samsung.com/common/img/nav-ir.png" />
+		<test url="http://www.samsung.com/common/img/ico-search.svg" />
+		<test url="http://www.samsung.com/common/next/font/samsungIcon.woff" />
 	
-	<rule from="^http://((?:stg-)?account|cdn|(?:help\.|img\.|pub\.)?content|findmymobile|images|link|secureus|smetrics|support-cn|us|shop\.us)\.samsung\.com/"
-		to="https://$1.samsung.com/" />
-
-		<test url="http://account.samsung.com/membership/service/getServieInfoList.do/" />
-		<test url="http://cdn.samsung.com/common/next/css/apps/mobile/barshade.css" />
-		<test url="http://help.content.samsung.com/csweb/main/main.do" />
-		<test url="http://findmymobile.samsung.com/img/favicon02.ico/" />
-		<test url="http://images.samsung.com/" />
-		<test url="http://link.samsung.com/" />
-		<test url="http://secureus.samsung.com/us/mobile/galaxy-tab/SM-T810NZWEXAR" />
-		<test url="http://smetrics.samsung.com/" />
-		<test url="http://support-cn.samsung.com/cn/common/css/local_global_common.css" />
-		<test url="http://us.samsung.com/us/index.jsp" />
-		<test url="http://shop.us.samsung.com/store?Action=DisplayDrcartSummary" />
-
 </ruleset>
