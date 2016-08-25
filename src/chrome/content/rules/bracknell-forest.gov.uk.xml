@@ -1,0 +1,86 @@
+<!--
+	Bracknell Forest Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bracknell-forest.gov.uk:
+
+		- (www.)? ʳ
+		- benefitchoices ʳ
+		- business ʳ
+		- childrenssocialcare ʳ
+		- ihub ᵃ
+		- jsna ʳ
+		- schools ʳ
+		- statsshare ⁵
+
+	⁵ 504
+	ᵃ Shows another domain
+	ʳ Refused
+
+
+	Problematic hosts in *bracknell-forest.gov.uk:
+
+		- consult ᵐ
+		- digitalservices ᵐ
+		- maps ᶜ ᵉ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- democratic.bracknell-forest.gov.uk
+		- forms.bracknell-forest.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- iframe on consult from www.youtube.com ˢ
+		- css on maps from $self
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Bracknell-Forest.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="democratic.bracknell-forest.gov.uk" />
+	<target host="forms.bracknell-forest.gov.uk" />
+	<target host="my.bracknell-forest.gov.uk" />
+	<target host="oneservices.bracknell-forest.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.bracknell-forest.gov.uk" />
+
+		<test url="http://my.bracknell-forest.gov.uk/gov3Apps/public_website/core/css/ie.css" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://maps.bracknell-forest.gov.uk/LocalView/Sites/Public/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^democratic\.bracknell-forest\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^forms\.bracknell-forest\.gov\.uk$" name="^(?:AWSELB|firmstep2se(?:ssion|rver))$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.bracknell-forest\.gov\.uk/"
+		to="https://bracknell-forest-consult.objective.co.uk/" />
+
+		<test url="http://consult.bracknell-forest.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

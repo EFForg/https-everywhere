@@ -1,0 +1,95 @@
+<!--
+	Bath and North East Somerset Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bathnes.gov.uk:
+
+		- bathhacked ᵇ
+		- cicalc ᵃ
+		- thehub ᵃ
+
+	ᵃ Shows another domain
+	ᵇ Shows default page
+
+
+	Problematic hosts in *bathnes.gov.uk:
+
+		- ess ᶜ
+		- mss ᶜ
+	
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Partially covered hosts in *bathnes.gov.uk:
+
+		- (www.)? ʰ
+		- idox ʰ
+
+	ʰ Some pages redirect to http
+
+
+	These altnames don't exist:
+
+		- www.ess.bathnes.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- art.bathnes.gov.uk
+		- democracy.bathnes.gov.uk
+		- isharemaps.bathnes.gov.uk
+		- secure.bathnes.gov.uk
+
+-->
+<ruleset name="Bathnes.gov.uk (partial)">
+
+	<target host="bathnes.gov.uk" />
+	<target host="art.bathnes.gov.uk" />
+	<target host="capita.bathnes.gov.uk" />
+	<target host="democracy.bathnes.gov.uk" />
+	<target host="ess.bathnes.gov.uk" />
+	<target host="filetransfer.bathnes.gov.uk" />
+	<target host="idox.bathnes.gov.uk" />
+	<target host="isharemaps.bathnes.gov.uk" />
+	<target host="jobs.bathnes.gov.uk" />
+	<!--target host="mss.bathnes.gov.uk" /-->
+	<target host="secure.bathnes.gov.uk" />
+	<target host="www.bathnes.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:idox\.|www\.)?bathnes\.gov\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:idox\.|www\.)?bathnes\.gov\.uk/+(?!misc/|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.bathnes.gov.uk/jobs" />
+			<test url="http://www.bathnes.gov.uk/pay" />
+			<test url="http://www.bathnes.gov.uk/records" />
+
+			<!--	-ve:
+					-->
+			<test url="http://bathnes.gov.uk/misc/menu-leaf.png" />
+			<test url="http://idox.bathnes.gov.uk/misc/menu-leaf.png" />
+			<test url="http://idox.bathnes.gov.uk/sites/all/themes/banes7/css/images/bg_carousel_blue.png" />
+			<test url="http://www.bathnes.gov.uk/sites/all/themes/banes7/css/images/bg_carousel_blue.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^art\.bathnes\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:democracy|secure)\.bathnes\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^isharemaps\.bathnes\.gov\.uk$" name="^(?:ASP\.NET_SessionId|atLocation|atMyCouncil|astun)$" /-->
+
+	<securecookie host="^(?!(?:idox\.|www\.)?bathnes\.gov\.uk$)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,105 @@
+<!--
+	United States Department of Labor
+
+	For rules causing false/broken MCB, see dol.gov-falsemixed.xml.
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *dol.gov:
+
+		- clear ʳ
+		- ogesdw ʳ
+		- s ⁴
+
+	⁴ 404
+	ʳ Refused
+
+
+	Problematic hosts in *dol.gov:
+
+		- ^ ⁴
+		- askebsa ᵐ
+		- developer ᵐ
+		- webapps ˣ
+
+	⁴ 404, preemptable redirect
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	These altnames do not exist:
+
+		- dr.endpoint.efast.dol.gov
+		- dr.www.efast.dol.gov
+		- oalj.dol.gov
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- developer from fonts.googleapis.com ˢ
+			- webapps from www.dol.gov ˢ
+
+		- Images, on:
+		
+			- api, savingmatters from www.dol.gov ˢ
+			- www.oalj, www from $self ˢ
+
+		- favicon on api from www.dol.gov ˢ
+		- Bug on api from statse.webtrendslive.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="DoL.gov">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blog.dol.gov" />
+	<target host="api.dol.gov" />
+	<target host="www.askebsa.dol.gov" />
+	<target host="devtools.dol.gov" />
+	<target host="edit.dol.gov" />
+	<target host="efast.dol.gov" />
+	<target host="endpoint.efast.dol.gov" />
+	<target host="www.efast.dol.gov" />
+	<target host="jobcorps.dol.gov" />
+	<target host="learninglink.dol.gov" />
+	<target host="www.oalj.dol.gov" />
+	<target host="oig.dol.gov" />
+	<target host="www.oig.dol.gov" />
+	<target host="savingmatters.dol.gov" />
+	<target host="staging.dol.gov" />
+	<target host="edit.staging.dol.gov" />
+	<target host="vets100.dol.gov" />
+	<target host="vets4212.dol.gov" />
+	<!--target host="webapps.dol.gov" /-->
+	<target host="www.dol.gov" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://devtools.dol.gov/developer" />
+		<test url="http://vets4212.dol.gov/vets4212" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://www.dol.gov/ebsa/contactEBSA/consumerassistance.html" /-->
+
+	<!--	Complications:
+				-->
+	<target host="dol.gov" />
+	<target host="askebsa.dol.gov" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(askebsa\.)?dol\.gov/"
+		to="https://www.$1dol.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

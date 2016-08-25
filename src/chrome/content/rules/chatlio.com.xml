@@ -1,0 +1,40 @@
+<!--
+	CDN buckets:
+
+		- s3-us-west-2.amazonaws.com/static.chatlio.com/
+
+
+	Problematic hosts in *chatlio.com:
+
+		- status ᵐ
+		- www ʳ
+
+	ᵐ StatusPage.io / mismatched
+	ʳ Refused
+
+-->
+<ruleset name="Chatlio.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="chatlio.com" />
+
+	<!--	Complications:
+				-->
+	<target host="status.chatlio.com" />
+	<target host="www.chatlio.com" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://status\.chatlio\.com/"
+		to="https://chatlio.statuspage.io/" />
+
+	<rule from="^http://www\.chatlio\.com/"
+		to="https://chatlio.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

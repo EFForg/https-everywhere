@@ -1,42 +1,95 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *zscaler.com:
 
-		- info ¹
-		- research ²
-		- www ³
-		- zulu ⁴
+		- info ᴹ
+		- research ᴮ
+		- scrapbook ᴮ
+		- securitypreview ᵈ
+		- zap ʳ
+		- zulu ᵖ
 
-	¹ Marketo
-	² Blogger
-	³ Redirects to http
-	⁴ Plaintext reply
+	ᴹ Marketo
+	ᴮ Blogger/handshake fails
+	ᵖ Plaintext reply
+	ᵈ Dropped
+	ʳ Refused
 
 
-	Partially covered subdomains:
+	Problematic hosts in *zscaler.com:
 
-		- blog *
+		- blog ᵐ
+		- staging ᵐ ˢ
 
-	* Avoiding broken MCB
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.zscaler.com
 
 
 	Mixed content:
 
-		- on blog from $self *
+		- css on blog from $self ᵐ
+		- Images on blog from $self ᵐ
 
-	* Secured by us
+	ᵐ Not secured by us <= mismatched
+
 -->
-<ruleset name="Zscaler.com (partial)" default_off="Needs ruleset tests">
-  <target host="blog.zscaler.com" />
+<ruleset name="Zscaler.com (partial)">
 
-		<!--	Avoid broken MCB:
-						-->
-		<exclusion pattern="^http://blog\.zscaler\.com/+(?!favicon\.ico|modules/|sites/|themes/)" />
-		<!--
-			Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.zscaler\.com/($|contactsales-pop\.php|contactus\.php|css/|home-images/|images/|jquery\.simplyscroll\.css|support\.php)" /-->
+	<!--	Direct rewrites:
+				-->
+	<target host="zscaler.com" />
+	<target host="help.zscaler.com" />
+	<target host="trust.zscaler.com" />
+	<target host="www.zscaler.com" />
+	<target host="zmtr.zscaler.com" />
 
-			<test url="http://blog.zscaler.com/sites/all/themes/default_theme/logo.png" />
+	<!--	Complications:
+				-->
+	<target host="info.zscaler.com" />
 
-  <rule from="^http:" to="https:"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.zscaler\.com$" name="^(?:NO_CACHE|SimpleSAMLSessionID)$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!info\.)\w" name="." />
+
+
+	<!--	Redirect drops forward slash and args:
+							-->
+	<rule from="^http://info\.zscaler\.com/+(?:\?.*)?$"
+		to="https://www.zscaler.com/" />
+
+		<test url="http://info.zscaler.com/?foo" />
+		<test url="http://info.zscaler.com/?bar" />
+
+	<rule from="^http://info\.zscaler\.com/"
+		to="https://na-abm.marketo.com/" />
+
+		<exclusion pattern="^http://info\.zscaler\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.zscaler.com/GlobalStandardTemp.html" />
+			<test url="http://info.zscaler.com/GlobalStandardTemp.html?mkt_tok=" />
+			<test url="http://info.zscaler.com/IDCWebcastAug2012APAC.html" />
+			<test url="http://info.zscaler.com/IDCWebcastAug2012APAC.html?mkt_tok=" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html?mkt_unsubscribe=1" />
+			<test url="http://info.zscaler.com/UnsubscribePage.html?mkt_unsubscribe=1&amp;mkt_tok=" />
+			<test url="http://info.zscaler.com/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://info.zscaler.com/css/mktLPSupport.css" />
+			<test url="http://info.zscaler.com/images/forms/backRequiredGray.gif" />
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

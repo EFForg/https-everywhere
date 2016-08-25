@@ -1,0 +1,89 @@
+<!--
+	Nonfunctional hosts in *t-mobilebankowe.pl:
+
+		- kampanie ᵈ
+		- konto ᵈ
+		- www.rewards ᵈ
+		- wakacje ᵈ
+
+	ᵈ Dropped
+
+
+	Partially covered hosts in *t-mobilebankowe.pl:
+
+		- konto ⁴
+
+	⁴ /*\w 404s
+
+
+	^t-mobilebankowe.pl doesn't exist
+
+
+	Insecure cookies are set for these hosts:
+
+		- form.t-mobilebankowe.pl
+		- online.t-mobilebankowe.pl
+		- m.online.t-mobilebankowe.pl
+		- static.t-mobilebankowe.pl
+		- wnioski.t-mobilebankowe.pl
+		- www.t-mobilebankowe.pl
+
+-->
+<ruleset name="T-mobilebankowe.pl (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="form.t-mobilebankowe.pl" />
+	<target host="online.t-mobilebankowe.pl" />
+	<target host="m.online.t-mobilebankowe.pl" />
+	<target host="static.t-mobilebankowe.pl" />
+	<target host="wnioski.t-mobilebankowe.pl" />
+	<target host="www.t-mobilebankowe.pl" />
+
+	<!--	Complications:
+				-->
+	<target host="konto.t-mobilebankowe.pl" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://form.t-mobilebankowe.pl/fk_forms/index.html?application_ID=&amp;partner_id=&amp;source=" /-->
+		<!--test url="http://wnioski.t-mobilebankowe.pl/directcreditsystem-frontend-application-creditcard/cms/?partnerId=T_KK_AB_PRC&amp;transactionCode=main" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^form\.t-mobilebankowe\.pl$" name="^(?:JSESSIONID|TS[\da-f]{8}|lbsc)$" /-->
+	<!--securecookie host="^online\.t-mobilebankowe\.pl$" name="^(?:\w+|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^m\.online\.t-mobilebankowe\.pl$" name="^(?:\w+|TS[\da-f]{8}|org\.springframework\.web\.servlet\.theme\.CookieThemeResolver\.THEME)$" /-->
+	<!--securecookie host="^static\.t-mobilebankowe\.pl$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^wnioski\.t-mobilebankowe\.pl$" name="^(?:JSESSIONID|TS[\da-f]{8}|dcsseccookie|lbsc)$" /-->
+	<!--securecookie host="^www\.t-mobilebankowe\.pl$" name="^(?:\w+|TS[\da-f]{8})$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://konto\.t-mobilebankowe\.pl/[^?]*"
+		to="https://www.t-mobilebankowe.pl/porownywarka-kont" />
+
+		<!--	/*\w 404s:
+					-->
+		<exclusion pattern="^http://konto\.t-mobilebankowe\.pl/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://konto.t-mobilebankowe.pl/default.aspx" />
+			<test url="http://konto.t-mobilebankowe.pl/index.htm" />
+			<test url="http://konto.t-mobilebankowe.pl/index.html" />
+			<test url="http://konto.t-mobilebankowe.pl/index.jsp" />
+			<test url="http://konto.t-mobilebankowe.pl/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://konto.t-mobilebankowe.pl/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

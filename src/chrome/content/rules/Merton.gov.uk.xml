@@ -1,0 +1,117 @@
+<!--
+	Merton Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *merton.gov.uk:
+
+		- ^ ᵐ
+		- lbmsecure ᴿ ᶜ
+		- news ᵂ ᵐ
+
+	ᴿ Configured for RC4 only
+	ᵂ WordPress
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- autodiscover.merton.gov.uk
+		- democracy.merton.gov.uk
+		- webforms.merton.gov.uk
+		- webmail.merton.gov.uk
+
+-->
+<ruleset name="Merton.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="autodiscover.merton.gov.uk" />
+	<target host="democracy.merton.gov.uk" />
+	<target host="fsd.merton.gov.uk" />
+	<target host="lbmns.merton.gov.uk" />
+	<!--target host="lbmsecure.merton.gov.uk" /-->
+	<target host="webforms.merton.gov.uk" />
+	<target host="webmail.merton.gov.uk" />
+	<target host="www.merton.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="merton.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://fsd\.merton\.gov\.uk/(?:$|kb5/merton/directory/(?:advice|family|home|localoffer|privacy_policy|results|shortlist|site|whats_on)\.page)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://fsd\.merton\.gov\.uk/+(?!kb5/merton/directory/(?:assets/|(?:contact|register|sign_in)\.page))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/advice.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/family.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/home.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/localoffer.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/privacy_policy.page" />
+			<!--test url="http://fsd.merton.gov.uk/kb5/merton/directory/results.page" /-->
+			<!--test url="http://fsd.merton.gov.uk/kb5/merton/directory/shortlist.page" /-->
+			<!--test url="http://fsd.merton.gov.uk/kb5/merton/directory/site.page" /-->
+			<!--test url="http://fsd.merton.gov.uk/kb5/merton/directory/whats_on.page" /-->
+
+			<!--	-ve:
+					-->
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/assets/css/print.min.css" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/assets/images/presence/family_3.png" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/contact.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/register.page" />
+			<test url="http://fsd.merton.gov.uk/kb5/merton/directory/sign_in.page" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="http://www.merton.gov.uk/(?:$|\?)" />
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="http://www.merton.gov.uk/+(?![\w-]+\.(?:css|gif|jpg|pdf)|favicon\.ico|mymerton(?:\.htm)?(?:$|\?))" /-->
+
+			<!--	+ve:
+					-->
+			<test url="http://www.merton.gov.uk/?test" />
+			<test url="http://www.merton.gov.uk/?quota" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.merton.gov.uk/about-this-website.htm" />
+			<test url="http://www.merton.gov.uk/access.htm" />
+			<test url="http://www.merton.gov.uk/advice-benefits" />
+			<test url="http://www.merton.gov.uk/advice-benefits/counciltax/youraccount/ebilling.htm" />
+			<test url="http://www.merton.gov.uk/council" />
+			<test url="http://www.merton.gov.uk/council/gateway.htm" />
+			<test url="http://www.merton.gov.uk/css-home-complex.css" />
+			<test url="http://www.merton.gov.uk/favicon.ico" />
+			<test url="http://www.merton.gov.uk/fsd" />
+			<test url="http://www.merton.gov.uk/leader2011.jpg" />
+			<test url="http://www.merton.gov.uk/mymerton" />
+			<test url="http://www.merton.gov.uk/white-pixel.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:autodiscover|webmail)\.merton\.gov\.uk$" name="^cadata[\dA-F]{32}$" /-->
+	<!--securecookie host="^democracy\.merton\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^webforms\.merton\.gov\.uk$" name="^(?:AWSELB|firmstep2session|firmstep2server)$" /-->
+	<!--securecookie host="^webmail\.merton\.gov\.uk$" name="^cadata[\dA-F]{32}$" /-->
+
+	<securecookie host="^(?!fsd\.|www\.)\w" name="." />
+
+
+	<rule from="^http://merton\.gov\.uk/"
+		to="https://www.merton.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

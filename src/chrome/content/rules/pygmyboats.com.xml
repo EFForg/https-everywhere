@@ -1,0 +1,53 @@
+<!--
+	For rules causing false/broken MCB, see pygmyboats.com.xml.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .pygmyboats.com
+		- www.pygmyboats.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css from $self ˢ
+		- Images from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Pygmy Boats.com (partial)">
+
+	<target host="pygmyboats.com" />
+	<target host="www.pygmyboats.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?pygmyboats\.com/blog(?:$|[?/])" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.pygmyboats.com/blog" />
+			<test url="http://www.pygmyboats.com/blog/building-a-coho-hi-kayak-kit-part-3/" />
+			<test url="http://www.pygmyboats.com/blog/category/blog/" />
+			<test url="http://www.pygmyboats.com/blog/category/events/" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www.pygmyboats.com/cgi-sys/cgiwrap/pygmyweb/sc/order.cgi" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pygmyboats\.com$" name="^ss_cart_\d+$" /-->
+	<!--securecookie host="^www\.pygmyboats\.com$" name="^sbid1?$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

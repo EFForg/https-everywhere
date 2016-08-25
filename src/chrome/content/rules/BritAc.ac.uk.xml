@@ -1,66 +1,35 @@
 <!--
 	Nonfunctional hosts in *britac.ac.uk:
 
+		- ^ ʳ
 		- blog *
+		- www ʳ
 
-	* 404
-
-
-	^britac.ac.uk: 404
-
-
-	These altnames don't exist:
-
-		- www.ols.britac.ac.uk
+	* Handshake fails
+	ʳ Refused
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
+		- egap.britac.ac.uk
 		- ols.britac.ac.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="BritAc.ac.uk (partial)">
 
-	<!--	Direct rewrites:
-				-->
+	<target host="egap.britac.ac.uk" />
 	<target host="ols.britac.ac.uk" />
-	<target host="www.britac.ac.uk" />
-
-	<!--	Complications:
-				-->
-	<target host="britac.ac.uk" />
-
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.britac\.ac\.uk/(?:$|index\.cfm|templates/photo-handler\.cfm)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.britac\.ac\.uk/+(?!cmsfiles/|images/|styles/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.britac.ac.uk/contact_us.cfm" />
-			<test url="http://www.britac.ac.uk/index.cfm" />
-			<test url="http://www.britac.ac.uk/support.cfm" />
-			<test url="http://www.britac.ac.uk/templates/photo-handler.cfm?id=1" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.britac.ac.uk/cmsfiles/assets/" />
-			<test url="http://www.britac.ac.uk/images/templates/Home_2012/logo.png" />
-			<test url="http://www.britac.ac.uk/styles/templates/Home_2012.css" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^ols\.britac\.ac\.uk$" name="^ASPFIXATION$" /-->
+	<!--securecookie host="^egap\.britac\.ac\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^ols\.britac\.ac\.uk$" name="^(?:ASPFIXATION|type)$" /-->
 
-	<securecookie host="^ols\.britac\.ac\.uk$" name=".+" />
+	<securecookie host="^\w" name="." />
 
-
-	<rule from="^http://britac\.ac\.uk/"
-		to="https://www.britac.ac.uk/" />
 
 	<rule from="^http:"
 		to="https:" />

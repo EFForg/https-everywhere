@@ -1,4 +1,9 @@
 <!--
+	Other BuzzFeed rulesets:
+
+		- buzzfed.com.xml
+
+
 	CDN buckets:
 
 		- buzzfeed-static.s3.amazonaws.com
@@ -16,43 +21,46 @@
 			- s3-ak.buzzfeed.com
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *buzzfeed.com:
 
-		- pglb.buzzfed.com	(503, akamai)
-		- ct.buzzfeed.com	(404, CN: gp1.wac.edgecastcdn.net)
+		- ct ⁴
 
-
-	Problematic domains:
-
-		- s.buzzfed.com *
-		- s3-ak.buzzfed.com *
-		- s3-ec.buzzfed.com	(404, edgecast)
-		- s3-ak.buzzfeed.com *
-
-	* 503, akamai
+	⁴ 404
 
 
-	Fully covered domains:
+	^buzzfeed.com: Refused
 
-		- s.buzzfed.com *
 
-	* → buzzfeed-static.s3.amazonaws.com
+	Insecure cookies are set for these domains:
+
+		- .buzzfeed.com
 
 -->
-<ruleset name="BuzzFeed (broken)" default_off="Redirect loops">
+<ruleset name="BuzzFeed.com (partial)">
 
-	<target host="*.buzzfed.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="img.buzzfeed.com" />
+	<target host="s3-ak.buzzfeed.com" />
+	<target host="webappstatic.buzzfeed.com" />
+	<target host="www.buzzfeed.com" />
+
+	<!--	Complications:
+				-->
 	<target host="buzzfeed.com" />
-	<target host="*.buzzfeed.com" />
 
 
-	<securecookie host="^www\.buzzfeed\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.buzzfeed\.com$" name="^(?:bf-browser-language|bf-geo-country)$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?buzzfeed\.com/"
-		to="https://$1buzzfeed.com/" />
+	<rule from="^http://buzzfeed\.com/"
+		to="https://www.buzzfeed.com/" />
 
-	<rule from="^http://s(?:3-ak|3-ec)?\.buzzfee?d\.com/"
-		to="https://buzzfeed-static.s3.amazonaws.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

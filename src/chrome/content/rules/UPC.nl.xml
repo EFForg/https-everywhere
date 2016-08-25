@@ -1,34 +1,61 @@
 <!--
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *upc.nl:
 
-		- assets	(refused)
+		- assets ʳ
+
+	ʳ Refused
 
 
-	Fully covered subdomains:
+	Problematic hosts in *upc.nl:
 
-		- (www.)
-		- business
-		- preprod.business
-		- grootzakelijk
-		- m
-		- tvgids
-		- overupc
-		- service
-		- upcmail
-		- vragen
-		- preprod.www
+		- business ᵐ
+		- preprod.business ᵉ
+		- m ᵉ
+		- overupc ᵐ
+		- tvgids ᵉ
+		- preprod.www ᵉ
+
+	ᵉ Expired
+	ᵐ Mismatched
 
 -->
-<ruleset name="UPC">
+<ruleset name="UPC.nl (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="upc.nl" />
-	<target host="*.upc.nl" />
+	<target host="grootzakelijk.upc.nl" />
+	<target host="service.upc.nl" />
+	<target host="upcmail.upc.nl" />
+	<target host="vragen.upc.nl" />
+	<target host="www.upc.nl" />
+
+	<!--	Complications:
+				-->
+	<target host="business.upc.nl" />
+	<target host="overupc.upc.nl" />
 
 
-	<securecookie host="^(?:service|upcmail|vragen|www)?\.upc\.nl$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://((?:business|preprod\.(?:business|www)|grootzakelijk|m|tvgids|overupc|service|upcmail|vragen|www)\.)?upc\.nl/"
-		to="https://$1upc.nl/" />
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://business\.upc\.nl/+"
+		to="https://www.upcbusiness.nl/" />
+
+		<test url="http://business.upc.nl/index.php" />
+
+	<!--	Redirect drops forward slash
+		and path, but not args:
+					-->
+	<rule from="^http://overupc\.upc\.nl/[^?]*"
+		to="https://www.ziggo.nl/klantenservice/administratief/service/accessoires-shop/" />
+
+		<test url="http://overupc.upc.nl/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

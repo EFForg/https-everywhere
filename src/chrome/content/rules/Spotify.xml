@@ -1,5 +1,7 @@
 <!--
-	For problematic rules, see Spotify-problematic.xml.
+	Other Spotify rulesets:
+
+		- SCDN.co.xml
 
 
 	CDN buckets:
@@ -8,7 +10,7 @@
 
 		- d1clcicqv97n4s.cloudfront.net
 
-			- download
+			- download.spotify.com
 
 		- d2b1xqaw2ss8na.cloudfront.net
 
@@ -22,27 +24,11 @@
 		- spotify.i.lithium.com
 
 
-	Problematic domains:
+	Nonfunctional hosts in *spotify.com:
 
-		- cf.scdn.co			(cloudfront)
-		- origin.scdn.co		(mismatched, CN: *.spotify.com)
-		- charts.spotify.com		(shows developer.spotify.com)
+		- charts *
 
-
-	Fully covered domains:
-
-		- cf.scdn.co	(→ d2c87l0yth4zbw.cloudfront.net)
-
-		- spotify.com subdomains:
-
-			- (www.)
-			- community
-			- developer
-			- download	(→ d1clcicqv97n4s.cloudfront.net)
-			- embed
-			- open
-			- play
-			- support
+	* Sshows developer.spotify.com
 
 
 	Mixed content:
@@ -51,9 +37,9 @@
 
 			- community *
 			- www.airplane-pictures.net **
-			- labs **			(mixed content)
-			- news *			(mixed content)
-			- press *			(mixed content)
+			- labs **
+			- news *
+			- press *
 
 		- Web bugs on community from files.quizsnack.com *
 
@@ -61,23 +47,34 @@
 	** Unsecurable
 
 -->
-<ruleset name="Spotify (partial)">
+<ruleset name="Spotify.com (partial)">
 
-	<target host="cf.scdn.co" />
+	<!--	Direct rewrites:
+				-->
 	<target host="spotify.com" />
-	<target host="*.spotify.com" />
+	<target host="community.spotify.com" />
+	<target host="developer.spotify.com" />
+	<target host="embed.spotify.com" />
+	<target host="news.spotify.com" />
+	<target host="labs.spotify.com" />
+	<target host="open.spotify.com" />
+	<target host="play.spotify.com" />
+	<target host="press.spotify.com" />
+	<target host="support.spotify.com" />
+	<target host="www.spotify.com" />
+
+	<!--	Complications:
+				-->
+	<target host="download.spotify.com" />
 
 
-	<securecookie host="^(?:community|\.developer|\.?embed|www)?\.spotify\.com$" name=".+" />
+	<securecookie host="." name="." />
 
-
-	<rule from="^http://cf\.scdn\.co/"
-		to="https://d2c87l0yth4zbw.cloudfront.net/" />
-
-	<rule from="^http://((?:community|developer|embed|news|labs|open|play|press|support|www)\.)?spotify\.com/"
-		to="https://$1spotify.com/" />
 
 	<rule from="^http://download\.spotify\.com/"
 		to="https://d1clcicqv97n4s.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,87 @@
+<!--
+	Cherwell District Council
+
+	For rules covering resources which do not secure
+	mixed content, see cherwell.gov.uk-resources.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *cherwell.gov.uk:
+
+		- modgov ᵈ
+		- npa ᵈ
+		- www.publicaccess ᵈ
+		- your ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *cherwell.gov.uk:
+
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	www.cherwell.gov.uk: Pages redirect to http
+
+	^cherwell.gov.uk does not exist.
+
+-->
+<ruleset name="Cherwell.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="icm.cherwell.gov.uk" />
+	<target host="www.cherwell.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://www\.cherwell\.gov\.uk/index\.cfm" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="http://www\.cherwell\.gov\.uk/(?!/*(?:css/|images/|media\.cfm|media/))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="http://www\.cherwell\.gov\.uk/(?!/*media\.cfm)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.cherwell.gov.uk/index.cfm" />
+			<test url="http://www.cherwell.gov.uk/index.cfm?articleid=10715" />
+			<!--
+			<test url="http://www.cherwell.gov.uk/index.cfm?articleid=4" />
+			<test url="http://www.cherwell.gov.uk/index.cfm?articleid=8063" />
+			<test url="http://www.cherwell.gov.uk/index.cfm?articleid=8932" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+
+			<test url="http://www.cherwell.gov.uk/css/layout0/cherwelldc/smartfaqquestion.css" />
+			<test url="http://www.cherwell.gov.uk/images/cherwelldc/common/corners.gif" />
+			-->
+			<test url="http://www.cherwell.gov.uk/media.cfm?mediaid=14310" />
+			<!--
+			<test url="http://www.cherwell.gov.uk/media/homeicon1/t/b/street_light.png" />
+			-->
+
+	<!--	Complications:
+				-->
+	<target host="consult.cherwell.gov.uk" />
+
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http://consult\.cherwell\.gov\.uk/"
+		to="https://cherwell-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

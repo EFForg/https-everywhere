@@ -1,0 +1,61 @@
+<!--
+	Taunton Deane Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *tauntondeane.gov.uk:
+
+		- consultldf ᵐ
+		- www *
+
+	* >= 1 path differs from http
+	ᵐ Mismatched
+
+
+	These altnames do not exist:
+
+		- tauntondeane.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- consultldf.tauntondeane.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Taunton Deane.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="www.tauntondeane.gov.uk" /-->
+	<target host="www1.tauntondeane.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consultldf.tauntondeane.gov.uk" />
+
+		<!--	Differs from http:
+						-->
+		<!--test url="http://www.tauntondeane.gov.uk/tourism" /-->
+
+		<!--	Does not differ:
+					-->
+		<!--test url="http://www.tauntondeane.gov.uk/irj/public" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consultldf\.tauntondeane\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consultldf\.tauntondeane\.gov\.uk/"
+		to="https://tauntondeane-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

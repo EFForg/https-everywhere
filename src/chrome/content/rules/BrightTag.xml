@@ -40,13 +40,18 @@
 	* Included on 3rd-party websites
 
 
-	Insecure coookies are set for these domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
+		- s.thebrighttag.com
 		- .s.thebrighttag.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="BrightTag (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="api.thebrighttag.com" />
 	<target host="control.thebrighttag.com" />
 	<target host="s.thebrighttag.com" />
@@ -59,12 +64,18 @@
 	<target host="a.s.thebrighttag.com" />
 	<target host="b.s.thebrighttag.com" />
 
+		<!--	Set cookie without Secure:
+							-->
+		<test url="http://s.thebrighttag.com/csx?tp=" />
+		<!--test url="http://s.thebrighttag.com/iframe?c=" /-->
+
 
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^\.s\.thebrighttag\.com$" name="^bt3$" /-->
+	<!--securecookie host="^s\.thebrighttag\.com$" name="^btpdb\.[\w.]+$" /-->
 
-	<securecookie host="^(?:\.?control|\.s)\.thebrighttag\.com$" name=".+" />
+	<securecookie host="^(?!\.thebrighttag\.com$)." name="." />
 
 
 	<rule from="^http://[ab]\.s\.thebrighttag\.com/"

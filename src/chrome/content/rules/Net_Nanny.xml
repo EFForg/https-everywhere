@@ -1,13 +1,27 @@
-<ruleset name="Net Nanny">
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.netnanny.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Net Nanny.com">
 
 	<target host="netnanny.com" />
+	<target host="admin.netnanny.com" />
 	<target host="www.netnanny.com" />
 
 
-	<securecookie host="^(?:www\.)?netnanny\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.netnanny\.com$" name="^(?:PHPSESSID|mid|pid)$" /-->
+
+	<securecookie host="^\." name="_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?netnanny\.com/"
-		to="https://$1netnanny.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

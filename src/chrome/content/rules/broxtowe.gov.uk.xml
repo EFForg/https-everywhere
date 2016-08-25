@@ -1,0 +1,102 @@
+<!--
+	Broxtowe Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *broxtowe.gov.uk:
+
+		- elections ᵃ
+		- love ᶠ
+		- planning ᵃ
+
+	ᵃ Shows another domain
+	ᶠ Handshake fails
+
+
+	Partially covered hosts in *broxtowe.gov.uk:
+
+		- (www.)? ʰ
+		- m ʰ
+
+	ʰ Some pages redirects to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- broxtowe.gov.uk
+		- m.broxtowe.gov.uk
+		- www.broxtowe.gov.uk
+
+-->
+<ruleset name="Broxtowe.gov.uk (partial)">
+
+	<target host="broxtowe.gov.uk" />
+	<target host="leisurebookings.broxtowe.gov.uk" />
+	<target host="m.broxtowe.gov.uk" />
+	<target host="selfserve.broxtowe.gov.uk" />
+	<target host="www.broxtowe.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?broxtowe\.gov\.uk/index\.aspx\?articleid=(?:1|15367|15427|205|8330)$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?broxtowe\.gov\.uk/(?!/*(?:CHttpHandler\.ashx|css/|images/|index\.aspx\?(?:.*&amp;)?articleid=6(?:$|&amp;)|media/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://broxtowe.gov.uk/aboutus" />
+			<test url="http://broxtowe.gov.uk/consultations" />
+			<test url="http://broxtowe.gov.uk/inclusion" />
+			<test url="http://broxtowe.gov.uk/index.aspx?articleid=1" />
+			<test url="http://broxtowe.gov.uk/index.aspx?articleid=15367" />
+			<test url="http://www.broxtowe.gov.uk/index.aspx?articleid=15427" />
+			<test url="http://www.broxtowe.gov.uk/index.aspx?articleid=205" />
+			<test url="http://www.broxtowe.gov.uk/index.aspx?articleid=8330" />
+			<test url="http://www.broxtowe.gov.uk/mediation" />
+			<test url="http://www.broxtowe.gov.uk/payments" />
+
+			<!--	-ve:
+					-->
+			<test url="http://broxtowe.gov.uk/CHttpHandler.ashx?id=32923" />
+			<test url="http://broxtowe.gov.uk/css/broxtowe/stylemedia.css" />
+			<test url="http://broxtowe.gov.uk/images/broxtowe/common/socialmedia/facebook-logo.jpg" />
+			<test url="http://www.broxtowe.gov.uk/media/image/8/j/blue_information_sign_small.jpg" />
+			<test url="http://www.broxtowe.gov.uk/index.aspx?articleid=6" />
+			<test url="http://www.broxtowe.gov.uk/index.aspx?articleid=6&amp;returnarticleid=0&amp;action=newregistration" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://m\.broxtowe\.gov\.uk/index\.aspx\?articleid=(?:11414|11420|11425|7140)$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://m\.broxtowe\.gov\.uk/(?!/*media/|.+/(?:cs|image)s/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://m.broxtowe.gov.uk/index.aspx?articleid=11414" />
+			<test url="http://m.broxtowe.gov.uk/index.aspx?articleid=11420" />
+			<test url="http://m.broxtowe.gov.uk/index.aspx?articleid=11425" />
+			<test url="http://m.broxtowe.gov.uk/index.aspx?articleid=7140" />
+			<test url="http://m.broxtowe.gov.uk/index.aspx?articleid=7140&amp;sendtoid=2878&amp;formid=191977" />
+
+			<!--	-ve:
+					-->
+			<test url="http://m.broxtowe.gov.uk/images/media/pdficon.gif" />
+			<test url="http://m.broxtowe.gov.uk/broxtowemobile/images/toplogo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:m\.|www\.)?broxtowe\.gov\.uk$" name="^(?:ASP\.NET_SessionId|clientvars)$" /-->
+
+	<securecookie host="^[^.bmw]" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

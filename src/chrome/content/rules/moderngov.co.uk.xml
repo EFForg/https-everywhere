@@ -1,0 +1,160 @@
+<!--
+	Nonfunctional hosts in *moderngov.co.uk:
+
+		- ^ ᶠ *
+		- aylesburyvale ⁴
+		- barnsleymbc ⁴
+		- brentwood ⁴
+		- chesterfield ⁴
+		- chichester ⁴
+		- doncaster ⁴
+		- havant ⁴
+		- lga ⁴
+		- merton ⁴
+		- portsmouth ⁴
+		- scambs ⁴
+		- southend ⁴
+		- stalbans ⁴
+		- surreyheath ⁴
+		- tameside ⁴
+		- watford ⁴
+		- westminster ⁴
+		- wokingham ⁴
+
+	* Differs from www.moderngov.co.uk
+	⁴ 404
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *moderngov.co.uk:
+
+		- wolverhampton ˣ
+		- worcestershire ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Partially covered hosts in *moderngov.co.uk:
+
+		- hastings ʰ
+		- rbwm ʰ
+		- rutlandcounty ʰ
+		- sheffielddemocracy ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- (account_vhost).moderngov.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- wolverhampton from www.wolverhampton.gov.uk ˢ
+			- worcestershire from e-services.worcestershire.gov.uk
+
+		- Images, on:
+
+			- wolverhampton from www.wolverhampton.gov.uk ˢ
+			- worcestershire from e-services.worcestershire.gov.uk
+			- www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Moderngov.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.moderngov.co.uk" />
+
+	<!--	(Account vhosts:)
+				-->
+	<target host="barnet.moderngov.co.uk" />
+	<target host="bradford.moderngov.co.uk" />
+	<target host="cardiff.moderngov.co.uk" />
+	<target host="copeland.moderngov.co.uk" />
+	<target host="gwh.moderngov.co.uk" />
+	<target host="hastings.moderngov.co.uk" />
+	<target host="lincolnshire.moderngov.co.uk" />
+	<target host="nkdc.moderngov.co.uk" />
+	<target host="powys.moderngov.co.uk" />
+	<target host="rbwm.moderngov.co.uk" />
+	<target host="rutlandcounty.moderngov.co.uk" />
+	<target host="sheffield.moderngov.co.uk" />
+	<target host="sheffielddemocracy.moderngov.co.uk" />
+	<target host="sutton.moderngov.co.uk" />
+	<target host="walthamforest.moderngov.co.uk" />
+	<!--target host="wolverhampton.moderngov.co.uk" /-->
+	<!--target host="worcestershire.moderngov.co.uk" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:hastings|rbwm|rutlandcounty|sheffielddemocracy)\.moderngov\.co\.uk/(?:ieListDocuments|mgMeetingAttendance|mgPasswordReqst|uuCoverPage)\.aspx" /-->
+		<!--exclusion pattern="^http://(?:hastings|rutlandcounty)\.moderngov\.co\.uk/ieRegisterUser\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:rbwm|sheffielddemocracy)\.moderngov\.co\.uk/(?!/*(?:[Ss]ite[Ss]pecific/|documents/|ie(?:[Ll]ogon|RegisterUser)\.aspx|mgimages/|jquery-ui/|UserData/))" />
+		<exclusion pattern="^http://(?:hastings|rutlandcounty)\.moderngov\.co\.uk/(?!/*(?:[Ss]ite[Ss]pecific/|documents/|ie[Ll]ogon\.aspx|mgimages/|jquery-ui/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://hastings.moderngov.co.uk/ieRegisterUser.aspx" />
+			<test url="http://hastings.moderngov.co.uk/mgPasswordReqst.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/ecCatDisplay.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/ieDocSearch.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/mgCalendarMonthView.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/mgListOutsideBodies.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/mgMemberIndex.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/mgMemberIndexMP.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/mgPasswordReqst.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/ieListDocuments.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/ieRegisterUser.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgDelegatedDecisions.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgMeetingAttendance.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgPasswordReqst.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/mgUserInfo.aspx" />
+			<!--test url="http://rutlandcounty.moderngov.co.uk/uuCoverPage.aspx" /-->
+			<test url="http://sheffielddemocracy.moderngov.co.uk/mgMemberIndex.aspx" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/mgPasswordReqst.aspx" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/uuCoverPage.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://hastings.moderngov.co.uk/SiteSpecific/ssWordStyles.css" />
+			<test url="http://hastings.moderngov.co.uk/ielogon.aspx" />
+			<test url="http://hastings.moderngov.co.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://rbwm.moderngov.co.uk/ieRegisterUser.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/ielogon.aspx" />
+			<test url="http://rbwm.moderngov.co.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://rbwm.moderngov.co.uk/mgimages/left5.gif" />
+			<test url="http://rbwm.moderngov.co.uk/sitespecific/ssMgResponsive.css" />
+			<test url="http://rbwm.moderngov.co.uk/sitespecific/tile_sub.gif" />
+			<test url="http://rutlandcounty.moderngov.co.uk/SiteSpecific/1.gif" />
+			<test url="http://rutlandcounty.moderngov.co.uk/SiteSpecific/gm_sidebar_rh.css" />
+			<test url="http://rutlandcounty.moderngov.co.uk/ielogon.aspx" />
+			<test url="http://rutlandcounty.moderngov.co.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/SiteSpecific/bg-snv-parent.gif" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/UserData/8/4/1/Info00000148/smallpic.jpg" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/ieRegisterUser.aspx" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/ielogon.aspx" />
+			<test url="http://sheffielddemocracy.moderngov.co.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(account_vhost)\.moderngov\.co\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!(?:hastings|rbwm|rutlandcounty|sheffielddemocracy)\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

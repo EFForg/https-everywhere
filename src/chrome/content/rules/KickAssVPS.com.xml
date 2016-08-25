@@ -1,15 +1,42 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://kickassvps.com/ => https://kickassvps.com/: (60, 'SSL certificate problem: certificate has expired')
+	Nonfunctional hosts in *kickassvps.com:
+
+		- manage ᵇ
+		- www ʰ
+
+	ᵇ Shows default page
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- clients.kickassvps.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="KickAssVPS.com" platform="mixedcontent" default_off='failed ruleset test'>
+<ruleset name="KickAssVPS.com (partial)">
 
-	<target host="kickassvps.com" />
-	<target host="*.kickassvps.com" />
+	<target host="clients.kickassvps.com" />
 
-	<securecookie host="^manage\.kickassvps\.com$" name=".+" />
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.kickassvps\.com/(?:$|assets/|favicon\.ico)" /-->
 
-	<rule from="^http://(manage\.|www\.)?kickassvps\.com/"
-          to="https://$1kickassvps.com/" />
+			<!--	+ve:
+					-->
+			<!--test url="http://www.kickassvps.com/assets/images/buttons-bg.png" /-->
+			<!--test url="http://www.kickassvps.com/favicon.ico" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^clients\.kickassvps\.com$" name="^WHMCS\w+$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

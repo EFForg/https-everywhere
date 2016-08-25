@@ -1,0 +1,74 @@
+<!--
+	Broadland District Council
+
+	For rules causing false/broken MCB, see broadland.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *broadland.gov.uk:
+
+		- search *
+
+	* Redirects to http://search3.openobjects.com
+
+
+	Problematic hosts in *broadland.gov.uk:
+
+		- (www.)? ᵐ
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- consult.broadland.gov.uk
+		- secure.broadland.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on secure from www.broadland.gov.uk ˢ
+		- Images on secure from www.broadland.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Broadland.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="secure.broadland.gov.uk" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="broadland.gov.uk" /-->
+	<target host="consult.broadland.gov.uk" />
+	<!--target host="www.broadland.gov.uk" /-->
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://secure.broadland.gov.uk/Northgate/PlanningExplorer/GeneralSearch.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult.broadland.gov.uk$" name="^ServerID$" /-->
+	<!--securecookie host="^secure.broadland.gov.uk$" name="^(?:ASP\.NET_SessionId|MVMSession)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://(?:www\.)?broadland\.gov\.uk/"
+		to="https://secure.broadland.gov.uk/" /-->
+
+	<rule from="^http://consult\.broadland\.gov\.uk/"
+		to="https://broadland-consult.objective.co.uk/" />
+
+	<!--rule from="^http:"
+		to="https:" /-->
+
+</ruleset>

@@ -1,0 +1,122 @@
+<!--
+	For rules causing false/broken MCB, see parliament.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *parliament.uk:
+
+		- qna.files ⁴
+		- www.data ᵈ
+		- (www.)?lordspublications ᶠ
+		- archive.scottish ⁴
+
+	⁴ 404
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *parliament.uk:
+
+		- ^ ʳ
+		- blog.data ᵐ
+		- www.publications ˣ
+		- researchbriefings ˣ
+		- epetitions.scottish ᶠ
+		- www.scottish ᵐ
+		- shop ᵐ
+
+	ᶠ Handshake fails, preemptable redirect
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .blog.data.parliament.uk
+		- www.publications.parliament.uk
+		- visit.parliament.uk
+		- www.parliament.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www.publications, researchbriefings from www.parliament.uk ˢ
+
+		- Images, on:
+
+			- researchbriefings, services, www from assets3.parliament.uk ˢ
+			- www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Parliament.uk (partial)">
+
+	<target host="assets3.parliament.uk" />
+	<target host="hansard.parliament.uk" />
+	<target host="petition.parliament.uk" />
+	<!--target host="www.publications.parliament.uk" /-->
+	<!--target host="researchbriefings.parliament.uk" /-->
+	<target host="services.parliament.uk" />
+	<target host="www.shop.parliament.uk" />
+	<target host="subscriptions.parliament.uk" />
+	<target host="visit.parliament.uk" />
+	<target host="www.parliament.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://services.parliament.uk/bills/" />
+		<test url="http://visit.parliament.uk/HouseofParliament/shop/ViewItems.aspx" />
+
+		<!--	Aforementioned mixed css:
+							-->
+		<!--test url="http://www.parliament.uk/styles/hansard.css" /-->
+
+	<!--	Complications:
+				-->
+	<target host="parliament.uk" />
+	<target host="epetitions.scottish.parliament.uk" />
+	<target host="www.scottish.parliament.uk" />
+	<target host="shop.parliament.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blog\.data\.parliament\.uk$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^www\.publications\.parliament\.uk$" name="^ASPSESSIONID[A-z]{8}$" /-->
+	<!--securecookie host="^visit\.parliament\.uk$" name="^GTSASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.parliament\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid$|_gat?$|_gat_|cf_clearance$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(shop\.)?parliament\.uk/"
+		to="https://www.$1parliament.uk/" />
+
+	<!--	Redirect keeps path, but not forward slash nor args:
+									-->
+	<rule from="^http://epetitions\.scottish\.parliament\.uk/+([^?]*).*"
+		to="https://www.parliament.scot/gettinginvolved/petitions/$1" />
+
+		<test url="http://epetitions.scottish.parliament.uk/default.asp" />
+		<test url="http://epetitions.scottish.parliament.uk/list_petitions.asp" />
+		<test url="http://epetitions.scottish.parliament.uk/view_petition.asp?PetitionID=88" />
+		<test url="http://epetitions.scottish.parliament.uk/view_petition.asp?PetitionID=166" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.scottish\.parliament\.uk/+"
+		to="https://www.parliament.scot/" />
+
+		<test url="http://www.scottish.parliament.uk/help/31037.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

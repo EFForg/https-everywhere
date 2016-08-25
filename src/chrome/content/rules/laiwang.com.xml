@@ -1,0 +1,81 @@
+<!--
+	For other Alibaba Group coverage, see Alibaba.xml.
+
+
+	Nonfunctional hosts in *laiwang.com:
+
+		- baron ᵈ
+		- hi ʳ
+		- hicdn ʳ
+		- m ¹
+
+	¹ 501
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *laiwang.com:
+
+		- party ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .laiwang.com
+
+
+	Mixed content:
+
+		- Image, on:
+
+			- pp from pin.aliyun.com ˢ
+			- www from gtms0\d.alicdn.com ˢ
+			- www from i01.lw.aliimg.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Laiwang.com (partial)">
+
+	<target host="laiwang.com" />
+	<target host="pp.laiwang.com" />
+	<target host="wukong.laiwang.com" />
+	<target host="www.laiwang.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.laiwang\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?laiwang\.com/(?!/*(?:favicon\.ico|/event/(?:feed|share)\.htm|qr\.html))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.laiwang.com/default.aspx" />
+			<test url="http://www.laiwang.com/index.htm" />
+			<test url="http://www.laiwang.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.laiwang.com/event/feed.htm?userId=1161842&amp;feedId=217369143" /><!--	mixed images -->
+			<test url="http://www.laiwang.com/event/share.htm?eventId=10370008" /><!--	mixed images -->
+			<test url="http://www.laiwang.com/favicon.ico" />
+			<test url="http://www.laiwang.com/qr.html" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://pp.laiwang.com/reg/recover_pass.htm" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.laiwang\.com$" name="^(?:__last_login_pubid__|__last_loginid__|_fs_|_notice_type_|_pub_last_login_account_|_uid_bind_|_user_name_|JSESSIONID|pubsetmp|setmp|tmp0|umid_timestamp|umid_token)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

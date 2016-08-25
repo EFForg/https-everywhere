@@ -1,0 +1,105 @@
+<!--
+	Lincolnshire County Council
+
+	For rules causing false/broken MCB, see Lincolnshire.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *lincolnshire.gov.uk:
+
+		- culturalcollections *
+		- eplanning ³
+		- parishes ⁴
+		- partners ⁴
+		- row ʳ
+
+	* Redirects to another domain
+	³ 403
+	⁴ 400
+	ʳ Refused
+
+
+	Problematic hosts in *lincolnshire.gov.uk:
+
+		- ^ ⁴
+		- apps ˣ
+
+	⁴ 400
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- apps.lincolnshire.gov.uk
+		- community.lincolnshire.gov.uk
+		- highways.lincolnshire.gov.uk
+		- lccdataexchange.lincolnshire.gov.uk
+		- microsites.lincolnshire.gov.uk
+		- www.lincolnshire.gov.uk
+		- zipapps.lincolnshire.gov.uk
+
+
+	Mixed content:
+
+		- css on apps from aspapps.lincolnshire.gov.uk ˢ
+
+		- Images, on:
+		
+			- apps from aspapps.lincolnshire.gov.uk ˢ
+			- microsites, www from $self ˢ
+
+		- Bug on community from uk.sitestat.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Lincolnshire.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="apps.lincolnshire.gov.uk" /-->
+	<!--target host="aspapps.lincolnshire.gov.uk" /-->
+	<target host="community.lincolnshire.gov.uk" />
+	<target host="jobs.lincolnshire.gov.uk" />
+	<target host="lccdataexchange.lincolnshire.gov.uk" />
+	<target host="microsites.lincolnshire.gov.uk" />
+	<target host="www.lincolnshire.gov.uk" />
+	<target host="zipapps.lincolnshire.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="lincolnshire.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://apps.lincolnshire.gov.uk/TrueTimes/SearchByStopCode.aspx" /-->
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://microsites.lincolnshire.gov.uk/countryside/section.asp?catId=22712" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://www.lincolnshire.gov.uk/central-lincolnshire/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:apps|lccdataexchange)\.lincolnshire\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^community\.lincolnshire\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^highways\.lincolnshire\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^(?:microsites|www)\.lincolnshire\.gov\.uk$" name="^(?:ASP\.NET_SessionId|UserRecentHistory)$" /-->
+	<!--securecookie host="^zipapps\.lincolnshire\.gov\.uk$" name="^(?:ASP\.NET_SessionId|SessinId|eCeremonyPlannerSessionId)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://lincolnshire\.gov\.uk/"
+		to="https://www.lincolnshire.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

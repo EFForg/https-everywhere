@@ -1,0 +1,72 @@
+<!--
+	Elmbridge Borough Council
+
+	For rules causing MCB, see Elmbridge.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *elmbridge.gov.uk:
+
+		- (www.)? ᵈ
+		- edocs ᵈ
+		- emaps ᵃ
+		- images ᵃ
+		- petitions ᵗ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ᵗ Reset
+
+
+	Problematic hosts in *elmbridge.gov.uk:
+
+		- consult ᵐ ˢ
+		- mygov ˣ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- benefits.elmbridge.gov.uk
+		- mygov.elmbridge.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on mygov from www.elmbridge.gov.uk ᵈ
+
+		- Images, on:
+
+			- consult, mygov from images.elmbridge.gov.uk ᵃ
+			- mygov from www.elmbridge.gov.uk ᵈ
+
+		- favicon on mygov from www.elmbridge.gov.uk ᵈ
+
+	ᵃ Unsecurable <= shows another domain
+	ᵈ Unsecurable <= connection dropped
+
+-->
+<ruleset name="Elmbridge.gov.uk (partial)">
+
+	<target host="benefits.elmbridge.gov.uk" />
+	<!--starget host="mygov.elmbridge.gov.uk" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^benefits\.elmbridge\.gov\.uk$" name="^(?:\.ASPXAUTH|ASP\.NET_SessionId$)" /-->
+	<!--securecookie host="^mygov\.elmbridge\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

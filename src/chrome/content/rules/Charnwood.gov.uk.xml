@@ -1,0 +1,75 @@
+<!--
+	Charnwood Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *charnwood.gov.uk:
+
+		- mail ⁴
+		- webmap ³
+
+	³ 403
+	⁴ 504
+
+
+	Problematic hosts in *charnwood.gov.uk:
+
+		- consult ᵐ
+		- www.localplan ᵐ ˢ
+		- my ᵐ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	These altnames don't exist:
+
+		- autodiscover.charnwood.gov.uk
+		- owa.charnwood.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.localplan.charnwood.gov.uk
+		- portal.charnwood.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on my from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Charnwood.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="charnwood.gov.uk" />
+	<target host="portal.charnwood.gov.uk" />
+	<target host="revenuesbenefits.charnwood.gov.uk" />
+	<target host="www.charnwood.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.charnwood.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.localplan\.charnwood\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^portal\.charnwood\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.charnwood\.gov\.uk/"
+		to="https://charnwood-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

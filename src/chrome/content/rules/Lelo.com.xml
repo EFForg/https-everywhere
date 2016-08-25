@@ -1,6 +1,43 @@
+<!--
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .lelo.com
+		- www.lelo.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on rs from leloimg.lelo.netdna-cdn.com
+
+-->
 <ruleset name="Lelo.com">
-        <target host="lelo.com" />
-        <target host="*.lelo.com" />
-        <rule from="^http://lelo\.com/" to="https://lelo.com/"/>
-        <rule from="^http://([^/:@\.]+)\.lelo\.com/" to="https://$1.lelo.com/"/>
+
+	<target host="lelo.com" />
+	<target host="*.lelo.com" />
+
+		<exclusion pattern="^http://(?:[^./]+\.){2,}lelo\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.lelo.com/" />
+			<test url="http://exists.not.lelo.com/" />
+
+		<test url="http://rs.lelo.com/" />
+		<test url="http://www.lelo.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lelo\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.lelo\.com$" name="^SERVERID$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|PHPSESSID$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
 </ruleset>

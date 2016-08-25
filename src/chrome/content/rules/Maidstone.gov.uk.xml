@@ -1,0 +1,68 @@
+<!--
+	Maidstone Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *maidstone.gov.uk:
+
+		- (www.)? ʳ
+		- dynamic ʳ
+		- (www.)?museum ᵈ
+		- pcm ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *maidstone.gov.uk:
+
+		- consult ᵐ
+		- maps ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- consult.maidstone.gov.uk
+		- services.maidstone.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Maidstone.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ecitizen.maidstone.gov.uk" />
+	<target host="self.maidstone.gov.uk" />
+	<target host="services.maidstone.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.maidstone.gov.uk" />
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://services.maidstone.gov.uk/meetings/mgParishCouncilDetailsList.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.maidstone\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^services\.maidstone\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.maidstone\.gov\.uk/"
+		to="https://maidstone-consult.objective.co.uk/" />
+
+		<test url="http://consult.maidstone.gov.uk/portal/ditsfeb16" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

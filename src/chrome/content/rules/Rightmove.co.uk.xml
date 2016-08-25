@@ -1,0 +1,62 @@
+<!--
+	Problematic hosts in *rightmove.co.uk:
+
+		- plc *
+		
+	* Cloudfront/mismatched
+
+
+	Mixed content:
+
+		- Bug on www from \d+.fls.doubleclick.net *
+
+	* See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Rightmove.co.uk (partial)">
+
+	<target host="rightmove.co.uk" />
+	<target host="media.rightmove.co.uk" />
+	<target host="www.rightmove.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.rightmove\.co\.uk/(?:$|(?:commercial-property-to-let|estate-agents|feedback/feedback|house-prices|overseas-property|property-for-sale|property-to-rent|rightmoveplc/rightmove-contacts|user/saved-searches)\.html|rmplus/login/login\.action)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.rightmove\.co\.uk/(?!/*(?:favicon\.ico|forgottenPasswordForm\.html|(?:[\w-]+/)?login\.html|ps/|rmplus/login/login\.action))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.rightmove.co.uk/commercial-property-to-let.html" />
+			<test url="http://www.rightmove.co.uk/estate-agents.html" />
+			<test url="http://www.rightmove.co.uk/favicon.ico" />
+			<test url="http://www.rightmove.co.uk/feedback/feedback.html" />
+			<test url="http://www.rightmove.co.uk/house-prices.html" />
+			<test url="http://www.rightmove.co.uk/overseas-property.html" />
+			<test url="http://www.rightmove.co.uk/property-for-sale.html" />
+			<test url="http://www.rightmove.co.uk/property-to-rent.html" />
+			<test url="http://www.rightmove.co.uk/rightmoveplc/rightmove-contacts.html" />
+			<test url="http://www.rightmove.co.uk/user/saved-searches.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.rightmove.co.uk/forgottenPasswordForm.html" />
+			<test url="http://www.rightmove.co.uk/login.html" />
+			<test url="http://www.rightmove.co.uk/overseas-property/login.html/svr/1708?from=%2Foverseas-property.html&amp;hideFromParameterOnRegisterURI=true" />
+			<test url="http://www.rightmove.co.uk/ps/css15343/concat/css_fullsite/homepage.css" />
+			<test url="http://www.rightmove.co.uk/ps/images/fullsite/logos/site_logo_strapless.gif" />
+			<test url="http://www.rightmove.co.uk/rmplus/login/login.action" />
+
+
+	<!--	Tracking cookies:
+					-->
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="^__utm" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

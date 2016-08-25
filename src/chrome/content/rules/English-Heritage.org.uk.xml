@@ -4,30 +4,43 @@
 		- English-Heritage_shop.org.uk.xml
 
 
-	^english-heritage.org.uk doesn't exist.
-
-
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *english-heritage.org.uk:
 
 		- list	(refused)
+		- www (JS http redirect)
+
+
+	^english-heritage.org.uk does not exist.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- www.english-heritage.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Images on www from www *
+		- Images on www from $self ˢ
 
-	* Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="English-Heritage.org.uk (partial)">
+<ruleset name="English-Heritage.org.uk (partial)" default_off="js redirect to http">
 
 	<target host="www.english-heritage.org.uk" />
 
 
-	<securecookie host="^www\.english-heritage\.org\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.english-heritage\.org\.uk$" name="^(?:ASP\.NET_SessionId|ehmob)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://www\.english-heritage\.org\.uk/"
-		to="https://www.english-heritage.org.uk/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

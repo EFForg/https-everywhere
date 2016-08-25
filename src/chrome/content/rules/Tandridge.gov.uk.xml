@@ -1,0 +1,73 @@
+<!--
+	Tandridge District Council
+
+	For rules causing MCB, see Tandridge.gov.uk-mixedcontent.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *tandridge.gov.uk:
+
+		- www.councillors ᵈ
+		- maps ³
+		- planning ᵈ
+
+	³ 403
+	ᵈ Dropped
+
+
+	Problematic hosts in *tandridge.gov.uk:
+
+		- (www.)? ˣ
+		- consult ᵐ
+		- m ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- consult.tandridge.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on (www.)? from maps.tandridge.gov.uk ³
+		- Image on (www.)? from www.siteimprove.com ˢ
+		- Bug on (www.)? from www.logo-serve2.co.uk ʳ
+
+	³ Unsecurable <= 403
+	ʳ Unsecurable <= refused
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Tandridge.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="tandridge.gov.uk" /-->
+	<target host="tdcws01.tandridge.gov.uk" />
+	<!--target host="www.tandridge.gov.uk" /-->
+
+	<!--	Complications:
+				-->
+	<target host="consult.tandridge.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.tandridge\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.tandridge\.gov\.uk/"
+		to="https://tandridge-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

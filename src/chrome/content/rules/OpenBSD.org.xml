@@ -1,17 +1,36 @@
 <!--
 	Nonfunctional hosts in *openbsd.org:
 
-		- (www.) *
-		- cvsweb *
-		- https *
+		- cvsweb ²
+		- ftp, ftp.eu, ftp2.eu, &c ²
+		- man ²
 
-	* Refused
+	² Refused
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- firmware ¹
+		- portroach ¹
+
+	¹ Mismatched
 
 -->
-<ruleset name="OpenBSD.org (partial)" default_off="connection refusd">
+<ruleset name="OpenBSD.org (partial)">
 
-	<target host="https.openbsd.org" />
+	<!--	Direct rewrites:
+				-->
+	<target host="lists.openbsd.org" />
+	<target host="www.openbsd.org" />
 
+	<!--	Complications:
+				-->
+	<target host="openbsd.org" />
+
+
+	<rule from="^http://openbsd\.org/"
+		to="https://www.openbsd.org/" />
 
 	<rule from="^http:"
 		to="https:" />

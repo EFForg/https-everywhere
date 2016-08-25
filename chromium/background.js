@@ -22,9 +22,8 @@ function loadExtensionFile(url, returnType) {
 
 
 // Rules are loaded here
-var all_rules = new RuleSets(navigator.userAgent, LRUCache, localStorage);
-var rule_list = 'rules/default.rulesets';
-all_rules.addFromXml(loadExtensionFile(rule_list, 'xml'));
+var all_rules = new RuleSets(localStorage);
+all_rules.addFromXml(loadExtensionFile('rules/default.rulesets', 'xml'));
 
 
 var USER_RULE_KEY = 'userRules';
@@ -37,22 +36,34 @@ var switchPlannerEnabledFor = {};
 // rw / nrw stand for "rewritten" versus "not rewritten"
 var switchPlannerInfo = {};
 
+// Is HTTPSe enabled, or has it been manually disabled by the user?
+var isExtensionEnabled = true;
+
 // Load prefs about whether http nowhere is on. Structure is:
 //  { httpNowhere: true/false }
 var httpNowhereOn = false;
-chrome.storage.sync.get({httpNowhere: false}, function(item) {
+storage.get({httpNowhere: false}, function(item) {
   httpNowhereOn = item.httpNowhere;
-  setIconColor();
+  updateState();
 });
 chrome.storage.onChanged.addListener(function(changes, areaName) {
-  if (areaName === 'sync') {
+  if (areaName === 'sync' || areaName === 'local') {
     for (var key in changes) {
       if (key === 'httpNowhere') {
         httpNowhereOn = changes[key].newValue;
-        setIconColor();
+        updateState();
       }
     }
   }
+});
+chrome.tabs.onActivated.addListener(function() {
+  updateState();
+});
+chrome.windows.onFocusChanged.addListener(function() {
+  updateState();
+});
+chrome.webNavigation.onCompleted.addListener(function() {
+  updateState();
 });
 
 /**
@@ -84,26 +95,35 @@ loadStoredUserRules();
 
 /**
  * Set the icon color correctly
- * Depending on http-nowhere it should be red/default
+ * inactive: extension is enabled, but no rules were triggered on this page.
+ * blocking: extension is in "block all HTTP requests" mode.
+ * active: extension is enabled and rewrote URLs on this page.
+ * disabled: extension is disabled from the popup menu.
  */
-var setIconColor = function() {
-  var newIconPath = httpNowhereOn ? './icon38-red.png' : './icon38.png';
-  chrome.browserAction.setIcon({
-    path: newIconPath
+var updateState = function() {
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    if (!tabs || tabs.length === 0) {
+      return;
+    }
+    var applied = activeRulesets.getRulesets(tabs[0].id)
+    var iconState = "inactive";
+    if (!isExtensionEnabled) {
+      iconState = "disabled";
+    } else if (httpNowhereOn) {
+      iconState = "blocking";
+    } else if (applied) {
+      iconState = "active";
+    }
+    chrome.browserAction.setIcon({
+      path: {
+        "38": "icons/icon-" + iconState + "-38.png"
+      }
+    });
+    chrome.browserAction.setTitle({
+      title: "HTTPS Everywhere (" + iconState + ")"
+    });
   });
-};
-
-/*
-for (var v in localStorage) {
-  log(DBUG, "localStorage["+v+"]: "+localStorage[v]);
 }
-
-var rs = all_rules.potentiallyApplicableRulesets("www.google.com");
-for (r in rs) {
-  log(DBUG, rs[r].name +": "+ rs[r].active);
-  log(DBUG, rs[r].name +": "+ rs[r].default_state);
-}
-*/
 
 /**
  * Adds a new user rule
@@ -164,8 +184,8 @@ AppliedRulesets.prototype = {
 // FIXME: change this name
 var activeRulesets = new AppliedRulesets();
 
-var urlBlacklist = {};
-var domainBlacklist = {};
+var urlBlacklist = new Set();
+var domainBlacklist = new Set();
 
 // redirect counter workaround
 // TODO: Remove this code if they ever give us a real counter
@@ -177,6 +197,11 @@ var redirectCounter = {};
  * @param details of the handler, see Chrome doc
  * */
 function onBeforeRequest(details) {
+  // If HTTPSe has been disabled by the user, return immediately.
+  if (!isExtensionEnabled) {
+    return;
+  }
+
   var uri = document.createElement('a');
   uri.href = details.url;
 
@@ -207,7 +232,7 @@ function onBeforeRequest(details) {
     log(INFO, "Original url " + details.url + 
         " changed before processing to " + canonical_url);
   }
-  if (canonical_url in urlBlacklist) {
+  if (urlBlacklist.has(canonical_url)) {
     return {cancel: shouldCancel};
   }
 
@@ -215,25 +240,25 @@ function onBeforeRequest(details) {
     activeRulesets.removeTab(details.tabId);
   }
 
-  var rs = all_rules.potentiallyApplicableRulesets(uri.hostname);
+  var potentiallyApplicable = all_rules.potentiallyApplicableRulesets(uri.hostname);
   // If no rulesets could apply, let's get out of here!
-  if (rs.length === 0) { return {cancel: shouldCancel}; }
+  if (potentiallyApplicable.size === 0) { return {cancel: shouldCancel}; }
 
   if (redirectCounter[details.requestId] >= 8) {
     log(NOTE, "Redirect counter hit for " + canonical_url);
-    urlBlacklist[canonical_url] = true;
+    urlBlacklist.add(canonical_url);
     var hostname = uri.hostname;
-    domainBlacklist[hostname] = true;
+    domainBlacklist.add(hostname);
     log(WARN, "Domain blacklisted " + hostname);
     return {cancel: shouldCancel};
   }
 
   var newuristr = null;
 
-  for(var i = 0; i < rs.length; ++i) {
-    activeRulesets.addRulesetToTab(details.tabId, rs[i]);
-    if (rs[i].active && !newuristr) {
-      newuristr = rs[i].apply(canonical_url);
+  for (let ruleset of potentiallyApplicable) {
+    activeRulesets.addRulesetToTab(details.tabId, ruleset);
+    if (ruleset.active && !newuristr) {
+      newuristr = ruleset.apply(canonical_url);
     }
   }
 
@@ -459,8 +484,8 @@ function switchPlannerDetailsHtmlSection(tab_id, rewritten) {
  * @param changeInfo Cookie changed info, see Chrome doc
  * */
 function onCookieChanged(changeInfo) {
-  if (!changeInfo.removed && !changeInfo.cookie.secure) {
-    if (all_rules.shouldSecureCookie(changeInfo.cookie, false)) {
+  if (!changeInfo.removed && !changeInfo.cookie.secure && isExtensionEnabled) {
+    if (all_rules.shouldSecureCookie(changeInfo.cookie)) {
       var cookie = {name:changeInfo.cookie.name,
                     value:changeInfo.cookie.value,
                     path:changeInfo.cookie.path,

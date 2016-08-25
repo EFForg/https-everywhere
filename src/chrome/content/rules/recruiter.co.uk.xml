@@ -1,0 +1,44 @@
+<!--
+	Nonfunctional hosts in *recruiter.co.uk:
+
+		- (www.)? ʰ
+		- awards ᵈ
+
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *recruiter.co.uk:
+
+		- jobs ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- subs.recruiter.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Recruiter.co.uk (partial)">
+
+	<target host="subs.recruiter.co.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://subs.recruiter.co.uk/registrationselection" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^subs\.recruiter\.co\.uk$" name="^(?:__AntiXsrfToken|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

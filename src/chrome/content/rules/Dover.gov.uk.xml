@@ -1,0 +1,63 @@
+<!--
+	Dover District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *dover.gov.uk:
+
+		- (www.)? ⁴
+		- www.mapping ⁴
+
+	⁴ 404
+
+
+	Problematic hosts in *dover.gov.uk:
+
+		- moderngov ˣ
+
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .forms.dover.gov.uk
+		- moderngov.dover.gov.uk
+		- secure.dover.gov.uk
+
+
+	Mixed content:
+
+		- css on moderngov from ^dover.gov.uk ⁴
+		- Images on moderngov from ^dover.gov.uk ⁴
+
+	⁴ Unsecurable <= 404
+
+-->
+<ruleset name="Dover.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="forms.dover.gov.uk" />
+	<!--target host="moderngov.dover.gov.uk" /-->
+	<target host="parking.dover.gov.uk" />
+	<target host="secure.dover.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<test url="http://secure.dover.gov.uk/streetcollections/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forms\.dover\.gov\.uk$" name="^TestCookie$" /-->
+	<!--securecookie host="^(?:moderngov|secure)\.dover\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\.forms\." name="." />
+	<securecookie host="^\w" name="" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

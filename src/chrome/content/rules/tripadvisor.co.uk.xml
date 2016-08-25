@@ -1,0 +1,51 @@
+<!--
+	For other TripAdvisor coverage, see TripAdvisor.xml.
+
+
+	Problematic hosts in *tripadvisor.co.uk:
+
+		- help ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .tripadvisor.co.uk
+		- .www.tripadvisor.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="TripAdvisor.co.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="tripadvisor.co.uk" />
+	<target host="www.tripadvisor.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="help.tripadvisor.co.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tripadvisor\.co\.uk$" name="^(?:CM|ServerPool|TAReturnTo|TASession|TATravelInfo|TAUD|TAUnique)$" /-->
+	<!--securecookie host="^\.www\.tripadvisor\.co\.uk$" name="^TASSK$" /-->
+
+	<securecookie host="^\." name="^(?:ServerPool|TAUnique)$" />
+	<securecookie host="^\.www\." name="." />
+
+
+	<!--	Redirect keeps path and args, but not forward slash:
+									-->
+	<rule from="^http://help\.tripadvisor\.co\.uk/+"
+		to="https://www.tripadvisorsupport.com/hc/en-gb/" />
+
+		<test url="http://help.tripadvisor.co.uk/categories/200056887-Guidelines" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

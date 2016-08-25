@@ -1,0 +1,85 @@
+<!--
+	Other Hobsons rulesets:
+
+		- starfishsolutions.com.xml
+
+
+	Nonfunctional hosts in *hobsons.com:
+
+		- areyouready ᵈ
+		- ems ²
+		- starfish ʳ
+
+	² 200 "Site Not Found"
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *hobsons.com:
+
+		- ^ ᵐ
+		- emsinfo ᵐ
+		- engineering ᵐ
+		- go ᵐ
+		- apps.go ᵐ
+		- images.go ᵐ
+		- www.postgrad ᵐ
+		- radius ᵐ
+		- www ᵀ
+
+	ᵀ Blocks Tor users
+	ᵐ Mismatched
+	² 200 "Site Not Found"
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .go.hobsons.com
+		- www.hobsons.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on radius from static1.squarespace.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Hobsons.com (partial)" default_off="needs clearnet testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.hobsons.com" />
+
+	<!--	Complications:
+				-->
+	<target host="hobsons.com" />
+	<target host="www.postgrad.hobsons.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.go\.hobsons\.com$" name="^ELOQUA$" /-->
+	<!--securecookie host="^www\.hobsons\.com$" name="^(?:AWSELB|PHPSESSID)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hobsons\.com/"
+		to="https://www.hobsons.com/" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://www\.postgrad\.hobsons\.com/"
+		to="https://www.postgrad.com/" />
+
+		<test url="http://www.postgrad.hobsons.com/blog" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

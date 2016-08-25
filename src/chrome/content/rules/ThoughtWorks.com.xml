@@ -1,18 +1,27 @@
-<ruleset name="ThoughtWorks.com (partial)">
+<!--
+	Insecure cookies are set for these hosts:
+
+		- info.thoughtworks.com
+		- www.thoughtworks.com
+
+-->
+<ruleset name="ThoughtWorks.com">
 
 	<target host="thoughtworks.com" />
+	<target host="info.thoughtworks.com" />
 	<target host="www.thoughtworks.com" />
-		<!--
-			Redirect to http:
-						-->
-		<!--exclusion pattern="^http://(www\.)?thoughtworks\.com/+($|\?|candy/footer-icons/|favicon\.ico|sites/default/files/styles/|social-impact($|\?))" /-->
-		<!--
-			Exceptions:
+
+
+	<!--	Not secured by server:
 					-->
-		<!--exclusion pattern="^http://(www\.)?thoughtworks\.com/+(?!\d+_grid/css/|css/|imgs/)" /-->
+	<!--securecookie host="info\.thoughtworks\.com" name="^RSMKTO1$" /-->
+	<!--securecookie host="www\.thoughtworks\.com" name="^rack\.session$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^_gat?$" />
 
 
-	<rule from="^http://(www\.)?thoughtworks\.com/(?=\d+_grid/css/|css/|imgs/)"
-		to="https://$1thoughtworks.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

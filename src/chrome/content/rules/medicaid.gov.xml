@@ -1,0 +1,56 @@
+<!--
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *medicaid.gov:
+
+		- www1b ᶠ
+
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *medicaid.gov:
+
+		- (www.)? ᵀ
+		- qa ᵀ
+
+	ᵀ Blocks Tor users
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- public.medicaid.gov
+		- questions.medicaid.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- public from assets.cms.gov
+			- public from ^medicaid.gov
+
+-->
+<ruleset name="Medicaid.gov (partial)">
+
+	<!--target host="medicaid.gov" />	needs clearnet testing -->
+	<target host="public.medicaid.gov" />
+	<!--target host="qa.medicaid.gov" />	needs clearnet testing -->
+	<target host="questions.medicaid.gov" />
+	<!--target host="www.medicaid.gov" />	needs clearnet testing -->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^public.medicaid.gov$" name="^(?:BIGipServer|JSESSIONID$|SPIDERLOGON$)" /-->
+	<!--securecookie host="^questions.medicaid.gov$" name="^(?:PHPSESSID|THE_GOVT)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

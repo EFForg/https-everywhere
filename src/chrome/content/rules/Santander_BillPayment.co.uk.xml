@@ -1,20 +1,36 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://santanderbillpayment.co.uk/ => https://www.santanderbillpayment.co.uk/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
-Fetch error: http://www.santanderbillpayment.co.uk/ => https://www.santanderbillpayment.co.uk/: (28, 'Operation timed out after 0 milliseconds with 0 out of 0 bytes received')
 	For other Santander coverage, see Santander.co.uk.xml.
 
 
-	^: dropped
+	^santanderbillpayment.co.uk: Dropped
+
+
+	STS header includes includeSubdomains
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.santanderbillpayment.co.uk
 
 -->
-<ruleset name="Santander BillPayment.co.uk" default_off='failed ruleset test'>
+<ruleset name="Santander BillPayment.co.uk">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="*.santanderbillpayment.co.uk" />
+
+	<!--	Complications:
+				-->
 	<target host="santanderbillpayment.co.uk" />
-	<target host="www.santanderbillpayment.co.uk" />
+
+		<test url="http://www.santanderbillpayment.co.uk/" />
 
 
-	<securecookie host="^www\.santanderbillpayment\.co\.uk$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.santanderbillpayment\.co\.uk$" name="^BIGipServer" /-->
+
+	<securecookie host="." name="." />
 
 
 	<!--	Redirect drops path but not args:
@@ -22,10 +38,15 @@ Fetch error: http://www.santanderbillpayment.co.uk/ => https://www.santanderbill
 	<rule from="^http://santanderbillpayment\.co\.uk/+\??$"
 		to="https://www.santanderbillpayment.co.uk/" />
 
+		<test url="http://santanderbillpayment.co.uk/?" />
+
 	<rule from="^http://santanderbillpayment\.co\.uk/[^?]*"
 		to="https://www.santanderbillpayment.co.uk/" />
 
-	<rule from="^http://www\.santanderbillpayment\.co\.uk/"
-		to="https://www.santanderbillpayment.co.uk/" />
+		<test url="http://santanderbillpayment.co.uk/default.aspx" />
+		<test url="http://santanderbillpayment.co.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

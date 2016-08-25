@@ -2,78 +2,131 @@
 	CDN buckets:
 
 		- thebodyshop-uk-blog.azurewebsites.net
-
-			- beautyblog
-
 		- www.thebodyshop.co.uk.edgesuite.net
-
-			- a1026.b.akamai.net
-
 		- bodyshop.metafaq.com
 
 
-	Problematic subdomains:
+	Nonfunctional hosts in *thebodyshop.co.uk:
 
-		- ^			(cert only matches secure)
-		- (www.)beautyblog	(some pages redirect to http; mismatched, CN: *.azurewebsites.net)
-		- www			(works, akamai)
+		- (www.)?beautyblog ᵖ
+		- skincareonline ᵃ
 
-
-	These stylesheets reference images relative to self:
-
-		- css/auto-complete.css
-		- css/category.leftnav.css
-		- css/static_content.css
+	ᵃ Shows another domain
+	ᵖ Plaintext reply
 
 
-	These stylesheets reference images relative to root:
+	^thebodyshop.co.uk: Mismatched
+	www.thebodyshop.co.uk: Akamai / mismatched
 
-		- css/bodyshop_reskin.css
-		- css/common/one_column_page.css
-		- css/mediaqueries.css
-		- css/megamenu.css
-		- css/storelocate/common.css
-		- css/storelocate/dynamic_common.css
-		- css/store_locator_search.css
-		- css/style.css
-		- css/style.searchandizing.css
-		- css/style.videopage.css
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .thebodyshop.co.uk
+		- help.thebodyshop.co.uk
+		- secure.thebodyshop.co.uk
 
 
 	Mixed content:
 
-		- Web bugs on secure from res.levexis.com *
+		- Images on secure from www.thebodyshop.co.uk *
 
-	* Secured by us
+		- Bugs, on:
+
+			- secure from ad.amgdgt.com *
+			- secure from res.levexis.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="The Body Shop.co.uk (partial)">
 
-	<target host="thebodyshop.co.uk" />
-	<target host="*.thebodyshop.co.uk" />
-		<!--
-			Some pages redirect back:
-								-->
-		<exclusion pattern="^http://(?:www\.)?thebodyshop\.co\.uk/+(?!404\.htm|404_\d\.jpg|(?:athome|myspace)(?:$|[?/])|checkout/|content/|css/|images/|img/|js/|loyalty/|services/|socialhub/|(?:Script|Web)Resource\.axd|ws/)" />
+	<!--	Direct rewrites:
+				-->
+	<target host="help.thebodyshop.co.uk" />
+	<target host="secure.thebodyshop.co.uk" />
 
+	<!--	Complications:
+				-->
+	<target host="thebodyshop.co.uk" />
+	<target host="www.thebodyshop.co.uk" />
+
+		<!--	Redirects back:
+								-->
+		<!--exclusion pattern="^http://(?:www\.)?thebodyshop\.co\.uk/(?:$|(?:index|new|skin-advice)\.aspx)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?thebodyshop\.co\.uk/(?!/*(?:404\.htm|404-\d\.jpg|(?:athome|content|loveyourbody|myspace)(?:$|[?/])|checkout/|css/|images/|img/|js/|loyalty/|services/|socialhub/|(?:Script|Web)Resource\.axd|ws/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://thebodyshop.co.uk/body.aspx" />
+			<test url="http://thebodyshop.co.uk/body/scrubs.aspx" />
+			<test url="http://thebodyshop.co.uk/catalog/" />
+			<test url="http://thebodyshop.co.uk/face.aspx" />
+			<test url="http://thebodyshop.co.uk/face/accessories.aspx" />
+			<test url="http://thebodyshop.co.uk/fragrance.aspx" />
+			<test url="http://thebodyshop.co.uk/fragrance/candles.aspx" />
+			<test url="http://thebodyshop.co.uk/gifts.aspx" />
+			<test url="http://thebodyshop.co.uk/hair.aspx" />
+			<test url="http://thebodyshop.co.uk/hair/styling.aspx" />
+			<test url="http://www.thebodyshop.co.uk/hands.aspx" />
+			<test url="http://www.thebodyshop.co.uk/hands/tools.aspx" />
+			<test url="http://www.thebodyshop.co.uk/index.aspx" />
+			<test url="http://www.thebodyshop.co.uk/joy" />
+			<test url="http://www.thebodyshop.co.uk/new.aspx" />
+			<test url="http://www.thebodyshop.co.uk/services/aboutus_privacypolicy.aspx" />
+			<test url="http://www.thebodyshop.co.uk/services/cookies.aspx" />
+			<test url="http://www.thebodyshop.co.uk/skin-advice.aspx" />
+			<test url="http://www.thebodyshop.co.uk/values/ingredient_cotton.aspx" />
+			<test url="http://www.thebodyshop.co.uk/values/tct.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://thebodyshop.co.uk/404-3.jpg" />
+			<test url="http://thebodyshop.co.uk/404.htm" /><!--	Mixed images -->
+			<test url="http://thebodyshop.co.uk/athome/athome_hostaparty.aspx" /><!--	Mixed images, bug -->
+			<test url="http://thebodyshop.co.uk/content" /><!--	Mixed images, bug -->
+			<test url="http://thebodyshop.co.uk/content/TBSAH/index.aspx" /><!--	Mixed images, bug -->
+			<test url="http://thebodyshop.co.uk/content/affiliates/hub.aspx" /><!--	Mixed images, bug -->
+			<test url="http://www.thebodyshop.co.uk/css/common/fiche_produit.css" />
+			<test url="http://www.thebodyshop.co.uk/images/product/Medium/47466m_m.jpg" />
+			<test url="http://www.thebodyshop.co.uk/img/BTN_SgnInRED_ON.gif" />
+			<test url="http://www.thebodyshop.co.uk/love-your-body" />
+			<test url="http://www.thebodyshop.co.uk/love-your-body/index.aspx" />
+			<test url="http://www.thebodyshop.co.uk/services/sitemap.aspx" /><!--	Mixed images -->
+			<test url="http://www.thebodyshop.co.uk/services/storelocator-search.aspx" />
+
+		<!--	Avoid potential XHR problems:
+							-->
+		<exclusion pattern="^http://(?:www\.)?thebodyshop\.co\.uk/.+\.js(?:on)?(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://thebodyshop.co.uk/js/lib/jquery/jquery-ui.1.9.2.min.js" />
+			<test url="http://thebodyshop.co.uk/js/lib/modernizr/modernizr-2.5.3.min.js" />
+			<test url="http://www.thebodyshop.co.uk/js/lib/jquery/jquery-ui.1.9.2.min.js" />
+			<test url="http://www.thebodyshop.co.uk/js/lib/modernizr/modernizr-2.5.3.min.js" />
+			<test url="http://www.thebodyshop.co.uk/js/lib/modernizr/modernizr-ie-prefix.min.js" />
+			<test url="http://www.thebodyshop.co.uk/js/s_code.js" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.thebodyshop\.co\.uk$" name="^(?:AdditionalParams|stop_mobi|UKTBSAUTH|UserAuthentication)$" /-->
+	<!--securecookie host="^help\.thebodyshop\.co\.uk$" name="^(?:identitytoken|vsid)$" /-->
+	<!--securecookie host="^secure\.thebodyshop\.co\.uk$" name="^(?:server)$" /-->
 
 	<!--	Tracking cookies:
 					-->
-	<securecookie host="^\.thebodyshop\.co\.uk$" name="^(?:TRADEDOUBLER_|__tro)\w+$" />
-	<securecookie host="^secure\.thebodyshop\.co\.uk$" name=".+" />
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|TRADEDOUBLER_\w+$|__tro\w+$)" />
+	<securecookie host="^(?!\.thebodyshop\.co\.uk$)." name="." />
 
 
-	<!--	First, point user-invisible paths (except some css) to akamai:
-										-->
-	<rule from="^http://(?:www\.)?thebodyshop\.co\.uk/(?=css/(?:auto-complete|category\.leftnav|static-content)\.css|images/|img/|js/|(?:Script|Web)Resource\.axd|ws/)"
-		to="https://a248.e.akamai.net/f/1026/9034/7/www.thebodyshop.co.uk/" />
-
-	<!--	And then, everything else that doesn't redirect back, to secure:
-										-->
-	<rule from="^http://(?:secure\.|www\.)?thebodyshop\.co\.uk/"
+	<rule from="^http://(?:www\.)?thebodyshop\.co\.uk/"
 		to="https://secure.thebodyshop.co.uk/" />
 
-	<rule from="^http://(?:www\.)?beautyblog\.thebodyshop\.co\.uk/(?=favicon\.ico|wp-content/|wp-includes/)"
-		to="https://thebodyshop-uk-blog.azurewebsites.net/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

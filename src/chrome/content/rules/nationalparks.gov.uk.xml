@@ -1,0 +1,76 @@
+<!--
+	The Association Of National Park Authorities
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *nationalparks.gov.uk:
+
+		- ^ ʳ
+		- apna ᶜ ᵐ
+		- extranet ᶜ ᵐ
+		- nymdev ᶜ ᵐ
+		- southdowns ᶜ ᵐ
+		- weather ᶜ ᵐ
+		- www ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts:
+
+		- apna.nationalparks.gov.uk
+		- extranet.nationalparks.gov.uk
+		- secure.nationalparks.gov.uk
+		- southdowns.nationalparks.gov.uk
+		- www.nationalparks.gov.uk
+		- . . .
+
+-->
+<ruleset name="National Parks.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.nationalparks.gov.uk" />
+	<!--target host="www.nationalparks.gov.uk" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="nationalparks.gov.uk" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nationalparks\.gov\.uk/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?nationalparks\.gov\.uk/(?!/*(?:__data|design/css)/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.nationalparks.gov.uk/home" /-->
+			<!--test url="http://www.nationalparks.gov.uk/pdshop/" /-->
+			<!--test url="http://www.nationalparks.gov.uk/visiting" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://nationalparks.gov.uk/__data/assets/file/0009/623583/top.svg" /-->
+			<!--test url="http://www.nationalparks.gov.uk/design/css/deluxe.css" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:apna|extranet|secure|southdowns|weather|www)\.nationalparks\.gov\.uk$" name="^SQ_SYSTEM_SESSION$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://nationalparks\.gov\.uk/"
+		to="https://www.nationalparks.gov.uk/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

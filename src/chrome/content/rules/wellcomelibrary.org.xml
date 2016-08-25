@@ -1,0 +1,63 @@
+<!--
+	For other Wellcome Trust coverage, see wellcome.ac.uk.xml.
+
+
+	Nonfunctional hosts in *wellcomelibrary.org:
+
+		- catalogue *
+		- search ʰ
+
+	* Redirects to login
+	ʰ Redirects to http
+
+
+	Problematic hosts in *wellcomelibrary.org:
+
+		- blog ᶜ
+		- www ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+-->
+<ruleset name="Wellcome Library.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="wellcomelibrary.org" />
+	<!--target host="blog.wellcomelibrary.org" /-->
+
+	<!--	Complications:
+				-->
+	<target host="www.wellcomelibrary.org" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://blog\.wellcomelibrary\.org/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://blog\.wellcomelibrary\.org/+(?!wp-content/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://blog.wellcomelibrary.org/author/pharkins/" /-->
+			<!--test url="http://blog.wellcomelibrary.org/tag/seminars/" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://blog.wellcomelibrary.org/wp-content/plugins/add-to-any/addtoany.min.css" /-->
+
+
+	<securecookie host="^\." name="^_gat?$" />
+	<!--securecookie host="^(?!blog\.)\w" name="." /-->
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.wellcomelibrary\.org/"
+		to="https://wellcomelibrary.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

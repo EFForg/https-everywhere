@@ -1,0 +1,69 @@
+<!--
+	Slough Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *slough.gov.uk:
+
+		- citizen ᵈ
+		- servicesguide *
+		- www2 ʳ
+
+	* Redirects to search3.openobjects.com
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *slough.gov.uk:
+
+		- css * ᵐ
+		- static * ᵐ
+
+	* Seems equivalent to www.slough.gov.uk
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- www.capita.slough.gov.uk
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- css.slough.gov.uk
+		- static.slough.gov.uk
+		- www.slough.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Slough.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="slough.gov.uk" />
+	<target host="capita.slough.gov.uk" />
+	<target host="selfservice.slough.gov.uk" />
+	<target host="www.slough.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="css.slough.gov.uk" />
+	<target host="static.slough.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:css|static|www)\.slough\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="" />
+
+
+	<rule from="^http://(?:css|static)\.slough\.gov\.uk/"
+		to="https://www.slough.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

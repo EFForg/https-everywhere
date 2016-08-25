@@ -1,0 +1,44 @@
+<!--
+	CDN buckets:
+
+		- iaohelp.azurewebsites.net
+
+
+	Problematic hosts in *instantatlas.com:
+
+		- (www.)? ᵉ ᵐ ˢ
+		- ias ᵉ ᵐ ˢ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .help.instantatlas.com
+		- online.instantatlas.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="InstantAtlas.com (partial)">
+
+	<target host="help.instantatlas.com" />
+	<target host="online.instantatlas.com" />
+	<target host="reports.instantatlas.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.help\.instantatlas\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^online\.instantatlas\.com$" name="^__RequestVerificationToken$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^ARRAffinity$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
