@@ -19,7 +19,7 @@ function get_alexa(alexa_cb){
   var alexa = []
   var csv_regex = /^[0-9]+,(.+)/
 
-  request.get('http://s3.amazonaws.com/alexa-static/top-1m.csv.zip')
+  request.get('https://s3.amazonaws.com/alexa-static/top-1m.csv.zip')
     .on('error', function(err) {
       alexa_cb(err);
     })
