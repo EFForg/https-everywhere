@@ -24,7 +24,7 @@ var path = require("path"),
 
     URI = require("URIjs");
 
-var ruleSets = null;
+var ruleSets = new rules.RuleSets({});
 
 /**
  * For a given directory, recursively edit all files in it that match a filename
@@ -48,7 +48,6 @@ function processDir(dir) {
   .on('error', function (err) { console.error('fatal error', err); })
   .pipe(es.mapSync(function (entry) {
     var filename = path.join(dir, entry.path);
-    console.log("Rewriting " + filename);
     try {
       processFile(filename);
     } catch(e) {
@@ -57,27 +56,16 @@ function processDir(dir) {
   }));
 }
 
-/**
- * Overwrite the default URI find_uri_expression with a modified one that
- * mitigates a catastrophic backtracking issue common in CSS.
- * The workaround was to insist that URLs start with http, since those are the
- * only ones we want to rewrite anyhow. Note that this may still go exponential
- * on certain inputs. http://www.regular-expressions.info/catastrophic.html
- * Example string that blows up URI.withinString:
- *  image:url(http://img.youtube.com/vi/x7f
- */
-URI.find_uri_expression = /\b((?:http:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}\/)(?:[^\s()<>]+)+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))/ig;
-
 function processFile(filename) {
   var contents = fs.readFileSync(filename, 'utf8');
   var rewrittenFile = URI.withinString(contents, function(url) {
-    console.log("Found ", url);
     var uri = new URI(url);
     if (uri.protocol() != 'http') return url;
 
     uri.normalize();
     var rewritten = ruleSets.rewriteURI(uri.toString(), uri.host());
     if (rewritten) {
+      console.log('Rewrote', url, 'in', filename);
       return rewritten;
     } else {
       return url;
@@ -92,16 +80,15 @@ function processFile(filename) {
 /**
  * Load all rulesets for rewriting.
  */
-function loadRuleSets() {
-  console.log("Loading rules...");
-  var fileContents = fs.readFileSync(path.join(__dirname, '../pkg/crx/rules/default.rulesets'), 'utf8');
+function loadRuleSets(filename) {
+  console.log("Loading rules from", filename);
+  var fileContents = fs.readFileSync(filename, 'utf8');
   var xml = new DOMParser().parseFromString(fileContents, 'text/xml');
-  ruleSets = new rules.RuleSets({});
   ruleSets.addFromXml(xml);
 }
 
 function usage() {
-  console.log("Usage: \n   nodejs rewriter.js /path/to/my/webapp \n");
+  console.log("Usage:\n   nodejs rewriter.js /path/to/my/webapp\n");
   process.exit(1);
 }
 
@@ -120,7 +107,16 @@ for (var i = 2; i < process.argv.length; i++) {
   }
 }
 
-loadRuleSets();
+var hstsFilename = path.join(__dirname, 'hsts.xml');
+try {
+  fs.statSync(hstsFilename);
+} catch (e) {
+  console.error('hsts.xml not found. Run hsts-transform.js.');
+  return;
+}
+loadRuleSets(hstsFilename);
+
+loadRuleSets(path.join(__dirname, '../pkg/crx/rules/default.rulesets'));
 for (var i = 2; i < process.argv.length; i++) {
   processDir(process.argv[i]);
 }
