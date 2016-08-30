@@ -4,17 +4,15 @@
 # The JSON DB is used by the Firefox addon.
 #
 
-import glob
 import locale
 import json
 import os
-import re
-import sqlite3
-import subprocess
 import sys
 
 import collections
 from lxml import etree
+
+from ruleset_filenames_validate import validate_filenames
 
 # Explicitly set locale so sorting order for filenames is consistent.
 # This is important for deterministic builds.
@@ -35,28 +33,7 @@ parser = etree.XMLParser(remove_blank_text=True)
 xpath_host = etree.XPath("/ruleset/target/@host")
 xpath_ruleset = etree.XPath("/ruleset")
 
-# Sort filenames so output is deterministic.
-filenames = sorted(glob.glob('src/chrome/content/rules/*'))
-
-counted_lowercase_names = collections.Counter([name.lower() for name in filenames])
-most_common_entry = counted_lowercase_names.most_common(1)[0]
-if most_common_entry[1] > 1:
-    dupe_filename = re.compile(re.escape(most_common_entry[0]), re.IGNORECASE)
-    print("%s failed case-insensitivity testing." % filter(dupe_filename.match, filenames))
-    print("Rules exist with identical case-insensitive names, which breaks some filesystems.")
-    sys.exit(1)
-
-for fi in filenames:
-    basename = fi.split(os.path.sep)[-1]
-    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
-        continue
-
-    if " " in fi:
-        print("%s failed validity: Rule filenames cannot contain spaces" % (fi))
-        sys.exit(1)
-    if not fi.endswith('.xml'):
-        print("%s failed validity: Rule filenames must end in .xml" % (fi))
-        sys.exit(1)
+for fi in validate_filenames():
 
     try:
         tree = etree.parse(fi, parser)
