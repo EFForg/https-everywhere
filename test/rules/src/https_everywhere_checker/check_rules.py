@@ -83,12 +83,11 @@ class UrlComparisonThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		while True:
-			try:
-				self.processTask(self.taskQueue.get())
-				self.taskQueue.task_done()
-			except Exception, e:
-				logging.exception(e)
+		try:
+			self.processTask(self.taskQueue.get())
+			self.taskQueue.task_done()
+		except Exception, e:
+			logging.exception(e)
 
 	def processTask(self, task):
 		problems = []
