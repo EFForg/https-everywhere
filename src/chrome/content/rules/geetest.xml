@@ -1,21 +1,31 @@
-<!--	Broken
-	- account.geetest.com
-	- fullpage.geetest.com
-	- my.geetest.com
-	- www.geetest.com
+<!--
+
+	Break the redirect by server:
+		- account.geetest.com
+
+	Redirect to different page : /login
+		- ^(www.)
+
+	Mismatch:
+		- fullpage.geetest.com
+		- my.geetest.com
+
+	404
+		- old.geetest.com
+
 -->
 
-<!--	404
-	- old.geetest.com
--->
+<ruleset name="geetest (partial)">
 
-<ruleset name="geetest" platform="mixedcontent">
-
-	<target host="geetest.com" />
 	<target host="api.geetest.com" />
+		<test url="http://api.geetest.com/get.php?callback=gtcallback" />
 	<target host="front.geetest.com" />
+		<test url="http://front.geetest.com/base/https/style/css/main.css" />
 	<target host="static.geetest.com" />
+		<test url="http://static.geetest.com/static/js/geetest.5.5.36.js" />
+		<test url="http://static.geetest.com/static/golden/style_https.3.0.23.css" />
 	<target host="user.geetest.com" />
+		<test url="http://user.geetest.com/static/img/logo.png" />
 
 	<rule from="^http:" to="https:" />
 
