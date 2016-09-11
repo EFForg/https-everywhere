@@ -52,7 +52,7 @@ When matching an arbitrary DNS label (a single component of a hostname), prefer
 
 For `securecookie` tags, if you know that all cookies on the included targets
 can be secured (which in particular means that the cookies are not used by any
-of its non-securable subdomains, use the trivial
+of its non-securable subdomains), use the trivial
 
 ```xml
 <securecookie host=".+" name=".+" />
