@@ -175,8 +175,6 @@ class HTTPFetcher(object):
 	"""Fetches HTTP(S) pages via PyCURL. CA certificates can be configured.
 	"""
 	
-	_headerRe = regex.compile(r"(?P<name>\S+?): (?P<value>.*?)\r\n")
-	
 	def __init__(self, platform, certPlatforms, fetchOptions, ruleTrie=None):
 		"""Create fetcher that validates certificates using selected
 		platform.
@@ -379,13 +377,11 @@ class HTTPFetcher(object):
 			if httpCode == 0:
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
 			elif httpCode in (301, 302, 303, 307):
-				# Parse out the headers and extract location, case-insensitively.
-				# If there are multiple location headers, pick the last one.
-				headers = dict()
-				for k, v in self._headerRe.findall(headerStr):
-					headers[k.lower()] = v
-				location = headers.get('location')
-				if not location:
+				location = None
+				for piece in headerStr.split('\n'):
+					if piece.startswith('Location:'):
+						location = ''.join(piece.split(': ')[1:])
+				if location is None:
 					raise HTTPFetcherError("Redirect for '%s' missing Location" % newUrl)
 				
 				location = self.absolutizeUrl(newUrl, location)
