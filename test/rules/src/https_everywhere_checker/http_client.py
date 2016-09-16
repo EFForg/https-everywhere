@@ -378,11 +378,11 @@ class HTTPFetcher(object):
 				raise HTTPFetcherError("Pycurl fetch failed for '%s'" % newUrl)
 			elif httpCode in (301, 302, 303, 307):
 				location = None
-				for piece in headerStr.split('\n'):
-					if piece.startswith('Location:'):
+				for piece in headerStr.lower().split('\n'):
+					if piece.startswith('location:'):
 						location = ''.join(piece.split(': ')[1:])
 				if location is None:
-					raise HTTPFetcherError("Redirect for '%s' missing Location" % newUrl)
+					raise HTTPFetcherError("Redirect for '%s' missing location header" % newUrl)
 				
 				location = self.absolutizeUrl(newUrl, location)
 				logging.debug("Following redirect %s => %s", newUrl, location)
