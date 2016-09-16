@@ -1,27 +1,40 @@
 <!--
-	Might be blocked by The Great Fire Wall (GFW) in China, Check error: Connection timed out ( after 20000 milliseconds ).
+
+	- Might be blocked by The Great Fire Wall (GFW) in China, Check error: Connection timed out ( after 20000 milliseconds ).
 	Test in Tor broswer 6.0.4, Ok by http, however, unable to connect to https.
 	Users could turn on this rule to test by youself.
+
+	- MCB : ac.qq.com
+
+	- http://iwgc.cn/ creat weixin's rss. It give us the pics redirected by its host. We can get the original pics by https.
+
+	- While we use weixin pics in other sites, the pics will not been seen. For example: "http://mmbiz.qpic.cn/mmbiz/XO9Nbaxia0HwlPFHl1eRaMkpdqUlZsPqiacyAUSicjESqtsLOJ0OXYIDEyd5XSicxSe3tMD8NxRftYDWFnFibwHW4Gg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" in "http://ding.youku.com/a/id_XMTY2NDYw.html" 
+	We can fix this issue by redirect the pics to https and remove it's parameter just like "wx_lazy=1" as the first step. The pics will not be opened in new tab with the parameters. Now we will get one pic from the Tencent to tell you the error.
+	The second step : set the referrer for "mmbiz.qpic.cn" as "https://mp.weixin.qq.com/" by other extensions.
+	
 -->
 
 <ruleset name="Tencent_CN" default_off="Only avaiable in China">
-	
-<!--	MCB : all pages
-	<target host="ac.qq.com" />
--->
+
+	<!--target host="ac.qq.com" /-->
 
 	<target host="dp3.qq.com" />
 
 	<target host="t8.qlogo.cn" />
 
 	<target host="mmbiz.qpic.cn" />
-		<test url="http://mmbiz.qpic.cn/mmbiz_jpg/tp6GaCh2ZTRyY2HibMibpnpmTX7ayyib80e3b4rW0CSwD3muIsdQtkIFoULn2OeRpvQYQsGjXwIB7j2KGQPPtazBQ/0" />
 
-	<!-- http://iwgc.cn/ creat weixin's rss for users. It give us the pics redirected by its host. We can get the original pics by https.-->
 	<target host="img02.iwgc.cn" />
+
 	<exclusion pattern="^http://img02\.iwgc\.cn/$" />
-	<rule from="^http://img02\.iwgc\.cn/getimg\.php\?url=http://mmbiz\.qpic\.cn/" to="https://mmbiz.qpic.cn/" />
+
+	<rule from="^http://img02\.iwgc\.cn/getimg\.php\?url=https?://mmbiz\.qpic\.cn/" to="https://mmbiz.qpic.cn/" />
 		<test url="http://img02.iwgc.cn/getimg.php?url=http://mmbiz.qpic.cn/mmbiz_jpg/tp6GaCh2ZTRyY2HibMibpnpmTX7ayyib80e3b4rW0CSwD3muIsdQtkIFoULn2OeRpvQYQsGjXwIB7j2KGQPPtazBQ/0" />
+		<test url="http://img02.iwgc.cn/getimg.php?url=https://mmbiz.qpic.cn/mmbiz_jpg/tp6GaCh2ZTRyY2HibMibpnpmTX7ayyib80e3b4rW0CSwD3muIsdQtkIFoULn2OeRpvQYQsGjXwIB7j2KGQPPtazBQ/0" />
+
+	<rule from="^https?://mmbiz\.qpic\.cn/([^?]+)\?.*" to="https://mmbiz.qpic.cn/$1" />
+		<test url="http://mmbiz.qpic.cn/mmbiz/XO9Nbaxia0HwlPFHl1eRaMkpdqUlZsPqiacyAUSicjESqtsLOJ0OXYIDEyd5XSicxSe3tMD8NxRftYDWFnFibwHW4Gg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" />
+		<test url="https://mmbiz.qpic.cn/mmbiz/XO9Nbaxia0HwlPFHl1eRaMkpdqUlZsPqiacyAUSicjESqtsLOJ0OXYIDEyd5XSicxSe3tMD8NxRftYDWFnFibwHW4Gg/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" />
 	
 	<rule from="^http:" to="https:" />
 
