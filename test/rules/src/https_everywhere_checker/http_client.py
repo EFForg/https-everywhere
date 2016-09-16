@@ -380,7 +380,7 @@ class HTTPFetcher(object):
 				location = None
 				for piece in headerStr.lower().split('\n'):
 					if piece.startswith('location:'):
-						location = ''.join(piece.split(': ')[1:])
+						location = ':'.join(piece.split(':')[1:]).strip()
 				if location is None:
 					raise HTTPFetcherError("Redirect for '%s' missing location header" % newUrl)
 				
