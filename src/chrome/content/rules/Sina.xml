@@ -139,10 +139,12 @@
 	<target host="help.sina.com.cn" />
 	<target host="licaishi.sina.com.cn" />
 	<target host="login.sina.com.cn" />
-		<!-- The page at 'crossdomain2.php' is loaded over HTTPS, but requests an insecure script 'http://i.sso.sina.com.cn/js/ssologin.js'. -->
-		<exclusion pattern="^http://login\.sina\.com\.cn/crossdomain2\.php" />
-		<test url="http://login.sina.com.cn/" />
-		<test url="http://login.sina.com.cn/crossdomain2.php" />
+		<!-- 'crossdomain2.php' requests an insecure script 'http://i.sso.sina.com.cn/js/ssologin.js' when 'action=login' or 'action=logout' present -->
+		<exclusion pattern="^http://login\.sina\.com\.cn/crossdomain2\.php\?action=(login|logout)" />
+		<test url="http://login.sina.com.cn/crossdomain2.php?action=login" />
+		<test url="http://login.sina.com.cn/crossdomain2.php?action=login&#x26;entry=weibo" />
+		<test url="http://login.sina.com.cn/crossdomain2.php?action=logout&#x26;r=https%3A%2F%2Flogin.sina.com.cn%2Fmember%2Fmy.php%3Fentry%3Dsso" />
+		<test url="http://login.sina.com.cn/crossdomain2.php?action=logout&#x26;r=http%3A%2F%2Fweibo.com%2Flogout.php%3Fbackurl%3D%25252F" />
 	<target host="mail.sina.com.cn" />
 	<target host="mail2008.sina.com.cn" />
 	<target host="members.sina.com.cn" />
