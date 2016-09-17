@@ -1,6 +1,8 @@
 <!--
 	Mismatch:
 		 - rp.blick.ch
+
+	Refused:
 		 - gutscheine.blick.ch
 
 	Mixed content:
@@ -12,6 +14,7 @@
 	Redirect:
 		- (www\.)?blick.ch
 		- (www\.)?blickamabend.ch
+		- amp.blickamabend.ch
 -->
 <ruleset name="blick.ch (partial)">
 	<target host="c.blick.ch"/>
@@ -25,6 +28,25 @@
 
 	<target host="f.blickamabend.ch"/>
 
-	<rule from="^http:"
-		to="https:"/>
+
+	<test url="http://f.blickamabend.ch/resources/BAAZ_20160916-1/ver1-0/img/Logo_BlickamAbend.svg" />
+	<test url="http://f.blick.ch/resources/BAAZ_20160916-1/ver1-0/img/Logo_BlickamAbend.svg" />
+	<test url="http://f1.blick.ch/resources/BAAZ_20160916-1/ver1-0/img/Logo_BlickamAbend.svg" />
+	<test url="http://f2.blick.ch/resources/BAAZ_20160916-1/ver1-0/img/Logo_BlickamAbend.svg" />
+	<test url="http://f3.blick.ch/resources/BAAZ_20160916-1/ver1-0/img/Logo_BlickamAbend.svg" />
+	<test url="http://f.blickamabend.ch/img/nativeads/crop3597253/882668537-csquare-w50-q99/wysiwyg-logo.png" />
+	<test url="http://f.blick.ch/img/nativeads/crop3597253/882668537-csquare-w50-q99/wysiwyg-logo.png" />
+	<test url="http://f1.blick.ch/img/nativeads/crop3597253/882668537-csquare-w50-q99/wysiwyg-logo.png" />
+	<test url="http://f2.blick.ch/img/nativeads/crop3597253/882668537-csquare-w50-q99/wysiwyg-logo.png" />
+	<test url="http://f3.blick.ch/img/nativeads/crop3597253/882668537-csquare-w50-q99/wysiwyg-logo.png" />
+
+
+	<rule from="^http://(c|ebalance|parship|video)\.blick\.ch/"
+		to="https://$1.blick.ch/"/>
+
+	<!-- site is accessible over CDN urls, but has mixed content issues -->
+	<rule from="^http://(f[1-3]?)\.blick\.ch/(img|resources)/"
+		to="https://$1.blick.ch/$2/"/>
+	<rule from="^http://f\.blickamabend\.ch/(img|resources)/"
+		to="https://f.blickamabend.ch/$1/"/>
 </ruleset>
