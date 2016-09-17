@@ -852,15 +852,15 @@ SSLObservatory.prototype = {
     var custom_proxy_type = this.myGetCharPref("proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
       this.log(INFO,"CASE: use_tor_proxy");
-      // extract torbutton proxy settings
+      // extract tor browser proxy settings
       proxy_settings.type = "http";
-      proxy_settings.host = this.prefs.getCharPref("extensions.torbutton.https_proxy");
-      proxy_settings.port = this.prefs.getIntPref("extensions.torbutton.https_port");
+      proxy_settings.host = this.prefs.getCharPref("network.proxy.http");
+      proxy_settings.port = this.prefs.getIntPref("network.proxy.http_port");
 
       if (proxy_settings.port == 0) {
         proxy_settings.type = "socks";
-        proxy_settings.host = this.prefs.getCharPref("extensions.torbutton.socks_host");
-        proxy_settings.port = this.prefs.getIntPref("extensions.torbutton.socks_port");
+        proxy_settings.host = this.prefs.getCharPref("network.proxy.socks");
+        proxy_settings.port = this.prefs.getIntPref("network.proxy.socks_port");
       }
       proxy_settings.tor_safe = true;
     /* Regarding the test below:
@@ -885,7 +885,7 @@ SSLObservatory.prototype = {
       proxy_settings.port = 9050;
       proxy_settings.tor_safe = true;
     }
-    this.log(INFO, "Using proxy: " + proxy_settings);
+    this.log(INFO, "Using proxy: " + JSON.stringify(proxy_settings));
     return proxy_settings;
   },
 
