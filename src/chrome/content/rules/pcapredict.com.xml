@@ -1,0 +1,78 @@
+<!--
+	For other Postcode Anywhere coverage, see postcodeanywhere.co.uk.xml.
+
+
+	Nonfunctional hosts in *pcapredict.com:
+
+		- bigdatalabs ᶠ
+		- resources ᵃ
+
+	ᵃ Shows another domain
+	ᶠ Handshake fails
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .pcapredict.com
+		- account.pcapredict.com
+		- www.pcapredict.com
+
+
+	Mixed content:
+
+		- Image on www from resources.pcapredict.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="PCA Predict.com (partial)">
+
+	<target host="pcapredict.com" />
+	<target host="account.pcapredict.com" />
+	<target host="www.pcapredict.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?pcapredict\.com/(?:en-us/about-us|en-us/index|pricing)/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?pcapredict\.com/(?!/*(?:(?:en-us/contact-us|register|[Ss]upport|status)(?:$|[?/])|favicon\.ico|[Ii]mages/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.pcapredict.com/branding/" />
+			<test url="http://www.pcapredict.com/en-us/about-us/" />
+			<test url="http://www.pcapredict.com/en-us/email-validation/" />
+			<test url="http://www.pcapredict.com/en-us/index/" />
+			<test url="http://www.pcapredict.com/fuzzy/" />
+			<test url="http://www.pcapredict.com/infographics/christmas2014" />
+			<test url="http://www.pcapredict.com/magento/" />
+			<test url="http://www.pcapredict.com/pricing/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://pcapredict.com/Support/faqs/pricing/" />
+			<test url="http://pcapredict.com/content/assets/banners/Capture40.png" />
+			<test url="http://pcapredict.com/en-us/contact-us" /><!--	mixed image	-->
+			<test url="http://pcapredict.com/favicon.ico" />
+			<test url="http://www.pcapredict.com/images/icons/arrow.png" />
+			<test url="http://www.pcapredict.com/register/" />
+			<test url="http://www.pcapredict.com/status/" /><!--	mixed image	-->
+			<test url="http://www.pcapredict.com/support/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pcapredict\.com$" name="^(?:PostcodeAnywhere\.(?:Permanent|Session)Cookie|pcapredictRegion)$" /-->
+	<!--securecookie host="^account\.pcapredict\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.pcapredict\.com$" name="^__RequestVerificationToken$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^a" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

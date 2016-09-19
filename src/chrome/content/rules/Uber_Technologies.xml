@@ -1,16 +1,63 @@
 <!--
-	Problematic subdomains:
+	Uber Technologies 
 
-		- blog		(works; mismatched, CN: *.gridserver.com)
+
+	CDN buckets:
+
+		- d1a3f4spazzrp4.cloudfront.net
+		- 2q72xc49mze8bkcog2f01nlh-wpengine.netdna-ssl.com
+
+
+	Problematic hosts in *uber.com:
+
+		- blog ᵉ
+
+	ᵉ Expired
+
+
+	Insecure cookies are set for these hosts:
+
+		- newsroom.uber.com
+		- transparencyreport.uber.com
 
 -->
-<ruleset name="Uber Technologies (partial)">
+<ruleset name="Uber.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="uber.com" />
-	<target host="*.uber.com" />
+	<target host="clients.uber.com" />
+	<target host="developer.uber.com" />
+	<target host="get.uber.com" />
+	<target host="help.uber.com" />
+	<target host="login.uber.com" />
+	<target host="newsroom.uber.com" />
+	<target host="riders.uber.com" />
+	<target host="transparencyreport.uber.com" />
+	<target host="www.uber.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.uber.com" />
 
 
-	<rule from="^http://(clients\.|www\.)?uber\.com/"
-		to="https://$1uber.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:newsroom|transparencyreport)\.uber\.com$" name="^X-Mapping-" /-->
+
+	<securecookie host="^\." name="^__qca$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://blog\.uber\.com/+"
+		to="https://newsroom.uber.com/" />
+
+		<test url="http://blog.uber.com/page/2/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

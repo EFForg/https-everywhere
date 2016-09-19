@@ -27,19 +27,25 @@
 
 		- betobaccofree ¹
 		- freshempire.betobaccofree ¹
+		- ehrincentives.cms ᶜ
+		- (www.)?hospitalcompare ¹
 		- thinkculturalhealth ²
 
 	¹ Akamai
 	² 404
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- ams.hhs.gov
 		- tracker.cloud.hhs.gov
+		- ehrincentives.cms.hhs.gov
 		- comment-app.hhs.gov
 		- www.thinkculturalhealth.hhs.gov
 		- vaers.hhs.gov
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
@@ -52,7 +58,7 @@
 			- comment-app from $self *
 			- wcdapps from www.googletagmanager.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="HHS.gov (partial)">
@@ -65,6 +71,7 @@
 	<target host="freshempire.betobaccofree.hhs.gov" />
 	<target host="tracker.cloud.hhs.gov" />
 	<target host="cms.hhs.gov" />
+	<!--target host="ehrincentives.cms.hhs.gov" /-->
 	<target host="www.cms.hhs.gov" />
 	<target host="comment-app.hhs.gov" />
 	<target host="digitalmedia.hhs.gov" />
@@ -84,6 +91,8 @@
 
 	<!--	Complications:
 				-->
+	<target host="hospitalcompare.hhs.gov" />
+	<target host="www.hospitalcompare.hhs.gov" />
 	<target host="thinkculturalhealth.hhs.gov" />
 
 		<!--	Mixed bug:
@@ -99,14 +108,20 @@
 					-->
 	<!--securecookie host="^ams\.hhs\.gov$" name="^OAM_JSESSIONID$" /-->
 	<!--securecookie host="^tracker\.cloud\.hhs\.gov$" name="^(?:JSESSIONID|atlassian\.xsrf\.token)$" /-->
+	<!--securecookie host="^ehrincentives\.cms\.hhs\.gov$" name="^BIGipServer" /-->
 	<!--securecookie host="^comment-app\.hhs\.gov$" name="^(?:_comment_tool_public_session|survey_view_\d+)$" /-->
 	<!--securecookie host="^exclusions\.oig\.hhs\.gov$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^www\.thinkculturalhealth\.hhs\.gov$" name="^(?:ASPSESSIONID[A-Z]{8}|BIGipServer)" /-->
 	<!--securecookie host="^vaers\.hhs\.gov$" name="^_ZopeId$" /-->
 
-	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^\w" name="." />
 
+
+	<!--	Redirect keeps path and args, but not forward slash:
+									-->
+	<rule from="^http://(?:www\.)?hospitalcompare\.hhs\.gov/+"
+		to="https://www.medicare.gov/hospitalcompare/" />
 
 	<rule from="^http://thinkculturalhealth\.hhs\.gov/"
 		to="https://www.thinkculturalhealth.hhs.gov/" />

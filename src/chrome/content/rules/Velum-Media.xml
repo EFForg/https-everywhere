@@ -1,29 +1,43 @@
 <!--
-	Other Velum Media rulesets:
-
-		- Bestcovery.com.xml
-
-
 	CDN buckets:
 
 		- wp-ruby-blog.s3.amazonaws.com
 
 
-	Cert only matches ^smallnetbuilder.com, but ^ redirects to www.
+	Insecure cookies are set for these hosts: ᶜ
 
-	Expired 2013-03-07
+		- www.smallnetbuilder.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css from $self ˢ
+
+		- Images, from:
+
+			- s3.amazonaws.com ˢ
+			- vma.tgdaily.net
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Velum Media (partial)" default_off="expired, mismatched, self-signed">
+<ruleset name="SmallNetBuilder.com" platform="mixedcontent">
 
 	<target host="smallnetbuilder.com" />
 	<target host="www.smallnetbuilder.com" />
 
 
-	<securecookie host="^www\.smallnetbuilder\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.smallnetbuilder\.com$" name="^[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?smallnetbuilder\.com/"
-		to="https://www.smallnetbuilder.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

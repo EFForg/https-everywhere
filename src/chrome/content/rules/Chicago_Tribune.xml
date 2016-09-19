@@ -1,7 +1,6 @@
 <!--
 	For problematic rules, see Chicago_Tribune-problematic.xml.
 
-
 	For other Tribune coverage, see Tribune.xml.
 
 
@@ -11,28 +10,78 @@
 		- s3.amazonaws.com/prod-chitribgreenguide/
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *chicagotribune.com:
 
-		- my	(504; akamai)
-		- touch	(refused)
+		- ^ ᵈ
+		- ad ᵈ
+		- cars ʳ
+		- my ⁴
+		- www ʰ
+
+	⁴ 504, Akamai
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *chicagotribune.com:
 
-		- ^	(times out)
-		- cars	(works; mismatched, CN: members.chicagotribune.com)
-		- www	(works, akamai)
+		- advertise ᵐ ˢ
+		- members ᵐ ˢ
+		- membership ᶜ ᵉ ᵐ
+		- touch ᵐ ˢ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	These altnames do not exist:
+
+		- www.myaccount2.chicagotribune.com
+		- www.placeanad.chicagotribune.com
+
+
+	STS header includes includeSubdomains
+	for myaccount2
 
 -->
-<ruleset name="Chicago Tribune (partial)">
+<ruleset name="Chicago Tribune.com (partial)">
 
-	<target host="*.chicagotribune.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="myaccount2.chicagotribune.com" />
+	<target host="*.myaccount2.chicagotribune.com" />
+	<target host="placeanad.chicagotribune.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}myaccount2\.chicagotribune\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.myaccount2.chicagotribune.com/" />
+			<test url="http://exists.not.myaccount2.chicagotribune.com/" />
+
+		<test url="http://www.myaccount2.chicagotribune.com/" />
+
+	<!--	Complications:
+				-->
+	<target host="advertise.chicagotribune.com" />
 
 
-	<securecookie host="^myaccount2\.chicagotribune\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:www\.)?advertise|members|myaccount2)\.chicagotribune\.com/"
-		to="https://$1.chicagotribune.com/" />
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://advertise\.chicagotribune\.com/[^?]*"
+		to="https://advertise.chicagotribune.com/" />
+
+		<test url="http://advertise.chicagotribune.com/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

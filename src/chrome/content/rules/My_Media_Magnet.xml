@@ -1,20 +1,26 @@
 <!--
-	- !www: self-signed, CN: plesk
 	- Expired 2010-10-01
-	- www: refused
-	- Some pages redirect to !www from www
+	- www.mymediamagnet.com: Internal error
 
 -->
-<ruleset name="My Media Magnet" default_off="expired, self-signed">
+<ruleset name="My Media Magnet.com" default_off="expired, mismatched, self-signed">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mymediamagnet.com" />
+
+	<!--	Complications:
+				-->
 	<target host="www.mymediamagnet.com" />
 
 
-	<securecookie host="^mymediamagnet\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?mymediamagnet\.com/"
+	<rule from="^http://www\.mymediamagnet\.com/"
 		to="https://mymediamagnet.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

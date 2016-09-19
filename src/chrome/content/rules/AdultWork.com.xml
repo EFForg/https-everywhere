@@ -1,28 +1,43 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://adultwork.com/ => https://adultwork.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-Fetch error: http://www.adultwork.com/ => https://www.adultwork.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *adultwork.com:
 
-		- refer *
+		- refer ᶠ
 
-	* Reset
+	ᶠ Handshake fails
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- adultwork.com
+		- developers.adultwork.com
+		- www.adultwork.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="AdultWork.com (partial)" default_off='failed ruleset test'>
+<ruleset name="AdultWork.com (partial)">
 
 	<target host="adultwork.com" />
+	<target host="cdn.adultwork.com" />
+	<target host="developers.adultwork.com" />
 	<target host="www.adultwork.com" />
+
+		<test url="http://cdn.adultwork.com/platform/images/Plugins/LoginButton/btnUL_register_M.png" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://developers.adultwork.com/User/Register" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?adultwork\.com$" name="^ReferralID$" /-->
+	<!--securecookie host="^(?:www\.)?adultwork\.com$" name="^ReferralID$" /-->
+	<!--securecookie host="^developer\.adultwork\.com$" name="^__RequestVerificationToken$" /-->
 
-	<securecookie host="^(?:www\.)?adultwork\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(www\.)?adultwork\.com/"
-		to="https://$1adultwork.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

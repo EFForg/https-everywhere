@@ -1,0 +1,168 @@
+<!--
+	For rules causing false/broken MCB, see autotrader.co.uk-falsemixed.xml.
+
+
+	Nonfunctional hosts in *autotrader.co.uk:
+
+		- about-us ᵈ
+		- bestbike2014 ʳ
+		- dealerlogo ⁴
+		- dmsgateway ᵈ
+		- i ⁴
+		- media[25] ⁴
+		- pictures2 ⁴
+
+	⁴ 400
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *autotrader.co.uk:
+
+		- farm ˣ
+		- plant ˣ
+		- trucks ˣ
+
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .autotrader.co.uk
+		- advertising.autotrader.co.uk
+		- caravans.autotrader.co.uk
+		- dealerservices.autotrader.co.uk
+		- farm.autotrader.co.uk
+		- motorhomes.autotrader.co.uk
+		- plant.autotrader.co.uk
+		- trucks.autotrader.co.uk
+		- vans.autotrader.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- advertising from fast.fonts.net ˢ
+			- farm, plant from trucks.autotrader.co.uk ˢ
+			- trucks from $self ˢ
+
+		- Images, on:
+		
+			- advertising, promotions, trucks from $self ˢ
+			- farm, plant, trucks from i.autotrader.co.uk ⁴
+			- farm, plant, trucks from merlin-images.autotrader.co.uk ˢ
+			- farm, plant from trucks.autotrader.co.uk ˢ
+			- promotions from www.autotrader.co.uk ˢ
+
+		- Ads / bugs, on:
+
+			- farm, plant, trucks from dealerlogo.autotrader.co.uk ⁴
+			- farm, plant, trucks from metrics.autotrader.co.uk ˢ
+			- farm, plant, trucks from \d+.fls.doubleclick.net
+
+	⁴ Unsecurable <= 400
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Auto Trader.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="advertising.autotrader.co.uk" />
+	<!--target host="caravans.autotrader.co.uk" /-->
+	<target host="careers.autotrader.co.uk" />
+	<target host="dealerportal.autotrader.co.uk" />
+	<target host="dealerservices.autotrader.co.uk" />
+	<target host="explore.autotrader.co.uk" />
+	<!--target host="farm.autotrader.co.uk" /-->
+	<!--target host="merlin-images.autotrader.co.uk" /-->
+	<target host="metrics.autotrader.co.uk" />
+	<!--target host="motorhomes.autotrader.co.uk" /-->
+	<target host="oas.autotrader.co.uk" />
+	<!--target host="plant.autotrader.co.uk" /-->
+	<target host="portal.autotrader.co.uk" />
+	<target host="promotions.autotrader.co.uk" />
+	<target host="secure.autotrader.co.uk" />
+	<target host="trade.autotrader.co.uk" />
+	<!--target host="trucks.autotrader.co.uk" /-->
+	<!--target host="vans.autotrader.co.uk" /-->
+	<target host="www.autotrader.co.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="autotrader.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.autotrader\.co\.uk/(?:$|content$|image-library/|media/|mobile$|privacy-policy$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?autotrader\.co\.uk/(?!/*(?:favicon\.ico|secure(?:$|[?/])|static/))" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://(?:www\.)?autotrader\.co\.uk/.+\.js(?:$|\?)" /-->
+		<!--
+			Combined:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?autotrader\.co\.uk/(?!/*(?:favicon\.ico|secure(?:$|[?/])|static/(?!.+\.js(?:$|\?))))" /-->
+		<!--
+			Do not increase non-Tor distinguishability:
+									-->
+		<exclusion pattern="^http://(?:www\.)?autotrader\.co\.uk/(?!/*secure(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.autotrader.co.uk/car-warranty" />
+			<test url="http://www.autotrader.co.uk/content" />
+			<test url="http://www.autotrader.co.uk/image-library/697/392/23494?width=697" />
+			<test url="http://www.autotrader.co.uk/mini" />
+			<test url="http://www.autotrader.co.uk/mobile" />
+			<test url="http://www.autotrader.co.uk/privacy-policy" />
+			<test url="http://www.autotrader.co.uk/seat" />
+			<test url="http://www.autotrader.co.uk/static/6988/js/_generated/bundles/content-hub.js" />
+			<test url="http://www.autotrader.co.uk/static/6988/js/_generated/lib/modernizr.js" />
+			<test url="http://www.autotrader.co.uk/toyota" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://autotrader.co.uk/favicon.ico" />
+			-->
+			<test url="http://autotrader.co.uk/secure/my-auto-trader/my-car" />
+			<!--
+			<test url="http://www.autotrader.co.uk/static/de7c4dc53dc3/images/spartan/fifty-bg-white.png" />
+			-->
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://oas.autotrader.co.uk/RealMedia/ads/adstream_nx.ads/www.autotrader.co.uk/home/@Bottom?site=mobile&amp;device=mobi" /-->
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://promotions.autotrader.co.uk/ferrari/search" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.autotrader\.co\.uk$" name="^(?:NXCLICK2|OAX|UserLocation|bucket|ctuser)$" /-->
+	<!--securecookie host="^advertising\.autotrader\.co\.uk$" name="^(?:PHPSESSID|exp_(?:csrf_token|last_activity|last_visit|stashid|tracker))$" /-->
+	<!--securecookie host="^(?:caravans|vans)\.autotrader\.co\.uk$" name="^(?:_ATD_DIGEST|_ATD_SESSION)$" /-->
+	<!--securecookie host="^dealerservices\.autotrader\.co\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:farm|motorhomes|plant|trucks)\.autotrader\.co\.uk$" name="^(?:_ATD_DIGEST|_ATD_SESSION|JSESSIONID|mdctracking)$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|NXCLICK2$|OAX$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://autotrader\.co\.uk/"
+		to="https://www.autotrader.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

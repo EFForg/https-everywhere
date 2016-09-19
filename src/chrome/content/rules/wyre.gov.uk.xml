@@ -1,0 +1,57 @@
+<!--
+	Wyre Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *wyre.gov.uk:
+
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- wyre.gov.uk
+		- www.wyre.gov.uk
+		- .www.wyre.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on (www.)? from www.wyre.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Wyre.gov.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="wyre.gov.uk" />
+	<target host="www.wyre.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.wyre.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?wyre\.gov\.uk$" name="^\w{16}$" /-->
+	<!--securecookie host="^\.www\.wyre\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.wyre\.gov\.uk/"
+		to="https://wyrebc-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

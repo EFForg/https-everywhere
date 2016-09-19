@@ -1,0 +1,36 @@
+<!--
+	These altnames do not exist:
+
+		- www.secure.rockfile.eu
+	
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .rockfile.eu
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Rockfile.eu">
+
+	<target host="rockfile.eu" />
+	<target host="secure.rockfile.eu" />
+	<target host="www.rockfile.eu" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://secure.rockfile.eu/support/open.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rockfile\.eu$" name="^secureLogin$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -21,7 +21,7 @@
 		- consult ᵐ
 		- mylimehouse ᵐ
 
-	ᶜ 
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 	ᵐ Mismatched
 
 
@@ -41,12 +41,14 @@
 		- payments.eastsussex.gov.uk
 		- spreturns.eastsussex.gov.uk
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
 		- Images on news from $self ˢ
 
-	ˢ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="East Sussex.gov.uk (partial)">
@@ -69,6 +71,8 @@
 	<!--	Complications:
 				-->
 	<target host="eastsussex.gov.uk" />
+	<target host="consult.eastsussex.gov.uk" />
+	<target host="mylimehouse.eastsussex.gov.uk" />
 
 		<!--	Sets cookie without Secure:
 							-->
@@ -82,13 +86,19 @@
 	<!--securecookie host="^(?:consult|mylimehouse)\.eastsussex\.gov\.uk$" name="^(?:JSESSSION|Server)ID$" /-->
 	<!--securecookie host="^\.new\.eastsussex\.gov\.uk$" name="^ARRAffinity$" /-->
 
-	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^\w" name="." />
 	<securecookie host="^\.new\." name="." />
 
 
 	<rule from="^http://eastsussex\.gov\.uk/"
 		to="https://www.eastsussex.gov.uk/" />
+
+	<rule from="^http://consult\.eastsussex\.gov\.uk/"
+		to="https://eastsussex-consult.objective.co.uk/" />
+
+	<rule from="^http://mylimehouse\.eastsussex\.gov\.uk/"
+		to="https://eastsussex.objective.co.uk/" />
 
 	<rule from="^http:"
 		to="https:" />

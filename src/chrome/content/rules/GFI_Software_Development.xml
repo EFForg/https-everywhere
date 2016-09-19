@@ -1,4 +1,9 @@
 <!--
+	Fixes: https://github.com/EFForg/https-everywhere/issues/4305
+
+
+	For rules causing false/broken MCB, see gfi.com-falsemixed.xml.
+
 	Other GFI Software Development rulesets:
 
 		- GFI.nl.xml
@@ -18,17 +23,19 @@
 	² redirects to customers login
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these domains and hosts:
 
+		- .gfi.com
 		- www.gfi.com
 
 
 	Mixed content:
 
+		- css on www.gfi.com from $self *
 		- Images on www.gfi.com from $self *
 		- Bug on www.gfi.com from pixel.fetchback.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="GFI.com (partial)">
@@ -42,6 +49,19 @@
 	<!--	Complications:
 				-->
 	<target host="kb.gfi.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.gfi\.com/blog/(?!wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.gfi.com/blog/" />
+			<test url="http://www.gfi.com/blog/hold-off-on-upgrading-to-net-framework-4-6-1/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.gfi.com/blog/wp-content/plugins/wp-postratings/postratings-css.css" />
 
 		<!--exclusion pattern="^http://kb\.gfi\.com/(?!partnersurvey/site/|resource/)" /-->
 		<exclusion pattern="^http://kb\.gfi\.com/(?!resource/)" />
@@ -59,9 +79,12 @@
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.gfi\.com$" name="^EntryURL$" /-->
 	<!--securecookie host="^www\.gfi\.com$" name="^(?:ASP\.NET_SessionId|EntryURL|SC_ANALYTICS_(?:GLOBAL|SESSION)_COOKIE|adv|loc)$" /-->
 
-	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?!www\.)\w" name="." />
+	<securecookie host="^www\." name="^(?:ASP\.NET_SessionId$|EntryURL$|SC_ANALYTICS|adv$|loc$)" />
 
 
 	<!--	Needs test:

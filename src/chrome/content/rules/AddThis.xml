@@ -1,98 +1,148 @@
 <!--
-	Other Clearspring rulesets:
-
-		- AddThisedge.com.xml
-		- XGraph.xml
+	For other Oracle coverage, see Oracle.xml.
 
 
 	CDN buckets:
 
 		- wildcard.addthis.com.edgekey.net
-		- wildcard.addthiscdn.com.edgekey.net
 
 
 	Nonfunctional domains:
 
 		- s4.addthis.com	(shows empty tree, mismatched, CN: xiaomufwq.com)
 
-		- support.addthis.com	(redirects to http, CN: *.assistly.com)
 
-			- So does addthis.assistly.com  & addthis.desk.com
+	Problematic domains:
 
-
-	Partially covered domains:
-
-		- (www.)addthis.com	(some pages redirect to http)
+		- go.addthis.com 	(invalid cert; mismatched)
 
 
-	Fully covered domains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- addthis.com subdomains:
+		- .addthis.com
+		- www.addthis.com
 
-			- api
-			- cache
-			- cf
-			- ct[01345]
-			- ds
-			- m
-			- s[3579]
-			- secure
-			- su
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
-		- cache.addthiscdn.com
+
+	Mixed content:
+
+		- Image on www from blog.addthiscdn.com ˢ
+		- Bug on www from cf.addthis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="AddThis (partial)">
+<ruleset name="AddThis.com (partial)">
 
 	<target host="addthis.com" />
-	<target host="*.addthis.com" />
-	<!--
-		These paths 302 to http:
+	<target host="api.addthis.com" />
+	<target host="api-public.addthis.com" />
+	<target host="cache.addthis.com" />
+	<target host="cf.addthis.com" />
+	<target host="ct0.addthis.com" />
+	<target host="ct1.addthis.com" />
+	<target host="ct3.addthis.com" />
+	<target host="ct4.addthis.com" />
+	<target host="ct5.addthis.com" />
+	<target host="dashcache.addthis.com" />
+	<target host="m.addthis.com" />
+	<target host="s3.addthis.com" />
+	<target host="s5.addthis.com" />
+	<target host="s7.addthis.com" />
+	<target host="s9.addthis.com" />
+	<target host="secure.addthis.com" />
+	<target host="status.addthis.com" />
+	<target host="su.addthis.com" />
+	<target host="support.addthis.com" />
+	<target host="www.addthis.com" />
 
-			- about$
-			- about/team$
-			- advertising-choices$
-			- browser-extensions$
-			- careers$
-			- contact$
-			- get$
-			- get/welcome$
-			- logos$
-			- privacy/opt-out$
-			- privacy/partners$
-			- privacy/privacy-policy$
-			- technology$
-			- technology/web-intents$
-			- tos$
+		<!--	Redirects to http:
+						-->
 
-		These paths don't:
+		<!--exclusion pattern="^http://(?:www\.)?addthis\.com/(?:browser-extensions$|careers$|contact$|forgot-password$|plugins$|privacy/privacy-policy$|security/hall-of-fame$|social-buttons$|support$)" /-->
 
-			- blog$
-			- blog/
-			- download/
-			- get/just-analytics
-			- get/sharing
-			- get/trending
-			- images/
-			- landing$
-			- login
-			- press$
-			- register
+		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!/*(?:$|\?|bookmark\.php|(?:academy|blog|dashboard|get|landing|login|plans|press|register|services|sitebar-editor|website-tools|wordpress)(?:$|[?/])|download/|images/|\w+/sharing-buttons(?:$|\?)|style/))" />
+
+			<!--	+ve:
 					-->
-		<exclusion pattern="^http://(?:www\.)?addthis\.com/(?!bookmark\.php|blog(?:$|\?|/)|download/|images/|(?:get(?:/just-analytics|/sharing|/trending)?|landing|login|press|register)(?:$|\?))" />
-	<target host="cache.addthiscdn.com" />
+			<test url="http://www.addthis.com/about" />
+			<test url="http://www.addthis.com/audiences" />
+			<test url="http://www.addthis.com/browser-extensions" />
+			<test url="http://www.addthis.com/browser-extensions/bookmarklets" />
+			<test url="http://www.addthis.com/browser-extensions/safari" />
+			<test url="http://www.addthis.com/careers" />
+			<test url="http://www.addthis.com/contact" />
+			<test url="http://www.addthis.com/custom-audiences" />
+			<test url="http://www.addthis.com/data-solutions" />
+			<test url="http://www.addthis.com/forgot-password" />
+			<test url="http://www.addthis.com/international" />
+			<test url="http://www.addthis.com/mobile" />
+			<test url="http://www.addthis.com/personalize" />
+			<test url="http://www.addthis.com/platform" />
+			<test url="http://www.addthis.com/plugins" />
+			<test url="http://www.addthis.com/privacy" />
+			<test url="http://www.addthis.com/privacy/opt-out" />
+			<test url="http://www.addthis.com/privacy/partners" />
+			<test url="http://www.addthis.com/privacy/pixel-partners" />
+			<test url="http://www.addthis.com/privacy/privacy-policy" />
+			<test url="http://www.addthis.com/security/hall-of-fame" />
+			<test url="http://www.addthis.com/social-buttons" />
+			<test url="http://www.addthis.com/social-buttons/facebook-like-button" />
+			<test url="http://www.addthis.com/social-buttons/foursquare" />
+			<test url="http://www.addthis.com/social-buttons/reddit" />
+			<test url="http://www.addthis.com/social-buttons/sharing-tools" />
+			<test url="http://www.addthis.com/social-buttons/slack-button" />
+			<test url="http://www.addthis.com/standard-audiences" />
+			<test url="http://www.addthis.com/support" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.addthis.com/academy/" />
+			<test url="http://www.addthis.com/academy/category/addthis-account/" />
+			<test url="http://www.addthis.com/blog" />
+			<test url="http://www.addthis.com/blog/2015/04/14/minneapolis-running-using-custom-messages-to-better-engage-their-visitors/" />
+			<test url="http://www.addthis.com/blogger/sharing-buttons" />
+			<test url="http://www.addthis.com/dashboard" />
+			<test url="http://www.addthis.com/get/follow" />
+			<test url="http://www.addthis.com/joomla/sharing-buttons" />
+			<test url="http://www.addthis.com/landing?to=drupal" />
+			<test url="http://www.addthis.com/login" />
+			<test url="http://www.addthis.com/magento/sharing-buttons" />
+			<test url="http://www.addthis.com/plans" />
+			<test url="http://www.addthis.com/press" />
+			<test url="http://www.addthis.com/press/addthis-expands-relationship-with-oracle-data-cloud-to-provide-global-reach" />
+			<test url="http://www.addthis.com/register" />
+			<test url="http://www.addthis.com/services" />
+			<test url="http://www.addthis.com/shopify/sharing-buttons" />
+			<test url="http://www.addthis.com/sidebar-editor" /><!--	mixed bug & sets insecure cookie -->
+			<test url="http://www.addthis.com/style/images/common/icon-facebook.png" />
+			<test url="http://www.addthis.com/website-tools" />
+			<test url="http://www.addthis.com/wordpress" />
+			<test url="http://www.addthis.com/wordpress/share-buttons" />
+
+		<test url="http://cf.addthis.com/red/p.png?gen=&amp;rb=&amp;pco=&amp;ev=&amp;pxid=" />
+		<test url="http://ct1.addthis.com/static/r07/widget/css/widget007.old.css" />
+		<test url="http://dashcache.addthis.com/images/logo-reversed-lg.png" />
+
+		<!--	Mixed image:
+					-->
+		<!--test url="http://www.addthis.com/blog/" /-->
 
 
-	<securecookie host="^\.addthis.com$" name="^(?:__atuvc|di|uid|xtc)$" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.addthis.com$" name="^km_ai$" /-->
+	<!--securecookie host="^www\.addthis\.com$" name="^(?:ana_svc|bb2_screener|siteaud)$" /-->
+
+	<securecookie host="^\." name="^(?:__atuvc|__cfduid|di|uid|xtc)$" />
+	<securecookie host="^[^.w]" name="." />
 
 
-	<rule from="^http://(www\.)?addthis\.com/get($|\?)"
-		to="https://$1addthis.com/get/sharing$2" />
+	<rule from="^http://(ct\d)\.addthis\.com/"
+		to="https://$1.addthis.com/" />
 
-	<rule from="^http://((?:api|cache|cf|ct\d|ds|m|s[3579u]|secure|www)\.)?addthis\.com/"
-		to="https://$1addthis.com/" />
-
-	<rule from="^http://cache\.addthiscdn\.com/"
-		to="https://cache.addthiscdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

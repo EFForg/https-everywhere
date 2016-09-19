@@ -1,36 +1,54 @@
 <!--
 	For other Specific Media coverage, see Specific-Media.xml.
 
-secure.adviva.net
 
+	Insecure cookies are set for these domains: ᶜ
 
-	Fully covered  subdomains:
+		- .specificclick.net
 
-		- afe
-		- afe2
-		- clk
-		- cs
-		- rome
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Specificclick">
+<ruleset name="Specificclick.net">
 
-	<target host="*.specificclick.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="afe.specificclick.net" />
+	<target host="afe2.specificclick.net" />
+	<target host="bp.specificclick.net" />
+	<target host="clk.specificclick.net" />
+	<target host="cs.specificclick.net" />
+	<target host="dp.specificclick.net" />
+	<target host="dp2.specificclick.net" />
+	<target host="mpp.specificclick.net" />
+	<target host="mpp2.specificclick.net" />
+	<target host="rome.specificclick.net" />
+
+	<!--	Complications:
+				-->
+	<target host="dg.specificclick.net" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://bp.specificclick.net/?pixid=" /-->
 
 
-	<!--	Tracking cookie set by bp:
+	<!--	Not secured byserver:
+					-->
+	<!--securecookie host="^\.specificclick\.net$" name="^(?:ct|cug)$" /-->
+
+	<!--	Tracking cookies set by bp:
 						-->
-	<securecookie host="^\.specificclick\.net$" name="^ug$" />
-	<securecookie host="^(?:afe2?|bp|clk|cs|dp|mpp)\.specificclick\.net$" name=".+" />
+	<securecookie host="^\." name="^(?:ct|c?ug)$" />
+	<securecookie host="^\w" name="." />
 
-
-
-	<rule from="^http://(afe2?|bp|clk|cs|dp2?|mpp2?|rome)\.specificclick\.net/"
-		to="https://$1.specificclick.net/" />
 
 	<!--	dg cert: dp.specificclick.net
 						-->
 	<rule from="^http://dg\.specificclick\.net/"
 		to="https://dp.specificclick.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

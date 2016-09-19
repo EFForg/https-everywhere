@@ -1,0 +1,108 @@
+<!--
+	NB: p://www.providerfinder.../$ redirects
+	to s: 404 ?=> fetch test failure
+
+	For other Anthem coverage, see anthem.com.xml.
+
+
+	Nonfunctional hosts in *empireblue.com:
+
+		- sgplans ʳ
+		- smallbusiness ʰ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *empireblue.com:
+
+		- ^ ᵐ
+		- transformationcentral ᵉ ᵐ ˢ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .empireblue.com
+		- enrollment-info.empireblue.com
+		- eoc.empireblue.com
+		- es.empireblue.com
+		- m.empireblue.com
+		- mediproviders.empireblue.com
+		- secured.ols.empireblue.com
+		- payment.empireblue.com
+		- www.providerfinder.empireblue.com
+		- sbc.empireblue.com
+		- shop.empireblue.com
+		- transformationcentral.empireblue.com
+		- www.empireblue.com
+		- www13.empireblue.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on enrollment-info, transformationcentral from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- transformationcentral from transformation-central.com
+			- transformationcentral from www.transformation-central.com
+	
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Empire Blue.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="enrollment-info.empireblue.com" />
+	<target host="eoc.empireblue.com" />
+	<target host="es.empireblue.com" />
+	<target host="m.empireblue.com" />
+	<target host="mediproviders.empireblue.com" />
+	<target host="mss.empireblue.com" />
+	<target host="secured.ols.empireblue.com" />
+	<target host="payment.empireblue.com" />
+	<target host="www.providerfinder.empireblue.com" />
+	<target host="sbc.empireblue.com" />
+	<target host="www.sbc.empireblue.com" />
+	<target host="shop.empireblue.com" />
+	<target host="www.empireblue.com" />
+	<target host="www13.empireblue.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www13.empireblue.com/cp/web/nyhoteltrades" /-->
+
+	<!--	Complications:
+				-->
+	<target host="empireblue.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.empireblue\.com$" name="^TLTSID$" /-->
+	<!--securecookie host="^enrollment-info\.empireblue\.com$" name="^(?:t_session|visitorid)$$" /-->
+	<!--securecookie host="^eoc\.empireblue\.com$" name="^(?:JSESSIONID|ant|ice\.push\.browser)$" /-->
+	<!--securecookie host="^(?:es|mediproviders|mss|www\.providerfinder|shop)\.empireblue\.com$" name="^ant$" /-->
+	<!--securecookie host="^(?:m|secured\.ols|payment|www13)\.empireblue\.com$" name="^(?:JSESSIONID|ant)$" /-->
+	<!--securecookie host="^sbc\.empireblue\.com$" name="^(?:JSESSIONID|ice\.push\.browser|oam\.Flash\.RENDERMAP\.TOKEN)$" /-->
+	<!--securecookie host="^transformationcentral\.empireblue\.com$" name="^exp_(?:last_activity|last_visit|tracker)$" /-->
+	<!--securecookie host="^www\.empireblue\.com$" name="^ebizs$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://empireblue\.com/"
+		to="https://www.empireblue.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
