@@ -1,23 +1,31 @@
 <!--
-	Nonfunctional subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- ^	(shows st)
-		- www	(shows s1a)
+		- .dynamicyield.com
+		- adm.dynamicyield.com
+		- www.dynamicyield.com
 
-
-	Fully covered subdomains:
-
-		- adm
-		- s1a
-		- st
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Dynamic Yield.com (partial)">
 
-	<target host="*.dynamicyield.com" />
+	<target host="adm.dynamicyield.com" />
+	<target host="st.dynamicyield.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www.dynamicyield.com/request-demo/" /-->
 
 
-	<rule from="^http://(adm|s1a|st)\.dynamicyield\.com/"
-		to="https://$1.dynamicyield.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dynamicyield\.com$" name="^(?:_dynamicyield_session|admLoggedIn)$" /-->
+	<!--securecookie host="^adm\.dynamicyield\.com$" name="^(?:AWSELB|XSRF-TOKEN)$" /-->
+	<!--securecookie host="^www\.dynamicyield\.com$" name="^(?:PHPSESSID|wfvt_\d+)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
