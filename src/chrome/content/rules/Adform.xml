@@ -1,35 +1,39 @@
 <!--
-	Problematic domains:
+	Nonfunctional hosts in *adform.com:
 
-		- adform.com	(cert only matches www)
+		- academy ᶠ
+		- blog ᶠ
+		- brandsolutions ᶠ
+		- creative ᶠ
+		- engineering ᶠ
+		- events ᶠ
+		- getcertified ᶠ
+		- join ᶠ
+		- pr-old ᶠ
+		- studio ʰ
+		- tools-tracking ᵇ
 
-
-	Fully covered domains:
-
-		- (www.)adform.com	(^ → www)
-
-		- adform.net subdomains:
-
-			- a1
-			- adx
-			- asia
-			- cp
-			- files
-			- s[12]
-			- server
-			- track
-			- us
-
-		- s[12].adformdsp.net
-		- server.adformdsp.net
+	ᵇ Shows default page
+	ᶠ Handshake fails
+	ʰ Redirects to http
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
+		- .adform.net
 		- track.adform.net
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on showroom from showroom.adform.com ˢ
+
+	ˢ See https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="Adform">
+<ruleset name="Adform (partial)">
 
 	<target host="adform.com" />
 	<target host="www.adform.com" />
@@ -44,21 +48,25 @@
 	<target host="server.adform.net" />
 	<target host="track.adform.net" />
 	<target host="us.adform.net" />
-	
+
 	<target host="s1.adformdsp.net" />
 	<target host="s2.adformdsp.net" />
 	<target host="server.adformdsp.net" />
 
-		<test url="http://track.adform.net/Serving/TrackPoint/?pm=&amp;lid=" />
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://dmp.adform.net/dmp/profile/?CC=1&amp;pid=1&amp;" /-->
+		<!--test url="http://track.adform.net/Serving/TrackPoint/?pm=1" /-->
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.adform\.net$" name="^uid$" /-->
 	<!--securecookie host="^track\.adform\.net$" name="^C$" /-->
 
 	<securecookie host="^www\.adform\.com$" name=".+" />
 	<!--
-		name="^(GCM|TPC|uid)$"
+		name="^(GCM|TPC)$"
 					-->
 	<securecookie host="^\.adform\.net$" name=".+" />
 	<securecookie host="^track\.adform\.net$" name=".+" />
