@@ -11,7 +11,7 @@
 		- changes *
 		- gettingstarted *
 
-	* Tumblr
+	* Tumblr / refused
 
 
 	Problematic hosts in *exposure.co:
@@ -30,20 +30,29 @@
 	¹ Per-account vhosts
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains: ᶜ
 
 		- .exposure.co
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Exposure.co (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="exposure.co" />
 	<target host="*.exposure.co" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}exposure\.co/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.exposure.co/" />
+			<test url="http://exists.not.exposure.co/" />
+
 		<exclusion pattern="^http://(?:changes|gettingstarted|support)\.exposure\.co/" />
 
+			<!--	+ve:
+					-->
 			<test url="http://changes.exposure.co/" />
 			<test url="http://gettingstarted.exposure.co/" />
 			<test url="http://support.exposure.co/" />
@@ -58,7 +67,7 @@
 					-->
 	<!--securecookie host="^\.exposure\.co$" name="^_exposure_session$" /-->
 
-	<securecookie host="^\.exposure\.co$" name=".+" />
+	<securecookie host="." name="." />
 
 
 	<rule from="^http:"
