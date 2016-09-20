@@ -1,0 +1,64 @@
+<!--
+	For other HSBC Holdings coverage, see HSBC.xml.
+
+
+	Nonfunctional hosts in *hsbc.co.in:
+
+		- www.about *
+		- www.business *
+
+	* Unrecognized name
+
+
+	Problematic hosts in *hsbc.co.in:
+
+		- ^ ᵐ
+		- (www.)?assetmanagement ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- services.assetmanagement.hsbc.co.in
+		- www.hsbc.co.in
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bugs, on:
+		
+			- services.assetmanagement from www1.member-hsbc-group.com ˢ
+			- www from ad.doubleclick.net
+
+	ˢ See https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="HSBC.co.in (partial)" default_off="testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.hsbc.co.in" />
+
+	<!--	Complications:
+				-->
+	<target host="hsbc.co.in" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^services\.assetmanagement\.hsbc\.co\.in$" name="^(?:JSESSIONID|locale)$" /-->
+	<!--securecookie host="^www\.hsbc\.co\.in$" name="^(?:JSESSIONID|INPTK)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hsbc\.co\.in/"
+		to="https://www.hsbc.co.in/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
