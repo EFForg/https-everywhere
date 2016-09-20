@@ -269,6 +269,10 @@ const RuleWriter = {
 
     return data.value;
   },
+<<<<<<< HEAD
+=======
+
+>>>>>>> effRelease
   readFromFile: function(file) {
     if (!file.exists())
       return null;

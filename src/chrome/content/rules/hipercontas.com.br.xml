@@ -1,0 +1,46 @@
+<!--
+	Problematic hosts in *hipercontas.com.br:
+
+		- ^ ᵐ
+		- afiliados ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- chat.hipercontas.com.br
+		- www.hipercontas.com.br
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Hipercontas.com.br (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="afiliados.hipercontas.com.br" /-->
+	<target host="chat.hipercontas.com.br" />
+	<target host="www.hipercontas.com.br" />
+
+	<!--	Complications:
+				-->
+	<target host="hipercontas.com.br" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^chat\.hipercontas\.com\.br$" name="^(?:AWSELB|lz_userid)$" /-->
+	<!--securecookie host="^www\.hipercontas\.com\.br$" name="^(?:AWSELB|PHPSESSID)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://hipercontas\.com\.br/"
+		to="https://www.hipercontas.com.br/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

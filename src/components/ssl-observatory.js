@@ -123,7 +123,7 @@ function SSLObservatory() {
     this.setupASNWatcher();
 
   try {
-    NSS.initialize("");
+    NSS.initialize();
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }

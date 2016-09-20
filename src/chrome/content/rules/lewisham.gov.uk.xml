@@ -1,0 +1,120 @@
+<!--
+	London Borough of Lewisham Council
+
+	For rules covering resources which do not secure
+	mixed content, see lewisham.gov.uk-resources.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *lewisham.gov.uk:
+
+		- icel ʳ
+		- www2 ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Partially covered hosts in *lewisham.gov.uk:
+
+		- concilmeetings ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- jobs.lewisham.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on myaccount from www.lewisham.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Lewisham.gov.uk (partial)">
+
+	<target host="lewisham.gov.uk" />
+	<target host="councilmeetings.lewisham.gov.uk" />
+	<target host="jobs.lewisham.gov.uk" />
+	<target host="myaccount.lewisham.gov.uk" />
+	<target host="www.lewisham.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://councilmeetings\.lewisham\.gov\.uk/(?:ieDocHome|ieListDocuments|mgFindMember|mgPasswordReqst|uuCoverPage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://councilmeetings\.lewisham\.gov\.uk/(?!/*(?:documents/|ieLogon\.aspx|ieRegisterUser\.aspx|jquery-ui/|mgRegisterKeywordInterest\.aspx|mgimages/|[Ss]ite[Ss]pecific/))" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://councilmeetings\.lewisham\.gov\.uk/.+\.js(?:$|\?)" /-->
+		<!--
+			In conbination:
+					-->
+		<!--exclusion pattern="^http://councilmeetings\.lewisham\.gov\.uk/(?!(?!.+\.js(?:$|\?))/*(?:documents/|ieLogon\.aspx|ieRegisterUser\.aspx|jquery-ui/|mgRegisterKeywordInterest\.aspx|mgimages/|[Ss]ite[Ss]pecific/))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://councilmeetings\.lewisham\.gov\.uk/(?!/*(?:documents/|ieLogon\.aspx|ieRegisterUser\.aspx|mgRegisterKeywordInterest\.aspx))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://councilmeetings.lewisham.gov.uk/edit-doc-activex.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/ieDocHome.aspx?bcr=1" />
+			<test url="http://councilmeetings.lewisham.gov.uk/ieListDocuments.aspx?MId=3869" />
+			<test url="http://councilmeetings.lewisham.gov.uk/jquery-ui/Add-ons/mg.jqueryaddons.min.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/jquery-ui/js/jquery-1.9.1.min.js" />
+			<!--
+			<test url="http://councilmeetings.lewisham.gov.uk/mgAjaxScripts.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/mgFindMember.aspx" />
+			<test url="http://councilmeetings.lewisham.gov.uk/mgPasswordReqst.aspx" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/js/coreFunctions.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/js/iepngfix_tilebg.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/js/jquery-1.3.2.min.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/js/jquery.selectbox-0.4.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/js/mobilenav.js" />
+			<test url="http://councilmeetings.lewisham.gov.uk/uuCoverPage.aspx?bcr=1" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://councilmeetings.lewisham.gov.uk/documents/s42157/Cover%20Sheet%20Response%20to%20Public%20Accounts%20SC.pdf" />
+			-->
+			<test url="http://councilmeetings.lewisham.gov.uk/ieLogon.aspx" />
+			<test url="http://councilmeetings.lewisham.gov.uk/ieRegisterUser.aspx" />
+			<!--
+			<test url="http://councilmeetings.lewisham.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			-->
+			<test url="http://councilmeetings.lewisham.gov.uk/mgRegisterKeywordInterest.aspx?bcr=1" />
+			<!--
+			<test url="http://councilmeetings.lewisham.gov.uk/mgimages/logo-pdf-1.gif" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/Style%20Library/lbl/images/listItemGreenSquare.gif" />
+			<test url="http://councilmeetings.lewisham.gov.uk/sitespecific/ssWordStyles.css" />
+			-->
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://myaccount.lewisham.gov.uk/myforms/fms-33403.aspg" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^jobs\.lewisham\.gov\.uk$" name="^(?:ASP\.NET_SessionId|HighContrast|JobBookmarkReturnUrl)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!councilmeetings\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

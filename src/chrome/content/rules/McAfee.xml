@@ -1,20 +1,25 @@
 <!--
 	For other Intel coverage, see Intel.xml.
 
+	Other McAfee rulesets:
 
-	Av vendor. promos.mcafee.com lacks https
+		- McAfee-MX-Logic.xml
 
 
-	Insecure cookies are set for these domains and hosts:
+	Av vendor.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .mcafee.com
 		- kc.mcafee.com
+		- partnerfocus.mcafee.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="McAfee.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="mcafee.com" />
 	<target host="beta.mcafee.com" />
 	<target host="blogs.mcafee.com" />
@@ -23,6 +28,8 @@
 	<target host="images.mcafee.com" />
 	<target host="secureimages.mcafee.com" />
 	<target host="kc.mcafee.com" />
+	<target host="partnerfocus.mcafee.com" />
+	<target host="promos.mcafee.com" />
 	<target host="service.mcafee.com" />
 	<target host="shop.mcafee.com" />
 	<target host="us.mcafee.com" />
@@ -30,7 +37,7 @@
 
 		<!--	At least the homepage redirects to http.
 								-->
-		<exclusion pattern="^http://service\.mcafee\.com/(?!CSS/|css/|images/|locale/|(?:Script|Web)Resource\.axd)" />
+		<exclusion pattern="^http://service\.mcafee\.com/(?!CSS/|css/|images/|locale/|WebResource\.axd)" />
 
 			<!--	+ve:
 					-->
@@ -52,7 +59,7 @@
 		<!--
 			Exceptions:
 					-->
-		<exclusion pattern="^http://www\.mcafee\.com/+(?!favicon\.ico|img/|static/|\w\w/img/)" />
+		<exclusion pattern="^http://www\.mcafee\.com/(?!/*(?:favicon\.ico|img/|static/|\w\w/img/))" />
 
 			<!--	+ve:
 					-->
@@ -72,10 +79,11 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.mcafee\.com$" name="^(?:AffID|Currency|HPrst|HRntm|Locale|SessionInfo|SiteID|lUsrCtxPersist|lUsrCtxSession||langid|session_data)$" /-->
+	<!--securecookie host="^\.mcafee\.com$" name="^(?:Ac[ps]c|AffID|Currency|Flow|HPrst|HRntm|IBounceURL|IUsrCtxPersist|IUsrCtxSession|Locale|SessionInfo|SiteID|lUsrCtxPersist|lUsrCtxSession||langid|session_data)$" /-->
 	<!--securecookie host="^kc\.mcafee\.com$" name="^(JSESSIONID|OAMAuthnCookie_kc\.mcafee\.com:443|ROUTEID)$" /-->
+	<!--securecookie host="^partnerfocus\.mcafee\.com$" name="^\.ASPXFORMSAUTH$" /-->
 
-	<securecookie host=".+\.mcafee\.com$" name=".+" />
+	<securecookie host=".+\.mcafee\.com$" name="." />
 
 
 	<rule from="^http:"

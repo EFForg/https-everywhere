@@ -468,7 +468,11 @@ HTTPSEverywhere.prototype = {
   loadOCSPList: function() {
     try {
       var loc = "chrome://https-everywhere/content/code/commonOCSP.json";
+<<<<<<< HEAD
       var data = this.rw.readFromFile(loc);
+=======
+      var data = this.rw.readFromUrl(loc);
+>>>>>>> effRelease
       this.ocspList = JSON.parse(data);
     } catch(e) {
       this.log(WARN, "Failed to load OCSP list: " + e);

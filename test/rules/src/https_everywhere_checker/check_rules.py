@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 
 import binascii
 import collections
@@ -83,7 +83,7 @@ class UrlComparisonThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		while True:
+		while not self.taskQueue.empty():
 			try:
 				self.processTask(self.taskQueue.get())
 				self.taskQueue.task_done()
@@ -121,68 +121,77 @@ class UrlComparisonThread(threading.Thread):
 			res["https_url"] = https_url
 		self.resQueue.put(res)
 
-	def processUrl(self, plainUrl, task):
+	def fetchUrl(self, plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname):
+		logging.debug("=**= Start %s => %s ****", plainUrl, transformedUrl)
+		logging.debug("Fetching transformed page %s", transformedUrl)
+		transformedRcode, transformedPage = fetcherRewriting.fetchHtml(transformedUrl)
+		logging.debug("Fetching plain page %s", plainUrl)
+		# If we get an exception (e.g. connection refused,
+		# connection timeout) on the plain page, don't treat
+		# that as a failure.
+		plainRcode, plainPage = None, None
 		try:
-			transformedUrl = task.ruleset.apply(plainUrl)
+			plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
 		except Exception, e:
-			self.queue_result("regex_error", str(e), task.ruleFname, plainUrl)
-			logging.error("%s: Regex Error %s" % (task.ruleFname, str(e)))
-			return
+			logging.debug("Non-fatal fetch error for plain page %s: %s" % (plainUrl, e))
 
+		# Compare HTTP return codes - if original page returned 2xx,
+		# but the transformed didn't, consider it an error in ruleset
+		# (note this is not symmetric, we don't care if orig page is broken).
+		# We don't handle 1xx codes for now.
+		if plainRcode and plainRcode//100 == 2 and transformedRcode//100 != 2:
+			message = "Non-2xx HTTP code: %s (%d) => %s (%d)" % (
+				plainUrl, plainRcode, transformedUrl, transformedRcode)
+			self.queue_result("error", "non-2xx http code", ruleFname, plainUrl, https_url=transformedUrl)
+			logging.debug(message)
+			return message
+
+		# If the plain page fetch got an exception, we don't
+		# need to do the distance comparison. Intuitively, if a
+		# plain page is fetchable people expect it to have the
+		# same content as the HTTPS page. But if the plain page
+		# is unreachable, there's nothing to compare to.
+		if plainPage:
+			distance = self.metric.distanceNormed(plainPage, transformedPage)
+
+			logging.debug("==== D: %0.4f; %s (%d) -> %s (%d) =====",
+				distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage))
+			if distance >= self.thresholdDistance:
+				logging.info("Big distance %0.4f: %s (%d) -> %s (%d). Rulefile: %s =====",
+					distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage), ruleFname)
+
+		self.queue_result("success", "", ruleFname, plainUrl)
+
+	def processUrl(self, plainUrl, task):
 		fetcherPlain = task.fetcherPlain
 		fetcherRewriting = task.fetcherRewriting
 		ruleFname = task.ruleFname
-		
+
 		try:
-			logging.debug("=**= Start %s => %s ****", plainUrl, transformedUrl)
-			logging.debug("Fetching transformed page %s", transformedUrl)
-			transformedRcode, transformedPage = fetcherRewriting.fetchHtml(transformedUrl)
-			logging.debug("Fetching plain page %s", plainUrl)
-			# If we get an exception (e.g. connection refused,
-			# connection timeout) on the plain page, don't treat
-			# that as a failure.
-			plainRcode, plainPage = None, None
-			try:
-				plainRcode, plainPage = fetcherPlain.fetchHtml(plainUrl)
-			except Exception, e:
-				logging.debug("Non-fatal fetch error for plain page %s: %s" % (plainUrl, e))
-
-			# Compare HTTP return codes - if original page returned 2xx,
-			# but the transformed didn't, consider it an error in ruleset
-			# (note this is not symmetric, we don't care if orig page is broken).
-			# We don't handle 1xx codes for now.
-			if plainRcode and plainRcode//100 == 2 and transformedRcode//100 != 2:
-				message = "Non-2xx HTTP code: %s (%d) => %s (%d)" % (
-					plainUrl, plainRcode, transformedUrl, transformedRcode)
-				self.queue_result("error", "non-2xx http code", task.ruleFname, plainUrl, https_url=transformedUrl)
-				logging.debug(message)
-				return message
-			
-			# If the plain page fetch got an exception, we don't
-			# need to do the distance comparison. Intuitively, if a
-			# plain page is fetchable people expect it to have the
-			# same content as the HTTPS page. But if the plain page
-			# is unreachable, there's nothing to compare to.
-			if plainPage:
-				distance = self.metric.distanceNormed(plainPage, transformedPage)
-			
-				logging.debug("==== D: %0.4f; %s (%d) -> %s (%d) =====",
-					distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage))
-				if distance >= self.thresholdDistance:
-					logging.info("Big distance %0.4f: %s (%d) -> %s (%d). Rulefile: %s =====",
-						distance, plainUrl, len(plainPage), transformedUrl, len(transformedPage), ruleFname)
-
-			self.queue_result("success", "", task.ruleFname, plainUrl)
-
+			transformedUrl = task.ruleset.apply(plainUrl)
 		except Exception, e:
-			message = "Fetch error: %s => %s: %s" % (
-				plainUrl, transformedUrl, e)
-			self.queue_result("error", "fetch-error %s"% e, task.ruleFname, plainUrl, https_url=transformedUrl)
-			logging.debug(message)
-			return message
+			self.queue_result("regex_error", str(e), ruleFname, plainUrl)
+			logging.error("%s: Regex Error %s" % (ruleFname, str(e)))
+			return
+
+		try:
+			message = self.fetchUrl(plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname)
+
+		except:
+                        # Try once more before sending an error result
+			try:
+		            message = self.fetchUrl(plainUrl, transformedUrl, fetcherPlain, fetcherRewriting, ruleFname)
+			except Exception, e:
+			    message = "Fetch error: %s => %s: %s" % (
+				    plainUrl, transformedUrl, e)
+			    self.queue_result("error", "fetch-error %s"% e, ruleFname, plainUrl, https_url=transformedUrl)
+			    logging.debug(message)
+
 		finally:
 			logging.info("Finished comparing %s -> %s. Rulefile: %s.",
 				plainUrl, transformedUrl, ruleFname)
+
+		return message
 
 def disableRuleset(ruleset, problems):
 	logging.info("Disabling ruleset %s", ruleset.filename)
@@ -399,11 +408,6 @@ def cli():
 		testedUrlPairCount = 0
 		config.getboolean("debug", "exit_after_dump")
 
-		for i in range(threadCount):
-			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
-			t.setDaemon(True)
-			t.start()
-
 		# set of main pages to test
 		mainPages = set(urlList)
 		# If list of URLs to test/scan was not defined, use the test URL extraction
@@ -421,6 +425,12 @@ def cli():
 						logging.debug("Skipping excluded URL %s", test.url)
 				task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
 				taskQueue.put(task)
+
+		for i in range(threadCount):
+			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
+			t.setDaemon(True)
+			t.start()
+
 		taskQueue.join()
 		logging.info("Finished in %.2f seconds. Loaded rulesets: %d, URL pairs: %d.",
 			time.time() - startTime, len(xmlFnames), testedUrlPairCount)
