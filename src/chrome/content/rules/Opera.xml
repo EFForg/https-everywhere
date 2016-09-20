@@ -10,6 +10,7 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	Other Opera rulesets:
 
 		- AdMarvel.com.xml
+		- Operamediaworks.com.xml
 		- operacdn.com.xml
 
 
@@ -49,7 +50,9 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 			- get-ice-1
 			- get-tsw-1
 			- help ᵈ
+			- mail ᵈ
 			- media *
+			- my ᵈ
 			- my-beta		(redirects to http)
 			- my-next		(reset, expired 2013-03-06)
 			- redir
@@ -74,7 +77,7 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 		- cn ᵐ
 		- de ᵐ
 		- fr ᵐ
-		- in ᵐ
+		- in ᵐ		(404)
 		- jp ᵐ
 		- m ʳ
 		- mini ʳ
@@ -101,7 +104,6 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- bugs.opera.com
-		- mail.opera.com
 		- .micropage.opera.com
 
 	ᶜ See https://owasp.org/index.php/SecureFlag
@@ -126,23 +128,27 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	<target host="apps.opera.com" />
 	<target host="auth.opera.com" />
 	<target host="bugs.opera.com" />
-	<target host="mini.bugs.opera.com" />
+		<target host="mini.bugs.opera.com" />
 	<target host="deb.opera.com" />
 	<target host="dev.opera.com" />
 	<target host="ftp.opera.com" />
+	<target host="get.geo.opera.com" />
 	<target host="net.geo.opera.com" />
 	<target host="get.opera.com" />
+	<target host="get2.opera.com" />
 	<target host="idp.opera.com" />
 	<target host="labs.opera.com" />
-	<target host="mail.opera.com" />
 	<target host="micropage.opera.com" />
-	<target host="my.opera.com" />
+	<target host="people.opera.com" />
+	<target host="redir.opera.com" />
 	<target host="ssl.opera.com" />
 	<target host="unite.opera.com" />
 	<target host="widgets.opera.com" />
 	<target host="www.opera.com" />
 
-	<target host="bugfiles.operasoft.com" />
+	<!-- Tests times out
+		<target host="bugfiles.operasoft.com" />
+	-->
 
 	<!--	Complications:
 				-->
@@ -151,7 +157,6 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	<target host="cn.opera.com" />
 	<target host="de.opera.com" />
 	<target host="fr.opera.com" />
-	<target host="in.opera.com" />
 	<target host="jp.opera.com" />
 	<target host="m.opera.com" />
 	<target host="mini.opera.com" />
@@ -192,33 +197,41 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^bugs\.opera\.com$" name="^(?:JSESSIONID|atlassian\.xsrf\.token)$" /-->
-	<!--securecookie host="^mail\.opera\.com$" name="^AWSELB$" /-->
 	<!--securecookie host="^\.micropage\.opera\.com$" name="^mppers$" /-->
 
 	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
-	<securecookie host="^(?:addons|bugs|idp|mail|\.micropage|ssl)\.opera\.com$" name=".+" />
+	<securecookie host="^(?:addons|bugs|idp|\.micropage|ssl)\.opera\.com$" name=".+" />
 
 
 	<!--	Redirect keeps path, but not
 		? nor forward slash:
 					-->
-	<rule from="^http://(ar|de|fr|in|ru|tw)\.opera\.com/+([^?]*)\??$"
+	<rule from="^http://(ar|de|fr|ru|tw)\.opera\.com/+([^?]*)\??$"
 		to="https://www.opera.com/$1/$2" />
 
-		<test url="http://in.opera.com/home" />
+		<test url="http://ar.opera.com/home" />
+		<test url="http://ar.opera.com/mobile/" />
+		<test url="http://de.opera.com/home" />
+		<test url="http://de.opera.com/mobile/" />
+		<test url="http://fr.opera.com/home" />
+		<test url="http://fr.opera.com/mobile/" />
 		<test url="http://ru.opera.com/home" />
+		<test url="http://ru.opera.com/mobile/" />
+		<test url="http://tw.opera.com/home" />
+		<test url="http://tw.opera.com/mobile/" />
 
 	<!--	Redirect keeps path and args, but not
 		forward slash; and duplicates args:
 							-->
-	<rule from="^http://(ar|de|fr|in|ru|tw)\.opera\.com/+([^?]*)(.*)"
+	<rule from="^http://(ar|de|fr|ru|tw)\.opera\.com/+([^?]*)(.*)"
 		to="https://www.opera.com/$1/$2$3$3" />
 
 		<test url="http://ar.opera.com/index.htm?foo" />
+		<test url="http://ar.opera.com/index.htm?bar" />
 		<test url="http://de.opera.com/index.htm?foo" />
+		<test url="http://de.opera.com/index.htm?bar" />
 		<test url="http://fr.opera.com/index.htm?foo" />
-		<test url="http://in.opera.com/index.htm?foo" />
-		<test url="http://in.opera.com/index.htm?bar" />
+		<test url="http://fr.opera.com/index.htm?bar" />
 		<test url="http://ru.opera.com/index.htm?foo" />
 		<test url="http://ru.opera.com/index.htm?bar" />
 		<test url="http://tw.opera.com/index.htm?foo" />
@@ -238,8 +251,8 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	<rule from="^http://cn\.opera\.com/+([^?]*)\??$"
 		to="https://www.opera.com/zh-cn/$1" />
 
-		<test url="http://cn.opera.com/favicon.ico" />
 		<test url="http://cn.opera.com/index.htm" />
+		<test url="http://cn.opera.com/mobile/" />
 
 	<!--	Redirect keeps path and args, but not
 		forward slash; and duplicates args:
@@ -258,8 +271,8 @@ Non-2xx HTTP code: http://in.opera.com/ (200) => https://www.opera.com/in/ (404)
 	<rule from="^http://jp\.opera\.com/+([^?]*)\??$"
 		to="https://www.opera.com/ja/$1" />
 
-		<test url="http://jp.opera.com/favicon.ico" />
 		<test url="http://jp.opera.com/index.htm" />
+		<test url="http://jp.opera.com/mobile/" />
 
 	<!--	Redirect keeps path and args, but not
 		forward slash; and duplicates args:
