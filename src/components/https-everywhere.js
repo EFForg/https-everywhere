@@ -92,7 +92,7 @@ const WHERE_UNTRUSTED = 1;
 const WHERE_TRUSTED = 2;
 const ANYWHERE = 3;
 
-const N_COHORTS = 1000; 
+const N_COHORTS = 1000;
 
 const DUMMY_OBJ = {};
 DUMMY_OBJ.wrappedJSObject = DUMMY_OBJ;
@@ -146,7 +146,7 @@ function HTTPSEverywhere() {
   // we rewrite.
   this.obsService = CC["@mozilla.org/observer-service;1"]
                     .getService(Components.interfaces.nsIObserverService);
-                    
+
   if (this.prefs.getBoolPref("globalEnabled")) {
     this.obsService.addObserver(this, "profile-before-change", false);
     this.obsService.addObserver(this, "profile-after-change", false);
@@ -180,10 +180,10 @@ In recent versions of Firefox and HTTPS Everywhere, the call stack for performin
 1. HTTPSEverywhere.shouldIgnoreURI() checks for very quick reasons to ignore a
 request, such as redirection loops, non-HTTP[S] URIs, and OCSP
 
-    2. HTTPS.replaceChannel() 
+    2. HTTPS.replaceChannel()
 
-       3. HTTPSRules.rewrittenURI() 
-            
+       3. HTTPSRules.rewrittenURI()
+
            4. HTTPSRules.potentiallyApplicableRulesets uses <target host=""> elements to identify relevant rulesets
 
            foreach RuleSet:
@@ -468,11 +468,7 @@ HTTPSEverywhere.prototype = {
   loadOCSPList: function() {
     try {
       var loc = "chrome://https-everywhere/content/code/commonOCSP.json";
-<<<<<<< HEAD
-      var data = this.rw.readFromFile(loc);
-=======
       var data = this.rw.readFromUrl(loc);
->>>>>>> effRelease
       this.ocspList = JSON.parse(data);
     } catch(e) {
       this.log(WARN, "Failed to load OCSP list: " + e);
@@ -633,7 +629,7 @@ HTTPSEverywhere.prototype = {
     // This variable is used for gradually turning on features for testing and
     // scalability purposes.  It is a random integer [0,N_COHORTS) generated
     // once and stored thereafter.
-    // 
+    //
     // This is not currently used/called in the development branch
     var cohort;
     try {
@@ -701,18 +697,18 @@ HTTPSEverywhere.prototype = {
   },
 
   chrome_opener: function(uri, args) {
-    // we don't use window.open, because we need to work around TorButton's 
+    // we don't use window.open, because we need to work around TorButton's
     // state control
     args = args || 'chrome,centerscreen';
     return CC['@mozilla.org/appshell/window-mediator;1']
-      .getService(CI.nsIWindowMediator) 
+      .getService(CI.nsIWindowMediator)
       .getMostRecentWindow('navigator:browser')
       .open(uri,'', args );
   },
 
   tab_opener: function(uri) {
     var gb = CC['@mozilla.org/appshell/window-mediator;1']
-      .getService(CI.nsIWindowMediator) 
+      .getService(CI.nsIWindowMediator)
       .getMostRecentWindow('navigator:browser')
       .gBrowser;
     var tab = gb.addTab(uri);
@@ -806,7 +802,7 @@ function https_everywhereLog(level, str) {
     prefs = HTTPSEverywhere.instance.get_prefs();
     econsole = Components.classes["@mozilla.org/consoleservice;1"]
                .getService(Components.interfaces.nsIConsoleService);
-  } 
+  }
   try {
     var threshold = prefs.getIntPref(LLVAR);
   } catch (e) {

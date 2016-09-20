@@ -17,13 +17,8 @@ if type apt-get >/dev/null ; then
     BROWSERS="iceweasel chromium"
     CHROMEDRIVER="chromedriver"
   fi
-<<<<<<< HEAD
-  sudo apt-get install -y libxml2-dev libxml2-utils libxslt1-dev python-dev \
-    $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
-=======
   $SUDO_SHIM apt-get install libxml2-dev libxml2-utils libxslt1-dev \
     python-dev $BROWSERS zip sqlite3 python-pip libcurl4-openssl-dev xvfb \
->>>>>>> effRelease
     libssl-dev git $CHROMEDRIVER
 elif type brew >/dev/null ; then
   brew list python &>/dev/null || brew install python
