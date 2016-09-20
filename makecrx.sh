@@ -49,7 +49,7 @@ needs_update() {
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py && bash utils/validate.sh
+  python2.7 ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
