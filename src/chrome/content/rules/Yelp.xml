@@ -4,23 +4,61 @@
 		- (www.)yelp-support.com
 
 	^yelcdn.com does not exist
+
+
+	Nonfunctional hosts in *yelp.com:
+
+		- help ʰ
+
+	ʰ Desk.com / redirects to http
+
+
+	Problematic hosts in *yelp.com:
+
+		- (www.)? ᵀ
+		- (www.)?biz ᵀ
+		- br ᵀ
+		- ch ᵀ
+		- m ᵀ
+		- opensource ᵀ
+
+	ᵀ Blocks Tor users
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .yelp.com
+		- nz.yelp.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="Yelp">
 
 	<target host="yelp.com" />
 	<target host="*.yelp.com" />
 
+		<exclusion pattern="^http://help\.yelp\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://help.yelp.com/" />
+
 		<test url="http://biz.yelp.com/" />
+		<test url="http://www.biz.yelp.com/" />
 		<test url="http://br.yelp.com/" />
+		<test url="http://ch.yelp.com/" />
 		<test url="http://communityblog.yelp.com/" />
 		<test url="http://engineeringblog.yelp.com/" />
 		<test url="http://m.yelp.com/" />
 		<test url="http://nz.yelp.com/" />
 		<test url="http://officialblog.yelp.com/" />
+		<test url="http://opensource.yelp.com/" />
 		<test url="http://salesblog.yelp.com/" />
+		<test url="http://seatme.yelp.com/" />
 		<test url="http://www.seatme.yelp.com/" />
+		<test url="http://static.seatme.yelp.com/img/consumer/frontpage/small-iphone.png" />
 		<test url="http://www.yelp.com/" />
-
 
 	<target host="yelp.at" />
 	<target host="*.yelp.at" />
@@ -42,8 +80,6 @@
 	<target host="*.yelp.com.ar" />
 	<target host="yelp.com.au" />
 	<target host="*.yelp.com.au" />
-	<target host="yelp.com.br" />
-	<target host="*.yelp.com.br" />
 	<target host="yelp.com.hk" />
 	<target host="*.yelp.com.hk" />
 	<target host="yelp.com.mx" />
@@ -95,7 +131,6 @@
 		<test url="http://biz.yelp.co.uk/" />
 		<test url="http://biz.yelp.com.ar/" />
 		<test url="http://biz.yelp.com.au/" />
-		<test url="http://biz.yelp.com.br/" />
 		<test url="http://biz.yelp.com.hk/" />
 		<test url="http://biz.yelp.com.mx/" />
 		<test url="http://biz.yelp.com.ph/" />
@@ -126,7 +161,6 @@
 		<test url="http://m.yelp.co.uk/" />
 		<test url="http://m.yelp.com.ar/" />
 		<test url="http://m.yelp.com.au/" />
-		<test url="http://m.yelp.com.br/" />
 		<test url="http://m.yelp.com.hk/" />
 		<test url="http://m.yelp.com.mx/" />
 		<test url="http://m.yelp.com.ph/" />
@@ -157,7 +191,6 @@
 		<test url="http://www.yelp.co.uk/" />
 		<test url="http://www.yelp.com.ar/" />
 		<test url="http://www.yelp.com.au/" />
-		<test url="http://www.yelp.com.br/" />
 		<test url="http://www.yelp.com.hk/" />
 		<test url="http://www.yelp.com.mx/" />
 		<test url="http://www.yelp.com.ph/" />
@@ -180,10 +213,6 @@
 		<test url="http://www.yelp.se/" />
 
 
-	<target host="yelpblog.com" />
-	<target host="www.yelpblog.com" />
-
-
 	<target host="*.yelpcdn.com" />
 
 		<test url="http://s3-media0.fl.yelpcdn.com/assets/srv0/yelp_styleguide/bf3b130e5a1a/assets/img/logos/header_logo_desktop.png" />
@@ -198,6 +227,15 @@
 		<test url="http://s3-media3.ak.yelpcdn.com/assets/srv0/yelp_styleguide/bf3b130e5a1a/assets/img/logos/header_logo_desktop.png" />
 		<test url="http://s3-media4.ak.yelpcdn.com/assets/srv0/yelp_styleguide/bf3b130e5a1a/assets/img/logos/header_logo_desktop.png" />
 		<test url="http://s3-media5.ak.yelpcdn.com/assets/srv0/yelp_styleguide/bf3b130e5a1a/assets/img/logos/header_logo_desktop.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.yelp\.com$" name="^(?:bse|fd|hl|location|recentlocations|yuv)$" /-->
+	<!--securecookie host="^nz\.yelp\.com$" name="^sc$" /-->
+
+	<securecookie host="^\." name="^__(?:cfduid|qca)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"
