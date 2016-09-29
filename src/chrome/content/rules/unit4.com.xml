@@ -1,0 +1,175 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see unit4.com-resources.xml.
+
+
+	Nonfunctional hosts in *unit4.com:
+
+		- ^ ʳ
+		- info ᵃ
+		- nieuwsbrief ᶠ
+		- www ʰ
+
+	ᵃ Marketo / shows another domain
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *unit4.com:
+
+		- downloadcoda ᶜ
+		- pub.nieuwsbrief ᵐ
+		- u4 ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- careers.unit4.com
+		- downloadcoda.unit4.com
+		- my.unit4.com
+		- public.unit4.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Unit4.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ap.unit4.com" />
+	<target host="careers.unit4.com" />
+	<target host="digipoort.unit4.com" />
+	<!--target host="downloadcoda.unit4.com" /-->
+	<target host="my.unit4.com" />
+	<target host="partners.unit4.com" />
+	<target host="public.unit4.com" />
+	<target host="selfservice.unit4.com" />
+	<target host="supportcoda.unit4.com" />
+	<target host="xnet.unit4.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.unit4\.com/(?:$|partners$|support-your-way$)" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://www.unit4.com/partners" /-->
+			<!--test url="http://www.unit4.com/support-your-way" /-->
+
+	<!--	Complications:
+				-->
+	<target host="info.unit4.com" />
+	<target host="pub.nieuwsbrief.unit4.com" />
+	<!--target host="u4.unit4.com" /-->
+
+		<!--exclusion pattern="^http://info\.unit4\.com/(?!/*(?:cs|image|r)s/)" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://info\.unit4\.com/(?!/*rs/.+\.(?:docx?|pdf)(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.unit4.com/Kunskapsdagen.html" />
+			<test url="http://info.unit4.com/NA-CL-WB-Non-Profit-ERP-Webinar_LP.html" />
+			<test url="http://info.unit4.com/NL-CF-AP-ES-ERP-marktvergelijking_LP.html" />
+			<test url="http://info.unit4.com/NL-CL-AP-IDC-Financial-Impact-of-ERP-architecture_LP.html" />
+			<test url="http://info.unit4.com/NL-CL-WP-Juiste-fulfilment-strategie-essentieel-voor-groothandel_LP.html" />
+			<test url="http://info.unit4.com/NL-CL-WP-Vergeten-vragen-bij-ERP-selectie_LP.html" />
+			<test url="http://info.unit4.com/Sjekkliste.html" />
+			<!--
+			<test url="http://info.unit4.com/U4-WB-20160510-CFOWebinarwithRayLeclercq_LP-On-Demand.html?online_lead_source=Blog" />
+			<test url="http://info.unit4.com/U4D-CL-AR-IG-4-Steps-To-Become-A-Business-Partner_LP.html" />
+			<test url="http://info.unit4.com/U4D-CL-WP-CON-12-Changes-That-Determine-The-Future-For-The-Financial-Controller_LP.html?online_lead_source=Blog" />
+			<test url="http://info.unit4.com/U4D-CL-WP-EDU-7-Roadblocks-To-Boosting-Student-Success_LP.html" />
+			<test url="http://info.unit4.com/U4D-CL-WP-PRO-12-Methods-to-Overcome-Scoop-Creep-On-Projects_LP.html?online_lead_source=blog-local" />
+			<test url="http://info.unit4.com/U4D-CL-WP-Self-driving-Experience_LP.html" />
+			<test url="http://info.unit4.com/higher-education-future_LP.html" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://info.unit4.com/css/SocialShare.css" />
+			-->
+			<test url="http://info.unit4.com/rs/900-SZD-631/images/Justify_Your_Attendance_Letter.docx" />
+			<test url="http://info.unit4.com/rs/900-SZD-631/images/U4-U4BW-WHO-CS-Veris-Construction.pdf" />
+			<!--
+			<test url="http://info.unit4.com/rs/900-SZD-631/images/unit4-screen.css" />
+			-->
+
+		<exclusion pattern="^http://pub\.nieuwsbrief\.unit4\.com/(?!/*r/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://pub.nieuwsbrief.unit4.com/default.aspx" />
+			<test url="http://pub.nieuwsbrief.unit4.com/index.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://pub.nieuwsbrief.unit4.com/r/+fks8D1lthyJS95wNWzRdg/83JTe2CLCJ_4bfXCK7gpxQ/tbMNVJieuQQ0V6KarRplag" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/0E1fBlB6V0CGEZPIf1tSYA/2wrlDaaazTAPR0kKAVhMug/9HAyjiC7dkaG6wHMuJlxcQ" />
+			<!--
+			<test url="http://pub.nieuwsbrief.unit4.com/r/0e7uwP7SQOBMzIZFtEU8TA/IfZPvfoZtE_IkaRz5sorNQ/PzQ2ZMtxw6rNa6gVtkvSGA" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/1c8cltuFtYWx3hWVbjVdFQ/iDGEcKOYtRCza5UEwhEPfA/iRMLwYBNoenB64ej_Wa1Yw" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/4MNoDPNQ+8bwODhu+hX9kA/Sq_Kmgu_jywwcpYM7aa+Uw/iYiymlBRiXdC3TW9oMNK1Q" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/4vmQKXsPAloT9PiwSOq2NQ/xl0CzGs0g_6mn64jNoZ3OA/84nmCkmPbiE6yDiEX1F0OQ" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/5DyEswFFCLK10KJjZ7lXew/DhmbiakfysJQJD2R_mr69g/j2gb8MNoZCQ0cARVwo_v2Q" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/7+gnr2HymlzBCAD4rrMqkA/IfZPvfoZtE_IkaRz5sorNQ/PzQ2ZMtxw6rNa6gVtkvSGA" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/I4rDeqWRwOfVJkNuiQQZuw/-/-" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/Ka7ydlwdxM_5j+MtCVR6YA/jVAsG990BNHy3UB6eDt+0A/W4g2pmGFkDTj9fzVC5IGKw" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/Q2Z0DKY2MVJucxJBN_QsFw/g2NJMzjB2j3F9NipoeZYDg/qHL+3EmAl5oZL_ncbPsjcg" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/TaNFIYl6_ODauFKYWjnVrQ/IKjF0JLx4RWsoy6luc8z2w/TJkmnkKCsUkTaTWRNl3usA" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/VFim7tW82yZAr3p++ImP4A/utLsX0HnHDpfKDVPxMVVJQ/qHL+3EmAl5oZL_ncbPsjcg" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/_cAF0WoHCoa3adqbytBLeg/jQGMlsm9IxGPnqBXXp7BvA/nB9RuhVu9HfbUnI+5hfy3Q" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/h4YmPDDLwBRLTVV__TDuFw/GVormn3mycy4Oz8238m2Zw/Uah0obB4teL5YvJdmwYy4w" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/jgM1LMk4kiNVHMUmmLO19Q/-/-" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/lpIBkAjS8SIvJJTcV5wN5g/oPgdd+ICkAoTPun3FbtqzQ/aWLNMu2OSFq8Iil3MJGoXg" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/wrwlcF7NNs1rpy0Hj6vqCA/oPgdd+ICkAoTPun3FbtqzQ/aWLNMu2OSFq8Iil3MJGoXg" />
+			<test url="http://pub.nieuwsbrief.unit4.com/r/yzqNat_WhHeNRcMxhM+uXQ/oPgdd+ICkAoTPun3FbtqzQ/aWLNMu2OSFq8Iil3MJGoXg" />
+			-->
+
+		<!--exclusion pattern="^http://u4\.unit4\.com/(?!/*acton/)" /-->
+
+			<!--	+ve:
+					-->
+			<!--
+			<test url="http://u4.unit4.com/default.aspx" />
+			<test url="http://u4.unit4.com/index.htm" />
+			-->
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://u4.unit4.com/acton/media/5506/cfo-strategic-empowerment-series-part-1" />
+			-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^careers\.unit4\.com$" name="^(?:XSRF-TOKEN|laravel_session)$" /-->
+	<!--securecookie host="^downloadcoda\.unit4\.com$" name="^PLAY_(?:ERRORS|FLASH|SESSION)$" /-->
+	<!--securecookie host="^my\.unit4\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^public\.unit4\.com$" name="^(?:ASP\.NET_SessionId|ASPSESSIONID[A-Z]{8}|HATServerCookie|uniquesig[\dA-F]+)$" /-->
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^(?!info\.|pub\.nieuwsbrief\.)\w" name="." />
+
+
+	<rule from="^http://info\.unit4\.com/"
+		to="https://na-ab12.marketo.com/" />
+
+	<rule from="^http://pub\.nieuwsbrief\.unit4\.com/"
+		to="https://mailing.finalist.nl/" />
+
+	<!--rule from="^http://u4\.unit4\.com/"
+		to="https://unit4.actonsoftware.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
