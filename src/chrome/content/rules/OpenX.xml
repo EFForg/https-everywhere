@@ -1,4 +1,7 @@
 <!--
+	For rules covering resources which do not secure
+	mixed content, see openx.com-resources.xml.
+
 	Other OpenX rulesets:
 
 		- Advertisers-OpenX.com.xml
@@ -15,23 +18,15 @@
 	CDN buckets:
 
 		- i.cdn.openx.com.edgesuite.net
-
-			- a1621.g.akamai.net
-
 		- i.xx.openx.com.edgesuite.net
-
-			- a1773.g.akamai.net
 
 
 	Nonfunctional hosts in openx.com:
 
-		- (www.)? ²
 		- ac **
-		- docs *
 		- support *
 		- uk-ac **
 
-	² wpengine
 	* Shows blog.openx.org
 	** 504, Akamai
 
@@ -39,53 +34,126 @@
 	Problematic hosts in *openx.com:
 
 		- i.cdn *
+		- community ᶜ
 		- i.xx *
 
 	* Works, akamai
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
 
 
-	Fully covered hosts in *openx.com:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- ssl-i.cdn
-		- i-cdn
-		- lift
-		- pc
-		- sso
-		- ssl-i.xx
+		- openx.com
+		- community.openx.com
+		- www.openx.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- Web bugs, on www.openx.com from:
+		- Images, on:
 
-			- marketing.liftdna.com *
-			- d3.advertisers-openx.com *
-			- u.openx.net *
-			- mediaservices-d.openxenterprise.com *
-			- t3.trackalyzer.com *
+			- ^ from 37vqjr47r2xf2msyvh42d2z1app.wpengine.netdna-cdn.com
 
-	* Secured buy us
+		- Ads / bugs, on:
 
+			- ^ from www.google.com ˢ
+			- ^ from ox-d.buyer.openxadexchange.com ˢ
+			- ^ from ox-d.openxadexchange.com ˢ
 
-	We don't care about web bugs, so don't
-	mark this ruleset as mixedcontent.
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="OpenX.com (partial)">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="openx.com" />
 	<target host="ssl-i.cdn.openx.com" />
+	<!--target host="community.openx.com" /-->
 	<target host="i-cdn.openx.com" />
+	<target host="docs.openx.com" />
 	<target host="lift.openx.com" />
 	<target host="pc.openx.com" />
 	<target host="sso.openx.com" />
+	<target host="www.openx.com" />
 	<target host="ssl-i.xx.openx.com" />
 
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://openx\.com/(?:$|(?:about|careers|events|investors|legal/privacypolicy|media-center|mobile|newsletter)/?$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?openx\.com/(?!/*(?:(?:blog|documentation)(?:$|[?/])|wp-content/|wp-includes/))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://(?:www\.)?openx\.com/(?!/*(?:blog|documentation)(?:$|[?/]))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://openx.com/about/" />
+			<test url="http://openx.com/careers/" />
+			<test url="http://openx.com/events/" />
+			<test url="http://openx.com/investors/" />
+			<test url="http://openx.com/legal/privacypolicy/" />
+			<!--
+			<test url="http://openx.com/media-center/" />
+			<test url="http://openx.com/mobile/" />
+			<test url="http://openx.com/newsletter/" />
+			-->
+
+			<!--	-ve:
+					-->
+			<test url="http://openx.com/blog/" />
+			<test url="http://openx.com/documentation/" />
+			<!--
+			<test url="http://openx.com/wp-content/themes/OpenX/css/additional_styles_new.css" />
+			-->
+
+	<!--	Complications:
+				-->
+	<target host="welcome.openx.com" />
+
+		<!--exclusion pattern="^http://welcome\.openx\.com/(?!/*(?:cs|image|r)s/)" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://welcome\.openx\.com/(?!/*rs/.+\.pdf(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://welcome.openx.com/AdNetworks_vs_AdExchanges.html" />
+			<test url="http://welcome.openx.com/AdWeekXII_lp.html" />
+			<test url="http://welcome.openx.com/General_lpv2.html" />
+			<test url="http://welcome.openx.com/MWC-in-barcelona.html" />
+			<test url="http://welcome.openx.com/breakfree" />
+			<test url="http://welcome.openx.com/index.php/email/emailWebview" />
+
+			<!--	-ve:
+					-->
+			<!--
+			<test url="http://welcome.openx.com/css/mktLPSupportCompat.css" />
+			-->
+			<test url="http://welcome.openx.com/rs/745-BUQ-779/images/The_Mobile_Programmatic_Playbook_Edit_%281%29.pdf" />
+			<!--
+			<test url="http://welcome.openx.com/rs/openx/images/fb.jpg" />
+			-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?openx\.com$" name="^X-Mapping-" /-->
+	<!--securecookie host="^community\.openx\.com$" name="^JSESSIONID$" /-->
 
 	<!--securecookie host="^\.openx\.com$" name="^(_mkto_trk|__utm\w)$" /-->
-	<securecookie host="^(?:i-cdn|lift|sso|d\.tradex)?\.openx\.com$" name=".+" />
+	<securecookie host="^(?:i-cdn|lift|sso|d\.tradex)?\.openx\.com$" name="." />
 
+
+	<rule from="^http://welcome\.openx\.com/"
+		to="https://na-sjl.marketo.com/" />
 
 	<rule from="^http:"
 		to="https:" />
