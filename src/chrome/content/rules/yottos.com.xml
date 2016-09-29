@@ -1,0 +1,54 @@
+<!--
+	Nonfunctional hosts in *yottos.com:
+
+		- adload ᵃ
+		- blog ᵈ
+
+	ᵃ Shows mail.yottos.com
+	ᵈ Dropped
+
+
+	Problematic hosts in *yottos.com:
+
+		- www.cdn ᵐ
+		- mail ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	STS header includes includeSubdomains
+	for cdn
+
+-->
+<ruleset name="Yottos.com (partial)">
+
+	<target host="yottos.com" />
+	<target host="cdn.yottos.com" />
+	<target host="*.cdn.yottos.com" />
+	<!--target host="mail.yottos.com" /-->
+	<target host="www.yottos.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}cdn\.yottos\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.cdn.yottos.com/" />
+			<test url="http://exists.not.cdn.yottos.com/" />
+
+
+	<securecookie host="^\." name="^_ga" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.cdn\.yottos\.com/"
+		to="https://cdn.yottos.com/" />
+
+		<test url="http://www.cdn.yottos.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
