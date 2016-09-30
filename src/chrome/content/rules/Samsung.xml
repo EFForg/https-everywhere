@@ -1,0 +1,150 @@
+<!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://samsung.cn/ (200) => https://samsung.com.cn/ (404)
+Non-2xx HTTP code: http://samsung.com.cn/ (200) => https://samsung.com.cn/ (404)
+	For rules causing false/broken MCB, see Samsung-falsemixed.xml.
+
+
+	Other Samsung rulesets:
+
+		- AllShare_Play.xml
+		- ChatON.xml
+		- Samsung_Apps.xml
+		- Samsung_Direct.xml
+		- Samsung_Knox.com.xml
+		- Samsung_LFD.xml
+		- Samsung_mySingle.xml
+		- Samsung_Techwin.xml
+
+
+	samsungbarbarian.appspot.com
+
+
+	Nonfunctional domains:
+
+		- samsung.com subdomains:
+
+			- help.content *
+			- m		(503, akamai)
+			- origin *
+
+		- (www.)samsungmobilepress.com *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)samsung.cn	(cert only matches samsung.com.cn)
+
+		- samsung.com subdomains:
+
+			- ^		(times out)
+			- chaton	(akamai)
+			- nmetrics	(mismatched, CN: *.112.2o7.net)
+			- shop.us	(some paths redirect to http)
+
+
+	Partially covered samsung.com subdomains:
+
+		- opensource	(at least some pages redirect to http)
+		- shop.us	(display cart requests redirect to http)
+
+
+	Fully covered domains:
+
+		- samsung.cn subdomains:
+
+			- (www.)	(→ samsung.com.cn)
+			- content
+			- img.content
+			- pub.content
+
+		- samsung.com subdomains:
+
+			- (www.)	(^ → www)
+			- account
+			- allshareplay
+			- apps
+			- chaton	(→ web.samsungchaton.com)
+			- content
+			- img.content
+			- pub.content
+			- findmymobile
+			- findmymobile2
+			- images
+			- nmetrics	(→ samsung-com.112.2o7.net)
+			- smetrics
+			- secureus
+			- smm
+			- stg-account
+			- support-cn
+			- us
+
+		- (www.)samsung.com.cn
+
+
+	Insecure cookies are set for these domains:
+
+		- .samsung.com
+		- apps.samsung.com
+
+
+	Mixed content:
+
+		- css on link.samsung.com from pub.content.samsung.com *
+
+		- Images on apps.samsung.com from img.samsungapps.com ²
+
+	* Secured by us
+	² Unsecurable <= 400
+
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="Samsung (partial)" default_off='failed ruleset test'>
+
+	<target host="samsung.cn" />
+	<target host="*.samsung.cn" />
+	<target host="samsung.com" />
+	<target host="*.samsung.com" />
+		<!--exclusion pattern="^http://opensource\.samsung\.com/+($|\?|community/(ajax/|community/|community\.do|guest/|proj/)|iframeMain\.do|reception/receptionSub\.do|reception\.do)" /-->
+		<exclusion pattern="^http://opensource\.samsung\.com/(?!community/(?:css/|images/|img2?/|img_model/|js2?/|org\.ditchnet\.taglib/|repository/|scmShowFileRevision(?:$|\?)|stylesheet/|usageStatistics\.do|wikiTreeMessage(?:$|\?))|css/|img/|js/)" />
+		<exclusion pattern="^http://shop\.us\.samsung\.com/store\?[aA]ction=[dD]isplay[dD][rR][cC]art[sS]ummary" />
+		<!-- Support page FAQ and other features are broken. Also, their i18n is a lie.
+		     Github issue: https://github.com/EFForg/https-everywhere/issues/309 -->
+		<exclusion pattern="^http://www\.samsung\.com/us/(?:support/|function/)" />
+	<target host="samsung.com.cn" />
+	<target host="www.samsung.com.cn" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.samsung\.com$" name="^(_common_country|_common_lang|COUNTRY_CODE|EXPAND_SCHEDULED|REMEMBERED_DEVICE_CODE_CAN)$" /-->
+	<!--securecookie host="^apps\.samsung\.com$" name="^WMONID$" /-->
+
+	<securecookie host="^\.samsung\.cn$" name=".+" />
+	<securecookie host="^(?!shop\.us\.).*\.samsung\.com$" name=".+" />
+
+
+	<rule from="^http://(img\.|pub\.)?content\.samsumg\.cn/"
+		to="https://$1content.samsung.cn/" />
+
+	<rule from="^http://(?:www\.)?samsung\.com/"
+		to="https://www.samsung.com/" />
+
+	<rule from="^http://chaton\.samsung\.com/"
+		to="https://web.samsungchaton.com/" />
+
+	<rule from="^http://nmetrics\.samsung\.com/"
+		to="https://samsung-com.112.2o7.net/" />
+
+	<rule from="^http://((?:stg-)?account|allshareplay|apps|(?:img\.|pub\.)?content|findmymobile2?|images|opensource|secureus|smetrics|smm|support-cn|us|shop\.us)\.samsung\.com/"
+		to="https://$1.samsung.com/" />
+
+	<rule from="^http://(www\.)?samsung\.(?:com\.)?cn/"
+		to="https://$1samsung.com.cn/" />
+
+</ruleset>
