@@ -37,6 +37,11 @@ if sys.platform.startswith("linux"):
         #Debian is lowercase when platform.linux_distribution() is used.
         #This is not a mistake.
         chromedriver_path = "/usr/lib/chromium/chromedriver"
+    elif 'openSUSE ' in platform.linux_distribution():
+        if 'x86_64' in platform.linux_distribution():
+            chromedriver_path = "/usr/lib64/chromium/chromedriver"
+        else:
+            chromedriver_path = "/usr/lib/chromium/chromedriver"
 
 try:
     # First argument is optional, if not specified will search path.
