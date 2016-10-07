@@ -1,0 +1,54 @@
+<!--
+	^membersaccounts.com: Dropped
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- secure.membersaccounts.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="membersaccounts.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secure.membersaccounts.com" />
+
+	<!--	Complications:
+				-->
+	<target host="membersaccounts.com" />
+
+		<!--	/*\w$ 404s:
+					-->
+		<exclusion pattern="^http://membersaccounts\.com/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://membersaccounts.com/default.aspx" />
+			<test url="http://membersaccounts.com/favicon.ico" />
+			<test url="http://membersaccounts.com/index.htm" />
+			<test url="http://membersaccounts.com/index.html" />
+			<test url="http://membersaccounts.com/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^secure\.membersaccounts\.com$" name="^(?:APSLanguage|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^\.secure\.membersaccounts\.com$" name="^UserAccountID$" /-->
+
+	<securecookie host="^[^.m]" name="." />
+	<securecookie host="^\.secure\." name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://membersaccounts\.com/.*"
+		to="https://secure.membersaccounts.com/selfservice/ActivateMyCard.aspx" />
+
+		<test url="http://membersaccounts.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

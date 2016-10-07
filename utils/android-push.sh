@@ -18,7 +18,7 @@ if type adb > /dev/null 2>/dev/null && adb devices >/dev/null 2>/dev/null ; then
     adb push "../$XPI_NAME" /sdcard/"$XPI_NAME"
     adb shell am start -a android.intent.action.VIEW \
                        -c android.intent.category.DEFAULT \
-                       -d file:///mnt/sdcard/"$XPI_NAME" \
+                       -d file:///mnt/sdcard/pkg/ \
                        -n $ANDROID_APP_ID/.App
   fi
 fi

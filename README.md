@@ -61,7 +61,7 @@ Important directories you might want to know about
 Hacking on the Source Code
 --------------------------
 
-The current stable release series is 5.0. The maintainers release new versions
+The current stable release series is 5.2. The maintainers release new versions
 off the current master branch about every two weeks.
 
 To submit changes, either use pull requests on GitHub or email patches to

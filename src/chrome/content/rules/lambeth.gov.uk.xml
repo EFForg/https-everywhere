@@ -1,0 +1,126 @@
+<!--
+	London Borough of Lambeth Council
+
+	For rules causing false/broken MCB, see lambeth.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *lambeth.gov.uk:
+
+		- cilcalc ᵃ
+		- landmark ʰ
+		- parkingphotos ᵈ
+		- portal ⁴
+
+	⁴ >=1 path 404s
+	ᵃ Shows another domain
+	ᵈ Dropped
+	ʰ Redirects to http
+
+
+	Problematic hosts in *lambeth.gov.uk:
+
+		- ^ ²
+		- extranet ᶜ
+		- moderngov ˣ
+		- yourcareyourway ⁴
+
+	² 200 "an error has occurred"
+	⁴ 404
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Partially covered hosts in *lambeth.gov.uk:
+
+		- moderngov ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- lambeth.gov.uk
+		- bookings.lambeth.gov.uk
+		- centrebookings.lambeth.gov.uk
+		- housingmanagement.lambeth.gov.uk
+		- .housingmanagement.lambeth.gov.uk
+		- moderngov.lambeth.gov.uk
+		- my.lambeth.gov.uk
+		- onlinepermits.lambeth.gov.uk
+		- www.lambeth.gov.uk
+
+
+	Mixed content:
+
+		- css, on:
+
+			- housingmanagement from fonts.googleapis.com ˢ
+			- moderngov from www.lambeth.gov.uk ˢ
+
+		- Images, on:
+
+			- moderngov from $self ˢ
+			- moderngov from www.lambeth.gov.uk ˢ
+
+		- Bug on moderngov from cdn.leafletjs.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Lambeth.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bookings.lambeth.gov.uk" />
+	<target host="centrebookings.lambeth.gov.uk" />
+	<!--target host="extranet.lambeth.gov.uk" /-->
+	<target host="housingmanagement.lambeth.gov.uk" />
+	<target host="libraries.lambeth.gov.uk" />
+	<!--target host="moderngov.lambeth.gov.uk" /-->
+	<target host="my.lambeth.gov.uk" />
+	<target host="onlinepermits.lambeth.gov.uk" />
+	<target host="pcbooking.lambeth.gov.uk" />
+	<target host="www.lambeth.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="lambeth.gov.uk" />
+	<target host="yourcareyourway.lambeth.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://onlinepermits.lambeth.gov.uk/ecommerce/control/GenralTermCondition" /-->
+
+		<!--	404:
+				-->
+		<!--test url="http://portal.lambeth.gov.uk/cemetery/GraveAboutCemeteryDatabase.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?lambeth\.gov\.uk$" name="^SERVERID$" /-->
+	<!--securecookie host="^housingmanagement\.lambeth\.gov\.uk$" name="^(?:BIGipServer|JSESSIONID$)" /-->
+	<!--securecookie host="^\.housingmanagement\.lambeth\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:bookings|centrebookings|moderngov)\.lambeth\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^my\.lambeth\.gov\.uk$" name="^(?:JSESSIONID|cookietest)$" /-->
+	<!--securecookie host="^onlinepermits\.lambeth\.gov\.uk$" name="^OFBiz\.Visitor$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\.housingmanagement\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path, but not forward slash nor args:
+									-->
+	<rule from="^http://yourcareyourway\.lambeth\.gov\.uk/+([^?]*)(?:\?.*)?"
+		to="https://www.careplace.org.uk/$1" />
+
+		<test url="http://yourcareyourway.lambeth.gov.uk//Shortlist" />
+		<test url="http://yourcareyourway.lambeth.gov.uk/requestlogin?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

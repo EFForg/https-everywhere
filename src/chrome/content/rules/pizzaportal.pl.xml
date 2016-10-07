@@ -1,0 +1,55 @@
+<!--
+	Nonfunctional hosts in *pizzaportal.pl:
+
+		- blog ʳ
+		- kontakt ʰ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	www.pizzaportal.pl: Redirects to http
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- pizzaportal.pl
+		- .pizzaportal.pl
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Bug on ^ from img-cdn.mediaplex.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="PizzaPortal.pl (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="pizzaportal.pl" />
+
+	<!--	Complications:
+				-->
+	<target host="www.pizzaportal.pl" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pizzaportal\.pl$" name="^cookieConfirmShow$" /-->
+	<!--securecookie host="^\.pizzaportal\.pl$" name="^(?:ident|latestAddressData|referer)$" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|ident$|latestAddressData$|referer$)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.pizzaportal\.pl/"
+		to="https://pizzaportal.pl/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

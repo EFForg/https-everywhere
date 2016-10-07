@@ -1,7 +1,4 @@
 <!--
-	For problematic rules, see Ansible.com-problematic.xml.
-
-
 	Other Ansible rulesets:
 
 		- Ansible_works.com.xml
@@ -11,17 +8,8 @@
 
 		- 330046.group46.sites.hubspot.net
 
-			- www
 
-
-	Nonfunctional subdomains:
-
-		- ^ *
-
-	* times out
-
-
-	www: works, akamai
+	^ansible.com: Dropped
 
 
 	These altnames don't exist:
@@ -29,31 +17,36 @@
 		- www.galaxy.ansible.com
 
 
-	Mixed content:
+	Insecure cookies are set for these hosts:
 
-		- Images, on:
-
-			- docs from www
-			- www from $self ¹
-			- www from cdn2.hubspot.net ²
-
-	¹ Rule disabled by default <= mismatched
-	² Secured by us
+		- galaxy.ansible.com
 
 -->
 <ruleset name="Ansible.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="docs.ansible.com" />
 	<target host="galaxy.ansible.com" />
 	<target host="releases.ansible.com" />
+	<target host="support.ansible.com" />
+	<target host="www.ansible.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ansible.com" />
 
 
-	<securecookie host="^\.ansible\.com$" name="^__cfduid$" />
-	<!--
-		Not secured by server:
+	<!--	Not secured by server:
 					-->
-	<securecookie host="^galaxy\.ansible\.com$" name=".+" />
+	<!--securecookie host="^galaxy\.ansible\.com$" name="^sessionid$" /-->
 
+	<securecookie host="^\." name="^(?:__cfduid|_gat?|_gat_|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://ansible\.com/"
+		to="https://www.ansible.com/" />
 
 	<rule from="^http:"
 		to="https:" />

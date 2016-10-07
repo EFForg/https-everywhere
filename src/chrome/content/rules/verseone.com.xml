@@ -1,0 +1,59 @@
+<!--
+	Nonfunctional hosts in *verseone.com:
+
+		- aruneastpreston ᶠ
+		- arunfelpham ᶠ
+		- arunarundel ᶠ
+		- kht ᵃ
+		- lewisham ᶠ
+
+	ᵃ Shows another domain
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *verseone.com:
+
+		- hc ᶠ
+		- hightown ᵐ
+
+	ᶠ Handshake fails, preemptable redirect
+	ᵐ Mismatched
+
+-->
+<ruleset name="VerseOne.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="verseone.com" />
+	<target host="www.verseone.com" />
+
+	<!--	Complications:
+				-->
+	<target host="hc.verseone.com" />
+	<target host="hightown.verseone.com" />
+
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://hc\.verseone\.com/+"
+		to="https://www.howard-cottage.co.uk/" />
+
+		<test url="http://hc.verseone.com/default.aspx" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+						-->
+	<rule from="^http://hightown\.verseone\.com/+"
+		to="https://myaccount.hightownha.org.uk/" />
+
+		<test url="http://hightown.verseone.com/register" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

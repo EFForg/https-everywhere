@@ -1,0 +1,96 @@
+<!--
+	Scottish Environment Protection Agency
+
+	For rules causing false/broken MCB, see sepa.org.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *sepa.org.uk:
+
+		- apps ⁴
+		- beta ⁴
+		- data ᵈ
+		- flood ⁴
+		- media ⁴
+		- online ᵈ
+		- rict ᵈ
+
+	⁴ 404
+	ᵈ Dropped
+
+
+	Problematic hosts in *sepa.org.uk:
+
+		- ^ ⁴
+		- floodline ᵐ
+		- gis ˣ
+		- map ˣ
+
+	⁴ 404, preemptable redirect
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	These altnames do not exist:
+
+		- www.consultation.sepa.org.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- webpayments.sepa.org.uk
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- gis from serverapi.arcgisonline.com ˢ
+			- map from js.arcgisonline.com ˢ
+			- map from code.jquery.com ˢ
+
+		- Images on map from www.sepa.org.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="SEPA.org.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="consultation.sepa.org.uk" />
+	<!--target host="gis.sepa.org.uk" /-->
+	<target host="informatics.sepa.org.uk" />
+	<!--target host="map.sepa.org.uk" /-->
+	<target host="webpayments.sepa.org.uk" />
+	<target host="www.sepa.org.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="sepa.org.uk" />
+
+		<!--	$ prints default page, so:
+							-->
+		<test url="http://informatics.sepa.org.uk/ChargingSchemeCustomerTool/" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://gis.sepa.org.uk/rbmp/" /-->
+		<!--test url="http://map.sepa.org.uk/floodmap/map.htm" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^webpayments\.sepa\.org\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://sepa\.org\.uk/"
+		to="https://www.sepa.org.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

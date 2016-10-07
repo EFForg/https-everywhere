@@ -1,0 +1,49 @@
+<!--
+	$ differs from http, redirect destination does not
+	support tls.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- www.myaffiliateprogram.com
+		- .www.myaffiliateprogram.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="My Affiliate Program.com (partial)">
+
+	<target host="myaffiliateprogram.com" />
+	<target host="www.myaffiliateprogram.com" />
+
+		<!--	Differs from http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?myaffiliateprogram\.com/+(?:$|\?|myap_contact_us\.asp)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?myaffiliateprogram\.com/(?!/*(?:1pxlclr\.gif|u/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.myaffiliateprogram.com/default.asp" />
+			<test url="http://www.myaffiliateprogram.com/favicon.ico" />
+			<test url="http://www.myaffiliateprogram.com/myap_contact_us.asp" />
+
+		<test url="http://www.myaffiliateprogram.com/1pxlclr.gif" />
+		<test url="http://www.myaffiliateprogram.com/u/ait/e.asp?e=9&amp;id=1006&amp;p=series63.htm" />
+		<test url="http://www.myaffiliateprogram.com/u/compcorp/up.asp?i=1089" />
+		<test url="http://www.myaffiliateprogram.com/u/koala/t.asp?id=1710" />
+		<test url="http://www.myaffiliateprogram.com/u/worldwid/b.asp?id=1866&amp;p=wwb/kh_freeebook.asp" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.myaffiliateprogram\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^\.www\.myaffiliateprogram\.com$" name="^(?:advanced|ait|aitimage|sub_advanced|sub_ait)$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -73,7 +73,11 @@ if [ "$1" == "--justrun" ]; then
   fi
 else
   echo "running tests"
-  $XVFB_RUN cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+  if [ -n "$FIREFOX" ]; then
+    $XVFB_RUN cfx test -b $FIREFOX --profiledir="$PROFILE_DIRECTORY" --verbose
+  else
+    $XVFB_RUN cfx test --profiledir="$PROFILE_DIRECTORY" --verbose
+  fi
 fi
 
 popd

@@ -1,0 +1,50 @@
+<!--
+	Problematic hosts in *cihan.com.tr:
+
+		- video2 ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- cihan.com.tr
+		- .cihan.com.tr
+		- www.cihan.com.tr
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- (www.)? from medya.cihan.com.tr ˢ
+			- (www.)? from video2.cihan.com.tr
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Cihan.com.tr (partial)">
+
+	<target host="cihan.com.tr" />
+	<target host="medya.cihan.com.tr" />
+	<target host="www.cihan.com.tr" />
+
+		<test url="http://medya.cihan.com.tr/import/images/logo/cihan_logo.png" />
+		<!--test url="http://video2.cihan.com.tr/dl2/5ea2937fa050f33d0a0188bf9ca9bd61/53756e20/thumb/08-05-2016/2071094_0.jpg" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?cihan\.com\.tr$" name="^(?:JSESSIONID$|NSC_)" /-->
+	<!--securecookie host="^\.cihan\.com\.tr$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

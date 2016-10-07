@@ -39,7 +39,7 @@ with open(thispath + '/downgrade-whitelist.txt') as downgrade_fh:
 with open(thispath + '/duplicate-whitelist.txt') as duplicate_fh:
     duplicate_allowed_list = [x.rstrip('\n') for x in duplicate_fh.readlines()]
 
-filenames = glob.glob('src/chrome/content/rules/*')
+filenames = glob.glob(thispath + '/../src/chrome/content/rules/*')
 
 def test_bad_regexp(tree, rulename, from_attrib, to):
     # Rules with invalid regular expressions.
@@ -167,7 +167,8 @@ host_counter = Counter()
 for filename in filenames:
     xml_parser = etree.XMLParser(remove_blank_text=True)
 
-    if filename.endswith('/00README') or filename.endswith('/make-trivial-rule') or filename.endswith('/default.rulesets'):
+    basename = filename.split(os.path.sep)[-1]
+    if basename == '00README' or basename == 'make-trivial-rule' or basename == 'default.rulesets':
         continue
 
     try:

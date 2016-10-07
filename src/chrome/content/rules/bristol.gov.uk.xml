@@ -1,0 +1,170 @@
+<!--
+	Bristol City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bristol.gov.uk:
+
+		- email ᶠ
+		- epetitions ᵇ
+		- museums ʳ
+		- planningonline *
+		- profile *
+		- volunteerteam ᵃ
+
+	* Redirects to s://email
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᶠ Handshake fails
+	ʳ Refused
+
+
+	Problematic hosts in *bristol.gov.uk:
+
+		- efsm *
+		- news ᵐ
+		- style ᵐ
+
+	* pls/apex/f?p=101:1 redirects to http
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *bristol.gov.uk:
+
+		- www2 ʰ
+
+	ʰ Some pages redirect to http
+	
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .bristol.gov.uk
+		- adultlearning.bristol.gov.uk
+		- ctstatements.bristol.gov.uk
+		- efsm.bristol.gov.uk
+		- emso.bristol.gov.uk
+		- id.bristol.gov.uk
+		- jobs.bristol.gov.uk
+		- maps.bristol.gov.uk
+		- news.bristol.gov.uk
+		- opendata.bristol.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on news from presspage-production-content.s3.amazonaws.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Bristol.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bristol.gov.uk" />
+	<target host="adultlearning.bristol.gov.uk" />
+	<target host="cp.bristol.gov.uk" />
+	<target host="ctstatements.bristol.gov.uk" />
+	<target host="democracy.bristol.gov.uk" />
+	<target host="emso.bristol.gov.uk" />
+	<target host="jobs.bristol.gov.uk" />
+	<target host="maps.bristol.gov.uk" />
+	<target host="opendata.bristol.gov.uk" />
+	<target host="parkingappeals.bristol.gov.uk" />
+	<target host="services.bristol.gov.uk" />
+	<target host="webmail.bristol.gov.uk" />
+	<target host="www.bristol.gov.uk" />
+	<target host="www2.bristol.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www2\.bristol\.gov\.uk/(?:LocalElectionViewer$|LocalElectionViewer2016$|nav/|node/\d+$|page/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www2\.bristol\.gov\.uk/(?!/*(?:$|\?|(?:CommunityCentreViewer|CouncillorComponent|CouncillorFinder|WardFinder|committeeMeetingFinder)/*(?:$|\?)|ccm-ldn-theme/|form/|item/wardfinder\.html|misc/|modules/|news/|sites/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www2.bristol.gov.uk/LocalElectionViewer" />
+			<test url="http://www2.bristol.gov.uk/LocalElectionViewer2016" />
+			<test url="http://www2.bristol.gov.uk/nav/ashton-court-mansion" />
+			<test url="http://www2.bristol.gov.uk/nav/bristol-legal" />
+			<test url="http://www2.bristol.gov.uk/nav/bristol-property-board" />
+			<test url="http://www2.bristol.gov.uk/node/23647" />
+			<test url="http://www2.bristol.gov.uk/page/ashton-court-mansion/special-offers" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-legal/compulsory-purchase" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-legal/contact-us" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-legal/general-procurement" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-legal/legal-assistants" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-legal/policies-and-procedures" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-property-board/current-opportunities" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-property-board/stakeholder-contacts" />
+			<test url="http://www2.bristol.gov.uk/page/bristol-property-board/which-assets-are-owned-public-sector" />
+			<test url="http://www2.bristol.gov.uk/page/city-hall/contact" />
+			<test url="http://www2.bristol.gov.uk/page/city-hall/council-chamber" />
+			<test url="http://www2.bristol.gov.uk/page/city-hall/directions-city-hall" />
+			<test url="http://www2.bristol.gov.uk/page/city-hall/foyer" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www2.bristol.gov.uk/CommunityCentreViewer" />
+			<test url="http://www2.bristol.gov.uk/CouncillorComponent" />
+			<test url="http://www2.bristol.gov.uk/CouncillorFinder" />
+			<test url="http://www2.bristol.gov.uk/WardFinder" />
+			<test url="http://www2.bristol.gov.uk/ccm-ldn-theme/__ccm__/themes-prod/bristol/css/bcc.css" />
+			<test url="http://www2.bristol.gov.uk/committeeMeetingFinder" />
+			<test url="http://www2.bristol.gov.uk/form/ashton-court-mansion/ashton-court-mansion-contact-us" />
+			<test url="http://www2.bristol.gov.uk/form/city-hall/enquiry-form" />
+			<test url="http://www2.bristol.gov.uk/form/jobs-and-training/training-booking-form" />
+			<test url="http://www2.bristol.gov.uk/forms/fly-tipping" />
+			<test url="http://www2.bristol.gov.uk/item/wardfinder.html?wardlinks=election" />
+			<test url="http://www2.bristol.gov.uk/misc/menu-leaf.png" />
+			<test url="http://www2.bristol.gov.uk/modules/node/node.css" />
+			<test url="http://www2.bristol.gov.uk/news/bristol-legal/solar-flare" />
+			<test url="http://www2.bristol.gov.uk/sites/all/modules/contributed/views_slideshow/views_slideshow.css" />
+
+		<!--	$ shows default page, so:
+						-->
+		<test url="http://emso.bristol.gov.uk/pls/services/f?p=200" />
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://id.bristol.gov.uk/openam/UI/Login" /-->
+		<!--test url="http://opendata.bristol.gov.uk/login" /-->
+
+	<!--	Complications:
+				-->
+	<target host="efsm.bristol.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.bristol\.gov\.uk$" name="^(?:AMAuthCookie|amlbcookie)$" /-->
+	<!--securecookie host="^adultlearning\.bristol\.gov\.uk$" name="^(?:ASP\.NET_SessionId|JavaScriptActive)$" /-->
+	<!--securecookie host="^(?:cp|news)\.bristol\.gov\.uk$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^ctstatements\.bristol\.gov\.uk$" name="^cookietest$" /-->
+	<!--securecookie host="^(?:efsm|emso)\.bristol\.gov\.uk$" name="^ORA_WWV_APP_\d+$" /-->
+	<!--securecookie host="^id\.bristol\.gov\.uk$" name="^X-Mapping" /-->
+	<!--securecookie host="^jobs\.bristol\.gov\.uk$" name="^(?:lastaccesstime|sessionid)\d+$" /-->
+	<!--securecookie host="^maps\.bristol\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^opendata\.bristol\.gov\.uk$" name="^logged_in$" /-->
+
+	<securecookie host="^(?!www2\.)\w" name="." />
+
+
+	<rule from="^http://cp\.bristol\.gov\.uk:6082/"
+		to="https://cp.bristol.gov.uk:6082/" />
+
+		<test url="http://cp.bristol.gov.uk:6082/php/uid.php?vsys=1&amp;url=http://email.bristol.gov.uk%2fowa" />
+
+	<rule from="^http://efsm\.bristol\.gov\.uk/(?:pls/apex/f\?p=101:1)?$"
+		to="https://efsm.bristol.gov.uk/pls/educa/f?p=109" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

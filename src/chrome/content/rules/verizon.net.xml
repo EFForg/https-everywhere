@@ -1,0 +1,70 @@
+<!--
+	For other Verizon coverage, see Verizon.xml.
+
+
+	CDN buckets:
+
+		- wildcard.verizon.net.edgekey.net	← static-business
+		- vrzn.lithium.com	← forums.verizon.com
+
+
+	Problematic hosts in *verizon.net:
+
+		- ^ ᵐ
+		- businessforums ʳ
+
+	ᵐ Mismatched
+	ʳ Refused; preemptable redirect
+
+
+	Insecure cookies are set for these hosts:
+
+		- care.verizon.net
+
+-->
+<ruleset name="Verizon.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="business.verizon.net" />
+	<!--target host="care.verizon.net" /-->
+	<target host="static-business.verizon.net" />
+	<target host="www.verizon.net" />
+
+	<!--	Complications:
+				-->
+	<target host="verizon.net" />
+	<target host="businessforums.verizon.net" />
+
+		<!--	No longer seems to redirect.
+							-->
+		<!--exclusion pattern="^http://business\.verizon\.net/.*SMBPortalWeb/login$" /-->
+
+			<test url="http://business.verizon.net/SMBPortalWeb/vanity.url?orig_url=/SMBPortalWeb/login" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://care.verizon.net/iha/IHAPC.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^care\.verizon\.net$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?:www\.)?verizon\.net$" name=".+" />
+
+
+	<rule from="^http://verizon\.net/"
+		to="https://www.verizon.net/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://businessforums\.verizon\.net/.*"
+		to="https://business.verizon.com/MyBusinessAccount/one.portal?_nfpb=true&amp;_pageLabel=gb_mycommunity" />
+
+		<test url="http://businessforums.verizon.net/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

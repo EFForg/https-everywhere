@@ -1,0 +1,120 @@
+<!--
+	Northamptonshire County Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *northamptonshire.gov.uk:
+
+		- maps ᵈ
+		- www3 ⁴
+		- www5 ⁴
+
+	⁴ 404
+	ᵈ Dropped
+
+
+	Problematic hosts in *northamptonshire.gov.uk:
+
+		- eduweb ᶜ
+		- (www.)?librarycatalogue ᵇ
+
+	ᵇ $ shows default page, preemptable redirect
+
+
+	These altnames do not exist:
+
+		- www.eduweb.northamptonshire.gov.uk
+		- www.payments.northamptonshire.gov.uk
+		- www.pensions.northamptonshire.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- eduweb.northamptonshire.gov.uk
+		- payments.northamptonshire.gov.uk
+
+
+	Mixed content:
+
+		- css on pensions from fonts.googleapis.com ˢ
+
+		- Images, on:
+
+			- eduweb from go.microsoft.com ˢ
+			- pensions from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Northamptonshire.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="northamptonshire.gov.uk" />
+	<target host="connect2.northamptonshire.gov.uk" />
+	<target host="www.connect2.northamptonshire.gov.uk" />
+	<!--target host="eduweb.northamptonshire.gov.uk" /-->
+	<target host="payments.northamptonshire.gov.uk" />
+	<target host="pensions.northamptonshire.gov.uk" />
+	<target host="www.northamptonshire.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="librarycatalogue.northamptonshire.gov.uk" />
+	<target host="www.librarycatalogue.northamptonshire.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?northamptonshire\.gov\.uk/(?:Pages/VariationRoot|en/Pages/HomePage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?northamptonshire\.gov\.uk/(?!/*(?:.*/)?(?:_layouts|FooterImages|PublishingImages|[Ss]tyle%20[Ll]ibrary)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://northamptonshire.gov.uk/Pages/VariationRoot.aspx" />
+			<test url="http://northamptonshire.gov.uk/buspass" />
+			<test url="http://northamptonshire.gov.uk/elibrary" />
+			<test url="http://northamptonshire.gov.uk/en/Pages/HomePage.aspx" />
+			<test url="http://www.northamptonshire.gov.uk/learnercharter" />
+			<test url="http://www.northamptonshire.gov.uk/longbuckbylibrary" />
+			<test url="http://www.northamptonshire.gov.uk/payments" />
+			<test url="http://www.northamptonshire.gov.uk/racetothetop" />
+			<test url="http://www.northamptonshire.gov.uk/streetdoctor" />
+
+			<!--	-ve:
+					-->
+			<test url="http://northamptonshire.gov.uk/_layouts/NCCWeb/styles/images/NCCGradBack-Inactive.jpg" />
+			<test url="http://northamptonshire.gov.uk/FooterImages/twitter-168.png" />
+			<test url="http://www.northamptonshire.gov.uk/PublishingImages/Popular%20Strip/popular-strip-icon-school.gif" />
+			<test url="http://www.northamptonshire.gov.uk/style%20library/images/general/pixel.gif" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://cmis.northamptonshire.gov.uk/cmis5live/Councillors.aspx" /-->
+
+		<!--	404:
+				-->
+		<!--test url="http://www4.northamptonshire.gov.uk/schoolclosure/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^cmis\.northamptonshire\.gov\.uk$" name="^(?:\.ASPXANONYMOUS|ASP\.NET_SessionId|DateInputMode|language)$" /-->
+	<!--securecookie host="^eduweb\.northamptonshire\.gov\.uk$" name="^BNI_BARRACUDA_LB_COOKIE$" /-->
+	<!--securecookie host="^payments\.northamptonshire\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!www\.n)\w" name="." />
+
+
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://(www\.)?librarycatalogue\.northamptonshire\.gov\.uk/+(?=$|\?)"
+		to="https://$1librarycatalogue.northamptonshire.gov.uk/web/arena" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

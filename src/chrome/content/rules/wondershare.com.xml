@@ -1,0 +1,77 @@
+<!--
+	For rules causing false/broken MCB, see wondershare.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *wondershare.com:
+
+		- filmora ʰ
+		- mobilego ʰ
+		- nl ʰ
+		- images.nl ³
+		- ru ʰ
+		- images.ru ⁴
+		- support ʰ
+
+	³ 403
+	⁴ 404
+	ʰ Redirects to http
+
+
+	Problematic hosts in *wondershare.com:
+
+		- download ᴬ
+		- my ˣ
+
+	ᴬ Akamai / mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- my.wondershare.com
+		- store.wondershare.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- my from fonts.googleapis.com ˢ
+			- my from $self ˢ
+
+		- Images, on:
+
+			- my from images.wondershare.com ˢ
+			- my from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Wondershare.com (partial)">
+
+	<target host="wondershare.com" />
+	<target host="datarecovery.wondershare.com" />
+	<target host="images.wondershare.com" />
+	<!--target host="my.wondershare.com" /-->
+	<target host="pdf.wondershare.com" />
+	<target host="pdfimages.wondershare.com" />
+	<target host="www.wondershare.com" />
+
+		<test url="http://images.wondershare.com/styles/images/new_23.png" />
+		<test url="http://pdfimages.wondershare.com/style/images/icon_arrow_yw.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^my\.wondershare\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^store\.wondershare\.com$" name="^(?:PHPSESSID|USD\[cart_code\])$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

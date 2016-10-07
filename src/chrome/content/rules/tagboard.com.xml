@@ -1,0 +1,74 @@
+<!--
+	Nonfunctional hosts in *tagboard.com:
+
+		- blog ʳ
+
+	ʳ Tumblr / refused
+
+
+	Problematic hosts in *tagboard.com:
+
+		- account *
+
+	* Redirect differs
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- support.tagboard.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on account from media.tumblr.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Tagboard.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="tagboard.com" />
+	<target host="about.tagboard.com" />
+	<target host="display.tagboard.com" />
+	<target host="static.tagboard.com" />
+	<target host="support.tagboard.com" />
+	<target host="user.tagboard.com" />
+	<target host="www.tagboard.com" />
+
+		<test url="http://static.tagboard.com/public/img/icon-search-alt.png" />
+
+		<!--	$ 404s, so:
+					-->
+		<test url="http://user.tagboard.com/auth/twitter" />
+
+	<!--	Complications:
+				-->
+	<target host="account.tagboard.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^support\.tagboard\.com$" name="^(?:XSRF-TOKEN|connect\.sid)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://account\.tagboard\.com/$"
+		to="https://account.tagboard.com/u/" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://account\.tagboard\.com/\?.*"
+		to="https://account.tagboard.com/search" />
+
+		<test url="http://account.tagboard.com/?" />
+		<test url="http://account.tagboard.com/?foo" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

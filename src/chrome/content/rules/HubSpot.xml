@@ -6,6 +6,7 @@
 		- HSstatic.net.xml
 		- HubSpot.net.xml
 		- HubSpot_QA.com.xml
+		- leadin.com.xml
 
 
 	s3.amazonaws.com/css.blog.hubspot.com/
@@ -45,8 +46,7 @@
 
 		- hubspot.com subdomains:
 
-			- ^ ¹
-			- academy ²
+			- br ²
 			- cdn1			(akamai 503, valid cert)
 			- dev			(works, akamai)
 			- forums ²
@@ -55,30 +55,15 @@
 		- www.inbound.com	(works, akamai)
 
 	² Mismatched
-	¹ Dropped
+	¹ Dropped, preemptable redirect
 
 
-	Fully covered domains:
-
-		- hubspot.com subdomains:
-
-			- (www.)?	(^ → www)
-			- app
-			- cdn1		(→ s3.amazonaws.com)
-			- cdn2
-			- designers
-			- forms
-			- info
-			- knowledge
-			- login
-			- no-cache
-			- sites-auth
-			- static2cdn
-
-
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these hosts: ᶜ
 
 		- designers.hubspot.com
+		- offers.hubspot.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	track sets "hsfirstvisit" and "hubspotutk" wildcard
@@ -100,12 +85,17 @@
 		- Images, on:
 
 			- academy, designers, developers from cdn[12].hubspot.com
+			- br, offers from cdn2.hubspot.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="HubSpot.com">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="hubspot.com" />
+	<target host="academy.hubspot.com" />
 	<target host="app.hubspot.com" />
 	<target host="blog.hubspot.com" />
 	<target host="cdn2.hubspot.com" />
@@ -115,9 +105,13 @@
 	<target host="info.hubspot.com" />
 	<target host="js.hubspot.com" />
 	<target host="knowledge.hubspot.com" />
+	<target host="leadin.hubspot.com" />
+	<target host="legal.hubspot.com" />
+	<target host="library.hubspot.com" />
 	<target host="login.hubspot.com" />
 	<target host="marketplace.hubspot.com" />
 	<target host="no-cache.hubspot.com" />
+	<target host="offers.hubspot.com" />
 	<target host="sites-auth.hubspot.com" />
 	<target host="static.hubspot.com" />
 	<target host="static2cdn.hubspot.com" />
@@ -125,9 +119,12 @@
 	<target host="tracking.hubspot.com" />
 	<target host="www.hubspot.com" />
 
+		<!--	Mixed images, sets cookies without Secure:
+								-->
+		<!--test url="http://offers.hubspot.com/contact-sales" /-->
+
 	<!--	Complications:
 				-->
-	<target host="hubspot.com" />
 	<target host="cdn.blog.hubspot.com" />
 	<target host="cdn1.hubspot.com" />
 	<target host="forums.hubspot.com" />
@@ -137,12 +134,10 @@
 	<!--	Not secured by server:
 					-->
 	<!--securecookie host="^designers\.hubspot\.com$" name="^PagesViewedThisSession$" /-->
+	<!--securecookie host="^offers\.hubspot\.com$" name="^(?:hs_ab_test_\d+|hsPagesViewedThisSession)$" /-->
 
-	<securecookie host="^(?:.*\.)?hubspot\.com$" name=".*" />
+	<securecookie host="." name="." />
 
-
-	<rule from="^http://hubspot\.com/"
-		to="https://www.hubspot.com/" />
 
 	<rule from="^http://cdn\.blog\.hubspot\.com/"
 		to="https://s3.amazonaws.com/cdn.hubspot.com/" />

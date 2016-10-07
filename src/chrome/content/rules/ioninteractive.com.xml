@@ -1,0 +1,75 @@
+<!--
+	Other Ion Interactive rulesets:
+
+		- Post-Click-Marketing.xml
+
+
+	CDN buckets:
+
+		- f110c5f33f0193dac457-4d10287819954fd6d08ae459de19af00.ssl.cf1.rackcdn.com
+
+
+	Problematic hosts in *ioninteractive.com:
+
+		- (www.)? ᵐ
+		- demo ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ioninteractive.com
+		- apps.ioninteractive.com
+		- meet.ioninteractive.com
+		- paths.ioninteractive.com
+
+-->
+<ruleset name="Ion Interactive.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="apps.ioninteractive.com" />
+	<target host="meet.ioninteractive.com" />
+	<target host="paths.ioninteractive.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ioninteractive.com" />
+	<target host="www.ioninteractive.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ioninteractive\.com$" name="^LiveBall$" /-->
+	<!--securecookie host="^(?:apps|meet|paths)\.ioninteractive\.com$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://(?:www\.)?ioninteractive\.com/.*"
+		to="https://meet.ioninteractive.com/home" />
+
+		<!--	Not all paths redirect:
+						-->
+		<exclusion pattern="http://(?:www\.)?ioninteractive\.com/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ioninteractive.com/blog-summary/" />
+			<test url="http://ioninteractive.com/careers/home/" />
+			<test url="http://www.ioninteractive.com/events-summary/" />
+			<test url="http://www.ioninteractive.com/news/" />
+			<test url="http://www.ioninteractive.com/webinars/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.ioninteractive.com/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
