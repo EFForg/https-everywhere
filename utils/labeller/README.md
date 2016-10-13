@@ -20,7 +20,7 @@ This will work for admins of HTTPS Everywhere that generate a [GitHub token](htt
 
 Download and install `node` and `npm`, then
 
-    nmp install
+    npm install
     cp config.json.example config.json
 
 Enter your GitHub token info into `config.json`.
