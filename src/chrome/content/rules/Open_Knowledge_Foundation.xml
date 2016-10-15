@@ -1,21 +1,42 @@
 <!--
 	Open Knowledge Foundation
 
-
-	Nonfunctional hosts in *okfn.org:
-
-		- blog *
-
-	* WP Engine
+	For rules causing false/broken MCB, see okfn.org-falsemixed.xml.
 
 
-	www.okfn.org: Dropped
+	Problematic hosts in *okfn.org:
+
+		- blog ˣ
+		- www ᵗ
+
+	ᵗ Reset, preemptable redirect
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- okfn.org
 		- .okfn.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- blog from a.okfn.org ˢ
+			- blog from assets.okfn.org ˢ
+			- blog from $self ˢ
+			- blog from blog.core.okfn.org ˢ
+
+		- Images, on:
+
+			- blog from $self ˢ
+			- blog from blog.core.okfn.org ˢ
+			- blog from i\d.wp.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="OKFn.org (partial)">
@@ -23,8 +44,16 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="okfn.org" />
+	<!--target host="a.okfn.org" /-->
 	<target host="assets.okfn.org" />
+	<!--target host="blog.okfn.org" /-->
+	<!--target host="blog.core.okfn.org" /-->
 	<target host="pad.okfn.org" />
+
+		<!--
+		<test url="http://a.okfn.org/html/oki/panel/panel.html" />
+		-->
+		<test url="http://assets.okfn.org/themes/okfn/okf-footer/okf-footer.css" />
 
 	<!--	Complications:
 				-->

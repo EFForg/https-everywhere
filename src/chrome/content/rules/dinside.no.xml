@@ -1,0 +1,72 @@
+<!--
+	For rules causing false/broken MCB, see dinside.no-falsemixed.xml.
+
+
+	Nonfunctional hosts in *dinside.no:
+
+		- bilde ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *dinside.no:
+
+		- ^ ᵈ
+		- testpilot ˣ
+
+	ᵈ Dropped
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- testpilot from $self ˢ
+			- testpilot, www from fonts.googleapis.com ˢ
+
+		- Images, on:
+		
+			- testpilot from $self ˢ
+			- www from gfx.dagbladet.no ˢ
+			- www from bilde.dinside.no ʳ
+			- www from testpilot.dinside.no ˢ
+
+		- Bugs, on:
+
+			- www from www.allerinternett.no ʳ
+			- www from measure.richmetrics.com ˢ
+			- www from dagbladet.tns-cs.net ˢ
+
+	ʳ Unsecurable <= refused
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Dinside.no (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="styleguide.dinside.no" />
+	<!--target host="testpilot.dinside.no" /-->
+	<target host="www.dinside.no" />
+
+		<!--	Mixed content:
+					-->
+		<!--test url="http://www.dinside.no/bat/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="dinside.no" />
+
+
+	<securecookie host="^\." name="^(?:__cfduid$|_ga)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://dinside\.no/"
+		to="https://www.dinside.no/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

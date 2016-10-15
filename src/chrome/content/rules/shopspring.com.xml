@@ -1,0 +1,56 @@
+<!--
+	Nonfunctional hosts in *shopspring.com:
+
+		- blog ᵃ
+
+	ᵃ Tumblr / shows another domain
+
+
+	Problematic hosts in *shopspring.com:
+
+		- docs ᵐ
+		- engineering ᵐ
+		- share ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- on.shopspring.com
+		- share.shopspring.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on docs from fonts.googleapis.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Shop Spring.com (partial)">
+
+	<target host="shopspring.com" />
+	<target host="concierge.shopspring.com" />
+	<target host="on.shopspring.com" />
+	<target host="static.shopspring.com" />
+	<target host="www.shopspring.com" />
+
+		<test url="http://on.shopspring.com/download-android" />
+		<test url="http://static.shopspring.com/web/styles/main-085350f2.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^on\.shopspring\.com$" name="^__tsid$" /-->
+	<!--securecookie host="^share\.shopspring\.com$" name="^uuid$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

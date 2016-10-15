@@ -1,0 +1,71 @@
+<!--
+	Nonfunctional hosts in *actiac.org:
+
+		- cyberinitiative ᵇ
+
+	ᵇ Shows default page
+
+
+	These altnames do not eixst:
+
+		- www.members.actiac.org
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .actiac.org
+		- members.actiac.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="ACT IAC.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="actiac.org" />
+	<target host="members.actiac.org" />
+	<target host="www.actiac.org" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://members.actiac.org/eweb/StartPage.aspx?Site=act2014" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://www.actiac.org/membership/join-act-iac/join-act-iac" /-->
+
+	<!--	Complications:
+				-->
+	<target host="cyberinitiative.actiac.org" />
+
+		<exclusion pattern="^http://cyberinitiative\.actiac\.org/(?!/*(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://cyberinitiative.actiac.org/default.aspx" />
+			<test url="http://cyberinitiative.actiac.org/a/community/login" />
+			<test url="http://cyberinitiative.actiac.org/a/register" />
+			<test url="http://cyberinitiative.actiac.org/index.htm" />
+			<test url="http://cyberinitiative.actiac.org/index.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.actiac\.org$" name="^UUID$" /-->
+	<!--securecookie host="^members\.actiac\.org$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^[^c]" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://cyberinitiative\.actiac\.org/.*"
+		to="https://actiaccyberinitiative.ideascale.com/" />
+
+		<test url="http://cyberinitiative.actiac.org/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

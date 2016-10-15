@@ -113,17 +113,19 @@
 	<target host="support.lenovo.com" />
 		<!--
 			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-April/001098.html
+			https://trac.torproject.org/projects/tor/ticket/18055
 
 			Redirects that 404. Destinations don't support https:
 										-->
-		<exclusion pattern="^http://www\.lenovo\.com/(?:support|training)/" />
+		<exclusion pattern="^http://www\.lenovo\.com/(lenovorecovery|support|training)" />
 
-			<test url="http://www.lenovo.com/support/" />
-			<test url="http://www.lenovo.com/training/" />
+			<test url="http://www.lenovo.com/lenovorecovery" />
+			<test url="http://www.lenovo.com/support" />
+			<test url="http://www.lenovo.com/training" />
 
 		<!--	Redirects to http:
 						-->
-		<exclusion pattern="http://shop\.lenovo\.com/\w\w/\w\w/services-warranty(?:$|\?|/)" />
+		<exclusion pattern="http://shop\.lenovo\.com/\w\w/\w\w/services-warranty($|\?|/)" />
 
 			<!--	-ve:
 					-->
@@ -164,7 +166,7 @@
 			(it's a pity we can't specify for a test whether
 			CORS should cause said test to fail...)
 									-->
-		<exclusion pattern="http://support\.lenovo\.com/+(?!(?:App|~)/.+\.(?:(?:css|png)(?:$|[?/])|ashx\?w=\d)|~/media/images/system/icon/rss\.ashx)" />
+		<exclusion pattern="http://support\.lenovo\.com/+(?!(App|~)/.+\.((css|png)($|[?/])|ashx\?w=\d)|~/media/images/system/icon/rss\.ashx)" />
 
 			<!--	+ve:
 					-->
@@ -202,13 +204,13 @@
 	<target host="www.partnerinfo.lenovo.com" />
 	<target host="social.lenovo.com" />
 
-		<exclusion pattern="^http://(?:www\.)?lenovo\.co\.uk/(?!$)" />
+		<exclusion pattern="^http://(www\.)?lenovo\.co\.uk/(?!$)" />
 
 			<test url="http://lenovo.co.uk//" />
 			<test url="http://www.lenovo.co.uk/?" />
 			<test url="http://www.lenovo.co.uk//" />
 
-		<exclusion pattern="^http://(?:blog|consumersupport|news|ovp|www\.partnerinfo|social)\.lenovo\.com/" />
+		<exclusion pattern="^http://(blog|consumersupport|news|ovp|www\.partnerinfo|social)\.lenovo\.com/" />
 
 			<test url="http://blog.lenovo.com/" />
 			<test url="http://consumersupport.lenovo.com" />
@@ -231,22 +233,22 @@
 	<!--securecookie host="^\.support\.lenovo\.com$" name="^esupport#lang1$" /-->
 
 	<securecookie host="\.lenovo\.com$" name="VISITORID" />
-	<securecookie host="(?:forums|\.?support)\.lenovo\.com$" name=".+" />
+	<securecookie host="(forums|\.?support)\.lenovo\.com$" name=".+" />
 
 	<!--	Tracking cookies:
         These have been observed to break partner referral links and so are
         disabled...
-	<securecookie host="^\.lenovo\.com$" name="^(?:exp_|oo_inv_|psp|s_|utag_)\w+$" />
-	<securecookie host="^(?:.+\.)?lenovo\.com$" name=".+" />
+	<securecookie host="^\.lenovo\.com$" name="^(exp_|oo_inv_|psp|s_|utag_)\w+$" />
+	<securecookie host="^(.+\.)?lenovo\.com$" name=".+" />
 					-->
 
 
-	<rule from="^http://(?:www\.)?lenovo\.co\.uk/$"
+	<rule from="^http://(www\.)?lenovo\.co\.uk/$"
 		to="https://www.lenovo.com/uk/en/" />
 
 	<!--	404s as-is:
 				-->
-	<rule from="^http://(?:www\.)?lenovo\.com/depotstatus/?$"
+	<rule from="^http://(www\.)?lenovo\.com/depotstatus/?$"
 		to="https://download.lenovo.com/lenovo/content/vru/depotstatus.html" />
 
 		<test url="http://lenovo.com/depotstatus" />
@@ -255,7 +257,7 @@
 
 	<!--	404s as-is:
 				-->
-	<rule from="^http://(?:www\.)?lenovo\.com/friendsandfamily/?$"
+	<rule from="^http://(www\.)?lenovo\.com/friendsandfamily/?$"
 		to="https://shop.lenovo.com/SEUILibrary/controller/Lenovo:EnterStdAffinity?affinity=lenovofamily&amp;ConfigContext=StdAffinityPortal" />
 
 		<test url="http://lenovo.com/friendsandfamily" />
@@ -267,7 +269,7 @@
 		thinkpad.com redirects to www.lenovo.com/link/redirect.www.lenovo.com/www.thinkpad.com/,
 		which 404s over https but redirects like so over http:
 									-->
-	<rule from="^http://(?:(?:www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(?:www\.)?thinkpad\.com/.*"
+	<rule from="^http://((www\.)?lenovo\.com/link/redirect\.www\.lenovo\.com/)?(www\.)?thinkpad\.com/.*"
 		to="https://www.lenovo.com/us/en/?cid=SEO-thinkpadcom" />
 
 	<rule from="^http://lenovo\.com/"
@@ -278,7 +280,7 @@
 
 	<!--	Loops as-is:
 				-->
-	<rule from="^http:///shop\.lenovo\.com/us/en/?(?:\?redir=y&amp;redirsrc=1)?$"
+	<rule from="^http:///shop\.lenovo\.com/us/en/?(\?redir=y&amp;redirsrc=1)?$"
 		to="https://www.lenovo.com/us/en/?redir=y&amp;redirsrc=1" />
 
 		<test url="http://shop.lenovo.com/us" />
@@ -289,7 +291,7 @@
 
 		shop.lenovo points here:
 						-->
-	<rule from="^http://(?:www\.)?lenovovision\.com/.*"
+	<rule from="^http://(www\.)?lenovovision\.com/.*"
 		to="https://www.lenovo.com/" />
 
 		<test url="http://lenovovision.com/foo" />

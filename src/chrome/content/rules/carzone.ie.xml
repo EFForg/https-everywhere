@@ -1,0 +1,70 @@
+<!--
+	Problematic hosts in *carzone.ie:
+
+		- (www.)? ᵐ
+		- m ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- carzone.ie
+		- .carzone.ie
+		- m.carzone.ie
+		- sell.carzone.ie
+		- .sell.carzone.ie
+		- www.carzone.ie
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www from $self
+			- www from resources.autotrader.ie ᵈ
+
+		- Images on www from $self
+
+		- Bugs, on:
+
+			- m from oas.autotrader.ie ˢ
+			- www from metrics.carzone.ie ˢ
+			- www from \d+.fls.doubleclick.net
+
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Carzone.ie (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="sell.carzone.ie" />
+
+	<!--	Complications:
+				-->
+	<target host="metrics.carzone.ie" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:sell\.|www\.)?carzone\.ie$" name="^_ATD_(?:DIGEST_|SESSION)$" /-->
+	<!--securecookie host="^\.carzone\.ie$" name="^s_vi$" /-->
+	<!--securecookie host="^m\.carzone\.ie$" name="^(?:CFID|CFTOKEN|JSESSIONID)$" /-->
+	<!--securecookie host="^\.sell\.carzone\.ie$" name="^bucket$" /-->
+	<!--securecookie host="^www\.carzone\.ie$" name="^(?:CFID|CFTOKEN)$" /-->
+
+	<securecookie host="^\." name="^(?:s_v|_gat?$|_gat_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://metrics\.carzone\.ie/"
+		to="https://tradermediagroup.122.2o7.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -5,33 +5,33 @@
 	Sanoma News
 
 
-	Problematic subdomains:
-
-		- (www.)	(dropped)
-
-
-	Fully covered subdomains:
-
-		- (www.)	(→ www.sanoma.com)
-		- admp-tc
-		- analytics
-		- cts
-		- sat
+	(www.)?sanoma.fi: dropped
 
 -->
 <ruleset name="Sanoma.fi">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="analytics.sanoma.fi" />
+	<target host="cts.sanoma.fi" />
+	<target host="sat.sanoma.fi" />
+	<target host="tili.sanoma.fi" />
+
+		<test url="http://analytics.sanoma.fi/zag.gif?Log=1&amp;v_jd=1" />
+		<test url="http://tili.sanoma.fi/public/widget/css/widget.css?style=hs_blue" />
+
+	<!--	Complications:
+				-->
 	<target host="sanoma.fi" />
-	<target host="*.sanoma.fi" />
+	<target host="www.sanoma.fi" />
 
 
 	<!--	Tracking cookies:
 
-			- evid and evid-synced set by admp-tc
 			- v1st set by analytics
 						-->
-	<securecookie host="^\.sanoma\.fi$" name="^(?:evid|evid-synced|v1st)$" />
-	<securecookie host="^sat\.sanoma\.fi$" name=".+" />
+	<securecookie host="^\." name="^(?:evid|evid-synced|v1st)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<!--	Server drops path:
@@ -39,7 +39,7 @@
 	<rule from="^http://(?:www\.)?sanoma\.fi/.*"
 		to="https://www.sanoma.com/fi" />
 
-	<rule from="^http://(admp-tc|analytics|cts|sat)\.sanoma\.fi/"
-		to="https://$1.sanoma.fi/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

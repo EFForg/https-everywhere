@@ -1,0 +1,185 @@
+<!--
+	CDN buckets:
+
+		- debenhams.scene7.com
+
+
+	Nonfunctional hosts in *debenhams.com:
+
+		- blog ʳ
+		- finance ʳ
+		- m ʰ
+
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *debenhams.com:
+
+		- ^ ʳ
+		- int ˡ
+
+	ˡ >=1 paths loop over http
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .debenhams.com
+		- int.debenhams.com
+		- .www.debenhams.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on www from fonts.googleapis.com ˢ
+
+		- Images, on:
+		
+			- pages.e from image.e.debenhams.com ˢ
+			- www from $self ˢ
+			- www from debenhams.scene7.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Debenhams.com (partial)" platform="mixedcontent">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="images.e.debenhams.com" />
+	<target host="pages.e.debenhams.com" />
+	<target host="int.debenhams.com" />
+	<target host="www.debenhams.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://int\.debenhams\.com/(?:$|ad/home/$|info/faq/our_terms_and_conditions/privacy_policy$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://int\.debenhams\.com/(?!/*(?:ad/+(?:gifts|shop)/|micro/|wcsstore/|webapp/wcs/stores/servlet/))" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://int\.debenhams\.com/.+\.js(?:$|\?)" /-->
+		<!--
+			In combination:
+					-->
+		<exclusion pattern="^http://int\.debenhams\.com/(?!(?!.+\.js(?:$|\?))/*(?:ad/+(?:gifts|shop)/|micro/|wcsstore/|webapp/wcs/stores/servlet/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://int.debenhams.com/ad/home/" />
+			<test url="http://int.debenhams.com/info/designer_collections" />
+			<test url="http://int.debenhams.com/info/faq/home" />
+			<test url="http://int.debenhams.com/info/faq/our_terms_and_conditions/privacy_policy" />
+			<test url="http://int.debenhams.com/info/gifts_for_him/" />
+			<test url="http://int.debenhams.com/micro/js/Deb.INT-HP.js" />
+			<test url="http://int.debenhams.com/micro/js/debs_sitewide.js" />
+			<test url="http://int.debenhams.com/micro/js/jquery.bxslider.4.1.1-patched.js" />
+			<test url="http://int.debenhams.com/micro/js/jquery.bxslider.4.1.1-patched.js" />
+			<test url="http://int.debenhams.com/micro/responsive/responsive.js" />
+			<test url="http://int.debenhams.com/wcsstore/SharedStoreFront/javascript/adrum.js" />
+
+			<!--	-ve:
+					-->
+			<test url="http://int.debenhams.com/ad/gifts/" />
+			<test url="http://int.debenhams.com/ad/shop/?showpage=2" />
+			<test url="http://int.debenhams.com/micro/img/arrow-sprite.png" />
+			<test url="http://int.debenhams.com/wcsstore/SharedStoreFront/Custom/img/country-ad.png" />
+			<test url="http://int.debenhams.com/webapp/wcs/stores/servlet/OrderItemDisplay" />
+			<test url="http://int.debenhams.com/webapp/wcs/stores/servlet/OrderItemDisplay" />
+			<test url="http://int.debenhams.com/webapp/wcs/stores/servlet/OrderTrackingRequestView" />
+			<test url="http://int.debenhams.com/webapp/wcs/stores/servlet/ResetPasswordForm" />
+			<test url="http://int.debenhams.com/webapp/wcs/stores/servlet/UserRegistrationLogonView?storeId=10151" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.debenhams\.com/(?:$|beauty$|sale$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.debenhams\.com/(?!/*(?:favicon\.ico|wcsstore/))" /-->
+		<!--
+			Avoid potential XHR problems:
+							-->
+		<!--exclusion pattern="^http://www\.debenhams\.com/+wcsstore/.+\.js(?:$|\?)" /-->
+		<!--
+			In combination:
+					-->
+		<exclusion pattern="^http://www\.debenhams\.com/(?!(?!.+\.js(?:$|\?))/*(?:favicon\.ico|wcsstore/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.debenhams.com/beauty" />
+			<test url="http://www.debenhams.com/sale" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/foresee/foresee-trigger.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/CatalogArea/ProductDisplay.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/CommonContextsDeclarations.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/CommonControllersDeclaration.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/Deb.Global.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/Deb.HP.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/Deb.INT.SR.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/MessageHelper.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/ServicesDeclaration.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/ServicesEventMapping.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/StoreCommonUtilities.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/ajax-helper.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/debs_akamai_cache.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/deliveryFiles/chosen.jquery.min.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/deliveryFiles/chosen.jquery.min.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/deliveryFiles/jquery-1.10.2.min.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/dropdown_menu.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/ibmcomponents/main.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/jquery.simplemodal.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/owl.carousel.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/javascript/owl.carousel.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/js-ext/debscommon.js" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/js-ext/jquery.bxSlider.3.0-patched.min.js" />
+			<test url="http://www.debenhams.com/wcsstore/common/javascript/s_code.js" />
+			<test url="http://www.debenhams.com/wcsstore/common/javascript/tagmanContainer_19.js" />
+			<test url="http://www.debenhams.com/wcsstore/common/javascript/tagmanContainer_clicks.js" />
+			<test url="http://www.debenhams.com/wcsstore/common/javascript/tagmanInitialisation.js" />
+			<test url="http://www.debenhams.com/wcsstore/dojo18/debs/coreComponents.js" />
+			<test url="http://www.debenhams.com/wcsstore/dojo18/dojo/dojo.js" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.debenhams.com/favicon.ico" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsStorefrontAssetStore/survey/Deb.survey.css" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsUKSite/css/pages/non-furniture-tcat.css" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsUKSite/faq/delivery_and_collection_information/late_deliveries.html" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsUKSite/faq/home.html" /><!--	mixed images -->
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsUKSite/faq/legal_information/privacy_policy.html" />
+			<test url="http://www.debenhams.com/wcsstore/DebenhamsUKSite/faq/our_terms_and_conditions/privacy_policy.html" /><!--	mixed image -->
+
+		<test url="http://image.e.debenhams.com/lib/fe9915707d62057f71/m/1/20140124_Email-sign-up_NEW.jpg" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://pages.e.debenhams.com/page.aspx?email=&amp;fo=homepageSubscription&amp;QS=773ed3059447707dd5aead926c577512fc41330e500c5a0c04cd2e26b05515ac" /-->
+
+	<!--	Complications:
+				-->
+	<target host="debenhams.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.debenhams\.com$" name="^SSLB$" /-->
+	<!--securecookie host="^int\.debenhams\.com$" name="^WC_(?:AUTHENTICATION_\d+|GENERIC_ACTIVITYDATA|USERACTIVITY_-?\d+)$" /-->
+	<!--securecookie host="^\.www\.debenhams\.com$" name="^origin_dc$" /-->
+
+	<securecookie host="^\." name="^s_(?:per|ses)s$" />
+
+
+	<rule from="^http://debenhams\.com/"
+		to="https://www.debenhams.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

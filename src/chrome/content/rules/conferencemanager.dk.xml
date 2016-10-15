@@ -1,0 +1,53 @@
+<!--
+	For rules covering resources which do not secure
+	mixed content, see conferencemanager.dk-resources.xml.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- conferencemanager.dk
+		- templates.conferencemanager.dk
+		- www.conferencemanager.dk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Conference Manager.dk (partial)">
+
+	<target host="conferencemanager.dk" />
+	<target host="files.conferencemanager.dk" />
+	<!--target host="templates.conferencemanager.dk" /-->
+	<target host="www.conferencemanager.dk" />
+
+		<!--	Reduce non-Tor dinstinguishability:
+								-->
+		<exclusion pattern="^http://files\.conferencemanager\.dk/(?!.+\.pdf(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://files.conferencemanager.dk/default.aspx" />
+			<test url="http://files.conferencemanager.dk/index.htm" />
+			<test url="http://files.conferencemanager.dk/index.html" />
+			<test url="http://files.conferencemanager.dk/index.php" />
+
+		<test url="http://files.conferencemanager.dk/medialibrary/B693E535-DE78-4D8A-8F17-C435C0047AC6/images/Jan_Eriksen.pdf" />
+		<!--
+		<test url="http://files.conferencemanager.dk/medialibrary/b693e535-de78-4d8a-8f17-c435c0047ac6/images/Kvinde450x170.jpg" />
+		<test url="http://templates.conferencemanager.dk/5DDA65DF-1AAC-42B2-B7BA-517913D4A9AF/bg.png" />
+		<test url="http://templates.conferencemanager.dk/main/css/styles-cmv9.0.6.css" />
+		<test url="http://templates.conferencemanager.dk/main/images/agenda-arrows.png" />
+		-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:templates\.)?conferencemanager\.dk$" name="^perseverantia$" /-->
+	<!--securecookie host="^www\.conferencemanager\.dk$" name="^(?:ACCEPTCOOKIES|perseverantia)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

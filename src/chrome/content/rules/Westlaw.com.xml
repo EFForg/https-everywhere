@@ -1,63 +1,74 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://westlaw.com/ => https://westlaw.com/: (51, "SSL: no alternative certificate subject name matches target host name 'westlaw.com'")
 	For other Thomson Reuters coverage, see Thomson-Reuters.xml.
 
 
-	Problematic subdomains:
+	Problematic hosts in *westlaw.com:
  
+		- ^ *
 		- store *
 
-	* Mismatched, CN: *.thomsonreuters.com
+	* Mismatched
 
 
-	Fully covered subdomains:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
-		- (www.)
-		- lawschool
-		- 1.next
-		- m.next
-		- onepass
-		- store
-		- images.store
-		- text
-		- web2
-		- west
+		- .westlaw.com
+		- .firmcentral.westlaw.com
+		- lawschool.westlaw.com
+		- .next.westlaw.com
+		- 1.next.westlaw.com
+		- m.next.westlaw.com
+		- onepass.westlaw.com
+		- store.westlaw.com
 
-
-	Insecure cookies are set for these domains:
-
-		- ^
-		- lawschool
-		- .next
-		- 1.next
-		- m.next
-		- text
-		- web2
-		- west
-		- www
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="Westlaw.com (partial)" default_off='failed ruleset test'>
+<ruleset name="Westlaw.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="compliance.westlaw.com" />
+	<target host="firmcentral.westlaw.com" />
+	<target host="forms.westlaw.com" />
+	<target host="lawschool.westlaw.com" />
+	<target host="next.westlaw.com" />
+
+	<target host="1.next.westlaw.com" />
+	<target host="c1.next.westlaw.com" />
+	<target host="i1.next.westlaw.com" />
+	<target host="m.next.westlaw.com" />
+
+	<target host="onepass.westlaw.com" />
+	<target host="images.store.westlaw.com" />
+	<target host="text.westlaw.com" />
+	<target host="web2.westlaw.com" />
+	<target host="westcapitolwatch.westlaw.com" />
+	<target host="www.westlaw.com" />
+
+		<test url="http://c1.next.westlaw.com/StaticContent_32.5.1019/css/v2/scss/partials/mobile/v1/base.css" />
+		<test url="http://i1.next.westlaw.com/StaticContent_32.5.1019/images/mobile/v1/signIn.gif" />
+
+	<!--	Complications:
+				-->
 	<target host="westlaw.com" />
-	<target host="*.westlaw.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^(www\.)?westlaw\.com$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^\.firmcentral\.westlaw\.com$" name="^Co_SessionToken$" /-->
 	<!--securecookie host="^lawschool\.westlaw\.com$" name="^(ASP\.NET_SessionId|BIGipServerLAWSCHOOL-80)$" /-->
-	<!--securecookie host="^\.next\.westlaw\.com$" name="^(ig|mob_pm|site|web_pm)$" /-->
-	<!--securecookie host="^[1m]\.next\.westlaw.com$" name="^BIGipServerprod_apache_a$" /-->
-	<!--securecookie host="^text.westlaw.com$" name="^(BIGipServerCHAMELEON-80|bhCookieSaveSess|CSSignon|FDSERVER|pinfo|tinfo)$" /-->
-	<!--securecookie host="^(text|web2)\.westlaw\.com$" name="^(CSSess|bhCookiePerm|bhCookieSess|userMachineInfo)$" /-->
-	<!--securecookie host="^(text|west)\.westlaw\.com$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^\.next\.westlaw\.com$" name="^(?:BindingKey|mob_pm)$" /-->
+	<!--securecookie host="^(?:[1m]\.next|store)\.westlaw\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^onepass\.westlaw\.com$" name="^bhCookie(?:Perm|Sess)$" /-->
 
-	<securecookie host="^(?:(?:lawschool|[1m]\.next|store|text|web2|west|www)\.)?westlaw\.com$" name=".*" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:lawschool|[1m]\.next|onepass|(?:images\.)?store|text|web2|west|www)\.)?westlaw\.com/"
-		to="https://$1westlaw.com/" />
+	<rule from="^http://westlaw\.com/"
+		to="https://www.westlaw.com/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

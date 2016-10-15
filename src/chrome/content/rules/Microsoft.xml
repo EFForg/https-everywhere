@@ -32,6 +32,7 @@
 		- Microsoft_Online-p.net.xml
 		- Microsoft_Online_Services.xml
 		- Microsoft_Studios.com.xml
+		- Microsoft_Translator.com.xml
 		- Microsoft_Ventures.com.xml
 		- Microsoft_Store.xml
 		- Modern.IE.xml
@@ -58,11 +59,10 @@
 		- S-msn.com.xml
 		- So.cl.xml
 		- Surface.com.xml
-		- Sway.xml
-		- Sway-CDN.com.xml
 		- System_Center_Advisor.com.xml
 		- Technet.com.xml
 		- Technical_Community.com.xml
+		- Translatoruser.net.xml
 		- TwinsOrNot.Net.xml
 		- VSIP_Program.com.xml
 		- Virtualearth.net.xml
@@ -101,11 +101,11 @@
 		- microsoft.com subdomains:
 
 			- advertise.bingads ʳ
+			- help.bingads		(incomplete certificate chain)
 			- innovation.connect	(redirects to connect.microsoft.com)
 			- services.connect	(Mismatched)
 			- developer		(404)
 			- silverlight.dlservice *
-			- download *
 			- web.esd *		(esd, origin, origin-web, and web don't exist)
 			- events		(Mismatched)
 			- ignite		(Mismatched)
@@ -144,7 +144,6 @@
 
 			- ^			(mismatched, CN: *.microsoft.com)
 			- (www.)? ¹
-			- adcenter		(expired)
 			- feedback.adcenter	(Dropped)
 			- fp.advertising ⁴
 			- apps			(works; mismatched, CN: *.apps.microsoft.com)
@@ -182,7 +181,6 @@
 
 	Partially covered microsoft.com subdomains:
 
-		- answers ¹
 		- learning ¹
 		- snackbox		(→ learning.microsoft.com)
 		- tag ¹
@@ -208,11 +206,10 @@
 		- .microsoft.com
 		- account.microsoft.com
 		- .bingads.microsoft.com
-		- help.bingads.microsoft.com
+		- advertise.bingads.microsoft.com
 		- careers.microsoft.com
 		- choice.microsoft.com
 		- connect.microsoft.com
-		- curah.microsoft.com
 		- info.microsoft.com
 		- learning.microsoft.com
 		- mbs.microsoft.com
@@ -269,7 +266,7 @@
 			- technet from msstonojstechnet.112.2o7.net *
 			- social.technet from msstonojssocial.112.2o7.net *
 			- careers, msdn, logobuilder.mspartner, pinpoint, technet, social.technet from m.webtrends.com
-			- blogs, curah, news, www from c.microsoft.com *
+			- blogs, news, www from c.microsoft.com *
 			- sxp from blogs.technet.com
 
 	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
@@ -281,6 +278,7 @@
 				-->
 	<target host="account.microsoft.com" />
 	<target host="accountservices.microsoft.com" />
+	<target host="adcenter.microsoft.com" />
 	<target host="advertising.microsoft.com" />
 	<target host="ajax.microsoft.com" />
 	<target host="answers.microsoft.com" />
@@ -290,7 +288,7 @@
 	<target host="azure.microsoft.com" />
 	<target host="bingads.microsoft.com" />
 
-	<target host="help.bingads.microsoft.com" />
+	<target host="advertise.bingads.microsoft.com" />
 	<target host="resources.bingads.microsoft.com" />
 	<target host="secure.bingads.microsoft.com" />
 	<target host="ui.bingads.microsoft.com" />
@@ -306,7 +304,7 @@
 	<!--	Cert error
 	target host="services.connect.microsoft.com" /-->
 	<target host="sas.css.microsoft.com" />
-	<target host="curah.microsoft.com" />
+	<target host="download.microsoft.com" />
 	<target host="social.expression.microsoft.com" />
 	<target host="g.microsoft.com" />
 	<target host="go.microsoft.com" />
@@ -353,16 +351,16 @@
 	<target host="i3.services.social.microsoft.com" />
 	<target host="i4.services.social.microsoft.com" />
 
-	<target host="store.microsoft.com" />
 	<target host="corp.sts.microsoft.com" />
 	<target host="support.microsoft.com" />
+		<target host="fud.community.services.support.microsoft.com" />
+		<test url="http://fud.community.services.support.microsoft.com/Fud/FileDownloadHandler.ashx" />
 	<target host="support2.microsoft.com" />
 	<target host="sxp.microsoft.com" />
 	<target host="tag.microsoft.com" />
 	<target host="technet.microsoft.com" />
 	<target host="gallery.technet.microsoft.com" />
 	<target host="social.technet.microsoft.com" />
-	<target host="origin-res.windows.microsoft.com" />
 	<target host="www.microsoft.com" />
 
 	<!--	Complications:
@@ -436,20 +434,6 @@
 		<!--	Redirects to http:
 						-->
 		<!--exclusion pattern="^http://www\.microsoft\.com/Surface/\w\w-\w\w(?:$|[?/])" /-->
-		<exclusion pattern="^http://answers\.microsoft\.com/(?!\w\w-\w\w/\w+/forum/[\w-]+/[\w-]+/|static/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://answers.microsoft.com/cs-cz/badges/community-leaders" />
-			<test url="http://answers.microsoft.com/de-de/badges/mcc" />
-			<test url="http://answers.microsoft.com/en-us/page/forums" />
-			<test url="http://answers.microsoft.com/en-us/page/faq" />
-			<test url="http://answers.microsoft.com/en-us/page/gettingstarted" />
-			<test url="http://answers.microsoft.com/es-es/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://answers.microsoft.com/static/css/core.css" />
 
 		<!--	Redirects to http:
 						-->
@@ -597,11 +581,10 @@
 	<!--securecookie host="^\.microsoft\.com$" name="^(A|FedCountryOfChoice|MC1|MS-CV|MS0|gssLANG|msdn|smcexpsessionticket|smcexpticket|smcflighting)$" /-->
 	<!--securecookie host="^account\.microsoft\.com$" name="^oref$" /-->
 	<!--securecookie host="^\.bingads\.microsoft\.com$" name="^ckyAdCenter$" /-->
-	<!--securecookie host="^help\.bingads\.microsoft\.com$" name="^__RequestVerificationToken$" /-->
+	<!--securecookie host="^advertise\.bingads\.microsoft\.com$" name="^(?:ASP\.NET_sessionId|CMSCsrfCookie|CMSPreferredCulture|Campaign|Source)$" /-->
 	<!--securecookie host="^(careers|support)\.microsoft\.com$" name="^ASP\.NET_SessionId$" /-->
 	<!--securecookie host="^choice\.microsoft\.com$" name="^PPLState$" /-->
 	<!--securecookie host="^(connect|mbs)\.microsoft\.com$" name="^BlueStripe\.PVN$" /-->
-	<!--securecookie host="^curah\.microsoft\.com$" name="^__RequestVerificationToken$" /-->
 	<!--securecookie host="^info\.microsoft\.com$" name="^BIGipServer" /-->
 	<!--securecookie host="^msdn\.microsoft\.com$" name="^(__RequestVerificationToken|TocHashCookie)$" /-->
 	<!--securecookie host="^apisandbox\.msdn\.microsoft\.com$" name="^(ai_session|ai_user)$" /-->
@@ -628,7 +611,7 @@
 		s_.+: Other tracking cookies
 						-->
 	<securecookie host="^\.microsoft\.com$" name="^(?:A|GsfxStatsLog|MC1|MS0|OnlineTrackingV2\.0|R|RioTracking\..+|s_.+)$" />
-	<securecookie host="^(?:account|advertising|advertise\.bingads|choice|commerce|connect|curah|ieonline|info|m|mbs|msdn|(?:\.?apisandbox|lab|visualstudiogallery)\.msdn|mspartner|(?:logobuilder|mspartnerlp)\.mspartner|\.?news|\.?office|office(?:15client|2010|preview|redir)|training\.partner|corp\.sts|\.?support|support2|sxp|gallery\.technet|\.?www)\.microsoft\.com$" name=".+" />
+	<securecookie host="^(account|advertising|advertise\.bingads|choice|commerce|connect|download|ieonline|info|m|mbs|msdn|(\.?apisandbox|lab|visualstudiogallery)\.msdn|mspartner|(logobuilder|mspartnerlp)\.mspartner|\.?news|\.?office|office(15client|2010|preview|redir)|training\.partner|corp\.sts|\.?support|support2|sxp|gallery\.technet|\.?www)\.microsoft\.com$" name=".+" />
 	<securecookie host="^social\.technet\.microsoft\.com$" name="^CSExtendedAnalytics(?:Session)?$" />
 
 
