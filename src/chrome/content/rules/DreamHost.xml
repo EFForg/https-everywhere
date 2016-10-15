@@ -9,10 +9,13 @@
 
 	Nonfunctional domains:
 
-		- blog.dreamhost.com				(times out)
-		- wiki.dreamhost.com				(refused)
-		- transferapproval.dreamhost.com	(refused)
-		- (www.)dreamhoststatus.com
+		- blog.dreamhost.com			(self-signed & cert mismatch)
+		- links.dreamhost.com			(cert mismatch)
+		- whois.dreamhost.com			(refused)
+		- whoisweb.dreamhost.com		(refused)
+		- wiki.dreamhost.com			(refused)
+		- dreamhoststatus.com			(refused)
+		- www.dreamhoststatus.com		(cert mismatch)
 
 
 	Mixed content:
@@ -26,7 +29,7 @@
 
 	<target host="dreamhost.com" />
 	<target host="*.dreamhost.com" />
-		<exclusion pattern="^http://(?:blog|wiki|transferapproval)\.dreamhost\.com/" />
+		<exclusion pattern="^http://(?:links|whois(web)?|wiki)\.dreamhost\.com/" />
 		<exclusion pattern="\.crl$" />
 		<exclusion pattern="ocsp\.dreamhost" />
 
@@ -34,16 +37,25 @@
 	<securecookie host="^(?:.*\.)?dreamhost\.com$" name=".+" />
 
 
+	<rule from="^http://blog\.dreamhost\.com/"
+		to="https://www.dreamhost.com/blog/" />
+
 	<!--	Observed subdomains:
 
+			- abuse
+			- atmail
 			- discussion
-			- files
 			- gifts
+			- help
 			- media
 			- dreamhost-com-media.objects
+			- media-dh-com.objects
 			- panel
+			- roundcube
 			- signup
+			- transferapproval
 			- webftp
+			- webmail
 			- www
 				-->
 	<rule from="^http://([\w-]+\.(?:objects\.)?)?dreamhost\.com/"
