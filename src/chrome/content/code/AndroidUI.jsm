@@ -7,8 +7,10 @@ var HTTPSEverywhere = CC["@eff.org/https-everywhere;1"]
 
 CU.import("resource://gre/modules/Prompt.jsm");
 
-var menuId;
-var urlbarId;
+var menuToggleId;
+var menuParentId;
+var menuRulesId;
+var menuDefaultsId;
 var aWindow = getWindow();
 
 
@@ -21,12 +23,7 @@ function loadIntoWindow() {
     return;
   }
   var enabled = HTTPSEverywhere.prefs.getBoolPref("globalEnabled");
-  addToggleItemToMenu(enabled);
-  if (enabled) {
-    urlbarId = aWindow.NativeWindow.pageactions.add(urlbarOptions);
-  } else if (urlbarId) {
-    aWindow.NativeWindow.pageactions.remove(urlbarId);
-  }
+  addMenuItems(enabled);
 
   // When navigating away from a page, we want to clear the applicable list for
   // that page. There are a few different APIs to do this, but this is the one
@@ -43,8 +40,7 @@ function unloadFromWindow() {
   if (!aWindow) {
     return;
   }
-  aWindow.NativeWindow.menu.remove(menuId);
-  aWindow.NativeWindow.pageactions.remove(urlbarId);
+  aWindow.NativeWindow.menu.remove(menuParentId);
 }
 
 
@@ -53,11 +49,70 @@ function unloadFromWindow() {
  */
 
 function addToggleItemToMenu(enabled) {
-  if (menuId) { aWindow.NativeWindow.menu.remove(menuId); }
-  var menuLabel = enabled ? "HTTPS Everywhere (on)" : "HTTPS Everywhere (off)";
-  menuId = aWindow.NativeWindow.menu.add(menuLabel, null, function() {
-    popupToggleMenu(aWindow, enabled);
+  if (menuToggleId) { aWindow.NativeWindow.menu.remove(menuToggleId); }
+  var menuLabel = enabled ? "Disable" : "Enable";
+  menuToggleId = aWindow.NativeWindow.menu.add({
+    name: menuLabel,
+    callback: function() {
+      popupToggleMenu(aWindow, enabled);
+    },
+    parent: menuParentId
   });
+}
+
+function addRulesItemToMenu(enabled){
+  if (menuRulesId) { aWindow.NativeWindow.menu.remove(menuRulesId); }
+
+  if (enabled) {
+    menuRulesId = aWindow.NativeWindow.menu.add({
+      name: "Enable/disable rules",
+      callback: function() {
+        popupInfo.fill();
+        rulesPrompt.setMultiChoiceItems(popupInfo.ruleItems);
+        rulesPrompt.show(function(data) {
+          var db = data.button;
+          if (db === -1) { return null; } // user didn't click the accept button
+
+          for (var i=0; i<popupInfo.rules.length; i++) {
+            var ruleOn = popupInfo.ruleStatus[i];
+            var ruleChecked = (data.list.indexOf(i) == -1 ? false : true);
+            if (ruleOn !== ruleChecked) {
+              HTTPSEverywhere.log(4, "toggling: "+JSON.stringify(popupInfo.rules[i]));
+              popupInfo.rules[i].toggle();
+            }
+          }
+          reloadTab();
+          return null;
+        });
+      },
+      parent: menuParentId
+    });
+  }
+}
+
+function addDefaultsItemToMenu(enabled){
+  if (menuDefaultsId) { aWindow.NativeWindow.menu.remove(menuDefaultsId); }
+
+  if (enabled) {
+    menuDefaultsId = aWindow.NativeWindow.menu.add({
+      name: "Reset to Defaults",
+      callback: function() {
+        popupResetDefaultsMenu(aWindow);
+      },
+      parent: menuParentId
+    });
+  }
+}
+
+function addMenuItems(enabled){
+  if(!menuParentId){
+    menuParentId = aWindow.NativeWindow.menu.add({
+      name: "HTTPS Everywhere",
+    });
+  }
+  addToggleItemToMenu(enabled);
+  addRulesItemToMenu(enabled);
+  addDefaultsItemToMenu(enabled);
 }
 
 function popupToggleMenu(aWindow, enabled) {
@@ -69,7 +124,8 @@ function popupToggleMenu(aWindow, enabled) {
         var msg = enabled ? "HTTPS Everywhere disabled!" : "HTTPS Everywhere enabled!";
         aWindow.NativeWindow.toast.show(msg, "short");
         return true;
-      }
+      },
+      positive: true
     }, {
       label: "No",
       callback: function() { return false; }
@@ -134,39 +190,6 @@ var popupInfo = {
   }
 };
 
-var urlbarOptions = {
-
-  title: "HTTPS Everywhere",
-
-  icon: "chrome://https-everywhere/skin/icon-active-128.png",
-
-  clickCallback: function() {
-    popupInfo.fill();
-    rulesPrompt.setMultiChoiceItems(popupInfo.ruleItems);
-    rulesPrompt.show(function(data) {
-      var db = data.button;
-      if (db === -1) { return null; } // user didn't click the accept button
-      if (popupInfo.rules.length !== db.length) {
-        // Why does db sometimes have an extra entry that doesn't correspond
-        // to any of the ruleItems? No idea, but let's log it.
-        HTTPSEverywhere.log(5,"Got length mismatch between popupInfo.ruleItems and data.button");
-        HTTPSEverywhere.log(4,"Applicable rules: "+JSON.stringify(popupInfo.rules));
-        HTTPSEverywhere.log(4, "data.button: "+JSON.stringify(db));
-      }
-      for (var i=0; i<popupInfo.rules.length; i++) {
-        if (popupInfo.ruleStatus[i] !== db[i]) {
-          HTTPSEverywhere.log(4, "toggling: "+JSON.stringify(popupInfo.rules[i]));
-          popupInfo.rules[i].toggle();
-        }
-      }
-      reloadTab();
-      return null;
-    });
-  },
-
-  longClickCallback: function() { popupResetDefaultsMenu(aWindow); }
-};
-
 var rulesPrompt = new Prompt({
   window: aWindow,
   title: "Enable/disable rules",
@@ -182,7 +205,8 @@ function popupResetDefaultsMenu(aWindow) {
         var msg = "Default rules reset.";
         aWindow.NativeWindow.toast.show(msg, "short");
         return true;
-      }
+      },
+      positive: true
     }, {
       label: "No",
       callback: function() { return false; }

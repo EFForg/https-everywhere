@@ -31,7 +31,7 @@ if [ -n "$1" ]; then
   git reset --hard "$1"
 fi
 
-VERSION=`python -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
+VERSION=`python2.7 -c "import json ; print(json.loads(open('chromium/manifest.json').read())['version'])"`
 
 echo "Building chrome version" $VERSION
 
@@ -49,7 +49,7 @@ needs_update() {
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   echo "Generating ruleset DB"
-  python2.7 ./utils/make-json.py && bash utils/validate.sh
+  python2.7 ./utils/make-json.py && bash utils/validate.sh && cp pkg/rulesets.json src/chrome/content/rulesets.json
 fi
 
 sed -e "s/VERSION/$VERSION/g" chromium/updates-master.xml > chromium/updates.xml
@@ -121,7 +121,7 @@ sig_len_hex=$(byte_swap $(printf '%08x\n' $(ls -l "$sig" | awk '{print $5}')))
 ) > "$crx"
 #rm -rf pkg/crx
 
-#python githubhelper.py $VERSION
+#python2.7 githubhelper.py $VERSION
 
 #git add chromium/updates.xml
 #git commit -m "release $VERSION"

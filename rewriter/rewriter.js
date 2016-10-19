@@ -22,7 +22,7 @@ var path = require("path"),
 
     rules = require("../chromium/rules"),
 
-    URI = require("URIjs");
+    URI = require("urijs");
 
 var ruleSets = null;
 

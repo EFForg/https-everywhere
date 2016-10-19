@@ -1,0 +1,66 @@
+<!--
+	Nonfunctional hosts in *pirateparty.gr:
+
+		- elections ᵃ ᵀ
+		- lists ᵃ
+
+	ᵀ Sets STS header
+	ᵃ Shows another domain
+
+
+	Problematic hosts in *pirateparty.gr:
+
+		- liquid *
+
+	* Redirect for lf($|\?) differs
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- pads.pirateparty.gr
+		- teams.pirateparty.gr
+		- www.pirateparty.gr
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on teams from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Pirate Party.gr (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="pirateparty.gr" />
+	<target host="pads.pirateparty.gr" />
+	<target host="teams.pirateparty.gr" />
+	<target host="www.pirateparty.gr" />
+
+	<!--	Complications:
+				-->
+	<target host="liquid.pirateparty.gr" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^pads\.pirateparty\.gr$" name="^express_sid$" /-->
+	<!--securecookie host="^teams\.pirateparty\.gr$" name="^_redmine_session$" /-->
+	<!--securecookie host="^www\.pirateparty\.gr$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://liquid\.pirateparty\.gr/+lf(?=$|\?)"
+		to="https://liquid.pirateparty.gr/lf/" />
+
+		<test url="http://liquid.pirateparty.gr/lf" />
+		<test url="http://liquid.pirateparty.gr/lf?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,7 +1,7 @@
-<ruleset name="Nyaa.se (partial)">
-
-	<!--	Direct rewrites:
-				-->
+<!--
+	nyaa.eu redirects to nyaa.se (See Nyaa.eu.xml)
+-->
+<ruleset name="Nyaa.se">
 	<target host="nyaa.se" />
 	<target host="*.nyaa.se" />
 
@@ -10,15 +10,14 @@
 	<test url="http://sukebei.nyaa.se/" />
 	<test url="http://files.nyaa.se/favicon.png" />
 
+	<securecookie host="^(sukebei|www)?\.nyaa\.se$" name=".+" />
 
-	<!--	CloudFlare cookies:
-					-->
-	<!--securecookie host="^\.nyaa\.se$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!-- 
+		Error 500 at https://nyaa.se
+		Temporarily fixes a previously working server-side redirect
+		https://github.com/EFForg/https-everywhere/pull/4845
+	-->
+	<rule from="^http://nyaa\.se/" to="https://www.nyaa.se/" />
 
-	<securecookie host="^\.nyaa\.se$" name="^(?:__cfduid|cf_clearance)$" />
-
-
-	<rule from="^http:"
-		to="https:" />
-
+	<rule from="^http:" to="https:" />
 </ruleset>

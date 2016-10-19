@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 
 import binascii
 import collections
@@ -83,7 +83,7 @@ class UrlComparisonThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
-		while True:
+		while not self.taskQueue.empty():
 			try:
 				self.processTask(self.taskQueue.get())
 				self.taskQueue.task_done()
@@ -408,11 +408,6 @@ def cli():
 		testedUrlPairCount = 0
 		config.getboolean("debug", "exit_after_dump")
 
-		for i in range(threadCount):
-			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
-			t.setDaemon(True)
-			t.start()
-
 		# set of main pages to test
 		mainPages = set(urlList)
 		# If list of URLs to test/scan was not defined, use the test URL extraction
@@ -430,6 +425,12 @@ def cli():
 						logging.debug("Skipping excluded URL %s", test.url)
 				task = ComparisonTask(testUrls, fetcherPlain, fetcher, ruleset)
 				taskQueue.put(task)
+
+		for i in range(threadCount):
+			t = UrlComparisonThread(taskQueue, metric, thresholdDistance, autoDisable, resQueue)
+			t.setDaemon(True)
+			t.start()
+
 		taskQueue.join()
 		logging.info("Finished in %.2f seconds. Loaded rulesets: %d, URL pairs: %d.",
 			time.time() - startTime, len(xmlFnames), testedUrlPairCount)

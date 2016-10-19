@@ -84,6 +84,7 @@ die() {
 }
 
 bash utils/validate.sh
+cp pkg/rulesets.json src/chrome/content/rulesets.json
 
 # The name/version of the XPI we're building comes from src/install.rdf
 XPI_NAME="pkg/$APP_NAME-`grep em:version src/install.rdf | sed -e 's/[<>]/	/g' | cut -f3`"

@@ -1,15 +1,24 @@
 <!--
-	Nonfunctional subdomains:
+	Mismatch:
+		- builds
+		- iso.cdn
+		- pkg.cdn
+		- download
+		- ftp
+		- pbibuild
+		- pbibuild64
+		- pootle
+		- pootle2
+		- wiki
 
-		- blog ²
-		- lists		(shows mail.ixsystems.com; mismatched, CN: *.ixsystems.com)
-		- pootle ²
-		- pootle2 ²
-		- translate ³
-		- wiki ²
 
-	² Shows ^pcbsd.org
-	³ Dropped
+	Timeout:
+		- lists
+		- translate
+
+
+	Incomplete cert chain:
+		- ^
 
 
 	Insecure cookies are set for these hosts:
@@ -18,31 +27,29 @@
 		- forums.pcbsd.org
 
 
-	Mixed content:
-
-		- css on www from fonts.googleapis.com *
-		- Images on www from $self *
-
-	* Secured by us
-
+	Mixed content on ^ and www.
 -->
 <ruleset name="PC BSD.org (partial)">
 
-	<!--	Direct rewrites:
-				-->
-	<target host="pcbsd.org" />
+	<target host="www.pcbsd.org" />
+	<target host="api.pcbsd.org" />
+	<target host="area51.pcbsd.org" />
+	<target host="blog.pcbsd.org" />
 	<target host="bugs.pcbsd.org" />
 	<target host="forums.pcbsd.org" />
-	<target host="trac.pcbsd.org" />
-	<target host="www.pcbsd.org" />
+	<target host="web.pcbsd.org" />
 
 
-	<!--	Not secured by server:
-					-->
-	<!--securecookie host="^bugs\.pcbsd\.org$" name="^_redmine_session$" /-->
-	<!--securecookie host="^forums\.pcbsd\.org$" name="^bbsessionhash$" /-->
+	<exclusion pattern="^http://www\.pcbsd\.org/(?!favicon\.ico|wp-content/|wp-includes/)" />
+	<test url="http://www.pcbsd.org/favicon.ico" />
+	<test url="http://www.pcbsd.org/wp-content/uploads/2015/12/PCBSD.png" />
+	<test url="http://www.pcbsd.org/wp-includes/js/jquery/jquery.js" />
+	<test url="http://www.pcbsd.org/community/" />
+	<test url="http://www.pcbsd.org/download/" />
+	<test url="http://www.pcbsd.org/docs/" />
 
-	<securecookie host="^\w" name="." />
+
+	<securecookie host="^(bugs|forums)\.pcbsd\.org$" name="." />
 
 
 	<rule from="^http:"
