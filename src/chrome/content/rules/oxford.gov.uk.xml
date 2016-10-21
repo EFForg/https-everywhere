@@ -1,0 +1,81 @@
+<!--
+	Oxford City Council
+
+	For rules causing false/broken MCB, see oxford.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *oxford.gov.uk:
+
+		- mycouncil ʳ
+		- planning01 ʳ
+		- public ʳ
+
+	ʳ Refused
+
+
+	Problematic hosts in *oxford.gov.uk:
+
+		- ^ * ᵐ
+		- consultation ᵐ ˢ
+		- ecitizen ˣ
+		- leaseholdershandbook **
+		- repairshandbook **
+		- tenantshandbook **
+
+	* Not listening on :80
+	** Redirect differs
+	ᵐ Mismatched
+	ˢ Self-signed
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- ecitizen.oxford.gov.uk
+		- .www.oxford.gov.uk
+
+
+	Mixed content:
+
+		- css on ecitizen from $self ˢ
+		- Images on ecitizen from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Oxford.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="ecitizen.oxford.gov.uk" /-->
+	<target host="www.oxford.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="leaseholdershandbook.oxford.gov.uk" />
+	<target host="repairshandbook.oxford.gov.uk" />
+	<target host="tenantshandbook.oxford.gov.uk" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://ecitizen.oxford.gov.uk/publicaccesslive/selfservice/councilservices.htm" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^ecitizen\.oxford\.gov\.uk$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^\.www\.oxford\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:leaseholder|repair|tenant)shandbook\.oxford\.gov\.uk/"
+		to="https://www.oxford.gov.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,41 @@
+<!--
+	Office of Rail and Road
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Problematic hosts in *orr.gov.uk:
+
+		- (www.)? ᵉ ᵐ ˢ
+		- dataportal ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these domains:
+
+		- .dataportal.orr.gov.uk
+
+-->
+<ruleset name="ORR.gov.uk (partial)">
+
+	<!--target host="dataportal.orr.gov.uk" /-->
+	<target host="orrdat.orr.gov.uk" />
+	<target host="raildata.orr.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.dataportal\.orr\.gov\.uk$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

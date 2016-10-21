@@ -1,25 +1,56 @@
 <!--
 	CDN buckets:
 
-		- d2wxwu28a4m0zf.cloudfront.net
-
-			- cdn
-
+		- d1gl4fdbjuiapz.cloudfront.net	← re
+		- d2wxwu28a4m0zf.cloudfront.net	← cdn
 		- az413505.vo.msecnd.net
+
+
+	Problematic hosts in *directrev.com:
+
+		- ^ ᵈ
+		- cdn ᵐ
+		- re ᵐ
+		- www ᵐ
+
+	ᵈ Dropped, preemptable redirect
+	ᵐ Cloudfront / mismatched
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .directrev.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="directrev.com">
 
-	<target host="*.directrev.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="ad.directrev.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.directrev.com" />
+	<target host="re.directrev.com" />
 
 
-	<securecookie host="^ad\.directrev\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.directrev\.com$" name="^OAX$" /-->
 
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|OAX$)" />
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://ad\.directrev\.com/"
-		to="https://ad.directrev.com/" />
 
 	<rule from="^http://cdn\.directrev\.com/"
 		to="https://d2wxwu28a4m0zf.cloudfront.net/" />
+
+	<rule from="^http://re\.directrev\.com/"
+		to="https://d1gl4fdbjuiapz.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

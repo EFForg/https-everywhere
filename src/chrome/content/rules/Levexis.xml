@@ -1,34 +1,38 @@
 <!--
-	Nonfunctional subdomains:
-
-		- ^	(shows default plesk page; expired 2007-06-15, CN: plesk)
+	^levexis.com: shows default page
 
 
-	Problematic subdomains:
+	Problematic hosts in *levexis.com:
 
-		- res	(akamai)
+		- res ᴬ
 
-
-	Fully covered subdomains:
-
-		- pfa
+	ᴬ Akamai / mismatched
 
 
-	www does not exist
+	www.levexis.com does not exist
 
 -->
-<ruleset name="Levexis (partial)">
+<ruleset name="Levexis.com (partial)">
 
-	<target host="*.levexis.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="pfa.levexis.com" />
+	<target host="sec.levexis.com" />
+
+	<!--	Complications:
+				-->
+	<target host="res.levexis.com" />
 
 
-	<securecookie host="^pfa\.levexis\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://pfa\.levexis\.com/"
-		to="https://pfa.levexis.com/" />
-
-	<rule from="^http://(?:res|sec)\.levexis\.com/"
+	<rule from="^http://res\.levexis\.com/"
 		to="https://sec.levexis.com/" />
+
+		<test url="http://res.levexis.com/clientfiles/default/19/debenhamsie.htm" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,0 +1,35 @@
+<!--
+	Problematic hosts in *sitejam.com:
+
+		- ^ ᵐ
+		- 55b558c7-site ᶜ
+		- www ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+-->
+<ruleset name="sitejam.com" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="55b558c7-site.sitejam.com" />
+	<target host="www.sitejam.com" />
+
+		<test url="https://55b558c7-site.sitejam.com/_css/site_289695_76615_29.css" />
+
+	<!--	Complications:
+				-->
+	<target host="sitejam.com" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://sitejam\.com/"
+		to="https://www.sitejam.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

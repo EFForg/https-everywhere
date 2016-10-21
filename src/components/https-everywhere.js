@@ -246,8 +246,7 @@ HTTPSEverywhere.prototype = {
   QueryInterface: XPCOMUtils.generateQI(
     [ Components.interfaces.nsIObserver,
       Components.interfaces.nsISupports,
-      Components.interfaces.nsISupportsWeakReference,
-      Components.interfaces.nsIChannelEventSink ]),
+      Components.interfaces.nsISupportsWeakReference ]),
 
   wrappedJSObject: null,  // Initialized by constructor
 
@@ -469,9 +468,7 @@ HTTPSEverywhere.prototype = {
   loadOCSPList: function() {
     try {
       var loc = "chrome://https-everywhere/content/code/commonOCSP.json";
-      var file = CC["@mozilla.org/file/local;1"].createInstance(CI.nsILocalFile);
-      file.initWithPath(this.rw.chromeToPath(loc));
-      var data = this.rw.read(file);
+      var data = this.rw.readFromUrl(loc);
       this.ocspList = JSON.parse(data);
     } catch(e) {
       this.log(WARN, "Failed to load OCSP list: " + e);
@@ -640,45 +637,6 @@ HTTPSEverywhere.prototype = {
       this.prefs.setIntPref("experimental_feature_cohort", cohort);
     }
     return cohort;
-  },
-
-  // nsIChannelEventSink implementation
-  // XXX This was here for rewrites in the past.  Do we still need it?
-  onChannelRedirect: function(oldChannel, newChannel, flags) {  
-    const uri = newChannel.URI;
-    this.log(DBUG,"Got onChannelRedirect to "+uri.spec);
-    if (!(newChannel instanceof CI.nsIHttpChannel)) {
-      this.log(DBUG, newChannel + " is not an instance of nsIHttpChannel");
-      return;
-    }
-    var alist = this.juggleApplicableListsDuringRedirection(oldChannel, newChannel);
-    HTTPS.replaceChannel(alist, newChannel, this.httpNowhereEnabled);
-  },
-
-  juggleApplicableListsDuringRedirection: function(oldChannel, newChannel) {
-    // If the new channel doesn't yet have a list of applicable rulesets, start
-    // with the old one because that's probably a better representation of how
-    // secure the load process was for this page
-    var browser = this.getBrowserForChannel(oldChannel);
-    var old_alist = null;
-    if (browser) 
-      old_alist = this.getExpando(browser,"applicable_rules");
-    browser = this.getBrowserForChannel(newChannel);
-    if (!browser) return null;
-    var new_alist = this.getExpando(browser,"applicable_rules");
-    if (old_alist && !new_alist) {
-      new_alist = old_alist;
-      this.setExpando(browser,"applicable_rules",new_alist);
-    } else if (!new_alist) {
-      new_alist = new ApplicableList(this.log, browser.currentURI);
-      this.setExpando(browser,"applicable_rules",new_alist);
-    }
-    return new_alist;
-  },
-
-  asyncOnChannelRedirect: function(oldChannel, newChannel, flags, callback) {
-        this.onChannelRedirect(oldChannel, newChannel, flags);
-        callback.onRedirectVerifyCallback(0);
   },
 
   get_prefs: function(prefBranch) {

@@ -1,0 +1,51 @@
+<!--
+	Nonfunctional hosts in *nuomi.com:
+
+		- bj ʰ
+		- m ʰ
+		- t ʰ
+
+	ʰ Redirects to http
+
+
+	Mixed content:
+
+		- css on d from s0.nuomi.bdimg.com
+		- favicon on d from www.nuomi.com ˢ
+		- Images on d from newpc2.nuomi.bdimg.com
+		- Images on d from s0.nuomi.bdimg.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="nuomi.com (partial)" platform="mixedcontent">
+
+	<target host="d.nuomi.com" />
+	<target host="www.nuomi.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.nuomi\.com/(?:\?cid=fr_tuanbai$|deal/\w+\.html|pclogin/main/loginpage$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.nuomi\.com/(?!/*static/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.nuomi.com/?cid=fr_tuanbai" />
+			<test url="http://www.nuomi.com/deal/pu14haoo.html" />
+			<test url="http://www.nuomi.com/pclogin/main/loginpage" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.nuomi.com/static/common/img/favicon.ico" />
+
+
+	<securecookie host="^d" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

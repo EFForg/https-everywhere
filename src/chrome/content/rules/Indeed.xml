@@ -3,31 +3,39 @@
 	www.indeed.com: Redirects to http
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .indeed.com
 		- ads.indeed.com
+		- conv.indeed.com
 		- employers.indeed.com
 		- secure.indeed.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Indeed.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
 	<target host="ads.indeed.com" />
+	<target host="conv.indeed.com" />
 	<target host="employers.indeed.com" />
 	<target host="secure.indeed.com" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://conv.indeed.com/pagead/conv/1/?script=" /-->
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.indeed\.com$" name="^(?:CSRF|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^\.indeed\.com$" name="^(?:CSRF|CTK|TS[\da-f]{8})$" /-->
+	<!--securecookie host="^conv\.indeed\.com$" name="^(?:BIGipServer|INDEED_CSRF_TOKEN$|JSESSION$|ctokgen$)" /-->
 	<!--securecookie host="^employers\.indeed\.com$" name="^(?:BIGipServer\w+|CO|LOCALE)$" /-->
 	<!--securecookie host="^ads\.indeed\.com$" name="^INDEED(?:_CSRF_TOKEN|ADS_CC|ADS_LANG)$" /-->
 	<!--securecookie host="^secure\.indeed\.com$" name="^TS[\da-f]{8}$" /-->
 
-	<securecookie host="^(?:ads|employers|secure)\.indeed\.com$" name=".+" />
+	<securecookie host="^\." name="^CTK$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http:"

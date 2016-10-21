@@ -123,12 +123,14 @@ function SSLObservatory() {
     this.setupASNWatcher();
 
   try {
-    NSS.initialize("");
+    NSS.initialize();
   } catch(e) {
     this.log(WARN, "Failed to initialize NSS component:" + e);
   }
 
-  this.testProxySettings();
+  // It is necessary to testProxySettings after the window is loaded, since the
+  // Tor Browser will not be finished establishing a circuit otherwise
+  OS.addObserver(this, "browser-delayed-startup-finished", false);
 
   this.log(DBUG, "Loaded observatory component!");
 }
@@ -176,7 +178,7 @@ SSLObservatory.prototype = {
 
   findSubmissionTarget: function() {
     // Compute the URL that the Observatory will currently submit to
-    var host = this.prefs.getCharPref("extensions.https_everywhere._observatory.server_host");
+    var host = this.myGetCharPref("server_host");
     // Rebuild the regexp iff the host has changed
     if (host != this.submit_host) {
       this.submit_host = host;
@@ -315,7 +317,7 @@ SSLObservatory.prototype = {
     }
 
     var hexArr = [];
-    for (i in h){
+    for (var i in h){
       hexArr.push(toHexString(h.charCodeAt(i)));
     }
     return hexArr.join("").toUpperCase();
@@ -398,6 +400,10 @@ SSLObservatory.prototype = {
         }
       }
     }
+
+    if (topic == "browser-delayed-startup-finished") {
+      this.testProxySettings();
+    }
   },
 
   observatoryActive: function() {
@@ -437,9 +443,13 @@ SSLObservatory.prototype = {
     return false;
   },
 
+  // following two methods are syntactic sugar
   myGetBoolPref: function(prefstring) {
-    // syntactic sugar
     return this.prefs.getBoolPref ("extensions.https_everywhere._observatory." + prefstring);
+  },
+
+  myGetCharPref: function(prefstring) {
+    return this.prefs.getCharPref ("extensions.https_everywhere._observatory." + prefstring);
   },
 
   isChainWhitelisted: function(chainhash) {
@@ -768,6 +778,21 @@ SSLObservatory.prototype = {
      */
     this.proxy_test_successful = null;
 
+    var proxy_settings = this.getProxySettings();
+    // if proxy_settings is false, we're using tor browser for sure
+    // if tor_safe is false, the user has specified use_custom_proxy
+    // in either case, don't issue request to tor check url
+    if (!proxy_settings) {
+      this.proxy_test_successful = true;
+      this.log(INFO, "Tor check assumed succeeded.");
+      return;
+    }
+    if (proxy_settings.tor_safe == false) {
+      this.proxy_test_successful = false;
+      this.log(INFO, "Tor check failed: Not safe to check.");
+      return;
+    }
+
     try {
       var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"]
                               .createInstance(Components.interfaces.nsIXMLHttpRequest);
@@ -826,21 +851,16 @@ SSLObservatory.prototype = {
   getProxySettings: function(testingForTor) {
     // This may be called either for an Observatory submission, or during a test to see if Tor is
     // present.  The testingForTor argument is true in the latter case.
-    var proxy_settings = ["direct", "", 0];
+    var proxy_settings = {
+      type: "direct",
+      host: "",
+      port: 0,
+      tor_safe: false
+    };
     this.log(INFO,"in getProxySettings()");
-    var custom_proxy_type = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_type");
+    var custom_proxy_type = this.myGetCharPref("proxy_type");
     if (this.torbutton_installed && this.myGetBoolPref("use_tor_proxy")) {
-      this.log(INFO,"CASE: use_tor_proxy");
-      // extract torbutton proxy settings
-      proxy_settings[0] = "http";
-      proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.https_proxy");
-      proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.https_port");
-
-      if (proxy_settings[2] == 0) {
-        proxy_settings[0] = "socks";
-        proxy_settings[1] = this.prefs.getCharPref("extensions.torbutton.socks_host");
-        proxy_settings[2] = this.prefs.getIntPref("extensions.torbutton.socks_port");
-      }
+      return false;
     /* Regarding the test below:
      *
      * custom_proxy_type == "direct" is indicative of the user having selected "submit certs even if
@@ -851,17 +871,19 @@ SSLObservatory.prototype = {
      */
     } else if (this.myGetBoolPref("use_custom_proxy") && !(testingForTor && custom_proxy_type == "direct")) {
       this.log(INFO,"CASE: use_custom_proxy");
-      proxy_settings[0] = custom_proxy_type;
-      proxy_settings[1] = this.prefs.getCharPref("extensions.https_everywhere._observatory.proxy_host");
-      proxy_settings[2] = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
+      proxy_settings.type = custom_proxy_type;
+      proxy_settings.host = this.myGetCharPref("proxy_host");
+      proxy_settings.port = this.prefs.getIntPref("extensions.https_everywhere._observatory.proxy_port");
+      proxy_settings.tor_safe = false;
     } else {
       /* Take a guess at default tor proxy settings */
       this.log(INFO,"CASE: try localhost:9050");
-      proxy_settings[0] = "socks";
-      proxy_settings[1] = "localhost";
-      proxy_settings[2] = 9050;
+      proxy_settings.type = "socks";
+      proxy_settings.host = "localhost";
+      proxy_settings.port = 9050;
+      proxy_settings.tor_safe = true;
     }
-    this.log(INFO, "Using proxy: " + proxy_settings);
+    this.log(INFO, "Using proxy: " + JSON.stringify(proxy_settings));
     return proxy_settings;
   },
 
@@ -892,10 +914,16 @@ SSLObservatory.prototype = {
         // for the torbutton proxy settings.
         try {
           proxy_settings = this.getProxySettings(testingForTor);
-          proxy = this.pps.newProxyInfo(proxy_settings[0], proxy_settings[1],
-                    proxy_settings[2],
-                    Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
-                    0xFFFFFFFF, null);
+          if(proxy_settings){
+            proxy = this.pps.newProxyInfo(
+              proxy_settings.type,
+              proxy_settings.host,
+              proxy_settings.port,
+              Ci.nsIProxyInfo.TRANSPARENT_PROXY_RESOLVES_HOST,
+              0xFFFFFFFF, null);
+          } else {
+            proxy = aProxy;
+          }
         } catch(e) {
           this.log(WARN, "Error specifying proxy for observatory: "+e);
         }

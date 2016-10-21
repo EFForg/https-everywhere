@@ -1,0 +1,61 @@
+<!--
+	Other Cxense rulesets:
+
+		- Emediate.dk.xml
+		- Emediate.eu.xml
+		- Emediate.se.xml
+
+
+	Problematic hosts in *cxense.com:
+
+		- cdn *
+
+	* Akamai / mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- cxense.com
+		- wiki.cxense.com
+		- www.cxense.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Cxense.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cxense.com" />
+	<target host="api.cxense.com" />
+	<target host="comcluster.cxense.com" />
+
+	<target host="adserver.cxad.cxense.com" />
+	<target host="s-adserver.cxad.cxense.com" />
+
+	<target host="scdn.cxense.com" />
+	<target host="support.cxense.com" />
+	<target host="wiki.cxense.com" />
+	<target host="www.cxense.com" />
+
+	<!--	Complications:
+				-->
+	<target host="cdn.cxense.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?cxense\.com$" name="^(?:_icl_current_language|PHPSESSID)$" /-->
+	<!--securecookie host="^wiki\.cxense\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\.cxense\.com$" name="^gck\w$" />
+	<securecookie host="^wiki\.cxense\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.cxense\.com/"
+		to="https://scdn.cxense.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

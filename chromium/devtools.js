@@ -1,5 +1,5 @@
 chrome.devtools.panels.create("HTTPS Everywhere",
-    "icon48.png",
+    "icons/icon-active-38.png",
     "devtools-panel.html",
     function(panel) {
     }

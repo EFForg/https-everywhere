@@ -1,5 +1,13 @@
 <!--
-	For other Booking.com rulesets, refer to Booking.com.xml
+	For other Booking.com coverage, see Booking.com.xml.
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .villas.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
 <ruleset name="Villas.com">
 
@@ -7,20 +15,31 @@
 	<target host="*.villas.com" />
 	<target host="*.vcomstatic.com" />
 
+		<exclusion pattern="^http://(?:[^./]+\.){2,}v(?:comstatic|illas)\.com/" />
 
-	<securecookie host="^(\.[\w\-]+)?\.villas\.com$" name=".+" />
+			<!--	+ve:
+					-->
+			<test url="http://this.host.villas.com/" />
+			<test url="http://exists.not.villas.com/" />
+			<test url="http://this.host.vcomstatic.com/" />
+			<test url="http://exists.not.vcomstatic.com/" />
 
 
-	<rule from="^http://([\w\-]+\.)?villas\.com/"
-		to="https://$1villas.com/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.villas\.com$" name="^bkng$" /-->
 
-	<test url="http://www.villas.com/" />
-	<test url="http://secure.villas.com/" />
+	<securecookie host="." name="." />
 
-	<rule from="^http://([\w\-]+)\.vcomstatic\.com/"
-		to="https://$1.vcomstatic.com/" />
 
-	<test url="http://r-ec.vcomstatic.com/" />
-	<test url="http://s-ec.vcomstatic.com/" />
+	<rule from="^http:"
+		to="https:" />
+
+		<test url="http://secure.villas.com/" />
+		<test url="http://www.villas.com/" />
+
+		<test url="http://r-ec.vcomstatic.com/" />
+		<test url="http://s-ec.vcomstatic.com/static/img/transparent/85e02501df1560d359a473f544224481a83c9aa7.png" />
+		<test url="http://t-ec.vcomstatic.com/villas/img/dropdown/7287c551b7fa657e8d3a3b7fe1e419679cd605a3.png" />
 
 </ruleset>

@@ -27,36 +27,38 @@
 
 
 	Partially covered hosts in *manchester.gov.uk:
-	
+
 		- open *
 
 	* Some paths differ from (cms|secure)
 
 
-	Insecure cookies are set for these domains and hosts:
+	Insecure cookies are set for these domains and hosts: ᶜ
 
 		- .manchester.gov.uk
 		- consult.manchester.gov.uk
 		- posters.manchester.gov.uk
 		- www.revbens.manchester.gov.uk
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 
 	Mixed content:
 
 		- css, on:
-		
+
 			- cms from www.manchester.gov.uk ˢ *
 			- petitions from fonts.typotheque.com
-			- www.revbens ˢ **
+			- www.revbens from www.manchester.gov.uk ˢ **
 
 		- Images, on:
 
 			- cms, open from open.manchester.gov.uk ˢ
-			- cms, open from www.manchester.gov.uk ˢ
+			- cms, open, www.revbens from www.manchester.gov.uk ˢ
 
 	* Minor
 	** 404s over http & https
-	ˢ Secured by us
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Manchester.gov.uk (partial)">
@@ -79,7 +81,7 @@
 
 		<!--	Some paths differ:
 						-->
-		<exclusion pattern="http://open\.manchester\.gov\.uk/+(?!favicon\.ico|open(?:$|[?/]))" />
+		<exclusion pattern="^http://open\.manchester\.gov\.uk/(?!/*(?:favicon\.ico|open(?:$|[?/])))" />
 
 			<!--	+ve:
 					-->
@@ -110,7 +112,7 @@
 	<!--securecookie host="^posters\.manchester\.gov\.uk$" name="^ekm_(?:archiveplus|mo_archivesplus)$" /-->
 	<!--securecookie host="^www\.revbens\.manchester\.gov\.uk$" name="^(?:ASPSESSIONID[A-Z]{8}|CONNECTSID)$" /-->
 
-	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
 	<securecookie host="^(?!open\.)\w" name="." />
 
 
@@ -120,15 +122,8 @@
 	<rule from="^http://b3\.manchester\.gov\.uk/"
 		to="https://www.b3.manchester.gov.uk/" />
 
-	<!--	Redirect keeps forward slash and args:
-							-->
-	<rule from="^http://consult\.manchester\.gov\.uk/+(?:\?.*)?$"
-		to="https://manchester.objective.co.uk/portal" />
-
-		<test url="http://consult.manchester.gov.uk/?" />
-
 	<rule from="^http://consult\.manchester\.gov\.uk/"
-		to="https://manchester.objective.co.uk/" />
+		to="https://manchester-consult.objective.co.uk/" />
 
 		<test url="http://consult.manchester.gov.uk/portal/contact_us" />
 

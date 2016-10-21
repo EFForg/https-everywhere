@@ -1,41 +1,33 @@
 <!--
-	^: Refused
-	www: Cloudfront
+	Insecure cookies are set for these hosts: ᶜ
 
-
-	Insecure cookies are set for these domains:
-
+		- bitcoin.com
+		- news.bitcoin.com
 		- www.bitcoin.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 
 	Mixed content:
 
-		- css on www from img.okcoin.com *
-		- Images on www from img.okcoin.com *
+		- Image on news from www.gravatar.com *
 
-	* Secured by us
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Bitcoin.com" default_off="mismatched" platform="mixedcontent">
+<ruleset name="Bitcoin.com">
 
-	<!--	Direct rewrites:
-				-->
-	<target host="www.bitcoin.com" />
-
-	<!--	Complications:
-				-->
 	<target host="bitcoin.com" />
+	<target host="news.bitcoin.com" />
+	<target host="www.bitcoin.com" />
 
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^www\.bitcoin\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^(?:news\.|www\.)?bitcoin\.com$" name="^JSESSIONID$" /-->
 
-	<securecookie host="^(?:www)?\.bitcoin\.com$" name=".+" />
+	<securecookie host="." name="." />
 
-
-	<rule from="^http://bitcoin\.com/"
-		to="https://www.bitcoin.com/" />
 
 	<rule from="^http:"
 		to="https:" />

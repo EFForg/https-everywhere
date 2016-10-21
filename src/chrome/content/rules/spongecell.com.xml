@@ -1,0 +1,104 @@
+<!--
+	CDN buckets:
+
+		- spongecell-assets.s3.amazonaws.com
+
+
+	Problematic hosts in *spongecell.com:
+
+		- www2 ᵐ
+
+	ᵐ Pardot / mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- spongecell.com
+		- .spongecell.com
+		- royale.spongecell.com
+		- .royale.spongecell.com
+		- royale-ssl.spongecell.com
+		- .royale-ssl.spongecell.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Spongecell.com (partial)">
+
+	<target host="spongecell.com" />
+	<target host="analytics.spongecell.com" />
+	<target host="live-ssl.cdn.spongecell.com" />
+	<target host="royale.spongecell.com" />
+	<target host="royale-ssl.spongecell.com" />
+	<target host="www.spongecell.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.spongecell\.com/(?:$|blog$|contact-us$|jobs$|technology$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.spongecell\.com/(?!/*(?:favicon\.ico|sites/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.spongecell.com/blog" />
+			<test url="http://www.spongecell.com/contact-us" />
+			<test url="http://www.spongecell.com/jobs" />
+			<test url="http://www.spongecell.com/technology" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.spongecell.com/favicon.ico" />
+			<test url="http://www.spongecell.com/sites/all/themes/spongecell/img/spongecell-logo.png" />
+
+		<!--	Set cookie without Secure:
+							-->
+		<!--test url="http://analytics.spongecell.com/ad_tags/00000000?ad_version=&amp;type=&amp;flight_id=&amp;screen=&amp;noflash=&amp;noscript=&amp;creative_id=1&amp;external_placement_id=1&amp;external_site_id=&amp;anticache=&amp;e=" /-->
+		<!--test url="http://royale.spongecell.com/api/ad_tags/00000000/clickthrough?creative_id=&amp;noflash=&amp;iid=&amp;external_placement_id=&amp;external_site_id=&amp;anticache=&amp;click_tag=" /-->
+		<!--test url="http://royale-ssl.spongecell.com/api/ad_tags/00000000/clickthrough?creative_id=&amp;noflash=&amp;noscript=&amp;external_placement_id=&amp;external_site_id=&amp;anticache=&amp;click_tag=&amp;sig=&amp;urlfix=&amp;adurl=&amp;landingPages1=&amp;c3nid=&amp;c3creative=&amp;c3adid=&amp;c3size=&amp;utm_source=&amp;utm_medium=&amp;utm_campaign=" /-->
+
+	<!--	Complications:
+				-->
+	<target host="www2.spongecell.com" />
+
+		<exclusion pattern="^http://www2\.spongecell\.com/(?!/*(?:$|\?|[el]/))" />
+
+			<!--	See below respective rules for negative cases.
+
+				+ve:
+					-->
+			<test url="http://www2.spongecell.com/COREverview" />
+			<test url="http://www2.spongecell.com/downloads/retargeting_playbook_2015" />
+			<test url="http://www2.spongecell.com/default.aspx" />
+			<test url="http://www2.spongecell.com/index.htm" />
+			<test url="http://www2.spongecell.com/index.html" />
+			<test url="http://www2.spongecell.com/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:royale\.|royale-ssl\.)?spongecell\.com$" name="^XSRF-TOKEN$" /-->
+	<!--securecookie host="^\.spongecell\.com$" name="^(?:_spongecell_loves_u|spongekey)$" /-->
+	<!--securecookie host="^\.royale(?:-ssl)?\.spongecell\.com$" name="^_spongecell_loves_u$" /-->
+
+	<securecookie host="^\." name="^spongekey$" />
+	<securecookie host="^(?!www2?\.)\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://www2\.spongecell\.com/+(?:\?.*)?$"
+		to="https://www.spongecell.com/" />
+
+		<test url="http://www2.spongecell.com/?" />
+
+	<rule from="^http://www2\.spongecell\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://www2.spongecell.com/l/105302/2015-11-03/33mpz" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

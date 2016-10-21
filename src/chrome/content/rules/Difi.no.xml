@@ -1,0 +1,111 @@
+<!--
+	Direktoratet for forvaltning og IKT
+
+
+	Nonfunctional hosts in *difi.no:
+
+		- eid ᵈ
+		- internkontroll.infosikkerhet ᵃ
+		- kompetanseutvikling ᵃ
+		- kurs ᵃ
+		- los ᵃ
+		- oep ᵃ
+		- sosialemedier ᵈ
+		- tegnsett.standard ᵈ
+		- styleguide ᵃ
+		- tidliglcc ᵃ
+		- wcag ᵃ
+
+	ᵃ Shows another domain
+	ᵈ Dropped
+
+
+	Nonfunctional domains:
+		- tmp (ERR_TIMED_OUT)
+		- tegnsett (ERR_TIMED_OUT)
+		- idporten-sptest2 (RR_CERT_COMMON_NAME_INVALID)
+
+	Problematic hosts in *difi.no:
+
+		- standard ᵈ
+
+	ᵈ Dropped, preemptable rediret
+
+
+	STS header includes includeSubdomains
+	for brukerprofil
+
+
+	These altnames do not exist:
+
+		- www.statsquiz.difi.no
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- walter.difi.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<!-- Norwegian National Directorate for Management and IT-Communication -->
+<ruleset name="Difi.no (partial)">
+
+	<target host="difi.no" />
+	<target host="begrep.difi.no" />
+	<target host="brukar.difi.no" />
+	<target host="brukerprofil.difi.no" />
+	<target host="*.brukerprofil.difi.no" />
+	<target host="doc.difi.no" />
+	<target host="einnsyn.difi.no" />
+	<target host="kontaktinfo-ws-ver1.difi.no" />
+	<target host="kvalitet.difi.no" />
+	<target host="laeringsplattformen.difi.no" />
+	<target host="orglogo.difi.no" />
+	<target host="samarbeid.difi.no" />
+	<target host="smp.difi.no" />
+	<target host="stat.difi.no" />
+	<target host="statsquiz.difi.no" />
+	<target host="test-vefa.difi.no" />
+	<target host="tidstyv.difi.no" />
+	<target host="uu.difi.no" />
+	<target host="vefa.difi.no" />
+	<target host="verkty.difi.no" />
+	<target host="walter.difi.no" />
+	<target host="www.difi.no" />
+	
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}brukerprofil\.difi\.no/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.brukerprofil.difi.no/" />
+			<test url="http://exists.not.brukerprofil.difi.no/" />
+
+		<test url="http://www.brukerprofil.difi.no/" />
+
+	<!--	Complications:
+				-->
+	<target host="standard.difi.no" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^walter\.difi\.no$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://standard\.difi\.no/[^?]*"
+		to="https://www.difi.no/veiledning/ikt-og-digitalisering/standarder" />
+
+		<test url="http://standard.difi.no/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

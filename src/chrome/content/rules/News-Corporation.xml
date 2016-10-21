@@ -1,29 +1,29 @@
 <!--
 Disabled by https-everywhere-checker because:
-Fetch error: http://online.barrons.com/ => http://online.barrons.com/: Cycle detected - URL already encountered: http://online.barrons.com/home-page
 Fetch error: http://om.dowjoneson.com/ => https://djglobal.122.2o7.net/: None
-Fetch error: http://secure.nypost.com/ => https://secure.nypost.com/: (6, 'Could not resolve host: secure.nypost.com')
 Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
 	For problematic rules, see News-Corporation-mismatches.xml.
-
-	on.wsj.com is handled in Bit.ly_vanity_domains.xml.
 
 
 	Other News Corporation rulesets:
 
+		- alsop-n.uk.xml
+		- barrons.com.xml
+		- driving.co.uk.xml
 		- Fox_News.xml
 		- IGN.xml
 		- Marketwatch.com.xml
+		- sunmotors.co.uk.xml
+		- thescottishsun.co.uk.xml
+		- thesun.co.uk.xml
+		- thesun.ie.xml
+		- Times.xml
+		- wsj.com.xml
+		- wsj.net.xml
 
 
 	CDN buckets:
 
-		- blogs.wsj.com.edgesuite.net
-
-			- a623.b.akamai.net
-
-		- a248.e.akamai.net/f/248/67675/6h/si.wsj.net/
-		- a248.e.akamai.net/f/1731/67675/12h/(m|s[1-4ci]?).wsj.net/
 		- s3.amazonaws.com/static.fins.com/
 		- efinancialnews.com.edgesuite.net/...
 			- a1859.g.akamai.net/...
@@ -31,35 +31,15 @@ Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL 
 			- a1092.g.akamai.net/...
 		- sj.smartmoney.net.edgesuite.net/...
 			- a1683.g.akamai.net/...
-		- fonts.wsj.com.edgesuite.net/...
-			- a1213.g.akamai.net/...
-		- sc.wsj.net.edgesuite.net/...
-			- a1574.g.akamai.net/...
 
 
 	Nonfunctional domains:
 
-		- blogs.barrons.com	(503, akamai)
 		- www.news.com.au	(Akamai; "Service Unavailable")
-		- live.wsj.com		(Cert: online.wsj.com; 301s there)
-		- online.wsj.com	(Cert: self-signed; 301s to http)
-		- uk.wsj.com		(Cert: online.wsj.com; 301s there)
-		- cs.wsj.net		(data also hosted on sc.wsj.net)
-		- synccontent.wsj.com
-
-
-	Problematic domains:
-
-		- blogs.wsj.com *
-		- on.wsj.com ²
-
-	* Works, akamai
-	² bit.ly
 
 -->
 <ruleset name="News Corporation (partial)" default_off='failed ruleset test'>
 
-	<target host="online.barrons.com" />
 	<target host="om.dowjoneson.com" />
 	<target host="djrc.portal.dowjones.com" />
 	<target host="efinancialnews.com" />
@@ -68,17 +48,7 @@ Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL 
 	<target host="*.factiva.com" />
 	<target host="fins.com" />
 	<target host="*.fins.com" />
-	<target host="secure.nypost.com" />
 	<target host="*.wsj.com" />
-	<target host="*.wsj.net" />
-		<!--
-			Doesn't translate directly to s2.wsj.net
-								-->
-		<exclusion pattern="^http://barrons\.wsj\.net/css/barronsDependencies/" />
-		<!--
-			All of si.wsj now seems to 404, but others (s., sc., ...) do not.
-					-->
-		<exclusion pattern="^http://si?\.wsj\.net/" />
 	<target host="services.wsje.com" />
 	<target host="smartmoney.com" />
 	<target host="*.smartmoney.com" />
@@ -90,10 +60,8 @@ Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL 
 
 
 	<securecookie host="^.*\.factiva\.com$" name=".*" />
-	<securecookie host="^secure\.nypost\.com$" name=".*" />
 	<securecookie host="^secure\.smartmoney\.com$" name=".*" />
-	<securecookie host="^(?:classifieds|customerceter)\.wsj\.com$" name=".*" />
-	<securecookie host="^services\.wsje?\.com$" name=".*" />
+	<securecookie host="^services\.wsje\.com$" name=".*" />
 	<securecookie host="^(?:.*\.)?wsj(?:eurosubs|safehouse)\.com$" name=".*" />
 
 	<rule from="^http://om\.dowjoneson\.com/"
@@ -115,20 +83,11 @@ Fetch error: http://services.wsje.com/ => https://services.wsje.com/: (60, 'SSL 
 	<rule from="^http://(?:www\.)?fins\.com/Finance/(cs|Image)s/"
 		to="https://www.fins.com/Finance/$1s/" />
 
-	<rule from="^http://secure\.nypost\.com/"
-		to="https://secure.nypost.com/"/>
-
 	<rule from="^http://j(?:tools|secure)?\.smartmoney\.com/"
 		to="https://jsecure.smartmoney.com/" />
 
-	<rule from="^http://(?:classifieds|customercenter)\.wsj\.com/"
-		to="https://buy.wsj.com/" />
-
-	<rule from="^http://id\.wsj\.com/"
-		to="https://id.wsj.com/" />
-
-	<rule from="^http://services\.wsj(e)?\.com/"
-		to="https://services.wsj$1.com/" />
+	<rule from="^http://services\.wsje\.com/"
+		to="https://services.wsje.com/" />
 
 	<rule from="^http://(www\.)?wsjeuropesubs\.com/"
 		to="https://$1wsjeuropesubs.com/" />

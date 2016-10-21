@@ -1,0 +1,86 @@
+<!--
+	Newcastle-Under-Lyme Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *newcastle-staffs.gov.uk:
+
+		- licensing ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *newcastle-staffs.gov.uk:
+
+		- moderngov ᶜ
+		- publicaccess ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames do not exist
+
+		- www.moderngov.newcastle-staffs.gov.uk
+		- www.portal.newcastle-staffs.gov.uk
+
+
+	Insecure cookies are set for these hosts:
+
+		- moderngov.newcastle-staffs.gov.uk
+		- portal.newcastle-staffs.gov.uk
+
+-->
+<ruleset name="Newcastle-Staffs.gov.uk (partial)">
+
+	<target host="newcastle-staffs.gov.uk" />
+	<!--target host="moderngov.newcastle-staffs.gov.uk" /-->
+	<target host="portal.newcastle-staffs.gov.uk" />
+	<!--target host="publicaccess.newcastle-staffs.gov.uk" /-->
+	<target host="www.newcastle-staffs.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://moderngov\.newcastle-staffs\.gov\.uk/(?:ieRegisterUser|mgPasswordReqst|uucoverpage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://moderngov\.newcastle-staffs\.gov\.uk/(?!/*(?:[Ss]ite[Ss]pecific/|UserData/|documents/|(?:ie[Ll]login|mgConvert2PDF)\.aspx|jquery-ui/))" /-->
+
+			<!--	+ve:
+					-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/ieRegisterUser.aspx" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgMemberIndex.aspx?bcr=1" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgOutsideBodyDetails.aspx?ID=289" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgParishCouncilDetails.aspx?ID=247" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgPasswordReqst.aspx" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgUserInfo.aspx?UID=181" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/mgUserInfo.aspx?UID=421" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/uucoverpage.aspx?bcr=1" /-->
+
+			<!--	-ve:
+					-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/SiteSpecific/council_topic_page_footer.gif" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/UserData/5/6/1/Info00000165/bigpic.jpg" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/documents/s3911/Locally%20Set%20Fees.pdf" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/ieLogon.aspx" /-->
+			<!--test url="http://moderngov.newcastle-staffs.gov.uk/sitespecific/ssWordStyles.css" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://portal.newcastle-staffs.gov.uk/pls/rblive_selfserv/f?p=12000:200:" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^moderngov\.newcastle-staffs\.gov\.uk$" name="^(?:_mglogon_|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^portal\.newcastle-staffs\.gov\.uk$" name="^SSRV_AUTHENTICATION$" /-->
+
+	<!--securecookie host="^(?!moderngov\.)\w" name="." /-->
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

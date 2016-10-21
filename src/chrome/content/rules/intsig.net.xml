@@ -1,0 +1,53 @@
+<!--
+	For other IntSig coverage, see intsig.com.xml.
+
+
+	Nonfunctional hosts in *intsig.net:
+
+		- w12013 ʰ
+
+	ʰ Redirects to http
+
+
+	Insecure cookies are set for these domains hosts: ᶜ
+
+		- .intsig.net
+		- shop.intsig.net
+		- store.intsig.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="IntSig.net (partial)">
+
+	<target host="intsig.net" />
+	<target host="download.intsig.net" />
+	<target host="resource.intsig.net" />
+	<target host="s.intsig.net" />
+	<target host="shop.intsig.net" />
+	<target host="static.intsig.net" />
+	<target host="store.intsig.net" />
+	<target host="www.intsig.net" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://download.intsig.net/desktop/" />
+		<test url="http://s.intsig.net/r/terms/PP_CamCard_en-us.html" />
+
+		<!--test url="http://resource.intsig.net/software/Android_CamCard_Lite.apk" /-->
+		<test url="http://static.intsig.net/openapi/camscanner/img/developer/openapi_footer.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.intsig\.net$" name="^_(?:_ccl|isstat)$" /-->
+	<!--securecookie host="^(?:shop|store)\.intsig\.net$" name="^JSESSID$" /-->
+
+	<securecookie host="^\." name="^_isstat" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
