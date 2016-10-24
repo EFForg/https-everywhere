@@ -3,17 +3,32 @@
 -->
 <ruleset name="Google Images">
 	<target host="google.*" />
+	<target host="images.google.*" />
 	<target host="www.google.*" />
 	<target host="google.co.*" />
+	<target host="images.google.co.*" />
 	<target host="www.google.co.*" />
 	<target host="google.com" />
 	<target host="images.google.com" />
 	<target host="google.com.*" />
+	<target host="images.google.com.*" />
 	<target host="www.google.com.*" />
 
 	<!-- The ruleset checker adds an implicit test URL for google.com, which we
 			 don't rewrite (but we rewrite paths like google.com/imghp). So exclude it. -->
 	<exclusion pattern="^http://google\.com/" />
+
+	<!-- This exclusion is for the Google-hosted LIFE photo archive, which can be
+			found at http://images.google.com/hosted/life (no trailing slash)
+			and which does not support HTTPS as of October 2016. -->
+	<exclusion pattern="^http://images\.google\.com/hosted/" />
+		<test url="http://images.google.com/hosted/life/67933df915a33f1f.html" />
+
+	<rule from="^http://images\.google\.((com?\.)?\w{2,3})/images\?"
+			to="https://www.google.$1/images?" />
+		<test url="http://images.google.ca/images?q=test" />
+		<test url="http://images.google.com/images?q=test" />
+		<test url="http://images.google.com.au/images?q=test" />
 
 	<rule from="^http://images\.google\.((?:com?\.)?\w{2,3})/"
 			to="https://images.google.$1/" />
