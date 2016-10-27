@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.7
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 # $Id: gvgen.py 10440 2007-10-23 15:17:33Z toady $
 """
