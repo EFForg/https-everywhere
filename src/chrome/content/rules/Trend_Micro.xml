@@ -1,17 +1,17 @@
 <!--
 	For rules causing false MCB, see Trend_Micro-falsemixed.xml.
 
-	For problematic rules, see Trend_Micro-problematic.xml.
+
+	Other Trend Micro rulesets:
+
+		- Trend_Micro.de.xml
+		- Trend_Micro.eu.xml
 
 
 	CDN buckets:
 
 		- trend-fail.download.trendmicro.com.edgesuite.net
-
 		- global-web.trendmicro.com.edgesuite.net
-
-			- a489.g.akamai.net
-			- countermeasures.trendmicro.eu
 
 
 	Nonfunctional domains:
@@ -23,11 +23,14 @@
 
 		- trendmicro.com subdomains:
 
-			- ^
 			- about-threats **
 			- de ***
+			- community		Shows ssl.trendmicro.com
+			- documents		Refused
+			- downloadcenter	Redirects to forms.trendmicro.com
 			- fr ***
-			- housecall **
+			- newsroom	500
+			- uk		403
 
 		- trendmicro.co.uk *
 		- www.trendmicro.co.uk **
@@ -37,21 +40,18 @@
 	*** "Server Error", akamai
 
 
-	Problematic domains:
+	Problematic hosts in *trendmicro.com:
 
-		- countermeasures.trendmicro.eu		(works, akamai)
+		- amea ¹
+		- apac ¹
+		- blog ²
+		- feeds ³
+		- free ¹
+		- housecall ¹
 
-
-	Partially covered domains:
-
-		- countermeasures.trendmicro.eu		(→ akamai)
-
-
-	Fully covered domains:
-
-		- trendmicro.com subdomains:
-
-			- corelib
+	¹ Akamai
+	² Mixed css
+	³ Feedburner
 
 
 	Mixed content:
@@ -63,52 +63,61 @@
 
 		- css on blog from blog *
 		- Images on blog from blog *
+		- favicon on apac, free, housecall from apac.trendmicro.com
 
-		- Web bugs:
+		- Bugs:
 
 			- On blog from edge.quantserve.com *
 			- On blog from platform.twitter.com *
 
 	* Secured by us
 
-
-	NB: We secure all resources, and thus
-	-falsemixed should be merged for Ffx 24.
-
 -->
-<ruleset name="Trend Micro (partial)">
+<ruleset name="Trend Micro.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="trendmicro.com" />
-	<target host="*.trendmicro.com" />
-	<target host="trendmicro.eu" />
-	<target host="*.trendmicro.eu" />
-		<!--
-			Exclude pages so as to avoid false MCB:
+	<target host="blog.trendmicro.com" />
+	<target host="corelib.trendmicro.com" />
+	<target host="esupport.trendmicro.com" />
+	<target host="forms.trendmicro.com" />
+	<target host="go.trendmicro.com" />
+	<target host="go2.trendmicro.com" />
+	<target host="ssl.trendmicro.com" />
+	<target host="www.trendmicro.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.trendmicro.com" />
+
+		<!--	Exclude pages so as to avoid false MCB:
 								-->
 		<exclusion pattern="^http://blog\.trendmicro\.com/(?![\w-]+/files/|wp-content/)" />
-		<!--
-			Exclude user-visible paths:
-							-->
-		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/(?!favicon\.ico|wp-content/)" />
-		<!--
-			styles.css links to image relative to /
-								-->
-		<exclusion pattern="^http://countermeasures\.trendmicro\.eu/wp-content/plugins/youtube-channel-gallery/styles\.css" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.trendmicro.com/author/rikferguson/" />
+			<test url="http://blog.trendmicro.com/page/2/" />
+			<test url="http://blog.trendmicro.com/websites-use-https/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.trendmicro.com/wp-content/uploads/2013/07/simply-security-logo.png" />
 
 
-	<securecookie host="^(?:\.blog|esupport)\.trendmicro\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^esupport\.trendmicro\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^forms\.trendmicro\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?trendmicro\.com/"
-		to="https://www.trendmicro.com/" />
+	<rule from="^http://feeds\.trendmicro\.com/"
+		to="https://feeds.feedburner.com/" />
 
-	<rule from="^http://(blog|corelib|esupport|go)\.trendmicro\.com/"
-		to="https://$1.trendmicro.com/" />
-
-	<rule from="^http://(partnerlocator\.|www\.)?trendmicro\.eu/"
-		to="https://$1trendmicro.eu/" />
-
-	<rule from="^http://countermeasures\.trendmicro\.eu/"
-		to="https://a248.e.akamai.net/f/489/2696/8m/countermeasures.trendmicro.eu/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

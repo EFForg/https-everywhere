@@ -1,38 +1,30 @@
 <!--
-	Nonfunctional subdomains:
-
-		- git	(shows CentOS test page)
-
-
-	Problematic subdomains:
-
-		- ^ *
-		- support	(expired 2012-05-24)
-		- wiki *
-		- www		(self-signed)
-
-	* Cert only matches www
+	STS header includes includeSubDomains
 
 -->
-<ruleset name="RTEMS (partial)" default_off="expired, self-signed">
+<ruleset name="RTEMS.org">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="rtems.org" />
 	<target host="*.rtems.org" />
 
+		<target host="devel.rtems.org" />
+		<target host="docs.rtems.org" />
+		<target host="git.rtems.org" />
+		<target host="lists.rtems.org" />
+		<target host="wiki.rtems.org" />
+		<target host="www.rtems.org" />
 
-	<securecookie host="^(?:\.support|www)\.rtems\.org$" name=".+" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.rtems\.org$" name="^SESS[\da-f]{32}$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?rtems\.org/"
-		to="https://www.rtems.org/" />
-
-	<rule from="^http://support\.rtems\.org/"
-		to="https://support.rtems.org/" />
-
-	<rule from="^http://wiki\.rtems\.org/(?:\?.*)?$"
-		to="https://www.rtems.org/wiki/index.php/Main_Page" />
-
-	<rule from="^http://wiki\.rtems\.org/wiki/"
-		to="https://www.rtems.org/wiki/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

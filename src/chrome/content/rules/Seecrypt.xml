@@ -1,17 +1,29 @@
 <!--
-	!www: cert only matches www
+	STS header includes includeSubDomains
+
+
+	Mixed content:
+
+		- Bug from piwik.seecrypt.net *
+
+	* Unsecurable <= dropped
 
 -->
-<ruleset name="Seecrypt">
+<ruleset name="Seecrypt.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="seecrypt.com" />
-	<target host="www.seecrypt.com" />
+	<target host="*.seecrypt.com" />
+
+		<test url="http://enterprise.seecrypt.com/" />
+		<test url="http://www.seecrypt.com/" />
 
 
-	<securecookie host="^www\.seecrypt\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:www\.)?seecrypt\.com/"
-		to="https://www.seecrypt.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

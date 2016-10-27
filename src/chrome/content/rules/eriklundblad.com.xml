@@ -1,0 +1,38 @@
+<!--
+	STS header includes includeSubdomains.
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- eriklundblad.com
+		- www.eriklundblad.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Erik Lundblad.com">
+
+	<target host="eriklundblad.com" />
+	<target host="*.eriklundblad.com" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}eriklundblad\.com/" />
+
+			<test url="http://this.host.eriklundblad.com/" />
+			<test url="http://exists.not.eriklundblad.com/" />
+
+		<test url="http://www.eriklundblad.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?eriklundblad\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

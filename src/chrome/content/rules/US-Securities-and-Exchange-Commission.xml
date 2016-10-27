@@ -1,42 +1,63 @@
 <!--
-	For other US government coverage,
-	see US-government.xml.
+	U.S. Securities and Exchange Commission
+
+	For other US government coverage, see US-government.xml.
 
 
-	Nonfunctional:
+	Nonfunctional hosts in *sec.gov:
 
-		- xbrl.sec.gov
+		- search ¹
+		- xbrl ²
 
-
-	Problematic domains:
-
-		- sec.gov *
-
-	* Cert only matches www.sec.gov
+	¹ Dropped
+	² Refused
 
 
-	Fully covered domains:
+	Problematic hosts in *sec.gov:
 
-		- searchwww.sec.gov
+		- datapreview *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		- tcr.sec.gov
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.sec.gov
 
 
 	Mixed content:
 
-		- css on www.sec.gov from fonts.googleapis.com *
+		- css on www, www-test from fonts.googleapis.com *
 
 	* Secured by us
 
 -->
-<ruleset name="U.S. Securities and Exchange Commission (partial)">
+<ruleset name="SEC.gov">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="sec.gov" />
-	<target host="*.sec.gov" />
+	<!--target host="datapreview.sec.gov" /-->
+	<target host="www.onlineforms.edgarfiling.sec.gov" />
+	<target host="www.edgarfiling.sec.gov" />
+	<target host="searchwww.sec.gov" />
+	<target host="www.sec.gov" />
+	<target host="www-test.sec.gov" />
 
 
-	<rule from="^http://(?:www\.)?sec\.gov/"
-		to="https://www.sec.gov/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.sec\.gov$" name="^datacenter$" /-->
 
-	<rule from="^http://searchwww\.sec\.gov/"
-		to="https://searchwww.sec.gov/" />
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

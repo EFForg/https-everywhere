@@ -1,0 +1,40 @@
+<!--
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	(www.)?central-lincs.org.uk: Refused
+
+-->
+<ruleset name="Central-Lincs.org.uk">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="aurora.central-lincs.org.uk" />
+
+		<!--	$ shows default page, so:
+
+			(I do not know how to encode literal
+			backslashes in a way that relaxng
+			accepts... replacing '[^\\]'
+			with '.' does not help.)
+							-->
+		<!--test url="http://aurora.central-lincs.org.uk/map/Aurora.svc/run?script=\Shared+Services\JPU\JPUJS.AuroraScript%24&amp;resize=always&amp;x=488562.841&amp;y=361289.858&amp;scale=131072" /-->
+		<!--test url="http://aurora.central-lincs.org.uk/map/Aurora.svc/run?script=&#92;Shared+Services&#92;JPU&#92;JPUJS.AuroraScript%24&amp;resize=always&amp;x=488562.841&amp;y=361289.858&amp;scale=131072" /-->
+		<!--test url="http://aurora.central-lincs.org.uk/map/Aurora.svc/run?script=&#x5C;Shared+Services&#x5C;JPU&#x5C;JPUJS.AuroraScript%24&amp;resize=always&amp;x=488562.841&amp;y=361289.858&amp;scale=131072" /-->
+
+	<!--	Complications:
+				-->
+	<target host="central-lincs.org.uk" />
+	<target host="www.central-lincs.org.uk" />
+
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(?:www\.)?central-lincs\.org\.uk/"
+		to="https://www.lincolnshire.gov.uk/central-lincolnshire/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

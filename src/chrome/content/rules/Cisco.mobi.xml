@@ -2,15 +2,23 @@
 	For other Cisco coverage, see Cisco.xml.
 
 
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .cisco.mobi
+		- cln.cisco.mobi
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
 	Mixed content:
 
-		- Images on cln, from:
+		- Images, on:
 
-			- www.cisco.com ¹
-			- proxyelements.by.com ²
+			- cln from proxyelements.by.com ᵈ
+			- cln from www.cisco.com ˢ
 
-	¹ Secured by us
-	² Unsecurable <= dropped
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
 <ruleset name="Cisco.mobi (partial)">
@@ -20,13 +28,13 @@
 
 	<!--	Not secured by server:
 					-->
-	<!--securecookie host="^\.cisco\.mobi$" name="^(BIGipServerm\w+-40-pool_#.+|JSESSIONID_#.+|PP4_SessionId|jive\.server\.info_#.+|jive\.server\.info_#.+)$" /-->
+	<!--securecookie host="^\.cisco\.mobi$" name="^(?:BIGipServer|JSESSIONID_|PP4_SessionId$|jive\.server\.info_)" /-->
 	<!--securecookie host="^cln\.cisco\.mobi$" name="^X-Mapping-\w+$" /-->
 
-	<securecookie host="^(?:cln)?\.cisco\.mobi$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://cln\.cisco\.mobi/"
-		to="https://cln.cisco.mobi/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,8 +1,6 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://nrc.gov/ => https://forms.nrc.gov/: (28, 'Connection timed out after 10000 milliseconds')
-Fetch error: http://forms.nrc.gov/ => https://forms.nrc.gov/: (28, 'Connection timed out after 10001 milliseconds')
-Fetch error: http://www.nrc.gov/ => https://forms.nrc.gov/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	United States Nuclear Regulatory Commission
+
 	For other US government coverage, see US-government.xml.
 
 
@@ -10,18 +8,32 @@ Fetch error: http://www.nrc.gov/ => https://forms.nrc.gov/: (60, 'SSL certificat
 
 		- pbadupws	(times out)
 
--->
-<ruleset name="United States Nuclear Regulatory Commission" platform="mixedcontent" default_off='failed ruleset test'>
 
-	<!--	Cert: forms.nrc.gov	-->
-	<target host="nrc.gov" />
+	Problematic hosts in *nrc.gov:
+
+		- (www.)? ᵐ
+		- forms ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+-->
+<ruleset name="NRC.gov" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
 	<target host="forms.nrc.gov" />
-	<!--	Akamai	-->
+
+	<!--	Complications:
+				-->
+	<target host="nrc.gov" />
 	<target host="www.nrc.gov" />
 
 
-	<!--	All show the same data.	-->
-	<rule from="^http://(?:forms\.|www\.)?nrc\.gov/"
+	<rule from="^http://(?:www\.)?nrc\.gov/"
 		to="https://forms.nrc.gov/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

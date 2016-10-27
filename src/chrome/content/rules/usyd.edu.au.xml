@@ -1,0 +1,99 @@
+<!--
+	For other University of Sydney coverage, see sydney.edu.au.xml.
+
+
+	Nonfunctional hosts in *usyd.edu.au:
+
+		- exams.library ᵈ
+		- libguides.library ʰ
+		- news.library ᵈ
+		- staff.library ᵈ
+		- www.library ᵈ
+
+		- timesheets ʳ
+		- webstats ʰ
+
+	ᵈ Dropped
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic hosts in *usyd.edu.au:
+
+		- (www.)? ᵐ
+		- www.alumni ᵐ
+		- cms.ucc ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+
+
+	These altnames don't exist:
+
+		- auth.usyd.edu.au
+		- www.cms.ucc.usyd.edu.au
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- www.alumniandfriends.usyd.edu.au
+
+		- .library.usyd.edu.au
+		- m.library.usyd.edu.au
+		- opac.library.usyd.edu.au
+		- orion.library.usyd.edu.au
+
+		- cms.ucc.usyd.edu.au
+
+
+	Mixed content:
+
+		- Image on opac.library from sydney.edu.au ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="USyd.edu.au (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.alumniandfriends.usyd.edu.au" />
+	<target host="www.auth.usyd.edu.au" />
+
+	<target host="m.library.usyd.edu.au" />
+	<target host="opac.library.usyd.edu.au" />
+	<target host="orion.library.usyd.edu.au" />
+
+	<!--target host="cms.ucc.usyd.edu.au" /-->
+	<target host="wasm.usyd.edu.au" />
+
+	<!--	Complications:
+				-->
+	<target host="usyd.edu.au" />
+	<target host="www.usyd.edu.au" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.alumniandfriends\.usyd\.edu\.au$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^\.library\.usyd\.edu\.au$" name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^(?:m|opac)\.library\.usyd\.edu\.au$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^orion\.library\.usyd\.edu\.au$" name="^(?:PHPSESSID|lang)$" /-->
+	<!--securecookie host="^cms\.ucc\.usyd\.edu\.au$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?usyd\.edu\.au/+"
+		to="https://sydney.edu.au/" />
+
+		<test url="http://www.usyd.edu.au/home.html" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

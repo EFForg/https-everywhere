@@ -1,8 +1,4 @@
-
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://crazyegg.com/ => https://crazyegg.com/: Too many redirects while fetching 'https://crazyegg.com/'
-
 	Other Crazy Egg rulesets:
 
 		- CEtrk.com.xml
@@ -14,68 +10,54 @@ Fetch error: http://crazyegg.com/ => https://crazyegg.com/: Too many redirects w
 		- s3.amazonaws.com/new.cetrk.com/
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *crazyegg.com:
 
-		- blog.crazyegg.com *
-		- support.crazyegg.com *
+		- resources ʳ
 
-	* WP Engine
+	ʳ Refused
 
 
-	Problematic hosts:
+	Problematic hosts in *crazyegg.com:
 
-		- www.script.crazyegg.com *
+		- www.script ᵐ
 
-	* Mismatched
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .crazyegg.com
+		- help.crazyegg.com
+		- www.crazyegg.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Image on help from resources.crazyegg.com ʳ
+
+	ʳ Unsecurable <= refused
 
 -->
-<ruleset name="Crazy Egg (partial)" default_off='failed ruleset test'>
+<ruleset name="Crazy Egg.com (partial)">
 
 	<target host="crazyegg.com" />
+	<target host="blog.crazyegg.com" />
+	<target host="help.crazyegg.com" />
 	<target host="script.crazyegg.com" />
+	<target host="support.crazyegg.com" />
 	<target host="www.crazyegg.com" />
-		<exclusion pattern="^http://www\.crazyegg\.com/(?:$|\?)" />
 
-			<!--	+ve:
+
+	<!--	Not secured by server:
 					-->
-			<test url="http://www.crazyegg.com/?" />
-			<test url="http://www.crazyegg.com/?foo" />
+	<!--securecookie host="^\.crazyegg\.com$" name="^(?:adxs|ce2tg)$" /-->
+	<!--securecookie host="^help\.crazyegg\.com$" name="^_help_center_session$" /-->
+	<!--securecookie host="^www\.crazyegg\.com$" name="^sid$" /-->
 
-			<!--	-ve:
-					-->
-			<test url="http://www.crazyegg.com/contact" />
-			<test url="http://www.crazyegg.com/external/homepage-test-2014-12-18/images/ce_logo.png" />
-			<test url="http://www.crazyegg.com/forgot_password" />
-			<test url="http://www.crazyegg.com/login" />
-			<test url="http://www.crazyegg.com/overview" />
+	<securecookie host="." name="." />
 
-
-	<!--	At least the homepage redirects to http.
-
-			These paths don't:
-
-				- contact$
-				- contact/$
-				- external/
-				- help$
-				- help/
-				- images/
-				- login$
-				- login/$
-				- opt-out$
-				- opt-out/$
-				- overview$
-				- pricing$
-				- pricing/$
-				- privacy$
-				- signup$
-				- signup/pro$
-				- signup/standard$
-				- stylesheets/
-				- terms$
-
-	<rule from="^http://(www\.)?crazyegg\.com/((?:external|help|images|signup|stylesheets)(?:$|/|\?)|(?:login|opt-out|overview|pricing|terms)(?:/?$|\?))"
-		to="https://$1crazyegg.com/$2" /-->
 
 	<rule from="^http:"
 		to="https:" />

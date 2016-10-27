@@ -1,0 +1,101 @@
+<!--
+	Other Tune rulesets:
+
+		- HasOffers.xml
+		- mobileapptracking.com.xml
+
+
+	Problematic hosts in *tune.com:
+
+		- academy ᵐ
+		- in ᵐ
+		- nyk ᵐ
+		- scholars ᵐ
+		- wehack ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- help.tune.com
+		- mc.tune.com
+		- nyk.tune.com
+		- scholars.tune.com
+		- wehack.tune.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from ^tune.com ˢ
+			- www from www.hasoffers.com
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Tune.com (partial)">
+
+	<target host="tune.com" />
+	<target host="audience.tune.com" />
+	<target host="bi.tune.com" />
+	<target host="help.tune.com" />
+	<target host="ma.tune.com" />
+	<target host="mc.tune.com" />
+	<target host="partners.tune.com" />
+	<target host="www.tune.com" />
+
+		<!--	Mixed images:
+					-->
+		<!--test url="http://www.tune.com/blog/" /-->
+
+	<!--	Complications:
+				-->
+	<target host="in.tune.com" />
+
+		<exclusion pattern="^http://in\.tune\.com/(?!/*(?:$|\?|[el]/))" />
+
+			<!--	See below respective rules for negative cases.
+
+				+ve:
+					-->
+			<test url="http://in.tune.com/HOmobilemarketingstatistics" />
+			<test url="http://in.tune.com/bluepodmedia" />
+			<test url="http://in.tune.com/gartnerworldwidedeviceshipments" />
+			<test url="http://in.tune.com/hostatistaappdownloads" />
+			<test url="http://in.tune.com/tmc-site-complete-guide" />
+			<test url="http://in.tune.com/wp-ads-tracking-and-privacy" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^help\.tune\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^ma\.tune\.com$" name="^_session_id$" /-->
+	<!--securecookie host="^mc\.tune\.com$" name="^session$" /-->
+	<!--securecookie host="^(?:nyk|scholars|wehack)\.tune\.com$" name="^(?:php-console-server|spl)$" /-->
+	<!--securecookie host="^partners\.tune\.com$" name="^sid$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!in\.)\w" name="." />
+
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://in\.tune\.com/+(?:\?.*)?$"
+		to="https://www.tune.com/" />
+
+		<test url="http://in.tune.com/?" />
+
+	<rule from="^http://in\.tune\.com/"
+		to="https://go.pardot.com/" />
+
+		<test url="http://in.tune.com/e/23402/TuneOSS/xl81g/956851987" />
+		<test url="http://in.tune.com/l/23402/2014-08-14/4r8cw/23402/41794/HasOffers_by_Tune_Logo.jpg" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,9 +1,4 @@
 <!--
-	dev-account: Gone
-
-
-	For problematic rules, see Xsolla.com-problematic.xml.
-
 	Other Xsolla rulesets:
 
 		- 2pay.ru.xml
@@ -16,39 +11,17 @@
 
 	Problematic hosts in *xsolla.com:
 
-		- account ¹
 		- blog ²
-		- demo-merchant ¹
-		- livedemo ¹
-		- www.merchant ³
 		- status ⁴
-		- tools ¹ ⁵
 
-	¹ Server sends no certificate chain, see https://whatsmychaincert.com
-	² Mismatched
-	³ Refused
+	² 403
 	⁴ StatusPage.io
-	⁵ Untrusted root
-
-
-	Fully covered hosts in *xsolla.com:
-
-		- (www.)?
-		- account
-		- analytics
-		- cdn
-		- developers
-		- help
-		- (www.)?merchant	(www → ^)
-		- ps
-		- secure
-		- static
-		- status	(→ xsolla.statuspage.io)
 
 
 	These altnames don't exist:
 
 		- www.ps.xsolla.com
+		- www.merchant.xsolla.com
 
 
 	Insecure cookies are set for these domains and hosts:
@@ -60,7 +33,7 @@
 
 	Mixed content:
 
-		- css on ^, developers, help from fonts.googleapis.com *
+		- css on developers, help from fonts.googleapis.com *
 
 	* Secured by us
 
@@ -70,22 +43,24 @@
 	<!--	Direct rewrites:
 				-->
 	<target host="xsolla.com" />
-	<!--target host="account.xsolla.com" /-->
+	<target host="account.xsolla.com" />
 	<target host="analytics.xsolla.com" />
 	<target host="cdn.xsolla.com" />
-	<!--target host="demo-merchant.xsolla.com" /-->
+	<target host="cdn3.xsolla.com" />
+	<target host="demo-merchant.xsolla.com" />
 	<target host="developers.xsolla.com" />
 	<target host="help.xsolla.com" />
-	<!--target host="livedemo.xsolla.com" /-->
+	<target host="livedemo.xsolla.com" />
 	<target host="merchant.xsolla.com" />
 	<target host="ps.xsolla.com" />
 	<target host="secure.xsolla.com" />
 	<target host="static.xsolla.com" />
+	<target host="tools.xsolla.com" />
 	<target host="www.xsolla.com" />
 
 	<!--	Complications:
 				-->
-	<target host="www.merchant.xsolla.com" />
+	<target host="blog.xsolla.com" />
 	<target host="status.xsolla.com" />
 
 
@@ -94,12 +69,15 @@
 	<!--securecookie host="(www\.)?xsolla\.com$" name="^_icl_current_languag$" /-->
 	<!--securecookie host="\.xsolla\.com$" name="^AdRoll_vs$" /-->
 
-	<securecookie host="^(?:.+\.)?xsolla\.com$" name=".+" />
-	<securecookie host="\.xsolla\.com$" name="^AdRoll_vs$" />
+	<securecookie host="^(?:.+\.)?xsolla\.com$" name="." />
+	<securecookie host="\." name="^(?:__utm|_gat?$|AdRoll_vs$)" />
 
 
-	<rule from="^http://www\.merchant\.xsolla\.com/"
-		to="https://merchant.xsolla.com/" />
+	<!--	Redirect keeps path, args,
+		and forward slash:
+					-->
+	<rule from="^http://blog\.xsolla\.com/"
+		to="https://xsolla.com/blog/" />
 
 	<rule from="^http://status\.xsolla\.com/"
 		to="https://xsolla.statuspage.io/" />

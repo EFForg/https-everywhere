@@ -1,23 +1,31 @@
 <!--
-	Nonfunctional subdomains:
-
-		- (www.)	(no https)
+	(www.)?clickmotive.com: Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *clickmotive.com:
 
-		- assets	(akamai)
+		- assets *
+
+	* Akamai
 
 -->
-<ruleset name="ClickMotive (partial)">
+<ruleset name="ClickMotive.com (partial)">
 
-	<target host="*.clickmotive.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="fusiontools.clickmotive.com" />
+	<target host="origin-assets.clickmotive.com" />
+	<target host="secureassets.clickmotive.com" />
+
+	<!--	Complications:
+				-->
+	<target host="assets.clickmotive.com" />
 
 
-	<rule from="^http://(?:(origin-)|secure)?assets\.clickmotive\.com/"
-		to="https://$1assets.clickmotive.com/" />
+	<rule from="^http://assets\.clickmotive\.com/"
+		to="https://secureassets.clickmotive.com/" />
 
-	<rule from="^http://fusiontools\.clickmotive\.com/"
-		to="https://fusiontools.clickmotive.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -1,17 +1,35 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://city.com.ua/ => https://city.com.ua/: (7, 'Failed to connect to city.com.ua port 443: Connection refused')
+	Insecure cookies are set for these hosts: ᶜ
+
+		- city.com.ua
+		- m.city.com.ua
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on ^ from $self ˢ
+		- Bug on ^ from cdn.yottos.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
 -->
-<ruleset name="City.com.ua" default_off='failed ruleset test'>
+<ruleset name="City.com.ua">
 
 	<target host="city.com.ua" />
-	<target host="*.city.com.ua" />
+	<target host="www.city.com.ua" />
 
 
-	<securecookie host="^\.?city\.com\.ua$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^city\.com\.ua$" name="^(?:PHPSESSID|ShoppingCart)$" /-->
+	<!--securecookie host="^m\.city\.com\.ua$" name="^(?:PHPSESSID|ShoppingCart|VisitorsID)$" /-->
+
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(www\.)?city\.com\.ua/"
-		to="https://$1city.com.ua/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

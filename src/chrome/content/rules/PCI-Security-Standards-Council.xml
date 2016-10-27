@@ -2,17 +2,16 @@
 	PCI Security Standards Council
 
 
-	Problematic hosts in *pcisecuritystandards.org:
+	Insecure cookies are set for these domains:
 
-		- ^ *
-
-	* Refused
+		- .pcisecuritystandards.org
 
 -->
 <ruleset name="PCI Security Standards.org">
 
 	<!--	Direct rewrites:
 				-->
+	<target host="pcisecuritystandards.org" />
 	<target host="de.pcisecuritystandards.org" />
 	<target host="es.pcisecuritystandards.org" />
 	<target host="fr.pcisecuritystandards.org" />
@@ -25,13 +24,14 @@
 	<target host="www.pcisecuritystandards.org" />
 	<target host="zh.pcisecuritystandards.org" />
 
-	<!--	Complications:
-				-->
-	<target host="pcisecuritystandards.org" />
 
+	<!--	Incapsula cookies:
+					-->
+	<!--securecookie host="^\.pcisecuritystandards\.org$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
 
-	<rule from="^http://pcisecuritystandards\.org/"
-		to="https://www.pcisecuritystandards.org/" />
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+
 
 	<rule from="^http:"
 		to="https:" />

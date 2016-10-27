@@ -1,32 +1,48 @@
 <!--
-	Nonfunctional subdomains:
-
-		- (www.)	(shows hydra; mismatched, CN: hydra.q1media.com)
+	(www.)?q1media.com: Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *q1media.com:
 
-		- ads		(mismatched, CN: *.adnxs.com)
+		- ads *
+
+	* Mismatched, CN: *.adnxs.com
 
 
-	Fully covered subdomains:
+	Mixed content:
 
-		- ads	(→ ib.adnxs.com)
-		- hydra
+		- css on pubdash from fonts.googleapis.com *
+		- Image on pubdash from admin.q1media.com *
+
+	* Secured by us
 
 -->
 <ruleset name="Q1Media.com (partial)">
 
-	<target host="*.q1media.com" />
+	<!--	Direct rewrites:
+				-->
+	<target host="admin.q1media.com" />
+	<target host="hydra.q1media.com" />
+	<target host="pubdash.q1media.com" />
+
+	<!--	 Complications:
+				-->
+	<target host="ads.q1media.com" />
 
 
-	<securecookie host="^hydra\.q1media\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.q1media\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^admin\.q1media\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host="^\w" name="." />
 
 
 	<rule from="^http://ads\.q1media\.com/"
 		to="https://ib.adnxs.com/" />
 
-	<rule from="^http://hydra\.q1media\.com/"
-		to="https://hydra.q1media.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

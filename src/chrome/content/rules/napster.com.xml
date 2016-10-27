@@ -1,0 +1,47 @@
+<!--
+	For other Rhapsody International coverage, see Rhapsody.xml.
+
+
+	Nonfunctional hosts in *napster.com:
+
+		- blog ⁴
+
+	⁴ 404
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .napster.com
+		- account.napster.com
+		- order.napster.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Napster.com (partial)">
+
+	<target host="account.napster.com" />
+	<target host="app.napster.com" />
+	<target host="nl.napster.com" />
+	<target host="order.napster.com" />
+	<target host="us.napster.com" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://order.napster.com/checkout/coupon" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.napster\.com$" name="^(?:language|orderurl)$" /-->
+	<!--securecookie host="^account\.napster\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^order\.napster\.com$" name="^(?:JSESSIONID$|NSC_)" /-->
+
+	<securecookie host="^\." name="^(?:_gat?$|_gat_|optimizely)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

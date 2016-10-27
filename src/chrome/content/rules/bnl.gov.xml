@@ -1,0 +1,152 @@
+<!--
+	Brookhaven National Laboratory
+
+	For other U.S. government coverage, see US-government.xml.
+
+
+	Nonfunctional hosts in *bnl.gov:
+
+		- bugzilla ³
+		- www.cap ³
+		- dayabay ᵇ
+		- www.eic ²
+		- www.gim ³
+		- hq2008 ᵃ
+		- hq2010 ᵃ
+		- hq2012 ᵃ
+		- hq2014 ᵃ
+		- www.inst ³
+		- cts-demo.itd ³
+
+		- neutrons.phy ³
+		- tvdg10.phy ³
+		- www.phy ᵇ
+
+		- beamlines.ps ³
+		- staff.ps ³
+		- usersmeeting.ps ³
+
+		- qm2008 ᵃ
+		- www.rhichrome ᵈ
+		- www.roadrunners ³
+		- root ᵃ
+		- snews ¹
+		- sshtools ³
+		- training ⁵
+		- unix ³
+		- www.usatlas *
+		- www2 ³
+		- wx1 ⁵
+
+	* Redirects to sp.usatlas.bnl.gov
+	¹ 401
+	² 200 "you're likely here by mistake"
+	³ 403
+	⁵ 503
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᵈ Dropped
+
+
+	Problematic hosts in *bnl.gov:
+
+		- openscience ᵐ
+		- www.phobos ᵈ
+		- quark.phy ᵘ
+
+	ᵈ Dropped
+	ᵐ Mismatched
+	ᵘ Untrusted root
+
+
+	These altnames do not exist:
+
+		- phenix.bnl.gov
+		- racf.bnl.gov
+		- star.bnl.gov
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- cfnproposals.bnl.gov
+		- discoverypark.bnl.gov
+		- .drupal.bnl.gov
+		- fom.bnl.gov
+		- mail.bnl.gov
+		- nsrl.bnl.gov
+		- www.racf.bnl.gov
+		- sbms.bnl.gov
+		- www.bnl.gov
+
+
+	Mixed content:
+
+		- Image on cfnproposals, www.cmth from www.bnl.gov ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="BNL.gov (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bnl.gov" />
+	<target host="fsd84.bis.bnl.gov" />
+	<target host="cfnproposals.bnl.gov" />
+	<target host="www.cmth.bnl.gov" />
+	<target host="discoverypark.bnl.gov" />
+	<target host="drupal.bnl.gov" />
+	<target host="dune.bnl.gov" />
+	<target host="fom.bnl.gov" />
+	<target host="guestcentral.bnl.gov" />
+	<target host="lists.bnl.gov" />
+	<target host="mail.bnl.gov" />
+	<target host="nsrl.bnl.gov" />
+	<target host="www.phenix.bnl.gov" />
+	<target host="pubweb.bnl.gov" />
+	<target host="www.racf.bnl.gov" />
+	<target host="sbms.bnl.gov" />
+	<target host="www.star.bnl.gov" />
+	<target host="sp.usatlas.bnl.gov" />
+	<target host="wiki.bnl.gov" />
+	<target host="www.bnl.gov" />
+	<target host="www3.bnl.gov" />
+
+	<!--	Complications:
+				-->
+	<target host="www.phobos.bnl.gov" />
+
+		<!--	Does not redirect:
+						-->
+		<!--test url="http://www.phy.bnl.gov/e949/" /-->
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://drupal.star.bnl.gov/STAR/webmaster" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.drupal\.bnl\.gov$" name="^SESS[\da-f]{32}$" /-->
+	<!--securecookie host="^discoverypark\.bnl\.gov$" name="^(?:BIGipServer|PHPSESSID$)" /-->
+	<!--securecookie host="^fom\.bnl\.gov$" name="^(?:LID|PASSCODE|USERNAME|fomlock_eid|fomlock_fomlock)$" /-->
+	<!--securecookie host="^mail\.bnl\.gov$" name="^(?:cadata|sessionid)$" /-->
+	<!--securecookie host="^nslr\.bnl\.gov$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^www\.racf\.bnl\.gov$" name="^l18N_LANGUAGE$" /-->
+	<!--securecookie host="^(?:cfnproposals|sbms|www)\.bnl\.gov$" name="^BIGipServer" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://www\.phobos\.bnl\.gov/+"
+		to="https://www.bnl.gov/phobos/" />
+
+		<test url="http://www.phobos.bnl.gov/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

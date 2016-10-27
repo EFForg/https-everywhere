@@ -25,20 +25,13 @@ function NSS() {
 
 }
 
-// Alias to reduce the number of spurious warnings from amo-validator.
-let tcypes = ctypes;
-
-NSS.initialize = function(nssPath) {  
+NSS.initialize = function() {
   var sharedLib;
 
-  try {
-    sharedLib = tcypes.open(nssPath);    
-  } catch (e) {
-    Components.utils.import("resource://gre/modules/Services.jsm");
-    var nssFile = Services.dirsvc.get("GreD", Ci.nsILocalFile);
-    nssFile.append(tcypes.libraryName("nss3"));
-    sharedLib = tcypes.open(nssFile.path);
-  }
+  Components.utils.import("resource://gre/modules/Services.jsm");
+  var nssFile = Services.dirsvc.get("GreD", Ci.nsILocalFile);
+  nssFile.append(tcypes.libraryName("nss3"));
+  sharedLib = tcypes.open(nssFile.path);
 
   NSS.types = new Object();
 

@@ -1,0 +1,154 @@
+<!--
+	Nonfunctional hosts in *aalto.fi:
+
+		- avoin
+		- becs ¹
+		- cs
+		- design ²
+		- elec
+		- gim ¹
+		- libguides
+		- mediafactory ¹
+		- nbe
+		- www.servicefactory ¹
+
+	¹ Refused
+	² Redirects to http
+
+
+	Problematic hosts in *aalto.fi:
+
+		- ^ ¹ ²
+		- aaltofimedia1 ¹ ²
+		- architecture ²
+		- arts ²
+		- eea ²
+		- elo ²
+		- lib ²
+		- stats.lib ²
+		- lounasmaalab ²
+		- mathsys ¹ ²
+		- metsahovi ²
+		- nano ²
+		- radio ²
+		- sci ²
+		- spa ²
+		- smarad ¹ ²
+		- tuta ¹ ²
+		- www ²
+		- wwwcms ²
+
+	¹ Mismatched
+	² Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .aalto.fi
+		- booking.aalto.fi
+		- mail.aalto.fi
+		- math.aalto.fi
+		- oodi.aalto.fi
+		- shop.aalto.fi
+		- www.aalto.fi
+		- wwwcms.aalto.fi
+
+-->
+<ruleset name="Aalto.fi (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="aaltodoc.aalto.fi" />
+	<!--target host="architecture.aalto.fi" /-->
+	<target host="artcoordination.aalto.fi" />
+	<!--target host="arts.aalto.fi" /-->
+	<target host="blogs.aalto.fi" />
+	<target host="booking.aalto.fi" />
+	<!--target host="eea.aalto.fi" /-->
+	<!--target host="elo.aalto.fi" /-->
+	<target host="idp.aalto.fi" />
+	<target host="into.aalto.fi" />
+	<!--target host="lib.aalto.fi" /-->
+	<!--target host="stats.lib.aalto.fi" /-->
+	<target host="web.lib.aalto.fi" />
+	<target host="libproxy.aalto.fi" />
+	<target host="login.libproxy.aalto.fi" />
+	<!--target host="lounasmaalab.aalto.fi" /-->
+	<target host="mail.aalto.fi" />
+	<target host="math.aalto.fi" />
+	<!--target host="metsahovi.aalto.fi" /-->
+	<!--target host="nano.aalto.fi" /-->
+	<target host="oma.aalto.fi" />
+	<target host="oodi.aalto.fi" />
+	<target host="diario.org.aalto.fi" />
+	<!--target host="radio.aalto.fi" /-->
+	<!--target host="sci.aalto.fi" /-->
+	<target host="shop.aalto.fi" />
+	<!--target host="spa.aalto.fi" /-->
+	<!--target host="tuta.aalto.fi" /-->
+	<target host="wiki.aalto.fi" />
+	<!--target host="www.aalto.fi" /-->
+	<!--target host="wwwcms.aalto.fi" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="aalto.fi" /-->
+	<target host="mathsys.aalto.fi" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:architecture|artcoordination|arts|eea|elo|lib|lounasmaalab|metsahovi|nano|radio|spa|sci|tuta|www)\.aalto\.fi/(?:$|fi/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:architecture|artcoordination|arts|eea|elo|lib|lounasmaalab|metsahovi|nano|radio|spa|tuta|www)\.aalto\.fi/(?!fi/midcom-serveattachmentguid-[\da-f]{32}/\w+\.(?:jp|pn)g)" /-->
+		<exclusion pattern="^http://artcoordination\.aalto\.fi/(?!fi/midcom-serveattachmentguid-)" />
+
+			<!--	+ve:
+					-->
+			<!--test url="http://architecture.aalto.fi/fi/" /-->
+			<test url="http://artcoordination.aalto.fi/fi/" />
+			<test url="http://artcoordination.aalto.fi/fi/projects/" />
+			<!--test url="http://arts.aalto.fi/fi/" /-->
+			<!--test url="http://eea.aalto.fi/fi/" /-->
+			<!--test url="http://elo.aalto.fi/fi/" /-->
+			<!--test url="http://lib.aalto.fi/fi/" /-->
+			<!--test url="http://lounasmaalab.aalto.fi/fi/" /-->
+			<!--test url="http://metsahovi.aalto.fi/fi/" /-->
+			<!--test url="http://nano.aalto.fi/fi/" /-->
+			<!--test url="http://radio.aalto.fi/fi/" /-->
+			<!--test url="http://spa.aalto.fi/fi/" /-->
+			<!--test url="http://sci.aalto.fi/fi/" /-->
+			<!--test url="http://tuta.aalto.fi/fi/" /-->
+			<!--test url="http://www.aalto.fi/fi/" /-->
+
+			<!--	-ve:
+					-->
+			<test url="http://artcoordination.aalto.fi/fi/midcom-serveattachmentguid-1e4ef07b0d5a132ef0711e4839cfb1aca4b21862186/2014_symposium_report-1.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.aalto\.fi$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" /-->
+	<!--securecookie host="^booking\.aalto\.fi$" name="^(?:__asio_login_uri|__asio_relogin_uri|PHPSESSID)$" /-->
+	<!--securecookie host="^mail\.aalto\.fi$" name="^(?:cadata|sessionid)$" /-->
+	<!--securecookie host="^math\.aalto\.fi$" name="^ses$" /-->
+	<!--securecookie host="^oodi\.aalto\.fi$" name="^(?:Kieli|MD5)$" /-->
+	<!--securecookie host="^shop\.aalto\.fi$" name="^(?:csrftoken|sessionid)$" /-->
+	<!--securecookie host="^www\.aalto\.fi$" name="^___utmv[abm]\w+$" /-->
+	<!--securecookie host="^wwwcms\.aalto\.fi$" name="^_shibstate_\d+_\d+$" /-->
+
+	<securecookie host="^\.aalto\.fi$" name="^(?:incap_ses_\d+|visid_incap)_\d+$" />
+	<securecookie host="^\w" name="." />
+
+
+	<!--rule from="^http://aalto\.fi/"
+		to="https://www.aalto.fi/" /-->
+
+	<rule from="^http://mathsys\.aalto\.fi/"
+		to="https://math.aalto.fi/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,90 @@
+<!--
+	Bedford Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *bedford.gov.uk:
+
+		- apps ³
+		- bedsarchivescat ³
+		- cleanstreets ᶠ
+		- www.councillorsupport ³
+		- edrms ³
+		- www.forms ³
+		- www.higgins ³
+
+	³ 403
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *bedford.gov.uk:
+
+		- www.athleticstadium ³
+		- www.robinsonpool ³
+
+	³ 403
+
+
+	Insecure cookies are set for these hosts:
+
+		- parking.bedford.gov.uk
+
+
+	Mixed content:
+
+		- Images on ^ from www.bedford.gov.uk ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Bedford.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bedford.gov.uk" />
+	<target host="bcex.bedford.gov.uk" />
+	<target host="bereavement.bedford.gov.uk" />
+	<target host="earlyhelp.bedford.gov.uk" />
+	<target host="parking.bedford.gov.uk" />
+	<target host="robinsonpool.bedford.gov.uk" />
+	<target host="sendguide.bedford.gov.uk" />
+	<target host="www.bedford.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="www.athleticstadium.bedford.gov.uk" />
+	<target host="www.robinsonpool.bedford.gov.uk" />
+
+		<!--test url="http://bereavement.bedford.gov.uk/BACASBookingsUI/" /-->
+
+		<!--	403:
+				-->
+		<!--test url="http://edrms.bedford.gov.uk/planningbrowse.aspx" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^parking\.bedford\.gov\.uk$" name="^ASPSESSID[A-Z]{8}$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://www\.athleticstadium\.bedford\.gov\.uk/.*"
+		to="https://www.bedford.gov.uk/leisure_and_culture/leisure_and_fitness_facilities/athletic_stadium.aspx" />
+
+		<test url="http://www.athleticstadium.bedford.gov.uk/default.aspx" />
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://www\.robinsonpool\.bedford\.gov\.uk/.*"
+		to="https://www.bedford.gov.uk/leisure_and_culture/leisure_and_fitness_facilities/swimming_pools/robinson_pool.aspx" />
+
+		<test url="http://www.robinsonpool.bedford.gov.uk/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

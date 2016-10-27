@@ -7,28 +7,18 @@
 
 		- dnv9my2eseobd.cloudfront.net
 
-		- mapbox.tenderapp.com
 
-			- support.mapbox.com
-
-
-	Problematic subdomains:
+	Problematic hosts in *mapbox.com:
 
 		- support *
 
-	* Works; mismatched, CN: *.tenderapp.com
-
-
-	Fully covered subdomains:
-
-		- (www.)
-		- support	(→ mapbox.tenderapp.com)
-		- tiles
-		- api.tiles
+	* Refused
 
 -->
 <ruleset name="MapBox.com">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="mapbox.com" />
 	<target host="tiles.mapbox.com" />
 	<target host="api.tiles.mapbox.com" />
@@ -39,11 +29,16 @@
 	<target host="support.mapbox.com" />
 
 
-	<securecookie host="^mapbox\.tenderapp\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://support\.mapbox\.com/"
-		to="https://mapbox.tenderapp.com/" />
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://support\.mapbox\.com/.*"
+		to="https://www.mapbox.com/help/" />
+
+		<test url="http://support.mapbox.com/home" />
 
 	<rule from="^http:"
 		to="https:" />

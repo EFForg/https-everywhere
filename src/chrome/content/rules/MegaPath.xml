@@ -4,28 +4,29 @@
 		- Speakeasy.net.xml
 
 
-	^megapath.com: Server sends no certificate chain, see https://whatsmychaincert.com
+	Nonfunctional hosts in *megapath.com:
+
+		- pontus ʳ
+
+	ʳ Refused
 
 
-	Insecure cookies are set for these hosts:
+	Insecure cookies are set for these domains and hosts:
 
+		- .megapath.com
 		- extranet.megapath.com
 		- my.megapath.com
+		- www.megapath.com
 
 -->
 <ruleset name="MegaPath.com (partial)">
 
-	<!--	Direct rewrites:
-				-->
+	<target host="megapath.com"/>
 	<target host="extranet.megapath.com"/>
 	<target host="my.megapath.com"/>
 	<target host="voice.megapath.com"/>
 	<target host="vp1-voiceportal.megapath.com"/>
 	<target host="www.megapath.com"/>
-
-	<!--	Complications:
-				-->
-	<target host="megapath.com"/>
 
 		<!--	Redirects to http:
 						-->
@@ -59,41 +60,25 @@
 					-->
 			<test url="http://vp1-voiceportal.megapath.com/Login/" />
 
-		<!--	Redirects to http:
-						-->
-		<!--exclusion pattern="^http://www\.megapath\.com/(?:$|support/login/$)" /-->
-		<!--
-			Exceptions:
-					-->
-		<exclusion pattern="^http://www\.megapath\.com/+(?!favicon\.ico|megapath/(?:asset|include|cs)s/|shadowbox/)" />
-
-			<!--	+ve:
-					-->
-			<test url="http://www.megapath.com/about/" />
-			<test url="http://www.megapath.com/data/" />
-			<test url="http://www.megapath.com/partners/" />
-			<test url="http://www.megapath.com/sitemap/" />
-			<test url="http://www.megapath.com/support/login/" />
-
-			<!--	-ve:
-					-->
-			<test url="http://www.megapath.com/megapath/assets/Image/home/T1_gph.png" />
-			<test url="http://www.megapath.com/megapath/css/reset.css" />
-			<test url="http://www.megapath.com/megapath/favicon.ico" />
-			<test url="http://www.megapath.com/megapath/includes/themes/2015/images/MP_logo.png" />
-			<test url="http://www.megapath.com/shadowbox/shadowbox.css" />
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www.megapath.com/about/" />
+		<test url="http://www.megapath.com/data/" />
+		<test url="http://www.megapath.com/partners/" />
+		<test url="http://www.megapath.com/sitemap/" />
+		<test url="http://www.megapath.com/support/login/" />
 
 
 	<!--	Not secured by server:
 					-->
+	<!--securecookie host="^\.megapath\.com$" name="^(?:cfid|cftoken)$" /-->
 	<!--securecookie host="^events\.megapath\.com$" name="^ASP\.NET_SessionId$" /-->
-	<!--securecookie host="^my\.megapath\.com$" name="^(?:COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^my\.megapath\.com$" name="^(?:CF_COOKIE_SUPPORT|GUEST_LANGUAGE_ID|JSESSIONID)$" /-->
+	<!--securecookie host="^www\.megapath\.com$" name="^(?:CF_SESSION_\W+|MOBILEFORMAT|ORIGINALURLTOKEN|REFERRINGURL|SITEENTRYURL|VISITORID)$" /-->
 
-	<securecookie host="^(?:events|my)\.megapath\.com$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^(?:events|my|www)\.megapath\.com$" name="." />
 
-
-	<rule from="^http://megapath\.com/"
-		to="https://www.megapath.com/"/>
 
 	<rule from="^http:"
 		to="https:" />

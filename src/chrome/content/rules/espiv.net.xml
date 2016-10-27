@@ -1,0 +1,128 @@
+<!--
+	For rules causing false/broken MCB, see espiv.net-falsemixed.xml.
+
+
+	Problematic hosts in *espiv.net:
+
+		- adelante ᵐ
+		- burntheboredom ᵐ
+		- gr.contrainfo ᵐ
+		- espeir ᵐ
+		- insideout ᵐ
+		- mperntes ᵐ
+		- saltadoroi ᵐ
+		- skya ˣ
+		- perasma ᵐ
+		- vogliamotutto *
+
+	* Mixed css at redirect destination
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- espiv.net
+		- mail.espiv.net
+		- skya.espiv.net
+		- www.espiv.net
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+		
+			- saltadoroi, thersitis from fonts.googleapis.com ˢ
+			- skya from $self
+
+		- Images, on:
+		
+			- adelante from adelante.espivblogs.net
+			- adelante from athens.indymedia.org ˢ
+			- adelante from ia.media-imdb.com
+			- adelante from www.sevenart.gr ᵈ
+			- adelante from www.poly-gelio.gr ᵈ
+			- burntheboredom from burntheboredom.espivblogs.net
+			- burntheboredom from burntheboredom.files.wordpress.com ˢ
+			- ese from ese.espivblogs.net ˢ
+			- espeir from espeir.espivblogs.net
+			- espeir from img.youtube.com ˢ
+			- oulaloum from s.wordpress.org ˢ
+			- oulaloum from www.wordpress.org ˢ
+			- planet from [^.]+.espivblogs.net ˢ
+			- planet from eseioanninon.squat.gr ˢ
+			- skya from $self
+			- skya from skya.espivblogs.net
+
+		- Bugs, on:
+
+			- espeir from www.freebloghitcounter.com
+
+	ᵈ Unsecurable <= dropped
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="espiv.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="espiv.net" />
+	<target host="files.espiv.net" />
+	<target host="mail.espiv.net" />
+	<target host="planet.espiv.net" />
+	<target host="www.espiv.net" />
+
+	<!--	(accounts:) -->
+	<target host="afisa.espiv.net" />
+	<target host="alcoholicdesaster.espiv.net" />
+	<target host="arb-contrainfo.espiv.net" />
+	<target host="ca-contrainfo.espiv.net" />
+	<target host="contrainfo.espiv.net" />
+	<target host="de-contrainfo.espiv.net" />
+	<target host="en-contrainfo.espiv.net" />
+	<target host="es-contrainfo.espiv.net" />
+	<target host="ese.espiv.net" />
+	<target host="fr-contrainfo.espiv.net" />
+	<target host="gr-contrainfo.espiv.net" />
+	<target host="it-contrainfo.espiv.net" />
+	<target host="madmarx.espiv.net" />
+	<target host="nl-contrainfo.espiv.net" />
+	<target host="nolager.espiv.net" />
+	<target host="oulaloum.espiv.net" />
+	<target host="pt-contrainfo.espiv.net" />
+	<target host="radio98fm.espiv.net" />
+	<target host="radiokatalipsi.espiv.net" />
+	<target host="sh-contrainfo.espiv.net" />
+	<target host="sinialo.espiv.net" />
+	<target host="sv-contrainfo.espiv.net" />
+	<target host="thersitis.espiv.net" />
+	<target host="tr-contrainfo.espiv.net" />
+	<!--target host="vogliamotutto.espiv.net" /-->
+
+	<!--	Complications:
+				-->
+	<target host="gr.contrainfo.espiv.net" />
+	<target host="perasma.espiv.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?espiv\.net$" name="^qtrans_front_language$" /-->
+	<!--securecookie host="^mail\.espiv\.net$" name="^roundcube_session$" /-->
+	<!--securecookie host="^skya\.espiv\.net$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://gr\.contrainfo\.espiv\.net/"
+		to="https://gr-contrainfo.espivblogs.net/" />
+
+	<rule from="^http://perasma\.espiv\.net/"
+		to="https://perasma.espivblogs.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

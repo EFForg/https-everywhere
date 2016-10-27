@@ -1,21 +1,54 @@
 <!--
-	Nonfunctional subdomains:
+	Other Connexity rulesets:
 
-		- ^ *	(reset)
-		- www *	(redirects to http)
+		- Connexity.net.xml
 
-	* Mismatched, CN: pro.connexity.com
+
+	(www.)?connexity.com: Some pages redirect to http
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .connexity.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
 <ruleset name="Connexity.com (partial)">
 
+	<target host="connexity.com" />
 	<target host="pro.connexity.com" />
+	<target host="publisher.connexity.com" />
+	<target host="www.connexity.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?connexity\.com/(?:$|\w\w/$|login/$|programmatic/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?connexity\.com/(?!/*(?:favicon\.ico|wp-content/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://connexity.com/fr/" />
+			<test url="http://connexity.com/login/" />
+			<test url="http://www.connexity.com/programmatic/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://connexity.com/favicon.ico" />
+			<test url="http://www.connexity.com/wp-content/plugins/itempropwp/assets/css/itempropwp.css" />
 
 
-	<securecookie host="^pro\.connexity\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.connexity\.com$" name="^rng$" /-->
+
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://pro\.connexity\.com/"
-		to="https://pro.connexity.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

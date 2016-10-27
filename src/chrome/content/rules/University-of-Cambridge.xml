@@ -1,50 +1,88 @@
 <!--
 	University of Cambridge
 
+	For rules causing false/broken MCB, see Cam.ac.uk-falsemixed.xml.
 	For problematic rules, see Cam.ac.uk-problematic.xml.
-
 
 	Other University of Cambridge rulesets:
 
 		- Light_Blue_Touchpaper.org.xml
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *cam.ac.uk:
 
+		- www.disability.admin ²
 		- www.environment.admin ²
+		- www.equality.admin ²
 		- news.admin ³
+		- www.student-systems.admin ²
+
 		- my.alumni ⁴
+		- gcal.apps	Handshake fails
+		- www.arct ⁸
+		- www.cambridgestudents ²
+
+		- www.crucible.cl	Shows default page
 		- www.mbone.cl ⁵
+		- www.misc.cl	Shows default page
+
+		- www.crassh ᵃ
 		- ucsnews.csx ᵃ
-		- www.fitzmuseum ⁴
-		- ceid.educ ⁶
+
+		- ceid.educ	Redirects to http
+		- corerj.educ	Redirects to http
+		- skinner.educ	Redirects to http
+		- classictales.educ	Redirects to http
+		- zapp.educ	Redirects to http
 
 		- www.eng ⁷
+		- www.ifm.eng	Shows default page
 		- www2.eng ⁴
 		- www-g.eng ⁴
 		- www-h.eng ⁴
 		- www-sigproc.eng ⁴
 		- www-womeninengineering.eng ⁸
 
+		- www.fitzmuseum ⁴
 		- www.graduate ¹
 		- www.internationalstudents ¹
+
+		- jcbc.jesus *
+		- jcsu.jesus	Missing certificate chain
 		- mcr.jesus *
 		- www-jcsu.jesus *
-		- www.lib ⁹
+		- zeus.jesus	Missing certificate chain
+
+		- cudl.lib ⁴
 		- search.lib ⁴
+		- ul-newton.lib ⁴
+		- www.lib ⁹
+
 		- admin.map ᵃ
 		- preview.map ᵃ
 		- www.misd ¹
+
+		- cms.mus ⁸
+		- outreach.mus ⁸
+		- pendlebury.mus ⁸
+		- www.mus ⁸
+
 		- www.inference.phy ⁴
 		- www.europe.polis ⁸
+		- www.polis ⁸
 		- www.psychometrics ⁸
 		- www.sport ᵃ
 		- www.sports ᵃ
 		- www.vhi.st-edmunds ⁸
 		- www.st-edmunds	(Shows default page)
+		- www.graduate.study ²
 		- talks ᵃ
+		- www.training ᵃ
 		- www.ucs ⁸
 		- news.uis ᵃ
+		- www.uis ⁸
+		- www.undergraduate ²
+		- museum.zoo ⁴
 		- www.zoo ⁴
 
 	² Reset
@@ -59,89 +97,33 @@
 	ᵃ Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *cam.ac.uk:
 
-		- ^ *
-		- www.epe.admin ¹
-		- alumni ²
+		- ^ ¹
+		- (www.)?camtools.admin ²
+		- www.epe.admin ²
+		- www.camcors ²
+		- www.camsis ²
 		- damtp ²
 
-		- jesus ⁴
-		- zeus.jesus ⁴
+		- jesus ²
+		- zeus.jesus ²
 		- www.jesus ⁵
 
-		- www.jobs ¹
-		- www.mrc-lmb ³
-		- www.philanthropy ¹
-		- www.study ¹
+		- www.jobs ²
+		- www.mrc-lmb ³ ⁵
+		- www.study ²
 
-	* Reset
-	¹ Works; mismatched, CN: www.admin.cam.ac.uk
-	² Cert only matches www.foo
-	⁴ Mismatched
+	¹ Reset
+	² Mismatched
 	⁵ Mixed css
-	³ https breaks styling; expired, self-signed
-
-
-	Partially covered subdomains:
-
-		- www.damtp	(^ → www, some pages 404)
-		- (www.)?jesus ²	(^ → www)
-
-	² Avoiding broken MCB
-
-
-	Fully covered subdomains:
-
-		- (www.)?		(^ → www)
-
-		- hrsystems.admin
-		- iceintranet.admin
-		- sales.admin
-		- webservices.admin
-		- www.admin
-
-		- (www.)alumni		(^ → www)
-		- www.campaign
-		- sysdata.cl
-		- www.cl
-
-		- jotter.educ
-		- thinkingtogether.educ
-		- www.educ
-		- www-new.educ
-
-		- www.ice
-		- old-webmail.hermes
-		- webmail.hermes
-
-		- conference.jesus
-		- jcsu.jesus
-		- jrf.jesus
-		- mail.jesus
-
-		- lists
-		- map
-		- www2.mrc-lmb
-		- raven
-		- shib.raven
-		- search
-		- api.search
-		- print-server.st-edmunds...:9192
-		- wiki
-		- www.wolfson
+	³ Expired, self-signed
 
 
 	These altnames don't exist:
 
 		- www.ftp.cl.cam.ac.uk
-
-
-	Observed cookie domains:
-
-		- www.admin
-		- shib.raven
-		- www.study
+		- www.mbone.cl.cam.ac.uk
 
 
 	Mixed content:
@@ -156,13 +138,10 @@
 		- Images, on:
 
 			- www.admin from www ²
-			- www.educ from $self ³
+			- www.educ, conference.jesus, www.jesus, www2.mrc-lmb from $self
 			- www3.eng from www.eng ¹
-
-			- conference.jesus from $self
 			- jcsu.jesus from $self
 			- zeus.jesus from www.w3.org
-
 			- www.study from $self ⁴
 
 		- favicon on wiki from www ³
@@ -176,16 +155,146 @@
 -->
 <ruleset name="Cam.ac.uk (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="app4.admin.cam.ac.uk" />
+	<target host="2015.gaobase.admin.cam.ac.uk" />
+	<target host="2016.gaobase.admin.cam.ac.uk" />
+	<target host="hrsystems.admin.cam.ac.uk" />
+	<target host="iceintranet.admin.cam.ac.uk" />
+	<target host="sales.admin.cam.ac.uk" />
+	<target host="webservices.admin.cam.ac.uk" />
+	<target host="www.admin.cam.ac.uk" />
+
+	<target host="alumni.cam.ac.uk" />
+	<target host="www.alumni.cam.ac.uk" />
+	<target host="camcors.cam.ac.uk" />
+	<target host="www.campaign.cam.ac.uk" />
+	<target host="www.camsis.cam.ac.uk" />
+	<target host="camtools.cam.ac.uk" />
+	<target host="www.camtools.cam.ac.uk" />
+	<target host="www.careers.cam.ac.uk" />
+	<target host="sysdata.cl.cam.ac.uk" />
+	<target host="www.cl.cam.ac.uk" />
+	<target host="git.csx.cam.ac.uk" />
+	<target host="www.cusu.cam.ac.uk" />
+	<target host="www.damtp.cam.ac.uk" />
+
+	<target host="alternative-settings.educ.cam.ac.uk" />
+	<target host="caribbeanpoetry.educ.cam.ac.uk" />
+	<target host="conference.educ.cam.ac.uk" />
+	<target host="dialogueiwb.educ.cam.ac.uk" />
+	<target host="engaged.educ.cam.ac.uk" />
+	<target host="instructlab.educ.cam.ac.uk" />
+	<target host="ipre.educ.cam.ac.uk" />
+	<target host="iwbcollaboration.educ.cam.ac.uk" />
+	<target host="jotter.educ.cam.ac.uk" />
+	<target host="learningwithoutlimits.educ.cam.ac.uk" />
+	<target host="sendfiles.educ.cam.ac.uk" />
+	<target host="t-media.educ.cam.ac.uk" />
+	<target host="thinkingtogether.educ.cam.ac.uk" />
+	<target host="web-code.educ.cam.ac.uk" />
+	<target host="web-content.educ.cam.ac.uk" />
+	<target host="web-style.educ.cam.ac.uk" />
+	<target host="www.educ.cam.ac.uk" />
+	<target host="www-rba.educ.cam.ac.uk" />
+
+	<target host="www-edc.eng.cam.ac.uk" />
+	<target host="old-webmail.hermes.cam.ac.uk" />
+	<target host="webmail.hermes.cam.ac.uk" />
+	<target host="www.ice.cam.ac.uk" />
+
+	<target host="account.jesus.cam.ac.uk" />
+	<target host="conference.jesus.cam.ac.uk" />
+	<target host="jnet.jesus.cam.ac.uk" />
+	<target host="jrf.jesus.cam.ac.uk" />
+	<!--target host="jcsu.jesus.cam.ac.uk" /-->
+	<target host="mail.jesus.cam.ac.uk" />
+	<target host="www.jesus.cam.ac.uk" />
+	<!--target host="zeus.jesus.cam.ac.uk" /-->
+
+	<target host="specialcollections.blog.lib.cam.ac.uk" />
+	<target host="towerproject.blog.lib.cam.ac.uk" />
+	<target host="exhibitions.lib.cam.ac.uk" />
+	<target host="lists.cam.ac.uk" />
+	<target host="map.cam.ac.uk" />
+	<target host="www.map.cam.ac.uk" />
+	<target host="www2.mrc-lmb.cam.ac.uk" />
+	<target host="philanthropy.cam.ac.uk" />
+	<target host="www.philanthropy.cam.ac.uk" />
+	<target host="raven.cam.ac.uk" />
+	<target host="shib.raven.cam.ac.uk" />
+	<target host="search.cam.ac.uk" />
+	<target host="api.search.cam.ac.uk" />
+	<target host="sms.cam.ac.uk" />
+
+	<target host="downloads.sms.cam.ac.uk" />
+	<target host="upload.sms.cam.ac.uk" />
+	<target host="www.sms.cam.ac.uk" />
+
+	<target host="print-server.st-edmunds.cam.ac.uk" />
+	<target host="vle.cam.ac.uk" />
+	<target host="www.vle.cam.ac.uk" />
+	<target host="wiki.cam.ac.uk" />
+	<target host="www.wolfson.cam.ac.uk" />
+	<target host="www.cam.ac.uk" />
+
+	<!--	Complications:
+				-->
 	<target host="cam.ac.uk" />
-	<target host="*.cam.ac.uk" />
-		<!--
-			Redirect to http:
+	<target host="damtp.cam.ac.uk" />
+	<target host="jesus.cam.ac.uk" />
+	<target host="camsis.cam.ac.uk" />
+
+		<!--	Redirects to http:
 						-->
-		<!--exclusion pattern="^http://(www\.)?cam\.ac\.uk/(profiles/cam/themes/cam/assets/images/|site/accessibility/|sites/www\.cam\.ac\.uk/files/)" /-->
+		<exclusion pattern="^http://www\.damtp\.cam\.ac\.uk/$" />
 		<!--
-			Avoid broken MCB:
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.damtp\.cam\.ac\.uk/+(?!global/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.damtp.cam.ac.uk/about/" />
+			<test url="http://www.damtp.cam.ac.uk/internal/" />
+			<test url="http://www.damtp.cam.ac.uk/study/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.damtp.cam.ac.uk/global/images/button-search.gif" />
+			<test url="http://www.damtp.cam.ac.uk/global/photos/home2.jpg" />
+			<test url="http://www.damtp.cam.ac.uk/global/style/reset.css" />
+
+		<!--	Avoid broken MCB:
 						-->
 		<exclusion pattern="^http://(?:www\.)?jesus\.cam\.ac\.uk/+(?!favicon\.ico|wp-content/|wp-includes/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://jesus.cam.ac.uk/about-jesus-college/" />
+			<test url="http://www.jesus.cam.ac.uk/alumni-friends/" />
+			<test url="http://www.jesus.cam.ac.uk/chapel-choir/" />
+			<test url="http://www.jesus.cam.ac.uk/contacts-directions/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.jesus.cam.ac.uk/favicon.ico" />
+			<test url="http://www.jesus.cam.ac.uk/wp-content/themes/jesuscollege/images/jesus-college-logo.gif" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.wolfson\.cam\.ac\.uk/+(?!sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.wolfson.cam.ac.uk/alumni" />
+			<test url="http://www.wolfson.cam.ac.uk/applying" />
+			<test url="http://www.wolfson.cam.ac.uk/sitemap" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.wolfson.cam.ac.uk/sites/default/files/wolfson50-header-web.jpg" />
 
 
 	<!--	Not secured by server:
@@ -197,19 +306,18 @@
 	<!--securecookie host="^www\.ice\.cam\.ac\.uk$" name="^[0-9a-f]{32}$" /-->
 	<!--securecookie host="^jrf\.jesus\.cam\.ac\.uk$" name="^resfell_string_mem$" /-->
 
-	<securecookie host="^(?:(?:hrsystems|webservices)\.admin|www\.a(?:dmin|lumni)|www\.educ|sysdata\.cl|www\.ice|jrf\.jesus)\.cam\.ac\.uk$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://((?:hrsystems|iceintranet|sales|webservices|www)\.admin|www\.campaign|sysdata\.cl|(?:jotter|thinkingtogether|www|www-new)\.educ|www\.ice|(?:old-)?webmail\.hermes|(?:conference|jcsu|jrf)\.jesus|lists|map|www2\.mrc-lmb|(?:shib\.)?raven|search|api\.search|print-server\.st-edmunds|wiki|www\.(?:admin|cl|wolfson))\.cam\.ac\.uk(:9192)?/"
-		to="https://$1.cam.ac.uk$2/" />
-
-	<!--	Domains for which both !www and www
-		exist, and both work without caveat:
-							-->
-	<rule from="^http://(?:www\.)?((?:alumni|jesus)\.)?cam\.ac\.uk/"
+	<rule from="^http://((?:camsis|damtp|jesus)\.)?cam\.ac\.uk/"
 		to="https://www.$1cam.ac.uk/" />
 
-	<rule from="^http://(?:www\.)?damtp\.cam\.ac\.uk/global/"
-		to="https://www.damtp.cam.ac.uk/global/" />
+	<rule from="^http://print-server\.st-edmunds\.cam\.ac\.uk:9192/"
+		to="https://print-server.st-edmunds.cam.ac.uk:9192/" />
+
+		<test url="http://print-server.st-edmunds.cam.ac.uk:9192/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

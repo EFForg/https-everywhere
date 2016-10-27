@@ -1,16 +1,14 @@
 <!--
-	For problematic rules, see SkimLinks-problematic.xml.
-
-
 	Other SkimLinks rulesets:
 
+		- redirectingat.com.xml
 		- Skimresources.com.xml
 		- Skm.io.xml
 
 
 	Problematic subdomains:
 
-		- redirect		(works, mismatched, CN: *.skimresources.com)
+		- redirect		(works, mismatched)
 
 
 	Nonfunctional subdomains:
@@ -40,24 +38,29 @@
 		- signup
 
 
-	Insecure cookies are set for these domains:
+	Insecure cookies are set for these domains:  ᶜ
 
 		- .skimlinks.com
 
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
 -->
-<ruleset name="SkimLinks (partial)">
+<ruleset name="SkimLinks.com (partial)">
 
 	<target host="skimlinks.com" />
 	<target host="*.skimlinks.com" />
 
-		<exclusion pattern="^http://(?:api-products?|arthur|redirect)\.skimlinks.com/" />
+		<exclusion pattern="^http://(?:api-products?|arthur|(?:[^./]+\.)+[^./]+)\.skimlinks.com/" />
 
 			<test url="http://api-product.skimlinks.com/" />
 			<test url="http://api-products.skimlinks.com/" />
 			<test url="http://arthur.skimlinks.com/" />
-			<test url="http://redirect.skimlinks.com/" />
+			<test url="http://this.host.skimlinks.com/" />
+			<test url="http://exists.not.skimlinks.com/" />
+			<test url="http://honestly.this.host.skimlinks.com/" />
+			<test url="http://honestly.exists.not.skimlinks.com/" />
 
-		<exclusion pattern="^http://info\.skimlinks\.com/+(?!$|\?|css/|images/|rs/)" />
+		<exclusion pattern="^http://info\.skimlinks\.com/(?!/*(?:$|\?|css/|images/|rs/))" />
 
 			<!--	+ve:
 					-->
@@ -67,6 +70,7 @@
 			<test url="http://info.skimlinks.com/Shoppable-Content-Guide.html" />
 			<test url="http://info.skimlinks.com//Shoppable-Content-Guide.html" />
 			<test url="http://info.skimlinks.com/SmartAttribution.html" />
+			<test url="http://info.skimlinks.com/SmartAttribution.html?bar" />
 			<test url="http://info.skimlinks.com//SmartAttribution.html" />
 
 			<!--	-ve:
@@ -99,7 +103,12 @@
 	<rule from="^http://info\.skimlinks\.com/"
 		to="https://na-lon03.marketo.com/" />
 
-	<rule from="^http://([\w-]+\.)?skimlinks\.com/"
-		to="https://$1skimlinks.com/" />
+	<rule from="^http://redirect\.skimlinks\.com/"
+		to="https://go.redirectingat.com/" />
+
+		<test url="http://redirect.skimlinks.com/?id=76434X1526786&amp;xs=1&amp;url=http%3A%2F%2Fwww.amazon.com%2Fgp%2Fproduct%2FB00IEYHMIM" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

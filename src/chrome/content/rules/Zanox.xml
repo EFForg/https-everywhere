@@ -1,28 +1,48 @@
 <!--
-	Nonfunctional domains:
-
-		- blog.zanox.com	(shows www.stu; mismatched, CN: stu.kundenserver42.de)
-		- help.zanox.com	(no https)
+	For rules causing false/broken MCB, see Zanox.com-falsemixed.xml.
 
 
-	Problematic domains:
+	Nonfunctional hosts in *zanox.com:
 
-		- zanox.com	(cert only matches *.zanox.com)
+		- help *
+
+	* Refused
+
+
+	Mixed content:
+
+		- iframe on blog from www.zanox.com *
+
+		- css, on:
+
+			- blog from $self *
+			- blog from www.zanox.com *
+
+		- Images,on:
+
+			- blog from $self
+			- blog from www.zanox.com *
+			- www from ui.zanox.com *
+
+		- Bug on blog from www.facebook.com *
+
+	* Secured by us
 
 -->
-<ruleset name="Zanox (partial)">
+<ruleset name="Zanox.com (partial)">
 
 	<target host="zanox.com" />
-	<target host="*.zanox.com" />
+	<target host="ad.zanox.com" />
+	<!--target host="blog.zanox.com" /-->
+	<target host="marketplace.zanox.com" />
+	<target host="ui.zanox.com" />
+	<target host="www.zanox.com" />
 
 
-	<securecookie host="^(?:ad|www)\.zanox\.com$" name=".+" />
+	<securecookie host="^\w" name="." />
 
 
-	<rule from="^http://(?:www\.)?zanox\.com/"
-		to="https://www.zanox.com/" />
-
-	<rule from="^http://(ad|ui)\.zanox\.com/"
-		to="https://$1.zanox.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

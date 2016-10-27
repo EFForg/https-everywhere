@@ -1,9 +1,4 @@
 <!--
-Disabled by https-everywhere-checker because:
-Fetch error: http://bioshockinfinite.com/ => https://bioshockinfinite.com/: Cycle detected - URL already encountered: http://bioshockinfinite.com/
-Fetch error: http://www.bioshockinfinite.com/ => https://www.bioshockinfinite.com/: Cycle detected - URL already encountered: http://www.bioshockinfinite.com/
-Fetch error: http://finkmanufacturing.com/ => https://www.bioshockinfinite.com/faq: Cycle detected - URL already encountered: http://www.bioshockinfinite.com/faq
-Non-2xx HTTP code: http://www.finkmanufacturing.com/ (200) => https://www.bioshockinfinite.com/faq (502)
 	For other 2K Games coverage, see 2K_Games.xml.
 
 
@@ -14,29 +9,41 @@ Non-2xx HTTP code: http://www.finkmanufacturing.com/ (200) => https://www.biosho
 	* Mismatched
 
 
-	Fully covered domains:
+	Insecure cookies are set for these hosts: ᶜ
 
-		- (www.)?finkmanufacturing.com	(→ www.bioshockinfinite.com)
+		- www.bioshockinfinite.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
 
 -->
-<ruleset name="BioShock Infinite" default_off='failed ruleset test'>
+<ruleset name="BioShock Infinite">
 
+	<!--	Direct rewrites:
+				-->
 	<target host="bioshockinfinite.com" />
 	<target host="www.bioshockinfinite.com" />
+
+	<!--	Complications:
+				-->
 	<target host="finkmanufacturing.com" />
 	<target host="www.finkmanufacturing.com" />
 
 
-	<securecookie host="^www\.bioshockinfinite\.com$" name=".+" />
-	<securecookie host="^(?:www\.)?finkmanufacturing\.com$" name=".+" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.bioshockinfinite\.com$" name="^(?:PHPSESSID|exp_last_activity|exp_last_visit|exp_tracker|exp_transcribe)$" /-->
 
+	<securecookie host="^\w" name="." />
 
-	<rule from="^http://(www\.)?bioshockinfinite\.com/"
-		to="https://$1bioshockinfinite.com/" />
 
 	<!--	Redirects like so:
 					-->
 	<rule from="^http://(?:www\.)?finkmanufacturing\.com/+([^?/]*).*"
 		to="https://www.bioshockinfinite.com/faq$1" />
+
+		<test url="http://www.finkmanufacturing.com/dlc1/adjust-difficulty" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

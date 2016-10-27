@@ -1,0 +1,107 @@
+<!--
+	Telford & Wrekin Council
+
+	For rules causing false/broken MCB, see telford.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *telford.gov.uk:
+
+		- crmonlineforms ᵈ
+		- crmonlineforms:8080 ᵖ
+		- newsroom ⁴
+		- ocs ᵗ
+
+	⁴ 404
+	ᵈ Dropped
+	ᵖ Plaintext reply
+	ᵗ Reset
+
+
+	Problematic hosts in *telford.gov.uk:
+
+		- consult ᵐ
+		- securetheatre ⁴ ˣ
+
+	⁴ 404; preemptable redirect
+	ᵐ Mismatched
+	ˣ Mixed iframe at redirect destination, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- telford.gov.uk
+		- .telford.gov.uk
+		- apps.telford.gov.uk
+		- tlc.telford.gov.uk
+		- webapps.telford.gov.uk
+		- webforms.telford.gov.uk
+		- www.telford.gov.uk
+		- .www.telford.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on apps from fonts.googleapis.com ˢ
+		- favicon on apps from www.telford.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Telford.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="telford.gov.uk" />
+	<target host="applications.telford.gov.uk" />
+	<target host="apps.telford.gov.uk" />
+	<target host="mail.telford.gov.uk" />
+	<target host="maps.telford.gov.uk" />
+	<target host="secureleisure.telford.gov.uk" />
+	<target host="tlc.telford.gov.uk" />
+	<target host="webapps.telford.gov.uk" />
+	<target host="webforms.telford.gov.uk" />
+	<target host="webmail.telford.gov.uk" />
+	<target host="www.telford.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.telford.gov.uk" />
+	<!--target host="securetheatre.telford.gov.uk" /-->
+
+		<!--	Mixed content:
+					-->
+		<!--test url="http://apps.telford.gov.uk/CouncilAndDemocracy/Councillors" /-->
+		<!--test url="http://apps.telford.gov.uk/snowline/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:tlc|webforms|www)\.)?telford\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.telford\.gov\.uk$" name="^cadata[\dA-F]{32}$" /-->
+	<!--securecookie host="^webapps\.telford\.gov\.uk$" name="^SecurEnvoy4$" /-->
+	<!--securecookie host="^\.www\.telford\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\." name="^cadata" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.telford\.gov\.uk/"
+		to="https://telford-consult.objective.co.uk/" />
+
+		<test url="http://consult.telford.gov.uk/portal/contact_us" />
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<!--rule from="^http://securetheatre\.telford\.gov\.uk/.*"
+		to="https://theplacetelford.com/" /-->
+
+		<!--test url="http://securetheatre.telford.gov.uk/default.aspx" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

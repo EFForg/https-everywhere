@@ -2,25 +2,55 @@
 	For other Microsoft coverage, see Microsoft.xml.
 
 
-	Fully covered domains:
+	Problematic hosts in *virtualearth.net:
 
-		- virtualearth.net subdomains:
-
-			- dev
-			- ecn.dev
-			- ecn.t[0-7].tiles
-			- venuemaps
+		- (www.)? *
+		- fb.ecn.api.tiles *
+		
+	* Mismatched
 
 -->
-<ruleset name="virtualearth.net">
+<ruleset name="Virtual Earth.net">
 
-	<target host="*.virtualearth.net" />
+	<!--	Direct rewrites:
+				-->
+	<target host="dev.virtualearth.net" />
+	<target host="ecn.dev.virtualearth.net" />
+
+	<target host="api.tiles.virtualearth.net" />
+	<target host="ecn.t0.tiles.virtualearth.net" />
+	<target host="ecn.t1.tiles.virtualearth.net" />
+	<target host="ecn.t2.tiles.virtualearth.net" />
+	<target host="ecn.t3.tiles.virtualearth.net" />
+	<target host="ecn.t4.tiles.virtualearth.net" />
+	<target host="ecn.t5.tiles.virtualearth.net" />
+	<target host="ecn.t6.tiles.virtualearth.net" />
+	<target host="ecn.t7.tiles.virtualearth.net" />
+
+	<target host="venuemaps.virtualearth.net" />
+
+	<!--	Complications:
+				-->
+	<target host="virtualearth.net" />
+	<target host="fb.ecn.api.tiles.virtualearth.net" />
+	<target host="www.virtualearth.net" />
 
 
-	<securecookie host="^.*\.virtualearth\.net$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(dev|ecn\.(?:dev|t\d\.tiles)|api\.tiles|venuemaps)\.virtualearth\.net/"
-		to="https://$1.virtualearth.net/" />
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://(?:www\.)?virtualearth\.net/.*"
+		to="https://www.bing.com/maps/" />
+
+		<test url="http://virtualearth.net//index.aspx" />
+		<test url="http://www.virtualearth.net//index.aspx" />
+
+	<rule from="^http://fb\.ecn\.api\.tiles\.virtualearth\.net/"
+		to="https://api.tiles.virtualearth.net/" />
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

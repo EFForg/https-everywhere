@@ -1,17 +1,61 @@
 <!--
+	Oxford University Press
+
+
 	CDN buckets:
 
 		- d3hc5ng33pisks.cloudfront.net
 
 			- gab.cookie.oup.com
 
+
+	Nonfunctional hosts in *oup.com:
+
+		- (www.)? ¹
+		- ukcatalogue ²
+		- www.us ¹
+
+	¹ Dropped
+	² Plaintext reply
+
+
+	These altnames don't exist:
+
+		- www.global.oup.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- elt.oup.com
+		- global.oup.com
+
+
+	Mixed content:
+
+		- favicon on global from www.oup.com
+		- Bug on global from pub.cookie.oup.com *
+
+	* Secured by us
+
 -->
-<ruleset name="Oxford University Press (partial)">
+<ruleset name="OUP.com (partial)">
 
+	<!--	Direct rewrites:
+				-->
+	<target host="elt.oup.com" />
+	<target host="global.oup.com" />
 	<target host="gab.cookie.oup.com" />
+	<target host="pub.cookie.oup.com" />
 
 
-	<rule from="^http://gab\.cookie\.oup\.com/"
-		to="https://d3hc5ng33pisks.cloudfront.net/" />
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:elt|global)\.oup\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>

@@ -139,13 +139,13 @@ RuleSet.prototype = {
     var urispec = uri.spec;
 
     this.ensureCompiled();
- 
+
     if (this.ruleset_match_c && !this.ruleset_match_c.test(urispec)) 
       return false;
- 
+
     for (var i = 0; i < this.exclusions.length; ++i) 
       if (this.exclusions[i].pattern_c.test(urispec)) return false;
- 
+
     for (var i = 0; i < this.rules.length; ++i) 
       if (this.rules[i].from_c.test(urispec)) return true;
     return false;
@@ -246,7 +246,31 @@ const RuleWriter = {
     return rv;
   },
 
-  read: function(file) {
+  readFromUrl: function (url) {
+    var ios = CC['@mozilla.org/network/io-service;1']
+        .getService(CI.nsIIOService);
+    var encoding = "UTF-8";
+    var channel = ios.newChannel(url, encoding, null);
+    var stream = channel.open();
+    var streamSize = stream.available();
+
+    if (!streamSize) {
+      return null;
+    }
+
+    var convStream = CC["@mozilla.org/intl/converter-input-stream;1"]
+        .createInstance(CI.nsIConverterInputStream);
+
+    convStream.init(stream, encoding, streamSize,
+        convStream.DEFAULT_REPLACEMENT_CHARACTER);
+
+    var data = {};
+    convStream.readString(streamSize, data);
+
+    return data.value;
+  },
+
+  readFromFile: function(file) {
     if (!file.exists())
       return null;
     var data = "";
@@ -285,7 +309,7 @@ const RuleWriter = {
   rulesetFromFile: function(file, rule_store, ruleset_id) {
     if ((rule_store.targets == null) && (rule_store.targets != {}))
       this.log(WARN, "TARGETS IS NULL");
-    var data = this.read(file);
+    var data = this.readFromFile(file);
     if (!data) return null;
     return this.readFromString(data, rule_store, ruleset_id);
   },
@@ -324,7 +348,7 @@ const RuleWriter = {
     // Add this ruleset id into HTTPSRules.targets if it's not already there.
     // This should only happen for custom user rules. Built-in rules get
     // their ids preloaded into the targets map, and have their <target>
-    // tags stripped when the sqlite database is built.
+    // tags stripped when the JSON database is built.
     var targets = xmlruleset.getElementsByTagName("target");
     for (var i = 0; i < targets.length; i++) {
       var host = targets[i].getAttribute("host");
@@ -390,31 +414,10 @@ const HTTPSRules = {
       var t1 = new Date().getTime();
       this.checkMixedContentHandling();
       var rulefiles = RuleWriter.enumerate(RuleWriter.getCustomRuleDir());
+
+      this.loadTargets();
       this.scanRulefiles(rulefiles);
 
-      // Initialize database connection.
-      var dbFile = new FileUtils.File(RuleWriter.chromeToPath("chrome://https-everywhere/content/rulesets.sqlite"));
-      var rulesetDBConn = Services.storage.openDatabase(dbFile);
-      this.queryForRuleset = rulesetDBConn.createStatement(
-        "select contents from rulesets where id = :id");
-
-      // Preload the mapping of hostname target -> ruleset ID from DB.
-      // This is a little slow (287 ms on a Core2 Duo @ 2.2GHz with SSD),
-      // but is faster than loading all of the rulesets. If this becomes a
-      // bottleneck, change it to load in a background webworker, or load
-      // a smaller bloom filter instead.
-      var targetsQuery = rulesetDBConn.createStatement("select host, ruleset_id from targets");
-      this.log(DBUG, "Loading targets...");
-      while (targetsQuery.executeStep()) {
-        var host = targetsQuery.row.host;
-        var id = targetsQuery.row.ruleset_id;
-        if (!this.targets[host]) {
-          this.targets[host] = [id];
-        } else {
-          this.targets[host].push(id);
-        }
-      }
-      this.log(DBUG, "Loading adding targets.");
     } catch(e) {
       this.log(DBUG,"Rules Failed: "+e);
     }
@@ -422,6 +425,19 @@ const HTTPSRules = {
     this.log(NOTE,"Loading targets took " + (t2 - t1) / 1000.0 + " seconds");
 
     return;
+  },
+
+  /**
+   * Read and parse the ruleset JSON.
+   * Note: This only parses the outer JSON wrapper. Each ruleset is itself an
+   * XML string, which will be parsed on an as-needed basis.
+   */
+  loadTargets: function() {
+    var loc = "chrome://https-everywhere/content/rulesets.json";
+    var data = RuleWriter.readFromUrl(loc);
+    var rules = JSON.parse(data);
+    this.targets = rules.targets;
+    this.rulesetStrings = rules.rulesetStrings;
   },
 
   checkMixedContentHandling: function() {
@@ -560,7 +576,7 @@ const HTTPSRules = {
         }
     } catch(e3) {
       this.log(INFO, "uri.host is explosive!");
-      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and soforth
+      try       { this.log(INFO, "(" + uri.spec + ")"); }  // happens for about: uris and so forth
       catch(e4) { this.log(WARN, "(and unprintable!!!!!!)"); }
     }
     return uri;
@@ -576,22 +592,8 @@ const HTTPSRules = {
   },
 
   // Load a ruleset by numeric id, e.g. 234
-  // NOTE: This call runs synchronously, which can lock up the browser UI. Is
-  // there any way to fix that, given that we need to run blocking in the request
-  // flow? Perhaps we can preload all targets from the DB into memory at startup
-  // so we only hit the DB when we know there is something to be had.
   loadRulesetById: function(ruleset_id) {
-    this.queryForRuleset.params.id = ruleset_id;
-
-    try {
-      if (this.queryForRuleset.executeStep()) {
-        RuleWriter.readFromString(this.queryForRuleset.row.contents, this, ruleset_id);
-      } else {
-        this.log(WARN,"Couldn't find ruleset for id " + ruleset_id);
-      }
-    } finally {
-      this.queryForRuleset.reset();
-    }
+    RuleWriter.readFromString(this.rulesetStrings[ruleset_id], this, ruleset_id);
   },
 
   // Get all rulesets matching a given target, lazy-loading from DB as necessary.
@@ -634,14 +636,16 @@ const HTTPSRules = {
 
     attempt(host);
 
+    // Ensure host is well-formed (RFC 1035)
+    if (host.indexOf("..") != -1 || host.length > 255) {
+      this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
+      return null;
+    }
+
     // replace each portion of the domain with a * in turn
     var segmented = host.split(".");
     for (i = 0; i < segmented.length; ++i) {
       tmp = segmented[i];
-      if (tmp.length === 0) {
-        this.log(WARN,"Malformed host passed to potentiallyApplicableRulesets: " + host);
-        return null;
-      }
       segmented[i] = "*";
       t = segmented.join(".");
       segmented[i] = tmp;
@@ -676,7 +680,7 @@ const HTTPSRules = {
   },
 
   /**
-   * Check to see if the Cookie object c meets any of our cookierule citeria
+   * Check to see if the Cookie object c meets any of our cookierule criteria
    * for being marked as secure.
    *
    * @param applicable_list {ApplicableList} an ApplicableList for record keeping

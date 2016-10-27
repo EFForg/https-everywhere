@@ -2,19 +2,20 @@
 	For problematic rules, see Check_Point-problematic.xml.
 
 
-	Nonfunctional subdomains:
+	Nonfunctional hosts in *checkpoint.com:
 
 		- rus *
 		- strong01
 		- track
+		- partners.us
 
 	* Refused
 
 
-	Problematic subdomains:
+	Problematic hosts in *checkpoint.com:
 
 		- ^ ¹
-		- blog ² 
+		- blog ²
 		- forums ³
 		- media ¹
 		- supportcontent ¹
@@ -41,12 +42,16 @@
 
 	Mixed content:
 
-		- css on search.us from download.zonealarm.com ¹
+		- css, on:
+
+			- search.us from download.zonealarm.com ¹
+			- www from cdnjs.cloudflare.com *
 
 		- Images, on:
 
-			- store from sc1 *
+			- store, www from sc1 *
 			- search.us from download.zonealarm.com ¹
+			- www from cdnjs.cloudflare.com *
 
 	¹ Not secured by us <= mismatched
 	* Secured by us
@@ -74,7 +79,6 @@
 	<!--	Complications:
 				-->
 	<target host="checkpoint.com" />
-	<target host="media.checkpoint.com" />
 
 		<!--	Avoid broken MCB:
 						-->
@@ -97,14 +101,12 @@
 	<!--securecookie host="^(forums|supportcenter|usercenter)\.checkpoint\.com$" name="^saplb_\*$" /-->
 	<!--securecookie host="^usercenter\.checkpoint\.com$" name="^servicerequestcreatecookie$" /-->
 
-	<securecookie host="^.+\.checkpoint\.com$" name=".+" />
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host=".+\.checkpoint\.com$" name="." />
 
 
 	<rule from="^http://checkpoint\.com/"
 		to="https://www.checkpoint.com/" />
-
-	<rule from="^http://media\.checkpoint\.com/"
-		to="https://a248.e.akamai.net/f/248/1/1/media.checkpoint.com/" />
 
 	<rule from="^http:"
 		to="https:" />

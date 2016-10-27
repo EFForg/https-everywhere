@@ -1,75 +1,89 @@
 <!--
+	For rules causing false/broken MCB, see gravity.com-falsemixed.xml.
+
 	For problematic rules, see Gravity-mismatches.xml.
 
 
-	blog.gravity.com is handled in WordPress-blogs.xml.
+	Other Gravity rulesets:
+
+		- GrvCDN.com.xml
 
 
 	CDN buckets:
 
 		- cdn.insights.gravity.com.edgesuite.net
 		- rma-api.gravity.com.edgesuite.net
-		- i.api.grvcdn.com.edgesuite.net
-		- b.grvcdn.com.edgesuite.net
-		- i.grvcdn.com.edgesuite.net
 
 
-	Nonfunctional domains:
+	Nonfunctional hosts in *gravity.com:
 
-		- graph.gravity.com	(refused)
+		- blog ʳ
+
+	ʳ Refused
 
 
-	Problematic domains:
+	Problematic hosts in *gravity.com:
 
-		- gravity.com subdomains:
-
-			- ^		(cert only matches www)
-			- blog		(wordpress)
-			- insights	(mismatched, CN: analytics.gravity.com)
-			- cdn.insights *
-			- rma-api *
-			- www		(expired 2013-02-02)
-
-		- grvcdn.com subdomains:
-
-			- i.api *
-			- b *
-			- i *
+		- cdn.insights *
+		- rma-api *
+		- status ᵐ
+		- www ˣ
 
 	* Akamai
+	ᵐ Mismatched
+	ˣ Mixed css
 
 
-	Fully covered domains:
+	Mixed content:
 
-		- gravity.com subdomains:
+		- css, on:
 
-			- rma-api	(→ akamai)
+			- www from fonts.googleapis.com ˢ
+			- www from $self ˢ
 
-		- grvcdn.com subdomains:
+		- Images, on:
 
-			- b	(→ b-ssl)
-			- b-ssl
+			- www from dsex26io62rpn.cloudfront.net ˢ
+			- www from $self ˢ
+
+		- favicon on www from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
 
 -->
-<ruleset name="Gravity (partial)">
+<ruleset name="Gravity.com (partial)">
 
-	<target host="*.gravity.com" />
-	<target host="*.grvcdn.com" />
+	<!--	Direct rewrites:
+				-->
+	<!--target host="gravity.com" /-->
+	<target host="analytics.gravity.com" />
+	<target host="api.gravity.com" />
+	<target host="insights.gravity.com" />
+	<target host="support.gravity.com" />
+	<!--target host="www.gravity.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="blog.gravity.com" /-->
+	<!--target host="status.gravity.com" /-->
 
 
-	<securecookie host="^(?:analytics)?\.gravity\.com$" name=".+" />
+	<securecookie host="." name="." />
 
 
-	<rule from="^http://(?:api\.gravity|i\.api\.grvcdn)\.com/"
-		to="https://api.gravity.com/" />
+	<!--rule from="^http://blog\.gravity\.com/"
+		to="https://www.gravity.com/blog/" /-->
 
-	<rule from="^http://rma-api\.gravity\.com/"
-		to="https://a248.e.akamai.net/f/1015/4323/4m/rma-api.gravity.com/" />
+		<!--	(?!$) 404s:
+					-->
+		<!--exclusion pattern="^http://blog\.gravity\.com/(?!$)" /-->
 
-	<rule from="^http://(?:analytic|insight)s\.gravity\.com/"
-		to="https://analytics.gravity.com/" />
+			<!--	+ve:
+					-->
+			<!--test url="http://blog.gravity.com/?" /-->
+			<!--test url="http://blog.gravity.com/index.htm" /-->
 
-	<rule from="^http://b(?:-ssl)?\.grvcdn\.com/"
-		to="https://b-ssl.grvcdn.com/" />
+	<rule from="^http:"
+		to="https:" />
 
 </ruleset>
