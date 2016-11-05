@@ -2,6 +2,7 @@
 	Nonfunctional hosts in *youku.com:
 
 		- (www.)? ¹
+		- actives ¹
 		- static.atm ¹
 		- auto ¹
 		- baby ¹
@@ -29,7 +30,6 @@
 		- tds.ott ¹
 		- share ¹
 		- sports
-		- static ¹
 		- tech ¹
 		- travel
 		- tv ¹
@@ -41,62 +41,17 @@
 		- zy
 
 	¹ Refused
-	³ Dropped
+	² Dropped
 	³ Plaintext reply
-
-
-	Problematic hosts in *youku.com:
-
-		- login *
-		- passport ˣ
-
-	* Protocol-relative inclusions of static.ykimg.com
-	ˣ Mixed css
-
-
-	Insecure cookies are set for these domains:
-
-		- .youku.com
-
-
-	Mixed content:
-
-		- css on passport from static.youku.com ʳ
-
-	ʳ Unsecurable <= refused
-
 -->
-<ruleset name="Youku.com (partial)" platform="mixedcontent">
 
-	<!--	Direct rewrites:
-				-->
+<ruleset name="Youku.com (partial)">
+
+	<target host="cloud.youku.com" />
 	<target host="login.youku.com" />
 	<target host="passport.youku.com" />
+	<target host="static.youku.com" />
 
-	<!--	Complications:
-				-->
-	<target host="static.ykimg.com" />
-
-		<exclusion pattern="^http://static\.ykimg\.com/" />
-
-			<!--	+ve:
-					-->
-			<test url="http://static.ykimg.com/yk/lib/css/youku.17b39556b5.css" />
-
-
-	<!--	Not secured by server:
-					-->
-	<!--securecookie name="^\.youku\.com$" host="^ykss$" /-->
-
-
-	<!--	Protocol-relative includes on login:
-							-->
-	<rule from="^https://static\.ykimg\.com/"
-		to="http://static.ykimg.com/" downgrade="1" />
-
-		<test url="https://static.ykimg.com/yk/passport/css/login_page.ee46495e24.css" />
-
-	<rule from="^http:"
-		to="https:" />
+	<rule from="^http:" to="https:" />
 
 </ruleset>
