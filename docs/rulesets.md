@@ -1,3 +1,5 @@
+## HTTPS Everywhere Rulesets
+
 This page describes how to write rulesets for [HTTPS Everywhere](https://eff.org/https-everywhere), a browser extension that switches sites over from HTTP to HTTPS automatically. HTTPS Everywhere comes with [thousands](http://www.eff.org/https-everywhere/atlas/) of rulesets that tell HTTPS Everywhere which sites it should switch to HTTPS and how. If there is a site that offers HTTPS and is not handled by the extension, this guide will explain how to add that site.
 
 #### [Rulesets](#rulesets)
