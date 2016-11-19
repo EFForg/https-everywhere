@@ -1,6 +1,19 @@
 HTTPS Everywhere [![Build Status](https://travis-ci.org/EFForg/https-everywhere.svg?branch=master)](https://travis-ci.org/EFForg/https-everywhere)
 ================
 
+Reproducing the Build
+---------------------
+
+Instead of modifying your own system, you may find it easiest to install docker to perform the building and testing steps outlined below from the same reproducible environment used by Travis CI.
+
+Based on the current `test/travis.sh`, you can build a docker image with `docker build -t httpse .` from the cloned `https-everywhere` directory.
+
+Then
+
+    docker run --interactive --tty --volume=$(pwd):/httpseverywhere --workdir=/httpseverywhere httpse
+
+from the cloned `https-everywhere` directory will get you an interactive terminal into the docker reproducible environment, ready and waiting for you to perform any of the steps listed below for building and testing HTTPS Everywhere.
+
 Getting Started
 ---------------
 
