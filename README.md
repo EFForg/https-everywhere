@@ -54,9 +54,9 @@ Important directories you might want to know about
     src/chrome/content        | Firefox JavaScript and XUL code
     src/chrome/content/code   |
 
-    src/chrome/content/rules  The rulesets live here
+    src/chrome/content/rules  The rulesets (for all browsers) live here
 
-    test/                     The tests live here
+    test/                     The tests (for all browsers) live here
 
 Hacking on the Source Code
 --------------------------
