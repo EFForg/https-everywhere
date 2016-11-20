@@ -1,0 +1,35 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)cachefly.com	(302 to http)
+		- blog.cachefly.com	(shows blank page; expired, self-signed, CN: offsite.cachefly.com)
+
+-->
+<ruleset name="CacheFly (partial)">
+
+	<target host="portal.cachefly.com" />
+	<target host="*.cachefly.net" />
+		<!--
+			Breaks speed test.
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-September/001291.html
+													-->
+		<exclusion pattern="^http://cachefly\.cachefly\.net/(?:speedtest/|.+\.test)" />
+		<!--
+			https://trac.torproject.org/projects/tor/ticket/7585
+
+			Breaks captcha:
+					-->
+		<exclusion pattern="^http://topix\.cachefly\.net" />
+
+
+	<securecookie host="^portal\.cachefly\.com$" name=".+" />
+
+
+	<rule from="^http://portal\.cachefly\.com/"
+		to="https://portal.cachefly.com/" />
+
+	<rule from="^http://(?:\d\.)?([^@:/\.]+)\.cachefly\.net/"
+		to="https://$1.cachefly.net/" />
+
+</ruleset>

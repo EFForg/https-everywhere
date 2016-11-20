@@ -1,0 +1,164 @@
+<!--
+	Other Masaryk University rulesets:
+
+		- CERIT.cz.xml
+		- CERIT-SC.cz.xml
+		- Odevzdej.cz.xml
+		- PravyDiplom.cz.xml
+		- Repozitar.cz.xml
+
+
+	Nonfunctional subdomains:
+	
+		- 95 ¹
+		- patat06 ²
+		- science ³
+		- (www.)veda ³
+		- www.video ⁴
+		
+	¹ Shows webserver.ics; mismatched, CN: webserver.ics.muni.cz
+	² Shows marach.ics; mismatched, CN: www.cerit.cz
+	³ Shows morwen2.rect; mismatched, CN: morwen2.rect.muni.cz
+	⁴ Redirects to idp2.ics, valid cert
+
+
+	Problematic subdomains:
+
+		- cic ¹
+		- www.cic ²
+		- www.czs ²
+		- discovery ³
+		- fi ⁴
+		- scb.ics ⁵
+		- (www.)info ²
+		- www.ois ²
+		- online ²
+		- morwen2.rect ⁶
+		- skm ⁷
+
+	¹ Works; mismatched, CN: online.muni.cz
+	³ Shows ezdroje; mismatched, CN: ezdroje.muni.cz
+	⁴ Cert only matches www.foo
+	⁵ Mismatched, CN: www.cerit.cz
+	² Shows morwen2.rect; mismatched, CN: morwen2.rect.muni.cz
+	⁶ Works; expired 2013-05-15, self-signed
+	⁷ Mismatched, CN: www.skm.muni.cz
+
+
+	Partially covered subdomains:
+
+		- isc *
+		- (www.)kite *
+
+	* $ redirects to http
+	
+	
+	Fully covered subdomains:
+
+		- (www.)
+		- (www.)czs	(www ^)
+		- discovery	( search.ebscohost.com)
+		- (www.)em2il
+		- ezdroje
+		- (www.)fi	(^ www)
+		- fadmin.fi
+
+		- (www.)ics
+		- dior.ics
+		- idp2.ics
+		- inet.dis.ics
+		- marach.ics
+		- scb.ics	( www.cerit.cz)
+		- webserver.ics
+
+		- inet
+		- (www.)info	( www.online)
+		- is
+		- knihovna
+		- knihovna-tst
+		- library
+		- mailman
+		- (www.)ois	(www ^)
+		- isois.ois
+		- (www.)online	(^ www)
+		- (www.)skm	(^ www)
+		- intranet.skm
+
+
+	Observed cookie domains:
+
+		- cic
+		- czs 
+		- em2il
+		- www.em2il
+		- idp2.ics
+		- is
+		- kite
+		- www.kite
+		- isois.ois
+		- www.online
+		- intranet.skm
+		- www.veda
+		- www.video
+		- www
+
+-->
+<ruleset name="Muni.cz (partial)">
+
+	<target host="muni.cz" />
+	<target host="*.muni.cz" />
+		<!--exclusion pattern="^http://(95|(www\.)?cic|patat06|morwen2\.rect|(www\.)?veda|www\.video)\.muni\.cz/" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(isc|kite)\.muni\.cz/+($|\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://isc\.muni\.cz/+(?!\w+\.css|favicon\.(?:ico|png)|images/)" />
+		<exclusion pattern="^http://(?:www\.)?kite\.muni\.cz/+(?!css/|favicon\.ico|img/|online-application/public/login(?:$|[?/]))" />
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^idp2\.ics\.muni\.cz$" name="^(JSESSIONID|_idp_authn_lc_key)$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^(cic|czs|www\.(online|veda))\.muni\.cz$" name="^[\da-f]{32}$" /-->
+	<!--securecookie host="^inet\.(dis\.ics\.)?muni\.cz$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^is\.muni\.cz$" name="^issession$" /-->
+	<!--securecookie host="^(www\.)?kite\.muni\.cz$" name="^(Kite_lang|PHPSESSID)$" /-->
+	<!--securecookie host="^isois\.ois\.muni\.cz$" name="^(PHPSESSID_ISOIS|lang)$" /-->
+	<!--securecookie host="^((www\.)?em2il|intranet\.skm)\.muni\.cz$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^www\.video\.muni\.cz$" name="^_shibstate_[\da-f]{8}$" /-->
+	<!--securecookie host="^www\.muni\.cz$" name="^w3mu\.(global|prev-page)$" /-->
+
+	<securecookie host="^(?:czs|(?:www\.)?em2il|inet\.dis\.ics|inet|is|isois\.ois|www\.online|intranet\.skm|www)\.muni\.cz$" name=".+" />
+
+
+	<rule from="^http://((?:(?:www\.)?em2il|ezdroje|fadmin\.fi|(?:(?:dior|inet\.dis|idp2|marach|webserver|www)\.)?ics|inet|isc?|(?:www\.)?kite|knihovna|knihovna-tst|library|mailman|isois\.ois|intranet\.skm|www)\.)?muni\.cz/"
+		to="https://$1muni.cz/" />
+
+	<rule from="^http://(?:www\.)?(cz|oi)s\.muni\.cz/"
+		to="https://$1s.muni.cz/" />
+
+	<!--	Redirect keeps path but not args:
+							-->
+	<rule from="^http://discovery\.muni\.cz/+([^?]).*"
+		to="https://search.ebscohost.com/login.aspx?authtype=cookie,ip,guest&amp;profile=eds&amp;groupid=infolib&amp;custid=s8431878$1" />
+
+	<rule from="^http://(?:www\.)?(fi|online|skm)\.muni\.cz/"
+		to="https://www.$1.muni.cz/" />
+
+	<!--	Redirect drops path but not args:
+						-->
+	<rule from="^http://scb\.ics\.muni\.cz/[^?]*"
+		to="https://www.cerit.cz/cs/cerit-sc/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://(?:www\.)?info\.muni\.cz/+"
+		to="https://www.online.muni.cz/" />
+
+</ruleset>

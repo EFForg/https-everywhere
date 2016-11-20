@@ -1,0 +1,29 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ^	(404; mismatched, CN: google.com)
+		- www	(refused)
+
+-->
+<ruleset name="NetSeer">
+
+	<target host="*.netseer.com" />
+
+
+	<!--	Wildcard cookies set by tracking beacons:
+								-->
+	<securecookie host="^\.netseer\.com$" name="^netseer_v3_(?:gp|vi)$" />
+	<securecookie host="^pixel\.netseer\.com$" name=".+" />
+
+
+	<!--	Tracking beacon.	-->
+	<rule from="^http://(cmi|pixel)\.netseer\.com/"
+		to="https://$1.netseer.com/" />
+
+	<!--	- Cert only matches (www.)leadback
+		- Data appear identical
+				-->
+	<rule from="^http://(?:cl|contextlinks|leadback|media|staging)\.netseer\.com/"
+		to="https://leadback.netseer.com/" />
+
+</ruleset>

@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/the.longaccess.com/
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- stage ²
+		- the ¹
+
+	¹ Refused
+	² Works, revoked
+
+
+	These altnames don't exist:
+
+		- api.longaccess.com
+
+-->
+<ruleset name="Long Access.com (partial)">
+
+	<target host="longaccess.com" />
+	<target host="*.longaccess.com" />
+		<!--exclusion pattern="^http://stage\.longaccess\.com/" /-->
+		<!--
+			Avoid user-visible paths:
+							-->
+		<!--exclusion pattern="^http://the\.longaccess\.com/+($|\?|blog/rss\.xml|(developers/)?index\.html)" /-->
+		<!--exclusion pattern="^http://the\.longaccess\.com/+(?!assets/|blog/2\d{3}/\d\d/\d\d/[\w-]+/\w+\.(jpe?|pn)g)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(stage|www)\.longaccess\.com$" name="^csrftoken$" /-->
+
+	<securecookie host="^www\.longaccess\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?longaccess\.com/"
+		to="https://www.longaccess.com/" />
+
+	<rule from="^http://the\.longaccess\.com/(?=assets/|blog/2\d{3}/\d\d/\d\d/[\w-]+/\w+\.(?:jpe?|pn)g)"
+		to="https://s3.amazonaws.com/the.longaccess.com/" />
+
+
+
+</ruleset>

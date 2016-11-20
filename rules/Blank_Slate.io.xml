@@ -1,0 +1,40 @@
+<!--
+	^:  Server sends no certificate chain, see https://whatsmychaincert.com
+	www: Mismatched
+
+
+	These altnames don't exist:
+
+		- api.blankslate.io
+
+
+	Insecure cookies are set for these hosts:
+
+		- blankslate.io
+
+-->
+<ruleset name="Blank Slate.io" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="blankslate.io" />
+
+	<!--	Complications:
+				-->
+	<target host="www.blankslate.io" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^blankslate\.io$" name="^(blankslatefirstime|laravel_session)$" /-->
+
+	<securecookie host="^blankslate\.io$" name=".+" />
+
+
+	<rule from="^http://www\.blankslate\.io/"
+		to="https://blankslate.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

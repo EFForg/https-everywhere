@@ -1,0 +1,173 @@
+<!--
+	Other Tufts University rulesets:
+
+		- Floating_Hospital.org.xml
+		- Tufts_Giving.org.xml
+		- Tufts_Medical_Center.org.xml
+
+
+	Nonfunctional subdomains:
+
+		- (www.) ¹
+		- as ²
+		- gs.as ²
+		- campusmaps ¹
+		- enews ¹
+		- engineering ²
+		- events ¹
+		- giving ¹
+		- gradstudy ²
+		- go ¹
+		- hr ¹
+		- support.hsl ³
+		- infoboard ⁴
+		- (www.)nutrition ⁴
+		- socialmedia ¹
+		- tuftsjournal ⁵
+		- lb-infoboard-prod.uit ⁴
+		- uss ⁴
+		- viceprovost ¹
+		- webcomm ¹
+
+	¹ Refused
+	² Shows ase; mismatched, CN: ase.tufts.edu
+	³ Shows www.library; mismatched, CN: www.library.tufts.edu
+	⁴ Data differs from http
+	⁵ http reply
+
+
+	Problematic subdomains:
+
+		- admissions ¹
+		- medical.alumni ²
+		- directory ³
+		- md ⁴
+		- publichealth ⁴
+		- researchguides.library ⁵
+		- sackler ⁴
+		- uit ⁶
+		- whitepages ⁷
+
+	¹ ocsp failure
+	² Refused, destination supports tls
+	³ Mismatched, CN: whitepages.tufts.edu
+	⁴ Works; mismatched, CN: medicine.tufts.edu
+	⁵ Mismatched, CN: *.libguides.com
+	⁶ Refused; destination supports tls, but redirect is unpredictable
+	⁷ Mixed css from $self
+
+
+	Fully covered subdomains:
+
+		- medical.alumni	(→ medical)
+		- ase
+		- exchange
+		- it
+		- library
+		- illiad.library
+		- www.library
+		- m
+		- medicine
+		- webapps.moit
+		- now
+		- sites
+		- trunk
+		- ests01.uit
+		- infoboard-updates.uit
+		- isis.uit
+		- wikis.uit
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- ase ²
+		- exchange ³
+		- m ²
+		- md ⁴
+		- medicine ²
+		- webapps.moit ²
+		- publichealth ⁴
+		- sackler ⁴
+		- trunk ²
+		- infoboard-updates.uit ²
+		- lb-infoboard-prod.uit ⁵
+		- isis.uit ²
+		- wikis.uit ⁶
+
+	¹ Not secured by us <= accounting for possible use on unsecurable domains
+	² Secured by us <= not secured by server
+	³ Some secured by server, the rest by us
+	⁴ Not secured by us <= cert mismatched
+	⁵ Not secured by us <= tls unsupported
+	⁶ Secured by server
+
+
+	Mixed content:
+
+		- css on whitepages from $self ¹
+
+		- Images, on:
+
+			- www.library from $self ¹
+			- medicine from assets.umb.edu ²
+			- now from distilleryimage\d.s3.amazonaws.com ¹
+			- sites from $self ¹
+			- whitepages from $self ¹
+
+		- Web bugs on sites from chat.zoho.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Tufts.edu (partial)">
+
+	<target host="*.tufts.edu" />
+		<!--exclusion pattern="^http://(admissions|as|gs\.as|campusmaps|enews|engineering|events|giving|go|gradstudy|hr|support\.hsl|md|(www\.)?nutrition|publichealth|sackler|socialmedia|tuftsjournal|lb-infoboard-prod\.uit|uss|viceprovost|webcomm|www)\.tufts\.edu/" /-->
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:directory|whitepages)\.tufts\.edu/+(?!css/|favicon\.ico|images/|main\.css)" />
+		
+
+
+	<!--	Secured by server:
+					-->
+	<!--securecookie host="^exchange\.tufts\.edu$" name="^OutlookSession$" /-->
+	<!--securecookie host="^wikis\.uit\.tufts\.edu$" name="^JSESSIONID$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<!--securecookie host="^\.tufts\.edu$" name="^(F5-ISISPA-PROD|III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^ase\.tufts\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^exchange\.tufts\.edu$" name="^BIGipServertftmexarray01\.tufts\.ad\.tufts\.edu$" /-->
+	<!--securecookie host="^library\.tufts\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^m\.tufts\.edu$" name="^([\da-f]{32}|deviceClassification|visitID)$" /-->
+	<!--securecookie host="^(md|medicine|publichealth|sackler)\.tufts\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^webapps\.moit\.tufts\.edu$" name="^(ASP\.NET_SessionId|TMOSBrowservalidation|testCookie)$" /-->
+	<!--securecookie host="^trunk\.tufts\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^infoboard-updates\.uit\.tufts\.edu$" name="^outages$" /-->
+	<!--securecookie host="^isis\.uit\.tufts\.edu$" name="^F5-PAPRD-COOKIE$" /-->
+
+	<securecookie host="^(?:ase|exchange|library|m|medicine|webapps\.moit|trunk|(?:infoboard-updates|isis)\.uit)\.tufts\.edu$" name=".+" />
+
+
+	<!--	Redirect preserves path and args:
+							-->
+	<rule from="^http://medical\.alumni\.tufts\.edu/+"
+		to="https://medicine.tufts.edu/Who-We-Are/Alumnia/" />
+
+	<rule from="^http://(ase|exchange|it|(?:illiad\.|www\.)?library|m|medicine|webapps\.moit|now|sites|trunk|(?:ests01|infoboard-updates|isis|wikis)\.uit|whitepages)\.tufts\.edu/"
+		to="https://$1.tufts.edu/" />
+
+	<rule from="^http://directory\.tufts\.edu/"
+		to="https://whitepages.tufts.edu/" />
+
+	<rule from="^http://researchguides\.library\.tufts\.edu/(?=css\d*/|data/|favicon\.ico|images/|include/|js\d*/)"
+		to="https://libguides.com/" />
+
+	<rule from="^http://uit\.tufts\.edu/+\??$"
+		to="https://it.tufts.edu/" />
+
+</ruleset>

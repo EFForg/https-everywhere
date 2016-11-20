@@ -1,0 +1,90 @@
+<!--
+	For other Other DuoDecad IT Services coverage, see dditservices.com.xml.
+
+
+	Nonfunctional hosts in *livejasmin.com:
+
+		- (www.)? ᵈ
+		- modelcenter ʳ
+		- registration ᵈ
+		- wiki ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .livejasmin.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="LiveJasmin (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="new.livejasmin.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://new\.livejasmin\.com/(?:$|[a-z]{2}/(?:$|contact-us$|policy$)|redirect/[\w-]+$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://new\.livejasmin\.com/(?!/*(?:favicon\.ico|[a-z]{2}/auth/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://new.livejasmin.com/en/" />
+			<test url="http://new.livejasmin.com/en/contact-us" />
+			<test url="http://new.livejasmin.com/en/policy" />
+			<test url="http://new.livejasmin.com/en/redirect/awempire" />
+			<test url="http://new.livejasmin.com/nl/" />
+			<test url="http://new.livejasmin.com/nl/contact-us" />
+			<test url="http://new.livejasmin.com/nl/policy" />
+			<test url="http://new.livejasmin.com/nl/policy" />
+			<test url="http://new.livejasmin.com/nl/redirect/model-center-login" />
+			<test url="http://new.livejasmin.com/pt/" />
+			<test url="http://new.livejasmin.com/pt/contact-us" />
+
+			<!--	-ve:
+					-->
+			<test url="http://new.livejasmin.com/en/auth/credit" />
+			<test url="http://new.livejasmin.com/en/auth/forgot-password" />
+			<test url="http://new.livejasmin.com/en/auth/login" />
+			<test url="http://new.livejasmin.com/favicon.ico" />
+			<test url="http://new.livejasmin.com/nl/auth/forgot-password" />
+			<test url="http://new.livejasmin.com/nl/auth/login" />
+			<test url="http://new.livejasmin.com/nl/auth/sign-up" />
+			<test url="http://new.livejasmin.com/pt/auth/forgot-password" />
+			<test url="http://new.livejasmin.com/pt/auth/login" />
+			<test url="http://new.livejasmin.com/pt/auth/sign-up" />
+
+	<!--	Complications:
+				-->
+	<target host="*.new.livejasmincdn.com" />
+
+		<exclusion pattern="^http://(?!static\d\.new\.livejasmincdn\.com/).+\.new\.livejasmincdn\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.new.livejasmincdn.com/" />
+			<test url="http://exists.not.new.livejasmincdn.com/" />
+			<test url="http://really.not.new.livejasmincdn.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.livejasmin\.com$" name="^(?:category|jasminsite|listPageIds|session|tppId)$" /-->
+
+
+	<rule from="^http://static\d\.new\.livejasmincdn\.com/"
+		to="https://new.livejasmin.com/" />
+
+		<test url="http://static1.new.livejasmincdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

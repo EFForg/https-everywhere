@@ -1,0 +1,56 @@
+<!--
+	For rules causing false/broken MCB, see Retriever-Info.com-falsemixed.xml.
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- web.retriever-info.com
+		- www.retriever-info.com
+		- .www.retriever-info.com
+
+
+	Mixed content:
+
+		- css on www from $self *
+		- Images on www from $self *
+		- Bug on www from tr.prospecteye.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Retriever-Info.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="retriever-info.com" />
+	<target host="web.retriever-info.com" />
+	<target host="www.retriever-info.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://www\.retriever-info\.com/+(?!favicon\.ico|go/|wp-content/)" />
+
+			<test url="http://www.retriever-info.com/en/aktuellt/" />
+			<test url="http://www.retriever-info.com/en/index.php" />
+			<test url="http://www.retriever-info.com/en/kontakta-oss/" />
+			<test url="http://www.retriever-info.com/en/om-oss/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.retriever-info.com/favicon.ico" />
+			<test url="http://www.retriever-info.com/go/?a=41959&amp;d=084062201501290022800000000245362&amp;p=653971&amp;s=84062&amp;sa=2024698&amp;x=cf7619b3bf7e213f70374e5dc30bdad2" />
+			<test url="http://www.retriever-info.com/wp-content/themes/wordpress-bootstrap-v2.1/img/retriever_logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^w(?:eb|ww)\.retriever-info\.com$" name="^language$" /-->
+	<!--securecookie host="^\.www\.retriever-info\.com$" name="^qtrans_cookie_test$" /-->
+
+	<securecookie host="^web\.retriever-info\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

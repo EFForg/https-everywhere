@@ -1,0 +1,63 @@
+<!--
+	For other Rackspace coverage, see Rackspace.xml.
+
+
+	Problematic hosts in *rackspacecloud.com:
+
+		- cdn.cloudfiles ¹
+		- cdn[12].cloudfiles ¹
+		- www ²
+
+	¹ Akamai
+	² Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- manage.rackspacecloud.com
+
+-->
+<ruleset name="Rackspace Cloud.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="rackspacecloud.com" />
+	<target host="manage.rackspacecloud.com" />
+
+	<!--	Complications:
+				-->
+	<target host="*.cdn.cloudfiles.rackspacecloud.com" />
+	<target host="*.cdn1.cloudfiles.rackspacecloud.com" />
+	<target host="*.cdn2.cloudfiles.rackspacecloud.com" />
+
+	<target host="www.rackspacecloud.com" />
+
+		<test url="http://c0001113.cdn2.cloudfiles.rackspacecloud.com/sheer-linen-gallery-5.jpg" />
+		<test url="http://c0006681.cdn.cloudfiles.rackspacecloud.com/mosso_logo.png" />
+		<test url="http://c0021744.cdn1.cloudfiles.rackspacecloud.com/sites/tvnewscheck/images/global/bullet-round-small.png" />
+		<test url="http://c0021744.cdn1.cloudfiles.rackspacecloud.com/sites/tvnewscheck/images/global/bullet-round-small.png" />
+		<test url="http://c1775272.cdn.cloudfiles.rackspacecloud.com/regular/f103334_1275423063.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^manage\.rackspacecloud\.com$" name="^X-Mapping-php\w+$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://www\.rackspacecloud\.com/"
+		to="https://rackspacecloud.com/" />
+
+	<rule from="^http://(\w+)\.cdn\.cloudfiles\.rackspacecloud\.com/"
+		to="https://$1.ssl.cf0.rackcdn.com/" />
+
+	<!--	Needs more tests:
+					-->
+	<rule from="^http://(\w+)\.cdn(1|2)\.cloudfiles\.rackspacecloud\.com/"
+		to="https://$1.ssl.cf$2.rackcdn.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

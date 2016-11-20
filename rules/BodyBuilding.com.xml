@@ -1,0 +1,73 @@
+<!--
+	CDN buckets:
+
+		- d1qro4ibhgqt8c.cloudfront.net 
+			- imagecdn.bodybuilding.com
+
+	bodybuilding.com.112.2o7.net
+
+
+	Nonfunctional domains:
+
+		- bodyspace.bodybuilding.com *
+		- forum.bodybuilding.com
+		- my.bodybuilding.com		(times out)
+
+	* Redirects to http
+
+
+	Partially covered bodybuilding.com subdomains:
+
+		- (www.) *
+		- r[eosu] *
+		- s[abcegikmnortvz] *
+		- t[chjltwz] *
+		- u[ayz] *
+		- v[cgnu] *
+		- ws *
+		- ye *
+		- z[aw] *
+
+	*  Some (most?) pages redirect to http
+
+
+	Fully covered domains:
+
+		- common.bbcomcdn.com
+		- store.bbcomcdn.com
+
+		- bodybuilding.com subdomains:
+
+			- ad
+			- assets
+			- imagecdn	(→ d1qro4ibhgqt8c.cloudfront.net)
+			- n		(→ bodybuilding-com.112.2o7.net)
+			- s
+
+-->
+<ruleset name="BodyBuilding.com (partial)">
+
+	<target host="*.bbcomcdn.com" />
+	<target host="*.bodybuilding.com" />
+		<exclusion pattern="^http://my\.bodybuilding\.com/" />
+
+
+	<securecookie host="^ad\.bodybuilding\.com$" name=".+" />
+
+
+	<rule from="^http://(common|store)\.bbcomcdn\.com/"
+		to="https://$1.bbcomcdn.com/" />
+
+	<rule from="^http://(\w{2}\.|www\.)?bodybuilding\.com/store/(account/|commerce/cart\.jsp|orderstatus\.htm)"
+		to="https://$1bodybuilding.com/store/$2" />
+
+	<rule from="^http://(ad|assets|s)\.bodybuilding\.com/"
+		to="https://$1.bodybuilding.com/" />
+
+	<rule from="^http://imagecdn\.bodybuilding\.com/"
+		to="https://d1qro4ibhgqt8c.cloudfront.net/" />
+
+	<rule from="^http://n\.bodybuilding\.com/"
+		to="https://bodybuilding-com.112.2o7.net/" />
+
+</ruleset>

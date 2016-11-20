@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional domains:
+
+		- (www.)futurequest.net
+		- (www.)merchantquest.net	("SSL Access Not Active")
+		- (www.)visionquest.net
+
+
+	Problematic domains:
+
+		- (www.)questadmin.net		(shows secure, mismatched)
+
+-->
+<ruleset name="FutureQuest (partial)">
+
+	<target host="*.futurequest.net" />
+	<target host="www.service.futurequest.net" />
+	<target host="questadmin.net" />
+	<target host="*.questadmin.net" />
+
+
+	<securecookie host="^(?:www\.)?se(?:cur|rvic)e\.(?:futurequest|questadmin)\.net$" name=".+" />
+
+
+	<rule from="^http://(www\.)?se(cur|rvic)e\.futurequest\.net/"
+		to="https://$1se$2e.futurequest.net/" />
+
+	<rule from="^http://(?:www\.)?questadmin\.net/(?:$|\?.*)"
+		to="https://secure.questadmin.net/cgi-ssl/mgr.py/login" />
+
+	<rule from="^http://secure\.questadmin\.net/"
+		to="https://secure.questadmin.net/" />
+
+</ruleset>

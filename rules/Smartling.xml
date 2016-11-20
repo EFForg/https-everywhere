@@ -1,0 +1,42 @@
+<!--
+	For problematic rules, see Smartling-problematic.xml.
+
+
+	Problematic domains:
+
+		- (www.)smartlingsource.com	(works, expired, mismatched, CN: www.mostapp.com)
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- es *
+
+	* Redirects to http
+
+
+	Fully covered subdomains:
+
+		- cdn01
+
+
+	cdn01 sets _smtLastVisitedHost wildcard cookie
+	on whichever domain it is loaded from.
+
+-->
+<ruleset name="Smartling (partial)">
+
+	<target host="smartling.com" />
+	<target host="*.smartling.com" />
+
+
+	<securecookie host="^dashboard\.smartling\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?smartling\.com/static/"
+		to="https://s.smartling.com/static/" />
+
+	<rule from="^http://(cdn01|(?:s-)?dashboard|s)\.smartling\.com/"
+		to="https://$1.smartling.com/" />
+
+</ruleset>

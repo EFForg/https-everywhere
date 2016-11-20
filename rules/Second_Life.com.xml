@@ -1,0 +1,137 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/images.wiki.secondlife.com/ | d1yjxggot69855.cloudfront.net
+		- static.search.secondlife.com.s3.amazonaws.com
+		- lecs-static-secondlife-com.s3.amazonaws.com
+
+		- d378iqxsyg0s3u.cloudfront.net
+
+			- download.cloud
+
+
+	Nonfunctional subdomains:
+
+		- maps ²
+
+	² Refused
+
+
+	Problematic hosts in *secondlife.com:
+
+		- download.cloud *
+
+	* Cloudfront
+
+
+	Partially covered subdomains:
+
+		- wiki *
+
+	* Some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- blogs
+		- download.cloud	(→ d378iqxsyg0s3u.cloudfront.net)
+		- community
+		- id
+		- jira
+		- join
+		- land
+		- lists
+		- marketplace
+		- search
+		- slm-assets[0-3]
+		- support
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .secondlife.com
+		- id.secondlife.com
+		- jira.secondlife.com
+		- search.secondlife.com
+		- support.secondlife.com
+		- wiki.secondlife.com
+
+
+	Mixed content:
+
+		- favicon on search from search from static.search.secondlife.com.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Second Life.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="secondlife.com" />
+	<target host="blogs.secondlife.com" />
+	<target host="community.secondlife.com" />
+	<target host="id.secondlife.com" />
+	<target host="jira.secondlife.com" />
+	<target host="join.secondlife.com" />
+	<target host="land.secondlife.com" />
+	<target host="lists.secondlife.com" />
+	<target host="marketplace.secondlife.com" />
+	<target host="search.secondlife.com" />
+	<target host="slm-assets0.secondlife.com" />
+	<target host="slm-assets1.secondlife.com" />
+	<target host="slm-assets2.secondlife.com" />
+	<target host="slm-assets3.secondlife.com" />
+	<target host="support.secondlife.com" />
+	<target host="wiki.secondlife.com" />
+	<target host="www.secondlife.com" />
+
+	<!--	Complications:
+				-->
+	<target host="download.cloud.secondlife.com" />
+
+		<!--	Redirect to http:
+						-->
+		<!--exclusion pattern="^http://wiki\.secondlife\.com/+(wiki/Issue_tracker($|\?))" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://wiki\.secondlife\.com/+(?!favicon\.ico|static/|w/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://wiki.secondlife.com/wiki/Clothing_Tutorials" />
+			<test url="http://wiki.secondlife.com/wiki/Community_Resources_Portal" />
+			<test url="http://wiki.secondlife.com/wiki/Live_Data_Feeds" />
+			<test url="http://wiki.secondlife.com/wiki/Second_Life_Periodicals" />
+			<test url="http://wiki.secondlife.com/wiki/Second_Life_Work/FAQs" />
+
+			<!--	-ve:
+					-->
+			<test url="http://wiki.secondlife.com/favicon.ico" />
+			<test url="http://wiki.secondlife.com/static/2007/img/somerights20.png" />
+			<test url="http://wiki.secondlife.com/w/bullet.gif" />
+			<test url="http://wiki.secondlife.com/w/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=monobook" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.secondlife\.com" name="^(VISITORID|locale)$" /-->
+	<!--securecookie host="^community\.secondlife\.com" name="^LithiumVisitor$" /-->
+	<!--securecookie host="^id\.secondlife\.com$" name="^agni_sl_session_id$" /-->
+	<!--securecookie host="^jira\.secondlife\.com$" name="^atlassian\.xsrf\.token$" /-->
+	<!--securecookie host="^search\.secondlife\.com$" name="^session$" /-->
+	<!--securecookie host="^support\.secondlife\.com$" name="^(hwlb-session-id|support_sessionid)$" /-->
+	<!--securecookie host="^wiki\.secondlife\.com$" name="^AWSELB$" /-->
+
+	<securecookie host="^(?:(?:community|id|jira|search|support|www)?\.)?secondlife\.com$" name=".+" />
+
+
+	<rule from="^http://download\.cloud\.secondlife\.com/"
+		to="https://d378iqxsyg0s3u.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

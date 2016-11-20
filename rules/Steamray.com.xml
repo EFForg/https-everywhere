@@ -1,0 +1,61 @@
+<!--
+	Ads.
+
+	For other FriendFinder coverage, see FriendFinder.xml.
+
+
+	(www.): refused
+
+
+	Problematic subdomains:
+
+		- graphics ¹
+		- webmaster ²
+
+	¹ Works; mismatched, CN: *.securedataimages.com
+	² works; mismatched, CN: affiliates.streamray.com
+
+
+	Fully covered subdomains:
+
+		- affiliates
+		- graphics	(→ secureimage.securedataimages.com)
+		- studios
+		- webmaster	(→ affiliates)
+
+
+	These altnames don't exist:
+
+		- www.affiliates.streamray.com
+
+-->
+<ruleset name="Streamray.com (partial)">
+
+	<target host="affiliates.streamray.com" />
+	<target host="studios.streamray.com" />
+
+	<!--	Complications:
+				-->
+	<target host="graphics.streamray.com" />
+	<target host="webmaster.streamray.com" />
+
+		<!--exclusion pattern="^http://www\." /-->
+
+
+	<securecookie host="^\.steamray\.com$" name="^(?:AB_TRACKING|cams_tr|click_id_time|HISTORY|IP_COUNTRY|LOCATION_FROM_IP|REFERRAL_URL)$" />
+	<!--
+		Could we secure either of these safely?
+							-->
+	<!--securecookie host="^\.steamray\.com$" name="^(cams_who|v_hash)$" /-->
+
+
+	<rule from="^http://graphics\.streamray\.com/"
+		to="https://secureimage.securedataimages.com/" />
+
+	<rule from="^http://webmaster\.streamray\.com/"
+		to="https://affiliates.streamray.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

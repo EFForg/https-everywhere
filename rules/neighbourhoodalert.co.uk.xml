@@ -1,0 +1,50 @@
+<!--
+	Nonfunctional hosts in *neighbourhoodalert.co.uk:
+
+		- derbyshirebusiness ᶠ
+
+	ᶠ Handshake fails
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- business-registration.neighbourhoodalert.co.uk
+		- member-admin.neighbourhoodalert.co.uk
+		- member-registration.neighbourhoodalert.co.uk
+		- socialsense.neighbourhoodalert.co.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Neighbourhood Alert.co.uk (partial)">
+
+	<target host="neighbourhoodalert.co.uk" />
+	<target host="api.neighbourhoodalert.co.uk" />
+	<target host="business-registration.neighbourhoodalert.co.uk" />
+	<target host="member-admin.neighbourhoodalert.co.uk" />
+	<target host="member-registration.neighbourhoodalert.co.uk" />
+	<target host="socialsense.neighbourhoodalert.co.uk" />
+	<target host="twitter.neighbourhoodalert.co.uk" />
+	<target host="www.neighbourhoodalert.co.uk" />
+
+		<!--	$ 403s, so:
+					-->
+		<test url="http://api.neighbourhoodalert.co.uk/api/RSS" />
+
+		<!--	$ 500s, so:
+					-->
+		<test url="http://twitter.neighbourhoodalert.co.uk/MessageIcons.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:business|member)-registration|member-admin)\.neighbourhoodalert\.co\.uk$" name="^association_idx_cookie$" /-->
+	<!--securecookie host="^socialsense\.neighbourhoodalert\.co\.uk$" name="^(?:\.ASPXAUTH|__RequestVerificationToken|ASP\.NET_SessionId)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

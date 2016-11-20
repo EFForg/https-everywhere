@@ -1,0 +1,70 @@
+<!--
+	Other Wistia rulesets:
+
+		- Wistia.net.xml
+
+
+	CDN buckets:
+
+		- 50grove-cdn.wistia.com.cdngc.net
+
+		- wistia.sslcs.cdngc.net
+
+		- wpc.4ab5.edgecastcdn.net/??4AB5/
+
+			- embed-ssl
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(redirects to http, valid cert)
+		- prime-cdn	(pantherssl)
+
+
+	Problematic subdomains:
+
+		- 50grove	(pages redirect to http, resources don't; mismatched, CN: *.heroku.com)
+		- embed		(404; mismatched, CN: edgecastcdn.net)
+		- 50grove-cdn	(403; mismatched, CN: ssl.cdngc.net)
+
+
+	Fully covered domains:
+
+		- wistia.com subdomains:
+
+			- embed-ssl
+			- grove-cdn	(→ wistia.sslcs.cdngc.net)
+			- prime
+
+-->
+<ruleset name="Wistia.com (partial)">
+
+	<target host="app.wistia.com" />
+	<target host="buy.wistia.com" />
+	<target host="embed.wistia.com" />
+	<target host="embed-ssl.wistia.com" />
+	<target host="fast.wistia.com" />
+	<!--target host="grove-cdn.wistia.com" /-->
+	<target host="home.wistia.com" />
+	<target host="prime.wistia.com" />
+	<target host="rs-static.wistia.com" />
+	<target host="secure.wistia.com" />
+	<target host="static.wistia.com" />
+		<exclusion pattern="^http://home\.wistia\.com/(?!images/)" />
+
+			<test url="http://home.wistia.com//" />
+
+
+	<!--	Set by login page on secure:
+						-->
+	<!--securecookie host="^\.wistia\.com$" name="^_w_session$" /-->
+	<securecookie host="^(?:embed-ssl|prime)\.wistia\.com$" name=".+" />
+
+
+	<rule from="^http://embed\.wistia\.com/"
+		to="https://wistia.sslcs.cdngc.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,32 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- cdn1	(works; self-signed, CN: hkolam)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- cdn1	(→ www)
+
+-->
+<ruleset name="FIGUE.com (partial)">
+
+	<target host="figue.com" />
+	<target host="*.figue.com" />
+		<!--exclusion pattern="^http://(?:www\.)?figue\.com/(?!(?:about|customer|looks|travel-blog)(?:$|[?/])|favicon\.ico|media/|skin/)" /-->
+		<exclusion pattern="^http://(?:www\.)?figue\.com/+(?:$|\?)" />
+
+
+	<securecookie host="^\.figue\.com$" name="^__utm\w$" />
+
+
+	<rule from="^http://(?:cdn1\.|www\.)?figue\.com/"
+		to="https://www.figue.com/" />
+
+</ruleset>

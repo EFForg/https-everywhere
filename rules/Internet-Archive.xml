@@ -1,0 +1,67 @@
+<!--
+	Internet Archive
+
+	Other Internet Archive rulesets:
+
+		- Archive.org_Way_Back_Machine.xml
+		- Archive-It.org.xml
+		- Open_Library.org.xml
+
+
+	Nonfunctional subdomains:
+
+		- pgdp01.us ²
+
+	² Refused
+
+
+	Problematic subdomains:
+
+		- blog.openlibrary *
+
+	* Works, cert only matches *.archive.org
+
+
+	Fully covered hosts in *archive.org:
+
+		- (www.)?
+		- blog
+		- blog.openlibrary	(→ blog.openlibrary.org)
+		- *.us
+
+-->
+<ruleset name="Archive.org">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="archive.org" />
+	<target host="blog.archive.org" />
+	<target host="*.us.archive.org" />
+	<target host="www.archive.org" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.openlibrary.archive.org" />
+
+		<exclusion pattern="^http://(?:graphite|pgdp01|s3|lending)\.us\.archive\.org/" />
+
+			<test url="http://graphite.us.archive.org/" />
+			<test url="http://pgdp01.us.archive.org/" />
+			<test url="http://s3.us.archive.org/" />
+			<test url="http://lending.us.archive.org/" />
+
+		<!--	The rule does not handle web anyway:
+
+		<exclusion pattern="^http://web\.archive\.org/" /-->
+
+
+	<securecookie host="^\.archive\.org$" name=".+" />
+
+
+	<rule from="^http://blog\.openlibrary\.archive\.org/"
+		to="https://blog.openlibrary.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

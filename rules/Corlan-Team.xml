@@ -1,0 +1,50 @@
+<!--
+	Corlan Team
+
+
+	Problematic hosts in *corelan.be:
+
+		- redmine ʳ
+
+	ʳ Refused, preemptable redirect
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- corelan.be
+		- www.corelan.be
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Corlan.be">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="corelan.be" />
+	<target host="www.corelan.be" />
+
+	<!--	Complications:
+				-->
+	<target host="redmine.corelan.be" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?corelan\.be$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://redmine\.corelan\.be/+"
+		to="https://github.com/corelan" />
+
+		<test url="http://redmine.corelan.be/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

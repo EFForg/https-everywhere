@@ -1,0 +1,40 @@
+<!--
+	University of Hertfordshire
+
+
+	Nonfunctional subdomains:
+
+		- (www.)?
+		- perseus
+		- sitem
+		- (www.)?voyager
+
+
+	Problematic subdomains:
+
+		- go ¹
+		- studynet[12] ²
+
+	¹ Cert only matches www-apps
+	² Cert only matches www.foo
+
+-->
+<ruleset name="Herts.ac.uk (partial)">
+
+	<target host="*.herts.ac.uk" />
+
+
+	<!--	Redirects like so:
+					-->
+	<rule from="^http://go\.herts\.ac\.uk/(?=\w)"
+		to="https://web-apps.herts.ac.uk/go/?go=" />
+
+	<rule from="^http://(?:www\.)?studynet(1|2)?\.herts\.ac\.uk/"
+		to="https://www.studynet$1.herts.ac.uk/" />
+
+	<!--	//studentrecord. doesn't exist.
+						-->
+	<rule from="^http://(www\.studentrecord|web-apps)\.herts\.ac\.uk/"
+		to="https://$1.herts.ac.uk/" />
+
+</ruleset>

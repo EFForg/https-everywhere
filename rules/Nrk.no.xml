@@ -1,0 +1,77 @@
+<!--
+	Norsk rikskringkasting AS
+
+	Other Norsk rikskringkasting rulesets:
+
+		- NRKbeta.no.xml
+
+
+	Nonfunctional hosts in *nrk.no:
+
+		- blogg ʳ
+		- pressbilder ʳ
+		- psfil.radio ²
+		- sprak ʰ
+		- trafikk ᵈ
+		- cdn.trafikk ᵈ
+		- psfil.tv ²
+
+	ᵈ Dropped
+	ʰ WP Engine / redirects to http
+	ʳ Refused
+	² 504, Akamai
+
+
+	Problematic hosts in *nrk.no:
+
+		- arkivpublisering ᵐ
+		- v8.psapi ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- arkivpublisering.nrk.no
+		- .arkivpublisering.nrk.no
+		- snutt.nrk.no
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on arkivpublisering from www.nrk.no ˢ
+		- Bugs on radio, tv from nrk.tns-cs.net ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="NRK.no (partial)">
+
+	<target host="nrk.no" />
+	<target host="fil.nrk.no" />
+	<target host="gfx.nrk.no" />
+	<target host="resultater.nrk.no" />
+	<target host="snutt.nrk.no" />
+	<target host="tv.nrk.no" />
+	<target host="www.nrk.no" />
+
+		<test url="http://fil.nrk.no/contentfile/web/files/nrk.no/_forsiden/images/Ytring_198px.jpg" />
+		<test url="http://gfx.nrk.no/WhohBNhFz937GN8XC1BIZgnXdlPeINQw35mJgM1IDEDA" />
+		<test url="http://tv.nrk.no/pakke73/2.4.75.0a/content/images/icons/heading-arrow.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^arkivpublisering\.nrk\.no$" name="^sails\.sid$" /-->
+	<!--securecookie host="^\.arkivpublisering\.nrk\.no$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^snutt\.nrk\.no$" name="^BIGipServer" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

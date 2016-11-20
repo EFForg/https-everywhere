@@ -1,0 +1,58 @@
+<!--
+	Other SurveyMonkey rulesets:
+
+		- Wufoo.xml
+		- Zoomerang.xml
+
+
+	CDN buckets:
+
+		- surveymonkey.force.com
+
+			- help.surveymonkey.com
+
+
+	Problematic surveymonkey.com subdomains:
+
+		- ^		(cert only matches www)
+		- help		(mismatched, CN: slotmatching4.salesforce.com)
+		- smaudience	(redirects to app-d.marketo.com; mismatched, CN: *.marketo.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(Home_Landing.aspx redirects to http)
+
+-->
+<ruleset name="SurveyMonkey (buggy)" default_off="breaks surveys!">
+
+	<target host="surveymonkey.com" />
+	<target host="*.surveymonkey.com" />
+		<exclusion pattern="^http://www\.surveymonkey\.com/Home_Landing\.aspx" />
+	<target host="research.net" />
+	<target host="*.research.net" />
+
+
+	<securecookie host="^\.research\.net$" name=".+" />
+	<securecookie host="^(?:.*\.)?surveymonkey\.com$" name=".+" />
+
+
+	<rule from="^http://(secure\.|www\.)?research\.net/"
+		to="https://$1research.net/" />
+
+	<rule from="^http://surveymonkey\.com/"
+		to="https://www.surveymonkey.com/" />
+
+	<rule from="^http://(admin|aide|a[jy]uda|blog|contribute|da|de|fr|es|fi|go|help2|hilfe|it|jp|ko|nl|no|pt|ru|ruhelp|secure|sv|www|zh)\.surveymonkey\.com/"
+		to="https://$1.surveymonkey.com/" />
+
+	<rule from="^http://help\.surveymonkey\.com/"
+		to="https://surveymonkey.secure.force.com/" />
+
+	<rule from="^http://smaudience\.surveymonkey\.com/(?:\?.*)?$"
+		to="https://www.surveymonkey.com/mp/audience/" />
+
+	<rule from="^http://smaudience\.surveymonkey\.com/(cs|image|j|r)s/"
+		to="https://na-d.market.com/$1s/" />
+
+</ruleset>

@@ -1,0 +1,36 @@
+<!--
+	Nonfunctional sudomains:
+
+		- cdn[1-4]	(cert: api.infoq.com, self-signed; shows that domain's
+				data; redirects to http when rewritten to https://www)
+
+-->
+<ruleset name="InfoQ (partial)">
+
+	<target host="infoq.com" />
+	<target host="www.infoq.com" />
+
+
+	<!--	These paths redirect to http:
+
+			- $
+			- article/
+			- br/news/
+			- cn/development/$
+			- cn/news/
+			- resource/
+			- styles/
+			- webwork/
+
+		These paths don't:
+
+			- br$
+			- br/$
+			- cn/$
+			- jp/$
+			- resource/
+					-->
+	<rule from="^http://(www\.)?infoq\.com/((?:br|cn|jp)/?$|resource/)"
+		to="https://$1infoq.com/$2" />
+
+</ruleset>

@@ -1,0 +1,92 @@
+<!--
+vx28.ucsf.edu
+
+	For problematic rules, see University_of_California_San_Francisco-problematic.xml.
+
+
+	CDN buckets:
+
+		- ucsf.force.com
+
+			- brightideas.ucsf.edu
+
+
+
+	Nonfunctional subdomains:
+
+		- access	(reset)
+		- brightideas	(redirects to http; mismatched, CN: slotmatching14.salesforce.com)
+		- calendar *
+		- directory *
+		- osl		(shows campuslifeservices)
+		- synapse	(no https)
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches *.ucsf.edu)
+		- campuslifeservices	($ redirects to http, some pages work; self-signed, CN: Default)
+		- www.career		(mismatched, CN: sis-blade03.ucsf.edu)
+		- postdocs *
+		- support *
+		- www.warnme		(cert only ,atches ^warnme)
+
+	* Works; mismatched, CN: acquia-sites.com
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- asuc
+		- (www.)career		(www → ^)
+		- dp
+		- edtech
+		- finaid
+		- graduate
+		- gsa
+		- insideguide
+		- interprofessional
+		- isso
+		- it
+		- learn|makeagift
+		- myaccess
+		- oir
+		- registrar
+		- saa
+		- sac
+		- sds
+		- ssmb
+		- studenthealth
+		- (www.)warnme		(www → ^)
+
+-->
+<ruleset name="University of California, San Francisco (partial)">
+
+	<target host="ucsf.edu" />
+	<target host="*.ucsf.edu" />
+
+
+	<securecookie host="^(?:\.asuc|\.career|dp|\.edtech|\.finaid|\.graduate|\.gsa|\.insideguide|\.interprofessional|\.isso|\.?it|\.learn|makeagift|\.oir|\.registrar|\.?saa|\.sac|\.sds|\.ssmb|studenthealth|www)\.ucsf\.edu$" name=".+" />
+
+
+	<rule from="^http://ucsf\.edu/"
+		to="https://www.ucsf.edu/" />
+
+	<!--	These paths redirect to http first:
+
+			- $
+			- site/PageServer$
+			- site/PageServer?pagename=page_not_found
+						-->
+	<rule from="^http://makeagift\.ucsf\.edu/(?:site/PageServer)?(?:\?pagename=page_not_found)?$"
+		to="https://makeagift.ucsf.edu/site/PageServer?pagename=A1_API_GeneralGivingForm" />
+
+	<rule from="^http://(asuc|career|dp|edtech|finaid|graduate|gsa|insideguide|interprofessional|isso|it|learn|makeagift|myaccess|oir|registrar|saa|sac|sds|ssmb|studenthealth|warnme|www)\.ucsf\.edu/"
+		to="https://$1.ucsf.edu/" />
+
+	<rule from="^http://www\.(career|warnme)\.ucsf\.edu/"
+		to="https://$1.ucsf.edu/" />
+
+</ruleset>

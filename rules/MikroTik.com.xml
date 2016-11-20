@@ -1,0 +1,83 @@
+<!--
+	CDN buckets:
+
+		- d355q2xs8kb5oj.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- mikrotik.com subdomains:
+
+			- forum *
+			- mum	(redirects to www; mismatched, CN: www.mikrotik.com)
+			- wiki *
+
+		- i.mt.lv	(http reply)
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- download2 ¹
+		- training ²
+
+	¹ Cloudfront
+	² Dropped
+
+-->
+<ruleset name="MikroTik.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="mikrotik.com" />
+	<target host="www.mikrotik.com" />
+
+	<!--	Complications:
+				-->
+	<target host="download2.mikrotik.com" />
+	<!--target host="training.mikrotik.com" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.mikrotik\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.mikrotik\.com/+(?!client(?:$|[?/])|css/|favicon\.ico|img/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.mikrotik.com/buy" />
+			<test url="http://www.mikrotik.com/consultants" />
+			<test url="http://www.mikrotik.com/documentation" />
+			<test url="http://www.mikrotik.com/download" />
+			<test url="http://www.mikrotik.com/mfm" />
+			<test url="http://www.mikrotik.com/support.html" />
+			<test url="http://www.mikrotik.com/training/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.mikrotik.com/client/" />
+			<test url="http://www.mikrotik.com/css/front.css" />
+			<test url="http://www.mikrotik.com/favicon.ico" />
+			<test url="http://www.mikrotik.com/img/header/gogo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.mikrotik\.com$" name="^PHPSESSID$" /-->
+
+	<!--securecookie host="^www\.mikrotik\.com$" name=".+" /-->
+
+
+	<rule from="^http://download2\.mikrotik\.com/"
+		to="https://d355q2xs8kb5oj.cloudfront.net/" />
+
+	<!--rule from="^http://training\.mikrotik\.com/.*"
+		to="https://www.mikrotik.com/training/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

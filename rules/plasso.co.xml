@@ -1,0 +1,41 @@
+<!--
+	Insecure cookies are set for these hosts: ᶜ
+
+		- plasso.co
+		- www.plasso.co
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	STS header includes includeSubdomains
+	for ^, www
+
+-->
+<ruleset name="Plasso.co">
+
+	<target host="plasso.co" />
+	<target host="*.plasso.co" />
+
+		<!--	includeSubdomains applies to one level only, so:
+									-->
+		<exclusion pattern="^http://(?:[^./]+\.){2,}plasso\.co/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://this.host.plasso.co/" />
+			<test url="http://exists.not.plasso.co/" />
+
+		<test url="http://www.plasso.co/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?plasso\.co$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

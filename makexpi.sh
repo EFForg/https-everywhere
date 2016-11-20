@@ -55,12 +55,12 @@ if [ -n "$1" ] && [ "$2" != "--no-recurse" ] ; then
 fi
 
 # Clean up obsolete ruleset databases, just in case they still exist.
-rm -f src/chrome/content/rules/default.rulesets src/defaults/rulesets.sqlite
+rm -f rules/default.rulesets src/defaults/rulesets.sqlite
 
 # Only generate the ruleset database if any rulesets have changed. Tried
 # implementing this with make, but make is very slow with 15k+ input files.
 needs_update() {
-  find src/chrome/content/rules/ -newer $RULESETS_JSON |\
+  find rules/ -newer $RULESETS_JSON |\
     grep -q .
 }
 if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
@@ -69,7 +69,7 @@ if [ ! -f "$RULESETS_JSON" ] || needs_update ; then
   # at once allows the IO subsystem to seek more efficiently.
   for firstchar in `echo {a..z} {A..Z} {0..9}` ; do
     # Those cover everything but it wouldn't matter if they didn't
-    nohup cat src/chrome/content/rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
+    nohup cat rules/"$firstchar"*.xml >/dev/null 2>/dev/null &
   done
   echo "Generating ruleset DB"
   python2.7 ./utils/make-json.py
@@ -127,8 +127,8 @@ rm -f "${XPI_NAME}-amo.xpi"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-eff.xpi" -x ".build_exclusions" "pkg/xpi-eff"
 python2.7 utils/create_xpi.py -n "${XPI_NAME}-amo.xpi" -x ".build_exclusions" "pkg/xpi-amo"
 
-echo >&2 "Total included rules: `find src/chrome/content/rules -name "*.xml" | wc -l`"
-echo >&2 "Rules disabled by default: `find src/chrome/content/rules -name "*.xml" | xargs grep -F default_off | wc -l`"
+echo >&2 "Total included rules: `find rules -name "*.xml" | wc -l`"
+echo >&2 "Rules disabled by default: `find rules -name "*.xml" | xargs grep -F default_off | wc -l`"
 echo >&2 "Created ${XPI_NAME}-eff.xpi and ${XPI_NAME}-amo.xpi"
 
 bash utils/android-push.sh "$XPI_NAME-eff.xpi"

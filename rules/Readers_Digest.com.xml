@@ -1,0 +1,43 @@
+<!--
+	CDN buckets:
+
+		- wac.8167.edgecastcdn.net/??8167/
+
+			- media.rd.com
+			- www.rd.com
+
+
+	Nonfunctional domains:
+
+		- rd.com
+		- media.rd.com	(404; mismatched, CN: 
+		- www.rd.com	(redirects to http, valid cert)
+
+
+	Fully covered domains:
+
+		- legacy.rd.com
+		- somtrkpix.rd.com
+		- order.readersdigest.com
+		- us.readersdigest.com
+
+-->
+<ruleset name="Readers Digest.com (partial)">
+
+	<target host="*.rd.com" />
+	<target host="*.readersdigest.com" />
+
+
+	<securecookie host="^\.rd\.com$" name="^s_\w+$" />
+	<securecookie host="^legacy\.rd\.com$" name=".+" />
+	<securecookie host="^\.readersdigest\.com$" name="^(?:CLEQ_\w|mbox|s_\w+)$" />
+	<securecookie host="^(?:order|\.?us)\.readersdigest\.com$" name=".+" />
+
+
+	<rule from="^http://(legacy|somtrkpix)\.rd\.com/"
+		to="https://$1.rd.com/" />
+
+	<rule from="^http://(order|us)\.readersdigest\.com/"
+		to="https://$1.readersdigest.com/" />
+
+</ruleset>

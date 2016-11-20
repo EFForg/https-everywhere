@@ -1,0 +1,53 @@
+<!--
+	Other GitLab rulesets:
+	
+		- GitLab.io.xml
+
+
+	Nonfuctional hosts in *gitlab.com:
+
+		- doc *
+
+	* Refused
+
+
+	Problematic hosts in *gitlab.com:
+
+		- feedback *
+
+	* Tor users blocked by CloudFlare settings
+
+
+	Insecure cookies are set for these hosts and domains:
+
+		- gitlab.com
+		- .gitlab.com
+
+
+	These altnames don't exist:
+
+		- www.about.gitlab.com
+
+-->
+<ruleset name="GitLab.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="gitlab.com" />
+	<target host="about.gitlab.com" />
+	<target host="www.gitlab.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^gitlab\.com$" name="^request_method$" /-->
+	<!--securecookie host="^\.gitlab\.com$" name="^^(__cfduid|cf_clearance)$$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

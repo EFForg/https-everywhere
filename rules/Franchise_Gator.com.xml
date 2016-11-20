@@ -1,0 +1,58 @@
+<!--
+	^franchisegator.com: Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.franchisegator.com
+
+-->
+<ruleset name="Franchise Gator.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.franchisegator.com" />
+
+	<!--	Complications:
+				-->
+	<target host="franchisegator.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.franchisegator\.com/$" /-->
+		<!--
+			404:
+				-->
+		<!--exclusion pattern="^http://www\.franchisegator\.com/(assets|images)/.+\.(cf|ic)\.[\dA-Za-z]{10}\.css" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?franchisegator\.com/+(?!dashboard(?:$|[?/])|tracker\.php)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://franchisegator.com/articles/" />
+			<test url="http://www.franchisegator.com/industries/" />
+			<test url="http://www.franchisegator.com/international/" />
+			<test url="http://www.franchisegator.com/lists/" />
+			<test url="http://www.franchisegator.com/videos/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.franchisegator.com/tracker.php?action=visit&amp;g_id=" />
+			<test url="http://franchisegator.com/dashboard/" />
+			<test url="http://www.franchisegator.com/dashboard/forgot_password.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.franchisegator\.com$" name="^PHPSESSID$" /-->
+
+
+	<rule from="^http://franchisegator\.com/"
+		to="https://www.franchisegator.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

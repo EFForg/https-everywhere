@@ -1,0 +1,50 @@
+<!--
+	Nonfunctional hosts in *rootless.org:
+
+		- imcjapan ᵃ
+		- ns ᵃ
+
+	ᵃ Shows ^rootless.org
+
+
+	NB: server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="rootless.org (partial)" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="rootless.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.rootless.org" />
+
+		<!--	404:
+				-->
+		<!--exclusion pattern="^http://(?:www\.)?rootless\.org/(?:botiboti/$|canary/$|goloh/$|kakekomi/$|mailform$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?rootless\.org/(?!/*(?:$|\?|webmail(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://rootless.org/botiboti/" />
+			<test url="http://rootless.org/canary/" />
+			<test url="http://rootless.org/goloh/" />
+			<test url="http://www.rootless.org/kakekomi/member.html" />
+			<test url="http://www.rootless.org/mailform" />
+
+			<!--	-ve:
+					-->
+			<test url="http://rootless.org/webmail/src/login.php" />
+
+
+	<rule from="^http://www\.rootless\.org/"
+		to="https://rootless.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

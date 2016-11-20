@@ -1,0 +1,93 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/static.piriform.com/
+
+		- d1k4dgg08m176h.cloudfront.net
+
+			- download
+
+		- d3sg17i8imdw59.cloudfront.net
+
+			- static
+
+		- d3sg17i8imdw59.cloudfront.net
+
+			- s1.pir.fm
+
+
+	Nonfunctional domains:
+
+		- forum.piriform.com	(http reply)
+
+
+	Problematic domains:
+
+		- s1.pir.fm ¹
+
+		- piriform.com subdomains:
+
+			- ^		(cert only matches www)
+			- download ¹
+			- support	(zendesk)
+			- static ¹
+
+	¹ cloudfront
+
+
+	Partially covered domains:
+
+		- support.piriform.com	(→ piriform.zendesk.com)
+
+
+	Fully covered domains:
+
+		- s1.pir.fm	( → d3sg17i8imdw59.cloudfront.net)
+
+		- piriform.com subdomains:
+
+			- (www.)	(^ → www)
+			- download	(→ d1k4dgg08m176h.cloudfront.net)
+			- secure
+			- static	(→ d3sg17i8imdw59.cloudfront.net)
+
+
+	Mixed content:
+
+		- Images on www, from:
+
+			- static *
+			- s1.pir.fm *
+
+	* Secured by us
+
+-->
+<ruleset name="Piriform (partial)">
+
+	<target host="s1.pir.fm" />
+	<target host="piriform.com" />
+	<target host="*.piriform.com" />
+
+
+	<securecookie host="^\.secure\.piriform\.com$" name=".+" />
+
+
+	<rule from="^http://s1\.pir\.fm/"
+		to="https://d3sg17i8imdw59.cloudfront.net/" />
+
+	<rule from="^http://(?:www\.)?piriform\.com/"
+		to="https://www.piriform.com/" />
+
+	<rule from="^http://download\.piriform\.com/"
+		to="https://d1k4dgg08m176h.cloudfront.net/" />
+
+	<rule from="^http://secure\.piriform\.com/"
+		to="https://secure.piriform.com/" />
+
+	<rule from="^http://static\.piriform\.com/"
+		to="https://d3sg17i8imdw59.cloudfront.net/" />
+
+	<rule from="^http://support\.piriform\.com/(?=generated/|images/|system/)"
+		to="https://piriform.zendesk.com/" />
+
+</ruleset>

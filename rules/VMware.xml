@@ -1,0 +1,140 @@
+<!--
+	info is handled in Eloqua-clients.xml.
+
+	Other VMware rulesets:
+
+		- VMware_Blogs.com.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/vmware-partnerpedia-production/product/NNNN/
+		- kb.vmware.com.edgesuite.net
+
+
+	Nonfunctional hosts:
+
+		- ir ¹
+		- kb ²
+		- nlblogs ³
+		- partnerlocator ⁴
+		- vcloud ⁵
+
+	¹ Shareholder
+	² 503, akamai
+	³ Refused
+	⁴ Salesforce
+	⁵ 504, Akamai
+
+
+	Problematic hosts:
+
+		- ^ ¹
+		- info ²
+		- learn ³
+		- store ⁴
+
+	¹ Refused
+	² Eloqua
+	³ Mismatch
+	⁴ Digital River
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .vmware.com
+		- developercenter.vmware.com
+		- blogs.vmware.com
+		- .info.vmware.com
+		- my.vmware.com
+		- mylearn.vmware.com
+		- store.vmware.com
+		- www.vmware.com
+
+
+	Mixed content:
+
+		- css on info from www.vmware.com *
+		- Images on blogs from download3.vmware.com *
+		- favicon on info from www.vmware.com *
+
+		- Bugs, on:
+
+			- blogs from leads.demandbase.com *
+			- blogs from www.demandbase.com *
+			- blogs from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="VMware.com (partial)">
+
+	<target host="vmware.com" />
+	<target host="*.vmware.com" />
+
+		<exclusion pattern="^http://(?:forum|info|ir|kb|learn|nlblogs|partnerlocator|vcloud)\.vmware\.com/" />
+
+			<test url="http://forum.vmware.com/" />
+			<test url="http://info.vmware.com/" />
+			<test url="http://ir.vmware.com/" />
+			<test url="http://kb.vmware.com/" />
+			<test url="http://learn.vmware.com/" />
+			<test url="http://nlblogs.vmware.com/" />
+			<test url="http://partnerlocator.vmware.com/" />
+			<test url="http://vcloud.vmware.com/" />
+
+		<exclusion pattern="^http://store\.vmware\.com/(?!DRHM/Storefront/Site/|favicon\.ico|promo/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://store.vmware.com/store/vmware/home" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.affiliateprogram" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.howtobuy" />
+			<test url="http://store.vmware.com/store/vmware/en_US/html/pbPage.newfaq" />
+
+			<!--	-ve:
+					-->
+			<test url="http://store.vmware.com/favicon.ico" />
+
+		<test url="http://campaign.vmware.com/" />
+		<test url="http://communities.vmware.com/" />
+		<test url="http://download3.vmware.com/" />
+		<test url="http://downloads.vmware.com/" />
+		<test url="http://my.vmware.com/" />
+		<test url="http://mylearn.vmware.com/" />
+		<test url="http://solutionexchange.vmware.com/" />
+		<test url="http://store.vmware.com/" />
+		<test url="http://www.vmware.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.vmware\.com$" name="^(JSESSIONID|dtCookie)$" /-->
+	<!--securecookie host="^developercenter\.vmware\.com$" name="^vdc-cookie$" /-->
+	<!--securecookie host="^blogs\.vmware\.com$" name="^blogs-prod-cookie2$" /-->
+	<!--securecookie host="^\.info\.vmware\.com$" name="^ELOQUA$" /-->
+	<!--securecookie host="^my\.vmware\.com$" name="^(COOKIE_SUPPORT|GUEST_LANGUAGE_ID|ObFormLoginCookie|myvmware-www)$" /-->
+	<!--securecookie host="^mylearn\.vmware\.com$" name="^(CFID|CFTOKEN|PORTAL_ALIAS|REGUI|cookie-myln|TS\d+)$" /-->
+	<!--securecookie host="^(mylearn|store)\.vmware\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^www\.vmware\.com$" name="^myvmware-wwwa-prod$" /-->
+
+	<!--	Observed cookie domains:
+
+			- ^campaign
+			- ^downloads
+			- ^solutionexchange
+					-->
+	<securecookie host="^(?!store\.)(?:.*\.)?vmware\.com$" name=".+" />
+
+
+	<!--	Redirect preserves path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://vmware\.com/+"
+		to="https://www.vmware.com/" />
+
+			<test url="http://vmware.com//go/partnercentral" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

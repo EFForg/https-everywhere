@@ -1,0 +1,45 @@
+<!--
+	Problematic subdomains:
+
+		- cdn4 *
+		- cdn[1-5] *
+
+	* Mismatched, CN: www.fontspring.com
+
+
+	Mixed content:
+
+		- Images on www from cdn\d? *
+
+	* Secured by us
+
+-->
+<ruleset name="Fontspring (partial)">
+
+	<target host="fontspring.com" />
+	<target host="*.fontspring.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.fontspring\.com/+((blog|fonts/[\w-]+|foundry/[\w-]+)($|\?)|ffdemo/css/)" /-->
+		<!--
+			Exceptions (5, 4, ...):
+						-->
+		<!--exclusion pattern="^http://www\.fontspring\.com/+(?!account($|[?/])|cache_assets/|favicon\.ico|fnt_imgs/|(fonts|fresh)/*($|\?)|poster_imgs/|presentation_20140401/|tools/)" /-->
+
+
+	<!--securecookie host="^\.fontspring.com$" name=".*" /-->
+
+
+	<!--	Redirects to http:
+					-->
+	<rule from="^http://www\.fontspring\.com/fonts/(?=$|\?)"
+		to="https://www.fontspring.com/fonts" />
+
+	<rule from="^http://(www\.)?fontspring\.com/(?=account(?:$|[?/])|cache_assets/|favicon\.ico|fnt_imgs/|(?:fonts|fresh)/*(?:$|\?)|poster_imgs/|presentation_20140401/|tools/)"
+		to="https://$1fontspring.com/" />
+
+	<rule from="^http://cdn\d\.fontspring\.com/"
+		to="https://www.fontspring.com/" />
+
+</ruleset>

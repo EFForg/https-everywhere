@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- clicktalecdn.sslcs.cdngc.net
+		- clicktale.pantherssl.com
+
+
+	Problematic domains:
+
+		- clicktale.com		(interrupted)
+		- cdn.clicktale.net	(403, mismatched, CN: ssl2.cdngc.net)
+		- s.clicktale.net	(403; mismatched, CN: ssl2.cdngc.net)
+
+-->
+<ruleset name="ClickTale">
+
+	<target host="clicktale.com" />
+	<target host="*.clicktale.com" />
+	<target host="*.clicktale.net" />
+
+
+	<securecookie host=".*\.clicktale\.(?:com|net)$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?clicktale\.com/"
+		to="https://www.clicktale.com/" />
+
+	<rule from="^http://((?:login|subs)\.app|blog)\.clicktale\.com/"
+		to="https://$1.clicktale.com/" />
+
+	<!--	- s:
+
+			- Tracking scripts included on 3rd-party websites
+			- Cert: ssl2.cdngc.net
+			- 403s
+		 	- Scripts 404 when rewritten to ^clicktale.net
+							-->
+	<rule from="^http://s\.clicktale\.net/"
+		to="https://clicktale.pantherssl.com/" />
+
+	<rule from="^http://cdn\.clicktale\.net/"
+		to="https://clicktalecdn.sslcs.cdngc.net/" />
+
+	<rule from="^http://www(07)?\.clicktale\.net/"
+		to="https://www$1.clicktale.net/" />
+
+</ruleset>

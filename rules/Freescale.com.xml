@@ -1,0 +1,111 @@
+<!--
+	Commit comment: https://trac.torproject.org/projects/tor/ticket/10821
+
+
+	CDN buckets:
+
+		- www.corporate-ir.net.edgesuite.net
+
+			- a121.g.akamai.net
+			- investors
+
+		- freescale.https.internapcdn.net
+
+			- cache
+			- cache-uat
+			- images
+			- styles
+
+		- freescale.https.internapcdn.net
+
+			- media
+
+
+	Problematic subdomains:
+
+		- cache *
+		- cache-uat *
+		- investors	(works, akamai)
+
+	* Paths are different
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+		- investors	(→ akamai)
+
+
+	Fully covered subdomains:
+
+		- cache
+		- cache-uat
+		- community
+		- apps.community
+		- community-cache
+		- community-cache-uat
+		- community-uat
+		- apps.community-uat
+		- fdc
+		- images
+		- images-uat
+		- styles
+		- styles-uat
+
+
+	Observed cookie domains:
+
+		- community
+		- community-uat
+		- community-cache
+		- community-cache-uat
+		- apps.community
+		- apps.community-uat
+		- fdc
+		- images
+		- images-uat
+		- styles
+		- styles-uat
+
+
+	Mixed content:
+
+		- Images on www from cache *
+
+	* Secured by us
+
+-->
+<ruleset name="Freescale.com (partial)">
+
+	<target host="apps.community.freescale.com" />
+	<target host="apps.community-uat.freescale.com" />
+	<target host="cache.freescale.com" />
+	<target host="cache-uat.freescale.com" />
+	<target host="community-cache.freescale.com" />
+	<target host="community-cache-uat.freescale.com" />
+	<target host="community.freescale.com" />
+	<target host="community-uat.freescale.com" />
+	<target host="fdc.freescale.com" />
+	<target host="freescale.com" />
+	<target host="images.freescale.com" />
+	<target host="images-uat.freescale.com" />
+	<target host="styles.freescale.com" />
+	<target host="styles-uat.freescale.com" />
+	<target host="www.freescale.com" />
+
+		<exclusion pattern="^http://(?:www\.)?freescale\.com/(?!favicon\.ico|files/|(?:idp|ruhp|security|webapp)(?:$|[?/])|js/|recommendation/|shared/)" />
+
+
+	<securecookie host="^(?!www\.).+\.freescale\.com$" name=".+" />
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://freescale\.com/"
+		to="https://www.freescale.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

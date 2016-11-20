@@ -1,0 +1,64 @@
+<!--
+	For problematic rules, see FedEx.com-problematic.xml.
+
+
+		- fedex.com.d2.sc.omtrdc.net 
+
+			- metrics
+
+
+	Problematic subdomains:
+
+		- metrics	(mismatched, CN: *.d2.sc.omtrdc.net)
+		- blog.van	(mismatched, CN: *.gridserver.com)
+		- news.van	(CN: Parallels Panel)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- m *
+		- wwwtest *
+
+	* Some pages redirect to http, others 404
+
+
+	Mixed content:
+
+		- css, on:
+
+			- news.van from news.van *
+			- news.van from www *
+
+		- Images, on:
+
+			- news.van from images *
+			- news.van from news.van *
+
+	* Secured by us
+
+-->
+<ruleset name="FedEx.com (partial)">
+
+	<target host="fedex.com" />
+	<target host="*.fedex.com" />
+		<exclusion pattern="^http://m\.fedex\.com/+(?!img/)" />
+		<exclusion pattern="^http://wwwtest\.fedex\.com/(?!css/|images/)" />
+
+
+	<securecookie host="^\.fedex\.com$" name="^s_\w+$" />
+
+
+	<!--	^ redirects to www over http
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?fedex\.com/(?=css/|images/|myprofile/)"
+		to="https://www.fedex.com/" />
+
+	<rule from="^http://(images|m|wwwtest)\.fedex\.com/"
+		to="https://$1.fedex.com/" />
+
+	<rule from="^http://metrics\.fedex\.com/"
+		to="https://fedex-com.d2.sc.omtrdc.net/" />
+
+</ruleset>

@@ -1,0 +1,107 @@
+<!--
+	Wokingham Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *wokingham.gov.uk:
+
+		- consultations ⁴
+
+	⁴ 400
+
+
+	Problematic hosts in *wokingham.gov.uk:
+
+		- childrenincarecouncil ᵐ
+		- fostering ᵐ
+		- info ᵐ
+		- wsh ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *wokingham.gov.uk:
+
+		- (www.)? ʰ
+		- directory ʰ
+
+	ʰ Some pags redirect to http
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- selfservice.wokingham.gov.uk
+		- www.wokingham.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Wokingham.gov.uk (partial)">
+
+	<target host="wokingham.gov.uk" />
+	<target host="booking.wokingham.gov.uk" />
+	<target host="buspass.wokingham.gov.uk" />
+	<target host="directory.wokingham.gov.uk" />
+	<target host="schoolsonline.wokingham.gov.uk" />
+	<target host="selfservice.wokingham.gov.uk" />
+	<target host="www.wokingham.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?wokingham\.gov\.uk/(?:$|a-to-z/$|contact-us/sign-up-manage-text-and-email-alerts/$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?wokingham\.gov\.uk/(?!/*(?:contact(?:-u)?s/*(?:$|\?)|[Ee]asy[Ss]ite[Ww]eb/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.wokingham.gov.uk/a-to-z/" />
+			<test url="http://www.wokingham.gov.uk/benefits/" />
+			<test url="http://www.wokingham.gov.uk/boroughnews" />
+			<test url="http://www.wokingham.gov.uk/communitytrigger" />
+			<test url="http://www.wokingham.gov.uk/contact-us/sign-up-manage-text-and-email-alerts/" />
+			<test url="http://www.wokingham.gov.uk/housing" />
+			<test url="http://www.wokingham.gov.uk/maps/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://wokingham.gov.uk/EasySiteWeb/EasySite/StyleData/Wokingham_Page_2014/CSS/EasySite_FF.css" />
+			<test url="http://www.wokingham.gov.uk/EasySiteWeb/style/faux/css/ux.net.css" />
+			<test url="http://www.wokingham.gov.uk/EasysiteWeb/getresource.axd?AssetID=365071&amp;type=full&amp;servicetype=Inline" />
+			<test url="http://www.wokingham.gov.uk/contacts/" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://directory\.wokingham\.gov\.uk/(?:$|kb5/wokingham/directory/home\.page)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://directory\.wokingham\.gov\.uk/(?!/*kb5/wokingham/directory/(?:assets/|sign_in\.page))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/app.proxy" />
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/home.page" />
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/whats_on.page" />
+
+			<!--	-ve:
+					-->
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/assets/css/print.min.css" />
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/assets/images/presence/close.png" />
+			<test url="http://directory.wokingham.gov.uk/kb5/wokingham/directory/sign_in.page" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^selfservice\.wokingham\.gov\.uk$" name="^anonprofile$" /-->
+	<!--securecookie host="^www\.wokingham\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!directory\.|www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

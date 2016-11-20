@@ -1,0 +1,115 @@
+<!--
+	Other Photobucket rulesets:
+
+		- Pbsrc.com.xml
+
+
+	CDN buckets:
+
+		- crtl.aimatch.com
+
+			- b.photobucket.com
+
+		- wpc.38F2.edgecastcdn.net
+		- wpc.3901.edgecastcdn.net
+		- wac.3B2E.edgecastcdn.net
+
+			- pic.pbsrc.com
+			- pic.photobucket.com
+
+		- wac.3B49.edgecastcdn.net
+
+			- static.pbsrc.com	
+
+		- cdn.photobucket.com.c.footprint.net
+
+			- img.photobucket.com
+
+
+	Nonfunctional hosts in *photobucket.com:
+
+		- ^ *
+		- s11.beta *
+		- smg.beta *
+		- img *
+		- s11 *
+		- s515 *
+		- s1218 *
+		- simg *
+		- support ³
+
+	* Times out
+	** 404, CN: edgecastcdn.net
+	³ Zendesk
+
+
+	Problematic hosts in *photobucket.com:
+
+		- beta **
+		- s619.beta **
+		- ox-d		(Mismatched
+		- pic
+
+	* CN: gp1.wac.edgecastcdn.net; 404
+	** Times out
+
+
+	Partially covered  hosts in *photobucket.com:
+
+		- s619.beta	(some paths redirect back)
+
+
+	Fully covered hosts in *photobucket.com:
+
+		- b
+		- beta			(→ secure-beta.photobucket.com)
+		- i\d+
+		- pic			(→ pbsrc.com)
+		- secure-beta
+
+
+	These altnames don't exist:
+
+		- www.b.photobucket.com
+
+
+	Insecure cookies are set for these domains:
+
+		- .photobucket.com
+
+-->
+<ruleset name="Photobucket.com (partial)">
+
+	<target host="*.photobucket.com" />
+
+		<exclusion pattern="^http://s\d+\.beta\.photobucket\.com/(?!action/|component/)" />
+		<exclusion pattern="^http://s\d+\.photobucket\.com/+(?!albums/w\d+/\w+/pbprofilepics/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://s176.photobucket.com/user/Lianne-photo/library/Antwerpen%202008" />
+
+		<test url="http://b.photobucket.com/" />
+		<test url="http://i1382.photobucket.com/albums/ah245/PhotobucketMKTG/WebSliders/SpringSavingsLanding.jpg~original" />
+		<test url="http://secure.photobucket.com/login" />
+		<test url="http://secure.photobucket.com/register" />
+
+
+	<!--	Not secured by server:
+					-->
+	<securecookie host="^\.photobucket\.com$" name="^(External|Hint|puid)$" />
+
+
+	<rule from="^http://s\d+\.beta\.photobucket\.com/"
+		to="https://secure-beta.photobucket.com/" />
+
+	<rule from="^http://pic\.photobucket\.com/"
+		to="https://pbsrc.com/" />
+
+	<rule from="^http://s\d+\.photobucket\.com/"
+		to="https://secure.photobucket.com/" />
+
+	<rule from="^http://(b|i\d+|secure|secure-beta)\.photobucket\.com/"
+		to="https://$1.photobucket.com/" />
+
+</ruleset>

@@ -1,0 +1,121 @@
+<!--
+	For rules that are on by default, see UBM.xml.
+
+
+	Nonfunctional:
+
+		- (www.)cloudconnectevent.com
+		- (www.)inforwarding.com
+		- acme.medialiveinternational.com
+		- (www.)nonwovens.com			(cert: *.risiinfo.com; shows that domain's data)
+		- (www.)oag-flights.com
+		- (static.|www.)routesonline.com
+		- (www.)ubm.com				(times out)
+		- (www.)ubmbuiltenvironment.com		(ssl_error_rx_record_too_long)
+		- (www.)ubmconferences.com		(times out)
+		- (www.)ubmcanon.com
+		- ubmconferences.com			(cert: directories.piers.com; redirects there)
+		- (www.)ubmmedica.com			(times out)
+		- (www.)ubmlive.com			(ditto)
+		- (www.)woodbiomass.com			(cert: *.risiinfo.com; shows that domain's data)
+
+-->
+<ruleset name="UBM (mismatches)" default_off="mismatch" platform="mixedcontent">
+
+	<!--	Cert: www.oag.com	-->
+	<target host="aircargoworld.com"/>
+	<target host="www.aircargoworld.com"/>
+	<!--	Cert: cms.informationweekanalytics.com	-->
+	<target host="pro.darkreading.com" />
+	<!--	Cert: deusm.com	-->
+	<target host="www.deusm.com" />
+	<!--	Cert: cms.informationweekanalytics.com	-->
+	<target host="drdobbs.com"/>
+	<target host="www.drdobbs.com"/>
+	<!--	Cert: cms.informationweekanalytics.com	-->
+	<target host="reports.informationweek.com"/>
+	<!--	Cert: cms.informationweekanalytics.com	-->
+	<target host="insurancetech.com" />
+	<target host="www.insurancetech.com" />
+	<!--	Cert: www.oag.com	-->
+	<target host="oagaviation.com"/>
+	<target host="www.oagaviation.com"/>
+	<!--	Ditto.	-->
+	<target host="oagcargo.com"/>
+	<target host="www.oagcargo.com"/>
+	<!--	Ditto.	-->
+	<target host="oagtravel.com"/>
+	<target host="www.oagtravel.com"/>
+	<!--	Ditto.	-->
+	<target host="ubmaviation.com"/>
+	<target host="www.ubmaviation.com"/>
+	<!--	Ditto.	-->
+	<target host="ubmaviationnews.com"/>
+	<target host="www.ubmaviationnews.com"/>
+	<!--	Cert: *.crn.com		-->
+	<target host="ubmchannel.com"/>
+	<target host="www.ubmchannel.com"/>
+	<!--	Cert: *.bluehost.com	-->
+	<target host="ubmelectronics.techinsights-marketing.com"/>
+	<target host="ubmelectronics.com"/>
+
+
+	<securecookie host="^pro\.darkreading\.com$" name=".*" />
+	<!--
+		www.deusm.com cookies are handled in DeusM.xml.
+								-->
+	<securecookie host="^www\.drdobbs\.com$" name=".*"/>
+	<securecookie host="^oagcargo\.com$" name=".*"/>
+	<securecookie host="^ubmaviationnews\.com$" name=".*"/>
+
+
+	<!--	!www doesn't work via https.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?aircargoworld\.com/"
+		to="https://www.aircargoworld.com/"/>
+
+	<rule from="^http://pro\.darkreading\.com/"
+		to="https://pro.darkreading.com/" />
+
+	<!--	- Cert doesn't match www
+		- !www 301s to www
+					-->
+	<rule from="^http://www\.deusm\.com/"
+		to="https://www.deusm.com/" />
+
+	<!--	!www redirects to www	-->
+	<rule from="^http://(?:www\.)?drdobbs\.com/"
+		to="https://www.drdobbs.com/"/>
+
+	<rule from="^http://reports\.informationweek\.com/((?:asset)?image|cs)s/"
+		to="https://reports.informationweek.com/$1s/"/>
+
+	<!--	!www redirects to www.	-->
+	<rule from="^http://(?:www\.)?insurancetech\.com/"
+		to="https://www.insurancetech.com/" />
+
+	<!--	!www doesn't work via https.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?oagaviation\.com/"
+		to="https://www.oagaviation.com/"/>
+
+	<rule from="^http://(?:www\.)?oag(cargo|travel)\.com/"
+		to="https://oag$1.com/"/>
+
+	<!--	!www doesn't work via http.
+		Redirects to www via http.	-->
+	<rule from="^http://(?:www\.)?ubmaviation\.com/"
+		to="https://www.ubmaviation.com/"/>
+
+	<rule from="^http://(?:www\.)?ubmaviationnews\.com/"
+		to="https://ubmaviationnews.com/"/>
+
+	<!--	!www redirects to www.
+		Pages redirect to http.		-->
+	<rule from="^http://(?:www\.)?ubmchannel\.com/(cs|image)s/"
+		to="https://www.ubmchannel.com/$1s/"/>
+
+	<rule from="^http://(?:www\.)?ubmelectronics(?:\.techinsights-marketing)?\.com/(\d{4}/wordpress/|favicon\.ico)"
+		to="https://ubmelectronics.techinsights-marketing.com/~techinsi/ubmelectronics/$1"/>
+
+</ruleset>

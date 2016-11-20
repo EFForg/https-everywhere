@@ -1,0 +1,43 @@
+<!--
+	University of Pennsylvania
+
+
+	Nonfunctional subdomains:
+
+		- www.psych	(shows www.sas; mismatched, CN: *.sas.upenn.edu)
+		- www		("temporarily unavailable", akamai)
+
+
+	Partially covered subdomains:
+
+		- www.library	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)cis
+		- www.college
+		- weblogin.pennkey
+		- fission.sas
+		- www.sas
+		- webmail.seas
+		- www.seas
+
+
+	^upenn.edu doesn't exist.
+
+-->
+<ruleset name="UPenn.edu (partial)">
+
+	<target host="*.upenn.edu"/>
+		<exclusion pattern="^http://www\.library\.upenn\.edu/(?!images/|styles/)" />
+
+
+	<!--securecookie host="^\.college\.upenn\.edu$" name="^SESS\w{32}$" /-->
+	<securecookie host="^(?:weblogin\.pennkey|\.www\.sas)\.upenn\.edu$" name=".+" />
+
+
+	<rule from="^http://((?:www\.)?cis|www\.college|medley\.isc-seo|www\.library|weblogin\.pennkey|(?:fission|www)\.sas|w(?:ebmail|ww)\.seas)\.upenn\.edu/"
+		to="https://$1.upenn.edu/"/>
+
+</ruleset>

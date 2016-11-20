@@ -1,0 +1,66 @@
+<!--
+	CDN buckets:
+
+		- forum-merethis.netdna-ssl.com
+
+
+	Problematic subdomains:
+
+		- forum * ²
+
+	* Mixed css
+	² Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- centreon.com
+		- blog.centreon.com
+		- forum.centreon.com
+		- www.centreon.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- documentation from fonts.googleapis.com *
+			- forum from $self *
+
+		- Bug on documentation from i.creativecommons.org *
+
+	* Secured by us
+
+-->
+<ruleset name="Centreon.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="centreon.com" />
+	<target host="blog.centreon.com" />
+	<target host="documentation.centreon.com" />
+	<target host="download.centreon.com" />
+	<target host="forge.centreon.com" />
+	<!--target host="forum.centreon.com" /-->
+	<target host="login.centreon.com" />
+	<target host="translate.centreon.com" />
+	<target host="www.centreon.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<!--exclusion pattern="^http://forum\.centreon\.com/+(?!css\.php|favicon\.ico)" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?centreon\.com$" name="^pll_language$" /-->
+	<!--securecookie host="^blog\.centreon\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^forum\.centreon\.com$" name="^(?:AWSELB|vb\d+(?:lastactivity|lastvisit|sessionhash))$" /-->
+
+	<securecookie host="^(?:.+\.)?centreon\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

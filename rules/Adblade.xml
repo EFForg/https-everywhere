@@ -1,0 +1,67 @@
+<!--
+	Nonfunctional hosts in *adblade.com:
+
+		- blog *
+
+	* Dropped
+
+
+	Insecure cookies are set for these domains:
+
+		- .adblade.com
+
+
+	Mixed content:
+
+		- Bug on (www.)? from piwik.adiant.com *
+
+	* Unsecurable <= shows another domain
+
+-->
+<ruleset name="Adblade.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="adblade.com" />
+	<target host="pixel.adblade.com" />
+	<target host="web.adblade.com" />
+	<target host="www.adblade.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?adblade\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?adblade\.com/+(?!css/|favicon\.ico|images/|img/|registration/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://adblade.com/adblade-adspecs" />
+			<test url="http://adblade.com/doc/about" />
+			<test url="http://adblade.com/doc/contact" />
+			<test url="http://www.adblade.com/adblade-adspecs" />
+			<test url="http://www.adblade.com/doc/about" />
+			<test url="http://www.adblade.com/doc/contact" />
+
+			<!--	-ve:
+					-->
+			<test url="http://adblade.com/css/adblade.css" />
+			<test url="http://adblade.com/favicon.ico" />
+			<test url="http://adblade.com/images/design/adblade/logo.png" />
+			<test url="http://adblade.com/registration/" />
+
+		<test url="http://pixel.adblade.com/imps.php?sgms=" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.adblade\.com$" name="^__sgs$" /-->
+
+	<securecookie host="^\.adblade\.com$" name="^__sgs$" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

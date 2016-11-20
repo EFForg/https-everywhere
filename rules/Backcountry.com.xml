@@ -1,0 +1,30 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(mismatched, CN: www)
+		- content *
+		- content[1-4] *
+		- promoimages	(404, CN: gp1.wac.edgecastcdn.net)
+
+	* Works, akamai
+
+-->
+<ruleset name="Backcountry.com (partial)">
+
+	<target host="backcountry.com" />
+	<target host="*.backcountry.com" />
+
+
+	<securecookie host="^m\.backcountry\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?backcountry\.com/(css|images|promo_upload)/"
+		to="https://www.backcountry.com/$1/" />
+
+	<rule from="^http://(api|beta|m)\.backcountry\.com/"
+		to="https://$1.backcountry.com/" />
+
+	<rule from="^http://(?:content|promoimages)\.backcountry\.com/"
+		to="https://www.backcountry.com/" />
+
+</ruleset>

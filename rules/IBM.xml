@@ -1,0 +1,179 @@
+<!--
+	IBM has lots of resources, besides software,
+	also developerworks and redbooks.
+
+
+	Other IBM rulesets:
+
+		- brassring.com.xml
+		- CoreMetrics.xml
+		- ibm.biz.xml
+		- Kenexa.xml
+		- Lotus.xml
+		- Pviq.com.xml
+		- S81c.com.xml
+		- Trusteer.com.xml
+
+
+	Nonfunctional domains:
+
+		- in *ibm.com:
+
+			- alme1.almaden	ʳ
+			- www.almaden ʳ
+			- icml2010.haifa.il *
+			- sysrun.haifa.il ʳ
+			- researcher *
+			- researcher.watson *
+			- www.watson *
+
+		- research.ihost.com *
+		- (www.)smartercommerceblog.com		(http reply)
+
+	* Times out
+	ʳ Refused
+
+
+
+	Problematic hosts in *ibm.com:
+
+		- www.elink.ibmlink *
+		- research ᵐ
+		- ftp.software *
+		- domino.watson ᵐ
+		- researchweb.watson ᵐ
+		- stats.www *
+		- www-1 *
+		- www-306 *
+		- www-6 *
+		- www-958 *
+		- www.zurich **
+
+	* Mismatched; CN: redirect.www.ibm.com
+	** Some paths differ from http
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .ibm.com
+		- developer.ibm.com
+		- idaas.iam.ibm.com
+		- media.ibm.com
+		- portal.sec.ibm.com
+		- www.ibm.com
+		- www-01.ibm.com
+		- www-304.ibm.com
+		- www-947.ibm.com
+
+
+	Mixed content:
+
+		- Images on m, www-01 from www.ibm.com
+		- favicon on www-01 from www.ibm.com
+
+-->
+<ruleset name="IBM.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="publib.boulder.ibm.com" />
+	<target host="developer.ibm.com" />
+
+	<target host="delivery04.dhe.ibm.com" />
+	<target host="pic.dhe.ibm.com" />
+	<target host="public.dhe.ibm.com" />
+
+	<target host="idaas.iam.ibm.com" />
+	<target host="m.ibm.com" />
+	<target host="media.ibm.com" />
+	<target host="www.redbooks.ibm.com" />
+	<target host="domino.research.ibm.com" />
+	<target host="www.research.ibm.com" />
+	<target host="portal.sec.ibm.com" />
+	<target host="www14.software.ibm.com" />
+	<target host="www3.software.ibm.com" />
+	<target host="www.ibm.com" />
+	<target host="redirect.www.ibm.com" />
+	<target host="www-01.ibm.com" />
+	<target host="www-03.ibm.com" />
+	<target host="www-05.ibm.com" />
+	<target host="www-304.ibm.com" />
+	<target host="www-950.ibm.com" />
+	<target host="www-935.ibm.com" />
+	<target host="www-947.ibm.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ibm.com" />
+	<target host="research.ibm.com" />
+	<target host="domino.watson.ibm.com" />
+	<target host="researchweb.watson.ibm.com" />
+
+		<!--exclusion pattern="^http://www-958\.ibm\.com/(?!software/data/cognos/manyeyes/(?:image|stylesheet)s/)" /-->
+
+		<!--	Differs:
+				-->
+		<!--test url="http://www.zurich.ibm.com/service/commercial_contact.html" /-->
+
+		<test url="http://media.ibm.com/mluniversal-1x1.gif" />
+		<test url="http://media.ibm.com/ping?spacedesc=" />
+
+		<!--	Formerly redirected to http:
+							-->
+		<test url="http://www-947.ibm.com/support/entry/portal/support" />
+
+		<!--	Mixed image:
+					-->
+		<!--test url="http://www-01.ibm.com/software/security/trusteer/" /-->
+
+		<!--	Set cookies without Secure:
+							-->
+		<!--test url="http://developer.ibm.com/open/" /-->
+		<!--test url="http://www.ibm.com/account/profile/us?page=reghelpdesk" /-->
+		<!--test url="http://www-01.ibm.com/marketing/iwm/tnd/home.jsp" /-->
+		<!--test url="http://www-947.ibm.com/support/entry/portal/us/en/overview" /-->
+		<!--test url="http://www-947.ibm.com/systems/support/myview/subscription/css.wss/folders?methodName=listMyFolders" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.ibm\.com$" name="^(?:IBMIS[PS]|PD-SGNPAGE|PrefID|rlang)$" /-->
+	<!--securecookie host="^developer\.ibm\.com$" name="^wordpress(?:_logged_in|_sec)?[\da-f]{32}$" /-->
+	<!--securecookie host="^idaas\.iam\.ibm\.com$" name="^(?:JSESSIONID$|PD_STATEFUL)" /-->
+	<!--securecookie host="^portal\.sec\.ibm\.com$" name="^JPOOLERD$" /-->
+	<!--securecookie host="^www\.ibm\.com$" name="^(?:IBMID|IBMSessionHandle_\w+|SESSION_\w+_\w+)$" /-->
+	<!--securecookie host="^www-01\.ibm\.com$" name="-SESSIONID$" /-->
+	<!--securecookie host="^www-304\.ibm\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^www-947\.ibm\.com$" name="(?:^IBMID|^IBMSessionHandle_\w+|^PD-H-SESSION-ID|^PD_STATEFUL_[\da-f-]+|JSESSIONID|^SESSION_\w+_\w+)$" /-->
+
+	<securecookie host="^\." name="^PrefID$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://(research\.)?ibm\.com/"
+		to="https://www.$1ibm.com/" />
+
+	<rule from="^http://domino\.watson\.ibm\.com/"
+		to="https://domino.research.ibm.com/" />
+
+	<rule from="^http://researchweb\.watson\.ibm\.com/"
+		to="https://www.research.ibm.com/" />
+
+	<!--rule from="^http://stats\.www\.ibm\.com/rc/images/uc\.GIF"
+		to="https://www.ibm.com/i/c.gif" /-->
+
+	<!--rule from="^http://www-1\.ibm\.com/support/search\.wss"
+		to="https://www.ibm.com/support/search.wss" /-->
+
+	<!--	- Redirects as so, sans-https.
+		- Link found at https://buysub.com/
+					-->
+	<!--rule from="^http://www-306\.ibm\.com/software/webservers/httpservers/support/"
+		to="https://www-947.ibm.com/support/entry/portal/Overview/Software/WebSphere/IBM_HTTP_Server" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+
+</ruleset>

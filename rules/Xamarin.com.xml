@@ -1,0 +1,150 @@
+<!--
+	Problematic hosts in *xamarin.com:
+
+		- iosapi *
+		- macapi *
+		- planet ¹
+		- support ²
+
+	* Shows another domain
+	¹ Mixed css
+	² Dropped
+
+
+	Partially covered hosts in *xamarin.com:
+
+		- planet *
+
+	* Avoiding broken MCB
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .xamarin.com
+		- components.xamarin.com
+		- .planet.xamarin.com
+		- .scan.xamarin.com
+		- store.xamarin.com
+		- university.xamarin.com
+		- .university.xamarin.com
+
+
+	Mixed content:
+
+		- iframes, on:
+		
+			- planet from app.stitcher.com
+			- planet from www.youtube.com ¹
+
+		- css, on:
+
+			- planet from fonts.googleapis.com ¹
+			- planet from i\d.wp.com ¹
+
+		- Images, on:
+
+			- planet from www.cazzulino.com
+			- planet from feeds.feedburner.com ¹
+			- planet from www.michaelridland.com
+			- planet from blogs.plainconcepts.com
+			- planet from solola.ca
+			- planet from blog.verslu.is
+			- planet from feeds.wordpress.com
+			- planet from i\d.wp.com ¹
+			- planet from cdn1.xamarin.com ¹
+			- scan from download.microsoft.com ¹
+			- scan from go.microsoft.com ¹
+
+		- favicon on developer, docs from ^xamarin.com  ¹
+
+		- Ads/bugs, on:
+
+			- planet from www.googleadservices.com ¹
+			- planet from pixel.wp.com ¹
+
+	¹ Secured by us
+	² Unsecurable <= refused
+
+-->
+<ruleset name="Xamarin.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="xamarin.com" />
+	<target host="androidapi.xamarin.com" />
+	<target host="blog.xamarin.com" />
+	<target host="bugzilla.xamarin.com" />
+	<target host="cdn1.xamarin.com" />
+	<target host="components.xamarin.com" />
+	<target host="developer.xamarin.com" />
+	<target host="docs.xamarin.com" />
+	<target host="forums.xamarin.com" />
+	<target host="planet.xamarin.com" />
+	<target host="scan.xamarin.com" />
+	<target host="store.xamarin.com" />
+	<target host="university.xamarin.com" />
+	<target host="www.xamarin.com" />
+
+	<!--	Complications:
+				-->
+	<target host="iosapi.xamarin.com" />
+	<target host="macapi.xamarin.com" />
+	<target host="support.xamarin.com" />
+
+		<!--	Avoid broken MCB:
+						-->
+		<exclusion pattern="^http://planet\.xamarin\.com/+(?:$|\?)" />
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://planet\.xamarin\.com/+(?!Resources/|favicon\.ico|feed/|images/)" /-->
+
+			<!--	+ve:
+					-->
+			<test url="http://planet.xamarin.com//" />
+			<test url="http://planet.xamarin.com/?foo" />
+			<test url="http://planet.xamarin.com/?bar" />
+
+			<!--	-ve:
+					-->
+			<test url="http://planet.xamarin.com/Resources/Styles/style.css" />
+			<test url="http://planet.xamarin.com/favicon.ico" />
+			<test url="http://planet.xamarin.com/feed/" />
+			<test url="http://planet.xamarin.com/images/twitter16.png" />
+
+
+	<!--securecookie host="^xamarin\.com$" name="__RequestVerificationToken_Lw__" /-->
+	<!--securecookie host="^(components\.)?xamarin\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.(planet|scan|university)\.xamarin\.com$" name="^ARRAffinity$" /-->
+	<!--securecookie host="^store\.xamarin\.com$" name="^(__RequestVerificationToken|Nop\.CustomerSessionGUIDCookie)$" /-->
+	<!--securecookie host="^university\.xamarin\.com$" name="^__RequestVerificationToken$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\." name="^(?:_gat?|ARRAffinity)$" />
+
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://iosapi\.xamarin\.com/[^?]*"
+		to="https://developer.xamarin.com/api/root/ios-unified/" />
+
+		<test url="http://iosapi.xamarin.com/home.htm" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://macapi\.xamarin\.com/[^?]*"
+		to="https://developer.xamarin.com/api/root/monomac-lib" />
+
+		<test url="http://macapi.xamarin.com/home.htm" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://support\.xamarin\.com/[^?]*"
+		to="https://xamarin.com/support" />
+
+		<test url="http://support.xamarin.com/home.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

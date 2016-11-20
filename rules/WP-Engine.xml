@@ -1,0 +1,98 @@
+<!--
+	Other WP Engine rulesets:
+
+		- WP_Engine_Status.com.xml
+
+
+	CDN buckets:
+
+		- wpe.wpengine.netdna-cdn.com
+
+			- -ssl doesn't exist
+			- cdn.wpengine.com
+
+
+	Problematic subdomains:
+
+		- cdn			(404; mismatched, CN: *.netdna-ssl.com)
+		- press			(mismatched, CN: *.heroku.com)
+		- *.*.wpengine.com	(mismatched, CN: *.wpengine.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cdn		(→ ^)
+		- devbox
+		- my
+		- press		(→ wpengine.totemapp.com)
+		- signup
+		- support
+		- \w+ *
+
+	* Per-account domains
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- wpengine.com
+		- .wpengine.com
+		- signup.wpengine.com
+
+
+	Mixed content:
+
+		- css, on:
+
+			- ^ from fast.fonts.net *
+			- ^ from fonts.googleapis.com *
+
+		- Images, on:
+
+			- ^ from wpengine.com *
+			- ^ from cdn.wpengine.com *
+
+	* Secured by us
+
+-->
+<ruleset name="WP Engine.com">
+
+	<target host="wpengine.com" />
+	<target host="*.wpengine.com" />
+
+		<test url="http://wpengine.com/" />
+		<test url="http://cdn.wpengine.com/" />
+		<test url="http://devbox.wpengine.com/" />
+		<test url="http://my.wpengine.com/" />
+		<test url="http://press.wpengine.com/" />
+		<test url="http://signup.wpengine.com/" />
+		<test url="http://support.wpengine.com/" />
+		<test url="http://www.wpengine.com/" />
+		<test url="http://www.wpengine.com/blog" />
+
+	<!-- deeper domains cause certificate mismatch error -->
+	<exclusion pattern="^http://([\w.-]+)\.([\w-]+)\.wpengine\.com"/>
+
+		<test url="http://talkdesk.staging.wpengine.com/"/>
+		<test url="http://kelvin.staging.wpengine.com/"/>
+		<test url="http://cfps.staging.wpengine.com/"/>
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(signup\.)?wpengine\.com$" name="^X-Mapping-[a-z]{8}$" /-->
+	<!--securecookie host="^\.wpengine\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^signup\.wpengine\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^(?:.*\.)?wpengine\.com$" name=".+" />
+
+
+	<rule from="^http://cdn\.wpengine\.com/"
+		to="https://wpengine.com/" />
+
+	<rule from="^http://press\.wpengine\.com/"
+		to="https://wpengine.totemapp.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

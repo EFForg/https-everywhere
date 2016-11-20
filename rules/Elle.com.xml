@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+		- www.elle.com.edgesuite.net
+
+			- a1023.b.akamai.net
+
+
+	Problematic subdomains:
+
+		- ^		(works; mismatched, CN: subscribe.hearstmags.com)
+		- www		(works, akamai)
+		- service	(dropped)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ akamai, avoiding user-visible paths)
+		- dating	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- service	(→ w1.buysub.com)
+
+-->
+<ruleset name="Elle.com (partial)">
+
+	<target host="elle.com" />
+	<target host="*.elle.com" />
+		<!--
+			Links resources relative to /:
+							-->
+		<!--exclusion pattern="^http://(www\.)?elle\.com/cm/elle/styles/(_accessories_landing|_blogLanding|blogsGeneral|_channel|global|_homepage|_hubPage|runwayBase)\.css" /-->
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://dating\.elle\.com/(affiliates|login/reset|whitelabel)?($|\?)" /-->
+
+
+	<rule from="^http://dating\.elle\.com/(?=assets/|bridge\.js|favicon\.ico|login/*(?:$|\?)|whitelabel/elle/header\.html)"
+		to="https://dating.elle.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://service\.elle\.com/.*"
+		to="https://w1.buysub.com/servlet/CSGateway?cds_mag_code=ELM" />
+
+</ruleset>

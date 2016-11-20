@@ -1,0 +1,70 @@
+<!--
+	^zipcar.com: Dropped
+
+
+	Partially covered hosts in *zipcar.com:
+
+		- members *
+
+	* Some pages redirect to http
+
+
+	- Mixed content:
+
+		- favicon on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Zipcar.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="drive.zipcar.com" />
+	<target host="dru-cdn.zipcar.com" />
+	<target host="media.zipcar.com" />
+	<target host="members.zipcar.com" />
+	<target host="www.zipcar.com" />
+
+	<!--	Complications:
+				-->
+	<target host="zipcar.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://members\.zipcar\.com/site/privacy" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://members\.zipcar\.com/+(?!$|\?|apply|images/|regist|styles/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://members.zipcar.com/about/jobs" />
+			<test url="http://members.zipcar.com/business" />
+			<test url="http://members.zipcar.com/contact/" />
+			<test url="http://members.zipcar.com/gift/" />
+			<test url="http://members.zipcar.com/members/refer" />
+			<test url="http://members.zipcar.com/press/" />
+			<test url="http://members.zipcar.com/site/privacy" />
+			<test url="http://members.zipcar.com/universities" />
+
+			<!--	-ve:
+					-->
+			<test url="http://members.zipcar.com/images/responsive-menu-icon.svg" />
+			<test url="http://members.zipcar.com/register/" />
+			<test url="http://members.zipcar.com/styles/template/widgets.css" />
+			<test url="http://members.zipcar.com/user/set-locale?locale=en-US&amp;return_url=" />
+
+
+	<securecookie host="^\." name="^(?:_gat?$|ad_)" />
+	<securecookie host="^(?!members\.)\w" name="." />
+
+
+	<rule from="^http://zipcar\.com/"
+		to="https://www.zipcar.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

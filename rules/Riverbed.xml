@@ -1,0 +1,151 @@
+<!--
+	CDN buckets:
+
+		- s1155.t.eloqua.com
+
+		- riverbed.vo.llnwd.net
+
+			- .hs. doesn't exist
+			- media-cms
+			- www
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+		- blogs *
+		- media-cms **
+		- www **
+
+	* Times out
+	** 400; mismatched, CN: *.hs.llnwd.net
+
+
+	Problematic subdomains:
+
+		- dr-cas ¹
+		- dr-webmail ¹
+		- dev.www	(works; mismatched, CN: *.clickability.com)
+		- forms		(works; mismatched, CN: secure.eloqua.com)
+		- images *
+		- ir		(works, akamai)
+
+	¹ Expired
+	* Mismatched
+
+
+	Partially covered subdomains:
+
+		- ir	(→ origin-phoenix.corporate-ir.net)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- autodiscover
+		- community
+		- developer
+		- global
+		- images	(→ secure.eloqua.com)
+
+		- splash subdomains:
+
+			- ^
+			- apps
+			- uat
+			- apps.uat
+
+		- support
+		- supportkb
+		- webmail
+
+
+	These altnames don't exist:
+
+		- www.supportkb.riverbed.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- riverbed.com
+		- forms.riverbed.com
+		- splash.riverbed.com
+		- support.riverbed.com
+		- supportkb.riverbed.com
+
+
+	Mixed content:
+
+		- css on ir from www.riverbed.com *
+
+		- Images, on:
+
+			- go from img.en25.com ²
+			- go from images.riverbed.com ²
+			- ir from media-cms.riverbed.com *
+
+	* Unsecurable <= 400
+	² Secured by us
+
+-->
+<ruleset name="Riverbed.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="riverbed.com" />
+	<target host="autodiscover.riverbed.com" />
+	<target host="community.riverbed.com" />
+	<target host="developer.riverbed.com" />
+	<!--target host="dr-cas.riverbed.com" /-->
+	<!--target host="dr-webmail.riverbed.com" /-->
+	<target host="global.riverbed.com" />
+
+	<target host="splash.riverbed.com" />
+	<target host="apps.splash.riverbed.com" />
+	<target host="uat.splash.riverbed.com" />
+	<target host="apps.uat.splash.riverbed.com" />
+
+	<target host="support.riverbed.com" />
+	<target host="supportkb.riverbed.com" />
+	<target host="webmail.riverbed.com" />
+
+	<!--	Complications:
+				-->
+	<target host="images.riverbed.com" />
+	<target host="ir.riverbed.com" />
+
+		<exclusion pattern="^http://ir\.riverbed\.com/(?!client/|media_files/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://ir.riverbed.com/phoenix.zhtml?c=198235&amp;p=irol-newsArticle&amp;ID=2028428" />
+			<test url="http://ir.riverbed.com/phoenix.zhtml?c=198235&amp;p=irol-newsArticle&amp;ID=2028062" />
+			<test url="http://ir.riverbed.com/phoenix.zhtml?c=198235&amp;p=irol-newsArticle&amp;ID=2025208" />
+
+			<!--	-ve:
+					-->
+			<test url="http://ir.riverbed.com/client/19/198235/css/riverbed-full.css" />
+			<test url="http://ir.riverbed.com/media_files/IROL/19/198235/rb/css/img/bg-arrow-gray.gif" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(support\.)?riverbed\.com$" name="^X-Mapping-[a-z]{8}$" /-->
+	<!--securecookie host="^forms\.riverbed\.com$" name="^ELOQUA$" /-->
+	<!--ssecurecookie host="^(splash|supportkb)\.riverbed\.com$" name="^(BIGipServer\w+|JSESSIONID)$" /-->
+	<!--ssecurecookie host="^splash\.riverbed\.com$" name="^jive\.security\.context$" /-->
+	<!--ssecurecookie host="^supportkb\.riverbed\.com$" name="^(scav|scwysiwygparams)$" /-->
+
+	<securecookie host="^(?:(?:autodiscover|community|developer|global|(?:apps(?:\.uat)?\.|uat\.)?splash|support|supportkb|(?:dr-)?webmail)\.)?riverbed\.com$" name=".+" />
+
+
+	<rule from="^http://images\.riverbed\.com/"
+		to="https://secure.eloqua.com/" />
+
+	<rule from="^http://ir\.riverbed\.com/"
+		to="https://origin-phoenix.corporate-ir.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

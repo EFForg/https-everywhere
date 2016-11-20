@@ -1,0 +1,58 @@
+<!--
+	For other Sears Holdings coverage, see Sears.com.xml.
+
+
+	CDN buckets:
+
+		- nc.shld.net.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- e	(404)
+
+
+	Problematic subdomains:
+
+		- nc	(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- c *
+		- nc *
+		- c2 *
+
+	* $ redirects to http
+
+
+	Fully covered subdomains:
+
+		- k
+		- k2
+		- s
+		- sso
+
+-->
+<ruleset name="SHld.net (partial)">
+
+	<target host="*.shld.net" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://c2?\.shld\.net/+($|\?)" /-->
+
+
+	<securecookie host="^sso\.shld\.net$" name=".+" />
+
+
+	<rule from="^http://(c2|k2?|s|sso)\.shld\.net/"
+		to="https://$1.shld.net/" />
+
+	<!--	We can't point nc to akamai, as images are referenced
+		relative to /, rather than relative to stylesheets:
+								-->
+	<rule from="^http://n?c\.shld\.net/(?!$|\?)"
+		to="https://c.shld.net/" />
+
+</ruleset>

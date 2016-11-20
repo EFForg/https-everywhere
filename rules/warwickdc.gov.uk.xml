@@ -1,0 +1,79 @@
+<!--
+	Warwick District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *warwickdc.gov.uk:
+
+		- planningdocuments ʳ
+
+	ʳ Refused
+
+
+	Partially covered hosts in *warwickdc.gov.uk:
+
+		- estates5 *
+
+	* Some pages 404, others 500
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- warwickdc.gov.uk
+		- www.warwickdc.gov.uk
+		- .www.warwickdc.gov.uk
+
+
+	Mixed content:
+
+		- Bug on (www.)? from socitm.govmetric.com ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Warwick DC.gov.uk (partial)">
+
+	<target host="warwickdc.gov.uk" />
+	<target host="estates4.warwickdc.gov.uk" />
+	<target host="estates5.warwickdc.gov.uk" />
+	<target host="flexweb.warwickdc.gov.uk" />
+	<target host="www.warwickdc.gov.uk" />
+
+		<exclusion pattern="^http://estates5\.warwickdc\.gov\.uk/(?!/*(?:HomeChoice2010RSL|HomeHoice2015|pcn)(?:$|[?/]))" />
+			<!--	404:
+					-->
+			<test url="http://estates5.warwickdc.gov.uk/BuildingControlFeeCalculator/forms/calculatefees.aspx" />
+			<test url="http://estates5.warwickdc.gov.uk/BuildingControlRegister/forms/searchResults.aspx?search=2" />
+			<test url="http://estates5.warwickdc.gov.uk/LicensingPortal/Forms/Search.aspx" />
+			<!--
+				500:
+					-->
+			<test url="http://estates5.warwickdc.gov.uk/PropertyPortal/Property/Search" />
+
+			<!--	-ve:
+					-->
+			<test url="http://estates5.warwickdc.gov.uk/HomeChoice2010RSL/Forms/RSLLogin.aspx" />
+			<test url="http://estates5.warwickdc.gov.uk/HomeChoice2015/Property" />
+			<test url="http://estates5.warwickdc.gov.uk/HomeChoice2015/Results?m=1&amp;y=2016" />
+			<test url="http://estates5.warwickdc.gov.uk/pcn/forms/pcnDetails.aspx" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://estates4.warwickdc.gov.uk/openaccess/openaccess.asp" />
+		<test url="http://flexweb.warwickdc.gov.uk/live/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?warwickdc\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^\.warwickdc\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\.www\." name="." />
+	<securecookie host="^(?!estates5\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

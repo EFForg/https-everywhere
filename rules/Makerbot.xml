@@ -1,0 +1,56 @@
+<!--
+	CDN buckets:
+
+		- makerbot-blog.s3.amazonaws.com
+		- s3.amazonaws.com/mb-nav/
+
+
+	Problematic subdomains:
+
+		- www.store	(cert only matches *.markerbot.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- accounts
+		- digitalstore
+		- (www.)store	(^ → www)
+
+
+	Observed cookie domains:
+
+		- . *
+		- accounts *
+		- .digitalstore *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Images, on (www.) from:
+
+			- distilleryimage\d\d?.s3.amazonaws.com *
+			- makerbot-blog.s3.amazonaws.com *
+			- pbs.twimg.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Makerbot">
+
+	<target host="makerbot.com" />
+	<target host="*.makerbot.com" />
+
+
+	<securecookie host="^(?:accounts|\.digitalstore|\.store)?\.makerbot\.com$" name=".+" />
+
+
+	<rule from="^http://((?:accounts|digitalstore|www)\.)?makerbot\.com/"
+		to="https://$1makerbot.com/" />
+
+	<rule from="^http://(?:www\.)?store\.makerbot\.com/"
+		to="https://store.makerbot.com/" />
+
+</ruleset>

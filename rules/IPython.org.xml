@@ -1,0 +1,30 @@
+<!--
+	Problematic domains:
+
+		- www ¹
+		- archive ³
+		- nbviewer ²
+
+	¹: Timeout
+	²: HTTP redirects but HTTPS does not
+	³: Invalid certificate
+
+	See also Jupyter.org.xml
+-->
+<ruleset name="IPython.org">
+
+	<target host="ipython.org" />
+	<target host="www.ipython.org" />
+	
+	<target host="nbviewer.ipython.org" />
+
+	<!-- At the time of writing of this ruleset,
+	     https://nbviewer.ipython.org also works, but
+             we keep a redirect here in case that changes. -->
+	<rule from="^http://nbviewer\.ipython\.org/"
+		to="https://nbviewer.jupyter.org/" />
+
+	<rule from="^http://(?:www\.)?ipython\.org/"
+		to="https://ipython.org/" />
+
+</ruleset>

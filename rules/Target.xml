@@ -1,0 +1,174 @@
+<!--
+	CDN buckets:
+
+
+		- /D/16382/173656/000/
+
+		- phx.corporate-ir.net
+
+			- investors
+
+		- www.target.com.edgesuite.net
+		- weeklyad.target.com.edgesuite.net
+		- m.weeklyad.target.com.edgesuite.net
+		- img1.targetimg1.com.edgesuite.net
+		- pressroom.target.com.ipressroom.com
+
+
+	Nonfunctional target.com subdomains:
+
+		- ^			(times out)
+		- staging.college	(shows RHEL test page)
+		- weeklyad		(redirects to http, akamai)
+		- www			("Oh no", akamai)
+
+
+	Problematic domains:
+
+		- target.com subdomains:
+
+			- dailydeals *
+			- m *
+			- m-beta-secure	(mismatched)
+			- pressroom	(works; mismatched, CN: cms.iprsoftware.com)
+			- m.weeklyad *
+
+		- img1.targetimg1.com		(works, akamai)
+
+	* Works, akamai
+
+
+	Partially covered subdomains:
+
+		- www			(→ akamai)
+		- m.weeklyad		(→ akamai)
+
+
+	Fully covered domains:
+
+		- target.com subdomains:
+
+			- *-secure:
+
+				- cartwheel-secure
+				- cartwheelws-secure
+				- imgsvc-secure
+				- m-secure
+				- m-beta		(→ akamai)
+				- mobileapp-secure
+				- m-perf-secure
+				- tapidotcom-secure
+				- tws-secure
+				- typeahead-secure
+				- www-secure
+				- www-perf-secure
+
+			- *-secure-perf
+
+				- socialsavings-secure-perf
+				- socialsavingsws-secure-perf
+				- tws-secure-perf
+
+			- *-secure-stg:
+
+				- imgsvc-secure-stg
+				- mobileapp-secure-stg
+				- m-secure-stg
+				- socialsavingsws-secure-stg
+				- tapidotcom-secure-stg
+				- tws-secure-stg
+
+			- babycatalog
+
+			- catalogs subdomains:
+
+				- baby
+				- m.baby
+				- home
+				- patio
+				- toys
+				- wedding
+
+			- college
+			- corporate
+			- corporate-admin
+			- health
+			- images-babycatalog
+			- m			(→ m-secure)
+			- microsites
+			- mrcam
+			- secureconnect
+			- sites
+			- tgtfiles
+
+		- static.targetimg1.com
+
+		- targetimg[1-3].com subdomains:
+
+			- img\d			(→ img\d-secure)
+			- img\d-secure
+			- img\d-secure-stg
+			- img\d-ssa-secure-perf
+			- img\d-ssa-secure-stg
+
+
+	Mixed content:
+
+		- iframe on investors from corporate *
+
+		- css, on:
+
+			- investors from corporate *
+			- investors from phx.corporate-ir.net *
+
+		- Images, on:
+
+			- investors from media.corporate-ir.net *
+			- investors from charts.edgar-online.com *
+			- pressroom from cms.ipressroom.com.s3.amazonaws.com *
+
+		- favicon in investors from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Target (partial) ">
+
+	<target host="*.target.com" />
+		<exclusion pattern="^http://m-beta-secure\.target\.com/" />
+	<target host="*.targetimg1.com" />
+	<target host="*.targetimg2.com" />
+	<target host="*.targetimg3.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.target\.com$" name="^(TealeafAkaSid|TealeafAkaUID)$" /-->
+	<!--securecookie host="^pressroom\.target\.com$" name="^ipr_i$" /-->
+
+	<securecookie host="^\.m-secure\.target\.com$" name=".+" />
+	<!--
+		No partially covered domains
+
+		... except for those rewritten to akamai,
+		which in turn is not touched here:
+							-->
+	<securecookie host="^.+\.target\.com$" name=".+" />
+
+
+	<rule from="^http://([\w-]+-secure(?:-perf|-stg)?|(?:images-)?babycatalog|(?:baby|m\.baby|home|patio|toys|wedding)\.catalogs|college|corporate(?:-admin)?|health|microsites|mrcam|secureconnect|sites|tgtfiles)\.target\.com/"
+		to="https://$1.target.com/" />
+
+	<rule from="^http://m\.target\.com/"
+		to="https://m-secure.target.com/" />
+
+	<rule from="^http://([\w-]+)-secure(-perf|-stg)?\.targetimg(\d)\.com/"
+		to="https://$1-secure$2.targetimg$3.com/" />
+
+	<rule from="^http://img(\d)\.targetimg\d\.com/"
+		to="https://img$1-secure.targetimg$1.com/" />
+
+	<rule from="^http://static\.targetimg1\.com/"
+		to="https://static.targetimg1.com/" />
+
+</ruleset>

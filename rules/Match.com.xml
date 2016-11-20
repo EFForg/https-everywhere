@@ -1,0 +1,57 @@
+<!--
+	CDN buckets:
+
+		- cp.match.com.edgesuite.net
+
+		- images.match.com.edgesuite.net
+
+			- a419.c.akamai.net
+			- images
+
+
+	Nonfunctional subdomains:
+
+		- cp *
+		- nl		Dropped
+		- www		Refused
+
+	* 504, akamai
+
+
+	^: cert only matches www
+
+
+	Fully covered subdomains:
+
+		- images	(→ a248.e.akamai.net)
+		- secure2.intl
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .match.com
+		- secure2.intl.match.com
+
+-->
+<ruleset name="Match.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="match.com" /-->
+	<target host="secure2.intl.match.com" />
+
+		<!--exclusion pattern="^http://(?:cp|nl|www)\.match\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.match\.com$" name="^(dMatch|ppLoginReferer)$" /-->
+	<!--securecookie host="^secure2\.intl\.match\.com$" name="^(LinkedAccountsLandingUrl|Match|MatchSession|SECU)$" /-->
+
+	<securecookie host="^secure2\.intl\.match\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

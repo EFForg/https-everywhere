@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- databricks-prod-storage-oregon.s3.amazonaws.com
+
+
+	Nonfunctional hosts in *databricks.com:
+
+		- feedback ³
+		- help ʰ
+
+	³ 403
+	ʰ Zendesk/redirects to http
+
+
+	Problematic hosts in *databricks.com:
+
+		- go ᵐ
+
+	ᵐ Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- accounts.cloud.databricks.com
+		- forums.databricks.com
+
+-->
+<ruleset name="Databricks.com (partial)">
+
+	<target host="databricks.com" />
+
+	<target host="accounts.cloud.databricks.com" />
+	<target host="databricks-prod-cloudfront.cloud.databricks.com" />
+	<target host="docs.cloud.databricks.com" />
+
+	<target host="forums.databricks.com" />
+	<target host="sparkhub.databricks.com" />
+	<target host="www.databricks.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^accounts\.cloud\.databricks\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^forums\.databricks\.com$" name="^TH_CSRF$" /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

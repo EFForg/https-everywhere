@@ -1,0 +1,42 @@
+<!--
+	(www.)?: Most paths redirect to http
+
+
+	Problematic hosts in *odnoklassniki.ru:
+
+		- stg *
+
+	* Mismatched
+
+-->
+<ruleset name="Odnoklassniki.ru (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="odnoklassniki.ru" />
+	<target host="m.odnoklassniki.ru" />
+	<target host="www.odnoklassniki.ru" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?odnoklassniki\.ru/($|cdk/nomr/on$|dk\?cmd=anonymLoginImport&amp;nc=\d+$|favicon\.ico|oauth/resources\.do\?type=css$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?odnoklassniki\.ru/(?!dk\?st\.cmd=updateAuthCode)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://odnoklassniki.ru/dk?cmd=anonymLoginImport&amp;nc=" />
+			<test url="http://www.odnoklassniki.ru/dk?cmd=anonymLoginImport" />
+			<test url="http://www.odnoklassniki.ru/oauth/resources.do?type=css" />
+
+			<!--	-ve:
+					-->
+			<test url="http://odnoklassniki.ru/dk?st.cmd=updateAuthCode&amp;nc=&amp;st.auth=&amp;st.js=" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

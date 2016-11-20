@@ -1,0 +1,38 @@
+<!--
+	For other NASDAQ coverage, see NASDAQ.com.xml.
+
+
+	Nonfunctional subdomains:
+
+		- files		(404, valid cert)
+
+-->
+<ruleset name="Shareholder.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="shareholder.com" />
+	<target host="apps.shareholder.com" />
+	<target host="dialogue.shareholder.com" />
+	<target host="investor.shareholder.com" />
+	<target host="www.shareholder.com" />
+
+	<!--	Complications:
+				-->
+	<target host="apps2.shareholder.com" />
+
+
+	<!--securecookie host="^\.shareholder\.com$" name="^(gpv_p\d\d|s_\w\w|s_fid|s_invisit|s_vnum)$" /-->
+	<securecookie host="^(?:dialogue|\.investor)?\.shareholder\.com" name=".+" />
+
+
+	<!--	- apps2 doesn't work over https
+		- apps & apps2 appear identical
+			-->
+	<rule from="^http://apps2\.shareholder\.com/"
+		to="https://apps.shareholder.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

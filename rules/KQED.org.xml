@@ -1,0 +1,43 @@
+<!--
+	Nonfunctional domains:
+
+		- blogs.kqed.org	(403/404, valid cert)
+
+
+	Problematic domains:
+
+		- u.s.kqed.org		(shows www.kqed.org; mismatched, CN: *.kqed.org)
+		- www.kqed.org ²
+
+	² Redirects to http
+
+-->
+<ruleset name="KQED.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="a.s.kqed.net" />
+	<target host="u.s.kqed.net" />
+	<target host="kqed.org" />
+
+	<!--	Complications:
+				-->
+	<target host="u.s.kqed.org" />
+	<target host="www.kqed.org" />
+
+		<test url="http://www.kqed.org/assets/flash/kqedplayer.swf" />
+
+
+	<securecookie host="^\.kqed\.org$" name="^_(?:chartbeat2|_qca|_utm\w)$" />
+
+
+	<rule from="^http://u\.s\.kqed\.org/"
+		to="https://u.s.kqed.net/" />
+
+	<rule from="^http://www\.kqed\.org/"
+		to="https://kqed.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

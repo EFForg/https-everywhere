@@ -1,0 +1,52 @@
+<!--
+	Problematic hosts in *torrent.tm:
+
+		- cdn *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains:
+
+		- .torrent.tm
+
+
+	Mixed content:
+
+		- css from cdn.torrent.tm ¹
+
+		- Images, from:
+
+			- torrent.tm ¹
+			- cdn.torrent.tm ¹
+
+	¹ Not secured by us <= mismatched
+	¹ Secured by us
+
+-->
+<ruleset name="Torrent.tm (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="torrent.tm" />
+	<target host="www.torrent.tm" />
+
+	<!--	Complications:
+				-->
+	<!--target host="cdn.torrent.tm" /-->
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.torrent\.tm$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\.torrent\.tm$" name=".+" />
+
+
+	<!--rule from="^http://cdn\.torrent\.tm/"
+		to="https://???.kxcdn.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

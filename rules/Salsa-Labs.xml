@@ -1,0 +1,77 @@
+<!--
+	CDN buckets:
+
+		- dp-prod-sli-01.s3.amazonaws.com
+
+
+	Problematic domains:
+
+		- (www.)salsacommons.org	(expired 2013-02-04)
+
+
+	Fully covered domains:
+
+		- (www.)salsacommons.org	(→ salsalabs.com)
+
+		- salsalabs.com
+
+		- \w-.salsalabs.com:
+
+			- action
+			- help
+			- hq
+			- org
+			- www
+
+		- wiredforchange.com
+
+		- \w-.wiredforchange.com:
+
+			- www
+
+
+	Observed cookie domains:
+
+		- www.salsacommons.org
+
+		- salsalabs.com subdomains:
+
+			- ^
+			- action
+			- help
+			- hq
+			- org
+			- www
+
+
+	Mixed content:
+
+		- Images on www.salsalabs.com from dp-prod-sli-01.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Salsa Labs">
+
+	<target host="salsacommons.org" />
+	<target host="www.salsacommons.org" />
+	<target host="salsalabs.com" />
+	<target host="*.salsalabs.com" />
+	<target host="wiredforchange.com" />
+	<target host="*.wiredforchange.com" />
+
+
+	<securecookie host="^(?:.*\.)?(?:salsalabs|wiredforchange)\.com$"
+			name=".+" />
+
+
+	<rule from="^http://([\w-]+\.)?(salsalabs|wiredforchange)\.com/"
+		to="https://$1$2.com/" />
+
+	<rule from="^http://(?:www\.)?salsacommons\.org/+(?=$|\?)"
+		to="https://www.salsalabs.com/commons" />
+
+	<rule from="^http://(?:www\.)?salsacommons\.org/+"
+		to="https://www.salsalabs.com/" />
+
+</ruleset>

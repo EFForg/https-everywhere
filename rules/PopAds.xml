@@ -1,0 +1,64 @@
+<!--
+	Other PopAds rulesets:
+
+		- PopAds_CDN.net.xml
+
+
+	CDN buckets:
+
+		- 487998493.r.cdn77.net
+
+			- c1.popads.net
+
+		- 780499803.r.cdn77.net
+
+			- world.popadscdn.net
+
+		- c2popadsadcode.popads.netdna-cdn.com
+
+			- c2.popads.net
+
+
+	Problematic hosts in *popads.net:
+
+		- c1		(works, CN: *.r.worldssl.net)
+		- c2		(404, CN: *.netdna-ssl.com)
+
+
+	Fully covered hosts in *popads.net:
+
+		- (www.)?
+		- blog
+		- c[12]		(→ static)
+		- serve
+		- static
+		- world
+
+-->
+<ruleset name="PopAds.net">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="popads.net" />
+	<target host="blog.popads.net" />
+	<target host="serve.popads.net" />
+	<target host="static.popads.net" />
+	<target host="world.popads.net" />
+	<target host="www.popads.net" />
+
+	<!--	Complications:
+				-->
+	<target host="c1.popads.net" />
+	<target host="c2.popads.net" />
+
+
+	<securecookie host=".*\.popads\.net$" name=".+" />
+
+
+	<rule from="^http://c[12]\.popads\.net/"
+		to="https://static.popads.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

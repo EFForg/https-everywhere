@@ -1,0 +1,74 @@
+<!--
+	Canterbury City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *canterbury.gov.uk:
+
+		- planningdocs ᵈ
+		- maps ᵈ
+
+	ᵈ Dropped
+
+
+	Partially covered hosts in *canterbury.gov.uk:
+
+		- democracy ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- democracy.canterbury.gov.uk
+		- .forms.canterbury.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Canterbury.gov.uk (partial)">
+
+	<target host="canterbury.gov.uk" />
+	<target host="democracy.canterbury.gov.uk" />
+	<target host="forms.canterbury.gov.uk" />
+	<target host="publicaccess.canterbury.gov.uk" />
+	<target host="www.canterbury.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://democracy\.canterbury\.gov\.uk/(?:ieRegisterUser|mgFindMember|mgPasswordReqst|uuCoverPage)\.aspx" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://democracy\.canterbury\.gov\.uk/(?!/*(?:[Ss]iteSpecific/|(?:ieLogon|mgRegisterKeywordInterest)\.aspx|jquery-ui/))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://democracy.canterbury.gov.uk/ieRegisterUser.aspx?RPID=&amp;HPID=" />
+			<test url="http://democracy.canterbury.gov.uk/mgFindMember.aspx?bcr=1" />
+			<test url="http://democracy.canterbury.gov.uk/mgPasswordReqst.aspx" />
+			<test url="http://democracy.canterbury.gov.uk/mgUserInfo.aspx?UID=104" />
+			<test url="http://democracy.canterbury.gov.uk/uuCoverPage.aspx?bcr=1" />
+
+			<!--	-ve:
+					-->
+			<test url="http://democracy.canterbury.gov.uk/SiteSpecific/ssWordStyles.css" />
+			<test url="http://democracy.canterbury.gov.uk/ieLogon.aspx?RPID=&amp;HPID=&amp;Forms=&amp;META=mgSubscribeLogon" />
+			<test url="http://democracy.canterbury.gov.uk/jquery-ui/css/Smoothness/jquery-ui-1.10.2.custom.min.css" />
+			<test url="http://democracy.canterbury.gov.uk/mgRegisterKeywordInterest.aspx?bcr=1" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^democracy\.canterbury\.gov\.uk$" name="^(?:_mglogon_|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^\.forms\.canterbury\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^(?!democracy\.)\w" name="." />
+	<securecookie host="^\.forms\." name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

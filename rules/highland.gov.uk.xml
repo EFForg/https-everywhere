@@ -1,0 +1,105 @@
+<!--
+	The Highland Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *highland.gov.uk:
+
+		- her ᵈ
+		- libraries ᵈ
+		- wam ᵈ
+		- ww2 ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *highland.gov.uk:
+
+		- consult ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *highland.gov.uk:
+
+		- libraries *
+
+	* Not all paths redirect
+
+
+	These altnames do not exist:
+
+		- www.self.highland.gov.uk
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- highland.gov.uk
+		- self.highland.gov.uk
+		- www.highland.gov.uk
+		- .www.highland.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images on (www.)? from www.highland.gov.uk ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Highland.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="highland.gov.uk" />
+	<target host="self.highland.gov.uk" />
+	<target host="www.highland.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.highland.gov.uk" />
+	<target host="libraries.highland.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?highland\.gov\.uk$" name="^\w{16}$" /-->
+	<!--securecookie host="^self\.highland\.gov\.uk$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.www\.highland\.gov\.uk$" name="^TestCookie$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.www\." name="." />
+
+
+	<rule from="^http://consult\.highland\.gov\.uk/"
+		to="https://highland-consult.objective.co.uk/" />
+
+		<test url="http://consult.highland.gov.uk/portal/contact_us" />
+
+	<!--	Redirect drops args:
+					-->
+	<rule from="^http://libraries\.highland\.gov\.uk/.*"
+		to="https://capitadiscovery.co.uk/highland/" />
+
+		<!--	/[/\w] does not redirect:
+						-->
+		<exclusion pattern="^http://libraries\.highland\.gov\.uk/(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://libraries.highland.gov.uk/default.aspx" />
+			<test url="http://libraries.highland.gov.uk/index.htm" />
+			<test url="http://libraries.highland.gov.uk/index.html" />
+			<test url="http://libraries.highland.gov.uk/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://libraries.highland.gov.uk/?" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

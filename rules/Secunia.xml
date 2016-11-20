@@ -1,0 +1,57 @@
+<!--
+	Fully covered subdomains:
+
+		- autodiscover
+		- ca
+		- csi
+		- (www.)csi7 *
+		- psi
+
+		- *.exch.eu.s:
+
+			- as
+			- ews
+			- oa
+			- oab
+			- owa
+
+		- (www.)smallbusiness *
+		- vim4
+
+	* www → ^
+
+
+	Observed cookie domains:
+
+		- ca
+		- csi7
+		- vim4
+
+-->
+<ruleset name="Secunia">
+
+	<target host="secunia.com" />
+	<target host="*.secunia.com" />
+
+
+	<securecookie host="^(?:\w+\.)?secunia\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?secunia\.com/"
+		to="https://secunia.com/" />
+
+	<rule from="^http://(autodiscover|ca|csi|psi|\w+\.exch\.eu\.s|vim4)\.secunia\.com/"
+		to="https://$1.secunia.com/" />
+
+	<!--	Server drops path and args:
+						-->
+	<rule from="^http://(?:www\.)?csi7\.secunia\.com/.*"
+		to="https://csi7.secunia.com/" />
+
+	<!--	www redirects to ^ over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?smallbusiness\.secunia\.com/"
+		to="https://smallbusiness.secunia.com/" />
+
+</ruleset>

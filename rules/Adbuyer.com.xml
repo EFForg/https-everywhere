@@ -1,0 +1,29 @@
+<!--
+	Problematic subdomains:
+
+		- (www.)	(shows app.mbuy.com; mismatched, CN: *.mbuy.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(→ app.mbuy.com)
+		- gbid
+		- pixel
+
+-->
+<ruleset name="adbuyer.com">
+
+	<target host="adbuyer.com" />
+	<target host="*.adbuyer.com" />
+
+
+	<securecookie host="^(?:gbid)?\.adbuyer\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?adbuyer\.com/([^?]*)(\?:.*)?"
+		to="https://app.mbuy.com/$1" />
+
+	<rule from="^http://(gbid|pixel)\.adbuyer\.com/"
+		to="https://$1.adbuyer.com/" />
+
+</ruleset>

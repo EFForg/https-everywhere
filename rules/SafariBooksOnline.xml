@@ -1,0 +1,64 @@
+<!--
+	CDN buckets:
+
+		- my.safaribooksonline.com.global.prod.fastly.net
+		- techbus.safaribooksonline.com.global.prod.fastly.net
+
+		- safaribooksonline.force.com
+
+			- support
+
+
+	Nonfunctional hosts in *safaribooksonline.com:
+
+		- support *
+
+	* Force.com
+
+
+	Problematic hosts in *safaribooksonline.com:
+
+		- my ¹
+		- ssl ²
+		- techbus ¹
+
+	¹ Fastly
+	² Insecure renegotiation
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- my.safaribooksonline.com
+		- .my.safaribooksonline.com
+		- ssl.safaribooksonline.com
+		- .ssl.safaribooksonline.com
+		- techbus.safaribooksonline.com
+		- .techbus.safaribooksonline.com
+		- www.safaribooksonline.com
+		- .www.safaribooksonline.com
+
+-->
+<ruleset name="Safari Books Online.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="safaribooksonline.com" />
+	<target host="blog.safaribooksonline.com" />
+	<target host="ssl.safaribooksonline.com" />
+	<target host="www.safaribooksonline.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="(my|ssl|techbus)\.safaribooksonline\.com$" name="^cookie-monster$" /-->
+	<!--securecookie host="\.(my|ssl|techbus)\.safaribooksonline\.com$" name="^Safari$" /-->
+	<!--securecookie host="www\.safaribooksonline\.com$" name="^(BrowserCookie|csrftoken|original_referer)$" /-->
+	<!--securecookie host="\.www\.safaribooksonline\.com$" name="^(?:corp_sessionid|csrfsafari)$" /-->
+
+	<securecookie host="(?:ssl|\.?www)\.safaribooksonline\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

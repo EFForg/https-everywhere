@@ -1,0 +1,34 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://mediastorehouse.com/ => http://mediastorehouse.com/: Redirect for 'http://mediastorehouse.com/' missing Location
+Fetch error: http://mediastorehouse.net/ => https://secure.mediastorehouse.com/: Redirect for 'http://mediastorehouse.net/' missing Location
+Fetch error: http://www.mediastorehouse.net/ => https://secure.mediastorehouse.com/: Redirect for 'http://www.mediastorehouse.net/' missing Location
+	s3.amazonaws.com/images.mediastorehouse.com/
+
+
+	Nonfunctional:
+
+		- images.mediastorehouse.net	(times out; not on secure nor images...com)
+
+-->
+<ruleset name="Media Storehouse (partial)" default_off='failed ruleset test'>
+
+	<target host="mediastorehouse.com" />
+	<target host="*.mediastorehouse.com" />
+	<target host="mediastorehouse.net" />
+	<target host="www.mediastorehouse.net" />
+
+
+	<securecookie host="^secure\.mediastorehouse\.com$" name=".*" />
+
+
+	<!--	Cert not valid for static nor www.
+		Data appear identical.			-->
+	<rule from="^http://(?:static|www)\.mediastorehouse\.com/"
+		to="https://secure.mediastorehouse.com/" />
+
+	<!--	www...net redirects to www...com	-->
+	<rule from="^http://(?:www\.)?mediastorehouse\.net/"
+		to="https://secure.mediastorehouse.com/" />
+
+</ruleset>

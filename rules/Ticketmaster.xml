@@ -1,0 +1,171 @@
+<!--
+	For other Live Nation coverage, see Live-Nation.xml
+
+
+	CDN buckets:
+
+		- ads.ticketmaster1st.akadns.net
+
+			 - ads.tmcs.ticketmaster.com
+			 - ads.as4x.tmcs.ticketmaster.com
+
+		- ticketmaster.ugc.bazaarvoice.com
+
+			- reviews.ticketmaster.co.uk
+
+		- ticketmaster.com.d2.sc.omtrdc.net
+
+			- metrics.ticketmaster.com
+
+
+	Problematic domains:
+
+		- (www.)billetnet.es			(redirects to billetnet.fr)
+		- (www.)billetnet.fr			(shows default Parallels Panel page)
+		- eticketing.co.uk ***
+		- ticketmaster.com			(only matches www)
+		- media.ticketmaster.com *
+		- media.ticketmaster.co.uk *
+		- metrics.ticketmaster.com		(mismatched, CN: *.d2.sc.omtrdc.net)
+		- reviews.ticketmaster.co.uk *
+		- ads.tmcs.ticketmaster.com **
+		- ads.as4x.tmcs.ticketmaster.com **
+		- ticketmaster.co.uk			(cert only matches media)
+		- ticketmaster.es ***
+		- i.ticketweb.com **
+		- (www.)tmdeals.co.uk
+
+	* Akamai
+	** CN: de.ticketmaster.com, works.
+	*** Cert only matches www
+
+
+	Partially covered domains:
+
+		- (www.)billetnet.dk *
+		- (www.)billettservice.no *
+		- lippupalvelu.fi *
+		- (www.)ticketmaster.com *
+		- ticketsnow.ticketmaster.com *
+		- reviews.ticketmaster.co.uk *
+		- (www.)ticketmaster.de *
+		- (www.)ticketmaster.nl *
+
+	* At least some pages redirect to http.
+
+
+	Fully covered domains:
+
+		- (www.)eticketing.co.uk	(^ → www)
+		- (www.)ticketmaster.co.uk	(^ → www)
+		- secure.store.ticketmaster.com
+		- de.ticketmaster.com
+		- (www.)ticketmaster.es		(^ → www)
+
+-->
+<ruleset name="Ticketmaster (partial)">
+
+	<target host="admission.com" />
+	<target host="www.admission.com" />
+	<target host="billetnet.dk" />
+	<target host="www.billetnet.dk" />
+		<exclusion pattern="^http://(?:www\.)?(?:billetnet\.dk|billettservice\.no|lippupalvelu\.fi|ticketmaster\.(?:de|nl))/(?!assets/|myAccount|resource/|static/|theme/|tm-\w\wprod\.112\.2O7\.net/)" />
+	<target host="billettservice.no" />
+	<target host="www.billettservice.no" />
+	<target host="eticketing.co.uk" />
+	<target host="www.eticketing.co.uk" />
+	<target host="lippupalvelu.fi" />
+	<target host="www.lippupalvelu.fi" />
+	<target host="ticketmaster.*" />
+	<target host="www.ticketmaster.*" />
+	<target host="*.ticketmaster.com" />
+	<target host="ticketmaster.co.uk" />
+	<target host="*.ticketmaster.co.uk" />
+	<target host="ticketweb.*" />
+	<target host="*.ticketweb.com" />
+	<target host="www.ticketweb.co.uk" />
+
+
+	<securecookie host="^www\.eticketing\.co\.uk$" name=".+" />
+	<!--
+		Omniture cookies:
+					-->
+	<securecookie host="^\.ticketmaster\.com$" name="^s_vi$" />
+	<securecookie host="^de\.ticketmaster\.com$" name=".+" />
+
+	<!--	Apply 2o7 rules first, so that matches
+		don't get rewritten by other rules.
+							-->
+	<rule from="^http://(?:www\.)?(?:billet(?:net\.dk|tservice\.no)|lippupalvelu\.fi|ticketmaster\.(?:de|nl))/tm-(\w\w)prod\.112\.2O7\.net/"
+		to="https://tm-$1prod.112.2o7.net/" />
+
+
+	<rule from="^http://(?:www\.)?admission\.com/(resourc|them)e/"
+		to="https://www.admission.com/$1e/" />
+
+
+	<rule from="^http://(?:www\.)?billetnet\.dk/"
+		to="https://www.billetnet.dk/" />
+
+	<rule from="^http://(?:www\.)?eticketing\.co\.uk/"
+		to="https://www.eticketing.co.uk/" />
+
+	<rule from="^http://(?:www\.)?lippupalvelu\.fi/"
+		to="https://www.lippupalvelu.fi/" />
+
+
+	<rule from="^http://(?:www\.)?ticket(?:ek|master)\.cl/"
+		to="https://www.ticketek.cl/" />
+
+
+	<rule from="^http://(?:www\.)?ticketmaster\.(ca|com\.(?:au|nz|mx)|ie)/favicon-rebrand\.ico"
+		to="https://www.ticketmaster.$1/favicon-rebrand.ico" />
+
+	<rule from="^http://(?:www\.)?ticketmaster\.com/(app/|checkout/|h/|json/|member(?:$|\?|/))"
+		to="https://www.ticketmaster.com/$1" />
+
+
+	<rule from="^http://(ds|mm|secure\.store)\.ticketmaster\.com/"
+		to="https://$1.ticketmaster.com/" />
+
+	<rule from="^http://metrics\.ticketmaster\.com/"
+		to="https://ticketmaster-com.d2.sc.omtrdc.net/" />
+
+	<rule from="^http://ticketsnow\.ticketmaster\.com/(DataProviders/|Scripts/|TopCitiesDropDownListGenerator\.aspx|UI/)"
+		to="https://ticketsnow.ticketmaster.com/$1" />
+
+
+	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/(?:section)?(\?.*)?$"
+		to="https://www.ticketmaster.co.uk/section/$1" />
+
+	<rule from="^http://(?:www\.)?ticketmaster\.co\.uk/"
+		to="https://www.ticketmaster.co.uk/" />
+
+	<rule from="^http://reviews\.ticketmaster\.co\.uk/(logging(?:$|\?)|\d+-\w\w_\w\w/\d+/reviews\.htm\?.*format=embedded|static/)"
+		to="https://ticketmaster.ugc.bazaarvoice.com/$1" />
+
+
+	<rule from="^http://(?:www\.)?ticketmaster\.(de|es|nl)/"
+		to="https://www.ticketmaster.$1/" />
+
+
+	<rule from="^http://(?:www\.)?ticketmaster\.dk/"
+		to="https://www.billetnet.dk/" />
+
+
+	<rule from="^http://media\.ticketmaster\.eu/"
+		to="https://media.ticketmaster.eu/" />
+
+
+	<rule from="^http://(?:www\.)?ticketnet\.fr/(assets|static)/"
+		to="https://www.ticketnet.fr/$1/" />
+
+
+	<rule from="^http://(?:www\.)?ticketweb\.com/"
+		to="https://www.ticketweb.com/" />
+
+
+	<rule from="^http://(?:www\.)?ticketweb\.co\.uk/(images/|INFO/|giftcards|member|partners/|section/|styles\.css|twpurple\.html|ukcontent\.css|user/gb_northeast/order/|venuepages/|[\w\./-]+\.html$|[\w-]+/artist/\d+)"
+		to="https://www.ticketweb.co.uk/$1" />
+
+</ruleset>

@@ -1,0 +1,76 @@
+<!--
+	For rules causing false/broken MCB, see nus.org.uk-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- s3-eu-west-1.amazonaws.com/nusdigital/
+
+
+	Nonfunctional hosts in *nus.org.uk:
+
+		- ^ ᶠ
+		- alcoholimpact ʰ
+		- readytorent ᵇ
+		- saves ʰ
+		- sustainability ʰ
+		- www ᵈ
+
+	ᵇ Shows default page
+	ᵈ Dropped
+	ᶠ Handshake fails
+	ʰ Redirects to http
+
+
+	Problematic hosts in *nus.org.uk:
+
+		- saves ᵐ
+		- snapitoff ˣ
+		- www.switchoff * ᵐ
+
+	* Differs from ^foo
+	ᵐ Mismatched
+	ˣ Mixed css, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- saves.nus.org.uk
+		- snapitoff.nus.org.uk
+		- www.snapitoff.nus.org.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on snapitoff from $self ˢ
+		- Images on snapitoff from $self ˢ
+
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="NUS.org.uk (partial)">
+
+	<!--target host="snapitoff.nus.org.uk" /-->
+	<!--target host="www.snapitoff.nus.org.uk" /-->
+	<target host="switchoff.nus.org.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://saves.nus.org.uk/users/sign_in" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^saves\.nus\.org\.uk$" name="^_nusdigital_session$" /-->
+	<!--securecookie host="^(?:www\.)?snapitoff\.nus\.org\.uk$" name="^wfvt_\d+$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

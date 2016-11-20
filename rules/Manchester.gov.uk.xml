@@ -1,0 +1,133 @@
+<!--
+	Manchester City Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *manchester.gov.uk:
+
+		- www.burialrecords ᶠ
+		- mymanchesterservices ᵈ
+		- www.publicaccess ᵈ
+
+	ᵈ Dropped
+	ᶠ Handshake fails
+
+
+	Problematic hosts in *manchester.gov.uk:
+
+		- (www.)? ᵐ
+		- b3 ᵐ
+		- consult ᵐ
+		- open ᵐ
+		- petitions ᵐ
+		- posters ᵐ
+
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *manchester.gov.uk:
+
+		- open *
+
+	* Some paths differ from (cms|secure)
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .manchester.gov.uk
+		- consult.manchester.gov.uk
+		- posters.manchester.gov.uk
+		- www.revbens.manchester.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- cms from www.manchester.gov.uk ˢ *
+			- petitions from fonts.typotheque.com
+			- www.revbens from www.manchester.gov.uk ˢ **
+
+		- Images, on:
+
+			- cms, open from open.manchester.gov.uk ˢ
+			- cms, open, www.revbens from www.manchester.gov.uk ˢ
+
+	* Minor
+	** 404s over http & https
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Manchester.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.b3.manchester.gov.uk" />
+	<target host="cms.manchester.gov.uk" />
+	<target host="www.lea.manchester.gov.uk" />
+	<target host="www.revbens.manchester.gov.uk" />
+	<target host="secure.manchester.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="manchester.gov.uk" />
+	<target host="b3.manchester.gov.uk" />
+	<target host="consult.manchester.gov.uk" />
+	<target host="open.manchester.gov.uk" />
+	<target host="www.manchester.gov.uk" />
+
+		<!--	Some paths differ:
+						-->
+		<exclusion pattern="^http://open\.manchester\.gov\.uk/(?!/*(?:favicon\.ico|open(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://open.manchester.gov.uk/Default.aspx" />
+			<test url="http://open.manchester.gov.uk/index.htm" />
+			<test url="http://open.manchester.gov.uk/index.php" />
+			<test url="http://open.manchester.gov.uk/index.xhtml" />
+			<test url="http://open.manchester.gov.uk/site/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://open.manchester.gov.uk/favicon.ico" />
+			<test url="http://open.manchester.gov.uk/open" />
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://cms.manchester.gov.uk/aab/site_map" /-->
+
+		<!--	Ses cookies without Secure:
+							-->
+		<!--test url="http://www.revbens.manchester.gov.uk/HubEforms/default.asp?ScreenId=eform006" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.manchester\.gov\.uk$" name="^(?:_gat|\w{16}|TestCookie)$" /-->
+	<!--securecookie host="^consult\.manchester\.gov\.uk$" name="^(?:JSESSIONID|ServerID)$" /-->
+	<!--securecookie host="^posters\.manchester\.gov\.uk$" name="^ekm_(?:archiveplus|mo_archivesplus)$" /-->
+	<!--securecookie host="^www\.revbens\.manchester\.gov\.uk$" name="^(?:ASPSESSIONID[A-Z]{8}|CONNECTSID)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^(?!open\.)\w" name="." />
+
+
+	<rule from="^http://(?:www\.)?manchester\.gov\.uk/"
+		to="https://cms.manchester.gov.uk/" />
+
+	<rule from="^http://b3\.manchester\.gov\.uk/"
+		to="https://www.b3.manchester.gov.uk/" />
+
+	<rule from="^http://consult\.manchester\.gov\.uk/"
+		to="https://manchester-consult.objective.co.uk/" />
+
+		<test url="http://consult.manchester.gov.uk/portal/contact_us" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

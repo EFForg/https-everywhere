@@ -1,0 +1,110 @@
+<!--
+	Kirklees Metropolitan Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *kirklees.gov.uk:
+
+		- www.buildingservices ᵈ
+		- businesssolutions ᵇ
+		- ebooks ⁴
+		- map ᵈ
+		- noticeyourstreet ᵇ
+		- socialmedia ᵇ
+
+	⁴ 404
+	ᵇ Shows default page
+	ᵈ Dropped
+
+
+	Problematic hosts in *kirklees.gov.uk:
+
+		- consult ᵐ
+		- knh ᵐ ˢ
+		- observatory ᵐ
+
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- kirklees.gov.uk
+		- communitydirectory.kirklees.gov.uk
+		- consult.kirklees.gov.uk
+		- democracy.kirklees.gov.uk
+		- earlyyears.kirklees.gov.uk
+		- jobs.kirklees.gov.uk
+		- kalbookings.kirklees.gov.uk
+		- observatory.kirklees.gov.uk
+		- parking.kirklees.gov.uk
+		- parkingpermits.kirklees.gov.uk
+		- schoolapplications.kirklees.gov.uk
+		- tickets.kirklees.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- Images, on:
+		
+			- (www.)? from www.kirklees.gov.uk ˢ
+			- observatory from observatory.bradford.gov.uk ᵐ
+			- observatory from observatory.calderdale.gov.uk ᵐ
+			- observatory from $self ᵐ
+			- observatory from observatory.leeds.gov.uk ˢ
+			- observatory from observatory.wakefield.gov.uk
+
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Kirklees.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="kirklees.gov.uk" />
+	<target host="communitydirectory.kirklees.gov.uk" />
+	<target host="customerservice.kirklees.gov.uk" />
+	<target host="democracy.kirklees.gov.uk" />
+	<target host="earlyyears.kirklees.gov.uk" />
+	<target host="enrol.kirklees.gov.uk" />
+	<target host="jobs.kirklees.gov.uk" />
+	<target host="kalbookings.kirklees.gov.uk" />
+	<target host="licensing.kirklees.gov.uk" />
+	<target host="parking.kirklees.gov.uk" />
+	<target host="parkingpermits.kirklees.gov.uk" />
+	<target host="schoolapplications.kirklees.gov.uk" />
+	<target host="sst.kirklees.gov.uk" />
+	<target host="static.kirklees.gov.uk" />
+	<target host="tickets.kirklees.gov.uk" />
+	<target host="www.kirklees.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.kirklees.gov.uk" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:(?:communitydirectory|democracy|kalbookings|schoolapplications)\.)?kirklees\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^consult\.kirklees\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^earlyyears\.kirklees\.gov\.uk$" name="^(?:ASP\.NET_SessionId|PE(?:Language|Test)Cookie)$" /-->
+	<!--securecookie host="^jobs\.kirklees\.gov\.uk$" name="^(?:ASP\.NET_SessionId|HighContrast)$" /-->
+	<!--securecookie host="^observatory\.kirklees\.gov\.uk$" name="^(?:ASP\.NET_SessionId|ias\.Locale|ias\.PreferredItemCount)$" /-->
+	<!--securecookie host="^parking(?:permits)?\.kirklees\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^tickets\.kirklees\.gov\.uk$" name="^(?:ASP\.NET_SessionId|af|gid)$" /-->
+
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.kirklees\.gov\.uk/"
+		to="https://kirklees-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

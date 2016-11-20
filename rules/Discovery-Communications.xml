@@ -1,0 +1,102 @@
+<!--
+	Discovery Communications
+
+	Other Discovery Communications rulesets:
+
+		- DDM_CDN.com.xml
+
+
+	CDN buckets:
+
+		- amsarkadium-a.akamaihd.net/assets/dsc-discovery-main/
+		- discovery.custhelp.com
+		- dsc.discovery.com.edgesuite.net
+		- games.dsc.discovery.com.edgesuite.net
+		- netstorage.discovery.com.edgesuite.net
+		- news.discovery.com.edgesuite.net
+
+		- dsc-static.edgesuite.net
+
+			- r.ddmcdn.com
+
+		- static.howstuffworks.com.edgesuite.net
+
+			- static.ddmcdn.com
+
+
+	Nonfunctional hosts in *discovery.com:
+
+		- blogs
+		- dsc		(prints "This Discovery web site is down
+					for scheduled maintenance", akamai)
+		- games.dsc ³
+
+	³ Refused
+
+
+	Problematic host in *discovery.com:
+
+		- netstorage *
+		- news *
+		- store *
+
+	* Works, akamai
+
+
+	Fully covered hosts in *discovery.com:
+
+		- (www.)?
+		- netstorage	(→ akamai)
+		- store		(→ securestore.discovery.com)
+		- securestore
+
+
+	Mixed content:
+
+		- css on news from static.ddmcdn.com ¹
+		- css on news from fonts.googleapis.com ²
+
+		- Images on news and www from r.ddmcdn.com ¹
+		- Images on news and www from static.ddmcdn.com ¹
+
+		- Ads/bugs, on:
+
+			- news from:
+
+				- tags.bkrtx.com ²
+				- pagead2.googlesyndication.com ²
+				- widgets.outbrain.com ²
+				- www.reddit.com ²
+				- b.scorecardresearch.com ²
+
+			- news and www, from:
+
+				- content.dl-rms.com ²
+				- icompass.insightexpressai.com ²
+				- js.revsci.com ²
+
+			- www from core.insightexpressai.com
+
+	¹ Rule not enabled by default <= mismatched
+
+-->
+<ruleset name="Discovery.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="discovery.com" />
+	<target host="securestore.discovery.com" />
+	<target host="www.discovery.com" />
+
+	<!--	Complications:
+				-->
+	<target host="store.discovery.com" />
+
+
+	<rule from="^http://store\.discovery\.com/"
+		to="https://securestore.discovery.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

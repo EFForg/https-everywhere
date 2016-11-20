@@ -1,0 +1,95 @@
+<!--
+	Courier-Post
+
+	For other Gannett Company coverage, see Gannett-Company.xml.
+
+
+	- courierpost.paperg.com
+	- chill.planetdiscover.com
+
+
+	Nonfunctional subdomains:
+
+		- blogs		(no https)
+		- topics	(404, akamai)
+
+
+	Problematic hosts in courierpostonline.com:
+
+		- ^ ¹
+		- cmsimg ²
+		- deals ³
+		- localsearch ³
+		- offers ³
+
+	¹ Refused
+	² 503, akamai
+	³ Mismatched
+
+
+	Mixed content:
+
+		- css, on:
+
+			- localsearch from $self *
+			- www from www.gannett-cdn.com
+
+		- Images, on:
+
+			- localsearch from $self *
+			- www from www.gannett-cdn.com
+
+	* Secured by us
+
+-->
+<ruleset name="Courier Post Online.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="account.courierpostonline.com" />
+	<target host="accountsolution.courierpostonline.com" />
+	<target host="myaccount.courierpostonline.com" />
+	<target host="staticassets.courierpostonline.com" />
+	<target host="subscribe.courierpostonline.com" />
+	<!--target host="www.courierpostonline.com" /-->
+
+	<!--	Complications:
+				-->
+	<!--target host="courierpostonline.com" /-->
+	<!--target host="cmsimg.courierpostonline.com" /-->
+	<target host="localsearch.courierpostonline.com" />
+
+		<exclusion pattern="http://localsearch\.courierpostonline\.com/+(?!images/|sf_frameworks/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://localsearch.courierpostonline.com/localevents/0" />
+			<test url="http://localsearch.courierpostonline.com/localevents/add_event/" />
+			<test url="http://localsearch.courierpostonline.com/sp" />
+
+			<!--	-ve:
+					-->
+			<test url="http://localsearch.courierpostonline.com/images/logo_planetdiscover.gif" />
+			<test url="http://localsearch.courierpostonline.com/sf_frameworks/gdev/css/screen.jsp?skin=" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://offers\.courierpostonline\.com/specialoffer\?gps-source=" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="https://offers\.courierpostonline\.com/KeyGrip\.ashx" /-->
+
+		<test url="http://staticassets.courierpostonline.com/global/assets/uscp/property/courierpostonline/logo/logo_sm_white.png" />
+
+
+	<!--rule from="^http://(?:cmsimg\.)?courierpostonline\.com/"
+		to="https://www.courierpostonline.com/" /-->
+
+	<rule from="^http://localsearch\.courierpostonline\.com/"
+		to="https://chill.planetdiscover.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,35 @@
+<!--
+	CDN buckets:
+
+		- touch-commerce-880c4ca5.s3.amazonaws.com
+
+
+	Nonfunctional domains:
+
+		- (www.)inq.com			(times out)
+		- touchcommerce.com		(cert: *.webvanta.com; 302s to www)
+		- www.touchcommerce.com		(times out)
+
+-->
+<ruleset name="TouchCommerce (partial)">
+
+	<target host="*.inq.com" />
+		<!--
+			301s to www.touchcommerce.com.
+							-->
+		<exclusion pattern="^http://www\." />
+	<target host="go.touchcommerce.com" />
+
+
+	<!--	Clients have unique subdomains.
+						-->
+	<rule from="^http://([\w\-]+)\.inq\.com/"
+		to="https://$1.inq.com/" />
+
+	<!--	- $ 302s to app-j.market.com
+		- Pages 404
+						-->
+	<rule from="^http://go\.touchcommerce\.com/(cs|image|r)s/"
+		to="https://na-j.marketo.com/$1s/" />
+
+</ruleset>

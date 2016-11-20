@@ -1,0 +1,41 @@
+<!--
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- www.physics	(cert only matches ^physics)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- (www.)myleicester
+		- (www.)physics		(www → ^)
+		- swww2
+		- www2
+
+
+	Observed cookie domains:
+
+		- physics
+		- www.physics
+
+-->
+<ruleset name="University of Leicester (partial)">
+
+	<target host="le.ac.uk" />
+	<target host="*.le.ac.uk" />
+
+
+	<securecookie host="^physics\.le\.ac\.uk" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?le\.ac\.uk/"
+		to="https://www.le.ac.uk/" />
+
+	<rule from="^http://((?:www\.)?myleicester|s?www2)\.le\.ac\.uk/"
+		to="https://$1.le.ac.uk/" />
+
+	<rule from="^http://(?:www\.)?physics\.le\.ac\.uk/"
+		to="https://physics.le.ac.uk/" />
+
+</ruleset>

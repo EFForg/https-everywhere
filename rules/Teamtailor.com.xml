@@ -1,0 +1,63 @@
+<!--
+	Nonfunctional hosts in *teamtailor.com:
+
+		- blog ³
+
+	³ 403
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .teamtailor.com
+		- career.teamtailor.com
+		- mynewsdesk.teamtailor.com
+		- paradox-interactive.teamtailor.com
+		- www.teamtailor.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css on blog from fonts.googleapis.com *
+		- Images on career, paradox-interactive, www from res.cloudinary.com *
+
+	* Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+-->
+<ruleset name="Teamtailor.com (partial)">
+
+	<target host="teamtailor.com" />
+	<target host="career.teamtailor.com" />
+	<target host="mynewsdesk.teamtailor.com" />
+	<target host="paradox-interactive.teamtailor.com" />
+	<target host="www.teamtailor.com" />
+
+		<!--	Redirect destination mismatched:
+							-->
+		<exclusion pattern="^http://paradox-interactive\.teamtailor\.com/$" />
+
+			<!--	-ve:
+					-->
+			<test url="http://paradox-interactive.teamtailor.com/connect/login" />
+
+		<test url="http://career.teamtailor.com/connect" />
+
+		<!--	$ redirects to career, so:
+							-->
+		<test url="http://mynewsdesk.teamtailor.com/connect" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.teamtailor\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^(?:career|mynewsdesk|paradox-interactive|www)\.teamtailor\.com$" name="^_tt_session$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+	<securecookie host=".\.teamtailor\.com$" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

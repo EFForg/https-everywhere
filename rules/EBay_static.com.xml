@@ -1,0 +1,56 @@
+<!--
+	For problematic rules, see EBay_static.com-mismatches.xml.
+
+	For other eBay coverage, see EBay.xml.
+
+
+	Problematic subdomains:
+
+		- include ¹
+		- ir ¹
+		- pics ¹
+		- rtm ¹
+		- thumbs\d? ²
+
+	¹ Akamai
+	² 504, Akamai
+
+
+	Partially covered subdomains:
+
+		- gh
+		- include	(→ secureinclude.ebaystatic.com)
+		- ir		(→ secureir.ebaystatic.com)
+		- p		(→ securepics.ebaystatic.com)
+		- pics		(→ securepics.ebaystatic.com)
+		- q		(→ securepics.ebaystatic.com)
+		- rtm		(→ securertm.ebaystatic.com)
+		- secureinclude
+		- secureir
+		- securepics
+		- securertm
+		- \d.thumbs	(→ securethumbs.ebay.com)
+
+-->
+<ruleset name="eBay static.com (partial)">
+
+	<target host="*.ebaystatic.com" />
+		<!--
+			Avoid possible CORS pains:
+							-->
+		<exclusion pattern="^http://\w+\.ebaystatic\.com/(?!.+\.(?:gif|ico|jpg|png)(?:$|\?))" />
+
+
+	<rule from="^http://thumbs\d?\.ebaystatic\.com/"
+		to="https://securethumbs.ebay.com/" />
+
+	<rule from="^http://(?:secure)?(include|ir|pics|rtm)\.ebaystatic\.com/"
+		to="https://secure$1.ebaystatic.com/" />
+
+	<rule from="^http://[pq]\.ebaystatic\.com/"
+		to="https://securepics.ebaystatic.com/" />
+
+	<rule from="^http://gh\.ebaystatic\.com/"
+		to="https://gh.ebaystatic.com/" />
+
+</ruleset>

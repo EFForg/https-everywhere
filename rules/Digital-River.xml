@@ -1,0 +1,117 @@
+<!--
+	Other Digital River rulesets:
+
+		- Commerce5.com.xml
+		- Digital_River_content.net.xml
+		- Element_5.xml
+		- Esellerate.net.xml
+		- Find_My_Order.com.xml
+		- Fireclick.com.xml
+		- Frcanalytics.com.xml
+		- Marketstudio.net.xml
+		- MyCommerce.xml
+		- Netflame.cc.xml
+		- Share_it.com.xml
+
+
+	Nonfunctional hosts in *digitalriver.com:
+
+		- info *
+
+	* Marketo
+
+
+	Partially covered hosts in *digitalriver.com:
+
+		- corporate	(pages redirect to http)
+		- info		(→ na-sj03.marketo.com)
+
+
+	Fully covered hosts in *digitalriver.com:
+
+		- (www.)?
+		- *.cfspx
+		- developers
+
+		- *.img	(tracking images for esellerate):
+
+			- drh
+			- drh[12]
+			- mycommerce
+			- swreg
+			- ui1
+
+		- gc
+		- store
+
+
+	Insecure cookies are set for these hosts:
+
+		- gc.digitalriver.com
+
+
+	Mixed content:
+
+		- Images on developers from www.digitalriver.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Digital River.com (partial)">
+
+	<!--	Direct rewrites:
+					-->
+	<target host="digitalriver.com" />
+	<target host="*.cfspx.digitalriver.com" />
+	<target host="corporate.digitalriver.com" />
+	<target host="developers.digitalriver.com" />
+	<target host="gc.digitalriver.com" />
+	<target host="*.img.digitalriver.com" />
+	<target host="store.digitalriver.com" />
+	<target host="www.digitalriver.com" />
+
+		<!--	Pages redirect to http:
+						-->
+		<exclusion pattern="^http://corporate\.digitalriver\.com/(?!DRHM/)" />
+
+			<test url="http://corporate.digitalriver.com/store/wdau/ContentTheme/pbPage.contactus" />
+
+	<!--	Complications:
+				-->
+	<target host="info.digitalriver.com" />
+
+		<exclusion pattern="^http://info\.digitalriver\.com/(?!css/|images/|js/|rs/)" />
+
+			<test url="http://info.digitalriver.com/BlueHornet-Demo.html" />
+			<test url="http://info.digitalriver.com/Contact-Us.html" />
+			<test url="http://info.digitalriver.com/ContactUsCN.html" />
+			<test url="http://info.digitalriver.com/ManyWaysToPay.html" />
+			<test url="http://info.digitalriver.com/MyCommerceContactUs.html" />
+
+			<!--	+ve:
+					-->
+			<test url="http://info.digitalriver.com/css/mktLPSupport.css" />
+			<test url="http://info.digitalriver.com/rs/digitalriver/images/mycommerce_CMYK.jpg" />
+
+		<test url="http://drh.img.digitalriver.com/DRHM/Storefront/Site/findmyor/cm/images/Redesign2013/main_logo.png" />
+		<test url="http://mycommerce.img.digitalriver.com/templates/system/css/system.css" />
+
+
+	<!--	not secured by server:
+					-->
+	<!--securecookie host="^gc\.digitalriver\.com$" name="^BIGipServerp(-\w+){5}$" /-->
+
+	<!--	Tracking cookie:
+				-->
+	<securecookie host="^\.digitalriver\.com$" name="^utag_\w+$" />
+
+	<securecookie host="^(?:\.?developers|gc|store)\.digitalriver\.com$" name=".+" />
+
+
+	<rule from="^http://info\.digitalriver\.com/"
+		to="https://na-sj03.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

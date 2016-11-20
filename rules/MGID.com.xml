@@ -1,0 +1,103 @@
+<!--
+	For other MarketGid coverage, see MarketGid.com.xml.
+
+
+	Nonfunctional domains:
+
+		- blog.mgid.com *
+		- fem.mgid.com *
+
+	* 502, self-signed
+
+
+	Problematic domains:
+
+		- img.dt00.net ¹
+		- jsc.dt00.net ¹
+		- oth.dt00.net ¹
+		- img.dt07.net ²
+		- jsc.dt07.net ²
+		- oth.dt07.net ²
+
+	¹ Mismatched, CN: *.marketgrid.com
+	² Mismatched, CN: *.mgid.com
+
+
+	Fully covered domains:
+
+		- dt00.net subdomains:
+
+			- img	(→ img.mgid.com)
+			- jsc	(→ jsc.mgid.com)
+			- oth	(→ oth.mgid.com)
+
+		- dt07.net subdomains:
+
+			- admin
+			- admin4
+			- img	(→ img.mgid.com)
+			- imgn	(→ imgn.mgid.com)
+			- jsc	(→ jsc.mgid.com)
+			- oth	(→ oth.mgid.com)
+
+		- mgid.com subdomains:
+
+			- (www.)
+			- dashboard
+			- freelance
+			- img
+			- imgn
+			- jsc
+			- my
+			- oth
+			- usr
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- admin4.dt07.net from img.dt00.net *
+			- (www.)mgid.com from img.dt07.net *
+			- news.mgid.com from imgn.dt07.net *
+
+		- Ads/web bugs, on:
+
+			- (www.)mgid.com and news.mgid.com from b.scorecardresearch.com *
+			- news.mgid.com from news.mgid.com *
+			- (www.)mgid.com and news.mgid.com from edge.quantserve.com *
+			- (www.)mgid.com and news.mgid.com from pixel.quantserve.com *
+
+	* Secured by us
+
+-->
+<ruleset name="MGID.com (partial)">
+
+	<target host="*.dt00.net" />
+		<!--
+			Not identical to mgid.com:
+						-->
+		<exclusion pattern="^http://imgn\.dt00\." />
+	<target host="*.dt07.net" />
+	<target host="mgid.com" />
+	<target host="*.mgid.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.mgid\.com$" name="^(referal|utmc)$" /-->
+
+	<securecookie host="^admin4\.dt07\.net$" name=".+" />
+	<securecookie host="^(?:dashboard|my)?\.mgid\.com$" name=".+" />
+
+
+	<rule from="^http://(imgn?|jsc|oth)\.(?:dt0[07]\.net|mgid\.com)/"
+		to="https://$1.mgid.com/" />
+
+	<rule from="^http://admin(4)?\.dt07\.net/"
+		to="https://admin$1.dt07.net/" />
+
+	<rule from="^http://((?:dashboard|freelance|my|usr|www)\.)?mgid\.com/"
+		to="https://$1mgid.com/" />
+
+</ruleset>

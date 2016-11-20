@@ -1,0 +1,60 @@
+<!--
+	For problematic rules, see TED-mismatches.xml.
+
+
+	CDN buckets:
+
+		- video.ted.com.edgesuite.net
+
+		- lvlt.tedcdn.com.c.footprint.net
+
+			- images.ted.com
+
+
+	Nonfunctional domains:
+
+		- conferences.ted.com	(shows default RHEL page)
+		- images.ted.com *
+		- media.ted.com *
+
+	* Times out
+
+-->
+<ruleset name="TED (buggy)" >
+
+	<target host="*.ted.com" />
+	<target host="*.tedcdn.com" />
+
+		<!--
+			Handled in TED-mismatches.xml.
+							-->
+		<exclusion pattern="^http://video\.ted\.com/" />
+
+  <!-- do not securecookie this ruleset :
+    https://trac.torproject.org/projects/tor/ticket/7548
+	  <securecookie host="^.*\.ted\.com$" name=".+" />
+  -->
+
+	<rule from="^http://ed\.ted\.com/"
+		to="https://teded.herokuapp.com/" />
+
+	<rule from="^http://(?:images\.ted|lvlt\.tedcdn)\.com/"
+		to="https://www.ted.com/" />
+
+	<rule from="^http://www\.ted\.com/"
+		to="https://www.ted.com/" />
+
+	<rule from="^http://pb\-assets\.tedcdn\.com/"
+		to="https://pb-assets.tedcdn.com/" />
+
+	<rule from="^http://img\.tedcdn\.com/"
+		to="https://img-ssl.tedcdn.com/" />
+
+	<test url="http://ed.ted.com/" />
+	<test url="http://images.ted.com/" />
+	<test url="http://video.ted.com/" />
+	<test url="http://www.ted.com/" />
+	<test url="http://pb-assets.tedcdn.com/" />
+	<test url="http://img.tedcdn.com/" />
+	<test url="http://lvlt.tedcdn.com/" />
+</ruleset>

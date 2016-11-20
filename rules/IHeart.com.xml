@@ -1,0 +1,71 @@
+<!--
+	CDN buckets:
+
+		- general-support.iheartradio.desk.com
+
+			- help
+
+		- news.iheart.com.edgesuite.net
+
+		- static.iheart.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- developer ¹
+		- help ²
+		- jobs ³
+		- news ⁴
+
+	¹ Refused
+	² Desk.com
+	³ Github
+	⁴ 503, akamai
+
+
+	Problematic subdomains:
+
+		- static *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- iscale
+		- pylon
+		- securestatic
+		- static	(→ securestatic)
+
+
+	Mixed content:
+
+		- Images on www from iscale *
+
+	* Secured by us
+
+-->
+<ruleset name="iHeart.com (partial)">
+
+	<target host="iheart.com" />
+	<target host="*.iheart.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.iheart\.com$" name="^s_cc$" /-->
+
+	<securecookie host="^\.iheart\.com$" name=".+" />
+
+
+	<rule from="^http://((?:iscale|pylon|www)\.)?iheart\.com/"
+		to="https://$1iheart.com/" />
+
+	<!--rule from="^http://help\.iheart\.com/"
+		to="https://iheartradio.desk.com/" /-->
+
+	<rule from="^http://(?:secure)?static\.iheart\.com/"
+		to="https://securestatic.iheart.com/" />
+
+</ruleset>

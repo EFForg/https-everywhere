@@ -1,0 +1,64 @@
+<!--
+	For other Fastly coverage, see Fastly.xml.
+
+	Nonfunctional domains:
+
+		- *.global.prod.fastly.net
+		- purge.fastly.net	(times out)
+
+
+	Fully covered domains:
+
+		- *.fastly.net:
+
+			- control
+			- mirrors
+			- assets1.fastly.com.a.prod	(→ fastly.a.ssl.fastly.net)
+
+			- *.a.ssl:
+
+				- fastly
+				- fastly-assets
+
+-->
+<ruleset name="Fastly.net (partial)">
+
+	<target host="*.fastly.net" />
+		<test url="http://swiftype-proxy-fastly.a.ssl.fastly.net/embed.js" />
+		<test url="http://virtual-host-discourse.global.ssl.fastly.net/" />
+		<test url="http://naytev.global.ssl.fastly.net/" />
+
+		<exclusion pattern="^http://(?!assets1\.fastly\.com\.a\.prod\.)[\w.-]+\.prod\.fastly\.net/" />
+		<test url="http://www.example.com.global.prod.fastly.net/" />
+		<test url="http://www.loveholidays.com.global.prod.fastly.net/" />
+		<test url="http://www.cosmopolitan.com.global.prod.fastly.net/" />
+		
+		<exclusion pattern="^http://purge\.fastly\.net/" />
+		<test url="http://purge.fastly.net/" />
+		<!-- Discourse forum software uses a font for its icons. When the HTTP URL
+				 for these fonts gets upgraded, it triggers the CORS bug,
+				 https://github.com/EFForg/https-everywhere/issues/49.
+				 This caused problems on rust-lang.org and Boing Boing:
+				 https://github.com/EFForg/https-everywhere/issues/1365
+				 https://github.com/EFForg/https-everywhere/issues/1597
+				The paths have a predictable pattern so we can exclude all instances even though they exist on different hostnames.
+				-->
+		<exclusion pattern="^http://[\w.-]+/assets/fontawesome-webfont-" />
+		<test url="http://boingboing.global.ssl.fastly.net/assets/fontawesome-webfont-eeaf3e983ade434b10eda37dfbd6c6d7.woff?http://bbs.boingboing.net&amp;amp;2&amp;v=4.3.0" />
+		<test url="http://virtual-host-discourse.global.ssl.fastly.net/assets/fontawesome-webfont-73827efc2a64a873027d05873d392cb6.eot?http://users.rust-lang.org&amp;amp;2&amp;v=4.3.0" />
+		<test url="http://boingboing.global.ssl.fastly.net/assets/fontawesome-webfont-743c128c2e48ae20145724e61f9998b4.ttf?http://bbs.boingboing.net" />
+
+	<!-- Periscope.tv live streaming is broken by rewrite of player resources -->
+
+	<exclusion pattern="^http://periscope\-prod\-[\w.-]+\.global\.ssl\.fastly\.net" />
+	<test url="http://periscope-prod-eu-central-1.global.ssl.fastly.net" />
+	<test url="http://periscope-prod-us-west-1.global.ssl.fastly.net" />
+
+	<rule from="^http://assets1\.fastly\.com\.a\.prod\.fastly\.net/"
+		to="https://fastly.a.ssl.fastly.net/" />
+	<test url="http://assets1.fastly.com.a.prod.fastly.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

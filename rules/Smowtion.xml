@@ -1,0 +1,49 @@
+<!--
+	CDN buckets:
+
+		- px.smowtion.com.s3.amazonaws.com
+
+		- wac.3D9E.edgecastcdn.net
+
+			- ads.smowtion.com
+			- edgecast.smowtion.com
+			- geo-ads.smowtion.com
+			- static.smowtion.com
+
+
+	Nonfunctional subdomains:
+
+		- (www.) *
+		- blog *
+		- edge **
+		- landing	(shows passport, mismatched, CN: passport.smowtion.com)
+		- press *
+		- px		(amazonaws)
+		- static **
+
+	* Redirects to http, mismatched, CN: publisher.smowtion.com
+	** 404, mismatched, CN: gp1.wac.edgecastcdn.net
+
+
+	Problematic subdomains:
+
+		- ad		(mismatched, CN: ad.yieldmanager.com)
+		- ads		(works, akamai)
+		- geo-ads	(akamai)
+
+-->
+<ruleset name="Smowtion (partial)">
+
+	<target host="*.smowtion.com" />
+
+
+	<rule from="^http://ad\.smowtion\.com/"
+		to="https://ad.yieldmanager.com/" />
+
+	<rule from="^http://p(assport|ublisher)\.smowtion\.com/"
+		to="https://p$1.smowtion.com/" />
+
+	<rule from="^http://px\.smowtion\.com/"
+		to="https://s3.amazonaws.com/px.smowtion.com/" />
+
+</ruleset>

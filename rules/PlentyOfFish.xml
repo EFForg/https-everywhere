@@ -1,0 +1,27 @@
+<ruleset name="PlentyOfFish (partial)" default_off="needs testing">
+
+	<target host="pof.com" />
+	<target host="*.pof.com" />
+		<!--
+			302s to http:
+
+				- $
+				- .*.aspx
+
+			thumbnails/ 404s on www.
+
+			https://trac.torproject.org/projects/tor/ticket/6279
+					-->
+		<exclusion pattern="^http://(?:pics\d?|www)\.pof\.com/(?:$|.*\.aspx(?:$|\?)|thumbnails/)" />
+
+
+	<!--	- pics\d?: Akamai
+		- Cert doesn't match ^pof.com
+						-->
+	<rule from="^http://(?:pics\d?\.|www\.)?pof\.com/"
+		to="https://www.pof.com/" />
+
+	<rule from="^http://secure\.pof\.com/"
+		to="https://secure.pof.com/" />
+
+</ruleset>

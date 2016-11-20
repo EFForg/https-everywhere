@@ -1,0 +1,46 @@
+<!--
+	For other Cornell University coverage, see Cornell.xml
+
+	Problematic subdomains:
+
+		- de ¹
+		- fr ²
+		- xxx ²
+		- www ²
+
+	¹: Timeout
+	²: Mismatched (CN=arxiv.org)
+
+
+	Insecure cookies are set for these domains: ᶜ
+
+		- .arxiv.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="arXiv.org">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="arxiv.org" />
+	<target host="static.arxiv.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.arxiv.org" />
+	<target host="xxx.arxiv.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.arxiv\.org$" name="^browser$" /-->
+
+
+	<rule from="^http://(?:www|xxx)\.arxiv\.org/"
+		to="https://arxiv.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

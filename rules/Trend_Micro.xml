@@ -1,0 +1,123 @@
+<!--
+	For rules causing false MCB, see Trend_Micro-falsemixed.xml.
+
+
+	Other Trend Micro rulesets:
+
+		- Trend_Micro.de.xml
+		- Trend_Micro.eu.xml
+
+
+	CDN buckets:
+
+		- trend-fail.download.trendmicro.com.edgesuite.net
+		- global-web.trendmicro.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- trendmicro.ae *
+		- www.trendmicro.ae **
+		- trendmicro.be *
+		- www.trendmicro.be **
+
+		- trendmicro.com subdomains:
+
+			- about-threats **
+			- de ***
+			- community		Shows ssl.trendmicro.com
+			- documents		Refused
+			- downloadcenter	Redirects to forms.trendmicro.com
+			- fr ***
+			- newsroom	500
+			- uk		403
+
+		- trendmicro.co.uk *
+		- www.trendmicro.co.uk **
+
+	* Shows eu, mismatched, CN: www.trendmicro.eu
+	** 503, akamai
+	*** "Server Error", akamai
+
+
+	Problematic hosts in *trendmicro.com:
+
+		- amea ¹
+		- apac ¹
+		- blog ²
+		- feeds ³
+		- free ¹
+		- housecall ¹
+
+	¹ Akamai
+	² Mixed css
+	³ Feedburner
+
+
+	Mixed content:
+
+		- Scripts:
+
+			- On blog from corelib *
+			- On blog from ajax.googleapis.com *
+
+		- css on blog from blog *
+		- Images on blog from blog *
+		- favicon on apac, free, housecall from apac.trendmicro.com
+
+		- Bugs:
+
+			- On blog from edge.quantserve.com *
+			- On blog from platform.twitter.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Trend Micro.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="trendmicro.com" />
+	<target host="blog.trendmicro.com" />
+	<target host="corelib.trendmicro.com" />
+	<target host="esupport.trendmicro.com" />
+	<target host="forms.trendmicro.com" />
+	<target host="go.trendmicro.com" />
+	<target host="go2.trendmicro.com" />
+	<target host="ssl.trendmicro.com" />
+	<target host="www.trendmicro.com" />
+
+	<!--	Complications:
+				-->
+	<target host="feeds.trendmicro.com" />
+
+		<!--	Exclude pages so as to avoid false MCB:
+								-->
+		<exclusion pattern="^http://blog\.trendmicro\.com/(?![\w-]+/files/|wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.trendmicro.com/author/rikferguson/" />
+			<test url="http://blog.trendmicro.com/page/2/" />
+			<test url="http://blog.trendmicro.com/websites-use-https/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://blog.trendmicro.com/wp-content/uploads/2013/07/simply-security-logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^esupport\.trendmicro\.com$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^forms\.trendmicro\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://feeds\.trendmicro\.com/"
+		to="https://feeds.feedburner.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

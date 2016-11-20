@@ -1,0 +1,71 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Tumblr
+
+
+	Problematic subdomains:
+
+		- a	(times out)
+		- \d.i *
+
+	* Dropped
+
+
+	Mixed content:
+
+		- css on ^ from a.blip.tv *
+		- Images on ^ from a.blip.tv *
+
+		- Bugs, on:
+
+			- ^ from pixel.quantserve.com *
+			- ^ from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Blip.tv (mixed content)" platform="mixedcontent">
+
+<!--	Direct rewrites:
+			-->
+  <target host="blip.tv" />
+	<target host="i.blip.tv" />
+	<target host="as.blip.tv" />
+	<target host="press.blip.tv" />
+	<target host="theblog.blip.tv" />
+  <target host="www.blip.tv" />
+
+<!--	Complications:
+			-->
+  <target host="a.blip.tv" />
+	<target host="*.i.blip.tv" />
+
+		<test url="http://a.blip.tv/images/blank.gif" />
+		<test url="http://a.blip.tv/skin/smooth/images/icon-search.png" />
+
+		<test url="http://0.i.blip.tv/g?src=Therockoffice-TheRockOfficePresentsBluesTraveler559-428.jpg&amp;w=270&amp;h=152&amp;fmt=jpg" />
+		<test url="https://0.i.blip.tv/g?src=Therockoffice-TheRockOfficePresentsBluesTraveler559-428.jpg&amp;w=270&amp;h=152&amp;fmt=jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.blip\.tv$" name="^__qca$" /-->
+
+  <securecookie host="^(?:.*\.)?blip\.tv$" name=".*"/>
+
+
+	<rule from="^http://a\.blip\.tv/"
+		to="https://as.blip.tv/" />
+
+	<!--	s? for protocol-relative links:
+						-->
+	<rule from="^https?://\d\.i\.blip\.tv/"
+		to="https://i.blip.tv/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,160 @@
+<!--
+	Other MSI rulesets:
+
+		- MSI_Computer.com.xml
+		- MSI-Shop.de.xml
+
+
+	Nonfunctional hosts in *msi.com:
+
+		- ^ ¹
+		- ar ²
+		- asset ²
+		- au ³
+		- be ¹
+		- br ³
+		- by ¹
+		- cafr ³
+		- cn ¹
+		- cz ²
+		- de ³
+		- dk ¹
+		- dl ¹
+		- es ²
+		- eu ²
+		- fi ²
+		- forum-sc ⁴
+		- fr ²
+		- gr ¹
+		- hu ¹
+		- jp ³
+		- kr ³
+		- latam ³
+		- mga ⁵
+		- my ³
+		- nl ²
+		- no ¹
+		- pl ¹
+		- pt ¹
+		- ro ¹
+		- rs ²
+		- ru ²
+		- se ¹
+		- sk ¹
+		- th ³
+		- tr ³
+		- tw ²
+		- ua ²
+		- uk ²
+		- us ³
+		- vn ³
+		- workstations ⁵
+		- www ²
+		- za ³
+
+	¹ Refused
+	² 503, Akamai
+	³ Dropped
+	⁴ Redirects to http
+	⁵ Shows another domain
+
+
+	Problematic hosts in *msi.com:
+
+		- dragoonarmy ¹
+		- event ²
+		- forum-tc ³
+		- support ⁴
+
+	¹ Redirect from $ differs
+	² Akamai
+	³ Server sends no certificate chain, see https://whatsmychaincert.com
+	⁴ Mismatched, CN: register.msi.com
+
+
+	These altnames don't exist:
+
+		- www.register.msi.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- dragoonarmy.msi.com
+		- forum-de.msi.com
+		- forum-en.msi.com
+		- forum-fr.msi.com
+		- forum-pl.msi.com
+		- forum-ru.msi.com
+		- forum-tc.msi.com
+		- frsupport.msi.com
+		- .gaming.msi.com
+		- register.msi.com
+		- sam.msi.com
+		- somethings.msi.com
+
+
+	Mixed content:
+
+		- css on somethings from fonts.googleapis.com *
+		- Images on frsupport from $self *
+		- Web bugs on media from b.static.ak.fbcdn.net
+
+	* Secured by us
+
+-->
+<ruleset name="MSI.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cms.msi.com" />
+	<target host="euinline.msi.com" />
+	<target host="euscripts.msi.com" />
+	<target host="forum-de.msi.com" />
+	<target host="forum-en.msi.com" />
+	<target host="forum-fr.msi.com" />
+	<target host="forum-pl.msi.com" />
+	<!--target host="forum-tc.msi.com" /-->
+	<target host="frsupport.msi.com" />
+	<target host="game-static.msi.com" />
+	<target host="game.msi.com" />
+	<target host="gaming.msi.com" />
+	<target host="media.msi.com" />
+	<target host="register.msi.com" />
+	<target host="sam.msi.com" />
+	<target host="somethings.msi.com" />
+
+	<!--	Complications:
+				-->
+	<target host="dragoonarmy.msi.com" />
+	<target host="support.msi.com" />
+
+
+	<!--    Not secured by server:
+					-->
+	<!--securecookie host="^(?:dragoonarmy|somethings)\.msi\.com$" name="^ci_session$" /-->
+	<!--securecookie host="^forum-(?:de|en|fr|pl|ru|tc)\.msi\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^frsupport\.msi\.com$" name="^(SWIFT_client|SWIFT_sessionid\d+)$" /-->
+	<!--securecookie host="^\.gaming\.msi\.com$" name="^_icl_current_language$" /-->
+	<!--securecookie host="^register\.msi\.com$" name="^reg_grb_session_[\da-f]{32}$" /-->
+	<!--securecookie host="^sam\.msi\.com$" name="^se_id_ui$" /-->
+
+	<securecookie host="^\w" name="." />
+	<securecookie host="^\.gaming\.msi\.com$" name="." />
+
+
+	<!--	Redirects as so:
+				-->
+	<rule from="^http://dragoonarmy\.msi\.com/$"
+		to="https://gaming.msi.com/" />
+
+	<!--	Server drops path:
+					-->
+	<rule from="^http://support\.msi\.com/[^?]*"
+		to="https://register.msi.com/" />
+
+		<test url="http://support.msi.com/index.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

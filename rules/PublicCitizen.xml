@@ -1,0 +1,36 @@
+<!--
+	Problematic subdomains:
+
+		- ^	(cert only matches *.citizen.org)
+
+
+	Observed cookie domains:
+
+		- action *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Web bugs on www from s7.addthis.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Public Citizen">
+
+	<target host="citizen.org" />
+	<target host="*.citizen.org" />
+
+
+	<securecookie host="^(?:action|secure|www)\.citizen\.org$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?citizen\.org/"
+		to="https://www.citizen.org/" />
+
+	<rule from="^http://(action|secure)\.citizen\.org/"
+		to="https://$1.citizen.org/" />
+
+</ruleset>

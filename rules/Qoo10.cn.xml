@@ -1,0 +1,57 @@
+<!--
+	CDN buckets:
+
+		- gd.image-qoo10.cn.gslb.cdnetworks.com
+		- gdssl.image-qoo10.cn.gslb.cdnetworks.com
+		- static.image-qoo10.cn.gslb.cdnetworks.com
+		- staticssl.image-qoo10.cn.gslb.cdnetworks.com
+		- list.qoo10.cn.gslb.cdnetworks.com
+		- my.qoo10.cn.gslb.cdnetworks.com
+		- www.qoo10.cn.gslb.cdnetworks.com
+
+	Nonfunctional domains:
+
+		- qoo10.cn	(shows admin; mismatched, CN: admin.qoo10.cn)
+		- list.qoo10.cn *
+		- www.qoo10.cn *
+
+	* 403; mismatched, CN: ssl2.cdngc.net
+
+
+	Problematic domains:
+
+		- gd.image-qoo10.cn *
+		- static.image-qoo10.cn *
+
+	* 403; mismatched, CN: ssl2.cdngc.net
+
+
+	Fully covered domains:
+
+		- image-qoo10.cn subdomains:
+
+			- gd		(→ gdssl)
+			- gdssl
+			- static	(→ staticssl)
+			- staticssl
+
+		- my.qoo10.cn
+		- qsm.qoo10.cn
+
+-->
+<ruleset name="Qoo10.cn (partial)">
+
+	<target host="*.image-qoo10.cn" />
+	<target host="*.qoo10.cn" />
+
+
+	<securecookie host="^(?:my|qsm)\.qoo10\.cn$" name=".+" />
+
+
+	<rule from="^http://(gd|static)(?:ssl)?\.image-qoo10\.cn/"
+		to="https://$1ssl.image-qoo10.cn/" />
+
+	<rule from="^http://(my|qsm)\.qoo10\.cn/"
+		to="https://$1.qoo10.cn/" />
+
+</ruleset>

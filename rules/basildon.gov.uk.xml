@@ -1,0 +1,72 @@
+<!--
+	Basildon Borough Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *basildon.gov.uk:
+
+		- planning ᵈ
+
+	ᵈ Dropped
+
+
+	Insecure cookies are set for these hosts:
+
+		- payments.basildon.gov.uk
+		- www4.basildon.gov.uk
+		- www5.basildon.gov.uk
+
+-->
+<ruleset name="Basildon.gov.uk (partial)">
+
+	<target host="onlinebenefitclaim.basildon.gov.uk" />
+	<target host="payments.basildon.gov.uk" />
+	<target host="www.basildon.gov.uk" />
+	<target host="www3.basildon.gov.uk" />
+	<target host="www4.basildon.gov.uk" />
+	<target host="www5.basildon.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.basildon\.gov\.uk/(?:contactus|fraud|home)$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.basildon\.gov\.uk/+(?!\w+/(?:css|images|template)/|CHttpHandler\.ashx|media/)" />
+		
+			<!--	+ve:
+					-->
+			<test url="http://www.basildon.gov.uk/article/1945/Contact-Us" />
+			<test url="http://www.basildon.gov.uk/business" />
+			<test url="http://www.basildon.gov.uk/contactus" />
+			<test url="http://www.basildon.gov.uk/fraud" />
+			<test url="http://www.basildon.gov.uk/home" />
+			<test url="http://www.basildon.gov.uk/housing" />
+			<test url="http://www.basildon.gov.uk/leisure" />
+		
+			<!--	-ve:
+					-->
+			<test url="http://www.basildon.gov.uk/basildon/images/listbullet.gif" />
+			<test url="http://www.basildon.gov.uk/basildon/css/styleprint.css" />
+			<test url="http://www.basildon.gov.uk/media/image/t/5/Pay_Now_140x30.jpg" />
+			<test url="http://www.basildon.gov.uk/basildon/template/home/css/home.css" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<!--test url="http://www4.basildon.gov.uk/live/scripts/orev.wsc/ibsxmlpr.p?docid=login" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^payments\.basildon\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+	<!--securecookie host="^www4\.basildon\.gov\.uk$" name="^(?:\w+|anon-session|session-id)$" /-->
+	<!--securecookie host="^www5\.basildon\.gov\.uk$" name="^anonprofile$" /-->
+
+	<securecookie host="^(?!www\.)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

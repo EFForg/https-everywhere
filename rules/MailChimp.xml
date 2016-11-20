@@ -1,0 +1,113 @@
+<!--
+	For problematic rules, see MailChimp-mismatches.xml.
+
+	Other MailChimp rulesets:
+
+		- List-manage.com.xml
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com:
+
+			- cdn-images.mailchimp.com
+			- experts-production		(used on experts)
+			- int-dir			(used on connect.; doesn't have "blog" in filenames)
+
+		- s3.amazonaws.com/downloads.mailchimp.com/ | d1zgderxoe1a.cloudfront.net
+
+		- dbfv8p2wljo34.cloudfront.net
+
+			- static.mailchimp.com
+
+		- dbhkt46el5ri0.cloudfront.net
+
+			- equivalent to cdn-images.mailchimp.com.s3.amazonaws.com
+			- cdn-images.mailchimp.com
+
+		- fukui-9447.herokussl.com
+
+			- connect.mailchimp.com
+
+		- mc-experts.herokuapp.com
+
+			- experts.mailchimp.com
+
+		- mc-status.herokuapp.com		(404, "No such app")
+
+			- status.mailchimp.com
+
+
+	Nonfunctional domains:
+
+		- 50.23.108.136		(shows sfbloghost)
+
+		- mailchimp.com subdomains:
+
+			- apidocs	(shows sfbloghost, cert valid)
+			- cf		(shows sfbloghost over https, 403 over http)
+			- creative	(hosted on Tumblr)
+			- kb ⁵
+
+	⁵ Dropped
+
+
+	Problematic subdomains:
+
+		- status		(mismatched, CN: *.herokuapp.com)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- admin
+		- downloads	(→ d1zgderxoe1a.cloudfront.net)
+
+		- \w+.admin:
+
+			- us2
+
+		- blog
+		- cdn-images
+		- connect
+		- experts	(→ mc-experts.herokuapp.com)
+		- gallery
+		- login
+		- sfbloghost
+		- static	(→ dbfv8p2wljo34.cloudfront.net)
+
+
+-->
+<ruleset name="MailChimp (partial)">
+
+	<target host="mailchimp.com" />
+	<target host="*.mailchimp.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://mailchimp\.com/+($|\?|(about|about/jobs|contact/abuse|favicon\.ico|features|more|pricing|resources/mailchimp-at-work|search)($|[?/]))" /-->
+		<exclusion pattern="^http://mailchimp\.com/+(?!(?:blog|login|signup)(?:$|[?/])|assets/)" />
+
+
+	<!--	is wildcard login cookie used on unsecureable pages?
+									-->
+	<securecookie host="^.+\.mailchimp\.com$" name=".+" />
+
+
+	<rule from="^http://((?:(?:\w+\.)?admin|blog|cdn-images|connect|gallery|login|sfbloghost|www)\.)?mailchimp\.com/"
+		to="https://$1mailchimp.com/" />
+
+	<rule from="^http://downloads\.mailchimp\.com/"
+		to="https://d1zgderxoe1a.cloudfront.net/" />
+
+	<rule from="^http://experts\.mailchimp\.com/"
+		to="https://mc-experts.herokuapp.com/" />
+
+	<rule from="^http://static\.mailchimp\.com/"
+		to="https://dbfv8p2wljo34.cloudfront.net/" />
+
+</ruleset>

@@ -1,0 +1,58 @@
+<!--
+	Other pheedo rulesets:
+
+		- Pheedcontent.com.xml
+
+
+	CDN buckets:
+
+		- d2m3yj20rqnr65.cloudfront.net
+
+			- feeds
+
+
+	Nonfunctional subdomains:
+
+		- site	(refused)
+
+
+	Problematic subdomains:
+
+		- ads *
+		- feeds			(cloudflare)
+		- cforigin.feeds *
+		- images *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- ads			(→ www)
+		- feeds			(→ d2m3yj20rqnr65.cloudfront.net)
+		- cforigin.feeds	(→ d2m3yj20rqnr65.cloudfront.net)
+		- images		(→ www)
+
+-->
+<ruleset name="Pheedo.com (partial)">
+
+	<target host="pheedo.com" />
+	<target host="*.pheedo.com" />
+
+
+	<!--	name="^phdo$"
+				-->
+	<securecookie host="^\.pheedo\.com$" name="^phdo$" />
+
+
+	<rule from="^http://(www\.)?pheedo\.com/"
+		to="https://$1pheedo.com/" />
+
+	<rule from="^http://(?:ad|image)s\.pheedo\.com/"
+		to="https://www.pheedo.com/" />
+
+	<rule from="^http://(?:cforigin\.)?feeds\.pheedo\.com/"
+		to="https://d2m3yj20rqnr65.cloudfront.net/" />
+
+</ruleset>

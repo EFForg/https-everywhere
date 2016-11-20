@@ -1,0 +1,107 @@
+<!--
+	CDN buckets:
+
+		- infoworld-production.112.2o7.net
+
+		- wac.34CE.edgecastcdn.net/??34CE/
+
+			- static.businessinsider.com
+
+
+	Nonfunctional hosts in *businessinsider.com:
+
+		- articles ¹
+		- jobs ²
+
+	¹ 403; CN: ssl2?.cdngc.net
+	² CN: *.jobamatic.com
+
+
+	Problematic hosts in *businessinsider.com:
+
+		- au *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .businessinsider.com
+		- intelligence.businessinsider.com
+
+-->
+<ruleset name="BusinessInsider.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="businessinsider.com" />
+	<target host="intelligence.businessinsider.com" />
+	<target host="static.businessinsider.com" />
+	<target host="static-bii.businessinsider.com" />
+	<target host="static-ssl.businessinsider.com" />
+	<target host="static1.businessinsider.com" />
+	<target host="static2.businessinsider.com" />
+	<target host="static3.businessinsider.com" />
+	<target host="static4.businessinsider.com" />
+	<target host="static5.businessinsider.com" />
+	<target host="static6.businessinsider.com" />
+	<target host="static7.businessinsider.com" />
+	<target host="static8.businessinsider.com" />
+
+	<!--	Fix broken video, see:
+			https://github.com/EFForg/https-everywhere/issues/5014 -->
+		<exclusion pattern="^http://static(\d|-ssl)?.businessinsider.com/assets/js/app/partners/ooyala/skin.json$" />
+		<test url="http://static.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static1.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+		<test url="http://static-ssl.businessinsider.com/assets/js/app/partners/ooyala/skin.json" />
+
+	<target host="static1.uk.businessinsider.com" />
+	<target host="static2.uk.businessinsider.com" />
+	<target host="static3.uk.businessinsider.com" />
+	<target host="static4.uk.businessinsider.com" />
+	<target host="static5.uk.businessinsider.com" />
+	<target host="static6.uk.businessinsider.com" />
+
+	<target host="www.businessinsider.com" />
+
+	<!--	Complications:
+				-->
+		<!--	Many pages redirect to http.
+							-->
+		<!--exclusion pattern="^http://uk\.businessinsider\.com/[\w-]+($|\?)" /-->
+	        <!--exclusion pattern="^http://www\.businessinsider\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+	        <exclusion pattern="^http://www\.businessinsider\.com/(?!assets/|favicon\.ico|login)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.businessinsider.com/about" />
+			<test url="http://www.businessinsider.com/careers" />
+			<test url="http://www.businessinsider.com/contributor" />
+			<test url="http://www.businessinsider.com/events" />
+			<test url="http://www.businessinsider.com/forgot" />
+			<test url="http://www.businessinsider.com/trending" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.businessinsider.com/favicon.ico" />
+			<test url="http://www.businessinsider.com/login" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.businessinsider\.com$" name="^s$" /-->
+	<!--securecookie host="^intelligence\.businessinsider\.com$" name="^PHPSESSID$" /-->
+
+	<securecookie host="^\.businessinsider\.com$" name="^OAX$" />
+	<securecookie host="^intelligence\.businessinsider\.com$" name=".+" />
+
+
+        <!--    See Simply-Hired-clients.xml for problematic jobs rules.
+									-->
+        <rule from="^http:"
+		to="https:" />
+
+</ruleset>

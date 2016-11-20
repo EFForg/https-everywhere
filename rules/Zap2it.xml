@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- d1mxyp5ceukbya.cloudfront.net
+
+			- image-cdn
+
+		- images.zap2it.com.edgesuite.net
+
+
+	Nonfunctional domains:
+
+		- login *
+		- tvbythenumbers *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- (www.)? ¹
+		- image-cdn ²
+		- images ²
+
+	¹ Expired
+	² Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)?
+		- image-cdn	(→ d1mxyp5ceukbya.cloudfront.net)
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.zap2it.com
+
+
+	Mixed content:
+
+		- Images on www from image-cdn.zap2it.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Zap2it.com (partial)" default_off="expired, mismatched">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="zap2it.com" />
+	<target host="www.zap2it.com" />
+
+	<!--	Complications:
+				-->
+	<target host="image-cdn.zap2it.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.zap2it\.com$" name="^^(fuelcid|rmcookie)$" /-->
+
+	<securecookie host="^www\.zap2it\.com$" name=".+" />
+
+
+	<rule from="^http://image-cdn\.zap2it\.com/"
+		to="https://d1mxyp5ceukbya.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

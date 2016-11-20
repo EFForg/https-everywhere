@@ -1,0 +1,54 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://clnk.me/ => https://clnk.me/: (28, 'Connection timed out after 10000 milliseconds')
+Fetch error: http://mlv-cdn.com/ => https://mylikes.com/: (28, 'Connection timed out after 10000 milliseconds')
+	CDN buckets:
+
+		- d1t8hc7w4sf1nn.cloudfront.net
+
+			- w.mlv-cdn.com
+
+
+		- d2h0k96vhpmtat.cloudfront.net
+
+
+	Problematic domains:
+
+		- mlv-cdn.com		(mismatched, CN: mylikes.com)
+		- m.mlv-cdn.com		(cloudfront)
+
+
+	- www.longurl.it doesn't exist
+	- www.mlv-cdn.com doesn't exist
+
+-->
+<ruleset name="MyLikes" default_off='failed ruleset test'>
+
+	<target host="clnk.me" />
+	<target host="longurl.it" />
+	<target host="*.longurl.it" />
+	<target host="mlv-cdn.com" />
+	<target host="w.mlv-cdn.com" />
+	<target host="mylikes.com" />
+	<target host="*.mylikes.com" />
+
+
+	<securecookie host="^\.longurl\.it$" name=".+" />
+	<securecookie host="^(?:ads\.|www\.)?mylikes\.com$" name=".+" />
+
+
+	<!--	www doesn't exist.
+					-->
+	<rule from="^http://(clnk\.me|longurl\.it)/"
+		to="https://$1/" />
+
+	<rule from="^http://mlv-cdn\.com/"
+		to="https://mylikes.com/" />
+
+	<rule from="^http://w\.mlv-cdn\.com/"
+		to="https://d1t8hc7w4sf1nn.cloudfront.net/" />
+
+	<rule from="^http://(ads\.|www\.)?mylikes\.com/"
+		to="https://$1mylikes.com/" />
+
+</ruleset>

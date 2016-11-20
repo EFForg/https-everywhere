@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- com.tictail.blog.s3.amazonaws.com | d2q56xp1cg562x.cloudfront.net
+
+			- blogassets
+			- external.static
+
+		- dhskp7m6mg2zv.cloudfront.net
+		- dmb7ixdwya1nh.cloudfront.net
+		- dtvep25tfu0n1.cloudfront.net
+
+		- tictail.desk.com
+
+			- help
+
+
+	Nonfunctional subdomains:
+
+		- blog		(dropped)
+		- *		(dropped - per-client subdomains)
+
+
+	Problematic subdomains:
+
+		- help		(desk.com)
+		- blogassets *
+		- external.static *
+
+	* cloudfront
+
+
+	Partially covered subdomains:
+
+		- help		(→ d3jyn100am7dxp.cloudfront.net)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- blogassets ¹
+		- external.static ¹
+		- *			(per-client subdomains)
+
+	¹ → d2q56xp1cg562x.cloudfront.net
+
+-->
+<ruleset name="Tictail.com (partial)">
+
+	<target host="tictail.com" />
+	<target host="*.tictail.com" />
+		<!--exclusion pattern="^http://blog\.tictail\.com/" /-->
+
+
+	<securecookie host="^\.ticktail\.com$" name="^(?:__ar_v4|mp_\w{32}_mixpanel|optimizely\w+|_te_)$" />
+	<!--
+		Not secured by server:
+					-->
+	<securecookie host="^(?:www\.)?tictail\.com$" name=".+" />
+
+
+	<rule from="^http://(api\.|www\.)?tictail\.com/"
+		to="https://$1tictail.com/" />
+
+	<rule from="^http://(?:blogassets|external\.static)\.tictail\.com/"
+		to="https://d2q56xp1cg562x.cloudfront.net/" />
+
+	<rule from="^http://help\.tictail\.com/favicon\.ico"
+		to="https://d3jyn100am7dxp.cloudfront.net/favicon.ico" />
+
+</ruleset>

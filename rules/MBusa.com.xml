@@ -1,0 +1,53 @@
+<!--
+		- merc.netmng.com
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- stage
+
+
+	Insecure cookies are set for these hosts:
+
+		- www.mbusa.com
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="MBusa.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="stage.mbusa.com" />
+	<target host="www.mbusa.com" />
+
+	<!--	Complications:
+				-->
+	<target host="mbusa.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.mbusa\.com$" name="WAS8\.mbusaprod-BGN\.sticky\.prod-81$" /-->
+
+	<securecookie host="^(?:stage|www)?\.mbusa\.com$" name=".+" />
+
+
+	<rule from="^http://mbusa\.com/"
+		to="https://www.mbusa.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

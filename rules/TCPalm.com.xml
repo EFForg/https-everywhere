@@ -1,0 +1,69 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://tcpalm.com/ => https://www.tcpalm.com/: (51, "SSL: no alternative certificate subject name matches target host name 'www.tcpalm.com'")
+	CDN buckets:
+
+		- media.tcpalm.com.edgesuite.net
+
+			- a1683.g.akamai.net
+
+		- web.tcpalm.com.edgesuite.net
+
+			- a194.g.akamai.net
+
+		- 8ca6b18bf7d72ef21bc1-160e49a758c1cd43544365a628f11bb4.r40.cf1.rackcdn.com
+
+
+	Nonfunctional subdomains:
+
+		- cars2		(dropped)
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- cars *
+		- homes *
+		- jobs *
+		- m *
+		- media **
+		- web **
+
+	* Works; mismatched, CN: push.scrippsing.com
+	** Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- jobs		(→ www)
+		- login
+		- media *
+		- web *
+
+	* → akamai
+
+-->
+<ruleset name="TCPalm.com (partial)" default_off='failed ruleset test'>
+
+	<target host="tcpalm.com" />
+	<target host="*.tcpalm.com" />
+	<target host="tcpalmextras.com" />
+	<target host="www.tcpalmextras.com" />
+
+
+	<securecookie host="^(?:login)?\.tcpalm\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?tcpalm\.com/"
+		to="https://www.tcpalm.com/" />
+
+	<!--	Server does not drop path:
+						-->
+	<rule from="^http://jobs\.tcpalm\.com/"
+		to="https://www.tcpalm.com/hotjobs" />
+
+	<rule from="^http://(www\.)?tcpalmextras\.com/"
+		to="https://$1tcpalmextras.com/" />
+
+</ruleset>

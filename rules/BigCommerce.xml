@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- http://wac.7ac6.edgecastcdn.net/007AC6/legacy-cdn/images/
+
+-->
+<ruleset name="BigCommerce">
+
+	<target host="bigcommerce.com" />
+	<target host="*.bigcommerce.com" />
+	<target host="interspire.com" />
+	<target host="www.interspire.com" />
+	<target host="mybigcommerce.com" />
+	<target host="*.mybigcommerce.com" />
+		<exclusion pattern="^http://www\.mybigcommerce\.com/$" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="\.client_domain\.mybigcommerce\.com$" name="^(SHOP_SESSION_TOKEN|fornax_anonymousId|fornax_lastIdentify)$" /-->
+
+	<securecookie host="^(?:account|support|www)\.bigcommerce\.com$" name=".+" />
+	<securecookie host="^www\.interspire\.com$" name=".+" />
+	<securecookie host=".*\.mybigcommerce\.com$" name=".+" />
+
+
+	<rule from="^http://(?:my)?bigcommerce\.com/"
+		to="https://www.bigcommerce.com/" />
+
+	<rule from="^http://(account|apps|cdn\d*|support|www)\.bigcommerce\.com/"
+		to="https://$1.bigcommerce.com/" />
+
+	<rule from="^http://(?:www\.)?interspire\.com/"
+		to="https://www.interspire.com/" />
+
+	<rule from="^http://([\w-]+)\.mybigcommerce\.com/"
+		to="https://$1.mybigcommerce.com/" />
+
+</ruleset>

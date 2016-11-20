@@ -1,0 +1,35 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://aka-img-1.h-img.com/ => https://hunch.com/: (28, 'Resolving timed out after 10520 milliseconds')
+Fetch error: http://hunch.com/ => https://hunch.com/: (60, 'SSL certificate problem: certificate has expired')
+	CDN buckets:
+
+		- aka-img-1.h-img.com.edgesuite.net
+		- aka-img-2.h-img.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- blog
+
+
+	Problematic domains:
+
+		- aka-img-[12].h-img.com	(works, akamai)
+		- img-1.hunch.com		(mismatched, CN: HUNCH.COM)
+
+-->
+<ruleset name="Hunch (partial)" default_off='failed ruleset test'>
+
+	<target host="aka-img-1.h-img.com" />
+	<target host="hunch.com" />
+	<target host="*.hunch.com" />
+
+
+	<rule from="^http://(admin\.|api\.|www\.)?hunch\.com/"
+		to="https://$1hunch.com/" />
+
+	<rule from="^http://(?:aka-img-\d\.h-img|img-1\.hunch)\.com/"
+		to="https://hunch.com/" />
+
+</ruleset>

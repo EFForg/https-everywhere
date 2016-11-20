@@ -1,0 +1,133 @@
+<!--
+	Other Atlassian rulesets:
+
+		- Atlassian.net.xml
+		- BitBucket.xml
+		- HipChat.com.xml
+		- SourceTree_app.com.xml
+
+
+	CDN buckets:
+
+		- dq1dnt4af4eyy.cloudfront.net
+
+		- downloads.wpc.29c4.edgecastcdn.net/??29C4/
+
+			- downloads
+
+
+	Nonfunctional subdomains:
+
+		- go *
+
+	* Google
+
+
+	Problematic subdomains:
+
+		- status *
+
+	* StatusPage.io
+
+
+	Fully covered subdomains:
+
+		- atlassian.com
+		- status.atlassian.com		(→ atlassian.statuspage.io)
+
+		- *.atlassian.com: *
+
+			- ace
+			- answers
+			- aug
+			- aui-cdn
+			- blogs
+			- confluence
+			- developer
+			- docs
+			- downloads
+			- extranet
+			- bamboo.extranet
+			- id
+			- jira
+			- marketplace
+			- my
+			- plugins
+			- studio
+			- summit
+			- support
+
+	* Except where excluded below
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .atlassian.com
+
+	Mixed content:
+
+		- Web bugs on confluence from ace *
+
+	* Secured by us
+
+-->
+<ruleset name="Atlassian.com (partial)">
+
+	<target host="atlassian.com" />
+	<target host="*.atlassian.com" />
+
+	<!--target host="atlassian.wpengine.netdna-cdn.com" /-->
+
+		<exclusion pattern="http://(?:click\.mailer|status\.marketplace|swag)\.atlassian\.com/" />
+
+			<test url="http://click.mailer.atlassian.com/" />
+			<test url="http://status.marketplace.atlassian.com/" />
+			<test url="http://swag.atlassian.com/" />
+
+		<!--	Added by Atlassian:
+						-->
+		<exclusion pattern="^http://(?:.+\.(?:ams|dyn\.syd|inf|internal|sf|office)|go)\.atlassian\.com" />
+
+			<test url="http://x.ams.atlassian.com/" />
+			<test url="http://eg.ams.atlassian.com/" />
+			<test url="http://eg.dyn.syd.atlassian.com/" />
+			<test url="http://eg.inf.atlassian.com/" />
+			<test url="http://eg.internal.atlassian.com/" />
+			<test url="http://eg.internal.atlassian.com:81/" />
+			<test url="http://eg.sf.atlassian.com/" />
+			<test url="http://go.atlassian.com/" />
+			<test url="http://eg.office.atlassian.com/" />
+
+		<!--exclusion pattern="^http://wac\.29c4\.edgecastcdn\.net/(?!8029C4/wac-small//wac/)" /-->
+
+		<!--	Direct rewrites:
+					-->
+		<test url="http://answers.atlassian.com/" />
+		<test url="http://developer.atlassian.com/" />
+		<test url="http://jira.atlassian.com/" />
+		<test url="http://marketplace.atlassian.com/" />
+		<test url="http://support.atlassian.com/" />
+		<test url="http://www.atlassian.com/" />
+
+		<!--	Complications:
+					-->
+		<test url="http://status.atlassian.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.atlassian\.com$" name="^_(?:_atl_path|OAVARS\[[\da-f]{8}\])$" /-->
+
+	<securecookie host="^(?:ace|answers|aug|confluence|developer|id|jira|marketplace|my|openid|support)\.atlassian\.com$" name=".+" />
+
+
+	<rule from="^http://status\.atlassian\.com/"
+		to="https://atlassian.statuspage.io/" />
+
+	<!--	Actually redirects as so.	-->
+	<!--rule from="^http://wac\.29c4\.edgecastcdn\.net/8029C4/wac-small//wac/"
+		to="https://summit.atlassian.com/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+</ruleset>

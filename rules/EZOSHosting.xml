@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- cdn.ezoshosting.com.web.cdn.anycast.me
+
+
+	Problematic subdomains:
+
+		- cdn	(refused)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- cdn		(→ ^)
+		- support
+
+
+	Mixed content:
+
+		- Scripts on www from www *
+
+		- css, on www from:
+
+			- cdn *
+			- www *
+
+		- Images on www from cdn *
+
+		- Web bug on www from livepeople.info
+
+	* Secured by us
+
+-->
+<ruleset name="EZOSHosting (false MCB)" platform="mixedcontent">
+
+	<target host="ezoshosting.com" />
+	<target host="*.ezoshosting.com" />
+
+
+	<securecookie host="^.*\.ezoshosting\.com$" name=".*" />
+
+
+	<rule from="^http://(?:cdn\.|(support\.|www\.))?ezoshosting\.com/"
+		to="https://$1ezoshosting.com/" />
+
+</ruleset>

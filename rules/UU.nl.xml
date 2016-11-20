@@ -1,0 +1,109 @@
+<!--
+	Utrecht University
+
+
+	Nonfunctional subdomains:
+
+		- (www.)		(dropped)
+
+		- cs subdomains:
+
+			- legacy ²
+			- people ²
+			- www ²
+
+		- www.fisme.science	(404)
+
+	² Shows wwwsec.cs; mismatched, CN: wwwsec.cs.uu.nl
+
+
+	Problematic subdomains:
+
+		- science *
+		- iiscluster.science *
+		- intercon.science *
+		- www.staff.science	(mismatched, CN: webfarm.science.uu.nl)
+		- web.science **
+		- webstage.science **
+
+	* Data differ
+	** Interrupted
+
+
+	Fully covered subdomains:
+
+		- caracal
+		- wwwsec.cs
+
+		- science subdomains:
+
+			- 4thfloor
+			- babaji
+			- betaplanner
+			- betaplannerstage
+			- caracal
+			- caracalstage
+			- fa203
+			- www.projects
+			- testweb
+			- upper
+			- uppersurvey
+			- webfarm
+			- webstats
+			- web		(→ www.science)
+			- webstage	(→ www.science)
+			- www
+
+
+	These altnames don't exist:
+
+		- wwws.cs.uu.nl
+
+
+	Observed cookie domains:
+
+		- caracal
+
+		- science subdomains:
+
+			- 4thfloor
+			- betaplanner
+			- betaplannerstage
+			- caracal
+			- caracalstage
+			- cellbiology
+			- www.fisme
+			- www.projects
+			- www.staff
+			- testweb
+			- uppersurvey
+			- webfarm
+
+		- www
+
+
+	Mixed content:
+
+		- css, on:
+
+			- www.math from www.math
+			- cellbiology.science from cellbiology.science
+
+		- Images on cellbiology.science from cellbiology.science
+
+-->
+<ruleset name="UU.nl (partial)">
+
+	<target host="*.uu.nl" />
+
+
+	<securecookie host="^(?:caracal|(?:4thfloor|betaplanner|betaplannerstage|caracal|caracalstage|www\.projects|uppersurvey|webfarm)\.science)\.uu\.nl$" name=".+" />
+
+
+	<rule from="^http://(caracal|wwwsec\.cs|(?:4thfloor|babaji|betaplanner|betaplannerstage|caracal|caracalstage|fa203|www\.projects|testweb|upper|uppersurvey|webfarm|webstats)\.science)\.uu\.nl/"
+		to="https://$1.uu.nl/" />
+
+	<rule from="^http://w(?:eb|ebstage|ww)\.science\.uu\.nl/"
+		to="https://www.science.uu.nl/" />
+
+</ruleset>

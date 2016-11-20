@@ -1,0 +1,46 @@
+<!--
+	CDN buckets:
+
+		- spacyz.vo.llnwd.net
+
+			- .hs. doesn't exist
+			- i.t
+
+
+	Problematic subdomains:
+
+		- i.t	(400; mismatched, CN: *.hs.llnwd.net)
+
+
+	Fully covered subdomains:
+
+		- t
+		- a.t
+		- i.t	(→ a.t)
+
+
+	(www.)?: Dropped over http & https
+
+-->
+<ruleset name="Webtracker.jp">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="t.webtracker.jp" />
+	<target host="a.t.webtracker.jp" />
+
+	<!--	Complications:
+				-->
+	<target host="i.t.webtracker.jp" />
+
+
+	<securecookie host="^www\.webtracker\.jp$" name=".+" />
+
+
+	<rule from="^http://i\.t\.webtracker\.jp/"
+		to="https://a.t.webtracker.jp/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,58 @@
+<!--
+	For problematic rules, see Liftdna.com-problematic.xml.
+
+	For other OpenX coverage, see OpenX.xml.
+
+
+	CDN buckets:
+
+		- akamai.openx.org
+
+			- a1051.w7.akamai.net
+			- www.liftdna.com
+
+
+	Problematic subdomains:
+
+		- ^		(works; self-signed, CN: *.openx.com)
+		- marketing	(works; mismatched, CN: *.actonsoftware.com)
+		- reporting	(some pages 404; mismatched, CN: *.openx.com)
+		- www		(works, akamai)
+
+
+	Partially covered subdomains:
+
+		- (www.)	(→ akamai, avoiding user-visible paths)
+		- reporting	(→ lift.openx.com)
+
+
+	Fully covered subdomains:
+
+		- hosted
+		- marketing	(→ www.actonsoftware.com)
+		- static
+
+-->
+<ruleset name="Liftdna.com (partial)">
+
+	<target host="liftdna.com" />
+	<target host="*.liftdna.com" />
+		<!--
+			Avoid user visible paths:
+							-->
+		<!--exclusion pattern="^http://(www\.)?liftdna\.com/(?!\w+\.js|css/|images/|js/)" /-->
+
+
+	<rule from="^http://(hosted|static)\.liftdna\.com/"
+		to="https://$1.liftdna.com/" />
+
+	<rule from="^http://marketing\.liftdna\.com/"
+		to="https://www.actonsoftware.com/" />
+
+	<rule from="^http://reporting\.liftdna\.com/(users)?(?:\?.*)?$"
+		to="https://lift.openx.com/$1" />
+
+	<rule from="^http://reporting\.liftdna\.com/users/([^?]*)(?:$\?.*)?"
+		to="https://lift.openx.com/users/$1" />
+
+</ruleset>

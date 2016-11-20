@@ -1,0 +1,83 @@
+<!--
+	For rules causing false/broken MCB, see NUUG.no-falsemixed.xml.
+
+	For problematic rules, see NUUG.no-problematic.xml.
+
+
+	Problematic subdomains:
+
+		- planet *
+		- wiki *
+
+	* Works; mismatched, CN: nerdhaven.nuug.no
+
+
+	Partially covered subdomains:
+
+		- memberdb	(avoiding false/broken MCB)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- approve
+		- lists
+		- nerdhaven
+		- rt
+
+
+	Mixed content:
+
+		- Video on www from player.vimeo.com ¹
+
+		- Images, on:
+
+			- planet, from:
+
+				- planet ¹
+				- www ¹
+				- (www.)bekkelund.net ²
+				- \d.bp.blogspot.com ¹
+				- www.devolo.com ¹
+				- blogg.friprog.no ²
+				- www.hdwallpapersinn.com ²
+				- www.southafrica.net ²
+				- www.wired.com ²
+
+			- wiki from wiki ¹
+
+	¹ Secured by us
+	² Unsecurable
+
+-->
+<ruleset name="NUUG.no (partial)" platform="cacert">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="nuug.no" />
+	<target host="approve.nuug.no" />
+	<target host="lists.nuug.no" />
+	<target host="memberdb.nuug.no" />
+	<target host="nerdhaven.nuug.no" />
+	<target host="rt.nuug.no" />
+	<target host="www.nuug.no" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://memberdb\.nuug\.no/+(?!favicon\.ico|global\.css)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://memberdb.nuug.no/?page=edit-member" />
+			<test url="http://memberdb.nuug.no/?page=index" />
+			<test url="http://memberdb.nuug.no/?page=signup" />
+
+			<!--	-ve:
+					-->
+			<test url="http://memberdb.nuug.no//global.css" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

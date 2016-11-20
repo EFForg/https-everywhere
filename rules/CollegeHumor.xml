@@ -1,0 +1,31 @@
+<!--
+	For problematic rules, see CollegeHumor-mismatches.xml.
+
+
+	CDN buckets:
+
+		- \d.media.collegehumor.cvcdn.com.edgesuite.net		(works)
+		- \d.static.collegehumor.cvcdn.com.edgesuite.net
+
+-->
+<ruleset name="CollegeHumor (buggy)" default_off="JS redirection loops">
+
+	<target host="collegehumor.com" />
+	<target host="*.collegehumor.com" />
+	<target host="*.static.collegehumor.cvcdn.com" />
+
+
+	<securecookie host="^\.collegehumor\.com$" name=".+" />
+
+
+	<!--	Cert only matches www.
+					-->
+	<rule from="^http://(?:www\.)?collegehumor\.com/"
+		to="https://www.collegehumor.com/" />
+
+	<!--	Akamai.
+			-->
+	<rule from="^http://\d\.static\.collegehumor\.cvcdn\.com/"
+		to="https://www.collegehumor.com/" />
+
+</ruleset>

@@ -1,0 +1,29 @@
+<!--
+	Other Axel Springer rulesets:
+
+		- Smart-AdServer.xml
+
+
+	Nonfunctional:
+		- static.afcdn.com		(503, akamai)
+		- imalbum.aufeminin.com
+		imworld.aufeminin.com		(503, Akamai)
+		media.news.aufeminin.com	(timeout)
+
+-->
+<ruleset name="Axel Springer (partial)">
+
+	<target host="aufeminin.com"/>
+	<target host="*.aufeminin.com"/>
+		<exclusion pattern="^http://www\.aufeminin\.com/.+(?:\.asp$|/)"/>
+
+
+	<!--	pages redirect to http	-->
+	<rule from="^http://(?:www\.)?aufeminin\.com/(a/|[\w\W]+(?:\.(?:css|gif|js|ico|jpg|png)(?:$|\?)|\?lsh|v=[\d\.]+))"
+		to="https://www.aufeminin.com/$1"/>
+
+	<!--	302 to akamai.smartserver.com	-->
+        <rule from="^http://network\.aufeminin\.com/call/pubimppixel/\d{7}/\d+\??"
+                to="https://im2.smartserver.com/images/shim.gif"/>
+
+</ruleset>

@@ -1,0 +1,41 @@
+<!--
+	For other UBM coverage, see UBM-mismatches.xml.
+
+
+	Nonfunctional:
+
+
+		- (www.)causeroom.com	(times out)
+		- \w+.causeroom.com	(ditto; unique subdomains for clients)
+		- (www.)drivetheweb.com	(times out)
+
+		- prnewswire.com:
+
+			- content	(cert: *.hs.llnwd.net; blank page)
+			- www		(ditto)
+
+		- (www.)smallbusinesspr.com
+		- (www.)thefuelteam.com	(times out)
+
+-->
+<ruleset name="PR Newswire (partial)">
+
+	<target host="filecache.drivetheweb.com" />
+	<target host="content.prnewswire.com"/>
+	<target host="photos.prnewswire.com" />
+	<target host="portal.prnewswire.com"/>
+
+
+	<securecookie host="^p\w+\.prnewswire\.com$" name=".*"/>
+
+
+	<rule from="^http://filecache\.drivetheweb\.com/"
+		to="https://s3.amazonaws.com/filecache.drivetheweb.com/" />
+
+	<rule from="^http://content\.prnewswire\.com/designimages/l(ine-horz|ogo-prn)-01_PRN\.gif"
+		to="https://portal.prnewswire.com/images/l$1-01.gif"/>
+
+	<rule from="^http://p(hotos|ortal)\.prnewswire\.com/"
+		to="https://p$1.prnewswire.com/"/>
+
+</ruleset>

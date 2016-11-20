@@ -1,0 +1,93 @@
+<!--
+	For problematic rules, see Shazam-problematic.xml.
+
+	Other Shazam rulesets:
+
+		- My_Shazam.com.xml
+		- ShazamID.com.xml
+
+
+	CDN buckets:
+
+		- ec2-75-101-210-252.compute-1.amazonaws.com
+
+			- swpcontent1.blog.aws-ue1a.shazamcloud.com
+
+		- ec2-176-34-223-26.eu-west-1.compute.amazonaws.com
+
+			- admin.blog.aws-ew1a.shazamcloud.com
+
+		- wp-lb1-922049084.us-east-1.elb.amazonaws.com
+
+			- www.swpcontent.com
+
+		- www.mynewsdesk.com/...
+
+			- news.shazam.com
+
+		- shazamsupport.ssl.zendesk.com
+
+			- support.shazam.com
+
+
+	Nonfunctional domains:
+
+		- admin.blog.aws-ew1a.shazamcloud.com *
+		- (www.)myshazam.com ***
+		- swpcontent1.blog.aws-ue1a.shazamcloud.com *
+		- www.shazamers.com **
+		- www.swpcontent.com **
+
+	* Dropped
+	** Refused
+	*** Revoked
+
+
+	Problematic domains:
+
+		- shazam.com		(refused)
+		- news.shazam.com	(works; mismatched, CN: *.mynewsdesk.com)
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .shazam.com
+		- www.shazam.com
+
+
+	Mixed content:
+
+		- Images on www from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Shazam.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cdn.shazam.com" />
+	<target host="images.shazam.com" />
+	<target host="support.shazam.com" />
+	<target host="www.shazam.com" />
+
+	<!--	Complications:
+				-->
+	<target host="shazam.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.shazam\.com$" name="^(?:_mynewsdesk_session|origin_site|picked_site)$" /-->
+	<!--securecookie host="^www\.shazam\.com$" name="^(?:fat|inid|lruic|profile-data|registration|social-session|tempea|uid|wid)$" /-->
+
+	<securecookie host=".+\.shazam\.com$" name=".+" />
+
+
+	<rule from="^http://shazam\.com/"
+		to="https://www.shazam.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

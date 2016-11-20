@@ -1,0 +1,39 @@
+<!--
+	CDN buckets:
+
+		- wac.43E0.edgecastcdn.net/0043E0/
+
+			- small.linncdn.com
+
+
+	Problematic domains:
+
+		- small.linncdn.com	(works; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- linnrecords.com	(404)
+
+
+	Partially covered subdomains:
+
+		- (www.)linnrecords.com		(^ → www, some pages redirect to http)
+
+
+	Fully covered domains:
+
+		- small.linncdn.com	(→ gp1.wac.edgecastcdn.net)
+
+-->
+<ruleset name="Linn Records.com (partial)">
+
+	<target host="small.linncdn.com" />
+	<target host="linnrecords.com" />
+	<target host="www.linnrecords.com" />
+		<!--exclusion pattern="^http://(www\.)?linnrecords\.com/(?!(account|forgotten|login)\.aspx|css/|images/|img/|img\\comment\.gif|js/|linn\.ico|WebResource\.axd)" /-->
+
+
+	<rule from="^http://(?:www\.)?linnrecords\.com/(?=(?:account|forgotten|login)\.aspx|css/|images/|img/|img\\comment\.gif|js/|linn\.ico|WebResource\.axd)"
+		to="https://www.linnrecords.com/" />
+
+	<rule from="^http://small\.linncdn\.com/"
+		to="https://gp1.wac.edgecastcdn.net/0043E0/" />
+
+</ruleset>

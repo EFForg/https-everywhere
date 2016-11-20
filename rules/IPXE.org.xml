@@ -1,0 +1,37 @@
+<!--
+	Partially covered subdomains:
+
+		- (www.)	(most paths redirect to http)
+
+
+	Fully covered subdomains:
+
+		- boot
+
+
+	Mixed content:
+
+		- Images:
+
+			- on git from www *
+			- in git from www.gravatar.com **
+			- on www from www *
+
+	* Unsecurable, doesn't trip MCB
+	** Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="iPXE.org (partial)">
+
+	<target host="ipxe.org" />
+	<target host="*.ipxe.org" />
+		<!--
+			Most paths redirect to http:
+							-->
+		<exclusion pattern="^http://(?:www\.)?ipxe\.org/(?!.*\?do=(?:login|resendpwd|register))" />
+
+
+	<rule from="^http://((?:boot|git|www)\.)?ipxe\.org/"
+		to="https://$1ipxe.org/" />
+
+</ruleset>

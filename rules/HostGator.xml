@@ -1,0 +1,157 @@
+<!--
+	For rules causing broken MCB, see HostGator.com-falsemixed.xml.
+
+
+	Nonfunctional hosts in *hostgator.com:
+
+		- forums ¹
+		- suspended ²
+
+	¹ Shows blog
+	² Refused
+
+
+	Problematic hosts in *hostgator.com:
+
+		- demo ¹
+		- templates ²
+		- webmail ¹ ³
+		- www ²
+
+	¹ Self-signed
+	² Mixed css
+	³ Mismatched
+
+
+	Partially covered hosts in *hostgator.com:
+
+		- templates *
+		- www *
+
+	* Avoiding broken MCB
+
+
+	Fully covered hosts in *hostgator.com:
+
+		- ^
+		- blog
+		- chat
+		- chat1
+		- gbclient
+		- ga
+		- mail...(:8443)?
+		- portal
+		- secure
+		- support
+		- tickets
+		- tracking
+		- www1
+
+
+	Insecure cookies are set for these hosts:
+
+		- chat1.hostgator.com
+		- ga.hostgator.com
+		- portal.hostgator.com
+		- tickets.hostgator.com
+		- www.hostgator.com
+
+
+	Mixed content:
+
+		- iframe on www from www.youtube.com *
+
+		- css, on:
+
+			- templates from $self *
+			- www from $self *
+
+		- Images, on:
+
+			- templates from $self *
+			- www from $self *
+			- www from blog.hostgator.com *
+
+		- favicon on templates, www from www.hostgator.com *
+
+		- Ads/bugs, on:
+
+			- support from www.googleadservices.com *
+			- templates from media.fastclick.net *
+			- www from www.facebook.com *
+
+	* Secured by us
+
+-->
+<ruleset name="HostGator.com (partial)">
+
+	<target host="hostgator.com" />
+	<target host="*.hostgator.com" />
+
+		<exclusion pattern="^http://(?:demo|forums|suspended)\.hostgator\.com/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://demo.hostgator.com/" />
+			<test url="http://forums.hostgator.com/" />
+			<test url="http://suspended.hostgator.com/" />
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://templates\.hostgator\.com/+(?!favicon\.ico|images/|thumbnails/|style\.css|styles-gator\.css)" />
+		<exclusion pattern="^http://www\.hostgator\.com/+blog(?!/~/tmp/|/wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://templates.hostgator.com/Cell_Phone_Equipment/" />
+			<test url="http://templates.hostgator.com/Communication_Technologies/" />
+			<test url="http://templates.hostgator.com/Hosting" />
+			<test url="http://templates.hostgator.com/Insurance_Brokers/" />
+			<test url="http://templates.hostgator.com/Printers/" />
+			<test url="http://templates.hostgator.com/Promotional_Products/" />
+			<test url="http://www.hostgator.com/blog" />
+			<test url="http://www.hostgator.com/blog/" />
+			<test url="http://www.hostgator.com//blog" />
+			<test url="http://www.hostgator.com//blog/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://templates.hostgator.com/" />
+			<test url="http://templates.hostgator.com/favicon.ico" />
+			<test url="http://templates.hostgator.com/images/pimp.jpg" />
+			<test url="http://templates.hostgator.com/style.css" />
+			<test url="http://templates.hostgator.com/styles-gator.css" />
+			<test url="http://templates.hostgator.com/thumbnails/pr_131.jpg" />
+			<test url="http://www.hostgator.com/blog/~/tmp/wp-uploads/2015/02/button.png" />
+			<test url="http://www.hostgator.com/blog/wp-content/themes/hgblog/images/dragonfly.png" />
+
+		<test url="http://blog.hostgator.com/" />
+		<test url="http://chat.hostgator.com/" />
+		<test url="http://chat1.hostgator.com/" />
+		<test url="http://ga.hostgator.com/" />
+		<test url="http://gbclient.hostgator.com/" />
+		<test url="http://portal.hostgator.com/" />
+		<test url="http://register.hostgator.com/" />
+		<test url="http://secure.hostgator.com/" />
+		<test url="http://support.hostgator.com/" />
+		<test url="http://tickets.hostgator.com/" />
+		<test url="http://tracking.hostgator.com/" />
+		<test url="http://www.hostgator.com/" />
+		<test url="http://www1.hostgator.com/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="chat1\.hostgator\.com$" name="^PHPSESSID$" /-->
+	<!--securecookie host="ga\.hostgator\.com$" name="^dancer\.session$" /-->
+	<!--securecookie host="portal\.hostgator\.com$" name="^gbclient_session$" /-->
+	<!--securecookie host="tickets\.hostgator\.com$" name="^tik_login$" /-->
+	<!--securecookie host="www\.hostgator\.com$" name="^SESSION_ID$" /-->
+
+	<securecookie host=".+\.hostgator\.com$" name=".+" />
+
+
+	<rule from="^http://(\w+\.)?hostgator\.com(:8443)?/"
+		to="https://$1hostgator.com$2/" />
+
+</ruleset>

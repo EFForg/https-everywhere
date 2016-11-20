@@ -1,0 +1,89 @@
+<!--
+	For problematic rules, see Aberystwyth-University-mismatches.xml.
+
+
+	aber-ac-uk.campuspack.eu
+
+
+	Problematic subdomains:
+
+		- ^
+		- arun		(CN: primo; same as primo)
+		- beta
+		- connect	(self-signed)
+
+
+	Nonfunctional subdomains:
+
+		- www.inf
+		- jump		(rx_record_too_long)
+		- nexus
+		- users
+
+
+	Partially covered subdomains:
+
+		- cadair
+
+			- Many paths redirect to http
+			- These don't:
+
+				- dspace/ldap-login
+
+		- primo
+
+			- These paths 404:
+
+				- primo_library/libweb/
+
+			- These don't:
+
+				- $
+				- goto/logon/
+				- pds
+
+
+	Fully covered subdomains:
+
+		- ^		(→ www)
+		- adfs
+		- beta		(→ www)
+		- blackboard
+		- careers
+		- exchange
+		- myaccount
+		- outlook
+		- blackboardtest.psv
+		- qmpsum
+		- share
+		- shibboleth
+		- shop
+		- staffrecord
+		- studentrecord
+		- voyager
+		- webmail
+		- wordpress
+		- www
+
+-->
+<ruleset name="Aberystwyth University (partial)">
+
+	<target host="aber.ac.uk" />
+	<target host="*.aber.ac.uk" />
+		<exclusion pattern="^http://cadair\.aber\.ac\.uk/(?!dspace/ldap-login)" />
+		<exclusion pattern="^http://(?:connect|www\.inf|jump|nexus|users)\." />
+		<exclusion pattern="^http://primo\.aber\.ac\.uk(?:80)?/primo_library/libweb/" />
+
+
+	<!--	^c & ^p to avoid cadair & primo.
+							-->
+	<securecookie host="^[^cp][\w\.]+\.aber\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:beta\.)?aber\.ac\.uk/"
+		to="https://www.aber.ac.uk/" />
+
+	<rule from="^http://([\w\.]+)\.aber\.ac\.uk/"
+		to="https://$1.aber.ac.uk/" />
+
+</ruleset>

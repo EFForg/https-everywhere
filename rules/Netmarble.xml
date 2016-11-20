@@ -1,0 +1,67 @@
+<!--
+	CDN buckets:
+
+		- web.cjgames.edgesuite.net
+
+			- a728.g.akamai.net
+			- img.a.netmarble.com
+			- img.cdn.global.netmarble.com
+
+
+	Nonfunctional subdomains:
+
+		- as *
+		- d187 *
+		- dv *
+		- file			(dropped)
+		- forum *
+		- uwo *
+
+	* 404, valid cert
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches *.netmarble.com)
+		- img.a *
+		- img.cdn.global *
+
+	* Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- auth
+		- bill
+		- img.cdn.global	(→ simg)
+		- img
+		- member
+		- nbill
+		- simg
+
+
+	Mixed content:
+
+		- Web bug on www from img.a
+
+-->
+<ruleset name="Netmarble (partial)">
+
+	<target host="netmarble.com" />
+	<target host="*.netmarble.com" />
+
+
+	<securecookie host="^(?:auth|www)\.netmarble\.com$" name=".+" />
+
+
+	<rule from="^http://netmarble\.com/"
+		to="https://www.netmarble.com/" />
+
+	<rule from="^http://(auth|n?bill|s?img|member|www)\.netmarble\.com/"
+		to="https://$1.netmarble.com/" />
+
+	<rule from="^http://img\.cdn\.global\.netmarble\.com/"
+		to="https://simg.netmarble.com/" />
+
+</ruleset>

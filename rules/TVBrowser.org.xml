@@ -1,0 +1,48 @@
+<!--
+	CN: webserver.ispgateway.de
+
+
+	Fully covered subdomains:
+
+		- (www.)	(www → ^)
+		- hilfe
+
+
+	Mixed content:
+
+		- css on ^ from www *
+
+		- Images, on:
+
+			- ^, from:
+
+				- ^ *
+				- hilfe
+				- www *
+				- www.jetbrains.com *
+				- sflogo.sourceforge.net *
+
+			- hilfe from ^ *
+
+	* Secured by us
+
+
+	mixedcontent due to css from www.
+
+	NB: We secure all resources, and thus
+	platform should be removed with Ffx 24.
+
+-->
+<ruleset name="TVBrowser.org" default_off="mismatched, self-signed" platform="mixedcontent">
+
+	<target host="tvbrowser.org" />
+	<target host="*.tvbrowser.org" />
+
+
+	<securecookie host="^(?:\.hilfe\.)?tvbrowser\.org$" name=".+" />
+
+
+	<rule from="^http://(?:(hilfe\.)|www\.)?tvbrowser\.org/"
+		to="https://$1tvbrowser.org/" />
+
+</ruleset>

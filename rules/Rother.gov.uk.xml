@@ -1,0 +1,109 @@
+<!--
+	Rother District Council
+
+	For rules causing false/broken MCB, see Rother.gov.uk-falsemixed.xml.
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *rother.gov.uk:
+
+		- planweb01 ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *rother.gov.uk:
+
+		- icm ᵉ ᵐ
+		- hub ˣ
+
+	ᵉ Expired
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	Insecure cookies are set for these hosts:
+
+		- rother.gov.uk
+		- hub.rother.gov.uk
+		- www.rother.gov.uk
+
+
+	Mixed content:
+
+		- css on hub from www.rother.gov.uk ˢ
+		- Images on hub from www.rother.gov.uk ˢ
+		- Bug on hub from d1.logo-net.co.uk ʳ
+
+	ʳ Refused
+	ˢ Secured by us
+
+-->
+<ruleset name="Rother.gov.uk (partial)">
+
+	<target host="rother.gov.uk" />
+	<target host="directdebit.rother.gov.uk" />
+	<!--target host="hub.rother.gov.uk" /-->
+	<target host="www.rother.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(?:www\.)?rother\.gov\.uk/(?:News$|Procurement$|article/10062/Search$|business$|counciltax$|faq$|jobs$|listen$|residents$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?rother\.gov\.uk/+(?!\w+/(?:css/|images/|scripts/.+\.css|template/)|CHttpHandler\.ashx|(?:MyAlerts|MyAlertsEvents|article/10061/Login|contactus|unsubscribe)(?:$|[?/])|css/|images/|media/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.rother.gov.uk/News" />
+			<test url="http://www.rother.gov.uk/Procurement" />
+			<test url="http://www.rother.gov.uk/article/10062/Search" />
+			<test url="http://www.rother.gov.uk/buildingcontrol" />
+			<test url="http://www.rother.gov.uk/business" />
+			<test url="http://www.rother.gov.uk/counciltax" />
+			<test url="http://www.rother.gov.uk/counciltax" />
+			<test url="http://www.rother.gov.uk/eventsbooking" />
+			<test url="http://www.rother.gov.uk/faq" />
+			<test url="http://www.rother.gov.uk/jobs" />
+			<test url="http://www.rother.gov.uk/listen" />
+			<test url="http://www.rother.gov.uk/localplan" />
+			<test url="http://www.rother.gov.uk/maps" />
+			<test url="http://www.rother.gov.uk/residents" />
+			<test url="http://www.rother.gov.uk/reuse" />
+			<test url="http://www.rother.gov.uk/servicestandards/" />
+			<test url="http://www.rother.gov.uk/sportsbookings" />
+			<test url="http://www.rother.gov.uk/stats" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.rother.gov.uk/CHttpHandler.ashx?id=22060&amp;p=0" />
+			<test url="http://www.rother.gov.uk/MyAlerts" />
+			<test url="http://www.rother.gov.uk/MyAlertsEvents" />
+			<test url="http://www.rother.gov.uk/article/10061/Login" />
+			<test url="http://www.rother.gov.uk/contactus" />
+			<test url="http://www.rother.gov.uk/media/icon_link/b/r/rss-chicklet.png" />
+			<test url="http://www.rother.gov.uk/rotherdcnet/css/cookiecuttr.css" />
+			<test url="http://www.rother.gov.uk/rotherdcnet/template/home/images/border.png" />
+			<test url="http://www.rother.gov.uk/unsubscribe" />
+			<test url="http://www.rother.gov.uk/utilities/scripts/ext/resources/css/ext-all.css" />
+			<test url="http://www.rother.gov.uk/css/layout0/rotherdc/template/default.css" />
+
+		<!--	Mixed css:
+					-->
+		<test url="http://hub.rother.gov.uk/RotherPortal/ServiceForms/BrownBinForGardenWasteFrm.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(?:www\.)?rother\.gov\.uk$" name="^(?:TextOnlyX|clientvars)$" /-->
+	<!--securecookie host="^hub\.rother\.gov\.uk$" name="^ASP\.NET_SessionId$" /-->
+
+	<securecookie host="^(?!(?:www\.)?rother\.gov\.uk$)\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

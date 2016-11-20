@@ -1,0 +1,34 @@
+<!--
+	For other Condé Nast coverage, see Conde-Nast.xml.
+
+
+	CDN buckets:
+
+		- www.newyorker.com.edgesuite.net
+
+
+	^: cert only matches secure
+
+-->
+<ruleset name="The New Yorker (partial)" default_off="top level pages unencrypted, rule expired">
+
+	<target host="newyorker.com" />
+	<target host="*.newyorker.com" />
+
+
+	<rule from="^http://(?:www\.)?newyorker\.com/(?=favicon\.ico|wp-content/|wp-includes/)"
+		to="https://www.newyorker.com/" />
+
+	<!--	secure... redirects to http:
+
+		- epicenter/wp-content/
+		- images_blogs/
+		- opinion/wp-content/
+					-->
+	<rule from="^http://(?:www\.)?newyorker\.com/(appjs/stats/|online/blogs/[\w-]+/[\w-]+\.(?:jp|pn)g(?:$|\?)|css/|images/|js/|sandbox/)"
+		to="https://secure.newyorker.com/$1" />
+
+	<rule from="^http://(result|secure)\.newyorker\.com/"
+		to="https://$1.newyorker.com/" />
+
+</ruleset>

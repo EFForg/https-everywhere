@@ -1,0 +1,123 @@
+<!--
+	For rules causing false/broken MCB, see ACM.org-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- delivery.acm.org.edgesuite.net
+
+		- deliveryimages.acm.org.edgesuite.net
+
+			- a1907.g.akamai.net
+
+		- portalparts.acm.org.edgesuite.net
+
+			- a1896.g.akamai.net
+
+
+	acm.org lacks proper ssl for the following subdomains
+
+		- amturing ¹
+		- awards ²
+		- delivery ³
+		- dev			<- shows www
+		- jobs			<- sends to jobtarget.com
+		- librarians		<- displays what appears to be
+					   an old version of the website.
+		- mags
+
+	² Shows awards, valid cert
+	² Redirects to http, valid cert
+	³ 504, akamai
+
+
+	Problematic subdomains:
+
+		- deliveryimages *
+		- jobs ²
+		- portalparts *
+		- store ³
+
+	* Works, akamai
+	² Partially works; mismatched, CN: *.jobtarget.com
+	³ Shows an old version of the website
+
+
+	Partially covered subdomains:
+
+		- (www.) ¹
+		- cacm		(some pages redirect to http)
+
+	¹ Avoiding mixed stylesheets
+
+
+	Fully covered subdomains:
+
+		- cacm
+		- campus
+		- deliveryimages *
+		- dl
+		- learning
+		- myacm
+		- pd
+		- plone
+		- portal
+		- portalparts *
+		- queue
+		- spam
+		- store		(→ campus)
+		- techpack
+
+	* → akamai
+
+
+	Mixed content:
+
+		- Scripts, on:
+
+			- www from www *
+
+		- css, on:
+
+			- util from myacm *
+			- www from www *
+
+		- Images:
+
+			- campus from portalparts *
+			- dl from $self *
+			- queue from deliveryimages *
+			- util from $self
+			- util from www *
+
+		- favicons on myacm and util from www *
+
+	* Secured by us
+
+-->
+<ruleset name="ACM.org (partial)">
+
+	<target host="acm.org" />
+	<target host="*.acm.org" />
+		<!--
+			Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?acm\.org/+(?!.+\.(?:/image_thumb$|\.gif$|\.jpg$|\.png$)|favicon\.ico|images-mail/|portal_css/)" />
+		<exclusion pattern="^http://cacm.acm.org/(?!(?:accounts/(?:forgot-password|new)|login)/*(?:\?.*)?$|favicon\.ico|images/|javascripts/|stylesheets/|system/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?acm\.org$" name="^I18N_LANGUAGE$" /-->
+	<!--securecookie host="^\.acm\.org$" name="^MYACM$" /-->
+	<!--securecookie host="^cacm\.acm\.org$" name="^_cacm_session$" /-->
+	<!--securecookie host="^(dl|learning|myacm|techpack)\.acm\.org$" name="^(CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^jobs\.acm\.org$" name="^JTSUBREF$" /-->
+
+	<securecookie host="^(?!cacm\.).*\.acm\.org$" name=".+" />
+
+
+	<rule from="^http://((?:cacm|campus|dl|myacm|pd|learning|myacm|plone|portal|queue|spam|techpack|www)\.)?acm\.org/"
+		to="https://$1acm.org/" />
+
+</ruleset>

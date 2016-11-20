@@ -1,0 +1,64 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+	For clients, see RightNow-clients.xml.
+
+
+	(www.)?: Mismatched
+	motorola-global-community: Mismatched (CN: forums.motorola.com)
+
+
+	Mixed content:
+
+		- Image on ora-fusion-apps.custhelp.com from webstandards.us.oracle.com
+
+-->
+<ruleset name="Custhelp.com">
+
+	<target host="*.custhelp.com" />
+
+		<test url="http://ora-fusion-apps.custhelp.com/" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^appsconnect\.custhelp\.com$" name="^HiveSession$" /-->
+	<!--securecookie host="^ora-fusion-apps\.custhelp\.com$" name="^ps_cookie$" /-->
+
+	<!--	Securing this appears to break login:
+
+			https://trac.torproject.org/projects/tor/ticket/11402
+										-->
+	<!--securecookie host="^\.[\w-]+\.custhelp\.com$" name="^ps_cookie$" /-->
+
+	<securecookie host="^.*\.custhelp\.com$" name="^(?!ps_cookie$).*" />
+
+	<!-- MCB issue -->
+	<exclusion pattern="^http://canoncanada\.custhelp\.com/" />
+
+		<test url="http://canoncanada.custhelp.com/" />
+
+	<!-- Fix #4742 -->
+	<exclusion pattern="^http://ancestryuk\.custhelp\.com/" />
+
+		<test url="http://ancestryuk.custhelp.com/" />
+
+	<!-- Redirects through a number of sites which ultimately can not be secured. -->
+	<exclusion pattern="^http://www\.custhelp\.com/" />
+
+		<test url="http://www.custhelp.com/" />
+
+	<!--	Mismatched (CN: forums.motorola.com)
+
+		http://motorola-global-community.custhelp.com/ redirects to https://forums.motorola.com/ anyway.
+
+		https://github.com/EFForg/https-everywhere/issues/4060 -->
+	<rule from="^http://motorola-global-community\.custhelp\.com/"
+		to="https://forums.motorola.com/" />
+
+		<test url="http://motorola-global-community.custhelp.com/" />
+		<test url="http://motorola-global-community.custhelp.com/pages/afe9e9ba5d" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

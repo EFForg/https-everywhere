@@ -1,0 +1,47 @@
+<!--
+	For other SurveyMonkey coverage, see SurveyMonkey.xml.
+
+
+	CDN buckets:
+
+		- wfo.s3.amazonaws.com
+
+		- surveymonkey.force.com
+
+			- help.wufoo.com
+
+
+	Nonfunctional hosts in *wufoo.com:
+
+		- help *
+
+	* Mismatched, CN: slotmatching4.salesforce.com
+
+
+	Fully covered hosts in *wufoo.com:
+
+		- (www.)
+		- secure
+		- \w+		(per-client subdomains)
+
+-->
+<ruleset name="Wufoo">
+
+	<target host="wufoo.com" />
+	<target host="*.wufoo.com" />
+
+		<exclusion pattern="^http://help\." />
+
+			<test url="http://help.wufoo.com/" />
+
+		<test url="http://secure.wufoo.com/" />
+		<test url="http://www.wufoo.com/" />
+
+
+	<securecookie host="." name="." />
+
+
+	<rule from="^http://([\w-]+\.)?wufoo\.com/"
+		to="https://$1wufoo.com/" />
+
+</ruleset>

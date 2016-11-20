@@ -1,0 +1,38 @@
+<!--
+	NB: Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	^38.de: Mismatched
+
+
+	STS header includes includeSubdomains
+
+-->
+<ruleset name="38.de" default_off="missing certificate chain">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="*.38.de" />
+
+	<!--	Complications:
+				-->
+	<target host="38.de" />
+
+		<test url="http://www.38.de/" />
+	
+
+	<securecookie host="." name="." />
+
+
+	<!--	Server drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://38\.de/.*"
+		to="https://www.38.de/" />
+
+		<test url="http://38.de//index.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

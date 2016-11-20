@@ -1,0 +1,48 @@
+<!--
+	Nonfunctional subdomains:
+
+		- d\d+...:182 ¹
+		- nagios ²
+
+	¹ Refused
+	² Shows adtrace.org, expired 2013-07-31
+
+
+	These altnames don't exist:
+
+		- secure.allmyvideos.net
+
+
+	Mixed content:
+
+		- Images, on (www.)? from d\d+ *
+
+	* Unsecurable
+
+-->
+<ruleset name="allmyvideos.net (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="allmyvideos.net" />
+	<target host="api.allmyvideos.net" />
+	<target host="cacti.allmyvideos.net" />
+	<target host="wiki.allmyvideos.net" />
+	<target host="www.allmyvideos.net" />
+
+		<!--exclusion pattern="^http://(d\d+|nagios)\.allmyvideos\.net/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.allmyvideos\.net$" name="^lang$" /-->
+	<!--securecookie host="^api\.allmyvideos\.net$" name="^dancer\.session$" /-->
+	<!--securecookie host="^cacti\.allmyvideos\.net" name="^Cacti$" /-->
+
+	<securecookie host="^(?:api|cacti)?\.allmyvideos\.net$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,101 @@
+<!--
+	For problematic rules, see Bazaarvoice-problematic.xml.
+
+
+	Nonfunctional hosts in *bazaarvoice.com:
+
+		- ^ ʳ
+		- investors ᵈ
+		- resources ᴹ
+		- status ᵈ
+		- www ³
+
+	³ 503
+	ᴹ Marketo
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic domains:
+
+		- in *bazaarvoice.com:
+
+			- media2 ᴬ ᵐ
+			- spark	ᵐ	(CN: slotmatching6.salesforce.com)
+
+		- resources.bazaarvoicecampaigns.com ˢ
+
+	ᴬ Akamai
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Partially covered hosts in *bazaarvoice.com:
+
+		- resources ᴹ
+
+	ᴹ Marketo
+
+
+	Insecure cookies are set for these hosts:
+
+		- login.bazaarvoice.com
+
+-->
+<ruleset name="Bazaarvoice.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="login.bazaarvoice.com" />
+	<target host="*.ugc.bazaarvoice.com" />
+
+	<!--	Complications:
+				-->
+	<!--target host="media2.bazaarvoice.com" /-->
+	<target host="resources.bazaarvoice.com" />
+	<target host="spark.bazaarvoice.com" />
+
+		<exclusion pattern="^http://resources\.bazaarvoice\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://resources.bazaarvoice.com/RequestADemo1.html" />
+			<test url="http://resources.bazaarvoice.com/RequestADemo1.html?utm_campaign=&amp;utm_content=&amp;utm_source=&amp;utm_medium=&amp;utm_term=&amp;utm_nooverride=&amp;gclid=" />
+			<test url="http://resources.bazaarvoice.com/fy14-retail.html" />
+			<test url="http://resources.bazaarvoice.com/fy14-retail.html?utm_campaign=&amp;utm_content=&amp;utm_source=&amp;utm_medium=&amp;utm_term=&amp;utm_nooverride=&amp;gclid=" />
+
+			<!--	-ve:
+					-->
+			<test url="http://resources.bazaarvoice.com/css/mktLPSupport.css" />
+			<test url="http://resources.bazaarvoice.com/images/forms/backRequiredGray.gif" />
+			<test url="http://resources.bazaarvoice.com/rs/bazaarvoice/images/logo_bv_sub.png" />
+
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/164648/photoThumb.jpg" />
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/165983/photoThumb.jpg" />
+		<test url="http://walmart.ugc.bazaarvoice.com/1336/165984/photoThumb.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^login\.bazaarvoice\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^(?!dashboard\.)." name="." /-->
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^login\." name="." />
+
+
+	<!--rule from="^http://media2\.bazaarvoice\.com/"
+		to="https://???-a.akamaihd.net/" /-->
+
+		<!--test url="http://media2.bazaarvoice.com/images/lexus-featured.jpg" /-->
+
+	<rule from="^http://spark\.bazaarvoice\.com/"
+		to="https://bazaarvoice.secure.force.com/" />
+
+	<rule from="^http://resources\.bazaarvoice\.com/"
+		to="https://na-aba.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

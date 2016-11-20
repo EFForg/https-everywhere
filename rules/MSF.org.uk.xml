@@ -1,0 +1,64 @@
+<!--
+	Problematic hosts in *msf.org.uk:
+
+		- ^ ² ² ³
+		- cdn ⁴
+
+	² Expired
+	² Mismatched
+	³ Untrusted root
+	⁴ Fastly
+
+-->
+<ruleset name="MSF.org.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.msf.org.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="msf.org.uk" />
+	<target host="cdn.msf.org.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.msf\.org\.uk/(?:email-signup|home|quick-signup-confirm|request-msf-speaker-uk)$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.msf\.org\.uk/+(?!favicon\.ico|sites/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.msf.org.uk/email-signup" />
+			<test url="http://www.msf.org.uk/events-main" />
+			<test url="http://www.msf.org.uk/fundraise-msf" />
+			<test url="http://www.msf.org.uk/home" />
+			<test url="http://www.msf.org.uk/make-a-donation" />
+			<test url="http://www.msf.org.uk/support-us" />
+			<!--
+				(physical address, email, real name...):
+									-->
+			<test url="http://www.msf.org.uk/quick-signup-confirm" />
+			<!--
+				(same & phone number):
+							-->
+			<test url="http://www.msf.org.uk/request-msf-speaker-uk" />
+			<test url="http://www.msf.org.uk/volunteer-uk" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.msf.org.uk/favicon.ico" />
+			<test url="http://www.msf.org.uk/sites/all/themes/unified_template/ut_zen/logo.png" />
+
+		<test url="http://cdn.msf.org.uk/sites/all/themes/unified_template/ut_zen/logo.png" />
+
+
+	<rule from="^http://(?:cdn\.)?msf\.org\.uk/"
+		to="https://www.msf.org.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

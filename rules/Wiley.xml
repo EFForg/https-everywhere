@@ -1,0 +1,50 @@
+
+<!--
+Disabled by https-everywhere-checker because:
+Non-2xx HTTP code: http://sp.onlinelibrary.wiley.com/ (200) => https://sp.onlinelibrary.wiley.com/ (403)
+
+	Nonfunctional subdomains:
+
+		- bcs		(no https)
+		- eu *
+		- eu.he *
+		- he-cda *
+		- www *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- hesupport	(times out)
+		- higheredbcs	(works; mismatched, CN: onlinelibrary)
+
+-->
+<ruleset name="Wiley (partial)" default_off='failed ruleset test'>
+
+	<target host="wiley.com"/>
+	<target host="*.wiley.com"/>
+	<target host="onlinelibrarystatic.wiley.com"/>
+	<target host="sp.onlinelibrary.wiley.com" />
+
+
+	<securecookie host="^sp\.onlinelibrary\.wiley\.com$" name=".*" />
+
+
+	<rule from="^http://(?:www\.)?wiley\.com/(?:remcover\.cg|WileyRemoteAPI/Cover\.rap)i\?isbn=(\d{8})(\w\w)"
+		to="https://media.wiley.com/product_data/coverImage/$2/$1/$1$2.jpg" />
+
+	<rule from="^http://hesupport\.wiley\.com/(?:\?.*)?$"
+		to="https://higheredwiley.custhelp.com/" />
+
+	<!--	Where there's only one atom, it's Wiley's internal ID for a publication
+		Where there are two atoms:
+			- 1st atom: 1st half of DOI
+			- 2nd atom: 2nd half of DOI OR ISSN		-->
+	<rule from="^http://onlinelibrary\.wiley\.com/store/([\d\.]+)(/[^/]+)?/asset/"
+		to="https://onlinelibrarystatic.wiley.com/store/$1$2/asset/"/>
+
+	<rule from="^http://(images|sp\.onlinelibrary|onlinelibrarystatic)\.wiley\.com/"
+		to="https://$1.wiley.com/"/>
+
+</ruleset>

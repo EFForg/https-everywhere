@@ -1,0 +1,85 @@
+<!--
+	For rules causing valid MCB, see Highcharts.com-mixedcontent.xml.
+
+
+	Nonfunctional hosts in *highcharts.com:
+
+		- (www.)? *
+		- api ²
+		- forum *
+
+	* Redirects to http
+	² Refused
+
+
+	Problematic hosts in *highcharts.com:
+
+		- code *
+
+	* Mixed css
+
+
+	These altnames don't exist:
+
+		- www.shop.highsoft.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .highcharts.com
+		- cloud.highcharts.com
+		- .shop.highsoft.com
+
+
+	Mixed content:
+
+		- css on code from www.highcharts.com ¹
+		- Fonts on shop from themes.googleusercontent.com ²
+		- Images on code, shop from www.highcharts.com ¹
+
+	¹ Unsecurable <= redirects to http
+	² Secured by us
+
+-->
+<ruleset name="Highcharts.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="code.highcharts.com" />
+	<target host="cloud.highcharts.com" />
+	<target host="shop.highsoft.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?highcharts\.com/($|joomla/templates/|templates/highsoft_colorful/)" /-->
+		<!--exclusion pattern="^http://forum\.highcharts\.com/$" /-->
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://code\.highcharts\.com/+(?![\d.]+/modules/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://code.highcharts.com/mapdata/" />
+			<test url="http://code.highcharts.com/mapdata/1.0.0/" />
+			<test url="http://code.highcharts.com/mapdata/changelog.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://code.highcharts.com/2.3.5/modules/canvas-tools.js" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.highcharts\.com$" name="^(__cfduid|cf_clearance)$" /-->
+	<!--securecookie host="^cloud\.highcharts\.com$" name="^AWSELB$" /-->
+	<!--securecookie host="^\.shop\.highcharts\.com$" name="^frontend$" /-->
+
+	<securecookie host="^\.highcharts\.com$" name="^__cfduid$" />
+	<securecookie host="^(?:cloud|\.shop)\.highcharts\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

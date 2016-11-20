@@ -1,0 +1,82 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://rollingstone.com/ => https://rollingstone.com/: (7, 'Failed to connect to rollingstone.com port 443: Connection timed out')
+	Other Rolling Stone rulesets:
+
+		- Rolling_Stone_Subscriptions.com.xml
+
+
+	CDN buckets:
+
+		- assets.rollingstone.com.edgesuite.net
+
+			- a402.g.akamai.net
+
+		- assets-s3.rollingstone.com.edgesuite.net
+
+		- www.rollingstone.com.edgesuite.net
+
+			- a1317.g.akamai.net
+
+
+	Nonfunctional subdomains:
+
+		- archive *
+
+	* Refused
+
+
+	Partially covered subdomains:
+
+		- assets-s3 *
+
+	* At least some pages redirect to http
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- assets
+		- subscribe
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- www from assets *
+			- www from www.thedailybeast.com *
+
+		- favicon on subscribe from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Rolling Stone.com (partial)" default_off='failed ruleset test'>
+
+	<target host="rollingstone.com" />
+	<target host="*.rollingstone.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://assets-s3\.rollingstone\.com/+($|\?|css/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://assets-s3\.rollingstone\.com/+(?!assets/|favicon\.ico|images/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^subscribe\.rollingstone\.com$" name="^(JSESSIONID|TI_SPLIT_RANDOM|customerSessionGuid)$" /-->
+	<!--
+		google-analytics.com tracking cookies:
+							-->
+	<securecookie host="^\.rollingstone\.com$" name="^__utm\w$" />
+	<securecookie host="^subscribe\.rollingstone\.com$" name=".+" />
+
+
+	<rule from="^http://((?:assets|assets-s3|subscribe|www)\.)?rollingstone\.com/"
+		to="https://$1rollingstone.com/" />
+
+</ruleset>

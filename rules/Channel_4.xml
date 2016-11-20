@@ -1,0 +1,99 @@
+<!--
+	Disabled per https://trac.torproject.org/projects/tor/ticket/15878
+	For rules causing false/broken MCB, see Channel_4-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- channel4.com.edgesuite.net
+
+			- paralympics
+
+		- watchlive.channel4.com.edgesuite.net
+
+		- 2a7e9.v.fwmrm.net
+
+			- realmedia.channel4.com
+
+		- chnlfourad.fcod.llnwd.net
+
+			- ll.flash.anno.channel4.com
+
+		- chnlfour.vo.llnwd.net
+
+			- ll.abrstream.channel4.com
+			- .hs. doesn't exist
+
+
+	Nonfunctional subdomains:
+
+		- ll.abrstream.channel4.com	(400, CN: *.hs.llnwd.net)
+		- ll.flash.anno		(interrupted)
+		- blogs			(redirects to http, valid cert)
+		- paralympics		(404, akamai)
+		- watchlive		(503, akamai)
+
+
+	Problematic subdomains:
+
+		- realmedia	(mismatched, CN: *.v.fwmrm.net)
+
+
+	Partially covered subdomains:
+
+		- (www.) *
+		- mailing	(avoiding false/broken MCB)
+
+	* Some paths redirect to http, including:
+
+		- assets/
+		- media/
+
+
+	Fully covered subdomains:
+
+		- 4id
+		- ais
+		- test
+		- realmedia	(→ 2a7e9.v.fwmrm.net)
+
+
+	Mixed content:
+
+		- css on mailing from www *
+
+		- Images on mailing from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Channel 4.com (partial)" default_off="Breaks video">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="channel4.com" />
+	<target host="4id.channel4.com" />
+	<target host="ais.channel4.com" />
+	<target host="mailing.channel4.com" />
+	<target host="test.channel4.com" />
+	<target host="www.channel4.com" />
+
+	<!--	Complications:
+				-->
+	<target host="realmedia.channel4.com" />
+
+		<!--exclusion pattern="^http://(www\.)?channel4\.com/+(assets|media)/" /-->
+		<exclusion pattern="^http://(?:www\.)?channel4\.com/(?!4me(?:$|[?/])|static/)" />
+
+		<!--	Avoid false/broken MCB:
+						-->
+		<exclusion pattern="^http://mailing\.channel4\.com/public/snowmail/remotebox\.jsp" />
+
+
+	<rule from="^http://realmedia\.channel4\.com/"
+		to="https://2a7e9.v.fwmrm.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

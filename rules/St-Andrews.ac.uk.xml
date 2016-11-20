@@ -1,0 +1,58 @@
+<!--
+	University of St Andrews
+
+
+	Nonfunctional subdomains:
+
+		- morph.cs		(dropped)
+		- research-repository	(redirects to http)
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- risweb
+		- sparc
+		- www.vacancies
+
+
+	Observed cookie domains:
+
+		- research-repository ¹
+		- risweb ²
+		- www.vacancies ²
+
+	¹ Not secured by us <= we don't touch plaintext cookies
+	² Secured by us
+
+
+	Mixed content:
+
+		- Images on risweb from www *
+
+	* Secured by us
+
+-->
+<ruleset name="St-Andrews.ac.uk (partial)">
+
+	<target host="st-andrews.ac.uk" />
+	<target host="*.st-andrews.ac.uk" />
+		<!--exclusion pattern="^http://research-repository\.st-andrews\.ac\.uk/+($|community-list$|favicon\.ico|image/|print\.css|static/|styles\.css|utils\.js)" /-->
+
+
+	<securecookie host="^\.(?:.+\.)?st-andrews\.ac\.uk$" name="^__utm\w+$" />
+	<securecookie host="^(?:risweb|www\.vacancies)\.st-andrews\.ac\.uk$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?st-andrews\.ac\.uk/"
+		to="https://www.st-andrews.ac.uk/" />
+
+	<rule from="^http://(risweb|sparc|www\.vacancies)\.st-andrews\.ac\.uk/"
+		to="https://$1.st-andrews.ac.uk/" />
+
+</ruleset>

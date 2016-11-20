@@ -1,0 +1,86 @@
+<!--
+	Nonfunctional domains:
+
+		- s0.d45.net
+		- s1.prbrds.com
+		- s15524.prbrds.com
+		- ads.proboards.com ¹
+		- www.login.proboards.com ¹
+		- s1.storage.proboards.com ²
+
+	¹ 502
+	² 403
+
+
+	Problematic domains:
+
+		- 4d5.net ¹
+		- d.prbrds.com ¹
+		- help.proboards.com ²
+
+	¹ Works; mismatched, CN; ss.prbrds.com
+	² Redirect differs
+
+
+	Insecure cookies are set for these domains:
+
+		- .proboards.com
+
+-->
+<ruleset name="ProBoards (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ss.prbrds.com" />
+	<target host="www.ss.prbrds.com" />
+
+	<target host="proboards.com" />
+	<target host="images.proboards.com" />
+	<target host="login.proboards.com" />
+	<target host="storage.proboards.com" />
+	<target host="www.proboards.com" />
+
+	<!--	Complications:
+				-->
+	<target host="d.prbrds.com" />
+
+	<target host="help.proboards.com" />
+
+		<!--	/*(?!$|\?) 404s:
+					-->
+		<exclusion pattern="http://help\.proboards\.com/+(?!$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://help.proboards.com/home.htm" />
+			<test url="http://help.proboards.com/index.asp" />
+			<test url="http://help.proboards.com/index.aspx" />
+			<test url="http://help.proboards.com/index.php" />
+
+			<!--	-ve:
+					-->
+			<test url="http://help.proboards.com//" />
+			<test url="http://help.proboards.com/?" />
+
+		<test url="http://images.proboards.com/v5/icons/board-new-post.png" />
+
+
+	<!--	CloudFlare cookies:
+					-->
+	<!--securecookie host="^\.proboards\.com$" name="^(?:__cfduid|cf_clearance)$" /-->
+
+	<securecookie host="^\." name="^(?:__cfduid|cf_clearance)$" />
+
+
+	<rule from="^http://d\.prbrds\.com/"
+		to="https://ss.prbrds.com/" />
+
+	<!--	Redirect drops args and forward slash:
+							-->
+	<rule from="^http://help\.proboards\.com/.*"
+		to="https://www.proboards.com/forum-help-guide" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

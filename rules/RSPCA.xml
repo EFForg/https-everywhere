@@ -1,0 +1,68 @@
+<!--
+	Royal Society for the Prevention of Cruelty to Animals
+
+
+	Other RSPCA rulesets:
+
+		- RSPCA_shop.co.uk.xml
+
+
+	Problematic subdomains:
+
+		- ^ *
+		- ask		(works; mismatched, CN: service.nibcdirect.nl)
+		- content.www *
+
+	* Cert only matches *.rspca.org.uk
+
+
+	Partially covered domains:
+
+		- (www.)rspca.org.uk	(home pages redirects to http)
+
+
+	Mixed content:
+
+		- Images, on www from:
+
+			- www *
+			- content.www *
+
+		- Ads/web bugs, on www from:
+
+			- s7.addthis.com *
+			- s3.amazonaws.com/new.cetrk.com/ *
+			- www.googleadservices.com *
+
+	* Secured by us
+
+-->
+<ruleset name="RSPCA (partial)">
+
+	<target host="rspca.org.uk" />
+	<target host="www.rspca.org.uk" />
+	<target host="content.www.rspca.org.uk" />
+	<target host="donations.rspca.org.uk" />
+
+
+	<securecookie host="^donations\.rspca\.org\.uk$" name=".+" />
+	<!--
+		cookie set by data rewritten from content.www
+								-->
+	<securecookie host="^www\.rspca\.org\.uk$" name="^CMS_PRD_SESSIONID$" />
+
+
+	<test url="http://www.rspca.org.uk/home" />
+	<test url="http://www.rspca.org.uk/home?foo" />
+
+
+	<rule from="^http://www\.rspca\.org\.uk/home"
+		to="https://www.rspca.org.uk/home/" />
+
+	<rule from="^http://content\.www\.rspca\.org\.uk/"
+		to="https://www.rspca.org.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

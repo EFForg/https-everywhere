@@ -1,0 +1,790 @@
+<!--
+	For rules causing MCB, see georgetown.edu-mixedcontent.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/global-db-public
+
+
+	Nonfunctional subdomains:
+
+		- alumni ʰ
+		- assessment ³
+		- biomedgrad ²
+		- bookstore ʳ
+		- canzps ¹
+		- cbbc ⁶
+		- ccpe ᵇ
+		- cdmc ³
+		- www.cnir ⁶
+		- conversation ³
+		- csd ⁸
+		- csl				(redirects to http, self-signed)
+		- css ²
+		- ctc ¹
+		- ctls ᵃ
+		- courses ᵃ
+		- doyle ³
+		- events ᵃ
+		- financialaffairs ⁶
+		- gervaseprograms ⁴
+		- giving ʰ
+		- gnulab ᶠ
+		- gucchd ¹
+		- gumail			(reset)
+		- gumc ¹
+		- h ³
+		- instructionalcontinuity	(200 "DNS or server configuration error")
+		- isd ¹
+		- isim ²
+		- www.isis			(interrupted)
+		- journal ³
+		- linguistics ⁴
+		- mlc.linguistics ³
+		- lwp ³
+		- magazine ᵃ
+		- memory ⁶
+		- dev.msb ⁹
+		- stg.msb ⁹
+		- narrative ³
+		- masm.physics ᵃ
+		- police ²
+		- policies ⁴
+		- publicsafety ²
+		- scs ʰ
+		- sips ³
+		- web ²
+		- writing	(200 "DNS or server configuration error")
+		- writingcenter	(200 "DNS or server configuration error")
+
+	¹ Shows www2; mismatched, CN: www2.georgetown.edu
+	² Times out
+	³ Shows blog. cert
+	⁴ Shows www1; mismatched, CN: www1.georgetown.edu
+	⁵ Shows www11; mismatched, CN: www11.georgetown.edu
+	⁶ Shows www9; mismatched, CN: www9.georgetown.edu
+	⁷ Shows www15; mismatched, CN: www15.georgetown.edu
+	⁸ Shows www8; mismatched, CN: www8.georgetown.edu
+	⁹ 503; mismatched, CN: acquia-sites.com
+	ᵃ Shows another domain
+	ᵇ Shows default page
+	ᶠ Handshake fails
+	ʰ Redirects to http
+	ʳ Refused
+
+
+	Problematic subdomains:
+
+		- ^ ᵐ
+		- advancement ᵉ ᵐ
+		- alumni-resources ᵐ
+		- bpe ᵐ
+		- campaign ᵉ
+		- crm ᵐ
+		- dante ᵐ
+		- dbbb ᵐ
+		- digital ¹
+
+		- rooms.dml ᵐ
+		- guides.dml ᵐ
+		- researchguides.dml ²
+		- www.dml ᵐ
+
+		- everywhere ᵐ
+		- facilities-apps ᶜ
+		- blog.giwps ᵐ
+		- globaleducation ᵐ
+		- www.gumc ᵐ
+		- gusa ¹ * **
+		- iwpsd ᵐ
+		- keyform		(shows www4; mismatched, CN: www4.georgetown.edu)
+
+		- answers.library ᵐ
+		- www.catalog.library ᵐ
+		- guides.library ᵐ
+		- proxy.library ᵐ
+
+		- www.ll ³
+		- lynda			(200 "DNS or server configuration error")
+		- www.msb ᵐ	404
+		- mspp ᵐ
+		- my ⁴
+		- netid ᵐ
+		- nursing ᵐ
+		- ocaf ᵐ
+		- osp ᵐ
+		- otm ᵐ
+		- outdoored			(200 "DNS or server configuration error")
+		- pjc ᵐ
+		- preparedness ᵐ
+		- sem ᵐ
+		- servicecenter ᵐ
+		- news.sfs ᵐ
+		- signin ᵐ
+		- sites ᵐ
+		- adifferentdialogue.studentaffairs ᵐ
+		- ui.uis ᵐ
+		- woodstock			(200 "DNS or server configuration error")
+		- www[12389] ᵐ
+		- www1[12] ᵐ
+		- yates ᵐ
+
+	* Preemptable redirect
+	** Mismatched cert at redirect destination
+	¹ Prints "DNS or server configuration error", valid cert
+	² Redirects to http; mismatched, CN: *.libguides.com
+	³ No https
+	⁴ Works; mismatched, CN: georgetown.edu
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Partially covered subdomains:
+
+		- www.ll		(→ www.law)
+
+
+	These altnames do not exist:
+
+		- calendar.georgetown.edu
+		- docs.georgetown.edu
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .georgetown.edu
+		- africanamericanstudies.georgetown.edu
+		- art.georgetown.edu
+		- benefits.georgetown.edu
+		- biasreporting.georgetown.edu
+		- biology.georgetown.edu
+		- biomedicalprograms.georgetown.edu
+		- campus.georgetown.edu
+		- catholicstudies.georgetown.edu
+		- cfr.georgetown.edu
+		- cledsp.georgetown.edu
+		- commons.georgetown.edu
+		- contact.georgetown.edu
+		- csj.georgetown.edu
+		- drugdiscovery.georgetown.edu
+		- eaplus.georgetown.edu
+		- ehs.georgetown.edu
+		- eval.georgetown.edu
+		- guevents.georgetown.edu
+		- gucprof.georgetown.edu
+		- healthphysics.georgetown.edu
+		- hoyakids.georgetown.edu
+		- internalaudit.georgetown.edu
+		- jobs.georgetown.edu
+		- kennedyinstitute.georgetown.edu
+
+		- apps.law.georgetown.edu
+		- mail.law.georgetown.edu
+		- schedule.law.georgetown.edu
+		- www.law.georgetown.edu
+
+		- catalog.georgetown.edu
+		- .catalog.georgetown.edu
+		- catalog.library.georgetown.edu
+		- .catalog.library.georgetown.edu
+		- staffwiki.library.georgetown.edu
+
+		- m.georgetown.edu
+		- medievalstudies.georgetown.edu
+		- msb.georgetown.edu
+		- provost.georgetown.edu
+		- rotc.georgetown.edu
+		- portal.scs.georgetown.edu
+		- security.georgetown.edu
+		- seo.georgetown.edu
+		- shibb-idp.georgetown.edu
+		- som.georgetown.edu
+		- studentaffairs.georgetown.edu
+		- studentliving.georgetown.edu
+		- threatassessment.georgetown.edu
+		- trasportation.georgetown.edu
+		- tumorbiology.georgetown.edu
+		- wgsp.georgetown.edu
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+
+	Mixed content:
+
+		- css, on:
+
+			- answers.library, guides.library, msb from fonts.googleapis.com ˢ
+			- units from ui.uis.georgetown.edu ᵐ
+			- units from $self ˢ
+			- units from www2.georgetown.edu ˢ
+			- www1[5-8] from explore.georgetown.edu *
+
+		- Images, on:
+
+			- asianstudies from i.imgur.com ˢ
+			- guides.dml from dml.georgetown.edu ˢ
+			- answers.library, guides.library from library.georgetown.edu ˢ
+			- answers.library, guides.library from www.library.georgetown.edu ˢ
+			- maps from maps.google.com ˢ
+			- futures, msb, physics, registrar, sfs, studenthealth, uis, units from $self ˢ
+			- mortara from megaicons.net
+			- netid-mgmt, blog.sfs gucms-ui.georgetown.edu ˢ
+			- scs from kbpublisher.gu-scs.com ᵉ
+			- qatar.sfs from pbs.twimg.com ˢ
+			- veterans from militaryfriendly.com ˢ
+
+		- Bugs, on:
+
+			- msb from bs.serving-sys.com ˢ
+
+	ᵉ Not secured by us <= expired
+	ᵐ Not secured by us <= mismatched
+	ˢ Secured by us, see https://www.paulirish.com/2010/the-protocol-relative-url/
+
+	* $ is not linked to, nor does it  appear as though meant
+	  be accessed, so this should not be a problem.
+
+-->
+<ruleset name="Georgetown University (partial)" default_off="testing">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="acmcu.georgetown.edu" />
+	<target host="adifferentdialogue.georgetown.edu" />
+	<target host="africanamericanstudies.georgetown.edu" />
+	<target host="africanstudies.georgetown.edu" />
+	<target host="secure.alumni.georgetown.edu" />
+	<target host="americanstudies.georgetown.edu" />
+	<target host="anesthesiology.georgetown.edu" />
+	<target host="apps.georgetown.edu" />
+	<target host="art.georgetown.edu" />
+	<target host="asianstudies.georgetown.edu" />
+	<target host="auxiliary.georgetown.edu" />
+	<target host="benefits.georgetown.edu" />
+	<target host="biasreporting.georgetown.edu" />
+	<target host="bioethics.georgetown.edu" />
+	<target host="bioethicsarchive.georgetown.edu" />
+	<target host="biology.georgetown.edu" />
+	<target host="biomedicalprograms.georgetown.edu" />
+	<target host="biomedicalresearch.georgetown.edu" />
+	<target host="biostatistics.georgetown.edu" />
+	<target host="bmcb.georgetown.edu" />
+	<target host="box.georgetown.edu" />
+	<target host="bsfs.georgetown.edu" />
+	<target host="bulletin.georgetown.edu" />
+	<target host="campus.georgetown.edu" />
+	<target host="campusministry.georgetown.edu" />
+	<target host="campusplan.georgetown.edu" />
+	<target host="canzps.georgetown.edu" />
+	<target host="capitalbreastcare.georgetown.edu" />
+	<target host="careers.georgetown.edu" />
+	<target host="catholicstudies.georgetown.edu" />
+	<target host="ccas.georgetown.edu" />
+	<target host="ceres.georgetown.edu" />
+	<target host="cets.georgetown.edu" />
+	<target host="cges.georgetown.edu" />
+	<target host="cfr.georgetown.edu" />
+	<target host="chemistry.georgetown.edu" />
+	<target host="cirs.georgetown.edu" />
+	<target host="cjc.georgetown.edu" />
+	<target host="clas.georgetown.edu" />
+	<target host="classics.georgetown.edu" />
+	<target host="cled.georgetown.edu" />
+	<target host="cledsp.georgetown.edu" />
+	<target host="clinicaltrials.georgetown.edu" />
+	<target host="cndls.georgetown.edu" />
+
+	<target host="apps.cndls.georgetown.edu" />
+	<target host="media.cndls.georgetown.edu" />
+	<target host="pilot.cndls.georgetown.edu" />
+
+	<target host="college.georgetown.edu" />
+	<target host="communityengagement.georgetown.edu" />
+	<target host="compliance.georgetown.edu" />
+	<target host="commencement.georgetown.edu" />
+	<target host="commons.georgetown.edu" />
+	<target host="blogs.commons.georgetown.edu" />
+	<target host="contact.georgetown.edu" />
+	<target host="continuity.georgetown.edu" />
+	<target host="coo.georgetown.edu" />
+	<target host="counsel.georgetown.edu" />
+	<target host="csj.georgetown.edu" />
+	<target host="css.georgetown.edu" />
+	<target host="digitalcommons.georgetown.edu" />
+	<target host="dml.georgetown.edu" />
+	<target host="drugdiscovery.georgetown.edu" />
+	<target host="eaplus.georgetown.edu" />
+	<target host="efl.georgetown.edu" />
+	<target host="ehs.georgetown.edu" />
+	<target host="emergencymanagement.georgetown.edu" />
+	<target host="english.georgetown.edu" />
+	<target host="ethicslab.georgetown.edu" />
+	<target host="eval.georgetown.edu" />
+	<target host="eventspace.georgetown.edu" />
+	<target host="explore.georgetown.edu" />
+	<target host="facilities.georgetown.edu" />
+	<!--target host="facilities-apps.georgetown.edu" /-->
+	<target host="facultyhandbook.georgetown.edu" />
+	<target host="facultysenate.georgetown.edu" />
+	<target host="family.georgetown.edu" />
+	<target host="familymedicine.georgetown.edu" />
+	<target host="filmandmediastudies.georgetown.edu" />
+	<target host="finaid.georgetown.edu" />
+	<target host="fishercenter.georgetown.edu" />
+	<target host="futures.georgetown.edu" />
+	<target host="gaap.georgetown.edu" />
+	<target host="gcsc.georgetown.edu" />
+	<target host="gdc.georgetown.edu" />
+	<target host="getinvolved.georgetown.edu" />
+	<target host="ghd.georgetown.edu" />
+	<target host="giwps.georgetown.edu" />
+	<target host="global.georgetown.edu" />
+	<target host="globalfutures.georgetown.edu" />
+	<target host="gms.georgetown.edu" />
+	<target host="gocard.georgetown.edu" />
+	<target host="governance.georgetown.edu" />
+	<target host="gquads.georgetown.edu" />
+	<target host="grad.georgetown.edu" />
+	<target host="gu360.georgetown.edu" />
+	<target host="gucms-ui.georgetown.edu" />
+	<target host="guevents.georgetown.edu" />
+	<target host="gumc.georgetown.edu" />
+	<target host="ofaa.gumc.georgetown.edu" />
+	<target host="gumcprof.georgetown.edu" />
+	<target host="healthphysics.georgetown.edu" />
+	<target host="help.georgetown.edu" />
+	<target host="highschoolbioethics.georgetown.edu" />
+	<target host="housing.georgetown.edu" />
+	<target host="hoyakids.georgetown.edu" />
+	<target host="hoyalink.georgetown.edu" />
+	<target host="hr.georgetown.edu" />
+	<target host="ibd.georgetown.edu" />
+	<target host="icbi.georgetown.edu" />
+	<target host="internalaudit.georgetown.edu" />
+	<target host="investments.georgetown.edu" />
+	<target host="isim.georgetown.edu" />
+	<target host="itel.georgetown.edu" />
+	<target host="jobs.georgetown.edu" />
+	<target host="journalism.georgetown.edu" />
+	<target host="justiceandpeace.georgetown.edu" />
+	<target host="kennedyinstitute.georgetown.edu" />
+	<target host="lannan.georgetown.edu" />
+
+	<target host="apps.law.georgetown.edu" />
+	<target host="autodiscover.law.georgetown.edu" />
+	<target host="illiad.law.georgetown.edu" />
+	<target host="legacy.law.georgetown.edu" />
+	<target host="mail.law.georgetown.edu" />
+	<target host="schedule.law.georgetown.edu" />
+	<target host="sp.law.georgetown.edu" />
+	<target host="www.law.georgetown.edu" />
+
+	<target host="library.georgetown.edu" />
+
+	<target host="catalog.library.georgetown.edu" />
+	<target host="repository.library.georgetown.edu" />
+	<target host="login.proxy.library.georgetown.edu" />
+	<target host="www.proxy.library.georgetown.edu" />
+	<target host="resources.library.georgetown.edu" />
+	<target host="staffwiki.library.georgetown.edu" />
+	<target host="www.library.georgetown.edu" />
+
+	<target host="lombardi.georgetown.edu" />
+	<target host="lombardigala.georgetown.edu" />
+	<target host="m.georgetown.edu" />
+	<target host="mail.georgetown.edu" />
+	<target host="maincampusresearch.georgetown.edu" />
+	<target host="maps.georgetown.edu" />
+	<target host="masterplanning.georgetown.edu" />
+	<target host="mccourt.georgetown.edu" />
+	<target host="medcourseeval.georgetown.edu" />
+	<target host="medicine.georgetown.edu" />
+	<target host="medievalstudies.georgetown.edu" />
+	<target host="microbiology.georgetown.edu" />
+	<target host="www.middleware.georgetown.edu" />
+	<target host="missionandministry.georgetown.edu" />
+	<target host="mobile.georgetown.edu" />
+	<target host="mortara.georgetown.edu" />
+	<target host="msb.georgetown.edu" />
+	<target host="msfs.georgetown.edu" />
+	<target host="myaccess.georgetown.edu" />
+	<target host="mydante-public.georgetown.edu" />
+	<target host="netid-mgmt.georgetown.edu" />
+	<target host="neuro.georgetown.edu" />
+	<target host="neurology.georgetown.edu" />
+	<target host="nhs.georgetown.edu" />
+	<target host="oncology.georgetown.edu" />
+	<target host="ora.georgetown.edu" />
+	<target host="orientation.georgetown.edu" />
+	<target host="osvpr.georgetown.edu" />
+	<target host="otc.georgetown.edu" />
+	<target host="password.georgetown.edu" />
+	<target host="pathology.georgetown.edu" />
+	<target host="pediatrics.georgetown.edu" />
+	<target host="pegasus.georgetown.edu" />
+	<target host="performingarts.georgetown.edu" />
+	<target host="pes.georgetown.edu" />
+	<target host="pharmacology.georgetown.edu" />
+	<target host="physics.georgetown.edu" />
+	<target host="site.physics.georgetown.edu" />
+	<target host="president.georgetown.edu" />
+	<target host="protectionofminors.georgetown.edu" />
+	<target host="provost.georgetown.edu" />
+	<target host="blog.provost.georgetown.edu" />
+	<target host="publicaffairs.georgetown.edu" />
+	<target host="radiology.georgetown.edu" />
+	<target host="recreation.georgetown.edu" />
+	<target host="registrar.georgetown.edu" />
+	<target host="rehabmedicine.georgetown.edu" />
+	<target host="riskmanagement.georgetown.edu" />
+	<target host="rotc.georgetown.edu" />
+	<target host="ruesch.georgetown.edu" />
+	<target host="s2erc.georgetown.edu" />
+	<target host="safety.georgetown.edu" />
+	<target host="portal.scs.georgetown.edu" />
+	<target host="static.scs.georgetown.edu" />
+	<target host="schedule.georgetown.edu" />
+	<target host="search.georgetown.edu" />
+	<target host="security.georgetown.edu" />
+	<target host="seo.georgetown.edu" />
+	<target host="sexualassault.georgetown.edu" />
+	<target host="sfs.georgetown.edu" />
+	<target host="blog.sfs.georgetown.edu" />
+	<target host="qatar.sfs.georgetown.edu" />
+	<target host="shibb-idp.georgetown.edu" />
+	<target host="sociology.georgetown.edu" />
+	<target host="softmatter.georgetown.edu" />
+	<target host="som.georgetown.edu" />
+	<target host="spi.georgetown.edu" />
+	<target host="staffaap.georgetown.edu" />
+	<target host="studentaccounts.georgetown.edu" />
+	<target host="studentaffairs.georgetown.edu" />
+	<target host="studentconduct.georgetown.edu" />
+	<target host="studenthealth.georgetown.edu" />
+	<target host="studentliving.georgetown.edu" />
+	<target host="studyabroad.georgetown.edu" />
+	<target host="sustainability.georgetown.edu" />
+	<target host="threatassessment.georgetown.edu" />
+	<target host="transportation.georgetown.edu" />
+	<target host="tumorbiology.georgetown.edu" />
+	<target host="uadmissions.georgetown.edu" />
+	<target host="uis.georgetown.edu" />
+	<target host="search.uis.georgetown.edu" />
+	<target host="ttdrupallb1.uis.georgetown.edu" />
+	<target host="wiki.uis.georgetown.edu" />
+	<target host="undocumented.georgetown.edu" />
+	<!--target host="units.georgetown.edu" /-->
+	<target host="veterans.georgetown.edu" />
+	<target host="visualidentity.georgetown.edu" />
+	<target host="wellness.georgetown.edu" />
+	<target host="wgsp.georgetown.edu" />
+	<target host="www.georgetown.edu" />
+	<target host="www15.georgetown.edu" />
+	<target host="www16.georgetown.edu" />
+	<target host="www17.georgetown.edu" />
+	<target host="www18.georgetown.edu" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://portal\.scs\.georgetown\.edu/(?:index\.jsp|search/publicCourseAdvancedSearch\.do)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://portal\.scs\.georgetown\.edu/(?!/*(?:3rdPartyTools/deployed/yui2/treeview/assets/|(?:coursebasket/publicCourseBasket|portal/logon|portal/logonInstructor)\.do(?:$|\?)|css/))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://portal\.scs\.georgetown\.edu/(?!/*(?:coursebasket/publicCourseBasket|portal/logon|portal/logonInstructor)\.do(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://portal.scs.georgetown.edu/index.jsp" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseAdvancedSearch.do?method=load&amp;" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseSearchDetails.do?method=load" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseSearchDetails.do?method=load&amp;courseId=14480" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseSearchDetails.do?method=load&amp;courseId=14558" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseSearchDetails.do?method=load&amp;courseId=15799232" />
+			<test url="http://portal.scs.georgetown.edu/search/publicCourseSearchDetails.do?method=load&amp;courseId=15825131" />
+
+			<!--	-ve:
+					-->
+			<!--	sets cookie without Secure: -->
+			<!--
+			<test url="http://portal.scs.georgetown.edu/Shibboleth.sso/Login?target=https%3A%2F%2Fportal.scs.georgetown.edu%2Fportal%2FlogonInstructor.do%3Fmethod%3DcallbackEmbeddedLogonInstructor" />
+			<test url="http://portal.scs.georgetown.edu/3rdPartyTools/deployed/yui2/treeview/assets/skins/sam/treeview.css" />
+			-->
+			<test url="http://portal.scs.georgetown.edu/coursebasket/publicCourseBasket.do?method=load" />
+			<!--
+			<test url="http://portal.scs.georgetown.edu/css/clearfix.css" />
+			<test url="http://portal.scs.georgetown.edu/images/1x1.gif" />
+			-->
+			<test url="http://portal.scs.georgetown.edu/portal/logon.do?method=load" />
+			<test url="http://portal.scs.georgetown.edu/portal/logonInstructor.do?method=load" />
+
+		<!--	$ shows default page, so:
+							-->
+		<test url="http://apps.cndls.georgetown.edu/kb/Main_Page" />
+		<test url="http://schedule.law.georgetown.edu/MasterCalendar/" />
+		<test url="http://static.scs.georgetown.edu/www/i2/_.gif" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://guevents.georgetown.edu/auth/login" /-->
+		<!--test url="http://eval.georgetown.edu/etw/ets/et.asp?nxappid=GU2&amp;nxmid=start" /-->
+		<!--test url="http://medcourseeval.georgetown.edu/etw/ets/et.asp?nxappid=GU2&amp;nxmid=start" /-->
+
+		<!--	Mixed css:
+					-->
+		<!--test url="http://units.georgetown.edu/gumc/lombardi/magazine/288045.html" /-->
+
+		<test url="http://media.cndls.georgetown.edu/media_eportfoliodemo/css/reset.css" />
+		<test url="http://gucms-ui.georgetown.edu/gu/shared/media/screen/marker-list.gif" />
+
+	<!--	Complications:
+				-->
+	<target host="georgetown.edu" />
+	<target host="bpe.georgetown.edu" />
+	<target host="crm.georgetown.edu" />
+	<target host="dbbb.georgetown.edu" />
+	<target host="digital.georgetown.edu" />
+	<target host="www.dml.georgetown.edu" />
+	<target host="globaleducation.georgetown.edu" />
+	<target host="iwpsd.georgetown.edu" />
+	<target host="keyform.georgetown.edu" />
+	<target host="www.catalog.library.georgetown.edu" />
+	<target host="proxy.library.georgetown.edu" />
+	<target host="www.ll.georgetown.edu" />
+	<target host="lynda.georgetown.edu" />
+	<target host="www.msb.georgetown.edu" />
+	<target host="mspp.georgetown.edu" />
+	<target host="netid.georgetown.edu" />
+	<target host="nursing.georgetown.edu" />
+	<target host="ocaf.georgetown.edu" />
+	<target host="osp.georgetown.edu" />
+	<target host="otm.georgetown.edu" />
+	<target host="outdoored.georgetown.edu" />
+	<target host="pjc.georgetown.edu" />
+	<target host="preparedness.georgetown.edu" />
+	<target host="sem.georgetown.edu" />
+	<target host="news.sfs.georgetown.edu" />
+	<target host="adifferentdialogue.studentaffairs.georgetown.edu" />
+	<target host="woodstock.georgetown.edu" />
+	<target host="www2.georgetown.edu" />
+	<target host="yates.georgetown.edu" />
+
+		<exclusion pattern="^http://www\.ll\.georgetown\.edu/(?!(?:services/|services/ill/)?(?:$|\?))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.ll.georgetown.edu/default.asp" />
+			<test url="http://www.ll.georgetown.edu/default.aspx" />
+			<test url="http://www.ll.georgetown.edu/favicon.ico" />
+			<test url="http://www.ll.georgetown.edu/index.htm" />
+			<test url="http://www.ll.georgetown.edu/index.html" />
+			<test url="http://www.ll.georgetown.edu/index.php" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.georgetown\.edu$" name="^_georgetownglobaldatabase_session$" /-->
+	<!--securecookie host="^(?:africanamericanstudies|art|benefits|biasreporting|biology|biomedicalprograms|catholicstudies|cfr|cledsp|csj|drugdiscovery|ehs|healthphysics|hoyakids|internalaudit|medievalstudies|msb|provost|rotc|security|som|studentaffairs|studentliving|threatassessment|transportation|tumorbiology|wgsp)\.georgetown\.edu$" name="^(?:NO_CACHE|SimpleSAMLSessionID)$" /-->
+	<!--securecookie host="^campus\.georgetown\.edu$" name="^(?:ADRUM_BT|session_id)$" /-->
+	<!--securecookie host="^(?:commons|contact|eaplus)\.georgetown\.edu$" name="^csrftoken$" /-->
+	<!--securecookie host="^eval\.georgetown\.edu$" name="^(?:CFTK|NXM_MOBILE_FONT|NXM_MOBILE_MODE)$" /-->
+	<!--securecookie host="^guevents\.georgetown\.edu$" name="^_session_id$" /-->
+	<!--securecookie host="^(?:gumcprof|staffwiki\.library)\.georgetown\.edu$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^jobs\.georgetown\.edu$" name="^PHPSESSID$" /-->
+	<!--securecookie host="^kennedyinstitute\.georgetown\.edu$" name="^(?:PHPSESSID|wfvt_\d+)$" /-->
+	<!--securecookie host="^(?:apps|www)\.law\.georgetown\.edu$" name="^(?:CFID|CFTOKEN)$" /-->
+	<!--securecookie host="^mail\.law\.georgetown\.edu$" name="^(?:ISAWPLB\{[\dA-F]+\}|cadata|sessionid)$$" /-->
+	<!--securecookie host="^\.(?:catalog\.)?library\.georgetown\.edu$" name="^(?:III_EXPT_FILE|III_SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^(?:www\.)?catalog\.library\.georgetown\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^m\.georgetown\.edu$" name="^(?:_kgouuid$|X-Mapping-)" /-->
+	<!--securecookie host="^portal\.scs\.georgetown\.edu$" name="^(?:_shibstate_[\da-f]{8}|JSESSIONID)$" /-->
+	<!--securecookie host="^(?:schedule\.law|seo)\.georgetown\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^shibb-idp\.georgetown\.edu$" name="^SHIBBP$" /-->
+
+	<securecookie host="^\." name="^(?:_ga|III_EXPT_FILE$|III_SESSION_ID$|SESSION_LANGUAGE$)" />
+	<securecookie host="^(?:secure\.alumni|campus|commons|eaplus|gquads|gucms-mgmt|guevents|hoyalink|(?:mail|schedule|www)\.law|(?:\.?catalog|repository)\.library|m|msb|myaccess|wiki\.uis|uis-bboard-\d|www[134])\.georgetown\.edu$" name=".+" />
+
+
+	<rule from="^http://georgetown\.edu/"
+		to="https://www.georgetown.edu/" />
+
+	<rule from="^http://bpe\.georgetown\.edu/"
+		to="https://pes.georgetown.edu/" />
+
+		<test url="http://bpe.georgetown.edu/faculty-staff" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://crm\.georgetown\.edu/"
+		to="https://gu360.georgetown.edu/" />
+
+		<test url="http://crm.georgetown.edu/about" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://dbbb\.georgetown\.edu/"
+		to="https://biostatistics.georgetown.edu/" />
+
+		<test url="http://dbbb.georgetown.edu/about" />
+
+	<rule from="^http://digital\.georgetown\.edu/"
+		to="https://www.library.georgetown.edu/digital/" />
+
+	<rule from="^http://www\.(dml|catalog\.library|msb)\.georgetown\.edu/"
+		to="https://$1.georgetown.edu/" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://globaleducation\.georgetown\.edu/"
+		to="https://studyabroad.georgetown.edu/" />
+
+		<test url="http://globaleducation.georgetown.edu/alerts" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://iwpsd\.georgetown\.edu/.*"
+		to="https://giwps.georgetown.edu/#domain-redirected" />
+
+		<test url="http://iwpsd.georgetown.edu/index.htm" />
+
+	<rule from="^http://keyform\.georgetown\.edu/"
+		to="https://www4.georgetown.edu/uis/keybridge/keyform/" />
+
+	<rule from="^http://proxy\.library\.georgetown\.edu/"
+		to="https://www.proxy.library.georgetown.edu/" />
+
+	<rule from="^http://www\.ll\.georgetown\.edu/(?=$|\?)"
+		to="https://www.law.georgetown.edu/library/" />
+
+	<rule from="^http://www\.ll\.georgetown\.edu/services/(?=$|\?)"
+		to="https://www.law.georgetown.edu/library/about/services-policies/" />
+
+		<test url="http://www.ll.georgetown.edu/services/" />
+
+	<rule from="^http://www\.ll\.georgetown\.edu/services/ill/"
+		to="https://www.law.georgetown.edu/library/about/services-policies/interlibrary-loan.cfm" />
+
+		<test url="http://www.ll.georgetown.edu/services/ill/" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://lynda\.georgetown\.edu/[^?]*"
+		to="https://www.library.georgetown.edu/lynda" />
+
+		<test url="http://lynda.georgetown.edu/index.htm" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://mspp\.georgetown\.edu/"
+		to="https://mccourt.georgetown.edu/" />
+
+		<test url="http://mspp.georgetown.edu/news/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://netid\.georgetown\.edu/.*"
+		to="https://uis.georgetown.edu/netid-passwords" />
+
+		<test url="http://netid.georgetown.edu/index.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://nursing\.georgetown\.edu/.*"
+		to="https://nhs.georgetown.edu/nursing" />
+
+		<test url="http://nursing.georgetown.edu/index.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://ocaf\.georgetown\.edu/.*"
+		to="https://getinvolved.georgetown.edu/reserving-spaces" />
+
+		<test url="http://ocaf.georgetown.edu/index.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://osp\.georgetown\.edu/.*"
+		to="https://maincampusresearch.georgetown.edu/osp" />
+
+		<test url="http://osp.georgetown.edu/index.htm" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://otm\.georgetown\.edu/"
+		to="https://transportation.georgetown.edu/" />
+
+		<test url="http://otm.georgetown.edu/guts" />
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://outdoored\.georgetown\.edu/[^?]*"
+		to="https://blogs.commons.georgetown.edu/outdoored/" />
+
+		<test url="http://outdoored.georgetown.edu/trips/" />
+
+	<!--	Redirect keeps all:
+					-->
+	<rule from="^http://pjc\.georgetown\.edu/"
+		to="https://cjc.georgetown.edu/" />
+
+		<test url="http://pjc.georgetown.edu/events/past" />
+
+	<rule from="^http://preparedness\.georgetown\.edu/[^?]*"
+		to="https://www.georgetown.edu/campus-life/safety-and-emergency-preparedness/" />
+
+		<test url="http://preparedness.georgetown.edu/index.htm" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://sem\.georgetown\.edu/.*"
+		to="https://safety.georgetown.edu/#domain-redirected" />
+
+		<test url="http://sem.georgetown.edu/trips/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://news\.sfs\.georgetown\.edu/.*"
+		to="https://news.sfs.georgetown.edu/" />
+
+		<test url="http://news.sfs.georgetown.edu/summersfs-gretchen-knoth/" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://adifferentdialogue\.studentaffairs\.georgetown\.edu/.*"
+		to="https://adifferentdialogue.georgetown.edu/#domain-redirected" />
+
+		<test url="http://adifferentdialogue.studentaffairs.georgetown.edu/video/facilitator-experience" />
+
+	<!--	Redirect keeps all:
+					-->
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://woodstock\.georgetown\.edu/[^?]*"
+		to="https://www.library.georgetown.edu/woodstock" />
+
+		<test url="http://woodstock.georgetown.edu/library" />
+
+	<rule from="^http://www2\.georgetown\.edu/"
+		to="https://units.georgetown.edu/" />
+
+		<test url="http://www2.georgetown.edu/gumc/lombardi/magazine/ksefiles/css/screen.css" />
+
+	<!--	Redirect drops all:
+					-->
+	<rule from="^http://yates\.georgetown\.edu/.*"
+		to="https://recreation.georgetown.edu/yates/#domain-redirected&amp;mssg=no" />
+
+		<test url="http://yates.georgetown.edu/club-sports" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

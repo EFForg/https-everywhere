@@ -1,0 +1,34 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/change-production/
+
+
+	Nonfunctional subdomains:
+
+		- helpdesk *
+
+	* Zendesk
+
+-->
+<ruleset name="Change.org (partial)">
+
+	<target host="change.org" />
+	<target host="*.change.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.change\.org$" name="^_change_session$" /-->
+	<!--securecookie host="^www\.change\.org$" name="^tracking_data$" /-->
+
+	<securecookie host=".*\.change\.org$" name=".+" />
+
+
+	<rule from="^http://(www\.)?change\.org/"
+		to="https://$1change.org/" />
+
+	<rule from="^http://helpdesk\.change\.org/(?=generated/|images/|system/)"
+		to="https://change.zendesk.com/" />
+
+</ruleset>

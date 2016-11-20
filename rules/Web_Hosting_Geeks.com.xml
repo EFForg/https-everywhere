@@ -1,0 +1,38 @@
+<!--
+	CDN buckets:
+
+		- d2qa8wpyt2chna.cloudfront.net
+
+			- acf
+
+
+	Nonfunctional subdomains:
+
+		- answers *
+		- science *
+
+	* Redirects to google.com; mismatched. CN: webhostinggeeks.com
+
+
+	Problematic subdomains:
+
+		- acf	(→ d2qa8wpyt2chna.cloudfront.net)
+		- www	(works, cert only matches ^webhostinggeeks.com)
+
+-->
+<ruleset name="Web Hosting Geeks.com">
+
+	<target host="webhostinggeeks.com" />
+	<target host="*.webhostinggeeks.com" />
+
+
+	<securecookie host="^webhostinggeeks\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?webhostinggeeks\.com/"
+		to="https://webhostinggeeks.com/" />
+
+	<rule from="^http://acf\.webhostinggeeks\.com/"
+		to="https://d2qa8wpyt2chna.cloudfront.net/" />
+
+</ruleset>

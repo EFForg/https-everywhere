@@ -1,0 +1,48 @@
+<!--
+	CDN buckets:
+
+		- kununu-public.s3.amazonaws.com | dt75rt3oyihg4.cloudfront.net
+
+			- cf.kununu.com
+
+		- kununu.ivwbox.de
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* Dropped
+
+
+	Problematic subdomains:
+
+		- cf *
+
+	* cloudfront
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="kununu (partial)">
+
+	<target host="kununu.com" />
+	<target host="*.kununu.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.kununu\.com/($|\?|jobs$|jobs/de$|kununu$|sitemap$|unternehmen$|unternehmen/hilfe$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.kununu\.com/(?!bewerten|css/|favicon\.ico|index/captcha/|info$|info/kontakt|info/presse$|info/ueber|login\?|meinkununu$|register$|sc\.css|user/login$|user/logout$)" /-->
+
+
+	<rule from="^http://(www\.)?kununu\.com/(?=(?:bewerten|info|login|meinkununu|register|user/(?:login|logout))(?:$|[?/])|css/|favicon\.ico|index/captcha/|sc\.css)"
+		to="https://$1kununu.com/" />
+
+	<rule from="^http://cf\.kununu\.com/"
+		to="https://dt75rt3oyihg4.cloudfront.net/" />
+
+</ruleset>

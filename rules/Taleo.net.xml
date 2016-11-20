@@ -1,0 +1,64 @@
+<!--
+	For other Oracle coverage, see Oracle.xml.
+
+
+	Fully covered subdomains:
+
+		- nestleusa
+		- oracle
+
+		- *.tbe: ¹
+
+			- ch
+			- chj
+			- staticchj
+
+	¹ Domain for clients
+
+
+	!functional:
+		- www.taleo.net			(cert: acquia-sites.com; redirect to http://...com; same cert is valid for .com)
+
+
+	Insecure cookies are set for these hosts:
+
+		- nestleusa.taleo.net
+		- oracle.taleo.net
+
+-->
+<ruleset name="Taleo.net (partial)">
+
+	<!--target host="taleo.net"/-->
+	<target host="nestleusa.taleo.net" />
+	<target host="oracle.taleo.net"/>
+	<target host="tbe.taleo.net"/>
+	<target host="*.tbe.taleo.net"/>
+	<target host="toc.taleo.net"/>
+	<!--target host="www.taleo.net" /-->
+
+		<!--test url="http://kenthrbc.taleo.net/careersection/external/jobsearch.ftl?lang=" /-->
+		<test url="http://nestleusa.taleo.net/careersection/9/jobdetail.ftl?job=" />
+		<test url="http://chj.tbe.taleo.net/chj06/ats/careers/searchResults.jsp" />
+		<test url="http://oracle.taleo.net/careersection/2/jobsearch.ftl" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^nestleusa\.taleo\.net$" name="^locale$" /-->
+	<!--securecookie host="^oracle\.taleo\.net$" name="^locale$" /-->
+
+	<!--	encountered cookies:
+
+			- .net:
+				- ^tbe
+				- ^staticiad.tbe	-->
+	<securecookie host="^(?:oracle|(?:.+\.)?tbe)\.taleo\.net$" name=".+" />
+
+
+	<!--	cert is not valid for net	-->
+	<!--rule from="^http://(?:www\.)?taleo\.(?:com|net)/"
+		to="https://www.taleo.com/"/-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

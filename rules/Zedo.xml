@@ -1,0 +1,98 @@
+<!--
+	CDN buckets:
+
+		- c5.2-01-29be-0005.cdx.cedexis.net
+		- d2.2-01-29be-0006.cdx.cedexis.net
+		- d3.2-01-29be-0006.cdx.cedexis.net
+		- axp.2-01-29be-0007.cdx.cedexis.net
+
+		- c5.zedo.com.edgesuite.net
+
+			- a426.g.akamai.net
+
+		- c7.zedo.com.edgesuite.net
+
+			- a1979.g.akamai.net
+
+		- d1.zedo.com.edgesuite.net
+
+			- a355.g.akamai.net
+
+		- d4.zedo.com.edgesuite.net
+
+			- a296.g.akamai.net
+
+		- d5.zedo.com.edgesuite.net
+
+			- a724.g.akamai.net
+
+		- d6.zedo.com.edgesuite.net
+
+			- a535.g.akamai.net
+
+		- d7.zedo.com.edgesuite.net
+
+			- a124.g.akamai.net
+
+		- d8.zedo.com.edgesuite.net
+
+			- a489.g.akamai.net
+
+		- d9.zedo.com.edgesuite.net
+
+			- a48.g.akamai.net
+
+		- r1.zedo.com.edgesuite.net
+
+
+	Nonfunctional subdomains:
+
+		- (www.)	(shows target, CN: target.zedo.com)
+
+
+	Problematic subdomains:
+
+		- axp		(mismatched, CN: saxp.zedo.com)
+		- c[57]		(works, akamai)
+		- d[23]		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+		- d[14-9]	(works, akamai)
+		- r1		(504, akamai)
+
+
+	Fully covered subdomains:
+
+		- axp		(→ saxp)
+		- d[1-9]	(→ akamai)
+		- r1		(→ akamai)
+		- saxp
+		- ss1
+		- target
+
+
+	Mixed content:
+
+		- Ads on d[1-9] from axp *
+		- Ads on r1 from axp *
+
+	* Secured by us, and no one cares
+
+-->
+<ruleset name="Zedo (partial)">
+
+	<target host="ss1.zedo.com" />
+	<target host="target.zedo.com" />
+	<target host="saxp.zedo.com" />
+	<target host="axp.zedo.com" />
+
+
+	<!--securecookie host="^\.zedo\.com$" name="^(FF\w\w|FFad|FFcat|FFgeo|FFIDA|ZCBC|ZEDOIDA|ZEDOIDX|ZTCEC|ZZRSYNC)" /-->
+	<securecookie host="^(?:target)?\.zedo\.com$" name=".+" />
+
+
+	<rule from="^http://axp\.zedo\.com/"
+		to="https://saxp.zedo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

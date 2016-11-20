@@ -1,0 +1,31 @@
+<!--
+	For other Say Media coverage, see Say-Media.xml.
+
+
+	Nonfunctional subdomains:
+
+		- everything		(times out)
+		- help			(ditto)
+		- help-origin		(ditto)
+		- static		(redirects to http, valid cert)
+		- foo			(account subdomains)
+
+-->
+<ruleset name="Typepad (partial)">
+
+	<target host="typepad.com" />
+	<target host="www.typepad.com"/>
+		<!--
+			302s to http.
+
+			When services is rewritten to secure/services, 302s to typepad.com/$.
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-June/001190.html
+							-->
+		<exclusion pattern="http://www\.typepad\.com/(?:services)?(?:$|[\?/])" />
+
+
+	<rule from="^http://(?:www\.)?typepad\.com/"
+		to="https://www.typepad.com/" />
+
+</ruleset>

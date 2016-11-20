@@ -1,0 +1,34 @@
+<!--
+	Problematic domains:
+
+		- ^ ¹
+
+	¹: Mismatch
+-->
+<ruleset name="Energinet.dk (partial)">
+
+	<target host="energinet.dk" />
+	<target host="www.energinet.dk" />
+
+	<!-- Causes redirect loops -->
+	<exclusion pattern="^http://(www\.)?energinet\.dk/(DA|EN)/" />
+
+		<!-- Matching exception pattern -->
+		<test url="http://energinet.dk/DA/Sider/default.aspx" />
+		<test url="http://energinet.dk/EN/Sider/default.aspx" />
+		<test url="http://www.energinet.dk/DA/El/Sider/Elsystemet-lige-nu.aspx" />
+		<test url="http://www.energinet.dk/EN/El/Sider/Elsystemet-lige-nu.aspx" />
+
+		<!-- Not matching exception pattern -->
+		<test url="http://www.energinet.dk/SiteCollectionImages/Forside/el_kort.jpg" />
+		<test url="http://www.energinet.dk/_layouts/1033/Energinet/Styles/Images/energinetlogo.gif" />
+
+	<!-- Serves different content on HTTP and HTTPS -->
+	<exclusion pattern="http://(www.)?energinet.dk/_layouts/internet.oversaettelse/oversaettelse.aspx" />
+
+		<test url="http://energinet.dk/_layouts/internet.oversaettelse/oversaettelse.aspx" />
+		<test url="http://www.energinet.dk/_layouts/internet.oversaettelse/oversaettelse.aspx" />
+
+	<rule from="^http://(www\.)?energinet\.dk/" to="https://www.energinet.dk/" />
+
+</ruleset>

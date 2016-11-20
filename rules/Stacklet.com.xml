@@ -1,0 +1,34 @@
+<!--
+	Nonfunctional subdomains:
+
+		- ftp *
+
+	* Refused
+
+
+	Problematic hosts:
+
+		- (www.)? *
+		- secure *
+
+	* Server sends no certificate chain, see https://whatsmychaincert.com
+
+-->
+<ruleset name="Stacklet.com (partial)" default_off="missing certificate chain">
+
+	<target host="stacklet.com" />
+	<target host="secure.stacklet.com" />
+	<target host="www.stacklet.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(\.secure)?\.stacklet\.com$" name="^SESS[0-9a-f]{32}$" /-->
+
+	<securecookie host="^(?:\.secure)?\.stacklet\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

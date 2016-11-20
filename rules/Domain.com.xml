@@ -1,0 +1,35 @@
+<!--
+	Problematic subdomains:
+
+		- images	(shows www, valid cert)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- images	(→ secure)
+		- secure
+
+-->
+<ruleset name="Domain.com">
+
+	<target host="domain.com" />
+	<target host="*.domain.com" />
+
+
+	<securecookie host="^\.domain\.com$" name=".+" />
+
+
+	<!--	!www redirects to www over http,
+		so copy that behavior:
+					-->		
+	<rule from="^http://(?:www\.)?domain\.com/"
+		to="https://www.domain.com/" />
+
+	<rule from="^http://images\.domain\.com/"
+		to="https://secure.domain.com/images/" />
+
+	<rule from="^http://secure\.domain\.com/"
+		to="https://secure.domain.com/" />
+
+</ruleset>

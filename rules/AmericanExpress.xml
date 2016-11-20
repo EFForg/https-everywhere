@@ -1,0 +1,120 @@
+<!--
+	Other American Express rulesets:
+
+		- AeXp-static.com.xml
+		- AmEx_Travel.com.xml
+		- AmExserve-static.com.xml
+		- Bluebird.com.xml
+		- Corporate_Card_Application.com.xml
+		- Membership_Rewards.com.xml
+		- Serve.com.xml
+
+
+	Nonfunctional hosts in *americanexpress.com:
+
+		- atwork ¹
+		- ir ²
+		- travelspecialists ³
+
+	¹ Dropped
+	² Refused
+	³ Handshake fails
+
+
+	Problematic hosts in *americanexpress.com:
+
+		- about ¹ ²
+		- axptravel ³
+
+	¹ Akamai
+	² Mixed iframe
+	³ $ 404s
+
+
+	These altnames don't exist:
+
+		- www.business.americanexpress.com
+		- home.americanexpress.com
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .americanexpress.com
+		- about.americanexpress.com
+		- www01.extra.americanexpress.com
+		- online.americanexpress.com
+		- rewards.americanexpress.com
+		- search.americanexpress.com
+		- travel.americanexpress.com
+		- www209.americanexpress.com
+		- www262.americanexpress.com
+		- www295.americanexpress.com
+		- www304.americanexpress.com
+
+
+	Mixed content:
+
+		- iframe on about from $self ¹
+		- Bug on careers from seg.sharethis.com ²
+
+	¹ Not secured by us <= mismatched
+	² Secured by us
+
+-->
+<!-- Thanks to ForceTLS -->
+<!-- Note that there are lots of subdomains and some are still unprotected,
+     but some don't work properly in HTTPS anyway.  This is kind of a mess. -->
+<ruleset name="AmericanExpress.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+  <target host="www.americanexpress.com" />
+  <target host="americanexpress.com" />
+	<target host="business.americanexpress.com" />
+	<target host="careers.americanexpress.com" />
+	<target host="secure.cmax.americanexpress.com" />
+	<target host="www01.extra.americanexpress.com" />
+	<target host="omns.americanexpress.com" />
+	<target host="online.americanexpress.com" />
+	<target host="personalsavings.americanexpress.com" />
+	<target host="www.personalsavings.americanexpress.com" />
+	<target host="rewards.americanexpress.com" />
+	<target host="search.americanexpress.com" />
+	<target host="sso.americanexpress.com" />
+	<target host="sync.americanexpress.com" />
+	<target host="travel.americanexpress.com" />
+	<target host="travelinsiders.americanexpress.com" />
+	<target host="www209.americanexpress.com" />
+	<target host="www262.americanexpress.com" />
+	<target host="www295.americanexpress.com" />
+	<target host="www304.americanexpress.com" />
+	<target host="www347.americanexpress.com" />
+
+	<!--	Complications:
+				-->
+	<target host="axptravel.americanexpress.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.americanexpress\.com$" name="^(AB_FILTER|FHR_DB_PERCENT|FHR_RANDOM_NUMBER|SaneID)$" /-->
+	<!--securecookie host="^(about|online|travel|www209|www262|www304)\.americanexpress\.com$" name="^BIGipServer[\w-]+$" /-->
+	<!--securecookie host="^rewards\.americanexpress\.com$" name="^DataCenter$" /-->
+	<!--securecookie host="^search\.americanexpress\.com$" name="^cp_session$" /-->
+	<!--securecookie host="^travel\.americanexpress\.com$" name="^sroute$" /-->
+	<!--securecookie host="^www01\.extra\.americanexpress\.com$" name="^(\.ASPXAUTH|ASP\.NET_SessionId|Initial|NumberOfCartItems|NumberOfSavedItems|ReturnPage|ism)$" /-->
+	<!--securecookie host="^www209\.americanexpress\.com$" name="^TS[\da-f]{8}$" /-->
+	<!--securecookie host="^www295\.americanexpress\.com$" name="^[a-z]+__JSESSIONID$" /-->
+
+	<securecookie host="^(?:www01\.extra|online|rewards|search|travel|www209|www295|www304)\.americanexpress\.com$" name=".+" />
+
+
+	<!--	$ 404s
+			-->
+	<rule from="^http://axptravel\.americanexpress\.com/$"
+		to="https://axptravel.americanexpress.com/consumertravel/travel.do" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,46 @@
+<!--
+	Nonfunctional subdomains:
+
+		- board *
+		- status *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- www.webmail *
+
+	* Cert only matches *.artfiles.de
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- dcp.c
+		- documents
+		- (www.)webmail		(www → ^)
+
+-->
+<ruleset name="Artfiles New Media (partial)">
+
+	<target host="artfiles.de" />
+	<target host="*.artfiles.de" />
+
+
+	<!--	Not secured by server:
+						-->
+	<!--securecookie host="^\.artfiles\.de$" name="^HSID$" /-->
+	<!--securecookie host="^webmail\.artfiles\.de$" name="^SQMSESSID$" /-->
+	<!--securecookie host="^www\.artfiles\.de$" name="^(PHPSESSID|fe_typo_user)$" /-->
+
+	<securecookie host="^(?:webmail|www)?\.artfiles\.de$" name=".+" />
+
+
+	<rule from="^http://((?:dcp\.c|documents|www)\.)?artfiles\.de/"
+		to="https://$1artfiles.de/" />
+
+	<rule from="^http://(?:www\.)?webmail\.artfiles\.de/"
+		to="https://webmail.artfiles.de/" />
+
+</ruleset>

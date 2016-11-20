@@ -1,0 +1,54 @@
+<!--
+	For problematic rules, see Parse.ly-mismatches.xml.
+
+
+	CDN buckets:
+
+		- d1z2jf7jlzjs58.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- blog.parsely.com	(tumblr)
+
+
+	Problematic domains:
+
+		- (www.)parse.ly	(mismatched, CN: *.parsely.com)
+		- blog.parse.ly		(works; mismatched, CN: *.parsely.com)
+
+
+	Fully covered domains:
+
+		- [\w-]+.config.parsely.com:
+
+			- srv-\d{4}(-\d\d){3}
+
+		- [\w-]+.pixel.parsely.com:
+
+			- srv-\d{4}(-\d\d){3}
+
+
+	config sets parsely_uuid wildcard cookie
+	on whichever domain it is loaded from.
+
+-->
+<ruleset name="Parse.ly (partial)">
+
+	<target host="parsely.com" />
+	<target host="*.parsely.com" />
+
+
+	<securecookie host="^config\.parsely\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?parse\.ly/"
+		to="https://www.parsely.com/" />
+
+	<rule from="^http://((?:api|config|[\w-]+\.config|dash|pixel|[\w-]+\.pixel|www)\.)?parsely\.com/"
+		to="https://$1parsely.com/" />
+
+	<rule from="^http://static\.parsely\.com/"
+		to="https://d1z2jf7jlzjs58.cloudfront.net/" />
+
+</ruleset>

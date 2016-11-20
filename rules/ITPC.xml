@@ -1,0 +1,30 @@
+<!--
+	^: cert only matches www
+
+
+	Mixed content:
+
+		- Image from $self *
+
+	* Unsecurable <= 404
+
+-->
+<ruleset name="ITPC (partial)">
+
+	<target host="iptc.org"/>
+	<target host="www.iptc.org"/>
+		<!--
+			404:
+				-->
+		<exclusion pattern="^http://www\.iptc\.org/gfxgen(?:$|\?)" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.iptc\.org$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^(?:.*\.)?iptc\.org$" name=".*"/>
+
+	<rule from="^http://(?:www\.)?iptc\.org/"
+		to="https://www.iptc.org/"/>
+
+</ruleset>

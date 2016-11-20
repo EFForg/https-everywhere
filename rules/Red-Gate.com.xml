@@ -1,0 +1,61 @@
+<!--
+	Nonfunctional hosts in *red-gate.com:
+
+		- redgatesupport ¹
+		- sqlinthecity ²
+		- ux ³
+
+	¹ Zendesk
+	² Refused
+	³ Handshake fails
+
+
+	^red-gate.com: Mismatched
+
+
+	These altnames don't exist:
+
+		- www.assets.red-gate.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- documentation.red-gate.com
+
+
+	Mixed content:
+
+		- Image on documentation from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="Red-Gate.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="assets.red-gate.com" />
+	<target host="documentation.red-gate.com" />
+	<target host="www.red-gate.com" />
+
+	<!--	Complications:
+				-->
+	<target host="red-gate.com" />
+
+		<!--exclusion pattern="^http://(redgatesupport|ux)\.red-gate\.com/" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^documentation\.red-gate\.com$" name="JSESSIONID$" /-->
+
+	<securecookie host="^documentation\.red-gate\.com$" name=".+" />
+
+
+	<rule from="^http://red-gate\.com/"
+		to="https://www.red-gate.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

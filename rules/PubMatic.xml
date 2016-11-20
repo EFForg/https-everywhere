@@ -1,0 +1,58 @@
+<!--
+	Nonfunctional subdomains:
+
+		- (www.)	(301s to http)
+
+
+	Problematic domains:
+
+		- image[24]	(refused)
+
+
+	Fully covered subdomains:
+
+		- ads
+		- aktrack
+		- apps
+		- image[24]	(→ simage[24])
+		- origin
+		- simage[24]
+
+
+	Insecure cookies are set for these domains:
+
+		- .pubmatic.com
+
+-->
+<ruleset name="PubMatic.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="ads.pubmatic.com" />
+	<target host="aktrack.pubmatic.com" />
+	<target host="apps.pubmatic.com" />
+	<target host="origin.pubmatic.com" />
+	<target host="simage2.pubmatic.com" />
+	<target host="simage4.pubmatic.com" />
+
+	<!--	Complications:
+				-->
+	<target host="image2.pubmatic.com" />
+	<target host="image4.pubmatic.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.pubmatic\.com$" name="^(KRTBCOOKIE_\d+|PUBMDCID|PUBRETARGET)$" /-->
+
+	<securecookie host="^.*\.pubmatic\.com$" name=".+" />
+
+
+	<rule from="^http://image(2|4)\.pubmatic\.com/"
+		to="https://simage$1.pubmatic.com/" />
+
+	<!--	ads & simage4: included on 3rd-party websites.	-->
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

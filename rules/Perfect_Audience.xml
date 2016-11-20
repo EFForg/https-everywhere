@@ -1,0 +1,65 @@
+<!--
+	CDN buckets:
+
+		- perfect-audience-assets.s3.amazonaws.com
+
+		- perfectaudience.uservoice.com
+
+			- support
+
+		- perfectaudienc.wpengine.com
+
+			- blog.perfectaudience.com
+
+
+	Problematic subdomains:
+
+		- ads ¹
+		- blog		(redirects to http, mismatched)
+		- support ¹
+
+	¹ Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- ads		(→ ib.adnxs.com)
+		- app
+		- tag
+
+-->
+<ruleset name="Perfect Audience.com">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="perfectaudience.com" />
+	<target host="app.perfectaudience.com" />
+	<target host="tag.perfectaudience.com" />
+	<target host="www.perfectaudience.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ads.perfectaudience.com" />
+	<target host="blog.perfectaudience.com" />
+
+
+	<securecookie host="^www\.perfectaudience\.com$" name=".+" />
+
+
+	<rule from="^http://ads\.perfectaudience\.com/"
+		to="https://ib.adnxs.com/" />
+
+	<!--	Protocol-relative links to blog
+		exist on perfectaudienc:
+						-->
+	<rule from="^https?://blog\.perfectaudience\.com/"
+		to="https://perfectaudienc.wpengine.com/" />
+
+		<test url="https://blog.perfectaudience.com/2015/01/29/publisher-spotlight-targeting-experienced-developer-audience-thinkster/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+
+</ruleset>

@@ -1,0 +1,189 @@
+<!--
+	Virginia Polytechnic Institute and State University
+
+
+	Nonfunctional subdomains:
+
+		- calendar		(cert: secure.hosting.vt.edu; 404)
+		- mirror.ece		(refused)
+		- filebox		(Refused)
+		- (www.)fishwild
+		- (www.)frec
+		- (www.)geography
+		- m.lib				(shows scrooge.lib, CN: ulfs.lib)
+		- scholar.lib			(shows CentOS test page)
+		- www.tec.lib			(shows secure.hosting. CN: secure.hosting)
+		- www.podcasts			(shows secure.hosting. CN: secure.hosting)
+		- (www.)auction.research	(404)
+		- confluence.research		(Dropped)
+		- (www.)sbio
+		- www.directory.unirel		(shows secure.hosting, CN: secure.hosting)
+		- ossie.wireless	(self-signed, expired; shows CentOS Apache test page)
+
+
+	Problematic subdomains:
+
+		- ^
+		- bioinformatics
+		- www.cnr
+		- scrooge.lib				(expired, self-signed)
+		- www.oesrc.researchcompliance *
+		- vbi *
+
+	* Mismatched
+
+
+	Fully covered subdomains:
+
+		- (www.)				(^ → www)
+		- addison
+		- m.addison
+		- (www.)assessment
+		- auth
+		- (www.)bioinformatics			(^ → www)
+		- (www.)bse
+		- (www.)cals
+		- (www.)research.cals
+		- www.cnr				(→ cnre)
+		- (www.)cnre
+		- (www.)ext
+		- (www.)pubs.ext
+		- www.fralin
+		- (www.)vectorborne.fralin
+		- www.hnfe
+		- (www.)hipl.hnfe
+		- secure.hosting
+
+		- lib subdomains:
+
+			- aqua
+			- login.ezproxy.lib...:2443
+			- vtechworks
+			- www
+
+		- my
+		- (www.)osp
+
+		- research subdomains:
+
+			- (www.)
+			- dev
+			- help
+			- secure
+
+		- researchcompliance subdomains:
+
+			- (www.)
+			- (www.)oesrc			(www → ^)
+			- (www.)ibc
+
+		- security
+		- (www.)unirel
+
+		- (www.)vaes
+		- arec.vaes
+		- (www.)vbi				(^ → www)
+		- (www.)vtnews
+
+-->
+<ruleset name="VT.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="addison.vt.edu" />
+	<target host="m.addison.vt.edu" />
+	<target host="assessment.vt.edu" />
+	<target host="www.assessment.vt.edu" />
+	<target host="auth.vt.edu" />
+	<target host="bioinformatics.vt.edu" />
+	<target host="bse.vt.edu" />
+	<target host="www.bse.vt.edu" />
+
+	<target host="cals.vt.edu" />
+	<target host="research.cals.vt.edu" />
+	<target host="www.research.cals.vt.edu" />
+	<target host="www.cals.vt.edu" />
+
+	<target host="cnre.vt.edu" />
+	<target host="www.cnre.vt.edu" />
+
+	<target host="ext.vt.edu" />
+	<target host="pubs.ext.vt.edu" />
+	<target host="www.pubs.ext.vt.edu" />
+	<target host="www.ext.vt.edu" />
+
+	<target host="vectorborne.fralin.vt.edu" />
+	<target host="www.vectorborne.fralin.vt.edu" />
+	<target host="www.fralin.vt.edu" />
+
+	<target host="hipl.hnfe.vt.edu" />
+	<target host="www.hipl.hnfe.vt.edu" />
+	<target host="www.hnfe.vt.edu" />
+
+	<target host="secure.hosting.vt.edu" />
+
+	<target host="aqua.lib.vt.edu" />
+	<!--target host="ulfs.lib.vt.edu" /-->
+	<target host="vtechworks.lib.vt.edu" />
+	<target host="www.lib.vt.edu" />
+
+	<target host="my.vt.edu" />
+	<target host="osp.vt.edu" />
+	<target host="www.osp.vt.edu" />
+
+	<target host="research.vt.edu" />
+	<target host="dev.research.vt.edu" />
+	<target host="help.research.vt.edu" />
+	<target host="secure.research.vt.edu" />
+	<target host="www.research.vt.edu" />
+
+	<target host="researchcompliance.vt.edu" />
+	<target host="ibc.researchcompliance.vt.edu" />
+	<target host="www.ibc.researchcompliance.vt.edu" />
+	<target host="oesrc.researchcompliance.vt.edu" />
+	<target host="www.researchcompliance.vt.edu" />
+
+	<target host="security.vt.edu" />
+	<target host="www.security.vt.edu" />
+	<target host="unirel.vt.edu" />
+	<target host="www.unirel.vt.edu" />
+
+	<target host="vaes.vt.edu" />
+	<target host="arec.vaes.vt.edu" />
+	<target host="www.vaes.vt.edu" />
+
+	<target host="vbi.vt.edu" />
+	<target host="vtnews.vt.edu" />
+	<target host="www.vtnews.vt.edu" />
+	<target host="www.vt.edu" />
+
+	<!--	Special cases:
+				-->
+	<target host="vt.edu" />
+	<target host="www.bioinformatics.vt.edu" />
+	<target host="www.cnr.vt.edu" />
+	<target host="www.oesrc.researchcompliance.vt.edu" />
+	<target host="www.vbi.vt.edu" />
+
+		<!--	403:
+				-->
+		<!--exclusion pattern="^http://ulfs\.lib\.vt\.edu/$" /-->
+
+
+	<securecookie host="^(?:(?:m?\.)?addison|auth|www\.(?:bioinformatics|vbi)|(?:\.vectorborne)?\.fralin|(?:help|secure)?\.research|(?:\.ibc|\.oesrc)?\.researchcompliance)\.vt\.edu$" name=".+" />
+	<!--securecookie host="^\.vt\.edu$" name=".+" /-->
+
+
+	<rule from="^http://(bioinformatics\.|vbi\.)?vt\.edu/"
+		to="https://www.$1vt.edu/" />
+
+	<rule from="^http://www\.cnr\.vt\.edu/"
+		to="https://cnre.vt.edu/" />
+
+	<rule from="^http://www\.oesrc\.researchcompliance\.vt\.edu/"
+		to="https://oesrc.researchcompliance.vt.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

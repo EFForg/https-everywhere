@@ -1,0 +1,108 @@
+<!--
+	For rules causing false/broken MCB, see Red_Bull_Mobile-falsemixed.xml.
+
+	For other Red Bull coverage, see Red_Bull.xml.
+
+
+	Nonfunctional domains:
+
+		- (www.)redbullmobile.com *
+		- stage-trackingtool.redbullmobile.com *
+
+	* Refused
+
+
+	Problematic domains:
+
+		- redbullmobile.at		(refused)
+		- www.redbullmobile.com.au	(redirects to http)
+
+
+	Fully covered domains:
+
+		- redbullmobile.com subdomains:
+
+			- fbck
+			- qr
+			- socialposter
+			- trackingtool
+			- worb
+
+		- redbullmobile.com.au subdomains:
+
+			- (www.)	(www → ^)
+			- secure
+			- securea
+
+
+	Partially covered domains:
+
+		- (www.)redbullmobile.at *	(^ → www)
+
+	* Avoiding false/broken MCB, rest handled in Red_Bull_Mobile-falsemixed.xml
+
+
+	Mixed content, on redbullmobile.at:
+
+		- Scripts, from:
+
+			- www.redbullmobile.at *
+			- ajax.googleapis.com *
+
+		- css, from:
+
+			- www.redbullmobile.at *
+			- fonts.googleapis.com *
+
+		- Images from www.redbullmobile.at *
+
+		- favicon from rbx00412.microsites.redbull.com **
+
+		- Web bugs, from:
+
+			- admin.brightcove.com *
+			- www.googletagmanager.com *
+			- statse.webtrendslive.com *
+
+	* Secured by us
+	** Unsecurable
+
+
+	redbullmobile.at is in a separate -falsemixed ruleset
+	due to css and scripts from www.redbullmobile.at and
+	ajax.googleapis.com.
+
+	NB: We secure all resources, and thus
+	-falsemixed should be merged for Ffx 24.
+
+-->
+<ruleset name="Red Bull Mobile (partial)">
+
+	<target host="redbullmobile.at" />
+	<target host="www.redbullmobile.at" />
+		<!--
+			Avoid false/broken MCB:
+							-->
+		<!--exclusion pattern="^http://(www\.)?redbullmobile\.at/(?!fileadmin/|typo3conf/|typo3temp/|uploads/)" /-->
+	<target host="*.redbullmobile.com" />
+	<target host="redbullmobile.com.au" />
+	<target host="*.redbullmobile.com.au" />
+
+
+	<securecookie host="^(?:fbck|qr|socialposter|trackingtool|worb)\.redbullmobile\.com$" name=".+" />
+	<securecookie host="^(?:securea\.)?redbullmobile\.com\.au$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?redbullmobile\.at/(?=fileadmin/|typo3conf/|typo3temp/|uploads/)"
+		to="https://www.redbullmobile.at/" />
+
+	<rule from="^http://(fbck|qr|socialposter|trackingtool|worb)\.redbullmobile\.com/"
+		to="https://$1.redbullmobile.com/" />
+
+	<rule from="^http://(?:www\.)?redbullmobile\.com\.au/"
+		to="https://redbullmobile.com.au/" />
+
+	<rule from="^http://secure(a)?\.redbullmobile\.com\.au/"
+		to="https://secure$1.redbullmobile.com.au/" />
+
+</ruleset>

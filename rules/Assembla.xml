@@ -1,0 +1,48 @@
+<!--
+	For problematic rules, see Assembla-mismatches.xml.
+
+
+	Nonfunctional subdomains:
+
+		- about		(shows www)
+		- feed		(CN: *.p.assembla.com; redirects to www)
+		- helpdesk	(CN: *.desk.com; redirects to http, assembla.desk.com redirects back)
+		- offers	(redirects to www)
+
+
+	Problematic subdomains:
+
+		- blog		(CN: *.hubspot.com)
+		- feedback	(CN: *.uservoice.com; pages redirect back from assembla.uservoice.com)
+
+
+	Fully covered subdomains:
+
+		- ^
+		- assets1
+		- assets2
+		- nooku
+		- portfolio
+		- scala-ide-portfolio
+		- svn2
+		- trac
+		- trac2
+		- www
+
+-->
+<ruleset name="Assembla (partial)">
+
+	<target host="assembla.com" />
+	<target host="*.assembla.com" />
+
+
+	<securecookie host="^(?:.*\.)?assembla\.com$" name=".+" />
+
+
+	<rule from="^http://((?:assets\d|nooku|(?:scala-ide-)?portfolio|svn2|trac2?|www)\.)?assembla\.com/"
+		to="https://$1assembla.com/" />
+
+	<rule from="^http://feedback\.assembla\.com/track\.gif"
+		to="https://assembla.uservoice.com/track.gif" />
+
+</ruleset>

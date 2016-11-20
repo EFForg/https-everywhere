@@ -1,0 +1,91 @@
+<!--
+
+	Other TDC rulesets:
+
+		- C.dk.xml
+		- TDC.no.xml
+		- TDC_online.se.xml
+		- TDC_Service_Online.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- 118			(refused)
+		- aarsrapport2012	(dropped)
+		- go			(refused)
+		- hastighedstest	(refused)
+		- investor		(timeout)
+		- perspektiv		(mismatch)
+		- play			(refused)
+		- presse		(mismatch)
+		- tdcguide		(refused)
+		- telefonmanualer	(mismatch)
+
+
+	Problematic subdomains:
+
+		- forum		(lithium)
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- shop ²
+
+	¹ Partially secured by us <= accounting
+	  for possible use on uncovered domains
+
+	² Secured by us <= complete coverage
+
+-->
+<ruleset name="TDC.dk (partial)" default_off='failed ruleset test'>
+
+	<target host="tdc.dk" />
+	<target host="www.tdc.dk" />
+	<target host="businesscare.tdc.dk" />
+	<target host="clouddisk.tdc.dk" />
+	<target host="erhverv.tdc.dk" />
+	<target host="erhvervkundeservice.tdc.dk" />
+	<target host="fly.tdc.dk" />
+	<target host="fordele.tdc.dk" />
+	<target host="forum.tdc.dk" />
+	<target host="kundeservice.tdc.dk" />
+	<target host="mail.tdc.dk" />
+	<target host="mit.tdc.dk" />
+	<target host="mobil.tdc.dk" />
+	<target host="oam.tdc.dk" />
+	<target host="om.tdc.dk" />
+	<target host="opdaterdinpc.tdc.dk" />
+	<target host="postmaster.tdc.dk" />
+	<target host="privat.tdc.dk" />
+	<target host="reinsurance.tdc.dk" />
+	<target host="selfcare.tdc.dk" />
+	<target host="shop.tdc.dk" />
+	<target host="sikkerhed.tdc.dk" />
+	<target host="tdc-wholesale.com" />
+	<target host="wholesale.tdc.dk" />
+	<target host="www.tdc-wholesale.com" />
+
+	<!--	Set by shop:
+				-->
+	<securecookie host="^\.tdc\.dk$" name="^salg_dwbc$" />
+	<!--
+		Could we  secure either of these safely?
+							-->
+	<!--securecookie host="^\.tdc\.dk$" name="^(ObSSOCookie|VISITORID)$" /-->
+	<securecookie host="^(?:privatalarm|shop)\.tdc\.dk$" name=".+" />
+
+
+	<rule from="^http://forum\.tdc\.dk/"
+		to="https://tdc.i.lithium.com/" />
+
+	<!--	- //+ redirects to http://$
+		- \w+ 404s
+				-->
+	<rule from="^http://(?:www\.)?tdc-wholesale\.com/"
+		to="https://wholesale.tdc.dk/nordic/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,50 @@
+<!--
+	Nonfunctional subdomains:
+
+		- gd *
+		- www.sss *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+
+
+	Partially covered subdomains:
+
+		- www.zid	(some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- mail
+		- pop
+		- mail.student
+		- webmail
+		- iu.zid
+		- mail.zserv
+		- webstats.zserv
+
+-->
+<ruleset name="Vienna University of Technology (partial)">
+
+	<target host="tuwien.ac.at" />
+	<target host="*.tuwien.ac.at" />
+		<!--exclusion pattern="^http://www\.zid\.tuwien\.ac\.at/(?:$|campussoftware/|impressum/|systempflege/|webmail/)" /-->
+		<!--exclusion pattern="^http://www.zid\.tuwien\.ac\.at/sts/(?:$|\?|it_beratung/|sts/quick_links/)" /-->
+		<exclusion pattern="^http://www.zid\.tuwien\.ac\.at/sts/(?!campussoftware|studentensoftware)" />
+
+
+	<securecookie host="^(?:\.mail\.student|\.webmail|www)\.tuwien\.ac\.at$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?tuwien\.ac\.at/"
+		to="https://www.tuwien.ac.at/" />
+
+	<rule from="^http://(mail|pop|mail\.student|webmail|(?:ui|www)\.zid|(?:mail|webstats)\.zserv)\.tuwien\.ac\.at/"
+		to="https://$1.tuwien.ac.at/" />
+
+</ruleset>

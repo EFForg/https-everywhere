@@ -1,0 +1,144 @@
+<!--
+	Disabled per https://github.com/EFForg/https-everywhere/issues/1387
+	For problematic rules, see Huffington-Post-mismatches.xml.
+
+	For other AOL coverage, see AOL.xml.
+
+
+	CDN buckets:
+
+		- s3.amazonaws.com/big.assets.huffingtonpost.com/
+		- s3.amazonaws.com/i.huffpost.com/	-	not directly equivalent to i.huffingtonpost.com
+		- entry-stats-huffpost-com.egslb.aol.com
+		- s-i.huffpost.com.edgekey.net
+		- s-s.huffpost.com.edgekey.net
+		- www.huffingtonpost.ca.edgesuite.net
+		- images.huffingtonpost.com.edgesuite.net
+		- e.huffpost.com.edgesuite.net
+		- i.huffpost.com.edgesuite.net
+
+		- s.huffpost.com.edgesuite.net
+
+			- a1428.g.akamai.net
+			- s[01].huffpost.com
+
+
+	Nonfunctional domains:
+
+		- elections.huffingtonpost.com ¹
+		- entry-stats.huffpost.com	(refused)
+
+	¹ 503, Akamai
+
+
+	Problematic domains:
+
+		- (www.)huffingtonpost.com
+		- bug.assets.huffingtonpost.com
+		- i.huffpost.com	(503, Akamai)
+		- s.huffpost.com	(redirects to i, prints Amazon Web Services "Access Denied")
+		- s[12].huffpost.com ²
+
+	² Works, akamai
+
+
+	Partially covered domains:
+
+		- (www.)huffingtonpost.com *	(→ a248.e.akamai.net)
+		- e.huffpost.com		(→ a248.e.akamai.net)
+
+	* Some pages redirect back
+
+
+	Fully covered domains:
+
+		- huffingtonpost.com subdomains:
+
+			- big.assets	(→ s3.amazonaws.com/big.assets.huffingtonpost.com/)
+			- images	(→ s-i.huffpost.com)
+			- secure
+
+		- huffpost.com subdomains:
+
+			- i	(→ s-i)
+			- s	(→ s-s)
+
+			- s\d:	(→ akamai)
+
+				- [0-3]
+
+			- s-i
+			- s-s
+
+
+	Mixed content:
+
+		- css, on secure.huffingtonpost.com from s.huffpost.com *
+
+		- css on secure.huffingtonpost.com from  s[01].huffpost.com *
+
+		- Images, on secure.huffingtonpost.com from:
+
+			- cdn.crowdignite.com **
+			- www.gstatic.com *
+			- www.mediabistro.com *
+			- i.huffpost.com *
+			- s.huffpost.com *
+			- s.huffpost.com via s-s.huffpost.com *
+			- s[01].huffpost.com *
+
+		- Web bug, on secure.huffingtonpost.com from:
+
+			- o.aolcdn.com *
+			- entry-stats.huffpost.com **
+			- pixel.quantserve.com *
+			- b.scorecardresearch.com *
+			- ar.voicefive.com *
+
+	* Secured by us
+	** Unsecurable
+
+-->
+<ruleset name="Huffington Post (partial)" default_off="Breaks some images">
+
+	<target host="huffingtonpost.com" />
+	<target host="*.huffingtonpost.com" />
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?huffingtonpost\.com/+(?!favicon\.ico|images/)" />
+	<target host="*.huffpost.com" />
+		<exclusion pattern="^http://e\.huffpost\.com/+(?!\w+/images/)" />
+		<!--
+			css embeds resources relative to root => rewriting to akamai breaks:
+												-->
+		<!--exclusion pattern="^http://s[01]\.huffpost\.com/+assets/css\.php\?f=liveblog\.css" /-->
+		<!--
+			css embeds resources absolutely => rewriting to akamai works:
+											-->
+		<!--exclusion pattern="^http://s[01]\.huffpost\.com/+assets/css\.php\?f=(?!phoenix\.css)" /-->
+
+
+	<rule from="^http://big\.assets\.huffingtonpost\.com/"
+		to="https://s3.amazonaws.com/big.assets.huffingtonpost.com/" />
+
+	<rule from="^http://images\.huffingtonpost\.com/"
+		to="https://s-i.huffpost.com/" />
+
+	<rule from="^http://secure\.huffingtonpost\.com/"
+		to="https://secure.huffingtonpost.com/" />
+
+	<!--	404s on s-s.huffpost.com.
+						-->
+	<rule from="^http://s\.huffpost\.com/contributors/"
+		to="https://secure.huffingtonpost.com/contributors/" />
+
+	<!--	AmazonWS, but valid cert.
+						-->
+	<rule from="^http://(?:s-)?([is])\.huffpost\.com/"
+		to="https://s-$1.huffpost.com/" />
+
+	<rule from="^http://s\d\.huffpost\.com/"
+		to="https://s-s.huffpost.com/" />
+
+</ruleset>

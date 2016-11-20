@@ -1,0 +1,65 @@
+<!--
+	For other Pivotal coverage, see Pivotal.xml.
+
+
+	CDN buckets:
+
+		- cloudfoundry.github.io
+
+			- docs
+
+		- i[012].wp.com/blog.cloudfoundry.com/
+	
+
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- docs		(404; mismatched, CN: *.github.com)
+		- status	(times out)
+
+	¹ WP Engine
+
+
+	Problematic subdomains:
+
+		- support ²
+
+	² Mismatched
+
+
+	Partially covered subdomains:
+
+		- blog		(→ blog.pivotal.io)
+
+-->
+<ruleset name="Cloud Foundry.com (partial)">
+
+	<target host="cloudfoundry.com" />
+	<target host="core.cloudfoundry.com" />
+	<target host="www.cloudfoundry.com" />
+
+	<!--	Complications:
+				-->
+	<target host="blog.cloudfoundry.com" />
+
+		<exclusion pattern="^http://blog\.cloudfoundry\.com/(?!$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://blog.cloudfoundry.com/author/nbadiey" />
+			<test url="http://blog.cloudfoundry.com/page/2/" />
+
+
+	<securecookie host="^core\.cloudfoundry\.com$" name=".+" />
+
+
+	<rule from="^http://blog\.cloudfoundry\.com/"
+		to="https://blog.pivotal.io/cloud-foundry-pivotal" />
+
+	<!--rule from="^http://support\.cloudfoundry\.com/$"
+		to="https://support.run.pivotal.io/" /-->
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

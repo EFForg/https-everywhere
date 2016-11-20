@@ -1,0 +1,95 @@
+<!--
+	For other NBCUniversal coverage, see NBCUniversal_Media.xml.
+
+
+	CDN buckets:
+
+		- m.static.newsvine.com.edgesuite.net
+
+
+	Problematic hosts in *newsvine.com:
+
+		- cdn.lib ¹
+		- m.static *
+
+	¹ Akamai
+	* Works, akamai
+
+
+	Insecure cookies are set for these domains:
+
+		- .newsvine.com
+
+-->
+<ruleset name="newsvine.com (partial)" default_off='Needs ruleset tests'>
+
+	<!--	Direct rewrites:
+				-->
+	<target host="newsvine.com" />
+	<!--target host="bonosrama.newsvine.com" /-->
+	<target host="lib.newsvine.com" />
+	<target host="log.newsvine.com" />
+	<target host="onesearch4-2.newsvine.com" />
+	<target host="www.newsvine.com" />
+
+	<!--	Akamai	-->
+	<target host="cdn.bonosrama.newsvine.com" />
+	<target host="www.cdn.newsvine.com" />
+	<target host="i.newsvine.com" />
+	<target host="cdn.lib.newsvine.com" />
+	<target host="polls.newsvine.com" />
+	<target host="www.polls.newsvine.com" />
+	<target host="m.static.newsvine.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://bonosrama\.newsvine\.com/(?:$|_nv/)" /-->
+
+		<!--	Pages redirect to www:
+						-->
+		<exclusion pattern="^http://onesearch4-2\.newsvine\.com/+(?!_vine/)" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.polls\.newsvine\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?polls\.newsvine\.com/(?!_static/|_vine/)" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.newsvine\.com/(?:$|_nv/)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.newsvine\.com/(?!_static/|_vine/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.newsvine\.com$" name="^vid$" /-->
+
+
+	<rule from="^http://cdn\.bonosrama\.newsvine\.com/"
+		to="https://bonosrama.newsvine.com/" />
+
+	<!--	- www.cdn: Akamai
+		- i times out as-is
+					-->
+	<rule from="^http://(?:www\.cdn|i)\.newsvine\.com/"
+		to="https://www.newsvine.com/" />
+
+	<!--	polls uses Akamai.
+		This is what server does for https pages.
+		NB: Most polls pages are handled in MSN.com.xml.	-->
+	<rule from="^http://(?:www\.)?polls\.newsvine\.com/"
+		to="https://www.newsvine.com/" />
+
+	<rule from="^http://m\.static\.newsvine\.com/"
+		to="https://m.newsvine.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,57 @@
+<!--
+	For rules causing false/broken MCB, see Details.com-falsemixed.xml.
+
+	For other Condé Nast coverage, see Conde-Nast.xml.
+
+
+	Problematic subdomains:
+
+		- ^ ¹
+		- network ²
+		- www ³
+
+	¹ Mismatched, CN: secure.details.com
+	² Works; mismatched, CN: tid.al
+	³ Akamai
+
+
+	Some pages redirect to http, including:
+
+		- epicenter/wp-content/
+		- images_blogs/
+		- opinion/wp-content/
+
+
+	Mixed content:
+
+		- css on wp-poc from www *
+
+		- Images, on:
+
+			- network, from:
+
+				- c15192701.r1.cf2.rackcdn.com *
+				- 46cd30968e1573f1be6a-8c2846daf2177f4f4bf5c632288c9df2.r86.cf2.rackcdn.com *
+				- f533f48d5f4caca7eca4-fc1b9f39dbc011f36431a12c21c5bdb0.r0.cf2.rackcdn.com *
+				- cdna.tid.al *
+
+			- wp-poc from $self *
+			- wp-poc from www *
+
+	* Secured by us
+
+-->
+<ruleset name="Details (partial)">
+
+	<target host="details.com" />
+	<target host="*.details.com" />
+		<exclusion pattern="^http://(?:www\.)?details\.com/(?!css/|images/|favicon\.ico$|sandbox/)" />
+
+
+	<rule from="^http://(?:secure\.|www\.)?details\.com/"
+		to="https://secure.details.com/" />
+
+	<rule from="^http://wp-poc\.details\.com/(?=(?:daily-details/)?(?:files/|wp-content/)|favicon\.ico)"
+		to="https://wp-poc.details.com/" />
+
+</ruleset>

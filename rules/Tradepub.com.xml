@@ -1,0 +1,101 @@
+<!--
+	For rules causing false/broken MCB, see TradePub.com-falsemixed.xml.
+
+
+	CDN buckets:
+
+		- netline.cachefly.net
+
+			- img
+
+
+	Cert only matches *.tradepub.com
+
+
+	Fully covered subdomains:
+
+		- img		(→ netline.cachefly.net)
+		- nl-marketing
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, avoiding false/broken MCB)
+
+
+	Insecure cookies are set for these domains:
+
+		- .tradepub.com
+
+
+	Mixed content:
+
+		- Scripts on www from www ¹
+
+		- css, on:
+
+			- nl-marketing from www.netline.com ²
+			- www from www ¹
+
+		- Images, on:
+
+			- nl-marketing from img ¹
+			- nl-marketing from www.netline.com ³
+			- www from img ¹
+
+		- Web bugs, on www from:
+
+			- cts ¹
+			- w.sharethis.com ¹
+
+	¹ Secured by us
+	² Unsecurable, minimal effect
+	³ Unsecurable
+
+-->
+<ruleset name="tradepub.com (partial)">
+
+	<target host="tradepub.com" />
+	<target host="cts.tradepub.com" />
+	<target host="img.tradepub.com" />
+	<target host="nl-marketing.tradepub.com" />
+	<target host="www.tradepub.com" />
+		<!--
+			False/broken MCB:
+						-->
+		<exclusion pattern="^http://(?:www\.)?tradepub\.com/+(?!body_styles\.css|c/|data/|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://tradepub.com/?do=login" />
+			<test url="http://tradepub.com/?p=faq" />
+			<test url="http://tradepub.com/?p=rss" />
+			<test url="http://tradepub.com/?pt=main&amp;page=home.about" />
+			<test url="http://tradepub.com/?pt=main&amp;page=home.topten" />
+
+			<!--	-ve:
+					-->
+			<test url="http://tradepub.com/body_styles.css" />
+			<test url="http://tradepub.com/data/font-awesome.min.css" />
+			<test url="http://tradepub.com/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.tradepub\.com$" name="^Apache$" /-->
+
+	<!--	Could we secure any of these safely?
+							-->
+	<!--securecookie host="^\.tradepub\.com$" name="^(Apache|_t|tpid)$" /-->
+
+
+	<rule from="^http://tradepub\.com/"
+		to="https://www.tradepub.com/" />
+
+	<rule from="^http://img\.tradepub\.com/"
+		to="https://netline.cachefly.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

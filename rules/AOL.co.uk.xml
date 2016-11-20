@@ -1,0 +1,97 @@
+<!--
+	For other AOL coverage, see AOL.xml.
+
+
+	Nonfunctional hosts in *aol.co.uk:
+
+		- ^ ¹
+		- corp ¹
+		- games ²
+		- money ¹
+		- privacy ¹
+		- search ¹
+		- sportinglife ²
+		- weather ¹
+		- www ³
+
+	¹ Refused
+	² Dropped
+	³ Redirects to http
+
+
+	Problematic hosts in *aol.co.uk:
+
+		- help *
+		- on *
+
+	* Mismatched
+
+
+	Fully covered hosts in *aol.co.uk:
+
+		- mail
+		- rs
+
+
+	Insecure cookies are set for these hosts:
+
+		- on.aol.co.uk
+
+
+	Mixed content:
+
+		- iframe on on from embed.5min.com *
+
+		- css, on:
+
+			- on from as.on.aol.com *
+			- on from fonts.googleapis.com *
+
+		- Images, on:
+
+			- on from pfiles.5min.com *
+			- on from at.on.aol.com *
+
+		- Bugs on on from b.scorecardresearch.com *
+
+	* Secured by us
+
+-->
+<ruleset name="AOL.co.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="help.aol.co.uk" /-->
+	<target host="mail.aol.co.uk" />
+	<!--target host="on.aol.co.uk" /-->
+	<target host="rs.aol.co.uk" />
+	<target host="uktools.aol.co.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.aol\.co\.uk/($|ads/load_v7\.html)" /-->
+		<!--exclusion pattern="^http://uktools\.aol\.co\.uk/($|api/word-of-the-day\.html)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://uktools\.aol\.co\.uk/(?!media/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://uktools.aol.co.uk/api/word-of-the-day.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://uktools.aol.co.uk/media/email-sign-out-rwd.css" />
+			<test url="http://uktools.aol.co.uk//media/email-sign-out-rwd.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^on\.aol\.co\.uk$" name="^watchpage$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

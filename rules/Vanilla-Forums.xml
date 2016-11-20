@@ -1,0 +1,50 @@
+<!--
+	CDN buckets:
+
+		- c3409409.r9.cf0.rackcdn.com
+			- cdn.vanillaforums.com
+			- cdn.vni.la
+
+
+	vanillaforums.totemapp.com
+
+
+	Nonfunctional subdomains:
+
+		- cdn	(Akamai; 401)
+
+-->
+<ruleset name="Vanilla Forums (partial)">
+
+	<target host="vanillaforums.com" />
+	<target host="*.vanillaforums.com" />
+		<!--	These paths redirect to http.	-->
+		<exclusion pattern="^http://(?:www\.)?vanillaforums\.com/(?:$|info(?:$|/))" />
+	<target host="*.vanilladev.com" />
+	<target host="cdn.vni.la" />
+
+
+	<rule from="^http://autostatic\.vanilladev\.com/"
+		to="https://autostatic.vanilladev.com/" />
+
+	<!--	Some pages redirect to http.
+
+		Those in the commented out rule have been verified as not doing so.
+		
+	<rule from="^http://(www\.)?vanillaforums\.com/((?:account|applications|blog|entry|features|migrate-your-community|plans|resources|themes|tour)(?:$|/))">
+			-->
+	<rule from="^http://(www\.)?vanillaforums\.com/"
+		to="https://$1vanillaforums.com/" />
+
+	<rule from="^http://cdn\.v(?:anillaforums\.com|ni\.la)/"
+		to="https://c3409409.ssl.cf0.rackcdn.com/" />
+
+	<!--	- Doesn't work over https
+		- Included on clients' websites
+
+		NB: revisit this, is it working as-is now?
+				-->
+	<rule from="^http://autostatic-cl1\.vanilladev\.com/(\w+)\.vanillaforums\.com/"
+		to="https://$1.vanillaforums.com/" />
+
+</ruleset>

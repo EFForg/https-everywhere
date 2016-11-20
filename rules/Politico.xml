@@ -1,0 +1,43 @@
+<!--
+	Other Politico rulesets:
+
+		- Politico_Pro.com.xml
+
+
+	!functional subdomains:
+		- avatar	(data not on images nor www)
+		- dyn ²
+		- find		(timeout)
+
+	² Dropped
+
+-->
+<ruleset name="Politico (partial)" default_off="mismatch">
+
+	<!--	cert: Akamai	-->
+	<target host="politico.com"/>
+	<target host="www.politico.com"/>
+	<target host="images.politico.com"/>
+	<target host="jobs.politico.com"/>
+		<!--	avatar: 404; data not on images nor www.
+			dyn: timeout
+			find: ditto
+			www2: ditto		-->
+		<exclusion pattern="^http://(?:avatar|dyn|find|www2)\."/>
+
+
+	<!--	encountered cookies:
+			- ^.
+			- dyn
+			- find
+			- jobs	-->
+	<securecookie host="^(?:jobs)?\.politico\.com$" name=".*"/>
+
+
+	<rule from="^http://politico\.com/"
+		to="https://www.politico.com/"/>
+
+	<rule from="^http:"
+		to="https:"/>
+
+</ruleset>

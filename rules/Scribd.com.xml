@@ -1,0 +1,190 @@
+<!--
+	CDN buckets:
+
+		- s3.amazonaws.com/assets.scribd.com/
+		- s3.amazonaws.com/html.scribd.com/
+
+		- s3.amazonaws.com/reflow.scribd.com/...
+
+			- img.scribd.com
+
+		- s3.amazonaws.com/sprited-images.scribd.com/
+		- s3.amazonaws.com/s3.scribd.com/
+		- d.scribd.com.cdngc.net
+
+		- s.scribd.com.cdngc.net/...
+
+			- s[5-8].scribdassets.com
+
+		- html.scribdassets.com.cdngc.net/...
+
+			- fonts[1-4].scribdassets.com
+			- html.scribdassets.com
+			- html[1-4].scribdassets.com
+			- htmlimg.scribdassets.com
+			- htmlimg[1-4].scribdassets.com
+
+		- img.scribdassets.com.cdngc.net
+
+			- img.scribdassets.com
+			- img[1-4].scribdassets.com
+
+		- imgv2.scribdassets.com.cdngc.net/..
+
+			- imgv2.scribdassets.com
+			- imgv2-[1-4].scribdassets.com
+
+		- s.scribd.com.edgesuite.net/...
+
+			- s[1-4].scribdassets.com
+
+
+	Nonfunctional domains:
+
+		- scribd.com subdomains:
+
+			- blog ¹
+			- d ²
+			- support ³
+
+	¹ wpengine
+	² AmazonAWS 403; mismatched, CN: ssl2?.cdngc.net
+	³ Zendesk.com
+
+
+	Problematic domains:
+
+		- scribd.com subdomains:
+
+			- html ¹
+			- img ¹
+			- s ²
+
+		- img.scribdassets.com ²
+		- img[1-4].scribdassets.com ²
+
+	¹ AmazonAWS
+	² 403; mismatched, CN: ssl2?.cdngc.net
+
+
+	Partially covered domains:
+
+		- (www.)?scribd.com *
+
+	* docs/ redirects to http
+
+
+	Fully covered domains:
+
+		- scribd.com subdomains:
+
+			- ^
+			- fonts
+			- html		(→ html.scribdassets.com)
+			- htmlcdn
+			- img		(-> s3.amazonaws.com)
+			- origin-s
+			- rat
+			- rs
+
+			- rs\d:
+
+				- [1-8]
+
+			- s		(→ www)
+
+		- scribdassets.com subdomains:
+
+			- fonts\d:
+
+				- [1-4]
+
+			- html
+
+			- html\d:
+
+				- [1-4]
+
+			- htmlimg\d:
+
+				- [1-4]
+
+			- img\d:	(-> imgv2-\1)
+
+				- [1-4]
+
+			- imgv2
+
+			- imgv2-\d:
+
+				- [1-4]
+
+			- imgv2-\d-f:
+
+				-[12]
+
+			- s\d:
+
+				- [5-8]
+
+			- s\d-f:
+
+				- [12]
+
+
+	Insecure cookies are set for these domains:
+
+		- .scribd.com
+		- .scribdassets.com
+
+-->
+<ruleset name="Scribd.com (partial)">
+
+	<target host="scribd.com" />
+	<target host="*.scribd.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.scribd\.com/doc/\d+/[\w-]+($|\?)" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://www\.scribd\.com/doc(?:$|[?/])" />
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://www\.scribd\.com/+(?!aggregated/|embeds/|favicon\.ico|images/|(?:about|account-settings|adchoices|archive|books?|browse|contact|copyright|developers|faq|fullscreen|giftcards|jobs|leadership|login|mobile|notifications|payments|privacy|profiles|publishers|read|[Ss]cribd|static|store_purchase|subscribe|terms|upload-document|zendesk_session)(?:$|[?/])|options/|ssi/)" /-->
+	<target host="*.scribdassets.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.scribd\.com$" name="^(_scribd_session|scribd_ubtc)$" /-->
+	<securecookie host="^\.scribdassets\.com$" name="^scribd_ubtc$" />
+
+
+	<rule from="^http://html\.scribd\.com/"
+		to="https://html.scribassets.com/" />
+
+	<rule from="^http://img\.scribd\.com/"
+		to="https://s3.amazonaws.com/img.scribd.com/" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://s\.scribd\.com/+"
+		to="https://www.scribd.com/" />
+
+	<rule from="^http://support\.scribd\.com/(?=favicon\.ico|generated/|images/|system/)"
+		to="https://assets.zendesk.com/" />
+
+	<rule from="^http://((?:fonts|htmlcdn|rat|rs\d?|www)\.)?scribd\.com/"
+		to="https://$1scribd.com/" />
+
+	<rule from="^http://img(\d)\.scribdassets\.com/"
+		to="https://imgv2-$1.scribdassets.com/" />
+
+	<rule from="^http://(fonts\d|html\d?|htmlimg\d|imgv2|imgv2-\d|imgv2-\d-f|s\d|s\d-f)\.scribdassets\.com/"
+		to="https://$1.scribdassets.com/" />
+
+
+</ruleset>

@@ -1,0 +1,160 @@
+<!--
+	California Polytechnic State University
+
+	For rules causing false/broken MCB, see Cal_Poly.edu-falsemixed.xml.
+
+	Other California Polytechnic State University rulesets:
+
+		- Cal_Poly_Arts.org.xml
+
+
+	Nonfunctional hosts in *calpoly.edu:
+
+		- (www.) ᵈ
+		- (www.)?academicaffairs ᵈ
+		- (www.)?alumni ᵈ
+		- backweek ᵈ
+		- (www.)brae ᵈ
+		- www.calpolynews ʰ
+		- campusclimate ʰ
+		- cap *
+		- (www.)?catalog ʳ
+		- www.cob ʳ
+		- (www.)?continuing-ed ᵈ
+		- www.extended ᵈ
+		- financialaid ᵈ
+		- (www.)?international ᵈ
+		- (www.)?ipa ᵈ
+		- (www.)?its ᵈ
+		- databases.lib ˢ
+		- find.lib ˢ
+		- (www.)?maps ᵈ
+		- (www.)?mds ᵈ
+		- netadmin ˢ
+		- orientation ᵈ
+		- president ᵈ
+		- (www.)?polylearnsupport ᵈ
+		- universitystrategicplan ᵖ
+
+	ᵈ Dropped
+	ʰ Handshake fails
+	* Redirects to afd.calpoly.edu
+	ʳ Refused
+	ˢ Shows another domain
+	ᵖ Shows default page
+
+
+	Problematic hosts in *calpoly.edu:
+
+		- (www.)?academic-personnel ᵐ
+		- (www.)?academicsenate ᵐ
+		- admissions ˣ
+		- (www.)?aged ᵐ
+		- (www.)?cafes ᵐ
+		- (www.)?careerservices ᵐ
+		- (www.)?cla ᵐ
+		- www.cosam ᵐ
+		- (www.)?diversity
+		- (www.)?drupal ᵐ
+		- (www.)?equalopportunity ᵐ
+		- (www.)?hcs ᵐ
+		- www.housing ᵐ
+		- (www.)?housing-test ᵐ
+		- (www.)?ipa ᵐ
+		- (www.)?ir ᵐ
+
+		- guides.lib ᵐ
+		- polycat.lib ˣ
+		- www.lib ᵐ
+
+		- (www.)?liberalstudies ᵐ
+		- www.my ᵐ
+		- (www.)?osrr ᵐ
+		- (www.)?polycard ᵐ
+		- (www.)?polydata ᵐ
+		- (www.)?registrar ᵐ
+		- (www.)?security ᵐ
+		- (www.)?servicedesk ᵐ
+		- (www.)?soe ᵐ
+		- (www.)?studentaffairs ᵐ
+		- www.tickets ᵐ
+		- (www.)?wasc ᵐ
+		- www.wireless ᵐ
+
+	ᵐ Mismatched
+	ˣ Mixed css
+
+
+	These altnames don't exist:
+
+		- d7.calpoly.edu
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .lib.calpoly.edu
+		- polycat.lib.calpoly.edu
+		- hcsportal.studaff.calpoly.edu
+		- tickets.calpoly.edu
+
+
+	Mixed content:
+
+		- css, on:
+
+			- admissions from webresource.its.calpoly.edu *
+			- (www.)?academicsenate, (www.)?cla, www.cosam, (www.)?ir, (www.)?polycard from $self
+			- lib from fonts.googleapis.com *
+			- polycat.lib from lib.calpoly.edu *
+
+		- Images, on:
+
+			- (www.)?academicsenate, (www.)?cla, www.cosam, (www.)?ir, (www.)?polycard from $self
+			- admissions from webresource.its.calpoly.edu *
+			- servicedesk from www.calpoly.edu
+
+-->
+<ruleset name="Cal Poly.edu (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<!--target host="admissions.calpoly.edu" /-->
+	<target host="afd.calpoly.edu" />
+	<target host="www.afd.calpoly.edu" />
+	<target host="webresource.its.calpoly.edu" />
+	<target host="lib.calpoly.edu" />
+	<!--target host="polycat.lib.calpoly.edu" /-->
+	<target host="hagrid.libart.calpoly.edu" />
+	<target host="my.calpoly.edu" />
+	<target host="myportal.calpoly.edu" />
+	<target host="polylearn.calpoly.edu" />
+	<target host="hcsportal.studaff.calpoly.edu" />
+	<target host="tickets.calpoly.edu" />
+	<target host="xerxes.calpoly.edu" />
+
+	<!--	Complications:
+				-->
+	<target host="www.lib.calpoly.edu" />
+	<target host="www.my.calpoly.edu" />
+	<target host="www.tickets.calpoly.edu" />
+
+		<test url="http://webresource.its.calpoly.edu/cpwebtemplate/5.0.0/common/css/cp_screen.min.css" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.lib\.calpoly\.edu$" name="^(?:III_EXPT_FILE|SESSION_ID|SESSION_LANGUAGE)$" /-->
+	<!--securecookie host="^polycat\.lib\.calpoly\.edu$" name="^SESSION_SCOPE$" /-->
+	<!--securecookie host="^hcsportal\.studaff\.calpoly\.edu$" name="^ASP\.NET_SessionId$" /-->
+	<!--securecookie host="^tickets\.calpoly\.edu$" name="^(?:ASPSESSIONID[\A-Z]{8}|AV-Cookie|TS[\da-f]{8}|b+|f5_cspm)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.(lib|my|tickets)\.calpoly\.edu/"
+		to="https://$1.calpoly.edu/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

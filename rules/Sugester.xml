@@ -1,0 +1,31 @@
+<!--
+	For other Radgost coverage, see Fakturownia.xml.
+
+
+	CDN buckets:
+
+		- s3-eu-west-1.amazonaws.com/assets.sugester.pl/
+		- s3-eu-west-1.amazonaws.com/fs.sugester.pl/
+		- dp5zdpqpeogmk.cloudfront.net
+
+
+	Cert only matches (*.)sugester.pl.
+
+
+	Some in \w+ are clients' domains.
+
+-->
+<ruleset name="Sugester (partial)">
+
+	<target host="*.sugester.pl" />
+	<target host="*.suggester.pl" />
+		<exclusion pattern="^http://www\." />
+
+
+	<rule from="^http://(asset|f)s\.sugester\.pl/"
+		to="https://s3-eu-west-1.amazonaws.com/$1s.sugester.pl/" />
+
+	<rule from="^http://(\w+)\.sugg?ester\.pl/"
+		to="https://$1.sugester.pl/" />
+
+</ruleset>

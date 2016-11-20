@@ -1,0 +1,47 @@
+<!--
+	Supported domains:
+
+	gktw.org
+	www.gktw.org
+	secure.gktw.org
+	www.givekidstheworldstore.org
+
+	Unsupported domains:
+
+	support.gktw.org		(cert mismatch; cert is for secure2.convio.net)
+	givekidstheworld.org		(cert mismatch; cert is only valid for gktw.org and *.gktw.org)*
+	www.givekidstheworld.org	(ditto)*
+	givekidstheworldstore.org	(redirects to HTTP)**
+
+	Notes:
+	*	The ruleset redirects givekidstheworld.org to gktw.org and redirects www.givekidstheworld.org
+		to www.gktw.org; the givekidstheworld.org and gktw.org domains appear to have the same content.
+	**	The ruleset redirects givekidstheworldstore.org to www.givekidstheworldstore.org; both appear
+		to have the same content.
+-->
+<ruleset name="Give Kids the World" platform="mixedcontent">
+	<target host="gktw.org" />
+	<target host="www.gktw.org" />
+	<target host="givekidstheworld.org" />
+	<target host="www.givekidstheworld.org" />
+	<target host="secure.gktw.org" />
+	
+	<target host="givekidstheworldstore.org" />
+	<target host="www.givekidstheworldstore.org" />
+
+	<securecookie host="^(?:secure|www)\.gktw\.org$"
+				name=".+" />
+
+	<securecookie host="^www\.givekidstheworldstore\.org$"
+				name=".+" />
+
+	<rule from="^http://(www\.)?gktw\.org/"
+			to="https://$1gktw.org/" />
+	<rule from="^http://(www\.)?givekidstheworld\.org/"
+			to="https://$1gktw.org/" />
+	<rule from="^http://secure\.gktw\.org/"
+			to="https://secure.gktw.org/" />
+
+	<rule from="^http://(?:www\.)?givekidstheworldstore\.org/"
+			to="https://www.givekidstheworldstore.org/" />
+</ruleset>

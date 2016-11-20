@@ -1,0 +1,41 @@
+<!--
+	Nonfunctional subdomains:
+
+		- marketing
+		- public	(interrupted)
+
+-->
+<ruleset name="Metapress (partial)">
+
+	<target host="metapress.com" />
+	<target host="*.metapress.com" />
+
+
+	<securecookie host="^s(?:hibboleth|pringerlink3)\.metapress\.com$" name=".+" />
+
+
+	<!--	- Cert only matches *.metapress.com
+		- At least some pages redirect from www to !www
+					-->
+	<rule from="^http://(?:www\.)?metapress\.com/(account/|dynamic-file\.axd|identities/(?:help|me)/|images/|personalization/)"
+		to="https://www.metapress.com/$1" />
+
+	<!--	- 302s to http:
+
+			- books$
+			- content/
+
+		- Doesn't:
+
+			- dynamic-file.axd
+			- identities$
+			- identities/
+			- images/
+					-->
+	<rule from="^http://ons\.metapress\.com/(dynamic-file\.axd|identities(?:$|[\?/])|images/)"
+		to="https://ons.metapress.com/$1" />
+
+	<rule from="^http://(psycontent|shibboleth|springerlink3)\.metapress\.com/"
+		to="https://$1.metapress.com/" />
+
+</ruleset>

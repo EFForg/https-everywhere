@@ -1,0 +1,76 @@
+<!--
+	For other Jingdong Mall coverage, see JD.com.xml.
+
+
+	Nonfunctional hosts in *360buy.com:
+
+		- help.en *
+
+	* Refused
+
+
+	Problematic hosts in *360buy.com:
+
+		- (www.)? *
+		- gw.api *
+		- book *
+		- club *
+		- jmall *
+		- mvd *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these hosts:
+
+		- auth.360buy.com
+
+-->
+<ruleset name="360buy.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="auth.360buy.com" />
+
+	<!--	Complications:
+				-->
+	<target host="360buy.com" />
+	<target host="book.360buy.com" />
+	<target host="club.360buy.com" />
+	<target host="jmall.360buy.com" />
+	<target host="mvd.360buy.com" />
+	<target host="www.360buy.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^auth\.360buy\.com$" name="^JSESSIONID$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://360buy\.com/+"
+		to="https://www.jd.com/" />
+
+		<test url="http://360buy.com//index.htm" />
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?!auth\.)(\w+)\.360buy\.com/+"
+		to="https://$1.jd.com/" />
+
+		<test url="http://book.360buy.com//index.htm" />
+		<test url="http://club.360buy.com//index.htm" />
+		<test url="http://jmall.360buy.com//index.htm" />
+		<test url="http://mvd.360buy.com//index.htm" />
+		<test url="http://www.360buy.com//index.htm" />
+		<test url="http://www.360buy.com/favicon.ico" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

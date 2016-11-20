@@ -1,0 +1,222 @@
+<!--
+	Note: https?://collaborateext(stg)?.../$ redirects to a
+	port on which nothing appears to listen/reply
+	?=> fetch test failures
+
+	Other Verizon rulesets:
+
+		- Share_the_Network.xml
+		- verizon.net.xml
+		- verizonbusiness.com.xml
+		- Verizon_Enterprise.xml
+		- Verizon_Wireless.xml
+
+
+	CDN buckets:
+
+		- ak1s.abmr.net/is/www22.verizon.com
+		- vznews.convio.net
+		- ehg-verizon.hitbox.com
+		- vzw.jiwire.com
+		- vrzn.i.lithium.com
+
+		- vrzn.lithium.com
+			- forums.verizon.com
+			- businessforums.verizon.net
+
+
+	Nonfunctional domains:
+
+		- (www.)thinkfinity.org
+		- (www.)community.thinkfinity.org
+		- developer.verizon.com *
+		- fiostrending.verizon.com ʰ
+		- foundation.verizon.com	(shows RHEL test page; self-signed, CN: ph1025101.bwi40g.vzbi.caas)
+		- newscenter2.verizon.com	(no https)
+		- publicpolicy.verizon.com	(redirects to forums; mismatched, CN: responsibility.verizon.com)
+
+	* Times out.
+	ʰ Redirects to http
+
+
+	Problematic domains:
+
+		- verizon.com ᵐ
+		- about.verizon.com		(works; self-signed, CN: vz-about-dev.com)
+		- entertainment.verizon.com	(some pages work, at least games/index.php 404s)
+		- responsibility.verison.com ʳ
+		- searchresults.verizon.com	(works; mismatched, CN: entertainmentlogin.verizon.com)
+
+	ᵐ Mismatched
+	ʳ Refused; preemptable redirect
+
+
+	Partially covered hosts in *verizon.com:
+
+		- (www.)? **
+		- collaborateext ¹
+		- collaborateextstg ¹
+		- www22 *
+		- www98
+
+	** ?lid=//global//residential redirects
+	¹ $ redirects to ...:449
+
+	* See: 
+		- https://lists.eff.org/pipermail/https-everywhere/2011-November/001237.html
+		- https://lists.eff.org/pipermail/https-everywhere-rules/2012-February/001003.html
+
+	NB: Has this been fixed? It doesn't seem to loop...
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .verizon.com
+		- auth.verizon.com
+		- enterprisecenter.verizon.com
+		- espanol.verizon.com
+		- forums.verizon.com
+		- signin.verizon.com
+		- smallbizrewards.verizon.com
+		- webmail.verizon.com
+		- .webmail.verizon.com
+		- www.verizon.com
+		- www36.verizon.com
+		- www98.verizon.com
+
+
+	Mixed content:
+
+		- Images on forums, www from $self
+
+		- Ads / bugs, on:
+
+			- www from fls.doubleclick.net
+			- www from \d+.fls.doubleclick.net
+
+-->
+<ruleset name="Verizon.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="auth.verizon.com" />
+	<!--target host="business.verizon.com" /-->
+	<target host="collaborateext.verizon.com" />
+	<target host="collaborateextstg.verizon.com" />
+	<target host="enterprisecenter.verizon.com" />
+	<target host="entertainmentlogin.verizon.com" />
+	<target host="espanol.verizon.com" />
+	<target host="forums.verizon.com" />
+	<!--target host="mail.verizon.com" /-->
+	<!--target host="mblogin.verizon.com" /-->
+	<!--target host="myverizonenterprise.verizon.com" /-->
+	<!--target host="respframework.verizon.com" /-->
+	<target host="signin.verizon.com" />
+	<!--target host="smallbizrewards.verizon.com" /-->
+	<target host="smallbusiness.verizon.com" />
+	<target host="webmail.verizon.com" />
+	<target host="www.verizon.com" />
+	<target host="www22.verizon.com" />
+	<target host="www98.verizon.com" />
+
+	<!--	Complications:
+				-->
+	<target host="verizon.com" />
+	<target host="responsibility.verizon.com" />
+	<target host="www36.verizon.com" />
+
+		<!--	Redirect differs:
+						-->
+		<!--exclusion pattern="^http://www\.verizon\.com/\?lid=//global//residential" /-->
+		<!--
+			More conservatively:
+						-->
+		<exclusion pattern="^http://(?:www\.)?verizon\.com/+\?(?:.*&amp;)?lid=" />
+
+			<!--	+ve:
+					-->
+			<test url="http://verizon.com/?lid=" />
+			<test url="http://verizon.com/?lid=//global" />
+			<test url="http://verizon.com/?lid=//global//residential" />
+			<test url="http://www.verizon.com/?lid=" />
+			<test url="http://www.verizon.com/?lid=//global" />
+			<test url="http://www.verizon.com/?lid=//global//residential" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.verizon.com/home/ak-cached/2h/styles/common.css" />
+
+		<!--	investor/DocServlet 404s
+							-->
+		<exclusion pattern="^http://www22\.verizon\.com/(?:Foryourhome/MyAccount/Unprotected|investor/DocServlet|secure/pages/viewbill)/" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www22.verizon.com/Foryourhome/MyAccount/Unprotected/" />
+			<test url="http://www22.verizon.com/investor/DocServlet/" />
+			<test url="http://www22.verizon.com/secure/pages/viewbill/" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://www98\.verizon\.com/(?:$|\?)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www98.verizon.com/?" />
+			<test url="http://www98.verizon.com/?utm_source=" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www98.verizon.com/cs/groups/public/documents/adacct/caret_svg.svg" />
+			<test url="http://www98.verizon.com/home/ak-cached/2h/styles/common.css" />
+			<test url="http://www98.verizon.com/resources/verizonglobalhome/i/buttons/pause.png" />
+			<test url="http://www98.verizon.com/support/residential/billingcenter/homepage.htm" />
+
+		<!--	$ redirects to nonfunctional port, so:
+								-->
+		<test url="http://collaborateext.verizon.com/aims/encore/recapScreen_new.jsp" />
+
+		<!--	Sets cookies without Secure:
+							-->
+		<test url="http://www36.verizon.com/fiosvoice/signin.aspx?goto=http://www36.verizon.com:80/fiosvoice/members/default.aspx" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.verizon\.com$" name="^(?:Aka[SU]TrackingID|AMAuthCookie|CHAT_IN_PROGRESS|GlobalSessionID|HBXInitialVisit|INTERACTIVE_CHAT|ReferenceSessionCookie|VA_CHAT_IN_PROGRESS|dotcomsid|hersheys|islogin|lob|vzapps)$" /-->
+	<!--securecookie host="^auth\.verizon\.com$" name="^JSESSIONID$" /-->
+	<!--securecookie host="^enterprisecenter\.verizon\.com$" name="^NSC_" /-->
+	<!--securecookie host="^espanol\.verizon\.com$" name="(?:_JSESSIONID$|NSC_)" /-->
+	<!--securecookie host="^forums\.verizon\.com$" name="^Lithium(?:UserInfo|UserSecure|Visitor)$" /-->
+	<!--securecookie host="^signin\.verizon\.com$" name="^VZSSOCOM_SESSIONID$" /-->
+	<!--securecookie host="^smallbizrewards\.verizon\.com$" name="^CF(?:ID|TOKEN)$" /-->
+	<!--securecookie host="^webmail\.verizon\.com$" name="^(?:AlteonP|JSESSIONID|webmail_ad)$" /-->
+	<!--securecookie host="^\.webmail\.verizon\.com$" name="^webmailauthgeo$" /-->
+	<!--securecookie host="^www\.verizon\.com$" name="^(?:NSC_|SMBWEBLEARNSESSIONID$)" /-->
+	<!--securecookie host="^www36\.verizon\.com$" name="^(?:ASP\.NET_SessionId|Vzopt)$" /-->
+	<!--securecookie host="^www98\.verizon\.com$" name="^(?:(?:ESUPPORT_JSESSIONID|omnivendorflag|ppsh_omni_flag|ppshcondcode|ppshcondcodeflag|state_flag|uniqueId)$|NSC_)" /-->
+
+	<!--securecookie host="^\.verizon\.com$" name=".+" /-->
+	<securecookie host="^(?:enterprisecenter|espanol|forums|responsibility|signin|smallbusiness|webmail)\.verizon\.com$" name=".+" />
+	<!--securecookie host="^www22\.verizon\.com$" name=".+" /-->
+
+
+	<rule from="^http://verizon\.com/"
+		to="https://www.verizon.com/" />
+
+	<!--	Redirect drops forward slash, path, and args:
+								-->
+	<rule from="^http://responsibility\.verizon\.com/.*"
+		to="https://www.verizon.com/about/responsibility/" />
+
+		<test url="http://responsibility.verizon.com/default.aspx" />
+
+	<rule from="^http://www36\.verizon\.com:80/"
+		to="https://www36.verizon.com/" />
+
+		<test url="http://www36.verizon.com:80/fiosvoice/members/default.aspx" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

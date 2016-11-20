@@ -1,0 +1,96 @@
+<!--
+	For problematic rules, see HootSuite-mismatches.xml.
+
+
+	Other HootSuite rulesets:
+
+		- Ow.ly.xml
+
+
+	CDN buckets:
+
+		- unbouncepages-com.s3.amazonaws.com/signup.hootsuite.com/
+		- d1ue63gpusfv5w.cloudfront.net
+		- d2l6uygi1pgnys.cloudfront.net
+		- dpjw5kqcbwqqv.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- appdirectory *
+		- blog *
+		- media *
+
+	* Refused
+
+
+	Problematic subdomains:
+
+		- signup *
+
+	* Mismatched, CN: *.unbounce.com
+
+
+	Fully covered hosts in *hootsuite.com:
+
+		- (www.)?
+		- feedback
+		- help
+
+		- static	(→ d1ue63gpusfv5w.cloudfront.net)
+		- s0.static	(→ d2l6uygi1pgnys.cloudfront.net)
+		- s7.static	(→ d1ue63gpusfv5w.cloudfront.net)
+
+		- translate
+
+
+	These altnames don't exist:
+
+		- www.feedback.hootsuite.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- feedback.hootsuite.com
+
+
+	Mixed content:
+
+		- css on feedback from fonts.googleapis.com
+
+-->
+<ruleset name="HootSuite">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="hootsuite.com" />
+	<target host="feedback.hootsuite.com" />
+	<target host="help.hootsuite.com" />
+	<target host="translate.hootsuite.com" />
+	<target host="www.hootsuite.com" />
+
+	<!--	Complications:
+				-->
+	<target host="static.hootsuite.com" />
+	<target host="s0.static.hootsuite.com" />
+	<target host="s7.static.hootsuite.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^hootsuite\.com$" name="^eZSESSID$" /-->
+	<!--securecookie host="^feedback\.hootsuite\.com$" name="^(_rf|_session_id)$" /-->
+
+	<securecookie host="^(?:.*\.)?hootsuite\.com$" name=".+" />
+
+
+	<rule from="^http://(?:s7\.)?static\.hootsuite\.com/"
+		to="https://d1ue63gpusfv5w.cloudfront.net/" />
+
+	<rule from="^http://s0\.static\.hootsuite\.com/"
+		to="https://d2l6uygi1pgnys.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

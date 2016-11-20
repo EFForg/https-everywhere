@@ -1,0 +1,70 @@
+<!--
+	There's a bucket at s3.amazonaws.com/alexa/.
+
+
+	CDN buckets:
+
+	- s3.amazonaws.com/com.alexa.pcache/ | d1d024ntqri789.cloudfront.net | d1uki75gjpelap.cloudfront.net
+	- s3.amazonaws.com/com.alexametrics.pixel/ | d5nxst8fruw4z.cloudfront.net
+	- alexa-sitestats.s3.amazonaws.com | d1loejjcvv1d9m.cloudfront.net
+	- d31qbv1cthcecs.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- traffic *
+		- xsltcache *
+
+	* Refused
+
+-->
+<ruleset name="Alexa (partial)">
+
+	<target host="alexa.com" />
+	<target host="pcache.alexa.com" />
+	<target host="support.alexa.com" />
+	<target host="xslt.alexa.com" />
+	<target host="www.alexa.com" />
+		<!--
+			Rewriting css to AmaonAWS breaks images.
+			(images/ points to s3.amazonaws.com/images/)
+
+		<exclusion pattern="^http://pcache.alexa.com/css/" /-->
+	<target host="pixel.alexametrics.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.alexa\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.alexa\.com/(?!favicon\.ico|css/|images/|secure/|\w+/wp-content/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.alexa.com/about" />
+			<test url="http://www.alexa.com/siteinfo" />
+			<test url="http://www.alexa.com/support" />
+			<test url="http://www.alexa.com/toolbar" />
+			<test url="http://www.alexa.com/tools" />
+			<test url="http://www.alexa.com/topsites" />
+
+			<!--	-ve+:
+					-->
+			<test url="http://www.alexa.com/favicon.ico" />
+			<test url="http://www.alexa.com/secure/login?resource=%2F" />
+
+
+	<rule from="^http://pcache\.alexa\.com/"
+		to="https://d1uki75gjpelap.cloudfront.net/" />
+
+	<rule from="^http://xslt\.alexa\.com/"
+		to="https://d1loejjcvv1d9m.cloudfront.net/" />
+
+	<rule from="^http://pixel\.alexametrics\.com/"
+		to="https://d5nxst8fruw4z.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,34 @@
+<!--
+	Problematic subdomains:
+
+		- (www.)	(works; mismatched, CN: *.emc.com)
+
+
+	Fully covered subdomains:
+
+		- (www.)	(^ → www)
+		- blogs
+
+
+	Mixed content:
+
+		- Images on blogs from blogs *
+
+	* Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="RSA">
+  <target host="rsa.com" />
+  <target host="*.rsa.com" />
+
+
+	<securecookie host="^\.rsa\.com$" name="^__(?:qca|utm\w)$" />
+	<securecookie host="^\.blogs\.rsa\.com$" name=".+" />
+
+
+  <rule from="^http://(?:www\.)?rsa\.com/" to="https://www.rsa.com/" />
+
+	<rule from="^http://blogs\.rsa\.com/"
+		to="https://blogs.rsa.com/" />
+
+</ruleset>

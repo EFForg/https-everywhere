@@ -1,0 +1,71 @@
+<!--
+	For other MediaMind coverage, see MediaMind.com.xml.
+
+
+	CDN buckets:
+
+		- bs.eyeblaster.akadns.net
+
+			- bs.serving-sys.com
+
+		- www.eyeblaster-ds.com.edgesuite.net
+
+			- ds.serving-sys.com
+
+		- activity.serving-sys.com.edgekey.net
+		- secure-ds.serving-sys.com.edgekey.net
+
+
+	Problematic domains:
+
+		- activity.serving-sys.com	(403; mismatched, CN: platform.mediamind.com)
+		- ds.serving-sys.com *
+
+	* Works, akamai
+
+
+	Fully covered domains:
+
+		- serving-sys.com subdomains:
+
+			- activity	(→ bs)
+			- bs
+			- ds		(→ akamai)
+			- secure-ds
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .serving-sys.com
+		- bs.serving-sys.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="serving-sys.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="bs.serving-sys.com" />
+	<target host="secure-ds.serving-sys.com" />
+
+	<!--	Special cases:
+				-->
+	<target host="activity.serving-sys.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.serving-sys\.com$" name="^(ActivityInfo2|eyeblaster|u2)$" /-->
+	<!--securecookie host="^bs\.serving-sys\.com$" name="(?:S_\d+|r1)$" /-->
+
+	<securecookie host="^bs\.serving-sys\.com$" name=".*" />
+
+
+	<rule from="^http://activity\.serving-sys\.com/"
+		to="https://bs.serving-sys.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

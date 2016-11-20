@@ -1,0 +1,54 @@
+<!--
+	CDN buckets:
+
+		- d1lggihq2bt4jo.cloudfront.net
+		- d2vnkn0bfhsarv.cloudfront.net
+		- d2voeg3kbgjfsb.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- blog *
+
+	* http reply
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- api
+		- billing
+
+
+	Observed cookie domains:
+
+		- ^ ¹
+		- . ²
+		- api ²
+		- billing ²
+		- go ¹
+		- www ¹
+
+	¹ Secured by server
+	² Secured by us <= not secured by server
+
+-->
+<ruleset name="Mad Mimi.com (partial)">
+
+	<target host="madmimi.com" />
+	<target host="*.madmimi.com" />
+
+
+	<!--	Secured by server
+					-->
+	<!--securecookie host="^(go\.|www\.)?madmimi\.com$" name="^mimi2$" /-->
+	<!--
+		Not secured by server:
+					-->
+	<securecookie host="^(?:api|billing)?\.madmimi\.com$" name=".+" />
+
+
+	<rule from="^http://((?:api|billing|go|www)\.)?madmimi\.com/"
+		to="https://$1madmimi.com/" />
+
+</ruleset>

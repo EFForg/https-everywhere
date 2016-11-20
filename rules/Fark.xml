@@ -1,0 +1,87 @@
+<!--
+	Disabled per https://trac.torproject.org/projects/tor/ticket/15763
+	Some pages redirect to http
+
+
+	Nonfunctional hosts in *fark.com:
+
+		- beerspill ʳ
+
+	ʳ Refused
+
+-->
+<ruleset name="Fark (partial)" default_off="testing">
+
+	<target host="fark.com" />
+	<target host="app.fark.com" />
+	<target host="beta.fark.com" />
+	<!--target host="m.beta.fark.com" /-->
+	<!--target host="deals.fark.com" /-->
+	<target host="gw.fark.com" />
+	<target host="m.fark.com" />
+	<target host="ssl.fark.com" />
+	<target host="total.fark.com" />
+	<target host="m.total.fark.com" />
+	<!--target host="totalbeta.fark.com" /-->
+	<!--target host="m.totalbeta.fark.com" /-->
+	<target host="www.fark.com" />
+
+	<target host="img.fark.net" />
+	<!--target host="imgbeta.fark.net" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.fark\.com/(?:$|blog$|comments$|comments/\d+/[\w-]+$|feedback$|quiz$|psbrowser$|users$)" /-->
+		<!--
+			Exceptions:
+					-->
+		<!--exclusion pattern="^http://(?:www\.)?fark\.com/(?!/*(?:(?:barefarksignup|forgotpassword|ll|newuser|submit)(?:$|[?/])|css/|js/.+\.css(?:$|\?)))" /-->
+		<!--
+			Reduce non-Tor distinguishability:
+								-->
+		<exclusion pattern="^http://(?:www\.)?fark\.com/(?!/*(?:(?:barefarksignup|forgotpassword|newuser|submit)(?:$|[?/])))" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.fark.com/blog" />
+			<test url="http://www.fark.com/comments" />
+			<test url="http://www.fark.com/comments/9169956/Dear-Work-Advice-Columnist-Im-a-man-whos-surrounded-by-female-co-workers-flaunting-their-cleavage-at-me-but-everybody-freaks-out-if-I-unbutton-more-than-top-button-of-my-shirt-Am-I-being-oppressed" />
+			<test url="http://www.fark.com/farkus/" />
+			<test url="http://www.fark.com/farq/" />
+			<test url="http://www.fark.com/feedback" />
+			<test url="http://www.fark.com/psbrowser" />
+			<test url="http://www.fark.com/quiz" />
+			<test url="http://www.fark.com/top/links/" />
+			<test url="http://www.fark.com/totalfarksample" />
+			<test url="http://www.fark.com/users" />
+			<test url="http://www.fark.com/video/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.fark.com/barefarksignup" />
+			<!--
+			<test url="http://www.fark.com/css/jquery-ui.min.css" />
+			-->
+			<test url="http://www.fark.com/forgotpassword" />
+			<!--
+			<test url="http://www.fark.com/js/joyride/joyride-2.1.css" />
+			<test url="http://www.fark.com/ll" />
+			-->
+			<test url="http://www.fark.com/newuser" />
+			<test url="http://www.fark.com/submit" />
+			<test url="http://www.fark.com/submit/" />
+
+		<!--
+		<test url="http://img.fark.net/imagesnoc/trans.gif?usertype=Lurker" />
+		-->
+
+
+	<securecookie host="^\." name="^_(?:_qca$|gat?$|gat_)" />
+	<securecookie host="^\w" name="^__utm" />
+	<securecookie host="^[^.f]" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

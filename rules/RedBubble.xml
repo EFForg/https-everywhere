@@ -1,0 +1,76 @@
+<!--
+	CDN buckets:
+
+		- wac.0b02.edgecastcdn.net
+
+
+	Nonfunctional hosts in *redbubble.com:
+
+		- blog *
+
+	* WP Engine
+
+
+	Problematic hosts in *redbubble.com:
+
+		- feedback ¹
+		- support ²
+
+	¹ Mismatched, CN: *.uservoice.com
+	² Mismatched
+
+-->
+<ruleset name="RedBubble (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="redbubble.com" />
+	<target host="help.redbubble.com" />
+	<target host="www.redbubble.com" />
+
+	<target host="assets0.redbubble.net" />
+	<target host="assets1.redbubble.net" />
+	<target host="ih0.redbubble.net" />
+	<target host="ih1.redbubble.net" />
+	<target host="ih2.redbubble.net" />
+	<target host="ih3.redbubble.net" />
+
+	<!--	Complications:
+				-->
+	<target host="support.redbubble.com" />
+
+		<exclusion pattern="^http://www\.redbubble\.com/+(?!(?:auth/login|signup)(?:$|[?/])|favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.redbubble.com/about" />
+			<test url="http://www.redbubble.com/affiliates" />
+			<test url="http://www.redbubble.com/jobs" />
+			<test url="http://www.redbubble.com/orders" />
+			<test url="http://www.redbubble.com/pages/play-nice" />
+			<test url="http://www.redbubble.com/products/index" />
+			<test url="http://www.redbubble.com/shop/stickers?ref=" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.redbubble.com/favicon.ico" />
+			<test url="http://www.redbubble.com/auth/login" />
+
+		<test url="http://assets0.redbubble.net/website-content/homepage-banner/20151125152715/151119_holiday_himher_hp.jpg" />
+		<test url="http://assets1.redbubble.net/assets/icons/email-arrow_2x-6af449c230003a7da2fc5fa9af964165.png" />
+		<test url="http://ih0.redbubble.net/image.97554104.0925/fp,550x550,black,off_white,box20,s,ffffff.u5.jpg" />
+		<test url="http://ih1.redbubble.net/image.125508601.3776/flat,138x,075,f.u3.jpg" />
+
+
+	<!--	Redirect drops path, args,
+		and forward slash:
+					-->
+	<rule from="^http://support\.redbubble\.com/.*"
+		to="https://help.redbubble.com/" />
+
+		<test url="http://support.redbubble.com/home.php" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

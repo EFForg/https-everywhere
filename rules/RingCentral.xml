@@ -1,0 +1,72 @@
+<!--
+	Nonfunctional hosts in *ringcentral.com:
+
+		- marketo
+		- success *
+
+	* Redirects to http
+
+
+	^ringcentral.com: Dropped
+
+
+	Insecure cookies are set for these hosts:
+
+		- service.ringcentral.com
+		- www.ringcentral.com
+
+
+	Mixed content:
+
+		- Bugs on www from ringcentral.112.2o7.net *
+
+	* Secured by us
+
+-->
+<ruleset name="RingCentral.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="service.ringcentral.com" />
+	<target host="www.ringcentral.com" />
+
+	<!--	Complications:
+				-->
+	<target host="ringcentral.com" />
+	<target host="marketo.ringcentral.com" />
+
+		<exclusion pattern="^http://marketo\.ringcentral\.com/+(?!css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://marketo.ringcentral.com/contact-center-wp.html" />
+			<test url="http://marketo.ringcentral.com/healthcare_informatics.html" />
+			<test url="http://marketo.ringcentral.com/multi_site_businesses" />
+			<test url="http://marketo.ringcentral.com/rc_connect_platform.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://marketo.ringcentral.com/css/mktLPSupport.css" />
+			<test url="http://marketo.ringcentral.com/rs/ringcentral/images/separator-dotdot-hor.png" />
+
+		<test url="http://www.ringcentral.com/whyringcentral/contactus.html" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^service\.ringcentral\.com$" name="^(?:RCBRAND|RCRoutingInfo)$" /-->
+	<!--securecookie host="^www\.ringcentral\.com$" name="^rcakamai$" /-->
+
+	<securecookie host="^(?:service|www)\.ringcentral\.com$" name=".+" />
+
+
+	<rule from="^http://ringcentral\.com/"
+		to="https://www.ringcentral.com/" />
+
+	<rule from="^http://marketo\.ringcentral\.com/"
+		to="https://na-c.marketo.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

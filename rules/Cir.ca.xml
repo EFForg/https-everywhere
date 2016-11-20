@@ -1,0 +1,57 @@
+<!--
+	For other Circa News coverage, see Circa_News.com.xml.
+
+
+	CDN buckets:
+
+		- s3-us-west-2.amazonaws.com/titleimages.cir.ca/
+
+
+	(www.)?cir.ca: Mismatched
+
+
+	Mixed content:
+
+		- Images, on:
+
+			- blog and backupblog from \w+.files.wordpress.com *
+			- blog and backupblog backupblog from ^ *
+			- blog and backupblog from blog *
+			- blog and backupblog from backupblog *
+			- blog and backupblog from media.giphy.com *
+			- blog and backupblog from media[12].giphy.com *
+			- blog  and backupblog backupblog from i2.cdn.turner.com *
+			- (www.) from s3-us-west-2.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Cir.ca">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="backupblog.cir.ca" />
+	<target host="blog.cir.ca" />
+	<target host="help.cir.ca" />
+
+	<!--	Complications:
+				-->
+	<target host="cir.ca" />
+	<target host="www.cir.ca" />
+
+
+	<securecookie host="^\.cir\.ca$" name=".+" />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://(?:www\.)?cir\.ca/+"
+		to="https://circanews.com/" />
+
+		<test url="http://cir.ca//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

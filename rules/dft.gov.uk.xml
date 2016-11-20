@@ -1,0 +1,122 @@
+<!--
+	Department for Transport
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	CDN buckets:
+
+		- data.dft.gov.uk.s3.amazonaws.com
+		- static.dft.gov.uk.s3.amazonaws.com
+
+
+	Nonfunctional hosts in *dft.gov.uk:
+
+		- assets ᵈ
+		- charts ʳ
+		- dvla ᵈ
+		- maps ᵈ
+
+	ᵈ Dropped
+	ʳ Refused
+
+
+	Problematic hosts in *dft.gov.uk:
+
+		- aka ᵐ
+		- bikeability ᶜ ᵉ
+		- data ᵐ
+		- highspeedrail ᵐ
+		- maritime ᶜ
+		- nptdtr ᵐ
+		- sharp ᶜ
+		- static ᵐ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵉ Expired
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *dft.gov.uk:
+
+		- shop ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these hosts:
+
+		- dsa.dft.gov.uk
+		- esdal.dft.gov.uk
+		- maritime.dft.gov.uk
+		- tanks.dft.gov.uk
+		- tssplansregistry.dft.gov.uk
+
+-->
+<ruleset name="DFT.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="dft.gov.uk" />
+	<target host="dsa.dft.gov.uk" />
+	<target host="esdal.dft.gov.uk" />
+	<target host="extranet.dft.gov.uk" />
+	<target host="halogenonline.dft.gov.uk" />
+	<target host="halogenuseradmin.dft.gov.uk" />
+	<!--target host="maritime.dft.gov.uk" /-->
+	<!--target host="sharp.dft.gov.uk" /-->
+	<target host="shop.dft.gov.uk" />
+	<target host="tanks.dft.gov.uk" />
+	<target host="tssplansregistry.dft.gov.uk" />
+	<target host="www.dft.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="bikeability.dft.gov.uk" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://shop\.dft\.gov\.uk/THINKShop(?:$|/(?:Contact|Help|ResetPassword)\.aspx)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://shop\.dft\.gov\.uk/+(?!THINKShop/(?:_assets/css|_assets/images|ProductImages)/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://shop.dft.gov.uk/THINKShop" />
+			<test url="http://shop.dft.gov.uk/THINKShop/Contact.aspx" />
+			<test url="http://shop.dft.gov.uk/THINKShop/Help.aspx" />
+			<test url="http://shop.dft.gov.uk/THINKShop/ResetPassword.aspx" />
+
+			<!--	-ve:
+					-->
+			<test url="http://shop.dft.gov.uk/THINKShop/ProductImages/8bc959f4-62e5-41dd-abc9-f63b0546bc6a.jpg" />
+			<test url="http://shop.dft.gov.uk/THINKShop/Register.aspx" />
+			<test url="http://shop.dft.gov.uk/THINKShop/_assets/css/think.css" />
+			<test url="http://shop.dft.gov.uk/THINKShop/_assets/images/footer_pattern_grey.jpg" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^dsa\.dft\.gov\.uk$" name="^(?:BIGipServer|atype$)" /-->
+	<!--securecookie host="^esdal\.dft\.gov\.uk$" name="^(?:__RequestVerificationToken|ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^maritime\.dft\.gov\.uk$" name="^sid$" /-->
+	<!--securecookie host="^tanks\.dft\.gov\.uk$" name="^\.ASPXANONYMOUS$" /-->
+	<!--securecookie host="^tssplansregistry\.dft\.gov\.uk$" name="^ASPSESSIONID[A-Z]{8}$" /-->
+
+	<securecookie host="^(?!shop\.)\w" name="." />
+
+
+	<!--	Redirect keeps path and args,
+		but not forward slash:
+					-->
+	<rule from="^http://bikeability\.dft\.gov\.uk/+"
+		to="https://bikeability.org.uk/" />
+
+		<test url="http://bikeability.dft.gov.uk/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

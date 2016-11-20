@@ -1,0 +1,63 @@
+<!--
+	CDN buckets:
+
+		- legacy.o.miisolutions.net
+
+
+	Nonfunctional hosts in *legacy.com:
+
+		- (www.)? ᵈ
+		- static.cms ³
+
+	³ 503
+	ᵈ Dropped
+
+
+	Problematic hosts in *legacy.com:
+
+		- ak-static ᴬ
+		- (www.)?connect ᵐ
+		- mi-cache ᴬ
+		- mi-static ᴬ
+
+	ᴬ Akamai / mismatched
+	ᵐ Mismatched
+
+
+	Partially covered hosts in *legacy.com:
+
+		- memorialwebsites *
+
+	* Some pages redirect to http
+
+-->
+<ruleset name="Legacy.com (partial)">
+
+	<target host="blog.legacy.com" />
+	<target host="cache.legacy.com" />
+	<target host="media2.legacy.com" />
+	<target host="memorialwebsites.legacy.com" />
+	<target host="mi.legacy.com" />
+	<target host="static.legacy.com" />
+	<target host="sympathy.legacy.com" />
+
+		<!--	Redirects to http:
+						-->
+		<exclusion pattern="^http://memorialwebsites\.legacy\.com/(?:.*/)?InvalidPage\.aspx" />
+
+			<!--	+ve:
+					-->
+			<test url="http://memorialwebsites.legacy.com/InvalidPage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/bar/InvalidPage.aspx" />
+			<test url="http://memorialwebsites.legacy.com/foo/InvalidPage.aspx" />
+
+
+	<securecookie host="." name="^optimizely" />
+	<securecookie host="^\." name="^_ga(?:t?$|t_)" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

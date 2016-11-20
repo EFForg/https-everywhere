@@ -1,0 +1,95 @@
+<!--
+	For other Amazon coverage, see Amazon.xml.
+
+
+	CDN buckets:
+
+		- cdn.comixology.com.cdngc.net
+		- iphone.comixology.com.cdngc.net
+		- comixologyssl.sslcs.cdngc.net
+		- dcomixologyssl.sslcs.cdngc.net
+
+		- comixology.desk.com
+
+			- support
+
+
+	Nonfunctional subdomains:
+
+		- blog		(prints "blog0"; expired 2012-06-05, self-signed, CN: ip-10-86-101-22)
+		- cdn		(403; mismatched, CN: ssl2.cdngc.net)
+		- iphone	(403; mismatched, CN: support4.cdnetworks.net)
+		- support	(desk.com)
+
+
+	Problematic subdomains:
+
+		- ^ *
+
+	* Refused
+
+
+	Fully covered subdomains:
+
+		- (www.)?	(^ → www)
+		- pulllist
+		- retailers
+		- store-images
+		- submit
+		- www-images
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .comixology.com
+		- www.comixology.com
+
+
+	Mixed images on pulllist from cdn
+	Mixed image on retailers from cdn
+	Mixed images on submit from iphone
+
+-->
+<ruleset name="comiXology.com (partial)">
+
+	<target host="pulllist.comixology.com" />
+	<target host="retailers.comixology.com" />
+	<target host="store-images.comixology.com" />
+	<target host="submit.comixology.com" />
+	<target host="www.comixology.com" />
+	<target host="www-images.comixology.com" />
+
+	<!--	Complications:
+				-->
+	<target host="comixology.com" />
+	<target host="support.comixology.com" />
+
+		<exclusion pattern="^http://support\.comixology\.com/(?!favicon\.ico)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.comixology.com/customer/portal/emails/new" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.comixology.com/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.comixology\.com$" name="^CMXSESSIONID$" /-->
+	<!--securecookie host="^www\.comixology\.com$" name="^newUserBanner$" /-->
+
+	<securecookie host="^(?:pulllist|retailers|store-images|submit|www)\.comixology\.com$" name=".+" />
+
+
+	<rule from="^http://comixology\.com/"
+		to="https://www.comixology.com/" />
+
+	<rule from="^http://support\.comixology\.com/"
+		to="https://d3jyn100am7dxp.cloudfront.net/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,42 @@
+<!--
+	For other CBS coverage, see CBS.xml.
+
+	For coverage of the last.fm API, see Audioscrobbler.com.xml.
+
+
+	CDN buckets:
+
+		- static2.last.fm.edgesuite.net
+
+			- cdn.last.fm
+			- userserve-ak.last.fm
+			- cdn.lst.fm
+
+
+	Nonfunctional subdomains:
+
+		- imagegen ¹
+		- userserve
+		- userserve-ak ²
+
+	¹ Refused
+	² 503, akamai
+
+-->
+<ruleset name="Last.fm (buggy)" default_off="breaks streaming">
+
+	<target host="last.fm" />
+	<target host="*.last.fm" />
+	<target host="cdn.lst.fm" />
+
+
+	<rule from="^http://last\.fm/"
+		to="https://www.last.fm/" />
+
+	<rule from="^http://www\.last\.fm/(?=join|login|settings/lost(?:password|username))"
+		to="https://www.last.fm/" />
+
+	<rule from="^http://cdn\.la?st\.fm/"
+		to="https://www.last.fm/static/" />
+
+</ruleset>

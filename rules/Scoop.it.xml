@@ -1,0 +1,35 @@
+<!--
+	CDN buckets:
+
+		- d1lojpvs1j5ni5.cloudfront.net
+
+			- img.scoop.it
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www, some pages redirect to http)
+
+
+	Fully covered subdomains:
+
+		- img	(→ d1lojpvs1j5ni5.cloudfront.net)
+
+-->
+<ruleset name="Scoop.it (partial)">
+
+	<target host="scoop.it" />
+	<target host="*.scoop.it" />
+		<!--exclusion pattern="^http://www\.scoop\.it/($|\?|(lostpassword|t/cultivating-community/js)($|\?))" /-->
+
+
+	<!--	^ redirects to www over http,
+		so copy that behavior:
+					-->
+	<rule from="^http://(?:www\.)?scoop\.it/((?:apps|login)(?:$|\?)|favicon\.ico|resources/)"
+		to="https://www.scoop.it/$1" />
+
+	<rule from="^http://img\.scoop\.it/"
+		to="https://d1lojpvs1j5ni5.cloudfront.net/" />
+
+</ruleset>

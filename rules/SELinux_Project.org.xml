@@ -1,0 +1,40 @@
+<!--
+	www.selinuxproject.org: cert only matches ^selinuxproject.org
+
+
+	Insecure cookies are set for these hosts: ᶜ
+
+		- selinuxproject.org
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="SELinux Project.org">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="selinuxproject.org" />
+
+	<!--	Complications:
+				-->
+	<target host="www.selinuxproject.org" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://selinuxproject.org/w/?title=Special:UserLogin&amp;returnto=Main+Page" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^selinuxproject\.org$" name="^wikidb_session$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://www\.selinuxproject\.org/"
+		to="https://selinuxproject.org/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

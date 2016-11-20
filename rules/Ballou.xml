@@ -1,0 +1,47 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blogg		(reset)
+		- control
+		- controllinux	(redirects to www, valid cert)
+		- lillamy	(reset)
+		- listserv	(refused)
+		- nyhetsbrev	(expired 2012-03-10)
+		- stat		(times out)
+
+
+	Problematic subdomains:
+
+		- registrar	(times out
+		- support	(shows minasidor)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- autodiscover
+		- mail
+		- mailadministration
+		- minasidor
+		- registrar	(→ minasidor)
+		- support	(→ minasidor)
+		- websally
+		- wiki
+
+-->
+<ruleset name="Ballou (partial)">
+
+	<target host="ballou.se" />
+	<target host="*.ballou.se" />
+
+
+	<securecookie host="^(?:mail|mailadministration|minasidor|www)\.ballou\.se$" name=".+" />
+
+
+	<rule from="^http://((?:autodiscover|mail|mailadministration|minasidor|websally|wiki|www)\.)?ballou\.se/"
+		to="https://$1ballou.se/" />
+
+	<rule from="^http://(?:registrar|support)\.ballou\.se/"
+		to="https://minasidor.ballou.se/" />
+
+</ruleset>

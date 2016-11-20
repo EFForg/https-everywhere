@@ -1,0 +1,188 @@
+<!--
+	Other University of Calgary rulesets:
+
+		- U_Mag.ca.xml
+
+
+	Nonfunctional subdomains:
+
+		- ereports	(reset)
+		- gsa ¹
+		- sirsi1.lib ¹
+		- libapps ¹
+		- hours.library ¹
+		- www.ras	(shows default RHEL page; expired 2008-06-06, CN: localhost.localdomain)
+		- webapps2	(404)
+		- workrooms	(shows webapps2; mismatched, CN: webapps2.ucalgary.ca)
+
+	¹ Refused
+
+
+	Problematic subdomains:
+
+		- libguides	(redirects to http/404s; mismatched, CN: *.libguides.com)
+
+
+	Partially covered subdomains:
+
+		- contacts ¹
+		- conted ¹
+		- ereports2	(data differ from http)
+		- haskayne ¹
+		- kb ¹
+		- libguides	(→ libguides.com)
+		- springsummer ²
+		- www ¹
+
+	¹ Some pages redirect to http
+	² Avoiding false/broken MCB
+
+
+	Fully covered subdomains:
+
+		- acctman *
+		- activeliving
+		- arts
+		- cas
+		- www.efs
+		- www.efs...:8445
+		- prdrps2.ehs
+		- eplanning
+		- idp
+		- imagine
+		- itsc
+		- library
+		- ling
+		- llc
+		- my
+		- netcommunity
+		- oadm
+		- people
+		- pr1web *
+		- science
+		- spse
+		- static
+		- (www.)su	(^ → www)
+		- wcmprod2
+
+	* Server is configured for rc4 only
+
+
+	Observed cookie domains:
+
+		- . ¹
+		- acctman ²
+		- activeliving ²
+		- arts ²
+		- .arts ³
+		- cas ²
+		- contacts ¹
+		- .contacts ¹
+		- conted ¹
+		- eplanning ²
+		- .ehs ³
+		- prdrps2.ehs ²
+		- ereports2 ¹
+		- haskayne ¹
+		- idp ²
+		- .idp ³
+		- imagine ²
+		- itsc ²
+		- kb ¹
+		- libapps ⁴
+		- libguides ¹
+		- library ²
+		- llc ²
+		- netcommunity ²
+		- oadm ²
+		- science ²
+		- springsummer ¹
+		- static ²
+		- .su ²
+		- www.su ²
+		- www ¹
+
+	¹ Not secured by us <= partial support
+	² Secured by us
+	³ Not secured by us <= maybe more domains under *.foo
+	⁴ Not secured by us <= no support
+
+
+	Mixed content:
+
+		- Frame on www from people *
+
+		- css, on:
+
+			- springsummer from springsummer *
+
+			- www from:
+
+				- people *
+				- people via people *
+				- static *
+
+		- Images, on:
+
+			- activeliving from www.calgaryoutdoorcentre.ca *
+			- grad from grad *
+			- idp from i.imgur.com *
+			- imagine from wcmprod2 *
+			- springsummer from springsummer *
+			- springsummer from wcmprod2 *
+			- www from people via people *
+			- www from www *
+
+		- Ads/web bugs, on:
+
+			- activeliving from bluetoad.com
+			- activeliving from twitter-badges.s3.amazonaws.com *
+
+	* Secured by us
+
+-->
+<ruleset name="UCalgary.ca (partial)">
+
+	<target host="ucalgary.ca" />
+	<target host="*.ucalgary.ca" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?ucalgary\.ca/+(admissions|careers|earthsci|it|ras|registrar|registration|science(?!/user($|[?/])|scienceworkshop|ses)(?!/(files|misc|modules|sites)/)" /-->
+		<exclusion pattern="^http://(?:www\.)?ucalgary\.ca/+(?!(?:\w+/)?(?:files|misc|modules|sites)/|(?:alumni|brand|community|currentstudents|events|facultyandstaff|hr|identity|map|prospectivestudents|pubs|residence|science/user)(?:$|[?/])|favicon\.ico)" />
+		<!--exclusion pattern="^http://contacts\.ucalgary\.ca/+($|\?|(browse|node)($|[?/]))" /-->
+		<exclusion pattern="^http://contacts\.ucalgary\.ca/+(?!files/|sites/|user(?:$|[?/]))" />
+		<!--exclusion pattern="^http://conted\.ucalgary\.ca/+(index\.jsp)?($|\?)" /-->
+		<exclusion pattern="^http://conted\.ucalgary\.ca/+(?!\w+/images/|coursebasket/publicCourseBasket\.do|css/|favicon\.ico|images/|javascript/|uc-scripts/|yahoo/)" />
+		<!--exclusion pattern="^http://(haskayne|kb)\.ucalgary\.ca/+($|\?)" /-->
+		<exclusion pattern="^http://(?:haskayne|kb)\.ucalgary\.ca/+(?!files/)" />
+		<!--
+			"maximum execution time...exceeded"
+								-->
+		<!--exclusion pattern="^http://(www\.)?ucalgary\.ca/+utoday($|[?/])" /-->
+		<!--
+			False MCB:
+					-->
+		<!--exclusion pattern="^http://(www\.)?ucalgary\.ca/+($|\?|(about|givinguc|international|news)($|[?/]))" /-->
+		<!--exclusion pattern="^htt://springsummer.ucalgary.ca/+($|\?)" /-->
+		<exclusion pattern="^http://springsummer.ucalgary.ca/+(?!files/)" />
+		<exclusion pattern="^http://ereports2\.ucalgary\.ca/+(?!cognoscas/*(?:$|\?))" />
+	<target host="www.calgaryoutdoorcentre.ca" />
+
+
+	<securecookie host="^(?:acctman|activeliving|arts|cas|prdrps2\.ehs|eplanning|idp|imagine|itsc|library|llc|netcommunity|oadm|science|static|\.su|www\.su)\.ucalgary\.ca$" name=".+" />
+
+
+	<rule from="^http://((?:acctman|activeliving|arts|cas|contacts|conted|www\.efs|prdrps2\.ehs|eplanning|ereports2|grad|haskayne|idp|itsc|imagine|kb|library|ling|llc|my|netcommunity|oadm|people|pr1web|science|springsummer|spse|static|wcmprod2|www)\.)?ucalgary\.ca(:8445)?/"
+		to="https://$1ucalgary.ca$2/" />
+
+	<rule from="^http://libguides\.ucalgary\.com/(?=css\d*/|favicon\.ico|include/|js\d*/)"
+		to="https://libguides.com/" />
+
+	<rule from="^http://(?:www\.)?su\.ucalgary\.ca/"
+		to="https://www.su.ucalgary.ca/" />
+
+	<rule from="^http://www\.calgaryoutdoorcentre\.ca/files/"
+		to="https://www.ucalgary.ca/files/" />
+
+</ruleset>

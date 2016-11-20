@@ -1,0 +1,49 @@
+<!--
+	Nonfunctional subdomains:
+
+		- forums *
+
+	* Plaintext reply
+
+
+	^: Refused
+
+
+	Insecure cookies are set for these hosts:
+
+		- store.omnigroup.com
+		- www.omnigroup.com
+
+
+	Mixed content:
+
+		- Bug on www from piwik.omnigroup.com *
+
+	* Secured by us
+
+-->
+<ruleset name="Omni Group.com (partial)">
+	<target host="omnigroup.com" />
+	<target host="piwik.omnigroup.com" />
+	<target host="store.omnigroup.com" />
+	<target host="www.omnigroup.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^store\.omnigroup\.com$" name="^(PHPSESSID|pad)$" /-->
+	<!--securecookie host="^(store|www)\.omnigroup\.com$" name="^exp_(last_activity|last_visit|tracker)$" /-->
+	<!--securecookie host="^www\.omnigroup\.com$" name="^exp_csrf_token$" /-->
+
+	<securecookie host="^(?:store|www)\.omnigroup\.com$" name=".+" />
+
+
+	<!--	Redirect keeps path, args,
+		but not forward slash:
+					-->
+	<rule from="^http://omnigroup\.com/+" to="https://www.omnigroup.com/"/>
+
+		<test url="http://omnigroup.com/blog/" />
+
+	<rule from="^http:" to="https:"/>
+</ruleset>

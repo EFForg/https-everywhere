@@ -1,0 +1,78 @@
+<!--
+	For other Comcast coverage, see Comcast.xml.
+
+
+	Nonfunctional subdomains:
+
+		- compass-images-[1-4] ⁵
+		- home ᵈ
+		- mydeviceinfo *
+
+	⁵ 504
+	ᵈ Dropped
+	* Refused
+
+
+	Problematic hosts in *comcast.net:
+
+		- constantguard ᶜ
+		- media2 ᴬ
+		- m ᴬ
+		- xfinity ᴬ
+
+	ᴬ Akamai / mismatched
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+
+
+	These altnames don't exist:
+
+		www.idp.comcast.net
+
+
+	Insecure cookies are set for these hosts:
+
+		- .comcast.net
+		- businessclass.comcast.net
+		- idp.comcast.net
+		- login.comcast.net
+		- xfinityconnect.mail.comcast.net
+
+
+	Mixed content:
+
+		- Images on login from por-img.cimcontent.net
+
+-->
+<ruleset name="Comcast.net (partial)">
+
+	<target host="businessclass.comcast.net" />
+	<target host="calendar.comcast.net" />
+
+	<target host="prefs.connect.comcast.net" />
+	<target host="vmail.connect.comcast.net" />
+	<target host="voice.connect.comcast.net" />
+
+	<!--target host="constantguard.comcast.net" /-->
+	<target host="downloads.comcast.net" />
+	<target host="idp.comcast.net" />
+	<target host="login.comcast.net" />
+	<target host="xfinityconnect.mail.comcast.net" />
+	<target host="oascentral.comcast.net" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.comcast\.net$" name="(?:NXCLICK2|OAX|PS?C|cc)$" /-->
+	<!--securecookie host="^businessclass\.comcast\.net$" name="(?:-prd_wc|^ADRUM_BT[1a]|^ASP\.NET_SessionId)$" /-->
+	<!--securecookie host="^idp\.comcast\.net$" name="^BIGipServer" /-->
+	<!--securecookie host="^login\.comcast\.net$" name="^(?:JSESSIONID|cookie-monster|ndcd|oauth-session-id)$" /-->
+	<!--securecookie host="^xfinityconnect\.mail\.comcast\.net$" name="^(?:ADRUM_BT[1a]|XCP)$" /-->
+
+	<securecookie host="^\." name="^(?:NXCLICK2|OAX)$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

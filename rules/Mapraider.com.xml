@@ -1,0 +1,29 @@
+<!--
+	Problematic subdomains:
+
+		- static	(redirects to www; mismatched, CN: www.mapraider.com)
+
+
+	Some pages redirect to http.
+
+-->
+<ruleset name="Mapraider.com (partial)">
+
+	<target host="mapraider.com" />
+	<target host="*.mapraider.com" />
+		<!--exclusion pattern="^http://(www\.)?mapraider\.com/+($|\?|favicon\.ico|privacypolicy/)" /-->
+		<!--exclusion pattern="^http://(www\.)?mapraider\.com/+(?!_css/|_images/|_js/|(login|register)($|[?/]))" /-->
+
+
+	<!--	Redirect to http first:
+						-->
+	<rule from="^http://(www\.)?mapraider\.com/+(login|register)(?=$|\?)"
+		to="https://$1mapraider.com/$2/" />
+
+	<rule from="^http://(www\.)?mapraider\.com/(?=_css/|_images/|_js/|login/|register/)"
+		to="https://$1mapraider.com/" />
+
+	<rule from="^http://static\.mapraider\.com/"
+		to="https://www.mapraider.com/" />
+
+</ruleset>

@@ -1,0 +1,82 @@
+<!--
+	Nonfunctional subdomains:
+
+		- srvwinweb001.wf *
+
+	* Times out
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- (www.)hr	(works; mismatched, CN: www.uct.ac.za)
+		- icts		(cert only matches www.icts)
+		- www.mail	(mismatched, CN: mail.uct.ac.za)
+		- www.password	(cert only matches ^password)
+		- staffonline	(times out)
+		- www.vula	(cert only matches ^vula)
+
+
+	Partially covered subdomains:
+
+		- (www.)hr	(→ www)
+		- (www.)icts	(^ → www, some pages redirect to http)
+		- www.mail	(→ mail)
+		- www.vula	(→ vula)
+
+
+	Fully covered subdomains:
+
+		- (www.)		(^ → www)
+		- autodiscover
+		- chrysalis
+		- mail
+		- netstorage
+		- (www.)password	(www → ^)
+		- srvslspsw001
+		- www.staff
+		- staffonline		(→ srvslspsw001...:483)
+		- uctgwacc
+
+
+	^staff doesn't exist
+
+-->
+<ruleset name="University of Cape Town (partial)">
+
+	<target host="uct.ac.za" />
+	<target host="*.uct.ac.za" />
+		<exclusion pattern="^http://(?:www\.)?icts\.uct\.ac\.za/(?!alerts\.php|favicon\.ico|images/|modules\.php\?name=Your_Account|themes/)" />
+
+
+	<!--securecookie host="^\.uct\.ac\.za$" name="^srvslspsw001-\d\d-PORTAL-PSJSESSIONID$" /-->
+	<securecookie host="^(?:mail|netstorage|password|www\.staff|uctgwacc|vula|www)\.uct\.ac\.za$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?(icts\.)?uct\.ac\.za/"
+		to="https://www.$1uct.ac.za/" />
+
+	<rule from="^http://(autodiscover|chrysalis|mail|netstorage|srvslspsw001|www\.staff|uctgwacc|vula)\.uct\.ac\.za/"
+		to="https://$1.uct.ac.za/" />
+
+	<rule from="^http://(?:www\.)?hr\.uct\.ac\.za/(favicon\.ico|images/|scripts/)"
+		to="https://www.uct.ac.za/$1" />
+
+	<rule from="^http://www\.mail\.uct\.ac\.za/([^/]*)(?:\?.*)?$"
+		to="https://mail.uct.ac.za/owa/$1" />
+
+	<rule from="^http://(?:www\.)?password\.uct\.ac\.za/"
+		to="https://password.uct.ac.za/" />
+
+	<!--	Server drops path like so:
+						-->
+	<rule from="^http://staffonline\.uct\.ac\.za/.*"
+		to="https://srvslspsw002.uct.ac.za:483/staff/signon.html" />
+
+	<rule from="^http://srvslspsw001\.uct\.ac\.za:483/"
+		to="https://srvslspsw001.uct.ac.za:483/" />
+
+	<rule from="^http://www\.vula\.uct\.ac\.za/(?:\?.*)$"
+		to="https://vula.uct.ac.za/portal" />
+
+</ruleset>

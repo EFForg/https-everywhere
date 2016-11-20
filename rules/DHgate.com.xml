@@ -1,0 +1,47 @@
+<!--
+	CDN buckets:
+
+		- blog.dhgate.com.cdn20.com
+		- image.dhgate.com.cdn20.com
+		- www.dhresource.com.cdn20.com
+
+
+	Nonfunctional domains:
+
+		- dhgate.com subdomains:
+
+			- blog *
+			- help	(times out)
+			- image *
+
+		- www.dhresource.com *
+
+	* 504, akamai
+
+
+	Problematic subdomains:
+
+		- ^	(times out)
+		- www	(mismatched, CN: secure.dhgate.com)
+
+
+	Mixed images on secure from image.dhgate.com & www.dhresource.com
+
+-->
+<ruleset name="DHgate.com (partial)">
+
+	<target host="dhgate.com" />
+	<target host="*.dhgate.com" />
+		<!--
+			Some (most?) pages not on secure:
+								-->
+		<exclusion pattern="^http://(?:www\.)?dhgate\.com/(?:\?.*)?$" />
+
+
+	<!--securecookie host="^\.?secure\.dhgate\.com$" name=".+" /-->
+
+
+	<rule from="^http://(?:secure\.|www\.)?dhgate\.com/"
+		to="https://secure.dhgate.com/" />
+
+</ruleset>

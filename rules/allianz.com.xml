@@ -1,0 +1,133 @@
+<!--
+	Nonfunctional hosts in *allianz.com:
+
+		- (www.)?acs ᵖ
+		- annualreport2010 ¹
+		- annualreport2011 ¹
+		- annualreport2012 ¹
+		- annualreport2013 ¹
+		- www.art ʳ
+		- digitallabs ʳ
+		- frauen ᵃ
+		- geschaeftsbericht2010 ¹
+		- geschaeftsbericht2011 ¹
+		- geschaeftsbericht2012 ¹
+		- geschaeftsbericht2013 ¹
+		- women ᵃ
+
+	¹ 401
+	ᵃ Shows another domain
+	ᵖ Plaintext reply
+	ʳ Refused
+
+
+	Problematic hosts in *allianz.com:
+
+		- www.acp ᵐ ˢ
+		- www.azt ᵐ
+		- act ᶜ
+
+	ᶜ Server sends no certificate chain, see https://whatsmychaincert.com
+	ᵐ Mismatched
+	ˢ Self-signed
+
+
+	Partially covered hosts in *allianz.com:
+
+		- www.agcs ʰ
+
+	ʰ Some pages redirect to http
+
+
+	Insecure cookies are set for these domains and hosts:
+
+		- .allianz.com
+		- www.acp.allianz.com
+		- act.allianz.com
+		- asia.allianz.com
+		- azt.allianz.com
+		- indonesia.allianz.com
+		- jobs.allianz.com
+		- knowledge.allianz.com
+		- malaysia.allianz.com
+		- thailand.allianz.com
+		- weathersafe.allianz.com
+		- www.allianz.com
+
+
+	Mixed content:
+
+		- Bug on asia from bs.serving-sys.com ˢ
+
+	ˢ Secured by us
+
+-->
+<ruleset name="Allianz.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="allianz.com" />
+	<!--target host="act.allianz.com" /-->
+	<target host="www.agcs.allianz.com" />
+	<target host="asia.allianz.com" />
+	<target host="azt.allianz.com" />
+	<target host="www.cdmp.allianz.com" />
+	<target host="indonesia.allianz.com" />
+	<target host="jobs.allianz.com" />
+	<target host="knowledge.allianz.com" />
+	<target host="malaysia.allianz.com" />
+	<target host="www.marketing.allianz.com" />
+	<target host="thailand.allianz.com" />
+	<target host="weathersafe.allianz.com" />
+	<target host="www.allianz.com" />
+
+	<!--	Complications:
+				-->
+	<target host="www.azt.allianz.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.agcs\.allianz\.com/(?:$|sign-up-for-updates/\?)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.agcs\.allianz\.com/+(?!assets/|css/|images/|sign-up-for-updates/+$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.agcs.allianz.com/about-us/news/" />
+			<test url="http://www.agcs.allianz.com/careers/" />
+			<test url="http://www.agcs.allianz.com/insights/" />
+			<test url="http://www.agcs.allianz.com/sectors/" />
+			<test url="http://www.agcs.allianz.com/services/" />
+			<test url="http://www.agcs.allianz.com/sign-up-for-updates/?foo" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.agcs.allianz.com/assets/Homepage/Anne%20Lebel_480X240.jpg" />
+			<test url="http://www.agcs.allianz.com/css/print.min.css" />
+			<test url="http://www.agcs.allianz.com/images/spr-arrows-8bit.png" />
+			<test url="http://www.agcs.allianz.com/sign-up-for-updates/" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.allianz\.com$" name="^NETMIND_(?:PERM)?SID$" /-->
+	<!--securecookie host="^www\.acp\.allianz\.com$" name="^CONCRETE5$" /-->
+	<!--securecookie host="^act\.allianz\.com$" name="^(?:LastVisit|WebSessionID)$" /-->
+	<!--securecookie host="^(?:asia|indonesia|malaysia|thailand)\.allianz\.com$" name="^(?:LastVisit|WebSessionID|language)$" /-->
+	<!--securecookie host="^azt\.allianz\.com$" name="(?:JSESSIONID|^WebSessionID)$" /-->
+	<!--securecookie host="^(?:jobs|knowledge)\.allianz\.com$" name="^WebSessionID$" /-->
+	<!--securecookie host="^weathersafe\.allianz\.com$" name="^(?:PHPSESSID|lastlid_INT)$" /-->
+	<!--securecookie host="^www\.allianz\.com$" name="^(?:AzCountryCode|LastVisit|WebSessionID)$" /-->
+
+	<securecookie host="^(?!www\.agcs\.)\w" name="." />
+
+
+	<rule from="^http://www\.azt\.allianz\.com/"
+		to="https://azt.allianz.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

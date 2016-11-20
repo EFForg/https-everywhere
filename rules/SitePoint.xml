@@ -1,0 +1,88 @@
+<!--
+	CDN buckets:
+
+		- wac.41aa.edgecastcdn.net/??41AA/
+
+			- cdn
+
+
+	Nonfunctional domains:
+
+		- sitepoint.com subdomains:
+
+			- cdn		(404; mismatched, CN: gp1.wac.edgecastcdn.net)
+			- downtime *
+			- products *
+			- tools *
+
+		- (www.)sitepointstatic.com ³
+		- 1.sitepointstatic.com *
+
+	* Refused
+	³ Shows beyonce
+
+
+	Problematic domains:
+
+		- sitepoint.com subdomains:
+
+			- beyonce ¹
+			- community *
+			- i2 ³
+			- reference *
+			- xmas *
+
+	¹ Self-signed
+	* Mismatched
+	³ Shows beyonce
+
+
+	Partially covered domains:
+
+		- (www.)sitepoint.com
+
+			- Some pages redirect to http
+
+
+	Fully covered domains:
+
+		- i2.sitepoint.com		(→ www)
+
+-->
+<ruleset name="SitePoint.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="sitepoint.com" />
+	<target host="www.sitepoint.com" />
+
+	<!--	Complications:
+				-->
+	<target host="i2.sitepoint.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.sitepoint\.com/($|forums/images/)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://www\.sitepoint\.com/+(?!favicon\.ico|wp-content/)" />
+
+			<test url="http://www.sitepoint.com/design-ux/" />
+			<test url="http://www.sitepoint.com/html-css/" />
+			<test url="http://www.sitepoint.com/php/" />
+			<test url="http://www.sitepoint.com/wordpress/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.sitepoint.com/favicon.ico" />
+			<test url="http://www.sitepoint.com/wp-content/themes/sitepoint/assets/svg/sitepoint.svg" />
+
+
+	<rule from="^http://i2\.sitepoint\.com/"
+		to="https://www.sitepoint.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

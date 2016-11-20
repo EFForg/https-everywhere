@@ -1,0 +1,62 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://broadcaster.email-tickets.com/ => https://broadcaster.email-tickets.com/: (60, 'SSL certificate problem: unable to get local issuer certificate')
+	Other Tickets.com rulesets:
+
+		- ProVenue.net.xml
+
+
+	CDN buckets:
+
+		- a248.e.akamai.net/f/248/8705/1[dh]/images.tickets.com/
+		- d17e7uh9u4v5ad.cloudfront.net
+
+
+	Nonfunctional subdomains:
+
+		- purchase	(refused)
+
+
+	Problematic subdomains:
+
+		- ^			(cert only matches www)
+		- facebook
+		- frontline.images	(works, akamai)
+		- youtube
+
+
+	Partially covered subdomains:
+
+		- (www.)	(^ → www)
+
+-->
+<ruleset name="Tickets.com (partial)" default_off='failed ruleset test'>
+
+	<target host="broadcaster.email-tickets.com" />
+	<target host="tickets.com" />
+	<target host="*.tickets.com" />
+
+
+	<securecookie host="^broadcaster\.email-tickets\.com$" name=".+" />
+	<securecookie host="^purchasecdn\.tickets\.com$" name=".+" />
+
+
+	<rule from="^http://broadcaster\.email-tickets\.com/"
+		to="https://broadcaster.email-tickets.com/" />
+
+	<rule from="^http://(?:www\.)?tickets\.com/(images/|user(?:$|[?/]))"
+		to="https://www.tickets.com/$1" />
+
+	<rule from="^http://facebook\.tickets\.com/[^?]*(\?.*)?"
+		to="https://www.facebook.com/pages/Ticketscom/43749304172$1" />
+
+	<rule from="^http://(?:frontline\.)?images\.tickets\.com/"
+		to="https://images.tickets.com/" />
+
+	<rule from="^http://purchasecdn\.tickets\.com/"
+		to="https://purchasecdn.tickets.com/" />
+
+	<rule from="^http://youtube\.tickets\.com/[^?]*(\?.*)?"
+		to="https://www.youtube.com/gototicketsdotcom$1" />
+
+</ruleset>

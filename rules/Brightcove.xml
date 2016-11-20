@@ -1,0 +1,149 @@
+<!--
+	go.brightcove.com is handled in Eloqua-clients.xml.
+
+
+	Other Brightcove rulesets:
+
+		- Bcove.me.xml
+		- Zencoder.xml
+
+
+	CDN buckets:
+
+		- brightcove01.brightcove.com.edgesuite.net
+
+			- a948.ga.akamai.net
+
+		- brightcove04.brightcove.com.edgesuite.net
+
+			- brightcove04
+			- brightcove04.o
+
+		- osab.vorpal.io
+
+			- opensource.brightcove.com
+
+
+	Nonfunctional domains:
+
+		- brightcove.com subdomains:
+
+			- feeds *
+			- forum **
+			- investor ***
+			- brightcove04.o	(503, Akamai)
+			- status *
+
+		- brightcove.vo.llnwd.net	(400; .hs. doesn't exist)
+
+	* Reset
+	** Refused
+	*** Dropped
+
+
+	Problematic domains:
+
+		- admin.brightcove.com		(akamai)
+		- brightcove01.brightcove.com ¹
+		- go.brightcove.com		(works; mismatched, CN: secure.eloqua.com)
+		- opensource.brightcove.com	(refused)
+
+	¹ Works, akamai
+
+
+	Fully covered subdomains:
+
+		- (www.) *
+		- api
+		- read.appcloud
+		- transcode.appcloud
+		- write.appcloud
+		- blog
+		- brightcove01-secure
+		- developer
+		- docs
+		- images.gallery
+		- goku
+		- img
+		- link
+		- opensource	(→ docs)
+		- signin
+		- solutions
+		- support
+		- videocloud
+
+
+	- brightcove.vo.llnwd.net/d21/unsecured/media/
+	- brightcove.vo.llnwd.net/d22/unsecured/media/
+	- brightcove.vo.llnwd.net/e1/pd
+	- brightcove01.brightcove.com/23/
+	- brightcove04.brightcove.com/4/	(Akamai; 404...but somethings there...outdated?)
+	- rainbow.brightcove.com.edgesuite.net
+
+	/101716/rtmp_pd
+
+
+	These altnames don't exist:
+
+		- www.images.gallery.brightcove.com
+		- www.goku.brightcove.com
+		- www.services.brightcove.com
+		- www.signin.brightcove.com
+		- www.solutions.brightcove.com
+		- www.support.brightcove.com
+
+
+	Mixed content:
+
+		- Images on support from img *
+
+	* Secured by us
+
+-->
+<ruleset name="Brightcove (partial)">
+
+	<target host="*.brightcove.com" />
+		<!--
+			Videos fail to load.
+
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2012-July/001243.html
+													-->
+		<exclusion pattern="^http://admin\.brightcove\.com/crossdomain\.xml" />
+		<!--
+			https://mail1.eff.org/pipermail/https-everywhere-rules/2013-May/001587.html
+													-->
+		<!--
+			Videos fail to load.
+			https://trac.torproject.org/projects/tor/ticket/12405
+			The Brightcove player loads in an iframe, whose URL gets correctly
+			rewritten to HTTPS. However, that iframe attempts to load a script
+			that runs afoul of the mixed content blocking bug. -->
+		<exclusion pattern="^https://secure.brightcove.com/services/viewer/" />
+
+		<exclusion pattern="^http://admin\.brightcove\.com/viewer/us20[\d\.]+/BrightcoveBootloader\.swf(?:\?|$)" />
+		<!--exclusion pattern="^http://c\.brightcove\.com/services/messagebroker/amf\?playerId=" /-->
+		<exclusion pattern="^http://admin\.brightcove\.com/viewer/.+\.swf(?:\?|$)" />
+
+	<!--securecookie host="^\.brightcove\.com$" name="^(test|vorpal-signature|vorpal-user)$" /-->
+	<securecookie host="^\w.*\.brightcove\.com$" name=".+" />
+
+	<rule from="^http://c\.brightcove\.com/services/viewer/"
+		to="https://secure.brightcove.com/services/viewer/" />
+
+	<rule from="^http://((?:api|(?:read\.|transcode\.|write\.)?appcloud|blog|brightcove01-secure|docs|files|images\.gallery|goku|img|link|metrics|my|register|secure|services|signin|solutions|support|videocloud|www)\.)?brightcove\.com/"
+		to="https://$1brightcove.com/" />
+
+	<!--	Then everything else to -secure.
+							-->
+	<rule from="^http://brightcove01\.brightcove\.com/"
+		to="https://brightcove01-secure.brightcove.com/" />
+
+	<rule from="^http://s?admin\.brightcove\.com/"
+		to="https://sadmin.brightcove.com/" />
+
+	<!--	Redirect drops path but not args:
+							-->
+	<rule from="^http://opensource\.brightcove\.com/+[^?]*"
+		to="https://docs.brightcove.com/en/video-cloud/open-source/" />
+
+</ruleset>

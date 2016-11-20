@@ -1,0 +1,38 @@
+<!--
+	For other Safari Books coverage, see SafariBooksOnline.xml.
+
+
+	Problematic hosts in *safariflow.com:
+
+		- (www.)? ¹
+		- blog ²
+
+	¹ Server sends no certificate chain, see https://whatsmychaincert.com
+	² Works, worpdress
+
+
+	Mixed content:
+
+		- Images on blog from www.safaribooksonline.com *
+
+	* Unsecurable <= http reply
+
+-->
+<ruleset name="Safari Flow.com (partial)" default_off="missing certificate chain">
+
+	<target host="safariflow.com" />
+	<target host="www.safariflow.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^www\.safariflow\.com$" name="^(X-Mapping-\w{8}|csrftoken)$" /-->
+	<!--securecookie host="^\.www\.safariflow\.com$" name="^sessionid$" /-->
+
+	<securecookie host="^\.?www\.safariflow\.com$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

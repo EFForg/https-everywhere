@@ -1,0 +1,61 @@
+<!--
+	Problematic domains:
+
+		- www.abanet.org *
+
+	* Expired 2012-02-09
+
+
+	Observed cookie domains:
+
+		- americanbar.org *
+		- apps.americanbar.org *
+		- www.americanbar.org *
+
+	* Secured by us <= not secured by server
+
+
+	Mixed content:
+
+		- Images, on apps from:
+
+			- $self *
+			- www.abanet.org *
+
+		- Web bugs, on www from:
+
+			- webstats *
+			- seal-chicago.bbb.org *
+
+	* Secured by us
+
+-->
+<ruleset name="American Bar Association">
+
+	<target host="www.abanet.org" />
+	<target host="americanbar.org" />
+	<target host="*.americanbar.org" />
+
+
+	<securecookie host="^(?:.*\.)?americanbar\.org$" name=".+" />
+
+
+	<rule from="^http://www\.abanet\.org/+(?=search/+common/+img/)"
+		to="https://apps.americanbar.org/" />
+
+	<!--	Some paths redirect as so, but at least some others do not,
+		so be cautious until we determine all of the latter:
+									-->
+	<rule from="^http://www\.abanet\.org/+(?=$|\?)"
+		to="https://www.americanbar.org/content/aba/" />
+
+	<rule from="^http://www\.abanet\.org/+rppt(?:(?:/[^?]*)?(\?.*)?)$"
+		to="https://www.americanbar.org/publications/probate_property_magazine_home.html$1" />
+
+	<rule from="^http://(apps\.|www\.)?americanbar\.org/"
+		to="https://$1americanbar.org/" />
+
+	<rule from="^http://webstats\.americanbar\.org/"
+		to="https://americanbar-org.d1.sc.omtrdc.net/" />
+
+</ruleset>

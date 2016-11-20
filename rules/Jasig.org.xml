@@ -1,0 +1,53 @@
+<!--
+	Problematic domains:
+
+		- (www.)?ja-sig.org *
+		- (www.)?jasig.org *
+
+	* Mismatched
+
+
+	Fully covered domains:
+
+		- (www.)?ja-sig.org	(→ www.apereo.org)
+
+		- in *jasig.org:
+
+			- (www.)?	(^ → www.apereo.org)
+			- issues
+			- wiki
+
+-->
+<ruleset name="Jasig.org">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="issues.jasig.org" />
+	<target host="wiki.jasig.org" />
+
+	<!--	Complications:
+				-->
+	<target host="ja-sig.org" />
+	<target host="www.ja-sig.org" />
+
+	<target host="jasig.org" />
+	<target host="www.jasig.org" />
+
+
+
+	<securecookie host="^(?:issues|wiki)?\.jasig\.org$" name=".+" />
+
+
+	<!--	Redirect drops path and forward
+		slash, but not args:
+					-->
+	<rule from="^http://(?:www\.)?ja-?sig\.org/[^?]*"
+		to="https://www.apereo.org/" />
+
+		<test url="http://www.jasig.org//" />
+		<test url="http://www.ja-sig.org//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

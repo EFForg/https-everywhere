@@ -1,0 +1,52 @@
+<!--
+	For rules causing false/broken MCB, see NetNow.co-falsemixed.xml.
+
+
+	Insecure cookies are set for these hosts:
+
+		- netnow.co
+		- www.netnow.co
+
+
+	Mixed content:
+
+		- css from $self *
+		- fonts from $self *
+		- Images from $self *
+
+	* Secured by us
+
+-->
+<ruleset name="NetNow.co (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="netnow.co" />
+	<target host="www.netnow.co" />
+
+		<!--	Avoid broken MCB:
+					-->
+		<exclusion pattern="^http://(?:www\.)?netnow\.co/+(?!favicon\.ico|wp-content/|wp-login\.php)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://netnow.co/apps/" />
+			<test url="http://netnow.co/blog/" />
+			<test url="http://netnow.co/contact-netnow/" />
+			<test url="http://www.netnow.co/support/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://netnow.co/wp-login.php" />
+			<test url="http://www.netnow.co/wp-content/plugins/usernoise/images/ok.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^(www\.)?netnow\.co$" name="^X-Mapping-[a-z]{8}$" /-->
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

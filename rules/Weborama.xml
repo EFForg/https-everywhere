@@ -1,0 +1,42 @@
+<!--	gs1.wpc.edgecastcdn.net/001F34/
+
+	cstatic.weborama.fr/transp.gif	=	ssl.weborama.fr/images/transp.gif
+
+	(www.)weborama.fr doesn't work
+-->
+<ruleset name="Weborama.fr (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="cstatic.weborama.fr"/>
+	<target host="*.solution.weborama.fr"/>
+	<target host="ssl.weborama.fr"/>
+
+	<!--	Complications:
+				-->
+	<target host="astatic.weborama.fr"/>
+	<target host="elstatic.weborama.fr"/>
+	<target host="perf.weborama.fr"/>
+	<target host="static.weborama.fr"/>
+
+		<test url="http://cstatic.weborama.fr/iframe/customers/premium.html" />
+		<test url="http://cstatic.weborama.fr/iframe/customers/premium.html?idEditeur=" />
+
+
+	<securecookie host="^\.\w+\.solution\.weborama\.fr$" name=".*"/>
+
+
+	<!--	mismatch (EdgeCast)	-->
+	<rule from="^http://(?:a|el)static\.weborama\.fr/"
+		to="https://gs1.wpc.edgecastcdn.net/001F34/"/>
+
+	<rule from="^http://perf\.weborama\.fr/"
+		to="https://webo.solution.weborama.fr/"/>
+
+	<rule from="^http://static\.weborama\.fr/"
+		to="https://ssl.weborama.fr/"/>
+
+	<rule from="^http://(cstatic|\w+\.solution|ssl)\.weborama\.fr/"
+		to="https://$1.weborama.fr/"/>
+
+</ruleset>

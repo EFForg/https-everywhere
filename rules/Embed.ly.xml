@@ -1,0 +1,75 @@
+<!--
+	Other Embedly rulesets:
+
+		- Embedly.com.xml
+
+
+	Nonfunctional subdomains:
+
+		- ^ ¹
+		- blog ²
+		- support ³
+
+	¹ Redirects to http
+	² Tumblr
+	³ Zendesk
+
+
+	Fully covered subdomains:
+
+		- api
+		- api-cdn
+		- app
+		- cdn
+		- i
+		- t
+		- www
+
+
+	Insecure cookies are set for these domains:
+
+		- api.embed.ly
+
+-->
+<ruleset name="Embed.ly (partial)">
+
+	<target host="api.embed.ly" />
+	<target host="api-cdn.embed.ly" />
+	<target host="app.embed.ly" />
+	<target host="cdn.embed.ly" />
+	<target host="i.embed.ly" />
+	<target host="t.embed.ly" />
+	<target host="www.embed.ly" />
+
+	<!--	Complications:
+				-->
+	<target host="support.embed.ly" />
+
+		<exclusion pattern="^http://support\.embed\.ly/(?!favicon\.ico|images/|support/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://support.embed.ly/hc/communities/public/questions/202224445-Image-Resize-returning-broken-images" />
+			<test url="http://support.embed.ly/hc/communities/public/questions/202224805-not-support-vk-com" />
+			<test url="http://support.embed.ly/hc/en-us/articles/204266065-Unsafe-JavaScript" />
+			<test url="http://support.embed.ly/hc/en-us/articles/204266155-Vimeo-Domain-Restrictions" />
+
+			<!--	-ve:
+					-->
+			<test url="http://support.embed.ly/favicon.ico" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^api\.embed\.ly$" name="^em_beagle_eid$" /-->
+
+	<securecookie host="^ap[ip]\.embed\.ly$" name=".+" />
+
+
+	<rule from="^http://support\.embed\.ly/"
+		to="https://embedly.zendesk.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

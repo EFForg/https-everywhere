@@ -1,0 +1,42 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://media.screened.com/ => https://s3.amazonaws.com/media.screened.com/: (6, 'Could not resolve host: media.screened.com')
+Fetch error: http://auth.whiskeymedia.com/ => https://auth.whiskeymedia.com/: (60, 'SSL certificate problem: certificate has expired')
+Fetch error: http://media.corp.whiskeymedia.com/ => https://s3.amazonaws.com/media.corp.whiskeymedia.com/: (6, 'Could not resolve host: media.corp.whiskeymedia.com')
+	CDN buckets:
+
+		- ddjhyz888xk1m.cloudfront.net
+		- dh3vbjnk0bnfa.cloudfront.net
+
+
+	Nonfunctional domains:
+
+		- comicvine.com		(cert: auth.whiskeymedia.com; redirects there)
+		- www.comicvine.com	(ditto)
+		- giantbomb.com		(cert: auth.whiskeymedia.com; redirects there)
+		- store.giantbomb.com	(cert: *.myshopify.com; redirects to http)
+		- www.giantbomb.com	(cert: auth.whiskeymedia.com; redirects there)
+		- tested.com
+		- www.tested.com
+		- whiskeymedia.com	(cert: auth.whiskeymedia.com; redirects there)
+		- www.whiskeymedia.com	(ssl_error_rx_record_too_long)
+
+-->
+<ruleset name="Whiskey Media (partial)" default_off='failed ruleset test'>
+
+	<target host="*.comicvine.com" />
+	<target host="media.screened.com" />
+	<target host="files.tested.com" />
+	<target host="auth.whiskeymedia.com" />
+	<target host="media.corp.whiskeymedia.com" />
+
+	<rule from="^http://auth\.(comicvine|whiskeymedia)\.com/"
+		to="https://auth.$1.com/" />
+
+	<rule from="^http://media\.(comicvine|screened|corp\.whiskeymedia)\.com/"
+		to="https://s3.amazonaws.com/media.$1.com/" />
+
+	<rule from="^http://files\.tested\.com/"
+		to="https://ddjhyz888xk1m.cloudfront.net/" />
+
+</ruleset>

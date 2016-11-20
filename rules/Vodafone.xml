@@ -1,0 +1,63 @@
+<!--
+	Other Vodafone rulesets:
+
+		- Firsts.com.xml
+		- Vodafone.co.uk.xml
+		- Vodafone.co.nz.xml
+		- Vodafone.de.xml
+		- Vodafone.ie.xml
+
+
+	- vodafonegroup.122.2o7.net
+	- vodafone.ivwbox.de
+	- vodafone01.secure.lithium.com
+
+
+	Nonfunctional hosts in *vodafone.com:
+
+		- cms-vp *
+
+	* Plaintext reply
+
+
+	(www.)?vodafone.com: Shows firsts.com
+
+
+	Insecure cookies are set for these hosts:
+
+		- developer.vodafone.com
+
+-->
+<ruleset name="Vodafone.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="developer.vodafone.com" />
+
+	<!--	Complications:
+				-->
+	<target host="vodafone.com" />
+	<target host="www.vodafone.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^developer\.vodafone\.com$" name="^csrftoken$" /-->
+
+	<securecookie host="^developer\.vodafone\.com$" name=".+" />
+
+
+	<!--	Redirect keeps args but not forward slash:
+								-->
+	<rule from="^http://(?:www\.)?vodafone\.com/+(?=$|\?)"
+		to="https://www.vodafone.com/content/index.html" />
+
+		<test url="http://vodafone.com/?" />
+		<test url="http://www.vodafone.com/?" />
+		<test url="http://vodafone.com//" />
+		<test url="http://www.vodafone.com//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

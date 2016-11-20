@@ -1,0 +1,74 @@
+<!--
+	For other Thomson Reuters coverage, see Thomson-Reuters.xml.
+
+
+	Problematic hosts in *westlaw.com:
+ 
+		- ^ *
+		- store *
+
+	* Mismatched
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- .westlaw.com
+		- .firmcentral.westlaw.com
+		- lawschool.westlaw.com
+		- .next.westlaw.com
+		- 1.next.westlaw.com
+		- m.next.westlaw.com
+		- onepass.westlaw.com
+		- store.westlaw.com
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Westlaw.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="compliance.westlaw.com" />
+	<target host="firmcentral.westlaw.com" />
+	<target host="forms.westlaw.com" />
+	<target host="lawschool.westlaw.com" />
+	<target host="next.westlaw.com" />
+
+	<target host="1.next.westlaw.com" />
+	<target host="c1.next.westlaw.com" />
+	<target host="i1.next.westlaw.com" />
+	<target host="m.next.westlaw.com" />
+
+	<target host="onepass.westlaw.com" />
+	<target host="images.store.westlaw.com" />
+	<target host="text.westlaw.com" />
+	<target host="web2.westlaw.com" />
+	<target host="westcapitolwatch.westlaw.com" />
+	<target host="www.westlaw.com" />
+
+		<test url="http://c1.next.westlaw.com/StaticContent_32.5.1019/css/v2/scss/partials/mobile/v1/base.css" />
+		<test url="http://i1.next.westlaw.com/StaticContent_32.5.1019/images/mobile/v1/signIn.gif" />
+
+	<!--	Complications:
+				-->
+	<target host="westlaw.com" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.firmcentral\.westlaw\.com$" name="^Co_SessionToken$" /-->
+	<!--securecookie host="^lawschool\.westlaw\.com$" name="^(ASP\.NET_SessionId|BIGipServerLAWSCHOOL-80)$" /-->
+	<!--securecookie host="^\.next\.westlaw\.com$" name="^(?:BindingKey|mob_pm)$" /-->
+	<!--securecookie host="^(?:[1m]\.next|store)\.westlaw\.com$" name="^BIGipServer" /-->
+	<!--securecookie host="^onepass\.westlaw\.com$" name="^bhCookie(?:Perm|Sess)$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://westlaw\.com/"
+		to="https://www.westlaw.com/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

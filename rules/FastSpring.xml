@@ -1,0 +1,47 @@
+<!--
+	For problematic rules, see FastSpring-mismatches.xml.
+
+
+	CDN buckets:
+
+		- dcnz2rrcot657.cloudfront.net
+		- dxezhqhj7t42i.cloudfront.net
+		- resource.fastspring.com.s3.amazonaws.com
+
+
+	(www.)?fastspring.com: Refused
+
+
+	Problematic hosts in *fastspring.com:
+
+		- info ᵐ	(Hubspot)
+		- resource ᵐ	(AmazonAWS)
+
+	ᵐ Mismatched
+
+-->
+<ruleset name="FastSpring (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="sites.fastspring.com" />
+	<target host="springboard.fastspring.com" />
+
+	<!--	Complications:
+				-->
+	<target host="resource.fastspring.com" />
+
+
+	<securecookie host="^\." name="^_gat?$" />
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://resource\.fastspring\.com/"
+		to="https://s3.amazonaws.com/resource.fastspring.com/" />
+
+		<test url="http://resource.fastspring.com/app/store/style/base.css" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

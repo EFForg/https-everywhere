@@ -1,0 +1,31 @@
+<!--
+	Mixed content on secure:
+
+		- Images, from:
+
+			- i0.wp.com (from Gravatar)
+
+-->
+<ruleset name="trakt">
+
+	<target host="trakt.tv" />
+	<target host="www.trakt.tv" />
+	<target host="support.trakt.tv" />
+
+	<!-- For securecookie rule below (host used for movie etc. images) -->
+	<target host="*.trakt.us" />
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.trakt\.(tv|us)$" name="^__cfduid$" /-->
+	<!--securecookie host="^\.?support\.trakt\.tv$" name="^_session_id$" /-->
+	<!--securecookie host="^(www\.)?trakt\.tv$" name="^(_traktsession|AWSELB|trakt_username|remember_user_token)$" /-->
+
+	<securecookie host="^(\.|www\.)?trakt\.tv$" name=".+" />
+	<securecookie host="^\.?support\.trakt\.tv$" name=".*" />
+	<securecookie host="^\.trakt\.us$" name=".+" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

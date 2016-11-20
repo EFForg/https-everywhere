@@ -1,0 +1,72 @@
+<!--
+	CDN buckets:
+
+		- c576040.r40.cf2.rackcdn.com
+
+			- images-buttons.slooh.com
+
+		- c575441.r41.cf2.rackcdn.com
+
+			- images-home.slooh.com
+
+		- c576050.r50.cf2.rackcdn.com
+
+			- images-footer.slooh.com
+
+		- c580754.r54.cf2.rackcdn.com
+
+			- images-account.slooh.com
+
+		- c575991.r91.cf2.rackcdn.com
+
+			- images-background.slooh.com
+
+
+	Nonfunctional subdomains:
+
+		- events	(handshake fails)
+
+
+	Problematic subdomains:
+
+		- images-account *
+		- images-background *
+		- images-buttons *
+		- images-footer *
+		- images-home *
+
+	* Works, akamai
+
+-->
+<ruleset name="SLOOH (partial)">
+
+	<target host="slooh.com" />
+	<target host="*.slooh.com" />
+		<!--
+			$ 403s
+				-->
+		<exclusion pattern="^http://(?:www\.)?slooh\.com/(?:\?.*)?$" />
+
+
+	<rule from="^http://(www\.)?slooh\.com/"
+		to="https://$1slooh.com/" />
+
+	<rule from="^http://images\.slooh\.com/"
+		to="https://s3.images.slooh.com/" />
+
+	<rule from="^http://images-account\.slooh\.com/"
+		to="https://c580754.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http://images-background\.slooh\.com/"
+		to="https://c575991.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http://images-buttons\.slooh\.com/"
+		to="https://c576040.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http://images-footer\.slooh\.com/"
+		to="https://c576050.ssl.cf2.rackcdn.com/" />
+
+	<rule from="^http://images-home\.slooh\.com/"
+		to="https://c575441.ssl.cf2.rackcdn.com/" />
+
+</ruleset>

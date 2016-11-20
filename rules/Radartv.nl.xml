@@ -1,0 +1,51 @@
+<!--
+	Insecure cookies are set for these domains:
+
+		- .forum.www.radartv.nl
+
+
+	These altnames don't exist:
+
+		- www.forum.www.radartv.nl
+
+-->
+<ruleset name="Radartv.nl (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="radartv.nl" />
+	<target host="www.radartv.nl" />
+	<target host="forum.www.radartv.nl" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.radartv\.nl/(?:$|\?npo_cc=na|\?npo_cc_skip_wall=1)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.radartv\.nl/+(?!favicon\.ico|fileadmin/|typo3temp/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.radartv.nl/?npo_cc=na" />
+			<test url="http://www.radartv.nl/?npo_cc_skip_wall=1" />
+			<test url="http://www.radartv.nl/sites/radar/" />
+			<test url="http://www.radartv.nl/testpanel/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.radartv.nl/favicon.ico" />
+			<test url="http://www.radartv.nl/fileadmin/GFX/radar_logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^\.forum\.www\.radartv\.nl$" name="^npo_cc$" /-->
+
+	<securecookie host="^\.forum\.www\.radartv\.nl$" name=".+" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

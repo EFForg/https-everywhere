@@ -1,0 +1,66 @@
+<!--
+	Cotswold District Council
+
+	For other UK government coverage, see GOV.UK.xml.
+
+
+	Nonfunctional hosts in *cotswold.gov.uk:
+
+		- www.cmis ᵈ
+		- my ᵈ
+		- publicaccess ᵈ
+
+	ᵈ Dropped
+
+
+	Problematic hosts in *cotswold.gov.uk:
+
+		- consult ᵐ
+		- www ᵐ
+
+	ᵐ Mismatched
+
+
+	^cotswold.gov.uk doesn't exist.
+
+
+	Insecure cookies are set for these domains and hosts: ᶜ
+
+		- consult.cotswold.gov.uk
+		- forms.cotswold.gov.uk
+		- .www.cotswold.gov.uk
+
+	ᶜ See https://owasp.org/index.php/SecureFlag
+
+-->
+<ruleset name="Cotswold.gov.uk (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="forms.cotswold.gov.uk" />
+
+	<!--	Complications:
+				-->
+	<target host="consult.cotswold.gov.uk" />
+
+		<!--	Sets cookie without Secure:
+							-->
+		<!--test url="http://forms.cotswold.gov.uk/eforms/ufsmain?formid=CDC_GW_PAYMENT_2016&amp;C_PRM__ORG=cdc&amp;C_PRM__UID_ACCESSKEY=" /-->
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^consult\.cotswold\.gov\.uk$" name="^(?:JSESSION|Server)ID$" /-->
+	<!--securecookie host="^forms\.cotswold\.gov\.uk$" name="^ebaseCookieTest$" /-->
+	<!--securecookie host="^\.www\.cotswold\.gov\.uk$" name="^ARRAffinity$" /-->
+
+	<securecookie host="^\w" name="." />
+
+
+	<rule from="^http://consult\.cotswold\.gov\.uk/"
+		to="https://cotswold-consult.objective.co.uk/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

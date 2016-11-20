@@ -1,0 +1,87 @@
+<!--
+	Nonfunctional hosts in *idoxgroup.com:
+
+		- cloudamber ᵈ
+		- epam ᵈ
+		- informationservice *
+		- investors ᵈ
+		- isbeta ᵈ
+		- isreview ᵈ
+		- iview ᵈ
+		- www ᵈ
+
+	* Shows maintenance page
+	ᵈ Dropped
+
+
+	Problematic hosts in *idoxgroup.com:
+
+		- blog ᵐ
+		- fskills ᵐ
+		- hart ʷ
+
+	ᵐ Mismatched
+	ʷ Configured for weak ciphers only
+
+
+	These altnames do not exist:
+
+		- www.connect.idoxgroup.com
+
+-->
+<ruleset name="idox group.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="www.compliance.idoxgroup.com" />
+	<target host="connect.idoxgroup.com" />
+	<target host="easyprint.idoxgroup.com" />
+	<target host="servicedesk.idoxgroup.com" />
+
+	<!--	Complications:
+				-->
+	<target host="fskills.idoxgroup.com" />
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="http://www\.compliance\.idoxgroup\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="http://www\.compliance\.idoxgroup\.com/+(?!(?:aktuelles/newsletter|en/login|login)\.html|fileadmin/|typo3temp/|uploads/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.compliance.idoxgroup.com/aktuelles.html" />
+			<test url="http://www.compliance.idoxgroup.com/aktuelles/events.html" />
+			<test url="http://www.compliance.idoxgroup.com/ansprechpartner.html" />
+			<test url="http://www.compliance.idoxgroup.com/compliance-beratung.html" />
+			<test url="http://www.compliance.idoxgroup.com/en.html" />
+			<test url="http://www.compliance.idoxgroup.com/fachautoren.html" />
+			<test url="http://www.compliance.idoxgroup.com/news.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.compliance.idoxgroup.com/aktuelles/newsletter.html" />
+			<test url="http://www.compliance.idoxgroup.com/en/login.html" />
+			<test url="http://www.compliance.idoxgroup.com/fileadmin/template/img/snavi_kontakt.gif" />
+			<test url="http://www.compliance.idoxgroup.com/login.html" />
+			<test url="http://www.compliance.idoxgroup.com/typo3temp/stylesheet_d1c2046323.css" />
+			<test url="http://www.compliance.idoxgroup.com/uploads/RTEmagicC_akkordeon_teaserbild_betrugsbekaempfung.png" />
+
+
+	<securecookie host="^(?!www\.compliance\.)\w" name="." />
+
+
+	<!--	Redirect drops forward
+		slash, path, and args:
+					-->
+	<rule from="^http://fskills\.idoxgroup\.com/.*"
+		to="https://www.researchonline.org.uk/sds/index.do" />
+
+		<test url="http://fskills.idoxgroup.com/index.htm" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

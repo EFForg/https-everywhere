@@ -1,0 +1,86 @@
+<!--
+	Other AT&T rulesets:
+
+		- BellSouth.xml
+		- Sslcert35.com.xml
+
+
+	CDN buckets:
+
+		- cng.i.lithium.com
+
+
+	Nonfunctional domains:
+
+		- att.com subdomains:
+
+			- repair		(times out)
+			- (www.)research	(prints "this is a test")
+			- savings
+			- att.uc		(http & https data differ)
+
+		- blogs.att.net *
+		- preview.att.net *
+		- (www.)attpublicpolicy.com	(shows RHEL default page, CN: localhost.localdomain)
+
+	* Times out
+
+
+	Problematic domains:
+
+		- att.com subdomains:
+
+			- (www.)business	(reset)
+			- uc			(works; mismatched, CN: *.sslcert35.com)
+
+
+	Fully covered domains:
+
+		- att.com subdomains:
+
+			- (www.)
+			- connect
+			- www.corp
+			- cprodmasx
+			- developer
+			- www.e-access
+			- forums
+			- localization
+			- networkingexchangeblog
+			- rewardcenter
+			- smb
+			- trial.uc
+			- ufix
+			- uversecentral[3]
+			- webhosting
+			- www.wireless
+
+		- [013].ecom.attccc.com
+
+-->
+<ruleset name="AT&amp;T (partial)">
+
+	<target host="att.com" />
+	<target host="*.att.com" />
+	<target host="*.ecom.attccc.com" />
+
+
+	<securecookie host="^.*\.att\.com$" name=".+" />
+
+
+	<rule from="^http://((?:connect|www\.corp|cprodmasx|developer|www\.e-access|forums|localization|networkingexchangeblog|rewardcenter|smb|trial\.uc|ufix|uversecentral\d|webhosting|www\.wireless|www)\.)?att\.com/"
+		to="https://$1att.com/" />
+
+	<rule from="^http://(?:www\.)?business\.att\.com/(?:enterprise/)?(?:\?.*)?$"
+		to="https://www.att.com/gen/landing-pages?pid=9214" />
+
+	<!--	https://wireless redirects to login, while
+		http://wireless redirects like so.
+							-->
+	<rule from="^http://wireless\.att\.com/($|\?)"
+		to="https://www.att.com/shop/wireless/$1" />
+
+	<rule from="^http://(\d)\.ecom\.attccc\.com/"
+		to="https://$1.ecom.attccc.com/" />
+
+</ruleset>

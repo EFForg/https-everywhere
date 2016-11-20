@@ -1,0 +1,96 @@
+<!--
+	Other Oracle rulesets:
+
+		- NetBeans.xml
+		- Oracle.xml
+		- Oracle-mismatches.xml
+
+
+	See Oracle-mismatches.xml for problematic rules.
+
+
+	Problematic subdomains:
+
+		- cdn	(akamai)
+	forums
+        lists
+	labs
+	planet
+
+
+	Nonfunctional subdomains:
+
+		- downloads *
+
+	* Refused
+
+-->
+<ruleset name="MySQL">
+
+	<!--	Direct rewrites:
+				-->
+	<target host=          "mysql.com"/>
+	<target host=     "bugs.mysql.com"/>
+	<target host=      "cdn.mysql.com"/>
+	<target host=      "dev.mysql.com"/>
+	<target host=     "repo.mysql.com"/>
+	<target host=      "www.mysql.com"/>
+	<target host=   "www-jp.mysql.com"/>
+	<target host="www.mysql.de"/>
+	<target host="www.mysql.fr"/>
+	<target host="www.mysql.it"/>
+
+	<!--	Complications:
+				-->
+	<target host="downloads.mysql.com"/>
+	<target host=    "forge.mysql.com"/>
+	<target host=       "wb.mysql.com"/>
+
+	<target host=    "mysql.de"/>
+	<target host=    "mysql.fr"/>
+	<target host=    "mysql.it"/>
+
+		<!--  http://downloads.mysql.com/ -> https://dev.mysql.com/downloads/
+		      Other pages like http://downloads.mysql.com/archives/
+	              don't have https pages
+		-->
+		<exclusion pattern="^http://downloads\.mysql\.com/[^\n]" />
+
+			<test url="http://downloads.mysql.com/archives/" />
+
+		<test url="http://cdn.mysql.com/Downloads/Connector-J/mysql-connector-java-5.1.34.tar.gz.md5" />
+		<test url="http://cdn.mysql.com/Downloads/MySQL-5.6/MySQL-5.6.23-1.linux_glibc2.5.i386.rpm-bundle.tar.md5" />
+
+
+	<!--	Cookies observed:
+
+			- MySQL_S
+			- SSO_Interstitial
+
+		Looks like we need to leave SSO for bug 8025:
+
+		- https://trac.torproject.org/projects/tor/ticket/8025
+		- http://bugs.mysql.com/bug.php?id=67311
+
+		Shared with at least bugs.
+							-->
+	<securecookie host="^\.mysql\.\w{2,3}$" name="^MySQL_S$"/>
+
+
+	<rule from="^http://downloads\.mysql\.com/$"
+		to="https://dev.mysql.com/downloads/" />
+
+	<rule from="^http://forge\.mysql\.com/"
+		to="https://www.mysql.com/" />
+
+	<rule from="^http://wb\.mysql\.com/"
+		to="https://www.mysql.com/products/workbench/" />
+
+	<!--	Cert doesn't match !www		-->
+	<rule from="^http://mysql\.(\w\w)/"
+		to="https://www.mysql.$1/"/>
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

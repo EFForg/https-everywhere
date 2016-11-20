@@ -1,0 +1,70 @@
+<!--
+	For rules that cause mixed content, see Weebly-mixed.xml.
+
+
+	Other Weebly rulesets:
+
+		- Editmysite.com.xml
+
+
+	CDN buckets:
+
+		- cdn1.weebly.com.cdngc.net
+
+			- static-cdn.weebly.com
+
+
+	Nonfunctional domains:
+
+		- weebly.com subdomains:
+
+			- affiliate *
+			- affiliates *
+			- blog *
+			- help *
+			- kb *
+			- partnerblog *
+			- partnerwith *
+			- static-cdn	(403; mismatched, CN: *.pantherssl.com)
+			- support *
+
+	* Times out
+
+
+	Problematic domains:
+
+		- (www.)weebly.com	(mixed css & images from *.editmysite.com)
+
+
+	Fully covered subdomains:
+
+		- teffect
+
+-->
+<ruleset name="Weebly.com (partial)">
+
+	<target host="weebly.com" />
+	<target host="*.weebly.com" />
+		<!--
+			Redirects to http:
+						-->
+		<!--exclusion pattern="^http://www\.weebly\.com/$" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.weebly\.com/(?!editor/(?:app|font|image|librarie)s|favicon\.ico|footer_signup\.php|images/)" />
+
+
+	<!--	Set by editor/apps/showCommentForm-v2.php
+								-->
+	<securecookie host="^\.weebly\.com$" name="^sto-id$" />
+	<!--
+		Set by editor/apps/tracking_frame_static.php
+								-->
+	<securecookie host="^www\.weebly\.com$" name="^wt-\w{6}$" />
+
+
+	<rule from="^http://((?:mobileapi|secure|teffect|www)\.)?weebly\.com/"
+		to="https://$1weebly.com/" />
+
+</ruleset>

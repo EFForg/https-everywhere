@@ -1,0 +1,45 @@
+<!--
+	Problematic domains:
+
+		- static	(redirects to ^; mismatched, CN: e-prawnik.pl)
+		- static1	(works; mismatched, CN: *.money.pl)
+		- www		(works; mismatched, CN: e-prawnik.pl)
+
+
+	Partially covered subdomains:
+
+		- (www.)
+
+
+	Fully covered subdomains:
+
+		- static	(→ ^)
+		- static1	(→ static1.money.pl)
+
+
+-->
+<ruleset name="e-prawnik.pl (partial)">
+
+	<target host="e-prawnik.pl" />
+	<target host="*.e-prawnik.pl" />
+		<!--
+			Many pages redirect to http:
+							-->
+		<exclusion pattern="^http://(?:www\.)?e-prawnik\.pl/(?!favicon\.ico|i/|zamow-opinie(?:$|[?/]))" />
+
+
+	<!--	Can we secure any of these safely?
+							-->
+	<!--securecookie host="^\.e-prawnik\.pl$" name="^(LS_cap_mb_20\w\w_\w\w|LS_mobi|PHPSESSID)" /-->
+
+
+	<rule from="^http://(?:www\.)?e-prawnik\.pl/"
+		to="https://e-prawnik.pl/" />
+
+	<rule from="^http://static\.e-prawnik\.pl/"
+		to="https://e-prawnik.pl/i/" />
+
+	<rule from="^http://static1\.e-prawnik\.pl/"
+		to="https://static1.money.pl/" />
+
+</ruleset>

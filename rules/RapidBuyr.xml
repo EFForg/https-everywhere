@@ -1,0 +1,64 @@
+<!--
+	For problematic rules, see RapidBuyr-problematic.xml.
+
+
+	Client subdomains fail to redirect when fetched via https.
+
+
+	Problematic subdomains:
+
+		- ^	(cert only matches www)
+		- cart	(works, mismatched, CN: *.echonest.com)
+
+-->
+<ruleset name="RapidBuyr (partial)">
+
+	<target host="rapidbuyr.cachefly.net" />
+	<target host="rapidbuyr.com" />
+	<target host="*.rapidbuyr.com" />
+		<!--
+			These paths redirect to http:
+
+				- $
+				- $(category)/$(product).htm
+				- affiliate-program.htm
+				- careers.htm
+				- cart.aspx\?
+				- customersupport.htm
+				- cyo.aspx
+				- frequently-asked-questions.htm
+				- how-it-works.htm
+				- news.htm
+				- privacy-policy.htm
+				- refer-a-friend.htm
+				- shop-by-brand.aspx
+				- sitemap.aspx\?
+				- terms-and-conditions.htm
+
+			These don't:
+
+				- about-us.htm
+				- All-Products.htm
+				- captcha.aspx
+				- images/
+				- member$
+				- MemberLogin.aspx
+				- merchant/default.htm
+				- merchant/resources.htm
+				- merchant/support.htm
+				- secure/createAccount.aspx
+								-->
+		<exclusion pattern="^http://(?:www\.)?rapidbuyr\.com/(?:$|\?|(?!MemberLogin)[\w-]+\.aspx|(?!All-Products|merchant/)[\w/-]+\.htm)" />
+
+
+	<securecookie host="^rapidbuyr\.cachefly\.net$" name=".+" />
+	<securecookie host="^svcart\.rapidbuyr\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?rapidbuyr\.com/"
+		to="https://www.rapidbuyr.com/" />
+
+	<rule from="^http://svcart\.rapidbuyr\.com/"
+		to="https://svcart.rapidbuyr.com/" />
+
+</ruleset>

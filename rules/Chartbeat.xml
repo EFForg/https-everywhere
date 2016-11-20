@@ -1,0 +1,122 @@
+<!--
+	blog.chartbeat.com is handled in WordPress-blogs.xml.
+
+	Other Chartbeat rulesets:
+
+		- Chartbeat.net.xml
+
+
+	CDN buckets:
+
+		- chartbeat.edgekey.net
+
+			- static
+			- static2
+
+		- static.blog.chartbeat.com.edgesuite.net
+
+			- static.blog
+
+		- chartbeat.wpengine.com
+
+			- blog
+
+
+	Nonfunctional domains:
+
+		- blog.chartbeat.com ¹
+		- static.blog.chartbeat.com	(redirects to http, akamai)
+		- lp.chartbeat.com ³
+		- pages.chartbeat.com ⁴
+		- support.chartbeat.com ⁵
+
+	¹ WP Engine
+	³ Marketo
+	⁴ Refused
+	⁵ Desk.com
+
+
+	Problematic domains:
+
+		- status.chartbeat.com *
+
+	* Mismatched
+
+
+	Fully covered hosts in *chartbeat.com:
+
+		- (www.)
+		- ads
+		- static
+		- static2
+		- status	(→ chartbeat.statuspage.io)
+		- post.update
+		- s.update
+
+
+	Insecure cookies are set for these hosts:
+
+		- chartbeat.com
+
+-->
+<ruleset name="Chartbeat.com (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="chartbeat.com" />
+	<target host="ads.chartbeat.com" />
+	<target host="static.chartbeat.com" />
+	<target host="static2.chartbeat.com" />
+	<target host="post.update.chartbeat.com" />
+	<target host="s.update.chartbeat.com" />
+	<target host="www.chartbeat.com" />
+
+	<!--	Complications:
+				-->
+	<target host="lp.chartbeat.com" />
+	<target host="status.chartbeat.com" />
+
+		<exclusion pattern="^http://lp\.chartbeat\.com/+(?!$|\?|css/|images/|rs/)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://lp.chartbeat.com/audience-development-whitepaper.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-for-ad-sales-contact-us.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-for-editorial-contact-us.html" />
+			<test url="http://lp.chartbeat.com/chartbeat-publishing-video-contact-us.html" />
+			<test url="http://lp.chartbeat.com/contact-us.html" />
+			<test url="http://lp.chartbeat.com/guide-to-traffic-sources-audience-behavior.html" />
+			<test url="http://lp.chartbeat.com/quarterly-0101.html" />
+			<test url="http://lp.chartbeat.com/quarterly-0201.html" />
+
+			<!--	-ve:
+					-->
+			<test url="http://lp.chartbeat.com/rs/chartbeatinc/images/gated-chartbeat-logo.png" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^chartbeat\.com$" name="^django_language$" /-->
+
+	<securecookie host="^chartbeat\.com$" name=".+" />
+
+
+	<rule from="^http://lp\.chartbeat\.com/+(?:\?.*)?$"
+		to="https://chartbeat.com/404" />
+
+		<test url="http://lp.chartbeat.com/?f" />
+		<test url="http://lp.chartbeat.com/?o" />
+		<test url="http://lp.chartbeat.com/?b" />
+		<test url="http://lp.chartbeat.com/?a" />
+		<test url="http://lp.chartbeat.com/?r" />
+
+	<rule from="^http://lp\.chartbeat\.com/"
+		to="https://na-p.marketo.com/" />
+
+	<rule from="^http://status\.chartbeat\.com/"
+		to="https://chartbeat.statuspage.io/" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

@@ -1,0 +1,38 @@
+<!--
+	For other PJ Media coverage, see PJ_Media.xml.
+
+
+	CDN buckets:
+
+		- pajamasmed.vo.llnwd.net
+
+			- .hs. does exist
+			- Doesn't map directly
+			- cdn
+			- cdn[1-4]
+
+
+	Problematic subdomains:
+
+		- ^		(cert only matches www)
+		- cdn[1-4]	(400; mismatched, CN: *.hs.llnwd.net)
+
+-->
+<ruleset name="PJTV.com">
+
+	<target host="pjtv.com" />
+	<target host="*.pjtv.com" />
+
+
+	<securecookie host="^(?:www)?\.pjtv\.com$" name=".+" />
+
+
+	<!--	What the server does:
+					-->
+	<rule from="^http://pjtv\.com/([^?]*)(?:\?.*)?$"
+		to="https://www.pjtv.com/$1" />
+
+	<rule from="^http://(?:cdn[1-3]|www)\.pjtv\.com/"
+		to="https://www.pjtv.com/" />
+
+</ruleset>

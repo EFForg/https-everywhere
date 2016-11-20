@@ -1,0 +1,38 @@
+<!--
+	Nonfunctional subdomains:
+
+		- blog ¹
+		- investors ²
+
+	¹ Typepad
+	² Shareholder
+
+-->
+<ruleset name="Proofpoint (partial)">
+
+	<target host="proofpoint.com" />
+	<target host="*.proofpoint.com" />
+		<!--
+			Redirect to http:
+						-->
+		<!--exclusion pattern="^http://www\.proofpoint\.com/($|favicon\.ico|id/gartner-email-security-magic-quadrant/index\.php)" /-->
+		<!--
+			Exceptions:
+					-->
+		<exclusion pattern="^http://www\.proofpoint\.com/(?!(?:asset|cs|image|partner)s/)" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^urldefense\.proofpoint\.com$" name="^_redirector_session$" /-->
+
+	<securecookie host="^urldefense\.proofpoint\.com$" name=".+" />
+
+
+	<rule from="^http://((?:support|urldefense|www)\.)?proofpoint\.com/"
+		to="https://$1proofpoint.com/" />
+
+	<rule from="^http://go\.proofpoint\.com/(?=css/|images/|js/|rs/)"
+		to="https://na-n.marketo.com/" />
+
+</ruleset>

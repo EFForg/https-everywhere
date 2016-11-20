@@ -1,0 +1,129 @@
+<!--
+Disabled by https-everywhere-checker because:
+Fetch error: http://computerworld.com/ => https://www.computerworld.com/: (28, 'Connection timed out after 10001 milliseconds')
+	For other IDG coverage, see IDG.se.xml.
+
+
+	CDN buckets:
+
+		- computerworld.com.edgesuite.net/newsletter_images/
+		- computerworld.com.edgesuite.net/techbrief/
+
+		- redirect.etouches.com
+
+			- events.computerworld.com
+
+		- computerworld.jobamatic.com
+
+			- itjobs.compterworld.com
+
+		- computerworld.mobify.me
+
+			- m.computerworld.com
+
+		- computerworld.idg.netdna-cdn.com
+
+			- -ssl doesn't exist
+			- cdn[1-4].computerworlduk.com
+
+
+	Nonfunctional domains:
+
+		- blogs.computerworld.com *
+		- resources.computerworld.com	(refused)
+		- (www.)computerworlduk.com *
+		- cdn[1-4].computerworlduk.com	(404; mismatched, CN: *.netdna-ssl.com)
+
+	* Dropped
+
+
+	Problematic computerworld.com subdomains:
+
+		- ^		(works; expired 2010-07-23, cert only matches www)
+		- events	(works; mismatched, CN: *.eiseverywhere.com)
+		- itjobs	(works; mismatched, CN: *.jobamatic.com)
+		- m		(shows mobify.com; mismatched, CN: *.mobify.com)
+
+
+	Partially covered domains:
+
+		- m.computerworld.com	(→ computerworld.mobify.com)
+
+
+	Fully covered domains:
+
+		- events.computerworld.com	(→ eiseverywhere.com)
+		- itjobs.compterworld.com	(→ computerworld.jobamatic.com)
+
+
+	Mixed content:
+
+		- Scripts, on www from:
+
+			- m *
+			- api.brightcove.com *
+			- disqus.com
+			- idg-networkworld.disqus.com
+			- wd.sharethis.com *
+
+		- Images, on www from:
+
+			- blogs ***
+			- from www *
+			- d1piko3ylsjhpd.cloudfront.net *
+			- computerworld.com.edgesuite.net *
+			- resources.idgenterprise.com ***
+
+		- Web bugs, on www from:
+
+			- bit.ly *
+			- s.bit.ly *
+			- tags.bkrtx.com *
+			- a.collective-media.net *
+			- api.demandbase.com *
+			- content.dl-rms.com *
+			- ad.doubleclick.net *
+			- pubads.g.doubleclick.net *
+			- ai.hitbox.com **
+			- jlinks.industrybrains.com *
+			- b.scorecardresearch.com *
+
+	* Secured by us
+	** Unsecurable, but who cares. 404s anyway.
+	*** Unsecurable, doesn't trip MCB anyway
+
+
+		All secured by us, apart from:
+
+			- a.visualrevenue.com
+			- p.visualrevenue.com
+			- t.visualrevenue.com
+
+		for which no secure equivalents have been found.
+		Being web bugs, do we really care about these
+		being blocked?
+
+-->
+<ruleset name="ComputerWorld (partial)" platform="mixedcontent" default_off='failed ruleset test'>
+
+	<target host="computerworld.com" />
+	<target host="*.computerworld.com" />
+
+
+	<!--securecookie host="^\.computerworld\.com$" name="^(idglg_ref_domain|mobify|s_pers|s_sess|__vr[flmuy]|__vrid)$" /-->
+	<securecookie host="^\.computerworld\.com$" name=".+" />
+
+
+	<rule from="^http://(?:www\.)?computerworld\.com/"
+		to="https://www.computerworld.com/"/>
+
+	<rule from="^http://events\.computerworld\.com/"
+		to="https://eiseverywhere.com/ehome/Computerworld/" />
+
+	<rule from="^http://itjobs\.computerworld\.com/"
+		to="https://computerworld.jobamatic.com/" />
+
+	<rule from="^http://m\.computerworld\.com/mobify/"
+		to="https://computerworld.mobify.com/mobify/" />
+
+</ruleset>

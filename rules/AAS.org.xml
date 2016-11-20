@@ -1,0 +1,77 @@
+<!--
+	Nonfunctional hosts in *aas.org:
+
+		- aer ¹
+		- csma ¹
+		- dda ¹
+		- dps ¹
+		- had ¹
+		- head ¹
+		- lad ¹
+		- solarnews ²
+		- spd ³
+
+	¹ Shows ^aas.org
+	² Plaintext reply
+	³ Refused
+
+
+	Problematic hosts in *aas.org:
+
+		- aj ¹
+		- apj ¹
+		- photos ²
+		- www ³
+
+	¹ Shows ^aas.org
+	² Mismatched, CN: *.smugmug.com
+	³ Mismatched, CN: jobregister.aas.org
+
+
+	Note that some paths appear to differ between ^ and www.
+
+
+	Insecure cookies are set for these hosts:
+
+		- members.aas.org
+
+-->
+<ruleset name="AAS.org (partial)">
+
+	<!--	Direct rewrites:
+				-->
+	<target host="aas.org" />
+	<target host="jobregister.aas.org" />
+	<target host="members.aas.org" />
+
+	<!--	Complications:
+				-->
+	<target host="aj.aas.org" />
+	<target host="apj.aas.org" />
+
+
+	<!--	Not secured by server:
+					-->
+	<!--securecookie host="^members\.aas\.org$" name="^(ASP\.NET_SessionId|AnonymousCartId)$" /-->
+
+	<securecookie host="^members\.aas\.org$" name=".+" />
+
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://aj\.aas\.org/+"
+		to="https://iopscience.iop.org/1538-3881" />
+
+		<test url="http://aj.aas.org//" />
+
+	<!--	Redirect keeps path and args:
+						-->
+	<rule from="^http://apj\.aas\.org/+"
+		to="https://iopscience.iop.org/0004-637X" />
+
+		<test url="http://apj.aas.org//" />
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>

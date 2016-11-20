@@ -1,0 +1,50 @@
+<!--
+	Visual Supply Co
+
+
+	CDN buckets:
+
+		- vscosites.s3.amazonaws.com
+
+		- d1484tg77u0d9i.cloudfront.net
+
+			- static\d.vsco.co
+
+
+	Problematic subdomains:
+
+		- static\d	(cloudfront)
+
+
+	Fully covered subdomains:
+
+		- (www.)
+		- static\d	(→ d1484tg77u0d9i.cloudfront.net)
+
+
+	Mixed content:
+
+		- Images, on ^ from:
+
+			- static[0125-8] *
+			- vscosites.s3.amazonaws.com *
+
+	* Secured by us, doesn't trip MCB
+
+-->
+<ruleset name="VSCo.co">
+
+	<target host="vsco.co" />
+	<target host="*.vsco.co" />
+
+
+	<securecookie host="^vsco\.co$" name=".+" />
+
+
+	<rule from="^http://(www\.)?vsco\.co/"
+		to="https://$1vsco.co/" />
+
+	<rule from="^http://static\d\.vsco\.co/"
+		to="https://d1484tg77u0d9i.cloudfront.net/" />
+
+</ruleset>

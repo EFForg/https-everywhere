@@ -1,0 +1,76 @@
+<!--
+	Nonfunctional hosts in *printfection.com:
+
+		- blog ¹
+		- go ¹
+		- help ²
+
+	¹ WP Engine
+	² Zendesk
+
+
+	Problematic hosts in *printfection.com:
+
+		- img *
+
+	* Insecure renegotiation (CVE-2009-3555)
+
+
+	Partially covered hosts in *printfection.com:
+
+		- (www.)? *
+
+	* Some paths redirect to http
+
+
+	Fully covered hosts in *printfection.com:
+
+		- img
+
+-->
+<ruleset name="Printfection.com (partial)">
+
+	<target host="printfection.com" />
+	<target host="img.printfection.com" />
+	<target host="software.topcoder.com" />
+	<target host="www.printfection.com" />
+
+		<!--	Redirects to customer/store_error.php
+				-->
+		<!--exclusion pattern="^http://(www\.)?printfection\.com/wp-content/themes/" /-->
+
+		<!--	Redirects to http:
+						-->
+		<!--exclusion pattern="^http://(www\.)?printfection\.com/(help/contact/?$)" /-->
+
+		<!--	Exceptions:
+					-->
+		<exclusion pattern="^http://(?:www\.)?printfection\.com/(?!(?:account|css|images)(?:$|[?/])|assets/|css\.php|skin1/|.+\?store_page=cart$)" />
+
+			<!--	+ve:
+					-->
+			<test url="http://www.printfection.com/about/" />
+			<test url="http://www.printfection.com/about/jobs/" />
+			<test url="http://www.printfection.com/features/" />
+			<test url="http://www.printfection.com/features/compare/" />
+			<test url="http://www.printfection.com/help/contact/" />
+			<test url="http://www.printfection.com/merchandise/product-list/" />
+			<test url="http://www.printfection.com/naughtees" />
+			<test url="http://www.printfection.com/pricing/" />
+			<test url="http://www.printfection.com/resources/customer-experience/" />
+			<test url="http://www.printfection.com/resources/example/" />
+			<test url="http://www.printfection.com/solutions/" />
+
+			<!--	-ve:
+					-->
+			<test url="http://www.printfection.com/account/reset_password.php" />
+			<test url="http://www.printfection.com/account/secure_login.php" />
+			<test url="http://www.printfection.com/assets/images/application/layout/global/logo.png" />
+			<test url="http://www.printfection.com/css.php" />
+			<test url="http://www.printfection.com/skin1/images/simple/layout/footer/logo-alt-small.png" />
+
+
+	<rule from="^http:"
+		to="https:" />
+
+</ruleset>
